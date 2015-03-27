@@ -1,0 +1,13 @@
+.secupress-row-actions{font-size:13px}
+.secupress-dashicon-color-good:before{color:#88BA0E}
+.secupress-dashicon-color-bad:before{color:#D73838}
+.secupress-dashicon-color-warning:before{color:#FFA500   }
+.status-good .fixit, .status-notscannedyet .fixit{display:none}
+.helpme a:focus{box-shadow:none;outline:0}
+#table-secupress-tests ul{list-style:disc outside;}
+th.secupress-type{width:100px}
+th.secupress-status{width:150px}
+.dashicons-external{font-size:1.2em}
+#table-secupress-tests th{padding:5px}
+th.secupress-check{width:1%}
+.form-table td{vertical-align:top}
