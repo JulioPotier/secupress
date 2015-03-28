@@ -78,12 +78,12 @@ abstract class SecuPress_Scanners_Functions {
 			}
 		}
 
-		//  upgrade.php
+		//  install.php
 		$response = wp_remote_get( admin_url( 'install.php?time=' . time() ) );
 		if ( ! is_wp_error( $response ) ) {
 			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
 				self::set_status( $return, 'Bad' );
-				self::set_message( $return, sprintf( __( '<code>%s</code> is accessible by anyone.', 'secupress' ), admin_url( 'install.php' ) ) );
+				self::set_message( $return, sprintf( __( '<code>%s</code> shouldn\'t be accessible by anyone.', 'secupress' ), admin_url( 'install.php' ) ) );
 			}
 		} else {
 			self::set_status( $return, 'Warning' );
@@ -95,19 +95,29 @@ abstract class SecuPress_Scanners_Functions {
 		if ( ! is_wp_error( $response ) ) {
 			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
 				self::set_status( $return, 'Bad' );
-				self::set_message( $return, sprintf( __( '<code>%s</code> is accessible by anyone.', 'secupress' ), admin_url( 'upgrade.php' ) ) );
+				self::set_message( $return, sprintf( __( '<code>%s</code> shouldn\'t be accessible by anyone.', 'secupress' ), admin_url( 'upgrade.php' ) ) );
 			}
 		} else {
 			self::set_status( $return, 'Warning' );
 			self::set_message( $return, sprintf( __( 'Unable to determine status of <code>%s</code>.', 'secupress' ), admin_url( 'upgrade.php' ) ) );
 		}
 
+		// multiple *wp-config*.*
+		$check = array_flip( array_map( 'basename', (array) glob( ABSPATH . '*wp-config*.*' ) ) );
+		unset( $check['wp-config.php'], $check['wp-config-sample.php'] );
+		if ( count( $check ) ) {
+				self::set_status( $return, 'Bad' );
+				self::set_message( $return, sprintf( __( 'Your installation shouldn\'t contain these config files: <code>%s</code>', 'secupress' ), implode( '</code>, <code>', array_flip( $check ) ) ) );
+		} else {
+			self::set_status( $return, 'Good' );
+		}
+
 		// index.php / index.html
-		$response = wp_remote_get( plugins_url( '/inc/DirectoryIndex/' ) );
+		$response = wp_remote_get( plugins_url( 'secupress/inc/DirectoryIndex/' ) );
 		if ( ! is_wp_error( $response && 200 === wp_remote_retrieve_response_code( $response ) ) ) {
 			if ( 'index.php' == wp_remote_retrieve_body( $response ) ) {
 				self::set_status( $return, 'Good' );
-			} else { // index.html
+			} elseif ( 'index.html' == wp_remote_retrieve_body( $response ) ) {
 				self::set_status( $return, 'Bad' );
 				self::set_message( $return, sprintf( __( '<code>%s</code> should load <code>index.php</code> and <b>not</b> <code>index.html</code>.', 'secupress' ), plugins_url( '/inc/DirectoryIndex/' ) ) );
 			}
@@ -166,7 +176,7 @@ abstract class SecuPress_Scanners_Functions {
 		// default role
 		$check   = get_option( 'default_role' );
 		self::set_status( $return, 'subscriber' == $check ? 'Good' : 'Bad' );
-		self::set_message( $return, 'subscriber' == $check ? '' : sprintf( __( 'The default role in your installation should be <code>subscriber</code>.', 'secupress' ), $check ) );
+		self::set_message( $return, 'subscriber' == $check ? '' : sprintf( __( 'The default role in your installation is <code>%s</code> and it should be <code>subscriber</code>.', 'secupress' ), $check ) );
 
 		// open subscription
 		$check   = get_option( 'users_can_register' );
@@ -268,9 +278,9 @@ abstract class SecuPress_Scanners_Functions {
 
 		$current = get_site_transient( 'update_plugins' );
 
-		$plugin_update_cnt = 0;
+		$plugin_updates = array();
 		if ( isset( $current->response ) && is_array( $current->response ) ) {
-			$plugin_update_cnt = count( $current->response );
+			$plugin_updates = wp_list_pluck( array_intersect_key( get_plugins(), array_flip( array_keys( $current->response ) ) ), 'Name' );
 		}
 
 		// Themes
@@ -285,28 +295,27 @@ abstract class SecuPress_Scanners_Functions {
 
 		$current = get_site_transient( 'update_themes' );
 
+		$theme_updates = array();
 		if ( isset( $current->response ) && is_array( $current->response ) ) {
-			$theme_update_cnt = count( $current->response );
-		} else {
-			$theme_update_cnt = 0;
+			$theme_updates = wp_list_pluck( array_map( 'wp_get_theme', array_keys( $current->response ) ), 'Name' );
 		}
 
 		if ( isset( $latest_core_update->response ) && ( $latest_core_update->response == 'upgrade' ) ||
-		     $plugin_update_cnt || $theme_update_cnt
+		     $plugin_updates || $theme_update_cnt
 		) {
 			self::set_status( $return, 'Bad' );
 			if ( isset( $latest_core_update->response ) && ( $latest_core_update->response == 'upgrade' ) ) {
 				self::set_message( $return, __( 'WordPress <b>core</b> is not up to date.', 'secupress' ) );
 			}
-			if ( $plugin_update_cnt > 1 ) {
-				self::set_message( $return, sprintf( __( '<b>%d</b> plugins are not up to date.', 'secupress' ), $plugin_update_cnt ) );
+			if ( count( $plugin_updates ) > 1 ) {
+				self::set_message( $return, sprintf( __( '<b>%1$d</b> plugins are not up to date: <code>%2$s</code>.', 'secupress' ), count( $plugin_updates ), implode( '</code>, <code>', $plugin_updates ) ) );
 			} else {
-				self::set_message( $return, __( '<b>One</b> plugin is not up to date.', 'secupress' ) );
+				self::set_message( $return, sprintf( __( '<b>One</b> plugin is not up to date: <code>%s</code>', 'secupress' ), reset( $plugin_updates ) ) );
 			}
-			if ( $theme_update_cnt > 1 ) {
-				self::set_message( $return, sprintf( __( '<b>%d</b> themes are not up to date.', 'secupress' ), $theme_update_cnt ) );
+			if ( count( $theme_updates ) > 1 ) {
+				self::set_message( $return, sprintf( __( '<b>%1$d</b> themes are not up to date: <code>%2$s</code>', 'secupress' ), count( $theme_updates ), implode( '</code>, <code>', $theme_updates ) ) );
 			} else {
-				self::set_message( $return, sprintf( __( '<b>One</b> theme is not up to date.', 'secupress' ), $theme_update_cnt ) );
+				self::set_message( $return, sprintf( __( '<b>One</b> theme is not up to date:', 'secupress' ), reset( $theme_update_cnt ) ) );
 			}
 		} else {
 			self::set_status( $return, 'Good' );
@@ -361,9 +370,9 @@ abstract class SecuPress_Scanners_Functions {
 
 		// PHP version
 		$min_php_version = '5.4.39';
-		if ( version_compare( PHP_VERSION, $min_php_version ) < 0 ) {
+		if ( version_compare( PHP_VERSION, $min_php_version ) > 0 ) {
 			self::set_status( $return, 'Bad' );
-			self::set_message( $return, sprintf( __( 'Your server is running une <code>PHP v%1$s</code>, it\'s an outdated version, use <code>%2$s</code> at least.', 'secupress' ), PHP_VERSION, $min_php_version ) );
+			self::set_message( $return, sprintf( __( 'Your server is running on <code>PHP v%1$s</code>, it\'s an outdated version, use <code>v%2$s</code> at least.', 'secupress' ), PHP_VERSION, $min_php_version ) );
 		}
 
 		self::end_message( $return );
@@ -523,7 +532,7 @@ abstract class SecuPress_Scanners_Functions {
 		if ( ! is_wp_error( $response ) ) {
 			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
 				self::set_status( $return, 'Bad' );
-				self::set_message( $return, sprintf( __( '<code>%s</code> is accessible by anyone.', 'secupress' ), home_url( 'readme.html' ) ) );
+				self::set_message( $return, sprintf( __( '<code>%s</code> shouldn\'t be accessible by anyone.', 'secupress' ), home_url( 'readme.html' ) ) );
 			}
 		} else {
 			self::set_status( $return, 'Warning' );
@@ -535,7 +544,7 @@ abstract class SecuPress_Scanners_Functions {
 		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) && $body = wp_remote_retrieve_body( $response ) ) {
 			if ( strpos( $body, '<h1>PHP Credits</h1>' ) > 0 && strpos( $body, '<title>phpinfo()</title>' ) > 0 ) {
 				self::set_status( $return, 'Bad' );
-				self::set_message( $return, sprintf( __( '<code>%s</code> is accessible by anyone.', 'secupress' ), home_url( '/?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000' ) ) );
+				self::set_message( $return, sprintf( __( '<code>%s</code> shouldn\'t be accessible by anyone.', 'secupress' ), home_url( '/?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000' ) ) );
 			}
 		} else {
 			self::set_status( $return, 'Warning' );
@@ -549,7 +558,7 @@ abstract class SecuPress_Scanners_Functions {
 		if ( ! is_wp_error( $response ) ) {
 			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
 				self::set_status( $return, 'Bad' );
-				self::set_message( $return, sprintf( __( '<code>%s</code> is accessible by anyone.', 'secupress' ), $base_url ) );
+				self::set_message( $return, sprintf( __( '<code>%s</code> shouldn\'t accessible by anyone.', 'secupress' ), $base_url ) );
 			}
 		} else {
 			self::set_status( $return, 'Warning' );
@@ -638,147 +647,145 @@ abstract class SecuPress_Scanners_Functions {
 			}
 		}
 		self::end_message( $return );
-
 		return $return;
 	}
 
+	static function common_flaws() {
+		$return = $hashes = array();
 
-		static function common_flaws() {
-			$return = $hashes = array();
-
-			// Scanners and Breach
-			for ( $i = 0 ; $i < 3 ; ++$i ) {
-				$response = wp_remote_get( home_url( '/?' . uniqid( 'time=', true ) ) );
-				if ( ! is_wp_error( $response ) ) {
-					if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
-						$hashes[] = md5( wp_remote_retrieve_body( $response ) );
-					}
-				}
-			}
-			$hashes = array_unique( $hashes );
-			if ( count( $hashes ) === 3 ) {
-				self::set_status( $return, 'Good' );
-			} elseif( count( $hashes ) === 0 ) {
-				self::set_status( $return, 'Warning' );
-				self::set_message( $return, __( 'Unable to determine status of your homepage.', 'secupress' ) );
-			} else { // 1 or 2
-				self::set_status( $return, 'Bad' );
-				self::set_message( $return, __( 'Your website pages should be different for each reload.', 'secupress' ) );
-			}
-
-			// Shellshock
-				// from http://plugins.svn.wordpress.org/shellshock-check/trunk/shellshock-check.php
-			if ( strtoupper( substr( PHP_OS, 0, 3 ) ) !== 'WIN' ) {
-
-				$env = array( 'SHELL_SHOCK_TEST' => '() { :;}; echo VULNERABLE' );
-
-				$desc = array(
-					0 => array( 'pipe', 'r' ),
-					1 => array( 'pipe', 'w' ),
-					2 => array( 'pipe', 'w' ),
-				);
-
-				// CVE-2014-6271
-				$p = proc_open( 'bash -c "echo Test"', $desc, $pipes, null, $env );
-				$output = isset( $pipes[1] ) ? stream_get_contents( $pipes[1] ) : 'error';
-				proc_close( $p );
-
-				if ( strpos( $output, 'VULNERABLE' ) === false ) {
-					self::set_status( $return, 'Good' );
-				} elseif ( 'error' === $output ) {
-					self::set_status( $return, 'Warning' );
-					self::set_message( $return, __( 'Unable to determine status of Shellshock flaw.', 'secupress' ) );
-				} else {
-					self::set_status( $return, 'Bad' );
-					self::set_message( $return, sprintf( __( 'The server appears to be vulnerable to Shellshock (%s).', 'secupress' ), '<i>CVE-2014-6271</i>' ) );
-				}
-
-				// CVE-2014-7169
-				$p = proc_open("rm -f echo; env 'x=() { (a)=>\' bash -c \"echo date +%Y\"; cat echo", $desc, $pipes, sys_get_temp_dir() );
-				$output = isset( $pipes[1] ) ? stream_get_contents( $pipes[1] ) : 'error';
-				proc_close( $p );
-
-				$test_date = date('Y');
-
-				if ( trim( $output ) !== $test_date ) {
-					self::set_status( $return, 'Good' );
-				} elseif ( 'error' === $output ) {
-					self::set_status( $return, 'Warning' );
-					self::set_message( $return, __( 'Unable to determine status of <b>Shellshock</b> flaw.', 'secupress' ) );
-				} else {
-					self::set_status( $return, 'Bad' );
-					self::set_message( $return, sprintf( __( 'The server appears to be vulnerable to <b>Shellshock</b> (%s).', 'secupress' ), '<i>CVE-2014-7169</i>' ) );
-				}
-
-			}
-
-			// bad user
-			$response = wp_remote_get( home_url(), array( 'user-agent' => '<script>' ) );
+		// Scanners and Breach
+		for ( $i = 0 ; $i < 3 ; ++$i ) {
+			$response = wp_remote_get( home_url( '/?' . uniqid( 'time=', true ) ) );
 			if ( ! is_wp_error( $response ) ) {
 				if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
-					self::set_status( $return, 'Bad' );
-					self::set_message( $return, sprintf( __( 'Your website should block <code>%s</code> requests with <b>bad user-agents</b>.', 'secupress' ), 'HTTP' ) );
-				}
-			} else {
-				self::set_status( $return, 'Warning' );
-				self::set_message( $return, __( 'Unable to determine status of your homepage.', 'secupress' ) );
-			}
-
-			// disallowed requests methods
-			$methods = array( 'TRACE', 'TRACK', 'HEAD', 'PUT', 'OPTIONS', 'DELETE', 'CONNECT', 'custom<thisisacustomrequestfromsecupress/>' );
-			foreach ( $methods as $method ) {
-				$WP_HTTP = _wp_http_get_object();
-				$response = $WP_HTTP->request( home_url(), array( 'method' => $method ) );
-				if ( ! is_wp_error( $response ) ) {
-					if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
-						self::set_status( $return, 'Bad' );
-						self::set_message( $return, sprintf( __( 'Your website should block <code>%s</code> request method.', 'secupress' ), $method ) );
-					}
-				} else {
-					self::set_status( $return, 'Warning' );
-					self::set_message( $return, __( 'Unable to determine status of your homepage.', 'secupress' ) );
+					$hashes[] = md5( wp_remote_retrieve_body( $response ) );
 				}
 			}
-
-			// disallow HTTP 1.0 POST
-			$response = wp_remote_post( home_url(), array( 'httpversion' => '1.0' ) );
-			if ( ! is_wp_error( $response ) ) {
-				if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
-					self::set_status( $return, 'Bad' );
-					self::set_message( $return, sprintf( __( 'Your website should block <code>%s</code> requests.', 'secupress' ), 'HTTP/1.0 POST' ) );
-				}
-			} else {
-				self::set_status( $return, 'Warning' );
-				self::set_message( $return, __( 'Unable to determine status of your homepage.', 'secupress' ) );
-			}
-
-			// too long URL
-			$response = wp_remote_get( home_url( '/?' . time() . '=' . wp_generate_password( 255, false ) ) );
-			if ( ! is_wp_error( $response ) ) {
-				if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
-					self::set_status( $return, 'Bad' );
-					self::set_message( $return, sprintf( __( 'Your website should block <b>too long string requests</b>.', 'secupress' ), 'HTTP' ) );
-				}
-			} else {
-				self::set_status( $return, 'Warning' );
-				self::set_message( $return, __( 'Unable to determine status of your homepage.', 'secupress' ) );
-			}
-
-			// SQLi attemps
-			$response = wp_remote_get( home_url( '/?' . time() . '=UNION+SELECT+FOO' ) );
-			if ( ! is_wp_error( $response ) ) {
-				if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
-					self::set_status( $return, 'Bad' );
-					self::set_message( $return, sprintf( __( 'Your website should block <b>malicious requests</b>.', 'secupress' ), 'HTTP' ) );
-				}
-			} else {
-				self::set_status( $return, 'Warning' );
-				self::set_message( $return, __( 'Unable to determine status of your homepage.', 'secupress' ) );
-			}
-
-			self::end_message( $return );
-
-			return $return;
 		}
+		$hashes = array_unique( $hashes );
+		if ( count( $hashes ) === 3 ) {
+			self::set_status( $return, 'Good' );
+		} elseif( count( $hashes ) === 0 ) {
+			self::set_status( $return, 'Warning' );
+			self::set_message( $return, __( 'Unable to determine status of your homepage.', 'secupress' ) );
+		} else { // 1 or 2
+			self::set_status( $return, 'Bad' );
+			self::set_message( $return, __( 'Your website pages should be <b>different</b> for each reload.', 'secupress' ) );
+		}
+
+		// Shellshock
+			// from http://plugins.svn.wordpress.org/shellshock-check/trunk/shellshock-check.php
+		if ( strtoupper( substr( PHP_OS, 0, 3 ) ) !== 'WIN' ) {
+
+			$env = array( 'SHELL_SHOCK_TEST' => '() { :;}; echo VULNERABLE' );
+
+			$desc = array(
+				0 => array( 'pipe', 'r' ),
+				1 => array( 'pipe', 'w' ),
+				2 => array( 'pipe', 'w' ),
+			);
+
+			// CVE-2014-6271
+			$p = proc_open( 'bash -c "echo Test"', $desc, $pipes, null, $env );
+			$output = isset( $pipes[1] ) ? stream_get_contents( $pipes[1] ) : 'error';
+			proc_close( $p );
+
+			if ( strpos( $output, 'VULNERABLE' ) === false ) {
+				self::set_status( $return, 'Good' );
+			} elseif ( 'error' === $output ) {
+				self::set_status( $return, 'Warning' );
+				self::set_message( $return, __( 'Unable to determine status of Shellshock flaw.', 'secupress' ) );
+			} else {
+				self::set_status( $return, 'Bad' );
+				self::set_message( $return, sprintf( __( 'The server appears to be vulnerable to Shellshock (%s).', 'secupress' ), '<i>CVE-2014-6271</i>' ) );
+			}
+
+			// CVE-2014-7169
+			$p = proc_open("rm -f echo; env 'x=() { (a)=>\' bash -c \"echo date +%Y\"; cat echo", $desc, $pipes, sys_get_temp_dir() );
+			$output = isset( $pipes[1] ) ? stream_get_contents( $pipes[1] ) : 'error';
+			proc_close( $p );
+
+			$test_date = date('Y');
+
+			if ( trim( $output ) !== $test_date ) {
+				self::set_status( $return, 'Good' );
+			} elseif ( 'error' === $output ) {
+				self::set_status( $return, 'Warning' );
+				self::set_message( $return, __( 'Unable to determine status of <b>Shellshock</b> flaw.', 'secupress' ) );
+			} else {
+				self::set_status( $return, 'Bad' );
+				self::set_message( $return, sprintf( __( 'The server appears to be vulnerable to <b>Shellshock</b> (%s).', 'secupress' ), '<i>CVE-2014-7169</i>' ) );
+			}
+
+		}
+
+		// bad user
+		$response = wp_remote_get( home_url(), array( 'user-agent' => '<script>' ) );
+		if ( ! is_wp_error( $response ) ) {
+			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
+				self::set_status( $return, 'Bad' );
+				self::set_message( $return, sprintf( __( 'Your website should block <code>%s</code> requests with <b>bad user-agents</b>.', 'secupress' ), 'HTTP' ) );
+			}
+		} else {
+			self::set_status( $return, 'Warning' );
+			self::set_message( $return, __( 'Unable to determine status of your homepage.', 'secupress' ) );
+		}
+
+		// disallowed requests methods
+		$methods = array( 'TRACE', 'TRACK', 'HEAD', 'PUT', 'OPTIONS', 'DELETE', 'CONNECT', 'custom<thisisacustomrequestfromsecupress/>' );
+		foreach ( $methods as $method ) {
+			$WP_HTTP = _wp_http_get_object();
+			$response = $WP_HTTP->request( home_url(), array( 'method' => $method ) );
+			if ( ! is_wp_error( $response ) ) {
+				if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
+					self::set_status( $return, 'Bad' );
+					self::set_message( $return, sprintf( __( 'Your website should block <code>%s</code> request method.', 'secupress' ), $method ) );
+				}
+			} else {
+				self::set_status( $return, 'Warning' );
+				self::set_message( $return, __( 'Unable to determine status of your homepage.', 'secupress' ) );
+			}
+		}
+
+		// disallow HTTP 1.0 POST
+		$response = wp_remote_post( home_url(), array( 'httpversion' => '1.0' ) );
+		if ( ! is_wp_error( $response ) ) {
+			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
+				self::set_status( $return, 'Bad' );
+				self::set_message( $return, sprintf( __( 'Your website should block <code>%s</code> requests.', 'secupress' ), 'HTTP/1.0 POST' ) );
+			}
+		} else {
+			self::set_status( $return, 'Warning' );
+			self::set_message( $return, __( 'Unable to determine status of your homepage.', 'secupress' ) );
+		}
+
+		// too long URL
+		$response = wp_remote_get( home_url( '/?' . time() . '=' . wp_generate_password( 255, false ) ) );
+		if ( ! is_wp_error( $response ) ) {
+			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
+				self::set_status( $return, 'Bad' );
+				self::set_message( $return, sprintf( __( 'Your website should block <b>too long string requests</b>.', 'secupress' ), 'HTTP' ) );
+			}
+		} else {
+			self::set_status( $return, 'Warning' );
+			self::set_message( $return, __( 'Unable to determine status of your homepage.', 'secupress' ) );
+		}
+
+		// SQLi attemps
+		$response = wp_remote_get( home_url( '/?' . time() . '=UNION+SELECT+FOO' ) );
+		if ( ! is_wp_error( $response ) ) {
+			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
+				self::set_status( $return, 'Bad' );
+				self::set_message( $return, sprintf( __( 'Your website should block <b>malicious requests</b>.', 'secupress' ), 'HTTP' ) );
+			}
+		} else {
+			self::set_status( $return, 'Warning' );
+			self::set_message( $return, __( 'Unable to determine status of your homepage.', 'secupress' ) );
+		}
+
+		self::end_message( $return );
+
+		return $return;
+	}
 
 }

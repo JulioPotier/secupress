@@ -1,12 +1,6 @@
 <?php
-if (!defined('ABSPATH'))
-    die('Cheatin\' uh?');
-/*
-fichiers non WP dans le core + root
-antibots
-plusieirs wp config
-fichier bak~
-*/
+defined( 'ABSPATH' ) or die('Cheatin\' uh?');
+
 global $secupress_tests;
 $secupress_tests = array(
     'fake_good' => array(

@@ -4,7 +4,7 @@ Plugin Name: SecuPress
 Plugin URI: http://secupress.fr
 Description: SecuPress Security, the best and simpler way to protect your websites.
 Author: SecuPress, WP Media
-Version: 1.0-free-alpha
+Version: 1.0-alpha
 Author URI: http://www.secupress.fr
 
 Text Domain: secupress
@@ -14,7 +14,7 @@ Copyright 2012-2015 SecuPress
 */
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 // SecuPress defines
-define( 'SECUPRESS_VERSION'             , '1.0-free-alpha' );
+define( 'SECUPRESS_VERSION'             , '1.0-alpha' );
 define( 'SECUPRESS_PRIVATE_KEY'         , false );
 define( 'SECUPRESS_SLUG'                , 'secupress_settings' );
 define( 'SECUPRESS_SCAN_SLUG'           , 'secupress_scanners' );
