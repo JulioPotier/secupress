@@ -183,7 +183,7 @@ function secupress_sidebox( $id, $title, $content, $hideifnojs = false )
 function __secupress_scanner()
 {
 	global $current_user, $percent, $secupress_options, $secupress_tests, $scanners;
-	require_once( SECUPRESS_FUNCTIONS_PATH . '/secupress_scanner.php' );
+	require_once( SECUPRESS_FUNCTIONS_PATH . '/secupress-scanner.php' );
 	$scanners = (array)get_option( 'secupress' );
 	$secupress_options = array_shift( $scanners );
 	$good_status = count(array_filter(wp_list_pluck($scanners, 'status'), create_function('$a', 'return $a==__("Good","secupress") ? 1 : 0;')));

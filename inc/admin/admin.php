@@ -3,8 +3,7 @@ defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
 
 add_action( 'admin_post_secupress_scanner', '__secupress_scanner_ajax' );
 add_action( 'wp_ajax_secupress_scanner', '__secupress_scanner_ajax' );
-function __secupress_scanner_ajax( $this_test = null, $nonce = null, $action = null )
-{
+function __secupress_scanner_ajax( $this_test = null, $nonce = null, $action = null ) {
 	$this_test = isset( $_GET['test'] ) ? $_GET['test'] : $this_test;
 	$nonce = isset( $_GET['_wpnonce'] ) ? $_GET['_wpnonce'] : $nonce;
 	$action = isset( $_GET['action'] ) ? $_GET['action'] : $action;
@@ -12,8 +11,8 @@ function __secupress_scanner_ajax( $this_test = null, $nonce = null, $action = n
 	unset( $results[ $test_name ] );
 	if ( ! empty( $this_test ) && ! empty( $nonce ) && ! empty( $action ) ) {
 		wp_verify_nonce( $nonce, 'secupress_scanner_' . $this_test ) or wp_nonce_ays('');
-		require_once( SECUPRESS_FUNCTIONS_PATH . '/scanners_functions.php' );
-		require_once( SECUPRESS_FUNCTIONS_PATH . '/secupress_scanner.php' );
+		require_once( SECUPRESS_FUNCTIONS_PATH . '/scanners-functions.php' );
+		require_once( SECUPRESS_FUNCTIONS_PATH . '/secupress-scanner.php' );
 		foreach( $secupress_tests as $test_name => $test ) {
 			@set_time_limit( 0 );
 			if ( ( $this_test == null || $this_test == 'all' || $this_test == $test_name ) && is_callable( array( 'SecuPress_Scanners_Functions', $test_name ) ) ) {
@@ -52,8 +51,7 @@ function __secupress_scanner_ajax( $this_test = null, $nonce = null, $action = n
  * @since 1.0
  */
 add_filter( 'plugin_action_links_' . plugin_basename( SECUPRESS_FILE ), '__secupress_settings_action_links' );
-function __secupress_settings_action_links( $actions )
-{
+function __secupress_settings_action_links( $actions ) {
 	if ( ! secupress_is_white_label() ) {
 		array_unshift( $actions, sprintf( '<a href="%s">%s</a>', 'http:/secupress.fr/support/', __( 'Support', 'secupress' ) ) );
 
@@ -71,13 +69,10 @@ function __secupress_settings_action_links( $actions )
  *
  * @since 1.0
  */
-// add_action( 'load-secupress_page_secupress_scanner', '' );
-// add_action( 'admin_print_styles-secupress_page_secupress_scanner', '' );
 add_action( 'admin_print_styles-secupress_page_secupress_scanner', '__secupress_add_admin_css_js' );
-function __secupress_add_admin_css_js()
-{
-	wp_enqueue_script( 'secupress-scanner-js', SECUPRESS_ADMIN_JS_URL . 'secupress_scanner.js', null, SECUPRESS_VERSION, true );
-	wp_enqueue_style( 'secupress-scanner-css', SECUPRESS_ADMIN_CSS_URL . 'secupress_scanner.css', null, SECUPRESS_VERSION );
+function __secupress_add_admin_css_js() {
+	wp_enqueue_script( 'secupress-scanner-js', SECUPRESS_ADMIN_JS_URL . 'secupress-scanner.js', null, SECUPRESS_VERSION, true );
+	wp_enqueue_style( 'secupress-scanner-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-scanner.css', null, SECUPRESS_VERSION );
 }
 
 
@@ -87,8 +82,7 @@ function __secupress_add_admin_css_js()
  * @since 1.0
  */
 add_action( 'admin_post_secupress_resetwl', '__secupress_reset_white_label_values_action' );
-function __secupress_reset_white_label_values_action()
-{
+function __secupress_reset_white_label_values_action() {
 	if ( isset( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'secupress_resetwl' ) ) {
 		secupress_reset_white_label_values( true );
 	}
@@ -103,8 +97,7 @@ function __secupress_reset_white_label_values_action()
  *
  */
 // add_filter( 'all_plugins', '__secupress_white_label' );
-function __secupress_white_label( $plugins )
-{
+function __secupress_white_label( $plugins ) {
 	if ( secupress_is_white_label() ) {
 		// We change the plugin's header
 		$plugins[ SECUPRESS_PLUGIN_FILE ] = array(
@@ -127,8 +120,7 @@ function __secupress_white_label( $plugins )
  * @since 1.0
  */
 // add_action( 'admin_init', '__secupress_check_no_empty_name', 11 ); ////
-function __secupress_check_no_empty_name()
-{
+function __secupress_check_no_empty_name() {
 	$wl_plugin_name = trim( get_secupress_option( 'wl_plugin_name' ) );
 	if ( empty( $wl_plugin_name ) ) {
 		secupress_reset_white_label_values( false );
@@ -143,8 +135,7 @@ function __secupress_check_no_empty_name()
  * @since 1.0
  */
 add_action( 'admin_post_secupress_export', '__secupress_do_options_export' );
-function __secupress_do_options_export()
-{
+function __secupress_do_options_export() {
 	if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress_export' ) ) {
 		wp_nonce_ays( '' );
 	}
