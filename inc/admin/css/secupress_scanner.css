@@ -9,5 +9,8 @@ th.secupress-type{width:100px}
 th.secupress-status{width:150px}
 .dashicons-external{font-size:1.2em}
 #table-secupress-tests th{padding:5px}
+.secupress-row-actions > span:not(:last-child):after{content:"|"}
 th.secupress-check{width:1%}
 .form-table td{vertical-align:top}
+.secupress-details .dashicons-editor-help{vertical-align:top;line-height:0.7em}
+.secupress-result-list{margin:0px}

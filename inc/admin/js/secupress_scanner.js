@@ -32,12 +32,20 @@ jQuery(document).ready(function($)
 						}
 						if ( r.data[pairs['test']].hasOwnProperty('message') ) {
 							$('.secupress-item-' + pairs['test'] +' td.secupress-result' )
-								.html( r.data[pairs['test']].message );
+								.html( '<ul class="secupress-result-list">' + r.data[pairs['test']].message + '</ul>');
 						}
 						$('.secupress-item-' + pairs['test']+' .secupress-status')
 							.parent().css( { backgroundImage: 'inherit' } );
 						$('.secupress-neverrun, .secupress-neverrun')
 							.remove();
+						$('.secupress-item-' + pairs['test'] +' .secupress-row-actions .rescanit').show();
+						$('.secupress-item-' + pairs['test'] +' .secupress-row-actions .scanit').hide();
+						if ( 'good' == r.data[pairs['test']].class ) {
+							$('.secupress-item-' + pairs['test'] +' .secupress-row-actions .fixit').hide();
+						} else {
+							$('.secupress-item-' + pairs['test'] +' .secupress-row-actions .fixit').show();
+						}
+						$('#secupress-date').text( '1 min ago' ); ////
 						if ( ! $( this ).hasClass( 'button-secupress-scan' ) ) {
 							secupress_maj_score();
 						}

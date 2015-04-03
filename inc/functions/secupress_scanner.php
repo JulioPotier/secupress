@@ -34,6 +34,13 @@ $secupress_tests = array(
         'details' => __('It\'s very important to maintain your WordPress installation up to date. If you can not update because of a plugin or theme, contact its author and submit him your issue.', 'secupress'),
         'type' => __('WordPress', 'secupress'),
     ),
+    'bad_url_access' => array(
+        'number_tests' => 9,
+        'title' => __('Check if your WordPress site discloses sensitive informations.', 'secupress'),
+        'msg_good' => __('Your site doesn\'t reveal sensitive informations.', 'secupress'),
+        'details' => __('When a hacker wants to hack into a WordPress site, he\'ll search for a maximum of information. The goal is to find outdated versions of your server softwares or WordPress component. Don\'t let them easily find these informations.', 'secupress'),
+        'type' => __('WordPress', 'secupress'),
+    ),
     'disclose_check' => array(
         'number_tests' => 9,
         'title' => __('Check if your WordPress site discloses sensitive informations.', 'secupress'),
@@ -66,21 +73,28 @@ $secupress_tests = array(
         'number_tests' => 8,
         'title' => __('Check if the security keys are correctly set.', 'secupress'),
         'msg_good' => __('All keys have default values set.', 'secupress'),
-        'details' => __('WordPress provides 8 security keys, each key has its own role. You have to set these keys and not let the default value.', 'secupress'),
+        'details' => __('WordPress provides 8 security keys, each key has its own role. You have to set these keys with long random strings, not let the default value, don\'t hardcode them.', 'secupress'),
         'type' => __('WordPress', 'secupress'),
     ),
     'passwords_strenght' => array(
         'number_tests' => 8,
-        'title' => __('Test the strength of WordPress database and FTP password.', 'secupress'),
+        'title' => __('Test the strength of WordPress database and FTP password if available.', 'secupress'),
         'msg_good' => __('Database and FTP passwords are strong enough.', 'secupress'),
         'type' => __('3rd party', 'secupress'),
-        'details' => __('The password of the database or FTP has to be strong to avoid a possible brute force attack.', 'secupress')
+        'details' => __('The password of the database and FTP has to be strong to avoid a possible brute force attack.', 'secupress')
     ),
     'bad_old_files' => array(
-        'number_tests' => 4,
+        'number_tests' => 2,
         'title' => __('Check if your installation still contains old files from WordPress 2.0 to your version.', 'secupress'),
         'msg_good' => __('Your installation is free of old files.', 'secupress'),
         'details' => __('Since WordPress 2.0, about 500 files were deleted, let\'s check if you need a clean up.', 'secupress'),
+        'type' => __('WordPress', 'secupress'),
+    ),
+    'bad_url_access' => array(
+        'number_tests' => 6, /// à completer
+        'title' => __('Check if your installation protect some sentitive URLs.', 'secupress'),
+        'msg_good' => __('Your installation protects some known as sentitive URLs.', 'secupress'),
+    'details' => __('Like <code>/readme.html</code>, some URLs can be used by hackers to get sentitive data from your site like <code>/wp-admin/install.php</code> or <code>/wp-admin/upgrade.php</code>.', 'secupress'),
         'type' => __('WordPress', 'secupress'),
     ),
     'chmods' => array(

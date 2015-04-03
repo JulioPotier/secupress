@@ -106,10 +106,10 @@ function secupress_field_scan()
 		$i++;
 		$status = isset( $scanners[ $test_name ]['status'] ) ? $scanners[ $test_name ]['status'] : secupress_status( /**/'Not Scanned Yet'/**/ ); // Do not localize
 		$css_class = isset( $scanners[ $test_name ]['class'] ) && $scanners[ $test_name ]['class'] ? $scanners[ $test_name ]['class'] : 'notscannedyet';
+		$status_raw = $css_class;
 		$class = ' type-' . sanitize_key( $details['type'] );
 		$class .= ' status-' . $css_class;
 		$class .= $i%2==0 ? '' : ' alternate';
-		$scan_title = $css_class != 'notscannedyet' ? __( 'Re-Scan this test', 'secupress' ) : __( 'Scan this test first', 'secupress' );
 		$hiddens = !isset( $_GET['DOING_AJAX'] ) ? '' : '<input type="hidden" id="secupress-percent" value="' . $percent . '" /><input type="hidden" id="secupress-humantime" value="' . $thedate . '" />';
 		?>
 		<tr class="secupress-item-all secupress-item-<?php echo $test_name; ?> type-all status-all<?php echo $class; ?>">
@@ -120,23 +120,25 @@ function secupress_field_scan()
 			<td class="secupress-status"><?php echo $hiddens . $status; ?></td>
 			<td><?php echo $details['title']; ?>
 				<div class="secupress-row-actions">
-					<span class="scanit">
-						<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $test_name ), 'secupress_scanner_' . $test_name ); ?>" class="secupress-scanit" /><?php echo $scan_title; ?></a>
+					<span class="rescanit<?php echo $status_raw != 'notscannedyet' ? '' : ' hidden'; ?>">
+						<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $test_name ), 'secupress_scanner_' . $test_name ); ?>" class="secupress-scanit" /><?php _e( 'Re-Scan this test', 'secupress' ); ?></a>
 					</span>
-					<span class="fixit">
-					|	<a href="#" class=" secupress-fixit" title="<?php _e( 'Fix it!', 'secupress' ); ?>" />Fix it</a>
+					<span class="scanit<?php echo $status_raw == 'notscannedyet' ? '' : ' hidden'; ?>">
+						<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $test_name ), 'secupress_scanner_' . $test_name ); ?>" class="secupress-scanit" /><?php _e( 'Scan this test first', 'secupress' ) ?></a>
+					</span>
+					<span class="fixit<?php echo $status_raw != 'notscannedyet' & $status_raw != 'good' ? '' : ' hide'; ?>">
+						<a href="#" class=" secupress-fixit" title="<?php _e( 'Fix it!', 'secupress' ); ?>" />Fix it</a>
 					</span>
 					<span class="helpme hide-if-no-js">
-					|	<a href="#" class="secupress-details" data-test="<?php echo $test_name; ?>" title="<?php _e( 'Get details', 'secupress' ); ?>" /><span class="edit dashicons dashicons-editor-help"></span></a>
+					<a href="#" class="secupress-details" data-test="<?php echo $test_name; ?>" title="<?php _e( 'Get details', 'secupress' ); ?>" /><span class="edit dashicons dashicons-editor-help"></span></a>
 					</span>
-
 				</div>
 			</td>
 			<td class="secupress-result"><?php echo isset( $scanners[$test_name]['message'] ) ? $scanners[$test_name]['message'] : '&#175;'; ?></td>
 			<td><?php echo $details['type']; ?></td>
 		</tr>
 		<tr id="details-<?php echo $test_name; ?>" class="details hide-if-js" style="background-color:#ddf;">
-			<td colspan="4" style="font-style: italic">
+			<td colspan="5" style="font-style: italic">
 				<?php echo $details['details']; ?>
 			</td>
 		</tr>
