@@ -75,7 +75,17 @@ function secupress_field_scan()
 				<option value="warning"><?php _e( 'Warning', 'secupress' ); ?></option>
 				<option value="notscannedyet"><?php _e( 'Not Scanned Yet', 'secupress' ); ?></option>
 			</select>
-			<input type="button" name="filter_action" id="filter-submit" class="button" value="Filter">
+			<input type="button" class="button alignleft filter-submit" value="<?php _e( 'Filter' ) ;?>" data-filter="status">
+			&nbsp;
+			<label for="filter-by-type" class="screen-reader-text"><?php _e( 'Filter by type', 'secupress' ); ?></label>
+			<select name="filter-by-type" id="filter-by-type">
+				<option selected="selected" value="all"><?php _e( 'All Types', 'secupress' ); ?></option>
+				<option value="wordpress"><?php _e( 'WordPress', 'secupress' ); ?></option>
+				<option value="php"><?php _e( 'PHP', 'secupress' ); ?></option>
+				<option value="filesystem"><?php _e( 'File System', 'secupress' ); ?></option>
+				<option value="3rdparty"><?php _e( '3rd party', 'secupress' ); ?></option>
+			</select>
+			<input type="button" class="button alignleft filter-submit" value="<?php _e( 'Filter' ) ;?>" data-filter="type">
 		</div>
 		<div class="tablenav-pages one-page">
 			<span class="displaying-num">

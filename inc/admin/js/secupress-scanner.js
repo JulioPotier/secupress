@@ -78,33 +78,18 @@ jQuery(document).ready(function($)
 	}
 
 	secupress_maj_score();
-
-	$('.filter-type, .filter-status').click(function(e){
-		e.preventDefault();
-		var current = $(this).parent().data('who');
-		$('.filter-'+current).removeClass('button-primary');
-		$(this).addClass('button-primary');
-		var current_type = $('.filter-type.button-primary').data('what');
-		var current_status = $('.filter-status.button-primary').data('what');
-		$.post( window.location, {type: current_type, status: current_status, _spsnonce: $('#_wpnonce').val()} );
-		var what = $(this).data('what');
-		$('.'+current+'-all').show();
-		$('.status-all:not(.status-'+current_status+')').hide();
-		$('.type-all:not(.type-'+current_type+')').hide();
-	});
-	
-	$('.filter-type.button-primary, .filter-status.button-primary').click();
 	
 	$('.secupress-details').click(function(e){
 		e.preventDefault();
 		$('#details-'+$(this).data('test')).toggle(250);
 	});
 
-	$('#filter-submit').click( function(e){
+	$('.filter-submit').click( function(e){
 		e.preventDefault();
-		var filter = $('#filter-by-status').val();
+		var filter_status = $('#filter-by-status').val();
+		var filter_type = $('#filter-by-type').val();
 		$('.status-all').hide();
-		$('.status-'+filter).show();
+		$('.status-' + filter_status + '.type-' + filter_type).show();
 		$('#table-secupress-tests tr').removeClass('alternate');
 		$('#table-secupress-tests tr.secupress-item-all:visible:even').addClass('alternate');
 	});
