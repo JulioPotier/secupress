@@ -151,6 +151,7 @@ abstract class SecuPress_Scanners_Functions {
 
 	static public function user_check() {
 		$return = array();
+		self::set_status( $return, 'Good' );
 
 		// open subscription
 		$check   = get_option( 'users_can_register' );
@@ -236,6 +237,21 @@ abstract class SecuPress_Scanners_Functions {
 		if ( count( $ids ) ) {
 			self::set_status( $return, 'Bad' );
 			self::set_message( $return, sprintf( __( '<b>%d</b> posts have an <b>administrator</b> as an author.', 'secupress' ), count( $ids ) ) );
+		}
+
+		$temp_login = uniqid( 'secupress' );
+		$temp_pass = wp_generate_password( 64 );
+		$temp_id = wp_insert_user( array( 	'user_login' => $temp_login,
+											'user_pass' => $temp_pass,
+											'user_email' => 'secupress_no_mail@fakemail.' . time(),
+											'role' => 'secupress_no_role_' . time(),
+										)
+									);
+		$check = wp_authenticate( $temp_login, $temp_pass );
+		wp_delete_user( $temp_id );
+		if( is_a( $check, 'WP_User' ) ) {
+			self::set_status( $return, 'Bad' );
+			self::set_message( $return, sprintf( __( 'Your login system is <b>not strong enought</b>, you need a <b>two authentication system</b>.', 'secupress' ), count( $ids ) ) );
 		}
 
 		return $return;
@@ -342,7 +358,7 @@ abstract class SecuPress_Scanners_Functions {
 			$check = array_intersect_key( $all_plugins, $no_longer_in_directory_plugin_list );
 			if ( count( $check ) ) {
 				self::set_status($return, 'Bad' );
-				self::set_message($return, sprintf(__('These plugins haven\'t been updated <b>since 2 years</b>b> at least: <code>%s</code>', 'secupress'), implode('</code>, <code>', wp_list_pluck( $check, 'Name' ) ) ) );
+				self::set_message($return, sprintf(__('These plugins haven\'t been updated <b>since 2 years</b> at least: <code>%s</code>', 'secupress'), implode('</code>, <code>', wp_list_pluck( $check, 'Name' ) ) ) );
 			}
 		} else {
 			self::set_status($return, 'Warning' );

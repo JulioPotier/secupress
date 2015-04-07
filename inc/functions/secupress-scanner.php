@@ -56,7 +56,7 @@ $secupress_tests = array(
         'type' => __('PHP', 'secupress'),
     ),
     'user_check' => array(
-        'number_tests' => 7,
+        'number_tests' => 8,
         'title' => __('Check if your users features are well configured.', 'secupress'),
         'msg_good' => __('Your settings are fine, your users got fine names too.', 'secupress'),
         'details' => __('Dealing with users is not easy. Dealing with usernames neither. It\'s important to deal with the famous "admin" account, dealing with the fact that you users shouldn\'t display their login in the front-end of your website to avoid being targeted in a password guessing process. And at least but not last, always use the lower role when creating new users.', 'secupress'),
@@ -94,7 +94,7 @@ $secupress_tests = array(
         'number_tests' => 6, /// à completer
         'title' => __('Check if your installation protect some sentitive URLs.', 'secupress'),
         'msg_good' => __('Your installation protects some known as sentitive URLs.', 'secupress'),
-    'details' => __('Like <code>/readme.html</code>, some URLs can be used by hackers to get sentitive data from your site like <code>/wp-admin/install.php</code> or <code>/wp-admin/upgrade.php</code>.', 'secupress'),
+        'details' => __('Like <code>/readme.html</code>, some URLs can be used by hackers to get sentitive data from your site like <code>/wp-admin/install.php</code> or <code>/wp-admin/upgrade.php</code>.', 'secupress'),
         'type' => __('WordPress', 'secupress'),
     ),
     'chmods' => array(
