@@ -37,9 +37,6 @@ if ( ! defined( 'SECUPRESS_LASTVERSION' ) ) {
     define( 'SECUPRESS_LASTVERSION', '0' );
 }
 
-require( SECUPRESS_INC_PATH	. '/compat.php' );
-
-
 /*
  * Tell WP what to do when plugin is loaded
  *
