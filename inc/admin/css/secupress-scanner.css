@@ -1,16 +1,43 @@
 .secupress-row-actions{font-size:13px}
 .secupress-dashicon-color-good:before{color:#88BA0E}
+.secupress-dashicon-color-warning:before{color:#FFA500}
 .secupress-dashicon-color-bad:before{color:#D73838}
-.secupress-dashicon-color-warning:before{color:#FFA500   }
+.secupress-dashicon-color-notscannedyet:before{color:#555}
 .status-good .fixit, .status-notscannedyet .fixit{display:none}
-.helpme a:focus{box-shadow:none;outline:0}
 #table-secupress-tests ul{list-style:disc outside;}
 th.secupress-type{width:100px}
 th.secupress-status{width:150px}
 .dashicons-external{font-size:1.2em}
 #table-secupress-tests th{padding:5px}
 .secupress-row-actions > span:not(:last-child):after{content:"|"}
-th.secupress-check{width:1%}
+th.secupress-check{width:1%;padding:4px 0 0 2px}
 .form-table td{vertical-align:top}
 .secupress-details .dashicons-editor-help{vertical-align:top;line-height:0.7em}
 .secupress-result-list{margin:0px}
+.table-prio-high .alternate-1{background-color:#FDD}
+.table-prio-high .alternate-2{background-color:#FEE}
+.table-prio-medium .alternate-1{background-color:#FFFFDF}
+.table-prio-medium .alternate-2{background-color:#FFFFED}
+.table-prio-low .alternate-1{background-color:#E1F4FD}
+.table-prio-low .alternate-2{background-color:#EFF9FD}
+.form-table th{line-height:1em;padding:10px 0px 10px 2px;}
+.secupress-postbox{width:48%;margin:0 10px 10px 0;display:inline-block;vertical-align:top}
+.secupress-postbox .hndle{line-height:1em;padding:0px 0px 5px 10px}
+.percent{font-size:35px;font-weight:bold;position:relative;top:80px}
+.letter{display:block;position:relative;top:30px;font-size:100px;font-family:Arial Black;}
+.letter.lA{color:#88BA0E}
+.letter.lB{color:#C4B007}
+.letter.lC{color:#FFA500}
+.letter.lD{color:#EB6F1C}
+.letter.lE{color:#D73838}
+.letter.lF{color:#c32222}
+.score_info{width:69%;height:300px;display:inline-block}
+.score_info2{display:inline-block;width:30%;vertical-align:top;padding-left:50px}
+.score_results{position:relative;top:100px;display:inline-block}
+.mini{font-size:12px;line-height:1.7em}
+.dashicons-arrow-up-alt2{color:#88BA0E}
+.dashicons-arrow-down-alt2{color:#D73838}
+.square-filter{padding:0}
+.square-filter span{cursor:pointer;min-width:100px; display: inline-block; border: 1px solid #CCC; text-align: center; padding: 10px 5px; background: #FFF; margin: 10px -4px 0 0;}
+.square-filter span:hover{background: #eee;}
+.square-filter span.active{background: #eef;font-weight:bold}

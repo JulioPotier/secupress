@@ -3,22 +3,27 @@ defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
 
 add_action( 'admin_post_secupress_scanner', '__secupress_scanner_ajax' );
 add_action( 'wp_ajax_secupress_scanner', '__secupress_scanner_ajax' );
-function __secupress_scanner_ajax( $this_test = null, $nonce = null, $action = null ) {
+function __secupress_scanner_ajax( $this_test = null, $nonce = null, $action = null, $prio = null ) { //// fwd compat
 	$this_test = isset( $_GET['test'] ) ? $_GET['test'] : $this_test;
 	$nonce = isset( $_GET['_wpnonce'] ) ? $_GET['_wpnonce'] : $nonce;
 	$action = isset( $_GET['action'] ) ? $_GET['action'] : $action;
-	$results = get_option( SECUPRESS_SCAN_SLUG );
-	unset( $results[ $test_name ] );
-	if ( ! empty( $this_test ) && ! empty( $nonce ) && ! empty( $action ) ) {
+	$prio_key = isset( $_GET['prio'] ) ? $_GET['prio'] : $prio;
+	if ( ! empty( $this_test ) && ! empty( $nonce ) && ! empty( $action ) && ! empty( $prio_key ) ) {
 		wp_verify_nonce( $nonce, 'secupress_scanner_' . $this_test ) or wp_nonce_ays('');
+		unset( $results[ $test_name ] );
 		require_once( SECUPRESS_FUNCTIONS_PATH . '/scanners-functions.php' );
 		require_once( SECUPRESS_FUNCTIONS_PATH . '/secupress-scanner.php' );
-		foreach( $secupress_tests as $test_name => $test ) {
+		foreach( $secupress_tests[ $prio_key ] as $test_name => $test ) {
 			@set_time_limit( 0 );
 			if ( ( $this_test == null || $this_test == 'all' || $this_test == $test_name ) && is_callable( array( 'SecuPress_Scanners_Functions', $test_name ) ) ) {
 				ob_start();
 				$response = call_user_func( array( 'SecuPress_Scanners_Functions', $test_name ) );
+////				if ( time() % 2 == 0 ) {
+//					$response = array( 'status' => 'Good' );
+//				}
+
 				ob_end_flush();
+				$results = array();
 				$results[ $test_name ]['status'] = secupress_status( $response['status'] );
 				$results[ $test_name ]['class']  = sanitize_key( $response['status'] );
 				if ( isset( $test[ 'msg_' . sanitize_key( $response['status'] ) ] ) ) {
@@ -26,9 +31,15 @@ function __secupress_scanner_ajax( $this_test = null, $nonce = null, $action = n
 				} elseif ( isset( $response['message'] ) ) {
 					$results[ $test_name ]['message'] = $response['message'];
 				}
+				update_option( SECUPRESS_SCAN_SLUG, array_merge( $results, array_filter( (array) get_option( SECUPRESS_SCAN_SLUG ) ) ) );
+				$times = (array) get_option( SECUPRESS_SCAN_TIMES );
+				$counts = secupress_get_scanner_counts();
+				$percent = floor( $counts['good'] * 100 / $counts['total'] );
+				$times[] = array( 'grade' => $counts['grade'], 'percent' => $percent, 'time' => time() );
+				$times = array_filter( array_slice( $times , -5 ) );
+				update_option( SECUPRESS_SCAN_TIMES, $times );
 			}
 		}
-		update_option( SECUPRESS_SCAN_SLUG, array_merge( $results, array( 'last_run' => current_time( 'timestamp', true ), 'version' => SECUPRESS_VERSION ) ) );
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			wp_send_json_success( $results );
 		} else {
@@ -65,14 +76,37 @@ function __secupress_settings_action_links( $actions ) {
 
 
 /**
- * Add the CSS and JS files for SecuPress options page
+ * Add the CSS and JS files for SecuPress scanners page
  *
  * @since 1.0
  */
-add_action( 'admin_print_styles-secupress_page_secupress_scanner', '__secupress_add_admin_css_js' );
-function __secupress_add_admin_css_js() {
+add_action( 'admin_print_styles-secupress_page_secupress_scanner', '__secupress_scanner_add_admin_css_js' );
+function __secupress_scanner_add_admin_css_js() {
+	$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 	wp_enqueue_script( 'secupress-scanner-js', SECUPRESS_ADMIN_JS_URL . 'secupress-scanner.js', null, SECUPRESS_VERSION, true );
+	wp_enqueue_script( 'secupress-chartjs', SECUPRESS_ADMIN_JS_URL . 'Chart' . $suffix . '.js', null, '1.0.2.1', true );
+	wp_enqueue_script( 'jquery-timeago', SECUPRESS_ADMIN_JS_URL . 'jquery.timeago.js', null, '1.4.1', true );
 	wp_enqueue_style( 'secupress-scanner-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-scanner.css', null, SECUPRESS_VERSION );
+	$counts = secupress_get_scanner_counts();
+	wp_localize_script( 'secupress-chartjs', 'SecuPressi18nChart',
+		array(
+			'good' => array( 'value' => $counts['good'], 'text' => __( 'Good', 'secupress' ) ),
+			'warning' => array( 'value' => $counts['warning'], 'text' => __( 'Warning', 'secupress' ) ),
+			'bad' => array( 'value' => $counts['bad'], 'text' => __( 'Bad', 'secupress' ) ),
+			'notscannedyet' => array( 'value' => $counts['notscannedyet'], 'text' => __( 'Not Scanned Yet', 'secupress' ) ),
+		)
+	);
+}
+
+/**
+ * Add the CSS and JS files for SecuPress modules page
+ *
+ * @since 1.0
+ */
+add_action( 'admin_print_styles-secupress_page_secupress_modules', '__secupress_modules_add_admin_css_js' );
+function __secupress_modules_add_admin_css_js() {
+	wp_enqueue_script( 'secupress-modules-js', SECUPRESS_ADMIN_JS_URL . 'secupress-modules.js', null, SECUPRESS_VERSION, true );
+	wp_enqueue_style( 'secupress-modules-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-modules.css', null, SECUPRESS_VERSION );
 }
 
 

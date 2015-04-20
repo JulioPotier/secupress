@@ -2,6 +2,35 @@
 defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
 
 /**
+ * Get SecuPress scanner counter(s)
+ *
+ * @since 1.0
+ */
+function secupress_get_scanner_counts( $type = '' ) {
+	include( SECUPRESS_FUNCTIONS_PATH . '/secupress-scanner.php' );
+	global $secupress_tests;
+	$scanners = get_option( SECUPRESS_SCAN_SLUG );
+	$array_fill_keys = array_fill_keys( array( 'good', 'warning', 'bad' ), 0 );
+	$array_count_values = false !== $scanners ? array_count_values( wp_list_pluck( $scanners, 'class' ) ) : array();
+	$counts = array_merge( $array_fill_keys, $array_count_values );
+	$counts['notscannedyet'] = count( $secupress_tests['high'] ) + count( $secupress_tests['medium'] ) + count( $secupress_tests['low'] ) - array_sum( $counts );
+	$counts['total'] = count( $secupress_tests['high'] ) + count( $secupress_tests['medium'] ) + count( $secupress_tests['low'] );
+	$percent = floor( $counts['good'] * 100 / $counts['total'] );
+	switch( $percent ) {
+		case $percent >= 90: $counts['grade'] = 'A'; break;
+		case $percent >= 80: $counts['grade'] = 'B'; break;
+		case $percent >= 70: $counts['grade'] = 'C'; break;
+		case $percent >= 60: $counts['grade'] = 'D'; break;
+		case $percent >= 50: $counts['grade'] = 'E'; break;
+		default: $counts['grade'] = 'F'; break;
+	}
+	if ( isset( $counts[ $type ] ) ) {
+		return $counts[ $type ];
+	}
+	return $counts;
+}
+
+/**
  * Add SecuPress informations into USER_AGENT
  *
  * @since 1.0
@@ -155,4 +184,13 @@ function __secupress_add_own_ua( $r, $url ) {
 function secupress_admin_url( $page, $params = '' )
 {
 	return admin_url( 'admin.php?' . $params . '&page=secupress_' . $page, 'admin' );
+}
+
+add_filter( 'registration_errors', '__secupress_registration_test_errors', PHP_INT_MAX, 2 );
+function __secupress_registration_test_errors( $errors, $sanitized_user_login ) {
+	if ( ! $errors->get_error_code() && strpos( $sanitized_user_login, 'secupress' ) !== false ) {
+		set_transient( 'secupress_registration_test', 'failed', HOUR_IN_SECONDS );
+		$errors->add( 'secupress_registration_test', 'secupress_registration_test_failed' );
+	}
+	return $errors;
 }
