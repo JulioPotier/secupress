@@ -4,6 +4,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
 abstract class SecuPress_Scanners_Functions {
 
+	static public $remote_args = array( 'redirection' => 0 );
 	// internal functions
 	static public function set_status( &$data, $status ) {
 		if ( ( ! isset( $data['status'] ) || 'Good' == $data['status'] ) ||
@@ -72,16 +73,17 @@ abstract class SecuPress_Scanners_Functions {
 	static public function bad_url_access() {
 		$return = array();
 		self::set_status( $return, 'Good' );
-
+		remove_all_filters( 'site_url' ); // avoid plugin's hooks of course
+		remove_all_filters( 'admin_url' ); // avoid plugin's hooks of course
 		$urls = array( 	admin_url( 'install.php' ),
-						admin_url( 'upgrade.php' ),
-						site_url( 'wp-login.php', 'login' ),
-						home_url( 'php.ini' ),
-						admin_url( 'menu-header.php' ),
-						admin_url( 'includes/menu.php' ),
-					);
+			//admin_url( 'upgrade.php' ),
+			site_url( 'wp-login.php', 'login' ),
+			home_url( 'php.ini' ),
+			admin_url( 'menu-header.php' ),
+			admin_url( 'includes/menu.php' ),
+		);
 		foreach ( $urls as $url ) {
-			$response = wp_remote_get( $url );
+			$response = wp_remote_get( $url, self::$remote_args );
 			if ( ! is_wp_error( $response ) ) {
 				if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
 					self::set_status( $return, 'Bad' );
@@ -100,34 +102,42 @@ abstract class SecuPress_Scanners_Functions {
 		$return = array();
 
 		$ini_values = array(    'register_globals' => false, 'display_errors' => false, 'expose_php' => false,
-								'allow_url_include' => false, 'safe_mode' => false, 'open_basedir' => '!empty',
-								'allow_url_fopen' => false, 'log_errors' => 1, 'error_log' => '!empty',
-								'post_max_size' => '<64M', 'upload_max_filezize' => '<64M', 'memory_limit' => '<1024M',
-								'disable_functions' => '!empty', 'auto_append_file' => false, 'auto_prepend_file' => false
-						);
+			'allow_url_include' => false, 'safe_mode' => false, 'open_basedir' => '!empty',
+			'log_errors' => 1, 'error_log' => '!empty',
+			'post_max_size' => '<64M', 'upload_max_filezize' => '<64M', 'memory_limit' => '<1024M',
+			'disable_functions' => '!empty', 'auto_append_file' => false, 'auto_prepend_file' => false
+		);
 		foreach( $ini_values as $value => $compare ) {
 			$check = ini_get( $value );
 			switch( $compare ) {
-				case '!empty' && '' == ( $check ) :
-					self::set_status( $return, 'Bad' );
-					self::set_message( $return, sprintf( __( '<code>%1$s</code> shouldn\'t be empty.', 'secupress' ), $value ) );
-				break;
-				case 1 && ! $check :
-					self::set_status( $return, 'Bad' );
-					self::set_message( $return, sprintf( __( '<code>%1$s</code> should be set on %2$s.', 'secupress' ), $value, '<code>On</code>' ) );
-				break;
-				case '<' === $compare[0] :
-					$int = substr( $compare, 1, strlen( $compare ) - 2 );
-					$check = substr( $check, 0, strlen( $check ) - 2 ) <= $int;
+				case '!empty':
+					if ( '' == ( $check ) ) {
+						self::set_status( $return, 'Bad' );
+						self::set_message( $return, sprintf( __( '<code>%1$s</code> shouldn\'t be empty.', 'secupress' ), $value ) );
+					}
+					break;
+				case 1:
 					if ( ! $check ) {
 						self::set_status( $return, 'Bad' );
-						self::set_message( $return, sprintf( __( '<code>%1$s</code> should be set on %2$s.', 'secupress' ), $value, str_replace( array( '<', 'M' ), array( '&lt; <code>', 'M</code>' ), $compare ) ) );
+						self::set_message( $return, sprintf( __( '<code>%1$s</code> should be set on %2$s.', 'secupress' ), $value, '<code>On</code>' ) );
 					}
-				break;
-				case false && $check :
-					self::set_status( $return, 'Bad' );
-					self::set_message( $return, sprintf( __( '<code>%1$s</code> should be set on %2$s.', 'secupress' ), $value, '<code>Off</code>' ) );
-				break;
+					break;
+				case false:
+					if ( $check ) {
+						self::set_status( $return, 'Bad' );
+						self::set_message( $return, sprintf( __( '<code>%1$s</code> should be set on %2$s.', 'secupress' ), $value, '<code>Off</code>' ) );
+					}
+					break;
+				default:
+					if ( '<' === $compare[0] ) {
+						$int = substr( $compare, 1, strlen( $compare ) - 2 );
+						$check = substr( $check, 0, strlen( $check ) - 2 ) <= $int;
+						if ( ! $check ) {
+							self::set_status( $return, 'Bad' );
+							self::set_message( $return, sprintf( __( '<code>%1$s</code> should be set on %2$s.', 'secupress' ), $value, str_replace( array( '<', 'M' ), array( '&lt; <code>', 'M</code>' ), $compare ) ) );
+						}
+					}
+					break;
 			}
 		}
 
@@ -204,6 +214,20 @@ abstract class SecuPress_Scanners_Functions {
 		if ( count( $ids ) ) {
 			self::set_status( $return, 'Bad' );
 			self::set_message( $return, sprintf( __( '<b>%d</b> posts have an <b>administrator</b> as an author.', 'secupress' ), count( $ids ) ) );
+		}
+
+		return $return;
+	}
+
+	static function too_many_admins(){
+		$return = array();
+		self::set_status( $return, 'Good' );
+
+		// are the administrators authors too? (i hope not)
+		$ids = get_users( array( 'fields' => 'ids', 'role' => 'administrator' ) );
+		if ( count( $ids ) > 3 ) {
+			self::set_status( $return, 'Bad' );
+			self::set_message( $return, sprintf( __( '<b>%d administrators</b> found on this site.', 'secupress' ), count( $ids ) ) );
 		}
 
 		return $return;
@@ -305,10 +329,6 @@ abstract class SecuPress_Scanners_Functions {
 			$current = new stdClass;
 		}
 
-		set_site_transient( 'update_plugins', $current );
-
-		wp_update_plugins();
-
 		$current = get_site_transient( 'update_plugins' );
 
 		$plugin_updates = array();
@@ -323,9 +343,6 @@ abstract class SecuPress_Scanners_Functions {
 			$current = new stdClass;
 		}
 
-		set_site_transient( 'update_themes', $current );
-		wp_update_themes();
-
 		$current = get_site_transient( 'update_themes' );
 
 		$theme_updates = array();
@@ -334,17 +351,17 @@ abstract class SecuPress_Scanners_Functions {
 		}
 
 		if ( isset( $latest_core_update->response ) && ( $latest_core_update->response == 'upgrade' ) ||
-		     $plugin_updates || $theme_updates
+			$plugin_updates || $theme_updates
 		) {
 			self::set_status( $return, 'Bad' );
-			if ( isset( $latest_core_update->response ) && ( $latest_core_update->response == 'upgrade' ) ) {
+			if ( isset( $latest_core_update->response ) && ( 'upgrade' == $latest_core_update->response ) ) {
 				self::set_message( $return, __( 'WordPress <b>core</b> is not up to date.', 'secupress' ) );
 			}
 			if ( count( $plugin_updates ) ) {
-				self::set_message( $return, sprintf( _n( '<b>%1$d</b> plugin isn\'t up to date: <code>%2$s</code>.', '<b>%1$d</b> plugins are not up to date: <code>%2$s</code>.', count( $plugin_updates ), 'secupress' ), count( $plugin_updates ), implode( '</code>, <code>', $plugin_updates ) ) );
+				self::set_message( $return, sprintf( _n( '<b>%1$d</b> plugin isn\'t up to date: <code>%2$s</code>.', '<b>%1$d</b> plugins aren\'t up to date: <code>%2$s</code>.', count( $plugin_updates ), 'secupress' ), count( $plugin_updates ), implode( '</code>, <code>', $plugin_updates ) ) );
 			}
 			if ( count( $theme_updates ) ) {
-				self::set_message( $return, sprintf( _n( '<b>%1$d</b> theme isn\'t up to date: <code>%2$s</code>', '<b>%1$d</b> themes are not up to date: <code>%2$s</code>', count( $theme_updates ), 'secupress' ), count( $theme_updates ), implode( '</code>, <code>', $theme_updates ) ) );
+				self::set_message( $return, sprintf( _n( '<b>%1$d</b> theme isn\'t up to date: <code>%2$s</code>', '<b>%1$d</b> themes aren\'t up to date: <code>%2$s</code>', count( $theme_updates ), 'secupress' ), count( $theme_updates ), implode( '</code>, <code>', $theme_updates ) ) );
 			}
 		}
 
@@ -366,35 +383,43 @@ abstract class SecuPress_Scanners_Functions {
 
 		// plugins no longer in directory
 		// http://plugins.svn.wordpress.org/no-longer-in-directory/trunk/
-		$file = SECUPRESS_INC_PATH . 'data/no-longer-in-directory-plugin-list.txt';
-		if ( is_readable( $file ) ) {
-			$no_longer_in_directory_plugin_list = array_flip( array_map( 'chop', file( $file ) ) );
+		$plugin_list = SECUPRESS_INC_PATH . 'data/no-longer-in-directory-plugin-list.txt';
+		if ( is_readable( $plugin_list ) ) {
+			$no_longer_in_directory_plugin_list = array_flip( array_map( 'chop', file( $plugin_list ) ) );
 			$all_plugins = array_combine( array_map( 'dirname', array_keys( get_plugins() ) ), get_plugins() );
 			$check = array_intersect_key( $all_plugins, $no_longer_in_directory_plugin_list );
 			if ( count( $check ) ) {
+				$number = _n( '<b>%d</b> plugin is <b>no longer</b> in the WordPress directory: <code>%s</code>', '<b>%d</b> plugins are <b>no longer</b> in the WordPress directory: <code>%s</code>', count( $count ), 'secupress' );
 				self::set_status( $return, 'Bad' );
-				self::set_message( $return, sprintf( __( 'These plugins are <b>no longer</b> in the WordPress directory: <code>%s</code>', 'secupress' ), implode( '</code>, <code>', wp_list_pluck( $check, 'Name' ) ) ) );
+				self::set_message( $return, sprintf( $number, count( $check ), implode( '</code>, <code>', wp_list_pluck( $check, 'Name' ) ) ) );
 			}
 		} else {
 			self::set_status( $return, 'Warning' );
-			self::set_message( $return, sprintf( __( 'Error, could not read <code>%s</code>.', 'secupress' ), SECUPRESS_INC_PATH . 'data/no-longer-in-directory-plugin-list.txt' ) );
+			self::set_message( $return, sprintf( __( 'Error, could not read <code>%s</code>.', 'secupress' ), $plugin_list ) );
 		}
 
 		// plugins not updated in over 2 years
 		// http://plugins.svn.wordpress.org/no-longer-in-directory/trunk/
-		$file = SECUPRESS_INC_PATH . 'data/not-updated-in-over-two-years-plugin-list.txt';
-		if ( is_readable( $file ) ) {
-			$no_longer_in_directory_plugin_list = array_flip( array_map( 'chop', file( $file ) ) );
+		$plugin_list = SECUPRESS_INC_PATH . 'data/not-updated-in-over-two-years-plugin-list.txt';
+		if ( is_readable( $plugin_list ) ) {
+			$no_longer_in_directory_plugin_list = array_flip( array_map( 'chop', file( $plugin_list ) ) );
 			$all_plugins = array_combine( array_map( 'dirname', array_keys( get_plugins() ) ), get_plugins() );
 			$check = array_intersect_key( $all_plugins, $no_longer_in_directory_plugin_list );
 			if ( count( $check ) ) {
+				$number = _n( '<b>%d</b> plugin haven\'t been updated <b>since 2 years</b> at least: <code>%s</code>', '<b>%d</b> plugins haven\'t been updated <b>since 2 years</b> at least: <code>%s</code>', count( $count ), 'secupress' );
 				self::set_status($return, 'Bad' );
-				self::set_message($return, sprintf(__('These plugins haven\'t been updated <b>since 2 years</b> at least: <code>%s</code>', 'secupress'), implode('</code>, <code>', wp_list_pluck( $check, 'Name' ) ) ) );
+				self::set_message($return, sprintf( $number, count( $check ), implode('</code>, <code>', wp_list_pluck( $check, 'Name' ) ) ) );
 			}
 		} else {
 			self::set_status($return, 'Warning' );
-			self::set_message( $return, sprintf( __( 'Error, could not read <code>%s</code>.', 'secupress' ), SECUPRESS_INC_PATH . 'data/no-longer-in-directory-plugin-list.txt' ) );
+			self::set_message( $return, sprintf( __( 'Error, could not read <code>%s</code>.', 'secupress' ), $plugin_list ) );
 
+		}
+
+		// check hello.php
+		if ( file_exists( dirname( plugin_dir_path( SECUPRESS_FILE ) ) . '/hello.php' ) ) {
+			self::set_status( $return, 'Bad' );
+			self::set_message( $return, __( 'You should delete <code>hello.php</code> from your plugin directory.', 'secupress' ) );
 		}
 
 		return $return;
@@ -408,15 +433,33 @@ abstract class SecuPress_Scanners_Functions {
 		// inactive plugins
 		$check = array_intersect_key( get_plugins(), array_flip( array_filter( array_keys( get_plugins() ), 'is_plugin_inactive' ) ) );
 		if ( count( $check ) ) {
+			$number = _n( '<b>%d deactivated plugin</b>, if you don\'t need it, delete it: <code>%s</code>', '<b>%d deactivated plugins</b>, if you don\'t need them, delete them: <code>%s</code>', count( $check ), 'secupress' );
 			self::set_status( $return, 'Bad' );
-			self::set_message( $return, sprintf( __( 'There is some <b>deactivated plugins</b>, if you don\'t need them, delete them: <code>%s</code>', 'secupress' ), implode( '</code>, <code>', wp_list_pluck( $check, 'Name' ) ) ) );
+			self::set_message( $return, sprintf( $number, count( $check ), implode( '</code>, <code>', wp_list_pluck( $check, 'Name' ) ) ) );
 		}
 
 		// inactive themes
-		$check = array_diff_key( wp_get_themes(), array( wp_get_theme() ) );
+		$check = array_diff( wp_list_pluck( wp_get_themes(), 'Name' ), array( wp_get_theme()->Name ) );
 		if ( count( $check ) ) {
+			$number = _n( '<b>%d deactivated theme</b>, if you don\'t need it, delete it: <code>%s</code>', '<b>%d deactivated themes</b>, if you don\'t need them, delete them: <code>%s</code>', count( $check ), 'secupress' );
 			self::set_status( $return, 'Bad' );
-			self::set_message( $return, sprintf( __( 'There is some <b>deactivated themes</b>, if you don\'t need them, delete them: <code>%s</code>', 'secupress' ), implode( '</code>, <code>', wp_list_pluck( $check, 'Name' ) ) ) );
+			self::set_message( $return, sprintf( $number, count( $check ), implode( '</code>, <code>', $check ) ) );
+		}
+
+		return $return;
+
+	}
+
+	static public function auto_update_check() {
+
+		$return = array();
+		self::set_status( $return, 'Good' );
+
+		require_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
+		$check = (bool)  WP_Automatic_Updater::is_disabled();
+		if ( $check ) {
+			self::set_status( $return, 'Bad' );
+			self::set_message( $return, __( 'Your installation <b>can NOT auto update</b> itself.', 'secupress' ) );
 		}
 
 		return $return;
@@ -449,29 +492,37 @@ abstract class SecuPress_Scanners_Functions {
 
 		// other constants
 		$constants = array( 'WP_DEBUG' => false, 'SCRIPT_DEBUG' => false, 'WP_DEBUG_LOG' => 1, 'RELOCATE' => false,
-	                        'DIEONDBERROR' => false, 'WP_DEBUG_DISPLAY' => false, 'ALLOW_UNFILTERED_UPLOADS' => false,
-	                        'FORCE_SSL_ADMIN' => 1, 'FORCE_SSL_LOGIN' => 1, 'DISALLOW_FILE_EDIT' => 1,
-	                        'WP_ALLOW_REPAIR' => '!isset', 'ERRORLOGFILE' => '!empty', 'DISALLOW_UNFILTERED_HTML' => 1,
-							'FS_CHMOD_FILE' => 644, 'FS_CHMOD_DIR' => 755,
-						);
+			'DIEONDBERROR' => false, 'WP_DEBUG_DISPLAY' => false, 'ALLOW_UNFILTERED_UPLOADS' => false,
+			'FORCE_SSL_ADMIN' => 1, 'FORCE_SSL_LOGIN' => 1, 'DISALLOW_FILE_EDIT' => 1,
+			'WP_ALLOW_REPAIR' => '!isset', 'ERRORLOGFILE' => '!empty', 'DISALLOW_UNFILTERED_HTML' => 1,
+			'FS_CHMOD_FILE' => 644, 'FS_CHMOD_DIR' => 755,
+		);
 		foreach( $constants as $value => $compare ) {
 			$check = defined ( $value ) ? constant( $value ) : null;
 			switch( $compare ) {
-				case '!empty' && '' == ( $check ) :
-					self::set_status( $return, 'Bad' );
-					self::set_message( $return, sprintf( __( '<code>%1$s</code> shouldn\'t be empty.', 'secupress' ), $value ) );
+				case '!empty':
+					if ( '' == ( $check ) ) {
+						self::set_status( $return, 'Bad' );
+						self::set_message( $return, sprintf( __( '<code>%1$s</code> shouldn\'t be empty.', 'secupress' ), $value ) );
+					}
 					break;
-				case '!isset' && ! is_null( $check ) :
-					self::set_status( $return, 'Bad' );
-					self::set_message( $return, sprintf( __( '<code>%1$s</code> shouldn\'t be set.', 'secupress' ), $value ) );
+				case '!isset':
+					if ( ! is_null( $check ) ) {
+						self::set_status( $return, 'Bad' );
+						self::set_message( $return, sprintf( __( '<code>%1$s</code> shouldn\'t be set.', 'secupress' ), $value ) );
+					}
 					break;
-				case 1 && ! $check :
-					self::set_status( $return, 'Bad' );
-					self::set_message( $return, sprintf( __( '<code>%1$s</code> should be set on %2$s.', 'secupress' ), $value, '<code>true</code>' ) );
+				case 1:
+					if ( ! $check ) {
+						self::set_status( $return, 'Bad' );
+						self::set_message( $return, sprintf( __( '<code>%1$s</code> should be set on %2$s.', 'secupress' ), $value, '<code>true</code>' ) );
+					}
 					break;
-				case false && $check:
-					self::set_status( $return, 'Bad' );
-					self::set_message( $return, sprintf( __( '<code>%1$s</code> should be set on %2$s.', 'secupress' ), $value, '<code>false</code>' ) );
+				case false:
+					if ( $check ) {
+						self::set_status( $return, 'Bad' );
+						self::set_message( $return, sprintf( __( '<code>%1$s</code> should be set on %2$s.', 'secupress' ), $value, '<code>false</code>' ) );
+					}
 					break;
 				default:
 					$check = decoct( $check ) <= $compare;
@@ -491,15 +542,15 @@ abstract class SecuPress_Scanners_Functions {
 		self::set_status( $return, 'Good' );
 		$_wp_upload_dir = wp_upload_dir();
 		$files = array(	secupress_find_wpconfig_path() 	=> 444,
-						get_home_path() 				=> 755,
-						get_home_path() . 'wp-admin/' 	=> 755,
-						get_home_path() . 'wp-includes/'=> 755,
-						WP_CONTENT_DIR 					=> 755,
-						get_theme_root() 				=> 755,
-						plugin_dir_path( SECUPRESS_FILE )=> 755,
-						$_wp_upload_dir['basedir'] 		=> 755,
-						$_wp_upload_dir['basedir'] 		=> 755,
-					);
+			get_home_path() . '/'			=> 755,
+			get_home_path() . 'wp-admin/' 	=> 755,
+			get_home_path() . 'wp-includes/'=> 755,
+			WP_CONTENT_DIR 					=> 755,
+			get_theme_root() 				=> 755,
+			plugin_dir_path( SECUPRESS_FILE )=> 755,
+			$_wp_upload_dir['basedir'] 		=> 755,
+			$_wp_upload_dir['basedir'] 		=> 755,
+		);
 		if ( $GLOBALS['is_apache'] ) {
 			$files[ get_home_path() . '.htaccess' ] = 444;
 		}
@@ -523,7 +574,7 @@ abstract class SecuPress_Scanners_Functions {
 		self::set_status( $return, 'Good' );
 
 		// Generator meta tag + php header
-		$response = wp_remote_get( home_url() );
+		$response = wp_remote_get( home_url(), self::$remote_args );
 		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response )) {
 			$html = wp_remote_retrieve_body( $response );
 			$head = wp_remote_retrieve_header( $response, 'x-powered-by' );
@@ -569,7 +620,7 @@ abstract class SecuPress_Scanners_Functions {
 		}
 
 		// Readme file
-		$response = wp_remote_get( home_url( 'readme.html' ) );
+		$response = wp_remote_get( home_url( 'readme.html' ), self::$remote_args );
 		if ( ! is_wp_error( $response ) ) {
 			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
 				self::set_status( $return, 'Bad' );
@@ -588,7 +639,7 @@ abstract class SecuPress_Scanners_Functions {
 		self::set_status( $return, 'Good' );
 
 		// Easter egg
-		$response = wp_remote_get( home_url( '/?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000' ) );
+		$response = wp_remote_get( home_url( '/?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000' ), self::$remote_args );
 		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) && $body = wp_remote_retrieve_body( $response ) ) {
 			if ( strpos( $body, '<h1>PHP Credits</h1>' ) > 0 && strpos( $body, '<title>phpinfo()</title>' ) > 0 ) {
 				self::set_status( $return, 'Bad' );
@@ -609,7 +660,7 @@ abstract class SecuPress_Scanners_Functions {
 		// Directory listing
 		$_wp_upload_dir = wp_upload_dir();
 		$base_url = $_wp_upload_dir['baseurl'];
-		$response = wp_remote_get( $base_url );
+		$response = wp_remote_get( $base_url, self::$remote_args );
 		if ( ! is_wp_error( $response ) ) {
 			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
 				self::set_status( $return, 'Bad' );
@@ -642,15 +693,13 @@ abstract class SecuPress_Scanners_Functions {
 		$return = $bad_keys = array();
 		self::set_status( $return, 'Good' );
 
-		$keys   = array(
-			'AUTH_KEY',
-			'SECURE_AUTH_KEY',
-			'LOGGED_IN_KEY',
-			'NONCE_KEY',
-			'AUTH_SALT',
-			'SECURE_AUTH_SALT',
-			'LOGGED_IN_SALT',
-			'NONCE_SALT',
+		$schemes = array( 'key', 'salt' );
+
+		$keys = array(
+			'auth',
+			'secure_auth',
+			'logged_in',
+			'nonce',
 		);
 
 		// get code only from wp-config.php
@@ -658,18 +707,30 @@ abstract class SecuPress_Scanners_Functions {
 		preg_match_all( '/' . implode( '|', $keys ) . '/', $wp_config_content, $matches );
 		$bad_keys['hardcoded'] = isset( $matches[0] ) ? reset( $matches ) : array();
 
-		foreach ( $keys as $key ) {
-			$constant = defined( $key ) ? constant( $key ) : null;
-			switch( true ) {
-				case is_null( $constant ) :
-					$bad_keys['notset'][] = $key;
-				break;
-				case 'put your unique phrase here' == $constant :
-					$bad_keys['default'][] = $key;
-				break;
-				case strlen( $constant ) < 64 :
-					$bad_keys['tooshort'][] = $key;
-				break;
+		foreach ( $schemes as $scheme ) {
+			foreach ( $keys as $key ) {
+
+				// Check constant
+				$check = sprintf( '%1$s_%2$s', strtoupper( $key ), strtoupper( $scheme ) );
+				$constant = defined( $check ) ? constant( $check ) : null;
+				switch( true ) {
+					case is_null( $constant ) :
+						$bad_keys['notset'][] = $check;
+						break;
+					case 'put your unique phrase here' == $constant :
+						$bad_keys['default'][] = $check;
+						break;
+					case strlen( $constant ) < 64 :
+						$bad_keys['tooshort'][] = $check;
+						break;
+				}
+
+				// Check DB
+				$check = sprintf( '%1$s_%2$s', strtolower( $key ), strtolower( $scheme ) );
+				$db = get_site_option( $check, null );
+				if ( ! is_null( $db ) ) {
+					$bad_keys['db'][] = $check;
+				}
 			}
 		}
 
@@ -677,12 +738,13 @@ abstract class SecuPress_Scanners_Functions {
 			self::set_status( $return, 'Bad' );
 			$bad_keys_text = '';
 			$l10n_reasons = array( 	'notset' 	=> __( 'Not Set:', 'secupress' ),
-									'default' 	=> __( 'Default Value:', 'secupress' ) ,
-									'tooshort' 	=> __( 'Too Short:', 'secupress' ) ,
-									'hardcoded'	=> __( 'Hardcoded:', 'secupress' ) ,
-								);
+				'default' 	=> __( 'Default Value:', 'secupress' ),
+				'tooshort' 	=> __( 'Too Short:', 'secupress' ),
+				'hardcoded'	=> __( 'Hardcoded:', 'secupress' ),
+				'db'		=> __( 'From DB:', 'secupress' ),
+			);
 			foreach ( $l10n_reasons as $reason => $l10n_text ) {
-				if ( '' != ( $bad_keys[ $reason ] ) ) {
+				if ( count( $bad_keys[ $reason ] ) ) {
 					$bad_keys_text .= '<p><b>&middot; ' . $l10n_text . '</b> <code>' . implode( '</code>, <code>', $bad_keys[ $reason ] ) . '</code>.</p>';
 				}
 			}
@@ -736,7 +798,7 @@ abstract class SecuPress_Scanners_Functions {
 		self::set_status( $return, 'Good' );
 
 		// bad user agent
-		$response = wp_remote_get( home_url(), array( 'user-agent' => '<script>' ) );
+		$response = wp_remote_get( home_url(), array_merge( self::$remote_args, array( 'user-agent' => '<script>' ) ) );
 		if ( ! is_wp_error( $response ) ) {
 			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
 				self::set_status( $return, 'Bad' );
@@ -755,12 +817,12 @@ abstract class SecuPress_Scanners_Functions {
 		self::set_status( $return, 'Good' );
 
 		// disallowed requests methods
-		$methods = array( 'TRACE', 'TRACK', 'HEAD', 'PUT', 'OPTIONS', 'DELETE', 'CONNECT', 'custom<thisisacustomrequestfromsecupress/>'/*////*/ );
+		$methods = array( 'TRACE', 'TRACK', 'HEAD', 'PUT', 'OPTIONS', 'DELETE', 'CONNECT' );
 		foreach ( $methods as $method ) {
-			$WP_HTTP = _wp_http_get_object();
-			$response = $WP_HTTP->request( home_url(), array( 'method' => $method ) );
+			//$WP_HTTP = _wp_http_get_object();
+			$response = wp_remote_request( home_url(), array( 'method' => $method, 'redirection' => false ) );
 			if ( ! is_wp_error( $response ) ) {
-				if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
+				if ( 200 === wp_remote_retrieve_response_code( $response ) && '' != wp_remote_retrieve_body( $response ) ) {
 					self::set_status( $return, 'Bad' );
 					self::set_message( $return, sprintf( __( 'Your website should block <code>%s</code> request method.', 'secupress' ), $method ) );
 				}
@@ -778,7 +840,7 @@ abstract class SecuPress_Scanners_Functions {
 
 		// Scanners and Breach
 		for ( $i = 0 ; $i < 3 ; ++$i ) {
-			$response = wp_remote_get( home_url( '/?' . uniqid( 'time=', true ) ) );
+			$response = wp_remote_get( home_url( '/?' . uniqid( 'time=', true ) ), self::$remote_args );
 			if ( ! is_wp_error( $response ) ) {
 				if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
 					$hashes[] = md5( wp_remote_retrieve_body( $response ) );
@@ -797,7 +859,7 @@ abstract class SecuPress_Scanners_Functions {
 		}
 
 		// Shellshock
-			// from http://plugins.svn.wordpress.org/shellshock-check/trunk/shellshock-check.php
+		// from http://plugins.svn.wordpress.org/shellshock-check/trunk/shellshock-check.php
 		if ( strtoupper( substr( PHP_OS, 0, 3 ) ) !== 'WIN' ) {
 
 			$env = array( 'SHELL_SHOCK_TEST' => '() { :;}; echo VULNERABLE' );
@@ -850,7 +912,7 @@ abstract class SecuPress_Scanners_Functions {
 		self::set_status( $return, 'Good' );
 
 		// too long URL
-		$response = wp_remote_get( home_url( '/?' . time() . '=' . wp_generate_password( 255, false ) ) );
+		$response = wp_remote_get( home_url( '/?' . time() . '=' . wp_generate_password( 255, false ) ), self::$remote_args );
 		if ( ! is_wp_error( $response ) ) {
 			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
 				self::set_status( $return, 'Bad' );
@@ -870,7 +932,19 @@ abstract class SecuPress_Scanners_Functions {
 		self::set_status( $return, 'Good' );
 
 		// SQLi attemps
-		$response = wp_remote_get( home_url( '/?' . time() . '=UNION+SELECT+FOO' ) );
+		$response = wp_remote_get( home_url( '/?' . time() . '=UNION+SELECT+FOO' ), self::$remote_args );
+		if ( ! is_wp_error( $response ) ) {
+			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
+				self::set_status( $return, 'Bad' );
+				self::set_message( $return, sprintf( __( 'Your website should block <b>malicious requests</b>.', 'secupress' ), 'HTTP' ) );
+			}
+		} else {
+			self::set_status( $return, 'Warning' );
+			self::set_message( $return, __( 'Unable to determine status of your homepage.', 'secupress' ) );
+		}
+
+		// wp-config.php access
+		$response = wp_remote_get( home_url( '/?' . time() . '=wp-config.php' ), self::$remote_args );
 		if ( ! is_wp_error( $response ) ) {
 			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
 				self::set_status( $return, 'Bad' );

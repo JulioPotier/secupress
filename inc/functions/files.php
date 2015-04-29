@@ -21,7 +21,7 @@ function secupress_rrmdir( $dir, $dirs_to_preserve = array() )
 	 *
 	 * @param string $dir File/Directory to delete
 	 * @param array $dirs_to_preserve Directories that should not be deleted
-	*/
+	 */
 	do_action( 'before_secupress_rrmdir', $dir, $dirs_to_preserve );
 
 	if ( ! is_dir( $dir ) ) {
@@ -29,7 +29,7 @@ function secupress_rrmdir( $dir, $dirs_to_preserve = array() )
 		return;
 	};
 
-    if ( $dirs = glob( $dir . '/*', GLOB_NOSORT ) ) {
+	if ( $dirs = glob( $dir . '/*', GLOB_NOSORT ) ) {
 
 		$keys = array();
 		foreach( $dirs_to_preserve as $dir_to_preserve ) {
@@ -56,7 +56,7 @@ function secupress_rrmdir( $dir, $dirs_to_preserve = array() )
 	 *
 	 * @param string $dir File/Directory to delete
 	 * @param array $dirs_to_preserve Dirs that should not be deleted
-	*/
+	 */
 	do_action( 'after_secupress_rrmdir', $dir, $dirs_to_preserve );
 }
 
@@ -153,9 +153,9 @@ function secupress_find_wpconfig_path()
 	$config_file = get_home_path() . 'wp-config.php';
 	$config_file_alt = dirname( get_home_path() ) . '/wp-config.php';
 
-	if ( file_exists( $config_file ) && is_writable( $config_file ) ) {
+	if ( file_exists( $config_file ) ) {
 		return $config_file;
-	} elseif ( @file_exists( $config_file_alt ) && is_writable( $config_file_alt ) && ! file_exists( dirname( get_home_path() ) . '/wp-settings.php' ) ) {
+	} elseif ( @file_exists( $config_file_alt ) && ! file_exists( dirname( get_home_path() ) . '/wp-settings.php' ) ) {
 		return $config_file_alt;
 	}
 

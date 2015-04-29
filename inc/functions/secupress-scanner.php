@@ -28,6 +28,14 @@ $secupress_tests = array(
             'type' => __('WordPress', 'secupress'),
         ),
 
+        'auto_update_check' => array(
+            'number_tests' => 4,
+            'title' => __('Check if your WordPress core can auto update minor versions.', 'secupress'),
+            'msg_good' => __('Your installation <b>can auto update</b> itself.', 'secupress'),
+            'details' => __('When a minor update comes, WordPress can auto update itself. By doing this, you\'re always up to date when a security flaw is doscovered.', 'secupress'),
+            'type' => __('WordPress', 'secupress'),
+        ),
+
         'bad_old_plugins' => array(
             'number_tests' => 2,
             'title' => __('Check if you\'re using old plugins that have been deleted from the repository or not updated since 2 years at least.', 'secupress'),
@@ -75,6 +83,7 @@ $secupress_tests = array(
             'details' => __('???.', 'secupress'),
             'type' => __('WordPress', 'secupress'),
         ),
+
         'wp_config_check' => array(
             'number_tests' => 18,
             'title' => __('Check your <code>wp-config.php</code> file, especially the PHP constants.', 'secupress'),
@@ -106,13 +115,6 @@ $secupress_tests = array(
             'details' => __('Since WordPress 2.0, about 500 files were deleted, let\'s check if you need a clean up.', 'secupress'),
             'type'
             => __('WordPress', 'secupress'),
-        ),
-        'bad_url_access' => array(
-            'number_tests' => 6, /// à completer
-            'title' => __('Check if your installation protect some sentitive URLs.', 'secupress'),
-            'msg_good' => __('Your installation protects some known as sentitive URLs.', 'secupress'),
-            'details' => __('Like <code>/readme.html</code>, some URLs can be used by hackers to get sentitive data from your site like <code>/wp-admin/install.php</code> or <code>/wp-admin/upgrade.php</code>.', 'secupress'),
-            'type' => __('WordPress', 'secupress'),
         ),
 
         'chmods' => array(
@@ -161,7 +163,7 @@ $secupress_tests = array(
 
         'bad_config_files' => array(
             'number_tests' => 1,
-            'title' => __('Check if your installation contains old or backed up <code>wp-config.php</code> files like <code>wp-config.bak</code>, <code></code>.old</code> etc.', 'secupress'),
+            'title' => __('Check if your installation contains old or backed up <code>wp-config.php</code> files like <code>wp-config.bak</code>, <code>.old</code> etc.', 'secupress'),
             'msg_good' => __('You don\'t have old <code>wp-config</code>.', 'secupress'),
             'details' => __('Some hackers will try to find old and backed up config files to try to steal them, avoid this attack and remove them!', 'secupress'),
             'type' => __('WordPress', 'secupress'),
@@ -183,6 +185,14 @@ $secupress_tests = array(
             'type' => __('WordPress', 'secupress'),
         ),
 
+        'too_many_admins' => array(
+            'number_tests' => 6,
+            'title' => __('Check if there is more than 3 administrators on this site.', 'secupress'),
+            'msg_good' => __('You have 3 or less administrator, fine.', 'secupress'),
+            'details' => __('Try to reduce the number of administrators to lower the risk that any account has been compromised.', 'secupress'),
+            'type' => __('WordPress', 'secupress'),
+        ),
+
         'bad_request_methods' => array(
             'number_tests' => 6,
             'title' => __('Check if bad request methods can reach your website.', 'secupress'),
@@ -193,7 +203,7 @@ $secupress_tests = array(
 
         'block_long_url' => array(
             'number_tests' => 6,
-            'title' => __('Check if long URL can rach your website (more than 255 chars).', 'secupress'),
+            'title' => __('Check if long URL can reach your website (more than 255 chars).', 'secupress'),
             'msg_good' => __('You are currently blocking bad request methods.', 'secupress'),
             'details' => __('////?', 'secupress'),
             'type' => __('WordPress', 'secupress'),

@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: SecuPress
-Plugin URI: http://secupress.fr
+Plugin URI: http://secupress.me
 Description: SecuPress Security, the best and simpler way to protect your websites.
 Author: SecuPress, WP Media
 Version: 1.0-alpha
@@ -18,7 +18,8 @@ define( 'SECUPRESS_VERSION'             , '1.0-alpha' );
 define( 'SECUPRESS_PRIVATE_KEY'         , false );
 define( 'SECUPRESS_SLUG'                , 'secupress_settings' );
 define( 'SECUPRESS_SCAN_SLUG'           , 'secupress_scanners' );
-define( 'SECUPRESS_WEB_MAIN'            , 'http://secupress.me' );
+define( 'SECUPRESS_SCAN_TIMES'          , 'secupress_scanners_times' );
+define( 'SECUPRESS_WEB_MAIN'            , 'http://secupress.me/' );
 define( 'SECUPRESS_BOT_URL'             , 'http://bot.secupress.me' );
 define( 'SECUPRESS_FILE'                , __FILE__ );
 define( 'SECUPRESS_PLUGIN_FILE'         , 'secupress/secupress.php' );

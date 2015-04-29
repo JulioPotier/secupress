@@ -23,7 +23,7 @@ function __secupress_scanner_ajax( $this_test = null, $nonce = null, $action = n
 //				}
 
 				ob_end_flush();
-				$results = array();
+				$results = array_filter( (array) get_option( SECUPRESS_SCAN_SLUG ) );
 				$results[ $test_name ]['status'] = secupress_status( $response['status'] );
 				$results[ $test_name ]['class']  = sanitize_key( $response['status'] );
 				if ( isset( $test[ 'msg_' . sanitize_key( $response['status'] ) ] ) ) {
@@ -31,7 +31,7 @@ function __secupress_scanner_ajax( $this_test = null, $nonce = null, $action = n
 				} elseif ( isset( $response['message'] ) ) {
 					$results[ $test_name ]['message'] = $response['message'];
 				}
-				update_option( SECUPRESS_SCAN_SLUG, array_merge( $results, array_filter( (array) get_option( SECUPRESS_SCAN_SLUG ) ) ) );
+				update_option( SECUPRESS_SCAN_SLUG, $results );
 				$times = (array) get_option( SECUPRESS_SCAN_TIMES );
 				$counts = secupress_get_scanner_counts();
 				$percent = floor( $counts['good'] * 100 / $counts['total'] );
