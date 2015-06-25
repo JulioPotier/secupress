@@ -20,6 +20,8 @@ th.secupress-check{width:1%;padding:4px 0 0 2px}
 .table-prio-medium .alternate-2{background-color:#FFFFED}
 .table-prio-low .alternate-1{background-color:#E1F4FD}
 .table-prio-low .alternate-2{background-color:#EFF9FD}
+.secupress-item-all.status-good.alternate-1{background-color:#E5FFDD}
+.secupress-item-all.status-good.alternate-2{background-color:#EFFFEE}
 .form-table th{line-height:1em;padding:10px 0px 10px 2px;}
 .secupress-postbox{width:48%;margin:0 10px 10px 0;display:inline-block;vertical-align:top}
 .secupress-postbox .hndle{line-height:1em;padding:0px 0px 5px 10px}

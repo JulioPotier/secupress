@@ -1,6 +1,52 @@
 jQuery(document).ready(function($)
 {
-	var zz = 'z';
+
+
+	var data = [
+		{
+			value: SecuPressi18nChart.good.value,
+			color:"#88BA0E",
+			highlight: "#97cc0f",
+			label: SecuPressi18nChart.good.text,
+			status: 'good',
+		},
+		{
+			value: SecuPressi18nChart.warning.value,
+			color: "#FFA500",
+			highlight: "#ffad14",
+			label: SecuPressi18nChart.warning.text,
+			status: 'warning',
+		},
+		{
+			value: SecuPressi18nChart.bad.value,
+			color: "#D73838",
+			highlight: "#db4848",
+			label: SecuPressi18nChart.bad.text,
+			status: 'bad',
+		},
+		{
+			value: SecuPressi18nChart.notscannedyet.value,
+			color: "#555",
+			highlight: "#5e5e5e",
+			label: SecuPressi18nChart.notscannedyet.text,
+			status: 'notscannedyet',
+		},
+	];
+	var donutId = document.getElementById("status_chart");
+	var SecuPressDonutChart = new Chart(donutId.getContext("2d")).Doughnut(data, {
+		animationEasing: 'easeInOutQuart',
+		onAnimationComplete: function()
+		{
+			this.showTooltip([this.segments[0]], true);
+		},
+		tooltipEvents: [],
+		showTooltips: true
+	});
+	donutId.onclick = function(evt){
+		var activePoints = SecuPressDonutChart.getSegmentsAtEvent(evt);
+		jQuery('.square-filter.statuses span[data-type="'+activePoints[0].status+'"]').click();
+	};
+
 	$('body').on( 'click','.button-secupress-scan, .secupress-scanit', function( e ) {
 		e.preventDefault();
 		if ( $( this ).hasClass( 'button-secupress-scan' ) ) {
@@ -11,12 +57,10 @@ jQuery(document).ready(function($)
 			var vars = href.split("?");
 			var vars = vars[1].split("&");
 			var pairs = new Array();
-			var status_points = { notscannedyet:'a', bad:'b', warning:'c', good:'d' };
 			for ( var i=0; i<vars.length; i++ ) {
 				var temp = vars[i].split("=");
 				pairs[ temp[0] ] = temp[1];
 			}
-			zz = zz + 'z';
 			$( '.secupress-item-'+pairs['test']+' .secupress-status').html('<img src="' + href.replace( 'admin-post.php', 'images/wpspin_light-2x.gif' ) + '" />').parent().css( { backgroundImage: 'repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(200, 200, 200, 0.1) 10px, rgba(200, 200, 200, 0.1) 20px)' } );
 			$.get( href.replace( 'admin-post.php', 'admin-ajax.php' ), function( r ) {
 				if( r.hasOwnProperty('success') && r.success ) {
@@ -57,9 +101,26 @@ jQuery(document).ready(function($)
 		}
 	});
 
-	$('body').on( 'click','.secupress-fixit', function( e ) {
+
+	$('body').on( 'click', '.secupress-fixit', function( e ) {
 		e.preventDefault();
-		alert('Not yet implemented ;p');
+		var href = $( this ).attr( 'href' );
+		var vars = href.split("?");
+		var vars = vars[1].split("&");
+		var pairs = new Array();
+		for ( var i=0; i<vars.length; i++ ) {
+			var temp = vars[i].split("=");
+			pairs[ temp[0] ] = temp[1];
+		}
+		var t = this;
+		$( t ).hide();
+		$( '.secupress-item-'+pairs['test']+' .secupress-status').parent().css( { backgroundImage: 'repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(200, 200, 200, 0.1) 10px, rgba(200, 200, 200, 0.1) 20px)' } );
+		$( t ).after('<img id="load-fix-' + pairs['test'] + '" src="' + href.replace( 'admin-post.php', 'images/wpspin_light.gif' ) + '" />');
+		$.get( href.replace( 'admin-post.php', 'admin-ajax.php' ), function( r ) {
+			$('.secupress-item-' + pairs['test'] + ' .secupress-scanit' ).click();
+			$('#load-fix-' + pairs['test']).remove();
+			$( t ).show();
+		})
 	});
 
 	$('body').on( 'click','.square-filter span', function( e ) {

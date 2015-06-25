@@ -15,8 +15,11 @@ abstract class SecuPress_Scanners_Functions {
 	}
 
 	static public function set_message( &$data, $message ) {
-		if ( '' == ( $message ) ) {
+		if ( '' == $message ) {
 			return;
+		}		
+		if ( ! isset( $data['message'] ) ) {
+			$data['message'] = '';
 		}
 		$data['message'] .= '<li>' . $message . '</li>';
 	}
@@ -251,7 +254,7 @@ abstract class SecuPress_Scanners_Functions {
 		wp_delete_user( $temp_id );
 		if( is_a( $check, 'WP_User' ) ) {
 			self::set_status( $return, 'Bad' );
-			self::set_message( $return, sprintf( __( 'Your login system is <b>not strong enought</b>, you need a <b>two authentication system</b>.', 'secupress' ), count( $ids ) ) );
+			self::set_message( $return, __( 'Your login system is <b>not strong enought</b>, you need a <b>two authentication system</b>.', 'secupress' ) );
 		}
 
 		return $return;
@@ -584,7 +587,7 @@ abstract class SecuPress_Scanners_Functions {
 			}
 			// find all Meta Tags
 			preg_match_all( '#<meta[^>]*[name="generator"]?[^>]*content="WordPress ' . get_bloginfo( 'version' ) . '"[^>]*[name="generator"]?[^>]*>#si', $html, $matches );
-			if ( count( $matches ) ) {
+			if ( count( array_filter( $matches ) ) ) {
 				self::set_status( $return, 'Bad' );
 				self::set_message( $return, __( 'The website displays the <b>WordPress version</b> in the homepage source code.', 'secupress' ) . ' (META)' );
 			}
@@ -593,26 +596,33 @@ abstract class SecuPress_Scanners_Functions {
 			self::set_message( $return, __( 'Unable to determine status of your homepage.', 'secupress' ) );
 		}
 
+
 		// meta generator is hidden, what about style loader now?
 		if ( 'Good' == $return['status'] ) {
 			$check = home_url( '/fake.css?ver=' . get_bloginfo( 'version' ) ) == apply_filters( 'style_loader_src', home_url( '/fake.css?ver=' . get_bloginfo( 'version' ) ), 'secupress' );
-			self::set_status( $return, 'Bad' );
-			self::set_message( $return, $check ? __( 'The website displays the <b>WordPress version</b> in the homepage source code.', 'secupress' ) . ' (CSS)' : '' );
+			if ( $check ) {
+				self::set_status( $return, 'Bad' );
+				self::set_message( $return, __( 'The website displays the <b>WordPress version</b> in the homepage source code.', 'secupress' ) . ' (CSS)' );
+			}
 		}
 
 		// meta generator is hidden, what about script loader now?
 		if ( 'Good' == $return['status'] ) {
 			$check = home_url( '/fake.js?ver=' . get_bloginfo( 'version' ) ) == apply_filters( 'script_loader_src', home_url( '/fake.js?ver=' . get_bloginfo( 'version' ) ), 'secupress' );
-			self::set_status( $return, 'Bad' );
-			self::set_message( $return, $check ? __( 'The website displays the <b>WordPress version</b> in the homepage source code.', 'secupress' ) . ' (JS)' : '' );
+			if ( $check ) {
+				self::set_status( $return, 'Bad' );
+				self::set_message( $return, __( 'The website displays the <b>WordPress version</b> in the homepage source code.', 'secupress' ) . ' (JS)' );
+			}
 		}
 
 		// meta generator is hidden, style and css files doesn't contains it neither, what about full source page?
 		if ( 'Good' == $return['status'] ) {
 			if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) { // response from the 1st call
 				$check = strpos( wp_remote_retrieve_body( $response ), get_bloginfo( 'version' ) );
-				self::set_status( $return, $check ? 'Bad' : 'Good' );
-				self::set_message( $return, $check ? __( 'The website displays the <b>WordPress version</b> in the homepage source code.', 'secupress' ) : '' );
+				if ( $check ) {
+					self::set_status( $return,'Bad' );
+					self::set_message( $return, __( 'The website displays the <b>WordPress version</b> in the homepage source code.', 'secupress' ) );
+				}
 			} else {
 				self::set_status( $return, 'Warning' );
 				self::set_message( $return, __( 'Unable to determine status of your homepage.', 'secupress' ) );
@@ -734,7 +744,7 @@ abstract class SecuPress_Scanners_Functions {
 			}
 		}
 
-		if ( count( $bad_keys ) ) {
+		if ( count( array_filter( $bad_keys ) ) ) {
 			self::set_status( $return, 'Bad' );
 			$bad_keys_text = '';
 			$l10n_reasons = array( 	'notset' 	=> __( 'Not Set:', 'secupress' ),

@@ -189,3 +189,69 @@ function secupress_warning_htaccess_permissions()
 
 	}
 }
+
+
+/**
+ * This warnings are displayed when a module has been activated/deactivated
+ *
+ * @since 1.0
+ */
+add_action( 'admin_notices', 'secupress_warning_module_activity' );
+function secupress_warning_module_activity()
+{
+	global $current_user;
+	/** This filter is documented in inc/admin-bar.php */
+	if ( current_user_can( apply_filters( 'secupress_capacity', 'administrator' ) ) ) {
+
+		$activated_modules = get_site_transient( 'secupress_module_activation_' . $current_user->ID );
+		$deactivated_modules = get_site_transient( 'secupress_module_deactivation_' . $current_user->ID );
+		delete_site_transient( 'secupress_module_activation_' . $current_user->ID );
+		delete_site_transient( 'secupress_module_deactivation_' . $current_user->ID );
+
+		if ( $activated_modules && count( $activated_modules ) ) {
+		?>
+			<div class="updated">
+				<p>
+					<b><?php echo SECUPRESS_PLUGIN_NAME; ?></b>: 
+					<?php echo sprintf( _n( 'This module have been activated: <ul><li>%s</li></ul>', 'These modules have been activated:<br><ul><li>%s</li></ul>', count( $activated_modules ), 'secupress' ), implode( '</li><li>', $activated_modules ) ); ?>
+				</p>
+			</div>
+		<?php
+		}
+
+		if ( $deactivated_modules && count( $deactivated_modules ) ) {
+		?>
+			<div class="updated">
+				<p>
+					<b><?php echo SECUPRESS_PLUGIN_NAME; ?></b>: 
+					<?php echo sprintf( _n( 'This module have been deactivated: <ul><li>%s</li></ul>', 'These modules have been deactivated:<br><ul><li>%s</li></ul>', count( $deactivated_modules ), 'secupress' ), implode( '</li><li>', $deactivated_modules ) ); ?>
+				</p>
+			</div>
+		<?php
+		}
+
+	}
+}
+
+/**
+ * This warnings are displayed when the backup email is not set
+ *
+ * @since 1.0
+ */
+add_action( 'admin_notices', 'secupress_warning_no_backup_email' );
+function secupress_warning_no_backup_email()
+{
+	global $current_user;
+	/** This filter is documented in inc/admin-bar.php */
+	if ( ! get_user_meta( $current_user->ID, 'backup_email', true ) ) {
+		?>
+		<div class="error">
+			<p>
+				<b><?php echo SECUPRESS_PLUGIN_NAME; ?></b>: 
+				<?php echo sprintf( __( 'Your <a href="%s#secupress_backup_email">Backup E-mail</a> isn\'t yet set. Please do it.', 'secupress' ), get_edit_profile_url() ); ?>
+			</p>
+		</div>
+		<?php
+	}
+}
+

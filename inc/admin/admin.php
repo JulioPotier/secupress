@@ -1,29 +1,47 @@
 <?php
 defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
 
+add_action( 'admin_post_secupress_fixit', '__secupress_fixit_ajax' );
+add_action( 'wp_ajax_secupress_fixit', '__secupress_fixit_ajax' );
+function __secupress_fixit_ajax() {
+	if ( isset( $_GET['prio'], $_GET['test'], $_GET['_wpnonce'] ) ) {
+		$this_test = $_GET['test'];
+		wp_verify_nonce( $_GET['_wpnonce'], 'secupress_fixit_' . $this_test ) or wp_nonce_ays( '' );
+		if ( function_exists( 'secupress_fix_' . $this_test ) ) {
+			ob_start();
+				$response = call_user_func( 'secupress_fix_' . $this_test );
+				// if ( time() % 2 == 0 ) {
+				// 	$response = array( 'status' => 'Good' );
+				// }
+
+			ob_end_flush();
+		}
+	}
+}
+
 add_action( 'admin_post_secupress_scanner', '__secupress_scanner_ajax' );
 add_action( 'wp_ajax_secupress_scanner', '__secupress_scanner_ajax' );
-function __secupress_scanner_ajax( $this_test = null, $nonce = null, $action = null, $prio = null ) { //// fwd compat
+function __secupress_scanner_ajax( $this_test = null, $prio = null ) {
 	$this_test = isset( $_GET['test'] ) ? $_GET['test'] : $this_test;
-	$nonce = isset( $_GET['_wpnonce'] ) ? $_GET['_wpnonce'] : $nonce;
-	$action = isset( $_GET['action'] ) ? $_GET['action'] : $action;
+	$nonce = isset( $_GET['_wpnonce'] ) ? $_GET['_wpnonce'] : 0;
+	$nonce = 0 === $nonce || wp_verify_nonce( $nonce, 'secupress_scanner_' . $this_test );
 	$prio_key = isset( $_GET['prio'] ) ? $_GET['prio'] : $prio;
-	if ( ! empty( $this_test ) && ! empty( $nonce ) && ! empty( $action ) && ! empty( $prio_key ) ) {
-		wp_verify_nonce( $nonce, 'secupress_scanner_' . $this_test ) or wp_nonce_ays('');
-		unset( $results[ $test_name ] );
+	if ( ! empty( $this_test ) && ! empty( $prio_key ) ) {
+		
 		require_once( SECUPRESS_FUNCTIONS_PATH . '/scanners-functions.php' );
 		require_once( SECUPRESS_FUNCTIONS_PATH . '/secupress-scanner.php' );
 		foreach( $secupress_tests[ $prio_key ] as $test_name => $test ) {
 			@set_time_limit( 0 );
 			if ( ( $this_test == null || $this_test == 'all' || $this_test == $test_name ) && is_callable( array( 'SecuPress_Scanners_Functions', $test_name ) ) ) {
 				ob_start();
-				$response = call_user_func( array( 'SecuPress_Scanners_Functions', $test_name ) );
-////				if ( time() % 2 == 0 ) {
-//					$response = array( 'status' => 'Good' );
-//				}
+					$response = call_user_func( array( 'SecuPress_Scanners_Functions', $test_name ) );
+					// if ( time() % 2 == 0 ) {
+					// 	$response = array( 'status' => 'Good' );
+					// }
 
 				ob_end_flush();
 				$results = array_filter( (array) get_option( SECUPRESS_SCAN_SLUG ) );
+				unset( $results[ $test_name ] );
 				$results[ $test_name ]['status'] = secupress_status( $response['status'] );
 				$results[ $test_name ]['class']  = sanitize_key( $response['status'] );
 				if ( isset( $test[ 'msg_' . sanitize_key( $response['status'] ) ] ) ) {
@@ -80,7 +98,7 @@ function __secupress_settings_action_links( $actions ) {
  *
  * @since 1.0
  */
-add_action( 'admin_print_styles-secupress_page_secupress_scanner', '__secupress_scanner_add_admin_css_js' );
+add_action( 'admin_print_styles-secupress_page_secupress_scanner', '__secupress_scanner_add_admin_css_js' ); //// dédoublonner
 function __secupress_scanner_add_admin_css_js() {
 	$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 	wp_enqueue_script( 'secupress-scanner-js', SECUPRESS_ADMIN_JS_URL . 'secupress-scanner.js', null, SECUPRESS_VERSION, true );
@@ -103,10 +121,30 @@ function __secupress_scanner_add_admin_css_js() {
  *
  * @since 1.0
  */
-add_action( 'admin_print_styles-secupress_page_secupress_modules', '__secupress_modules_add_admin_css_js' );
-function __secupress_modules_add_admin_css_js() {
-	wp_enqueue_script( 'secupress-modules-js', SECUPRESS_ADMIN_JS_URL . 'secupress-modules.js', null, SECUPRESS_VERSION, true );
+add_action( 'admin_print_styles-secupress_page_secupress_modules', '__secupress_modules_add_admin_css' );
+function __secupress_modules_add_admin_css() {
 	wp_enqueue_style( 'secupress-modules-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-modules.css', null, SECUPRESS_VERSION );
+}
+
+
+/**
+ * Add the CSS and JS files for SecuPress modules page
+ *
+ * @since 1.0
+ */
+add_action( 'admin_print_scripts-secupress_page_secupress_modules', '__secupress_modules_add_admin_js' );
+function __secupress_modules_add_admin_js() {
+	wp_enqueue_script( 'secupress-zxcvbn-async', includes_url( '/js/zxcvbn.min.js' ), array( 'jquery' ) );
+	wp_enqueue_script( 'secupress-modules-js', SECUPRESS_ADMIN_JS_URL . 'secupress-modules.js', array( 'jquery', 'secupress-zxcvbn-async', 'password-strength-meter' ), SECUPRESS_VERSION, true );
+	wp_localize_script( 'secupress-modules-js', 'l10nmodules', array( 'selectOneRoleMinimum' => __( 'Select 1 role minimum', 'secupress' ) ) );
+	wp_localize_script( 'password-strength-meter', 'pwsL10n', array(
+    'empty' => __( 'Enter a password', 'secupress' ),
+    'short' => __( 'Very weak' ),
+    'bad' => __( 'Weak' ),
+    'good' => _x( 'Medium', 'password strength' ),
+    'strong' => __( 'Strong' ),
+    'mismatch' => __( 'Mismatch' )
+) );
 }
 
 
@@ -177,7 +215,7 @@ function __secupress_do_options_export() {
 	$filename = sprintf( 'secupress-settings-%s-%s.txt', date( 'Y-m-d' ), uniqid() );
 	$gz = 'gz' . strrev( 'etalfed' );
 	$options = $gz//;
-	( serialize( get_option( SECUPRESS_SLUG ) ), 1 ); // do not use get_rocket_option() here
+	( serialize( get_option( SECUPRESS_SETTINGS_SLUG ) ), 1 ); // do not use get_rocket_option() here
 	nocache_headers();
 	@header( 'Content-Type: text/plain' );
 	@header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
@@ -186,4 +224,27 @@ function __secupress_do_options_export() {
 	@header( 'Connection: close' );
 	echo $options;
 	exit();
+}
+
+
+/**
+ * Force our user agent header when we hit our urls
+ *
+ * @since 1.0
+ */
+add_filter( 'http_request_args', '__secupress_add_own_ua', 10, 3 );
+function __secupress_add_own_ua( $r, $url ) {
+	if ( strpos( $url, 'secupress.fr' ) !== false ) {
+		$r['user-agent'] = secupress_user_agent( $r['user-agent'] );
+	}
+	return $r;
+}
+
+add_filter( 'registration_errors', '__secupress_registration_test_errors', PHP_INT_MAX, 2 );
+function __secupress_registration_test_errors( $errors, $sanitized_user_login ) {
+	if ( ! $errors->get_error_code() && strpos( $sanitized_user_login, 'secupress' ) !== false ) {
+		set_transient( 'secupress_registration_test', 'failed', HOUR_IN_SECONDS );
+		$errors->add( 'secupress_registration_test', 'secupress_registration_test_failed' );
+	}
+	return $errors;
 }

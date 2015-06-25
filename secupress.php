@@ -14,26 +14,31 @@ Copyright 2012-2015 SecuPress
 */
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 // SecuPress defines
-define( 'SECUPRESS_VERSION'             , '1.0-alpha' );
-define( 'SECUPRESS_PRIVATE_KEY'         , false );
-define( 'SECUPRESS_SLUG'                , 'secupress_settings' );
-define( 'SECUPRESS_SCAN_SLUG'           , 'secupress_scanners' );
-define( 'SECUPRESS_SCAN_TIMES'          , 'secupress_scanners_times' );
-define( 'SECUPRESS_WEB_MAIN'            , 'http://secupress.me/' );
-define( 'SECUPRESS_BOT_URL'             , 'http://bot.secupress.me' );
-define( 'SECUPRESS_FILE'                , __FILE__ );
-define( 'SECUPRESS_PLUGIN_FILE'         , 'secupress/secupress.php' );
-define( 'SECUPRESS_PATH'                , realpath( plugin_dir_path( SECUPRESS_FILE ) ) . '/' );
-define( 'SECUPRESS_INC_PATH'            , realpath( SECUPRESS_PATH . 'inc/' ) . '/' );
-define( 'SECUPRESS_FRONT_PATH'          , realpath( SECUPRESS_INC_PATH . 'front/' ) . '/' );
-define( 'SECUPRESS_ADMIN_PATH'          , realpath( SECUPRESS_INC_PATH . 'admin' ) . '/' );
-define( 'SECUPRESS_FUNCTIONS_PATH'      , realpath( SECUPRESS_INC_PATH . 'functions' ) . '/' );
-define( 'SECUPRESS_PLUGIN_URL'          , plugin_dir_url( SECUPRESS_FILE ) );
-define( 'SECUPRESS_INC_URL'             , SECUPRESS_PLUGIN_URL . 'inc/' );
-define( 'SECUPRESS_FRONT_URL'           , SECUPRESS_INC_URL . 'front/' );
-define( 'SECUPRESS_ADMIN_URL'           , SECUPRESS_INC_URL . 'admin/' );
-define( 'SECUPRESS_ADMIN_JS_URL'        , SECUPRESS_ADMIN_URL . 'js/' );
-define( 'SECUPRESS_ADMIN_CSS_URL'       , SECUPRESS_ADMIN_URL . 'css/' );
+define( 'SECUPRESS_VERSION'               , '1.0-alpha' );
+define( 'SECUPRESS_PRIVATE_KEY'           , false );
+define( 'SECUPRESS_ACTIVE_SUBMODULES'     , 'secupress_active_submodules' );
+define( 'SECUPRESS_SETTINGS_SLUG'         , 'secupress_settings' );
+define( 'SECUPRESS_SCAN_SLUG'             , 'secupress_scanners' );
+define( 'SECUPRESS_SCAN_TIMES'            , 'secupress_scanners_times' );
+define( 'SECUPRESS_WEB_MAIN'              , 'http://secupress.me/' );
+define( 'SECUPRESS_BOT_URL'               , 'http://bot.secupress.me' );
+define( 'SECUPRESS_WEB_VALID'             , 'http://support.secupress.me/' );
+define( 'SECUPRESS_FILE'                  , __FILE__ );
+define( 'SECUPRESS_PLUGIN_FILE'           , 'secupress/secupress.php' );
+define( 'SECUPRESS_PATH'                  , realpath( plugin_dir_path( SECUPRESS_FILE ) ) . '/' );
+define( 'SECUPRESS_INC_PATH'              , realpath( SECUPRESS_PATH . 'inc/' ) . '/' );
+define( 'SECUPRESS_MODULES_PATH'          , realpath( SECUPRESS_INC_PATH . 'modules/' ) . '/' );
+define( 'SECUPRESS_MODULES_PLUGINS_PATH'  , realpath( SECUPRESS_MODULES_PATH . 'plugins/' ) . '/' );
+define( 'SECUPRESS_FRONT_PATH'            , realpath( SECUPRESS_INC_PATH . 'front/' ) . '/' );
+define( 'SECUPRESS_ADMIN_PATH'            , realpath( SECUPRESS_INC_PATH . 'admin' ) . '/' );
+define( 'SECUPRESS_FUNCTIONS_PATH'        , realpath( SECUPRESS_INC_PATH . 'functions' ) . '/' );
+define( 'SECUPRESS_PLUGIN_URL'            , plugin_dir_url( SECUPRESS_FILE ) );
+define( 'SECUPRESS_INC_URL'               , SECUPRESS_PLUGIN_URL . 'inc/' );
+define( 'SECUPRESS_FRONT_URL'             , SECUPRESS_INC_URL . 'front/' );
+define( 'SECUPRESS_ADMIN_URL'             , SECUPRESS_INC_URL . 'admin/' );
+define( 'SECUPRESS_ADMIN_JS_URL'          , SECUPRESS_ADMIN_URL . 'js/' );
+define( 'SECUPRESS_ADMIN_CSS_URL'         , SECUPRESS_ADMIN_URL . 'css/' );
+
 if ( ! defined( 'SECUPRESS_LASTVERSION' ) ) {
     define( 'SECUPRESS_LASTVERSION', '0' );
 }
@@ -43,7 +48,7 @@ if ( ! defined( 'SECUPRESS_LASTVERSION' ) ) {
  *
  * @since 1.0
  */
-add_action( 'plugins_loaded', 'secupress_init' );
+add_action( 'plugins_loaded', 'secupress_init', 0 );
 function secupress_init()
 {
     // Nothing to do if autosave
@@ -60,7 +65,6 @@ function secupress_init()
     define( 'SECUPRESS_PLUGIN_NAME', get_secupress_option( 'wl_plugin_name', 'SecuPress' ) );
     define( 'SECUPRESS_PLUGIN_SLUG', sanitize_key( SECUPRESS_PLUGIN_NAME ) );
     // Call defines,  classes and functions
-// die(var_dump(time()));
 	require( SECUPRESS_FUNCTIONS_PATH	. '/files.php' );
     require( SECUPRESS_FUNCTIONS_PATH	. '/admin.php' );
     require( SECUPRESS_FUNCTIONS_PATH	. '/formatting.php' );
@@ -70,14 +74,16 @@ function secupress_init()
     require( SECUPRESS_FRONT_PATH		. '/plugin-compatibility.php' );
     require( SECUPRESS_INC_PATH			. '/admin-bar.php' );
     require( SECUPRESS_INC_PATH 		. '/cron.php' );
+	require( SECUPRESS_MODULES_PATH 	. '/modules.php' );
 
-    
     if ( is_admin() ) {
 
         require( SECUPRESS_ADMIN_PATH . '/options.php' );
         require( SECUPRESS_ADMIN_PATH . '/notices.php' );
         require( SECUPRESS_ADMIN_PATH . '/admin.php' );
-        require( SECUPRESS_ADMIN_PATH . '/plugin-compatibility.php' );
+        // require( SECUPRESS_ADMIN_PATH . '/plugin-compatibility.php' );
+        require( SECUPRESS_ADMIN_PATH . '/profiles.php' );
+        require( SECUPRESS_ADMIN_PATH . '/upgrader.php' );
 
     } 
 
@@ -124,18 +130,27 @@ function secupress_activation()
     define( 'SECUPRESS_PLUGIN_SLUG', sanitize_key( SECUPRESS_PLUGIN_NAME ) );
 
 }
-// add_action( 'plugins_loaded', create_function( '', '
-// 	$filename  = "inc/";
-// 	$filename .= is_admin() ? "backend-" : "frontend-";
-// 	$filename .= defined( "DOING_AJAX" ) && DOING_AJAX ? "" : "no";
-// 	$filename .= "ajax.inc.php";
-// 	if( file_exists( plugin_dir_path( __FILE__ ) . $filename ) )
-// 		include( plugin_dir_path( __FILE__ ) . $filename );
-// 	$filename  = "inc/";
-// 	$filename .= "bothend-";
-// 	$filename .= defined( "DOING_AJAX" ) && DOING_AJAX ? "" : "no";
-// 	$filename .= "ajax.inc.php";
-// 	if( file_exists( plugin_dir_path( __FILE__ ) . $filename ) )
-// 		include( plugin_dir_path( __FILE__ ) . $filename );
-// ' )
-// );
+
+add_action( 'secupress_loaded', 'secupress_load_plugins' );
+function secupress_load_plugins() {
+	global $secupress_modules;
+	foreach ( $secupress_modules as $key => $module ) {
+		$file = SECUPRESS_MODULES_PATH . sanitize_key( $key ) . '/callbacks.php';
+		if ( is_admin() && file_exists( $file ) ) {
+			require( $file );
+		}
+	}
+	$modules = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
+	if ( $modules ) {
+		foreach ( $modules as $module => $plugins ) {
+			if ( secupress_is_module_active( $module ) ) {
+				foreach ( $plugins as $plugin ) {
+					$file = SECUPRESS_MODULES_PATH . sanitize_key( $module ) . '/plugins/' . sanitize_key( $plugin ) . '.php';
+					if ( file_exists( $file ) ) {
+						require( $file );
+					}
+				}
+			}
+		}
+	}
+}

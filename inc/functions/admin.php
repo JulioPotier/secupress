@@ -11,7 +11,7 @@ function secupress_get_scanner_counts( $type = '' ) {
 	global $secupress_tests;
 	$scanners = get_option( SECUPRESS_SCAN_SLUG );
 	$array_fill_keys = array_fill_keys( array( 'good', 'warning', 'bad' ), 0 );
-	$array_count_values = false !== $scanners ? array_count_values( wp_list_pluck( $scanners, 'class' ) ) : array();
+	$array_count_values = is_array( $scanners ) ? array_count_values( wp_list_pluck( $scanners, 'class' ) ) : array();
 	$counts = array_merge( $array_fill_keys, $array_count_values );
 	$counts['notscannedyet'] = count( $secupress_tests['high'] ) + count( $secupress_tests['medium'] ) + count( $secupress_tests['low'] ) - array_sum( $counts );
 	$counts['total'] = count( $secupress_tests['high'] ) + count( $secupress_tests['medium'] ) + count( $secupress_tests['low'] );
@@ -99,13 +99,13 @@ function secupress_renew_box( $function, $uid = 0 )
  */
 function secupress_dismiss_box( $function )
 {
-	rocket_dismiss_boxes(
-		array(
-			'box'      => $function,
-			'_wpnonce' => wp_create_nonce( 'secupress_ignore_' . $function ),
-			'action'   => 'secupress_ignore'
-		)
-	);
+	// secupress_dismiss_boxes(
+	// 	array(
+	// 		'box'      => $function,
+	// 		'_wpnonce' => wp_create_nonce( 'secupress_ignore_' . $function ),
+	// 		'action'   => 'secupress_ignore'
+	// 	)
+	// );
 }
 
 /**
@@ -134,7 +134,7 @@ function secupress_is_white_label()
 function secupress_reset_white_label_values( $hack_post )
 {
 	// White Label default values - !!! DO NOT TRANSLATE !!!
-	$options = get_option( WP_ROCKET_SLUG );
+	$options = get_option( SECUPRESS_SETTINGS_SLUG );
 	$options['wl_plugin_name']	= 'SecuPress';
 	$options['wl_plugin_slug']	= 'secupress';
 	$options['wl_plugin_URI']	= 'http://www.secupress.fr';
@@ -145,7 +145,7 @@ function secupress_reset_white_label_values( $hack_post )
 		// hack $_POST to force refresh of files, sorry
 		$_POST['page'] = 'secupress';
 	}
-	update_option( SECUPRESS_SLUG, $options );
+	update_option( SECUPRESS_SETTINGS_SLUG, $options );
 }
 
 
@@ -159,38 +159,136 @@ function create_secupress_uniqid()
 	return str_replace( '.', '', uniqid( '', true ) );
 }
 
-/**
- * Force our user agent header when we hit our urls
- *
- * @since 1.0
- */
-add_filter( 'http_request_args', '__secupress_add_own_ua', 10, 3 );
-function __secupress_add_own_ua( $r, $url ) {
-	if ( strpos( $url, 'secupress.fr' ) !== false ) {
-		$r['user-agent'] = secupress_user_agent( $r['user-agent'] );
+function secupress_die( $message = '', $title = '', $args = array() ) {
+	wp_die( '<h1>' . SECUPRESS_PLUGIN_NAME . '</h1><p>' . $message . '</p>', $title, $args );
+}
+
+function do_secupress_settings_sections( $page ) {
+	echo '<div class="secublock">';
+	do_settings_sections( $page );
+	echo '</div>';
+}
+
+function __secupress_get_hidden_classes( $classes ) {
+	$output = 'hide-if-js block-hidden ' . $classes;
+	return $output;
+}
+
+function secupress_deactivate_submodule( $module, $plugins ) {
+	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
+	if ( ! is_array( $plugins ) ) {
+		$plugins = (array) $plugins; 
 	}
-	return $r;
+	foreach ( $plugins as $plugin ) {
+		$plugin_file = sanitize_key( $plugin );
+		if ( $active_plugins && isset( $active_plugins[ $module ] ) && in_array_deep( $plugin_file, $active_plugins ) ) {
+			$key = array_search( $plugin_file, $active_plugins[ $module ] );
+			if ( false !== $key ) {
+				unset( $active_plugins[ $module ][ $key ] );
+				update_site_option( SECUPRESS_ACTIVE_SUBMODULES, $active_plugins );
+				secupress_add_module_notice( $module, $plugin_file, 'deactivation' );
+				do_action( 'secupress_deactivate_plugin_' . $plugin_file );
+			}
+		}
+	}
+}
+
+function secupress_activate_module( $module, $settings ) {
+	global $secupress_modules;
+	if ( ! function_exists( "__secupress_{$module}_settings_callback" ) || ! isset( $secupress_modules[ $module ] ) ) {
+		secupress_die( sprintf( __( 'Unknow Module %s', 'secupress' ), esc_html( $module ) ) );
+	}
+	$module_options = get_option( "secupress_{$module}_settings" );
+	$module_options['module_active'] = 1;
+	$module_options = array_merge( $module_options, $settings );
+	call_user_func( "__secupress_{$module}_settings_callback", $module_options );
+	update_option( "secupress_{$module}_settings", $module_options );
+	if ( ! defined( 'DOING_AJAX' ) ) {
+		__secupress_scanner_ajax( $module );
+	}
+}
+
+function secupress_activate_submodule( $module, $plugin, $incompatibles_modules = array() ) {
+	$plugin_file = sanitize_key( $plugin );
+	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
+	if ( secupress_is_module_active( $module ) && ! in_array_deep( $plugin_file, $active_plugins ) ) {
+		if( ! empty( $incompatibles_modules ) ) {
+			secupress_deactivate_submodule( $module, $incompatibles_modules );
+		}
+		$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
+		$active_plugins[ $module ][] = $plugin_file;
+		update_site_option( SECUPRESS_ACTIVE_SUBMODULES, $active_plugins );
+		require_once( SECUPRESS_MODULES_PATH . $module . '/plugins/' . $plugin_file . '.php' );
+		secupress_add_module_notice( $module, $plugin_file, 'activation' );
+		do_action( 'secupress_activate_plugin_' . $plugin_file );
+	}
+}
+
+function secupress_add_module_notice( $module, $submodule, $action ) {
+	global $current_user;
+	$current = get_site_transient( "secupress_module_{$action}_{$current_user->ID}" );
+	$submodule_data = get_secupress_module_data( $module , $submodule );
+	$current[] = $submodule_data['Name'];
+	set_site_transient( "secupress_module_{$action}_{$current_user->ID}", $current );
+	do_action( 'module_notice_' . $action, $module, $submodule );
+}
+
+function get_secupress_module_data( $module, $submodule ) {
+	$default_headers = array(
+		'Name' => 'Module Name',
+		'Module' => 'Main Module',
+		'Version' => 'Version',
+		'Description' => 'Description',
+		'Author' => 'Author',
+	);
+	return get_file_data( SECUPRESS_MODULES_PATH . $module . '/plugins/' . $submodule . '.php', $default_headers, 'module' );
 }
 
 
-/**
- * 
- * 
- * @since 1.0
- *
- * @param (string)$page : the last word of the secupress page slug
- * @param (string)$params : required params if needed, never use "?" neither "&" for the first char
-*/
-function secupress_admin_url( $page, $params = '' )
-{
-	return admin_url( 'admin.php?' . $params . '&page=secupress_' . $page, 'admin' );
+
+function secupress_generate_key() {
+	$chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+
+	$key = '';
+	for ( $i = 0; $i < 16; $i++ ) {
+		$key .= $chars[ wp_rand( 0, 31 ) ];
+	}
+
+	return $key;
 }
 
-add_filter( 'registration_errors', '__secupress_registration_test_errors', PHP_INT_MAX, 2 );
-function __secupress_registration_test_errors( $errors, $sanitized_user_login ) {
-	if ( ! $errors->get_error_code() && strpos( $sanitized_user_login, 'secupress' ) !== false ) {
-		set_transient( 'secupress_registration_test', 'failed', HOUR_IN_SECONDS );
-		$errors->add( 'secupress_registration_test', 'secupress_registration_test_failed' );
+function secupress_generate_backupcodes() {
+
+	$keys = array();
+	for ( $k = 1; $k <= 10; $k++ ) { // 10 codes
+		$max = 99999999;
+		$keys[ $k ] = str_pad( wp_rand( floor( $max / 10 ), $max ), strlen( (string) $max ), '0', STR_PAD_RIGHT );
 	}
-	return $errors;
+
+	return $keys;
+
+}
+
+function secupress_generate_password( $length = 12, $args = array() ) {
+	$defaults = array( 'min' => true, 'maj' => true, 'num' => true, 'special' => false, 'extra' => false, 'custom' => '' );
+	$args = wp_parse_args( $args, $defaults );
+	$chars = array();
+	$chars['min'] = 'abcdefghijklmnopqrstuvwxyz';
+	$chars['maj'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	$chars['num'] = '0123456789';
+	$chars['special'] = '!@#$%^&*()';
+	$chars['extra'] = '-_ []{}<>~`+=,.;:/?|';
+	$chars['custom'] = $args['custom'];
+
+	$usable_chars = '';
+	foreach ( $args as $key => $arg ) {
+		$usable_chars .= $args[ $key ] ? $chars[ $key ] : '';
+	}
+
+	$password = '';
+	for ( $i = 0; $i < $length; $i++ ) {
+		$password .= substr( $usable_chars, wp_rand( 0, strlen( $usable_chars ) - 1 ), 1 );
+	}
+
+	return $password;
 }

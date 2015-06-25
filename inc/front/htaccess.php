@@ -33,7 +33,7 @@ function flush_secupress_htaccess( $force = false )
 		}
 
 		// Update the .htacces file
-		rocket_put_content( $htaccess_file, $rules . $ftmp );
+		secupress_put_content( $htaccess_file, $rules . $ftmp );
 	}
 }
 

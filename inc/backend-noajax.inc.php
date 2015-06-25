@@ -102,7 +102,7 @@ function secupress_field_scan()
 		<td><?php echo $details['type']; ?></td>
 		<td>
 			<p id="secupress-actions">
-				<a href="#" class="button secupress-fixit" title="<?php _e( 'Fix it!', 'secupress' ); ?>" style="background: transparent url(<?php echo SECUPRESS_PLUGIN_URL; ?>/img/fixit.png) no-repeat 2px 2px;height:24px;width:18px;" /></a>
+				<button type="button" class="button-secondary secupress-fixit"><?php _e( 'Fix it!', 'secupress' ); ?></button>
 				<a href="<?php echo admin_url( 'tools.php?page=secupress_scan&action=scan&this_test=' . $test_name . '&_secupressnonce=' . wp_create_nonce( 'scan-test_' . $test_name ) ); ?>" data-nonce="<?php echo wp_create_nonce( 'scan-test_' . $test_name ); ?>" data-test="<?php echo $test_name; ?>" class="button secupress-fixit" title="Refresh this test" style="background: transparent url(<?php echo SECUPRESS_PLUGIN_URL; ?>/img/scan.png) no-repeat 2px 2px;height:24px;width:18px;" /></a>
 				<a href="#" class="hide-if-no-js button secupress-details" data-test="<?php echo $test_name; ?>" title="<?php _e( 'Get details', 'secupress' ); ?>" style="background: transparent url(<?php echo SECUPRESS_PLUGIN_URL; ?>/img/details.png) no-repeat 2px 2px;height:24px;width:18px;" /></a>
 			</p>

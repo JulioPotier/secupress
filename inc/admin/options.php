@@ -1,28 +1,49 @@
 <?php
 defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
 
+add_action( 'admin_head-secupress_page_secupress_settings', 'secupress_favicon' );
+add_action( 'admin_head-secupress_page_secupress_modules', 'secupress_favicon' );
+add_action( 'admin_head-secupress_page_secupress_scanner', 'secupress_favicon' );
+function secupress_favicon() {
+	echo '<link id="favicon" rel="shortcut icon" type="image/png" href="' . SECUPRESS_ADMIN_CSS_URL . '/images/black-shield-16.png" />';
+}
+
 /**
  * Add submenu in menu "Settings"
  *
  * @since 1.0
  */
 add_action( 'admin_menu', 'secupress_create_menus' );
-function secupress_create_menus()
-{
+function secupress_create_menus() {
 	add_menu_page( SECUPRESS_PLUGIN_NAME, SECUPRESS_PLUGIN_NAME, 'administrator', 'secupress', '__secupress_dashboard', 'dashicons-shield-alt' );
-	add_submenu_page( 'secupress', __( 'Settings', 'secupress' ), __( 'Settings', 'secupress' ), 'administrator', 'secupress_settings', '__secupress_settings' );
-	add_submenu_page( 'secupress', __( 'Settings', 'secupress' ), __( 'Modules', 'secupress' ), 'administrator', 'secupress_modules', '__secupress_modules' );
-	add_submenu_page( 'secupress', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ), 'administrator', 'secupress_scanner', '__secupress_scanner' );
+		add_submenu_page( 'secupress', __( 'Settings', 'secupress' ), __( 'Settings', 'secupress' ), 'administrator', 'secupress_settings', '__secupress_settings' );
+		add_submenu_page( 'secupress', __( 'Modules', 'secupress' ), __( 'Modules', 'secupress' ), 'administrator', 'secupress_modules', '__secupress_modules' );
+		add_submenu_page( 'secupress', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ), 'administrator', 'secupress_scanner', '__secupress_scanner' );
 }
 
+function __secupress_modules() {
+	global $modulenow, $secupress_modules;
+
+	$modulenow = isset( $_GET['module'] ) ? $_GET['module'] : 'welcome';
+	$modulenow = array_key_exists( $modulenow, $secupress_modules ) && file_exists( SECUPRESS_MODULES_PATH . $modulenow . '/settings.php' ) ? $modulenow : 'welcome';
+	include(  SECUPRESS_MODULES_PATH . 'UI_menu.php' );
+	?>
+	<div id="tab_content">
+	<?php
+		include( SECUPRESS_MODULES_PATH . 'UI_header.php' );
+		include( SECUPRESS_MODULES_PATH . $modulenow . '/settings.php' );
+		include( SECUPRESS_MODULES_PATH . 'UI_footer.php' );
+	?>
+	</div>
+	<?php
+}
 /**
  * Tell to WordPress to be confident with our setting, we are clean!
  *
  * @since 1.0
  */
 add_action( 'admin_init', 'secupress_register_setting' );
-function secupress_register_setting()
-{
+function secupress_register_setting() {
 	register_setting( 'secupress_scan', 'secupress' );
 }
 
@@ -32,38 +53,13 @@ function __secupress_dashboard() {
 	delete_option( SECUPRESS_SCAN_TIMES );
 }
 
-function __secupress_modules() {
-	echo '<h1>Modules</h1>';
-	?>
-	<div class="nav-tab-wrapper">
-		<ul>
-			<li><a href="#tab_user" class="nav-tab nav-tab -active" style="outline: 0px;">Users & Login</a></li>
-			<li><a href="#tab_plugin" class="nav-tab" style="outline: 0px;">Plugins & Themes</a></li>
-			<li><a href="#tab_cdn" class="nav-tab" style="outline: 0px;">Sensitive Data</a></li>
-			<li><a href="#tab_tools" class="nav-tab" style="outline: 0px;">Server Settings</a></li>
-			<li><a href="#tab_faq" class="nav-tab" style="outline: 0px;">Backups</a></li>
-			<li><a href="#tab_faq" class="nav-tab" style="outline: 0px;">Anti Spam</a></li>
-			<li><a href="#tab_support" class="nav-tab file-error" style="outline: 0px;">Common Flaws</a></li>
-			<li><a href="#tab_support" class="nav-tab file-error" style="outline: 0px;">Logs</a></li>
-			<li><a href="#tab_support" class="nav-tab file-error" style="outline: 0px;">Tools</a></li>
-			<li><a href="#tab_support" class="nav-tab file-error" style="outline: 0px;">Schedules</a></li>
-		</ul>
-		<div id="tab_content">
-			<h2>Users and Login Protection</h2>
-			<p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
-			<p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
-		</div>
-	</div>
-	<?php
-}
 
 function __secupress_settings() {
 	echo '<h1>SETTINGS</h1>';
 }
 
 
-function secupress_main_scan()
-{
+function secupress_main_scan() {
 	global $secupress_tests;
 	$scanners = get_option( SECUPRESS_SCAN_SLUG );
 	$thedate = ! empty( $scanners['last_run'] ) ? wp_sprintf( __('%s ago'), human_time_diff( $scanners['last_run'] ) ) : __( 'Never', 'secupress' );
@@ -144,7 +140,7 @@ function secupress_main_scan()
 		$class .= ' status-' . $css_class;
 		$class .= $i%2==0 ? ' alternate-2' : ' alternate-1';
 		$hiddens = !isset( $_GET['DOING_AJAX'] ) ? '' : '<input type="hidden" id="secupress-percent" value="' . $percent . '" /><input type="hidden" id="secupress-humantime" value="' . $thedate . '" />';
-		$points = array( 'good', 'warning', 'bad', 'notscannedyet' );
+		$point = array( 'good' => 'd', 'warning' => 'c', 'bad' => 'b', 'notscannedyet' => 'a' );
 		$point[ $css_class ] .= $statuses_point[ $css_class ];
 		?>
 		<tr class="secupress-item-all secupress-item-<?php echo $test_name; ?> type-all status-all<?php echo $class; ?>" data-sort-value="<?php echo $point[ $css_class ]; ?>">
@@ -169,7 +165,7 @@ function secupress_main_scan()
 			<td class="secupress-result"><?php echo isset( $scanners[$test_name]['message'] ) ? $scanners[$test_name]['message'] : '&#175;'; ?></td>
 			<td>
 				<span class="fixit<?php echo $status_raw != 'notscannedyet' & $status_raw != 'good' ? '' : ' hide'; ?>">
-					<a href="#" class="button button-secondary button-small secupress-fixit" title="<?php _e( 'Fix it!', 'secupress' ); ?>" />Fix it</a>
+					<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&prio=' . $prio_key . '&test=' . $test_name ), 'secupress_fixit_' . $test_name ); ?>" class="button button-secondary button-small secupress-fixit" /><?php _e( 'Fix it!', 'secupress' ); ?></a>
 				</span>
 			</td>
 			<!--// <td><?php echo $details['type']; ?></td> //-->
@@ -205,8 +201,7 @@ function secupress_main_scan()
 	<?php
 }
 
-function secupress_status( $status )
-{
+function secupress_status( $status ) {
 	$template = '<span class="dashicons dashicons-shield-alt secupress-dashicon secupress-dashicon-color-%2$s"></span> <span class="secupress-status">%1$s</span>';
 	switch( $status ):
 		case 'Bad': return wp_sprintf( $template, __( 'Bad', 'secupress' ), 'bad' ); break;
@@ -216,8 +211,7 @@ function secupress_status( $status )
 	endswitch;
 }
 
-function secupress_sidebox( $args )
-{
+function secupress_sidebox( $args ) {
 	$defaults = array(
 			'id' => '',
 			'title' => 'Missing',
@@ -231,8 +225,7 @@ function secupress_sidebox( $args )
 	echo $return;
 }
 
-function __secupress_scanner()
-{
+function __secupress_scanner() {
 	$times = array_filter( (array) get_option( SECUPRESS_SCAN_TIMES ) );
 	$reports = array();
 	$last_percent = -1;
@@ -286,3 +279,258 @@ function __secupress_scanner()
 	</div>
 <?php
 }
+
+function secupress_field( $args )
+{
+	global $modulenow;
+	unset( $args['class'] );
+	if( ! is_array( reset( $args ) ) ) {
+		$args = array( $args );
+	}
+
+	$full = $args;
+
+	foreach ( $full as $args ) {
+		if ( isset( $args['display'] ) && ! $args['display'] ) {
+			continue;
+		}
+		$args['label_for'] 	= isset( $args['label_for'] ) 	? $args['label_for'] : '';
+		$args['name'] 		= isset( $args['name'] ) 		? $args['name'] : $args['label_for'];
+		$parent 			= isset( $args['parent'] ) 		? 'data-parent="' . sanitize_html_class( $args['parent' ] ). '"' : null;
+		$placeholder 		= isset( $args['placeholder'] )	? 'placeholder="'. $args['placeholder'].'" ' : '';
+		$label 				= isset( $args['label'] ) 		? $args['label'] : '';
+		$required			= isset( $args['required'] ) 	? ' data-required="required" data-aria-required="true"' : '';
+		$pattern			= isset( $args['pattern'] ) 	? ' data-pattern="' . $args['pattern'] . '"' : '';
+		$title				= isset( $args['title'] ) 		? ' title="' . $args['title'] . '"' : '';
+		$default			= isset( $args['default'] ) 	? $args['default'] : '';
+		$cols 				= isset( $args['cols'] ) 		? (int) $args['cols'] : 50;
+		$rows 				= isset( $args['rows'] ) 		? (int) $args['rows'] : 5;
+		$size 				= isset( $args['size'] ) 		? (int) $args['size'] : 1;
+		$readonly			= isset( $args['readonly'] ) && $args['readonly'] ? ' readonly="readonly" disabled="disabled"' : '';
+		$class = isset( $args['class'] ) ? $args['class'] : '';
+		if ( is_array( $class ) ) {
+			$class = implode( ' ', array_map( 'sanitize_html_class', $class ) );
+		} else {
+			$class = sanitize_html_class( $class );
+		}
+		$class .= ( $parent ) ? ' has-parent' : null;
+		
+		if( ! isset( $args['fieldset'] ) || 'start' == $args['fieldset'] ){
+			echo '<fieldset class="fieldname-'.sanitize_html_class( $args['name'] ).' fieldtype-'.sanitize_html_class( $args['type'] ).'">';
+		}
+
+		switch( $args['type'] ) {
+			case 'number' :
+			case 'email' :
+			case 'text' :
+
+				$value = esc_attr( get_secupress_module_option( $args['name'] ) );
+				if ( $value === false ) {
+					$value = $default;
+				}
+
+				$number_options = $args['type']=='number' ? ' min="0" class="small-text"' : '';
+				$autocomplete = in_array( $args['name'], array( 'consumer_key', 'consumer_email' ) ) ? ' autocomplete="off"' : '';
+				$disabled = false ? ' disabled="disabled"' : $readonly;
+				$data_realtype = 'password' != $args['type'] ? '' : ' data-realtype="password"';
+				?>
+
+					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
+					<label>
+						<input <?php echo $title; ?><?php echo $autocomplete; ?><?php echo $pattern; ?><?php echo $required; ?><?php echo $disabled; ?><?php echo $data_realtype; ?> type="<?php echo $args['type']; ?>"<?php echo $number_options; ?> id="<?php echo $args['label_for']; ?>" name="secupress_<?php echo $modulenow; ?>_settings[<?php echo $args['name']; ?>]" value="<?php echo $value; ?>" <?php echo $placeholder; ?><?php echo $readonly; ?>/> 
+						<?php echo $label; ?>
+					</label>
+				<?php
+			break;
+
+			case 'password' :
+
+				$value = esc_attr( get_secupress_module_option( $args['name'] ) );
+				$data_nocheck = $value ? ' data-nocheck="true"' : '';
+				$disabled = false ? ' disabled="disabled"' : $readonly;
+				?>
+
+					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
+					<label>
+						<input autocomplete="off" data-realtype="password" <?php echo $data_nocheck; ?><?php echo $title; ?><?php echo $pattern; ?><?php echo $required; ?><?php echo $disabled; ?> type="password" id="<?php echo $args['label_for']; ?>" name="secupress_<?php echo $modulenow; ?>_settings[<?php echo $args['name']; ?>]" value="" <?php echo $readonly; ?>/> 
+						<input type="text" tabindex="-1" id="password_strength_pattern"<?php echo $data_nocheck; ?> data-pattern="[3-4]" title="<?php _e( 'Minimum Strength Level: Medium', 'secupress' ); ?>" name="secupress_<?php echo $modulenow; ?>_settings[password_strength_value]" value="0" id="password_strength_value" />
+						<?php echo $label; ?>
+						<i class="hide-if-no-js"><?php printf( __( 'Required: %s', 'secupress' ), _x( 'Medium', 'password strength' ) ); ?></i>
+						<br><span id="password-strength" class="hide-if-no-js"></span>
+					</label>
+				<?php
+			break;
+
+			case 'textarea' :
+
+				$t_temp = get_secupress_module_option( $args['name'], '' );
+				$value = ! empty( $t_temp ) ? esc_textarea( implode( "\n" , $t_temp ) ) : '';
+				if ( ! $value ){
+					$value = $default;
+				}
+				?>
+
+					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
+					<label>
+						<textarea id="<?php echo $args['label_for']; ?>" name="secupress_<?php echo $modulenow; ?>_settings[<?php echo $args['name']; ?>]" cols="<?php echo $cols; ?>" rows="<?php echo $rows; ?>"<?php echo $readonly; ?>><?php echo $value; ?></textarea>
+					</label>
+
+				<?php
+			break;
+
+			case 'checkbox' : 
+					if ( isset( $args['label_screen'] ) ) {
+					?>
+						<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
+					<?php } ?>
+					<label><input type="checkbox" id="<?php echo $args['name']; ?>" class="<?php echo $class; ?>" name="secupress_<?php echo $modulenow; ?>_settings[<?php echo $args['name']; ?>]" value="1"<?php echo $readonly; ?> <?php checked( get_secupress_module_option( $args['name'], 0 ), 1 ); ?> <?php echo $parent; ?>/> <?php echo $args['label']; ?>
+					</label>
+
+			<?php
+			break;
+
+			case 'select' : ?>
+
+					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
+					<label>	<select size="<?php echo $args['size']; ?>" multiple="multiple" id="<?php echo $args['name']; ?>" for="<?php echo $args['name']; ?>" name="secupress_<?php echo $modulenow; ?>_settings[<?php echo $args['name']; ?>]"<?php echo $readonly; ?>>
+							<?php foreach( $args['options'] as $val => $title) { 
+								if ( '_' == $val[0] ) {
+									$title .= ' (' . __( 'Premium', 'secupress' ) . ')';
+								}
+								?>
+								<option value="<?php echo $val; ?>" <?php selected( get_secupress_module_option( $args['name'] ) == $val || in_array( $val, get_secupress_module_option( $args['name'], array() ) ) ); ?>><?php echo $title; ?></option>
+							<?php } ?>
+							</select>
+					<?php echo $label; ?>
+					</label>
+
+			<?php
+			break;
+
+			case 'roles' : 
+				$roles = new WP_Roles();
+				$roles = $roles->get_names();
+				$roles = array_map( 'translate_user_role', $roles );
+			?>
+
+					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
+					<?php foreach( $roles as $val => $title) {
+						?>
+						<label><input type="checkbox" name="secupress_<?php echo $modulenow; ?>_settings[<?php echo $args['name']; ?>][]" value="<?php echo $val; ?>" <?php checked( ! in_array( $val, get_secupress_module_option( $args['name'], array() ) ) ); ?>> <?php echo $title; ?></label><br />
+						<input type="hidden" name="secupress_<?php echo $modulenow; ?>_settings[hidden_<?php echo $args['name']; ?>][]" value="<?php echo $val; ?>">
+					<?php }
+			break;
+
+			case 'radio' : ?>
+
+					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
+					<?php foreach( $args['options'] as $val => $title) { 
+						if ( '_' == $val[0] ) {
+							$title .= ' (' . __( 'Premium', 'secupress' ) . ')';
+						}
+						?>
+						<label><input type="radio" for="<?php echo $args['name']; ?>" id="<?php echo $args['name']; ?>_<?php echo $val; ?>" value="<?php echo $val; ?>" <?php checked( get_secupress_module_option( $args['name'] ), $val ); ?>name="secupress_<?php echo $modulenow; ?>_settings[<?php echo $args['name']; ?>]"<?php echo $readonly; ?>> <?php echo $title; ?></label><br />
+					<?php } ?>
+
+			<?php
+			break;
+
+			// case 'repeater' :
+
+			// 	$fields = new WP_Rocket_Repeater_Field( $args );
+			// 	$fields->render();
+
+			// 	break;
+
+			// case 'secupress_defered_module' :
+
+			// 		secupress_defered_module();
+
+			// break;
+
+			case 'helper_description' :
+
+				$description = isset( $args['description'] ) ? '<p class="description desc '.$class.'">'.$args['description'].'</p>' : '';
+				echo apply_filters( 'secupress_help', $description, $args['name'], 'description' );
+
+			break;
+
+			case 'helper_help' :
+				$description = isset( $args['description'] ) ? '<p class="description help '.$class.'">'.$args['description'].'</p>' : '';
+				echo apply_filters( 'secupress_help', $description, $args['name'], 'help' );
+
+			break;
+
+			case 'helper_warning' :
+
+				$description = isset( $args['description'] ) ? '<p class="description warning '.$class.'"><b>'.__( 'Warning: ', 'secupress') . '</b>' . $args['description'].'</p>' : '';
+				echo apply_filters( 'secupress_help', $description, $args['name'], 'warning' );
+
+			break;
+/*
+			case 'secupress_export_form' :
+				?>
+				<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_export' ), 'secupress_export' ); ?>" id="export" class="button button-secondary secupressicon"><?php _e( 'Download options', 'secupress' ); ?></a>
+				<?php
+			break;
+
+			case 'secupress_import_upload_form' :
+
+				secupress_import_upload_form( 'secupress_importer' );
+
+			break;*/
+			default : 'Type manquant ou incorrect'; // ne pas traduire
+
+		}
+
+		if( ! isset( $args['fieldset'] ) || 'end' == $args['fieldset'] ) {
+			echo '</fieldset>';
+		}
+
+	}
+
+}
+
+/**
+ * Used to display buttons on settings form, tools tab
+ *
+ * @since 1.0
+ */
+function secupress_button( $args )
+{
+	$button       = $args['button'];
+	$desc         = isset( $args['helper_description'] ) ? $args['helper_description'] : null;
+	$help         = isset( $args['helper_help'] ) ? $args['helper_help'] : null;
+	$warning      = isset( $args['helper_warning'] ) ? $args['helper_warning'] : null;
+	$id           = isset( $button['button_id'] ) ? sanitize_html_class( $button['button_id'] ) : null;
+	$class        = sanitize_html_class( strip_tags( $button['button_label'] ) );
+	$button_style = isset( $button['style'] ) ? 'button-'.sanitize_html_class( $button['style'] ) : 'button-secondary';
+
+	if ( ! empty( $help ) ) {
+		$help = '<p class="description help '.$class.'">'.$help['description'].'</p>';
+	}
+	if ( ! empty( $desc ) ) {
+		$desc = '<p class="description desc '.$class.'">'.$desc['description'].'</p>';
+	}
+	if ( ! empty( $warning ) ) {
+		$warning = '<p class="description warning file-error '.$class.'"><b>'.__( 'Warning: ', 'secupress' ) . '</b>' . $warning['description'].'</p>';
+	}
+?>
+	<fieldset class="toto fieldname-<?php echo $class; ?> fieldtype-button">
+		<?php
+		if ( isset( $button['url'] ) ) {
+			echo '<a href="' . esc_url( $button['url'] ) . '" id="' . $id . '" class="' . $button_style . ' secupressicon secupressicon-'. $class . '">' . wp_kses_post( $button['button_label'] ) . '</a>';
+		} else {
+			echo '<button id="' . $id . '" class="' . $button_style . ' secupressicon secupressicon-'. $class . '">' . wp_kses_post( $button['button_label'] ) . '</button>';
+		}
+		?>
+		
+
+		<?php echo apply_filters( 'secupress_help', $desc, sanitize_key( strip_tags( $button['button_label'] ) ), 'description' ); ?>
+		<?php echo apply_filters( 'secupress_help', $help, sanitize_key( strip_tags( $button['button_label'] ) ), 'help' ); ?>
+		<?php echo apply_filters( 'secupress_help', $warning, sanitize_key( strip_tags( $button['button_label'] ) ), 'warning' ); ?>
+
+	</fieldset>
+<?php
+}
+
