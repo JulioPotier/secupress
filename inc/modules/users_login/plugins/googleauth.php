@@ -416,8 +416,6 @@ function __secupress_base32_verify( $secretkey, $thistry, $lasttimeslot ) {
 	return false;
 }
 
-
-//// modifier googleauthenticator_ en secupress_google_auth_ ?
 /**
  * Extend personal profile page with Google Authenticator settings.
  */
@@ -436,16 +434,26 @@ function secupress_googleauth_profile_personal_options() {
 		$googleauth_app_pass = implode( "", $googleauth_app_pass );
 	}
 
-
-	$key_info = '<p class="description">' . __( 'You can scan the QRCode or use the text key.', 'secupress' ) . '</p>';
+	$key_info = '<p class="description hidden">' . __( 'You can <span class="hide-if-no-js">scan the QRCode or </span>use this text key.', 'secupress' ) . '</p>';
 	if ( '' == $googleauth_secret ) {
 		$googleauth_secret = __( '[Google Authenticator not configured, generate a key first.]', 'secupress' );
-		$key_info = '<p class="description">' . __( 'To get an application key, just click the <b>Generate a new app key</b> button below.', 'secupress' ) . '</p>';
-	} elseif ( get_site_transient( 'secupress_googleauth_regenkeys' . $user_id ) ) {
-		delete_site_transient( 'secupress_googleauth_regenkeys' . $user_id );
-		$key_info = '<p class="description">' . __( 'You can use this text key.', 'secupress' ) . '</p>';
+		$key_info = '<p class="description">' . __( 'To get an authentication key, just click the <b>Generate a new app key</b> button below.', 'secupress' ) . '</p>';
+	} elseif ( get_site_transient( 'secupress_googleauth_regen_secret' . $user_id ) ) {
+		delete_site_transient( 'secupress_googleauth_regen_secret' . $user_id );
+		$key_info = '<p class="description">' . __( 'You can <span class="hide-if-no-js">scan the QRCode or </span>use this text key.', 'secupress' ) . '</p>';
 	} else {
 		$googleauth_secret = str_repeat( '&bull;', 16 ) . __( ' (hidden for safety)', 'secupress' );
+	}
+
+	$app_info = '<p class="description hidden">' . __( 'You can use this key for any external application.', 'secupress' ) . '</p>';
+	if ( '' == $googleauth_app_pass ) {
+		$googleauth_app_pass = __( '[No application password yet.]', 'secupress' );
+		$app_info = '<p class="description">' . __( 'To get an application password, just click the <b>Generate a new application key</b> button below.', 'secupress' ) . '</p>';
+	} elseif ( get_site_transient( 'secupress_googleauth_regen_app_password_reset' . $user_id ) ) {
+		delete_site_transient( 'secupress_googleauth_regen_app_password_reset' . $user_id );
+		$app_info = '<p class="description">' . __( 'You can use this key for any external application.', 'secupress' ) . '</p>';
+	} else {
+		$googleauth_app_pass = str_repeat( '&bull;', 16 ) . __( ' (hidden for safety)', 'secupress' );
 	}
 	?>
 	<h3><?php _e( 'Google Authenticator Settings', 'secupress' ); ?></h3>
@@ -459,16 +467,16 @@ function secupress_googleauth_profile_personal_options() {
 				</th>
 				<td>
 					<code id="googleauth_secret"><?php echo $googleauth_secret; ?></code>
-					<p id="googleauth_qrcode_desc" class="hide-if-js">
+					<div id="googleauth_qrcode_desc" class="hide-if-js">
 						<span id="googleauth_qrcode"></span>
 						<br>
 						<span class="description">
 							<?php echo $key_info; ?>
 						</span>
-					</p>
+					</div>
 					<p>
 						<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=googleauthenticator_secret&uid=' . $user_id ), 'secupress_google_auth_secret-' . $user_id ); ?>" id="googleauth_newkey" class="button button-secondary button-small">
-							<?php _e( 'Generate a new app key', 'secupress' ); //// test admin post ?>
+							<?php _e( 'Generate a new app key', 'secupress' ); ?>
 						</a>
 					</p>
 				</td>
@@ -539,7 +547,7 @@ function secupress_googleauth_profile_personal_options() {
 					<?php } ?>
 					<p>
 						<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=googleauthenticator_new_backup_codes&uid=' . $user_id ), 'secupress_google_auth_new_backup_codes-' . $user_id ); ?>" id="googleauth_newcodes" class="button button-secondary button-small">
-							<?php _e( 'Generate new backup codes', 'secupress' ); //// test admin post ?>
+							<?php _e( 'Generate new backup codes', 'secupress' ); ?>
 						</a>
 					</p>
 				</td>
@@ -553,10 +561,10 @@ function secupress_googleauth_profile_personal_options() {
 			</th>
 				<td>
 					<p>
-						<code id="app_password"><?php echo $googleauth_app_pass ? $googleauth_app_pass : __( 'No app password.', 'secupress' ); ?></code>
+						<code id="app_password"><?php echo $googleauth_app_pass; ?></code>
 						<p>
 							<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=googleauthenticator_app_password&uid=' . $user_id ), 'secupress_google_auth_app_password-' . $user_id ); ?>" id="googleauth_app_password" class="button button-secondary button-small">
-								<?php _e( 'Generate an application password', 'secupress' );  ?>
+								<?php _e( 'Generate a new application password', 'secupress' );  ?>
 							</a>
 						</p>
 						<p class="<?php echo $googleauth_app_pass ? '' : 'hide-if-no-js'; ?>">
@@ -586,7 +594,7 @@ function secupress_googleauth_profile_personal_options() {
 				$.get( href.replace( 'admin-post', 'admin-ajax' ), function( data ) { 
 					if ( data.success ) {
 						var qrcode = "otpauth://totp/WordPress:"+escape('<?php echo esc_js( get_bloginfo( 'name' ) ); ?>')+"?secret="+data.data.key+"&issuer=WordPress";
-						$( '#googleauth_qrcode_desc' ).show();
+						$( '#googleauth_qrcode_desc, #googleauth_qrcode_desc .description' ).show();
 						$( '#googleauth_qrcode' ).html( '' ).qrcode( { "render":"image", "background":"#ffffff", "size": 200, "text":qrcode } );
 						$( '#googleauth_secret' ).text( data.data.key ).css('font-size','1.5em');
 					}
@@ -667,9 +675,9 @@ function secupress_googleauth_profile_personal_options() {
 <?php
 }
 
-add_action( 'wp_ajax_googleauthenticator_secret', 'secupress_googleauth_regenkeys' );
-add_action( 'admin_post_googleauthenticator_secret', 'secupress_googleauth_regenkeys' );
-function secupress_googleauth_regenkeys( $uid = false ) {
+add_action( 'wp_ajax_googleauthenticator_secret', 'secupress_googleauth_regen_secret' );
+add_action( 'admin_post_googleauthenticator_secret', 'secupress_googleauth_regen_secret' );
+function secupress_googleauth_regen_secret( $uid = false ) {
 	if ( $uid || isset( $_GET['_wpnonce'], $_GET['uid'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'secupress_google_auth_secret-' . $_GET['uid'] ) ) {
 		$user_id = isset( $_GET['uid'] ) ? (int) $_GET['uid'] : $uid;
 		$newkeys = array();
@@ -680,7 +688,7 @@ function secupress_googleauth_regenkeys( $uid = false ) {
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			wp_send_json_success( $newkeys );
 		} else {
-			set_site_transient( 'secupress_googleauth_regenkeys' . $GLOBALS['current_user']->ID, '1' );
+			set_site_transient( 'secupress_googleauth_regen_secret' . $GLOBALS['current_user']->ID, '1' );
 			wp_redirect( wp_get_referer() );
 			die();
 		}
@@ -728,6 +736,7 @@ function secupress_googleauth_regen_app_password( $uid = false ) {
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			wp_send_json_success( $newkey );
 		} else {
+			set_site_transient( 'secupress_googleauth_regen_app_password_reset' . $GLOBALS['current_user']->ID, '1' );
 			wp_redirect( wp_get_referer() );
 			die();
 		}
@@ -817,7 +826,7 @@ function secupress_googleauth_redirect() {
 }
 
 /*
-
-empecher de se logger avec les lettres
-TODO : multiple app password
+TODO :
+multiple app password
+hash app password
 */

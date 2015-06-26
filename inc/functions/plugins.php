@@ -59,9 +59,14 @@ function secupress_is_affected_role( $module, $submodule, $user ) {
 function __secupress_module_switch_description() {
 	global $modulenow, $sectionnow;
 
+	$before = '<div class="notice notice-success"><i>';
+	$after = '</i></div>';
 	switch ( $modulenow . '_' . $sectionnow ) {
 		case 'users_login_login_auth':
-			echo '<div class="notice notice-success"><i>' . __( 'A Double Authentication is a way to enforce another layer of login, like an additional password, a secret key, a special link sent by email etc. Not just your login and password.', 'secupress' ) . '</i></div>';
+			echo $before . __( 'A Double Authentication is a way to enforce another layer of login, like an additional password, a secret key, a special link sent by email etc. Not just your login and password.', 'secupress' ) . $after;
+			break;
+		case 'sensitive_data_profile_protect':
+			echo $before . __( 'Your profile can contain sensitive data and is also used to change your password. Don\'t let anyone sneaking into it.', 'secupress' ) . $after;
 			break;
 	}
 }

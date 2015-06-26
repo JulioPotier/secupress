@@ -83,7 +83,15 @@ function update_secupress_module_option( $option, $value, $module = false )
 }
 
 function secupress_submit_button( $type = 'primary large', $name = 'main_submit', $wrap = false, $other_attributes = null, $echo = true ) {
-	$button = get_submit_button( __( 'Save All Changes', 'secupress' ), $type, $name, $wrap, $other_attributes );
+	if ( true === $wrap ) {
+		$wrap = '';
+	} elseif ( $wrap ) {
+		$wrap = '<p class="' . sanitize_html_class( $wrap ) . '">';
+	}
+	$button = get_submit_button( __( 'Save All Changes', 'secupress' ), $type, $name, false, $other_attributes );
+	if ( $wrap ) {
+		$button = $wrap . $button . '</p>';
+	}
 	if ( $echo ) {
 		echo $button;
 	} else {

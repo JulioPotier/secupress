@@ -292,3 +292,18 @@ function secupress_generate_password( $length = 12, $args = array() ) {
 
 	return $password;
 }
+
+function secupress_load_settings( $module, $plugin ) {
+	$plugin_file = SECUPRESS_MODULES_PATH . sanitize_key( $module ) . '/settings/' . sanitize_key( $plugin ) . '.php';
+	if ( file_exists( $plugin_file ) ) {
+		require( $plugin_file );
+	}
+}
+
+function secupress_manage_affected_roles( &$settings, $pluginnow ) {
+	if ( isset( $settings['hidden_' . $pluginnow . '_affected_role'] ) ) {
+		$settings[ $pluginnow . '_affected_role'] = array_diff( $settings['hidden_' . $pluginnow . '_affected_role'], $settings[ $pluginnow . '_affected_role'] );
+	}
+
+	unset( $settings['hidden_' . $pluginnow . '_affected_role'] ); // not actual option
+}

@@ -52,11 +52,17 @@ function __secupress_users_login_settings_callback( $settings ) {
 		$settings['double_auth_password'] = '';
 	}
 
-	if ( isset( $settings['hidden_double_auth_affected_role'] ) ) {
-		$settings['double_auth_affected_role'] = array_diff( $settings['hidden_double_auth_affected_role'], $settings['double_auth_affected_role'] );
-	}
+	secupress_manage_affected_roles( $settings, 'double_auth' );
 
-	unset( $settings['password_strength_value'], $settings['hidden_double_auth_affected_role'] ); // not actual options
+	unset( $settings['password_strength_value'] ); // not actual option
+
+	if ( isset( $settings['profile_protect'] ) ) {
+		secupress_activate_submodule( $modulenow, 'profile_protect' );
+	} else {
+		secupress_deactivate_submodule( $modulenow, 'profile_protect' );
+	}
+	secupress_manage_affected_roles( $settings, 'profile_protect' );
+
 	return $settings;
 }
 
