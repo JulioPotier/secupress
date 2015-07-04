@@ -124,10 +124,44 @@ function secupress_mkdir_p( $target )
  * @since 1.0
  *
  * @param string $file 	  The path of file will be created
- * @param string $content The content that will be printed in advanced-cache.php
+ * @param string $new_content The content that will be added on top of the file
+ * @param string $file_content The content that will already exists in the file
  * @return bool
  */
-function secupress_put_content( $file, $content )
+function secupress_put_content( $file, $marker, $new_content )
+{
+	global $wp_filesystem;
+	if ( ! $wp_filesystem ) {
+		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php' );
+		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php' );
+		$wp_filesystem = new WP_Filesystem_Direct( new StdClass() );
+	}
+	// Get content of file
+	$ftmp = file_get_contents( $file );
+	$file_content = preg_replace( '/# BEGIN SecuPress ' . $marker . '(.*)# END SecuPress/isU', '', $ftmp );
+	if ( ! empty( $new_content ) ) {
+		$content = '# BEGIN SecuPress ' . $marker . PHP_EOL;
+		$content .= trim( $new_content ) . PHP_EOL;
+		$content .= '# END SecuPress' . PHP_EOL;
+		$content .= $file_content;
+		$file_content = $content;
+	}
+	$chmod = defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : 0644;
+	return $wp_filesystem->put_contents( $file, $file_content, $chmod );
+}
+
+
+/**
+ * File creation based on WordPress Filesystem
+ *
+ * @since 1.0
+ *
+ * @param string $file 	  The path of file will be created
+ * @param string $new_content The content that will be removed from the file
+ * @param string $file_content The content that will already exists in the file
+ * @return bool
+ */
+function secupress_remove_content( $file, $marker, $file_content )
 {
 	global $wp_filesystem;
 	if ( ! $wp_filesystem ) {
@@ -137,7 +171,25 @@ function secupress_put_content( $file, $content )
 	}
 
 	$chmod = defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : 0644;
-	return $wp_filesystem->put_contents( $file, $content, $chmod );
+	$file_content = str_replace( $new_content, '', $file_content );
+	return $wp_filesystem->put_contents( $file, $file_content, $chmod );
+}
+
+
+/**
+ * File creation based on WordPress Filesystem
+ *
+ * @since 1.0
+ *
+ * @param string $file 	  The path of file will be created
+ * @param string $new_content The content that will be replaced on top from the file
+ * @param string $file_content The content that will already exists in the file
+ * @return bool
+ */
+function secupress_replace_content( $file, $marker, $new_content, $file_content )
+{
+	secupress_remove_content( $file, $marker, $file_content );
+	secupress_add_content( $file, $new_content, $file_content );
 }
 
 

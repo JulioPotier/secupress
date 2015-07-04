@@ -1,11 +1,11 @@
 <?php
 /*
-Plugin Name: SecuPress
+Plugin Name: WordPress Security by SecuPress
 Plugin URI: http://secupress.me
-Description: SecuPress Security, the best and simpler way to protect your websites.
+Description: WordPress Security by SecuPress, the best and simpler way to protect your websites.
 Author: SecuPress, WP Media
 Version: 1.0-alpha
-Author URI: http://www.secupress.fr
+Author URI: http://www.secupress.me
 
 Text Domain: secupress
 Domain Path: languages
@@ -20,6 +20,7 @@ define( 'SECUPRESS_ACTIVE_SUBMODULES'     , 'secupress_active_submodules' );
 define( 'SECUPRESS_SETTINGS_SLUG'         , 'secupress_settings' );
 define( 'SECUPRESS_SCAN_SLUG'             , 'secupress_scanners' );
 define( 'SECUPRESS_SCAN_TIMES'            , 'secupress_scanners_times' );
+define( 'SECUPRESS_BAN_IP'            	  , 'secupress_ban_ip' );
 define( 'SECUPRESS_WEB_MAIN'              , 'http://secupress.me/' );
 define( 'SECUPRESS_BOT_URL'               , 'http://bot.secupress.me' );
 define( 'SECUPRESS_WEB_VALID'             , 'http://support.secupress.me/' );
@@ -28,9 +29,8 @@ define( 'SECUPRESS_PLUGIN_FILE'           , 'secupress/secupress.php' );
 define( 'SECUPRESS_PATH'                  , realpath( plugin_dir_path( SECUPRESS_FILE ) ) . '/' );
 define( 'SECUPRESS_INC_PATH'              , realpath( SECUPRESS_PATH . 'inc/' ) . '/' );
 define( 'SECUPRESS_MODULES_PATH'          , realpath( SECUPRESS_INC_PATH . 'modules/' ) . '/' );
-define( 'SECUPRESS_MODULES_PLUGINS_PATH'  , realpath( SECUPRESS_MODULES_PATH . 'plugins/' ) . '/' );
 define( 'SECUPRESS_FRONT_PATH'            , realpath( SECUPRESS_INC_PATH . 'front/' ) . '/' );
-define( 'SECUPRESS_ADMIN_PATH'            , realpath( SECUPRESS_INC_PATH . 'admin' ) . '/' );
+define( 'SECUPRESS_ADMIN_PATH'            , realpath( SECUPRESS_INC_PATH . 'admin/' ) . '/' );
 define( 'SECUPRESS_FUNCTIONS_PATH'        , realpath( SECUPRESS_INC_PATH . 'functions' ) . '/' );
 define( 'SECUPRESS_PLUGIN_URL'            , plugin_dir_url( SECUPRESS_FILE ) );
 define( 'SECUPRESS_INC_URL'               , SECUPRESS_PLUGIN_URL . 'inc/' );
@@ -63,7 +63,7 @@ function secupress_init()
     require( SECUPRESS_FUNCTIONS_PATH 	. '/options.php' );
     // Last constants
     define( 'SECUPRESS_PLUGIN_NAME', get_secupress_option( 'wl_plugin_name', 'SecuPress' ) );
-    define( 'SECUPRESS_PLUGIN_SLUG', sanitize_key( SECUPRESS_PLUGIN_NAME ) );
+    define( 'SECUPRESS_PLUGIN_SLUG', sanitize_key( str_replace( ' ', '-', SECUPRESS_PLUGIN_NAME ) ) );
     // Call defines,  classes and functions
 	require( SECUPRESS_FUNCTIONS_PATH	. '/files.php' );
     require( SECUPRESS_FUNCTIONS_PATH	. '/admin.php' );
@@ -71,7 +71,7 @@ function secupress_init()
     require( SECUPRESS_FUNCTIONS_PATH	. '/plugins.php' );
     require( SECUPRESS_FUNCTIONS_PATH	. '/bots.php' );
     require( SECUPRESS_FRONT_PATH		. '/htaccess.php' );
-    require( SECUPRESS_FRONT_PATH		. '/plugin-compatibility.php' );
+    require( SECUPRESS_FRONT_PATH		. '/main-protections.php' );
     require( SECUPRESS_INC_PATH			. '/admin-bar.php' );
     require( SECUPRESS_INC_PATH 		. '/cron.php' );
 	require( SECUPRESS_MODULES_PATH 	. '/modules.php' );
@@ -81,7 +81,6 @@ function secupress_init()
         require( SECUPRESS_ADMIN_PATH . '/options.php' );
         require( SECUPRESS_ADMIN_PATH . '/notices.php' );
         require( SECUPRESS_ADMIN_PATH . '/admin.php' );
-        // require( SECUPRESS_ADMIN_PATH . '/plugin-compatibility.php' );
         require( SECUPRESS_ADMIN_PATH . '/profiles.php' );
         require( SECUPRESS_ADMIN_PATH . '/upgrader.php' );
 
@@ -152,5 +151,16 @@ function secupress_load_plugins() {
 				}
 			}
 		}
+	}
+}
+
+add_action( 'secupress_loaded', 'secupress_been_first' );
+function secupress_been_first() {
+	$active_plugins = get_option( 'active_plugins' );
+	$plugin_basename = plugin_basename( __FILE__ );
+	if ( reset( $active_plugins ) != plugin_basename( __FILE__ ) ) {
+		unset( $active_plugins[ array_search( $plugin_basename, $active_plugins ) ] );
+		array_unshift( $active_plugins, $plugin_basename );
+		update_option( 'active_plugins', $active_plugins );
 	}
 }

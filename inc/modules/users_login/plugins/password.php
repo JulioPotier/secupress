@@ -28,8 +28,8 @@ function secupress_password_login_form_add_form() {
 		$time = get_user_meta( $CLEAN['uid'], 'auth_timeout', true );
 		$new_password = get_secupress_module_option( 'double_auth_password', false, 'users_login' );
 		if ( $time >= time() ) {
-			var_dump($new_password);
-			var_dump($_POST['website_password']);
+			// var_dump($new_password);//// ?
+			// var_dump($_POST['website_password']);
 			if ( wp_check_password( $_POST['website_password'], $new_password, $user_by_check->ID ) ) {
 				$secure_cookie = apply_filters( 'secure_signon_cookie', is_ssl(), array( 'user_login' => $user_by_check->user_login, 'user_password' => time() ) ); // we don't have the real password, just pass something
 				wp_set_auth_cookie( $CLEAN['uid'], $CLEAN['rememberme'], $secure_cookie );

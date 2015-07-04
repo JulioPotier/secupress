@@ -59,15 +59,25 @@ function secupress_is_affected_role( $module, $submodule, $user ) {
 function __secupress_module_switch_description() {
 	global $modulenow, $sectionnow;
 
-	$before = '<div class="notice notice-success"><i>';
-	$after = '</i></div>';
+	$output = '';
 	switch ( $modulenow . '_' . $sectionnow ) {
 		case 'users_login_login_auth':
-			echo $before . __( 'A Double Authentication is a way to enforce another layer of login, like an additional password, a secret key, a special link sent by email etc. Not just your login and password.', 'secupress' ) . $after;
-			break;
+			$output = __( 'A Double Authentication is a way to enforce another layer of login, like an additional password, a secret key, a special link sent by email etc. Not just your login and password.', 'secupress' );
+		break;
+		case 'plugins_themes_plugins_themes':
+			$output = __( 'By using these protections, you can easily select the proper allowed actions on your plugins.', 'secupress' );
+		break;
+		case 'plugins_themes_themes_plugins':
+			$output = __( 'By using these protections, you can easily select the proper allowed actions on your themes.', 'secupress' );
+		break;
 		case 'sensitive_data_profile_protect':
-			echo $before . __( 'Your profile can contain sensitive data and is also used to change your password. Don\'t let anyone sneaking into it.', 'secupress' ) . $after;
-			break;
+			$output = __( 'Your profile can contain sensitive data and is also used to change your password. Don\'t let anyone sneaking into it.', 'secupress' );
+		break;
+	}
+	if ( $output ) {
+		echo '<div class="notice notice-success"><i>';
+		echo $output;
+		echo '</i></div>';
 	}
 }
 
@@ -138,4 +148,8 @@ function secupress_do_secupress_settings_sections() {
 	do_secupress_settings_sections( 'module_' . $modulenow . '_' . $sectionnow );
 	secupress_submit_button( 'primary small', $sectionnow . '_submit' );
 	do_action( 'after_section_' . $sectionnow );
+}
+
+function secupress_validate_range( $value, $min, $max ) {
+	return filter_var( $value, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => $min, 'max_range' => $max ) ) );
 }

@@ -24,7 +24,7 @@ function secupress_googleauth_css() {
 /**
  * Add verification code field to login form.
  */
-// add_action( 'login_form', 'secupress_googleauth_loginform' );
+add_action( 'login_form', 'secupress_googleauth_loginform' );
 function secupress_googleauth_loginform( $echo = false ) {
 	// var_dump(get_secupress_module_option( 'double_auth_affected_role', false, 'users_login' ));
 	if ( $echo || array() == get_secupress_module_option( 'double_auth_affected_role', false, 'users_login' ) ) {
@@ -226,10 +226,10 @@ function secupress_googleauth_login_form_add_form() {
 
 			if ( $timeslot = __secupress_base32_verify( $googleauth_secret, $_POST['otp'], $lasttimeslot ) ) {
 				update_user_option( $user->ID, 'secupress_google_auth_lasttimeslot', $timeslot, true );
-				$secure_cookie = apply_filters( 'secure_signon_cookie', is_ssl(), array( 'user_login' => $user_by_check->user_login, 'user_password' => time() ) ); // we don't have the real password, just pass something
+				$secure_cookie = apply_filters( 'secure_signon_cookie', is_ssl(), array( 'user_login' => $user->user_login, 'user_password' => time() ) ); // we don't have the real password, just pass something
 				wp_set_auth_cookie( $CLEAN['uid'], $CLEAN['rememberme'], $secure_cookie );
 				do_action( 'wp_login', $user->user_login, $user );
-				$redirect_to = apply_filters( 'login_redirect', admin_url(), admin_url(), $user_by_check );
+				$redirect_to = apply_filters( 'login_redirect', admin_url(), admin_url(), $user );
 				do_action( 'googleauth_autologin_success', $user );
 				wp_redirect( $redirect_to );
 				die( 'login_redirect' );
@@ -313,7 +313,6 @@ function secupress_googleauth_hideifnojs() {
  */
 add_filter( 'authenticate', 'secupress_googleauth_otp', PHP_INT_MAX, 3 );
 function secupress_googleauth_otp( $raw_user, $username, $password ) {
-
 	if ( defined( 'XMLRPC_REQUEST' ) || defined( 'APP_REQUEST' ) ) {
 		$user = get_user_by( 'login', $username );
 		if ( $user && $password === get_user_option( 'secupress_google_auth_app_pass', $user->ID ) ) {
@@ -403,7 +402,7 @@ function __secupress_base32_verify( $secretkey, $thistry, $lasttimeslot ) {
 		// Only 32 bits
 		$value = $value & 0x7FFFFFFF;
 		$value = $value % 1000000;
-		if ( $value === $thistry ) {
+		if ( $value === (int) $thistry ) {
 			// Check for replay (Man-in-the-middle) attack.
 			if ( $lasttimeslot >= ($tm+$i) ) {
 				//// secupress log

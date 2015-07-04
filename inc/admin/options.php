@@ -325,11 +325,13 @@ function secupress_field( $args )
 			case 'text' :
 
 				$value = esc_attr( get_secupress_module_option( $args['name'] ) );
-				if ( $value === false ) {
+				if ( ! $value ) {
 					$value = $default;
 				}
+				$min = isset( $args['min'] ) ? ' min="' . (int) $args['min'] . '"' : '';
+				$max = isset( $args['max'] ) ? ' max="' . (int) $args['max'] . '"' : '';
 
-				$number_options = $args['type']=='number' ? ' min="0" class="small-text"' : '';
+				$number_options = $args['type']=='number' ? $min . $max . ' class="small-text"' : '';
 				$autocomplete = in_array( $args['name'], array( 'consumer_key', 'consumer_email' ) ) ? ' autocomplete="off"' : '';
 				$disabled = false ? ' disabled="disabled"' : $readonly;
 				$data_realtype = 'password' != $args['type'] ? '' : ' data-realtype="password"';
@@ -421,7 +423,23 @@ function secupress_field( $args )
 					<?php }
 			break;
 
-			case 'radio' : ?>
+			case 'checkboxes' : 
+			?>
+
+					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
+					<?php foreach( $args['options'] as $val => $title) { 
+						if ( '_' == $val[0] ) {
+							$title .= ' (' . __( 'Premium', 'secupress' ) . ')';
+						}
+						?>
+						<label><input type="checkbox" for="<?php echo $args['name']; ?>" id="<?php echo $args['name']; ?>_<?php echo $val; ?>" value="<?php echo $val; ?>" <?php checked( in_array( $val, (array) get_secupress_module_option( $args['name'] ) ) ); ?>name="secupress_<?php echo $modulenow; ?>_settings[<?php echo $args['name']; ?>][]"<?php echo $readonly; ?>> <?php echo $title; ?></label><br />
+					<?php } ?>
+
+			<?php
+			break;	
+
+			case 'radio' : 
+			?>
 
 					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
 					<?php foreach( $args['options'] as $val => $title) { 
@@ -430,23 +448,36 @@ function secupress_field( $args )
 						}
 						?>
 						<label><input type="radio" for="<?php echo $args['name']; ?>" id="<?php echo $args['name']; ?>_<?php echo $val; ?>" value="<?php echo $val; ?>" <?php checked( get_secupress_module_option( $args['name'] ), $val ); ?>name="secupress_<?php echo $modulenow; ?>_settings[<?php echo $args['name']; ?>]"<?php echo $readonly; ?>> <?php echo $title; ?></label><br />
-					<?php } ?>
+					<?php }
 
-			<?php
 			break;
 
-			// case 'repeater' :
+			case 'nonlogintimeslot' : 
+			?>
 
-			// 	$fields = new WP_Rocket_Repeater_Field( $args );
-			// 	$fields->render();
+					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
+					<?php 
+						$value = get_secupress_module_option( $args['name'] );
+						$from_hour = isset( $value['from_hour'] ) ? $value['from_hour'] : '';
+						$from_minute = isset( $value['from_minute'] ) ? $value['from_minute'] : '';
+						$to_hour = isset( $value['to_hour'] ) ? $value['to_hour'] : '';
+						$to_minute = isset( $value['to_minute'] ) ? $value['to_minute'] : '';
 
-			// 	break;
+						_e( 'Everyday', 'secupress' ); ////
+						echo '<br>';
+						echo '<span style="display:inline-block;min-width:3em">' . _x( 'From', '*From* xx h xx mn To xx h xx mn', 'secupress' ) . '</span>';
+						?>
+						<label><input type="number" class="small-text" min="0" max="23" id="<?php echo $args['name']; ?>_from_hour" value="<?php echo (int) $from_hour; ?>" name="secupress_<?php echo $modulenow; ?>_settings[<?php echo $args['name']; ?>][from_hour]"<?php echo $readonly; ?>> </label> <?php _ex( 'h', 'hour', 'secupress' ); ?>
+						<label><input type="number" class="small-text" min="0" max="45" step="15" id="<?php echo $args['name']; ?>_from_minute" value="<?php echo (int) $from_minute; ?>" name="secupress_<?php echo $modulenow; ?>_settings[<?php echo $args['name']; ?>][from_minute]"<?php echo $readonly; ?>></label> <?php _ex( 'min', 'minute', 'secupress' ); ?>
+						<br>
+						<?php
+						echo '<span style="display:inline-block;min-width:3em">' . _x( 'To', 'From xx h xx mn *To* xx h xx mn', 'secupress' ) . '</span>';
+						?>
+						<label><input type="number" class="small-text" min="0" max="23" id="<?php echo $args['name']; ?>_to_hour" value="<?php echo (int) $to_hour; ?>" name="secupress_<?php echo $modulenow; ?>_settings[<?php echo $args['name']; ?>][to_hour]"<?php echo $readonly; ?>> </label> <?php _ex( 'h', 'hour', 'secupress' ); ?>
+						<label><input type="number" class="small-text" min="0" max="45" step="15" id="<?php echo $args['name']; ?>_to_minute" value="<?php echo (int) $to_minute; ?>" name="secupress_<?php echo $modulenow; ?>_settings[<?php echo $args['name']; ?>][to_minute]"<?php echo $readonly; ?>></label> <?php _ex( 'min', 'minute', 'secupress' ); ?>
+						<?php
 
-			// case 'secupress_defered_module' :
-
-			// 		secupress_defered_module();
-
-			// break;
+			break;
 
 			case 'helper_description' :
 

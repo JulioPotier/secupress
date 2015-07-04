@@ -8,8 +8,6 @@ if ( 'welcome' == $modulenow ) {
 ?>
 </div>
 <?php
-$class_hidden = secupress_is_module_active( $modulenow ) ? ' hidden' : '';
-secupress_submit_button( 'primary large' . $class_hidden);
 settings_fields( "secupress_{$modulenow}_settings" );
 ?>
 </form>

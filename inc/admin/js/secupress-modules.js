@@ -7,11 +7,6 @@
 		$('#module_active').click( function(e){
 			var val = ! $('#block-advanced_options:visible').length;
 			$('#block-advanced_options').slideToggle(250);
-			if ( val ) {
-				$('#main_submit').hide();
-			} else {
-				$('#main_submit').show();
-			}
 		} );
 
 		$('.button-actions-title').click( function(e){
@@ -48,15 +43,22 @@
 			$('fieldset[class*="_affected_role"].fieldtype-helper_warning p.warning').show();
 		}
 
-		var last_block_target = null;
-		function secupressToggleBlockVisibility( t ) {
-			console.log('ok');
+		var last_block_target = new Array();
+		function secupressToggleBlockVisibility( e, t, first ) {
+			if ( first ) {
+				e.preventDefault();
+			}
+			var block_val = $(t).val();
+			var block_name = $(t).attr('name');
 			var block_target = $('.block-' + $(t).val() );
 			var block_id = $(t).attr('for');
-			$('.block-hidden.block-' + block_id).hide();
-			// console.log( '...'+$(v).data('nocheck') );
 
-			$('.block-hidden.block-' + last_block_target + ' input').each( function(i,v){
+			// if ( first || $(t).attr('type') == 'radio' &&  last_block_target[ $(t).attr('name') ] != $( '[name="' + $(t).attr('name') + '"]:checked' ).val() ) {
+			if ( $(t).attr('type') == 'radio' ) {
+				$('.block-hidden.block-' + block_id).hide();
+			}
+
+			$('.block-hidden.block-' + last_block_target[ $(t).attr('name') ] + ' input').each( function(i,v){
 					if ( true != $(v).data('nocheck') ) {
 						var pattern = $(v).data('pattern');
 						if ( pattern != undefined && pattern != '' ) {
@@ -70,7 +72,6 @@
 						if ( aria_required != undefined && aria_required != '' ) {
 							$(v).removeAttr('aria-required');
 						}
-					// } else {
 					}
 			});
 
@@ -91,18 +92,34 @@
 							$(v).attr('aria-required', aria_required);
 						}
 					} else {
-						console.log( $('.block-hidden.block-' + $(t).val() + ' .new-password').length );
 						$('.block-hidden.block-' + $(t).val() + ' .new-password').show();
 					}
 				});
-				$(block_target).show(tempo);
-				last_block_target = $(t).val();
+
+				if( $(t).is(':radio') ) {
+					$(block_target).show(tempo);
+				} else {
+					if ( ( first && ! $(t).prop( 'checked' ) ) || $(t).prop( 'checked' ) ) {
+						$(block_target).show(tempo);
+					} else {
+						if ( ! first ) {
+							var not = '';
+							$('[name="'+block_name+'"]:checked').each(function(){
+								not += '.block-'+$(this).val()+','
+							});
+							$(block_target).filter(':not('+not+'0)').hide(tempo);
+						}
+					}
+				}
+				last_block_target[ $(t).attr('name') ] = $(t).val();
 			}
 		}
 
 		var tempo = 0;
-		$('select[name^="secupress"]').change( function(){ secupressToggleBlockVisibility( $(this) ) } ).change();
-		$('input[name^="secupress"]:radio').click( function(){ secupressToggleBlockVisibility( $(this) ) } ).filter(':checked').click();
+		$('select[name^="secupress"]').change( function(e){ secupressToggleBlockVisibility( e, $(this), tempo==0 ) } ).change();
+		$('input[name^="secupress"]:radio,input[name^="secupress"]:checkbox').click( function(e){
+			secupressToggleBlockVisibility( e, $(this), tempo==0 );
+		} ).filter(':checked:not(#module_active)').click();
 		tempo = 250;
 	 
 	    function checkPasswordStrength() {

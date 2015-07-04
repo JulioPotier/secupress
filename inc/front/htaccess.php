@@ -9,47 +9,47 @@ defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
  * @param bool $force (default: false)
  * @return void
  */
-function flush_secupress_htaccess( $force = false )
+function secupress_write_htaccess( $marker )
 {
 	if ( ! $GLOBALS['is_apache'] ) {
 		return;
 	}
 
 	$rules = '';
-	$htaccess_file = get_home_path() . '.htaccess';
-
-	if ( is_writable( $htaccess_file ) ) {
-		// Get content of .htaccess file
-		$ftmp = file_get_contents( $htaccess_file );
-
-		// Remove the WP Rocket marker
-		$ftmp = preg_replace( '/# BEGIN SecuPress(.*)# END SecuPress/isU', '', $ftmp );
-
-		// Remove empty spacings
-		$ftmp = str_replace( "\n\n" , "\n" , $ftmp );
-
-		if ( $force === false ) {
-			$rules = get_secupress_htaccess_marker();
-		}
-
-		// Update the .htacces file
-		secupress_put_content( $htaccess_file, $rules . $ftmp );
+	if ( ! function_exists( 'get_home_path' ) ) {
+		require( ABSPATH . 'wp-admin/includes/file.php' );
 	}
+	$htaccess_file = get_home_path() . '.htaccess';
+	if ( is_writable( $htaccess_file ) ) {
+
+		// The rules
+		$rules = get_secupress_htaccess_marker( $marker );
+		// war_dump( $rules );
+		// Update the .htacces file
+		secupress_put_content( $htaccess_file, $marker, $rules );
+
+		return true;
+	}
+	return false;
 }
 
 /**
- * Return the markers for htacces rules
+ * Return the markers for htaccess rules
  *
  * @since 1.0
  *
+ * @param string $function This suffix can be added
  * @return string $marker Rules that will be printed
  */
-function get_secupress_htaccess_marker()
+function get_secupress_htaccess_marker( $function )
 {
-	// Recreate WP Rocket marker
-	$marker  = '# BEGIN SecuPress v' . SECUPRESS_VERSION . PHP_EOL;
-	////
-	$marker .= '# END SecuPress' . PHP_EOL;
+	$_function = 'get_secupress_htaccess_' . $function;
+	if ( ! function_exists( $_function ) ) {
+		return false;
+	}
+
+	// Recreate this marker
+	$marker = call_user_func( $_function );
 
 	/**
 	 * Filter rules added by SecuPress in .htaccess
@@ -58,7 +58,19 @@ function get_secupress_htaccess_marker()
 	 *
 	 * @param string $marker The content of all rules
 	*/
-	$marker = apply_filters( 'secupress_htaccess_marker', $marker );
+	$marker = apply_filters( 'secupress_htaccess_marker_' . $function, $marker );
 
 	return $marker;
+}
+
+function get_secupress_htaccess_ban_ip() {
+	$ban_ips = get_option( SECUPRESS_BAN_IP );
+	if ( is_array( $ban_ips ) && count( $ban_ips ) ) {
+		$content = 'Order Deny,Allow' . PHP_EOL;
+		foreach ( $ban_ips as $IP => $time ) {
+			$content .= 'Deny from ' . $IP . PHP_EOL;
+		}
+		return $content;
+	}
+	return '';
 }

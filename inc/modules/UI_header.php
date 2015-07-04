@@ -44,6 +44,7 @@ function __rocket_module_full_title() {
 <form id="secupress-module-form-settings" method="post" action="<?php echo admin_url( 'options.php' ); ?>">
 <?php
 do_secupress_settings_sections( 'module_' . $modulenow );
+secupress_submit_button( 'primary large' );
 $class_hidden = secupress_is_module_active( $modulenow ) ? '' : 'hide-if-js';
 ?>
 <div id="block-advanced_options" data-module="<?php echo $modulenow; ?>" class="<?php echo $class_hidden; ?>">

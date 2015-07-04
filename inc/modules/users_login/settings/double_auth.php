@@ -10,17 +10,17 @@ $pluginnow = 'double_auth';
 secupress_add_settings_section( __( 'Authentication', 'secupress' ), array( 'with_roles' => true ) );
 
 
-	$select_args_options = apply_filters( 'modules_double_auth', 
+	$select_args_options = apply_filters( 'module_' . $pluginnow, 
 							array(	'-1' 			=> __( 'No thank you', 'secupress' ) . ' <i>(' . __( 'Not recommanded', 'secupress' ) . ')</i>',
 									'googleauth'	=> __( 'Google Authenticator', 'secupress' ),
 									'_notif' 		=> __( 'iOS & Android Notifications', 'secupress' ),
-									'passwordless'	=> __( 'PasswordLess', 'secupress' ),
+									'_passwordless'	=> __( 'PasswordLess', 'secupress' ),
 									'emaillink'		=> __( 'Email Link', 'secupress' ),
 									'password'		=> __( 'Additional Password', 'secupress' ),
 								) );
 	secupress_add_settings_field(
 		__( 'Use a Double Authentication', 'secupress' ),
-		array(	'description' => __( 'We recommand <label for="plugin_double_auth_googleauth"><b>Google Authenticator</b></label>.<br>Still hard to decide?<br>Check this <a href="#">quick tutorial video</a>.', 'secupress' ),
+		array(	'description' => __( 'We recommand <label for="plugin_double_auth_passwordless"><b>PassWordLess</b></label>.<br>Still hard to decide?<br>Check this <a href="#">quick tutorial video</a>.', 'secupress' ),
 				'name' => 'plugin_' . $pluginnow,
 			),
 		array(

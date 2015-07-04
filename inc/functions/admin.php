@@ -211,7 +211,7 @@ function secupress_activate_module( $module, $settings ) {
 function secupress_activate_submodule( $module, $plugin, $incompatibles_modules = array() ) {
 	$plugin_file = sanitize_key( $plugin );
 	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
-	if ( secupress_is_module_active( $module ) && ! in_array_deep( $plugin_file, $active_plugins ) ) {
+	if ( ( secupress_is_module_active( $module ) || isset( $_POST['secupress_' . $module . '_settings']['module_active'] ) ) && ! in_array_deep( $plugin_file, $active_plugins ) ) {
 		if( ! empty( $incompatibles_modules ) ) {
 			secupress_deactivate_submodule( $module, $incompatibles_modules );
 		}
@@ -241,7 +241,11 @@ function get_secupress_module_data( $module, $submodule ) {
 		'Description' => 'Description',
 		'Author' => 'Author',
 	);
-	return get_file_data( SECUPRESS_MODULES_PATH . $module . '/plugins/' . $submodule . '.php', $default_headers, 'module' );
+	$file = SECUPRESS_MODULES_PATH . $module . '/plugins/' . $submodule . '.php';
+	if ( file_exists( $file ) ) {
+		return get_file_data( $file, $default_headers, 'module' );
+	}
+	return array();
 }
 
 
@@ -306,4 +310,42 @@ function secupress_manage_affected_roles( &$settings, $pluginnow ) {
 	}
 
 	unset( $settings['hidden_' . $pluginnow . '_affected_role'] ); // not actual option
+}
+
+function secupress_get_ip() {
+    foreach ( array(
+             'HTTP_CLIENT_IP', 
+             'HTTP_X_FORWARDED_FOR', 
+             'HTTP_X_FORWARDED', 
+             'HTTP_X_CLUSTER_CLIENT_IP', 
+             'HTTP_FORWARDED_FOR', 
+             'HTTP_FORWARDED', 
+             'REMOTE_ADDR' ) as $key ) {
+        if ( array_key_exists( $key, $_SERVER ) ) {
+            $ip = explode( ',', $_SERVER[ $key ] );
+            $ip = end( $ip );
+            if ( filter_var( $ip, FILTER_VALIDATE_IP ) !== false ) {
+                return apply_filters( 'secupress_get_ip', $ip );
+            }
+        }
+    }
+    return apply_filters( 'secupress_default_ip', '0.0.0.0' );
+}
+
+function secupress_ban_ip( $IP = null, $die = true ) {
+	$bad_logins_time_ban = get_secupress_module_option( 'bad_logins_time_ban', 5, 'users_login' );
+	$IP = $IP ? $IP : secupress_get_ip();
+	$ban_ips = get_option( SECUPRESS_BAN_IP );
+	if ( ! is_array( $ban_ips ) ) {
+		$ban_ips = array();
+	}
+	$ban_ips[ $IP ] = time();
+	update_option( SECUPRESS_BAN_IP, $ban_ips );
+	if ( apply_filters( 'write_ban_in_htaccess', true ) ) {
+		secupress_write_htaccess( 'ban_ip' );
+	}
+	if ( $die ) {
+		$msg = sprintf( __( 'Your IP address <code>%1$s</code> have been banned for <b>%2$d</b> minutes, please do not retry until.', 'secupress' ), esc_html( $IP ), $bad_logins_time_ban );
+		secupress_die( $msg );
+	}
 }

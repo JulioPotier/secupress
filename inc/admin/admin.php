@@ -121,7 +121,7 @@ function __secupress_scanner_add_admin_css_js() {
  *
  * @since 1.0
  */
-add_action( 'admin_print_styles-secupress_page_secupress_modules', '__secupress_modules_add_admin_css' );
+add_action( 'admin_print_styles-' . SECUPRESS_PLUGIN_SLUG . '_page_secupress_modules', '__secupress_modules_add_admin_css' );
 function __secupress_modules_add_admin_css() {
 	wp_enqueue_style( 'secupress-modules-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-modules.css', null, SECUPRESS_VERSION );
 }

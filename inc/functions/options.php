@@ -82,11 +82,11 @@ function update_secupress_module_option( $option, $value, $module = false )
 	update_option( "secupress_{$module}_settings", $options );
 }
 
-function secupress_submit_button( $type = 'primary large', $name = 'main_submit', $wrap = false, $other_attributes = null, $echo = true ) {
+function secupress_submit_button( $type = 'primary large', $name = 'main_submit', $wrap = true, $other_attributes = null, $echo = true ) {
 	if ( true === $wrap ) {
-		$wrap = '';
+		$wrap = '<p class="align-right">';
 	} elseif ( $wrap ) {
-		$wrap = '<p class="' . sanitize_html_class( $wrap ) . '">';
+		$wrap = '<p class="align-right ' . sanitize_html_class( $wrap ) . '">';
 	}
 	$button = get_submit_button( __( 'Save All Changes', 'secupress' ), $type, $name, false, $other_attributes );
 	if ( $wrap ) {
