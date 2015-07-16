@@ -94,7 +94,12 @@ function __secupress_users_login_settings_callback( $settings ) {
 	$settings['bad_logins_nonlogintimeslot']['from_minute'] = isset( $settings['bad_logins_nonlogintimeslot']['from_minute'] ) && in_array( $settings['bad_logins_nonlogintimeslot']['from_minute'], array( '0', '15', '30', '45' ) ) ? (int) $settings['bad_logins_nonlogintimeslot']['from_minute'] : 0;
 	$settings['bad_logins_nonlogintimeslot']['to_hour'] = isset( $settings['bad_logins_nonlogintimeslot']['to_hour'] ) && secupress_validate_range( $settings['bad_logins_nonlogintimeslot']['to_hour'], 0, 23 ) ? (int) $settings['bad_logins_nonlogintimeslot']['to_hour'] : 0;
 	$settings['bad_logins_nonlogintimeslot']['to_minute'] = isset( $settings['bad_logins_nonlogintimeslot']['to_minute'] ) && in_array( $settings['bad_logins_nonlogintimeslot']['to_minute'], array( '0', '15', '30', '45' ) ) ? (int) $settings['bad_logins_nonlogintimeslot']['to_minute'] : 0;
-	// war_dump( $settings );
+	
+	if ( isset( $settings['plugin_captcha'] ) ) {
+			secupress_activate_submodule( $modulenow, 'login_captcha' );
+		} else {
+			secupress_deactivate_submodule( $modulenow, 'login_captcha' );
+	}
 
 	return $settings;
 }

@@ -24,7 +24,6 @@ function secupress_write_htaccess( $marker )
 
 		// The rules
 		$rules = get_secupress_htaccess_marker( $marker );
-		// war_dump( $rules );
 		// Update the .htacces file
 		secupress_put_content( $htaccess_file, $marker, $rules );
 

@@ -20,7 +20,6 @@ function secupress_upgrader()
 	elseif ( SECUPRESS_VERSION != $actual_version ) {
 		do_action( 'wp_secupress_upgrade', SECUPRESS_VERSION, $actual_version );
 	}
-
 	// If any upgrade has been done, we flush and update version #
 	if ( did_action( 'wp_secupress_first_install' ) || did_action( 'wp_secupress_upgrade' ) ) {
 		flush_secupress_htaccess();

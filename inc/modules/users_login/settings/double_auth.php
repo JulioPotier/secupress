@@ -13,11 +13,11 @@ secupress_add_settings_section( __( 'Authentication', 'secupress' ), array( 'wit
 	$select_args_options = apply_filters( 'module_' . $pluginnow, 
 							array(	'-1' 			=> __( 'No thank you', 'secupress' ) . ' <i>(' . __( 'Not recommanded', 'secupress' ) . ')</i>',
 									'googleauth'	=> __( 'Google Authenticator', 'secupress' ),
-									'_notif' 		=> __( 'iOS & Android Notifications', 'secupress' ),
-									'_passwordless'	=> __( 'PasswordLess', 'secupress' ),
+									'_passwordless'	=> __( 'PasswordLess', 'secupress' ) . ' ' . __( '<i>(by mail, iOS or Android notifs)</i>', 'secupress' ),
 									'emaillink'		=> __( 'Email Link', 'secupress' ),
 									'password'		=> __( 'Additional Password', 'secupress' ),
 								) );
+
 	secupress_add_settings_field(
 		__( 'Use a Double Authentication', 'secupress' ),
 		array(	'description' => __( 'We recommand <label for="plugin_double_auth_passwordless"><b>PassWordLess</b></label>.<br>Still hard to decide?<br>Check this <a href="#">quick tutorial video</a>.', 'secupress' ),
@@ -50,7 +50,7 @@ secupress_add_settings_section( __( 'Authentication', 'secupress' ), array( 'wit
 		__( 'Premium Upgrade', 'secupress' ),
 		array( 'field_type' => 'button', 'name' => '' ),
 		array(
-			'class' => __secupress_get_hidden_classes( 'hidden block-_notif block-plugin_' . $pluginnow ),
+			'class' => __secupress_get_hidden_classes( 'hidden block-_passwordless block-plugin_' . $pluginnow ),
 			'helper_description'  => array( 'description' => __( 'This feature is only available in the <b>Premium Version</b>.', 'secupress' ) ),
 			'button' => array(
 				'url'			=> '#',
@@ -89,6 +89,29 @@ secupress_add_settings_section( __( 'Authentication', 'secupress' ), array( 'wit
 				// do not use wp_get_password_hint() because we can't respect the site policy here, but only ours
 				'description'  => __( 'Hint: The password should be at least seven characters long. To make it stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ &amp; ).' )
 			),		
+		)
+	);
+
+	$pluginnow = 'captcha';
+	secupress_add_settings_field(
+		__( 'Use a Captcha for everyone', 'secupress' ),
+		array(	'description' => __( 'A Captcha can avoid a form to be sent if its rule isn\'t respected.', 'secupress' ),
+				'name' => 'plugin_' . $pluginnow,
+			),
+		array(
+			array(
+				'type'			=> 'checkbox',
+				'name'			=> 'plugin_' . $pluginnow,
+				'label'			=> __( 'Yes, use a Captcha', 'secupress' ),
+				'label_for'		=> 'plugin_' . $pluginnow,
+				'label_screen'	=> __( 'Use a Captcha', 'secupress' ),
+			),
+			array(
+				'type'	=> 'helper_warning',
+				'name'	=> 'plugin_' . $pluginnow,
+				'class'	=> array( 'block-' . 'plugin_' . $pluginnow ),
+				'description'  => __( 'This module requires JavaScript enabled, without it the form will never be sent.', 'secupress' ),
+			),			
 		)
 	);
 

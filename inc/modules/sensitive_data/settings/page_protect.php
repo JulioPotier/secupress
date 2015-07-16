@@ -40,6 +40,7 @@ secupress_add_settings_section( __( 'Settings Pages Protection', 'secupress' )/*
 			array(
 				'type'			=> 'checkbox',
 				'name'			=> 'settings_protect_' . $pluginnow,
+				'label'			=> __( 'Yes, protect the settings pages', 'secupress' ),
 				'label_for'		=> 'settings_protect_' . $pluginnow,
 				'label_screen'	=> __( 'Yes, protect the settings pages', 'secupress' ),
 			),
