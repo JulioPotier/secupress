@@ -23,7 +23,8 @@ add_settings_section( 'module_' . $modulenow, __( 'Module activation', 'secupres
 			'type'         => 'helper_description',
 			'name'         => 'advanced_options',
 			'description'  =>  __( 'You can select and configure each module separately below.', 'secupress' ),
-		),			)
+		),
+	)
 );
 
 /**

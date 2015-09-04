@@ -459,7 +459,8 @@ abstract class SecuPress_Scanners_Functions {
 		self::set_status( $return, 'Good' );
 
 		require_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
-		$check = (bool)  WP_Automatic_Updater::is_disabled();
+		$WP_Automatic_Updater = new WP_Automatic_Updater();
+		$check = (bool) $WP_Automatic_Updater->is_disabled();
 		if ( $check ) {
 			self::set_status( $return, 'Bad' );
 			self::set_message( $return, __( 'Your installation <b>can NOT auto update</b> itself.', 'secupress' ) );

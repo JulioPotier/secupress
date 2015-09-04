@@ -22,6 +22,7 @@ define( 'SECUPRESS_SCAN_SLUG'             , 'secupress_scanners' );
 define( 'SECUPRESS_SCAN_TIMES'            , 'secupress_scanners_times' );
 define( 'SECUPRESS_BAN_IP'            	  , 'secupress_ban_ip' );
 define( 'SECUPRESS_WEB_MAIN'              , 'http://secupress.me/' );
+define( 'SECUPRESS_WEB_DEMO'              , home_url( '/' ) );
 define( 'SECUPRESS_BOT_URL'               , 'http://bot.secupress.me' );
 define( 'SECUPRESS_WEB_VALID'             , 'http://support.secupress.me/' );
 define( 'SECUPRESS_FILE'                  , __FILE__ );
@@ -32,6 +33,7 @@ define( 'SECUPRESS_MODULES_PATH'          , realpath( SECUPRESS_INC_PATH . 'modu
 define( 'SECUPRESS_FRONT_PATH'            , realpath( SECUPRESS_INC_PATH . 'front/' ) . '/' );
 define( 'SECUPRESS_ADMIN_PATH'            , realpath( SECUPRESS_INC_PATH . 'admin/' ) . '/' );
 define( 'SECUPRESS_FUNCTIONS_PATH'        , realpath( SECUPRESS_INC_PATH . 'functions' ) . '/' );
+define( 'SECUPRESS_ADMIN_SETTINGS_MODULES', SECUPRESS_ADMIN_PATH . 'modules/' );
 define( 'SECUPRESS_PLUGIN_URL'            , plugin_dir_url( SECUPRESS_FILE ) );
 define( 'SECUPRESS_INC_URL'               , SECUPRESS_PLUGIN_URL . 'inc/' );
 define( 'SECUPRESS_FRONT_URL'             , SECUPRESS_INC_URL . 'front/' );

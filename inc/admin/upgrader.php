@@ -22,7 +22,7 @@ function secupress_upgrader()
 	}
 	// If any upgrade has been done, we flush and update version #
 	if ( did_action( 'wp_secupress_first_install' ) || did_action( 'wp_secupress_upgrade' ) ) {
-		flush_secupress_htaccess();
+		// flush_secupress_htaccess(); ////
 
 		secupress_renew_all_boxes( 0, array( 'secupress_warning_plugin_modification' ) );
 

@@ -87,7 +87,7 @@ function __secupress_settings_action_links( $actions ) {
 		array_unshift( $actions, sprintf( '<a href="%s">%s</a>', 'http://docs.secupress.fr', __( 'Docs', 'secupress' ) ) );
 	}
 
-	array_unshift( $actions, sprintf( '<a href="%s">%s</a>', secupress_admin_url( 'dashboard' ), __( 'Settings' ) ) );
+	array_unshift( $actions, sprintf( '<a href="%s">%s</a>', secupress_admin_url( 'settings' ), __( 'Settings' ) ) );
 
     return $actions;
 }
@@ -114,6 +114,16 @@ function __secupress_scanner_add_admin_css_js() {
 			'notscannedyet' => array( 'value' => $counts['notscannedyet'], 'text' => __( 'Not Scanned Yet', 'secupress' ) ),
 		)
 	);
+}
+
+/**
+ * Add the CSS and JS files for SecuPress settings page
+ *
+ * @since 1.0
+ */
+add_action( 'admin_print_styles-secupress_page_secupress_settings', '__secupress_settings_add_admin_css', 99999 );
+function __secupress_settings_add_admin_css() {
+	wp_enqueue_style( 'secupress-settings-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-settings.css', null, SECUPRESS_VERSION );
 }
 
 /**
@@ -215,7 +225,7 @@ function __secupress_do_options_export() {
 	$filename = sprintf( 'secupress-settings-%s-%s.txt', date( 'Y-m-d' ), uniqid() );
 	$gz = 'gz' . strrev( 'etalfed' );
 	$options = $gz//;
-	( serialize( get_option( SECUPRESS_SETTINGS_SLUG ) ), 1 ); // do not use get_rocket_option() here
+	( serialize( get_option( SECUPRESS_SETTINGS_SLUG ) ), 1 ); // do not use get_secupress_option() here
 	nocache_headers();
 	@header( 'Content-Type: text/plain' );
 	@header( 'Content-Disposition: attachment; filename="' . $filename . '"' );

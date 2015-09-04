@@ -16,7 +16,7 @@ function secupress_favicon() {
 add_action( 'admin_menu', 'secupress_create_menus' );
 function secupress_create_menus() {
 	add_menu_page( SECUPRESS_PLUGIN_NAME, SECUPRESS_PLUGIN_NAME, 'administrator', 'secupress', '__secupress_dashboard', 'dashicons-shield-alt' );
-		add_submenu_page( 'secupress', __( 'Settings', 'secupress' ), __( 'Settings', 'secupress' ), 'administrator', 'secupress_settings', '__secupress_settings' );
+		add_submenu_page( 'secupress', __( 'Settings', 'secupress' ), __( 'Settings', 'secupress' ), 'administrator', 'secupress_settings', '__secupress_global_settings' );
 		add_submenu_page( 'secupress', __( 'Modules', 'secupress' ), __( 'Modules', 'secupress' ), 'administrator', 'secupress_modules', '__secupress_modules' );
 		add_submenu_page( 'secupress', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ), 'administrator', 'secupress_scanner', '__secupress_scanner' );
 }
@@ -44,33 +44,86 @@ function __secupress_modules() {
  */
 add_action( 'admin_init', 'secupress_register_setting' );
 function secupress_register_setting() {
-	register_setting( 'secupress_scan', 'secupress' );
+	register_setting( 'secupress_global_settings', SECUPRESS_SETTINGS_SLUG, '__secupress_global_settings_callback' );
+}
+
+function __secupress_global_settings_callback( $value ) {
+	if ( ! empty( $value['consumer_email'] ) && empty( $value['consumer_key'] ) ) {
+		$response = wp_remote_post( SECUPRESS_WEB_DEMO . 'valid_key.php',
+						array(
+							'timeout' => 10,
+							'body'    => array(
+								'data' => array(
+									'user_email'	=> $value['consumer_email'],
+									'user_key'		=> $value['consumer_key'],
+									'action'		=> 'create_free_licence',
+								)
+							),
+						)
+					);
+		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
+			$value['consumer_key'] = wp_remote_retrieve_body( $response );
+		}
+	}
+	return $value;
 }
 
 function __secupress_dashboard() {
-	echo '<h1>DASHBOARD</h1>';
+	$heading_tag = version_compare( $GLOBALS['wp_version'], '4.3' ) >= 0 ? 'h1' : 'h2';
+	?>
+	<div class="wrap">
+		<<?php echo $heading_tag; ?>><?php echo SECUPRESS_PLUGIN_NAME; ?> - <?php _e( 'Dashboard' ); ?></<?php echo $heading_tag; ?>>
+	</div>
+	<?php
 	delete_option( SECUPRESS_SCAN_SLUG );
 	delete_option( SECUPRESS_SCAN_TIMES );
 }
 
 
-function __secupress_settings() {
-	echo '<h1>SETTINGS</h1>';
+function __secupress_global_settings() {
+	global $modulenow;
+	$modulenow = 'global';
+
+	$setting_modules = apply_filters( 'secupress_global_settings_modules', array( 'api-key', 'auto-config' ) );
+	foreach ( $setting_modules as $_module) {
+		include( SECUPRESS_ADMIN_SETTINGS_MODULES . $_module . '.php' );
+	}
+	$heading_tag = version_compare( $GLOBALS['wp_version'], '4.3' ) >= 0 ? 'h1' : 'h2';
+	?>
+	<div class="wrap">
+		<<?php echo $heading_tag; ?>><?php echo SECUPRESS_PLUGIN_NAME; ?> <sup><?php echo SECUPRESS_VERSION; ?></sup> <?php _e( 'Settings' ); ?></<?php echo $heading_tag; ?>>
+		<form action="options.php" method="post" id="secupress_settings">
+			<?php submit_button(); ?>
+			<?php settings_fields( 'secupress_settings' ); ?>
+			<div class="secupress_setting_block">
+				<?php do_settings_sections( 'secupress_apikey' ); ?>
+			</div>
+			<?php submit_button(); ?>
+			<div class="secupress_setting_block">
+				<?php do_settings_sections( 'secupress_autoconfig' ); ?>
+			</div>
+			<?php submit_button(); ?>
+		</form>
+		<div class="secupress_setting_block">
+			<h2><?php _e( 'That\'s all!', 'secupress' ); ?></h2>
+			<p><?php _e( 'Looking for more settings? Each other setting is included in its own module, just <a href="#">check them</a> if you need.', 'secupress' ); ?></p>
+		</div>
+	</div>
+	<?php
 }
 
+function secupress_uksort_scanners( $key_a, $key_b ) {
+
+}
 
 function secupress_main_scan() {
 	global $secupress_tests;
 	$scanners = get_option( SECUPRESS_SCAN_SLUG );
 	$thedate = ! empty( $scanners['last_run'] ) ? wp_sprintf( __('%s ago'), human_time_diff( $scanners['last_run'] ) ) : __( 'Never', 'secupress' );
-	?><!--//
+	?>
 	<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=all' ), 'secupress_scanner_all' ); ?>" class="button button-primary button-large button-secupress-scan" style="text-align: center;font-size: 3em; font-style: italic; height: 60px; max-width: 435px; overflow: hidden; padding: 10px 20px; margin-bottom: 5px" id="submit">
-		<?php _e( 'Launch Scan', 'secupress' ); ?>
-		<span style="clear:both;display:block;line-height:1.6em;font-size: 12px; font-style: italic">
-			<?php _e( 'Last scan: ', 'secupress' ); ?><span id="secupress-date"><?php echo $thedate; ?></span>
-		</span>
+		<?php _e( 'One Click Scan', 'secupress' ); ?>
 	</a>
-//-->
 
 	<div class="square-filter priorities hide-if-no-js">
 		<span class="active" data-type="all"><?php _ex( 'All Priorities', 'priority', 'secupress' ); ?></span>
@@ -131,6 +184,19 @@ function secupress_main_scan() {
 	<?php
 	$i=0;
 	global $statuses_point;
+	// uasort( $scanners, function( $a, $b ) {
+	// 	$_a = $_b = 2;
+	// 	switch ( $a['class'] ) {
+	// 		case 'bad': $_a = 1; break;
+	// 		case 'good': $_a = 3; break;
+	// 	}
+	// 	switch ( $b['class'] ) {
+	// 		case 'bad': $_b = 1; break;
+	// 		case 'good': $_b = 3; break;
+	// 	}
+	// 	return $_a < $_b ;
+	// });
+	// var_dump($scanners);
 	foreach ( $secupress_tests[ $prio_key ] as $test_name => $details ){
 		$i++;
 		$status = isset( $scanners[ $test_name ]['status'] ) ? $scanners[ $test_name ]['status'] : secupress_status( /**/'Not Scanned Yet'/**/ ); // Do not localize
@@ -283,13 +349,12 @@ function __secupress_scanner() {
 function secupress_field( $args )
 {
 	global $modulenow;
-	unset( $args['class'] );
+
 	if( ! is_array( reset( $args ) ) ) {
 		$args = array( $args );
 	}
 
 	$full = $args;
-
 	foreach ( $full as $args ) {
 		if ( isset( $args['display'] ) && ! $args['display'] ) {
 			continue;

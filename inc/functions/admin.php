@@ -40,7 +40,7 @@ function secupress_user_agent( $user_agent )
 	
 	$bonus = ! secupress_is_white_label() ? '' : '*';
 	$bonus .= ! get_secupress_option( 'do_beta' ) ? '' : '+';
-	$new_ua = sprintf( '%s;SecuPress|%s%s|%s|%s|%s|;', $user_agent, SECUPRESS_VERSION, $bonus, esc_url( home_url() ) );
+	$new_ua = sprintf( '%s;SecuPress|%s%s|%s|;', $user_agent, SECUPRESS_VERSION, $bonus, esc_url( home_url() ) );
 
     return $new_ua;
 }
@@ -121,6 +121,7 @@ function secupress_is_white_label()
 	{
 		$options .= !is_array( get_secupress_option( $value ) ) ? get_secupress_option( $value ) : reset( ( get_secupress_option( $value ) ) );
 	}
+	return false; ////
 	return 'a509cac94e0cd8238b250074fe802b90' != md5( $options ); ////
 }
 

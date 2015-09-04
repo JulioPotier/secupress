@@ -202,12 +202,12 @@ function secupress_replace_content( $file, $marker, $new_content, $file_content 
  */
 function secupress_find_wpconfig_path()
 {
-	$config_file = get_home_path() . 'wp-config.php';
-	$config_file_alt = dirname( get_home_path() ) . '/wp-config.php';
+	$config_file = ABSPATH . 'wp-config.php';
+	$config_file_alt = dirname( ABSPATH ) . '/wp-config.php';
 
 	if ( file_exists( $config_file ) ) {
 		return $config_file;
-	} elseif ( @file_exists( $config_file_alt ) && ! file_exists( dirname( get_home_path() ) . '/wp-settings.php' ) ) {
+	} elseif ( @file_exists( $config_file_alt ) && ! file_exists( dirname( ABSPATH ) . '/wp-settings.php' ) ) {
 		return $config_file_alt;
 	}
 

@@ -93,6 +93,7 @@ jQuery(document).ready(function($)
 					}
 					if ( ! $( this ).hasClass( 'button-secupress-scan' ) ) {
 						secupress_maj_score( true );
+						secupress_sort( pairs['prio'], pairs['test'] );
 					}
 				} else {
 					console.log( 'AJAX error:' + test );
@@ -143,6 +144,19 @@ jQuery(document).ready(function($)
 		$('.table-prio-all table tbody tr').removeClass('alternate-1 alternate-2');
 		$('.table-prio-all table tbody tr.secupress-item-all:visible:odd').addClass('alternate-2');
 		$('.table-prio-all table tbody tr.secupress-item-all:visible:even').addClass('alternate-1');
+	}
+
+	function secupress_sort( prio, test ) {
+		var $good_items = $( '.table-prio-' + prio + ' .status-good, .status-fpositive' ).detach();
+		var $bad_items = $( '.table-prio-' + prio + ' .status-bad' ).detach();
+		var $nsy_items = $( '.table-prio-' + prio + ' .status-notscannedyet' ).detach();
+		$( $bad_items ).appendTo( '.table-prio-' + prio + ' tbody' );
+		$( $nsy_items ).appendTo( '.table-prio-' + prio + ' tbody' );
+		$( $good_items ).appendTo( '.table-prio-' + prio + ' tbody' );
+		$('html, body').animate( {
+				scrollTop: $( '.secupress-item-' + test ).offset().top - 32
+				},
+			750 );
 	}
 
 	function secupress_maj_score( refresh ) {
