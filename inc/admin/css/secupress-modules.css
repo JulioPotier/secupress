@@ -5,7 +5,7 @@ h2 .nav-tab { padding: 6px 10px 10px 10px; font-weight: bold; font-size: 15px; l
 h2 .nav-tab:first-child { border-radius: 4px 4px 0 0;  }
 h2 .nav-tab:last-child { border-radius: 0 0 4px 4px;}
 #tab_content{margin-left:190px;width:650px;position: relative;top:-4px}
-.secublock{background-color:#FFF;padding: 1px 10px 10px 15px;border: 1px solid #ccc;margin-top: 10px; margin-bottom: 5px;border-radius: 4px;}
+.secublock{background-color:#FFF;padding: 1px 10px 10px 15px;border: 1px solid #ccc;margin-bottom: 5px;border-radius: 4px;}
 .secublock h3 {border-bottom: 1px solid #CCC; padding-bottom: 3px; }
 .form-table {clear: none;}
 .secublock .notice { background: #fcfcfc; margin: 0px; padding: 3px 5px 3px 8px}

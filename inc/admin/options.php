@@ -92,10 +92,9 @@ function secupress_create_menus() {
  * @since 1.0
  */
 function __secupress_dashboard() {
-	$heading_tag = version_compare( $GLOBALS['wp_version'], '4.3' ) >= 0 ? 'h1' : 'h2';
 	?>
 	<div class="wrap">
-		<<?php echo $heading_tag; ?>><?php echo SECUPRESS_PLUGIN_NAME; ?> - <?php _e( 'Dashboard' ); ?></<?php echo $heading_tag; ?>>
+		<?php secupress_admin_heading( __( 'Dashboard' ) ); ?>
 	</div>
 	<?php
 	delete_option( SECUPRESS_SCAN_SLUG );
@@ -118,10 +117,9 @@ function __secupress_global_settings() {
 		include( SECUPRESS_ADMIN_SETTINGS_MODULES . $_module . '.php' );
 	}
 
-	$heading_tag = version_compare( $GLOBALS['wp_version'], '4.3' ) >= 0 ? 'h1' : 'h2';
 	?>
 	<div class="wrap">
-		<<?php echo $heading_tag; ?>><?php echo SECUPRESS_PLUGIN_NAME; ?> <sup><?php echo SECUPRESS_VERSION; ?></sup> <?php _e( 'Settings' ); ?></<?php echo $heading_tag; ?>>
+		<?php secupress_admin_heading( __( 'Settings' ) ); ?>
 		<form action="options.php" method="post" id="secupress_settings">
 			<?php submit_button(); ?>
 			<?php settings_fields( 'secupress_settings' ); ?>
@@ -153,15 +151,18 @@ function __secupress_modules() {
 
 	$modulenow = isset( $_GET['module'] ) ? $_GET['module'] : 'welcome';
 	$modulenow = array_key_exists( $modulenow, $secupress_modules ) && file_exists( SECUPRESS_MODULES_PATH . $modulenow . '/settings.php' ) ? $modulenow : 'welcome';
-
-	include(  SECUPRESS_MODULES_PATH . 'UI_menu.php' );
 	?>
-	<div id="tab_content">
-		<?php
-		include( SECUPRESS_MODULES_PATH . 'UI_header.php' );
-		include( SECUPRESS_MODULES_PATH . $modulenow . '/settings.php' );
-		include( SECUPRESS_MODULES_PATH . 'UI_footer.php' );
-		?>
+	<div class="wrap">
+
+		<?php include(  SECUPRESS_MODULES_PATH . 'UI_menu.php' ); ?>
+
+		<div id="tab_content">
+			<?php
+			include( SECUPRESS_MODULES_PATH . 'UI_header.php' );
+			include( SECUPRESS_MODULES_PATH . $modulenow . '/settings.php' );
+			include( SECUPRESS_MODULES_PATH . 'UI_footer.php' );
+			?>
+		</div>
 	</div>
 	<?php
 }
@@ -222,14 +223,17 @@ function __secupress_scanner() {
 	);
 	?>
 	<div class="wrap">
-		<h2><?php echo SECUPRESS_PLUGIN_NAME; ?> <small>v<?php echo SECUPRESS_VERSION; ?></small></h2>
 		<?php
+		secupress_admin_heading( __( 'Scanners', 'secupress' ) );
+
 		foreach( $boxes as $id => $box ) {
 			secupress_sidebox( array( 'id' => $id, 'title' => $box[0], 'content' => $box[1], 'context' => 'top' ) );
 		}
+
+		secupress_main_scan();
+
+		wp_nonce_field( 'secupress_score', 'secupress_score', false );
 		?>
-		<?php secupress_main_scan(); ?>
-		<?php wp_nonce_field( 'secupress_score', 'secupress_score', false ); ?>
 	</div>
 	<?php
 }
@@ -238,6 +242,17 @@ function __secupress_scanner() {
 /*------------------------------------------------------------------------------------------------*/
 /* !TOOLS ======================================================================================= */
 /*------------------------------------------------------------------------------------------------*/
+
+/**
+ * Print the settings page title.
+ *
+ * @since 1.0
+ */
+function secupress_admin_heading( $title = '' ) {
+	$heading_tag = version_compare( $GLOBALS['wp_version'], '4.3' ) >= 0 ? 'h1' : 'h2';
+	printf( '<%1$s>%2$s <sup>%3$s</sup> %4$s</%1$s>', $heading_tag, SECUPRESS_PLUGIN_NAME, SECUPRESS_VERSION, $title );
+}
+
 
 function secupress_uksort_scanners( $key_a, $key_b ) {
 	//
