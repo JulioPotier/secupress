@@ -143,6 +143,28 @@ th.secupress-check {
 .dashicons-arrow-down-alt2 {
 	color: #D73838;
 }
+.link-like {
+	padding: 0;
+	border: none;
+	margin: 0;
+	font-size: 1em;
+	line-height: inherit;
+	text-align: left;
+	text-transform: none;
+	color: #0073AA;
+	text-shadow: none;
+	background: none;
+	border-radius: 0;
+	box-shadow: none;
+	cursor: pointer;
+	transition-property: border, background, color;
+	transition-duration: .05s;
+	transition-timing-function: ease-in-out;
+}
+.link-like:hover,
+.link-like:focus {
+	color: #00A0D2;
+}
 .square-filter {
 	padding: 0;
 }
