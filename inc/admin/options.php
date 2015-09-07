@@ -120,6 +120,7 @@ function __secupress_global_settings() {
 	?>
 	<div class="wrap">
 		<?php secupress_admin_heading( __( 'Settings' ) ); ?>
+
 		<form action="options.php" method="post" id="secupress_settings">
 			<?php submit_button(); ?>
 			<?php settings_fields( 'secupress_settings' ); ?>
@@ -178,23 +179,25 @@ function __secupress_scanner() {
 	$reports      = array();
 	$last_percent = -1;
 
-	foreach ( $times as $time ) {
-		$replacement = 'right';
+	if ( ! empty( $times ) && is_array( $times ) ) {
+		foreach ( $times as $time ) {
+			$replacement = 'right';
 
-		if ( $last_percent > -1 && $last_percent < $time['percent'] ) {
-			$replacement = 'up';
+			if ( $last_percent > -1 && $last_percent < $time['percent'] ) {
+				$replacement = 'up';
+			}
+			else if ( $last_percent > -1 && $last_percent > $time['percent'] ) {
+				$replacement = 'down';
+			}
+
+			$last_percent = $time['percent'];
+			$date         = sprintf( __( '%s ago' ), human_time_diff( $time['time'] ) );
+
+			$reports[] = sprintf(
+				'<li data-percent="%1$d"><span class="dashicons mini dashicons-arrow-%2$s-alt2" aria-hidden="true"></span><strong>%3$s (%1$d %%)</strong> <span class="timeago">%4$s</span></li>',
+				$time['percent'], $replacement, $time['grade'], $date
+			);
 		}
-		else if ( $last_percent > -1 && $last_percent > $time['percent'] ) {
-			$replacement = 'down';
-		}
-
-		$last_percent = $time['percent'];
-		$date         = date( 'Y-m-d H:i', $time['time'] + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS ) );
-
-		$reports[] = sprintf(
-			'<li data-percent="%1$d"><span class="dashicons mini dashicons-arrow-%2$s-alt2"></span><b>%3$s (%1$d %%)</b> <span class="timeago" title="%4$s">%4$s</span></li>',
-			$time['percent'], $replacement, $time['grade'], $date
-		);
 	}
 
 	$boxes = array(
@@ -204,13 +207,18 @@ function __secupress_scanner() {
 			'<div class="score_info2">' .
 				'<span class="letter">&ndash;</span>' .
 				'<span class="percent">(0 %)</span>' .
-				'<span class="score_results"><b>Last Reports</b>:<br>' .
+				'<span class="score_results">' . sprintf( __( '%s:', 'secupress' ), '<strong>' . __( 'Latest Reports', 'secupress' ) . '</strong>' ) . '<br>' .
 					'<ul>' .
 						implode( "\n", array_reverse( $reports ) ) .
 					'</ul>' .
 				'</span>' .
 			'</div>' .
-			__( '<div class="legend"><span class="dashicons dashicons-shield-alt secupress-dashicon-color-good"></span> Good | <span class="dashicons dashicons-shield-alt secupress-dashicon-color-bad"></span> Bad | <span class="dashicons dashicons-shield-alt secupress-dashicon-color-warning"></span> Warning | <span class="dashicons dashicons-shield-alt secupress-dashicon-color-notscannedyet"></span> Not scanned yet</div>', 'secupress' ) .
+			'<div class="legend">' .
+				'<span class="dashicons dashicons-shield-alt secupress-dashicon-color-good" aria-hidden="true"></span> ' . __( 'Good', 'secupress' ) . ' | ' .
+				'<span class="dashicons dashicons-shield-alt secupress-dashicon-color-bad" aria-hidden="true"></span> ' . __( 'Bad', 'secupress' ) . ' | ' .
+				'<span class="dashicons dashicons-shield-alt secupress-dashicon-color-warning" aria-hidden="true"></span> ' . __( 'Warning', 'secupress' ) . ' | ' .
+				'<span class="dashicons dashicons-shield-alt secupress-dashicon-color-notscannedyet" aria-hidden="true"></span> ' . __( 'Not scanned yet', 'secupress' ) .
+			'</div>' .
 			'<span id="tweeterA" class="hidden"><hr><img style="vertical-align:middle" src="https://g.twimg.com/dev/documentation/image/Twitter_logo_blue_16.png"> <i>' . __( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ) . '</i> <a class="button button-small" href="https://twitter.com/intent/tweet?via=secupress&url=http://secupress.fr&text=' . urlencode( 'Wow! My website just got an A security grade using SecuPress, what about yours?' ) . '">Tweet &raquo;</a></span>'
 		),
 	//	'premium' => array(
@@ -270,18 +278,18 @@ function secupress_main_scan() {
 	</a>
 
 	<div class="square-filter priorities hide-if-no-js">
-		<span class="active" data-type="all"><?php _ex( 'All Priorities', 'priority', 'secupress' ); ?></span>
-		<span data-type="high"><?php _ex( 'High Priority', 'priority', 'secupress' ); ?></span>
-		<span data-type="medium"><?php _ex( 'Medium Priority', 'priority', 'secupress' ); ?></span>
-		<span data-type="low"><?php _ex( 'Low Priority', 'priority', 'secupress' ); ?></span>
+		<button type="button" class="active" data-type="all"><?php _ex( 'All Priorities', 'priority', 'secupress' ); ?></button><?php
+		?><button type="button" data-type="high"><?php _ex( 'High Priority', 'priority', 'secupress' ); ?></button><?php
+		?><button type="button" data-type="medium"><?php _ex( 'Medium Priority', 'priority', 'secupress' ); ?></button><?php
+		?><button type="button" data-type="low"><?php _ex( 'Low Priority', 'priority', 'secupress' ); ?></button>
 	</div>
 
 	<div class="square-filter statuses hide-if-no-js">
-		<span class="active" data-type="all"><?php _ex( 'All Statuses', 'priority', 'secupress' ); ?></span>
-		<span data-type="good"><?php _ex( 'Good Status', 'priority', 'secupress' ); ?></span>
-		<span data-type="warning"><?php _ex( 'Warning Status', 'priority', 'secupress' ); ?></span>
-		<span data-type="bad"><?php _ex( 'Bad Status', 'priority', 'secupress' ); ?></span>
-		<span data-type="notscannedyet"><?php _ex( 'Not Scanned Yet', 'priority', 'secupress' ); ?></span>
+		<button type="button" class="active" data-type="all"><?php _ex( 'All Statuses', 'priority', 'secupress' ); ?></button><?php
+		?><button type="button" data-type="good"><?php _ex( 'Good Status', 'priority', 'secupress' ); ?></button><?php
+		?><button type="button" data-type="warning"><?php _ex( 'Warning Status', 'priority', 'secupress' ); ?></button><?php
+		?><button type="button" data-type="bad"><?php _ex( 'Bad Status', 'priority', 'secupress' ); ?></button><?php
+		?><button type="button" data-type="notscannedyet"><?php _ex( 'Not Scanned Yet', 'priority', 'secupress' ); ?></button>
 	</div>
 
 	<div id="secupress-tests">

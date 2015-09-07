@@ -44,7 +44,7 @@ jQuery(document).ready(function($)
 	});
 	donutId.onclick = function(evt){
 		var activePoints = SecuPressDonutChart.getSegmentsAtEvent(evt);
-		jQuery('.square-filter.statuses span[data-type="'+activePoints[0].status+'"]').click();
+		jQuery('.square-filter.statuses button[data-type="'+activePoints[0].status+'"]').click();
 	};
 
 	$('body').on( 'click','.button-secupress-scan, .secupress-scanit', function( e ) {
@@ -124,7 +124,7 @@ jQuery(document).ready(function($)
 		})
 	});
 
-	$('body').on( 'click','.square-filter span', function( e ) {
+	$('body').on( 'click','.square-filter button', function( e ) {
 		e.preventDefault();
 		var priority = $(this).data('type');
 		$(this).siblings().removeClass('active');
