@@ -17,7 +17,7 @@ abstract class SecuPress_Scanners_Functions {
 	static public function set_message( &$data, $message ) {
 		if ( '' == $message ) {
 			return;
-		}		
+		}
 		if ( ! isset( $data['message'] ) ) {
 			$data['message'] = '';
 		}
@@ -915,6 +915,18 @@ abstract class SecuPress_Scanners_Functions {
 
 		}
 
+		// wp-config.php access
+		$response = wp_remote_get( home_url( '/?' . time() . '=wp-config.php' ), self::$remote_args );
+		if ( ! is_wp_error( $response ) ) {
+			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
+				self::set_status( $return, 'Bad' );
+				self::set_message( $return, sprintf( __( 'Your website should block <b>malicious requests</b>.', 'secupress' ), 'HTTP' ) );
+			}
+		} else {
+			self::set_status( $return, 'Warning' );
+			self::set_message( $return, __( 'Unable to determine status of your homepage.', 'secupress' ) );
+		}
+
 		return $return;
 	}
 
@@ -944,18 +956,6 @@ abstract class SecuPress_Scanners_Functions {
 
 		// SQLi attemps
 		$response = wp_remote_get( home_url( '/?' . time() . '=UNION+SELECT+FOO' ), self::$remote_args );
-		if ( ! is_wp_error( $response ) ) {
-			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
-				self::set_status( $return, 'Bad' );
-				self::set_message( $return, sprintf( __( 'Your website should block <b>malicious requests</b>.', 'secupress' ), 'HTTP' ) );
-			}
-		} else {
-			self::set_status( $return, 'Warning' );
-			self::set_message( $return, __( 'Unable to determine status of your homepage.', 'secupress' ) );
-		}
-
-		// wp-config.php access
-		$response = wp_remote_get( home_url( '/?' . time() . '=wp-config.php' ), self::$remote_args );
 		if ( ! is_wp_error( $response ) ) {
 			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
 				self::set_status( $return, 'Bad' );
