@@ -55,34 +55,16 @@ class SecuPress_Scan_Long_URL extends SecuPress_Scan {
 		if ( ! is_wp_error( $response ) ) {
 
 			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
-
-				$this->result = array(
-					'status' => 'bad',
-					'msgs'   => array(
-						200 => array(),
-					),
-				);
-
+				// bad
+				$this->add_message( 200 );
 			} else {
-
-				$this->result = array(
-					'status' => 'good',
-					'msgs'   => array(
-						0 => array(),
-					),
-				);
-
+				// good
+				$this->add_message( 0 );
 			}
 
 		} else {
-
-			$this->result = array(
-				'status' => 'warning',
-				'msgs'   => array(
-					100 => array(),
-				),
-			);
-
+			// warning
+			$this->add_message( 100 );
 		}
 
 		return parent::scan();
