@@ -28,28 +28,20 @@ class SecuPress_Scan_Long_URL extends SecuPress_Scan {
 	}
 
 
-	public static function get_messages( $status = null, $id = null ) {
+	public static function get_messages( $id = null ) {
 		$messages = array(
-			'good'    => array(
-				0 => __( 'You are currently blocking bad request methods.', 'secupress' ),
-			),
-			'warning' => array(
-				0 => __( 'Unable to determine status of your homepage.', 'secupress' ),
-			),
-			'cantfix' => array(
-				0 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
-			),
-			'bad'     => array(
-				0 => __( 'Your website should block <strong>too long string requests</strong>.', 'secupress' ),
-			),
+			// good
+			0   => __( 'You are currently blocking bad request methods.', 'secupress' ),
+			// warning
+			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
+			// cantfix
+			200 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
+			// bad
+			300 => __( 'Your website should block <strong>too long string requests</strong>.', 'secupress' ),
 		);
 
-		if ( isset( $status ) ) {
-			if ( isset( $id ) ) {
-				return isset( $messages[ $status ][ $id ] ) ? $messages[ $status ][ $id ] : __( 'Unknown message', 'secupress' );
-			}
-
-			return isset( $messages[ $status ] ) ? $messages[ $status ] : array( __( 'Unknown message', 'secupress' ), );
+		if ( isset( $id ) ) {
+			return isset( $messages[ $id ] ) ? $messages[ $id ] : __( 'Unknown message', 'secupress' );
 		}
 
 		return $messages;
@@ -67,7 +59,7 @@ class SecuPress_Scan_Long_URL extends SecuPress_Scan {
 				$this->result = array(
 					'status' => 'bad',
 					'msgs'   => array(
-						0 => array(),
+						300 => array(),
 					),
 				);
 
@@ -87,7 +79,7 @@ class SecuPress_Scan_Long_URL extends SecuPress_Scan {
 			$this->result = array(
 				'status' => 'warning',
 				'msgs'   => array(
-					0 => array(),
+					100 => array(),
 				),
 			);
 
