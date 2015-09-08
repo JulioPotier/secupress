@@ -48,6 +48,8 @@ jQuery(document).ready(function($)
 	};
 
 	$('body').on( 'click','.button-secupress-scan, .secupress-scanit', function( e ) {
+		var href, vars, pairs;
+
 		e.preventDefault();
 
 		if ( $( this ).hasClass( 'button-secupress-scan' ) ) {
@@ -55,74 +57,85 @@ jQuery(document).ready(function($)
 			secupress_maj_score( true );
 		}
 		else {
-			var href = $( this ).attr( 'href' );
-			var vars = href.split("?");
-			var vars = vars[1].split("&");
-			var pairs = new Array();
+			href  = $( this ).attr( 'href' );
+			vars  = href.split("?");
+			vars  = vars[1].split("&");
+			pairs = [];
+
 			for ( var i=0; i<vars.length; i++ ) {
 				var temp = vars[i].split("=");
 				pairs[ temp[0] ] = temp[1];
 			}
-			$( '.secupress-item-'+pairs['test']+' .secupress-status').html('<img src="' + href.replace( 'admin-post.php', 'images/wpspin_light-2x.gif' ) + '" />').parent().css( { backgroundImage: 'repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(200, 200, 200, 0.1) 10px, rgba(200, 200, 200, 0.1) 20px)' } );
+
+			$( '.secupress-item-'+pairs.test+' .secupress-status').html('<img src="' + href.replace( 'admin-post.php', 'images/wpspin_light-2x.gif' ) + '" />').parent().css( { backgroundImage: 'repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(200, 200, 200, 0.1) 10px, rgba(200, 200, 200, 0.1) 20px)' } );
+
 			$.get( href.replace( 'admin-post.php', 'admin-ajax.php' ), function( r ) {
-				if( r.hasOwnProperty('success') && r.success ) {
-					if ( r.data[pairs['test']].hasOwnProperty('class') ) {
-						$('.secupress-item-' + pairs['test'] )
+				if ( r.success ) {
+					if ( r.data[pairs.test].hasOwnProperty('class') ) {
+						$('.secupress-item-' + pairs.test )
 							.removeClass( 'status-good status-bad status-warning status-notscannedyet' )
-							.addClass( 'status-' + r.data[pairs['test']].class );
-						$('.secupress-item-' + pairs['test'] +' td.secupress-status span.secupress-dashicon' )
+							.addClass( 'status-' + r.data[pairs.test].class );
+						$('.secupress-item-' + pairs.test +' td.secupress-status span.secupress-dashicon' )
 							.removeClass( 'secupress-dashicon-color-good secupress-dashicon-color-bad secupress-dashicon-color-warning secupress-dashicon-color-notscannedyet' )
-							.addClass( 'secupress-dashicon-color-' + r.data[pairs['test']].class );
+							.addClass( 'secupress-dashicon-color-' + r.data[pairs.test].class );
 					}
-					if ( r.data[pairs['test']].hasOwnProperty('status') ) {
-						$('.secupress-item-' + pairs['test'] +' td.secupress-status' )
-							.html( r.data[pairs['test']].status );
+					if ( r.data[pairs.test].hasOwnProperty('status') ) {
+						$('.secupress-item-' + pairs.test +' td.secupress-status' )
+							.html( r.data[pairs.test].status );
 					}
-					if ( r.data[pairs['test']].hasOwnProperty('message') ) {
-						$('.secupress-item-' + pairs['test'] +' td.secupress-result' )
-							.html( '<ul class="secupress-result-list">' + r.data[pairs['test']].message + '</ul>');
+					if ( r.data[pairs.test].hasOwnProperty('message') ) {
+						$('.secupress-item-' + pairs.test +' td.secupress-result' )
+							.html( '<ul class="secupress-result-list">' + r.data[pairs.test].message + '</ul>');
 					}
-					$('.secupress-item-' + pairs['test']+' .secupress-status')
+					$('.secupress-item-' + pairs.test+' .secupress-status')
 						.parent().css( { backgroundImage: 'inherit' } );
 					$('.secupress-neverrun, .secupress-neverrun')
 						.remove();
-					$('.secupress-item-' + pairs['test'] +' .secupress-row-actions .rescanit').show();
-					$('.secupress-item-' + pairs['test'] +' .secupress-row-actions .scanit').hide();
-					if ( 'good' == r.data[pairs['test']].class ) {
-						$('.secupress-item-' + pairs['test'] +' .secupress-row-actions .fixit').hide();
+					$('.secupress-item-' + pairs.test +' .secupress-row-actions .rescanit').show();
+					$('.secupress-item-' + pairs.test +' .secupress-row-actions .scanit').hide();
+					if ( 'good' == r.data[pairs.test].class ) {
+						$('.secupress-item-' + pairs.test +' .secupress-row-actions .fixit').hide();
 					} else {
-						$('.secupress-item-' + pairs['test'] +' .secupress-row-actions .fixit').show();
+						$('.secupress-item-' + pairs.test +' .secupress-row-actions .fixit').show();
 					}
 					if ( ! $( this ).hasClass( 'button-secupress-scan' ) ) {
 						secupress_maj_score( true );
 					}
 				} else {
-					console.log( 'AJAX error' );
+					console.log( 'AJAX error: ' + pairs.test );
 				}
-			});
+
+				$( "#cb-select-" + pairs.test ).removeProp( "checked" );
+			} );
 		}
 	});
 
 
 	$('body').on( 'click', '.secupress-fixit', function( e ) {
+		var href, vars, pairs, t;
+
 		e.preventDefault();
-		var href = $( this ).attr( 'href' );
-		var vars = href.split("?");
-		var vars = vars[1].split("&");
-		var pairs = new Array();
+
+		href  = $( this ).attr( 'href' );
+		vars  = href.split("?");
+		vars  = vars[1].split("&");
+		pairs = [];
+		t = this;
+
 		for ( var i=0; i<vars.length; i++ ) {
 			var temp = vars[i].split("=");
 			pairs[ temp[0] ] = temp[1];
 		}
-		var t = this;
+
 		$( t ).hide();
-		$( '.secupress-item-'+pairs['test']+' .secupress-status').parent().css( { backgroundImage: 'repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(200, 200, 200, 0.1) 10px, rgba(200, 200, 200, 0.1) 20px)' } );
-		$( t ).after('<img id="load-fix-' + pairs['test'] + '" src="' + href.replace( 'admin-post.php', 'images/wpspin_light.gif' ) + '" />');
+		$( '.secupress-item-'+pairs.test+' .secupress-status').parent().css( { backgroundImage: 'repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(200, 200, 200, 0.1) 10px, rgba(200, 200, 200, 0.1) 20px)' } );
+		$( t ).after('<img id="load-fix-' + pairs.test + '" src="' + href.replace( 'admin-post.php', 'images/wpspin_light.gif' ) + '" />');
+
 		$.get( href.replace( 'admin-post.php', 'admin-ajax.php' ), function( r ) {
-			$('.secupress-item-' + pairs['test'] + ' .secupress-scanit' ).click();
-			$('#load-fix-' + pairs['test']).remove();
+			$('.secupress-item-' + pairs.test + ' .secupress-scanit' ).click();
+			$('#load-fix-' + pairs.test).remove();
 			$( t ).show();
-		})
+		});
 	});
 
 	$('body').on( 'click','.square-filter button', function( e ) {
