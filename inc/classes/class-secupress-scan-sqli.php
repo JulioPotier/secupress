@@ -1,18 +1,14 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
-<<<<<<< HEAD
 /*
  * SQLi scan class.
-=======
-/**
- * Sqli scan class.
->>>>>>> parent of 4a10415... Pink stars are falling.
  *
  * @package SecuPress
  * @subpackage SecuPress_Scan
  * @since 1.0
  */
+
 class SecuPress_Scan_SQLi extends SecuPress_Scan {
 
 	const VERSION = '1.0';
