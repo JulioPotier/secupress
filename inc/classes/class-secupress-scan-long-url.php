@@ -34,10 +34,10 @@ class SecuPress_Scan_Long_URL extends SecuPress_Scan {
 			0   => __( 'You are currently blocking bad request methods.', 'secupress' ),
 			// warning
 			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
-			// cantfix
-			200 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 			// bad
-			300 => __( 'Your website should block <strong>too long string requests</strong>.', 'secupress' ),
+			200 => __( 'Your website should block <strong>too long string requests</strong>.', 'secupress' ),
+			// cantfix
+			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);
 
 		if ( isset( $id ) ) {
@@ -59,7 +59,7 @@ class SecuPress_Scan_Long_URL extends SecuPress_Scan {
 				$this->result = array(
 					'status' => 'bad',
 					'msgs'   => array(
-						300 => array(),
+						200 => array(),
 					),
 				);
 

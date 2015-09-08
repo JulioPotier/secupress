@@ -34,10 +34,10 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan {
 			0   => __( 'You are currently blocking bad user-agents.', 'secupress' ),
 			// warning
 			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
-			// cantfix
-			200 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 			// bad
-			300 => sprintf( __( 'Your website should block <code>%s</code> requests with <strong>bad user-agents</strong>.', 'secupress' ), 'HTTP' ),
+			200 => sprintf( __( 'Your website should block <code>%s</code> requests with <strong>bad user-agents</strong>.', 'secupress' ), 'HTTP' ),
+			// cantfix
+			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);
 
 		if ( isset( $id ) ) {
@@ -59,7 +59,7 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan {
 				$this->result = array(
 					'status' => 'bad',
 					'msgs'   => array(
-						300 => array(),
+						200 => array(),
 					),
 				);
 
