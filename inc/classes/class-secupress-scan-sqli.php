@@ -1,13 +1,14 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
-/**
+/*
  * Sqli scan class.
  *
  * @package SecuPress
  * @subpackage SecuPress_Scan
  * @since 1.0
  */
+
 class SecuPress_Scan_SQLi extends SecuPress_Scan {
 
 	const VERSION = '1.0';
