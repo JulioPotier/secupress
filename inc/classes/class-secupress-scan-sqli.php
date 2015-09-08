@@ -2,7 +2,7 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /*
- * Sqli scan class.
+ * SQLi scan class.
  *
  * @package SecuPress
  * @subpackage SecuPress_Scan
