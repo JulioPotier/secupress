@@ -1,7 +1,7 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
-/*
+/**
  * Long URL scan class.
  *
  * @package SecuPress

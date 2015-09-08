@@ -1,7 +1,7 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
-/*
+/**
  * SQLi scan class.
  *
  * @package SecuPress
