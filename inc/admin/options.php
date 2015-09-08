@@ -272,6 +272,25 @@ function secupress_main_scan() {
 
 	$scanners = get_option( SECUPRESS_SCAN_SLUG );
 	$thedate  = ! empty( $scanners['last_run'] ) ? wp_sprintf( __( '%s ago' ), human_time_diff( $scanners['last_run'] ) ) : __( 'Never', 'secupress' );
+	unset( $scanners['last_run'] );
+
+	// Store the scans in 2 variables. They will be used to order the scans by status: 'bad', 'warning', 'notscannedyet', 'good'.
+	$before_not_scanned = array( 'bad' => array(), 'warning' => array(), );
+	$after_not_scanned  = array( 'good' => array(), );
+
+	if ( ! empty( $scanners ) ) {
+		foreach ( $scanners as $test_name => $details ) {
+			if ( isset( $before_not_scanned[ $details['class'] ] ) ) {
+				$before_not_scanned[ $details['class'] ][ $test_name ] = $details['class'];
+			}
+			elseif ( isset( $after_not_scanned[ $details['class'] ] ) ) {
+				$after_not_scanned[ $details['class'] ][ $test_name ] = $details['class'];
+			}
+		}
+	}
+
+	$before_not_scanned = array_merge( $before_not_scanned['bad'], $before_not_scanned['warning'] );
+	$after_not_scanned  = $after_not_scanned['good'];
 	?>
 	<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=all' ), 'secupress_scanner_all' ); ?>" class="button button-primary button-large button-secupress-scan" style="text-align: center; font-size: 3em; font-style: italic; height: 60px; max-width: 435px; overflow: hidden; padding: 10px 20px; margin-bottom: 5px" id="submit">
 		<?php _e( 'One Click Scan', 'secupress' ); ?>
@@ -363,6 +382,13 @@ function secupress_main_scan() {
 						// 	return $_a < $_b ;
 						// });
 						// var_dump($scanners);
+
+						// For this priority, order the scans by result status.
+						$this_prio_before_not_scanned = array_intersect_key( $secupress_tests[ $prio_key ], $before_not_scanned );
+						$this_prio_after_not_scanned  = array_intersect_key( $secupress_tests[ $prio_key ], $after_not_scanned );
+						$secupress_tests[ $prio_key ] = array_diff_key( $secupress_tests[ $prio_key ], $this_prio_after_not_scanned );
+						$secupress_tests[ $prio_key ] = array_merge( $this_prio_before_not_scanned, $secupress_tests[ $prio_key ], $this_prio_after_not_scanned );
+						unset( $this_prio_before_not_scanned, $this_prio_after_not_scanned );
 
 						foreach ( $secupress_tests[ $prio_key ] as $test_name => $details ) {
 							$i++;
