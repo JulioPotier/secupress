@@ -10,8 +10,7 @@ defined( 'ABSPATH' ) or die('Cheatin\' uh?');
 
 class SecuPress_Scan {
 
-	const VERSION     = '1.0';
-	const OPTION_NAME = SECUPRESS_SCAN_SLUG;
+	const VERSION = '1.0';
 
 	protected static $instance = false;
 	protected static $name     = '';
@@ -23,6 +22,8 @@ class SecuPress_Scan {
 	public    static $title = '';
 	public    static $more  = '';
 
+
+	// Instance ====================================================================================
 
 	public function __construct( $args = array() ) {}
 
@@ -38,39 +39,14 @@ class SecuPress_Scan {
 	}
 
 
+	// Properties ==================================================================================
+
 	public static function get_name() {
 		return static::$name;
 	}
 
 
-	public static function get_priorities( $level = null ) {
-		$priorities = array(
-			'high' => array(
-				'title' => __( 'High Priority', 'secupress' ),
-				'description' => __( 'These tests should be fixed now.', 'secupress' ),
-			),
-			'medium' => array(
-				'title' => __( 'Medium Priority', 'secupress' ),
-				'description' => __( 'These tests should be fixed when you can if no conflict are found', 'secupress' ),
-			),
-			'low' => array(
-				'title' => __( 'Low Priority', 'secupress' ),
-				'description' => __( 'These tests should be fixed to improve your security, but not mandatory.', 'secupress' ),
-			),
-		);
-
-		if ( isset( $level ) ) {
-			return isset( $priorities[ $level ] ) ? $priorities[ $level ] : array( 'title' => __( 'Unkown Priority', 'secupress' ), 'description' => '' );
-		}
-
-		return $priorities;
-	}
-
-
-	public static function get_messages( $id = null ) {
-		die( 'function SecuPress_Scan::get_messages() must be over-ridden in a sub-class.' ); // no i18n thx
-	}
-
+	// Status and messages =========================================================================
 
 	// Maybe set current status.
 
@@ -101,27 +77,54 @@ class SecuPress_Scan {
 	}
 
 
+	// Get messages.
+
+	public static function get_messages( $message_id = null ) {
+		die( 'function SecuPress_Scan::get_messages() must be over-ridden in a sub-class.' ); // no i18n thx
+	}
+
+
 	// Add a message and automatically set the status.
 
-	public function add_message( $id, $params = array() ) {
+	public function add_message( $message_id, $params = array() ) {
 		$this->result['msgs'] = isset( $this->result['msgs'] ) ? $this->result['msgs'] : array();
-		$this->result['msgs'][ $id ] = $params;
+		$this->result['msgs'][ $message_id ] = $params;
 
-		if ( $id < 100 ) {
+		if ( $message_id < 100 ) {
 
 			$this->set_status( 'good' );
 
-		} elseif  ( $id < 200 ) {
+		} elseif  ( $message_id < 200 ) {
 
 			$this->set_status( 'warning' );
 
-		} elseif ( $id < 300 ) {
+		} elseif ( $message_id < 300 ) {
 
 			$this->set_status( 'bad' );
 
 		}
 	}
 
+
+	// Are status and message(s) set?
+
+	public function has_status() {
+		return ! empty( $this->result );
+	}
+
+
+	// Set a status + message only if no status is set yet.
+
+	public function maybe_set_status( $message_id = 0, $params = array() ) {
+		if ( ! $this->has_status() ) {
+			$this->add_message( $message_id, $params );
+		}
+	}
+
+
+	// Scan and fix ================================================================================
+
+	// Scan for flow(s).
 
 	public function scan( $fix_attempted = false ) {
 		$this->fix = $fix_attempted;
@@ -132,26 +135,81 @@ class SecuPress_Scan {
 	}
 
 
+	// Try to fix the flow(s).
+
 	public function fix() {
 		return $this->scan( true );
 	}
 
 
-	public function update() {
+	// Options =====================================================================================
 
-		$opts = get_option( self::OPTION_NAME, array() );
-		$opts = is_array( $opts ) ? $opts : array();
+	// Get options array.
+
+	public static function get() {
+		$opts = get_option( SECUPRESS_SCAN_SLUG, array() );
+		return is_array( $opts ) ? $opts : array();
+	}
+
+
+	// Set options.
+
+	public function update() {
 
 		if ( $this->fix ) {
 			$this->result['attempted_fixes'] = array_key_exists( 'attempted_fixes', $this->result ) ? ++$this->result['attempted_fixes'] : 1;
 		}
 
+		$opts = self::get();
 		$opts = array_merge( $opts, array( static::$name => $this->result ) );
 
-		if ( ! update_option( self::OPTION_NAME, $opts ) ) {
+		if ( ! update_option( SECUPRESS_SCAN_SLUG, $opts ) ) {
 			return false;
 		}
 
 		return $this->result;
+	}
+
+
+	// Tools =======================================================================================
+
+	// Get prioritie(s).
+
+	public static function get_priorities( $level = null ) {
+		$priorities = array(
+			'high' => array(
+				'title'       => __( 'High Priority', 'secupress' ),
+				'description' => __( 'These tests should be fixed now.', 'secupress' ),
+			),
+			'medium' => array(
+				'title'       => __( 'Medium Priority', 'secupress' ),
+				'description' => __( 'These tests should be fixed when you can if no conflict are found', 'secupress' ),
+			),
+			'low' => array(
+				'title'       => __( 'Low Priority', 'secupress' ),
+				'description' => __( 'These tests should be fixed to improve your security, but not mandatory.', 'secupress' ),
+			),
+		);
+
+		if ( isset( $level ) ) {
+			return isset( $priorities[ $level ] ) ? $priorities[ $level ] : array( 'title' => __( 'Unkown Priority', 'secupress' ), 'description' => '' );
+		}
+
+		return $priorities;
+	}
+
+
+	// Given an array of "things", wrap those "things" in a HTML tag.
+
+	public static function wrap_in_tag( $array, $tag = 'code' ) {
+		$out = array();
+
+		if ( $array ) {
+			foreach ( (array) $array as $thing ) {
+				$out[] = sprintf( '<%2$s>%1$s</%2$s>', $thing, $tag );
+			}
+		}
+
+		return $out;
 	}
 }
