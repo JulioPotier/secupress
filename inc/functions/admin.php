@@ -11,7 +11,7 @@ function secupress_get_scanner_counts( $type = '' ) {
 	global $secupress_tests;
 	$scanners = get_option( SECUPRESS_SCAN_SLUG );
 	$array_fill_keys = array_fill_keys( array( 'good', 'warning', 'bad' ), 0 );
-	$array_count_values = is_array( $scanners ) ? array_count_values( wp_list_pluck( $scanners, 'class' ) ) : array();
+	$array_count_values = is_array( $scanners ) ? array_count_values( wp_list_pluck( $scanners, 'status' ) ) : array();
 	$counts = array_merge( $array_fill_keys, $array_count_values );
 	$counts['notscannedyet'] = count( $secupress_tests['high'] ) + count( $secupress_tests['medium'] ) + count( $secupress_tests['low'] ) - array_sum( $counts );
 	$counts['total'] = count( $secupress_tests['high'] ) + count( $secupress_tests['medium'] ) + count( $secupress_tests['low'] );

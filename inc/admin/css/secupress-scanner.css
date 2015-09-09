@@ -31,9 +31,6 @@ th.secupress-status {
 #table-secupress-tests th {
 	padding: 5px;
 }
-.secupress-row-actions > span: not(: last-child):after {
-	content: "|";
-}
 th.secupress-check {
 	width: 1%;
 	padding: 4px 0 0 2px;

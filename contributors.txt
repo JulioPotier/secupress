@@ -2,4 +2,5 @@ This file contains a list of people who have made large contributions
 to the public version of SecuPress.
 
 Developers:
-	Julio Potier <julio@secupress.me>
+	Julio Potier    <julio@secupress.me>
+	Gregory Viguier <gregory@secupress.me>

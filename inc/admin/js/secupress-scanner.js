@@ -66,7 +66,7 @@ jQuery(document).ready(function($)
 				var temp = vars[i].split("=");
 				pairs[ temp[0] ] = temp[1];
 			}
-
+			var $saveme = $('.secupress-item-' + pairs['test'] +' .secupress-row-actions:first' ).wrap('<p/>').parent().html();
 			$( '.secupress-item-'+pairs.test+' .secupress-status').html('<img src="' + href.replace( 'admin-post.php', 'images/wpspin_light-2x.gif' ) + '" />').parent().css( { backgroundImage: 'repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(200, 200, 200, 0.1) 10px, rgba(200, 200, 200, 0.1) 20px)' } );
 
 			$.get( href.replace( 'admin-post.php', 'admin-ajax.php' ), function( r ) {
@@ -81,7 +81,7 @@ jQuery(document).ready(function($)
 					}
 					if ( r.data[pairs.test].hasOwnProperty('status') ) {
 						$('.secupress-item-' + pairs.test +' td.secupress-status' )
-							.html( r.data[pairs.test].status );
+							.html( r.data[pairs['test']].status + $saveme );
 					}
 					if ( r.data[pairs.test].hasOwnProperty('message') ) {
 						$('.secupress-item-' + pairs.test +' td.secupress-result' )

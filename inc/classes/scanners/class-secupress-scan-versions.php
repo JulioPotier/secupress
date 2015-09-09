@@ -34,13 +34,13 @@ class SecuPress_Scan_Versions extends SecuPress_Scan {
 				// good
 				0 => __( 'You are totally up to date, WordPress, plugins and themes. Bravo.', 'secupress' ),
 				// warning
-				100 => __( 'Impossible to determine the updateness of your installation.', 'secupress' ),
+				100 => __( 'Impossible to determine the updateness of your installation.', 'secupress' ), //// updateness + determine if the updates are available
 				// bad
 				200 => __( 'It\'s very important to maintain your WordPress installation up to date. If you can not update because of a plugin or theme, contact its author and submit him your issue.', 'secupress' ),
 				201 => __( 'WordPress <strong>core</strong> is not up to date.', 'secupress' ),
 				202 => _n_noop( '<b>%1$d</b> plugin isn\'t up to date: <code>%2$s</code>.', '<b>%1$d</b> plugins aren\'t up to date: <code>%2$s</code>.', 'secupress' ),
 				203 => _n_noop( '<b>%1$d</b> theme isn\'t up to date: <code>%2$s</code>', '<b>%1$d</b> themes aren\'t up to date: <code>%2$s</code>', 'secupress' ),
-				204 => __( 'Your server is running on <code>PHP v%1$s</code>, it\'s an outdated version, use <code>v%2$s</code> at least.', 'secupress' ),
+				////204 => __( 'Your server is running on <code>PHP v%1$s</code>, it\'s an outdated version, use <code>v%2$s</code> at least.', 'secupress' ),
 				// cantfix
 				300 => __( 'I can not fix this, you have to manually update your plugins, themes and WordPress core.', 'secupress' ),
 			);
@@ -104,6 +104,8 @@ class SecuPress_Scan_Versions extends SecuPress_Scan {
 			if ( count( $theme_updates ) ) {
 				$this->add_message( 203, array( count( $theme_updates ), count( $theme_updates ), implode( '</code>, <code>', $theme_updates ) ) );
 			}
+		} else {
+			$this->add_message( 0 );
 		}
 
 		return parent::scan();
@@ -113,7 +115,6 @@ class SecuPress_Scan_Versions extends SecuPress_Scan {
     public function fix() {
 
         // include the fix here.
-
         return parent::fix();
     }
 }
