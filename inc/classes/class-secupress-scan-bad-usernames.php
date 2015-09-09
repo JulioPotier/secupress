@@ -97,11 +97,8 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan {
 			$this->add_message( 201, array( $ids, number_format_i18n( $ids ) ) );
 		}
 
-		// All good, Captain!
-		if ( empty( $this->result ) ) {
-			// good
-			$this->add_message( 0 );
-		}
+		// good
+		$this->maybe_set_status();
 
 		return parent::scan();
 	}

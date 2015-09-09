@@ -82,10 +82,8 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan {
 			$this->add_message( 100, array( count( $warnings ), wp_sprintf_l( '%l', $warnings ) ) );
 		}
 
-		if ( empty( $this->result ) ) {
-			// good
-			$this->add_message( 0 );
-		}
+		// good
+		$this->maybe_set_status();
 
 		return parent::scan();
 	}

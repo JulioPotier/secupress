@@ -85,7 +85,7 @@ class SecuPress_Scan_Disclose extends SecuPress_Scan {
 		}
 
 		// What about style tag src?
-		if ( empty( $this->result ) ) {
+		if ( ! $this->has_status() ) {
 
 			$style_url = home_url( '/fake.css?ver=' . get_bloginfo( 'version' ) );
 
@@ -97,7 +97,7 @@ class SecuPress_Scan_Disclose extends SecuPress_Scan {
 		}
 
 		// What about script tag src?
-		if ( empty( $this->result ) ) {
+		if ( ! $this->has_status() ) {
 
 			$script_url = home_url( '/fake.js?ver=' . get_bloginfo( 'version' ) );
 
@@ -109,7 +109,7 @@ class SecuPress_Scan_Disclose extends SecuPress_Scan {
 		}
 
 		// What about full source page?
-		if ( empty( $this->result ) && $has_response && strpos( $body, get_bloginfo( 'version' ) ) ) {
+		if ( ! $this->has_status() && $has_response && strpos( $body, get_bloginfo( 'version' ) ) ) {
 			// bad
 			$this->add_message( 202 );
 		}
@@ -129,11 +129,8 @@ class SecuPress_Scan_Disclose extends SecuPress_Scan {
 			$this->add_message( 101 );
 		}
 
-		// No error: set good status.
-		if ( empty( $this->result ) ) {
-			// good
-			$this->add_message( 0 );
-		}
+		// good
+		$this->maybe_set_status();
 
 		return parent::scan();
 	}
