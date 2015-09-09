@@ -5,25 +5,24 @@ global $modulenow, $secupress_modules;
 if ( 'welcome' == $modulenow ) {
 	return; // no module loaded
 }
-add_settings_section( 'module_' . $modulenow, __( 'Module activation', 'secupress' ), '__rocket_module_full_title', 'module_' . $modulenow );
+//// todo save settings with history
+add_settings_section( 'module_' . $modulenow, __( 'Module settings', 'secupress' ), '__rocket_module_full_title', 'module_' . $modulenow );
 	add_settings_field(
-	'module_' . $modulenow . '_active',
-	__( 'Module activated?', 'rocket' ),
-	'secupress_field',
+	'module_' . $modulenow . '_settings',
+	__( 'Reset settings?', 'rocket' ),
+	'secupress_button',
 	'module_' . $modulenow,
 	'module_' . $modulenow,
-	array(
+	array( 'button' =>
 		array(
-			'type'			=> 'checkbox',
-			'label'    		=> sprintf( __( 'Yes, activate the %s modules.', 'secupress' ), get_secupress_module_title() ),
-			'label_for'		=> 'module_active',
-			'label_screen'	=> __( 'Module active:', 'secupress' ),
+			'url'			=> wp_nonce_url( admin_url( 'admin-post.php?action=secupress_reset_settings&module=' . $modulenow ), 'secupress_reset_' . $modulenow ),
+			'button_label'    		=> sprintf( __( 'Reset the %s\'s settings.', 'secupress' ), get_secupress_module_title() ),
 		),
-		array(
-			'type'         => 'helper_description',
-			'name'         => 'advanced_options',
-			'description'  =>  __( 'You can select and configure each module separately below.', 'secupress' ),
-		),
+		// array(
+		// 	'type'         => 'helper_description',
+		// 	'name'         => 'advanced_options',
+		// 	'description'  =>  __( 'You can select and configure each module separately below.', 'secupress' ),
+		// ),
 	)
 );
 
@@ -31,7 +30,7 @@ add_settings_section( 'module_' . $modulenow, __( 'Module activation', 'secupres
 *
 */
 function __rocket_module_full_title() {
-	echo '<div class="notice notice-success"><i>' . __( 'This will activate all the sub-modules, for more accuracy, let this first box checked, then you can select which ones you need by expanding the advanced options.', 'secupress' ) . '</i></div>';
+	echo '<div class="notice notice-success"><i>' . __( 'If you need to reset this module\'s settings to the default ones, you just have to do it here, we will set the best for your site.', 'secupress' ) . '</i></div>';
 }
 ?>
 <div class="secublock">
@@ -46,6 +45,5 @@ function __rocket_module_full_title() {
 <?php
 do_secupress_settings_sections( 'module_' . $modulenow );
 secupress_submit_button( 'primary large' );
-$class_hidden = secupress_is_module_active( $modulenow ) ? '' : 'hide-if-js';
 ?>
-<div id="block-advanced_options" data-module="<?php echo $modulenow; ?>" class="<?php echo $class_hidden; ?>">
+<div id="block-advanced_options" data-module="<?php echo $modulenow; ?>">

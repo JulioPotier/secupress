@@ -53,27 +53,31 @@ function secupress_upgrader()
  * Keeps this function up to date at each version
  *
  * @since 1.0
- */
-add_action( 'wp_secupress_first_install', 'secupress_first_install' );
-function secupress_first_install()
-{
-	// Generate an random key
-	$secret_cache_key = create_secupress_uniqid();
 
-	// Create Options
-	add_option( SECUPRESS_SETTINGS_SLUG,
-		array(
-			
-		)
-	);
-	add_option( 'secupress_users_login_settings',
-		array(
-			'module_active' => 1,
-			'plugin_double_auth' => '-1',
-		)
-	);
-	secupress_dismiss_box( 'secupress_warning_plugin_modification' );
-	// secupress_reset_white_label_values( false );
+add_action( 'wp_secupress_first_install', 'secupress_install_modules' );
+function secupress_install_modules( $module = 'all' ) {
+	if ( 'all' === $module ) {
+		// Generate an random key
+		$secret_cache_key = create_secupress_uniqid();
+
+		secupress_dismiss_box( 'secupress_warning_plugin_modification' );
+		//// secupress_reset_white_label_values( false );
+
+		// Create Options
+		add_option( SECUPRESS_SETTINGS_SLUG,
+			array(
+				
+			)
+		);
+	}
+	if ( 'all' === $module || 'users_login' === $module ) {
+		update_option( 'secupress_users_login_settings',
+			array(
+				'plugin_double_auth'	=> '-1',
+				'plugin_bad_logins'		=> array( 'limitloginattempts', 'bannonexistsuser' )
+			)
+		);
+	}
 }
 
 /**

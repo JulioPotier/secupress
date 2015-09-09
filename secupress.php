@@ -157,7 +157,6 @@ function secupress_load_plugins() {
 
 	if ( $modules ) {
 		foreach ( $modules as $module => $plugins ) {
-			if ( secupress_is_module_active( $module ) ) {
 				foreach ( $plugins as $plugin ) {
 					$file = SECUPRESS_MODULES_PATH . sanitize_key( $module ) . '/plugins/' . sanitize_key( $plugin ) . '.php';
 					if ( file_exists( $file ) ) {
@@ -167,8 +166,6 @@ function secupress_load_plugins() {
 			}
 		}
 	}
-}
-
 
 add_action( 'secupress_loaded', 'secupress_been_first' );
 

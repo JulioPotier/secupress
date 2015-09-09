@@ -200,7 +200,6 @@ function secupress_activate_module( $module, $settings ) {
 		secupress_die( sprintf( __( 'Unknow Module %s', 'secupress' ), esc_html( $module ) ) );
 	}
 	$module_options = get_option( "secupress_{$module}_settings" );
-	$module_options['module_active'] = 1;
 	$module_options = array_merge( $module_options, $settings );
 	call_user_func( "__secupress_{$module}_settings_callback", $module_options );
 	update_option( "secupress_{$module}_settings", $module_options );
@@ -212,7 +211,7 @@ function secupress_activate_module( $module, $settings ) {
 function secupress_activate_submodule( $module, $plugin, $incompatibles_modules = array() ) {
 	$plugin_file = sanitize_key( $plugin );
 	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
-	if ( ( secupress_is_module_active( $module ) || isset( $_POST['secupress_' . $module . '_settings']['module_active'] ) ) && ! in_array_deep( $plugin_file, $active_plugins ) ) {
+	if ( ! in_array_deep( $plugin_file, $active_plugins ) ) {
 		if( ! empty( $incompatibles_modules ) ) {
 			secupress_deactivate_submodule( $module, $incompatibles_modules );
 		}
