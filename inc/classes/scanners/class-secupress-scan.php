@@ -115,7 +115,7 @@ class SecuPress_Scan {
 
 	// Set a status + message only if no status is set yet.
 
-	public function maybe_set_status( $message_id = 0, $params = array() ) {
+	public function maybe_set_status( $message_id, $params = array() ) {
 		if ( ! $this->has_status() ) {
 			$this->add_message( $message_id, $params );
 		}
