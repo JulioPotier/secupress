@@ -64,10 +64,8 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan {
 			$this->add_message( 100 );
 		}
 
-		if ( empty( $this->result ) ) {
-			// good
-			$this->add_message( 0 );
-		}
+		// good
+		$this->maybe_set_status();
 
 		return parent::scan();
 	}

@@ -144,11 +144,8 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan {
 			$this->add_message( 100 );
 		}
 
-		// No errors? Set status as good.
-		if ( ! $this->result ) {
-			// good
-			$this->add_message( 0, array( $nbr_tests, $nbr_tests ) );
-		}
+		// good
+		$this->maybe_set_status( 0, array( $nbr_tests, $nbr_tests ) );
 
 		return parent::scan();
 	}
