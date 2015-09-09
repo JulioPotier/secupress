@@ -250,11 +250,16 @@ abstract class SecuPress_Scanners_Functions {
 				'role' => 'secupress_no_role_' . time(),
 			)
 		);
+		if ( ! is_wp_error( $temp_id ) ) {
 		$check = wp_authenticate( $temp_login, $temp_pass );
 		wp_delete_user( $temp_id );
 		if( is_a( $check, 'WP_User' ) ) {
 			self::set_status( $return, 'Bad' );
 			self::set_message( $return, __( 'Your login system is <b>not strong enought</b>, you need a <b>two authentication system</b>.', 'secupress' ) );
+	}
+		} else {
+			self::set_status( $return, 'Warning' );
+			self::set_message( $return, __( 'Unable to create a user to test the login authentication system.', 'secupress' ) );
 		}
 
 		return $return;

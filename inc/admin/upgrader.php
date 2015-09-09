@@ -53,7 +53,7 @@ function secupress_upgrader()
  * Keeps this function up to date at each version
  *
  * @since 1.0
-
+ */
 add_action( 'wp_secupress_first_install', 'secupress_install_modules' );
 function secupress_install_modules( $module = 'all' ) {
 	if ( 'all' === $module ) {
