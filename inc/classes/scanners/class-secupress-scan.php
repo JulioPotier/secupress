@@ -126,9 +126,7 @@ class SecuPress_Scan {
 
 	// Scan for flow(s).
 
-	public function scan( $fix_attempted = false ) {
-		$this->fix = $fix_attempted;
-
+	public function scan() {
 		$this->update();
 
 		return $this->result;
@@ -138,9 +136,9 @@ class SecuPress_Scan {
 	// Try to fix the flow(s).
 
 	public function fix() {
-		return $this->scan( true );
+		$this->fix = true;
+		return $this->scan();
 	}
-
 
 	// Options =====================================================================================
 
