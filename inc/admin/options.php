@@ -246,8 +246,26 @@ function secupress_uksort_scanners( $key_a, $key_b ) {
 
 function secupress_main_scan() {
 	global $secupress_tests;
+
 	$scanners = get_option( SECUPRESS_SCAN_SLUG );
-	$thedate = ! empty( $scanners['last_run'] ) ? wp_sprintf( __('%s ago'), human_time_diff( $scanners['last_run'] ) ) : __( 'Never', 'secupress' );
+
+	// Store the scans in 2 variables. They will be used to order the scans by status: 'bad', 'warning', 'notscannedyet', 'good'.
+	$before_not_scanned = array( 'bad' => array(), 'warning' => array(), );
+	$after_not_scanned  = array( 'good' => array(), );
+
+	if ( ! empty( $scanners ) ) {
+		foreach ( $scanners as $scan_name => $details ) {
+			if ( isset( $before_not_scanned[ $details['status'] ] ) ) {
+				$before_not_scanned[ $details['status'] ][ $scan_name ] = $details['status'];
+			}
+			elseif ( isset( $after_not_scanned[ $details['status'] ] ) ) {
+				$after_not_scanned[ $details['status'] ][ $scan_name ] = $details['status'];
+			}
+		}
+	}
+
+	$before_not_scanned = array_merge( $before_not_scanned['bad'], $before_not_scanned['warning'] );
+	$after_not_scanned  = $after_not_scanned['good'];
 	?>
 	<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=all' ), 'secupress_scanner_all' ); ?>" class="button button-primary button-large button-secupress-scan" style="text-align: center;font-size: 3em; font-style: italic; height: 60px; max-width: 435px; overflow: hidden; padding: 10px 20px; margin-bottom: 5px" id="submit">
 		<?php _e( 'One Click Scan', 'secupress' ); ?>
@@ -269,146 +287,178 @@ function secupress_main_scan() {
 	</div>
 
 	<div id="secupress-tests">
-	<?php
-	if ( ! class_exists( 'SecuPress_Scan' ) ) {
-		include_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan.php' );
-	}
-	foreach ( $secupress_tests as $prio_key => $tests_names ) {
-		$i=0;
-		$prio_data = SecuPress_Scan::get_priorities( $prio_key );
-		?>
-		<div class="table-prio-all table-prio-<?php echo $prio_key; ?>">
-			<div class="prio-<?php echo $prio_key; ?>">
-			<h2><?php echo $prio_data['title']; ?></h2>
-			<?php echo $prio_data['description']; ?>
-			</div>
-			<div class="tablenav top hide-if-no-js">
+		<?php
+		if ( ! class_exists( 'SecuPress_Scan' ) ) {
+			include_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan.php' );
+		}
 
-				<div class="alignleft actions bulkactions">
-					<label for="bulk-action-selector-top" class="screen-reader-text"><?php _e( 'Select bulk action' ); ?></label>
-					<select name="action" id="bulk-action-<?php echo $prio_key; ?>">
-						<option value="-1" selected="selected"><?php _e( 'Bulk Actions' ); ?></option>
-						<option value="scanit"><?php _e( 'Scan it', 'secupress' ); ?></option>
-						<option value="fixit"><?php _e( 'Fix it', 'secupress' ); ?></option>
-						<option value="fpositive"><?php _e( 'Mark as False Positive', 'secupress' ); ?></option>
-					</select>
-					<input type="button" name="" id="doaction-<?php echo $prio_key; ?>" class="button action" value="<?php _e( 'Apply' ); ?>">
+		foreach ( $secupress_tests as $prio_key => $scan_names ) {
+			$i         = 0;
+			$prio_data = SecuPress_Scan::get_priorities( $prio_key );
+			?>
+			<div class="table-prio-all table-prio-<?php echo $prio_key; ?>">
+
+				<div class="prio-<?php echo $prio_key; ?>">
+					<h2><?php echo $prio_data['title']; ?></h2>
+					<?php echo $prio_data['description']; ?>
 				</div>
 
-			</div>
+				<div class="tablenav top hide-if-no-js">
+					<div class="alignleft actions bulkactions">
+						<label for="bulk-action-selector-top" class="screen-reader-text"><?php _e( 'Select bulk action' ); ?></label>
+						<select name="action" id="bulk-action-<?php echo $prio_key; ?>">
+							<option value="-1" selected="selected"><?php _e( 'Bulk Actions' ); ?></option>
+							<option value="scanit"><?php _e( 'Scan it', 'secupress' ); ?></option>
+							<option value="fixit"><?php _e( 'Fix it', 'secupress' ); ?></option>
+							<option value="fpositive"><?php _e( 'Mark as False Positive', 'secupress' ); ?></option>
+						</select>
+						<input type="button" name="" id="doaction-<?php echo $prio_key; ?>" class="button action" value="<?php _e( 'Apply' ); ?>">
+					</div>
+				</div>
 
 
-		<table class="wp-list-table widefat" cellspacing="0">
-		<thead>
-			<tr>
-				<th class="secupress-check hide-if-no-js">
-					<label class="screen-reader-text" for="cb-select-all"><?php _e( 'Select All' ); ?></label>
-					<input id="cb-select-all-<?php echo $prio_key; ?>" type="checkbox" class="me secupress-checkbox-<?php echo $prio_key; ?>"/>
-				</th>
-				<th class="secupress-status" data-sort="string"><?php _e( 'Status', 'secupress' ); ?></th>
-				<th class="secupress-desc"><?php _e( 'Test Description', 'secupress' ); ?></th>
-				<th class="secupress-result"><?php _e( 'Test Results', 'secupress' ); ?></th>
-				<th class="secupress-fix"><?php _e( 'Fix', 'secupress' ); ?></th>
-				<!--// <th class="secupress-type"><?php _e( 'Test Type', 'secupress' ); ?></th> //-->
-			</tr>
-		</thead>
-		<tbody>
-		<?php
-		foreach ( $tests_names as $test_name ) {
-			if ( ! file_exists( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . secupress_class_name( $test_name ) . '.php' ) ) {
-				continue;
-			} else {
-				include_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . secupress_class_name( $test_name ) . '.php' );
-			}
-			$class_name = 'SecuPress_Scan_' . $test_name;
-			$current_test = new $class_name//;
-			();
-			++$i;
-			$test_name = strtolower( $test_name );
-			$status = isset( $scanners[ $test_name ]['status'] ) ? secupress_status( $scanners[ $test_name ]['status'] ) : secupress_status( /**/'Not Scanned Yet'/**/ ); // Do not localize
-			$css_class = isset( $scanners[ $test_name ]['status'] ) ? sanitize_html_class( $scanners[ $test_name ]['status'] ) : 'notscannedyet';
-			$class = ' type-' . sanitize_key( $class_name::$type );
-			$class .= ' status-' . $css_class;
-			$class .= $i % 2 == 0 ? ' alternate-2' : ' alternate-1';
-			$hiddens = ! isset( $_GET['DOING_AJAX'] ) ? '' : '<input type="hidden" id="secupress-percent" value="' . $percent . '" /><input type="hidden" id="secupress-humantime" value="' . $thedate . '" />';
-			$message = '';
-			if ( isset( $scanners[ $test_name ]['msgs'] ) ) {
-				$messages = $class_name::get_messages();
-				foreach ($scanners[ $test_name ]['msgs'] as $id => $atts ) {
-					if ( is_array( $messages[ $id ] ) ) {
-						$count  = array_shift( $atts );
-						$string = translate_nooped_plural( $messages[ $id ], $count );
-					} else {
-						$string = $messages[ $id ];
-					}
-					$message .= ! empty( $atts ) ? vsprintf( $string, $atts ) : $messages[ $id ];
-					$message .= '<br>';
-				}
-			} else {
-				$message = '&#175;';
-			}
-			?>
-			<tr class="secupress-item-all secupress-item-<?php echo $test_name; ?> type-all status-all<?php echo $class; ?>">
-				<td class="secupress-check hide-if-no-js">
-					<label class="screen-reader-text" for="cb-select-<?php echo $test_name; ?>"></label>
-					<input id="cb-select-<?php echo $test_name; ?>" type="checkbox" class="secupress-checkbox-<?php echo $prio_key; ?>" />
-				</td>
-				<td class="secupress-status">
+				<table class="wp-list-table widefat" cellspacing="0">
+					<thead>
+						<tr>
+							<th class="secupress-check hide-if-no-js">
+								<label class="screen-reader-text" for="cb-select-all"><?php _e( 'Select All' ); ?></label>
+								<input id="cb-select-all-<?php echo $prio_key; ?>" type="checkbox" class="me secupress-checkbox-<?php echo $prio_key; ?>"/>
+							</th>
+							<th class="secupress-status" data-sort="string"><?php _e( 'Status', 'secupress' ); ?></th>
+							<th class="secupress-desc"><?php _e( 'Test Description', 'secupress' ); ?></th>
+							<th class="secupress-result"><?php _e( 'Test Results', 'secupress' ); ?></th>
+							<th class="secupress-fix"><?php _e( 'Fix', 'secupress' ); ?></th>
+							<!--// <th class="secupress-type"><?php _e( 'Test Type', 'secupress' ); ?></th> //-->
+						</tr>
+					</thead>
+
+					<tbody>
 					<?php
-					echo $hiddens;
-					echo $status;
+					// For this priority, order the scans by result status.
+					$ordered_scan_names = array();
+
+					foreach ( $scan_names as $scan_name ) {
+						$file_name = 'class-secupress-scan-' . secupress_class_name( $scan_name );
+
+						if ( ! file_exists( SECUPRESS_CLASSES_PATH . 'scanners/' . $file_name . '.php' ) ) {
+							continue;
+						}
+
+						include_once( SECUPRESS_CLASSES_PATH . 'scanners/' . $file_name . '.php' );
+
+						/*
+						 * $option_name: 'admin_as_author'
+						 * $class_name:  'SecuPress_Scan_Admin_As_Author'
+						 */
+						$class_name  = 'SecuPress_Scan_' . $scan_name;
+						$option_name = $class_name::get_name();
+
+						$ordered_scan_names[ $option_name ] = $class_name;
+					}
+
+					$scan_names = $ordered_scan_names;
+
+					$this_prio_before_not_scanned = array_intersect_key( $scan_names, $before_not_scanned );
+					$this_prio_after_not_scanned  = array_intersect_key( $scan_names, $after_not_scanned );
+					$scan_names = array_diff_key( $scan_names, $this_prio_after_not_scanned );
+					$scan_names = array_merge( $this_prio_before_not_scanned, $scan_names, $this_prio_after_not_scanned );
+					unset( $ordered_scan_names, $this_prio_before_not_scanned, $this_prio_after_not_scanned );
+
+					// Print the rows.
+					foreach ( $scan_names as $option_name => $class_name ) {
+						$current_test = new $class_name//;
+						();
+						++$i;
+
+						$status_text  = isset( $scanners[ $option_name ]['status'] ) ? secupress_status( $scanners[ $option_name ]['status'] )    : secupress_status( 'notscannedyet' );
+						$status_class = isset( $scanners[ $option_name ]['status'] ) ? sanitize_html_class( $scanners[ $option_name ]['status'] ) : 'notscannedyet';
+						$css_class    = ' type-' . sanitize_key( $class_name::$type );
+						$css_class   .= ' status-' . $status_class;
+						$css_class   .= $i % 2 == 0 ? ' alternate-2' : ' alternate-1';
+						$message      = '';
+
+						if ( isset( $scanners[ $option_name ]['msgs'] ) ) {
+
+							$messages = $class_name::get_messages();
+
+							foreach ( $scanners[ $option_name ]['msgs'] as $id => $atts ) {
+								if ( is_array( $messages[ $id ] ) ) {
+									$count  = array_shift( $atts );
+									$string = translate_nooped_plural( $messages[ $id ], $count );
+								} else {
+									$string = $messages[ $id ];
+								}
+								$message .= ! empty( $atts ) ? vsprintf( $string, $atts ) : $messages[ $id ];
+								$message .= '<br>';
+							}
+
+						} else {
+							$message = '&#175;';
+						}
+						?>
+						<tr class="secupress-item-all secupress-item-<?php echo $option_name; ?> type-all status-all<?php echo $css_class; ?>">
+							<td class="secupress-check hide-if-no-js">
+								<label class="screen-reader-text" for="cb-select-<?php echo $option_name; ?>"></label>
+								<input id="cb-select-<?php echo $option_name; ?>" type="checkbox" class="secupress-checkbox-<?php echo $prio_key; ?>" />
+							</td>
+							<td class="secupress-status">
+								<?php echo $status_text; ?>
+
+								<div class="secupress-row-actions">
+									<span class="rescanit<?php echo $status_class != 'notscannedyet' ? '' : ' hidden'; ?>">
+										<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $option_name ), 'secupress_scanner_' . $option_name ); ?>" class="secupress-scanit" /><?php _e( 'Re-Scan this test', 'secupress' ); ?></a>
+									</span>
+									<span class="scanit<?php echo $status_class == 'notscannedyet' ? '' : ' hidden'; ?>">
+										<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $option_name ), 'secupress_scanner_' . $option_name ); ?>" class="secupress-scanit" /><?php _e( 'Scan this test first', 'secupress' ) ?></a>
+									</span>
+								</div>
+							</td>
+							<td><?php echo esc_html( $class_name::$title ); ?>
+								<div class="secupress-row-actions">
+									<span class="helpme hide-if-no-js">
+										<button type="button" class="secupress-details link-like" data-test="<?php echo $option_name; ?>" title="<?php _e( 'Get details', 'secupress' ); ?>" /><?php _e( 'Learn more', 'secupress' ); ?></button>
+									</span>
+								</div>
+							</td>
+							<td class="secupress-result">
+								<?php echo $message; ?>
+							</td>
+							<td>
+								<span class="fixit<?php echo $status_class != 'notscannedyet' & $status_class != 'good' ? '' : ' hide'; ?>">
+									<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $option_name ), 'secupress_fixit_' . $option_name ); ?>" class="button button-secondary button-small secupress-fixit" /><?php _e( 'Fix it!', 'secupress' ); ?></a>
+								</span>
+							</td>
+							<!--// <td><?php echo $details['type']; ?></td> //-->
+						</tr>
+						<tr id="details-<?php echo $option_name; ?>" class="details hide-if-js" style="background-color:#ddf;">
+							<td colspan="5" style="font-style: italic">
+								<?php echo wp_kses_post( $current_test::$more ); ?>
+							</td>
+						</tr>
+						<?php
+					}
 					?>
-					<div class="secupress-row-actions">
-						<span class="rescanit<?php echo $css_class != 'notscannedyet' ? '' : ' hidden'; ?>">
-							<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $test_name ), 'secupress_scanner_' . $test_name ); ?>" class="secupress-scanit" /><?php _e( 'Re-Scan this test', 'secupress' ); ?></a>
-						</span>
-						<span class="scanit<?php echo $css_class == 'notscannedyet' ? '' : ' hidden'; ?>">
-							<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $test_name ), 'secupress_scanner_' . $test_name ); ?>" class="secupress-scanit" /><?php _e( 'Scan this test first', 'secupress' ) ?></a>
-						</span>
-					</div>
-				</td>
-				<td><?php echo esc_html( $class_name::$title ); ?>
-					<div class="secupress-row-actions">
-						<span class="helpme hide-if-no-js">
-						<a href="#" class="secupress-details" data-test="<?php echo $test_name; ?>" title="<?php _e( 'Get details', 'secupress' ); ?>" /><?php _e( 'Learn more', 'secupress' ); ?></a>
-						</span>
-					</div>
-				</td>
-				<td class="secupress-result"><?php echo $message; ?></td>
-				<td>
-					<span class="fixit<?php echo $css_class != 'notscannedyet' & $css_class != 'good' ? '' : ' hide'; ?>">
-						<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $test_name ), 'secupress_fixit_' . $test_name ); ?>" class="button button-secondary button-small secupress-fixit" /><?php _e( 'Fix it!', 'secupress' ); ?></a>
-					</span>
-				</td>
-				<!--// <td><?php echo $details['type']; ?></td> //-->
-			</tr>
-			<tr id="details-<?php echo $test_name; ?>" class="details hide-if-js" style="background-color:#ddf;">
-				<td colspan="5" style="font-style: italic">
-					<?php echo wp_kses_post( $current_test::$more ); ?>
-				</td>
-			</tr>
+					</tbody>
+
+					<tfoot>
+						<tr>
+							<th class="secupress-check hide-if-no-js">
+								<label class="screen-reader-text" for="cb-select-all-2"><?php _e( 'Select All' ); ?></label>
+								<input id="cb-select-all-2-<?php echo $prio_key; ?>" type="checkbox" class="me secupress-checkbox-<?php echo $prio_key; ?>"/>
+							</th>
+							<th class="secupress-status"><?php _e( 'Status', 'secupress' ); ?></th>
+							<th class="secupress-desc"><?php _e( 'Test Description', 'secupress' ); ?></th>
+							<th class="secupress-result"><?php _e( 'Test Results', 'secupress' ); ?></th>
+							<th class="secupress-fix"><?php _e( 'Fix', 'secupress' ); ?></th>
+							<!--// <th class="secupress-type"><?php _e( 'Test Type', 'secupress' ); ?></th> //-->
+						</tr>
+					</tfoot>
+				</table>
+
+			</div>
 			<?php
-		}
+		} // foreach prio
 		?>
-		</tbody>
-		<tfoot>
-			<tr>
-				<th class="secupress-check hide-if-no-js">
-					<label class="screen-reader-text" for="cb-select-all-2"><?php _e( 'Select All' ); ?></label>
-					<input id="cb-select-all-2-<?php echo $prio_key; ?>" type="checkbox" class="me secupress-checkbox-<?php echo $prio_key; ?>"/>
-				</th>
-				<th class="secupress-status"><?php _e( 'Status', 'secupress' ); ?></th>
-				<th class="secupress-desc"><?php _e( 'Test Description', 'secupress' ); ?></th>
-				<th class="secupress-result"><?php _e( 'Test Results', 'secupress' ); ?></th>
-				<th class="secupress-fix"><?php _e( 'Fix', 'secupress' ); ?></th>
-				<!--// <th class="secupress-type"><?php _e( 'Test Type', 'secupress' ); ?></th> //-->
-			</tr>
-		</tfoot>
-		</table>
-		</div>
-		<?php
-	} // foreach prio
-	?>
 	</div>
 	<?php
 }
