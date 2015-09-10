@@ -86,13 +86,9 @@ abstract class SecuPress_Scan {
 
 	// Add a message and automatically set the status.
 
-	public function add_message( $message_id, $params = array(), $set_status = true ) {
+	public function add_message( $message_id, $params = array() ) {
 		$this->result['msgs'] = isset( $this->result['msgs'] ) ? $this->result['msgs'] : array();
 		$this->result['msgs'][ $message_id ] = $params;
-
-		if ( ! $set_status ) {
-			return;
-		}
 
 		if ( $message_id < 100 ) {
 
