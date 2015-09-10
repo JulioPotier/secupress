@@ -14,7 +14,7 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan {
 	const VERSION = '1.0';
 
 	protected static $name = 'bad_config_files';
-	public    static $prio = 'medium';
+	public    static $prio = 'high';
 
 
 	public function __construct() {
