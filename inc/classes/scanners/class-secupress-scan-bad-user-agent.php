@@ -28,7 +28,7 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan {
 	}
 
 
-	public static function get_messages( $id = null ) {
+	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// good
 			0   => __( 'You are currently blocking bad user-agents.', 'secupress' ),
@@ -40,8 +40,8 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan {
 			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);
 
-		if ( isset( $id ) ) {
-			return isset( $messages[ $id ] ) ? $messages[ $id ] : __( 'Unknown message', 'secupress' );
+		if ( isset( $message_id ) ) {
+			return isset( $messages[ $message_id ] ) ? $messages[ $message_id ] : __( 'Unknown message', 'secupress' );
 		}
 
 		return $messages;
