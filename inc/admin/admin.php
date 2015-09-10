@@ -10,11 +10,11 @@ function __secupress_fixit_ajax( $test_name = null ) {
 	$nonce = 0 === $nonce || wp_verify_nonce( $nonce, 'secupress_fixit_' . $test_name );
 
 	if ( ! empty( $test_name ) && $nonce &&
-		file_exists( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . strtolower( $test_name ) . '.php' )
+		file_exists( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . secupress_class_name( $test_name ) . '.php' )
 		) {
 
 		require_once( SECUPRESS_FUNCTIONS_PATH . '/secupress-scanner.php' );
-		include_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . strtolower( $test_name ) . '.php' );
+		include_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . secupress_class_name( $test_name ) . '.php' );
 
 		$classname = 'SecuPress_Scan_' . $test_name;
 		if ( class_exists( $classname ) ) {
@@ -54,12 +54,12 @@ function __secupress_scanner_ajax( $test_name = null ) {
 
 		
 	if ( ! empty( $test_name ) && $nonce &&
-		file_exists( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . strtolower( $test_name ) . '.php' )
+		file_exists( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . secupress_class_name( $test_name ) . '.php' )
 		) {
 
 		@set_time_limit( 0 );
 		require_once( SECUPRESS_FUNCTIONS_PATH . '/secupress-scanner.php' );
-		include_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . strtolower( $test_name ) . '.php' );
+		include_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . secupress_class_name( $test_name ) . '.php' );
 		$classname = 'SecuPress_Scan_' . $test_name;
 		if ( class_exists( $classname ) ) {
 			ob_start();

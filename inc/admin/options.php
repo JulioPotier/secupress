@@ -315,10 +315,10 @@ function secupress_main_scan() {
 		<tbody>
 		<?php
 		foreach ( $tests_names as $test_name ) {
-			if ( ! file_exists( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . strtolower( $test_name ) . '.php' ) ) {
+			if ( ! file_exists( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . secupress_class_name( $test_name ) . '.php' ) ) {
 				continue;
 			} else {
-				include_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . strtolower( $test_name ) . '.php' );
+				include_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . secupress_class_name( $test_name ) . '.php' );
 			}
 			$class_name = 'SecuPress_Scan_' . $test_name;
 			$current_test = new $class_name//;
