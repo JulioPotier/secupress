@@ -34,7 +34,7 @@ class SecuPress_Scan_Versions extends SecuPress_Scan {
 				// good
 				0 => __( 'You are totally up to date, WordPress, plugins and themes. Bravo.', 'secupress' ),
 				// warning
-				100 => __( 'Impossible to determine the updateness of your installation.', 'secupress' ), //// updateness + determine if the updates are available
+				100 => __( 'Impossible to determine the updateness of your installation.', 'secupress' ),
 				// bad
 				200 => __( 'It\'s very important to maintain your WordPress installation up to date. If you can not update because of a plugin or theme, contact its author and submit him your issue.', 'secupress' ),
 				201 => __( 'WordPress <strong>core</strong> is not up to date.', 'secupress' ),
@@ -104,8 +104,6 @@ class SecuPress_Scan_Versions extends SecuPress_Scan {
 			if ( count( $theme_updates ) ) {
 				$this->add_message( 203, array( count( $theme_updates ), count( $theme_updates ), implode( '</code>, <code>', $theme_updates ) ) );
 			}
-		} else {
-			$this->add_message( 0 );
 		}
 
 		return parent::scan();
@@ -115,6 +113,7 @@ class SecuPress_Scan_Versions extends SecuPress_Scan {
     public function fix() {
 
         // include the fix here.
+
         return parent::fix();
     }
 }
