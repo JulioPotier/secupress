@@ -53,20 +53,20 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan {
 		$plugins = get_plugins();
 		$plugins = array_intersect_key( $plugins, array_flip( array_filter( array_keys( $plugins ), 'is_plugin_inactive' ) ) );
 
-		if ( $plugins ) {
+		if ( $count = count( $plugins ) ) {
 			// bad
 			$plugins = self::wrap_in_tag( wp_list_pluck( $plugins, 'Name' ) );
-			$this->add_message( 200, array( count( $plugins ), wp_sprintf_l( '%l', $plugins ) ) );
+			$this->add_message( 200, array( $count, $count, wp_sprintf_l( '%l', $plugins ) ) );
 		}
 
 		// Inactive themes
 		$themes = wp_get_themes();
 		$themes = array_diff( wp_list_pluck( $themes, 'Name' ), array( $themes->Name ) );	//// Attention au thème parent si on utilise un thème enfant !
 
-		if ( $themes ) {
+		if ( $count = count( $themes ) ) {
 			// bad
 			$themes = self::wrap_in_tag( $themes );
-			$this->add_message( 201, array( count( $themes ), wp_sprintf_l( '%l', $themes ) ) );
+			$this->add_message( 201, array( $count, $count, wp_sprintf_l( '%l', $themes ) ) );
 		}
 
 		// good
