@@ -79,9 +79,7 @@ abstract class SecuPress_Scan {
 
 	// Get messages.
 
-	public static function get_messages( $message_id = null ){
-		die( 'function SecuPress_Scan::get_messages() must be over-ridden in a sub-class.' );
-	}
+	abstract public static function get_messages( $message_id = null );
 
 
 	// Add a message and automatically set the status.
@@ -136,10 +134,8 @@ abstract class SecuPress_Scan {
 	// Try to fix the flow(s).
 
 	public function fix() {
-		if ( ! defined( 'DOING_AJAX' ) ) {
-			$this->fix = true;
-			return $this->scan();
-		}
+		$this->fix = true;
+		return $this->scan();
 	}
 
 	// Options =====================================================================================
@@ -198,27 +194,6 @@ abstract class SecuPress_Scan {
 		return $priorities;
 	}
 
-	public static function get_tests() {
-		return array(
-					'high' => 
-						array( 'Versions',         'Auto_Update',       'Bad_Old_Plugins', 
-							   'Bad_Config_Files', 'Directory_listing', 'PHP_INI', 
-							   'Admin_User_Check', 'Easy_Login',        'Subscription',
-							   'WP_Config',        'Salt_Keys',         'Passwords_Strenght',
-							   'Bad_Old_Files',    'Chmods',            'Common_Flaws',
-							   'Bad_User_Agent',   'SQLi',
-							),
-
-					'medium' =>
-						array( 'Inactive_Plugins_Themes', 'Bad_Url_Access',  'Bad_Usernames',
-							   'Bad_Request_Methods',     'Too_Many_Admins', 'Block_Long_URL',
-							   'Block_HTTP_1_0',          'Discloses',
-							),
-
-					'low' =>
-						array( 'Login_Errors_Disclose', 'PHP_Disclosure', 'Admin_As_Author' ),
-					);
-	}
 
 	// Given an array of "things", wrap those "things" in a HTML tag.
 
