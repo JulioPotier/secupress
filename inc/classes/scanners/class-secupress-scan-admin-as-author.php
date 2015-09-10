@@ -63,6 +63,9 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan {
 			$this->add_message( 200, array( $ids, number_format_i18n( $ids ) ) );
 		}
 
+		// good
+		$this->maybe_set_status( 0 );
+
 		return parent::scan();
 	}
 
