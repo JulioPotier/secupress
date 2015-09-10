@@ -2,7 +2,7 @@
 defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
 
 /**
- * 
+ * Create a URL to easily access to our pages
  * 
  * @since 1.0
  *
@@ -16,6 +16,13 @@ function secupress_admin_url( $page, $module = false )
 	return admin_url( 'admin.php?page=secupress_' . sanitize_key( $page ) . $module, 'admin' );
 }
 
+/**
+ * Gives back the module title
+ * 
+ * @since 1.0
+ *
+ * @param (string)$module : the desired module
+*/
 function get_secupress_module_title( $module = false ) {
 	$module = $module ? $module : $GLOBALS['modulenow'];
 	if ( isset( $GLOBALS['secupress_modules'][ $module ] ) ) {
@@ -24,12 +31,25 @@ function get_secupress_module_title( $module = false ) {
 	return '';
 }
 
+/**
+ * Output the $text in a P tag with .description class
+ * 
+ * @since 1.0
+ *
+ * @param (string)$text : the last word of the secupress page slug
+*/
 function __secupress_description_module( $text = '' ) {
 	if ( '' != $text ) {
 		return '<p class="description">' . $text . '</p>';
 	}
 }
 
+/**
+ * like in_array but for nested arrays
+ * 
+ * @since 1.0
+ *
+*/
 if ( ! function_exists( 'in_array_deep' ) ) {
 	function in_array_deep( $needle, $haystack ) {
 		if ( $haystack ) {
@@ -41,4 +61,15 @@ if ( ! function_exists( 'in_array_deep' ) ) {
 		}
 	    return false;
 	}
+}
+
+/**
+ * Output the test name lowercased with _ replaced by - to match the file names
+ * 
+ * @since 1.0
+ *
+ * @param (string)$test_name : the last word of the secupress page slug
+*/
+function secupress_class_name( $test_name ) {
+	return strtolower( str_replace( '_', '-', $test_name ) );
 }
