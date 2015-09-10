@@ -245,7 +245,6 @@ function secupress_uksort_scanners( $key_a, $key_b ) {
 
 
 function secupress_main_scan() {
-	global $secupress_tests;
 	$scanners = get_option( SECUPRESS_SCAN_SLUG );
 	$thedate = ! empty( $scanners['last_run'] ) ? wp_sprintf( __('%s ago'), human_time_diff( $scanners['last_run'] ) ) : __( 'Never', 'secupress' );
 	?>
@@ -271,8 +270,10 @@ function secupress_main_scan() {
 	<div id="secupress-tests">
 	<?php
 	if ( ! class_exists( 'SecuPress_Scan' ) ) {
-		include_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan.php' );
+		include( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan.php' );
 	}
+
+	$secupress_tests = SecuPress_Scan::get_tests();
 	foreach ( $secupress_tests as $prio_key => $tests_names ) {
 		$i=0;
 		$prio_data = SecuPress_Scan::get_priorities( $prio_key );

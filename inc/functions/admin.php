@@ -7,8 +7,10 @@ defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
  * @since 1.0
  */
 function secupress_get_scanner_counts( $type = '' ) {
-	include( SECUPRESS_FUNCTIONS_PATH . '/secupress-scanner.php' );
-	global $secupress_tests;
+	if ( ! class_exists( 'SecuPress_Scan' ) ) {
+		include( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan.php' );
+	}
+	$secupress_tests = SecuPress_Scan::get_tests();
 	$scanners = get_option( SECUPRESS_SCAN_SLUG );
 	$array_fill_keys = array_fill_keys( array( 'good', 'warning', 'bad' ), 0 );
 	$array_count_values = is_array( $scanners ) ? array_count_values( wp_list_pluck( $scanners, 'status' ) ) : array();
@@ -313,23 +315,23 @@ function secupress_manage_affected_roles( &$settings, $pluginnow ) {
 }
 
 function secupress_get_ip() {
-    foreach ( array(
-             'HTTP_CLIENT_IP', 
-             'HTTP_X_FORWARDED_FOR', 
-             'HTTP_X_FORWARDED', 
-             'HTTP_X_CLUSTER_CLIENT_IP', 
-             'HTTP_FORWARDED_FOR', 
-             'HTTP_FORWARDED', 
-             'REMOTE_ADDR' ) as $key ) {
-        if ( array_key_exists( $key, $_SERVER ) ) {
-            $ip = explode( ',', $_SERVER[ $key ] );
-            $ip = end( $ip );
-            if ( filter_var( $ip, FILTER_VALIDATE_IP ) !== false ) {
-                return apply_filters( 'secupress_get_ip', $ip );
-            }
-        }
-    }
-    return apply_filters( 'secupress_default_ip', '0.0.0.0' );
+	foreach ( array(
+		'HTTP_CLIENT_IP', 
+		'HTTP_X_FORWARDED_FOR', 
+		'HTTP_X_FORWARDED', 
+		'HTTP_X_CLUSTER_CLIENT_IP', 
+		'HTTP_FORWARDED_FOR', 
+		'HTTP_FORWARDED', 
+		'REMOTE_ADDR' ) as $key ) {
+		if ( array_key_exists( $key, $_SERVER ) ) {
+			$ip = explode( ',', $_SERVER[ $key ] );
+			$ip = end( $ip );
+			if ( filter_var( $ip, FILTER_VALIDATE_IP ) !== false ) {
+				return apply_filters( 'secupress_get_ip', $ip );
+			}
+		}
+	}
+	return apply_filters( 'secupress_default_ip', '0.0.0.0' );
 }
 
 function secupress_ban_ip( $IP = null, $die = true ) {
