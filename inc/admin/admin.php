@@ -13,13 +13,13 @@ function __secupress_fixit_ajax( $test_name = null ) {
 		file_exists( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . secupress_class_name( $test_name ) . '.php' )
 		) {
 
-		require_once( SECUPRESS_FUNCTIONS_PATH . '/secupress-scanner.php' );
+		require_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan.php' );
 		include_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . secupress_class_name( $test_name ) . '.php' );
 
 		$classname = 'SecuPress_Scan_' . $test_name;
 		if ( class_exists( $classname ) ) {
-			@set_time_limit( 0 );
 			ob_start();
+				@set_time_limit( 0 );
 				$secupress_scan = new $classname//;
 				();
 				$response = $secupress_scan->fix();
@@ -57,12 +57,12 @@ function __secupress_scanner_ajax( $test_name = null ) {
 		file_exists( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . secupress_class_name( $test_name ) . '.php' )
 		) {
 
-		@set_time_limit( 0 );
-		require_once( SECUPRESS_FUNCTIONS_PATH . '/secupress-scanner.php' );
+		require_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan.php' );
 		include_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . secupress_class_name( $test_name ) . '.php' );
 		$classname = 'SecuPress_Scan_' . $test_name;
 		if ( class_exists( $classname ) ) {
 			ob_start();
+				@set_time_limit( 0 );
 				$secupress_scan = new $classname;
 				$response = $secupress_scan->scan();
 			ob_end_flush();

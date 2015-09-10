@@ -245,9 +245,12 @@ function secupress_uksort_scanners( $key_a, $key_b ) {
 
 
 function secupress_main_scan() {
-	global $secupress_tests;
+	if ( ! class_exists( 'SecuPress_Scan' ) ) {
+		include_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan.php' );
+	}
 
-	$scanners = get_option( SECUPRESS_SCAN_SLUG );
+	$secupress_tests = SecuPress_Scan::get_tests();
+	$scanners        = get_option( SECUPRESS_SCAN_SLUG );
 
 	// Store the scans in 2 variables. They will be used to order the scans by status: 'bad', 'warning', 'notscannedyet', 'good'.
 	$before_not_scanned = array( 'bad' => array(), 'warning' => array(), );
@@ -288,10 +291,6 @@ function secupress_main_scan() {
 
 	<div id="secupress-tests">
 		<?php
-		if ( ! class_exists( 'SecuPress_Scan' ) ) {
-			include_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan.php' );
-		}
-
 		foreach ( $secupress_tests as $prio_key => $scan_names ) {
 			$i         = 0;
 			$prio_data = SecuPress_Scan::get_priorities( $prio_key );
