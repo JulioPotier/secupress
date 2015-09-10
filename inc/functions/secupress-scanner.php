@@ -18,8 +18,8 @@ $secupress_tests = array(
 
 						'medium' =>
 							array( 'Inactive_Plugins_Themes', 'Bad_Url_Access',  'Bad_Usernames',
-								   'Bad_Request_Methods',     'Too_Many_Admins', 'Block_Long_Url',
-								   'Block_HTTP_1_0',           'Discloses',
+								   'Bad_Request_Methods',     'Too_Many_Admins', 'Block_Long_URL',
+								   'Block_HTTP_1_0',          'Discloses',
 								),
 
 						'low' =>

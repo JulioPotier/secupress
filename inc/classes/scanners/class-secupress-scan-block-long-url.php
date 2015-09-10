@@ -9,11 +9,11 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @since 1.0
  */
 
-class SecuPress_Scan_Long_URL extends SecuPress_Scan {
+class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan {
 
 	const VERSION = '1.0';
 
-	protected static $name = 'long_url';
+	protected static $name = 'block_long_url';
 	public    static $prio = 'medium';
 
 
@@ -28,7 +28,7 @@ class SecuPress_Scan_Long_URL extends SecuPress_Scan {
 	}
 
 
-	public static function get_messages( $message_id = null ) {
+	public static function get_messages( $id = null ) {
 		$messages = array(
 			// good
 			0   => __( 'You are currently blocking bad request methods.', 'secupress' ),
@@ -40,8 +40,8 @@ class SecuPress_Scan_Long_URL extends SecuPress_Scan {
 			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);
 
-		if ( isset( $message_id ) ) {
-			return isset( $messages[ $message_id ] ) ? $messages[ $message_id ] : __( 'Unknown message', 'secupress' );
+		if ( isset( $id ) ) {
+			return isset( $messages[ $id ] ) ? $messages[ $id ] : __( 'Unknown message', 'secupress' );
 		}
 
 		return $messages;
