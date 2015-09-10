@@ -65,7 +65,7 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan {
 		}
 
 		// good
-		$this->maybe_set_status();
+		$this->maybe_set_status( 0 );
 
 		return parent::scan();
 	}

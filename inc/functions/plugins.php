@@ -31,17 +31,8 @@ function secupress_is_plugin_active_for_network( $plugin )
 	return isset( $plugins[ $plugin ] );
 }
 
-
-function secupress_is_module_active( $module ) {
-	return (bool) get_secupress_module_option( 'module_active', false, $module );
-}
-
-
 function secupress_is_submodule_active( $submodule, $module = null ) {
-	if ( secupress_is_module_active( $module ) ) {
-		return in_array_deep( $module . '_plugin_' . $submodule, get_site_option( SECUPRESS_ACTIVE_SUBMODULES ) );
-	}
-	return false;
+	return in_array_deep( $module . '_plugin_' . $submodule, get_site_option( SECUPRESS_ACTIVE_SUBMODULES ) );
 }
 
 /**

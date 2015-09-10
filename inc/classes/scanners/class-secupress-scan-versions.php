@@ -92,7 +92,6 @@ class SecuPress_Scan_Versions extends SecuPress_Scan {
 			if ( $count = count( $theme_updates ) ) {
 				$this->add_message( 203, array( $count, $count, wp_sprintf_l( '%l', self::wrap_in_tag( $theme_updates ) ) ) );
 			}
-
 		}
 
 		// good

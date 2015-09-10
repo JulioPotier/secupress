@@ -33,6 +33,7 @@ define( 'SECUPRESS_MODULES_PATH'          , realpath( SECUPRESS_INC_PATH . 'modu
 define( 'SECUPRESS_FRONT_PATH'            , realpath( SECUPRESS_INC_PATH . 'front/' ) . '/' );
 define( 'SECUPRESS_ADMIN_PATH'            , realpath( SECUPRESS_INC_PATH . 'admin/' ) . '/' );
 define( 'SECUPRESS_FUNCTIONS_PATH'        , realpath( SECUPRESS_INC_PATH . 'functions' ) . '/' );
+define( 'SECUPRESS_CLASSES_PATH'          , realpath( SECUPRESS_INC_PATH . 'classes' ) . '/' );
 define( 'SECUPRESS_ADMIN_SETTINGS_MODULES', SECUPRESS_ADMIN_PATH . 'modules/' );
 define( 'SECUPRESS_PLUGIN_URL'            , plugin_dir_url( SECUPRESS_FILE ) );
 define( 'SECUPRESS_INC_URL'               , SECUPRESS_PLUGIN_URL . 'inc/' );
@@ -156,7 +157,6 @@ function secupress_load_plugins() {
 
 	if ( $modules ) {
 		foreach ( $modules as $module => $plugins ) {
-			if ( secupress_is_module_active( $module ) ) {
 				foreach ( $plugins as $plugin ) {
 					$file = SECUPRESS_MODULES_PATH . sanitize_key( $module ) . '/plugins/' . sanitize_key( $plugin ) . '.php';
 					if ( file_exists( $file ) ) {
@@ -166,8 +166,6 @@ function secupress_load_plugins() {
 			}
 		}
 	}
-}
-
 
 add_action( 'secupress_loaded', 'secupress_been_first' );
 
