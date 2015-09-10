@@ -8,7 +8,7 @@ defined( 'ABSPATH' ) or die('Cheatin\' uh?');
  * @since 1.0
  */
 
-class SecuPress_Scan {
+abstract class SecuPress_Scan {
 
 	const VERSION = '1.0';
 
@@ -79,9 +79,7 @@ class SecuPress_Scan {
 
 	// Get messages.
 
-	public static function get_messages( $message_id = null ) {
-		die( 'function SecuPress_Scan::get_messages() must be over-ridden in a sub-class.' ); // no i18n thx
-	}
+	abstract public static function get_messages( $message_id = null );
 
 
 	// Add a message and automatically set the status.
