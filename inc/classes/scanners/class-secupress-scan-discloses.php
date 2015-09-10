@@ -2,18 +2,18 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /**
- * Disclose scan class.
+ * Discloses scan class.
  *
  * @package SecuPress
  * @subpackage SecuPress_Scan
  * @since 1.0
  */
 
-class SecuPress_Scan_Disclose extends SecuPress_Scan {
+class SecuPress_Scan_Discloses extends SecuPress_Scan {
 
 	const VERSION = '1.0';
 
-	protected static $name = 'disclose';
+	protected static $name = 'discloses';
 	public    static $prio = 'medium';
 
 
