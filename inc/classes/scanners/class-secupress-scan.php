@@ -204,7 +204,7 @@ abstract class SecuPress_Scan {
 				'Versions',         'Auto_Update',       'Bad_Old_Plugins',
 				'Bad_Config_Files', 'Directory_listing', 'PHP_INI',
 				'Admin_User_Check', 'Easy_Login',        'Subscription',
-				'WP_Config',        'Salt_Keys',         'Passwords_Strenght',
+				'WP_Config',        'Salt_Keys',         'Passwords_Strength',
 				'Bad_Old_Files',    'Chmods',            'Common_Flaws',
 				'Bad_User_Agent',   'SQLi',
 			),
