@@ -412,10 +412,11 @@ function secupress_main_scan() {
 									</span>
 								</div>
 							</td>
-							<td><?php echo esc_html( $class_name::$title ); ?>
+							<td>
+								<?php echo $class_name::$title; ?>
 								<div class="secupress-row-actions">
 									<span class="helpme hide-if-no-js">
-										<button type="button" class="secupress-details link-like" data-test="<?php echo $option_name; ?>" title="<?php _e( 'Get details', 'secupress' ); ?>" /><?php _e( 'Learn more', 'secupress' ); ?></button>
+										<button type="button" class="secupress-details link-like" data-test="<?php echo $option_name; ?>" title="<?php esc_attr_e( 'Get details', 'secupress' ); ?>" /><?php _e( 'Learn more', 'secupress' ); ?></button>
 									</span>
 								</div>
 							</td>
@@ -571,7 +572,7 @@ function secupress_field( $args ) {
 				<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
 				<label>
 					<input autocomplete="off" data-realtype="password" <?php echo $data_nocheck; ?><?php echo $title; ?><?php echo $pattern; ?><?php echo $required; ?><?php echo $disabled; ?> type="password" id="<?php echo $args['label_for']; ?>" name="secupress_<?php echo $modulenow; ?>_settings[<?php echo $args['name']; ?>]" value="" <?php echo $readonly; ?>/>
-					<input type="text" tabindex="-1" id="password_strength_pattern"<?php echo $data_nocheck; ?> data-pattern="[3-4]" title="<?php _e( 'Minimum Strength Level: Medium', 'secupress' ); ?>" name="secupress_<?php echo $modulenow; ?>_settings[password_strength_value]" value="0" id="password_strength_value" />
+					<input type="text" tabindex="-1" id="password_strength_pattern"<?php echo $data_nocheck; ?> data-pattern="[3-4]" title="<?php esc_attr_e( 'Minimum Strength Level: Medium', 'secupress' ); ?>" name="secupress_<?php echo $modulenow; ?>_settings[password_strength_value]" value="0" id="password_strength_value" />
 					<?php echo $label; ?>
 					<i class="hide-if-no-js"><?php printf( __( 'Required: %s', 'secupress' ), _x( 'Medium', 'password strength' ) ); ?></i>
 					<br><span id="password-strength" class="hide-if-no-js"></span>
