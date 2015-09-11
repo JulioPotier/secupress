@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @since 1.0
  */
 
-class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan {
+class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements iSecuPress_Scan {
 
 	const VERSION = '1.0';
 
@@ -18,10 +18,6 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan {
 
 
 	public function __construct() {
-		if ( self::$instance ) {
-			return self::$instance;
-		}
-
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if your WordPress site discloses the PHP modules <em>(know as PHP Easter Egg)</em>.', 'secupress' );
 		self::$more  = __( 'Don\'t let them easily find these informations.', 'secupress' ); ////

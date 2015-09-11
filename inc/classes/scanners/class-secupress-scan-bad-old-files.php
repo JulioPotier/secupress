@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @since 1.0
  */
 
-class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan {
+class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements iSecuPress_Scan {
 
 	const VERSION = '1.0';
 
@@ -18,13 +18,9 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan {
 
 
 	public function __construct() {
-		if ( self::$instance ) {
-			return self::$instance;
-		}
-
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if your installation still contains old files from WordPress 2.0 to your version.', 'secupress' );
-		self::$more  = __( 'Since WordPress 2.0, about 500 files were deleted, let\'s check if you need a clean up.', 'secupress' );
+		self::$more  = sprintf( __( 'Since WordPress 2.0, about %s files were deleted, let\'s check if you need a clean up.', 'secupress' ), number_format_i18n( 650 ) );
 	}
 
 

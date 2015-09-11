@@ -1,6 +1,14 @@
 <?php
 defined( 'ABSPATH' ) or die('Cheatin\' uh?');
 
+
+interface iSecuPress_Scan
+{
+	public static function get_messages( $message_id = null );
+	public function scan();
+	public function fix();
+}
+
 /**
  * Base scan class.
  *
@@ -8,14 +16,15 @@ defined( 'ABSPATH' ) or die('Cheatin\' uh?');
  * @since 1.0
  */
 
-abstract class SecuPress_Scan {
+abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 	const VERSION = '1.0';
 
-	protected static $instance = false;
-	protected static $name     = '';
-	protected        $result   = array();
-	protected        $fix      = false;
+	private static $_instance;
+	protected static $name   = '';
+	protected        $result = array();
+	protected        $fix    = false;
+
 
 	public    static $prio  = '';
 	public    static $type  = '';
@@ -25,17 +34,16 @@ abstract class SecuPress_Scan {
 
 	// Instance ====================================================================================
 
+
 	public function __construct( $args = array() ) {}
 
 
 	public static function get_instance( $args = array() ) {
-		if ( ! self::$instance ) {
-			$classname = __CLASS__;
-			self::$instance = new $classname//;
-			( $args );
+		if ( ! self::$_instance ) {
+			self::$_instance = new static();
 		}
 
-		return self::$instance;
+		return self::$_instance;
 	}
 
 

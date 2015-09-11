@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @since 1.0
  */
 
-class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan {
+class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPress_Scan {
 
 	const VERSION = '1.0';
 
@@ -18,10 +18,6 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan {
 
 
 	public function __construct() {
-		if ( self::$instance ) {
-			return self::$instance;
-		}
-
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if your installation contains old or backed up <code>wp-config.php</code> files like <code>wp-config.bak</code>, <code>.old</code> etc.', 'secupress' );
 		self::$more  = __( 'Some attackers will try to find old and backed up config files to try to steal them, avoid this attack and remove them!', 'secupress' );

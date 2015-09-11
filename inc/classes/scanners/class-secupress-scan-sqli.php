@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @since 1.0
  */
 
-class SecuPress_Scan_SQLi extends SecuPress_Scan {
+class SecuPress_Scan_SQLi extends SecuPress_Scan implements iSecuPress_Scan {
 
 	const VERSION = '1.0';
 
@@ -18,13 +18,9 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan {
 
 
 	public function __construct() {
-		if ( self::$instance ) {
-			return self::$instance;
-		}
-
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if a basic SQL Injection is blocked or not.', 'secupress' );
-		self::$more  = __( '////?', 'secupress' );
+		self::$more  = __( 'SQL injection is a way to read, modify, delete any content of your database, this is a powerful vulnerability.', 'secupress' );
 	}
 
 

@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @since 1.0
  */
 
-class SecuPress_Scan_Discloses extends SecuPress_Scan {
+class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan {
 
 	const VERSION = '1.0';
 
@@ -18,13 +18,9 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan {
 
 
 	public function __construct() {
-		if ( self::$instance ) {
-			return self::$instance;
-		}
-
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if your WordPress site discloses its version.', 'secupress' );
-		self::$more  = __( 'When a hacker wants to hack into a WordPress site, he\'ll search for a maximum of information. The goal is to find outdated versions of your server softwares or WordPress component. Don\'t let them easily find these informations.', 'secupress' );
+		self::$more  = __( 'When a attacker wants to hack into a WordPress site, he\'ll search for a maximum of information. The goal is to find outdated versions of your server softwares or WordPress component. Don\'t let them easily find these informations.', 'secupress' );
 	}
 
 

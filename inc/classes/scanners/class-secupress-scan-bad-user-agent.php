@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @since 1.0
  */
 
-class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan {
+class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan implements iSecuPress_Scan {
 
 	const VERSION = '1.0';
 
@@ -18,13 +18,9 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan {
 
 
 	public function __construct() {
-		if ( self::$instance ) {
-			return self::$instance;
-		}
-
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if bad user-agent can visit your website.', 'secupress' );
-		self::$more  = __( '////?', 'secupress' );
+		self::$more  = __( 'Bad User Agents are Bots that generally provide no value to the website. It includes scrapers, spambots, email harvesters and more bots that you don\'t want on your site. In many cases, those bots that are generally online crawling with a malicious purpose have no desire to follow any robots.txt or meta tag attempt at controlling them.', 'secupress' );
 	}
 
 

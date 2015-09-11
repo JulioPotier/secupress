@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @since 1.0
  */
 
-class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan {
+class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPress_Scan {
 
 	const VERSION = '1.0';
 
@@ -18,9 +18,6 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan {
 
 
 	public function __construct() {
-		if ( self::$instance ) {
-			return self::$instance;
-		}
 
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if there is more than 3 administrators on this site.', 'secupress' );

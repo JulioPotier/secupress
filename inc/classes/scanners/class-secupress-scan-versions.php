@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) or die('Cheatin\' uh?');
  * @since 1.0
  */
 
-class SecuPress_Scan_Versions extends SecuPress_Scan {
+class SecuPress_Scan_Versions extends SecuPress_Scan implements iSecuPress_Scan {
 
 	const VERSION = '1.0';
 
@@ -18,10 +18,6 @@ class SecuPress_Scan_Versions extends SecuPress_Scan {
 
 
 	public function __construct() {
-		if ( self::$instance ) {
-			return self::$instance;
-		}
-
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if your WordPress core, plugins, and themes are up to date.', 'secupress' );
 		self::$more  = __( 'It\'s very important to maintain your WordPress installation up to date. If you can not update because of a plugin or theme, contact its author and submit him your issue.', 'secupress' );
