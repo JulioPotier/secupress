@@ -365,10 +365,9 @@ function secupress_main_scan() {
 
 					// Print the rows.
 					foreach ( $scan_names as $option_name => $class_name ) {
-						$current_test = new $class_name//;
-						();
 						++$i;
 
+						$current_test = $class_name::get_instance();
 						$status_text  = isset( $scanners[ $option_name ]['status'] ) ? secupress_status( $scanners[ $option_name ]['status'] )    : secupress_status( 'notscannedyet' );
 						$status_class = isset( $scanners[ $option_name ]['status'] ) ? sanitize_html_class( $scanners[ $option_name ]['status'] ) : 'notscannedyet';
 						$css_class    = ' type-' . sanitize_key( $class_name::$type );
