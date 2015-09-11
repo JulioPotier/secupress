@@ -13,11 +13,15 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 
 	const VERSION = '1.0';
 
+	/**
+	 * @var Singleton The reference to *Singleton* instance of this class
+	 */
+	protected static $_instance;
 	protected static $name = 'bad_config_files';
 	public    static $prio = 'high';
 
 
-	public function __construct() {
+	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if your installation contains old or backed up <code>wp-config.php</code> files like <code>wp-config.bak</code>, <code>.old</code> etc.', 'secupress' );
 		self::$more  = __( 'Some attackers will try to find old and backed up config files to try to steal them, avoid this attack and remove them!', 'secupress' );

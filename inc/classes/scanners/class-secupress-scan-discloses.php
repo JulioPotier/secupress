@@ -13,11 +13,15 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 
 	const VERSION = '1.0';
 
+	/**
+	 * @var Singleton The reference to *Singleton* instance of this class
+	 */
+	protected static $_instance;
 	protected static $name = 'discloses';
 	public    static $prio = 'medium';
 
 
-	public function __construct() {
+	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if your WordPress site discloses its version.', 'secupress' );
 		self::$more  = __( 'When a attacker wants to hack into a WordPress site, he\'ll search for a maximum of information. The goal is to find outdated versions of your server softwares or WordPress component. Don\'t let them easily find these informations.', 'secupress' );

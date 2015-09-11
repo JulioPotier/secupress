@@ -13,11 +13,15 @@ class SecuPress_Scan_Block_HTTP_1_0 extends SecuPress_Scan implements iSecuPress
 
 	const VERSION = '1.0';
 
+	/**
+	 * @var Singleton The reference to *Singleton* instance of this class
+	 */
+	protected static $_instance;
 	protected static $name = 'block_http_1_0';
 	public    static $prio = 'medium';
 
 
-	public function __construct() {
+	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if POST requests using HTTP 1.0 can reach your website.', 'secupress' );
 		self::$more  = __( 'POST is the opposite of GET. Instead of grabbing resources from the server, data is being sent. Using HTTP 1.0, rather than HTTP 1.1 is bad because it doesn\'t require a Host header.', 'secupress' );

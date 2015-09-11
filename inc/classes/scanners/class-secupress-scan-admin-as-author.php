@@ -13,11 +13,15 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 
 	const VERSION = '1.0';
 
+	/**
+	 * @var Singleton The reference to *Singleton* instance of this class
+	 */
+	protected static $_instance;
 	protected static $name = 'admin_as_author';
 	public    static $prio = 'low';
 
 
-	public function __construct() {
+	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if any administrator already created a public post.', 'secupress' );
 		self::$more  = __( 'The <em>administrator</em> role is to administrate the website, not creating posts, there is other roles for that. Also it means that your admin account is always logged in, this can easily lead to CSRF attacks.', 'secupress' );

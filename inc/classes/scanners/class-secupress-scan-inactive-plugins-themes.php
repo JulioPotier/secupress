@@ -13,11 +13,15 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 
 	const VERSION = '1.0';
 
+	/**
+	 * @var Singleton The reference to *Singleton* instance of this class
+	 */
+	protected static $_instance;
 	protected static $name = 'inactive_plugins_themes';
 	public    static $prio = 'medium';
 
 
-	public function __construct() {
+	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if you got some deactivated plugins or themes.', 'secupress' );
 		self::$more  = __( 'Even deactivated plugins or themes can potentially be exploited to some vulnerabilities.', 'secupress' );

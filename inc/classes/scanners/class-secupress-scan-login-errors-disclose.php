@@ -13,11 +13,15 @@ class SecuPress_Scan_Login_Errors_Disclose extends SecuPress_Scan implements iSe
 
 	const VERSION = '1.0';
 
+	/**
+	 * @var Singleton The reference to *Singleton* instance of this class
+	 */
+	protected static $_instance;
 	protected static $name = 'login_errors_disclose';
 	public    static $prio = 'low';
 
 
-	public function __construct() {
+	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if your WordPress site discloses some login errors.', 'secupress' );
 		self::$more  = __( 'Don\'t let them easily find these informations.', 'secupress' ); ////

@@ -13,11 +13,15 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan implements iSecuPress
 
 	const VERSION = '1.0';
 
+	/**
+	 * @var Singleton The reference to *Singleton* instance of this class
+	 */
+	protected static $_instance;
 	protected static $name = 'bad_user_agent';
 	public    static $prio = 'high';
 
 
-	public function __construct() {
+	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if bad user-agent can visit your website.', 'secupress' );
 		self::$more  = __( 'Bad User Agents are Bots that generally provide no value to the website. It includes scrapers, spambots, email harvesters and more bots that you don\'t want on your site. In many cases, those bots that are generally online crawling with a malicious purpose have no desire to follow any robots.txt or meta tag attempt at controlling them.', 'secupress' );

@@ -13,11 +13,15 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 
 	const VERSION = '1.0';
 
+	/**
+	 * @var Singleton The reference to *Singleton* instance of this class
+	 */
+	protected static $_instance;
 	protected static $name = 'bad_usernames';
 	public    static $prio = 'medium';
 
 
-	public function __construct() {
+	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if your users got correct username, not blacklisted, not the same as their login.', 'secupress' );
 		self::$more  = __( 'It\'s important to not having the same login and display name to protect your login name and avoid simple brute-force attacks on it.', 'secupress' );

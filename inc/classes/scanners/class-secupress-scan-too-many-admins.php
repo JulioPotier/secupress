@@ -13,12 +13,15 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPres
 
 	const VERSION = '1.0';
 
+	/**
+	 * @var Singleton The reference to *Singleton* instance of this class
+	 */
+	protected static $_instance;
 	protected static $name = 'too_many_admins';
 	public    static $prio = 'medium';
 
 
-	public function __construct() {
-
+	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if there is more than 3 administrators on this site.', 'secupress' );
 		self::$more  = __( 'Try to reduce the number of administrators to lower the risk that any account has been compromised.', 'secupress' );

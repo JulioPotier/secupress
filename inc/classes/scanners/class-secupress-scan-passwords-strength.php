@@ -13,15 +13,15 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan {
 
 	const VERSION = '1.0';
 
+	/**
+	 * @var Singleton The reference to *Singleton* instance of this class
+	 */
+	protected static $_instance;
 	protected static $name = 'passwords_strength';
 	public    static $prio = 'high';
 
 
-	public function __construct() {
-		if ( self::$instance ) {
-			return self::$instance;
-		}
-
+	protected static function init() {
 		self::$type  = __( '3rd party', 'secupress' );
 		self::$title = __( 'Test the strength of WordPress database and FTP password if available.', 'secupress' );
 		self::$more  = __( 'The password of the database and FTP has to be strong to avoid a possible brute-force attack.', 'secupress' );

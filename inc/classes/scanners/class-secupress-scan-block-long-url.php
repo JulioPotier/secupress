@@ -13,11 +13,15 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements iSecuPress
 
 	const VERSION = '1.0';
 
+	/**
+	 * @var Singleton The reference to *Singleton* instance of this class
+	 */
+	protected static $_instance;
 	protected static $name = 'block_long_url';
 	public    static $prio = 'medium';
 
 
-	public function __construct() {
+	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if long URL can reach your website (more than 255 chars).', 'secupress' );
 		self::$more  = __( 'A usual URL has no more than 255 characters, but attackers often need to test very long strings to try to hack something.', 'secupress' );

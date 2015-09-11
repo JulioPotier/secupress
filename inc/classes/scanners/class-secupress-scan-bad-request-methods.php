@@ -13,11 +13,15 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements iSecu
 
 	const VERSION = '1.0';
 
+	/**
+	 * @var Singleton The reference to *Singleton* instance of this class
+	 */
+	protected static $_instance;
 	protected static $name = 'bad_request_methods';
 	public    static $prio = 'medium';
 
 
-	public function __construct() {
+	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if bad request methods can reach your website.', 'secupress' );
 		self::$more  = __( 'There are malicious scripts and bad bots out there hammering away at your site with useless HTTP GET requests.', 'secupress' );

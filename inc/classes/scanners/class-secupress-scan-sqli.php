@@ -13,11 +13,15 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements iSecuPress_Scan {
 
 	const VERSION = '1.0';
 
+	/**
+	 * @var Singleton The reference to *Singleton* instance of this class
+	 */
+	protected static $_instance;
 	protected static $name = 'sqli';
 	public    static $prio = 'high';
 
 
-	public function __construct() {
+	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if a basic SQL Injection is blocked or not.', 'secupress' );
 		self::$more  = __( 'SQL injection is a way to read, modify, delete any content of your database, this is a powerful vulnerability.', 'secupress' );

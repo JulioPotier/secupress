@@ -2,15 +2,24 @@
 defined( 'ABSPATH' ) or die('Cheatin\' uh?');
 
 
-interface iSecuPress_Scan
-{
+/**
+ * Base scan interface.
+ *
+ * @package SecuPress
+ * @since 1.0
+ */
+
+interface iSecuPress_Scan {
+
 	public static function get_messages( $message_id = null );
 	public function scan();
 	public function fix();
+
 }
 
+
 /**
- * Base scan class.
+ * Base scan abstract class.
  *
  * @package SecuPress
  * @since 1.0
@@ -20,11 +29,9 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 	const VERSION = '1.0';
 
-	private static $_instance;
 	protected static $name   = '';
 	protected        $result = array();
 	protected        $fix    = false;
-
 
 	public    static $prio  = '';
 	public    static $type  = '';
@@ -34,23 +41,58 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 	// Instance ====================================================================================
 
-
-	public function __construct( $args = array() ) {}
-
-
-	public static function get_instance( $args = array() ) {
-		if ( ! self::$_instance ) {
-			self::$_instance = new static();
+	/**
+	 * Returns the *Singleton* instance of this class.
+	 *
+	 * @return Singleton The *Singleton* instance.
+	 */
+	public static function get_instance() {
+		if ( ! isset( static::$_instance ) ) {
+			static::$_instance = new static;
 		}
 
-		return self::$_instance;
+		return static::$_instance;
 	}
+
+
+	/**
+	 * Protected constructor to prevent creating a new instance of the
+	 * *Singleton* via the `new` operator from outside of this class.
+	 */
+	final private function __construct() {
+		static::init();
+	}
+
+
+	/**
+	 * Private clone method to prevent cloning of the instance of the
+	 * *Singleton* instance.
+	 *
+	 * @return void
+	 */
+	final private function __clone() {}
+
+
+	/**
+	 * Private unserialize method to prevent unserializing of the *Singleton*
+	 * instance.
+	 *
+	 * @return void
+	 */
+	final private function __wakeup() {}
 
 
 	// Properties ==================================================================================
 
 	public static function get_name() {
 		return static::$name;
+	}
+
+
+	// Init ========================================================================================
+
+	protected static function init() {
+		die( 'Method SecuPress_Scan::init() must be over-ridden in a sub-class.' );
 	}
 
 
@@ -88,7 +130,7 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	// Get messages.
 
 	public static function get_messages( $message_id = null ){
-		die( 'function SecuPress_Scan::get_messages() must be over-ridden in a sub-class.' );
+		die( 'Method SecuPress_Scan::get_messages() must be over-ridden in a sub-class.' );
 	}
 
 
@@ -240,4 +282,5 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 		return $out;
 	}
+
 }

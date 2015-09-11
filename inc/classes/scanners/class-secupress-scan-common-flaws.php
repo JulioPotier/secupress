@@ -13,11 +13,15 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements iSecuPress_S
 
 	const VERSION = '1.0';
 
+	/**
+	 * @var Singleton The reference to *Singleton* instance of this class
+	 */
+	protected static $_instance;
 	protected static $name = 'common_flaws';
 	public    static $prio = 'high';
 
 
-	public function __construct() {
+	protected static function init() {
 		self::$type  = 'PHP';
 		self::$title = __( 'Check if your website can easily be the target of common flaws.', 'secupress' );
 		self::$more  = __( 'Every year new flaws are discovered. We have to be sure that your website cannot be the target.', 'secupress' );

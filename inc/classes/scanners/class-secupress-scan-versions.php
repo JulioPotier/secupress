@@ -13,11 +13,15 @@ class SecuPress_Scan_Versions extends SecuPress_Scan implements iSecuPress_Scan 
 
 	const VERSION = '1.0';
 
+	/**
+	 * @var Singleton The reference to *Singleton* instance of this class
+	 */
+	protected static $_instance;
 	protected static $name = 'versions';
 	public    static $prio = 'high';
 
 
-	public function __construct() {
+	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if your WordPress core, plugins, and themes are up to date.', 'secupress' );
 		self::$more  = __( 'It\'s very important to maintain your WordPress installation up to date. If you can not update because of a plugin or theme, contact its author and submit him your issue.', 'secupress' );
