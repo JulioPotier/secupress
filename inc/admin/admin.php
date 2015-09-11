@@ -20,8 +20,7 @@ function __secupress_fixit_ajax( $test_name = null ) {
 		if ( class_exists( $classname ) ) {
 			ob_start();
 				@set_time_limit( 0 );
-				$secupress_scan = new $classname//;
-				();
+				$secupress_scan = $classname::get_instance();;
 				$response = $secupress_scan->fix();
 			ob_end_flush();
 		}
@@ -52,7 +51,7 @@ function __secupress_scanner_ajax( $test_name = null ) {
 	$nonce = isset( $_GET['_wpnonce'] ) ? $_GET['_wpnonce'] : 0;
 	$nonce = 0 === $nonce || wp_verify_nonce( $nonce, 'secupress_scanner_' . $test_name );
 
-		
+
 	if ( ! empty( $test_name ) && $nonce &&
 		file_exists( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . secupress_class_name( $test_name ) . '.php' )
 		) {
@@ -63,7 +62,7 @@ function __secupress_scanner_ajax( $test_name = null ) {
 		if ( class_exists( $classname ) ) {
 			ob_start();
 				@set_time_limit( 0 );
-				$secupress_scan = new $classname;
+				$secupress_scan = $classname::get_instance();
 				$response = $secupress_scan->scan();
 			ob_end_flush();
 		}
@@ -209,7 +208,7 @@ function __secupress_reset_white_label_values_action() {
 }
 
 /**
- * 
+ *
  *
  * @since 1.0
  */
