@@ -23,8 +23,8 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan {
 		}
 
 		self::$type  = __( 'File System', 'secupress' );
-		self::$title = __( 'Check if your files and folders have the correct right permissions (chmod).', 'secupress' );
-		self::$more  = __( 'CHMOD is a way to give read/write/execute rights to a file/dir, the bad guy is knew as 0777, never use it. This test will check all files and dirs.', 'secupress' );
+		self::$title = __( 'Check if your files and folders have the correct write permissions (chmod).', 'secupress' );
+		self::$more  = __( 'CHMOD is a way to give read/write/execute rights to a file or a folder. The bad guy is known as <code>0777</code> and should never be used. This test will check some strategic files and folders.', 'secupress' );
 	}
 
 
