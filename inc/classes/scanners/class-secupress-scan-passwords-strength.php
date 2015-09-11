@@ -37,7 +37,7 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan {
 			200 => __( '%s is <strong>empty</strong>.', 'secupress' ),
 			201 => __( '%s is known as a <strong>too common</strong>.', 'secupress' ),
 			202 => _n_noop( '%1$s is only <strong>%2$d character length</strong>.', '%1$s is only <strong>%2$d characters length</strong>.', 'secupress' ),
-			201 => __( '%s isn\'t <strong>complex</strong> enough.', 'secupress' ),
+			203 => __( '%s isn\'t <strong>complex</strong> enough.', 'secupress' ),
 			// cantfix
 			300 => __( 'I can not fix this, you have to manually update your plugins, themes and WordPress core.', 'secupress' ),
 		);
