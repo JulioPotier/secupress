@@ -31,7 +31,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// good
-			0   => __( 'Your site doesn\'t reveal the the file list.', 'secupress' ),
+			0   => __( 'Your site doesn\'t reveal the files list.', 'secupress' ),
 			// warning
 			100 => __( 'Unable to determine status of <code>%s</code>.', 'secupress' ),
 			// bad
