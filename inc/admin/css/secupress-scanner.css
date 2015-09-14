@@ -140,6 +140,7 @@ th.secupress-check {
 .dashicons-arrow-down-alt2 {
 	color: #D73838;
 }
+/**/
 .link-like {
 	padding: 0;
 	border: none;
@@ -162,6 +163,7 @@ th.secupress-check {
 .link-like:focus {
 	color: #00A0D2;
 }
+/**/
 .square-filter {
 	padding: 0;
 }
@@ -188,4 +190,15 @@ th.secupress-check {
 .square-filter button.active {
 	font-weight: 700;
 	background: #eef;
+}
+/**/
+.widefat .secupress-check-column {
+	width: 2.2em;
+	padding: 6px 0 25px;
+	vertical-align: top;
+}
+.widefat tbody th.secupress-check-column,
+.widefat tfoot td.secupress-check-column,
+.widefat thead td.secupress-check-column {
+	padding: 11px 0 0 3px;
 }

@@ -1,6 +1,4 @@
-jQuery(document).ready(function($)
-{
-
+jQuery( document ).ready( function( $ ) {
 
 	var data = [
 		{
@@ -32,6 +30,7 @@ jQuery(document).ready(function($)
 			status: 'notscannedyet',
 		},
 	];
+
 	var donutId = document.getElementById("status_chart");
 	var SecuPressDonutChart = new Chart(donutId.getContext("2d")).Doughnut(data, {
 		animationEasing: 'easeInOutQuart',
@@ -42,12 +41,13 @@ jQuery(document).ready(function($)
 		tooltipEvents: [],
 		showTooltips: true
 	});
+
 	donutId.onclick = function(evt){
 		var activePoints = SecuPressDonutChart.getSegmentsAtEvent(evt);
 		jQuery('.square-filter.statuses button[data-type="'+activePoints[0].status+'"]').click();
 	};
 
-	$('body').on( 'click','.button-secupress-scan, .secupress-scanit', function( e ) {
+	$('body').on( 'click scan','.button-secupress-scan, .secupress-scanit', function( e ) {
 		var href, vars, pairs;
 
 		e.preventDefault();
@@ -111,7 +111,7 @@ jQuery(document).ready(function($)
 	});
 
 
-	$('body').on( 'click', '.secupress-fixit', function( e ) {
+	$('body').on( 'click fix', '.secupress-fixit', function( e ) {
 		var href, vars, pairs, t;
 
 		e.preventDefault();
@@ -233,50 +233,119 @@ jQuery(document).ready(function($)
 		$('#details-'+$(this).data('test')).toggle(250);
 	});
 
-	$('#doaction-high, #doaction-medium, #doaction-low').click(function(e){
-		e.preventDefault();
-		var prio = $(this).attr('id').replace('doaction-','');
-		var action = $('#bulk-action-' + prio).val();
+
+	// !Bulk -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	$( "#doaction-high, #doaction-medium, #doaction-low" ).on( "click", function( e ) {
+		var $this  = $( this ),
+			prio   = $this.attr( "id" ).replace( "doaction-", "" ),
+			action = $this.siblings( "select" ).val(),
+			$rows  = $this.parents( ".table-prio-all" ).find( "tbody .secupress-check-column :checked" ).parents( ".secupress-item-all" );
+
+		if ( action === "-1" ) {
+			return;
+		}
+
+		$this.siblings( "select" ).val( "-1" );
+
 		switch( action ) {
 			case 'scanit':
-				$('.secupress-checkbox-' + prio + ':checked').parent().parent().find('.secupress-scanit').click();
+				$rows.find( ".secupress-scanit" ).trigger( "scan" );
 				break;
 			case 'fixit':
 				alert('Not yet implemented ;p');
-				//$('.secupress-check input:checked').parent().parent().find('.secupress-fixit').click();
+				////$rows.find( ".secupress-fixit" ).trigger( "fix" );
 				break;
 			case 'fpositive':
-				$('td.checkbox-' + prio + ' input:checked').parent().parent()
-					.filter(':not(.status-good,.status-notscannedyet)')
-					.addClass('status-fpositive')
-					.find('.secupress-dashicon')
-					.removeClass('dashicons-shield-alt secupress-dashicon-color-bad secupress-dashicon-color-warning secupress-dashicon-color-notscannedyet')
-					.addClass('dashicons-shield secupress-dashicon-color-good');
+				$rows.not( ".status-good, .status-notscannedyet" )
+					.addClass( "status-fpositive" )
+					.find( ".secupress-dashicon" )
+					.removeClass( "dashicons-shield-alt secupress-dashicon-color-bad secupress-dashicon-color-warning secupress-dashicon-color-notscannedyet" )
+					.addClass( "dashicons-shield secupress-dashicon-color-good" );//// Et c'est tout ? On ne sauvegarde pas ce statut quelque part ?
 				break;
 		}
 		//secupress_maj_score( true );
-	});
+	} );
 
-	$('input[id^="cb-select-all-"]').click( function(){
-		var prio = $(this).attr('id').replace('cb-select-all-', '').replace('2-', '');
-		if ( ! $(this).prop('checked') ) {
-			$('.secupress-checkbox-'+prio).prop('checked', false);
-		} else {
-			$('.secupress-checkbox-'+prio).prop('checked', true);
-		}
-	});
 
-	$('input[class^="secupress-checkbox-"]:not(.me)').click( function(){
-		var cssclass = $(this).attr('class');
-		var checks = $( '.' + cssclass ).length-2;
-		var checkeds = $( '.' + cssclass ).filter(':checked').length;
-		var prio = cssclass.replace('secupress-checkbox-', '');
-		if ( checks == checkeds ) {
-			$('.' + cssclass + '.me').prop('checked', true);
-		} else {
-			$('.' + cssclass + '.me').prop('checked', false);
-		}
-	});
+	// !"Select all" -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	(function( w, d, $, undefined ) {
+
+		var checks, first, last, checked, sliced, lastClicked = {};
+
+		// Check all checkboxes.
+		$( "tbody" ).children().children( ".secupress-check-column" ).find( ":checkbox" ).on( "click", function( e ) {
+			var prio;
+
+			if ( "undefined" === e.shiftKey ) {
+				return true;
+			}
+
+			prio = this.className.replace( /^.*secupress-checkbox-([^\s]+)(?:\s.*|$)/g, "$1" );
+
+			if ( e.shiftKey ) {
+				if ( ! lastClicked[ prio ] ) {
+					return true;
+				}
+				checks  = $( lastClicked[ prio ] ).closest( ".table-prio-all" ).find( ":checkbox" );
+				first   = checks.index( lastClicked[ prio ] );
+				last    = checks.index( this );
+				checked = $( this ).prop( "checked" );
+
+				if ( 0 < first && 0 < last && first !== last ) {
+					sliced = ( last > first ) ? checks.slice( first, last ) : checks.slice( last, first );
+					sliced.prop( "checked", function() {
+						if ( $( this ).closest( "tr" ).is( ":visible" ) ) {
+							return checked;
+						}
+
+						return false;
+					} );
+				}
+			}
+
+			lastClicked[ prio ] = this;
+
+			// toggle "check all" checkboxes
+			var unchecked = $( this ).closest( "tbody" ).find( ":checkbox" ).filter( ":visible" ).not( ":checked" );
+			$( this ).closest( "table" ).children( "thead, tfoot" ).find( ":checkbox" ).prop( "checked", function() {
+				return ( 0 === unchecked.length );
+			} );
+
+			return true;
+		} );
+
+		$( "thead, tfoot" ).find( ".secupress-check-column :checkbox" ).on( "click.wp-toggle-checkboxes", function( e ) {
+			var $this          = $(this),
+				$table         = $this.closest( "table" ),
+				controlChecked = $this.prop( "checked" ),
+				toggle         = e.shiftKey || $this.data( "wp-toggle" );
+
+			$table.children( "tbody" ).filter( ":visible" )
+				.children().children( ".secupress-check-column" ).find( ":checkbox" )
+				.prop( "checked", function() {
+					if ( $( this ).is( ":hidden" ) ) {
+						return false;
+					}
+
+					if ( toggle ) {
+						return ! $( this ).prop( "checked" );
+					}
+
+					return controlChecked ? true : false;
+				} );
+
+			$table.children( "thead, tfoot" ).filter( ":visible" )
+				.children().children( ".secupress-check-column" ).find( ":checkbox" )
+				.prop( "checked", function() {
+					if ( toggle ) {
+						return false;
+					}
+
+					return controlChecked ? true : false;
+				} );
+		} );
+
+	} )(window, document, $);
 
 	jQuery.timeago.settings.strings = { //// voir pour mettre celui de WP
 		prefixAgo: null,
