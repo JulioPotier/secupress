@@ -68,7 +68,7 @@ function secupress_init() {
 
 	// Last constants
 	define( 'SECUPRESS_PLUGIN_NAME', secupress_get_option( 'wl_plugin_name', 'SecuPress' ) );
-	define( 'SECUPRESS_PLUGIN_SLUG', sanitize_key( str_replace( ' ', '-', SECUPRESS_PLUGIN_NAME ) ) );
+	define( 'SECUPRESS_PLUGIN_SLUG', sanitize_title( SECUPRESS_PLUGIN_NAME ) );
 
 	// Call defines, classes and functions
 	require( SECUPRESS_FUNCTIONS_PATH . '/files.php' );

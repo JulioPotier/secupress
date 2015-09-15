@@ -134,7 +134,7 @@ function __secupress_settings_action_links( $actions ) {
  *
  * @since 1.0
  */
-add_action( 'admin_print_styles-' . sanitize_title( SECUPRESS_PLUGIN_NAME ) . '_page_secupress_scanner', '__secupress_scanner_add_admin_css_js' ); //// dédoublonner
+add_action( 'admin_print_styles-' . SECUPRESS_PLUGIN_SLUG . '_page_secupress_scanner', '__secupress_scanner_add_admin_css_js' ); //// dédoublonner
 
 function __secupress_scanner_add_admin_css_js() {
 	$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
@@ -161,7 +161,7 @@ function __secupress_scanner_add_admin_css_js() {
  *
  * @since 1.0
  */
-add_action( 'admin_print_styles-' . sanitize_title( SECUPRESS_PLUGIN_NAME ) . '_page_secupress_settings', '__secupress_settings_add_admin_css', 99999 );
+add_action( 'admin_print_styles-' . SECUPRESS_PLUGIN_SLUG . '_page_secupress_settings', '__secupress_settings_add_admin_css', 99999 );
 
 function __secupress_settings_add_admin_css() {
 	wp_enqueue_style( 'secupress-settings-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-settings.css', null, SECUPRESS_VERSION );
@@ -183,7 +183,7 @@ function __secupress_modules_add_admin_css() {
  *
  * @since 1.0
  */
-add_action( 'admin_print_scripts-' . sanitize_title( SECUPRESS_PLUGIN_NAME ) . '_page_secupress_modules', '__secupress_modules_add_admin_js' );
+add_action( 'admin_print_scripts-' . SECUPRESS_PLUGIN_SLUG . '_page_secupress_modules', '__secupress_modules_add_admin_js' );
 
 function __secupress_modules_add_admin_js() {
 	wp_enqueue_script( 'secupress-zxcvbn-async', includes_url( '/js/zxcvbn.min.js' ), array( 'jquery' ) );
