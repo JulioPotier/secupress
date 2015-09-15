@@ -115,6 +115,7 @@ function __secupress_scanner_ajax( $test_name = null ) {
  * @since 1.0
  */
 add_filter( 'plugin_action_links_' . plugin_basename( SECUPRESS_FILE ), '__secupress_settings_action_links' );
+
 function __secupress_settings_action_links( $actions ) {
 	if ( ! secupress_is_white_label() ) {
 		array_unshift( $actions, sprintf( '<a href="%s">%s</a>', 'http:/secupress.fr/support/', __( 'Support', 'secupress' ) ) );
@@ -124,7 +125,7 @@ function __secupress_settings_action_links( $actions ) {
 
 	array_unshift( $actions, sprintf( '<a href="%s">%s</a>', secupress_admin_url( 'settings' ), __( 'Settings' ) ) );
 
-    return $actions;
+	return $actions;
 }
 
 
@@ -133,19 +134,23 @@ function __secupress_settings_action_links( $actions ) {
  *
  * @since 1.0
  */
-add_action( 'admin_print_styles-secupress_page_secupress_scanner', '__secupress_scanner_add_admin_css_js' ); //// dédoublonner
+add_action( 'admin_print_styles-' . sanitize_title( SECUPRESS_PLUGIN_NAME ) . '_page_secupress_scanner', '__secupress_scanner_add_admin_css_js' ); //// dédoublonner
+
 function __secupress_scanner_add_admin_css_js() {
 	$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-	wp_enqueue_script( 'secupress-scanner-js', SECUPRESS_ADMIN_JS_URL . 'secupress-scanner.js', null, SECUPRESS_VERSION, true );
-	wp_enqueue_script( 'secupress-chartjs', SECUPRESS_ADMIN_JS_URL . 'Chart' . $suffix . '.js', null, '1.0.2.1', true );
-	wp_enqueue_script( 'jquery-timeago', SECUPRESS_ADMIN_JS_URL . 'jquery.timeago.js', null, '1.4.1', true );
+
 	wp_enqueue_style( 'secupress-scanner-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-scanner.css', null, SECUPRESS_VERSION );
+
+	wp_enqueue_script( 'secupress-scanner-js', SECUPRESS_ADMIN_JS_URL . 'secupress-scanner.js', null, SECUPRESS_VERSION, true );
+	wp_enqueue_script( 'secupress-chartjs',    SECUPRESS_ADMIN_JS_URL . 'Chart' . $suffix . '.js', null, '1.0.2.1', true );
+	wp_enqueue_script( 'jquery-timeago',       SECUPRESS_ADMIN_JS_URL . 'jquery.timeago.js', null, '1.4.1', true );
+
 	$counts = secupress_get_scanner_counts();
 	wp_localize_script( 'secupress-chartjs', 'SecuPressi18nChart',
 		array(
-			'good' => array( 'value' => $counts['good'], 'text' => __( 'Good', 'secupress' ) ),
-			'warning' => array( 'value' => $counts['warning'], 'text' => __( 'Warning', 'secupress' ) ),
-			'bad' => array( 'value' => $counts['bad'], 'text' => __( 'Bad', 'secupress' ) ),
+			'good'          => array( 'value' => $counts['good'],          'text' => __( 'Good', 'secupress' ) ),
+			'warning'       => array( 'value' => $counts['warning'],       'text' => __( 'Warning', 'secupress' ) ),
+			'bad'           => array( 'value' => $counts['bad'],           'text' => __( 'Bad', 'secupress' ) ),
 			'notscannedyet' => array( 'value' => $counts['notscannedyet'], 'text' => __( 'Not Scanned Yet', 'secupress' ) ),
 		)
 	);
@@ -156,7 +161,8 @@ function __secupress_scanner_add_admin_css_js() {
  *
  * @since 1.0
  */
-add_action( 'admin_print_styles-secupress_page_secupress_settings', '__secupress_settings_add_admin_css', 99999 );
+add_action( 'admin_print_styles-' . sanitize_title( SECUPRESS_PLUGIN_NAME ) . '_page_secupress_settings', '__secupress_settings_add_admin_css', 99999 );
+
 function __secupress_settings_add_admin_css() {
 	wp_enqueue_style( 'secupress-settings-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-settings.css', null, SECUPRESS_VERSION );
 }
@@ -177,19 +183,21 @@ function __secupress_modules_add_admin_css() {
  *
  * @since 1.0
  */
-add_action( 'admin_print_scripts-secupress_page_secupress_modules', '__secupress_modules_add_admin_js' );
+add_action( 'admin_print_scripts-' . sanitize_title( SECUPRESS_PLUGIN_NAME ) . '_page_secupress_modules', '__secupress_modules_add_admin_js' );
+
 function __secupress_modules_add_admin_js() {
 	wp_enqueue_script( 'secupress-zxcvbn-async', includes_url( '/js/zxcvbn.min.js' ), array( 'jquery' ) );
 	wp_enqueue_script( 'secupress-modules-js', SECUPRESS_ADMIN_JS_URL . 'secupress-modules.js', array( 'jquery', 'secupress-zxcvbn-async', 'password-strength-meter' ), SECUPRESS_VERSION, true );
+
 	wp_localize_script( 'secupress-modules-js', 'l10nmodules', array( 'selectOneRoleMinimum' => __( 'Select 1 role minimum', 'secupress' ) ) );
 	wp_localize_script( 'password-strength-meter', 'pwsL10n', array(
-    'empty' => __( 'Enter a password', 'secupress' ),
-    'short' => __( 'Very weak' ),
-    'bad' => __( 'Weak' ),
-    'good' => _x( 'Medium', 'password strength' ),
-    'strong' => __( 'Strong' ),
-    'mismatch' => __( 'Mismatch' )
-) );
+		'empty'    => __( 'Enter a password', 'secupress' ),
+		'short'    => __( 'Very weak' ),
+		'bad'      => __( 'Weak' ),
+		'good'     => _x( 'Medium', 'password strength' ),
+		'strong'   => __( 'Strong' ),
+		'mismatch' => __( 'Mismatch' )
+	) );
 }
 
 
