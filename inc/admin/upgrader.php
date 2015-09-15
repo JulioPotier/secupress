@@ -10,7 +10,7 @@ add_action( 'admin_init', 'secupress_upgrader' );
 function secupress_upgrader()
 {
 	// Grab some infos
-	$actual_version = get_secupress_option( 'version' );
+	$actual_version = secupress_get_option( 'version' );
 	// You can hook the upgrader to trigger any action when WP secupress is upgraded
 	// first install
 	if ( ! $actual_version ){
@@ -26,7 +26,7 @@ function secupress_upgrader()
 
 		secupress_renew_all_boxes( 0, array( 'secupress_warning_plugin_modification' ) );
 
-		$options = get_option( SECUPRESS_SETTINGS_SLUG ); // do not use get_secupress_option() here
+		$options = get_option( SECUPRESS_SETTINGS_SLUG ); // do not use secupress_get_option() here
 		$options['version'] = SECUPRESS_VERSION;
 
 		$keys = secupress_check_key( 'live' );

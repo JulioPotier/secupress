@@ -23,7 +23,7 @@ function secupress_write_htaccess( $marker )
 	if ( is_writable( $htaccess_file ) ) {
 
 		// The rules
-		$rules = get_secupress_htaccess_marker( $marker );
+		$rules = secupress_get_htaccess_marker( $marker );
 		// Update the .htacces file
 		secupress_put_content( $htaccess_file, $marker, $rules );
 
@@ -40,9 +40,9 @@ function secupress_write_htaccess( $marker )
  * @param string $function This suffix can be added
  * @return string $marker Rules that will be printed
  */
-function get_secupress_htaccess_marker( $function )
+function secupress_get_htaccess_marker( $function )
 {
-	$_function = 'get_secupress_htaccess_' . $function;
+	$_function = 'secupress_get_htaccess_' . $function;
 	if ( ! function_exists( $_function ) ) {
 		return false;
 	}
@@ -62,7 +62,7 @@ function get_secupress_htaccess_marker( $function )
 	return $marker;
 }
 
-function get_secupress_htaccess_ban_ip() {
+function secupress_get_htaccess_ban_ip() {
 	$ban_ips = get_option( SECUPRESS_BAN_IP );
 	if ( is_array( $ban_ips ) && count( $ban_ips ) ) {
 		$content = 'Order Deny,Allow' . PHP_EOL;

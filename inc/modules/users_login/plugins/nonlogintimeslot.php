@@ -10,7 +10,7 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 add_action( 'plugins_loaded', 'secupress_donttrytologin' );
 function secupress_donttrytologin() {
-	$timings = get_secupress_module_option( 'bad_logins_nonlogintimeslot', 10, 'users_login' );
+	$timings = secupress_get_module_option( 'bad_logins_nonlogintimeslot', 10, 'users_login' );
 	// from
 	$setting_from = strtotime( date( sprintf( 'Y-m-d %s:%s:00', $timings['from_hour'], $timings['from_minute'] ) ) );
 	$UTC = new DateTimeZone( 'UTC' );
@@ -44,7 +44,7 @@ function __secupress_cant_login_now() {
 function secupress_nonlogintimeslot( $raw_user ) {
 	if ( ! empty( $_POST ) && is_a( $raw_user, 'WP_User' ) ) {
 		$IP = secupress_get_ip();
-		$bad_logins_number_attempts = get_secupress_module_option( 'bad_logins_number_attempts', 10, 'users_login' );
+		$bad_logins_number_attempts = secupress_get_module_option( 'bad_logins_number_attempts', 10, 'users_login' );
 		$attempts = (int) get_user_meta( $uid, '_secupress_limitloginattempts', true );
 		++$attempts;
 		if ( $attempts < $bad_logins_number_attempts ) {

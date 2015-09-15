@@ -4,7 +4,7 @@ defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
 add_action( 'plugins_loaded', 'secupress_check_ban_ips' );
 function secupress_check_ban_ips() {
 	$ban_ips = get_option( SECUPRESS_BAN_IP );
-	$bad_logins_time_ban = get_secupress_module_option( 'bad_logins_time_ban', 5, 'users_login' );
+	$bad_logins_time_ban = secupress_get_module_option( 'bad_logins_time_ban', 5, 'users_login' );
 	$refresh_htaccess = false;
 	// if we got banned ips
 	if ( is_array( $ban_ips ) && count( $ban_ips ) ) {

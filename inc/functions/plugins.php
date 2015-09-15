@@ -39,7 +39,7 @@ function secupress_is_submodule_active( $submodule, $module = null ) {
  * @return (-1)/(bool) -1 = every role is affected, true = the user's role is affected, false = the user's role isn't affected
  */
 function secupress_is_affected_role( $module, $submodule, $user ) {
-    $roles = get_secupress_module_option( $submodule . '_affected_role', array(), $module );
+    $roles = secupress_get_module_option( $submodule . '_affected_role', array(), $module );
     if ( ! $roles ) {
     	return -1;
     } else {

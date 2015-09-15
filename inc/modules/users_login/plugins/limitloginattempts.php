@@ -12,7 +12,7 @@ add_action( 'authenticate', 'secupress_limitloginattempts', PHP_INT_MAX - 20, 2 
 function secupress_limitloginattempts( $raw_user, $username ) {
 	if ( ! empty( $_POST ) && is_wp_error( $raw_user ) && false !== ( $uid = username_exists( $username ) ) ) {
 		$IP = secupress_get_ip();
-		$bad_logins_number_attempts = get_secupress_module_option( 'bad_logins_number_attempts', 10, 'users_login' );
+		$bad_logins_number_attempts = secupress_get_module_option( 'bad_logins_number_attempts', 10, 'users_login' );
 		$attempts = (int) get_user_meta( $uid, '_secupress_limitloginattempts', true );
 		++$attempts;
 		if ( $attempts < $bad_logins_number_attempts ) {

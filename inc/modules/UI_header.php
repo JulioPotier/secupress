@@ -16,7 +16,7 @@ add_settings_section( 'module_' . $modulenow, __( 'Module settings', 'secupress'
 	array( 'button' =>
 		array(
 			'url'			=> wp_nonce_url( admin_url( 'admin-post.php?action=secupress_reset_settings&module=' . $modulenow ), 'secupress_reset_' . $modulenow ),
-			'button_label'    		=> sprintf( __( 'Reset the %s\'s settings.', 'secupress' ), get_secupress_module_title() ),
+			'button_label'    		=> sprintf( __( 'Reset the %s\'s settings.', 'secupress' ), secupress_get_module_title() ),
 		),
 		// array(
 		// 	'type'         => 'helper_description',

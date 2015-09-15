@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
  * @param bool   $default (default: false) The default value of option
  * @return mixed The option value
  */
-function get_secupress_option( $option, $default = false )
+function secupress_get_option( $option, $default = false )
 {
 	/**
 	 * Pre-filter any SecuPress option before read
@@ -19,7 +19,7 @@ function get_secupress_option( $option, $default = false )
 	 *
 	 * @param variant $default The default value
 	*/
-	$value = apply_filters( 'pre_get_secupress_option_' . $option, NULL, $default );
+	$value = apply_filters( 'pre_secupress_get_option_' . $option, NULL, $default );
 	if ( NULL !== $value ) {
 		return $value;
 	}
@@ -32,7 +32,7 @@ function get_secupress_option( $option, $default = false )
 	 *
 	 * @param variant $default The default value
 	*/
-	return apply_filters( 'get_secupress_option_' . $option, $value, $default );
+	return apply_filters( 'secupress_get_option_' . $option, $value, $default );
 }
 
 
@@ -46,7 +46,7 @@ function get_secupress_option( $option, $default = false )
  * @param string $module  The module slug (see array keys from modules.php) default is $modulenow global var
  * @return mixed The option value
  */
-function get_secupress_module_option( $option, $default = false, $module = false )
+function secupress_get_module_option( $option, $default = false, $module = false )
 {
 	global $modulenow;
 	$module = $module ? $module : $modulenow;
@@ -57,7 +57,7 @@ function get_secupress_module_option( $option, $default = false, $module = false
 	 *
 	 * @param variant $default The default value
 	*/
-	$value = apply_filters( 'pre_get_secupress_module_option_' . $option, NULL, $default, $module );
+	$value = apply_filters( 'pre_secupress_get_module_option_' . $option, NULL, $default, $module );
 	if ( NULL !== $value ) {
 		return $value;
 	}
@@ -70,7 +70,7 @@ function get_secupress_module_option( $option, $default = false, $module = false
 	 *
 	 * @param variant $default The default value
 	*/
-	return apply_filters( 'get_secupress_module_option_' . $option, $value, $default, $module );
+	return apply_filters( 'secupress_get_module_option_' . $option, $value, $default, $module );
 }
 
 function update_secupress_module_option( $option, $value, $module = false )
@@ -83,7 +83,7 @@ function update_secupress_module_option( $option, $value, $module = false )
 }
 
 
-function get_secupress_scanners() {
+function secupress_get_scanners() {
 	static $tests;
 
 	if ( ! isset( $tests ) ) {
@@ -114,7 +114,7 @@ function get_secupress_scanners() {
 		update_option( SECUPRESS_SCAN_SLUG, $options );
 	}
 
-	return apply_filters( 'get_secupress_scanners', $options );
+	return apply_filters( 'secupress_get_scanners', $options );
 }
 
 
@@ -185,7 +185,7 @@ function secupress_check_key( $type = 'transient_1', $data = null )
 			if( $json->success ) {
 
 				$secupress_options['secret_key'] = $json->data->secret_key;
-				if ( ! get_secupress_option( 'license' ) ) {
+				if ( ! secupress_get_option( 'license' ) ) {
 					$secupress_options['license'] = '1';
 				}
 
@@ -226,7 +226,7 @@ function secupress_check_key( $type = 'transient_1', $data = null )
  */
 function secupress_valid_key()
 {
-	return 8 == strlen( get_secupress_option( 'consumer_key' ) ) && get_secupress_option( 'secret_key' ) == hash( 'crc32', get_secupress_option( 'consumer_email' ) );
+	return 8 == strlen( secupress_get_option( 'consumer_key' ) ) && secupress_get_option( 'secret_key' ) == hash( 'crc32', secupress_get_option( 'consumer_email' ) );
 }
 
 function secupress_need_api_key(){}

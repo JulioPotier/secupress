@@ -12,7 +12,7 @@ function secupress_get_scanner_counts( $type = '' ) {
 	}
 
 	$secupress_tests    = secupress_get_tests();
-	$scanners           = get_secupress_scanners();
+	$scanners           = secupress_get_scanners();
 	$array_fill_keys    = array_fill_keys( array( 'good', 'warning', 'bad' ), 0 );
 	$array_count_values = is_array( $scanners ) ? array_count_values( wp_list_pluck( $scanners, 'status' ) ) : array();
 	$counts             = array_merge( $array_fill_keys, $array_count_values );
@@ -46,7 +46,7 @@ function secupress_user_agent( $user_agent )
 {
 
 	$bonus = ! secupress_is_white_label() ? '' : '*';
-	$bonus .= ! get_secupress_option( 'do_beta' ) ? '' : '+';
+	$bonus .= ! secupress_get_option( 'do_beta' ) ? '' : '+';
 	$new_ua = sprintf( '%s;SecuPress|%s%s|%s|;', $user_agent, SECUPRESS_VERSION, $bonus, esc_url( home_url() ) );
 
     return $new_ua;
@@ -126,7 +126,7 @@ function secupress_is_white_label()
 	$options = '';
 	foreach( $names as $value )
 	{
-		$options .= !is_array( get_secupress_option( $value ) ) ? get_secupress_option( $value ) : reset( ( get_secupress_option( $value ) ) );
+		$options .= !is_array( secupress_get_option( $value ) ) ? secupress_get_option( $value ) : reset( ( secupress_get_option( $value ) ) );
 	}
 	return false; ////
 	return 'a509cac94e0cd8238b250074fe802b90' != md5( $options ); ////
@@ -234,13 +234,13 @@ function secupress_activate_submodule( $module, $plugin, $incompatibles_modules 
 function secupress_add_module_notice( $module, $submodule, $action ) {
 	global $current_user;
 	$current = get_site_transient( "secupress_module_{$action}_{$current_user->ID}" );
-	$submodule_data = get_secupress_module_data( $module , $submodule );
+	$submodule_data = secupress_get_module_data( $module , $submodule );
 	$current[] = $submodule_data['Name'];
 	set_site_transient( "secupress_module_{$action}_{$current_user->ID}", $current );
 	do_action( 'module_notice_' . $action, $module, $submodule );
 }
 
-function get_secupress_module_data( $module, $submodule ) {
+function secupress_get_module_data( $module, $submodule ) {
 	$default_headers = array(
 		'Name' => 'Module Name',
 		'Module' => 'Main Module',
@@ -340,7 +340,7 @@ function secupress_get_ip() {
 }
 
 function secupress_ban_ip( $IP = null, $die = true ) {
-	$bad_logins_time_ban = get_secupress_module_option( 'bad_logins_time_ban', 5, 'users_login' );
+	$bad_logins_time_ban = secupress_get_module_option( 'bad_logins_time_ban', 5, 'users_login' );
 	$IP = $IP ? $IP : secupress_get_ip();
 	$ban_ips = get_option( SECUPRESS_BAN_IP );
 	if ( ! is_array( $ban_ips ) ) {

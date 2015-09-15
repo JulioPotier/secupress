@@ -250,7 +250,7 @@ function secupress_main_scan() {
 	}
 
 	$secupress_tests = secupress_get_tests();
-	$scanners        = get_secupress_scanners();
+	$scanners        = secupress_get_scanners();
 
 	// Store the scans in 2 variables. They will be used to order the scans by status: 'bad', 'warning', 'notscannedyet', 'good'.
 	$before_not_scanned = array( 'bad' => array(), 'warning' => array(), );
@@ -542,7 +542,7 @@ function secupress_field( $args ) {
 			case 'email' :
 			case 'text' :
 
-				$value = esc_attr( get_secupress_module_option( $args['name'] ) );
+				$value = esc_attr( secupress_get_module_option( $args['name'] ) );
 				if ( ! $value ) {
 					$value = $default;
 				}
@@ -564,7 +564,7 @@ function secupress_field( $args ) {
 
 			case 'password' :
 
-				$value        = esc_attr( get_secupress_module_option( $args['name'] ) );
+				$value        = esc_attr( secupress_get_module_option( $args['name'] ) );
 				$data_nocheck = $value ? ' data-nocheck="true"' : '';
 				$disabled     = false ? ' disabled="disabled"' : $readonly;
 				?>
@@ -581,7 +581,7 @@ function secupress_field( $args ) {
 
 			case 'textarea' :
 
-				$t_temp = get_secupress_module_option( $args['name'], '' );
+				$t_temp = secupress_get_module_option( $args['name'], '' );
 				$value  = ! empty( $t_temp ) ? esc_textarea( implode( "\n" , $t_temp ) ) : '';
 				if ( ! $value ){
 					$value = $default;
@@ -603,7 +603,7 @@ function secupress_field( $args ) {
 				}
 				?>
 				<label>
-					<input type="checkbox" id="<?php echo $args['name']; ?>" class="<?php echo $class; ?>" name="secupress_<?php echo $modulenow; ?>_settings[<?php echo $args['name']; ?>]" value="1"<?php echo $readonly; ?> <?php checked( get_secupress_module_option( $args['name'], 0 ), 1 ); ?> <?php echo $parent; ?>/> <?php echo $args['label']; ?>
+					<input type="checkbox" id="<?php echo $args['name']; ?>" class="<?php echo $class; ?>" name="secupress_<?php echo $modulenow; ?>_settings[<?php echo $args['name']; ?>]" value="1"<?php echo $readonly; ?> <?php checked( secupress_get_module_option( $args['name'], 0 ), 1 ); ?> <?php echo $parent; ?>/> <?php echo $args['label']; ?>
 				</label>
 				<?php
 				break;
@@ -619,7 +619,7 @@ function secupress_field( $args ) {
 								$title .= ' (' . __( 'Premium', 'secupress' ) . ')';
 							}
 							?>
-							<option value="<?php echo $val; ?>" <?php selected( get_secupress_module_option( $args['name'] ) == $val || in_array( $val, get_secupress_module_option( $args['name'], array() ) ) ); ?>><?php echo $title; ?></option>
+							<option value="<?php echo $val; ?>" <?php selected( secupress_get_module_option( $args['name'] ) == $val || in_array( $val, secupress_get_module_option( $args['name'], array() ) ) ); ?>><?php echo $title; ?></option>
 							<?php
 						}
 						?>
@@ -641,7 +641,7 @@ function secupress_field( $args ) {
 				foreach( $roles as $val => $title ) {
 					?>
 					<label>
-						<input type="checkbox" name="secupress_<?php echo $modulenow; ?>_settings[<?php echo $args['name']; ?>][]" value="<?php echo $val; ?>" <?php checked( ! in_array( $val, get_secupress_module_option( $args['name'], array() ) ) ); ?>> <?php echo $title; ?>
+						<input type="checkbox" name="secupress_<?php echo $modulenow; ?>_settings[<?php echo $args['name']; ?>][]" value="<?php echo $val; ?>" <?php checked( ! in_array( $val, secupress_get_module_option( $args['name'], array() ) ) ); ?>> <?php echo $title; ?>
 					</label><br />
 					<input type="hidden" name="secupress_<?php echo $modulenow; ?>_settings[hidden_<?php echo $args['name']; ?>][]" value="<?php echo $val; ?>">
 					<?php
@@ -658,7 +658,7 @@ function secupress_field( $args ) {
 					}
 					?>
 					<label>
-						<input type="checkbox" for="<?php echo $args['name']; ?>" id="<?php echo $args['name']; ?>_<?php echo $val; ?>" value="<?php echo $val; ?>" <?php checked( in_array( $val, (array) get_secupress_module_option( $args['name'] ) ) ); ?>name="secupress_<?php echo $modulenow; ?>_settings[<?php echo $args['name']; ?>][]"<?php echo $readonly; ?>> <?php echo $title; ?>
+						<input type="checkbox" for="<?php echo $args['name']; ?>" id="<?php echo $args['name']; ?>_<?php echo $val; ?>" value="<?php echo $val; ?>" <?php checked( in_array( $val, (array) secupress_get_module_option( $args['name'] ) ) ); ?>name="secupress_<?php echo $modulenow; ?>_settings[<?php echo $args['name']; ?>][]"<?php echo $readonly; ?>> <?php echo $title; ?>
 					</label><br />
 					<?php
 				}
@@ -675,7 +675,7 @@ function secupress_field( $args ) {
 					}
 					?>
 					<label>
-						<input type="radio" for="<?php echo $args['name']; ?>" id="<?php echo $args['name']; ?>_<?php echo $val; ?>" value="<?php echo $val; ?>" <?php checked( get_secupress_module_option( $args['name'] ), $val ); ?>name="secupress_<?php echo $modulenow; ?>_settings[<?php echo $args['name']; ?>]"<?php echo $readonly; ?>> <?php echo $title; ?>
+						<input type="radio" for="<?php echo $args['name']; ?>" id="<?php echo $args['name']; ?>_<?php echo $val; ?>" value="<?php echo $val; ?>" <?php checked( secupress_get_module_option( $args['name'] ), $val ); ?>name="secupress_<?php echo $modulenow; ?>_settings[<?php echo $args['name']; ?>]"<?php echo $readonly; ?>> <?php echo $title; ?>
 					</label><br />
 					<?php
 				}
@@ -686,7 +686,7 @@ function secupress_field( $args ) {
 
 				<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
 				<?php
-				$value       = get_secupress_module_option( $args['name'] );
+				$value       = secupress_get_module_option( $args['name'] );
 				$from_hour   = isset( $value['from_hour'] ) ? $value['from_hour'] : '';
 				$from_minute = isset( $value['from_minute'] ) ? $value['from_minute'] : '';
 				$to_hour     = isset( $value['to_hour'] ) ? $value['to_hour'] : '';

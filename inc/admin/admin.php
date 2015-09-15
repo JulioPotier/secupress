@@ -232,12 +232,12 @@ function __secupress_white_label( $plugins ) {
 	if ( secupress_is_white_label() ) {
 		// We change the plugin's header
 		$plugins[ SECUPRESS_PLUGIN_FILE ] = array(
-				'Name'			=> get_secupress_option( 'wl_plugin_name' ),
-				'PluginURI'		=> get_secupress_option( 'wl_plugin_URI' ),
+				'Name'			=> secupress_get_option( 'wl_plugin_name' ),
+				'PluginURI'		=> secupress_get_option( 'wl_plugin_URI' ),
 				'Version'		=> isset( $plugins[ SECUPRESS_PLUGIN_FILE ]['Version'] ) ? $plugins[ SECUPRESS_PLUGIN_FILE ]['Version'] : '',
-				'Description'	=> reset( ( get_secupress_option( 'wl_description', array() ) ) ),
-				'Author'		=> get_secupress_option( 'wl_author' ),
-				'AuthorURI'		=> get_secupress_option( 'wl_author_URI' ),
+				'Description'	=> reset( ( secupress_get_option( 'wl_description', array() ) ) ),
+				'Author'		=> secupress_get_option( 'wl_author' ),
+				'AuthorURI'		=> secupress_get_option( 'wl_author_URI' ),
 				'TextDomain'	=> isset( $plugins[ SECUPRESS_PLUGIN_FILE ]['TextDomain'] ) ? $plugins[ SECUPRESS_PLUGIN_FILE ]['TextDomain'] : '',
 				'DomainPath'	=> isset( $plugins[ SECUPRESS_PLUGIN_FILE ]['DomainPath'] ) ? $plugins[ SECUPRESS_PLUGIN_FILE ]['DomainPath'] : '',
 			);
@@ -252,7 +252,7 @@ function __secupress_white_label( $plugins ) {
  */
 // add_action( 'admin_init', '__secupress_check_no_empty_name', 11 ); ////
 function __secupress_check_no_empty_name() {
-	$wl_plugin_name = trim( get_secupress_option( 'wl_plugin_name' ) );
+	$wl_plugin_name = trim( secupress_get_option( 'wl_plugin_name' ) );
 	if ( empty( $wl_plugin_name ) ) {
 		secupress_reset_white_label_values( false );
 		wp_safe_redirect( $_SERVER['REQUEST_URI'] );
@@ -274,7 +274,7 @@ function __secupress_do_options_export() {
 	$filename = sprintf( 'secupress-settings-%s-%s.txt', date( 'Y-m-d' ), uniqid() );
 	$gz = 'gz' . strrev( 'etalfed' );
 	$options = $gz//;
-	( serialize( get_option( SECUPRESS_SETTINGS_SLUG ) ), 1 ); // do not use get_secupress_option() here
+	( serialize( get_option( SECUPRESS_SETTINGS_SLUG ) ), 1 ); // do not use secupress_get_option() here
 	nocache_headers();
 	@header( 'Content-Type: text/plain' );
 	@header( 'Content-Disposition: attachment; filename="' . $filename . '"' );

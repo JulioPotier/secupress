@@ -26,7 +26,7 @@ function secupress_password_login_form_add_form() {
 	} elseif ( isset( $_POST['website_password'], $_POST['token'] ) ) {
 		$CLEAN['uid'] = (int) reset( $CLEAN['uid'] );
 		$time = get_user_meta( $CLEAN['uid'], 'auth_timeout', true );
-		$new_password = get_secupress_module_option( 'double_auth_password', false, 'users_login' );
+		$new_password = secupress_get_module_option( 'double_auth_password', false, 'users_login' );
 		if ( $time >= time() ) {
 			// var_dump($new_password);//// ?
 			// var_dump($_POST['website_password']);
@@ -82,7 +82,7 @@ function secupress_password_login_form_add_form() {
 
 add_action( 'login_form', 'secupress_password_login_form_add_field' );
 function secupress_password_login_form_add_field() {
-	if ( -1 == get_secupress_module_option( 'double_auth_affected_role', false, 'users_login' ) ) {
+	if ( -1 == secupress_get_module_option( 'double_auth_affected_role', false, 'users_login' ) ) {
 	?>
 	<p>
 		<label><?php _e( 'Website\'s Password', 'secupress' ); ?><br />
@@ -112,7 +112,7 @@ function secupress_password_login( $raw_user, $username ) {
 			die();
 		} elseif( -1 === secupress_is_affected_role( 'users_login', 'double_auth', $raw_user ) ) {
 
-		    $new_password = get_secupress_module_option( 'double_auth_password', false, 'users_login' );
+		    $new_password = secupress_get_module_option( 'double_auth_password', false, 'users_login' );
 
 		    if ( ! isset( $_POST['website_password'] ) || $_POST['website_password'] !== $new_password ) {
 		        

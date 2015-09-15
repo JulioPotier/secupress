@@ -19,7 +19,7 @@ function __secupress_users_login_settings_callback( $settings ) {
 	switch ( $settings['plugin_double_auth'] ) {
 
 		case 'password':
-			$actual_double_auth_password = get_secupress_module_option( 'double_auth_password', false, $modulenow );
+			$actual_double_auth_password = secupress_get_module_option( 'double_auth_password', false, $modulenow );
 			if ( strlen( $settings['double_auth_password'] ) < 7 || $settings['password_strength_value'] < 3 ) {
 				if ( ! $actual_double_auth_password ) {
 					$settings['plugin_double_auth'] = '-1';

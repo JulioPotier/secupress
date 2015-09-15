@@ -23,7 +23,7 @@ function secupress_admin_url( $page, $module = false )
  *
  * @param (string)$module : the desired module
 */
-function get_secupress_module_title( $module = false ) {
+function secupress_get_module_title( $module = false ) {
 	$module = $module ? $module : $GLOBALS['modulenow'];
 	if ( isset( $GLOBALS['secupress_modules'][ $module ] ) ) {
 		return $GLOBALS['secupress_modules'][ $module ]['title'];
