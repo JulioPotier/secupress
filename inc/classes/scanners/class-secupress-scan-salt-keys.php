@@ -114,7 +114,7 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements iSecuPress_Scan
 		}
 
 		// good
-		$this->maybe_set_status( $has_ftp ? 1 : 0 );
+		$this->maybe_set_status( 0 );
 
 		return parent::scan();
 	}
