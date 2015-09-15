@@ -114,7 +114,7 @@ function secupress_get_scanners() {
 		update_option( SECUPRESS_SCAN_SLUG, $options );
 	}
 
-	return apply_filters( 'secupress_get_scanners', $options );
+	return $options;
 }
 
 
