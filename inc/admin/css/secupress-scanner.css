@@ -73,6 +73,15 @@ th.secupress-check {
 	padding: 10px 0 10px 2px;
 	line-height: 1em;
 }
+.secupress-result ul {
+	margin: 0;
+}
+.secupress-result li {
+	margin-bottom: 0;
+}
+.secupress-result li + li {
+	margin-top: 6px;
+}
 .secupress-postbox {
 	display: inline-block;
 	width: 60%;

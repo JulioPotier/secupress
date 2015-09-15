@@ -87,7 +87,7 @@ jQuery( document ).ready( function( $ ) {
 					}
 					if ( r.data[pairs.test].hasOwnProperty('message') ) {
 						$('.secupress-item-' + pairs.test +' td.secupress-result' )
-							.html( '<ul class="secupress-result-list">' + r.data[pairs.test].message + '</ul>');
+							.html( r.data[pairs.test].message );
 					}
 					$('.secupress-item-' + pairs.test+' .secupress-status')
 						.parent().css( { backgroundImage: 'inherit' } );

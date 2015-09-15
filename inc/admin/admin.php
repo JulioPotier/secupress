@@ -1,39 +1,16 @@
 <?php
-defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 add_action( 'admin_post_secupress_fixit', '__secupress_fixit_ajax' );
-add_action( 'wp_ajax_secupress_fixit', '__secupress_fixit_ajax' );
+add_action( 'wp_ajax_secupress_fixit',    '__secupress_fixit_ajax' );
+
 function __secupress_fixit_ajax( $test_name = null ) {
 
-	$test_name = isset( $_GET['test'] ) ? $_GET['test'] : $test_name;
-	$nonce = isset( $_GET['_wpnonce'] ) ? $_GET['_wpnonce'] : 0;
-	$nonce = 0 === $nonce || wp_verify_nonce( $nonce, 'secupress_fixit_' . $test_name );
+	$test_name = isset( $_GET['test'] )     ? esc_attr( $_GET['test'] ) : $test_name;
+	$nonce     = isset( $_GET['_wpnonce'] ) ? $_GET['_wpnonce']         : 0;
+	$nonce     = 0 === $nonce || wp_verify_nonce( $nonce, 'secupress_fixit_' . $test_name );
 
-	if ( ! empty( $test_name ) && $nonce &&
-		file_exists( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . secupress_class_name( $test_name ) . '.php' )
-		) {
-
-		require_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan.php' );
-		include_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . secupress_class_name( $test_name ) . '.php' );
-
-		$classname = 'SecuPress_Scan_' . $test_name;
-		if ( class_exists( $classname ) ) {
-			ob_start();
-				@set_time_limit( 0 );
-				$secupress_scan = $classname::get_instance();;
-				$response = $secupress_scan->fix();
-			ob_end_flush();
-		}
-
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-			wp_send_json_success( $response );
-		} else {
-			wp_redirect( secupress_admin_url( 'scanner' ) );
-			die();
-		}
-
-	} else {
-
+	if ( empty( $test_name ) || ! $nonce || ! file_exists( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . secupress_class_name( $test_name ) . '.php' ) ) {
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			wp_send_json_error();
 		} else {
@@ -41,70 +18,97 @@ function __secupress_fixit_ajax( $test_name = null ) {
 		}
 	}
 
+	require_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan.php' );
+	include_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . secupress_class_name( $test_name ) . '.php' );
+
+	$classname = 'SecuPress_Scan_' . $test_name;
+
+	if ( class_exists( $classname ) ) {
+		ob_start();
+			@set_time_limit( 0 );
+			$response = $classname::get_instance()->fix();
+		ob_end_flush();
+	}
+
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		wp_send_json_success( $response );
+	} else {
+		wp_redirect( secupress_admin_url( 'scanner' ) );
+		die();
+	}
 }
 
+
 add_action( 'admin_post_secupress_scanner', '__secupress_scanner_ajax' );
-add_action( 'wp_ajax_secupress_scanner', '__secupress_scanner_ajax' );
+add_action( 'wp_ajax_secupress_scanner',    '__secupress_scanner_ajax' );
+
 function __secupress_scanner_ajax( $test_name = null ) {
 
-	$test_name = isset( $_GET['test'] ) ? $_GET['test'] : $test_name;
-	$nonce = isset( $_GET['_wpnonce'] ) ? $_GET['_wpnonce'] : 0;
-	$nonce = 0 === $nonce || wp_verify_nonce( $nonce, 'secupress_scanner_' . $test_name );
+	$test_name = isset( $_GET['test'] )     ? esc_attr( $_GET['test'] ) : $test_name;
+	$nonce     = isset( $_GET['_wpnonce'] ) ? $_GET['_wpnonce']         : 0;
+	$nonce     = 0 === $nonce || wp_verify_nonce( $nonce, 'secupress_scanner_' . $test_name );
 
-
-	if ( ! empty( $test_name ) && $nonce &&
-		file_exists( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . secupress_class_name( $test_name ) . '.php' )
-		) {
-
-		require_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan.php' );
-		include_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . secupress_class_name( $test_name ) . '.php' );
-		$classname = 'SecuPress_Scan_' . $test_name;
-		if ( class_exists( $classname ) ) {
-			ob_start();
-				@set_time_limit( 0 );
-				$secupress_scan = $classname::get_instance();
-				$response = $secupress_scan->scan();
-			ob_end_flush();
-		}
-
-		$output = array();
-		$output[ $test_name ]['status'] = secupress_status( $response['status'] );
-		$output[ $test_name ]['class']  = sanitize_key( $response['status'] );
-		$output[ $test_name ]['message'] = '';
-
-		$messages = $secupress_scan->get_messages();
-		foreach ( $response['msgs'] as $id => $atts ) {
-			if ( is_array( $messages[ $id ] ) ) {
-				$count  = array_shift( $atts );
-				$string = translate_nooped_plural( $messages[ $id ], $count );
-			} else {
-				$string = $messages[ $id ];
-			}
-			$output[ $test_name ]['message'] .= ! empty( $atts ) ? vsprintf( $string, $atts ) : $messages[ $id ];
-			$output[ $test_name ]['message'] .= '<br>';
-		}
-
-		$times = (array) get_option( SECUPRESS_SCAN_TIMES );
-		$counts = secupress_get_scanner_counts();
-		$percent = floor( $counts['good'] * 100 / $counts['total'] );
-		$times[] = array( 'grade' => $counts['grade'], 'percent' => $percent, 'time' => time() );
-		$times = array_filter( array_slice( $times , -5 ) );
-		update_option( SECUPRESS_SCAN_TIMES, $times );
-
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-			wp_send_json_success( $output );
-		} else {
-			wp_redirect( secupress_admin_url( 'scanner' ) );
-			die();
-		}
-
-	} else {
-
+	if ( empty( $test_name ) || ! $nonce || ! file_exists( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . secupress_class_name( $test_name ) . '.php' ) ) {
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			wp_send_json_error();
 		} else {
 			wp_nonce_ays( '' );
 		}
+	}
+
+	require_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan.php' );
+	include_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . secupress_class_name( $test_name ) . '.php' );
+
+	$classname = 'SecuPress_Scan_' . $test_name;
+
+	if ( class_exists( $classname ) ) {
+		ob_start();
+			@set_time_limit( 0 );
+			$scan_class = $classname::get_instance();
+			$response   = $scan_class->scan();
+		ob_end_flush();
+	}
+
+	$output = array(
+		$test_name => array(
+			'status'  => secupress_status( $response['status'] ),
+			'class'   => sanitize_key( $response['status'] ),
+			'message' => '<ul>',
+		),
+	);
+
+	$messages = $scan_class->get_messages();
+
+	foreach ( $response['msgs'] as $id => $atts ) {
+
+		if ( is_array( $messages[ $id ] ) ) {
+
+			$count  = array_shift( $atts );
+			$string = translate_nooped_plural( $messages[ $id ], $count );
+
+		} else {
+
+			$string = $messages[ $id ];
+
+		}
+
+		$output[ $test_name ]['message'] .= '<li>' . ( ! empty( $atts ) ? vsprintf( $string, $atts ) : $messages[ $id ] ) . '</li>';
+	}
+
+	$output[ $test_name ]['message'] .= '</ul>';
+
+/*	$times   = (array) get_option( SECUPRESS_SCAN_TIMES );
+	$counts  = secupress_get_scanner_counts();
+	$percent = floor( $counts['good'] * 100 / $counts['total'] );
+	$times[] = array( 'grade' => $counts['grade'], 'percent' => $percent, 'time' => time() );
+	$times   = array_filter( array_slice( $times , -5 ) );
+	update_option( SECUPRESS_SCAN_TIMES, $times );*/
+
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		wp_send_json_success( $output );
+	} else {
+		wp_redirect( secupress_admin_url( 'scanner' ) );
+		die();
 	}
 }
 
