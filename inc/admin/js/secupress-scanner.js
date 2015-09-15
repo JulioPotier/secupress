@@ -110,6 +110,8 @@ jQuery( document ).ready( function( $ ) {
 				if ( $checkbox.prop( "checked" ) ) {
 					$checkbox.trigger( "click" );
 				}
+
+				update_secupress_bads_counters();
 			} );
 		}
 	});
@@ -162,6 +164,17 @@ jQuery( document ).ready( function( $ ) {
 		$('.table-prio-all table tbody tr').removeClass('alternate-1 alternate-2');
 		$('.table-prio-all table tbody tr.secupress-item-all:visible:odd').addClass('alternate-2');
 		$('.table-prio-all table tbody tr.secupress-item-all:visible:even').addClass('alternate-1');
+	}
+
+	function update_secupress_bads_counters() {
+		var count = $( ".secupress-item-all.status-bad" ).length,
+			$counters = $( "#toplevel_page_secupress" ).find( ".update-plugins" );
+
+		$counters.attr( "class", function( i, val ) {
+			return val.replace( /^((?:.*\s)?)count-\d+((?:\s.*)?)$/g, "$1count-" + count + "$2" );
+		} );
+
+		$counters.children().text( count );
 	}
 
 	function secupress_maj_score( refresh ) {

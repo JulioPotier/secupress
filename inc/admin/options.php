@@ -2,7 +2,7 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /*------------------------------------------------------------------------------------------------*/
-/* !OPTION REGISTRATION ========================================================================= */
+/* OPTION REGISTRATION ========================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
 /**
@@ -49,7 +49,7 @@ function __secupress_global_settings_callback( $value ) {
 
 
 /*------------------------------------------------------------------------------------------------*/
-/* !ADMIN UI ==================================================================================== */
+/* ADMIN UI ===================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
 /**
@@ -74,16 +74,39 @@ function secupress_favicon() {
 add_action( 'admin_menu', 'secupress_create_menus' );
 
 function secupress_create_menus() {
+	global $menu;
+
+	// Add a counter of scans with bad result.
+	$count = 0;
+	$scans = secupress_get_scanners();
+
+	if ( $scans ) {
+		foreach( $scans as $scan ) {
+			if ( $scan['status'] === 'bad' ) {
+				++$count;
+			}
+		}
+	}
+
+	$count = sprintf( ' <span class="update-plugins count-%1$d"><span class="update-count">%1$d</span></span>', $count );
+
+	// Main menu item
 	add_menu_page( SECUPRESS_PLUGIN_NAME, SECUPRESS_PLUGIN_NAME, 'administrator', 'secupress', '__secupress_dashboard', 'dashicons-shield-alt' );
 
+	// Sub-menus
 	add_submenu_page( 'secupress', __( 'Settings', 'secupress' ), __( 'Settings', 'secupress' ), 'administrator', 'secupress_settings', '__secupress_global_settings' );
 	add_submenu_page( 'secupress', __( 'Modules', 'secupress' ),  __( 'Modules', 'secupress' ),  'administrator', 'secupress_modules',  '__secupress_modules' );
-	add_submenu_page( 'secupress', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ), 'administrator', 'secupress_scanner',  '__secupress_scanner' );
+	add_submenu_page( 'secupress', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ) . $count, 'administrator', 'secupress_scanner',  '__secupress_scanner' );
+
+	// Add the counter to the main menu: it can't be added with `add_menu_page()` because it would change the value of the screen ID (yes, it's utterly stupid).
+	end( $menu );
+	$key = key( $menu );
+	$menu[ $key ][0] .= $count;
 }
 
 
 /*------------------------------------------------------------------------------------------------*/
-/* !SETTINGS PAGES ============================================================================== */
+/* SETTINGS PAGES =============================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
 /**
@@ -225,7 +248,7 @@ function __secupress_scanner() {
 }
 
 /*------------------------------------------------------------------------------------------------*/
-/* !TOOLS ======================================================================================= */
+/* TOOLS ======================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
 /**
