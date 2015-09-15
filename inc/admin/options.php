@@ -249,8 +249,8 @@ function secupress_main_scan() {
 		include_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan.php' );
 	}
 
-	$secupress_tests = SecuPress_Scan::get_tests();
-	$scanners        = get_option( SECUPRESS_SCAN_SLUG );
+	$secupress_tests = secupress_get_tests();
+	$scanners        = get_secupress_scanners();
 
 	// Store the scans in 2 variables. They will be used to order the scans by status: 'bad', 'warning', 'notscannedyet', 'good'.
 	$before_not_scanned = array( 'bad' => array(), 'warning' => array(), );

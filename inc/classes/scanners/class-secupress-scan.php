@@ -194,15 +194,7 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 	// Options =====================================================================================
 
-	// Get options array.
-
-	public static function get() {
-		$opts = get_option( SECUPRESS_SCAN_SLUG, array() );
-		return is_array( $opts ) ? $opts : array();
-	}
-
-
-	// Set options.
+	// Set option.
 
 	public function update() {
 
@@ -210,10 +202,7 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 			$this->result['attempted_fixes'] = array_key_exists( 'attempted_fixes', $this->result ) ? ++$this->result['attempted_fixes'] : 1;
 		}
 
-		$opts = self::get();
-		$opts = array_merge( $opts, array( static::$name => $this->result ) );
-
-		if ( ! update_option( SECUPRESS_SCAN_SLUG, $opts ) ) {
+		if ( ! set_transient( 'secupress_scan_' . static::$name, $this->result ) ) {
 			return false;
 		}
 
@@ -246,27 +235,6 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 		}
 
 		return $priorities;
-	}
-
-	public static function get_tests() {
-		return array(
-			'high' => array(
-				'Versions',         'Auto_Update',       'Bad_Old_Plugins',
-				'Bad_Config_Files', 'Directory_Listing', 'PHP_INI',
-				'Admin_User',       'Easy_Login',        'Subscription',
-				'WP_Config',        'Salt_Keys',         'Passwords_Strength',
-				'Bad_Old_Files',    'Chmods',            'Common_Flaws',
-				'Bad_User_Agent',   'SQLi',
-			),
-			'medium' => array(
-				'Inactive_Plugins_Themes', 'Bad_Url_Access',  'Bad_Usernames',
-				'Bad_Request_Methods',     'Too_Many_Admins', 'Block_Long_URL',
-				'Block_HTTP_1_0',          'Discloses',
-			),
-			'low' => array(
-				'Login_Errors_Disclose', 'PHP_Disclosure', 'Admin_As_Author'
-			),
-		);
 	}
 
 	// Given an array of "things", wrap those "things" in a HTML tag.

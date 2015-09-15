@@ -82,6 +82,63 @@ function update_secupress_module_option( $option, $value, $module = false )
 	update_option( "secupress_{$module}_settings", $options );
 }
 
+
+function get_secupress_scanners() {
+	static $tests;
+
+	if ( ! isset( $tests ) ) {
+		$tests = array();
+		$tmps  = secupress_get_tests();
+
+		foreach( $tmps as $tmp ) {
+			$tests = array_merge( $tests, array_map( 'strtolower', $tmp ) );
+		}
+	}
+
+	$transients = array();
+
+	foreach( $tests as $test_name ) {
+		$transient = get_transient( 'secupress_scan_' . $test_name );
+
+		if ( $transient && is_array( $transient ) ) {
+			delete_transient( 'secupress_scan_' . $test_name );
+			$transients[ $test_name ] = $transient;
+		}
+	}
+
+	$options = get_option( SECUPRESS_SCAN_SLUG, array() );
+	$options = is_array( $options ) ? $options : array();
+
+	if ( $transients ) {
+		$options = array_merge( $options, $transients );
+		update_option( SECUPRESS_SCAN_SLUG, $options );
+	}
+
+	return apply_filters( 'get_secupress_scanners', $options );
+}
+
+
+function secupress_get_tests() {
+	return array(
+		'high' => array(
+			'Versions',         'Auto_Update',       'Bad_Old_Plugins',
+			'Bad_Config_Files', 'Directory_Listing', 'PHP_INI',
+			'Admin_User',       'Easy_Login',        'Subscription',
+			'WP_Config',        'Salt_Keys',         'Passwords_Strength',
+			'Bad_Old_Files',    'Chmods',            'Common_Flaws',
+			'Bad_User_Agent',   'SQLi',
+		),
+		'medium' => array(
+			'Inactive_Plugins_Themes', 'Bad_Url_Access',  'Bad_Usernames',
+			'Bad_Request_Methods',     'Too_Many_Admins', 'Block_Long_URL',
+			'Block_HTTP_1_0',          'Discloses',
+		),
+		'low' => array(
+			'Login_Errors_Disclose', 'PHP_Disclosure', 'Admin_As_Author'
+		),
+	);
+}
+
 function secupress_submit_button( $type = 'primary large', $name = 'main_submit', $wrap = true, $other_attributes = null, $echo = true ) {
 	if ( true === $wrap ) {
 		$wrap = '<p class="align-right">';
@@ -131,7 +188,7 @@ function secupress_check_key( $type = 'transient_1', $data = null )
 				if ( ! get_secupress_option( 'license' ) ) {
 					$secupress_options['license'] = '1';
 				}
-				
+
 				if ( 'live' != $type ) {
 					if ( 'transient_1' == $type ) {
 						set_transient( 'secupress_check_licence_1', true, DAY_IN_SECONDS );
