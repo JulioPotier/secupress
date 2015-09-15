@@ -70,6 +70,8 @@ jQuery( document ).ready( function( $ ) {
 			$( '.secupress-item-'+pairs.test+' .secupress-status').html('<img src="' + href.replace( 'admin-post.php', 'images/wpspin_light-2x.gif' ) + '" />').parent().css( { backgroundImage: 'repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(200, 200, 200, 0.1) 10px, rgba(200, 200, 200, 0.1) 20px)' } );
 
 			$.get( href.replace( 'admin-post.php', 'admin-ajax.php' ), function( r ) {
+				var $checkbox = $( "#cb-select-" + pairs.test );
+
 				if ( r.success ) {
 					if ( r.data[pairs.test].hasOwnProperty('class') ) {
 						$('.secupress-item-' + pairs.test )
@@ -105,7 +107,9 @@ jQuery( document ).ready( function( $ ) {
 					console.log( 'AJAX error: ' + pairs.test );
 				}
 
-				$( "#cb-select-" + pairs.test ).removeProp( "checked" );
+				if ( $checkbox.prop( "checked" ) ) {
+					$checkbox.trigger( "click" );
+				}
 			} );
 		}
 	});
