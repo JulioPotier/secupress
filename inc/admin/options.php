@@ -268,9 +268,7 @@ function secupress_uksort_scanners( $key_a, $key_b ) {
 
 
 function secupress_main_scan() {
-	if ( ! class_exists( 'SecuPress_Scan' ) ) {
-		include_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan.php' );
-	}
+	secupress_require_class( 'scan' );
 
 	$secupress_tests = secupress_get_tests();
 	$scanners        = secupress_get_scanners();
@@ -374,13 +372,11 @@ function secupress_main_scan() {
 					$ordered_scan_names = array();
 
 					foreach ( $class_name_parts as $class_name_part ) {
-						$file_name = 'class-secupress-scan-' . secupress_class_name( $class_name_part );
-
-						if ( ! file_exists( SECUPRESS_CLASSES_PATH . 'scanners/' . $file_name . '.php' ) ) {
+						if ( ! file_exists( secupress_class_path( 'scan', $class_name_part ) ) ) {
 							continue;
 						}
 
-						include_once( SECUPRESS_CLASSES_PATH . 'scanners/' . $file_name . '.php' );
+						secupress_require_class( 'scan', $class_name_part );
 
 						$option_name = strtolower( $class_name_part );
 						$ordered_scan_names[ $option_name ] = $class_name_part;

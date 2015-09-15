@@ -10,7 +10,7 @@ function __secupress_fixit_ajax( $test_name = null ) {
 	$nonce     = isset( $_GET['_wpnonce'] ) ? $_GET['_wpnonce']         : 0;
 	$nonce     = 0 === $nonce || wp_verify_nonce( $nonce, 'secupress_fixit_' . $test_name );
 
-	if ( empty( $test_name ) || ! $nonce || ! file_exists( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . secupress_class_name( $test_name ) . '.php' ) ) {
+	if ( empty( $test_name ) || ! $nonce || ! file_exists( secupress_class_path( 'scan', $test_name ) ) ) {
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			wp_send_json_error();
 		} else {
@@ -18,8 +18,8 @@ function __secupress_fixit_ajax( $test_name = null ) {
 		}
 	}
 
-	require_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan.php' );
-	include_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . secupress_class_name( $test_name ) . '.php' );
+	secupress_require_class( 'scan' );
+	secupress_require_class( 'scan', $test_name );
 
 	$classname = 'SecuPress_Scan_' . $test_name;
 
@@ -48,7 +48,7 @@ function __secupress_scanner_ajax( $test_name = null ) {
 	$nonce     = isset( $_GET['_wpnonce'] ) ? $_GET['_wpnonce']         : 0;
 	$nonce     = 0 === $nonce || wp_verify_nonce( $nonce, 'secupress_scanner_' . $test_name );
 
-	if ( empty( $test_name ) || ! $nonce || ! file_exists( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . secupress_class_name( $test_name ) . '.php' ) ) {
+	if ( empty( $test_name ) || ! $nonce || ! file_exists( secupress_class_path( 'scan', $test_name ) ) ) {
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			wp_send_json_error();
 		} else {
@@ -56,8 +56,8 @@ function __secupress_scanner_ajax( $test_name = null ) {
 		}
 	}
 
-	require_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan.php' );
-	include_once( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan-' . secupress_class_name( $test_name ) . '.php' );
+	secupress_require_class( 'scan' );
+	secupress_require_class( 'scan', $test_name );
 
 	$classname = 'SecuPress_Scan_' . $test_name;
 
