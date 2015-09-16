@@ -60,8 +60,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 		}
 
 		// Inactive themes
-		$themes = wp_get_themes();
-		$themes = array_diff( wp_list_pluck( $themes, 'Name' ), array( $themes->Name ) );	//// Attention au thème parent si on utilise un thème enfant !
+		$themes = array_diff( wp_list_pluck( wp_get_themes(), 'Name' ), array( wp_get_theme()->Name ) );	//// Attention au thème parent si on utilise un thème enfant !
 
 		if ( $count = count( $themes ) ) {
 			// bad
