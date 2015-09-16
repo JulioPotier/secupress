@@ -29,14 +29,13 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 	const VERSION = '1.0';
 
-	protected static $name   = '';
-	protected        $result = array();
-	protected        $fix    = false;
+	protected     $result = array();
+	protected     $fix    = false;
 
-	public    static $prio  = '';
-	public    static $type  = '';
-	public    static $title = '';
-	public    static $more  = '';
+	public static $prio   = '';
+	public static $type   = '';
+	public static $title  = '';
+	public static $more   = '';
 
 
 	// Instance ====================================================================================
@@ -80,13 +79,6 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	 * @return void
 	 */
 	final private function __wakeup() {}
-
-
-	// Properties ==================================================================================
-
-	public static function get_name() {
-		return static::$name;
-	}
 
 
 	// Init ========================================================================================
@@ -202,7 +194,9 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 			$this->result['attempted_fixes'] = array_key_exists( 'attempted_fixes', $this->result ) ? ++$this->result['attempted_fixes'] : 1;
 		}
 
-		if ( ! set_transient( 'secupress_scan_' . static::$name, $this->result ) ) {
+		$name = strtolower( substr( get_called_class(), 15 ) );	// 15 is 'SecuPress_Scan_' length.
+
+		if ( ! set_transient( 'secupress_scan_' . $name, $this->result ) ) {
 			return false;
 		}
 

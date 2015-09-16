@@ -17,7 +17,6 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 	 * @var Singleton The reference to *Singleton* instance of this class
 	 */
 	protected static $_instance;
-	protected static $name = 'admin_user';
 	public    static $prio = 'high';
 
 

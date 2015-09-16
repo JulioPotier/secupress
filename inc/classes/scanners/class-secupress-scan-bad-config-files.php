@@ -17,7 +17,6 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 	 * @var Singleton The reference to *Singleton* instance of this class
 	 */
 	protected static $_instance;
-	protected static $name = 'bad_config_files';
 	public    static $prio = 'high';
 
 

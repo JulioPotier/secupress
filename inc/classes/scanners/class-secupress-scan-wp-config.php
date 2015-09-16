@@ -17,7 +17,6 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 	 * @var Singleton The reference to *Singleton* instance of this class
 	 */
 	protected static $_instance;
-	protected static $name = 'wp_config';
 	public    static $prio = 'high';
 
 

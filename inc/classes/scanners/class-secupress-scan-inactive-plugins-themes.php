@@ -17,7 +17,6 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 	 * @var Singleton The reference to *Singleton* instance of this class
 	 */
 	protected static $_instance;
-	protected static $name = 'inactive_plugins_themes';
 	public    static $prio = 'medium';
 
 

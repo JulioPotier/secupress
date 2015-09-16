@@ -17,7 +17,6 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements iSecuPress_Sc
 	 * @var Singleton The reference to *Singleton* instance of this class
 	 */
 	protected static $_instance;
-	protected static $name = 'auto_update';
 	public    static $prio = 'high';
 
 

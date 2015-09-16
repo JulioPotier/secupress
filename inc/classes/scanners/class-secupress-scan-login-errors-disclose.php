@@ -17,7 +17,6 @@ class SecuPress_Scan_Login_Errors_Disclose extends SecuPress_Scan implements iSe
 	 * @var Singleton The reference to *Singleton* instance of this class
 	 */
 	protected static $_instance;
-	protected static $name = 'login_errors_disclose';
 	public    static $prio = 'low';
 
 

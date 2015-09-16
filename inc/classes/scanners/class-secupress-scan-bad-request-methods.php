@@ -17,7 +17,6 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements iSecu
 	 * @var Singleton The reference to *Singleton* instance of this class
 	 */
 	protected static $_instance;
-	protected static $name = 'bad_request_methods';
 	public    static $prio = 'medium';
 
 

@@ -17,7 +17,6 @@ class SecuPress_Scan_Versions extends SecuPress_Scan implements iSecuPress_Scan 
 	 * @var Singleton The reference to *Singleton* instance of this class
 	 */
 	protected static $_instance;
-	protected static $name = 'versions';
 	public    static $prio = 'high';
 
 

@@ -17,7 +17,6 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 	 * @var Singleton The reference to *Singleton* instance of this class
 	 */
 	protected static $_instance;
-	protected static $name = 'directory_listing';
 	public    static $prio = 'high';
 
 

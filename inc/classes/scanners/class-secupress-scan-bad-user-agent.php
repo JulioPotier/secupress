@@ -17,7 +17,6 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan implements iSecuPress
 	 * @var Singleton The reference to *Singleton* instance of this class
 	 */
 	protected static $_instance;
-	protected static $name = 'bad_user_agent';
 	public    static $prio = 'high';
 
 

@@ -17,7 +17,6 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan {
 	 * @var Singleton The reference to *Singleton* instance of this class
 	 */
 	protected static $_instance;
-	protected static $name = 'passwords_strength';
 	public    static $prio = 'high';
 
 

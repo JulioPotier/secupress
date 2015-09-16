@@ -17,7 +17,6 @@ class SecuPress_Scan_Block_HTTP_1_0 extends SecuPress_Scan implements iSecuPress
 	 * @var Singleton The reference to *Singleton* instance of this class
 	 */
 	protected static $_instance;
-	protected static $name = 'block_http_1_0';
 	public    static $prio = 'medium';
 
 

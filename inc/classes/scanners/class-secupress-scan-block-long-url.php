@@ -17,7 +17,6 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements iSecuPress
 	 * @var Singleton The reference to *Singleton* instance of this class
 	 */
 	protected static $_instance;
-	protected static $name = 'block_long_url';
 	public    static $prio = 'medium';
 
 

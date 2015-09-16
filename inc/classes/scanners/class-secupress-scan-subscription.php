@@ -17,7 +17,6 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements iSecuPress_S
 	 * @var Singleton The reference to *Singleton* instance of this class
 	 */
 	protected static $_instance;
-	protected static $name = 'subscription';
 	public    static $prio = 'high';
 
 
