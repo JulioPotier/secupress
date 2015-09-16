@@ -22,17 +22,17 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements iSecuPress_Sc
 
 	protected static function init() {
 		self::$type  = 'WordPress';
-		self::$title = __( 'Check if your WordPress core can auto update minor versions.', 'secupress' );
-		self::$more  = __( 'When a minor update comes, WordPress can auto update itself. By doing this, you\'re always up to date when a security flaw is discovered.', 'secupress' );
+		self::$title = __( 'Check if your WordPress core can perform auto-updates for minor versions.', 'secupress' );
+		self::$more  = __( 'When a minor update is released, WordPress can install it automatically. By doing so, you are always up to date when a security flaw is discovered.', 'secupress' );
 	}
 
 
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// good
-			0   => __( 'Your installation <strong>can auto update</strong> itself.', 'secupress' ),
+			0   => __( 'Your installation <strong>can auto-update</strong> itself.', 'secupress' ),
 			// bad
-			200 => __( 'Your installation <strong>can NOT auto update</strong> itself.', 'secupress' ),
+			200 => __( 'Your installation <strong>can NOT auto-update</strong> itself.', 'secupress' ),
 			// cantfix
 			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);

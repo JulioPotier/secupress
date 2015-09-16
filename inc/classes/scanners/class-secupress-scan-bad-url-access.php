@@ -23,18 +23,18 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if your WordPress site discloses sensitive informations.', 'secupress' );
-		self::$more  = __( 'When an attacker wants to hack into a WordPress site, he\'ll search for a maximum of information. The goal is to find outdated versions of your server softwares or WordPress component. Don\'t let them easily find these informations.', 'secupress' );
+		self::$more  = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of information. The goal is to find outdated versions of your server softwares or WordPress component. Don\'t let him easily find these informations.', 'secupress' );
 	}
 
 
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// good
-			0   => __( 'Your site doesn\'t reveal sensitive informations.', 'secupress' ),
+			0   => __( 'Your site does not reveal sensitive informations.', 'secupress' ),
 			// warning
 			100 => __( 'Unable to determine status of %s.', 'secupress' ),
 			// bad
-			200 => _n_noop( '%s shouldn\'t be accessible by anyone.', '%s shouldn\'t be accessible by anyone.', 'secupress' ),
+			200 => _n_noop( '%s should not be accessible by anyone.', '%s should not be accessible by anyone.', 'secupress' ),
 			// cantfix
 			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);
@@ -49,8 +49,10 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 
 	public function scan() {
 
-		remove_all_filters( 'site_url' ); // avoid plugin's hooks of course
-		remove_all_filters( 'admin_url' ); // avoid plugin's hooks of course
+		// Avoid plugin's hooks of course.
+		remove_all_filters( 'site_url' );
+		remove_all_filters( 'admin_url' );
+		remove_all_filters( 'home_url' );
 
 		$urls = array(
 			site_url( 'wp-login.php', 'login' ),

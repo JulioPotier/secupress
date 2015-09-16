@@ -22,17 +22,17 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 
 	protected static function init() {
 		self::$type  = 'WordPress';
-		self::$title = __( 'Check if the "admin" account is correctly protected.', 'secupress' );
-		self::$more  = __( 'It\'s important to protect the famous "admin" account to avoid simple brute-force attacks on it.', 'secupress' );
+		self::$title = __( 'Check if the <em>admin</em> account is correctly protected.', 'secupress' );
+		self::$more  = __( 'It is important to protect the famous <em>admin</em> account to avoid simple brute-force attacks on it. This account is most of the time the first one created when you install WordPress, and it is well known by attackers.', 'secupress' );
 	}
 
 
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// good
-			0   => __( 'The "admin" account is correctly protected.', 'secupress' ),
+			0   => __( 'The <em>admin</em> account is correctly protected.', 'secupress' ),
 			// bad
-			200 => __( 'The <em>admin</em> account role shouldn\'t be an <strong>administrator</strong>.', 'secupress' ),
+			200 => __( 'The <em>admin</em> account role should not be <strong>Administrator</strong>.', 'secupress' ),
 			201 => __( 'The <em>admin</em> account <code>ID</code> should be greater than <strong>50</strong>.', 'secupress' ),
 			202 => __( 'The <em>admin</em> account should exist (with no role) to avoid someone to register it.', 'secupress' ),
 			// cantfix
@@ -57,7 +57,7 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 		}
 
 		// ID should be > 25 to avoid simple SQLi.
-		if ( isset( $check->ID ) && ( $check->ID < 25 ) ) {		//// 25 ici mais 50 dans le message d'erreur.
+		if ( isset( $check->ID ) && ( $check->ID < 50 ) ) {
 			// bad
 			$this->add_message( 201 );
 		}

@@ -22,17 +22,17 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 
 	protected static function init() {
 		self::$type  = 'WordPress';
-		self::$title = __( 'Check if any administrator already created a public post.', 'secupress' );
-		self::$more  = __( 'The <em>administrator</em> role is to administrate the website, not creating posts, there is other roles for that. Also it means that your admin account is always logged in, this can easily lead to CSRF attacks.', 'secupress' );
+		self::$title = __( 'Check if any Administrator already created public posts.', 'secupress' );
+		self::$more  = __( 'The <strong>Administrator</strong> role is to administrate the website, not to create posts, there are other roles for that, like <strong>Author</strong>. But mainly, it means that your Administrator account is always logged in, an attacker could then perform actions on your behalf (<abbr title="Cross-Site Request Forgery">CSRF</abbr> flaw).', 'secupress' );
 	}
 
 
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// good
-			0   => __( 'Perfect, no posts created by admin.', 'secupress' ),
+			0   => __( 'Perfect, no posts created by an Administrator.', 'secupress' ),
 			// bad
-			200 => _n_noop( '<strong>%s</strong> post has an <strong>administrator</strong> as author.', '<strong>%s</strong> posts have an <strong>administrator</strong> as author.', 'secupress' ),
+			200 => _n_noop( '<strong>%s</strong> post has an <strong>Administrator</strong> as author.', '<strong>%s</strong> posts have an <strong>Administrator</strong> as author.', 'secupress' ),
 			// cantfix
 			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);
@@ -47,6 +47,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 
 	public function scan() {
 
+		// Get posts created by an Administrator.
 		$ids = get_posts( array(
 			'fields'     => 'ids',
 			'author__in' => get_users( array(

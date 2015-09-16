@@ -22,21 +22,21 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 
 	protected static function init() {
 		self::$type  = 'WordPress';
-		self::$title = __( 'Check if you\'re using old plugins that have been deleted from the repository or not updated since 2 years at least.', 'secupress' );
-		self::$more  = __( 'Avoid to use a plugin that have been removed from the repository and avoid using a plugin that have not been maintained since 2 years at least.', 'secupress' );
+		self::$title = __( 'Check if you are using plugins that have been deleted from the official repository or not updated since two years at least.', 'secupress' );
+		self::$more  = __( 'Avoid to use a plugin that have been removed from the official repository, and avoid using a plugin that have not been maintained for two years at least.', 'secupress' );
 	}
 
 
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// good
-			0   => __( 'You don\'t use bad old plugins.', 'secupress' ),
+			0   => __( 'You don\'t use bad or old plugins.', 'secupress' ),
 			// warning
 			100 => __( 'Error, could not read %s.', 'secupress' ),
 			// bad
 			200 => _n_noop( '<strong>%d</strong> plugin is <strong>no longer</strong> in the WordPress directory: %s.', '<strong>%d</strong> plugins are <strong>no longer</strong> in the WordPress directory: %s.', 'secupress' ),
 			201 => _n_noop( '<strong>%d</strong> plugin hasn\'t been updated <strong>for 2 years</strong> at least: %s.', '<strong>%d</strong> plugins haven\'t been updated <strong>for 2 years</strong> at least: %s.', 'secupress' ),
-			202 => __( 'You should delete %s from your plugin directory.', 'secupress' ),
+			202 => __( 'You should delete the plugin %s.', 'secupress' ),
 			// cantfix
 			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);

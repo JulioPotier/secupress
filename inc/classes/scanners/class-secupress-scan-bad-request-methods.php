@@ -23,7 +23,7 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements iSecu
 	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if bad request methods can reach your website.', 'secupress' );
-		self::$more  = __( 'There are malicious scripts and bad bots out there hammering away at your site with useless HTTP GET requests.', 'secupress' );
+		self::$more  = __( 'There are malicious scripts and bots out there, hammering your site with bad HTTP GET requests.', 'secupress' );
 	}
 
 

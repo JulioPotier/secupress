@@ -22,8 +22,8 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 
 	protected static function init() {
 		self::$type  = 'WordPress';
-		self::$title = __( 'Check if your installation contains old or backed up <code>wp-config.php</code> files like <code>wp-config.bak</code>, <code>.old</code> etc.', 'secupress' );
-		self::$more  = __( 'Some attackers will try to find old and backed up config files to try to steal them, avoid this attack and remove them!', 'secupress' );
+		self::$title = __( 'Check if your installation contains old or backed up <code>wp-config.php</code> files like <code>wp-config.bak</code>, <code>wp-config.old</code> etc.', 'secupress' );
+		self::$more  = __( 'Some attackers will try to find old and backed up config files to try to steal them. Avoid this kind of attack by removing them!', 'secupress' );
 	}
 
 
@@ -32,7 +32,7 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 			// good
 			0   => __( 'You don\'t have old <code>wp-config</code> files.', 'secupress' ),
 			// bad
-			200 => _n_noop( 'Your installation shouldn\'t contain this old or backed up config file: %s.', 'Your installation shouldn\'t contain these old or backed up config files: %s.', 'secupress' ),
+			200 => _n_noop( 'Your installation should not contain this old or backed up config file: %s.', 'Your installation should not contain these old or backed up config files: %s.', 'secupress' ),
 			// cantfix
 			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);
