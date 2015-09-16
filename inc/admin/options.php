@@ -57,9 +57,9 @@ function __secupress_global_settings_callback( $value ) {
  *
  * @since 1.0
  */
-add_action( 'admin_head-secupress_page_secupress_settings', 'secupress_favicon' );
-add_action( 'admin_head-secupress_page_secupress_modules',  'secupress_favicon' );
-add_action( 'admin_head-secupress_page_secupress_scanner',  'secupress_favicon' );
+add_action( 'admin_head-' . SECUPRESS_PLUGIN_SLUG . '_page_secupress_settings', 'secupress_favicon' );
+add_action( 'admin_head-' . SECUPRESS_PLUGIN_SLUG . '_page_secupress_modules',  'secupress_favicon' );
+add_action( 'admin_head-' . SECUPRESS_PLUGIN_SLUG . '_page_secupress_scanner',  'secupress_favicon' );
 
 function secupress_favicon() {
 	echo '<link id="favicon" rel="shortcut icon" type="image/png" href="' . SECUPRESS_ADMIN_CSS_URL . '/images/black-shield-16.png" />';

@@ -815,7 +815,7 @@ function secupress_googleauth_warning_not_set_yet()
 add_action( 'current_screen', 'secupress_googleauth_redirect' );
 function secupress_googleauth_redirect() {
 	global $current_user, $current_screen, $pagenow;
-	if ( 'secupress_page_secupress_modules' != $current_screen->id &&
+	if ( SECUPRESS_PLUGIN_SLUG . '_page_secupress_modules' != $current_screen->id &&
 		! in_array( $pagenow, array( 'profile.php', 'admin-ajax.php', 'admin-post.php' ) ) && 
 		is_user_logged_in() && ! get_user_option( 'secupress_google_auth_secret', $current_user->ID )
 	) {
