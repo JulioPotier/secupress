@@ -46,7 +46,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 	}
 
 
-	public function scan() {
+	public function scan() { //// Attention au multisite. Des plugins et themes pourraient être activés sur d'autres sites.
 
 		// Inactive plugins
 		$plugins = get_plugins();
@@ -59,7 +59,21 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 		}
 
 		// Inactive themes
-		$themes = array_diff( wp_list_pluck( wp_get_themes(), 'Name' ), array( wp_get_theme()->Name ) );	//// Attention au thème parent si on utilise un thème enfant !
+		$theme  = wp_get_theme();
+		$themes = wp_get_themes();
+
+		// We may have a child theme, we need to add its parent to the "active themes" list.
+		$active = array(
+			$theme->get_stylesheet(),
+		);
+		if ( $theme->parent() ) {
+			$active[] = $theme->parent()->get_stylesheet();
+		}
+
+		$list   = array_diff( array_keys( $themes ), $active );
+		$list   = array_combine( $list, $list );
+		$themes = array_intersect_key( $themes, $list );
+		$themes = wp_list_pluck( $themes, 'Name' );
 
 		if ( $count = count( $themes ) ) {
 			// bad
