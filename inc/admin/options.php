@@ -62,7 +62,7 @@ add_action( 'admin_head-' . SECUPRESS_PLUGIN_SLUG . '_page_secupress_modules',  
 add_action( 'admin_head-' . SECUPRESS_PLUGIN_SLUG . '_page_secupress_scanner',  'secupress_favicon' );
 
 function secupress_favicon() {
-	echo '<link id="favicon" rel="shortcut icon" type="image/png" href="' . SECUPRESS_ADMIN_CSS_URL . '/images/black-shield-16.png" />';
+	echo '<link id="favicon" rel="shortcut icon" type="image/png" href="' . SECUPRESS_ADMIN_CSS_URL . 'images/black-shield-16.png" />';
 }
 
 
@@ -94,8 +94,8 @@ function secupress_create_menus() {
 	add_menu_page( SECUPRESS_PLUGIN_NAME, SECUPRESS_PLUGIN_NAME, 'administrator', 'secupress', '__secupress_dashboard', 'dashicons-shield-alt' );
 
 	// Sub-menus
-	add_submenu_page( 'secupress', __( 'Settings', 'secupress' ), __( 'Settings', 'secupress' ), 'administrator', 'secupress_settings', '__secupress_global_settings' );
-	add_submenu_page( 'secupress', __( 'Modules', 'secupress' ),  __( 'Modules', 'secupress' ),  'administrator', 'secupress_modules',  '__secupress_modules' );
+	add_submenu_page( 'secupress', __( 'Settings', 'secupress' ), __( 'Settings', 'secupress' ),          'administrator', 'secupress_settings', '__secupress_global_settings' );
+	add_submenu_page( 'secupress', __( 'Modules', 'secupress' ),  __( 'Modules', 'secupress' ),           'administrator', 'secupress_modules',  '__secupress_modules' );
 	add_submenu_page( 'secupress', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ) . $count, 'administrator', 'secupress_scanner',  '__secupress_scanner' );
 
 	// Add the counter to the main menu: it can't be added with `add_menu_page()` because it would change the value of the screen ID (yes, it's utterly stupid).
@@ -124,6 +124,13 @@ function __secupress_dashboard() {
 	delete_option( SECUPRESS_SCAN_TIMES );
 }
 
+add_filter( 'secupress_global_settings_modules', '__secupress_add_white_label_settings_block' );
+function __secupress_add_white_label_settings_block( $modules ) {
+	if ( defined( 'WP_SWL' ) && WP_SWL ) {
+		$modules[] = 'white-label';
+	}
+	return $modules;
+}
 
 /**
  * Global settings page.
@@ -134,12 +141,15 @@ function __secupress_global_settings() {
 	global $modulenow;
 
 	$modulenow       = 'global';
-	$setting_modules = apply_filters( 'secupress_global_settings_modules', array( 'api-key', 'auto-config' ) );
+	$setting_modules = apply_filters( 'secupress_global_settings_modules', 
+							array( 'api-key',
+								   'auto-config',
+							   ) 
+						);
 
-	foreach ( $setting_modules as $_module) {
-		include( SECUPRESS_ADMIN_SETTINGS_MODULES . $_module . '.php' );
+	foreach ( $setting_modules as $setting_module ) {
+		require( SECUPRESS_ADMIN_SETTINGS_MODULES . $setting_module . '.php' );
 	}
-
 	?>
 	<div class="wrap">
 		<?php secupress_admin_heading( __( 'Settings' ) ); ?>
@@ -147,14 +157,12 @@ function __secupress_global_settings() {
 		<form action="options.php" method="post" id="secupress_settings">
 			<?php submit_button(); ?>
 			<?php settings_fields( 'secupress_settings' ); ?>
-			<div class="secupress_setting_block">
-				<?php do_settings_sections( 'secupress_apikey' ); ?>
-			</div>
-			<?php submit_button(); ?>
-			<div class="secupress_setting_block">
-				<?php do_settings_sections( 'secupress_autoconfig' ); ?>
-			</div>
-			<?php submit_button(); ?>
+			<?php foreach( $setting_modules as $setting_module ) { ?>
+				<div class="secupress_setting_block">
+					<?php do_settings_sections( 'secupress_' . $setting_module ); ?>
+				</div>
+				<?php submit_button(); ?>
+			<?php } ?>
 		</form>
 		<div class="secupress_setting_block">
 			<h2><?php _e( 'That\'s all!', 'secupress' ); ?></h2>

@@ -1,13 +1,13 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
-add_settings_section( 'secupress_display_apikey_options', __( 'License validation', 'secupress' ), '__secupress_how_to_get_licence', 'secupress_apikey' );
+add_settings_section( 'secupress_display_apikey_options', __( 'License validation', 'secupress' ), '__secupress_how_to_get_licence', 'secupress_api-key' );
 
 add_settings_field(
 	'secupress_email',
 	__( 'E-mail Address', 'secupress' ),
 	'secupress_field',
-	'secupress_apikey',
+	'secupress_api-key',
 	'secupress_display_apikey_options',
 	array(
 		array(
@@ -27,7 +27,7 @@ add_settings_field(
 	'secupress_api_key',
 	__( 'API Key', 'secupress' ),
 	'secupress_field',
-	'secupress_apikey',
+	'secupress_api-key',
 	'secupress_display_apikey_options',
 	array(
 		array(

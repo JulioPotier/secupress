@@ -1,14 +1,14 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
-add_settings_section( 'secupress_auto_config', __( 'Auto configuration <b><i>(optional)</i></b>', 'secupress' ), '__secupress_autoconfig_info', 'secupress_autoconfig' );
+add_settings_section( 'secupress_auto-config', __( 'Auto configuration <b><i>(optional)</i></b>', 'secupress' ), '__secupress_autoconfig_info', 'secupress_auto-config' );
 
 add_settings_field(
-	'secupress_email',
+	'secupress_auto-config',
 	__( 'Level of configuration', 'secupress' ),
 	'secupress_field',
-	'secupress_autoconfig',
-	'secupress_auto_config',
+	'secupress_auto-config',
+	'secupress_auto-config',
 	array(
 		array(
 			'type'         => 'radio',
