@@ -23,7 +23,7 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements iSecuPress_S
 	protected static function init() {
 		self::$type  = 'PHP';
 		self::$title = __( 'Check if your website can easily be the target of common flaws.', 'secupress' );
-		self::$more  = __( 'Every year new flaws are discovered. We have to be sure that your website cannot be the target.', 'secupress' );
+		self::$more  = __( 'Every year new flaws are discovered. We have to be sure that your website cannot be a target.', 'secupress' );
 	}
 
 
@@ -112,7 +112,7 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements iSecuPress_S
 
 			// CVE-2014-7169
 			$test_date = date( 'Y' );
-			$p         = proc_open("rm -f echo; env 'x=() { (a)=>\' bash -c \"echo date +%Y\"; cat echo", $desc, $pipes, sys_get_temp_dir() );
+			$p         = proc_open( "rm -f echo; env 'x=() { (a)=>\' bash -c \"echo date +%Y\"; cat echo", $desc, $pipes, sys_get_temp_dir() );
 			$output    = isset( $pipes[1] ) ? stream_get_contents( $pipes[1] ) : 'error';
 			proc_close( $p );
 

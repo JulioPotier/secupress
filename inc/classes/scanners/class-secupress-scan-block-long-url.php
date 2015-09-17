@@ -23,14 +23,14 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements iSecuPress
 	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if long URL can reach your website (more than 255 chars).', 'secupress' );
-		self::$more  = __( 'A usual URL has no more than 255 characters, but attackers often need to test very long strings to try to hack something.', 'secupress' );
+		self::$more  = __( 'A usual URL has no more than 255 characters, but attackers often need to test very long strings when they try to hack something.', 'secupress' );
 	}
 
 
 	public static function get_messages( $id = null ) {
 		$messages = array(
 			// good
-			0   => __( 'You are currently blocking bad request methods.', 'secupress' ),
+			0   => __( 'You are currently blocking too long string requests.', 'secupress' ),
 			// warning
 			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
 			// bad

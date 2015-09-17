@@ -23,17 +23,17 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if your WordPress site discloses its version.', 'secupress' );
-		self::$more  = __( 'When a attacker wants to hack into a WordPress site, he\'ll search for a maximum of information. The goal is to find outdated versions of your server softwares or WordPress component. Don\'t let them easily find these informations.', 'secupress' );
+		self::$more  = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of informations. The goal is to find outdated versions of your server softwares or WordPress components. Don\'t let them easily find these informations.', 'secupress' );
 	}
 
 
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// good
-			0   => __( 'Your site doesn\'t reveal sensitive informations.', 'secupress' ),
+			0   => __( 'Your site does not reveal sensitive informations.', 'secupress' ),
 			// warning
 			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
-			101 => sprintf( __( 'Unable to determine status of <code>%s</code>.', 'secupress' ), home_url( 'readme.html' ) ),
+			101 => sprintf( __( 'Unable to determine status of %s.', 'secupress' ), '<code>' . home_url( 'readme.html' ) . '</code>' ),
 			// bad
 			200 => __( 'The website displays the <strong>PHP version</strong> in the request headers.', 'secupress' ),
 			201 => __( 'The website displays the <strong>WordPress version</strong> in the homepage source code (%s).', 'secupress' ),

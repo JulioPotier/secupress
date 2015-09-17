@@ -22,19 +22,19 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan implements iSecuPress
 
 	protected static function init() {
 		self::$type  = 'WordPress';
-		self::$title = __( 'Check if bad user-agent can visit your website.', 'secupress' );
-		self::$more  = __( 'Bad User Agents are Bots that generally provide no value to the website. It includes scrapers, spambots, email harvesters and more bots that you don\'t want on your site. In many cases, those bots that are generally online crawling with a malicious purpose have no desire to follow any robots.txt or meta tag attempt at controlling them.', 'secupress' );
+		self::$title = __( 'Check if bad User Agents can visit your website.', 'secupress' );
+		self::$more  = __( 'Bad User Agents are bots that provide no value to the website. It includes scrapers, spambots, email harvesters and more bots that you don\'t want on your site. In any cases, those bots that are crawling with a malicious purpose, have no desire to follow any <code>robots.txt</code> or meta tag.', 'secupress' );
 	}
 
 
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// good
-			0   => __( 'You are currently blocking bad user-agents.', 'secupress' ),
+			0   => __( 'You are currently blocking bad User Agents.', 'secupress' ),
 			// warning
 			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
 			// bad
-			200 => sprintf( __( 'Your website should block <code>%s</code> requests with <strong>bad user-agents</strong>.', 'secupress' ), 'HTTP' ),
+			200 => __( 'Your website should block <code>HTTP</code> requests for <strong>bad User Agents</strong>.', 'secupress' ),
 			// cantfix
 			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);

@@ -22,15 +22,15 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 
 	protected static function init() {
 		self::$type  = 'WordPress';
-		self::$title = __( 'Check if your users got correct username, not blacklisted, not the same as their login.', 'secupress' );
-		self::$more  = __( 'It\'s important to not having the same login and display name to protect your login name and avoid simple brute-force attacks on it.', 'secupress' );
+		self::$title = __( 'Check if your users have correct username, not blacklisted, not the same as their login.', 'secupress' );
+		self::$more  = __( 'It is important to not have the same login and display name to protect your login name and avoid simple brute-force attacks.', 'secupress' );
 	}
 
 
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// good
-			0   => __( 'All your users\' names are correct.', 'secupress' ),
+			0   => __( 'All the user names are correct.', 'secupress' ),
 			// bad
 			200 => _n_noop( '<strong>%d</strong> user has a forbidden login name.', '<strong>%d</strong> users have a forbidden login name.', 'secupress' ),
 			201 => _n_noop( '<strong>%d</strong> user has similar login name and display name.', '<strong>%d</strong> users have similar login name and display name.', 'secupress' ),
@@ -49,7 +49,7 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 	public function scan() {
 		global $wpdb;
 
-		// blacklisted names
+		// Blacklisted names
 		$names = array( //// mettre ça dans une option
 			'a', 'about', 'access', 'account', 'accounts', 'ad', 'address', 'adm', 'admin', 'administration', 'adult', 'advertising', 'affiliate', 'affiliates', 'ajax', 'analytics', 'android', 'anon', 'anonymous', 'api', 'app', 'apps', 'archive', 'atom', 'auth', 'authentication', 'avatar',
 			'b', 'backup', 'banner', 'banners', 'bin', 'billing', 'blog', 'blogs', 'board', 'bot', 'bots', 'business',
@@ -76,7 +76,8 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 			'w', 'win', 'ww', 'www', 'www1', 'www2', 'www3', 'www4', 'www5', 'www6', 'www7', 'www9', 'www9', 'wwww', 'wws', 'wwws', 'web', 'webmail', 'website', 'websites', 'webmaster', 'workshop',
 			'x', 'xxx', 'xpg',
 			'y', 'you',
-			'z'
+			'z',
+			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 		);
 
 		$ids = $wpdb->get_col( 'SELECT ID from ' . $wpdb->users . ' WHERE user_login IN ( "' . implode( '", "', $names ) . '" )' );
@@ -87,7 +88,7 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 			$this->add_message( 200, array( $ids, number_format_i18n( $ids ) ) );
 		}
 
-		// Who got the same nickname and login?
+		// Who have the same nickname and login?
 		$ids = $wpdb->get_col( "SELECT ID FROM $wpdb->users u, $wpdb->usermeta um WHERE u.user_login = u.display_name OR ( um.user_id = u.ID AND um.meta_key = 'nickname' AND um.meta_value = u.user_login ) GROUP BY ID" );
 		$ids = count( $ids );
 

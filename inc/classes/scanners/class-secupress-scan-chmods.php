@@ -23,7 +23,7 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements iSecuPress_Scan {
 	protected static function init() {
 		self::$type  = __( 'File System', 'secupress' );
 		self::$title = __( 'Check if your files and folders have the correct write permissions (chmod).', 'secupress' );
-		self::$more  = __( 'CHMOD is a way to give read/write/execute rights to a file or a folder. The bad guy is known as <code>0777</code> and should never be used. This test will check some strategic files and folders.', 'secupress' );
+		self::$more  = __( 'CHMOD is the way to give read/write/execute rights to a file or a folder. The bad guy is known as <code>0777</code> and should never be used (it gives all rights to everybody). This test will check some strategic files and folders.', 'secupress' );
 	}
 
 
@@ -34,7 +34,7 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements iSecuPress_Scan {
 			// warning
 			100 => __( 'Unable to determine status of %s.', 'secupress' ),
 			// bad
-			200 => _x( '%1$s file permissions should be %2$s, NOT %3$s!', '1: file path, 2: chmod required, 3: current chmod', 'secupress' ),
+			200 => _x( 'File permissions for %1$s <strong>should be %2$s</strong>, NOT %3$s!', '1: file path, 2: chmod required, 3: current chmod', 'secupress' ),
 			// cantfix
 			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);

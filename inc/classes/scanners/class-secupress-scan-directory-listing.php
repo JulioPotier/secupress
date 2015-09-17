@@ -23,18 +23,18 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if your WordPress site discloses files in directory (known as Directory Listing).', 'secupress' );
-		self::$more  = __( 'Don\'t let them easily find these informations.', 'secupress' );
+		self::$more  = __( 'Without the appropriate protection, anybody could browse your site files. While browsing some of your files might not be a security risk, most of them are sensitive.', 'secupress' );
 	}
 
 
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// good
-			0   => __( 'Your site doesn\'t reveal the files list.', 'secupress' ),
+			0   => __( 'Your site does not reveal the files list.', 'secupress' ),
 			// warning
-			100 => __( 'Unable to determine status of <code>%s</code>.', 'secupress' ),
+			100 => __( 'Unable to determine status of %s.', 'secupress' ),
 			// bad
-			200 => __( '<code>%s</code> shouldn\'t be accessible by anyone.', 'secupress' ),
+			200 => __( '%s (for example) should not be accessible to anyone.', 'secupress' ),
 			// cantfix
 			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);
@@ -56,12 +56,12 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 
 			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
 				// bad
-				$this->add_message( 200, array( $base_url ) );
+				$this->add_message( 200, array( '<code>' . $base_url . '</code>' ) );
 			}
 
 		} else {
 			// warning
-			$this->add_message( 100, array( $base_url ) );
+			$this->add_message( 100, array( '<code>' . $base_url . '</code>' ) );
 		}
 
 		// good
