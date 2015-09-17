@@ -23,16 +23,16 @@ class SecuPress_Scan_Login_Errors_Disclose extends SecuPress_Scan implements iSe
 	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if your WordPress site discloses some login errors.', 'secupress' );
-		self::$more  = __( 'Don\'t let them easily find these informations.', 'secupress' ); ////
+		self::$more  = __( 'Error messages displayed on the login page are a useful information for an attacker: they should not be displayed, or at least, should be less specific.', 'secupress' );
 	}
 
 
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// good
-			0   => __( 'You are currently not displaying <strong>Login errors</strong>.', 'secupress' ),
+			0   => __( 'You are currently not displaying <strong>login errors</strong>.', 'secupress' ),
 			// bad
-			200 => __( '<strong>Login errors</strong> shouldn\'t be displayed.', 'secupress' ),
+			200 => __( '<strong>Login errors</strong> should not be displayed.', 'secupress' ),
 			// cantfix
 			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);

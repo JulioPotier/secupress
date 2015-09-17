@@ -23,19 +23,18 @@ class SecuPress_Scan_Versions extends SecuPress_Scan implements iSecuPress_Scan 
 	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if your WordPress core, plugins, and themes are up to date.', 'secupress' );
-		self::$more  = __( 'It\'s very important to maintain your WordPress installation up to date. If you can not update because of a plugin or theme, contact its author and submit him your issue.', 'secupress' );
+		self::$more  = __( 'It\'s very important to maintain your WordPress installation up to date. If you can not update because of a plugin or a theme, contact its author and submit him your issue.', 'secupress' );
 	}
 
 
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// good
-			0   => __( 'You are totally up to date, WordPress, plugins and themes. Bravo.', 'secupress' ),
+			0   => __( 'You are totally up to date: WordPress, plugins and themes. Bravo.', 'secupress' ),
 			// bad
-			200 => __( 'It\'s very important to maintain your WordPress installation up to date. If you can not update because of a plugin or theme, contact its author and submit him your issue.', 'secupress' ),
-			201 => __( 'WordPress <strong>core</strong> is not up to date.', 'secupress' ),
-			202 => _n_noop( '<strong>%1$d</strong> plugin isn\'t up to date: %2$s.', '<strong>%1$d</strong> plugins aren\'t up to date: %2$s.', 'secupress' ),
-			203 => _n_noop( '<strong>%1$d</strong> theme isn\'t up to date: %2$s.',  '<strong>%1$d</strong> themes aren\'t up to date: %2$s.', 'secupress' ),
+			200 => __( 'WordPress <strong>core</strong> is not up to date.', 'secupress' ),
+			201 => _n_noop( '<strong>%1$d</strong> plugin isn\'t up to date: %2$s.', '<strong>%1$d</strong> plugins aren\'t up to date: %2$s.', 'secupress' ),
+			202 => _n_noop( '<strong>%1$d</strong> theme isn\'t up to date: %2$s.',  '<strong>%1$d</strong> themes aren\'t up to date: %2$s.', 'secupress' ),
 			// cantfix
 			300 => __( 'I can not fix this, you have to manually update your plugins, themes and WordPress core.', 'secupress' ),
 		);
@@ -75,22 +74,19 @@ class SecuPress_Scan_Versions extends SecuPress_Scan implements iSecuPress_Scan 
 			$theme_updates = wp_list_pluck( array_map( 'wp_get_theme', array_keys( $current->response ) ), 'Name' );
 		}
 
-		if ( $core_update || $plugin_updates || $theme_updates ) {
-
+		if ( $core_update ) {
 			// bad
 			$this->add_message( 200 );
+		}
 
-			if ( $core_update ) {
-				$this->add_message( 201 );
-			}
+		if ( $count = count( $plugin_updates ) ) {
+			// bad
+			$this->add_message( 201, array( $count, $count, wp_sprintf_l( '%l', self::wrap_in_tag( $plugin_updates ) ) ) );
+		}
 
-			if ( $count = count( $plugin_updates ) ) {
-				$this->add_message( 202, array( $count, $count, wp_sprintf_l( '%l', self::wrap_in_tag( $plugin_updates ) ) ) );
-			}
-
-			if ( $count = count( $theme_updates ) ) {
-				$this->add_message( 203, array( $count, $count, wp_sprintf_l( '%l', self::wrap_in_tag( $theme_updates ) ) ) );
-			}
+		if ( $count = count( $theme_updates ) ) {
+			// bad
+			$this->add_message( 202, array( $count, $count, wp_sprintf_l( '%l', self::wrap_in_tag( $theme_updates ) ) ) );
 		}
 
 		// good

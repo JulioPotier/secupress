@@ -22,15 +22,15 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements iSecuPress_S
 
 	protected static function init() {
 		self::$type  = 'WordPress';
-		self::$title = __( 'Check if the subscription setting is correctly set.', 'secupress' );
-		self::$more  = __( '???', 'secupress' );
+		self::$title = __( 'Check if the subscription settings are set correctly.', 'secupress' );
+		self::$more  = __( 'If user registrations are open, the default user role should be Subscriber. Moreover, your registration page should be protected from bots.', 'secupress' );
 	}
 
 
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// good
-			0   => __( 'The subscription is correctly set on your site.', 'secupress' ),
+			0   => __( 'Your subscription settings are set correctly.', 'secupress' ),
 			// warning
 			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
 			// bad

@@ -23,7 +23,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check your <code>wp-config.php</code> file, especially the PHP constants.', 'secupress' );
-		self::$more  = __( 'You can use the <code>wp-config.php</code> file to improve the security of your website, know the best practice with this test.', 'secupress' );
+		self::$more  = __( 'You can use the <code>wp-config.php</code> file to improve the security of your website. Know the best practice with this test.', 'secupress' );
 	}
 
 
@@ -32,11 +32,11 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 			// good
 			0   => __( 'Your <code>wp-config.php</code> file is correct.', 'secupress' ),
 			// bad
-			200 => __( 'The database prefix shouldn\'t be %s.', 'secupress' ),
-			201 => __( '%s shouldn\'t be set with the default value.', 'secupress' ),
+			200 => __( 'The database prefix should not be %s. Choose something else than <code>wp_</code> or <code>wordpress_</code>, they are too easy to guess.', 'secupress' ),
+			201 => __( '%s should not be set with the default value.', 'secupress' ),
 			202 => __( '%s should be set.', 'secupress' ),
-			203 => __( '%s shouldn\'t be set.', 'secupress' ),
-			204 => __( '%s shouldn\'t be empty.', 'secupress' ),
+			203 => __( '%s should not be set.', 'secupress' ),
+			204 => __( '%s should not be empty.', 'secupress' ),
 			205 => __( '%1$s should be set on %2$s.', 'secupress' ),
 			206 => __( '%1$s should be set on %2$s or less.', 'secupress' ),
 			// cantfix
@@ -84,12 +84,17 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 
 		// Other constants
 		$constants = array(
-			'ALLOW_UNFILTERED_UPLOADS' => false, 'DIEONDBERROR'     => false,    'DISALLOW_FILE_EDIT' => 1,
-			'DISALLOW_UNFILTERED_HTML' => 1,     'ERRORLOGFILE'     => '!empty', 'FORCE_SSL_ADMIN'    => 1,
-			'FORCE_SSL_LOGIN'          => 1,     'FS_CHMOD_DIR'     => 755,      'FS_CHMOD_FILE'      => 644,
-			'RELOCATE'                 => false, 'SCRIPT_DEBUG'     => false,    'WP_ALLOW_REPAIR'    => '!isset',
-			'WP_DEBUG'                 => false, 'WP_DEBUG_DISPLAY' => false,    'WP_DEBUG_LOG'       => 1,
+			'ALLOW_UNFILTERED_UPLOADS' => false,    'DIEONDBERROR'     => false,    'DISALLOW_FILE_EDIT' => 1,
+			'DISALLOW_UNFILTERED_HTML' => 1,        'ERRORLOGFILE'     => '!empty', 'FS_CHMOD_DIR'       => 755,
+			'FS_CHMOD_FILE'            => 644,      'RELOCATE'         => false,    'SCRIPT_DEBUG'       => false,
+			'WP_ALLOW_REPAIR'          => '!isset', 'WP_DEBUG'         => false,    'WP_DEBUG_DISPLAY'   => false,
+			'WP_DEBUG_LOG'             => 1,
 		);
+
+		if ( is_ssl() ) {
+			$constants['FORCE_SSL_ADMIN'] = 1;
+			$constants['FORCE_SSL_LOGIN'] = 1;
+		}
 
 		foreach( $constants as $constant => $compare ) {
 

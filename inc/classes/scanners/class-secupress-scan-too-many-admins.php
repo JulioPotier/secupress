@@ -22,17 +22,17 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPres
 
 	protected static function init() {
 		self::$type  = 'WordPress';
-		self::$title = __( 'Check if there is more than 3 administrators on this site.', 'secupress' );
-		self::$more  = __( 'Try to reduce the number of administrators to lower the risk that any account has been compromised.', 'secupress' );
+		self::$title = __( 'Check if there are more than three Administrators on this site.', 'secupress' );
+		self::$more  = __( 'Accounts with Administrator privileges can perform any kind of action. The less Administrators you have, the lower the risk that any account has been compromised is.', 'secupress' );
 	}
 
 
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// good
-			0   => __( 'You have 3 or less administrator, fine.', 'secupress' ),
+			0   => _n_noop( 'You have only <strong>%d Administrator</strong>, fine.', 'You have only <strong>%d Administrators</strong>, fine.', 'secupress' ),
 			// bad
-			200 => _n_noop( '<strong>%d administrator</strong> found on this site.', '<strong>%d administrators</strong> found on this site.', 'secupress' ),
+			200 => _n_noop( '<strong>%d Administrator</strong> found on this site.', '<strong>%d Administrators</strong> found on this site.', 'secupress' ),
 			// cantfix
 			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);
@@ -57,7 +57,7 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPres
 			$this->add_message( 200, array( $count, $count ) );
 		} else {
 			// good
-			$this->add_message( 0 );
+			$this->add_message( 0, array( $count, $count ) );
 		}
 
 		return parent::scan();

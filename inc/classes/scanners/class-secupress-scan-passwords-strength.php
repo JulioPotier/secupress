@@ -22,8 +22,14 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan {
 
 	protected static function init() {
 		self::$type  = __( '3rd party', 'secupress' );
-		self::$title = __( 'Test the strength of WordPress database and FTP password if available.', 'secupress' );
-		self::$more  = __( 'The password of the database and FTP has to be strong to avoid a possible brute-force attack.', 'secupress' );
+
+		if ( defined( 'FTP_PASS' ) ) {
+			self::$title = __( 'Test the strength of WordPress database and FTP passwords.', 'secupress' );
+			self::$more  = __( 'The passwords of the database and FTP have to be strong to avoid a possible brute-force attack.', 'secupress' );
+		} else {
+			self::$title = __( 'Test the strength of WordPress database password.', 'secupress' );
+			self::$more  = __( 'The password of the database has to be strong to avoid a possible brute-force attack.', 'secupress' );
+		}
 	}
 
 
@@ -33,10 +39,10 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan {
 			0   => __( 'Database password is strong enough.', 'secupress' ),
 			1   => __( 'Database and FTP passwords are strong enough.', 'secupress' ),
 			// bad
-			200 => __( '%s is <strong>empty</strong>.', 'secupress' ),
-			201 => __( '%s is known as a <strong>too common</strong>.', 'secupress' ),
-			202 => _n_noop( '%1$s is only <strong>%2$d character length</strong>.', '%1$s is only <strong>%2$d characters length</strong>.', 'secupress' ),
-			203 => __( '%s isn\'t <strong>complex</strong> enough.', 'secupress' ),
+			200 => __( '%s is <strong>empty</strong>!', 'secupress' ),
+			201 => __( '%s is known to be <strong>too common</strong>.', 'secupress' ),
+			202 => _n_noop( '%1$s is only <strong>%2$d character length</strong>. That is obviously too short!', '%1$s is only <strong>%2$d characters length</strong>.', 'secupress' ),
+			203 => __( '%s is not <strong>complex</strong> enough.', 'secupress' ),
 			// cantfix
 			300 => __( 'I can not fix this, you have to manually update your plugins, themes and WordPress core.', 'secupress' ),
 		);

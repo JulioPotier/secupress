@@ -23,7 +23,7 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements iSecuPress_Scan
 	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if the security keys are correctly set.', 'secupress' );
-		self::$more  = __( 'WordPress provides 8 security keys, each key has its own role. You have to set these keys with long random strings, not let the default value, don\'t hardcode them.', 'secupress' );
+		self::$more  = __( 'WordPress provides 8 security keys, each key has its own purpose. These keys must be set with long random strings: don\'t keep the default value, don\'t store them in the database, don\'t hardcode them.', 'secupress' );
 	}
 
 
@@ -32,12 +32,12 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements iSecuPress_Scan
 			// good
 			0   => __( 'All keys are properly set.', 'secupress' ),
 			// bad
-			200 => __( 'The following security keys aren\'t correctly set:', 'secupress' ),
-			201 => __( '<strong>&middot; Not Set:</strong> %s.', 'secupress' ),
-			202 => __( '<strong>&middot; Default Value:</strong> %s.', 'secupress' ),
-			203 => __( '<strong>&middot; Too Short:</strong> %s.', 'secupress' ),
-			204 => __( '<strong>&middot; Hardcoded:</strong> %s.', 'secupress' ),
-			205 => __( '<strong>&middot; From DB:</strong> %s.', 'secupress' ),
+			200 => __( 'The following security keys are not set correctly:', 'secupress' ),
+			201 => _n_noop( '<strong>&middot; Not Set:</strong> %s.',       '<strong>&middot; Not Set:</strong> %s.',       'secupress' ),
+			202 => _n_noop( '<strong>&middot; Default Value:</strong> %s.', '<strong>&middot; Default Value:</strong> %s.', 'secupress' ),
+			203 => _n_noop( '<strong>&middot; Too Short:</strong> %s.',     '<strong>&middot; Too Short:</strong> %s.',     'secupress' ),
+			204 => _n_noop( '<strong>&middot; Hardcoded:</strong> %s.',     '<strong>&middot; Hardcoded:</strong> %s.',     'secupress' ),
+			205 => _n_noop( '<strong>&middot; From DB:</strong> %s.',       '<strong>&middot; From DB:</strong> %s.',       'secupress' ),
 			// cantfix
 			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);
@@ -108,7 +108,7 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements iSecuPress_Scan
 			$this->add_message( 200 );
 
 			foreach ( $bad_keys as $message_id => $keys ) {
-				$this->add_message( $message_id, array( wp_sprintf_l( '%l', $keys ) ) );
+				$this->add_message( $message_id, array( count( $keys ), wp_sprintf_l( '%l', $keys ) ) );
 			}
 		}
 
