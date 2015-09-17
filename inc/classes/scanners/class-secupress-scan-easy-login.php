@@ -30,11 +30,11 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// good
-			0   => __( 'The login page seems protected by double auth or custom script.', 'secupress' ),
+			0   => __( 'The login page seems to be protected by double authentication or a custom script.', 'secupress' ),
 			// warning
 			100 => __( 'Unable to create a user to test the login authentication system.', 'secupress' ),
 			// bad
-			200 => __( 'Your login system is <strong>not strong enough</strong>, you need a <strong>two authentication system</strong>.', 'secupress' ),
+			200 => __( 'Your login system is <strong>not strong enough</strong>, you need a <strong>double authentication system</strong>.', 'secupress' ),
 			201 => __( 'The registration page is <strong>not protected</strong> from bots.', 'secupress' ),
 			// cantfix
 			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
@@ -55,7 +55,7 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 			'user_login' => $temp_login,
 			'user_pass'  => $temp_pass,
 			'user_email' => 'secupress_no_mail@fakemail.' . time(),
-			'role'       => 'secupress_no_role_' . time(),			//// Pourquoi utiliser un role qui n'existe pas ?
+			'role'       => 'secupress_no_role_' . time(),
 		) );
 
 		if ( ! is_wp_error( $temp_id ) ) {

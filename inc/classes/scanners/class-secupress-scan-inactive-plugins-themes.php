@@ -22,7 +22,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 
 	protected static function init() {
 		self::$type  = 'WordPress';
-		self::$title = __( 'Check if you got some deactivated plugins or themes.', 'secupress' );
+		self::$title = __( 'Check if you have some deactivated plugins or themes.', 'secupress' );
 		self::$more  = __( 'Even deactivated plugins or themes can potentially be exploited to some vulnerabilities.', 'secupress' );
 	}
 
