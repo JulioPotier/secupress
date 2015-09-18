@@ -96,11 +96,11 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 			$constants['FORCE_SSL_LOGIN'] = 1;
 		}
 
-		foreach( $constants as $constant => $compare ) {
+		foreach ( $constants as $constant => $compare ) {
 
 			$check = defined( $constant ) ? constant( $constant ) : null;
 
-			switch( $compare ) {
+			switch ( $compare ) {
 				case '!isset':
 					if ( isset( $check ) ) {
 						// bad

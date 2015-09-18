@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /**
  * Used to flush the .htaccess file
@@ -9,17 +9,19 @@ defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
  * @param bool $force (default: false)
  * @return void
  */
-function secupress_write_htaccess( $marker )
-{
+function secupress_write_htaccess( $marker ) {
 	if ( ! $GLOBALS['is_apache'] ) {
 		return;
 	}
 
 	$rules = '';
+
 	if ( ! function_exists( 'get_home_path' ) ) {
-		require( ABSPATH . 'wp-admin/includes/file.php' );
+		require_once( ABSPATH . 'wp-admin/includes/file.php' );
 	}
+
 	$htaccess_file = get_home_path() . '.htaccess';
+
 	if ( is_writable( $htaccess_file ) ) {
 
 		// The rules
@@ -29,8 +31,10 @@ function secupress_write_htaccess( $marker )
 
 		return true;
 	}
+
 	return false;
 }
+
 
 /**
  * Return the markers for htaccess rules
@@ -40,9 +44,9 @@ function secupress_write_htaccess( $marker )
  * @param string $function This suffix can be added
  * @return string $marker Rules that will be printed
  */
-function secupress_get_htaccess_marker( $function )
-{
+function secupress_get_htaccess_marker( $function ) {
 	$_function = 'secupress_get_htaccess_' . $function;
+
 	if ( ! function_exists( $_function ) ) {
 		return false;
 	}
@@ -62,14 +66,19 @@ function secupress_get_htaccess_marker( $function )
 	return $marker;
 }
 
+
 function secupress_get_htaccess_ban_ip() {
 	$ban_ips = get_option( SECUPRESS_BAN_IP );
+
 	if ( is_array( $ban_ips ) && count( $ban_ips ) ) {
 		$content = 'Order Deny,Allow' . PHP_EOL;
+
 		foreach ( $ban_ips as $IP => $time ) {
 			$content .= 'Deny from ' . $IP . PHP_EOL;
 		}
+
 		return $content;
 	}
+
 	return '';
 }

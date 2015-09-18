@@ -68,7 +68,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 		if ( $has_response ) {
 
 			// PHP version in headers.
-			if ( strpos( $head, phpversion() ) !== false ) {
+			if ( false !== strpos( $head, phpversion() ) ) {
 				// bad
 				$this->add_message( 200 );
 			}

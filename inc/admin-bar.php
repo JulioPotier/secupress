@@ -25,7 +25,7 @@ function secupress_admin_bar( $wp_admin_bar ) {
 		$total = secupress_get_tests();
 		$total = count( array_merge( $total['high'], $total['medium'], $total['low'] ) );
 
-		foreach( $scans as $scan ) {
+		foreach ( $scans as $scan ) {
 			if ( 'good' === $scan['status'] ) {
 				++$count;
 			}

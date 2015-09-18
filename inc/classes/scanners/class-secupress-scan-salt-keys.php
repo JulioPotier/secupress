@@ -75,7 +75,7 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements iSecuPress_Scan
 			// Check constant
 			$constant = defined( $key ) ? constant( $key ) : null;
 
-			switch( true ) {
+			switch ( true ) {
 				case is_null( $constant ) :
 					// Not Set
 					$bad_keys[201][] = '<code>' . $key . '</code>';

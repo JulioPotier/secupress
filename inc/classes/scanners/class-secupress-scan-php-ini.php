@@ -65,10 +65,10 @@ class SecuPress_Scan_PHP_INI extends SecuPress_Scan implements iSecuPress_Scan {
 		);
 		$zoz = array();
 
-		foreach( $ini_values as $name => $compare ) {
+		foreach ( $ini_values as $name => $compare ) {
 			$check = ini_get( $name );
 
-			switch( $compare ) {
+			switch ( $compare ) {
 				case '!empty':
 					if ( '' == $check ) {
 						// 200

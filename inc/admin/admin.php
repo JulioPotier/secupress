@@ -160,6 +160,7 @@ function __secupress_scanner_add_admin_css_js() {
 	);
 }
 
+
 /**
  * Add the CSS and JS files for SecuPress settings page
  *
@@ -171,12 +172,14 @@ function __secupress_settings_add_admin_css() {
 	wp_enqueue_style( 'secupress-settings-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-settings.css', null, SECUPRESS_VERSION );
 }
 
+
 /**
  * Add the CSS and JS files for SecuPress modules page
  *
  * @since 1.0
  */
 add_action( 'admin_print_styles-' . SECUPRESS_PLUGIN_SLUG . '_page_secupress_modules', '__secupress_modules_add_admin_css' );
+
 function __secupress_modules_add_admin_css() {
 	wp_enqueue_style( 'secupress-modules-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-modules.css', null, SECUPRESS_VERSION );
 }
@@ -215,9 +218,11 @@ function __secupress_reset_white_label_values_action() {
 	if ( isset( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'secupress_resetwl' ) ) {
 		secupress_reset_white_label_values( true );
 	}
+
 	wp_safe_redirect( add_query_arg( 'page', 'secupress_settings', remove_query_arg( 'page', wp_get_referer() ) ) );
 	die();
 }
+
 
 /**
  *
@@ -229,9 +234,11 @@ function __secupress_admin_post_reset_settings() {
 	if ( isset( $_GET['_wpnonce'], $_GET['module'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'secupress_reset_' . $_GET['module'] ) ) {
 		secupress_install_modules( $_GET['module'] );
 	}
+
 	wp_safe_redirect( secupress_admin_url( 'modules', $_GET['module'] ) );
 	die();
 }
+
 
 /**
  * White Label the plugin, if you need to
@@ -241,21 +248,25 @@ function __secupress_admin_post_reset_settings() {
  */
 // add_filter( 'all_plugins', '__secupress_white_label' );
 function __secupress_white_label( $plugins ) {
-	if ( secupress_is_white_label() ) {
-		// We change the plugin's header
-		$plugins[ SECUPRESS_PLUGIN_FILE ] = array(
-				'Name'			=> secupress_get_option( 'wl_plugin_name' ),
-				'PluginURI'		=> secupress_get_option( 'wl_plugin_URI' ),
-				'Version'		=> isset( $plugins[ SECUPRESS_PLUGIN_FILE ]['Version'] ) ? $plugins[ SECUPRESS_PLUGIN_FILE ]['Version'] : '',
-				'Description'	=> reset( ( secupress_get_option( 'wl_description', array() ) ) ),
-				'Author'		=> secupress_get_option( 'wl_author' ),
-				'AuthorURI'		=> secupress_get_option( 'wl_author_URI' ),
-				'TextDomain'	=> isset( $plugins[ SECUPRESS_PLUGIN_FILE ]['TextDomain'] ) ? $plugins[ SECUPRESS_PLUGIN_FILE ]['TextDomain'] : '',
-				'DomainPath'	=> isset( $plugins[ SECUPRESS_PLUGIN_FILE ]['DomainPath'] ) ? $plugins[ SECUPRESS_PLUGIN_FILE ]['DomainPath'] : '',
-			);
+	if ( ! secupress_is_white_label() ) {
+		return $plugins;
 	}
+
+	// We change the plugin's header
+	$plugins[ SECUPRESS_PLUGIN_FILE ] = array(
+		'Name'        => secupress_get_option( 'wl_plugin_name' ),
+		'PluginURI'   => secupress_get_option( 'wl_plugin_URI' ),
+		'Version'     => isset( $plugins[ SECUPRESS_PLUGIN_FILE ]['Version'] ) ? $plugins[ SECUPRESS_PLUGIN_FILE ]['Version'] : '',
+		'Description' => reset( ( secupress_get_option( 'wl_description', array() ) ) ),
+		'Author'      => secupress_get_option( 'wl_author' ),
+		'AuthorURI'   => secupress_get_option( 'wl_author_URI' ),
+		'TextDomain'  => isset( $plugins[ SECUPRESS_PLUGIN_FILE ]['TextDomain'] ) ? $plugins[ SECUPRESS_PLUGIN_FILE ]['TextDomain'] : '',
+		'DomainPath'  => isset( $plugins[ SECUPRESS_PLUGIN_FILE ]['DomainPath'] ) ? $plugins[ SECUPRESS_PLUGIN_FILE ]['DomainPath'] : '',
+	);
+
 	return $plugins;
 }
+
 
 /**
  * When you're doing an update, the constant does not contain yet your option or any value, reset and redirect!
@@ -265,6 +276,7 @@ function __secupress_white_label( $plugins ) {
 // add_action( 'admin_init', '__secupress_check_no_empty_name', 11 ); ////
 function __secupress_check_no_empty_name() {
 	$wl_plugin_name = trim( secupress_get_option( 'wl_plugin_name' ) );
+
 	if ( empty( $wl_plugin_name ) ) {
 		secupress_reset_white_label_values( false );
 		wp_safe_redirect( $_SERVER['REQUEST_URI'] );
@@ -272,27 +284,31 @@ function __secupress_check_no_empty_name() {
 	}
 }
 
+
 /**
  * This function will force the direct download of the plugin's options, compressed.
  *
  * @since 1.0
  */
 add_action( 'admin_post_secupress_export', '__secupress_do_options_export' );
+
 function __secupress_do_options_export() {
 	if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress_export' ) ) {
 		wp_nonce_ays( '' );
 	}
 
 	$filename = sprintf( 'secupress-settings-%s-%s.txt', date( 'Y-m-d' ), uniqid() );
-	$gz = 'gz' . strrev( 'etalfed' );
-	$options = $gz//;
+	$gz       = 'gz' . strrev( 'etalfed' );
+	$options  = $gz//;
 	( serialize( get_option( SECUPRESS_SETTINGS_SLUG ) ), 1 ); // do not use secupress_get_option() here
+
 	nocache_headers();
 	@header( 'Content-Type: text/plain' );
 	@header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
 	@header( 'Content-Transfer-Encoding: binary' );
 	@header( 'Content-Length: ' . strlen( $options ) );
 	@header( 'Connection: close' );
+
 	echo $options;
 	exit();
 }
@@ -304,18 +320,23 @@ function __secupress_do_options_export() {
  * @since 1.0
  */
 add_filter( 'http_request_args', '__secupress_add_own_ua', 10, 3 );
+
 function __secupress_add_own_ua( $r, $url ) {
-	if ( strpos( $url, 'secupress.fr' ) !== false ) {
+	if ( false !== strpos( $url, 'secupress.fr' ) ) {
 		$r['user-agent'] = secupress_user_agent( $r['user-agent'] );
 	}
+
 	return $r;
 }
 
+
 add_filter( 'registration_errors', '__secupress_registration_test_errors', PHP_INT_MAX, 2 );
+
 function __secupress_registration_test_errors( $errors, $sanitized_user_login ) {
-	if ( ! $errors->get_error_code() && strpos( $sanitized_user_login, 'secupress' ) !== false ) {
+	if ( ! $errors->get_error_code() && false !== strpos( $sanitized_user_login, 'secupress' ) ) {
 		set_transient( 'secupress_registration_test', 'failed', HOUR_IN_SECONDS );
 		$errors->add( 'secupress_registration_test', 'secupress_registration_test_failed' );
 	}
+
 	return $errors;
 }

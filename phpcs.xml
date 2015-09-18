@@ -4,7 +4,7 @@
 
 	<arg name="extensions" value="php"/>
 
-	<file>inc/admin/options.php</file>
+	<file>.</file>
 
 	<exclude-pattern>*.js</exclude-pattern>
 
@@ -14,8 +14,9 @@
 		<exclude name="Generic.WhiteSpace.ScopeIndent.IncorrectExact"/>
 		<exclude name="PhpCompatibility.PHP.DefaultTimezoneRequired"/>
 		<exclude name="Squiz.WhiteSpace.SuperfluousWhitespace.EmptyLines"/>
-		<exclude name="WordPress.Files.FileName"/>
 		<exclude name="WordPress.Arrays.ArrayDeclaration"/>
+		<exclude name="WordPress.Classes.ValidClassName"/>
+		<exclude name="WordPress.Files.FileName"/>
 		<exclude name="WordPress.Variables.GlobalVariables"/>
 		<exclude name="WordPress.VIP"/>
 		<exclude name="WordPress.WP.EnqueuedResources"/>

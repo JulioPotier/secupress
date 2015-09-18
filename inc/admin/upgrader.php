@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /*
  * Tell WP what to do when admin is loaded aka upgrader
@@ -7,8 +7,8 @@ defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
  * @since 1.0
  */
 add_action( 'admin_init', 'secupress_upgrader' );
-function secupress_upgrader()
-{
+
+function secupress_upgrader() {
 	// Grab some infos
 	$actual_version = secupress_get_option( 'version' );
 	// You can hook the upgrader to trigger any action when WP secupress is upgraded
@@ -35,17 +35,15 @@ function secupress_upgrader()
 		}
 
 		update_option( SECUPRESS_SETTINGS_SLUG, $options );
-	} else {
-		if ( empty( $_POST ) && secupress_valid_key() ) {
-			secupress_check_key( 'transient_30' );
-		}
+	} elseif ( empty( $_POST ) && secupress_valid_key() ) {
+		secupress_check_key( 'transient_30' );
 	}
 	/** This filter is documented in inc/admin-bar.php */
-	if ( ! secupress_valid_key() && current_user_can( apply_filters( 'secupress_capacity', 'manage_options' ) ) &&
-		( ! isset( $_GET['page'] ) || 'secupress' != $_GET['page'] ) ) {
+	if ( ! secupress_valid_key() && current_user_can( apply_filters( 'secupress_capacity', 'manage_options' ) ) && ( ! isset( $_GET['page'] ) || 'secupress' != $_GET['page'] ) ) {
 		add_action( 'admin_notices', 'secupress_need_api_key' );
 	}
 }
+
 
 /* BEGIN UPGRADER'S HOOKS */
 
@@ -55,6 +53,7 @@ function secupress_upgrader()
  * @since 1.0
  */
 add_action( 'wp_secupress_first_install', 'secupress_install_modules' );
+
 function secupress_install_modules( $module = 'all' ) {
 	if ( 'all' === $module ) {
 		// Generate an random key
@@ -66,19 +65,21 @@ function secupress_install_modules( $module = 'all' ) {
 		// Create Options
 		add_option( SECUPRESS_SETTINGS_SLUG,
 			array(
-				
+
 			)
 		);
 	}
+
 	if ( 'all' === $module || 'users_login' === $module ) {
 		update_option( 'secupress_users_login_settings',
 			array(
-				'plugin_double_auth'	=> '-1',
-				'plugin_bad_logins'		=> array( 'limitloginattempts', 'bannonexistsuser' )
+				'plugin_double_auth' => '-1',
+				'plugin_bad_logins'  => array( 'limitloginattempts', 'bannonexistsuser' )
 			)
 		);
 	}
 }
+
 
 /**
  * What to do when secupress is updated, depending on versions
@@ -86,8 +87,8 @@ function secupress_install_modules( $module = 'all' ) {
  * @since 1.0
  */
 add_action( 'wp_secupress_upgrade', 'secupress_new_upgrade', 10, 2 );
-function secupress_new_upgrade( $wp_secupress_version, $actual_version )
-{
-	
+
+function secupress_new_upgrade( $wp_secupress_version, $actual_version ) {
+	//
 }
 /* END UPGRADER'S HOOKS */

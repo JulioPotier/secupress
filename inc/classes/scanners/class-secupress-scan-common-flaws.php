@@ -84,7 +84,7 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements iSecuPress_S
 		}
 
 		// Shellshock - http://plugins.svn.wordpress.org/shellshock-check/trunk/shellshock-check.php
-		if ( strtoupper( substr( PHP_OS, 0, 3 ) ) !== 'WIN' ) {
+		if ( 'WIN' !== strtoupper( substr( PHP_OS, 0, 3 ) ) ) {
 			++$nbr_tests;
 
 			$env = array( 'SHELL_SHOCK_TEST' => '() { :;}; echo VULNERABLE' );
@@ -100,7 +100,7 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements iSecuPress_S
 			$output = isset( $pipes[1] ) ? stream_get_contents( $pipes[1] ) : 'error';
 			proc_close( $p );
 
-			if ( strpos( $output, 'VULNERABLE' ) === false ) {
+			if ( false === strpos( $output, 'VULNERABLE' ) ) {
 				// good
 			} elseif ( 'error' === $output ) {
 				// warning

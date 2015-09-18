@@ -26,7 +26,7 @@ function secupress_is_plugin_active_for_network( $plugin )
 		return false;
 	}
 
-	$plugins = get_site_option( 'active_sitewide_plugins');
+	$plugins = get_site_option( 'active_sitewide_plugins' );
 
 	return isset( $plugins[ $plugin ] );
 }
@@ -39,10 +39,10 @@ function secupress_is_submodule_active( $submodule, $module = null ) {
  * @return (-1)/(bool) -1 = every role is affected, true = the user's role is affected, false = the user's role isn't affected
  */
 function secupress_is_affected_role( $module, $submodule, $user ) {
-    $roles = secupress_get_module_option( $submodule . '_affected_role', array(), $module );
-    if ( ! $roles ) {
-    	return -1;
-    } else {
+	$roles = secupress_get_module_option( $submodule . '_affected_role', array(), $module );
+	if ( ! $roles ) {
+		return -1;
+	} else {
 	    return is_a( $user, 'WP_User' ) && user_can( $user, 'exist' ) && ! count( (array) array_intersect( $roles, $user->roles ) );
 	}
 }
@@ -80,15 +80,14 @@ function secupress_add_settings_section( $title, $args = null ) {
 	if ( (bool) $args['with_roles'] ) {
 		$actions .= '<button type="button" class="hide-if-no-js no-button button-actions-title" for="_affected_role">' . __( 'Roles', 'secupress' ) . '<span class="dashicons dashicons-arrow-right"></span></button>';
 	}
-	
+
 	do_action( 'before_section_' . $sectionnow );
-	
+
 	add_settings_section( 'module_' . $modulenow . '_' . $sectionnow, $title . $actions, '__secupress_module_switch_description', 'module_' . $modulenow . '_' . $sectionnow );
-	
+
 	if ( (bool) $args['with_roles'] ) {
-		secupress_add_settings_field( 
+		secupress_add_settings_field(
 			'<span class="dashicons dashicons-groups"></span> ' . __( 'Affected Roles', 'secupress' ),
-			
 			array(	'description' 	=> __( 'Which roles will be affected by this module?', 'secupress' ),
 					'field_type' 	=> 'field',
 					'name' 			=> 'affected_role',
@@ -107,13 +106,13 @@ function secupress_add_settings_section( $title, $args = null ) {
 					'type'         => 'helper_description',
 					'name'         => $pluginnow . '_affected_role',
 					'description'  => __( 'Future roles will be automatically checked.', 'secupress' )
-				),					
+				),
 				array(
 					'type'         => 'helper_warning',
 					'name'         => $pluginnow . '_affected_role',
 					'class'		   => 'hide-if-js',
 					'description'  => __( 'Select 1 role minimum', 'secupress' )
-				),		
+				),
 			)
 		);
 	}
@@ -123,7 +122,7 @@ function secupress_add_settings_field( $title, $args, $fields ) {
 	global $sectionnow, $modulenow, $pluginnow;
 
 	$args = wp_parse_args( $args, array( 'name' => '', 'field_type' => 'field', 'description' => '' ) );
-	add_settings_field( 
+	add_settings_field(
 		'module_' . $modulenow . '_' . $pluginnow . '_' . $args['name'],
 		$title . __secupress_description_module( $args['description'] ),
 		'secupress_' . $args['field_type'],
