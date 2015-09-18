@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /**
  * Remove a single file or a folder recursively
@@ -10,8 +10,7 @@ defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
  * @param array $dirs_to_preserve (default: array()) Dirs that should not be deleted
  * @return void
  */
-function secupress_rrmdir( $dir, $dirs_to_preserve = array() )
-{
+function secupress_rrmdir( $dir, $dirs_to_preserve = array() ) {
 	$dir = rtrim( $dir, '/' );
 
 	/**
@@ -32,12 +31,13 @@ function secupress_rrmdir( $dir, $dirs_to_preserve = array() )
 	if ( $dirs = glob( $dir . '/*', GLOB_NOSORT ) ) {
 
 		$keys = array();
-		foreach( $dirs_to_preserve as $dir_to_preserve ) {
+		foreach ( $dirs_to_preserve as $dir_to_preserve ) {
 			$matches = preg_grep( "#^$dir_to_preserve$#" , $dirs );
 			$keys[] = reset( $matches );
 		}
 
 		$dirs = array_diff( $dirs, array_filter( $keys ) );
+		
 		foreach ( $dirs as $dir ) {
 			if ( is_dir( $dir ) ) {
 				secupress_rrmdir( $dir, $dirs_to_preserve );
@@ -47,7 +47,7 @@ function secupress_rrmdir( $dir, $dirs_to_preserve = array() )
 		}
 	}
 
-	@rmdir($dir);
+	@rmdir( $dir );
 
 	/**
 	 * Fires before a file/directory cache was deleted
@@ -60,6 +60,7 @@ function secupress_rrmdir( $dir, $dirs_to_preserve = array() )
 	do_action( 'after_secupress_rrmdir', $dir, $dirs_to_preserve );
 }
 
+
 /**
  * Directory creation based on WordPress Filesystem
  *
@@ -68,16 +69,18 @@ function secupress_rrmdir( $dir, $dirs_to_preserve = array() )
  * @param string $dir The path of directory will be created
  * @return bool
  */
-function secupress_mkdir( $dir )
-{
+function secupress_mkdir( $dir ) {
 	global $wp_filesystem;
+
 	if ( ! $wp_filesystem ) {
 		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php' );
 		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php' );
+
 		$wp_filesystem = new WP_Filesystem_Direct( new StdClass() );
 	}
 
 	$chmod = defined( 'FS_CHMOD_DIR' ) ? FS_CHMOD_DIR : ( fileperms( WP_CONTENT_DIR ) & 0777 | 0755 );
+
 	return $wp_filesystem->mkdir( $dir, $chmod );
 }
 
@@ -88,14 +91,14 @@ function secupress_mkdir( $dir )
  *
  * @source wp_mkdir_p() in /wp-includes/functions.php
  */
-function secupress_mkdir_p( $target )
-{
+function secupress_mkdir_p( $target ) {
 	// from php.net/mkdir user contributed notes
 	$target = str_replace( '//', '/', $target );
 
 	// safe mode fails with a trailing slash under certain PHP versions.
-	$target = rtrim($target, '/'); // Use rtrim() instead of untrailingslashit to avoid formatting.php dependency.
-	if ( empty($target) ) {
+	$target = rtrim( $target, '/' );
+
+	if ( empty( $target ) ) {
 		$target = '/';
 	}
 
@@ -111,7 +114,7 @@ function secupress_mkdir_p( $target )
 	}
 
 	// If the above failed, attempt to create the parent node, then try again.
-	if ( ( $target != '/' ) && ( secupress_mkdir_p( dirname( $target ) ) ) ) {
+	if ( ( $target !== '/' ) && ( secupress_mkdir_p( dirname( $target ) ) ) ) {
 		return secupress_mkdir_p( $target );
 	}
 
@@ -128,25 +131,30 @@ function secupress_mkdir_p( $target )
  * @param string $file_content The content that will already exists in the file
  * @return bool
  */
-function secupress_put_content( $file, $marker, $new_content )
-{
+function secupress_put_content( $file, $marker, $new_content ) {
 	global $wp_filesystem;
+	
 	if ( ! $wp_filesystem ) {
 		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php' );
 		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php' );
+		
 		$wp_filesystem = new WP_Filesystem_Direct( new StdClass() );
 	}
+	
 	// Get content of file
-	$ftmp = file_get_contents( $file );
+	$ftmp         = file_get_contents( $file );
 	$file_content = preg_replace( '/# BEGIN SecuPress ' . $marker . '(.*)# END SecuPress/isU', '', $ftmp );
+
 	if ( ! empty( $new_content ) ) {
-		$content = '# BEGIN SecuPress ' . $marker . PHP_EOL;
+		$content  = '# BEGIN SecuPress ' . $marker . PHP_EOL;
 		$content .= trim( $new_content ) . PHP_EOL;
 		$content .= '# END SecuPress' . PHP_EOL;
 		$content .= $file_content;
 		$file_content = $content;
 	}
+	
 	$chmod = defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : 0644;
+	
 	return $wp_filesystem->put_contents( $file, $file_content, $chmod );
 }
 
@@ -161,17 +169,19 @@ function secupress_put_content( $file, $marker, $new_content )
  * @param string $file_content The content that will already exists in the file
  * @return bool
  */
-function secupress_remove_content( $file, $marker, $file_content )
-{
+function secupress_remove_content( $file, $marker, $file_content ) {
 	global $wp_filesystem;
+	
 	if ( ! $wp_filesystem ) {
 		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php' );
 		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php' );
+		
 		$wp_filesystem = new WP_Filesystem_Direct( new StdClass() );
 	}
 
-	$chmod = defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : 0644;
+	$chmod        = defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : 0644;
 	$file_content = str_replace( $new_content, '', $file_content );
+	
 	return $wp_filesystem->put_contents( $file, $file_content, $chmod );
 }
 
@@ -186,8 +196,7 @@ function secupress_remove_content( $file, $marker, $file_content )
  * @param string $file_content The content that will already exists in the file
  * @return bool
  */
-function secupress_replace_content( $file, $marker, $new_content, $file_content )
-{
+function secupress_replace_content( $file, $marker, $new_content, $file_content ) {
 	secupress_remove_content( $file, $marker, $file_content );
 	secupress_add_content( $file, $new_content, $file_content );
 }
@@ -200,9 +209,8 @@ function secupress_replace_content( $file, $marker, $new_content, $file_content 
  *
  * @return string|bool The path of wp-config.php file or false
  */
-function secupress_find_wpconfig_path()
-{
-	$config_file = ABSPATH . 'wp-config.php';
+function secupress_find_wpconfig_path() {
+	$config_file     = ABSPATH . 'wp-config.php';
 	$config_file_alt = dirname( ABSPATH ) . '/wp-config.php';
 
 	if ( file_exists( $config_file ) ) {
