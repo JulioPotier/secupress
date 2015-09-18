@@ -88,7 +88,7 @@ function secupress_renew_all_boxes( $uid = null, $keep_this = array() ) {
  */
 function secupress_renew_box( $function, $uid = 0 ) {
 	global $current_user;
-	
+
 	$uid    = $uid == 0 ? $current_user->ID : $uid;
 	$actual = get_user_meta( $uid, 'secupress_boxes', true );
 
@@ -125,11 +125,11 @@ function secupress_dismiss_box( $function ) {
 function secupress_is_white_label() {
 	$names   = array( 'wl_plugin_name', 'wl_plugin_URI', 'wl_description', 'wl_author', 'wl_author_URI' );
 	$options = '';
-	
+
 	foreach ( $names as $value ) {
 		$options .= ! is_array( secupress_get_option( $value ) ) ? secupress_get_option( $value ) : reset( ( secupress_get_option( $value ) ) );
 	}
-	
+
 	return false; ////
 	return 'a509cac94e0cd8238b250074fe802b90' != md5( $options ); ////
 }
@@ -156,7 +156,7 @@ function secupress_reset_white_label_values( $hack_post ) {
 		// hack $_POST to force refresh of files, sorry
 		$_POST['page'] = 'secupress';
 	}
-	
+
 	update_option( SECUPRESS_SETTINGS_SLUG, $options );
 }
 
@@ -195,7 +195,7 @@ function secupress_deactivate_submodule( $module, $plugins ) {
 	if ( ! is_array( $plugins ) ) {
 		$plugins = (array) $plugins;
 	}
-	
+
 	foreach ( $plugins as $plugin ) {
 		$plugin_file = sanitize_key( $plugin );
 
@@ -211,22 +211,22 @@ function secupress_deactivate_submodule( $module, $plugins ) {
 			}
 		}
 	}
-} 
+}
 
 function secupress_activate_module( $module, $settings ) {
 	global $secupress_modules; ////
-	
+
 	if ( ! function_exists( "__secupress_{$module}_settings_callback" ) || ! isset( $secupress_modules[ $module ] ) ) {
 		secupress_die( sprintf( __( 'Unknow Module %s', 'secupress' ), esc_html( $module ) ) );
 	}
-	
+
 	$module_options = get_option( "secupress_{$module}_settings" );
 	$module_options = array_merge( $module_options, $settings );
-	
+
 	call_user_func( "__secupress_{$module}_settings_callback", $module_options );
-	
+
 	update_option( "secupress_{$module}_settings", $module_options );
-	
+
 	if ( ! defined( 'DOING_AJAX' ) ) {
 		__secupress_scanner_ajax( $module );
 	}
@@ -240,10 +240,10 @@ function secupress_activate_submodule( $module, $plugin, $incompatibles_modules 
 		if ( ! empty( $incompatibles_modules ) ) {
 			secupress_deactivate_submodule( $module, $incompatibles_modules );
 		}
-		
+
 		$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
 		$active_plugins[ $module ][] = $plugin_file;
-		
+
 		update_site_option( SECUPRESS_ACTIVE_SUBMODULES, $active_plugins );
 		require_once( SECUPRESS_MODULES_PATH . $module . '/plugins/' . $plugin_file . '.php' );
 		secupress_add_module_notice( $module, $plugin_file, 'activation' );
@@ -255,7 +255,7 @@ function secupress_activate_submodule( $module, $plugin, $incompatibles_modules 
 
 function secupress_add_module_notice( $module, $submodule, $action ) {
 	global $current_user;
-	
+
 	$current        = get_site_transient( "secupress_module_{$action}_{$current_user->ID}" );
 	$submodule_data = secupress_get_module_data( $module , $submodule );
 	$current[]      = $submodule_data['Name'];
@@ -274,13 +274,13 @@ function secupress_get_module_data( $module, $submodule ) {
 		'Description' => 'Description',
 		'Author'      => 'Author',
 	);
-	
+
 	$file = SECUPRESS_MODULES_PATH . $module . '/plugins/' . $submodule . '.php';
 
 	if ( file_exists( $file ) ) {
 		return get_file_data( $file, $default_headers, 'module' );
 	}
-	
+
 	return array();
 }
 
@@ -299,7 +299,7 @@ function secupress_generate_key() {
 
 function secupress_generate_backupcodes() {
 	$keys = array();
-	
+
 	for ( $k = 1; $k <= 10; $k++ ) { // 10 codes
 		$max = 99999999;
 		$keys[ $k ] = str_pad( wp_rand( floor( $max / 10 ), $max ), strlen( (string) $max ), '0', STR_PAD_RIGHT );
@@ -322,13 +322,13 @@ function secupress_generate_password( $length = 12, $args = array() ) {
 	$chars['custom']  = $args['custom'];
 
 	$usable_chars = '';
-	
+
 	foreach ( $args as $key => $arg ) {
 		$usable_chars .= $args[ $key ] ? $chars[ $key ] : '';
 	}
 
 	$password = '';
-	
+
 	for ( $i = 0; $i < $length; $i++ ) {
 		$password .= substr( $usable_chars, wp_rand( 0, strlen( $usable_chars ) - 1 ), 1 );
 	}
@@ -348,7 +348,7 @@ function secupress_load_settings( $module, $plugin ) {
 
 function secupress_manage_affected_roles( &$settings, $pluginnow ) {
 	if ( isset( $settings[ 'hidden_' . $pluginnow . '_affected_role' ] ) ) {
-		$settings[ $pluginnow . '_affected_role'] = array_diff( $settings[ 'hidden_' . $pluginnow . '_affected_role' ], $settings[ $pluginnow . '_affected_role' ] );
+		$settings[ $pluginnow . '_affected_role' ] = array_diff( $settings[ 'hidden_' . $pluginnow . '_affected_role' ], $settings[ $pluginnow . '_affected_role' ] );
 	}
 
 	unset( $settings[ 'hidden_' . $pluginnow . '_affected_role' ] ); // not actual option
@@ -365,18 +365,18 @@ function secupress_get_ip() {
 		'HTTP_FORWARDED',
 		'REMOTE_ADDR',
 	);
-	
+
 	foreach ( $keys as $key ) {
 		if ( array_key_exists( $key, $_SERVER ) ) {
 			$ip = explode( ',', $_SERVER[ $key ] );
 			$ip = end( $ip );
 
-			if ( filter_var( $ip, FILTER_VALIDATE_IP ) !== false ) {
+			if ( false !== filter_var( $ip, FILTER_VALIDATE_IP ) ) {
 				return apply_filters( 'secupress_get_ip', $ip );
 			}
 		}
 	}
-	
+
 	return apply_filters( 'secupress_default_ip', '0.0.0.0' );
 }
 
@@ -389,15 +389,15 @@ function secupress_ban_ip( $IP = null, $die = true ) {
 	if ( ! is_array( $ban_ips ) ) {
 		$ban_ips = array();
 	}
-	
+
 	$ban_ips[ $IP ] = time();
-	
+
 	update_option( SECUPRESS_BAN_IP, $ban_ips );
-	
+
 	if ( apply_filters( 'write_ban_in_htaccess', true ) ) {
 		secupress_write_htaccess( 'ban_ip' );
 	}
-	
+
 	if ( $die ) {
 		$msg = sprintf( __( 'Your IP address %1$s have been banned for %2$d minutes, please do not retry until.', 'secupress' ), '<code>' . esc_html( $IP ) . '</code>', '<strong>' . $bad_logins_time_ban . '</strong>' );
 		secupress_die( $msg );
