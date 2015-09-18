@@ -9,10 +9,10 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @param (string)$page : the last word of the secupress page slug
  * @param (string)$module : the required module
 */
-function secupress_admin_url( $page, $module = false )
-{
+function secupress_admin_url( $page, $module = false ) {
 	$module = $module ? '&module=' . sanitize_key( $module ) : '';
 	$page = str_replace( '&', '_', $page );
+
 	return admin_url( 'admin.php?page=secupress_' . sanitize_key( $page ) . $module, 'admin' );
 }
 
@@ -25,9 +25,11 @@ function secupress_admin_url( $page, $module = false )
 */
 function secupress_get_module_title( $module = false ) {
 	$module = $module ? $module : $GLOBALS['modulenow'];
+
 	if ( isset( $GLOBALS['secupress_modules'][ $module ] ) ) {
 		return $GLOBALS['secupress_modules'][ $module ]['title'];
 	}
+
 	return '';
 }
 
@@ -39,7 +41,7 @@ function secupress_get_module_title( $module = false ) {
  * @param (string)$text : the last word of the secupress page slug
 */
 function __secupress_description_module( $text = '' ) {
-	if ( '' != $text ) {
+	if ( '' !== $text ) {
 		return '<p class="description">' . $text . '</p>';
 	}
 }
