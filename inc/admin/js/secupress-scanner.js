@@ -258,7 +258,7 @@ jQuery( document ).ready( function( $ ) {
 			action = $this.siblings( "select" ).val(),
 			$rows  = $this.parents( ".table-prio-all" ).find( "tbody .secupress-check-column :checked" ).parents( ".secupress-item-all" );
 
-		if ( action === "-1" ) {
+		if ( action === "-1" || ! $rows.length ) {
 			return;
 		}
 
@@ -280,6 +280,7 @@ jQuery( document ).ready( function( $ ) {
 					.addClass( "dashicons-shield secupress-dashicon-color-good" );//// Et c'est tout ? On ne sauvegarde pas ce statut quelque part ?
 				break;
 		}
+
 		//secupress_maj_score( true );
 	} );
 
