@@ -37,7 +37,7 @@ function secupress_rrmdir( $dir, $dirs_to_preserve = array() ) {
 		}
 
 		$dirs = array_diff( $dirs, array_filter( $keys ) );
-		
+
 		foreach ( $dirs as $dir ) {
 			if ( is_dir( $dir ) ) {
 				secupress_rrmdir( $dir, $dirs_to_preserve );
@@ -133,14 +133,14 @@ function secupress_mkdir_p( $target ) {
  */
 function secupress_put_content( $file, $marker, $new_content ) {
 	global $wp_filesystem;
-	
+
 	if ( ! $wp_filesystem ) {
 		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php' );
 		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php' );
-		
+
 		$wp_filesystem = new WP_Filesystem_Direct( new StdClass() );
 	}
-	
+
 	// Get content of file
 	$ftmp         = file_get_contents( $file );
 	$file_content = preg_replace( '/# BEGIN SecuPress ' . $marker . '(.*)# END SecuPress/isU', '', $ftmp );
@@ -152,9 +152,9 @@ function secupress_put_content( $file, $marker, $new_content ) {
 		$content .= $file_content;
 		$file_content = $content;
 	}
-	
+
 	$chmod = defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : 0644;
-	
+
 	return $wp_filesystem->put_contents( $file, $file_content, $chmod );
 }
 
@@ -171,17 +171,17 @@ function secupress_put_content( $file, $marker, $new_content ) {
  */
 function secupress_remove_content( $file, $marker, $file_content ) {
 	global $wp_filesystem;
-	
+
 	if ( ! $wp_filesystem ) {
 		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php' );
 		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php' );
-		
+
 		$wp_filesystem = new WP_Filesystem_Direct( new StdClass() );
 	}
 
 	$chmod        = defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : 0644;
 	$file_content = str_replace( $new_content, '', $file_content );
-	
+
 	return $wp_filesystem->put_contents( $file, $file_content, $chmod );
 }
 
