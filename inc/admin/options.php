@@ -81,7 +81,7 @@ function secupress_create_menus() {
 	$scans = secupress_get_scanners();
 
 	if ( $scans ) {
-		foreach( $scans as $scan ) {
+		foreach ( $scans as $scan ) {
 			if ( 'bad' === $scan['status'] ) {
 				++$count;
 			}
@@ -157,7 +157,7 @@ function __secupress_global_settings() {
 		<form action="options.php" method="post" id="secupress_settings">
 			<?php submit_button(); ?>
 			<?php settings_fields( 'secupress_settings' ); ?>
-			<?php foreach( $setting_modules as $setting_module ) { ?>
+			<?php foreach ( $setting_modules as $setting_module ) { ?>
 				<div class="secupress_setting_block">
 					<?php do_settings_sections( 'secupress_' . $setting_module ); ?>
 				</div>
@@ -260,7 +260,7 @@ function __secupress_scanner() {
 		<?php
 		secupress_admin_heading( __( 'Scanners', 'secupress' ) );
 
-		foreach( $boxes as $id => $box ) {
+		foreach ( $boxes as $id => $box ) {
 			secupress_sidebox( array( 'id' => $id, 'title' => $box[0], 'content' => $box[1], 'context' => 'top' ) );
 		}
 
@@ -506,7 +506,7 @@ function secupress_main_scan() {
 function secupress_status( $status ) {
 	$template = '<span class="dashicons dashicons-shield-alt secupress-dashicon secupress-dashicon-color-%2$s" aria-hidden="true"></span> <span class="secupress-status">%1$s</span>';
 
-	switch( $status ):
+	switch ( $status ):
 		case 'bad':
 			return wp_sprintf( $template, __( 'Bad', 'secupress' ), 'bad' );
 		case 'good':
@@ -551,7 +551,7 @@ function secupress_field( $args ) {
 
 		$args['label_for'] = isset( $args['label_for'] )   ? $args['label_for'] : '';
 		$args['name']      = isset( $args['name'] )        ? $args['name'] : $args['label_for'];
-		$parent            = isset( $args['parent'] )      ? 'data-parent="' . sanitize_html_class( $args['parent' ] ). '"' : null;
+		$parent            = isset( $args['parent'] )      ? 'data-parent="' . sanitize_html_class( $args['parent'] ). '"' : null;
 		$placeholder       = isset( $args['placeholder'] ) ? 'placeholder="'. $args['placeholder'].'" ' : '';
 		$label             = isset( $args['label'] )       ? $args['label'] : '';
 		$required          = isset( $args['required'] )    ? ' data-required="required" data-aria-required="true"' : '';
@@ -577,7 +577,7 @@ function secupress_field( $args ) {
 			echo '<fieldset class="fieldname-' . sanitize_html_class( $args['name'] ) . ' fieldtype-' . sanitize_html_class( $args['type'] ) . '">';
 		}
 
-		switch( $args['type'] ) {
+		switch ( $args['type'] ) {
 			case 'number' :
 			case 'email' :
 			case 'text' :
@@ -654,7 +654,7 @@ function secupress_field( $args ) {
 				<label>
 					<select size="<?php echo $args['size']; ?>" multiple="multiple" id="<?php echo $args['name']; ?>" for="<?php echo $args['name']; ?>" name="secupress_<?php echo $modulenow; ?>_settings[<?php echo $args['name']; ?>]"<?php echo $readonly; ?>>
 						<?php
-						foreach( $args['options'] as $val => $title ) {
+						foreach ( $args['options'] as $val => $title ) {
 							if ( '_' === $val[0] ) {
 								$title .= ' (' . __( 'Premium', 'secupress' ) . ')';
 							}
@@ -678,7 +678,7 @@ function secupress_field( $args ) {
 				?>
 				<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
 				<?php
-				foreach( $roles as $val => $title ) {
+				foreach ( $roles as $val => $title ) {
 					?>
 					<label>
 						<input type="checkbox" name="secupress_<?php echo $modulenow; ?>_settings[<?php echo $args['name']; ?>][]" value="<?php echo $val; ?>" <?php checked( ! in_array( $val, secupress_get_module_option( $args['name'], array() ) ) ); ?>> <?php echo $title; ?>
@@ -692,7 +692,7 @@ function secupress_field( $args ) {
 
 				<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
 				<?php
-				foreach( $args['options'] as $val => $title ) {
+				foreach ( $args['options'] as $val => $title ) {
 					if ( '_' === $val[0] ) {
 						$title .= ' (' . __( 'Premium', 'secupress' ) . ')';
 					}
@@ -709,7 +709,7 @@ function secupress_field( $args ) {
 
 				<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
 				<?php
-				foreach( $args['options'] as $val => $title ) {
+				foreach ( $args['options'] as $val => $title ) {
 					if ( '_' === $val[0] ) {
 						$title .= ' (' . __( 'Premium', 'secupress' ) . ')';
 					}
@@ -772,7 +772,7 @@ function secupress_field( $args ) {
 
 			case 'helper_warning' :
 
-				$description = isset( $args['description'] ) ? '<p class="description warning ' . $class . '"><b>' . __( 'Warning: ', 'secupress') . '</b>' . $args['description'] . '</p>' : '';
+				$description = isset( $args['description'] ) ? '<p class="description warning ' . $class . '"><b>' . __( 'Warning: ', 'secupress' ) . '</b>' . $args['description'] . '</p>' : '';
 				echo apply_filters( 'secupress_help', $description, $args['name'], 'warning' );
 
 				break;
@@ -795,7 +795,7 @@ function secupress_field( $args ) {
 
 		}
 
-		if( ! isset( $args['fieldset'] ) || 'end' == $args['fieldset'] ) {
+		if ( ! isset( $args['fieldset'] ) || 'end' == $args['fieldset'] ) {
 			echo '</fieldset>';
 		}
 
