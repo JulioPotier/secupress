@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<ruleset name="SecuPress">
+	<description>Security plugin by WP Media.</description>
+
+	<arg name="extensions" value="php"/>
+
+	<file>inc/admin/options.php</file>
+
+	<exclude-pattern>*.js</exclude-pattern>
+
+	<rule ref="WordPress">
+		<exclude name="Generic.PHP.NoSilencedErrors.Discouraged"/>
+		<exclude name="Generic.WhiteSpace.ScopeIndent.Incorrect"/>
+		<exclude name="Generic.WhiteSpace.ScopeIndent.IncorrectExact"/>
+		<exclude name="PhpCompatibility.PHP.DefaultTimezoneRequired"/>
+		<exclude name="Squiz.WhiteSpace.SuperfluousWhitespace.EmptyLines"/>
+		<exclude name="WordPress.Files.FileName"/>
+		<exclude name="WordPress.Arrays.ArrayDeclaration"/>
+		<exclude name="WordPress.Variables.GlobalVariables"/>
+		<exclude name="WordPress.VIP"/>
+		<exclude name="WordPress.WP.EnqueuedResources"/>
+		<exclude name="WordPress.WhiteSpace.ControlStructureSpacing.BlankLineAfterEnd"/>
+		<exclude name="WordPress.XSS.EscapeOutput"/>
+	</rule>
+</ruleset>
