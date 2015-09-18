@@ -12,8 +12,14 @@ Domain Path: languages
 
 Copyright 2012-2015 SecuPress
 */
+
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
-// SecuPress defines
+
+
+/*------------------------------------------------------------------------------------------------*/
+/* DEFINES ====================================================================================== */
+/*------------------------------------------------------------------------------------------------*/
+
 define( 'SECUPRESS_VERSION'               , '1.0-alpha' );
 define( 'SECUPRESS_PRIVATE_KEY'           , false );
 define( 'SECUPRESS_ACTIVE_SUBMODULES'     , 'secupress_active_submodules' );
@@ -46,6 +52,10 @@ if ( ! defined( 'SECUPRESS_LASTVERSION' ) ) {
 	define( 'SECUPRESS_LASTVERSION', '0' );
 }
 
+
+/*------------------------------------------------------------------------------------------------*/
+/* INIT ========================================================================================= */
+/*------------------------------------------------------------------------------------------------*/
 
 /*
  * Tell WP what to do when plugin is loaded
@@ -93,7 +103,7 @@ function secupress_init() {
 	}
 
 	/**
-	 * Fires when WP Rocket is correctly loaded.
+	 * Fires when SecuPress is correctly loaded.
 	  *
 	* @since 1.0
 	 */
@@ -102,30 +112,61 @@ function secupress_init() {
 
 
 /*
- * Tell WP what to do when plugin is uninstalled.
+ * Load modules.
  *
  * @since 1.0
  */
-register_uninstall_hook( SECUPRESS_FILE, 'secupress_uninstaller' );
+add_action( 'secupress_loaded', 'secupress_load_plugins' );
 
-function secupress_uninstaller() {
-	delete_option( 'secupress' );
+function secupress_load_plugins() {
+	global $secupress_modules; //// Hello you, you gonna die!
+
+	if ( $secupress_modules && is_admin() ) {
+		foreach ( $secupress_modules as $key => $module ) {
+			$file = SECUPRESS_MODULES_PATH . sanitize_key( $key ) . '/callbacks.php';
+			if ( file_exists( $file ) ) {
+				require( $file );
+			}
+		}
+	}
+
+	$modules = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
+
+	if ( $modules ) {
+		foreach ( $modules as $module => $plugins ) {
+			foreach ( $plugins as $plugin ) {
+				$file = SECUPRESS_MODULES_PATH . sanitize_key( $module ) . '/plugins/' . sanitize_key( $plugin ) . '.php';
+				if ( file_exists( $file ) ) {
+					require( $file );
+				}
+			}
+		}
+	}
 }
 
 
 /*
- * Tell WP what to do when plugin is deactivated.
+ * Make SecuPress the first plugin loaded.
  *
  * @since 1.0
  */
-register_deactivation_hook( __FILE__, 'secupress_deactivation' );
+add_action( 'secupress_loaded', 'secupress_been_first' );
 
-function secupress_deactivation() {
-	// Pause the licence.
-	wp_remote_get( SECUPRESS_WEB_MAIN . '/pause-licence.php' );
+function secupress_been_first() {
+	$active_plugins  = get_option( 'active_plugins' );
+	$plugin_basename = plugin_basename( __FILE__ );
 
+	if ( reset( $active_plugins ) != plugin_basename( __FILE__ ) ) {
+		unset( $active_plugins[ array_search( $plugin_basename, $active_plugins ) ] );
+		array_unshift( $active_plugins, $plugin_basename );
+		update_option( 'active_plugins', $active_plugins );
+	}
 }
 
+
+/*------------------------------------------------------------------------------------------------*/
+/* ACTIVATE/DEACTIVATE ========================================================================== */
+/*------------------------------------------------------------------------------------------------*/
 
 /*
  * Tell WP what to do when plugin is activated
@@ -141,41 +182,14 @@ function secupress_activation() {
 }
 
 
-add_action( 'secupress_loaded', 'secupress_load_plugins' );
+/*
+ * Tell WP what to do when plugin is deactivated.
+ *
+ * @since 1.0
+ */
+register_deactivation_hook( __FILE__, 'secupress_deactivation' );
 
-function secupress_load_plugins() {
-	global $secupress_modules;
-
-	foreach ( $secupress_modules as $key => $module ) {
-		$file = SECUPRESS_MODULES_PATH . sanitize_key( $key ) . '/callbacks.php';
-		if ( is_admin() && file_exists( $file ) ) {
-			require( $file );
-		}
-	}
-
-	$modules = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
-
-	if ( $modules ) {
-		foreach ( $modules as $module => $plugins ) {
-				foreach ( $plugins as $plugin ) {
-					$file = SECUPRESS_MODULES_PATH . sanitize_key( $module ) . '/plugins/' . sanitize_key( $plugin ) . '.php';
-					if ( file_exists( $file ) ) {
-						require( $file );
-					}
-				}
-			}
-		}
-	}
-
-add_action( 'secupress_loaded', 'secupress_been_first' );
-
-function secupress_been_first() {
-	$active_plugins  = get_option( 'active_plugins' );
-	$plugin_basename = plugin_basename( __FILE__ );
-
-	if ( reset( $active_plugins ) != plugin_basename( __FILE__ ) ) {
-		unset( $active_plugins[ array_search( $plugin_basename, $active_plugins ) ] );
-		array_unshift( $active_plugins, $plugin_basename );
-		update_option( 'active_plugins', $active_plugins );
-	}
+function secupress_deactivation() {
+	// Pause the licence.
+	wp_remote_get( SECUPRESS_WEB_MAIN . '/pause-licence.php' );
 }
