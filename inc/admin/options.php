@@ -141,11 +141,11 @@ function __secupress_global_settings() {
 	global $modulenow;
 
 	$modulenow       = 'global';
-	$setting_modules = apply_filters( 'secupress_global_settings_modules', 
-							array( 'api-key',
-								   'auto-config',
-							   ) 
-						);
+	$setting_modules = array(
+		'api-key',
+		'auto-config',
+	);
+	$setting_modules = apply_filters( 'secupress_global_settings_modules', $setting_modules );
 
 	foreach ( $setting_modules as $setting_module ) {
 		require( SECUPRESS_ADMIN_SETTINGS_MODULES . $setting_module . '.php' );
@@ -201,58 +201,75 @@ function __secupress_modules() {
 
 
 function __secupress_scanner() {
-	$times = array_filter( (array) get_option( SECUPRESS_SCAN_TIMES ) );
-	$reports = array();
+	$times        = array_filter( (array) get_option( SECUPRESS_SCAN_TIMES ) );
+	$reports      = array();
 	$last_percent = -1;
-	foreach ( $times as $time ) {
-		$replacement = 'right';
-		if ( $last_percent > -1 && $last_percent < $time['percent'] ) {
-			$replacement = 'up';
-		} else if ( $last_percent > -1 && $last_percent > $time['percent'] ) {
-			$replacement = 'down';
+
+	if ( ! empty( $times ) && is_array( $times ) ) {
+		foreach ( $times as $time ) {
+			$replacement = 'right';
+
+			if ( $last_percent > -1 && $last_percent < $time['percent'] ) {
+				$replacement = 'up';
+			}
+			else if ( $last_percent > -1 && $last_percent > $time['percent'] ) {
+				$replacement = 'down';
+			}
+
+			$last_percent = $time['percent'];
+			$date         = sprintf( __( '%s ago' ), human_time_diff( $time['time'] ) );
+
+			$reports[] = sprintf(
+				'<li data-percent="%1$d"><span class="dashicons mini dashicons-arrow-%2$s-alt2" aria-hidden="true"></span><strong>%3$s (%1$d %%)</strong> <span class="timeago">%4$s</span></li>',
+				$time['percent'], $replacement, $time['grade'], $date
+			);
 		}
-		$last_percent = $time['percent'];
-		$date = date( 'Y-m-d H:i', $time['time'] + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS ) );
-		$reports[] = sprintf( '<li data-percent="%1$d"><span class="dashicons mini dashicons-arrow-%2$s-alt2"></span><b>%3$s (%1$d %%)</b> <span class="timeago" title="%4$s">%4$s</span></li>',
-								$time['percent'], $replacement, $time['grade'], $date
-							);
 	}
 
-	$boxes = array( 'score' => array(
-						__( 'Your Score', 'secupress' ),
-						'<canvas id="status_chart" width="300" height="300"></canvas>' .
-						'<div class="score_info2">' .
-							'<span class="letter">&ndash;</span>' .
-							'<span class="percent">(0 %)</span>' .
-							'<span class="score_results"><b>Last Reports</b>:<br>' .
-								'<ul>' .
-									implode( "\n", array_reverse( $reports ) ) .
-								'</ul>' .
-							'</span>' .
-						'</div>' .
-						__( '<div class="legend"><span class="dashicons dashicons-shield-alt secupress-dashicon-color-good"></span> Good | <span class="dashicons dashicons-shield-alt secupress-dashicon-color-bad"></span> Bad | <span class="dashicons dashicons-shield-alt secupress-dashicon-color-warning"></span> Warning | <span class="dashicons dashicons-shield-alt secupress-dashicon-color-notscannedyet"></span> Not scanned yet</div>', 'secupress' ) .
-						'<span id="tweeterA" class="hidden"><br><img style="vertical-align:middle" src="https://g.twimg.com/dev/documentation/image/Twitter_logo_blue_16.png" alt=""> <i>' . __( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ) . '</i> <a class="button button-small" href="https://twitter.com/intent/tweet?via=secupress&amp;url=' . urlencode( 'http://secupress.fr&text=Wow! My website just got an A security grade using SecuPress, what about yours?' ) . '">Tweet &raquo;</a></span>'
-					),
-//					'premium' => array(
-//						'SecuPress Security Pro',
-//						__( '<img src="https://dl-web.dropbox.com/get/BAW/V3/secupress_sign.png?_subject_uid=45956904&w=AABRKI608fHD9wxoU4qXaJ3TlsmpqTO_vpZT969iKmlrbw"><br>Get "<b>SecuPress Security Pro</b>" now and fix all to get a Securer installation!<br><a href="#">Clic here</a>', 'secupress' )
-//					),
-//					'infos' => array(
-//						__( 'Informations', 'secupress' ),
-//					),
-				);
-?>
+	$boxes = array(
+		'score' => array(
+			__( 'Your Score', 'secupress' ),
+			'<canvas id="status_chart" width="300" height="300"></canvas>' .
+			'<div class="score_info2">' .
+				'<span class="letter">&ndash;</span>' .
+				'<span class="percent">(0 %)</span>' .
+				'<span class="score_results">' . sprintf( __( '%s:', 'secupress' ), '<strong>' . __( 'Latest Reports', 'secupress' ) . '</strong>' ) . '<br>' .
+					'<ul>' .
+						implode( "\n", array_reverse( $reports ) ) .
+					'</ul>' .
+				'</span>' .
+			'</div>' .
+			'<div class="legend">' .
+				'<span class="dashicons dashicons-shield-alt secupress-dashicon-color-good" aria-hidden="true"></span> ' . __( 'Good', 'secupress' ) . ' | ' .
+				'<span class="dashicons dashicons-shield-alt secupress-dashicon-color-bad" aria-hidden="true"></span> ' . __( 'Bad', 'secupress' ) . ' | ' .
+				'<span class="dashicons dashicons-shield-alt secupress-dashicon-color-warning" aria-hidden="true"></span> ' . __( 'Warning', 'secupress' ) . ' | ' .
+				'<span class="dashicons dashicons-shield-alt secupress-dashicon-color-notscannedyet" aria-hidden="true"></span> ' . __( 'Not scanned yet', 'secupress' ) .
+			'</div>' .
+			'<span id="tweeterA" class="hidden"><hr><img style="vertical-align:middle" src="https://g.twimg.com/dev/documentation/image/Twitter_logo_blue_16.png"> <i>' . __( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ) . '</i> <a class="button button-small" href="https://twitter.com/intent/tweet?via=secupress&url=http://secupress.fr&text=' . urlencode( 'Wow! My website just got an A security grade using SecuPress, what about yours?' ) . '">Tweet &raquo;</a></span>'
+		),
+	//	'premium' => array(
+	//		'SecuPress Security Pro',
+	//		__( '<img src="https://dl-web.dropbox.com/get/BAW/V3/secupress_sign.png?_subject_uid=45956904&w=AABRKI608fHD9wxoU4qXaJ3TlsmpqTO_vpZT969iKmlrbw"><br>Get "<b>SecuPress Security Pro</b>" now and fix all to get a Securer installation!<br><a href="#">Clic here</a>', 'secupress' )
+	//	),
+	//	'infos' => array(
+	//		__( 'Informations', 'secupress' ),
+	//	),
+	);
+	?>
 	<div class="wrap">
-		<h2><?php echo SECUPRESS_PLUGIN_NAME; ?> <small>v<?php echo SECUPRESS_VERSION; ?></small></h2>
 		<?php
+		secupress_admin_heading( __( 'Scanners', 'secupress' ) );
+
 		foreach( $boxes as $id => $box ) {
 			secupress_sidebox( array( 'id' => $id, 'title' => $box[0], 'content' => $box[1], 'context' => 'top' ) );
 		}
+
+		secupress_main_scan();
+
+		wp_nonce_field( 'secupress_score', 'secupress_score', false );
 		?>
-		<?php secupress_main_scan(); ?>
-		<?php wp_nonce_field( 'secupress_score', 'secupress_score', false ); ?>
 	</div>
-<?php
+	<?php
 }
 
 /*------------------------------------------------------------------------------------------------*/
