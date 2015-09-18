@@ -19,8 +19,8 @@
 		<exclude name="WordPress.Files.FileName"/>
 		<exclude name="WordPress.Variables.GlobalVariables"/>
 		<exclude name="WordPress.VIP"/>
-		<exclude name="WordPress.WP.EnqueuedResources"/>
 		<exclude name="WordPress.WhiteSpace.ControlStructureSpacing.BlankLineAfterEnd"/>
+		<exclude name="WordPress.WP.EnqueuedResources"/>
 		<exclude name="WordPress.XSS.EscapeOutput"/>
 	</rule>
 </ruleset>
