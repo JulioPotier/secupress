@@ -304,7 +304,7 @@ jQuery( document ).ready( function( $ ) {
 				if ( ! lastClicked[ prio ] ) {
 					return true;
 				}
-				checks  = $( lastClicked[ prio ] ).closest( ".table-prio-all" ).find( ":checkbox" );
+				checks  = $( lastClicked[ prio ] ).closest( ".table-prio-all" ).find( ":checkbox" ).filter( ":visible:enabled" );
 				first   = checks.index( lastClicked[ prio ] );
 				last    = checks.index( this );
 				checked = $( this ).prop( "checked" );
@@ -324,7 +324,7 @@ jQuery( document ).ready( function( $ ) {
 			lastClicked[ prio ] = this;
 
 			// toggle "check all" checkboxes
-			var unchecked = $( this ).closest( "tbody" ).find( ":checkbox" ).filter( ":visible" ).not( ":checked" );
+			var unchecked = $( this ).closest( "tbody" ).find( ":checkbox" ).filter( ":visible:enabled" ).not( ":checked" );
 			$( this ).closest( "table" ).children( "thead, tfoot" ).find( ":checkbox" ).prop( "checked", function() {
 				return ( 0 === unchecked.length );
 			} );
@@ -341,7 +341,7 @@ jQuery( document ).ready( function( $ ) {
 			$table.children( "tbody" ).filter( ":visible" )
 				.children().children( ".secupress-check-column" ).find( ":checkbox" )
 				.prop( "checked", function() {
-					if ( $( this ).is( ":hidden" ) ) {
+					if ( $( this ).is( ":hidden,:disabled" ) ) {
 						return false;
 					}
 
