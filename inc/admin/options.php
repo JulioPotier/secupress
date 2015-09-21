@@ -94,7 +94,8 @@ function secupress_create_menus() {
 	add_menu_page( SECUPRESS_PLUGIN_NAME, SECUPRESS_PLUGIN_NAME, 'administrator', 'secupress', '__secupress_dashboard', 'dashicons-shield-alt' );
 
 	// Sub-menus
-	add_submenu_page( 'secupress', __( 'Settings', 'secupress' ), __( 'Settings', 'secupress' ),          'administrator', 'secupress_settings', '__secupress_global_settings' );
+	add_submenu_page( 'secupress', __( 'Dashboard' ),             __( 'Dashboard' ),                      'administrator', 'secupress',          '__secupress_dashboard' );
+	add_submenu_page( 'secupress', __( 'Settings' ),              __( 'Settings' ),                       'administrator', 'secupress_settings', '__secupress_global_settings' );
 	add_submenu_page( 'secupress', __( 'Modules', 'secupress' ),  __( 'Modules', 'secupress' ),           'administrator', 'secupress_modules',  '__secupress_modules' );
 	add_submenu_page( 'secupress', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ) . $count, 'administrator', 'secupress_scanner',  '__secupress_scanner' );
 
