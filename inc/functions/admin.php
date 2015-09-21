@@ -7,14 +7,14 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @since 1.0
  */
 function secupress_get_scanner_counts( $type = '' ) {
-	$secupress_tests    = secupress_get_tests();
-	$scanners           = secupress_get_scanners();
-	$array_fill_keys    = array_fill_keys( array( 'good', 'warning', 'bad' ), 0 );
-	$array_count_values = is_array( $scanners ) ? array_count_values( wp_list_pluck( $scanners, 'status' ) ) : array();
-	$counts             = array_merge( $array_fill_keys, $array_count_values );
+	$tests_by_status = secupress_get_tests();
+	$scanners        = secupress_get_scanners();
+	$empty_statuses  = array( 'good' => 0, 'warning' => 0, 'bad' => 0 );
+	$scanners_count  = ! empty( $scanners ) ? array_count_values( wp_list_pluck( $scanners, 'status' ) ) : array();
+	$counts          = array_merge( $empty_statuses, $scanners_count );
 
-	$counts['notscannedyet'] = count( $secupress_tests['high'] ) + count( $secupress_tests['medium'] ) + count( $secupress_tests['low'] ) - array_sum( $counts );
-	$counts['total']         = count( $secupress_tests['high'] ) + count( $secupress_tests['medium'] ) + count( $secupress_tests['low'] );
+	$counts['notscannedyet'] = count( $tests_by_status['high'] ) + count( $tests_by_status['medium'] ) + count( $tests_by_status['low'] ) - array_sum( $counts );
+	$counts['total']         = count( $tests_by_status['high'] ) + count( $tests_by_status['medium'] ) + count( $tests_by_status['low'] );
 	$percent                 = floor( $counts['good'] * 100 / $counts['total'] );
 
 	switch ( $percent ) {
