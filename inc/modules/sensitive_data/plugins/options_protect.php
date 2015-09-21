@@ -10,7 +10,7 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 add_action( 'admin_init', 'secupress_shortcut_settings_hooks' );
 function secupress_shortcut_settings_hooks() {
-	$hooks = array( 'secupress_page' => array( 'secupress', 'secupress_settings', 'secupress_modules', 'secupress_scanner' ) );
+	$hooks = array( 'secupress_page' => array( 'secupress', 'secupress_settings', 'secupress_modules', 'secupress_scanners' ) );
 	foreach ( $hooks as $page => $subs ) {
 		foreach ( $subs as $sub ) {
 			add_action( "load-{$page}_{$sub}", 'secupress_shortcut_settings', 0 );
@@ -25,6 +25,6 @@ function secupress_shortcut_settings_hooks() {
 				wp_safe_redirect( wp_get_referer() );
 				die();
 			}
-		} 
+		}
 	} );
 }

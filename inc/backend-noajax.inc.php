@@ -22,12 +22,12 @@ function secupress_admin_notice_bad_request()
 {
 	echo '<div class="error below-h2 secupress-badrequest"><p>' . _e( '<strong>SecuPress Security</strong>: Bad request ...', 'secupress' ) . ' </p></div>';
 }
-		
+
 add_action( 'admin_menu', 'secupress_create_menus' );
 function secupress_create_menus()
 {
 	add_menu_page( SECUPRESS_FULLNAME, SECUPRESS_FULLNAME, 'administrator', 'secupress', '__secupress_dashboard', 'dashicons-shield-alt' );
-	add_submenu_page( 'secupress', __( 'Scanner', 'secupress' ), __( 'Scanner', 'secupress' ), 'administrator', 'secupress_scanner', '__secupress_scanner' );
+	add_submenu_page( 'secupress', __( 'Scanner', 'secupress' ), __( 'Scanner', 'secupress' ), 'administrator', 'secupress_scanners', '__secupress_scanner' );
 	register_setting( 'secupress_scan', 'secupress' );
 }
 
@@ -42,7 +42,7 @@ function secupress_scan_nojs()
 	if( isset( $_REQUEST['this_test'], $_REQUEST['_secupressnonce'], $_REQUEST['action'] ) ):
 		require( dirname( __FILE__ ) . '/backend-ajax.inc.php' );
 		secupress_launch_scan( $_REQUEST['this_test'], $_REQUEST['_secupressnonce'], $_REQUEST['action'] );
-	endif;	
+	endif;
 	if( isset( $_REQUEST['type'], $_REQUEST['status'], $_REQUEST['_secupressnonce'] ) ):
 		global $current_user;
 		wp_verify_nonce( $_REQUEST['_secupressnonce'], 'secupress_scan-options' ) or wp_nonce_ays('');
@@ -73,7 +73,7 @@ function secupress_field_scan()
 			<span style="clear:both;display:block;line-height:1.6em;font-size: 12px; font-style: italic"><?php _e( 'Last scan: ', 'secupress' ); ?><span id="secupress-date"><?php echo $thedate; ?></span></span>
 		</button>
 	</p>
-	
+
 	<div id="div-secupress-security">
 	<table class="wp-list-table widefat" cellspacing="0" id="table-secupress-security">
 	<thead>
@@ -176,15 +176,15 @@ function __secupress_scanner()
 	$html = '';
 	foreach( $boxes as $id => $box )
 		$html .= secupress_setting_box( $id, $box[0], $box[1], strstr( $id, 'filter' )!==false );
-	add_settings_section( 'secupress_scanner', '', '__return_false', 'secupress_scan' );
-		add_settings_field( 'secupress_field_scan', $html, 'secupress_field_scan', 'secupress_scan', 'secupress_scanner' );
+	add_settings_section( 'secupress_scanners', '', '__return_false', 'secupress_scan' );
+		add_settings_field( 'secupress_field_scan', $html, 'secupress_field_scan', 'secupress_scan', 'secupress_scanners' );
 
 ?>
 	<div class="wrap">
-		<div id="icon-secupress" class="icon32" style="background: url(<?php echo SECUPRESS_PLUGIN_URL; ?>img/icon32.png) 0 0 no-repeat;"><br/></div> 
+		<div id="icon-secupress" class="icon32" style="background: url(<?php echo SECUPRESS_PLUGIN_URL; ?>img/icon32.png) 0 0 no-repeat;"><br/></div>
 		<h2><?php echo SECUPRESS_FULLNAME; ?> <small>v<?php echo SECUPRESS_VERSION; ?></small></h2>
 
-		<form action="admin-post.php?page=secupress_scanner&" method="post">
+		<form action="admin-post.php?page=secupress_scanners&" method="post">
 			<?php settings_fields( 'secupress_scan' ); ?>
 			<?php do_settings_sections( 'secupress_scan' ); ?>
 			<input type="hidden" name="this_test" value="all" />

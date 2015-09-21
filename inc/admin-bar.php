@@ -65,6 +65,6 @@ function secupress_admin_bar( $wp_admin_bar ) {
 		'parent' => 'secupress',
 		'id' 	 => 'secupress-scanners',
 		'title'  => __( 'Scanners', 'secupress' ),
-		'href'   => secupress_admin_url( 'secupress_scanner' ),
+		'href'   => secupress_admin_url( 'secupress_scanners' ),
 	) );
 }

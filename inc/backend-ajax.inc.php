@@ -30,7 +30,7 @@ function secupress_launch_scan( $this_test = null, $nonce = null, $action = null
 		if( defined( 'DOING_AJAX' ) && DOING_AJAX )
 			die( '1' );
 		else
-			wp_redirect( admin_url( 'admin.php?page=secupress_scanner' ) );
+			wp_redirect( admin_url( 'admin.php?page=secupress_scanners' ) );
 	else:
 		if( defined( 'DOING_AJAX' ) && DOING_AJAX )
 			die( '-1' );

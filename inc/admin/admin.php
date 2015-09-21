@@ -138,7 +138,7 @@ function __secupress_settings_action_links( $actions ) {
  *
  * @since 1.0
  */
-add_action( 'admin_print_styles-' . SECUPRESS_PLUGIN_SLUG . '_page_secupress_scanner', '__secupress_scanner_add_admin_css_js' ); //// dédoublonner
+add_action( 'admin_print_styles-' . SECUPRESS_PLUGIN_SLUG . '_page_secupress_scanners', '__secupress_scanner_add_admin_css_js' ); //// dédoublonner
 
 function __secupress_scanner_add_admin_css_js() {
 	$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';

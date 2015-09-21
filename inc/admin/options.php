@@ -59,7 +59,7 @@ function __secupress_global_settings_callback( $value ) {
  */
 add_action( 'admin_head-' . SECUPRESS_PLUGIN_SLUG . '_page_secupress_settings', 'secupress_favicon' );
 add_action( 'admin_head-' . SECUPRESS_PLUGIN_SLUG . '_page_secupress_modules',  'secupress_favicon' );
-add_action( 'admin_head-' . SECUPRESS_PLUGIN_SLUG . '_page_secupress_scanner',  'secupress_favicon' );
+add_action( 'admin_head-' . SECUPRESS_PLUGIN_SLUG . '_page_secupress_scanners', 'secupress_favicon' );
 
 function secupress_favicon() {
 	echo '<link id="favicon" rel="shortcut icon" type="image/png" href="' . SECUPRESS_ADMIN_CSS_URL . 'images/black-shield-16.png" />';
@@ -97,7 +97,7 @@ function secupress_create_menus() {
 	add_submenu_page( 'secupress', __( 'Dashboard' ),             __( 'Dashboard' ),                      'administrator', 'secupress',          '__secupress_dashboard' );
 	add_submenu_page( 'secupress', __( 'Settings' ),              __( 'Settings' ),                       'administrator', 'secupress_settings', '__secupress_global_settings' );
 	add_submenu_page( 'secupress', __( 'Modules', 'secupress' ),  __( 'Modules', 'secupress' ),           'administrator', 'secupress_modules',  '__secupress_modules' );
-	add_submenu_page( 'secupress', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ) . $count, 'administrator', 'secupress_scanner',  '__secupress_scanner' );
+	add_submenu_page( 'secupress', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ) . $count, 'administrator', 'secupress_scanners',  '__secupress_scanners' );
 
 	// Add the counter to the main menu: it can't be added with `add_menu_page()` because it would change the value of the screen ID (yes, it's utterly stupid).
 	end( $menu );
@@ -125,13 +125,6 @@ function __secupress_dashboard() {
 	delete_option( SECUPRESS_SCAN_TIMES );
 }
 
-add_filter( 'secupress_global_settings_modules', '__secupress_add_white_label_settings_block' );
-function __secupress_add_white_label_settings_block( $modules ) {
-	if ( defined( 'WP_SWL' ) && WP_SWL ) {
-		$modules[] = 'white-label';
-	}
-	return $modules;
-}
 
 /**
  * Global settings page.
@@ -175,6 +168,21 @@ function __secupress_global_settings() {
 
 
 /**
+ * Add White Label in the list of settings modules.
+ *
+ * @since 1.0
+ */
+add_filter( 'secupress_global_settings_modules', '__secupress_add_white_label_settings_block' );
+
+function __secupress_add_white_label_settings_block( $modules ) {
+	if ( defined( 'WP_SWL' ) && WP_SWL ) {
+		$modules[] = 'white-label';
+	}
+	return $modules;
+}
+
+
+/**
  * Modules page.
  *
  * @since 1.0
@@ -202,7 +210,12 @@ function __secupress_modules() {
 }
 
 
-function __secupress_scanner() {
+/**
+ * Scanners page.
+ *
+ * @since 1.0
+ */
+function __secupress_scanners() {
 	$times        = array_filter( (array) get_option( SECUPRESS_SCAN_TIMES ) );
 	$reports      = array();
 	$last_percent = -1;
