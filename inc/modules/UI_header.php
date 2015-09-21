@@ -1,10 +1,15 @@
 <?php
-defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+
+global $modulenow;
+
 settings_errors();
-global $modulenow, $secupress_modules;
-if ( 'welcome' == $modulenow ) {
-	return; // no module loaded
+
+if ( 'welcome' === $modulenow ) {
+	// no module loaded
+	return;
 }
+
 //// todo save settings with history
 add_settings_section( 'module_' . $modulenow, __( 'Module settings', 'secupress' ), '__rocket_module_full_title', 'module_' . $modulenow );
 	add_settings_field(
@@ -32,11 +37,14 @@ add_settings_section( 'module_' . $modulenow, __( 'Module settings', 'secupress'
 function __rocket_module_full_title() {
 	echo '<div class="notice notice-success"><i>' . __( 'If you need to reset this module\'s settings to the default ones, you just have to do it here, we will set the best for your site.', 'secupress' ) . '</i></div>';
 }
+
+
+$modules = secupress_get_modules();
 ?>
 <div class="secublock">
-	<h3><?php echo $secupress_modules[ $modulenow ]['title']; ?></h3>
+	<h3><?php echo $modules[ $modulenow ]['title']; ?></h3>
 	<?php
-	foreach ( $secupress_modules[ $modulenow ]['description'] as $description ) {
+	foreach ( $modules[ $modulenow ]['description'] as $description ) {
 		echo "<p>$description</p>\n";
 	}
 	?>

@@ -210,9 +210,9 @@ function secupress_deactivate_submodule( $module, $plugins ) {
 }
 
 function secupress_activate_module( $module, $settings ) {
-	global $secupress_modules; ////
+	$modules = secupress_get_modules();
 
-	if ( ! function_exists( "__secupress_{$module}_settings_callback" ) || ! isset( $secupress_modules[ $module ] ) ) {
+	if ( ! function_exists( "__secupress_{$module}_settings_callback" ) || ! isset( $modules[ $module ] ) ) {
 		secupress_die( sprintf( __( 'Unknow Module %s', 'secupress' ), esc_html( $module ) ) );
 	}
 

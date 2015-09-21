@@ -119,10 +119,10 @@ function secupress_init() {
 add_action( 'secupress_loaded', 'secupress_load_plugins' );
 
 function secupress_load_plugins() {
-	global $secupress_modules; //// Hello you, you gonna die!
+	$modules = secupress_get_modules();
 
-	if ( $secupress_modules && is_admin() ) {
-		foreach ( $secupress_modules as $key => $module ) {
+	if ( $modules && is_admin() ) {
+		foreach ( $modules as $key => $module ) {
 			$file = SECUPRESS_MODULES_PATH . sanitize_key( $key ) . '/callbacks.php';
 			if ( file_exists( $file ) ) {
 				require( $file );

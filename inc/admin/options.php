@@ -180,10 +180,11 @@ function __secupress_global_settings() {
  * @since 1.0
  */
 function __secupress_modules() {
-	global $modulenow, $secupress_modules;
+	global $modulenow;
 
+	$modules   = secupress_get_modules();
 	$modulenow = isset( $_GET['module'] ) ? $_GET['module'] : 'welcome';
-	$modulenow = array_key_exists( $modulenow, $secupress_modules ) && file_exists( SECUPRESS_MODULES_PATH . $modulenow . '/settings.php' ) ? $modulenow : 'welcome';
+	$modulenow = array_key_exists( $modulenow, $modules ) && file_exists( SECUPRESS_MODULES_PATH . $modulenow . '/settings.php' ) ? $modulenow : 'welcome';
 	?>
 	<div class="wrap">
 
