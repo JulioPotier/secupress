@@ -7,10 +7,6 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @since 1.0
  */
 function secupress_get_scanner_counts( $type = '' ) {
-	if ( ! class_exists( 'SecuPress_Scan' ) ) {
-		include( SECUPRESS_CLASSES_PATH . 'scanners/class-secupress-scan.php' );
-	}
-
 	$secupress_tests    = secupress_get_tests();
 	$scanners           = secupress_get_scanners();
 	$array_fill_keys    = array_fill_keys( array( 'good', 'warning', 'bad' ), 0 );
