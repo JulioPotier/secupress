@@ -49,22 +49,102 @@ function __secupress_global_settings_callback( $value ) {
 
 
 /*------------------------------------------------------------------------------------------------*/
-/* ADMIN UI ===================================================================================== */
+/* CSS, JS, FAVICON ============================================================================= */
 /*------------------------------------------------------------------------------------------------*/
+
+/**
+ * Add some CSS and JS to our settings pages.
+ *
+ * @since 1.0
+ */
+add_action( 'admin_enqueue_scripts', '__secupress_add_settings_scripts' );
+
+function __secupress_add_settings_scripts( $hook_suffix ) {
+	$pages = array(
+		'toplevel_page_secupress',
+		SECUPRESS_PLUGIN_SLUG . '_page_secupress_settings',
+		SECUPRESS_PLUGIN_SLUG . '_page_secupress_modules',
+		SECUPRESS_PLUGIN_SLUG . '_page_secupress_scanners',
+	);
+
+	if ( ! in_array( $hook_suffix, $pages ) ) {
+		return;
+	}
+
+	$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+	$version = $suffix ? SECUPRESS_VERSION : time();
+
+	// Common CSS
+	wp_enqueue_style( 'secupress-common-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-common' . $suffix . '.css', array(), $version );
+
+	// Global settings page.
+	if ( SECUPRESS_PLUGIN_SLUG . '_page_secupress_settings' === $hook_suffix ) {
+		// CSS
+		wp_enqueue_style( 'secupress-settings-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-settings' . $suffix . '.css', array( 'secupress-common-css' ), $version );
+	}
+
+	// Modules page.
+	elseif ( SECUPRESS_PLUGIN_SLUG . '_page_secupress_modules' === $hook_suffix ) {
+		// CSS
+		wp_enqueue_style( 'secupress-modules-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-modules' . $suffix . '.css', array( 'secupress-common-css' ), $version );
+
+		// JS
+		wp_enqueue_script( 'secupress-zxcvbn-async', includes_url( '/js/zxcvbn.min.js' ), array( 'jquery' ) );
+		wp_enqueue_script( 'secupress-modules-js', SECUPRESS_ADMIN_JS_URL . 'secupress-modules' . $suffix . '.js', array( 'secupress-zxcvbn-async', 'password-strength-meter' ), $version, true );
+
+		wp_localize_script( 'secupress-modules-js', 'l10nmodules', array(
+			'selectOneRoleMinimum' => __( 'Select 1 role minimum', 'secupress' ),
+		) );
+		wp_localize_script( 'password-strength-meter', 'pwsL10n', array(
+			'empty'    => __( 'Enter a password', 'secupress' ),
+			'short'    => __( 'Very weak' ),
+			'bad'      => __( 'Weak' ),
+			'good'     => _x( 'Medium', 'password strength' ),
+			'strong'   => __( 'Strong' ),
+			'mismatch' => __( 'Mismatch' )
+		) );
+	}
+
+	// Scanners page.
+	elseif ( SECUPRESS_PLUGIN_SLUG . '_page_secupress_scanners' === $hook_suffix ) {
+		// CSS
+		wp_enqueue_style( 'secupress-scanner-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-scanner' . $suffix . '.css', array( 'secupress-common-css' ), $version );
+
+		// JS
+		wp_enqueue_script( 'secupress-chartjs',    SECUPRESS_ADMIN_JS_URL . 'Chart' . $suffix . '.js', array(), '1.0.2.1', true );
+		wp_enqueue_script( 'jquery-timeago',       SECUPRESS_ADMIN_JS_URL . 'jquery.timeago.js', array( 'jquery' ), '1.4.1', true );
+		wp_enqueue_script( 'secupress-scanner-js', SECUPRESS_ADMIN_JS_URL . 'secupress-scanner' . $suffix . '.js', array( 'secupress-chartjs', 'jquery-timeago' ), $version, true );
+
+		$counts = secupress_get_scanner_counts();
+		wp_localize_script( 'secupress-chartjs', 'SecuPressi18nChart',
+			array(
+				'good'          => array( 'value' => $counts['good'],          'text' => __( 'Good', 'secupress' ) ),
+				'warning'       => array( 'value' => $counts['warning'],       'text' => __( 'Warning', 'secupress' ) ),
+				'bad'           => array( 'value' => $counts['bad'],           'text' => __( 'Bad', 'secupress' ) ),
+				'notscannedyet' => array( 'value' => $counts['notscannedyet'], 'text' => __( 'Not Scanned Yet', 'secupress' ) ),
+			)
+		);
+	}
+
+	// Add the favicon, no need to test again the page we're in.
+	add_action( 'admin_head', 'secupress_favicon' );
+}
+
 
 /**
  * Add a site icon to each of our settings pages.
  *
  * @since 1.0
  */
-add_action( 'admin_head-' . SECUPRESS_PLUGIN_SLUG . '_page_secupress_settings', 'secupress_favicon' );
-add_action( 'admin_head-' . SECUPRESS_PLUGIN_SLUG . '_page_secupress_modules',  'secupress_favicon' );
-add_action( 'admin_head-' . SECUPRESS_PLUGIN_SLUG . '_page_secupress_scanners', 'secupress_favicon' );
-
 function secupress_favicon() {
-	echo '<link id="favicon" rel="shortcut icon" type="image/png" href="' . SECUPRESS_ADMIN_CSS_URL . 'images/black-shield-16.png" />';
+	$version = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '?ver=' . time() : '';
+	echo '<link id="favicon" rel="shortcut icon" type="image/png" href="' . SECUPRESS_ADMIN_CSS_URL . 'images/black-shield-16.png' . $version . '" />';
 }
 
+
+/*------------------------------------------------------------------------------------------------*/
+/* ADMIN MENU =================================================================================== */
+/*------------------------------------------------------------------------------------------------*/
 
 /**
  * Create the plugin menu and submenus.
@@ -119,10 +199,15 @@ function __secupress_dashboard() {
 	?>
 	<div class="wrap">
 		<?php secupress_admin_heading( __( 'Dashboard' ) ); ?>
+
+		<div class="secupress-wrapper">
+			<?php
+			delete_option( SECUPRESS_SCAN_SLUG );
+			delete_option( SECUPRESS_SCAN_TIMES );
+			?>
+		</div>
 	</div>
 	<?php
-	delete_option( SECUPRESS_SCAN_SLUG );
-	delete_option( SECUPRESS_SCAN_TIMES );
 }
 
 
@@ -148,8 +233,7 @@ function __secupress_global_settings() {
 	<div class="wrap">
 		<?php secupress_admin_heading( __( 'Settings' ) ); ?>
 
-		<form action="options.php" method="post" id="secupress_settings">
-			<?php submit_button(); ?>
+		<form action="options.php" method="post" id="secupress_settings" class="secupress-wrapper">
 			<?php settings_fields( 'secupress_settings' ); ?>
 			<?php foreach ( $setting_modules as $setting_module ) { ?>
 				<div class="secupress_setting_block">
@@ -195,16 +279,34 @@ function __secupress_modules() {
 	$modulenow = array_key_exists( $modulenow, $modules ) && file_exists( SECUPRESS_MODULES_PATH . $modulenow . '/settings.php' ) ? $modulenow : 'welcome';
 	?>
 	<div class="wrap">
+		<?php secupress_admin_heading( __( 'Modules', 'secupress' ) ); ?>
 
-		<?php include(  SECUPRESS_MODULES_PATH . 'UI_menu.php' ); ?>
+		<div class="secupress-wrapper">
 
-		<div id="tab_content">
-			<?php
-			include( SECUPRESS_MODULES_PATH . 'UI_header.php' );
-			include( SECUPRESS_MODULES_PATH . $modulenow . '/settings.php' );
-			include( SECUPRESS_MODULES_PATH . 'UI_footer.php' );
-			?>
+			<h2 class="nav-tab-wrapper hide-if-no-js">
+				<?php
+				foreach ( $modules as $key => $module ) {
+					$class = $modulenow === $key          ? ' nav-tab-active'    : '';
+					$icon  = isset( $module['dashicon'] ) ?  $module['dashicon'] : 'admin-generic';
+					?>
+					<a href="<?php echo secupress_admin_url( 'modules', $key ); ?>" class="nav-tab<?php echo $class; ?> active_module">
+						<span class="dashicons dashicons-<?php echo $icon; ?>"></span> <?php echo $module['title']; ?>
+					</a>
+					<?php
+				}
+				?>
+			</h2>
+
+			<div id="tab_content">
+				<?php
+				include( SECUPRESS_MODULES_PATH . 'module-header.php' );
+				include( SECUPRESS_MODULES_PATH . $modulenow . '/settings.php' );
+				include( SECUPRESS_MODULES_PATH . 'module-footer.php' );
+				?>
+			</div>
+
 		</div>
+
 	</div>
 	<?php
 }
@@ -273,19 +375,24 @@ function __secupress_scanners() {
 	?>
 	<div class="wrap">
 		<?php
-		secupress_admin_heading( __( 'Scanners', 'secupress' ) );
+		secupress_admin_heading( __( 'Scanners', 'secupress' ) ); ?>
 
-		foreach ( $boxes as $id => $box ) {
-			secupress_sidebox( array( 'id' => $id, 'title' => $box[0], 'content' => $box[1], 'context' => 'top' ) );
-		}
+		<div class="secupress-wrapper">
+			<?php
+			foreach ( $boxes as $id => $box ) {
+				secupress_sidebox( array( 'id' => $id, 'title' => $box[0], 'content' => $box[1], 'context' => 'top' ) );
+			}
 
-		secupress_main_scan();
+			secupress_main_scan();
 
-		wp_nonce_field( 'secupress_score', 'secupress_score', false );
-		?>
+			wp_nonce_field( 'secupress_score', 'secupress_score', false );
+			?>
+		</div>
+
 	</div>
 	<?php
 }
+
 
 /*------------------------------------------------------------------------------------------------*/
 /* TOOLS ======================================================================================== */
@@ -299,11 +406,6 @@ function __secupress_scanners() {
 function secupress_admin_heading( $title = '' ) {
 	$heading_tag = version_compare( $GLOBALS['wp_version'], '4.3' ) >= 0 ? 'h1' : 'h2';
 	printf( '<%1$s>%2$s <sup>%3$s</sup> %4$s</%1$s>', $heading_tag, SECUPRESS_PLUGIN_NAME, SECUPRESS_VERSION, $title );
-}
-
-
-function secupress_uksort_scanners( $key_a, $key_b ) {
-	//
 }
 
 

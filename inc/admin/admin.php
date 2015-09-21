@@ -134,86 +134,12 @@ function __secupress_settings_action_links( $actions ) {
 
 
 /**
- * Add the CSS and JS files for SecuPress scanners page
- *
- * @since 1.0
- */
-add_action( 'admin_print_styles-' . SECUPRESS_PLUGIN_SLUG . '_page_secupress_scanners', '__secupress_scanner_add_admin_css_js' ); //// dédoublonner
-
-function __secupress_scanner_add_admin_css_js() {
-	$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-
-	wp_enqueue_style( 'secupress-scanner-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-scanner.css', null, SECUPRESS_VERSION );
-
-	wp_enqueue_script( 'secupress-scanner-js', SECUPRESS_ADMIN_JS_URL . 'secupress-scanner.js', null, SECUPRESS_VERSION, true );
-	wp_enqueue_script( 'secupress-chartjs',    SECUPRESS_ADMIN_JS_URL . 'Chart' . $suffix . '.js', null, '1.0.2.1', true );
-	wp_enqueue_script( 'jquery-timeago',       SECUPRESS_ADMIN_JS_URL . 'jquery.timeago.js', null, '1.4.1', true );
-
-	$counts = secupress_get_scanner_counts();
-	wp_localize_script( 'secupress-chartjs', 'SecuPressi18nChart',
-		array(
-			'good'          => array( 'value' => $counts['good'],          'text' => __( 'Good', 'secupress' ) ),
-			'warning'       => array( 'value' => $counts['warning'],       'text' => __( 'Warning', 'secupress' ) ),
-			'bad'           => array( 'value' => $counts['bad'],           'text' => __( 'Bad', 'secupress' ) ),
-			'notscannedyet' => array( 'value' => $counts['notscannedyet'], 'text' => __( 'Not Scanned Yet', 'secupress' ) ),
-		)
-	);
-}
-
-
-/**
- * Add the CSS and JS files for SecuPress settings page
- *
- * @since 1.0
- */
-add_action( 'admin_print_styles-' . SECUPRESS_PLUGIN_SLUG . '_page_secupress_settings', '__secupress_settings_add_admin_css', 99999 );
-
-function __secupress_settings_add_admin_css() {
-	wp_enqueue_style( 'secupress-settings-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-settings.css', null, SECUPRESS_VERSION );
-}
-
-
-/**
- * Add the CSS and JS files for SecuPress modules page
- *
- * @since 1.0
- */
-add_action( 'admin_print_styles-' . SECUPRESS_PLUGIN_SLUG . '_page_secupress_modules', '__secupress_modules_add_admin_css' );
-
-function __secupress_modules_add_admin_css() {
-	wp_enqueue_style( 'secupress-modules-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-modules.css', null, SECUPRESS_VERSION );
-}
-
-
-/**
- * Add the CSS and JS files for SecuPress modules page
- *
- * @since 1.0
- */
-add_action( 'admin_print_scripts-' . SECUPRESS_PLUGIN_SLUG . '_page_secupress_modules', '__secupress_modules_add_admin_js' );
-
-function __secupress_modules_add_admin_js() {
-	wp_enqueue_script( 'secupress-zxcvbn-async', includes_url( '/js/zxcvbn.min.js' ), array( 'jquery' ) );
-	wp_enqueue_script( 'secupress-modules-js', SECUPRESS_ADMIN_JS_URL . 'secupress-modules.js', array( 'jquery', 'secupress-zxcvbn-async', 'password-strength-meter' ), SECUPRESS_VERSION, true );
-
-	wp_localize_script( 'secupress-modules-js', 'l10nmodules', array( 'selectOneRoleMinimum' => __( 'Select 1 role minimum', 'secupress' ) ) );
-	wp_localize_script( 'password-strength-meter', 'pwsL10n', array(
-		'empty'    => __( 'Enter a password', 'secupress' ),
-		'short'    => __( 'Very weak' ),
-		'bad'      => __( 'Weak' ),
-		'good'     => _x( 'Medium', 'password strength' ),
-		'strong'   => __( 'Strong' ),
-		'mismatch' => __( 'Mismatch' )
-	) );
-}
-
-
-/**
  * Reset White Label values to SecuPress default values
  *
  * @since 1.0
  */
 add_action( 'admin_post_secupress_resetwl', '__secupress_reset_white_label_values_action' );
+
 function __secupress_reset_white_label_values_action() {
 	if ( isset( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'secupress_resetwl' ) ) {
 		secupress_reset_white_label_values( true );
@@ -230,6 +156,7 @@ function __secupress_reset_white_label_values_action() {
  * @since 1.0
  */
 add_action( 'admin_post_secupress_reset_settings', '__secupress_admin_post_reset_settings' );
+
 function __secupress_admin_post_reset_settings() {
 	if ( isset( $_GET['_wpnonce'], $_GET['module'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'secupress_reset_' . $_GET['module'] ) ) {
 		secupress_install_modules( $_GET['module'] );
@@ -274,6 +201,7 @@ function __secupress_white_label( $plugins ) {
  * @since 1.0
  */
 // add_action( 'admin_init', '__secupress_check_no_empty_name', 11 ); ////
+
 function __secupress_check_no_empty_name() {
 	$wl_plugin_name = trim( secupress_get_option( 'wl_plugin_name' ) );
 
