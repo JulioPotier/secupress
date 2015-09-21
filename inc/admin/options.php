@@ -655,9 +655,11 @@ function secupress_sidebox( $args ) {
 function secupress_field( $args ) {
 	global $modulenow;
 
-	if ( ! is_array( reset( $args ) ) ) {
+	if ( ! is_array( end( $args ) ) ) {
 		$args = array( $args );
 	}
+
+	$args = array_filter( $args, 'is_array' );
 
 	$full = $args;
 
