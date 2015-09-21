@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /**
  * Check whether the plugin is active by checking the active_plugins list.
@@ -8,10 +8,10 @@ defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
  *
  * @source wp-admin/includes/plugin.php
  */
-function secupress_is_plugin_active( $plugin )
-{
+function secupress_is_plugin_active( $plugin ) {
 	return in_array( $plugin, (array) get_option( 'active_plugins', array() ) ) || secupress_is_plugin_active_for_network( $plugin );
 }
+
 
 /**
  * Check whether the plugin is active for the entire network.
@@ -20,8 +20,7 @@ function secupress_is_plugin_active( $plugin )
  *
  * @source wp-admin/includes/plugin.php
  */
-function secupress_is_plugin_active_for_network( $plugin )
-{
+function secupress_is_plugin_active_for_network( $plugin ) {
 	if ( ! is_multisite() ) {
 		return false;
 	}
@@ -31,52 +30,60 @@ function secupress_is_plugin_active_for_network( $plugin )
 	return isset( $plugins[ $plugin ] );
 }
 
+
 function secupress_is_submodule_active( $submodule, $module = null ) {
 	return in_array_deep( $module . '_plugin_' . $submodule, get_site_option( SECUPRESS_ACTIVE_SUBMODULES ) );
 }
 
+
 /**
- * @return (-1)/(bool) -1 = every role is affected, true = the user's role is affected, false = the user's role isn't affected
+ * @return (-1)/(bool) -1 = every role is affected, true = the user's role is affected, false = the user's role isn't affected.
  */
 function secupress_is_affected_role( $module, $submodule, $user ) {
 	$roles = secupress_get_module_option( $submodule . '_affected_role', array(), $module );
+
 	if ( ! $roles ) {
 		return -1;
-	} else {
-	    return is_a( $user, 'WP_User' ) && user_can( $user, 'exist' ) && ! count( (array) array_intersect( $roles, $user->roles ) );
 	}
+
+	return is_a( $user, 'WP_User' ) && user_can( $user, 'exist' ) && ! count( (array) array_intersect( $roles, $user->roles ) );
 }
+
 
 function __secupress_module_switch_description() {
 	global $modulenow, $sectionnow;
 
 	$output = '';
+
 	switch ( $modulenow . '_' . $sectionnow ) {
 		case 'users_login_login_auth':
 			$output = __( 'A Double Authentication is a way to enforce another layer of login, like an additional password, a secret key, a special link sent by email etc. Not just your login and password.', 'secupress' );
-		break;
+			break;
 		case 'plugins_themes_plugins_themes':
 			$output = __( 'By using these protections, you can easily select the proper allowed actions on your plugins.', 'secupress' );
-		break;
+			break;
 		case 'plugins_themes_themes_plugins':
 			$output = __( 'By using these protections, you can easily select the proper allowed actions on your themes.', 'secupress' );
-		break;
+			break;
 		case 'sensitive_data_profile_protect':
 			$output = __( 'Your profile can contain sensitive data and is also used to change your password. Don\'t let anyone sneaking into it.', 'secupress' );
-		break;
+			break;
 	}
+
 	if ( $output ) {
 		echo '<div class="notice notice-success"><i>';
-		echo $output;
+			echo $output;
 		echo '</i></div>';
 	}
 }
 
+
 function secupress_add_settings_section( $title, $args = null ) {
 	global $sectionnow, $modulenow, $pluginnow;
 
-	$args = wp_parse_args( $args, array( 'with_roles' => false, 'with_save_button' => true ) );
+	$args    = wp_parse_args( $args, array( 'with_roles' => false, 'with_save_button' => true ) );
 	$actions = '';
+
 	if ( (bool) $args['with_roles'] ) {
 		$actions .= '<button type="button" class="hide-if-no-js no-button button-actions-title" for="_affected_role">' . __( 'Roles', 'secupress' ) . '<span class="dashicons dashicons-arrow-right"></span></button>';
 	}
@@ -88,19 +95,20 @@ function secupress_add_settings_section( $title, $args = null ) {
 	if ( (bool) $args['with_roles'] ) {
 		secupress_add_settings_field(
 			'<span class="dashicons dashicons-groups"></span> ' . __( 'Affected Roles', 'secupress' ),
-			array(	'description' 	=> __( 'Which roles will be affected by this module?', 'secupress' ),
-					'field_type' 	=> 'field',
-					'name' 			=> 'affected_role',
-					),
+			array(
+				'description' => __( 'Which roles will be affected by this module?', 'secupress' ),
+				'field_type'  => 'field',
+				'name'        => 'affected_role',
+			),
 			array(
 				'class' => __secupress_get_hidden_classes( 'hide-if-js block-_affected_role block-plugin_' . $pluginnow ),
 				array(
-					'type'			=> 'roles',
-					'default' 		=> array(), //// (TODO) not supported yet why not $args['with_roles']
-					'name' 			=> $pluginnow . '_affected_role',
-					'label_for'		=> $pluginnow . '_affected_role',
-					'label'			=> '',
-					'label_screen'	=> __( 'Affected Roles', 'secupress' ),
+					'type'         => 'roles',
+					'default'      => array(), //// (TODO) not supported yet why not $args['with_roles']
+					'name'         => $pluginnow . '_affected_role',
+					'label_for'    => $pluginnow . '_affected_role',
+					'label'        => '',
+					'label_screen' => __( 'Affected Roles', 'secupress' ),
 				),
 				array(
 					'type'         => 'helper_description',
@@ -110,7 +118,7 @@ function secupress_add_settings_section( $title, $args = null ) {
 				array(
 					'type'         => 'helper_warning',
 					'name'         => $pluginnow . '_affected_role',
-					'class'		   => 'hide-if-js',
+					'class'        => 'hide-if-js',
 					'description'  => __( 'Select 1 role minimum', 'secupress' )
 				),
 			)
@@ -118,10 +126,12 @@ function secupress_add_settings_section( $title, $args = null ) {
 	}
 }
 
+
 function secupress_add_settings_field( $title, $args, $fields ) {
 	global $sectionnow, $modulenow, $pluginnow;
 
 	$args = wp_parse_args( $args, array( 'name' => '', 'field_type' => 'field', 'description' => '' ) );
+
 	add_settings_field(
 		'module_' . $modulenow . '_' . $pluginnow . '_' . $args['name'],
 		$title . __secupress_description_module( $args['description'] ),
@@ -130,15 +140,19 @@ function secupress_add_settings_field( $title, $args, $fields ) {
 		'module_' . $modulenow . '_' . $sectionnow,
 		$fields
 	);
+
 	do_action( 'after_module_' . $modulenow . '_' . $pluginnow );
 }
 
+
 function secupress_do_secupress_settings_sections() {
 	global $sectionnow, $modulenow;
+
 	do_secupress_settings_sections( 'module_' . $modulenow . '_' . $sectionnow );
 	secupress_submit_button( 'primary small', $sectionnow . '_submit' );
 	do_action( 'after_section_' . $sectionnow );
 }
+
 
 function secupress_validate_range( $value, $min, $max ) {
 	return filter_var( $value, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => $min, 'max_range' => $max ) ) );
