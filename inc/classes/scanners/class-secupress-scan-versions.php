@@ -48,6 +48,7 @@ class SecuPress_Scan_Versions extends SecuPress_Scan implements iSecuPress_Scan 
 
 
 	public function scan() {
+		ob_start();
 
 		// Core
 		if ( ! function_exists( 'get_preferred_from_update_core' ) ) {
@@ -73,6 +74,8 @@ class SecuPress_Scan_Versions extends SecuPress_Scan implements iSecuPress_Scan 
 		if ( isset( $current->response ) && is_array( $current->response ) ) {
 			$theme_updates = wp_list_pluck( array_map( 'wp_get_theme', array_keys( $current->response ) ), 'Name' );
 		}
+
+		ob_flush();
 
 		if ( $core_update ) {
 			// bad
