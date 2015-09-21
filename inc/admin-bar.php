@@ -20,7 +20,7 @@ function secupress_admin_bar( $wp_admin_bar ) {
 
 	if ( $counts['good'] || $counts['bad'] ) {
 		// Translators: 1 is plugin name, 2 is a number for the percentage. Keep the double "%%".
-		$count = sprintf( __( '%1$s: %2$d%% of the scanners are OK', 'secupress' ), SECUPRESS_PLUGIN_NAME, $counts['good'] );
+		$count = sprintf( __( '%1$s: %2$d%% of the scanners are OK', 'secupress' ), SECUPRESS_PLUGIN_NAME, $counts['good'] * 100 / $counts['total'] );
 		$grade = esc_attr( sprintf( __( 'Grade %s', 'secupress' ), $counts['grade'] ) );
 	} else {
 		$count = '';
