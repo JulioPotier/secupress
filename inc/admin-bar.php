@@ -16,49 +16,32 @@ function secupress_admin_bar( $wp_admin_bar ) {
 	}
 
 	// Add a counter of scans with good result.
-	$count = '';
-	$grade = '';
-	$scans = secupress_get_scanners();
+	$counts = secupress_get_scanner_counts();
 
-	if ( $scans ) {
-		$count = 0;
-		$total = secupress_get_tests();
-		$total = count( array_merge( $total['high'], $total['medium'], $total['low'] ) );
-
-		foreach ( $scans as $scan ) {
-			if ( 'good' === $scan['status'] ) {
-				++$count;
-			}
-		}
-
-		$count = round( $count * 100 / $total );
-
-		if ( $count >= 90 ) {
-			$grade = 'A';
-		} elseif ( $count >= 80 ) {
-			$grade = 'B';
-		} elseif ( $count >= 70 ) {
-			$grade = 'C';
-		} elseif ( $count >= 60 ) {
-			$grade = 'D';
-		} elseif ( $count >= 50 ) {
-			$grade = 'E';
-		} else {
-			$grade = 'F';
-		}
-
-		$count = sprintf( ' <span class="ab-label secupress-percent"><span class="count">%d</span>%%</span>', $count );
-		$grade = esc_attr( sprintf( __( 'Grade %s', 'secupress' ), $grade ) );
+	if ( $counts['good'] || $counts['bad'] ) {
+		// Translators: 1 is plugin name, 2 is a number for the percentage. Keep the double "%%".
+		$count = sprintf( __( '%1$s: %2$d%% of the scanners are OK', 'secupress' ), SECUPRESS_PLUGIN_NAME, $counts['good'] );
+		$grade = esc_attr( sprintf( __( 'Grade %s', 'secupress' ), $counts['grade'] ) );
+	} else {
+		$count = '';
+		$grade = '';
 	}
 
 	// Parent
 	$wp_admin_bar->add_menu( array(
 		'id'    => 'secupress',
-		'title' => '<span class="ab-icon dashicons-shield-alt"></span><span class="screen-reader-text">' . SECUPRESS_PLUGIN_NAME . '</span>' . $count,
-		'href'  => secupress_admin_url( 'dashboard' ),
+		'title' => '<span class="ab-icon dashicons-shield-alt"></span><span class="screen-reader-text">' . SECUPRESS_PLUGIN_NAME . '</span>' . $grade,
 		'meta'  => array(
-			'title' => $grade,
+			'title' => $count,
 		),
+	) );
+
+	// Dashboard
+	$wp_admin_bar->add_menu( array(
+		'parent' => 'secupress',
+		'id' 	 => 'secupress-dashboard',
+		'title'  => SECUPRESS_PLUGIN_NAME,
+		'href'   => secupress_admin_url( 'dashboard' ),
 	) );
 
 	// Settings
