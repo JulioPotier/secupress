@@ -58,12 +58,12 @@ class SecuPress_Scan_PHP_INI extends SecuPress_Scan implements iSecuPress_Scan {
 			'post_max_size'     => '<64M',   'upload_max_filezize' => '<64M',   'memory_limit'      => '<1024M',
 			'disable_functions' => '!empty', 'auto_append_file'    => false,    'auto_prepend_file' => false,
 		);
-		$zoo = array();
-		$zol = array(
+		$arg_200 = array();
+		$arg_201 = array(
 			'<code>On</code>'  => array(),
 			'<code>Off</code>' => array(),
 		);
-		$zoz = array();
+		$arg_202 = array();
 
 		foreach ( $ini_values as $name => $compare ) {
 			$check = ini_get( $name );
@@ -72,19 +72,19 @@ class SecuPress_Scan_PHP_INI extends SecuPress_Scan implements iSecuPress_Scan {
 				case '!empty':
 					if ( '' == $check ) {
 						// 200
-						$zoo[] = '<code>' . $name . '</code>';
+						$arg_200[] = '<code>' . $name . '</code>';
 					}
 					break;
 				case 1:
 					if ( ! $check ) {
 						// 201
-						$zol['<code>On</code>'][] = '<code>' . $name . '</code>';
+						$arg_201['<code>On</code>'][] = '<code>' . $name . '</code>';
 					}
 					break;
 				case false:
 					if ( $check ) {
 						// 201
-						$zol['<code>Off</code>'][] = '<code>' . $name . '</code>';
+						$arg_201['<code>Off</code>'][] = '<code>' . $name . '</code>';
 					}
 					break;
 				default:
@@ -96,35 +96,35 @@ class SecuPress_Scan_PHP_INI extends SecuPress_Scan implements iSecuPress_Scan {
 							// 202
 							$compare = str_replace( array( '<', 'M' ), array( '<code>', 'M</code>' ), $compare );
 
-							if ( ! isset( $zoz[ $compare ] ) ) {
-								$zoz[ $compare ] = array();
+							if ( ! isset( $arg_202[ $compare ] ) ) {
+								$arg_202[ $compare ] = array();
 							}
 
-							$zoz[ $compare ][] = '<code>' . $name . '</code>';
+							$arg_202[ $compare ][] = '<code>' . $name . '</code>';
 						}
 					}
 					break;
 			}
 		}
 
-		if ( $count = count( $zoo ) ) {
+		if ( $count = count( $arg_200 ) ) {
 			// bad
-			$this->add_message( 200, array( $count, wp_sprintf_l( '%l', $zoo ) ) );
+			$this->add_message( 200, array( $count, wp_sprintf_l( '%l', $arg_200 ) ) );
 		}
 
-		$zol = array_filter( $zol );
+		$arg_201 = array_filter( $arg_201 );
 
-		if ( $zol ) {
+		if ( $arg_201 ) {
 			// bad
-			foreach ( $zol as $value => $names ) {
+			foreach ( $arg_201 as $value => $names ) {
 				$count = count( $names );
 				$this->add_message( 201, array( $count, wp_sprintf_l( '%l', $names ), $value ) );
 			}
 		}
 
-		if ( $zoz ) {
+		if ( $arg_202 ) {
 			// bad
-			foreach ( $zoz as $value => $names ) {
+			foreach ( $arg_202 as $value => $names ) {
 				$count = count( $names );
 				$this->add_message( 202, array( $count, wp_sprintf_l( '%l', $names ), $value ) );
 			}
