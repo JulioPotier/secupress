@@ -8,9 +8,9 @@ add_settings_section( 'secupress_display_white_label', __( 'White Label', 'secup
  *
  * @since 1.0
  */
-do_action( 'premium.white-label-module' );
+do_action( 'premium.module.white-label' );
 
-if ( ! has_action( 'premium.white-label-module' ) ) {
+if ( ! has_action( 'premium.module.white-label' ) ) {
 
 	add_settings_field(
 		'secupress_need_premium',
