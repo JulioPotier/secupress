@@ -217,15 +217,12 @@ function secupress_activate_module( $module, $settings ) {
 	}
 
 	$module_options = get_option( "secupress_{$module}_settings" );
-	$module_options = array_merge( $module_options, $settings );
+	$module_options = array_merge( array_filter( (array) $module_options ), $settings );
 
 	call_user_func( "__secupress_{$module}_settings_callback", $module_options );
 
 	update_option( "secupress_{$module}_settings", $module_options );
 
-	if ( ! defined( 'DOING_AJAX' ) ) {
-		__secupress_scanner_ajax( $module );
-	}
 }
 
 function secupress_activate_submodule( $module, $plugin, $incompatibles_modules = array() ) {
