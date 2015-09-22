@@ -24,6 +24,14 @@ function secupress_get_modules() {
 				__( 'Do not hesitate to check all, and then, when you need, come back here to deactivate only what you need.', 'secupress' ),
 			),
 		),
+		'wordpress_core'  => array(
+			'title'       => esc_html__( 'WordPress Core', 'secupress' ),
+			'dashicon'    => 'wordpress-alt',
+			'description' => array(
+				__( 'WordPress can be tweak by so many ways. But are you using the right ones. We will help', 'secupress' ),
+				__( '', 'secupress' ),
+			),
+		),		
 		'sensitive_data'  => array(
 			'title'       => esc_html__( 'Sensitive Data', 'secupress' ),
 			'dashicon'    => 'lock',
@@ -56,6 +64,14 @@ function secupress_get_modules() {
 				__( '', 'secupress' ),
 			),
 		),
+		'alerts'          => array(
+			'title'       => esc_html__( 'Alerts', 'secupress' ),
+			'dashicon'    => 'megaphone',
+			'description' => array(
+				__( '', 'secupress' ),
+				__( '', 'secupress' ),
+			),
+		),		
 		'common_flaws'    => array(
 			'title'       => esc_html__( 'Common Flaws', 'secupress' ),
 			'dashicon'    => 'flag',
