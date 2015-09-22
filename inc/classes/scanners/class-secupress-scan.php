@@ -32,10 +32,11 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	protected     $result = array();
 	protected     $fix    = false;
 
-	public static $prio   = '';
-	public static $type   = '';
-	public static $title  = '';
-	public static $more   = '';
+	public static $prio    = '';
+	public static $type    = '';
+	public static $title   = '';
+	public static $more    = '';
+	public static $fixable = true;
 
 
 	// Instance ====================================================================================
