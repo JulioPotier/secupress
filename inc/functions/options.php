@@ -126,12 +126,13 @@ function secupress_get_scanners() {
 function secupress_get_tests() {
 	return array(
 		'high' => array(
-			'Versions',         'Auto_Update',       'Bad_Old_Plugins',
+			'Core_Update',      'Plugins_Update',    'Themes_Update',
+			'Auto_Update',      'Bad_Old_Plugins',   'Bad_Old_Files',
 			'Bad_Config_Files', 'Directory_Listing', 'PHP_INI',
 			'Admin_User',       'Easy_Login',        'Subscription',
 			'WP_Config',        'Salt_Keys',         'Passwords_Strength',
-			'Bad_Old_Files',    'Chmods',            'Common_Flaws',
-			'Bad_User_Agent',   'SQLi',
+			'Chmods',           'Common_Flaws',      'Bad_User_Agent',
+			'SQLi',
 		),
 		'medium' => array(
 			'Inactive_Plugins_Themes', 'Bad_Url_Access',  'Bad_Usernames',
