@@ -33,7 +33,7 @@ function __secupress_fixit_ajax( $test_name = null ) {
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 		wp_send_json_success( $response );
 	} else {
-		wp_redirect( secupress_admin_url( 'scanner' ) );
+		wp_redirect( secupress_admin_url( 'scanners' ) );
 		die();
 	}
 }
@@ -107,7 +107,7 @@ function __secupress_scanner_ajax( $test_name = null ) {
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 		wp_send_json_success( $output );
 	} else {
-		wp_redirect( secupress_admin_url( 'scanner' ) );
+		wp_redirect( secupress_admin_url( 'scanners' ) );
 		die();
 	}
 }
