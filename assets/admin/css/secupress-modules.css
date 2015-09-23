@@ -92,6 +92,11 @@ h2 .nav-tab .dashicons {
 	border-color: #8dff1c;
 }
 
+label {
+	display: inline-block;
+	position: relative;
+}
+
 .button-actions-title,
 .button-actions-title:hover,
 .button-actions-title:focus {
@@ -102,19 +107,18 @@ h2 .nav-tab .dashicons {
 	font-style: italic;
 	opacity: .6;
 }
-
-label {
-	display: inline-block;
-	position: relative;
-}
-
-.button-actions-title:hover {
+.button-actions-title:hover,
+.button-actions-title[aria-expanded="true"] {
 	opacity: 1;
 }
-
 .button-actions-title .dashicons-arrow-right {
-	transition-duration: .3s;
-	-webkit-transition-duration: .3s;
+	-webkit-transition: all .3s ease;
+	        transition: all .3s ease;
+}
+.button-actions-title[aria-expanded="true"] .dashicons-arrow-right {
+	-webkit-transform: rotate(90deg);
+	    -ms-transform: rotate(90deg);
+	        transform: rotate(90deg);
 }
 
 #password_strength_pattern {

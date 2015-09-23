@@ -9,16 +9,22 @@
 			$('#block-advanced_options').slideToggle(250);
 		} );
 
-		$('.button-actions-title').click( function(e){
+		$( ".button-actions-title" ).click( function( e ) {
+			var $this = $( this );
+
 			e.preventDefault();
-			var block_id = $(this).attr('aria-controls');
-			$('.'+block_id).toggle( 250 );
-			if ( 'none' != $(this).find('.dashicons-arrow-right').css( 'transform' ) ) {
-				$(this).css( 'opacity', '' ).find('.dashicons-arrow-right').css( {'transform': 'none','-ms-transform': 'none','-webkit-transform': 'none',} );
-			} else {
-				$(this).css( 'opacity', '1' ).find('.dashicons-arrow-right').css( {'transform': 'rotate(90deg)','-ms-transform': 'rotate(90deg)','-webkit-transform': 'rotate(90deg)',} );
+
+			$( "." + $this.attr( "aria-controls" ) ).toggle( 250 );
+
+			// It's open: close it.
+			if ( $this.attr( "aria-expanded" ) === "true" ) {
+				$this.attr( "aria-expanded", "false" );
 			}
-		});
+			// It's closed: open it.
+			else {
+				$this.attr( "aria-expanded", "true" );
+			}
+		} );
 
 		$('input[data-realtype="password"]').focus(
 			function() {
