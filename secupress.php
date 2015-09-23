@@ -77,7 +77,6 @@ function secupress_init() {
 
 	// Call defines, classes and functions
 	require( SECUPRESS_FUNCTIONS_PATH . '/options.php' );
-	require( SECUPRESS_INC_PATH       . '/compat.php' ); //// A supprimer lorsque la page des réglages globaux utilisera SecuPress_Settings.
 
 	// Last constants
 	define( 'SECUPRESS_PLUGIN_NAME', secupress_get_option( 'wl_plugin_name', 'SecuPress' ) );

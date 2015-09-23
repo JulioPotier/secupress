@@ -48,11 +48,16 @@ function secupress_get_option( $option, $default = false ) {
  * @return mixed The option value
  */
 function secupress_get_module_option( $option, $default = false, $module = false ) {
-	global $modulenow;
 
-	$current_module = class_exists( 'SecuPress_Settings_Modules' ) ? SecuPress_Settings_Modules::get_instance()->get_current_module() : $modulenow;////
+	if ( ! $module ) {
+		if ( ! class_exists( 'SecuPress_Settings_Modules' ) ) {
+			secupress_require_class( 'settings' );
+			secupress_require_class( 'settings', 'modules' );
+		}
 
-	$module = $module ? $module : $current_module;
+		$module = SecuPress_Settings_Modules::get_instance()->get_current_module();
+	}
+
 	/**
 	 * Pre-filter any SecuPress option before read
 	 *
@@ -80,11 +85,16 @@ function secupress_get_module_option( $option, $default = false, $module = false
 
 
 function update_secupress_module_option( $option, $value, $module = false ) {
-	global $modulenow;
 
-	$current_module = class_exists( 'SecuPress_Settings_Modules' ) ? SecuPress_Settings_Modules::get_instance()->get_current_module() : $modulenow;////
+	if ( ! $module ) {
+		if ( ! class_exists( 'SecuPress_Settings_Modules' ) ) {
+			secupress_require_class( 'settings' );
+			secupress_require_class( 'settings', 'modules' );
+		}
 
-	$module  = $module ? $module : $current_module;
+		$module = SecuPress_Settings_Modules::get_instance()->get_current_module();
+	}
+
 	$options = get_option( "secupress_{$module}_settings" );
 	$options[ $option ] = $value;
 
