@@ -50,8 +50,10 @@ function secupress_get_option( $option, $default = false ) {
 function secupress_get_module_option( $option, $default = false, $module = false ) {
 
 	if ( ! $module ) {
-		if ( ! class_exists( 'SecuPress_Settings_Modules' ) ) {
+		if ( ! class_exists( 'SecuPress_Settings' ) ) {
 			secupress_require_class( 'settings' );
+		}
+		if ( ! class_exists( 'SecuPress_Settings_Modules' ) ) {
 			secupress_require_class( 'settings', 'modules' );
 		}
 
@@ -87,8 +89,10 @@ function secupress_get_module_option( $option, $default = false, $module = false
 function update_secupress_module_option( $option, $value, $module = false ) {
 
 	if ( ! $module ) {
-		if ( ! class_exists( 'SecuPress_Settings_Modules' ) ) {
+		if ( ! class_exists( 'SecuPress_Settings' ) ) {
 			secupress_require_class( 'settings' );
+		}
+		if ( ! class_exists( 'SecuPress_Settings_Modules' ) ) {
 			secupress_require_class( 'settings', 'modules' );
 		}
 
