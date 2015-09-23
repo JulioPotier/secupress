@@ -450,7 +450,7 @@ function secupress_add_settings_field( $title, $args, $fields ) {//// dans SecuP
 }
 
 
-function secupress_do_secupress_settings_sections() {//// dans SecuPress_Settings_Module
+function secupress_do_secupress_settings_sections() {//// dans SecuPress_Settings_Modules
 	global $sectionnow, $modulenow;
 
 	do_secupress_settings_sections( 'module_' . $modulenow . '_' . $sectionnow );

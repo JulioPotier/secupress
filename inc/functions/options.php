@@ -50,7 +50,7 @@ function secupress_get_option( $option, $default = false ) {
 function secupress_get_module_option( $option, $default = false, $module = false ) {
 	global $modulenow;
 
-	$current_module = class_exists( 'SecuPress_Settings_Module' ) ? SecuPress_Settings_Module::get_instance()->get_current_module() : $modulenow;////
+	$current_module = class_exists( 'SecuPress_Settings_Modules' ) ? SecuPress_Settings_Modules::get_instance()->get_current_module() : $modulenow;////
 
 	$module = $module ? $module : $current_module;
 	/**
@@ -82,7 +82,7 @@ function secupress_get_module_option( $option, $default = false, $module = false
 function update_secupress_module_option( $option, $value, $module = false ) {
 	global $modulenow;
 
-	$current_module = class_exists( 'SecuPress_Settings_Module' ) ? SecuPress_Settings_Module::get_instance()->get_current_module() : $modulenow;////
+	$current_module = class_exists( 'SecuPress_Settings_Modules' ) ? SecuPress_Settings_Modules::get_instance()->get_current_module() : $modulenow;////
 
 	$module  = $module ? $module : $current_module;
 	$options = get_option( "secupress_{$module}_settings" );

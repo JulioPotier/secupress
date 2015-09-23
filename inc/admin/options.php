@@ -273,9 +273,9 @@ function __secupress_add_white_label_settings_block( $modules ) {
  */
 function __secupress_modules() {
 	secupress_require_class( 'settings' );
-	secupress_require_class( 'settings', 'module' );
+	secupress_require_class( 'settings', 'modules' );
 
-	SecuPress_Settings_Module::get_instance()->print_page();
+	SecuPress_Settings_Modules::get_instance()->print_page();
 }
 
 
