@@ -8,7 +8,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 function secupress_get_modules() {
 	return array(
-		'users_login'     => array(
+		'users-login'     => array(
 			'title'       => esc_html__( 'Users & Login', 'secupress' ),
 			'dashicon'    => 'admin-users',
 			'description' => array(
@@ -16,7 +16,7 @@ function secupress_get_modules() {
 				__( 'You will find here the best and easy ways to do this.', 'secupress' ),
 			),
 		),
-		'plugins_themes'  => array(
+		'plugins-themes'  => array(
 			'title'       => esc_html__( 'Plugins & Themes', 'secupress' ),
 			'dashicon'    => 'admin-plugins',
 			'description' => array(
@@ -24,7 +24,7 @@ function secupress_get_modules() {
 				__( 'Do not hesitate to check all, and then, when you need, come back here to deactivate only what you need.', 'secupress' ),
 			),
 		),
-		'wordpress_core'  => array(
+		'wordpress-core'  => array(
 			'title'       => esc_html__( 'WordPress Core', 'secupress' ),
 			'dashicon'    => 'wordpress-alt',
 			'description' => array(
@@ -32,7 +32,7 @@ function secupress_get_modules() {
 				__( '', 'secupress' ),
 			),
 		),		
-		'sensitive_data'  => array(
+		'sensitive-data'  => array(
 			'title'       => esc_html__( 'Sensitive Data', 'secupress' ),
 			'dashicon'    => 'lock',
 			'description' => array(
@@ -40,7 +40,7 @@ function secupress_get_modules() {
 				__( 'Do not hesitate to lock as much as you can to improve the security of your website.', 'secupress' ),
 			),
 		),
-		'server_settings' => array(
+		'server-settings' => array(
 			'title'       => esc_html__( 'Server Settings', 'secupress' ),
 			'dashicon'    => 'admin-home',
 			'description' => array(
@@ -72,7 +72,7 @@ function secupress_get_modules() {
 				__( '', 'secupress' ),
 			),
 		),		
-		'common_flaws'    => array(
+		'common-flaws'    => array(
 			'title'       => esc_html__( 'Common Flaws', 'secupress' ),
 			'dashicon'    => 'flag',
 			'description' => array(

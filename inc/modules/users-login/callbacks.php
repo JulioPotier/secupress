@@ -3,7 +3,7 @@ defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
 
 add_action( 'admin_init', 'secupress_register_users_login_settings' );
 function secupress_register_users_login_settings() {
-	register_setting( "secupress_users_login_settings", "secupress_users_login_settings", "__secupress_users_login_settings_callback" );
+	register_setting( "secupress_users-login_settings", "secupress_users-login_settings", "__secupress_users_login_settings_callback" );
 }
 
 /**
@@ -13,7 +13,7 @@ function secupress_register_users_login_settings() {
  * @since 1.0
  */
 function __secupress_users_login_settings_callback( $settings ) {
-	$modulenow = 'users_login';
+	$modulenow = 'users-login';
 
 	/* double_auth */
 	switch ( $settings['plugin_double_auth'] ) {
@@ -58,11 +58,11 @@ function __secupress_users_login_settings_callback( $settings ) {
 	unset( $settings['password_strength_value'] ); // not actual option
 
 	if ( isset( $settings['profile_protect'] ) ) {
-		secupress_activate_submodule( $modulenow, 'profile_protect' );
+		secupress_activate_submodule( $modulenow, 'profile-protect' );
 	} else {
-		secupress_deactivate_submodule( $modulenow, 'profile_protect' );
+		secupress_deactivate_submodule( $modulenow, 'profile-protect' );
 	}
-	secupress_manage_affected_roles( $settings, 'profile_protect' );
+	secupress_manage_affected_roles( $settings, 'profile-protect' );
 
 	/* bad_logins */
 	if ( isset( $settings['plugin_bad_logins'] ) ) {
@@ -96,9 +96,9 @@ function __secupress_users_login_settings_callback( $settings ) {
 	$settings['bad_logins_nonlogintimeslot']['to_minute'] = isset( $settings['bad_logins_nonlogintimeslot']['to_minute'] ) && in_array( $settings['bad_logins_nonlogintimeslot']['to_minute'], array( '0', '15', '30', '45' ) ) ? (int) $settings['bad_logins_nonlogintimeslot']['to_minute'] : 0;
 	
 	if ( isset( $settings['plugin_captcha'] ) ) {
-			secupress_activate_submodule( $modulenow, 'login_captcha' );
+			secupress_activate_submodule( $modulenow, 'login-captcha' );
 		} else {
-			secupress_deactivate_submodule( $modulenow, 'login_captcha' );
+			secupress_deactivate_submodule( $modulenow, 'login-captcha' );
 	}
 
 	return $settings;
@@ -106,7 +106,7 @@ function __secupress_users_login_settings_callback( $settings ) {
 
 function secupress_fix_easy_login() {
 	$settings = array( 'plugin_double_auth' => 'emaillink', 'double_auth_affected_role' => array() );
-	secupress_activate_module( 'users_login', $settings );
+	secupress_activate_module( 'users-login', $settings );
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 		wp_send_json_success();
 	} else {
