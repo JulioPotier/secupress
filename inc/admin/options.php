@@ -228,8 +228,12 @@ function __secupress_dashboard() {
  * @since 1.0
  */
 function __secupress_global_settings() {
-	secupress_require_class( 'settings' );
-	secupress_require_class( 'settings', 'global' );
+	if ( ! class_exists( 'SecuPress_Settings' ) ) {
+		secupress_require_class( 'settings' );
+	}
+	if ( ! class_exists( 'SecuPress_Settings_Global' ) ) {
+		secupress_require_class( 'settings', 'global' );
+	}
 
 	SecuPress_Settings_Global::get_instance()->print_page();
 }
@@ -256,8 +260,12 @@ function __secupress_add_white_label_settings_block( $modules ) {
  * @since 1.0
  */
 function __secupress_modules() {
-	secupress_require_class( 'settings' );
-	secupress_require_class( 'settings', 'modules' );
+	if ( ! class_exists( 'SecuPress_Settings' ) ) {
+		secupress_require_class( 'settings' );
+	}
+	if ( ! class_exists( 'SecuPress_Settings_Modules' ) ) {
+		secupress_require_class( 'settings', 'modules' );
+	}
 
 	SecuPress_Settings_Modules::get_instance()->print_page();
 }
