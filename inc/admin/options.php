@@ -122,7 +122,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		wp_enqueue_style( 'secupress-scanner-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-scanner' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 
 		// JS
-		wp_enqueue_script( 'secupress-chartjs',    SECUPRESS_ADMIN_JS_URL . 'Chart' . $suffix . '.js', array(), '1.0.2.1', true );
+		wp_enqueue_script( 'secupress-chartjs',    SECUPRESS_ADMIN_JS_URL . 'chart' . $suffix . '.js', array(), '1.0.2.1', true );
 		wp_enqueue_script( 'jquery-timeago',       SECUPRESS_ADMIN_JS_URL . 'jquery.timeago.js', array( 'jquery' ), '1.4.1', true );
 		wp_enqueue_script( 'secupress-scanner-js', SECUPRESS_ADMIN_JS_URL . 'secupress-scanner' . $suffix . '.js', array( 'secupress-chartjs', 'jquery-timeago' ), $version, true );
 
@@ -149,7 +149,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
  */
 function secupress_favicon() {
 	$version = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '?ver=' . time() : '';
-	echo '<link id="favicon" rel="shortcut icon" type="image/png" href="' . SECUPRESS_ADMIN_CSS_URL . 'images/black-shield-16.png' . $version . '" />';
+	echo '<link id="favicon" rel="shortcut icon" type="image/png" href="' . SECUPRESS_ADMIN_IMAGES_URL . 'black-shield-16.png' . $version . '" />';
 }
 
 

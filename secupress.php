@@ -45,8 +45,10 @@ define( 'SECUPRESS_PLUGIN_URL'            , plugin_dir_url( SECUPRESS_FILE ) );
 define( 'SECUPRESS_INC_URL'               , SECUPRESS_PLUGIN_URL . 'inc/' );
 define( 'SECUPRESS_FRONT_URL'             , SECUPRESS_INC_URL . 'front/' );
 define( 'SECUPRESS_ADMIN_URL'             , SECUPRESS_INC_URL . 'admin/' );
-define( 'SECUPRESS_ADMIN_JS_URL'          , SECUPRESS_ADMIN_URL . 'js/' );
-define( 'SECUPRESS_ADMIN_CSS_URL'         , SECUPRESS_ADMIN_URL . 'css/' );
+define( 'SECUPRESS_ASSETS_URL'            , SECUPRESS_PLUGIN_URL . 'assets/' );
+define( 'SECUPRESS_ADMIN_CSS_URL'         , SECUPRESS_ASSETS_URL . 'admin/css/' );
+define( 'SECUPRESS_ADMIN_JS_URL'          , SECUPRESS_ASSETS_URL . 'admin/js/' );
+define( 'SECUPRESS_ADMIN_IMAGES_URL'      , SECUPRESS_ASSETS_URL . 'admin/images/' );
 
 if ( ! defined( 'SECUPRESS_LASTVERSION' ) ) {
 	define( 'SECUPRESS_LASTVERSION', '0' );
