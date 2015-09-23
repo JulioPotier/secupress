@@ -39,13 +39,6 @@ h2 .nav-tab .dashicons {
 	position: relative;
 }
 
-.secublock {
-	background-color: #FFF;
-	padding: 1px 10px 10px 15px;
-	border: 1px solid #ccc;
-	margin-bottom: 5px;
-	border-radius: 4px;
-}
 #tab_content > .secublock {
 	margin-bottom: 20px;
 }
@@ -60,19 +53,6 @@ h2 .nav-tab .dashicons {
 	clear: none;
 }
 
-.secublock .notice {
-	background: #fcfcfc;
-	margin: 0;
-	padding: 3px 5px 3px 8px;
-}
-
-div.updated {
-	margin: 5px 0 2px;
-	border-top: 1px solid #ccc;
-	border-right: 1px solid #ccc;
-	border-bottom: 1px solid #ccc;
-}
-
 .toggle-password {
 	opacity: .7;
 }
@@ -80,10 +60,6 @@ div.updated {
 .nav-tab-wrapper a.active-module {
 	border-left: 3px solid #88BA0E;
 	width: 151px;
-}
-
-p.description {
-	font-weight: 400;
 }
 
 #password-strength {
@@ -151,9 +127,4 @@ label {
 
 .fieldtype-helper_warning b {
 	color: red;
-}
-
-p.submit {
-	margin-top: 0;
-	text-align: right;
 }

@@ -23,25 +23,36 @@ function secupress_register_setting() {
  * @since 1.0
  */
 function __secupress_global_settings_callback( $value ) {
-	if ( empty( $value['consumer_email'] ) || ! empty( $value['consumer_key'] ) ) {
-		return $value;
+	// License validation
+	$value['consumer_email'] = ! empty( $value['consumer_email'] ) ? sanitize_email( $value['consumer_email'] )    : '';
+	$value['consumer_key']   = ! empty( $value['consumer_key'] )   ? sanitize_text_field( $value['consumer_key'] ) : '';
+
+	if ( $value['consumer_email'] && $value['consumer_key'] ) {
+		$response = wp_remote_post( SECUPRESS_WEB_DEMO . 'valid_key.php',
+			array(
+				'timeout' => 10,
+				'body'    => array(
+					'data' => array(
+						'user_email' => $value['consumer_email'],
+						'user_key'   => $value['consumer_key'],
+						'action'     => 'create_free_licence',
+					)
+				),
+			)
+		);
+
+		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
+			$value['consumer_key'] = sanitize_text_field( wp_remote_retrieve_body( $response ) );
+		}
 	}
 
-	$response = wp_remote_post( SECUPRESS_WEB_DEMO . 'valid_key.php',
-		array(
-			'timeout' => 10,
-			'body'    => array(
-				'data' => array(
-					'user_email' => $value['consumer_email'],
-					'user_key'   => $value['consumer_key'],
-					'action'     => 'create_free_licence',
-				)
-			),
-		)
-	);
-
-	if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
-		$value['consumer_key'] = wp_remote_retrieve_body( $response );
+	// Level of configuration
+	if ( ! empty( $value['auto_config_level'] ) ) {
+		$value['auto_config_level'] = min( 4, max( 1, absint( $value['auto_config_level'] ) ) );
+	}
+	// Default
+	else {
+		$value['auto_config_level'] = 3;
 	}
 
 	return $value;
@@ -217,37 +228,10 @@ function __secupress_dashboard() {
  * @since 1.0
  */
 function __secupress_global_settings() {
-	global $modulenow;
+	secupress_require_class( 'settings' );
+	secupress_require_class( 'settings', 'global' );
 
-	$modulenow       = 'global';
-	$setting_modules = array(
-		'api-key',
-		'auto-config',
-	);
-	$setting_modules = apply_filters( 'secupress_global_settings_modules', $setting_modules );
-
-	foreach ( $setting_modules as $setting_module ) {
-		require( SECUPRESS_ADMIN_SETTINGS_MODULES . $setting_module . '.php' );
-	}
-	?>
-	<div class="wrap">
-		<?php secupress_admin_heading( __( 'Settings' ) ); ?>
-
-		<form action="options.php" method="post" id="secupress_settings" class="secupress-wrapper">
-			<?php settings_fields( 'secupress_settings' ); ?>
-			<?php foreach ( $setting_modules as $setting_module ) { ?>
-				<div class="secupress_setting_block">
-					<?php do_settings_sections( 'secupress_' . $setting_module ); ?>
-				</div>
-				<?php submit_button(); ?>
-			<?php } ?>
-		</form>
-		<div class="secupress_setting_block">
-			<h2><?php _e( 'That\'s all!', 'secupress' ); ?></h2>
-			<p><?php _e( 'Looking for more settings? Each other setting is included in its own module, just <a href="#">check them</a> if you need.', 'secupress' ); ?></p>
-		</div>
-	</div>
-	<?php
+	SecuPress_Settings_Global::get_instance()->print_page();
 }
 
 

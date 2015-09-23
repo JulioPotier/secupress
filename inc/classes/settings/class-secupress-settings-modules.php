@@ -13,16 +13,84 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 
 	const VERSION = '1.0';
 
+	protected static $modules;
+
 	/**
 	 * @var Singleton The reference to *Singleton* instance of this class
 	 */
 	protected static $_instance;
 
 
+	// Setters =====================================================================================
+
+	final protected static function set_modules() {
+		static::$modules = secupress_get_modules();
+	}
+
+
+	final protected function set_current_module() {
+		$this->modulenow = isset( $_GET['module'] ) ? $_GET['module'] : 'welcome';
+		$this->modulenow = array_key_exists( $this->modulenow, static::get_modules() ) && file_exists( SECUPRESS_MODULES_PATH . $this->modulenow . '/settings.php' ) ? $this->modulenow : 'welcome';
+		return $this;
+	}
+
+
+	// Getters =====================================================================================
+
+	final public static function get_modules() {
+		if ( empty( static::$modules ) ) {
+			static::set_modules();
+		}
+
+		return static::$modules;
+	}
+
+
+	/**
+	 * Get a module title.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string)$module : the desired module
+	*/
+	final public function get_module_title( $module = false ) {
+		$modules = static::get_modules();
+		$module  = $module ? $module : $this->modulenow;
+
+		if ( ! empty( $modules[ $module ]['title'] ) ) {
+			return $modules[ $module ]['title'];
+		}
+
+		return '';
+	}
+
+
+	/**
+	 * Get a module descriptions.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string)$module : the desired module
+	*/
+	final public function get_module_descriptions( $module = false ) {
+		$modules = static::get_modules();
+		$module  = $module ? $module : $this->modulenow;
+
+		if ( ! empty( $modules[ $module ]['description'] ) ) {
+			return (array) $modules[ $module ]['description'];
+		}
+
+		return array();
+	}
+
+
+	// Main template tags ==========================================================================
+
 	public function print_page() {
 		?>
 		<div class="wrap">
 			<?php secupress_admin_heading( __( 'Modules', 'secupress' ) ); ?>
+			<?php settings_errors(); ?>
 
 			<div class="secupress-wrapper">
 
@@ -55,7 +123,6 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 
 
 	protected function print_current_module() {
-		settings_errors();
 
 		// No module.
 		if ( 'welcome' === $this->get_current_module() ) {
@@ -96,7 +163,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		//// todo save settings with history
 		$this->set_current_section( 'reset' );
 		$this->set_section_description( __( 'If you need to reset this module\'s settings to the default ones, you just have to do it here, we will set the best for your site.', 'secupress' ) );
-		$this->add_section( __( 'Module settings', 'secupress' ) );
+		$this->add_section( __( 'Module settings', 'secupress' ), array( 'with_save_button' => false, ) );
 
 		$this->set_current_plugin( 'reset' );
 
@@ -114,6 +181,41 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			)
 		);
 
-		$this->do_sections( false );
+		$this->do_sections();
+	}
+
+
+	protected function print_module_title( $tag = 'h3' ) {
+		echo "<$tag>" . $this->get_module_title() . "</$tag>\n";
+		return $this;
+	}
+
+
+	protected function print_module_description() {
+		if ( $this->get_module_descriptions() ) {
+			echo '<p>' . implode( "</p>\n<p>", $this->get_module_descriptions() ) . "</p>\n";
+		}
+		return $this;
+	}
+
+
+	// Includes ====================================================================================
+
+	final protected function load_module_settings() {
+		$module_file = SECUPRESS_MODULES_PATH . $this->modulenow . '/settings.php';
+
+		if ( file_exists( $module_file ) ) {
+			require( $module_file );
+		}
+
+		return $this;
+	}
+
+
+	// secupress_load_settings()
+	final protected function load_plugin_settings( $plugin ) {
+		$plugin_file = SECUPRESS_MODULES_PATH . $this->modulenow . '/settings/' . $plugin . '.php';
+
+		return $this->require_settings_file( $plugin_file, $plugin );
 	}
 }

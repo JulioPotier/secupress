@@ -1,14 +1,32 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
+defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
-add_settings_section( 'secupress_display_apikey_options', __( 'License validation', 'secupress' ), '__secupress_how_to_get_licence', 'secupress_api-key' );
 
-add_settings_field(
-	'secupress_email',
+if ( ! function_exists( '__secupress_how_to_get_licence' ) ) {
+	function __secupress_how_to_get_licence() {
+		$description = array(
+			'<strong>' . __( 'Why an API key?', 'secupress' ) . '</strong>',
+			__( 'The API Key is needed for our module linked to the services depending of our servers, like <em>website monitoring</em> or <em>plugins vulnerability check discovery</em> in live.', 'secupress' ),
+			sprintf( __( '%s or just <strong>enter your email address</strong> below and <strong>save</strong> to get a free account.', 'secupress' ), '<a href="" target="_blank">' . __( 'Buy a licence to unlock all the features', 'secupress' ) . '</a>' ),
+		);
+
+		return implode( "<br/>\n", $description );
+	}
+}
+
+
+$this->set_current_section( 'secupress_display_apikey_options' );
+$this->set_section_description( __secupress_how_to_get_licence() );
+$this->add_section( __( 'License validation', 'secupress' ) );
+
+
+$plugin = $this->get_current_plugin(); // 'api-key'
+
+$this->add_field(
 	__( 'E-mail Address', 'secupress' ),
-	'secupress_field',
-	'secupress_api-key',
-	'secupress_display_apikey_options',
+	array(
+		'name'        => $plugin . '_email',
+	),
 	array(
 		array(
 			'type'         => 'email',
@@ -23,31 +41,21 @@ add_settings_field(
 	)
 );
 
-add_settings_field(
-	'secupress_api_key',
+$this->add_field(
 	__( 'API Key', 'secupress' ),
-	'secupress_field',
-	'secupress_api-key',
-	'secupress_display_apikey_options',
+	array(
+		'name'        => $plugin . '_api_key',
+	),
 	array(
 		array(
-			'type'			=> 'text',
-			'label_for'		=> 'consumer_key',
-			'label_screen'	=> __( 'API Key', 'secupress' ),
+			'type'         => 'text',
+			'label_for'    => 'consumer_key',
+			'label_screen' => __( 'API Key', 'secupress' ),
 		),
 		array(
-			'type'			=> 'helper_help',
-			'name'			=> 'consumer_key',
-			'description'	=> __( 'Please enter the API key obtained with your account or leave blank and save to get a free account.', 'secupress' )
-		),		
+			'type'         => 'helper_help',
+			'name'         => 'consumer_key',
+			'description'  => __( 'Please enter the API key obtained with your account or leave blank and save to get a free account.', 'secupress' )
+		),
 	)
 );
-
-if ( ! function_exists( '__secupress_how_to_get_licence' ) ) {
-	function __secupress_how_to_get_licence() {
-		_e( '<b>Why an API key?</b><br>The API Key is needed for our module linked to the services depending of our servers, like <i>website monitoring</i> or <i>plugins vulnerability check discovery</i> in live.', 'secupress' );
-		echo '<br>';
-		_e( '<a href="%1$s" target="_blank">Buy a licence to unlock all the features</a> or just <b>enter your email address</b> below and <b>save</b> to get a free account.', 'secupress' );
-		echo '<hr>';
-	}
-}

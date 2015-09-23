@@ -13,12 +13,11 @@ abstract class SecuPress_Settings {
 
 	const VERSION = '1.0';
 
-	protected static $modules;
-
 	protected        $modulenow;  // Tab (page), like `users_login`.
 	protected        $sectionnow; // Section, like `login_auth`.
 	protected        $pluginnow;  // Field, like `double_auth`.
 	protected        $sections_descriptions = array();
+	protected        $sections_save_button  = array();
 
 
 	// Instance ====================================================================================
@@ -28,7 +27,7 @@ abstract class SecuPress_Settings {
 	 *
 	 * @return Singleton The *Singleton* instance.
 	 */
-	public static function get_instance() {
+	final public static function get_instance() {
 		if ( ! isset( static::$_instance ) ) {
 			static::$_instance = new static;
 		}
@@ -63,40 +62,46 @@ abstract class SecuPress_Settings {
 
 	// Setters =====================================================================================
 
-	final protected static function set_modules() {
-		static::$modules = secupress_get_modules();
+	protected function set_current_module() {
+		die( 'Method SecuPress_Settings::set_current_module() must be over-ridden in a sub-class.' );
 	}
 
 
-	final protected function set_current_module() {
-		$this->modulenow = isset( $_GET['module'] ) ? $_GET['module'] : 'welcome';
-		$this->modulenow = array_key_exists( $this->modulenow, static::get_modules() ) && file_exists( SECUPRESS_MODULES_PATH . static::sanitize_filename( $this->modulenow ) . '/settings.php' ) ? $this->modulenow : 'welcome';
-		return $this;
-	}
-
-
-	final public function set_current_section( $section ) {
+	final protected function set_current_section( $section ) {
 		$this->sectionnow = $section;
 		return $this;
 	}
 
 
-	final public function set_current_plugin( $plugin ) {
+	final protected function set_current_plugin( $plugin ) {
 		$this->pluginnow = $plugin;
 		return $this;
 	}
 
 
-	// Getters =====================================================================================
+	final protected function set_section_description( $description ) {
+		$section_id = $this->modulenow . '|' . $this->sectionnow;
 
-	final public static function get_modules() {
-		if ( empty( static::$modules ) ) {
-			static::set_modules();
-		}
+		$this->sections_descriptions[ $section_id ] = $description;
 
-		return static::$modules;
+		return $this;
 	}
 
+
+	final protected function set_section_save_button( $value ) {
+		$section_id = $this->get_section_id();
+
+		if ( $value ) {
+			$this->sections_save_button[ $section_id ] = 1;
+		} else {
+			unset( $this->sections_save_button[ $section_id ] );
+		}
+
+		return $this;
+	}
+
+
+	// Getters =====================================================================================
 
 	final public function get_current_module() {
 		return $this->modulenow;
@@ -113,41 +118,8 @@ abstract class SecuPress_Settings {
 	}
 
 
-	/**
-	 * Get a module title.
-	 *
-	 * @since 1.0
-	 *
-	 * @param (string)$module : the desired module
-	*/
-	final public function get_module_title( $module = false ) {
-		$modules = static::get_modules();
-		$module  = $module ? $module : $this->modulenow;
-
-		if ( ! empty( $modules[ $module ]['title'] ) ) {
-			return $modules[ $module ]['title'];
-		}
-
-		return '';
-	}
-
-
-	/**
-	 * Get a module descriptions.
-	 *
-	 * @since 1.0
-	 *
-	 * @param (string)$module : the desired module
-	*/
-	final public function get_module_descriptions( $module = false ) {
-		$modules = static::get_modules();
-		$module  = $module ? $module : $this->modulenow;
-
-		if ( ! empty( $modules[ $module ]['description'] ) ) {
-			return (array) $modules[ $module ]['description'];
-		}
-
-		return array();
+	public function get_section_id() {
+		return 'module_' . $this->modulenow . '|' . $this->sectionnow;
 	}
 
 
@@ -165,28 +137,14 @@ abstract class SecuPress_Settings {
 	}
 
 
-	protected function print_module_title( $tag = 'h3' ) {
-		echo "<$tag>" . $this->get_module_title() . "</$tag>\n";
-		return $this;
-	}
-
-
-	protected function print_module_description() {
-		if ( $this->get_module_descriptions() ) {
-			echo '<p>' . implode( "</p>\n<p>", $this->get_module_descriptions() ) . "</p>\n";
-		}
-		return $this;
-	}
-
-
 	// Sections ====================================================================================
 
 	//// secupress_add_settings_section()
-	public function add_section( $title, $args = null ) {
+	protected function add_section( $title, $args = null ) {
 
 		$args       = wp_parse_args( $args, array( 'with_roles' => false, 'with_save_button' => true ) );
 		$actions    = '';
-		$section_id = 'module_' . $this->modulenow . '|' . $this->sectionnow;
+		$section_id = $this->get_section_id();
 
 		if ( ! empty( $args['with_roles'] ) ) {
 			$actions .= '<button type="button" class="hide-if-no-js no-button button-actions-title" aria-expanded="false" aria-controls="block-_affected_role">' . __( 'Roles', 'secupress' ) . ' <span class="dashicons dashicons-arrow-right" aria-hidden="true"></span></button>';
@@ -201,7 +159,11 @@ abstract class SecuPress_Settings {
 			$section_id
 		);
 
-		if ( empty( $args['with_roles'] ) ) {
+		if ( $args['with_save_button'] ) {
+			$this->sections_save_button[ $section_id ] = 1;
+		}
+
+		if ( ! $args['with_roles'] ) {
 			return $this;
 		}
 
@@ -242,15 +204,15 @@ abstract class SecuPress_Settings {
 
 
 	// do_secupress_settings_sections() + secupress_do_secupress_settings_sections()
-	protected function do_sections( $submit_button = true ) {
+	protected function do_sections() {
 
-		$page = 'module_' . $this->modulenow . '|' . $this->sectionnow;
+		$section_id = $this->get_section_id();
 
 		echo '<div class="secublock">';
-			static::do_settings_sections( $page );
+			$this->do_settings_sections();
 		echo '</div>';
 
-		if ( $submit_button ) {
+		if ( ! empty( $this->sections_save_button[ $section_id ] ) ) {
 			static::submit_button( 'primary small', $this->sectionnow . '_submit' );
 
 			do_action( 'after_section_' . $this->sectionnow );
@@ -265,14 +227,16 @@ abstract class SecuPress_Settings {
 	 *
 	 * @return void
 	 */
-	final protected static function do_settings_sections( $page ) {
+	final protected function do_settings_sections() {
 		global $wp_settings_sections, $wp_settings_fields;
 
-		if ( ! isset( $wp_settings_sections[ $page ] ) ) {
+		$section_id = $this->get_section_id();
+
+		if ( ! isset( $wp_settings_sections[ $section_id ] ) ) {
 			return;
 		}
 
-		foreach ( (array) $wp_settings_sections[ $page ] as $section ) {
+		foreach ( (array) $wp_settings_sections[ $section_id ] as $section ) {
 			if ( $section['title'] ) {
 				echo "<h3>{$section['title']}</h3>\n";
 			}
@@ -281,12 +245,12 @@ abstract class SecuPress_Settings {
 				call_user_func( $section['callback'], $section );
 			}
 
-			if ( ! isset( $wp_settings_fields ) || ! isset( $wp_settings_fields[ $page ] ) || ! isset( $wp_settings_fields[ $page ][ $section['id'] ] ) ) {
+			if ( ! isset( $wp_settings_fields ) || ! isset( $wp_settings_fields[ $section_id ] ) || ! isset( $wp_settings_fields[ $section_id ][ $section['id'] ] ) ) {
 				continue;
 			}
 
 			echo '<table class="form-table">';
-				static::do_settings_fields( $page, $section['id'] );
+				static::do_settings_fields( $section_id, $section['id'] );
 			echo '</table>';
 		}
 	}
@@ -312,13 +276,16 @@ abstract class SecuPress_Settings {
 
 			$args['label_for'] = isset( $args['label_for'] )   ? $args['label_for'] : '';
 			$args['name']      = isset( $args['name'] )        ? $args['name'] : $args['label_for'];
+			$option_name       = 'secupress' . ( 'global' !== $this->modulenow ? '_' . $this->modulenow : '' ) . '_settings';
+			$default           = isset( $args['default'] )     ? $args['default'] : '';
+			$value             = 'global' !== $this->modulenow ? secupress_get_module_option( $args['name'] ) : secupress_get_option( $args['name'] );
+			$value             = $value ? $value : $default;
 			$parent            = isset( $args['parent'] )      ? 'data-parent="' . sanitize_html_class( $args['parent'] ). '"' : null;
 			$placeholder       = isset( $args['placeholder'] ) ? 'placeholder="'. $args['placeholder'].'" ' : '';
 			$label             = isset( $args['label'] )       ? $args['label'] : '';
 			$required          = isset( $args['required'] )    ? ' data-required="required" data-aria-required="true"' : '';
 			$pattern           = isset( $args['pattern'] )     ? ' data-pattern="' . $args['pattern'] . '"' : '';
 			$title             = isset( $args['title'] )       ? ' title="' . $args['title'] . '"' : '';
-			$default           = isset( $args['default'] )     ? $args['default'] : '';
 			$cols              = isset( $args['cols'] )        ? (int) $args['cols'] : 50;
 			$rows              = isset( $args['rows'] )        ? (int) $args['rows'] : 5;
 			$size              = isset( $args['size'] )        ? (int) $args['size'] : 1;
@@ -338,15 +305,11 @@ abstract class SecuPress_Settings {
 				echo '<fieldset class="fieldname-' . sanitize_html_class( $args['name'] ) . ' fieldtype-' . sanitize_html_class( $args['type'] ) . '">';
 			}
 
-			switch ( $args['type'] ) {
+			switch ( $args['type'] ) {//// Supprimer les labels si $label est vide.
 				case 'number' :
 				case 'email' :
 				case 'text' :
 
-					$value = esc_attr( secupress_get_module_option( $args['name'] ) );
-					if ( ! $value ) {
-						$value = $default;
-					}
 					$min = isset( $args['min'] ) ? ' min="' . (int) $args['min'] . '"' : '';
 					$max = isset( $args['max'] ) ? ' max="' . (int) $args['max'] . '"' : '';
 
@@ -357,22 +320,21 @@ abstract class SecuPress_Settings {
 					?>
 					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
 					<label>
-						<input <?php echo $title; ?><?php echo $autocomplete; ?><?php echo $pattern; ?><?php echo $required; ?><?php echo $disabled; ?><?php echo $data_realtype; ?> type="<?php echo $args['type']; ?>"<?php echo $number_options; ?> id="<?php echo $args['label_for']; ?>" name="secupress_<?php echo $this->modulenow; ?>_settings[<?php echo $args['name']; ?>]" value="<?php echo $value; ?>" <?php echo $placeholder; ?><?php echo $readonly; ?>/>
+						<input <?php echo $title; ?><?php echo $autocomplete; ?><?php echo $pattern; ?><?php echo $required; ?><?php echo $disabled; ?><?php echo $data_realtype; ?> type="<?php echo $args['type']; ?>"<?php echo $number_options; ?> id="<?php echo $args['label_for']; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]" value="<?php echo esc_attr( $value ); ?>" <?php echo $placeholder; ?><?php echo $readonly; ?>/>
 						<?php echo $label; ?>
 					</label>
 					<?php
 					break;
 
-				case 'password' :
+				case 'password' ://// Pas 2 input dans le même label >_>
 
-					$value        = esc_attr( secupress_get_module_option( $args['name'] ) );
 					$data_nocheck = $value ? ' data-nocheck="true"' : '';
 					$disabled     = false ? ' disabled="disabled"' : $readonly;
 					?>
 					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
 					<label>
-						<input autocomplete="off" data-realtype="password" <?php echo $data_nocheck; ?><?php echo $title; ?><?php echo $pattern; ?><?php echo $required; ?><?php echo $disabled; ?> type="password" id="<?php echo $args['label_for']; ?>" name="secupress_<?php echo $this->modulenow; ?>_settings[<?php echo $args['name']; ?>]" value="" <?php echo $readonly; ?>/>
-						<input type="text" tabindex="-1" id="password_strength_pattern"<?php echo $data_nocheck; ?> data-pattern="[3-4]" title="<?php esc_attr_e( 'Minimum Strength Level: Medium', 'secupress' ); ?>" name="secupress_<?php echo $this->modulenow; ?>_settings[password_strength_value]" value="0" id="password_strength_value" />
+						<input autocomplete="off" data-realtype="password" <?php echo $data_nocheck; ?><?php echo $title; ?><?php echo $pattern; ?><?php echo $required; ?><?php echo $disabled; ?> type="password" id="<?php echo $args['label_for']; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]" value="" <?php echo $readonly; ?>/>
+						<input type="text" tabindex="-1" id="password_strength_pattern"<?php echo $data_nocheck; ?> data-pattern="[3-4]" title="<?php esc_attr_e( 'Minimum Strength Level: Medium', 'secupress' ); ?>" name="<?php echo $option_name; ?>[password_strength_value]" value="0" id="password_strength_value" />
 						<?php echo $label; ?>
 						<i class="hide-if-no-js"><?php printf( __( 'Required: %s', 'secupress' ), _x( 'Medium', 'password strength' ) ); ?></i>
 						<br><span id="password-strength" class="hide-if-no-js"></span>
@@ -382,15 +344,11 @@ abstract class SecuPress_Settings {
 
 				case 'textarea' :
 
-					$t_temp = secupress_get_module_option( $args['name'], '' );
-					$value  = ! empty( $t_temp ) ? esc_textarea( implode( "\n" , $t_temp ) ) : '';
-					if ( ! $value ){
-						$value = $default;
-					}
+					$value = esc_textarea( implode( "\n" , $value ) );
 					?>
 					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
 					<label>
-						<textarea id="<?php echo $args['label_for']; ?>" name="secupress_<?php echo $this->modulenow; ?>_settings[<?php echo $args['name']; ?>]" cols="<?php echo $cols; ?>" rows="<?php echo $rows; ?>"<?php echo $readonly; ?>><?php echo $value; ?></textarea>
+						<textarea id="<?php echo $args['label_for']; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]" cols="<?php echo $cols; ?>" rows="<?php echo $rows; ?>"<?php echo $readonly; ?>><?php echo $value; ?></textarea>
 					</label>
 					<?php
 					break;
@@ -404,7 +362,7 @@ abstract class SecuPress_Settings {
 					}
 					?>
 					<label>
-						<input type="checkbox" id="<?php echo $args['name']; ?>" class="<?php echo $class; ?>" name="secupress_<?php echo $this->modulenow; ?>_settings[<?php echo $args['name']; ?>]" value="1"<?php echo $readonly; ?> <?php checked( secupress_get_module_option( $args['name'], 0 ), 1 ); ?> <?php echo $parent; ?>/> <?php echo $args['label']; ?>
+						<input type="checkbox" id="<?php echo $args['name']; ?>" class="<?php echo $class; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]" value="1"<?php echo $readonly; ?> <?php checked( $value, 1 ); ?> <?php echo $parent; ?>/> <?php echo $args['label']; ?>
 					</label>
 					<?php
 					break;
@@ -413,14 +371,16 @@ abstract class SecuPress_Settings {
 
 					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
 					<label>
-						<select size="<?php echo $args['size']; ?>" multiple="multiple" id="<?php echo $args['name']; ?>" name="secupress_<?php echo $this->modulenow; ?>_settings[<?php echo $args['name']; ?>]"<?php echo $readonly; ?>>
+						<select size="<?php echo $args['size']; ?>" multiple="multiple" id="<?php echo $args['name']; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]"<?php echo $readonly; ?>>
 							<?php
+							$value = (array) $value;
+
 							foreach ( $args['options'] as $val => $title ) {
 								if ( '_' === $val[0] ) {
 									$title .= ' (' . __( 'Premium', 'secupress' ) . ')';
 								}
 								?>
-								<option value="<?php echo $val; ?>" <?php selected( secupress_get_module_option( $args['name'] ) == $val || in_array( $val, secupress_get_module_option( $args['name'], array() ) ) ); ?>><?php echo $title; ?></option>
+								<option value="<?php echo $val; ?>" <?php selected( in_array( $val, $value ) ); ?>><?php echo $title; ?></option>
 								<?php
 							}
 							?>
@@ -433,6 +393,7 @@ abstract class SecuPress_Settings {
 
 				case 'roles' :
 
+					$value = (array) $value;
 					$roles = new WP_Roles();
 					$roles = $roles->get_names();
 					$roles = array_map( 'translate_user_role', $roles );
@@ -442,9 +403,9 @@ abstract class SecuPress_Settings {
 					foreach ( $roles as $val => $title ) {
 						?>
 						<label>
-							<input type="checkbox" name="secupress_<?php echo $this->modulenow; ?>_settings[<?php echo $args['name']; ?>][]" value="<?php echo $val; ?>"<?php checked( ! in_array( $val, secupress_get_module_option( $args['name'], array() ) ) ); ?>> <?php echo $title; ?>
+							<input type="checkbox" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][]" value="<?php echo $val; ?>"<?php checked( ! in_array( $val, $value ) ); ?>> <?php echo $title; ?>
 						</label><br />
-						<input type="hidden" name="secupress_<?php echo $this->modulenow; ?>_settings[hidden_<?php echo $args['name']; ?>][]" value="<?php echo $val; ?>">
+						<input type="hidden" name="<?php echo $option_name; ?>[hidden_<?php echo $args['name']; ?>][]" value="<?php echo $val; ?>">
 						<?php
 					}
 					break;
@@ -453,13 +414,15 @@ abstract class SecuPress_Settings {
 
 					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
 					<?php
+					$value = (array) $value;
+
 					foreach ( $args['options'] as $val => $title ) {
 						if ( '_' === $val[0] ) {
 							$title .= ' (' . __( 'Premium', 'secupress' ) . ')';
 						}
 						?>
 						<label>
-							<input type="checkbox" id="<?php echo $args['name']; ?>_<?php echo $val; ?>" value="<?php echo $val; ?>"<?php checked( in_array( $val, (array) secupress_get_module_option( $args['name'] ) ) ); ?> name="secupress_<?php echo $this->modulenow; ?>_settings[<?php echo $args['name']; ?>][]"<?php echo $readonly; ?>> <?php echo $title; ?>
+							<input type="checkbox" id="<?php echo $args['name']; ?>_<?php echo $val; ?>" value="<?php echo $val; ?>"<?php checked( in_array( $val, $value ) ); ?> name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][]"<?php echo $readonly; ?>> <?php echo $title; ?>
 						</label><br />
 						<?php
 					}
@@ -476,7 +439,7 @@ abstract class SecuPress_Settings {
 						}
 						?>
 						<label>
-							<input type="radio" id="<?php echo $args['name']; ?>_<?php echo $val; ?>" value="<?php echo $val; ?>"<?php checked( secupress_get_module_option( $args['name'] ), $val ); ?> name="secupress_<?php echo $this->modulenow; ?>_settings[<?php echo $args['name']; ?>]"<?php echo $readonly; ?>> <?php echo $title; ?>
+							<input type="radio" id="<?php echo $args['name']; ?>_<?php echo $val; ?>" value="<?php echo $val; ?>"<?php checked( $value, $val ); ?> name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]"<?php echo $readonly; ?>> <?php echo $title; ?>
 						</label><br />
 						<?php
 					}
@@ -487,31 +450,30 @@ abstract class SecuPress_Settings {
 
 					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
 					<?php
-					$value       = secupress_get_module_option( $args['name'] );
-					$from_hour   = isset( $value['from_hour'] ) ? $value['from_hour'] : '';
+					$from_hour   = isset( $value['from_hour'] )   ? $value['from_hour']   : '';
 					$from_minute = isset( $value['from_minute'] ) ? $value['from_minute'] : '';
-					$to_hour     = isset( $value['to_hour'] ) ? $value['to_hour'] : '';
-					$to_minute   = isset( $value['to_minute'] ) ? $value['to_minute'] : '';
+					$to_hour     = isset( $value['to_hour'] )     ? $value['to_hour']     : '';
+					$to_minute   = isset( $value['to_minute'] )   ? $value['to_minute']   : '';
 
 					_e( 'Everyday', 'secupress' ); ////
 					echo '<br>';
 					echo '<span style="display:inline-block;min-width:3em">' . _x( 'From', '*From* xx h xx mn To xx h xx mn', 'secupress' ) . '</span>';
 					?>
 					<label>
-						<input type="number" class="small-text" min="0" max="23" id="<?php echo $args['name']; ?>_from_hour" value="<?php echo (int) $from_hour; ?>" name="secupress_<?php echo $this->modulenow; ?>_settings[<?php echo $args['name']; ?>][from_hour]"<?php echo $readonly; ?>>
+						<input type="number" class="small-text" min="0" max="23" id="<?php echo $args['name']; ?>_from_hour" value="<?php echo (int) $from_hour; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][from_hour]"<?php echo $readonly; ?>>
 					</label> <?php _ex( 'h', 'hour', 'secupress' ); ?>
 					<label>
-						<input type="number" class="small-text" min="0" max="45" step="15" id="<?php echo $args['name']; ?>_from_minute" value="<?php echo (int) $from_minute; ?>" name="secupress_<?php echo $this->modulenow; ?>_settings[<?php echo $args['name']; ?>][from_minute]"<?php echo $readonly; ?>>
+						<input type="number" class="small-text" min="0" max="45" step="15" id="<?php echo $args['name']; ?>_from_minute" value="<?php echo (int) $from_minute; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][from_minute]"<?php echo $readonly; ?>>
 					</label> <?php _ex( 'min', 'minute', 'secupress' ); ?>
 					<br>
 					<?php
 					echo '<span style="display:inline-block;min-width:3em">' . _x( 'To', 'From xx h xx mn *To* xx h xx mn', 'secupress' ) . '</span>';
 					?>
 					<label>
-						<input type="number" class="small-text" min="0" max="23" id="<?php echo $args['name']; ?>_to_hour" value="<?php echo (int) $to_hour; ?>" name="secupress_<?php echo $this->modulenow; ?>_settings[<?php echo $args['name']; ?>][to_hour]"<?php echo $readonly; ?>>
+						<input type="number" class="small-text" min="0" max="23" id="<?php echo $args['name']; ?>_to_hour" value="<?php echo (int) $to_hour; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][to_hour]"<?php echo $readonly; ?>>
 					</label> <?php _ex( 'h', 'hour', 'secupress' ); ?>
 					<label>
-						<input type="number" class="small-text" min="0" max="45" step="15" id="<?php echo $args['name']; ?>_to_minute" value="<?php echo (int) $to_minute; ?>" name="secupress_<?php echo $this->modulenow; ?>_settings[<?php echo $args['name']; ?>][to_minute]"<?php echo $readonly; ?>>
+						<input type="number" class="small-text" min="0" max="45" step="15" id="<?php echo $args['name']; ?>_to_minute" value="<?php echo (int) $to_minute; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][to_minute]"<?php echo $readonly; ?>>
 					</label> <?php _ex( 'min', 'minute', 'secupress' ); ?>
 					<?php
 
@@ -610,7 +572,7 @@ abstract class SecuPress_Settings {
 
 
 	// secupress_add_settings_field()
-	public function add_field( $title, $args, $fields ) {
+	protected function add_field( $title, $args, $fields ) {
 
 		$args = wp_parse_args( $args, array(
 			'name'        => '',
@@ -624,8 +586,8 @@ abstract class SecuPress_Settings {
 			'module_' . $this->modulenow . '|' . $this->pluginnow . '|' . $args['name'],
 			$title . static::field_description( $args['description'] ),
 			$callback,
-			'module_' . $this->modulenow . '|' . $this->sectionnow,
-			'module_' . $this->modulenow . '|' . $this->sectionnow,
+			$this->get_section_id(),
+			$this->get_section_id(),
 			$fields
 		);
 
@@ -675,48 +637,14 @@ abstract class SecuPress_Settings {
 	}
 
 
-	// Includes ====================================================================================
-
-	final public function load_module_settings() {
-		$module_file = SECUPRESS_MODULES_PATH . static::sanitize_filename( $this->modulenow ) . '/settings.php';
-
-		if ( file_exists( $module_file ) ) {
-			require( $module_file );
-		}
-
-		return $this;
-	}
-
-
-	// secupress_load_settings()
-	final public function load_plugin_settings( $plugin ) {
-		$plugin_file = SECUPRESS_MODULES_PATH . static::sanitize_filename( $this->modulenow ) . '/settings/' . static::sanitize_filename( $plugin ) . '.php';
-
-		if ( file_exists( $plugin_file ) ) {
-			$this->set_current_plugin( $plugin );
-
-			require( $plugin_file );
-
-			$this->do_sections();
-		}
-
-		return $this;
-	}
-
-
-	public static function sanitize_filename( $filename ) {
-		return strtolower( str_replace( '_', '-', sanitize_key( $filename ) ) );
-	}
-
-
 	// Other template tags =========================================================================
 
 	// __secupress_module_switch_description() + __rocket_module_full_title()
-	public function print_section_description() {
+	protected function print_section_description() {
 		$key = $this->modulenow . '|' . $this->sectionnow;
 
 		if ( ! empty( $this->sections_descriptions[ $key ] ) ) {
-			echo '<div class="notice notice-success"><i>';
+			echo '<div class="secupress-section-description"><i>';
 				echo $this->sections_descriptions[ $key ];
 			echo '</i></div>';
 		}
@@ -725,14 +653,29 @@ abstract class SecuPress_Settings {
 	}
 
 
-	public function set_section_description( $description ) {
-		$key = $this->modulenow . '|' . $this->sectionnow;
+	// secupress_submit_button()
+	protected static function submit_button( $type = 'primary large', $name = 'main_submit', $wrap = true, $other_attributes = null, $echo = true ) {
+		if ( true === $wrap ) {
+			$wrap = '<p class="submit">';
+		} elseif ( $wrap ) {
+			$wrap = '<p class="submit ' . sanitize_html_class( $wrap ) . '">';
+		}
 
-		$this->sections_descriptions[ $key ] = $description;
+		$button = get_submit_button( __( 'Save All Changes', 'secupress' ), $type, $name, false, $other_attributes );
 
-		return $this;
+		if ( $wrap ) {
+			$button = $wrap . $button . '</p>';
+		}
+
+		if ( ! $echo ) {
+			return $button;
+		}
+
+		echo $button;
 	}
 
+
+	// Utilities ===================================================================================
 
 	/**
 	 * Output the $text in a P tag with .description class
@@ -754,25 +697,19 @@ abstract class SecuPress_Settings {
 	}
 
 
-	// secupress_submit_button()
-	public static function submit_button( $type = 'primary large', $name = 'main_submit', $wrap = true, $other_attributes = null, $echo = true ) {
-		if ( true === $wrap ) {
-			$wrap = '<p class="submit">';
-		} elseif ( $wrap ) {
-			$wrap = '<p class="submit ' . sanitize_html_class( $wrap ) . '">';
+	// Includes ====================================================================================
+
+	final protected function require_settings_file( $module_file, $module ) {
+
+		if ( file_exists( $module_file ) ) {
+			$this->set_current_plugin( $module );
+
+			require( $module_file );
+
+			$this->do_sections();
 		}
 
-		$button = get_submit_button( __( 'Save All Changes', 'secupress' ), $type, $name, false, $other_attributes );
-
-		if ( $wrap ) {
-			$button = $wrap . $button . '</p>';
-		}
-
-		if ( ! $echo ) {
-			return $button;
-		}
-
-		echo $button;
+		return $this;
 	}
 
 }

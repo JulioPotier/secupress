@@ -1,7 +1,14 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
-add_settings_section( 'secupress_display_white_label', __( 'White Label', 'secupress' ), '__secupress_whitelabel_info', 'secupress_white-label' );
+
+$this->set_current_section( 'secupress_display_white_label' );
+$this->set_section_description( __( 'You can change the name of the plugin, this will be shown on the plugins page, only when activated.', 'secupress' ) );
+$this->add_section( __( 'White Label', 'secupress' ) );
+
+
+$plugin = $this->get_current_plugin(); // 'white-label'
+
 
 /**
  * Used by premium version to add the right fields. Developpers: don't use it ;)
@@ -10,31 +17,26 @@ add_settings_section( 'secupress_display_white_label', __( 'White Label', 'secup
  */
 do_action( 'premium.module.white-label' );
 
-if ( ! has_action( 'premium.module.white-label' ) ) {
+if ( ! has_action( 'premium.module.white-label' ) ) :
 
-	add_settings_field(
-		'secupress_need_premium',
+	$this->set_section_save_button( false );
+
+	$this->add_field(
 		__( 'Premium Upgrade', 'secupress' ),
-		'secupress_button',
-		'secupress_white-label',
-		'secupress_display_white_label',
 		array(
-			'button' =>
-			array(
+			'name'        => $plugin . '_need_premium',
+			'field_type'  => 'field_button',
+		),
+		array(
+			'button' => array(
 				'button_label' => __( 'Premium Upgrade', 'secupress' ),
-				'url'   => '#', ////
+				'url'          => '#', ////
 			),
-			'helper_help' =>
-			array(
-				'name'			=> 'need_premium',
-				'description'	=> __( 'This feature is only available in the <b>Premium Version</b>.', 'secupress' )
+			'helper_help' => array(
+				'name'         => 'need_premium',
+				'description'  => __( 'This feature is only available in the <strong>Premium Version</strong>.', 'secupress' )
 			),
 		)
 	);
 
-}
-
-function __secupress_whitelabel_info() {
-	_e( 'You can change the name of the plugin, this will be shown on the plugins page, only when activated.', 'secupress' );
-	echo '<hr>';
-}
+endif;
