@@ -172,19 +172,6 @@ function secupress_die( $message = '', $title = '', $args = array() ) {
 }
 
 
-function do_secupress_settings_sections( $page ) {
-	echo '<div class="secublock">';
-		do_settings_sections( $page );
-	echo '</div>';
-}
-
-
-function __secupress_get_hidden_classes( $classes ) {
-	$output = 'hide-if-js block-hidden ' . $classes;
-	return $output;
-}
-
-
 function secupress_deactivate_submodule( $module, $plugins ) {
 	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
 
@@ -209,6 +196,7 @@ function secupress_deactivate_submodule( $module, $plugins ) {
 	}
 }
 
+
 function secupress_activate_module( $module, $settings ) {
 	$modules = secupress_get_modules();
 
@@ -224,6 +212,7 @@ function secupress_activate_module( $module, $settings ) {
 	update_option( "secupress_{$module}_settings", $module_options );
 
 }
+
 
 function secupress_activate_submodule( $module, $plugin, $incompatibles_modules = array() ) {
 	$plugin_file    = sanitize_key( $plugin );
@@ -327,15 +316,6 @@ function secupress_generate_password( $length = 12, $args = array() ) {
 	}
 
 	return $password;
-}
-
-
-function secupress_load_settings( $module, $plugin ) {
-	$plugin_file = SECUPRESS_MODULES_PATH . sanitize_key( $module ) . '/settings/' . sanitize_key( $plugin ) . '.php';
-
-	if ( file_exists( $plugin_file ) ) {
-		require( $plugin_file );
-	}
 }
 
 

@@ -11,8 +11,8 @@
 
 		$('.button-actions-title').click( function(e){
 			e.preventDefault();
-			var block_id = $(this).attr('for');
-			$('.block-'+block_id).toggle( 250 );
+			var block_id = $(this).attr('aria-controls');
+			$('.'+block_id).toggle( 250 );
 			if ( 'none' != $(this).find('.dashicons-arrow-right').css( 'transform' ) ) {
 				$(this).css( 'opacity', '' ).find('.dashicons-arrow-right').css( {'transform': 'none','-ms-transform': 'none','-webkit-transform': 'none',} );
 			} else {
@@ -20,15 +20,15 @@
 			}
 		});
 
-		$('input[data-realtype="password"]').focus( 
+		$('input[data-realtype="password"]').focus(
 			function() {
 				$(this).attr('type', 'text');
 			} );
-		
-		$('input[data-realtype="password"]').blur( 
+
+		$('input[data-realtype="password"]').blur(
 			function () {
 				$(this).attr('type', 'password');
-			} 
+			}
 		);
 		if (typeof document.createElement( 'input' ).checkValidity == 'function') {
 			var checkboxes = $('fieldset[class*="_affected_role"] :checkbox');
@@ -51,11 +51,11 @@
 			var block_val = $(t).val();
 			var block_name = $(t).attr('name');
 			var block_target = $('.block-' + $(t).val() );
-			var block_id = $(t).attr('for');
+			var block_id = $(t).attr('aria-controls');
 
 			// if ( first || $(t).attr('type') == 'radio' &&  last_block_target[ $(t).attr('name') ] != $( '[name="' + $(t).attr('name') + '"]:checked' ).val() ) {
 			if ( $(t).attr('type') == 'radio' ) {
-				$('.block-hidden.block-' + block_id).hide();
+				$('.block-hidden.' + block_id).hide();
 			}
 
 			$('.block-hidden.block-' + last_block_target[ $(t).attr('name') ] + ' input').each( function(i,v){
@@ -121,7 +121,7 @@
 			secupressToggleBlockVisibility( e, $(this), tempo==0 );
 		} ).filter(':checked:not(#module_active)').click();
 		tempo = 250;
-	 
+
 	    function checkPasswordStrength() {
 			var pass = $('#double_auth_password').val();
 
@@ -161,7 +161,7 @@
 			}
 		}
 
-	    $( '#double_auth_password' ).on( 'input propertychange', 
+	    $( '#double_auth_password' ).on( 'input propertychange',
 	        checkPasswordStrength
 		);
 

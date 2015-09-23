@@ -25,7 +25,7 @@ function secupress_get_option( $option, $default = false ) {
 	}
 
 	$options = get_option( SECUPRESS_SETTINGS_SLUG );
-	$value = isset( $options[ $option ] ) && $options[ $option ] !== false ? $options[ $option ] : $default;
+	$value   = isset( $options[ $option ] ) && $options[ $option ] !== false ? $options[ $option ] : $default;
 	/**
 	 * Filter any SecuPress option after read
 	 *
@@ -43,14 +43,16 @@ function secupress_get_option( $option, $default = false ) {
  * @since 1.0
  *
  * @param string $option  The option name
- * @param bool   $default (default: false) The default value of option
- * @param string $module  The module slug (see array keys from modules.php) default is $modulenow global var
+ * @param bool   $default (default: false) The default value of option.
+ * @param string $module  The module slug (see array keys from modules.php) default is the current module.
  * @return mixed The option value
  */
 function secupress_get_module_option( $option, $default = false, $module = false ) {
-	global $modulenow; //// You too, you'll die soon.
+	global $modulenow;
 
-	$module = $module ? $module : $modulenow;
+	$current_module = class_exists( 'SecuPress_Settings_Module' ) ? SecuPress_Settings_Module::get_instance()->get_current_module() : $modulenow;////
+
+	$module = $module ? $module : $current_module;
 	/**
 	 * Pre-filter any SecuPress option before read
 	 *
@@ -65,7 +67,7 @@ function secupress_get_module_option( $option, $default = false, $module = false
 	}
 
 	$options = get_option( "secupress_{$module}_settings" );
-	$value = isset( $options[ $option ] ) && $options[ $option ] !== false ? $options[ $option ] : $default;
+	$value   = isset( $options[ $option ] ) && $options[ $option ] !== false ? $options[ $option ] : $default;
 	/**
 	 * Filter any SecuPress option after read
 	 *
@@ -78,9 +80,11 @@ function secupress_get_module_option( $option, $default = false, $module = false
 
 
 function update_secupress_module_option( $option, $value, $module = false ) {
-	global $modulenow; ////
+	global $modulenow;
 
-	$module  = $module ? $module : $modulenow;
+	$current_module = class_exists( 'SecuPress_Settings_Module' ) ? SecuPress_Settings_Module::get_instance()->get_current_module() : $modulenow;////
+
+	$module  = $module ? $module : $current_module;
 	$options = get_option( "secupress_{$module}_settings" );
 	$options[ $option ] = $value;
 
@@ -143,29 +147,6 @@ function secupress_get_tests() {
 			'Login_Errors_Disclose', 'PHP_Disclosure', 'Admin_As_Author'
 		),
 	);
-}
-
-
-//// Not sure this is the right place for you to be, buddy.
-
-function secupress_submit_button( $type = 'primary large', $name = 'main_submit', $wrap = true, $other_attributes = null, $echo = true ) {
-	if ( true === $wrap ) {
-		$wrap = '<p class="align-right">';
-	} elseif ( $wrap ) {
-		$wrap = '<p class="align-right ' . sanitize_html_class( $wrap ) . '">';
-	}
-
-	$button = get_submit_button( __( 'Save All Changes', 'secupress' ), $type, $name, false, $other_attributes );
-
-	if ( $wrap ) {
-		$button = $wrap . $button . '</p>';
-	}
-
-	if ( ! $echo ) {
-		return $button;
-	}
-
-	echo $button;
 }
 
 

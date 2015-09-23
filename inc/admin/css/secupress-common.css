@@ -3,3 +3,28 @@
 .secupress-wrapper {
 	padding-top: 20px;
 }
+.no-button,
+.no-button:hover,
+.no-button:focus {
+	position: relative;
+	display: inline-block;
+	vertical-align: baseline;
+	padding: 0;
+	border: none;
+	margin: 0;
+	font-family: inherit;
+	font-size: 1em;
+	line-height: inherit;
+	text-align: left;
+	text-transform: none;
+	text-decoration: none;
+	color: inherit;
+	text-shadow: none;
+	background: none;
+	border-radius: 0;
+	box-shadow: none;
+	cursor: pointer;
+	-webkit-appearance: none;
+	   -moz-appearance: none;
+	        appearance: none;
+}

@@ -1,10 +1,9 @@
 <?php
-defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 ?>
-<div class="secublock">
+
 	<h2><?php esc_html_e( 'Welcome in your modules dashboard.', 'secupress' ); ?></h2>
-	<p><b><?php printf( __( 'We actually propose you %d security modules.', 'secupress' ), count( secupress_get_modules() ) ); ?></b></p>
+	<p><b><?php printf( __( 'We actually propose you %d security modules.', 'secupress' ), count( $this->get_modules() ) ); ?></b></p>
 	<p><?php _e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fermentum, mi eu rhoncus mattis, nisi mi tincidunt massa, sed iaculis dolor leo sed quam. Proin sed tempor sem. Donec et rhoncus sapien. Vestibulum aliquet aliquet porttitor. Nullam nec tortor aliquam felis egestas lobortis. Donec ullamcorper magna eget nisl venenatis finibus. Donec scelerisque faucibus bibendum. Vestibulum tempus tellus ac iaculis condimentum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nulla vulputate tincidunt auctor. Ut sed pharetra turpis. Donec in sodales sem, sed tempor libero. Sed sed viverra ligula. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce vitae eleifend mauris.', 'secupress' ); ?></p>
 	<p><?php _e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fermentum, mi eu rhoncus mattis, nisi mi tincidunt massa, sed iaculis dolor leo sed quam. Proin sed tempor sem. Donec et rhoncus sapien. Vestibulum aliquet aliquet porttitor. Nullam nec tortor aliquam felis egestas lobortis. Donec ullamcorper magna eget nisl venenatis finibus. Donec scelerisque faucibus bibendum. Vestibulum tempus tellus ac iaculis condimentum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nulla vulputate tincidunt auctor. Ut sed pharetra turpis. Donec in sodales sem, sed tempor libero. Sed sed viverra ligula. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce vitae eleifend mauris.', 'secupress' ); ?></p>
 	<p><i>—<?php _e( 'The SecuPress Team', 'secupress' ); ?>.</i></p>
-</div>
