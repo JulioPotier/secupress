@@ -571,6 +571,17 @@ abstract class SecuPress_Settings {
 	}
 
 
+	/**
+	 * Output a correct name for setting fields
+	 *
+	 * @since 1.0 
+	 * @return string
+	 **/
+	final protected function get_field_name( $field ) {
+		return "{$this->pluginnow}_{$field}";
+	}
+
+
 	// secupress_add_settings_field()
 	protected function add_field( $title, $args, $fields ) {
 
