@@ -42,7 +42,7 @@
 				$(this).get(0).setCustomValidity( '' );
 				if ( checkboxes.filter(':checked').length === 0 ) {
 					$(this).get(0).setCustomValidity( l10nmodules.selectOneRoleMinimum );
-					$('#main_submit').click();
+					$( "#secupress-module-form-settings [type='submit']:first").trigger( "click" );
 				}
 			});
 		} else {
