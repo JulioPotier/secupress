@@ -10,9 +10,9 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  *
  * @since 1.0
  */
-add_action( 'admin_init', 'secupress_register_setting' );
+add_action( 'admin_init', 'secupress_register_global_setting' );
 
-function secupress_register_setting() {
+function secupress_register_global_setting() {
 	register_setting( 'secupress_global_settings', SECUPRESS_SETTINGS_SLUG, '__secupress_global_settings_callback' );
 }
 
