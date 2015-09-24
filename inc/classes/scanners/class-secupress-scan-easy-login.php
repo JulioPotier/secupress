@@ -82,7 +82,8 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 
 	public function fix() {
 
-		// include the fix here.
+		$settings = array( 'plugin_double_auth' => 'emaillink', 'double_auth_affected_role' => array() ); //// emaillink ?
+		secupress_activate_module( 'users-login', $settings );
 
 		return parent::fix();
 	}
