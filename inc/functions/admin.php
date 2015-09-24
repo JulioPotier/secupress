@@ -238,11 +238,12 @@ function secupress_activate_submodule( $module, $plugin, $incompatibles_modules 
 function secupress_add_module_notice( $module, $submodule, $action ) {
 	global $current_user;
 
-	$current        = get_site_transient( "secupress_module_{$action}_{$current_user->ID}" );
+	$transient_name = "secupress_module_{$action}_{$current_user->ID}";
+	$current        = get_site_transient( $transient_name );
 	$submodule_data = secupress_get_module_data( $module , $submodule );
 	$current[]      = $submodule_data['Name'];
 
-	set_site_transient( "secupress_module_{$action}_{$current_user->ID}", $current );
+	set_site_transient( $transient_name, $current );
 
 	do_action( 'module_notice_' . $action, $module, $submodule );
 }
@@ -319,12 +320,13 @@ function secupress_generate_password( $length = 12, $args = array() ) {
 }
 
 
-function secupress_manage_affected_roles( &$settings, $pluginnow ) {
-	if ( isset( $settings[ 'hidden_' . $pluginnow . '_affected_role' ] ) ) {
-		$settings[ $pluginnow . '_affected_role' ] = array_diff( $settings[ 'hidden_' . $pluginnow . '_affected_role' ], $settings[ $pluginnow . '_affected_role' ] );
+function secupress_manage_affected_roles( &$settings, $plugin ) {
+	if ( isset( $settings[ 'hidden_' . $plugin . '_affected_role' ] ) ) {
+		$settings[ $plugin . '_affected_role' ] = $settings[ $plugin . '_affected_role' ] ? $settings[ $plugin . '_affected_role' ] : array();
+		$settings[ $plugin . '_affected_role' ] = array_diff( $settings[ 'hidden_' . $plugin . '_affected_role' ], $settings[ $plugin . '_affected_role' ] );
 	}
 
-	unset( $settings[ 'hidden_' . $pluginnow . '_affected_role' ] ); // not actual option
+	unset( $settings[ 'hidden_' . $plugin . '_affected_role' ] ); // not actual option
 }
 
 
