@@ -268,3 +268,21 @@ function __secupress_registration_test_errors( $errors, $sanitized_user_login ) 
 
 	return $errors;
 }
+
+/**
+ * Register all modules settings
+ *
+ * @return void
+ * @since 1.0 
+ **/
+add_action( 'admin_init', 'secupress_register_all_settings' );
+
+function secupress_register_all_settings() {
+	$modules = secupress_get_modules();
+
+	if ( $modules ) {
+		foreach ( $modules as $key => $module_data ) {
+			secupress_register_setting( $key );
+		}
+	}
+}
