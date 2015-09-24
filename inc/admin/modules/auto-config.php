@@ -7,12 +7,10 @@ $this->set_section_description( __( 'You can trust in our auto setting configura
 $this->add_section( __( 'Auto configuration <strong><em>(optional)</em></strong>', 'secupress' ) );
 
 
-$plugin = $this->get_current_plugin(); // 'auto-config'
-
 $this->add_field(
 	__( 'Level of configuration', 'secupress' ),
 	array(
-		'name'        => $plugin . '_level',
+		'name'        => $this->get_field_name( 'level' ),
 	),
 	array(
 		array(

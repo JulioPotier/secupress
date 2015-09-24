@@ -20,12 +20,10 @@ $this->set_section_description( __secupress_how_to_get_licence() );
 $this->add_section( __( 'License validation', 'secupress' ) );
 
 
-$plugin = $this->get_current_plugin(); // 'api-key'
-
 $this->add_field(
 	__( 'E-mail Address', 'secupress' ),
 	array(
-		'name'        => $plugin . '_email',
+		'name'        => $this->get_field_name( 'email' ),
 	),
 	array(
 		array(
@@ -44,7 +42,7 @@ $this->add_field(
 $this->add_field(
 	__( 'API Key', 'secupress' ),
 	array(
-		'name'        => $plugin . '_api_key',
+		'name'        => $this->get_field_name( 'api_key' ),
 	),
 	array(
 		array(
