@@ -8,19 +8,19 @@ $this->add_section( __( 'WordPress Updates', 'secupress' ) );
 
 $plugin = $this->get_current_plugin(); // 'auto_update'
 
-
+$field_name = $this->get_field_name( 'minor' );
 $this->add_field(
 	__( 'Minor Updates', 'secupress' ),
 	array(
-		'name'        => $plugin . '_minor',
+		'name'        => $field_name,
 		'description' => __( 'Let WordPress updates itself when a minor version is available.<br>4.3.<b>1</b> is a minor version.', 'secupress' ),
 	),
 	array(
 		array(
 			'type'         => 'checkbox',
-			'name'         => $plugin . '_minor',
+			'name'         => $field_name,
 			'label'        => __( 'Try to force WordPress to allow auto updates for <b>minor</b> versions.', 'secupress' ),
-			'label_for'    => $plugin . '_minor',
+			'label_for'    => $field_name,
 			'label_screen' => __( 'Allow minor versions updates', 'secupress' ),
 		),
 		array(
@@ -31,23 +31,24 @@ $this->add_field(
 	)
 );
 
+$field_name = $this->get_field_name( 'major' );
 $this->add_field(
 	__( 'Major Updates', 'secupress' ),
 	array(
-		'name'        => $plugin . '_major',
+		'name'        => $field_name,
 		'description' => __( 'Let WordPress updates itself when a major version is available.<br>4.<b>4</b> is a major version.', 'secupress' ),
 	),
 	array(
 		array(
 			'type'         => 'checkbox',
-			'name'         => $plugin . '_major',
+			'name'         => $field_name,
 			'label'        => __( 'Try to force WordPress to allow auto updates for <b>major</b> versions.', 'secupress' ),
 			'label_for'    => 'plugin_' . $plugin,
 			'label_screen' => __( 'Allow major versions updates', 'secupress' ),
 		),
 		array(
 			'type'         => 'helper_help',
-			'name'         => $plugin . '_major',
+			'name'         => $field_name,
 			'description'  => __( 'This is not mandatory but recommanded since a major version also contains security fixes.', 'secupress' ),
 		),
 	)

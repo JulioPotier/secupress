@@ -1,26 +1,22 @@
 <?php
 defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
 
-add_action( 'admin_init', 'secupress_register_plugins_themes_settings' );
-function secupress_register_plugins_themes_settings() {
-	register_setting( "secupress_plugins-themes_settings", "secupress_plugins-themes_settings", "__secupress_plugins_themes_settings_callback" );
-}
-
 /**
- *
- *
+ * Callback to filter, sanitize and de/activate submodules
  *
  * @since 1.0
+ * @return array $settings
  */
 function __secupress_plugins_themes_settings_callback( $settings ) {
 	$modulenow = 'plugins-themes';
+	$settings = $settings ? $settings : array();
 
 	// plugins
-	foreach( array(	'plugin_deactivation_plugins' 	=> 'plugin-deactivation',
-					'plugin_deletion_plugins' 		=> 'plugin-deletion',
-					'plugin_install_plugins' 		=> 'plugin-installation',
-					'plugin_activation_plugins' 	=> 'plugin-activation',
-					'plugin_update_plugins' 		=> 'plugin-update' ) as $key => $file ) {
+	foreach( array(	'plugins_deactivation' => 'plugin-deactivation',
+					'plugins_deletion'     => 'plugin-deletion',
+					'plugins_installation' => 'plugin-installation',
+					'plugins_activation'   => 'plugin-activation',
+					'plugins_update'       => 'plugin-update' ) as $key => $file ) {
 		
 		if ( array_key_exists( $key, $settings ) ) {
 			secupress_activate_submodule( $modulenow, $file );
@@ -31,10 +27,10 @@ function __secupress_plugins_themes_settings_callback( $settings ) {
 	}
 
 	// themes
-	foreach( array(	'theme_deletion_themes' 	=> 'theme-deletion',
-					'theme_install_themes' 		=> 'theme-installation',
-					'theme_activation_themes' 	=> 'theme-switch',
-					'theme_update_themes' 		=> 'theme-update' ) as $key => $file ) {
+	foreach( array(	'themes_deletion'     => 'theme-deletion',
+					'themes_installation' => 'theme-installation',
+					'themes_switch'       => 'theme-switch',
+					'themes_update'       => 'theme-update' ) as $key => $file ) {
 
 		if ( array_key_exists( $key, $settings ) ) {
 			secupress_activate_submodule( $modulenow, $file );

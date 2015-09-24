@@ -16,6 +16,7 @@ $select_args_options = apply_filters( 'module_' . $plugin, array(
 	'nonlogintimeslot'   => __( 'Set a non-login time slot', 'secupress' ),
 ) );
 
+$field_name = $this->get_field_name( 'type' );
 $this->add_field(
 	__( 'Use an attempt blocker', 'secupress' ),
 	array(
@@ -42,7 +43,7 @@ $this->add_field(
 	__( 'Premium Upgrade', 'secupress' ),
 	array(
 		'name'       => '',
-		'field_type' => 'button',
+		'field_type' => 'field_button',
 	),
 	array(
 		'class'              => static::hidden_classes( 'hidden block-_ooc block-plugin_' . $plugin ),

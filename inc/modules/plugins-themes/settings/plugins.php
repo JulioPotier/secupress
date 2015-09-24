@@ -10,52 +10,55 @@ $this->add_section( __( 'Plugins Page', 'secupress' ) );
 $plugin = $this->get_current_plugin(); // 'plugins'
 
 
+$field_name = $this->get_field_name( 'installation' );
 $this->add_field(
 	__( 'Plugins installation', 'secupress' ),
 	array(
-		'name'        => 'plugin_install_' . $plugin,
+		'name'        => $field_name,
 	),
 	array(
 		array(
 			'type'         => 'checkbox',
-			'name'         => 'plugin_install_' . $plugin,
+			'name'         => $field_name,
 			'label'        => __( 'Yes, disable the installation of all new plugins', 'secupress' ),
-			'label_for'    => 'plugin_install_' . $plugin,
+			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, disable the installation of all new plugins', 'secupress' ),
 		),
 		array(
 			'type'         => 'helper_description',
-			'name'         => 'plugin_install_' . $plugin,
-			'class'        => array( 'block-plugin_install_' . $plugin ),
+			'name'         => $field_name,
+			'class'        => array( 'block-' . $field_name ),
 		),
 	)
 );
 
+$field_name = $this->get_field_name( 'activation' );
 $this->add_field(
 	__( 'Plugins activation', 'secupress' ),
 	array(
-		'name'        => 'plugin_activation_' . $plugin,
+		'name'        => $field_name,
 	),
 	array(
 		array(
 			'type'         => 'checkbox',
-			'name'         => 'plugin_activation_' . $plugin,
+			'name'         => $field_name,
 			'label'        => __( 'Yes, disable the activation action for every plugin', 'secupress' ),
-			'label_for'    => 'plugin_activation_' . $plugin,
+			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, disable the activation action for every plugin', 'secupress' ),
 		),
 		array(
 			'type'         => 'helper_description',
-			'name'         => 'plugin_activation_' . $plugin,
-			'class'        => array( 'block-plugin_activation_' . $plugin ),
+			'name'         => $field_name,
+			'class'        => array( 'block-' . $field_name ),
 		),
 	)
 );
 
+$field_name = $this->get_field_name( 'activation' );
 $this->add_field(
 	__( 'Plugins deactivation', 'secupress' ),
 	array(
-		'name'        => 'plugin_deactivation_' . $plugin,
+		'name'        => $plugin . '_deactivation',
 	),
 	array(
 		array(
@@ -68,49 +71,51 @@ $this->add_field(
 		array(
 			'type'         => 'helper_description',
 			'name'         => 'plugin_deactivation_' . $plugin,
-			'class'        => array( 'block-plugin_deactivation_' . $plugin ),
+			'class'        => array( 'block-' . $field_name ),
 		),
 	)
 );
 
+$field_name = $this->get_field_name( 'deletion' );
 $this->add_field(
 	__( 'Plugins deletion', 'secupress' ),
 	array(
-		'name'        => 'plugin_deletion_' . $plugin,
+		'name'        => $field_name,
 	),
 	array(
 		array(
 			'type'         => 'checkbox',
-			'name'         => 'plugin_deletion_' . $plugin,
+			'name'         => $field_name,
 			'label'        => __( 'Yes, disable the deletion action for every plugin', 'secupress' ),
-			'label_for'    => 'plugin_deletion_' . $plugin,
+			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, disable the deletion action for every plugin', 'secupress' ),
 		),
 		array(
 			'type'         => 'helper_description',
-			'name'         => 'plugin_deletion_' . $plugin,
-			'class'        => array( 'block-plugin_deletion_' . $plugin ),
+			'name'         => $field_name,
+			'class'        => array( 'block-' . $field_name ),
 		),
 	)
 );
 
+$field_name = $this->get_field_name( 'update' );
 $this->add_field(
 	__( 'Plugins updates', 'secupress' ),
 	array(
-		'name'        => 'plugin_update_' . $plugin,
+		'name'        => $field_name,
 	),
 	array(
 		array(
 			'type'         => 'checkbox',
-			'name'         => 'plugin_update_' . $plugin,
+			'name'         => $field_name,
 			'label'        => __( 'Yes, disable the updates for all plugins', 'secupress' ),
-			'label_for'    => 'plugin_update_' . $plugin,
-			'label_screen' => __( 'Yes, disable the updates for all new plugins', 'secupress' ),
+			'label_for'    => $field_name,
+			'label_screen' => __( 'Yes, disable the updates for all plugins', 'secupress' ),
 		),
 		array(
 			'type'         => 'helper_description',
-			'name'         => 'plugin_update_' . $plugin,
-			'class'        => array( 'block-plugin_update_' . $plugin ),
+			'name'         => $field_name,
+			'class'        => array( 'block-' . $field_name ),
 			'description'  => __( 'You will still be notified when an update is available.', 'secupress' ),
 		),
 	)
