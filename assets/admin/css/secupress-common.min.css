@@ -49,3 +49,7 @@ p.submit {
 	   -moz-appearance: none;
 	        appearance: none;
 }
+
+.js [class*="depends-"] {
+	display: none;
+}

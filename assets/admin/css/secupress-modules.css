@@ -129,6 +129,6 @@ label {
 	z-index: -1;
 }
 
-.fieldtype-helper_warning b {
+.description.warning strong {
 	color: red;
 }

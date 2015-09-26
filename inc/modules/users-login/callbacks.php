@@ -32,15 +32,15 @@ function __secupress_users_login_settings_callback( $settings ) {
 					}
 				}
 			break;
-					
+
 			case 'googleauth':
 				secupress_activate_submodule( $modulenow, 'googleauth', array( 'password', 'notif', 'emaillink' ) );
-			break;			
+			break;
 
 			case 'emaillink':
 				secupress_activate_submodule( $modulenow, 'emaillink', array( 'password', 'notif', 'googleauth' ) );
 			break;
-			
+
 			default:
 				secupress_deactivate_submodule( $modulenow, array( 'password', 'notif', 'emaillink', 'googleauth' ) );
 			break;
@@ -78,7 +78,7 @@ function __secupress_users_login_settings_callback( $settings ) {
 			secupress_activate_submodule( $modulenow, 'nonlogintimeslot' );
 		} else {
 			secupress_deactivate_submodule( $modulenow, 'nonlogintimeslot' );
-		}	
+		}
 	} else {
 		secupress_deactivate_submodule( $modulenow, array( 'bannonexistsuser', 'ooc', 'limitloginattempts', 'nonlogintimeslot' ) );
 	}
@@ -92,7 +92,7 @@ function __secupress_users_login_settings_callback( $settings ) {
 	$settings['bad-logins_nonlogintimeslot']['from_minute'] = isset( $settings['bad-logins_nonlogintimeslot']['from_minute'] ) && in_array( $settings['bad-logins_nonlogintimeslot']['from_minute'], array( '0', '15', '30', '45' ) ) ? (int) $settings['bad-logins_nonlogintimeslot']['from_minute'] : 0;
 	$settings['bad-logins_nonlogintimeslot']['to_hour']     = isset( $settings['bad-logins_nonlogintimeslot']['to_hour'] )     ? secupress_validate_range( $settings['bad-logins_nonlogintimeslot']['to_hour'], 0, 23, 0 )   : 0;
 	$settings['bad-logins_nonlogintimeslot']['to_minute']   = isset( $settings['bad-logins_nonlogintimeslot']['to_minute'] )   && in_array( $settings['bad-logins_nonlogintimeslot']['to_minute'], array( '0', '15', '30', '45' ) )   ? (int) $settings['bad-logins_nonlogintimeslot']['to_minute']   : 0;
-	
+
 	if ( isset( $settings['captcha_type'] ) ) {
 		secupress_activate_submodule( $modulenow, 'login-captcha' );
 	} else {

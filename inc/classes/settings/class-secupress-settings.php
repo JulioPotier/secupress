@@ -141,13 +141,14 @@ abstract class SecuPress_Settings {
 
 	//// secupress_add_settings_section()
 	protected function add_section( $title, $args = null ) {
+		static $i = 0;
 
 		$args       = wp_parse_args( $args, array( 'with_roles' => false, 'with_save_button' => true ) );
 		$actions    = '';
 		$section_id = $this->get_section_id();
 
 		if ( ! empty( $args['with_roles'] ) ) {
-			$actions .= '<button type="button" class="hide-if-no-js no-button button-actions-title" aria-expanded="false" aria-controls="block-_affected_role">' . __( 'Roles', 'secupress' ) . ' <span class="dashicons dashicons-arrow-right" aria-hidden="true"></span></button>';
+			$actions .= '<button type="button" id="affected-role-' . $i . '" class="hide-if-no-js no-button button-actions-title">' . __( 'Roles', 'secupress' ) . ' <span class="dashicons dashicons-arrow-right" aria-hidden="true"></span></button>';
 		}
 
 		do_action( 'before_section_' . $this->sectionnow );
@@ -167,37 +168,39 @@ abstract class SecuPress_Settings {
 			return $this;
 		}
 
+		$field_name = $this->get_field_name( 'affected_role' );
+
 		$this->add_field(
 			'<span class="dashicons dashicons-groups"></span> ' . __( 'Affected Roles', 'secupress' ),
 			array(
 				'description' => __( 'Which roles will be affected by this module?', 'secupress' ),
-				'field_type'  => 'field',
-				'name'        => 'affected_role',
+				'name'        => $field_name,
 			),
 			array(
-				'id'    => 'block-_affected_role',
-				'class' => static::hidden_classes( 'hide-if-js block-_affected_role block-plugin_' . $this->pluginnow ),
+				'depends_on'  => 'affected-role-' . $i,
 				array(
 					'type'         => 'roles',
 					'default'      => array(), //// (TODO) not supported yet why not $args['with_roles']
-					'name'         => $this->pluginnow . '_affected_role',
-					'label_for'    => $this->pluginnow . '_affected_role',
+					'name'         => $field_name,
+					'label_for'    => $field_name,
 					'label'        => '',
 					'label_screen' => __( 'Affected Roles', 'secupress' ),
 				),
 				array(
 					'type'         => 'helper_description',
-					'name'         => $this->pluginnow . '_affected_role',
+					'name'         => $field_name,
 					'description'  => __( 'Future roles will be automatically checked.', 'secupress' )
 				),
 				array(
 					'type'         => 'helper_warning',
-					'name'         => $this->pluginnow . '_affected_role',
+					'name'         => $field_name,
 					'class'        => 'hide-if-js',
 					'description'  => __( 'Select 1 role minimum', 'secupress' )
 				),
 			)
 		);
+
+		++$i;
 
 		return $this;
 	}
@@ -274,24 +277,25 @@ abstract class SecuPress_Settings {
 				continue;
 			}
 
-			$args['label_for'] = isset( $args['label_for'] )   ? $args['label_for'] : '';
-			$args['name']      = isset( $args['name'] )        ? $args['name'] : $args['label_for'];
+			$args['label_for'] = isset( $args['label_for'] )    ? $args['label_for'] : '';
+			$args['name']      = isset( $args['name'] )         ? $args['name'] : $args['label_for'];
 			$option_name       = 'secupress' . ( 'global' !== $this->modulenow ? '_' . $this->modulenow : '' ) . '_settings';
-			$default           = isset( $args['default'] )     ? $args['default'] : '';
-			$value             = 'global' !== $this->modulenow ? secupress_get_module_option( $args['name'] ) : secupress_get_option( $args['name'] );
-			$value             = $value ? $value : $default;
-			$parent            = isset( $args['parent'] )      ? 'data-parent="' . sanitize_html_class( $args['parent'] ). '"' : null;
-			$placeholder       = isset( $args['placeholder'] ) ? 'placeholder="'. $args['placeholder'].'" ' : '';
-			$label             = isset( $args['label'] )       ? $args['label'] : '';
-			$required          = isset( $args['required'] )    ? ' data-required="required" data-aria-required="true"' : '';
-			$pattern           = isset( $args['pattern'] )     ? ' data-pattern="' . $args['pattern'] . '"' : '';
-			$title             = isset( $args['title'] )       ? ' title="' . $args['title'] . '"' : '';
-			$cols              = isset( $args['cols'] )        ? (int) $args['cols'] : 50;
-			$rows              = isset( $args['rows'] )        ? (int) $args['rows'] : 5;
-			$size              = isset( $args['size'] )        ? (int) $args['size'] : 1;
-			$readonly          = ! empty( $args['readonly'] )  ? ' readonly="readonly" disabled="disabled"' : '';
-			$class             = isset( $args['class'] )       ? $args['class'] : '';
+			$default           = isset( $args['default'] )      ? $args['default'] : '';
+			$value             = 'global' !== $this->modulenow  ? secupress_get_module_option( $args['name'] ) : secupress_get_option( $args['name'] );
+			$value             = $value                         ? $value : $default;
+			$parent            = isset( $args['parent'] )       ? 'data-parent="' . sanitize_html_class( $args['parent'] ). '"' : null;
+			$placeholder       = isset( $args['placeholder'] )  ? 'placeholder="'. $args['placeholder'].'" ' : '';
+			$label             = isset( $args['label'] )        ? $args['label'] : '';
+			$required          = isset( $args['required'] )     ? ' data-required="required" data-aria-required="true"' : '';
+			$pattern           = isset( $args['pattern'] )      ? ' data-pattern="' . $args['pattern'] . '"' : '';
+			$title             = isset( $args['title'] )        ? ' title="' . $args['title'] . '"' : '';
+			$cols              = isset( $args['cols'] )         ? (int) $args['cols'] : 50;
+			$rows              = isset( $args['rows'] )         ? (int) $args['rows'] : 5;
+			$size              = isset( $args['size'] )         ? (int) $args['size'] : 1;
+			$readonly          = ! empty( $args['readonly'] )   ? ' readonly="readonly" disabled="disabled"' : '';
+			$class             = ! empty( $args['class'] )      ? $args['class'] : '';
 
+			// Classes
 			if ( is_array( $class ) ) {
 				$class = implode( ' ', array_map( 'sanitize_html_class', $class ) );
 			}
@@ -299,13 +303,31 @@ abstract class SecuPress_Settings {
 				$class = sanitize_html_class( $class );
 			}
 
-			$class .= ( $parent ) ? ' has-parent' : null;
+			$class .= $parent ? ' has-parent' : '';
+			$class  = $class ? ' ' . trim( $class ) : '';
 
-			if ( ! isset( $args['fieldset'] ) || 'start' === $args['fieldset'] ) {
-				echo '<fieldset class="fieldname-' . sanitize_html_class( $args['name'] ) . ' fieldtype-' . sanitize_html_class( $args['type'] ) . '">';
+			$depends_on = '';
+			if ( ! empty( $args['depends_on'] ) ) {
+				$args['depends_on'] = explode( ' ', $args['depends_on'] );
+				$depends_on = ' depends-' . implode( ' depends-', $args['depends_on'] );
 			}
 
-			switch ( $args['type'] ) {//// Supprimer les labels si $label est vide.
+			$has_fieldset_begin = ! isset( $args['fieldset'] ) || 'start' === $args['fieldset'];
+			$has_fieldset_end   = ! isset( $args['fieldset'] ) || 'end'   === $args['fieldset'];
+
+			// Unless it's an fieldset end or start ONLY, don't wrap helpers in a fieldset tag.
+			if ( $has_fieldset_begin && $has_fieldset_end && substr( $args['type'], 0, 7 ) === 'helper_' ) {
+				$has_fieldset_begin = false;
+				$has_fieldset_end   = false;
+			}
+
+			$has_fieldset = $has_fieldset_begin || $has_fieldset_end;
+
+			if ( $has_fieldset_begin ) {
+				echo '<fieldset class="fieldname-' . sanitize_html_class( $args['name'] ) . ' fieldtype-' . sanitize_html_class( $args['type'] ) . $depends_on . '">';
+			}
+
+			switch ( $args['type'] ) {//// Supprimer les labels si $label est vide. Supprimer les legend si pas de fieldset.
 				case 'number' :
 				case 'email' :
 				case 'text' :
@@ -334,10 +356,10 @@ abstract class SecuPress_Settings {
 					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
 					<label>
 						<input autocomplete="off" data-realtype="password" <?php echo $data_nocheck; ?><?php echo $title; ?><?php echo $pattern; ?><?php echo $required; ?><?php echo $disabled; ?> type="password" id="<?php echo $args['label_for']; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]" value="" <?php echo $readonly; ?>/>
-						<input type="text" tabindex="-1" id="password_strength_pattern"<?php echo $data_nocheck; ?> data-pattern="[3-4]" title="<?php esc_attr_e( 'Minimum Strength Level: Medium', 'secupress' ); ?>" name="<?php echo $option_name; ?>[password_strength_value]" value="0" id="password_strength_value" />
+						<input type="text" tabindex="-1" id="password_strength_pattern"<?php echo $data_nocheck; ?> data-pattern="[3-4]" title="<?php esc_attr_e( 'Minimum Strength Level: Medium', 'secupress' ); ?>" name="<?php echo $option_name; ?>[password_strength_value]" value="0" aria-hidden="true" />
 						<?php echo $label; ?>
 						<i class="hide-if-no-js"><?php printf( __( 'Required: %s', 'secupress' ), _x( 'Medium', 'password strength' ) ); ?></i>
-						<br><span id="password-strength" class="hide-if-no-js"></span>
+						<br><span id="password-strength" class="hide-if-no-js"><?php _e( 'Enter a password', 'secupress' ); ?></span>
 					</label>
 					<?php
 					break;
@@ -481,21 +503,21 @@ abstract class SecuPress_Settings {
 
 				case 'helper_description' :
 
-					$description = isset( $args['description'] ) ? '<p class="description desc ' . $class . '">' . $args['description'] . '</p>' : '';
+					$description = isset( $args['description'] ) ? '<p class="description desc' . $class . $depends_on . '">' . $args['description'] . '</p>' : '';
 					echo apply_filters( 'secupress_help', $description, $args['name'], 'description' );
 
 					break;
 
 				case 'helper_help' :
 
-					$description = isset( $args['description'] ) ? '<p class="description help ' . $class . '">' . $args['description'] . '</p>' : '';
+					$description = isset( $args['description'] ) ? '<p class="description help' . $class . $depends_on . '">' . $args['description'] . '</p>' : '';
 					echo apply_filters( 'secupress_help', $description, $args['name'], 'help' );
 
 				break;
 
 				case 'helper_warning' :
 
-					$description = isset( $args['description'] ) ? '<p class="description warning ' . $class . '"><b>' . __( 'Warning: ', 'secupress' ) . '</b>' . $args['description'] . '</p>' : '';
+					$description = isset( $args['description'] ) ? '<p class="description warning' . $class . $depends_on . '"><strong>' . __( 'Warning: ', 'secupress' ) . '</strong>' . $args['description'] . '</p>' : '';
 					echo apply_filters( 'secupress_help', $description, $args['name'], 'warning' );
 
 					break;
@@ -518,7 +540,7 @@ abstract class SecuPress_Settings {
 
 			}
 
-			if ( ! isset( $args['fieldset'] ) || 'end' == $args['fieldset'] ) {
+			if ( $has_fieldset_end ) {
 				echo '</fieldset>';
 			}
 
@@ -574,7 +596,7 @@ abstract class SecuPress_Settings {
 	/**
 	 * Output a correct name for setting fields
 	 *
-	 * @since 1.0 
+	 * @since 1.0
 	 * @return string
 	 **/
 	final protected function get_field_name( $field ) {
@@ -628,8 +650,19 @@ abstract class SecuPress_Settings {
 			}
 
 			if ( ! empty( $field['args']['class'] ) ) {
-				$class = ' class="' . esc_attr( $field['args']['class'] ) . '"';
+				$class = $field['args']['class'];
 			}
+
+			if ( ! empty( $field['args']['depends_on'] ) ) {
+				$field['args']['depends_on'] = explode( ' ', $field['args']['depends_on'] );
+				$class .= ' depends-' . implode( ' depends-', $field['args']['depends_on'] );
+			}
+
+			if ( $class ) {
+				$class = ' class="' . esc_attr( trim( $class ) ) . '"';
+			}
+
+			unset( $field['args']['class'], $field['args']['depends_on'] );
 
 			echo "<tr{$id}{$class}>";
 
@@ -699,12 +732,6 @@ abstract class SecuPress_Settings {
 		if ( '' !== $text ) {
 			return '<p class="description">' . $text . '</p>';
 		}
-	}
-
-
-	// __secupress_get_hidden_classes()
-	public static function hidden_classes( $classes ) {
-		return 'hide-if-js block-hidden ' . $classes;
 	}
 
 

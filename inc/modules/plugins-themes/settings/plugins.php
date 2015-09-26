@@ -27,7 +27,6 @@ $this->add_field(
 		array(
 			'type'         => 'helper_description',
 			'name'         => $field_name,
-			'class'        => array( 'block-' . $field_name ),
 		),
 	)
 );
@@ -49,7 +48,6 @@ $this->add_field(
 		array(
 			'type'         => 'helper_description',
 			'name'         => $field_name,
-			'class'        => array( 'block-' . $field_name ),
 		),
 	)
 );
@@ -71,7 +69,6 @@ $this->add_field(
 		array(
 			'type'         => 'helper_description',
 			'name'         => 'plugin_deactivation_' . $plugin,
-			'class'        => array( 'block-' . $field_name ),
 		),
 	)
 );
@@ -93,7 +90,6 @@ $this->add_field(
 		array(
 			'type'         => 'helper_description',
 			'name'         => $field_name,
-			'class'        => array( 'block-' . $field_name ),
 		),
 	)
 );
@@ -115,7 +111,6 @@ $this->add_field(
 		array(
 			'type'         => 'helper_description',
 			'name'         => $field_name,
-			'class'        => array( 'block-' . $field_name ),
 			'description'  => __( 'You will still be notified when an update is available.', 'secupress' ),
 		),
 	)

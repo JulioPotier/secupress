@@ -9,22 +9,24 @@ $this->set_section_description( __( 'A Double Authentication is a way to enforce
 $this->add_section( __( 'Authentication', 'secupress' ), array( 'with_roles' => true ) );
 
 
-$plugin = $this->get_current_plugin(); // 'double_auth'
+$plugin = $this->get_current_plugin(); // 'double-auth'
+
 /**
  * Used by premium version to modify the fields. //// doc en doublon
  *
  * @since 1.0
  */
 $select_args_options = apply_filters( 'premium.module.' . $plugin, array(
-	'-1'            => __( 'No thank you', 'secupress' ) . ' <i>(' . __( 'Not recommanded', 'secupress' ) . ')</i>',
+	'-1'            => __( 'No thank you', 'secupress' ) . ' <em>(' . __( 'Not recommended', 'secupress' ) . ')</em>',
 	'googleauth'    => __( 'Google Authenticator', 'secupress' ),
-	'_passwordless' => __( 'PasswordLess', 'secupress' ) . ' ' . __( '<i>(by mail, iOS or Android notifs)</i>', 'secupress' ),
+	'_passwordless' => __( 'PasswordLess', 'secupress' ) . ' <em>(' . __( 'by mail, iOS or Android notifications', 'secupress' ) . ')</em>',
 	'emaillink'     => __( 'Email Link', 'secupress' ),
 	'password'      => __( 'Additional Password', 'secupress' ),
 ) );
 
-$field_name = $this->get_field_name( 'type' );
+$field_name      = $this->get_field_name( 'type' );
 $main_field_name = $field_name;
+
 $this->add_field(
 	__( 'Use a Double Authentication', 'secupress' ),
 	array(
@@ -42,14 +44,14 @@ $this->add_field(
 		array(
 			'type'         => 'helper_description',
 			'name'         => $field_name,
-			'class'        => array( 'hidden', 'block-hidden', 'block-emaillink', 'block-' . $main_field_name ),
 			'description'  => __( 'When you log in, you\'ll receive an email with a link to be clicked, then, you\'ll be logged in.', 'secupress' ),
+			'depends_on'   => $field_name . '_emaillink',
 		),
 		array(
 			'type'         => 'helper_warning',
 			'name'         => $field_name,
-			'class'        => array( 'hidden', 'block-hidden', 'block-emaillink', 'block-' . $main_field_name ),
-			'description'  => sprintf( __( 'Is <code>%1$s</code> a valid email address? If not, <a href="%2$s">change it before logging out</a>.', 'secupress' ), $current_user->user_email, get_edit_profile_url( $current_user->ID ) . '#email' )
+			'description'  => sprintf( __( 'Is <code>%1$s</code> a valid email address? If not, <a href="%2$s">change it before logging out</a>.', 'secupress' ), $current_user->user_email, get_edit_profile_url( $current_user->ID ) . '#email' ),
+			'depends_on'   => $field_name . '_emaillink',
 		),
 	)
 );
@@ -61,8 +63,8 @@ $this->add_field(
 		'field_type'  => 'field_button',
 	),
 	array(
-		'class'              => static::hidden_classes( 'hidden block-_passwordless block-' . $main_field_name ),
-		'helper_description' => array( 'description' => __( 'This feature is only available in the <b>Premium Version</b>.', 'secupress' ) ),
+		'depends_on'         => $field_name . '__passwordless',
+		'helper_description' => array( 'description' => __( 'This feature is only available in the <strong>Premium Version</strong>.', 'secupress' ) ),
 		'button'             => array(
 			'url'            => '#',
 			'button_label'   => __( 'I Upgrade Now', 'secupress' ),
@@ -70,8 +72,9 @@ $this->add_field(
 	)
 );
 
-$field_name = $this->get_field_name( 'password' );
+$field_name          = $this->get_field_name( 'password' );
 $field_name_password = $this->get_field_name( 'password2' );
+
 $this->add_field(
 	__( 'Additional Password', 'secupress' ),
 	array(
@@ -79,7 +82,7 @@ $this->add_field(
 		'description' => __( 'It\'s like an additional website\'s password.', 'secupress' ),
 	),
 	array(
-		'class' => static::hidden_classes( 'block-password block-' . $main_field_name ),
+		'depends_on'       => $main_field_name . '_password',
 		array(
 			'type'         => 'password',
 			'pattern'      => '.{7,}',
@@ -128,7 +131,6 @@ $this->add_field(
 		array(
 			'type'         => 'helper_warning',
 			'name'         => $field_name,
-			'class'        => array( 'block-' . $main_field_name ),
 			'description'  => __( 'This module requires JavaScript enabled, without it the form will never be sent.', 'secupress' ),
 		),
 	)

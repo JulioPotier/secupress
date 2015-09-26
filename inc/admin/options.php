@@ -106,14 +106,6 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		wp_localize_script( 'secupress-modules-js', 'l10nmodules', array(
 			'selectOneRoleMinimum' => __( 'Select 1 role minimum', 'secupress' ),
 		) );
-		wp_localize_script( 'password-strength-meter', 'pwsL10n', array(
-			'empty'    => __( 'Enter a password', 'secupress' ),
-			'short'    => __( 'Very weak' ),
-			'bad'      => __( 'Weak' ),
-			'good'     => _x( 'Medium', 'password strength' ),
-			'strong'   => __( 'Strong' ),
-			'mismatch' => __( 'Mismatch' )
-		) );
 	}
 
 	// Scanners page.

@@ -26,7 +26,7 @@ $this->add_field(
 		array(
 			'type'         => 'helper_description',
 			'name'         => $field_name,
-			'class'        => array( 'hidden', 'block-hidden', 'block-' . $field_name ),
+			'depends_on'   => $field_name,
 			'description'  => __( 'By using this protection, nobody can stalk into your profile page when you left your computer.', 'secupress' ),
 		),
 	)
@@ -49,7 +49,7 @@ $this->add_field(
 		array(
 			'type'         => 'helper_description',
 			'name'         => $field_name,
-			'class'        => array( 'hidden', 'block-hidden', 'block-' . $field_name ),
+			'depends_on'   => $field_name,
 			'description'  => __( 'By using this protection, nobody can stalk into the settings page when you left your computer.', 'secupress' ),
 		),
 	)

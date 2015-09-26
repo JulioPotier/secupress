@@ -1,178 +1,277 @@
-(function($){
+// Password ========================================================================================
+(function($, d, w, undefined) {
 
-	$( document ).ready( function() {
+	$( "#double-auth_password" ).on( "input pwupdate init.secupress", function() { //// Comparer avec le code qu'utilise actuellement WP.
+		var pass, strengthResult, strength;
 
-		$('#password_strength_pattern').prop( 'disabled', false );
+		pass = this.value;
 
-		$('#module_active').click( function(e){
-			var val = ! $('#block-advanced_options:visible').length;
-			$('#block-advanced_options').slideToggle(250);
-		} );
+		strengthResult = $( "#password-strength" ).removeClass( "short bad good strong" );
 
-		$( ".button-actions-title" ).click( function( e ) {
-			var $this = $( this );
+		if ( ! pass ) {
+			return;
+		}
 
-			e.preventDefault();
+		// Get the password strength
+		strength = wp.passwordStrength.meter( pass, wp.passwordStrength.userInputBlacklist(), pass );
 
-			$( "." + $this.attr( "aria-controls" ) ).toggle( 250 );
+		$( "#password_strength_pattern" ).val( strength );
 
-			// It's open: close it.
-			if ( $this.attr( "aria-expanded" ) === "true" ) {
-				$this.attr( "aria-expanded", "false" );
-			}
-			// It's closed: open it.
-			else {
-				$this.attr( "aria-expanded", "true" );
-			}
-		} );
+		// Add the strength meter results
+		switch ( strength ) {
+			case 2:
+				strengthResult.addClass( "bad" ).html( w.pwsL10n.bad );
+				break;
+			case 3:
+				strengthResult.addClass( "good" ).html( w.pwsL10n.good );
+				break;
+			case 4:
+				strengthResult.addClass( "strong" ).html( w.pwsL10n.strong );
+				break;
+			case 5:
+				strengthResult.addClass( "short" ).html( w.pwsL10n.mismatch );
+				break;
+			default:
+				strengthResult.addClass( "short" ).html( w.pwsL10n.short );
+		}
+	} ).trigger( "init.secupress" ); //// Dans ton ancien code c'était "input propertyChange". WP semble utiliser ça maintenant. A regarder de près donc.
 
-		$('input[data-realtype="password"]').focus(
-			function() {
-				$(this).attr('type', 'text');
+
+	$( "#password_strength_pattern" ).prop( "disabled", false )
+		.closest( "tr" )
+		// Triggered before the panel is opened: add pattern/required/aria-required attributes.
+		.on( "secupressbeforeshow", function() {
+			var $this   = $( this ),
+				$inputs = $this.find( "input" ),
+				pattern, required, ariaRequired;
+
+			$inputs.each( function(){
+				var $this = $( this );
+
+				if ( "true" === $this.data( "nocheck" ) ) {
+					$this.find( ".new-password" ).show();
+					return true;
+				}
+
+				pattern = $this.data( "pattern" );
+
+				if ( undefined !== pattern && "" !== pattern ) {
+					$this.attr( "pattern", pattern );
+				}
+
+				required = $this.data( "required" );
+
+				if ( undefined !== required && "" !== required ) {
+					$this.attr( "required", required );
+				}
+
+				ariaRequired = $this.data( "aria-required" );
+
+				if ( undefined !== ariaRequired && "" !== ariaRequired ) {
+					$this.attr( "aria-required", ariaRequired );
+				}
 			} );
+		} )
+		// Triggered before the panel is closed: remove pattern/required/aria-required attributes.
+		.on( "secupressbeforehide", function() {
+			var $this   = $( this ),
+				$inputs = $this.find( "input" ),
+				pattern, required, ariaRequired;
 
-		$('input[data-realtype="password"]').blur(
-			function () {
-				$(this).attr('type', 'password');
-			}
-		);
-		if (typeof document.createElement( 'input' ).checkValidity == 'function') {
-			var checkboxes = $('fieldset[class*="_affected_role"] :checkbox');
-			checkboxes.click( function() {
-				$(this).get(0).setCustomValidity( '' );
-				if ( checkboxes.filter(':checked').length === 0 ) {
-					$(this).get(0).setCustomValidity( l10nmodules.selectOneRoleMinimum );
-					$( "#secupress-module-form-settings [type='submit']:first").trigger( "click" );
+			$inputs.each( function(){
+				var $this = $( this );
+
+				if ( "true" === $this.data( "nocheck" ) ) {
+					return true;
 				}
-			});
-		} else {
-			$('fieldset[class*="_affected_role"].fieldtype-helper_warning p.warning').show();
-		}
 
-		var last_block_target = new Array();
-		function secupressToggleBlockVisibility( e, t, first ) {
-			if ( first ) {
-				e.preventDefault();
-			}
-			var block_val = $(t).val();
-			var block_name = $(t).attr('name');
-			var block_target = $('.block-' + $(t).val() );
-			var block_id = $(t).attr('aria-controls');
+				pattern = $this.data( "pattern" );
 
-			// if ( first || $(t).attr('type') == 'radio' &&  last_block_target[ $(t).attr('name') ] != $( '[name="' + $(t).attr('name') + '"]:checked' ).val() ) {
-			if ( $(t).attr('type') == 'radio' ) {
-				$('.block-hidden.' + block_id).hide();
-			}
-
-			$('.block-hidden.block-' + last_block_target[ $(t).attr('name') ] + ' input').each( function(i,v){
-					if ( true != $(v).data('nocheck') ) {
-						var pattern = $(v).data('pattern');
-						if ( pattern != undefined && pattern != '' ) {
-							$(v).removeAttr('pattern');
-						}
-						var required = $(v).data('required');
-						if ( required != undefined && required != '' ) {
-							$(v).removeProp('required');
-						}
-						var aria_required = $(v).data('aria-required');
-						if ( aria_required != undefined && aria_required != '' ) {
-							$(v).removeAttr('aria-required');
-						}
-					}
-			});
-
-			if ( block_target.length > 0 ) {
-
-				$('.block-hidden.block-' + $(t).val() + ' input').each( function(i,v){
-					if ( true != $(v).data('nocheck') ) {
-						var pattern = $(v).data('pattern');
-						if ( pattern != undefined && pattern != '' ) {
-							$(v).attr('pattern', pattern);
-						}
-						var required = $(v).data('required');
-						if ( required != undefined && required != '' ) {
-							$(v).prop('required', required);
-						}
-						var aria_required = $(v).data('aria-required');
-						if ( aria_required != undefined && aria_required != '' ) {
-							$(v).attr('aria-required', aria_required);
-						}
-					} else {
-						$('.block-hidden.block-' + $(t).val() + ' .new-password').show();
-					}
-				});
-
-				if( $(t).is(':radio') ) {
-					$(block_target).show(tempo);
-				} else {
-					if ( ( first && ! $(t).prop( 'checked' ) ) || $(t).prop( 'checked' ) ) {
-						$(block_target).show(tempo);
-					} else {
-						if ( ! first ) {
-							var not = '';
-							$('[name="'+block_name+'"]:checked').each(function(){
-								not += '.block-'+$(this).val()+','
-							});
-							$(block_target).filter(':not('+not+'0)').hide(tempo);
-						}
-					}
+				if ( undefined !== pattern && "" !== pattern ) {
+					$this.removeAttr( "pattern" );
 				}
-				last_block_target[ $(t).attr('name') ] = $(t).val();
+
+				required = $this.data( "required" );
+
+				if ( undefined !== required && "" !== required ) {
+					$this.removeAttr( "required" );
+				}
+
+				ariaRequired = $this.data( "aria-required" );
+
+				if ( undefined !== ariaRequired && "" !== ariaRequired ) {
+					$this.removeAttr( "aria-required" );
+				}
+			} );
+		} );
+
+} )(jQuery, document, window);
+
+
+// Roles: at least one role must be chosen. ========================================================
+(function($, d, w, undefined) {
+	var checkboxes;
+
+	if ( "function" === typeof document.createElement( "input" ).checkValidity ) {
+		checkboxes = $( 'fieldset[class*="_affected_role"] :checkbox' );
+
+		checkboxes.on( "click", function() {
+			$( this ).get( 0 ).setCustomValidity( '' );
+
+			if ( 0 === checkboxes.filter( ":checked" ).length ) {
+				$( this ).get( 0 ).setCustomValidity( w.l10nmodules.selectOneRoleMinimum );
+				$( "#secupress-module-form-settings [type='submit']" ).first().trigger( "click" );
 			}
-		}
+		} );
+	} else {
+		$( 'fieldset[class*="_affected_role"]' ).siblings( "p.warning" ).removeClass( "hide-if-js" );
+	}
 
-		var tempo = 0;
-		$('select[name^="secupress"]').change( function(e){ secupressToggleBlockVisibility( e, $(this), tempo==0 ) } ).change();
-		$('input[name^="secupress"]:radio,input[name^="secupress"]:checkbox').click( function(e){
-			secupressToggleBlockVisibility( e, $(this), tempo==0 );
-		} ).filter(':checked:not(#module_active)').click();
-		tempo = 250;
+} )(jQuery, document, window);
 
-	    function checkPasswordStrength() {
-			var pass = $('#double_auth_password').val();
 
-			var strengthResult = $('#password-strength');
+// Show/Hide panels, depending on some other field value. ==========================================
+(function($, d, w, undefined) {
 
-			// Reset the form & meter
-			strengthResult.removeClass( 'short bad good strong' );
-			if ( ! pass ) {
-				$('#password-strength').html( pwsL10n.empty ); //// change default
-				return;
+	var $depends   = $( "#wpbody-content" ).find( '[class*="depends-"]' ), // Rows that will open/close.
+		dependsIds = {}; // IDs of the checkboxes, radios, etc that will trigger a panel open/close.
+
+	$depends.each( function() {
+		var classes = $( this ).attr( "class" ).replace( /^\s+|\s+$/g, "" ).replace( /\s+/, " " ).split( " " );
+
+		$.each( classes, function( i, id ) {
+			var $target, targetTagName, targetTypeAttr, targetNameAttr, targetIsValid = false;
+
+			// If the class is not a "depends-XXXXXX", bail out.
+			if ( 0 !== id.indexOf( "depends-" ) ) {
+				return true;
 			}
-			// Get the password strength
-			var strength = wp.passwordStrength.meter( pass, wp.passwordStrength.userInputBlacklist(), pass );
-			$('#password_strength_pattern').val( strength );
 
-			// Add the strength meter results
-			switch ( strength ) {
+			id = id.substr( 8 );
 
-				case 2:
-				strengthResult.addClass( 'bad' ).html( pwsL10n.bad );
-				break;
-
-				case 3:
-				strengthResult.addClass( 'good' ).html( pwsL10n.good );
-				break;
-
-				case 4:
-				strengthResult.addClass( 'strong' ).html( pwsL10n.strong );
-				break;
-
-				case 5:
-				strengthResult.addClass( 'short' ).html( pwsL10n.mismatch );
-				break;
-
-				default:
-				strengthResult.addClass( 'short' ).html( pwsL10n.short );
+			// If the ID was previously delt with, bail out.
+			if ( "undefined" !== typeof dependsIds[ id ] ) {
+				return true;
 			}
-		}
+			dependsIds[ id ] = 1;
 
-	    $( '#double_auth_password' ).on( 'input propertychange',
-	        checkPasswordStrength
-		);
+			$target = $( "#" + id );
 
-		checkPasswordStrength();
+			// Uh? The input doesn't exist?
+			if ( ! $target.length ) {
+				return true;
+			}
 
+			// We need to know which type of input we deal with, the way we deal with it is not the same.
+			targetTagName = $target.get( 0 ).nodeName.toLowerCase();
+
+			if ( "input" === targetTagName ) {
+				targetTypeAttr = $target.attr( "type" ).toLowerCase();
+
+				if ( "checkbox" === targetTypeAttr || "radio" === targetTypeAttr ) {
+					targetIsValid = true;
+				}
+
+			} else if ( /*"select" === targetTagName || */"button" === targetTagName ) {
+				targetIsValid = true;
+			}
+
+			// Only checkboxes, radios groups and buttons so far.
+			if ( ! targetIsValid ) {
+				return true;
+			}
+
+			// Attach the events.
+			// Buttons
+			if ( "button" === targetTagName ) {
+
+				$target.on( "click", function() {
+					var id = $( this ).attr( "id" );
+					$( ".depends-" + id ).toggle( 250 );
+				} );
+
+			}
+			// Radios
+			else if ( "radio" === targetTypeAttr ) {
+
+				// Radios don't trigger a "change" event on uncheck: we need to monitor the entire group.
+				targetNameAttr = $target.attr( "name" );
+
+				$( '[name="' + targetNameAttr + '"]' ).on( "change init.secupress", { targetId: id }, function( e ) {
+					var id     = $( this ).attr( "id" ),
+						$elems = $( ".depends-" + e.data.targetId ),
+						tempo  = "init" === e.type && "secupress" === e.namespace ? 0 : 250; // On page load, no animation.
+
+					// Uh? No rows?
+					if ( ! $elems.length ) {
+						return true;
+					}
+
+					// The desired radio is checked: open if not visible.
+					if ( e.data.targetId === id ) {
+						if ( ! $elems.is( ":visible" ) ) {
+							$elems.trigger( "secupressbeforeshow" ).show( tempo, function() {
+								$( this ).trigger( "secupressaftershow" );
+							} );
+						}
+					}
+					// Another radio is checked: close if visible.
+					else if ( $elems.is( ":visible" ) ) {
+						$elems.trigger( "secupressbeforehide" ).hide( tempo, function() {
+							$( this ).trigger( "secupressafterhide" );
+						} );
+					}
+				} ).filter( ":checked" ).trigger( "init.secupress" );
+
+			}
+			// Checkboxes
+			else if ( "checkbox" === targetTypeAttr ) {
+
+				$target.on( "change init.secupress", function( e ) {
+					var $this  = $( this ),
+						id     = $this.attr( "id" ),
+						$elems = $( ".depends-" + id ),
+						tempo  = "init" === e.type && "secupress" === e.namespace ? 0 : 250; // On page load, no animation.
+
+					// Uh? No rows?
+					if ( ! $elems.length ) {
+						return true;
+					}
+
+					// The checkbox is checked: open if not visible.
+					if ( $this.is( ":checked" ) ) {
+						if ( ! $elems.is( ":visible" ) ) {
+							$elems.trigger( "secupressbeforeshow" ).show( tempo, function() {
+								$( this ).trigger( "secupressaftershow" );
+							} );
+						}
+					}
+					// The checkbox is not checked: close if visible and no other checkboxes that want this row to be open is checked.
+					else if ( $elems.is( ":visible" ) ) {
+						$elems.each( function() {
+							var $this   = $( this ),
+								classes = $this.attr( "class" ).replace( /^\s+|\s+$/g, "" ).replace( /\s+/, " " ).split( " " ),
+								others  = []; // Other checkboxes
+
+							$.each( classes, function( i, v ) {
+								if ( "depends-" + id !== v && 0 === v.indexOf( "depends-" ) ) {
+									others.push( "#" + v.substr( 8 ) + ":checked" );
+								}
+							} );
+
+							others = others.join( "," );
+
+							if ( ! $( others ).length ) {
+								$this.trigger( "secupressbeforehide" ).hide( tempo, function() {
+									$( this ).trigger( "secupressafterhide" );
+								} );
+							}
+						} );
+					}
+				} ).filter( ":checked" ).trigger( "init.secupress" );
+
+			}
+		} );
 	} );
 
-})(jQuery);
+} )(jQuery, document, window);
