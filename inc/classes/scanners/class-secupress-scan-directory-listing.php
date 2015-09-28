@@ -17,7 +17,8 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 	 * @var Singleton The reference to *Singleton* instance of this class
 	 */
 	protected static $_instance;
-	public    static $prio = 'high';
+	protected static $scan_rules = "<IfModule mod_autoindex.c>\nOptions -Indexes\n</IfModule>";
+	public    static $prio       = 'high';
 
 
 	protected static function init() {
@@ -75,7 +76,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 		global $wp_filesystem;
 
 		// If we can add our lines, it means the file is writeable.
-		if ( secupress_write_htaccess( 'directory_listing' ) ) {
+		if ( secupress_write_htaccess( 'directory_listing', static::$scan_rules ) ) {
 
 			// Remove `Options +Indexes`.
 			$file_path    = get_home_path() . '.htaccess';
@@ -91,7 +92,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 			}
 
 		} else {
-			$code = secupress_get_htaccess_marker( 'directory_listing' );
+			$code = static::$scan_rules;
 			$this->add_message( 300, array( "# BEGIN SecuPress directory_listing\n$code\n# END SecuPress" ) );
 		}
 

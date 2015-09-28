@@ -9,12 +9,10 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @param bool $force (default: false)
  * @return void
  */
-function secupress_write_htaccess( $marker ) {
-	if ( ! $GLOBALS['is_apache'] ) {
+function secupress_write_htaccess( $marker, $rules = null ) {
+	if ( ! $GLOBALS['is_apache'] || ! $rules ) {
 		return;
 	}
-
-	$rules = '';
 
 	if ( ! function_exists( 'get_home_path' ) ) {
 		require_once( ABSPATH . 'wp-admin/includes/file.php' );
@@ -23,13 +21,8 @@ function secupress_write_htaccess( $marker ) {
 	$htaccess_file = get_home_path() . '.htaccess';
 
 	if ( is_writable( $htaccess_file ) ) {
-
-		// The rules
-		$rules = secupress_get_htaccess_marker( $marker );
-		// Update the .htacces file
-		secupress_put_content( $htaccess_file, $marker, $rules );
-
-		return true;
+		// Update the .htacces file.
+		return secupress_put_content( $htaccess_file, $marker, $rules );
 	}
 
 	return false;
@@ -81,9 +74,4 @@ function secupress_get_htaccess_ban_ip() {
 	}
 
 	return '';
-}
-
-
-function secupress_get_htaccess_directory_listing() {
-	return "<IfModule mod_autoindex.c>\nOptions -Indexes\n</IfModule>";
 }

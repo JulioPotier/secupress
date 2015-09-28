@@ -370,7 +370,7 @@ function secupress_ban_ip( $IP = null, $die = true ) {
 	update_option( SECUPRESS_BAN_IP, $ban_ips );
 
 	if ( apply_filters( 'write_ban_in_htaccess', true ) ) {
-		secupress_write_htaccess( 'ban_ip' );
+		secupress_write_htaccess( 'ban_ip', secupress_get_htaccess_ban_ip() );
 	}
 
 	if ( $die ) {

@@ -23,7 +23,7 @@ function secupress_check_ban_ips() {
 
 		if ( $refresh_htaccess ) {
 			wp_load_alloptions();
-			secupress_write_htaccess( 'ban_ip' );
+			secupress_write_htaccess( 'ban_ip', secupress_get_htaccess_ban_ip() );
 		}
 
 		// check if the IP is still in the array
