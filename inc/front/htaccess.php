@@ -82,3 +82,8 @@ function secupress_get_htaccess_ban_ip() {
 
 	return '';
 }
+
+
+function secupress_get_htaccess_directory_listing() {
+	return "<IfModule mod_autoindex.c>\nOptions -Indexes\n</IfModule>";
+}

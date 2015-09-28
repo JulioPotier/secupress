@@ -36,7 +36,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 			// bad
 			200 => __( '%s (for example) should not be accessible to anyone.', 'secupress' ),
 			// cantfix
-			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
+			300 => sprintf( __( 'Your %1$s file is not writeable. Please delete lines that may contain %2$s and add the following ones to the file: %3$s.', 'secupress' ), '<code>.htaccess</code>', '<code>Options +Indexes</code>', '<code>%s</code>' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -49,7 +49,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 
 	public function scan() {
 		$upload_dir = wp_upload_dir();
-		$base_url   = $upload_dir['baseurl'];
+		$base_url   = user_trailingslashit( $upload_dir['baseurl'] );
 		$response   = wp_remote_get( $base_url, array( 'redirection' => 0 ) );
 
 		if ( ! is_wp_error( $response ) ) {
@@ -72,8 +72,23 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 
 
 	public function fix() {
+		global $wp_filesystem;
 
-		// include the fix here.
+		// If we can add our lines, it means the file is writeable.
+		if ( secupress_write_htaccess( 'directory_listing' ) ) {
+
+			// Remove `Options +Indexes`.
+			$file_path    = get_home_path() . '.htaccess';
+			$chmod        = defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : 0644;
+			$file_content = $wp_filesystem->get_contents( $file_path );
+			$file_content = preg_replace( "/Options\s+\+Indexes\s*(\n|$)/", '', $file_content );
+
+			$wp_filesystem->put_contents( $file_path, trim( $file_content ), $chmod );
+
+		} else {
+			$code = secupress_get_htaccess_marker( 'directory_listing' );
+			$this->add_message( 300, array( "# BEGIN SecuPress directory_listing\n$code\n# END SecuPress" ) );
+		}
 
 		return parent::fix();
 	}
