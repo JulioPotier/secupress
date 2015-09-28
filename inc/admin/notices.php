@@ -217,8 +217,8 @@ function secupress_warning_module_activity() {
 		<div class="updated">
 			<p>
 				<?php
-				printf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
-				echo _n( 'This module have been activated:', 'These modules have been activated:', count( $activated_modules ), 'secupress' );
+				printf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong> ' );
+				echo _n( 'This module has been activated:', 'These modules have been activated:', count( $activated_modules ), 'secupress' );
 				printf( '<ul><li>%s</li></ul>', implode( '</li><li>', $activated_modules ) );
 				?>
 			</p>
@@ -231,8 +231,8 @@ function secupress_warning_module_activity() {
 		<div class="updated">
 			<p>
 				<?php
-				printf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
-				echo _n( 'This module have been deactivated:', 'These modules have been deactivated:', count( $deactivated_modules ), 'secupress' );
+				printf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong> ' );
+				echo _n( 'This module has been deactivated:', 'These modules have been deactivated:', count( $deactivated_modules ), 'secupress' );
 				printf( '<ul><li>%s</li></ul>', implode( '</li><li>',  $deactivated_modules ) );
 				?>
 			</p>
