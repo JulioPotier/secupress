@@ -17,8 +17,8 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 	 * @var Singleton The reference to *Singleton* instance of this class
 	 */
 	protected static $_instance;
-	protected static $scan_rules = "<IfModule mod_autoindex.c>\nOptions -Indexes\n</IfModule>";
-	public    static $prio       = 'high';
+	protected static $fix_rules = "<IfModule mod_autoindex.c>\nOptions -Indexes\n</IfModule>";
+	public    static $prio      = 'high';
 
 
 	protected static function init() {
@@ -37,7 +37,8 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 			// bad
 			200 => __( '%s (for example) should not be accessible to anyone.', 'secupress' ),
 			// cantfix
-			300 => sprintf( __( 'Your %1$s file is not writeable. Please delete lines that may contain %2$s and add the following ones to the file: %3$s.', 'secupress' ), '<code>.htaccess</code>', '<code>Options +Indexes</code>', '<code>%s</code>' ),
+			300 => __( 'You don\'t run an Apache system, the directory listing disclosure cannot be fixed.', 'secupress' ),
+			301 => sprintf( __( 'Your %1$s file is not writeable. Please delete lines that may contain %2$s and add the following ones to the file: %3$s.', 'secupress' ), '<code>.htaccess</code>', '<code>Options +Indexes</code>', '<code>%s</code>' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -73,27 +74,56 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 
 
 	public function fix() {
-		global $wp_filesystem;
+		global $wp_filesystem, $is_apache;
 
-		// If we can add our lines, it means the file is writeable.
-		if ( secupress_write_htaccess( 'directory_listing', static::$scan_rules ) ) {
+		// Not Apache system, bail out.
+		if ( ! $is_apache ) {
+			$this->add_message( 300 );
+			return parent::fix();
+		}
 
-			// Remove `Options +Indexes`.
-			$file_path    = get_home_path() . '.htaccess';
-			$chmod        = defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : 0644;
-			$file_content = $wp_filesystem->get_contents( $file_path );
+		if ( ! function_exists( 'get_home_path' ) ) {
+			require_once( ABSPATH . 'wp-admin/includes/file.php' );
+		}
 
-			if ( preg_match_all( "/Options\s+\+Indexes\s*(?:\n|$)/", $file_content, $matches, PREG_SET_ORDER ) ) {
-				foreach ( $matches as $match ) {
-					$file_content = str_replace( $match[0], '', $file_content );
-				}
+		$file_path = get_home_path() . '.htaccess';
+		$rules     = static::$fix_rules;
+		$rules     = "# BEGIN SecuPress directory_listing\n$rules\n# END SecuPress";
 
-				$wp_filesystem->put_contents( $file_path, trim( $file_content ), $chmod );
+		// `.htaccess` not writable, bail out.
+		if ( ! is_writable( $file_path ) ) {
+			$this->add_message( 301, array( $rules ) );
+			return parent::fix();
+		}
+
+		if ( ! $wp_filesystem ) {
+			require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php' );
+			require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php' );
+
+			$wp_filesystem = new WP_Filesystem_Direct( new StdClass() );
+		}
+
+		// Get `.htaccess` content.
+		$file_content = $wp_filesystem->get_contents( $file_path );
+
+		// Maybe remove `Options +Indexes`.
+		if ( preg_match_all( "/Options\s+\+Indexes\s*(?:\n|$)/", $file_content, $matches, PREG_SET_ORDER ) ) {
+			foreach ( $matches as $match ) {
+				$file_content = str_replace( $match[0], '', $file_content );
 			}
+		}
 
-		} else {
-			$code = static::$scan_rules;
-			$this->add_message( 300, array( "# BEGIN SecuPress directory_listing\n$code\n# END SecuPress" ) );
+		// Maybe remove old rules.
+		$file_content = preg_replace( '/# BEGIN SecuPress directory_listing(.*)# END SecuPress\n*/isU', '', $file_content );
+
+		// Add our rules.
+		$file_content = $rules . "\n\n" . trim( $file_content );
+		$chmod        = defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : 0644;
+
+		$fixed = $wp_filesystem->put_contents( $file_path, $file_content, $chmod );
+
+		if ( ! $fixed ) {
+			$this->add_message( 301, array( $rules ) );
 		}
 
 		return parent::fix();
