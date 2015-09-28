@@ -6,7 +6,6 @@ $this->set_current_section( 'page_protect' );
 $this->add_section( __( 'Pages Protection', 'secupress' )/*, array( 'with_roles' => true )*/ );
 
 
-$plugin = $this->get_current_plugin(); // 'page-protect'
 $field_name = $this->get_field_name( 'profile' );
 
 $this->add_field(
@@ -33,6 +32,7 @@ $this->add_field(
 );
 
 $field_name = $this->get_field_name( 'settings' );
+
 $this->add_field(
 	sprintf( __( 'Protect %s settings page', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
 	array(	'description' => __( 'We recommand to protect the settings page once your settings are done.', 'secupress' ),
