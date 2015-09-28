@@ -59,7 +59,7 @@ $this->add_field(
 		'description' => sprintf( __( 'Recommended: %s', 'secupress' ), '10 - 50' ),
 	),
 	array(
-		'depends_on'       => $main_field_name . '_limitloginattempts ' . $main_field_name . '_bannonexistsuser',
+		'depends_on'       => $main_field_name . '_limitloginattempts',
 		array(
 			'type'         => 'number',
 			'min'          => 3,
