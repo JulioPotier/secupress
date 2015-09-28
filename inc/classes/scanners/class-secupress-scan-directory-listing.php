@@ -81,9 +81,14 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 			$file_path    = get_home_path() . '.htaccess';
 			$chmod        = defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : 0644;
 			$file_content = $wp_filesystem->get_contents( $file_path );
-			$file_content = preg_replace( "/Options\s+\+Indexes\s*(\n|$)/", '', $file_content );
 
-			$wp_filesystem->put_contents( $file_path, trim( $file_content ), $chmod );
+			if ( preg_match_all( "/Options\s+\+Indexes\s*(?:\n|$)/", $file_content, $matches, PREG_SET_ORDER ) ) {
+				foreach ( $matches as $match ) {
+					$file_content = str_replace( $match[0], '', $file_content );
+				}
+
+				$wp_filesystem->put_contents( $file_path, trim( $file_content ), $chmod );
+			}
 
 		} else {
 			$code = secupress_get_htaccess_marker( 'directory_listing' );
