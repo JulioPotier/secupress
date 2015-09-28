@@ -209,15 +209,13 @@
 
 					// The desired radio is checked: open if not visible.
 					if ( e.data.targetId === id ) {
-						if ( ! $elems.is( ":visible" ) ) {
-							$elems.trigger( "secupressbeforeshow" ).show( tempo, function() {
-								$( this ).trigger( "secupressaftershow" );
-							} );
-						}
+						$elems.not( ":visible" ).trigger( "secupressbeforeshow" ).show( tempo, function() {
+							$( this ).trigger( "secupressaftershow" );
+						} );
 					}
 					// Another radio is checked: close if visible.
-					else if ( $elems.is( ":visible" ) ) {
-						$elems.trigger( "secupressbeforehide" ).hide( tempo, function() {
+					else {
+						$elems.filter( ":visible" ).trigger( "secupressbeforehide" ).hide( tempo, function() {
 							$( this ).trigger( "secupressafterhide" );
 						} );
 					}
@@ -240,15 +238,13 @@
 
 					// The checkbox is checked: open if not visible.
 					if ( $this.is( ":checked" ) ) {
-						if ( ! $elems.is( ":visible" ) ) {
-							$elems.trigger( "secupressbeforeshow" ).show( tempo, function() {
-								$( this ).trigger( "secupressaftershow" );
-							} );
-						}
+						$elems.not( ":visible" ).trigger( "secupressbeforeshow" ).show( tempo, function() {
+							$( this ).trigger( "secupressaftershow" );
+						} );
 					}
 					// The checkbox is not checked: close if visible and no other checkboxes that want this row to be open is checked.
-					else if ( $elems.is( ":visible" ) ) {
-						$elems.each( function() {
+					else {
+						$elems.filter( ":visible" ).each( function() {
 							var $this   = $( this ),
 								classes = $this.attr( "class" ).replace( /^\s+|\s+$/g, "" ).replace( /\s+/, " " ).split( " " ),
 								others  = []; // Other checkboxes
