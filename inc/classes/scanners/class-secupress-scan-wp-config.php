@@ -96,6 +96,8 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 			$constants['FORCE_SSL_LOGIN'] = 1;
 		}
 
+		$results = array();
+
 		foreach ( $constants as $constant => $compare ) {
 
 			$check = defined( $constant ) ? constant( $constant ) : null;
@@ -103,36 +105,58 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 			switch ( $compare ) {
 				case '!isset':
 					if ( isset( $check ) ) {
-						// bad
-						$this->add_message( 203, array( '<code>' . $constant . '</code>' ) );
+						$results[203]   = isset( $results[203] ) ? $results[203] : array();
+						$results[203][] = '<code>' . $constant . '</code>';
 					}
 					break;
 				case '!empty':
 					if ( empty( $check ) ) {
-						// bad
-						$this->add_message( 204, array( '<code>' . $constant . '</code>' ) );
+						$results[204]   = isset( $results[204] ) ? $results[204] : array();
+						$results[204][] = '<code>' . $constant . '</code>';
 					}
 					break;
 				case 1:
 					if ( ! $check ) {
-						// bad
-						$this->add_message( 205, array( '<code>' . $constant . '</code>', '<code>true</code>' ) );
+						$results[205]           = isset( $results[205] )         ? $results[205]         : array();
+						$results[205]['true']   = isset( $results[205]['true'] ) ? $results[205]['true'] : array();
+						$results[205]['true'][] = '<code>' . $constant . '</code>';
 					}
 					break;
 				case false:
 					if ( $check ) {
-						// bad
-						$this->add_message( 205, array( '<code>' . $constant . '</code>', '<code>false</code>' ) );
+						$results[205]            = isset( $results[205] )          ? $results[205]          : array();
+						$results[205]['false']   = isset( $results[205]['false'] ) ? $results[205]['false'] : array();
+						$results[205]['false'][] = '<code>' . $constant . '</code>';
 					}
 					break;
 				default:
 					$check = decoct( $check ) <= $compare;
 
 					if ( ! $check ) {
-						// bad
-						$this->add_message( 206, array( '<code>' . $constant . '</code>', '<code>0' . $compare . '</code>' ) );
+						$results[206]                     = isset( $results[206] )                   ? $results[206]                   : array();
+						$results[206][ '0' . $compare ]   = isset( $results[206][ '0' . $compare ] ) ? $results[206][ '0' . $compare ] : array();
+						$results[206][ '0' . $compare ][] = '<code>' . $constant . '</code>';
 					}
 					break;
+			}
+
+		}
+
+		if ( $results ) {
+			foreach ( $results as $message_id => $maybe_constants ) {
+
+				if ( is_array( $maybe_constants ) ) {
+
+					foreach ( $maybe_constants as $compare => $constants ) {
+						// bad
+						$this->add_message( $message_id, array( wp_sprintf_l( '%l', $constants ), '<code>' . $compare . '</code>' ) );
+					}
+
+				} else {
+					// bad
+					$this->add_message( $message_id, array( wp_sprintf_l( '%l', $constants ) ) );
+				}
+
 			}
 
 		}
