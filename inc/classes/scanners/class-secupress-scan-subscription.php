@@ -96,7 +96,17 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements iSecuPress_S
 
 	public function fix() {
 
-		// include the fix here.
+		if ( ! get_option( 'users_can_register' ) ) {
+			return parent::fix();
+		}
+
+		// Default role
+		if ( 'subscriber' !== get_option( 'default_role' ) ) {
+			update_option( 'default_role', 'subscriber' );
+		}
+
+		// Bots: use a captcha.
+		secupress_activate_module( 'users-login', array( 'captcha_type' => 1, ) );
 
 		return parent::fix();
 	}
