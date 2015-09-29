@@ -32,9 +32,8 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 			// good
 			0   => __( 'The <em>admin</em> account is correctly protected.', 'secupress' ),
 			// bad
-			200 => __( 'The <em>admin</em> account role should not be <strong>Administrator</strong>.', 'secupress' ),
-			201 => __( 'The <em>admin</em> account <code>ID</code> should be greater than <strong>50</strong>.', 'secupress' ),
-			202 => __( 'The <em>admin</em> account should exist (with no role) to avoid someone to register it.', 'secupress' ),
+			200 => __( 'The <em>admin</em> account role should not be <strong>Administrator</strong> but should have no role at all.', 'secupress' ),
+			201 => __( 'Because the user registration is open, the <em>admin</em> account should exist (with no role) to avoid someone to register it.', 'secupress' ),
 			// cantfix
 			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);
@@ -51,21 +50,15 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 		$check = username_exists( 'admin' );
 
 		// Should not be administrator.
-		if ( isset( $check->ID ) && user_can( $check, 'administrator' ) ) {
+		if ( false !== $check && user_can( $check, 'administrator' ) ) {
 			// bad
 			$this->add_message( 200 );
 		}
 
-		// ID should be > 25 to avoid simple SQLi.
-		if ( isset( $check->ID ) && ( $check->ID < 50 ) ) {
+		// // "admin" user should exist to avoid the creation of this user.
+		if ( get_option( 'users_can_register' ) && false === $check ) {
 			// bad
 			$this->add_message( 201 );
-		}
-
-		// "admin" user should exist to avoid the creation of this user.
-		if ( get_option( 'users_can_register' ) && ! isset( $check->ID ) ) {
-			// bad
-			$this->add_message( 202 );
 		}
 
 		// good
@@ -77,7 +70,26 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 
 	public function fix() {
 
-		// include the fix here.
+		$check = username_exists( 'admin' );
+
+		// Should not be administrator.
+		if ( false !== $check && user_can( $check, 'administrator' ) ) {
+			if ( $check != $current_user->ID ) {
+				$user = new WP_User( $check );
+				$user->remove_role( 'administrator' );
+			} else {
+				//// (sweetalert)
+			}
+		}
+
+		// "admin" user should exist to avoid the creation of this user.
+		if ( false === $check && get_option( 'users_can_register' ) ) {
+			wp_insert_user( array( 'user_login' => 'admin',
+				'user_pass'  => wp_generate_password( 64, 1, 1 ),
+				'user_email' => 'secupress_no_mail@fakemail.' . time(),
+				'role'       => '', )
+			);
+		}
 
 		return parent::fix();
 	}
