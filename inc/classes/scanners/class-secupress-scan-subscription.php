@@ -74,9 +74,14 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements iSecuPress_S
 
 			if ( ! is_wp_error( $response ) ) {
 
-				if ( username_exists( $user_login ) || 'failed' === get_transient( 'secupress_registration_test' ) ) {
-					// bad
-					$this->add_message( 201 );
+				if ( $user_id = username_exists( $user_login ) ) {
+
+					wp_delete_user( $user_id );
+
+					if ( 'failed' === get_transient( 'secupress_registration_test' ) ) {
+						// bad
+						$this->add_message( 201 );
+					}
 				}
 
 			} else {
