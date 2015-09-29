@@ -82,6 +82,14 @@ th.secupress-check {
 .secupress-result li + li {
 	margin-top: 6px;
 }
+.test-fix-action h3 {
+	margin-top: 0;
+}
+.test-fix-action .submit {
+	padding-bottom: 0;
+	margin-bottom: 0;
+	text-align: left;
+}
 .secupress-postbox {
 	display: inline-block;
 	width: 60%;

@@ -39,6 +39,44 @@ function __secupress_fixit_ajax( $test_name = null ) {
 }
 
 
+add_action( 'admin_post_secupress_manual_fixit', '__secupress_manual_fixit' );
+add_action( 'wp_ajax_secupress_manual_fixit',    '__secupress_manual_fixit' );
+
+function __secupress_manual_fixit( $class_name_part = null ) {
+
+	$class_name_part = isset( $_POST['test'] )                  ? esc_attr( $_POST['test'] )    : $class_name_part;
+	$nonce           = isset( $_POST['sp_manual_fixit-nonce'] ) ? $_POST['sp_manual_fixit-nonce'] : 0;
+	$nonce           = 0 === $nonce || wp_verify_nonce( $nonce, 'secupress_manual_fixit-' . $class_name_part );
+
+	if ( empty( $class_name_part ) || ! $nonce || ! file_exists( secupress_class_path( 'scan', $class_name_part ) ) ) {
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			wp_send_json_error();
+		} else {
+			wp_nonce_ays( '' );
+		}
+	}
+
+	secupress_require_class( 'scan' );
+	secupress_require_class( 'scan', $class_name_part );
+
+	$classname = 'SecuPress_Scan_' . $class_name_part;
+
+	if ( class_exists( $classname ) ) {
+		ob_start();
+			@set_time_limit( 0 );
+			$response = $classname::get_instance()->manual_fix();
+		ob_end_flush();
+	}
+
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		wp_send_json_success( $response );
+	} else {
+		wp_redirect( secupress_admin_url( 'scanners' ) );
+		die();
+	}
+}
+
+
 add_action( 'admin_post_secupress_scanner', '__secupress_scanner_ajax' );
 add_action( 'wp_ajax_secupress_scanner',    '__secupress_scanner_ajax' );
 
@@ -273,7 +311,7 @@ function __secupress_registration_test_errors( $errors, $sanitized_user_login ) 
  * Register all modules settings
  *
  * @return void
- * @since 1.0 
+ * @since 1.0
  **/
 add_action( 'admin_init', 'secupress_register_all_settings' );
 

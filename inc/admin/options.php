@@ -366,6 +366,11 @@ function secupress_main_scan() {
 	$secupress_tests = secupress_get_tests();
 	$scanners        = secupress_get_scanners();
 
+	// Actions the user needs to perform for a fix.
+	$fix_actions     = get_transient( 'secupress_fix_actions' );
+	$fix_actions     = $fix_actions ? explode( '|', $fix_actions ) : array( 0 => false );
+	delete_transient( 'secupress_fix_actions' );
+
 	// Store the scans in 2 variables. They will be used to order the scans by status: 'bad', 'warning', 'notscannedyet', 'good'.
 	$before_not_scanned = array( 'bad' => array(), 'warning' => array(), );
 	$after_not_scanned  = array( 'good' => array(), );
@@ -455,7 +460,6 @@ function secupress_main_scan() {
 							<th scope="col" class="secupress-desc"><?php _e( 'Test Description', 'secupress' ); ?></th>
 							<th scope="col" class="secupress-result"><?php _e( 'Test Results', 'secupress' ); ?></th>
 							<th scope="col" class="secupress-fix"><?php _e( 'Fix', 'secupress' ); ?></th>
-							<!--// <th scope="col" class="secupress-type"><?php _e( 'Test Type', 'secupress' ); ?></th> //-->
 						</tr>
 					</tfoot>
 
@@ -555,8 +559,32 @@ function secupress_main_scan() {
 								</span>
 							<?php }?>
 							</td>
-							<!--// <td><?php echo $details['type']; ?></td> //-->
 						</tr>
+						<?php
+						if ( $class_name_part === $fix_actions[0] ) {
+							$fix_actions = explode( ',', $fix_actions[1] );
+							$fix_actions = array_combine( $fix_actions, $fix_actions );
+							$fix_actions = array_intersect_key( $current_test->get_fix_action_template_parts(), $fix_actions );
+
+							if ( $fix_actions ) { ?>
+								<tr class="test-fix-action">
+									<td colspan="5">
+										<form method="post" action="<?php echo admin_url( 'admin-post.php' ); ?>">
+											<h3><?php echo _n( 'This action requires your attention', 'These actions require your attention', count( $fix_actions ), 'secupress' ); ?></h3>
+											<?php
+											echo implode( '', $fix_actions );
+											submit_button( __( 'Fix it!', 'secupress' ) );
+											$current_test->print_fix_action_fields( $fix_actions );
+											?>
+										</form>
+									</td>
+								</tr>
+								<?php
+							}
+
+							$fix_actions = array( 0 => false );
+						}
+						?>
 						<tr id="details-<?php echo $class_name_part; ?>" class="details hide-if-js" style="background-color:#ddf;">
 							<td colspan="5" style="font-style: italic">
 								<?php echo wp_kses_post( $current_test::$more ); ?>

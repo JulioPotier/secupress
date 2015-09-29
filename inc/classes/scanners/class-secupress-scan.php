@@ -29,6 +29,8 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 	const VERSION = '1.0';
 
+	private       $fix_actions = array();
+
 	protected     $result = array();
 	protected     $fix    = false;
 
@@ -180,9 +182,55 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 	public function fix() {
 		if ( ! defined( 'DOING_AJAX' ) ) {
+			// Set a transient with fixes that require user action.
+			if ( $this->fix_actions ) {
+				$class_name_part   = substr( get_called_class(), 15 );	// 15 is 'SecuPress_Scan_' length.
+				set_transient( 'secupress_fix_actions', $class_name_part . '|' . implode( ',', $this->fix_actions ) );
+				$this->fix_actions = array();
+			}
+
 			$this->fix = true;
 			return $this->scan();
 		}
+	}
+
+
+	// Try to fix the flow(s) after requiring user action.
+
+	public function manual_fix() {}
+
+
+	// Store IDs related to fixes that require user action.
+
+	final protected function add_fix_action( $fix_id ) {
+		$this->fix_actions[ $fix_id ] = $fix_id;
+	}
+
+
+	// Return an array containing the forms that would fix the scan if it requires user action.
+
+	public function get_fix_action_template_parts() {
+		return array();
+	}
+
+
+	// Tell if a fix action part is needed.
+
+	protected function has_fix_action_part( $fix_id ) {
+		$fix_ids = ! empty( $_POST['test-parts'] ) ? ',' . $_POST['test-parts'] . ',' : '';
+		return false !== strpos( $fix_ids, ',' . $fix_id . ',' );
+	}
+
+
+	// Print the required fields for the user fix form.
+
+	public function print_fix_action_fields( $fix_actions ) {
+		$class_name_part = substr( get_called_class(), 15 );	// 15 is 'SecuPress_Scan_' length.
+
+		echo '<input type="hidden" name="action" value="secupress_manual_fixit" />';
+		echo '<input type="hidden" name="test" value="' . $class_name_part . '" />';
+		echo '<input type="hidden" name="test-parts" value="' . implode( ',', array_keys( $fix_actions ) ) . '" />';
+		wp_nonce_field( 'secupress_manual_fixit-' . $class_name_part, 'sp_manual_fixit-nonce' );
 	}
 
 	// Options =====================================================================================
