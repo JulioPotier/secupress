@@ -47,13 +47,11 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 
 	public function scan() {
 
-		$files = array_flip( array_map( 'basename', (array) glob( ABSPATH . '*wp-config*.*' ) ) );
-
-		unset( $files['wp-config.php'], $files['wp-config-sample.php'] );
+		$files = static::get_files();
 
 		if ( $files ) {
 			// bad
-			$files = self::wrap_in_tag( array_flip( $files ) );
+			$files = self::wrap_in_tag( $files );
 			$this->add_message( 200, array( count( $files ), wp_sprintf_l( '%l', $files ) ) );
 		}
 
@@ -66,8 +64,68 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 
 	public function fix() {
 
-		// include the fix here.
+		$files = static::get_files();
+
+		// This fix requires the user to take action.
+		if ( $files ) {
+			$this->add_fix_action( 'delete-files' );
+		}
 
 		return parent::fix();
+	}
+
+
+	public function manual_fix() {
+		if ( $this->has_fix_action_part( 'delete-files' ) && ! empty( $_POST['secupress-fix-wp-config-files'] ) && is_array( $_POST['secupress-fix-wp-config-files'] ) ) {
+			$files = static::get_files();
+			$sent  = $_POST['secupress-fix-wp-config-files'];
+			$sent  = array_intersect( $files, $sent );
+
+			if ( $sent ) {
+				foreach ( $sent as $filename ) {
+					if ( is_writable( ABSPATH . $filename ) ) {
+						unlink( ABSPATH . $filename );
+					}
+				}
+			}
+		}
+
+		return $this->scan();
+	}
+
+
+	public function get_fix_action_template_parts() {
+		$form  = '';
+		$files = static::get_files();
+
+		if ( count( $files ) === 1 ) {
+
+			$form .= '<h4>' . __( 'The following file will be deleted:', 'secupress' ) . '</h4>';
+
+			$file  = reset( $files );
+			$form .= sprintf( _x( 'Delete %s', 'delete a file', 'secupress' ), '<code>' . esc_html( $file ) . '</code>' );
+			$form .= '<input type="hidden" name="secupress-fix-wp-config-files[]" value="' . esc_attr( $file ) . '"/> ';
+
+		} elseif ( $files ) {
+
+			$form .= '<h4>' . __( 'Select the files to delete:', 'secupress' ) . '</h4>';
+
+			foreach ( $files as $file ) {
+				$form .= '<input type="checkbox" id="secupress-fix-wp-config-file-' . sanitize_html_class( $file ) . '" name="secupress-fix-wp-config-files[]" value="' . esc_attr( $file ) . '"/> ';
+				$form .= '<label for="secupress-fix-wp-config-file-' . sanitize_html_class( $file ) . '">' . sprintf( _x( 'Delete %s', 'delete a file', 'secupress' ), '<code>' . esc_html( $file ) . '</code>' ) . '</label><br/>';
+			}
+
+		}
+
+		return array( 'delete-files' => $form );
+	}
+
+
+	protected static function get_files() {
+		$files = array_flip( array_map( 'basename', (array) glob( ABSPATH . '*wp-config*.*' ) ) );
+
+		unset( $files['wp-config.php'], $files['wp-config-sample.php'] );
+
+		return array_flip( $files );
 	}
 }
