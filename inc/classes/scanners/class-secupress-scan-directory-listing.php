@@ -37,8 +37,10 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 			// bad
 			200 => __( '%s (for example) should not be accessible to anyone.', 'secupress' ),
 			// cantfix
-			300 => __( 'You don\'t run an Apache system, the directory listing disclosure cannot be fixed.', 'secupress' ),
-			301 => sprintf( __( 'Your %1$s file is not writeable. Please delete lines that may contain %2$s and add the following ones to the file: %3$s.', 'secupress' ), '<code>.htaccess</code>', '<code>Options +Indexes</code>', '<code>%s</code>' ),
+			300 => sprintf( __( 'You run a nginx system, I cannot fix the directory listing disclosure but you can do it yourself with the following code: %s.', 'secupress' ), '<code>autoindex off;</code>' ),
+			301 => sprintf( __( 'You run an IIS7 system, I cannot fix the directory listing disclosure but you can do it yourself with the following code: %s.', 'secupress' ), '<code>zobbylamouche</code>' ), ////
+			302 => __( 'You don\'t run an Apache system, I cannot fix the directory listing disclosure.', 'secupress' ),
+			303 => sprintf( __( 'Your %1$s file is not writable. Please delete lines that may contain %2$s and add the following ones to the file: %3$s.', 'secupress' ), '<code>.htaccess</code>', '<code>Options +Indexes</code>', '<code>%s</code>' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -74,11 +76,22 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 
 
 	public function fix() {
-		global $wp_filesystem, $is_apache;
+		global $wp_filesystem, $is_apache, $is_nginx, $is_iis7;
 
 		// Not Apache system, bail out.
 		if ( ! $is_apache ) {
-			$this->add_message( 300 );
+			if ( ! isset( $is_nginx ) ) {
+				$is_nginx = ! empty( $_SERVER['SERVER_SOFTWARE'] ) && strpos( $_SERVER['SERVER_SOFTWARE'], 'nginx' ) !== false;
+			}
+
+			if ( $is_nginx ) {
+				$this->add_message( 300 );
+			} elseif ( $is_iis7 ) {
+				$this->add_message( 301 );
+			} else {
+				$this->add_message( 302 );
+			}
+
 			return parent::fix();
 		}
 
@@ -92,7 +105,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 
 		// `.htaccess` not writable, bail out.
 		if ( ! is_writable( $file_path ) ) {
-			$this->add_message( 301, array( $rules ) );
+			$this->add_message( 303, array( $rules ) );
 			return parent::fix();
 		}
 
@@ -123,7 +136,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 		$fixed = $wp_filesystem->put_contents( $file_path, $file_content, $chmod );
 
 		if ( ! $fixed ) {
-			$this->add_message( 301, array( $rules ) );
+			$this->add_message( 303, array( $rules ) );
 		}
 
 		return parent::fix();
