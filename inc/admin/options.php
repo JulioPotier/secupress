@@ -129,6 +129,15 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 				'notscannedyet' => array( 'value' => $counts['notscannedyet'], 'text' => __( 'Not Scanned Yet', 'secupress' ) ),
 			)
 		);
+
+		$counts = secupress_get_scanner_counts();
+		wp_localize_script( 'secupress-scanner-js', 'SecuPressi18nScanner',
+			array(
+				'fixed'    => __( 'Fixed', 'secupress' ),
+				'notfixed' => __( 'Not Fixed', 'secupress' ),
+				'fixit'    => __( 'Fix it!', 'secupress' ),
+			)
+		);
 	}
 
 	// Add the favicon, no need to test again the page we're in.
@@ -576,7 +585,7 @@ function secupress_main_scan() {
 											<?php
 											echo implode( '', $fix_actions );
 											submit_button( __( 'Fix it!', 'secupress' ) );
-											$current_test->print_fix_action_fields( $fix_actions );
+											$current_test->get_fix_action_fields( $fix_actions );
 											?>
 										</form>
 									</td>

@@ -138,7 +138,36 @@ jQuery( document ).ready( function( $ ) {
 		$( t ).after('<img id="load-fix-' + pairs.test + '" src="' + href.replace( 'admin-post.php', 'images/wpspin_light.gif' ) + '" />');
 
 		$.get( href.replace( 'admin-post.php', 'admin-ajax.php' ), function( r ) {
-			$('.secupress-item-' + pairs.test + ' .secupress-scanit' ).click();
+			if ( r.success && r.data.form_contents && r.data.form_fields ) {
+				var content = '<form method="post" id="form_manual_fix" action="' + ajaxurl.replace( 'admin-ajax.php', 'admin-post.php' ) + '">';
+				for( var index in r.data.form_contents ) { 
+					content += r.data.form_contents[ index ];
+				}
+				content += r.data.form_fields;
+				content += '</form>';
+				swal({ title: r.data.form_title,
+				       text: content, 
+				       html: true,
+				       type: 'warning', 
+				       showLoaderOnConfirm: true, 
+				       closeOnConfirm: false, 
+				       allowOutsideClick: true, 
+				       showCancelButton: true, 
+				       confirmButtonText: SecuPressi18nScanner.fixit, 
+					},
+					function() {
+						var $params = $('#form_manual_fix').serializeArray();
+						$.post( ajaxurl, $params, function( r ) {
+							$('.secupress-item-' + pairs.test + ' .secupress-scanit' ).click();
+							if ( r.success ) {
+								swal({ title: SecuPressi18nScanner.fixed, type: 'success' });
+							} else {
+								swal({ title: SecuPressi18nScanner.notfixed, type: 'error' });
+							}
+						} );
+					}
+			    );
+			}
 			$('#load-fix-' + pairs.test).remove();
 			$( t ).show();
 		});

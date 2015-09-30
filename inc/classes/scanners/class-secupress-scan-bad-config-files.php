@@ -77,15 +77,17 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 
 	public function manual_fix() {
 		if ( $this->has_fix_action_part( 'delete-files' ) && ! empty( $_POST['secupress-fix-wp-config-files'] ) && is_array( $_POST['secupress-fix-wp-config-files'] ) ) {
-			$files = static::get_files();
-			$sent  = $_POST['secupress-fix-wp-config-files'];
-			$sent  = array_intersect( $files, $sent );
+			$bad_files = static::get_files();
+			$files     = $_POST['secupress-fix-wp-config-files'];
+			$files     = array_intersect( $bad_files, $files );
 
-			if ( $sent ) {
-				foreach ( $sent as $filename ) {
-					if ( is_writable( ABSPATH . $filename ) ) {
-						unlink( ABSPATH . $filename );
-					}
+			if ( ! $files ) {
+				return $this->scan();
+			}
+
+			foreach ( $files as $filename ) {
+				if ( is_writable( ABSPATH . $filename ) ) {
+					unlink( ABSPATH . $filename );
 				}
 			}
 		}
@@ -95,7 +97,7 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 
 
 	public function get_fix_action_template_parts() {
-		$form  = '';
+		$form  = '<div class="show-input">';
 		$files = static::get_files();
 
 		if ( count( $files ) === 1 ) {
@@ -103,7 +105,7 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 			$form .= '<h4>' . __( 'The following file will be deleted:', 'secupress' ) . '</h4>';
 
 			$file  = reset( $files );
-			$form .= sprintf( _x( 'Delete %s', 'delete a file', 'secupress' ), '<code>' . esc_html( $file ) . '</code>' );
+			$form .= '<code>' . esc_html( $file ) . '</code>';
 			$form .= '<input type="hidden" name="secupress-fix-wp-config-files[]" value="' . esc_attr( $file ) . '"/> ';
 
 		} elseif ( $files ) {
@@ -116,6 +118,7 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 			}
 
 		}
+		$form .= '</div>';
 
 		return array( 'delete-files' => $form );
 	}

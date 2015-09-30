@@ -27,7 +27,8 @@ interface iSecuPress_Scan {
 
 abstract class SecuPress_Scan implements iSecuPress_Scan {
 
-	const VERSION = '1.0';
+	const VERSION               = '1.0';
+	const SECUPRESS_SCAN_LENGTH = 15; // 15 is 'SecuPress_Scan_' length.
 
 	private       $fix_actions = array();
 
@@ -184,13 +185,23 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 		if ( ! defined( 'DOING_AJAX' ) ) {
 			// Set a transient with fixes that require user action.
 			if ( $this->fix_actions ) {
-				$class_name_part   = substr( get_called_class(), 15 );	// 15 is 'SecuPress_Scan_' length.
+				$class_name_part   = substr( get_called_class(), self::SECUPRESS_SCAN_LENGTH );
 				set_transient( 'secupress_fix_actions', $class_name_part . '|' . implode( ',', $this->fix_actions ) );
 				$this->fix_actions = array();
 			}
 
 			$this->fix = true;
 			return $this->scan();
+		} else {
+			if ( $this->fix_actions ) {
+				wp_send_json_success( 
+					array( 
+						'form_contents' => $this->get_fix_action_template_parts(), 
+						'form_fields'   => $this->get_fix_action_fields( $this->fix_actions, false ),
+						'form_title'    => _n( 'This action requires your attention', 'These actions require your attention', count( $this->fix_actions ), 'secupress' ),
+						)
+					);
+			}
 		}
 	}
 
@@ -224,13 +235,17 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 	// Print the required fields for the user fix form.
 
-	public function print_fix_action_fields( $fix_actions ) {
-		$class_name_part = substr( get_called_class(), 15 );	// 15 is 'SecuPress_Scan_' length.
-
-		echo '<input type="hidden" name="action" value="secupress_manual_fixit" />';
-		echo '<input type="hidden" name="test" value="' . $class_name_part . '" />';
-		echo '<input type="hidden" name="test-parts" value="' . implode( ',', array_keys( $fix_actions ) ) . '" />';
-		wp_nonce_field( 'secupress_manual_fixit-' . $class_name_part, 'sp_manual_fixit-nonce' );
+	public function get_fix_action_fields( $fix_actions, $echo = true ) {
+		$class_name_part = substr( get_called_class(), self::SECUPRESS_SCAN_LENGTH );
+		$output  = '<input type="hidden" name="action" value="secupress_manual_fixit" />';
+		$output .= '<input type="hidden" name="test" value="' . $class_name_part . '" />';
+		$output .= '<input type="hidden" name="test-parts" value="' . implode( ',', array_keys( $fix_actions ) ) . '" />';
+		$output .= wp_nonce_field( 'secupress_manual_fixit-' . $class_name_part, 'secupress_manual_fixit-nonce', false, false );
+		if ( $echo ) {
+			echo $output;
+		} else {
+			return $output;
+		}
 	}
 
 	// Options =====================================================================================
@@ -243,7 +258,7 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 			$this->result['attempted_fixes'] = array_key_exists( 'attempted_fixes', $this->result ) ? ++$this->result['attempted_fixes'] : 1;
 		}
 
-		$name = strtolower( substr( get_called_class(), 15 ) );	// 15 is 'SecuPress_Scan_' length.
+		$name = strtolower( substr( get_called_class(), self::SECUPRESS_SCAN_LENGTH ) );
 
 		if ( ! set_transient( 'secupress_scan_' . $name, $this->result ) ) {
 			return false;
