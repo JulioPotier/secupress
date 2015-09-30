@@ -112,11 +112,13 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	elseif ( SECUPRESS_PLUGIN_SLUG . '_page_secupress_scanners' === $hook_suffix ) {
 		// CSS
 		wp_enqueue_style( 'secupress-scanner-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-scanner' . $suffix . '.css', array( 'secupress-common-css' ), $version );
+		wp_enqueue_style( 'secupress-sweetalert', SECUPRESS_ADMIN_CSS_URL . 'sweetalert' . $suffix . '.css', array(), '1.1.0' );
 
 		// JS
 		wp_enqueue_script( 'secupress-chartjs',    SECUPRESS_ADMIN_JS_URL . 'chart' . $suffix . '.js', array(), '1.0.2.1', true );
 		wp_enqueue_script( 'jquery-timeago',       SECUPRESS_ADMIN_JS_URL . 'jquery.timeago.js', array( 'jquery' ), '1.4.1', true );
 		wp_enqueue_script( 'secupress-scanner-js', SECUPRESS_ADMIN_JS_URL . 'secupress-scanner' . $suffix . '.js', array( 'secupress-chartjs', 'jquery-timeago' ), $version, true );
+		wp_enqueue_script( 'secupress-sweetalert', SECUPRESS_ADMIN_JS_URL . 'sweetalert' . $suffix . '.js', array(), '1.1.0', true );
 
 		$counts = secupress_get_scanner_counts();
 		wp_localize_script( 'secupress-chartjs', 'SecuPressi18nChart',
