@@ -92,7 +92,7 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 			}
 		}
 
-		return $this->scan();
+		return parent::manual_fix();
 	}
 
 
@@ -127,8 +127,9 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 	protected static function get_files() {
 		$files = glob( ABSPATH . '*wp-config*.*' );
 		$files = array_map( 'basename', $files );
+
 		foreach( $files as $k => $file ) {
-			if ( 'php' == pathinfo( $file, PATHINFO_EXTENSION ) ) {
+			if ( 'php' === pathinfo( $file, PATHINFO_EXTENSION ) ) {
 				unset( $files[ $k ] );
 			}
 		}

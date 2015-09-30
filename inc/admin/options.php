@@ -121,23 +121,19 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		wp_enqueue_script( 'secupress-sweetalert', SECUPRESS_ADMIN_JS_URL . 'sweetalert' . $suffix . '.js', array(), '1.1.0', true );
 
 		$counts = secupress_get_scanner_counts();
-		wp_localize_script( 'secupress-chartjs', 'SecuPressi18nChart',
-			array(
-				'good'          => array( 'value' => $counts['good'],          'text' => __( 'Good', 'secupress' ) ),
-				'warning'       => array( 'value' => $counts['warning'],       'text' => __( 'Warning', 'secupress' ) ),
-				'bad'           => array( 'value' => $counts['bad'],           'text' => __( 'Bad', 'secupress' ) ),
-				'notscannedyet' => array( 'value' => $counts['notscannedyet'], 'text' => __( 'Not Scanned Yet', 'secupress' ) ),
-			)
-		);
+		wp_localize_script( 'secupress-chartjs', 'SecuPressi18nChart', array(
+			'good'          => array( 'value' => $counts['good'],          'text' => __( 'Good', 'secupress' ) ),
+			'warning'       => array( 'value' => $counts['warning'],       'text' => __( 'Warning', 'secupress' ) ),
+			'bad'           => array( 'value' => $counts['bad'],           'text' => __( 'Bad', 'secupress' ) ),
+			'notscannedyet' => array( 'value' => $counts['notscannedyet'], 'text' => __( 'Not Scanned Yet', 'secupress' ) ),
+		) );
 
-		$counts = secupress_get_scanner_counts();
-		wp_localize_script( 'secupress-scanner-js', 'SecuPressi18nScanner',
-			array(
-				'fixed'    => __( 'Fixed', 'secupress' ),
-				'notfixed' => __( 'Not Fixed', 'secupress' ),
-				'fixit'    => __( 'Fix it!', 'secupress' ),
-			)
-		);
+		wp_localize_script( 'secupress-scanner-js', 'SecuPressi18nScanner', array(
+			'fixed'    => __( 'Fixed', 'secupress' ),
+			'notfixed' => __( 'Not Fixed', 'secupress' ),
+			'fixit'    => __( 'Fix it!', 'secupress' ),
+			'error'    => __( 'Error', 'secupress' ),
+		) );
 	}
 
 	// Add the favicon, no need to test again the page we're in.
@@ -319,12 +315,12 @@ function __secupress_scanners() {
 				'</span>' .
 			'</div>' .
 			'<div class="legend">' .
-				'<span class="dashicons dashicons-shield-alt secupress-dashicon-color-good" aria-hidden="true"></span> ' . __( 'Good', 'secupress' ) . ' | ' .
-				'<span class="dashicons dashicons-shield-alt secupress-dashicon-color-bad" aria-hidden="true"></span> ' . __( 'Bad', 'secupress' ) . ' | ' .
-				'<span class="dashicons dashicons-shield-alt secupress-dashicon-color-warning" aria-hidden="true"></span> ' . __( 'Warning', 'secupress' ) . ' | ' .
-				'<span class="dashicons dashicons-shield-alt secupress-dashicon-color-notscannedyet" aria-hidden="true"></span> ' . __( 'Not scanned yet', 'secupress' ) .
+				'<span class="status-good"><span class="secupress-dashicon dashicons dashicons-shield-alt" aria-hidden="true"></span> ' . __( 'Good', 'secupress' ) . '</span> | ' .
+				'<span class="status-bad"><span class="secupress-dashicon dashicons dashicons-shield-alt" aria-hidden="true"></span> ' . __( 'Bad', 'secupress' ) . '</span> | ' .
+				'<span class="status-warning"><span class="secupress-dashicon dashicons dashicons-shield-alt" aria-hidden="true"></span> ' . __( 'Warning', 'secupress' ) . '</span> | ' .
+				'<span class="status-notscannedyet"><span class="secupress-dashicon dashicons dashicons-shield-alt" aria-hidden="true"></span> ' . __( 'Not scanned yet', 'secupress' ) . '</span>' .
 			'</div>' .
-			'<span id="tweeterA" class="hidden"><hr><img style="vertical-align:middle" src="https://g.twimg.com/dev/documentation/image/Twitter_logo_blue_16.png"> <i>' . __( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ) . '</i> <a class="button button-small" href="https://twitter.com/intent/tweet?via=secupress&url=http://secupress.fr&text=' . urlencode( 'Wow! My website just got an A security grade using SecuPress, what about yours?' ) . '">Tweet &raquo;</a></span>'
+			'<span id="tweeterA" class="hidden"><hr><img style="vertical-align:middle" src="https://g.twimg.com/dev/documentation/image/Twitter_logo_blue_16.png"> <i>' . __( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ) . '</i> <a class="button button-small" href="https://twitter.com/intent/tweet?via=secupress&amp;url=' . urlencode( 'http://secupress.fr&text=' . __( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ) ) . '">Tweet &raquo;</a></span>'
 		),
 	//	'premium' => array(
 	//		'SecuPress Security Pro',
@@ -617,17 +613,17 @@ function secupress_main_scan() {
 
 
 function secupress_status( $status ) {
-	$template = '<span class="dashicons dashicons-shield-alt secupress-dashicon secupress-dashicon-color-%2$s" aria-hidden="true"></span> <span class="secupress-status">%1$s</span>';
+	$template = '<span class="dashicons dashicons-shield-alt secupress-dashicon" aria-hidden="true"></span> <span class="secupress-status">%s</span>';
 
 	switch ( $status ):
 		case 'bad':
-			return wp_sprintf( $template, __( 'Bad', 'secupress' ), 'bad' );
+			return wp_sprintf( $template, __( 'Bad', 'secupress' ) );
 		case 'good':
-			return wp_sprintf( $template, __( 'Good', 'secupress' ), 'good' );
+			return wp_sprintf( $template, __( 'Good', 'secupress' ) );
 		case 'warning':
-			return wp_sprintf( $template, __( 'Warning', 'secupress' ), 'warning' );
+			return wp_sprintf( $template, __( 'Warning', 'secupress' ) );
 		default:
-			return wp_sprintf( $template, __( 'Not scanned yet', 'secupress' ), 'notscannedyet' );
+			return wp_sprintf( $template, __( 'Not scanned yet', 'secupress' ) );
 	endswitch;
 }
 

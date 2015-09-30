@@ -1,16 +1,17 @@
 .secupress-row-actions {
 	font-size: 13px;
 }
-.secupress-dashicon-color-good:before {
+.status-good .secupress-dashicon:before {
 	color: #88BA0E;
 }
-.secupress-dashicon-color-warning:before {
+.status-warning .secupress-dashicon:before {
 	color: orange;
 }
-.secupress-dashicon-color-bad:before {
+.status-bad .secupress-dashicon:before,
+.status-error .secupress-dashicon:before {
 	color: #D73838;
 }
-.secupress-dashicon-color-notscannedyet:before {
+.status-notscannedyet .secupress-dashicon:before {
 	color: #555;
 }
 .status-good .fixit,.status-notscannedyet .fixit {
@@ -68,6 +69,9 @@ th.secupress-check {
 }
 .secupress-item-all.status-good.alternate-2 {
 	background-color: #EFFFEE;
+}
+.secupress-item-all.scanning {
+	background-image: repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(200, 200, 200, 0.1) 10px, rgba(200, 200, 200, 0.1) 20px);
 }
 .form-table th {
 	padding: 10px 0 10px 2px;

@@ -27,11 +27,11 @@ interface iSecuPress_Scan {
 
 abstract class SecuPress_Scan implements iSecuPress_Scan {
 
-	const VERSION               = '1.0';
-	const SECUPRESS_SCAN_LENGTH = 15; // 15 is 'SecuPress_Scan_' length.
+	const VERSION = '1.0';
 
 	private       $fix_actions = array();
 
+	protected     $class_name_part;
 	protected     $result = array();
 	protected     $fix    = false;
 
@@ -63,6 +63,7 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	 * *Singleton* via the `new` operator from outside of this class.
 	 */
 	final private function __construct() {
+		$this->class_name_part = substr( get_called_class(), 15 ); // 15 is 'SecuPress_Scan_' length.
 		static::init();
 	}
 
@@ -182,33 +183,36 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	// Try to fix the flow(s).
 
 	public function fix() {
-		if ( ! defined( 'DOING_AJAX' ) ) {
-			// Set a transient with fixes that require user action.
-			if ( $this->fix_actions ) {
-				$class_name_part   = substr( get_called_class(), self::SECUPRESS_SCAN_LENGTH );
-				set_transient( 'secupress_fix_actions', $class_name_part . '|' . implode( ',', $this->fix_actions ) );
+		$this->fix = true;
+		$return = $this->scan();
+
+		if ( $this->fix_actions ) {
+			// Ajax
+			if ( defined( 'DOING_AJAX' ) ) {
+				// Add the fixes that require user action in the returned data.
+				$return = array_merge( $return, array(
+					'form_contents' => $this->get_fix_action_template_parts(),
+					'form_fields'   => $this->get_fix_action_fields( $this->fix_actions, false ),
+					'form_title'    => _n( 'This action requires your attention', 'These actions require your attention', count( $this->fix_actions ), 'secupress' ),
+				) );
+			}
+			// No ajax
+			else {
+				// Set a transient with fixes that require user action.
+				set_transient( 'secupress_fix_actions', $this->class_name_part . '|' . implode( ',', $this->fix_actions ) );
 				$this->fix_actions = array();
 			}
-
-			$this->fix = true;
-			return $this->scan();
-		} else {
-			if ( $this->fix_actions ) {
-				wp_send_json_success( 
-					array( 
-						'form_contents' => $this->get_fix_action_template_parts(), 
-						'form_fields'   => $this->get_fix_action_fields( $this->fix_actions, false ),
-						'form_title'    => _n( 'This action requires your attention', 'These actions require your attention', count( $this->fix_actions ), 'secupress' ),
-						)
-					);
-			}
 		}
+
+		return $return;
 	}
 
 
 	// Try to fix the flow(s) after requiring user action.
 
-	public function manual_fix() {}
+	public function manual_fix() {
+		return $this->scan();
+	}
 
 
 	// Store IDs related to fixes that require user action.
@@ -236,11 +240,10 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	// Print the required fields for the user fix form.
 
 	public function get_fix_action_fields( $fix_actions, $echo = true ) {
-		$class_name_part = substr( get_called_class(), self::SECUPRESS_SCAN_LENGTH );
 		$output  = '<input type="hidden" name="action" value="secupress_manual_fixit" />';
-		$output .= '<input type="hidden" name="test" value="' . $class_name_part . '" />';
+		$output .= '<input type="hidden" name="test" value="' . $this->class_name_part . '" />';
 		$output .= '<input type="hidden" name="test-parts" value="' . implode( ',', array_keys( $fix_actions ) ) . '" />';
-		$output .= wp_nonce_field( 'secupress_manual_fixit-' . $class_name_part, 'secupress_manual_fixit-nonce', false, false );
+		$output .= wp_nonce_field( 'secupress_manual_fixit-' . $this->class_name_part, 'secupress_manual_fixit-nonce', false, false );
 		if ( $echo ) {
 			echo $output;
 		} else {
@@ -258,7 +261,7 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 			$this->result['attempted_fixes'] = array_key_exists( 'attempted_fixes', $this->result ) ? ++$this->result['attempted_fixes'] : 1;
 		}
 
-		$name = strtolower( substr( get_called_class(), self::SECUPRESS_SCAN_LENGTH ) );
+		$name = strtolower( $this->class_name_part );
 
 		if ( ! set_transient( 'secupress_scan_' . $name, $this->result ) ) {
 			return false;
