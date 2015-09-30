@@ -1,6 +1,6 @@
 jQuery( document ).ready( function( $ ) {
 
-	var data = [
+	var spChartData = [
 		{
 			value: SecuPressi18nChart.good.value,
 			color:"#88BA0E",
@@ -31,86 +31,94 @@ jQuery( document ).ready( function( $ ) {
 		},
 	];
 
-	var donutId = document.getElementById("status_chart");
-	var SecuPressDonutChart = new Chart(donutId.getContext("2d")).Doughnut(data, {
-		animationEasing: 'easeInOutQuart',
-		onAnimationComplete: function()
-		{
-			this.showTooltip([this.segments[0]], true);
-		},
-		tooltipEvents: [],
-		showTooltips: true
-	});
+	var spChartEl = document.getElementById( "status_chart" );
+	var spChart   = new Chart( spChartEl.getContext( "2d" ) ).Doughnut( spChartData, {
+		animationEasing    : 'easeInOutQuart',
+		tooltipEvents      : [],
+		showTooltips       : true,
+		onAnimationComplete: function() {
+			this.showTooltip( [ this.segments[0] ], true );
+		}
+	} );
 
-	donutId.onclick = function(evt){
-		var activePoints = SecuPressDonutChart.getSegmentsAtEvent(evt);
-		jQuery('.square-filter.statuses button[data-type="'+activePoints[0].status+'"]').click();
+	spChartEl.onclick = function( e ){
+		var activePoints = spChart.getSegmentsAtEvent( e );
+		$( '.square-filter.statuses button[data-type="' + activePoints[0].status + '"]' ).trigger( "click" );
 	};
 
+	function prependdatali( percent, now ) {
+		$( ".score_results ul" ).prepend( '<li class="hidden" data-percent="' + percent + '">' + now + "</li>" ).find( "li.hidden" ).slideDown( 250 );
+		$( ".timeago:first" ).timeago();
+	}
+
 	function secupress_maj_score( refresh ) {
-		var total = $( '.status-all' ).length;
-		var status_good = $( '.status-good, .status-fpositive' ).length;
-		var status_warning = $( '.status-warning' ).length;
-		var status_bad = $( '.status-bad' ).length;
-		var status_notscannedyet = $( '.status-notscannedyet' ).length;
-		var percent = Math.floor( status_good * 100 / total );
-		var letter = '&ndash;';
-		$( '.score_info2 .percent' ).text( '(' + percent + ' %)');
+		var total                = $( ".status-all" ).length;
+		var status_good          = $( ".table-prio-all .status-good, .table-prio-all .status-fpositive" ).length;
+		var status_warning       = $( ".table-prio-all .status-warning" ).length;
+		var status_bad           = $( ".table-prio-all .status-bad" ).length;
+		var status_notscannedyet = $( ".table-prio-all .status-notscannedyet" ).length;
+		var percent              = Math.floor( status_good * 100 / total );
+		var letter               = "&ndash;";
+		var d, the_date, dashicon, score_results_ul, replacement, last_percent, now;
+
+		$( ".score_info2 .percent" ).text( "(" + percent + " %)" );
+
 		if ( total != status_notscannedyet ) {
 			if ( percent >= 90 ) {
-				letter = 'A';
+				letter = "A";
 			} else if ( percent >= 80 ) {
-				letter = 'B';
+				letter = "B";
 			} else if ( percent >= 70 ) {
-				letter = 'C';
+				letter = "C";
 			} else if ( percent >= 60 ) {
-				letter = 'D';
+				letter = "D";
 			} else if ( percent >= 50 ) {
-				letter = 'E';
+				letter = "E";
 			} else {
-				letter = 'F';
+				letter = "F";
 			}
 		}
-		if ( 'A' == letter ) {
-			$('#tweeterA').slideDown();
+
+		if ( "A" === letter ) {
+			$( "#tweeterA" ).slideDown();
 		} else {
-			$('#tweeterA').slideUp();
+			$( "#tweeterA" ).slideUp();
 		}
-		$('.score_info2 .letter').html(letter).removeClass('lA lB lC lD lE lF').addClass('l'+letter);
+
+		$( ".score_info2 .letter" ).html( letter ).removeClass( "lA lB lC lD lE lF" ).addClass( "l" + letter );
+
 		if ( refresh ) {
-			var d = new Date();
-			var the_date = d.getFullYear() + '-' + ("0"+(d.getMonth()+01)).slice(-2) + '-' + ("0" + d.getDate()).slice(-2) + ' ' + ("0"+d.getHours()).slice(-2) + ':' + ("0"+d.getMinutes()).slice(-2);
-			var dashicon = '<span class="dashicons mini dashicons-arrow-?-alt2"></span>';
-			var score_results_ul = $('.score_results ul');
-			var replacement = 'right';
-			var last_percent = $( score_results_ul ).find('li:first').data('percent');
+			d                = new Date();
+			the_date         = d.getFullYear() + "-" + ( "0" + ( d.getMonth() + 01 ) ).slice( -2 ) + "-" + ( "0" + d.getDate() ).slice( -2 ) + " " + ( "0" + d.getHours() ).slice( -2 ) + ":" + ( "0" + d.getMinutes() ).slice( -2 );
+			dashicon         = '<span class="dashicons mini dashicons-arrow-?-alt2"></span>';
+			score_results_ul = $( ".score_results ul" );
+			replacement      = "right";
+			last_percent     = score_results_ul.find( "li:first" ).data( "percent" );
+
 			if ( last_percent < percent ) {
-				replacement = 'up';
+				replacement = "up";
 			} else if ( last_percent > percent ) {
-				replacement = 'down';
+				replacement = "down";
 			}
-			dashicon = dashicon.replace('?', replacement);
-			var now = '<b>' + dashicon + letter + ' (' + percent + ' %)</b> <span class="timeago" title="' + the_date + '">' + the_date + '</span>';
-			function prependdatali() {
-				$('.score_results ul').prepend('<li class="hidden" data-percent="' + percent + '">' + now + '</li>').find('li.hidden').slideDown('250');
-				$('.timeago:first').timeago();
-			}
-			if ( $(score_results_ul).find('li').length == 5 ) {
-				$(score_results_ul).find('li:last').slideUp('250',
-					function(){
-						$(this).remove();
-						prependdatali();
-					}
-				);
+
+			dashicon = dashicon.replace( "?", replacement );
+			now = "<strong>" + dashicon + letter + " (" + percent + ' %)</strong> <span class="timeago" title="' + the_date + '">' + the_date + "</span>";
+
+			if ( score_results_ul.find( "li" ).length === 5 ) {
+				score_results_ul.find( "li:last" ).slideUp( 250, function() {
+					$( this ).remove();
+					prependdatali( percent, now );
+				} );
 			} else {
-				prependdatali();
+				prependdatali( percent, now );
 			}
 		}
-		SecuPressDonutChart.segments[0].value = status_good;
-		SecuPressDonutChart.segments[1].value = status_warning;
-		SecuPressDonutChart.segments[2].value = status_bad;
-		SecuPressDonutChart.segments[3].value = status_notscannedyet;
-		SecuPressDonutChart.update();
+
+		spChart.segments[0].value = status_good;
+		spChart.segments[1].value = status_warning;
+		spChart.segments[2].value = status_bad;
+		spChart.segments[3].value = status_notscannedyet;
+		spChart.update();
 	}
 
 	secupress_maj_score();
@@ -135,7 +143,7 @@ jQuery( document ).ready( function( $ ) {
 		numbers: []
 	};
 
-	$('.timeago').timeago();
+	$( ".timeago" ).timeago();
 
 
 	// !Filter rows ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

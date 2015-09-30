@@ -308,11 +308,11 @@ function __secupress_scanners() {
 			'<div class="score_info2">' .
 				'<span class="letter">&ndash;</span>' .
 				'<span class="percent">(0 %)</span>' .
-				'<span class="score_results">' . sprintf( __( '%s:', 'secupress' ), '<strong>' . __( 'Latest Reports', 'secupress' ) . '</strong>' ) . '<br>' .
+				'<div class="score_results">' . sprintf( __( '%s:', 'secupress' ), '<strong>' . __( 'Latest Reports', 'secupress' ) . '</strong>' ) . '<br>' .
 					'<ul>' .
 						implode( "\n", array_reverse( $reports ) ) .
 					'</ul>' .
-				'</span>' .
+				'</div>' .
 			'</div>' .
 			'<div class="legend">' .
 				'<span class="status-good"><span class="secupress-dashicon dashicons dashicons-shield-alt" aria-hidden="true"></span> ' . __( 'Good', 'secupress' ) . '</span> | ' .
@@ -320,7 +320,12 @@ function __secupress_scanners() {
 				'<span class="status-warning"><span class="secupress-dashicon dashicons dashicons-shield-alt" aria-hidden="true"></span> ' . __( 'Warning', 'secupress' ) . '</span> | ' .
 				'<span class="status-notscannedyet"><span class="secupress-dashicon dashicons dashicons-shield-alt" aria-hidden="true"></span> ' . __( 'Not scanned yet', 'secupress' ) . '</span>' .
 			'</div>' .
-			'<span id="tweeterA" class="hidden"><hr><img style="vertical-align:middle" src="https://g.twimg.com/dev/documentation/image/Twitter_logo_blue_16.png"> <i>' . __( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ) . '</i> <a class="button button-small" href="https://twitter.com/intent/tweet?via=secupress&amp;url=' . urlencode( 'http://secupress.fr&text=' . __( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ) ) . '">Tweet &raquo;</a></span>'
+			'<div id="tweeterA" class="hidden">' .
+				'<hr>' .
+				'<img src="https://g.twimg.com/dev/documentation/image/Twitter_logo_blue_16.png" alt=""> ' .
+				'<i>' . __( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ) . '</i> ' .
+				'<a class="button button-small" href="https://twitter.com/intent/tweet?via=secupress&amp;url=' . urlencode( 'http://secupress.fr&text=' . __( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ) ) . '">Tweet &raquo;</a>' .
+			'</div>'
 		),
 	//	'premium' => array(
 	//		'SecuPress Security Pro',
