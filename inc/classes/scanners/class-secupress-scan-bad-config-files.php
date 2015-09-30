@@ -122,10 +122,14 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 
 
 	protected static function get_files() {
-		$files = array_flip( array_map( 'basename', (array) glob( ABSPATH . '*wp-config*.*' ) ) );
+		$files = glob( ABSPATH . '*wp-config*.*' );
+		$files = array_map( 'basename', $files );
+		foreach( $files as $k => $file ) {
+			if ( 'php' == pathinfo( $file, PATHINFO_EXTENSION ) ) {
+				unset( $files[ $k ] );
+			}
+		}
 
-		unset( $files['wp-config.php'], $files['wp-config-sample.php'] );
-
-		return array_flip( $files );
+		return $files;
 	}
 }
