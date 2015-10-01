@@ -89,7 +89,7 @@ function secupress_init() {
 	require( SECUPRESS_FUNCTIONS_PATH . '/plugins.php' );
 	require( SECUPRESS_FUNCTIONS_PATH . '/bots.php' );
 	require( SECUPRESS_FRONT_PATH     . '/htaccess.php' );
-	require( SECUPRESS_FRONT_PATH     . '/main-protections.php' );
+	require( SECUPRESS_FRONT_PATH     . '/common.php' );
 	require( SECUPRESS_INC_PATH       . '/admin-bar.php' );
 	require( SECUPRESS_INC_PATH       . '/cron.php' );
 	require( SECUPRESS_MODULES_PATH   . '/modules.php' );
