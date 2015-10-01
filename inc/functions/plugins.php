@@ -77,3 +77,27 @@ function secupress_register_setting( $module ) {
 	$module_for_callback = str_replace( '-', '_', $module );
 	register_setting( "secupress_{$module}_settings", "secupress_{$module}_settings", "__secupress_{$module_for_callback}_settings_callback" );
 }
+
+/**
+ * Return the current URL
+ *
+ * @param $mode (string) base (before '?'), raw (all), uri (after '?')
+ * @since 1.0 
+ * @return string $url
+ **/
+function secupress_get_current_url( $mode = 'base' ) {
+	$url = ! empty( $GLOBALS['HTTP_SERVER_VARS']['REQUEST_URI'] ) ? $GLOBALS['HTTP_SERVER_VARS']['REQUEST_URI'] : ( ! empty( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '' );
+	$url = 'http' . ( is_ssl() ? 's' : '' ) . '://' . $_SERVER['HTTP_HOST'] . $url;
+
+	switch( $mode ) :
+		case 'raw' :
+			return $url;
+		case 'uri' :
+			$url = reset( ( explode( '?', $url ) ) );
+			$url = reset( ( explode( '&', $url ) ) );
+			return trim( str_replace( home_url(), '', $url ), '/' );
+		default :
+			$url = reset( ( explode( '?', $url ) ) );
+			return reset( ( explode( '&', $url ) ) );
+	endswitch;
+}
