@@ -32,14 +32,25 @@ function secupress_formate_message( $msgs, $scan_class ) {
 
 // Scan
 
-add_action( 'admin_post_secupress_scanner', '__secupress_scanner_ajax' );
-add_action( 'wp_ajax_secupress_scanner',    '__secupress_scanner_ajax' );
+add_action( 'admin_post_secupress_scanner', '__secupress_scanit_action_callback' );
+add_action( 'wp_ajax_secupress_scanner',    '__secupress_scanit_action_callback' );
+/**
+ * Used to scan a test in scanner page
+ *
+ * @param $test_name (string) The suffix of the class name
+ * @param $manual (bool) Set it to true to avoid nonce check and redirections
+ * @since 1.0 
+ * @return (string) json format or redirects the user
+ **/
+function __secupress_scanit_action_callback( $test_name = null, $manual = false ) {
 
-function __secupress_scanner_ajax( $test_name = null ) {
-
-	$test_name = isset( $_GET['test'] )     ? esc_attr( $_GET['test'] ) : $test_name;
-	$nonce     = isset( $_GET['_wpnonce'] ) ? $_GET['_wpnonce']         : 0;
-	$nonce     = 0 === $nonce || wp_verify_nonce( $nonce, 'secupress_scanner_' . $test_name );
+	$test_name = isset( $_GET['test'] ) ? esc_attr( $_GET['test'] ) : $test_name;
+	if ( ! $manual ) {
+		$nonce     = isset( $_GET['_wpnonce'] ) ? $_GET['_wpnonce'] : 0;
+		$nonce     = wp_verify_nonce( $nonce, 'secupress_scanner_' . $test_name );
+	} else {
+		$nonce     = true;
+	}
 
 	if ( empty( $test_name ) || ! $nonce || ! file_exists( secupress_class_path( 'scan', $test_name ) ) ) {
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
@@ -62,6 +73,10 @@ function __secupress_scanner_ajax( $test_name = null ) {
 		ob_end_flush();
 	}
 
+	if ( $manual ) {
+		return;
+	}
+
 	$output = array(
 		'status'  => secupress_status( $response['status'] ),
 		'class'   => sanitize_key( $response['status'] ),
@@ -73,7 +88,7 @@ function __secupress_scanner_ajax( $test_name = null ) {
 	$percent = floor( $counts['good'] * 100 / $counts['total'] );
 	$times[] = array( 'grade' => $counts['grade'], 'percent' => $percent, 'time' => time() );
 	$times   = array_filter( array_slice( $times , -5 ) );
-	update_option( SECUPRESS_SCAN_TIMES, $times );*/
+	update_option( SECUPRESS_SCAN_TIMES, $times );*////
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 		wp_send_json_success( $output );
@@ -83,17 +98,35 @@ function __secupress_scanner_ajax( $test_name = null ) {
 	}
 }
 
+/**
+ * Wrapper for __secupress_scanit_action_callback
+ *
+ * @return void
+ * @since 1.0
+ **/
+function secupress_scanit( $test_name ) {
+	__secupress_scanit_action_callback( $test_name, true );
+}
 
-// Fix
+add_action( 'admin_post_secupress_fixit', '__secupress_fixit_action_callback' );
+add_action( 'wp_ajax_secupress_fixit',    '__secupress_fixit_action_callback' );
+/**
+ * Used to automatically fix a test in scanner page
+ *
+ * @param $test_name (string) The suffix of the class name
+ * @param $manual (bool) Set it to true to avoid nonce check and redirections
+ * @since 1.0 
+ * @return (string) json format or redirects the user
+ **/
+function __secupress_fixit_action_callback( $test_name = null, $manual = false ) {
 
-add_action( 'admin_post_secupress_fixit', '__secupress_fixit_ajax' );
-add_action( 'wp_ajax_secupress_fixit',    '__secupress_fixit_ajax' );
-
-function __secupress_fixit_ajax( $test_name = null ) {
-
-	$test_name = isset( $_GET['test'] )     ? esc_attr( $_GET['test'] ) : $test_name;
-	$nonce     = isset( $_GET['_wpnonce'] ) ? $_GET['_wpnonce']         : 0;
-	$nonce     = 0 === $nonce || wp_verify_nonce( $nonce, 'secupress_fixit_' . $test_name );
+	$test_name = isset( $_GET['test'] ) ? esc_attr( $_GET['test'] ) : $test_name;
+	if ( ! $manual ) {
+		$nonce     = isset( $_GET['_wpnonce'] ) ? $_GET['_wpnonce'] : 0;
+		$nonce     = wp_verify_nonce( $nonce, 'secupress_fixit_' . $test_name );
+	} else {
+		$nonce     = true;
+	}
 
 	if ( empty( $test_name ) || ! $nonce || ! file_exists( secupress_class_path( 'scan', $test_name ) ) ) {
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
@@ -116,6 +149,10 @@ function __secupress_fixit_ajax( $test_name = null ) {
 		ob_end_flush();
 	}
 
+	if ( $manual ) {
+		return;
+	}
+
 	$response['class']   = sanitize_key( $response['status'] );
 	$response['status']  = secupress_status( $response['status'] );
 	$response['message'] = secupress_formate_message( $response['msgs'], $scan_class );
@@ -129,19 +166,38 @@ function __secupress_fixit_ajax( $test_name = null ) {
 	}
 }
 
+/**
+ * Wrapper for __secupress_fixit_action_callback
+ *
+ * @return void
+ * @since 1.0
+ **/
+function secupress_fixit( $test_name ) {
+	__secupress_fixit_action_callback( $test_name, true );
+}
 
 // Manual fix
 
 add_action( 'admin_post_secupress_manual_fixit', '__secupress_manual_fixit' );
 add_action( 'wp_ajax_secupress_manual_fixit',    '__secupress_manual_fixit' );
+/**
+ * Used to manually fix a test in scanner page
+ *
+ * @param $test_name (string) The suffix of the class name
+ * @since 1.0 
+ * @return (string) json format or redirects the user
+ **/
+function __secupress_manual_fixit( $class_name_part = null ) {
 
-function __secupress_manual_fixit( $test_name = null ) {
+	$class_name_part = isset( $_POST['test'] ) ? esc_attr( $_POST['test'] ) : $class_name_part;
+	if ( ! isset( $args['nonce_check'] ) || $args['nonce_check'] ) {
+		$nonce     = isset( $_POST['secupress_manual_fixit-nonce'] ) ? $_POST['secupress_manual_fixit-nonce'] : 0;
+		$nonce     = wp_verify_nonce( $nonce, 'secupress_manual_fixit-' . $class_name_part );
+	} else {
+		$nonce     = true;
+	}
 
-	$test_name = isset( $_POST['test'] ) ? esc_attr( $_POST['test'] ) : $test_name;
-	$nonce     = isset( $_POST['secupress_manual_fixit-nonce'] ) ? $_POST['secupress_manual_fixit-nonce'] : 0;
-	$nonce     = 0 === $nonce || wp_verify_nonce( $nonce, 'secupress_manual_fixit-' . $test_name );
-
-	if ( empty( $test_name ) || ! $nonce || ! file_exists( secupress_class_path( 'scan', $test_name ) ) ) {
+	if ( empty( $class_name_part ) || ! $nonce || ! file_exists( secupress_class_path( 'scan', $class_name_part ) ) ) {
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			wp_send_json_error();
 		} else {
@@ -150,9 +206,9 @@ function __secupress_manual_fixit( $test_name = null ) {
 	}
 
 	secupress_require_class( 'scan' );
-	secupress_require_class( 'scan', $test_name );
+	secupress_require_class( 'scan', $class_name_part );
 
-	$classname = 'SecuPress_Scan_' . $test_name;
+	$classname = 'SecuPress_Scan_' . $class_name_part;
 
 	if ( class_exists( $classname ) ) {
 		ob_start();
