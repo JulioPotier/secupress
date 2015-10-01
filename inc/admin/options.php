@@ -129,10 +129,15 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		) );
 
 		wp_localize_script( 'secupress-scanner-js', 'SecuPressi18nScanner', array(
-			'fixed'    => __( 'Fixed', 'secupress' ),
-			'notfixed' => __( 'Not Fixed', 'secupress' ),
-			'fixit'    => __( 'Fix it!', 'secupress' ),
-			'error'    => __( 'Error', 'secupress' ),
+			'fixed'           => __( 'Fixed', 'secupress' ),
+			'fixedPartial'    => __( 'Partially fixed', 'secupress' ),
+			'notFixed'        => __( 'Not Fixed', 'secupress' ),
+			'fixit'           => __( 'Fix it!', 'secupress' ),
+			'error'           => __( 'Error', 'secupress' ),
+			'manualFixMsg'    => __( 'This fix requires your intervention.', 'secupress' ),
+			'allFixed'        => __( 'All flaws are fixed!', 'secupress' ),
+			'oneManualFix'    => __( 'One fix requires your intervention.', 'secupress' ),
+			'someManualFixes' => __( 'Some fixes require your intervention.', 'secupress' ),
 		) );
 	}
 
@@ -541,10 +546,10 @@ function secupress_main_scan() {
 								<?php echo $status_text; ?>
 
 								<div class="secupress-row-actions">
-									<span class="rescanit<?php echo $status_class != 'notscannedyet' ? '' : ' hidden'; ?>">
+									<span class="rescanit">
 										<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $class_name_part ), 'secupress_scanner_' . $class_name_part ); ?>" class="secupress-scanit"><?php _e( 'Re-Scan this test', 'secupress' ); ?></a>
 									</span>
-									<span class="scanit<?php echo $status_class == 'notscannedyet' ? '' : ' hidden'; ?>">
+									<span class="scanit">
 										<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $class_name_part ), 'secupress_scanner_' . $class_name_part ); ?>" class="secupress-scanit"><?php _e( 'Scan this test first', 'secupress' ) ?></a>
 									</span>
 								</div>
@@ -552,7 +557,7 @@ function secupress_main_scan() {
 							<td>
 								<?php echo $class_name::$title; ?>
 								<div class="secupress-row-actions">
-									<span class="helpme hide-if-no-js">
+									<span class="hide-if-no-js">
 										<button type="button" class="secupress-details link-like" data-test="<?php echo $class_name_part; ?>" title="<?php esc_attr_e( 'Get details', 'secupress' ); ?>"><?php _e( 'Learn more', 'secupress' ); ?></button>
 									</span>
 								</div>
@@ -562,11 +567,11 @@ function secupress_main_scan() {
 							</td>
 							<td>
 							<?php if ( $current_test::$fixable ) { ?>
-								<span class="fixit<?php echo $status_class != 'notscannedyet' & $status_class != 'good' ? '' : ' hide'; ?>">
+								<span class="fixit<?php echo $status_class != 'notscannedyet' & $status_class != 'good' ? '' : ' hidden'; ?>">
 									<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $class_name_part ), 'secupress_fixit_' . $class_name_part ); ?>" class="button button-secondary button-small secupress-fixit"><?php _e( 'Fix it!', 'secupress' ); ?></a>
 								</span>
 							<?php } else { ?>
-								<span class="fixit<?php echo $status_class != 'notscannedyet' & $status_class != 'good' ? '' : ' hide'; ?>">
+								<span class="fixit<?php echo $status_class != 'notscannedyet' & $status_class != 'good' ? '' : ' hidden'; ?>">
 									<a href="#premium" class="button button-secondary button-small secupress-fixit"><?php _e( 'Premium Upgrade', 'secupress' ); ?></a>
 								</span>
 							<?php }?>

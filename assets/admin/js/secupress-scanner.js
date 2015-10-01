@@ -43,7 +43,7 @@ jQuery( document ).ready( function( $ ) {
 
 	spChartEl.onclick = function( e ){
 		var activePoints = spChart.getSegmentsAtEvent( e );
-		$( '.square-filter.statuses button[data-type="' + activePoints[0].status + '"]' ).trigger( "click" );
+		$( '.square-filter.statuses button[data-type="' + activePoints[0].status + '"]' ).trigger( "filter.secupress" );
 	};
 
 	function prependdatali( percent, now ) {
@@ -51,7 +51,7 @@ jQuery( document ).ready( function( $ ) {
 		$( ".timeago:first" ).timeago();
 	}
 
-	function secupress_maj_score( refresh ) {
+	function spUpdateScore( refresh ) {
 		var total                = $( ".status-all" ).length;
 		var status_good          = $( ".table-prio-all .status-good, .table-prio-all .status-fpositive" ).length;
 		var status_warning       = $( ".table-prio-all .status-warning" ).length;
@@ -121,7 +121,7 @@ jQuery( document ).ready( function( $ ) {
 		spChart.update();
 	}
 
-	secupress_maj_score();
+	spUpdateScore();
 
 	jQuery.timeago.settings.strings = { //// voir pour mettre celui de WP
 		prefixAgo: null,
@@ -148,24 +148,26 @@ jQuery( document ).ready( function( $ ) {
 
 	// !Filter rows ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	$( "body" ).on( "click", ".square-filter button", function( e ) {
+	$( "body" ).on( "click filter.secupress", ".square-filter button", function( e ) {
 		var $this    = $( this ),
 			priority = $this.data( "type" ),
 			$tr;
 
-		e.preventDefault();
+		if ( $this.hasClass( "active" ) ) {
+			return;
+		}
 
 		$this.addClass( "active" ).siblings().removeClass( "active" );
 
 		if ( $this.parent().hasClass( "statuses" ) ) {
 
-			$( ".status-all" ).hide();
-			$( ".status-" + priority ).show();
+			$( ".status-all" ).addClass( "hidden" );
+			$( ".status-" + priority ).removeClass( "hidden" );
 
 		} else if ( $this.parent().hasClass( "priorities" ) ) {
 
-			$( ".table-prio-all" ).hide();
-			$( ".table-prio-" + priority ).show();
+			$( ".table-prio-all" ).addClass( "hidden" );
+			$( ".table-prio-" + priority ).removeClass( "hidden" );
 
 		}
 
@@ -177,10 +179,12 @@ jQuery( document ).ready( function( $ ) {
 
 	// !Scans and fixes --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	var doingScan = {}; // Used to tell when all ajax scans are completed (then we can update the graph).
+	var doingFix  = {};
+	var manualFix = [];
 
 
 	// Update counters of bad results.
-	function spUpdateBadsCounters() {
+	function spUpdateBadResultsCounters() {
 		var count = $( ".secupress-item-all.status-bad" ).length,
 			$counters = $( "#toplevel_page_secupress" ).find( ".update-plugins" );
 
@@ -199,41 +203,54 @@ jQuery( document ).ready( function( $ ) {
 	}
 
 
-	// Badge + status text + show/hide scan buttons.
-	function spAddStatusText( $row, status, showActions ) {
-		$td = $row.children( ".secupress-status" );
-
-		if ( typeof showActions === "undefined" || showActions ) {
-			$td.children( ".secupress-row-actions" ).removeClass( "hidden" ).siblings().remove();
-		} else {
-			$td.children( ".secupress-row-actions" ).addClass( "hidden" ).siblings().remove();
-		}
-
-		$td.prepend( status );
+	// Tell if a test is fixable.
+	function spIsFixable( $row ) {
+		return $row.hasClass( "status-bad" ) || $row.hasClass( "status-warning" );
 	}
 
 
-	// Replace a scan status with an error icon + message.
-	function spDisplayRowError( $row ) {
-		var status = '<span class="dashicons dashicons-no secupress-dashicon" aria-hidden="true"></span> <span class="secupress-status">' + SecuPressi18nScanner.error + "</span>";
+	// Badge + status text + show/hide scan buttons.
+	function spAddStatusText( $row, statusText ) {
+		var $td = $row.children( ".secupress-status" );
 
+		$td.children( ".secupress-row-actions" ).siblings().remove();
+		$td.prepend( statusText );
+	}
+
+
+	// Replace a test status with an error icon + message.
+	function spDisplayRowError( $row ) {
+		var status    = '<span class="dashicons dashicons-no secupress-dashicon" aria-hidden="true"></span> <span class="secupress-status">' + SecuPressi18nScanner.error + "</span>";
+
+		// Add the icon + text.
 		spAddStatusText( $row, status );
+
+		// Add a "status-error" class to the row and empty the test results.
 		$row.addClass( "status-error" ).children( ".secupress-result" ).html( "" );
+
+		// Uncheck the checkbox.
+		sfUncheckTest( $row );
+
+		return false;
+	}
+
+
+	// Maybe uncheck the test checkbox.
+	function sfUncheckTest( $row ) {
+		$row.children( ".secupress-check-column" ).children( ":checked" ).trigger( "click" );
 	}
 
 
 	// Tell if the returned data (from ajax) has required infos.
 	function spResponseHasRequiredData( r, $row ) {
 		// Fail, or there's a problem with the returned data.
-		if ( ! r.success || typeof r.data !== "object" ) {
-			spDisplayRowError( $row );
-			return false;
+		if ( ! r.success || ! $.isPlainObject( r.data ) ) {
+			return spDisplayRowError( $row );
 		}
 
 		// The data is incomplete.
 		if ( ! r.data.status || ! r.data.class || ! r.data.message ) {
-			spDisplayRowError( $row );
-			return false;
+			return spDisplayRowError( $row );
 		}
 
 		return true;
@@ -241,69 +258,60 @@ jQuery( document ).ready( function( $ ) {
 
 
 	// Deal with scan infos.
-	function spScanResult( r, test ) {
-		var $checkbox = $( "#cb-select-" + test ),
-			$row      = $( ".secupress-item-" + test );
+	function spDisplayScanResult( r, test ) {
+		var $row = $( ".secupress-item-" + test ),
+			classes, oldStatus = null;
 
 		// Fail, or there's a problem with the returned data.
 		if ( ! spResponseHasRequiredData( r, $row ) ) {
 			return false;
 		}
 
-		// Row class.
-		$row.removeClass( "status-good status-bad status-warning status-notscannedyet" ).addClass( "status-" + r.data.class );
+		// Get current status.
+		classes = $row.attr( "class" ).replace( /(\s|^)(status-error|status-all)(\s|$)/g, " " ).replace( /^\s+|\s+$/g, "" ).replace( /\s+/, " " ).split( " " );
+
+		$.each( classes, function( i, cl ) {
+			if ( 0 === cl.indexOf( "status-" ) ) {
+				oldStatus = cl.substr( 7 );
+				return false;
+			}
+		} );
+
+		// Add the new status as a class.
+		$row.removeClass( "status-error status-good status-bad status-warning status-notscannedyet" ).addClass( "status-" + r.data.class );
 
 		// Add back the status and the scan button.
 		spAddStatusText( $row, r.data.status );
-		$row.children( ".secupress-status" ).find( ".rescanit" ).show().siblings( ".scanit" ).hide();
 
 		// Add messages.
 		$row.children( ".secupress-result" ).html( r.data.message );
 
-		// Show/Hide the fix button.
-		if ( "good" === r.data.class ) {
-			$row.find( ".secupress-row-actions .fixit" ).hide();
-		} else {
-			$row.find( ".secupress-row-actions .fixit" ).show();
+		// A manual fix is needed: add a message.
+		if ( r.data.form_contents && r.data.form_fields || r.data.manualFix ) {
+			$row.children( ".secupress-result" ).append( '<div class="manual-fix-message">' + SecuPressi18nScanner.manualFixMsg + "</div>" );
 		}
 
 		// Uncheck the checkbox.
-		if ( $checkbox.prop( "checked" ) ) {
-			$checkbox.trigger( "click" );
+		sfUncheckTest( $row );
+
+		if ( r.data.class !== oldStatus ) {
+			// Tell the row status has been updated.
+			$( "body" ).trigger( "testStatusChange.secupress", [ {
+				test:      test,
+				newStatus: r.data.class,
+				oldStatus: oldStatus
+			} ] );
 		}
 
 		return true;
 	}
 
 
-	// Show test details.
-	$( ".secupress-details" ).on( "click", function( e ) {
-		e.preventDefault();
-		$( "#details-" + $( this ).data( "test" ) ).toggle( 250 );
-	} );
-
-
-	// Perform a scan on click.
-	$( "body" ).on( "click scan", ".button-secupress-scan, .secupress-scanit", function( e ) {
-		var $this = $( this ),
-			href, test, $row;
-
-		e.preventDefault();
-
-		if ( $this.hasClass( "button-secupress-scan" ) ) {
-			// It's the "One Click Scan" button.
-			$( ".scanit > .secupress-scanit" ).trigger( "scan" );
-			return;
-		}
-
-		href = $this.attr( "href" );
-		test = spGetTestFromUrl( href );
-		$row = $this.closest( "tr" ).removeClass( "status-error" );
-
+	// Perform a scan.
+	function spScanit( test, $row, href, isBulk ) {
 		if ( ! test ) {
 			// Something's wrong here.
-			spDisplayRowError( $row );
-			return;
+			return spDisplayRowError( $row );
 		}
 
 		if ( doingScan[ test ] ) {
@@ -311,126 +319,364 @@ jQuery( document ).ready( function( $ ) {
 			return;
 		}
 
-		// Spinner
-		spAddStatusText( $row, '<img src="' + href.replace( "admin-post.php", "images/wpspin_light-2x.gif" ) + '" alt="" />', false );
-
-		// Tell our ajax call is running.
-		$row.addClass( "scanning" );
+		// Show our scan is running.
 		doingScan[ test ] = 1;
+		$row.addClass( "working" ).removeClass( "status-error" );
+
+		// Add the spinner.
+		spAddStatusText( $row, '<img src="' + href.replace( "admin-post.php", "images/wpspin_light-2x.gif" ) + '" alt="" />' );
 
 		// Ajax call
-		$.getJSON( href.replace( "admin-post.php", "admin-ajax.php" ), function( r ) {
+		$.getJSON( href.replace( "admin-post.php", "admin-ajax.php" ) )
+		.done( function( r ) {
+			// Display scan result.
+			if ( spDisplayScanResult( r, test ) ) {
+				delete doingScan[ test ];
 
-			spScanResult( r, test );
+				// Trigger an event.
+				$( "body" ).trigger( "scanDone.secupress", [ {
+					test:   test,
+					href:   href,
+					isBulk: isBulk,
+					data:   r.data
+				} ] );
 
-		} ).fail( function() {
+			} else {
+				delete doingScan[ test ];
+			}
+
+		} )
+		.fail( function() {
+			delete doingScan[ test ];
+
 			// Error
 			spDisplayRowError( $row );
 
-		} ).always( function() {
-			// Tell our scan is completed.
-			$row.removeClass( "scanning" );
-			delete doingScan[ test ];
+		} )
+		.always( function() {
+			// Show our scan is completed.
+			$row.removeClass( "working" );
 
-			// Update the score graph when no scans left.
+			// If this is the last scan in queue, trigger an event.
 			if ( $.isEmptyObject( doingScan ) ) {
-				secupress_maj_score( true );
+				$( "body" ).trigger( "allScanDone.secupress", [ { isBulk: isBulk } ] );
+			}
+		} );
+	}
+
+
+	// Perform a fix.
+	function spFixit( test, $row, href, isBulk ) {
+		var $button;
+
+		if ( ! test ) {
+			// Something's wrong here.
+			return spDisplayRowError( $row );
+		}
+
+		if ( doingFix[ test ] ) {
+			// Oy! Slow down!
+			return;
+		}
+
+		if ( ! spIsFixable( $row ) ) {
+			sfUncheckTest( $row );
+			return;
+		}
+
+		$button = $row.find( ".fixit" );
+
+		// Show our fix is running.
+		doingFix[ test ] = 1;
+		$row.addClass( "working" ).removeClass( "status-error" );
+
+		// Add the spinner and hide the button.
+		$button.after( '<img src="' + href.replace( "admin-post.php", "images/wpspin_light.gif" ) + '" alt="" />' );
+
+		// Ajax call
+		$.getJSON( href.replace( "admin-post.php", "admin-ajax.php" ) )
+		.done( function( r ) {
+			// Display scan result.
+			if ( spDisplayScanResult( r, test ) ) {
+				delete doingFix[ test ];
+
+				// If it's a bulk action, store the info and bail out.
+				if ( isBulk ) {
+					manualFix.push( test );
+					return;
+				}
+
+				// Trigger an event.
+				$( "body" ).trigger( "fixDone.secupress", [ {
+					test:      test,
+					href:      href,
+					isBulk:    isBulk,
+					manualFix: ( r.data.form_contents && r.data.form_fields ),
+					data:      r.data
+				} ] );
+
+			} else {
+				delete doingFix[ test ];
 			}
 
-			// Update the counters of bad results.
-			spUpdateBadsCounters();
+		} )
+		.fail( function() {
+			delete doingFix[ test ];
+
+			// Error
+			spDisplayRowError( $row );
+
+		} )
+		.always( function() {
+			// Show the button and remove the spinner.
+			$button.next( "img" ).remove();
+
+			// Show our fix is completed.
+			$row.removeClass( "working" );
+
+			// If this is the last fix in queue, trigger an event.
+			if ( $.isEmptyObject( doingFix ) ) {
+				$( "body" ).trigger( "allFixDone.secupress", [ { isBulk: isBulk } ] );
+			}
 		} );
+	}
+
+
+	// Perform a manual fix.
+	function spManualFixit( test, data ) {
+		var content, index;
+
+		content = '<form method="post" id="form_manual_fix-' + test + '" action="' + ajaxurl + '">';
+
+		for ( index in data.form_contents ) {
+			content += data.form_contents[ index ];
+		}
+		content += data.form_fields;
+
+		content += "</form>";
+
+		swal( {
+				title: data.form_title,
+				text: content,
+				html: true,
+				type: "warning",
+				showLoaderOnConfirm: true,
+				closeOnConfirm: false,
+				allowOutsideClick: true,
+				showCancelButton: true,
+				confirmButtonText: SecuPressi18nScanner.fixit,
+			},
+			function() {
+				var params = $( "#form_manual_fix-" + test ).serializeArray(),
+					$row   = $( ".secupress-item-" + test );
+
+				$.post( ajaxurl, params )
+				.done( function( r ) {
+
+					if ( r.success && $.isPlainObject( r.data ) ) {
+						r.data.manualFix= ( r.data.class === "bad" );
+
+						// Deal with the scan infos.
+						spDisplayScanResult( r, test );
+
+						if ( r.data.class === "warning" ) {
+							// Failed.
+							swal( {
+								title: SecuPressi18nScanner.notFixed,
+								type: "error"
+							} );
+						} else if ( r.data.class === "bad" ) {
+							// Success, but it needs another manual fix. Well, it could also mean that the fix failed.
+							swal( {
+								title: SecuPressi18nScanner.fixedPartial,
+								type: "success"
+							} );
+						} else {
+							// Success.
+							swal( {
+								title: SecuPressi18nScanner.fixed,
+								type: "success"
+							} );
+						}
+
+						// Trigger an event.
+						$( "body" ).trigger( "ManualFixDone.secupress", [ {
+							test: test,
+							manualFix: ( r.data.class === "bad" ),
+							data: r.data
+						} ] );
+					} else {
+						spDisplayRowError( $row );
+
+						// Failed.
+						swal( {
+							title: SecuPressi18nScanner.notFixed,
+							type: "error"
+						} );
+					}
+				} )
+				.fail( function() {
+					// Error
+					spDisplayRowError( $row );
+
+					// Failed.
+					swal( {
+						title: SecuPressi18nScanner.error,
+						type: "error"
+					} );
+
+				} )
+				.always( function() {
+					//
+				} );
+			}
+		);
+	}
+
+
+	// What to do when a scan ends.
+	$( "body" ).on( "scanDone.secupress", function( e, extra ) {
+		/*
+		* Available extras:
+		* extra.test:   test name.
+		* extra.href:   the admin-post.php URL.
+		* extra.isBulk: tell if it's a bulk scan.
+		* extra.data:   data returned by the ajax call.
+		*/
+	} );
+
+
+	// What to do after ALL scans end.
+	$( "body" ).on( "allScanDone.secupress", function( e, extra ) {
+		/*
+		* Available extras:
+		* extra.isBulk: tell if it's a bulk scan.
+		*/
+
+		// Update the donut only when all scans are done.
+		spUpdateScore( true );
+	} );
+
+
+	// What to do when a fix ends.
+	$( "body" ).on( "fixDone.secupress", function( e, extra ) {
+		/*
+		* Available extras:
+		* extra.test:      test name.
+		* extra.href:      the admin-post.php URL.
+		* extra.isBulk:    tell if it's a bulk fix.
+		* extra.manualFix: tell if the fix needs a manual fix.
+		* extra.data:      data returned by the ajax call.
+		*/
+
+		if ( ! extra.isBulk ) {
+			spManualFixit( extra.test, extra.data );
+		}
+	} );
+
+
+	// What to do after ALL fixes end.
+	$( "body" ).on( "allFixDone.secupress", function( e, extra ) {
+		/*
+		* Available extras:
+		* extra.isBulk: tell if it's a bulk fix.
+		*/
+
+		// If some manual fixes need the user to take action.
+		if ( manualFix.length ) {
+			// Add a message.
+			manualFix = "." + manualFix.join( ", ." );
+			manualFix = $( manualFix ).children( ".secupress-result" );
+			manualFix.children( ".manual-fix-message" ).remove();
+			manualFix.append( '<div class="manual-fix-message">' + SecuPressi18nScanner.manualFixMsg + "</div>" );
+			manualFix = [];
+
+			// Take that in your face!
+			swal( {
+				title: manualFix.length === 1 ? SecuPressi18nScanner.oneManualFix : SecuPressi18nScanner.someManualFixes,
+				type: "warning"
+			} );
+
+		} else {
+			// Everything is fine.
+			swal( {
+				title: SecuPressi18nScanner.allFixed,
+				type: "success"
+			} );
+
+		}
+
+		// Update the donut only when all fixes are done.
+		spUpdateScore( true );
+	} );
+
+
+	// What to do after a manual fix.
+	$( "body" ).on( "ManualFixDone.secupress", function( e, extra ) {
+		/*
+		* Available extras:
+		* extra.test:      test name.
+		* extra.manualFix: tell if the fix needs a manual fix.
+		* extra.data:      data returned by the ajax call.
+		*/
+	} );
+
+
+	// What to do when a status changes.
+	$( "body" ).on( "testStatusChange.secupress", function( e, extra ) {
+		/*
+		* Available extras:
+		* extra.test:      test name.
+		* extra.newStatus: the new status.
+		* extra.oldStatus: the old status.
+		*/
+
+		// Update the counters of bad results.
+		spUpdateBadResultsCounters();
+	} );
+
+
+	// Show test details.
+	$( "body" ).on( "click", ".secupress-details", function( e ) {
+		$( this ).closest( ".secupress-item-all" ).next( ".details" ).toggleClass( "hide-if-js" );
+	} );
+
+
+	// Perform a scan on click.
+	$( "body" ).on( "click scan.secupress bulkscan.secupress", ".button-secupress-scan, .secupress-scanit", function( e ) {
+		var $this = $( this ),
+			href, test, $row, isBulk;
+
+		e.preventDefault();
+
+		if ( $this.hasClass( "button-secupress-scan" ) ) {
+			// It's the "One Click Scan" button.
+			$( ".scanit > .secupress-scanit" ).trigger( "bulkscan.secupress" );
+			return;
+		}
+
+		href   = $this.attr( "href" );
+		test   = spGetTestFromUrl( href );
+		$row   = $this.closest( "tr" );
+		isBulk = e.type === "bulkscan";
+
+		spScanit( test, $row, href, isBulk );
 	} );
 
 
 	// Perform a fix on click.
-	$( "body" ).on( "click fix", ".secupress-fixit", function( e ) {
+	$( "body" ).on( "click fix.secupress bulkfix.secupress", ".secupress-fixit", function( e ) {
 		var $this = $( this ),
-			href, test, $row;
+			href, test, $row, isBulk;
 
 		e.preventDefault();
 
-		href = $this.attr( "href" );
-		test = spGetTestFromUrl( href );
-		$row = $this.closest( "tr" ).removeClass( "status-error" );
+		href   = $this.attr( "href" );
+		test   = spGetTestFromUrl( href );
+		$row   = $this.closest( "tr" );
+		isBulk = e.type === "bulkfix";
 
-		if ( ! test ) {
-			// Something's wrong here.
-			spDisplayRowError( $row );
-			return;
-		}
-
-		// Spinner and button.
-		$this.hide().after( '<img src="' + href.replace( "admin-post.php", "images/wpspin_light.gif" ) + '" alt="" />' );
-
-		// Show the user we're working.
-		$row.addClass( "scanning" );
-
-		// Ajax call
-		$.getJSON( href.replace( "admin-post.php", "admin-ajax.php" ), function( r ) {
-			var content, index;
-
-			// Deal with the scan infos.
-			if ( ! spScanResult( r, test ) ) {
-				return;
-			}
-
-			// If no need of a manual action, bail out.
-			if ( ! r.data.form_contents || ! r.data.form_fields || r.data.class !== "bad" ) {
-				////$row.find( ".scanit > .secupress-scanit" ).trigger( "scan" );
-				return;
-			}
-
-			content = '<form method="post" id="form_manual_fix-' + test + '" action="' + ajaxurl.replace( 'admin-ajax.php', 'admin-post.php' ) + '">';
-
-			for ( index in r.data.form_contents ) {
-				content += r.data.form_contents[ index ];
-			}
-
-			content += r.data.form_fields;
-			content += "</form>";
-
-			swal( {
-					title: r.data.form_title,
-					text: content,
-					html: true,
-					type: 'warning',
-					showLoaderOnConfirm: true,
-					closeOnConfirm: false,
-					allowOutsideClick: true,
-					showCancelButton: true,
-					confirmButtonText: SecuPressi18nScanner.fixit,
-				},
-				function() {
-					var $params = $( "#form_manual_fix-" + test ).serializeArray();
-
-					$.post( ajaxurl, $params, function( r ) {
-						if ( r.success ) {
-							swal( { title: SecuPressi18nScanner.fixed, type: 'success' } );
-						} else {
-							swal( { title: SecuPressi18nScanner.notfixed, type: 'error' } );
-						}
-
-						// Deal with the scan infos.
-						spScanResult( r, test );
-					} );
-				}
-			);
-		} )
-		.fail( function() {
-			// Error
-			spDisplayRowError( $row );
-
-		} ).always( function() {
-			// Spinner and button
-			$this.show().next( "img" ).remove();
-
-			// Chill out
-			$row.removeClass( "scanning" );
-
-			// Update the counters of bad results.
-			spUpdateBadsCounters();
-		} );
+		spFixit( test, $row, href, isBulk );
 	} );
 
 
@@ -439,7 +685,8 @@ jQuery( document ).ready( function( $ ) {
 		var $this  = $( this ),
 			prio   = $this.attr( "id" ).replace( "doaction-", "" ),
 			action = $this.siblings( "select" ).val(),
-			$rows  = $this.parents( ".table-prio-all" ).find( "tbody .secupress-check-column :checked" ).parents( ".secupress-item-all" );
+			$rows  = $this.parents( ".table-prio-all" ).find( "tbody .secupress-check-column :checked" ).parents( ".secupress-item-all" ),
+			bulk   = $rows.length < 2 ? "" : "bulk";
 
 		if ( action === "-1" || ! $rows.length ) {
 			return;
@@ -449,18 +696,17 @@ jQuery( document ).ready( function( $ ) {
 
 		switch ( action ) {
 			case 'scanit':
-				$rows.find( ".scanit > .secupress-scanit" ).trigger( "scan" );
+				$rows.find( ".scanit > .secupress-scanit" ).trigger( bulk + "scan.secupress" );
 				break;
 			case 'fixit':
-				alert('Not yet implemented ;p');
-				////$rows.find( ".secupress-fixit" ).trigger( "fix" );
+				$rows.find( ".secupress-fixit" ).trigger( bulk + "fix.secupress" );
 				break;
 			case 'fpositive':
 				$rows.not( ".status-good, .status-notscannedyet" )
 					.addClass( "status-fpositive" )
 					.find( ".secupress-dashicon" )
 					.removeClass( "dashicons-shield-alt" )
-					.addClass( "dashicons-shield" );//// Et c'est tout ? On ne sauvegarde pas ce statut quelque part ?
+					.addClass( "dashicons-shield" ); //// On ne sauvegarde pas ce statut quelque part ?
 				break;
 		}
 	} );

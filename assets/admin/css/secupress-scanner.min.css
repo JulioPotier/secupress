@@ -1,6 +1,3 @@
-.secupress-row-actions {
-	font-size: 13px;
-}
 .status-good .secupress-dashicon:before {
 	color: #88BA0E;
 }
@@ -14,9 +11,29 @@
 .status-notscannedyet .secupress-dashicon:before {
 	color: #555;
 }
-.status-good .fixit,.status-notscannedyet .fixit {
+
+.secupress-row-actions {
+	font-size: 13px;
+}
+
+.secupress-row-actions .scanit,
+.status-notscannedyet .secupress-row-actions .rescanit {
 	display: none;
 }
+.status-notscannedyet .secupress-row-actions .scanit {
+	display: inline-block;
+}
+
+.status-good .fixit,
+.status-notscannedyet .fixit {
+	display: none;
+}
+
+.working .secupress-status > .secupress-row-actions,
+.working .fixit {
+	display: none;
+}
+
 #table-secupress-tests ul {
 	list-style: disc outside;
 }
@@ -38,6 +55,9 @@ th.secupress-check {
 }
 .form-table td {
 	vertical-align: top;
+}
+.secupress-item-all.hidden + .details {
+	display: none;
 }
 .secupress-details .dashicons-editor-help {
 	vertical-align: top;
@@ -70,7 +90,7 @@ th.secupress-check {
 .secupress-item-all.status-good.alternate-2 {
 	background-color: #EFFFEE;
 }
-.secupress-item-all.scanning {
+.secupress-item-all.working {
 	background-image: repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(200, 200, 200, 0.1) 10px, rgba(200, 200, 200, 0.1) 20px);
 }
 .form-table th {
@@ -85,6 +105,13 @@ th.secupress-check {
 }
 .secupress-result li + li {
 	margin-top: 6px;
+}
+.secupress-result .manual-fix-message {
+	padding: 6px 20px;
+	border: 0 solid #D73838;
+	border-left-width: 3px;
+	margin-top: 8px;
+	background: #fff;
 }
 .test-fix-action h3 {
 	margin-top: 0;
