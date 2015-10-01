@@ -180,7 +180,7 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	}
 
 
-	// Try to fix the flow(s).
+	// Try to fix the flaw(s).
 
 	public function fix() {
 		$this->fix = true;
