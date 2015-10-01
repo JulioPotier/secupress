@@ -85,10 +85,15 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 				return $this->scan();
 			}
 
+			$errors = 0;
 			foreach ( $files as $filename ) {
 				if ( is_writable( ABSPATH . $filename ) ) {
-					unlink( ABSPATH . $filename );
+					$errors += (int) ! @unlink( ABSPATH . $filename );
 				}
+			}
+
+			if ( $errors ) {
+				return array( 'code' => 'error', 'message' => __( 'Sorry, some files could not have been deleted!', 'secupress' ) );
 			}
 		}
 
