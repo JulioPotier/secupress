@@ -327,7 +327,7 @@ function __secupress_scanners() {
 			'</div>' .
 			'<div id="tweeterA" class="hidden">' .
 				'<hr>' .
-				'<img src="https://g.twimg.com/dev/documentation/image/Twitter_logo_blue_16.png" alt=""> ' .
+				'<span class="dashicons dashicons-twitter"></span> ' .
 				'<i>' . __( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ) . '</i> ' .
 				'<a class="button button-small" href="https://twitter.com/intent/tweet?via=secupress&amp;url=' . urlencode( 'http://secupress.fr&text=' . __( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ) ) . '">Tweet &raquo;</a>' .
 			'</div>'
