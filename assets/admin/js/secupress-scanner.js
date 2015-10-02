@@ -499,7 +499,7 @@ jQuery( document ).ready( function( $ ) {
 						if ( r.data.class === "error" ) {
 							// Retry swal.
 							data.swalType = "error";
-							data.swalInfo = "<div style=\"color:red;font-weight:bold\">" + r.data.info + "</div>"; //// css class pour ça ?
+							data.swalInfo = '<div class="sa-error-container show"><div class="icon">!</div><p>' + r.data.info + '</p></div>';
 							secupressManualFixit( test, data );
 						} else if ( r.data.class === "warning" ) {
 							// Failed.

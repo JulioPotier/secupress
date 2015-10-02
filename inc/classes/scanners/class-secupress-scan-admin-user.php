@@ -127,7 +127,7 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 		$form .= '<h4>' . __( 'Choose a new login for your account:', 'secupress' ) . '</h4>';
 		$form .= '<p><span style="color:red">' . __( 'Your username will be renamed on the next page change.', 'secupress' ) . '</span></p>';
 		$form .= '<input type="text" id="secupress-fix-rename-admin-username" name="secupress-fix-rename-admin-username" value="admin_' . substr( md5( time() ), 0, 6 ) . '"/>';
-		$form .= '<br>' . sprintf( __( 'Allowed chars: %s', 'secupress' ), '<code>A-Z, a-z, 0-9, _, ., -, @</code>' );
+		$form .= '<p>' . sprintf( __( 'Allowed chars: %s', 'secupress' ), '<code>A-Z, a-z, 0-9, _, ., -, @</code>' ) . '</p>';
 		$form .= '</div>';
 
 		return array( 'rename-admin-username' => $form );
