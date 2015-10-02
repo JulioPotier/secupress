@@ -269,3 +269,7 @@ th.secupress-check {
 #tweeterA span {
 	color: #55acee;
 }
+.disabled {
+    border-color: #ccc;
+    color: #ccc;
+}

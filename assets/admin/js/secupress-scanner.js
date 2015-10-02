@@ -447,6 +447,8 @@ jQuery( document ).ready( function( $ ) {
 			if ( $.isEmptyObject( doingFix ) ) {
 				$( "body" ).trigger( "allFixDone.secupress", [ { isBulk: isBulk } ] );
 			}
+			secupressDoingFix = false;
+			$(".secupress-fixit").removeClass('disabled');
 		} );
 	}
 
@@ -704,7 +706,9 @@ jQuery( document ).ready( function( $ ) {
 
 
 	// Perform a fix on click.
+	var secupressDoingFix = false;
 	$( "body" ).on( "click fix.secupress bulkfix.secupress", ".secupress-fixit", function( e ) {
+		$(".secupress-fixit").addClass('disabled');
 		var $this = $( this ),
 			href, test, $row, isBulk;
 
@@ -714,7 +718,11 @@ jQuery( document ).ready( function( $ ) {
 		test   = secupressGetTestFromUrl( href );
 		$row   = $this.closest( "tr" );
 		isBulk = e.type === "bulkfix";
+		if ( ! isBulk && secupressDoingFix ) {
+			return false;
+		}
 
+		secupressDoingFix = true;
 		secupressFixit( test, $row, href, isBulk );
 	} );
 
