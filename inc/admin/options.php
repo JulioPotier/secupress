@@ -632,6 +632,8 @@ function secupress_status( $status ) {
 			return wp_sprintf( $template, __( 'Good', 'secupress' ) );
 		case 'warning':
 			return wp_sprintf( $template, __( 'Warning', 'secupress' ) );
+		case 'cantfix':
+			return wp_sprintf( $template, __( 'I cannot fix', 'secupress' ) );
 		default:
 			return wp_sprintf( $template, __( 'Not scanned yet', 'secupress' ) );
 	endswitch;

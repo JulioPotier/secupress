@@ -149,6 +149,10 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 			$this->set_status( 'bad' );
 
+		} elseif ( $message_id < 400 ) {
+
+			$this->set_status( 'cantfix' );
+
 		}
 	}
 
