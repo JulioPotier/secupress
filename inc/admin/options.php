@@ -406,7 +406,7 @@ function secupress_main_scan() {
 	$before_not_scanned = array_merge( $before_not_scanned['bad'], $before_not_scanned['warning'] );
 	$after_not_scanned  = $after_not_scanned['good'];
 	?>
-	<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=all' ), 'secupress_scanner_all' ); ?>" class="button button-primary button-large button-secupress-scan" style="text-align: center;font-size: 3em; font-style: italic; height: 60px; max-width: 435px; overflow: hidden; padding: 10px 20px; margin-bottom: 5px" id="submit">
+	<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=all' ), 'secupress_scanner_all' ); ?>" class="button button-primary button-large button-secupress-scan">
 		<?php _e( 'One Click Scan', 'secupress' ); ?>
 	</a>
 
@@ -602,8 +602,8 @@ function secupress_main_scan() {
 							$fix_actions = array( 0 => false );
 						}
 						?>
-						<tr id="details-<?php echo $class_name_part; ?>" class="details hide-if-js" style="background-color:#ddf;">
-							<td colspan="5" style="font-style: italic">
+						<tr id="details-<?php echo $class_name_part; ?>" class="details hide-if-js">
+							<td colspan="5">
 								<?php echo wp_kses_post( $current_test::$more ); ?>
 							</td>
 						</tr>

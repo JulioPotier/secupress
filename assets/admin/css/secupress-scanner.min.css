@@ -12,6 +12,18 @@
 	color: #555;
 }
 
+#wpbody-content .button-secupress-scan {
+	max-width: 435px;
+	height: auto;
+	padding: .25em .5em;
+	margin-bottom: 5px;
+	font-size: 3em;
+	line-height: 1.2;
+	font-style: italic;
+	text-align: center;
+	overflow: hidden;
+}
+
 .secupress-row-actions {
 	font-size: 13px;
 }
@@ -55,6 +67,10 @@ th.secupress-check {
 }
 .form-table td {
 	vertical-align: top;
+}
+.table-prio-all .details {
+	font-style: italic;
+	background: #ddf;
 }
 .secupress-item-all.hidden + .details {
 	display: none;
@@ -249,4 +265,7 @@ th.secupress-check {
 .widefat tfoot td.secupress-check-column,
 .widefat thead td.secupress-check-column {
 	padding: 11px 0 0 3px;
+}
+#tweeterA span {
+	color: #55acee;
 }
