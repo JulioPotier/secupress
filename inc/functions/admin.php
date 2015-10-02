@@ -198,16 +198,17 @@ function secupress_deactivate_submodule( $module, $plugins ) {
 
 
 function secupress_activate_module( $module, $settings ) {
-	$modules = secupress_get_modules();
+	$modules  = secupress_get_modules();
+	$callback = str_replace( '-', '_', $module );
 
-	if ( ! function_exists( "__secupress_{$module}_settings_callback" ) || ! isset( $modules[ $module ] ) ) {
-		secupress_die( sprintf( __( 'Unknow Module %s', 'secupress' ), esc_html( $module ) ) );
+	if ( ! function_exists( "__secupress_{$callback}_settings_callback" ) || ! isset( $modules[ $module ] ) ) {
+		secupress_die( sprintf( __( 'Unknown Module %s', 'secupress' ), esc_html( $module ) ) );
 	}
 
 	$module_options = get_option( "secupress_{$module}_settings" );
 	$module_options = array_merge( array_filter( (array) $module_options ), $settings );
 
-	call_user_func( "__secupress_{$module}_settings_callback", $module_options );
+	call_user_func( "__secupress_{$callback}_settings_callback", $module_options );
 
 	update_option( "secupress_{$module}_settings", $module_options );
 
