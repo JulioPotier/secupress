@@ -94,6 +94,15 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	}
 
 
+	// Messages for scans and fixes ================================================================
+
+	// Get messages.
+
+	public static function get_messages( $message_id = null ){
+		die( 'Method SecuPress_Scan::get_messages() must be over-ridden in a sub-class.' );
+	}
+
+
 	// Status and messages for scans ===============================================================
 
 	// Maybe set current status.
@@ -123,13 +132,6 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 		}
 
 		return $this->result['status'];
-	}
-
-
-	// Get messages.
-
-	public static function get_messages( $message_id = null ){
-		die( 'Method SecuPress_Scan::get_messages() must be over-ridden in a sub-class.' );
 	}
 
 
