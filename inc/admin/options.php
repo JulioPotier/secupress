@@ -135,7 +135,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'fixit'           => __( 'Fix it!', 'secupress' ),
 			'error'           => __( 'Error', 'secupress' ),
 			'manualFixMsg'    => __( 'This fix requires your intervention.', 'secupress' ),
-			'allFixed'        => __( 'All flaws are fixed!', 'secupress' ),
+			'allFixed'        => __( 'Perfectly fixed!', 'secupress' ),
 			'oneManualFix'    => __( 'One fix requires your intervention.', 'secupress' ),
 			'someManualFixes' => __( 'Some fixes require your intervention.', 'secupress' ),
 		) );
