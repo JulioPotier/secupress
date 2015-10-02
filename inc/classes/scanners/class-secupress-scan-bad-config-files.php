@@ -84,13 +84,13 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 			$files     = array_intersect( $bad_files, $files );
 
 			if ( ! $files ) {
-				return $this->scan();
+				return parent::manual_fix();
 			}
 
 			$errors = 0;
 			foreach ( $files as $filename ) {
-				if ( is_writable( ABSPATH . $filename ) ) {
-					$errors += (int) ! @unlink( ABSPATH . $filename );
+				if ( ! is_writable( ABSPATH . $filename ) || ! @unlink( ABSPATH . $filename ) ) {
+					++$errors;
 				}
 			}
 
