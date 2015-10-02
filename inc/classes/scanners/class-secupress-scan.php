@@ -99,9 +99,10 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 	public function set_status( $status, $force = false ) {
 		$statuses = array(
-			'good'    => 0,
-			'warning' => 1,
-			'bad'     => 2,
+			'cantfix' => 0,
+			'good'    => 1,
+			'warning' => 2,
+			'bad'     => 3,
 		);
 
 		// Unkown status
