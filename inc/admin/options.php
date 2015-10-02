@@ -567,11 +567,11 @@ function secupress_main_scan() {
 							</td>
 							<td>
 							<?php if ( $current_test::$fixable ) { ?>
-								<span class="fixit<?php echo $status_class != 'notscannedyet' & $status_class != 'good' ? '' : ' hidden'; ?>">
+								<span class="fixit">
 									<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $class_name_part ), 'secupress_fixit_' . $class_name_part ); ?>" class="button button-secondary button-small secupress-fixit"><?php _e( 'Fix it!', 'secupress' ); ?></a>
 								</span>
 							<?php } else { ?>
-								<span class="fixit<?php echo $status_class != 'notscannedyet' & $status_class != 'good' ? '' : ' hidden'; ?>">
+								<span class="fixit">
 									<a href="#premium" class="button button-secondary button-small secupress-fixit"><?php _e( 'Premium Upgrade', 'secupress' ); ?></a>
 								</span>
 							<?php }?>
