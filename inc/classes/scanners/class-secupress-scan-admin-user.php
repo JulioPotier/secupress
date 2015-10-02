@@ -105,20 +105,21 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 		$username = ! empty( $_POST['secupress-fix-rename-admin-username'] ) ? sanitize_user( $_POST['secupress-fix-rename-admin-username'] ) : null;
 		if ( $this->has_fix_action_part( 'rename-admin-username' ) ) {
 			if ( 'admin' == $username ) {
-				return array( 'code' => 'error', 'message' => __( 'Sorry, that username is forbidden!' ) );
+				return array( 'status' => 'error', 'info' => __( 'Sorry, that username is forbidden!' ) );
 			} elseif ( is_null( $username ) || '' == $username ) {
-				return array( 'code' => 'error', 'message' => __( 'Cannot create a user with an empty login name.!' ) );
+				return array( 'status' => 'error', 'info' => __( 'Cannot create a user with an empty login name.!' ) );
 			} elseif ( username_exists( $username ) ) {
-				return array( 'code' => 'error', 'message' => __( 'Sorry, that username already exists!' ) );
+				return array( 'status' => 'error', 'info' => __( 'Sorry, that username already exists!' ) );
 			} elseif ( $username != sanitize_user( $username, true ) ) {
-				return array( 'code' => 'error', 'message' => __( 'This username is invalid because it uses illegal characters.' ) );
+				return array( 'status' => 'error', 'info' => __( 'This username is invalid because it uses illegal characters.' ) );
 			}
 			// $username ok, can't rename now or all nonces will be broken and the user disconnected
 			$current_user = wp_get_current_user();
 			set_transient( 'secupress-rename-admin-username', array( 'ID' => $current_user->ID, 'username' => $username ) );
 		}
 
-		return $this->scan();
+		return array( 'status' => 'bad', 'info' => wp_strip_all_tags( $this->get_messages()[100] ), 'msgs' => array( '100' => true ) );
+		//// return $this->scan(); // je epux delete ça, ça te dérange pas ?
 	}
 
 	public function get_fix_action_template_parts() {

@@ -31,6 +31,8 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 		$messages = array(
 			// good
 			0   => __( 'You don\'t have old <code>wp-config</code> files.', 'secupress' ),
+			// warning
+			100 => __( 'Sorry, some files could not have been deleted!', 'secupress' ),
 			// bad
 			200 => _n_noop( 'Your installation should not contain this old or backed up config file: %s.', 'Your installation should not contain these old or backed up config files: %s.', 'secupress' ),
 			// cantfix
@@ -93,7 +95,7 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 			}
 
 			if ( $errors ) {
-				return array( 'code' => 'error', 'message' => __( 'Sorry, some files could not have been deleted!', 'secupress' ) );
+				return array( 'status' => 'warning', 'info' => $this->get_messages()[100] );
 			}
 		}
 

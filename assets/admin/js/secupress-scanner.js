@@ -46,7 +46,7 @@ jQuery( document ).ready( function( $ ) {
 		$( '.square-filter.statuses button[data-type="' + activePoints[0].status + '"]' ).trigger( "filter.secupress" );
 	};
 
-	function prependdatali( percent, now ) {
+	function secupressPrependDataLi( percent, now ) {
 		$( ".score_results ul" ).prepend( '<li class="hidden" data-percent="' + percent + '">' + now + "</li>" ).find( "li.hidden" ).slideDown( 250 );
 		$( ".timeago:first" ).timeago();
 	}
@@ -107,10 +107,10 @@ jQuery( document ).ready( function( $ ) {
 			if ( score_results_ul.find( "li" ).length === 5 ) {
 				score_results_ul.find( "li:last" ).slideUp( 250, function() {
 					$( this ).remove();
-					prependdatali( percent, now );
+					secupressPrependDataLi( percent, now );
 				} );
 			} else {
-				prependdatali( percent, now );
+				secupressPrependDataLi( percent, now );
 			}
 		}
 
@@ -267,34 +267,36 @@ jQuery( document ).ready( function( $ ) {
 			return false;
 		}
 
-		// Get current status.
-		classes = $row.attr( "class" ).replace( /(\s|^)(status-error|status-all)(\s|$)/g, " " ).replace( /^\s+|\s+$/g, "" ).replace( /\s+/, " " ).split( " " );
+		if ( r.data.class !== "error" ) {
+			// Get current status.
+			classes = $row.attr( "class" ).replace( /(\s|^)(status-error|status-all)(\s|$)/g, " " ).replace( /^\s+|\s+$/g, "" ).replace( /\s+/, " " ).split( " " );
 
-		$.each( classes, function( i, cl ) {
-			if ( 0 === cl.indexOf( "status-" ) ) {
-				oldStatus = cl.substr( 7 );
-				return false;
-			}
-		} );
+			$.each( classes, function( i, cl ) {
+				if ( 0 === cl.indexOf( "status-" ) ) {
+					oldStatus = cl.substr( 7 );
+					return false;
+				}
+			} );
 
-		// Add the new status as a class.
-		$row.removeClass( "status-error status-good status-bad status-warning status-notscannedyet" ).addClass( "status-" + r.data.class );
+			// Add the new status as a class.
+			$row.removeClass( "status-error status-good status-bad status-warning status-notscannedyet" ).addClass( "status-" + r.data.class );
 
-		// Add back the status and the scan button.
-		secupressAddStatusText( $row, r.data.status );
+			// Add back the status and the scan button.
+			secupressAddStatusText( $row, r.data.status );
+		}
 
 		// Add messages.
 		$row.children( ".secupress-result" ).html( r.data.message );
 
 		// A manual fix is needed: add a message.
 		if ( r.data.form_contents && r.data.form_fields || r.data.manualFix ) {
-			$row.children( ".secupress-result" ).append( '<div class="manual-fix-message">' + SecuPressi18nScanner.manualFixMsg + "</div>" );
+			secupressDisplayManualFixMsg( $row );
 		}
 
 		// Uncheck the checkbox.
 		secupressUncheckTest( $row );
 
-		if ( r.data.class !== oldStatus ) {
+		if ( r.data.class !== "error" && oldStatus !== r.data.class ) {
 			// Tell the row status has been updated.
 			$( "body" ).trigger( "testStatusChange.secupress", [ {
 				test:      test,
@@ -306,6 +308,10 @@ jQuery( document ).ready( function( $ ) {
 		return true;
 	}
 
+	// Display the "This fix requires your intervention." banner message
+	function secupressDisplayManualFixMsg( $row ) {
+		$row.children( ".secupress-result" ).append( '<div class="manual-fix-message">' + SecuPressi18nScanner.manualFixMsg + "</div>" );
+	}
 
 	// Perform a scan.
 	function secupressScanit( test, $row, href, isBulk ) {
@@ -374,7 +380,7 @@ jQuery( document ).ready( function( $ ) {
 			return secupressDisplayRowError( $row );
 		}
 
-		if ( doingFix[ test ] ) {
+		if ( doingFix[ test ] ) { //// clic sur 2 fix d'affilé, une seule popup, je propose de disable les autres bouton, s'il en veut X à la fois, bulk.
 			// Oy! Slow down!
 			return;
 		}
@@ -391,7 +397,7 @@ jQuery( document ).ready( function( $ ) {
 		$row.addClass( "working" ).removeClass( "status-error" );
 
 		// Add the spinner and hide the button.
-		$button.after( '<img src="' + href.replace( "admin-post.php", "images/wpspin_light.gif" ) + '" alt="" />' );
+		$button.after( '<img src="' + href.replace( "admin-post.php", "images/wpspin_light.gif" ) + '" alt="" />' ); //// remove ? and following also to avoid new pic to be loaded each time
 
 		// Ajax call
 		$.getJSON( href.replace( "admin-post.php", "admin-ajax.php" ) )
@@ -446,10 +452,13 @@ jQuery( document ).ready( function( $ ) {
 
 
 	// Perform a manual fix.
-	function secupressManualFixit( test ) {
+	function secupressManualFixit( test, data ) {
 		var content, index;
-
-		data = manualFix[ test ];
+		if ( ! data ) {
+			data = manualFix[ test ];
+			data.swalType = "warning";
+			data.swalInfo = "";
+		}
 		delete manualFix[ test ];
 
 		content = '<form method="post" id="form_manual_fix-' + test + '" action="' + ajaxurl + '">';
@@ -463,9 +472,9 @@ jQuery( document ).ready( function( $ ) {
 
 		swal( {
 				title: data.form_title,
-				text: content,
+				text: content + data.swalInfo,
 				html: true,
-				type: "warning",
+				type: data.swalType,
 				showLoaderOnConfirm: true,
 				closeOnConfirm: false,
 				allowOutsideClick: true,
@@ -482,25 +491,36 @@ jQuery( document ).ready( function( $ ) {
 					if ( r.success && $.isPlainObject( r.data ) ) {
 						r.data.manualFix = ( r.data.class === "bad" );
 
-						// Deal with the scan infos.
-						secupressDisplayScanResult( r, test );
+						if ( r.data.class !== "error" ) {
+							// Deal with the scan infos.
+							secupressDisplayScanResult( r, test );
+						}
 
-						if ( r.data.class === "warning" ) {
+						if ( r.data.class === "error" ) {
+							// Retry swal.
+							data.swalType = "error";
+							data.swalInfo = "<div style=\"color:red;font-weight:bold\">" + r.data.info + "</div>"; //// css class pour ça ?
+							secupressManualFixit( test, data );
+						} else if ( r.data.class === "warning" ) {
 							// Failed.
 							swal( {
 								title: SecuPressi18nScanner.notFixed,
+								text: r.data.info,
 								type: "error"
 							} );
+							secupressDisplayManualFixMsg( $row );
 						} else if ( r.data.class === "bad" ) {
 							// Success, but it needs another manual fix. Well, it could also mean that the fix failed.
 							swal( {
 								title: SecuPressi18nScanner.fixedPartial,
-								type: "success"
+								text: r.data.info,
+								type: "warning"
 							} );
 						} else {
 							// Success.
 							swal( {
 								title: SecuPressi18nScanner.fixed,
+								text: r.data.info,
 								type: "success"
 							} );
 						}

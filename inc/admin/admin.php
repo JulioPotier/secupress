@@ -80,7 +80,8 @@ function __secupress_scanit_action_callback( $test_name = null, $manual = false 
 	$output = array(
 		'status'  => secupress_status( $response['status'] ),
 		'class'   => sanitize_key( $response['status'] ),
-		'message' => secupress_formate_message( $response['msgs'], $scan_class ),
+		'info'    => isset( $response['info'] ) ? $response['info'] : '',
+		'message' => isset( $response['msgs'] ) ? secupress_formate_message( $response['msgs'], $scan_class ) : '',
 	);
 
 /*	$times   = (array) get_option( SECUPRESS_SCAN_TIMES );
@@ -155,7 +156,7 @@ function __secupress_fixit_action_callback( $test_name = null, $manual = false )
 
 	$response['class']   = sanitize_key( $response['status'] );
 	$response['status']  = secupress_status( $response['status'] );
-	$response['message'] = secupress_formate_message( $response['msgs'], $scan_class );
+	$response['message'] = isset( $response['msgs'] ) ? secupress_formate_message( $response['msgs'], $scan_class ) : '';
 	unset( $response['msgs'], $response['attempted_fixes'] );
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
@@ -220,7 +221,7 @@ function __secupress_manual_fixit( $class_name_part = null ) {
 
 	$response['class']   = sanitize_key( $response['status'] );
 	$response['status']  = secupress_status( $response['status'] );
-	$response['message'] = secupress_formate_message( $response['msgs'], $scan_class );
+	$response['message'] = isset( $response['msgs'] ) ? secupress_formate_message( $response['msgs'], $scan_class ) : '';
 	unset( $response['msgs'], $response['attempted_fixes'] );
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
