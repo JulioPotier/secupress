@@ -462,8 +462,8 @@ function secupress_main_scan() {
 							<th scope="col" class="secupress-status" data-sort="string"><?php _e( 'Status', 'secupress' ); ?></th>
 							<th scope="col" class="secupress-desc"><?php _e( 'Test Description', 'secupress' ); ?></th>
 							<th scope="col" class="secupress-result"><?php _e( 'Test Results', 'secupress' ); ?></th>
+							<th scope="col" class="secupress-fix-result"><?php _e( 'Fix Results', 'secupress' ); ?></th>
 							<th scope="col" class="secupress-fix"><?php _e( 'Fix', 'secupress' ); ?></th>
-							<!--// <th scope="col" class="secupress-type"><?php _e( 'Test Type', 'secupress' ); ?></th> //-->
 						</tr>
 					</thead>
 
@@ -476,6 +476,7 @@ function secupress_main_scan() {
 							<th scope="col" class="secupress-status"><?php _e( 'Status', 'secupress' ); ?></th>
 							<th scope="col" class="secupress-desc"><?php _e( 'Test Description', 'secupress' ); ?></th>
 							<th scope="col" class="secupress-result"><?php _e( 'Test Results', 'secupress' ); ?></th>
+							<th scope="col" class="secupress-fix-result"><?php _e( 'Fix Results', 'secupress' ); ?></th>
 							<th scope="col" class="secupress-fix"><?php _e( 'Fix', 'secupress' ); ?></th>
 						</tr>
 					</tfoot>
@@ -564,6 +565,9 @@ function secupress_main_scan() {
 							</td>
 							<td class="secupress-result">
 								<?php echo $message; ?>
+							</td>
+							<td class="secupress-fix-result">
+								<?php // Hey there! ?>
 							</td>
 							<td>
 							<?php if ( $current_test::$fixable ) { ?>

@@ -261,15 +261,23 @@ th.secupress-check {
 	padding: 6px 0 25px;
 	vertical-align: top;
 }
-.widefat tbody th.secupress-check-column,
-.widefat tfoot td.secupress-check-column,
-.widefat thead td.secupress-check-column {
-	padding: 11px 0 0 3px;
+#secupress-tests thead .secupress-check-column,
+#secupress-tests foot .secupress-check-column {
+	padding: 0 0 0 3px;
+	vertical-align: middle;
 }
+#secupress-tests thead input,
+#secupress-tests tfoot input {
+	margin-top: 2px;
+}
+/**/
+.secupress-fix-result {
+	width: 25%;
+}
+/**/
 #tweeterA span {
 	color: #55acee;
-}
-.disabled {
+}.disabled {
     border-color: #ccc;
     color: #ccc;
 }
