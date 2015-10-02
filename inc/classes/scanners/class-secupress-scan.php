@@ -32,8 +32,9 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	private       $fix_actions = array();
 
 	protected     $class_name_part;
-	protected     $result = array();
-	protected     $fix    = false;
+	protected     $result     = array();
+	protected     $result_fix = array();
+	protected     $fix        = false;
 
 	public static $prio    = '';
 	public static $type    = '';
@@ -93,7 +94,7 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	}
 
 
-	// Status and messages =========================================================================
+	// Status and messages for scans ===============================================================
 
 	// Maybe set current status.
 
@@ -170,6 +171,80 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	public function maybe_set_status( $message_id, $params = array() ) {
 		if ( ! $this->has_status() ) {
 			$this->add_message( $message_id, $params );
+		}
+	}
+
+
+	// Status and messages for fixes ===============================================================
+
+	// Maybe set current fix status.
+
+	public function set_fix_status( $status, $force = false ) {
+		$statuses = array(
+			'cantfix' => 0,
+			'good'    => 1,
+			'warning' => 2,
+			'bad'     => 3,
+		);
+
+		// Unkown status
+		if ( ! isset( $statuses[ $status ] ) ) {
+			return false;
+		}
+
+		// No previous status
+		if ( empty( $this->result_fix['status'] ) || $force ) {
+			$this->result_fix['status'] = $status;
+			return $status;
+		}
+
+		// Status already set: only allow to "upgrade" to a superior status.
+		if ( $statuses[ $status ] > $statuses[ $this->result_fix['status'] ] ) {
+			$this->result_fix['status'] = $status;
+		}
+
+		return $this->result_fix['status'];
+	}
+
+
+	// Add a message and automatically set the fix status.
+
+	public function add_fix_message( $message_id, $params = array() ) {
+		$this->result_fix['msgs'] = isset( $this->result_fix['msgs'] ) ? $this->result_fix['msgs'] : array();
+		$this->result_fix['msgs'][ $message_id ] = $params;
+
+		if ( $message_id < 100 ) {
+
+			$this->set_fix_status( 'good' );
+
+		} elseif  ( $message_id < 200 ) {
+
+			$this->set_fix_status( 'warning' );
+
+		} elseif ( $message_id < 300 ) {
+
+			$this->set_fix_status( 'bad' );
+
+		} elseif ( $message_id < 400 ) {
+
+			$this->set_fix_status( 'cantfix' );
+
+		}
+	}
+
+
+	// Are fix status and message(s) set?
+
+	public function has_fix_status() {
+		return ! empty( $this->result_fix );
+	}
+
+
+	// Set a fix status + message only if no status is set yet.
+
+	public function maybe_set_fix_status( $message_id, $params = array() ) {
+		if ( ! $this->has_fix_status() ) {
+			$this->add_fix_message( $message_id, $params );
 		}
 	}
 
