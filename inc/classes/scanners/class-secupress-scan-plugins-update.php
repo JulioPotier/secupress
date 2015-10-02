@@ -49,6 +49,7 @@ class SecuPress_Scan_Plugins_Update extends SecuPress_Scan implements iSecuPress
 		ob_start();
 
 		// Plugins
+		wp_update_plugins();
 		$current        = get_site_transient( 'update_plugins' );
 		$plugin_updates = array();
 
@@ -82,7 +83,8 @@ class SecuPress_Scan_Plugins_Update extends SecuPress_Scan implements iSecuPress
 			$url = 'update.php?action=update-selected&amp;plugins=' . urlencode( implode( ',', $plugins ) );
 			$nonce = 'bulk-update-plugins';
 			include_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
-			$upgrader = new Plugin_Upgrader( new Bulk_Plugin_Upgrader_Skin( compact( 'nonce', 'url' ) ) );
+			$skin = new Automatic_Upgrader_Skin( compact( 'nonce', 'url' ) );
+			$upgrader = new Plugin_Upgrader( $skin );
 			$upgrader->bulk_upgrade( $plugins ); 
 		}
 

@@ -49,6 +49,7 @@ class SecuPress_Scan_Themes_Update extends SecuPress_Scan implements iSecuPress_
 		ob_start();
 
 		// Themes
+		wp_update_themes();
 		$current       = get_site_transient( 'update_themes' );
 		$theme_updates = array();
 
@@ -82,7 +83,8 @@ class SecuPress_Scan_Themes_Update extends SecuPress_Scan implements iSecuPress_
 			$url = 'update.php?action=update-selected-themes&amp;themes=' . urlencode( implode( ',', $themes ) );
 			$nonce = 'bulk-update-themes';
 			include_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
-			$upgrader = new Theme_Upgrader( new Bulk_Theme_Upgrader_Skin( compact( 'nonce', 'url' ) ) );
+			$skin = new Automatic_Upgrader_Skin( compact( 'nonce', 'url' ) );
+			$upgrader = new Theme_Upgrader( $skin );
 			$upgrader->bulk_upgrade( $themes ); 	
 		}	
 
