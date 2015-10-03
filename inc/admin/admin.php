@@ -273,7 +273,7 @@ function secupress_format_message( $msgs, $test_name ) {
 
 		}
 
-		$output .= '<li>' . ( ! empty( $atts ) ? vsprintf( $string, $atts ) : $messages[ $id ] ) . '</li>';
+		$output .= '<li>' . ( ! empty( $atts ) ? vsprintf( $string, $atts ) : $string ) . '</li>';
 	}
 
 	return $output . '</ul>';
