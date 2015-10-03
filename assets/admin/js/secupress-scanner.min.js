@@ -396,7 +396,7 @@ jQuery( document ).ready( function( $ ) {
 		doingFix[ test ] = 1;
 		$row.addClass( "working" ).removeClass( "status-error" );
 
-		// Add the spinner and hide the button.
+		// Add the spinner.
 		$button.after( '<img src="' + href.replace( "admin-post.php", "images/wpspin_light.gif" ) + '" alt="" />' ); //// remove ? and following also to avoid new pic to be loaded each time
 
 		// Ajax call
@@ -437,7 +437,7 @@ jQuery( document ).ready( function( $ ) {
 
 		} )
 		.always( function() {
-			// Show the button and remove the spinner.
+			// Remove the spinner.
 			$button.next( "img" ).remove();
 
 			// Show our fix is completed.
