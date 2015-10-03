@@ -181,6 +181,7 @@ jQuery( document ).ready( function( $ ) {
 	var doingScan = {}; // Used to tell when all ajax scans are completed (then we can update the graph).
 	var doingFix  = {};
 	var manualFix = {};
+	var secupressDoingFix = false;
 
 
 	// Update counters of bad results.
@@ -706,7 +707,6 @@ jQuery( document ).ready( function( $ ) {
 
 
 	// Perform a fix on click.
-	var secupressDoingFix = false;
 	$( "body" ).on( "click fix.secupress bulkfix.secupress", ".secupress-fixit", function( e ) {
 		$(".secupress-fixit").addClass('disabled');
 		var $this = $( this ),
