@@ -142,9 +142,11 @@ function secupress_fixit( $test_name, $format_response = false ) {
 	}
 
 	if ( $response && $format_response ) {
-		$response['class']   = sanitize_key( $response['status'] );
-		$response['status']  = secupress_status( $response['status'] );
-		$response['message'] = isset( $response['msgs'] ) ? secupress_format_message( $response['msgs'], $test_name ) : '';
+		$response = array_merge( $response, array(
+			'class'   => sanitize_key( $response['status'] ),
+			'status'  => secupress_status( $response['status'] ),
+			'message' => isset( $response['msgs'] ) ? secupress_format_message( $response['msgs'], $test_name ) : '',
+		) );
 		unset( $response['msgs'], $response['attempted_fixes'] );
 	}
 
@@ -211,9 +213,11 @@ function secupress_manual_fixit( $test_name, $format_response = false ) {
 	}
 
 	if ( $response && $format_response ) {
-		$response['class']   = sanitize_key( $response['status'] );
-		$response['status']  = secupress_status( $response['status'] );
-		$response['message'] = isset( $response['msgs'] ) ? secupress_format_message( $response['msgs'], $test_name ) : '';
+		$response = array_merge( $response, array(
+			'class'   => sanitize_key( $response['status'] ),
+			'status'  => secupress_status( $response['status'] ),
+			'message' => isset( $response['msgs'] ) ? secupress_format_message( $response['msgs'], $test_name ) : '',
+		) );
 		unset( $response['msgs'], $response['attempted_fixes'] );
 	}
 
