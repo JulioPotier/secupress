@@ -155,17 +155,9 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 		$form  = '<div class="show-input">';
 		$files = static::get_files();
 
-		if ( count( $files ) === 1 ) {
+		if ( $files ) {
 
-			$form .= '<h4>' . __( 'The following file will be deleted:', 'secupress' ) . '</h4>';
-
-			$file  = reset( $files );
-			$form .= '<code>' . esc_html( $file ) . '</code>';
-			$form .= '<input type="hidden" name="secupress-fix-wp-config-files[]" value="' . esc_attr( $file ) . '"/> ';
-
-		} elseif ( $files ) {
-
-			$form .= '<h4>' . __( 'The following files will be deleted:', 'secupress' ) . '</h4>';
+			$form .= '<h4>' . _n( 'The following file will be deleted:', 'The following files will be deleted:', count( $files ), 'secupress' ) . '</h4>';
 			$form .= '<div>';
 
 			foreach ( $files as $file ) {
@@ -173,8 +165,8 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 				$form .= '<label for="secupress-fix-wp-config-file-' . sanitize_html_class( $file ) . '"><code>' . esc_html( $file ) . '</code></label><br/>';
 			}
 
+			$form .= '</div>';
 		}
-		$form .= '</div>';
 		$form .= '</div>';
 
 		return array( 'delete-files' => $form );
