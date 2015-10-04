@@ -153,6 +153,7 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 
 	public function get_fix_action_template_parts() {
 		$files = static::get_files();
+		$form = '';
 
 		if ( $files ) {
 
