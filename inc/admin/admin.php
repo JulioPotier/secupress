@@ -74,7 +74,7 @@ function secupress_scanit( $test_name, $format_response = false ) {
 		$response = array(
 			'status'  => secupress_status( $response['status'] ),
 			'class'   => sanitize_key( $response['status'] ),
-			'info'    => isset( $response['info'] ) ? $response['info'] : '',
+		//	'info'    => isset( $response['info'] ) ? $response['info'] : '',
 			'message' => isset( $response['msgs'] ) ? secupress_format_message( $response['msgs'], $test_name ) : '',
 		);
 	}

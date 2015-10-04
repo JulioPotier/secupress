@@ -544,7 +544,7 @@ function secupress_main_scan() {
 								<input id="cb-select-<?php echo $class_name_part; ?>" type="checkbox" class="secupress-checkbox-<?php echo $prio_key; ?>" />
 							</th>
 							<td class="secupress-status">
-								<?php echo $status_text; ?>
+								<div class="secupress-scan-status"><?php echo $status_text; ?></div>
 
 								<div class="secupress-row-actions">
 									<span class="rescanit">
@@ -566,8 +566,13 @@ function secupress_main_scan() {
 							<td class="secupress-result">
 								<?php echo $message; ?>
 							</td>
-							<td class="secupress-fix-result">
-								<?php // Hey there! ?>
+							<td class="secupress-fix-result<?php echo ' status-cantfix'; //// ?>">
+								<?php
+								if ( $status_class !== 'good' ) {
+									echo '<div class="secupress-fix-status">' . secupress_status( 'cantfix' ) . '</div>'; ////
+									//// Message avec <ul>
+								}
+								?>
 							</td>
 							<td>
 							<?php if ( $current_test::$fixable ) { ?>
@@ -627,7 +632,7 @@ function secupress_main_scan() {
 
 
 function secupress_status( $status ) {
-	$template = '<span class="dashicons dashicons-shield-alt secupress-dashicon" aria-hidden="true"></span> <span class="secupress-status">%s</span>';
+	$template = '<span class="dashicons dashicons-shield-alt secupress-dashicon" aria-hidden="true"></span> %s';
 
 	switch ( $status ):
 		case 'bad':

@@ -198,3 +198,61 @@
 	} );
 
 })(jQuery);
+
+
+
+
+
+					/*if ( r.success && $.isPlainObject( r.data ) ) {
+						r.data.manualFix = ( r.data.class === "bad" );
+
+						if ( r.data.class !== "error" ) {
+							// Deal with the fix infos.
+							secupressDisplayFixResult( r, test );
+						}
+
+						if ( r.data.class === "error" ) {
+							// Retry swal.
+							data.swalType = "error";
+							data.swalInfo = '<div class="sa-error-container show"><div class="icon">!</div><p>' + r.data.info + '</p></div>';
+							secupressManualFixit( test, data );
+						} else if ( r.data.class === "warning" ) {
+							// Failed.
+							swal( {
+								title: SecuPressi18nScanner.notFixed,
+								text: r.data.info,
+								type: "error"
+							} );
+							secupressDisplayManualFixMsg( $row );
+						} else if ( r.data.class === "bad" ) {
+							// Success, but it needs another manual fix. Well, it could also mean that the fix failed.
+							swal( {
+								title: SecuPressi18nScanner.fixedPartial,
+								text: r.data.info,
+								type: "warning"
+							} );
+						} else {
+							// Success.
+							swal( {
+								title: SecuPressi18nScanner.fixed,
+								text: r.data.info,
+								type: "success"
+							} );
+						}
+
+						// Trigger an event.
+						$( "body" ).trigger( "manualFixDone.secupress", [ {
+							test: test,
+							manualFix: ( r.data.class === "bad" ),
+							data: r.data
+						} ] );
+					} else {
+						secupressDisplayFixError( $row );
+
+						// Failed.
+						swal( {
+							title: SecuPressi18nScanner.notFixed,
+							type: "error"
+						} );
+					}*/
+

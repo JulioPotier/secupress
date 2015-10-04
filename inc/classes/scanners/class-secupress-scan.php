@@ -29,12 +29,15 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 	const VERSION = '1.0';
 
+	// Filled when fixes need manual actions.
 	private       $fix_actions = array();
 
+	// The part of the class that extends this one, like SecuPress_Scan_{$class_name_part}.
 	protected     $class_name_part;
+	// Contain scan results.
 	protected     $result     = array();
+	// Contain fix results.
 	protected     $result_fix = array();
-	protected     $fix        = false;
 
 	public static $prio    = '';
 	public static $type    = '';
@@ -135,7 +138,13 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	}
 
 
-	// Add a message and automatically set the status.
+	/*
+	 * Add a message and automatically set the scan status.
+	 *
+	 * good:    the scan performed correctly and returned a good result.
+	 * warning: the scan could not perform correctly.
+	 * bad:     the scan performed correctly but returned a bad result.
+	 */
 
 	public function add_message( $message_id, $params = array() ) {
 		$this->result['msgs'] = isset( $this->result['msgs'] ) ? $this->result['msgs'] : array();
@@ -152,10 +161,6 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 		} elseif ( $message_id < 300 ) {
 
 			$this->set_status( 'bad' );
-
-		} elseif ( $message_id < 400 ) {
-
-			$this->set_status( 'cantfix' );
 
 		}
 	}
@@ -209,7 +214,14 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	}
 
 
-	// Add a message and automatically set the fix status.
+	/*
+	 * Add a message and automatically set the fix status.
+	 *
+	 * good:    the fix performed correctly.
+	 * warning: partial fix. The fix could not perform entirely: some fix(es) worked and some not.
+	 * bad:     error. The fix could not perform correctly.
+	 * cantfix: neutral. The flaw cannot be fixed by this plugin.
+	 */
 
 	public function add_fix_message( $message_id, $params = array() ) {
 		$this->result_fix['msgs'] = isset( $this->result_fix['msgs'] ) ? $this->result_fix['msgs'] : array();
@@ -258,21 +270,23 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	public function scan() {
 		$this->update();
 
-		return $this->result;
+		$result = $this->result;
+		$this->result = array();
+
+		return $result;
 	}
 
 
 	// Try to fix the flaw(s).
 
 	public function fix() {
-		$this->fix = true;
-		$return = $this->scan();
+		$this->update_fix();
 
 		if ( $this->fix_actions ) {
 			// Ajax
 			if ( defined( 'DOING_AJAX' ) ) {
 				// Add the fixes that require user action in the returned data.
-				$return = array_merge( $return, array(
+				$this->result_fix = array_merge( $this->result_fix, array(
 					'form_contents' => $this->get_fix_action_template_parts(),
 					'form_fields'   => $this->get_fix_action_fields( $this->fix_actions, false ),
 					'form_title'    => _n( 'This action requires your attention', 'These actions require your attention', count( $this->fix_actions ), 'secupress' ),
@@ -282,18 +296,23 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 			else {
 				// Set a transient with fixes that require user action.
 				set_transient( 'secupress_fix_actions', $this->class_name_part . '|' . implode( ',', $this->fix_actions ) );
-				$this->fix_actions = array();
 			}
+
+			$this->fix_actions = array();
 		}
 
-		return $return;
+		$result = $this->result_fix;
+		$this->result_fix = array();
+
+		return $result;
 	}
 
 
 	// Try to fix the flow(s) after requiring user action.
 
 	public function manual_fix() {
-		return $this->scan();
+		// Don't use `$this->` here, we need to call the one from this class.
+		return self::fix();
 	}
 
 
@@ -326,11 +345,11 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 		$output .= '<input type="hidden" name="test" value="' . $this->class_name_part . '" />';
 		$output .= '<input type="hidden" name="test-parts" value="' . implode( ',', array_keys( $fix_actions ) ) . '" />';
 		$output .= wp_nonce_field( 'secupress_manual_fixit-' . $this->class_name_part, 'secupress_manual_fixit-nonce', false, false );
-		if ( $echo ) {
-			echo $output;
-		} else {
+
+		if ( ! $echo ) {
 			return $output;
 		}
+		echo $output;
 	}
 
 	// Options =====================================================================================
@@ -338,18 +357,26 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	// Set option.
 
 	public function update() {
-
-		if ( $this->fix ) {
-			$this->result['attempted_fixes'] = array_key_exists( 'attempted_fixes', $this->result ) ? ++$this->result['attempted_fixes'] : 1;
-		}
-
 		$name = strtolower( $this->class_name_part );
 
 		if ( ! set_transient( 'secupress_scan_' . $name, $this->result ) ) {
-			return false;
+			return array();
 		}
 
 		return $this->result;
+	}
+
+
+	public function update_fix() {
+		$this->result_fix['attempted_fixes'] = array_key_exists( 'attempted_fixes', $this->result_fix ) ? ++$this->result_fix['attempted_fixes'] : 1;
+
+		$name = strtolower( $this->class_name_part );
+
+		if ( ! set_transient( 'secupress_fix_' . $name, $this->result_fix ) ) {
+			return array();
+		}
+
+		return $this->result_fix;
 	}
 
 

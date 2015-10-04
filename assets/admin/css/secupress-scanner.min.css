@@ -8,7 +8,8 @@
 .status-error .secupress-dashicon:before {
 	color: #D73838;
 }
-.status-notscannedyet .secupress-dashicon:before {
+.status-notscannedyet .secupress-dashicon:before,
+.status-cantfix .secupress-dashicon:before {
 	color: #555;
 }
 

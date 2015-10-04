@@ -32,11 +32,15 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 			// good
 			0   => __( 'You don\'t have old <code>wp-config</code> files.', 'secupress' ),
 			// warning
-			100 => __( 'Sorry, some files could not have been deleted!', 'secupress' ),
+			100 => __( 'Some files still need to be deleted.', 'secupress' ),
+			101 => __( 'All selected files have been deleted (but some are still there).', 'secupress' ),
+			102 => __( 'Sorry, some files could not be deleted.', 'secupress' ),
+			103 => __( 'Please select at least one file.', 'secupress' ),
 			// bad
 			200 => _n_noop( 'Your installation should not contain this old or backed up config file: %s.', 'Your installation should not contain these old or backed up config files: %s.', 'secupress' ),
+			201 => _n_noop( 'Sorry, this file could not be deleted.', 'Sorry, those files could not be deleted.', 'secupress' ),
 			// cantfix
-			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
+			300 => __( 'I can\'t delete those files blindly, please make a selection.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -68,9 +72,14 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 
 		$files = static::get_files();
 
-		// This fix requires the user to take action.
+		// There are files to delete.
 		if ( $files ) {
+			// This fix requires the user to take action.
+			$this->add_fix_message( 300 );
 			$this->add_fix_action( 'delete-files' );
+		} else {
+			// Should not happen.
+			$this->add_fix_message( 0 );
 		}
 
 		return parent::fix();
@@ -78,25 +87,64 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 
 
 	public function manual_fix() {
-		if ( $this->has_fix_action_part( 'delete-files' ) && ! empty( $_POST['secupress-fix-wp-config-files'] ) && is_array( $_POST['secupress-fix-wp-config-files'] ) ) {
-			$bad_files = static::get_files();
-			$files     = $_POST['secupress-fix-wp-config-files'];
-			$files     = array_intersect( $bad_files, $files );
+		if ( ! $this->has_fix_action_part( 'delete-files' ) ) {
+			return parent::manual_fix();
+		}
 
-			if ( ! $files ) {
-				return parent::manual_fix();
-			}
+		if ( empty( $_POST['secupress-fix-wp-config-files'] ) || ! is_array( $_POST['secupress-fix-wp-config-files'] ) ) {
+			// warning
+			$this->add_fix_message( 103 );
+			$this->add_fix_action( 'delete-files' );
+			return parent::manual_fix();
+		}
 
-			$errors = 0;
-			foreach ( $files as $filename ) {
-				if ( ! is_writable( ABSPATH . $filename ) || ! @unlink( ABSPATH . $filename ) ) {
-					++$errors;
-				}
-			}
+		$bad_files = static::get_files();
+		$count_all = count( $bad_files );
+		$files     = array_filter( $_POST['secupress-fix-wp-config-files'] );
+		$files     = array_intersect( $bad_files, $files );
+		$count     = count( $files );
+		$deleted   = 0;
 
-			if ( $errors ) {
-				return array( 'status' => 'warning', 'info' => $this->get_messages()[100] );
+		// Should not happen.
+		if ( ! $count_all ) {
+			// good
+			$this->add_fix_message( 0 );
+			return parent::manual_fix();
+		}
+
+		// If a file was selected, it is not in the list anymore.
+		if ( ! $count ) {
+			// Let's play dumb and go to "partial": some files still need to be deleted.
+			$this->add_fix_message( 100 );
+			return parent::manual_fix();
+		}
+
+		// Delete the files.
+		foreach ( $files as $filename ) {
+			if ( is_writable( ABSPATH . $filename ) && @unlink( ABSPATH . $filename ) ) {
+				++$deleted;
 			}
+		}
+
+		// Everything's deleted, no files left.
+		if ( $deleted === $count_all ) {
+			// good
+			$this->add_fix_message( 0 );
+		}
+		// All selected files deleted.
+		elseif ( $deleted === $count ) {
+			// "partial": some files still need to be deleted.
+			$this->add_fix_message( 101 );
+		}
+		// No files deleted.
+		elseif ( ! $deleted ) {
+			// bad
+			$this->add_fix_message( 201, array( $count ) );
+		}
+		// Some files could not be deleted.
+		else {
+			// partial
+			$this->add_fix_message( 102 );
 		}
 
 		return parent::manual_fix();
