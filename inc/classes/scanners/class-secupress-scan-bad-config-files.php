@@ -165,14 +165,16 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 
 		} elseif ( $files ) {
 
-			$form .= '<h4>' . __( 'Select the files to delete:', 'secupress' ) . '</h4>';
+			$form .= '<h4>' . __( 'The following files will be deleted:', 'secupress' ) . '</h4>';
+			$form .= '<div>';
 
 			foreach ( $files as $file ) {
-				$form .= '<input type="checkbox" id="secupress-fix-wp-config-file-' . sanitize_html_class( $file ) . '" name="secupress-fix-wp-config-files[]" value="' . esc_attr( $file ) . '"/> ';
-				$form .= '<label for="secupress-fix-wp-config-file-' . sanitize_html_class( $file ) . '">' . sprintf( _x( 'Delete %s', 'delete a file', 'secupress' ), '<code>' . esc_html( $file ) . '</code>' ) . '</label><br/>';
+				$form .= '<input type="checkbox" checked="checked" id="secupress-fix-wp-config-file-' . sanitize_html_class( $file ) . '" name="secupress-fix-wp-config-files[]" value="' . esc_attr( $file ) . '"/> ';
+				$form .= '<label for="secupress-fix-wp-config-file-' . sanitize_html_class( $file ) . '"><code>' . esc_html( $file ) . '</code></label><br/>';
 			}
 
 		}
+		$form .= '</div>';
 		$form .= '</div>';
 
 		return array( 'delete-files' => $form );
