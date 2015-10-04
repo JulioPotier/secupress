@@ -152,11 +152,11 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 
 
 	public function get_fix_action_template_parts() {
-		$form  = '<div class="show-input">';
 		$files = static::get_files();
 
 		if ( $files ) {
 
+			$form  = '<div class="show-input">';
 			$form .= '<h4>' . _n( 'The following file will be deleted:', 'The following files will be deleted:', count( $files ), 'secupress' ) . '</h4>';
 			$form .= '<div>';
 
@@ -166,8 +166,8 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 			}
 
 			$form .= '</div>';
+			$form .= '</div>';
 		}
-		$form .= '</div>';
 
 		return array( 'delete-files' => $form );
 	}
