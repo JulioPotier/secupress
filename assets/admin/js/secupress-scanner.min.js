@@ -761,7 +761,7 @@ jQuery( document ).ready( function( $ ) {
 
 		// Success!
 		swal( {
-			title: SecuPressi18nScanner.fixed,
+			title: extra.data.class === "warning" ? SecuPressi18nScanner.fixedPartial : SecuPressi18nScanner.fixed,
 			text:  extra.data.message.replace( /(<ul>|<li>|<\/li><\/ul>)/g, "" ).replace( /<\/li>/g, "<br/>" ),
 			type:  extra.data.class === "warning" ? "warning" : "success",
 			html:  true,
