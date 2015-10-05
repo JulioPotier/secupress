@@ -88,10 +88,10 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements iSecuPress_Scan {
 
 	public function fix() {
 
-		$warnings = array();
-		$bads     = array();
-		$files    = static::get_file_perms();
-		$count    = 0;
+		$warnings  = array();
+		$bads      = array();
+		$files     = static::get_file_perms();
+		$files_tmp = array();
 
 		foreach ( $files as $file => $chmod ) {
 			// Current file perm
@@ -100,25 +100,29 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements iSecuPress_Scan {
 			if ( ! $current || $current > $chmod ) {
 				// Apply new file perm.
 				@chmod( $file, octdec( $chmod ) );
-				++$count;
+				$files_tmp[ $file ] = $chmod;
+			}
+		}
 
-				// Check if it worked.
-				clearstatcache();
-				$current = (int) decoct( fileperms( $file ) & 0777 );
+		$count = count( $files_tmp );
+		clearstatcache();
 
-				if ( ! $current ) {
-					// warning: unable to determine file perm.
-					$file       = str_replace( ABSPATH, '', $file );
-					$file       = '' === $file ? '/' : $file;
-					$warnings[] = sprintf( '<code>%s</code>', $file );
+		foreach ( $files_tmp as $file => $chmod ) {
+			// Check if it worked.
+			$current = (int) decoct( fileperms( $file ) & 0777 );
 
-				} elseif ( $current > $chmod ) {
-					// bad: unable to apply the file perm.
-					$file   = str_replace( ABSPATH, '', $file );
-					$file   = '' === $file ? '/' : $file;
-					$bads[] = sprintf( '<code>%s</code>', $file );
+			if ( ! $current ) {
+				// warning: unable to determine file perm.
+				$file       = str_replace( ABSPATH, '', $file );
+				$file       = '' === $file ? '/' : $file;
+				$warnings[] = sprintf( '<code>%s</code>', $file );
 
-				}
+			} elseif ( $current > $chmod ) {
+				// bad: unable to apply the file perm.
+				$file   = str_replace( ABSPATH, '', $file );
+				$file   = '' === $file ? '/' : $file;
+				$bads[] = sprintf( '<code>%s</code>', $file );
+
 			}
 		}
 
