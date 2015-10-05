@@ -108,7 +108,7 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 	// Status and messages for scans ===============================================================
 
-	// Maybe set current status.
+	// Maybe set current scan status.
 
 	public function set_status( $status, $force = false ) {
 		$statuses = array(
@@ -139,7 +139,7 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 
 	/*
-	 * Add a message and automatically set the scan status.
+	 * Add a scan message and automatically set the scan status.
 	 *
 	 * good:    the scan performed correctly and returned a good result.
 	 * warning: the scan could not perform correctly.
@@ -166,14 +166,14 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	}
 
 
-	// Are status and message(s) set?
+	// Are scan status and message(s) set?
 
 	public function has_status() {
 		return ! empty( $this->result );
 	}
 
 
-	// Set a status + message only if no status is set yet.
+	// Set a scan status + message only if no status is set yet.
 
 	public function maybe_set_status( $message_id, $params = array() ) {
 		if ( ! $this->has_status() ) {
@@ -215,7 +215,7 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 
 	/*
-	 * Add a message and automatically set the fix status.
+	 * Add a fix message and automatically set the fix status.
 	 *
 	 * good:    the fix performed correctly.
 	 * warning: partial fix. The fix could not perform entirely: some fix(es) worked and some not.

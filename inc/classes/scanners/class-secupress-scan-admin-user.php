@@ -125,6 +125,9 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 			}
 		}
 
+		// good
+		$this->maybe_set_fix_status( 0, array( '<em>' . $username . '</em>' ) );
+
 		return parent::fix();
 	}
 
