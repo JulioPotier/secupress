@@ -31,10 +31,12 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements iSecuPress_Scan {
 		$messages = array(
 			// good
 			0   => __( 'All is ok, permissions are good.', 'secupress' ),
+			1   => __( 'All files fixed.', 'secupress' ),
 			// warning
 			100 => __( 'Unable to determine status of %s.', 'secupress' ),
 			// bad
 			200 => _x( 'File permissions for %1$s <strong>should be %2$s</strong>, NOT %3$s!', '1: file path, 2: chmod required, 3: current chmod', 'secupress' ),
+			201 => __( 'Unable to apply new file permissions to %s.', 'secupress' ),
 			// cantfix
 			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);
@@ -49,29 +51,15 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements iSecuPress_Scan {
 
 	public function scan() {
 
-		$warnings       = array();
-		$_wp_upload_dir = wp_upload_dir();
-		$home_path      = get_home_path();
-		$files          = array(
-			secupress_find_wpconfig_path()    => 444,
-			$home_path                        => 755,
-			$home_path . 'wp-admin/'          => 755,
-			$home_path . 'wp-includes/'       => 755,
-			WP_CONTENT_DIR . '/'              => 755,
-			get_theme_root() . '/'            => 755,
-			plugin_dir_path( SECUPRESS_FILE ) => 755,
-			$_wp_upload_dir['basedir'] . '/'  => 755,
-		);
-
-		if ( $GLOBALS['is_apache'] ) {
-			$files[ $home_path . '.htaccess' ] = 444;
-		}
+		$warnings = array();
+		$files    = static::get_file_perms();
 
 		foreach ( $files as $file => $chmod ) {
-			$current = decoct( fileperms( $file ) & 0777 );
+			// Current file perm
+			$current = (int) decoct( fileperms( $file ) & 0777 );
 
 			if ( ! $current ) {
-				// warning
+				// warning: unable to determine file perm.
 				$file       = str_replace( ABSPATH, '', $file );
 				$file       = '' === $file ? '/' : $file;
 				$warnings[] = sprintf( '<code>%s</code>', $file );
@@ -100,8 +88,83 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements iSecuPress_Scan {
 
 	public function fix() {
 
-		// include the fix here.
+		$warnings = array();
+		$bads     = array();
+		$files    = static::get_file_perms();
+		$count    = 0;
+
+		foreach ( $files as $file => $chmod ) {
+			// Current file perm
+			$current = (int) decoct( fileperms( $file ) & 0777 );
+
+			if ( ! $current || $current > $chmod ) {
+				// Apply new file perm.
+				@chmod( $file, octdec( $chmod ) );
+				++$count;
+
+				// Check if it worked.
+				clearstatcache();
+				$current = (int) decoct( fileperms( $file ) & 0777 );
+
+				if ( ! $current ) {
+					// warning: unable to determine file perm.
+					$file       = str_replace( ABSPATH, '', $file );
+					$file       = '' === $file ? '/' : $file;
+					$warnings[] = sprintf( '<code>%s</code>', $file );
+
+				} elseif ( $current > $chmod ) {
+					// bad: unable to apply the file perm.
+					$file   = str_replace( ABSPATH, '', $file );
+					$file   = '' === $file ? '/' : $file;
+					$bads[] = sprintf( '<code>%s</code>', $file );
+
+				}
+			}
+		}
+
+		if ( ! $count ) {
+			// good (there was nothing to fix).
+			$this->add_fix_message( 0 );
+			return parent::fix();
+		}
+
+		if ( $bads ) {
+			// bad
+			$this->add_fix_message( 201, array( wp_sprintf_l( '%l', $bads ) ) );
+		}
+
+		if ( $warnings ) {
+			// warning
+			$this->add_fix_message( 100, array( wp_sprintf_l( '%l', $warnings ) ) );
+		}
+
+		// good
+		$this->maybe_set_fix_status( 1 );
 
 		return parent::fix();
+	}
+
+
+	protected static function get_file_perms() {
+		global $is_apache;
+
+		$_wp_upload_dir = wp_upload_dir();
+		$home_path      = get_home_path();
+		$files          = array(
+			secupress_find_wpconfig_path()    => 644,
+			$home_path                        => 755,
+			$home_path . 'wp-admin/'          => 755,
+			$home_path . 'wp-includes/'       => 755,
+			WP_CONTENT_DIR . '/'              => 755,
+			get_theme_root() . '/'            => 755,
+			plugin_dir_path( SECUPRESS_FILE ) => 755,
+			$_wp_upload_dir['basedir'] . '/'  => 755,
+		);
+
+		if ( $is_apache ) {
+			$files[ $home_path . '.htaccess' ] = 644;
+		}
+
+		return $files;
 	}
 }
