@@ -6,7 +6,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  *
  * @since 1.0
  *
- * @param bool $force (default: false)
+ * @param string $rules
  * @return void
  */
 function secupress_write_htaccess( $marker, $rules = null ) {
@@ -21,8 +21,8 @@ function secupress_write_htaccess( $marker, $rules = null ) {
 	$htaccess_file = get_home_path() . '.htaccess';
 
 	if ( is_writable( $htaccess_file ) ) {
-		// Update the .htacces file.
-		return secupress_put_content( $htaccess_file, $marker, $rules );
+		// Update the .htaccess file.
+		return secupress_put_contents( $htaccess_file, $marker, $rules );
 	}
 
 	return false;
