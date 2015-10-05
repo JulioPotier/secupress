@@ -85,7 +85,12 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements iSecuPress_Sc
 
 		$settings = array( 'plugin_minor_updates' => '1' );
 		secupress_activate_module( 'wordpress-core', $settings );
+		secupress_activate_submodule( 'wordpress-core', 'minor-updates' );
+
+		$this->add_fix_message( 0 );
 
 		return parent::fix();
 	}
+
+
 }
