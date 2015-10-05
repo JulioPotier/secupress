@@ -131,7 +131,7 @@ function secupress_mkdir_p( $target ) {
  * @param string $file_content The content that will already exists in the file
  * @return bool
  */
-function secupress_put_content( $file, $marker, $new_content ) {
+function secupress_put_contents( $file, $marker, $new_content ) {
 	global $wp_filesystem;
 
 	if ( ! $wp_filesystem ) {
@@ -141,14 +141,21 @@ function secupress_put_content( $file, $marker, $new_content ) {
 		$wp_filesystem = new WP_Filesystem_Direct( new StdClass() );
 	}
 
+	$comment_char = 'php.ini' != basename( $file ) ? '#' : ';';
 	// Get content of file
-	$ftmp         = file_get_contents( $file );
-	$file_content = preg_replace( '/# BEGIN SecuPress ' . $marker . '(.*)# END SecuPress/isU', '', $ftmp );
+	$file_content = '';
+	if ( file_exists( $file ) ) {
+		$ftmp         = file_get_contents( $file );
+		$file_content = preg_replace( '/' . $comment_char . ' BEGIN SecuPress ' . $marker . '(.*)' . $comment_char . ' END SecuPress/isU', '', $ftmp );
+	}
+	
+	// Remove empty spacings
+	$ftmp = str_replace( "\n\n" , "\n" , $ftmp );
 
 	if ( ! empty( $new_content ) ) {
-		$content  = '# BEGIN SecuPress ' . $marker . PHP_EOL;
+		$content  = $comment_char . ' BEGIN SecuPress ' . $marker . PHP_EOL;
 		$content .= trim( $new_content ) . PHP_EOL;
-		$content .= '# END SecuPress' . PHP_EOL;
+		$content .= $comment_char . ' END SecuPress' . PHP_EOL;
 		$content .= $file_content;
 		$file_content = $content;
 	}
