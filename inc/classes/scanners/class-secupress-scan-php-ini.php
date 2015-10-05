@@ -40,6 +40,7 @@ class SecuPress_Scan_PHP_INI extends SecuPress_Scan implements iSecuPress_Scan {
 			202 => _n_noop( '%1$s should be less than %2$s.', '%1$s should be less than %2$s.', 'secupress' ),
 			// cantfix
 			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
+			301 => __( 'The fix has been applied.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -50,7 +51,7 @@ class SecuPress_Scan_PHP_INI extends SecuPress_Scan implements iSecuPress_Scan {
 	}
 
 
-	public function scan() {
+	public static function get_ini_values() {
 		$ini_values = array(
 			'register_globals'  => false,    'display_errors'      => false,    'expose_php'        => false,
 			'allow_url_include' => false,    'safe_mode'           => false,    'open_basedir'      => '!empty',
@@ -58,6 +59,13 @@ class SecuPress_Scan_PHP_INI extends SecuPress_Scan implements iSecuPress_Scan {
 			'post_max_size'     => '<64M',   'upload_max_filezize' => '<64M',   'memory_limit'      => '<1024M',
 			'disable_functions' => '!empty', 'auto_append_file'    => false,    'auto_prepend_file' => false,
 		);
+
+		return $ini_values;
+	}
+
+
+	public function scan() {
+		$ini_values = self::get_ini_values();
 		$arg_200 = array();
 		$arg_201 = array(
 			'<code>On</code>'  => array(),
@@ -139,7 +147,59 @@ class SecuPress_Scan_PHP_INI extends SecuPress_Scan implements iSecuPress_Scan {
 
 	public function fix() {
 
-		// include the fix here.
+		$ini_values = self::get_ini_values();
+		$htaccess_rules = '';
+		$phpini_rules = '';
+
+		foreach ( $ini_values as $name => $compare ) {
+			$check = ini_get( $name );
+
+			switch ( $compare ) {
+				case '!empty':
+					if ( '' == $check ) {
+						if ( 'disable_functions' == $name ) {
+							$htaccess_rules .= 'php_value ' . $name . ' disable_functions,exec,passthru,shell_exec,system,proc_open,popen,curl_exec,curl_multi_exec,parse_ini_file,show_source' . "\n";
+							$phpini_rules .= $name . ' = disable_functions,exec,passthru,shell_exec,system,proc_open,popen,curl_exec,curl_multi_exec,parse_ini_file,show_source;' . "\n";
+						} elseif ( 'error_log' == $name ) {
+							$filename = 'error_log_' . uniqid() . '.log';
+							$htaccess_rules .= 'php_value ' . $name . ' ' . ABSPATH . $filename . "\n";
+							$phpini_rules .= $name . ' = ' . $filename . ';' . "\n";
+						} elseif( 'open_basedir' == $name ) {
+							$htaccess_rules .= 'php_value ' . $name . ' ' . ABSPATH . "\n";
+							$phpini_rules .= $name . ' = ' . ABSPATH . ';' . "\n";
+						}
+					}
+					break;
+				case 1:
+					if ( ! $check ) {
+						$htaccess_rules .= 'php_value ' . $name . ' = On' . "\n";
+						$phpini_rules .= $name . ' = On;' . "\n";
+					}
+					break;
+				case false:
+					if ( $check ) {
+						$htaccess_rules .= 'php_value ' . $name . ' Off' . "\n";
+						$phpini_rules .= $name . ' = Off;' . "\n";
+					}
+					break;
+				default:
+					if ( '<' === $compare[0] ) {
+						$int   = substr( $compare, 1, strlen( $compare ) - 2 );
+						$check = substr( $check, 0, strlen( $check ) - 1 );
+
+						if ( $check > $int ) {
+							$htaccess_rules .= 'php_value ' . $name . ' ' . $int . 'M' . "\n";
+							$phpini_rules .= $name . ' = ' . $int . 'M;' . "\n";
+						}
+
+					}
+					break;
+			}
+		}
+		secupress_write_htaccess( 'php.ini', $htaccess_rules );
+		secupress_put_contents( ABSPATH . 'php.ini', 'php.ini', $phpini_rules );
+
+		$this->add_fix_message( 301 );
 
 		return parent::fix();
 	}
