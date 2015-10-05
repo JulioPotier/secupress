@@ -31,10 +31,10 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements iSecuPress_
 		$messages = array(
 			// good
 			0   => __( 'Your installation is free of old files.', 'secupress' ),
+			1   => __( 'All old files were deleted.', 'secupress' ),
 			// bad
 			200 => _n_noop( 'Your installation contains %1$d old file: %2$s.', 'Your installation contains old files: %2$s.', 'secupress' ),
-			// cantfix
-			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
+			201 => _n_noop( 'The following file could not be deleted: %s.', 'The following files could not be deleted: %s.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -48,34 +48,61 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements iSecuPress_
 	public function scan() {
 		global $_old_files;
 
-		$bads = array();
-
 		require_once( ABSPATH . 'wp-admin/includes/update-core.php' );
 
-		if ( ! empty( $_old_files ) && is_array( $_old_files ) ) {
-			foreach ( $_old_files as $file ) {
-				if ( @file_exists( ABSPATH . $file ) ) {
-					// bad
-					$bads[] = sprintf( '<code>%s</code>', $file );
-				}
+		$not_deleted = array();
+
+		if ( empty( $_old_files ) || ! is_array( $_old_files ) ) {
+			// Should not happen.
+			$this->add_fix_message( 0 );
+			return parent::fix();
+		}
+
+		foreach ( $_old_files as $file ) {
+			if ( @file_exists( ABSPATH . $file ) ) {
+				// bad
+				$bads[] = sprintf( '<code>%s</code>', $file );
 			}
 		}
 
 		if ( $count = count( $bads ) ) {
 			// bad
 			$this->add_message( 200, array( $count, $count, wp_sprintf_l( '%l', $bads ) ) );
+		} else {
+			// good
+			$this->add_message( 0 );
 		}
-
-		// good
-		$this->maybe_set_status( 0 );
 
 		return parent::scan();
 	}
 
 
 	public function fix() {
+		global $_old_files;
 
-		// include the fix here.
+		require_once( ABSPATH . 'wp-admin/includes/update-core.php' );
+
+		$not_deleted = array();
+
+		if ( empty( $_old_files ) || ! is_array( $_old_files ) ) {
+			// Should not happen.
+			$this->add_fix_message( 0 );
+			return parent::fix();
+		}
+
+		foreach ( $_old_files as $file ) {
+			if ( @file_exists( ABSPATH . $file ) && ! is_writable( ABSPATH . $filename ) || ! @unlink( ABSPATH . $filename ) ) {
+				$not_deleted[] = sprintf( '<code>%s</code>', $file );
+			}
+		}
+
+		if ( $count = count( $not_deleted ) ) {
+			// bad
+			$this->add_fix_message( 201, array( $count, $count, wp_sprintf_l( '%l', $not_deleted ) ) );
+		} else {
+			// good
+			$this->add_fix_message( 1 );
+		}
 
 		return parent::fix();
 	}
