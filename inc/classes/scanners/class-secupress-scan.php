@@ -110,7 +110,7 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 	// Maybe set current scan status.
 
-	public function set_status( $status, $force = false ) {
+	final protected function set_status( $status, $force = false ) {
 		$statuses = array(
 			'cantfix' => 0,
 			'good'    => 1,
@@ -146,7 +146,7 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	 * bad:     the scan performed correctly but returned a bad result.
 	 */
 
-	public function add_message( $message_id, $params = array() ) {
+	final protected function add_message( $message_id, $params = array() ) {
 		$this->result['msgs'] = isset( $this->result['msgs'] ) ? $this->result['msgs'] : array();
 		$this->result['msgs'][ $message_id ] = $params;
 
@@ -168,14 +168,14 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 	// Are scan status and message(s) set?
 
-	public function has_status() {
+	final protected function has_status() {
 		return ! empty( $this->result );
 	}
 
 
 	// Set a scan status + message only if no status is set yet.
 
-	public function maybe_set_status( $message_id, $params = array() ) {
+	final protected function maybe_set_status( $message_id, $params = array() ) {
 		if ( ! $this->has_status() ) {
 			$this->add_message( $message_id, $params );
 		}
@@ -186,7 +186,7 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 	// Maybe set current fix status.
 
-	public function set_fix_status( $status, $force = false ) {
+	final protected function set_fix_status( $status, $force = false ) {
 		$statuses = array(
 			'cantfix' => 0,
 			'good'    => 1,
@@ -249,14 +249,14 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 	// Are fix status and message(s) set?
 
-	public function has_fix_status() {
+	final protected function has_fix_status() {
 		return ! empty( $this->result_fix );
 	}
 
 
 	// Set a fix status + message only if no status is set yet.
 
-	public function maybe_set_fix_status( $message_id, $params = array() ) {
+	final protected function maybe_set_fix_status( $message_id, $params = array() ) {
 		if ( ! $this->has_fix_status() ) {
 			$this->add_fix_message( $message_id, $params );
 		}
@@ -265,7 +265,7 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 	// Scan and fix ================================================================================
 
-	// Scan for flow(s).
+	// Scan for flaw(s).
 
 	public function scan() {
 		$this->update();
@@ -291,14 +291,14 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 					'form_fields'   => $this->get_fix_action_fields( $this->fix_actions, false ),
 					'form_title'    => _n( 'This action requires your attention', 'These actions require your attention', count( $this->fix_actions ), 'secupress' ),
 				) );
+
+				$this->fix_actions = array();
 			}
 			// No ajax
 			else {
 				// Set a transient with fixes that require user action.
-				set_transient( 'secupress_fix_actions', $this->class_name_part . '|' . implode( ',', $this->fix_actions ) );
+				$this->set_fix_actions();
 			}
-
-			$this->fix_actions = array();
 		}
 
 		$result = $this->result_fix;
@@ -308,7 +308,7 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	}
 
 
-	// Try to fix the flow(s) after requiring user action.
+	// Try to fix the flaw(s) after requiring user action.
 
 	public function manual_fix() {
 		// Don't use `$this->` here, we need to call the one from this class.
@@ -332,7 +332,7 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 	// Tell if a fix action part is needed.
 
-	protected function has_fix_action_part( $fix_id ) {
+	final protected function has_fix_action_part( $fix_id ) {
 		$fix_ids = ! empty( $_POST['test-parts'] ) ? ',' . $_POST['test-parts'] . ',' : '';
 		return false !== strpos( $fix_ids, ',' . $fix_id . ',' );
 	}
@@ -340,7 +340,7 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 	// Print the required fields for the user fix form.
 
-	public function get_fix_action_fields( $fix_actions, $echo = true ) {
+	final public function get_fix_action_fields( $fix_actions, $echo = true ) {
 		$output  = '<input type="hidden" name="action" value="secupress_manual_fixit" />';
 		$output .= '<input type="hidden" name="test" value="' . $this->class_name_part . '" />';
 		$output .= '<input type="hidden" name="test-parts" value="' . implode( ',', array_keys( $fix_actions ) ) . '" />';
@@ -356,7 +356,7 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 	// Set option.
 
-	public function update() {
+	final public function update() {
 		$name = strtolower( $this->class_name_part );
 
 		if ( ! set_transient( 'secupress_scan_' . $name, $this->result ) ) {
@@ -367,7 +367,7 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	}
 
 
-	public function update_fix() {
+	final public function update_fix() {
 		$this->result_fix['attempted_fixes'] = array_key_exists( 'attempted_fixes', $this->result_fix ) ? ++$this->result_fix['attempted_fixes'] : 1;
 
 		$name = strtolower( $this->class_name_part );
@@ -379,12 +379,47 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 		return $this->result_fix;
 	}
 
+	// Other transients ============================================================================
+
+	// Fixes that require user action.
+
+	final protected function set_fix_actions() {
+		set_transient( 'secupress_fix_actions', $this->class_name_part . '|' . implode( ',', $this->fix_actions ) );
+		$this->fix_actions = array();
+	}
+
+
+	final public static function get_and_delete_fix_actions() {
+		$transient = get_transient( 'secupress_fix_actions' );
+		delete_transient( 'secupress_fix_actions' );
+		return $transient ? explode( '|', $transient ) : array( 0 => false );
+	}
+
+
+	// Schedule an auto-scan that will be executed on page load.
+
+	final protected function schedule_autoscan() {
+		$transient = get_transient( 'secupress_autoscans' );
+		$transient = is_array( $transient ) ? $transient : array();
+
+		$transient[ $this->class_name_part ] = $this->class_name_part;
+
+		set_transient( 'secupress_autoscans', $transient );
+	}
+
+
+	final public static function get_and_delete_autoscans() {
+		$transient = get_transient( 'secupress_autoscans' );
+		delete_transient( 'secupress_autoscans' );
+		return is_array( $transient ) ? $transient : array();
+	}
+
 
 	// Tools =======================================================================================
 
 	// Get prioritie(s).
 
-	public static function get_priorities( $level = null ) {
+	final public static function get_priorities( $level = null ) {
 		$priorities = array(
 			'high' => array(
 				'title'       => __( 'High Priority', 'secupress' ),
@@ -409,7 +444,7 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 	// Given an array of "things", wrap those "things" in a HTML tag.
 
-	public static function wrap_in_tag( $array, $tag = 'code' ) {
+	final public static function wrap_in_tag( $array, $tag = 'code' ) {
 		$out = array();
 
 		if ( $array ) {

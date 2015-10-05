@@ -472,6 +472,15 @@ jQuery( document ).ready( function( $ ) {
 			if ( secupressDisplayScanResult( r, test ) ) {
 				delete doingScan[ test ];
 
+				// If it's an auto-scan and the result is good, remove the fix status.
+				if ( $row.hasClass( "autoscan" ) ) {
+					$row.removeClass( "autoscan" );
+
+					if ( r.data.class === "good" ) {
+						$row.children( ".secupress-fix-result" ).html( "" );
+					}
+				}
+
 				// Trigger an event.
 				$( "body" ).trigger( "scanDone.secupress", [ {
 					test:   test,
@@ -698,7 +707,7 @@ jQuery( document ).ready( function( $ ) {
 		*/
 
 		// Go for a new scan.
-		$( ".secupress-item-" + extra.test ).find( ".scanit > .secupress-scanit" ).trigger( ( extra.isBulk ? "bulk" : "" ) + "scan.secupress" );
+		$( ".secupress-item-" + extra.test ).find( ".secupress-row-actions > .secupress-scanit" ).trigger( ( extra.isBulk ? "bulk" : "" ) + "scan.secupress" );
 	} );
 
 
@@ -757,7 +766,7 @@ jQuery( document ).ready( function( $ ) {
 		*/
 
 		// Go for a new scan.
-		$( ".secupress-item-" + extra.test ).find( ".scanit > .secupress-scanit" ).trigger( "scan.secupress" );
+		$( ".secupress-item-" + extra.test ).find( ".secupress-row-actions > .secupress-scanit" ).trigger( "scan.secupress" );
 
 		// Success!
 		swal( {
@@ -798,7 +807,7 @@ jQuery( document ).ready( function( $ ) {
 
 		if ( $this.hasClass( "button-secupress-scan" ) ) {
 			// It's the "One Click Scan" button.
-			$( ".scanit > .secupress-scanit" ).trigger( "bulkscan.secupress" );
+			$( ".secupress-row-actions > .secupress-scanit" ).trigger( "bulkscan.secupress" );
 			return;
 		}
 
@@ -828,6 +837,10 @@ jQuery( document ).ready( function( $ ) {
 	} );
 
 
+	// Autoscans.
+	$( ".secupress-item-all.autoscan .secupress-scanit" ).first().trigger( "bulkscan.secupress" );
+
+
 	// !Bulk -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	$( "#doaction-high, #doaction-medium, #doaction-low" ).on( "click", function( e ) {
 		var $this  = $( this ),
@@ -844,7 +857,7 @@ jQuery( document ).ready( function( $ ) {
 
 		switch ( action ) {
 			case 'scanit':
-				$rows.find( ".scanit > .secupress-scanit" ).trigger( bulk + "scan.secupress" );
+				$rows.find( ".secupress-row-actions > .secupress-scanit" ).trigger( bulk + "scan.secupress" );
 				break;
 			case 'fixit':
 				$rows.find( ".secupress-fixit" ).trigger( bulk + "fix.secupress" );

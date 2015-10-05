@@ -383,11 +383,10 @@ function secupress_main_scan() {
 	$secupress_tests = secupress_get_tests();
 	$scanners        = secupress_get_scanners();
 	$fixes           = secupress_get_scanner_fixes();
-
 	// Actions the user needs to perform for a fix.
-	$fix_actions     = get_transient( 'secupress_fix_actions' );
-	$fix_actions     = $fix_actions ? explode( '|', $fix_actions ) : array( 0 => false );
-	delete_transient( 'secupress_fix_actions' );
+	$fix_actions     = SecuPress_Scan::get_and_delete_fix_actions();
+	// Auto-scans: scans that will be executed on page load.
+	$autoscans       = SecuPress_Scan::get_and_delete_autoscans();
 
 	// Store the scans in 2 variables. They will be used to order the scans by status: 'bad', 'warning', 'notscannedyet', 'good'.
 	$before_not_scanned = array( 'bad' => array(), 'warning' => array(), );
@@ -518,6 +517,7 @@ function secupress_main_scan() {
 						$status_text  = isset( $scanners[ $option_name ]['status'] ) ? secupress_status( $scanners[ $option_name ]['status'] )    : secupress_status( 'notscannedyet' );
 						$status_class = isset( $scanners[ $option_name ]['status'] ) ? sanitize_html_class( $scanners[ $option_name ]['status'] ) : 'notscannedyet';
 						$css_class   .= ' status-' . $status_class;
+						$css_class   .= isset( $autoscans[ $class_name_part ] ) ? ' autoscan' : '';
 
 						if ( ! empty( $scanners[ $option_name ]['msgs'] ) ) {
 							$scan_message = secupress_format_message( $scanners[ $option_name ]['msgs'], $class_name_part );
@@ -545,9 +545,7 @@ function secupress_main_scan() {
 								<div class="secupress-scan-status"><?php echo $status_text; ?></div>
 
 								<div class="secupress-row-actions">
-									<span class="scanit">
-										<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $class_name_part ), 'secupress_scanner_' . $class_name_part ); ?>" class="secupress-scanit"><?php _ex( 'Scan', 'scan a test', 'secupress' ); ?></a>
-									</span>
+									<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $class_name_part ), 'secupress_scanner_' . $class_name_part ); ?>" class="secupress-scanit"><?php _ex( 'Scan', 'scan a test', 'secupress' ); ?></a>
 								</div>
 							</td>
 							<td>
