@@ -53,7 +53,7 @@ jQuery( document ).ready( function( $ ) {
 
 	function secupressUpdateScore( refresh ) {
 		var total                = $( ".status-all" ).length;
-		var status_good          = $( ".table-prio-all .status-good, .table-prio-all .status-fpositive" ).length;
+		var status_good          = $( ".table-prio-all .status-good, .table-prio-all" ).length;
 		var status_warning       = $( ".table-prio-all .status-warning" ).length;
 		var status_bad           = $( ".table-prio-all .status-bad" ).length;
 		var status_notscannedyet = $( ".table-prio-all .status-notscannedyet" ).length;
@@ -848,13 +848,6 @@ jQuery( document ).ready( function( $ ) {
 				break;
 			case 'fixit':
 				$rows.find( ".secupress-fixit" ).trigger( bulk + "fix.secupress" );
-				break;
-			case 'fpositive':
-				$rows.not( ".status-good, .status-notscannedyet" )
-					.addClass( "status-fpositive" )
-					.find( ".secupress-dashicon" )
-					.removeClass( "dashicons-shield-alt" )
-					.addClass( "dashicons-shield" ); //// On ne sauvegarde pas ce statut quelque part ?
 				break;
 		}
 	} );
