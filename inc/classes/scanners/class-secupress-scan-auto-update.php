@@ -32,9 +32,12 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements iSecuPress_Sc
 			// good
 			0   => __( 'Your installation <strong>can auto-update</strong> itself.', 'secupress' ),
 			// bad
-			200 => __( 'Your installation <strong>can NOT auto-update</strong> itself.', 'secupress' ),
+			200 => __( 'Your installation <strong>can not auto-update</strong> itself.', 'secupress' ),
+			201 => __( '<code>DISALLOW_FILE_MODS</code> should be set on <code>FALSE</code>.', 'secupress' ),
+			202 => __( '<code>AUTOMATIC_UPDATER_DISABLED</code> should be set on <code>FALSE</code>.', 'secupress' ),
+			203 => __( '<code>DISALLOW_FILE_MODS</code> and <code>AUTOMATIC_UPDATER_DISABLED</code> should be set on <code>FALSE</code>.', 'secupress' ),
 			// cantfix
-			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
+			300 => __( 'The filter <code>automatic_updater_disabled</code> should not be used, we can not overwrite it.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -54,7 +57,21 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements iSecuPress_Sc
 
 		if ( $check ) {
 			// bad
-			$this->add_message( 200 );
+			$constants = 0;
+			if ( defined( 'DISALLOW_FILE_MODS' ) && DISALLOW_FILE_MODS ) {
+				$constants += 1;
+			}
+
+			if ( defined( 'AUTOMATIC_UPDATER_DISABLED' ) && AUTOMATIC_UPDATER_DISABLED ) {
+				$constants += 2;
+			}
+
+			if ( $constants ) {
+				$this->add_message( 200 );
+				$this->add_message( 200 + $constants );
+			} else {
+				$this->add_message( 0 );
+			}
 		}
 
 		// good

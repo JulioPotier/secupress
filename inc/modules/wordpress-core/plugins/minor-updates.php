@@ -8,9 +8,6 @@ Version: 1.0
 */
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
-// Try via constant AUTOMATIC_UPDATER_DISABLED
-defined( 'AUTOMATIC_UPDATER_DISABLED' ) or define( 'AUTOMATIC_UPDATER_DISABLED', false );
-
-// and filters automatic_updater_disabled, automatic_updater_disabled
+// Fix using filters automatic_updater_disabled, automatic_updater_disabled
 add_filter( 'automatic_updater_disabled', '__return_false', PHP_INT_MAX );
 add_filter( 'allow_minor_auto_core_updates', '__return_true', PHP_INT_MAX );
