@@ -197,7 +197,7 @@ function secupress_deactivate_submodule( $module, $plugins ) {
 }
 
 
-function secupress_activate_module( $module, $settings ) {
+function secupress_activate_module( $module, $settings ) { //// rename this, it finally does not ativate any module but just set the correct settongs
 	$modules  = secupress_get_modules();
 	$callback = str_replace( '-', '_', $module );
 
@@ -215,7 +215,7 @@ function secupress_activate_module( $module, $settings ) {
 }
 
 
-function secupress_activate_submodule( $module, $plugin, $incompatibles_modules = array() ) {
+function secupress_activate_submodule( $module, $plugin, $incompatibles_modules = array() ) { //// add the possiblity to activate it in "silent mode" (from a canner fix and not from a user checkbox)?
 	$plugin_file    = sanitize_key( $plugin );
 	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
 
