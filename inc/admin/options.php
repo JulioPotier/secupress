@@ -460,8 +460,8 @@ function secupress_main_scan() {
 								<input id="cb-select-all-<?php echo $prio_key; ?>-1" type="checkbox"/>
 							</td>
 							<th scope="col" class="secupress-status" data-sort="string"><?php _e( 'Status', 'secupress' ); ?></th>
-							<th scope="col" class="secupress-desc"><?php _e( 'Test Description', 'secupress' ); ?></th>
-							<th scope="col" class="secupress-result"><?php _e( 'Test Results', 'secupress' ); ?></th>
+							<th scope="col" class="secupress-desc"><?php _e( 'Scan Descriptions', 'secupress' ); ?></th>
+							<th scope="col" class="secupress-result"><?php _e( 'Scan Results', 'secupress' ); ?></th>
 							<th scope="col" class="secupress-fix-result"><?php _e( 'Fix Results', 'secupress' ); ?></th>
 							<th scope="col" class="secupress-fix"><?php _e( 'Fix', 'secupress' ); ?></th>
 						</tr>
@@ -474,8 +474,8 @@ function secupress_main_scan() {
 								<input id="cb-select-all-<?php echo $prio_key; ?>-2" type="checkbox"/>
 							</td>
 							<th scope="col" class="secupress-status"><?php _e( 'Status', 'secupress' ); ?></th>
-							<th scope="col" class="secupress-desc"><?php _e( 'Test Description', 'secupress' ); ?></th>
-							<th scope="col" class="secupress-result"><?php _e( 'Test Results', 'secupress' ); ?></th>
+							<th scope="col" class="secupress-desc"><?php _e( 'Scan Descriptions', 'secupress' ); ?></th>
+							<th scope="col" class="secupress-result"><?php _e( 'Scan Results', 'secupress' ); ?></th>
 							<th scope="col" class="secupress-fix-result"><?php _e( 'Fix Results', 'secupress' ); ?></th>
 							<th scope="col" class="secupress-fix"><?php _e( 'Fix', 'secupress' ); ?></th>
 						</tr>
@@ -545,11 +545,8 @@ function secupress_main_scan() {
 								<div class="secupress-scan-status"><?php echo $status_text; ?></div>
 
 								<div class="secupress-row-actions">
-									<span class="rescanit">
-										<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $class_name_part ), 'secupress_scanner_' . $class_name_part ); ?>" class="secupress-scanit"><?php _e( 'Re-Scan this test', 'secupress' ); ?></a>
-									</span>
 									<span class="scanit">
-										<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $class_name_part ), 'secupress_scanner_' . $class_name_part ); ?>" class="secupress-scanit"><?php _e( 'Scan this test first', 'secupress' ) ?></a>
+										<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $class_name_part ), 'secupress_scanner_' . $class_name_part ); ?>" class="secupress-scanit"><?php _ex( 'Scan', 'scan a test', 'secupress' ); ?></a>
 									</span>
 								</div>
 							</td>

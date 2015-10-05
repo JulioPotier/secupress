@@ -29,14 +29,6 @@
 	font-size: 13px;
 }
 
-.secupress-row-actions .scanit,
-.status-notscannedyet .secupress-row-actions .rescanit {
-	display: none;
-}
-.status-notscannedyet .secupress-row-actions .scanit {
-	display: inline-block;
-}
-
 .status-good .fixit,
 .status-notscannedyet .fixit {
 	display: none;
