@@ -85,11 +85,11 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 			}
 
 			if ( $is_nginx ) {
-				$this->add_message( 300 );
+				$this->add_fix_message( 300 );
 			} elseif ( $is_iis7 ) {
-				$this->add_message( 301 );
+				$this->add_fix_message( 301 );
 			} else {
-				$this->add_message( 302 );
+				$this->add_fix_message( 302 );
 			}
 
 			return parent::fix();
@@ -105,7 +105,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 
 		// `.htaccess` not writable, bail out.
 		if ( ! is_writable( $file_path ) ) {
-			$this->add_message( 303, array( $rules ) );
+			$this->add_fix_message( 303, array( $rules ) );
 			return parent::fix();
 		}
 
@@ -136,7 +136,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 		$fixed = $wp_filesystem->put_contents( $file_path, $file_content, $chmod );
 
 		if ( ! $fixed ) {
-			$this->add_message( 303, array( $rules ) );
+			$this->add_fix_message( 303, array( $rules ) );
 		}
 
 		return parent::fix();
