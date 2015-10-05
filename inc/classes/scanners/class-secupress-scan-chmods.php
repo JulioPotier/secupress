@@ -53,11 +53,12 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements iSecuPress_Scan {
 
 		$warnings = array();
 		$files    = static::get_file_perms();
+		$abspath  = realpath( ABSPATH );
 
 		foreach ( $files as $file => $chmod ) {
 			// Current file perm
 			$current = (int) decoct( fileperms( $file ) & 0777 );
-			$file    = ltrim( str_replace( realpath( ABSPATH ), '', realpath( $file ) ), '\\' );
+			$file    = ltrim( str_replace( $abspath, '', realpath( $file ) ), '\\' );
 			$file    = '' === $file ? '/' : $file;
 
 			if ( ! $current ) {
@@ -92,6 +93,7 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements iSecuPress_Scan {
 		$bads      = array();
 		$files     = static::get_file_perms();
 		$files_tmp = array();
+		$abspath   = realpath( ABSPATH );
 
 		foreach ( $files as $file => $chmod ) {
 			// Current file perm
@@ -110,7 +112,7 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements iSecuPress_Scan {
 		foreach ( $files_tmp as $file => $chmod ) {
 			// Check if it worked.
 			$current = (int) decoct( fileperms( $file ) & 0777 );
-			$file    = ltrim( str_replace( realpath( ABSPATH ), '', realpath( $file ) ), '\\' );
+			$file    = ltrim( str_replace( $abspath, '', realpath( $file ) ), '\\' );
 			$file    = '' === $file ? '/' : $file;
 
 			if ( ! $current ) {
