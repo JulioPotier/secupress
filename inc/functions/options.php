@@ -128,7 +128,7 @@ function secupress_get_scanners() {
 			delete_transient( 'secupress_scan_' . $test_name );
 			$transients[ $test_name ] = $transient;
 			// In the same time, when a scan is good, remove the related fix.
-			if ( 'good' === $transient['class'] ) {
+			if ( 'good' === $transient['status'] ) {
 				unset( $fixes[ $test_name ] );
 			}
 		}
