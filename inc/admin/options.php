@@ -382,6 +382,7 @@ function secupress_main_scan() {
 
 	$secupress_tests = secupress_get_tests();
 	$scanners        = secupress_get_scanners();
+	$fixes           = secupress_get_scanner_fixes();
 
 	// Actions the user needs to perform for a fix.
 	$fix_actions     = get_transient( 'secupress_fix_actions' );
@@ -511,31 +512,29 @@ function secupress_main_scan() {
 
 						$class_name   = 'SecuPress_Scan_' . $class_name_part;
 						$current_test = $class_name::get_instance();
-						$status_text  = isset( $scanners[ $option_name ]['status'] ) ? secupress_status( $scanners[ $option_name ]['status'] )    : secupress_status( 'notscannedyet' );
-						$status_class = isset( $scanners[ $option_name ]['status'] ) ? sanitize_html_class( $scanners[ $option_name ]['status'] ) : 'notscannedyet';
 						$css_class    = ' type-' . sanitize_key( $class_name::$type );
-						$css_class   .= ' status-' . $status_class;
 						$css_class   .= $i % 2 === 0 ? ' alternate-2' : ' alternate-1';
 
-						if ( isset( $scanners[ $option_name ]['msgs'] ) ) {
+						// Scan
+						$status_text  = isset( $scanners[ $option_name ]['status'] ) ? secupress_status( $scanners[ $option_name ]['status'] )    : secupress_status( 'notscannedyet' );
+						$status_class = isset( $scanners[ $option_name ]['status'] ) ? sanitize_html_class( $scanners[ $option_name ]['status'] ) : 'notscannedyet';
+						$css_class   .= ' status-' . $status_class;
 
-							$messages = $class_name::get_messages();
-							$message  = '<ul>';
-
-							foreach ( $scanners[ $option_name ]['msgs'] as $id => $atts ) {
-								if ( is_array( $messages[ $id ] ) ) {
-									$count  = array_shift( $atts );
-									$string = translate_nooped_plural( $messages[ $id ], $count );
-								} else {
-									$string = $messages[ $id ];
-								}
-								$message .= '<li>' . ( ! empty( $atts ) ? vsprintf( $string, $atts ) : $messages[ $id ] ) . '</li>';
-							}
-
-							$message .= '</ul>';
-
+						if ( ! empty( $scanners[ $option_name ]['msgs'] ) ) {
+							$scan_message = secupress_format_message( $scanners[ $option_name ]['msgs'], $class_name_part );
 						} else {
-							$message = '&#175;';
+							$scan_message = '&#175;';
+						}
+
+						// Fix
+						$fix_status_text  = isset( $fixes[ $option_name ]['status'] ) ? secupress_status( $fixes[ $option_name ]['status'] )    : secupress_status( 'cantfix' );
+						$fix_status_class = isset( $fixes[ $option_name ]['status'] ) ? sanitize_html_class( $fixes[ $option_name ]['status'] ) : 'cantfix';
+						$fix_css_class    = ' status-' . $fix_status_class;
+
+						if ( ! empty( $fixes[ $option_name ]['msgs'] ) ) {
+							$fix_message = secupress_format_message( $fixes[ $option_name ]['msgs'], $class_name_part );
+						} else {
+							$fix_message = '';
 						}
 						?>
 						<tr class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> type-all status-all<?php echo $css_class; ?>">
@@ -564,15 +563,13 @@ function secupress_main_scan() {
 								</div>
 							</td>
 							<td class="secupress-result">
-								<?php echo $message; ?>
+								<?php echo $scan_message; ?>
 							</td>
-							<td class="secupress-fix-result<?php echo ' status-cantfix'; //// ?>">
-								<?php
-								if ( $status_class !== 'good' ) {
-									echo '<div class="secupress-fix-status">' . secupress_status( 'cantfix' ) . '</div>'; ////
-									//// Message avec <ul>
-								}
-								?>
+							<td class="secupress-fix-result<?php echo $fix_css_class; ?>">
+								<?php if ( $status_class !== 'good' ) {
+									echo '<div class="secupress-fix-status">' . $fix_status_text . '</div>';
+									echo $fix_message;
+								} ?>
 							</td>
 							<td>
 							<?php if ( $current_test::$fixable ) { ?>
