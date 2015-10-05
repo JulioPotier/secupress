@@ -38,7 +38,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 			200 => __( '%s (for example) should not be accessible to anyone.', 'secupress' ),
 			// cantfix
 			300 => sprintf( __( 'You run a nginx system, I cannot fix the directory listing disclosure but you can do it yourself with the following code: %s.', 'secupress' ), '<code>autoindex off;</code>' ),
-			301 => sprintf( __( 'You run an IIS7 system, I cannot fix the directory listing disclosure but you can do it yourself with the following code: %s.', 'secupress' ), '<code>zobbylamouche</code>' ), ////
+			301 => sprintf( __( 'You run an IIS7 system, I cannot fix the directory listing disclosure but you can do it yourself with the following code: %s.', 'secupress' ), '<code>(add IIS code here)</code>' ), //// iis7_url_rewrite_rules ?
 			302 => __( 'You don\'t run an Apache system, I cannot fix the directory listing disclosure.', 'secupress' ),
 			303 => sprintf( __( 'Your %1$s file is not writable. Please delete lines that may contain %2$s and add the following ones to the file: %3$s.', 'secupress' ), '<code>.htaccess</code>', '<code>Options +Indexes</code>', '<code>%s</code>' ),
 		);
@@ -137,6 +137,8 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 
 		if ( ! $fixed ) {
 			$this->add_fix_message( 303, array( $rules ) );
+		} else {
+			$this->add_fix_message( 0 );
 		}
 
 		return parent::fix();
