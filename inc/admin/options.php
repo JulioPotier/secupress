@@ -446,7 +446,6 @@ function secupress_main_scan() {
 							<option value="-1" selected="selected"><?php _e( 'Bulk Actions' ); ?></option>
 							<option value="scanit"><?php _e( 'Scan it', 'secupress' ); ?></option>
 							<option value="fixit"><?php _e( 'Fix it', 'secupress' ); ?></option>
-							<option value="fpositive"><?php _e( 'Mark as False Positive', 'secupress' ); ?></option>
 						</select>
 						<input type="button" id="doaction-<?php echo $prio_key; ?>" class="button action" value="<?php _e( 'Apply' ); ?>">
 					</div>
@@ -570,6 +569,8 @@ function secupress_main_scan() {
 									echo '<div class="secupress-fix-status">' . $fix_status_text . '</div>';
 									echo $fix_message;
 								} ?>
+
+
 							</td>
 							<td>
 							<?php if ( $current_test::$fixable ) { ?>
