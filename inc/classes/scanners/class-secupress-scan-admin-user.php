@@ -30,16 +30,21 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// good
-			0   => __( 'The <em>admin</em> account is correctly protected.', 'secupress' ),
+			0   => __( 'The %s account is correctly protected.', 'secupress' ),
+			1   => __( 'The %s account is not an Administrator anymore.', 'secupress' ),
 			// warning
 			100 => __( 'This fix is <strong>pending</strong>, please reload the page to apply it now.', 'secupress' ),
 			// bad
-			200 => __( 'The <em>admin</em> account role should not be <strong>Administrator</strong> but should have no role at all.', 'secupress' ),
-			201 => __( 'Because the user registration is open, the <em>admin</em> account should exist (with no role) to avoid someone to register it.', 'secupress' ),
+			200 => __( 'The %s account role should not be <strong>Administrator</strong> but should have no role at all.', 'secupress' ),
+			201 => __( 'Because the user registration is open, the %s account should exist (with no role) to avoid someone to register it.', 'secupress' ),
 			202 => __( 'Sorry, the username %s is forbidden!', 'secupress' ),
 			203 => __( 'Cannot create a user with an empty login name!' ), // WPi18n
 			204 => __( 'Sorry, the username %s already exists!', 'secupress' ),
 			205 => __( 'The username %s is invalid because it uses illegal characters.', 'secupress' ),
+			206 => __( 'Sorry, I couldn\'t remove the <strong>Administrator</strong> role from the %s account. You should try to remove its role manually.', 'secupress' ),
+			207 => __( 'Sorry, the %s account could not be created. You should try to create it manually and then remove its role.', 'secupress' ),
+			// cantfix
+			300 => __( 'Oh! The %s account is yours! Please choose a new login for your account.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -51,7 +56,8 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 
 
 	public function scan() {
-		$check = username_exists( 'admin' );
+		$username = 'admin';
+		$check    = username_exists( $username );
 
 		if ( get_transient( 'secupress-rename-admin-username' ) ) {
 			$this->add_message( 100 );
@@ -59,17 +65,17 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 			// Should not be administrator.
 			if ( false !== $check && user_can( $check, 'administrator' ) ) {
 				// bad
-				$this->add_message( 200 );
+				$this->add_message( 200, array( '<em>' . $username . '</em>' ) );
 			}
 
 			// // "admin" user should exist to avoid the creation of this user.
 			if ( get_option( 'users_can_register' ) && false === $check ) {
 				// bad
-				$this->add_message( 201 );
+				$this->add_message( 201, array( '<em>' . $username . '</em>' ) );
 			}
 		}
 		// good
-		$this->maybe_set_status( 0 );
+		$this->maybe_set_status( 0, array( '<em>' . $username . '</em>' ) );
 
 		return parent::scan();
 	}
@@ -77,7 +83,8 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 
 	public function fix() {
 
-		$check = username_exists( 'admin' );
+		$username     = 'admin';
+		$check        = username_exists( $username );
 		$current_user = wp_get_current_user();
 
 		// Should not be administrator.
@@ -85,18 +92,37 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 			if ( $check != $current_user->ID ) {
 				$user = new WP_User( $check );
 				$user->remove_role( 'administrator' );
+
+				if ( user_can( $user, 'administrator' ) ) {
+					// bad
+					$this->add_fix_message( 206, array( '<em>' . $username . '</em>' ) );
+				} else {
+					// good
+					$this->add_fix_message( 1, array( '<em>' . $username . '</em>' ) );
+				}
 			} else {
+				// This fix requires the user to take action.
+				$this->add_fix_message( 300, array( '<em>' . $username . '</em>' ) );
 				$this->add_fix_action( 'rename-admin-username' );
 			}
 		}
 
 		// "admin" user should exist to avoid the creation of this user.
 		if ( false === $check && get_option( 'users_can_register' ) ) {
-			wp_insert_user( array( 'user_login' => 'admin',
+			$user_id = wp_insert_user( array(
+				'user_login' => $username,
 				'user_pass'  => wp_generate_password( 64, 1, 1 ),
 				'user_email' => 'secupress_no_mail@fakemail.' . time(),
-				'role'       => '', )
-			);
+				'role'       => '',
+			) );
+
+			if ( is_wp_error( $user_id ) || ! $user_id ) {
+				// bad
+				$this->add_fix_message( 207, array( '<em>' . $username . '</em>' ) );
+			} else {
+				// good
+				$this->add_fix_message( 0, array( '<em>' . $username . '</em>' ) );
+			}
 		}
 
 		return parent::fix();
