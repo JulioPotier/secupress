@@ -30,8 +30,8 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements iSecuPress_Scan {
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// good
-			0   => __( 'All is ok, permissions are good.', 'secupress' ),
-			1   => __( 'All files fixed.', 'secupress' ),
+			0   => __( 'All files permissions are good.', 'secupress' ),
+			1   => __( 'All files permissions are fixed.', 'secupress' ),
 			// warning
 			100 => __( 'Unable to determine status of %s.', 'secupress' ),
 			// bad
@@ -57,17 +57,17 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements iSecuPress_Scan {
 		foreach ( $files as $file => $chmod ) {
 			// Current file perm
 			$current = (int) decoct( fileperms( $file ) & 0777 );
+			$file    = ltrim( str_replace( realpath( ABSPATH ), '', realpath( $file ) ), '\\' );
+			$file    = '' === $file ? '/' : $file;
 
 			if ( ! $current ) {
 				// warning: unable to determine file perm.
-				$file       = str_replace( ABSPATH, '', $file );
-				$file       = '' === $file ? '/' : $file;
 				$warnings[] = sprintf( '<code>%s</code>', $file );
 
 			} elseif ( $current > $chmod ) {
 				// bad
 				$this->add_message( 200, array(
-					sprintf( '<code>%s</code>', str_replace( ABSPATH, '', $file ) ),
+					sprintf( '<code>%s</code>', $file ),
 					sprintf( '<code>0%s</code>', $chmod ),
 					sprintf( '<code>0%s</code>', $current ),
 				) );
@@ -110,19 +110,15 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements iSecuPress_Scan {
 		foreach ( $files_tmp as $file => $chmod ) {
 			// Check if it worked.
 			$current = (int) decoct( fileperms( $file ) & 0777 );
+			$file    = ltrim( str_replace( realpath( ABSPATH ), '', realpath( $file ) ), '\\' );
+			$file    = '' === $file ? '/' : $file;
 
 			if ( ! $current ) {
 				// warning: unable to determine file perm.
-				$file       = str_replace( ABSPATH, '', $file );
-				$file       = '' === $file ? '/' : $file;
 				$warnings[] = sprintf( '<code>%s</code>', $file );
-
 			} elseif ( $current > $chmod ) {
 				// bad: unable to apply the file perm.
-				$file   = str_replace( ABSPATH, '', $file );
-				$file   = '' === $file ? '/' : $file;
 				$bads[] = sprintf( '<code>%s</code>', $file );
-
 			}
 		}
 
