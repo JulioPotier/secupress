@@ -34,7 +34,7 @@ class SecuPress_Scan_Plugins_Update extends SecuPress_Scan implements iSecuPress
 			// bad
 			200 => _n_noop( '<strong>%1$d</strong> plugin isn\'t up to date: %2$s.', '<strong>%1$d</strong> plugins aren\'t up to date: %2$s.', 'secupress' ),
 			// cantfix
-			300 => __( 'I can not fix this, you have to manually update your plugins.', 'secupress' ),
+			300 => __( 'Some plugins could not be updated correctly.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -89,6 +89,14 @@ class SecuPress_Scan_Plugins_Update extends SecuPress_Scan implements iSecuPress
 		}
 
 		ob_end_clean();
+
+		$plugins = get_site_transient( 'update_plugins' );
+		$plugins = isset( $plugins->response ) ? array_keys( $plugins->response ) : false;
+		if ( ! $plugins ) {
+			$this->add_fix_message( 0 );
+		} else {
+			$this->add_fix_message( 300 );
+		}
 
 		return parent::fix();
 	}

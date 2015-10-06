@@ -31,6 +31,8 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements iSecuPress_S
 		$messages = array(
 			// good
 			0   => __( 'Your subscription settings are set correctly.', 'secupress' ),
+			1   => __( 'A captcha module has been activated to block bot registration.', 'secupress' ),
+			2   => __( 'The user role for new registrations has been set to <strong>Subscriber</strong>.', 'secupress' ),
 			// warning
 			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
 			// bad
@@ -108,10 +110,13 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements iSecuPress_S
 		// Default role
 		if ( 'subscriber' !== get_option( 'default_role' ) ) {
 			update_option( 'default_role', 'subscriber' );
+			$this->add_fix_message( 1 );
 		}
 
 		// Bots: use a captcha.
 		secupress_activate_module( 'users-login', array( 'captcha_type' => 1, ) );
+
+		$this->add_fix_message( 2 );
 
 		return parent::fix();
 	}
