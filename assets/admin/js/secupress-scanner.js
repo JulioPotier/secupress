@@ -53,10 +53,10 @@ jQuery( document ).ready( function( $ ) {
 
 	function secupressUpdateScore( refresh ) {
 		var total                = $( ".status-all" ).length;
-		var status_good          = $( ".table-prio-all .status-good, .table-prio-all" ).length;
-		var status_warning       = $( ".table-prio-all .status-warning" ).length;
-		var status_bad           = $( ".table-prio-all .status-bad" ).length;
-		var status_notscannedyet = $( ".table-prio-all .status-notscannedyet" ).length;
+		var status_good          = $( ".table-prio-all tr.status-good" ).length;
+		var status_warning       = $( ".table-prio-all tr.status-warning" ).length;
+		var status_bad           = $( ".table-prio-all tr.status-bad" ).length;
+		var status_notscannedyet = $( ".table-prio-all tr.status-notscannedyet" ).length;
 		var percent              = Math.floor( status_good * 100 / total );
 		var letter               = "&ndash;";
 		var d, the_date, dashicon, score_results_ul, replacement, last_percent, now;
