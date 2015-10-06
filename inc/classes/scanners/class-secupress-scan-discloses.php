@@ -53,7 +53,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 
 	public function scan() {
 
-		$response     = wp_remote_get( home_url(), array( 'redirection' => 0 ) );
+		$response     = wp_remote_get( user_trailingslashit( home_url() ), array( 'redirection' => 0 ) );
 		$has_response = ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response );
 
 		if ( $has_response ) {
