@@ -31,16 +31,13 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 		$messages = array(
 			// good
 			0   => __( 'You don\'t have old <code>wp-config</code> files.', 'secupress' ),
+			1   => _n_noop( 'The file was suffixed with %s.', 'All files were suffixed with %s.', 'secupress' ),
 			// warning
-			100 => __( 'Some files still need to be deleted.', 'secupress' ),
-			101 => __( 'All selected files have been deleted (but some are still there).', 'secupress' ),
-			102 => __( 'Sorry, some files could not be deleted.', 'secupress' ),
-			103 => __( 'Please select at least one file.', 'secupress' ),
+			100 => _n_noop( '%1$d file was successfully suffixed with %2$s.', '%1$d files were successfully suffixed with %2$s.', 'secupress' ),
+			101 => _n_noop( 'Sorry, this file could not be renamed: %s', 'Sorry, those files could not be renamed: %s', 'secupress' ),
 			// bad
 			200 => _n_noop( 'Your installation should not contain this old or backed up config file: %s.', 'Your installation should not contain these old or backed up config files: %s.', 'secupress' ),
-			201 => _n_noop( 'Sorry, this file could not be deleted.', 'Sorry, those files could not be deleted.', 'secupress' ),
-			// cantfix
-			300 => __( 'I can\'t delete those files blindly, please make a selection.', 'secupress' ),
+			201 => _n_noop( 'Sorry, the file could not be renamed.', 'Sorry, the files could not be renamed.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -59,118 +56,68 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 			// bad
 			$files = self::wrap_in_tag( $files );
 			$this->add_message( 200, array( count( $files ), wp_sprintf_l( '%l', $files ) ) );
+		} else {
+			// good
+			$this->add_message( 0 );
 		}
-
-		// good
-		$this->maybe_set_status( 0 );
 
 		return parent::scan();
 	}
 
 
 	public function fix() {
+		global $wp_filesystem;
 
 		$files = static::get_files();
 
-		// There are files to delete.
-		if ( $files ) {
-			// This fix requires the user to take action.
-			$this->add_fix_message( 300 );
-			$this->add_fix_action( 'delete-files' );
-		} else {
-			// Should not happen.
+		// Should not happen.
+		if ( ! $files ) {
+			// good
 			$this->add_fix_message( 0 );
+			return parent::fix();
+		}
+
+		if ( ! $wp_filesystem ) {
+			require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php' );
+			require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php' );
+
+			$wp_filesystem = new WP_Filesystem_Direct( new StdClass() );
+		}
+
+		$count_all = count( $files );
+		$renamed   = array();
+		$suffix    = '.' . time() . '.secupress.php';
+
+		// Rename the files.
+		foreach ( $files as $filename ) {
+			$new_file = ABSPATH . $filename . $suffix;
+
+			if ( $wp_filesystem->move( ABSPATH . $filename, $new_file ) ) {
+				$wp_filesystem->chmod( $new_file, octdec( 644 ) );
+				// Counting the renamed files is safer that counting the not renamed ones.
+				$renamed[] = $filename;
+			}
+		}
+
+		$count_renamed = count( $renamed );
+
+		if ( $count_renamed === $count_all ) {
+			// good: all files were renamed.
+			$this->add_fix_message( 1, array( $count_all, '<code>' . $suffix . '</code>' ) );
+		} elseif ( $count_renamed ) {
+			// warning: some files could not be renamed.
+			$not_renamed = array_diff( $files, $renamed );
+			$not_renamed = static::wrap_in_tag( $not_renamed );
+
+			$this->add_fix_message( 100, array( $count_renamed, $count_renamed, '<code>' . $suffix . '</code>' ) );
+			$this->add_fix_message( 101, array( count( $not_renamed ), wp_sprintf_l( '%l', $not_renamed ) ) );
+		}
+		else {
+			// bad: no files could not be renamed.
+			$this->add_fix_message( 201, array( $count_all ) );
 		}
 
 		return parent::fix();
-	}
-
-
-	public function manual_fix() {
-		if ( ! $this->has_fix_action_part( 'delete-files' ) ) {
-			return parent::manual_fix();
-		}
-
-		if ( empty( $_POST['secupress-fix-wp-config-files'] ) || ! is_array( $_POST['secupress-fix-wp-config-files'] ) ) {
-			// warning
-			$this->add_fix_message( 103 );
-			$this->add_fix_action( 'delete-files' );
-			return parent::manual_fix();
-		}
-
-		$bad_files = static::get_files();
-		$count_all = count( $bad_files );
-		$files     = array_filter( $_POST['secupress-fix-wp-config-files'] );
-		$files     = array_intersect( $bad_files, $files );
-		$count     = count( $files );
-		$deleted   = 0;
-
-		// Should not happen.
-		if ( ! $count_all ) {
-			// good
-			$this->add_fix_message( 0 );
-			return parent::manual_fix();
-		}
-
-		// If a file was selected, it is not in the list anymore.
-		if ( ! $count ) {
-			// Let's play dumb and go to "partial": some files still need to be deleted.
-			$this->add_fix_message( 100 );
-			return parent::manual_fix();
-		}
-
-		// Delete the files.
-		foreach ( $files as $filename ) {
-			if ( is_writable( ABSPATH . $filename ) && @unlink( ABSPATH . $filename ) ) {
-				++$deleted;
-			}
-		}
-
-		// Everything's deleted, no files left.
-		if ( $deleted === $count_all ) {
-			// good
-			$this->add_fix_message( 0 );
-		}
-		// All selected files deleted.
-		elseif ( $deleted === $count ) {
-			// "partial": some files still need to be deleted.
-			$this->add_fix_message( 101 );
-		}
-		// No files deleted.
-		elseif ( ! $deleted ) {
-			// bad
-			$this->add_fix_message( 201, array( $count ) );
-		}
-		// Some files could not be deleted.
-		else {
-			// partial
-			$this->add_fix_message( 102 );
-		}
-
-		return parent::manual_fix();
-	}
-
-
-	public function get_fix_action_template_parts() {
-		$files = static::get_files();
-		$form = '';
-
-		if ( $files ) {
-
-			$form  = '<div class="show-input">';
-			$form .= '<h4>' . _n( 'The following file will be deleted:', 'The following files will be deleted:', count( $files ), 'secupress' ) . '</h4>';
-			$form .= '<div>';
-
-			foreach ( $files as $file ) {
-				$form .= '<input type="checkbox" checked="checked" id="secupress-fix-wp-config-file-' . sanitize_html_class( $file ) . '" name="secupress-fix-wp-config-files[]" value="' . esc_attr( $file ) . '"/> ';
-				$form .= '<label for="secupress-fix-wp-config-file-' . sanitize_html_class( $file ) . '"><code>' . esc_html( $file ) . '</code></label><br/>';
-			}
-
-			$form .= '</div>';
-			$form .= '</div>';
-		}
-
-		return array( 'delete-files' => $form );
 	}
 
 
