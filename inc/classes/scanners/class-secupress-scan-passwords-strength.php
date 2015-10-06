@@ -44,7 +44,7 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan {
 			202 => _n_noop( '%1$s is only <strong>%2$d character length</strong>. That is obviously too short!', '%1$s is only <strong>%2$d characters length</strong>.', 'secupress' ),
 			203 => __( '%s is not <strong>complex</strong> enough.', 'secupress' ),
 			// cantfix
-			300 => __( 'I can not fix this, you have to manually update your plugins, themes and WordPress core.', 'secupress' ),
+			300 => __( 'I can not fix this, you have to manually change your DB and/or FTP password in your server administration.', 'secupress' ), //// and/or ? better ?
 		);
 
 		if ( isset( $message_id ) ) {
@@ -107,7 +107,7 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan {
 
 	public function fix() {
 
-		// include the fix here.
+		$this->add_fix_message( 300 );
 
 		return parent::fix();
 	}
