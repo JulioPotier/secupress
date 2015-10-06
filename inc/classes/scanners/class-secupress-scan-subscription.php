@@ -110,13 +110,13 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements iSecuPress_S
 		// Default role
 		if ( 'subscriber' !== get_option( 'default_role' ) ) {
 			update_option( 'default_role', 'subscriber' );
-			$this->add_fix_message( 1 );
+			$this->add_fix_message( 2 );
 		}
 
 		// Bots: use a captcha.
 		secupress_activate_module( 'users-login', array( 'captcha_type' => 1, ) );
 
-		$this->add_fix_message( 2 );
+		$this->add_fix_message( 1 );
 
 		return parent::fix();
 	}
