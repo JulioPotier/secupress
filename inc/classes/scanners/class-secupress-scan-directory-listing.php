@@ -76,7 +76,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 
 
 	public function fix() {
-		global $wp_filesystem, $is_apache, $is_nginx, $is_iis7;
+		global $is_apache, $is_nginx, $is_iis7;
 
 		// Not Apache system, bail out.
 		if ( ! $is_apache ) {
@@ -109,15 +109,9 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 			return parent::fix();
 		}
 
-		if ( ! $wp_filesystem ) {
-			require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php' );
-			require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php' );
-
-			$wp_filesystem = new WP_Filesystem_Direct( new StdClass() );
-		}
-
 		// Get `.htaccess` content.
-		$file_content = $wp_filesystem->get_contents( $file_path );
+		$wp_filesystem = static::get_filesystem();
+		$file_content  = $wp_filesystem->get_contents( $file_path );
 
 		// Maybe remove `Options +Indexes`.
 		if ( preg_match_all( "/Options\s+\+Indexes\s*(?:\n|$)/", $file_content, $matches, PREG_SET_ORDER ) ) {

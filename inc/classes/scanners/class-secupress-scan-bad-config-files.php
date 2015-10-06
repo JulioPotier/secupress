@@ -31,7 +31,7 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 		$messages = array(
 			// good
 			0   => __( 'You don\'t have old <code>wp-config</code> files.', 'secupress' ),
-			1   => _n_noop( 'The file was suffixed with %s.', 'All files were suffixed with %s.', 'secupress' ),
+			1   => _n_noop( 'The file was successfully suffixed with %s.', 'All files were successfully suffixed with %s.', 'secupress' ),
 			// warning
 			100 => _n_noop( '%1$d file was successfully suffixed with %2$s.', '%1$d files were successfully suffixed with %2$s.', 'secupress' ),
 			101 => _n_noop( 'Sorry, this file could not be renamed: %s', 'Sorry, those files could not be renamed: %s', 'secupress' ),
@@ -66,8 +66,6 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 
 
 	public function fix() {
-		global $wp_filesystem;
-
 		$files = static::get_files();
 
 		// Should not happen.
@@ -77,16 +75,10 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 			return parent::fix();
 		}
 
-		if ( ! $wp_filesystem ) {
-			require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php' );
-			require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php' );
-
-			$wp_filesystem = new WP_Filesystem_Direct( new StdClass() );
-		}
-
-		$count_all = count( $files );
-		$renamed   = array();
-		$suffix    = '.' . time() . '.secupress.php';
+		$wp_filesystem = static::get_filesystem();
+		$count_all     = count( $files );
+		$renamed       = array();
+		$suffix        = '.' . time() . '.secupress.php';
 
 		// Rename the files.
 		foreach ( $files as $filename ) {

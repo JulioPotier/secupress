@@ -48,7 +48,6 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements iSecuPress_Sc
 	public function scan() {
 		ob_start();
 
-		// Core
 		if ( ! function_exists( 'get_preferred_from_update_core' ) ) {
 			require_once( ABSPATH . 'wp-admin/includes/update.php' );
 		}
@@ -75,23 +74,26 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements iSecuPress_Sc
 
 		ob_start();
 		@set_time_limit( 0 );
-		// Core
-		$core = get_preferred_from_update_core();
-		$version = isset( $core->version )? $core->version : false;
-		$locale = isset( $core->locale )? $core->locale : 'en_US';
+
+		$core    = get_preferred_from_update_core();
+		$version = isset( $core->version ) ? $core->version : false;
+		$locale  = isset( $core->locale )  ? $core->locale  : 'en_US';
+
 		if ( $version ) {
 			include_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
-			$url = 'update-core.php?action=do-core-upgrade';
-			$url = wp_nonce_url( $url, 'upgrade-core' );
+
+			$url    = 'update-core.php?action=do-core-upgrade';
+			$url    = wp_nonce_url( $url, 'upgrade-core' );
 			$update = find_core_update( $version, $locale );
+
 			if ( $update ) {
-				global $wp_filesystem;
 				$allow_relaxed_file_ownership = isset( $update->new_files ) && ! $update->new_files;
 				$credentials = request_filesystem_credentials( $url, '', false, ABSPATH, array( 'version', 'locale' ), $allow_relaxed_file_ownership );
+
 				if ( WP_Filesystem( $credentials, ABSPATH, $allow_relaxed_file_ownership ) ) {
 
 					$upgrader = new Core_Upgrader();
-					$result = $upgrader->upgrade( $update, array(
+					$result   = $upgrader->upgrade( $update, array(
 						'allow_relaxed_file_ownership' => $allow_relaxed_file_ownership
 					) );
 				}

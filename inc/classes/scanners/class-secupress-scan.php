@@ -442,6 +442,7 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 		return $priorities;
 	}
 
+
 	// Given an array of "things", wrap those "things" in a HTML tag.
 
 	final public static function wrap_in_tag( $array, $tag = 'code' ) {
@@ -454,6 +455,22 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 		}
 
 		return $out;
+	}
+
+
+	// A shothand to get the WP file system class object.
+
+	final protected static function get_filesystem() {
+		global $wp_filesystem;
+
+		if ( ! $wp_filesystem ) {
+			require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php' );
+			require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php' );
+
+			$wp_filesystem = new WP_Filesystem_Direct( new StdClass() );
+		}
+
+		return $wp_filesystem;
 	}
 
 }
