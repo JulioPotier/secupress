@@ -50,7 +50,7 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements iSecuPress_
 
 		require_once( ABSPATH . 'wp-admin/includes/update-core.php' );
 
-		$not_deleted = array();
+		$bads = array();
 
 		if ( empty( $_old_files ) || ! is_array( $_old_files ) ) {
 			// Should not happen.
