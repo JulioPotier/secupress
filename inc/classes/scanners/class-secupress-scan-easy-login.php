@@ -31,6 +31,7 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 		$messages = array(
 			// good
 			0   => __( 'The login page seems to be protected by double authentication or a custom script.', 'secupress' ),
+			1   => __( 'The <strong>Double Authentication</strong> module has been activated with <strong>EmailLink</strong> option. Users will receive an email to log-in now.', 'secupress' ),
 			// warning
 			100 => __( 'Unable to create a user to test the login authentication system.', 'secupress' ),
 			// bad
@@ -57,11 +58,11 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 			'user_email' => 'secupress_no_mail@fakemail.' . time(),
 			'role'       => 'secupress_no_role_' . time(),
 		) );
-
 		if ( ! is_wp_error( $temp_id ) ) {
 
 			$check = wp_authenticate( $temp_login, $temp_pass );
-			wp_delete_user( $temp_id );
+
+			wp_delete_user( $temp_id ); //// mettre cet ID en TR et le delete au prochain reload au cas où (déjà eu le cas mais pas compris why)
 
 			if ( is_a( $check, 'WP_User' ) ) {
 				// bad
@@ -82,8 +83,10 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 
 	public function fix() {
 
-		$settings = array( 'plugin_double_auth' => 'emaillink', 'double_auth_affected_role' => array() ); //// emaillink ?
+		$settings = array( 'double-auth_type' => 'emaillink', 'double_auth_affected_role' => array() );
 		secupress_activate_module( 'users-login', $settings );
+
+		$this->add_fix_message( 1 );
 
 		return parent::fix();
 	}

@@ -27,7 +27,7 @@ function secupress_googleauth_css() {
  */
 add_action( 'login_form', 'secupress_googleauth_loginform' );
 function secupress_googleauth_loginform( $echo = false ) {
-	if ( $echo || array() == get_secupress_module_option( 'double_auth_affected_role', false, 'users_login' ) ) {
+	if ( $echo || array() == secupress_get_module_option( 'double_auth_affected_role', false, 'users_login' ) ) {
 	?>
 	<p>
 	    <label>

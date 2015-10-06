@@ -18,10 +18,10 @@ $plugin = $this->get_current_plugin(); // 'double-auth'
  */
 $select_args_options = apply_filters( 'premium.module.' . $plugin, array(
 	'-1'            => __( 'No thank you', 'secupress' ) . ' <em>(' . __( 'Not recommended', 'secupress' ) . ')</em>',
-	'googleauth'    => __( 'Google Authenticator', 'secupress' ),
-	'_passwordless' => __( 'PasswordLess', 'secupress' ) . ' <em>(' . __( 'by mail, iOS or Android notifications', 'secupress' ) . ')</em>',
+	'_passwordless' => __( 'PasswordLess (notifications by E-mail, mobile, Slack, SMS.)', 'secupress' ),
+	'googleauth'    => __( 'Mobile Authenticator App (Google Auth, FreeOTP, ...)', 'secupress' ),
 	'emaillink'     => __( 'Email Link', 'secupress' ),
-	'password'      => __( 'Additional Password', 'secupress' ),
+	// 'password'      => __( 'Additional Password', 'secupress' ),
 ) );
 
 $field_name      = $this->get_field_name( 'type' );
@@ -44,14 +44,8 @@ $this->add_field(
 		array(
 			'type'         => 'helper_description',
 			'name'         => $field_name,
-			'description'  => __( 'When you log in, you\'ll receive an email with a link to be clicked, then, you\'ll be logged in.', 'secupress' ),
-			'depends_on'   => $field_name . '_emaillink',
-		),
-		array(
-			'type'         => 'helper_warning',
-			'name'         => $field_name,
-			'description'  => sprintf( __( 'Is <code>%1$s</code> a valid email address? If not, <a href="%2$s">change it before logging out</a>.', 'secupress' ), $current_user->user_email, get_edit_profile_url( $current_user->ID ) . '#email' ),
-			'depends_on'   => $field_name . '_emaillink',
+			'description'  => __( 'Users will just have to configure the authentication in their profile.', 'secupress' ),
+			'depends_on'   => $field_name . '_googleauth',
 		),
 	)
 );
@@ -71,7 +65,7 @@ $this->add_field(
 		),
 	)
 );
-
+/*
 $field_name          = $this->get_field_name( 'password' );
 $field_name_password = $this->get_field_name( 'password2' );
 
@@ -108,7 +102,7 @@ $this->add_field(
 		),
 	)
 );
-
+*/
 
 $plugin = $this->set_current_plugin( 'captcha' )->get_current_plugin();
 
