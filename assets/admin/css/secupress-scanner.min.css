@@ -29,14 +29,6 @@
 	font-size: 13px;
 }
 
-.secupress-row-actions .scanit,
-.status-notscannedyet .secupress-row-actions .rescanit {
-	display: none;
-}
-.status-notscannedyet .secupress-row-actions .scanit {
-	display: inline-block;
-}
-
 .status-good .fixit,
 .status-notscannedyet .fixit {
 	display: none;
@@ -263,7 +255,7 @@ th.secupress-check {
 	vertical-align: top;
 }
 #secupress-tests thead .secupress-check-column,
-#secupress-tests foot .secupress-check-column {
+#secupress-tests tfoot .secupress-check-column {
 	padding: 0 0 0 3px;
 	vertical-align: middle;
 }
@@ -278,7 +270,8 @@ th.secupress-check {
 /**/
 #tweeterA span {
 	color: #55acee;
-}.disabled {
-    border-color: #ccc;
-    color: #ccc;
+}
+.disabled {
+	border-color: #ccc;
+	color: #ccc;
 }
