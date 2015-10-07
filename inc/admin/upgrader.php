@@ -57,9 +57,9 @@ add_action( 'wp_secupress_first_install', 'secupress_install_modules' );
 function secupress_install_modules( $module = 'all' ) {
 	if ( 'all' === $module ) {
 		// Generate an random key
-		$secret_cache_key = create_secupress_uniqid();
+		// $secret_cache_key = secupress_create_uniqid();
 
-		secupress_dismiss_box( 'secupress_warning_plugin_modification' );
+		// secupress_dismiss_box( 'secupress_warning_plugin_modification' );
 		//// secupress_reset_white_label_values( false );
 
 		// Create Options
