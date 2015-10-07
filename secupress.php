@@ -145,6 +145,12 @@ function secupress_load_plugins() {
 			}
 		}
 	}
+	/**
+	 * Once all our plugins/submodules has been loaded
+	 *
+	 * @since 1.0
+	 */
+	do_action( 'secupress_plugins_loaded' );
 }
 
 
