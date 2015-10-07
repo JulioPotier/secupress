@@ -115,8 +115,8 @@ jQuery( document ).ready( function( $ ) {
 		}
 
 		secupressChart.segments[0].value = status_good;
-		secupressChart.segments[1].value = status_warning;
-		secupressChart.segments[2].value = status_bad;
+		secupressChart.segments[1].value = status_bad;
+		secupressChart.segments[2].value = status_warning;
 		secupressChart.segments[3].value = status_notscannedyet;
 		secupressChart.update();
 	}
