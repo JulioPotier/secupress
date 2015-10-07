@@ -128,7 +128,7 @@ function secupress_load_plugins() {
 		foreach ( $modules as $key => $module ) {
 			$file = SECUPRESS_MODULES_PATH . sanitize_key( $key ) . '/callbacks.php';
 			if ( file_exists( $file ) ) {
-				require( $file );
+				require_once( $file );
 			}
 		}
 	}
@@ -140,7 +140,7 @@ function secupress_load_plugins() {
 			foreach ( $plugins as $plugin ) {
 				$file = SECUPRESS_MODULES_PATH . sanitize_key( $module ) . '/plugins/' . sanitize_key( $plugin ) . '.php';
 				if ( file_exists( $file ) ) {
-					require( $file );
+					require_once( $file );
 				}
 			}
 		}
