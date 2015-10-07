@@ -116,6 +116,7 @@ function secupress_dismiss_box( $function ) {
 /**
  * Is this version White Labeled?
  *
+ * @return string
  * @since 1.0
  */
 function secupress_is_white_label() {
@@ -135,7 +136,6 @@ function secupress_is_white_label() {
  * Reset white label options
  *
  * @since 1.0
- *
  * @return void
  */
 function secupress_reset_white_label_values( $hack_post ) {
@@ -161,16 +161,44 @@ function secupress_reset_white_label_values( $hack_post ) {
  * Create a unique id for some secupress options and functions
  *
  * @since 1.0
+ * @return string
  */
-function create_secupress_uniqid() {
+function secupress_create_uniqid() {
 	return str_replace( '.', '', uniqid( '', true ) );
 }
 
-
+/**
+ * Die with SecuPress format
+ *
+ * @since 1.0
+ * @return string
+ */
 function secupress_die( $message = '', $title = '', $args = array() ) {
 	wp_die( '<h1>' . SECUPRESS_PLUGIN_NAME . '</h1><p>' . $message . '</p>', $title, $args );
 }
 
+/**
+ * Block a request and die with more informations
+ *
+ * @since 1.0
+ * @return string
+ */
+function secupress_block( $module ) {
+	
+	$code = ucwords( str_replace( '-', ' ', $module ) );
+	$code = preg_replace( '/[^0-9A-Z]/', '', $code );
+
+	do_action( 'module.' . $module . '.trigger', secupress_get_ip(), $code );
+
+	status_header( 403 );
+	$title   = '<h4>' . __( '403 Access Forbidden', 'secupress' ) . '</h4>';
+	$content = '<p>' . __( 'You are not allowed to access the requested page.', 'secupress' ) . '</p>';
+	$details = '<h4>' . __( 'Logged Details:', 'secupress' ) . '</h4><p>';
+	$details .= sprintf( __( 'Your IP: %s', 'secupress' ), secupress_get_ip() ) . '<br>';
+	$details .= sprintf( __( 'Time: %s', 'secupress' ), date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ) ) . '<br>';
+	$details .= sprintf( __( 'Block ID: %s', 'secupress' ), $code ) . '</p>';
+	secupress_die( $title . $content . $details );
+}
 
 function secupress_deactivate_submodule( $module, $plugins ) {
 	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
