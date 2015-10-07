@@ -17,8 +17,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 	 * @var Singleton The reference to *Singleton* instance of this class
 	 */
 	protected static $_instance;
-	protected static $fix_rules = "<IfModule mod_autoindex.c>\nOptions -Indexes\n</IfModule>";
-	public    static $prio      = 'high';
+	public    static $prio = 'high';
 
 
 	protected static function init() {
@@ -32,6 +31,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 		$messages = array(
 			// good
 			0   => __( 'Your site does not reveal the files list.', 'secupress' ),
+			1   => sprintf( __( 'Your %s file has been successfully edited.', 'secupress' ), '<code>.htaccess</code>' ),
 			// warning
 			100 => __( 'Unable to determine status of %s.', 'secupress' ),
 			// bad
@@ -40,7 +40,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 			300 => sprintf( __( 'You run a nginx system, I cannot fix the directory listing disclosure but you can do it yourself with the following code: %s.', 'secupress' ), '<code>autoindex off;</code>' ),
 			301 => sprintf( __( 'You run an IIS7 system, I cannot fix the directory listing disclosure but you can do it yourself with the following code: %s.', 'secupress' ), '<code>(add IIS code here)</code>' ), //// iis7_url_rewrite_rules ?
 			302 => __( 'You don\'t run an Apache system, I cannot fix the directory listing disclosure.', 'secupress' ),
-			303 => sprintf( __( 'Your %1$s file is not writable. Please delete lines that may contain %2$s and add the following ones to the file: %3$s.', 'secupress' ), '<code>.htaccess</code>', '<code>Options +Indexes</code>', '<code>%s</code>' ),
+			303 => sprintf( __( 'Your %1$s file is not writable. Please delete lines that may contain %2$s and add the following ones to the file: %3$s', 'secupress' ), '<code>.htaccess</code>', '<code>Options +Indexes</code>', '<pre>%s</pre>' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -100,7 +100,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 		}
 
 		$file_path = get_home_path() . '.htaccess';
-		$rules     = static::$fix_rules;
+		$rules     = "<IfModule mod_autoindex.c>\n    Options -Indexes\n</IfModule>";
 		$rules     = "# BEGIN SecuPress directory_listing\n$rules\n# END SecuPress";
 
 		// `.htaccess` not writable, bail out.
@@ -129,10 +129,10 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 
 		$fixed = $wp_filesystem->put_contents( $file_path, $file_content, $chmod );
 
-		if ( ! $fixed ) {
-			$this->add_fix_message( 303, array( $rules ) );
+		if ( $fixed ) {
+			$this->add_fix_message( 1 );
 		} else {
-			$this->add_fix_message( 0 );
+			$this->add_fix_message( 303, array( $rules ) );
 		}
 
 		return parent::fix();
