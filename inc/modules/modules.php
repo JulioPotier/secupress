@@ -72,12 +72,12 @@ function secupress_get_modules() {
 				__( '', 'secupress' ),
 			),
 		),		
-		'common-flaws'    => array(
-			'title'       => esc_html__( 'Common Flaws', 'secupress' ),
-			'dashicon'    => 'flag',
+		'firewall'     => array(
+			'title'       => esc_html__( 'Firewall', 'secupress' ),
+			'dashicon'    => 'shield',
 			'description' => array(
-				__( '', 'secupress' ),
-				__( '', 'secupress' ),
+				__( 'Malicious URL requests are badly common. This will checks all incoming requests and quietly blocks all of these containing bad stuff.', 'secupress' ),
+				__( 'bla', 'secupress' ),
 			),
 		),
 		'logs'            => array(
