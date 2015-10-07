@@ -32,10 +32,11 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 			// good
 			0   => __( 'Your site does not reveal sensitive informations.', 'secupress' ),
 			1   => __( 'The rules against the php version disclosure have been successfully added to your %s file.', 'secupress' ),
-			2   => __( 'The generator meta tag should not be displayed anymore.', 'secupress' ),
-			3   => __( 'The WordPress version should be removed from your styles URL now.', 'secupress' ),
-			4   => __( 'The WordPress version should be removed from your scripts URL now.', 'secupress' ),
-			5   => __( 'The rules forbidding access to your %1$s file have been successfully added to your %2$s file.', 'secupress' ),
+			2   => __( 'As the rules against the php version disclosure added to your %s file do not seem to work, we remove this information directly with php.', 'secupress' ),
+			3   => __( 'The generator meta tag should not be displayed anymore.', 'secupress' ),
+			4   => __( 'The WordPress version should be removed from your styles URL now.', 'secupress' ),
+			5   => __( 'The WordPress version should be removed from your scripts URL now.', 'secupress' ),
+			6   => __( 'The rules forbidding access to your %1$s file have been successfully added to your %2$s file.', 'secupress' ),
 			// warning
 			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
 			101 => sprintf( __( 'Unable to determine status of %s.', 'secupress' ), '<code>' . home_url( 'readme.html' ) . '</code>' ),
@@ -146,7 +147,8 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 			$is_nginx = ! empty( $_SERVER['SERVER_SOFTWARE'] ) && strpos( $_SERVER['SERVER_SOFTWARE'], 'nginx' ) !== false;
 		}
 
-		$wp_version = get_bloginfo( 'version' );
+		$wp_version  = get_bloginfo( 'version' );
+		$php_version = phpversion();
 
 		// Get home page contents.
 		$response     = wp_remote_get( user_trailingslashit( home_url() ), array( 'redirection' => 0 ) );
@@ -159,7 +161,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 			$body = wp_remote_retrieve_body( $response );
 
 			// PHP version in headers.
-			if ( false !== strpos( $head, phpversion() ) ) {
+			if ( false !== strpos( $head, $php_version ) ) {
 
 				if ( $is_nginx ) {
 					$this->add_fix_message( 300 );
@@ -172,12 +174,28 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 					$rules = "<IfModule mod_headers.c>\n    Header unset X-Powered-By\n</IfModule>";
 
 					if ( secupress_write_htaccess( 'php_version_disclose', $rules ) ) {
+
+						// good
 						$this->add_fix_message( 1, array( '<code>.htaccess</code>' ) );
+
+						// Test our rule works.
+						$response_test = wp_remote_get( user_trailingslashit( home_url() ), array( 'redirection' => 0 ) );
+
+						if ( ! is_wp_error( $response_test ) && 200 === wp_remote_retrieve_response_code( $response_test ) ) {
+
+							$head = wp_remote_retrieve_header( $response_test, 'x-powered-by' );
+
+							if ( false !== strpos( $head, $php_version ) ) {
+								// good
+								secupress_activate_submodule( 'discloses', 'php-version' );
+								$this->add_fix_message( 2, array( '<code>.htaccess</code>' ) );
+							}
+						}
+
 					} else {
+						// cantfix
 						$this->add_fix_message( 303, array( '<code>.htaccess</code>', "<pre># BEGIN SecuPress php_version_disclose\n$rules\n# END SecuPress</pre>" ) );
 					}
-
-					//// scan + alternative?
 				}
 
 			}
@@ -186,8 +204,9 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 			preg_match_all( '#<meta[^>]*[name="generator"]?[^>]*content="WordPress ' . $wp_version . '"[^>]*[name="generator"]?[^>]*>#si', $body, $matches );
 
 			if ( count( array_filter( $matches ) ) ) {
+				// good
 				secupress_activate_submodule( 'discloses', 'generator' );
-				$this->add_fix_message( 2 );
+				$this->add_fix_message( 3 );
 			}
 
 		} else {
@@ -199,16 +218,18 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 		$style_url = home_url( '/fake.css?ver=' . $wp_version );
 
 		if ( $style_url === apply_filters( 'style_loader_src', $style_url, 'secupress' ) ) {
+			// good
 			secupress_activate_submodule( 'discloses', 'wp-version-css' );
-			$this->add_fix_message( 3 );
+			$this->add_fix_message( 4 );
 		}
 
 		// What about script tag src?
 		$script_url = home_url( '/fake.js?ver=' . $wp_version );
 
 		if ( $script_url === apply_filters( 'script_loader_src', $script_url, 'secupress' ) ) {
+			// good
 			secupress_activate_submodule( 'discloses', 'wp-version-js' );
-			$this->add_fix_message( 4 );
+			$this->add_fix_message( 5 );
 		}
 
 		// Readme file.
@@ -229,8 +250,10 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 					$rules = "<files readme.html>\n    deny from all\n</files>";
 
 					if ( secupress_write_htaccess( 'readme_version_disclose', $rules ) ) {
-						$this->add_fix_message( 5, array( '<code>readme.html</code>', '<code>.htaccess</code>' ) );
+						// good
+						$this->add_fix_message( 6, array( '<code>readme.html</code>', '<code>.htaccess</code>' ) );
 					} else {
+						// cantfix
 						$this->add_fix_message( 303, array( '<code>.htaccess</code>', "<pre># BEGIN SecuPress readme_version_disclose\n$rules\n# END SecuPress</pre>" ) );
 					}
 				}
@@ -241,6 +264,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 			$this->add_fix_message( 101 );
 		}
 
+		// good
 		$this->maybe_set_fix_status( 0 );
 
 		return parent::fix();
