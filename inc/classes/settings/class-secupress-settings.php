@@ -366,7 +366,7 @@ abstract class SecuPress_Settings {
 
 				case 'textarea' :
 
-					$value = esc_textarea( implode( "\n" , $value ) );
+					$value = is_array( $value ) ? esc_textarea( implode( "\n" , $value ) ) : esc_textarea( $value );
 					?>
 					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
 					<label>
