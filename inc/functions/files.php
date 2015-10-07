@@ -146,16 +146,16 @@ function secupress_put_contents( $file, $marker, $new_content ) {
 	$file_content = '';
 	if ( file_exists( $file ) ) {
 		$ftmp         = file_get_contents( $file );
-		$file_content = preg_replace( '/' . $comment_char . ' BEGIN SecuPress ' . $marker . '(.*)' . $comment_char . ' END SecuPress/isU', '', $ftmp );
+		$file_content = preg_replace( '/' . $comment_char . ' BEGIN SecuPress ' . $marker . '(.*)' . $comment_char . ' END SecuPress\s*?/isU', '', $ftmp );
 	}
-	
+
 	// Remove empty spacings
 	$ftmp = str_replace( "\n\n" , "\n" , $ftmp );
 
 	if ( ! empty( $new_content ) ) {
 		$content  = $comment_char . ' BEGIN SecuPress ' . $marker . PHP_EOL;
 		$content .= trim( $new_content ) . PHP_EOL;
-		$content .= $comment_char . ' END SecuPress' . PHP_EOL;
+		$content .= $comment_char . ' END SecuPress' . PHP_EOL . PHP_EOL;
 		$content .= $file_content;
 		$file_content = $content;
 	}
