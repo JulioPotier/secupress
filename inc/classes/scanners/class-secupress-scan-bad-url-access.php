@@ -55,7 +55,6 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 		remove_all_filters( 'home_url' );
 
 		$urls = array(
-			site_url( 'wp-login.php', 'login' ),
 			home_url( 'php.ini' ),
 			admin_url( 'install.php' ),
 			admin_url( 'menu-header.php' ),
