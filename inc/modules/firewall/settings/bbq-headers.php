@@ -13,7 +13,7 @@ $this->add_field(
 	__( 'Block Bad User-Agents', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description' => __( 'You can easily add or remove bad keywords to adjust you needs.', 'secupress' ),
+		'description' => __( '', 'secupress' ), //// ?
 	),
 	array(
 		array(
@@ -52,6 +52,31 @@ $this->add_field(
 			'type'         => 'helper_description',
 			'name'         => $field_name,
 			'description' => __( 'Add or remove User-Agents you want to be blocked, or not.', 'secupress' ),
+		),
+	)
+);
+
+$field_name = $this->get_field_name( 'request-methods-header' );
+$main_field_name = $field_name;
+
+$this->add_field(
+	__( 'Block Bad Request Methods', 'secupress' ),
+	array(
+		'name'        => $field_name,
+		'description' => __( 'The 3 known safe request methods are <code>GET</code>, <code>POST</code> and <code>HEAD</code>.', 'secupress' ), //// ?
+	),
+	array(
+		array(
+			'type'         => 'checkbox',
+			'name'         => $field_name,
+			'label'        => __( 'Yes, protect my site from bad request methods', 'secupress' ),
+			'label_for'    => $field_name,
+			'label_screen' => __( 'Yes, protect my site from bad request methods', 'secupress' ),
+		),
+		array(
+			'type'         => 'helper_description',
+			'name'         => $field_name,
+			'description'  => __( 'Some other request methods can be used to retreive information from your site, avoid them! This will also block malformed HTTP like old HTTP/1.0 POST or POST without Referer.', 'secupress' ),
 		),
 	)
 );

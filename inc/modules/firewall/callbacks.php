@@ -17,5 +17,11 @@ function __secupress_firewall_settings_callback( $settings ) {
 		secupress_deactivate_submodule( $modulenow, 'user-agents-header' );
 	}
 	
+	if ( isset( $settings['bbq-headers_request-methods-header'] ) ) {
+		secupress_activate_submodule( $modulenow, 'request-methods-header' );
+	} else {
+		secupress_deactivate_submodule( $modulenow, 'request-methods-header' );
+	}
+	
 	return $settings;
 }
