@@ -2,6 +2,18 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /**
+ * Return true is secupress premium is installed
+ *
+ * @since 1.0
+ * @source wp-admin/includes/plugin.php
+ * @return bool
+ */
+function secupress_is_premium() {
+	return defined( 'SECUPRESS_PREMIUM_VERSION' );
+}
+
+
+/**
  * Check whether the plugin is active by checking the active_plugins list.
  *
  * @since 1.0

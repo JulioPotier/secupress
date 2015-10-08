@@ -31,7 +31,8 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 		$messages = array(
 			// good
 			0   => __( 'The login page seems to be protected by double authentication or a custom script.', 'secupress' ),
-			1   => __( 'The <strong>Double Authentication</strong> module has been activated with <strong>EmailLink</strong> option. Users will receive an email to log-in now.', 'secupress' ),
+			1   => __( 'The <strong>Double Authentication</strong> module has been activated with <strong>Mobile Authenticator App</strong> option.', 'secupress' ),
+			2   => __( 'The <strong>Double Authentication</strong> module has been activated with <strong>PasswordLess - Email</strong> option. Users will receive an email to log-in now.', 'secupress' ),
 			// warning
 			100 => __( 'Unable to create a user to test the login authentication system.', 'secupress' ),
 			// bad
@@ -83,10 +84,14 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 
 	public function fix() {
 
-		$settings = array( 'double-auth_type' => 'emaillink', 'double_auth_affected_role' => array() );
+		if ( ! secupress_is_premium() ) {
+			$settings = array( 'double-auth_type' => 'googleauth', 'double_auth_affected_role' => array() );
+			$this->add_fix_message( 1 );
+		} else {
+			$settings = array( 'double-auth_type' => 'passwordless', 'double-auth_passwordless-type' => 'email', 'double_auth_affected_role' => array() );
+			$this->add_fix_message( 2 );
+		}
 		secupress_activate_module( 'users-login', $settings );
-
-		$this->add_fix_message( 1 );
 
 		return parent::fix();
 	}
