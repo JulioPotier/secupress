@@ -473,4 +473,52 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 		return $wp_filesystem;
 	}
 
+
+	/*
+	 * A sandbox for doing crazy things with `.htaccess`.
+	 * Create a folder containing a `.htaccess` file with the provided content and a `secupress.html` file.
+	 * Then, make a request to the `secupress.html` file to test if a server error is triggered.
+	 *
+	 * @param  (string)        The content to put in the `.htaccess` file.
+	 * @return (WP_Error|bool) Return true if the server does not trigger an error 500, false otherwise.
+	 *                         Return a WP_Error object if the sandbox creation fails or if the HTTP request fails.
+	 */
+
+	final protected static function htaccess_success_in_sandbox( $content ) {
+		$wp_filesystem = static::get_filesystem();
+		$folder_name   = 'secupress-sandbox-' . uniqid();
+		$folder_path   = ABSPATH . '/' . $folder_name;
+
+		// Create folder.
+		if ( ! $wp_filesystem->mkdir( $folder_path ) ) {
+			return new WP_Error( 'dir_creation_failed', __( 'The sandbox could not be created.', 'secupress' ) );
+		}
+
+		// Create `secupress.html` file.
+		if ( ! $wp_filesystem->put_contents( $folder_path . '/secupress.html', 'You are here.', FS_CHMOD_FILE ) ) {
+			$wp_filesystem->delete( $folder_path, true );
+			return new WP_Error( 'file_creation_failed', __( 'The sandbox could not be created.', 'secupress' ) );
+		}
+
+		// Create `.htaccess` file with our content.
+		if ( ! $wp_filesystem->put_contents( $folder_path . '/.htaccess', $content, FS_CHMOD_FILE ) ) {
+			$wp_filesystem->delete( $folder_path, true );
+			return new WP_Error( 'htaccess_creation_failed', __( 'The sandbox could not be created.', 'secupress' ) );
+		}
+
+		// Try to reach `secupress.html`.
+		$response = wp_remote_get( site_url( $folder_name . '/secupress.html' ), array( 'redirection' => 0 ) );
+
+		// Now we can get rid of the files.
+		$wp_filesystem->delete( $folder_path, true );
+
+		// HTTP requests are probably blocked.
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		// Finally, the answer we were looking for.
+		return 500 !== wp_remote_retrieve_response_code( $response );
+	}
+
 }
