@@ -43,8 +43,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 			// bad
 			200 => __( 'The website displays the <strong>PHP version</strong> in the request headers.', 'secupress' ),
 			201 => __( 'The website displays the <strong>WordPress version</strong> in the homepage source code (%s).', 'secupress' ),
-			202 => __( 'The website displays the <strong>WordPress version</strong> in the homepage source code.', 'secupress' ),
-			203 => sprintf( __( '<code>%s</code> should not be accessible by anyone.', 'secupress' ), home_url( 'readme.html' ) ),
+			202 => sprintf( __( '<code>%s</code> should not be accessible by anyone.', 'secupress' ), home_url( 'readme.html' ) ),
 			// cantfix
 			300 => sprintf( __( 'You run a nginx system, I cannot fix the PHP version disclosure in headers but you can do it yourself with the following code: %s.', 'secupress' ), '<code>(add nginx code here)</code>' ), ////
 			301 => sprintf( __( 'You run an IIS7 system, I cannot fix the PHP version disclosure in headers but you can do it yourself with the following code: %s.', 'secupress' ), '<code>(add IIS code here)</code>' ), //// iis7_url_rewrite_rules ?
@@ -63,6 +62,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 	public function scan() {
 
 		$wp_version   = get_bloginfo( 'version' );
+		$php_version  = phpversion();
 		$wp_discloses = array();
 
 		// Get home page contents.
@@ -70,8 +70,8 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 		$has_response = ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response );
 
 		if ( $has_response ) {
-			$head = wp_remote_retrieve_header( $response, 'x-powered-by' );
-			$body = wp_remote_retrieve_body( $response );
+			$powered_by = wp_remote_retrieve_header( $response, 'x-powered-by' );
+			$body       = wp_remote_retrieve_body( $response );
 		} else {
 			// warning
 			$this->add_message( 100 );
@@ -81,7 +81,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 		if ( $has_response ) {
 
 			// PHP version in headers.
-			if ( false !== strpos( $head, phpversion() ) ) {
+			if ( false !== strpos( $powered_by, $php_version ) ) {
 				// bad
 				$this->add_message( 200 );
 			}
@@ -125,7 +125,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 
 			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
 				// bad
-				$this->add_message( 203 );
+				$this->add_message( 202 );
 			}
 
 		} else {
@@ -157,11 +157,11 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 		// Generator meta tag + php header.
 		if ( $has_response ) {
 
-			$head = wp_remote_retrieve_header( $response, 'x-powered-by' );
-			$body = wp_remote_retrieve_body( $response );
+			$powered_by = wp_remote_retrieve_header( $response, 'x-powered-by' );
+			$body       = wp_remote_retrieve_body( $response );
 
 			// PHP version in headers.
-			if ( false !== strpos( $head, $php_version ) ) {
+			if ( false !== strpos( $powered_by, $php_version ) ) {
 
 				if ( $is_nginx ) {
 					$this->add_fix_message( 300 );
@@ -184,9 +184,9 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 
 						if ( ! is_wp_error( $response_test ) && 200 === wp_remote_retrieve_response_code( $response_test ) ) {
 
-							$head = wp_remote_retrieve_header( $response_test, 'x-powered-by' );
+							$powered_by = wp_remote_retrieve_header( $response_test, 'x-powered-by' );
 
-							if ( false !== strpos( $head, $php_version ) ) {
+							if ( false !== strpos( $powered_by, $php_version ) ) {
 								// good
 								secupress_activate_submodule( 'discloses', 'php-version' );
 								$this->add_fix_message( 2, array( '<code>.htaccess</code>' ) );
