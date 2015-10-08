@@ -171,7 +171,8 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 					$this->add_fix_message( 302 );
 				} else {
 					// .htaccess
-					$rules = "<IfModule mod_headers.c>\n    Header unset X-Powered-By\n</IfModule>";
+					$rules  = "ServerSignature Off\n";
+					$rules .= "<IfModule mod_headers.c>\n    Header unset X-Powered-By\n</IfModule>";
 
 					if ( secupress_write_htaccess( 'php_version_disclose', $rules ) ) {
 
