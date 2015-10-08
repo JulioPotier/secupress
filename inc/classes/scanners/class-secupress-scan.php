@@ -468,6 +468,14 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 			require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php' );
 
 			$wp_filesystem = new WP_Filesystem_Direct( new StdClass() );
+
+			// Set the permission constants if not already set.
+			if ( ! defined( 'FS_CHMOD_DIR' ) ) {
+				define( 'FS_CHMOD_DIR', ( fileperms( ABSPATH ) & 0777 | 0755 ) );
+			}
+			if ( ! defined( 'FS_CHMOD_FILE' ) ) {
+				define( 'FS_CHMOD_FILE', ( fileperms( ABSPATH . 'index.php' ) & 0777 | 0644 ) );
+			}
 		}
 
 		return $wp_filesystem;
