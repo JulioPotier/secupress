@@ -31,11 +31,25 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 		$messages = array(
 			// good
 			0   => __( 'You don\'t have any deactivated plugins or themes.', 'secupress' ),
+			1   => __( 'All inactive plugins have been deleted.', 'secupress' ),
+			2   => __( 'All inactive themes have been deleted.', 'secupress' ),
+			// wraning
+			100 => __( 'No plugins selected.', 'secupress' ),
+			101 => __( 'All selected plugins have been deleted (but some are still there).', 'secupress' ),
+			102 => _n_noop( 'Sorry, the following plugin could not be deleted: %s.', 'Sorry, the following plugins could not be deleted: %s.', 'secupress' ),
+			103 => __( 'No themes selected.', 'secupress' ),
+			104 => __( 'All selected themes have been deleted (but some are still there).', 'secupress' ),
+			105 => _n_noop( 'Sorry, the following theme could not be deleted: %s.', 'Sorry, the following themes could not be deleted: %s.', 'secupress' ),
 			// bad
-			200 => _n_noop( '<strong>%d deactivated plugin</strong>, if you don\'t need it, delete it: %s', '<b>%d deactivated plugins</b>, if you don\'t need them, delete them: %s', 'secupress' ),
-			201 => _n_noop( '<strong>%d deactivated theme</strong>, if you don\'t need it, delete it: %s', '<b>%d deactivated themes</b>, if you don\'t need them, delete them: %s', 'secupress' ),
+			200 => _n_noop( '<strong>%d deactivated plugin</strong>, if you don\'t need it, delete it: %s', '<strong>%d deactivated plugins</strong>, if you don\'t need them, delete them: %s', 'secupress' ),
+			201 => _n_noop( '<strong>%d deactivated theme</strong>, if you don\'t need it, delete it: %s', '<strong>%d deactivated themes</strong>, if you don\'t need them, delete them: %s', 'secupress' ),
+			202 => _n_noop( 'Sorry, this plugin could not be deleted.', 'Sorry, those plugins could not be deleted.', 'secupress' ),
+			203 => _n_noop( 'Sorry, this theme could not be deleted.', 'Sorry, those themes could not be deleted.', 'secupress' ),
 			// cantfix
-			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
+			300 => _n_noop( '%d plugin is deactivated.', '%d plugins are deactivated.', 'secupress' ),
+			301 => _n_noop( '%d theme is deactivated.', '%d themes are deactivated.', 'secupress' ),
+			302 => __( 'Unable to locate WordPress Plugin directory.' ), // WPi18n
+			303 => __( 'Unable to locate WordPress theme directory.' ), // WPi18n
 		);
 
 		if ( isset( $message_id ) ) {
@@ -46,39 +60,23 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 	}
 
 
-	public function scan() { //// Attention au multisite. Des plugins et themes pourraient être activés sur d'autres sites.
+	public function scan() {
+		$lists = static::get_inactive_plugins_and_themes();
 
 		// Inactive plugins
-		$plugins = get_plugins();
-		$plugins = array_intersect_key( $plugins, array_flip( array_filter( array_keys( $plugins ), 'is_plugin_inactive' ) ) );
-
-		if ( $count = count( $plugins ) ) {
+		if ( $count = count( $lists['plugins'] ) ) {
 			// bad
-			$plugins = self::wrap_in_tag( wp_list_pluck( $plugins, 'Name' ) );
-			$this->add_message( 200, array( $count, $count, wp_sprintf_l( '%l', $plugins ) ) );
+			$lists['plugins'] = wp_list_pluck( $lists['plugins'], 'Name' );
+			$lists['plugins'] = self::wrap_in_tag( $lists['plugins'], 'strong' );
+			$this->add_message( 200, array( $count, $count, wp_sprintf_l( '%l', $lists['plugins'] ) ) );
 		}
 
 		// Inactive themes
-		$theme  = wp_get_theme();
-		$themes = wp_get_themes();
-
-		// We may have a child theme, we need to add its parent to the "active themes" list.
-		$active = array(
-			$theme->get_stylesheet(),
-		);
-		if ( $theme->parent() ) {
-			$active[] = $theme->parent()->get_stylesheet();
-		}
-
-		$list   = array_diff( array_keys( $themes ), $active );
-		$list   = array_combine( $list, $list );
-		$themes = array_intersect_key( $themes, $list );
-		$themes = wp_list_pluck( $themes, 'Name' );
-
-		if ( $count = count( $themes ) ) {
+		if ( $count = count( $lists['themes'] ) ) {
 			// bad
-			$themes = self::wrap_in_tag( $themes );
-			$this->add_message( 201, array( $count, $count, wp_sprintf_l( '%l', $themes ) ) );
+			$lists['themes'] = wp_list_pluck( $lists['themes'], 'Name' );
+			$lists['themes'] = self::wrap_in_tag( $lists['themes'], 'strong' );
+			$this->add_message( 201, array( $count, $count, wp_sprintf_l( '%l', $lists['themes'] ) ) );
 		}
 
 		// good
@@ -89,9 +87,303 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 
 
 	public function fix() {
+		$lists = static::get_inactive_plugins_and_themes();
 
-		// include the fix here.
+		// Inactive plugins
+		if ( $count = count( $lists['plugins'] ) ) {
+			$this->add_fix_message( 300, array( $count, $count ) );
+			$this->add_fix_action( 'delete-inactive-plugins' );
+		}
+
+		// Inactive themes
+		if ( $count = count( $lists['themes'] ) ) {
+			$this->add_fix_message( 301, array( $count, $count ) );
+			$this->add_fix_action( 'delete-inactive-themes' );
+		}
+
+		// good
+		$this->maybe_set_fix_status( 0 );
 
 		return parent::fix();
+	}
+
+
+	public function manual_fix() {
+		$wp_filesystem = static::get_filesystem();
+		$inactive      = static::get_inactive_plugins_and_themes();
+
+		ob_start();
+
+		// PLUGINS
+		if ( $this->has_fix_action_part( 'delete-inactive-plugins' ) ) {
+
+			// Get the list of plugins to uninstall.
+			$selected_plugins = ! empty( $_POST['secupress-fix-delete-inactive-plugins'] ) && is_array( $_POST['secupress-fix-delete-inactive-plugins'] ) ? array_filter( array_map( 'esc_attr', $_POST['secupress-fix-delete-inactive-plugins'] ) ) : array();
+			$selected_plugins = $selected_plugins ? array_fill_keys( $selected_plugins, 1 ) : array();
+			$selected_plugins = $selected_plugins ? array_intersect_key( $inactive['plugins'], $selected_plugins ) : array();
+
+			if ( $selected_plugins ) {
+				//Get the base plugin folder
+				$plugins_dir = $wp_filesystem->wp_plugins_dir();
+
+				if ( ! empty( $plugins_dir ) ) {
+					$plugins_dir     = trailingslashit( $plugins_dir );
+					$deleted_plugins = array();
+					$count_inactive  = count( $inactive['plugins'] );
+					$count_selected  = count( $selected_plugins );
+
+					foreach ( $selected_plugins as $plugin_file => $plugin_data ) {
+						// Run Uninstall hook
+						if ( is_uninstallable_plugin( $plugin_file ) ) {
+							uninstall_plugin( $plugin_file );
+						}
+
+						$this_plugin_dir = trailingslashit( dirname( $plugins_dir . $plugin_file ) );
+
+						// If plugin is in its own directory, recursively delete the directory.
+						if ( strpos( $plugin_file, '/' ) && $this_plugin_dir !== $plugins_dir ) { // base check on if plugin includes directory separator AND that its not the root plugin folder.
+							$deleted = $wp_filesystem->delete( $this_plugin_dir, true );
+						}
+						else {
+							$deleted = $wp_filesystem->delete( $plugins_dir . $plugin_file );
+						}
+
+						if ( $deleted ) {
+							$deleted_plugins[ $plugin_file ] = 1;
+						}
+					}
+
+					$count_deleted = count( $deleted_plugins );
+
+					// Everything's deleted, no plugins left.
+					if ( $count_deleted === $count_inactive ) {
+						// good
+						$this->add_fix_message( 1 );
+					}
+					// All selected plugins deleted.
+					elseif ( $count_deleted === $count_selected ) {
+						// "partial": some plugins still need to be deleted.
+						$this->add_fix_message( 101 );
+					}
+					// No plugins deleted.
+					elseif ( ! $count_deleted ) {
+						// bad
+						$this->add_fix_message( 202, array( $count_inactive ) );
+					}
+					// Some plugins could not be deleted.
+					else {
+						// cantfix
+						$not_removed = array_diff_key( $selected_plugins, $deleted_plugins );
+						$not_removed = wp_list_pluck( $not_removed, 'Name' );
+						$this->add_fix_message( 102, array( count( $not_removed ), wp_sprintf_l( '%l', $not_removed ) ) );
+					}
+
+					// Force refresh of plugin update information.
+					if ( $count_deleted && $current = get_site_transient( 'update_plugins' ) ) {
+						$current->response = array_diff_key( $current->response, $deleted_plugins );
+						set_site_transient( 'update_plugins', $current );
+					}
+
+				} else {
+					// cantfix: plugins dir not located.
+					$this->add_fix_message( 302 );
+				}
+
+			} else {
+				// warning: no plugins selected.
+				$this->add_fix_message( 100 );
+			}
+		}
+
+		// THEMES
+		if ( $this->has_fix_action_part( 'delete-inactive-themes' ) ) {
+
+			$selected_themes = ! empty( $_POST['secupress-fix-delete-inactive-themes'] ) && is_array( $_POST['secupress-fix-delete-inactive-themes'] ) ? array_filter( array_map( 'esc_attr', $_POST['secupress-fix-delete-inactive-themes'] ) ) : array();
+			$selected_themes = $selected_themes ? array_fill_keys( $selected_themes, 1 ) : array();
+			$selected_themes = $selected_themes ? array_intersect_key( $inactive['themes'], $selected_themes ) : array();
+
+			if ( $selected_themes ) {
+				//Get the base theme folder
+				$themes_dir = $wp_filesystem->wp_themes_dir();
+
+				if ( ! empty( $themes_dir ) ) {
+					$themes_dir      = trailingslashit( $themes_dir );
+					$deleted_themes  = array();
+					$count_inactive  = count( $inactive['themes'] );
+					$count_selected  = count( $selected_themes );
+
+					foreach ( $selected_themes as $theme_file => $theme_data ) {
+						$this_theme_dir  = trailingslashit( $themes_dir . $theme_file );
+
+						if ( $wp_filesystem->delete( $this_theme_dir, true ) ) {
+							$deleted_themes[ $theme_file ] = 1;
+						}
+					}
+
+					$count_deleted = count( $deleted_themes );
+
+					// Everything's deleted, no themes left.
+					if ( $count_deleted === $count_inactive ) {
+						// good
+						$this->add_fix_message( 2 );
+					}
+					// All selected themes deleted.
+					elseif ( $count_deleted === $count_selected ) {
+						// "partial": some themes still need to be deleted.
+						$this->add_fix_message( 104 );
+					}
+					// No themes deleted.
+					elseif ( ! $count_deleted ) {
+						// bad
+						$this->add_fix_message( 203, array( $count_inactive ) );
+					}
+					// Some themes could not be deleted.
+					else {
+						// cantfix
+						$not_removed = array_diff_key( $selected_themes, $deleted_themes );
+						$not_removed = wp_list_pluck( $not_removed, 'Name' );
+						$this->add_fix_message( 105, array( count( $not_removed ), wp_sprintf_l( '%l', $not_removed ) ) );
+					}
+
+					// Force refresh of theme update information
+					delete_site_transient( 'update_themes' );
+
+				} else {
+					// cantfix: themes dir not located.
+					$this->add_fix_message( 303 );
+				}
+
+			} else {
+				// warning: no themes selected.
+				$this->add_fix_message( 103 );
+			}
+		}
+
+		ob_end_clean();
+
+		return parent::manual_fix();
+	}
+
+
+	public function get_fix_action_template_parts() {
+		$forms = array();
+		$lists = static::get_inactive_plugins_and_themes();
+
+		if ( $lists['plugins'] ) {
+			$form  = '<div class="show-input">';
+				$form .= '<h4 id="secupress-fix-inactive-plugins">' . __( 'Choose plugins to delete:', 'secupress' ) . '</h4>';
+				$form .= '<fieldset aria-labelledby="secupress-fix-inactive-plugins">';
+
+					foreach ( $lists['plugins'] as $plugin_file => $plugin_data ) {
+						$is_symlinked = static::is_plugin_symlinked( $plugin_file );
+						$form .= '<input type="checkbox" id="secupress-fix-delete-inactive-plugins-' . sanitize_html_class( $plugin_file ) . '" name="secupress-fix-delete-inactive-plugins[]" value="' . esc_attr( $plugin_file ) . '" ' . ( $is_symlinked ? 'disabled="disabled"' : 'checked="checked"' ) . '/> ';
+						$form .= '<label for="secupress-fix-delete-inactive-plugins-' . sanitize_html_class( $plugin_file ) . '">';
+							if ( $is_symlinked ) {
+								$form .= '<del>' . esc_html( $plugin_data['Name'] ) . '</del> <span class="description">(' . __( 'symlinked', 'secupress' ) . ')</span>';
+							} else {
+								$form .= esc_html( $plugin_data['Name'] );
+							}
+						$form .= '</label><br/>';
+					}
+
+				$form .= '</fieldset>';
+			$form .= '</div>';
+		}
+		else {
+			$form = __( 'No inactive plugins', 'secupress' );
+		}
+
+		$forms['delete-inactive-plugins'] = $form;
+
+		if ( $lists['themes'] ) {
+			$form  = '<div class="show-input">';
+				$form .= '<h4 id="secupress-fix-inactive-themes">' . __( 'Choose themes to delete:', 'secupress' ) . '</h4>';
+				$form .= '<fieldset aria-labelledby="secupress-fix-inactive-themes">';
+
+					foreach ( $lists['themes'] as $theme_file => $theme_data ) {
+						$is_symlinked = static::is_theme_symlinked( $theme_file );
+						$form .= '<input type="checkbox" id="secupress-fix-delete-inactive-themes-' . sanitize_html_class( $theme_file ) . '" name="secupress-fix-delete-inactive-themes[]" value="' . esc_attr( $theme_file ) . '" ' . ( $is_symlinked ? 'disabled="disabled"' : 'checked="checked"' ) . '/> ';
+						$form .= '<label for="secupress-fix-delete-inactive-themes-' . sanitize_html_class( $theme_file ) . '">';
+							if ( $is_symlinked ) {
+								$form .= '<del>' . esc_html( $theme_data->Name ) . '</del> <span class="description">(' . __( 'symlinked', 'secupress' ) . ')</span>';
+							} else {
+								$form .= esc_html( $theme_data->Name );
+							}
+						$form .= '</label><br/>';
+					}
+
+				$form .= '</fieldset>';
+			$form .= '</div>';
+		}
+		else {
+			$form = __( 'No inactive themes', 'secupress' );
+		}
+
+		$forms['delete-inactive-themes'] = $form;
+
+		return $forms;
+	}
+
+
+	// Return the inactive plugins and themes.
+
+	protected static function get_inactive_plugins_and_themes() { //// Attention au multisite. Des plugins et themes pourraient être activés sur d'autres sites.
+		$out = array();
+
+		// Inactive plugins
+		$out['plugins'] = get_plugins();
+		$out['plugins'] = array_intersect_key( $out['plugins'], array_flip( array_filter( array_keys( $out['plugins'] ), 'is_plugin_inactive' ) ) );
+
+		// Inactive themes
+		$out['themes'] = wp_get_themes();
+		$theme         = wp_get_theme();
+
+		// We may have a child theme, we need to add its parent to the "active themes" list.
+		$active = array(
+			$theme->get_stylesheet(),
+		);
+		if ( $theme->parent() ) {
+			$active[] = $theme->parent()->get_stylesheet();
+		}
+
+		$list          = array_diff( array_keys( $out['themes'] ), $active );
+		$list          = array_combine( $list, $list );
+		$out['themes'] = array_intersect_key( $out['themes'], $list );
+
+		return $out;
+	}
+
+
+	/*
+	 * Tell if a plugin is symlinked.
+	 *
+	 * @param (string) $plugin_file: plugin main file path, relative to the plugins folder.
+	 * return (bool)   true if the plugin is symlinked.
+	 */
+
+	protected static function is_plugin_symlinked( $plugin_file ) {
+		$plugin_path = realpath( WP_PLUGIN_DIR . '/' . $plugin_file );
+		return ! ( $plugin_path && 0 === strpos( $plugin_path, WP_PLUGIN_DIR . '/' ) );
+	}
+
+
+	/*
+	 * Tell if a theme is symlinked.
+	 *
+	 * @param (string) $theme_slug: theme dir name.
+	 * return (bool)   true if the theme is symlinked.
+	 */
+
+	protected static function is_theme_symlinked( $theme_slug ) {
+		static $themes_dir;
+
+		if ( ! isset( $themes_dir ) ) {
+			$wp_filesystem = static::get_filesystem();
+			$themes_dir    = $wp_filesystem->wp_themes_dir();
+			$themes_dir    = trailingslashit( $themes_dir );
+		}
+
+		$theme_path = trailingslashit( realpath( $themes_dir . $theme_slug ) );
+		return ! ( $theme_path && 0 === strpos( $theme_path, $themes_dir ) );
 	}
 }
