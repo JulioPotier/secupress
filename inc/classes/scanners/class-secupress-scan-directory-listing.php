@@ -80,14 +80,11 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 
 		// Not Apache system, bail out.
 		if ( ! $is_apache ) {
-			if ( ! isset( $is_nginx ) ) {
-				$is_nginx = ! empty( $_SERVER['SERVER_SOFTWARE'] ) && strpos( $_SERVER['SERVER_SOFTWARE'], 'nginx' ) !== false;
-			}
 
 			if ( $is_nginx ) {
 				$this->add_fix_message( 300 );
 			} elseif ( $is_iis7 ) {
-				$this->add_fix_message( 301 );
+				$this->add_fix_message( 301 ); //// iis7_url_rewrite_rules
 			} else {
 				$this->add_fix_message( 302 );
 			}

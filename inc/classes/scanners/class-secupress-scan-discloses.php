@@ -143,10 +143,6 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 	public function fix() {
 		global $is_apache, $is_nginx, $is_iis7;
 
-		if ( ! isset( $is_nginx ) ) {
-			$is_nginx = ! empty( $_SERVER['SERVER_SOFTWARE'] ) && strpos( $_SERVER['SERVER_SOFTWARE'], 'nginx' ) !== false;
-		}
-
 		$wp_version  = get_bloginfo( 'version' );
 		$php_version = phpversion();
 
