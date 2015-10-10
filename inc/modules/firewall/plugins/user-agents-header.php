@@ -16,15 +16,22 @@ add_action( 'secupress_plugins_loaded', 'secupress_block_bad_user_agents', 0 );
 function secupress_block_bad_user_agents() {
 
 	$bad_user_agents = secupress_get_module_option( 'bbq-headers_user-agents-list', '', 'firewall' );
-	$bad_user_agents = str_replace( array( ',', ' ,', ', ' ), '|', $bad_user_agents );
-	$user_agent      = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : false;
-	$ua_compare      = wp_strip_all_tags( $user_agent, true ) === $user_agent;
-	$length_test     = strlen( $user_agent ) <= 255;
+	$bad_user_agents = str_replace( array( ' , ', ' ,', ', ', ',' ), '|', preg_quote( $bad_user_agents, '/' ) );
+	
+	if ( preg_match( '/' . $bad_user_agents . '/i', $user_agent ) {
+		secupress_block( 'UAHB' );
+	}
 
-	if ( ! $length_test || ! $ua_compare || ! $bad_user_agents || ! $user_agent || 
-		preg_match( '/' . preg_quote( $bad_user_agents, '/' ) . '/i', $user_agent )
-	) {
-		secupress_block( basename( __FILE__, '.php' ) );
+	if ( strlen( $user_agent ) > 255 ) {
+		secupress_block( 'UAHL' );
+	}
+
+	if ( wp_strip_all_tags( $user_agent, true ) !== $user_agent ) {
+		secupress_block( 'UAHT' );
+	}
+
+	if ( ! isset( $_SERVER['HTTP_USER_AGENT'] ) || empty( trim( $_SERVER['HTTP_USER_AGENT'] ) ) ) {
+		secupress_block( 'UAHE' );
 	}
 
 }

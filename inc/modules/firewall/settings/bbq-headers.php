@@ -44,14 +44,14 @@ $this->add_field(
 		array(
 			'type'         => 'textarea',
 			'name'         => $field_name,
-			'label'        => __( 'None', 'secupress' ),
+			// 'label'        => __( 'None', 'secupress' ),
 			'label_for'    => $field_name,
-			'label_screen' => __( 'None', 'secupress' ),
+			// 'label_screen' => __( 'None', 'secupress' ),
 		),
 		array(
 			'type'         => 'helper_description',
 			'name'         => $field_name,
-			'description' => __( 'Add or remove User-Agents you want to be blocked, or not.', 'secupress' ),
+			'description' => __( 'Add or remove User-Agents you want to be blocked.', 'secupress' ),
 		),
 	)
 );
@@ -76,7 +76,7 @@ $this->add_field(
 		array(
 			'type'         => 'helper_description',
 			'name'         => $field_name,
-			'description'  => __( 'Some other request methods can be used to retreive information from your site, avoid them! This will also block malformed HTTP like old HTTP/1.0 POST or POST without Referer.', 'secupress' ),
+			'description'  => __( 'Some other request methods can be used to retreive information from your site, avoid them! This will also block malformed HTTP like old <code>POST HTTP/1.0</code> or <code>POST</code> without a referer.', 'secupress' ),
 		),
 	)
 );

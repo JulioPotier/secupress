@@ -76,8 +76,7 @@ function secupress_get_modules() {
 			'title'       => esc_html__( 'Firewall', 'secupress' ),
 			'dashicon'    => 'shield',
 			'description' => array(
-				__( 'Malicious URL requests are badly common. This will checks all incoming requests and quietly blocks all of these containing bad stuff.', 'secupress' ),
-				__( 'bla', 'secupress' ),
+				__( 'Malicious requests are badly common. This will checks all incoming requests and quietly blocks all of these containing bad stuff.', 'secupress' ),
 			),
 		),
 		'logs'            => array(
