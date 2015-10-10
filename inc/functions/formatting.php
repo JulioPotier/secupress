@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @param (string)$module : the required module
 */
 function secupress_admin_url( $page, $module = false ) {
-	$module = $module ? '&amp;module=' . sanitize_key( $module ) : '';
+	$module = $module ? '&module=' . sanitize_key( $module ) : '';
 	$page = str_replace( '&', '_', $page );
 
 	return admin_url( 'admin.php?page=secupress_' . sanitize_key( $page ) . $module, 'admin' );
