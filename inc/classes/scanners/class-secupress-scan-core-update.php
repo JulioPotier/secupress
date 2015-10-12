@@ -31,10 +31,13 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements iSecuPress_Sc
 		$messages = array(
 			// good
 			0   => __( 'WordPress core is up to date.', 'secupress' ),
+			1   => __( 'WordPress has been updated to version <strong>%s</strong>.', 'secupress' ),
+			2 => '%s', // already translated
 			// bad
-			200 => __( 'WordPress <strong>core</strong> is not up to date.', 'secupress' ),
+			200 => __( 'WordPress core is <strong>not up to date</strong>.', 'secupress' ),
 			// cantfix
-			300 => __( 'I can not fix this, you have to manually update the WordPress core.', 'secupress' ),
+			300 => '%s', // already translated
+			301 => __( 'You have the latest version of WordPress.' ), // wp i18n
 		);
 
 		if ( isset( $message_id ) ) {
@@ -78,21 +81,24 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements iSecuPress_Sc
 		$core    = get_preferred_from_update_core();
 		$version = isset( $core->version ) ? $core->version : false;
 		$locale  = isset( $core->locale )  ? $core->locale  : 'en_US';
+		$result  = false;
 
 		if ( $version ) {
 			include_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
 
-			$url    = 'update-core.php?action=do-core-upgrade';
-			$url    = wp_nonce_url( $url, 'upgrade-core' );
+			$url       = 'update-core.php?action=do-core-upgrade';
+			$nonce     = 'upgrade-core';
+			$url_nonce = wp_nonce_url( $url, $nonce );
 			$update = find_core_update( $version, $locale );
 
 			if ( $update ) {
 				$allow_relaxed_file_ownership = isset( $update->new_files ) && ! $update->new_files;
-				$credentials = request_filesystem_credentials( $url, '', false, ABSPATH, array( 'version', 'locale' ), $allow_relaxed_file_ownership );
+				$credentials = request_filesystem_credentials( $url_nonce, '', false, ABSPATH, array( 'version', 'locale' ), $allow_relaxed_file_ownership );
 
 				if ( WP_Filesystem( $credentials, ABSPATH, $allow_relaxed_file_ownership ) ) {
 
-					$upgrader = new Core_Upgrader();
+					$skin = new Automatic_Upgrader_Skin( compact( 'nonce', 'url' ) );
+					$upgrader = new Core_Upgrader( $skin );
 					$result   = $upgrader->upgrade( $update, array(
 						'allow_relaxed_file_ownership' => $allow_relaxed_file_ownership
 					) );
@@ -101,6 +107,15 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements iSecuPress_Sc
 		}
 
 		ob_end_clean();
+		if ( is_string( $result ) ) {
+			$this->add_fix_message( 1, array( $result ) );
+		} elseif( false === $result ) {
+			$this->add_fix_message( 301 );
+		} else {
+			$errors = reset( $result->errors );
+			$code = isset( $errors['up_to_date'] ) ? 2 : 300;
+			$this->add_fix_message( 300, array( reset( $errors ) ) );
+		}
 
 		return parent::fix();
 	}
