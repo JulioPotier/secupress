@@ -587,7 +587,7 @@ function secupress_main_scan() {
 
 							if ( $fix_actions ) { ?>
 								<tr class="test-fix-action">
-									<td colspan="5">
+									<td colspan="6">
 										<form method="post" action="<?php echo admin_url( 'admin-post.php' ); ?>">
 											<h3><?php echo _n( 'This action requires your attention', 'These actions require your attention', count( $fix_actions ), 'secupress' ); ?></h3>
 											<?php
@@ -605,7 +605,7 @@ function secupress_main_scan() {
 						}
 						?>
 						<tr id="details-<?php echo $class_name_part; ?>" class="details hide-if-js">
-							<td colspan="5">
+							<td colspan="6">
 								<?php echo wp_kses_post( $current_test::$more ); ?>
 							</td>
 						</tr>
