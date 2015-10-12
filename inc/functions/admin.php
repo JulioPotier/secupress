@@ -191,13 +191,14 @@ function secupress_block( $module, $code = 403 ) {
 	$module = preg_replace( '/[^0-9A-Z]/', '', $module );
 
 	status_header( $code );
-	$title   = '<h4>' . $code  . ' ' . get_status_header_desc( $code ) . '</h4>';
-	$content = '<p>' . __( 'You are not allowed to access the requested page.', 'secupress' ) . '</p>';
-	$details = '<h4>' . __( 'Logged Details:', 'secupress' ) . '</h4><p>';
-	$details .= sprintf( __( 'Your IP: %s', 'secupress' ), secupress_get_ip() ) . '<br>';
-	$details .= sprintf( __( 'Time: %s', 'secupress' ), date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ) ) . '<br>';
-	$details .= sprintf( __( 'Block ID: %s', 'secupress' ), $module ) . '</p>';
-	secupress_die( $title . $content . $details );
+	$title     = $code  . ' ' . get_status_header_desc( $code );
+	$title_fmt = '<h4>' . $title . '</h4>';
+	$content   = '<p>' . __( 'You are not allowed to access the requested page.', 'secupress' ) . '</p>';
+	$details   = '<h4>' . __( 'Logged Details:', 'secupress' ) . '</h4><p>';
+	$details  .= sprintf( __( 'Your IP: %s', 'secupress' ), secupress_get_ip() ) . '<br>';
+	$details  .= sprintf( __( 'Time: %s', 'secupress' ), date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ) ) . '<br>';
+	$details  .= sprintf( __( 'Block ID: %s', 'secupress' ), $module ) . '</p>';
+	secupress_die( $title_fmt . $content . $details, $title, array( 'response', $code ) );
 }
 
 function secupress_deactivate_submodule( $module, $plugins ) {
