@@ -57,7 +57,6 @@ $this->add_field(
 );
 
 $field_name = $this->get_field_name( 'request-methods-header' );
-$main_field_name = $field_name;
 
 $this->add_field(
 	__( 'Block Bad Request Methods', 'secupress' ),
