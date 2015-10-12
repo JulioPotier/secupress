@@ -16,10 +16,9 @@ add_action( 'secupress_plugins_loaded', 'secupress_block_bad_user_agents', 0 );
 function secupress_block_bad_user_agents() {
 
 	$bad_user_agents = secupress_get_module_option( 'bbq-headers_user-agents-list', '', 'firewall' );
-	$bad_user_agents = preg_replace( '/\s*,\s*/', '|', preg_quote( $bad_user_agents, '/' ) );
-	$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? trim( $_SERVER['HTTP_USER_AGENT'] ) : '';
+	$bad_user_agents = str_replace( array( ' , ', ' ,', ', ', ',' ), '|', preg_quote( $bad_user_agents, '/' ) );
 	
-	if ( preg_match( '/' . $bad_user_agents . '/i', $user_agent ) ) {
+	if ( preg_match( '/' . $bad_user_agents . '/i', $user_agent ) {
 		secupress_block( 'UAHB' );
 	}
 
@@ -31,7 +30,7 @@ function secupress_block_bad_user_agents() {
 		secupress_block( 'UAHT' );
 	}
 
-	if ( ! $user_agent ) {
+	if ( ! isset( $_SERVER['HTTP_USER_AGENT'] ) || empty( trim( $_SERVER['HTTP_USER_AGENT'] ) ) ) {
 		secupress_block( 'UAHE' );
 	}
 
