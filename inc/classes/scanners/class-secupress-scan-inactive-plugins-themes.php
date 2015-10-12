@@ -327,28 +327,92 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 
 	// Return the inactive plugins and themes.
 
-	protected static function get_inactive_plugins_and_themes() { //// Attention au multisite. Des plugins et themes pourraient être activés sur d'autres sites.
+	protected static function get_inactive_plugins_and_themes() {
+		global $wpdb;
 		$out = array();
 
-		// Inactive plugins
-		$out['plugins'] = get_plugins();
-		$out['plugins'] = array_intersect_key( $out['plugins'], array_flip( array_filter( array_keys( $out['plugins'] ), 'is_plugin_inactive' ) ) );
+		if ( is_multisite() ) {
+			// For multisite we need to get active plugins and themes for each blog. Here, we'll fetch both.
+			$active = array( 'plugins' => array(), 'themes' => array(), );
+			$blogs  = $wpdb->get_col( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs WHERE site_id = %d", $wpdb->siteid ) );
 
-		// Inactive themes
-		$out['themes'] = wp_get_themes();
-		$theme         = wp_get_theme();
+			if ( count( $blogs ) <= 1 ) {
+				// Plugins
+				$this_blog_plugins = get_option( 'active_plugins', array() );
 
-		// We may have a child theme, we need to add its parent to the "active themes" list.
-		$active = array(
-			$theme->get_stylesheet(),
-		);
-		if ( $theme->parent() ) {
-			$active[] = $theme->parent()->get_stylesheet();
+				if ( $this_blog_plugins && is_array( $this_blog_plugins ) ) {
+					$active['plugins'] = array_combine( $this_blog_plugins, $this_blog_plugins );
+				}
+
+				// Theme
+				$this_blog_theme = get_stylesheet();
+
+				if ( $this_blog_theme ) {
+					$active['themes'][ $this_blog_theme ] = $this_blog_theme;
+				}
+			} else {
+				foreach ( $blogs as $blog_id ) {
+					$blog_id = (int) $blog_id;
+					$this_blog_actives = $wpdb->get_results( 'SELECT option_name, option_value FROM ' . $wpdb->prefix . ( $blog_id > 1 ? $blog_id . '_' : '' ) . 'options WHERE option_name = \'active_plugins\' OR option_name = \'stylesheet\'', OBJECT_K );
+
+					// Plugins
+					$this_blog_plugins = ! empty( $this_blog_actives['active_plugins']->option_value ) ? maybe_unserialize( $this_blog_actives['active_plugins']->option_value ) : array();
+
+					if ( $this_blog_plugins && is_array( $this_blog_plugins ) ) {
+						$this_blog_plugins = array_combine( $this_blog_plugins, $this_blog_plugins );
+						$active['plugins'] = array_merge( $active['plugins'], $this_blog_plugins );
+					}
+
+					// Themes
+					$this_blog_theme = ! empty( $this_blog_actives['stylesheet']->option_value ) ? $this_blog_actives['stylesheet']->option_value : '';
+
+					if ( $this_blog_theme ) {
+						$active['themes'][ $this_blog_theme ] = $this_blog_theme;
+					}
+				}
+			}
 		}
 
-		$list          = array_diff( array_keys( $out['themes'] ), $active );
-		$list          = array_combine( $list, $list );
-		$out['themes'] = array_intersect_key( $out['themes'], $list );
+		// INACTIVE PLUGINS
+		$out['plugins'] = get_plugins();
+
+		if ( is_multisite() ) {
+			$network_active_plugins = get_site_option( 'active_sitewide_plugins', array() );
+			$network_active_plugins = is_array( $network_active_plugins ) ? $network_active_plugins : array();
+			$active_plugins         = array_merge( $active['plugins'], $network_active_plugins );
+		} else {
+			$active_plugins = get_option( 'active_plugins', array() );
+			$active_plugins = is_array( $active_plugins ) ? $active_plugins : array();
+			$active_plugins = array_fill_keys( $active_plugins, 1 );
+		}
+
+		$out['plugins'] = array_diff_key( $out['plugins'], $active_plugins );
+
+		// INACTIVE THEMES
+		$out['themes'] = wp_get_themes();
+
+		if ( is_multisite() ) {
+			$active_themes = $active['themes'];
+		} else {
+			$active_themes   = array();
+			$this_blog_theme = get_stylesheet();
+
+			if ( $this_blog_theme ) {
+				$active_themes[ $this_blog_theme ] = $this_blog_theme;
+			}
+		}
+
+		// We may have child themes, we need to add their parent to the "active themes" list.
+		if ( $active_themes ) {
+			foreach ( $active_themes as $stylesheet ) {
+				if ( isset( $out['themes'][ $stylesheet ] ) && $out['themes'][ $stylesheet ]->parent() ) {
+					$parent_stylesheet = $out['themes'][ $stylesheet ]->parent()->get_stylesheet();
+					$active_themes[ $parent_stylesheet ] = $parent_stylesheet;
+				}
+			}
+		}
+
+		$out['themes'] = array_diff_key( $out['themes'], $active_themes );
 
 		return $out;
 	}
