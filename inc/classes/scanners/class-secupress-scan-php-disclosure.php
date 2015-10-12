@@ -31,12 +31,16 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements iSecuPress
 		$messages = array(
 			// good
 			0   => __( 'Your site does not reveal the PHP modules.', 'secupress' ),
+			1   => sprintf( __( 'Your %s file has been successfully edited.', 'secupress' ), '<code>.htaccess</code>' ),
 			// warning
 			100 => sprintf( __( 'Unable to determine status of %s.', 'secupress' ), '<code>' . home_url( '/?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000' ) . '</code>' ),
 			// bad
 			200 => sprintf( __( '%s should not be accessible to anyone.', 'secupress' ), '<code>' . home_url( '/?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000' ) . '</code>' ),
 			// cantfix
-			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
+			300 => sprintf( __( 'You run a nginx system, I cannot fix this sensitive information disclosure but you can do it yourself with the following code: %s.', 'secupress' ), '<code>(add nginx code here)</code>' ), ////
+			301 => sprintf( __( 'You run an IIS7 system, I cannot fix this sensitive information disclosure but you can do it yourself with the following code: %s.', 'secupress' ), '<code>(add IIS code here)</code>' ), //// iis7_url_rewrite_rules ?
+			302 => __( 'You don\'t run an Apache system, I cannot fix this sensitive information disclosure.', 'secupress' ),
+			303 => __( 'Your %1$s file is not writable. Please add the following lines to the file: %2$s.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -52,7 +56,9 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements iSecuPress
 		// http://osvdb.org/12184
 		$response = wp_remote_get( home_url( '/?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000' ), array( 'redirection' => 0 ) );
 
-		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) && $body = wp_remote_retrieve_body( $response ) ) {
+		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
+
+			$body = wp_remote_retrieve_body( $response );
 
 			if ( strpos( $body, '<h1>PHP Credits</h1>' ) > 0 && strpos( $body, '<title>phpinfo()</title>' ) > 0 ) {
 				// bad
@@ -72,8 +78,36 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements iSecuPress
 
 
 	public function fix() {
+		global $is_apache, $is_nginx, $is_iis7;
 
-		// include the fix here.
+		// Not Apache system, bail out.
+		if ( ! $is_apache ) {
+
+			if ( $is_nginx ) {
+				$this->add_fix_message( 300 );
+			} elseif ( $is_iis7 ) {
+				$this->add_fix_message( 301 ); //// iis7_url_rewrite_rules
+			} else {
+				$this->add_fix_message( 302 );
+			}
+
+			return parent::fix();
+		}
+
+		// Edit `.htaccess` file.
+		$rules  = "<IfModule mod_rewrite.c>\n";
+		$rules .= "    RewriteEngine on\n";
+		$rules .= "    RewriteCond %{QUERY_STRING} \=PHP[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12} [NC]\n";
+		$rules .= "    RewriteRule .* - [F]\n";
+		$rules .= "</IfModule>";
+
+		if ( secupress_write_htaccess( 'php_disclosure', $rules ) ) {
+			// good
+			$this->add_fix_message( 1, array( '<code>.htaccess</code>' ) );
+		} else {
+			// cantfix
+			$this->add_fix_message( 303, array( '<code>.htaccess</code>', "<pre># BEGIN SecuPress php_disclosure\n$rules\n# END SecuPress</pre>" ) );
+		}
 
 		return parent::fix();
 	}
