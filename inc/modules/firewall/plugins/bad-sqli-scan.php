@@ -7,16 +7,14 @@ Author: SecuPress
 Version: 1.0
 */
 
+add_action( 'admin_footer', 'secupress_block_sqli_scanners' );
+add_action( 'wp_footer', 'secupress_block_sqli_scanners' );
 /**
  * Add a hidden span containing random content and random length
  *
  * @since 1.0
  * @return void
  **/
-function secupress_block_sqli_scanners() {
-
-add_action( 'admin_footer', 'secupress_block_sqli_scanners' );
-add_action( 'wp_footer', 'secupress_block_sqli_scanners' );
 function secupress_block_sqli_scanners() {
 
 	$md5 = md5( microtime( true ) );
