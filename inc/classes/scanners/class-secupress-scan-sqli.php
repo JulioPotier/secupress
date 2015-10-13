@@ -22,7 +22,7 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements iSecuPress_Scan {
 
 	protected static function init() {
 		self::$type  = 'WordPress';
-		self::$title = __( 'Check if a basic SQL Injection is blocked or not.', 'secupress' );
+		self::$title = __( 'Check if basic SQL Injections are blocked or not.', 'secupress' );
 		self::$more  = __( 'SQL injection is a way to read, modify, delete any content of your database, this is a powerful vulnerability.', 'secupress' );
 	}
 
@@ -74,6 +74,8 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements iSecuPress_Scan {
 
 		$settings = array( 'bbq-url-content_bad-sqli-scan' => '1' );
 		secupress_activate_module( 'firewall', $settings );
+
+		$this->add_fix_message( 0 );
 
 		return parent::fix();
 	}

@@ -55,34 +55,6 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements iSecuPress_S
 	public function scan() {
 		$nbr_tests = 0;
 
-		// Scanners and Breach
-		++$nbr_tests;
-		$hashes = array();
-
-		for ( $i = 0 ; $i < 3 ; ++$i ) {
-			$response = wp_remote_get( home_url( '/?' . uniqid( 'time=', true ) ), array( 'redirection' => 0 ) );
-
-			if ( ! is_wp_error( $response ) ) {
-
-				if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
-					$hashes[] = md5( wp_remote_retrieve_body( $response ) );
-				}
-
-			}
-		}
-
-		$hashes = count( array_unique( $hashes ) );
-
-		if ( 3 === $hashes ) {
-			// good
-		} elseif ( 0 === $hashes ) {
-			// warning
-			$this->add_message( 100 );
-		} else {
-			// bad
-			$this->add_message( 200 );
-		}
-
 		// Shellshock - http://plugins.svn.wordpress.org/shellshock-check/trunk/shellshock-check.php
 		if ( 'WIN' !== strtoupper( substr( PHP_OS, 0, 3 ) ) ) {
 			++$nbr_tests;
@@ -152,7 +124,10 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements iSecuPress_S
 
 	public function fix() {
 
-		// include the fix here.
+		$settings = array( 'bbq-url-content_bad-contents' => '1' );
+		secupress_activate_module( 'firewall', $settings );
+
+		$this->add_fix_message( 0 );
 
 		return parent::fix();
 	}

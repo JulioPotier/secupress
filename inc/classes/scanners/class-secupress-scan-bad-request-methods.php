@@ -93,6 +93,8 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements iSecu
 		$settings = array( 'bbq-headers_request-methods-header' => '1' );
 		secupress_activate_module( 'firewall', $settings );
 
+		$this->add_fix_message( 0 );
+
 		return parent::fix();
 	}
 }
