@@ -72,8 +72,9 @@ class SecuPress_Scan_Block_HTTP_1_0 extends SecuPress_Scan implements iSecuPress
 
 	public function fix() {
 
-		// include the fix here.
-
+		$settings = array( 'bbq-headers_request-methods-header' => '1' );
+		secupress_activate_module( 'firewall', $settings );
+		
 		return parent::fix();
 	}
 }

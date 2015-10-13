@@ -72,7 +72,8 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan implements iSecuPress
 
 	public function fix() {
 
-		// include the fix here.
+		$settings = array( 'bbq-headers_user-agents-header' => '1' );
+		secupress_activate_module( 'firewall', $settings );
 
 		return parent::fix();
 	}

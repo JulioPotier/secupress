@@ -49,7 +49,7 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements iSecu
 
 	public function scan() {
 
-		$methods  = array( 'TRACE', 'TRACK', 'HEAD', 'PUT', 'OPTIONS', 'DELETE', 'CONNECT' );
+		$methods  = array( 'TRACE', 'TRACK', 'HEAD', 'PUT', 'OPTIONS', 'DELETE', 'CONNECT', 'SECUPRESS_TEST_' . time() );
 		$bads     = array();
 		$warnings = array();
 
@@ -90,7 +90,8 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements iSecu
 
 	public function fix() {
 
-		// include the fix here.
+		$settings = array( 'bbq-headers_request-methods-header' => '1' );
+		secupress_activate_module( 'firewall', $settings );
 
 		return parent::fix();
 	}
