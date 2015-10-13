@@ -680,6 +680,15 @@ jQuery( document ).ready( function( $ ) {
 		* extra.isBulk: tell if it's a bulk scan.
 		* extra.data:   data returned by the ajax call.
 		*/
+		var $row;
+
+		// If we have a good result, empty the fix cell.
+		if ( extra.data.class === "good" ) {
+			$row = $( ".secupress-item-" + extra.test );
+			secupressSetStatusClass( $row.children( ".secupress-fix-result" ), "cantfix" );
+			secupressAddFixStatusText( $row, "" );
+			secupressAddFixResult( $row, "" );
+		}
 	} );
 
 
