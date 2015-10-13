@@ -229,3 +229,52 @@ function secupress_find_wpconfig_path() {
 	// No writable file found
 	return false;
 }
+
+/**
+ * From WP Core async_upgrade() but using Automatic_Upgrader_Skin instead of Language_Pack_Upgrader_Skin to have a silent upgrade
+ *
+ * @since 1.0
+ * @return void
+ **/
+function secupress_async_upgrades() {
+	// Nothing to do?
+	$language_updates = wp_get_translation_updates();
+	// war_dump( $language_updates );
+	if ( ! $language_updates ) {
+		return;
+	}
+
+	// Avoid messing with VCS installs, at least for now.
+	// Noted: this is not the ideal way to accomplish this.
+	$check_vcs = new WP_Automatic_Updater;
+	if ( $check_vcs->is_vcs_checkout( WP_CONTENT_DIR ) ) {
+		return;
+	}
+
+	foreach ( $language_updates as $key => $language_update ) {
+		$update = ! empty( $language_update->autoupdate );
+
+		/**
+		 * Filter whether to asynchronously update translation for core, a plugin, or a theme.
+		 *
+		 * @since 4.0.0
+		 *
+		 * @param bool   $update          Whether to update.
+		 * @param object $language_update The update offer.
+		 */
+		$update = apply_filters( 'async_update_translation', $update, $language_update );
+
+		if ( ! $update ) {
+			unset( $language_updates[ $key ] );
+		}
+	}
+
+	if ( empty( $language_updates ) ) {
+		return;
+	}
+
+	$skin = new Automatic_Upgrader_Skin();
+
+	$lp_upgrader = new Language_Pack_Upgrader( $skin );
+	$lp_upgrader->bulk_upgrade( $language_updates );
+}
