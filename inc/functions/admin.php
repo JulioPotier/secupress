@@ -360,12 +360,14 @@ function secupress_manage_affected_roles( &$settings, $plugin ) {
 }
 
 
-function secupress_get_ip() {
+function secupress_get_ip() { //// find the best order
 	$keys = array(
+		'HTTP_CF_CONNECTING_IP', // CF = CloudFlare
 		'HTTP_CLIENT_IP',
 		'HTTP_X_FORWARDED_FOR',
 		'HTTP_X_FORWARDED',
 		'HTTP_X_CLUSTER_CLIENT_IP',
+		'HTTP_X_REAL_IP',
 		'HTTP_FORWARDED_FOR',
 		'HTTP_FORWARDED',
 		'REMOTE_ADDR',
@@ -377,7 +379,8 @@ function secupress_get_ip() {
 			$ip = end( $ip );
 
 			if ( false !== filter_var( $ip, FILTER_VALIDATE_IP ) ) {
-				return apply_filters( 'secupress_get_ip', $ip );
+				// return apply_filters( 'secupress_get_ip', $ip ); //// maybe not
+				return $ip;
 			}
 		}
 	}
