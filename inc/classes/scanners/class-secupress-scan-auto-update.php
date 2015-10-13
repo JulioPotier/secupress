@@ -36,6 +36,9 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements iSecuPress_Sc
 			201 => __( '<code>DISALLOW_FILE_MODS</code> should be set on <code>FALSE</code>.', 'secupress' ),
 			202 => __( '<code>AUTOMATIC_UPDATER_DISABLED</code> should be set on <code>FALSE</code>.', 'secupress' ),
 			203 => __( '<code>DISALLOW_FILE_MODS</code> and <code>AUTOMATIC_UPDATER_DISABLED</code> should be set on <code>FALSE</code>.', 'secupress' ),
+			204 => __( 'The filter <code>automatic_updater_disabled</code> should not be used or set to return <code>FALSE</code>.', 'secupress' ),
+			205 => __( 'The filter <code>allow_minor_auto_core_updates</code> should not be used or set to return <code>TRUE</code>.', 'secupress' ),
+			206 => __( 'The filters <code>automatic_updater_disabled</code> and <code>allow_minor_auto_core_updates</code> should not be used or set to return respectively  <code>FALSE</code> and <code>TRUE</code>.', 'secupress' ),
 			// cantfix
 			300 => __( 'The filter <code>automatic_updater_disabled</code> should not be used, we can not overwrite it.', 'secupress' ),
 		);
@@ -50,28 +53,35 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements iSecuPress_Sc
 
 	public function scan() {
 
-		require_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
+		// bad
+		$constants = 0;
+		$filters   = 0;
+		if ( defined( 'DISALLOW_FILE_MODS' ) && DISALLOW_FILE_MODS ) {
+			$constants += 1;
+		}
 
-		$updater = new WP_Automatic_Updater();
-		$check = (bool) $updater->is_disabled();
+		if ( defined( 'AUTOMATIC_UPDATER_DISABLED' ) && AUTOMATIC_UPDATER_DISABLED ) {
+			$constants += 2;
+		}
 
-		if ( $check ) {
-			// bad
-			$constants = 0;
-			if ( defined( 'DISALLOW_FILE_MODS' ) && DISALLOW_FILE_MODS ) {
-				$constants += 1;
-			}
+		if ( true === apply_filters( 'automatic_updater_disabled', false ) ) {
+			$filters += 1;
+		}
 
-			if ( defined( 'AUTOMATIC_UPDATER_DISABLED' ) && AUTOMATIC_UPDATER_DISABLED ) {
-				$constants += 2;
-			}
+		if ( false === apply_filters( 'allow_minor_auto_core_updates', true ) ) {
+			$filters += 2;
+		}
 
+		if ( $constants || $filters ) {
+			$this->add_message( 200 );
 			if ( $constants ) {
-				$this->add_message( 200 );
 				$this->add_message( 200 + $constants );
-			} else {
-				$this->add_message( 0 );
 			}
+			if ( $filters ) {
+				$this->add_message( 203 + $filters );
+			}
+		} else {
+			$this->add_message( 0 );
 		}
 
 		// good
