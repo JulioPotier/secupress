@@ -39,8 +39,8 @@ class SecuPress_Scan_PHP_INI extends SecuPress_Scan implements iSecuPress_Scan {
 			201 => _n_noop( '%1$s should be set on %2$s.', '%1$s should be set on %2$s.', 'secupress' ),
 			202 => _n_noop( '%1$s should be less than %2$s.', '%1$s should be less than %2$s.', 'secupress' ),
 			// cantfix
-			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
-			301 => __( 'The fix has been applied.', 'secupress' ),
+			300 => sprintf( __( 'We cannot fix the <code>php.ini</code> file, you have to contact your hosting provider or do it yourself. Need a little <a href="%s">tutorial video</a>?', 'secupress' ), '#' ), //// #
+			//// 301 => __( 'The fix has been applied.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -146,7 +146,7 @@ class SecuPress_Scan_PHP_INI extends SecuPress_Scan implements iSecuPress_Scan {
 
 
 	public function fix() {
-
+/* // later
 		$ini_values = self::get_ini_values();
 		$htaccess_rules = '';
 		$phpini_rules = '';
@@ -198,8 +198,8 @@ class SecuPress_Scan_PHP_INI extends SecuPress_Scan implements iSecuPress_Scan {
 		}
 		secupress_write_htaccess( 'php.ini', $htaccess_rules );
 		secupress_put_contents( ABSPATH . 'php.ini', 'php.ini', $phpini_rules );
-
-		$this->add_fix_message( 301 );
+*/
+		$this->add_fix_message( 300 );
 
 		return parent::fix();
 	}
