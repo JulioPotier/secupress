@@ -80,12 +80,16 @@ class SecuPress_Scan_Plugins_Update extends SecuPress_Scan implements iSecuPress
 		$plugins = get_site_transient( 'update_plugins' );
 		$plugins = isset( $plugins->response ) ? array_keys( $plugins->response ) : false;
 		if ( $plugins ) {
+			// remove the WP upgrade process for translation since it will output data, use our own based on core but using a silent upgrade
+			remove_action( 'upgrader_process_complete', array( 'Language_Pack_Upgrader', 'async_upgrade' ), 20 );
+			add_action( 'upgrader_process_complete', 'secupress_async_upgrades', 20 );
+
 			$url = 'update.php?action=update-selected&amp;plugins=' . urlencode( implode( ',', $plugins ) );
 			$nonce = 'bulk-update-plugins';
 			include_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
 			$skin = new Automatic_Upgrader_Skin( compact( 'nonce', 'url' ) );
 			$upgrader = new Plugin_Upgrader( $skin );
-			$upgrader->bulk_upgrade( $plugins ); 
+			$upgrader->bulk_upgrade( $plugins );
 		}
 
 		ob_end_clean();

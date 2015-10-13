@@ -97,6 +97,10 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements iSecuPress_Sc
 
 				if ( WP_Filesystem( $credentials, ABSPATH, $allow_relaxed_file_ownership ) ) {
 
+					// remove the WP upgrade process for translation since it will output data, use our own based on core but using a silent upgrade
+					remove_action( 'upgrader_process_complete', array( 'Language_Pack_Upgrader', 'async_upgrade' ), 20 );
+					add_action( 'upgrader_process_complete', 'secupress_async_upgrades', 20 );
+					
 					$skin = new Automatic_Upgrader_Skin( compact( 'nonce', 'url' ) );
 					$upgrader = new Core_Upgrader( $skin );
 					$result   = $upgrader->upgrade( $update, array(

@@ -34,7 +34,7 @@ class SecuPress_Scan_Themes_Update extends SecuPress_Scan implements iSecuPress_
 			// bad
 			200 => _n_noop( '<strong>%1$d</strong> theme isn\'t up to date: %2$s.',  '<strong>%1$d</strong> themes aren\'t up to date: %2$s.', 'secupress' ),
 			// cantfix
-			300 => __( 'I can not fix this, you have to manually update your plugins, themes and WordPress core.', 'secupress' ),
+			300 => __( 'There is no themes to be updated.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -80,15 +80,23 @@ class SecuPress_Scan_Themes_Update extends SecuPress_Scan implements iSecuPress_
 		$themes = get_site_transient( 'update_themes' );
 		$themes = isset( $themes->response ) ? array_keys( $themes->response ) : false;
 		if ( $themes ) {
+			// remove the WP upgrade process for translation since it will output data, use our own based on core but using a silent upgrade
+			remove_action( 'upgrader_process_complete', array( 'Language_Pack_Upgrader', 'async_upgrade' ), 20 );
+			add_action( 'upgrader_process_complete', 'secupress_async_upgrades', 20 );
+
 			$url = 'update.php?action=update-selected-themes&amp;themes=' . urlencode( implode( ',', $themes ) );
 			$nonce = 'bulk-update-themes';
 			include_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
 			$skin = new Automatic_Upgrader_Skin( compact( 'nonce', 'url' ) );
 			$upgrader = new Theme_Upgrader( $skin );
-			$upgrader->bulk_upgrade( $themes ); 	
-		}	
+			$upgrader->bulk_upgrade( $themes );
+			$this->add_fix_message( 0 );
+		} else {
+			$this->add_fix_message( 300 );
+		}
 
 		ob_end_clean();
+
 
 		return parent::fix();
 	}
