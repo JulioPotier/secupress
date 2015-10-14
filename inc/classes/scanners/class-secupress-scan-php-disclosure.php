@@ -33,9 +33,9 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements iSecuPress
 			0   => __( 'Your site does not reveal the PHP modules.', 'secupress' ),
 			1   => sprintf( __( 'Your %s file has been successfully edited.', 'secupress' ), '<code>.htaccess</code>' ),
 			// warning
-			100 => sprintf( __( 'Unable to determine status of %s.', 'secupress' ), '<code>' . home_url( '/?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000' ) . '</code>' ),
+			100 => sprintf( __( 'Unable to determine status of %s.', 'secupress' ), '<code>' . user_trailingslashit( home_url() ) . '?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000</code>' ),
 			// bad
-			200 => sprintf( __( '%s should not be accessible to anyone.', 'secupress' ), '<code>' . home_url( '/?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000' ) . '</code>' ),
+			200 => sprintf( __( '%s should not be accessible to anyone.', 'secupress' ), '<code>' . user_trailingslashit( home_url() ) . '?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000</code>' ),
 			// cantfix
 			300 => sprintf( __( 'You run a nginx system, I cannot fix this sensitive information disclosure but you can do it yourself with the following code: %s.', 'secupress' ), '<code>(add nginx code here)</code>' ), ////
 			301 => sprintf( __( 'You run an IIS7 system, I cannot fix this sensitive information disclosure but you can do it yourself with the following code: %s.', 'secupress' ), '<code>(add IIS code here)</code>' ), //// iis7_url_rewrite_rules ?
@@ -54,7 +54,7 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements iSecuPress
 	public function scan() {
 
 		// http://osvdb.org/12184
-		$response = wp_remote_get( home_url( '/?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000' ), array( 'redirection' => 0 ) );
+		$response = wp_remote_get( user_trailingslashit( home_url() ) . '?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000', array( 'redirection' => 0 ) );
 
 		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 

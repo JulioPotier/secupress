@@ -49,7 +49,7 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan implements iSecuPress
 
 	public function scan() {
 
-		$response = wp_remote_get( home_url(), array( 'redirection' => 0, 'user-agent' => '<script>' ) );
+		$response = wp_remote_get( user_trailingslashit( home_url() ), array( 'redirection' => 0, 'user-agent' => '<script>' ) );
 
 		if ( ! is_wp_error( $response ) ) {
 

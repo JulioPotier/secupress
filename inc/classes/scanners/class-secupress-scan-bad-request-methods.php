@@ -55,7 +55,7 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements iSecu
 
 		foreach ( $methods as $method ) {
 
-			$response = wp_remote_get( home_url(), array( 'method' => $method, 'redirection' => 0 ) );
+			$response = wp_remote_get( user_trailingslashit( home_url() ), array( 'method' => $method, 'redirection' => 0 ) );
 
 			if ( ! is_wp_error( $response ) ) {
 

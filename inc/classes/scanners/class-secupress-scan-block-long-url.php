@@ -49,7 +49,7 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements iSecuPress
 
 	public function scan() {
 
-		$response = wp_remote_get( home_url( '/?' . time() . '=' . wp_generate_password( 255, false ) ), array( 'redirection' => 0 ) );
+		$response = wp_remote_get( user_trailingslashit( home_url() ) . '?' . time() . '=' . wp_generate_password( 255, false ), array( 'redirection' => 0 ) );
 
 		if ( ! is_wp_error( $response ) ) {
 
@@ -76,7 +76,7 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements iSecuPress
 		secupress_activate_module( 'firewall', $settings );
 
 		$this->add_fix_message( 0 );
-		
+
 		return parent::fix();
 	}
 }
