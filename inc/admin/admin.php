@@ -266,7 +266,11 @@ function secupress_format_message( $msgs, $test_name ) {
 
 	foreach ( $msgs as $id => $atts ) {
 
-		if ( is_array( $messages[ $id ] ) ) {
+		if ( ! isset( $messages[ $id ] ) ) {
+
+			$string = __( 'Unknown message', 'secupress' );
+
+		} elseif ( is_array( $messages[ $id ] ) ) {
 
 			$count  = array_shift( $atts );
 			$string = translate_nooped_plural( $messages[ $id ], $count );
