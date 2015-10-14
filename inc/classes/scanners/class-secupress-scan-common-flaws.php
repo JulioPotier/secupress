@@ -31,6 +31,7 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements iSecuPress_S
 		$messages = array(
 			// good
 			0   => _n_noop( 'All is ok, %d test passed.', 'All is ok, %d tests passed.', 'secupress' ),
+			1   => __( 'Protection activated', 'secupress' ),
 			// warning
 			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
 			101 => sprintf( __( 'Unable to determine status of <strong>Shellshock</strong> flaw (%s).', 'secupress' ), '<em>CVE-2014-6271</em>' ),
@@ -127,7 +128,7 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements iSecuPress_S
 		$settings = array( 'bbq-url-content_bad-contents' => '1' );
 		secupress_activate_module( 'firewall', $settings );
 
-		$this->add_fix_message( 0 );
+		$this->add_fix_message( 1 );
 
 		return parent::fix();
 	}
