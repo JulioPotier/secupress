@@ -37,7 +37,8 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPres
 			200 => _n_noop( '<strong>%d Administrator</strong> found on this site.', '<strong>%d Administrators</strong> found on this site.', 'secupress' ),
 			201 => _n_noop( 'More than %1$d Administrators found on the site %2$s.', 'More than %1$d Administrators found on the sites %2$s.', 'secupress' ),
 			// cantfix
-			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
+			300 => __( 'Please delete some users or change their role to get a maximum of %s Administrators.', 'secupress' ),
+			301 => __( 'Please delete some users or change their role to get a maximum of %s Administrators per blog.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -91,12 +92,148 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPres
 
 
 	public function fix() {
+		global $wpdb;
 
-		// table usermeta. user_id
-		// meta_key: wp_capabilities, wp_2_capabilities...
-		// meta_value: s:13:"administrator";b:1;
+		if ( is_multisite() ) {
+			$admins = static::get_admins_per_blog();
+
+			if ( $admins ) {
+				// bad
+				$this->add_fix_message( 301, array( static::$max_admins ) );
+				$this->add_fix_action( 'too-many-admins' );
+			} else {
+				// good
+				$this->add_fix_message( 1, array( static::$max_admins ) );
+			}
+
+		} else {
+
+			$count = count( get_users( array(
+				'fields' => 'ids',
+				'role'   => 'administrator',
+			) ) );
+
+			if ( $count > static::$max_admins ) {
+				// bad
+				$this->add_fix_message( 300, array( static::$max_admins ) );
+				$this->add_fix_action( 'too-many-admins' );
+			} else {
+				// good
+				$this->add_fix_message( 0, array( $count, $count ) );
+			}
+		}
 
 		return parent::fix();
+	}
+
+
+	public function manual_fix() {
+		if ( ! $this->has_fix_action_part( 'too-many-admins' ) ) {
+			return parent::manual_fix();
+		}
+
+		// include the fix here.
+
+		return parent::manual_fix();
+	}
+
+
+	public function get_fix_action_template_parts() {
+		$form    = '';
+		$blog_id = get_current_blog_id();
+		$users   = get_users( array(
+			'role' => 'administrator',
+		) );
+
+		if ( $users ) {
+			$form .= '<div class="show-input">';
+				$form .= '<h4 id="secupress-fix-too-many-admins-title">' . __( 'Choose what to do for each Administrator:', 'secupress' ) . '</h4>';
+				$form .= '<div class="secupress-scrollable" aria-labelledby="secupress-fix-too-many-admins-title">';
+					foreach ( $users as $user ) {
+						$form .= static::user_row( $blog_id, $user );
+					}
+				$form .= '</div>';
+			$form .= '</div>';
+		}
+
+		return array( 'too-many-admins' => $form );
+	}
+
+
+	protected static function user_row( $blog_id, $user ) {
+		static $role_selector;
+
+		if ( get_current_user_id() === $user->ID ) {
+			return '';
+		}
+
+		$base_id   = 'too-many-admins-' . $blog_id . '-' . $user->ID;
+		$base_name = 'secupress-fix-too-many-admins[' . $blog_id . '][' . $user->ID . ']';
+
+		// Find the most appropriate role (the one with the largest number of capabilities).
+		if ( ! isset( $role_selector ) ) {
+			$new_role = '';
+			$nbr_caps = 0;
+			$roles    = get_editable_roles();
+			unset( $roles['administrator'] );
+
+			$role_selector  = '<label for="%base_id%-role">' . __( 'Change role to&hellip;' ) . '</label> '; // WPi18n
+			$role_selector .= '<select id="%base_id%-role" name="%base_name%[role]">';
+			$role_selector .= '<option value="">' . __( '&mdash; No role for this site &mdash;' ) . '</option>'; // WPi18n
+
+			if ( $roles ) {
+				foreach ( $roles as $role => $details ) {
+					$role_nbr_caps = count( array_filter( $details['capabilities'] ) );
+
+					if ( $role_nbr_caps > $nbr_caps ) {
+						$new_role = $role;
+						$nbr_caps = $role_nbr_caps;
+					}
+				}
+
+				foreach ( $roles as $role => $details ) {
+					$role_name      = translate_user_role( $details['name'] );
+					$role_selector .= '<option' . ( $new_role === $role ? ' selected="selected"' : '' ) . ' value="' . esc_attr( $role ) . '">' . $role_name . '</option>';
+				}
+
+				$role_selector .= '</select>';
+			}
+		}
+
+		$row  = '<fieldset class="secupress-boxed-group too-many-admins-field" aria-labbelledby="' . $base_id . '-legend">';
+			$row .= '<legend id="' . $base_id . '-legend"><strong>' . $user->display_name . '</strong> <span class="description">(' . $user->user_login . ')</span></legend>';
+			$row .= '<input id="' . $base_id . '-action" type="radio" name=' . $base_name . '[action]" value="" /> ';
+			$row .= '<label id="' . $base_id . '-label" for="' . $base_id . '-action">' . __( 'Nothing', 'secupress' ) . '</label>';
+			$row .= '<input id="' . $base_id . '-action-delete" type="radio" name=' . $base_name . '[action]" value="delete" /> ';
+			$row .= '<label id="' . $base_id . '-delete-label" for="' . $base_id . '-action-delete">' . __( 'Delete user', 'secupress' ) . '</label>';
+			$row .= '<input id="' . $base_id . '-action-changerole" type="radio" name=' . $base_name . '[action]" value="changerole" checked="checked" /> ';
+			$row .= '<label id="' . $base_id . '-changerole-label" for="' . $base_id . '-action-changerole">' . __( 'Change role', 'secupress' ) . '</label>';
+
+			$row .= '<fieldset class="too-many-admins-posts-wrapper">';
+				$row .= '<p><legend>' . __( 'What should be done with content owned by this user?' ) . '</legend></p>'; // WPi18n
+				$row .= '<ul>';
+					$row .= '<li>';
+						$row .= '<input type="radio" id="' . $base_id . '-posts-delete" name="' . $base_name . '[posts]" value="delete" /> <label for="' . $base_id . '-posts-delete">' . __( 'Delete all content.' ) . '</label>'; // WPi18n
+					$row .= '</li>';
+					$row .= '<li>';
+						$row .= '<input type="radio" id="' . $base_id . '-posts-reassign" name="' . $base_name . '[posts]" value="reassign" /> ';
+						$row .= '<label for="' . $base_id . '-posts-reassign">' . __( 'Attribute all content to:' ) . '</label> '; // WPi18n
+						$row .= wp_dropdown_users( array(
+							'name'    => $base_name . '[posts-user]',
+							'id'      => $base_id . '-posts-user',
+							'blog_id' => $blog_id,
+							'who'     => 'authors',
+							'exclude' => array( $user->ID ),
+							'echo'    => 0,
+						) );
+					$row .= '</li>';
+				$row .= '</ul>';
+			$row .= '</fieldset>';
+
+			$row .= '<fieldset class="too-many-admins-role-wrapper">' . str_replace( array( '%base_id%', '%base_name%', ), array( $base_id, $base_name, ), $role_selector ) . '</fieldset>';
+		$row .= '</fieldset>';
+
+		return $row;
 	}
 
 
