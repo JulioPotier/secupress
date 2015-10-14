@@ -30,7 +30,8 @@
 	font-size: 13px;
 }
 
-.working .secupress-row-actions,
+.scanning .secupress-row-actions,
+.fixing .secupress-row-actions,
 .status-good .secupress-fix-status .secupress-row-actions,
 .status-warning .secupress-fix-status .secupress-row-actions,
 .status-notscannedyet .secupress-fix-status .secupress-row-actions,
@@ -100,7 +101,8 @@ th.secupress-check {
 .secupress-item-all.status-good.alternate-2 {
 	background-color: #EFFFEE;
 }
-.secupress-item-all.working {
+.secupress-item-all.scanning,
+.secupress-item-all.fixing {
 	background-image: repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(200, 200, 200, 0.1) 10px, rgba(200, 200, 200, 0.1) 20px);
 }
 .form-table th {

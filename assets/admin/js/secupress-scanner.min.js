@@ -436,7 +436,7 @@ jQuery( document ).ready( function( $ ) {
 
 		// Show our scan is running.
 		doingScan[ test ] = 1;
-		$row.addClass( "working" ).removeClass( "status-error" );
+		$row.addClass( "scanning" ).removeClass( "status-error" );
 
 		// Add the spinner.
 		secupressAddScanStatusText( $row, '<img src="' + SecuPressi18nScanner.spinnerUrl + '" alt="" />' );
@@ -479,7 +479,7 @@ jQuery( document ).ready( function( $ ) {
 		} )
 		.always( function() {
 			// Show our scan is completed.
-			$row.removeClass( "working" );
+			$row.removeClass( "scanning" );
 
 			// If this is the last scan in queue, trigger an event.
 			if ( $.isEmptyObject( doingScan ) ) {
@@ -516,7 +516,7 @@ jQuery( document ).ready( function( $ ) {
 
 		// Show our fix is running.
 		doingFix[ test ] = 1;
-		$row.addClass( "working" ).removeClass( "status-error" );
+		$row.addClass( "fixing" ).removeClass( "status-error" );
 
 		// Add the spinner.
 		secupressAddFixStatusText( $row, '<img src="' + SecuPressi18nScanner.spinnerUrl + '" alt="" />' );
@@ -557,7 +557,7 @@ jQuery( document ).ready( function( $ ) {
 		} )
 		.always( function() {
 			// Show our fix is completed.
-			$row.removeClass( "working" );
+			$row.removeClass( "fixing" );
 
 			// Enable fix buttons again.
 			$( ".secupress-fixit" ).removeClass( "disabled" );
