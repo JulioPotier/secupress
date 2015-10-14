@@ -13,7 +13,7 @@ if ( ! in_array( $_SERVER['REQUEST_METHOD'], array( 'GET', 'POST', 'HEAD' ) ) ) 
 }
 
 // Block Bad protocol method
-if ( 'POST' === $_SERVER['REQUEST_METHOD'] && ! isset( $_SERVER['SERVER_PROTOCOL'] ) || 'HTTP/1.1' !== $_SERVER['SERVER_PROTOCOL'] ) {
+if ( 'POST' === $_SERVER['REQUEST_METHOD'] && ( ! isset( $_SERVER['SERVER_PROTOCOL'] ) || 'HTTP/1.1' !== $_SERVER['SERVER_PROTOCOL'] ) ) {
 	secupress_block( 'RMHP', 505 );
 }
 
