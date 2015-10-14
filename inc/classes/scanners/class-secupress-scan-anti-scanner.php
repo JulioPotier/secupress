@@ -53,14 +53,10 @@ class SecuPress_Scan_Anti_Scanner extends SecuPress_Scan implements iSecuPress_S
 		$hashes = array();
 
 		for ( $i = 0 ; $i < 3 ; ++$i ) {
-			$response = wp_remote_get( home_url( '/?' . uniqid( 'time=', true ) ), array( 'redirection' => 0 ) );
+			$response = wp_remote_get( user_trailingslashit( home_url() ) . '?' . uniqid( 'time=', true ), array( 'redirection' => 0 ) );
 
-			if ( ! is_wp_error( $response ) ) {
-
-				if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
-					$hashes[] = md5( wp_remote_retrieve_body( $response ) );
-				}
-
+			if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
+				$hashes[] = md5( wp_remote_retrieve_body( $response ) );
 			}
 		}
 
