@@ -134,10 +134,9 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'notFixed'        => __( 'Not Fixed', 'secupress' ),
 			'fixit'           => __( 'Fix it!', 'secupress' ),
 			'error'           => __( 'Error', 'secupress' ),
-			'manualFixMsg'    => __( 'This fix requires your intervention.', 'secupress' ),
-			'allFixed'        => __( 'Perfectly fixed!', 'secupress' ),
 			'oneManualFix'    => __( 'One fix requires your intervention.', 'secupress' ),
 			'someManualFixes' => __( 'Some fixes require your intervention.', 'secupress' ),
+			'spinnerUrl'      => admin_url( 'images/wpspin_light-2x.gif' ),
 		) );
 	}
 
@@ -219,6 +218,7 @@ function __secupress_dashboard() {
 			<?php
 			delete_option( SECUPRESS_SCAN_SLUG );
 			delete_option( SECUPRESS_SCAN_TIMES );
+			delete_option( SECUPRESS_FIX_SLUG );
 			?>
 		</div>
 	</div>
@@ -458,11 +458,11 @@ function secupress_main_scan() {
 								<label for="cb-select-all-<?php echo $prio_key; ?>-1" class="screen-reader-text"><?php _e( 'Select All' ); ?></label>
 								<input id="cb-select-all-<?php echo $prio_key; ?>-1" type="checkbox"/>
 							</td>
-							<th scope="col" class="secupress-status" data-sort="string"><?php _e( 'Status', 'secupress' ); ?></th>
-							<th scope="col" class="secupress-desc"><?php _e( 'Scan Descriptions', 'secupress' ); ?></th>
-							<th scope="col" class="secupress-result"><?php _e( 'Scan Results', 'secupress' ); ?></th>
-							<th scope="col" class="secupress-fix-result"><?php _e( 'Fix Results', 'secupress' ); ?></th>
-							<th scope="col" class="secupress-fix"><?php _e( 'Fix', 'secupress' ); ?></th>
+							<th scope="col" class="secupress-desc"><?php _e( 'Description', 'secupress' ); ?></th>
+							<th scope="col" class="secupress-scan-status" data-sort="string"><?php _e( 'Scan Status', 'secupress' ); ?></th>
+							<th scope="col" class=".secupress-scan-result"><?php _e( 'Scan Result', 'secupress' ); ?></th>
+							<th scope="col" class="secupress-fix-status"><?php _e( 'Fix Status', 'secupress' ); ?></th>
+							<th scope="col" class="secupress-fix-result"><?php _e( 'Fix Result', 'secupress' ); ?></th>
 						</tr>
 					</thead>
 
@@ -472,11 +472,11 @@ function secupress_main_scan() {
 								<label for="cb-select-all-<?php echo $prio_key; ?>-2" class="screen-reader-text"><?php _e( 'Select All' ); ?></label>
 								<input id="cb-select-all-<?php echo $prio_key; ?>-2" type="checkbox"/>
 							</td>
-							<th scope="col" class="secupress-status"><?php _e( 'Status', 'secupress' ); ?></th>
-							<th scope="col" class="secupress-desc"><?php _e( 'Scan Descriptions', 'secupress' ); ?></th>
-							<th scope="col" class="secupress-result"><?php _e( 'Scan Results', 'secupress' ); ?></th>
-							<th scope="col" class="secupress-fix-result"><?php _e( 'Fix Results', 'secupress' ); ?></th>
-							<th scope="col" class="secupress-fix"><?php _e( 'Fix', 'secupress' ); ?></th>
+							<th scope="col" class="secupress-desc"><?php _e( 'Description', 'secupress' ); ?></th>
+							<th scope="col" class="secupress-scan-status"><?php _e( 'Scan Status', 'secupress' ); ?></th>
+							<th scope="col" class=".secupress-scan-result"><?php _e( 'Scan Result', 'secupress' ); ?></th>
+							<th scope="col" class="secupress-fix-status"><?php _e( 'Fix Status', 'secupress' ); ?></th>
+							<th scope="col" class="secupress-fix-result"><?php _e( 'Fix Result', 'secupress' ); ?></th>
 						</tr>
 					</tfoot>
 
@@ -514,8 +514,8 @@ function secupress_main_scan() {
 						$css_class   .= $i % 2 === 0 ? ' alternate-2' : ' alternate-1';
 
 						// Scan
-						$status_text  = isset( $scanners[ $option_name ]['status'] ) ? secupress_status( $scanners[ $option_name ]['status'] )    : secupress_status( 'notscannedyet' );
-						$status_class = isset( $scanners[ $option_name ]['status'] ) ? sanitize_html_class( $scanners[ $option_name ]['status'] ) : 'notscannedyet';
+						$status_text  = ! empty( $scanners[ $option_name ]['status'] ) ? secupress_status( $scanners[ $option_name ]['status'] )    : secupress_status( 'notscannedyet' );
+						$status_class = ! empty( $scanners[ $option_name ]['status'] ) ? sanitize_html_class( $scanners[ $option_name ]['status'] ) : 'notscannedyet';
 						$css_class   .= ' status-' . $status_class;
 						$css_class   .= isset( $autoscans[ $class_name_part ] ) ? ' autoscan' : '';
 
@@ -526,11 +526,10 @@ function secupress_main_scan() {
 						}
 
 						// Fix
-						$fix_status_text  = isset( $fixes[ $option_name ]['status'] ) ? secupress_status( $fixes[ $option_name ]['status'] )    : secupress_status( 'cantfix' );
-						$fix_status_class = isset( $fixes[ $option_name ]['status'] ) ? sanitize_html_class( $fixes[ $option_name ]['status'] ) : 'cantfix';
-						$fix_css_class    = ' status-' . $fix_status_class;
+						$fix_status_text  = ! empty( $fixes[ $option_name ]['status'] ) && $fixes[ $option_name ]['status'] !== 'good' ? secupress_status( $fixes[ $option_name ]['status'] ) : '&#160;';
+						$fix_css_class    = ! empty( $fixes[ $option_name ]['status'] ) ? ' status-' . sanitize_html_class( $fixes[ $option_name ]['status'] ) : ' status-cantfix';
 
-						if ( ! empty( $fixes[ $option_name ]['msgs'] ) ) {
+						if ( ! empty( $fixes[ $option_name ]['msgs'] ) && $status_class !== 'good' ) {
 							$fix_message = secupress_format_message( $fixes[ $option_name ]['msgs'], $class_name_part );
 						} else {
 							$fix_message = '';
@@ -541,13 +540,6 @@ function secupress_main_scan() {
 								<label class="screen-reader-text" for="cb-select-<?php echo $class_name_part; ?>"><?php _e( 'Select this scan', 'secupress' ); ?></label>
 								<input id="cb-select-<?php echo $class_name_part; ?>" type="checkbox" class="secupress-checkbox-<?php echo $prio_key; ?>" />
 							</th>
-							<td class="secupress-status">
-								<div class="secupress-scan-status"><?php echo $status_text; ?></div>
-
-								<div class="secupress-row-actions">
-									<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $class_name_part ), 'secupress_scanner_' . $class_name_part ); ?>" class="secupress-scanit"><?php _ex( 'Scan', 'scan a test', 'secupress' ); ?></a>
-								</div>
-							</td>
 							<td>
 								<?php echo $class_name::$title; ?>
 								<div class="secupress-row-actions">
@@ -556,27 +548,33 @@ function secupress_main_scan() {
 									</span>
 								</div>
 							</td>
-							<td class="secupress-result">
+							<td class="secupress-scan-status">
+								<div class="secupress-status"><?php echo $status_text; ?></div>
+
+								<div class="secupress-row-actions">
+									<a class="button button-secondary button-small secupress-scanit" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $class_name_part ), 'secupress_scanner_' . $class_name_part ); ?>"><?php _ex( 'Scan', 'scan a test', 'secupress' ); ?></a>
+								</div>
+							</td>
+							<td class="secupress-scan-result">
 								<?php echo $scan_message; ?>
 							</td>
-							<td class="secupress-fix-result<?php echo $fix_css_class; ?>">
-								<?php if ( $status_class !== 'good' ) {
-									echo '<div class="secupress-fix-status">' . $fix_status_text . '</div>';
-									echo $fix_message;
-								} ?>
+							<td class="secupress-fix-status<?php echo $fix_css_class; ?>">
+								<div class="secupress-status"><?php echo $fix_status_text; ?></div>
 
-
+								<div class="secupress-row-actions">
+									<?php
+									if ( $current_test::$fixable ) { ?>
+										<a class="button button-secondary button-small secupress-fixit" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $class_name_part ), 'secupress_fixit_' . $class_name_part ); ?>"><?php _e( 'Fix it!', 'secupress' ); ?></a>
+										<?php
+									} else { ?>
+										<button type="button" class="button button-secondary button-small secupress-go-premium"><?php _e( 'Premium Upgrade', 'secupress' ); ?></button>
+										<?php
+									}
+									?>
+								</div>
 							</td>
-							<td>
-							<?php if ( $current_test::$fixable ) { ?>
-								<span class="fixit">
-									<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $class_name_part ), 'secupress_fixit_' . $class_name_part ); ?>" class="button button-secondary button-small secupress-fixit"><?php _e( 'Fix it!', 'secupress' ); ?></a>
-								</span>
-							<?php } else { ?>
-								<span class="fixit">
-									<a href="#premium" class="button button-secondary button-small secupress-fixit"><?php _e( 'Premium Upgrade', 'secupress' ); ?></a>
-								</span>
-							<?php }?>
+							<td class="secupress-fix-result">
+								<?php echo $fix_message; ?>
 							</td>
 						</tr>
 						<?php
@@ -618,6 +616,13 @@ function secupress_main_scan() {
 			</div>
 			<?php
 		} // foreach prio
+
+		if ( function_exists( 'pre_print_r' ) ) {////
+			echo '<code>$scanners</code>:';
+			pre_print_r($scanners,1);
+			echo '<code>$fixes</code>:';
+			pre_print_r($fixes,1);
+		}
 		?>
 	</div>
 	<?php
@@ -635,7 +640,7 @@ function secupress_status( $status ) {
 		case 'warning':
 			return wp_sprintf( $template, __( 'Warning', 'secupress' ) );
 		case 'cantfix':
-			return wp_sprintf( $template, __( 'Not fixed yet', 'secupress' ) );
+			return '&#160;';
 		default:
 			return wp_sprintf( $template, __( 'Not scanned yet', 'secupress' ) );
 	endswitch;

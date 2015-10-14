@@ -235,13 +235,13 @@ jQuery( document ).ready( function( $ ) {
 
 	// Scan icon + status text.
 	function secupressAddScanStatusText( $row, statusText ) {
-		$row.find( ".secupress-scan-status" ).html( statusText );
+		$row.children( ".secupress-scan-status" ).children( ".secupress-status" ).html( statusText );
 	}
 
 
 	// Add a scan result.
 	function secupressAddScanResult( $row, message ) {
-		$row.children( ".secupress-result" ).html( message );
+		$row.children( ".secupress-scan-result" ).html( message );
 	}
 
 
@@ -267,30 +267,13 @@ jQuery( document ).ready( function( $ ) {
 
 	// Fix icon + status text.
 	function secupressAddFixStatusText( $row, statusText ) {
-		var $td     = $row.children( ".secupress-fix-result" ),
-			$status = $td.children( ".secupress-fix-status" );
-
-		if ( ! $status.length ) {
-			$td.prepend( '<div class="secupress-fix-status">' + statusText + "</div>" );
-		} else {
-			$status.html( statusText );
-		}
+		$row.children( ".secupress-fix-status" ).children( ".secupress-status" ).html( statusText );
 	}
 
 
 	// Add a fix result.
 	function secupressAddFixResult( $row, message ) {
-		var $td         = $row.children( ".secupress-fix-result" ),
-			$status     = $td.children( ".secupress-fix-status" ),
-			$prevResult = $td.children( "ul" );
-
-		if ( $prevResult.length ) {
-			$prevResult.replaceWith( message );
-		} else if ( $status.length ) {
-			$status.after( message );
-		} else {
-			$td.prepend( message );
-		}
+		$row.children( ".secupress-fix-result" ).html( message );
 	}
 
 
@@ -300,6 +283,9 @@ jQuery( document ).ready( function( $ ) {
 
 		// Add the icon + text.
 		secupressAddFixStatusText( $row, statusText );
+
+		// Empty the fix results.
+		secupressAddFixResult( $row, "" );
 
 		// Add a "status-error" class to the td.
 		$row.children( ".secupress-fix-result" ).addClass( "status-error" );
@@ -405,8 +391,7 @@ jQuery( document ).ready( function( $ ) {
 	// Deal with fix infos.
 	function secupressDisplayFixResult( r, test, warn ) {
 		var $row = $( ".secupress-item-" + test ),
-			$td  = $row.children( ".secupress-fix-result" ),
-			oldStatus;
+			$td  = $row.children( ".secupress-fix-result" );
 
 		warn = typeof warn === "undefined" ? false : warn;
 
@@ -414,9 +399,6 @@ jQuery( document ).ready( function( $ ) {
 		if ( ! secupressFixResponseHasRequiredData( r, $row, warn ) ) {
 			return false;
 		}
-
-		// Get current fix status.
-		oldStatus = secupressGetCurrentStatus( $td );
 
 		// Add the new status as a class.
 		secupressSetStatusClass( $td, r.data.class );
@@ -440,12 +422,6 @@ jQuery( document ).ready( function( $ ) {
 	}
 
 
-	// Display the "This fix requires your intervention." banner message.
-	function secupressDisplayManualFixMsg( $row ) {
-		$row.children( ".secupress-fix-result" ).append( '<div class="manual-fix-message">' + SecuPressi18nScanner.manualFixMsg + "</div>" );
-	}
-
-
 	// Perform a scan: spinner + row class + ajax call + display result.
 	function secupressScanit( test, $row, href, isBulk ) {
 		if ( ! test ) {
@@ -463,7 +439,7 @@ jQuery( document ).ready( function( $ ) {
 		$row.addClass( "working" ).removeClass( "status-error" );
 
 		// Add the spinner.
-		secupressAddScanStatusText( $row, '<img src="' + href.replace( "admin-post.php", "images/wpspin_light-2x.gif" ) + '" alt="" />' );
+		secupressAddScanStatusText( $row, '<img src="' + SecuPressi18nScanner.spinnerUrl + '" alt="" />' );
 
 		// Ajax call
 		$.getJSON( href.replace( "admin-post.php", "admin-ajax.php" ) )
@@ -538,14 +514,12 @@ jQuery( document ).ready( function( $ ) {
 			return;
 		}
 
-		$button = $row.find( ".fixit" );
-
 		// Show our fix is running.
 		doingFix[ test ] = 1;
 		$row.addClass( "working" ).removeClass( "status-error" );
 
 		// Add the spinner.
-		$button.after( '<img src="' + href.replace( "admin-post.php", "images/wpspin_light.gif" ) + '" alt="" />' ); //// remove ? and following also to avoid new pic to be loaded each time
+		secupressAddFixStatusText( $row, '<img src="' + SecuPressi18nScanner.spinnerUrl + '" alt="" />' );
 
 		// Ajax call
 		$.getJSON( href.replace( "admin-post.php", "admin-ajax.php" ) )
@@ -582,9 +556,6 @@ jQuery( document ).ready( function( $ ) {
 
 		} )
 		.always( function() {
-			// Remove the spinner.
-			$button.next( "img" ).remove();
-
 			// Show our fix is completed.
 			$row.removeClass( "working" );
 
@@ -716,7 +687,7 @@ jQuery( document ).ready( function( $ ) {
 		*/
 
 		// Go for a new scan.
-		$( ".secupress-item-" + extra.test ).find( ".secupress-row-actions > .secupress-scanit" ).trigger( ( extra.isBulk ? "bulk" : "" ) + "scan.secupress" );
+		$( ".secupress-item-" + extra.test ).find( ".secupress-scanit" ).trigger( ( extra.isBulk ? "bulk" : "" ) + "scan.secupress" );
 	} );
 
 
@@ -741,7 +712,7 @@ jQuery( document ).ready( function( $ ) {
 				}
 			} );
 			$rows = $rows.substr( 1 );
-			$rows = $( $rows ).children( ".secupress-result" );
+			$rows = $( $rows ).children( ".secupress-scan-result" );
 			$rows.children( ".manual-fix-message" ).remove();
 			$rows.append( '<div class="manual-fix-message">' + SecuPressi18nScanner.manualFixMsg + "</div>" );
 
@@ -775,7 +746,7 @@ jQuery( document ).ready( function( $ ) {
 		*/
 
 		// Go for a new scan.
-		$( ".secupress-item-" + extra.test ).find( ".secupress-row-actions > .secupress-scanit" ).trigger( "scan.secupress" );
+		$( ".secupress-item-" + extra.test ).find( ".secupress-scanit" ).trigger( "scan.secupress" );
 
 		// Success!
 		swal( {
@@ -816,7 +787,7 @@ jQuery( document ).ready( function( $ ) {
 
 		if ( $this.hasClass( "button-secupress-scan" ) ) {
 			// It's the "One Click Scan" button.
-			$( ".secupress-row-actions > .secupress-scanit" ).trigger( "bulkscan.secupress" );
+			$( ".secupress-scanit" ).trigger( "bulkscan.secupress" );
 			return;
 		}
 
@@ -847,7 +818,7 @@ jQuery( document ).ready( function( $ ) {
 
 
 	// Autoscans.
-	$( ".secupress-item-all.autoscan .secupress-scanit" ).first().trigger( "bulkscan.secupress" );
+	$( ".secupress-item-all.autoscan .secupress-scanit" ).trigger( "bulkscan.secupress" );
 
 
 	// !Bulk -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -866,7 +837,7 @@ jQuery( document ).ready( function( $ ) {
 
 		switch ( action ) {
 			case 'scanit':
-				$rows.find( ".secupress-row-actions > .secupress-scanit" ).trigger( bulk + "scan.secupress" );
+				$rows.find( ".secupress-scanit" ).trigger( bulk + "scan.secupress" );
 				break;
 			case 'fixit':
 				$rows.find( ".secupress-fixit" ).trigger( bulk + "fix.secupress" );

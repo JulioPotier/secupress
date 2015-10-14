@@ -26,16 +26,14 @@
 }
 
 .secupress-row-actions {
+	margin-top: 4px;
 	font-size: 13px;
 }
 
-.status-good .fixit,
-.status-notscannedyet .fixit {
-	display: none;
-}
-
-.working .secupress-status > .secupress-row-actions,
-.working .fixit {
+.working .secupress-row-actions,
+.status-good .secupress-fix-status .secupress-row-actions,
+.status-warning .secupress-fix-status .secupress-row-actions,
+.status-notscannedyet .secupress-fix-status .secupress-row-actions {
 	display: none;
 }
 
@@ -45,8 +43,10 @@
 th.secupress-type {
 	width: 100px;
 }
-th.secupress-status {
-	width: 150px;
+td.secupress-scan-status,
+td.secupress-fix-status {
+	width: 11em;
+	height: 48px;
 }
 .dashicons-external {
 	font-size: 1.2em;
@@ -106,16 +106,16 @@ th.secupress-check {
 	padding: 10px 0 10px 2px;
 	line-height: 1em;
 }
-.secupress-result ul {
+.secupress-scan-result ul {
 	margin: 0;
 }
-.secupress-result li {
+.secupress-scan-result li {
 	margin-bottom: 0;
 }
-.secupress-result li + li {
+.secupress-scan-result li + li {
 	margin-top: 6px;
 }
-.secupress-result .manual-fix-message {
+.secupress-scan-result .manual-fix-message {
 	padding: 6px 20px;
 	border: 0 solid #D73838;
 	border-left-width: 3px;
@@ -264,6 +264,7 @@ th.secupress-check {
 	margin-top: 2px;
 }
 /**/
+.secupress-scan-result,
 .secupress-fix-result {
 	width: 25%;
 }
