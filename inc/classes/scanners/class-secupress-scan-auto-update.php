@@ -31,6 +31,7 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements iSecuPress_Sc
 		$messages = array(
 			// good
 			0   => __( 'Your installation <strong>can auto-update</strong> itself.', 'secupress' ),
+			1   => __( 'Protection activated', 'secupress' ),
 			// bad
 			200 => __( 'Your installation <strong>can not auto-update</strong> itself.', 'secupress' ),
 			201 => __( '<code>DISALLOW_FILE_MODS</code> should be set on <code>FALSE</code>.', 'secupress' ),
@@ -97,7 +98,7 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements iSecuPress_Sc
 		secupress_activate_module( 'wordpress-core', $settings );
 		secupress_activate_submodule( 'wordpress-core', 'minor-updates' );
 
-		$this->add_fix_message( 0 );
+		$this->add_fix_message( 1 );
 
 		return parent::fix();
 	}

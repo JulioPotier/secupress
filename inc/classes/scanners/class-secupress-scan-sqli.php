@@ -31,6 +31,7 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements iSecuPress_Scan {
 		$messages = array(
 			// good
 			0   => __( 'You are currently blocking simple SQL Injection.', 'secupress' ),
+			1   => __( 'Protection activated', 'secupress' ),
 			// warning
 			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
 			// bad
@@ -72,10 +73,10 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements iSecuPress_Scan {
 
 	public function fix() {
 
-		$settings = array( 'bbq-url-content_bad-sqli-scan' => '1' );
+		$settings = array( 'bbq-url-content_bad-contents' => '1' );
 		secupress_activate_module( 'firewall', $settings );
 
-		$this->add_fix_message( 0 );
+		$this->add_fix_message( 1 );
 
 		return parent::fix();
 	}

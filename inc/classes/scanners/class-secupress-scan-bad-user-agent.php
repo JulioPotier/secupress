@@ -31,10 +31,12 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan implements iSecuPress
 		$messages = array(
 			// good
 			0   => __( 'You are currently blocking bad User Agents.', 'secupress' ),
+			1   => __( 'Protection activated', 'secupress' ),
 			// warning
 			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
 			// bad
 			200 => __( 'Your website should block <code>HTTP</code> requests for <strong>bad User Agents</strong>.', 'secupress' ),
+			201 => __( 'The list containing the User Agents to block is empty.', 'secupress' ),
 			// cantfix
 			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);
@@ -74,8 +76,16 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan implements iSecuPress
 
 		$settings = array( 'bbq-headers_user-agents-header' => '1' );
 		secupress_activate_module( 'firewall', $settings );
+		// good
+		$this->add_fix_message( 1 );
 
-		$this->add_fix_message( 0 );
+		$bad_user_agents = trim( secupress_get_module_option( 'bbq-headers_user-agents-list', '', 'firewall' ) );
+		$bad_user_agents = preg_replace( '/\s*,\s*/', '|', preg_quote( $bad_user_agents, '/' ) );
+
+		if ( ! $bad_user_agents ) {
+			// bad
+			$this->add_fix_message( 201 );
+		}
 
 		return parent::fix();
 	}

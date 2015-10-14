@@ -31,6 +31,7 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements iSecuPress
 		$messages = array(
 			// good
 			0   => __( 'You are currently blocking too long string requests.', 'secupress' ),
+			1   => __( 'Protection activated', 'secupress' ),
 			// warning
 			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
 			// bad
@@ -75,7 +76,7 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements iSecuPress
 		$settings = array( 'bbq-url-content_bad-url-length' => '1' );
 		secupress_activate_module( 'firewall', $settings );
 
-		$this->add_fix_message( 0 );
+		$this->add_fix_message( 1 );
 
 		return parent::fix();
 	}

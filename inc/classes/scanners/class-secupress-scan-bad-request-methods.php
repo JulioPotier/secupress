@@ -31,6 +31,7 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements iSecu
 		$messages = array(
 			// good
 			0   => __( 'You are currently blocking bad request methods.', 'secupress' ),
+			1   => __( 'Protection activated', 'secupress' ),
 			// warning
 			100 => _n_noop( 'Unable to determine status of your homepage for %s request method.', 'Unable to determine status of your homepage for %s request methods.', 'secupress' ),
 			// bad
@@ -93,7 +94,7 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements iSecu
 		$settings = array( 'bbq-headers_request-methods-header' => '1' );
 		secupress_activate_module( 'firewall', $settings );
 
-		$this->add_fix_message( 0 );
+		$this->add_fix_message( 1 );
 
 		return parent::fix();
 	}

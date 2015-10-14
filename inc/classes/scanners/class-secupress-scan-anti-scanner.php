@@ -31,6 +31,7 @@ class SecuPress_Scan_Anti_Scanner extends SecuPress_Scan implements iSecuPress_S
 		$messages = array(
 			// good
 			0   => __( 'You are currently blocking <strong>automated scanning</strong>.', 'secupress' ),
+			1   => __( 'Protection activated', 'secupress' ),
 			// warning
 			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
 			// bad
@@ -85,7 +86,7 @@ class SecuPress_Scan_Anti_Scanner extends SecuPress_Scan implements iSecuPress_S
 		$settings = array( 'bbq-url-content_bad-sqli-scan' => '1' );
 		secupress_activate_module( 'firewall', $settings );
 
-		$this->add_fix_message( 0 );
+		$this->add_fix_message( 1 );
 
 		return parent::fix();
 	}

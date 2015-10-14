@@ -33,7 +33,8 @@
 .working .secupress-row-actions,
 .status-good .secupress-fix-status .secupress-row-actions,
 .status-warning .secupress-fix-status .secupress-row-actions,
-.status-notscannedyet .secupress-fix-status .secupress-row-actions {
+.status-notscannedyet .secupress-fix-status .secupress-row-actions,
+.secupress-fix-status.status-good .secupress-row-actions {
 	display: none;
 }
 
@@ -106,21 +107,17 @@ th.secupress-check {
 	padding: 10px 0 10px 2px;
 	line-height: 1em;
 }
-.secupress-scan-result ul {
+.secupress-scan-result ul,
+.secupress-fix-result ul {
 	margin: 0;
 }
-.secupress-scan-result li {
+.secupress-scan-result li,
+.secupress-fix-result li {
 	margin-bottom: 0;
 }
-.secupress-scan-result li + li {
+.secupress-scan-result li + li,
+.secupress-fix-result li + li {
 	margin-top: 6px;
-}
-.secupress-scan-result .manual-fix-message {
-	padding: 6px 20px;
-	border: 0 solid #D73838;
-	border-left-width: 3px;
-	margin-top: 8px;
-	background: #fff;
 }
 .test-fix-action h3 {
 	margin-top: 0;
