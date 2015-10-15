@@ -61,13 +61,8 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 					$blog_names[] = '<strong>' . ( $blog_name ? esc_html( $blog_name ) : '(' . $blog_id . ')' ) . '</strong>';
 				}
 
-				if ( $blog_names ) {
-					// bad
-					$this->add_message( 201, array( count( $blog_names ), wp_sprintf_l( '%l', $blog_names ) ) );
-				} else {
-					// good
-					$this->add_message( 0 );
-				}
+				// bad
+				$this->add_message( 201, array( count( $blog_names ), wp_sprintf_l( '%l', $blog_names ) ) );
 			} else {
 				// good
 				$this->add_message( 0 );
