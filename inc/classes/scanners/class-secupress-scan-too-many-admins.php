@@ -92,7 +92,6 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPres
 
 
 	public function fix() {
-		global $wpdb;
 
 		if ( is_multisite() ) {
 			$admins = static::get_admins_per_blog();
