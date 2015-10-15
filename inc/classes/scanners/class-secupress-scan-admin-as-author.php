@@ -50,20 +50,15 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 		global $wpdb;
 
 		if ( is_multisite() ) {
-			$admins = static::get_admins_per_blog();
+			$admins = static::get_posts_count_per_admin_per_blog();
 
 			if ( $admins ) {
 				$blog_names = array();
 
-				foreach ( $admins as $blog_id => $user_ids ) {
+				foreach ( $admins as $blog_id => $users ) {
 					$table_prefix = $wpdb->get_blog_prefix( $blog_id );
-					$user_ids     = implode( ',', $user_ids );
-					$nbr_posts    = $wpdb->get_var( "SELECT COUNT(ID) FROM {$table_prefix}posts WHERE post_author IN ($user_ids) AND post_type = 'post' LIMIT 1" );
-
-					if ( $nbr_posts ) {
-						$blog_name    = $wpdb->get_var( "SELECT option_value FROM {$table_prefix}options WHERE option_name = 'blogname' LIMIT 1" );
-						$blog_names[] = '<strong>' . ( $blog_name ? esc_html( $blog_name ) : '(' . $blog_id . ')' ) . '</strong>';
-					}
+					$blog_name    = $wpdb->get_var( "SELECT option_value FROM {$table_prefix}options WHERE option_name = 'blogname' LIMIT 1" );
+					$blog_names[] = '<strong>' . ( $blog_name ? esc_html( $blog_name ) : '(' . $blog_id . ')' ) . '</strong>';
 				}
 
 				if ( $blog_names ) {
@@ -113,22 +108,21 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 
 
 	/*
-	 * Return a list of admins per blog like:
+	 * Return a list of admins per blog + the number of their Posts like:
 	 * array(
 	 *     blog_id_1 => array(
-	 *         user_id_1 => user_id_1,
-	 *         user_id_2 => user_id_2,
+	 *         user_id_1 => nbr_posts_of_user_1,
+	 *         user_id_2 => nbr_posts_of_user_2,
 	 *     ),
 	 *     blog_id_2 => array(
-	 *         user_id_1 => user_id_1,
-	 *         user_id_2 => user_id_2,
-	 *         user_id_3 => user_id_3,
-	 *         user_id_4 => user_id_4,
-	 *         user_id_5 => user_id_5,
+	 *         user_id_1 => nbr_posts_of_user_1,
+	 *         user_id_2 => nbr_posts_of_user_2,
+	 *         user_id_3 => nbr_posts_of_user_3,
+	 *         user_id_4 => nbr_posts_of_user_4,
 	 *     ),
 	 * )
 	 */
-	final protected static function get_admins_per_blog() {
+	final protected static function get_posts_count_per_admin_per_blog() {
 		global $wpdb;
 		$admins_per_blog = array();
 
@@ -144,6 +138,23 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 
 				$admins_per_blog[ $blog_id ] = isset( $admins_per_blog[ $blog_id ] ) ? $admins_per_blog[ $blog_id ] : array();
 				$admins_per_blog[ $blog_id ][ $user_id ] = $user_id;
+			}
+
+			// Limit results to administrators that have created Posts + count the number of Posts.
+			foreach ( $admins_per_blog as $blog_id => $user_ids ) {
+				$table_prefix = $wpdb->get_blog_prefix( $blog_id );
+				$user_ids     = implode( ',', $user_ids );
+				$user_ids     = $wpdb->get_results( "SELECT post_author, COUNT(ID) AS posts_count FROM {$table_prefix}posts WHERE post_author IN ($user_ids) AND post_type = 'post' AND post_status != 'auto-draft' GROUP BY post_author" );
+
+				if ( ! $user_ids ) {
+					unset( $admins_per_blog[ $blog_id ] );
+				} else {
+					$admins_per_blog[ $blog_id ] = array();
+
+					foreach ( $user_ids as $user ) {
+						$admins_per_blog[ $blog_id ][ (int) $user->post_author ] = (int) $user->posts_count;
+					}
+				}
 			}
 		}
 
