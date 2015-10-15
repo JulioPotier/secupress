@@ -65,17 +65,7 @@ function secupress_install_modules( $module = 'all' ) {
 		// Create Options
 		add_option( SECUPRESS_SETTINGS_SLUG,
 			array(
-
-			)
-		);
-	}
-
-	// users_login
-	if ( 'all' === $module || 'users_login' === $module ) {
-		update_option( 'secupress_users_login_settings',
-			array(
-				'double-auth_type' => '-1',
-				//// pas fini
+				//
 			)
 		);
 	}

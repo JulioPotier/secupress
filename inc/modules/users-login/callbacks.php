@@ -1,5 +1,9 @@
 <?php
-defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+
+/*------------------------------------------------------------------------------------------------*/
+/* ON MODULE SETTINGS SAVE ====================================================================== */
+/*------------------------------------------------------------------------------------------------*/
 
 /**
  * Callback to filter, sanitize and de/activate submodules
@@ -100,4 +104,22 @@ function __secupress_users_login_settings_callback( $settings ) {
 	}
 
 	return $settings;
+}
+
+
+/*------------------------------------------------------------------------------------------------*/
+/* INSTALL ====================================================================================== */
+/*------------------------------------------------------------------------------------------------*/
+
+// Create default option on install.
+
+add_action( 'wp_secupress_first_install', '__secupress_install_users_login_module' );
+
+function __secupress_install_users_login_module( $module = 'all' ) {
+	if ( 'all' === $module || 'users_login' === $module ) {
+		update_option( 'secupress_users_login_settings', array(
+			'double-auth_type' => '-1',
+			//// pas fini
+		) );
+	}
 }
