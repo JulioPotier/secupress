@@ -581,7 +581,7 @@ function secupress_main_scan() {
 						if ( $class_name_part === $fix_actions[0] ) {
 							$fix_actions = explode( ',', $fix_actions[1] );
 							$fix_actions = array_combine( $fix_actions, $fix_actions );
-							$fix_actions = array_intersect_key( $current_test->get_fix_action_template_parts(), $fix_actions );
+							$fix_actions = $current_test->get_required_fix_action_template_parts( $fix_actions );
 
 							if ( $fix_actions ) { ?>
 								<tr class="test-fix-action">

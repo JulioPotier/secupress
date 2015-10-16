@@ -294,8 +294,8 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 			if ( defined( 'DOING_AJAX' ) ) {
 				// Add the fixes that require user action in the returned data.
 				$this->result_fix = array_merge( $this->result_fix, array(
-					'form_contents' => $this->get_fix_action_template_parts(),
-					'form_fields'   => $this->get_fix_action_fields( $this->fix_actions, false ),
+					'form_contents' => $this->get_required_fix_action_template_parts(),
+					'form_fields'   => $this->get_fix_action_fields( false, false ),
 					'form_title'    => _n( 'This action requires your attention', 'These actions require your attention', count( $this->fix_actions ), 'secupress' ),
 				) );
 
@@ -330,9 +330,17 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	}
 
 
-	// Return an array containing the forms that would fix the scan if it requires user action.
+	// Return an array containing ONLY THE REQUIRED forms that would fix the scan if it requires user action.
 
-	public function get_fix_action_template_parts() {
+	final public function get_required_fix_action_template_parts( $fix_actions = false ) {
+		$fix_actions = $fix_actions ? $fix_actions : $this->fix_actions;
+		return array_intersect_key( $this->get_fix_action_template_parts(), $fix_actions );
+	}
+
+
+	// Return an array containing ALL the forms that would fix the scan if it requires user action.
+
+	protected function get_fix_action_template_parts() {
 		return array();
 	}
 
@@ -347,10 +355,11 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 	// Print the required fields for the user fix form.
 
-	final public function get_fix_action_fields( $fix_actions, $echo = true ) {
+	final public function get_fix_action_fields( $fix_actions = false, $echo = true ) {
+		$fix_actions = $fix_actions ? $fix_actions : $this->fix_actions;
 		$output  = '<input type="hidden" name="action" value="secupress_manual_fixit" />';
 		$output .= '<input type="hidden" name="test" value="' . $this->class_name_part . '" />';
-		$output .= '<input type="hidden" name="test-parts" value="' . implode( ',', array_keys( $fix_actions ) ) . '" />';
+		$output .= '<input type="hidden" name="test-parts" value="' . implode( ',', $fix_actions ) . '" />';
 		$output .= wp_nonce_field( 'secupress_manual_fixit-' . $this->class_name_part, 'secupress_manual_fixit-nonce', false, false );
 
 		if ( ! $echo ) {

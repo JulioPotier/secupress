@@ -166,7 +166,7 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 		return parent::manual_fix();
 	}
 
-	public function get_fix_action_template_parts() {
+	protected function get_fix_action_template_parts() {
 		$form  = '<div class="show-input">';
 		$form .= '<h4>' . __( 'Choose a new login for your account:', 'secupress' ) . '</h4>';
 		$form .= '<p><span style="color:red">' . __( 'Your username will be renamed on the next page change.', 'secupress' ) . '</span></p>';

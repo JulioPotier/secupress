@@ -137,7 +137,7 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPres
 	}
 
 
-	public function get_fix_action_template_parts() {
+	protected function get_fix_action_template_parts() {
 		$form    = '';
 		$blog_id = get_current_blog_id();
 		$users   = get_users( array(

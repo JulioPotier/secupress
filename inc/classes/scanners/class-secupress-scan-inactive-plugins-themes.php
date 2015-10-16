@@ -265,7 +265,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 	}
 
 
-	public function get_fix_action_template_parts() {
+	protected function get_fix_action_template_parts() {
 		$forms = array();
 		$lists = static::get_inactive_plugins_and_themes();
 
