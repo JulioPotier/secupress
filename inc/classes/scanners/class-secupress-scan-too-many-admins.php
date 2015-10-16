@@ -97,7 +97,7 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPres
 			$admins = static::get_admins_per_blog();
 
 			if ( $admins ) {
-				// bad
+				// cantfix
 				$this->add_fix_message( 301, array( static::$max_admins ) );
 				$this->add_fix_action( 'too-many-admins' );
 			} else {
