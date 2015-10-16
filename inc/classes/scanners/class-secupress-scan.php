@@ -453,15 +453,15 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	// Given an array of "things", wrap those "things" in a HTML tag.
 
 	final public static function wrap_in_tag( $array, $tag = 'code' ) {
-		$out = array();
-
 		if ( $array ) {
-			foreach ( (array) $array as $thing ) {
-				$out[] = sprintf( '<%2$s>%1$s</%2$s>', $thing, $tag );
+			$array = (array) $array;
+
+			foreach ( $array as $k => $thing ) {
+				$array[ $k ] = sprintf( '<%2$s>%1$s</%2$s>', $thing, $tag );
 			}
 		}
 
-		return $out;
+		return $array ? $array : array();
 	}
 
 
