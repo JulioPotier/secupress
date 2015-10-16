@@ -305,7 +305,8 @@ jQuery( document ).ready( function( $ ) {
 	function secupressErrorWarn() {
 		swal( {
 			title: SecuPressi18nScanner.error,
-			type: "error"
+			type: "error",
+			allowOutsideClick: true
 		} );
 	}
 
@@ -606,7 +607,7 @@ jQuery( document ).ready( function( $ ) {
 				closeOnConfirm:      false,
 				allowOutsideClick:   true,
 				showCancelButton:    true,
-				confirmButtonText:   SecuPressi18nScanner.fixit,
+				confirmButtonText:   SecuPressi18nScanner.fixit
 			},
 			function() {
 				var params = $( "#form_manual_fix" ).serializeArray(),
@@ -724,7 +725,8 @@ jQuery( document ).ready( function( $ ) {
 				// Bulk: warn the user that some manual fixes need to be done.
 				swal( {
 					title: manualFixLen === 1 ? SecuPressi18nScanner.oneManualFix : SecuPressi18nScanner.someManualFixes,
-					type: "warning"
+					type: "warning",
+					allowOutsideClick: true
 				} );
 			}
 
@@ -753,7 +755,8 @@ jQuery( document ).ready( function( $ ) {
 			title: extra.data.class === "warning" ? SecuPressi18nScanner.fixedPartial : SecuPressi18nScanner.fixed,
 			text:  extra.data.message.replace( /(<ul>|<li>|<\/li><\/ul>)/g, "" ).replace( /<\/li>/g, "<br/>" ),
 			type:  extra.data.class === "warning" ? "warning" : "success",
-			html:  true,
+			allowOutsideClick: true,
+			html:  true
 		} );
 	} );
 
