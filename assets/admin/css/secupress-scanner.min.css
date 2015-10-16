@@ -272,6 +272,11 @@ th.secupress-check {
 	max-height: 370px;
 	overflow-y: auto;
 }
+.speech-box {
+	max-width: 400px;
+	margin: 0 auto;
+	text-align: left;
+}
 .sweet-alert .show-input > fieldset,
 .sweet-alert .show-input .secupress-boxed-group {
 	max-width: 400px;
