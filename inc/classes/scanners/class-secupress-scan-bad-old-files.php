@@ -89,9 +89,8 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements iSecuPress_
 			$this->add_fix_message( 0 );
 			return parent::fix();
 		}
-
 		foreach ( $_old_files as $file ) {
-			if ( @file_exists( ABSPATH . $file ) && ! is_writable( ABSPATH . $filename ) || ! @unlink( ABSPATH . $filename ) ) {
+			if ( @file_exists( ABSPATH . $file ) && ( ! is_writable( ABSPATH . $file ) || ! @unlink( ABSPATH . $file ) ) ) {
 				$not_deleted[] = sprintf( '<code>%s</code>', $file );
 			}
 		}
