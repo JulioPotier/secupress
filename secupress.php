@@ -165,10 +165,24 @@ function secupress_been_first() {
 	$active_plugins  = get_option( 'active_plugins' );
 	$plugin_basename = plugin_basename( __FILE__ );
 
-	if ( reset( $active_plugins ) != plugin_basename( __FILE__ ) ) {
+	if ( reset( $active_plugins ) !== $plugin_basename ) {
 		unset( $active_plugins[ array_search( $plugin_basename, $active_plugins ) ] );
 		array_unshift( $active_plugins, $plugin_basename );
 		update_option( 'active_plugins', $active_plugins );
+	}
+}
+
+
+/*
+ * Translations for the default textdomain must be loaded on init, not before.
+ *
+ * @since 1.0
+ */
+add_action( 'init', 'secupress_load_default_textdomain_translations' );
+
+function secupress_load_default_textdomain_translations() {
+	if ( ! defined( 'DOING_AUTOSAVE' ) ) {
+		load_plugin_textdomain( 'default', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 	}
 }
 
