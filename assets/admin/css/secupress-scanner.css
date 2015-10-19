@@ -34,8 +34,7 @@
 .fixing .secupress-row-actions,
 .status-good .secupress-fix-status .secupress-row-actions,
 .status-warning .secupress-fix-status .secupress-row-actions,
-.status-notscannedyet .secupress-fix-status .secupress-row-actions,
-.secupress-fix-status.status-good .secupress-row-actions {
+.status-notscannedyet .secupress-fix-status .secupress-row-actions {
 	display: none;
 }
 
