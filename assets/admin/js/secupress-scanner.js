@@ -753,7 +753,7 @@ jQuery( document ).ready( function( $ ) {
 		// Success!
 		swal( {
 			title: extra.data.class === "warning" ? SecuPressi18nScanner.fixedPartial : SecuPressi18nScanner.fixed,
-			text:  extra.data.message.replace( /(<ul>|<li>|<\/li><\/ul>)/g, "" ).replace( /<\/li>/g, "<br/>" ),
+			text:  extra.data.message.replace( /(<ul>|<li>|<\/li><\/ul>)/g, "" ).replace( /<\/li>/g, "<br/><br/>" ),
 			type:  extra.data.class === "warning" ? "warning" : "success",
 			allowOutsideClick: true,
 			html:  true
