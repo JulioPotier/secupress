@@ -31,6 +31,7 @@ class SecuPress_Scan_Login_Errors_Disclose extends SecuPress_Scan implements iSe
 		$messages = array(
 			// good
 			0   => __( 'You are currently not displaying <strong>login errors</strong>.', 'secupress' ),
+			1   => __( 'Protection activated', 'secupress' ),
 			// bad
 			200 => __( '<strong>Login errors</strong> should not be displayed.', 'secupress' ),
 			// cantfix
@@ -46,10 +47,14 @@ class SecuPress_Scan_Login_Errors_Disclose extends SecuPress_Scan implements iSe
 
 
 	public function scan() {
+		$messages = static::get_login_messages( false );
+		$messages = '	' . implode( "<br />\n	", $messages ) . "<br />\n";
+		$messages = apply_filters( 'login_errors', $messages );
 
-		$check = apply_filters( 'login_errors', 'errors' );
+		$pattern = static::get_login_messages();
+		$pattern = '@\s(' . implode( '|', $pattern ) . ')<br />\n@';
 
-		if ( 'errors' === $check ) {
+		if ( preg_match( $pattern, $messages ) ) {
 			// bad
 			$this->add_message( 200 );
 		} else {
@@ -62,9 +67,46 @@ class SecuPress_Scan_Login_Errors_Disclose extends SecuPress_Scan implements iSe
 
 
 	public function fix() {
+		$messages = static::get_login_messages( false );
+		$messages = '	' . implode( "<br />\n	", $messages ) . "<br />\n";
+		$messages = apply_filters( 'login_errors', $messages );
 
-		// include the fix here.
+		$pattern = static::get_login_messages();
+		$pattern = '@\s(' . implode( '|', $pattern ) . ')<br />\n@';
+
+		if ( preg_match( $pattern, $messages ) ) {
+
+			secupress_activate_submodule( 'discloses', 'login-errors-disclose' );
+
+			// good
+			$this->add_fix_message( 1 );
+		} else {
+			// good
+			$this->add_fix_message( 0 );
+		}
 
 		return parent::fix();
+	}
+
+
+	protected static function get_login_messages( $for_regex = true ) {
+		$messages = array(
+			'invalid_email'      => __( '<strong>ERROR</strong>: There is no user registered with that email address.' ),
+			'invalidcombo'       => __( '<strong>ERROR</strong>: Invalid username or e-mail.' ),
+			'invalid_username'   => sprintf( __( '<strong>ERROR</strong>: Invalid username. <a href="%s">Lost your password?</a>' ), wp_lostpassword_url() ),
+			'incorrect_password' => sprintf( __( '<strong>ERROR</strong>: The password you entered for the username <strong>%1$s</strong> is incorrect. <a href="%2$s">Lost your password?</a>' ), '%ALL%', wp_lostpassword_url() ),
+		);
+
+		if ( $for_regex ) {
+			foreach ( $messages as $id => $message ) {
+				$messages[ $id ] = str_replace(
+					array(  '[',  ']',  '(',  ')',  '{',  '}',  '.',  '*',  '?',  '+',  '|',  '^',  '$',  '@', '%ALL%' ),
+					array( '\[', '\]', '\(', '\)', '\{', '\}', '\.', '\*', '\?', '\+', '\|', '\^', '\$', '\@', '.*' ),
+					$message
+				);
+			}
+		}
+
+		return $messages;
 	}
 }
