@@ -60,25 +60,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 
 		// MULTISITE ===============
 		if ( is_multisite() ) {
-			$admins = static::get_posts_count_per_admin_per_blog();
-
-			if ( $admins ) {
-				$blog_names = array();
-
-				foreach ( $admins as $blog_id => $users ) {
-					$table_prefix = $wpdb->get_blog_prefix( $blog_id );
-					$blog_name    = $wpdb->get_var( "SELECT option_value FROM {$table_prefix}options WHERE option_name = 'blogname' LIMIT 1" );
-					$blog_names[] = '<strong>' . ( $blog_name ? esc_html( $blog_name ) : '(' . $blog_id . ')' ) . '</strong>';
-				}
-
-				// bad
-				$this->add_message( 201, array( count( $blog_names ), wp_sprintf_l( '%l', $blog_names ), static::get_new_role( true ) ) );
-			} else {
-				// good
-				$this->add_message( 0 );
-			}
-
-			return parent::scan();
+			return $this->scan_multisite();
 		}
 
 		// MONOSITE ================
@@ -99,8 +81,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 	public function fix() {
 		// MULTISITE ===============
 		if ( is_multisite() ) {
-			////
-			return parent::fix();
+			return $this->fix_multisite();
 		}
 
 		// MONOSITE ================
@@ -180,8 +161,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 
 		// MULTISITE ===============
 		if ( is_multisite() ) {
-			////
-			return parent::manual_fix();
+			return $this->manual_fix_multisite();
 		}
 
 		// MONOSITE ================
@@ -258,17 +238,15 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 		return parent::manual_fix();
 	}
 
-	protected function get_fix_action_template_parts() {
-		$parts = array();
 
+	protected function get_fix_action_template_parts() {
 		// MULTISITE ===============
 		if ( is_multisite() ) {
-			////
-			$parts['admin-as-author'] = 'foo';
-			return $parts;
+			return $this->get_fix_action_template_parts_multisite();
 		}
 
 		// MONOSITE ================
+		$parts  = array();
 		$admins = static::get_admins( 'user_login' );
 
 		if ( $admins ) {
@@ -318,6 +296,95 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 			$parts['admin-as-author'] = static::get_messages( 1 );
 		}
 
+		return $parts;
+	}
+
+
+	/*
+	 * Return a list of Administrators that created Posts.
+	 * This is used for non-multisite.
+	 *
+	 * @return (array) Array of WP_User objects.
+	 */
+	final protected static function get_admins( $field = false ) {
+		$out   = array();
+		$users = get_users( array( 'role' => 'administrator' ) );
+
+		if ( $users ) {
+			$tmp = array();
+			foreach ( $users as $user ) {
+				$user->ID = (int) $user->ID;
+				$tmp[ $user->ID ] = $user;
+			}
+			$users = $tmp;
+
+			// We look for Posts with any status (except trash and auto-draft).
+			$posts = get_posts( array(
+				'author__in'  => array_keys( $users ),
+				'post_status' => 'any',
+			) );
+
+			if ( $posts ) {
+				foreach ( $posts as $post ) {
+					$post->post_author = (int) $post->post_author;
+
+					if ( ! isset( $out[ $post->post_author ] ) ) {
+						$out[ $post->post_author ] = $field ? $users[ $post->post_author ]->$field : $users[ $post->post_author ];
+					}
+				}
+			}
+		}
+
+		return $out;
+	}
+
+
+	/*--------------------------------------------------------------------------------------------*/
+	/* MULTISITE ================================================================================ */
+	/*--------------------------------------------------------------------------------------------*/
+
+	protected function scan_multisite() {
+		global $wpdb;
+
+		$admins = static::get_posts_count_per_admin_per_blog();
+
+		if ( $admins ) {
+			$blog_names = array();
+
+			foreach ( $admins as $blog_id => $users ) {
+				$table_prefix = $wpdb->get_blog_prefix( $blog_id );
+				$blog_name    = $wpdb->get_var( "SELECT option_value FROM {$table_prefix}options WHERE option_name = 'blogname' LIMIT 1" );
+				$blog_names[] = '<strong>' . ( $blog_name ? esc_html( $blog_name ) : '(' . $blog_id . ')' ) . '</strong>';
+			}
+
+			// bad
+			$this->add_message( 201, array( count( $blog_names ), wp_sprintf_l( '%l', $blog_names ), static::get_new_role( true ) ) );
+		} else {
+			// good
+			$this->add_message( 0 );
+		}
+
+		return parent::scan();
+	}
+
+
+	protected function fix_multisite() {
+		////
+		return parent::fix();
+	}
+
+
+	protected function manual_fix_multisite() {
+		////
+		return parent::manual_fix();
+	}
+
+
+	protected function get_fix_action_template_parts_multisite() {
+		$parts = array();
+
+		////
+		$parts['admin-as-author'] = 'foo';
 		return $parts;
 	}
 
@@ -378,43 +445,9 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 	}
 
 
-	/*
-	 * Return a list of Administrators that created Posts.
-	 * This is used for non-multisite.
-	 *
-	 * @return (array) Array of WP_User objects.
-	 */
-	final protected static function get_admins( $field = false ) {
-		$out   = array();
-		$users = get_users( array( 'role' => 'administrator' ) );
-
-		if ( $users ) {
-			$tmp = array();
-			foreach ( $users as $user ) {
-				$user->ID = (int) $user->ID;
-				$tmp[ $user->ID ] = $user;
-			}
-			$users = $tmp;
-
-			$posts = get_posts( array(
-				'author__in'  => array_keys( $users ),
-				'post_status' => 'any',
-			) );
-
-			if ( $posts ) {
-				foreach ( $posts as $post ) {
-					$post->post_author = (int) $post->post_author;
-
-					if ( ! isset( $out[ $post->post_author ] ) ) {
-						$out[ $post->post_author ] = $field ? $users[ $post->post_author ]->$field : $users[ $post->post_author ];
-					}
-				}
-			}
-		}
-
-		return $out;
-	}
-
+	/*--------------------------------------------------------------------------------------------*/
+	/* OTHER TOOLS ============================================================================== */
+	/*--------------------------------------------------------------------------------------------*/
 
 	/*
 	 * Find the most appropriate role (the one with the largest number of capabilities, and able to publish Posts).
