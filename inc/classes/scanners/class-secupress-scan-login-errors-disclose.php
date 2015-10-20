@@ -99,11 +99,8 @@ class SecuPress_Scan_Login_Errors_Disclose extends SecuPress_Scan implements iSe
 
 		if ( $for_regex ) {
 			foreach ( $messages as $id => $message ) {
-				$messages[ $id ] = str_replace(
-					array(  '[',  ']',  '(',  ')',  '{',  '}',  '.',  '*',  '?',  '+',  '|',  '^',  '$',  '@', '%ALL%' ),
-					array( '\[', '\]', '\(', '\)', '\{', '\}', '\.', '\*', '\?', '\+', '\|', '\^', '\$', '\@', '.*' ),
-					$message
-				);
+				$messages[ $id ] = addcslashes( $messages[ $id ], '[](){}.*+?|^$@' );
+				$messages[ $id ] = str_replace( '%ALL%', '.*', $messages[ $id ] );
 			}
 		}
 

@@ -20,11 +20,8 @@ function secupress_replace_login_errors_disclose( $errors ) {
 	);
 
 	foreach ( $pattern as $id => $message ) {
-		$pattern[ $id ] = str_replace(
-			array(  '[',  ']',  '(',  ')',  '{',  '}',  '.',  '*',  '?',  '+',  '|',  '^',  '$',  '@', '%ALL%' ),
-			array( '\[', '\]', '\(', '\)', '\{', '\}', '\.', '\*', '\?', '\+', '\|', '\^', '\$', '\@', '.*' ),
-			$message
-		);
+		$pattern[ $id ] = addcslashes( $pattern[ $id ], '[](){}.*+?|^$@' );
+		$pattern[ $id ] = str_replace( '%ALL%', '.*', $pattern[ $id ] );
 	}
 
 	$pattern = '@\s(' . implode( '|', $pattern ) . ')<br />\n@';
