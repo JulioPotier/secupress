@@ -64,7 +64,6 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 				// bad
 				$bad_plugins = wp_list_pluck( $bad_plugins, 'Name' );
 				$bad_plugins = self::wrap_in_tag( $bad_plugins );
-				$bad_plugins = wp_sprintf_l( '%l', $bad_plugins );
 
 				$this->add_message( 200, array( $count, $count, $bad_plugins ) );
 			}
@@ -87,7 +86,6 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 				// bad
 				$bad_plugins = wp_list_pluck( $bad_plugins, 'Name' );
 				$bad_plugins = self::wrap_in_tag( $bad_plugins );
-				$bad_plugins = wp_sprintf_l( '%l', $bad_plugins );
 
 				$this->add_message( 201, array( $count, $count, $bad_plugins ) );
 			}

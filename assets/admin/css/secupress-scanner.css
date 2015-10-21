@@ -271,33 +271,34 @@ th.secupress-check {
 	max-height: 370px;
 	overflow-y: auto;
 }
-.speech-box {
+.sweet-alert .secupress-boxed-group,
+.sweet-alert .secupress-unboxed-group {
 	max-width: 400px;
 	margin: 0 auto;
 	text-align: left;
 }
-.sweet-alert .show-input > fieldset,
-.sweet-alert .show-input .secupress-boxed-group {
-	max-width: 400px;
+.sweet-alert .secupress-boxed-group,
+.sweet-alert .secupress-bordered-group {
+	border: solid 1px #dfdfdf;
+}
+.sweet-alert .secupress-boxed-group + .secupress-boxed-group,
+.sweet-alert .secupress-unboxed-group + .secupress-unboxed-group,
+.sweet-alert .secupress-boxed-group + .secupress-unboxed-group,
+.sweet-alert .secupress-unboxed-group + .secupress-boxed-group {
+	margin-top: 1em;
+}
+.sweet-alert .secupress-boxed-group {
 	max-height: 7.5em;
 	padding-left: .5em;
-	border: solid 1px #dfdfdf;
-	margin: 0 auto 1em;
 	overflow-y: auto;
-	text-align: left;
 }
-.sweet-alert .show-input > fieldset > legend,
-.sweet-alert .show-input .secupress-boxed-group > legend {
+.sweet-alert .secupress-boxed-group > legend,
+.sweet-alert .secupress-unboxed-group > legend {
 	margin-bottom: .5em;
 }
-.sweet-alert .show-input > fieldset > fieldset,
-.sweet-alert .show-input .secupress-boxed-group > fieldset {
+.sweet-alert .secupress-boxed-group > fieldset,
+.sweet-alert .secupress-unboxed-group > fieldset {
 	margin-left: .875em;
-}
-.sweet-alert .show-input .too-many-admins-field {
-	max-height: none;
-	padding-left: 0;
-	margin-bottom: .5em;
 }
 .too-many-admins-field [type="radio"] {
 	margin-left: 1em;

@@ -61,7 +61,7 @@ class SecuPress_Scan_Themes_Update extends SecuPress_Scan implements iSecuPress_
 
 		if ( $count = count( $theme_updates ) ) {
 			// bad
-			$this->add_message( 200, array( $count, $count, wp_sprintf_l( '%l', self::wrap_in_tag( $theme_updates ) ) ) );
+			$this->add_message( 200, array( $count, $count, self::wrap_in_tag( $theme_updates ) ) );
 		}
 
 		// good

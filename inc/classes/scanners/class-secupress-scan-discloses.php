@@ -115,7 +115,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 		// Sum up!
 		if ( $wp_discloses ) {
 			// bad
-			$this->add_message( 201, array( wp_sprintf_l( '%l', $wp_discloses ) ) );
+			$this->add_message( 201, array( $wp_discloses ) );
 		}
 
 		// Readme file.

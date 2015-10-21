@@ -108,7 +108,7 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements iSecuPress_Scan
 			$this->add_message( 200 );
 
 			foreach ( $bad_keys as $message_id => $keys ) {
-				$this->add_message( $message_id, array( count( $keys ), wp_sprintf_l( '%l', $keys ) ) );
+				$this->add_message( $message_id, array( count( $keys ), $keys ) );
 			}
 		}
 

@@ -77,7 +77,7 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements iSecuPress_Scan {
 
 		if ( $warnings ) {
 			// warning
-			$this->add_message( 100, array( wp_sprintf_l( '%l', $warnings ) ) );
+			$this->add_message( 100, array( $warnings ) );
 		}
 
 		// good
@@ -132,12 +132,12 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements iSecuPress_Scan {
 
 		if ( $bads ) {
 			// bad
-			$this->add_fix_message( 201, array( wp_sprintf_l( '%l', $bads ) ) );
+			$this->add_fix_message( 201, array( $bads ) );
 		}
 
 		if ( $warnings ) {
 			// warning
-			$this->add_fix_message( 100, array( wp_sprintf_l( '%l', $warnings ) ) );
+			$this->add_fix_message( 100, array( $warnings ) );
 		}
 
 		// good
