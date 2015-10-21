@@ -65,7 +65,7 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPres
 				}
 
 				// bad
-				$this->add_message( 201, array( count( $blog_names ), static::$max_admins, wp_sprintf_l( '%l', $blog_names ) ) );
+				$this->add_message( 201, array( count( $blog_names ), static::$max_admins, $blog_names ) );
 			} else {
 				// good
 				$this->add_message( 1, array( static::$max_admins ) );
