@@ -272,7 +272,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 		if ( $lists['plugins'] ) {
 			$form  = '<div class="show-input">';
 				$form .= '<h4 id="secupress-fix-inactive-plugins">' . __( 'Choose plugins to delete:', 'secupress' ) . '</h4>';
-				$form .= '<fieldset aria-labelledby="secupress-fix-inactive-plugins">';
+				$form .= '<fieldset aria-labelledby="secupress-fix-inactive-plugins" class="secupress-boxed-group">';
 
 					foreach ( $lists['plugins'] as $plugin_file => $plugin_data ) {
 						$is_symlinked = static::is_plugin_symlinked( $plugin_file );
@@ -298,7 +298,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 		if ( $lists['themes'] ) {
 			$form  = '<div class="show-input">';
 				$form .= '<h4 id="secupress-fix-inactive-themes">' . __( 'Choose themes to delete:', 'secupress' ) . '</h4>';
-				$form .= '<fieldset aria-labelledby="secupress-fix-inactive-themes">';
+				$form .= '<fieldset aria-labelledby="secupress-fix-inactive-themes" class="secupress-boxed-group">';
 
 					foreach ( $lists['themes'] as $theme_file => $theme_data ) {
 						$is_symlinked = static::is_theme_symlinked( $theme_file );

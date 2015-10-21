@@ -276,8 +276,7 @@ th.secupress-check {
 	margin: 0 auto;
 	text-align: left;
 }
-.sweet-alert .show-input > fieldset,
-.sweet-alert .show-input .secupress-boxed-group {
+.sweet-alert .secupress-boxed-group {
 	max-width: 400px;
 	max-height: 7.5em;
 	padding-left: .5em;
@@ -286,15 +285,13 @@ th.secupress-check {
 	overflow-y: auto;
 	text-align: left;
 }
-.sweet-alert .show-input > fieldset > legend,
-.sweet-alert .show-input .secupress-boxed-group > legend {
+.sweet-alert .secupress-boxed-group > legend {
 	margin-bottom: .5em;
 }
-.sweet-alert .show-input > fieldset > fieldset,
-.sweet-alert .show-input .secupress-boxed-group > fieldset {
+.sweet-alert .secupress-boxed-group > fieldset {
 	margin-left: .875em;
 }
-.sweet-alert .show-input .too-many-admins-field {
+.sweet-alert .too-many-admins-field {
 	max-height: none;
 	padding-left: 0;
 	margin-bottom: .5em;
