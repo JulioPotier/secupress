@@ -174,7 +174,8 @@ function secupress_create_uniqid() {
  * @return string
  */
 function secupress_die( $message = '', $title = '', $args = array() ) {
-	wp_die( '<h1>' . SECUPRESS_PLUGIN_NAME . '</h1><p>' . $message . '</p>', $title, $args );
+	$has_p = strpos( $message, '<p>' ) !== false;
+	wp_die( '<h1>' . SECUPRESS_PLUGIN_NAME . '</h1>' . ( $has_p ? '' : '<p>' ) . $message . ( $has_p ? '' : '</p>' ), $title, $args );
 }
 
 /**
@@ -184,7 +185,7 @@ function secupress_die( $message = '', $title = '', $args = array() ) {
  * @return string
  */
 function secupress_block( $module, $code = 403 ) {
-	
+
 	do_action( 'module.' . $module . '.trigger', secupress_get_ip(), $code );
 
 	$module = ucwords( str_replace( '-', ' ', $module ) );
