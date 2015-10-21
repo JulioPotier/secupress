@@ -125,5 +125,5 @@ function __secupress_firewall_pre_bbq_url_content_bad_contents_list_default_if_e
 
 
 function secupress_firewall_bbq_url_content_bad_contents_list_default() {
-	return 'AND 1=, AND+1=, AND%201=, information_schema, UNI'.'ON SEL'.'ECT, UNI'.'ON+SEL'.'ECT, UNI'.'ON%20SEL'.'ECT,  UNI'.'ON ALL SEL'.'ECT, UNI'.'ON+ALL+SEL'.'ECT, UNI'.'ON%20ALL%20SEL'.'ECT, ev'.'al(, wp-config.php, %'.'00, %%'.'30%'.'30, GLOBALS, .ini, REQUEST, et'.'c/pas'.'swd, ba'.'se'.'64'.'_en'.'co'.'de, ba'.'se'.'64'.'_de'.'co'.'de, javascript:, ../, 127.0.0.1, inp'.'ut_fi'.'le';
+	return 'AND 1=, AND+1=, AND%201=, information_schema, UNI'.'ON SEL'.'ECT, UNI'.'ON+SEL'.'ECT, UNI'.'ON%20SEL'.'ECT,  UNI'.'ON ALL SEL'.'ECT, UNI'.'ON+ALL+SEL'.'ECT, UNI'.'ON%20ALL%20SEL'.'ECT, ev'.'al(, wp-config.php, %'.'00, %%'.'30%'.'30, GLOBALS[, .ini, REQUEST[, et'.'c/pas'.'swd, ba'.'se'.'64'.'_en'.'co'.'de, ba'.'se'.'64'.'_de'.'co'.'de, javascript:, ../, 127.0.0.1, inp'.'ut_fi'.'le';
 }
