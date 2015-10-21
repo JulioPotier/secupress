@@ -199,7 +199,7 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPres
 			}
 		}
 
-		$row  = '<fieldset class="secupress-boxed-group too-many-admins-field" aria-labbelledby="' . $base_id . '-legend">';
+		$row  = '<fieldset class="secupress-unboxed-group secupress-bordered-group too-many-admins-field" aria-labbelledby="' . $base_id . '-legend">';
 			$row .= '<legend id="' . $base_id . '-legend"><strong>' . $user->display_name . '</strong> <span class="description">(' . $user->user_login . ')</span></legend>';
 			$row .= '<input id="' . $base_id . '-action" type="radio" name=' . $base_name . '[action]" value="" /> ';
 			$row .= '<label id="' . $base_id . '-label" for="' . $base_id . '-action">' . __( 'Nothing', 'secupress' ) . '</label>';
