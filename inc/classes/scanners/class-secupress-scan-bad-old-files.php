@@ -67,7 +67,7 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements iSecuPress_
 
 		if ( $count = count( $bads ) ) {
 			// bad
-			$this->add_message( 200, array( $count, $count, wp_sprintf_l( '%l', $bads ) ) );
+			$this->add_message( 200, array( $count, $count, $bads ) );
 		} else {
 			// good
 			$this->add_message( 0 );
@@ -97,7 +97,7 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements iSecuPress_
 
 		if ( $count = count( $not_deleted ) ) {
 			// bad
-			$this->add_fix_message( 201, array( $count, $count, wp_sprintf_l( '%l', $not_deleted ) ) );
+			$this->add_fix_message( 201, array( $count, $count, $not_deleted ) );
 		} else {
 			// good
 			$this->add_fix_message( 1 );

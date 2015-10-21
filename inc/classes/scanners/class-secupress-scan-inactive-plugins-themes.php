@@ -68,7 +68,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 			// bad
 			$lists['plugins'] = wp_list_pluck( $lists['plugins'], 'Name' );
 			$lists['plugins'] = self::wrap_in_tag( $lists['plugins'], 'strong' );
-			$this->add_message( 200, array( $count, $count, wp_sprintf_l( '%l', $lists['plugins'] ) ) );
+			$this->add_message( 200, array( $count, $count, $lists['plugins'] ) );
 		}
 
 		// Inactive themes
@@ -76,7 +76,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 			// bad
 			$lists['themes'] = wp_list_pluck( $lists['themes'], 'Name' );
 			$lists['themes'] = self::wrap_in_tag( $lists['themes'], 'strong' );
-			$this->add_message( 201, array( $count, $count, wp_sprintf_l( '%l', $lists['themes'] ) ) );
+			$this->add_message( 201, array( $count, $count, $lists['themes'] ) );
 		}
 
 		// good
@@ -175,7 +175,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 						// cantfix
 						$not_removed = array_diff_key( $selected_plugins, $deleted_plugins );
 						$not_removed = wp_list_pluck( $not_removed, 'Name' );
-						$this->add_fix_message( 102, array( count( $not_removed ), wp_sprintf_l( '%l', $not_removed ) ) );
+						$this->add_fix_message( 102, array( count( $not_removed ), $not_removed ) );
 					}
 
 					// Force refresh of plugin update information.
@@ -242,7 +242,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 						// cantfix
 						$not_removed = array_diff_key( $selected_themes, $deleted_themes );
 						$not_removed = wp_list_pluck( $not_removed, 'Name' );
-						$this->add_fix_message( 105, array( count( $not_removed ), wp_sprintf_l( '%l', $not_removed ) ) );
+						$this->add_fix_message( 105, array( count( $not_removed ), $not_removed ) );
 					}
 
 					// Force refresh of theme update information

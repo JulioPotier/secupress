@@ -281,6 +281,14 @@ function secupress_format_message( $msgs, $test_name ) {
 
 		}
 
+		if ( $atts ) {
+			foreach ( $atts as $i => $att ) {
+				if ( is_array( $att ) ) {
+					$atts[ $i ] = wp_sprintf_l( '%l', $att );
+				}
+			}
+		}
+
 		$output .= '<li>' . ( ! empty( $atts ) ? vsprintf( $string, $atts ) : $string ) . '</li>';
 	}
 

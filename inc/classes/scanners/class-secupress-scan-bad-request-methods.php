@@ -74,12 +74,12 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements iSecu
 
 		if ( $bads ) {
 			// bad
-			$this->add_message( 200, array( count( $bads ), wp_sprintf_l( '%l', $bads ) ) );
+			$this->add_message( 200, array( count( $bads ), $bads ) );
 		}
 
 		if ( $warnings ) {
 			// warning
-			$this->add_message( 100, array( count( $warnings ), wp_sprintf_l( '%l', $warnings ) ) );
+			$this->add_message( 100, array( count( $warnings ), $warnings ) );
 		}
 
 		// good

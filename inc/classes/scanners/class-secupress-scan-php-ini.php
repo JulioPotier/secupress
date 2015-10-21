@@ -117,7 +117,7 @@ class SecuPress_Scan_PHP_INI extends SecuPress_Scan implements iSecuPress_Scan {
 
 		if ( $count = count( $arg_200 ) ) {
 			// bad
-			$this->add_message( 200, array( $count, wp_sprintf_l( '%l', $arg_200 ) ) );
+			$this->add_message( 200, array( $count, $arg_200 ) );
 		}
 
 		$arg_201 = array_filter( $arg_201 );
@@ -126,7 +126,7 @@ class SecuPress_Scan_PHP_INI extends SecuPress_Scan implements iSecuPress_Scan {
 			// bad
 			foreach ( $arg_201 as $value => $names ) {
 				$count = count( $names );
-				$this->add_message( 201, array( $count, wp_sprintf_l( '%l', $names ), $value ) );
+				$this->add_message( 201, array( $count, $names, $value ) );
 			}
 		}
 
@@ -134,7 +134,7 @@ class SecuPress_Scan_PHP_INI extends SecuPress_Scan implements iSecuPress_Scan {
 			// bad
 			foreach ( $arg_202 as $value => $names ) {
 				$count = count( $names );
-				$this->add_message( 202, array( $count, wp_sprintf_l( '%l', $names ), $value ) );
+				$this->add_message( 202, array( $count, $names, $value ) );
 			}
 		}
 

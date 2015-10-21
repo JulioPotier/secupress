@@ -55,7 +55,7 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 		if ( $files ) {
 			// bad
 			$files = self::wrap_in_tag( $files );
-			$this->add_message( 200, array( count( $files ), wp_sprintf_l( '%l', $files ) ) );
+			$this->add_message( 200, array( count( $files ), $files ) );
 		} else {
 			// good
 			$this->add_message( 0 );
@@ -102,7 +102,7 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 			$not_renamed = static::wrap_in_tag( $not_renamed );
 
 			$this->add_fix_message( 100, array( $count_renamed, $count_renamed, '<code>' . $suffix . '</code>' ) );
-			$this->add_fix_message( 101, array( count( $not_renamed ), wp_sprintf_l( '%l', $not_renamed ) ) );
+			$this->add_fix_message( 101, array( count( $not_renamed ), $not_renamed ) );
 		}
 		else {
 			// bad: no files could not be renamed.
