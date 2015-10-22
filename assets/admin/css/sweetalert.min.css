@@ -123,7 +123,10 @@ body.stop-scrolling {
       opacity: 1;
       -webkit-transform: scale(1);
       transform: scale(1); }
-  .sweet-alert input[type=text] {
+  .sweet-alert input[type="text"],
+  .sweet-alert input[type="email"],
+  .sweet-alert input[type="password"],
+  .sweet-alert input[type="url"] {
     width: 100%;
     box-sizing: border-box;
     border-radius: 3px;
@@ -209,9 +212,9 @@ body.stop-scrolling {
         transition-delay: 0s; }
     .sweet-alert button::-moz-focus-inner {
       border: 0; }
-  .sweet-alert[data-has-cancel-button=false] button {
+  .sweet-alert[data-has-cancel-button="false"] button {
     box-shadow: none !important; }
-  .sweet-alert[data-has-confirm-button=false][data-has-cancel-button=false] {
+  .sweet-alert[data-has-confirm-button="false"][data-has-cancel-button="false"] {
     padding-bottom: 40px; }
   .sweet-alert .sa-icon {
     width: 80px;
@@ -462,35 +465,35 @@ body.stop-scrolling {
   100% {
     top: 70%; } }
 
-.showSweetAlert[data-animation=pop] {
+.showSweetAlert[data-animation="pop"] {
   -webkit-animation: showSweetAlert 0.3s;
   animation: showSweetAlert 0.3s; }
 
-.showSweetAlert[data-animation=none] {
+.showSweetAlert[data-animation="none"] {
   -webkit-animation: none;
   animation: none; }
 
-.showSweetAlert[data-animation=slide-from-top] {
+.showSweetAlert[data-animation="slide-from-top"] {
   -webkit-animation: slideFromTop 0.3s;
   animation: slideFromTop 0.3s; }
 
-.showSweetAlert[data-animation=slide-from-bottom] {
+.showSweetAlert[data-animation="slide-from-bottom"] {
   -webkit-animation: slideFromBottom 0.3s;
   animation: slideFromBottom 0.3s; }
 
-.hideSweetAlert[data-animation=pop] {
+.hideSweetAlert[data-animation="pop"] {
   -webkit-animation: hideSweetAlert 0.2s;
   animation: hideSweetAlert 0.2s; }
 
-.hideSweetAlert[data-animation=none] {
+.hideSweetAlert[data-animation="none"] {
   -webkit-animation: none;
   animation: none; }
 
-.hideSweetAlert[data-animation=slide-from-top] {
+.hideSweetAlert[data-animation="slide-from-top"] {
   -webkit-animation: slideToTop 0.4s;
   animation: slideToTop 0.4s; }
 
-.hideSweetAlert[data-animation=slide-from-bottom] {
+.hideSweetAlert[data-animation="slide-from-bottom"] {
   -webkit-animation: slideToBottom 0.3s;
   animation: slideToBottom 0.3s; }
 
