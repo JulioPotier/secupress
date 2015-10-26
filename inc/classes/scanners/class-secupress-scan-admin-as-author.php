@@ -30,21 +30,44 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// good
-			0   => __( 'Perfect, no Posts created by Administrators.', 'secupress' ),
+			0   => __( 'No Posts created by Administrators.', 'secupress' ),
 			1   => __( 'No Posts created by Administrators anymore.', 'secupress' ),
+			/* translators: %s is a user role. */
 			2   => __( 'User role %s created.', 'secupress' ),
-			3   => __( 'User role %1$s set to: %2$s.', 'secupress' ),
+			/* translators: %s is a user name. */
+			3   => __( 'All your Posts have been attributed to %s.', 'secupress' ),
+			/* translators: 1 is a user name, 2 is a user role. */
+			4   => _n_noop( '%1$s successfully downgraded to %2$s.', '%1$s successfully downgraded to %2$s.', 'secupress' ),
+			/* translators: %s is a logout link. */
+			5   => sprintf( __( 'New <strong>Administrator</strong> account created. The current account will be downgraded as soon as you log into your new account (you should receive an e-mail very soon). %s?', 'secupress' ), '<a href="' . esc_url( wp_logout_url() ) . '">' . __( 'Logout' ) . '</a>' ), // WPi18n
+			/* translators: %s is a user role. */
+			6   => __( 'New %s account created.', 'secupress' ),
 			// warning
+			/* translators: %s is a user name. */
 			100 => __( '%s\'s user role still needs to be changed.', 'secupress' ),
 			// bad
-			200 => _n_noop( '%s is Administrator and a Post author at the same time.', '%s are Administrators and Post authors at the same time.', 'secupress' ),
+			/* translators: %s is a user name. */
+			200 => _n_noop( '%s is Administrator and a Post Author at the same time.', '%s are Administrators and Post Authors at the same time.', 'secupress' ),
+			/* translators: %s is a site name (or a list of site names). */
 			201 => _n_noop( '%s has Posts created by Administrators.', 'Some of your sites have Posts created by Administrators: %s.', 'secupress' ),
-			202 => __( 'The new user role could not be created. You will need to create a user role able to publish Posts by yourself: some free plugins able to do that exist.', 'secupress' ),
+			202 => __( 'The new user role could not be created. You will need to create a user role able to publish Posts by yourself: some free plugins able to do such thing exist.', 'secupress' ),
+			203 => __( 'Error: no data sent concerning your current user account.', 'secupress' ),
+			204 => __( 'Please select a valid user to whom to attribute your Posts.', 'secupress' ),
+			/* translators: 1 is a user name (or a list of user names), 2 is a user role. */
+			205 => _n_noop( '%1$s could not be downgraded to %2$s. You should try to do it manually.', '%1$s could not be downgraded to %2$s. You should try to do it manually.', 'secupress' ),
+			206 => __( 'Please provide data for your new user account.', 'secupress' ),
+			207 => __( 'Please provide valid login and e-mail for your new user account.', 'secupress' ),
+			208 => __( 'Sorry, that username already exists!' ), // WPi18n
+			209 => __( 'Sorry, that username is not allowed.' ), // WPi18n
+			210 => sprintf( __( 'Sorry, that username is invalid. It may not be longer than 60 characters and may contain only the following characters: %s', 'secupress' ), static::allowed_characters_for_login( true ) ),
+			211 => __( 'Sorry, that email address is already used!' ), // WPi18n
+			212 => __( 'Posts could not be attributed.', 'secupress' ),
 			// cantfix
-			300 => _n_noop( 'The user role of %d Administrator must be changed.', 'The user role of %d Administrators must be changed.', 'secupress' ),
-			301 => __( 'It seems there are no user role, other than Administrator, able to create Posts. A new user role must be created.', 'secupress' ),
-			302 => __( '%1$s created Posts with this account. A new Administrator account must be created: it is safer if you do it yourself. Once done, you can "downgrade" %1$s\'s user role; or come back here and I will do it for you.', 'secupress' ),
-			303 => __( 'All Administrators created Posts. Obviously I can\'t "downgrade" all of them, at least one Administrator must be kept. A new Administrator account must be created first.', 'secupress' ),
+			300 => __( 'You created Posts with this account. A new account may be needed.', 'secupress' ),
+			/* translators: %d is the number of Administrators. */
+			301 => _n_noop( 'The user role of %d Administrator must be changed.', 'The user role of %d Administrators must be changed.', 'secupress' ),
+			/* translators: %s is a user role. */
+			302 => __( 'You chose to create a new %s account.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -68,7 +91,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 
 		if ( $admins ) {
 			// bad
-			$this->add_message( 200, array( count( $admins ), wp_sprintf_l( '%l', static::wrap_in_tag( $admins, 'strong' ) ) ) );
+			$this->add_message( 200, array( count( $admins ), static::wrap_in_tag( $admins, 'strong' ) ) );
 		} else {
 			// good
 			$this->add_message( 0 );
@@ -78,227 +101,638 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 	}
 
 
+	/*
+	 * Fixes:
+	 * - Well, we fix nothing here actually. We only throw messages and display a form or informative text.
+	 */
 	public function fix() {
+
 		// MULTISITE ===============
 		if ( is_multisite() ) {
 			return $this->fix_multisite();
 		}
 
 		// MONOSITE ================
-		$admins = static::get_admins( 'user_login' );
+		$admins       = static::get_admins( 'user_login' );
+		$count_admins = count( $admins );
 
-		if ( ! $admins ) {
+		if ( ! $count_admins ) {
 			// good
 			$this->add_fix_message( 1 );
 			return parent::fix();
 		}
 
-		$go_to_manual_fix = false;
-		$new_role         = static::get_new_role( true );
-		$count_admins     = count( $admins );
+		$current_admin           = get_current_user_id();
+		$current_admin_is_author = isset( $admins[ $current_admin ] );
+		$has_other_admin_authors = ! $current_admin_is_author || ( $current_admin_is_author && $count_admins > 1 );
 
-		// No suitable user role.
-		if ( ! $new_role ) {
-			// cantfix: create new role.
-			$this->add_fix_message( 301 );
-			$go_to_manual_fix = true;
+		/*
+		 * The current user is in the list.
+		 */
+		if ( $current_admin_is_author ) {
+			--$count_admins;
+			// cantfix: current user must create a new account.
+			$this->add_fix_message( 300 );
 		}
 
-		$current_admin    = get_current_user_id();
-		$all_admins       = get_users( array( 'role' => 'administrator' ) );
-		$count_all_admins = count( $all_admins );
-
-		// cantfix: admins must be downgraded.
-		$this->add_fix_message( 300, array( $count_admins, $count_admins ) );
-
-		if ( isset( $admins[ $current_admin ] ) ) {
-			/*
-			 * The current user is in the list.
-			 */
-
-			// cantfix: user must create a new admin account.
-			$this->add_fix_message( 302, array( '<strong>' . $admins[ $current_admin ] . '</strong>' ) );
-
-			if ( $count_admins > 1 ) {
-				// cantfix: admins will be downgraded.
-				$this->add_fix_message( 300, array( $count_admins, $count_admins ) ); // We include the current user in the list.
-				$go_to_manual_fix = true;
-			}
-
-		} elseif ( count( $all_admins ) === $count_admins ) {
-			/*
-			 * All Administrators created Posts.
-			 * Should not happen because current user is an Administrator.
-			 * This is just for safety: someday we could use `manage_options` instead of `administrator` to be able to reach this settings page.
-			 */
-
-			// cantfix: we can't downgrade ALL Administrators.
-			$this->add_fix_message( 303 );
-
-		} else {
-			/*
-			 * The current user is not in the list.
-			 */
-
-			// cantfix: admins must be downgraded.
-			$this->add_fix_message( 300, array( $count_admins, $count_admins ) );
-			$go_to_manual_fix = true;
+		/*
+		 * Some other administrators created Posts.
+		 */
+		if ( $has_other_admin_authors ) {
+			// cantfix: some admins must be downgraded.
+			$this->add_fix_message( 301, array( $count_admins, $count_admins ) );
 		}
 
 		// Let's do it!
-		if ( $go_to_manual_fix ) {
-			$this->add_fix_action( 'admin-as-author' );
-		}
+		$this->add_fix_action( 'admin-as-author' );
 
 		return parent::fix();
 	}
 
 
+	/*
+	 * Manual fixes.
+	 */
 	public function manual_fix() {
-		if ( ! $this->has_fix_action_part( 'admin-as-author' ) ) {
-			return parent::manual_fix();
-		}
 
 		// MULTISITE ===============
 		if ( is_multisite() ) {
-			return $this->manual_fix_multisite();
-		}
-
-		// MONOSITE ================
-		$admins = static::get_admins();
-
-		// No admins with Posts left.
-		if ( ! $admins ) {
-			// good
-			$this->add_fix_message( 1 );
+			$this->manual_fix_multisite();
 			return parent::manual_fix();
 		}
 
-		$new_role      = static::get_new_role();
-		$new_role_name = static::get_new_role( true );
-		$current_admin = get_current_user_id();
-		$all_admins    = get_users( array( 'role' => 'administrator' ) );
-		$warning       = false;
-
-		// No suitable user role: create one.
-		if ( ! $new_role ) {
-			$new_role       = static::create_editor_role();
-			$new_role_name  =_x( 'Post Author', 'User role' );
-
-			if ( $new_role ) {
-				// good: new user role created.
-				$this->add_fix_message( 2, array( '<strong>' . $new_role_name . '</strong>' ) );
-			} else {
-				// bad: the user role could not be created.
-				$this->add_fix_message( 202 );
-				return parent::manual_fix();
-			}
+		// MONOSITE ================
+		if ( $this->has_fix_action_part( 'admin-as-author' ) ) {
+			// Maybe create new role + maybe assign Posts + maybe downgrade Administrators.
+			$this->manual_fix_main_action();
 		}
-
-		// Change Admins role.
-		if ( isset( $admins[ $current_admin ] ) ) {
-			/*
-			 * The current user is in the list.
-			 */
-			$warning = '<strong>' . $admins[ $current_admin ]->user_login . '</strong>';
-			unset( $admins[ $current_admin ] );
-
-		} elseif ( count( $all_admins ) === count( $admins ) ) {
-			/*
-			 * All Administrators created Posts.
-			 * Should not happen because current user is an Administrator.
-			 * This is just for safety: someday we could use `manage_options` instead of `administrator` to be able to reach this settings page.
-			 */
-
-			// cantfix
-			$this->add_fix_message( 303 );
-			$admins = array();
+		elseif ( $this->has_fix_action_part( 'admin-as-author-new-administrator' ) ) {
+			// Create new Administrator account.
+			$this->manual_fix_new_administrator_action();
 		}
-
-		if ( $admins ) {
-			$done = array();
-
-			foreach ( $admins as $admin ) {
-				$admin->remove_role( 'administrator' );
-				$admin->add_role( $new_role );
-				$done[] = '<strong>' . $admin->user_login . '</strong>';
-			}
-
-			// good
-			$this->add_fix_message( 3, array( '<strong>' . $new_role_name . '</strong>', wp_sprintf_l( '%l', $done ) ) );
+		elseif ( $this->has_fix_action_part( 'admin-as-author-new-editor' ) ) {
+			// Create new Editor account.
+			$this->manual_fix_new_editor_action();
 		}
-
-		if ( $warning ) {
-			// warning
-			$this->add_fix_message( 100, array( $warning ) );
-		}
-
-		$this->maybe_set_fix_status( 1 );
 
 		return parent::manual_fix();
 	}
 
 
+	/*
+	 * Individual fix:
+	 * - Maybe create new role.
+	 * - Maybe assign Posts.
+	 * - Maybe downgrade Administrators.
+	 */
+	protected function manual_fix_main_action() {
+		global $wpdb;
+
+		$admins       = static::get_admins( 'user_login' );
+		$count_admins = count( $admins );
+
+		// No admins with Posts left.
+		if ( ! $count_admins ) {
+			// good
+			return $this->add_fix_message( 1 );
+		}
+
+		$final_test    = true;
+		$current_admin = get_current_user_id();
+		$new_role      = static::get_new_role();
+		$new_role_name = '<strong>' . static::get_new_role( true ) . '</strong>';
+
+		$current_admin_is_author = isset( $admins[ $current_admin ] );
+		$has_other_admin_authors = ! $current_admin_is_author || ( $current_admin_is_author && $count_admins > 1 );
+
+		/*
+		 * No suitable user role: create one.
+		 */
+		if ( ! $new_role ) {
+			$new_role = static::create_editor_role();
+
+			if ( ! $new_role ) {
+				// bad: the user role could not be created.
+				return $this->add_fix_message( 202 );
+			}
+
+			$new_role_name = '<strong>' . $new_role['label'] . '</strong>';
+			$new_role      = $new_role['name'];
+
+			// good: new user role created.
+			$this->add_fix_message( 2, array( $new_role_name ) );
+		}
+
+		/*
+		 * The current user is in the list.
+		 */
+		if ( $current_admin_is_author ) {
+			$what_to_do = ! empty( $_POST['secupress-fix-current-admin-as-author'] ) ? $_POST['secupress-fix-current-admin-as-author'] : false;
+
+			// Create new Admin account.
+			if ( $what_to_do === 'new-admin' ) {
+				// cantfix: display a new form.
+				$this->add_fix_message( 302, array( '<strong>' . _x( 'Administrator', 'User role' ) . '</strong>' ) );
+				$this->add_fix_action( 'admin-as-author-new-administrator' );
+				// Don't do the final test yet, or the message 100 (and all other messages) will be shown in the popup.
+				$final_test = false;
+			}
+			// Assign Posts to an Editor.
+			elseif ( $what_to_do === 'editor' ) {
+				$editor_id = ! empty( $_POST['secupress-fix-current-admin-as-author-editor-choose'] ) ? (int) $_POST['secupress-fix-current-admin-as-author-editor-choose'] : 0;
+
+				// Create new Editor account.
+				if ( $editor_id === -1 ) {
+					// cantfix: display a new form.
+					$this->add_fix_message( 302, array( $new_role_name ) );
+					$this->add_fix_action( 'admin-as-author-new-editor' );
+					// Don't do the final test yet, or the message 100 (and all other messages) will be shown in the popup.
+					$final_test = false;
+				}
+				// Use an existing Editor.
+				else {
+					$editor    = $editor_id ? get_userdata( $editor_id ) : false;
+					$editor_id = $editor ? (int) $editor->ID : 0;
+
+					if ( ! $editor_id || ! $this->attribute_posts_to( $editor ) ) {
+						// bad: no user selected or user not valid (or I couldn't attribute Posts to him/her).
+						$this->add_fix_message( 204 );
+						$this->add_fix_action( 'admin-as-author' );
+					}
+				}
+			}
+			// Uh?
+			else {
+				// bad: I don't know what to do with the current user.
+				$this->add_fix_message( 203 );
+				$this->add_fix_action( 'admin-as-author' );
+			}
+
+			unset( $admins[ $current_admin ] );
+			--$count_admins;
+		}
+
+		/*
+		 * Some other administrators created Posts: downgrade them.
+		 */
+		if ( $has_other_admin_authors ) {
+			$done = array();
+			$fail = array();
+
+			foreach ( $admins as $user_id => $user_login ) {
+				$user = get_userdata( $user_id );
+
+				if ( ! $user ) {
+					// Fail silently.
+					continue;
+				}
+
+				// No super powers anymore.
+				$user->remove_role( 'administrator' );
+				$user->add_role( $new_role );
+
+				if ( user_can( $user, 'administrator' ) || ! user_can( $user, $new_role ) ) {
+					$fail[] = '<strong>' . $user_login . '</strong>';
+				} else {
+					$done[] = '<strong>' . $user_login . '</strong>';
+				}
+			}
+
+			if ( $done ) {
+				// good
+				$this->add_fix_message( 4, array( count( $done ), $done, $new_role_name ) );
+			}
+
+			if ( $fail ) {
+				// bad
+				$this->add_fix_message( 205, array( count( $fail ), $fail, $new_role_name ) );
+			}
+		}
+
+		// Final test
+		if ( $final_test ) {
+			$this->final_test();
+		}
+	}
+
+
+	/*
+	 * Individual fix:
+	 * - Create new Admin account.
+	 * - Set a transient to downgrade the current user account later.
+	 */
+	protected function manual_fix_new_administrator_action() {
+		$data = ! empty( $_POST['secupress-fix-current-admin-as-author-new-administrator'] ) ? $_POST['secupress-fix-current-admin-as-author-new-administrator'] : false;
+
+		if ( ! $data || ! is_array( $data ) ) {
+			// bad
+			$this->add_fix_message( 206 );
+			return;
+		}
+
+		$login = ! empty( $data['login'] ) ? $data['login'] : false; // login will be sanitized in `wp_insert_user()`.
+		$email = ! empty( $data['email'] ) ? sanitize_email( $data['email'] ) : false;
+
+		if ( ! $login || ! $email ) {
+			// bad
+			$this->add_fix_message( 207 );
+			return;
+		}
+
+		// A new super hero rises.
+		$user_id = wp_insert_user( array(
+			'user_login' => $login,
+			'user_email' => $email,
+			'user_pass'  => wp_generate_password( 24 ),
+			'role'       => 'administrator',
+		) );
+
+		// Well... Not that super in the end.
+		if ( is_wp_error( $user_id ) ) {
+			$user_id = $user_id->get_error_code();
+
+			if ( $user_id === 'existing_user_login' ) {
+				// bad
+				$this->add_fix_message( 208 );
+			} elseif ( $user_id === 'illegal_user_login' ) {
+				// bad
+				$this->add_fix_message( 209 );
+			} elseif ( strpos( $user_id, 'user_login' ) !== false ) {
+				// bad
+				$this->add_fix_message( 210 );
+			} elseif ( $user_id === 'existing_user_email' ) {
+				// bad
+				$this->add_fix_message( 211 );
+			} else {
+				// bad
+				$this->add_fix_message( 207 );
+			}
+			// Get the form back.
+			$this->add_fix_action( 'admin-as-author-new-administrator' );
+		} else {
+			// good
+			$this->add_fix_message( 5 );
+
+			// Next time the new Administrator logs in, this current account will be downgraded.
+			set_transient( 'secupress-admin-as-author-administrator', $user_id . '|' . get_current_user_id() );
+
+			$user = get_userdata( $user_id );
+
+			// Send notification by email.
+			static::new_user_notification( $user );
+		}
+	}
+
+
+	/*
+	 * Individual fix:
+	 * - Create new Editor account.
+	 * - Assign Posts to it.
+	 */
+	protected function manual_fix_new_editor_action() {
+		global $wpdb;
+
+		$data = ! empty( $_POST['secupress-fix-current-admin-as-author-new-editor'] ) ? $_POST['secupress-fix-current-admin-as-author-new-editor'] : false;
+
+		if ( ! $data || ! is_array( $data ) ) {
+			// bad
+			$this->add_fix_message( 206 );
+			return;
+		}
+
+		$login = ! empty( $data['login'] ) ? $data['login'] : false; // login will be sanitized in `wp_insert_user()`.
+		$email = ! empty( $data['email'] ) ? sanitize_email( $data['email'] ) : false;
+
+		if ( ! $login || ! $email ) {
+			// bad
+			$this->add_fix_message( 207 );
+			return;
+		}
+
+		// We need a role first.
+		$role      = static::get_new_role();
+		$role_name = static::get_new_role( true );
+
+		/*
+		 * No suitable user role: create one (who the fuck deleted it?!).
+		 */
+		if ( ! $role ) {
+			$role = static::create_editor_role();
+
+			if ( ! $role ) {
+				// bad: the user role could not be created.
+				return $this->add_fix_message( 202 );
+			}
+
+			$role_name = $role['label'];
+			$role      = $role['name'];
+		}
+
+		// Create the new Editor, with the same metas than the current user (well, not ALL metas, only the main ones).
+		$metas = get_user_meta( get_current_user_id() );
+		$metas = array_map( 'reset', $metas );
+		unset( $metas['user_nicename'] );
+
+		// A new citizen comes in town :)
+		$user_id = wp_insert_user( array_merge( $metas, array(
+			'user_login' => $login,
+			'user_email' => $email,
+			'user_pass'  => wp_generate_password( 24 ),
+			'role'       => $role,
+		) ) );
+
+		// Oh, (s)he missed his/her highway exit.
+		if ( ! $user_id || is_wp_error( $user_id ) ) {
+			$user_id = $user_id->get_error_code();
+
+			if ( $user_id === 'existing_user_login' ) {
+				// bad
+				$this->add_fix_message( 208 );
+			} elseif ( $user_id === 'illegal_user_login' ) {
+				// bad
+				$this->add_fix_message( 209 );
+			} elseif ( strpos( $user_id, 'user_login' ) !== false ) {
+				// bad
+				$this->add_fix_message( 210 );
+			} elseif ( $user_id === 'existing_user_email' ) {
+				// bad
+				$this->add_fix_message( 211 );
+			} else {
+				// bad
+				$this->add_fix_message( 207 );
+			}
+			// Get the form back.
+			$this->add_fix_action( 'admin-as-author-new-editor' );
+		} else {
+			// good
+			$this->add_fix_message( 6, array( '<strong>' . $role_name . '</strong>' ) );
+
+			$user = get_userdata( $user_id );
+
+			// Send notification by email.
+			static::new_user_notification( $user );
+
+			// Assign Posts.
+			if ( ! $this->attribute_posts_to( $user ) ) {
+				// bad: Posts could not be assigned.
+				$this->add_fix_message( 212 );
+			}
+
+			// Final test.
+			$this->final_test();
+		}
+	}
+
+
+	/*
+	 * Template parts.
+	 */
 	protected function get_fix_action_template_parts() {
+
 		// MULTISITE ===============
 		if ( is_multisite() ) {
 			return $this->get_fix_action_template_parts_multisite();
 		}
 
 		// MONOSITE ================
-		$parts  = array();
 		$admins = static::get_admins( 'user_login' );
 
-		if ( $admins ) {
-			// Tell the user what we will do.
-			$out           = array();
-			$todo          = array();
-			$new_role      = static::get_new_role( true );
-			$admins        = static::wrap_in_tag( $admins, 'strong' );
-			$current_admin = get_current_user_id();
-			$all_admins    = get_users( array( 'role' => 'administrator' ) );
-
-			// No suitable user role.
-			if ( ! $new_role ) {
-				$new_role = _x( 'Post Author', 'User role' );
-				$out[]    = static::get_messages( 301 );
-				$todo[]   = __( 'A new user role will be created.', 'secupress' );
-			}
-
-			// Current user created Posts.
-			if ( isset( $admins[ $current_admin ] ) ) {
-				$out[] = static::get_messages( 302, array( '<strong>' . $admins[ $current_admin ] . '</strong>' ) );
-				unset( $admins[ $current_admin ] );
-			}
-
-			// Downgrade users.
-			if ( $admins ) {
-				$count_admins = count( $admins );
-
-				// Should not happen:
-				if ( count( $all_admins ) === $count_admins ) {
-					$out[]  = static::get_messages( 303 );
-				}
-				else {
-					$out[]  = __( 'Some Administrators user role must be changed.', 'secupress' );
-					$todo[] = sprintf( _n( '%1$s\'s user role will be changed to %2$s.', '%1$s\'s user role will be changed to %2$s.', $count_admins, 'secupress' ), wp_sprintf_l( '%l', $admins ), '<strong>' . $new_role . '</strong>' );
-				}
-			}
-
-			if ( $todo ) {
-				$out[] = '<strong>' . __( 'What will be done on next step:', 'secupress' ) . '</strong><ol><li>' . implode( '</li><li>', $todo ) . '</li></ol>';
-			}
-
-			$parts['admin-as-author'] = '<div class="speech-box">' . implode( '<br/><br/>', $out ) . '</div>';
-
-		} else {
-			// Meh.
-			$parts['admin-as-author'] = static::get_messages( 1 );
+		if ( ! $admins ) {
+			return array(
+				'admin-as-author'                   => static::get_messages( 1 ),
+				'admin-as-author-new-administrator' => static::get_messages( 1 ),
+				'admin-as-author-new-editor'        => static::get_messages( 1 ),
+			);
 		}
 
-		return $parts;
+		$current_admin       = get_current_user_id();
+		$current_admin_login = get_userdata( $current_admin )->user_login;
+		$role_name           = static::get_new_role( true );
+		$needs_new_role      = ! $role_name;
+
+		if ( $needs_new_role ) {
+			$role_name = get_role( 'editor' ) ? _x( 'Post Author', 'User role' ) : _x( 'Editor', 'User role' ); // WPi18n
+		}
+
+		return array(
+			// STEP 1: ASK WHAT TO DO.
+			'admin-as-author'                   => static::get_fix_main_action_template_part( $admins, $current_admin, $role_name, $needs_new_role ),
+			// STEP 2: CREATE NEW ADMINISTRATOR ACCOUNT.
+			'admin-as-author-new-administrator' => static::get_fix_new_administrator_action_template_part( $current_admin_login ),
+			// STEP 2bis: CREATE NEW EDITOR ACCOUNT.
+			'admin-as-author-new-editor'        => static::get_fix_new_editor_action_template_part( $current_admin_login, $role_name ),
+		);
 	}
 
+
+	/*
+	 * Template part for step 1:
+	 * - Ask what to do.
+	 */
+	protected static function get_fix_main_action_template_part( $admins, $current_admin, $role_name, $needs_new_role ) {
+		$count_admins   = count( $admins );
+		$form           = '<div class="show-input">';
+		$star1          = '<sup class="more-info" title="' . esc_attr__( 'More Info', 'secupress' ) . '">(1)</sup>';
+		$star2          = '<sup class="more-info" title="' . esc_attr__( 'More Info', 'secupress' ) . '">(2)</sup>';
+		$role_name      = '<strong>' . $role_name . '</strong>';
+		$role_name_star = $role_name . ( $needs_new_role ? $star2 : '' );
+
+		$current_admin_is_author = isset( $admins[ $current_admin ] );
+		$has_other_admin_authors = ! $current_admin_is_author || ( $current_admin_is_author && $count_admins > 1 );
+
+
+		/*
+		 * The current user is in the list.
+		 */
+		if ( $current_admin_is_author ) {
+			unset( $admins[ $current_admin ] );
+			--$count_admins;
+
+			$form .= '<h4 id="secupress-fix-current-admin-as-author">' . __( 'You created Posts with this account, what should I do?', 'secupress' ) . '</h4>';
+			$form .= '<fieldset aria-labelledby="secupress-fix-current-admin-as-author" class="secupress-unboxed-group">';
+				$form .= '<ul class="secupress-radio-group-vertical">';
+
+					// Create new Admin account.
+					$form .= '<li>';
+						$form .= '<input type="radio" checked="checked" name="secupress-fix-current-admin-as-author" id="secupress-fix-current-admin-as-author_new-admin" value="new-admin" /> ';
+
+						$form .= '<label for="secupress-fix-current-admin-as-author_new-admin">';
+							/* translators: %s is a user role name. */
+							$form .= sprintf( __( 'Create a new <strong>Administrator</strong> account and downgrade this account to %s.', 'secupress' ), $role_name_star );
+						$form .= '</label>';
+					$form .= '</li>';
+
+					// Assign Posts to an Editor/Author.
+					$form .= '<li>';
+						$form .= '<input type="radio" name="secupress-fix-current-admin-as-author" id="secupress-fix-current-admin-as-author_editor" value="editor" /> ';
+
+						$form .= '<label for="secupress-fix-current-admin-as-author_editor">';
+							/* translators: %s is a "More Info" symbol. */
+							$form .= sprintf( __( 'Attribute all my Posts%s to:', 'secupress' ), $star1 );
+						$form .= '</label> ';
+
+						$form .= '<select name="secupress-fix-current-admin-as-author-editor-choose">';
+							/* translators: %s is a user role name. */
+							$form .= '<option value="-1">' . sprintf( __( '&mdash; Create new %s account &mdash;', 'secupress' ), $role_name_star ) . '</option>';
+
+							// Existing Editors (or future Editors).
+							$roles_can_publish = static::get_roles_that_can_publish_posts();
+
+							if ( $roles_can_publish || $has_other_admin_authors ) {
+								$users_can_publish = array();
+
+								if ( $roles_can_publish ) {
+									foreach ( $roles_can_publish as $role_can_publish => $label ) {
+										$users_role_can_publish = get_users( array(
+											'role' => $role_can_publish,
+											'fields' => array( 'ID', 'user_login' )
+										) );
+
+										if ( $users_role_can_publish ) {
+											$users_can_publish[] = array(
+												'label' => $label,
+												'users' => $users_role_can_publish,
+											);
+										}
+									}
+								}
+
+								if ( $has_other_admin_authors ) {
+									$users_can_publish[] = array(
+										/* translators: %s is a user role name. */
+										'label' => sprintf( __( 'Newly downgraded %s', 'secupress' ), strip_tags( $role_name_star ) ),
+										'users' => $admins,
+									);
+								}
+
+								if ( $users_can_publish ) {
+									$only_one_role = count( $users_can_publish ) === 1;
+
+									foreach ( $users_can_publish as $atts ) {
+										if ( ! $only_one_role ) {
+											$form .= '<optgroup label="' . esc_attr( $atts['label'] ) . '">';
+										}
+										foreach ( $atts['users'] as $i => $user ) {
+											if ( is_string( $user ) ) {
+												$form .= '<option value="' . $i . '">' . esc_html( $user ) . '</option>';
+											} else {
+												$form .= '<option value="' . (int) $user->ID . '">' . esc_html( $user->user_login ) . '</option>';
+											}
+										}
+										if ( ! $only_one_role ) {
+											$form .= '</optgroup>';
+										}
+									}
+								}
+							}
+
+						$form .= '</select>';
+					$form .= '</li>';
+
+				$form .= '</ul>';
+
+				/* translators: %s is a link to an online help. */
+				$form .= sprintf( __( 'Having a hard time to make a choice? %s.', 'secupress' ), '<a href="' . SECUPRESS_WEB_VALID . 'admin-as-author/" target="_blank">' . __( 'Grab some help', 'secupress' ) . '</a>' ); ////
+
+			$form .= '</fieldset>';
+		}
+
+		// Downgrade users.
+		if ( $has_other_admin_authors ) {
+			$admins = static::wrap_in_tag( $admins, 'strong' );
+
+			$form  .= '<div class="secupress-unboxed-group">';
+				$form .= '<h4>' . ( $current_admin_is_author ? __( 'Other Administrators created Posts too', 'secupress' ) : __( 'Some Administrators created Posts', 'secupress' ) ) . '</h4>';
+				$form  .= sprintf(
+					/* translators: 1 is a user name (or a list of user names), 2 is a user role name. */
+					_n( '%1$s\'s user role will be downgraded to %2$s.', '%1$s\'s user role will be downgraded to %2$s.', $count_admins, 'secupress' ),
+					wp_sprintf_l( '%l', $admins ),
+					$role_name_star
+				);
+			$form  .= '</div>';
+		}
+
+		$stars = array();
+
+		if ( $current_admin_is_author ) {
+			$stars[] = sprintf(
+				__( '%1$s: %2$s', 'secupress' ),
+				$star1,
+				__( 'Only Posts will be attributed, not Pages or other post types.', 'secupress' )
+			);
+		}
+
+		if ( $needs_new_role ) {
+			$stars[] = sprintf(
+				__( '%1$s: %2$s', 'secupress' ),
+				$star2,
+				sprintf( __( '"%s" is a new user role that will be created and used if needed.', 'secupress' ), $role_name )
+			);
+		}
+
+		if ( $stars ) {
+			$form .= '<div class="secupress-unboxed-group">';
+				$form .= '<span class="description">';
+					$form .= implode( '<br/>', $stars );
+				$form .= '</span>';
+			$form  .= '</div>';
+		}
+
+		$form .= '</div>';
+
+		return $form;
+	}
+
+
+	/*
+	 * Template part for step 1:
+	 * - Ask login and email for the new Administrator account.
+	 */
+	protected static function get_fix_new_administrator_action_template_part( $current_admin_login ) {
+		$form  = '<div class="show-input secupress-unboxed-group">';
+			$form .= '<h4>' . sprintf( __( 'Create new %s account', 'secupress' ), _x( 'Administrator', 'User role' ) ) . '</h4>';
+
+			$form .= '<label for="secupress-fix-current-admin-as-author-new-administrator-login">' . __( 'Username' ) . ' <span class="description">' . __( '(required)' ) . '</span></label><br/>';
+			$form .= '<input type="text" id="secupress-fix-current-admin-as-author-new-administrator-login" name="secupress-fix-current-admin-as-author-new-administrator[login]" value="' . $current_admin_login . '-' . sanitize_title( _x( 'Administrator', 'User role' ), 'administrator' ) . '" maxlenght="60" required="required" aria-required="true" pattern="[A-Za-z0-9 _.\-@]{1,60}" autocorrect="off" autocapitalize="off" title="' . esc_attr( sprintf( __( 'Allowed characters: %s', 'secupress' ), static::allowed_characters_for_login() ) ) . '"/><br/>';
+
+			$form .= '<label for="secupress-fix-current-admin-as-author-new-administrator-email">' . __( 'E-mail' ) . ' <span class="description">' . __( '(required)' ) . '</span></label><br/>';
+			$form .= '<input type="email" id="secupress-fix-current-admin-as-author-new-administrator-email" name="secupress-fix-current-admin-as-author-new-administrator[email]" value="" required="required" aria-required="true"/><br/>';
+
+			$form .= '<span class="description">' . __( 'A password reset link will be sent to you via email.', 'secupress' ) . '<br/>';
+			$form .= __( 'Your current account will be downgraded only after you successfully log into your new Administrator account.', 'secupress' ) . '</span>';
+
+		$form .= '</div>';
+
+		return $form;
+	}
+
+
+	/*
+	 * Template part for step 1:
+	 * - Ask login and email for the new Editor account.
+	 */
+	protected static function get_fix_new_editor_action_template_part( $current_admin_login, $role_name ) {
+		$form  = '<div class="show-input secupress-unboxed-group">';
+			$form .= '<h4>' . sprintf( __( 'Create new %s account', 'secupress' ), $role_name ) . '</h4>';
+
+			$form .= '<label for="secupress-fix-current-admin-as-author-new-editor-login">' . __( 'Username' ) . ' <span class="description">' . __( '(required)' ) . '</span></label><br/>';
+			$form .= '<input type="text" id="secupress-fix-current-admin-as-author-new-editor-login" name="secupress-fix-current-admin-as-author-new-editor[login]" value="' . $current_admin_login . '-' . sanitize_title( $role_name, 'editor' ) . '" maxlenght="60" required="required" aria-required="true" pattern="[A-Za-z0-9 _.\-@]{1,60}" autocorrect="off" autocapitalize="off" title="' . esc_attr( sprintf( __( 'Allowed characters: %s', 'secupress' ), static::allowed_characters_for_login() ) ) . '"/><br/>';
+
+			$form .= '<label for="secupress-fix-current-admin-as-author-new-editor-email">' . __( 'E-mail' ) . ' <span class="description">' . __( '(required)' ) . '</span></label><br/>';
+			$form .= '<input type="email" id="secupress-fix-current-admin-as-author-new-editor-email" name="secupress-fix-current-admin-as-author-new-editor[email]" value="" required="required" aria-required="true"/><br/>';
+
+			$form .= '<span class="description">' . __( 'A password reset link will be sent to you via email.', 'secupress' ) . '<br/>';
+			$form .= __( 'This account data (biographical info, etc.) will be copied to the new account.', 'secupress' ) . '</span>';
+
+		$form .= '</div>';
+
+		return $form;
+	}
+
+
+	/*--------------------------------------------------------------------------------------------*/
+	/* TOOLS FOR MONOSITE ======================================================================= */
+	/*--------------------------------------------------------------------------------------------*/
 
 	/*
 	 * Return a list of Administrators that created Posts.
@@ -325,17 +759,109 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 			) );
 
 			if ( $posts ) {
+				$tmp = array();
 				foreach ( $posts as $post ) {
 					$post->post_author = (int) $post->post_author;
 
-					if ( ! isset( $out[ $post->post_author ] ) ) {
-						$out[ $post->post_author ] = $field ? $users[ $post->post_author ]->$field : $users[ $post->post_author ];
+					if ( ! isset( $tmp[ $post->post_author ] ) ) {
+						$tmp[ $post->post_author ] = 1;
+
+						if ( $field ) {
+							$users[ $post->post_author ] = $users[ $post->post_author ]->$field;
+						}
 					}
 				}
+				$out = array_intersect_key( $users, $tmp );
 			}
 		}
 
 		return $out;
+	}
+
+
+
+	final protected function attribute_posts_to( $editor, $check_if_valid = true ) {
+		global $wpdb;
+
+		$editor_id     = (int) $editor->ID;
+		$current_admin = get_current_user_id();
+
+		if ( $check_if_valid ) {
+			// Check if the user is valid.
+			$cap = post_type_exists( 'post' ) ? get_post_type_object( 'post' )->cap->publish_posts : 'publish_posts';
+
+			if ( ! user_can( $editor, $cap ) ) {
+				return false;
+			}
+		}
+
+		// The user is valid: change Posts author.
+		$post_ids = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_type = 'post' AND post_author = %d", $current_admin ) );
+
+		if ( ! empty( $post_ids ) ) {
+			$wpdb->update(
+				$wpdb->posts,
+				array( 'post_author' => $editor_id ),
+				array( 'post_author' => $current_admin, 'post_type' => 'post' )
+			);
+
+			foreach ( $post_ids as $post_id ) {
+				clean_post_cache( $post_id );
+			}
+		}
+
+		// good: Posts attributed!
+		// No $post_ids? Meh.
+		$this->add_fix_message( 3, array( '<strong>' . $editor->user_login . '</strong>' ) );
+		return true;
+	}
+
+
+	// Email login credentials to a newly-created user.
+
+	final protected static function new_user_notification( $user ) {
+		global $wpdb, $wp_hasher;
+
+		// The blogname option is escaped with esc_html on the way into the database in sanitize_option
+		// we want to reverse this for the plain text arena of emails.
+		$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
+
+		// Generate something random for a password reset key.
+		$key = wp_generate_password( 20, false );
+
+		/** This action is documented in wp-login.php */
+		do_action( 'retrieve_password_key', $user->user_login, $key );
+
+		// Now insert the key, hashed, into the DB.
+		if ( empty( $wp_hasher ) ) {
+			require_once ABSPATH . WPINC . '/class-phpass.php';
+			$wp_hasher = new PasswordHash( 8, true );
+		}
+
+		$hashed = time() . ':' . $wp_hasher->HashPassword( $key );
+
+		$wpdb->update( $wpdb->users, array( 'user_activation_key' => $hashed ), array( 'user_login' => $user->user_login ) );
+
+		$message  = sprintf( __( 'Username: %s' ), $user->user_login ) . "\r\n\r\n"; // WP i18n
+		$message .= __( 'To set your password, visit the following address:', 'secupress' ) . "\r\n\r\n";
+		$message .= '[' . network_site_url( "wp-login.php?action=rp&key=$key&login=" . rawurlencode( $user->user_login ), 'login' ) . "]\r\n\r\n";
+
+		$message .= wp_login_url() . "\r\n";
+
+		wp_mail( $user->user_email, sprintf( __( '[%s] Your username and password info', 'secupress' ), $blogname ), $message );
+	}
+
+
+	// After a fix, test if there are still Admins.
+
+	final protected function final_test() {
+		if ( $admins = static::get_admins( 'user_login' ) ) {
+			// warning
+			$this->add_fix_message( 100, array( static::wrap_in_tag( $admins, 'strong' ) ) );
+		} else {
+			// good
+			$this->maybe_set_fix_status( 1 );
+		}
 	}
 
 
@@ -358,7 +884,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 			}
 
 			// bad
-			$this->add_message( 201, array( count( $blog_names ), wp_sprintf_l( '%l', $blog_names ), static::get_new_role( true ) ) );
+			$this->add_message( 201, array( count( $blog_names ), $blog_names ) );
 		} else {
 			// good
 			$this->add_message( 0 );
@@ -376,7 +902,6 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 
 	protected function manual_fix_multisite() {
 		////
-		return parent::manual_fix();
 	}
 
 
@@ -385,9 +910,15 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 
 		////
 		$parts['admin-as-author'] = 'foo';
+		$parts['admin-as-author-new-editor'] = 'bar';
+		$parts['admin-as-author-new-administrator'] = 'baz';
 		return $parts;
 	}
 
+
+	/*--------------------------------------------------------------------------------------------*/
+	/* TOOLS FOR MULTISITE ====================================================================== */
+	/*--------------------------------------------------------------------------------------------*/
 
 	/*
 	 * Return a list of Administrators per blog + the number of their Posts like:
@@ -452,7 +983,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 	/*
 	 * Find the most appropriate role (the one with the largest number of capabilities, and able to publish Posts).
 	 */
-	final protected static function get_new_role( $translated = false ) {
+	final public static function get_new_role( $translated = false ) {
 		static $new_role;
 		static $role_name;
 
@@ -461,7 +992,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 			$role_name = false;
 			$nbr_caps  = 0;
 			$cap       = post_type_exists( 'post' ) ? get_post_type_object( 'post' )->cap->publish_posts : 'publish_posts';
-			$roles     = get_editable_roles();
+			$roles     = wp_roles()->roles;
 			unset( $roles['administrator'] );
 
 			if ( $roles ) {
@@ -475,7 +1006,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 				}
 
 				if ( $new_role ) {
-					$role_name = translate_user_role( $roles[ $new_role ]['name'] );
+					$role_name = esc_html( translate_user_role( $roles[ $new_role ]['name'] ) );
 				}
 			}
 		}
@@ -485,9 +1016,34 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 
 
 	/*
+	 * Find all user roles able to publish Posts.
+	 */
+	final protected static function get_roles_that_can_publish_posts() {
+		static $roles_can;
+
+		if ( ! isset( $roles_can ) ) {
+			$roles_can = array();
+			$cap       = post_type_exists( 'post' ) ? get_post_type_object( 'post' )->cap->publish_posts : 'publish_posts';
+			$roles     = wp_roles()->roles;
+			unset( $roles['administrator'] );
+
+			if ( $roles ) {
+				foreach ( $roles as $role => $details ) {
+					if ( ! empty( $details['capabilities'][ $cap ] ) ) {
+						$roles_can[ $role ] = translate_user_role( $details['name'] );
+					}
+				}
+			}
+		}
+
+		return $roles_can;
+	}
+
+
+	/*
 	 * Create a role able to create Posts.
 	 */
-	final protected static function create_editor_role() {
+	final public static function create_editor_role() {
 		// Dummy gettext call to get strings in the catalog.
 		/* translators: user role */
 		_x( 'Editor', 'User role' ); // WPi18n
@@ -540,6 +1096,24 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 
 		add_role( $role, $role_name, $capabilities );
 
-		return get_role( $role ) ? $role : false;
+		$role_obj = get_role( $role );
+
+		if ( ! $role_obj ) {
+			return false;
+		}
+
+		return array( 'name' => $role, 'label' => $role_name );
+	}
+
+
+	/*
+	 * Get the allowed characters for user login.
+	 */
+	final protected static function allowed_characters_for_login( $wrap = false ) {
+		$allowed = array( 'A-Z', 'a-z', '0-9', '(space)', '_', '.', '-', '@', );
+		$allowed = $wrap ? static::wrap_in_tag( $allowed ) : $allowed;
+		$allowed = wp_sprintf_l( '%l', $allowed );
+
+		return $allowed;
 	}
 }

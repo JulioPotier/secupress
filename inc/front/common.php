@@ -44,6 +44,7 @@ function secupress_check_ban_ips() {
 	}
 }
 
+
 add_action( 'plugins_loaded', 'secupress_rename_admin_username_logout', 50 );
 /**
  * Will rename the "admin" account after the rename-admin-username manual fix
@@ -88,6 +89,7 @@ function secupress_rename_admin_username_logout() {
 	}
 }
 
+
 add_action( 'plugins_loaded', 'secupress_rename_admin_username_login', 60 );
 /**
  * Will rename the "admin" account after the rename-admin-username manual fix
@@ -119,6 +121,7 @@ function secupress_rename_admin_username_login() {
 	}
 }
 
+
 /**
  * Used in secupress_rename_admin_username_login() to force a user when auto authenticating
  *
@@ -127,4 +130,93 @@ function secupress_rename_admin_username_login() {
  **/
 function __secupress_give_him_a_user( $user, $username ) {
 	return get_user_by( 'login', $username );
+}
+
+
+add_action( 'plugins_loaded', 'secupress_downgrade_author_administrator', 70 );
+/**
+ * Admin As Author fix: a new Administrator account has been created, now we need to downgrade the old one.
+ *
+ * @since 1.0
+ * @return void
+ **/
+function secupress_downgrade_author_administrator() {
+	if ( ! is_admin() ) {
+		return;
+	}
+
+	// "{$new_user_id}|{$old_user_id}"
+	$data = get_transient( 'secupress-admin-as-author-administrator' );
+
+	// Nope.
+	if ( ! $data ) {
+		return;
+	}
+
+	if ( ! is_string( $data ) ) {
+		// Dafuk
+		delete_transient( 'secupress-admin-as-author-administrator' );
+		return;
+	}
+
+	$data = array_map( 'absint', explode( '|', $data ) );
+
+	if ( count( $data ) !== 2 || ! $data[0] || ! $data[1] || $data[0] === $data[1] ) {
+		// Dafuk
+		delete_transient( 'secupress-admin-as-author-administrator' );
+		return;
+	}
+
+	if ( ! file_exists( secupress_class_path( 'scan', 'Admin_As_Author' ) ) ) {
+		// Dafuk
+		delete_transient( 'secupress-admin-as-author-administrator' );
+		return;
+	}
+
+	// These aren't the droids you're looking for.
+	if ( $data[0] !== get_current_user_id() ) {
+		return;
+	}
+
+	if ( ! user_can( $data[0], 'administrator' ) || ! user_can( $data[1], 'administrator' ) ) {
+		// Hey! What did you do?!
+		delete_transient( 'secupress-admin-as-author-administrator' );
+		return;
+	}
+
+	// The old account (the one with Posts).
+	$user = get_user_by( 'id', $data[1] );
+
+	if ( ! $user ) {
+		continue;
+	}
+
+	secupress_require_class( 'scan' );
+	secupress_require_class( 'scan', 'Admin_As_Author' );
+
+	$role = SecuPress_Scan_Admin_As_Author::get_new_role();
+
+	/*
+	 * No suitable user role: create one (who the fuck deleted it?!).
+	 */
+	if ( ! $role ) {
+		$role = SecuPress_Scan_Admin_As_Author::create_editor_role();
+
+		if ( ! $role ) {
+			// the user role could not be created.
+			return;
+		}
+
+		$role = $role['name'];
+	}
+
+	// Finally, change the user role.
+	$user->remove_role( 'administrator' );
+	$user->add_role( $role );
+
+	// Update scan result.
+	secupress_scanit( 'Admin_As_Author' );
+
+	// Bye bye!
+	delete_transient( 'secupress-admin-as-author-administrator' );
 }
