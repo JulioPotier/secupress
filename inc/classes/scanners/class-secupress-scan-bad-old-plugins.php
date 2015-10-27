@@ -337,6 +337,8 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 	// Return an array of plugin names like `array( $path => $name, $path => $name )`.
 
 	final protected static function get_installed_bad_plugins( $plugins_list_file, $for_fix = false ) {
+		static $whitelist;
+
 		$plugins_list_file = SECUPRESS_INC_PATH . $plugins_list_file;
 
 		if ( ! is_readable( $plugins_list_file ) ) {
@@ -349,8 +351,32 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 			return false;
 		}
 
+		// Deal with the white list.
+		if ( ! isset( $whitelist ) ) {
+			$whitelist_file = SECUPRESS_INC_PATH . 'data/whitelist-plugin-list.txt';
+
+			if ( ! is_readable( $whitelist_file ) ) {
+				// warning
+				if ( $for_fix ) {
+					$this->add_fix_message( 100, array( '<code>' . str_replace( ABSPATH, '', $whitelist_file ) . '</code>' ) );
+				} else {
+					$this->add_message( 100, array( '<code>' . str_replace( ABSPATH, '', $whitelist_file ) . '</code>' ) );
+				}
+				$whitelist_file = false;
+				return false;
+			}
+
+			$whitelist = array_flip( array_map( 'trim', file( $whitelist_file ) ) );
+		}
+
+		if ( ! $whitelist ) {
+			// No need to trigger a new warning, already done.
+			return false;
+		}
+
 		$plugins_by_path  = get_plugins();
 		$not_in_directory = array_flip( array_map( 'trim', file( $plugins_list_file ) ) );
+		$not_in_directory = array_diff_key( $not_in_directory, $whitelist );
 		$bad_plugins      = array();
 
 		foreach ( $plugins_by_path as $plugin_path => $plugin_data ) {
