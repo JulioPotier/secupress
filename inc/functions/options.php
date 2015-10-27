@@ -267,8 +267,9 @@ function secupress_get_transient( $transient ) {
 	 * @param string $transient     Transient name.
 	 */
 	$pre = apply_filters( 'pre_transient_' . $transient, false, $transient );
-	if ( false !== $pre )
+	if ( false !== $pre ) {
 		return $pre;
+	}
 
 	if ( wp_using_ext_object_cache() ) {
 		$value = wp_cache_get( $transient, 'transient' );
