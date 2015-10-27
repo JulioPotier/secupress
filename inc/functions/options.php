@@ -119,7 +119,7 @@ function secupress_get_scanners() {
 	}
 
 	$transients = array();
-	$fixes      = secupress_get_scanner_fixes();
+	$to_remove  = array();
 
 	foreach ( $tests as $test_name ) {
 		$transient = get_transient( 'secupress_scan_' . $test_name );
@@ -129,7 +129,7 @@ function secupress_get_scanners() {
 			$transients[ $test_name ] = $transient;
 			// In the same time, when a scan is good, remove the related fix.
 			if ( 'good' === $transient['status'] ) {
-				unset( $fixes[ $test_name ] );
+				$to_remove[ $test_name ] = 1;
 			}
 		}
 	}
@@ -142,6 +142,10 @@ function secupress_get_scanners() {
 		update_option( SECUPRESS_SCAN_SLUG, $options );
 
 		// Also update the fixes.
+		if ( $to_remove ) {
+			$fixes = secupress_get_scanner_fixes();
+			$fixes = array_diff_key( $fixes, $to_remove );
+		}
 		update_option( SECUPRESS_FIX_SLUG, $fixes );
 	}
 
@@ -197,7 +201,7 @@ function secupress_get_tests() {
 		),
 		'medium' => array(
 			'Inactive_Plugins_Themes', 'Bad_Url_Access', 'Bad_Usernames',
-			'Bad_Request_Methods',     'PhpVersion',     'Too_Many_Admins', 
+			'Bad_Request_Methods',     'PhpVersion',     'Too_Many_Admins',
 			'Block_HTTP_1_0',          'Discloses',      'Block_Long_URL',
 		),
 		'low' => array(
