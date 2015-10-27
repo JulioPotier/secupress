@@ -122,10 +122,10 @@ function secupress_get_scanners() {
 	$to_remove  = array();
 
 	foreach ( $tests as $test_name ) {
-		$transient = get_transient( 'secupress_scan_' . $test_name );
+		$transient = secupress_get_transient( 'secupress_scan_' . $test_name );
 
 		if ( $transient && is_array( $transient ) ) {
-			delete_transient( 'secupress_scan_' . $test_name );
+			secupress_delete_transient( 'secupress_scan_' . $test_name );
 			$transients[ $test_name ] = $transient;
 			// In the same time, when a scan is good, remove the related fix.
 			if ( 'good' === $transient['status'] ) {
@@ -168,10 +168,10 @@ function secupress_get_scanner_fixes() {
 	$transients = array();
 
 	foreach ( $tests as $test_name ) {
-		$transient = get_transient( 'secupress_fix_' . $test_name );
+		$transient = secupress_get_transient( 'secupress_fix_' . $test_name );
 
 		if ( $transient && is_array( $transient ) ) {
-			delete_transient( 'secupress_fix_' . $test_name );
+			secupress_delete_transient( 'secupress_fix_' . $test_name );
 			$transients[ $test_name ] = $transient;
 		}
 	}
@@ -185,6 +185,114 @@ function secupress_get_scanner_fixes() {
 	}
 
 	return $options;
+}
+
+
+/**
+ * Delete a transient.
+ *
+ * This is almost the same function than `delete_transient()`, but without the timeout check: it saves database calls.
+ *
+ * @since 1.0
+ * @since WP 2.8.0
+ *
+ * @param string $transient Transient name. Expected to not be SQL-escaped.
+ * @return bool true if successful, false otherwise
+ */
+function secupress_delete_transient( $transient ) {
+
+	/**
+	 * Fires immediately before a specific transient is deleted.
+	 *
+	 * The dynamic portion of the hook name, `$transient`, refers to the transient name.
+	 *
+	 * @since WP 3.0.0
+	 *
+	 * @param string $transient Transient name.
+	 */
+	do_action( 'delete_transient_' . $transient, $transient );
+
+	if ( wp_using_ext_object_cache() ) {
+		$result = wp_cache_delete( $transient, 'transient' );
+	} else {
+		$option = '_transient_' . $transient;
+		$result = delete_option( $option );
+	}
+
+	if ( $result ) {
+
+		/**
+		 * Fires after a transient is deleted.
+		 *
+		 * @since WP 3.0.0
+		 *
+		 * @param string $transient Deleted transient name.
+		 */
+		do_action( 'deleted_transient', $transient );
+	}
+
+	return $result;
+}
+
+
+/**
+ * Get the value of a transient.
+ *
+ * This is almost the same function than `get_transient()`, but without the timeout check: it saves database calls.
+ * If the transient does not exist or does not have a value, then the return value will be false.
+ *
+ * @since 1.0
+ * @since WP 2.8.0
+ *
+ * @param string $transient Transient name. Expected to not be SQL-escaped.
+ * @return mixed Value of transient.
+ */
+function secupress_get_transient( $transient ) {
+
+ 	/**
+	 * Filter the value of an existing transient.
+	 *
+	 * The dynamic portion of the hook name, `$transient`, refers to the transient name.
+	 *
+	 * Passing a truthy value to the filter will effectively short-circuit retrieval
+	 * of the transient, returning the passed value instead.
+	 *
+	 * @since 1.0
+	 * @since WP 2.8.0
+	 * @since WP 4.4.0 The `$transient` parameter was added
+	 *
+	 * @param mixed  $pre_transient The default value to return if the transient does not exist.
+	 *                              Any value other than false will short-circuit the retrieval
+	 *                              of the transient, and return the returned value.
+	 * @param string $transient     Transient name.
+	 */
+	$pre = apply_filters( 'pre_transient_' . $transient, false, $transient );
+	if ( false !== $pre )
+		return $pre;
+
+	if ( wp_using_ext_object_cache() ) {
+		$value = wp_cache_get( $transient, 'transient' );
+	} else {
+		$transient_option = '_transient_' . $transient;
+
+		if ( ! isset( $value ) ) {
+			$value = get_option( $transient_option );
+		}
+	}
+
+	/**
+	 * Filter an existing transient's value.
+	 *
+	 * The dynamic portion of the hook name, `$transient`, refers to the transient name.
+	 *
+	 * @since 1.0
+	 * @since WP 2.8.0
+	 * @since WP 4.4.0 The `$transient` parameter was added
+	 *
+	 * @param mixed  $value     Value of transient.
+	 * @param string $transient Transient name.
+	 */
+	return apply_filters( 'transient_' . $transient, $value, $transient );
 }
 
 
