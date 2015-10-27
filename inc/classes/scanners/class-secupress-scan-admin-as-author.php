@@ -156,8 +156,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 
 		// MULTISITE ===============
 		if ( is_multisite() ) {
-			$this->manual_fix_multisite();
-			return parent::manual_fix();
+			return $this->manual_fix_multisite();
 		}
 
 		// MONOSITE ================
@@ -897,6 +896,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 
 	protected function manual_fix_multisite() {
 		////
+		return parent::manual_fix();
 	}
 
 
