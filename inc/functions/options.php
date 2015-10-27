@@ -142,8 +142,8 @@ function secupress_get_scanners() {
 		update_option( SECUPRESS_SCAN_SLUG, $options );
 
 		// Also update the fixes.
+		$fixes = secupress_get_scanner_fixes();
 		if ( $to_remove ) {
-			$fixes = secupress_get_scanner_fixes();
 			$fixes = array_diff_key( $fixes, $to_remove );
 		}
 		update_option( SECUPRESS_FIX_SLUG, $fixes );
