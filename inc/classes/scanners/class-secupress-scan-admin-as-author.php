@@ -374,7 +374,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 			$this->add_fix_message( 5 );
 
 			// Next time the new Administrator logs in, this current account will be downgraded.
-			set_transient( 'secupress-admin-as-author-administrator', $user_id . '|' . get_current_user_id() );
+			secupress_set_transient( 'secupress-admin-as-author-administrator', $user_id . '|' . get_current_user_id() );
 
 			$user = get_userdata( $user_id );
 

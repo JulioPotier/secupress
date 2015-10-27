@@ -274,11 +274,8 @@ function secupress_get_transient( $transient ) {
 	if ( wp_using_ext_object_cache() ) {
 		$value = wp_cache_get( $transient, 'transient' );
 	} else {
-		$transient_option = '_transient_' . $transient;
-
-		if ( ! isset( $value ) ) {
-			$value = get_option( $transient_option );
-		}
+		$option = '_transient_' . $transient;
+		$value  = get_option( $option );
 	}
 
 	/**
@@ -294,6 +291,81 @@ function secupress_get_transient( $transient ) {
 	 * @param string $transient Transient name.
 	 */
 	return apply_filters( 'transient_' . $transient, $value, $transient );
+}
+
+
+/**
+ * Set/update the value of a transient.
+ *
+ * This is almost the same function than `set_transient()`, but without the timeout check.
+ * You do not need to serialize values. If the value needs to be serialized, then it will be serialized before it is set.
+ *
+ * @since 1.0
+ * @since WP 2.8.0
+ *
+ * @param string $transient  Transient name. Expected to not be SQL-escaped. Must be
+ *                           172 characters or fewer in length.
+ * @param mixed  $value      Transient value. Must be serializable if non-scalar.
+ *                           Expected to not be SQL-escaped.
+ * @return bool False if value was not set and true if value was set.
+ */
+function secupress_set_transient( $transient, $value ) {
+
+	/**
+	 * Filter a specific transient before its value is set.
+	 *
+	 * The dynamic portion of the hook name, `$transient`, refers to the transient name.
+	 *
+	 * @since 1.0
+	 * @since WP 3.0.0
+	 * @since WP 4.2.0 The `$expiration` parameter was added.
+	 * @since WP 4.4.0 The `$transient` parameter was added.
+	 *
+	 * @param mixed  $value      New value of transient.
+	 * @param int    $expiration Time until expiration in seconds, forced to 0.
+	 * @param string $transient  Transient name.
+	 */
+	$value = apply_filters( 'pre_set_transient_' . $transient, $value, 0, $transient );
+
+	if ( wp_using_ext_object_cache() ) {
+		$result = wp_cache_set( $transient, $value, 'transient' );
+	} else {
+		$option = '_transient_' . $transient;
+		$result = update_option( $option, $value );
+	}
+
+	if ( $result ) {
+
+		/**
+		 * Fires after the value for a specific transient has been set.
+		 *
+		 * The dynamic portion of the hook name, `$transient`, refers to the transient name.
+		 *
+		 * @since 1.0
+		 * @since WP 3.0.0
+		 * @since WP 3.6.0 The `$value` and `$expiration` parameters were added.
+		 * @since WP 4.4.0 The `$transient` parameter was added.
+		 *
+		 * @param mixed  $value      Transient value.
+		 * @param int    $expiration Time until expiration in seconds, forced to 0.
+		 * @param string $transient  The name of the transient.
+		 */
+		do_action( 'set_transient_' . $transient, $value, 0, $transient );
+
+		/**
+		 * Fires after the value for a transient has been set.
+		 *
+		 * @since 1.0
+		 * @since WP 3.0.0
+		 * @since WP 3.6.0 The `$value` and `$expiration` parameters were added.
+		 *
+		 * @param string $transient  The name of the transient.
+		 * @param mixed  $value      Transient value.
+		 * @param int    $expiration Time until expiration in seconds, forced to 0.
+		 */
+		do_action( 'setted_transient', $transient, $value, 0 );
+	}
+	return $result;
 }
 
 

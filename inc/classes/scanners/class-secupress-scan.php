@@ -375,7 +375,7 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	final public function update() {
 		$name = strtolower( $this->class_name_part );
 
-		if ( ! set_transient( 'secupress_scan_' . $name, $this->result ) ) {
+		if ( ! secupress_set_transient( 'secupress_scan_' . $name, $this->result ) ) {
 			return array();
 		}
 
@@ -388,7 +388,7 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 		$name = strtolower( $this->class_name_part );
 
-		if ( ! set_transient( 'secupress_fix_' . $name, $this->result_fix ) ) {
+		if ( ! secupress_set_transient( 'secupress_fix_' . $name, $this->result_fix ) ) {
 			return array();
 		}
 
@@ -400,14 +400,14 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	// Fixes that require user action.
 
 	final protected function set_fix_actions() {
-		set_transient( 'secupress_fix_actions', $this->class_name_part . '|' . implode( ',', $this->fix_actions ) );
+		secupress_set_transient( 'secupress_fix_actions', $this->class_name_part . '|' . implode( ',', $this->fix_actions ) );
 		$this->fix_actions = array();
 	}
 
 
 	final public static function get_and_delete_fix_actions() {
-		$transient = get_transient( 'secupress_fix_actions' );
-		delete_transient( 'secupress_fix_actions' );
+		$transient = secupress_get_transient( 'secupress_fix_actions' );
+		secupress_delete_transient( 'secupress_fix_actions' );
 		return $transient ? explode( '|', $transient ) : array( 0 => false );
 	}
 
@@ -415,18 +415,18 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	// Schedule an auto-scan that will be executed on page load.
 
 	final protected function schedule_autoscan() {
-		$transient = get_transient( 'secupress_autoscans' );
+		$transient = secupress_get_transient( 'secupress_autoscans' );
 		$transient = is_array( $transient ) ? $transient : array();
 
 		$transient[ $this->class_name_part ] = $this->class_name_part;
 
-		set_transient( 'secupress_autoscans', $transient );
+		secupress_set_transient( 'secupress_autoscans', $transient );
 	}
 
 
 	final public static function get_and_delete_autoscans() {
-		$transient = get_transient( 'secupress_autoscans' );
-		delete_transient( 'secupress_autoscans' );
+		$transient = secupress_get_transient( 'secupress_autoscans' );
+		secupress_delete_transient( 'secupress_autoscans' );
 		return is_array( $transient ) ? $transient : array();
 	}
 
