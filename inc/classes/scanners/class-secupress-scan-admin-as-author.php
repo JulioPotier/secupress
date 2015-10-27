@@ -79,7 +79,6 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 
 
 	public function scan() {
-		global $wpdb;
 
 		// MULTISITE ===============
 		if ( is_multisite() ) {
@@ -186,8 +185,6 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 	 * - Maybe downgrade Administrators.
 	 */
 	protected function manual_fix_main_action() {
-		global $wpdb;
-
 		$admins       = static::get_admins( 'user_login' );
 		$count_admins = count( $admins );
 
@@ -390,8 +387,6 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 	 * - Assign Posts to it.
 	 */
 	protected function manual_fix_new_editor_action() {
-		global $wpdb;
-
 		$data = ! empty( $_POST['secupress-fix-current-admin-as-author-new-editor'] ) ? $_POST['secupress-fix-current-admin-as-author-new-editor'] : false;
 
 		if ( ! $data || ! is_array( $data ) ) {
