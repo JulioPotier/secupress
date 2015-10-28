@@ -255,24 +255,22 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 			return array( 'delete-bad-old-plugins' => static::get_messages( 1 ) );
 		}
 
-		$form  = '<div class="show-input">';
-			$form .= '<h4 id="secupress-fix-bad-old-plugins">' . __( 'Checked plugins will be deleted:', 'secupress' ) . '</h4>';
-			$form .= '<fieldset aria-labelledby="secupress-fix-bad-old-plugins" class="secupress-boxed-group">';
+		$form  = '<h4 id="secupress-fix-bad-old-plugins">' . __( 'Checked plugins will be deleted:', 'secupress' ) . '</h4>';
+		$form .= '<fieldset aria-labelledby="secupress-fix-bad-old-plugins" class="secupress-boxed-group">';
 
-				foreach ( $plugins as $plugin_file => $plugin_name ) {
-					$is_symlinked = static::is_plugin_symlinked( $plugin_file );
-					$form .= '<input type="checkbox" id="secupress-fix-delete-bad-old-plugins-' . sanitize_html_class( $plugin_file ) . '" name="secupress-fix-delete-bad-old-plugins[]" value="' . esc_attr( $plugin_file ) . '" ' . ( $is_symlinked ? 'disabled="disabled"' : 'checked="checked"' ) . '/> ';
-					$form .= '<label for="secupress-fix-delete-bad-old-plugins-' . sanitize_html_class( $plugin_file ) . '">';
-						if ( $is_symlinked ) {
-							$form .= '<del>' . esc_html( $plugin_name ) . '</del> <span class="description">(' . __( 'symlinked', 'secupress' ) . ')</span>';
-						} else {
-							$form .= esc_html( $plugin_name );
-						}
-					$form .= '</label><br/>';
-				}
+			foreach ( $plugins as $plugin_file => $plugin_name ) {
+				$is_symlinked = static::is_plugin_symlinked( $plugin_file );
+				$form .= '<input type="checkbox" id="secupress-fix-delete-bad-old-plugins-' . sanitize_html_class( $plugin_file ) . '" name="secupress-fix-delete-bad-old-plugins[]" value="' . esc_attr( $plugin_file ) . '" ' . ( $is_symlinked ? 'disabled="disabled"' : 'checked="checked"' ) . '/> ';
+				$form .= '<label for="secupress-fix-delete-bad-old-plugins-' . sanitize_html_class( $plugin_file ) . '">';
+					if ( $is_symlinked ) {
+						$form .= '<del>' . esc_html( $plugin_name ) . '</del> <span class="description">(' . __( 'symlinked', 'secupress' ) . ')</span>';
+					} else {
+						$form .= esc_html( $plugin_name );
+					}
+				$form .= '</label><br/>';
+			}
 
-			$form .= '</fieldset>';
-		$form .= '</div>';
+		$form .= '</fieldset>';
 
 		return array( 'delete-bad-old-plugins' => $form );
 	}

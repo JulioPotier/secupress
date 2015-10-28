@@ -589,7 +589,7 @@ jQuery( document ).ready( function( $ ) {
 			swalType = data.class === "bad" ? "error" : "warning";
 		}
 
-		content += '<form method="post" id="form_manual_fix" action="' + ajaxurl + '">';
+		content += '<form method="post" id="form_manual_fix" class="secupress-swal-form show-input" action="' + ajaxurl + '">';
 
 			for ( index in data.form_contents ) {
 				content += data.form_contents[ index ];

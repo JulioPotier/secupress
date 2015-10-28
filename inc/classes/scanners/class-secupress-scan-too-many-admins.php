@@ -145,13 +145,11 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPres
 		) );
 
 		if ( $users ) {
-			$form .= '<div class="show-input">';
-				$form .= '<h4 id="secupress-fix-too-many-admins-title">' . __( 'Choose what to do for each Administrator:', 'secupress' ) . '</h4>';
-				$form .= '<div class="secupress-scrollable" aria-labelledby="secupress-fix-too-many-admins-title">';
-					foreach ( $users as $user ) {
-						$form .= static::user_row( $blog_id, $user );
-					}
-				$form .= '</div>';
+			$form .= '<h4 id="secupress-fix-too-many-admins-title">' . __( 'Choose what to do for each Administrator:', 'secupress' ) . '</h4>';
+			$form .= '<div class="secupress-scrollable" aria-labelledby="secupress-fix-too-many-admins-title">';
+				foreach ( $users as $user ) {
+					$form .= static::user_row( $blog_id, $user );
+				}
 			$form .= '</div>';
 		}
 

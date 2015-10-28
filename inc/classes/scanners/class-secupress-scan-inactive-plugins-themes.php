@@ -270,24 +270,22 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 		$lists = static::get_inactive_plugins_and_themes();
 
 		if ( $lists['plugins'] ) {
-			$form  = '<div class="show-input">';
-				$form .= '<h4 id="secupress-fix-inactive-plugins">' . __( 'Checked plugins will be deleted:', 'secupress' ) . '</h4>';
-				$form .= '<fieldset aria-labelledby="secupress-fix-inactive-plugins" class="secupress-boxed-group">';
+			$form = '<h4 id="secupress-fix-inactive-plugins">' . __( 'Checked plugins will be deleted:', 'secupress' ) . '</h4>';
+			$form .= '<fieldset aria-labelledby="secupress-fix-inactive-plugins" class="secupress-boxed-group">';
 
-					foreach ( $lists['plugins'] as $plugin_file => $plugin_data ) {
-						$is_symlinked = static::is_plugin_symlinked( $plugin_file );
-						$form .= '<input type="checkbox" id="secupress-fix-delete-inactive-plugins-' . sanitize_html_class( $plugin_file ) . '" name="secupress-fix-delete-inactive-plugins[]" value="' . esc_attr( $plugin_file ) . '" ' . ( $is_symlinked ? 'disabled="disabled"' : 'checked="checked"' ) . '/> ';
-						$form .= '<label for="secupress-fix-delete-inactive-plugins-' . sanitize_html_class( $plugin_file ) . '">';
-							if ( $is_symlinked ) {
-								$form .= '<del>' . esc_html( $plugin_data['Name'] ) . '</del> <span class="description">(' . __( 'symlinked', 'secupress' ) . ')</span>';
-							} else {
-								$form .= esc_html( $plugin_data['Name'] );
-							}
-						$form .= '</label><br/>';
-					}
+				foreach ( $lists['plugins'] as $plugin_file => $plugin_data ) {
+					$is_symlinked = static::is_plugin_symlinked( $plugin_file );
+					$form .= '<input type="checkbox" id="secupress-fix-delete-inactive-plugins-' . sanitize_html_class( $plugin_file ) . '" name="secupress-fix-delete-inactive-plugins[]" value="' . esc_attr( $plugin_file ) . '" ' . ( $is_symlinked ? 'disabled="disabled"' : 'checked="checked"' ) . '/> ';
+					$form .= '<label for="secupress-fix-delete-inactive-plugins-' . sanitize_html_class( $plugin_file ) . '">';
+						if ( $is_symlinked ) {
+							$form .= '<del>' . esc_html( $plugin_data['Name'] ) . '</del> <span class="description">(' . __( 'symlinked', 'secupress' ) . ')</span>';
+						} else {
+							$form .= esc_html( $plugin_data['Name'] );
+						}
+					$form .= '</label><br/>';
+				}
 
-				$form .= '</fieldset>';
-			$form .= '</div>';
+			$form .= '</fieldset>';
 		}
 		else {
 			$form = __( 'No inactive plugins', 'secupress' );
@@ -296,24 +294,22 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 		$forms['delete-inactive-plugins'] = $form;
 
 		if ( $lists['themes'] ) {
-			$form  = '<div class="show-input">';
-				$form .= '<h4 id="secupress-fix-inactive-themes">' . __( 'Checked themes will be deleted:', 'secupress' ) . '</h4>';
-				$form .= '<fieldset aria-labelledby="secupress-fix-inactive-themes" class="secupress-boxed-group">';
+			$form  = '<h4 id="secupress-fix-inactive-themes">' . __( 'Checked themes will be deleted:', 'secupress' ) . '</h4>';
+			$form .= '<fieldset aria-labelledby="secupress-fix-inactive-themes" class="secupress-boxed-group">';
 
-					foreach ( $lists['themes'] as $theme_file => $theme_data ) {
-						$is_symlinked = static::is_theme_symlinked( $theme_file );
-						$form .= '<input type="checkbox" id="secupress-fix-delete-inactive-themes-' . sanitize_html_class( $theme_file ) . '" name="secupress-fix-delete-inactive-themes[]" value="' . esc_attr( $theme_file ) . '" ' . ( $is_symlinked ? 'disabled="disabled"' : 'checked="checked"' ) . '/> ';
-						$form .= '<label for="secupress-fix-delete-inactive-themes-' . sanitize_html_class( $theme_file ) . '">';
-							if ( $is_symlinked ) {
-								$form .= '<del>' . esc_html( $theme_data->Name ) . '</del> <span class="description">(' . __( 'symlinked', 'secupress' ) . ')</span>';
-							} else {
-								$form .= esc_html( $theme_data->Name );
-							}
-						$form .= '</label><br/>';
-					}
+				foreach ( $lists['themes'] as $theme_file => $theme_data ) {
+					$is_symlinked = static::is_theme_symlinked( $theme_file );
+					$form .= '<input type="checkbox" id="secupress-fix-delete-inactive-themes-' . sanitize_html_class( $theme_file ) . '" name="secupress-fix-delete-inactive-themes[]" value="' . esc_attr( $theme_file ) . '" ' . ( $is_symlinked ? 'disabled="disabled"' : 'checked="checked"' ) . '/> ';
+					$form .= '<label for="secupress-fix-delete-inactive-themes-' . sanitize_html_class( $theme_file ) . '">';
+						if ( $is_symlinked ) {
+							$form .= '<del>' . esc_html( $theme_data->Name ) . '</del> <span class="description">(' . __( 'symlinked', 'secupress' ) . ')</span>';
+						} else {
+							$form .= esc_html( $theme_data->Name );
+						}
+					$form .= '</label><br/>';
+				}
 
-				$form .= '</fieldset>';
-			$form .= '</div>';
+			$form .= '</fieldset>';
 		}
 		else {
 			$form = __( 'No inactive themes', 'secupress' );

@@ -525,7 +525,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 	 */
 	protected static function get_fix_main_action_template_part( $admins, $current_admin, $role_name, $needs_new_role ) {
 		$count_admins   = count( $admins );
-		$form           = '<div class="show-input">';
+		$form           = '';
 		$star1          = '<sup class="more-info" title="' . esc_attr__( 'More Info', 'secupress' ) . '">(1)</sup>';
 		$star2          = '<sup class="more-info" title="' . esc_attr__( 'More Info', 'secupress' ) . '">(2)</sup>';
 		$role_name      = '<strong>' . $role_name . '</strong>';
@@ -672,8 +672,6 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 			$form  .= '</div>';
 		}
 
-		$form .= '</div>';
-
 		return $form;
 	}
 
@@ -683,7 +681,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 	 * - Ask login and email for the new Administrator account.
 	 */
 	protected static function get_fix_new_administrator_action_template_part( $current_admin_login ) {
-		$form  = '<div class="show-input secupress-unboxed-group">';
+		$form  = '<div class="secupress-unboxed-group">';
 			$form .= '<h4>' . sprintf( __( 'Create new %s account', 'secupress' ), _x( 'Administrator', 'User role' ) ) . '</h4>';
 
 			$form .= '<label for="secupress-fix-current-admin-as-author-new-administrator-login">' . __( 'Username' ) . ' <span class="description">' . __( '(required)' ) . '</span></label><br/>';
@@ -706,7 +704,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 	 * - Ask login and email for the new Editor account.
 	 */
 	protected static function get_fix_new_editor_action_template_part( $current_admin_login, $role_name ) {
-		$form  = '<div class="show-input secupress-unboxed-group">';
+		$form  = '<div class="secupress-unboxed-group">';
 			$form .= '<h4>' . sprintf( __( 'Create new %s account', 'secupress' ), $role_name ) . '</h4>';
 
 			$form .= '<label for="secupress-fix-current-admin-as-author-new-editor-login">' . __( 'Username' ) . ' <span class="description">' . __( '(required)' ) . '</span></label><br/>';
