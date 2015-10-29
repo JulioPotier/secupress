@@ -267,6 +267,14 @@ th.secupress-check {
 	width: 25%;
 }
 /**/
+.sweet-alert .sa-error-container .icon {
+	margin-right: 10px;
+	vertical-align: middle;
+}
+.sweet-alert .sa-error-container p {
+	vertical-align: middle;
+}
+/**/
 .sweet-alert .secupress-scrollable {
 	max-height: 370px;
 	overflow-y: auto;
