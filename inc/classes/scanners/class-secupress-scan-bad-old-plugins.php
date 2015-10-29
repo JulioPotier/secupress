@@ -319,7 +319,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 	// Plugins no longer in directory - http://plugins.svn.wordpress.org/no-longer-in-directory/trunk/
 
 	final protected static function get_installed_plugins_no_longer_in_directory( $for_fix = false ) {
-		$plugins_list_file = 'data/no-longer-in-directory-plugin-list.txt';
+		$plugins_list_file = 'data/no-longer-in-directory-plugin-list.data';
 		return static::get_installed_bad_plugins( $plugins_list_file, $for_fix );
 	}
 
@@ -327,7 +327,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 	// Plugins not updated in over 2 years - http://plugins.svn.wordpress.org/no-longer-in-directory/trunk/
 
 	final protected static function get_installed_plugins_over_2_years( $for_fix = false ) {
-		$plugins_list_file = 'data/not-updated-in-over-two-years-plugin-list.txt';
+		$plugins_list_file = 'data/not-updated-in-over-two-years-plugin-list.data';
 		return static::get_installed_bad_plugins( $plugins_list_file, $for_fix );
 	}
 
@@ -351,7 +351,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 
 		// Deal with the white list.
 		if ( ! isset( $whitelist ) ) {
-			$whitelist_file = SECUPRESS_INC_PATH . 'data/whitelist-plugin-list.txt';
+			$whitelist_file = SECUPRESS_INC_PATH . 'data/whitelist-plugin-list.data';
 
 			if ( ! is_readable( $whitelist_file ) ) {
 				// warning

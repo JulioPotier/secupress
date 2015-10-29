@@ -114,7 +114,7 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan {
 
 
 	public static function dictionary_attack( $password ) {
-		$dictionary = file( SECUPRESS_INC_PATH . 'data/10kmostcommon.txt', FILE_IGNORE_NEW_LINES );
+		$dictionary = file( SECUPRESS_INC_PATH . 'data/10kmostcommon.data', FILE_IGNORE_NEW_LINES );
 		return $dictionary ? in_array( $password, $dictionary ) : null;
 	}
 }
