@@ -62,6 +62,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 			210 => sprintf( __( 'Sorry, that username is invalid. It may not be longer than 60 characters and may contain only the following characters: %s', 'secupress' ), static::allowed_characters_for_login( true ) ),
 			211 => __( 'Sorry, that email address is already used!' ), // WPi18n
 			212 => __( 'Posts could not be attributed.', 'secupress' ),
+			213 => __( 'Downgrading all Administrators is forbidden.', 'secupress' ),
 			// cantfix
 			300 => __( 'You created Posts with this account. A new account may be needed.', 'secupress' ),
 			/* translators: %d is the number of Administrators. */
@@ -247,10 +248,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 				}
 				// Use an existing Editor.
 				else {
-					$editor    = $editor_id ? get_userdata( $editor_id ) : false;
-					$editor_id = $editor ? (int) $editor->ID : 0;
-
-					if ( ! $editor_id || ! $this->attribute_posts_to( $editor ) ) {
+					if ( ! $editor_id || ! static::validate_editor( $editor_id ) || ! $this->attribute_posts_to( $editor_id ) ) {
 						// bad: no user selected or user not valid (or I couldn't attribute Posts to him/her).
 						$this->add_fix_message( 204 );
 						$this->add_fix_action( 'admin-as-author' );
@@ -272,36 +270,53 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 		 * Some other administrators created Posts: downgrade them.
 		 */
 		if ( $has_other_admin_authors ) {
-			$done = array();
-			$fail = array();
 
-			foreach ( $admins as $user_id => $user_login ) {
-				$user = get_userdata( $user_id );
+			if ( ! current_user_can( 'administrator' ) ) {
+				// Not an Admin uh? I got a surprise for you.
+				$all_admins = get_users( array(
+					'role'    => 'administrator',
+					'fields'  => 'ID',
+				) );
+				$all_admins = array_map( 'absint', $all_admins );
 
-				if ( ! $user ) {
-					// Fail silently.
-					continue;
-				}
-
-				// No super powers anymore.
-				$user->remove_role( 'administrator' );
-				$user->add_role( $new_role );
-
-				if ( user_can( $user, 'administrator' ) || ! user_can( $user, $new_role ) ) {
-					$fail[] = '<strong>' . $user_login . '</strong>';
-				} else {
-					$done[] = '<strong>' . $user_login . '</strong>';
+				if ( count( $admins ) === count( $all_admins ) ) {
+					/*
+					 * I won't let you downgrade all the Admins, I'll keep the oldest one secure.
+					 */
+					sort( $admins, SORT_NUMERIC );
+					array_shift( $admins );
+					// bad
+					$this->add_message( 213 );
 				}
 			}
 
-			if ( $done ) {
-				// good
-				$this->add_fix_message( 4, array( count( $done ), $done, $new_role_name ) );
-			}
+			if ( $admins ) {
+				$done = array();
+				$fail = array();
 
-			if ( $fail ) {
-				// bad
-				$this->add_fix_message( 205, array( count( $fail ), $fail, $new_role_name ) );
+				foreach ( $admins as $user_id => $user_login ) {
+					$user = get_userdata( $user_id );
+
+					// No super powers anymore.
+					$user->remove_role( 'administrator' );
+					$user->add_role( $new_role );
+
+					if ( user_can( $user, 'administrator' ) || ! user_can( $user, $new_role ) ) {
+						$fail[] = '<strong>' . $user_login . '</strong>';
+					} else {
+						$done[] = '<strong>' . $user_login . '</strong>';
+					}
+				}
+
+				if ( $done ) {
+					// good
+					$this->add_fix_message( 4, array( count( $done ), $done, $new_role_name ) );
+				}
+
+				if ( $fail ) {
+					// bad
+					$this->add_fix_message( 205, array( count( $fail ), $fail, $new_role_name ) );
+				}
 			}
 		}
 
@@ -771,20 +786,31 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 	}
 
 
+	/*
+	 * Make sure the given user ID corresponds to a valid Editor/Author.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int|object) $user_id User ID or object.
+	 *
+	 * @return (bool) Either the user is valid or not.
+	 */
+	final protected static function validate_editor( $user ) {
+		$cap = post_type_exists( 'post' ) ? get_post_type_object( 'post' )->cap->publish_posts : 'publish_posts';
+		return $user && user_can( $user, $cap );
+	}
+
 
 	final protected function attribute_posts_to( $editor, $check_if_valid = true ) {
 		global $wpdb;
 
+		$editor        = is_object( $editor ) ? $editor : get_userdata( $editor );
 		$editor_id     = (int) $editor->ID;
 		$current_admin = get_current_user_id();
 
-		if ( $check_if_valid ) {
-			// Check if the user is valid.
-			$cap = post_type_exists( 'post' ) ? get_post_type_object( 'post' )->cap->publish_posts : 'publish_posts';
-
-			if ( ! user_can( $editor, $cap ) ) {
-				return false;
-			}
+		// Check if the user is valid.
+		if ( $check_if_valid && ! static::validate_editor( $editor ) ) {
+			return false;
 		}
 
 		// The user is valid: change Posts author.
@@ -813,6 +839,8 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 
 	final protected static function new_user_notification( $user ) {
 		global $wpdb, $wp_hasher;
+
+		$user = is_object( $user ) ? $user : get_userdata( $user );
 
 		// The blogname option is escaped with esc_html on the way into the database in sanitize_option
 		// we want to reverse this for the plain text arena of emails.

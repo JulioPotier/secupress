@@ -439,17 +439,33 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPres
 			return array();
 		}
 
-		$admins = array_unique( $admins );
-		$admins = array_diff( $admins, array( get_current_user_id() ) );
+		$admins     = array_unique( $admins );
+		$all_admins = get_users( array(
+			'role'    => 'administrator',
+			'exclude' => array( get_current_user_id() ),
+			'fields'  => 'ID',
+		) );
 
-		if ( ! $admins ) {
+		if ( ! $all_admins ) {
+			// Nice try.
 			return array();
 		}
 
-		foreach ( $admins as $i => $user_id ) {
-			if ( ! user_can( $user_id, 'administrator' ) ) {
-				unset( $admins[ $i ] );
-			}
+		$all_admins = array_map( 'absint', $all_admins );
+		$admins     = array_intersect( $admins, $all_admins );
+
+		if ( ! $admins ) {
+			// Nice try.
+			return array();
+		}
+
+		if ( count( $admins ) === count( $all_admins ) ) {
+			/*
+			 * Uh? Okay you're cheating, you're not an Admin.
+			 * But I won't let you downgrade or delete all the Admins, I'll keep the oldest one secure.
+			 */
+			sort( $admins, SORT_NUMERIC );
+			array_shift( $admins );
 		}
 
 		return array_values( $admins );
