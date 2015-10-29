@@ -543,7 +543,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 			--$count_admins;
 
 			$form .= '<h4 id="secupress-fix-current-admin-as-author">' . __( 'You created Posts with this account, what should I do?', 'secupress' ) . '</h4>';
-			$form .= '<fieldset aria-labelledby="secupress-fix-current-admin-as-author" class="secupress-unboxed-group">';
+			$form .= '<fieldset aria-labelledby="secupress-fix-current-admin-as-author" class="secupress-group">';
 				$form .= '<ul class="secupress-radio-group-vertical">';
 
 					// Create new Admin account.
@@ -635,7 +635,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 		if ( $has_other_admin_authors ) {
 			$admins = static::wrap_in_tag( $admins, 'strong' );
 
-			$form  .= '<div class="secupress-unboxed-group">';
+			$form  .= '<div class="secupress-group">';
 				$form .= '<h4>' . ( $current_admin_is_author ? __( 'Other Administrators created Posts too', 'secupress' ) : __( 'Some Administrators created Posts', 'secupress' ) ) . '</h4>';
 				$form  .= sprintf(
 					/* translators: 1 is a user name (or a list of user names), 2 is a user role name. */
@@ -665,7 +665,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 		}
 
 		if ( $stars ) {
-			$form .= '<div class="secupress-unboxed-group">';
+			$form .= '<div class="secupress-group">';
 				$form .= '<span class="description">';
 					$form .= implode( '<br/>', $stars );
 				$form .= '</span>';
@@ -681,7 +681,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 	 * - Ask login and email for the new Administrator account.
 	 */
 	protected static function get_fix_new_administrator_action_template_part( $current_admin_login ) {
-		$form  = '<div class="secupress-unboxed-group">';
+		$form  = '<div class="secupress-group">';
 			$form .= '<h4>' . sprintf( __( 'Create new %s account', 'secupress' ), _x( 'Administrator', 'User role' ) ) . '</h4>';
 
 			$form .= '<label for="secupress-fix-current-admin-as-author-new-administrator-login">' . __( 'Username' ) . ' <span class="description">' . __( '(required)' ) . '</span></label><br/>';
@@ -704,7 +704,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 	 * - Ask login and email for the new Editor account.
 	 */
 	protected static function get_fix_new_editor_action_template_part( $current_admin_login, $role_name ) {
-		$form  = '<div class="secupress-unboxed-group">';
+		$form  = '<div class="secupress-group">';
 			$form .= '<h4>' . sprintf( __( 'Create new %s account', 'secupress' ), $role_name ) . '</h4>';
 
 			$form .= '<label for="secupress-fix-current-admin-as-author-new-editor-login">' . __( 'Username' ) . ' <span class="description">' . __( '(required)' ) . '</span></label><br/>';

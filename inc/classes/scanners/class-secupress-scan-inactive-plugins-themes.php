@@ -270,7 +270,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 		$lists = static::get_inactive_plugins_and_themes();
 
 		if ( $lists['plugins'] ) {
-			$form = '<h4 id="secupress-fix-inactive-plugins">' . __( 'Checked plugins will be deleted:', 'secupress' ) . '</h4>';
+			$form  = '<h4 id="secupress-fix-inactive-plugins">' . __( 'Checked plugins will be deleted:', 'secupress' ) . '</h4>';
 			$form .= '<fieldset aria-labelledby="secupress-fix-inactive-plugins" class="secupress-boxed-group">';
 
 				foreach ( $lists['plugins'] as $plugin_file => $plugin_data ) {
