@@ -120,11 +120,12 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 	 **/
 	final protected static function get_correct_tables() {
 		global $wpdb;
-		$wp_tables     = $wpdb->tables();
+		$wp_tables     = static::get_wp_tables();
 		$all_tables    = $wpdb->get_results( "SHOW TABLES LIKE '{$wpdb->prefix}%'" );
 		$all_tables    = wp_list_pluck( $all_tables, 'Tables_in_' . DB_NAME . ' (' . $wpdb->prefix . '%)' );
 		$test_tables   = array();
-		$merges_values = array_merge( array_keys( $wp_tables ), array( $wpdb->prefix ) );
+		$prefixes      = array( $wpdb->prefix );
+		$merges_values = array_merge( array_keys( array_reverse( $wp_tables ) ), $prefixes );
 		foreach ( $all_tables as $table ) {
 			$test_tables[] = str_replace( $merges_values, '', $table );
 		}
@@ -132,7 +133,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 		$test_tables_unique = array_keys( array_flip( $test_tables_filter ) );
 		$duplicates         = array_count_values( $test_tables_filter );
 		$duplicates         = array_keys( array_filter( $duplicates, function( $a ){ return 1 < $a; } ) );
-		$dup_tables         = array();
+		$dup_tables     = array();
 		foreach ( $duplicates as $dup_prefix ) {
 			$dup_tables = array_merge( $dup_tables, $wpdb->get_results( "SHOW TABLES LIKE '{$wpdb->prefix}{$dup_prefix}%'" ) );
 			$dup_tables = wp_list_pluck( $dup_tables, 'Tables_in_' . DB_NAME . ' (' . $wpdb->prefix . $dup_prefix . '%)' );
@@ -141,6 +142,25 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 		$good_tables = array_diff( $good_tables, $wp_tables );
 
 		return $good_tables;
+	}
+
+	/**
+	 * Return correct WP tables
+	 *
+	 * @since 1.0 
+	 * @return array of DB tables
+	 **/
+	final protected static function get_wp_tables() {
+		global $wpdb;
+		$wp_tables = $wpdb->tables();
+		if ( is_multisite() ) {
+			$query = $wpdb->prepare( "SHOW TABLES LIKE %s", $wpdb->esc_like( $wpdb->sitecategories ) );
+		 	if ( ! $wpdb->get_var( $query ) ) {
+				unset( $wp_tables['sitecategories'] );
+			}
+		}
+
+		return $wp_tables;
 	}
 
 	public function scan() {
@@ -258,6 +278,8 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 
 		$wpconfig_filename = secupress_find_wpconfig_path();
 
+
+
 		// Check db prefix
 		$check = $wpdb->prefix === 'wp_' || $wpdb->prefix === 'wordpress_';
 
@@ -269,11 +291,11 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 
 				if ( is_writable( $wpconfig_filename ) && preg_match( '/\$table_prefix.*=.*(\'' . $old_prefix . '\'|"' . $old_prefix . '");.*/', file_get_contents( $wpconfig_filename ) ) ) {
 					
-					$wp_tables = $wpdb->tables();
+					$wp_tables = static::get_wp_tables();
 					
 					$good_tables     = static::get_correct_tables();
 					$count_wp_tables = count( $wp_tables );
-					if ( count( $good_tables ) + $count_wp_tables > $count_wp_tables ) {
+					if ( $good_tables ) {
 						$this->add_fix_message( 304 );
 						$this->add_fix_action( 'select-db-tables-to-rename' );
 					} else {
@@ -355,6 +377,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 			secupress_put_contents( $wpconfig_filename, $new_content, array( 'marker' => 'Correct Constants Values', 'put' => 'append', 'text' => '<?php' ) );
 		}
 
+
 		if ( isset( $not_fixed[0] ) ) {
 			$this->add_fix_message( 300, array( $not_fixed ) );
 		}
@@ -373,15 +396,28 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 		$new_prefix   = static::create_unique_db_prefix();
 		$query_tables = array();
 		$good_tables  = static::get_correct_tables();
-		$wp_tables    = $wpdb->tables();
+		$wp_tables    = static::get_wp_tables();
+
 		if ( isset( $_POST['secupress-select-db-tables-to-rename-flag'] ) ) {
 			$good_tables = array_intersect( (array) $_POST['secupress-select-db-tables-to-rename'], $good_tables );
 		}
 		$good_tables = array_merge( $good_tables, $wp_tables );
+		if ( is_multisite() ) {
+			$blog_ids = $wpdb->get_col( "SELECT blog_id FROM {$wpdb->blogs} WHERE blog_id > 1" );
+			if ( $blog_ids ) {
+				foreach ( $blog_ids as $blog_id ) {
+					foreach ( $wpdb->tables( 'blog' ) as $table ) {
+						$table         = substr_replace( $table, $old_prefix . $blog_id . '_', 0, strlen( $old_prefix ) );
+						$good_tables[] = $table;
+					}
+				}
+			}
+		}
 		foreach ( $good_tables as $table ) {
 			$new_table      = substr_replace( $table, $new_prefix, 0, strlen( $wpdb->prefix ) );
 			$query_tables[] = "`{$table}` TO `{$new_table}`";
 		}
+
 		$wpdb->query( "RENAME TABLE " . implode( ', ', $query_tables ) );
 		if ( reset( $wpdb->get_col( "SHOW TABLES LIKE '{$new_prefix}options'" ) ) != $new_prefix . 'options' ) {
 			$this->add_fix_message( 303 );
@@ -391,6 +427,15 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 			$old_prefix_len1 = $old_prefix_len + 1;
 			$wpdb->update( $new_prefix . 'options', array( 'option_name'  => $new_prefix . 'user_roles' ), array( 'option_name' => $old_prefix . 'user_roles' ) );
 			$wpdb->query( "UPDATE {$new_prefix}usermeta SET meta_key = CONCAT( REPLACE( LEFT( meta_key, {$old_prefix_len}), '$old_prefix', '$new_prefix' ), SUBSTR( meta_key, {$old_prefix_len1} ) )" );
+			if ( isset( $blog_ids ) && $blog_ids ) {
+				foreach ( $blog_ids as $blog_id ) {
+					$old_prefix_len  = strlen( $old_prefix ) + strlen( $blog_id ) + 1; // + 1 = "_"
+					$old_prefix_len1 = $old_prefix_len + 1;
+					$ms_prefix       = $new_prefix . $blog_id . '_';
+					$wpdb->update( $ms_prefix . 'options', array( 'option_name'  => $ms_prefix . 'user_roles' ), array( 'option_name' => $old_prefix . 'user_roles' ) );
+					$wpdb->query( "UPDATE {$ms_prefix}usermeta SET meta_key = CONCAT( REPLACE( LEFT( meta_key, {$old_prefix_len}), '$old_prefix', '$ms_prefix' ), SUBSTR( meta_key, {$old_prefix_len1} ) )" );
+				}
+			}
 
 			$this->add_fix_message( 1, array( $new_prefix ) );
 		}
@@ -401,19 +446,25 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 	protected function get_fix_action_template_parts() {
 		global $wpdb;
 		$good_tables = static::get_correct_tables();
-		$wp_tables   = $wpdb->tables();
+		$wp_tables   = static::get_wp_tables();
+		$blog_ids    = ! is_multisite() ? array( '1' ) : $wpdb->get_col( "SELECT blog_id FROM {$wpdb->blogs}" );
 
 		$form  = '<div class="show-input">';
-		$form .= '<h4>' . __( 'Uncheck the non-desired tables to be renamed:', 'secupress' ) . '</h4>';
+		$form .= '<h4>' . __( 'Check tables will be renamed:', 'secupress' ) . '</h4>';
 		$form .= '<p><span style="color:red">' . __( 'Renaming a table is not rollbackable.', 'secupress' ) . '</span></p>';
 		$form .= '<input type="hidden" name="secupress-select-db-tables-to-rename-flag">';
 		$form .= '<fieldset aria-labelledby="select-db-tables-to-rename" class="secupress-boxed-group">';
+		$form .= '<b>' . __( 'Unknown tables', 'secupress' ) . '</b><br>';
 		foreach ( $good_tables as $table ) {
-			$form .= '<input type="checkbox" name="secupress-select-db-tables-to-rename[]" value="' . $table . '" id="secupress-select-db-tables-to-rename-' . $table . '" checked="checked"><label for="select-db-tables-to-rename-' . $table . '">' . $table . '</label><br>';
+			$form .= '<input type="checkbox" name="secupress-select-db-tables-to-rename[]" value="' . $table . '" id="select-db-tables-to-rename-' . $table . '" checked="checked"><label for="select-db-tables-to-rename-' . $table . '">' . $table . '</label><br>';
 		}
-		$form .= '<h4>' . __( 'WordPress tables will be renamed', 'secupress' ) . '</h4>';
-		foreach ( $wp_tables as $table ) {
-			$form .= '<input type="checkbox" id="secupress-select-db-tables-to-rename-' . $table . '" checked="checked" disabled="disabled"><label for="select-db-tables-to-rename-' . $table . '">' . $table . '</label><br>';
+		$form .= '<b>' . __( 'WordPress tables (mandatory)', 'secupress' ) . '</b><br>';
+		foreach ( $blog_ids as $blog_id ) {
+			$blog_id = 1 == $blog_id ? '' : $blog_id . '_';
+			foreach ( $wp_tables as $table ) {
+				$table = substr_replace( $table, $wpdb->prefix . $blog_id, 0, strlen( $wpdb->prefix ) );
+				$form .= '<input type="checkbox" id="secupress-select-db-tables-to-rename-' . $table . '" checked="checked" disabled="disabled"><label>' . $table . '</label><br>';
+			}
 		}
 		$form .= '</fieldset>';
 		$form .= '</div>';
