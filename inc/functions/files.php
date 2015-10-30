@@ -128,10 +128,17 @@ function secupress_mkdir_p( $target ) {
  *
  * @param string $file 	  The path of file will be created
  * @param string $new_content The content that will be added on top of the file
- * @param string $file_content The content that will already exists in the file
+ * @param array  $args (optional) 
+ *				 marker (string): An additional suffix string adde the the "SecuPress" marker, Default ''
+ *				 put (string) (prepend|append|replace): Prepend of append content in the file, Default 'Prepend'
+ *				 text (string) When (prepend|append)is used for "put", you can speficy a text to find, it will be pre/append around this text
  * @return bool
  */
-function secupress_put_contents( $file, $marker, $new_content ) {
+function secupress_put_contents( $file, $new_content, $args ) {
+
+	$defaults = array( 'marker' =>'', 'put' => 'prepend', 'text' => '' );
+	$args = wp_parse_args( $args, $defaults );
+
 	global $wp_filesystem;
 
 	if ( ! $wp_filesystem ) {
@@ -146,17 +153,33 @@ function secupress_put_contents( $file, $marker, $new_content ) {
 	$file_content = '';
 	if ( file_exists( $file ) ) {
 		$ftmp         = file_get_contents( $file );
-		$file_content = preg_replace( '/' . $comment_char . ' BEGIN SecuPress ' . $marker . '(.*)' . $comment_char . ' END SecuPress\s*?/isU', '', $ftmp );
+		$file_content = preg_replace( '/' . $comment_char . ' BEGIN SecuPress ' . $args['marker'] . '(.*)' . $comment_char . ' END SecuPress\s*?/isU', '', $ftmp );
 	}
 
 	// Remove empty spacings
 	$ftmp = str_replace( "\n\n" , "\n" , $ftmp );
 
 	if ( ! empty( $new_content ) ) {
+
 		$content  = $comment_char . ' BEGIN SecuPress ' . $marker . PHP_EOL;
 		$content .= trim( $new_content ) . PHP_EOL;
 		$content .= $comment_char . ' END SecuPress' . PHP_EOL . PHP_EOL;
-		$content .= $file_content;
+
+
+		if ( '' != $args['text'] && strpos( $file_content, $args['text'] ) !== false ) {
+			if ( 'append' == $args['put'] ) {
+				$content = str_replace( $args['text'], $args['text'] . PHP_EOL . $content, $file_content );
+			} elseif ( 'prepend' == $args['put'] ) {
+				$content = str_replace( $args['text'], $content . PHP_EOL . $args['text'], $file_content );
+			}
+		} else {
+			if ( 'append' == $args['put'] ) {
+				$content = $content . $file_content;
+			} elseif ( 'prepend' == $args['put'] ) {
+				$content = $file_content . $content;
+			}
+		}
+
 		$file_content = $content;
 	}
 
@@ -172,11 +195,16 @@ function secupress_put_contents( $file, $marker, $new_content ) {
  * @since 1.0
  *
  * @param string $file 	  The path of file will be created
- * @param string $new_content The content that will be removed from the file
- * @param string $file_content The content that will already exists in the file
+ * @param string $old_content The content to be replaced from the file (preg_replace)
+ * @param string $new_content The new content (preg_replace)
  * @return bool
  */
-function secupress_remove_content( $file, $marker, $file_content ) {
+function secupress_replace_content( $file, $old_content, $new_content ) {
+
+	if ( ! file_exists( $file ) ) {
+		return false;
+	}
+
 	global $wp_filesystem;
 
 	if ( ! $wp_filesystem ) {
@@ -186,26 +214,14 @@ function secupress_remove_content( $file, $marker, $file_content ) {
 		$wp_filesystem = new WP_Filesystem_Direct( new StdClass() );
 	}
 
+	$file_content = $wp_filesystem->get_contents( $file );
+
 	$chmod        = defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : 0644;
-	$file_content = str_replace( $new_content, '', $file_content );
-
-	return $wp_filesystem->put_contents( $file, $file_content, $chmod );
-}
-
-
-/**
- * File creation based on WordPress Filesystem
- *
- * @since 1.0
- *
- * @param string $file 	  The path of file will be created
- * @param string $new_content The content that will be replaced on top from the file
- * @param string $file_content The content that will already exists in the file
- * @return bool
- */
-function secupress_replace_content( $file, $marker, $new_content, $file_content ) {
-	secupress_remove_content( $file, $marker, $file_content );
-	secupress_add_content( $file, $new_content, $file_content );
+	$new_content  = preg_replace( $old_content, $new_content, $file_content );
+	$replaced     =  $new_content != null && $new_content != $file_content;
+	$put_contents = $wp_filesystem->put_contents( $file, $new_content, $chmod );
+	
+	return $put_contents && $replaced;
 }
 
 
