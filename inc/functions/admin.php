@@ -391,9 +391,9 @@ function secupress_get_ip() { //// find the best order
 
 
 function secupress_ban_ip( $IP = null, $die = true ) {
-	$bad_logins_time_ban = secupress_get_module_option( 'bad_logins_time_ban', 5, 'users_login' );
-	$IP                  = $IP ? $IP : secupress_get_ip();
-	$ban_ips             = get_option( SECUPRESS_BAN_IP );
+	$login_protection_time_ban = secupress_get_module_option( 'login_protection_time_ban', 5, 'users_login' );
+	$IP                        = $IP ? $IP : secupress_get_ip();
+	$ban_ips                   = get_option( SECUPRESS_BAN_IP );
 
 	if ( ! is_array( $ban_ips ) ) {
 		$ban_ips = array();
@@ -408,7 +408,7 @@ function secupress_ban_ip( $IP = null, $die = true ) {
 	}
 
 	if ( $die ) {
-		$msg = sprintf( __( 'Your IP address %1$s have been banned for %2$d minutes, please do not retry until.', 'secupress' ), '<code>' . esc_html( $IP ) . '</code>', '<strong>' . $bad_logins_time_ban . '</strong>' );
+		$msg = sprintf( __( 'Your IP address %1$s have been banned for %2$d minutes, please do not retry until.', 'secupress' ), '<code>' . esc_html( $IP ) . '</code>', '<strong>' . $login_protection_time_ban . '</strong>' );
 		secupress_die( $msg );
 	}
 }

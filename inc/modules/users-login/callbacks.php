@@ -66,19 +66,19 @@ function __secupress_users_login_settings_callback( $settings ) {
 	}
 	secupress_manage_affected_roles( $settings, 'profile-protect' );
 
-	// bad-logins
-	if ( isset( $settings['bad-logins_type'] ) ) {
-		if ( in_array( 'bannonexistsuser', $settings['bad-logins_type'] ) ) {
+	// login-protection
+	if ( isset( $settings['login-protection_type'] ) ) {
+		if ( in_array( 'bannonexistsuser', $settings['login-protection_type'] ) ) {
 			secupress_activate_submodule( $modulenow, 'bannonexistsuser' );
 		} else {
 			secupress_deactivate_submodule( $modulenow, 'bannonexistsuser' );
 		}
-		if ( in_array( 'limitloginattempts', $settings['bad-logins_type'] ) ) {
+		if ( in_array( 'limitloginattempts', $settings['login-protection_type'] ) ) {
 			secupress_activate_submodule( $modulenow, 'limitloginattempts' );
 		} else {
 			secupress_deactivate_submodule( $modulenow, 'limitloginattempts' );
 		}
-		if ( in_array( 'nonlogintimeslot', $settings['bad-logins_type'] ) ) {
+		if ( in_array( 'nonlogintimeslot', $settings['login-protection_type'] ) ) {
 			secupress_activate_submodule( $modulenow, 'nonlogintimeslot' );
 		} else {
 			secupress_deactivate_submodule( $modulenow, 'nonlogintimeslot' );
@@ -87,15 +87,15 @@ function __secupress_users_login_settings_callback( $settings ) {
 		secupress_deactivate_submodule( $modulenow, array( 'bannonexistsuser', 'ooc', 'limitloginattempts', 'nonlogintimeslot' ) );
 	}
 
-	$settings['bad-logins_number_attempts'] = isset( $settings['bad-logins_number_attempts'] ) ? secupress_validate_range( $settings['bad-logins_number_attempts'], 3, 99, 10 ) : 10;
-	$settings['bad-logins_time_ban']        = isset( $settings['bad-logins_time_ban'] )        ? secupress_validate_range( $settings['bad-logins_time_ban'], 1, 60, 5 )         : 5;
-	if ( ! isset( $settings['bad-logins_nonlogintimeslot'] ) ) {
-		$settings['bad-logins_nonlogintimeslot'] = array();
+	$settings['login-protection_number_attempts'] = isset( $settings['login-protection_number_attempts'] ) ? secupress_validate_range( $settings['login-protection_number_attempts'], 3, 99, 10 ) : 10;
+	$settings['login-protection_time_ban']        = isset( $settings['login-protection_time_ban'] )        ? secupress_validate_range( $settings['login-protection_time_ban'], 1, 60, 5 )         : 5;
+	if ( ! isset( $settings['login-protection_nonlogintimeslot'] ) ) {
+		$settings['login-protection_nonlogintimeslot'] = array();
 	}
-	$settings['bad-logins_nonlogintimeslot']['from_hour']   = isset( $settings['bad-logins_nonlogintimeslot']['from_hour'] )   ? secupress_validate_range( $settings['bad-logins_nonlogintimeslot']['from_hour'], 0, 23, 0 ) : 0;
-	$settings['bad-logins_nonlogintimeslot']['from_minute'] = isset( $settings['bad-logins_nonlogintimeslot']['from_minute'] ) && in_array( $settings['bad-logins_nonlogintimeslot']['from_minute'], array( '0', '15', '30', '45' ) ) ? (int) $settings['bad-logins_nonlogintimeslot']['from_minute'] : 0;
-	$settings['bad-logins_nonlogintimeslot']['to_hour']     = isset( $settings['bad-logins_nonlogintimeslot']['to_hour'] )     ? secupress_validate_range( $settings['bad-logins_nonlogintimeslot']['to_hour'], 0, 23, 0 )   : 0;
-	$settings['bad-logins_nonlogintimeslot']['to_minute']   = isset( $settings['bad-logins_nonlogintimeslot']['to_minute'] )   && in_array( $settings['bad-logins_nonlogintimeslot']['to_minute'], array( '0', '15', '30', '45' ) )   ? (int) $settings['bad-logins_nonlogintimeslot']['to_minute']   : 0;
+	$settings['login-protection_nonlogintimeslot']['from_hour']   = isset( $settings['login-protection_nonlogintimeslot']['from_hour'] )   ? secupress_validate_range( $settings['login-protection_nonlogintimeslot']['from_hour'], 0, 23, 0 ) : 0;
+	$settings['login-protection_nonlogintimeslot']['from_minute'] = isset( $settings['login-protection_nonlogintimeslot']['from_minute'] ) && in_array( $settings['login-protection_nonlogintimeslot']['from_minute'], array( '0', '15', '30', '45' ) ) ? (int) $settings['login-protection_nonlogintimeslot']['from_minute'] : 0;
+	$settings['login-protection_nonlogintimeslot']['to_hour']     = isset( $settings['login-protection_nonlogintimeslot']['to_hour'] )     ? secupress_validate_range( $settings['login-protection_nonlogintimeslot']['to_hour'], 0, 23, 0 )   : 0;
+	$settings['login-protection_nonlogintimeslot']['to_minute']   = isset( $settings['login-protection_nonlogintimeslot']['to_minute'] )   && in_array( $settings['login-protection_nonlogintimeslot']['to_minute'], array( '0', '15', '30', '45' ) )   ? (int) $settings['login-protection_nonlogintimeslot']['to_minute']   : 0;
 
 	if ( isset( $settings['captcha_type'] ) ) {
 		secupress_activate_submodule( $modulenow, 'login-captcha' );
