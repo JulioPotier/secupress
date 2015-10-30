@@ -7,6 +7,17 @@ Author: SecuPress
 Version: 1.0
 */
 
-if ( strlen( $_SERVER['REQUEST_URI'] ) > 255 ) {
+$parse_url = explode( '?', $_SERVER['REQUEST_URI'] );
+$parse_url = parse_str( end( $parse_url ), $args );
+
+unset( $args['_wp_http_referer'] );
+
+$args = apply_filters( 'secupress.plugin.bbul', $args );
+
+$url_test = http_build_query( $args );
+
+if ( strlen( $url_test ) > 255 ) {
 	secupress_block( 'BUL', 414 );
 }
+
+unset( $url_test, $args, $parse_url );
