@@ -22,7 +22,7 @@ function secupress_write_htaccess( $marker, $rules = null ) {
 
 	if ( is_writable( $htaccess_file ) ) {
 		// Update the .htaccess file.
-		return secupress_put_contents( $htaccess_file, $marker, $rules );
+		return secupress_put_contents( $htaccess_file, $rules, array( 'marker' => $marker ) );
 	}
 
 	return false;

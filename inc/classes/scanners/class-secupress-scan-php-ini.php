@@ -197,7 +197,7 @@ class SecuPress_Scan_PHP_INI extends SecuPress_Scan implements iSecuPress_Scan {
 			}
 		}
 		secupress_write_htaccess( 'php.ini', $htaccess_rules );
-		secupress_put_contents( ABSPATH . 'php.ini', 'php.ini', $phpini_rules );
+		secupress_put_contents( ABSPATH . 'php.ini', $phpini_rules, array( 'marker' =>  'php.ini' ) );
 */
 		$this->add_fix_message( 300 );
 
