@@ -374,7 +374,7 @@ function secupress_get_tests() {
 		'high' => array(
 			'Core_Update',      'Plugins_Update',    'Themes_Update',
 			'Auto_Update',      'Bad_Old_Plugins',   'Bad_Old_Files',
-			'Bad_Config_Files', 'Directory_Listing', 'PHP_INI',
+			'Bad_Config_Files', 'Directory_Listing',// 'PHP_INI',
 			'Admin_User',       'Easy_Login',        'Subscription',
 			'WP_Config',        'Salt_Keys',         'Passwords_Strength',
 			'Chmods',           'Common_Flaws',      'Bad_User_Agent',
