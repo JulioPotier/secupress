@@ -294,3 +294,35 @@ function secupress_async_upgrades() {
 	$lp_upgrader = new Language_Pack_Upgrader( $skin );
 	$lp_upgrader->bulk_upgrade( $language_updates );
 }
+
+/**
+ * Create a MU-PLUGIN
+ *
+ * @since 1.0
+ * @return bool
+ **/
+function secupress_create_mu_plugin( $filename_part, $contents ) {
+	
+	global $wp_filesystem;
+
+	if ( ! $wp_filesystem ) {
+		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php' );
+		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php' );
+
+		$wp_filesystem = new WP_Filesystem_Direct( new StdClass() );
+	}
+
+	$filename = WPMU_PLUGIN_DIR . "/_secupress_{$filename_part}.php";
+	if ( file_exists( $filename ) ) {
+		$wp_filesystem->delete( $filename );
+	}
+	if ( ! file_exists( WPMU_PLUGIN_DIR ) ) {
+		$wp_filesystem->mkdir( WPMU_PLUGIN_DIR );
+	}
+	if ( file_exists( $filename ) || ! file_exists( WPMU_PLUGIN_DIR ) ) {
+		return false;
+	}
+
+	return $wp_filesystem->put_contents( $filename, $contents );
+
+}
