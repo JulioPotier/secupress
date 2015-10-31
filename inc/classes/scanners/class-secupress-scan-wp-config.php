@@ -32,6 +32,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 			// good
 			0   => __( 'Your <code>wp-config.php</code> file is correct.', 'secupress' ),
 			1   => __( 'Your WordPress tables has been renamed using the new following prefix <strong>%s</strong>.', 'secupress' ),
+			2   => __( 'A must use plugin has been added in order to change the default value for <code>COOKIEHASH</code>.', 'secupress' ),
 			// warning
 			100 => __( 'This fix is <strong>pending</strong>, please reload the page to apply it now.', 'secupress' ),
 			// bad
@@ -48,6 +49,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 			302 => __( 'I can not write into wp-config.php so i can not change the DB prefix.', 'secupress' ),
 			303 => __( 'The DataBase user seems to have to correct rights, but i still could not change the DB prefix.', 'secupress' ),
 			304 => __( 'I found too many DB tables, so i can not choose alone which ones to rename, help me!', 'secupress' ),
+			305 => __( 'I can not create a must use plugin in <code>%s</code>, but i need it to change the default value for <code>COOKIEHASH</code>.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -125,6 +127,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 		$all_tables    = wp_list_pluck( $all_tables, 'Tables_in_' . DB_NAME . ' (' . $wpdb->prefix . '%)' );
 		$test_tables   = array();
 		$prefixes      = array( $wpdb->prefix );
+
 		$merges_values = array_merge( array_keys( array_reverse( $wp_tables ) ), $prefixes );
 		foreach ( $all_tables as $table ) {
 			$test_tables[] = str_replace( $merges_values, '', $table );
@@ -274,7 +277,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 
 	public function fix() {
 
-		global $wpdb;
+		global $wpdb, $current_user;
 
 		$wpconfig_filename = secupress_find_wpconfig_path();
 
@@ -377,6 +380,14 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 			secupress_put_contents( $wpconfig_filename, $new_content, array( 'marker' => 'Correct Constants Values', 'put' => 'append', 'text' => '<?php' ) );
 		}
 
+		// COOKIEHASH
+		$check = defined( 'COOKIEHASH' ) && COOKIEHASH === md5( get_site_option( 'siteurl' ) );
+
+		if ( $check ) {
+			// bad
+			set_transient( 'secupress-add-cookiehash-muplugin', array( 'ID' => $current_user->ID, 'username' => $current_user->user_login ) );
+			$this->add_fix_message( 100 );
+		}
 
 		if ( isset( $not_fixed[0] ) ) {
 			$this->add_fix_message( 300, array( $not_fixed ) );

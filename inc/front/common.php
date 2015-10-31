@@ -74,9 +74,9 @@ function secupress_rename_admin_username_logout() {
 		wp_destroy_current_session();
 
 		$token = md5( time() );
-		set_transient( 'secupress_auto_login_' . $token, $data['username'] );
+		set_transient( 'secupress_auto_login_' . $token, array( $data['username'], 'Admin_User' ) );
 
-		// Store a good scan result.
+		// Store a good scan result. ////
 		set_transient( 'secupress_scan_admin_user', array(
 			'msgs'   => array(
 				0 => array( '<em>admin</em>' ),
@@ -89,6 +89,42 @@ function secupress_rename_admin_username_logout() {
 	}
 }
 
+add_action( 'plugins_loaded', 'secupress_add_cookiehash_muplugin', 50 );
+/**
+ * Will rename the "admin" account after the rename-admin-username manual fix
+ *
+ * @since 1.0
+ * @return void
+ **/
+function secupress_add_cookiehash_muplugin() {
+	global $current_user, $pagenow, $wpdb;
+
+	$current_user    = wp_get_current_user();
+	$current_user_ID = $current_user->ID;
+
+	if ( empty( $_POST ) && ( ! isset( $pagenow ) || 'admin-post.php' != $pagenow ) && ! defined( 'DOING_AJAX' ) && ! defined( 'DOING_AUTOSAVE' ) && ! defined( 'DOING_CRON' ) &&
+		is_user_logged_in() && $data = get_transient( 'secupress-add-cookiehash-muplugin' )
+	) {
+		delete_transient( 'secupress-add-cookiehash-muplugin' );
+
+		if ( ! is_array( $data ) || ! isset( $data['ID'], $data['username'] ) || $current_user->ID != $data['ID'] ) {
+			return;
+		}
+
+		$contents  = '<?php // Added by SecuPress' . PHP_EOL;
+		$contents .= 'define( \'COOKIEHASH\', md5( __FILE__ . \'' . wp_generate_password( 64 ) . '\' ) );';
+		if ( secupress_create_mu_plugin( 'COOKIEHASH_' . uniqid(), $contents ) ) {
+			wp_clear_auth_cookie();
+			wp_destroy_current_session();
+
+			$token = md5( time() );
+			set_transient( 'secupress_auto_login_' . $token, array( $data['username'], 'WP_Config' ) );
+
+			wp_safe_redirect( add_query_arg( 'secupress_auto_login_token', $token, secupress_get_current_url( 'raw' ) ) );
+			die();
+		}
+	}
+}
 
 add_action( 'plugins_loaded', 'secupress_rename_admin_username_login', 60 );
 /**
@@ -96,11 +132,15 @@ add_action( 'plugins_loaded', 'secupress_rename_admin_username_login', 60 );
  *
  * @since 1.0
  * @return void
- **/
+
 function secupress_rename_admin_username_login() {
+
 	if ( isset( $_GET['secupress_auto_login_token'] ) ) {
-		$username = get_transient( 'secupress_auto_login_' . $_GET['secupress_auto_login_token'] );
+
+		list( $username, $action ) = get_transient( 'secupress_auto_login_' . $_GET['secupress_auto_login_token'] );
+
 		if ( $username ) {
+
 			delete_transient( 'secupress_auto_login_' . $_GET['secupress_auto_login_token'] );
 
 			add_filter( 'authenticate', '__secupress_give_him_a_user', 1, 2 );
@@ -112,15 +152,16 @@ function secupress_rename_admin_username_login() {
 				wp_set_auth_cookie( $user->ID );
 			}
 
-			secupress_fixit( 'Admin_User' );
-			secupress_scanit( 'Admin_User' );
+			if ( $action ) {
+				secupress_fixit( $action );
+				secupress_scanit( $action );
+			}
 
 			wp_safe_redirect( remove_query_arg( 'secupress_auto_login_token', secupress_get_current_url( 'raw' ) ) );
 			die();
 		}
 	}
 }
-
 
 /**
  * Used in secupress_rename_admin_username_login() to force a user when auto authenticating
