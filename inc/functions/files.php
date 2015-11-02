@@ -194,18 +194,17 @@ function secupress_put_contents( $file, $new_content, $args ) {
  *
  * @since 1.0
  *
- * @param string $file 	  The path of file will be created
+ * @param string $file        The path of file will be created
  * @param string $old_content The content to be replaced from the file (preg_replace)
  * @param string $new_content The new content (preg_replace)
  * @return bool
  */
 function secupress_replace_content( $file, $old_content, $new_content ) {
+	global $wp_filesystem;
 
 	if ( ! file_exists( $file ) ) {
 		return false;
 	}
-
-	global $wp_filesystem;
 
 	if ( ! $wp_filesystem ) {
 		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php' );
@@ -238,7 +237,8 @@ function secupress_find_wpconfig_path() {
 
 	if ( file_exists( $config_file ) ) {
 		return $config_file;
-	} elseif ( @file_exists( $config_file_alt ) && ! file_exists( dirname( ABSPATH ) . '/wp-settings.php' ) ) {
+	}
+	if ( @file_exists( $config_file_alt ) && ! file_exists( dirname( ABSPATH ) . '/wp-settings.php' ) ) {
 		return $config_file_alt;
 	}
 
@@ -255,7 +255,7 @@ function secupress_find_wpconfig_path() {
 function secupress_async_upgrades() {
 	// Nothing to do?
 	$language_updates = wp_get_translation_updates();
-	// war_dump( $language_updates );
+
 	if ( ! $language_updates ) {
 		return;
 	}
@@ -302,7 +302,6 @@ function secupress_async_upgrades() {
  * @return bool
  **/
 function secupress_create_mu_plugin( $filename_part, $contents ) {
-
 	global $wp_filesystem;
 
 	if ( ! $wp_filesystem ) {
@@ -313,6 +312,7 @@ function secupress_create_mu_plugin( $filename_part, $contents ) {
 	}
 
 	$filename = WPMU_PLUGIN_DIR . "/_secupress_{$filename_part}.php";
+
 	if ( file_exists( $filename ) ) {
 		$wp_filesystem->delete( $filename );
 	}
@@ -324,5 +324,4 @@ function secupress_create_mu_plugin( $filename_part, $contents ) {
 	}
 
 	return $wp_filesystem->put_contents( $filename, $contents );
-
 }
