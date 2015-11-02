@@ -63,7 +63,6 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 			admin_url( 'install.php' ),
 			admin_url( 'menu.php' ),
 			admin_url( 'menu-header.php' ),
-			admin_url( 'setup-config.php' ),	//// wp_die(), donc erreur 500 (et non 200). De plus, je ne vois pas d'info sensible. Sachant que c'est probablement toi qui m'avais indiqué de bloquer l'accès à ce fichier, tu te souviens pourquoi ?
 			admin_url( 'includes/menu.php' ),
 		);
 		$bads     = array();
