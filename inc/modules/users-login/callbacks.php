@@ -187,8 +187,8 @@ function __secupress_pre_bad_logins_blacklist_default_if_empty( $value, $default
 }
 
 
-function secupress_blacklist_logins_list_default() {
-	return array(
+function secupress_blacklist_logins_list_default( $glue = null ) {
+	$list = array(
 		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 		'a', 'about', 'access', 'account', 'accounts', 'ad', 'address', 'adm', 'admin', 'administration', 'adult', 'advertising', 'affiliate', 'affiliates', 'ajax', 'analytics', 'android', 'anon', 'anonymous', 'api', 'app', 'apps', 'archive', 'atom', 'auth', 'authentication', 'avatar',
 		'b', 'backup', 'banner', 'banners', 'bin', 'billing', 'blog', 'blogs', 'board', 'bot', 'bots', 'business',
@@ -217,11 +217,13 @@ function secupress_blacklist_logins_list_default() {
 		'y', 'you',
 		'z',
 	);
+
+	return isset( $glue ) ? implode( $glue, $list ) : $list;
 }
 
 
 function secupress_blacklist_logins_list_default_string() {
-	return implode( "\n", secupress_blacklist_logins_list_default() );
+	return secupress_blacklist_logins_list_default( "\n" );
 }
 
 
