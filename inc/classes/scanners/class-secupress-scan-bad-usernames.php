@@ -31,6 +31,7 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 		$messages = array(
 			// good
 			0   => __( 'All the user names are correct.', 'secupress' ),
+			1   => __( 'Module activated: the users with a blacklisted username will be asked to change it.', 'secupress' ),
 			// bad
 			200 => _n_noop( '<strong>%d</strong> user has a forbidden login name.', '<strong>%d</strong> users have a forbidden login name.', 'secupress' ),
 			201 => _n_noop( '<strong>%d</strong> user has similar login name and display name.', '<strong>%d</strong> users have similar login name and display name.', 'secupress' ),
@@ -50,10 +51,9 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 		global $wpdb;
 
 		// Blacklisted names
-		$names = "'" . implode( "','", secupress_blacklist_logins_list_default() ) . "'";
-
-		$ids = $wpdb->get_col( "SELECT ID from $wpdb->users WHERE user_login IN ( $names )" );
-		$ids = count( $ids );
+		$names = "'" . secupress_blacklist_logins_list_default( "','" ) . "'";
+		$ids   = $wpdb->get_col( "SELECT ID from $wpdb->users WHERE user_login IN ( $names )" );
+		$ids   = count( $ids );
 
 		if ( $ids ) {
 			// bad
@@ -77,8 +77,24 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 
 
 	public function fix() {
+		global $wpdb;
 
-		// include the fix here.
+		// Blacklisted names
+		$names = "'" . secupress_blacklist_logins_list_default( "','" ) . "'";
+		$ids   = $wpdb->get_col( "SELECT ID from $wpdb->users WHERE user_login IN ( $names )" );
+
+		if ( $ids ) {
+			$settings = array( 'bad-logins_blacklist-logins' => '1' );
+			secupress_activate_module( 'users-login', $settings );
+			// good
+			$this->add_fix_message( 1 );
+		}
+
+		// Who have the same nickname and login?
+		////
+
+		// good
+		$this->maybe_set_fix_status( 0 );
 
 		return parent::fix();
 	}
