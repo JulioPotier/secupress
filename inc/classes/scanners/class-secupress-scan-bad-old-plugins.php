@@ -413,7 +413,13 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 	 * return (bool)   true if the plugin is symlinked.
 	 */
 	final protected static function is_plugin_symlinked( $plugin_file ) {
-		$plugin_path = realpath( WP_PLUGIN_DIR . '/' . $plugin_file );
-		return ! ( $plugin_path && 0 === strpos( $plugin_path, WP_PLUGIN_DIR . '/' ) );
+		static $plugins_dir;
+
+		if ( ! isset( $plugins_dir ) ) {
+			$plugins_dir = trailingslashit( realpath( WP_PLUGIN_DIR ) );
+		}
+
+		$plugin_path = trailingslashit( realpath( $plugins_dir . $plugin_file ) );
+		return ! ( $plugin_path && 0 === strpos( $plugin_path, $plugins_dir ) );
 	}
 }
