@@ -57,7 +57,7 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 
 		if ( $ids ) {
 			// bad
-			$this->add_message( 200, array( $ids, number_format_i18n( $ids ) ) );
+			$this->add_message( 200, array( $ids, $ids ) );
 		}
 
 		// Who have the same nickname and login?
