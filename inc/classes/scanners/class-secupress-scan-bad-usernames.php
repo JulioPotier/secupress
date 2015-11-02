@@ -57,8 +57,12 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 
 		// bad
 		if ( $ids ) {
+			if ( $ids > 10 ) {
+				$logins = array_slice( $logins, 0, 9 );
+				array_push( $logins, '&hellip;' );
+			}
 			// 2nd param: 1st item is used for the noop if needed, the rest for sprintf.
-			$this->add_message( 200, array( $ids, $ids, wp_sprintf( '%l', static::wrap_in_tag( $logins ) ) ) );
+			$this->add_message( 200, array( $ids, $ids, static::wrap_in_tag( $logins ) ) );
 		}
 
 		// Who have the same nickname and login?
@@ -67,8 +71,12 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 
 		// bad
 		if ( $ids ) {
+			if ( $ids > 10 ) {
+				$logins = array_slice( $logins, 0, 9 );
+				array_push( $logins, '&hellip;' );
+			}
 			// 2nd param: 1st item is used for the noop if needed, the rest for sprintf.
-			$this->add_message( 201, array( $ids, $ids, wp_sprintf( '%l', static::wrap_in_tag( $logins ) ) ) );
+			$this->add_message( 201, array( $ids, $ids, static::wrap_in_tag( $logins ) ) );
 		}
 
 		// good
