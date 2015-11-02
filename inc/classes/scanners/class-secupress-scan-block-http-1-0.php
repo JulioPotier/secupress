@@ -50,7 +50,7 @@ class SecuPress_Scan_Block_HTTP_1_0 extends SecuPress_Scan implements iSecuPress
 
 	public function scan() {
 
-		$response = wp_remote_get( user_trailingslashit( home_url() ), array( 'httpversion' => '1.0' ) );
+		$response = wp_remote_post( user_trailingslashit( home_url() ), array( 'httpversion' => '1.0' ) );
 
 		if ( ! is_wp_error( $response ) ) {
 
