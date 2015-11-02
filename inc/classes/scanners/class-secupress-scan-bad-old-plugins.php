@@ -399,10 +399,6 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 			$plugins['hello.php'] = 'Hello Dolly';
 		}
 
-		if ( file_exists( WP_PLUGIN_DIR . '/hello-dolly/hello.php' ) ) {
-			$plugins['hello-dolly/hello.php'] = 'Hello Dolly' . ( $plugins ? ' (' . __( 'from the official repository', 'secupress' ) . ')' : '' );
-		}
-
 		return $plugins;
 	}
 
