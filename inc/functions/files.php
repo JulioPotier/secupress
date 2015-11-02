@@ -126,20 +126,22 @@ function secupress_mkdir_p( $target ) {
  *
  * @since 1.0
  *
- * @param string $file 	  The path of file will be created
- * @param string $new_content The content that will be added on top of the file
- * @param array  $args (optional) 
- *				 marker (string): An additional suffix string adde the the "SecuPress" marker, Default ''
- *				 put (string) (prepend|append|replace): Prepend of append content in the file, Default 'Prepend'
- *				 text (string) When (prepend|append)is used for "put", you can speficy a text to find, it will be pre/append around this text
+ * @param string $file The path of file
+ * @param string $new_content The content that will be added to the file
+ * @param array  $args (optional)
+ *               marker (string): An additional suffix string to add to the "SecuPress" marker, Default ''
+ *               put    (string): (prepend|append|replace): Prepend or append content in the file, Default 'prepend'
+ *               text   (string): When (prepend|append) is used for "put", you can speficy a text to find, it will be pre/appended around this text
  * @return bool
  */
 function secupress_put_contents( $file, $new_content, $args ) {
-
-	$defaults = array( 'marker' =>'', 'put' => 'prepend', 'text' => '' );
-	$args = wp_parse_args( $args, $defaults );
-
 	global $wp_filesystem;
+
+	$args = wp_parse_args( $args, array(
+		'marker' => '',
+		'put'    => 'prepend',
+		'text'   => '',
+	) );
 
 	if ( ! $wp_filesystem ) {
 		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php' );
@@ -148,16 +150,14 @@ function secupress_put_contents( $file, $new_content, $args ) {
 		$wp_filesystem = new WP_Filesystem_Direct( new StdClass() );
 	}
 
-	$comment_char = 'php.ini' != basename( $file ) ? '#' : ';';
-	// Get content of file
 	$file_content = '';
+	$comment_char = 'php.ini' != basename( $file ) ? '#' : ';';
+
+	// Get content of file
 	if ( file_exists( $file ) ) {
 		$ftmp         = file_get_contents( $file );
 		$file_content = preg_replace( '/' . $comment_char . ' BEGIN SecuPress ' . $args['marker'] . '(.*)' . $comment_char . ' END SecuPress\s*?/isU', '', $ftmp );
 	}
-
-	// Remove empty spacings
-	$ftmp = str_replace( "\n\n" , "\n" , $ftmp );
 
 	if ( ! empty( $new_content ) ) {
 
@@ -220,7 +220,7 @@ function secupress_replace_content( $file, $old_content, $new_content ) {
 	$new_content  = preg_replace( $old_content, $new_content, $file_content );
 	$replaced     =  $new_content != null && $new_content != $file_content;
 	$put_contents = $wp_filesystem->put_contents( $file, $new_content, $chmod );
-	
+
 	return $put_contents && $replaced;
 }
 
@@ -302,7 +302,7 @@ function secupress_async_upgrades() {
  * @return bool
  **/
 function secupress_create_mu_plugin( $filename_part, $contents ) {
-	
+
 	global $wp_filesystem;
 
 	if ( ! $wp_filesystem ) {
