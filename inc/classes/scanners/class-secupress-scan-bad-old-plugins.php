@@ -153,7 +153,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 		}
 
 		// Get the list of plugins to uninstall.
-		$selected_plugins = ! empty( $_POST['secupress-fix-delete-bad-old-plugins'] ) && is_array( $_POST['secupress-fix-delete-bad-old-plugins'] ) ? array_filter( array_map( 'esc_attr', $_POST['secupress-fix-delete-bad-old-plugins'] ) ) : array();
+		$selected_plugins = ! empty( $_POST['secupress-fix-delete-bad-old-plugins'] ) && is_array( $_POST['secupress-fix-delete-bad-old-plugins'] ) ? array_filter( $_POST['secupress-fix-delete-bad-old-plugins'] ) : array();
 		$selected_plugins = $selected_plugins ? array_fill_keys( $selected_plugins, 1 ) : array();
 		$selected_plugins = $selected_plugins ? array_intersect_key( $bad_plugins, $selected_plugins ) : array();
 		$count_selected   = count( $selected_plugins );
@@ -235,6 +235,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 		else {
 			// cantfix
 			$not_removed = array_diff_key( $selected_plugins, $deleted_plugins );
+			$not_removed = array_map( 'esc_attr', $not_removed );
 			$this->add_fix_message( 103, array( count( $not_removed ), $not_removed ) );
 		}
 
