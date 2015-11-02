@@ -413,10 +413,10 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 		static $plugins_dir;
 
 		if ( ! isset( $plugins_dir ) ) {
-			$plugins_dir = trailingslashit( realpath( WP_PLUGIN_DIR ) );
+			$plugins_dir = realpath( WP_PLUGIN_DIR ) . DIRECTORY_SEPARATOR;
 		}
 
-		$plugin_path = trailingslashit( realpath( $plugins_dir . $plugin_file ) );
+		$plugin_path = realpath( $plugins_dir . $plugin_file );
 		return ! ( $plugin_path && 0 === strpos( $plugin_path, $plugins_dir ) );
 	}
 }

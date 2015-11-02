@@ -425,10 +425,10 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 		static $plugins_dir;
 
 		if ( ! isset( $plugins_dir ) ) {
-			$plugins_dir = trailingslashit( realpath( WP_PLUGIN_DIR ) );
+			$plugins_dir = realpath( WP_PLUGIN_DIR ) . DIRECTORY_SEPARATOR;
 		}
 
-		$plugin_path = trailingslashit( realpath( $plugins_dir . $plugin_file ) );
+		$plugin_path = realpath( $plugins_dir . $plugin_file );
 		return ! ( $plugin_path && 0 === strpos( $plugin_path, $plugins_dir ) );
 	}
 
@@ -445,11 +445,10 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 
 		if ( ! isset( $themes_dir ) ) {
 			$wp_filesystem = static::get_filesystem();
-			$themes_dir    = $wp_filesystem->wp_themes_dir();
-			$themes_dir    = trailingslashit( $themes_dir );
+			$themes_dir    = realpath( $wp_filesystem->wp_themes_dir() ) . DIRECTORY_SEPARATOR;
 		}
+		$theme_path = realpath( $themes_dir . $theme_slug );
 
-		$theme_path = trailingslashit( realpath( $themes_dir . $theme_slug ) );
 		return ! ( $theme_path && 0 === strpos( $theme_path, $themes_dir ) );
 	}
 }
