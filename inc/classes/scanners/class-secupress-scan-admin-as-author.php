@@ -338,6 +338,8 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 		if ( ! $data || ! is_array( $data ) ) {
 			// bad
 			$this->add_fix_message( 206 );
+			// Get the form back.
+			$this->add_fix_action( 'admin-as-author-new-administrator' );
 			return;
 		}
 
@@ -347,6 +349,8 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 		if ( ! $login || ! $email ) {
 			// bad
 			$this->add_fix_message( 207 );
+			// Get the form back.
+			$this->add_fix_action( 'admin-as-author-new-administrator' );
 			return;
 		}
 
@@ -406,6 +410,8 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 		if ( ! $data || ! is_array( $data ) ) {
 			// bad
 			$this->add_fix_message( 206 );
+			// Get the form back.
+			$this->add_fix_action( 'admin-as-author-new-editor' );
 			return;
 		}
 
@@ -415,6 +421,8 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 		if ( ! $login || ! $email ) {
 			// bad
 			$this->add_fix_message( 207 );
+			// Get the form back.
+			$this->add_fix_action( 'admin-as-author-new-editor' );
 			return;
 		}
 
