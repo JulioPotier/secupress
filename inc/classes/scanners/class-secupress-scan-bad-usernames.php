@@ -23,7 +23,7 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if your users have correct username, not blacklisted, not the same as their login.', 'secupress' );
-		self::$more  = __( 'It is important to not have the same login and display name to protect your login name and avoid simple brute-force attacks.', 'secupress' );
+		self::$more  = __( 'It is important to not have the same login and display name to protect your login name and avoid simple brute-force attacks. Also some usernames are know to be used for malicious usage, or created by bots.', 'secupress' );
 	}
 
 
@@ -33,8 +33,8 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 			0   => __( 'All the user names are correct.', 'secupress' ),
 			1   => __( 'Module activated: the users with a blacklisted username will be asked to change it.', 'secupress' ),
 			// bad
-			200 => _n_noop( '<strong>%d</strong> user has a forbidden login name.', '<strong>%d</strong> users have a forbidden login name.', 'secupress' ),
-			201 => _n_noop( '<strong>%d</strong> user has similar login name and display name.', '<strong>%d</strong> users have similar login name and display name.', 'secupress' ),
+			200 => _n_noop( '<strong>%s</strong> user has a forbidden login name: %s', '<strong>%s</strong> users have a forbidden login name: %s', 'secupress' ),
+			201 => _n_noop( '<strong>%s</strong> user has similar login name and display name: %s', '<strong>%s</strong> users have similar login name and display name: %s', 'secupress' ),
 			// cantfix
 			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);
@@ -51,22 +51,24 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 		global $wpdb;
 
 		// Blacklisted names
-		$names = "'" . secupress_blacklist_logins_list_default( "','" ) . "'";
-		$ids   = $wpdb->get_col( "SELECT ID from $wpdb->users WHERE user_login IN ( $names )" );
-		$ids   = count( $ids );
+		$names  = "'" . secupress_blacklist_logins_list_default( "','" ) . "'";
+		$logins = $wpdb->get_col( "SELECT user_login from $wpdb->users WHERE user_login IN ( $names )" );
+		$ids    = count( $logins );
 
+		// bad
 		if ( $ids ) {
-			// bad
-			$this->add_message( 200, array( $ids, $ids ) );
+			// 2nd param: 1st item is used for the noop if needed, the rest for sprintf.
+			$this->add_message( 200, array( $ids, $ids, wp_sprintf( '%l', static::wrap_in_tag( $logins ) ) ) );
 		}
 
 		// Who have the same nickname and login?
-		$ids = $wpdb->get_col( "SELECT ID FROM $wpdb->users u, $wpdb->usermeta um WHERE u.user_login = u.display_name OR ( um.user_id = u.ID AND um.meta_key = 'nickname' AND um.meta_value = u.user_login ) GROUP BY ID" );
-		$ids = count( $ids );
+		$logins = $wpdb->get_col( "SELECT user_login FROM $wpdb->users u, $wpdb->usermeta um WHERE u.user_login = u.display_name OR ( um.user_id = u.ID AND um.meta_key = 'nickname' AND um.meta_value = u.user_login ) GROUP BY user_login" );
+		$ids    = count( $logins );
 
+		// bad
 		if ( $ids ) {
-			// bad
-			$this->add_message( 201, array( $ids, number_format_i18n( $ids ) ) );
+			// 2nd param: 1st item is used for the noop if needed, the rest for sprintf.
+			$this->add_message( 201, array( $ids, $ids, wp_sprintf( '%l', static::wrap_in_tag( $logins ) ) ) );
 		}
 
 		// good
