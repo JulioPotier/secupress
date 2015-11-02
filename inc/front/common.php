@@ -201,9 +201,9 @@ function secupress_downgrade_author_administrator() {
 		return;
 	}
 
-	$data = array_map( 'absint', explode( '|', $data ) );
+	list( $new_user_id, $old_user_id ) = array_map( 'absint', explode( '|', $data ) );
 
-	if ( count( $data ) !== 2 || ! $data[0] || ! $data[1] || $data[0] === $data[1] ) {
+	if ( ! isset( $new_user_id, $old_user_id ) || ! $new_user_id || ! $old_user_id || $new_user_id === $old_user_id ) {
 		// Dafuk
 		secupress_delete_transient( 'secupress-admin-as-author-administrator' );
 		return;
@@ -216,18 +216,18 @@ function secupress_downgrade_author_administrator() {
 	}
 
 	// These aren't the droids you're looking for.
-	if ( $data[0] !== get_current_user_id() ) {
+	if ( $new_user_id !== get_current_user_id() ) {
 		return;
 	}
 
-	if ( ! user_can( $data[0], 'administrator' ) || ! user_can( $data[1], 'administrator' ) ) {
+	if ( ! user_can( $new_user_id, 'administrator' ) || ! user_can( $old_user_id, 'administrator' ) ) {
 		// Hey! What did you do?!
 		secupress_delete_transient( 'secupress-admin-as-author-administrator' );
 		return;
 	}
 
 	// The old account (the one with Posts).
-	$user = get_user_by( 'id', $data[1] );
+	$user = get_user_by( 'id', $old_user_id );
 
 	if ( ! $user ) {
 		continue;
