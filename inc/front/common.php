@@ -132,6 +132,7 @@ add_action( 'plugins_loaded', 'secupress_rename_admin_username_login', 60 );
  *
  * @since 1.0
  * @return void
+ */
 
 function secupress_rename_admin_username_login() {
 
