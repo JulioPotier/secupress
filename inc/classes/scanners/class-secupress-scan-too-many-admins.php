@@ -54,6 +54,7 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPres
 			/* translators: %s is a user name (or a list of user names). */
 			207 => _n_noop( '%s could not be deleted. You should try to do it manually.', '%s could not be deleted. You should try to do it manually.', 'secupress' ),
 			208 => __( 'Please select a valid user to whom attribute posts.', 'secupress' ),
+			209 => __( 'Hey, I can\'t assign Posts to a user who will be deleted!', 'secupress' ),
 			// cantfix
 			300 => __( 'Please delete some users or change their role to get a maximum of %s Administrators.', 'secupress' ),
 			301 => __( 'Please delete some users or change their role to get a maximum of %s Administrators per blog.', 'secupress' ),
@@ -250,6 +251,13 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPres
 				if ( ! $posts_user ) {
 					// bad: not a valid user.
 					$this->add_fix_message( 208 );
+					$this->add_fix_action( 'too-many-admins' );
+					return parent::manual_fix();
+				}
+
+				if ( in_array( $posts_user, $admins ) ) {
+					// bad: the chosen user will be deleted.
+					$this->add_fix_message( 209 );
 					$this->add_fix_action( 'too-many-admins' );
 					return parent::manual_fix();
 				}
