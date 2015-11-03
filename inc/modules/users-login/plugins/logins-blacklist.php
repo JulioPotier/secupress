@@ -20,9 +20,9 @@ add_action( 'auth_redirect', 'secupress_auth_redirect_blacklist_logins' );
 function secupress_auth_redirect_blacklist_logins( $user_id ) {
 
 	$user = get_userdata( $user_id );
-	$list = secupress_get_module_option( 'bad-logins_blacklist-logins-list', secupress_blacklist_logins_list_default_string(), 'users-login' );
+	$list = explode( "\n", secupress_get_module_option( 'bad-logins_blacklist-logins-list', secupress_blacklist_logins_list_default_string(), 'users-login' ) );
 
-	if ( strpos( "\n$list\n", "\n$user->user_login\n" ) === false ) {
+	if ( ! in_array( $user->user_login, $list ) ) {
 		// Good, the login is not blacklisted.
 		return;
 	}
@@ -44,7 +44,7 @@ function secupress_auth_redirect_blacklist_logins( $user_id ) {
 			// Sanitize the submitted username.
 			$user_login = sanitize_user( $_POST['secupress-backlist-logins-new-login'], true );
 
-			if ( strpos( "\n$list\n", "\n$user_login\n" ) !== false ) {
+			if ( in_array( $user_login, $list ) ) {
 				// The new login is blacklisted.
 				$error = __( 'This username is also blacklisted', 'secupress' );
 			} else {
@@ -65,6 +65,7 @@ function secupress_auth_redirect_blacklist_logins( $user_id ) {
 					// Redirect the user to the login page.
 					$login_url = wp_login_url( secupress_get_current_url( 'raw' ), true );
 					$login_url = add_query_arg( 'secupress-relog', 1, $login_url );
+
 					wp_redirect( $login_url );
 					exit();
 				}
@@ -224,6 +225,8 @@ function secupress_blacklist_logins_change_user_login( $user_id, $user_login ) {
 
 	wp_cache_delete( $user_id, 'users' );
 	wp_cache_delete( $user_login, 'userlogins' );
+
+	secupress_scanit( 'Bad_Usernames' );
 
 	return $user_id;
 }
