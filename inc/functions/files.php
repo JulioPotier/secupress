@@ -330,13 +330,14 @@ function secupress_create_mu_plugin( $filename_part, $contents ) {
  *
  * @since 1.0
  *
- * @param $marker (string)             An additional suffix string to add to the "SecuPress" marker.
- * @param $node_types (array|string)   Node types: used to removed old nodes. Optional.
- * @param $nodes_string (array|string) Content to insert in the file.
+ * @param (string)       $marker       An additional suffix string to add to the "SecuPress" marker.
+ * @param (array|string) $node_types   Node types: used to removed old nodes. Optional.
+ * @param (array|string) $nodes_string Content to insert in the file.
+ * @param (string)       $path         Path where nodes should be created, relative to `/configuration/system.webServer`.
  *
- * @return (bool)
+ * @return (bool) true on success.
  **/
-function secupress_insert_iis7_nodes( $marker, $node_types = false, $nodes_string = '' ) {
+function secupress_insert_iis7_nodes( $marker, $node_types = false, $nodes_string = '', $path = '' ) {
 	static $home_path;
 
 	if ( ! $marker || ! class_exists( 'DOMDocument' ) ) {
@@ -372,6 +373,7 @@ function secupress_insert_iis7_nodes( $marker, $node_types = false, $nodes_strin
 			return false;
 		}
 
+		$path  = '/configuration/system.webServer' . ( $path ? '/' . trim( $path, '/' ) : '' );
 		$xpath = new DOMXPath( $doc );
 
 		// Remove possible nodes not created by us.
@@ -379,23 +381,23 @@ function secupress_insert_iis7_nodes( $marker, $node_types = false, $nodes_strin
 			$node_types = (array) $node_types;
 
 			foreach ( $node_types as $node_type ) {
-				$old_nodes = $xpath->query( '/configuration/system.webServer/' . $node_type );
+				$old_nodes = $xpath->query( $path . '/' . $node_type );
 
 				if ( $old_nodes->length > 0 ) {
-					$child  = $old_nodes->item( 0 );
-					$parent = $child->parentNode;
-					$parent->removeChild( $child );
+					foreach ( $old_nodes as $old_node ) {
+						$old_node->parentNode->removeChild( $old_node );
+					}
 				}
 			}
 		}
 
 		// Remove old nodes created by us.
-		$old_nodes = $xpath->query( '/configuration/system.webServer/*[starts-with(@name,\'' . $marker . '\')]' );
+		$old_nodes = $xpath->query( $path . '/*[starts-with(@name,\'' . $marker . '\')]' );
 
 		if ( $old_nodes->length > 0 ) {
-			$child  = $old_nodes->item( 0 );
-			$parent = $child->parentNode;
-			$parent->removeChild( $child );
+			foreach ( $old_nodes as $old_node ) {
+				$old_node->parentNode->removeChild( $old_node );
+			}
 		}
 
 		// No new nodes? Stop here.
@@ -405,37 +407,12 @@ function secupress_insert_iis7_nodes( $marker, $node_types = false, $nodes_strin
 			return true;
 		}
 
-		// Check the XPath for the node and create XML nodes if they do not exist.
-		$xmlnodes = $xpath->query( '/configuration/system.webServer' );
-
-		if ( $xmlnodes->length > 0 ) {
-			$container_node = $xmlnodes->item( 0 );
-		}
-		else {
-			$container_node = $doc->createElement( 'system.webServer' );
-			$xmlnodes       = $xpath->query( '/configuration' );
-
-			if ( $xmlnodes->length > 0 ) {
-				$config_node = $xmlnodes->item( 0 );
-			}
-			else {
-				$config_node = $doc->createElement( 'configuration' );
-				$doc->appendChild( $config_node );
-			}
-
-			$config_node->appendChild( $container_node );
-		}
-
 		// Create fragment.
 		$fragment = $doc->createDocumentFragment();
 		$fragment->appendXML( $nodes_string );
 
-		// Prepend new nodes.
-		if ( $container_node->hasChildNodes() ) {
-			$container_node->childNodes->item( 0 );
-		} else {
-			$container_node->appendChild( $fragment );
-		}
+		// Maybe create child nodes and then, prepend new nodes.
+		secupress_get_iis7_node( $doc, $xpath, $path, $fragment );
 
 		// Save and finish.
 		$doc->encoding     = 'UTF-8';
@@ -472,4 +449,63 @@ function secupress_get_home_path() {
 	}
 
 	return str_replace( '\\', '/', $home_path );
+}
+
+
+/**
+ * Get a DOMNode node.
+ * If it does not exist it is created recursively.
+ *
+ * @since 1.0
+ *
+ * @param (object) $doc   DOMDocument element.
+ * @param (object) $xpath DOMXPath element.
+ * @param (string) $path  Path to the desired node.
+ * @param (object) $child DOMNode to be prepended.
+ *
+ * @return (object) The DOMNode node.
+ **/
+function secupress_get_iis7_node( $doc, $xpath, $path, $child = false ) {
+	$nodelist = $xpath->query( $path );
+
+	if ( $nodelist->length > 0 ) {
+		return secupress_prepend_iis7_node( $nodelist->item( 0 ), $child );
+	}
+
+	$path = explode( '/', $path );
+	$node = array_pop( $path );
+	$path = implode( '/', $path );
+
+	$final_node = $doc->createElement( $node );
+
+	if ( $child ) {
+		$final_node->appendChild( $child );
+	}
+
+	return secupress_get_iis7_node( $doc, $xpath, $path, $final_node );
+}
+
+
+/**
+ * A shorthand to prepend a DOMNode node.
+ *
+ * @since 1.0
+ *
+ * @param (object) $container_node DOMNode that will contain the new node.
+ * @param (object) $new_node       DOMNode to be prepended.
+ *
+ * @return (object) DOMNode containing the new node.
+ **/
+function secupress_prepend_iis7_node( $container_node, $new_node ) {
+	if ( ! $new_node ) {
+		return $container_node;
+	}
+
+	if ( $container_node->hasChildNodes() ) {
+		$container_node->insertBefore( $new_node, $container_node->firstChild );
+	} else {
+		$container_node->appendChild( $new_node );
+	}
+
+	return $container_node;
 }
