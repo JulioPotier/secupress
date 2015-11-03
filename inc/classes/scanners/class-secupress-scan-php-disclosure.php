@@ -28,6 +28,7 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements iSecuPress
 
 
 	public static function get_messages( $message_id = null ) {
+		$nginx_rules = "location / {\n\t" . 'if ( $query_string ~* "\=PHP[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}" ) {' . "\n\t\treturn 403;\n\t}\n}";
 		$messages = array(
 			// good
 			0   => __( 'Your site does not reveal the PHP modules.', 'secupress' ),
@@ -37,9 +38,10 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements iSecuPress
 			// bad
 			200 => sprintf( __( '%s should not be accessible to anyone.', 'secupress' ), '<code>' . user_trailingslashit( home_url() ) . '?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000</code>' ),
 			// cantfix
-			300 => sprintf( __( 'You run a nginx system, I cannot fix this sensitive information disclosure but you can do it yourself with the following code: %s.', 'secupress' ), '<code>(add nginx code here)</code>' ), ////
+			/* translators: 1 si a file name, 2 is some code */
+			300 => sprintf( __( 'Your server runs a nginx system, the sensitive information disclosure cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s.', 'secupress' ), '<code>nginx.conf</code>', "<pre>$nginx_rules</pre>" ),
 			301 => sprintf( __( 'You run an IIS7 system, I cannot fix this sensitive information disclosure but you can do it yourself with the following code: %s.', 'secupress' ), '<code>(add IIS code here)</code>' ), //// iis7_url_rewrite_rules ?
-			302 => __( 'You don\'t run an Apache system, I cannot fix this sensitive information disclosure.', 'secupress' ),
+			302 => __( 'Your server runs a non recognized system. The sensitive information disclosure cannot be fixed automatically.', 'secupress' ),
 			303 => __( 'Your %1$s file is not writable. Please add the following lines to the file: %2$s.', 'secupress' ),
 		);
 
