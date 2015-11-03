@@ -40,9 +40,8 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements iSecuPress
 			// cantfix
 			/* translators: 1 si a file name, 2 is some code */
 			300 => sprintf( __( 'Your server runs a nginx system, the sensitive information disclosure cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s.', 'secupress' ), '<code>nginx.conf</code>', "<pre>$nginx_rules</pre>" ),
-			301 => sprintf( __( 'You run an IIS7 system, I cannot fix this sensitive information disclosure but you can do it yourself with the following code: %s.', 'secupress' ), '<code>(add IIS code here)</code>' ), //// iis7_url_rewrite_rules ?
-			302 => __( 'Your server runs a non recognized system. The sensitive information disclosure cannot be fixed automatically.', 'secupress' ),
-			303 => __( 'Your %1$s file is not writable. Please add the following lines to the file: %2$s.', 'secupress' ),
+			301 => __( 'Your server runs a non recognized system. The sensitive information disclosure cannot be fixed automatically.', 'secupress' ),
+			302 => __( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -82,35 +81,55 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements iSecuPress
 	public function fix() {
 		global $is_apache, $is_nginx, $is_iis7;
 
-		// Not Apache system, bail out.
-		if ( ! $is_apache ) {
-
-			if ( $is_nginx ) {
-				$this->add_fix_message( 300 );
-			} elseif ( $is_iis7 ) {
-				$this->add_fix_message( 301 ); //// iis7_url_rewrite_rules
-			} else {
-				$this->add_fix_message( 302 );
-			}
-
-			return parent::fix();
+		if ( $is_apache ) {
+			$this->fix_apache();
+		} elseif ( $is_iis7 ) {
+			$this->fix_iis7();
+		} elseif ( $is_nginx ) {
+			$this->add_fix_message( 300 );
+		} else {
+			$this->add_fix_message( 301 );
 		}
 
-		// Edit `.htaccess` file.
+		return parent::fix();
+	}
+
+
+	protected function fix_apache() {
+		$marker = 'php_disclosure';
 		$rules  = "<IfModule mod_rewrite.c>\n";
 		$rules .= "    RewriteEngine on\n";
 		$rules .= "    RewriteCond %{QUERY_STRING} \=PHP[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12} [NC]\n";
 		$rules .= "    RewriteRule .* - [F]\n";
 		$rules .= "</IfModule>";
 
-		if ( secupress_write_htaccess( 'php_disclosure', $rules ) ) {
+		if ( secupress_write_htaccess( $marker, $rules ) ) {
 			// good
 			$this->add_fix_message( 1, array( '<code>.htaccess</code>' ) );
 		} else {
 			// cantfix
-			$this->add_fix_message( 303, array( '<code>.htaccess</code>', "<pre># BEGIN SecuPress php_disclosure\n$rules\n# END SecuPress</pre>" ) );
+			$this->add_fix_message( 302, array( '<code>.htaccess</code>', "<pre># BEGIN SecuPress $marker\n$rules\n# END SecuPress</pre>" ) );
 		}
+	}
 
-		return parent::fix();
+
+	protected function fix_iis7() {
+		$marker = 'php_disclosure';
+		$spaces = str_repeat( ' ', 10 );
+		$node   = "<rule name=\"SecuPress $marker\" stopProcessing=\"true\">\n";
+			$node  .= "$spaces  <match url=\".*\"/>\n";
+			$node  .= "$spaces  <conditions>\n";
+				$node  .= "$spaces    <add input=\"{URL}\" pattern=\"\=PHP[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\" ignoreCase=\"true\"/>\n";
+			$node  .= "$spaces  </conditions>\n";
+			$node  .= "$spaces  <action type=\"AbortRequest\"/>\n";
+		$node  .= "$spaces</rule>";
+
+		if ( secupress_insert_iis7_nodes( $marker, $node ) ) {
+			// good
+			$this->add_fix_message( 1, array( '<code>web.config</code>' ) );
+		} else {
+			// cantfix
+			$this->add_fix_message( 302, array( '<code>web.config</code>', '<pre>' . $node . '</pre>' ) );
+		}
 	}
 }
