@@ -225,6 +225,8 @@ function secupress_blacklist_logins_change_user_login( $user_id, $user_login ) {
 	wp_cache_delete( $user_id, 'users' );
 	wp_cache_delete( $user_login, 'userlogins' );
 
+	secupress_scanit( 'Bad_Usernames' );
+
 	return $user_id;
 }
 
