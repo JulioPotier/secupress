@@ -11,21 +11,32 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements iSecuPress_Scan {
 
-	const VERSION      = '1.0';
-	const PHP_VER_MIN  = '5.5.30';
-	const PHP_VER_BEST = '5.6.14';
+	const VERSION = '1.0';
 
 	/**
 	 * @var Singleton The reference to *Singleton* instance of this class
 	 */
 	protected static $_instance;
-	public    static $prio = 'medium';
+	public    static $prio         = 'medium';
+	public    static $php_ver_min  = '5.5.30';
+	public    static $php_ver_best = '5.6.15';
 
 
 	protected static function init() {
 		self::$type  = __( 'File System', 'secupress' );
 		self::$title = __( 'Check if your installation is using a supported version of PHP.', 'secupress' );
 		self::$more  = __( 'Every year, old PHP version are not supported, even for security patches, it\'s important to stay updated.', 'secupress' );
+		if ( false === ( $php_vers = get_transient( 'secupress_php_versions' ) ) ) {
+			$response = wp_remote_get( 'http://php.net/releases/index.php?json&version=5&max=2' );
+			if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
+				$php_vers = json_decode( wp_remote_retrieve_body( $response ) );
+				$php_vers = array_keys( (array) $php_vers );
+				set_transient( 'secupress_php_versions', $php_vers, 7 * DAY_IN_SECONDS );
+			}
+		}
+		if ( $php_vers ) {
+			list( self::$php_ver_best, self::$php_ver_min ) = $php_vers;
+		}
 	}
 
 
@@ -37,7 +48,7 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements iSecuPress_Sca
 			// warning
 			100 => __( 'Unable to determine version of PHP.', 'secupress' ),
 			// bad
-			200   => sprintf( __( 'You are using <strong>PHP v%1$s</strong>, but the latest supported version is <strong>PHP v%2$s</strong>, and the best is <strong>PHP v%3$s</strong>.', 'secupress' ), phpversion(), self::PHP_VER_MIN, self::PHP_VER_BEST ),
+			200   => sprintf( __( 'You are using <strong>PHP v%1$s</strong>, but the latest supported version is <strong>PHP v%2$s</strong>, and the best is <strong>PHP v%3$s</strong>.', 'secupress' ), phpversion(), self::$php_ver_min, self::$php_ver_best ),
 			// cantfix
 			300 => __( 'I can not fix this, you have to contact you host provider to ask him to <strong>upgrade you version of PHP</strong>.', 'secupress' ),
 		);
@@ -52,12 +63,12 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements iSecuPress_Sca
 
 	public function scan() {
 
-		if ( version_compare( phpversion(), self::PHP_VER_MIN ) < 0 ) {
+		if ( version_compare( phpversion(), self::$php_ver_min ) < 0 ) {
 			$this->add_message( 200 );
 		}
 
 		// good
-		if ( phpversion() == self::PHP_VER_BEST ) {
+		if ( phpversion() == self::$php_ver_best ) {
 			$this->add_message( 1 );
 		} else {
 			$this->maybe_set_status( 0 );
