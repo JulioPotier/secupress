@@ -31,16 +31,15 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 		$messages = array(
 			// good
 			0   => __( 'Your site does not reveal the files list.', 'secupress' ),
-			1   => sprintf( __( 'Your %s file has been successfully edited.', 'secupress' ), '<code>.htaccess</code>' ),
+			1   => __( 'Your %s file has been successfully edited.', 'secupress' ),
 			// warning
 			100 => __( 'Unable to determine status of %s.', 'secupress' ),
 			// bad
 			200 => __( '%s (for example) should not be accessible to anyone.', 'secupress' ),
 			// cantfix
-			300 => sprintf( __( 'You run a nginx system, I cannot fix the directory listing disclosure but you can do it yourself with the following code: %s.', 'secupress' ), '<code>autoindex off;</code>' ),
-			301 => sprintf( __( 'You run an IIS7 system, I cannot fix the directory listing disclosure but you can do it yourself with the following code: %s.', 'secupress' ), '<code>(add IIS code here)</code>' ), //// iis7_url_rewrite_rules ?
-			302 => __( 'You don\'t run an Apache system, I cannot fix the directory listing disclosure.', 'secupress' ),
-			303 => sprintf( __( 'Your %1$s file is not writable. Please delete lines that may contain %2$s and add the following ones to the file: %3$s', 'secupress' ), '<code>.htaccess</code>', '<code>Options +Indexes</code>', '<pre>%s</pre>' ),
+			300 => sprintf( __( 'Your server runs a nginx system, the directory listing disclosure cannot be fixed automatically but you can do it yourself with the following code: %s.', 'secupress' ), '<code>autoindex off;</code>' ),
+			301 => __( 'Your server runs a non recognized system. The directory listing disclosure cannot be fixed automatically.', 'secupress' ),
+			302 => __( 'Your %1$s file is not writable. Please delete lines that may contain %2$s and add the following ones at the beginning of the file: %3$s', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -78,32 +77,29 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 	public function fix() {
 		global $is_apache, $is_nginx, $is_iis7;
 
-		// Not Apache system, bail out.
-		if ( ! $is_apache ) {
-
-			if ( $is_nginx ) {
-				$this->add_fix_message( 300 );
-			} elseif ( $is_iis7 ) {
-				$this->add_fix_message( 301 ); //// iis7_url_rewrite_rules
-			} else {
-				$this->add_fix_message( 302 );
-			}
-
-			return parent::fix();
+		if ( $is_apache ) {
+			$this->fix_apache();
+		} elseif ( $is_iis7 ) {
+			$this->fix_iis7();
+		} elseif ( $is_nginx ) {
+			$this->add_fix_message( 300 );
+		} else {
+			$this->add_fix_message( 301 );
 		}
 
-		if ( ! function_exists( 'get_home_path' ) ) {
-			require_once( ABSPATH . 'wp-admin/includes/file.php' );
-		}
+		return parent::fix();
+	}
 
-		$file_path = get_home_path() . '.htaccess';
+
+	protected function fix_apache() {
+		$file_path = secupress_get_home_path() . '.htaccess';
 		$rules     = "<IfModule mod_autoindex.c>\n    Options -Indexes\n</IfModule>";
 		$rules     = "# BEGIN SecuPress directory_listing\n$rules\n# END SecuPress";
 
 		// `.htaccess` not writable, bail out.
 		if ( ! is_writable( $file_path ) ) {
-			$this->add_fix_message( 303, array( $rules ) );
-			return parent::fix();
+			$this->add_fix_message( 302, array( '<code>.htaccess</code>', '<code>Options +Indexes</code>', '<pre>' . $rules . '</pre>' ) );
+			return;
 		}
 
 		// Get `.htaccess` content.
@@ -127,11 +123,22 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 		$fixed = $wp_filesystem->put_contents( $file_path, $file_content, $chmod );
 
 		if ( $fixed ) {
-			$this->add_fix_message( 1 );
+			$this->add_fix_message( 1, array( '<code>.htaccess</code>' ) );
 		} else {
-			$this->add_fix_message( 303, array( $rules ) );
+			$this->add_fix_message( 302, array( '<code>.htaccess</code>', '<code>Options +Indexes</code>', '<pre>' . $rules . '</pre>' ) );
 		}
+	}
 
-		return parent::fix();
+
+	protected function fix_iis7() {
+		$marker    = 'directory_listing';
+		$node_type = 'directoryBrowse';
+		$node      = '<' . $node_type . ' name="SecuPress ' . $marker . '" enabled="false" showFlags=""/>';
+
+		if ( secupress_insert_iis7_nodes( $marker, $node_type, $node ) ) {
+			$this->add_fix_message( 1, array( '<code>web.config</code>' ) );
+		} else {
+			$this->add_fix_message( 302, array( '<code>web.config</code>', '<code>&lt;' . $node_type . '/&gt;</code>', '<pre>' . $node . '</pre>' ) );
+		}
 	}
 }

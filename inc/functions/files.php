@@ -98,6 +98,7 @@ function secupress_mkdir( $dir ) {
 	return $wp_filesystem->mkdir( $dir, $chmod );
 }
 
+
 /**
  * Recursive directory creation based on full path.
  *
@@ -134,6 +135,7 @@ function secupress_mkdir_p( $target ) {
 
 	return false;
 }
+
 
 /**
  * File creation based on WordPress Filesystem
@@ -246,6 +248,7 @@ function secupress_find_wpconfig_path() {
 	return false;
 }
 
+
 /**
  * From WP Core async_upgrade() but using Automatic_Upgrader_Skin instead of Language_Pack_Upgrader_Skin to have a silent upgrade
  *
@@ -295,6 +298,7 @@ function secupress_async_upgrades() {
 	$lp_upgrader->bulk_upgrade( $language_updates );
 }
 
+
 /**
  * Create a MU-PLUGIN
  *
@@ -317,4 +321,155 @@ function secupress_create_mu_plugin( $filename_part, $contents ) {
 	}
 
 	return $wp_filesystem->put_contents( $filename, $contents );
+}
+
+
+/**
+ * Insert content at the beginning of web.config file.
+ * Can also be sused to remove content.
+ *
+ * @since 1.0
+ *
+ * @param $marker (string)             An additional suffix string to add to the "SecuPress" marker.
+ * @param $node_types (array|string)   Node types: used to removed old nodes. Optional.
+ * @param $nodes_string (array|string) Content to insert in the file.
+ *
+ * @return (bool)
+ **/
+function secupress_insert_iis7_nodes( $marker, $node_types = false, $nodes_string = '' ) {
+	static $home_path;
+
+	if ( ! $marker || ! class_exists( 'DOMDocument' ) ) {
+		return false;
+	}
+
+	if ( ! isset( $home_path ) ) {
+		$home_path = secupress_get_home_path();
+	}
+
+	// About the file.
+	$web_config_file = $home_path . 'web.config';
+	$has_web_config  = file_exists( $web_config_file );
+	$is_writable     = $has_web_config && wp_is_writable( $web_config_file );
+
+	// New content
+	$marker       = strpos( $marker, 'SecuPress' ) === 0 ? $marker : 'SecuPress ' . $marker;
+	$nodes_string = is_array( $nodes_string ) ? implode( "\n", $nodes_string ) : $nodes_string;
+	$nodes_string = trim( $nodes_string, "\r\n" );
+
+	if ( $is_writable || ! $has_web_config && wp_is_writable( $home_path ) && $nodes_string ) {
+		// If configuration file does not exist then we create one.
+		if ( ! $has_web_config ) {
+			$fp = fopen( $web_config_file, 'w' );
+			fwrite( $fp, '<configuration/>' );
+			fclose( $fp );
+		}
+
+		$doc = new DOMDocument();
+		$doc->preserveWhiteSpace = false;
+
+		if ( false === $doc->load( $web_config_file ) ) {
+			return false;
+		}
+
+		$xpath = new DOMXPath( $doc );
+
+		// Remove possible nodes not created by us.
+		if ( $node_types ) {
+			$node_types = (array) $node_types;
+
+			foreach ( $node_types as $node_type ) {
+				$old_nodes = $xpath->query( '/configuration/system.webServer/' . $node_type );
+
+				if ( $old_nodes->length > 0 ) {
+					$child  = $old_nodes->item( 0 );
+					$parent = $child->parentNode;
+					$parent->removeChild( $child );
+				}
+			}
+		}
+
+		// Remove old nodes created by us.
+		$old_nodes = $xpath->query( '/configuration/system.webServer/*[starts-with(@name,\'' . $marker . '\')]' );
+
+		if ( $old_nodes->length > 0 ) {
+			$child  = $old_nodes->item( 0 );
+			$parent = $child->parentNode;
+			$parent->removeChild( $child );
+		}
+
+		// No new nodes? Stop here.
+		if ( ! $nodes_string ) {
+			$doc->formatOutput = true;
+			saveDomDocument( $doc, $web_config_file );
+			return true;
+		}
+
+		// Check the XPath for the node and create XML nodes if they do not exist.
+		$xmlnodes = $xpath->query( '/configuration/system.webServer' );
+
+		if ( $xmlnodes->length > 0 ) {
+			$container_node = $xmlnodes->item( 0 );
+		}
+		else {
+			$container_node = $doc->createElement( 'system.webServer' );
+			$xmlnodes       = $xpath->query( '/configuration' );
+
+			if ( $xmlnodes->length > 0 ) {
+				$config_node = $xmlnodes->item( 0 );
+			}
+			else {
+				$config_node = $doc->createElement( 'configuration' );
+				$doc->appendChild( $config_node );
+			}
+
+			$config_node->appendChild( $container_node );
+		}
+
+		// Create fragment.
+		$fragment = $doc->createDocumentFragment();
+		$fragment->appendXML( $nodes_string );
+
+		// Prepend new nodes.
+		if ( $container_node->hasChildNodes() ) {
+			$container_node->childNodes->item( 0 );
+		} else {
+			$container_node->appendChild( $fragment );
+		}
+
+		// Save and finish.
+		$doc->encoding     = 'UTF-8';
+		$doc->formatOutput = true;
+		saveDomDocument( $doc, $web_config_file );
+
+		return true;
+	}
+
+	return false;
+}
+
+
+/**
+ * A better `get_home_path()`, without the bugs on old versions.
+ * https://core.trac.wordpress.org/ticket/25767
+ *
+ * @since 1.0
+ *
+ * @return (string) The home path.
+ **/
+function secupress_get_home_path() {
+	$home    = set_url_scheme( get_option( 'home' ), 'http' );
+	$siteurl = set_url_scheme( get_option( 'siteurl' ), 'http' );
+
+	if ( ! empty( $home ) && 0 !== strcasecmp( $home, $siteurl ) ) {
+		$wp_path_rel_to_home = str_ireplace( $home, '', $siteurl ); /* $siteurl - $home */
+		$pos       = strripos( str_replace( '\\', '/', $_SERVER['SCRIPT_FILENAME'] ), trailingslashit( $wp_path_rel_to_home ) );
+		$home_path = substr( $_SERVER['SCRIPT_FILENAME'], 0, $pos );
+		$home_path = trailingslashit( $home_path );
+	}
+	else {
+		$home_path = ABSPATH;
+	}
+
+	return str_replace( '\\', '/', $home_path );
 }
