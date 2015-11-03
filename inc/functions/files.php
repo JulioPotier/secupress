@@ -331,13 +331,13 @@ function secupress_create_mu_plugin( $filename_part, $contents ) {
  * @since 1.0
  *
  * @param (string)       $marker       An additional suffix string to add to the "SecuPress" marker.
- * @param (array|string) $node_types   Node types: used to removed old nodes. Optional.
  * @param (array|string) $nodes_string Content to insert in the file.
+ * @param (array|string) $node_types   Node types: used to removed old nodes. Optional.
  * @param (string)       $path         Path where nodes should be created, relative to `/configuration/system.webServer`.
  *
  * @return (bool) true on success.
  **/
-function secupress_insert_iis7_nodes( $marker, $node_types = false, $nodes_string = '', $path = '' ) {
+function secupress_insert_iis7_nodes( $marker, $nodes_string = '', $node_types = false, $path = '' ) {
 	static $home_path;
 
 	if ( ! $marker || ! class_exists( 'DOMDocument' ) ) {
@@ -373,7 +373,9 @@ function secupress_insert_iis7_nodes( $marker, $node_types = false, $nodes_strin
 			return false;
 		}
 
-		$path  = '/configuration/system.webServer' . ( $path ? '/' . trim( $path, '/' ) : '' );
+		$path_end = ! $path && strpos( $nodes_string, '<rule ' ) === 0 ? '/rewrite/rules/rule' : '';
+		$path     = '/configuration/system.webServer' . ( $path ? '/' . trim( $path, '/' ) : '' ) . $path_end;
+
 		$xpath = new DOMXPath( $doc );
 
 		// Remove possible nodes not created by us.
