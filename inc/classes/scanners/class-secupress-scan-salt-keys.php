@@ -26,11 +26,17 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements iSecuPress_Scan
 		self::$more  = __( 'WordPress provides 8 security keys, each key has its own purpose. These keys must be set with long random strings: don\'t keep the default value, don\'t store them in the database, don\'t hardcode them.', 'secupress' );
 	}
 
+	protected static function get_keys() {
+		return array( 'AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'NONCE_KEY', 'AUTH_SALT', 'SECURE_AUTH_SALT', 'LOGGED_IN_SALT', 'NONCE_SALT', );
+	}
+
 
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// good
 			0   => __( 'All keys are properly set.', 'secupress' ),
+			// warning
+			100 => __( 'This fix is <strong>pending</strong>, please reload the page to apply it now.', 'secupress' ),
 			// bad
 			200 => __( 'The following security keys are not set correctly:', 'secupress' ),
 			201 => _n_noop( '<strong>&middot; Not Set:</strong> %s.',       '<strong>&middot; Not Set:</strong> %s.',       'secupress' ),
@@ -39,7 +45,8 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements iSecuPress_Scan
 			204 => _n_noop( '<strong>&middot; Hardcoded:</strong> %s.',     '<strong>&middot; Hardcoded:</strong> %s.',     'secupress' ),
 			205 => _n_noop( '<strong>&middot; From DB:</strong> %s.',       '<strong>&middot; From DB:</strong> %s.',       'secupress' ),
 			// cantfix
-			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
+			300 => __( 'I can not write into wp-config.php so i can not change the salt keys.', 'secupress' ),
+			301 => __( 'The fix has been applied but there is still keys that i can\'t modify.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -51,7 +58,7 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements iSecuPress_Scan
 
 
 	public function scan() {
-		$keys     = array( 'AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'NONCE_KEY', 'AUTH_SALT', 'SECURE_AUTH_SALT', 'LOGGED_IN_SALT', 'NONCE_SALT', );
+		$keys     = $this->get_keys();
 		$bad_keys = array(
 			201 => array(),
 			202 => array(),
@@ -121,7 +128,21 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements iSecuPress_Scan
 
 	public function fix() {
 
-		// include the fix here.
+		if ( defined( 'SECUPRESS_SALT_KEYS_ACTIVE' ) ) {
+			$this->add_fix_message( 301 );
+		} else {
+
+			$wpconfig_filename = secupress_find_wpconfig_path();
+
+			if ( ! is_writable( $wpconfig_filename ) ) {
+				$this->add_fix_message( 300 );
+			} else {		
+
+				set_transient( 'secupress-add-salt-muplugin', array( 'ID' => $GLOBALS['current_user']->ID, 'username' => $GLOBALS['current_user']->user_login ) );
+
+				$this->add_fix_message( 100 );
+			}
+		}
 
 		return parent::fix();
 	}

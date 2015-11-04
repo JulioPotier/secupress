@@ -91,7 +91,7 @@ function secupress_rename_admin_username_logout() {
 
 add_action( 'plugins_loaded', 'secupress_add_cookiehash_muplugin', 50 );
 /**
- * Will rename the "admin" account after the rename-admin-username manual fix
+ * Will create a mu plugin to modify the COOKIEHASH constant
  *
  * @since 1.0
  * @return void
@@ -126,23 +126,73 @@ function secupress_add_cookiehash_muplugin() {
 	}
 }
 
-add_action( 'plugins_loaded', 'secupress_rename_admin_username_login', 60 );
+add_action( 'plugins_loaded', 'secupress_add_salt_muplugin', 50 );
 /**
- * Will rename the "admin" account after the rename-admin-username manual fix
+ * Will create a mu plugin to early set the salt keys
+ *
+ * @since 1.0
+ * @return void
+ **/
+function secupress_add_salt_muplugin() {
+	global $current_user, $pagenow, $wpdb;
+
+	$current_user    = wp_get_current_user();
+	$current_user_ID = $current_user->ID;
+	if ( ! defined( 'SECUPRESS_SALT_KEYS_ACTIVE' ) && empty( $_POST ) && ( ! isset( $pagenow ) || 'admin-post.php' != $pagenow ) && ! defined( 'DOING_AJAX' ) && ! defined( 'DOING_AUTOSAVE' ) && ! defined( 'DOING_CRON' ) &&
+		is_user_logged_in() && $data = get_transient( 'secupress-add-salt-muplugin' )
+	) {
+		delete_transient( 'secupress-add-salt-muplugin' );
+
+		$wpconfig_filename = secupress_find_wpconfig_path();
+		if ( ! is_writable( $wpconfig_filename ) || ! is_array( $data ) || ! isset( $data['ID'], $data['username'] ) || $current_user->ID != $data['ID'] ) {
+			return;
+		}
+
+		$keys = array( 'AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'NONCE_KEY', 'AUTH_SALT', 'SECURE_AUTH_SALT', 'LOGGED_IN_SALT', 'NONCE_SALT', );
+
+		foreach ( $keys as $constant ) {
+			secupress_replace_content( $wpconfig_filename, "/define\(.*('" . $constant . "'|\"" . $constant . "\").*,/", "/*Commented by SecuPress*/ // $0" );
+		}
+		
+		$alicia_keys = file_get_contents( SECUPRESS_INC_PATH . 'data/salt_keys.phps' );
+		$alicia_keys = str_replace( array( '{{HASH1}}', '{{HASH2}}' ), array( wp_generate_password( 64, true, true ), wp_generate_password( 64, true, true ) ), $alicia_keys );
+
+		if ( ! $alicia_keys || ! secupress_create_mu_plugin( 'salt_keys_' . uniqid(), $alicia_keys ) ) {
+			return;
+		}
+
+		wp_clear_auth_cookie();
+		wp_destroy_current_session();
+
+		foreach ( $keys as $constant ) {
+			delete_site_option( $constant );
+		}
+
+		$token = md5( time() );
+		set_transient( 'secupress_auto_login_' . $token, array( $data['username'], 'Salt_Keys' ) );
+
+		wp_safe_redirect( add_query_arg( 'secupress_auto_login_token', $token, secupress_get_current_url( 'raw' ) ) );
+		die();
+	}
+}
+
+add_action( 'plugins_loaded', 'secupress_auto_username_login', 60 );
+/**
+ * Will autologin the user found in the transient 'secupress_auto_login_' . $_GET['secupress_auto_login_token']
  *
  * @since 1.0
  * @return void
  */
 
-function secupress_rename_admin_username_login() {
+function secupress_auto_username_login() {
 
 	if ( isset( $_GET['secupress_auto_login_token'] ) ) {
 
 		list( $username, $action ) = get_transient( 'secupress_auto_login_' . $_GET['secupress_auto_login_token'] );
+		
+		delete_transient( 'secupress_auto_login_' . $_GET['secupress_auto_login_token'] );
 
 		if ( $username ) {
-
-			delete_transient( 'secupress_auto_login_' . $_GET['secupress_auto_login_token'] );
 
 			add_filter( 'authenticate', '__secupress_give_him_a_user', 1, 2 );
 			$user = wp_signon( array( 'user_login' => $username ) );
@@ -154,10 +204,8 @@ function secupress_rename_admin_username_login() {
 			}
 
 			if ( $action ) {
-				secupress_fixit( $action );
 				secupress_scanit( $action );
 			}
-
 			wp_safe_redirect( remove_query_arg( 'secupress_auto_login_token', secupress_get_current_url( 'raw' ) ) );
 			die();
 		}
