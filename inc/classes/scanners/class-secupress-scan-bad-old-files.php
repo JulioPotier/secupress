@@ -23,7 +23,7 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements iSecuPress_
 	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if your installation still contains old files from WordPress 2.0 to your current version.', 'secupress' );
-		self::$more  = sprintf( __( 'Since WordPress 2.0, about %s files were deleted, let\'s check if you need a clean up.', 'secupress' ), number_format_i18n( 650 ) );
+		self::$more  = sprintf( __( 'Since WordPress 2.0, about %s files were deleted, let\'s check if your website needs a clean up.', 'secupress' ), number_format_i18n( 650 ) );
 	}
 
 
@@ -31,7 +31,7 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements iSecuPress_
 		$messages = array(
 			// good
 			0   => __( 'Your installation is free of old files.', 'secupress' ),
-			1   => __( 'All old files were deleted.', 'secupress' ),
+			1   => __( 'All old files have been deleted.', 'secupress' ),
 			// bad
 			200 => _n_noop( 'Your installation contains %1$d old file: %2$s.', 'Your installation contains old files: %2$s.', 'secupress' ),
 			201 => _n_noop( 'The following file could not be deleted: %s.', 'The following files could not be deleted: %s.', 'secupress' ),

@@ -36,7 +36,7 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 			200 => _n_noop( '<strong>%s</strong> user has a forbidden login name: %s', '<strong>%s</strong> users have a forbidden login name: %s', 'secupress' ),
 			201 => _n_noop( '<strong>%s</strong> user has similar login name and display name: %s', '<strong>%s</strong> users have similar login name and display name: %s', 'secupress' ),
 			// cantfix
-			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
+			//// 300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -62,7 +62,7 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 				array_push( $logins, '&hellip;' );
 			}
 			// 2nd param: 1st item is used for the noop if needed, the rest for sprintf.
-			$this->add_message( 200, array( $ids, $ids, static::wrap_in_tag( $logins ) ) );
+			$this->add_message( 200, array( $ids, $ids, static::wrap_in_tag( $logins, 'strong' ) ) );
 		}
 
 		// Who have the same nickname and login?
@@ -76,7 +76,7 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 				array_push( $logins, '&hellip;' );
 			}
 			// 2nd param: 1st item is used for the noop if needed, the rest for sprintf.
-			$this->add_message( 201, array( $ids, $ids, static::wrap_in_tag( $logins ) ) );
+			$this->add_message( 201, array( $ids, $ids, static::wrap_in_tag( $logins, 'strong' ) ) );
 		}
 
 		// good

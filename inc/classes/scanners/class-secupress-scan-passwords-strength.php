@@ -36,8 +36,8 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan {
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// good
-			0   => __( 'Database password is strong enough.', 'secupress' ),
-			1   => __( 'Database and FTP passwords are strong enough.', 'secupress' ),
+			0   => __( 'Database password seems strong enough.', 'secupress' ),
+			1   => __( 'Database and FTP passwords seems strong enough.', 'secupress' ),
 			// bad
 			200 => __( '%s is <strong>empty</strong>!', 'secupress' ),
 			201 => __( '%s is known to be <strong>too common</strong>.', 'secupress' ),

@@ -23,7 +23,7 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if your WordPress site discloses sensitive informations.', 'secupress' );
-		self::$more  = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of information. The goal is to find outdated versions of your server softwares or WordPress component. Don\'t let him easily find these informations.', 'secupress' );
+		self::$more  = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of information. His goal is to find outdated versions of your server softwares or WordPress component. Don\'t let him easily find these informations.', 'secupress' );
 	}
 
 

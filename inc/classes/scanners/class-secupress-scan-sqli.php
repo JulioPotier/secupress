@@ -23,7 +23,7 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements iSecuPress_Scan {
 	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if basic SQL Injections are blocked or not.', 'secupress' );
-		self::$more  = __( 'SQL injection is a way to read, modify, delete any content of your database, this is a powerful vulnerability.', 'secupress' );
+		self::$more  = __( 'SQL injection is a way to read, modify, delete any content of your database, this is a powerful vulnerability, don\'t let anyone play with that.', 'secupress' );
 	}
 
 

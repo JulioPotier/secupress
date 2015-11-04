@@ -30,7 +30,7 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan implements iSecuPress
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// good
-			0   => __( 'You are currently blocking bad User Agents.', 'secupress' ),
+			0   => __( 'You are currently blocking Bad User Agents.', 'secupress' ),
 			1   => __( 'Protection activated', 'secupress' ),
 			// warning
 			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),

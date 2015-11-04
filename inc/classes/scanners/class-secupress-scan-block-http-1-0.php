@@ -23,7 +23,7 @@ class SecuPress_Scan_Block_HTTP_1_0 extends SecuPress_Scan implements iSecuPress
 	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if POST requests using HTTP 1.0 can reach your website.', 'secupress' );
-		self::$more  = __( 'POST is the opposite of GET. Instead of grabbing resources from the server, data is being sent. Using HTTP 1.0, rather than HTTP 1.1, is bad because it does not require a Host header.', 'secupress' );
+		self::$more  = __( 'POST requests is the opposite of GET. Instead of grabbing resources from the server, data is being sent. Using HTTP 1.0, rather than HTTP 1.1, is bad because it does not require a Host header.', 'secupress' );
 	}
 
 

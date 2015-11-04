@@ -23,15 +23,15 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if any Administrator already created public posts.', 'secupress' );
-		self::$more  = __( 'The <strong>Administrator</strong> role is to administrate the website, not to create posts, there are other roles for that, like <strong>Author</strong>. But mainly, it means that your Administrator account is always logged in, an attacker could then perform actions on your behalf (<abbr title="Cross-Site Request Forgery">CSRF</abbr> flaw).', 'secupress' );
+		self::$more  = __( 'The <strong>Administrator</strong> role is to fully manage the website but not to create posts. There are other roles for that like <strong>Editor</strong> or <strong>Author</strong>. But mainly, it means that your Administrator account is always logged in. An attacker could then perform actions on your behalf (<abbr title="Cross-Site Request Forgery">CSRF</abbr> flaw).', 'secupress' );
 	}
 
 
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// good
-			0   => __( 'No Posts created by Administrators.', 'secupress' ),
-			1   => __( 'No Posts created by Administrators anymore.', 'secupress' ),
+			0   => __( 'No Posts were created by Administrators.', 'secupress' ),
+			1   => __( 'There is no more Posts created by Administrators.', 'secupress' ),
 			/* translators: %s is a user role. */
 			2   => __( 'User role %s created.', 'secupress' ),
 			/* translators: %s is a user name. */
