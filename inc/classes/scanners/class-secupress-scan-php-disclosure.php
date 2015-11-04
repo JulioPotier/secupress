@@ -41,7 +41,9 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements iSecuPress
 			/* translators: 1 si a file name, 2 is some code */
 			300 => sprintf( __( 'Your server runs a nginx system, the sensitive information disclosure cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s.', 'secupress' ), '<code>nginx.conf</code>', "<pre>$nginx_rules</pre>" ),
 			301 => __( 'Your server runs a non recognized system. The sensitive information disclosure cannot be fixed automatically.', 'secupress' ),
+			/* translators: 1 si a file name, 2 is some code */
 			302 => __( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s.', 'secupress' ),
+			303 => __( 'It seems URL rewriting is not enabled on your server. The sensitive information disclosure cannot be fixed.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -103,7 +105,10 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements iSecuPress
 		$rules .= "    RewriteRule .* - [F]\n";
 		$rules .= "</IfModule>";
 
-		if ( secupress_write_htaccess( $marker, $rules ) ) {
+		if ( ! got_mod_rewrite() ) {
+			// cantfix
+			$this->add_fix_message( 303 );
+		} elseif ( secupress_write_htaccess( $marker, $rules ) ) {
 			// good
 			$this->add_fix_message( 1, array( '<code>.htaccess</code>' ) );
 		} else {
@@ -124,7 +129,10 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements iSecuPress
 			$node  .= "$spaces  <action type=\"AbortRequest\"/>\n";
 		$node  .= "$spaces</rule>";
 
-		if ( secupress_insert_iis7_nodes( $marker, $node ) ) {
+		if ( ! iis7_supports_permalinks() ) {
+			// cantfix
+			$this->add_fix_message( 303 );
+		} elseif ( secupress_insert_iis7_nodes( $marker, $node ) ) {
 			// good
 			$this->add_fix_message( 1, array( '<code>web.config</code>' ) );
 		} else {

@@ -40,6 +40,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 			/* translators: 1 si a file name, 2 is some code */
 			300 => sprintf( __( 'Your server runs a nginx system, the directory listing disclosure cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s.', 'secupress' ), '<code>nginx.conf</code>', '<code>autoindex off;</code>' ),
 			301 => __( 'Your server runs a non recognized system. The directory listing disclosure cannot be fixed automatically.', 'secupress' ),
+			/* translators: 1 si a file name, 2 and 3 are some code */
 			302 => __( 'Your %1$s file is not writable. Please delete lines that may contain %2$s and add the following ones at the beginning of the file: %3$s', 'secupress' ),
 		);
 
