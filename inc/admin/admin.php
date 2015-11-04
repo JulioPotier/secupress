@@ -346,7 +346,7 @@ add_action( 'admin_post_secupress_reset_settings', '__secupress_admin_post_reset
 
 function __secupress_admin_post_reset_settings() {
 	if ( isset( $_GET['_wpnonce'], $_GET['module'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'secupress_reset_' . $_GET['module'] ) ) {
-		secupress_install_modules( $_GET['module'] );
+		do_action( 'wp_secupress_first_install', $_GET['module'] );
 	}
 
 	wp_safe_redirect( secupress_admin_url( 'modules', $_GET['module'] ) );

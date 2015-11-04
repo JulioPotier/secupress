@@ -151,7 +151,7 @@ function __secupress_users_login_settings_callback( $settings ) {
 add_action( 'wp_secupress_first_install', '__secupress_install_users_login_module' );
 
 function __secupress_install_users_login_module( $module = 'all' ) {
-	if ( 'all' === $module || 'users_login' === $module ) {
+	if ( 'all' === $module || 'users-login' === $module ) {
 		update_option( 'secupress_users_login_settings', array(
 			'double-auth_type'                 => '-1',
 			'bad-logins_blacklist-logins-list' => secupress_blacklist_logins_list_default_string(),
@@ -170,7 +170,7 @@ function __secupress_install_users_login_module( $module = 'all' ) {
 add_filter( 'secupress_get_module_option_bad-logins_blacklist-logins-list', '__secupress_bad_logins_blacklist_default_if_empty', PHP_INT_MAX, 3 );
 
 function __secupress_bad_logins_blacklist_default_if_empty( $value, $default, $module ) {
-	if ( 'users_login' === $module && trim( $value ) === '' ) {
+	if ( 'users-login' === $module && trim( $value ) === '' ) {
 		return secupress_blacklist_logins_list_default_string();
 	}
 	return $value;
@@ -180,7 +180,7 @@ function __secupress_bad_logins_blacklist_default_if_empty( $value, $default, $m
 add_filter( 'pre_secupress_get_module_option_bad-logins_blacklist-logins-list', '__secupress_pre_bad_logins_blacklist_default_if_empty', PHP_INT_MAX, 3 );
 
 function __secupress_pre_bad_logins_blacklist_default_if_empty( $value, $default, $module ) {
-	if ( 'users_login' === $module && isset( $value ) && trim( $value ) === '' ) {
+	if ( 'users-login' === $module && isset( $value ) && trim( $value ) === '' ) {
 		return secupress_blacklist_logins_list_default_string();
 	}
 	return $value;
