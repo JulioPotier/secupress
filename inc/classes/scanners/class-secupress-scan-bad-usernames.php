@@ -22,8 +22,8 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 
 	protected static function init() {
 		self::$type  = 'WordPress';
-		self::$title = __( 'Check if your users have correct username, not blacklisted, not the same as their login.', 'secupress' );
-		self::$more  = __( 'It is important to not have the same login and display name to protect your login name and avoid simple brute-force attacks. Also some usernames are know to be used for malicious usage, or created by bots.', 'secupress' );
+		self::$title = __( 'Check if your users have correct username, not blacklisted, not the same as their display name.', 'secupress' );
+		self::$more  = __( 'It is important to not have the same username and display name to protect your username and avoid simple brute-force attacks. Also some usernames are know to be used for malicious usage, or created by bots.', 'secupress' );
 	}
 
 
@@ -33,8 +33,8 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 			0   => __( 'All the user names are correct.', 'secupress' ),
 			1   => __( 'Module activated: the users with a blacklisted username will be asked to change it.', 'secupress' ),
 			// bad
-			200 => _n_noop( '<strong>%s</strong> user has a forbidden login name: %s', '<strong>%s</strong> users have a forbidden login name: %s', 'secupress' ),
-			201 => _n_noop( '<strong>%s</strong> user has similar login name and display name: %s', '<strong>%s</strong> users have similar login name and display name: %s', 'secupress' ),
+			200 => _n_noop( '<strong>%s</strong> user has a forbidden username: %s', '<strong>%s</strong> users have a forbidden username: %s', 'secupress' ),
+			201 => _n_noop( '<strong>%s</strong> user has similar username and display name: %s', '<strong>%s</strong> users have similar username and display name: %s', 'secupress' ),
 			// cantfix
 			//// 300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);
