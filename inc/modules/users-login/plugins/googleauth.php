@@ -816,7 +816,7 @@ add_action( 'current_screen', 'secupress_googleauth_redirect' );
 function secupress_googleauth_redirect() {
 	global $current_user, $current_screen, $pagenow;
 	if ( SECUPRESS_PLUGIN_SLUG . '_page_secupress_modules' != $current_screen->id &&
-		! in_array( $pagenow, array( 'profile.php', 'admin-ajax.php', 'admin-post.php' ) ) && 
+		! in_array( $pagenow, array( 'options.php', 'profile.php', 'admin-ajax.php', 'admin-post.php' ) ) && 
 		is_user_logged_in() && ! get_user_option( 'secupress_google_auth_secret', $current_user->ID )
 	) {
 		wp_redirect( admin_url( 'profile.php' ) );
