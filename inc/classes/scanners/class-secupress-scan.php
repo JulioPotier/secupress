@@ -67,12 +67,6 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	 * *Singleton* via the `new` operator from outside of this class.
 	 */
 	final private function __construct() {
-		global $is_nginx;
-
-		if ( ! isset( $is_nginx ) ) {
-			$is_nginx = ! empty( $_SERVER['SERVER_SOFTWARE'] ) && strpos( $_SERVER['SERVER_SOFTWARE'], 'nginx' ) !== false;
-		}
-
 		$this->class_name_part = substr( get_called_class(), 15 ); // 15 is 'SecuPress_Scan_' length.
 
 		static::init();
