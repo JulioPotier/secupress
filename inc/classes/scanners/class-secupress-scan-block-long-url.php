@@ -22,8 +22,8 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements iSecuPress
 
 	protected static function init() {
 		self::$type  = 'WordPress';
-		self::$title = __( 'Check if long URL can reach your website (more than 255 chars).', 'secupress' );
-		self::$more  = __( 'A usual URL has no more than 255 characters, but attackers often need to test very long strings when they try to hack something.', 'secupress' );
+		self::$title = sprintf( __( 'Check if long URL can reach your website (more than %s chars).', 'secupress' ), number_format_i18n( apply_filters( 'secupress.plugin.len.bad-url-length', 300 ) ) );
+		self::$more  = sprintf( __( 'A usual URL has no more than %s characters, but attackers often need to test very long strings when they try to hack something.', 'secupress' ), number_format_i18n( apply_filters( 'secupress.plugin.len.bad-url-length', 300 ) ) );
 	}
 
 
@@ -50,7 +50,8 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements iSecuPress
 
 	public function scan() {
 
-		$response = wp_remote_get( user_trailingslashit( home_url() ) . '?' . time() . '=' . wp_generate_password( 255, false ), array( 'redirection' => 0 ) );
+		$test_len = apply_filters( 'secupress.plugin.len.bad-url-length', 300 );
+		$response = wp_remote_get( user_trailingslashit( home_url() ) . '?' . time() . '=' . wp_generate_password( $test_len, false ), array( 'redirection' => 0 ) );
 
 		if ( ! is_wp_error( $response ) ) {
 
