@@ -52,11 +52,11 @@ function secupress_login_captcha_css() {
 		position: relative;
 		font-size: 1.2em;
 		top: -10px;
-	    outline: 0;	
-	}	
+	    outline: 0;
+	}
 	#areyouhuman label:hover i.checkme{
 		color: #4e92df;
-	}	
+	}
 	#areyouhuman span.checkme:focus, #areyouhuman span.checkme:hover{
 		opacity: 1;
 	}
@@ -101,7 +101,7 @@ function secupress_login_captcha_js() {
 			}
 			var captcha_session;
 			function secupress_set_captcha_timeout() {
-				captcha_session = setTimeout( secupress_captcha_do_fail, 1000 * 59 * 2 ); // ~2 mn 
+				captcha_session = setTimeout( secupress_captcha_do_fail, 1000 * 59 * 2 ); // ~2 mn
 			}
 			function secupress_clear_captcha_timeout() {
 				clearTimeout( captcha_session );
@@ -144,7 +144,7 @@ function secupress_login_captcha_js() {
 				    		case 1:
 				    			clearInterval(animation);
 			    			break;
-					    	case -1: 
+					    	case -1:
 					    		secupress_sleep( 2000 );
 					    		flag = 2;
 					    		inc = -1;
@@ -159,7 +159,7 @@ function secupress_login_captcha_js() {
 				doing_ajax = true;
 				$.get( '<?php echo esc_js( esc_url( admin_url( 'admin-ajax.php' ) ) ); ?>?action=captcha_check&oldvalue=' + $('#captcha_key').val() )
 				.done( function( data ) {
-					setTimeout( secupress_set_flag_ok, 2000 );					
+					setTimeout( secupress_set_flag_ok, 2000 );
 					$('#captcha_key').val( data.data );
 					secupress_clear_captcha_timeout();
 					secupress_set_captcha_timeout();
@@ -203,7 +203,7 @@ function secupress_captcha_check() {
 			unset( $captcha_keys[ $key ] );
 		}
 	}
-	if ( version_compare( $GLOBALS['wp_version'], '4.2' ) < 0 ) {
+	if ( ! secupress_wp_version_is( '4.2.0-alpha' ) ) {
 		delete_option( 'secupress_captcha_keys' );
 		add_option( 'secupress_captcha_keys', $captcha_keys, false );
 	} else {
@@ -220,14 +220,14 @@ function secupress_manage_captcha( $raw_user, $username ) {
 	) {
 		$captcha_key = isset( $_POST['captcha_key'] ) ? $_POST['captcha_key'] : null;
 		$captcha_keys = get_option( 'secupress_captcha_keys', array() );
-		if ( ! isset( $captcha_keys[ $captcha_key ] ) || 
+		if ( ! isset( $captcha_keys[ $captcha_key ] ) ||
 			time() > $captcha_keys[ $captcha_key ] + 2 * MINUTE_IN_SECONDS ||
 			time() < $captcha_keys[ $captcha_key ] + 2
 		) {
 			return new WP_Error( 'authentication_failed', __( '<strong>ERROR</strong>: The Human verification is incorrect.', 'secupress' ) );
 		}
 		unset( $captcha_keys[ $captcha_key ] );
-		if ( version_compare( $GLOBALS['wp_version'], '4.2' ) < 0 ) {
+		if ( ! secupress_wp_version_is( '4.2.0-alpha' ) ) {
 			delete_option( 'secupress_captcha_keys' );
 			add_option( 'secupress_captcha_keys', $captcha_keys, false );
 		} else {
@@ -242,7 +242,7 @@ function secupress_manage_captcha( $raw_user, $username ) {
 add_filter( 'login_message', 'secupress_login_form_nojs_error' );
 function secupress_login_form_nojs_error( $message ) {
 	if ( ! isset( $_GET['action'] ) || 'login' == $_GET['action'] ) {
-		$message .= '<noscript><p class="message">' . __( 'You need to enable JavaScript to send this form correctly.', 'secupress' ) . '</p></noscript>'; 
+		$message .= '<noscript><p class="message">' . __( 'You need to enable JavaScript to send this form correctly.', 'secupress' ) . '</p></noscript>';
 	}
 	return $message;
 }

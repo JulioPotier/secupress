@@ -372,7 +372,7 @@ function __secupress_scanners() {
  * @since 1.0
  */
 function secupress_admin_heading( $title = '' ) {
-	$heading_tag = version_compare( $GLOBALS['wp_version'], '4.3' ) >= 0 ? 'h1' : 'h2';
+	$heading_tag = secupress_wp_version_is( '4.3.0-alpha' ) ? 'h1' : 'h2';
 	printf( '<%1$s>%2$s <sup>%3$s</sup> %4$s</%1$s>', $heading_tag, SECUPRESS_PLUGIN_NAME, SECUPRESS_VERSION, $title );
 }
 
