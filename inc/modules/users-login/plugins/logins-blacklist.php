@@ -20,7 +20,7 @@ add_action( 'auth_redirect', 'secupress_auth_redirect_blacklist_logins' );
 function secupress_auth_redirect_blacklist_logins( $user_id ) {
 
 	$user = get_userdata( $user_id );
-	$list = secupress_get_module_option( 'bad-logins_blacklist-logins-list', secupress_blacklist_logins_list_default_string(), 'users-login' );
+	$list = secupress_get_module_option( 'bad-logins_blacklist-logins-list', '', 'users-login' );
 
 	if ( strpos( "\n$list\n", "\n$user->user_login\n" ) === false ) {
 		// Good, the login is not blacklisted.
@@ -285,17 +285,66 @@ function secupress_blacklist_logins_display_login_message( $errors, $redirect_to
  * @since 1.0
  * @since WP 4.4.0
  *
- * @param (object) $errors      WP Error object.
- * @param (string) $redirect_to Redirect destination URL.
+ * @param (array) $user_logins List of logins.
  *
- * @return (object) WP Error object.
+ * @return (array) List of logins.
  */
-add_filter( 'illegal_user_logins', 'secupress_blacklist_logins_add_illegal_user_logins' );
+if ( secupress_wp_version_is( '4.4.0-alpha' ) ) {
+	add_filter( 'illegal_user_logins', 'secupress_blacklist_logins_add_illegal_user_logins' );
+}
 
 function secupress_blacklist_logins_add_illegal_user_logins( $user_logins ) {
-	// `secupress_blacklist_logins_list_default()` does not exists on frontend.
-	if ( function_exists( 'secupress_blacklist_logins_list_default' ) ) {
-		return array_merge( $user_logins, secupress_blacklist_logins_list_default() );
+	$list = secupress_get_module_option( 'bad-logins_blacklist-logins-list', '', 'users-login' );
+	$list = explode( "\n", $list );
+	return array_merge( $user_logins, $list );
+}
+
+
+/*
+ * In `wp_insert_user()`, detect forbidden logins.
+ * If the username is in the blacklist, an empty username will be returned, triggering a `empty_user_login` error later.
+ *
+ * @since 1.0
+ * @until WP 4.4.0
+ *
+ * @param (string) $sanitized_user_login Current user login.
+ *
+ * @return (string) The user login or an empty string if blacklisted.
+ */
+if ( ! secupress_wp_version_is( '4.4.0-alpha' ) ) {
+	add_filter( 'pre_user_login', 'secupress_blacklist_logins_pre_user_login' );
+}
+
+function secupress_blacklist_logins_pre_user_login( $sanitized_user_login ) {
+	$list = secupress_get_module_option( 'bad-logins_blacklist-logins-list', '', 'users-login' );
+
+	if ( strpos( "\n$list\n", "\n$sanitized_user_login\n" ) !== false ) {
+		// Filter the `empty_user_login` error message.
+		add_filter( 'gettext', 'secupress_blacklist_logins_gettext_filter', 8, 3 );
+		return '';
 	}
-	return $user_logins;
+
+	return $sanitized_user_login;
+}
+
+
+/*
+ * After a blacklisted username is detected, filter the `empty_user_login` error message.
+ *
+ * @since 1.0
+ * @until WP 4.4.0
+ *
+ * @param (string) $translations Translated text.
+ * @param (string) $text Original text.
+ * @param (string) $domain Text domain.
+ *
+ * @return (string) The translation.
+ */
+function secupress_blacklist_logins_gettext_filter( $translations, $text, $domain ) {
+	if ( 'Cannot create a user with an empty login name.' === $text && 'default' === $domain ) {
+		// No need to filter gettext anymore.
+		remove_filter( 'gettext', 'secupress_blacklist_logins_gettext_filter', 8 );
+		return __( 'Sorry, that username is not allowed.', 'secupress' );
+	}
+	return $translations;
 }
