@@ -2,21 +2,24 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /**
- * Used to flush the .htaccess file
+ * Used to write in a `.htaccess` file
  *
  * @since 1.0
  *
- * @param string $rules
- * @return void
+ * @param (string) $marker        Marker suffix after "SecuPress ".
+ * @param (string) $rules         Rules to write in the file. An empty value will remove the previous marker rules.
+ * @param (string) $relative_path If the file is not in the site root folder.
+ * @return (bool) true on success, false on failure.
  */
-function secupress_write_htaccess( $marker, $rules = null ) {
-	if ( ! $GLOBALS['is_apache'] || ! $rules ) {
+function secupress_write_htaccess( $marker, $rules = false, $relative_path = '' ) {
+	if ( ! $GLOBALS['is_apache'] ) {
 		return;
 	}
 
-	$htaccess_file = secupress_get_home_path() . '.htaccess';
+	$htaccess_path = trailingslashit( secupress_get_home_path() . trim( $relative_path, '/' ) );
+	$htaccess_file = $htaccess_path . '.htaccess';
 
-	if ( is_writable( $htaccess_file ) ) {
+	if ( ! file_exists( $htaccess_file ) && is_writable( $htaccess_path ) || is_writable( $htaccess_file ) ) {
 		// Update the .htaccess file.
 		return secupress_put_contents( $htaccess_file, $rules, array( 'marker' => $marker ) );
 	}
