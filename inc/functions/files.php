@@ -170,7 +170,7 @@ function secupress_put_contents( $file, $new_content, $args ) {
 
 	if ( ! empty( $new_content ) ) {
 
-		$content  = $comment_char . ' BEGIN SecuPress ' . $marker . PHP_EOL;
+		$content  = $comment_char . ' BEGIN SecuPress ' . $args['marker'] . PHP_EOL;
 		$content .= trim( $new_content ) . PHP_EOL;
 		$content .= $comment_char . ' END SecuPress' . PHP_EOL . PHP_EOL;
 
@@ -183,9 +183,9 @@ function secupress_put_contents( $file, $new_content, $args ) {
 			}
 		} else {
 			if ( 'append' == $args['put'] ) {
-				$content = $content . $file_content;
+				$content = $file_content . PHP_EOL . $content;
 			} elseif ( 'prepend' == $args['put'] ) {
-				$content = $file_content . $content;
+				$content = $content . $file_content;
 			}
 		}
 
