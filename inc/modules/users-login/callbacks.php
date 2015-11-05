@@ -103,39 +103,34 @@ function __secupress_users_login_settings_callback( $settings ) {
 		secupress_deactivate_submodule( $modulenow, 'login-captcha' );
 	}
 
-	// bad-logins
-	if ( isset( $settings['bad-logins_blacklist-logins'] ) ) {
-		// Logins blacklist.
-		$settings['bad-logins_blacklist-logins'] = ! empty( $settings['bad-logins_blacklist-logins'] ) ? 1 : 0;
+	// Logins blacklist.
+	$settings['bad-logins_blacklist-logins'] = ! empty( $settings['bad-logins_blacklist-logins'] ) ? 1 : 0;
 
-		if ( isset( $settings['bad-logins_blacklist-logins-list'] ) && '' !== $settings['bad-logins_blacklist-logins-list'] ) {
-			// Sanitization, validation.
-			$list   = explode( "\n", $settings['bad-logins_blacklist-logins-list'] );
-			$strict = array_fill( 0, count( $list ), true );
-			$list   = array_map( 'sanitize_user', $list, $strict );
-			$list   = array_unique( $list );
-			natcasesort( $list );
-			$list   = implode( "\n", $list );
+	if ( isset( $settings['bad-logins_blacklist-logins-list'] ) && '' !== $settings['bad-logins_blacklist-logins-list'] ) {
+		// Sanitization, validation.
+		$list   = explode( "\n", $settings['bad-logins_blacklist-logins-list'] );
+		$strict = array_fill( 0, count( $list ) - 1, true );
+		$list   = array_map( 'sanitize_user', $list, $strict );
+		$list   = array_unique( $list );
+		natcasesort( $list );
+		$list   = implode( "\n", $list );
 
-			while ( strpos( $list, "\n\n" ) !== false ) {
-				$list = str_replace( "\n\n", "\n", $list );
-			}
-
-			$settings['bad-logins_blacklist-logins-list'] = trim( $list );
+		while ( strpos( $list, "\n\n" ) !== false ) {
+			$list = str_replace( "\n\n", "\n", $list );
 		}
 
-		if ( ! isset( $settings['bad-logins_blacklist-logins-list'] ) || '' === $settings['bad-logins_blacklist-logins-list'] ) {
-			// No empty list.
-			$settings['bad-logins_blacklist-logins-list'] = secupress_blacklist_logins_list_default_string();
-		}
+		$settings['bad-logins_blacklist-logins-list'] = trim( $list );
+	}
 
-		if ( $settings['bad-logins_blacklist-logins'] ) {
-			secupress_activate_submodule( $modulenow, 'logins-blacklist' );
-		} else {
-			secupress_deactivate_submodule( $modulenow, 'logins-blacklist' );
-		}
+	if ( ! isset( $settings['bad-logins_blacklist-logins-list'] ) || '' === $settings['bad-logins_blacklist-logins-list'] ) {
+		// No empty list.
+		$settings['bad-logins_blacklist-logins-list'] = secupress_blacklist_logins_list_default_string();
+	}
+
+	if ( $settings['bad-logins_blacklist-logins'] ) {
+		secupress_activate_submodule( $modulenow, 'logins-blacklist' );
 	} else {
-		unset( $settings['bad-logins_blacklist-logins-list'] );
+		secupress_deactivate_submodule( $modulenow, 'logins-blacklist' );
 	}
 
 	return $settings;
@@ -143,7 +138,7 @@ function __secupress_users_login_settings_callback( $settings ) {
 
 
 /*------------------------------------------------------------------------------------------------*/
-/* INSTALL ====================================================================================== */
+/* INSTALL/RESET ================================================================================ */
 /*------------------------------------------------------------------------------------------------*/
 
 // Create default option on install.
@@ -162,30 +157,8 @@ function __secupress_install_users_login_module( $module = 'all' ) {
 
 
 /*------------------------------------------------------------------------------------------------*/
-/* MAKE SURE OUR LISTS ARE NOT EMPTY: FILTER OUTPUT ============================================= */
+/* DEFAULT VALUES =============================================================================== */
 /*------------------------------------------------------------------------------------------------*/
-
-// Forbidden logins.
-
-add_filter( 'secupress_get_module_option_bad-logins_blacklist-logins-list', '__secupress_bad_logins_blacklist_default_if_empty', PHP_INT_MAX, 3 );
-
-function __secupress_bad_logins_blacklist_default_if_empty( $value, $default, $module ) {
-	if ( 'users-login' === $module && trim( $value ) === '' ) {
-		return secupress_blacklist_logins_list_default_string();
-	}
-	return $value;
-}
-
-
-add_filter( 'pre_secupress_get_module_option_bad-logins_blacklist-logins-list', '__secupress_pre_bad_logins_blacklist_default_if_empty', PHP_INT_MAX, 3 );
-
-function __secupress_pre_bad_logins_blacklist_default_if_empty( $value, $default, $module ) {
-	if ( 'users-login' === $module && isset( $value ) && trim( $value ) === '' ) {
-		return secupress_blacklist_logins_list_default_string();
-	}
-	return $value;
-}
-
 
 function secupress_blacklist_logins_list_default( $glue = null ) {
 	$list = array(
@@ -226,6 +199,10 @@ function secupress_blacklist_logins_list_default_string() {
 	return secupress_blacklist_logins_list_default( "\n" );
 }
 
+
+/*------------------------------------------------------------------------------------------------*/
+/* UTILITIES ==================================================================================== */
+/*------------------------------------------------------------------------------------------------*/
 
 function secupress_blacklist_logins_allowed_characters( $wrap = false ) {
 	$allowed = array( 'A-Z', 'a-z', '0-9', '(space)', '_', '.', '-', '@', );
