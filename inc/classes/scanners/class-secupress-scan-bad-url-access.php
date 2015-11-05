@@ -28,7 +28,18 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 
 
 	public static function get_messages( $message_id = null ) {
-		$nginx_rules = "";////
+		$nginx_rules = '';
+
+		if ( $GLOBALS['is_nginx'] ) {	//// Guy, I don't know what I'm doing!
+			$marker = 'bad_url_access';
+			$bases  = secupress_rewrite_bases();
+			$from   = ltrim( $bases['from'], '^' );
+
+			$nginx_rules  = 'location ~ ^' . $bases['base'] . '(php\.ini|' . $from . WPINC . '/.+\.php|' . $from . 'wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$ {' . "\n";
+			$nginx_rules .= '    return 404;';
+			$nginx_rules .= '}';
+		}
+
 		$messages = array(
 			// good
 			0   => __( 'Your site does not reveal sensitive informations.', 'secupress' ),
