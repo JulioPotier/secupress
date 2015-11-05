@@ -450,7 +450,29 @@ function secupress_get_home_path() {
 		$home_path = ABSPATH;
 	}
 
-	return str_replace( '\\', '/', $home_path );
+	return secupress_normalize_path( $home_path );
+}
+
+
+/**
+ * A `wp_normalize_path()`-like, but available for WP < 3.9.0.
+ *
+ * @since 1.0
+ *
+ * @param (string) The path to normalize.
+ *
+ * @return (string) The normalized path.
+ **/
+function secupress_normalize_path( $path ) {
+	if ( function_exists( 'wp_normalize_path' ) ) {
+		return wp_normalize_path( $path );
+	}
+	$path = str_replace( '\\', '/', $path );
+	$path = preg_replace( '|/+|','/', $path );
+	if ( ':' === substr( $path, 1, 1 ) ) {
+		$path = ucfirst( $path );
+	}
+	return $path;
 }
 
 
