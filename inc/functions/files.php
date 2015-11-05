@@ -511,3 +511,164 @@ function secupress_prepend_iis7_node( $container_node, $new_node ) {
 
 	return $container_node;
 }
+
+
+/**
+ * Is WP a MultiSite and a subfolder install?
+ *
+ * @since 1.0
+ *
+ * @return (bool).
+ **/
+function secupress_is_subfolder_install() {
+	global $wpdb;
+	static $subfolder_install;
+
+	if ( ! isset( $subfolder_install ) ) {
+		if ( is_multisite() ) {
+			$subfolder_install = ! (bool) is_subdomain_install();
+		}
+		elseif ( ! is_null( $wpdb->sitemeta ) ) {
+			$subfolder_install = ! (bool) $wpdb->get_var( "SELECT meta_value FROM $wpdb->sitemeta WHERE site_id = 1 AND meta_key = 'subdomain_install'" );
+		}
+		else {
+			$subfolder_install = false;
+		}
+	}
+
+	return $subfolder_install;
+}
+
+
+/**
+ * Format a path with no heading slash and a trailing slash.
+ * If the path is empty, it returns an empty string, not a lonely slash.
+ * Example: foo/bar/
+ *
+ * @since 1.0
+ *
+ * @param (string) A path.
+ *
+ * @return (string) The path with no heading slash and a trailing slash.
+ **/
+function secupress_trailingslash_only( $slug ) {
+	return ltrim( trim( $slug, '/' ) . '/', '/' );
+}
+
+
+/**
+ * Has WP its own directory?
+ *
+ * @since 1.0
+ * @see http://codex.wordpress.org/Giving_WordPress_Its_Own_Directory
+ *
+ * @return (string) The directory containing WP.
+ **/
+function secupress_wp_directory() {
+	static $wp_siteurl_subdir;
+
+	if ( ! isset( $wp_siteurl_subdir ) ) {
+		$wp_siteurl_subdir = '';
+
+		$home    = set_url_scheme( rtrim( get_option( 'home' ), '/' ), 'http' );
+		$siteurl = set_url_scheme( rtrim( get_option( 'siteurl' ), '/' ), 'http' );
+
+		if ( ! empty( $home ) && 0 !== strcasecmp( $home, $siteurl ) ) {
+			$wp_siteurl_subdir = str_ireplace( $home, '', $siteurl ); /* $siteurl - $home */
+			$wp_siteurl_subdir = secupress_trailingslash_only( $wp_siteurl_subdir );
+		}
+	}
+
+	return $wp_siteurl_subdir;
+}
+
+
+/**
+ * Get infos for the rewrite rules.
+ * The main concern is about directories.
+ *
+ * @since 1.0
+ *
+ * @return (array) An array containing the following keys:
+ *         'base'  => rewrite base,
+ *         'wpdir' => WP directory,
+ *         'from'  => regex for first part of the rewrite rule,
+ *         'to'    => first part of the rewrited address.
+ **/
+function secupress_rewrite_bases() {
+	global $is_apache, $is_nginx, $is_iis7;
+	static $bases;
+
+	if ( isset( $bases ) ) {
+		return $bases;
+	}
+
+	$base   = parse_url( trailingslashit( get_option( 'home' ) ), PHP_URL_PATH );
+	$wp_dir = secupress_wp_directory();
+
+	// Apache
+	if ( $is_apache ) {
+		if ( secupress_is_subfolder_install() ) {
+			return ( $bases = array(
+				'base'  => $base,
+				'wpdir' => $wp_dir,
+				'from'  => '^([_0-9a-zA-Z-]+/)' . ( $wp_dir ? '' : '?' ),
+				'to'    => '$1',
+			) );
+		}
+		else {
+			return ( $bases = array(
+				'base'  => $base,
+				'wpdir' => $wp_dir,
+				'from'  => '^' . $wp_dir,
+				'to'    => $wp_dir,
+			) );
+		}
+	}
+
+	// Nginx
+	if ( $is_nginx ) {
+		$subdir_base = secupress_trailingslash_only( $base );
+
+		if ( secupress_is_subfolder_install() ) {
+			return ( $bases = array(
+				'base'  => $base,
+				'wpdir' => $wp_dir,
+				'from'  => '^([_0-9a-zA-Z-]+/)' . ( $wp_dir ? '' : '?' ),
+				'to'    => '/' . $subdir_base . '$1',
+			) );
+		}
+		else {
+			return ( $bases = array(
+				'base'  => $base,
+				'wpdir' => $wp_dir,
+				'from'  => '^' . $wp_dir,
+				'to'    => '/' . $subdir_base . $wp_dir,
+			) );
+		}
+	}
+
+	// iis7
+	if ( $is_iis7 ) {
+		$base = secupress_trailingslash_only( $base );
+
+		if ( secupress_is_subfolder_install() ) {
+			return ( $bases = array(
+				'base'  => $base,
+				'wpdir' => $wp_dir,
+				'from'  => '^' . $base . '([_0-9a-zA-Z-]+/)' . ( $wp_dir ? '' : '?' ),
+				'to'    => $base . '{R:1}',
+			) );
+		}
+		else {
+			return ( $bases = array(
+				'base'  => $base,
+				'wpdir' => $wp_dir,
+				'from'  => '^' . $base . $wp_dir,
+				'to'    => $base . $wp_dir,
+			) );
+		}
+	}
+
+	return ( $bases = false );
+}
