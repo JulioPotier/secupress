@@ -151,7 +151,7 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements iSecuPress_Scan {
 		global $is_apache;
 
 		$_wp_upload_dir = wp_upload_dir();
-		$home_path      = get_home_path();
+		$home_path      = secupress_get_home_path();
 		$files          = array(
 			secupress_find_wpconfig_path()    => 644,
 			$home_path                        => 755,

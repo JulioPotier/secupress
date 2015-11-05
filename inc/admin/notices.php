@@ -168,7 +168,7 @@ function secupress_warning_wp_config_permissions() {
 add_action( 'admin_notices', 'secupress_warning_htaccess_permissions' );
 
 function secupress_warning_htaccess_permissions() {
-	$htaccess_file = get_home_path() . '.htaccess';
+	$htaccess_file = secupress_get_home_path() . '.htaccess';
 
 	/** This filter is documented in inc/admin-bar.php */
 	if ( ! current_user_can( apply_filters( 'secupress_capacity', 'administrator' ) )|| is_writable( $htaccess_file ) || ! $GLOBALS['is_apache'] ) {

@@ -549,32 +549,37 @@ abstract class SecuPress_Scanners_Functions {
 	static public function chmods() {////
 		$return = array();
 		self::set_status( $return, 'Good' );
+
 		$_wp_upload_dir = wp_upload_dir();
-		$files = array(	secupress_find_wpconfig_path() 	=> 444,
-			get_home_path() . '/'			=> 755,
-			get_home_path() . 'wp-admin/' 	=> 755,
-			get_home_path() . 'wp-includes/'=> 755,
-			WP_CONTENT_DIR 					=> 755,
-			get_theme_root() 				=> 755,
-			plugin_dir_path( SECUPRESS_FILE )=> 755,
-			$_wp_upload_dir['basedir'] 		=> 755,
-			$_wp_upload_dir['basedir'] 		=> 755,
+		$home_path      = secupress_get_home_path();
+
+		$files = array(
+			secupress_find_wpconfig_path()    => 444,
+			$home_path                        => 755,
+			$home_path . 'wp-admin/'          => 755,
+			$home_path . 'wp-includes/'       => 755,
+			WP_CONTENT_DIR                    => 755,
+			get_theme_root()                  => 755,
+			plugin_dir_path( SECUPRESS_FILE ) => 755,
+			$_wp_upload_dir['basedir']        => 755,
+			$_wp_upload_dir['basedir']        => 755,
 		);
 		if ( $GLOBALS['is_apache'] ) {
-			$files[ get_home_path() . '.htaccess' ] = 444;
+			$files[ $home_path . '.htaccess' ] = 444;
 		}
 
 		foreach ( $files as $file => $chmod ) {
-			$check = decoct(fileperms($file) & 0777);
+			$check = decoct( fileperms( $file ) & 0777 );
 
-			if (!$check) {
-				self::set_status($return, 'Warning');
-				self::set_message($return, sprintf(__('Unable to determine status of <code>%s</code>.', 'secupress'), $file));
-			} elseif ($check > $chmod) {
-				self::set_status($return, 'Bad');
-				self::set_message($return, sprintf(__('<code>%1$s</code> file permissions set on %2$s, NOT %3$s!', 'secupress'), str_replace( ABSPATH, '', $file), '<code>0' . $chmod . '</code>', '<code>0' . $check . '</code>'));
+			if ( ! $check ) {
+				self::set_status( $return, 'Warning' );
+				self::set_message( $return, sprintf( __( 'Unable to determine status of <code>%s</code>.', 'secupress' ), $file ) );
+			} elseif ( $check > $chmod ) {
+				self::set_status( $return, 'Bad' );
+				self::set_message( $return, sprintf( __( '<code>%1$s</code> file permissions set on %2$s, NOT %3$s!', 'secupress' ), str_replace( ABSPATH, '', $file ), '<code>0' . $chmod . '</code>', '<code>0' . $check . '</code>' ) );
 			}
 		}
+
 		return $return;
 	}
 

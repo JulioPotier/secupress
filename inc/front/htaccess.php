@@ -14,11 +14,7 @@ function secupress_write_htaccess( $marker, $rules = null ) {
 		return;
 	}
 
-	if ( ! function_exists( 'get_home_path' ) ) {
-		require_once( ABSPATH . 'wp-admin/includes/file.php' );
-	}
-
-	$htaccess_file = get_home_path() . '.htaccess';
+	$htaccess_file = secupress_get_home_path() . '.htaccess';
 
 	if ( is_writable( $htaccess_file ) ) {
 		// Update the .htaccess file.
