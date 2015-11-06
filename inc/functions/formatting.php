@@ -92,13 +92,12 @@ function secupress_require_class( $prefix, $class_name_part = '' ) {
  * @return (bool) Result of the `version_compare()`.
  */
 function secupress_wp_version_is( $version ) {
+	global $wp_version;
 	static $is = array();
 
 	if ( isset( $is[ $version ] ) ) {
 		return $is[ $version ];
 	}
-
-	global $wp_version;
 
 	return ( $is[ $version ] = version_compare( $wp_version, $version ) >= 0 );
 }
