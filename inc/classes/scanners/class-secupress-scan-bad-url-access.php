@@ -31,12 +31,11 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 		global $is_nginx;
 		$nginx_rules = '';
 
-		if ( $is_nginx ) {	//// Guy, I don't know what I'm doing!
+		if ( $is_nginx ) {
 			$marker = 'bad_url_access';
 			$bases  = secupress_get_rewrite_bases();
-			$from   = ltrim( $bases['from'], '^' );
 
-			$nginx_rules  = 'location ~ ^' . $bases['base'] . '(php\.ini|' . $from . WPINC . '/.+\.php|' . $from . 'wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$ {' . "\n";
+			$nginx_rules  = 'location ~ ^(' . $bases['home_from'] . 'php\.ini|' . $bases['site_from'] . WPINC . '/.+\.php|' . $bases['site_from'] . 'wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$ {' . "\n";
 			$nginx_rules .= '    return 404;';
 			$nginx_rules .= '}';
 		}
@@ -54,9 +53,10 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 			/* translators: 1 si a file name, 2 is some code */
 			300 => sprintf( __( 'Your server runs a nginx system, these sensitive informations disclosures cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s.', 'secupress' ), '<code>nginx.conf</code>', "<pre>$nginx_rules</pre>" ),
 			301 => __( 'Your server runs a non recognized system. These sensitive informations disclosures cannot be fixed automatically.', 'secupress' ),
-			/* translators: 1 si a file name, 2 and 3 are some code */
-			302 => __( 'Your %1$s file is not writable. Please delete lines that may contain %2$s and add the following ones at the beginning of the file: %3$s', 'secupress' ),
+			/* translators: 1 si a file name, 2 is some code */
+			302 => __( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ),
 			303 => _n_noop( 'The following file is not writable. Please add the those lines at the beginning of the file: %s', 'The following files are not writable. Please add the those lines at the beginning of each file: %s', 'secupress' ),
+			304 => __( 'It seems URL rewriting is not enabled on your server. The sensitive information disclosure cannot be fixed.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -156,12 +156,11 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 		 */
 		$marker = 'bad_url_access';
 		$bases  = secupress_get_rewrite_bases();
-		$base   = $bases['base'];
 
 		// We can use rewrite rules \o/
 		if ( got_mod_rewrite() ) {
-			$from   = ltrim( $bases['from'], '^' );
-			$match  = '^(php\.ini|' . $from . WPINC . '/.+\.php|' . $from . 'wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$';
+			$base   = $bases['base'];
+			$match  = '^(' . $bases['home_from'] . 'php\.ini|' . $bases['site_from'] . WPINC . '/.+\.php|' . $bases['site_from'] . 'wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$';
 			// Trigger a 404 error, because forbidding access to a file is nice, but making it also invisible is more fun :)
 			$rules  = "<IfModule mod_rewrite.c>\n";
 			$rules .= "    RewriteEngine On\n";
@@ -180,14 +179,13 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 		}
 
 		// If the rewrite module is disabled (unlikely), forbid access: we have to create a `.htaccess` file in 6 different locations.
-		$wpdir  = secupress_trailingslash_only( $bases['wpdir'] );
 		$regexs = array(
-			''                            => 'php.ini',
-			$wpdir . WPINC . '/'          => '^.+\.php$',
-			$wpdir . 'wp-admin/'          => '^(admin-functions|install|menu-header|setup-config|menu|upgrade-functions)\.php$',
-			$wpdir . 'wp-admin/includes/' => '^.+\.php$',
-			$wpdir . 'wp-admin/network/'  => 'menu\.php',
-			$wpdir . 'wp-admin/user/'     => 'menu\.php',
+			''                                     => 'php.ini',
+			$bases['wpdir'] . WPINC . '/'          => '^.+\.php$',
+			$bases['wpdir'] . 'wp-admin/'          => '^(admin-functions|install|menu-header|setup-config|menu|upgrade-functions)\.php$',
+			$bases['wpdir'] . 'wp-admin/includes/' => '^.+\.php$',
+			$bases['wpdir'] . 'wp-admin/network/'  => 'menu\.php',
+			$bases['wpdir'] . 'wp-admin/user/'     => 'menu\.php',
 		);
 		$done = array();
 		$fail = array();
@@ -220,6 +218,28 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 
 
 	protected function fix_iis7() {
-		//
+		if ( ! iis7_supports_permalinks() ) {
+			// cantfix
+			$this->add_fix_message( 304 );
+			return;
+		}
+
+		$marker = 'bad_url_access';
+		$spaces = str_repeat( ' ', 10 );
+		$bases  = secupress_get_rewrite_bases();
+		$match  = '^(' . $bases['home_from'] . 'php\.ini|' . $bases['site_from'] . WPINC . '/.+\.php|' . $bases['site_from'] . 'wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$';
+
+		$node   = "<rule name=\"SecuPress $marker\" stopProcessing=\"true\">\n";
+			$node  .= "$spaces  <match url=\"$match\"/>\n";
+			$node  .= "$spaces  <action type=\"CustomResponse\" statusCode=\"404\"/>\n";
+		$node  .= "$spaces</rule>";
+
+		if ( secupress_insert_iis7_nodes( $marker, array( 'nodes_string' => $node ) ) ) {
+			// good
+			$this->add_fix_message( 1, array( '<code>web.config</code>' ) );
+		} else {
+			// cantfix
+			$this->add_fix_message( 302, array( '<code>web.config</code>', '<pre>' . $node . '</pre>' ) );
+		}
 	}
 }

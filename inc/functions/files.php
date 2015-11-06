@@ -625,10 +625,13 @@ function secupress_get_wp_directory() {
  * @since 1.0
  *
  * @return (array) An array containing the following keys:
- *         'base'  => rewrite base,
- *         'wpdir' => WP directory,
- *         'from'  => regex for first part of the rewrite rule,
- *         'to'    => first part of the rewrited address.
+ *         'base'      => rewrite base,
+ *         'wpdir'     => WP directory,
+ *         'is_sub'    => Is it a subfolder install? (Multisite),
+ *         'site_from' => regex for first part of the rewrite rule (WP files),
+ *         'site_to'   => first part of the rewrited address (WP files),
+ *         'home_from' => regex for first part of the rewrite rule (home),
+ *         'home_to'   => first part of the rewrited address (home).
  **/
 function secupress_get_rewrite_bases() {
 	global $is_apache, $is_nginx, $is_iis7;
@@ -645,40 +648,50 @@ function secupress_get_rewrite_bases() {
 	if ( $is_apache ) {
 		if ( secupress_is_subfolder_install() ) {
 			return ( $bases = array(
-				'base'  => $base,
-				'wpdir' => $wp_dir,
-				'from'  => '^([_0-9a-zA-Z-]+/)' . ( $wp_dir ? '' : '?' ),
-				'to'    => '$1',
+				'base'      => $base,
+				'wpdir'     => $wp_dir,
+				'is_sub'    => true,
+				'site_from' => $wp_dir . '([_0-9a-zA-Z-]+/)?',
+				'site_to'   => $wp_dir . '$1',
+				'home_from' => '([_0-9a-zA-Z-]+/)?',
+				'home_to'   => '$1',
 			) );
 		}
 		else {
 			return ( $bases = array(
-				'base'  => $base,
-				'wpdir' => $wp_dir,
-				'from'  => '^' . $wp_dir,
-				'to'    => $wp_dir,
+				'base'      => $base,
+				'wpdir'     => $wp_dir,
+				'is_sub'    => false,
+				'site_from' => $wp_dir,
+				'site_to'   => $wp_dir,
+				'home_from' => '',
+				'home_to'   => '',
 			) );
 		}
 	}
 
 	// Nginx
 	if ( $is_nginx ) {
-		$subdir_base = secupress_trailingslash_only( $base );
-
 		if ( secupress_is_subfolder_install() ) {
 			return ( $bases = array(
-				'base'  => $base,
-				'wpdir' => $wp_dir,
-				'from'  => '^([_0-9a-zA-Z-]+/)' . ( $wp_dir ? '' : '?' ),
-				'to'    => '/' . $subdir_base . '$1',
+				'base'      => $base,
+				'wpdir'     => $wp_dir,
+				'is_sub'    => true,
+				'site_from' => $wp_dir . '([_0-9a-zA-Z-]+/)?',
+				'site_to'   => $base . $wp_dir . '$1',
+				'home_from' => '([_0-9a-zA-Z-]+/)?',
+				'home_to'   => $base . '$1',
 			) );
 		}
 		else {
 			return ( $bases = array(
-				'base'  => $base,
-				'wpdir' => $wp_dir,
-				'from'  => '^' . $wp_dir,
-				'to'    => '/' . $subdir_base . $wp_dir,
+				'base'      => $base,
+				'wpdir'     => $wp_dir,
+				'is_sub'    => false,
+				'site_from' => $wp_dir,
+				'site_to'   => $base . $wp_dir,
+				'home_from' => '',
+				'home_to'   => $base,
 			) );
 		}
 	}
@@ -689,18 +702,24 @@ function secupress_get_rewrite_bases() {
 
 		if ( secupress_is_subfolder_install() ) {
 			return ( $bases = array(
-				'base'  => $base,
-				'wpdir' => $wp_dir,
-				'from'  => '^' . $base . '([_0-9a-zA-Z-]+/)' . ( $wp_dir ? '' : '?' ),
-				'to'    => $base . '{R:1}',
+				'base'      => $base,
+				'wpdir'     => $wp_dir,
+				'is_sub'    => true,
+				'site_from' => $base . $wp_dir . '([_0-9a-zA-Z-]+/)?',
+				'site_to'   => $base . $wp_dir . '{R:1}',
+				'home_from' => $base . '([_0-9a-zA-Z-]+/)?',
+				'home_to'   => $base . '{R:1}',
 			) );
 		}
 		else {
 			return ( $bases = array(
-				'base'  => $base,
-				'wpdir' => $wp_dir,
-				'from'  => '^' . $base . $wp_dir,
-				'to'    => $base . $wp_dir,
+				'base'      => $base,
+				'wpdir'     => $wp_dir,
+				'is_sub'    => false,
+				'site_from' => $base . $wp_dir,
+				'site_to'   => $base . $wp_dir,
+				'home_from' => $base,
+				'home_to'   => $base,
 			) );
 		}
 	}
