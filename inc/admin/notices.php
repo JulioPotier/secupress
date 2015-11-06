@@ -122,14 +122,15 @@ function secupress_plugins_to_deactivate() {
 add_action( 'admin_notices', 'secupress_warning_wp_config_permissions' );
 
 function secupress_warning_wp_config_permissions() {
+	global $pagenow, $current_user;
 	$config_file = secupress_find_wpconfig_path();
 
 	/** This filter is documented in inc/admin-bar.php */ //// Contexte pour le filtre.
-	if ( 'plugins.php' == $GLOBALS['pagenow'] && isset( $_GET['activate'] ) || ! current_user_can( apply_filters( 'secupress_capacity', 'administrator' ) ) || is_writable( $config_file ) ) {
+	if ( ! isset( $current_user->ID ) || 'plugins.php' == $pagenow && isset( $_GET['activate'] ) || ! current_user_can( apply_filters( 'secupress_capacity', 'administrator' ) ) || is_writable( $config_file ) ) {
 		return;
 	}
 
-	$boxes = get_user_meta( $GLOBALS['current_user']->ID, 'secupress_boxes', true );
+	$boxes = get_user_meta( $current_user->ID, 'secupress_boxes', true );
 
 	if ( in_array( __FUNCTION__, (array) $boxes ) ) {
 		return;
@@ -168,14 +169,15 @@ function secupress_warning_wp_config_permissions() {
 add_action( 'admin_notices', 'secupress_warning_htaccess_permissions' );
 
 function secupress_warning_htaccess_permissions() {
+	global $pagenow, $current_user;
 	$htaccess_file = secupress_get_home_path() . '.htaccess';
 
 	/** This filter is documented in inc/admin-bar.php */
-	if ( ! current_user_can( apply_filters( 'secupress_capacity', 'administrator' ) )|| is_writable( $htaccess_file ) || ! $GLOBALS['is_apache'] ) {
+	if ( ! isset( $current_user->ID ) || ! current_user_can( apply_filters( 'secupress_capacity', 'administrator' ) )|| is_writable( $htaccess_file ) || ! $is_apache ) {
 		return;
 	}
 
-	$boxes = get_user_meta( $GLOBALS['current_user']->ID, 'secupress_boxes', true );
+	$boxes = get_user_meta( $current_user->ID, 'secupress_boxes', true );
 
 	if ( in_array( __FUNCTION__, (array) $boxes ) ) {
 		return;

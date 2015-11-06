@@ -98,5 +98,7 @@ function secupress_wp_version_is( $version ) {
 		return $is[ $version ];
 	}
 
-	return ( $is[ $version ] = version_compare( $GLOBALS['wp_version'], $version ) >= 0 );
+	global $wp_version;
+
+	return ( $is[ $version ] = version_compare( $wp_version, $version ) >= 0 );
 }

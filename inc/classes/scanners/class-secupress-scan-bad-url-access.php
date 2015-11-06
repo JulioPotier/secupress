@@ -28,11 +28,12 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 
 
 	public static function get_messages( $message_id = null ) {
+		global $is_nginx;
 		$nginx_rules = '';
 
-		if ( $GLOBALS['is_nginx'] ) {	//// Guy, I don't know what I'm doing!
+		if ( $is_nginx ) {	//// Guy, I don't know what I'm doing!
 			$marker = 'bad_url_access';
-			$bases  = secupress_rewrite_bases();
+			$bases  = secupress_get_rewrite_bases();
 			$from   = ltrim( $bases['from'], '^' );
 
 			$nginx_rules  = 'location ~ ^' . $bases['base'] . '(php\.ini|' . $from . WPINC . '/.+\.php|' . $from . 'wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$ {' . "\n";
@@ -154,7 +155,7 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 		 * ^wp-includes/.+\.php$
 		 */
 		$marker = 'bad_url_access';
-		$bases  = secupress_rewrite_bases();
+		$bases  = secupress_get_rewrite_bases();
 		$base   = $bases['base'];
 
 		// We can use rewrite rules \o/

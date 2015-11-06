@@ -677,6 +677,7 @@ function secupress_googleauth_profile_personal_options() {
 add_action( 'wp_ajax_googleauthenticator_secret', 'secupress_googleauth_regen_secret' );
 add_action( 'admin_post_googleauthenticator_secret', 'secupress_googleauth_regen_secret' );
 function secupress_googleauth_regen_secret( $uid = false ) {
+	global $current_user;
 	if ( $uid || isset( $_GET['_wpnonce'], $_GET['uid'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'secupress_google_auth_secret-' . $_GET['uid'] ) ) {
 		$user_id = isset( $_GET['uid'] ) ? (int) $_GET['uid'] : $uid;
 		$newkeys = array();
@@ -687,7 +688,9 @@ function secupress_googleauth_regen_secret( $uid = false ) {
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			wp_send_json_success( $newkeys );
 		} else {
-			set_site_transient( 'secupress_googleauth_regen_secret' . $GLOBALS['current_user']->ID, '1' );
+			if ( isset( $current_user->ID ) ) {
+				set_site_transient( 'secupress_googleauth_regen_secret' . $current_user->ID, '1' );
+			}
 			wp_redirect( wp_get_referer() );
 			die();
 		}
@@ -728,6 +731,7 @@ function secupress_googleauthenticator_new_backup_codes( $uid = false ) {
 add_action( 'wp_ajax_googleauthenticator_app_password', 'secupress_googleauth_regen_app_password' );
 add_action( 'admin_post_googleauthenticator_app_password', 'secupress_googleauth_regen_app_password' );
 function secupress_googleauth_regen_app_password( $uid = false ) {
+	global $current_user;
 	if ( $uid || isset( $_GET['_wpnonce'], $_GET['uid'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'secupress_google_auth_app_password-' . $_GET['uid'] ) ) {
 		$user_id = isset( $_GET['uid'] ) ? (int) $_GET['uid'] : $uid;
 		$newkey = secupress_generate_password( 16, array( 'min' => true, 'maj' => false, 'num' => false ) );
@@ -735,7 +739,9 @@ function secupress_googleauth_regen_app_password( $uid = false ) {
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			wp_send_json_success( $newkey );
 		} else {
-			set_site_transient( 'secupress_googleauth_regen_app_password_reset' . $GLOBALS['current_user']->ID, '1' );
+			if ( isset( $current_user->ID ) ) {
+				set_site_transient( 'secupress_googleauth_regen_app_password_reset' . $current_user->ID, '1' );
+			}
 			wp_redirect( wp_get_referer() );
 			die();
 		}

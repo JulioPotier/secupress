@@ -12,7 +12,8 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @return (bool) true on success, false on failure.
  */
 function secupress_write_htaccess( $marker, $rules = false, $relative_path = '' ) {
-	if ( ! $GLOBALS['is_apache'] ) {
+	global $is_apache;
+	if ( ! $is_apache ) {
 		return;
 	}
 

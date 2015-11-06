@@ -127,6 +127,7 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements iSecuPress_Scan
 
 
 	public function fix() {
+		global $current_user;
 
 		if ( defined( 'SECUPRESS_SALT_KEYS_ACTIVE' ) ) {
 			$this->add_fix_message( 301 );
@@ -137,8 +138,9 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements iSecuPress_Scan
 			if ( ! is_writable( $wpconfig_filename ) ) {
 				$this->add_fix_message( 300 );
 			} else {		
-
-				set_transient( 'secupress-add-salt-muplugin', array( 'ID' => $GLOBALS['current_user']->ID, 'username' => $GLOBALS['current_user']->user_login ) );
+				if ( isset( $current_user->ID ) ) {
+					set_transient( 'secupress-add-salt-muplugin', array( 'ID' => $current_user->ID, 'username' => $current_user->user_login ) );
+				}
 
 				$this->add_fix_message( 100 );
 			}
