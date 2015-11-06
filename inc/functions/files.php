@@ -331,25 +331,25 @@ function secupress_create_mu_plugin( $filename_part, $contents ) {
  * @since 1.0
  *
  * @param (string)       $marker       An additional suffix string to add to the "SecuPress" marker.
- * @param (array|string) $nodes_string Content to insert in the file.
- * @param (array|string) $node_types   Node types: used to removed old nodes. Optional.
- * @param (string)       $path         Path where nodes should be created, relative to `/configuration/system.webServer`.
+ * @param (array)        $args         An array containing the following arguments:
+ *        (array|string) $nodes_string Content to insert in the file.
+ *        (array|string) $node_types   Node types: used to removed old nodes. Optional.
+ *        (string)       $path         Path where nodes should be created, relative to `/configuration/system.webServer`.
  *
  * @return (bool) true on success.
  **/
 function secupress_insert_iis7_nodes( $marker, $args ) {
+	static $home_path;
 
-	$args = wp_parse_args( $args, 
-		array(  $nodes_string => '', 
-				$node_types => false,
-				$path => '' )
-		);
+	$args = wp_parse_args( $args, array(
+		'nodes_string' => '',
+		'node_types'   => false,
+		'path'         => '',
+	) );
 
 	$nodes_string = $args['nodes_string'];
 	$node_types   = $args['node_types'];
 	$path         = $args['path'];
-
-	static $home_path;
 
 	if ( ! $marker || ! class_exists( 'DOMDocument' ) ) {
 		return false;
