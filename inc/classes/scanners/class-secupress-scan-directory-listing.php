@@ -137,7 +137,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 		$node_type = 'directoryBrowse';
 		$node      = '<' . $node_type . ' name="SecuPress ' . $marker . '" enabled="false" showFlags=""/>';
 
-		if ( secupress_insert_iis7_nodes( $marker, $node, $node_type ) ) {
+		if ( secupress_insert_iis7_nodes( $marker, array( 'nodes_string' => $node, 'node_types' => $node_type ) ) ) {
 			// good
 			$this->add_fix_message( 1, array( '<code>web.config</code>' ) );
 		} else {

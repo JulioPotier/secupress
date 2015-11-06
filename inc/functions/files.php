@@ -337,7 +337,18 @@ function secupress_create_mu_plugin( $filename_part, $contents ) {
  *
  * @return (bool) true on success.
  **/
-function secupress_insert_iis7_nodes( $marker, $nodes_string = '', $node_types = false, $path = '' ) {
+function secupress_insert_iis7_nodes( $marker, $args ) {
+
+	$args = wp_parse_args( $args, 
+		array(  $nodes_string => '', 
+				$node_types => false,
+				$path => '' )
+		);
+
+	$nodes_string = $args['nodes_string'];
+	$node_types   = $args['node_types'];
+	$path         = $args['path'];
+
 	static $home_path;
 
 	if ( ! $marker || ! class_exists( 'DOMDocument' ) ) {
@@ -414,7 +425,7 @@ function secupress_insert_iis7_nodes( $marker, $nodes_string = '', $node_types =
 		$fragment->appendXML( $nodes_string );
 
 		// Maybe create child nodes and then, prepend new nodes.
-		secupress_get_iis7_node( $doc, $xpath, $path, $fragment );
+		_secupress_get_iis7_node( $doc, $xpath, $path, $fragment );
 
 		// Save and finish.
 		$doc->encoding     = 'UTF-8';
@@ -489,7 +500,7 @@ function secupress_normalize_path( $path ) {
  *
  * @return (object) The DOMNode node.
  **/
-function secupress_get_iis7_node( $doc, $xpath, $path, $child = false ) {
+function _secupress_get_iis7_node( $doc, $xpath, $path, $child ) {
 	$nodelist = $xpath->query( $path );
 
 	if ( $nodelist->length > 0 ) {
@@ -506,7 +517,7 @@ function secupress_get_iis7_node( $doc, $xpath, $path, $child = false ) {
 		$final_node->appendChild( $child );
 	}
 
-	return secupress_get_iis7_node( $doc, $xpath, $path, $final_node );
+	return _secupress_get_iis7_node( $doc, $xpath, $path, $final_node );
 }
 
 
@@ -548,10 +559,10 @@ function secupress_is_subfolder_install() {
 
 	if ( ! isset( $subfolder_install ) ) {
 		if ( is_multisite() ) {
-			$subfolder_install = ! (bool) is_subdomain_install();
+			$subfolder_install = ! is_subdomain_install();
 		}
 		elseif ( ! is_null( $wpdb->sitemeta ) ) {
-			$subfolder_install = ! (bool) $wpdb->get_var( "SELECT meta_value FROM $wpdb->sitemeta WHERE site_id = 1 AND meta_key = 'subdomain_install'" );
+			$subfolder_install = ! $wpdb->get_var( "SELECT meta_value FROM $wpdb->sitemeta WHERE site_id = 1 AND meta_key = 'subdomain_install'" );
 		}
 		else {
 			$subfolder_install = false;
@@ -586,19 +597,21 @@ function secupress_trailingslash_only( $slug ) {
  *
  * @return (string) The directory containing WP.
  **/
-function secupress_wp_directory() {
+function secupress_get_wp_directory() {
 	static $wp_siteurl_subdir;
 
-	if ( ! isset( $wp_siteurl_subdir ) ) {
-		$wp_siteurl_subdir = '';
+	if ( isset( $wp_siteurl_subdir ) ) {
+		return $wp_siteurl_subdir;
+	}
 
-		$home    = set_url_scheme( rtrim( get_option( 'home' ), '/' ), 'http' );
-		$siteurl = set_url_scheme( rtrim( get_option( 'siteurl' ), '/' ), 'http' );
+	$wp_siteurl_subdir = '';
 
-		if ( ! empty( $home ) && 0 !== strcasecmp( $home, $siteurl ) ) {
-			$wp_siteurl_subdir = str_ireplace( $home, '', $siteurl ); /* $siteurl - $home */
-			$wp_siteurl_subdir = secupress_trailingslash_only( $wp_siteurl_subdir );
-		}
+	$home    = set_url_scheme( rtrim( get_option( 'home' ), '/' ), 'http' );
+	$siteurl = set_url_scheme( rtrim( get_option( 'siteurl' ), '/' ), 'http' );
+
+	if ( ! empty( $home ) && 0 !== strcasecmp( $home, $siteurl ) ) {
+		$wp_siteurl_subdir = str_ireplace( $home, '', $siteurl ); /* $siteurl - $home */
+		$wp_siteurl_subdir = secupress_trailingslash_only( $wp_siteurl_subdir );
 	}
 
 	return $wp_siteurl_subdir;
@@ -617,7 +630,7 @@ function secupress_wp_directory() {
  *         'from'  => regex for first part of the rewrite rule,
  *         'to'    => first part of the rewrited address.
  **/
-function secupress_rewrite_bases() {
+function secupress_get_rewrite_bases() {
 	global $is_apache, $is_nginx, $is_iis7;
 	static $bases;
 

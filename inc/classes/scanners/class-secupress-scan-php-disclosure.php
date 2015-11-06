@@ -132,7 +132,7 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements iSecuPress
 		if ( ! iis7_supports_permalinks() ) {
 			// cantfix
 			$this->add_fix_message( 303 );
-		} elseif ( secupress_insert_iis7_nodes( $marker, $node ) ) {
+		} elseif ( secupress_insert_iis7_nodes( $marker, array( 'nodes_string' => $node ) ) ) {
 			// good
 			$this->add_fix_message( 1, array( '<code>web.config</code>' ) );
 		} else {
