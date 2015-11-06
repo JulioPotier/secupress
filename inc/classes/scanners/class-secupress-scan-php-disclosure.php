@@ -29,6 +29,7 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements iSecuPress
 
 	public static function get_messages( $message_id = null ) {
 		$nginx_rules = "location / {\n\t" . 'if ( $query_string ~* "\=PHP[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}" ) {' . "\n\t\treturn 403;\n\t}\n}";
+
 		$messages = array(
 			// good
 			0   => __( 'Your site does not reveal the PHP modules.', 'secupress' ),
@@ -38,8 +39,8 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements iSecuPress
 			// bad
 			200 => sprintf( __( '%s should not be accessible to anyone.', 'secupress' ), '<code>' . user_trailingslashit( home_url() ) . '?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000</code>' ),
 			// cantfix
-			/* translators: 1 si a file name, 2 is some code */
-			300 => sprintf( __( 'Your server runs a nginx system, the sensitive information disclosure cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s.', 'secupress' ), '<code>nginx.conf</code>', "<pre>$nginx_rules</pre>" ),
+			/* translators: 1 is a block name, 2 is a file name, 3 is some code */
+			300 => sprintf( __( 'Your server runs a nginx system, the sensitive information disclosure cannot be fixed automatically but you can do it yourself by adding the following code inside the %1$s block of your %2$s file: %3$s.', 'secupress' ), '"server"', '<code>nginx.conf</code>', "<pre>$nginx_rules</pre>" ),
 			301 => __( 'Your server runs a non recognized system. The sensitive information disclosure cannot be fixed automatically.', 'secupress' ),
 			/* translators: 1 si a file name, 2 is some code */
 			302 => __( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s.', 'secupress' ),

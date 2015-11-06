@@ -32,12 +32,8 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 		$nginx_rules = '';
 
 		if ( $is_nginx ) {
-			$marker = 'bad_url_access';
-			$bases  = secupress_get_rewrite_bases();
-
-			$nginx_rules  = 'location ~ ^(' . $bases['home_from'] . 'php\.ini|' . $bases['site_from'] . WPINC . '/.+\.php|' . $bases['site_from'] . 'wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$ {' . "\n";
-			$nginx_rules .= '    return 404;';
-			$nginx_rules .= '}';
+			$bases = secupress_get_rewrite_bases();
+			$nginx_rules = 'location ~ ^(' . $bases['home_from'] . 'php\.ini|' . $bases['site_from'] . WPINC . '/.+\.php|' . $bases['site_from'] . "wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$ {\n\treturn 404;\n}";
 		}
 
 		$messages = array(
@@ -50,8 +46,8 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 			// bad
 			200 => _n_noop( '%s should not be accessible by anyone.', '%s should not be accessible by anyone.', 'secupress' ),
 			// cantfix
-			/* translators: 1 si a file name, 2 is some code */
-			300 => sprintf( __( 'Your server runs a nginx system, these sensitive informations disclosures cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s.', 'secupress' ), '<code>nginx.conf</code>', "<pre>$nginx_rules</pre>" ),
+			/* translators: 1 is a block name, 2 is a file name, 3 is some code */
+			300 => sprintf( __( 'Your server runs a nginx system, these sensitive informations disclosures cannot be fixed automatically but you can do it yourself by adding the following code inside the %1$s block of your %2$s file: %3$s.', 'secupress' ), '"server"', '<code>nginx.conf</code>', "<pre>$nginx_rules</pre>" ),
 			301 => __( 'Your server runs a non recognized system. These sensitive informations disclosures cannot be fixed automatically.', 'secupress' ),
 			/* translators: 1 si a file name, 2 is some code */
 			302 => __( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ),

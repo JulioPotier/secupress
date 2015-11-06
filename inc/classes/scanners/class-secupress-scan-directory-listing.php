@@ -28,6 +28,15 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 
 
 	public static function get_messages( $message_id = null ) {
+		global $is_nginx;
+		$nginx_rules = '';
+
+		if ( $is_nginx ) {
+			$bases = secupress_get_rewrite_bases();
+			$base  = $bases['base'];
+			$nginx_rules = "location $base {\n\tautoindex off;\n}";
+		}
+
 		$messages = array(
 			// good
 			0   => __( 'Your site does not reveal the files list.', 'secupress' ),
@@ -37,8 +46,8 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 			// bad
 			200 => __( '%s (for example) should not be accessible to anyone.', 'secupress' ),
 			// cantfix
-			/* translators: 1 si a file name, 2 is some code */
-			300 => sprintf( __( 'Your server runs a nginx system, the directory listing disclosure cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s.', 'secupress' ), '<code>nginx.conf</code>', '<code>autoindex off;</code>' ),
+			/* translators: 1 is a block name, 2 is a file name, 3 is some code */
+			300 => sprintf( __( 'Your server runs a nginx system, the directory listing disclosure cannot be fixed automatically but you can do it yourself by adding the following code inside the %1$s block of your %2$s file: %3$s.', 'secupress' ), '"server"', '<code>nginx.conf</code>', "<pre>$nginx_rules</pre>" ),
 			301 => __( 'Your server runs a non recognized system. The directory listing disclosure cannot be fixed automatically.', 'secupress' ),
 			/* translators: 1 si a file name, 2 and 3 are some code */
 			302 => __( 'Your %1$s file is not writable. Please delete lines that may contain %2$s and add the following ones at the beginning of the file: %3$s', 'secupress' ),
