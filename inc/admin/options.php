@@ -128,6 +128,24 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'notscannedyet' => array( 'value' => $counts['notscannedyet'], 'text' => __( 'Not Scanned Yet', 'secupress' ) ),
 		) );
 
+		wp_localize_script( 'jquery-timeago', 'SecuPressi18nTimeago', array(
+			'prefixAgo'     => _x( '', 'timeago.prefixAgo', 'secupress' ),
+			'prefixFromNow' => _x( '', 'timeago.prefixFromNow', 'secupress' ),
+			'suffixAgo'     => _x( 'ago', 'timeago.suffixAgo', 'secupress' ),
+			'suffixFromNow' => _x( '', 'timeago.suffixFromNow', 'secupress' ),
+			'seconds'       => _x( 'a few seconds', 'timeago.seconds', 'secupress' ),
+			'minute'        => _x( '1 minute', 'timeago.minute', 'secupress' ),
+			'minutes'       => _x( '%d minutes', 'timeago.minutes', 'secupress' ),
+			'hour'          => _x( '1 hour', 'timeago.hour', 'secupress' ),
+			'hours'         => _x( '%d hours', 'timeago.hours', 'secupress' ),
+			'day'           => _x( '1 day', 'timeago.day', 'secupress' ),
+			'days'          => _x( '%d days', 'timeago.days', 'secupress' ),
+			'month'         => _x( '1 month', 'timeago.month', 'secupress' ),
+			'months'        => _x( '%d months', 'timeago.months', 'secupress' ),
+			'year'          => _x( '1 year', 'timeago.year', 'secupress' ),
+			'years'         => _x( '%d years', 'timeago.years', 'secupress' ),
+			'wordSeparator' => _x( " ", 'timeago.wordSeparator', 'secupress' ),
+		) );
 		wp_localize_script( 'secupress-scanner-js', 'SecuPressi18nScanner', array(
 			'fixed'           => __( 'Fixed', 'secupress' ),
 			'fixedPartial'    => __( 'Partially fixed', 'secupress' ),
