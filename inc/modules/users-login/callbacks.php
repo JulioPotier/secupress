@@ -19,24 +19,6 @@ function __secupress_users_login_settings_callback( $settings ) {
 	if ( isset( $settings['double-auth_type'] ) ) {
 		switch ( $settings['double-auth_type'] ) {
 
-			case 'password':
-				$actual_double_auth_password = secupress_get_module_option( 'double-auth_password', false, $modulenow );
-				if ( strlen( $settings['double-auth_password'] ) < 7 || $settings['temp.password_strength_value'] < 3 ) {
-					if ( ! $actual_double_auth_password ) {
-						$settings['double-auth_type'] = '-1';
-						$settings['double-auth_password'] = '';
-						secupress_deactivate_submodule( $modulenow, 'password' );
-					} else {
-						$settings['double-auth_password'] = $actual_double_auth_password;
-					}
-				} else {
-					secupress_activate_submodule( $modulenow, 'password', array( 'notif', 'emaillink', 'googleauth' ) );
-					if ( strlen( $settings['double-auth_password'] ) > 0 ) {
-						$settings['double-auth_password'] = wp_hash_password( $settings['double-auth_password'] );
-					}
-				}
-			break;
-
 			case 'googleauth':
 				secupress_activate_submodule( $modulenow, 'googleauth', array( 'password', 'notif', 'emaillink' ) );
 			break;

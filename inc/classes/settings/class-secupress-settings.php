@@ -139,7 +139,6 @@ abstract class SecuPress_Settings {
 
 	// Sections ====================================================================================
 
-	//// secupress_add_settings_section()
 	protected function add_section( $title, $args = null ) {
 		static $i = 0;
 
@@ -337,29 +336,13 @@ abstract class SecuPress_Settings {
 
 					$number_options = $args['type'] === 'number' ? $min . $max . ' class="small-text"' : '';
 					$autocomplete   = in_array( $args['name'], array( 'consumer_key', 'consumer_email' ) ) ? ' autocomplete="off"' : '';
-					$disabled       = false ? ' disabled="disabled"' : $readonly;						////
+					$disabled       = false ? ' disabled="disabled"' : $readonly;
 					$data_realtype  = 'password' != $args['type'] ? '' : ' data-realtype="password"';
 					?>
 					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
 					<label>
 						<input <?php echo $title; ?><?php echo $autocomplete; ?><?php echo $pattern; ?><?php echo $required; ?><?php echo $disabled; ?><?php echo $data_realtype; ?> type="<?php echo $args['type']; ?>"<?php echo $number_options; ?> id="<?php echo $args['label_for']; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]" value="<?php echo esc_attr( $value ); ?>" <?php echo $placeholder; ?><?php echo $readonly; ?>/>
-						<?php echo $label; ?>
-					</label>
-					<?php
-					break;
-
-				case 'password' ://// Pas 2 input dans le même label >_>
-
-					$data_nocheck = $value ? ' data-nocheck="true"' : '';
-					$disabled     = false ? ' disabled="disabled"' : $readonly;
-					?>
-					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
-					<label>
-						<input autocomplete="off" data-realtype="password" <?php echo $data_nocheck; ?><?php echo $title; ?><?php echo $pattern; ?><?php echo $required; ?><?php echo $disabled; ?> type="password" id="<?php echo $args['label_for']; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]" value="" <?php echo $readonly; ?>/>
-						<input type="text" tabindex="-1" id="password_strength_pattern"<?php echo $data_nocheck; ?> data-pattern="[3-4]" title="<?php esc_attr_e( 'Minimum Strength Level: Medium', 'secupress' ); ?>" name="<?php echo $option_name; ?>[password_strength_value]" value="0" aria-hidden="true" />
-						<?php echo $label; ?>
-						<i class="hide-if-no-js"><?php printf( __( 'Required: %s', 'secupress' ), _x( 'Medium', 'password strength' ) ); ?></i>
-						<br><span id="password-strength" class="hide-if-no-js"><?php _e( 'Enter a password', 'secupress' ); ?></span>
+					<?php echo $label; ?>
 					</label>
 					<?php
 					break;
@@ -477,7 +460,7 @@ abstract class SecuPress_Settings {
 					$to_hour     = isset( $value['to_hour'] )     ? $value['to_hour']     : '';
 					$to_minute   = isset( $value['to_minute'] )   ? $value['to_minute']   : '';
 
-					_e( 'Everyday', 'secupress' ); ////
+					_e( 'Everyday', 'secupress' );
 					echo '<br>';
 					echo '<span style="display:inline-block;min-width:3em">' . _x( 'From', '*From* xx h xx mn To xx h xx mn', 'secupress' ) . '</span>';
 					?>
