@@ -28,15 +28,26 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 
 
 	public static function get_messages( $message_id = null ) {
+		$nginx_rules = '';
+
+		if ( $is_nginx ) {
+			$bases = secupress_get_rewrite_bases();
+			// http://nginx.org/en/docs/http/ngx_http_core_module.html#server_tokens
+			$nginx_rules  = "http {\n\tserver_tokens off;\n}\n";
+			// http://nginx.org/en/docs/http/ngx_http_core_module.html#location
+			$nginx_rules .= "server {\n\tlocation {$bases['home_from']}readme.html {\n\t\treturn 404;\n\t}\n}";
+		}
+
 		$messages = array(
 			// good
 			0   => __( 'Your site does not reveal sensitive informations.', 'secupress' ),
-			1   => __( 'The rules against the php version disclosure have been successfully added to your %s file.', 'secupress' ),
-			2   => __( 'As the rules against the php version disclosure added to your %s file do not seem to work, we remove this information directly with php.', 'secupress' ),
+			/* translators: 1 and 2 are file names */
+			1   => __( 'The rules against the PHP version disclosure and forbidding access to your %1$s file have been successfully added to your %2$s file.', 'secupress' ),
+			/* translators: 1 is a file name */
+			2   => __( 'As the rules against the PHP version disclosure added to your %s file do not seem to work, a plugin has been activated to remove this information in some other way.', 'secupress' ),
 			3   => __( 'The generator meta tag should not be displayed anymore.', 'secupress' ),
 			4   => __( 'The WordPress version should be removed from your styles URL now.', 'secupress' ),
 			5   => __( 'The WordPress version should be removed from your scripts URL now.', 'secupress' ),
-			6   => __( 'The rules forbidding access to your %1$s file have been successfully added to your %2$s file.', 'secupress' ),
 			// warning
 			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
 			101 => sprintf( __( 'Unable to determine status of %s.', 'secupress' ), '<code>' . home_url( 'readme.html' ) . '</code>' ),
@@ -45,10 +56,12 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 			201 => __( 'The website displays the <strong>WordPress version</strong> in the homepage source code (%s).', 'secupress' ),
 			202 => sprintf( __( '<code>%s</code> should not be accessible by anyone.', 'secupress' ), home_url( 'readme.html' ) ),
 			// cantfix
-			300 => sprintf( __( 'You run a nginx system, I cannot fix the PHP version disclosure in headers but you can do it yourself with the following code: %s.', 'secupress' ), '<code>(add nginx code here)</code>' ), ////
-			301 => sprintf( __( 'You run an IIS7 system, I cannot fix the PHP version disclosure in headers but you can do it yourself with the following code: %s.', 'secupress' ), '<code>(add IIS code here)</code>' ), //// iis7_url_rewrite_rules ?
-			302 => __( 'You don\'t run an Apache system, I cannot fix the PHP version disclosure in headers.', 'secupress' ),
-			303 => __( 'Your %1$s file is not writable. Please add the following lines to the file: %2$s.', 'secupress' ),
+			/* translators: 1 is a file name, 2 is some code */
+			300 => sprintf( __( 'Your server runs a nginx system, the PHP version disclosure in headers cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s.', 'secupress' ), '<code>nginx.conf</code>', "<pre>$nginx_rules</pre>" ),
+			301 => __( 'Your server runs a non recognized system. The PHP version disclosure in headers cannot be fixed automatically.', 'secupress' ),
+			/* translators: 1 is a file name, 2 is some code */
+			302 => __( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s.', 'secupress' ),
+			303 => __( 'It seems URL rewriting is not enabled on your server. The sensitive information disclosure cannot be fixed.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -143,6 +156,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 	public function fix() {
 		global $is_apache, $is_nginx, $is_iis7;
 
+		$todo        = array();
 		$wp_version  = get_bloginfo( 'version' );
 		$php_version = phpversion();
 
@@ -158,43 +172,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 
 			// PHP version in headers.
 			if ( false !== strpos( $powered_by, $php_version ) ) {
-
-				if ( $is_nginx ) {
-					$this->add_fix_message( 300 );
-				} elseif ( $is_iis7 ) {
-					$this->add_fix_message( 301 ); //// iis7_url_rewrite_rules ?
-				} elseif ( ! $is_apache ) {
-					$this->add_fix_message( 302 );
-				} else {
-					// .htaccess
-					$rules  = "ServerSignature Off\n";
-					$rules .= "<IfModule mod_headers.c>\n    Header unset X-Powered-By\n</IfModule>";
-
-					if ( secupress_write_htaccess( 'php_version_disclose', $rules ) ) {
-
-						// good
-						$this->add_fix_message( 1, array( '<code>.htaccess</code>' ) );
-
-						// Test our rule works.
-						$response_test = wp_remote_get( user_trailingslashit( home_url() ), array( 'redirection' => 0 ) );
-
-						if ( ! is_wp_error( $response_test ) && 200 === wp_remote_retrieve_response_code( $response_test ) ) {
-
-							$powered_by = wp_remote_retrieve_header( $response_test, 'x-powered-by' );
-
-							if ( false !== strpos( $powered_by, $php_version ) ) {
-								// good
-								secupress_activate_submodule( 'discloses', 'php-version' );
-								$this->add_fix_message( 2, array( '<code>.htaccess</code>' ) );
-							}
-						}
-
-					} else {
-						// cantfix
-						$this->add_fix_message( 303, array( '<code>.htaccess</code>', "<pre># BEGIN SecuPress php_version_disclose\n$rules\n# END SecuPress</pre>" ) );
-					}
-				}
-
+				$todo['php_version'] = 1;
 			}
 
 			// WordPress version in meta tag.
@@ -235,25 +213,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 		if ( ! is_wp_error( $response ) ) {
 
 			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
-
-				if ( $is_nginx ) {
-					$this->add_fix_message( 300 );
-				} elseif ( $is_iis7 ) {
-					$this->add_fix_message( 301 ); //// iis7_url_rewrite_rules ?
-				} elseif ( ! $is_apache ) {
-					$this->add_fix_message( 302 );
-				} else {
-					// .htaccess
-					$rules = "<files readme.html>\n    deny from all\n</files>";
-
-					if ( secupress_write_htaccess( 'readme_version_disclose', $rules ) ) {
-						// good
-						$this->add_fix_message( 6, array( '<code>readme.html</code>', '<code>.htaccess</code>' ) );
-					} else {
-						// cantfix
-						$this->add_fix_message( 303, array( '<code>.htaccess</code>', "<pre># BEGIN SecuPress readme_version_disclose\n$rules\n# END SecuPress</pre>" ) );
-					}
-				}
+				$toto['readme'] = 1;
 			}
 
 		} else {
@@ -261,9 +221,153 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 			$this->add_fix_message( 101 );
 		}
 
+		if ( $todo ) {
+			if ( $is_apache ) {
+				$this->fix_apache( $todo );
+			} elseif ( $is_iis7 ) {
+				$this->fix_iis7( $todo );
+			} elseif ( $is_nginx ) {
+				$this->add_fix_message( 300 );
+			} else {
+				$this->add_fix_message( 301 );
+			}
+		}
+
 		// good
 		$this->maybe_set_fix_status( 0 );
 
 		return parent::fix();
+	}
+
+
+	protected function fix_apache( $todo ) {
+		$marker = 'versions_disclose';
+		$rules  = '';
+
+		// php version disclosure in header.
+		if ( isset( $todo['php_version'] ) ) {
+			$rules .= "ServerSignature Off\n";
+			$rules .= "<IfModule mod_headers.c>\n    Header unset X-Powered-By\n</IfModule>\n";
+		}
+
+		// `readme.html` file.
+		if ( isset( $todo['readme'] ) ) {
+			if ( got_mod_rewrite() ) {
+				$bases  = secupress_get_rewrite_bases();
+				$base   = $bases['base'];
+				$from   = $bases['home_from'];
+				$rules .= "<IfModule mod_rewrite.c>\n";
+				$rules .= "    RewriteEngine On\n";
+				$rules .= "    RewriteBase $base\n";
+				$rules .= "    RewriteRule ^{$from}readme\.html$ [R=404,L]\n";
+				$rules .= "</IfModule>\n";
+				$rules .= "<IfModule !mod_rewrite.c>\n";
+				$rules .= "    <files readme.html>\n";
+				$rules .= "        deny from all\n";
+				$rules .= "    </files>\n";
+				$rules .= "</IfModule>\n";
+			} else {
+				$rules .= "<files readme.html>\n    deny from all\n</files>\n";
+			}
+		}
+
+		// Write in `.htaccess` file.
+		if ( secupress_write_htaccess( $marker, $rules ) ) {
+
+			// good
+			$this->add_fix_message( 1, array( '<code>readme.html</code>', '<code>.htaccess</code>' ) );
+
+			// Test our rule against php version disclosure works.
+			$this->scan_php_disclosure();
+
+		} else {
+			// cantfix
+			$this->add_fix_message( 302, array( '<code>.htaccess</code>', "<pre># BEGIN SecuPress $marker\n$rules# END SecuPress</pre>" ) );
+		}
+	}
+
+
+	protected function fix_iis7() {
+		if ( ! iis7_supports_permalinks() ) {
+			// cantfix
+			$this->add_fix_message( 303 );
+			return;
+		}
+
+		$marker = 'versions_disclose';
+
+		// php version disclosure in header.
+		if ( isset( $todo['php_version'] ) ) {
+
+			// https://www.iis.net/configreference/system.webserver/httpprotocol/customheaders
+			// https://stackoverflow.com/questions/1178831/remove-server-response-header-iis7
+			$spaces = str_repeat( ' ', 8 );
+
+			$rules  = "<remove name=\"X-AspNet-Version\" id=\"SecuPress $marker 1\"/>\n";
+			$rules .= "$spaces<remove name=\"X-AspNetMvc-Version\" id=\"SecuPress $marker 2\"/>\n";
+			$rules .= "$spaces<remove name=\"X-Powered-By\" id=\"SecuPress $marker 3\"/>";
+
+			$atts = array(
+				'nodes_string' => $rules,
+				'path'         => 'httpProtocol/customHeaders',
+				'attribute'    => 'id',
+			);
+
+			// Write in `web.config` file.
+			if ( secupress_insert_iis7_nodes( $marker, $atts ) ) {
+				// good
+				$this->add_fix_message( 1, array( '<code>web.config</code>' ) );
+
+				// Test our rule against php version disclosure works.
+				$this->scan_php_disclosure();
+
+			} else {
+				// cantfix
+				$this->add_fix_message( 302, array( '<code>web.config</code>', "<pre>$rules</pre>" ) );
+			}
+		}
+
+		// `readme.html` file.
+		if ( isset( $todo['readme'] ) ) {
+
+			$spaces = str_repeat( ' ', 10 );
+			$bases  = secupress_get_rewrite_bases();
+			$match  = '^' . $bases['home_from'] . 'readme\.html$';
+
+			$rules  = "<rule name=\"SecuPress $marker\" stopProcessing=\"true\">\n";
+			$rules .= "$spaces  <match url=\"$match\"/>\n";
+			$rules .= "$spaces  <action type=\"CustomResponse\" statusCode=\"404\"/>\n";
+			$rules .= "$spaces</rule>";
+
+			// Write in `web.config` file.
+			if ( secupress_insert_iis7_nodes( $marker, array( 'nodes_string' => $rules ) ) ) {
+				// good
+				$this->add_fix_message( 1, array( '<code>web.config</code>' ) );
+
+			} else {
+				// cantfix
+				$this->add_fix_message( 302, array( '<code>web.config</code>', "<pre>$rules</pre>" ) );
+			}
+		}
+	}
+
+
+	protected function scan_php_disclosure() {
+		global $is_apache;
+
+		$response_test = wp_remote_get( user_trailingslashit( home_url() ), array( 'redirection' => 0 ) );
+
+		if ( ! is_wp_error( $response_test ) && 200 === wp_remote_retrieve_response_code( $response_test ) ) {
+
+			$powered_by  = wp_remote_retrieve_header( $response_test, 'x-powered-by' );
+			$php_version = phpversion();
+
+			if ( false !== strpos( $powered_by, $php_version ) ) {
+				// good
+				secupress_activate_submodule( 'discloses', 'php-version' );
+				$file = '<code>' . ( $is_apache ? '.htaccess' : 'web.config' ) . '</code>';
+				$this->add_fix_message( 2, array( $file ) );
+			}
+		}
 	}
 }
