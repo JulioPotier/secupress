@@ -87,11 +87,7 @@ function secupress_plugins_to_deactivate() {
 		'wordfence/wordfence.php'
 	);
 
-	foreach ( $plugins as $plugin ) { //// array_filter
-		if ( is_plugin_active( $plugin ) ) {
-			$plugins_to_deactivate[] = $plugin;
-		}
-	}
+	$plugins_to_deactivate = array_filter( $plugins, 'is_plugin_active' );
 
 	/** This filter is documented in inc/admin-bar.php */
 	if ( current_user_can( apply_filters( 'secupress_capacity', 'administrator' ) ) && count( $plugins_to_deactivate ) ) { ?>
