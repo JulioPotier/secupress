@@ -101,3 +101,22 @@ function secupress_wp_version_is( $version ) {
 
 	return ( $is[ $version ] = version_compare( $wp_version, $version ) >= 0 );
 }
+
+
+/**
+ * Store and get static data.
+ *
+ * @since 1.0
+ *
+ * @param (string) $key:  An identifier key.
+ * @param (mixed)  $data: The data to be stored.
+ *
+ * @return (mixed) The stored data.
+ */
+function secupress_cache_data( $key, $data = 'trolilol' ) {
+	static $datas = array();
+	if ( $data !== 'trolilol' ) {
+		$datas[ $key ] = $data;
+	}
+	return isset( $datas[ $key ] ) ? $datas[ $key ] : null;
+}

@@ -58,7 +58,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 			206 => __( 'Please provide data for your new user account.', 'secupress' ),
 			207 => __( 'Please provide valid login and e-mail for your new user account.', 'secupress' ),
 			208 => __( 'Sorry, that username already exists!' ), // WPi18n
-			209 => __( 'Sorry, that username is not allowed.' ), // WPi18n
+			209 => __( 'Sorry, that username is not allowed.', 'secupress' ),
 			210 => sprintf( __( 'Sorry, that username is invalid. It may not be longer than 60 characters and may contain only the following characters: %s', 'secupress' ), static::allowed_characters_for_login( true ) ),
 			211 => __( 'Sorry, that email address is already used!' ), // WPi18n
 			212 => __( 'Posts could not be attributed.', 'secupress' ),
@@ -364,18 +364,20 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 
 		// Well... Not that super in the end.
 		if ( is_wp_error( $user_id ) ) {
-			$user_id = $user_id->get_error_code();
+			$error_code     = $user_id->get_error_code();
+			$error_msg      = $user_id->get_error_message( $error_code );
+			$illegal_compat = $error_code === 'empty_user_login' && $error_msg === __( 'Sorry, that username is not allowed.', 'secupress' );
 
-			if ( $user_id === 'existing_user_login' ) {
+			if ( $error_code === 'existing_user_login' ) {
 				// bad
 				$this->add_fix_message( 208 );
-			} elseif ( $user_id === 'illegal_user_login' ) {
+			} elseif ( $error_code === 'illegal_user_login' || $illegal_compat ) {
 				// bad
 				$this->add_fix_message( 209 );
-			} elseif ( strpos( $user_id, 'user_login' ) !== false ) {
+			} elseif ( strpos( $error_code, 'user_login' ) !== false ) {
 				// bad
 				$this->add_fix_message( 210 );
-			} elseif ( $user_id === 'existing_user_email' ) {
+			} elseif ( $error_code === 'existing_user_email' ) {
 				// bad
 				$this->add_fix_message( 211 );
 			} else {
@@ -460,18 +462,20 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 
 		// Oh, (s)he missed his/her highway exit.
 		if ( ! $user_id || is_wp_error( $user_id ) ) {
-			$user_id = $user_id->get_error_code();
+			$error_code     = $user_id->get_error_code();
+			$error_msg      = $user_id->get_error_message( $error_code );
+			$illegal_compat = $error_code === 'empty_user_login' && $error_msg === __( 'Sorry, that username is not allowed.', 'secupress' );
 
-			if ( $user_id === 'existing_user_login' ) {
+			if ( $error_code === 'existing_user_login' ) {
 				// bad
 				$this->add_fix_message( 208 );
-			} elseif ( $user_id === 'illegal_user_login' ) {
+			} elseif ( $error_code === 'illegal_user_login' || $illegal_compat ) {
 				// bad
 				$this->add_fix_message( 209 );
-			} elseif ( strpos( $user_id, 'user_login' ) !== false ) {
+			} elseif ( strpos( $error_code, 'user_login' ) !== false ) {
 				// bad
 				$this->add_fix_message( 210 );
-			} elseif ( $user_id === 'existing_user_email' ) {
+			} elseif ( $error_code === 'existing_user_email' ) {
 				// bad
 				$this->add_fix_message( 211 );
 			} else {

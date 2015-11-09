@@ -109,12 +109,14 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 
 		// "admin" user should exist to avoid the creation of this user.
 		if ( false === $check && get_option( 'users_can_register' ) ) {
+			secupress_cache_data( 'allowed_usernames', $username );
 			$user_id = wp_insert_user( array(
 				'user_login' => $username,
 				'user_pass'  => wp_generate_password( 64, 1, 1 ),
 				'user_email' => 'secupress_no_mail@fakemail.' . time(),
 				'role'       => '',
 			) );
+			secupress_cache_data( 'allowed_usernames', array() );
 
 			if ( is_wp_error( $user_id ) || ! $user_id ) {
 				// bad
