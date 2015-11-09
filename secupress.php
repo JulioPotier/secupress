@@ -1,17 +1,20 @@
 <?php
 /*
-Plugin Name: WordPress Security by SecuPress
-Plugin URI: http://secupress.me
-Description: WordPress Security by SecuPress, the best and simpler way to protect your websites.
-Author: SecuPress, WP Media
-Version: 1.0-alpha
-Author URI: http://www.secupress.me
+ * Plugin Name: WordPress Security by SecuPress
+ * Plugin URI: http://secupress.me
+ * Description: WordPress Security by SecuPress, the best and simpler way to protect your websites.
+ * Author: SecuPress, WP Media
+ * Version: 1.0-alpha
+ * Author URI: http://secupress.me
+ * Network: true
+ * License: GPLv2
+ * License URI: http://secupress.me/gpl.txt
 
-Text Domain: secupress
-Domain Path: languages
+ * Text Domain: secupress
+ * Domain Path: /languages/
 
-Copyright 2012-2015 SecuPress
-*/
+ * Copyright 2012-2015 SecuPress
+ */
 
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
@@ -29,7 +32,7 @@ define( 'SECUPRESS_SCAN_TIMES'            , 'secupress_scanners_times' );
 define( 'SECUPRESS_FIX_SLUG'              , 'secupress_fixes' );
 define( 'SECUPRESS_BAN_IP'                , 'secupress_ban_ip' );
 define( 'SECUPRESS_WEB_MAIN'              , 'http://secupress.me/' );
-define( 'SECUPRESS_WEB_DEMO'              , home_url( '/' ) );
+define( 'SECUPRESS_WEB_DEMO'              , home_url( '/' ) ); ////
 define( 'SECUPRESS_BOT_URL'               , 'http://bot.secupress.me' );
 define( 'SECUPRESS_WEB_VALID'             , 'http://support.secupress.me/' );
 define( 'SECUPRESS_FILE'                  , __FILE__ );
