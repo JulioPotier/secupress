@@ -123,25 +123,7 @@ jQuery( document ).ready( function( $ ) {
 
 	secupressUpdateScore();
 
-	jQuery.timeago.settings.strings = {
-		prefixAgo:     SecuPressi18nTimeago.prefixAgo,
-		prefixFromNow: SecuPressi18nTimeago.prefixFromNow,
-		suffixAgo:     SecuPressi18nTimeago.suffixAgo,
-		suffixFromNow: SecuPressi18nTimeago.suffixFromNow,
-		seconds:       SecuPressi18nTimeago.seconds,
-		minute:        SecuPressi18nTimeago.minute,
-		minutes:       SecuPressi18nTimeago.minutes,
-		hour:          SecuPressi18nTimeago.hour,
-		hours:         SecuPressi18nTimeago.hours,
-		day:           SecuPressi18nTimeago.day,
-		days:          SecuPressi18nTimeago.days,
-		month:         SecuPressi18nTimeago.month,
-		months:        SecuPressi18nTimeago.months,
-		year:          SecuPressi18nTimeago.year,
-		years:         SecuPressi18nTimeago.years,
-		wordSeparator: SecuPressi18nTimeago.wordSeparator,
-		numbers:       [],
-	};
+	jQuery.timeago.settings.strings = jQuery.extend( { numbers: [] }, SecuPressi18nTimeago );
 
 	$( ".timeago" ).timeago();
 
