@@ -76,7 +76,7 @@ function secupress_rename_admin_username_logout() {
 		$token = md5( time() );
 		set_transient( 'secupress_auto_login_' . $token, array( $data['username'], 'Admin_User' ) );
 
-		// Store a good scan result. ////
+		// Store a good scan result.
 		set_transient( 'secupress_scan_admin_user', array(
 			'msgs'   => array(
 				0 => array( '<em>admin</em>' ),

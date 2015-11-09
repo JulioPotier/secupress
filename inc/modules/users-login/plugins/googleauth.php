@@ -315,7 +315,7 @@ add_filter( 'authenticate', 'secupress_googleauth_otp', PHP_INT_MAX, 3 );
 function secupress_googleauth_otp( $raw_user, $username, $password ) {
 	if ( defined( 'XMLRPC_REQUEST' ) || defined( 'APP_REQUEST' ) ) {
 		$user = get_user_by( 'login', $username );
-		if ( $user && $password === get_user_option( 'secupress_google_auth_app_pass', $user->ID ) ) { //// user option ? WTF site option !!!
+		if ( $user && $password === get_user_option( 'secupress_google_auth_app_pass', $user->ID ) ) {
 			return $user;
 		} else {
 			return new WP_Error( 'authentication_failed', __( '<strong>ERROR</strong>: The Google Authenticator app password is incorrect.', 'secupress' ) );

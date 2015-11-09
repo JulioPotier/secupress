@@ -31,7 +31,7 @@ function secupress_login_authenticate( $raw_user, $username ) {
 			die();
 		}
 	}
-	return null; ////	
+	return null;
 }
 
 add_action( 'login_form_emaillink_autologin', 'secupress_emaillink_autologin_validation' );
