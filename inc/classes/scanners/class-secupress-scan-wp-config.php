@@ -187,10 +187,8 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 				$this->add_message( 201, array( '<code>COOKIEHASH</code>' ) );
 			}
 
-			// NOBLOGREDIRECT ////
-			// See wp-includes/ms-settings.php
-			// See maybe_redirect_404()
-			if ( is_multisite() && ! has_action( 'ms_site_not_found' ) && ! ( defined( 'NOBLOGREDIRECT' ) && NOBLOGREDIRECT ) ) {
+			// NOBLOGREDIRECT
+			if ( is_multisite() && is_subdomain_install() && ! has_action( 'ms_site_not_found' ) && ( ! defined( 'NOBLOGREDIRECT' ) || ! NOBLOGREDIRECT || ! apply_filters( 'blog_redirect_404', NOBLOGREDIRECT ) ) ) {
 				// bad
 				$this->add_message( 202, array( '<code>NOBLOGREDIRECT</code>' ) );
 			}
