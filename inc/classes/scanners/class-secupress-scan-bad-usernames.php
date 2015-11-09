@@ -22,8 +22,8 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 
 	protected static function init() {
 		self::$type  = 'WordPress';
-		self::$title = __( 'Check if your users have correct username, not blacklisted, not the same as their display name.', 'secupress' );
-		self::$more  = __( 'It is important to not have the same username and display name to protect your username and avoid simple brute-force attacks. Also some usernames are know to be used for malicious usage, or created by bots.', 'secupress' );
+		self::$title = __( 'Check if your users username are not blacklisted.', 'secupress' );
+		self::$more  = __( 'Some usernames are known to be used for malicious usage, or created by bots.', 'secupress' );
 	}
 
 
@@ -34,9 +34,6 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 			1   => __( 'Module activated: the users with a blacklisted username will be asked to change it.', 'secupress' ),
 			// bad
 			200 => _n_noop( '<strong>%s</strong> user has a forbidden username: %s', '<strong>%s</strong> users have a forbidden username: %s', 'secupress' ),
-			201 => _n_noop( '<strong>%s</strong> user has similar username and display name: %s', '<strong>%s</strong> users have similar username and display name: %s', 'secupress' ),
-			// cantfix
-			//// 300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -65,20 +62,6 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 			$this->add_message( 200, array( $ids, $ids, static::wrap_in_tag( $logins, 'strong' ) ) );
 		}
 
-		// Who have the same nickname and login?
-		$logins = $wpdb->get_col( "SELECT user_login FROM $wpdb->users u, $wpdb->usermeta um WHERE u.user_login = u.display_name OR ( um.user_id = u.ID AND um.meta_key = 'nickname' AND um.meta_value = u.user_login ) GROUP BY user_login" );
-		$ids    = count( $logins );
-
-		// bad
-		if ( $ids ) {
-			if ( $ids > 10 ) {
-				$logins = array_slice( $logins, 0, 9 );
-				array_push( $logins, '&hellip;' );
-			}
-			// 2nd param: 1st item is used for the noop if needed, the rest for sprintf.
-			$this->add_message( 201, array( $ids, $ids, static::wrap_in_tag( $logins, 'strong' ) ) );
-		}
-
 		// good
 		$this->maybe_set_status( 0 );
 
@@ -99,9 +82,6 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 			// good
 			$this->add_fix_message( 1 );
 		}
-
-		// Who have the same nickname and login?
-		////
 
 		// good
 		$this->maybe_set_fix_status( 0 );
