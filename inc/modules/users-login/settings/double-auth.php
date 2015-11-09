@@ -11,17 +11,12 @@ $this->add_section( __( 'Authentication', 'secupress' ), array( 'with_roles' => 
 
 $plugin = $this->get_current_plugin(); // 'double-auth'
 
-/**
- * Used by premium version to modify the fields. //// doc en doublon
- *
- * @since 1.0
- */
+/** This filter is documented in secupress/inc/admin/modules/white-label.php */
 $select_args_options = apply_filters( 'premium.module.' . $plugin, array(
 	'-1'            => __( 'No thank you', 'secupress' ) . ' <em>(' . __( 'Not recommended', 'secupress' ) . ')</em>',
 	'_passwordless' => __( 'PasswordLess (notifications by E-mail, mobile, Slack, SMS.)', 'secupress' ),
 	'googleauth'    => __( 'Mobile Authenticator App (Google Auth, FreeOTP, ...)', 'secupress' ),
 	'emaillink'     => __( 'Email Link', 'secupress' ),
-	// 'password'      => __( 'Additional Password', 'secupress' ),
 ) );
 
 $field_name      = $this->get_field_name( 'type' );
@@ -65,47 +60,8 @@ $this->add_field(
 		),
 	)
 );
-/*
-$field_name          = $this->get_field_name( 'password' );
-$field_name_password = $this->get_field_name( 'password2' );
-
-$this->add_field(
-	__( 'Additional Password', 'secupress' ),
-	array(
-		'name'        => $field_name,
-		'description' => __( 'It\'s like an additional website\'s password.', 'secupress' ),
-	),
-	array(
-		'depends_on'       => $main_field_name . '_password',
-		array(
-			'type'         => 'password',
-			'pattern'      => '.{7,}',
-			'required'     => true,
-			'title'        => __( 'The password should be at least seven characters long.', 'secupress' ),
-			'name'         => $field_name,
-			'label_for'    => $field_name,
-			'label'        => '',
-			'label_screen' => __( 'Additional Password', 'secupress' ),
-		),
-		array(
-			'type'         => 'helper_help',
-			'name'         => $field_name_password,
-			'class'        => array( 'hide-if-js', 'new-password' ),
-			'description'  => __( 'If you would like to change the password type a new one. Otherwise leave this blank.' )
-		),
-		array(
-			'type'         => 'helper_description',
-			'name'         => $field_name,
-			'class'        => 'hide-if-no-js',
-			// do not use wp_get_password_hint() because we can't respect the site policy here, but only ours
-			'description'  => __( 'Hint: The password should be at least seven characters long. To make it stronger, use upper and lower case letters, numbers, and symbols like ! " ? $ % ^ &amp; ).' )
-		),
-	)
-);
-*/
 
 $plugin = $this->set_current_plugin( 'captcha' )->get_current_plugin();
-
 
 $field_name = $this->get_field_name( 'type' );
 $this->add_field(
