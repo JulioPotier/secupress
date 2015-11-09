@@ -88,12 +88,12 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 
 				if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
 					// bad
-					$bads[] = '<code>' . $url . '</code>';
+					$bads[] = "<code>$url</code>";
 				}
 
 			} else {
 				// warning
-				$warnings[] = '<code>' . $url . '</code>';
+				$warnings[] = "<code>$url</code>";
 			}
 		}
 
@@ -235,7 +235,7 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 			$this->add_fix_message( 1, array( '<code>web.config</code>' ) );
 		} else {
 			// cantfix
-			$this->add_fix_message( 302, array( '<code>web.config</code>', '<pre>' . $node . '</pre>' ) );
+			$this->add_fix_message( 302, array( '<code>web.config</code>', "<pre>$node</pre>" ) );
 		}
 	}
 }
