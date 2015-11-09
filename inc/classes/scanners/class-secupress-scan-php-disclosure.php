@@ -28,7 +28,7 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements iSecuPress
 
 
 	public static function get_messages( $message_id = null ) {
-		$nginx_rules = "location / {\n\t" . 'if ( $query_string ~* "\=PHP[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}" ) {' . "\n\t\treturn 403;\n\t}\n}";
+		$nginx_rules = "server {\n\tlocation / {\n\t\t" . 'if ( $query_string ~* "\=PHP[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}" ) {' . "\n\t\t\treturn 403;\n\t\t}\n\t}\n}";
 
 		$messages = array(
 			// good
