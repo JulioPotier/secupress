@@ -345,12 +345,13 @@ function secupress_insert_iis7_nodes( $marker, $args ) {
 		'nodes_string' => '',
 		'node_types'   => false,
 		'path'         => '',
+		'attribute'    => 'name',
 	) );
 
 	$nodes_string = $args['nodes_string'];
 	$node_types   = $args['node_types'];
 	$path         = $args['path'];
-	$attribute    = strpos( $nodes_string, ' id="SecuPress ' ) === false ? 'name' : 'id';
+	$attribute    = $args['attribute'];
 
 	if ( ! $marker || ! class_exists( 'DOMDocument' ) ) {
 		return false;
@@ -368,7 +369,7 @@ function secupress_insert_iis7_nodes( $marker, $args ) {
 	// New content
 	$marker       = strpos( $marker, 'SecuPress' ) === 0 ? $marker : 'SecuPress ' . $marker;
 	$nodes_string = is_array( $nodes_string ) ? implode( "\n", $nodes_string ) : $nodes_string;
-	$nodes_string = trim( $nodes_string, "\r\n" );
+	$nodes_string = trim( $nodes_string, "\r\n\t " );
 
 	if ( $is_writable || ! $has_web_config && wp_is_writable( $home_path ) && $nodes_string ) {
 		// If configuration file does not exist then we create one.
@@ -421,9 +422,13 @@ function secupress_insert_iis7_nodes( $marker, $args ) {
 			return true;
 		}
 
+		// Indentation.
+		$spaces = ( count( ( explode( '/', trim( $path, '/' ) ) ) ) - 1 ) * 2;
+		$spaces = str_repeat( ' ', $spaces );
+
 		// Create fragment.
 		$fragment = $doc->createDocumentFragment();
-		$fragment->appendXML( $nodes_string );
+		$fragment->appendXML( "\n$spaces  $nodes_string\n$spaces" );
 
 		// Maybe create child nodes and then, prepend new nodes.
 		_secupress_get_iis7_node( $doc, $xpath, $path, $fragment );
