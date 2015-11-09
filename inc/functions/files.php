@@ -350,6 +350,7 @@ function secupress_insert_iis7_nodes( $marker, $args ) {
 	$nodes_string = $args['nodes_string'];
 	$node_types   = $args['node_types'];
 	$path         = $args['path'];
+	$attribute    = strpos( $nodes_string, ' id="SecuPress ' ) === false ? 'name' : 'id';
 
 	if ( ! $marker || ! class_exists( 'DOMDocument' ) ) {
 		return false;
@@ -405,7 +406,7 @@ function secupress_insert_iis7_nodes( $marker, $args ) {
 		}
 
 		// Remove old nodes created by us.
-		$old_nodes = $xpath->query( $path . '/*[starts-with(@name,\'' . $marker . '\')]' );
+		$old_nodes = $xpath->query( "$path/*[starts-with(@$attribute,'$marker')]" );
 
 		if ( $old_nodes->length > 0 ) {
 			foreach ( $old_nodes as $old_node ) {
@@ -642,7 +643,7 @@ function secupress_get_rewrite_bases() {
 	}
 
 	$base   = parse_url( trailingslashit( get_option( 'home' ) ), PHP_URL_PATH );
-	$wp_dir = secupress_wp_directory();
+	$wp_dir = secupress_get_wp_directory();
 
 	// Apache
 	if ( $is_apache ) {
