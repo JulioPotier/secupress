@@ -87,24 +87,24 @@ function secupress_init() {
 	define( 'SECUPRESS_PLUGIN_SLUG', sanitize_title( SECUPRESS_PLUGIN_NAME ) );
 
 	// Call defines, classes and functions
-	require( SECUPRESS_FUNCTIONS_PATH . '/files.php' );
-	require( SECUPRESS_FUNCTIONS_PATH . '/admin.php' );
-	require( SECUPRESS_FUNCTIONS_PATH . '/formatting.php' );
-	require( SECUPRESS_FUNCTIONS_PATH . '/plugins.php' );
-	require( SECUPRESS_FUNCTIONS_PATH . '/bots.php' );
-	require( SECUPRESS_FRONT_PATH     . '/htaccess.php' );
-	require( SECUPRESS_FRONT_PATH     . '/common.php' );
-	require( SECUPRESS_INC_PATH       . '/admin-bar.php' );
-	require( SECUPRESS_INC_PATH       . '/cron.php' );
-	require( SECUPRESS_MODULES_PATH   . '/modules.php' );
+	require( SECUPRESS_FUNCTIONS_PATH . 'files.php' );
+	require( SECUPRESS_FUNCTIONS_PATH . 'admin.php' );
+	require( SECUPRESS_FUNCTIONS_PATH . 'formatting.php' );
+	require( SECUPRESS_FUNCTIONS_PATH . 'plugins.php' );
+	require( SECUPRESS_FUNCTIONS_PATH . 'bots.php' );
+	require( SECUPRESS_FRONT_PATH     . 'htaccess.php' );
+	require( SECUPRESS_FRONT_PATH     . 'common.php' );
+	require( SECUPRESS_INC_PATH       . 'admin-bar.php' );
+	require( SECUPRESS_INC_PATH       . 'cron.php' );
+	require( SECUPRESS_MODULES_PATH   . 'modules.php' );
 
 	if ( is_admin() ) {
 
-		require( SECUPRESS_ADMIN_PATH . '/options.php' );
-		require( SECUPRESS_ADMIN_PATH . '/notices.php' );
-		require( SECUPRESS_ADMIN_PATH . '/admin.php' );
-		require( SECUPRESS_ADMIN_PATH . '/profiles.php' );
-		require( SECUPRESS_ADMIN_PATH . '/upgrader.php' );
+		require( SECUPRESS_ADMIN_PATH . 'options.php' );
+		require( SECUPRESS_ADMIN_PATH . 'notices.php' );
+		require( SECUPRESS_ADMIN_PATH . 'admin.php' );
+		require( SECUPRESS_ADMIN_PATH . 'profiles.php' );
+		require( SECUPRESS_ADMIN_PATH . 'upgrader.php' );
 
 	}
 
@@ -217,5 +217,5 @@ register_deactivation_hook( __FILE__, 'secupress_deactivation' );
 
 function secupress_deactivation() {
 	// Pause the licence.
-	wp_remote_get( SECUPRESS_WEB_MAIN . '/pause-licence.php' );
+	wp_remote_get( SECUPRESS_WEB_MAIN . 'pause-licence.php' );
 }
