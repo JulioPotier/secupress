@@ -371,77 +371,77 @@ function secupress_insert_iis7_nodes( $marker, $args ) {
 	$nodes_string = is_array( $nodes_string ) ? implode( "\n", $nodes_string ) : $nodes_string;
 	$nodes_string = trim( $nodes_string, "\r\n\t " );
 
-	if ( $is_writable || ! $has_web_config && wp_is_writable( $home_path ) && $nodes_string ) {
-		// If configuration file does not exist then we create one.
-		if ( ! $has_web_config ) {
-			$fp = fopen( $web_config_file, 'w' );
-			fwrite( $fp, '<configuration/>' );
-			fclose( $fp );
-		}
+	if ( ! ( $is_writable || ! $has_web_config && wp_is_writable( $home_path ) && $nodes_string ) ) {
+		return false;
+	}
 
-		$doc = new DOMDocument();
-		$doc->preserveWhiteSpace = false;
+	// If configuration file does not exist then we create one.
+	if ( ! $has_web_config ) {
+		$fp = fopen( $web_config_file, 'w' );
+		fwrite( $fp, '<configuration/>' );
+		fclose( $fp );
+	}
 
-		if ( false === $doc->load( $web_config_file ) ) {
-			return false;
-		}
+	$doc = new DOMDocument();
+	$doc->preserveWhiteSpace = false;
 
-		$path_end = ! $path && strpos( $nodes_string, '<rule ' ) === 0 ? '/rewrite/rules/rule' : '';
-		$path     = '/configuration/system.webServer' . ( $path ? '/' . trim( $path, '/' ) : '' ) . $path_end;
+	if ( false === $doc->load( $web_config_file ) ) {
+		return false;
+	}
 
-		$xpath = new DOMXPath( $doc );
+	$path_end = ! $path && strpos( $nodes_string, '<rule ' ) === 0 ? '/rewrite/rules/rule' : '';
+	$path     = '/configuration/system.webServer' . ( $path ? '/' . trim( $path, '/' ) : '' ) . $path_end;
 
-		// Remove possible nodes not created by us.
-		if ( $node_types ) {
-			$node_types = (array) $node_types;
+	$xpath = new DOMXPath( $doc );
 
-			foreach ( $node_types as $node_type ) {
-				$old_nodes = $xpath->query( $path . '/' . $node_type );
+	// Remove possible nodes not created by us.
+	if ( $node_types ) {
+		$node_types = (array) $node_types;
 
-				if ( $old_nodes->length > 0 ) {
-					foreach ( $old_nodes as $old_node ) {
-						$old_node->parentNode->removeChild( $old_node );
-					}
+		foreach ( $node_types as $node_type ) {
+			$old_nodes = $xpath->query( $path . '/' . $node_type );
+
+			if ( $old_nodes->length > 0 ) {
+				foreach ( $old_nodes as $old_node ) {
+					$old_node->parentNode->removeChild( $old_node );
 				}
 			}
 		}
+	}
 
-		// Remove old nodes created by us.
-		$old_nodes = $xpath->query( "$path/*[starts-with(@$attribute,'$marker')]" );
+	// Remove old nodes created by us.
+	$old_nodes = $xpath->query( "$path/*[starts-with(@$attribute,'$marker')]" );
 
-		if ( $old_nodes->length > 0 ) {
-			foreach ( $old_nodes as $old_node ) {
-				$old_node->parentNode->removeChild( $old_node );
-			}
+	if ( $old_nodes->length > 0 ) {
+		foreach ( $old_nodes as $old_node ) {
+			$old_node->parentNode->removeChild( $old_node );
 		}
+	}
 
-		// No new nodes? Stop here.
-		if ( ! $nodes_string ) {
-			$doc->formatOutput = true;
-			saveDomDocument( $doc, $web_config_file );
-			return true;
-		}
-
-		// Indentation.
-		$spaces = ( count( ( explode( '/', trim( $path, '/' ) ) ) ) - 1 ) * 2;
-		$spaces = str_repeat( ' ', $spaces );
-
-		// Create fragment.
-		$fragment = $doc->createDocumentFragment();
-		$fragment->appendXML( "\n$spaces  $nodes_string\n$spaces" );
-
-		// Maybe create child nodes and then, prepend new nodes.
-		_secupress_get_iis7_node( $doc, $xpath, $path, $fragment );
-
-		// Save and finish.
-		$doc->encoding     = 'UTF-8';
+	// No new nodes? Stop here.
+	if ( ! $nodes_string ) {
 		$doc->formatOutput = true;
 		saveDomDocument( $doc, $web_config_file );
-
 		return true;
 	}
 
-	return false;
+	// Indentation.
+	$spaces = ( count( ( explode( '/', trim( $path, '/' ) ) ) ) - 1 ) * 2;
+	$spaces = str_repeat( ' ', $spaces );
+
+	// Create fragment.
+	$fragment = $doc->createDocumentFragment();
+	$fragment->appendXML( "\n$spaces  $nodes_string\n$spaces" );
+
+	// Maybe create child nodes and then, prepend new nodes.
+	_secupress_get_iis7_node( $doc, $xpath, $path, $fragment );
+
+	// Save and finish.
+	$doc->encoding     = 'UTF-8';
+	$doc->formatOutput = true;
+	saveDomDocument( $doc, $web_config_file );
+
+	return true;
 }
 
 
