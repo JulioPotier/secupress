@@ -20,6 +20,24 @@ function secupress_admin_url( $page, $module = false ) {
 
 
 /**
+ * Get the user capability required to work with the plugin.
+ *
+ * @since 1.0
+ *
+ * @return (string) The capability.
+ */
+function secupress_get_capability() {
+	static $capability;
+
+	if ( ! isset( $capability ) ) {
+		$capability = is_multisite() ? 'manage_network_options' : 'administrator';
+	}
+
+	return $capability;
+}
+
+
+/**
  * Like in_array but for nested arrays.
  *
  * @since 1.0

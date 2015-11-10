@@ -9,9 +9,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 add_action( 'admin_bar_menu', 'secupress_admin_bar', 100 );
 
 function secupress_admin_bar( $wp_admin_bar ) {
-	$cap = apply_filters( 'secupress_capacity', 'administrator', 'adminbar' );
-
-	if ( ! current_user_can( $cap ) ) {
+	if ( ! current_user_can( secupress_get_capability() ) ) {
 		return;
 	}
 
