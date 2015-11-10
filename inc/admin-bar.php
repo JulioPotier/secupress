@@ -30,7 +30,7 @@ function secupress_admin_bar( $wp_admin_bar ) {
 	// Parent
 	$wp_admin_bar->add_menu( array(
 		'id'    => 'secupress',
-		'title' => '<span class="ab-icon dashicons-shield-alt"></span><span class="screen-reader-text">' . SECUPRESS_PLUGIN_NAME . '</span>' . $grade,
+		'title' => '<span class="ab-icon dashicons-shield-alt"></span><span class="screen-reader-text">' . SECUPRESS_PLUGIN_NAME . ' </span>' . $grade,
 		'meta'  => array(
 			'title' => $count,
 		),
