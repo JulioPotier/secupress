@@ -24,7 +24,7 @@ function secupress_get_option( $option, $default = false ) {
 		return $value;
 	}
 
-	$options = get_option( SECUPRESS_SETTINGS_SLUG );
+	$options = get_site_option( SECUPRESS_SETTINGS_SLUG );
 	$value   = isset( $options[ $option ] ) && $options[ $option ] !== false ? $options[ $option ] : $default;
 	/**
 	 * Filter any SecuPress option after read
@@ -73,7 +73,7 @@ function secupress_get_module_option( $option, $default = false, $module = false
 		return $value;
 	}
 
-	$options = get_option( "secupress_{$module}_settings" );
+	$options = get_site_option( "secupress_{$module}_settings" );
 	$value   = isset( $options[ $option ] ) && $options[ $option ] !== false ? $options[ $option ] : $default;
 	/**
 	 * Filter any SecuPress option after read
@@ -99,10 +99,10 @@ function update_secupress_module_option( $option, $value, $module = false ) {
 		$module = SecuPress_Settings_Modules::get_instance()->get_current_module();
 	}
 
-	$options = get_option( "secupress_{$module}_settings" );
+	$options = get_site_option( "secupress_{$module}_settings" );
 	$options[ $option ] = $value;
 
-	update_option( "secupress_{$module}_settings", $options );
+	update_site_option( "secupress_{$module}_settings", $options );
 }
 
 
@@ -134,19 +134,19 @@ function secupress_get_scanners() {
 		}
 	}
 
-	$options = get_option( SECUPRESS_SCAN_SLUG, array() );
+	$options = get_site_option( SECUPRESS_SCAN_SLUG, array() );
 	$options = is_array( $options ) ? $options : array();
 
 	if ( $transients ) {
 		$options = array_merge( $options, $transients );
-		update_option( SECUPRESS_SCAN_SLUG, $options );
+		update_site_option( SECUPRESS_SCAN_SLUG, $options );
 
 		// Also update the fixes.
 		$fixes = secupress_get_scanner_fixes();
 		if ( $to_remove ) {
 			$fixes = array_diff_key( $fixes, $to_remove );
 		}
-		update_option( SECUPRESS_FIX_SLUG, $fixes );
+		update_site_option( SECUPRESS_FIX_SLUG, $fixes );
 	}
 
 	return $options;
@@ -176,12 +176,12 @@ function secupress_get_scanner_fixes() {
 		}
 	}
 
-	$options = get_option( SECUPRESS_FIX_SLUG, array() );
+	$options = get_site_option( SECUPRESS_FIX_SLUG, array() );
 	$options = is_array( $options ) ? $options : array();
 
 	if ( $transients ) {
 		$options = array_merge( $options, $transients );
-		update_option( SECUPRESS_FIX_SLUG, $options );
+		update_site_option( SECUPRESS_FIX_SLUG, $options );
 	}
 
 	return $options;

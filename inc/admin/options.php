@@ -234,9 +234,9 @@ function __secupress_dashboard() {
 
 		<div class="secupress-wrapper">
 			<?php
-			delete_option( SECUPRESS_SCAN_SLUG );
-			delete_option( SECUPRESS_SCAN_TIMES );
-			delete_option( SECUPRESS_FIX_SLUG );
+			delete_site_option( SECUPRESS_SCAN_SLUG );
+			delete_site_option( SECUPRESS_SCAN_TIMES );
+			delete_site_option( SECUPRESS_FIX_SLUG );
 			?>
 		</div>
 	</div>
@@ -299,7 +299,7 @@ function __secupress_modules() {
  * @since 1.0
  */
 function __secupress_scanners() {
-	$times        = array_filter( (array) get_option( SECUPRESS_SCAN_TIMES ) );
+	$times        = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
 	$reports      = array();
 	$last_percent = -1;
 

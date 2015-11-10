@@ -140,7 +140,7 @@ function secupress_is_white_label() {
  */
 function secupress_reset_white_label_values( $hack_post ) {
 	// White Label default values - !!! DO NOT TRANSLATE !!!
-	$options = get_option( SECUPRESS_SETTINGS_SLUG );
+	$options = get_site_option( SECUPRESS_SETTINGS_SLUG );
 	$options['wl_plugin_name'] = 'SecuPress';
 	$options['wl_plugin_slug'] = 'secupress';
 	$options['wl_plugin_URI']  = 'http://secupress.me';
@@ -153,7 +153,7 @@ function secupress_reset_white_label_values( $hack_post ) {
 		$_POST['page'] = 'secupress';
 	}
 
-	update_option( SECUPRESS_SETTINGS_SLUG, $options );
+	update_site_option( SECUPRESS_SETTINGS_SLUG, $options );
 }
 
 
@@ -235,12 +235,12 @@ function secupress_activate_module( $module, $settings ) { //// rename this, it 
 		secupress_die( sprintf( __( 'Unknown Module %s', 'secupress' ), esc_html( $module ) ) );
 	}
 
-	$module_options = get_option( "secupress_{$module}_settings" );
+	$module_options = get_site_option( "secupress_{$module}_settings" );
 	$module_options = array_merge( array_filter( (array) $module_options ), $settings );
 
 	call_user_func( "__secupress_{$callback}_settings_callback", $module_options );
 
-	update_option( "secupress_{$module}_settings", $module_options );
+	update_site_option( "secupress_{$module}_settings", $module_options );
 
 }
 
@@ -393,7 +393,7 @@ function secupress_get_ip() { //// find the best order
 function secupress_ban_ip( $IP = null, $die = true ) {
 	$login_protection_time_ban = secupress_get_module_option( 'login_protection_time_ban', 5, 'users_login' );
 	$IP                        = $IP ? $IP : secupress_get_ip();
-	$ban_ips                   = get_option( SECUPRESS_BAN_IP );
+	$ban_ips                   = get_site_option( SECUPRESS_BAN_IP );
 
 	if ( ! is_array( $ban_ips ) ) {
 		$ban_ips = array();
@@ -401,7 +401,7 @@ function secupress_ban_ip( $IP = null, $die = true ) {
 
 	$ban_ips[ $IP ] = time();
 
-	update_option( SECUPRESS_BAN_IP, $ban_ips );
+	update_site_option( SECUPRESS_BAN_IP, $ban_ips );
 
 	if ( apply_filters( 'write_ban_in_htaccess', true ) ) {
 		secupress_write_htaccess( 'ban_ip', secupress_get_htaccess_ban_ip() );

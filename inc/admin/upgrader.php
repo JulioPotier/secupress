@@ -26,7 +26,7 @@ function secupress_upgrader() {
 
 		secupress_renew_all_boxes( 0, array( 'secupress_warning_plugin_modification' ) );
 
-		$options = get_option( SECUPRESS_SETTINGS_SLUG ); // do not use secupress_get_option() here
+		$options = get_site_option( SECUPRESS_SETTINGS_SLUG ); // do not use secupress_get_option() here
 		$options['version'] = SECUPRESS_VERSION;
 
 		$keys = secupress_check_key( 'live' );
@@ -34,7 +34,7 @@ function secupress_upgrader() {
 			$options = array_merge( $keys, $options );
 		}
 
-		update_option( SECUPRESS_SETTINGS_SLUG, $options );
+		update_site_option( SECUPRESS_SETTINGS_SLUG, $options );
 	} elseif ( empty( $_POST ) && secupress_valid_key() ) {
 		secupress_check_key( 'transient_30' );
 	}
@@ -63,7 +63,7 @@ function secupress_install_modules( $module = 'all' ) {
 		//// secupress_reset_white_label_values( false );
 
 		// Create Options
-		add_option( SECUPRESS_SETTINGS_SLUG,
+		add_site_option( SECUPRESS_SETTINGS_SLUG,
 			array(
 				//
 			)

@@ -129,7 +129,7 @@ add_action( 'wp_secupress_first_install', '__secupress_install_users_login_modul
 
 function __secupress_install_users_login_module( $module = 'all' ) {
 	if ( 'all' === $module || 'users-login' === $module ) {
-		update_option( 'secupress_users-login_settings', array(
+		update_site_option( 'secupress_users-login_settings', array(
 			'double-auth_type'                 => '-1',
 			'bad-logins_blacklist-logins-list' => secupress_blacklist_logins_list_default_string(),
 			//// pas fini

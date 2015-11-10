@@ -59,7 +59,7 @@ add_action( 'wp_secupress_first_install', '__secupress_install_firewall_module' 
 
 function __secupress_install_firewall_module( $module = 'all' ) {
 	if ( 'all' === $module || 'firewall' === $module ) {
-		update_option( 'secupress_firewall_settings', array(
+		update_site_option( 'secupress_firewall_settings', array(
 			'bbq-headers_user-agents-header'      => '1',
 			'bbq-headers_user-agents-list'        => secupress_firewall_bbq_headers_user_agents_list_default(),
 			'bbq-headers_request-methods-header'  => '1',
