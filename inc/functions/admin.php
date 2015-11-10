@@ -143,10 +143,10 @@ function secupress_reset_white_label_values( $hack_post ) {
 	$options = get_option( SECUPRESS_SETTINGS_SLUG );
 	$options['wl_plugin_name'] = 'SecuPress';
 	$options['wl_plugin_slug'] = 'secupress';
-	$options['wl_plugin_URI']  = 'http://www.secupress.fr';
+	$options['wl_plugin_URI']  = 'http://secupress.fr';
 	$options['wl_description'] = array( 'The best WordPress security plugin.' );
 	$options['wl_author']      = 'WP Media';
-	$options['wl_author_URI']  = 'http://www.secupress.fr';
+	$options['wl_author_URI']  = 'http://secupress.fr';
 
 	if ( $hack_post ) {
 		// hack $_POST to force refresh of files, sorry
