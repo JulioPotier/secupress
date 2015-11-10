@@ -106,6 +106,32 @@ function update_secupress_module_option( $option, $value, $module = false ) {
 }
 
 
+function update_secupress_module_options( $values, $module = false ) {
+	if ( ! $values || ! is_array( $values ) ) {
+		return null;
+	}
+
+	if ( ! $module ) {
+		if ( ! class_exists( 'SecuPress_Settings' ) ) {
+			secupress_require_class( 'settings' );
+		}
+		if ( ! class_exists( 'SecuPress_Settings_Modules' ) ) {
+			secupress_require_class( 'settings', 'modules' );
+		}
+
+		$module = SecuPress_Settings_Modules::get_instance()->get_current_module();
+	}
+
+	$options = get_site_option( "secupress_{$module}_settings" );
+
+	foreach ( $values as $option => $value ) {
+		$options[ $option ] = $value;
+	}
+
+	update_site_option( "secupress_{$module}_settings", $options );
+}
+
+
 function secupress_get_scanners() {
 	static $tests;
 
