@@ -14,7 +14,7 @@ function secupress_upgrader() {
 	// You can hook the upgrader to trigger any action when WP secupress is upgraded
 	// first install
 	if ( ! $actual_version ){
-		do_action( 'wp_secupress_first_install' );
+		do_action( 'wp_secupress_first_install', 'all' );
 	}
 	// already installed but got updated
 	elseif ( SECUPRESS_VERSION != $actual_version ) {
@@ -54,7 +54,7 @@ function secupress_upgrader() {
  */
 add_action( 'wp_secupress_first_install', 'secupress_install_modules', 9 );
 
-function secupress_install_modules( $module = 'all' ) {
+function secupress_install_modules( $module ) {
 	if ( 'all' === $module ) {
 		// Generate an random key
 		// $secret_cache_key = secupress_create_uniqid();

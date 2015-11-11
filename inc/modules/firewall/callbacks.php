@@ -57,7 +57,7 @@ function __secupress_firewall_settings_callback( $settings ) {
 
 add_action( 'wp_secupress_first_install', '__secupress_install_firewall_module' );
 
-function __secupress_install_firewall_module( $module = 'all' ) {
+function __secupress_install_firewall_module( $module ) {
 	if ( 'all' === $module || 'firewall' === $module ) {
 		update_site_option( 'secupress_firewall_settings', array(
 			'bbq-headers_user-agents-header'      => '1',

@@ -127,7 +127,7 @@ function __secupress_users_login_settings_callback( $settings ) {
 
 add_action( 'wp_secupress_first_install', '__secupress_install_users_login_module' );
 
-function __secupress_install_users_login_module( $module = 'all' ) {
+function __secupress_install_users_login_module( $module ) {
 	if ( 'all' === $module || 'users-login' === $module ) {
 		$values = array(
 			'double-auth_type'                 => '-1',
