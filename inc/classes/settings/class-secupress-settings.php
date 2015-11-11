@@ -13,11 +13,12 @@ abstract class SecuPress_Settings {
 
 	const VERSION = '1.0';
 
-	protected        $modulenow;  // Tab (page), like `users_login`.
-	protected        $sectionnow; // Section, like `login_auth`.
-	protected        $pluginnow;  // Field, like `double_auth`.
-	protected        $sections_descriptions = array();
-	protected        $sections_save_button  = array();
+	protected $modulenow;  // Tab (page), like `users_login`.
+	protected $sectionnow; // Section, like `login_auth`.
+	protected $pluginnow;  // Field, like `double_auth`.
+	protected $sections_descriptions = array();
+	protected $sections_save_button  = array();
+	protected $form_action;
 
 
 	// Instance ====================================================================================
@@ -123,9 +124,17 @@ abstract class SecuPress_Settings {
 	}
 
 
+	final public function get_form_action() {
+		return $this->form_action;
+	}
+
+
 	// Init ========================================================================================
 
 	protected function init() {
+		$this->form_action = is_network_admin() ? admin_url( 'admin-post.php' ) : admin_url( 'options.php' );
+		$this->form_action = esc_url( $this->form_action );
+
 		$this->set_current_module();
 	}
 

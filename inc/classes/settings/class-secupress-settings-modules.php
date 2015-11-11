@@ -142,7 +142,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			?>
 		</div>
 
-		<form id="secupress-module-form-settings" method="post" action="<?php echo admin_url( 'options.php' ); ?>">
+		<form id="secupress-module-form-settings" method="post" action="<?php echo $this->get_form_action(); ?>">
 
 			<div id="block-advanced_options" data-module="<?php echo $this->get_current_module(); ?>">
 				<?php $this->load_module_settings(); ?>

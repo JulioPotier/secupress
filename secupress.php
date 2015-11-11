@@ -100,6 +100,10 @@ function secupress_init() {
 
 	if ( is_admin() ) {
 
+		if ( is_multisite() ) {
+			require( SECUPRESS_ADMIN_PATH . 'multisite.php' );
+		}
+
 		require( SECUPRESS_ADMIN_PATH . 'options.php' );
 		require( SECUPRESS_ADMIN_PATH . 'notices.php' );
 		require( SECUPRESS_ADMIN_PATH . 'admin.php' );
