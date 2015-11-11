@@ -197,7 +197,7 @@ function secupress_block( $module, $code = 403 ) {
 	$content   = '<p>' . __( 'You are not allowed to access the requested page.', 'secupress' ) . '</p>';
 	$details   = '<h4>' . __( 'Logged Details:', 'secupress' ) . '</h4><p>';
 	$details  .= sprintf( __( 'Your IP: %s', 'secupress' ), secupress_get_ip() ) . '<br>';
-	$details  .= sprintf( __( 'Time: %s', 'secupress' ), date_i18n( __( 'F j, Y' ) . ' ' . __( 'g:i a' ) ) ) . '<br>';
+	$details  .= sprintf( __( 'Time: %s', 'secupress' ), date_i18n( __( 'F j, Y g:i a' ) ) ) . '<br>';
 	$details  .= sprintf( __( 'Block ID: %s', 'secupress' ), $module ) . '</p>';
 	secupress_die( $title_fmt . $content . $details, $title, array( 'response', $code ) );
 }
