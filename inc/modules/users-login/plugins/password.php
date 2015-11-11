@@ -101,9 +101,9 @@ function secupress_password_login( $raw_user, $username ) {
 			update_user_meta( $raw_user->ID, 'auth_timeout', time() + 10 * MINUTE_IN_SECONDS );
 			$raw_user = null;
 			$rememberme = isset( $_POST['rememberme'] );
-			$redirect_to = add_query_arg( array('action' => 'website_password', 
-												'token' => $token, 
-												'rememberme' => $rememberme ), 
+			$redirect_to = add_query_arg( array('action' => 'website_password',
+												'token' => $token,
+												'rememberme' => $rememberme ),
 											wp_login_url()
 										);
 			wp_redirect( $redirect_to );
@@ -113,13 +113,13 @@ function secupress_password_login( $raw_user, $username ) {
 		    $new_password = secupress_get_module_option( 'double_auth_password', false, 'users_login' );
 
 		    if ( ! isset( $_POST['website_password'] ) || $_POST['website_password'] !== $new_password ) {
-		        
+
 		        add_action( 'login_head', 'wp_shake_js', 12 );
-		 
+
 		        return new WP_Error( 'authentication_failed', __( '<strong>ERROR</strong>: Invalid Website Password.', 'secupress' ) );
 		    }
 		    do_action( 'emaillink_autologin_success', $raw_user );
-		    
+
 		}
 	}
     return $raw_user;
@@ -149,7 +149,7 @@ function secupress_password_retrieve( $user ) {
 		$message .= sprintf( '<p>' . __( 'Yes, <a href="%1$s">reset the website\'s password</a>, thanks.', 'secupress' ), admin_url( 'admin-post.php?action=reset_website_password&_wpnonce=' . $key ) ) . '</p>' . "\r\n";
 		$message .= '<p><i>' . __( 'Note: All administrators will be mailed with the new password.', 'secupress' ) . '</i></p>' . "\r\n";
 		set_transient( 'secupress_reset_website_password', $key, 10 * MINUTE_IN_SECONDS );
-		// Email the user 
+		// Email the user
 		wp_mail( $user->user_email, sprintf( __( '[%s] Reset Website\'s Password', 'secupress' ), get_bloginfo( 'name' ) ), $message, 'content-type: text/html' );
 	}
 }
@@ -160,7 +160,7 @@ function secupress_reset_website_password() {
 	if ( isset( $_GET['_wpnonce'] ) && $_GET['_wpnonce'] === get_transient( 'secupress_reset_website_password' ) ) {
 		delete_transient( 'secupress_reset_website_password' );
 		$new_password = wp_generate_password();
-		update_secupress_module_option( 'double_auth_password', $new_password, 'users_login' );
+		secupress_update_module_option( 'double_auth_password', $new_password, 'users_login' );
 		$message = sprintf( '<p>' . __( 'A new website\'s password has been generated, you can now use <b>%1$s</b>, please change it.', 'secupress' ), $new_password ) . '</p>' . "\r\n";
 		$message .= '<p><i>' . __( 'Note: All administrators have been mailed with the new password.', 'secupress' ) . '</i></p>' . "\r\n";
 		// Email the users

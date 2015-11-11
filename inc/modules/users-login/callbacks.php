@@ -135,7 +135,7 @@ function __secupress_install_users_login_module( $module ) {
 			'bad-logins_blacklist-logins-list' => secupress_blacklist_logins_list_default_string(),
 			//// pas fini
 		);
-		update_secupress_module_options( $values, 'users-login' );
+		secupress_update_module_options( $values, 'users-login' );
 	}
 }
 

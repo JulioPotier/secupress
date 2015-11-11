@@ -86,7 +86,7 @@ function secupress_get_module_option( $option, $default = false, $module = false
 }
 
 
-function update_secupress_module_option( $option, $value, $module = false ) {
+function secupress_update_module_option( $option, $value, $module = false ) {
 
 	if ( ! $module ) {
 		if ( ! class_exists( 'SecuPress_Settings' ) ) {
@@ -107,7 +107,7 @@ function update_secupress_module_option( $option, $value, $module = false ) {
 }
 
 
-function update_secupress_module_options( $values, $module = false ) {
+function secupress_update_module_options( $values, $module = false ) {
 	if ( ! $values || ! is_array( $values ) ) {
 		return null;
 	}
