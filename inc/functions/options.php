@@ -100,6 +100,7 @@ function update_secupress_module_option( $option, $value, $module = false ) {
 	}
 
 	$options = get_site_option( "secupress_{$module}_settings" );
+	$options = is_array( $options ) ? $options : array();
 	$options[ $option ] = $value;
 
 	update_site_option( "secupress_{$module}_settings", $options );
@@ -123,6 +124,7 @@ function update_secupress_module_options( $values, $module = false ) {
 	}
 
 	$options = get_site_option( "secupress_{$module}_settings" );
+	$options = is_array( $options ) ? $options : array();
 
 	foreach ( $values as $option => $value ) {
 		$options[ $option ] = $value;
