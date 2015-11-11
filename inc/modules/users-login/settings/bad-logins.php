@@ -31,20 +31,15 @@ $this->add_field(
 );
 
 
-$field_name  = $this->get_field_name( 'blacklist-logins-list' );
-
-// Starting from WP 4.4 we can prevent a user creation if his/her username is in the blacklist.
-if ( secupress_wp_version_is( '4.4.0-alpha' ) ) {
-	$description = __( 'Users won\'t be able to use any of the following usernames. The users already using one of those will be asked to change it.', 'secupress' );
-} else {
-	$description = __( 'Users won\'t be able to use any of the following usernames, they will be asked to change it.', 'secupress' );
-}
+$field_name    = $this->get_field_name( 'blacklist-logins-list' );
+$allowed_chars = secupress_blacklist_logins_allowed_characters( true );
+$allowed_chars = str_replace( sprintf( __('%s, %s'), '<code>A-Z</code>', '' ), '' , $allowed_chars );
 
 $this->add_field(
 	__( 'List of forbidden usernames', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description' => $description,
+		'description' => __( 'Users won\'t be able to use any of the following usernames. The users already using one of those will be asked to change it.', 'secupress' ),
 	),
 	array(
 		'depends_on'  => $main_field_name,
@@ -56,7 +51,7 @@ $this->add_field(
 		array(
 			'type'        => 'helper_description',
 			'name'        => $field_name,
-			'description' => __( 'One username per line.', 'secupress' ) . '<br/>' . __( 'Usernames with only one character are automatically blacklisted.', 'secupress' ) . '<br/>' . secupress_blacklist_logins_allowed_characters( true ),
+			'description' => __( 'One username per line, no uppercase.', 'secupress' ) . '<br/>' . __( 'Usernames with only one character are automatically blacklisted ("admin" also is).', 'secupress' ) . '<br/>' . $allowed_chars,
 		),
 	)
 );

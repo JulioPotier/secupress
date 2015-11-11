@@ -90,7 +90,8 @@ function __secupress_users_login_settings_callback( $settings ) {
 
 	if ( isset( $settings['bad-logins_blacklist-logins-list'] ) && '' !== $settings['bad-logins_blacklist-logins-list'] ) {
 		// Sanitization, validation.
-		$list   = explode( "\n", $settings['bad-logins_blacklist-logins-list'] );
+		$list   = mb_strtolower( $settings['bad-logins_blacklist-logins-list'] );
+		$list   = explode( "\n", $list );
 		$strict = array_fill( 0, count( $list ) - 1, true );
 		$list   = array_map( 'sanitize_user', $list, $strict );
 		$list   = array_unique( $list );
@@ -145,7 +146,7 @@ function __secupress_install_users_login_module( $module ) {
 
 function secupress_blacklist_logins_list_default( $glue = null ) {
 	$list = array(
-		'about', 'access', 'account', 'accounts', 'ad', 'address', 'adm', 'admin', 'administration', 'adult', 'advertising', 'affiliate', 'affiliates', 'ajax', 'analytics', 'android', 'anon', 'anonymous', 'api', 'app', 'apps', 'archive', 'atom', 'auth', 'authentication', 'avatar',
+		'about', 'access', 'account', 'accounts', 'ad', 'address', 'adm', 'administration', 'adult', 'advertising', 'affiliate', 'affiliates', 'ajax', 'analytics', 'android', 'anon', 'anonymous', 'api', 'app', 'apps', 'archive', 'atom', 'auth', 'authentication', 'avatar',
 		'backup', 'banner', 'banners', 'bin', 'billing', 'blog', 'blogs', 'board', 'bot', 'bots', 'business',
 		'chat', 'cache', 'cadastro', 'calendar', 'campaign', 'careers', 'cdn', 'cgi', 'client', 'cliente', 'code', 'comercial', 'compare', 'config', 'connect', 'contact', 'contest', 'create', 'code', 'compras', 'css',
 		'dashboard', 'data', 'db', 'design', 'delete', 'demo', 'design', 'designer', 'dev', 'devel', 'dir', 'directory', 'doc', 'documentation', 'docs', 'domain', 'download', 'downloads',
@@ -185,7 +186,7 @@ function secupress_blacklist_logins_list_default_string() {
 /*------------------------------------------------------------------------------------------------*/
 
 function secupress_blacklist_logins_allowed_characters( $wrap = false ) {
-	$allowed = array( 'A-Z', 'a-z', '0-9', '(space)', '_', '.', '-', '@', );
+	$allowed = is_multisite() ? array( 'a-z', '0-9', ) : array( 'A-Z', 'a-z', '0-9', '(space)', '_', '.', '-', '@', );
 	if ( $wrap ) {
 		foreach ( $allowed as $i => $char ) {
 			$allowed[ $i ] = '<code>' . $char . '</code>';

@@ -8,6 +8,9 @@ Version: 1.0
 */
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
+/*------------------------------------------------------------------------------------------------*/
+/* EXISTING USERS WITH A BLACKLISTED USERNAME MUST CHANGE IT. =================================== */
+/*------------------------------------------------------------------------------------------------*/
 
 /*
  * As soon as we are sure a user is connected, and before any redirection, check if the user login is not blacklisted.
@@ -58,7 +61,7 @@ function secupress_auth_redirect_blacklist_logins( $user_id ) {
 					// Send the new login by email.
 					secupress_blacklist_logins_new_user_notification( $user_id );
 
-					// Kill the user session.
+					// Kill Bill session.
 					wp_clear_auth_cookie();
 					wp_destroy_current_session();
 
@@ -197,6 +200,37 @@ label {
 
 
 /*
+ * Display a message on the login form after the new login creation.
+ *
+ * @since 1.0
+ *
+ * @param (object) $errors      WP Error object.
+ * @param (string) $redirect_to Redirect destination URL.
+ *
+ * @return (object) WP Error object.
+ */
+add_filter( 'wp_login_errors', 'secupress_blacklist_logins_display_login_message', 10, 2 );
+
+function secupress_blacklist_logins_display_login_message( $errors, $redirect_to ) {
+	if ( empty( $_GET['secupress-relog'] ) ) {
+		return $errors;
+	}
+
+	if ( empty( $errors ) ) {
+		$errors = new WP_Error();
+	}
+
+	$errors->add( 'secupress_relog', __( 'You will receive your new login in your mailbox.', 'secupress' ), 'message' );
+
+	return $errors;
+}
+
+
+/*------------------------------------------------------------------------------------------------*/
+/* UTILITIES ==================================================================================== */
+/*------------------------------------------------------------------------------------------------*/
+
+/*
  * Change a user login.
  *
  * @since 1.0
@@ -253,33 +287,6 @@ function secupress_blacklist_logins_new_user_notification( $user ) {
 
 
 /*
- * Display a message on the login form after the new login creation.
- *
- * @since 1.0
- *
- * @param (object) $errors      WP Error object.
- * @param (string) $redirect_to Redirect destination URL.
- *
- * @return (object) WP Error object.
- */
-add_filter( 'wp_login_errors', 'secupress_blacklist_logins_display_login_message', 10, 2 );
-
-function secupress_blacklist_logins_display_login_message( $errors, $redirect_to ) {
-	if ( empty( $_GET['secupress-relog'] ) ) {
-		return $errors;
-	}
-
-	if ( empty( $errors ) ) {
-		$errors = new WP_Error();
-	}
-
-	$errors->add( 'secupress_relog', __( 'You will receive your new login in your mailbox.', 'secupress' ), 'message' );
-
-	return $errors;
-}
-
-
-/*
  * Get the blacklisted usernames.
  *
  * @since 1.0
@@ -290,13 +297,8 @@ function secupress_get_blacklisted_usernames() {
 	// Blacklisted usernames from the setting.
 	$list      = secupress_get_module_option( 'bad-logins_blacklist-logins-list', '', 'users-login' );
 	$list      = explode( "\n", $list );
-	// Some usernames are always blaclisted.
-	$hardcoded = array(
-		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-		'_', '.', '-', '@',
-	);
+	// Some usernames are always blacklisted.
+	$hardcoded = array_merge( range( 0, 9 ), range( 'a', 'z' ), array( 'admin', '_', '.', '-', '@' ) );
 	$list      = array_merge( $list, $hardcoded );
 	// Temporarily allow some blacklisted usernames.
 	$allowed   = (array) secupress_cache_data( 'allowed_usernames' );
@@ -304,27 +306,39 @@ function secupress_get_blacklisted_usernames() {
 		$list  = array_diff( $list, $allowed );
 		secupress_cache_data( 'allowed_usernames', array() );
 	}
-
 	return $list;
 }
 
 
 /*
- * In `wp_insert_user()`, add our forbidden logins.
+ * Tell if a username is blacklisted.
  *
  * @since 1.0
- * @since WP 4.4.0
  *
- * @param (array) $user_logins List of logins.
+ * @param (string) $username The username to test.
  *
- * @return (array) List of logins.
+ * @return (bool) true if blacklisted.
  */
-if ( secupress_wp_version_is( '4.4-alpha' ) ) {
-	add_filter( 'illegal_user_logins', 'secupress_blacklist_logins_add_illegal_user_logins' );
+function secupress_is_username_blacklisted( $username ) {
+	return in_array( mb_strtolower( $username ), secupress_get_blacklisted_usernames() );
 }
 
-function secupress_blacklist_logins_add_illegal_user_logins( $user_logins ) {
-	return array_merge( $user_logins, secupress_get_blacklisted_usernames() );
+
+/*------------------------------------------------------------------------------------------------*/
+/* FORBID USER CREATION IF THE USERNAME IS BLACKLISTED. ========================================= */
+/*------------------------------------------------------------------------------------------------*/
+
+/*
+ * In `validate_username()`, detect forbidden logins.
+ *
+ * @since 1.0
+ *
+ * @return (bool) false if the username is blacklisted.
+ */
+add_filter( 'validate_username', 'secupress_blacklist_logins_validate_username', 10, 2 );
+
+function secupress_blacklist_logins_validate_username( $valid, $username ) {
+	return ! $username || secupress_is_username_blacklisted( $username ) ? false : $valid;
 }
 
 
@@ -333,20 +347,15 @@ function secupress_blacklist_logins_add_illegal_user_logins( $user_logins ) {
  * If the username is in the blacklist, an empty username will be returned, triggering a `empty_user_login` error later.
  *
  * @since 1.0
- * @until WP 4.4.0
  *
  * @param (string) $sanitized_user_login Current user login.
  *
  * @return (string) The user login or an empty string if blacklisted.
  */
-if ( ! secupress_wp_version_is( '4.4-alpha' ) ) {
-	add_filter( 'pre_user_login', 'secupress_blacklist_logins_pre_user_login' );
-}
+add_filter( 'pre_user_login', 'secupress_blacklist_logins_pre_user_login' );
 
 function secupress_blacklist_logins_pre_user_login( $sanitized_user_login ) {
-	$list = secupress_get_blacklisted_usernames();
-
-	if ( in_array( $sanitized_user_login, $list ) ) {
+	if ( secupress_is_username_blacklisted( $sanitized_user_login ) ) {
 		// Filter the `empty_user_login` error message.
 		add_filter( 'gettext', 'secupress_blacklist_logins_gettext_filter', 8, 3 );
 		return '';
@@ -360,7 +369,6 @@ function secupress_blacklist_logins_pre_user_login( $sanitized_user_login ) {
  * After a blacklisted username is detected, filter the `empty_user_login` error message.
  *
  * @since 1.0
- * @until WP 4.4.0
  *
  * @param (string) $translations Translated text.
  * @param (string) $text Original text.
