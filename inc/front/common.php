@@ -236,7 +236,7 @@ function secupress_downgrade_author_administrator() {
 	}
 
 	// "{$new_user_id}|{$old_user_id}"
-	$data = secupress_get_transient( 'secupress-admin-as-author-administrator' );
+	$data = secupress_get_site_transient( 'secupress-admin-as-author-administrator' );
 
 	// Nope.
 	if ( ! $data ) {
@@ -245,7 +245,7 @@ function secupress_downgrade_author_administrator() {
 
 	if ( ! is_string( $data ) ) {
 		// Dafuk
-		secupress_delete_transient( 'secupress-admin-as-author-administrator' );
+		secupress_delete_site_transient( 'secupress-admin-as-author-administrator' );
 		return;
 	}
 
@@ -253,13 +253,13 @@ function secupress_downgrade_author_administrator() {
 
 	if ( ! isset( $new_user_id, $old_user_id ) || ! $new_user_id || ! $old_user_id || $new_user_id === $old_user_id ) {
 		// Dafuk
-		secupress_delete_transient( 'secupress-admin-as-author-administrator' );
+		secupress_delete_site_transient( 'secupress-admin-as-author-administrator' );
 		return;
 	}
 
 	if ( ! file_exists( secupress_class_path( 'scan', 'Admin_As_Author' ) ) ) {
 		// Dafuk
-		secupress_delete_transient( 'secupress-admin-as-author-administrator' );
+		secupress_delete_site_transient( 'secupress-admin-as-author-administrator' );
 		return;
 	}
 
@@ -270,7 +270,7 @@ function secupress_downgrade_author_administrator() {
 
 	if ( ! user_can( $new_user_id, 'administrator' ) || ! user_can( $old_user_id, 'administrator' ) ) {
 		// Hey! What did you do?!
-		secupress_delete_transient( 'secupress-admin-as-author-administrator' );
+		secupress_delete_site_transient( 'secupress-admin-as-author-administrator' );
 		return;
 	}
 
@@ -308,5 +308,5 @@ function secupress_downgrade_author_administrator() {
 	secupress_scanit( 'Admin_As_Author' );
 
 	// Bye bye!
-	secupress_delete_transient( 'secupress-admin-as-author-administrator' );
+	secupress_delete_site_transient( 'secupress-admin-as-author-administrator' );
 }
