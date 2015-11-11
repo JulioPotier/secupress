@@ -33,7 +33,7 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 
 		if ( $is_nginx ) {
 			$bases = secupress_get_rewrite_bases();
-			$nginx_rules = 'location ~ ^(' . $bases['home_from'] . 'php\.ini|' . $bases['site_from'] . WPINC . '/.+\.php|' . $bases['site_from'] . "wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$ {\n\treturn 404;\n}";
+			$nginx_rules = "server {\n\tlocation ~ ^(" . $bases['home_from'] . 'php\.ini|' . $bases['site_from'] . WPINC . '/.+\.php|' . $bases['site_from'] . "wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$ {\n\t\treturn 404;\n\t}\n}";
 		}
 
 		$messages = array(
@@ -88,12 +88,12 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 
 				if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
 					// bad
-					$bads[] = '<code>' . $url . '</code>';
+					$bads[] = "<code>$url</code>";
 				}
 
 			} else {
 				// warning
-				$warnings[] = '<code>' . $url . '</code>';
+				$warnings[] = "<code>$url</code>";
 			}
 		}
 
@@ -235,7 +235,7 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 			$this->add_fix_message( 1, array( '<code>web.config</code>' ) );
 		} else {
 			// cantfix
-			$this->add_fix_message( 302, array( '<code>web.config</code>', '<pre>' . $node . '</pre>' ) );
+			$this->add_fix_message( 302, array( '<code>web.config</code>', "<pre>$node</pre>" ) );
 		}
 	}
 }

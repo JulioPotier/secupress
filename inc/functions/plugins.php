@@ -65,10 +65,11 @@ function secupress_is_affected_role( $module, $submodule, $user ) {
 	return is_a( $user, 'WP_User' ) && user_can( $user, 'exist' ) && ! count( (array) array_intersect( $roles, $user->roles ) );
 }
 
+
 /**
  * Validate a range
  *
- * @since 1.0 
+ * @since 1.0
  * @return false/integer
  **/
 function secupress_validate_range( $value, $min, $max, $default = false ) {
@@ -79,22 +80,39 @@ function secupress_validate_range( $value, $min, $max, $default = false ) {
 	return $value;
 }
 
+
 /**
  * Register the correct setting with the correct callback for the module
  *
  * @since 1.0
  * @return void
  **/
-function secupress_register_setting( $module ) {
-	$module_for_callback = str_replace( '-', '_', $module );
-	register_setting( "secupress_{$module}_settings", "secupress_{$module}_settings", "__secupress_{$module_for_callback}_settings_callback" );
+function secupress_register_setting( $module, $option_name = false ) {
+	$option_group      = "secupress_{$module}_settings";
+	$option_name       = $option_name ? $option_name : "secupress_{$module}_settings";
+	$sanitize_callback = str_replace( '-', '_', $module );
+	$sanitize_callback = "__secupress_{$sanitize_callback}_settings_callback";
+
+	if ( ! is_multisite() ) {
+		register_setting( $option_group, $option_name, $sanitize_callback );
+		return;
+	}
+
+	$whitelist = secupress_cache_data( 'new_whitelist_site_options' );
+	$whitelist = is_array( $whitelist ) ? $whitelist : array();
+	$whitelist[ $option_group ] = isset( $whitelist[ $option_group ] ) ? $whitelist[ $option_group ] : array();
+	$whitelist[ $option_group ][] = $option_name;
+	secupress_cache_data( 'new_whitelist_site_options', $whitelist );
+
+	add_filter( "sanitize_option_{$option_name}", $sanitize_callback );
 }
+
 
 /**
  * Return the current URL
  *
  * @param $mode (string) base (before '?'), raw (all), uri (after '?')
- * @since 1.0 
+ * @since 1.0
  * @return string $url
  **/
 function secupress_get_current_url( $mode = 'base' ) {

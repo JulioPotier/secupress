@@ -56,7 +56,7 @@ $this->add_field(
 		array(
 			'type'        => 'helper_description',
 			'name'        => $field_name,
-			'description' => __( 'One username per line.', 'secupress' ) . '<br/>' . secupress_blacklist_logins_allowed_characters( true ),
+			'description' => __( 'One username per line.', 'secupress' ) . '<br/>' . __( 'Usernames with only one character are automatically blacklisted.', 'secupress' ) . '<br/>' . secupress_blacklist_logins_allowed_characters( true ),
 		),
 	)
 );

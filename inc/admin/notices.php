@@ -11,8 +11,7 @@ add_action( 'admin_notices', 'secupress_bad_deactivations' );
 function secupress_bad_deactivations() {
 	global $current_user;
 
-	/** This filter is documented in inc/admin-bar.php */
-	if ( ! current_user_can( apply_filters( 'secupress_capacity', 'administrator' ) ) || ! ( $msgs = get_transient( $current_user->ID . '_donotdeactivatesecupress' ) ) ) {
+	if ( ! current_user_can( secupress_get_capability() ) || ! ( $msgs = get_transient( $current_user->ID . '_donotdeactivatesecupress' ) ) ) {
 		return;
 	}
 
@@ -89,8 +88,7 @@ function secupress_plugins_to_deactivate() {
 
 	$plugins_to_deactivate = array_filter( $plugins, 'is_plugin_active' );
 
-	/** This filter is documented in inc/admin-bar.php */
-	if ( current_user_can( apply_filters( 'secupress_capacity', 'administrator' ) ) && count( $plugins_to_deactivate ) ) { ?>
+	if ( current_user_can( secupress_get_capability() ) && count( $plugins_to_deactivate ) ) { ?>
 
 		<div class="error">
 			<p><?php printf( __( '<strong>%s</strong>: The following plugins are not compatible with this plugin and may cause unexpected results:', 'rocket' ), SECUPRESS_PLUGIN_NAME ); ?></p>
@@ -121,8 +119,7 @@ function secupress_warning_wp_config_permissions() {
 	global $pagenow, $current_user;
 	$config_file = secupress_find_wpconfig_path();
 
-	/** This filter is documented in inc/admin-bar.php */ //// Contexte pour le filtre.
-	if ( ! isset( $current_user->ID ) || 'plugins.php' == $pagenow && isset( $_GET['activate'] ) || ! current_user_can( apply_filters( 'secupress_capacity', 'administrator' ) ) || is_writable( $config_file ) ) {
+	if ( ! isset( $current_user->ID ) || 'plugins.php' == $pagenow && isset( $_GET['activate'] ) || ! current_user_can( secupress_get_capability() ) || is_writable( $config_file ) ) {
 		return;
 	}
 
@@ -165,11 +162,10 @@ function secupress_warning_wp_config_permissions() {
 add_action( 'admin_notices', 'secupress_warning_htaccess_permissions' );
 
 function secupress_warning_htaccess_permissions() {
-	global $pagenow, $current_user;
+	global $pagenow, $current_user, $is_apache;
 	$htaccess_file = secupress_get_home_path() . '.htaccess';
 
-	/** This filter is documented in inc/admin-bar.php */
-	if ( ! isset( $current_user->ID ) || ! current_user_can( apply_filters( 'secupress_capacity', 'administrator' ) )|| is_writable( $htaccess_file ) || ! $is_apache ) {
+	if ( ! $is_apache || ! isset( $current_user->ID ) || ! current_user_can( secupress_get_capability() ) || is_writable( $htaccess_file ) ) {
 		return;
 	}
 
@@ -200,8 +196,7 @@ add_action( 'admin_notices', 'secupress_warning_module_activity' );
 function secupress_warning_module_activity() {
 	global $current_user;
 
-	/** This filter is documented in inc/admin-bar.php */
-	if ( ! current_user_can( apply_filters( 'secupress_capacity', 'administrator' ) ) ) {
+	if ( ! current_user_can( secupress_get_capability() ) ) {
 		return;
 	}
 

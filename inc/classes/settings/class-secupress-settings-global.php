@@ -40,7 +40,7 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 			<?php secupress_admin_heading( __( 'Settings' ) ); ?>
 			<?php settings_errors(); ?>
 
-			<form action="options.php" method="post" id="secupress_settings" class="secupress-wrapper">
+			<form action="<?php echo $this->get_form_action(); ?>" method="post" id="secupress_settings" class="secupress-wrapper">
 
 				<?php array_map( array( $this, 'load_module_settings'), $setting_modules ); ?>
 

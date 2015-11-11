@@ -20,9 +20,9 @@ add_action( 'auth_redirect', 'secupress_auth_redirect_blacklist_logins' );
 function secupress_auth_redirect_blacklist_logins( $user_id ) {
 
 	$user = get_userdata( $user_id );
-	$list = secupress_get_module_option( 'bad-logins_blacklist-logins-list', '', 'users-login' );
+	$list = secupress_get_blacklisted_usernames();
 
-	if ( strpos( "\n$list\n", "\n$user->user_login\n" ) === false ) {
+	if ( ! in_array( $user->user_login, $list ) ) {
 		// Good, the login is not blacklisted.
 		return;
 	}
@@ -44,7 +44,7 @@ function secupress_auth_redirect_blacklist_logins( $user_id ) {
 			// Sanitize the submitted username.
 			$user_login = sanitize_user( $_POST['secupress-backlist-logins-new-login'], true );
 
-			if ( strpos( "\n$list\n", "\n$user_login\n" ) !== false ) {
+			if ( in_array( $user_login, $list ) ) {
 				// The new login is blacklisted.
 				$error = __( 'This username is also blacklisted', 'secupress' );
 			} else {
@@ -280,6 +280,36 @@ function secupress_blacklist_logins_display_login_message( $errors, $redirect_to
 
 
 /*
+ * Get the blacklisted usernames.
+ *
+ * @since 1.0
+ *
+ * @return (array)
+ */
+function secupress_get_blacklisted_usernames() {
+	// Blacklisted usernames from the setting.
+	$list      = secupress_get_module_option( 'bad-logins_blacklist-logins-list', '', 'users-login' );
+	$list      = explode( "\n", $list );
+	// Some usernames are always blaclisted.
+	$hardcoded = array(
+		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+		'_', '.', '-', '@',
+	);
+	$list      = array_merge( $list, $hardcoded );
+	// Temporarily allow some blacklisted usernames.
+	$allowed   = (array) secupress_cache_data( 'allowed_usernames' );
+	if ( $allowed ) {
+		$list  = array_diff( $list, $allowed );
+		secupress_cache_data( 'allowed_usernames', array() );
+	}
+
+	return $list;
+}
+
+
+/*
  * In `wp_insert_user()`, add our forbidden logins.
  *
  * @since 1.0
@@ -289,14 +319,12 @@ function secupress_blacklist_logins_display_login_message( $errors, $redirect_to
  *
  * @return (array) List of logins.
  */
-if ( secupress_wp_version_is( '4.4.0-alpha' ) ) {
+if ( secupress_wp_version_is( '4.4-alpha' ) ) {
 	add_filter( 'illegal_user_logins', 'secupress_blacklist_logins_add_illegal_user_logins' );
 }
 
 function secupress_blacklist_logins_add_illegal_user_logins( $user_logins ) {
-	$list = secupress_get_module_option( 'bad-logins_blacklist-logins-list', '', 'users-login' );
-	$list = explode( "\n", $list );
-	return array_merge( $user_logins, $list );
+	return array_merge( $user_logins, secupress_get_blacklisted_usernames() );
 }
 
 
@@ -311,14 +339,14 @@ function secupress_blacklist_logins_add_illegal_user_logins( $user_logins ) {
  *
  * @return (string) The user login or an empty string if blacklisted.
  */
-if ( ! secupress_wp_version_is( '4.4.0-alpha' ) ) {
+if ( ! secupress_wp_version_is( '4.4-alpha' ) ) {
 	add_filter( 'pre_user_login', 'secupress_blacklist_logins_pre_user_login' );
 }
 
 function secupress_blacklist_logins_pre_user_login( $sanitized_user_login ) {
-	$list = secupress_get_module_option( 'bad-logins_blacklist-logins-list', '', 'users-login' );
+	$list = secupress_get_blacklisted_usernames();
 
-	if ( strpos( "\n$list\n", "\n$sanitized_user_login\n" ) !== false ) {
+	if ( in_array( $sanitized_user_login, $list ) ) {
 		// Filter the `empty_user_login` error message.
 		add_filter( 'gettext', 'secupress_blacklist_logins_gettext_filter', 8, 3 );
 		return '';

@@ -34,7 +34,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 		if ( $is_nginx ) {
 			$bases = secupress_get_rewrite_bases();
 			$base  = $bases['base'];
-			$nginx_rules = "location $base {\n\tautoindex off;\n}";
+			$nginx_rules = "server {\n\tlocation $base {\n\t\tautoindex off;\n\t}\n}";
 		}
 
 		$messages = array(

@@ -30,12 +30,12 @@ function __secupress_scanit_action_callback() {
 
 	$response = secupress_scanit( $test_name, true );
 
-/*	$times   = (array) get_option( SECUPRESS_SCAN_TIMES );
+/*	$times   = (array) get_site_option( SECUPRESS_SCAN_TIMES );
 	$counts  = secupress_get_scanner_counts();
 	$percent = floor( $counts['good'] * 100 / $counts['total'] );
 	$times[] = array( 'grade' => $counts['grade'], 'percent' => $percent, 'time' => time() );
 	$times   = array_filter( array_slice( $times , -5 ) );
-	update_option( SECUPRESS_SCAN_TIMES, $times );*////
+	update_site_option( SECUPRESS_SCAN_TIMES, $times );*////
 
 	secupress_admin_send_response_or_redirect( $response, 'scanners' );
 }
@@ -415,7 +415,7 @@ function __secupress_do_options_export() {
 	$filename = sprintf( 'secupress-settings-%s-%s.txt', date( 'Y-m-d' ), uniqid() );
 	$gz       = 'gz' . strrev( 'etalfed' );
 	$options  = $gz//;
-	( serialize( get_option( SECUPRESS_SETTINGS_SLUG ) ), 1 ); // do not use secupress_get_option() here
+	( serialize( get_site_option( SECUPRESS_SETTINGS_SLUG ) ), 1 ); // do not use secupress_get_option() here
 
 	nocache_headers();
 	@header( 'Content-Type: text/plain' );

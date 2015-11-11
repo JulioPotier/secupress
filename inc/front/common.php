@@ -9,7 +9,7 @@ add_action( 'plugins_loaded', 'secupress_check_ban_ips' );
  * @return void
  **/
 function secupress_check_ban_ips() {
-	$ban_ips                   = get_option( SECUPRESS_BAN_IP );
+	$ban_ips                   = get_site_option( SECUPRESS_BAN_IP );
 	$login_protection_time_ban = secupress_get_module_option( 'login_protection_time_ban', 5, 'users_login' );
 	$refresh_htaccess          = false;
 
@@ -24,7 +24,7 @@ function secupress_check_ban_ips() {
 			}
 		}
 
-		update_option( SECUPRESS_BAN_IP, $ban_ips );
+		update_site_option( SECUPRESS_BAN_IP, $ban_ips );
 
 		if ( $refresh_htaccess ) {
 			wp_load_alloptions();
@@ -40,7 +40,7 @@ function secupress_check_ban_ips() {
 		}
 
 	} else {
-		delete_option( SECUPRESS_BAN_IP );
+		delete_site_option( SECUPRESS_BAN_IP );
 	}
 }
 
@@ -153,7 +153,7 @@ function secupress_add_salt_muplugin() {
 		foreach ( $keys as $constant ) {
 			secupress_replace_content( $wpconfig_filename, "/define\(.*('" . $constant . "'|\"" . $constant . "\").*,/", "/*Commented by SecuPress*/ // $0" );
 		}
-		
+
 		$alicia_keys = file_get_contents( SECUPRESS_INC_PATH . 'data/salt_keys.phps' );
 		$alicia_keys = str_replace( array( '{{HASH1}}', '{{HASH2}}' ), array( wp_generate_password( 64, true, true ), wp_generate_password( 64, true, true ) ), $alicia_keys );
 
@@ -189,7 +189,7 @@ function secupress_auto_username_login() {
 	if ( isset( $_GET['secupress_auto_login_token'] ) ) {
 
 		list( $username, $action ) = get_transient( 'secupress_auto_login_' . $_GET['secupress_auto_login_token'] );
-		
+
 		delete_transient( 'secupress_auto_login_' . $_GET['secupress_auto_login_token'] );
 
 		if ( $username ) {

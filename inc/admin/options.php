@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 add_action( 'admin_init', 'secupress_register_global_setting' );
 
 function secupress_register_global_setting() {
-	register_setting( 'secupress_global_settings', SECUPRESS_SETTINGS_SLUG, '__secupress_global_settings_callback' );
+	secupress_register_setting( 'global', SECUPRESS_SETTINGS_SLUG );
 }
 
 
@@ -183,7 +183,7 @@ function secupress_favicon() {
  *
  * @since 1.0
  */
-add_action( 'admin_menu', 'secupress_create_menus' );
+add_action( ( is_multisite() ? 'network_' : '' ) . 'admin_menu', 'secupress_create_menus' );
 
 function secupress_create_menus() {
 	global $menu;
@@ -201,15 +201,16 @@ function secupress_create_menus() {
 	}
 
 	$count = sprintf( ' <span class="update-plugins count-%1$d"><span class="update-count">%1$d</span></span>', $count );
+	$cap   = secupress_get_capability();
 
 	// Main menu item
-	add_menu_page( SECUPRESS_PLUGIN_NAME, SECUPRESS_PLUGIN_NAME, 'administrator', 'secupress', '__secupress_dashboard', 'dashicons-shield-alt' );
+	add_menu_page( SECUPRESS_PLUGIN_NAME, SECUPRESS_PLUGIN_NAME, $cap, 'secupress', '__secupress_dashboard', 'dashicons-shield-alt' );
 
 	// Sub-menus
-	add_submenu_page( 'secupress', __( 'Dashboard' ),             __( 'Dashboard' ),                      'administrator', 'secupress',          '__secupress_dashboard' );
-	add_submenu_page( 'secupress', __( 'Settings' ),              __( 'Settings' ),                       'administrator', 'secupress_settings', '__secupress_global_settings' );
-	add_submenu_page( 'secupress', __( 'Modules', 'secupress' ),  __( 'Modules', 'secupress' ),           'administrator', 'secupress_modules',  '__secupress_modules' );
-	add_submenu_page( 'secupress', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ) . $count, 'administrator', 'secupress_scanners', '__secupress_scanners' );
+	add_submenu_page( 'secupress', __( 'Dashboard' ),             __( 'Dashboard' ),                      $cap, 'secupress',          '__secupress_dashboard' );
+	add_submenu_page( 'secupress', __( 'Settings' ),              __( 'Settings' ),                       $cap, 'secupress_settings', '__secupress_global_settings' );
+	add_submenu_page( 'secupress', __( 'Modules', 'secupress' ),  __( 'Modules', 'secupress' ),           $cap, 'secupress_modules',  '__secupress_modules' );
+	add_submenu_page( 'secupress', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ) . $count, $cap, 'secupress_scanners', '__secupress_scanners' );
 
 	// Add the counter to the main menu: it can't be added with `add_menu_page()` because it would change the value of the screen ID (yes, it's utterly stupid).
 	end( $menu );
@@ -234,9 +235,9 @@ function __secupress_dashboard() {
 
 		<div class="secupress-wrapper">
 			<?php
-			delete_option( SECUPRESS_SCAN_SLUG );
-			delete_option( SECUPRESS_SCAN_TIMES );
-			delete_option( SECUPRESS_FIX_SLUG );
+			delete_site_option( SECUPRESS_SCAN_SLUG );
+			delete_site_option( SECUPRESS_SCAN_TIMES );
+			delete_site_option( SECUPRESS_FIX_SLUG );
 			?>
 		</div>
 	</div>
@@ -299,7 +300,7 @@ function __secupress_modules() {
  * @since 1.0
  */
 function __secupress_scanners() {
-	$times        = array_filter( (array) get_option( SECUPRESS_SCAN_TIMES ) );
+	$times        = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
 	$reports      = array();
 	$last_percent = -1;
 

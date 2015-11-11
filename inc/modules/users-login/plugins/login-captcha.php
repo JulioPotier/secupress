@@ -195,7 +195,7 @@ function secupress_captcha_check() {
 		wp_send_json_error();
 	}
 	$token = wp_generate_password( 12, false );
-	$captcha_keys = get_option( 'secupress_captcha_keys', array() );
+	$captcha_keys = get_site_option( 'secupress_captcha_keys', array() );
 	$captcha_keys[ $token ] = time();
 	$t = time();
 	foreach ( $captcha_keys as $key => $value ) {
@@ -204,10 +204,10 @@ function secupress_captcha_check() {
 		}
 	}
 	if ( ! secupress_wp_version_is( '4.2.0-alpha' ) ) {
-		delete_option( 'secupress_captcha_keys' );
-		add_option( 'secupress_captcha_keys', $captcha_keys, false );
+		delete_site_option( 'secupress_captcha_keys' );
+		add_site_option( 'secupress_captcha_keys', $captcha_keys, false );
 	} else {
-		update_option( 'secupress_captcha_keys', $captcha_keys, false );
+		update_site_option( 'secupress_captcha_keys', $captcha_keys, false );
 	}
 	wp_send_json_success( $token );
 }
@@ -219,7 +219,7 @@ function secupress_manage_captcha( $raw_user, $username ) {
 		 isset( $_POST['log'], $_POST['pwd'] )
 	) {
 		$captcha_key = isset( $_POST['captcha_key'] ) ? $_POST['captcha_key'] : null;
-		$captcha_keys = get_option( 'secupress_captcha_keys', array() );
+		$captcha_keys = get_site_option( 'secupress_captcha_keys', array() );
 		if ( ! isset( $captcha_keys[ $captcha_key ] ) ||
 			time() > $captcha_keys[ $captcha_key ] + 2 * MINUTE_IN_SECONDS ||
 			time() < $captcha_keys[ $captcha_key ] + 2
@@ -228,10 +228,10 @@ function secupress_manage_captcha( $raw_user, $username ) {
 		}
 		unset( $captcha_keys[ $captcha_key ] );
 		if ( ! secupress_wp_version_is( '4.2.0-alpha' ) ) {
-			delete_option( 'secupress_captcha_keys' );
-			add_option( 'secupress_captcha_keys', $captcha_keys, false );
+			delete_site_option( 'secupress_captcha_keys' );
+			add_site_option( 'secupress_captcha_keys', $captcha_keys, false );
 		} else {
-			update_option( 'secupress_captcha_keys', $captcha_keys, false );
+			update_site_option( 'secupress_captcha_keys', $captcha_keys, false );
 		}
 
 	}

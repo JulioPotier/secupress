@@ -11,11 +11,30 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  *
  * @return (string) The URL.
  */
-function secupress_admin_url( $page, $module = false ) {
+function secupress_admin_url( $page, $module = '' ) {
 	$module = $module ? '&module=' . sanitize_key( $module ) : '';
-	$page = str_replace( '&', '_', $page );
+	$page   = str_replace( '&', '_', $page );
+	$url    = 'admin.php?page=secupress_' . sanitize_key( $page ) . $module;
 
-	return admin_url( 'admin.php?page=secupress_' . sanitize_key( $page ) . $module, 'admin' );
+	return is_multisite() ? network_admin_url( $url ) : admin_url( $url );
+}
+
+
+/**
+ * Get the user capability required to work with the plugin.
+ *
+ * @since 1.0
+ *
+ * @return (string) The capability.
+ */
+function secupress_get_capability() {
+	static $capability;
+
+	if ( ! isset( $capability ) ) {
+		$capability = is_multisite() ? 'manage_network_options' : 'administrator';
+	}
+
+	return $capability;
 }
 
 
@@ -132,4 +151,22 @@ function secupress_prepare_email_for_like_search( $email ) {
 	$email    = str_split( $email );
 	$email    = implode( '%', $email );
 	return $email . '%' . $provider;
+}
+
+/**
+ * Store and get static data.
+ *
+ * @since 1.0
+ *
+ * @param (string) $key:  An identifier key.
+ * @param (mixed)  $data: The data to be stored.
+ *
+ * @return (mixed) The stored data.
+ */
+function secupress_cache_data( $key, $data = 'trolilol' ) {
+	static $datas = array();
+	if ( $data !== 'trolilol' ) {
+		$datas[ $key ] = $data;
+	}
+	return isset( $datas[ $key ] ) ? $datas[ $key ] : null;
 }

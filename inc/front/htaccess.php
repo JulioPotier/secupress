@@ -61,7 +61,7 @@ function secupress_get_htaccess_marker( $function ) {
 
 
 function secupress_get_htaccess_ban_ip() {
-	$ban_ips = get_option( SECUPRESS_BAN_IP );
+	$ban_ips = get_site_option( SECUPRESS_BAN_IP );
 
 	if ( is_array( $ban_ips ) && count( $ban_ips ) ) {
 		$content = 'Order Deny,Allow' . PHP_EOL;
