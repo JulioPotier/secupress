@@ -213,7 +213,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 		if ( ! is_wp_error( $response ) ) {
 
 			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
-				$toto['readme'] = 1;
+				$todo['readme'] = 1;
 			}
 
 		} else {
