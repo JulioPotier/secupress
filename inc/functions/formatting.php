@@ -101,3 +101,35 @@ function secupress_wp_version_is( $version ) {
 
 	return ( $is[ $version ] = version_compare( $wp_version, $version ) >= 0 );
 }
+
+/**
+ * Return true if the given email address is an alias
+ *
+ * @param (string) $email
+ * @since 1.0 
+ * @return (bool)
+ **/
+function secupress_remove_email_alias( $email ) {
+	$provider = strstr( $email, '@' );
+	$email    = strstr( $email, '@', true );
+	$email    = explode( '+', $email ); 
+	$email    = reset( $email );
+	$email    = str_replace( '.', '', $email );
+	return $email . $provider;
+}
+
+/**
+ * Return the email "example@example.com" like "e%x%a%m%p%l%e%@example.com"
+ *
+ * @param (string) $email
+ * @since 1.0 
+ * @return (string)
+ **/
+function secupress_prepare_email_for_like_search( $email ) {
+	$email    = secupress_remove_email_alias( $email );
+	$provider = strstr( $email, '@' );
+	$email    = $GLOBALS['wpdb']->esc_like( strstr( $email, '@', true ) );
+	$email    = str_split( $email );
+	$email    = implode( '%', $email );
+	return $email . '%' . $provider;
+}
