@@ -28,13 +28,7 @@ function secupress_admin_url( $page, $module = '' ) {
  * @return (string) The capability.
  */
 function secupress_get_capability() {
-	static $capability;
-
-	if ( ! isset( $capability ) ) {
-		$capability = is_multisite() ? 'manage_network_options' : 'administrator';
-	}
-
-	return $capability;
+	return is_multisite() ? 'manage_network_options' : 'administrator';
 }
 
 
