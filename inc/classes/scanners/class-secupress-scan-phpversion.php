@@ -26,13 +26,13 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements iSecuPress_Sca
 		self::$type  = __( 'File System', 'secupress' );
 		self::$title = __( 'Check if your installation is using a supported version of PHP.', 'secupress' );
 		self::$more  = __( 'Every year old PHP version are not supported anymore, even for security patches so it\'s important to stay updated.', 'secupress' );
-		
-		if ( false === ( $php_vers = get_transient( 'secupress_php_versions' ) ) ) {
+
+		if ( false === ( $php_vers = get_site_transient( 'secupress_php_versions' ) ) ) {
 			$response = wp_remote_get( 'http://php.net/releases/index.php?json&version=5&max=2' );
 			if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 				$php_vers = json_decode( wp_remote_retrieve_body( $response ) );
 				$php_vers = array_keys( (array) $php_vers );
-				set_transient( 'secupress_php_versions', $php_vers, 7 * DAY_IN_SECONDS );
+				set_site_transient( 'secupress_php_versions', $php_vers, 7 * DAY_IN_SECONDS );
 			}
 		}
 		if ( $php_vers ) {
