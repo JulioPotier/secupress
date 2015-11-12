@@ -11,16 +11,18 @@ add_action( 'admin_init', 'secupress_upgrader' );
 function secupress_upgrader() {
 	// Grab some infos
 	$actual_version = secupress_get_option( 'version' );
-	// You can hook the upgrader to trigger any action when WP secupress is upgraded
+	// You can hook the upgrader to trigger any action when WP SecuPress is upgraded.
 	// first install
 	if ( ! $actual_version ){
-		do_action( 'wp_secupress_first_install', 'all' );
+		if ( ! secupress_maybe_upgrade_mono_to_multi() ) {
+			do_action( 'wp_secupress_first_install', 'all' );
+		}
 	}
-	// already installed but got updated
-	elseif ( SECUPRESS_VERSION != $actual_version ) {
+	// already installed but got updated.
+	elseif ( SECUPRESS_VERSION !== $actual_version ) {
 		do_action( 'wp_secupress_upgrade', SECUPRESS_VERSION, $actual_version );
 	}
-	// If any upgrade has been done, we flush and update version #
+	// If any upgrade has been done, we flush and update version.
 	if ( did_action( 'wp_secupress_first_install' ) || did_action( 'wp_secupress_upgrade' ) ) {
 		// flush_secupress_htaccess(); ////
 
@@ -42,6 +44,49 @@ function secupress_upgrader() {
 	if ( ! secupress_valid_key() && current_user_can( apply_filters( 'secupress_capacity', 'manage_options' ) ) && ( ! isset( $_GET['page'] ) || 'secupress' != $_GET['page'] ) ) {
 		add_action( 'admin_notices', 'secupress_need_api_key' );
 	}
+}
+
+
+/**
+ * When switching a monosite installation to multisite, migrate options to the sitemeta table.
+ *
+ * @since 1.0
+ *
+ * @return (bool) true if some options have been imported.
+ */
+function secupress_maybe_upgrade_mono_to_multi() {
+	if ( ! is_multisite() ) {
+		return false;
+	}
+
+	$modules    = secupress_get_modules();
+	$has_values = false;
+
+	foreach ( $modules as $module => $atts ) {
+		$value = get_option( "secupress_{$module}_settings" );
+
+		if ( false !== $value ) {
+			add_site_option( "secupress_{$module}_settings" );
+			$has_values = true;
+		}
+
+		delete_option( "secupress_{$module}_settings" );
+	}
+
+	$options = array( SECUPRESS_SETTINGS_SLUG, SECUPRESS_SCAN_SLUG, SECUPRESS_FIX_SLUG, SECUPRESS_SCAN_TIMES, SECUPRESS_BAN_IP, 'secupress_captcha_keys', );
+
+	foreach ( $options as $option ) {
+		$value = get_option( $option );
+
+		if ( false !== $value ) {
+			add_site_option( $option );
+			$has_values = true;
+		}
+
+		delete_option( $option );
+	}
+
+	return $has_values;
 }
 
 
