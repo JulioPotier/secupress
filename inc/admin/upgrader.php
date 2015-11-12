@@ -1,6 +1,10 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
+/*------------------------------------------------------------------------------------------------*/
+/* MIGRATE / UPGRADE ============================================================================ */
+/*------------------------------------------------------------------------------------------------*/
+
 /*
  * Tell WP what to do when admin is loaded aka upgrader
  *
@@ -14,7 +18,7 @@ function secupress_upgrader() {
 	// You can hook the upgrader to trigger any action when WP SecuPress is upgraded.
 	// first install
 	if ( ! $actual_version ){
-		if ( ! secupress_maybe_upgrade_mono_to_multi() ) {
+		if ( ! secupress_maybe_migrate_mono_to_multi() ) {
 			do_action( 'wp_secupress_first_install', 'all' );
 		}
 	}
@@ -54,7 +58,7 @@ function secupress_upgrader() {
  *
  * @return (bool) true if some options have been imported.
  */
-function secupress_maybe_upgrade_mono_to_multi() {
+function secupress_maybe_migrate_mono_to_multi() {
 	if ( ! is_multisite() ) {
 		return false;
 	}
@@ -90,7 +94,9 @@ function secupress_maybe_upgrade_mono_to_multi() {
 }
 
 
-/* BEGIN UPGRADER'S HOOKS */
+/*------------------------------------------------------------------------------------------------*/
+/* UPGRADER'S HOOKS ============================================================================= */
+/*------------------------------------------------------------------------------------------------*/
 
 /**
  * Keeps this function up to date at each version
