@@ -178,7 +178,7 @@ label {
 			<p><?php
 			printf(
 				/* translators: 1 is a user name, 2 is a link "to the site" */
-				__( 'Your current username, %1$s, is blacklisted. You will not be able to reach the administration area until you change your username. Meanwhile, you still have access %2$s.', 'secupress' ),
+				__( 'Your current username %1$s is blacklisted. You will not be able to reach the administration area until you change your username. Meanwhile, you still have access %2$s.', 'secupress' ),
 				'<strong>' . esc_html( $user->user_login ) . '</strong>',
 				'<a href="' . esc_url( user_trailingslashit( home_url() ) ) . '">' . __( 'to the site', 'secupress' ) . '</a>'
 			);
@@ -298,7 +298,7 @@ function secupress_get_blacklisted_usernames() {
 	$list      = secupress_get_module_option( 'bad-logins_blacklist-logins-list', '', 'users-login' );
 	$list      = explode( "\n", $list );
 	// Some usernames are always blacklisted.
-	$hardcoded = array_merge( range( 0, 9 ), range( 'a', 'z' ), array( 'admin', '_', '.', '-', '@' ) );
+	$hardcoded = array_merge( range( 'a', 'z' ), array( '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ), array( 'admin', '_', '.', '-', '@' ) );
 	$list      = array_merge( $list, $hardcoded );
 	// Temporarily allow some blacklisted usernames.
 	$allowed   = (array) secupress_cache_data( 'allowed_usernames' );
