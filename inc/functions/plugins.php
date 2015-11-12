@@ -2,14 +2,14 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /**
- * Return true is secupress premium is installed
+ * Return true is secupress pro is installed
  *
  * @since 1.0
  * @source wp-admin/includes/plugin.php
  * @return bool
  */
-function secupress_is_premium() {
-	return defined( 'SECUPRESS_PREMIUM_VERSION' );
+function secupress_is_pro() {
+	return defined( 'SECUPRESS_PRO_VERSION' );
 }
 
 

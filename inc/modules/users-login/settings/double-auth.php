@@ -12,7 +12,7 @@ $this->add_section( __( 'Authentication', 'secupress' ), array( 'with_roles' => 
 $plugin = $this->get_current_plugin(); // 'double-auth'
 
 /** This filter is documented in secupress/inc/admin/modules/white-label.php */
-$select_args_options = apply_filters( 'premium.module.' . $plugin, array(
+$select_args_options = apply_filters( 'pro.module.' . $plugin, array(
 	'-1'            => __( 'No thank you', 'secupress' ) . ' <em>(' . __( 'Not recommended', 'secupress' ) . ')</em>',
 	'_passwordless' => __( 'PasswordLess (notifications by E-mail, mobile, Slack, SMS.)', 'secupress' ),
 	'googleauth'    => __( 'Mobile Authenticator App (Google Auth, FreeOTP, ...)', 'secupress' ),
@@ -45,21 +45,8 @@ $this->add_field(
 	)
 );
 
-$this->add_field(
-	__( 'Premium Upgrade', 'secupress' ),
-	array(
-		'name'        => '',
-		'field_type'  => 'field_button',
-	),
-	array(
-		'depends_on'         => $field_name . '__passwordless',
-		'helper_description' => array( 'description' => __( 'This feature is only available in the <strong>Premium Version</strong>.', 'secupress' ) ),
-		'button'             => array(
-			'url'            => '#',
-			'button_label'   => __( 'I Upgrade Now', 'secupress' ),
-		),
-	)
-);
+$this->add_pro_upgrade_field( $field_name . '__passwordless' );
+
 
 $plugin = $this->set_current_plugin( 'captcha' )->get_current_plugin();
 

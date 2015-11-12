@@ -214,6 +214,28 @@ abstract class SecuPress_Settings {
 	}
 
 
+	public function add_pro_upgrade_field( $depends_on_field, $helper_description_more = '' ) {
+		if ( secupress_is_pro() ) {
+			do_action( 'pro.upgrade_field.' . $depends_on_field );
+		} else {
+			$this->add_field(
+				__( 'Pro Upgrade', 'secupress' ),
+				array(
+					'name'        => '',
+					'field_type'  => 'field_button',
+				),
+				array(
+					'depends_on'         => $depends_on_field,
+					'helper_description' => array( 'description' => __( 'This feature is only available in the <strong>Pro Version</strong>.', 'secupress' ) . $helper_description_more ),
+					'button'             => array(
+						'url'            => '#', ////
+						'button_label'   => __( 'I Upgrade Now', 'secupress' ),
+					),
+				)
+			);
+		}
+	}
+
 	// do_secupress_settings_sections() + secupress_do_secupress_settings_sections()
 	protected function do_sections() {
 
@@ -391,7 +413,7 @@ abstract class SecuPress_Settings {
 
 							foreach ( $args['options'] as $val => $title ) {
 								if ( '_' === $val[0] ) {
-									$title .= ' (' . __( 'Premium', 'secupress' ) . ')';
+									$title .= ' (' . __( 'Pro', 'secupress' ) . ')';
 								}
 								?>
 								<option value="<?php echo $val; ?>" <?php selected( in_array( $val, $value ) ); ?>><?php echo $title; ?></option>
@@ -432,7 +454,7 @@ abstract class SecuPress_Settings {
 
 					foreach ( $args['options'] as $val => $title ) {
 						if ( '_' === $val[0] ) {
-							$title .= ' (' . __( 'Premium', 'secupress' ) . ')';
+							$title .= ' (' . __( 'Pro', 'secupress' ) . ')';
 						}
 						?>
 						<label>
@@ -449,7 +471,7 @@ abstract class SecuPress_Settings {
 					<?php
 					foreach ( $args['options'] as $val => $title ) {
 						if ( '_' === $val[0] ) {
-							$title .= ' (' . __( 'Premium', 'secupress' ) . ')';
+							$title .= ' (' . __( 'Pro', 'secupress' ) . ')';
 						}
 						?>
 						<label>

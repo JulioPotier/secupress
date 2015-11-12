@@ -84,7 +84,7 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 
 	public function fix() {
 
-		if ( ! secupress_is_premium() ) {
+		if ( ! secupress_is_pro() ) {
 			$settings = array( 'double-auth_type' => 'googleauth', 'double_auth_affected_role' => array() );
 			$this->add_fix_message( 1 );
 		} else {

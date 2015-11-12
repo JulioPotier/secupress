@@ -32,23 +32,7 @@ $this->add_field(
 	)
 );
 
-$this->add_field(
-	__( 'Premium Upgrade', 'secupress' ),
-	array(
-		'name'       => '',
-		'field_type' => 'field_button',
-	),
-	array(
-		'depends_on'         => $main_field_name . '__ooc',
-		'helper_description' => array(
-			'description'    => __( 'This feature is only available in the <b>Premium Version</b>.', 'secupress' ) . '<br>' . __( 'Once logged in, nobody can log in on your account at the same time as you.', 'secupress' ),
-		),
-		'button'             => array(
-			'url'            => '#',
-			'button_label'   => __( 'I Upgrade Now', 'secupress' ),
-		),
-	)
-);
+$this->add_pro_upgrade_field( $main_field_name . '__ooc', '<br>' . __( 'Once logged in, nobody can log in on your account at the same time as you.', 'secupress' ) );
 
 $field_name = $this->get_field_name( 'number_attempts' );
 

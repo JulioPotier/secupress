@@ -351,13 +351,6 @@ function __secupress_scanners() {
 				'<a class="button button-small" href="https://twitter.com/intent/tweet?via=secupress&amp;url=' . urlencode( 'http://secupress.fr&text=' . __( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ) ) . '">Tweet &raquo;</a>' .
 			'</div>'
 		),
-	//	'premium' => array(
-	//		'SecuPress Security Pro',
-	//		__( '<img src="https://dl-web.dropbox.com/get/BAW/V3/secupress_sign.png?_subject_uid=45956904&w=AABRKI608fHD9wxoU4qXaJ3TlsmpqTO_vpZT969iKmlrbw"><br>Get "<b>SecuPress Security Pro</b>" now and fix all to get a Securer installation!<br><a href="#">Clic here</a>', 'secupress' )
-	//	),
-	//	'infos' => array(
-	//		__( 'Informations', 'secupress' ),
-	//	),
 	);
 	?>
 	<div class="wrap">
@@ -586,7 +579,7 @@ function secupress_main_scan() {
 										<a class="button button-secondary button-small secupress-fixit" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $class_name_part ), 'secupress_fixit_' . $class_name_part ); ?>"><?php _e( 'Fix it!', 'secupress' ); ?></a>
 										<?php
 									} else { ?>
-										<button type="button" class="button button-secondary button-small secupress-go-premium"><?php _e( 'Premium Upgrade', 'secupress' ); ?></button>
+										<button type="button" class="button button-secondary button-small secupress-go-pro"><?php _e( 'Pro Upgrade', 'secupress' ); ?></button>
 										<?php
 									}
 									?>
