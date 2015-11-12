@@ -51,7 +51,7 @@ $this->add_field(
 		array(
 			'type'        => 'helper_description',
 			'name'        => $field_name,
-			'description' => __( 'One username per line, no uppercase.', 'secupress' ) . '<br/>' . __( 'Usernames with only one character are automatically blacklisted ("admin" also is).', 'secupress' ) . '<br/>' . $allowed_chars,
+			'description' => __( 'One username per line, lowercase.', 'secupress' ) . '<br/>' . __( '<code>admin</code> and <em>one character usernames</em> are automatically blacklisted.', 'secupress' ) . '<br/>' . $allowed_chars,
 		),
 	)
 );
