@@ -354,8 +354,7 @@ function __secupress_scanners() {
 	);
 	?>
 	<div class="wrap">
-		<?php
-		secupress_admin_heading( __( 'Scanners', 'secupress' ) ); ?>
+		<?php secupress_admin_heading( __( 'Scanners', 'secupress' ) ); ?>
 
 		<div class="secupress-wrapper">
 			<?php
@@ -384,7 +383,7 @@ function __secupress_scanners() {
  * @since 1.0
  */
 function secupress_admin_heading( $title = '' ) {
-	$heading_tag = secupress_wp_version_is( '4.3.0-alpha' ) ? 'h1' : 'h2';
+	$heading_tag = secupress_wp_version_is( '4.3-alpha' ) ? 'h1' : 'h2';
 	printf( '<%1$s>%2$s <sup>%3$s</sup> %4$s</%1$s>', $heading_tag, SECUPRESS_PLUGIN_NAME, SECUPRESS_VERSION, $title );
 }
 
@@ -395,6 +394,7 @@ function secupress_main_scan() {
 	$secupress_tests = secupress_get_tests();
 	$scanners        = secupress_get_scanners();
 	$fixes           = secupress_get_scanner_fixes();
+	$heading_tag     = secupress_wp_version_is( '4.4-alpha' ) ? 'h2' : 'h3';
 	// Actions the user needs to perform for a fix.
 	$fix_actions     = SecuPress_Scan::get_and_delete_fix_actions();
 	// Auto-scans: scans that will be executed on page load.
@@ -446,7 +446,7 @@ function secupress_main_scan() {
 			<div class="table-prio-all table-prio-<?php echo $prio_key; ?>">
 
 				<div class="prio-<?php echo $prio_key; ?>">
-					<h2><?php echo $prio_data['title']; ?></h2>
+					<?php echo '<' . $heading_tag . '>' . $prio_data['title'] . '</' . $heading_tag . '>'; ?>
 					<?php echo $prio_data['description']; ?>
 				</div>
 
@@ -634,6 +634,10 @@ function secupress_main_scan() {
 			pre_print_r($scanners,1);
 			echo '<code>$fixes</code>:';
 			pre_print_r($fixes,1);
+			if ( is_multisite() ) {
+				echo '<code>$sites_for_ms</code>:';
+				pre_print_r(secupress_get_sites_for_ms_scanner_fixes(),1);
+			}
 		}
 		?>
 	</div>
