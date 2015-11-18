@@ -952,9 +952,6 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 	 *         user_id_4 => username_4,
 	 *     ),
 	 * )
-	 * This is used for multisite.
-	 *
-	 * @param (bool) $user_login If true, will return the username instead of posts count.
 	 *
 	 * @return (array)
 	 */
