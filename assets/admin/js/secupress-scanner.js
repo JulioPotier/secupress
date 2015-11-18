@@ -1,65 +1,83 @@
 jQuery( document ).ready( function( $ ) {
 
-	var secupressChartData = [
-		{
-			value: SecuPressi18nChart.good.value,
-			color:"#88BA0E",
-			highlight: "#97cc0f",
-			label: SecuPressi18nChart.good.text,
-			status: 'good',
-		},
-		{
-			value: SecuPressi18nChart.bad.value,
-			color: "#D73838",
-			highlight: "#db4848",
-			label: SecuPressi18nChart.bad.text,
-			status: 'bad',
-		},
-		{
-			value: SecuPressi18nChart.warning.value,
-			color: "#FFA500",
-			highlight: "#ffad14",
-			label: SecuPressi18nChart.warning.text,
-			status: 'warning',
-		},
-		{
-			value: SecuPressi18nChart.notscannedyet.value,
-			color: "#555",
-			highlight: "#5e5e5e",
-			label: SecuPressi18nChart.notscannedyet.text,
-			status: 'notscannedyet',
-		},
-	];
+	var secupressChart,
+		secupressChartEl = document.getElementById( "status_chart" ),
+		secupressChartData;
 
-	var secupressChartEl = document.getElementById( "status_chart" );
-	var secupressChart   = new Chart( secupressChartEl.getContext( "2d" ) ).Doughnut( secupressChartData, {
-		animationEasing    : 'easeInOutQuart',
-		tooltipEvents      : [],
-		showTooltips       : true,
-		onAnimationComplete: function() {
-			this.showTooltip( [ this.segments[0] ], true );
-		}
-	} );
+	if ( secupressChartEl && window.Chart ) {
+		secupressChartData = [
+			{
+				value: SecuPressi18nChart.good.value,
+				color:"#88BA0E",
+				highlight: "#97cc0f",
+				label: SecuPressi18nChart.good.text,
+				status: 'good',
+			},
+			{
+				value: SecuPressi18nChart.bad.value,
+				color: "#D73838",
+				highlight: "#db4848",
+				label: SecuPressi18nChart.bad.text,
+				status: 'bad',
+			},
+			{
+				value: SecuPressi18nChart.warning.value,
+				color: "#FFA500",
+				highlight: "#ffad14",
+				label: SecuPressi18nChart.warning.text,
+				status: 'warning',
+			},
+			{
+				value: SecuPressi18nChart.notscannedyet.value,
+				color: "#555",
+				highlight: "#5e5e5e",
+				label: SecuPressi18nChart.notscannedyet.text,
+				status: 'notscannedyet',
+			},
+		];
 
-	secupressChartEl.onclick = function( e ){
-		var activePoints = secupressChart.getSegmentsAtEvent( e );
-		$( '.square-filter.statuses button[data-type="' + activePoints[0].status + '"]' ).trigger( "filter.secupress" );
-	};
+		secupressChart = new Chart( secupressChartEl.getContext( "2d" ) ).Doughnut( secupressChartData, {
+			animationEasing    : 'easeInOutQuart',
+			tooltipEvents      : [],
+			showTooltips       : true,
+			onAnimationComplete: function() {
+				this.showTooltip( [ this.segments[0] ], true );
+			}
+		} );
+
+		secupressChartEl.onclick = function( e ){
+			var activePoints = secupressChart.getSegmentsAtEvent( e );
+			$( '.square-filter.statuses button[data-type="' + activePoints[0].status + '"]' ).trigger( "filter.secupress" );
+		};
+	}
+
+	if ( jQuery.timeago ) {
+		jQuery.timeago.settings.strings = jQuery.extend( { numbers: [] }, SecuPressi18nTimeago );
+		$( ".timeago" ).timeago();
+	}
 
 	function secupressPrependDataLi( percent, now ) {
 		$( ".score_results ul" ).prepend( '<li class="hidden" data-percent="' + percent + '">' + now + "</li>" ).find( "li.hidden" ).slideDown( 250 );
-		$( ".timeago:first" ).timeago();
+		if ( jQuery.timeago ) {
+			$( ".timeago:first" ).timeago();
+		}
 	}
 
 	function secupressUpdateScore( refresh ) {
-		var total                = $( ".status-all" ).length;
-		var status_good          = $( ".table-prio-all tr.status-good" ).length;
-		var status_warning       = $( ".table-prio-all tr.status-warning" ).length;
-		var status_bad           = $( ".table-prio-all tr.status-bad" ).length;
-		var status_notscannedyet = $( ".table-prio-all tr.status-notscannedyet" ).length;
-		var percent              = Math.floor( status_good * 100 / total );
-		var letter               = "&ndash;";
-		var d, the_date, dashicon, score_results_ul, replacement, last_percent, now;
+		var total, status_good, status_warning, status_bad, status_notscannedyet, percent, letter,
+			d, the_date, dashicon, score_results_ul, replacement, last_percent, now;
+
+		if ( ! secupressChartEl || ! jQuery.timeago ) {
+			return;
+		}
+
+		total                = $( ".status-all" ).length;
+		status_good          = $( ".table-prio-all tr.status-good" ).length;
+		status_warning       = $( ".table-prio-all tr.status-warning" ).length;
+		status_bad           = $( ".table-prio-all tr.status-bad" ).length;
+		status_notscannedyet = $( ".table-prio-all tr.status-notscannedyet" ).length;
+		percent              = Math.floor( status_good * 100 / total );
+		letter               = "&ndash;";
 
 		$( ".score_info2 .percent" ).text( "(" + percent + " %)" );
 
@@ -122,10 +140,6 @@ jQuery( document ).ready( function( $ ) {
 	}
 
 	secupressUpdateScore();
-
-	jQuery.timeago.settings.strings = jQuery.extend( { numbers: [] }, SecuPressi18nTimeago );
-
-	$( ".timeago" ).timeago();
 
 
 	// !Filter rows ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

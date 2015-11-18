@@ -25,9 +25,14 @@ function secupress_admin_url( $page, $module = '' ) {
  *
  * @since 1.0
  *
+ * @param (bool) $force_mono: set to true to get the capability for monosite, whatever we're on multisite or not.
+ *
  * @return (string) The capability.
  */
-function secupress_get_capability() {
+function secupress_get_capability( $force_mono = false ) {
+	if ( $force_mono ) {
+		return 'administrator';
+	}
 	return is_multisite() ? 'manage_network_options' : 'administrator';
 }
 
@@ -65,16 +70,16 @@ endif;
  */
 function secupress_class_path( $prefix, $class_name_part = '' ) {
 	$folders = array(
-		'scan'     => 'scanners',
-		'settings' => 'settings',
+		'scan' => 'scanners',
 	);
 
 	$prefix = strtolower( str_replace( '_', '-', $prefix ) );
+	$folder = isset( $folders[ $prefix ] ) ? $folders[ $prefix ] : $prefix;
 
 	$class_name_part = strtolower( str_replace( '_', '-', $class_name_part ) );
 	$class_name_part = $class_name_part ? '-' . $class_name_part : '';
 
-	return SECUPRESS_CLASSES_PATH . $folders[ $prefix ] . '/class-secupress-' . $prefix . $class_name_part . '.php';
+	return SECUPRESS_CLASSES_PATH . $folder . '/class-secupress-' . $prefix . $class_name_part . '.php';
 }
 
 

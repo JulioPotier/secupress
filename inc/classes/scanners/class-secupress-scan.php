@@ -38,6 +38,17 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	protected     $result     = array();
 	// Contain fix results.
 	protected     $result_fix = array();
+	/*
+	 * On multisite, some fixes can't be performed from the network admin.
+	 * This array will contain a list of site IDs with scan messages.
+	 */
+	protected     $fix_sites;
+	/*
+	 * On multisite, if `$for_current_site` is true, then the scan/fix/etc are performed for the current site, not wetwork-widely.
+	 * If needed, should be set right after instanciation.
+	 * Does nothing on non-multisite installations.
+	 */
+	protected     $for_current_site = false;
 
 	public static $prio    = '';
 	public static $type    = '';
@@ -98,11 +109,35 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	}
 
 
+	// Multisite specifics =========================================================================
+
+	// Get `$for_current_site`.
+
+	final public function is_for_current_site() {
+		return $this->for_current_site;
+	}
+
+
+	// `is_network_admin()` does not work in an ajax callback.
+
+	final public function is_network_admin() {
+		return is_multisite() && ! $this->is_for_current_site();
+	}
+
+
+	// Set `$for_current_site`.
+
+	final public function for_current_site( $for_current_site = null ) {
+		$this->for_current_site = (bool) $for_current_site;
+		return $this;
+	}
+
+
 	// Messages for scans and fixes ================================================================
 
 	// Get messages.
 
-	public static function get_messages( $message_id = null ){
+	public static function get_messages( $message_id = null ) {
 		die( 'Method SecuPress_Scan::get_messages() must be over-ridden in a sub-class.' );
 	}
 
@@ -118,6 +153,10 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 			'warning' => 2,
 			'bad'     => 3,
 		);
+
+		if ( $this->is_for_current_site() ) {
+			return $this->set_subsite_status( $status, 'scan', 0, $force );
+		}
 
 		// Unkown status
 		if ( ! isset( $statuses[ $status ] ) ) {
@@ -148,28 +187,23 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	 */
 
 	final protected function add_message( $message_id, $params = array() ) {
+		if ( $this->is_for_current_site() ) {
+			return $this->add_subsite_message( $message_id, $params );
+		}
+
 		$this->result['msgs'] = isset( $this->result['msgs'] ) ? $this->result['msgs'] : array();
 		$this->result['msgs'][ $message_id ] = $params;
-
-		if ( $message_id < 100 ) {
-
-			$this->set_status( 'good' );
-
-		} elseif  ( $message_id < 200 ) {
-
-			$this->set_status( 'warning' );
-
-		} elseif ( $message_id < 300 ) {
-
-			$this->set_status( 'bad' );
-
-		}
+		$this->set_status( static::get_status_from_message_id( $message_id ) );
 	}
 
 
 	// Are scan status and message(s) set?
 
 	final protected function has_status() {
+		if ( $this->is_for_current_site() ) {
+			return $this->has_subsite_status();
+		}
+
 		return ! empty( $this->result );
 	}
 
@@ -177,6 +211,10 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	// Set a scan status + message only if no status is set yet.
 
 	final protected function maybe_set_status( $message_id, $params = array() ) {
+		if ( $this->is_for_current_site() ) {
+			return $this->maybe_set_subsite_status( $message_id, $params );
+		}
+
 		if ( ! $this->has_status() ) {
 			$this->add_message( $message_id, $params );
 		}
@@ -194,6 +232,10 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 			'warning' => 2,
 			'bad'     => 3,
 		);
+
+		if ( $this->is_for_current_site() ) {
+			return $this->set_subsite_status( $status, 'fix', 0, $force );
+		}
 
 		// Unkown status
 		if ( ! isset( $statuses[ $status ] ) ) {
@@ -225,32 +267,23 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	 */
 
 	public function add_fix_message( $message_id, $params = array() ) {
+		if ( $this->is_for_current_site() ) {
+			return $this->add_subsite_message( $message_id, $params, 'fix' );
+		}
+
 		$this->result_fix['msgs'] = isset( $this->result_fix['msgs'] ) ? $this->result_fix['msgs'] : array();
 		$this->result_fix['msgs'][ $message_id ] = $params;
-
-		if ( $message_id < 100 ) {
-
-			$this->set_fix_status( 'good' );
-
-		} elseif  ( $message_id < 200 ) {
-
-			$this->set_fix_status( 'warning' );
-
-		} elseif ( $message_id < 300 ) {
-
-			$this->set_fix_status( 'bad' );
-
-		} elseif ( $message_id < 400 ) {
-
-			$this->set_fix_status( 'cantfix' );
-
-		}
+		$this->set_fix_status( static::get_status_from_message_id( $message_id ) );
 	}
 
 
 	// Are fix status and message(s) set?
 
 	final protected function has_fix_status() {
+		if ( $this->is_for_current_site( 'fix' ) ) {
+			return $this->has_subsite_status( 'fix' );
+		}
+
 		return ! empty( $this->result_fix );
 	}
 
@@ -258,9 +291,145 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	// Set a fix status + message only if no status is set yet.
 
 	final protected function maybe_set_fix_status( $message_id, $params = array() ) {
+		if ( $this->is_for_current_site() ) {
+			return $this->maybe_set_subsite_status( $message_id, $params, 'fix' );
+		}
+
 		if ( ! $this->has_fix_status() ) {
 			$this->add_fix_message( $message_id, $params );
 		}
+	}
+
+
+	// Messages for subsites =======================================================================
+
+	/*
+	 * On multisite, some fixes can't be performed from the network admin.
+	 * Here we store a list of site IDs with some data:
+	 * array(
+	 *    blog_id => array(
+	 *        'scan' => array(
+	 *            'status' => 'bad|warning|good',
+	 *            'msgs'   => array(
+	 *                message_id => array( data_1 ),
+	 *                message_id => array( data_1, data_2 ),
+	 *            ),
+	 *        ),
+	 *        'fix' => array(
+	 *            'status' => 'bad|warning|good|cantfix',
+	 *            'msgs'   => array(
+	 *                message_id => array( data_1 ),
+	 *                message_id => array( data_1, data_2 ),
+	 *            ),
+	 *        ),
+	 *    ),
+	 * )
+	 */
+
+	// Maybe set current fix status.
+
+	final protected function set_subsite_status( $status, $scan_or_fix = 'scan', $site_id = 0, $force = false ) {
+		$statuses = array(
+			'cantfix' => 0,
+			'good'    => 1,
+			'warning' => 2,
+			'bad'     => 3,
+		);
+
+		// Unkown status
+		if ( ! isset( $statuses[ $status ] ) ) {
+			return false;
+		}
+
+		$scan_or_fix = 'fix' === $scan_or_fix ? 'fix' : 'scan';
+		$site_id     = $site_id ? $site_id : get_current_blog_id();
+
+		$this->set_subsite_defaults( $scan_or_fix, $site_id );
+
+		// No previous status
+		if ( empty( $this->fix_sites[ $site_id ][ $scan_or_fix ]['status'] ) || $force ) {
+			$this->fix_sites[ $site_id ][ $scan_or_fix ]['status'] = $status;
+		}
+		// Status already set: only allow to "upgrade" to a superior status.
+		elseif ( $statuses[ $status ] > $statuses[ $this->fix_sites[ $site_id ][ $scan_or_fix ]['status'] ] ) {
+			$this->fix_sites[ $site_id ][ $scan_or_fix ]['status'] = $status;
+		}
+
+		return $this->fix_sites[ $site_id ][ $scan_or_fix ]['status'];
+	}
+
+
+	// Add a message and automatically set the fix status.
+
+	final protected function add_subsite_message( $message_id, $params = array(), $scan_or_fix = 'scan', $site_id = 0 ) {
+		$scan_or_fix = 'fix' === $scan_or_fix ? 'fix' : 'scan';
+		$site_id     = $site_id ? $site_id : get_current_blog_id();
+
+		$this->set_subsite_status( static::get_status_from_message_id( $message_id ), $scan_or_fix, $site_id );
+		$this->fix_sites[ $site_id ][ $scan_or_fix ]['msgs'][ $message_id ] = $params;
+	}
+
+
+	// Are status and message(s) set?
+
+	final protected function has_subsite_status( $scan_or_fix = 'scan', $site_id = 0 ) {
+		$scan_or_fix = 'fix' === $scan_or_fix ? 'fix' : 'scan';
+		$site_id     = $site_id ? $site_id : get_current_blog_id();
+		return ! empty( $this->fix_sites[ $site_id ][ $scan_or_fix ] );
+	}
+
+
+	// Set a status + message only if no status is set yet.
+
+	final protected function maybe_set_subsite_status( $message_id, $params = array(), $scan_or_fix = 'scan', $site_id = 0 ) {
+		if ( ! $this->has_subsite_status( $scan_or_fix, $site_id ) ) {
+			$this->add_subsite_message( $message_id, $params, $scan_or_fix, $site_id );
+		}
+	}
+
+
+	// Set defaults.
+
+	final protected function set_subsite_defaults( $scan_or_fix = 'scan', $site_id = 0 ) {
+		$scan_or_fix = 'fix' === $scan_or_fix ? 'fix' : 'scan';
+		$site_id     = $site_id ? $site_id : get_current_blog_id();
+		$this->fix_sites                                       = is_array( $this->fix_sites )                                    ? $this->fix_sites                                       : array();
+		$this->fix_sites[ $site_id ]                           = isset( $this->fix_sites[ $site_id ] )                           ? $this->fix_sites[ $site_id ]                           : array();
+		$this->fix_sites[ $site_id ][ $scan_or_fix ]           = isset( $this->fix_sites[ $site_id ][ $scan_or_fix ] )           ? $this->fix_sites[ $site_id ][ $scan_or_fix ]           : array();
+		$this->fix_sites[ $site_id ][ $scan_or_fix ]['msgs']   = isset( $this->fix_sites[ $site_id ][ $scan_or_fix ]['msgs'] )   ? $this->fix_sites[ $site_id ][ $scan_or_fix ]['msgs']   : array();
+		$this->fix_sites[ $site_id ][ $scan_or_fix ]['status'] = isset( $this->fix_sites[ $site_id ][ $scan_or_fix ]['status'] ) ? $this->fix_sites[ $site_id ][ $scan_or_fix ]['status'] : '';
+	}
+
+
+	/*
+	 * Remove all previously stored messages for sub-sites.
+	 * This will allow to set an empty transient, and then empty the option later.
+	 */
+	final protected function set_empty_data_for_subsites() {
+		$this->fix_sites = array();
+	}
+
+
+	final protected function get_subsite_result( $scan_or_fix = 'scan', $site_id = 0 ) {
+		$scan_or_fix        = 'fix' === $scan_or_fix ? 'fix' : 'scan';
+		$scan_or_fix_invert = 'fix' === $scan_or_fix ? 'scan' : 'fix';
+		$site_id            = $site_id ? $site_id : get_current_blog_id();
+
+		$result  = $this->fix_sites[ $site_id ][ $scan_or_fix ];
+
+		unset( $this->fix_sites[ $site_id ][ $scan_or_fix ] );
+		if ( ! empty( $this->fix_sites[ $site_id ][ $scan_or_fix_invert ] ) ) {
+			return $result;
+		}
+
+		unset( $this->fix_sites[ $site_id ] );
+		if ( ! empty( $this->fix_sites ) ) {
+			return $result;
+		}
+
+		$this->fix_sites = null;
+
+		return $result;
 	}
 
 
@@ -271,8 +440,12 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	public function scan() {
 		$this->update();
 
-		$result = $this->result;
-		$this->result = array();
+		if ( $this->is_for_current_site() ) {
+			$result = $this->get_subsite_result();
+		} else {
+			$result = $this->result;
+			$this->result = array();
+		}
 
 		return $result;
 	}
@@ -287,11 +460,19 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 			// Ajax
 			if ( defined( 'DOING_AJAX' ) ) {
 				// Add the fixes that require user action in the returned data.
-				$this->result_fix = array_merge( $this->result_fix, array(
+				$form = array(
 					'form_contents' => $this->get_required_fix_action_template_parts(),
 					'form_fields'   => $this->get_fix_action_fields( false, false ),
 					'form_title'    => _n( 'This action requires your attention', 'These actions require your attention', count( $this->fix_actions ), 'secupress' ),
-				) );
+				);
+
+				if ( $this->is_for_current_site() ) {
+					$site_id = get_current_blog_id();
+					$this->set_subsite_defaults( 'fix', $site_id );
+					$this->fix_sites[ $site_id ]['fix'] = array_merge( $this->fix_sites[ $site_id ]['fix'], $form );
+				} else {
+					$this->result_fix = array_merge( $this->result_fix, $form );
+				}
 
 				$this->fix_actions = array();
 			}
@@ -302,8 +483,12 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 			}
 		}
 
-		$result = $this->result_fix;
-		$this->result_fix = array();
+		if ( $this->is_for_current_site() ) {
+			$result = $this->get_subsite_result( 'fix' );
+		} else {
+			$result = $this->result_fix;
+			$this->result_fix = array();
+		}
 
 		return $result;
 	}
@@ -355,6 +540,9 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 		$output .= '<input type="hidden" name="test" value="' . $this->class_name_part . '" />';
 		$output .= '<input type="hidden" name="test-parts" value="' . implode( ',', $fix_actions ) . '" />';
 		$output .= wp_nonce_field( 'secupress_manual_fixit-' . $this->class_name_part, 'secupress_manual_fixit-nonce', false, false );
+		if ( $this->is_for_current_site() ) {
+			$output .= '<input type="hidden" name="for-current-site" value="1" />';
+		}
 
 		if ( ! $echo ) {
 			return $output;
@@ -369,22 +557,56 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	final public function update() {
 		$name = strtolower( $this->class_name_part );
 
-		if ( ! secupress_set_site_transient( 'secupress_scan_' . $name, $this->result ) ) {
-			return array();
+		if ( $this->is_for_current_site() ) {
+			if ( ! isset( $this->fix_sites ) ) {
+				return array();
+			}
+
+			$site_id       = get_current_blog_id();
+			$sub_transient = secupress_get_site_transient( 'secupress_fix_sites_' . $name );
+			$sub_transient = is_array( $sub_transient ) ? $sub_transient : array();
+
+			$sub_transient[ $site_id ] = ! empty( $sub_transient[ $site_id ] ) ? $sub_transient[ $site_id ] : array();
+			$sub_transient[ $site_id ]['scan'] = ! empty( $this->fix_sites[ $site_id ]['scan'] ) ? $this->fix_sites[ $site_id ]['scan'] : array();
+
+			secupress_set_site_transient( 'secupress_fix_sites_' . $name, $sub_transient );
+
+			return isset( $this->fix_sites[ $site_id ]['scan'] ) && is_array( $this->fix_sites[ $site_id ]['scan'] ) ? $this->fix_sites[ $site_id ]['scan'] : array();
 		}
+
+		secupress_set_site_transient( 'secupress_scan_' . $name, $this->result );
 
 		return $this->result;
 	}
 
 
 	final public function update_fix() {
-		$this->result_fix['attempted_fixes'] = array_key_exists( 'attempted_fixes', $this->result_fix ) ? ++$this->result_fix['attempted_fixes'] : 1;
-
+		$name = strtolower( $this->class_name_part );
 		$name = strtolower( $this->class_name_part );
 
-		if ( ! secupress_set_site_transient( 'secupress_fix_' . $name, $this->result_fix ) ) {
-			return array();
+		if ( $this->is_for_current_site() ) {
+			if ( ! isset( $this->fix_sites ) ) {
+				return array();
+			}
+
+			$site_id       = get_current_blog_id();
+			$sub_transient = secupress_get_site_transient( 'secupress_fix_sites_' . $name );
+			$sub_transient = is_array( $sub_transient ) ? $sub_transient : array();
+
+			$sub_transient[ $site_id ] = ! empty( $sub_transient[ $site_id ] ) ? $sub_transient[ $site_id ] : array();
+			$sub_transient[ $site_id ]['fix'] = ! empty( $this->fix_sites[ $site_id ]['fix'] ) ? $this->fix_sites[ $site_id ]['fix'] : array();
+
+			secupress_set_site_transient( 'secupress_fix_sites_' . $name, $sub_transient );
+
+			return isset( $this->fix_sites[ $site_id ]['fix'] ) && is_array( $this->fix_sites[ $site_id ]['fix'] ) ? $this->fix_sites[ $site_id ]['fix'] : array();
+
+		} elseif ( isset( $this->fix_sites ) ) {
+			secupress_set_site_transient( 'secupress_fix_sites_' . $name, $this->fix_sites );
 		}
+
+		$this->result_fix['attempted_fixes'] = array_key_exists( 'attempted_fixes', $this->result_fix ) ? ++$this->result_fix['attempted_fixes'] : 1;
+
+		secupress_set_site_transient( 'secupress_fix_' . $name, $this->result_fix );
 
 		return $this->result_fix;
 	}
@@ -408,7 +630,7 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 	// Schedule an auto-scan that will be executed on page load.
 
-	final protected function schedule_autoscan() {
+	final public function schedule_autoscan() {
 		$transient = secupress_get_site_transient( 'secupress_autoscans' );
 		$transient = is_array( $transient ) ? $transient : array();
 
@@ -465,6 +687,24 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 		}
 
 		return $array ? $array : array();
+	}
+
+
+	//
+
+	final protected static function get_status_from_message_id( $message_id ) {
+		if ( $message_id < 100 ) {
+			return 'good';
+		}
+		if ( $message_id < 200 ) {
+			return 'warning';
+		}
+		if ( $message_id < 300 ) {
+			return 'bad';
+		}
+		if ( $message_id < 400 ) {
+			return 'cantfix';
+		}
 	}
 
 

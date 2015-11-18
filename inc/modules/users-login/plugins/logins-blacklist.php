@@ -325,7 +325,7 @@ function secupress_is_username_blacklisted( $username ) {
 
 
 /*------------------------------------------------------------------------------------------------*/
-/* FORBID USER CREATION IF THE USERNAME IS BLACKLISTED. ========================================= */
+/* FORBID USER CREATION AND EDITION IF THE USERNAME IS BLACKLISTED. ============================= */		//// wpmu_validate_user_signup() edit_user()
 /*------------------------------------------------------------------------------------------------*/
 
 /*

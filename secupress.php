@@ -104,6 +104,9 @@ function secupress_init() {
 			require( SECUPRESS_ADMIN_PATH . 'multisite.php' );
 		}
 
+		secupress_require_class( 'Admin', 'Notices' );
+		SecuPress_Admin_Notices::get_instance();
+
 		require( SECUPRESS_ADMIN_PATH . 'options.php' );
 		require( SECUPRESS_ADMIN_PATH . 'notices.php' );
 		require( SECUPRESS_ADMIN_PATH . 'admin.php' );

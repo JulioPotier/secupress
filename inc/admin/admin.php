@@ -13,6 +13,7 @@ add_action( 'wp_ajax_secupress_scanner',    '__secupress_scanit_action_callback'
  * Used to scan a test in scanner page.
  *
  * @since 1.0
+ *
  * @return (string) json format or redirects the user.
  **/
 function __secupress_scanit_action_callback() {
@@ -28,7 +29,8 @@ function __secupress_scanit_action_callback() {
 		secupress_admin_die();
 	}
 
-	$response = secupress_scanit( $test_name, true );
+	$for_current_site = ! empty( $_GET['for-current-site'] );
+	$response = secupress_scanit( $test_name, true, $for_current_site );
 
 /*	$times   = (array) get_site_option( SECUPRESS_SCAN_TIMES );
 	$counts  = secupress_get_scanner_counts();
@@ -44,11 +46,16 @@ function __secupress_scanit_action_callback() {
 /**
  * Get the result of a scan.
  *
- * @param $test_name (string) The suffix of the class name.
- * @return (array|bool) The scan result or false on failure.
  * @since 1.0
+ *
+ * @param (string) $test_name        The suffix of the class name.
+ * @param (bool)   $format_response  Change the output format.
+ * @param (bool)   $for_current_site If multisite, tell to perform the scan for the current site, not network-wide.
+ *                                   It has no effect on non multisite installations.
+ *
+ * @return (array|bool) The scan result or false on failure.
  **/
-function secupress_scanit( $test_name, $format_response = false ) {
+function secupress_scanit( $test_name, $format_response = false, $for_current_site = false ) {
 	$response = false;
 
 	if ( ! $test_name || ! file_exists( secupress_class_path( 'scan', $test_name ) ) ) {
@@ -63,9 +70,9 @@ function secupress_scanit( $test_name, $format_response = false ) {
 	if ( class_exists( $classname ) ) {
 		ob_start();
 			@set_time_limit( 0 );
-			$response = $classname::get_instance()->scan();
+			$response = $classname::get_instance()->for_current_site( $for_current_site )->scan();
 			/*
-			 * $response is an array that MUST contain "status" and MUST contain "msgs" OR "info".
+			 * $response is an array that MUST contain "status" and MUST contain "msgs".
 			 */
 		ob_end_flush();
 	}
@@ -74,7 +81,6 @@ function secupress_scanit( $test_name, $format_response = false ) {
 		$response = array(
 			'status'  => secupress_status( $response['status'] ),
 			'class'   => sanitize_key( $response['status'] ),
-		//	'info'    => isset( $response['info'] ) ? $response['info'] : '',
 			'message' => isset( $response['msgs'] ) ? secupress_format_message( $response['msgs'], $test_name ) : '',
 		);
 	}
@@ -106,7 +112,8 @@ function __secupress_fixit_action_callback() {
 		secupress_admin_die();
 	}
 
-	$response = secupress_fixit( $test_name, true );
+	$for_current_site = ! empty( $_GET['for-current-site'] );
+	$response = secupress_fixit( $test_name, true, $for_current_site );
 
 	secupress_admin_send_response_or_redirect( $response, 'scanners' );
 }
@@ -115,11 +122,16 @@ function __secupress_fixit_action_callback() {
 /**
  * Get the result of a fix.
  *
- * @param $test_name (string) The suffix of the class name.
- * @return (array|bool) The fix result or false on failure.
  * @since 1.0
+ *
+ * @param (string) $test_name        The suffix of the class name.
+ * @param (bool)   $format_response  Change the output format.
+ * @param (bool)   $for_current_site If multisite, tell to perform the fix for the current site, not network-wide.
+ *                                   It has no effect on non multisite installations.
+ *
+ * @return (array|bool) The scan result or false on failure.
  **/
-function secupress_fixit( $test_name, $format_response = false ) {
+function secupress_fixit( $test_name, $format_response = false, $for_current_site = false ) {
 	$response = false;
 
 	if ( ! $test_name || ! file_exists( secupress_class_path( 'scan', $test_name ) ) ) {
@@ -134,9 +146,9 @@ function secupress_fixit( $test_name, $format_response = false ) {
 	if ( class_exists( $classname ) ) {
 		ob_start();
 			@set_time_limit( 0 );
-			$response = $classname::get_instance()->fix();
+			$response = $classname::get_instance()->for_current_site( $for_current_site )->fix();
 			/*
-			 * $response is an array that MUST contain "status" and MUST contain "msgs" OR "info".
+			 * $response is an array that MUST contain "status" and MUST contain "msgs".
 			 */
 		ob_end_flush();
 	}
@@ -177,7 +189,8 @@ function __secupress_manual_fixit_action_callback() {
 		secupress_admin_die();
 	}
 
-	$response = secupress_manual_fixit( $test_name, true );
+	$for_current_site = ! empty( $_POST['for-current-site'] );
+	$response = secupress_manual_fixit( $test_name, true, $for_current_site );
 
 	secupress_admin_send_response_or_redirect( $response, 'scanners' );
 }
@@ -186,11 +199,16 @@ function __secupress_manual_fixit_action_callback() {
 /**
  * Get the result of a manual fix.
  *
- * @param $test_name (string) The suffix of the class name.
- * @return (array|bool) The fix result or false on failure.
  * @since 1.0
+ *
+ * @param (string) $test_name        The suffix of the class name.
+ * @param (bool)   $format_response  Change the output format.
+ * @param (bool)   $for_current_site If multisite, tell to perform the manual fix for the current site, not network-wide.
+ *                                   It has no effect on non multisite installations.
+ *
+ * @return (array|bool) The scan result or false on failure.
  **/
-function secupress_manual_fixit( $test_name, $format_response = false ) {
+function secupress_manual_fixit( $test_name, $format_response = false, $for_current_site = false ) {
 	$response = false;
 
 	if ( ! $test_name || ! file_exists( secupress_class_path( 'scan', $test_name ) ) ) {
@@ -205,9 +223,9 @@ function secupress_manual_fixit( $test_name, $format_response = false ) {
 	if ( class_exists( $classname ) ) {
 		ob_start();
 			@set_time_limit( 0 );
-			$response = $classname::get_instance()->manual_fix();
+			$response = $classname::get_instance()->for_current_site( $for_current_site )->manual_fix();
 			/*
-			 * $response is an array that MUST contain "status" and MUST contain "msgs" OR "info".
+			 * $response is an array that MUST contain "status" and MUST contain "msgs".
 			 */
 		ob_end_flush();
 	}

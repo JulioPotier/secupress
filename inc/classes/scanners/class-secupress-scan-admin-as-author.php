@@ -69,6 +69,8 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 			301 => _n_noop( 'The user role of %d Administrator must be changed.', 'The user role of %d Administrators must be changed.', 'secupress' ),
 			/* translators: %s is a user role. */
 			302 => __( 'You chose to create a new %s account.', 'secupress' ),
+			/* translators: %s is the plugin name. */
+			303 => sprintf( __( 'This cannot be fixed from here. A new %s menu item has been activated in the relevant site\'s administration area.', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -82,8 +84,9 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 	public function scan() {
 
 		// MULTISITE ===============
-		if ( is_multisite() ) {
-			return $this->scan_multisite();
+		if ( $this->is_network_admin() ) {
+			$this->scan_multisite();
+			return parent::scan();
 		}
 
 		// MONOSITE ================
@@ -108,8 +111,9 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 	public function fix() {
 
 		// MULTISITE ===============
-		if ( is_multisite() ) {
-			return $this->fix_multisite();
+		if ( $this->is_network_admin() ) {
+			$this->fix_network();
+			return parent::fix();
 		}
 
 		// MONOSITE ================
@@ -156,8 +160,9 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 	public function manual_fix() {
 
 		// MULTISITE ===============
-		if ( is_multisite() ) {
-			return $this->manual_fix_multisite();
+		if ( $this->is_network_admin() ) {
+			$this->fix_network();
+			return parent::manual_fix();
 		}
 
 		// MONOSITE ================
@@ -511,8 +516,12 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 	protected function get_fix_action_template_parts() {
 
 		// MULTISITE ===============
-		if ( is_multisite() ) {
-			return $this->get_fix_action_template_parts_multisite();
+		if ( $this->is_network_admin() ) {
+			return array(
+				'admin-as-author'                   => static::get_messages( 303 ),
+				'admin-as-author-new-editor'        => static::get_messages( 303 ),
+				'admin-as-author-new-administrator' => static::get_messages( 303 ),
+			);
 		}
 
 		// MONOSITE ================
@@ -528,6 +537,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 
 		$current_admin       = get_current_user_id();
 		$current_admin_login = get_userdata( $current_admin )->user_login;
+		$current_admin_login = sanitize_user( $current_admin_login, true );
 		$role_name           = static::get_new_role( true );
 		$needs_new_role      = ! $role_name;
 
@@ -904,7 +914,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 	protected function scan_multisite() {
 		global $wpdb;
 
-		$admins = static::get_posts_count_per_admin_per_blog();
+		$admins = static::get_usernames_per_blog();
 
 		if ( $admins ) {
 			$blog_names = array();
@@ -921,31 +931,6 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 			// good
 			$this->add_message( 0 );
 		}
-
-		return parent::scan();
-	}
-
-
-	protected function fix_multisite() {
-		////
-		return parent::fix();
-	}
-
-
-	protected function manual_fix_multisite() {
-		////
-		return parent::manual_fix();
-	}
-
-
-	protected function get_fix_action_template_parts_multisite() {
-		$parts = array();
-
-		////
-		$parts['admin-as-author'] = 'foo';
-		$parts['admin-as-author-new-editor'] = 'bar';
-		$parts['admin-as-author-new-administrator'] = 'baz';
-		return $parts;
 	}
 
 
@@ -957,24 +942,29 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 	 * Return a list of Administrators per blog + the number of their Posts like:
 	 * array(
 	 *     blog_id_1 => array(
-	 *         user_id_1 => nbr_posts_of_user_1,
-	 *         user_id_2 => nbr_posts_of_user_2,
+	 *         user_id_1 => username_1,
+	 *         user_id_2 => username_2,
 	 *     ),
 	 *     blog_id_2 => array(
-	 *         user_id_1 => nbr_posts_of_user_1,
-	 *         user_id_2 => nbr_posts_of_user_2,
-	 *         user_id_3 => nbr_posts_of_user_3,
-	 *         user_id_4 => nbr_posts_of_user_4,
+	 *         user_id_1 => username_1,
+	 *         user_id_2 => username_2,
+	 *         user_id_3 => username_3,
+	 *         user_id_4 => username_4,
 	 *     ),
 	 * )
 	 * This is used for multisite.
+	 *
+	 * @param (bool) $user_login If true, will return the username instead of posts count.
+	 *
+	 * @return (array)
 	 */
-	final protected static function get_posts_count_per_admin_per_blog() {
+	final protected static function get_usernames_per_blog() {
 		global $wpdb;
 		$admins_per_blog = array();
+		$user_logins     = array();
 
-		$prefix  = $wpdb->esc_like( $wpdb->prefix );
-		$results = $wpdb->get_results( "SELECT user_id, meta_key FROM $wpdb->usermeta AS um RIGHT JOIN $wpdb->users AS u ON um.user_id = u.ID WHERE meta_key LIKE '$prefix%capabilities' AND meta_value LIKE '%s:13:\"administrator\";b:1;%'" );
+		$prefix  = $wpdb->esc_like( $wpdb->base_prefix );
+		$results = $wpdb->get_results( "SELECT user_id, user_login, meta_key FROM $wpdb->usermeta AS um RIGHT JOIN $wpdb->users AS u ON um.user_id = u.ID WHERE meta_key LIKE '$prefix%capabilities' AND meta_value LIKE '%s:13:\"administrator\";b:1;%'" );
 
 		if ( $results ) {
 			// Fetch administrators.
@@ -983,15 +973,16 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 				$blog_id = max( 1, (int) trim( $blog_id, '_' ) );
 				$user_id = (int) $result->user_id;
 
+				$user_logins[ $user_id ]     = isset( $user_logins[ $user_id ] ) ? $user_logins[ $user_id ] : esc_html( $result->user_login );
 				$admins_per_blog[ $blog_id ] = isset( $admins_per_blog[ $blog_id ] ) ? $admins_per_blog[ $blog_id ] : array();
 				$admins_per_blog[ $blog_id ][ $user_id ] = $user_id;
 			}
 
-			// Limit results to administrators that have created Posts + count the number of Posts.
+			// Limit results to administrators that have created Posts.
 			foreach ( $admins_per_blog as $blog_id => $user_ids ) {
 				$table_prefix = $wpdb->get_blog_prefix( $blog_id );
 				$user_ids     = implode( ',', $user_ids );
-				$user_ids     = $wpdb->get_results( "SELECT post_author, COUNT(ID) AS posts_count FROM {$table_prefix}posts WHERE post_author IN ($user_ids) AND post_type = 'post' AND post_status NOT IN ( 'trash', 'auto-draft' ) GROUP BY post_author" );
+				$user_ids     = $wpdb->get_results( "SELECT post_author FROM {$table_prefix}posts WHERE post_author IN ($user_ids) AND post_type = 'post' AND post_status NOT IN ( 'trash', 'auto-draft' ) GROUP BY post_author" );
 
 				if ( ! $user_ids ) {
 					unset( $admins_per_blog[ $blog_id ] );
@@ -999,13 +990,33 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 					$admins_per_blog[ $blog_id ] = array();
 
 					foreach ( $user_ids as $user ) {
-						$admins_per_blog[ $blog_id ][ (int) $user->post_author ] = (int) $user->posts_count;
+						$admins_per_blog[ $blog_id ][ (int) $user->post_author ] = $user_logins[ (int) $user->post_author ];
 					}
 				}
 			}
 		}
 
 		return $admins_per_blog;
+	}
+
+
+	protected function fix_network() {
+		$admins = static::get_usernames_per_blog();
+
+		if ( $admins ) {
+			foreach ( $admins as $site_id => $data ) {
+				$data = array( count( $data ), static::wrap_in_tag( $data, 'strong' ) );
+				// Add a scan message for each listed sub-site.
+				$this->add_subsite_message( 200, $data, 'scan', $site_id );
+			}
+			// cantfix
+			$this->add_fix_message( 303 );
+		} else {
+			// Remove all previously stored messages for sub-sites.
+			$this->set_empty_data_for_subsites();
+			// good
+			$this->add_fix_message( 0 );
+		}
 	}
 
 

@@ -76,6 +76,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		SECUPRESS_PLUGIN_SLUG . '_page_secupress_settings',
 		SECUPRESS_PLUGIN_SLUG . '_page_secupress_modules',
 		SECUPRESS_PLUGIN_SLUG . '_page_secupress_scanners',
+		'toplevel_page_secupress_scanners',
 	);
 
 	if ( ! in_array( $hook_suffix, $pages ) ) {
@@ -146,6 +147,28 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'years'         => _x( '%d years', 'timeago.years', 'secupress' ),
 			'wordSeparator' => _x( " ", 'timeago.wordSeparator', 'secupress' ),
 		) );
+		wp_localize_script( 'secupress-scanner-js', 'SecuPressi18nScanner', array(
+			'fixed'           => __( 'Fixed', 'secupress' ),
+			'fixedPartial'    => __( 'Partially fixed', 'secupress' ),
+			'notFixed'        => __( 'Not Fixed', 'secupress' ),
+			'fixit'           => __( 'Fix it!', 'secupress' ),
+			'error'           => __( 'Error', 'secupress' ),
+			'oneManualFix'    => __( 'One fix requires your intervention.', 'secupress' ),
+			'someManualFixes' => __( 'Some fixes require your intervention.', 'secupress' ),
+			'spinnerUrl'      => admin_url( 'images/wpspin_light-2x.gif' ),
+		) );
+	}
+
+	// Scanners page (sub site).
+	elseif ( 'toplevel_page_secupress_scanners' === $hook_suffix ) {
+		// CSS
+		wp_enqueue_style( 'secupress-scanner-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-scanner' . $suffix . '.css', array( 'secupress-common-css' ), $version );
+		wp_enqueue_style( 'wpmedia-css-sweetalert', SECUPRESS_ADMIN_CSS_URL . 'sweetalert' . $suffix . '.css', array(), '1.1.0' );
+
+		// JS
+		wp_enqueue_script( 'secupress-scanner-js', SECUPRESS_ADMIN_JS_URL . 'secupress-scanner' . $suffix . '.js', array(), $version, true );
+		wp_enqueue_script( 'wpmedia-js-sweetalert', SECUPRESS_ADMIN_JS_URL . 'sweetalert' . $suffix . '.js', array(), '1.1.0', true );
+
 		wp_localize_script( 'secupress-scanner-js', 'SecuPressi18nScanner', array(
 			'fixed'           => __( 'Fixed', 'secupress' ),
 			'fixedPartial'    => __( 'Partially fixed', 'secupress' ),
@@ -635,8 +658,8 @@ function secupress_main_scan() {
 			echo '<code>$fixes</code>:';
 			pre_print_r($fixes,1);
 			if ( is_multisite() ) {
-				echo '<code>$sites_for_ms</code>:';
-				pre_print_r(secupress_get_sites_for_ms_scanner_fixes(),1);
+				echo '<code>$sub_sites</code>:';
+				pre_print_r(secupress_get_results_for_ms_scanner_fixes(),1);
 			}
 		}
 		?>
