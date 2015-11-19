@@ -295,13 +295,13 @@ class SecuPress_Admin_Notices {
 				} elseif ( 'wp-dismissible' === $type ) {
 					?>
 					<div class="<?php echo $error_code . $compat; ?> notice secupress-notice secupress-is-dismissible"><p>
-						<?php echo implode( '<br/>', $messages ); ?>
+						<?php echo implode( '<br class="separator"/>', $messages ); ?>
 					</p></div>
 					<?php
 				} else {
 					?>
 					<div class="<?php echo $error_code; ?> notice secupress-notice"><p>
-						<?php echo implode( '<br/>', $messages ); ?>
+						<?php echo implode( '<br class="separator"/>', $messages ); ?>
 					</p></div>
 					<?php
 				}
