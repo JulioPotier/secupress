@@ -2,20 +2,26 @@
 
 	// Make our notices dismissible.
 	$( ".notice.secupress-is-dismissible" ).each( function() {
-		var $this = $( this ),
-			$button = $( '<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button>' ),
-			btnText = SecuPressi18nNotices.dismiss || '';
+		var $this    = $( this ),
+			noticeId = $this.data( "id" ),
+			$button, btnText;
 
-		// Ensure plain text
-		$button.find( ".screen-reader-text" ).text( btnText );
+		if ( undefined !== noticeId && noticeId ) {
+			$button = $this.find( ".notice-dismiss" );
+		} else {
+			noticeId = false;
+			$button  = $( '<button type="button" class="notice-dismiss"><span class="screen-reader-text"></span></button>' );
+			btnText  = SecuPressi18nNotices.dismiss || '';
+			// Ensure plain text
+			$button.find( ".screen-reader-text" ).text( btnText );
+			// Add the button
+			$this.append( $button );
+		}
 
-		$this.append( $button );
+		$button.on( "click.wp-dismiss-notice", function( e ) {
+			e.preventDefault();
 
-		$button.on( "click.wp-dismiss-notice", function( event ) {
-			var noticeId = $this.data( "id" );
-			event.preventDefault();
-
-			if ( undefined !== noticeId && noticeId ) {
+			if ( noticeId ) {
 				$.post( ajaxurl, {
 					action: "secupress_dismiss-notice",
 					notice_id: noticeId,

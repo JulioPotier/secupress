@@ -64,8 +64,9 @@ class SecuPress_Admin_Notices {
 		self::$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 		self::$version = self::$suffix ? SECUPRESS_VERSION : time();
 
-		add_action( 'all_admin_notices',                array( $this, '_print' ), 20 );
-		add_action( 'wp_ajax_secupress_dismiss-notice', array( __CLASS__, '_ajax_dismiss' ) );
+		add_action( 'all_admin_notices',                   array( $this, '_print' ), 20 );
+		add_action( 'wp_ajax_secupress_dismiss-notice',    array( __CLASS__, '_ajax_dismiss' ) );
+		add_action( 'admin_post_secupress_dismiss-notice', array( __CLASS__, '_admin_dismiss' ) );
 	}
 
 
@@ -286,10 +287,12 @@ class SecuPress_Admin_Notices {
 			foreach ( $types as $type => $messages ) {
 				if ( 'sp-dismissible' === $type ) {
 					foreach ( $messages as $notice_id => $message ) {
+						$button = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_dismiss-notice&notice_id=' . $notice_id . '&_wp_http_referer=' . esc_url( secupress_get_current_url( 'raw' ) ) ), 'secupress-notices' );
+						$button = '<a href="' . $button . '" class="notice-dismiss"><span class="screen-reader-text">' . __( 'Dismiss', 'secupress' ) . '</span></a>';
 						?>
 						<div class="<?php echo $error_code . $compat; ?> notice secupress-notice secupress-is-dismissible" data-id="<?php echo $notice_id; ?>"><p>
 							<?php echo $message; ?>
-						</p></div>
+						</p><?php echo $button; ?></div>
 						<?php
 					}
 				} elseif ( 'wp-dismissible' === $type ) {
@@ -318,12 +321,11 @@ class SecuPress_Admin_Notices {
 	 * @return A json object.
 	 */
 	public static function _ajax_dismiss() {
-		if ( ! isset( $_POST['notice_id'], $_POST['_nonce'] ) ) {
-			wp_send_json_error();
+		if ( empty( $_POST['notice_id'] ) ) {
+			wp_die( -1 );
 		}
-		if ( ! wp_verify_nonce( $_POST['_nonce'], 'secupress-notices' ) ) {
-			wp_send_json_error();
-		}
+
+		check_ajax_referer( 'secupress-notices' );
 
 		/*
 		 * Filter the capability needed to dismiss the notice.
@@ -338,13 +340,49 @@ class SecuPress_Admin_Notices {
 		$capability = apply_filters( 'secupress_ajax_dismiss_notice_capability', secupress_get_capability(), $_POST['notice_id'] );
 
 		if ( ! current_user_can( $capability ) ) {
-			wp_send_json_error();
+			wp_die( -1 );
 		}
 
 		if ( self::dismiss( $_POST['notice_id'] ) ) {
-			wp_send_json_success();
+			wp_die( 1 );
 		}
-		wp_send_json_error();
+		wp_die( -1 );
+	}
+
+
+	/**
+	 * Admin post callback that stores the "dismissed" state without JS.
+	 *
+	 * @since 1.0
+	 */
+	public static function _admin_dismiss() {
+		if ( empty( $_GET['notice_id'] ) ) {
+			wp_nonce_ays( '' );
+		}
+
+		check_admin_referer( 'secupress-notices' );
+
+		/*
+		 * Filter the capability needed to dismiss the notice.
+		 *
+		 * @since 1.0
+		 *
+		 * @param (string) Capability or user role.
+		 * @param (string) The notice Identifier.
+		 *
+		 * @return (string) Capability or user role.
+		 */
+		$capability = apply_filters( 'secupress_ajax_dismiss_notice_capability', secupress_get_capability(), $_GET['notice_id'] );
+
+		if ( ! current_user_can( $capability ) ) {
+			wp_nonce_ays( '' );
+		}
+
+		if ( self::dismiss( $_GET['notice_id'] ) ) {
+			wp_safe_redirect( wp_get_referer() );
+			die();
+		}
+		wp_nonce_ays( '' );
 	}
 
 }
