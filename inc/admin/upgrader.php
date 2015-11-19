@@ -28,9 +28,6 @@ function secupress_upgrader() {
 	}
 	// If any upgrade has been done, we flush and update version.
 	if ( did_action( 'wp_secupress_first_install' ) || did_action( 'wp_secupress_upgrade' ) ) {
-		// flush_secupress_htaccess(); ////
-
-		secupress_renew_all_boxes( 0, array( 'secupress_warning_plugin_modification' ) );
 
 		$options = get_site_option( SECUPRESS_SETTINGS_SLUG ); // do not use secupress_get_option() here
 		$options['version'] = SECUPRESS_VERSION;
@@ -110,7 +107,6 @@ function secupress_install_modules( $module ) {
 		// Generate an random key
 		// $secret_cache_key = secupress_create_uniqid();
 
-		// secupress_dismiss_box( 'secupress_warning_plugin_modification' );
 		//// secupress_reset_white_label_values( false );
 
 		// Create Options
