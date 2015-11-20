@@ -31,7 +31,7 @@ function secupress_get_modules() {
 				__( 'WordPress can be tweak by so many ways. But are you using the right ones. We will help', 'secupress' ),
 				__( '', 'secupress' ),
 			),
-		),		
+		),
 		'sensitive-data'  => array(
 			'title'       => esc_html__( 'Sensitive Data', 'secupress' ),
 			'dashicon'    => 'lock',
@@ -71,7 +71,7 @@ function secupress_get_modules() {
 				__( '', 'secupress' ),
 				__( '', 'secupress' ),
 			),
-		),		
+		),
 		'firewall'     => array(
 			'title'       => esc_html__( 'Firewall', 'secupress' ),
 			'dashicon'    => 'shield',

@@ -51,7 +51,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 *
 	 * @since 1.0
 	 *
-	 * @param (string)$module : the desired module
+	 * @param (string) $module : the desired module.
 	*/
 	final public function get_module_title( $module = false ) {
 		$modules = static::get_modules();
@@ -70,7 +70,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 *
 	 * @since 1.0
 	 *
-	 * @param (string)$module : the desired module
+	 * @param (string) $module : the desired module.
 	*/
 	final public function get_module_descriptions( $module = false ) {
 		$modules = static::get_modules();
@@ -81,6 +81,21 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		}
 
 		return array();
+	}
+
+
+	/**
+	 * Tell if the reset box should be displayed for a specific module.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $module : the desired module.
+	*/
+	final public function display_module_reset_box( $module = false ) {
+		$modules = static::get_modules();
+		$module  = $module ? $module : $this->modulenow;
+
+		return empty( $modules[ $module ]['no-reset'] );
 	}
 
 
@@ -145,14 +160,13 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		<form id="secupress-module-form-settings" method="post" action="<?php echo $this->get_form_action(); ?>">
 
 			<div id="block-advanced_options" data-module="<?php echo $this->get_current_module(); ?>">
-				<?php $this->load_module_settings(); ?>
+				<?php
+				$this->load_module_settings();
+				$this->print_module_reset_box();
+				?>
 			</div>
 
-			<?php
-			$this->print_module_reset_box();
-
-			settings_fields( 'secupress_' . $this->get_current_module() . '_settings' );
-			?>
+			<?php settings_fields( 'secupress_' . $this->get_current_module() . '_settings' ); ?>
 
 		</form>
 		<?php
@@ -160,6 +174,9 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 
 
 	protected function print_module_reset_box() {
+		if ( ! $this->display_module_reset_box() ) {
+			return;
+		}
 		//// todo save settings with history
 		$this->set_current_section( 'reset' );
 		$this->set_section_description( __( 'If you need to reset this module\'s settings to the default ones, you just have to do it here, we will set the best for your site.', 'secupress' ) );
