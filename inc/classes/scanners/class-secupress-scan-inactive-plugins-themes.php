@@ -41,10 +41,12 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 			104 => __( 'All selected themes have been deleted (but some are still there).', 'secupress' ),
 			105 => _n_noop( 'Sorry, the following theme could not be deleted: %s.', 'Sorry, the following themes could not be deleted: %s.', 'secupress' ),
 			// bad
-			200 => _n_noop( '<strong>%d deactivated plugin</strong>, if you don\'t need it, delete it: %s', '<strong>%d deactivated plugins</strong>, if you don\'t need them, delete them: %s', 'secupress' ),
-			201 => _n_noop( '<strong>%d deactivated theme</strong>, if you don\'t need it, delete it: %s', '<strong>%d deactivated themes</strong>, if you don\'t need them, delete them: %s', 'secupress' ),
-			202 => _n_noop( 'Sorry, this plugin could not be deleted.', 'Sorry, those plugins could not be deleted.', 'secupress' ),
-			203 => _n_noop( 'Sorry, this theme could not be deleted.', 'Sorry, those themes could not be deleted.', 'secupress' ),
+			200 => _n_noop( '<strong>%1$d deactivated plugin</strong>, if you don\'t need it, delete it: %2$s.', '<strong>%1$d deactivated plugins</strong>, if you don\'t need them, delete them: %2$s.', 'secupress' ),
+			201 => _n_noop( '<strong>%1$d deactivated theme</strong>, if you don\'t need it, delete it: %2$s.', '<strong>%1$d deactivated themes</strong>, if you don\'t need them, delete them: %2$s.', 'secupress' ),
+			202 => __( '<strong>%1$d deactivated plugins</strong>, if you don\'t need them, delete them: %2$s... and %3$d others.', 'secupress' ),
+			203 => __( '<strong>%1$d deactivated themes</strong>, if you don\'t need them, delete them: %2$s... and %3$d others.', 'secupress' ),
+			204 => _n_noop( 'Sorry, this plugin could not be deleted.', 'Sorry, those plugins could not be deleted.', 'secupress' ),
+			205 => _n_noop( 'Sorry, this theme could not be deleted.', 'Sorry, those themes could not be deleted.', 'secupress' ),
 			// cantfix
 			300 => _n_noop( '%d plugin is deactivated.', '%d plugins are deactivated.', 'secupress' ),
 			301 => _n_noop( '%d theme is deactivated.', '%d themes are deactivated.', 'secupress' ),
@@ -62,21 +64,38 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 
 	public function scan() {
 		$lists = static::get_inactive_plugins_and_themes();
+		$glue  = sprintf( __('%s, %s'), '', '' );
 
 		// Inactive plugins
 		if ( $count = count( $lists['plugins'] ) ) {
 			// bad
-			$lists['plugins'] = wp_list_pluck( $lists['plugins'], 'Name' );
-			$lists['plugins'] = self::wrap_in_tag( $lists['plugins'], 'strong' );
-			$this->add_message( 200, array( $count, $count, $lists['plugins'] ) );
+			if ( $count > 8 ) {
+				$lists['plugins'] = array_slice( $lists['plugins'], 0, 6 );
+				$lists['plugins'] = wp_list_pluck( $lists['plugins'], 'Name' );
+				$lists['plugins'] = self::wrap_in_tag( $lists['plugins'], 'strong' );
+				$lists['plugins'] = implode( $glue, $lists['plugins'] );
+				$this->add_message( 202, array( $count, $lists['plugins'], $count - 6 ) );
+			} else {
+				$lists['plugins'] = wp_list_pluck( $lists['plugins'], 'Name' );
+				$lists['plugins'] = self::wrap_in_tag( $lists['plugins'], 'strong' );
+				$this->add_message( 200, array( $count, $count, $lists['plugins'] ) );
+			}
 		}
 
 		// Inactive themes
 		if ( $count = count( $lists['themes'] ) ) {
 			// bad
-			$lists['themes'] = wp_list_pluck( $lists['themes'], 'Name' );
-			$lists['themes'] = self::wrap_in_tag( $lists['themes'], 'strong' );
-			$this->add_message( 201, array( $count, $count, $lists['themes'] ) );
+			if ( $count > 8 ) {
+				$lists['themes'] = array_slice( $lists['themes'], 0, 6 );
+				$lists['themes'] = wp_list_pluck( $lists['themes'], 'Name' );
+				$lists['themes'] = self::wrap_in_tag( $lists['themes'], 'strong' );
+				$lists['themes'] = implode( $glue, $lists['themes'] );
+				$this->add_message( 203, array( $count, $lists['themes'], $count - 6 ) );
+			} else {
+				$lists['themes'] = wp_list_pluck( $lists['themes'], 'Name' );
+				$lists['themes'] = self::wrap_in_tag( $lists['themes'], 'strong' );
+				$this->add_message( 201, array( $count, $count, $lists['themes'] ) );
+			}
 		}
 
 		// good
@@ -168,7 +187,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 					// No plugins deleted.
 					elseif ( ! $count_deleted ) {
 						// bad
-						$this->add_fix_message( 202, array( $count_inactive ) );
+						$this->add_fix_message( 204, array( $count_inactive ) );
 					}
 					// Some plugins could not be deleted.
 					else {
@@ -235,7 +254,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 					// No themes deleted.
 					elseif ( ! $count_deleted ) {
 						// bad
-						$this->add_fix_message( 203, array( $count_inactive ) );
+						$this->add_fix_message( 205, array( $count_inactive ) );
 					}
 					// Some themes could not be deleted.
 					else {
@@ -329,43 +348,18 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 
 		if ( is_multisite() ) {
 			// For multisite we need to get active plugins and themes for each blog. Here, we'll fetch both.
-			$active = array( 'plugins' => array(), 'themes' => array(), );
-			$blogs  = $wpdb->get_col( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs WHERE site_id = %d", $wpdb->siteid ) );
+			$plugins = get_site_option( 'secupress_active_plugins' );
+			$themes  = get_site_option( 'secupress_active_themes' );
+			$active  = array( 'plugins' => array(), 'themes' => array(), );
 
-			if ( count( $blogs ) <= 1 ) {
-				// Plugins
-				$this_blog_plugins = get_option( 'active_plugins', array() );
-
-				if ( $this_blog_plugins && is_array( $this_blog_plugins ) ) {
-					$active['plugins'] = array_combine( $this_blog_plugins, $this_blog_plugins );
+			foreach ( $plugins as $site_id => $site_plugins ) {
+				if ( $site_plugins ) {
+					$active['plugins'] = array_merge( $active['plugins'], $site_plugins );
 				}
+			}
 
-				// Theme
-				$this_blog_theme = get_stylesheet();
-
-				if ( $this_blog_theme ) {
-					$active['themes'][ $this_blog_theme ] = $this_blog_theme;
-				}
-			} else {
-				foreach ( $blogs as $blog_id ) {
-					$blog_id = (int) $blog_id;
-					$this_blog_actives = $wpdb->get_results( 'SELECT option_name, option_value FROM ' . $wpdb->prefix . ( $blog_id > 1 ? $blog_id . '_' : '' ) . 'options WHERE option_name = \'active_plugins\' OR option_name = \'stylesheet\'', OBJECT_K );
-
-					// Plugins
-					$this_blog_plugins = ! empty( $this_blog_actives['active_plugins']->option_value ) ? maybe_unserialize( $this_blog_actives['active_plugins']->option_value ) : array();
-
-					if ( $this_blog_plugins && is_array( $this_blog_plugins ) ) {
-						$this_blog_plugins = array_combine( $this_blog_plugins, $this_blog_plugins );
-						$active['plugins'] = array_merge( $active['plugins'], $this_blog_plugins );
-					}
-
-					// Themes
-					$this_blog_theme = ! empty( $this_blog_actives['stylesheet']->option_value ) ? $this_blog_actives['stylesheet']->option_value : '';
-
-					if ( $this_blog_theme ) {
-						$active['themes'][ $this_blog_theme ] = $this_blog_theme;
-					}
-				}
+			foreach ( $themes as $site_id => $theme ) {
+				$active['themes'][ $theme ] = $theme;
 			}
 		}
 
