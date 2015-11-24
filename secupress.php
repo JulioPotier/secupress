@@ -172,12 +172,16 @@ function secupress_load_plugins() {
 add_action( 'secupress_loaded', 'secupress_been_first' );
 
 function secupress_been_first() {
+	if ( ! is_admin() ) {
+		return;
+	}
+
 	$plugin_basename = plugin_basename( __FILE__ );
 
 	if ( is_multisite() ) {
 		$active_plugins = get_site_option( 'active_sitewide_plugins' );
 
-		if ( key( $active_plugins ) !== $plugin_basename ) {
+		if ( isset( $active_plugins[ $plugin_basename ] ) && key( $active_plugins ) !== $plugin_basename ) {
 			$this_plugin = array( $plugin_basename => $active_plugins[ $plugin_basename ] );
 			unset( $active_plugins[ $plugin_basename ] );
 			$active_plugins = array_merge( $this_plugin, $active_plugins );
@@ -188,7 +192,7 @@ function secupress_been_first() {
 
 	$active_plugins = get_option( 'active_plugins' );
 
-	if ( reset( $active_plugins ) !== $plugin_basename ) {
+	if ( isset( $active_plugins[ $plugin_basename ] ) && reset( $active_plugins ) !== $plugin_basename ) {
 		unset( $active_plugins[ array_search( $plugin_basename, $active_plugins ) ] );
 		array_unshift( $active_plugins, $plugin_basename );
 		update_option( 'active_plugins', $active_plugins );
