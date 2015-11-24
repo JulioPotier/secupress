@@ -142,6 +142,56 @@ jQuery( document ).ready( function( $ ) {
 	secupressUpdateScore();
 
 
+	// !Big network: set some data ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	$( ".secupress-set-big-data" ).on( "click", function( e ) {
+		var $this    = $( this ),
+			href     = $this.attr( "href" ).replace( "admin-post.php", "admin-ajax.php" ),
+			$spinner = $( '<img src="' + SecuPressi18nScanner.spinnerUrl + '" alt="" class="secupress-spinner" />' ),
+			$percent = $( '<span class="secupress-ajax-percent">0%</span>' );
+
+		if ( $this.hasClass( "running" ) ) {
+			return false;
+		}
+		$this.addClass( "running" ).parent().append( $spinner ).append( $percent ).find( ".secupress-error-notif" ).remove();
+
+		e.preventDefault();
+
+		secupressSetBigData( href, $this, $spinner, $percent );
+	} );
+
+
+	function secupressSetBigData( href, $button, $spinner, $percent ) {
+		$.getJSON( href )
+		.done( function( r ) {
+			if ( ! r.success ) {
+				$spinner.replaceWith( '<span class="secupress-error-notif">' + SecuPressi18nScanner.error + "</span>" );
+				$percent.remove();
+				return;
+			}
+			if ( r.data ) {
+				$percent.text( r.data + "%" );
+
+				if ( r.data !== 100 ) {
+					// We need more data.
+					secupressSetBigData( href, $button, $spinner, $percent );
+					return;
+				}
+			}
+			// Finish.
+			$button.closest( ".secupress-notice" ).fadeTo( 100 , 0, function() {
+				$( this ).slideUp( 100, function() {
+					$( this ).remove();
+				} );
+			} );
+		} )
+		.fail( function() {
+			$spinner.replaceWith( '<span class="secupress-error-notif">' + SecuPressi18nScanner.error + "</span>" );
+			$percent.remove();
+		} );
+	}
+
+
 	// !Filter rows ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	$( "body" ).on( "click filter.secupress", ".square-filter button", function( e ) {

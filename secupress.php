@@ -242,4 +242,10 @@ register_deactivation_hook( __FILE__, 'secupress_deactivation' );
 function secupress_deactivation() {
 	// Pause the licence.
 	wp_remote_get( SECUPRESS_WEB_MAIN . 'pause-licence.php' );
+
+	// While the plugin is deactivated, some sites may activate or deactivate other plugins.
+	if ( is_multisite() ) {
+		delete_site_option( 'secupress_active_plugins' );
+		delete_site_option( 'secupress_active_themes' );
+	}
 }

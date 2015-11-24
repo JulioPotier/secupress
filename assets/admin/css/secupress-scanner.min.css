@@ -363,3 +363,17 @@ ul.secupress-checkbox-group-vertical,
 	border-color: #ccc;
 	color: #ccc;
 }
+/**/
+.secupress-notice .secupress-spinner,
+.secupress-notice .secupress-ajax-percent,
+.secupress-notice .secupress-error-notif {
+	vertical-align: middle;
+	display: inline-block;
+	margin-left: 1em;
+}
+.secupress-notice .secupress-spinner {
+	width: 1.5em;
+}
+.secupress-notice .secupress-error-notif {
+	color: #DD3D36;
+}

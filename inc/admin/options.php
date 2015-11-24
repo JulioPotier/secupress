@@ -660,6 +660,10 @@ function secupress_main_scan() {
 			if ( is_multisite() ) {
 				echo '<code>$sub_sites</code>:';
 				pre_print_r(secupress_get_results_for_ms_scanner_fixes(),1);
+				echo '<code>$active_plugins</code>:';
+				pre_print_r(get_site_option( 'secupress_active_plugins' ),1);
+				echo '<code>$active_themes</code>:';
+				pre_print_r(get_site_option( 'secupress_active_themes' ),1);
 			}
 		}
 		?>
