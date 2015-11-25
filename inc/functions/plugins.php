@@ -116,16 +116,19 @@ function secupress_register_setting( $module, $option_name = false ) {
  * @return string $url
  **/
 function secupress_get_current_url( $mode = 'base' ) {
-	$url = ! empty( $GLOBALS['HTTP_SERVER_VARS']['REQUEST_URI'] ) ? $GLOBALS['HTTP_SERVER_VARS']['REQUEST_URI'] : ( ! empty( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '' );
-	$url = 'http' . ( is_ssl() ? 's' : '' ) . '://' . $_SERVER['HTTP_HOST'] . $url;
+	$mode = (string) $mode;
+	$url  = ! empty( $GLOBALS['HTTP_SERVER_VARS']['REQUEST_URI'] ) ? $GLOBALS['HTTP_SERVER_VARS']['REQUEST_URI'] : ( ! empty( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '' );
+	$url  = 'http' . ( is_ssl() ? 's' : '' ) . '://' . $_SERVER['HTTP_HOST'] . $url;
 
-	switch( $mode ) :
+	switch ( $mode ) :
 		case 'raw' :
 			return $url;
 		case 'uri' :
-			$url = reset( ( explode( '?', $url ) ) );
-			$url = reset( ( explode( '&', $url ) ) );
-			return trim( str_replace( home_url(), '', $url ), '/' );
+			$home_url = set_url_scheme( home_url() );
+			$url      = reset( ( explode( '?', $url ) ) );
+			$url      = reset( ( explode( '&', $url ) ) );
+			$url      = str_replace( $home_url, '', $url );
+			return trim( $url, '/' );
 		default :
 			$url = reset( ( explode( '?', $url ) ) );
 			return reset( ( explode( '&', $url ) ) );
