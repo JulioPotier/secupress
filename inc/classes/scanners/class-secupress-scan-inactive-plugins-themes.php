@@ -343,7 +343,6 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 	// Return the inactive plugins and themes.
 
 	protected static function get_inactive_plugins_and_themes() {
-		global $wpdb;
 		$out = array();
 
 		if ( is_multisite() ) {
