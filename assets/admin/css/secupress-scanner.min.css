@@ -280,21 +280,24 @@ th.secupress-check {
 	margin: 0 auto;
 	text-align: left;
 }
+.secupress-swal-form h4 + .description {
+	display: block;
+	margin: -.33em 0 1em;
+	font-size: 1em;
+}
 .secupress-swal-form .secupress-boxed-group,
 .secupress-swal-form .secupress-scrollable {
 	max-height: 370px;
 	overflow-y: auto;
 }
+.secupress-swal-form .secupress-boxed-group,
+.secupress-swal-form .secupress-group {
+	margin-top: 1em;
+}
 .secupress-swal-form .secupress-boxed-group {
 	max-height: 8.5em;
-	padding-left: .5em;
+	padding: 0 0 .2em .5em;
 	border: solid 1px #dfdfdf;
-}
-.secupress-swal-form .secupress-boxed-group + .secupress-boxed-group,
-.secupress-swal-form .secupress-group + .secupress-group,
-.secupress-swal-form .secupress-boxed-group + .secupress-group,
-.secupress-swal-form .secupress-group + .secupress-boxed-group {
-	margin-top: 1em;
 }
 .secupress-swal-form .secupress-boxed-group > legend,
 .secupress-swal-form .secupress-group > legend {
