@@ -1001,10 +1001,18 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 		$admins = static::get_usernames_per_blog();
 
 		if ( $admins ) {
-			foreach ( $admins as $site_id => $data ) {
-				$data = array( count( $data ), static::wrap_in_tag( $data, 'strong' ) );
-				// Add a scan message for each listed sub-site.
-				$this->add_subsite_message( 200, $data, 'scan', $site_id );
+			$blogs = static::get_blog_ids();
+
+			foreach ( $blogs as $site_id ) {
+				$data = isset( $admins[ $site_id ] ) ? $admins[ $site_id ] : array();
+
+				if ( $data ) {
+					$data = array( count( $data ), static::wrap_in_tag( $data, 'strong' ) );
+					// Add a scan message for each listed sub-site.
+					$this->add_subsite_message( 200, $data, 'scan', $site_id );
+				} else {
+					$this->set_empty_data_for_subsite( $site_id );
+				}
 			}
 			// cantfix
 			$this->add_fix_message( 303 );

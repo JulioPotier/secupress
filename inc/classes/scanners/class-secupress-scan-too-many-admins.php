@@ -569,10 +569,17 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPres
 		$admins = static::get_usernames_per_blog();
 
 		if ( $admins ) {
-			foreach ( $admins as $site_id => $users ) {
-				$users = count( $users );
-				// Add a scan message for each listed sub-site.
-				$this->add_subsite_message( 200, array( $users, $users ), 'scan', $site_id );
+			$blogs = static::get_blog_ids();
+
+			foreach ( $blogs as $site_id ) {
+				$users = isset( $admins[ $site_id ] ) ? count( $admins[ $site_id ] ) : 0;
+
+				if ( $users ) {
+					// Add a scan message for each listed sub-site.
+					$this->add_subsite_message( 200, array( $users, $users ), 'scan', $site_id );
+				} else {
+					$this->set_empty_data_for_subsite( $site_id );
+				}
 			}
 			// cantfix
 			$this->add_fix_message( 301 );

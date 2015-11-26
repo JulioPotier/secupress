@@ -393,8 +393,9 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	final protected function set_subsite_defaults( $scan_or_fix = 'scan', $site_id = 0 ) {
 		$scan_or_fix = 'fix' === $scan_or_fix ? 'fix' : 'scan';
 		$site_id     = $site_id ? $site_id : get_current_blog_id();
-		$this->fix_sites                                       = is_array( $this->fix_sites )                                    ? $this->fix_sites                                       : array();
-		$this->fix_sites[ $site_id ]                           = isset( $this->fix_sites[ $site_id ] )                           ? $this->fix_sites[ $site_id ]                           : array();
+
+		$this->set_empty_data_for_subsite( $scan_or_fix, $site_id );
+
 		$this->fix_sites[ $site_id ][ $scan_or_fix ]           = isset( $this->fix_sites[ $site_id ][ $scan_or_fix ] )           ? $this->fix_sites[ $site_id ][ $scan_or_fix ]           : array();
 		$this->fix_sites[ $site_id ][ $scan_or_fix ]['msgs']   = isset( $this->fix_sites[ $site_id ][ $scan_or_fix ]['msgs'] )   ? $this->fix_sites[ $site_id ][ $scan_or_fix ]['msgs']   : array();
 		$this->fix_sites[ $site_id ][ $scan_or_fix ]['status'] = isset( $this->fix_sites[ $site_id ][ $scan_or_fix ]['status'] ) ? $this->fix_sites[ $site_id ][ $scan_or_fix ]['status'] : '';
@@ -407,6 +408,17 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	 */
 	final protected function set_empty_data_for_subsites() {
 		$this->fix_sites = array();
+	}
+
+
+	/*
+	 * Remove all previously stored messages for a particular sub-site.
+	 * This will allow to set an empty transient, and then empty the option later for this sub-site.
+	 */
+	final protected function set_empty_data_for_subsite( $site_id = 0 ) {
+		$site_id = $site_id ? $site_id : get_current_blog_id();
+		$this->fix_sites             = is_array( $this->fix_sites )          ? $this->fix_sites             : array();
+		$this->fix_sites[ $site_id ] = isset( $this->fix_sites[ $site_id ] ) ? $this->fix_sites[ $site_id ] : array();
 	}
 
 
@@ -729,6 +741,22 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 		}
 
 		return $wp_filesystem;
+	}
+
+
+	// Get the list of the blog IDs.
+
+	final protected static function get_blog_ids() {
+		global $wpdb;
+		static $blogs;
+
+		if ( isset( $blogs ) ) {
+			return $blogs;
+		}
+
+		$blogs = $wpdb->get_col( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs WHERE site_id = %d", $wpdb->siteid ) );
+		$blogs = array_map( 'absint', $blogs );
+		return $blogs;
 	}
 
 
