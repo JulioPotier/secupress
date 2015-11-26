@@ -394,7 +394,7 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 		$scan_or_fix = 'fix' === $scan_or_fix ? 'fix' : 'scan';
 		$site_id     = $site_id ? $site_id : get_current_blog_id();
 
-		$this->set_empty_data_for_subsite( $scan_or_fix, $site_id );
+		$this->set_empty_data_for_subsite( $site_id );
 
 		$this->fix_sites[ $site_id ][ $scan_or_fix ]           = isset( $this->fix_sites[ $site_id ][ $scan_or_fix ] )           ? $this->fix_sites[ $site_id ][ $scan_or_fix ]           : array();
 		$this->fix_sites[ $site_id ][ $scan_or_fix ]['msgs']   = isset( $this->fix_sites[ $site_id ][ $scan_or_fix ]['msgs'] )   ? $this->fix_sites[ $site_id ][ $scan_or_fix ]['msgs']   : array();
