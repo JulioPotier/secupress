@@ -261,6 +261,7 @@ function __secupress_dashboard() {
 			delete_site_option( SECUPRESS_SCAN_SLUG );
 			delete_site_option( SECUPRESS_SCAN_TIMES );
 			delete_site_option( SECUPRESS_FIX_SLUG );
+			delete_site_option( 'secupress_fix_sites' );
 			?>
 		</div>
 	</div>
