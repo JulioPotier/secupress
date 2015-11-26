@@ -31,7 +31,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 		$messages = array(
 			// good
 			0   => __( 'No Posts were created by Administrators.', 'secupress' ),
-			1   => __( 'There is no more Posts created by Administrators.', 'secupress' ),
+			1   => __( 'There are no Posts created by Administrators anymore.', 'secupress' ),
 			/* translators: %s is a user role. */
 			2   => __( 'User role %s created.', 'secupress' ),
 			/* translators: %s is a user name. */
@@ -1020,7 +1020,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 			// Remove all previously stored messages for sub-sites.
 			$this->set_empty_data_for_subsites();
 			// good
-			$this->add_fix_message( 0 );
+			$this->add_fix_message( 1 );
 		}
 	}
 
