@@ -407,7 +407,7 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	 * This will allow to set an empty transient, and then empty the option later.
 	 */
 	final protected function set_empty_data_for_subsites() {
-		$this->fix_sites = array();
+		$this->fix_sites = array_fill_keys( static::get_blog_ids(), array() );
 	}
 
 
