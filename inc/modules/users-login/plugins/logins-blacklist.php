@@ -325,11 +325,13 @@ function secupress_is_username_blacklisted( $username ) {
 
 
 /*------------------------------------------------------------------------------------------------*/
-/* FORBID USER CREATION AND EDITION IF THE USERNAME IS BLACKLISTED. ============================= */		//// wpmu_validate_user_signup() edit_user()
+/* FORBID USER CREATION AND EDITION IF THE USERNAME IS BLACKLISTED. ============================= */
 /*------------------------------------------------------------------------------------------------*/
 
 /*
  * In `validate_username()`, detect forbidden logins.
+ * Unfortunately, the error message can't be customized.
+ * Side note: `validate_username()` is also used in `edit_user()`.
  *
  * @since 1.0
  *
@@ -383,4 +385,23 @@ function secupress_blacklist_logins_gettext_filter( $translations, $text, $domai
 		return __( 'Sorry, that username is not allowed.', 'secupress' );
 	}
 	return $translations;
+}
+
+
+/*
+ * In `wpmu_validate_user_signup()`, detect forbidden logins.
+ *
+ * @since 1.0
+ *
+ * @param (array) $result An array containing the sanitized user name, the original one, the user email, and a `WP_Error` object.
+ *
+ * @return (array) The array with a new error if the user name is blacklisted.
+ */
+add_filter( 'wpmu_validate_user_signup', 'secupress_blacklist_logins_wpmu_validate_user_signup' );
+
+function secupress_blacklist_logins_wpmu_validate_user_signup( $result ) {
+	if ( secupress_is_username_blacklisted( $result['user_name'] ) ) {
+		$result['errors']->add( 'user_name',  __( 'Sorry, that username is not allowed.', 'secupress' ) );
+	}
+	return $result;
 }
