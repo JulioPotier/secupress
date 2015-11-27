@@ -139,9 +139,9 @@ function secupress_add_salt_muplugin() {
 	$current_user    = wp_get_current_user();
 	$current_user_ID = $current_user->ID;
 	if ( ! defined( 'SECUPRESS_SALT_KEYS_ACTIVE' ) && empty( $_POST ) && ( ! isset( $pagenow ) || 'admin-post.php' != $pagenow ) && ! defined( 'DOING_AJAX' ) && ! defined( 'DOING_AUTOSAVE' ) && ! defined( 'DOING_CRON' ) &&
-		is_user_logged_in() && $data = get_transient( 'secupress-add-salt-muplugin' )
+		is_user_logged_in() && $data = secupress_get_transient( 'secupress-add-salt-muplugin' )
 	) {
-		delete_transient( 'secupress-add-salt-muplugin' );
+		secupress_delete_transient( 'secupress-add-salt-muplugin' );
 
 		$wpconfig_filename = secupress_find_wpconfig_path();
 		if ( ! is_writable( $wpconfig_filename ) || ! is_array( $data ) || ! isset( $data['ID'], $data['username'] ) || $current_user->ID != $data['ID'] ) {
