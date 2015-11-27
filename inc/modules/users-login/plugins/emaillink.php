@@ -124,5 +124,3 @@ function secupress_create_activation_url( $user, $rememberme ) {
 
 	return admin_url( 'admin-post.php?action=emaillink_autologin&token=' . $key );
 }
-
-//// check roles
