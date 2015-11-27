@@ -434,7 +434,7 @@ function secupress_insert_iis7_nodes( $marker, $args ) {
 	$fragment->appendXML( "\n$spaces  $nodes_string\n$spaces" );
 
 	// Maybe create child nodes and then, prepend new nodes.
-	_secupress_get_iis7_node( $doc, $xpath, $path, $fragment );
+	__secupress_get_iis7_node( $doc, $xpath, $path, $fragment );
 
 	// Save and finish.
 	$doc->encoding     = 'UTF-8';
@@ -506,7 +506,7 @@ function secupress_normalize_path( $path ) {
  *
  * @return (object) The DOMNode node.
  **/
-function _secupress_get_iis7_node( $doc, $xpath, $path, $child ) {
+function __secupress_get_iis7_node( $doc, $xpath, $path, $child ) {
 	$nodelist = $xpath->query( $path );
 
 	if ( $nodelist->length > 0 ) {
@@ -523,7 +523,7 @@ function _secupress_get_iis7_node( $doc, $xpath, $path, $child ) {
 		$final_node->appendChild( $child );
 	}
 
-	return _secupress_get_iis7_node( $doc, $xpath, $path, $final_node );
+	return __secupress_get_iis7_node( $doc, $xpath, $path, $final_node );
 }
 
 
