@@ -81,7 +81,12 @@ function secupress_init() {
 	load_plugin_textdomain( 'secupress', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 
 	// Call defines, classes and functions
-	require( SECUPRESS_FUNCTIONS_PATH . '/options.php' );
+	require( SECUPRESS_FUNCTIONS_PATH . 'formatting.php' );
+	require( SECUPRESS_FUNCTIONS_PATH . 'options.php' );
+
+	if ( is_multisite() ) {
+		require( SECUPRESS_INC_PATH . 'multisite.php' );
+	}
 
 	// Last constants
 	define( 'SECUPRESS_PLUGIN_NAME', secupress_get_option( 'wl_plugin_name', 'SecuPress' ) );
@@ -90,7 +95,6 @@ function secupress_init() {
 	// Call defines, classes and functions
 	require( SECUPRESS_FUNCTIONS_PATH . 'files.php' );
 	require( SECUPRESS_FUNCTIONS_PATH . 'admin.php' );
-	require( SECUPRESS_FUNCTIONS_PATH . 'formatting.php' );
 	require( SECUPRESS_FUNCTIONS_PATH . 'plugins.php' );
 	require( SECUPRESS_FUNCTIONS_PATH . 'bots.php' );
 	require( SECUPRESS_FRONT_PATH     . 'htaccess.php' );

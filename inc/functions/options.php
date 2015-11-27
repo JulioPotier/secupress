@@ -141,6 +141,11 @@ function secupress_get_scanners() {
 		foreach ( $tmps as $tmp ) {
 			$tests = array_merge( $tests, array_map( 'strtolower', $tmp ) );
 		}
+
+		// Cache transients.
+		if ( is_multisite() && ! wp_using_ext_object_cache() ) {
+			secupress_load_site_options( $tests, '_site_transient_secupress_scan_' );
+		}
 	}
 
 	$transients = array();
@@ -187,6 +192,11 @@ function secupress_get_scanner_fixes() {
 
 		foreach ( $tmps as $tmp ) {
 			$tests = array_merge( $tests, array_map( 'strtolower', $tmp ) );
+		}
+
+		// Cache transients.
+		if ( is_multisite() && ! wp_using_ext_object_cache() ) {
+			secupress_load_site_options( $tests, '_site_transient_secupress_fix_' );
 		}
 	}
 

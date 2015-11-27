@@ -184,3 +184,15 @@ function secupress_cache_data( $key ) {
 
 	return isset( $datas[ $key ] ) ? $datas[ $key ] : null;
 }
+
+
+/**
+ * Check whether WordPress is in "installation" mode.
+ *
+ * @since 1.0
+ *
+ * @return (bool) true if WP is installing, otherwise false.
+ */
+function secupress_wp_installing() {
+	function_exists( 'wp_installing' ) ? wp_installing() : defined( 'WP_INSTALLING' ) && WP_INSTALLING;
+}

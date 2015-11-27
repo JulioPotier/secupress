@@ -25,8 +25,17 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  *  )
  */
 function secupress_get_results_for_ms_scanner_fixes() {
+	static $tests;
 	// Tests that must be fixed outside the network admin.
-	$tests     = secupress_get_tests_for_ms_scanner_fixes();
+	if ( ! isset( $tests ) ) {
+		$tests = secupress_get_tests_for_ms_scanner_fixes();
+
+		// Cache transients.
+		if ( is_multisite() && ! wp_using_ext_object_cache() ) {
+			$tests_lower = array_map( 'strtolower', $tests );
+			secupress_load_site_options( $tests_lower, '_site_transient_' . SECUPRESS_SCAN_FIX_SITES_SLUG . '_' );
+		}
+	}
 	// Current results.
 	$options   = get_site_option( SECUPRESS_SCAN_FIX_SITES_SLUG, array() );
 	$options   = is_array( $options ) ? $options : array();
