@@ -635,7 +635,9 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 	final public static function get_and_delete_fix_actions() {
 		$transient = secupress_get_site_transient( 'secupress_fix_actions' );
-		secupress_delete_site_transient( 'secupress_fix_actions' );
+		if ( false !== $transient ) {
+			secupress_delete_site_transient( 'secupress_fix_actions' );
+		}
 		return $transient ? explode( '|', $transient ) : array( 0 => false );
 	}
 
@@ -654,7 +656,9 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 
 	final public static function get_and_delete_autoscans() {
 		$transient = secupress_get_site_transient( 'secupress_autoscans' );
-		secupress_delete_site_transient( 'secupress_autoscans' );
+		if ( false !== $transient ) {
+			secupress_delete_site_transient( 'secupress_autoscans' );
+		}
 		return is_array( $transient ) ? $transient : array();
 	}
 
