@@ -139,7 +139,7 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements iSecuPress_Scan
 				$this->add_fix_message( 300 );
 			} else {
 				if ( isset( $current_user->ID ) ) {
-					secupress_set_transient( 'secupress-add-salt-muplugin', array( 'ID' => $current_user->ID, 'username' => $current_user->user_login ) );
+					secupress_set_site_transient( 'secupress-add-salt-muplugin', array( 'ID' => $current_user->ID, 'username' => $current_user->user_login ) );
 				}
 
 				$this->add_fix_message( 100 );

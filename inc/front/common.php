@@ -59,9 +59,9 @@ function secupress_rename_admin_username_logout() {
 	$current_user_ID = $current_user->ID;
 
 	if ( empty( $_POST ) && ( ! isset( $pagenow ) || 'admin-post.php' != $pagenow ) && ! defined( 'DOING_AJAX' ) && ! defined( 'DOING_AUTOSAVE' ) && ! defined( 'DOING_CRON' ) &&
-		is_user_logged_in() && $data = secupress_get_transient( 'secupress-rename-admin-username' )
+		is_user_logged_in() && $data = secupress_get_site_transient( 'secupress-rename-admin-username' )
 	) {
-		secupress_delete_transient( 'secupress-rename-admin-username' );
+		secupress_delete_site_transient( 'secupress-rename-admin-username' );
 
 		if ( ! is_array( $data ) || ! isset( $data['ID'], $data['username'] ) || $current_user->ID != $data['ID'] || 'admin' != $current_user->user_login ) {
 			return;
@@ -74,10 +74,10 @@ function secupress_rename_admin_username_logout() {
 		wp_destroy_current_session();
 
 		$token = md5( time() );
-		secupress_set_transient( 'secupress_auto_login_' . $token, array( $data['username'], 'Admin_User' ) );
+		secupress_set_site_transient( 'secupress_auto_login_' . $token, array( $data['username'], 'Admin_User' ) );
 
 		// Store a good scan result.
-		secupress_set_transient( 'secupress_scan_admin_user', array(
+		secupress_set_site_transient( 'secupress_scan_admin_user', array(
 			'msgs'   => array(
 				0 => array( '<em>admin</em>' ),
 			),
@@ -103,9 +103,9 @@ function secupress_add_cookiehash_muplugin() {
 	$current_user_ID = $current_user->ID;
 
 	if ( empty( $_POST ) && ( ! isset( $pagenow ) || 'admin-post.php' != $pagenow ) && ! defined( 'DOING_AJAX' ) && ! defined( 'DOING_AUTOSAVE' ) && ! defined( 'DOING_CRON' ) &&
-		is_user_logged_in() && $data = secupress_get_transient( 'secupress-add-cookiehash-muplugin' )
+		is_user_logged_in() && $data = secupress_get_site_transient( 'secupress-add-cookiehash-muplugin' )
 	) {
-		secupress_delete_transient( 'secupress-add-cookiehash-muplugin' );
+		secupress_delete_site_transient( 'secupress-add-cookiehash-muplugin' );
 
 		if ( ! is_array( $data ) || ! isset( $data['ID'], $data['username'] ) || $current_user->ID != $data['ID'] ) {
 			return;
@@ -118,7 +118,7 @@ function secupress_add_cookiehash_muplugin() {
 			wp_destroy_current_session();
 
 			$token = md5( time() );
-			secupress_set_transient( 'secupress_auto_login_' . $token, array( $data['username'], 'WP_Config' ) );
+			secupress_set_site_transient( 'secupress_auto_login_' . $token, array( $data['username'], 'WP_Config' ) );
 
 			wp_safe_redirect( add_query_arg( 'secupress_auto_login_token', $token, secupress_get_current_url( 'raw' ) ) );
 			die();
@@ -139,9 +139,9 @@ function secupress_add_salt_muplugin() {
 	$current_user    = wp_get_current_user();
 	$current_user_ID = $current_user->ID;
 	if ( ! defined( 'SECUPRESS_SALT_KEYS_ACTIVE' ) && empty( $_POST ) && ( ! isset( $pagenow ) || 'admin-post.php' != $pagenow ) && ! defined( 'DOING_AJAX' ) && ! defined( 'DOING_AUTOSAVE' ) && ! defined( 'DOING_CRON' ) &&
-		is_user_logged_in() && $data = secupress_get_transient( 'secupress-add-salt-muplugin' )
+		is_user_logged_in() && $data = secupress_get_site_transient( 'secupress-add-salt-muplugin' )
 	) {
-		secupress_delete_transient( 'secupress-add-salt-muplugin' );
+		secupress_delete_site_transient( 'secupress-add-salt-muplugin' );
 
 		$wpconfig_filename = secupress_find_wpconfig_path();
 		if ( ! is_writable( $wpconfig_filename ) || ! is_array( $data ) || ! isset( $data['ID'], $data['username'] ) || $current_user->ID != $data['ID'] ) {
@@ -169,7 +169,7 @@ function secupress_add_salt_muplugin() {
 		}
 
 		$token = md5( time() );
-		secupress_set_transient( 'secupress_auto_login_' . $token, array( $data['username'], 'Salt_Keys' ) );
+		secupress_set_site_transient( 'secupress_auto_login_' . $token, array( $data['username'], 'Salt_Keys' ) );
 
 		wp_safe_redirect( add_query_arg( 'secupress_auto_login_token', $token, secupress_get_current_url( 'raw' ) ) );
 		die();
@@ -188,9 +188,9 @@ function secupress_auto_username_login() {
 
 	if ( isset( $_GET['secupress_auto_login_token'] ) ) {
 
-		list( $username, $action ) = secupress_get_transient( 'secupress_auto_login_' . $_GET['secupress_auto_login_token'] );
+		list( $username, $action ) = secupress_get_site_transient( 'secupress_auto_login_' . $_GET['secupress_auto_login_token'] );
 
-		secupress_delete_transient( 'secupress_auto_login_' . $_GET['secupress_auto_login_token'] );
+		secupress_delete_site_transient( 'secupress_auto_login_' . $_GET['secupress_auto_login_token'] );
 
 		if ( $username ) {
 
