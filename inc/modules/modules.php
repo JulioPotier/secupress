@@ -47,6 +47,7 @@ function secupress_get_modules() {
 				__( 'Check the file permissions <em>(chmod)</em> at a glance and run a file monitoring on your installation', 'secupress' ),
 				__( 'Also, an antivus scanner can be performed on your installation, this may taka time but it\'s more efficient.', 'secupress' ),
 			),
+			'with_reset_box' => false,
 		),
 		'backups'         => array(
 			'title'       => esc_html__( 'Backups', 'secupress' ),
@@ -55,6 +56,7 @@ function secupress_get_modules() {
 				__( 'Backuping your database daily and you files weekly can reduce the risks to lose your content because of an attack.', 'secupress' ),
 				sprintf( __( 'Don\'t forget to <a href="%s">schedule backups</a> as soon as possible.', 'secupress' ), secupress_admin_url( 'modules', 'schedules' ) ),
 			),
+			'with_reset_box' => false,
 		),
 		'antispam'        => array(
 			'title'       => esc_html__( 'Anti Spam', 'secupress' ),
@@ -94,6 +96,7 @@ function secupress_get_modules() {
 				__( 'The page contains our tools designed to help you with the plugin. Export and import settings, set your API key, rollback a version or even monitor your website can be done from here.', 'secupress' ),
 				__( '', 'secupress' ),
 			),
+			'with_reset_box' => false,
 		),
 		'schedules'       => array(
 			'title'       => esc_html__( 'Schedules', 'secupress' ),
@@ -102,6 +105,7 @@ function secupress_get_modules() {
 				__( 'Scheduling recurrent tasks can be very usefull to gain time and stay safe. At least each week a backup should be done, same for a full scan of vulnerabilities and file changes.', 'secupress' ),
 				__( '', 'secupress' ),
 			),
+			'with_reset_box' => false,
 		),
 	);
 }
