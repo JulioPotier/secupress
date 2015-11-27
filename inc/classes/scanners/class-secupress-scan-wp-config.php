@@ -65,7 +65,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 	 *
 	 * Param @privilege (string) MySQL privilege
 	 *
-	 * @since 1.0 
+	 * @since 1.0
 	 * @return bool
 	 **/
 	final protected static function db_access_granted() {
@@ -117,7 +117,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 	/**
 	 * Return tables to be renamed, filtered.
 	 *
-	 * @since 1.0 
+	 * @since 1.0
 	 * @return array of DB tables
 	 **/
 	final protected static function get_correct_tables() {
@@ -150,7 +150,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 	/**
 	 * Return correct WP tables
 	 *
-	 * @since 1.0 
+	 * @since 1.0
 	 * @return array of DB tables
 	 **/
 	final protected static function get_wp_tables() {
@@ -289,9 +289,9 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 			if ( static::db_access_granted() ) {
 
 				if ( is_writable( $wpconfig_filename ) && preg_match( '/\$table_prefix.*=.*(\'' . $old_prefix . '\'|"' . $old_prefix . '");.*/', file_get_contents( $wpconfig_filename ) ) ) {
-					
+
 					$wp_tables = static::get_wp_tables();
-					
+
 					$good_tables     = static::get_correct_tables();
 					$count_wp_tables = count( $wp_tables );
 					if ( $good_tables ) {
@@ -381,7 +381,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 
 		if ( $check ) {
 			// bad
-			set_transient( 'secupress-add-cookiehash-muplugin', array( 'ID' => $current_user->ID, 'username' => $current_user->user_login ) );
+			secupress_set_transient( 'secupress-add-cookiehash-muplugin', array( 'ID' => $current_user->ID, 'username' => $current_user->user_login ) );
 			$this->add_fix_message( 100 );
 		}
 

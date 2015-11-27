@@ -103,9 +103,9 @@ function secupress_add_cookiehash_muplugin() {
 	$current_user_ID = $current_user->ID;
 
 	if ( empty( $_POST ) && ( ! isset( $pagenow ) || 'admin-post.php' != $pagenow ) && ! defined( 'DOING_AJAX' ) && ! defined( 'DOING_AUTOSAVE' ) && ! defined( 'DOING_CRON' ) &&
-		is_user_logged_in() && $data = get_transient( 'secupress-add-cookiehash-muplugin' )
+		is_user_logged_in() && $data = secupress_get_transient( 'secupress-add-cookiehash-muplugin' )
 	) {
-		delete_transient( 'secupress-add-cookiehash-muplugin' );
+		secupress_delete_transient( 'secupress-add-cookiehash-muplugin' );
 
 		if ( ! is_array( $data ) || ! isset( $data['ID'], $data['username'] ) || $current_user->ID != $data['ID'] ) {
 			return;
