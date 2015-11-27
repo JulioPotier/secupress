@@ -416,9 +416,10 @@ function secupress_get_tests() {
 			'Block_HTTP_1_0',          'Discloses',      'Block_Long_URL',
 		),
 		'low' => array(
-			'Login_Errors_Disclose', 'PHP_Disclosure', 'Admin_As_Author'
+			'Login_Errors_Disclose', 'PHP_Disclosure', 'Admin_As_Author',
 			'DirectoryIndex'
-		),
+		)
+	);
 }
 
 
