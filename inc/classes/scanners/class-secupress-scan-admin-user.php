@@ -59,7 +59,7 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 		$username = 'admin';
 		$check    = username_exists( $username );
 
-		if ( get_transient( 'secupress-rename-admin-username' ) ) {
+		if ( secupress_get_transient( 'secupress-rename-admin-username' ) ) {
 			$this->add_message( 100 );
 		} else {
 			// Should not be administrator.
@@ -160,7 +160,7 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 		} else {
 			// $username ok, can't rename now or all nonces will be broken and the user disconnected
 			$current_user = wp_get_current_user();
-			set_transient( 'secupress-rename-admin-username', array( 'ID' => $current_user->ID, 'username' => $username ) );
+			secupress_set_transient( 'secupress-rename-admin-username', array( 'ID' => $current_user->ID, 'username' => $username ) );
 			// warning
 			$this->add_fix_message( 100 );
 		}

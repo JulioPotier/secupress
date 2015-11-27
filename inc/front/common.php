@@ -59,9 +59,9 @@ function secupress_rename_admin_username_logout() {
 	$current_user_ID = $current_user->ID;
 
 	if ( empty( $_POST ) && ( ! isset( $pagenow ) || 'admin-post.php' != $pagenow ) && ! defined( 'DOING_AJAX' ) && ! defined( 'DOING_AUTOSAVE' ) && ! defined( 'DOING_CRON' ) &&
-		is_user_logged_in() && $data = get_transient( 'secupress-rename-admin-username' )
+		is_user_logged_in() && $data = secupress_get_transient( 'secupress-rename-admin-username' )
 	) {
-		delete_transient( 'secupress-rename-admin-username' );
+		secupress_delete_transient( 'secupress-rename-admin-username' );
 
 		if ( ! is_array( $data ) || ! isset( $data['ID'], $data['username'] ) || $current_user->ID != $data['ID'] || 'admin' != $current_user->user_login ) {
 			return;
