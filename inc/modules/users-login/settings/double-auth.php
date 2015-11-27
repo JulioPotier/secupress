@@ -26,7 +26,7 @@ $this->add_field(
 	__( 'Use a Double Authentication', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description' => __( 'We recommend <label for="plugin_double_auth_passwordless"><b>PassWordLess</b></label>.<br>Still hard to decide?<br>Check this <a href="#">quick tutorial video</a>.', 'secupress' ),
+		'description' => sprintf( __( 'We recommend %s.<br>Still hard to decide?<br>Check this <a href="#">quick tutorial video</a>.', 'secupress' ), '<label for="plugin_double_auth_passwordless"><b>PassWordLess</b></label>' ),
 	),
 	array(
 		array(
@@ -45,8 +45,7 @@ $this->add_field(
 	)
 );
 
-$this->add_pro_upgrade_field( $field_name . '__passwordless' );
-
+//// $this->add_pro_upgrade_field( $field_name . '__passwordless' );
 
 $plugin = $this->set_current_plugin( 'captcha' )->get_current_plugin();
 

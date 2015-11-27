@@ -95,7 +95,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		$modules = static::get_modules();
 		$module  = $module ? $module : $this->modulenow;
 
-		return empty( $modules[ $module ]['no-reset'] );
+		return (bool) $modules[ $module ]['with_reset_box'];
 	}
 
 

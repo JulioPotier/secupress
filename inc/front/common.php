@@ -154,7 +154,7 @@ function secupress_add_salt_muplugin() {
 			secupress_replace_content( $wpconfig_filename, "/define\(.*('" . $constant . "'|\"" . $constant . "\").*,/", "/*Commented by SecuPress*/ // $0" );
 		}
 
-		$alicia_keys = file_get_contents( SECUPRESS_INC_PATH . 'data/salt_keys.phps' );
+		$alicia_keys = file_get_contents( SECUPRESS_INC_PATH . 'data/salt-keys.phps' );
 		$alicia_keys = str_replace( array( '{{HASH1}}', '{{HASH2}}' ), array( wp_generate_password( 64, true, true ), wp_generate_password( 64, true, true ) ), $alicia_keys );
 
 		if ( ! $alicia_keys || ! secupress_create_mu_plugin( 'salt_keys_' . uniqid(), $alicia_keys ) ) {

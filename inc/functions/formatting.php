@@ -196,3 +196,35 @@ function secupress_cache_data( $key ) {
 function secupress_wp_installing() {
 	function_exists( 'wp_installing' ) ? wp_installing() : defined( 'WP_INSTALLING' ) && WP_INSTALLING;
 }
+
+
+/**
+ * Returns a i18n message to act like a CTA on pro version
+ *
+ * @param (string) $format You can use it to embed the message in a HTML tag, usage of "%s" is mandatory.
+ * @since 1.0
+ * @return (string)
+ **/
+function secupress_get_pro_version_string( $format = '' ) {
+	$message = sprintf( __( 'Available in <a href="%s">Pro Version</a>.', 'secupress' ), '#' ); //// #
+	if ( $format ) {
+		$message = sprintf( $format, $message );
+	}
+	return $message;
+}
+
+
+/**
+ * Returns a i18n message to act like a CTA to get an API key
+ *
+ * @param (string) $format You can use it to embed the message in a HTML tag, usage of "%s" is mandatory.
+ * @since 1.0
+ * @return (string)
+ **/
+function secupress_get_valid_key_string( $format = '' ) {
+	$message = sprintf( __( 'Requires a <a href="%s">Free API Key</a>.', 'secupress' ), '#' ); //// # + wording
+	if ( $format ) {
+		$message = sprintf( $format, $message );
+	}
+	return $message;
+}

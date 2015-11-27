@@ -270,4 +270,56 @@
 		} );
 	} );
 
+// Countries ======================================================================================
+
+	(function($, d, w, undefined) {
+		
+		$( ".geoip-system_geoip-countries" ).on( "click", function( e ) {
+				var val = $( this ).val();
+				$( ".fieldtype-countries" ).find( "[data-code-country='" + val + "']" ).prop( "checked", $( this ).is( ":checked" ) );
+			}
+		);
+
+		$( "[data-code-country]" ).on( "click", function( e ) {
+				var code = $( this ).data( "code-country" );
+				$( "[value='" + code + "']" ).prop( "checked", Boolean( $( "[data-code-country='" + code + "']:checked" ).length == $( "[data-code-country='" + code + "']" ).length ) );
+			}
+
+		);
+
+	} )(jQuery, document, window);
+
+// Fixed scroll ===================================================================================
+$(function() {
+
+    var $sidebar   = $("h2.nav-tab-wrapper"), 
+        $window    = $(window),
+        offset     = $sidebar.offset(),
+        topPadding = 35;
+
+    $window.scroll(function() {
+        if ($window.scrollTop() > offset.top) {
+            $sidebar.stop().animate({
+                marginTop: $window.scrollTop() - offset.top + topPadding
+            }, 250);
+        } else {
+            $sidebar.stop().animate({
+                marginTop: 0
+            });
+        }
+    });
+    
+});
+
+// Radiobox class =================================================================================
+$(function() {
+//// bug quand on a une des checkbox qui ouvre un panel
+    $(".radiobox").on( "click", function(e) { 
+    	var id = $( this ).attr( "id" );
+    	$( ".radiobox:not(#" + id + "):checked" ).trigger( "click" );
+    });
+    
+});
+
+
 } )(jQuery, document, window);
