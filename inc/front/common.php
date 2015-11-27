@@ -39,7 +39,7 @@ function secupress_check_ban_ips() {
 			secupress_die( $msg );
 		}
 
-	} else {
+	} elseif ( false !== $ban_ips ) {
 		delete_site_option( SECUPRESS_BAN_IP );
 	}
 }
