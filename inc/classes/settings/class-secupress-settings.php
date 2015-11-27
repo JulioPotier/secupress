@@ -326,7 +326,7 @@ abstract class SecuPress_Settings {
 			$class             = ! empty( $args['class'] )      ? $args['class'] : '';
 			$radio_style       = 'radioboxes' == $args['type'];
 			$field_type        = 'radioboxes' == $args['type']  ? 'checkboxes' : $args['type'];
-			
+
 			// Classes
 			if ( is_array( $class ) ) {
 				$class = implode( ' ', array_map( 'sanitize_html_class', $class ) );
