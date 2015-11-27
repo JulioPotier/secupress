@@ -12,11 +12,13 @@ function __secupress_plugins_themes_settings_callback( $settings ) {
 	$settings = $settings ? $settings : array();
 
 	// plugins
-	foreach( array(	'plugins_deactivation' => 'plugin-deactivation',
-					'plugins_deletion'     => 'plugin-deletion',
+	foreach( array(	
 					'plugins_installation' => 'plugin-installation',
-					'plugins_activation'   => 'plugin-activation',
-					'plugins_update'       => 'plugin-update' ) as $key => $file ) {
+					'plugins_update'       => 'plugin-update',
+					// 'plugins_deactivation' => 'plugin-deactivation',
+					// 'plugins_deletion'     => 'plugin-deletion',
+					// 'plugins_activation'   => 'plugin-activation',
+				) as $key => $file ) {
 		
 		if ( array_key_exists( $key, $settings ) ) {
 			secupress_activate_submodule( $modulenow, $file );
@@ -27,10 +29,12 @@ function __secupress_plugins_themes_settings_callback( $settings ) {
 	}
 
 	// themes
-	foreach( array(	'themes_deletion'     => 'theme-deletion',
+	foreach( array(	
 					'themes_installation' => 'theme-installation',
-					'themes_switch'       => 'theme-switch',
-					'themes_update'       => 'theme-update' ) as $key => $file ) {
+					'themes_update'       => 'theme-update',
+					// 'themes_deletion'     => 'theme-deletion',
+					// 'themes_switch'       => 'theme-switch',
+				) as $key => $file ) {
 
 		if ( array_key_exists( $key, $settings ) ) {
 			secupress_activate_submodule( $modulenow, $file );
@@ -39,6 +43,8 @@ function __secupress_plugins_themes_settings_callback( $settings ) {
 		}
 
 	}
+
+	apply_filters( 'pro.' . __FUNCTION__, $settings );
 
 	return $settings;
 }
