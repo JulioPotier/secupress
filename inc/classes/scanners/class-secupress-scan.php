@@ -575,13 +575,13 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 			}
 
 			$site_id       = get_current_blog_id();
-			$sub_transient = secupress_get_site_transient( 'secupress_fix_sites_' . $name );
+			$sub_transient = secupress_get_site_transient( SECUPRESS_SCAN_FIX_SITES_SLUG . '_' . $name );
 			$sub_transient = is_array( $sub_transient ) ? $sub_transient : array();
 
 			$sub_transient[ $site_id ] = ! empty( $sub_transient[ $site_id ] ) ? $sub_transient[ $site_id ] : array();
 			$sub_transient[ $site_id ]['scan'] = ! empty( $this->fix_sites[ $site_id ]['scan'] ) ? $this->fix_sites[ $site_id ]['scan'] : array();
 
-			secupress_set_site_transient( 'secupress_fix_sites_' . $name, $sub_transient );
+			secupress_set_site_transient( SECUPRESS_SCAN_FIX_SITES_SLUG . '_' . $name, $sub_transient );
 
 			return isset( $this->fix_sites[ $site_id ]['scan'] ) && is_array( $this->fix_sites[ $site_id ]['scan'] ) ? $this->fix_sites[ $site_id ]['scan'] : array();
 		}
@@ -602,18 +602,18 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 			}
 
 			$site_id       = get_current_blog_id();
-			$sub_transient = secupress_get_site_transient( 'secupress_fix_sites_' . $name );
+			$sub_transient = secupress_get_site_transient( SECUPRESS_SCAN_FIX_SITES_SLUG . '_' . $name );
 			$sub_transient = is_array( $sub_transient ) ? $sub_transient : array();
 
 			$sub_transient[ $site_id ] = ! empty( $sub_transient[ $site_id ] ) ? $sub_transient[ $site_id ] : array();
 			$sub_transient[ $site_id ]['fix'] = ! empty( $this->fix_sites[ $site_id ]['fix'] ) ? $this->fix_sites[ $site_id ]['fix'] : array();
 
-			secupress_set_site_transient( 'secupress_fix_sites_' . $name, $sub_transient );
+			secupress_set_site_transient( SECUPRESS_SCAN_FIX_SITES_SLUG . '_' . $name, $sub_transient );
 
 			return isset( $this->fix_sites[ $site_id ]['fix'] ) && is_array( $this->fix_sites[ $site_id ]['fix'] ) ? $this->fix_sites[ $site_id ]['fix'] : array();
 
 		} elseif ( isset( $this->fix_sites ) ) {
-			secupress_set_site_transient( 'secupress_fix_sites_' . $name, $this->fix_sites );
+			secupress_set_site_transient( SECUPRESS_SCAN_FIX_SITES_SLUG . '_' . $name, $this->fix_sites );
 		}
 
 		$this->result_fix['attempted_fixes'] = array_key_exists( 'attempted_fixes', $this->result_fix ) ? ++$this->result_fix['attempted_fixes'] : 1;

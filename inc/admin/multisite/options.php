@@ -28,7 +28,7 @@ function secupress_get_results_for_ms_scanner_fixes() {
 	// Tests that must be fixed outside the network admin.
 	$tests     = secupress_get_tests_for_ms_scanner_fixes();
 	// Current results.
-	$options   = get_site_option( 'secupress_fix_sites', array() );
+	$options   = get_site_option( SECUPRESS_SCAN_FIX_SITES_SLUG, array() );
 	$options   = is_array( $options ) ? $options : array();
 	$modified  = false;
 	$schedules = array();
@@ -39,14 +39,14 @@ function secupress_get_results_for_ms_scanner_fixes() {
 		$test_name_lower = strtolower( $test_name );
 
 		// Each test has its own transient.
-		$transient = secupress_get_site_transient( 'secupress_fix_sites_' . $test_name_lower );
+		$transient = secupress_get_site_transient( SECUPRESS_SCAN_FIX_SITES_SLUG . '_' . $test_name_lower );
 
 		if ( false === $transient ) {
 			continue;
 		}
 
 		// The transient has a value: delete the transient.
-		secupress_delete_site_transient( 'secupress_fix_sites_' . $test_name_lower );
+		secupress_delete_site_transient( SECUPRESS_SCAN_FIX_SITES_SLUG . '_' . $test_name_lower );
 
 		if ( ! $transient || ! is_array( $transient ) ) {
 			continue;
@@ -82,7 +82,7 @@ function secupress_get_results_for_ms_scanner_fixes() {
 
 	if ( $modified ) {
 		// We had transient(s), update the option.
-		update_site_option( 'secupress_fix_sites', $options );
+		update_site_option( SECUPRESS_SCAN_FIX_SITES_SLUG, $options );
 
 		if ( $schedules ) {
 			// Schedule scan updates.
