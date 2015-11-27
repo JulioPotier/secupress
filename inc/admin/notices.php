@@ -190,8 +190,8 @@ function secupress_warning_module_activity() {
 		return;
 	}
 
-	$activated_modules   = get_site_transient( 'secupress_module_activation_' . $current_user_id );
-	$deactivated_modules = get_site_transient( 'secupress_module_deactivation_' . $current_user_id );
+	$activated_modules   = secupress_get_site_transient( 'secupress_module_activation_' . $current_user_id );
+	$deactivated_modules = secupress_get_site_transient( 'secupress_module_deactivation_' . $current_user_id );
 
 	if ( false !== $activated_modules ) {
 		$message  = sprintf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong> ' );
@@ -199,7 +199,7 @@ function secupress_warning_module_activity() {
 		$message .= sprintf( '<ul><li>%s</li></ul>', implode( '</li><li>', $activated_modules ) );
 
 		secupress_add_notice( $message );
-		delete_site_transient( 'secupress_module_activation_' . $current_user_id );
+		secupress_delete_site_transient( 'secupress_module_activation_' . $current_user_id );
 	}
 
 	if ( false !== $deactivated_modules ) {
@@ -208,7 +208,7 @@ function secupress_warning_module_activity() {
 		$message .= sprintf( '<ul><li>%s</li></ul>', implode( '</li><li>', $deactivated_modules ) );
 
 		secupress_add_notice( $message );
-		delete_site_transient( 'secupress_module_deactivation_' . $current_user_id );
+		secupress_delete_site_transient( 'secupress_module_deactivation_' . $current_user_id );
 	}
 }
 
