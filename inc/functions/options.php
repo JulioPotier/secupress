@@ -43,11 +43,11 @@ function secupress_get_option( $option, $default = false ) {
  * @since 1.0
  *
  * @param string $option  The option name
- * @param bool   $default (default: false) The default value of option.
+ * @param bool   $default (default: null) The default value of option.
  * @param string $module  The module slug (see array keys from modules.php) default is the current module.
  * @return mixed The option value
  */
-function secupress_get_module_option( $option, $default = false, $module = false ) {
+function secupress_get_module_option( $option, $default = null, $module = false ) {
 
 	if ( ! $module ) {
 		if ( ! class_exists( 'SecuPress_Settings' ) ) {
@@ -393,7 +393,12 @@ function secupress_set_site_transient( $transient, $value ) {
 	return $result;
 }
 
-
+/**
+ * Return all tests to scan
+ *
+ * @since 1.0
+ * @return array Tests to scan
+ **/
 function secupress_get_tests() {
 	return array(
 		'high' => array(
@@ -412,8 +417,8 @@ function secupress_get_tests() {
 		),
 		'low' => array(
 			'Login_Errors_Disclose', 'PHP_Disclosure', 'Admin_As_Author'
+			'DirectoryIndex'
 		),
-	);
 }
 
 
