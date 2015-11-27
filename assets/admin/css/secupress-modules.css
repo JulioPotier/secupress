@@ -132,3 +132,8 @@ label {
 .description.warning strong {
 	color: red;
 }
+
+.form-table td fieldset label.readonly {
+	color: #ddd;
+	display: inline;
+}
