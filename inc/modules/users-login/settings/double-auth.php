@@ -45,7 +45,6 @@ $this->add_field(
 	)
 );
 
-//// $this->add_pro_upgrade_field( $field_name . '__passwordless' );
 
 $plugin = $this->set_current_plugin( 'captcha' )->get_current_plugin();
 
