@@ -3,14 +3,13 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 
 $this->set_current_section( 'login_auth2' );
-$this->add_section( __( 'Limit Login Attempts', 'secupress' ) );
+$this->add_section( __( 'Login Control', 'secupress' ) );
 
 
 $main_field_name = $this->get_field_name( 'type' );
 
 $select_args_options = apply_filters( $main_field_name, array(
 	'limitloginattempts' => __( 'Limit the number of bad login attempts', 'secupress' ),
-	'_ooc'               => __( 'Use the Only One Connection mode', 'secupress' ),
 	'bannonexistsuser'   => __( 'Ban login attempts on non-existing usernames', 'secupress' ),
 	'nonlogintimeslot'   => __( 'Set a non-login time slot', 'secupress' ),
 ) );
@@ -31,8 +30,6 @@ $this->add_field(
 		),
 	)
 );
-
-$this->add_pro_upgrade_field( $main_field_name . '__ooc', '<br>' . __( 'Once logged in, nobody can log in on your account at the same time as you.', 'secupress' ) );
 
 $field_name = $this->get_field_name( 'number_attempts' );
 
@@ -73,7 +70,7 @@ $this->add_field(
 			'max'          => 60,
 			'name'         => $field_name,
 			'label_for'    => $field_name,
-			'label'        => __( ' mn', 'secupress' ),
+			'label'        => _x( ' mn', 'minute', 'secupress' ),
 			'default'      => '5',
 			'label_screen' => __( 'How long should we ban?', 'secupress' ),
 		),
@@ -81,7 +78,6 @@ $this->add_field(
 );
 
 $field_name = $this->get_field_name( 'nonlogintimeslot' );
-
 $this->add_field(
 	__( 'Non-Login time slot settings', 'secupress' ),
 	array(
@@ -101,6 +97,56 @@ $this->add_field(
 			'type'         => 'helper_description',
 			'name'         => $field_name,
 			'description'  => __( 'Select the range of time you need to disallow logins.', 'secupress' ),
+		),
+	)
+);
+
+$field_name = $this->get_field_name( 'ooc' );
+$this->add_field(
+	__( 'Avoid Double Connexions', 'secupress' ),
+	array(
+		'name'        => $field_name,
+		'description' => __( 'Once logged in, nobody can log in on your account at the same time as you. You have to disconnect first to allow another connexion.', 'secupress' ) .
+		 				( secupress_is_pro() ? '' : secupress_get_pro_version_string( '<br>%s') ),
+	),
+	array(
+		array(
+			'type'         => 'checkbox',
+			'name'         => $field_name,
+			'label'        => __( 'Yes, do not allow double connexions', 'secupress' ),
+			'label_for'    => $field_name,
+			'label_screen' => __( 'Yes, do not allow double connexions', 'secupress' ),
+			'readonly'     => ! secupress_is_pro(),
+		),
+		array(
+			'type'         => 'helper_description',
+			'name'         => $field_name,
+			'description'  => __( 'You will be able to force the disconnection of anyone or everyone when using the <b>Sessions Control</b> module below.', 'secupress' ),
+		),
+	)
+);
+
+$field_name = $this->get_field_name( 'sessions_control' );
+$this->add_field(
+	__( 'Sessions Control', 'secupress' ),
+	array(
+		'name'        => $field_name,
+		'description' => __( 'Disconnect any user in one click, or even every logged in user at the same time in one click (but you).', 'secupress' ) .
+		 				( secupress_is_pro() ? '' : secupress_get_pro_version_string( '<br>%s') ),
+	),
+	array(
+		array(
+			'type'         => 'checkbox',
+			'name'         => $field_name,
+			'label'        => __( 'Yes, i want to use the Sessions Control Module', 'secupress' ),
+			'label_for'    => $field_name,
+			'label_screen' => __( 'Yes, i want to use the Sessions Control Module', 'secupress' ),
+			'readonly'     => ! secupress_is_pro(),
+		),
+		array(
+			'type'         => 'helper_description',
+			'name'         => $field_name,
+			'description'  => sprintf( __( 'You will find action links on every user\'s row in the <a href="%s">users listing administration page</a>.', 'secupress' ), admin_url( 'users.php' ) ),
 		),
 	)
 );
