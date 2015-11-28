@@ -84,7 +84,7 @@ function secupress_delete_blog_from_active_plugins_and_themes_site_options( $blo
 
 /*
  * First complete filling.
- * If the network has more than 1000 sites, the options will be filled piece by piece.
+ * If the network has more than 250 sites, the options will be filled piece by piece.
  *
  * @since 1.0
  *
@@ -104,7 +104,7 @@ function secupress_fill_active_plugins_and_themes_site_options() {
 	$plugins = is_array( $plugins ) ? $plugins : array();
 	// Set the query boundaries.
 	$offset  = ! empty( $plugins['offset'] ) ? absint( $plugins['offset'] ) : 0;
-	$step    = apply_filters( 'secupress_fill_active_plugins_and_themes_site_options_step', 1 );
+	$step    = apply_filters( 'secupress_fill_active_plugins_and_themes_site_options_step', 250 );
 	$step    = absint( $step );
 	$limit   = $offset * $step . ', ' . $step;
 
