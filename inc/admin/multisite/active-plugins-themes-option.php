@@ -276,6 +276,7 @@ a:focus {
 			printf(
 				/* translators: %s is a "click here" link. */
 				__( 'If this page does not refresh automatically in 2 seconds, please %s.', 'secupress' ),
+				/* For `wp_get_referer()` see the param `_wp_http_referer` in `secupress_add_active_plugins_and_themes_site_options()`. */
 				'<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress-set-big-data&_wp_http_referer=' . esc_url( wp_get_referer() ) ), 'secupress-set-big-data' ) . '" class="secupress-set-big-data">' . __( 'click here', 'secupress' ) . '</a>'
 			);
 			?></p>
