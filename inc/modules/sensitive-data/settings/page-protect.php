@@ -26,7 +26,7 @@ $this->add_field(
 		array(
 			'type'         => 'helper_description',
 			'name'         => $field_name,
-			'depends_on'   => $field_name,
+			'depends'      => $field_name,
 			'description'  => __( 'By using this protection, nobody can stalk into your profile page when you left your computer.', 'secupress' ),
 		),
 	)
@@ -36,7 +36,7 @@ $field_name = $this->get_field_name( 'settings' );
 
 $this->add_field(
 	sprintf( __( 'Protect %s settings page', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
-	array(	
+	array(
 			'name' => $field_name,
 			'description' => __( 'We recommand to protect the settings page once your settings are done.', 'secupress' ) . ( secupress_is_pro() ? '' : secupress_get_pro_version_string( '<br>%s') ),
 		),
@@ -52,7 +52,7 @@ $this->add_field(
 		array(
 			'type'         => 'helper_description',
 			'name'         => $field_name,
-			'depends_on'   => $field_name,
+			'depends'      => $field_name,
 			'description'  => __( 'By using this protection, nobody can stalk into the settings page when you left your computer.', 'secupress' ),
 		),
 	)

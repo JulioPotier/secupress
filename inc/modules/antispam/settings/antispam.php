@@ -17,8 +17,8 @@ $this->add_field(
 		array(
 			'type'         => 'radioboxes',
 			'name'         => $field_name,
-			'options'      => array( 
-									'fightspam' => __( 'I <strong>need</strong> this to help my website fighting comment spam', 'secupress' ), 
+			'options'      => array(
+									'fightspam' => __( 'I <strong>need</strong> this to help my website fighting comment spam', 'secupress' ),
 									'remove-comment-feature' => __( 'I <strong>do not need</strong> comments on my website, remove all the comment features.', 'secupress' ),
 								),
 			'label_for'    => $field_name,
@@ -35,7 +35,7 @@ $this->add_field(
 		'description' => __( '', 'secupress' ),
 	),
 	array(
-		'depends_on'   => $main_field_name,
+		'depends'     => $main_field_name,
 		array(
 			'type'         => 'checkbox',
 			'name'         => $field_name,
@@ -54,7 +54,7 @@ $this->add_field(
 		'description' => __( 'A <a href="https://codex.wordpress.org/Shortcode" target="_blank">shortcode</a> can create macros to be used in a post\'s content.', 'secupress' ),
 	),
 	array(
-		'depends_on'   => $main_field_name,
+		'depends'     => $main_field_name,
 		array(
 			'type'         => 'checkbox',
 			'name'         => $field_name,
@@ -78,7 +78,7 @@ $this->add_field(
 		'description' => __( 'You can improve the list of bad words that will change some comment into a detected spam.', 'secupress' ),
 	),
 	array(
-		'depends_on'   => $main_field_name,
+		'depends'     => $main_field_name,
 		array(
 			'type'         => 'checkbox',
 			'name'         => $field_name,
@@ -102,7 +102,7 @@ $this->add_field(
 		'description' => __( 'Some bots or people will just comment your blog to get a free and easy backling using the comment author url field.', 'secupress' ),
 	),
 	array(
-		'depends_on'   => $main_field_name,
+		'depends'     => $main_field_name,
 		array(
 			'type'         => 'checkbox',
 			'name'         => $field_name,
@@ -123,16 +123,16 @@ $this->add_field(
 	__( 'Handling Spam', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description'  => __( 'Usually WordPress keeps spam in the database, using the deletion setting, you will free some database storage usage.', 'secupress' ),
+		'description' => __( 'Usually WordPress keeps spam in the database, using the deletion setting, you will free some database storage usage.', 'secupress' ),
 	),
 	array(
-		'depends_on'   => $main_field_name,
+		'depends'     => $main_field_name,
 		array(
 			'type'         => 'radios',
-			'options'      => array( 
-									'deletenow'  => __( '<strong>Delete</strong> instantly any spam', 'secupress' ), 
-									'deletedays' => __( '<strong>Delete</strong> spam after 7 days', 'secupress' ), 
-									'markspam'   => __( '<strong>Only mark</strong> as spam', 'secupress' ) 
+			'options'      => array(
+									'deletenow'  => __( '<strong>Delete</strong> instantly any spam', 'secupress' ),
+									'deletedays' => __( '<strong>Delete</strong> spam after 7 days', 'secupress' ),
+									'markspam'   => __( '<strong>Only mark</strong> as spam', 'secupress' )
 								),
 			'default'      => 'deletenow',
 			'name'         => $field_name,
@@ -152,16 +152,16 @@ $this->add_field(
 	__( 'About Pings & Trackbacks', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description'  => __( 'If you do not specially use pings and trackbacks, you can forbid the usage, on the contrary, never mark it as spam.', 'secupress' ),
+		'description' => __( 'If you do not specially use pings and trackbacks, you can forbid the usage, on the contrary, never mark it as spam.', 'secupress' ),
 	),
 	array(
-		'depends_on'   => $main_field_name,
+		'depends'     => $main_field_name,
 		array(
 			'type'         => 'radios',
-			'options'      => array( 
-									'mark-ptb' => __( '<strong>Mark</strong> Pings & Trackbacks as spam like comments', 'secupress' ), 
-									'dontmark-ptb'  => __( '<strong>Never mark</strong> Pings & Trackbacks as spam', 'secupress' ), 
-									'forbid-ptb'   => __( '<strong>Fordib</strong> the usage of Pings & Trackbacks on this website', 'secupress' ) 
+			'options'      => array(
+									'mark-ptb' => __( '<strong>Mark</strong> Pings & Trackbacks as spam like comments', 'secupress' ),
+									'dontmark-ptb'  => __( '<strong>Never mark</strong> Pings & Trackbacks as spam', 'secupress' ),
+									'forbid-ptb'   => __( '<strong>Fordib</strong> the usage of Pings & Trackbacks on this website', 'secupress' )
 								),
 			'default'      => 'mark-ptb',
 			'name'         => $field_name,
@@ -177,8 +177,8 @@ $this->add_field(
 
 
 /* for info, will be marked as spam,:
-url in name  
-known ips, 
+url in name
+known ips,
 regular exp
 local db
 add_filter( 'preprocess_comment', 'baw_no_short_coms' );

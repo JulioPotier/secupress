@@ -37,10 +37,10 @@ $this->add_field(
 	__( 'Bad Contents List', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description'  => __( 'We will automatically block any request containing any of these keywords.', 'secupress' ),
+		'description' => __( 'We will automatically block any request containing any of these keywords.', 'secupress' ),
 	),
 	array(
-		'depends_on'   => $main_field_name,
+		'depends'     => $main_field_name,
 		array(
 			'type'         => 'textarea',
 			'name'         => $field_name,

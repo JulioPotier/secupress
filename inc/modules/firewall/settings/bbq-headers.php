@@ -37,10 +37,10 @@ $this->add_field(
 	__( 'User-Agents List', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description'  => __( 'We will automatically block any User-Agent containing any HTML tag in it or containing more than 255 characters.', 'secupress' ),
+		'description' => __( 'We will automatically block any User-Agent containing any HTML tag in it or containing more than 255 characters.', 'secupress' ),
 	),
 	array(
-		'depends_on'   => $main_field_name,
+		'depends'     => $main_field_name,
 		array(
 			'type'         => 'textarea',
 			'name'         => $field_name,

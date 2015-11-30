@@ -130,7 +130,7 @@ $this->add_field(
 		'description' => __( 'Only for themes from official repository.', 'secupress' ) . ( secupress_is_pro() ? '' : secupress_get_pro_version_string( '<br>%s') )
 	),
 	array(
-		'depends_on'       => $main_field_name,
+		'depends'     => $main_field_name,
 		array(
 			'type'         => 'checkbox',
 			'name'         => $field_name,

@@ -19,9 +19,9 @@ $this->add_field(
 		array(
 			'type'         => 'radios',
 			'name'         => $field_name,
-			'options'      => array( 
+			'options'      => array(
 									'-1'        => __( 'I <strong>do not need</strong> to block or allow countries from visiting my website', 'secupress' ),
-									'blacklist' => __( '<strong>Disallow</strong> the selected countries to visit my website (blacklist)', 'secupress' ), 
+									'blacklist' => __( '<strong>Disallow</strong> the selected countries to visit my website (blacklist)', 'secupress' ),
 									'whitelist' => __( '<strong>Only allow</strong> the selected countries to visit my website (whitelist)', 'secupress' )
 								),
 			'default'      => '-1',
@@ -58,7 +58,7 @@ $this->add_field(
 		'description' => __( 'Add or remove countries you want to be manage from your website.', 'secupress' ),
 	),
 	array(
-		'depends_on'       => $main_field_name . '_blacklist' . ' ' . $main_field_name . '_whitelist',
+		'depends'     => $main_field_name . '_blacklist' . ' ' . $main_field_name . '_whitelist',
 		array(
 			'type'         => 'countries',
 			'name'         => $field_name,

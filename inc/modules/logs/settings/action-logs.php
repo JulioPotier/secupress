@@ -37,7 +37,7 @@ $this->add_field(
 		'description' => __( 'What happened on your WordPress website?', 'secupress' ),
 	),
 	array(
-		'depends_on'       => $main_field_name,
+		'depends'          => $main_field_name,
 		array(
 			'type'         => 'wp_logs',
 		),

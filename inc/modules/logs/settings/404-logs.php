@@ -37,7 +37,7 @@ $this->add_field(
 		'description' => __( 'These pages has been reach recently.', 'secupress' ),
 	),
 	array(
-		'depends_on'       => $main_field_name,
+		'depends'          => $main_field_name,
 		array(
 			'type'         => '_404_logs',
 		),

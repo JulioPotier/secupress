@@ -45,7 +45,7 @@ $this->add_field(
 		'description' => sprintf( __( 'Recommended: %s', 'secupress' ), '9' ),
 	),
 	array(
-		'depends_on'       => $main_field_name,
+		'depends'     => $main_field_name,
 		array(
 			'type'         => 'number',
 			'min'          => 3,
@@ -68,7 +68,7 @@ $this->add_field(
 		'description' => sprintf( __( 'Recommended: %s', 'secupress' ), '5 - 15' ),
 	),
 	array(
-		'depends_on'       => $main_field_name,
+		'depends'     => $main_field_name,
 		array(
 			'type'         => 'number',
 			'min'          => 1,

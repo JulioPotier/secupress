@@ -185,7 +185,7 @@ abstract class SecuPress_Settings {
 				'name'        => $field_name,
 			),
 			array(
-				'depends_on'  => 'affected-role-' . $i,
+				'depends'     => 'affected-role-' . $i,
 				array(
 					'type'         => 'roles',
 					'default'      => array(), //// (TODO) not supported yet why not $args['with_roles']
@@ -315,10 +315,10 @@ abstract class SecuPress_Settings {
 			$class .= $parent ? ' has-parent' : '';
 			$class  = $class ? ' ' . trim( $class ) : '';
 
-			$depends_on = '';
-			if ( ! empty( $args['depends_on'] ) ) {
-				$args['depends_on'] = explode( ' ', $args['depends_on'] );
-				$depends_on = ' depends-' . implode( ' depends-', $args['depends_on'] );
+			$depends = '';
+			if ( ! empty( $args['depends'] ) ) {
+				$args['depends'] = explode( ' ', $args['depends'] );
+				$depends = ' depends-' . implode( ' depends-', $args['depends'] );
 			}
 
 			$has_fieldset_begin = ! isset( $args['fieldset'] ) || 'start' === $args['fieldset'];
@@ -333,7 +333,7 @@ abstract class SecuPress_Settings {
 			$has_fieldset = $has_fieldset_begin || $has_fieldset_end;
 
 			if ( $has_fieldset_begin ) {
-				echo '<fieldset class="fieldname-' . sanitize_html_class( $args['name'] ) . ' fieldtype-' . sanitize_html_class( $field_type ) . $depends_on . '">';
+				echo '<fieldset class="fieldname-' . sanitize_html_class( $args['name'] ) . ' fieldtype-' . sanitize_html_class( $field_type ) . $depends . '">';
 			}
 
 			switch ( $field_type ) {//// Supprimer les labels si $label est vide. Supprimer les legend si pas de fieldset.
@@ -540,25 +540,25 @@ abstract class SecuPress_Settings {
 
 				case 'helper_description' :
 
-					$description = isset( $args['description'] ) ? '<p class="description desc' . $class . $depends_on . '">' . $args['description'] . '</p>' : '';
+					$description = isset( $args['description'] ) ? '<p class="description desc' . $class . $depends . '">' . $args['description'] . '</p>' : '';
 					echo apply_filters( 'secupress_help', $description, $args['name'], 'description' );
 
 					break;
 
 				case 'helper_help' :
 
-					$description = isset( $args['description'] ) ? '<p class="description help' . $class . $depends_on . '">' . $args['description'] . '</p>' : '';
+					$description = isset( $args['description'] ) ? '<p class="description help' . $class . $depends . '">' . $args['description'] . '</p>' : '';
 					echo apply_filters( 'secupress_help', $description, $args['name'], 'help' );
 
 				break;
 
 				case 'helper_warning' :
 
-					$description = isset( $args['description'] ) ? '<p class="description warning' . $class . $depends_on . '"><strong>' . __( 'Warning: ', 'secupress' ) . '</strong>' . $args['description'] . '</p>' : '';
+					$description = isset( $args['description'] ) ? '<p class="description warning' . $class . $depends . '"><strong>' . __( 'Warning: ', 'secupress' ) . '</strong>' . $args['description'] . '</p>' : '';
 					echo apply_filters( 'secupress_help', $description, $args['name'], 'warning' );
 
 					break;
-				
+
 				default :
 					if ( method_exists( $this, $field_type ) ) {
 						call_user_func( array( $this, $field_type ) );
@@ -834,16 +834,16 @@ abstract class SecuPress_Settings {
 				$class = $field['args']['class'];
 			}
 
-			if ( ! empty( $field['args']['depends_on'] ) ) {
-				$field['args']['depends_on'] = explode( ' ', $field['args']['depends_on'] );
-				$class .= ' depends-' . implode( ' depends-', $field['args']['depends_on'] );
+			if ( ! empty( $field['args']['depends'] ) ) {
+				$field['args']['depends'] = explode( ' ', $field['args']['depends'] );
+				$class .= ' depends-' . implode( ' depends-', $field['args']['depends'] );
 			}
 
 			if ( $class ) {
 				$class = ' class="' . esc_attr( trim( $class ) ) . '"';
 			}
 
-			unset( $field['args']['class'], $field['args']['depends_on'] );
+			unset( $field['args']['class'], $field['args']['depends'] );
 
 			echo "<tr{$id}{$class}>";
 

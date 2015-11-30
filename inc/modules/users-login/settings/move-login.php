@@ -50,7 +50,7 @@ foreach( $labels as $slug => $label ) {
 			'name'        => $field_name,
 		),
 		array(
-			'depends_on'       => $main_field_name,
+			'depends'     => $main_field_name,
 			array(
 				'type'         => 'text',
 				'default'      => esc_attr( $slug ),
@@ -72,7 +72,7 @@ $this->add_field(
 		'description' => __( 'When a not connected user attempts to access the old login page.', 'secupress' ),
 	),
 	array(
-		'depends_on'       => $main_field_name,
+		'depends'     => $main_field_name,
 		array(
 			'type'         => 'radios',
 			'options'      => $options,
@@ -93,7 +93,7 @@ $this->add_field(
 		'description' => __( 'When a not connected user attempts to access the old login page.', 'secupress' ),
 	),
 	array(
-		'depends_on'       => $main_field_name,
+		'depends'     => $main_field_name,
 		array(
 			'type'         => 'radios',
 			'options'      => $options,

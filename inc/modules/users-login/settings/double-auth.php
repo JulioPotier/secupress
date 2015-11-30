@@ -40,7 +40,7 @@ $this->add_field(
 			'type'         => 'helper_description',
 			'name'         => $field_name,
 			'description'  => __( 'Users will just have to configure the authentication in their profile.', 'secupress' ),
-			'depends_on'   => $field_name . '_googleauth',
+			'depends'      => $field_name . '_googleauth',
 		),
 	)
 );

@@ -42,7 +42,7 @@ $this->add_field(
 		'description' => __( 'Users won\'t be able to use any of the following usernames. The users already using one of those will be asked to change it.', 'secupress' ),
 	),
 	array(
-		'depends_on'  => $main_field_name,
+		'depends'     => $main_field_name,
 		array(
 			'type'        => 'textarea',
 			'name'        => $field_name,

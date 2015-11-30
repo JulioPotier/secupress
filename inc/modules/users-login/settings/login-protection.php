@@ -40,7 +40,7 @@ $this->add_field(
 		'description' => sprintf( __( 'Recommended: %s', 'secupress' ), '10 - 50' ),
 	),
 	array(
-		'depends_on'       => $main_field_name . '_limitloginattempts',
+		'depends'     => $main_field_name . '_limitloginattempts',
 		array(
 			'type'         => 'number',
 			'min'          => 3,
@@ -63,7 +63,7 @@ $this->add_field(
 		'description' => sprintf( __( 'Recommended: %s', 'secupress' ), '5 - 15' ),
 	),
 	array(
-		'depends_on'       => $main_field_name . '_limitloginattempts ' . $main_field_name . '_bannonexistsuser',
+		'depends'     => $main_field_name . '_limitloginattempts ' . $main_field_name . '_bannonexistsuser',
 		array(
 			'type'         => 'number',
 			'min'          => 1,
@@ -85,7 +85,7 @@ $this->add_field(
 		'description' => '',
 	),
 	array(
-		'depends_on'       => $main_field_name . '_nonlogintimeslot',
+		'depends'     => $main_field_name . '_nonlogintimeslot',
 		array(
 			'type'         => 'nonlogintimeslot',
 			'name'         => $field_name,
