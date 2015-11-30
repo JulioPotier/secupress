@@ -792,15 +792,25 @@ jQuery( document ).ready( function( $ ) {
 		* extra.test:      test name.
 		* extra.data:      data returned by the ajax call.
 		*/
+		var title = SecuPressi18nScanner.notFixed,
+			type  = 'error';
 
 		// Go for a new scan.
 		$( ".secupress-item-" + extra.test ).find( ".secupress-scanit" ).trigger( "scan.secupress" );
 
-		// Success!
+		// Success! (or not)
+		if ( extra.data.class === "warning" ) {
+			title = SecuPressi18nScanner.fixedPartial;
+			type  = "warning";
+		} else if ( extra.data.class === "good" ) {
+			title = SecuPressi18nScanner.fixed;
+			type  = "success";
+		}
+
 		swal( {
-			title: extra.data.class === "warning" ? SecuPressi18nScanner.fixedPartial : SecuPressi18nScanner.fixed,
+			title: title,
 			text:  extra.data.message.replace( /(<ul>|<li>|<\/li><\/ul>)/g, "" ).replace( /<\/li>/g, "<br/><br/>" ),
-			type:  extra.data.class === "warning" ? "warning" : "success",
+			type:  type,
 			allowOutsideClick: true,
 			html:  true
 		} );
