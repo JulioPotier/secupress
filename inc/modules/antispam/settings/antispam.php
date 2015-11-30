@@ -70,9 +70,9 @@ $this->add_field(
 	)
 );
 
-$field_name = $this->get_field_name( 'better-blacklist-words' );
+$field_name = $this->get_field_name( 'better-blacklist-comment' );
 $this->add_field(
-	__( 'Improve the Blacklist Words from WordPress', 'secupress' ),
+	__( 'Improve the Blacklist Comments from WordPress', 'secupress' ),
 	array(
 		'name'        => $field_name,
 		'description' => __( 'You can improve the list of bad words that will change some comment into a detected spam.', 'secupress' ),
@@ -82,9 +82,9 @@ $this->add_field(
 		array(
 			'type'         => 'checkbox',
 			'name'         => $field_name,
-			'label'        => __( 'Yes, i want to use a better blacklist words to detect spams', 'secupress' ),
+			'label'        => __( 'Yes, i want to use a better blacklist comments to detect spams', 'secupress' ),
 			'label_for'    => $field_name,
-			'label_screen' => __( 'Yes, i want to use a better blacklist words to detect spams', 'secupress' ),
+			'label_screen' => __( 'Yes, i want to use a better blacklist comments to detect spams', 'secupress' ),
 		),
 		array(
 			'type'         => 'helper_description',
