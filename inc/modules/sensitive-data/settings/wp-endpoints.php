@@ -1,6 +1,8 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
+global $wp_version;
+$requires_wp_44_str = version_compare( '4.4', $wp_version ) >= 0 ? '<p class="description">' . __( 'Requires WordPress Version:' ) . ' ' . sprintf( __( '%s or more', 'secupress' ), '4.4' ) .'</p>' : false;
 
 $this->set_current_section( 'wp_endpoints' );
 $this->add_section( __( 'WordPress Endpoints', 'secupress' ) );
@@ -27,8 +29,6 @@ $this->add_field(
 	)
 );
 
-global $wp_version;
-$requires_wp_44_str = version_compare( '4.4', $wp_version ) >= 0 ? '<p class="description">' . __( 'Requires WordPress Version:' ) . ' ' . sprintf( __( '%s or more', 'secupress' ), '4.4' ) .'</p>' : false;
 $field_name = $this->get_field_name( 'restapi' );
 $this->add_field(
 	__( 'REST API', 'secupress' ) . $requires_wp_44_str,
