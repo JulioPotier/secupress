@@ -561,7 +561,7 @@ abstract class SecuPress_Settings {
 				
 				default :
 					if ( method_exists( $this, $field_type ) ) {
-						call_user_method( $field_type, $this );
+						call_user_func( array( $this, $field_type ) );
 					} else {
 						echo 'Type manquant ou incorrect'; // ne pas traduire
 					}
@@ -750,7 +750,7 @@ abstract class SecuPress_Settings {
 			$help = '<p class="description help ' . $class . '">' . $help['description'] . '</p>';
 		}
 		if ( ! empty( $desc ) ) {
-			$desc = '<p class="description desc ' . $class . '">' . $desc['description'] . '</p>';
+			$desc = '<p class="description desc ' . $class . '">' . $help['description'] . '</p>';
 		}
 		if ( ! empty( $warning ) ) {
 			$warning = '<p class="description warning file-error ' . $class . '"><b>' . __( 'Warning: ', 'secupress' ) . '</b>' . $warning['description'] . '</p>';
