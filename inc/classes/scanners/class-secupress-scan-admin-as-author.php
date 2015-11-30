@@ -934,6 +934,34 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 	}
 
 
+	protected function fix_network() {
+		$admins = static::get_usernames_per_blog();
+
+		if ( $admins ) {
+			$blogs = static::get_blog_ids();
+
+			foreach ( $blogs as $site_id ) {
+				$data = isset( $admins[ $site_id ] ) ? $admins[ $site_id ] : array();
+
+				if ( $data ) {
+					$data = array( count( $data ), static::wrap_in_tag( $data, 'strong' ) );
+					// Add a scan message for each listed sub-site.
+					$this->add_subsite_message( 200, $data, 'scan', $site_id );
+				} else {
+					$this->set_empty_data_for_subsite( $site_id );
+				}
+			}
+			// cantfix
+			$this->add_fix_message( 303 );
+		} else {
+			// Remove all previously stored messages for sub-sites.
+			$this->set_empty_data_for_subsites();
+			// good
+			$this->add_fix_message( 1 );
+		}
+	}
+
+
 	/*--------------------------------------------------------------------------------------------*/
 	/* TOOLS FOR MULTISITE ====================================================================== */
 	/*--------------------------------------------------------------------------------------------*/
@@ -994,34 +1022,6 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 		}
 
 		return $admins_per_blog;
-	}
-
-
-	protected function fix_network() {
-		$admins = static::get_usernames_per_blog();
-
-		if ( $admins ) {
-			$blogs = static::get_blog_ids();
-
-			foreach ( $blogs as $site_id ) {
-				$data = isset( $admins[ $site_id ] ) ? $admins[ $site_id ] : array();
-
-				if ( $data ) {
-					$data = array( count( $data ), static::wrap_in_tag( $data, 'strong' ) );
-					// Add a scan message for each listed sub-site.
-					$this->add_subsite_message( 200, $data, 'scan', $site_id );
-				} else {
-					$this->set_empty_data_for_subsite( $site_id );
-				}
-			}
-			// cantfix
-			$this->add_fix_message( 303 );
-		} else {
-			// Remove all previously stored messages for sub-sites.
-			$this->set_empty_data_for_subsites();
-			// good
-			$this->add_fix_message( 1 );
-		}
 	}
 
 
