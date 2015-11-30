@@ -52,6 +52,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 			301 => _n_noop( '%d theme is deactivated.', '%d themes are deactivated.', 'secupress' ),
 			302 => __( 'Unable to locate WordPress Plugin directory.' ), // WPi18n
 			303 => __( 'Unable to locate WordPress theme directory.' ), // WPi18n
+			304 => __( 'No plugins nor themes selected.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -135,152 +136,185 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 
 		// PLUGINS
 		if ( $this->has_fix_action_part( 'delete-inactive-plugins' ) ) {
-
-			// Get the list of plugins to uninstall.
-			$selected_plugins = ! empty( $_POST['secupress-fix-delete-inactive-plugins'] ) && is_array( $_POST['secupress-fix-delete-inactive-plugins'] ) ? array_filter( array_map( 'esc_attr', $_POST['secupress-fix-delete-inactive-plugins'] ) ) : array();
-			$selected_plugins = $selected_plugins ? array_fill_keys( $selected_plugins, 1 ) : array();
-			$selected_plugins = $selected_plugins ? array_intersect_key( $inactive['plugins'], $selected_plugins ) : array();
-
-			if ( $selected_plugins ) {
-				//Get the base plugin folder
-				$plugins_dir = $wp_filesystem->wp_plugins_dir();
-
-				if ( ! empty( $plugins_dir ) ) {
-					$plugins_dir     = trailingslashit( $plugins_dir );
-					$deleted_plugins = array();
-					$count_inactive  = count( $inactive['plugins'] );
-					$count_selected  = count( $selected_plugins );
-
-					foreach ( $selected_plugins as $plugin_file => $plugin_data ) {
-						// Run Uninstall hook
-						if ( is_uninstallable_plugin( $plugin_file ) ) {
-							uninstall_plugin( $plugin_file );
-						}
-
-						$this_plugin_dir = trailingslashit( dirname( $plugins_dir . $plugin_file ) );
-
-						// If plugin is in its own directory, recursively delete the directory.
-						if ( strpos( $plugin_file, '/' ) && $this_plugin_dir !== $plugins_dir ) { // base check on if plugin includes directory separator AND that its not the root plugin folder.
-							$deleted = $wp_filesystem->delete( $this_plugin_dir, true );
-						}
-						else {
-							$deleted = $wp_filesystem->delete( $plugins_dir . $plugin_file );
-						}
-
-						if ( $deleted ) {
-							$deleted_plugins[ $plugin_file ] = 1;
-						}
-					}
-
-					$count_deleted = count( $deleted_plugins );
-
-					// Everything's deleted, no plugins left.
-					if ( $count_deleted === $count_inactive ) {
-						// good
-						$this->add_fix_message( 1 );
-					}
-					// All selected plugins deleted.
-					elseif ( $count_deleted === $count_selected ) {
-						// "partial": some plugins still need to be deleted.
-						$this->add_fix_message( 101 );
-					}
-					// No plugins deleted.
-					elseif ( ! $count_deleted ) {
-						// bad
-						$this->add_fix_message( 204, array( $count_inactive ) );
-					}
-					// Some plugins could not be deleted.
-					else {
-						// cantfix
-						$not_removed = array_diff_key( $selected_plugins, $deleted_plugins );
-						$not_removed = wp_list_pluck( $not_removed, 'Name' );
-						$this->add_fix_message( 102, array( count( $not_removed ), $not_removed ) );
-					}
-
-					// Force refresh of plugin update information.
-					if ( $count_deleted && $current = get_site_transient( 'update_plugins' ) ) {
-						$current->response = array_diff_key( $current->response, $deleted_plugins );
-						set_site_transient( 'update_plugins', $current );
-					}
-
-				} else {
-					// cantfix: plugins dir not located.
-					$this->add_fix_message( 302 );
-				}
-
-			} else {
-				// warning: no plugins selected.
-				$this->add_fix_message( 100 );
-			}
+			$plugins = $this->manual_fix_plugins( $wp_filesystem, $inactive );
 		}
 
 		// THEMES
 		if ( $this->has_fix_action_part( 'delete-inactive-themes' ) ) {
-
-			$selected_themes = ! empty( $_POST['secupress-fix-delete-inactive-themes'] ) && is_array( $_POST['secupress-fix-delete-inactive-themes'] ) ? array_filter( array_map( 'esc_attr', $_POST['secupress-fix-delete-inactive-themes'] ) ) : array();
-			$selected_themes = $selected_themes ? array_fill_keys( $selected_themes, 1 ) : array();
-			$selected_themes = $selected_themes ? array_intersect_key( $inactive['themes'], $selected_themes ) : array();
-
-			if ( $selected_themes ) {
-				//Get the base theme folder
-				$themes_dir = $wp_filesystem->wp_themes_dir();
-
-				if ( ! empty( $themes_dir ) ) {
-					$themes_dir      = trailingslashit( $themes_dir );
-					$deleted_themes  = array();
-					$count_inactive  = count( $inactive['themes'] );
-					$count_selected  = count( $selected_themes );
-
-					foreach ( $selected_themes as $theme_file => $theme_data ) {
-						$this_theme_dir  = trailingslashit( $themes_dir . $theme_file );
-
-						if ( $wp_filesystem->delete( $this_theme_dir, true ) ) {
-							$deleted_themes[ $theme_file ] = 1;
-						}
-					}
-
-					$count_deleted = count( $deleted_themes );
-
-					// Everything's deleted, no themes left.
-					if ( $count_deleted === $count_inactive ) {
-						// good
-						$this->add_fix_message( 2 );
-					}
-					// All selected themes deleted.
-					elseif ( $count_deleted === $count_selected ) {
-						// "partial": some themes still need to be deleted.
-						$this->add_fix_message( 104 );
-					}
-					// No themes deleted.
-					elseif ( ! $count_deleted ) {
-						// bad
-						$this->add_fix_message( 205, array( $count_inactive ) );
-					}
-					// Some themes could not be deleted.
-					else {
-						// cantfix
-						$not_removed = array_diff_key( $selected_themes, $deleted_themes );
-						$not_removed = wp_list_pluck( $not_removed, 'Name' );
-						$this->add_fix_message( 105, array( count( $not_removed ), $not_removed ) );
-					}
-
-					// Force refresh of theme update information
-					delete_site_transient( 'update_themes' );
-
-				} else {
-					// cantfix: themes dir not located.
-					$this->add_fix_message( 303 );
-				}
-
-			} else {
-				// warning: no themes selected.
-				$this->add_fix_message( 103 );
-			}
+			$themes = $this->manual_fix_themes( $wp_filesystem, $inactive );
 		}
 
 		ob_end_clean();
 
+		if ( ! empty( $plugins ) && ! empty( $themes ) ) {
+			// cantfix: nothing selected in both lists.
+			$this->add_fix_message( 304 );
+		} elseif ( ! empty( $plugins ) ) {
+			// warning: no plugins selected.
+			$this->add_fix_message( $delete );
+		} elseif ( ! empty( $themes ) ) {
+			// warning: no themes selected.
+			$this->add_fix_message( $themes );
+		}
+
+		// good
+		$this->maybe_set_fix_status( 0 );
+
 		return parent::manual_fix();
+	}
+
+
+	protected function manual_fix_plugins( $wp_filesystem, $inactive ) {
+		// Get the list of plugins to uninstall.
+		$selected_plugins = ! empty( $_POST['secupress-fix-delete-inactive-plugins'] ) && is_array( $_POST['secupress-fix-delete-inactive-plugins'] ) ? array_filter( array_map( 'esc_attr', $_POST['secupress-fix-delete-inactive-plugins'] ) ) : array();
+		$selected_plugins = $selected_plugins ? array_fill_keys( $selected_plugins, 1 ) : array();
+		$selected_plugins = $selected_plugins ? array_intersect_key( $inactive['plugins'], $selected_plugins ) : array();
+
+		if ( ! $selected_plugins ) {
+			if ( $this->has_fix_action_part( 'delete-inactive-themes' ) ) {
+				/*
+				 * warning: no plugins selected.
+				 * No `add_fix_message()`, we need to change the status from warning to cantfix if both lists have no selection.
+				 */
+				return 100;
+			}
+			// cantfix: no plugins selected.
+			return $this->add_fix_message( 304 );
+		}
+
+		//Get the base plugin folder
+		$plugins_dir = $wp_filesystem->wp_plugins_dir();
+
+		if ( empty( $plugins_dir ) ) {
+			// cantfix: plugins dir not located.
+			return $this->add_fix_message( 302 );
+		}
+
+		$plugins_dir     = trailingslashit( $plugins_dir );
+		$deleted_plugins = array();
+		$count_inactive  = count( $inactive['plugins'] );
+		$count_selected  = count( $selected_plugins );
+
+		foreach ( $selected_plugins as $plugin_file => $plugin_data ) {
+			// Run Uninstall hook
+			if ( is_uninstallable_plugin( $plugin_file ) ) {
+				uninstall_plugin( $plugin_file );
+			}
+
+			$this_plugin_dir = trailingslashit( dirname( $plugins_dir . $plugin_file ) );
+
+			// If plugin is in its own directory, recursively delete the directory.
+			if ( strpos( $plugin_file, '/' ) && $this_plugin_dir !== $plugins_dir ) { // base check on if plugin includes directory separator AND that its not the root plugin folder.
+				$deleted = $wp_filesystem->delete( $this_plugin_dir, true );
+			}
+			else {
+				$deleted = $wp_filesystem->delete( $plugins_dir . $plugin_file );
+			}
+
+			if ( $deleted ) {
+				$deleted_plugins[ $plugin_file ] = 1;
+			}
+		}
+
+		$count_deleted = count( $deleted_plugins );
+
+		// Everything's deleted, no plugins left.
+		if ( $count_deleted === $count_inactive ) {
+			// good
+			$this->add_fix_message( 1 );
+		}
+		// All selected plugins deleted.
+		elseif ( $count_deleted === $count_selected ) {
+			// "partial": some plugins still need to be deleted.
+			$this->add_fix_message( 101 );
+		}
+		// No plugins deleted.
+		elseif ( ! $count_deleted ) {
+			// bad
+			$this->add_fix_message( 204, array( $count_inactive ) );
+		}
+		// Some plugins could not be deleted.
+		else {
+			// cantfix
+			$not_removed = array_diff_key( $selected_plugins, $deleted_plugins );
+			$not_removed = wp_list_pluck( $not_removed, 'Name' );
+			$this->add_fix_message( 102, array( count( $not_removed ), $not_removed ) );
+		}
+
+		// Force refresh of plugin update information.
+		if ( $count_deleted && $current = get_site_transient( 'update_plugins' ) ) {
+			$current->response = array_diff_key( $current->response, $deleted_plugins );
+			set_site_transient( 'update_plugins', $current );
+		}
+	}
+
+
+	protected function manual_fix_themes( $wp_filesystem, $inactive ) {
+		// Get the list of themes to uninstall.
+		$selected_themes = ! empty( $_POST['secupress-fix-delete-inactive-themes'] ) && is_array( $_POST['secupress-fix-delete-inactive-themes'] ) ? array_filter( array_map( 'esc_attr', $_POST['secupress-fix-delete-inactive-themes'] ) ) : array();
+		$selected_themes = $selected_themes ? array_fill_keys( $selected_themes, 1 ) : array();
+		$selected_themes = $selected_themes ? array_intersect_key( $inactive['themes'], $selected_themes ) : array();
+
+		if ( ! $selected_themes ) {
+			if ( $this->has_fix_action_part( 'delete-inactive-plugins' ) ) {
+				/*
+				 * warning: no themes selected.
+				 * No `add_fix_message()`, we need to change the status from warning to cantfix if both lists have no selection.
+				 */
+				return 103;
+			}
+			// cantfix: no themes selected.
+			return $this->add_fix_message( 304 );
+		}
+
+		//Get the base theme folder
+		$themes_dir = $wp_filesystem->wp_themes_dir();
+
+		if ( empty( $themes_dir ) ) {
+			// cantfix: themes dir not located.
+			return $this->add_fix_message( 303 );
+		}
+
+		$themes_dir      = trailingslashit( $themes_dir );
+		$deleted_themes  = array();
+		$count_inactive  = count( $inactive['themes'] );
+		$count_selected  = count( $selected_themes );
+
+		foreach ( $selected_themes as $theme_file => $theme_data ) {
+			$this_theme_dir  = trailingslashit( $themes_dir . $theme_file );
+
+			if ( $wp_filesystem->delete( $this_theme_dir, true ) ) {
+				$deleted_themes[ $theme_file ] = 1;
+			}
+		}
+
+		$count_deleted = count( $deleted_themes );
+
+		// Everything's deleted, no themes left.
+		if ( $count_deleted === $count_inactive ) {
+			// good
+			$this->add_fix_message( 2 );
+		}
+		// All selected themes deleted.
+		elseif ( $count_deleted === $count_selected ) {
+			// "partial": some themes still need to be deleted.
+			$this->add_fix_message( 104 );
+		}
+		// No themes deleted.
+		elseif ( ! $count_deleted ) {
+			// bad
+			$this->add_fix_message( 205, array( $count_inactive ) );
+		}
+		// Some themes could not be deleted.
+		else {
+			// cantfix
+			$not_removed = array_diff_key( $selected_themes, $deleted_themes );
+			$not_removed = wp_list_pluck( $not_removed, 'Name' );
+			$this->add_fix_message( 105, array( count( $not_removed ), $not_removed ) );
+		}
+
+		// Force refresh of theme update information
+		delete_site_transient( 'update_themes' );
 	}
 
 

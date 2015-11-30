@@ -62,6 +62,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 			302 => __( 'Unable to locate WordPress Plugin directory.' ), // WPi18n
 			/* translators: %s is the plugin name. */
 			303 => sprintf( __( 'A new %s menu item has been activated in the relevant site\'s administration area to let Administrators know which plugins to deactivate.', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ),
+			304 => __( 'No plugins selected.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -147,10 +148,22 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 
 		if ( $bad_plugins['count'] ) {
 			if ( $this->has_fix_action_part( 'delete-bad-old-plugins' ) ) {
-				$this->manual_delete( $bad_plugins['to_delete'], (bool) $bad_plugins['to_deactivate'] );
+				$delete = $this->manual_delete( $bad_plugins['to_delete'], (bool) $bad_plugins['to_deactivate'] );
 			}
+
 			if ( $this->has_fix_action_part( 'deactivate-bad-old-plugins' ) ) {
-				$this->manual_deactivate( $bad_plugins['to_deactivate'], (bool) $bad_plugins['to_delete'] );
+				$deactivate = $this->manual_deactivate( $bad_plugins['to_deactivate'], (bool) $bad_plugins['to_delete'] );
+			}
+
+			if ( ! empty( $delete ) && ! empty( $deactivate ) ) {
+				// cantfix: nothing selected in both lists.
+				$this->add_fix_message( 304 );
+			} elseif ( ! empty( $delete ) ) {
+				// warning: no plugins selected.
+				$this->add_fix_message( $delete );
+			} elseif ( ! empty( $deactivate ) ) {
+				// warning: no plugins selected.
+				$this->add_fix_message( $deactivate );
 			}
 		} else {
 			// good
@@ -173,8 +186,15 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 		$selected_plugins = $selected_plugins ? array_intersect_key( $bad_plugins, $selected_plugins ) : array();
 
 		if ( ! $selected_plugins ) {
-			// warning: no plugins selected.
-			return $this->add_fix_message( 101 );
+			if ( $this->has_fix_action_part( 'deactivate-bad-old-plugins' ) ) {
+				/*
+				 * warning: no plugins selected.
+				 * No `add_fix_message()`, we need to change the status from warning to cantfix if both lists have no selection.
+				 */
+				return 101;
+			}
+			// cantfix: no plugins selected.
+			return $this->add_fix_message( 304 );
 		}
 
 		// Get filesystem.
@@ -271,10 +291,20 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 		$selected_plugins = $selected_plugins ? array_intersect_key( $bad_plugins, $selected_plugins ) : array();
 
 		if ( ! $selected_plugins ) {
-			// Remove all previously stored messages for sub-sites.
-			$this->set_empty_data_for_subsites();
-			// warning: no plugins selected.
-			return $this->add_fix_message( 104 );
+			if ( $this->is_network_admin() ) {
+				// Remove all previously stored messages for sub-sites.
+				$this->set_empty_data_for_subsites();
+			}
+
+			if ( $this->has_fix_action_part( 'delete-bad-old-plugins' ) ) {
+				/*
+				 * warning: no plugins selected.
+				 * No `add_fix_message()`, we need to change the status from warning to cantfix if both lists have no selection.
+				 */
+				return 104;
+			}
+			// cantfix: no plugins selected.
+			return $this->add_fix_message( 304 );
 		}
 
 		// In the network admin we disable nothing. We only store the selected plugins for later use in the sub-sites scans page.
