@@ -271,6 +271,8 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 		$selected_plugins = $selected_plugins ? array_intersect_key( $bad_plugins, $selected_plugins ) : array();
 
 		if ( ! $selected_plugins ) {
+			// Remove all previously stored messages for sub-sites.
+			$this->set_empty_data_for_subsites();
 			// warning: no plugins selected.
 			return $this->add_fix_message( 104 );
 		}
