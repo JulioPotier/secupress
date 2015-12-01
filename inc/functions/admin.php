@@ -271,6 +271,15 @@ function secupress_activate_submodule( $module, $plugin, $incompatibles_modules 
 }
 
 
+function secupress_manage_submodule( $module, $plugin, $activate ) {
+	if ( $activate ) {
+		secupress_activate_submodule( $module, $plugin );
+	} else {
+		secupress_deactivate_submodule( $module, $plugin );
+	}
+}
+
+
 function secupress_add_module_notice( $module, $submodule, $action ) {
 	global $current_user;
 
