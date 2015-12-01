@@ -24,7 +24,7 @@ function __secupress_users_login_settings_callback( $settings ) {
 	__secupress_login_protection_settings_callback( $modulenow, $settings );
 
 	// Logins blacklist
-	__secupress_bad_logins_settings_callback( $modulenow, $settings );
+	__secupress_logins_blacklist_settings_callback( $modulenow, $settings );
 
 	return $settings;
 }
@@ -85,7 +85,7 @@ function __secupress_login_protection_settings_callback( $modulenow, &$settings 
 
 // Logins blacklist.
 
-function __secupress_bad_logins_settings_callback( $modulenow, &$settings ) {
+function __secupress_logins_blacklist_settings_callback( $modulenow, &$settings ) {
 	$settings['bad-logins_blacklist-logins'] = ! empty( $settings['bad-logins_blacklist-logins'] ) ? 1 : 0;
 
 	if ( isset( $settings['bad-logins_blacklist-logins-list'] ) && '' !== $settings['bad-logins_blacklist-logins-list'] ) {
