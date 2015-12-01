@@ -6,14 +6,14 @@ $this->set_current_section( 'move-login' );
 $this->add_section( __( 'Move Login', 'secupress' ) );
 
 
-$field_name      = $this->get_field_name( 'move-login' );
+$field_name      = $this->get_field_name( 'activated' );
 $main_field_name = $field_name;
 
 $this->add_field(
 	__( 'Move the login page', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description'  => __( 'This will not totally hide the login form from humans, the main goal is to avoid bots to hit this URL.', 'secupress' ),
+		'description' => __( 'This will not totally hide the login form from humans, the main goal is to avoid bots to hit this URL.', 'secupress' ),
 	),
 	array(
 		array(
@@ -37,13 +37,17 @@ $labels = array(
 	'lostpassword' => __( 'Lost Password' ),
 	'resetpass'    => __( 'Password Reset' ),
 );
+
 $new_slugs = apply_filters( 'sfml_additional_slugs', array() );
-if ( ! empty( $new_slugs ) ) {
-	$new_slugs    = array_diff_key( $new_slugs, $labels );
-	$labels = array_merge( $labels, $new_slugs );
+
+if ( $new_slugs ) {
+	$new_slugs = array_diff_key( $new_slugs, $labels );
+	$labels    = array_merge( $labels, $new_slugs );
 }
+
 foreach( $labels as $slug => $label ) {
-	$field_name      = $this->get_field_name( 'link-' . esc_attr( $slug ) );
+	$field_name = $this->get_field_name( 'link-' . esc_attr( $slug ) );
+
 	$this->add_field(
 		esc_html( $label ),
 		array(
@@ -63,8 +67,13 @@ foreach( $labels as $slug => $label ) {
 	);
 }
 
-$field_name      = $this->get_field_name( 'wp-login_access' );
-$options = array( 'error' => __( 'Display an error message', 'secupress' ), 'redir_404' => __( 'Redirect to a «Page not found» error page', 'secupress' ), 'redir_home' => __( 'Redirect to the home page', 'secupress' ) );
+$field_name = $this->get_field_name( 'wp-login_access' );
+$options    = array(
+	'error'      => __( 'Display an error message', 'secupress' ),
+	'redir_404'  => __( 'Redirect to a "Page not found" error page', 'secupress' ),
+	'redir_home' => __( 'Redirect to the home page', 'secupress' ),
+);
+
 $this->add_field(
 	sprintf( __( 'Access to %s', 'secupress' ), '<code>wp-login.php</code>' ),
 	array(
@@ -84,8 +93,14 @@ $this->add_field(
 	)
 );
 
-$field_name      = $this->get_field_name( 'admin_access' );
-$options = array( 'redir-login' => __( 'Do nothing, redirect to the new login page', 'secupress' ), 'error' => __( 'Display an error message', 'secupress' ), 'redir_404' => __( 'Redirect to a «Page not found» error page', 'secupress' ), 'redir_home' => __( 'Redirect to the home page', 'secupress' ) );
+$field_name = $this->get_field_name( 'admin_access' );
+$options    = array(
+	'redir-login' => __( 'Do nothing, redirect to the new login page', 'secupress' ),
+	'error'       => __( 'Display an error message', 'secupress' ),
+	'redir_404'   => __( 'Redirect to a "Page not found" error page', 'secupress' ),
+	'redir_home'  => __( 'Redirect to the home page', 'secupress' ),
+);
+
 $this->add_field(
 	__( 'Access to the administration area', 'secupress' ),
 	array(
@@ -100,8 +115,9 @@ $this->add_field(
 			'default'      => 'error',
 			'name'         => $field_name,
 			'label_for'    => $field_name,
-			'label_screen' => __( 'Access to administration area', 'secupress' ),
+			'label_screen' => __( 'Access to the administration area', 'secupress' ),
 		),
 	)
 );
+
 unset( $options );
