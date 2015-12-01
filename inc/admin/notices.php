@@ -194,18 +194,18 @@ function secupress_warning_module_activity() {
 	$deactivated_modules = secupress_get_site_transient( 'secupress_module_deactivation_' . $current_user_id );
 
 	if ( false !== $activated_modules ) {
-		$message  = sprintf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong> ' );
+		$message  = '<p>' . sprintf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ) . ' ';
 		$message .= _n( 'This module has been activated:', 'These modules have been activated:', count( $activated_modules ), 'secupress' );
-		$message .= sprintf( '<ul><li>%s</li></ul>', implode( '</li><li>', $activated_modules ) );
+		$message .= sprintf( '</p><ul><li>%s</li></ul>', implode( '</li><li>', $activated_modules ) );
 
 		secupress_add_notice( $message );
 		secupress_delete_site_transient( 'secupress_module_activation_' . $current_user_id );
 	}
 
 	if ( false !== $deactivated_modules ) {
-		$message  = sprintf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong> ' );
+		$message  = '<p>' . sprintf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong> ' ) . ' ';
 		$message .= _n( 'This module has been deactivated:', 'These modules have been deactivated:', count( $deactivated_modules ), 'secupress' );
-		$message .= sprintf( '<ul><li>%s</li></ul>', implode( '</li><li>', $deactivated_modules ) );
+		$message .= sprintf( '</p><ul><li>%s</li></ul>', implode( '</li><li>', $deactivated_modules ) );
 
 		secupress_add_notice( $message );
 		secupress_delete_site_transient( 'secupress_module_deactivation_' . $current_user_id );

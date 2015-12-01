@@ -103,8 +103,8 @@ class SecuPress_Admin_Notices {
 	 *                                  enpty string: meant for a one-shot use. The notice is dismissible but the "dismissed" state is not stored, it will popup again. This is the exact same behavior than the WordPress dismissible notices.
 	 */
 	public function add( $message, $error_code = 'updated', $notice_id = false ) {
-		if ( $notice_id ) {
-			if ( self::_is_dismissed( $notice_id ) ) {
+		if ( false !== $notice_id ) {
+			if ( $notice_id && self::_is_dismissed( $notice_id ) ) {
 				return;
 			}
 			// Add notices script.
@@ -289,23 +289,31 @@ class SecuPress_Admin_Notices {
 					foreach ( $messages as $notice_id => $message ) {
 						$button = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_dismiss-notice&notice_id=' . $notice_id . '&_wp_http_referer=' . esc_url( secupress_get_current_url( 'raw' ) ) ), 'secupress-notices' );
 						$button = '<a href="' . $button . '" class="notice-dismiss"><span class="screen-reader-text">' . __( 'Dismiss', 'secupress' ) . '</span></a>';
+						$message = strpos( $message, '<p>' ) === false ? '<p>' . $message . '</p>' : $message;
 						?>
-						<div class="<?php echo $error_code . $compat; ?> notice secupress-notice secupress-is-dismissible" data-id="<?php echo $notice_id; ?>"><p>
+						<div class="<?php echo $error_code . $compat; ?> notice secupress-notice secupress-is-dismissible" data-id="<?php echo $notice_id; ?>">
 							<?php echo $message; ?>
-						</p><?php echo $button; ?></div>
+							<?php echo $button; ?>
+						</div>
 						<?php
 					}
 				} elseif ( 'wp-dismissible' === $type ) {
 					?>
-					<div class="<?php echo $error_code . $compat; ?> notice secupress-notice secupress-is-dismissible"><p>
-						<?php echo implode( '<br class="separator"/>', $messages ); ?>
-					</p></div>
+					<div class="<?php echo $error_code . $compat; ?> notice secupress-notice secupress-is-dismissible">
+						<?php
+						$message = implode( '<br class="separator"/>', $messages );
+						echo strpos( $message, '<p>' ) === false ? '<p>' . $message . '</p>' : $message;
+						?>
+					</div>
 					<?php
 				} else {
 					?>
-					<div class="<?php echo $error_code; ?> notice secupress-notice"><p>
-						<?php echo implode( '<br class="separator"/>', $messages ); ?>
-					</p></div>
+					<div class="<?php echo $error_code; ?> notice secupress-notice">
+						<?php
+						$message = implode( '<br class="separator"/>', $messages );
+						echo strpos( $message, '<p>' ) === false ? '<p>' . $message . '</p>' : $message;
+						?>
+					</div>
 					<?php
 				}
 			}
