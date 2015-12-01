@@ -130,17 +130,32 @@
 } )(jQuery, document, window);
 
 
+// Radiobox class ==================================================================================
+(function($, d, w, undefined) {
+	$( ".radiobox" ).on( "click", function() {
+		var $this = $( this ),
+			name  = $this.attr( "name" );
+		$( '.radiobox[name="' + name + '"]:checked' ).not( $this ).removeAttr( "checked" ).trigger( "change" );
+	} );
+} )(jQuery, document, window);
+
+
 // Show/Hide panels, depending on some other field value. ==========================================
 (function($, d, w, undefined) {
 
 	var $depends   = $( "#wpbody-content" ).find( '[class*="depends-"]' ), // Rows that will open/close.
-		dependsIds = {}; // IDs of the checkboxes, radios, etc that will trigger a panel open/close.
+		dependsIds = {}, // IDs of the checkboxes, radios, etc that will trigger a panel open/close.
+		dependsRadioNames = {}; // names of the radios.
 
 	$depends.each( function() {
 		var classes = $( this ).attr( "class" ).replace( /^\s+|\s+$/g, "" ).replace( /\s+/, " " ).split( " " );
 
 		$.each( classes, function( i, id ) {
-			var $target, targetTagName, targetTypeAttr, targetNameAttr, targetIsValid = false;
+			var $input,        // input element
+				inputTagName,  // input tag name
+				inputTypeAttr, // input type
+				inputNameAttr, // input name
+				inputIsValid = false;
 
 			// If the class is not a "depends-XXXXXX", bail out.
 			if ( 0 !== id.indexOf( "depends-" ) ) {
@@ -155,80 +170,82 @@
 			}
 			dependsIds[ id ] = 1;
 
-			$target = $( "#" + id );
+			$input = $( "#" + id );
 
 			// Uh? The input doesn't exist?
-			if ( ! $target.length ) {
+			if ( ! $input.length ) {
 				return true;
 			}
 
 			// We need to know which type of input we deal with, the way we deal with it is not the same.
-			targetTagName = $target.get( 0 ).nodeName.toLowerCase();
+			inputTagName = $input.get( 0 ).nodeName.toLowerCase();
 
-			if ( "input" === targetTagName ) {
-				targetTypeAttr = $target.attr( "type" ).toLowerCase();
+			if ( "input" === inputTagName ) {
+				inputTypeAttr = $input.attr( "type" ).toLowerCase();
 
-				if ( "checkbox" === targetTypeAttr || "radio" === targetTypeAttr ) {
-					targetIsValid = true;
+				if ( "checkbox" === inputTypeAttr || "radio" === inputTypeAttr ) {
+					inputIsValid = true;
 				}
 
-			} else if ( /*"select" === targetTagName || */"button" === targetTagName ) {
-				targetIsValid = true;
+			} else if ( "button" === inputTagName ) {
+				inputIsValid = true;
 			}
 
 			// Only checkboxes, radios groups and buttons so far.
-			if ( ! targetIsValid ) {
+			if ( ! inputIsValid ) {
 				return true;
 			}
 
 			// Attach the events.
 			// Buttons
-			if ( "button" === targetTagName ) {
+			if ( "button" === inputTagName ) {
 
-				$target.on( "click", function() {
+				$input.on( "click", function() {
 					var id = $( this ).attr( "id" );
 					$( ".depends-" + id ).toggle( 250 );
 				} );
 
 			}
 			// Radios
-			else if ( "radio" === targetTypeAttr ) {
+			else if ( "radio" === inputTypeAttr ) {
 
-				// Radios don't trigger a "change" event on uncheck: we need to monitor the entire group.
-				targetNameAttr = $target.attr( "name" );
+				inputNameAttr = $input.attr( "name" );
 
-				$( '[name="' + targetNameAttr + '"]' ).on( "change init.secupress", { targetId: id }, function( e ) {
-					var id     = $( this ).attr( "id" ),
-						$elems = $( ".depends-" + e.data.targetId ),
-						tempo  = "init" === e.type && "secupress" === e.namespace ? 0 : 250; // On page load, no animation.
+				// If the name was previously delt with, bail out.
+				if ( "undefined" !== typeof dependsRadioNames[ inputNameAttr ] ) {
+					return true;
+				}
+				dependsRadioNames[ inputNameAttr ] = 1;
 
-					// Uh? No rows?
-					if ( ! $elems.length ) {
-						return true;
-					}
+				$( '[name="' + inputNameAttr + '"]' ).on( "change init.secupress", function( e ) {
+					var $this   = $( this ),
+						$toShow = $( ".depends-" + $this.attr( "id" ) ), // Elements to show.
+						toHide  = [], // Elements to hide.
+						tempo   = "init" === e.type && "secupress" === e.namespace ? 0 : 250; // On page load, no animation.
 
-					// The desired radio is checked: open if not visible.
-					if ( e.data.targetId === id ) {
-						$elems.not( ":visible" ).trigger( "secupressbeforeshow" ).show( tempo, function() {
-							$( this ).trigger( "secupressaftershow" );
-						} );
-					}
-					// Another radio is checked: close if visible.
-					else {
-						$elems.filter( ":visible" ).trigger( "secupressbeforehide" ).hide( tempo, function() {
-							$( this ).trigger( "secupressafterhide" );
-						} );
-					}
+					// The radio is checked: open the desired boxes if not visible.
+					$toShow.not( ":visible" ).trigger( "secupressbeforeshow" ).show( tempo, function() {
+						$( this ).trigger( "secupressaftershow" );
+					} );
+
+					// Find boxes to hide.
+					$( '[name="' + $this.attr( "name" ) + '"]' ).not( $this ).each( function() {
+						toHide.push( ".depends-" + $( this ).attr( "id" ).replace( /^\s+|\s+$/g, "" ) );
+					} );
+
+					$( toHide.join( "," ) ).not( $toShow ).filter( ":visible" ).trigger( "secupressbeforehide" ).hide( tempo, function() {
+						$( this ).trigger( "secupressafterhide" );
+					} );
 				} ).filter( ":checked" ).trigger( "init.secupress" );
 
 			}
 			// Checkboxes
-			else if ( "checkbox" === targetTypeAttr ) {
+			else if ( "checkbox" === inputTypeAttr ) {
 
-				$target.on( "change init.secupress", function( e ) {
+				$input.on( "change init.secupress", function( e ) {
 					var $this  = $( this ),
 						id     = $this.attr( "id" ),
-						$elems = $( ".depends-" + id ),
+						$elems = $( ".depends-" + id ), // Elements to hide or show.
 						tempo  = "init" === e.type && "secupress" === e.namespace ? 0 : 250; // On page load, no animation.
 
 					// Uh? No rows?
@@ -270,56 +287,43 @@
 		} );
 	} );
 
-// Countries ======================================================================================
+} )(jQuery, document, window);
 
-	(function($, d, w, undefined) {
-		
-		$( ".geoip-system_geoip-countries" ).on( "click", function( e ) {
-				var val = $( this ).val();
-				$( ".fieldtype-countries" ).find( "[data-code-country='" + val + "']" ).prop( "checked", $( this ).is( ":checked" ) );
-			}
-		);
 
-		$( "[data-code-country]" ).on( "click", function( e ) {
-				var code = $( this ).data( "code-country" );
-				$( "[value='" + code + "']" ).prop( "checked", Boolean( $( "[data-code-country='" + code + "']:checked" ).length == $( "[data-code-country='" + code + "']" ).length ) );
-			}
+// Countries =======================================================================================
+(function($, d, w, undefined) {
 
-		);
+	$( ".geoip-system_geoip-countries" ).on( "click", function( e ) {
+		var val = $( this ).val();
+		$( ".fieldtype-countries" ).find( "[data-code-country='" + val + "']" ).prop( "checked", $( this ).is( ":checked" ) );
+	} );
 
-	} )(jQuery, document, window);
+	$( "[data-code-country]" ).on( "click", function( e ) {
+		var code = $( this ).data( "code-country" );
+		$( "[value='" + code + "']" ).prop( "checked", Boolean( $( "[data-code-country='" + code + "']:checked" ).length == $( "[data-code-country='" + code + "']" ).length ) );
+	} );
 
-// Fixed scroll ===================================================================================
-$(function() {
+} )(jQuery, document, window);
 
-    var $sidebar   = $("h2.nav-tab-wrapper"), 
-        $window    = $(window),
-        offset     = $sidebar.offset(),
-        topPadding = 35;
 
-    $window.scroll(function() {
-        if ($window.scrollTop() > offset.top) {
-            $sidebar.stop().animate({
-                marginTop: $window.scrollTop() - offset.top + topPadding
-            }, 250);
-        } else {
-            $sidebar.stop().animate({
-                marginTop: 0
-            });
-        }
-    });
-    
-});
+// Fixed scroll ====================================================================================
+(function($, d, w, undefined) {
 
-// Radiobox class =================================================================================
-$(function() {
-//// bug quand on a une des checkbox qui ouvre un panel
-    $(".radiobox").on( "click", function(e) { 
-    	var id = $( this ).attr( "id" );
-    	$( ".radiobox:not(#" + id + "):checked" ).trigger( "click" );
-    });
-    
-});
+	var $sidebar   = $( "h2.nav-tab-wrapper" ),
+		$window    = $( w ),
+		offset     = $sidebar.offset(),
+		topPadding = 35;
 
+	$window.scroll( function() {
+		if ( $window.scrollTop() > offset.top ) {
+			$sidebar.stop().animate( {
+				marginTop: $window.scrollTop() - offset.top + topPadding
+			}, 250 );
+		} else {
+			$sidebar.stop().animate( {
+				marginTop: 0
+			} );
+		}
+	} );
 
 } )(jQuery, document, window);
