@@ -15,6 +15,8 @@ function __secupress_users_login_settings_callback( $settings ) {
 	$modulenow = 'users-login';
 	$settings = $settings ? $settings : array();
 
+	unset( $settings['temp.password_strength_value'] ); // not actual option
+
 	// double-auth
 	if ( isset( $settings['double-auth_type'] ) ) {
 		switch ( $settings['double-auth_type'] ) {
@@ -38,15 +40,6 @@ function __secupress_users_login_settings_callback( $settings ) {
 	}
 
 	secupress_manage_affected_roles( $settings, 'double-auth' );
-
-	unset( $settings['temp.password_strength_value'] ); // not actual option
-
-	if ( isset( $settings['profile_protect'] ) ) {
-		secupress_activate_submodule( $modulenow, 'profile-protect' );
-	} else {
-		secupress_deactivate_submodule( $modulenow, 'profile-protect' );
-	}
-	secupress_manage_affected_roles( $settings, 'profile-protect' );
 
 	// login-protection
 	if ( isset( $settings['login-protection_type'] ) ) {
