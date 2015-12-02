@@ -389,7 +389,7 @@ function secupress_insert_iis7_nodes( $marker, $args ) {
 		return false;
 	}
 
-	$path_end = ! $path && strpos( $nodes_string, '<rule ' ) === 0 ? '/rewrite/rules/rule' : '';
+	$path_end = ! $path && strpos( ltrim( $nodes_string ), '<rule ' ) === 0 ? '/rewrite/rules/rule' : '';
 	$path     = '/configuration/system.webServer' . ( $path ? '/' . trim( $path, '/' ) : '' ) . $path_end;
 
 	$xpath = new DOMXPath( $doc );
@@ -426,7 +426,7 @@ function secupress_insert_iis7_nodes( $marker, $args ) {
 	}
 
 	// Indentation.
-	$spaces = ( count( ( explode( '/', trim( $path, '/' ) ) ) ) - 1 ) * 2;
+	$spaces = ( count( ( explode( '/', trim( $path, '/' ) ) ) ) - 1 ) * 2; // Don't ask, it's magic.
 	$spaces = str_repeat( ' ', $spaces );
 
 	// Create fragment.
