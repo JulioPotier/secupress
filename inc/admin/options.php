@@ -356,7 +356,8 @@ function __secupress_scanners() {
 			'<div class="score_info2">' .
 				'<span class="letter">&ndash;</span>' .
 				'<span class="percent">(0 %)</span>' .
-				'<div class="score_results">' . sprintf( __( '%s:', 'secupress' ), '<strong>' . __( 'Latest Reports', 'secupress' ) . '</strong>' ) . '<br>' .
+				'<div class="score_results">' .
+					sprintf( __( '%s: ', 'secupress' ), '<strong>' . __( 'Latest Reports', 'secupress' ) . '</strong>' ) . '<br>' .
 					'<ul>' .
 						implode( "\n", array_reverse( $reports ) ) .
 					'</ul>' .
