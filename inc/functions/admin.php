@@ -207,7 +207,8 @@ function secupress_block( $module, $code = 403 ) {
 	secupress_die( $title_fmt . $content . $details, $title, array( 'response', $code ) );
 }
 
-function secupress_deactivate_submodule( $module, $plugins ) {
+
+function secupress_deactivate_submodule( $module, $plugins, $args = array() ) {
 	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
 
 	if ( ! is_array( $plugins ) ) {
@@ -225,14 +226,14 @@ function secupress_deactivate_submodule( $module, $plugins ) {
 				unset( $active_plugins[ $module ][ $key ] );
 				update_site_option( SECUPRESS_ACTIVE_SUBMODULES, $active_plugins );
 				secupress_add_module_notice( $module, $plugin_file, 'deactivation' );
-				do_action( 'secupress_deactivate_plugin_' . $plugin_file );
+				do_action( 'secupress_deactivate_plugin_' . $plugin_file, $args );
 			}
 		}
 	}
 }
 
 
-function secupress_activate_module( $module, $settings ) { //// rename this, it finally does not ativate any module but just set the correct settongs
+function secupress_activate_module( $module, $settings ) { //// rename this, it finally does not ativate any module but just set the correct settings.
 	$modules  = secupress_get_modules();
 	$callback = str_replace( '-', '_', $module );
 
@@ -250,7 +251,7 @@ function secupress_activate_module( $module, $settings ) { //// rename this, it 
 }
 
 
-function secupress_activate_submodule( $module, $plugin, $incompatibles_modules = array() ) { //// add the possiblity to activate it in "silent mode" (from a canner fix and not from a user checkbox)?
+function secupress_activate_submodule( $module, $plugin, $incompatibles_modules = array() ) { //// add the possiblity to activate it in "silent mode" (from a scanner fix and not from a user checkbox)?
 	$plugin_file    = sanitize_key( $plugin );
 	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
 
