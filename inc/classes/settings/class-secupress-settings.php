@@ -288,7 +288,13 @@ abstract class SecuPress_Settings {
 			$args['name']      = isset( $args['name'] )         ? $args['name'] : $args['label_for'];
 			$option_name       = 'secupress' . ( 'global' !== $this->modulenow ? '_' . $this->modulenow : '' ) . '_settings';
 			$default           = isset( $args['default'] )      ? $args['default'] : '';
-			$value             = 'global' !== $this->modulenow  ? secupress_get_module_option( $args['name'] ) : secupress_get_option( $args['name'] );
+			if ( isset( $args['value'] ) ) {
+				$value         = $args['value'];
+			} elseif ( 'global' === $this->modulenow ) {
+				$value         = secupress_get_option( $args['name'] );
+			} else {
+				$value         = secupress_get_module_option( $args['name'] );
+			}
 			$value             = ! is_null( $value )            ? $value : $default;
 			$parent            = isset( $args['parent'] )       ? 'data-parent="' . sanitize_html_class( $args['parent'] ). '"' : null;
 			$placeholder       = isset( $args['placeholder'] )  ? 'placeholder="'. $args['placeholder'].'" ' : '';
