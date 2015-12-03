@@ -45,8 +45,16 @@ function secupress_is_plugin_active_for_network( $plugin ) {
 }
 
 
-function secupress_is_submodule_active( $submodule, $module = null ) {
-	return in_array_deep( $module . '_plugin_' . $submodule, get_site_option( SECUPRESS_ACTIVE_SUBMODULES ) );
+function secupress_is_submodule_active( $module, $plugin ) {
+	$plugin         = sanitize_key( $plugin );
+	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
+
+	if ( isset( $active_plugins[ $module ] ) ) {
+		$active_plugins[ $module ] = array_flip( $active_plugins[ $module ] );
+		return isset( $active_plugins[ $module ][ $plugin ] );
+	}
+
+	return false;
 }
 
 
