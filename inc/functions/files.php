@@ -426,8 +426,9 @@ function secupress_insert_iis7_nodes( $marker, $args ) {
 	}
 
 	// Indentation.
-	$spaces = ( count( ( explode( '/', trim( $path, '/' ) ) ) ) - 1 ) * 2; // Don't ask, it's magic.
-	$spaces = str_repeat( ' ', $spaces );
+	$spaces = explode( '/', trim( $path, '/' ) );
+	$spaces = count( $spaces ) - 1;
+	$spaces = str_repeat( ' ', $spaces * 2 );
 
 	// Create fragment.
 	$fragment = $doc->createDocumentFragment();
