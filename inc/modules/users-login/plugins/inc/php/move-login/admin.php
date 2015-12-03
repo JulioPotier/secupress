@@ -44,6 +44,9 @@ function secupress_move_login_validate_server_config() {
 	// If a message is set, the plugin can't work.
 	if ( ! empty( $message ) ) {
 		secupress_deactivate_submodule( 'users-login', 'move-login', array( 'no-tests' => 1 ) );
+	} else {
+		// On activation, rewrite rules must be added to the `.htaccess`/`web.config` file, no matter if they changed or not.
+		add_filter( 'secupress.plugin.move-login.add_rewrite_rules', '__return_true' );
 	}
 }
 
@@ -130,23 +133,28 @@ function secupress_move_login_activate( $old_value, $value ) {
 		return;
 	}
 
-	// Test if rewrite rules have changed.
-	$slugs   = secupress_move_login_slug_labels();
-	$changed = false;
+	$slugs = secupress_move_login_slug_labels();
 
-	foreach ( $slugs as $action => $label ) {
-		$option_name = 'move-login_slug-' . $action;
+	if ( ! apply_filters( 'secupress.plugin.move-login.add_rewrite_rules', false ) ) {
+		// Test if rewrite rules have changed.
+		$changed = false;
 
-		if ( isset( $old_value[ $option_name ], $value[ $option_name ] ) && $old_value[ $option_name ] !== $value[ $option_name ] ) {
-			$changed = true;
-			break;
+		foreach ( $slugs as $action => $label ) {
+			$option_name = 'move-login_slug-' . $action;
+
+			if ( isset( $old_value[ $option_name ], $value[ $option_name ] ) && $old_value[ $option_name ] !== $value[ $option_name ] ) {
+				$changed = true;
+				break;
+			}
+		}
+
+		// No changes? bail out.
+		if ( ! $changed ) {
+			return;
 		}
 	}
 
-	// No changes? bail out.
-	if ( ! $changed ) {
-		return;
-	}
+	remove_all_filters( 'secupress.plugin.move-login.add_rewrite_rules' );
 
 	// Nginx: we can't edit the file.
 	if ( $is_nginx ) {
