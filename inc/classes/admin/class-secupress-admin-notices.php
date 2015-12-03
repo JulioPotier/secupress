@@ -218,8 +218,9 @@ class SecuPress_Admin_Notices {
 		if ( $notice_id ) {
 			// Get dismissed notices.
 			$dismissed = explode( ',', (string) get_user_option( self::META_NAME, get_current_user_id() ) );
+			$dismissed = array_flip( $dismissed );
 
-			return in_array( $notice_id, $dismissed );
+			return isset( $dismissed[ $notice_id ] );
 		}
 		return null;
 	}

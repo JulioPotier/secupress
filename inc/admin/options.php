@@ -72,14 +72,14 @@ add_action( 'admin_enqueue_scripts', '__secupress_add_settings_scripts' );
 
 function __secupress_add_settings_scripts( $hook_suffix ) {
 	$pages = array(
-		'toplevel_page_secupress',
-		SECUPRESS_PLUGIN_SLUG . '_page_secupress_settings',
-		SECUPRESS_PLUGIN_SLUG . '_page_secupress_modules',
-		SECUPRESS_PLUGIN_SLUG . '_page_secupress_scanners',
-		'toplevel_page_secupress_scanners',
+		'toplevel_page_secupress'                          => 1,
+		SECUPRESS_PLUGIN_SLUG . '_page_secupress_settings' => 1,
+		SECUPRESS_PLUGIN_SLUG . '_page_secupress_modules'  => 1,
+		SECUPRESS_PLUGIN_SLUG . '_page_secupress_scanners' => 1,
+		'toplevel_page_secupress_scanners'                 => 1,
 	);
 
-	if ( ! in_array( $hook_suffix, $pages ) ) {
+	if ( ! isset( $pages[ $hook_suffix ] ) ) {
 		return;
 	}
 

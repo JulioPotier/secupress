@@ -22,7 +22,9 @@ function secupress_is_pro() {
  * @return bool
  */
 function secupress_is_plugin_active( $plugin ) {
-	return in_array( $plugin, (array) get_option( 'active_plugins', array() ) ) || secupress_is_plugin_active_for_network( $plugin );
+	$plugins = (array) get_option( 'active_plugins', array() );
+	$plugins = array_flip( $plugins );
+	return isset( $plugins[ $plugin ] ) || secupress_is_plugin_active_for_network( $plugin );
 }
 
 

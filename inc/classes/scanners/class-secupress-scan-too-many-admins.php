@@ -534,7 +534,8 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPres
 		}
 
 		$users = array_map( 'absint', $users );
-		return in_array( $user_id, $users ) ? $user_id : false;
+		$users = array_flip( $users );
+		return isset( $users[ $user_id ] ) ? $user_id : false;
 	}
 
 

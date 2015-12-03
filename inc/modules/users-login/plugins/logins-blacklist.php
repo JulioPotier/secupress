@@ -24,8 +24,9 @@ function secupress_auth_redirect_blacklist_logins( $user_id ) {
 
 	$user = get_userdata( $user_id );
 	$list = secupress_get_blacklisted_usernames();
+	$list = array_flip( $list );
 
-	if ( ! in_array( $user->user_login, $list ) ) {
+	if ( ! isset( $list[ $user->user_login ] ) ) {
 		// Good, the login is not blacklisted.
 		return;
 	}
@@ -47,7 +48,7 @@ function secupress_auth_redirect_blacklist_logins( $user_id ) {
 			// Sanitize the submitted username.
 			$user_login = sanitize_user( $_POST['secupress-backlist-logins-new-login'], true );
 
-			if ( in_array( $user_login, $list ) ) {
+			if ( isset( $list[ $user_login ] ) ) {
 				// The new login is blacklisted.
 				$error = __( 'This username is also blacklisted', 'secupress' );
 			} else {
@@ -320,7 +321,9 @@ function secupress_get_blacklisted_usernames() {
  * @return (bool) true if blacklisted.
  */
 function secupress_is_username_blacklisted( $username ) {
-	return in_array( mb_strtolower( $username ), secupress_get_blacklisted_usernames() );
+	$list = secupress_get_blacklisted_usernames();
+	$list = array_flip( $list );
+	return isset( $list[ mb_strtolower( $username ) ] );
 }
 
 
