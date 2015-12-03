@@ -99,7 +99,7 @@ function secupress_plugins_to_deactivate() {
 		return;
 	}
 
-	$message  = sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong> ' );
+	$message  = sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
 	$message .= __( 'The following plugins are not compatible with this plugin and may cause unexpected results:', 'secupress' );
 	$message .= '<ul>';
 	foreach ( $plugins_to_deactivate as $plugin ) {
@@ -130,7 +130,7 @@ function secupress_warning_wp_config_permissions() {
 		return;
 	}
 
-	$message  = sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong> ' );
+	$message  = sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
 	$message .= sprintf( __( 'It seems we don\'t have <a href="%1$s" target="_blank">writing permissions</a> on %2$s file.', 'secupress' ), 'http://codex.wordpress.org/Changing_File_Permissions', '<code>wp-config.php</code>' );
 
 	secupress_add_notice( $message, 'error', 'wpconfig-not-writable' );
@@ -169,7 +169,7 @@ function secupress_warning_htaccess_permissions() {
 		return;
 	}
 
-	$message  = sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong> ' );
+	$message  = sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
 	$message .= sprintf( __( 'If you had <a href="%1$s" target="_blank">writing permissions</a> on %2$s file, %3$s could do more things automatically.', 'secupress' ), 'http://codex.wordpress.org/Changing_File_Permissions', '<code>' . $file . '</code>', '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
 
 	secupress_add_notice( $message, 'error', 'htaccess-not-writable' );
@@ -203,7 +203,7 @@ function secupress_warning_module_activity() {
 	}
 
 	if ( false !== $deactivated_modules ) {
-		$message  = '<p>' . sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong> ' );
+		$message  = '<p>' . sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
 		$message .= _n( 'This module has been deactivated:', 'These modules have been deactivated:', count( $deactivated_modules ), 'secupress' );
 		$message .= sprintf( '</p><ul><li>%s</li></ul>', implode( '</li><li>', $deactivated_modules ) );
 
@@ -225,7 +225,7 @@ function secupress_warning_no_backup_email() {
 		return;
 	}
 
-	$message  = sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong> ' );
+	$message  = sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
 	$message .= sprintf( __( 'Your <a href="%s">Backup E-mail</a> isn\'t yet set. Please do it.', 'secupress' ), get_edit_profile_url() . '#secupress_backup_email' );
 
 	secupress_add_notice( $message, 'error', false );
