@@ -31,11 +31,13 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 		$nginx_rules = '';
 
 		if ( $is_nginx ) {
-			$bases = secupress_get_rewrite_bases();
+			$base         = secupress_get_rewrite_bases();
+			$base         = $bases['home_from'];
+			$marker       = 'versions_disclose';
 			// http://nginx.org/en/docs/http/ngx_http_core_module.html#server_tokens
-			$nginx_rules  = "http {\n\tserver_tokens off;\n}\n";
+			$nginx_rules  = "http {\n\t# BEGIN SecuPress $marker 1\n\tserver_tokens off;\n\t# END SecuPress\n}\n";
 			// http://nginx.org/en/docs/http/ngx_http_core_module.html#location
-			$nginx_rules .= "server {\n\tlocation {$bases['home_from']}readme.html {\n\t\treturn 404;\n\t}\n}";
+			$nginx_rules .= "server {\n\t# BEGIN SecuPress $marker 2\n\tlocation {$base}readme.html {\n\t\treturn 404;\n\t}\n\t# END SecuPress\n}";
 		}
 
 		$messages = array(

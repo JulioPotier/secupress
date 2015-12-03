@@ -32,8 +32,10 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 		$nginx_rules = '';
 
 		if ( $is_nginx ) {
-			$bases = secupress_get_rewrite_bases();
-			$nginx_rules = "server {\n\tlocation ~ ^(" . $bases['home_from'] . 'php\.ini|' . $bases['site_from'] . WPINC . '/.+\.php|' . $bases['site_from'] . "wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$ {\n\t\treturn 404;\n\t}\n}";
+			$bases       = secupress_get_rewrite_bases();
+			$marker      = 'bad_url_access';
+			$nginx_rules = "location ~ ^(" . $bases['home_from'] . 'php\.ini|' . $bases['site_from'] . WPINC . '/.+\.php|' . $bases['site_from'] . "wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$ {\n\t\treturn 404;\n\t}";
+			$nginx_rules = "server {\n\t# BEGIN SecuPress $marker\n\t$nginx_rules\n\t# END SecuPress\n}";
 		}
 
 		$messages = array(

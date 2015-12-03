@@ -32,9 +32,11 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 		$nginx_rules = '';
 
 		if ( $is_nginx ) {
-			$bases = secupress_get_rewrite_bases();
-			$base  = $bases['base'];
-			$nginx_rules = "server {\n\tlocation $base {\n\t\tautoindex off;\n\t}\n}";
+			$bases       = secupress_get_rewrite_bases();
+			$base        = $bases['base'];
+			$marker      = 'directory_listing';
+			$nginx_rules = "location $base {\n\t\tautoindex off;\n\t}";
+			$nginx_rules = "server {\n\t# BEGIN SecuPress $marker\n\t$nginx_rules\n\t# END SecuPress\n}";
 		}
 
 		$messages = array(
