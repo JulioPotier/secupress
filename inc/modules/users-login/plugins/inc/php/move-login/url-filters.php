@@ -5,8 +5,19 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 /* FILTER URLS ================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-// !Site URL
-
+/**
+ * Filter the site URL.
+ *
+ * @since 1.0
+ *
+ * @param (string)      $url     The complete site URL including scheme and path.
+ * @param (string)      $path    Path relative to the site URL. Blank string if no path is specified.
+ * @param (string|null) $scheme  Scheme to give the site URL context. Accepts 'http', 'https', 'login',
+ *                               'login_post', 'admin', 'relative' or null.
+ * @param (int|null)    $blog_id Blog ID, or null for the current blog.
+ *
+ * @return (string) The site URL.
+ */
 add_filter( 'site_url', 'secupress_move_login_site_url', 10, 4 );
 
 function secupress_move_login_site_url( $url, $path, $scheme, $blog_id = null ) {
@@ -22,15 +33,26 @@ function secupress_move_login_site_url( $url, $path, $scheme, $blog_id = null ) 
 		}
 
 		$url = set_url_scheme( $url, $scheme );
-		return rtrim( $url, '/' ) . '/' . ltrim( secupress_move_login_set_path( $path ), '/' );
+		return rtrim( $url, '/' ) . secupress_move_login_set_path( $path );
 	}
 
 	return $url;
 }
 
 
-// !Network site URL: don't use network_site_url() for the login URL ffs!
-
+/**
+ * Filter the network site URL: don't use `network_site_url()` for the login URL ffs!
+ *
+ * @since 1.0
+ *
+ * @param (string)      $url    The complete network site URL including scheme and path.
+ * @param (string)      $path   Path relative to the network site URL. Blank string if
+ *                              no path is specified.
+ * @param (string|null) $scheme Scheme to give the URL context. Accepts 'http', 'https',
+ *                              'relative' or null.
+ *
+ * @return (string) The network site URL.
+ */
 add_filter( 'network_site_url', 'secupress_move_login_network_site_url', 10, 3 );
 
 function secupress_move_login_network_site_url( $url, $path, $scheme ) {
@@ -42,29 +64,50 @@ function secupress_move_login_network_site_url( $url, $path, $scheme ) {
 }
 
 
-// !Logout url: wp_logout_url() add the action param after using site_url().
+/**
+ * Filter the logout URL: `wp_logout_url()` add the action param after using `site_url()`.
+ *
+ * @since 1.0
+ *
+ * @param (string) $logout_url The Log Out URL.
+ *
+ * @return (string) The Log Out URL.
+ */
+add_filter( 'logout_url', 'secupress_move_login_logout_url', 1 );
 
-add_filter( 'logout_url', 'secupress_move_login_logout_url', 1, 2 );
-
-function secupress_move_login_logout_url( $logout_url, $redirect ) {
+function secupress_move_login_logout_url( $logout_url ) {
 	return secupress_move_login_login_to_action( $logout_url, 'logout' );
 }
 
 
-// !Forgot password url: wp_lostpassword_url() add the action param after using network_site_url().
+/**
+ * Filter the Lost Password URL: `wp_lostpassword_url()` add the action param after using `network_site_url()`.
+ *
+ * @since 1.0
+ *
+ * @param (string) $lostpassword_url The lost password page URL.
+ *
+ * @return (string) The lost password page URL.
+ */
+add_filter( 'lostpassword_url', 'secupress_move_login_lostpassword_url', 1 );
 
-add_filter( 'lostpassword_url', 'secupress_move_login_lostpassword_url', 1, 2 );
-
-function secupress_move_login_lostpassword_url( $lostpassword_url, $redirect ) {
+function secupress_move_login_lostpassword_url( $lostpassword_url ) {
 	return secupress_move_login_login_to_action( $lostpassword_url, 'lostpassword' );
 }
 
 
-// !Redirections are hard-coded.
+/**
+ * Filter the redirect location: some redirections are hard-coded.
+ *
+ * @since 1.0
+ *
+ * @param (string) $location The path to redirect to.
+ *
+ * @return (string) The path to redirect to.
+ */
+add_filter( 'wp_redirect', 'secupress_move_login_redirect', 10 );
 
-add_filter( 'wp_redirect', 'secupress_move_login_redirect', 10, 2 );
-
-function secupress_move_login_redirect( $location, $status ) {
+function secupress_move_login_redirect( $location ) {
 	if ( site_url( reset( ( explode( '?', $location ) ) ) ) === site_url( 'wp-login.php' ) ) {
 		return secupress_move_login_site_url( $location, $location, 'login', get_current_blog_id() );
 	}
@@ -73,11 +116,19 @@ function secupress_move_login_redirect( $location, $status ) {
 }
 
 
-// !Multisite: the "new site" welcome email.
+/**
+ * Multisite: filter the content of the welcome email after site activation.
+ *
+ * @since 1.0
+ *
+ * @param (string) $welcome_email Message body of the email.
+ * @param (int)    $blog_id       Blog ID.
+ *
+ * @return (string) Message body of the email.
+ */
+add_filter( 'update_welcome_email', 'secupress_move_login_update_welcome_email', 10, 2 );
 
-add_filter( 'update_welcome_email', 'secupress_move_login_update_welcome_email', 10, 6 );
-
-function secupress_move_login_update_welcome_email( $welcome_email, $blog_id, $user_id, $password, $title, $meta ) {
+function secupress_move_login_update_welcome_email( $welcome_email, $blog_id ) {
 	if ( false === strpos( $welcome_email, 'wp-login.php' ) ) {
 		return $welcome_email;
 	}
@@ -96,14 +147,21 @@ function secupress_move_login_update_welcome_email( $welcome_email, $blog_id, $u
 /* TOOLS ======================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-// !Construct the url
-
+/**
+ * Set the relative path: `wp-login.php?action=register -> /register`.
+ *
+ * @since 1.0
+ *
+ * @param (string) $path Path relative to the site URL.
+ *
+ * @return (string) The new path relative to the site URL, with our custom slug.
+ */
 function secupress_move_login_set_path( $path ) {
 	$slugs = secupress_move_login_get_slugs();
 	$other = array( 'retrievepassword' => 1, 'rp' => 1 );
 	$other = array_diff_key( $other, $slugs );
 
-	// Action
+	// Get the action.
 	$parsed_path = parse_url( $path );
 
 	if ( ! empty( $parsed_path['query'] ) ) {
@@ -114,7 +172,7 @@ function secupress_move_login_set_path( $path ) {
 			$action = 'resetpass';
 		}
 
-		if ( ! isset( $slugs[ $action ] ) && ! isset( $other[ $action ] ) && false === has_filter( 'login_form_' . $action ) ) {
+		if ( ! isset( $slugs[ $action ], $other[ $action ] ) && false === has_filter( 'login_form_' . $action ) ) {
 			$action = 'login';
 		}
 	}
@@ -122,12 +180,13 @@ function secupress_move_login_set_path( $path ) {
 		$action = 'login';
 	}
 
-	// Path
+	// Set the path.
 	if ( isset( $slugs[ $action ] ) ) {
 		$path = str_replace( 'wp-login.php', $slugs[ $action ], $path );
 		$path = remove_query_arg( 'action', $path );
 	}
-	else {	// In case of a custom action
+	else {
+		// In case of a custom action
 		$path = str_replace( 'wp-login.php', $slugs['login'], $path );
 		$path = add_query_arg( 'action', $action, $path );
 	}
@@ -136,8 +195,17 @@ function secupress_move_login_set_path( $path ) {
 }
 
 
-// !login?action=logout -> /logout
-
+/**
+ * Set the URL: `login?action=logout -> /logout`.
+ * If the action is not present when we try to build the new URL, we fallback to `/login`. Then we can use this function after the action is added.
+ *
+ * @since 1.0
+ *
+ * @param (string) $link The URL.
+ * @param (string) $action The action.
+ *
+ * @return (string) The new URL, with our custom slug.
+ */
 function secupress_move_login_login_to_action( $link, $action ) {
 	$slugs = secupress_move_login_get_slugs();
 	$need_action_param = false;
@@ -145,13 +213,15 @@ function secupress_move_login_login_to_action( $link, $action ) {
 	if ( isset( $slugs[ $action ] ) ) {
 		$slug = $slugs[ $action ];
 	}
-	else {	// Shouldn't happen, because this function is not used in this case.
+	else {
+		// Shouldn't happen, because this function is not used in this case.
 		$slug = $slugs['login'];
 
 		if ( false === has_filter( 'login_form_' . $action ) ) {
 			$action = 'login';
 		}
-		else {		// In case of a custom action
+		else {
+			// In case of a custom action.
 			$need_action_param = true;
 		}
 	}
@@ -160,7 +230,8 @@ function secupress_move_login_login_to_action( $link, $action ) {
 
 		$link = str_replace( array( '/' . $slugs['login'], '&amp;', '?amp;', '&' ), array( '/' . $slug, '&', '?', '&amp;' ), remove_query_arg( 'action', $link ) );
 
-		if ( $need_action_param ) {		// In case of a custom action, shouldn't happen.
+		if ( $need_action_param ) {
+			// In case of a custom action, shouldn't happen.
 			$link = add_query_arg( 'action', $action, $link );
 		}
 	}

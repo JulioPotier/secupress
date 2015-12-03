@@ -6,10 +6,13 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /*------------------------------------------------------------------------------------------------*/
 
 /**
- * Callback to filter, sanitize and de/activate submodules
+ * Callback to filter, sanitize, validate and de/activate submodules.
  *
  * @since 1.0
- * @return array $settings
+ *
+ * @param (array) $settings The module settings.
+ *
+ * @return (array) The sanitized an validated settings.
  */
 function __secupress_users_login_settings_callback( $settings ) {
 	$modulenow    = 'users-login';
@@ -17,6 +20,11 @@ function __secupress_users_login_settings_callback( $settings ) {
 	$old_settings = get_site_option( "secupress_{$modulenow}_settings" );
 
 	unset( $settings['temp.password_strength_value'] ); // not actual option
+
+	/*
+	 * Each submodule has its own sanitization function.
+	 * The `$settings` parameter is passed by reference.
+	 */
 
 	// Double authentication
 	__secupress_double_auth_settings_callback( $modulenow, $settings );
@@ -34,8 +42,14 @@ function __secupress_users_login_settings_callback( $settings ) {
 }
 
 
-// Double auth.
-
+/**
+ * Sanitize double authentication plugin settings.
+ *
+ * @since 1.0
+ *
+ * @param (string) $modulenow Current module.
+ * @param (array)  $settings  The module settings, passed by reference.
+ */
 function __secupress_double_auth_settings_callback( $modulenow, &$settings ) {
 	if ( isset( $settings['double-auth_type'] ) ) {
 		switch ( $settings['double-auth_type'] ) {
@@ -62,8 +76,14 @@ function __secupress_double_auth_settings_callback( $modulenow, &$settings ) {
 }
 
 
-// Login protection.
-
+/**
+ * Sanitize login protection plugin settings.
+ *
+ * @since 1.0
+ *
+ * @param (string) $modulenow Current module.
+ * @param (array)  $settings  The module settings, passed by reference.
+ */
 function __secupress_login_protection_settings_callback( $modulenow, &$settings ) {
 	if ( isset( $settings['login-protection_type'] ) ) {
 		secupress_manage_submodule( $modulenow, 'bannonexistsuser', in_array( 'bannonexistsuser', $settings['login-protection_type'] ) );
@@ -87,8 +107,14 @@ function __secupress_login_protection_settings_callback( $modulenow, &$settings 
 }
 
 
-// Logins blacklist.
-
+/**
+ * Sanitize and validate logins blacklist plugin settings.
+ *
+ * @since 1.0
+ *
+ * @param (string) $modulenow Current module.
+ * @param (array)  $settings  The module settings, passed by reference.
+ */
 function __secupress_logins_blacklist_settings_callback( $modulenow, &$settings ) {
 	$settings['bad-logins_blacklist-logins'] = ! empty( $settings['bad-logins_blacklist-logins'] ) ? 1 : 0;
 
@@ -118,8 +144,15 @@ function __secupress_logins_blacklist_settings_callback( $modulenow, &$settings 
 }
 
 
-// Move Login
-
+/**
+ * Sanitize and validate Move Login plugin settings.
+ *
+ * @since 1.0
+ *
+ * @param (string) $modulenow    Current module.
+ * @param (array)  $settings     The module settings, passed by reference.
+ * @param (array)  $old_settings The module previous settings.
+ */
 function __secupress_move_login_settings_callback( $modulenow, &$settings, $old_settings ) {
 	// Slugs.
 	$slugs     = secupress_move_login_slug_labels();
@@ -205,7 +238,13 @@ function __secupress_move_login_settings_callback( $modulenow, &$settings, $old_
 /* INSTALL/RESET ================================================================================ */
 /*------------------------------------------------------------------------------------------------*/
 
-// Create default option on install.
+/*
+ * Create default option on install.
+ *
+ * @since 1.0
+ *
+ * @param (string) $module The module(s) that will be reset to default. `all` means "all modules".
+ */
 
 add_action( 'wp_secupress_first_install', '__secupress_install_users_login_module' );
 
@@ -225,6 +264,15 @@ function __secupress_install_users_login_module( $module ) {
 /* DEFAULT VALUES =============================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
+/*
+ * Logins blacklist: return the default usernames blacklist.
+ *
+ * @since 1.0
+ *
+ * @param (string) $glue If set, the returned list will be imploded using this parameter as glue.
+ *
+ * @return (array|string) Return an array, or a string if the `$glue` parameter is set.
+ */
 function secupress_blacklist_logins_list_default( $glue = null ) {
 	$list = array(
 		'about', 'access', 'account', 'accounts', 'ad', 'address', 'adm', 'administration', 'adult', 'advertising', 'affiliate', 'affiliates', 'ajax', 'analytics', 'android', 'anon', 'anonymous', 'api', 'app', 'apps', 'archive', 'atom', 'auth', 'authentication', 'avatar',
@@ -257,11 +305,25 @@ function secupress_blacklist_logins_list_default( $glue = null ) {
 }
 
 
+/*
+ * Logins blacklist: return the default usernames blacklist as a string, with a `\n` caracter as separator.
+ *
+ * @since 1.0
+ *
+ * @return (string)
+ */
 function secupress_blacklist_logins_list_default_string() {
 	return secupress_blacklist_logins_list_default( "\n" );
 }
 
 
+/*
+ * Move Login: return the list of customizable login actions.
+ *
+ * @since 1.0
+ *
+ * @return (array) Return an array with the action names as keys and field labels as values.
+ */
 function secupress_move_login_slug_labels() {
 	$labels = array(
 		'login'        => __( 'Log in' ),
@@ -271,6 +333,13 @@ function secupress_move_login_slug_labels() {
 		'resetpass'    => __( 'Password Reset' ),
 	);
 
+	/**
+	 * Add custom actions to the list of customizable actions.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (array) An array with the action names as keys and field labels as values.
+	*/
 	$new_slugs = apply_filters( 'sfml_additional_slugs', array() );
 
 	if ( $new_slugs && is_array( $new_slugs ) ) {
@@ -282,6 +351,13 @@ function secupress_move_login_slug_labels() {
 }
 
 
+/*
+ * Move Login: return the list of available actions to perform when someone reaches the old login page.
+ *
+ * @since 1.0
+ *
+ * @return (array) Return an array with identifiers as keys and field labels as values.
+ */
 function secupress_move_login_wplogin_access_labels() {
 	return array(
 		'error'      => __( 'Display an error message', 'secupress' ),
@@ -291,6 +367,13 @@ function secupress_move_login_wplogin_access_labels() {
 }
 
 
+/*
+ * Move Login: return the list of available actions to perform when a logged out user reaches the administration area.
+ *
+ * @since 1.0
+ *
+ * @return (array) Return an array with identifiers as keys and field labels as values.
+ */
 function secupress_move_login_admin_access_labels() {
 	return array(
 		'redir-login' => __( 'Do nothing, redirect to the new login page', 'secupress' ),
@@ -305,6 +388,15 @@ function secupress_move_login_admin_access_labels() {
 /* UTILITIES ==================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
+/*
+ * Logins blacklist: return the list of allowed characters for the usernames.
+ *
+ * @since 1.0
+ *
+ * @param (bool) $wrap If set to true, the characters will be wrapped with `code` tags.
+ *
+ * @return (string)
+ */
 function secupress_blacklist_logins_allowed_characters( $wrap = false ) {
 	$allowed = is_multisite() ? array( 'a-z', '0-9', ) : array( 'A-Z', 'a-z', '0-9', '(space)', '_', '.', '-', '@', );
 	if ( $wrap ) {

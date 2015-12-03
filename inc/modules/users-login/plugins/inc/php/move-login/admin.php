@@ -6,7 +6,7 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 /*------------------------------------------------------------------------------------------------*/
 
 /*
- * On plugin activation, test if the server has all we need.
+ * On plugin activation, test if the server has what we need.
  * If not, deactivate.
  *
  * @since 1.0
@@ -52,9 +52,11 @@ function secupress_move_login_validate_server_config() {
 
 
 /*
- * Remove rewrite rules from `.htaccess` / `web.config` file on plugin deactivation.
+ * Remove rewrite rules from the `.htaccess`/`web.config` file on plugin deactivation.
  *
  * @since 1.0
+ *
+ * @param (array) $args Some parameters.
  */
 add_action( 'secupress_deactivate_plugin_move-login', 'secupress_move_login_deactivate' );
 
@@ -119,9 +121,13 @@ function secupress_move_login_deactivate( $args ) {
 /*------------------------------------------------------------------------------------------------*/
 
 /*
- * Add rewrite rules into `.htaccess` / `web.config` file when settings are updated.
+ * Add rewrite rules into the `.htaccess`/`web.config` file when settings are updated.
+ * An error notice is displayed on nginx servers or if the file is not writable.
  *
  * @since 1.0
+ *
+ * @param (array) $old_value Old value of the whole module option.
+ * @param (array) $value     New value of the whole module option.
  */
 add_action( 'update_option_secupress_users-login_settings', 'secupress_move_login_activate', 10, 2 );
 
@@ -135,6 +141,11 @@ function secupress_move_login_activate( $old_value, $value ) {
 
 	$slugs = secupress_move_login_slug_labels();
 
+	/*
+	 * This filter adds the possibility to bypass the rewrite rules verification, aiming at adding the rules even if they haven't changed.
+	 *
+	 * @since 1.0
+	 */
 	if ( ! apply_filters( 'secupress.plugin.move-login.add_rewrite_rules', false ) ) {
 		// Test if rewrite rules have changed.
 		$changed = false;
@@ -195,6 +206,13 @@ function secupress_move_login_activate( $old_value, $value ) {
 /* TOOLS ======================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
+/*
+ * Get generic rules for the rewrite rules, based on the settings.
+ *
+ * @since 1.0
+ *
+ * @return (array) An array with the rewritted URIs as keys and the real URIs as values.
+ */
 function secupress_move_login_get_rules() {
 	$slugs = secupress_move_login_get_default_slugs();
 	$rules = array();
@@ -209,6 +227,16 @@ function secupress_move_login_get_rules() {
 }
 
 
+/*
+ * Tell if a file located in the home folder is writable.
+ * If the file does not exist, tell if the home folder is writable.
+ *
+ * @since 1.0
+ *
+ * @param (string) $file File name.
+ *
+ * @return (bool)
+ */
 function secupress_move_login_file_is_writable( $file ) {
 	$home_path = secupress_get_home_path();
 
@@ -220,6 +248,15 @@ function secupress_move_login_file_is_writable( $file ) {
 /* APACHE ======================================================================================= */
 /*------------------------------------------------------------------------------------------------*/
 
+/*
+ * Get the rewrite rules that should be added into the `.htaccess` file (without the SecuPress marker).
+ *
+ * @since 1.0
+ *
+ * @param (array) $rules Generic rules to write (see `secupress_move_login_get_rules()`).
+ *
+ * @return (string) The rewrite rules, ready to be insterted into the `.htaccess` file.
+ */
 function secupress_move_login_get_apache_rules( $rules = array() ) {
 	$out = array();
 
@@ -243,11 +280,11 @@ function secupress_move_login_get_apache_rules( $rules = array() ) {
 
 
 /*
- * Add or remove rules in `.htaccess` file.
+ * Add or remove rules into the `.htaccess` file.
  *
  * @since 1.0
  *
- * @param (array) $rules  Rules to write.
+ * @param (array) $rules Generic rules to write (see `secupress_move_login_get_rules()`).
  *
  * @return (bool) true on succes, false on failure.
  */
@@ -268,6 +305,15 @@ function secupress_move_login_write_apache_rules( $rules = array() ) {
 /* IIS7 ========================================================================================= */
 /*------------------------------------------------------------------------------------------------*/
 
+/*
+ * Get the rewrite rules that should be added into the `web.config` file.
+ *
+ * @since 1.0
+ *
+ * @param (array) $rules Generic rules to write (see `secupress_move_login_get_rules()`).
+ *
+ * @return (string) The rewrite rules, ready to be insterted into the `web.config` file.
+ */
 function secupress_move_login_get_iis7_rules( $rules = array() ) {
 	$out = array();
 
@@ -291,11 +337,11 @@ function secupress_move_login_get_iis7_rules( $rules = array() ) {
 
 
 /*
- * Add or remove rules in `web.config` file.
+ * Add or remove rules into the `web.config` file.
  *
  * @since 1.0
  *
- * @param (string|array) Rules to write.
+ * @param (array) $rules Generic rules to write (see `secupress_move_login_get_rules()`).
  *
  * @return (bool) true on succes, false on failure.
  */
@@ -316,6 +362,15 @@ function secupress_move_login_write_iis7_rules( $rules = array() ) {
 /* NGINX ======================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
+/*
+ * Get the rewrite rules that should be added into the `nginx.conf` file (without the SecuPress marker).
+ *
+ * @since 1.0
+ *
+ * @param (array) $rules Generic rules to write (see `secupress_move_login_get_rules()`).
+ *
+ * @return (string) The rewrite rules, ready to be insterted into the `nginx.conf` file.
+ */
 function secupress_move_login_get_nginx_rules( $rules = array() ) {
 	$out = array();
 

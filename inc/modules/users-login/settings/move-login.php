@@ -102,6 +102,9 @@ $this->add_field(
 	)
 );
 
+
+// If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules.
+
 if ( $is_plugin_active && function_exists( 'secupress_move_login_file_is_writable' ) ) {
 	$message = false;
 
