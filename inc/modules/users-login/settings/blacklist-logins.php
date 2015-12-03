@@ -2,11 +2,11 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 
-$this->set_current_section( 'login_auth3' );
+$this->set_current_section( 'blacklist-logins' );
 $this->add_section( __( 'Usernames', 'secupress' ) );
 
 
-$field_name      = $this->get_field_name( 'blacklist-logins' );
+$field_name      = $this->get_field_name( 'activated' );
 $main_field_name = $field_name;
 
 $this->add_field(
@@ -18,6 +18,7 @@ $this->add_field(
 		array(
 			'type'         => 'checkbox',
 			'name'         => $field_name,
+			'value'        => (int) secupress_is_submodule_active( 'users-login', 'blacklist-logins' ),
 			'label'        => __( 'Yes, forbid users to use blacklisted usernames', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, forbid users to use blacklisted usernames', 'secupress' ),
@@ -31,7 +32,7 @@ $this->add_field(
 );
 
 
-$field_name    = $this->get_field_name( 'blacklist-logins-list' );
+$field_name    = $this->get_field_name( 'list' );
 $allowed_chars = secupress_blacklist_logins_allowed_characters( true );
 $allowed_chars = str_replace( sprintf( __('%s, %s'), '<code>A-Z</code>', '' ), '' , $allowed_chars );
 

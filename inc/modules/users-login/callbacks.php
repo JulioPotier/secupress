@@ -116,11 +116,10 @@ function __secupress_login_protection_settings_callback( $modulenow, &$settings 
  * @param (array)  $settings  The module settings, passed by reference.
  */
 function __secupress_logins_blacklist_settings_callback( $modulenow, &$settings ) {
-	$settings['bad-logins_blacklist-logins'] = ! empty( $settings['bad-logins_blacklist-logins'] ) ? 1 : 0;
-
-	if ( isset( $settings['bad-logins_blacklist-logins-list'] ) && '' !== $settings['bad-logins_blacklist-logins-list'] ) {
+	// Usernames list.
+	if ( isset( $settings['blacklist-logins_list'] ) && '' !== $settings['blacklist-logins_list'] ) {
 		// Sanitization, validation.
-		$list   = mb_strtolower( $settings['bad-logins_blacklist-logins-list'] );
+		$list   = mb_strtolower( $settings['blacklist-logins_list'] );
 		$list   = explode( "\n", $list );
 		$strict = array_fill( 0, count( $list ) - 1, true );
 		$list   = array_map( 'sanitize_user', $list, $strict );
@@ -132,15 +131,17 @@ function __secupress_logins_blacklist_settings_callback( $modulenow, &$settings 
 			$list = str_replace( "\n\n", "\n", $list );
 		}
 
-		$settings['bad-logins_blacklist-logins-list'] = trim( $list );
+		$settings['blacklist-logins_list'] = trim( $list );
 	}
 
-	if ( ! isset( $settings['bad-logins_blacklist-logins-list'] ) || '' === $settings['bad-logins_blacklist-logins-list'] ) {
+	if ( ! isset( $settings['blacklist-logins_list'] ) || '' === $settings['blacklist-logins_list'] ) {
 		// No empty list.
-		$settings['bad-logins_blacklist-logins-list'] = secupress_blacklist_logins_list_default_string();
+		$settings['blacklist-logins_list'] = secupress_blacklist_logins_list_default_string();
 	}
 
-	secupress_manage_submodule( $modulenow, 'logins-blacklist', $settings['bad-logins_blacklist-logins'] );
+	// Activate or deactivate plugin.
+	secupress_manage_submodule( $modulenow, 'blacklist-logins', ! empty( $settings['blacklist-logins_activated'] ) );
+	unset( $settings['blacklist-logins_activated'] );
 }
 
 
@@ -251,8 +252,8 @@ add_action( 'wp_secupress_first_install', '__secupress_install_users_login_modul
 function __secupress_install_users_login_module( $module ) {
 	if ( 'all' === $module || 'users-login' === $module ) {
 		$values = array(
-			'double-auth_type'                 => '-1',
-			'bad-logins_blacklist-logins-list' => secupress_blacklist_logins_list_default_string(),
+			'double-auth_type'      => '-1',
+			'blacklist-logins_list' => secupress_blacklist_logins_list_default_string(),
 			//// pas fini
 		);
 		secupress_update_module_options( $values, 'users-login' );

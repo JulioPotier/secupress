@@ -77,7 +77,7 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 		$ids   = $wpdb->get_col( "SELECT ID from $wpdb->users WHERE user_login IN ( $names )" );
 
 		if ( $ids ) {
-			$settings = array( 'bad-logins_blacklist-logins' => '1' );
+			$settings = array( 'blacklist-logins_activate' => 1 );
 			secupress_activate_module( 'users-login', $settings );
 			// good
 			$this->add_fix_message( 1 );

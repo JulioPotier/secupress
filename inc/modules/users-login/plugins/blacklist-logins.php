@@ -296,7 +296,7 @@ function secupress_blacklist_logins_new_user_notification( $user ) {
  */
 function secupress_get_blacklisted_usernames() {
 	// Blacklisted usernames from the setting.
-	$list      = secupress_get_module_option( 'bad-logins_blacklist-logins-list', '', 'users-login' );
+	$list      = secupress_get_module_option( 'blacklist-logins_list', '', 'users-login' );
 	$list      = explode( "\n", $list );
 	// Some usernames are always blacklisted.
 	$hardcoded = array_merge( range( 'a', 'z' ), array( '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ), array( 'admin', '_', '.', '-', '@' ) );
