@@ -107,10 +107,10 @@ if ( $is_plugin_active && function_exists( 'secupress_move_login_file_is_writabl
 
 	// Nginx
 	if ( $is_nginx ) {
-		/* translators: %s is a file name */
-		$message = sprintf( __( 'You need to add the following code into your %s file:', 'secupress' ), '<code>nginx.conf</code>' );
+		/* translators: 1 is a file name, 2 is a tag name */
+		$message = sprintf( __( 'You need to add the following code into your %1$s file, inside the %2$s block:', 'secupress' ), '<code>nginx.conf</code>', '<code>server</code>' );
 		$rules   = secupress_move_login_get_nginx_rules( secupress_move_login_get_rules() );
-		$rules   = "# BEGIN SecuPress move_login\n$rules\n# END SecuPress";////
+		$rules   = "# BEGIN SecuPress move_login\n$rules\n# END SecuPress";
 	}
 	// Apache
 	elseif ( $is_apache && ! secupress_move_login_file_is_writable( '.htaccess' ) ) {

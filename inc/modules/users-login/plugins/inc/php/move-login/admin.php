@@ -77,7 +77,7 @@ function secupress_move_login_deactivate( $args ) {
 			'<code># BEGIN SecuPress move_login</code>',
 			'<code># END SecuPress</code>',
 			'<code>nginx.conf</code>'
-		);////
+		);
 		add_settings_error( 'secupress_users-login_settings', 'nginx_manual_edit', $message, 'error' );
 		return;
 	}
