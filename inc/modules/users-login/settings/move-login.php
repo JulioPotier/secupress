@@ -1,13 +1,15 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
+global $is_apache, $is_nginx, $is_iis7;
 
 $this->set_current_section( 'move-login' );
 $this->add_section( __( 'Move Login', 'secupress' ) );
 
 
-$field_name      = $this->get_field_name( 'activated' );
-$main_field_name = $field_name;
+$field_name       = $this->get_field_name( 'activated' );
+$main_field_name  = $field_name;
+$is_plugin_active = secupress_is_submodule_active( 'users-login', 'move-login' );
 
 $this->add_field(
 	__( 'Move the login page', 'secupress' ),
@@ -19,6 +21,7 @@ $this->add_field(
 		array(
 			'type'         => 'checkbox',
 			'name'         => $field_name,
+			'value'        => (int) $is_plugin_active,
 			'label'        => __( 'Yes, move the login page to avoid bad login attempts', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, move the login page to avoid bad login attempts', 'secupress' ),
@@ -30,23 +33,11 @@ $this->add_field(
 	)
 );
 
-$labels = array(
-	'login'        => __( 'Log in' ),
-	'logout'       => __( 'Log out' ),
-	'register'     => __( 'Register' ),
-	'lostpassword' => __( 'Lost Password' ),
-	'resetpass'    => __( 'Password Reset' ),
-);
-
-$new_slugs = apply_filters( 'sfml_additional_slugs', array() );
-
-if ( $new_slugs ) {
-	$new_slugs = array_diff_key( $new_slugs, $labels );
-	$labels    = array_merge( $labels, $new_slugs );
-}
+$labels = secupress_move_login_slug_labels();
 
 foreach( $labels as $slug => $label ) {
-	$field_name = $this->get_field_name( 'link-' . esc_attr( $slug ) );
+	$slug       = esc_attr( $slug );
+	$field_name = $this->get_field_name( 'slug-' . $slug );
 
 	$this->add_field(
 		esc_html( $label ),
@@ -57,22 +48,18 @@ foreach( $labels as $slug => $label ) {
 			'depends'     => $main_field_name,
 			array(
 				'type'         => 'text',
-				'default'      => esc_attr( $slug ),
-				'name'         => $field_name . '_' . esc_attr( $slug ),
-				'label'        => '<em>(' . sprintf( __( 'Default: %s', 'secupress' ), esc_attr( $slug ) ) . ')</em>',
-				'label_for'    => $field_name . '_' . esc_attr( $slug ),
+				'default'      => $slug,
+				'name'         => $field_name,
+				'label'        => '<em>(' . sprintf( __( 'Default: %s', 'secupress' ), $slug ) . ')</em>',
+				'label_for'    => $field_name,
 				'label_screen' => __( 'page slug', 'secupress' ),
 			),
 		)
 	);
 }
 
-$field_name = $this->get_field_name( 'wp-login_access' );
-$options    = array(
-	'error'      => __( 'Display an error message', 'secupress' ),
-	'redir_404'  => __( 'Redirect to a "Page not found" error page', 'secupress' ),
-	'redir_home' => __( 'Redirect to the home page', 'secupress' ),
-);
+$field_name = $this->get_field_name( 'wp-login-access' );
+$options    = secupress_move_login_wplogin_access_labels();
 
 $this->add_field(
 	sprintf( __( 'Access to %s', 'secupress' ), '<code>wp-login.php</code>' ),
@@ -83,7 +70,7 @@ $this->add_field(
 	array(
 		'depends'     => $main_field_name,
 		array(
-			'type'         => 'radios',
+			'type'         => 'radio',
 			'options'      => $options,
 			'default'      => 'error',
 			'name'         => $field_name,
@@ -93,13 +80,8 @@ $this->add_field(
 	)
 );
 
-$field_name = $this->get_field_name( 'admin_access' );
-$options    = array(
-	'redir-login' => __( 'Do nothing, redirect to the new login page', 'secupress' ),
-	'error'       => __( 'Display an error message', 'secupress' ),
-	'redir_404'   => __( 'Redirect to a "Page not found" error page', 'secupress' ),
-	'redir_home'  => __( 'Redirect to the home page', 'secupress' ),
-);
+$field_name = $this->get_field_name( 'admin-access' );
+$options    = secupress_move_login_admin_access_labels();
 
 $this->add_field(
 	__( 'Access to the administration area', 'secupress' ),
@@ -110,9 +92,9 @@ $this->add_field(
 	array(
 		'depends'     => $main_field_name,
 		array(
-			'type'         => 'radios',
+			'type'         => 'radio',
 			'options'      => $options,
-			'default'      => 'error',
+			'default'      => 'redir-login',
 			'name'         => $field_name,
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Access to the administration area', 'secupress' ),
@@ -120,4 +102,53 @@ $this->add_field(
 	)
 );
 
-unset( $options );
+if ( $is_plugin_active && function_exists( 'secupress_move_login_file_is_writable' ) ) {
+	$message = false;
+
+	// Nginx
+	if ( $is_nginx ) {
+		/* translators: %s is a file name */
+		$message = sprintf( __( 'You need to add the following code into your %s file:', 'secupress' ), '<code>nginx.conf</code>' );
+		$rules   = secupress_move_login_get_nginx_rules( secupress_move_login_get_rules() );
+		$rules   = "# BEGIN SecuPress move_login\n$rules\n# END SecuPress";////
+	}
+	// Apache
+	elseif ( $is_apache && ! secupress_move_login_file_is_writable( '.htaccess' ) ) {
+		/* translators: %s is a file name */
+		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code inside:', 'secupress' ), '<code>.htaccess</code>' );
+		$rules   = secupress_move_login_get_apache_rules( secupress_move_login_get_rules() );
+		$rules   = "# BEGIN SecuPress move_login\n$rules\n# END SecuPress";
+	}
+	// IIS7
+	elseif ( $is_iis7 && ! secupress_move_login_file_is_writable( 'web.config' ) ) {
+		/* translators: %s is a file name */
+		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code inside:', 'secupress' ), '<code>web.config</code>' );
+		$rules   = secupress_move_login_get_iis7_rules( secupress_move_login_get_rules() );
+	}
+
+	if ( $message ) {
+		$field_name = $this->get_field_name( 'rules' );
+
+		$this->add_field(
+			__( 'Rules', 'secupress' ),
+			array(
+				'name'        => $field_name,
+				'description' => $message,
+			),
+			array(
+				'depends'     => $main_field_name,
+				array(
+					'type'         => 'textarea',
+					'value'        => $rules,
+					'name'         => $field_name,
+					'label_for'    => $field_name,
+					'label_screen' => __( 'Rules', 'secupress' ),
+					'readonly'     => true,
+					'rows'         => count( explode( "\n", $rules ) ) + 1,
+				),
+			)
+		);
+	}
+}
+
+unset( $options, $field_name, $main_field_name, $is_plugin_active, $labels, $message, $rules, $home_path );

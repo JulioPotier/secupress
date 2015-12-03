@@ -12,19 +12,23 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @return array $settings
  */
 function __secupress_users_login_settings_callback( $settings ) {
-	$modulenow = 'users-login';
-	$settings  = $settings ? $settings : array();
+	$modulenow    = 'users-login';
+	$settings     = $settings ? $settings : array();
+	$old_settings = get_site_option( "secupress_{$modulenow}_settings" );
 
 	unset( $settings['temp.password_strength_value'] ); // not actual option
 
-	// double-auth
+	// Double authentication
 	__secupress_double_auth_settings_callback( $modulenow, $settings );
 
-	// login-protection
+	// Login protection
 	__secupress_login_protection_settings_callback( $modulenow, $settings );
 
 	// Logins blacklist
 	__secupress_logins_blacklist_settings_callback( $modulenow, $settings );
+
+	// Move Login
+	__secupress_move_login_settings_callback( $modulenow, $settings, $old_settings );
 
 	return $settings;
 }
@@ -114,6 +118,89 @@ function __secupress_logins_blacklist_settings_callback( $modulenow, &$settings 
 }
 
 
+// Move Login
+
+function __secupress_move_login_settings_callback( $modulenow, &$settings, $old_settings ) {
+	// Slugs.
+	$slugs     = secupress_move_login_slug_labels();
+	// Handle forbidden slugs and duplicates.
+	$errors    = array( 'forbidden' => array(), 'duplicates' => array() );
+	// `postpass`, `retrievepassword` and `rp` are forbidden if they are not customizable.
+	$forbidden = array( 'postpass' => 1, 'retrievepassword' => 1, 'rp' => 1 );
+	$forbidden = array_diff_key( $forbidden, $slugs );
+	$dones     = array();
+
+	foreach ( $slugs as $default_slug => $label ) {
+		$option_name = 'move-login_slug-' . $default_slug;
+
+		// Build a fallback slug. Try the old value first.
+		$fallback_slug = ! empty( $old_settings[ $option_name ] ) ? sanitize_title( $old_settings[ $option_name ] ) : '';
+		// Then fallback to the default value.
+		if ( ! $fallback_slug || isset( $forbidden[ $fallback_slug ] ) || isset( $dones[ $fallback_slug ] ) ) {
+			$fallback_slug = $default_slug;
+		}
+		// Last chance, add an increment.
+		if ( isset( $forbidden[ $fallback_slug ] ) || isset( $dones[ $fallback_slug ] ) ) {
+			$i = 1;
+			while ( isset( $forbidden[ $fallback_slug . $i ] ) || isset( $dones[ $fallback_slug . $i ] ) ) {
+				++$i;
+			}
+			$fallback_slug .= $i;
+		}
+
+		// Sanitize the value provided.
+		$new_slug = ! empty( $settings[ $option_name ] ) ? sanitize_title( $settings[ $option_name ] ) : '';
+
+		if ( ! $new_slug ) {
+			// Sanitization did its job til the end, or the field was empty.
+			$new_slug = $fallback_slug;
+		} else {
+			// Validation.
+			// Test for forbidden slugs.
+			if ( isset( $forbidden[ $new_slug ] ) ) {
+				$errors['forbidden'][] = $new_slug;
+				$new_slug = $fallback_slug;
+			}
+			// Test for duplicates.
+			elseif ( isset( $dones[ $new_slug ] ) ) {
+				$errors['duplicates'][] = $new_slug;
+				$new_slug = $fallback_slug;
+			}
+		}
+
+		$dones[ $new_slug ]       = 1;
+		$settings[ $option_name ] = $new_slug;
+	}
+
+	// Access to `wp-login.php`.
+	$wp_login_actions = secupress_move_login_wplogin_access_labels();
+	$settings['move-login_wp-login-access'] = isset( $settings['move-login_wp-login-access'], $wp_login_actions[ $settings['move-login_wp-login-access'] ] ) ? $settings['move-login_wp-login-access'] : 'error';
+
+	// Access to `wp-admin`.
+	$admin_actions = secupress_move_login_admin_access_labels();
+	$settings['move-login_admin-access'] = isset( $settings['move-login_admin-access'], $wp_login_actions[ $settings['move-login_admin-access'] ] ) ? $settings['move-login_admin-access'] : 'redir-login';
+
+	// Handle validation errors.
+	$errors['forbidden']  = array_unique( $errors['forbidden'] );
+	$errors['duplicates'] = array_unique( $errors['duplicates'] );
+
+	if ( $nbr_forbidden = count( $errors['forbidden'] ) ) {
+		$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
+		$message .= sprintf( _n( 'The slug %s is forbidden.', 'The slugs %s are forbidden.', $nbr_forbidden, 'secupress' ), wp_sprintf( '<code>%l</code>', $errors['forbidden'] ) );
+		add_settings_error( "secupress_{$modulenow}_settings", 'forbidden-slugs', $message, 'error' );
+	}
+	if ( ! empty( $errors['duplicates'] ) ) {
+		$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
+		$message .= __( 'The links can\'t have the same slugs.', 'sf-move-login' );
+		add_settings_error( "secupress_{$modulenow}_settings", 'duplicate-slugs', $message, 'error' );
+	}
+
+	// Activate or deactivate plugin.
+	secupress_manage_submodule( $modulenow, 'move-login', ! empty( $settings['move-login_activated'] ) );
+	unset( $settings['move-login_activated'], $settings['move-login_rules'] );
+}
+
+
 /*------------------------------------------------------------------------------------------------*/
 /* INSTALL/RESET ================================================================================ */
 /*------------------------------------------------------------------------------------------------*/
@@ -172,6 +259,45 @@ function secupress_blacklist_logins_list_default( $glue = null ) {
 
 function secupress_blacklist_logins_list_default_string() {
 	return secupress_blacklist_logins_list_default( "\n" );
+}
+
+
+function secupress_move_login_slug_labels() {
+	$labels = array(
+		'login'        => __( 'Log in' ),
+		'logout'       => __( 'Log out' ),
+		'register'     => __( 'Register' ),
+		'lostpassword' => __( 'Lost Password' ),
+		'resetpass'    => __( 'Password Reset' ),
+	);
+
+	$new_slugs = apply_filters( 'sfml_additional_slugs', array() );
+
+	if ( $new_slugs && is_array( $new_slugs ) ) {
+		$new_slugs = array_diff_key( $new_slugs, $labels );
+		$labels    = array_merge( $labels, $new_slugs );
+	}
+
+	return $labels;
+}
+
+
+function secupress_move_login_wplogin_access_labels() {
+	return array(
+		'error'      => __( 'Display an error message', 'secupress' ),
+		'redir_404'  => __( 'Redirect to a "Page not found" error page', 'secupress' ),
+		'redir_home' => __( 'Redirect to the home page', 'secupress' ),
+	);
+}
+
+
+function secupress_move_login_admin_access_labels() {
+	return array(
+		'redir-login' => __( 'Do nothing, redirect to the new login page', 'secupress' ),
+		'error'       => __( 'Display an error message', 'secupress' ),
+		'redir_404'   => __( 'Redirect to a "Page not found" error page', 'secupress' ),
+		'redir_home'  => __( 'Redirect to the home page', 'secupress' ),
+	);
 }
 
 
