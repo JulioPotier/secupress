@@ -623,10 +623,15 @@ abstract class SecuPress_Settings {
 	 * @since 1.0
 	 */
 	protected function export_form() {
-		$readonly = ! secupress_is_pro() ? ' readonly="readonly" disabled="disabled"' : '';
+		if ( secupress_is_pro() ) {
 		?>
-		<a<?php echo $readonly; ?> href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_export' ), 'secupress_export' ); ?>" id="export" class="button button-secondary secupressicon"><?php _e( 'Download settings', 'secupress' ); ?></a>
+			<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_export' ), 'secupress_export' ); ?>" id="export" class="button button-secondary secupressicon"><?php _e( 'Download settings', 'secupress' ); ?></a>
 		<?php
+		} else {
+		?>
+			<button readonly="readonly" class="button button-secondary" disabled="disabled"><?php _e( 'Download settings', 'secupress' ); ?></button>
+		<?php
+		}
 	}
 
 	/**
@@ -773,7 +778,11 @@ abstract class SecuPress_Settings {
 
 			echo apply_filters( 'secupress_help', $desc,    sanitize_key( strip_tags( $button['button_label'] ) ), 'description' );
 			echo apply_filters( 'secupress_help', $help,    sanitize_key( strip_tags( $button['button_label'] ) ), 'help' );
-			echo apply_filters( 'secupress_help', $warning, sanitize_key( strip_tags( $button['button_label'] ) ), 'warning' );
+			echo apply_filters( 
+				'secupress_help', 
+				$warning, 
+				sanitize_key( strip_tags( $button['button_label'] ) ), 
+				'warning' );
 			?>
 		</fieldset>
 		<?php

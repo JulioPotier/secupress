@@ -418,37 +418,9 @@ function __secupress_check_no_empty_name() {
 }
 
 
-/**
- * This function will force the direct download of the plugin's options, compressed.
- *
- * @since 1.0
- */
-add_action( 'admin_post_secupress_export', '__secupress_do_options_export' );
-
-function __secupress_do_options_export() {
-	if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress_export' ) ) {
-		wp_nonce_ays( '' );
-	}
-
-	$filename = sprintf( 'secupress-settings-%s-%s.txt', date( 'Y-m-d' ), uniqid() );
-	$gz       = 'gz' . strrev( 'etalfed' );
-	$options  = $gz//;
-	( serialize( get_site_option( SECUPRESS_SETTINGS_SLUG ) ), 1 ); // do not use secupress_get_option() here
-
-	nocache_headers();
-	@header( 'Content-Type: text/plain' );
-	@header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
-	@header( 'Content-Transfer-Encoding: binary' );
-	@header( 'Content-Length: ' . strlen( $options ) );
-	@header( 'Connection: close' );
-
-	echo $options;
-	exit();
-}
-
 
 /**
- * Force our user agent header when we hit our urls
+ * Force our user agent header when we hit our urls //// X-Secupress header
  *
  * @since 1.0
  */
