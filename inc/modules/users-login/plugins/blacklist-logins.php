@@ -384,12 +384,9 @@ function secupress_blacklist_logins_allowed_characters( $wrap = false ) {
 
 // Launch the filters.
 
-// `register_new_user()`.
-add_filter( 'registration_errors', 'secupress_blacklist_logins_registration_errors', 10, 2 );
+if ( secupress_wp_version_is( '4.4-RC1-35773' ) ) :
 
-if ( secupress_wp_version_is( '4.4-RC1' ) ) :
-
-	// `edit_user()`, `wpmu_validate_user_signup()` and `wp_insert_user()`.
+	// `edit_user()`, `wpmu_validate_user_signup()`, `wp_insert_user()` and `register_new_user()`.
 	add_filter( 'illegal_user_logins', 'secupress_blacklist_logins_illegal_user_logins' );
 
 else :
@@ -400,26 +397,10 @@ else :
 	add_filter( 'wpmu_validate_user_signup', 'secupress_blacklist_logins_wpmu_validate_user_signup' );
 	// `wp_insert_user()`.
 	add_filter( 'pre_user_login', 'secupress_blacklist_logins_pre_user_login' );
+	// `register_new_user()`.
+	add_filter( 'registration_errors', 'secupress_blacklist_logins_registration_errors', 10, 2 );
 
 endif;
-
-
-/*
- * In `register_new_user()`, detect forbidden logins.
- *
- * @since 1.0
- *
- * @param (object) $errors               A WP_Error object containing any errors encountered during registration.
- * @param (string) $sanitized_user_login User's username after it has been sanitized.
- *
- * @return (object) The WP_Error object with a new error if the user name is blacklisted.
- */
-function secupress_blacklist_logins_registration_errors( $errors, $sanitized_user_login ) {
-	if ( secupress_is_username_blacklisted( $sanitized_user_login ) ) {
-		$errors->add( 'user_name',  __( 'Sorry, that username is not allowed.', 'secupress' ) );
-	}
-	return $errors;
-}
 
 
 /*
@@ -511,4 +492,22 @@ function secupress_blacklist_logins_gettext_filter( $translations, $text, $domai
 		return __( 'Sorry, that username is not allowed.', 'secupress' );
 	}
 	return $translations;
+}
+
+
+/*
+ * In `register_new_user()`, detect forbidden logins.
+ *
+ * @since 1.0
+ *
+ * @param (object) $errors               A WP_Error object containing any errors encountered during registration.
+ * @param (string) $sanitized_user_login User's username after it has been sanitized.
+ *
+ * @return (object) The WP_Error object with a new error if the user name is blacklisted.
+ */
+function secupress_blacklist_logins_registration_errors( $errors, $sanitized_user_login ) {
+	if ( secupress_is_username_blacklisted( $sanitized_user_login ) ) {
+		$errors->add( 'user_name',  __( 'Sorry, that username is not allowed.', 'secupress' ) );
+	}
+	return $errors;
 }
