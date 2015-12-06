@@ -47,7 +47,7 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 			100 => __( '%s\'s user role still needs to be changed.', 'secupress' ),
 			// bad
 			/* translators: %s is a user name. */
-			200 => _n_noop( '%s is Administrator and a Post Author at the same time.', '%s are Administrators and Post Authors at the same time.', 'secupress' ),
+			200 => _n_noop( 'This user is Administrator and a Post Author at the same time: %s', 'These users are Administrators and Post Authors at the same time: %s', 'secupress' ),
 			/* translators: %s is a site name (or a list of site names). */
 			201 => _n_noop( '%s has Posts created by Administrators.', 'Some of your sites have Posts created by Administrators: %s.', 'secupress' ),
 			202 => __( 'The new user role could not be created. You will need to create a user role able to publish Posts by yourself: some free plugins able to do such thing exist.', 'secupress' ),

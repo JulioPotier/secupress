@@ -46,9 +46,9 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 			106 => _n_noop( 'Sorry, the following plugin could not be deactivated: %s.', 'Sorry, the following plugins could not be deactivated: %s.', 'secupress' ),
 			// bad
 			/* translators: 1 is a number, 2 is a plugin name (or a list of plugin names). */
-			200 => _n_noop( '<strong>%1$d</strong> plugin is <strong>no longer</strong> in the WordPress directory: %2$s.',   '<strong>%1$d</strong> plugins are <strong>no longer</strong> in the WordPress directory: %2$s.',   'secupress' ),
+			200 => _n_noop( '<strong>%1$d plugin</strong> is no longer in the WordPress directory: %2$s.',   '<strong>%1$d plugins</strong> are no longer in the WordPress directory: %2$s.',   'secupress' ),
 			/* translators: 1 is a number, 2 is a plugin name (or a list of plugin names). */
-			201 => _n_noop( '<strong>%1$d</strong> plugin has not been updated <strong>for 2 years</strong> at least: %2$s.', '<strong>%1$d</strong> plugins have not been updated <strong>for 2 years</strong> at least: %2$s.', 'secupress' ),
+			201 => _n_noop( '<strong>%1$d plugin</strong> has not been updated for 2 years at least: %2$s.', '<strong>%1$d plugins</strong> have not been updated for 2 years at least: %2$s.', 'secupress' ),
 			/* translators: %s is a plugin name. */
 			202 => __( 'You should delete the plugin %s.', 'secupress' ),
 			203 => _n_noop( 'Sorry, this plugin could not be deleted.', 'Sorry, those plugins could not be deleted.', 'secupress' ),
@@ -93,7 +93,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 
 			if ( $count = count( $bad_plugins ) ) {
 				// bad
-				$this->add_message( 200, array( $count, $count, $bad_plugins ) );
+				$this->add_message( 200, array( $count, $count, self::wrap_in_tag( $bad_plugins ) ) );
 			}
 
 			// Plugins not updated in over 2 years.
@@ -102,7 +102,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 
 			if ( $count = count( $bad_plugins ) ) {
 				// bad
-				$this->add_message( 201, array( $count, $count, $bad_plugins ) );
+				$this->add_message( 201, array( $count, $count, self::wrap_in_tag( $bad_plugins ) ) );
 			}
 
 			// Check for Hello Dolly existence.
@@ -482,11 +482,12 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 		$plugins_list_file = SECUPRESS_INC_PATH . $plugins_list_file;
 
 		if ( ! is_readable( $plugins_list_file ) ) {
+			$args =  array( '<code>' . str_replace( ABSPATH, '', $plugins_list_file ) . '</code>' );
 			// warning
 			if ( $for_fix ) {
-				$this->add_fix_message( 100, array( '<code>' . str_replace( ABSPATH, '', $plugins_list_file ) . '</code>' ) );
+				$this->add_fix_message( 100, $args );
 			} else {
-				$this->add_message( 100, array( '<code>' . str_replace( ABSPATH, '', $plugins_list_file ) . '</code>' ) );
+				$this->add_message( 100, $args );
 			}
 			return false;
 		}
@@ -496,17 +497,20 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 			$whitelist_file = SECUPRESS_INC_PATH . 'data/whitelist-plugin-list.data';
 
 			if ( ! is_readable( $whitelist_file ) ) {
+				$args = array( '<code>' . str_replace( ABSPATH, '', $whitelist_file ) . '</code>' );
 				// warning
 				if ( $for_fix ) {
-					$this->add_fix_message( 100, array( '<code>' . str_replace( ABSPATH, '', $whitelist_file ) . '</code>' ) );
+					$this->add_fix_message( 100, $args );
 				} else {
-					$this->add_message( 100, array( '<code>' . str_replace( ABSPATH, '', $whitelist_file ) . '</code>' ) );
+					$this->add_message( 100, $args );
 				}
 				$whitelist_file = false;
 				return false;
 			}
 
-			$whitelist = array_flip( array_map( 'trim', file( $whitelist_file ) ) );
+			$whitelist = file( $whitelist_file );
+			$whitelist = array_map( 'trim', $whitelist );
+			$whitelist = array_flip( $whitelist );
 		}
 
 		if ( ! $whitelist ) {
@@ -516,14 +520,16 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 
 		$plugins_by_path = get_plugins();
 
-		$not_in_directory = array_flip( array_map( 'trim', file( $plugins_list_file ) ) );
+		$not_in_directory = file( $plugins_list_file );
+		$not_in_directory = array_map( 'trim', $not_in_directory );
+		$not_in_directory = array_flip( $not_in_directory );
 		$not_in_directory = array_diff_key( $not_in_directory, $whitelist );
 		$bad_plugins      = array();
 
 		foreach ( $plugins_by_path as $plugin_path => $plugin_data ) {
 			if ( preg_match( '/([^\/]+)\//', $plugin_path, $matches ) ) {
 				if ( isset( $not_in_directory[ $matches[1] ] ) ) {
-					$bad_plugins[ $plugin_path ] = '<strong>' . $plugin_data['Name'] . '</strong>';
+					$bad_plugins[ $plugin_path ] = $plugin_data['Name'];
 				}
 			}
 		}
@@ -539,7 +545,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 
 		// Sub-sites don't need to delete Dolly.
 		if ( ! $this->is_for_current_site() && file_exists( WP_PLUGIN_DIR . '/hello.php' ) ) {
-			$plugins['hello.php'] = '<strong>Hello Dolly</strong>';
+			$plugins['hello.php'] = '<code>Hello Dolly</code> (autoinstalled version)';
 		}
 
 		return $plugins;

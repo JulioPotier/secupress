@@ -33,7 +33,7 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 			0   => __( 'All the user names are correct.', 'secupress' ),
 			1   => __( 'Module activated: the users with a blacklisted username will be asked to change it.', 'secupress' ),
 			// bad
-			200 => _n_noop( '<strong>%s</strong> user has a forbidden username: %s', '<strong>%s</strong> users have a forbidden username: %s', 'secupress' ),
+			200 => _n_noop( '<strong>%s user</strong> has a forbidden username: %s', '<strong>%s users</strong> have a forbidden username: %s', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -54,10 +54,7 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 
 		// bad
 		if ( $ids ) {
-			if ( $ids > 10 ) {
-				$logins = array_slice( $logins, 0, 9 );
-				array_push( $logins, '&hellip;' );
-			}
+			$this->slice_and_dice( $logins, 10 );
 			// 2nd param: 1st item is used for the noop if needed, the rest for sprintf.
 			$this->add_message( 200, array( $ids, $ids, static::wrap_in_tag( $logins, 'strong' ) ) );
 		}
@@ -77,7 +74,7 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 		$ids   = $wpdb->get_col( "SELECT ID from $wpdb->users WHERE user_login IN ( $names )" );
 
 		if ( $ids ) {
-			$settings = array( 'blacklist-logins_activate' => 1 );
+			$settings = array( 'blacklist-logins_activated' => 1 );
 			secupress_activate_module( 'users-login', $settings );
 			// good
 			$this->add_fix_message( 1 );

@@ -54,24 +54,24 @@ class SecuPress_Scan_Anti_Scanner extends SecuPress_Scan implements iSecuPress_S
 		$hashes = array();
 
 		for ( $i = 0 ; $i < 3 ; ++$i ) {
-			$response = wp_remote_get( user_trailingslashit( home_url() ) . '?' . uniqid( 'time=', true ), array( 'redirection' => 0 ) );
+			$response = wp_remote_get( user_trailingslashit( home_url() ) . '?nocache=1', array( 'redirection' => 0 ) );
 
 			if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 				$hashes[] = md5( wp_remote_retrieve_body( $response ) );
 			}
 		}
 
-		$hashes = count( array_unique( $hashes ) );
+		$hashes = array_values( array_flip( array_flip( $hashes ) ) );
 
-		if ( 3 === $hashes ) {
+		if ( isset( $hashes[2] ) ) { // = 3 different
 			// good
 			$this->add_message( 0 );
 
-		} elseif ( 0 === $hashes ) {
+		} elseif ( ! isset( $hashes[0] ) ) { // = error during page request
 			// warning
 			$this->add_message( 100 );
 
-		} else {
+		} else { // = we got 1 or 2 different hashes only.
 			// bad
 			$this->add_message( 200 );
 

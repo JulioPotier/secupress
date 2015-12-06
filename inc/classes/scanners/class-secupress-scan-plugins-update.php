@@ -32,7 +32,7 @@ class SecuPress_Scan_Plugins_Update extends SecuPress_Scan implements iSecuPress
 			// good
 			0   => __( 'Your plugins are up to date.', 'secupress' ),
 			// bad
-			200 => _n_noop( '<strong>%1$d</strong> plugin isn\'t up to date: %2$s.', '<strong>%1$d</strong> plugins aren\'t up to date: %2$s.', 'secupress' ),
+			200 => _n_noop( '<strong>%1$d plugin</strong> isn\'t up to date: %2$s.', '<strong>%1$d plugins</strong> aren\'t up to date: %2$s.', 'secupress' ),
 			// cantfix
 			300 => __( 'Some plugins could not be updated correctly.', 'secupress' ),
 		);

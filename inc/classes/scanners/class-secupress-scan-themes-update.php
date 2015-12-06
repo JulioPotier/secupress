@@ -32,7 +32,7 @@ class SecuPress_Scan_Themes_Update extends SecuPress_Scan implements iSecuPress_
 			// good
 			0   => __( 'Your themes are up to date.', 'secupress' ),
 			// bad
-			200 => _n_noop( '<strong>%1$d</strong> theme isn\'t up to date: %2$s.',  '<strong>%1$d</strong> themes aren\'t up to date: %2$s.', 'secupress' ),
+			200 => _n_noop( '<strong>%1$d theme</strong> isn\'t up to date: %2$s.',  '<strong>%1$d themes</strong> aren\'t up to date: %2$s.', 'secupress' ),
 			// cantfix
 			300 => __( 'There is no themes to be updated.', 'secupress' ),
 		);

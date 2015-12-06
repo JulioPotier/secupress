@@ -71,7 +71,7 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements iSecuPress
 				$this->add_message( 200 );
 			}
 
-		} else {
+		} elseif ( is_wp_error( $response ) ) {
 			// warning
 			$this->add_message( 100 );
 		}

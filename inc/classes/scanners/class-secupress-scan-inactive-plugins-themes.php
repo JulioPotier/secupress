@@ -43,8 +43,8 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 			// bad
 			200 => _n_noop( '<strong>%1$d deactivated plugin</strong>, if you don\'t need it, delete it: %2$s.', '<strong>%1$d deactivated plugins</strong>, if you don\'t need them, delete them: %2$s.', 'secupress' ),
 			201 => _n_noop( '<strong>%1$d deactivated theme</strong>, if you don\'t need it, delete it: %2$s.', '<strong>%1$d deactivated themes</strong>, if you don\'t need them, delete them: %2$s.', 'secupress' ),
-			202 => __( '<strong>%1$d deactivated plugins</strong>, if you don\'t need them, delete them: %2$s... and %3$d others.', 'secupress' ),
-			203 => __( '<strong>%1$d deactivated themes</strong>, if you don\'t need them, delete them: %2$s... and %3$d others.', 'secupress' ),
+			// 202 => __( '<strong>%1$d deactivated plugins</strong>, if you don\'t need them, delete them: %2$s... and %3$d others.', 'secupress' ),
+			// 203 => __( '<strong>%1$d deactivated themes</strong>, if you don\'t need them, delete them: %2$s... and %3$d others.', 'secupress' ),
 			204 => _n_noop( 'Sorry, this plugin could not be deleted.', 'Sorry, those plugins could not be deleted.', 'secupress' ),
 			205 => _n_noop( 'Sorry, this theme could not be deleted.', 'Sorry, those themes could not be deleted.', 'secupress' ),
 			// cantfix
@@ -65,38 +65,24 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 
 	public function scan() {
 		$lists = static::get_inactive_plugins_and_themes();
-		$glue  = sprintf( __('%s, %s'), '', '' );
+		$glue  = sprintf( __('%s, %s'), '', '' ); // WP i18n
 
 		// Inactive plugins
 		if ( $count = count( $lists['plugins'] ) ) {
 			// bad
-			if ( $count > 8 ) {
-				$lists['plugins'] = array_slice( $lists['plugins'], 0, 6 );
-				$lists['plugins'] = wp_list_pluck( $lists['plugins'], 'Name' );
-				$lists['plugins'] = self::wrap_in_tag( $lists['plugins'], 'strong' );
-				$lists['plugins'] = implode( $glue, $lists['plugins'] );
-				$this->add_message( 202, array( $count, $lists['plugins'], $count - 6 ) );
-			} else {
-				$lists['plugins'] = wp_list_pluck( $lists['plugins'], 'Name' );
-				$lists['plugins'] = self::wrap_in_tag( $lists['plugins'], 'strong' );
-				$this->add_message( 200, array( $count, $count, $lists['plugins'] ) );
-			}
+			$lists['plugins'] = wp_list_pluck( $lists['plugins'], 'Name' ); // do not translate 'Name'
+			$lists['plugins'] = self::wrap_in_tag( $lists['plugins'], 'code' );
+			$this->slice_and_dice( $lists['plugins'], 8 );
+			$this->add_message( 200, array( $count, $count, $lists['plugins'] ) );
 		}
 
 		// Inactive themes
 		if ( $count = count( $lists['themes'] ) ) {
 			// bad
-			if ( $count > 8 ) {
-				$lists['themes'] = array_slice( $lists['themes'], 0, 6 );
-				$lists['themes'] = wp_list_pluck( $lists['themes'], 'Name' );
-				$lists['themes'] = self::wrap_in_tag( $lists['themes'], 'strong' );
-				$lists['themes'] = implode( $glue, $lists['themes'] );
-				$this->add_message( 203, array( $count, $lists['themes'], $count - 6 ) );
-			} else {
-				$lists['themes'] = wp_list_pluck( $lists['themes'], 'Name' );
-				$lists['themes'] = self::wrap_in_tag( $lists['themes'], 'strong' );
-				$this->add_message( 201, array( $count, $count, $lists['themes'] ) );
-			}
+			$lists['themes'] = wp_list_pluck( $lists['themes'], 'Name' ); // do not translate 'Name'
+			$lists['themes'] = self::wrap_in_tag( $lists['themes'], 'code' );
+			$this->slice_and_dice( $lists['themes'], 8 );
+			$this->add_message( 201, array( $count, $count, $lists['themes'] ) );
 		}
 
 		// good
