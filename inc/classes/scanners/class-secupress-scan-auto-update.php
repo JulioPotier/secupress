@@ -98,6 +98,15 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements iSecuPress_Sc
 		secupress_activate_module( 'wordpress-core', $settings );
 		secupress_activate_submodule( 'wordpress-core', 'minor-updates' );
 
+		$wpconfig_filename = secupress_find_wpconfig_path();
+		$constants         = array( 'AUTOMATIC_UPDATER_DISABLED' => true, 'WP_AUTO_UPDATE_CORE' => false );
+		foreach( $constants as $constant => $val ) {
+			if ( defined( $constant ) && $val === (bool) constant( $constant ) ) {
+				$str_val = $val === false ? 'true' : 'false';
+				secupress_replace_content( $wpconfig_filename, "/define\(.*('" . $constant . "'|\"" . $constant . "\").*,/", "define('$constant', $str_val ); // Modified by SecuPress\n/*Commented by SecuPress*/ // $0" );
+			}
+		}
+
 		$this->add_fix_message( 1 );
 
 		return parent::fix();
