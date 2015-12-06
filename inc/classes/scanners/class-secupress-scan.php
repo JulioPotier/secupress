@@ -691,18 +691,30 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	}
 
 
-	// Given an array of "things", wrap those "things" in a HTML tag.
+	// Given an array of items and wrap it in a HTML tag.
 
 	final public static function wrap_in_tag( $array, $tag = 'code' ) {
 		if ( $array ) {
 			$array = (array) $array;
 
-			foreach ( $array as $k => $thing ) {
-				$array[ $k ] = sprintf( '<%2$s>%1$s</%2$s>', $thing, $tag );
+			foreach ( $array as $k => $item ) {
+				$array[ $k ] = sprintf( '<%2$s>%1$s</%2$s>', $item, $tag );
 			}
 		}
 
 		return $array ? $array : array();
+	}
+
+
+	// Slide the items if there are too many
+
+	final public static function slice_and_dice( &$items, $max_count ) {
+		$count = count( $items ) - $max_count;
+		if ( $count > 0 ) {
+			$items = array_slice( $items, 0, $max_count );
+			array_push( $items, sprintf( _n( '%s other', '%s others', $count ), number_format_i18n( $count ) ) );
+			// array_push( $items, '<button>more</button>&#160;&hellip;' ); //// css class to looks like link + js to deploy all the items (so finally don't really slice but hide in a span, ykwim)
+		}
 	}
 
 
