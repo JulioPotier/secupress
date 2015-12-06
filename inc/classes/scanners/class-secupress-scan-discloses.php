@@ -28,6 +28,8 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 
 
 	public static function get_messages( $message_id = null ) {
+		global $is_nginx;
+		
 		$nginx_rules = '';
 
 		if ( $is_nginx ) {
