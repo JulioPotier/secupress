@@ -50,18 +50,20 @@ add_action( 'user_profile_update_errors', 'secupress_user_profile_update_errors'
 function secupress_user_profile_update_errors( &$errors, $update, $user ) {
 	global $wpdb;
 
-	$backup_email_no_alias      = secupress_remove_email_alias( $user->backup_email );
-	$backup_email_no_alias_like = secupress_prepare_email_for_like_search( $user->backup_email );
-	$user_email_no_alias        = secupress_remove_email_alias( $user->user_email );
-	$user_email_no_alias_like   = secupress_prepare_email_for_like_search( $user->user_email );
+	if ( isset( $user->backup_email ) ) {
+		$backup_email_no_alias      = secupress_remove_email_alias( $user->backup_email );
+		$backup_email_no_alias_like = secupress_prepare_email_for_like_search( $user->backup_email );
+		$user_email_no_alias        = secupress_remove_email_alias( $user->user_email );
+		$user_email_no_alias_like   = secupress_prepare_email_for_like_search( $user->user_email );
 
-	$user_emails                = $wpdb->get_col( $wpdb->prepare( 'SELECT user_email FROM ' . $wpdb->users . ' WHERE ID != %d AND ( user_email LIKE %s OR user_email LIKE %s )', $user->ID, $backup_email_no_alias_like, $user_email_no_alias_like ) );
-	$user_emails                = array_map( 'secupress_remove_email_alias', $user_emails );
+		$user_emails                = $wpdb->get_col( $wpdb->prepare( 'SELECT user_email FROM ' . $wpdb->users . ' WHERE ID != %d AND ( user_email LIKE %s OR user_email LIKE %s )', $user->ID, $backup_email_no_alias_like, $user_email_no_alias_like ) );
+		$user_emails                = array_map( 'secupress_remove_email_alias', $user_emails );
 
-	$user_exists                = (bool) $wpdb->get_col( $wpdb->prepare( 'SELECT user_id FROM ' . $wpdb->usermeta . ' WHERE user_id != %d AND meta_key = "backup_email_no_alias" AND meta_value = %s', $user->ID, $backup_email_no_alias ) );
-	$user_exists                = $user_exists || in_array( $backup_email_no_alias, $user_emails ) || in_array( $user_email_no_alias, $user_emails );
+		$user_exists                = (bool) $wpdb->get_col( $wpdb->prepare( 'SELECT user_id FROM ' . $wpdb->usermeta . ' WHERE user_id != %d AND meta_key = "backup_email_no_alias" AND meta_value = %s', $user->ID, $backup_email_no_alias ) );
+		$user_exists                = $user_exists || in_array( $backup_email_no_alias, $user_emails ) || in_array( $user_email_no_alias, $user_emails );
 
-	if ( $user_exists ) {
-		$errors->add( 'email_exists', __('<strong>ERROR</strong>: This email is already registered, please choose another one.'), array( 'form-field' => 'email' ) );
+		if ( $user_exists ) {
+			$errors->add( 'email_exists', __('<strong>ERROR</strong>: This email is already registered, please choose another one.'), array( 'form-field' => 'email' ) );
+		}
 	}
 }
