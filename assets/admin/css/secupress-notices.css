@@ -4,6 +4,9 @@
 	position: relative;
 	padding-right: 38px;
 }
+.secupress-notice a.notice-dismiss {
+	text-decoration: none;
+}
 
 .secupress-compat-notice .notice-dismiss {
 	position: absolute;
