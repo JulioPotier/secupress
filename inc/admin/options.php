@@ -654,7 +654,7 @@ function secupress_main_scan() {
 			<?php
 		} // foreach prio
 
-		if ( function_exists( 'pre_print_r' ) ) {////
+		if ( WP_DEBUG && function_exists( 'pre_print_r' ) ) {////
 			echo '<code>$scanners</code>:';
 			pre_print_r($scanners,1);
 			echo '<code>$fixes</code>:';
