@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  *
  * @param (array) $settings The module settings.
  *
- * @return (array) The sanitized an validated settings.
+ * @return (array) The sanitized and validated settings.
  */
 function __secupress_users_login_settings_callback( $settings ) {
 	$modulenow    = 'users-login';
