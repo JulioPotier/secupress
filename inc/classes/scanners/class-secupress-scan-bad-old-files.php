@@ -33,7 +33,8 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements iSecuPress_
 			0   => __( 'Your installation is free of old files.', 'secupress' ),
 			1   => __( 'All old files have been deleted.', 'secupress' ),
 			// bad
-			200 => _n_noop( 'Your installation contains <strong>%1$d old file</strong>: %2$s.', 'Your installation contains <strong>%1$d old files</strong>: %2$s.', 'secupress' ), //// %s +format i18n ?
+			/* translators: 1 is a number, 2 is a file name (or a list of file names). */
+			200 => _n_noop( 'Your installation contains <strong>%1$d old file</strong>: %2$s.', 'Your installation contains <strong>%1$d old files</strong>: %2$s.', 'secupress' ),
 			201 => _n_noop( 'The following file could not be deleted: %s.', 'The following files could not be deleted: %s.', 'secupress' ),
 		);
 
