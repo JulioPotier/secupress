@@ -29,7 +29,7 @@ $this->add_field(
 		array(
 			'type'         => 'helper_warning',
 			'name'         => $field_name,
-			'description'  => is_plugin_active( 'sf-move-login/sf-move-login.php' ) ? sprintf( __( 'This will also deactivate the plugin %s.', 'secupress' ), '<b>Move Login</b>' ) : null,
+			'description'  => secupress_get_deactivate_plugin_string( 'sf-move-login/sf-move-login.php' ),
 		),
 	)
 );

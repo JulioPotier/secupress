@@ -199,6 +199,25 @@ function secupress_wp_installing() {
 
 
 /**
+ * Returns a i18n message used with a packed plugin activation checkbox to tell the user that the standalone plugin will be deactivated.
+ *
+ * @param (string) $plugin_basename The standalone plugin basename.
+ * @since 1.0
+ * @return (string|null) Return null if the plugin is not activated.
+ **/
+function secupress_get_deactivate_plugin_string( $plugin_basename ) {
+	if ( ! is_plugin_active( $plugin_basename ) ) {
+		return null;
+	}
+
+	$plugin_basename = path_join( WP_PLUGIN_DIR, $plugin_basename );
+	$plugin = get_plugin_data( $plugin_basename, false, false );
+
+	return sprintf( __( 'This will also deactivate the plugin %s.', 'secupress' ), '<b>' . $plugin['Name'] . '</b>' );
+}
+
+
+/**
  * Returns a i18n message to act like a CTA on pro version
  *
  * @param (string) $format You can use it to embed the message in a HTML tag, usage of "%s" is mandatory.
