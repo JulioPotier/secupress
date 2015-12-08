@@ -25,7 +25,7 @@
 				$.post( ajaxurl, {
 					action: "secupress_dismiss-notice",
 					notice_id: noticeId,
-					_nonce: SecuPressi18nNotices.nonce
+					_wpnonce: SecuPressi18nNotices.nonce
 				} );
 			}
 
