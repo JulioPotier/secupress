@@ -224,9 +224,13 @@ function secupress_deactivate_submodule( $module, $plugins, $args = array() ) {
 
 			if ( false !== $key ) {
 				unset( $active_plugins[ $module ][ $key ] );
+
 				update_site_option( SECUPRESS_ACTIVE_SUBMODULES, $active_plugins );
 				secupress_add_module_notice( $module, $plugin_file, 'deactivation' );
+
 				do_action( 'secupress_deactivate_plugin_' . $plugin_file, $args );
+
+				do_action( 'secupress_deactivate_plugin', $plugin_file, $args );
 			}
 		}
 	}
@@ -268,6 +272,8 @@ function secupress_activate_submodule( $module, $plugin, $incompatibles_modules 
 		secupress_add_module_notice( $module, $plugin_file, 'activation' );
 
 		do_action( 'secupress_activate_plugin_' . $plugin_file );
+
+		do_action( 'secupress_activate_plugin', $plugin_file );
 	}
 }
 
