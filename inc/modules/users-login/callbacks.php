@@ -213,6 +213,25 @@ function __secupress_move_login_settings_callback( $modulenow, &$settings, $old_
 
 
 /*------------------------------------------------------------------------------------------------*/
+/* NOTICES ====================================================================================== */
+/*------------------------------------------------------------------------------------------------*/
+
+/**
+ * Display a notice if the standalone version of Move Login is used.
+ *
+ * @since 1.0
+ *
+ * @param (array) $plugins A list of plugin paths, relative to the plugins folder.
+ */
+add_filter( 'secupress.plugins.packed-plugins', 'secupress_move_login_add_packed_plugin' );
+
+function secupress_move_login_add_packed_plugin( $plugins ) {
+	$plugins['move-login'] = 'sf-move-login/sf-move-login.php';
+	return $plugins;
+}
+
+
+/*------------------------------------------------------------------------------------------------*/
 /* INSTALL/RESET ================================================================================ */
 /*------------------------------------------------------------------------------------------------*/
 
@@ -274,6 +293,10 @@ function secupress_move_login_slug_labels() {
 	return $labels;
 }
 
+
+/*------------------------------------------------------------------------------------------------*/
+/* TOOLS ======================================================================================== */
+/*------------------------------------------------------------------------------------------------*/
 
 /*
  * Move Login: return the list of available actions to perform when someone reaches the old login page.

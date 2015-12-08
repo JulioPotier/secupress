@@ -27,8 +27,9 @@ $this->add_field(
 			'label_screen' => __( 'Yes, move the login page to avoid bad login attempts', 'secupress' ),
 		),
 		array(
-			'type'         => 'helper_description',
+			'type'         => 'helper_warning',
 			'name'         => $field_name,
+			'description'  => is_plugin_active( 'sf-move-login/sf-move-login.php' ) ? sprintf( __( 'This will also deactivate the plugin %s.', 'secupress' ), '<b>Move Login</b>' ) : null,
 		),
 	)
 );

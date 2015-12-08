@@ -113,6 +113,98 @@ function secupress_plugins_to_deactivate() {
 
 
 /**
+ * Display a notice if the standalone version of a plugin packed in SecuPress is used.
+ *
+ * @since 1.0
+ */
+add_action( 'admin_init', 'secupress_add_packed_plugins_notice' );
+
+function secupress_add_packed_plugins_notice() {
+	if ( ! current_user_can( secupress_get_capability() ) ) {
+		return;
+	}
+
+	/*
+	 * Filter the list of plugins packed in SecuPress.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (array) A list of plugin paths, relative to the plugins folder. The "file name" of the packed plugin is used as key.
+	 *                Example: array( 'move-login' => 'sf-move-login/sf-move-login.php' )
+	 */
+	$plugins = apply_filters( 'secupress.plugins.packed-plugins', array() );
+	$plugins = array_filter( $plugins, 'is_plugin_active' );
+
+	if ( ! $plugins || secupress_notice_is_dismissed( 'deactivate-packed-plugins' ) ) {
+		return;
+	}
+
+	$message  = '<p>';
+	$message .= sprintf(
+		/* translators: 1 is the plugin name */
+		__( 'The features of the following plugins are included into %1$s. You can deactivate the plugins now and enable these features later in %1$s:', 'secupress' ),
+		'<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>'
+	);
+	$message .= '</p><ul>';
+	foreach ( $plugins as $plugin ) {
+		$plugin_data = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin );
+		$message .= '<li>' . $plugin_data['Name'] . '</span> <a href="' . wp_nonce_url( admin_url( 'plugins.php?action=deactivate&plugin=' . urlencode( $plugin ) ), 'deactivate-plugin_' . $plugin ) . '" class="button-secondary alignright">' . __( 'Deactivate' ) . '</a></li>';
+	}
+	$message .= '</ul>';
+
+	secupress_add_notice( $message, 'error', 'deactivate-packed-plugins' );
+}
+
+
+/*
+ * When the standalone version of a plugin packed in SecuPress is activated, reinit the notice.
+ *
+ * @since 1.0
+ *
+ * @param (string) $plugin The plugin path, relative to the plugins folder.
+ */
+add_action( 'activate_plugin', 'secupress_reset_packed_plugins_notice_on_plugins_activation' );
+
+function secupress_reset_packed_plugins_notice_on_plugins_activation( $plugin ) {
+	if ( ! current_user_can( secupress_get_capability() ) ) {
+		return;
+	}
+
+	/** This action is documented in inc/admin/notices.php */
+	$plugins = apply_filters( 'secupress.plugins.packed-plugins', array() );
+
+	if ( ! $plugins ) {
+		return;
+	}
+
+	$plugins = array_flip( $plugins );
+
+	if ( isset( $plugins[ $plugin ] ) ) {
+		secupress_reinit_notice( 'deactivate-packed-plugins' );
+	}
+}
+
+
+/*
+ * When a plugin packed in SecuPress is activated, deactivate the standalone version.
+ *
+ * @since 1.0
+ *
+ * @param (string) $plugin The name of the packed plugin.
+ */
+add_action( 'secupress_activate_plugin', 'secupress_deactivate_standalone_plugin_on_packed_plugin_activation' );
+
+function secupress_deactivate_standalone_plugin_on_packed_plugin_activation( $plugin ) {
+	/** This action is documented in inc/admin/notices.php */
+	$plugins = apply_filters( 'secupress.plugins.packed-plugins', array() );
+
+	if ( isset( $plugins[ $plugin ] ) && is_plugin_active( $plugins[ $plugin ] ) ) {
+		deactivate_plugins( $plugins[ $plugin ] );
+	}
+}
+
+
+/**
  * This warning is displayed when the wp-config.php file isn't writable.
  *
  * @since 1.0
