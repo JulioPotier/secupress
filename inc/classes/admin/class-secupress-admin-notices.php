@@ -104,7 +104,7 @@ class SecuPress_Admin_Notices {
 	 */
 	public function add( $message, $error_code = 'updated', $notice_id = false ) {
 		if ( false !== $notice_id ) {
-			if ( $notice_id && self::_is_dismissed( $notice_id ) ) {
+			if ( $notice_id && self::is_dismissed( $notice_id ) ) {
 				return;
 			}
 			// Add notices script.
@@ -203,8 +203,6 @@ class SecuPress_Admin_Notices {
 	}
 
 
-	// Private methods =============================================================================
-
 	/**
 	 * Tell if a notice is dismissed.
 	 *
@@ -214,7 +212,7 @@ class SecuPress_Admin_Notices {
 	 *
 	 * @return (bool|null) true if dismissed, false if not, null if the notice is not dismissible.
 	 */
-	protected static function _is_dismissed( $notice_id ) {
+	public static function is_dismissed( $notice_id ) {
 		if ( $notice_id ) {
 			// Get dismissed notices.
 			$dismissed = explode( ',', (string) get_user_option( self::META_NAME, get_current_user_id() ) );
@@ -225,6 +223,8 @@ class SecuPress_Admin_Notices {
 		return null;
 	}
 
+
+	// Private methods =============================================================================
 
 	/**
 	 * Enqueue JS scripts.
