@@ -172,6 +172,7 @@ function secupress_create_uniqid() {
 	return str_replace( '.', '', uniqid( '', true ) );
 }
 
+
 /**
  * Die with SecuPress format
  *
@@ -179,9 +180,14 @@ function secupress_create_uniqid() {
  * @return string
  */
 function secupress_die( $message = '', $title = '', $args = array() ) {
-	$has_p = strpos( $message, '<p>' ) !== false;
-	wp_die( '<h1>' . SECUPRESS_PLUGIN_NAME . '</h1>' . ( $has_p ? '' : '<p>' ) . $message . ( $has_p ? '' : '</p>' ), $title, $args );
+	$has_p   = strpos( $message, '<p>' ) !== false;
+	$message = ( $has_p ? '' : '<p>' ) . $message . ( $has_p ? '' : '</p>' );
+
+	do_action( 'secupress.before.die', $message, $args );
+
+	wp_die( '<h1>' . SECUPRESS_PLUGIN_NAME . '</h1>' . $message, $title, $args );
 }
+
 
 /**
  * Block a request and die with more informations
