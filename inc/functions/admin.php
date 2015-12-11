@@ -177,13 +177,22 @@ function secupress_create_uniqid() {
  * Die with SecuPress format
  *
  * @since 1.0
- * @return string
  */
 function secupress_die( $message = '', $title = '', $args = array() ) {
 	$has_p   = strpos( $message, '<p>' ) !== false;
 	$message = ( $has_p ? '' : '<p>' ) . $message . ( $has_p ? '' : '</p>' );
+	$url     = secupress_get_current_url( 'raw' );
 
-	do_action( 'secupress.before.die', $message, $args );
+	/**
+	 * Fires right before `wp_die()`.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $message The message displayed.
+	 * @param (string) $url     The current URL.
+	 * @param (array)  $_SERVER The superglobal var.
+	 */
+	do_action( 'secupress.before.die', $message, $url, $_SERVER );
 
 	wp_die( '<h1>' . SECUPRESS_PLUGIN_NAME . '</h1>' . $message, $title, $args );
 }
