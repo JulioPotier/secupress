@@ -187,6 +187,16 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 				uninstall_plugin( $plugin_file );
 			}
 
+			/**
+			 * Fires immediately before a plugin deletion attempt.
+			 *
+			 * @since 1.0
+			 * @since WP 4.4.0
+			 *
+			 * @param string $plugin_file Plugin file name.
+			 */
+			do_action( 'delete_plugin', $plugin_file );
+
 			$this_plugin_dir = trailingslashit( dirname( $plugins_dir . $plugin_file ) );
 
 			// If plugin is in its own directory, recursively delete the directory.
@@ -196,6 +206,17 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 			else {
 				$deleted = $wp_filesystem->delete( $plugins_dir . $plugin_file );
 			}
+
+			/**
+			 * Fires immediately after a plugin deletion attempt.
+			 *
+			 * @since 1.0
+			 * @since WP 4.4.0
+			 *
+			 * @param string $plugin_file Plugin file name.
+			 * @param bool   $deleted     Whether the plugin deletion was successful.
+			 */
+			do_action( 'deleted_plugin', $plugin_file, $deleted );
 
 			if ( $deleted ) {
 				$deleted_plugins[ $plugin_file ] = 1;
