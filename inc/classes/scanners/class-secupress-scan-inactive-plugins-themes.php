@@ -176,7 +176,10 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 			return $this->add_fix_message( 302 );
 		}
 
-		$plugins_dir     = trailingslashit( $plugins_dir );
+		$plugins_dir = trailingslashit( $plugins_dir );
+
+		$plugin_translations = wp_get_installed_translations( 'plugins' );
+
 		$deleted_plugins = array();
 		$count_inactive  = count( $inactive['plugins'] );
 		$count_selected  = count( $selected_plugins );
@@ -220,6 +223,17 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 
 			if ( $deleted ) {
 				$deleted_plugins[ $plugin_file ] = 1;
+
+				// Remove language files, silently.
+				$plugin_slug = dirname( $plugin_file );
+				if ( '.' !== $plugin_slug && ! empty( $plugin_translations[ $plugin_slug ] ) ) {
+					$translations = $plugin_translations[ $plugin_slug ];
+
+					foreach ( $translations as $translation => $data ) {
+						$wp_filesystem->delete( WP_LANG_DIR . '/plugins/' . $plugin_slug . '-' . $translation . '.po' );
+						$wp_filesystem->delete( WP_LANG_DIR . '/plugins/' . $plugin_slug . '-' . $translation . '.mo' );
+					}
+				}
 			}
 		}
 

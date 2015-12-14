@@ -209,6 +209,8 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 
 		$plugins_dir = trailingslashit( $plugins_dir );
 
+		$plugin_translations = wp_get_installed_translations( 'plugins' );
+
 		ob_start();
 
 		// Deactivate
@@ -255,6 +257,17 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 
 			if ( $deleted ) {
 				$deleted_plugins[ $plugin_file ] = 1;
+
+				// Remove language files, silently.
+				$plugin_slug = dirname( $plugin_file );
+				if ( '.' !== $plugin_slug && ! empty( $plugin_translations[ $plugin_slug ] ) ) {
+					$translations = $plugin_translations[ $plugin_slug ];
+
+					foreach ( $translations as $translation => $data ) {
+						$wp_filesystem->delete( WP_LANG_DIR . '/plugins/' . $plugin_slug . '-' . $translation . '.po' );
+						$wp_filesystem->delete( WP_LANG_DIR . '/plugins/' . $plugin_slug . '-' . $translation . '.mo' );
+					}
+				}
 			}
 		}
 
