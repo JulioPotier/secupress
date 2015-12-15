@@ -7,6 +7,8 @@ Author: SecuPress
 Version: 1.0
 */
 
+if ( ! defined( 'DOING_CRON' ) ) :
+
 // Block Bad request methods
 if ( ! in_array( $_SERVER['REQUEST_METHOD'], array( 'GET', 'POST', 'HEAD' ) ) ) {
 	secupress_block( 'RMHM', 405 );
@@ -22,3 +24,5 @@ if ( 'POST' === $_SERVER['REQUEST_METHOD'] && ! isset( $_SERVER['HTTP_HOST'] ) &
 if ( 'POST' === $_SERVER['REQUEST_METHOD'] && ( ! isset( $_SERVER['HTTP_REFERER'] ) || '' === trim( $_SERVER['HTTP_REFERER'] ) ) ) {
 	secupress_block( 'RMHR', 400 );
 }
+
+endif;
