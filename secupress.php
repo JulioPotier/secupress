@@ -103,6 +103,8 @@ function secupress_init() {
 	require( SECUPRESS_INC_PATH       . 'cron.php' );
 	require( SECUPRESS_MODULES_PATH   . 'modules.php' );
 
+	secupress_require_class( 'Singleton' );
+
 	if ( is_admin() ) {
 
 		if ( is_multisite() ) {

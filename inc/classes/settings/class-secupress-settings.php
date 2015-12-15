@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) or die('Cheatin\' uh?');
  * @since 1.0
  */
 
-abstract class SecuPress_Settings {
+abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 	const VERSION = '1.0';
 
@@ -19,46 +19,6 @@ abstract class SecuPress_Settings {
 	protected $sections_descriptions = array();
 	protected $sections_save_button  = array();
 	protected $form_action;
-
-
-	// Instance ====================================================================================
-
-	/**
-	 * Returns the *Singleton* instance of this class.
-	 *
-	 * @return Singleton The *Singleton* instance.
-	 */
-	final public static function get_instance() {
-		if ( ! isset( static::$_instance ) ) {
-			static::$_instance = new static;
-		}
-
-		return static::$_instance;
-	}
-
-
-	/**
-	 * Protected constructor to prevent creating a new instance of the *Singleton* via the `new` operator from outside of this class.
-	 */
-	final private function __construct() {
-		$this->init();
-	}
-
-
-	/**
-	 * Private clone method to prevent cloning of the instance of the *Singleton* instance.
-	 *
-	 * @return void
-	 */
-	final private function __clone() {}
-
-
-	/**
-	 * Private unserialize method to prevent unserializing of the *Singleton* instance.
-	 *
-	 * @return void
-	 */
-	final private function __wakeup() {}
 
 
 	// Setters =====================================================================================
@@ -131,7 +91,12 @@ abstract class SecuPress_Settings {
 
 	// Init ========================================================================================
 
-	protected function init() {
+	/**
+	 * Init: this method is required by the class `SecuPress_Singleton`.
+	 *
+	 * @since 1.0
+	 */
+	protected function _init() {
 		$this->form_action = is_network_admin() ? admin_url( 'admin-post.php' ) : admin_url( 'options.php' );
 		$this->form_action = esc_url( $this->form_action );
 
@@ -778,10 +743,10 @@ abstract class SecuPress_Settings {
 
 			echo apply_filters( 'secupress_help', $desc,    sanitize_key( strip_tags( $button['button_label'] ) ), 'description' );
 			echo apply_filters( 'secupress_help', $help,    sanitize_key( strip_tags( $button['button_label'] ) ), 'help' );
-			echo apply_filters( 
-				'secupress_help', 
-				$warning, 
-				sanitize_key( strip_tags( $button['button_label'] ) ), 
+			echo apply_filters(
+				'secupress_help',
+				$warning,
+				sanitize_key( strip_tags( $button['button_label'] ) ),
 				'warning' );
 			?>
 		</fieldset>
@@ -809,7 +774,13 @@ abstract class SecuPress_Settings {
 			'description' => '',
 		) );
 
-		$callback = method_exists( $this, $args['field_type'] ) ? array( $this, $args['field_type'] ) : 'secupress_' . $args['field_type'];
+		if ( is_array( $args['field_type'] ) ) {
+			$callback = $args['field_type'];
+		} elseif ( method_exists( $this, $args['field_type'] ) ) {
+			$callback = array( $this, $args['field_type'] );
+		} else {
+			$callback = 'secupress_' . $args['field_type'];
+		}
 
 		add_settings_field(
 			'module_' . $this->modulenow . '|' . $this->pluginnow . '|' . $args['name'],

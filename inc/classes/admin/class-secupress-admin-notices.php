@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
  * @since 1.0
  */
 
-class SecuPress_Admin_Notices {
+class SecuPress_Admin_Notices extends SecuPress_Singleton {
 
 	const VERSION   = '1.0';
 	const META_NAME = 'dismissed_secupress_notices';
@@ -38,54 +38,6 @@ class SecuPress_Admin_Notices {
 	 * @var Version to use for the css/js files.
 	 */
 	protected static $version;
-
-
-	// Instance ====================================================================================
-
-	/**
-	 * Returns the *Singleton* instance of this class.
-	 *
-	 * @return Singleton The *Singleton* instance.
-	 */
-	public static function get_instance() {
-		if ( ! isset( static::$_instance ) ) {
-			static::$_instance = new static;
-		}
-
-		return static::$_instance;
-	}
-
-
-	/**
-	 * Protected constructor to prevent creating a new instance of the
-	 * *Singleton* via the `new` operator from outside of this class.
-	 */
-	final private function __construct() {
-		self::$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-		self::$version = self::$suffix ? SECUPRESS_VERSION : time();
-
-		add_action( 'all_admin_notices',                   array( $this, '_print' ), 20 );
-		add_action( 'wp_ajax_secupress_dismiss-notice',    array( __CLASS__, '_ajax_dismiss' ) );
-		add_action( 'admin_post_secupress_dismiss-notice', array( __CLASS__, '_admin_dismiss' ) );
-	}
-
-
-	/**
-	 * Private clone method to prevent cloning of the instance of the
-	 * *Singleton* instance.
-	 *
-	 * @return void
-	 */
-	final private function __clone() {}
-
-
-	/**
-	 * Private unserialize method to prevent unserializing of the *Singleton*
-	 * instance.
-	 *
-	 * @return void
-	 */
-	final private function __wakeup() {}
 
 
 	// Public methods ==============================================================================
@@ -225,6 +177,21 @@ class SecuPress_Admin_Notices {
 
 
 	// Private methods =============================================================================
+
+	/**
+	 * Init: this method is required by the class `SecuPress_Singleton`.
+	 *
+	 * @since 1.0
+	 */
+	protected function _init() {
+		self::$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		self::$version = self::$suffix ? SECUPRESS_VERSION : time();
+
+		add_action( 'all_admin_notices',                   array( $this, '_print' ), 20 );
+		add_action( 'wp_ajax_secupress_dismiss-notice',    array( __CLASS__, '_ajax_dismiss' ) );
+		add_action( 'admin_post_secupress_dismiss-notice', array( __CLASS__, '_admin_dismiss' ) );
+	}
+
 
 	/**
 	 * Enqueue JS scripts.

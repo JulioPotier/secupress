@@ -25,7 +25,7 @@ interface iSecuPress_Scan {
  * @since 1.0
  */
 
-abstract class SecuPress_Scan implements iSecuPress_Scan {
+abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_Scan {
 
 	const VERSION = '1.0';
 
@@ -57,53 +57,24 @@ abstract class SecuPress_Scan implements iSecuPress_Scan {
 	public static $fixable = true;
 
 
-	// Instance ====================================================================================
+	// Init ========================================================================================
 
 	/**
-	 * Returns the *Singleton* instance of this class.
+	 * Init: this method is required by the class `SecuPress_Singleton`.
 	 *
-	 * @return Singleton The *Singleton* instance.
+	 * @since 1.0
 	 */
-	public static function get_instance() {
-		if ( ! isset( static::$_instance ) ) {
-			static::$_instance = new static;
-		}
-
-		return static::$_instance;
-	}
-
-
-	/**
-	 * Protected constructor to prevent creating a new instance of the
-	 * *Singleton* via the `new` operator from outside of this class.
-	 */
-	final private function __construct() {
+	protected function _init() {
 		$this->class_name_part = substr( get_called_class(), 15 ); // 15 is 'SecuPress_Scan_' length.
-
 		static::init();
 	}
 
 
 	/**
-	 * Private clone method to prevent cloning of the instance of the
-	 * *Singleton* instance.
+	 * Sub-classes init.
 	 *
-	 * @return void
+	 * @since 1.0
 	 */
-	final private function __clone() {}
-
-
-	/**
-	 * Private unserialize method to prevent unserializing of the *Singleton*
-	 * instance.
-	 *
-	 * @return void
-	 */
-	final private function __wakeup() {}
-
-
-	// Init ========================================================================================
-
 	protected static function init() {
 		die( 'Method SecuPress_Scan::init() must be over-ridden in a sub-class.' );
 	}
