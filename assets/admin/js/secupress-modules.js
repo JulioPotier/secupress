@@ -307,7 +307,7 @@
 
 
 // Fixed scroll ====================================================================================
-(function($, d, w, undefined) {
+/*(function($, d, w, undefined) {
 
 	var $sidebar   = $( "h2.nav-tab-wrapper" ),
 		$window    = $( w ),
@@ -326,4 +326,4 @@
 		}
 	} );
 
-} )(jQuery, document, window);
+} )(jQuery, document, window);*/
