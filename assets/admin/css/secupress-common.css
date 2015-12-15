@@ -54,7 +54,7 @@ p.submit {
 	display: none;
 }
 
-pre, code, samp {
+pre, code, samp, kbd {
 	max-width: 100%;
 	height: auto;
 	font-family: Consolas, Monaco, 'Andale Mono', monospace;
@@ -72,19 +72,22 @@ pre, code, samp {
 	    -ms-hyphens: none;
 	        hyphens: none;
 }
-code, samp {
+code, samp, kbd {
 	display: inline-block;
 	white-space: pre-wrap;
 }
 pre {
+	padding: 3px 5px;
 	overflow: auto;
 	clear: both;
+	background: #eaeaea;
+	background: rgba(0,0,0,0.07);
 }
 pre,
 pre * {
 	word-wrap: normal;
 }
-pre code, pre samp {
+pre code, pre samp, pre kbd {
 	max-width: none;
 	padding: 0 1em 0 0;
 	border: none;
