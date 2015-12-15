@@ -70,7 +70,8 @@ endif;
  */
 function secupress_class_path( $prefix, $class_name_part = '' ) {
 	$folders = array(
-		'scan' => 'scanners',
+		'scan'      => 'scanners',
+		'singleton' => 'common',
 	);
 
 	$prefix = strtolower( str_replace( '_', '-', $prefix ) );
