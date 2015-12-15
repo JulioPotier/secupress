@@ -92,6 +92,28 @@ function secupress_validate_range( $value, $min, $max, $default = false ) {
 
 
 /**
+ * Limit a number to a high and low value.
+ * A bit like `secupress_validate_range()` but:
+ * - cast the value as integer.
+ * - return the min/max value instead of false/default.
+ *
+ * @since 1.0
+ *
+ * @param (numeric) $value The value to limit.
+ * @param (int)     $min   The minimum value.
+ * @param (int)     $max   The maximum value.
+ *
+ * @return (int)
+ */
+function secupress_minmax_range( $value, $min, $max ) {
+	$value = (int) $value;
+	$value = max( $min, $value );
+	$value = min( $value, $max );
+	return $value;
+}
+
+
+/**
  * Register the correct setting with the correct callback for the module
  *
  * @since 1.0
