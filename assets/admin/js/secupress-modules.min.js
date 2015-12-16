@@ -1,3 +1,25 @@
+// Tools ===========================================================================================
+// Shorthand to tell if a modifier key is pressed.
+function secupressHasModifierKey( e ) {
+	return e.altKey || e.ctrlKey || e.metaKey || e.shiftKey;
+}
+// Shorthand to tell if the pressed key is Space or Enter.
+function secupressIsSpaceOrEnterKey( e ) {
+	return ( e.which === 13 || e.which === 32 ) && ! secupressHasModifierKey( e );
+}
+// Shorthand to tell if the pressed key is Space.
+function secupressIsSpaceKey( e ) {
+	return e.which === 32 && ! secupressHasModifierKey( e );
+}
+// Shorthand to tell if the pressed key is Enter.
+function secupressIsEnterKey( e ) {
+	return e.which === 13 && ! secupressHasModifierKey( e );
+}
+// Shorthand to tell if the pressed key is Escape.
+function secupressIsEscapeKey( e ) {
+	return e.which === 27 && ! secupressHasModifierKey( e );
+}
+
 // Password ========================================================================================
 (function($, d, w, undefined) {
 
@@ -284,6 +306,66 @@
 				} ).filter( ":checked" ).trigger( "init.secupress" );
 
 			}
+		} );
+	} );
+
+} )(jQuery, document, window);
+
+
+// Action Logs =====================================================================================
+(function($, d, w, undefined) {
+
+	function secupressActionLogsDisplayError( $this ) {
+		var $parent = $this.closest( "td" );
+
+		$parent.children( ".error-message" ).remove();
+		$parent.append( "<p class=\"error-message\"><em>" + w.l10nAlogs.errorText + "</em></p>" );
+
+		if ( wp.a11y && wp.a11y.speak ) {
+			wp.a11y.speak( w.l10nAlogs.errorText );
+		}
+
+		$this.removeClass( "disabled" ).removeAttr( "aria-disabled" );
+	}
+
+	// Ajax call that clears logs.
+	$( ".secupress-clear-logs" ).on( "click keyup", function( e ) {
+		var $this = $( this ),
+			href  = $this.attr( "href" );
+
+		if ( undefined === href || ! href ) {
+			return false;
+		}
+
+		if ( e.type === "keyup" && ! secupressIsSpaceOrEnterKey( e ) ) {
+			return false;
+		}
+
+		if ( $this.hasClass( "disabled" ) ) {
+			return false;
+		}
+
+		$this.addClass( "disabled" ).attr( "aria-disabled", "true" );
+		e.preventDefault();
+
+		if ( wp.a11y && wp.a11y.speak ) {
+			wp.a11y.speak( w.l10nAlogs.clearingText );
+		}
+
+		$.post( href.replace( "admin-post.php", "admin-ajax.php" ) )
+		.done( function( r ) {
+			if ( "1" === r ) {
+				$this.closest( "td" ).text( "" ).append( "<p><em>" + w.l10nAlogs.noLogsText + "</em></p>" );
+
+				if ( wp.a11y && wp.a11y.speak ) {
+					wp.a11y.speak( w.l10nAlogs.clearedText );
+				}
+			} else {
+				secupressActionLogsDisplayError( $this );
+			}
+		} )
+		.fail( function() {
+			secupressActionLogsDisplayError( $this );
 		} );
 	} );
 

@@ -148,7 +148,16 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 			$this->logs   = array_slice( $this->logs, $this->offset, $this->logs_per_page, true );
 		}
 
+		// Current page URL without page/orderby/order parameters.
 		static::$page_url = esc_url( secupress_admin_url( 'modules', 'logs' ) );
+
+		// JS
+		wp_localize_script( 'secupress-modules-js', 'l10nAlogs', array(
+			'noLogsText'   => __( 'Nothing happened yet.', 'secupress' ),
+			'errorText'    => __( 'Error', 'secupress' ),
+			'clearingText' => __( 'Clearing Logs...', 'secupress' ),
+			'clearedText'  => __( 'Logs cleared', 'secupress' ),
+		) );
 	}
 
 
@@ -345,7 +354,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 		$href = admin_url( 'admin-post.php?action=secupress_empty-logs&_wp_http_referer=' . $href );
 		$href = wp_nonce_url( $href, 'secupress-empty-logs' );
 
-		echo '<a class="button secupress-clear-logs" href="' . $href . '">' . __( 'Clear Logs', 'secupress' ) . "</a>\n";
+		echo '<a class="button secupress-clear-logs" href="' . $href . '">' . __( 'Clear Logs', 'secupress' ) . "</a> <span class=\"spinner\"></span>\n";
 	}
 
 

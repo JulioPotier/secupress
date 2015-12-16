@@ -160,3 +160,10 @@ label {
 .logs-order .order-arrow:before {
 	vertical-align: middle;
 }
+.secupress-clear-logs + .spinner {
+	float: none;
+}
+.secupress-clear-logs.disabled + .spinner {
+	display: inline-block;
+	visibility: visible;
+}
