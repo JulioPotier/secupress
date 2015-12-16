@@ -350,7 +350,7 @@ function __secupress_reset_white_label_values_action() {
 		secupress_reset_white_label_values( true );
 	}
 
-	wp_safe_redirect( add_query_arg( 'page', 'secupress_settings', remove_query_arg( 'page', wp_get_referer() ) ) );
+	wp_safe_redirect( add_query_arg( 'page', 'secupress_settings', wp_get_referer() ) );
 	die();
 }
 

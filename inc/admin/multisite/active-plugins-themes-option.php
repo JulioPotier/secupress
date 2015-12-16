@@ -162,10 +162,14 @@ add_action( 'load-secupress_page_secupress_scanners', 'secupress_add_active_plug
 
 function secupress_add_active_plugins_and_themes_site_options() {
 	if ( secupress_fill_active_plugins_and_themes_site_options() ) {
+		$href = urlencode( esc_url( secupress_get_current_url( 'raw' ) ) );
+		$href = admin_url( 'admin-post.php?action=secupress-set-big-data&_wp_http_referer=' . $href );
+		$href = wp_nonce_url( $href, 'secupress-set-big-data' );
+
 		$message = sprintf(
 			/* translators: %s is a "click here" link. */
 			__( 'Your network is quite big. Before doing anything, some data must be set. Please %s.', 'secupress' ),
-			'<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress-set-big-data&_wp_http_referer=' . esc_url( secupress_get_current_url( 'raw' ) ) ), 'secupress-set-big-data' ) . '" class="secupress-set-big-data">' . __( 'click here', 'secupress' ) . '</a>'
+			'<a href="' . $href . '" class="secupress-set-big-data">' . __( 'click here', 'secupress' ) . '</a>'
 		);
 		secupress_add_notice( $message, 'error', false );
 	}
@@ -273,11 +277,15 @@ a:focus {
 	<body>
 		<div class="wrap">
 			<p><?php
+			$href = urlencode( esc_url( wp_get_referer() ) );
+			$href = admin_url( 'admin-post.php?action=secupress-set-big-data&_wp_http_referer=' . $href );
+			$href = wp_nonce_url( $href, 'secupress-set-big-data' );
+
 			printf(
 				/* translators: %s is a "click here" link. */
 				__( 'If this page does not refresh automatically in 2 seconds, please %s.', 'secupress' ),
 				/* For `wp_get_referer()` see the param `_wp_http_referer` in `secupress_add_active_plugins_and_themes_site_options()`. */
-				'<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress-set-big-data&_wp_http_referer=' . esc_url( wp_get_referer() ) ), 'secupress-set-big-data' ) . '" class="secupress-set-big-data">' . __( 'click here', 'secupress' ) . '</a>'
+				'<a href="' . $href . '" class="secupress-set-big-data">' . __( 'click here', 'secupress' ) . '</a>'
 			);
 			?></p>
 			<div class="progress-wrap"><div style="width: <?php echo $percent; ?>%;" class="progress"><?php echo $percent; ?>%</div></div>

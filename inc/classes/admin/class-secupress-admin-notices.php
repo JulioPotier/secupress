@@ -243,7 +243,8 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 			return;
 		}
 
-		$compat = secupress_wp_version_is( '4.2-beta4' ) ? '' : ' secupress-compat-notice';
+		$compat  = secupress_wp_version_is( '4.2-beta4' ) ? '' : ' secupress-compat-notice';
+		$referer = urlencode( esc_url( secupress_get_current_url( 'raw' ) ) );
 
 		foreach ( $this->notices as $error_code => $types ) {
 			$types = array_filter( $types, 'count' );
@@ -255,7 +256,8 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 			foreach ( $types as $type => $messages ) {
 				if ( 'sp-dismissible' === $type ) {
 					foreach ( $messages as $notice_id => $message ) {
-						$button = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_dismiss-notice&notice_id=' . $notice_id . '&_wp_http_referer=' . esc_url( secupress_get_current_url( 'raw' ) ) ), 'secupress-notices' );
+						$button = admin_url( 'admin-post.php?action=secupress_dismiss-notice&notice_id=' . $notice_id . '&_wp_http_referer=' . $referer );
+						$button = wp_nonce_url( $button, 'secupress-notices' );
 						$button = '<a href="' . $button . '" class="notice-dismiss"><span class="screen-reader-text">' . __( 'Dismiss', 'secupress' ) . '</span></a>';
 						$message = strpos( $message, '<p>' ) === false ? '<p>' . $message . '</p>' : $message;
 						?>
