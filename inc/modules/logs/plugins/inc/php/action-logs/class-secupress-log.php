@@ -389,6 +389,26 @@ class SecuPress_Log {
 
 
 	/**
+	 * Fires after the user has successfully logged in with `wp_signon()`.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $user_login The user login.
+	 * @param (object) $user       WP_User object.
+	 *
+	 * @return (array) An array containing:
+	 *                 - (string) The user name followed by the user ID.
+	 */
+	protected function _pre_process_action_wp_login( $user_login, $user ) {
+		if ( ! user_can( $user, 'administrator' ) ) {
+			return array();
+		}
+		$user = static::format_user_login( $user );
+		return array( 'user' => $user );
+	}
+
+
+	/**
 	 * Fires immediately before a user is deleted from the database by `wp_delete_user()`.
 	 *
 	 * @since 1.0
@@ -701,6 +721,7 @@ class SecuPress_Log {
 				__( '%PLUGIN-NAME% prevented a request at <code>%1$s</code> with the following message: <pre>%2$s</pre> Here is the server configuration at the moment: <pre>%3$s</pre>', 'secupress' )
 			),
 			'switch_theme'      => __( 'Theme activated: <strong>%s</strong>.', 'secupress' ),
+			'wp_login'          => __( 'Administrator <strong>%s</strong> logged in.', 'secupress' ),
 			'delete_user'       => __( 'User deleted: <strong>%1$s</strong>. Post assigned to: <strong>%2$s</strong>.', 'secupress' ),
 			'profile_update'    => __( '<strong>%1$s</strong>\'s user data changed from: <pre>%2$s</pre> To: <pre>%3$s</pre>', 'secupress' ),
 			'user_register'     => __( 'New user <strong>%s</strong> created.', 'secupress' ),
@@ -833,13 +854,15 @@ class SecuPress_Log {
 	 *
 	 * @since 1.0
 	 *
-	 * @param (int) A user ID
+	 * @param (int|object) A user ID or a WP_User object.
 	 *
 	 * @return (string) This user login followed by his ID.
 	 */
-	protected static function format_user_login( $user_id ) {
-		$user = get_userdata( $user_id );
-		return ( $user ? $user->user_login : '[' . __( 'Unknown user', 'secupress' ) . ']' ) . ' (' . $user_id . ')';
+	protected static function format_user_login( $user ) {
+		if ( ! is_object( $user ) ) {
+			$user = get_userdata( $user );
+		}
+		return ( $user ? $user->user_login : '[' . __( 'Unknown user', 'secupress' ) . ']' ) . ' (' . $user->ID . ')';
 	}
 
 }

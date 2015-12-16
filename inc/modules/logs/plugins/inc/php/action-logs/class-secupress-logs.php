@@ -85,6 +85,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	protected static $actions = array(
 		'secupress.before.die' => 3, // `secupress_die()`
 		'switch_theme'         => 1, // `switch_theme()`
+		'wp_login'             => 2, // `wp_signon()`
 		'delete_user'          => 2, // `wp_delete_user()`
 		'profile_update'       => 2, // 'wp_insert_user()'
 		'user_register'        => 1, // 'wp_insert_user()'
