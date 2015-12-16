@@ -137,3 +137,26 @@ label {
 	color: #ddd;
 	display: inline;
 }
+
+.secupress-logs li {
+	margin-bottom: .5em;
+}
+.secupress-logs .secupress-row-header {
+	display: block;
+	padding: .25em .5em;
+	margin-bottom: .5em;
+	color: #F1F1F1;
+	background: #23282D;
+}
+.secupress-logs .criticity-high {
+	color: red;
+}
+.secupress-logs .criticity-normal {
+	color: orange;
+}
+.secupress-logs .criticity-low {
+	color: yellow;
+}
+.logs-order .order-arrow:before {
+	vertical-align: middle;
+}
