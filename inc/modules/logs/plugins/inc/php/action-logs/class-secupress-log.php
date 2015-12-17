@@ -579,6 +579,26 @@ class SecuPress_Log {
 	}
 
 
+	/**
+	 * Fires after PHPMailer is initialized and before an e-mail is sent by `wp_mail()`.
+	 *
+	 * @since 1.0
+	 *
+	 * @param PHPMailer &$phpmailer The PHPMailer instance, passed by reference.
+	 *
+	 * @return (array) An array containing:
+	 *                 - (string) $from    The "From" name + address.
+	 *                 - (string) $to      The "To" addresses.
+	 *                 - (string) $subject The Subject (no kidding).
+	 */
+	protected function _pre_process_action_phpmailer_init( $phpmailer ) {
+		$from    = $phpmailer->FromName . '[' . $phpmailer->From . ']';
+		$to      = implode( ', ', array_keys( $phpmailer->getAllRecipientAddresses() ) );
+		$subject = $phpmailer->Subject;
+		return array( 'from' => $from, 'to' => $to, 'subject' => $subject );
+	}
+
+
 	// Message =====================================================================================
 
 	/**
@@ -738,6 +758,7 @@ class SecuPress_Log {
 			'updated_user_meta' => __( 'User meta %2$s deleted for %1$s. Previous value was: %3$s', 'secupress' ),
 			'wpmu_new_blog'     => __( 'Blog %1$s created with %2$s as Administrator.', 'secupress' ),
 			'delete_blog'       => __( 'Blog %s deleted.', 'secupress' ),
+			'phpmailer_init'    => __( 'E-mail sent from %1$s to %2$s with the following subject: %3$s', 'secupress' ),
 		);
 
 		$this->message = isset( $messages[ $this->code ] ) ? $messages[ $this->code ] : '';

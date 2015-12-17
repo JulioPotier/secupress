@@ -94,6 +94,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		'deleted_user_meta'    => 4, // `delete_metadata()`
 		'wpmu_new_blog'        => 2, // `wpmu_create_blog()`
 		'delete_blog'          => 1, // `wpmu_delete_blog()`
+		'phpmailer_init'       => 1, // `wp_mail()`
 	);
 	/**
 	 * @var Will store the logs.
