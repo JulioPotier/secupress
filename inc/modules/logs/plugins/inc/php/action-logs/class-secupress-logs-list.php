@@ -205,6 +205,9 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 
 		// Button to clear logs.
 		static::_clear_logs_button();
+
+		// Button to download logs.
+		static::_download_logs_button();
 	}
 
 
@@ -327,7 +330,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 
 
 	/**
-	 * Print a "Empty logs" button.
+	 * Print a "Clear Logs" button.
 	 *
 	 * @since 1.0
 	 */
@@ -337,6 +340,19 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 		$href = wp_nonce_url( $href, 'secupress-clear-logs' );
 
 		echo '<a class="button secupress-clear-logs" href="' . $href . '">' . __( 'Clear Logs', 'secupress' ) . "</a> <span class=\"spinner secupress-inline-spinner\"></span>\n";
+	}
+
+
+	/**
+	 * Print a "Download Logs" button.
+	 *
+	 * @since 1.0
+	 */
+	protected static function _download_logs_button() {
+		$href = admin_url( 'admin-post.php?action=secupress_download-logs' );
+		$href = wp_nonce_url( $href, 'secupress-download-logs' );
+
+		echo '<a class="button secupress-download-logs" href="' . $href . '">' . __( 'Download Logs', 'secupress' ) . "</a>\n";
 	}
 
 

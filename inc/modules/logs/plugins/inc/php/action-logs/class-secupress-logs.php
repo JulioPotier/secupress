@@ -280,6 +280,10 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		add_action( 'admin_post_secupress_clear-logs', array( __CLASS__, '_admin_clear_logs' ) );
 
 
+		// Download logs list.
+		add_action( 'admin_post_secupress_download-logs', array( __CLASS__, '_admin_download_logs' ) );
+
+
 		// Delete a log from the list.
 		add_action( 'wp_ajax_secupress_delete-log',    array( __CLASS__, '_ajax_delete_log' ) );
 		add_action( 'admin_post_secupress_delete-log', array( __CLASS__, '_admin_delete_log' ) );
@@ -574,6 +578,50 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
 		wp_redirect( $goback );
 		die();
+	}
+
+
+	/**
+	 * Admin post callback that allows to download the logs as a txt file.
+	 *
+	 * @since 1.0
+	 */
+	public static function _admin_download_logs() {
+		check_admin_referer( 'secupress-download-logs' );
+
+		if ( ! current_user_can( secupress_get_capability() ) ) {
+			wp_nonce_ays( '' );
+		}
+
+		if ( ini_get( 'zlib.output_compression' ) ) {
+			ini_set( 'zlib.output_compression', 'Off' );
+		}
+
+		$filename = SECUPRESS_PLUGIN_SLUG . '-action-logs.txt';
+		$logs     = static::get_saved_logs();
+
+		set_time_limit( 0 );
+
+		ob_start();
+		nocache_headers();
+		header( 'Content-Type: text/plain; charset=' . get_option( 'blog_charset' ) );
+		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
+		header( 'Content-Transfer-Encoding: binary' );
+		header( 'Connection: close' );
+		ob_end_clean();
+		flush();
+
+		if ( $logs && is_array( $logs ) ) {
+			static::_maybe_include_log_class();
+
+			foreach ( $logs as $timestamp => $log ) {
+				$log = new SecuPress_Log( $timestamp, $log );
+				echo '[' . $log->get_time() . ' || ' . $log->get_criticity() . ' || ' . $log->get_user() . '] ';
+				echo strip_tags( $log->get_message() );
+				echo "\n";
+			}
+		}
+		die;
 	}
 
 
