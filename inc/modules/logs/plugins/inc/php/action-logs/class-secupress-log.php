@@ -599,6 +599,30 @@ class SecuPress_Log {
 	}
 
 
+	/**
+	 * Fires after an HTTP API response is received and before the response is returned.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (array|object) $response HTTP response or WP_Error object.
+	 * @param (string)       $context  Context under which the hook is fired.
+	 * @param (string)       $class    HTTP transport used.
+	 * @param (array)        $args     HTTP request arguments.
+	 * @param (string)       $url      The request URL.
+	 *
+	 * @return (array) An array containing:
+	 *                 - (string)       $url      The requested URL.
+	 *                 - (array)        $args     The request arguments.
+	 *                 - (array|object) $response Array containing 'headers', 'body', 'response', 'cookies', 'filename'. A WP_Error instance upon error.
+	 */
+	protected function _pre_process_action_http_api_debug( $response, $context, $class, $args, $url ) {
+		if ( 'response' !== $context ) {
+			return array();
+		}
+		return compact( 'url', 'args', 'response' );
+	}
+
+
 	// Message =====================================================================================
 
 	/**
@@ -759,6 +783,7 @@ class SecuPress_Log {
 			'wpmu_new_blog'     => __( 'Blog %1$s created with %2$s as Administrator.', 'secupress' ),
 			'delete_blog'       => __( 'Blog %s deleted.', 'secupress' ),
 			'phpmailer_init'    => __( 'E-mail sent from %1$s to %2$s with the following subject: %3$s', 'secupress' ),
+			'http_api_debug'    => __( 'External request to: %1$s with the following arguments: %2$s The response was: %3$s', 'secupress' ),
 		);
 
 		$this->message = isset( $messages[ $this->code ] ) ? $messages[ $this->code ] : '';
