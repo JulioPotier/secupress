@@ -345,6 +345,10 @@ function secupressIsEscapeKey( e ) {
 			return false;
 		}
 
+		if ( ! w.confirm( w.l10nAlogs.clearConfirmText ) ) {
+			return false;
+		}
+
 		$this.addClass( "disabled" ).attr( "aria-disabled", "true" );
 		e.preventDefault();
 

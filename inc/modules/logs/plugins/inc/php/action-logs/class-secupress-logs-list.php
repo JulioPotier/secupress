@@ -153,10 +153,11 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 
 		// JS
 		wp_localize_script( 'secupress-modules-js', 'l10nAlogs', array(
-			'noLogsText'   => __( 'Nothing happened yet.', 'secupress' ),
-			'errorText'    => __( 'Error', 'secupress' ),
-			'clearingText' => __( 'Clearing Logs...', 'secupress' ),
-			'clearedText'  => __( 'Logs cleared', 'secupress' ),
+			'noLogsText'       => __( 'Nothing happened yet.', 'secupress' ),
+			'errorText'        => __( 'Error', 'secupress' ),
+			'clearConfirmText' => __( 'Do you really want to delete all your Action Logs?', 'secupress' ),
+			'clearingText'     => __( 'Clearing Logs...', 'secupress' ),
+			'clearedText'      => __( 'Logs cleared', 'secupress' ),
 		) );
 	}
 
