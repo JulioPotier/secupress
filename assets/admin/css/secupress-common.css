@@ -1,5 +1,9 @@
 @charset "UTF-8";
 
+.form-table {
+	table-layout: fixed;
+}
+
 .secupress-wrapper {
 	padding-top: 20px;
 }
@@ -77,7 +81,9 @@ code, samp, kbd {
 	white-space: pre-wrap;
 }
 pre {
-	padding: 3px 5px;
+	padding: 0;
+	border: solid 3px transparent;
+	border-width: 3px 5px;
 	overflow: auto;
 	clear: both;
 	background: #eaeaea;
