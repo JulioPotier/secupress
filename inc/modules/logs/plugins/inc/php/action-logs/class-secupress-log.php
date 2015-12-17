@@ -295,7 +295,7 @@ class SecuPress_Log {
 		$activated   = implode( $sep, $activated );
 		$deactivated = implode( $sep, $deactivated );
 
-		return array( 'activated' => $activated, 'deactivated' => $deactivated );
+		return compact( 'activated', 'deactivated' );
 	}
 
 
@@ -364,7 +364,7 @@ class SecuPress_Log {
 		$activated   = implode( $sep, $activated );
 		$deactivated = implode( $sep, $deactivated );
 
-		return array( 'activated' => $activated, 'deactivated' => $deactivated );
+		return compact( 'activated', 'deactivated' );
 	}
 
 
@@ -384,7 +384,7 @@ class SecuPress_Log {
 	 */
 	protected function _pre_process_action_secupress_before_die( $message, $url, $server ) {
 		$url = wp_make_link_relative( $url );
-		return array( 'url' => $url, 'message' => $message, 'server' => $server );
+		return compact( 'url', 'message', 'server' );
 	}
 
 
@@ -404,7 +404,7 @@ class SecuPress_Log {
 			return array();
 		}
 		$user = static::format_user_login( $user );
-		return array( 'user' => $user );
+		return compact( 'user' );
 	}
 
 
@@ -423,7 +423,7 @@ class SecuPress_Log {
 	protected function _pre_process_action_delete_user( $id, $reassign ) {
 		$user     = static::format_user_login( $user_id );
 		$reassign = $reassign ? static::format_user_login( $reassign ) : __( 'Nobody', 'secupress' );
-		return array( 'user' => $user, 'reassign' => $reassign );
+		return compact( 'user', 'reassign' );
 	}
 
 
@@ -448,17 +448,17 @@ class SecuPress_Log {
 		unset( $user_keys['ID'], $user_keys['user_status'], $user_keys['user_activation_key'] );
 		$user_keys     = array_keys( $user_keys );
 
-		$old_data  = array();
-		$new_data  = array();
+		$old = array();
+		$new = array();
 
 		foreach ( $user_keys as $data_name ) {
 			if ( ! isset( $old_user_data[ $data_name ], $user_data[ $data_name ] ) || $old_user_data[ $data_name ] != $user_data[ $data_name ] ) {
-				$old_data[ $data_name ] = isset( $old_user_data[ $data_name ] ) ? $old_user_data[ $data_name ] : '';
-				$new_data[ $data_name ] = isset( $user_data[ $data_name ] )     ? $user_data[ $data_name ]     : '';
+				$old[ $data_name ] = isset( $old_user_data[ $data_name ] ) ? $old_user_data[ $data_name ] : '';
+				$new[ $data_name ] = isset( $user_data[ $data_name ] )     ? $user_data[ $data_name ]     : '';
 			}
 		}
 
-		return $old_data ? array( 'user' => $user, 'old' => $old_data, 'new' => $new_data ) : array();
+		return $old ? compact( 'user', 'old', 'new' ) : array();
 	}
 
 
@@ -474,7 +474,7 @@ class SecuPress_Log {
 	 */
 	protected function _pre_process_action_user_register( $user_id ) {
 		$user = static::format_user_login( $user_id );
-		return array( 'user' => $user );
+		return compact( 'user' );
 	}
 
 
@@ -495,7 +495,7 @@ class SecuPress_Log {
 	 */
 	protected function _pre_process_action_added_user_meta( $mid, $object_id, $meta_key, $meta_value ) {
 		$user = static::format_user_login( $object_id );
-		return array( 'user' => $user, 'meta' => $meta_key, 'value' => $meta_value );
+		return compact( 'user', 'meta_key', 'meta_value' );
 	}
 
 
@@ -516,7 +516,7 @@ class SecuPress_Log {
 	 */
 	protected function _pre_process_action_updated_user_meta( $meta_id, $object_id, $meta_key, $meta_value ) {
 		$user = static::format_user_login( $object_id );
-		return array( 'user' => $user, 'meta' => $meta_key, 'value' => $meta_value );
+		return compact( 'user', 'meta_key', 'meta_value' );
 	}
 
 
@@ -537,7 +537,7 @@ class SecuPress_Log {
 	 */
 	protected function _pre_process_action_deleted_user_meta( $meta_ids, $object_id, $meta_key, $meta_value ) {
 		$user = static::format_user_login( $object_id );
-		return array( 'user' => $user, 'meta' => $meta_key, 'value' => $meta_value );
+		return compact( 'user', 'meta_key', 'meta_value' );
 	}
 
 
@@ -555,11 +555,11 @@ class SecuPress_Log {
 	 */
 	protected function _pre_process_action_wpmu_new_blog( $blog_id, $user_id ) {
 		switch_to_blog( $blog_id );
-		$blog_name = get_option( 'blogname' ) . ' (' . $blog_id . ')';
-		$user      = static::format_user_login( $user_id );
+		$blog = get_option( 'blogname' ) . ' (' . $blog_id . ')';
+		$user = static::format_user_login( $user_id );
 		restore_current_blog();
 
-		return array( 'blog' => $blog_name, 'user' => $user );
+		return compact( 'blog', 'user' );
 	}
 
 
@@ -574,8 +574,8 @@ class SecuPress_Log {
 	 *                 - (string) The blog name followed by the blog ID.
 	 */
 	protected function _pre_process_action_delete_blog( $blog_id ) {
-		$blog_name = get_option( 'blogname' ) . ' (' . $blog_id . ')';
-		return array( 'blog' => $blog_name );
+		$blog = get_option( 'blogname' ) . ' (' . $blog_id . ')';
+		return compact( 'blog' );
 	}
 
 
@@ -595,7 +595,7 @@ class SecuPress_Log {
 		$from    = $phpmailer->FromName . '[' . $phpmailer->From . ']';
 		$to      = implode( ', ', array_keys( $phpmailer->getAllRecipientAddresses() ) );
 		$subject = $phpmailer->Subject;
-		return array( 'from' => $from, 'to' => $to, 'subject' => $subject );
+		return compact( 'from', 'to', 'subject' );
 	}
 
 
@@ -663,7 +663,8 @@ class SecuPress_Log {
 			} elseif ( is_scalar( $data ) ) {
 				$count = substr_count( $data, "\n" );
 
-				if ( $count || strlen( $data ) > 60 ) {
+				// 46 seems to be a good limit for the logs module width.
+				if ( $count || strlen( $data ) >= 46 ) {
 					$this->data[ $key ] = '<pre' . ( $count > 4 ? ' class="secupress-code-chunk"' : '' ) . '>' . esc_html( $data ) . '</pre>';
 				} else {
 					$this->data[ $key ] = '<code>' . esc_html( $data ) . '</code>';
