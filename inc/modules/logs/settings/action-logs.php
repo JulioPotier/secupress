@@ -43,7 +43,7 @@ $this->add_field(
 	__( 'WordPress Logs', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'field_type'  => array( SecuPress_Logs_List::get_instance(), 'output_list' ),
+		'field_type'  => array( SecuPress_Logs_List::get_instance(), 'output' ),
 		'description' => __( 'What happened on your WordPress website?', 'secupress' ),
 	),
 	array(

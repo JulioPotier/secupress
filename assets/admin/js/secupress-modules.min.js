@@ -314,12 +314,26 @@ function secupressIsEscapeKey( e ) {
 
 // Action Logs =====================================================================================
 (function($, d, w, undefined) {
+	var transitionTimeout, doingAjax = false;
 
-	function secupressActionLogsDisplayError( $this ) {
+	function secupressClearActionLogsDisplayError( $this ) {
 		var $parent = $this.closest( "td" );
 
 		$parent.children( ".error-message" ).remove();
 		$parent.append( "<p class=\"error-message\"><em>" + w.l10nAlogs.errorText + "</em></p>" );
+
+		if ( wp.a11y && wp.a11y.speak ) {
+			wp.a11y.speak( w.l10nAlogs.errorText );
+		}
+
+		$this.removeClass( "disabled" ).removeAttr( "aria-disabled" );
+	}
+
+	function secupressDeleteActionLogDisplayError( $this ) {
+		var $parent = $this.parent( ".actions" );
+
+		$parent.prev( ".error-message" ).remove();
+		$parent.before( "<p class=\"error-message\"><em>" + w.l10nAlogs.errorText + "</em></p>" );
 
 		if ( wp.a11y && wp.a11y.speak ) {
 			wp.a11y.speak( w.l10nAlogs.errorText );
@@ -341,7 +355,7 @@ function secupressIsEscapeKey( e ) {
 			return false;
 		}
 
-		if ( $this.hasClass( "disabled" ) ) {
+		if ( doingAjax ) {
 			return false;
 		}
 
@@ -349,6 +363,7 @@ function secupressIsEscapeKey( e ) {
 			return false;
 		}
 
+		doingAjax = true;
 		$this.addClass( "disabled" ).attr( "aria-disabled", "true" );
 		e.preventDefault();
 
@@ -365,11 +380,74 @@ function secupressIsEscapeKey( e ) {
 					wp.a11y.speak( w.l10nAlogs.clearedText );
 				}
 			} else {
-				secupressActionLogsDisplayError( $this );
+				secupressClearActionLogsDisplayError( $this );
 			}
 		} )
 		.fail( function() {
-			secupressActionLogsDisplayError( $this );
+			secupressClearActionLogsDisplayError( $this );
+		} )
+		.always( function() {
+			doingAjax = false;
+		} );
+	} );
+
+	// Ajax call that delete a log.
+	$( ".secupress-delete-log" ).on( "click keyup", function( e ) {
+		var $this = $( this ),
+			href  = $this.attr( "href" );
+
+		if ( undefined === href || ! href ) {
+			return false;
+		}
+
+		if ( e.type === "keyup" && ! secupressIsSpaceOrEnterKey( e ) ) {
+			return false;
+		}
+
+		if ( doingAjax ) {
+			return false;
+		}
+
+		if ( ! w.confirm( w.l10nAlogs.deleteConfirmText ) ) {
+			return false;
+		}
+
+		doingAjax = true;
+		$this.addClass( "disabled" ).attr( "aria-disabled", "true" );
+		e.preventDefault();
+
+		if ( wp.a11y && wp.a11y.speak ) {
+			wp.a11y.speak( w.l10nAlogs.deletingText );
+		}
+
+		$.getJSON( href.replace( "admin-post.php", "admin-ajax.php" ) )
+		.done( function( r ) {
+			if ( $.isPlainObject( r ) && r.success ) {
+				// r.data contains the number of logs.
+				if ( r.data ) {
+					$( ".logs-count" ).text( r.data );
+
+					$this.closest( "li" ).fadeTo( 100 , 0, function() {
+						$( this ).slideUp( 100, function() {
+							$( this ).remove();
+						} );
+					} );
+				} else {
+					$this.closest( "td" ).text( "" ).append( "<p><em>" + w.l10nAlogs.noLogsText + "</em></p>" );
+				}
+
+				if ( wp.a11y && wp.a11y.speak ) {
+					wp.a11y.speak( w.l10nAlogs.deletedText );
+				}
+			} else {
+				secupressDeleteActionLogDisplayError( $this );
+			}
+		} )
+		.fail( function() {
+			secupressDeleteActionLogDisplayError( $this );
+		} )
+		.always( function() {
+			doingAjax = false;
 		} );
 	} );
 

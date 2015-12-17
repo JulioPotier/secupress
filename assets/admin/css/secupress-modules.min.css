@@ -160,12 +160,49 @@ label {
 .logs-order .order-arrow:before {
 	vertical-align: middle;
 }
-.secupress-clear-logs + .spinner {
+.secupress-inline-spinner {
+	display: inline-block;
+	visibility: hidden;
 	float: none;
 }
-.secupress-clear-logs.disabled + .spinner {
-	display: inline-block;
+.disabled + .secupress-inline-spinner {
 	visibility: visible;
+}
+.secupress-delete-log + .secupress-inline-spinner {
+	float: right;
+	margin-top: 0;
+}
+.secupress-logs .actions {
+	display: block;
+	padding: .25em .5em;
+	font-size: 13px;
+	overflow: hidden;
+}
+.secupress-logs .actions a {
+	position: absolute;
+	clip: rect(1px, 1px, 1px, 1px);
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+.secupress-logs li:hover .actions a,
+.secupress-logs li .actions a:focus {
+	clip: auto;
+	width: auto;
+	height: auto;
+}
+.secupress-delete-log {
+	color: #a00;
+	text-decoration: none;
+	border: none;
+}
+.secupress-delete-log:hover,
+.secupress-delete-log:focus {
+	color: #f00;
+}
+.secupress-delete-log.disabled {
+	color: #A0A5AA;
+	cursor: default;
 }
 .js .secupress-code-chunk {
 	max-height: 6em;
@@ -175,7 +212,15 @@ label {
 .secupress-expand-code:hover,
 .secupress-expand-code:focus {
 	float: right;
-	margin-top: -3px;
+	margin: 2px 1px 0 0;
+}
+.secupress-expand-code:focus {
+	outline: 1px dotted;
+}
+.secupress-expand-code:focus .dashicons-before:before {
+	font-size: 30px;
+	width: 30px;
+	height: 30px;
 }
 .secupress-expand-code .dashicons-visibility,
 .secupress-code-chunk .secupress-expand-code .dashicons-hidden {

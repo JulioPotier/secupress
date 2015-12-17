@@ -153,12 +153,15 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 
 		// JS
 		wp_localize_script( 'secupress-modules-js', 'l10nAlogs', array(
-			'noLogsText'       => __( 'Nothing happened yet.', 'secupress' ),
-			'errorText'        => __( 'Error', 'secupress' ),
-			'clearConfirmText' => __( 'Do you really want to delete all your Action Logs?', 'secupress' ),
-			'clearingText'     => __( 'Clearing Logs...', 'secupress' ),
-			'clearedText'      => __( 'Logs cleared', 'secupress' ),
-			'expandCodeText'   => __( 'Expand or collapse code block', 'secupress' ),
+			'noLogsText'        => __( 'Nothing happened yet.', 'secupress' ),
+			'errorText'         => __( 'Error', 'secupress' ),
+			'clearConfirmText'  => __( 'Do you really want to delete all your Action Logs?', 'secupress' ),
+			'clearingText'      => __( 'Clearing Logs...', 'secupress' ),
+			'clearedText'       => __( 'Logs cleared', 'secupress' ),
+			'deleteConfirmText' => __( 'Do you really want to delete this Log?', 'secupress' ),
+			'deletingText'      => __( 'Deleting Log...', 'secupress' ),
+			'deletedText'       => __( 'Log deleted', 'secupress' ),
+			'expandCodeText'    => __( 'Expand or collapse code block', 'secupress' ),
 		) );
 	}
 
@@ -170,7 +173,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 	 *
 	 * @since 1.0
 	 */
-	public function output_list() {
+	public function output() {
 		if ( ! $this->logs ) {
 			echo '<p><em>' . __( 'Nothing happened yet.', 'secupress' ) . '</em></p>';
 			return;
@@ -192,52 +195,13 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 				echo '<li>';
 					echo '<em class="secupress-row-header">' . number_format_i18n( $min_log ) . '. ' . $log->get_criticity( 'icon' ) . ' [' . $log->get_time() . '] - ' . $log->get_user() . '</em> ';
 					echo $log->get_message();
+					echo '<span class="actions">';
+						static::_delete_log_button( $timestamp );
+					echo '</span>';
 				echo "</li>\n";
 				++$min_log;
 			}
 		echo "</ul>\n";
-
-		// Button to clear logs.
-		static::_clear_logs_button();
-	}
-
-
-	/**
-	 * Print the logs list as a table.
-	 *
-	 * @since 1.0
-	 */
-	public function output_table() {
-		if ( ! $this->logs ) {
-			echo '<p><em>' . __( 'Nothing happened yet.', 'secupress' ) . '</em></p>';
-			return;
-		}
-
-		// Number of logs.
-		$this->_logs_number();
-		// Pagination.
-		$this->_pagination();
-		// Buttons to reorder the logs.
-		$this->_order_links();
-
-		// The list.
-		echo '<table class="wp-list-table widefat secupress-logs">';
-			echo '<thead><tr><th scope="col" class="secupress-log-criticity">' . __( 'Criticity', 'secupress' ) . '</th><th scope="col" class="secupress-log-time">' . __( 'Time', 'secupress' ) . '</th><th scope="col" class="secupress-log-user">' . __( 'User', 'secupress' ) . '</th><th scope="col" class="secupress-log-message">' . __( 'Log message', 'secupress' ) .  '</th></tr></thead>';
-			echo '<tfoot><tr><th scope="col" class="secupress-log-criticity">' . __( 'Criticity', 'secupress' ) . '</th><th scope="col" class="secupress-log-time">' . __( 'Time', 'secupress' ) . '</th><th scope="col" class="secupress-log-user">' . __( 'User', 'secupress' ) . '</th><th scope="col" class="secupress-log-message">' . __( 'Log message', 'secupress' ) .  '</th></tr></tfoot>';
-
-			$class = ' class="alternate"';
-			foreach ( $this->logs as $timestamp => $log ) {
-				$class = $class ? '' : ' class="alternate"';
-				$log   = new SecuPress_Log( $timestamp, $log );
-
-				echo '<tr' . $class . '>';
-					echo '<td>' . $log->get_criticity() . '</td>';
-					echo '<td>' . $log->get_time() . '</td>';
-					echo '<td>' . $log->get_user() . '</td>';
-					echo '<td>' . $log->get_message() . '</td>';
-				echo '</tr>';
-			}
-		echo '</table>';
 
 		// Button to clear logs.
 		static::_clear_logs_button();
@@ -256,7 +220,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 			printf(
 				/* translators: %s is a number */
 				_n( '%s Log', '%s Logs', $this->count, 'secupress' ),
-				number_format_i18n( $this->count )
+				'<span class="logs-count">' . number_format_i18n( $this->count ) . '</span>'
 			);
 		echo "</p>\n";
 	}
@@ -347,16 +311,32 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 
 
 	/**
+	 * Print a "Delete log" link.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $timestamp The log timestamp (with the #).
+	 */
+	protected static function _delete_log_button( $timestamp ) {
+		$href = urlencode( secupress_admin_url( 'modules', 'logs' ) );
+		$href = admin_url( 'admin-post.php?action=secupress_delete-log&log=' . urlencode( $timestamp ) . '&_wp_http_referer=' . $href );
+		$href = wp_nonce_url( $href, 'secupress-delete-log' );
+
+		echo '<a class="secupress-delete-log" href="' . $href . '">' . __( 'Delete this Log', 'secupress' ) . "</a> <span class=\"spinner secupress-inline-spinner\"></span>\n";
+	}
+
+
+	/**
 	 * Print a "Empty logs" button.
 	 *
 	 * @since 1.0
 	 */
 	protected static function _clear_logs_button() {
 		$href = urlencode( secupress_admin_url( 'modules', 'logs' ) );
-		$href = admin_url( 'admin-post.php?action=secupress_empty-logs&_wp_http_referer=' . $href );
-		$href = wp_nonce_url( $href, 'secupress-empty-logs' );
+		$href = admin_url( 'admin-post.php?action=secupress_clear-logs&_wp_http_referer=' . $href );
+		$href = wp_nonce_url( $href, 'secupress-clear-logs' );
 
-		echo '<a class="button secupress-clear-logs" href="' . $href . '">' . __( 'Clear Logs', 'secupress' ) . "</a> <span class=\"spinner\"></span>\n";
+		echo '<a class="button secupress-clear-logs" href="' . $href . '">' . __( 'Clear Logs', 'secupress' ) . "</a> <span class=\"spinner secupress-inline-spinner\"></span>\n";
 	}
 
 

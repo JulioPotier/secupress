@@ -140,6 +140,36 @@ class SecuPress_Logs extends SecuPress_Singleton {
 
 
 	/**
+	 * Delete one saved log.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $timestamp The log timestamp (with the #).
+	 *
+	 * @return (bool) True, if succeed. False, if failure.
+	 */
+	public static function delete_saved_log( $timestamp ) {
+		if ( ! $timestamp ) {
+			return false;
+		}
+
+		$logs = static::get_saved_logs();
+
+		if ( ! isset( $logs[ $timestamp ] ) ) {
+			return false;
+		}
+
+		unset( $logs[ $timestamp ] );
+
+		if ( empty( $logs ) ) {
+			return static::delete_saved_logs();
+		}
+
+		return update_site_option( static::OPTION_NAME, $logs );
+	}
+
+
+	/**
 	 * Get the max number of stored logs.
 	 *
 	 * @since 1.0
@@ -246,8 +276,13 @@ class SecuPress_Logs extends SecuPress_Singleton {
 
 
 		// Empty logs list.
-		add_action( 'wp_ajax_secupress_empty-logs',    array( __CLASS__, '_ajax_empty_logs' ) );
-		add_action( 'admin_post_secupress_empty-logs', array( __CLASS__, '_admin_empty_logs' ) );
+		add_action( 'wp_ajax_secupress_clear-logs',    array( __CLASS__, '_ajax_clear_logs' ) );
+		add_action( 'admin_post_secupress_clear-logs', array( __CLASS__, '_admin_clear_logs' ) );
+
+
+		// Delete a log from the list.
+		add_action( 'wp_ajax_secupress_delete-log',    array( __CLASS__, '_ajax_delete_log' ) );
+		add_action( 'admin_post_secupress_delete-log', array( __CLASS__, '_admin_delete_log' ) );
 	}
 
 
@@ -506,8 +541,8 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 *
 	 * @return (int) 1 on success, -1 on failure.
 	 */
-	public static function _ajax_empty_logs() {
-		check_ajax_referer( 'secupress-empty-logs' );
+	public static function _ajax_clear_logs() {
+		check_ajax_referer( 'secupress-clear-logs' );
 
 		if ( ! current_user_can( secupress_get_capability() ) ) {
 			wp_die( -1 );
@@ -524,8 +559,8 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 *
 	 * @since 1.0
 	 */
-	public static function _admin_empty_logs() {
-		check_admin_referer( 'secupress-empty-logs' );
+	public static function _admin_clear_logs() {
+		check_admin_referer( 'secupress-clear-logs' );
 
 		if ( ! current_user_can( secupress_get_capability() ) ) {
 			wp_nonce_ays( '' );
@@ -534,6 +569,64 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		static::delete_saved_logs();
 
 		add_settings_error( 'general', 'logs_cleared', __( 'Logs cleared.', 'secupress' ), 'updated' );
+		set_transient( 'settings_errors', get_settings_errors(), 30 );
+
+		$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
+		wp_redirect( $goback );
+		die();
+	}
+
+
+	/**
+	 * Ajax callback that allows to delete a log.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (int) 1 on success, -1 on failure.
+	 */
+	public static function _ajax_delete_log() {
+		check_ajax_referer( 'secupress-delete-log' );
+
+		if ( empty( $_GET['log'] ) ) {
+			wp_send_json_error();
+		}
+
+		if ( ! current_user_can( secupress_get_capability() ) ) {
+			wp_send_json_error();
+		}
+
+		if ( ! static::delete_saved_log( $_GET['log'] ) ) {
+			wp_send_json_error();
+		}
+
+		$count = static::get_saved_logs();
+		$count = $count ? number_format_i18n( count( $count ) ) : 0;
+
+		wp_send_json_success( $count );
+	}
+
+
+	/**
+	 * Admin post callback that allows to delete a log.
+	 *
+	 * @since 1.0
+	 */
+	public static function _admin_delete_log() {
+		check_admin_referer( 'secupress-delete-log' );
+
+		if ( empty( $_GET['log'] ) ) {
+			wp_nonce_ays( '' );
+		}
+
+		if ( ! current_user_can( secupress_get_capability() ) ) {
+			wp_nonce_ays( '' );
+		}
+
+		if ( ! static::delete_saved_log( $_GET['log'] ) ) {
+			wp_nonce_ays( '' );
+		}
+
+		add_settings_error( 'general', 'log_deleted', __( 'Log deleted.', 'secupress' ), 'updated' );
 		set_transient( 'settings_errors', get_settings_errors(), 30 );
 
 		$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
