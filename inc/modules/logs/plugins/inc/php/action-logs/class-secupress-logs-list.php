@@ -158,6 +158,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 			'clearConfirmText' => __( 'Do you really want to delete all your Action Logs?', 'secupress' ),
 			'clearingText'     => __( 'Clearing Logs...', 'secupress' ),
 			'clearedText'      => __( 'Logs cleared', 'secupress' ),
+			'expandCodeText'   => __( 'Expand or collapse code block', 'secupress' ),
 		) );
 	}
 

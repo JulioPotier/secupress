@@ -373,6 +373,14 @@ function secupressIsEscapeKey( e ) {
 		} );
 	} );
 
+	// Expand <pre> tags.
+	$( ".secupress-code-chunk" )
+		.prepend( '<button type="button" class="no-button secupress-expand-code"><span class="dashicons-before dashicons-visibility" aria-hidden="true"></span><span class="dashicons-before dashicons-hidden" aria-hidden="true"></span><span class="screen-reader-text">' + w.l10nAlogs.expandCodeText + '</span></button>' )
+		.children( ".secupress-expand-code" )
+		.on( "click", function() {
+			$( this ).parent().toggleClass( "secupress-code-chunk" );
+		} );
+
 } )(jQuery, document, window);
 
 

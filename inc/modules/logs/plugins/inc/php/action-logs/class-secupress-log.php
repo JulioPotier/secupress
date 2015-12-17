@@ -617,9 +617,17 @@ class SecuPress_Log {
 			} elseif ( '' === $data ) {
 				$this->data[ $key ] = '<em>[' . __( 'empty string', 'secupress' ) . ']</em>';
 			} elseif ( is_scalar( $data ) ) {
-				$this->data[ $key ] = esc_html( $data );
+				$count = substr_count( $data, "\n" );
+
+				if ( $count || strlen( $data ) > 60 ) {
+					$this->data[ $key ] = '<pre' . ( $count > 4 ? ' class="secupress-code-chunk"' : '' ) . '>' . esc_html( $data ) . '</pre>';
+				} else {
+					$this->data[ $key ] = '<code>' . esc_html( $data ) . '</code>';
+				}
 			} else {
-				$this->data[ $key ] = esc_html( print_r( $data, true ) );
+				$data  = print_r( $data, true );
+				$count = substr_count( $data, "\n" );
+				$this->data[ $key ] = '<pre' . ( $count > 4 ? ' class="secupress-code-chunk"' : '' ) . '>' . esc_html( $data ) . '</pre>';
 			}
 		}
 
@@ -637,27 +645,27 @@ class SecuPress_Log {
 		if ( 'active_plugins' === $this->code ) {
 			if ( 'add' === $this->subtype ) {
 
-				$this->message = __( 'Plugin(s) activated: <strong>%1$s</strong>.', 'secupress' );
+				$this->message = __( 'Plugin(s) activated: %1$s.', 'secupress' );
 
 			} elseif ( ! empty( $this->data['activated'] ) && ! empty( $this->data['deactivated'] ) ) {
 
-				$this->message = __( 'Plugin(s) activated: <strong>%1$s</strong>. Plugin(s) deactivated: <strong>%2$s</strong>.', 'secupress' );
+				$this->message = __( 'Plugin(s) activated: %1$s. Plugin(s) deactivated: %2$s.', 'secupress' );
 
 			} elseif ( ! empty( $this->data['activated'] ) ) {
 
-				$this->message = __( 'Plugin(s) activated: <strong>%1$s</strong>.', 'secupress' );
+				$this->message = __( 'Plugin(s) activated: %1$s.', 'secupress' );
 
 			} elseif ( ! empty( $this->data['deactivated'] ) ) {
 
-				$this->message = __( 'Plugin(s) deactivated: <strong>%2$s</strong>.', 'secupress' );
+				$this->message = __( 'Plugin(s) deactivated: %2$s.', 'secupress' );
 			}
 			return;
 		}
 
 		if ( 'add' === $this->subtype ) {
-			$this->message = __( 'Option <code>%1$s</code> created with the following value: <code>%2$s</code>.', 'secupress' );
+			$this->message = __( 'Option %1$s created with the following value: %2$s.', 'secupress' );
 		} else {
-			$this->message = __( 'Option <code>%1$s</code> updated from the value <code>%3$s</code> to <code>%2$s</code>.', 'secupress' );
+			$this->message = __( 'Option %1$s updated from the value %3$s to %2$s.', 'secupress' );
 		}
 	}
 
@@ -671,27 +679,27 @@ class SecuPress_Log {
 		if ( 'active_sitewide_plugins' === $this->code ) {
 			if ( 'add' === $this->subtype ) {
 
-				$this->message = __( 'Plugin(s) network activated: <strong>%1$s</strong>.', 'secupress' );
+				$this->message = __( 'Plugin(s) network activated: %1$s.', 'secupress' );
 
 			} elseif ( ! empty( $this->data['activated'] ) && ! empty( $this->data['deactivated'] ) ) {
 
-				$this->message = __( 'Plugin(s) network activated: <strong>%1$s</strong>. Plugin(s) network deactivated: <strong>%2$s</strong>.', 'secupress' );
+				$this->message = __( 'Plugin(s) network activated: %1$s. Plugin(s) network deactivated: %2$s.', 'secupress' );
 
 			} elseif ( ! empty( $this->data['activated'] ) ) {
 
-				$this->message = __( 'Plugin(s) network activated: <strong>%1$s</strong>.', 'secupress' );
+				$this->message = __( 'Plugin(s) network activated: %1$s.', 'secupress' );
 
 			} elseif ( ! empty( $this->data['deactivated'] ) ) {
 
-				$this->message = __( 'Plugin(s) network deactivated: <strong>%2$s</strong>.', 'secupress' );
+				$this->message = __( 'Plugin(s) network deactivated: %2$s.', 'secupress' );
 			}
 			return;
 		}
 
 		if ( 'add' === $this->subtype ) {
-			$this->message = __( 'Network option <code>%1$s</code> created with the following value: <code>%2$s</code>.', 'secupress' );
+			$this->message = __( 'Network option %1$s created with the following value: %2$s.', 'secupress' );
 		} else {
-			$this->message = __( 'Network option <code>%1$s</code> updated from the value <code>%3$s</code> to <code>%2$s</code>.', 'secupress' );
+			$this->message = __( 'Network option %1$s updated from the value %3$s to %2$s', 'secupress' );
 		}
 	}
 
@@ -703,7 +711,7 @@ class SecuPress_Log {
 	 */
 	protected function _set_filter_message() {
 		$messages = array(
-			'wpmu_validate_user_signup' => __( 'New user added (or not) using the following data: <pre>%s</pre>', 'secupress' ),
+			'wpmu_validate_user_signup' => __( 'New user added (or not) using the following data: %s', 'secupress' ),
 		);
 
 		$this->message = isset( $messages[ $this->code ] ) ? $messages[ $this->code ] : '';
@@ -718,18 +726,18 @@ class SecuPress_Log {
 	protected function _set_action_message() {
 		$messages = array(
 			'secupress.before.die' => str_replace( '%PLUGIN-NAME%', '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>',
-				__( '%PLUGIN-NAME% prevented a request at <code>%1$s</code> with the following message: <pre>%2$s</pre> Here is the server configuration at the moment: <pre>%3$s</pre>', 'secupress' )
+				__( '%PLUGIN-NAME% prevented a request at %1$s with the following message: %2$s Here is the server configuration at the moment: %3$s', 'secupress' )
 			),
-			'switch_theme'      => __( 'Theme activated: <strong>%s</strong>.', 'secupress' ),
-			'wp_login'          => __( 'Administrator <strong>%s</strong> logged in.', 'secupress' ),
-			'delete_user'       => __( 'User deleted: <strong>%1$s</strong>. Post assigned to: <strong>%2$s</strong>.', 'secupress' ),
-			'profile_update'    => __( '<strong>%1$s</strong>\'s user data changed from: <pre>%2$s</pre> To: <pre>%3$s</pre>', 'secupress' ),
-			'user_register'     => __( 'New user <strong>%s</strong> created.', 'secupress' ),
-			'added_user_meta'   => __( 'User meta <code>%2$s</code> added to <strong>%1$s</strong> with the value <code>%3$s</code>.', 'secupress' ),
-			'updated_user_meta' => __( 'User meta <code>%2$s</code> updated for <strong>%1$s</strong> with the value <code>%3$s</code>.', 'secupress' ),
-			'updated_user_meta' => __( 'User meta <code>%2$s</code> deleted for <strong>%1$s</strong>. Previous value was <code>%3$s</code>.', 'secupress' ),
-			'wpmu_new_blog'     => __( 'Blog <strong>%1$s</strong> created with <strong>%2$s</strong> as Administrator.', 'secupress' ),
-			'delete_blog'       => __( 'Blog <strong>%s</strong> deleted.', 'secupress' ),
+			'switch_theme'      => __( 'Theme activated: %s.', 'secupress' ),
+			'wp_login'          => __( 'Administrator %s logged in.', 'secupress' ),
+			'delete_user'       => __( 'User deleted: %1$s. Post assigned to: %2$s.', 'secupress' ),
+			'profile_update'    => __( '%1$s\'s user data changed from: %2$s To: %3$s', 'secupress' ),
+			'user_register'     => __( 'New user %s created.', 'secupress' ),
+			'added_user_meta'   => __( 'User meta %2$s added to %1$s with the value %3$s', 'secupress' ),
+			'updated_user_meta' => __( 'User meta %2$s updated for %1$s with the value %3$s', 'secupress' ),
+			'updated_user_meta' => __( 'User meta %2$s deleted for %1$s. Previous value was: %3$s', 'secupress' ),
+			'wpmu_new_blog'     => __( 'Blog %1$s created with %2$s as Administrator.', 'secupress' ),
+			'delete_blog'       => __( 'Blog %s deleted.', 'secupress' ),
 		);
 
 		$this->message = isset( $messages[ $this->code ] ) ? $messages[ $this->code ] : '';

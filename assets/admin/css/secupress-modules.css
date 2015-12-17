@@ -167,3 +167,20 @@ label {
 	display: inline-block;
 	visibility: visible;
 }
+.js .secupress-code-chunk {
+	max-height: 6em;
+	overflow-y: hidden;
+}
+.secupress-expand-code,
+.secupress-expand-code:hover,
+.secupress-expand-code:focus {
+	float: right;
+	margin-top: -3px;
+}
+.secupress-expand-code .dashicons-visibility,
+.secupress-code-chunk .secupress-expand-code .dashicons-hidden {
+	display: none;
+}
+.secupress-code-chunk .secupress-expand-code .dashicons-visibility {
+	display: inline-block;
+}
