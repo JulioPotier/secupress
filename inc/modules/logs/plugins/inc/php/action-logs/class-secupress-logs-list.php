@@ -84,7 +84,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 		SecuPress_Logs::_maybe_include_log_class();
 
 		// Stored logs.
-		$this->logs  = SecuPress_Logs::get_saved_logs();
+		$this->logs  = SecuPress_Logs::get_logs();
 		$this->logs  = is_array( $this->logs ) ? $this->logs : array();
 
 		// Number of logs.

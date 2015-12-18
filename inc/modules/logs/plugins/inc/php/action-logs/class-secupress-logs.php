@@ -124,7 +124,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 *
 	 * @return (array)
 	 */
-	public static function get_saved_logs() {
+	public static function get_logs() {
 		return get_site_option( static::OPTION_NAME );
 	}
 
@@ -136,7 +136,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 *
 	 * @return (bool) True, if succeed. False, if failure.
 	 */
-	public static function delete_saved_logs() {
+	public static function delete_logs() {
 		return delete_site_option( static::OPTION_NAME );
 	}
 
@@ -150,12 +150,12 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 *
 	 * @return (bool) True, if succeed. False, if failure.
 	 */
-	public static function delete_saved_log( $timestamp ) {
+	public static function delete_log( $timestamp ) {
 		if ( ! $timestamp ) {
 			return false;
 		}
 
-		$logs = static::get_saved_logs();
+		$logs = static::get_logs();
 
 		if ( ! isset( $logs[ $timestamp ] ) ) {
 			return false;
@@ -164,7 +164,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		unset( $logs[ $timestamp ] );
 
 		if ( empty( $logs ) ) {
-			return static::delete_saved_logs();
+			return static::delete_logs();
 		}
 
 		return update_site_option( static::OPTION_NAME, $logs );
@@ -513,7 +513,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	public function _save_logs() {
-		$logs  = static::get_saved_logs();
+		$logs  = static::get_logs();
 		$limit = static::get_logs_limit();
 
 		if ( false === $logs ) {
@@ -554,7 +554,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			wp_die( -1 );
 		}
 
-		static::delete_saved_logs();
+		static::delete_logs();
 
 		wp_die( 1 );
 	}
@@ -572,7 +572,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			wp_nonce_ays( '' );
 		}
 
-		static::delete_saved_logs();
+		static::delete_logs();
 
 		add_settings_error( 'general', 'logs_cleared', __( 'Logs cleared.', 'secupress' ), 'updated' );
 		set_transient( 'settings_errors', get_settings_errors(), 30 );
@@ -600,7 +600,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		}
 
 		$filename = SECUPRESS_PLUGIN_SLUG . '-action-logs.txt';
-		$logs     = static::get_saved_logs();
+		$logs     = static::get_logs();
 
 		set_time_limit( 0 );
 
@@ -645,11 +645,11 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			wp_send_json_error();
 		}
 
-		if ( ! static::delete_saved_log( $_GET['log'] ) ) {
+		if ( ! static::delete_log( $_GET['log'] ) ) {
 			wp_send_json_error();
 		}
 
-		$count = static::get_saved_logs();
+		$count = static::get_logs();
 		$count = $count ? number_format_i18n( count( $count ) ) : 0;
 
 		wp_send_json_success( $count );
@@ -672,7 +672,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			wp_nonce_ays( '' );
 		}
 
-		if ( ! static::delete_saved_log( $_GET['log'] ) ) {
+		if ( ! static::delete_log( $_GET['log'] ) ) {
 			wp_nonce_ays( '' );
 		}
 

@@ -32,4 +32,4 @@ if ( ! did_action( 'secupress_plugins_loaded' ) ) {
  *
  * @param (array) $args Some parameters.
  */
-add_action( 'secupress_deactivate_plugin_action-logs', array( 'SecuPress_Logs', 'delete_saved_logs' ) );
+add_action( 'secupress_deactivate_plugin_action-logs', array( 'SecuPress_Logs', 'delete_logs' ) );
