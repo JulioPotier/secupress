@@ -129,18 +129,9 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 				krsort( $this->logs );
 			} elseif ( 'criticity' === $this->orderby ) {
 				$this->logs = array_map( array( __CLASS__, '_set_criticity_callback' ), $this->logs );
-
-				if ( 'ASC' === $this->order ) {
-					uasort( $this->logs, array( __CLASS__, '_order_by_criticity_asc_callback' ) );
-				} else {
-					uasort( $this->logs, array( __CLASS__, '_order_by_criticity_desc_callback' ) );
-				}
-			} elseif ( 'user' === $this->orderby ) {
-				if ( 'ASC' === $this->order ) {
-					uasort( $this->logs, array( __CLASS__, '_order_by_user_asc_callback' ) );
-				} else {
-					uasort( $this->logs, array( __CLASS__, '_order_by_user_desc_callback' ) );
-				}
+				uasort( $this->logs, array( $this, '_order_by_criticity_callback' ) );
+			} elseif ( 'date' !== $this->orderby ) {
+				uasort( $this->logs, array( $this, '_order_callback' ) );
 			}
 
 			// Logs offset.
@@ -155,7 +146,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 		wp_localize_script( 'secupress-modules-js', 'l10nAlogs', array(
 			'noLogsText'        => __( 'Nothing happened yet.', 'secupress' ),
 			'errorText'         => __( 'Error', 'secupress' ),
-			'clearConfirmText'  => __( 'Do you really want to delete all your Action Logs?', 'secupress' ),
+			'clearConfirmText'  => __( 'Do you really want to delete all these Logs?', 'secupress' ),
 			'clearingText'      => __( 'Clearing Logs...', 'secupress' ),
 			'clearedText'       => __( 'Logs cleared', 'secupress' ),
 			'deleteConfirmText' => __( 'Do you really want to delete this Log?', 'secupress' ),
@@ -422,7 +413,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 
 
 	/**
-	 * Callback used with `uasort()` to order the logs by ascending criticity.
+	 * Callback used with `uasort()` to order the logs by criticity.
 	 *
 	 * @since 1.0
 	 *
@@ -431,7 +422,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 	 *
 	 * @return (int)
 	 */
-	public static function _order_by_criticity_asc_callback( $log_a, $log_b ) {
+	public function _order_by_criticity_callback( $log_a, $log_b ) {
 		$orders = array(
 			'high'   => 3,
 			'normal' => 2,
@@ -441,14 +432,14 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 			return 0;
 		}
 		if ( $orders[ $log_a['critic'] ] > $orders[ $log_b['critic'] ] ) {
-			return 1;
+			return 'ASC' === $this->order ? 1 : -1;
 		}
-		return -1;
+		return 'ASC' === $this->order ? -1 : 1;
 	}
 
 
 	/**
-	 * Callback used with `uasort()` to order the logs by descending criticity.
+	 * Callback used with `uasort()` to order the logs.
 	 *
 	 * @since 1.0
 	 *
@@ -457,49 +448,11 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 	 *
 	 * @return (int)
 	 */
-	public static function _order_by_criticity_desc_callback( $log_a, $log_b ) {
-		$orders = array(
-			'high'   => 3,
-			'normal' => 2,
-			'low'    => 1,
-		);
-		if ( $orders[ $log_a['critic'] ] === $orders[ $log_b['critic'] ] ) {
-			return 0;
+	public function _order_callback( $log_a, $log_b ) {
+		if ( 'ASC' === $this->order ) {
+			return strcasecmp( $log_a[ $this->orderby ], $log_b[ $this->orderby ] );
 		}
-		if ( $orders[ $log_a['critic'] ] > $orders[ $log_b['critic'] ] ) {
-			return -1;
-		}
-		return 1;
-	}
-
-
-	/**
-	 * Callback used with `uasort()` to order the logs by ascending user.
-	 *
-	 * @since 1.0
-	 *
-	 * @param (array) $log_a The first log.
-	 * @param (array) $log_b The second log.
-	 *
-	 * @return (int)
-	 */
-	public static function _order_by_user_asc_callback( $log_a, $log_b ) {
-		return strcasecmp( $log_a['user'], $log_b['user'] );
-	}
-
-
-	/**
-	 * Callback used with `uasort()` to order the logs by descending user.
-	 *
-	 * @since 1.0
-	 *
-	 * @param (array) $log_a The first log.
-	 * @param (array) $log_b The second log.
-	 *
-	 * @return (int)
-	 */
-	public static function _order_by_user_desc_callback( $log_a, $log_b ) {
-		return strcasecmp( $log_b['user'], $log_a['user'] );
+		return strcasecmp( $log_b[ $this->orderby ], $log_a[ $this->orderby ] );
 	}
 
 }
