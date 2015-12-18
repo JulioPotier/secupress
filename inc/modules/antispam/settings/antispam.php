@@ -27,24 +27,32 @@ $this->add_field(
 	)
 );
 
-$field_name      = $this->get_field_name( 'trust-old-commenters' );
+$field_name           = $this->get_field_name( 'mark-as' );
+$options              = array( 'deletenow' => __( '<strong>Delete instantly</strong> any spam', 'secupress' ) );
+if ( defined( 'EMPTY_TRASH_DAYS' ) && is_numeric( EMPTY_TRASH_DAYS ) && EMPTY_TRASH_DAYS > 0 ) {
+	$options['markspam'] = sprintf( __( '<strong>Delete</strong> spam after %s days', 'secupress' ), EMPTY_TRASH_DAYS );
+} else {
+	$options['markspam']  = __( '<strong>Only mark</strong> as spam, i will delete manually.', 'secupress' );
+}
 $this->add_field(
-	__( 'Trust Old Commenters', 'secupress' ),
+	__( 'Handling Spam', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description' => __( '', 'secupress' ),
+		'description' => __( 'Usually WordPress keeps spam in the database, using the deletion setting, you will free some database storage usage.', 'secupress' ),
 	),
 	array(
 		'depends'     => $main_field_name,
 		array(
-			'type'         => 'checkbox',
+			'type'         => 'radio',
+			'options'      => $options,
+			'default'      => 'deletenow',
 			'name'         => $field_name,
-			'label'        => __( 'Yes, auto approve already approved commenters', 'secupress' ),
 			'label_for'    => $field_name,
-			'label_screen' => __( 'Yes, auto approve already approved commenters', 'secupress' ),
+			'label_screen' => __( 'How to mark spam', 'secupress' ),
 		),
 	)
 );
+unset( $options );
 
 $field_name = $this->get_field_name( 'block-shortcodes' );
 $this->add_field(
@@ -85,64 +93,17 @@ $this->add_field(
 			'label'        => __( 'Yes, i want to use a better blacklist comments to detect spams', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, i want to use a better blacklist comments to detect spams', 'secupress' ),
+			'readonly'     => ! is_readable( SECUPRESS_INC_PATH . 'data/spam-blacklist.data' ),
 		),
 		array(
 			'type'         => 'helper_description',
 			'name'         => $field_name,
 			'description'  => __( 'This will add more than 20,000 words in different languages.', 'secupress' ),
 		),
-	)
-);
-
-$field_name      = $this->get_field_name( 'remove_url' );
-$this->add_field(
-	__( 'Comment Author Url behavior', 'secupress' ),
-	array(
-		'name'        => $field_name,
-		'description' => __( 'Some bots or people will just comment your blog to get a free and easy backling using the comment author url field.', 'secupress' ),
-	),
-	array(
-		'depends'     => $main_field_name,
 		array(
-			'type'         => 'checkbox',
+			'type'         => 'helper_warning',
 			'name'         => $field_name,
-			'label'        => __( 'Yes, remove comment author url if the comment is not constructive enough.', 'secupress' ),
-			'label_for'    => $field_name,
-			'label_screen' => __( 'Yes, remove comment author url if the comment is not constructive enough.', 'secupress' ),
-		),
-		array(
-			'type'         => 'helper_description',
-			'name'         => $field_name,
-			'description'  => __( 'Words that contains less than 4 characters are removed, then a blacklist is applied on the comment. At the end, if there is less than 5 words, the URL is removed.', 'secupress' ),
-		),
-	)
-);
-
-$field_name      = $this->get_field_name( 'mark-as' );
-$this->add_field(
-	__( 'Handling Spam', 'secupress' ),
-	array(
-		'name'        => $field_name,
-		'description' => __( 'Usually WordPress keeps spam in the database, using the deletion setting, you will free some database storage usage.', 'secupress' ),
-	),
-	array(
-		'depends'     => $main_field_name,
-		array(
-			'type'         => 'radios',
-			'options'      => array(
-									'deletenow'  => __( '<strong>Delete</strong> instantly any spam', 'secupress' ),
-									'deletedays' => __( '<strong>Delete</strong> spam after 7 days', 'secupress' ),
-									'markspam'   => __( '<strong>Only mark</strong> as spam', 'secupress' )
-								),
-			'default'      => 'deletenow',
-			'name'         => $field_name,
-			'label_for'    => $field_name,
-			'label_screen' => __( 'How to mark spam', 'secupress' ),
-		),
-		array(
-			'type'         => 'helper_help',
-			'name'         => $field_name,
-			'description'  => __( '"Mark as spam" will keep data in the database.', 'secupress' ),
+			'description'  => ! is_readable( SECUPRESS_INC_PATH . 'data/spam-blacklist.data' ) ? sprintf( __( 'As long as the following file is not readable, this feature can\'t be used: %s', 'secupress' ), '<code>' . SECUPRESS_INC_PATH . 'data/spam-blacklist.data</code>' ) : null,
 		),
 	)
 );
@@ -157,10 +118,9 @@ $this->add_field(
 	array(
 		'depends'     => $main_field_name,
 		array(
-			'type'         => 'radios',
+			'type'         => 'radio',
 			'options'      => array(
 									'mark-ptb' => __( '<strong>Mark</strong> Pings & Trackbacks as spam like comments', 'secupress' ),
-									'dontmark-ptb'  => __( '<strong>Never mark</strong> Pings & Trackbacks as spam', 'secupress' ),
 									'forbid-ptb'   => __( '<strong>Fordib</strong> the usage of Pings & Trackbacks on this website', 'secupress' )
 								),
 			'default'      => 'mark-ptb',
@@ -171,6 +131,7 @@ $this->add_field(
 		array(
 			'type'         => 'helper_description',
 			'name'         => $field_name,
+			'description'  => __( 'Forbid will also hide all pingbacks & trackbacks from your post comments.', 'secupress' ),
 		),
 	)
 );

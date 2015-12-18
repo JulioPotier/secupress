@@ -15,21 +15,20 @@ function __secupress_antispam_settings_callback( $settings ) {
 	$modulenow = 'antispam';
 	$settings = $settings ? $settings : array();
 
-	// double-auth
+	// Remove Comment Feature
 	if ( isset( $settings['antispam_antispam'] ) && in_array( 'remove-comment-feature', $settings['antispam_antispam'] ) ) {
 		secupress_activate_submodule( $modulenow, 'remove-comment-feature' );
 	} else {
 		secupress_deactivate_submodule( $modulenow, 'remove-comment-feature' );
 	}
 
+	// Fight Spam
+	if ( isset( $settings['antispam_antispam'] ) && in_array( 'fightspam', $settings['antispam_antispam'] ) ) {
+		secupress_activate_submodule( $modulenow, 'fightspam' );
+	} else {
+		secupress_deactivate_submodule( $modulenow, 'fightspam' );
+	}
 
-	// unset( $settings[''] ); // not actual option
-
-	// if ( isset( $settings[''] ) ) {
-	// 	secupress_activate_submodule( $modulenow, '' );
-	// } else {
-	// 	secupress_deactivate_submodule( $modulenow, '' );
-	// }
 
 	return $settings;
 }
