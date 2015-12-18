@@ -37,7 +37,7 @@ if ( class_exists( 'SecuPress_Logs' ) ) :
 
 SecuPress_Logs::_maybe_include_list_class();
 
-$field_name = $this->get_field_name( 'wp-logs' );
+$field_name = $this->get_field_name( 'logs' );
 
 $this->add_field(
 	__( 'WordPress Logs', 'secupress' ),
