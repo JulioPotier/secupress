@@ -3,7 +3,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
 
 /**
- * Logs list class.
+ * General Logs list class.
  *
  * @package SecuPress
  * @since 1.0
@@ -13,18 +13,29 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 
 	const VERSION = '1.0';
 	/**
-	 * Parameters in page URL.
+	 * Parameters in page URL: must be extended.
 	 */
 	const PAGINATION_PARAM = 'logs-page';
 	const ORDERBY_PARAM    = 'logs-orderby';
 	const ORDER_PARAM      = 'logs-order';
-
 	/**
-	 * @var The reference to the *Singleton* instance of this class.
+	 * @var The reference to the *Singleton* instance of this class: must be extended.
 	 */
 	protected static $_instance;
 	/**
-	 * @var Will store the logs.
+	 * @var Logs class name: must be extended.
+	 */
+	protected $logs_classname = 'SecuPress_Logs';
+	/**
+	 * @var Logs type: must be extended.
+	 */
+	protected $logs_type = '';
+	/**
+	 * @var Log class name.
+	 */
+	protected $log_classname = '';
+	/**
+	 * @var Will contain the logs.
 	 */
 	protected $logs = array();
 	/**
@@ -58,14 +69,13 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 	/**
 	 * @var Default order.
 	 */
-	protected static $def_orderby = 'date';
+	protected $def_orderby = 'date';
 	/**
 	 * @var Default order directions.
 	 */
-	protected static $def_orders = array(
-		'date'      => 'ASC',
-		'criticity' => 'DESC',
-		'user'      => 'ASC',
+	protected $def_orders = array(
+		'date' => 'ASC',
+		'user' => 'ASC',
 	);
 	/**
 	 * @var Page URL without page/orderby/order parameters.
@@ -81,10 +91,14 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	protected function _init() {
-		SecuPress_Logs::_maybe_include_log_class();
+		static $init_done = false;
+
+		$logs_classname      = $this->logs_classname;
+		$this->log_classname = $logs_classname::_maybe_include_log_class();
+		$this->logs_type     = $logs_classname::LOGS_TYPE;
 
 		// Stored logs.
-		$this->logs  = SecuPress_Logs::get_logs();
+		$this->logs  = $logs_classname::get_logs();
 		$this->logs  = is_array( $this->logs ) ? $this->logs : array();
 
 		// Number of logs.
@@ -110,40 +124,38 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 		// Orderby.
 		if ( ! empty( $_GET[ static::ORDERBY_PARAM ] ) ) {
 			$this->orderby = $_GET[ static::ORDERBY_PARAM ];
-			$this->orderby = isset( static::$def_orders[ $this->orderby ] ) ? $this->orderby : static::$def_orderby;
+			$this->orderby = isset( $this->def_orders[ $this->orderby ] ) ? $this->orderby : $this->def_orderby;
 		} else {
-			$this->orderby = static::$def_orderby;
+			$this->orderby = $this->def_orderby;
 		}
 
 		// Order.
 		if ( ! empty( $_GET[ static::ORDER_PARAM ] ) ) {
 			$this->order   = strtoupper( $_GET[ static::ORDER_PARAM ] );
-			$this->order   = 'DESC' === $this->order || 'ASC' === $this->order ? $this->order : static::$def_orders[ $this->orderby ];
+			$this->order   = 'DESC' === $this->order || 'ASC' === $this->order ? $this->order : $this->def_orders[ $this->orderby ];
 		} else {
-			$this->order   = static::$def_orders[ $this->orderby ];
+			$this->order   = $this->def_orders[ $this->orderby ];
 		}
 
 		// Order logs.
 		if ( $this->logs ) {
-			if ( 'date' === $this->orderby && 'DESC' === $this->order ) {
-				krsort( $this->logs );
-			} elseif ( 'criticity' === $this->orderby ) {
-				$this->logs = array_map( array( __CLASS__, '_set_criticity_callback' ), $this->logs );
-				uasort( $this->logs, array( $this, '_order_by_criticity_callback' ) );
-			} elseif ( 'date' !== $this->orderby ) {
-				uasort( $this->logs, array( $this, '_order_callback' ) );
-			}
+			$this->_order_logs();
 
 			// Logs offset.
 			$this->offset = ( $this->page - 1 ) * $this->logs_per_page;
 			$this->logs   = array_slice( $this->logs, $this->offset, $this->logs_per_page, true );
 		}
 
+		if ( $init_done ) {
+			return;
+		}
+		$init_done = true;
+
 		// Current page URL without page/orderby/order parameters.
 		static::$page_url = esc_url( secupress_admin_url( 'modules', 'logs' ) );
 
 		// JS
-		wp_localize_script( 'secupress-modules-js', 'l10nAlogs', array(
+		wp_localize_script( 'secupress-modules-js', 'l10nLogs', array(
 			'noLogsText'        => __( 'Nothing happened yet.', 'secupress' ),
 			'errorText'         => __( 'Error', 'secupress' ),
 			'clearConfirmText'  => __( 'Do you really want to delete all these Logs?', 'secupress' ),
@@ -177,32 +189,49 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 		// Buttons to reorder the logs.
 		$this->_order_links();
 
-		$min_log = $this->offset + 1;
+		$row_number = $this->offset + 1;
+		$classname  = $this->log_classname;
 
 		// The list.
 		echo "<ul class=\"secupress-logs\">\n";
 			foreach ( $this->logs as $timestamp => $log ) {
-				$log = new SecuPress_Log( $timestamp, $log );
+				$log = new $classname( $timestamp, $log );
 				echo '<li>';
-					echo '<em class="secupress-row-header">' . number_format_i18n( $min_log ) . '. ' . $log->get_criticity( 'icon' ) . ' [' . $log->get_time() . '] - ' . $log->get_user() . '</em> ';
+					echo '<em class="secupress-row-header">';
+						$this->_log_header( $log, $row_number );
+					echo '</em> ';
 					echo $log->get_message();
 					echo '<span class="actions">';
-						static::_delete_log_button( $timestamp );
+						$this->_delete_log_button( $timestamp );
 					echo '</span>';
 				echo "</li>\n";
-				++$min_log;
+				++$row_number;
 			}
 		echo "</ul>\n";
 
 		// Button to clear logs.
-		static::_clear_logs_button();
+		$this->_clear_logs_button();
 
 		// Button to download logs.
-		static::_download_logs_button();
+		$this->_download_logs_button();
 	}
 
 
 	// Private methods =============================================================================
+
+	/**
+	 * Reorder logs depending of current orderby and order params.
+	 *
+	 * @since 1.0
+	 */
+	protected function _order_logs() {
+		if ( $this->def_orderby === $this->orderby && $this->def_orders[ $this->def_orderby ] !== $this->order ) {
+			krsort( $this->logs );
+		} elseif ( $this->def_orderby !== $this->orderby ) {
+			uasort( $this->logs, array( $this, '_order_callback' ) );
+		}
+	}
+
 
 	/**
 	 * Print the number of logs.
@@ -269,20 +298,16 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 		}
 
 		$suffix   = array(
-			'DESC'      => array( 'arrow' => ' <span class="order-arrow dashicons-before dashicons-arrow-down" aria-hidden="true"></span>', 'opposite' => 'ASC', ),
-			'ASC'       => array( 'arrow' => ' <span class="order-arrow dashicons-before dashicons-arrow-up" aria-hidden="true"></span>',   'opposite' => 'DESC', )
+			'DESC' => array( 'arrow' => ' <span class="order-arrow dashicons-before dashicons-arrow-down" aria-hidden="true"></span>', 'opposite' => 'ASC', ),
+			'ASC'  => array( 'arrow' => ' <span class="order-arrow dashicons-before dashicons-arrow-up" aria-hidden="true"></span>',   'opposite' => 'DESC', )
 		);
-		$orderbys = array(
-			'date'      => array( 'label' => __( 'Date', 'secupress' ),      'class' => '' ),
-			'criticity' => array( 'label' => __( 'Criticity', 'secupress' ), 'class' => '' ),
-			'user'      => array( 'label' => __( 'User', 'secupress' ),      'class' => '' ),
-		);
+		$orderbys = $this->_get_orderbys();
 
 		echo '<p class="logs-order">';
 
 			echo '<span class="screen-reader-text">';
 				printf(
-					/* translators: 1 is "date", "criticity" or "user" ; 2 is "ascending" or "descending". */
+					/* translators: 1 is "Date" or "User" ; 2 is "ascending" or "descending". */
 					__( 'Current order: by %1$s, %2$s.', 'secupress' ),
 					$orderbys[ $this->orderby ]['label'],
 					( 'ASC' === $this->order ? __( 'ascending', 'secupress' ) : __( 'descending', 'secupress' ) )
@@ -293,14 +318,44 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 
 			echo "<span>\n";
 				$orderbys[ $this->orderby ]['label'] .= $suffix[ $this->order ]['arrow'];
-				$orderbys[ $this->orderby ]['class'] .= ' active-filter';
+				$orderbys[ $this->orderby ]['class']  = ' active-filter';
 
 				foreach ( $orderbys as $orderby => $atts ) {
-					echo ' <a class="button' . $atts['class'] . '" href="' . static::$page_url . $this->_get_order_params( $orderby, true ) . '">' . $atts['label'] . "</a>\n";
+					echo ' <a class="button' . ( ! empty( $atts['class'] ) ? $atts['class'] : '' ) . '" href="' . static::$page_url . $this->_get_order_params( $orderby, true ) . '">' . $atts['label'] . "</a>\n";
 				}
 			echo "</span>\n";
 
 		echo "</p>\n";
+	}
+
+
+	/**
+	 * Get the parameters that can be used to order the logs.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) An array containing a label.
+	 */
+	protected function _get_orderbys() {
+		return array(
+			'date' => array( 'label' => __( 'Date', 'secupress' ) ),
+			'user' => array( 'label' => __( 'User', 'secupress' ) ),
+		);
+	}
+
+
+	/**
+	 * Get the header content used in the list.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (object) `SecuPress_Log` object.
+	 * @param (int)    Row number.
+	 *
+	 * @return (string) The header content.
+	 */
+	public function _log_header( $log, $row_number ) {
+		echo number_format_i18n( $row_number ) . '. [' . $log->get_time() . '] - ' . $log->get_user();
 	}
 
 
@@ -311,10 +366,10 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 	 *
 	 * @param (string) $timestamp The log timestamp (with the #).
 	 */
-	protected static function _delete_log_button( $timestamp ) {
+	protected function _delete_log_button( $timestamp ) {
 		$href = urlencode( secupress_admin_url( 'modules', 'logs' ) );
-		$href = admin_url( 'admin-post.php?action=secupress_delete-log&log=' . urlencode( $timestamp ) . '&_wp_http_referer=' . $href );
-		$href = wp_nonce_url( $href, 'secupress-delete-log' );
+		$href = admin_url( 'admin-post.php?action=secupress_delete-' . $this->logs_type . '-log&log=' . urlencode( $timestamp ) . '&_wp_http_referer=' . $href );
+		$href = wp_nonce_url( $href, 'secupress-delete-' . $this->logs_type . '-log' );
 
 		echo '<a class="secupress-delete-log" href="' . $href . '">' . __( 'Delete this Log', 'secupress' ) . "</a> <span class=\"spinner secupress-inline-spinner\"></span>\n";
 	}
@@ -325,10 +380,10 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 	 *
 	 * @since 1.0
 	 */
-	protected static function _clear_logs_button() {
+	protected function _clear_logs_button() {
 		$href = urlencode( secupress_admin_url( 'modules', 'logs' ) );
-		$href = admin_url( 'admin-post.php?action=secupress_clear-logs&_wp_http_referer=' . $href );
-		$href = wp_nonce_url( $href, 'secupress-clear-logs' );
+		$href = admin_url( 'admin-post.php?action=secupress_clear-' . $this->logs_type . '-logs&_wp_http_referer=' . $href );
+		$href = wp_nonce_url( $href, 'secupress-clear-' . $this->logs_type . '-logs' );
 
 		echo '<a class="button secupress-clear-logs" href="' . $href . '">' . __( 'Clear Logs', 'secupress' ) . "</a> <span class=\"spinner secupress-inline-spinner\"></span>\n";
 	}
@@ -339,9 +394,9 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 	 *
 	 * @since 1.0
 	 */
-	protected static function _download_logs_button() {
-		$href = admin_url( 'admin-post.php?action=secupress_download-logs' );
-		$href = wp_nonce_url( $href, 'secupress-download-logs' );
+	protected function _download_logs_button() {
+		$href = admin_url( 'admin-post.php?action=secupress_download-' . $this->logs_type . '-logs' );
+		$href = wp_nonce_url( $href, 'secupress-download-' . $this->logs_type . '-logs' );
 
 		echo '<a class="button secupress-download-logs" href="' . $href . '">' . __( 'Download Logs', 'secupress' ) . "</a>\n";
 	}
@@ -381,60 +436,19 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 			'ASC'  => 'desc',
 		);
 
-		if ( $orderby !== static::$def_orderby ) {
+		if ( $orderby !== $this->def_orderby ) {
 			$params .= '&amp;' . static::ORDERBY_PARAM . '=' . $orderby;
 		}
 
 		if ( $orderby === $this->orderby ) {
-			if ( $reverse_order && $this->order === static::$def_orders[ $orderby ] ) {
+			if ( $reverse_order && $this->order === $this->def_orders[ $orderby ] ) {
 				$params .= '&amp;' . static::ORDER_PARAM . '=' . $reverse[ $this->order ];
-			} elseif ( ! $reverse_order && $this->order !== static::$def_orders[ $orderby ] ) {
+			} elseif ( ! $reverse_order && $this->order !== $this->def_orders[ $orderby ] ) {
 				$params .= '&amp;' . static::ORDER_PARAM . '=' . strtolower( $this->order );
 			}
 		}
 
 		return $params;
-	}
-
-
-	/**
-	 * Callback used to set the criticity parameter in a log array.
-	 *
-	 * @since 1.0
-	 *
-	 * @param (array) $log The log.
-	 *
-	 * @return (array) The log.
-	 */
-	public static function _set_criticity_callback( $log ) {
-		$log['critic'] = SecuPress_Log::get_criticity_for( $log['type'], $log['code'] );
-		return $log;
-	}
-
-
-	/**
-	 * Callback used with `uasort()` to order the logs by criticity.
-	 *
-	 * @since 1.0
-	 *
-	 * @param (array) $log_a The first log.
-	 * @param (array) $log_b The second log.
-	 *
-	 * @return (int)
-	 */
-	public function _order_by_criticity_callback( $log_a, $log_b ) {
-		$orders = array(
-			'high'   => 3,
-			'normal' => 2,
-			'low'    => 1,
-		);
-		if ( $orders[ $log_a['critic'] ] === $orders[ $log_b['critic'] ] ) {
-			return 0;
-		}
-		if ( $orders[ $log_a['critic'] ] > $orders[ $log_b['critic'] ] ) {
-			return 'ASC' === $this->order ? 1 : -1;
-		}
-		return 'ASC' === $this->order ? -1 : 1;
 	}
 
 

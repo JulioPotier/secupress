@@ -316,14 +316,18 @@ function secupressIsEscapeKey( e ) {
 (function($, d, w, undefined) {
 	var transitionTimeout, doingAjax = false;
 
+	if ( ! w.l10nLogs ) {
+		return;
+	}
+
 	function secupressClearActionLogsDisplayError( $this ) {
 		var $parent = $this.closest( "td" );
 
 		$parent.children( ".error-message" ).remove();
-		$parent.append( "<p class=\"error-message\"><em>" + w.l10nAlogs.errorText + "</em></p>" );
+		$parent.append( "<p class=\"error-message\"><em>" + w.l10nLogs.errorText + "</em></p>" );
 
 		if ( wp.a11y && wp.a11y.speak ) {
-			wp.a11y.speak( w.l10nAlogs.errorText );
+			wp.a11y.speak( w.l10nLogs.errorText );
 		}
 
 		$this.removeClass( "disabled" ).removeAttr( "aria-disabled" );
@@ -333,10 +337,10 @@ function secupressIsEscapeKey( e ) {
 		var $parent = $this.parent( ".actions" );
 
 		$parent.prev( ".error-message" ).remove();
-		$parent.before( "<p class=\"error-message\"><em>" + w.l10nAlogs.errorText + "</em></p>" );
+		$parent.before( "<p class=\"error-message\"><em>" + w.l10nLogs.errorText + "</em></p>" );
 
 		if ( wp.a11y && wp.a11y.speak ) {
-			wp.a11y.speak( w.l10nAlogs.errorText );
+			wp.a11y.speak( w.l10nLogs.errorText );
 		}
 
 		$this.removeClass( "disabled" ).removeAttr( "aria-disabled" );
@@ -359,7 +363,7 @@ function secupressIsEscapeKey( e ) {
 			return false;
 		}
 
-		if ( ! w.confirm( w.l10nAlogs.clearConfirmText ) ) {
+		if ( ! w.confirm( w.l10nLogs.clearConfirmText ) ) {
 			return false;
 		}
 
@@ -368,16 +372,16 @@ function secupressIsEscapeKey( e ) {
 		e.preventDefault();
 
 		if ( wp.a11y && wp.a11y.speak ) {
-			wp.a11y.speak( w.l10nAlogs.clearingText );
+			wp.a11y.speak( w.l10nLogs.clearingText );
 		}
 
 		$.post( href.replace( "admin-post.php", "admin-ajax.php" ) )
 		.done( function( r ) {
 			if ( "1" === r ) {
-				$this.closest( "td" ).text( "" ).append( "<p><em>" + w.l10nAlogs.noLogsText + "</em></p>" );
+				$this.closest( "td" ).text( "" ).append( "<p><em>" + w.l10nLogs.noLogsText + "</em></p>" );
 
 				if ( wp.a11y && wp.a11y.speak ) {
-					wp.a11y.speak( w.l10nAlogs.clearedText );
+					wp.a11y.speak( w.l10nLogs.clearedText );
 				}
 			} else {
 				secupressClearActionLogsDisplayError( $this );
@@ -408,7 +412,7 @@ function secupressIsEscapeKey( e ) {
 			return false;
 		}
 
-		if ( ! w.confirm( w.l10nAlogs.deleteConfirmText ) ) {
+		if ( ! w.confirm( w.l10nLogs.deleteConfirmText ) ) {
 			return false;
 		}
 
@@ -417,7 +421,7 @@ function secupressIsEscapeKey( e ) {
 		e.preventDefault();
 
 		if ( wp.a11y && wp.a11y.speak ) {
-			wp.a11y.speak( w.l10nAlogs.deletingText );
+			wp.a11y.speak( w.l10nLogs.deletingText );
 		}
 
 		$.getJSON( href.replace( "admin-post.php", "admin-ajax.php" ) )
@@ -433,11 +437,11 @@ function secupressIsEscapeKey( e ) {
 						} );
 					} );
 				} else {
-					$this.closest( "td" ).text( "" ).append( "<p><em>" + w.l10nAlogs.noLogsText + "</em></p>" );
+					$this.closest( "td" ).text( "" ).append( "<p><em>" + w.l10nLogs.noLogsText + "</em></p>" );
 				}
 
 				if ( wp.a11y && wp.a11y.speak ) {
-					wp.a11y.speak( w.l10nAlogs.deletedText );
+					wp.a11y.speak( w.l10nLogs.deletedText );
 				}
 			} else {
 				secupressDeleteActionLogDisplayError( $this );
@@ -453,7 +457,7 @@ function secupressIsEscapeKey( e ) {
 
 	// Expand <pre> tags.
 	$( ".secupress-code-chunk" )
-		.prepend( '<button type="button" class="no-button secupress-expand-code"><span class="dashicons-before dashicons-visibility" aria-hidden="true"></span><span class="dashicons-before dashicons-hidden" aria-hidden="true"></span><span class="screen-reader-text">' + w.l10nAlogs.expandCodeText + '</span></button>' )
+		.prepend( '<button type="button" class="no-button secupress-expand-code"><span class="dashicons-before dashicons-visibility" aria-hidden="true"></span><span class="dashicons-before dashicons-hidden" aria-hidden="true"></span><span class="screen-reader-text">' + w.l10nLogs.expandCodeText + '</span></button>' )
 		.children( ".secupress-expand-code" )
 		.on( "click", function() {
 			$( this ).parent().toggleClass( "secupress-code-chunk" );

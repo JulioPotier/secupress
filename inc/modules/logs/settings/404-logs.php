@@ -34,20 +34,20 @@ $this->add_field(
 
 if ( class_exists( 'SecuPress_404_Logs' ) ) :
 
-SecuPress_404_Logs::_maybe_include_list_class();
+	SecuPress_404_Logs::_maybe_include_list_class();
 
-$field_name = $this->get_field_name( 'logs' );
+	$field_name = $this->get_field_name( 'logs' );
 
-$this->add_field(
-	__( 'WordPress 404 Pages Logs', 'secupress' ),
-	array(
-		'name'        => $field_name,
-		'field_type'  => array( SecuPress_404_Logs_List::get_instance(), 'output' ),
-		'description' => __( 'These addresses have been reached recently.', 'secupress' ),
-	),
-	array(
-		'depends'     => $main_field_name,
-	)
-);
+	$this->add_field(
+		__( 'WordPress 404 Pages Logs', 'secupress' ),
+		array(
+			'name'        => $field_name,
+			'field_type'  => array( SecuPress_404_Logs_List::get_instance(), 'output' ),
+			'description' => __( 'These addresses have been reached recently.', 'secupress' ),
+		),
+		array(
+			'depends'     => $main_field_name,
+		)
+	);
 
 endif;

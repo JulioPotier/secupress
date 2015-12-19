@@ -3,13 +3,13 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
 
 /**
- * Log class.
+ * Actions Log class.
  *
  * @package SecuPress
  * @since 1.0
  */
 
-class SecuPress_Log {
+class SecuPress_Action_Log extends SecuPress_Log {
 
 	const VERSION = '1.0';
 	/**
@@ -24,22 +24,6 @@ class SecuPress_Log {
 	 * @var (string) An identifier: option name, hook name...
 	 */
 	protected $code    = '';
-	/**
-	 * @var (string) User name + user ID, or an IP address.
-	 */
-	protected $user    = '';
-	/**
-	 * @var (string) A timestamp followed with a #. See `SecuPress_Logs::_log()`.
-	 */
-	protected $time    = 0;
-	/**
-	 * @var (array)  The log data: basically what will be used in `vsprintf()`.
-	 */
-	protected $data    = array();
-	/**
-	 * @var (string) The log message.
-	 */
-	protected $message = '';
 	/**
 	 * @var (string) The log criticity.
 	 */
@@ -113,49 +97,6 @@ class SecuPress_Log {
 		}
 
 		return $args['data'];
-	}
-
-
-	/**
-	 * Get the log formated date based on its timestamp.
-	 *
-	 * @since 1.0
-	 *
-	 * @param (string) $format See http://de2.php.net/manual/en/function.date.php
-	 *
-	 * @return (string|int) The formated date if a format is provided, the timestamp integer otherwise.
-	 */
-	public function get_time( $format = 'Y-m-d H:i:s' ) {
-		static $gmt_offset;
-		if ( ! isset( $gmt_offset ) ) {
-			$gmt_offset = get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;
-		}
-		$timestamp = (int) substr( $this->time, 0, strpos( $this->time, '#' ) );
-		return $format ? date_i18n( $format, $timestamp + $gmt_offset ) : $timestamp;
-	}
-
-
-	/**
-	 * Get the log user.
-	 *
-	 * @since 1.0
-	 *
-	 * @return (string) User name + user ID, or an IP address.
-	 */
-	public function get_user() {
-		return esc_html( $this->user );
-	}
-
-
-	/**
-	 * Get the log message.
-	 *
-	 * @since 1.0
-	 *
-	 * @return (string) A message containing all the related data.
-	 */
-	public function get_message() {
-		return $this->message;
 	}
 
 
@@ -403,7 +344,7 @@ class SecuPress_Log {
 		if ( ! user_can( $user, 'administrator' ) ) {
 			return array();
 		}
-		$user = static::format_user_login( $user );
+		$user = static::_format_user_login( $user );
 		return compact( 'user' );
 	}
 
@@ -421,8 +362,8 @@ class SecuPress_Log {
 	 *                 - (string) The user to reassign posts and links to: the user name followed by the user ID.
 	 */
 	protected function _pre_process_action_delete_user( $id, $reassign ) {
-		$user     = static::format_user_login( $user_id );
-		$reassign = $reassign ? static::format_user_login( $reassign ) : __( 'Nobody', 'secupress' );
+		$user     = static::_format_user_login( $user_id );
+		$reassign = $reassign ? static::_format_user_login( $reassign ) : __( 'Nobody', 'secupress' );
 		return compact( 'user', 'reassign' );
 	}
 
@@ -441,7 +382,7 @@ class SecuPress_Log {
 	 *                 - (array)  The new data.
 	 */
 	protected function _pre_process_action_profile_update( $user_id, $old_user_data ) {
-		$user          = static::format_user_login( $user_id );
+		$user          = static::_format_user_login( $user_id );
 		$old_user_data = (array) $old_user_data;
 		$user_data     = (array) get_userdata( $user_id )->data;
 		$user_keys     = array_merge( $old_user_data, $user_data );
@@ -473,7 +414,7 @@ class SecuPress_Log {
 	 *                 - (string) The user name followed by the user ID.
 	 */
 	protected function _pre_process_action_user_register( $user_id ) {
-		$user = static::format_user_login( $user_id );
+		$user = static::_format_user_login( $user_id );
 		return compact( 'user' );
 	}
 
@@ -494,7 +435,7 @@ class SecuPress_Log {
 	 *                 - (mixed)  The meta value.
 	 */
 	protected function _pre_process_action_added_user_meta( $mid, $object_id, $meta_key, $meta_value ) {
-		$user = static::format_user_login( $object_id );
+		$user = static::_format_user_login( $object_id );
 		return compact( 'user', 'meta_key', 'meta_value' );
 	}
 
@@ -515,7 +456,7 @@ class SecuPress_Log {
 	 *                 - (mixed)  The meta value.
 	 */
 	protected function _pre_process_action_updated_user_meta( $meta_id, $object_id, $meta_key, $meta_value ) {
-		$user = static::format_user_login( $object_id );
+		$user = static::_format_user_login( $object_id );
 		return compact( 'user', 'meta_key', 'meta_value' );
 	}
 
@@ -536,7 +477,7 @@ class SecuPress_Log {
 	 *                 - (mixed)  The meta value.
 	 */
 	protected function _pre_process_action_deleted_user_meta( $meta_ids, $object_id, $meta_key, $meta_value ) {
-		$user = static::format_user_login( $object_id );
+		$user = static::_format_user_login( $object_id );
 		return compact( 'user', 'meta_key', 'meta_value' );
 	}
 
@@ -556,7 +497,7 @@ class SecuPress_Log {
 	protected function _pre_process_action_wpmu_new_blog( $blog_id, $user_id ) {
 		switch_to_blog( $blog_id );
 		$blog = get_option( 'blogname' ) . ' (' . $blog_id . ')';
-		$user = static::format_user_login( $user_id );
+		$user = static::_format_user_login( $user_id );
 		restore_current_blog();
 
 		return compact( 'blog', 'user' );
@@ -631,8 +572,7 @@ class SecuPress_Log {
 	 * @since 1.0
 	 */
 	protected function _set_message() {
-
-		// Get the raw message.
+		// Set the raw message.
 		switch ( $this->type ) {
 			case 'option':
 				$this->_set_option_message();
@@ -650,34 +590,7 @@ class SecuPress_Log {
 				return;
 		}
 
-		// Prepare and escape the data.
-		foreach ( $this->data as $key => $data ) {
-			if ( is_null( $data ) ) {
-				$this->data[ $key ] = '<em>[null]</em>';
-			} elseif ( true === $data ) {
-				$this->data[ $key ] = '<em>[true]</em>';
-			} elseif ( false === $data ) {
-				$this->data[ $key ] = '<em>[false]</em>';
-			} elseif ( '' === $data ) {
-				$this->data[ $key ] = '<em>[' . __( 'empty string', 'secupress' ) . ']</em>';
-			} elseif ( is_scalar( $data ) ) {
-				$count = substr_count( $data, "\n" );
-
-				// 46 seems to be a good limit for the logs module width.
-				if ( $count || strlen( $data ) >= 46 ) {
-					$this->data[ $key ] = '<pre' . ( $count > 4 ? ' class="secupress-code-chunk"' : '' ) . '>' . esc_html( $data ) . '</pre>';
-				} else {
-					$this->data[ $key ] = '<code>' . esc_html( $data ) . '</code>';
-				}
-			} else {
-				$data  = print_r( $data, true );
-				$count = substr_count( $data, "\n" );
-				$this->data[ $key ] = '<pre' . ( $count > 4 ? ' class="secupress-code-chunk"' : '' ) . '>' . esc_html( $data ) . '</pre>';
-			}
-		}
-
-		// Add the data to the message.
-		$this->message = vsprintf( $this->message, $this->data );
+		parent::_set_message();
 	}
 
 
@@ -901,23 +814,6 @@ class SecuPress_Log {
 		}
 
 		return $out;
-	}
-
-
-	/**
-	 * Get a user login followed by his ID.
-	 *
-	 * @since 1.0
-	 *
-	 * @param (int|object) A user ID or a WP_User object.
-	 *
-	 * @return (string) This user login followed by his ID.
-	 */
-	protected static function format_user_login( $user ) {
-		if ( ! is_object( $user ) ) {
-			$user = get_userdata( $user );
-		}
-		return ( $user ? $user->user_login : '[' . __( 'Unknown user', 'secupress' ) . ']' ) . ' (' . $user->ID . ')';
 	}
 
 }

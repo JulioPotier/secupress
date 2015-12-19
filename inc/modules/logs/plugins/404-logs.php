@@ -14,6 +14,10 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 if ( ! did_action( 'secupress_plugins_loaded' ) ) {
 
+	if ( ! class_exists( 'SecuPress_Logs' ) ) {
+		secupress_require_class( 'Logs' );
+	}
+
 	require_once( SECUPRESS_MODULES_PATH . 'logs/plugins/inc/php/404-logs/class-secupress-404-logs.php' );
 
 	SecuPress_404_Logs::get_instance();

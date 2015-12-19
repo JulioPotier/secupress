@@ -14,9 +14,13 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 if ( ! did_action( 'secupress_plugins_loaded' ) ) {
 
-	require_once( SECUPRESS_MODULES_PATH . 'logs/plugins/inc/php/action-logs/class-secupress-logs.php' );
+	if ( ! class_exists( 'SecuPress_Logs' ) ) {
+		secupress_require_class( 'Logs' );
+	}
 
-	SecuPress_Logs::get_instance();
+	require_once( SECUPRESS_MODULES_PATH . 'logs/plugins/inc/php/action-logs/class-secupress-action-logs.php' );
+
+	SecuPress_Action_Logs::get_instance();
 
 }
 
@@ -32,4 +36,4 @@ if ( ! did_action( 'secupress_plugins_loaded' ) ) {
  *
  * @param (array) $args Some parameters.
  */
-add_action( 'secupress_deactivate_plugin_action-logs', array( 'SecuPress_Logs', 'delete_logs' ) );
+add_action( 'secupress_deactivate_plugin_action-logs', array( 'SecuPress_Action_Logs', 'delete_logs' ) );
