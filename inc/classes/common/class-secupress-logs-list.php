@@ -209,11 +209,16 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 			}
 		echo "</ul>\n";
 
-		// Button to clear logs.
-		$this->_clear_logs_button();
+		// Pagination.
+		$this->_secondary_pagination();
 
-		// Button to download logs.
-		$this->_download_logs_button();
+		echo '<p>';
+			// Button to clear logs.
+			$this->_clear_logs_button();
+
+			// Button to download logs.
+			$this->_download_logs_button();
+		echo "</p>\n";
 	}
 
 
@@ -284,6 +289,26 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 				++$page;
 			}
 		echo "</p>\n";
+	}
+
+
+	/**
+	 * Print the list secondary pagination.
+	 * Will be shown only if a certain number of logs in the page is reached.
+	 *
+	 * @since 1.0
+	 */
+	protected function _secondary_pagination() {
+		if ( 1 === $this->max_page ) {
+			return;
+		}
+
+		// If we display in this page more logs than this `$limit`, the pagination will be shown.
+		$limit = $this->logs_per_page / 4;
+
+		if ( $this->count - $this->offset >= $limit ) {
+			$this->_pagination();
+		}
 	}
 
 
