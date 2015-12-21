@@ -136,7 +136,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 		 *
 		 * @param (array) The option names.
 		 */
-		$this->options = apply_filters( 'secupress.logs.options', $this->options );
+		$this->options = apply_filters( 'secupress.logs.action-logs.options', $this->options );
 		if ( ! secupress_is_pro() ) {
 			$this->options = array_intersect_key( $this->options, $hooks );
 		}
@@ -155,7 +155,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 			 *
 			 * @param (array) The option names.
 			 */
-			$this->network_options = apply_filters( 'secupress.logs.network_options', $this->network_options );
+			$this->network_options = apply_filters( 'secupress.logs.action-logs.network_options', $this->network_options );
 			if ( ! secupress_is_pro() ) {
 				$this->network_options = array_intersect_key( $this->network_options, $hooks );
 			}
@@ -174,7 +174,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 		 *
 		 * @param (array) The filter names.
 		 */
-		$this->filters = apply_filters( 'secupress.logs.filters', $this->filters );
+		$this->filters = apply_filters( 'secupress.logs.action-logs.filters', $this->filters );
 		if ( ! secupress_is_pro() ) {
 			$this->filters = array_intersect_key( $this->filters, $hooks );
 		}
@@ -193,7 +193,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 		 *
 		 * @param (array) The action names.
 		 */
-		$this->actions = apply_filters( 'secupress.logs.actions', $this->actions );
+		$this->actions = apply_filters( 'secupress.logs.action-logs.actions', $this->actions );
 		if ( ! secupress_is_pro() ) {
 			$this->actions = array_intersect_key( $this->actions, $hooks );
 		}
