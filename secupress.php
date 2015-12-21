@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Plugin Name: WordPress Security by SecuPress
  * Plugin URI: http://secupress.me
  * Description: WordPress Security by SecuPress, the best and simpler way to protect your websites.
@@ -64,7 +64,7 @@ if ( ! defined( 'SECUPRESS_LASTVERSION' ) ) {
 /* INIT ========================================================================================= */
 /*------------------------------------------------------------------------------------------------*/
 
-/*
+/**
  * Tell WP what to do when plugin is loaded
  *
  * @since 1.0
@@ -126,14 +126,14 @@ function secupress_init() {
 
 	/**
 	 * Fires when SecuPress is correctly loaded.
-	  *
-	* @since 1.0
+	 *
+	 * @since 1.0
 	 */
 	do_action( 'secupress_loaded' );
 }
 
 
-/*
+/**
  * Load modules.
  *
  * @since 1.0
@@ -164,8 +164,21 @@ function secupress_load_plugins() {
 			}
 		}
 	}
+
+	if ( is_admin() && secupress_get_site_transient( 'secupress_activation' ) ) {
+
+		secupress_delete_site_transient( 'secupress_activation' );
+
+		/**
+		 * Fires once SecuPress is activated, after the SecuPress's plugins are loaded.
+		 *
+		 * @since 1.0
+		 */
+		do_action( 'secupress.plugins.activation' );
+	}
+
 	/**
-	 * Once all our plugins/submodules has been loaded
+	 * Fires once all our plugins/submodules has been loaded.
 	 *
 	 * @since 1.0
 	 */
@@ -173,7 +186,7 @@ function secupress_load_plugins() {
 }
 
 
-/*
+/**
  * Make SecuPress the first plugin loaded.
  *
  * @since 1.0
@@ -209,7 +222,7 @@ function secupress_been_first() {
 }
 
 
-/*
+/**
  * Translations for the default textdomain must be loaded on init, not before.
  *
  * @since 1.0
@@ -227,7 +240,7 @@ function secupress_load_default_textdomain_translations() {
 /* ACTIVATE/DEACTIVATE ========================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-/*
+/**
  * Tell WP what to do when plugin is activated
  *
  * @since 1.1.0
@@ -238,10 +251,23 @@ function secupress_activation() {
 	// Last constants
 	define( 'SECUPRESS_PLUGIN_NAME', 'SecuPress' );
 	define( 'SECUPRESS_PLUGIN_SLUG', sanitize_key( SECUPRESS_PLUGIN_NAME ) );
+
+	/**
+	 * Fires on SecuPress activation.
+	 *
+	 * @since 1.0
+	 */
+	do_action( 'secupress_activation' );
+
+	/**
+	 * As this activation hook appends before our plugins are loaded (and the page is reloaded right after that),
+	 * this transient will trigger a custom activation hook in `secupress_load_plugins()`.
+	 */
+	set_site_transient( 'secupress_activation', 1 );
 }
 
 
-/*
+/**
  * Tell WP what to do when plugin is deactivated.
  *
  * @since 1.0
@@ -257,4 +283,13 @@ function secupress_deactivation() {
 		delete_site_option( 'secupress_active_plugins' );
 		delete_site_option( 'secupress_active_themes' );
 	}
+
+	/**
+	 * Fires on SecuPress deactivation.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (array) An empty array to mimic the `$args` parameter from `secupress_deactivate_submodule()`.
+	 */
+	do_action( 'secupress_deactivation', array() );
 }
