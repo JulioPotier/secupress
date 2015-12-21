@@ -87,16 +87,50 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 * @return (array) $args.
 	 */
 	public static function pre_process_data( $time, $args ) {
+		/**
+		 * Create a new instance.
+		 * We don't include the data because it's not ready for the message yet:
+		 * that's the role of the pre-process callback, prepare the data to be ready for the message.
+		 */
+		$data     = $args['data'];
+		unset( $args['data'] );
+		$instance = new static( $time, $args );
+
+		/**
+		 * This filter allows not to log this Action.
+		 *
+		 * @since 1.0
+		 *
+		 * @param (bool)   $log_it   True to log.
+		 * @param (object) $instance A `SecuPress_Action_Log` instance.
+		 * @param (array)  $data     The data transmitted by the option/filter/action hooked.
+		 * @param (string) $time     The timestamp with "#".
+		 */
+		$log_it = apply_filters( 'secupress.logs.action-log.log-it', true, $instance, $data, $time );
+
+		if ( ! $log_it ) {
+			return false;
+		}
+
+		// Now, pre-proccess (maybe).
 		$method_name = '_pre_process_' . str_replace( array( '.', '-', '|' ), '_', $args['type'] ) . '_' . $args['code'];
 
 		if ( method_exists( __CLASS__, $method_name ) ) {
-			$data         = $args['data'];
-			unset( $args['data'] );
-			$instance     = new static( $time, $args );
-			$args['data'] = (array) call_user_func_array( array( $instance, $method_name ), $data );
+			$data = (array) call_user_func_array( array( $instance, $method_name ), $data );
 		}
 
-		return $args['data'];
+		/**
+		 * Fires right after an Action Log pre-processing.
+		 *
+		 * @since 1.0
+		 *
+		 * @param (object) $instance   A `SecuPress_Action_Log` instance.
+		 * @param (array)  $data       The data transmitted by the option/filter/action hooked.
+		 * @param (string) $time       The timestamp with "#".
+		 */
+		do_action( 'secupress.logs.action-log.after_pre-process', $instance, $data, $time );
+
+		return $data;
 	}
 
 
