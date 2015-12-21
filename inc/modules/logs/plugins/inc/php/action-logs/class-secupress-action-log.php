@@ -63,7 +63,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 		$this->_set_criticity();
 
 		if ( ! empty( $args['data'] ) ) {
-			$this->data = $args['data'];
+			$this->_set_data( $args['data'] );
 			$this->_set_message();
 		}
 	}
@@ -118,6 +118,10 @@ class SecuPress_Action_Log extends SecuPress_Log {
 		if ( method_exists( __CLASS__, $method_name ) ) {
 			$data = (array) call_user_func_array( array( $instance, $method_name ), $data );
 		}
+
+		// Set the data + message in the `SecuPress_Action_Log` instance, so it can be used by the following `do_action`.
+		$instance->_set_data( $data );
+		$instance->_set_message();
 
 		/**
 		 * Fires right after an Action Log pre-processing.
