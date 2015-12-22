@@ -19,8 +19,6 @@ function __secupress_users_login_settings_callback( $settings ) {
 	$settings     = $settings ? $settings : array();
 	$old_settings = get_site_option( "secupress_{$modulenow}_settings" );
 
-	unset( $settings['temp.password_strength_value'] ); // not actual option
-
 	/*
 	 * Each submodule has its own sanitization function.
 	 * The `$settings` parameter is passed by reference.

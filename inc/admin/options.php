@@ -101,8 +101,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		wp_enqueue_style( 'secupress-modules-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-modules' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 
 		// JS
-		wp_enqueue_script( 'secupress-zxcvbn-async', includes_url( '/js/zxcvbn.min.js' ), array( 'jquery' ) );
-		wp_enqueue_script( 'secupress-modules-js', SECUPRESS_ADMIN_JS_URL . 'secupress-modules' . $suffix . '.js', array( 'secupress-zxcvbn-async', 'password-strength-meter' ), $version, true );
+		wp_enqueue_script( 'secupress-modules-js', SECUPRESS_ADMIN_JS_URL . 'secupress-modules' . $suffix . '.js', array(), $version, true );
 
 		wp_localize_script( 'secupress-modules-js', 'l10nmodules', array(
 			'selectOneRoleMinimum' => __( 'Select 1 role minimum', 'secupress' ),
