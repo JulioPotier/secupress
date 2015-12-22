@@ -29,8 +29,14 @@ function __secupress_users_login_settings_callback( $settings ) {
 	// Double authentication
 	__secupress_double_auth_settings_callback( $modulenow, $settings );
 
+	// Captcha
+	__secupress_captcha_settings_callback( $modulenow, $settings );
+
 	// Login protection
 	__secupress_login_protection_settings_callback( $modulenow, $settings );
+
+	// Password Policy
+	__secupress_password_policy_settings_callback( $modulenow, $settings );
 
 	// Logins blacklist
 	__secupress_logins_blacklist_settings_callback( $modulenow, $settings );
@@ -43,7 +49,7 @@ function __secupress_users_login_settings_callback( $settings ) {
 
 
 /**
- * Sanitize double authentication plugin settings.
+ * (De)Activate double authentication plugins.
  *
  * @since 1.0
  *
@@ -51,33 +57,36 @@ function __secupress_users_login_settings_callback( $settings ) {
  * @param (array)  $settings  The module settings, passed by reference.
  */
 function __secupress_double_auth_settings_callback( $modulenow, &$settings ) {
-	if ( isset( $settings['double-auth_type'] ) ) {
-		switch ( $settings['double-auth_type'] ) {
-
-			case 'googleauth':
-				secupress_activate_submodule( $modulenow, 'googleauth', array( 'password', 'notif', 'emaillink' ) );
-			break;
-
-			case 'emaillink':
-				secupress_activate_submodule( $modulenow, 'emaillink', array( 'password', 'notif', 'googleauth' ) );
-			break;
-
-			default:
-				secupress_deactivate_submodule( $modulenow, array( 'password', 'notif', 'emaillink', 'googleauth' ) );
-			break;
-		}
-
-		if ( 'password' != $settings['double-auth_type'] ) {
-			$settings['double-auth_password'] = '';
-		}
+	if ( ! empty( $settings['double-auth_type'] ) ) {
+		secupress_manage_submodule( $modulenow, 'passwordless', '_passwordless' === $settings['double-auth_type'] && secupress_is_pro() );
+		secupress_manage_submodule( $modulenow, 'googleauth',   'googleauth'    === $settings['double-auth_type'] );
+		secupress_manage_submodule( $modulenow, 'emaillink',    'emaillink'     === $settings['double-auth_type'] );
+	} else {
+		secupress_deactivate_submodule( $modulenow, array( 'passwordless', 'googleauth', 'emaillink' ) );
 	}
+
+	unset( $settings['double-auth_type'] );
 
 	secupress_manage_affected_roles( $settings, 'double-auth' );
 }
 
 
 /**
- * Sanitize login protection plugin settings.
+ * (De)Activate captcha plugin.
+ *
+ * @since 1.0
+ *
+ * @param (string) $modulenow Current module.
+ * @param (array)  $settings  The module settings, passed by reference.
+ */
+function __secupress_captcha_settings_callback( $modulenow, &$settings ) {
+	secupress_manage_submodule( $modulenow, 'login-captcha', ! empty( $settings['captcha_type'] ) );
+	unset( $settings['captcha_type'] );
+}
+
+
+/**
+ * (De)Activate login protection plugin and sanitize settings.
  *
  * @since 1.0
  *
@@ -85,30 +94,58 @@ function __secupress_double_auth_settings_callback( $modulenow, &$settings ) {
  * @param (array)  $settings  The module settings, passed by reference.
  */
 function __secupress_login_protection_settings_callback( $modulenow, &$settings ) {
-	if ( isset( $settings['login-protection_type'] ) ) {
-		secupress_manage_submodule( $modulenow, 'bannonexistsuser', in_array( 'bannonexistsuser', $settings['login-protection_type'] ) );
+	if ( ! empty( $settings['login-protection_type'] ) ) {
+		$settings['login-protection_type'] = array_flip( $settings['login-protection_type'] );
 
-		secupress_manage_submodule( $modulenow, 'limitloginattempts', in_array( 'limitloginattempts', $settings['login-protection_type'] ) );
+		secupress_manage_submodule( $modulenow, 'limitloginattempts', ! empty( $settings['login-protection_type']['limitloginattempts'] ) );
+		secupress_manage_submodule( $modulenow, 'bannonexistsuser',   ! empty( $settings['login-protection_type']['bannonexistsuser']   ) );
+		secupress_manage_submodule( $modulenow, 'nonlogintimeslot',   ! empty( $settings['login-protection_type']['nonlogintimeslot']   ) );
 
-		secupress_manage_submodule( $modulenow, 'nonlogintimeslot', in_array( 'nonlogintimeslot', $settings['login-protection_type'] ) );
+		$settings['login-protection_type'] = array_flip( $settings['login-protection_type'] );
 	} else {
-		secupress_deactivate_submodule( $modulenow, array( 'bannonexistsuser', 'ooc', 'limitloginattempts', 'nonlogintimeslot' ) );
+		secupress_deactivate_submodule( $modulenow, array( 'bannonexistsuser', 'limitloginattempts', 'nonlogintimeslot' ) );
 	}
 
-	$settings['login-protection_number_attempts']  = isset( $settings['login-protection_number_attempts'] )  ? secupress_validate_range( $settings['login-protection_number_attempts'], 3, 99, 10 ) : 10;
-	$settings['login-protection_time_ban']         = isset( $settings['login-protection_time_ban'] )         ? secupress_validate_range( $settings['login-protection_time_ban'], 1, 60, 5 )         : 5;
-	$settings['login-protection_nonlogintimeslot'] = isset( $settings['login-protection_nonlogintimeslot'] ) ? $settings['login-protection_nonlogintimeslot'] : array();
-	$settings['login-protection_nonlogintimeslot']['from_hour']   = isset( $settings['login-protection_nonlogintimeslot']['from_hour'] )   ? secupress_validate_range( $settings['login-protection_nonlogintimeslot']['from_hour'], 0, 23, 0 ) : 0;
-	$settings['login-protection_nonlogintimeslot']['from_minute'] = isset( $settings['login-protection_nonlogintimeslot']['from_minute'] ) && in_array( $settings['login-protection_nonlogintimeslot']['from_minute'], array( '0', '15', '30', '45' ) ) ? (int) $settings['login-protection_nonlogintimeslot']['from_minute'] : 0;
-	$settings['login-protection_nonlogintimeslot']['to_hour']     = isset( $settings['login-protection_nonlogintimeslot']['to_hour'] )     ? secupress_validate_range( $settings['login-protection_nonlogintimeslot']['to_hour'], 0, 23, 0 )   : 0;
-	$settings['login-protection_nonlogintimeslot']['to_minute']   = isset( $settings['login-protection_nonlogintimeslot']['to_minute'] )   && in_array( $settings['login-protection_nonlogintimeslot']['to_minute'], array( '0', '15', '30', '45' ) )   ? (int) $settings['login-protection_nonlogintimeslot']['to_minute']   : 0;
+	$settings['login-protection_number_attempts']  = ! empty( $settings['login-protection_number_attempts'] ) ? secupress_validate_range( $settings['login-protection_number_attempts'], 3, 99, 10 ) : 10;
+	$settings['login-protection_time_ban']         = ! empty( $settings['login-protection_time_ban'] )        ? secupress_validate_range( $settings['login-protection_time_ban'], 1, 60, 5 )         : 5;
+	$settings['login-protection_nonlogintimeslot'] = ! empty( $settings['login-protection_nonlogintimeslot'] ) && is_array( $settings['login-protection_nonlogintimeslot'] ) ? $settings['login-protection_nonlogintimeslot'] : array();
 
-	secupress_manage_submodule( $modulenow, 'login-captcha', isset( $settings['captcha_type'] ) );
+	$settings['login-protection_nonlogintimeslot']['from_hour']   = ! empty( $settings['login-protection_nonlogintimeslot']['from_hour'] )   ? secupress_validate_range( $settings['login-protection_nonlogintimeslot']['from_hour'], 0, 23, 0 ) : 0;
+	$settings['login-protection_nonlogintimeslot']['from_minute'] = ! empty( $settings['login-protection_nonlogintimeslot']['from_minute'] ) && in_array( $settings['login-protection_nonlogintimeslot']['from_minute'], array( '0', '15', '30', '45' ) ) ? (int) $settings['login-protection_nonlogintimeslot']['from_minute'] : 0;
+	$settings['login-protection_nonlogintimeslot']['to_hour']     = ! empty( $settings['login-protection_nonlogintimeslot']['to_hour'] )     ? secupress_validate_range( $settings['login-protection_nonlogintimeslot']['to_hour'], 0, 23, 0 )   : 0;
+	$settings['login-protection_nonlogintimeslot']['to_minute']   = ! empty( $settings['login-protection_nonlogintimeslot']['to_minute'] )   && in_array( $settings['login-protection_nonlogintimeslot']['to_minute'], array( '0', '15', '30', '45' ) )   ? (int) $settings['login-protection_nonlogintimeslot']['to_minute']   : 0;
+
+	secupress_manage_submodule( $modulenow, 'ooc',              ! empty( $settings['login-protection_ooc'] ) && secupress_is_pro() );
+	secupress_manage_submodule( $modulenow, 'sessions-control', ! empty( $settings['login-protection_sessions_control'] ) && secupress_is_pro() );
+
+	unset( $settings['login-protection_type'], $settings['login-protection_ooc'], $settings['login-protection_sessions_control'] );
 }
 
 
 /**
- * Sanitize and validate logins blacklist plugin settings.
+ * (De)Activate password policy plugins and sanitize settings.
+ *
+ * @since 1.0
+ *
+ * @param (string) $modulenow Current module.
+ * @param (array)  $settings  The module settings, passed by reference.
+ */
+function __secupress_password_policy_settings_callback( $modulenow, &$settings ) {
+	if ( secupress_is_pro() ) {
+		$settings['password-policy_password_expiration'] = ! empty( $settings['password-policy_password_expiration'] ) ? absint( $settings['password-policy_password_expiration'] ) : 0;
+		secupress_manage_submodule( $modulenow, 'password-expiration', $settings['password-policy_password_expiration'] > 0 );
+		secupress_manage_submodule( $modulenow, 'strong-passwords', ! empty( $settings['password-policy_strong_passwords'] ) );
+	} else {
+		$settings['password-policy_password_expiration'] = 0;
+		secupress_deactivate_submodule( $modulenow, array( 'password-expiration', 'strong-passwords' ) );
+	}
+
+	unset( $settings['password-policy_strong_passwords'] );
+}
+
+
+/**
+ * (De)Activate logins blacklist plugin.
  *
  * @since 1.0
  *
@@ -116,14 +153,13 @@ function __secupress_login_protection_settings_callback( $modulenow, &$settings 
  * @param (array)  $settings  The module settings, passed by reference.
  */
 function __secupress_logins_blacklist_settings_callback( $modulenow, &$settings ) {
-	// Activate or deactivate plugin.
 	secupress_manage_submodule( $modulenow, 'blacklist-logins', ! empty( $settings['blacklist-logins_activated'] ) );
 	unset( $settings['blacklist-logins_activated'] );
 }
 
 
 /**
- * Sanitize and validate Move Login plugin settings.
+ * (De)Activate Move Login plugin. Sanitize and validate settings.
  *
  * @since 1.0
  *

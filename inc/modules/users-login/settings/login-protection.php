@@ -6,13 +6,19 @@ $this->set_current_section( 'login_auth2' );
 $this->add_section( __( 'Login Control', 'secupress' ) );
 
 
-$main_field_name = $this->get_field_name( 'type' );
-
+$main_field_name     = $this->get_field_name( 'type' );
+$is_plugin_active    = array();
 $select_args_options = apply_filters( $main_field_name, array(
 	'limitloginattempts' => __( 'Limit the number of bad login attempts', 'secupress' ),
 	'bannonexistsuser'   => __( 'Ban login attempts on non-existing usernames', 'secupress' ),
 	'nonlogintimeslot'   => __( 'Set a non-login time slot', 'secupress' ),
 ) );
+
+foreach ( $select_args_options as $_plugin => $label ) {
+	if ( secupress_is_submodule_active( 'users-login', $_plugin ) ) {
+		$is_plugin_active[] = $_plugin;
+	}
+}
 
 $this->add_field(
 	__( 'Use an attempt blocker', 'secupress' ),
@@ -25,14 +31,15 @@ $this->add_field(
 			'type'         => 'checkboxes',
 			'options'      => $select_args_options,
 			'name'         => $main_field_name,
+			'value'        => $is_plugin_active,
 			'label_for'    => $main_field_name,
 			'label_screen' => __( 'Use an attempt blocker', 'secupress' ),
 		),
 	)
 );
 
-$field_name = $this->get_field_name( 'number_attempts' );
 
+$field_name = $this->get_field_name( 'number_attempts' );
 $this->add_field(
 	__( 'How many attempts before a ban?', 'secupress' ),
 	array(
@@ -54,8 +61,8 @@ $this->add_field(
 	)
 );
 
-$field_name = $this->get_field_name( 'time_ban' );
 
+$field_name = $this->get_field_name( 'time_ban' );
 $this->add_field(
 	__( 'How long should we ban?', 'secupress' ),
 	array(
@@ -76,6 +83,7 @@ $this->add_field(
 		),
 	)
 );
+
 
 $field_name = $this->get_field_name( 'nonlogintimeslot' );
 $this->add_field(
@@ -101,13 +109,13 @@ $this->add_field(
 	)
 );
 
+
 $field_name = $this->get_field_name( 'ooc' );
 $this->add_field(
 	__( 'Avoid Double Connexions', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description' => __( 'Once logged in, nobody can log in on your account at the same time as you. You have to disconnect first to allow another connexion.', 'secupress' ) .
-		 				( secupress_is_pro() ? '' : secupress_get_pro_version_string( '<br>%s') ),
+		'description' => __( 'Once logged in, nobody can log in on your account at the same time as you. You have to disconnect first to allow another connexion.', 'secupress' ) . ( secupress_is_pro() ? '' : secupress_get_pro_version_string( '<br>%s') ),
 	),
 	array(
 		array(
@@ -126,13 +134,13 @@ $this->add_field(
 	)
 );
 
+
 $field_name = $this->get_field_name( 'sessions_control' );
 $this->add_field(
 	__( 'Sessions Control', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description' => __( 'Disconnect any user in one click, or even every logged in user at the same time in one click (but you).', 'secupress' ) .
-		 				( secupress_is_pro() ? '' : secupress_get_pro_version_string( '<br>%s') ),
+		'description' => __( 'Disconnect any user in one click, or even every logged in user at the same time in one click (but you).', 'secupress' ) . ( secupress_is_pro() ? '' : secupress_get_pro_version_string( '<br>%s') ),
 	),
 	array(
 		array(
