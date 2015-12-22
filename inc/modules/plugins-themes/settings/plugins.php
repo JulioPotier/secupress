@@ -7,9 +7,10 @@ $this->set_section_description( __( 'By using these protections, you can easily 
 $this->add_section( __( 'Plugins Page', 'secupress' ) );
 
 
-$plugin = $this->get_current_plugin(); // 'plugins'
+$plugin = $this->get_current_plugin();
 
 $field_name = $this->get_field_name( 'update' );
+
 $this->add_field(
 	__( 'Plugins updates', 'secupress' ),
 	array(
@@ -19,6 +20,7 @@ $this->add_field(
 		array(
 			'type'         => 'checkbox',
 			'name'         => $field_name,
+			'value'        => (int) secupress_is_submodule_active( 'plugins-themes', 'plugin-update' ),
 			'label'        => __( 'Yes, disable the updates for all plugins', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, disable the updates for all plugins', 'secupress' ),
@@ -31,7 +33,9 @@ $this->add_field(
 	)
 );
 
+
 $field_name = $this->get_field_name( 'installation' );
+
 $this->add_field(
 	__( 'Plugins installation', 'secupress' ),
 	array(
@@ -41,18 +45,17 @@ $this->add_field(
 		array(
 			'type'         => 'checkbox',
 			'name'         => $field_name,
+			'value'        => (int) secupress_is_submodule_active( 'plugins-themes', 'plugin-installation' ),
 			'label'        => __( 'Yes, disable the installation of all new plugins', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, disable the installation of all new plugins', 'secupress' ),
 		),
-		array(
-			'type'         => 'helper_description',
-			'name'         => $field_name,
-		),
 	)
 );
 
+
 $field_name = $this->get_field_name( 'activation' );
+
 $this->add_field(
 	__( 'Plugins activation', 'secupress' ),
 	array(
@@ -63,42 +66,40 @@ $this->add_field(
 		array(
 			'type'         => 'checkbox',
 			'name'         => $field_name,
+			'value'        => (int) secupress_is_submodule_active( 'plugins-themes', 'plugin-activation' ),
 			'label'        => __( 'Yes, disable the activation action for every plugin', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, disable the activation action for every plugin', 'secupress' ),
 			'readonly'     => ! secupress_is_pro(),
 		),
-		array(
-			'type'         => 'helper_description',
-			'name'         => $field_name,
-		),
 	)
 );
 
-$field_name = $this->get_field_name( 'activation' );
+
+$field_name = $this->get_field_name( 'deactivation' );
+
 $this->add_field(
 	__( 'Plugins deactivation', 'secupress' ),
 	array(
-		'name'        => $plugin . '_deactivation',
+		'name'        => $field_name,
 		'description' => secupress_is_pro() ? '' : secupress_get_pro_version_string()
 	),
 	array(
 		array(
 			'type'         => 'checkbox',
-			'name'         => 'plugin_deactivation_' . $plugin,
+			'name'         => $field_name,
+			'value'        => (int) secupress_is_submodule_active( 'plugins-themes', 'plugin-deactivation' ),
 			'label'        => __( 'Yes, disable the deactivation action for every plugin', 'secupress' ),
-			'label_for'    => 'plugin_deactivation_' . $plugin,
+			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, disable the deactivation action for every plugin', 'secupress' ),
 			'readonly'     => ! secupress_is_pro(),
-		),
-		array(
-			'type'         => 'helper_description',
-			'name'         => 'plugin_deactivation_' . $plugin,
 		),
 	)
 );
 
+
 $field_name = $this->get_field_name( 'deletion' );
+
 $this->add_field(
 	__( 'Plugins deletion', 'secupress' ),
 	array(
@@ -109,20 +110,19 @@ $this->add_field(
 		array(
 			'type'         => 'checkbox',
 			'name'         => $field_name,
+			'value'        => (int) secupress_is_submodule_active( 'plugins-themes', 'plugin-deletion' ),
 			'label'        => __( 'Yes, disable the deletion action for every plugin', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, disable the deletion action for every plugin', 'secupress' ),
 			'readonly'     => ! secupress_is_pro(),
 		),
-		array(
-			'type'         => 'helper_description',
-			'name'         => $field_name,
-		),
 	)
 );
 
+
 $field_name      = $this->get_field_name( 'detect_bad_plugins' );
 $main_field_name = $field_name;
+
 $this->add_field(
 	__( 'Detect Bad Plugins', 'secupress' ),
 	array(
@@ -133,6 +133,7 @@ $this->add_field(
 		array(
 			'type'         => 'checkbox',
 			'name'         => $field_name,
+			'value'        => (int) secupress_is_submodule_active( 'plugins-themes', 'detect-bad-plugins' ),
 			'label'        => __( 'Yes, enable the detection if a plugin I use is known as vulnerable', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, enable the detection if a plugin I use is known as vulnerable', 'secupress' ),
@@ -145,18 +146,21 @@ $this->add_field(
 	)
 );
 
+
 $field_name = $this->get_field_name( 'autoupdate_bad_plugins' );
+
 $this->add_field(
 	__( 'Auto-Update Bad Plugins', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description' => __( 'Only for plugins from official repository.', 'secupress' ) . ( secupress_is_pro() ? '' : secupress_get_pro_version_string( '<br>%s' ) )
+		'description' => __( 'Only for plugins from official repository.', 'secupress' ) . ( secupress_is_pro() ? '' : secupress_get_pro_version_string( '<br/>%s' ) )
 	),
 	array(
 		'depends'     => $main_field_name,
 		array(
 			'type'         => 'checkbox',
 			'name'         => $field_name,
+			'value'        => (int) secupress_is_submodule_active( 'plugins-themes', 'autoupdate-bad-plugins' ),
 			'label'        => __( 'Yes, also enable the auto-update if these plugins', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, also enable the auto-update if these plugins', 'secupress' ),
