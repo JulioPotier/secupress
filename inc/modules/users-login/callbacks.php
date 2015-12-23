@@ -98,8 +98,6 @@ function __secupress_login_protection_settings_callback( $modulenow, &$settings 
 		secupress_manage_submodule( $modulenow, 'limitloginattempts', ! empty( $settings['login-protection_type']['limitloginattempts'] ) );
 		secupress_manage_submodule( $modulenow, 'bannonexistsuser',   ! empty( $settings['login-protection_type']['bannonexistsuser']   ) );
 		secupress_manage_submodule( $modulenow, 'nonlogintimeslot',   ! empty( $settings['login-protection_type']['nonlogintimeslot']   ) );
-
-		$settings['login-protection_type'] = array_flip( $settings['login-protection_type'] );
 	} else {
 		secupress_deactivate_submodule( $modulenow, array( 'bannonexistsuser', 'limitloginattempts', 'nonlogintimeslot' ) );
 	}
@@ -242,7 +240,7 @@ function __secupress_move_login_settings_callback( $modulenow, &$settings, $old_
 
 	// Activate or deactivate plugin.
 	secupress_manage_submodule( $modulenow, 'move-login', ! empty( $settings['move-login_activated'] ) );
-	unset( $settings['move-login_activated'], $settings['move-login_rules'] );
+	unset( $settings['move-login_activated'] );
 }
 
 
