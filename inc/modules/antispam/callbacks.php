@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 function __secupress_antispam_settings_callback( $settings ) {
 	$modulenow = 'antispam';
-	$settings = $settings ? $settings : array();
+	$settings  = $settings ? $settings : array();
 
 	// Remove Comment Feature
 	if ( isset( $settings['antispam_antispam'] ) && in_array( 'remove-comment-feature', $settings['antispam_antispam'] ) ) {
@@ -29,6 +29,7 @@ function __secupress_antispam_settings_callback( $settings ) {
 		secupress_deactivate_submodule( $modulenow, 'fightspam' );
 	}
 
+	unset( $settings['antispam_antispam'] );
 
 	return $settings;
 }
@@ -40,7 +41,7 @@ function __secupress_antispam_settings_callback( $settings ) {
 
 // Create default option on install.
 
-// add_action( 'wp_secupress_first_install', '__secupress_install_antispam_module' ); 
+// add_action( 'wp_secupress_first_install', '__secupress_install_antispam_module' );
 
 function __secupress_install_antispam_module( $module ) {
 	if ( 'all' === $module || 'antispam' === $module ) {

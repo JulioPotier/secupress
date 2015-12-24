@@ -22,10 +22,5 @@ $this->add_field(
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, forbid users to use blacklisted usernames', 'secupress' ),
 		),
-		array(
-			'type'         => 'helper_description',
-			'name'         => $field_name,
-			'description'  => __( 'Create a list of forbidden usernames.', 'secupress' ),
-		),
 	)
 );

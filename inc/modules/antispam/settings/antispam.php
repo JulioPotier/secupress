@@ -5,22 +5,32 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 $this->set_current_section( 'antispam' );
 $this->add_section( __( 'Anti Spam Rules', 'secupress' ) );
 
-$field_name      = $this->get_field_name( 'antispam' );
-$main_field_name = $field_name . '_fightspam';
+$field_name       = $this->get_field_name( 'antispam' );
+$main_field_name  = $field_name . '_fightspam';
+$is_plugin_active = array();
+
+if ( secupress_is_submodule_active( 'antispam', 'antispam' ) ) {
+	$is_plugin_active[] = 'fightspam';
+}
+if ( secupress_is_submodule_active( 'antispam', 'remove-comment-feature' ) ) {
+	$is_plugin_active[] = 'remove-comment-feature';
+}
+
 $this->add_field(
 	__( 'Anti Spam', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description'  => __( 'If you do not activate this antispam or remove the comment feature, please, activate another antispam plugin for your security!', 'secupress' ),
+		'description' => __( 'If you do not activate this antispam or remove the comment feature, please, activate another antispam plugin for your security!', 'secupress' ),
 	),
 	array(
 		array(
 			'type'         => 'radioboxes',
 			'name'         => $field_name,
+			'value'        => $is_plugin_active,
 			'options'      => array(
-									'fightspam' => __( 'I <strong>need</strong> this to help my website fighting comment spam', 'secupress' ),
-									'remove-comment-feature' => __( 'I <strong>do not need</strong> comments on my website, remove all the comment features.', 'secupress' ),
-								),
+				'fightspam'              => __( 'I <strong>need</strong> this to help my website fighting comment spam', 'secupress' ),
+				'remove-comment-feature' => __( 'I <strong>do not need</strong> comments on my website, remove all the comment features.', 'secupress' ),
+			),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Which antispam do you need', 'secupress' ),
 		),
@@ -29,10 +39,11 @@ $this->add_field(
 
 $field_name           = $this->get_field_name( 'mark-as' );
 $options              = array( 'deletenow' => __( '<strong>Send to trash</strong> any spam', 'secupress' ) );
+
 if ( defined( 'EMPTY_TRASH_DAYS' ) && is_numeric( EMPTY_TRASH_DAYS ) && EMPTY_TRASH_DAYS > 0 ) {
 	$options['markspam'] = sprintf( __( '<strong>Delete</strong> spam after %s days', 'secupress' ), EMPTY_TRASH_DAYS );
 } else {
-	$options['markspam']  = __( '<strong>Only mark</strong> as spam, i will delete manually.', 'secupress' );
+	$options['markspam'] = __( '<strong>Only mark</strong> as spam, i will delete manually.', 'secupress' );
 }
 $this->add_field(
 	__( 'Handling Spam', 'secupress' ),
@@ -108,7 +119,7 @@ $this->add_field(
 	)
 );
 
-$field_name      = $this->get_field_name( 'pings-trackbacks' );
+$field_name = $this->get_field_name( 'pings-trackbacks' );
 $this->add_field(
 	__( 'About Pings & Trackbacks', 'secupress' ),
 	array(
@@ -120,9 +131,9 @@ $this->add_field(
 		array(
 			'type'         => 'radio',
 			'options'      => array(
-									'mark-ptb' => __( '<strong>Mark</strong> Pings & Trackbacks as spam like comments', 'secupress' ),
-									'forbid-ptb'   => __( '<strong>Fordib</strong> the usage of Pings & Trackbacks on this website', 'secupress' )
-								),
+				'mark-ptb' => __( '<strong>Mark</strong> Pings & Trackbacks as spam like comments', 'secupress' ),
+				'forbid-ptb'   => __( '<strong>Fordib</strong> the usage of Pings & Trackbacks on this website', 'secupress' )
+			),
 			'default'      => 'mark-ptb',
 			'name'         => $field_name,
 			'label_for'    => $field_name,

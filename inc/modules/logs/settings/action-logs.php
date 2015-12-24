@@ -33,22 +33,22 @@ $this->add_field(
 );
 
 
-if ( class_exists( 'SecuPress_Logs' ) ) :
+if ( class_exists( 'SecuPress_Action_Logs' ) ) :
 
-SecuPress_Logs::_maybe_include_list_class();
+	SecuPress_Action_Logs::_maybe_include_list_class();
 
-$field_name = $this->get_field_name( 'wp-logs' );
+	$field_name = $this->get_field_name( 'logs' );
 
-$this->add_field(
-	__( 'WordPress Logs', 'secupress' ),
-	array(
-		'name'        => $field_name,
-		'field_type'  => array( SecuPress_Logs_List::get_instance(), 'output' ),
-		'description' => __( 'What happened on your WordPress website?', 'secupress' ),
-	),
-	array(
-		'depends'     => $main_field_name,
-	)
-);
+	$this->add_field(
+		__( 'WordPress Logs', 'secupress' ),
+		array(
+			'name'        => $field_name,
+			'field_type'  => array( SecuPress_Action_Logs_List::get_instance(), 'output' ),
+			'description' => __( 'What happened on your WordPress website?', 'secupress' ),
+		),
+		array(
+			'depends'     => $main_field_name,
+		)
+	);
 
 endif;

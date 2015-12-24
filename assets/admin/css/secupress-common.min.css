@@ -28,6 +28,10 @@ p.submit {
 	text-align: right;
 }
 
+textarea {
+	width: 100%;
+}
+
 .no-button,
 .no-button:hover,
 .no-button:focus {

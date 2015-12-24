@@ -8,196 +8,213 @@ Version: 1.0
 */
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
-/* !---------------------------------------------------------------------------- */
-/* !	UTILITIES																 */
-/* ----------------------------------------------------------------------------- */
+/*------------------------------------------------------------------------------------------------*/
+/* INIT ========================================================================================= */
+/*------------------------------------------------------------------------------------------------*/
 
-// !Return the post types supporting comments.
-
-function secupress_nocomment_get_post_types_supporting_comments() {
-	global $_wp_post_type_features;
-
-	$post_types = array();
-	foreach ( $_wp_post_type_features as $type => $features ) {
-		if ( ! empty( $features['comments'] ) ) {
-			$post_types[ $type ] = $type;
-		}
-	}
-
-	// Store the post types originally supporting comments. This info can be used later if needed.
-	secupress_nocomment_get_comments_original_support( $post_types );
-
-	return $post_types;
-}
-
-
-// !Return the post types originally supporting comments (before the support is removed).
-
-function secupress_nocomment_get_comments_original_support( $array = null ) {
-	static $post_types;
-
-	if ( ! isset( $post_types ) ) {
-		$post_types = $array;
-	}
-
-	return $post_types;
-}
-
-
-// !Return the post types to remove comments support from.
-
-function secupress_nocomment_post_type_supports() {
-	$post_types = secupress_nocomment_get_post_types_supporting_comments();
-	$post_types = (array) apply_filters( 'no_comments_post_type_supports', $post_types );
-	$post_types = array_filter( array_flip( array_flip( $post_types ) ) );
-
-	return $post_types;
-}
-
-
-// !Check if a plugin is activated for a certain blog
-
-if ( ! function_exists( 'is_plugin_active_for_blog' ) ) :
-function is_plugin_active_for_blog( $plugin, $blog_id ) {
-	if ( function_exists( 'is_plugin_active_for_network' ) ) {
-		$is_plugin_active_for_network = is_plugin_active_for_network( $plugin );
-	} elseif ( ! is_multisite() ) {
-		$is_plugin_active_for_network = false;
-	} else {
-		$plugins = get_site_option( 'active_sitewide_plugins');
-		$is_plugin_active_for_network = isset( $plugins[ $plugin ] );
-	}
-	return in_array( $plugin, (array) get_blog_option( $blog_id, 'active_plugins', array() ) ) || $is_plugin_active_for_network;
-}
-endif;
-
-
-/* !---------------------------------------------------------------------------- */
-/* !	INIT																	 */
-/* ----------------------------------------------------------------------------- */
-
-// !Remove comments support and launch filters.
-
+/**
+ * Remove comments support and launch filters.
+ *
+ * @since 1.0
+ */
 add_action( 'init', 'secupress_nocomment_init', PHP_INT_MAX );
+
 function secupress_nocomment_init() {
-	$types = secupress_nocomment_post_type_supports();
+	// Get post types that support comments.
+	$post_types_raw = secupress_nocomment_get_post_types_supporting_comments();
 
-	if ( count( $types ) ) {
-		foreach ( $types as $type ) {
-			remove_post_type_support( $type, 'comments' );
-		}
+	/**
+	 * Store the post types originally supporting comments.
+	 * This info can be used later if needed.
+	 */
+	secupress_cache_data( 'nocomment_post_types', $post_types_raw );
+
+	$post_types = (array) apply_filters( 'no_comments_post_type_supports', $post_types_raw );
+	$post_types = array_filter( $post_types );
+
+	if ( ! $post_types ) {
+		return;
 	}
 
-	$types = secupress_nocomment_get_post_types_supporting_comments();
+	$post_types = array_flip( array_flip( $post_types ) );
 
-	if ( empty( $types ) ) {
-
-		if ( is_admin() ) {
-			// Hide the comments section in the "Today" dashboard widget
-			add_action( 'admin_head', 'secupress_nocomment_today_widget' );
-
-			// Removes the "Recent comments" dashboard widget and the menu item
-			add_action( 'admin_menu', 'secupress_nocomment_dashboard_widget_and_menu' );
-		}
-		else {
-			// Deregister the "comment-reply" script in frontend.
-			wp_deregister_script( 'comment-reply' );
-
-			// Remove comments feed link from head.
-			remove_action( 'wp_head', 'feed_links_extra', 3 );
-		}
-
-		// Adminbar: removes the general comments item and the site specific comments item for multisite
-		add_action( 'add_admin_bar_menus', 'secupress_nocomment_admin_bar_menus' );
-
-		// Remove the "Recent Comments" widget
-		unregister_widget( 'WP_Widget_Recent_Comments' );
-
-		// Make sure comments and pings are really open (or closed)
-		add_filter( 'comments_open', 'secupress_nocomment_comments_open', 10, 2 );
-		add_filter( 'pings_open', 'secupress_nocomment_comments_open', 10, 2 );
-
-		// Filter default options to return "closed"
-		add_filter( 'pre_option_default_comment_status', 'secupress_nocomment_return_closed' );
-		add_filter( 'pre_option_default_ping_status', 'secupress_nocomment_return_closed' );
+	foreach ( $post_types as $post_type ) {
+		remove_post_type_support( $post_type, 'comments' );
 	}
+
+	if ( array_diff( $post_types_raw, $post_types ) ) {
+		return;
+	}
+
+	if ( is_admin() ) {
+		// Hide the comments section in the "Today" dashboard widget.
+		add_action( 'admin_head', 'secupress_nocomment_today_widget' );
+
+		// Remove the "Recent comments" dashboard widget and the menu item.
+		add_action( 'admin_menu', 'secupress_nocomment_dashboard_widget_and_menu' );
+	}
+	else {
+		// Deregister the "comment-reply" script in frontend.
+		wp_deregister_script( 'comment-reply' );
+
+		// Remove comments feed link from head.
+		remove_action( 'wp_head', 'feed_links_extra', 3 );
+	}
+
+	// Adminbar: remove the general comments item and the site specific comments item for multisite.
+	add_action( 'add_admin_bar_menus', 'secupress_nocomment_admin_bar_menus' );
+
+	// Remove the "Recent Comments" widget.
+	unregister_widget( 'WP_Widget_Recent_Comments' );
+
+	// Filter whether the current post is open for comments and pings.
+	add_filter( 'comments_open', 'secupress_nocomment_comments_open', 10, 2 );
+	add_filter( 'pings_open',    'secupress_nocomment_comments_open', 10, 2 );
+
+	// Filter default comments/pings to return "closed".
+	add_filter( 'pre_option_default_comment_status', 'secupress_nocomment_return_closed' );
+	add_filter( 'pre_option_default_ping_status',    'secupress_nocomment_return_closed' );
 }
 
 
-/* !---------------------------------------------------------------------------- */
-/* !	ADMIN																	 */
-/* ----------------------------------------------------------------------------- */
+/*------------------------------------------------------------------------------------------------*/
+/* ADMIN ======================================================================================== */
+/*------------------------------------------------------------------------------------------------*/
 
-// !Hide the comments section in the "Today" dashboard widget
-
+/**
+ * Print some CSS to hide the comments section in the "Today" dashboard widget.
+ *
+ * @since 1.0
+ */
 function secupress_nocomment_today_widget() {
 	$screen = get_current_screen();
 
-	if ( ! empty( $screen->id ) && $screen->id === 'dashboard' ) {
+	if ( ! empty( $screen->id ) && 'dashboard' === $screen->id ) {
 		echo '<style type="text/css">.table_discussion,.comment-count,.comment-mod-count,#latest-comments{display:none;}</style>';
 	}
 }
 
 
-// !Remove the "Recent comments" dashboard widget and the menu item
-
+/**
+ * Remove the "Recent comments" dashboard widget and the menu item.
+ *
+ * @since 1.0
+ */
 function secupress_nocomment_dashboard_widget_and_menu() {
 	remove_menu_page( 'edit-comments.php' );
 	remove_meta_box( 'dashboard_recent_comments', 'dashboard', 'core' );
 }
 
 
-/* !---------------------------------------------------------------------------- */
-/* !	ADMINBAR																 */
-/* ----------------------------------------------------------------------------- */
+/*------------------------------------------------------------------------------------------------*/
+/* ADMINBAR ===================================================================================== */
+/*------------------------------------------------------------------------------------------------*/
 
-
-// !Adminbar: remove the general comments item and the site specific comments item for multisite
-
+/**
+ * Adminbar: remove the general comments item and the site specific comments item for multisite.
+ *
+ * @since 1.0
+ */
 function secupress_nocomment_admin_bar_menus() {
-	add_action( 'admin_bar_menu',    'secupress_nocomment_admin_bar_blogs_list',   40 );
+	add_action( 'admin_bar_menu', 'secupress_nocomment_admin_bar_blogs_list', 40 );
 	remove_action( 'admin_bar_menu', 'wp_admin_bar_comments_menu', 60 );
 }
 
 
-// !Remove the site specific comments item (admin bar) for multisite.
-
+/**
+ * Remove the site specific comments item (admin bar) for multisite.
+ *
+ * @since 1.0
+ *
+ * @param (object) $wp_admin_bar The `WP_Admin_Bar` object.
+ */
 function secupress_nocomment_admin_bar_blogs_list( $wp_admin_bar ) {
-	if ( ! is_multisite() ) {
+	// Don't show for logged out users or single site mode.
+	if ( ! is_user_logged_in() || ! is_multisite() ) {
 		return;
 	}
 
-	if ( count( $wp_admin_bar->user->blogs ) < 1 || ! is_super_admin() ) {
+	// Show only when the user has at least one site, or they're a super admin.
+	if ( ! $wp_admin_bar->user->blogs && ! is_super_admin() ) {
 		return;
 	}
 
-	$nodes  = $wp_admin_bar->get_nodes();
-	$plugin = plugin_basename( __FILE__ );
+	$nodes = $wp_admin_bar->get_nodes();
 
 	foreach ( (array) $wp_admin_bar->user->blogs as $blog ) {
-		$menu_id = 'blog-' . $blog->userblog_id;
+		$menu_id = 'blog-' . $blog->userblog_id . '-c';
 
-		if ( isset( $nodes[ $menu_id ] ) && is_plugin_active_for_blog( $plugin, $blog->userblog_id ) ) {
-			$wp_admin_bar->remove_node( $menu_id . '-c' );
+		if ( isset( $nodes[ $menu_id ] ) ) {
+			$wp_admin_bar->remove_node( $menu_id );
 		}
 	}
 }
 
 
-/* !---------------------------------------------------------------------------- */
-/* !	OTHER STUFF																 */
-/* ----------------------------------------------------------------------------- */
+/*------------------------------------------------------------------------------------------------*/
+/* OTHER FILTERS ================================================================================ */
+/*------------------------------------------------------------------------------------------------*/
 
-// !Make sure comments and pings are really open (or closed)
-
+/**
+ * Filter whether the current post is open for comments/pings.
+ * If the Post post type doesn't support comments, tell that comments/pings are closed.
+ *
+ * @since 1.0
+ *
+ * @param (bool)        $open    Whether the current post is open for comments/pings.
+ * @param (int|WP_Post) $post_id The post ID or WP_Post object.
+ */
 function secupress_nocomment_comments_open( $open, $post_id ) {
-	$_post = get_post( $post_id );
-	return $open && ! empty( $_post->post_type ) && post_type_supports( $_post->post_type, 'comments' );
+	$post = get_post( $post_id );
+	return $open && $post && post_type_supports( $post->post_type, 'comments' );
 }
 
 
-// !Filter default options to return "closed"
-
+/**
+ * Filter default comments/pings to return "closed".
+ *
+ * @since 1.0
+ *
+ * @return (string) Value to return instead of the option value.
+ */
 function secupress_nocomment_return_closed() {
 	return 'closed';
+}
+
+
+/*------------------------------------------------------------------------------------------------*/
+/* UTILITIES ==================================================================================== */
+/*------------------------------------------------------------------------------------------------*/
+
+/**
+ * Get the post types supporting comments.
+ *
+ * @since 1.0
+ *
+ * @return (array) Post types that supports comments.
+ */
+function secupress_nocomment_get_post_types_supporting_comments() {
+	global $_wp_post_type_features;
+
+	$post_types = array();
+
+	foreach ( $_wp_post_type_features as $type => $features ) {
+		if ( ! empty( $features['comments'] ) ) {
+			$post_types[ $type ] = $type;
+		}
+	}
+
+	return $post_types;
+}
+
+
+/**
+ * Get the post types originally supporting comments (before the support is removed).
+ *
+ * @since 1.0
+ *
+ * @return (array) Stored post types.
+ */
+function secupress_nocomment_get_comments_original_support() {
+	return secupress_cache_data( 'nocomment_post_types' );
 }

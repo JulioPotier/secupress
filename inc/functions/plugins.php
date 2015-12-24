@@ -149,8 +149,9 @@ function secupress_register_setting( $module, $option_name = false ) {
  **/
 function secupress_get_current_url( $mode = 'base' ) {
 	$mode = (string) $mode;
+	$port = (int) $_SERVER['SERVER_PORT'] !== 80 ? ( ':' . (int) $_SERVER['SERVER_PORT'] ) : '';
 	$url  = ! empty( $GLOBALS['HTTP_SERVER_VARS']['REQUEST_URI'] ) ? $GLOBALS['HTTP_SERVER_VARS']['REQUEST_URI'] : ( ! empty( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '' );
-	$url  = 'http' . ( is_ssl() ? 's' : '' ) . '://' . $_SERVER['HTTP_HOST'] . $url;
+	$url  = 'http' . ( is_ssl() ? 's' : '' ) . '://' . $_SERVER['HTTP_HOST'] . $port . $url;
 
 	switch ( $mode ) :
 		case 'raw' :

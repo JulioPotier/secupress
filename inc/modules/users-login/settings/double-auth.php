@@ -19,8 +19,16 @@ $select_args_options = apply_filters( 'pro.module.' . $plugin, array(
 	'emaillink'     => __( 'Email Link', 'secupress' ),
 ) );
 
-$field_name      = $this->get_field_name( 'type' );
-$main_field_name = $field_name;
+$field_name       = $this->get_field_name( 'type' );
+$main_field_name  = $field_name;
+$is_plugin_active = '-1';
+
+foreach ( $select_args_options as $_plugin => $label ) {
+	if ( '-1' !== $_plugin && secupress_is_submodule_active( 'users-login', $_plugin ) ) {
+		$is_plugin_active = $_plugin;
+		break;
+	}
+}
 
 $this->add_field(
 	__( 'Use a Double Authentication', 'secupress' ),
@@ -33,6 +41,7 @@ $this->add_field(
 			'type'         => 'radio',
 			'options'      => $select_args_options,
 			'name'         => $field_name,
+			'value'        => $is_plugin_active,
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Double Authentication choice', 'secupress' ),
 		),
@@ -59,6 +68,7 @@ $this->add_field(
 		array(
 			'type'         => 'checkbox',
 			'name'         => $field_name,
+			'value'        => (int) secupress_is_submodule_active( 'users-login', 'login-captcha' ),
 			'label'        => __( 'Yes, use a Captcha', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Use a Captcha', 'secupress' ),

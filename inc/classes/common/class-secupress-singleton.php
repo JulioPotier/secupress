@@ -31,7 +31,9 @@ class SecuPress_Singleton {
 
 
 	/**
-	 * Returns the *Singleton* instance of this class.
+	 * Get the *Singleton* instance of this class.
+	 *
+	 * @since 1.0
 	 *
 	 * @return Singleton The *Singleton* instance.
 	 */
@@ -45,7 +47,9 @@ class SecuPress_Singleton {
 
 
 	/**
-	 * Protected constructor to prevent creating a new instance of the *Singleton* via the `new` operator from outside of this class.
+	 * Private constructor to prevent creating a new instance of the *Singleton* via the `new` operator from outside of this class.
+	 *
+	 * @since 1.0
 	 */
 	final private function __construct() {
 		$this->_init();
@@ -54,12 +58,16 @@ class SecuPress_Singleton {
 
 	/**
 	 * Private clone method to prevent cloning of the instance of the *Singleton* instance.
+	 *
+	 * @since 1.0
 	 */
 	final private function __clone() {}
 
 
 	/**
 	 * Private unserialize method to prevent unserializing of the *Singleton* instance.
+	 *
+	 * @since 1.0
 	 */
 	final private function __wakeup() {}
 

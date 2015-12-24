@@ -86,6 +86,7 @@ function secupress_get_global_site_option_names_for_autoload() {
 		if ( is_admin() ) {
 			$option_names = array_merge( $option_names, array(
 				'_site_transient_secupress-admin-as-author-administrator',
+				'_site_transient_secupress_activation',
 			) );
 		}
 	}

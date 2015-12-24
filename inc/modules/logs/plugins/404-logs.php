@@ -1,7 +1,7 @@
 <?php
 /*
-Module Name: Actions Logs
-Description: Logs important events on the site, like some critical option changes and some hooks.
+Module Name: 404 Logs
+Description: Logs "404 Page Not Found" errors on the site.
 Main Module: logs
 Author: SecuPress
 Version: 1.0
@@ -18,9 +18,9 @@ if ( ! did_action( 'secupress_plugins_loaded' ) ) {
 		secupress_require_class( 'Logs' );
 	}
 
-	require_once( SECUPRESS_MODULES_PATH . 'logs/plugins/inc/php/action-logs/class-secupress-action-logs.php' );
+	require_once( SECUPRESS_MODULES_PATH . 'logs/plugins/inc/php/404-logs/class-secupress-404-logs.php' );
 
-	SecuPress_Action_Logs::get_instance();
+	SecuPress_404_Logs::get_instance();
 
 }
 
@@ -36,4 +36,4 @@ if ( ! did_action( 'secupress_plugins_loaded' ) ) {
  *
  * @param (array) $args Some parameters.
  */
-add_action( 'secupress_deactivate_plugin_action-logs', array( 'SecuPress_Action_Logs', 'delete_logs' ) );
+add_action( 'secupress_deactivate_plugin_404-logs', array( 'SecuPress_404_Logs', 'delete_logs' ) );

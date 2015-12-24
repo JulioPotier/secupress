@@ -3,17 +3,19 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
 
 /**
- * Logs class.
+ * Actions Logs class.
  *
  * @package SecuPress
  * @since 1.0
  */
 
-class SecuPress_Logs extends SecuPress_Singleton {
+class SecuPress_Action_Logs extends SecuPress_Logs {
 
-	const VERSION     = '1.0';
-	const OPTION_NAME = 'secupress_logs';
-
+	const VERSION = '1.0';
+	/**
+	 * @const (string) The logs type.
+	 */
+	const LOGS_TYPE = 'action';
 	/**
 	 * @var The reference to the *Singleton* instance of this class.
 	 */
@@ -22,7 +24,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @var Options to log.
 	 * @see `_maybe_log_option()` for an explanation about the values.
 	 */
-	protected static $options = array(
+	protected $options = array(
 		'blogname'               => null,
 		'blogdescription'        => null,
 		'siteurl'                => null,
@@ -52,7 +54,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	/**
 	 * @var Network options to log.
 	 */
-	protected static $network_options = array(
+	protected $network_options = array(
 		'site_name'                => null,
 		'admin_email'              => null,
 		'registration'             => '!none',
@@ -76,13 +78,13 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	/**
 	 * @var Filters to log.
 	 */
-	protected static $filters = array(
+	protected $filters = array(
 		'wpmu_validate_user_signup' => 1, // `wpmu_validate_user_signup()`
 	);
 	/**
 	 * @var Actions to log.
 	 */
-	protected static $actions = array(
+	protected $actions = array(
 		'secupress.before.die' => 3, // `secupress_die()`
 		'switch_theme'         => 1, // `switch_theme()`
 		'wp_login'             => 2, // `wp_signon()`
@@ -117,82 +119,6 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	}
 
 
-	/**
-	 * Get logs saved so far.
-	 *
-	 * @since 1.0
-	 *
-	 * @return (array)
-	 */
-	public static function get_saved_logs() {
-		return get_site_option( static::OPTION_NAME );
-	}
-
-
-	/**
-	 * Delete saved logs.
-	 *
-	 * @since 1.0
-	 *
-	 * @return (bool) True, if succeed. False, if failure.
-	 */
-	public static function delete_saved_logs() {
-		return delete_site_option( static::OPTION_NAME );
-	}
-
-
-	/**
-	 * Delete one saved log.
-	 *
-	 * @since 1.0
-	 *
-	 * @param (string) $timestamp The log timestamp (with the #).
-	 *
-	 * @return (bool) True, if succeed. False, if failure.
-	 */
-	public static function delete_saved_log( $timestamp ) {
-		if ( ! $timestamp ) {
-			return false;
-		}
-
-		$logs = static::get_saved_logs();
-
-		if ( ! isset( $logs[ $timestamp ] ) ) {
-			return false;
-		}
-
-		unset( $logs[ $timestamp ] );
-
-		if ( empty( $logs ) ) {
-			return static::delete_saved_logs();
-		}
-
-		return update_site_option( static::OPTION_NAME, $logs );
-	}
-
-
-	/**
-	 * Get the max number of stored logs.
-	 *
-	 * @since 1.0
-	 *
-	 * @return (int)
-	 */
-	public static function get_logs_limit() {
-		/*
-		 * Limit the number of logs stored in the database.
-		 * By default 1000, is restricted between 100 and 5000.
-		 *
-		 * @since 1.0
-		 *
-		 * @param (int) The limit.
-		 */
-		$limit = apply_filters( 'secupress.logs.limit', 1000 );
-
-		return secupress_minmax_range( $limit, 100, 5000 );
-	}
-
-
 	// Private methods =============================================================================
 
 	/**
@@ -202,7 +128,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 */
 	protected function _init() {
 		// Options.
-		$hooks = static::$options;
+		$hooks = $this->options;
 		/**
 		 * Filter the options to log.
 		 *
@@ -210,9 +136,9 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		 *
 		 * @param (array) The option names.
 		 */
-		static::$options = apply_filters( 'secupress.logs.options', static::$options );
+		$this->options = apply_filters( 'secupress.logs.action-logs.options', $this->options );
 		if ( ! secupress_is_pro() ) {
-			static::$options = array_intersect_key( static::$options, $hooks );
+			$this->options = array_intersect_key( $this->options, $hooks );
 		}
 
 		add_action( 'added_option',   array( $this, '_maybe_log_added_option' ), 1000, 2 );
@@ -221,7 +147,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 
 		// Network options.
 		if ( is_multisite() ) {
-			$hooks = static::$network_options;
+			$hooks = $this->network_options;
 			/**
 			 * Filter the network options to log.
 			 *
@@ -229,9 +155,9 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			 *
 			 * @param (array) The option names.
 			 */
-			static::$network_options = apply_filters( 'secupress.logs.network_options', static::$network_options );
+			$this->network_options = apply_filters( 'secupress.logs.action-logs.network_options', $this->network_options );
 			if ( ! secupress_is_pro() ) {
-				static::$network_options = array_intersect_key( static::$network_options, $hooks );
+				$this->network_options = array_intersect_key( $this->network_options, $hooks );
 			}
 
 			add_action( 'add_site_option',    array( $this, '_maybe_log_added_network_option' ), 1000, 2 );
@@ -240,7 +166,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 
 
 		// Filters.
-		$hooks = static::$filters;
+		$hooks = $this->filters;
 		/**
 		 * Filter the filters to log.
 		 *
@@ -248,18 +174,18 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		 *
 		 * @param (array) The filter names.
 		 */
-		static::$filters = apply_filters( 'secupress.logs.filters', static::$filters );
+		$this->filters = apply_filters( 'secupress.logs.action-logs.filters', $this->filters );
 		if ( ! secupress_is_pro() ) {
-			static::$filters = array_intersect_key( static::$filters, $hooks );
+			$this->filters = array_intersect_key( $this->filters, $hooks );
 		}
 
-		foreach ( static::$filters as $tag => $accepted_args ) {
+		foreach ( $this->filters as $tag => $accepted_args ) {
 			add_action( $tag, array( $this, '_log_filter' ), 1000, $accepted_args );
 		}
 
 
 		// Actions.
-		$hooks = static::$actions;
+		$hooks = $this->actions;
 		/**
 		 * Filter the actions to log.
 		 *
@@ -267,28 +193,18 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		 *
 		 * @param (array) The action names.
 		 */
-		static::$actions = apply_filters( 'secupress.logs.actions', static::$actions );
+		$this->actions = apply_filters( 'secupress.logs.action-logs.actions', $this->actions );
 		if ( ! secupress_is_pro() ) {
-			static::$actions = array_intersect_key( static::$actions, $hooks );
+			$this->actions = array_intersect_key( $this->actions, $hooks );
 		}
 
-		foreach ( static::$actions as $tag => $accepted_args ) {
+		foreach ( $this->actions as $tag => $accepted_args ) {
 			add_action( $tag, array( $this, '_log_action' ), 1000, $accepted_args );
 		}
 
 
-		// Empty logs list.
-		add_action( 'wp_ajax_secupress_clear-logs',    array( __CLASS__, '_ajax_clear_logs' ) );
-		add_action( 'admin_post_secupress_clear-logs', array( __CLASS__, '_admin_clear_logs' ) );
-
-
-		// Download logs list.
-		add_action( 'admin_post_secupress_download-logs', array( __CLASS__, '_admin_download_logs' ) );
-
-
-		// Delete a log from the list.
-		add_action( 'wp_ajax_secupress_delete-log',    array( __CLASS__, '_ajax_delete_log' ) );
-		add_action( 'admin_post_secupress_delete-log', array( __CLASS__, '_admin_delete_log' ) );
+		// Parent hooks.
+		parent::_init();
 	}
 
 
@@ -304,17 +220,8 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	protected function _log( $type, $code, $data = null ) {
 		static::_maybe_include_log_class();
 
-		$time = time() . '#';
-
-		if ( isset( $this->logs[ $time ] ) ) {
-			$i = 0;
-			while ( isset( $this->logs[ $time . $i ] ) ) {
-				++$i;
-			}
-			$time .= $i;
-		}
-
-		$log = array(
+		$time = static::_get_timestamp();
+		$log  = array(
 			'type'    => $type,
 			'code'    => $code,
 			'user'    => get_current_user_id(),
@@ -333,7 +240,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			$log['user'] = secupress_get_ip();
 		}
 
-		$data = SecuPress_Log::pre_process_data( $time, $log );
+		$data = SecuPress_Action_Log::pre_process_data( $time, $log );
 
 		// Possibility to not log this action.
 		if ( ! $data ) {
@@ -412,10 +319,10 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 */
 	protected function _maybe_log_option( $option, $values, $network = false ) {
 		if ( $network ) {
-			$options = static::$network_options;
+			$options = $this->network_options;
 			$type    = 'network_option';
 		} else {
-			$options = static::$options;
+			$options = $this->options;
 			$type    = 'option';
 		}
 
@@ -503,7 +410,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		}
 
 		$done = true;
-		add_action( 'shutdown', array( $this, '_save_logs' ) );
+		add_action( 'shutdown', array( $this, '_save_current_logs' ) );
 	}
 
 
@@ -512,210 +419,61 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 *
 	 * @since 1.0
 	 */
-	public function _save_logs() {
-		$logs  = static::get_saved_logs();
-		$limit = static::get_logs_limit();
-
-		if ( false === $logs ) {
-			$logs = array_slice( $this->get_current_logs(), - $limit, $limit, true );
-
-			// We don't want the logs to be autoloaded.
-			if ( is_multisite() ) {
-				add_site_option( static::OPTION_NAME, $logs );
-			} else {
-				add_option( static::OPTION_NAME, $logs, '', 'no' );
-			}
-		} else {
-			if ( $logs && is_array( $logs ) ) {
-				$logs = array_merge( $logs, $this->get_current_logs() );
-				$logs = array_slice( $logs, - $limit, $limit, true );
-			} else {
-				$logs = array_slice( $this->get_current_logs(), - $limit, $limit, true );
-			}
-
-			update_site_option( static::OPTION_NAME, $logs );
-		}
-
+	public function _save_current_logs() {
+		parent::_save_logs( $this->get_current_logs() );
 		$this->logs = array();
-	}
-
-
-	/**
-	 * Ajax callback that allows to clear the logs.
-	 *
-	 * @since 1.0
-	 *
-	 * @return (int) 1 on success, -1 on failure.
-	 */
-	public static function _ajax_clear_logs() {
-		check_ajax_referer( 'secupress-clear-logs' );
-
-		if ( ! current_user_can( secupress_get_capability() ) ) {
-			wp_die( -1 );
-		}
-
-		static::delete_saved_logs();
-
-		wp_die( 1 );
-	}
-
-
-	/**
-	 * Admin post callback that allows to clear the logs.
-	 *
-	 * @since 1.0
-	 */
-	public static function _admin_clear_logs() {
-		check_admin_referer( 'secupress-clear-logs' );
-
-		if ( ! current_user_can( secupress_get_capability() ) ) {
-			wp_nonce_ays( '' );
-		}
-
-		static::delete_saved_logs();
-
-		add_settings_error( 'general', 'logs_cleared', __( 'Logs cleared.', 'secupress' ), 'updated' );
-		set_transient( 'settings_errors', get_settings_errors(), 30 );
-
-		$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
-		wp_redirect( $goback );
-		die();
-	}
-
-
-	/**
-	 * Admin post callback that allows to download the logs as a txt file.
-	 *
-	 * @since 1.0
-	 */
-	public static function _admin_download_logs() {
-		check_admin_referer( 'secupress-download-logs' );
-
-		if ( ! current_user_can( secupress_get_capability() ) ) {
-			wp_nonce_ays( '' );
-		}
-
-		if ( ini_get( 'zlib.output_compression' ) ) {
-			ini_set( 'zlib.output_compression', 'Off' );
-		}
-
-		$filename = SECUPRESS_PLUGIN_SLUG . '-action-logs.txt';
-		$logs     = static::get_saved_logs();
-
-		set_time_limit( 0 );
-
-		ob_start();
-		nocache_headers();
-		header( 'Content-Type: text/plain; charset=' . get_option( 'blog_charset' ) );
-		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
-		header( 'Content-Transfer-Encoding: binary' );
-		header( 'Connection: close' );
-		ob_end_clean();
-		flush();
-
-		if ( $logs && is_array( $logs ) ) {
-			static::_maybe_include_log_class();
-
-			foreach ( $logs as $timestamp => $log ) {
-				$log = new SecuPress_Log( $timestamp, $log );
-				echo '[' . $log->get_time() . ' || ' . $log->get_criticity() . ' || ' . $log->get_user() . '] ';
-				echo strip_tags( $log->get_message() );
-				echo "\n";
-			}
-		}
-		die;
-	}
-
-
-	/**
-	 * Ajax callback that allows to delete a log.
-	 *
-	 * @since 1.0
-	 *
-	 * @return (int) 1 on success, -1 on failure.
-	 */
-	public static function _ajax_delete_log() {
-		check_ajax_referer( 'secupress-delete-log' );
-
-		if ( empty( $_GET['log'] ) ) {
-			wp_send_json_error();
-		}
-
-		if ( ! current_user_can( secupress_get_capability() ) ) {
-			wp_send_json_error();
-		}
-
-		if ( ! static::delete_saved_log( $_GET['log'] ) ) {
-			wp_send_json_error();
-		}
-
-		$count = static::get_saved_logs();
-		$count = $count ? number_format_i18n( count( $count ) ) : 0;
-
-		wp_send_json_success( $count );
-	}
-
-
-	/**
-	 * Admin post callback that allows to delete a log.
-	 *
-	 * @since 1.0
-	 */
-	public static function _admin_delete_log() {
-		check_admin_referer( 'secupress-delete-log' );
-
-		if ( empty( $_GET['log'] ) ) {
-			wp_nonce_ays( '' );
-		}
-
-		if ( ! current_user_can( secupress_get_capability() ) ) {
-			wp_nonce_ays( '' );
-		}
-
-		if ( ! static::delete_saved_log( $_GET['log'] ) ) {
-			wp_nonce_ays( '' );
-		}
-
-		add_settings_error( 'general', 'log_deleted', __( 'Log deleted.', 'secupress' ), 'updated' );
-		set_transient( 'settings_errors', get_settings_errors(), 30 );
-
-		$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
-		wp_redirect( $goback );
-		die();
 	}
 
 
 	// Tools =======================================================================================
 
 	/**
-	 * Include the file containing the class `Secupress_Log` if not already done.
+	 * Get the header content used in the `.txt` file the user can download.
 	 *
 	 * @since 1.0
+	 *
+	 * @param (object) `SecuPress_Action_Log` object.
+	 *
+	 * @return (string) The header content.
 	 */
-	public static function _maybe_include_log_class() {
-		static $included = false;
-
-		if ( ! $included ) {
-			require_once( dirname( __FILE__ ) . '/class-secupress-log.php' );
-		}
-
-		$included = true;
+	public static function _get_log_header_for_file( $log ) {
+		return '[' . $log->get_time() . ' || ' . $log->get_criticity() . ' || ' . $log->get_user() . '] ';
 	}
 
 
 	/**
-	 * Include the file containing the class `Secupress_Logs_List` if not already done.
+	 * Include the files containing the classes `Secupress_Log` and `SecuPress_Action_Log` if not already done.
 	 *
 	 * @since 1.0
+	 *
+	 * @return (string) The Log class name.
 	 */
-	public static function _maybe_include_list_class() {
-		static $included = false;
+	public static function _maybe_include_log_class() {
+		parent::_maybe_include_log_class();
 
-		if ( ! $included ) {
-			require_once( dirname( __FILE__ ) . '/class-secupress-logs-list.php' );
+		if ( ! class_exists( 'SecuPress_Action_Log' ) ) {
+			require_once( dirname( __FILE__ ) . '/class-secupress-action-log.php' );
 		}
 
-		$included = true;
+		return 'SecuPress_Action_Log';
+	}
+
+
+	/**
+	 * Include the files containing the classes `Secupress_Logs_List` and `Secupress_Action_Logs_List` if not already done.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (string) The Logs List class name.
+	 */
+	public static function _maybe_include_list_class() {
+		parent::_maybe_include_list_class();
+
+		if ( ! class_exists( 'SecuPress_Action_Logs_List' ) ) {
+			require_once( dirname( __FILE__ ) . '/class-secupress-action-logs-list.php' );
+		}
+
+		return 'SecuPress_Action_Logs_List';
 	}
 
 }

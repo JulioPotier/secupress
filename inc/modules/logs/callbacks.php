@@ -27,6 +27,9 @@ function __secupress_logs_settings_callback( $settings ) {
 	// Action Logs
 	__secupress_action_logs_settings_callback( $modulenow, $settings );
 
+	// 404 Logs
+	__secupress_404_logs_settings_callback( $modulenow, $settings );
+
 	return $settings;
 }
 
@@ -43,4 +46,19 @@ function __secupress_action_logs_settings_callback( $modulenow, &$settings ) {
 	// Activate or deactivate plugin.
 	secupress_manage_submodule( $modulenow, 'action-logs', ! empty( $settings['action-logs_activated'] ) );
 	unset( $settings['action-logs_activated'] );
+}
+
+
+/**
+ * Sanitize and validate 404 Logs plugin settings.
+ *
+ * @since 1.0
+ *
+ * @param (string) $modulenow Current module.
+ * @param (array)  $settings  The module settings, passed by reference.
+ */
+function __secupress_404_logs_settings_callback( $modulenow, &$settings ) {
+	// Activate or deactivate plugin.
+	secupress_manage_submodule( $modulenow, '404-logs', ! empty( $settings['404-logs_activated'] ) );
+	unset( $settings['404-logs_activated'] );
 }
