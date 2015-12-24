@@ -87,8 +87,8 @@ function secupress_shortcode_as_spam_check( $approved, $commentdata ) {
 	if ( (bool) secupress_get_module_option( 'antispam_shortcode-as-spam', false, 'antispam' ) ) {
 		$comment_filtered = preg_replace( '#\[[^\]]+\]#', '', $commentdata->comment_text );
 		if ( $commentdata->comment_text !== $comment_filtered ) {
-			do_action( 'secupress.antispam.block', 'shortcode-as-spam', $approved );
 			$approved = secupress_get_module_option( 'antispam_mark-as', 'deletenow', 'antispam' ) == 'deletenow' ? 'trash' : 'spam';
+			do_action( 'secupress.antispam.block', 'shortcode-as-spam', $approved );
 		}
 	}
 	return $approved;
