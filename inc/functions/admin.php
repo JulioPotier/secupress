@@ -200,13 +200,26 @@ function secupress_die( $message = '', $title = '', $args = array() ) {
 
 /**
  * Block a request and die with more informations
+ * 
+ * @param $module string The related module
+ * @param $args array|int|string Contains the "code" (def. 403) and a "content" (def. empty), this content will replace the default message
+ * $args can be used only for the "code" or "content" or both using an array
  *
  * @since 1.0
  * @return string
  */
-function secupress_block( $module, $code = 403 ) {
+function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 
-	do_action( 'module.' . $module . '.trigger', secupress_get_ip(), $code );
+	if ( is_int( $args ) ) {
+		$args = array( 'code' => $args );
+	} elseif ( is_string( $args ) ) {
+		$args = array( 'content' => $args );
+	}
+
+	$args = wp_parse_args( $args, array( 'code' => 403, 'content' => '' ) );
+
+	do_action( 'secupress.block.' . $module, secupress_get_ip(), $args );
+	do_action( 'secupress.block', $module, secupress_get_ip(), $args );
 
 	$module = ucwords( str_replace( '-', ' ', $module ) );
 	$module = preg_replace( '/[^0-9A-Z]/', '', $module );
@@ -214,7 +227,11 @@ function secupress_block( $module, $code = 403 ) {
 	status_header( $code );
 	$title     = $code  . ' ' . get_status_header_desc( $code );
 	$title_fmt = '<h4>' . $title . '</h4>';
-	$content   = '<p>' . __( 'You are not allowed to access the requested page.', 'secupress' ) . '</p>';
+	if ( ! $args['content'] ) {
+		$content = '<p>' . __( 'You are not allowed to access the requested page.', 'secupress' ) . '</p>';
+	} else {
+		$content = '<p>' . $args['content'] . '</p>';
+	}
 	$details   = '<h4>' . __( 'Logged Details:', 'secupress' ) . '</h4><p>';
 	$details  .= sprintf( __( 'Your IP: %s', 'secupress' ), secupress_get_ip() ) . '<br>';
 	$details  .= sprintf( __( 'Time: %s', 'secupress' ), date_i18n( __( 'F j, Y g:i a' ) ) ) . '<br>';
