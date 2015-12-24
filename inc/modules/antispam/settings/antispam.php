@@ -3,12 +3,12 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 
 $this->set_current_section( 'antispam' );
-$this->add_section( __( 'Antispam Rules', 'secupress' ) );
+$this->add_section( __( 'Anti Spam Rules', 'secupress' ) );
 
 $field_name      = $this->get_field_name( 'antispam' );
 $main_field_name = $field_name . '_fightspam';
 $this->add_field(
-	__( 'Antispam', 'secupress' ),
+	__( 'Anti Spam', 'secupress' ),
 	array(
 		'name'        => $field_name,
 		'description'  => __( 'If you do not activate this antispam or remove the comment feature, please, activate another antispam plugin for your security!', 'secupress' ),
@@ -28,7 +28,7 @@ $this->add_field(
 );
 
 $field_name           = $this->get_field_name( 'mark-as' );
-$options              = array( 'deletenow' => __( '<strong>Delete instantly</strong> any spam', 'secupress' ) );
+$options              = array( 'deletenow' => __( '<strong>Send to trash</strong> any spam', 'secupress' ) );
 if ( defined( 'EMPTY_TRASH_DAYS' ) && is_numeric( EMPTY_TRASH_DAYS ) && EMPTY_TRASH_DAYS > 0 ) {
 	$options['markspam'] = sprintf( __( '<strong>Delete</strong> spam after %s days', 'secupress' ), EMPTY_TRASH_DAYS );
 } else {
