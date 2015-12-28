@@ -243,3 +243,10 @@ function secupress_get_spam_status( $value ) {
 	}
 	return $status;
 }
+
+add_action( 'admin_print_scripts-post.php', 'secupress_antispam_no_pingstatus_css' );
+function secupress_antispam_no_pingstatus_css() {
+	if ( secupress_get_module_option( 'antispam_pings-trackbacks', 'mark-ptb', 'antispam' ) == 'forbid-ptb' ) {
+		echo '<style>label[for=ping_status]{display: none;}</style>';
+	}
+}
