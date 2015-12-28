@@ -200,7 +200,7 @@ function secupress_die( $message = '', $title = '', $args = array() ) {
 
 /**
  * Block a request and die with more informations
- * 
+ *
  * @param $module string The related module
  * @param $args array|int|string Contains the "code" (def. 403) and a "content" (def. empty), this content will replace the default message
  * $args can be used only for the "code" or "content" or both using an array
@@ -224,8 +224,8 @@ function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 	$module = ucwords( str_replace( '-', ' ', $module ) );
 	$module = preg_replace( '/[^0-9A-Z]/', '', $module );
 
-	status_header( $code );
-	$title     = $code  . ' ' . get_status_header_desc( $code );
+	status_header( $args['code'] );
+	$title     = $args['code']  . ' ' . get_status_header_desc( $args['code'] );
 	$title_fmt = '<h4>' . $title . '</h4>';
 	if ( ! $args['content'] ) {
 		$content = '<p>' . __( 'You are not allowed to access the requested page.', 'secupress' ) . '</p>';
@@ -236,7 +236,7 @@ function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 	$details  .= sprintf( __( 'Your IP: %s', 'secupress' ), secupress_get_ip() ) . '<br>';
 	$details  .= sprintf( __( 'Time: %s', 'secupress' ), date_i18n( __( 'F j, Y g:i a' ) ) ) . '<br>';
 	$details  .= sprintf( __( 'Block ID: %s', 'secupress' ), $module ) . '</p>';
-	secupress_die( $title_fmt . $content . $details, $title, array( 'response', $code ) );
+	secupress_die( $title_fmt . $content . $details, $title, array( 'response', $args['code'] ) );
 }
 
 
