@@ -258,7 +258,7 @@ function secupress_antispam_no_pingstatus_css() {
 	}
 }
 
-function secupress_antispam_set_comment_meta( $comment_id, $approved ) 
+function secupress_antispam_set_comment_meta( $comment_id, $approved ) {
 
 	if ( 'trash' == $approved || 'spam' == $approved && false === get_comment_meta( $comment_id, 'secupress_antispam_status' ) ) {
 		add_comment_meta( $comment_id, 'secupress_antispam_status', $approved, true );
