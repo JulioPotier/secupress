@@ -31,12 +31,7 @@ function secupress_block_bad_url_contents() {
 		}
 	}
 
-	if ( empty( $bad_url_contents ) ) {
-		return;
-	}
-
-	if ( preg_match( '/' . $bad_url_contents . '/i', $_SERVER['QUERY_STRING'], $matches ) ) {
+	if ( $bad_url_contents && preg_match( '/' . $bad_url_contents . '/i', $_SERVER['QUERY_STRING'] ) ) {
 		secupress_block( 'BUC', 503 );
 	}
-
 }
