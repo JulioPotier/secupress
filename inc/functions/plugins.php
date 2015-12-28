@@ -114,6 +114,35 @@ function secupress_minmax_range( $value, $min, $max ) {
 
 
 /**
+ * Sanitize a `$separator` separated list by removing doubled-separators.
+ *
+ * @since 1.0
+ *
+ * @param (string) $list      The list.
+ * @param (string) $separator The separator.
+ *
+ * @return (string) The list.
+ */
+function secupress_sanitize_list( $list, $separator = ', ' ) {
+	if ( empty( $list ) ) {
+		return '';
+	}
+
+	$trimed_sep = trim( $separator );
+	$double_sep = $trimed_sep . $trimed_sep;
+	$list = sanitize_text_field( $list );
+	$list = preg_replace( '/\s*' . $trimed_sep . '\s*/', $trimed_sep, $list );
+	$list = trim( $list, $trimed_sep . ' ' );
+
+	while ( false !== strpos( $list, $double_sep ) ) {
+		$list = str_replace( $double_sep, $trimed_sep, $list );
+	}
+
+	return str_replace( $trimed_sep, $separator, $list );
+}
+
+
+/**
  * Register the correct setting with the correct callback for the module
  *
  * @since 1.0
