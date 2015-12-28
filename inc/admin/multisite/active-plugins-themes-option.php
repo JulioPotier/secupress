@@ -229,68 +229,28 @@ function secupress_add_active_plugins_and_themes_site_options_admin_post_callbac
 
 	$total   = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT( blog_id ) FROM $wpdb->blogs WHERE site_id = %d", $wpdb->siteid ) );
 	$percent = ceil( $count * 100 / max( $total, 1 ) );
-	?><!DOCTYPE html>
-<html <?php language_attributes(); ?>>
-	<head>
-		<meta charset="<?php echo esc_attr( strtolower( get_bloginfo( 'charset' ) ) ); ?>" />
-		<title><?php _e( 'Setting new data...', 'secupress' ); ?></title>
-		<meta content="initial-scale=1.0" name="viewport" />
-		<meta http-equiv="refresh" content="1" />
-		<style>
-html, body {
-	width: 100%;
-	margin: 0;
-	font: 1em/1.5 Arial, Helvetica, sans-serif;
-	color: #313131;
-	background: #F1F1F1;
-}
-.wrap {
-	max-width: 400px;
-	padding: 20px 10px;
-	margin: 10px auto;
-	text-align: center;
-}
-.progress-wrap {
-	width: 100%;
-	border: solid 1px #555;
-	margin-left: -1px;
-}
-.progress {
-	height: 1.5em;
-	line-height: 1.5em;
-	background: #88BA0E;
-	color: #fff;
-	font-size: 2em;
-	font-weight: 700;
-	text-align: center;
-}
-a {
-	color: #205081;
-}
-a:active,
-a:hover,
-a:focus {
-	color: #2d75bd;
-}
-		</style>
-	</head>
-	<body>
-		<div class="wrap">
-			<p><?php
-			$href = urlencode( esc_url( wp_get_referer() ) );
-			$href = admin_url( 'admin-post.php?action=secupress-set-big-data&_wp_http_referer=' . $href );
-			$href = wp_nonce_url( $href, 'secupress-set-big-data' );
+	$href    = urlencode( esc_url( wp_get_referer() ) );
+	$href    = admin_url( 'admin-post.php?action=secupress-set-big-data&_wp_http_referer=' . $href );
+	$href    = wp_nonce_url( $href, 'secupress-set-big-data' );
 
-			printf(
-				/* translators: %s is a "click here" link. */
-				__( 'If this page does not refresh automatically in 2 seconds, please %s.', 'secupress' ),
-				/* For `wp_get_referer()` see the param `_wp_http_referer` in `secupress_add_active_plugins_and_themes_site_options()`. */
-				'<a href="' . $href . '" class="secupress-set-big-data">' . __( 'click here', 'secupress' ) . '</a>'
-			);
-			?></p>
-			<div class="progress-wrap"><div style="width: <?php echo $percent; ?>%;" class="progress"><?php echo $percent; ?>%</div></div>
-		</div>
-	</body>
-</html><?php
-	die();
+	ob_start();
+	?>
+	<div class="wrap">
+		<p><?php
+		printf(
+			/* translators: %s is a "click here" link. */
+			__( 'If this page does not refresh automatically in 2 seconds, please %s.', 'secupress' ),
+			/* For `wp_get_referer()` see the param `_wp_http_referer` in `secupress_add_active_plugins_and_themes_site_options()`. */
+			'<a href="' . $href . '" class="secupress-set-big-data">' . __( 'click here', 'secupress' ) . '</a>'
+		);
+		?></p>
+		<div class="progress-wrap"><div style="width:<?php echo $percent; ?>%" class="progress"><?php echo $percent; ?>%</div></div>
+	</div>
+	<?php
+	$title   = __( 'Setting new data...', 'secupress' );
+	$content = ob_get_contents();
+	$args    = array( 'head' => '<meta http-equiv="refresh" content="1" />' );
+	ob_clean();
+
+	secupress_action_page( $title, $content, $args );
 }

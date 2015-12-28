@@ -80,123 +80,30 @@ function secupress_auth_redirect_blacklist_logins( $user_id ) {
 	$allowed = esc_attr( secupress_blacklist_logins_allowed_characters() );
 
 	// The form.
-	?><!DOCTYPE html>
-<html <?php language_attributes(); ?>>
-	<head>
-		<meta charset="<?php echo esc_attr( strtolower( get_bloginfo( 'charset' ) ) ); ?>" />
-		<title><?php _e( 'Please change your username', 'secupress' ); ?></title>
-		<meta content="initial-scale=1.0" name="viewport" />
-		<style>
-html, body {
-	width: 100%;
-	margin: 0;
-	font: 1em/1.5 Arial, Helvetica, sans-serif;
-	color: #313131;
-	background: #F1F1F1;
-}
-form,
-div {
-	max-width: 400px;
-	padding: 20px 10px;
-	margin: 10px auto;
-}
-div {
-	text-align: center;
-}
-h1 {
-	margin: 0 0 1em;
-	font-size: 2em;
-	line-height: 1.1;
-}
-p {
-	margin: 0 0 1.5em;
-}
-a {
-	color: #205081;
-}
-a:active,
-a:hover,
-a:focus {
-	color: #2d75bd;
-}
-.error {
-	padding: .5em 1em;
-	border: solid 2px #ff8383;
-	background: #ffb1b1;
-	border-radius: .2em;
-}
-label {
-	display: inline-block;
-	margin-bottom: .5em;
-}
-[type="text"] {
-	box-sizing: border-box;
-	width: 100%;
-	padding: .5em;
-	border: 1px solid rgba(83,69,55,.3);
-	margin: 0 0 1.5em;
-	border-radius: 3px;
-	font-size: 1em;
-	font-family: inherit;
-	color: inherit;
-}
-[type="text"]:focus {
-	border-color: rgb(156,144,138);
-}
-[type="submit"] {
-	position: relative;
-	display: inline-block;
-	line-height: 1.2;
-	padding: .65em 1.8em;
-	border: none;
-	margin: 0 0 .5em 0;
-	background: #205081;
-	-webkit-appearance: none;
-	   -moz-appearance: none;
-	        appearance: none;
-	box-shadow: none;
-	border-radius: .214em;
-	color: #fff;
-	font-size: .875em;
-	font-family: inherit;
-	text-align: center;
-	text-transform: uppercase;
-	text-decoration: none;
-	vertical-align: middle;
-	cursor: pointer;
-	-webkit-transition: all .3s ease;
-	        transition: all .3s ease;
-}
-[type="submit"]:focus,
-[type="submit"]:hover {
-	background-color: #2d75bd;
-}
-		</style>
-	</head>
-	<body>
-		<form method="post">
-			<h1><?php _e( 'Please change your username', 'secupress' ); ?></h1>
-			<p><?php
-			printf(
-				/* translators: 1 is a user name, 2 is a link "to the site" */
-				__( 'Your current username %1$s is blacklisted. You will not be able to reach the administration area until you change your username. Meanwhile, you still have access %2$s.', 'secupress' ),
-				'<strong>' . esc_html( $user->user_login ) . '</strong>',
-				'<a href="' . esc_url( user_trailingslashit( home_url() ) ) . '">' . __( 'to the site', 'secupress' ) . '</a>'
-			);
-			?></p>
-			<?php
-			if ( $error ) {
-				echo '<p class="error">' . $error . '</p>';
-			}
-			?>
-			<label for="new-login"><?php _e( 'New username:', 'secupress' ); ?></label><br/>
-			<input type="text" id="new-login" name="secupress-backlist-logins-new-login" value="" maxlength="60" required="required" aria-required="true" pattern="[A-Za-z0-9 _.\-@]{2,60}" autocorrect="off" autocapitalize="off" title="<?php echo $allowed; ?>"/><br/>
-			<input type="submit" />
-			<?php wp_nonce_field( $nonce_action ) ?>
-		</form>
-	</body>
-</html><?php
-	die();
+	ob_start();
+	?>
+	<form class="wrap" method="post">
+		<h1><?php _e( 'Please change your username', 'secupress' ); ?></h1>
+		<p><?php
+		printf(
+			/* translators: 1 is a user name, 2 is a link "to the site" */
+			__( 'Your current username %1$s is blacklisted. You will not be able to reach the administration area until you change your username. Meanwhile, you still have access %2$s.', 'secupress' ),
+			'<strong>' . esc_html( $user->user_login ) . '</strong>',
+			'<a href="' . esc_url( user_trailingslashit( home_url() ) ) . '">' . __( 'to the site', 'secupress' ) . '</a>'
+		);
+		?></p>
+		<?php echo $error ? '<p class="error">' . $error . '</p>' : ''; ?>
+		<label for="new-login"><?php _e( 'New username:', 'secupress' ); ?></label><br/>
+		<input type="text" id="new-login" name="secupress-backlist-logins-new-login" value="" maxlength="60" required="required" aria-required="true" pattern="[A-Za-z0-9 _.\-@]{2,60}" autocorrect="off" autocapitalize="off" title="<?php echo $allowed; ?>"/><br/>
+		<input type="submit" />
+		<?php wp_nonce_field( $nonce_action ) ?>
+	</form>
+	<?php
+	$title   = __( 'Please change your username', 'secupress' );
+	$content = ob_get_contents();
+	ob_clean();
+
+	secupress_action_page( $title, $content );
 }
 
 

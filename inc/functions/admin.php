@@ -240,6 +240,41 @@ function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 }
 
 
+/**
+ * Display a small page, usually used to block a user until this user provides some info.
+ *
+ * @since 1.0
+ *
+ * @param (string) $title   The title tag content.
+ * @param (string) $content The page content.
+ * @param (array)  $args    Some more data:
+ *                 - $head  Content to display in the document's head.
+ */
+function secupress_action_page( $title, $content, $args = array() ) {
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		return;
+	}
+
+	$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+	$version = $suffix ? SECUPRESS_VERSION : time();
+
+	?><!DOCTYPE html>
+<html <?php language_attributes(); ?>>
+	<head>
+		<meta charset="<?php echo esc_attr( strtolower( get_bloginfo( 'charset' ) ) ); ?>" />
+		<title><?php echo strip_tags( $title ); ?></title>
+		<meta content="initial-scale=1.0" name="viewport" />
+		<link href="<?php echo SECUPRESS_ADMIN_CSS_URL . 'secupress-action-page' . $suffix . '.css?ver=' . $version; ?>" media="all" rel="stylesheet" />
+		<?php echo ! empty( $args['head'] ) ? $args['head'] : ''; ?>
+	</head>
+	<body>
+		<?php echo $content; ?>
+	</body>
+</html><?php
+	die();
+}
+
+
 function secupress_deactivate_submodule( $module, $plugins, $args = array() ) {
 	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
 
