@@ -6,19 +6,20 @@ $this->set_current_section( 'bbq_url_contents' );
 $this->add_section( __( 'Bad Contents', 'secupress' ) );
 
 
-$field_name = $this->get_field_name( 'bad-contents' );
+$field_name      = $this->get_field_name( 'bad-contents' );
 $main_field_name = $field_name;
 
 $this->add_field(
 	__( 'Block Bad Contents', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description' => __( '', 'secupress' ),
+		'description' => __( '', 'secupress' ),////
 	),
 	array(
 		array(
 			'type'         => 'checkbox',
 			'name'         => $field_name,
+			'value'        => (int) secupress_is_submodule_active( 'firewall', 'bad-url-contents' ),
 			'label'        => __( 'Yes, protect my site from bad contents in URLs', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, protect my site from bad contents in URLs', 'secupress' ),
@@ -30,6 +31,7 @@ $this->add_field(
 		),
 	)
 );
+
 
 $field_name = $this->get_field_name( 'bad-contents-list' );
 
@@ -48,10 +50,11 @@ $this->add_field(
 		array(
 			'type'         => 'helper_description',
 			'name'         => $field_name,
-			'description' => __( 'Add or remove keywords you want to be blocked.', 'secupress' ),
+			'description'  => __( 'Add or remove keywords you want to be blocked.', 'secupress' ),
 		),
 	)
 );
+
 
 $field_name = $this->get_field_name( 'bad-url-length' );
 
@@ -65,6 +68,7 @@ $this->add_field(
 		array(
 			'type'         => 'checkbox',
 			'name'         => $field_name,
+			'value'        => (int) secupress_is_submodule_active( 'firewall', 'bad-url-length' ),
 			'label'        => __( 'Yes, protect my site from too long URLs', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, protect my site from too long in URLs', 'secupress' ),
@@ -76,6 +80,7 @@ $this->add_field(
 		),
 	)
 );
+
 
 $field_name = $this->get_field_name( 'bad-sqli-scan' );
 
@@ -89,6 +94,7 @@ $this->add_field(
 		array(
 			'type'         => 'checkbox',
 			'name'         => $field_name,
+			'value'        => (int) secupress_is_submodule_active( 'firewall', 'bad-sqli-scan' ),
 			'label'        => __( 'Yes, protect my site from SQL injection scanners', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, protect my site from SQL injection scanners', 'secupress' ),

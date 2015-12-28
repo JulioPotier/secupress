@@ -6,8 +6,18 @@ $this->set_current_section( 'geoip-system' );
 $this->add_section( __( 'Country Managment', 'secupress' ) );
 
 
-$field_name = $this->get_field_name( 'geoip-system' );
+$field_name      = $this->get_field_name( 'type' );
 $main_field_name = $field_name;
+$geoip_value     = '-1';
+
+if ( secupress_is_submodule_active( 'firewall', 'geoip-system' ) ) {
+	/**
+	 * Make sure we have valid value if the submodule is active.
+	 * The default value is 'blacklist'.
+	 */
+	$geoip_value = secupress_get_module_option( $field_name );
+	$geoip_value = 'whitelist' === $geoip_value ? 'whitelist' : 'blacklist';
+}
 
 $this->add_field(
 	__( 'Use the GeoIP Managment', 'secupress' ),
@@ -17,13 +27,14 @@ $this->add_field(
 	),
 	array(
 		array(
-			'type'         => 'radios',
+			'type'         => 'radio',
 			'name'         => $field_name,
+			'value'        => $geoip_value,
 			'options'      => array(
-									'-1'        => __( 'I <strong>do not need</strong> to block or allow countries from visiting my website', 'secupress' ),
-									'blacklist' => __( '<strong>Disallow</strong> the selected countries to visit my website (blacklist)', 'secupress' ),
-									'whitelist' => __( '<strong>Only allow</strong> the selected countries to visit my website (whitelist)', 'secupress' )
-								),
+				'-1'        => __( 'I <strong>do not need</strong> to block or allow countries from visiting my website', 'secupress' ),
+				'blacklist' => __( '<strong>Disallow</strong> the selected countries to visit my website (blacklist)', 'secupress' ),
+				'whitelist' => __( '<strong>Only allow</strong> the selected countries to visit my website (whitelist)', 'secupress' )
+			),
 			'default'      => '-1',
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Whitelist or Blacklist the countries', 'secupress' ),
@@ -36,9 +47,9 @@ $this->add_field(
 	)
 );
 
-$field_name = $this->get_field_name( 'geoip-countries' );
-$GeoIP      = new GeoIP;
-$countries = array(
+$field_name     = $this->get_field_name( 'countries' );
+$geoip_instance = new GeoIP;
+$countries      = array(
 	'AF' => array( 'Africa' ),
 	'AN' => array( 'Antarctica' ),
 	'AS' => array( 'Asia' ),
@@ -47,10 +58,11 @@ $countries = array(
 	'NA' => array( 'North America' ),
 	'SA' => array( 'South America' ),
 );
-foreach( $GeoIP->GEOIP_CONTINENT_CODES as $index => $code ) {
-	$countries[ $code ][ $GeoIP->GEOIP_COUNTRY_CODES[ $index ] ] = $GeoIP->GEOIP_COUNTRY_NAMES [ $index ];
+foreach( $geoip_instance->GEOIP_CONTINENT_CODES as $index => $code ) {
+	$countries[ $code ][ $geoip_instance->GEOIP_COUNTRY_CODES[ $index ] ] = $geoip_instance->GEOIP_COUNTRY_NAMES [ $index ];
 }
 unset( $countries['--'] );
+
 $this->add_field(
 	__( 'Which countries?', 'secupress' ),
 	array(

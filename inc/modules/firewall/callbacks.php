@@ -13,39 +13,116 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 function __secupress_firewall_settings_callback( $settings ) {
 	$modulenow = 'firewall';
-	$settings = $settings ? $settings : array();
+	$settings  = $settings ? $settings : array();
 
-	if ( isset( $settings['bbq-headers_user-agents-header'] ) ) {
-		secupress_activate_submodule( $modulenow, 'user-agents-header' );
-	} else {
-		secupress_deactivate_submodule( $modulenow, 'user-agents-header' );
-	}
+	/*
+	 * Each submodule has its own sanitization function.
+	 * The `$settings` parameter is passed by reference.
+	 */
 
-	if ( isset( $settings['bbq-headers_request-methods-header'] ) ) {
-		secupress_activate_submodule( $modulenow, 'request-methods-header' );
-	} else {
-		secupress_deactivate_submodule( $modulenow, 'request-methods-header' );
-	}
+	// Bad headers.
+	__secupress_bad_headers_settings_callback( $modulenow, $settings );
 
-	if ( isset( $settings['bbq-url-content_bad-contents'] ) ) {
-		secupress_activate_submodule( $modulenow, 'bad-url-contents' );
-	} else {
-		secupress_deactivate_submodule( $modulenow, 'bad-url-contents' );
-	}
+	// Bad contents.
+	__secupress_bad_contents_settings_callback( $modulenow, $settings );
 
-	if ( isset( $settings['bbq-url-content_bad-url-length'] ) ) {
-		secupress_activate_submodule( $modulenow, 'bad-url-length' );
-	} else {
-		secupress_deactivate_submodule( $modulenow, 'bad-url-length' );
-	}
+	// Anti Bruteforce Managment.
+	__secupress_bruteforce_settings_callback( $modulenow, $settings );
 
-	if ( isset( $settings['bbq-url-content_bad-sqli-scan'] ) ) {
-		secupress_activate_submodule( $modulenow, 'bad-sqli-scan' );
-	} else {
-		secupress_deactivate_submodule( $modulenow, 'bad-sqli-scan' );
-	}
+	// Country Managment.
+	__secupress_geoip_settings_callback( $modulenow, $settings );
 
 	return $settings;
+}
+
+
+/**
+ * (De)Activate Bad Headers plugins and sanitize settings.
+ *
+ * @since 1.0
+ *
+ * @param (string) $modulenow Current module.
+ * @param (array)  $settings  The module settings, passed by reference.
+ */
+function __secupress_bad_headers_settings_callback( $modulenow, &$settings ) {
+	secupress_manage_submodule( $modulenow, 'user-agents-header',     ! empty( $settings['bbq-headers_user-agents-header'] ) );
+	secupress_manage_submodule( $modulenow, 'request-methods-header', ! empty( $settings['bbq-headers_request-methods-header'] ) );
+
+	if ( ! empty( $settings['bbq-headers_user-agents-list'] ) ) {
+		$settings['bbq-headers_user-agents-list'] = sanitize_text_field( $settings['bbq-headers_user-agents-list'] );
+		$settings['bbq-headers_user-agents-list'] = secupress_sanitize_list( $settings['bbq-headers_user-agents-list'] );
+	}
+
+	if ( empty( $settings['bbq-headers_user-agents-list'] ) ) {
+		$settings['bbq-headers_user-agents-list'] = secupress_firewall_bbq_headers_user_agents_list_default();
+	}
+
+	unset( $settings['bbq-headers_request-methods-header'], $settings['bbq-headers_user-agents-header'] );
+}
+
+
+/**
+ * (De)Activate Bad Contents plugins and sanitize settings.
+ *
+ * @since 1.0
+ *
+ * @param (string) $modulenow Current module.
+ * @param (array)  $settings  The module settings, passed by reference.
+ */
+function __secupress_bad_contents_settings_callback( $modulenow, &$settings ) {
+	secupress_manage_submodule( $modulenow, 'bad-url-contents', ! empty( $settings['bbq-url-content_bad-contents'] ) );
+	secupress_manage_submodule( $modulenow, 'bad-url-length',   ! empty( $settings['bbq-url-content_bad-url-length'] ) );
+	secupress_manage_submodule( $modulenow, 'bad-sqli-scan',    ! empty( $settings['bbq-url-content_bad-sqli-scan'] ) );
+
+	if ( ! empty( $settings['bbq-url-content_bad-contents-list'] ) ) {
+		// Do not sanitize the value or the sky will fall.
+		$settings['bbq-url-content_bad-contents-list'] = secupress_sanitize_list( $settings['bbq-url-content_bad-contents-list'] );
+	}
+
+	if ( empty( $settings['bbq-url-content_bad-contents-list'] ) ) {
+		$settings['bbq-url-content_bad-contents-list'] = secupress_firewall_bbq_url_content_bad_contents_list_default();
+	}
+
+	unset( $settings['bbq-url-content_bad-sqli-scan'], $settings['bbq-url-content_bad-contents'], $settings['bbq-url-content_bad-url-length'] );
+}
+
+
+/**
+ * (De)Activate Anti Bruteforce Managment plugin and sanitize settings.
+ *
+ * @since 1.0
+ *
+ * @param (string) $modulenow Current module.
+ * @param (array)  $settings  The module settings, passed by reference.
+ */
+function __secupress_bruteforce_settings_callback( $modulenow, &$settings ) {
+	secupress_manage_submodule( $modulenow, 'bruteforce', ! empty( $settings['bruteforce_activated'] ) );
+
+	$settings['bruteforce_request_number'] = ! empty( $settings['bruteforce_request_number'] ) ? (int) secupress_validate_range( $settings['bruteforce_request_number'], 3, 1000, 9 ) : 9;
+	$settings['bruteforce_time_ban'] =       ! empty( $settings['bruteforce_time_ban'] )       ? (int) secupress_validate_range( $settings['bruteforce_time_ban'], 1, 60, 5 )         : 5;
+
+	unset( $settings['bruteforce_activated'] );
+}
+
+
+/**
+ * (De)Activate Country Managment plugin and sanitize settings.
+ *
+ * @since 1.0
+ *
+ * @param (string) $modulenow Current module.
+ * @param (array)  $settings  The module settings, passed by reference.
+ */
+function __secupress_geoip_settings_callback( $modulenow, &$settings ) {
+	$geoip_values = array( '-1' => 1, 'blacklist' => 1, 'whitelist' => 1, );
+
+	if ( empty( $settings['geoip-system_type'] ) || ! isset( $geoip_values[ $settings['geoip-system_type'] ] ) ) {
+		$settings['geoip-system_type'] = '-1';
+	}
+
+	secupress_manage_submodule( $modulenow, 'geoip-system', ( '-1' !== $settings['geoip-system_type'] ) );
+
+	$settings['geoip-system_countries'] = ! empty( $settings['geoip-system_countries'] ) && is_array( $settings['geoip-system_countries'] ) ? array_map( 'sanitize_text_field', $settings['geoip-system_countries'] ) : array();
 }
 
 
@@ -60,12 +137,14 @@ add_action( 'wp_secupress_first_install', '__secupress_install_firewall_module' 
 function __secupress_install_firewall_module( $module ) {
 	if ( 'all' === $module || 'firewall' === $module ) {
 		update_site_option( 'secupress_firewall_settings', array(
-			'bbq-headers_user-agents-header'      => '1',
-			'bbq-headers_user-agents-list'        => secupress_firewall_bbq_headers_user_agents_list_default(),
-			'bbq-headers_request-methods-header'  => '1',
-			'bbq-url-content_bad-contents'        => '1',
-			'bbq-url-content_bad-contents-list'   => secupress_firewall_bbq_url_content_bad_contents_list_default(),
-			'bbq-url-content_bad-url-length'      => '1',
+			// Bad headers.
+			'bbq-headers_user-agents-header'     => '1',
+			'bbq-headers_user-agents-list'       => secupress_firewall_bbq_headers_user_agents_list_default(),
+			'bbq-headers_request-methods-header' => '1',
+			// Bad contents.
+			'bbq-url-content_bad-contents'       => '1',
+			'bbq-url-content_bad-contents-list'  => secupress_firewall_bbq_url_content_bad_contents_list_default(),
+			'bbq-url-content_bad-url-length'     => '1',
 		) );
 	}
 }

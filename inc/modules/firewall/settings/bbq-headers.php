@@ -6,19 +6,19 @@ $this->set_current_section( 'bbq_headers' );
 $this->add_section( __( 'Bad Headers', 'secupress' ) );
 
 
-$field_name = $this->get_field_name( 'user-agents-header' );
+$field_name      = $this->get_field_name( 'user-agents-header' );
 $main_field_name = $field_name;
 
 $this->add_field(
 	__( 'Block Bad User-Agents', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description' => __( '', 'secupress' ), //// ?
 	),
 	array(
 		array(
 			'type'         => 'checkbox',
 			'name'         => $field_name,
+			'value'        => (int) secupress_is_submodule_active( 'firewall', 'user-agents-header' ),
 			'label'        => __( 'Yes, protect my site from bad user-agents', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, protect my site from bad user-agents', 'secupress' ),
@@ -30,6 +30,7 @@ $this->add_field(
 		),
 	)
 );
+
 
 $field_name = $this->get_field_name( 'user-agents-list' );
 
@@ -44,9 +45,9 @@ $this->add_field(
 		array(
 			'type'         => 'textarea',
 			'name'         => $field_name,
-			// 'label'        => __( 'None', 'secupress' ),
+			'label'        => __( 'List of User-Agents to block', 'secupress' ),
 			'label_for'    => $field_name,
-			// 'label_screen' => __( 'None', 'secupress' ),
+			'label_screen' => __( 'List of User-Agents to block', 'secupress' ),
 		),
 		array(
 			'type'         => 'helper_description',
@@ -55,6 +56,7 @@ $this->add_field(
 		),
 	)
 );
+
 
 $field_name = $this->get_field_name( 'request-methods-header' );
 
@@ -68,6 +70,7 @@ $this->add_field(
 		array(
 			'type'         => 'checkbox',
 			'name'         => $field_name,
+			'value'        => (int) secupress_is_submodule_active( 'firewall', 'request-methods-header' ),
 			'label'        => __( 'Yes, protect my site from bad request methods', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, protect my site from bad request methods', 'secupress' ),
