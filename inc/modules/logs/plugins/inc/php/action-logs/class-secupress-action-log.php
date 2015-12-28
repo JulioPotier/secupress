@@ -113,7 +113,8 @@ class SecuPress_Action_Log extends SecuPress_Log {
 		}
 
 		// Now, pre-proccess (maybe).
-		$method_name = '_pre_process_' . str_replace( array( '.', '-', '|' ), '_', $args['type'] ) . '_' . $args['code'];
+		$method_name = str_replace( array( '.', '-', '|' ), '_', $args['type'] );
+		$method_name = '_pre_process_' . $method_name . '_' . $args['code'];
 
 		if ( method_exists( __CLASS__, $method_name ) ) {
 			$data = (array) call_user_func_array( array( $instance, $method_name ), $data );
