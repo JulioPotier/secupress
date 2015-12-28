@@ -29,8 +29,16 @@ function secupress_block_bad_user_agents() {
 		secupress_block( 'UAHT' );
 	}
 
-	$bad_user_agents = trim( secupress_get_module_option( 'bbq-headers_user-agents-list', '', 'firewall' ) );
-	$bad_user_agents = preg_replace( '/\s*,\s*/', '|', addcslashes( $bad_user_agents, '/' ) );
+	$bad_user_agents = secupress_get_module_option( 'bbq-headers_user-agents-list', '', 'firewall' );
+
+	if ( ! empty( $bad_user_agents ) ) {
+		$bad_user_agents = preg_replace( '/\s*,\s*/', '|', addcslashes( $bad_user_agents, '/' ) );
+		$bad_user_agents = trim( $bad_user_agents, '| ' );
+
+		while ( false !== strpos( $bad_user_agents, '||' ) ) {
+			$bad_user_agents = str_replace( '||', '|', $bad_user_agents );
+		}
+	}
 
 	if ( $bad_user_agents && preg_match( '/' . $bad_user_agents . '/i', $user_agent ) ) {
 		secupress_block( 'UAHB' );
