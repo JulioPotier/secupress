@@ -63,7 +63,7 @@ function secupress_get_modules() {
 			'dashicon'    => 'email-alt',
 			'description' => array(
 				__( 'Comments are great for your website, but bot traffic represent about 60 % of the internet. Spams are done by these bots, and they just want to add their content in your website. Don\'t let them do that!', 'secupress' ),
-				sprintf( __( 'Do not forget to visit the <a href="%s">Settings &raquo; Discussion</a> area to add words to the blacklist and other usual settings regarding comments.', 'secupress' ), admin_url( 'options-discussion.php' ) ),
+				sprintf( __( 'Do not forget to visit the <a href="%s">Settings &rsaquo; Discussion</a> area to add words to the blacklist and other usual settings regarding comments.', 'secupress' ), admin_url( 'options-discussion.php' ) ),
 				__( 'By default, we block identity usurpation, so if someone tries to comment using your email/name, the comment will be blocked.', 'secupress' ),
 				__( 'Also by default, we block bad IPs, author name, email and website url known as spammer.', 'secupress' ),
 			),
