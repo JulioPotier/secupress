@@ -57,12 +57,9 @@ class SecuPress_Log {
 	 * @return (string|int) The formated date if a format is provided, the timestamp integer otherwise.
 	 */
 	public function get_time( $format = 'Y-m-d H:i:s' ) {
-		static $gmt_offset;
-		if ( ! isset( $gmt_offset ) ) {
-			$gmt_offset = get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;
-		}
-		$timestamp = (int) substr( $this->time, 0, strpos( $this->time, '#' ) );
-		$timestamp = $format ? date_i18n( $format, $timestamp + $gmt_offset ) : $timestamp;
+		$gmt_offset = get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;
+		$timestamp  = (int) substr( $this->time, 0, strpos( $this->time, '#' ) );
+		$timestamp  = $format ? date_i18n( $format, $timestamp + $gmt_offset ) : $timestamp;
 		return esc_html( $timestamp );
 	}
 
