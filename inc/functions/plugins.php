@@ -130,7 +130,6 @@ function secupress_sanitize_list( $list, $separator = ', ' ) {
 
 	$trimed_sep = trim( $separator );
 	$double_sep = $trimed_sep . $trimed_sep;
-	$list = sanitize_text_field( $list );
 	$list = preg_replace( '/\s*' . $trimed_sep . '\s*/', $trimed_sep, $list );
 	$list = trim( $list, $trimed_sep . ' ' );
 
