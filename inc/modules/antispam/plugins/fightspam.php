@@ -62,6 +62,8 @@ function secupress_prevoid_comment( $approved, $commentdata ) {
 
 	$approved = 'blacklisted' == secupress_get_spam_status( $commentdata['comment_author_url'] ) ? $action : $approved;
 
+	secupress_antispam_set_comment_meta( $approved );
+
 	return $approved;	
 }
 
@@ -75,6 +77,8 @@ function secupress_trash_pingbacks_trackbacks( $approved, $commentdata ) {
 		$approved = 'trash';
 		do_action( 'secupress.antispam.block', 'pingback+trackback', $approved );
 	}
+
+	secupress_antispam_set_comment_meta( $approved );
 	return $approved;
 }
 
@@ -91,6 +95,8 @@ function secupress_shortcode_as_spam_check( $approved, $commentdata ) {
 			do_action( 'secupress.antispam.block', 'shortcode-as-spam', $approved );
 		}
 	}
+
+	secupress_antispam_set_comment_meta( $approved );
 	return $approved;
 }
 
@@ -114,6 +120,7 @@ function secupress_use_wp_blacklist_check_filter( $approved, $commentdata ) {
 	$approved = wp_blacklist_check( $commentdata['comment_author'], $commentdata['comment_author_email'], $commentdata['comment_author_url'], $commentdata['comment_content'], $commentdata['comment_author_IP'], $commentdata['comment_agent'] ) ? 'trash' : $approved;
 	do_action( 'secupress.antispam.block', 'blacklist_check', $approved );
 
+	secupress_antispam_set_comment_meta( $approved );
 	return $approved;
 }
 
@@ -247,6 +254,14 @@ function secupress_get_spam_status( $value ) {
 add_action( 'admin_print_scripts-post.php', 'secupress_antispam_no_pingstatus_css' );
 function secupress_antispam_no_pingstatus_css() {
 	if ( secupress_get_module_option( 'antispam_pings-trackbacks', 'mark-ptb', 'antispam' ) == 'forbid-ptb' ) {
-		echo '<style>label[for=ping_status]{display: none;}</style>';
+		echo '<style>label[for="ping_status"]{display: none;}</style>';
 	}
+}
+
+function secupress_antispam_set_comment_meta( $comment_id, $approved ) 
+
+	if ( 'trash' == $approved || 'spam' == $approved && false === get_comment_meta( $comment_id, 'secupress_antispam_status' ) ) {
+		add_comment_meta( $comment_id, 'secupress_antispam_status', $approved, true );
+	}
+
 }
