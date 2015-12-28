@@ -20,14 +20,22 @@ function secupress_block_bad_url_contents() {
 		return;
 	}
 
-	$bad_url_contents = trim( secupress_get_module_option( 'bbq-url-content_bad-contents-list', '', 'firewall' ) );
-	$bad_url_contents = preg_replace( '/\s*,\s*/', '|', preg_quote( $bad_url_contents, '/' ) );
+	$bad_url_contents = secupress_get_module_option( 'bbq-url-content_bad-contents-list', '', 'firewall' );
+
+	if ( ! empty( $bad_url_contents ) ) {
+		$bad_url_contents = preg_replace( '/\s*,\s*/', '|', preg_quote( $bad_url_contents, '/' ) );
+		$bad_url_contents = trim( $bad_url_contents, '| ' );
+
+		while ( false !== strpos( $bad_url_contents, '||' ) ) {
+			$bad_url_contents = str_replace( '||', '|', $bad_url_contents );
+		}
+	}
 
 	if ( empty( $bad_url_contents ) ) {
 		return;
 	}
 
-	if ( preg_match( '/' . $bad_url_contents . '/i', $_SERVER['QUERY_STRING'] ) ) {
+	if ( preg_match( '/' . $bad_url_contents . '/i', $_SERVER['QUERY_STRING'], $matches ) ) {
 		secupress_block( 'BUC', 503 );
 	}
 
