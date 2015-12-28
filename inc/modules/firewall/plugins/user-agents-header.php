@@ -6,6 +6,7 @@ Main Module: firewall
 Author: SecuPress
 Version: 1.0
 */
+
 add_action( 'secupress_plugins_loaded', 'secupress_block_bad_user_agents', 0 );
 /**
  * Filter the user agent to block it or not
@@ -29,10 +30,9 @@ function secupress_block_bad_user_agents() {
 	}
 
 	$bad_user_agents = trim( secupress_get_module_option( 'bbq-headers_user-agents-list', '', 'firewall' ) );
-	$bad_user_agents = preg_replace( '/\s*,\s*/', '|', preg_quote( $bad_user_agents, '/' ) );
+	$bad_user_agents = preg_replace( '/\s*,\s*/', '|', addcslashes( $bad_user_agents, '/' ) );
 
 	if ( $bad_user_agents && preg_match( '/' . $bad_user_agents . '/i', $user_agent ) ) {
 		secupress_block( 'UAHB' );
 	}
-
 }
