@@ -60,112 +60,6 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 	}
 
 
-	/**
-	 * Check a  privilege for the DB_USER@DB_NAME on DB_HOST
-	 *
-	 * Param @privilege (string) MySQL privilege
-	 *
-	 * @since 1.0
-	 * @return bool
-	 **/
-	final protected static function db_access_granted() {
-		global $wpdb;
-		// get privilege for the WP user
-		$results = $wpdb->get_results( 'SHOW GRANTS FOR ' . DB_USER . '@' . DB_HOST );
-
-		$access_granted = false;
-
-		// we got something
-		if ( isset( $results[0]->{'Grants for ' . DB_USER . '@' . DB_HOST} ) ) {
-
-			foreach ( $results as $result ) {
-				$result = reset( $result );
-				// USAGE only is not enought
-				if ( preg_match( '/GRANT USAGE ON/', $result ) ) {
-					continue;
-				}
-				$quoted_db_name = preg_quote( DB_NAME );
-				$access_granted = preg_match( '/ALL PRIVILEGES ON `?' . $quoted_db_name . '`?|ALL PRIVILEGES ON \*\.\*|GRANT .*, ALTER,.* ON `?' . $quoted_db_name .'`?|GRANT .*, ALTER,.* ON \*\.\*/', $result );
-
-				if ( $access_granted ) {
-					break;
-				}
-			}
-
-			return $access_granted;
-		}
-	}
-
-	/**
-	 * Create a unique and new DB prefix without modifing wp-config.php
-	 *
-	 * @return string
-	 * @since 1.0
-	 **/
-	final protected static function create_unique_db_prefix() {
-		global $wpdb;
-		$new_prefix = $wpdb->prefix;
-		$all_tables = $wpdb->get_results( "SHOW TABLES LIKE '{$wpdb->prefix}%'" );
-		$all_tables = wp_list_pluck( $all_tables, 'Tables_in_' . DB_NAME . ' (' . $wpdb->prefix . '%)' );
-		while ( in_array( $new_prefix . 'posts', $all_tables ) ) {
-			$new_prefix = strtolower( 'wp_' . secupress_generate_password( 6, array( 'min' => 'true', 'maj' => false, 'num' => false ) ) . '_' );
-		}
-
-		return $new_prefix;
-	}
-
-	/**
-	 * Return tables to be renamed, filtered.
-	 *
-	 * @since 1.0
-	 * @return array of DB tables
-	 **/
-	final protected static function get_correct_tables() {
-		global $wpdb;
-		$wp_tables     = static::get_wp_tables();
-		$all_tables    = $wpdb->get_results( "SHOW TABLES LIKE '{$wpdb->prefix}%'" );
-		$all_tables    = wp_list_pluck( $all_tables, 'Tables_in_' . DB_NAME . ' (' . $wpdb->prefix . '%)' );
-		$test_tables   = array();
-		$prefixes      = array( $wpdb->prefix );
-
-		$merges_values = array_merge( array_keys( array_reverse( $wp_tables ) ), $prefixes );
-		foreach ( $all_tables as $table ) {
-			$test_tables[] = str_replace( $merges_values, '', $table );
-		}
-		$test_tables_filter = array_filter( $test_tables );
-		$test_tables_unique = array_keys( array_flip( $test_tables_filter ) );
-		$duplicates         = array_count_values( $test_tables_filter );
-		$duplicates         = array_keys( array_filter( $duplicates, function( $a ){ return 1 < $a; } ) );
-		$dup_tables     = array();
-		foreach ( $duplicates as $dup_prefix ) {
-			$dup_tables = array_merge( $dup_tables, $wpdb->get_results( "SHOW TABLES LIKE '{$wpdb->prefix}{$dup_prefix}%'" ) );
-			$dup_tables = wp_list_pluck( $dup_tables, 'Tables_in_' . DB_NAME . ' (' . $wpdb->prefix . $dup_prefix . '%)' );
-		}
-		$good_tables = array_diff( $all_tables, $dup_tables );
-		$good_tables = array_diff( $good_tables, $wp_tables );
-
-		return $good_tables;
-	}
-
-	/**
-	 * Return correct WP tables
-	 *
-	 * @since 1.0
-	 * @return array of DB tables
-	 **/
-	final protected static function get_wp_tables() {
-		global $wpdb;
-		$wp_tables = $wpdb->tables();
-		if ( is_multisite() ) {
-			$query = $wpdb->prepare( "SHOW TABLES LIKE %s", $wpdb->esc_like( $wpdb->sitecategories ) );
-		 	if ( ! $wpdb->get_var( $query ) ) {
-				unset( $wp_tables['sitecategories'] );
-			}
-		}
-
-		return $wp_tables;
-	}
-
 	public function scan() {
 		global $wpdb;
 		if ( get_transient( 'select-db-tables-to-rename' ) ) {
@@ -286,13 +180,13 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 
 			$old_prefix = $wpdb->prefix;
 
-			if ( static::db_access_granted() ) {
+			if ( secupress_db_access_granted() ) {
 
 				if ( is_writable( $wpconfig_filename ) && preg_match( '/\$table_prefix.*=.*(\'' . $old_prefix . '\'|"' . $old_prefix . '");.*/', file_get_contents( $wpconfig_filename ) ) ) {
 
-					$wp_tables = static::get_wp_tables();
+					$wp_tables = secupress_get_wp_tables();
 
-					$good_tables     = static::get_correct_tables();
+					$good_tables     = secupress_get_correct_tables();
 					$count_wp_tables = count( $wp_tables );
 					if ( $good_tables ) {
 						$this->add_fix_message( 304 );
@@ -313,7 +207,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 		// Other constants
 		$constants = array(
 			'ALLOW_UNFILTERED_UPLOADS' => false,    'DIEONDBERROR'     => false,    'DISALLOW_FILE_EDIT' => 1,
-			'DISALLOW_UNFILTERED_HTML' => 1,        'ERRORLOGFILE'     => '!empty', 'FS_CHMOD_DIR'       => 755,
+			'DISALLOW_UNFILTERED_HTML' => 1,        'ERRORLOGFILE'     => 'elf',    'FS_CHMOD_DIR'       => 755,
 			'FS_CHMOD_FILE'            => 644,      'RELOCATE'         => false,    'SCRIPT_DEBUG'       => false,
 			'WP_ALLOW_REPAIR'          => '!isset', 'WP_DEBUG'         => false,    'WP_DEBUG_DISPLAY'   => false,
 		);
@@ -332,10 +226,12 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 						$not_fixed[] = sprintf( '<code>%s</code>', $constant );
 					}
 					break;
-				case '!empty':
-					if ( empty( $check ) ) {
-						$not_fixed[] = sprintf( '<code>%s</code>', $constant );
+				case 'elf':
+					if ( ! is_null( $check ) ) {
+						$replaced = secupress_replace_content( $wpconfig_filename, "/define\(.*('" . $constant . "'|\"" . $constant . "\").*,/", "/*Commented by SecuPress*/ // $0" );
 					}
+					$errorlogfile = dirname( ini_get( 'error_log' ) ) . '/wp_errorlogfile.log';
+					$new_content .= "define( '{$constant}', '{$errorlogfile}' ); // Added by SecuPress\n";
 					break;
 				case 1:
 					if ( ! $check ) {
@@ -372,6 +268,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 			}
 
 		}
+
 		if ( $new_content ) {
 			secupress_put_contents( $wpconfig_filename, $new_content, array( 'marker' => 'Correct Constants Values', 'put' => 'append', 'text' => '<?php' ) );
 		}
@@ -388,6 +285,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 		if ( isset( $not_fixed[0] ) ) {
 			$this->add_fix_message( 300, array( $not_fixed ) );
 		}
+
 		$this->maybe_set_fix_status( 0 );
 
 		return parent::fix();
@@ -400,10 +298,10 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 		}
 		global $wpdb;
 		$old_prefix   = $wpdb->prefix;
-		$new_prefix   = static::create_unique_db_prefix();
+		$new_prefix   = secupress_create_unique_db_prefix();
 		$query_tables = array();
-		$good_tables  = static::get_correct_tables();
-		$wp_tables    = static::get_wp_tables();
+		$good_tables  = secupress_get_correct_tables();
+		$wp_tables    = secupress_get_wp_tables();
 
 		if ( isset( $_POST['secupress-select-db-tables-to-rename-flag'] ) ) {
 			$good_tables = array_intersect( (array) $_POST['secupress-select-db-tables-to-rename'], $good_tables );
@@ -452,8 +350,8 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 
 	protected function get_fix_action_template_parts() {
 		global $wpdb;
-		$good_tables = static::get_correct_tables();
-		$wp_tables   = static::get_wp_tables();
+		$good_tables = secupress_get_correct_tables();
+		$wp_tables   = secupress_get_wp_tables();
 		$blog_ids    = ! is_multisite() ? array( '1' ) : $wpdb->get_col( "SELECT blog_id FROM {$wpdb->blogs}" );
 
 		$form  = '<div class="show-input">';

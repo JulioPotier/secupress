@@ -165,12 +165,16 @@ function secupress_put_contents( $file, $new_content, $args ) {
 	// Get content of file
 	if ( file_exists( $file ) ) {
 		$ftmp         = file_get_contents( $file );
+		preg_match( '/' . $comment_char . ' BEGIN SecuPress ' . $args['marker'] . '(.*)' . $comment_char . ' END SecuPress\s*?/isU', $ftmp, $old_content );
 		$file_content = preg_replace( '/' . $comment_char . ' BEGIN SecuPress ' . $args['marker'] . '(.*)' . $comment_char . ' END SecuPress\s*?/isU', '', $ftmp );
 	}
 
 	if ( ! empty( $new_content ) ) {
 
 		$content  = $comment_char . ' BEGIN SecuPress ' . $args['marker'] . PHP_EOL;
+		if ( isset( $old_content[1] ) ) {
+			$content .= trim( $old_content[1] ) . PHP_EOL;
+		}
 		$content .= trim( $new_content ) . PHP_EOL;
 		$content .= $comment_char . ' END SecuPress' . PHP_EOL . PHP_EOL;
 
