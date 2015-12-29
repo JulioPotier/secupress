@@ -491,6 +491,16 @@ function secupress_ban_ip( $IP = null, $die = true ) {
 
 	update_site_option( SECUPRESS_BAN_IP, $ban_ips );
 
+	/**
+	 * Fires once a IP is banned.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $IP      The IP banned.
+	 * @param (array)  $ban_ips The list of IPs banned (keys) and the time they were banned (values).
+	 */
+	do_action( 'secupress.ip_banned', $IP, $ban_ips );
+
 	if ( apply_filters( 'write_ban_in_htaccess', true ) ) {
 		secupress_write_htaccess( 'ban_ip', secupress_get_htaccess_ban_ip() );
 	}
