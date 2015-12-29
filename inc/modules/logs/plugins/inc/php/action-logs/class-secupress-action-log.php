@@ -359,6 +359,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 * @return (array) An array containing:
 	 *                 - (string) The current URL, made relative.
 	 *                 - (string) The IP blocked.
+	 *                 - (string) The "module".
 	 *                 - (array)  The `$_SERVER` superglobal.
 	 */
 	protected function _pre_process_action_secupress_block( $module, $ip ) {
