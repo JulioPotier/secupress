@@ -85,7 +85,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	 * @var Actions to log.
 	 */
 	protected $actions = array(
-		'secupress.before.die' => 3, // `secupress_die()`
+		'secupress.block'      => 2, // `secupress_block()`
 		'secupress.ip_banned'  => 1, // `secupress_ban_ip()`
 		'switch_theme'         => 1, // `switch_theme()`
 		'wp_login'             => 2, // `wp_signon()`

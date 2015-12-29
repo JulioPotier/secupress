@@ -349,22 +349,21 @@ class SecuPress_Action_Log extends SecuPress_Log {
 
 
 	/**
-	 * Fires when `secupress_die()` is called.
+	 * Fires when `secupress_block()` is called.
 	 *
 	 * @since 1.0
 	 *
-	 * @param (string) $message The message displayed.
-	 * @param (string) $url     The current URL.
-	 * @param (array)  $_SERVER The superglobal var.
+	 * @param (string) $module The name of the "module".
+	 * @param (string) $ip     The IP blocked.
 	 *
 	 * @return (array) An array containing:
 	 *                 - (string) The current URL, made relative.
-	 *                 - (string) The message.
+	 *                 - (string) The IP blocked.
 	 *                 - (array)  The `$_SERVER` superglobal.
 	 */
-	protected function _pre_process_action_secupress_before_die( $message, $url, $server ) {
-		$url = wp_make_link_relative( $url );
-		return compact( 'url', 'message', 'server' );
+	protected function _pre_process_action_secupress_block( $module, $ip ) {
+		$url = wp_make_link_relative( secupress_get_current_url() );
+		return array( 'url' => $url, 'ip' => $ip, 'module' => $module, 'server' => $_SERVER );
 	}
 
 
@@ -722,22 +721,22 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 */
 	protected function _set_action_message() {
 		$messages = array(
-			'secupress.before.die' => str_replace( '%PLUGIN-NAME%', '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>',
-				__( '%PLUGIN-NAME% prevented a request at %1$s with the following message: %2$s Here is the server configuration at the moment: %3$s', 'secupress' )
+			'secupress.block'     => str_replace( '%PLUGIN-NAME%', '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>',
+				__( '%PLUGIN-NAME% prevented a request at %1$s from the IP %2$s. Block ID: %3$s. The server configuration at the moment: %4$s', 'secupress' )
 			),
-			'secupress.ip_banned'  => __( 'IP banned: %s.', 'secupress' ),
-			'switch_theme'         => __( 'Theme activated: %s.', 'secupress' ),
-			'wp_login'             => __( 'Administrator %s logged in.', 'secupress' ),
-			'delete_user'          => __( 'User deleted: %1$s. Post assigned to: %2$s.', 'secupress' ),
-			'profile_update'       => __( '%1$s\'s user data changed from: %2$s To: %3$s', 'secupress' ),
-			'user_register'        => __( 'New user %s created.', 'secupress' ),
-			'added_user_meta'      => __( 'User meta %2$s added to %1$s with the value %3$s', 'secupress' ),
-			'updated_user_meta'    => __( 'User meta %2$s updated for %1$s with the value %3$s', 'secupress' ),
-			'updated_user_meta'    => __( 'User meta %2$s deleted for %1$s. Previous value was: %3$s', 'secupress' ),
-			'wpmu_new_blog'        => __( 'Blog %1$s created with %2$s as Administrator.', 'secupress' ),
-			'delete_blog'          => __( 'Blog %s deleted.', 'secupress' ),
-			'phpmailer_init'       => __( 'E-mail sent from %1$s to %2$s with the following subject: %3$s', 'secupress' ),
-			'http_api_debug'       => __( 'External request to: %1$s with the following arguments: %2$s The response was: %3$s', 'secupress' ),
+			'secupress.ip_banned' => __( 'IP banned: %s.', 'secupress' ),
+			'switch_theme'        => __( 'Theme activated: %s.', 'secupress' ),
+			'wp_login'            => __( 'Administrator %s logged in.', 'secupress' ),
+			'delete_user'         => __( 'User deleted: %1$s. Post assigned to: %2$s.', 'secupress' ),
+			'profile_update'      => __( '%1$s\'s user data changed from: %2$s To: %3$s', 'secupress' ),
+			'user_register'       => __( 'New user %s created.', 'secupress' ),
+			'added_user_meta'     => __( 'User meta %2$s added to %1$s with the value %3$s', 'secupress' ),
+			'updated_user_meta'   => __( 'User meta %2$s updated for %1$s with the value %3$s', 'secupress' ),
+			'updated_user_meta'   => __( 'User meta %2$s deleted for %1$s. Previous value was: %3$s', 'secupress' ),
+			'wpmu_new_blog'       => __( 'Blog %1$s created with %2$s as Administrator.', 'secupress' ),
+			'delete_blog'         => __( 'Blog %s deleted.', 'secupress' ),
+			'phpmailer_init'      => __( 'E-mail sent from %1$s to %2$s with the following subject: %3$s', 'secupress' ),
+			'http_api_debug'      => __( 'External request to: %1$s with the following arguments: %2$s The response was: %3$s', 'secupress' ),
 		);
 
 		$this->message = isset( $messages[ $this->code ] ) ? $messages[ $this->code ] : '';
@@ -819,7 +818,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 */
 	protected static function _get_action_criticity( $code ) {
 		switch ( $code ) {
-			case 'secupress.before.die':
+			case 'secupress.block':
 				return 'high';
 			default:
 				return 'normal';
