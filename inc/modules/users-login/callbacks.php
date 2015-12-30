@@ -111,10 +111,10 @@ function __secupress_login_protection_settings_callback( $modulenow, &$settings 
 	$settings['login-protection_nonlogintimeslot']['to_hour']     = ! empty( $settings['login-protection_nonlogintimeslot']['to_hour'] )     ? secupress_validate_range( $settings['login-protection_nonlogintimeslot']['to_hour'], 0, 23, 0 )   : 0;
 	$settings['login-protection_nonlogintimeslot']['to_minute']   = ! empty( $settings['login-protection_nonlogintimeslot']['to_minute'] )   && in_array( $settings['login-protection_nonlogintimeslot']['to_minute'], array( '0', '15', '30', '45' ) )   ? (int) $settings['login-protection_nonlogintimeslot']['to_minute']   : 0;
 
-	secupress_manage_submodule( $modulenow, 'ooc',              ! empty( $settings['login-protection_ooc'] ) && secupress_is_pro() );
-	secupress_manage_submodule( $modulenow, 'sessions-control', ! empty( $settings['login-protection_sessions_control'] ) && secupress_is_pro() );
+	secupress_manage_submodule( $modulenow, 'only-one-connexion', ! empty( $settings['login-protection_only-one-connexion'] ) && secupress_is_pro() );
+	secupress_manage_submodule( $modulenow, 'sessions-control',   ! empty( $settings['login-protection_sessions_control'] ) && secupress_is_pro() );
 
-	unset( $settings['login-protection_type'], $settings['login-protection_ooc'], $settings['login-protection_sessions_control'] );
+	unset( $settings['login-protection_type'], $settings['login-protection_only-one-connexion'], $settings['login-protection_sessions_control'] );
 }
 
 

@@ -110,7 +110,7 @@ $this->add_field(
 );
 
 
-$field_name = $this->get_field_name( 'ooc' );
+$field_name = $this->get_field_name( 'only-one-connexion' );
 $this->add_field(
 	__( 'Avoid Double Connexions', 'secupress' ),
 	array(
