@@ -340,20 +340,6 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					<?php
 					break;
 
-				case 'checkbox' :
-
-					if ( isset( $args['label_screen'] ) ) {
-						?>
-						<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
-						<?php
-					}
-					?>
-					<label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
-						<input type="checkbox" id="<?php echo $args['name']; ?>" class="<?php echo $class; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]" value="1"<?php echo $readonly; ?> <?php checked( $value, 1 ); ?> <?php echo $parent; ?>/> <?php echo $args['label']; ?>
-					</label>
-					<?php
-					break;
-
 				case 'select' : ?>
 
 					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
@@ -376,23 +362,18 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					<?php
 					break;
 
-				case 'roles' :
+				case 'checkbox' :
 
-					$value = (array) $value;
-					$roles = new WP_Roles();
-					$roles = $roles->get_names();
-					$roles = array_map( 'translate_user_role', $roles );
-					?>
-					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
-					<?php
-					foreach ( $roles as $val => $title ) {
+					if ( isset( $args['label_screen'] ) ) {
 						?>
-						<label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
-							<input type="checkbox" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][]" value="<?php echo $val; ?>"<?php checked( ! in_array( $val, $value ) ); ?>> <?php echo $title; ?>
-						</label><br />
-						<input type="hidden" name="<?php echo $option_name; ?>[hidden_<?php echo $args['name']; ?>][]" value="<?php echo $val; ?>">
+						<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
 						<?php
 					}
+					?>
+					<label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
+						<input type="checkbox" id="<?php echo $args['name']; ?>" class="<?php echo $class; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]" value="1"<?php echo $readonly; ?> <?php checked( $value, 1 ); ?> <?php echo $parent; ?>/> <?php echo $args['label']; ?>
+					</label>
+					<?php
 					break;
 
 				case 'checkboxes' : ?>
@@ -413,6 +394,60 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 						<?php
 					}
 
+					break;
+
+				case 'radio' : ?>
+
+					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
+					<?php
+					foreach ( $args['options'] as $val => $title ) {
+						$readonly = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' readonly="readonly" disabled="disabled"' : '';
+						?>
+						<label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
+							<input type="radio" id="<?php echo $args['name']; ?>_<?php echo $val; ?>" value="<?php echo $val; ?>"<?php checked( $value, $val ); ?> name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]"<?php echo $readonly; ?>> <?php echo $title; ?>
+						</label>
+						<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? secupress_get_pro_version_string( '<span class="description">%s</span>' ) : ''; ?>
+						<br />
+						<?php
+					}
+
+					break;
+
+				case 'radios' : ?>
+
+					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
+					<?php
+
+					foreach ( $args['options'] as $val => $title ) {
+						$readonly = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' readonly="readonly" disabled="disabled"' : '';
+						?>
+						<label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
+							<input type="radio" id="<?php echo $args['name']; ?>_<?php echo $val; ?>" value="<?php echo $val; ?>"<?php checked( $val, $value ); ?> name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][]"<?php echo $readonly; ?>> <?php echo $title; ?>
+						</label>
+						<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? secupress_get_pro_version_string( '<span class="description">%s</span>' ) : ''; ?>
+						<br />
+						<?php
+					}
+
+					break;
+
+				case 'roles' :
+
+					$value = (array) $value;
+					$roles = new WP_Roles();
+					$roles = $roles->get_names();
+					$roles = array_map( 'translate_user_role', $roles );
+					?>
+					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
+					<?php
+					foreach ( $roles as $val => $title ) {
+						?>
+						<label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
+							<input type="checkbox" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][]" value="<?php echo $val; ?>"<?php checked( ! in_array( $val, $value ) ); ?>> <?php echo $title; ?>
+						</label><br />
+						<input type="hidden" name="<?php echo $option_name; ?>[hidden_<?php echo $args['name']; ?>][]" value="<?php echo $val; ?>">
+						<?php
+					}
 					break;
 
 				case 'countries' : ?>
@@ -438,41 +473,6 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 							<?php
 						}
 						echo '<br />';
-					}
-
-					break;
-
-				case 'radios' : ?>
-
-					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
-					<?php
-
-					foreach ( $args['options'] as $val => $title ) {
-						$readonly = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' readonly="readonly" disabled="disabled"' : '';
-						?>
-						<label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
-							<input type="radio" id="<?php echo $args['name']; ?>_<?php echo $val; ?>" value="<?php echo $val; ?>"<?php checked( $val, $value ); ?> name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][]"<?php echo $readonly; ?>> <?php echo $title; ?>
-						</label>
-						<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? secupress_get_pro_version_string( '<span class="description">%s</span>' ) : ''; ?>
-						<br />
-						<?php
-					}
-
-					break;
-
-				case 'radio' : ?>
-
-					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
-					<?php
-					foreach ( $args['options'] as $val => $title ) {
-						$readonly = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' readonly="readonly" disabled="disabled"' : '';
-						?>
-						<label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
-							<input type="radio" id="<?php echo $args['name']; ?>_<?php echo $val; ?>" value="<?php echo $val; ?>"<?php checked( $value, $val ); ?> name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]"<?php echo $readonly; ?>> <?php echo $title; ?>
-						</label>
-						<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? secupress_get_pro_version_string( '<span class="description">%s</span>' ) : ''; ?>
-						<br />
-						<?php
 					}
 
 					break;
