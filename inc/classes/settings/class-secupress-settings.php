@@ -797,12 +797,12 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				$class = ' class="' . esc_attr( trim( $class ) ) . '"';
 			}
 
-			unset( $field['args']['class'], $field['args']['depends'] );
+			unset( $field['args']['id'], $field['args']['class'], $field['args']['depends'] );
 
 			echo "<tr{$id}{$class}>";
 
-				if ( ! empty( $field['args']['label_for'] ) ) {
-					echo '<th scope="row"><label for="' . esc_attr( $field['args']['label_for'] ) . '">' . $field['title'] . '</label></th>';
+				if ( ! empty( $field['args'][0]['label_for'] ) ) {
+					echo '<th scope="row"><label for="' . esc_attr( $field['args'][0]['label_for'] ) . '">' . $field['title'] . '</label></th>';
 				} else {
 					echo '<th scope="row">' . $field['title'] . '</th>';
 				}
