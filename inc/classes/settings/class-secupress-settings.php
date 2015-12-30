@@ -310,6 +310,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			switch ( $field_type ) {//// Supprimer les labels si $label est vide. Supprimer les legend si pas de fieldset.
 				case 'number' :
 				case 'email' :
+				case 'tel' :
 				case 'text' :
 
 					$min = isset( $args['min'] ) ? ' min="' . (int) $args['min'] . '"' : '';
@@ -362,7 +363,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 							$value = (array) $value;
 
 							foreach ( $args['options'] as $val => $title ) {
-								$readonly = '_' !== $val[0] ? '' : ' readonly="readonly" disabled="disabled"';
+								$readonly = '_' === $val[0] && ! secupress_is_pro() ? ' readonly="readonly" disabled="disabled"' : '';
 								?>
 								<option value="<?php echo $val; ?>" <?php selected( in_array( $val, $value ) ); echo $readonly;?>><?php echo $title; ?></option>
 								<?php
@@ -402,7 +403,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					$radio_style = $radio_style ? ' class="radiobox"' : '';
 
 					foreach ( $args['options'] as $val => $title ) {
-						$readonly = '_' !== $val[0] ? '' : ' readonly="readonly" disabled="disabled"';
+						$readonly = '_' === $val[0] && ! secupress_is_pro() ? ' readonly="readonly" disabled="disabled"' : '';
 						?>
 						<label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
 							<input type="checkbox" id="<?php echo $args['name']; ?>_<?php echo $val; ?>"<?php echo $radio_style; ?> value="<?php echo $val; ?>"<?php checked( in_array( $val, $value ) ); ?> name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][]"<?php echo $readonly; ?>> <?php echo $title; ?>
@@ -447,7 +448,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					<?php
 
 					foreach ( $args['options'] as $val => $title ) {
-						$readonly = '_' !== $val[0] ? '' : ' readonly="readonly" disabled="disabled"';
+						$readonly = '_' === $val[0] && ! secupress_is_pro() ? ' readonly="readonly" disabled="disabled"' : '';
 						?>
 						<label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
 							<input type="radio" id="<?php echo $args['name']; ?>_<?php echo $val; ?>" value="<?php echo $val; ?>"<?php checked( $val, $value ); ?> name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][]"<?php echo $readonly; ?>> <?php echo $title; ?>
@@ -464,7 +465,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
 					<?php
 					foreach ( $args['options'] as $val => $title ) {
-						$readonly = '_' !== $val[0] ? '' : ' readonly="readonly" disabled="disabled"';
+						$readonly = '_' === $val[0] && ! secupress_is_pro() ? ' readonly="readonly" disabled="disabled"' : '';
 						?>
 						<label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
 							<input type="radio" id="<?php echo $args['name']; ?>_<?php echo $val; ?>" value="<?php echo $val; ?>"<?php checked( $value, $val ); ?> name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]"<?php echo $readonly; ?>> <?php echo $title; ?>
@@ -599,17 +600,6 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		}
 	}
 
-	/**
-	 * Outputs the 404 logs
-	 *
-	 * @since 1.0
-	 */
-	protected function _404_logs() {
-		//// tempo
-		echo '<p><em>No 404 yet</em></p>';
-		echo '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_clear_404' ), 'secupress_clear_404' ) . '" class="button button-secondary">' . __( 'Clear 404', 'secupress' ) . '</a>';
-	}
-
 
 	/**
 	 * Displays the scheduled backups module
@@ -619,17 +609,6 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	protected function scheduled_backups() {
 		//// tempo
 		echo '<p><em>No scheduled backups yet, create one?</em></p>';
-		echo '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_clear_alerts' ), 'secupress_clear_alerts' ) . '" class="button button-secondary">' . __( 'Clear Alerts', 'secupress' ) . '</a>';
-	}
-
-	/**
-	 * Displays the alerts and add actions to delete it
-	 *
-	 * @since 1.0
-	 */
-	protected function alerts() {
-		//// tempo
-		echo '<p><em>No alerts found yet</em></p>';
 		echo '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_clear_alerts' ), 'secupress_clear_alerts' ) . '" class="button button-secondary">' . __( 'Clear Alerts', 'secupress' ) . '</a>';
 	}
 
@@ -643,19 +622,6 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		//// tempo
 		echo '<p><em>No Banned IPs found yet</em></p>';
 		echo '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_clear_ips' ), 'secupress_clear_ips' ) . '" class="button button-secondary">' . __( 'Clear Banned IPs', 'secupress' ) . '</a>';
-	}
-
-
-
-	/**
-	 * Displays WordPress logs
-	 *
-	 * @since 1.0
-	 */
-	protected function wp_logs() {
-		//// tempo
-		echo '<p><em>Nothing happens yet, how is that possible?</em></p>';
-		echo '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_clear_wplogs' ), 'secupress_clear_wplogs' ) . '" class="button button-secondary">' . __( 'Clear WordPress Logs', 'secupress' ) . '</a>';
 	}
 
 
