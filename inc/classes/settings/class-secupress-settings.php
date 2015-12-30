@@ -363,7 +363,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 							$value = (array) $value;
 
 							foreach ( $args['options'] as $val => $title ) {
-								$readonly = '_' === $val[0] && ! secupress_is_pro() ? ' readonly="readonly" disabled="disabled"' : '';
+								$readonly = static::is_pro_value( $val ) ? ' readonly="readonly" disabled="disabled"' : '';
 								?>
 								<option value="<?php echo $val; ?>" <?php selected( in_array( $val, $value ) ); echo $readonly;?>><?php echo $title; ?></option>
 								<?php
@@ -403,12 +403,12 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					$radio_style = $radio_style ? ' class="radiobox"' : '';
 
 					foreach ( $args['options'] as $val => $title ) {
-						$readonly = '_' === $val[0] && ! secupress_is_pro() ? ' readonly="readonly" disabled="disabled"' : '';
+						$readonly = static::is_pro_value( $val ) ? ' readonly="readonly" disabled="disabled"' : '';
 						?>
 						<label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
 							<input type="checkbox" id="<?php echo $args['name']; ?>_<?php echo $val; ?>"<?php echo $radio_style; ?> value="<?php echo $val; ?>"<?php checked( in_array( $val, $value ) ); ?> name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][]"<?php echo $readonly; ?>> <?php echo $title; ?>
 						</label>
-						<?php echo '_' !== $val[0] ? '' : secupress_get_pro_version_string( '<span class="description">%s</span>' ); ?>
+						<?php echo static::is_pro_value( $val ) ? secupress_get_pro_version_string( '<span class="description">%s</span>' ) : ''; ?>
 						<br />
 						<?php
 					}
@@ -448,12 +448,12 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					<?php
 
 					foreach ( $args['options'] as $val => $title ) {
-						$readonly = '_' === $val[0] && ! secupress_is_pro() ? ' readonly="readonly" disabled="disabled"' : '';
+						$readonly = static::is_pro_value( $val ) ? ' readonly="readonly" disabled="disabled"' : '';
 						?>
 						<label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
 							<input type="radio" id="<?php echo $args['name']; ?>_<?php echo $val; ?>" value="<?php echo $val; ?>"<?php checked( $val, $value ); ?> name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][]"<?php echo $readonly; ?>> <?php echo $title; ?>
 						</label>
-						<?php echo '_' !== $val[0] ? '' : secupress_get_pro_version_string( '<span class="description">%s</span>' ); ?>
+						<?php echo static::is_pro_value( $val ) ? secupress_get_pro_version_string( '<span class="description">%s</span>' ) : ''; ?>
 						<br />
 						<?php
 					}
@@ -465,12 +465,12 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
 					<?php
 					foreach ( $args['options'] as $val => $title ) {
-						$readonly = '_' === $val[0] && ! secupress_is_pro() ? ' readonly="readonly" disabled="disabled"' : '';
+						$readonly = static::is_pro_value( $val ) ? ' readonly="readonly" disabled="disabled"' : '';
 						?>
 						<label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
 							<input type="radio" id="<?php echo $args['name']; ?>_<?php echo $val; ?>" value="<?php echo $val; ?>"<?php checked( $value, $val ); ?> name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]"<?php echo $readonly; ?>> <?php echo $title; ?>
 						</label>
-						<?php echo '_' !== $val[0] ? '' : secupress_get_pro_version_string( '<span class="description">%s</span>' ); ?>
+						<?php echo static::is_pro_value( $val ) ? secupress_get_pro_version_string( '<span class="description">%s</span>' ) : ''; ?>
 						<br />
 						<?php
 					}
@@ -609,6 +609,19 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	protected function scheduled_backups() {
 		//// tempo
 		echo '<p><em>No scheduled backups yet, create one?</em></p>';
+		echo '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_clear_alerts' ), 'secupress_clear_alerts' ) . '" class="button button-secondary">' . __( 'Clear Alerts', 'secupress' ) . '</a>';
+	}
+
+
+
+	/**
+	 * Displays the alerts and add actions to delete it
+	 *
+	 * @since 1.0
+	 */
+	protected function alerts() {
+		//// tempo
+		echo '<p><em>No alerts found yet</em></p>';
 		echo '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_clear_alerts' ), 'secupress_clear_alerts' ) . '" class="button button-secondary">' . __( 'Clear Alerts', 'secupress' ) . '</a>';
 	}
 
@@ -855,16 +868,32 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	// Utilities ===================================================================================
 
 	/**
-	 * Output the $text in a P tag with .description class
+	 * Output the $text in a P tag with `description` class.
 	 *
 	 * @since 1.0
 	 *
-	 * @param (string)$text : the last word of the secupress page slug
-	*/
+	 * @param (string) $text The last word of the secupress page slug.
+	 *
+	 * @return (string) The text wrapped in a `<p>` tag.
+	 */
 	public static function field_description( $text = '' ) {
 		if ( '' !== $text ) {
 			return '<p class="description">' . $text . '</p>';
 		}
+	}
+
+
+	/**
+	 * Tell if the option value is for the pro version and we're not using the pro version.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $value The option value.
+	 *
+	 * @return (bool) True if the option value is for pro version but w're not using the pro version.
+	 */
+	protected static function is_pro_value( $value ) {
+		return '_' === $value[0] && ! secupress_is_pro();
 	}
 
 
