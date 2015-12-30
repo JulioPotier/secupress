@@ -90,7 +90,6 @@ $this->add_field(
 	__( 'Non-Login time slot settings', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description' => '',
 	),
 	array(
 		'depends'     => $main_field_name . '_nonlogintimeslot',
@@ -115,7 +114,7 @@ $this->add_field(
 	__( 'Avoid Double Connexions', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description' => __( 'Once logged in, nobody can log in on your account at the same time as you. You have to disconnect first to allow another connexion.', 'secupress' ) . ( secupress_is_pro() ? '' : secupress_get_pro_version_string( '<br>%s') ),
+		'description' => __( 'Once logged in, nobody can log in on your account at the same time as you. You have to disconnect first to allow another connexion.', 'secupress' ),
 	),
 	array(
 		array(
@@ -124,7 +123,6 @@ $this->add_field(
 			'label'        => __( 'Yes, do not allow double connexions', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, do not allow double connexions', 'secupress' ),
-			'readonly'     => ! secupress_is_pro(),
 		),
 		array(
 			'type'         => 'helper_description',
@@ -140,7 +138,7 @@ $this->add_field(
 	__( 'Sessions Control', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description' => __( 'Disconnect any user in one click, or even every logged in user at the same time in one click (but you).', 'secupress' ) . ( secupress_is_pro() ? '' : secupress_get_pro_version_string( '<br>%s') ),
+		'description' => __( 'Disconnect any user in one click, or even every logged in user at the same time in one click (but you).', 'secupress' ),
 	),
 	array(
 		array(
@@ -149,7 +147,6 @@ $this->add_field(
 			'label'        => __( 'Yes, i want to use the Sessions Control Module', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, i want to use the Sessions Control Module', 'secupress' ),
-			'readonly'     => ! secupress_is_pro(),
 		),
 		array(
 			'type'         => 'helper_description',

@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 $this->set_current_section( 'monitoring' );
 $this->add_section( __( 'Uptime Monitoring', 'secupress' ) );
 
-$field_name = $this->get_field_name( 'monitoring' );
+$field_name = $this->get_field_name( 'activate' );
 $this->add_field(
 	__( 'Monitor my website', 'secupress' ),
 	array(
@@ -25,7 +25,7 @@ $this->add_field(
 		array(
 			'type'         => 'helper_description',
 			'name'         => $field_name,
-			'description'  => sprintf( __( 'The following email address will be used: %s', 'secupress' ), '<code>' . '???' . '</code>' ) //// adresse mail de l'inscription de la clé API
+			'description'  => sprintf( __( 'The following email address will be used: %s', 'secupress' ), '<code>' . '???' . '</code>' ), //// adresse mail de l'inscription de la clé API
 		),
 	)
 );

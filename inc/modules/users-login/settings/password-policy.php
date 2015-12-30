@@ -11,7 +11,7 @@ $this->add_field(
 	__( 'Passwords Lifetime', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description' => sprintf( __( 'Recommended: %s days,<br>0 = never expires', 'secupress' ), '30' ) . ( secupress_is_pro() ? '' : secupress_get_pro_version_string( '<br>%s') ),
+		'description' => sprintf( __( 'Recommended: %s days,<br>0 = never expires', 'secupress' ), '30' ),
 	),
 	array(
 		array(
@@ -24,7 +24,6 @@ $this->add_field(
 			'label'        => __( 'days', 'secupress' ),
 			'default'      => '0',
 			'label_screen' => __( 'Passwords lifetime', 'secupress' ),
-			'readonly'     => ! secupress_is_pro(),
 		),
 	)
 );
@@ -35,7 +34,7 @@ $this->add_field(
 	__( 'Force Strong Passwords', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description' => __( 'When a user is changing his password, a strong password will be required to continue.', 'secupress' ) . ( secupress_valid_key() ? '' : secupress_get_pro_version_string( '<br>%s') ),
+		'description' => __( 'When a user is changing his password, a strong password will be required to continue.', 'secupress' ),
 	),
 	array(
 		array(
@@ -45,7 +44,6 @@ $this->add_field(
 			'label'        => __( 'Yes, force a strong passwords usage', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, force a strong passwords usage', 'secupress' ),
-			'readonly'     => ! secupress_is_pro(),
 		),
 	)
 );

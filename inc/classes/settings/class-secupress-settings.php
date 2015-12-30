@@ -270,7 +270,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$cols              = isset( $args['cols'] )         ? (int) $args['cols'] : 50;
 			$rows              = isset( $args['rows'] )         ? (int) $args['rows'] : 5;
 			$size              = isset( $args['size'] )         ? (int) $args['size'] : 1;
-			$readonly          = ! empty( $args['readonly'] )   ? ' readonly="readonly" disabled="disabled"' : '';
+			$readonly          = ! empty( $args['readonly'] ) || static::is_pro_feature( $args['name'] ) ? ' readonly="readonly" disabled="disabled"' : '';
 			$class             = ! empty( $args['class'] )      ? $args['class'] : '';
 			$radio_style       = 'radioboxes' == $args['type'];
 			$field_type        = 'radioboxes' == $args['type']  ? 'checkboxes' : $args['type'];
@@ -363,7 +363,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 							$value = (array) $value;
 
 							foreach ( $args['options'] as $val => $title ) {
-								$readonly = static::is_pro_value( $val ) ? ' readonly="readonly" disabled="disabled"' : '';
+								$readonly = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' readonly="readonly" disabled="disabled"' : '';
 								?>
 								<option value="<?php echo $val; ?>" <?php selected( in_array( $val, $value ) ); echo $readonly;?>><?php echo $title; ?></option>
 								<?php
@@ -403,12 +403,12 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					$radio_style = $radio_style ? ' class="radiobox"' : '';
 
 					foreach ( $args['options'] as $val => $title ) {
-						$readonly = static::is_pro_value( $val ) ? ' readonly="readonly" disabled="disabled"' : '';
+						$readonly = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' readonly="readonly" disabled="disabled"' : '';
 						?>
 						<label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
 							<input type="checkbox" id="<?php echo $args['name']; ?>_<?php echo $val; ?>"<?php echo $radio_style; ?> value="<?php echo $val; ?>"<?php checked( in_array( $val, $value ) ); ?> name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][]"<?php echo $readonly; ?>> <?php echo $title; ?>
 						</label>
-						<?php echo static::is_pro_value( $val ) ? secupress_get_pro_version_string( '<span class="description">%s</span>' ) : ''; ?>
+						<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? secupress_get_pro_version_string( '<span class="description">%s</span>' ) : ''; ?>
 						<br />
 						<?php
 					}
@@ -448,12 +448,12 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					<?php
 
 					foreach ( $args['options'] as $val => $title ) {
-						$readonly = static::is_pro_value( $val ) ? ' readonly="readonly" disabled="disabled"' : '';
+						$readonly = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' readonly="readonly" disabled="disabled"' : '';
 						?>
 						<label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
 							<input type="radio" id="<?php echo $args['name']; ?>_<?php echo $val; ?>" value="<?php echo $val; ?>"<?php checked( $val, $value ); ?> name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][]"<?php echo $readonly; ?>> <?php echo $title; ?>
 						</label>
-						<?php echo static::is_pro_value( $val ) ? secupress_get_pro_version_string( '<span class="description">%s</span>' ) : ''; ?>
+						<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? secupress_get_pro_version_string( '<span class="description">%s</span>' ) : ''; ?>
 						<br />
 						<?php
 					}
@@ -465,12 +465,12 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
 					<?php
 					foreach ( $args['options'] as $val => $title ) {
-						$readonly = static::is_pro_value( $val ) ? ' readonly="readonly" disabled="disabled"' : '';
+						$readonly = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' readonly="readonly" disabled="disabled"' : '';
 						?>
 						<label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
 							<input type="radio" id="<?php echo $args['name']; ?>_<?php echo $val; ?>" value="<?php echo $val; ?>"<?php checked( $value, $val ); ?> name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]"<?php echo $readonly; ?>> <?php echo $title; ?>
 						</label>
-						<?php echo static::is_pro_value( $val ) ? secupress_get_pro_version_string( '<span class="description">%s</span>' ) : ''; ?>
+						<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? secupress_get_pro_version_string( '<span class="description">%s</span>' ) : ''; ?>
 						<br />
 						<?php
 					}
@@ -753,12 +753,19 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			'description' => '',
 		) );
 
+		// Get the callback.
 		if ( is_array( $args['field_type'] ) ) {
 			$callback = $args['field_type'];
 		} elseif ( method_exists( $this, $args['field_type'] ) ) {
 			$callback = array( $this, $args['field_type'] );
 		} else {
 			$callback = 'secupress_' . $args['field_type'];
+		}
+
+		// If it's a pro feature, add some warning.
+		if ( static::is_pro_feature( $args['name'] ) ) {
+			$format = $args['description'] ? '<br>%s' : '';
+			$args['description'] .= secupress_get_pro_version_string( $format );
 		}
 
 		add_settings_field(
@@ -892,8 +899,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 *
 	 * @return (bool) True if the option value is for pro version but w're not using the pro version.
 	 */
-	protected static function is_pro_value( $value ) {
-		return '_' === $value[0] && ! secupress_is_pro();
+	protected static function is_pro_feature( $value ) {
+		return secupress_feature_is_pro( $value ) && ! secupress_is_pro();
 	}
 
 

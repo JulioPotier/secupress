@@ -14,6 +14,56 @@ function secupress_is_pro() {
 
 
 /**
+ * Tell if a feature is for pro version.
+ *
+ * @since 1.0
+ *
+ * @param (string) The feature to test. Basically it can be:
+ *                 - A field "name" when the whole field is pro: the result of `$this->get_field_name( $field_name )`.
+ *                 - A field "name + value" when only one (or some) of the values is pro: the result of `$this->get_field_name( $field_name ) . "|" . $value`.
+ *
+ * @return (bool) True if the feature is in the white-list.
+ */
+function secupress_feature_is_pro( $feature ) {
+	$features = array(
+		// Field names.
+		'login-protection_only-one-connexion' => 1,
+		'login-protection_sessions_control'   => 1,
+		'password-policy_password_expiration' => 1,
+		'password-policy_strong_passwords'    => 1,
+		'plugins_activation'                  => 1,
+		'plugins_deactivation'                => 1,
+		'plugins_deletion'                    => 1,
+		'plugins_autoupdate_bad_plugins'      => 1,
+		'themes_activation'                   => 1,
+		'themes_deletion'                     => 1,
+		'themes_autoupdate_bad_themes'        => 1,
+		'uploads_uploads'                     => 1,
+		'page-protect_profile'                => 1,
+		'page-protect_settings'               => 1,
+		'content-protect_hotlink'             => 1,
+		'file-scanner_virus-scanner'          => 1,
+		'backup-file_backup-file'             => 1,
+		'import-export_export_settings'       => 1,
+		'import-export_import_settings'       => 1,
+		'schedules_backups'                   => 1,
+		'schedules_scans'                     => 1,
+		'schedules_filemon'                   => 1,
+		// Field values.
+		'double-auth_type|passwordless'       => 1,
+		'alerts_type|sms'                     => 1,
+		'alerts_type|push'                    => 1,
+		'alerts_type|rss'                     => 1,
+		'alerts_type|slack'                   => 1,
+		'alerts_type|skype'                   => 1,
+		'alerts_type|twitter'                 => 1,
+	);
+
+	return isset( $features[ $feature ] );
+}
+
+
+/**
  * Check whether the plugin is active by checking the active_plugins list.
  *
  * @since 1.0

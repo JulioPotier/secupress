@@ -78,8 +78,8 @@ function __secupress_double_auth_settings_callback( $modulenow, &$settings ) {
  * @param (array)  $settings  The module settings, passed by reference.
  */
 function __secupress_captcha_settings_callback( $modulenow, &$settings ) {
-	secupress_manage_submodule( $modulenow, 'login-captcha', ! empty( $settings['captcha_type'] ) );
-	unset( $settings['captcha_type'] );
+	secupress_manage_submodule( $modulenow, 'login-captcha', ! empty( $settings['captcha_activate'] ) );
+	unset( $settings['captcha_activate'] );
 }
 
 

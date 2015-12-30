@@ -10,9 +10,7 @@ $this->add_field(
 	__( 'Settings Exporter', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description' => __( 'Export your settings so you can import them in another website or act just like a backup', 'secupress' ) . 
-						( secupress_is_pro() ? '' : secupress_get_pro_version_string( '<br>%s' ) ),
-		// 'readonly'    => ! secupress_is_pro(), // done in export_upload_form()
+		'description' => __( 'Export your settings so you can import them in another website or act just like a backup', 'secupress' ),
 	),
 	array(
 		array(
@@ -26,9 +24,7 @@ $this->add_field(
 	__( 'Settings Importer', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description' => __( 'Import previously exported settings from another website or from a last save point', 'secupress' ) .  //// wording save point
-						( secupress_is_pro() ? '' : secupress_get_pro_version_string( '<br>%s' ) ),
-		// 'readonly'    => ! secupress_is_pro(), // done in import_upload_form()
+		'description' => __( 'Import previously exported settings from another website or from a previous save point', 'secupress' ), //// wording save point
 	),
 	array(
 		array(

@@ -60,7 +60,6 @@ $this->add_field(
 	__( 'Plugins activation', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description' => secupress_is_pro() ? '' : secupress_get_pro_version_string()
 	),
 	array(
 		array(
@@ -70,7 +69,6 @@ $this->add_field(
 			'label'        => __( 'Yes, disable the activation action for every plugin', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, disable the activation action for every plugin', 'secupress' ),
-			'readonly'     => ! secupress_is_pro(),
 		),
 	)
 );
@@ -82,7 +80,6 @@ $this->add_field(
 	__( 'Plugins deactivation', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description' => secupress_is_pro() ? '' : secupress_get_pro_version_string()
 	),
 	array(
 		array(
@@ -92,7 +89,6 @@ $this->add_field(
 			'label'        => __( 'Yes, disable the deactivation action for every plugin', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, disable the deactivation action for every plugin', 'secupress' ),
-			'readonly'     => ! secupress_is_pro(),
 		),
 	)
 );
@@ -104,7 +100,6 @@ $this->add_field(
 	__( 'Plugins deletion', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description' => secupress_is_pro() ? '' : secupress_get_pro_version_string()
 	),
 	array(
 		array(
@@ -114,7 +109,6 @@ $this->add_field(
 			'label'        => __( 'Yes, disable the deletion action for every plugin', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, disable the deletion action for every plugin', 'secupress' ),
-			'readonly'     => ! secupress_is_pro(),
 		),
 	)
 );
@@ -153,7 +147,7 @@ $this->add_field(
 	__( 'Auto-Update Bad Plugins', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description' => __( 'Only for plugins from official repository.', 'secupress' ) . ( secupress_is_pro() ? '' : secupress_get_pro_version_string( '<br/>%s' ) )
+		'description' => __( 'Only for plugins from official repository.', 'secupress' ),
 	),
 	array(
 		'depends'     => $main_field_name,
@@ -164,7 +158,6 @@ $this->add_field(
 			'label'        => __( 'Yes, also enable the auto-update if these plugins', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, also enable the auto-update if these plugins', 'secupress' ),
-			'readonly'     => ! secupress_is_pro(),
 		),
 		array(
 			'type'         => 'helper_description',

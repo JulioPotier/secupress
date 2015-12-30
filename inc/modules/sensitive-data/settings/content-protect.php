@@ -12,7 +12,7 @@ $this->add_field(
 	__( 'Anti-Hot-link', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description' => __( 'A hot-link is when someone embed your medias directly from your website, stealing your bandwidth.', 'secupress' ) . ( secupress_is_pro() ? '' : secupress_get_pro_version_string( '<br/>%s') ),
+		'description' => __( 'A hot-link is when someone embed your medias directly from your website, stealing your bandwidth.', 'secupress' ),
 	),
 	array(
 		array(
@@ -22,7 +22,6 @@ $this->add_field(
 			'label'        => __( 'Yes, protect my medias from being hotlinked', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, protect my medias from being hotlinked', 'secupress' ),
-			'readonly'     => ! secupress_is_pro(),
 		),
 	)
 );

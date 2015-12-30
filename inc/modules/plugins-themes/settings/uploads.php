@@ -16,7 +16,6 @@ $this->add_field(
 	sprintf( __( 'Disallow %s uploads', 'secupress' ), '<code>.zip</code>' ),
 	array(
 		'name'        => $field_name,
-		'description' => secupress_is_pro() ? '' : secupress_get_pro_version_string(),
 	),
 	array(
 		array(
@@ -26,7 +25,6 @@ $this->add_field(
 			'label'        => __( 'Yes, disable uploads for themes and plugins', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, disable uploads for themes and plugins', 'secupress' ),
-			'readonly'     => ! secupress_is_pro(),
 		),
 	)
 );

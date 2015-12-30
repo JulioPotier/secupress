@@ -60,7 +60,6 @@ $this->add_field(
 	__( 'Theme switch', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description' => secupress_is_pro() ? '' : secupress_get_pro_version_string()
 	),
 	array(
 		array(
@@ -70,7 +69,6 @@ $this->add_field(
 			'label'        => __( 'Yes, disable switch theme', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, disable switch theme', 'secupress' ),
-			'readonly'     => ! secupress_is_pro(),
 		),
 	)
 );
@@ -82,7 +80,6 @@ $this->add_field(
 	__( 'Theme deletion', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description' => secupress_is_pro() ? '' : secupress_get_pro_version_string()
 	),
 	array(
 		array(
@@ -92,7 +89,6 @@ $this->add_field(
 			'label'        => __( 'Yes, disable delete for theme', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, disable delete for theme', 'secupress' ),
-			'readonly'     => ! secupress_is_pro(),
 		),
 	)
 );
@@ -131,7 +127,7 @@ $this->add_field(
 	__( 'Auto-Update Bad Themes', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description' => __( 'Only for themes from official repository.', 'secupress' ) . ( secupress_is_pro() ? '' : secupress_get_pro_version_string( '<br/>%s') )
+		'description' => __( 'Only for themes from official repository.', 'secupress' ),
 	),
 	array(
 		'depends'     => $main_field_name,
@@ -142,7 +138,6 @@ $this->add_field(
 			'label'        => __( 'Yes, enable the auto-update if a theme I use is known as vulnerable', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, enable the auto-update if a theme I use is known as vulnerable', 'secupress' ),
-			'readonly'     => ! secupress_is_pro(),
 		),
 		array(
 			'type'         => 'helper_description',

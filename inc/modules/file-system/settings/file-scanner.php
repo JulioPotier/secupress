@@ -26,9 +26,7 @@ $this->add_field(
 	__( 'Malware Scan', 'secupress' ),
 	array(
 		'name'        => $field_name,
-		'description' => __( 'Some Web malwares are know over the web, we daily add them to our database and use it to detect that on your website', 'secupress' ) .
-		( secupress_is_pro() ? '' : secupress_get_pro_version_string( '<br>%s') ),
-		// 'readonly'     => ! secupress_is_pro(), // done in virus_scanner
+		'description' => __( 'Some Web malwares are know over the web, we daily add them to our database and use it to detect that on your website', 'secupress' ),
 	),
 	array(
 		array(

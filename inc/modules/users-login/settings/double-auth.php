@@ -9,19 +9,13 @@ $this->set_section_description( __( 'A Double Authentication is a way to enforce
 $this->add_section( __( 'Authentication', 'secupress' ), array( 'with_roles' => true ) );
 
 
-$plugin = $this->get_current_plugin(); // 'double-auth'
-
-/** This filter is documented in secupress/inc/admin/modules/white-label.php */
-$select_args_options = apply_filters( 'pro.module.' . $plugin, array(
-	'-1'            => __( 'No thank you', 'secupress' ) . ' <em>(' . __( 'Not recommended', 'secupress' ) . ')</em>',
-	'_passwordless' => __( 'PasswordLess (notifications by E-mail, mobile, Slack, SMS.)', 'secupress' ),
-	'googleauth'    => __( 'Mobile Authenticator App (Google Auth, FreeOTP, ...)', 'secupress' ),
-	'emaillink'     => __( 'Email Link', 'secupress' ),
-) );
-
-$field_name       = $this->get_field_name( 'type' );
-$main_field_name  = $field_name;
-$is_plugin_active = '-1';
+$is_plugin_active    = '-1';
+$select_args_options = array(
+	'-1'           => __( 'No thank you', 'secupress' ) . ' <em>(' . __( 'Not recommended', 'secupress' ) . ')</em>',
+	'passwordless' => __( 'PasswordLess (notifications by E-mail, mobile, Slack, SMS.)', 'secupress' ),
+	'googleauth'   => __( 'Mobile Authenticator App (Google Auth, FreeOTP, ...)', 'secupress' ),
+	'emaillink'    => __( 'Email Link', 'secupress' ),
+);
 
 foreach ( $select_args_options as $_plugin => $label ) {
 	if ( '-1' !== $_plugin && secupress_is_submodule_active( 'users-login', $_plugin ) ) {
@@ -29,6 +23,9 @@ foreach ( $select_args_options as $_plugin => $label ) {
 		break;
 	}
 }
+
+$field_name      = $this->get_field_name( 'type' );
+$main_field_name = $field_name;
 
 $this->add_field(
 	__( 'Use a Double Authentication', 'secupress' ),
@@ -55,9 +52,9 @@ $this->add_field(
 );
 
 
-$plugin = $this->set_current_plugin( 'captcha' )->get_current_plugin();
+$this->set_current_plugin( 'captcha' );
 
-$field_name = $this->get_field_name( 'type' );
+$field_name = $this->get_field_name( 'activate' );
 $this->add_field(
 	__( 'Use a Captcha for everyone', 'secupress' ),
 	array(
