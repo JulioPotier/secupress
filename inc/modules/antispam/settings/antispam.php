@@ -104,7 +104,7 @@ $this->add_field(
 			'label'        => __( 'Yes, i want to use a better blacklist comments to detect spams', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, i want to use a better blacklist comments to detect spams', 'secupress' ),
-			'readonly'     => ! is_readable( SECUPRESS_INC_PATH . 'data/spam-blacklist.data' ),
+			'disabled'     => ! is_readable( SECUPRESS_INC_PATH . 'data/spam-blacklist.data' ),
 		),
 		array(
 			'type'         => 'helper_description',

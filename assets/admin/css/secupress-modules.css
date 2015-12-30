@@ -134,7 +134,7 @@ label {
 	color: red;
 }
 
-.form-table td fieldset label.readonly {
+.form-table td fieldset label.disabled {
 	color: #ddd;
 	display: inline;
 }

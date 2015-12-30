@@ -47,7 +47,7 @@ $this->add_field(
 			'label'        => __( 'Yes, disable all the features of REST API', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, disable all the features of REST API', 'secupress' ),
-			'readonly'     => (bool) $requires_wp_44_str,
+			'disabled'     => (bool) $requires_wp_44_str,
 		),
 	)
 );

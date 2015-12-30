@@ -20,7 +20,7 @@ $this->add_field(
 			'label'        => __( 'Yes, monitor the uptime of my website and alert me if needed', 'secupress' ),
 			'label_for'    => $field_name,
 			'label_screen' => __( 'Yes, force a strong passwords usage', 'secupress' ),
-			'readonly'     => ! secupress_valid_key(),
+			'disabled'     => ! secupress_valid_key(),
 		),
 		array(
 			'type'         => 'helper_description',

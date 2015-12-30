@@ -270,7 +270,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$cols              = isset( $args['cols'] )         ? (int) $args['cols'] : 50;
 			$rows              = isset( $args['rows'] )         ? (int) $args['rows'] : 5;
 			$size              = isset( $args['size'] )         ? (int) $args['size'] : 1;
-			$readonly          = ! empty( $args['readonly'] ) || static::is_pro_feature( $args['name'] ) ? ' readonly="readonly" disabled="disabled"' : '';
+			$disabled          = ! empty( $args['disabled'] ) || static::is_pro_feature( $args['name'] ) ? ' disabled="disabled"' : '';
 			$class             = ! empty( $args['class'] )      ? $args['class'] : '';
 			$radio_style       = 'radioboxes' == $args['type'];
 			$field_type        = 'radioboxes' == $args['type']  ? 'checkboxes' : $args['type'];
@@ -318,12 +318,11 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 					$number_options = $field_type === 'number' ? $min . $max . ' class="small-text"' : '';
 					$autocomplete   = in_array( $args['name'], array( 'consumer_key', 'consumer_email' ) ) ? ' autocomplete="off"' : '';
-					$disabled       = false ? ' disabled="disabled"' : $readonly;
 					$data_realtype  = 'password' != $field_type ? '' : ' data-realtype="password"';
 					?>
 					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
-					<label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
-						<input <?php echo $title; ?><?php echo $autocomplete; ?><?php echo $pattern; ?><?php echo $required; ?><?php echo $disabled; ?><?php echo $data_realtype; ?> type="<?php echo $field_type; ?>"<?php echo $number_options; ?> id="<?php echo $args['label_for']; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]" value="<?php echo esc_attr( $value ); ?>" <?php echo $placeholder; ?><?php echo $readonly; ?>/>
+					<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
+						<input <?php echo $title; ?><?php echo $autocomplete; ?><?php echo $pattern; ?><?php echo $required; ?><?php echo $data_realtype; ?> type="<?php echo $field_type; ?>"<?php echo $number_options; ?> id="<?php echo $args['label_for']; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]" value="<?php echo esc_attr( $value ); ?>" <?php echo $placeholder; ?><?php echo $disabled; ?>/>
 					<?php echo $label; ?>
 					</label>
 					<?php
@@ -334,8 +333,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					$value = is_array( $value ) ? esc_textarea( implode( "\n" , $value ) ) : esc_textarea( $value );
 					?>
 					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
-					<label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
-						<textarea id="<?php echo $args['label_for']; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]" cols="<?php echo $cols; ?>" rows="<?php echo $rows; ?>"<?php echo $readonly; ?>><?php echo $value; ?></textarea>
+					<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
+						<textarea id="<?php echo $args['label_for']; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]" cols="<?php echo $cols; ?>" rows="<?php echo $rows; ?>"<?php echo $disabled; ?><?php echo ! empty( $args['readonly'] ) ? ' readonly="readonly"' : ''; ?>><?php echo $value; ?></textarea>
 					</label>
 					<?php
 					break;
@@ -343,15 +342,15 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				case 'select' : ?>
 
 					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
-					<label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
-						<select size="<?php echo $args['size']; ?>" multiple="multiple" id="<?php echo $args['name']; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]"<?php echo $readonly; ?>>
+					<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
+						<select size="<?php echo $args['size']; ?>" multiple="multiple" id="<?php echo $args['name']; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]"<?php echo $disabled; ?>>
 							<?php
 							$value = (array) $value;
 
 							foreach ( $args['options'] as $val => $title ) {
-								$readonly = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' readonly="readonly" disabled="disabled"' : '';
+								$disabled = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' disabled="disabled"' : '';
 								?>
-								<option value="<?php echo $val; ?>" <?php selected( in_array( $val, $value ) ); echo $readonly;?>><?php echo $title; ?></option>
+								<option value="<?php echo $val; ?>" <?php selected( in_array( $val, $value ) ); echo $disabled;?>><?php echo $title; ?></option>
 								<?php
 							}
 							?>
@@ -370,8 +369,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 						<?php
 					}
 					?>
-					<label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
-						<input type="checkbox" id="<?php echo $args['name']; ?>" class="<?php echo $class; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]" value="1"<?php echo $readonly; ?> <?php checked( $value, 1 ); ?> <?php echo $parent; ?>/> <?php echo $args['label']; ?>
+					<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
+						<input type="checkbox" id="<?php echo $args['name']; ?>" class="<?php echo $class; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]" value="1"<?php echo $disabled; ?> <?php checked( $value, 1 ); ?> <?php echo $parent; ?>/> <?php echo $args['label']; ?>
 					</label>
 					<?php
 					break;
@@ -384,10 +383,10 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					$radio_style = $radio_style ? ' class="radiobox"' : '';
 
 					foreach ( $args['options'] as $val => $title ) {
-						$readonly = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' readonly="readonly" disabled="disabled"' : '';
+						$disabled = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' disabled="disabled"' : '';
 						?>
-						<label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
-							<input type="checkbox" id="<?php echo $args['name']; ?>_<?php echo $val; ?>"<?php echo $radio_style; ?> value="<?php echo $val; ?>"<?php checked( in_array( $val, $value ) ); ?> name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][]"<?php echo $readonly; ?>> <?php echo $title; ?>
+						<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
+							<input type="checkbox" id="<?php echo $args['name']; ?>_<?php echo $val; ?>"<?php echo $radio_style; ?> value="<?php echo $val; ?>"<?php checked( in_array( $val, $value ) ); ?> name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][]"<?php echo $disabled; ?>> <?php echo $title; ?>
 						</label>
 						<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? secupress_get_pro_version_string( '<span class="description">%s</span>' ) : ''; ?>
 						<br />
@@ -401,10 +400,10 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
 					<?php
 					foreach ( $args['options'] as $val => $title ) {
-						$readonly = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' readonly="readonly" disabled="disabled"' : '';
+						$disabled = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' disabled="disabled"' : '';
 						?>
-						<label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
-							<input type="radio" id="<?php echo $args['name']; ?>_<?php echo $val; ?>" value="<?php echo $val; ?>"<?php checked( $value, $val ); ?> name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]"<?php echo $readonly; ?>> <?php echo $title; ?>
+						<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
+							<input type="radio" id="<?php echo $args['name']; ?>_<?php echo $val; ?>" value="<?php echo $val; ?>"<?php checked( $value, $val ); ?> name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]"<?php echo $disabled; ?>> <?php echo $title; ?>
 						</label>
 						<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? secupress_get_pro_version_string( '<span class="description">%s</span>' ) : ''; ?>
 						<br />
@@ -424,7 +423,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 					foreach ( $roles as $val => $title ) {
 						?>
-						<label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
+						<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
 							<input type="checkbox" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][]" value="<?php echo $val; ?>"<?php checked( ! in_array( $val, $value ) ); ?>> <?php echo $title; ?>
 						</label><br />
 						<input type="hidden" name="<?php echo $option_name; ?>[hidden_<?php echo $args['name']; ?>][]" value="<?php echo $val; ?>">
@@ -441,15 +440,15 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					foreach ( $args['options'] as $code_country => $countries ) {
 						$title = array_shift( $countries );
 						?>
-						<label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
+						<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
 							<input type="checkbox" class="<?php echo $args['name']; ?>" value="<?php echo $code_country; ?>"<?php checked( in_array( $code_country, $value ) ); ?>> <?php echo $title; ?> <em>(<?php _e( 'All countries', 'secupress' ); ?>)</em>
 						</label>
 						<br />
 						<?php
 						foreach ( $countries as $code => $title ) {
 							?>
-							&mdash; <label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
-								<input type="checkbox" data-code-country="<?php echo $code_country; ?>" id="<?php echo $args['name']; ?>_<?php echo $code; ?>" value="<?php echo $code; ?>"<?php checked( in_array( $code, $value ) ); ?> name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][]"<?php echo $readonly; ?>> <?php echo $title; ?>
+							&mdash; <label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
+								<input type="checkbox" data-code-country="<?php echo $code_country; ?>" id="<?php echo $args['name']; ?>_<?php echo $code; ?>" value="<?php echo $code; ?>"<?php checked( in_array( $code, $value ) ); ?> name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][]"<?php echo $disabled; ?>> <?php echo $title; ?>
 							</label>
 							<br />
 							<?php
@@ -473,20 +472,20 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					echo '<span style="display:inline-block;min-width:3em">' . _x( 'From', '*From* xx h xx mn To xx h xx mn', 'secupress' ) . '</span>';
 					?>
 					<label>
-						<input type="number" class="small-text" min="0" max="23" id="<?php echo $args['name']; ?>_from_hour" value="<?php echo (int) $from_hour; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][from_hour]"<?php echo $readonly; ?>>
+						<input type="number" class="small-text" min="0" max="23" id="<?php echo $args['name']; ?>_from_hour" value="<?php echo (int) $from_hour; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][from_hour]"<?php echo $disabled; ?>>
 					</label> <?php _ex( 'h', 'hour', 'secupress' ); ?>
 					<label>
-						<input type="number" class="small-text" min="0" max="45" step="15" id="<?php echo $args['name']; ?>_from_minute" value="<?php echo (int) $from_minute; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][from_minute]"<?php echo $readonly; ?>>
+						<input type="number" class="small-text" min="0" max="45" step="15" id="<?php echo $args['name']; ?>_from_minute" value="<?php echo (int) $from_minute; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][from_minute]"<?php echo $disabled; ?>>
 					</label> <?php _ex( 'min', 'minute', 'secupress' ); ?>
 					<br>
 					<?php
 					echo '<span style="display:inline-block;min-width:3em">' . _x( 'To', 'From xx h xx mn *To* xx h xx mn', 'secupress' ) . '</span>';
 					?>
 					<label>
-						<input type="number" class="small-text" min="0" max="23" id="<?php echo $args['name']; ?>_to_hour" value="<?php echo (int) $to_hour; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][to_hour]"<?php echo $readonly; ?>>
+						<input type="number" class="small-text" min="0" max="23" id="<?php echo $args['name']; ?>_to_hour" value="<?php echo (int) $to_hour; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][to_hour]"<?php echo $disabled; ?>>
 					</label> <?php _ex( 'h', 'hour', 'secupress' ); ?>
 					<label>
-						<input type="number" class="small-text" min="0" max="45" step="15" id="<?php echo $args['name']; ?>_to_minute" value="<?php echo (int) $to_minute; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][to_minute]"<?php echo $readonly; ?>>
+						<input type="number" class="small-text" min="0" max="45" step="15" id="<?php echo $args['name']; ?>_to_minute" value="<?php echo (int) $to_minute; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][to_minute]"<?php echo $disabled; ?>>
 					</label> <?php _ex( 'min', 'minute', 'secupress' ); ?>
 					<?php
 
@@ -548,19 +547,19 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		$bytes      = apply_filters( 'import_upload_size_limit', wp_max_upload_size() ); // Filter from WP Core
 		$size       = size_format( $bytes );
 		$upload_dir = wp_upload_dir();
-		$readonly = ! secupress_is_pro() ? ' readonly="readonly" disabled="disabled"' : '';
+		$disabled = ! secupress_is_pro() ? ' disabled="disabled"' : '';
 		if ( ! empty( $upload_dir['error'] ) ) {
 			?><div class="error"><p><?php _e( 'Before you can upload your import file, you will need to fix the following error:', 'secupress' ); ?></p>
 			<p><strong><?php echo $upload_dir['error']; ?></strong></p></div><?php
 		} else {
 			?>
 			<p>
-			<input type="file" id="upload" name="import" size="25"<?php echo $readonly; ?>/>
+			<input type="file" id="upload" name="import" size="25"<?php echo $disabled; ?>/>
 			<br />
 			<label for="upload"><?php echo apply_filters( 'secupress_help', __( 'Choose a file from your computer:', 'secupress' ) . ' (' . sprintf( __( 'Maximum size: %s', 'secupress' ), $size ) . ')', 'upload', 'help' ); ?></label>
 			<input type="hidden" name="max_file_size" value="<?php echo $bytes; ?>" />
 			</p>
-			<?php submit_button( __( 'Upload file and import settings', 'secupress' ), 'button', 'import', true, $readonly );
+			<?php submit_button( __( 'Upload file and import settings', 'secupress' ), 'button', 'import', true, $disabled );
 		}
 	}
 
@@ -577,7 +576,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		<?php
 		} else {
 		?>
-			<button readonly="readonly" class="button button-secondary" disabled="disabled"><?php _e( 'Download settings', 'secupress' ); ?></button>
+			<button class="button button-secondary" disabled="disabled"><?php _e( 'Download settings', 'secupress' ); ?></button>
 		<?php
 		}
 	}
@@ -641,8 +640,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	protected function backup_files() {
 		//// tempo
 		echo '<p><em>No Files Backups found yet, do one?</em></p>';
-		$readonly = ! secupress_is_pro() ? ' readonly="readonly" disabled="disabled"' : '';
-		echo '<a' . $readonly . ' href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_backup_files' ), 'secupress_backup_files' ) . '" class="button button-secondary">' . __( 'Backup my Files', 'secupress' ) . '</a>';
+		$disabled = ! secupress_is_pro() ? ' disabled="disabled"' : '';
+		echo '<a' . $disabled . ' href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_backup_files' ), 'secupress_backup_files' ) . '" class="button button-secondary">' . __( 'Backup my Files', 'secupress' ) . '</a>';
 	}
 
 
@@ -662,8 +661,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	protected function virus_scanner() {
-		$readonly = ! secupress_is_pro() ? ' readonly="readonly" disabled="disabled"' : '';
-		echo '<a' . $readonly . ' href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_get_virus_scan' ), 'secupress_get_virus_scan' ) . '" class="button button-secondary">' . __( 'Search for malicious files', 'secupress' ) . '</a>';
+		$disabled = ! secupress_is_pro() ? ' disabled="disabled"' : '';
+		echo '<a' . $disabled . ' href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_get_virus_scan' ), 'secupress_get_virus_scan' ) . '" class="button button-secondary">' . __( 'Search for malicious files', 'secupress' ) . '</a>';
 	}
 
 
