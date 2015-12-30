@@ -413,33 +413,15 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 					break;
 
-				case 'radios' : ?>
+				case 'roles' : ?>
 
 					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
 					<?php
-
-					foreach ( $args['options'] as $val => $title ) {
-						$readonly = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' readonly="readonly" disabled="disabled"' : '';
-						?>
-						<label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
-							<input type="radio" id="<?php echo $args['name']; ?>_<?php echo $val; ?>" value="<?php echo $val; ?>"<?php checked( $val, $value ); ?> name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][]"<?php echo $readonly; ?>> <?php echo $title; ?>
-						</label>
-						<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? secupress_get_pro_version_string( '<span class="description">%s</span>' ) : ''; ?>
-						<br />
-						<?php
-					}
-
-					break;
-
-				case 'roles' :
-
 					$value = (array) $value;
 					$roles = new WP_Roles();
 					$roles = $roles->get_names();
 					$roles = array_map( 'translate_user_role', $roles );
-					?>
-					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
-					<?php
+
 					foreach ( $roles as $val => $title ) {
 						?>
 						<label<?php echo $readonly ? ' class="readonly"' : ''; ?>>
