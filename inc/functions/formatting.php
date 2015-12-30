@@ -228,16 +228,10 @@ function secupress_get_deactivate_plugin_string( $plugin_basename ) {
  * @return (string)
  **/
 function secupress_get_pro_version_string( $format = '' ) {
-	if ( secupress_is_pro() ) {
-		return '';
-	}
-
 	$message = sprintf( __( 'Available in <a href="%s">Pro Version</a>.', 'secupress' ), '#' ); //// #
-
 	if ( $format ) {
 		$message = sprintf( $format, $message );
 	}
-
 	return $message;
 }
 
