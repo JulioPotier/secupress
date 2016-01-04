@@ -57,12 +57,12 @@ function secupress_create_unique_db_prefix() {
 }
 
 /**
- * Return tables to be renamed, filtered.
+ * Return no WP tables, filtered.
  *
  * @since 1.0
  * @return array of DB tables
  **/
-function secupress_get_correct_tables() {
+function secupress_get_non_wp_tables() {
 
 	global $wpdb;
 
@@ -115,4 +115,50 @@ function secupress_get_wp_tables() {
 	}
 
 	return $wp_tables;
+}
+
+
+function secupress_get_db_backup_filename() {
+	global $wpdb;
+	return date( 'Y-m-d-H-i' ) . '.database.' . $wpdb->prefix . '.' . uniqid() . '.sql';
+}
+
+function secupress_get_db_tables_content( $tables ) {
+
+	global $wpdb;
+
+	$buffer = '## SecuPress Backup ##' . "\n\n";
+
+	foreach ( $tables as $table ) {
+
+		$table_data = $wpdb->get_results( 'SELECT * FROM ' . $table, ARRAY_A );
+
+		$buffer .= "#---------------------------------------------------------->> \n\n";
+		$buffer .= sprintf( "# Dump of table %s #\n", $table );
+		$buffer .= "#---------------------------------------------------------->> \n\n";
+
+		$buffer .= sprintf( "DROP TABLE IF EXISTS %s;", $table );
+
+		$show_create_table = $wpdb->get_row( 'SHOW CREATE TABLE ' . $table, ARRAY_A );
+		$buffer .= "\n\n" . $show_create_table['Create Table'] . ";\n\n";
+
+		if ( $table_data ) {
+			$buffer .= 'INSERT INTO ' . $table . ' VALUES';
+			foreach ( $table_data as $row ) {
+				if ( ! isset( $values ) ) {
+					$values = "\n(";
+				} else {
+					$values = ",\n(";
+				}
+				foreach ( $row as $key => $value ) {
+					$values .= '"' . $wpdb->escape( $value ) . '",';
+				}
+				$buffer .= rtrim( $values, ', ' ) . ")";
+			}
+			unset( $values );
+			$buffer .= ";\n\n";
+		}
+	}
+
+	return $buffer;
 }
