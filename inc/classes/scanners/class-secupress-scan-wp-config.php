@@ -186,7 +186,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 
 					$wp_tables = secupress_get_wp_tables();
 
-					$good_tables     = secupress_get_correct_tables();
+					$good_tables     = secupress_get_non_wp_tables();
 					$count_wp_tables = count( $wp_tables );
 					if ( $good_tables ) {
 						$this->add_fix_message( 304 );
@@ -300,7 +300,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 		$old_prefix   = $wpdb->prefix;
 		$new_prefix   = secupress_create_unique_db_prefix();
 		$query_tables = array();
-		$good_tables  = secupress_get_correct_tables();
+		$good_tables  = secupress_get_non_wp_tables();
 		$wp_tables    = secupress_get_wp_tables();
 
 		if ( isset( $_POST['secupress-select-db-tables-to-rename-flag'] ) ) {
@@ -350,7 +350,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 
 	protected function get_fix_action_template_parts() {
 		global $wpdb;
-		$good_tables = secupress_get_correct_tables();
+		$good_tables = secupress_get_non_wp_tables();
 		$wp_tables   = secupress_get_wp_tables();
 		$blog_ids    = ! is_multisite() ? array( '1' ) : $wpdb->get_col( "SELECT blog_id FROM {$wpdb->blogs}" );
 
