@@ -230,3 +230,18 @@ label {
 .secupress-code-chunk .secupress-expand-code .dashicons-visibility {
 	display: inline-block;
 }
+/**/
+#form-delete-backups .secupress-boxed-group{
+	max-height: 20em;
+}
+.db-backup-row span{
+	border-bottom: 1px solid #ccc;
+    display: inline-block;
+    padding-bottom: 3px;
+	padding-left: 10px;
+    width: 95%;
+}
+/**/
+.submit img{
+	vertical-align: middle;
+}
