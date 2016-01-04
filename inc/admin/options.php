@@ -78,7 +78,6 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		SECUPRESS_PLUGIN_SLUG . '_page_secupress_scanners' => 1,
 		'toplevel_page_secupress_scanners'                 => 1,
 	);
-
 	if ( ! isset( $pages[ $hook_suffix ] ) ) {
 		return;
 	}
@@ -99,15 +98,25 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	elseif ( SECUPRESS_PLUGIN_SLUG . '_page_secupress_modules' === $hook_suffix ) {
 		// CSS
 		wp_enqueue_style( 'secupress-modules-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-modules' . $suffix . '.css', array( 'secupress-common-css' ), $version );
+		wp_enqueue_style( 'wpmedia-css-sweetalert', SECUPRESS_ADMIN_CSS_URL . 'sweetalert' . $suffix . '.css', array(), '1.1.0' );
 
 		// JS
 		wp_enqueue_script( 'secupress-modules-js', SECUPRESS_ADMIN_JS_URL . 'secupress-modules' . $suffix . '.js', array(), $version, true );
+		wp_enqueue_script( 'wpmedia-js-sweetalert', SECUPRESS_ADMIN_JS_URL . 'sweetalert' . $suffix . '.js', array(), '1.1.0', true );
 
 		wp_localize_script( 'secupress-modules-js', 'l10nmodules', array(
 			'selectOneRoleMinimum' => __( 'Select 1 role minimum', 'secupress' ),
+			'areYouSure'           => __( 'Are you sure?', 'secupress' ),
+			'confirmDeleteBackups' => __( 'You are about to delete all your backups.', 'secupress' ),
+			'yesDeleteAll'         => __( 'Yes, delete all backups', 'secupress' ),
+			'unknownError'         => __( 'Unknown error.', 'secupress' ),
+			'error'                => __( 'Error', 'secupress' ),
+			'deleteAllImpossible'  => __( 'Impossible to delete all backups.', 'secupress' ),
+			'deleteOneImpossible'  => __( 'Impossible to delete this backup.', 'secupress' ),
+			'backupImpossible'     => __( 'Impossible to backup the database.', 'secupress' ),
 		) );
-	}
 
+	}
 	// Scanners page.
 	elseif ( SECUPRESS_PLUGIN_SLUG . '_page_secupress_scanners' === $hook_suffix ) {
 		// CSS
