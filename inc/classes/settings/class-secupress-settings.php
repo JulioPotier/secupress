@@ -97,10 +97,18 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	protected function _init() {
-		$this->form_action = is_network_admin() ? admin_url( 'admin-post.php' ) : admin_url( 'options.php' );
-		$this->form_action = esc_url( $this->form_action );
 
 		$this->set_current_module();
+
+		$modules = static::get_modules();
+		$module  = $module ? $module : $this->modulenow;
+		if ( isset( $modules[ $module ]['with_form'] ) && false === $modules[ $module ]['with_form'] ) {
+			$this->form_action = false;
+		} else {
+			$this->form_action = is_network_admin() ? admin_url( 'admin-post.php' ) : admin_url( 'options.php' );
+			$this->form_action = esc_url( $this->form_action );
+		}
+
 	}
 
 
@@ -619,16 +627,72 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	}
 
 
-
 	/**
-	 * Displays the db backups and the CTA to launch one
+	 * Displays the tables to launch a backup
 	 *
 	 * @since 1.0
 	 */
 	protected function backup_db() {
-		//// tempo
-		echo '<p><em>No Database Backups found yet, do one?</em></p>';
-		echo '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_backup_db' ), 'secupress_backup_db' ) . '" class="button button-secondary">' . __( 'Backup my Database', 'secupress' ) . '</a>';
+		$wp_tables    = secupress_get_wp_tables();
+		$other_tables = secupress_get_non_wp_tables();
+		?>
+		<form action="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_backup_db' ), 'secupress_backup_db' ); ?>" id="form-do-db-backup" method="post">
+			<div class="secupress-swal-form">
+				<fieldset class="secupress-boxed-group">
+					<b><?php _e( 'Unknown tables', 'secupress' ); ?></b><br>
+					<?php 
+					foreach ( $other_tables as $table ) {
+						echo '<input checked="checked" name="other_tables[]" type="checkbox"> ' . $table . '<br>';
+					}
+					?>
+					<hr>
+					<b><?php _e( 'WordPress tables (mandatory)', 'secupress' ); ?></b><br>
+					<?php 
+					foreach ( $wp_tables as $table ) {
+						echo '<input disabled="disabled" checked="checked" type="checkbox"> ' . $table . '<br>';
+					}
+					?>
+				</fieldset>
+			</div>
+			<p class="submit">
+				<img src="<?php echo admin_url( '/images/spinner.gif' ); ?>" id="secupress-db-backup-spinner" class="hidden">&nbsp;
+				<?php
+				submit_button( __( 'Backup my Database', 'secupress' ), 'secondary', 'submit-backup-db', false, 
+					array( 'data-original-i18n' => esc_attr__( 'Backup my Database', 'secupress' ), 'data-loading-i18n' => esc_attr__( 'Backuping &hellip;', 'secupress' ) )
+					);
+				?>
+			</p>
+		</form>
+	<?php
+	}
+
+
+	/**
+	 * Displays the old backups
+	 *
+	 * @since 1.0
+	 */
+	protected function backup_history() {
+
+		$backup_files = secupress_get_backup_file_list();
+		echo '<p id="secupress-no-db-backups" class="' . ( ! $backup_files ? '' : 'hidden' ) . '"><em>' . __( 'No Backups found yet, do one?', 'secupress' ) . '</em></p>';
+		$wp_tables    = secupress_get_wp_tables();
+		$other_tables = secupress_get_non_wp_tables();
+		?>
+		<form class="<?php echo ! $backup_files ? 'hidden' : ''; ?>" action="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_delete_backups' ), 'secupress_delete_backups' ); ?>" method="post" id="form-delete-db-backups">
+			<div class="secupress-swal-form">
+				<b><?php printf( __( '%1$s%2$s%3$s available Backups', 'secupress' ), '<span id="secupress-available-backups">', number_format_i18n( count( $backup_files ) ), '</span>' ); ?></b>
+				<fieldset class="secupress-boxed-group">
+					<?php 
+					array_map( 'secupress_print_backup_file_formated', array_reverse( $backup_files ) );
+					?>
+				</fieldset>
+			</div>
+			<?php
+			submit_button( __( 'Delete all Database Backups', 'secupress' ), 'secondary', 'submit-delete-db-backups' );
+			?>
+		</form>
+	<?php
 	}
 
 

@@ -52,6 +52,7 @@ function secupress_get_modules() {
 		'backups'         => array(
 			'title'       => esc_html__( 'Backups', 'secupress' ),
 			'dashicon'    => 'media-archive',
+			'with_form'   => false,
 			'description' => array(
 				__( 'Backuping your database daily and you files weekly can reduce the risks to lose your content because of an attack.', 'secupress' ),
 				sprintf( __( 'Don\'t forget to <a href="%s">schedule backups</a> as soon as possible.', 'secupress' ), secupress_admin_url( 'modules', 'schedules' ) ),

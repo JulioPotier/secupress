@@ -156,8 +156,14 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			$this->print_module_description();
 			?>
 		</div>
-
-		<form id="secupress-module-form-settings" method="post" action="<?php echo $this->get_form_action(); ?>">
+		<?php
+		$form_action = $this->get_form_action();
+		if ( false !== $form_action ) {
+			?>
+			<form id="secupress-module-form-settings" method="post" action="<?php echo $form_action; ?>">
+			<?php 
+		}
+		?>
 
 			<div id="block-advanced_options" data-module="<?php echo $this->get_current_module(); ?>">
 				<?php
@@ -166,9 +172,14 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 				?>
 			</div>
 
-			<?php settings_fields( 'secupress_' . $this->get_current_module() . '_settings' ); ?>
+			<?php settings_fields( 'secupress_' . $this->get_current_module() . '_settings' );
 
-		</form>
+		if ( false !== $form_action ) {
+			?>
+			</form>
+			<?php 
+		}
+		?>
 		<?php
 	}
 
