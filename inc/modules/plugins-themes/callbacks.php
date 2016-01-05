@@ -29,7 +29,7 @@ function __secupress_plugins_themes_settings_callback( $settings ) {
 	// Themes Page
 	__secupress_themes_page_settings_callback( $modulenow, $settings );
 
-	return apply_filters( 'pro.' . __FUNCTION__, $settings );
+	return $settings;
 }
 
 

@@ -195,19 +195,13 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 
 		$this->set_current_plugin( 'reset' );
 
-		$this->add_field(
-			__( 'Reset settings?', 'secupress' ),
-			array(
-				'name'        => 'reset',
-				'field_type'  => 'field_button',
-			),
-			array(
-				'button'      => array(
-					'url'          => wp_nonce_url( admin_url( 'admin-post.php?action=secupress_reset_settings&module=' . $this->get_current_module() ), 'secupress_reset_' . $this->get_current_module() ),
-					'button_label' => sprintf( __( 'Reset the %s\'s settings.', 'secupress' ), $this->get_module_title() ),
-				),
-			)
-		);
+		$this->add_field( array(
+			'title'      => __( 'Reset settings?', 'secupress' ),
+			'name'       => 'reset',
+			'field_type' => 'field_button',
+			'url'        => wp_nonce_url( admin_url( 'admin-post.php?action=secupress_reset_settings&module=' . $this->get_current_module() ), 'secupress_reset_' . $this->get_current_module() ),
+			'label'      => sprintf( __( 'Reset the %s\'s settings.', 'secupress' ), $this->get_module_title() ),
+		) );
 
 		$this->do_sections();
 	}

@@ -134,7 +134,7 @@ label {
 	color: red;
 }
 
-.form-table td fieldset label.disabled {
+.form-table label.disabled {
 	color: #ddd;
 	display: inline;
 }
