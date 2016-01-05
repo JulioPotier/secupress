@@ -112,13 +112,6 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	}
 
 
-	// Main template tags ==========================================================================
-
-	public function print_page() {
-		die( 'Method SecuPress_Settings::print_page() must be over-ridden in a sub-class.' );
-	}
-
-
 	// Sections ====================================================================================
 
 	/**
@@ -131,7 +124,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 *                        - (bool) $with_roles       Whenever to display a "Affected roles" radios list.
 	 *                        - (bool) $with_save_button Whenever to display a "Save Settings" button.
 	 *
-	 * @return (object) This class instance.
+	 * @return (object) The class instance.
 	 */
 	protected function add_section( $title, $args = null ) {
 		static $i = 0;
@@ -187,12 +180,13 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		return $this;
 	}
 
+
 	/**
 	 * A wrapper for `$this->do_settings_sections()` that wraps the sections in a `<div>` tag and prints the "Save" button.
 	 *
 	 * @since 1.0
 	 *
-	 * @return (object) This class instance.
+	 * @return (object) The class instance.
 	 */
 	protected function do_sections() {
 
@@ -246,7 +240,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	}
 
 
-	// Fields ======================================================================================
+	// Generic fields ==============================================================================
 
 	/**
 	 * The main callback that prints basic fields.
@@ -585,6 +579,31 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 
 	/**
+	 * Used to display buttons.
+	 *
+	 * @since 1.0
+	 */
+	protected function field_button( $args ) {
+
+		if ( ! empty( $args['label'] ) ) {
+			$class  = sanitize_html_class( $args['name'] );
+			$class .= ! empty( $args['style'] ) ? ' button-' . sanitize_html_class( $args['style'] ) : ' button-secondary';
+			$id     = ! empty( $args['id'] )    ? ' id="' . $args['id'] . '"' : '';
+
+			if ( ! empty( $args['url'] ) ) {
+				echo '<a' . $id . ' class="secupressicon secupressicon-'. $class . ( ! empty( $args['disabled'] ) ? ' disabled' : '' ) . '" href="' . esc_url( $args['url'] ) . '">' . $args['label'] . '</a>';
+			}
+			else {
+				echo '<button' . $id . ' class="secupressicon secupressicon-' . $class . '"' . ( ! empty( $args['disabled'] ) ? ' disabled="disabled"' : '' ) . ' type="button">' . $args['label'] . '</button>';
+			}
+		}
+
+		// Helpers
+		static::helpers( $args );
+	}
+
+
+	/**
 	 * Helpers printed after a field.
 	 *
 	 * @since 1.0
@@ -637,8 +656,10 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	}
 
 
+	// Specific fields =============================================================================
+
 	/**
-	 * Outputs the form used by the importers to accept the data to be imported
+	 * Outputs the form used by the importers to accept the data to be imported.
 	 *
 	 * @since 1.0
 	 */
@@ -678,7 +699,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 
 	/**
-	 * Outputs the export button
+	 * Outputs the export button.
 	 *
 	 * @since 1.0
 	 */
@@ -767,7 +788,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				?>
 			</p>
 		</form>
-	<?php
+		<?php
 	}
 
 
@@ -796,7 +817,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			submit_button( __( 'Delete all Database Backups', 'secupress' ), 'secondary', 'submit-delete-db-backups' );
 			?>
 		</form>
-	<?php
+		<?php
 	}
 
 
@@ -833,44 +854,33 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	}
 
 
+	// Fields related ==============================================================================
+
 	/**
-	 * Used to display buttons.
+	 * Output a correct name for setting fields.
 	 *
 	 * @since 1.0
+	 *
+	 * @return (string)
 	 */
-	// secupress_button()
-	protected function field_button( $args ) {
-
-		if ( ! empty( $args['label'] ) ) {
-			$class  = sanitize_html_class( $args['name'] );
-			$class .= ! empty( $args['style'] ) ? ' button-' . sanitize_html_class( $args['style'] ) : ' button-secondary';
-			$id     = ! empty( $args['id'] )    ? ' id="' . $args['id'] . '"' : '';
-
-			if ( ! empty( $args['url'] ) ) {
-				echo '<a' . $id . ' class="secupressicon secupressicon-'. $class . ( ! empty( $args['disabled'] ) ? ' disabled' : '' ) . '" href="' . esc_url( $args['url'] ) . '">' . $args['label'] . '</a>';
-			}
-			else {
-				echo '<button' . $id . ' class="secupressicon secupressicon-' . $class . '"' . ( ! empty( $args['disabled'] ) ? ' disabled="disabled"' : '' ) . ' type="button">' . $args['label'] . '</button>';
-			}
-		}
-
-		// Helpers
-		static::helpers( $args );
-	}
-
-
-	/**
-	 * Output a correct name for setting fields
-	 *
-	 * @since 1.0
-	 * @return string
-	 **/
 	final protected function get_field_name( $field ) {
 		return "{$this->pluginnow}_{$field}";
 	}
 
 
-	// secupress_add_settings_field()
+	/**
+	 * Add a field. It's a wrapper for `add_settings_field()`.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (array) $args An array of parameters:
+	 *                - (string) $title       The row title/label.
+	 *                - (string) $description The row description.
+	 *                - (string) $field_type  The field type.
+	 *                See `self::field()` for the other paramaters.
+	 *
+	 * @return (object) The class instance.
+	 */
 	protected function add_field( $args ) {
 
 		$args = wp_parse_args( $args, array(
@@ -906,6 +916,11 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$args
 		);
 
+		/**
+		 * Triggered after a field is added.
+		 *
+		 * @since 1.0
+		 */
 		do_action( 'after_module_' . $this->modulenow . '|' . $this->pluginnow );
 
 		return $this;
@@ -913,9 +928,15 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 
 	/**
-	 * Like the real `do_settings_fields()` but `id` and `class` attributes can be added to the `tr` tag (the `class` attribute appeared in WP 4.3).
+	 * Like the `do_settings_fields()` WordPress function but:
+	 * - `id` and `class` attributes can be added to the `tr` tag (the `class` attribute appeared in WP 4.3) with `row_id` and `row_class`.
+	 * - The `$depends` parameter can be used to show/hide the row depending on a field value.
+	 * - Automatically add some text to the row description if the field is pro and w're not using the pro version.
 	 *
-	 * @return void
+	 * @since 1.0
+	 *
+	 * @param (string) $page    Slug title of the admin page who's settings fields you want to show.
+	 * @param (string) $section Slug title of the settings section who's fields you want to show.
 	 */
 	final protected static function do_settings_fields( $page, $section ) {
 		global $wp_settings_fields;
@@ -979,23 +1000,53 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	}
 
 
+	// Main template tags ==========================================================================
+
+	/**
+	 * Print the page content. Must be extended.
+	 *
+	 * @since 1.0
+	 */
+	public function print_page() {
+		die( 'Method SecuPress_Settings::print_page() must be over-ridden in a sub-class.' );
+	}
+
+
 	// Other template tags =========================================================================
 
-	// __secupress_module_switch_description() + __secupress_module_full_title()
+	/**
+	 * Print the current section description (because you wouldn't guess by the method's name, be thankful).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (object) The class instance.
+	 */
 	protected function print_section_description() {
 		$key = $this->modulenow . '|' . $this->sectionnow;
 
 		if ( ! empty( $this->sections_descriptions[ $key ] ) ) {
-			echo '<div class="secupress-section-description"><i>';
+			echo '<div class="secupress-section-description"><em>';
 				echo $this->sections_descriptions[ $key ];
-			echo '</i></div>';
+			echo '</em></div>';
 		}
 
 		return $this;
 	}
 
 
-	// secupress_submit_button()
+	/**
+	 * Get or print a submit button.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string)       $type             Optional. The type of button. Accepts 'primary', 'secondary', or 'delete'. Default 'primary large'.
+	 * @param (string)       $name             Optional. The HTML name of the submit button. If no id attribute is given in $other_attributes below, `$name` will be used as the button's id. Default 'main_submit'.
+	 * @param (bool|string)  $wrap             Optional. True if the output button should be wrapped in a paragraph tag, false otherwise. Can be used as a string to add a class to the wrapper. Default true.
+	 * @param (array|string) $other_attributes Optional. Other attributes that should be output with the button, mapping attributes to their values, such as `array( 'tabindex' => '1' )`. These attributes will be output as `attribute="value"`, such as `tabindex="1"`. Other attributes can also be provided as a string such as `tabindex="1"`, though the array format is typically cleaner. Default empty.
+	 * @param (bool)         $echo             Optional. True if the button should be "echo"ed, false otherwise.
+	 *
+	 * @return (string) Submit button HTML.
+	 */
 	protected static function submit_button( $type = 'primary large', $name = 'main_submit', $wrap = true, $other_attributes = null, $echo = true ) {
 		if ( true === $wrap ) {
 			$wrap = '<p class="submit">';
@@ -1009,11 +1060,11 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$button = $wrap . $button . '</p>';
 		}
 
-		if ( ! $echo ) {
-			return $button;
+		if ( $echo ) {
+			echo $button;
 		}
 
-		echo $button;
+		return $button;
 	}
 
 
@@ -1035,6 +1086,16 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 	// Includes ====================================================================================
 
+	/**
+	 * Include a module settings file. Also, automatically set the current module and print the sections.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $module_file Absolute path to the module settings file.
+	 * @param (string) $module      The module.
+	 *
+	 * @return (object) The class instance.
+	 */
 	final protected function require_settings_file( $module_file, $module ) {
 
 		if ( file_exists( $module_file ) ) {
