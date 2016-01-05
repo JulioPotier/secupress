@@ -5,6 +5,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 $this->set_current_section( 'antispam' );
 $this->add_section( __( 'Anti Spam Rules', 'secupress' ) );
 
+
 $field_name       = $this->get_field_name( 'antispam' );
 $main_field_name  = $field_name . '_fightspam';
 $is_plugin_active = array();
@@ -16,136 +17,97 @@ if ( secupress_is_submodule_active( 'antispam', 'remove-comment-feature' ) ) {
 	$is_plugin_active[] = 'remove-comment-feature';
 }
 
-$this->add_field(
-	__( 'Anti Spam', 'secupress' ),
-	array(
-		'name'        => $field_name,
-		'description' => __( 'If you do not activate this antispam or remove the comment feature, please, activate another antispam plugin for your security!', 'secupress' ),
+$this->add_field( array(
+	'title'        => __( 'Anti Spam', 'secupress' ),
+	'description'  => __( 'If you do not activate this anti-spam or remove the comment feature, please, activate another anti-spam plugin for your security!', 'secupress' ),
+	'name'         => $field_name,
+	'type'         => 'radioboxes',
+	'value'        => $is_plugin_active,
+	'label_screen' => __( 'Which anti-spam do you need', 'secupress' ),
+	'options'      => array(
+		'fightspam'              => __( 'I <strong>need</strong> this to help my website fighting comment spam', 'secupress' ),
+		'remove-comment-feature' => __( 'I <strong>do not need</strong> comments on my website, remove all the comment features.', 'secupress' ),
 	),
-	array(
-		array(
-			'type'         => 'radioboxes',
-			'name'         => $field_name,
-			'value'        => $is_plugin_active,
-			'options'      => array(
-				'fightspam'              => __( 'I <strong>need</strong> this to help my website fighting comment spam', 'secupress' ),
-				'remove-comment-feature' => __( 'I <strong>do not need</strong> comments on my website, remove all the comment features.', 'secupress' ),
-			),
-			'label_for'    => $field_name,
-			'label_screen' => __( 'Which antispam do you need', 'secupress' ),
-		),
-	)
-);
+) );
 
-$field_name           = $this->get_field_name( 'mark-as' );
-$options              = array( 'deletenow' => __( '<strong>Send to trash</strong> any spam', 'secupress' ) );
+
+$options = array( 'deletenow' => __( '<strong>Send to trash</strong> any spam', 'secupress' ) );
 
 if ( defined( 'EMPTY_TRASH_DAYS' ) && is_numeric( EMPTY_TRASH_DAYS ) && EMPTY_TRASH_DAYS > 0 ) {
 	$options['markspam'] = sprintf( __( '<strong>Delete</strong> spam after %s days', 'secupress' ), EMPTY_TRASH_DAYS );
 } else {
 	$options['markspam'] = __( '<strong>Only mark</strong> as spam, i will delete manually.', 'secupress' );
 }
-$this->add_field(
-	__( 'Handling Spam', 'secupress' ),
-	array(
-		'name'        => $field_name,
-		'description' => __( 'Usually WordPress keeps spam in the database, using the deletion setting, you will free some database storage usage.', 'secupress' ),
-	),
-	array(
-		'depends'     => $main_field_name,
-		array(
-			'type'         => 'radio',
-			'options'      => $options,
-			'default'      => 'deletenow',
-			'name'         => $field_name,
-			'label_for'    => $field_name,
-			'label_screen' => __( 'How to mark spam', 'secupress' ),
-		),
-	)
-);
+
+$this->add_field( array(
+	'title'        => __( 'Handling Spam', 'secupress' ),
+	'description'  => __( 'Usually WordPress keeps spam in the database, using the deletion setting, you will free some database storage usage.', 'secupress' ),
+	'depends'      => $main_field_name,
+	'name'         => $this->get_field_name( 'mark-as' ),
+	'type'         => 'radios',
+	'options'      => $options,
+	'default'      => 'deletenow',
+	'label_screen' => __( 'How to mark spam', 'secupress' ),
+) );
 unset( $options );
 
-$field_name = $this->get_field_name( 'block-shortcodes' );
-$this->add_field(
-	__( 'Shortcode usage', 'secupress' ),
-	array(
-		'name'        => $field_name,
-		'description' => __( 'A <a href="https://codex.wordpress.org/Shortcode" target="_blank">shortcode</a> can create macros to be used in a post\'s content.', 'secupress' ),
-	),
-	array(
-		'depends'     => $main_field_name,
-		array(
-			'type'         => 'checkbox',
-			'name'         => $field_name,
-			'label'        => __( 'Yes, mark as spam any comment using any shortcode', 'secupress' ),
-			'label_for'    => $field_name,
-			'label_screen' => __( 'Yes, mark as spam any comment using any shortcode', 'secupress' ),
-		),
-		array(
-			'type'         => 'helper_description',
-			'name'         => $field_name,
-			'description'  => __( '<em>BBcodes</em> and <em>shortcodes</em> are lookalikes, both will be blocked. A shortcode looks like <code>[this]</code>.', 'secupress' ),
-		),
-	)
-);
 
-$field_name = $this->get_field_name( 'better-blacklist-comment' );
-$this->add_field(
-	__( 'Improve the Blacklist Comments from WordPress', 'secupress' ),
-	array(
-		'name'        => $field_name,
-		'description' => __( 'You can improve the list of bad words that will change some comment into a detected spam.', 'secupress' ),
+$this->add_field( array(
+	'title'        => __( 'Shortcode usage', 'secupress' ),
+	'description'  => __( 'A <a href="https://codex.wordpress.org/Shortcode" target="_blank">shortcode</a> can create macros to be used in a post\'s content.', 'secupress' ),
+	'depends'      => $main_field_name,
+	'label_for'    => $this->get_field_name( 'block-shortcodes' ),
+	'type'         => 'checkbox',
+	'label'        => __( 'Yes, mark as spam any comment using any shortcode', 'secupress' ),
+	'helpers' => array(
+		array(
+			'type'        => 'description',
+			'description' => __( '<em>BBcodes</em> and <em>shortcodes</em> are lookalikes, both will be blocked. A shortcode looks like <code>[this]</code>.', 'secupress' ),
+		),
 	),
-	array(
-		'depends'     => $main_field_name,
-		array(
-			'type'         => 'checkbox',
-			'name'         => $field_name,
-			'label'        => __( 'Yes, i want to use a better blacklist comments to detect spams', 'secupress' ),
-			'label_for'    => $field_name,
-			'label_screen' => __( 'Yes, i want to use a better blacklist comments to detect spams', 'secupress' ),
-			'disabled'     => ! is_readable( SECUPRESS_INC_PATH . 'data/spam-blacklist.data' ),
-		),
-		array(
-			'type'         => 'helper_description',
-			'name'         => $field_name,
-			'description'  => __( 'This will add more than 20,000 words in different languages.', 'secupress' ),
-		),
-		array(
-			'type'         => 'helper_warning',
-			'name'         => $field_name,
-			'description'  => ! is_readable( SECUPRESS_INC_PATH . 'data/spam-blacklist.data' ) ? sprintf( __( 'As long as the following file is not readable, this feature can\'t be used: %s', 'secupress' ), '<code>' . SECUPRESS_INC_PATH . 'data/spam-blacklist.data</code>' ) : null,
-		),
-	)
-);
+) );
 
-$field_name = $this->get_field_name( 'pings-trackbacks' );
-$this->add_field(
-	__( 'About Pings & Trackbacks', 'secupress' ),
-	array(
-		'name'        => $field_name,
-		'description' => __( 'If you do not specially use pings and trackbacks, you can forbid the usage, on the contrary, never mark it as spam.', 'secupress' ),
+
+$this->add_field( array(
+	'title'        => __( 'Improve the Blacklist Comments from WordPress', 'secupress' ),
+	'description'  => __( 'You can improve the list of bad words that will change some comment into a detected spam.', 'secupress' ),
+	'depends'      => $main_field_name,
+	'label_for'    => $this->get_field_name( 'better-blacklist-comment' ),
+	'type'         => 'checkbox',
+	'label'        => __( 'Yes, i want to use a better blacklist comments to detect spams', 'secupress' ),
+	'disabled'     => ! is_readable( SECUPRESS_INC_PATH . 'data/spam-blacklist.data' ),
+	'helpers' => array(
+		array(
+			'type'        => 'description',
+			'description' => __( 'This will add more than 20,000 words in different languages.', 'secupress' ),
+		),
+		array(
+			'type'        => 'warning',
+			'description' => ! is_readable( SECUPRESS_INC_PATH . 'data/spam-blacklist.data' ) ? sprintf( __( 'As long as the following file is not readable, this feature can\'t be used: %s', 'secupress' ), '<code>' . SECUPRESS_INC_PATH . 'data/spam-blacklist.data</code>' ) : null,
+		),
 	),
-	array(
-		'depends'     => $main_field_name,
+) );
+
+
+$this->add_field( array(
+	'title'        => __( 'About Pings & Trackbacks', 'secupress' ),
+	'description'  => __( 'If you do not specially use pings and trackbacks, you can forbid the usage, on the contrary, never mark it as spam.', 'secupress' ),
+	'depends'      => $main_field_name,
+	'name'         => $this->get_field_name( 'pings-trackbacks' ),
+	'type'         => 'radios',
+	'default'      => 'mark-ptb',
+	'label_screen' => __( 'What to do with Pings & Trackbacks', 'secupress' ),
+	'options'      => array(
+		'mark-ptb'   => __( '<strong>Mark</strong> Pings & Trackbacks as spam like comments', 'secupress' ),
+		'forbid-ptb' => __( '<strong>Forbid</strong> the usage of Pings & Trackbacks on this website', 'secupress' )
+	),
+	'helpers' => array(
 		array(
-			'type'         => 'radio',
-			'options'      => array(
-				'mark-ptb' => __( '<strong>Mark</strong> Pings & Trackbacks as spam like comments', 'secupress' ),
-				'forbid-ptb'   => __( '<strong>Fordib</strong> the usage of Pings & Trackbacks on this website', 'secupress' )
-			),
-			'default'      => 'mark-ptb',
-			'name'         => $field_name,
-			'label_for'    => $field_name,
-			'label_screen' => __( 'What to do with Pings & Trackbacks', 'secupress' ),
+			'type'        => 'description',
+			'description' => __( 'Forbid will also hide all pingbacks & trackbacks from your post comments.', 'secupress' ),
 		),
-		array(
-			'type'         => 'helper_description',
-			'name'         => $field_name,
-			'description'  => __( 'Forbid will also hide all pingbacks & trackbacks from your post comments.', 'secupress' ),
-		),
-	)
-);
+	),
+) );
 
 
 /* for info, will be marked as spam,:

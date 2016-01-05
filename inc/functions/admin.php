@@ -440,12 +440,20 @@ function secupress_generate_password( $length = 12, $args = array() ) {
 
 
 function secupress_manage_affected_roles( &$settings, $plugin ) {
-	if ( isset( $settings[ 'hidden_' . $plugin . '_affected_role' ] ) ) {
-		$settings[ $plugin . '_affected_role' ] = $settings[ $plugin . '_affected_role' ] ? $settings[ $plugin . '_affected_role' ] : array();
-		$settings[ $plugin . '_affected_role' ] = array_diff( $settings[ 'hidden_' . $plugin . '_affected_role' ], $settings[ $plugin . '_affected_role' ] );
+	static $roles;
+
+	if ( ! isset( $roles ) ) {
+		$roles = new WP_Roles();
+		$roles = $roles->get_names();
+		$roles = array_flip( $roles );
+		$roles = array_combine( $roles, $roles );
 	}
 
-	unset( $settings[ 'hidden_' . $plugin . '_affected_role' ] ); // not actual option
+	if ( empty( $settings[ $plugin . '_affected_role' ] ) || ! is_array( $settings[ $plugin . '_affected_role' ] ) ) {
+		$settings[ $plugin . '_affected_role' ] = $roles;
+	} else {
+		$settings[ $plugin . '_affected_role' ] = array_diff( $roles, $settings[ $plugin . '_affected_role' ] );
+	}
 }
 
 

@@ -20,40 +20,29 @@ $this->set_section_description( __secupress_how_to_get_licence() );
 $this->add_section( __( 'License validation', 'secupress' ) );
 
 
-$this->add_field(
-	__( 'E-mail Address', 'secupress' ),
-	array(
-		'name'        => $this->get_field_name( 'email' ),
+$this->add_field( array(
+	'title'        => __( 'E-mail Address', 'secupress' ),
+	'label_for'    => 'consumer_email',
+	'type'         => 'email',
+	'attributes'   => array( 'autocomplete' => 'off', ),
+	'helpers'      => array(
+		array(
+			'type'        => 'help',
+			'description' => __( 'The one you got with your account or enter your own and save to get a free account.', 'secupress' ),
+		),
 	),
-	array(
-		array(
-			'type'         => 'email',
-			'label_for'    => 'consumer_email',
-			'label_screen' => __( 'E-mail Address', 'secupress' ),
-		),
-		array(
-			'type'         => 'helper_help',
-			'name'         => 'consumer_email',
-			'description'  => 	__( 'The one you got with your account or enter your own and save to get a free account.', 'secupress' ),
-		),
-	)
-);
+) );
 
-$this->add_field(
-	__( 'API Key', 'secupress' ),
-	array(
-		'name'        => $this->get_field_name( 'api_key' ),
+
+$this->add_field( array(
+	'title'        => __( 'API Key', 'secupress' ),
+	'label_for'    => 'consumer_key',
+	'type'         => 'text',
+	'attributes'   => array( 'autocomplete' => 'off', ),
+	'helpers'      => array(
+		array(
+			'type'        => 'help',
+			'description' => __( 'Please enter the API key obtained with your account or leave blank and save to get a free account.', 'secupress' ),
+		),
 	),
-	array(
-		array(
-			'type'         => 'text',
-			'label_for'    => 'consumer_key',
-			'label_screen' => __( 'API Key', 'secupress' ),
-		),
-		array(
-			'type'         => 'helper_help',
-			'name'         => 'consumer_key',
-			'description'  => __( 'Please enter the API key obtained with your account or leave blank and save to get a free account.', 'secupress' )
-		),
-	)
-);
+) );

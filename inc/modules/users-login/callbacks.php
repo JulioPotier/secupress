@@ -137,6 +137,8 @@ function __secupress_password_policy_settings_callback( $modulenow, &$settings )
 	}
 
 	unset( $settings['password-policy_strong_passwords'] );
+
+	secupress_manage_affected_roles( $settings, 'password-policy' );
 }
 
 

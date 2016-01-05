@@ -113,6 +113,18 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 	// Sections ====================================================================================
 
+	/**
+	 * Add a new block in the page.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $title The section title.
+	 * @param (array)  $args  An array allowing 2 parameters:
+	 *                        - (bool) $with_roles       Whenever to display a "Affected roles" radios list.
+	 *                        - (bool) $with_save_button Whenever to display a "Save Settings" button.
+	 *
+	 * @return (object) This class instance.
+	 */
 	protected function add_section( $title, $args = null ) {
 		static $i = 0;
 
@@ -141,44 +153,39 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			return $this;
 		}
 
-		$field_name = $this->get_field_name( 'affected_role' );
-
-		$this->add_field(
-			'<span class="dashicons dashicons-groups"></span> ' . __( 'Affected Roles', 'secupress' ),
-			array(
-				'description' => __( 'Which roles will be affected by this module?', 'secupress' ),
-				'name'        => $field_name,
+		$this->add_field( array(
+			'title'        => '<span class="dashicons dashicons-groups"></span> ' . __( 'Affected Roles', 'secupress' ),
+			'description'  => __( 'Which roles will be affected by this module?', 'secupress' ),
+			'depends'      => 'affected-role-' . $i,
+			'name'         => $this->get_field_name( 'affected_role' ),
+			'type'         => 'roles',
+			'default'      => array(), //// (TODO) not supported yet why not $args['with_roles']
+			'label_screen' => __( 'Affected Roles', 'secupress' ),
+			'helpers'      => array(
+				array(
+					'type'        => 'helper_description',
+					'description' => __( 'Future roles will be automatically checked.', 'secupress' )
+				),
+				array(
+					'type'        => 'warning',
+					'class'       => 'hide-if-js',
+					'description' => __( 'Select 1 role minimum', 'secupress' )
+				),
 			),
-			array(
-				'depends'     => 'affected-role-' . $i,
-				array(
-					'type'         => 'roles',
-					'default'      => array(), //// (TODO) not supported yet why not $args['with_roles']
-					'name'         => $field_name,
-					'label_for'    => $field_name,
-					'label'        => '',
-					'label_screen' => __( 'Affected Roles', 'secupress' ),
-				),
-				array(
-					'type'         => 'helper_description',
-					'name'         => $field_name,
-					'description'  => __( 'Future roles will be automatically checked.', 'secupress' )
-				),
-				array(
-					'type'         => 'helper_warning',
-					'name'         => $field_name,
-					'class'        => 'hide-if-js',
-					'description'  => __( 'Select 1 role minimum', 'secupress' )
-				),
-			)
-		);
+		) );
 
 		++$i;
 
 		return $this;
 	}
 
-	// do_secupress_settings_sections() + secupress_do_secupress_settings_sections()
+	/**
+	 * A wrapper for `$this->do_settings_sections()` that wraps the sections in a `<div>` tag and prints the "Save" button.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (object) This class instance.
+	 */
 	protected function do_sections() {
 
 		$section_id = $this->get_section_id();
@@ -200,7 +207,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	/**
 	 * Like the real `do_settings_sections()` but using a custom `do_settings_fields()`.
 	 *
-	 * @return void
+	 * @since 1.0
 	 */
 	final protected function do_settings_sections() {
 		global $wp_settings_sections, $wp_settings_fields;
@@ -233,301 +240,394 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 	// Fields ======================================================================================
 
-	// secupress_field()
+	/**
+	 * The main callback that prints basic fields.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (array) $args An array with the following parameters:
+	 *                - (string) $type         The field type: 'number', 'email', 'tel', 'text', 'textarea', 'select', 'checkbox', 'checkboxes', 'radioboxes', 'radios', 'roles', 'countries', 'nonlogintimeslot'.
+	 *                - (string) $name         The name attribute. Also used as id attribute if `$label_for` is not provided.
+	 *                - (string) $label_for    The id attribute. Also used as name attribute if `$name` is not provided.
+	 *                - (mixed)  $default      The default value.
+	 *                - (mixed)  $value        The field value. If not provided the field will look for an option stored in db.
+	 *                - (array)  $options      Used for 'select', 'checkboxes', 'radioboxes' and 'radios': all possible choices for the user (value => label).
+	 *                - (string) $fieldset     Wrap the field in a `<fieldset>` tag. Possible values: 'start', 'end', 'no' and 'yes'. 'checkboxes', 'radioboxes' and 'radios' are automatically wrapped. 'start' and 'end' are not used yet.
+	 *                - (string) $label_screen Used for the `<legend>` tag when a fieldset is used.
+	 *                - (string) $label        A label to display on top of the field. Also used as field label for the 'checkbox' type.
+	 *                - (string) $label_before A label to display before the field.
+	 *                - (string) $label_after  A label to display after the field.
+	 *                - (bool)   $disabled     True to disable the field. Pro fields are autotically disabled on the free version.
+	 *                - (array)  $attributes   An array of html attributes to add to the field (like min and max for a 'number' type).
+	 *                - (array)  $helpers      An array containing the helpers. See `self::helpers()`.
+	 */
 	protected function field( $args ) {
+		$args = array_merge( array(
+			'type'         => '',
+			'name'         => '',
+			'label_for'    => '',
+			'default'      => '',
+			'value'        => null,
+			'options'      => array(),
+			'fieldset'     => null,
+			'label_screen' => '',
+			'label'        => '',
+			'label_before' => '',
+			'label_after'  => '',
+			'disabled'     => false,
+			'attributes'   => array(),
+			'helpers'      => array(),
+		), $args );
 
-		if ( ! is_array( end( $args ) ) ) {
-			$args = array( $args );
+		$option_name    = 'secupress' . ( 'global' !== $this->modulenow ? '_' . $this->modulenow : '' ) . '_settings';
+		$name_attribute = $option_name . '[' . $args['name'] . ']';
+		$disabled       = ! empty( $args['disabled'] ) || static::is_pro_feature( $args['name'] );
+
+		// Type
+		$args['type'] = 'radio' === $args['type'] ? 'radios' : $args['type'];
+
+		// Value
+		if ( isset( $args['value'] ) ) {
+			$value = $args['value'];
+		} elseif ( 'global' === $this->modulenow ) {
+			$value = secupress_get_option( $args['name'] );
+		} else {
+			$value = secupress_get_module_option( $args['name'] );
 		}
 
-		$args = array_filter( $args, 'is_array' );
+		if ( is_null( $value ) ) {
+			$value = $args['default'];
+		}
 
-		$full = $args;
+		// HTML attributes
+		$attributes = '';
+		$args['attributes']['class'] = ! empty( $args['attributes']['class'] ) ? (array) $args['attributes']['class'] : array();
 
-		foreach ( $full as $args ) {
-			if ( isset( $args['display'] ) && ! $args['display'] ) {
+		if ( 'number' === $args['type'] ) {
+			$args['attributes']['class'][] = 'small-text';
+		} elseif ( 'radioboxes' === $args['type'] ) {
+			$args['attributes']['class'][] = 'radiobox';
+		}
+
+		if ( $args['attributes']['class'] ) {
+			$args['attributes']['class'] = implode( ' ', array_map( 'sanitize_html_class', $args['attributes']['class'] ) );
+		} else {
+			unset( $args['attributes']['class'] );
+		}
+
+		if ( ! empty( $args['attributes']['pattern'] ) ) {
+			$args['attributes']['data-pattern'] = $args['attributes']['pattern'];
+		}
+
+		if ( ! empty( $args['attributes']['required'] ) ) {
+			$args['attributes']['data-required']      = 'required';
+			$args['attributes']['data-aria-required'] = 'true';
+		}
+
+		if ( $disabled ) {
+			$args['attributes']['disabled'] = 'disabled';
+		}
+
+		unset( $args['attributes']['pattern'], $args['attributes']['required'] );
+
+		if ( ! empty( $args['attributes'] ) ) {
+			foreach ( $args['attributes'] as $attribute => $attribute_value ) {
+				$attributes .= ' ' . $attribute . '="' . esc_attr( $attribute_value ) . '"';
+			}
+		}
+
+		// Fieldset
+		$has_fieldset_begin = false;
+		$has_fieldset_end   = false;
+
+		switch ( $args['fieldset'] ) {
+			case 'start' :
+				$has_fieldset_begin = true;
+				break;
+			case 'end' :
+				$has_fieldset_end = true;
+				break;
+			case 'no' :
+				break;
+			default :
+				if ( 'yes' === $args['fieldset'] || 'checkboxes' === $args['type'] || 'radioboxes' === $args['type'] || 'radios' === $args['type'] ) {
+					$has_fieldset_begin = true;
+					$has_fieldset_end   = true;
+				}
+		}
+
+		if ( $has_fieldset_begin ) {
+			echo '<fieldset class="fieldname-' . sanitize_html_class( $args['name'] ) . ' fieldtype-' . sanitize_html_class( $args['type'] ) . '">';
+
+			if ( ! empty( $args['label_screen'] ) ) {
+				echo '<legend class="screen-reader-text"><span>' . $args['label_screen'] . '</span></legend>';
+			}
+		}
+
+		// Labels
+		$label_open  = '';
+		$label_close = '';
+		if ( '' !== $args['label_before'] || '' !== $args['label'] || '' !== $args['label_after'] ) {
+			$label_open  = '<label' . ( $disabled ? ' class="disabled"' : '' ) . '>';
+			$label_close = '</label>';
+		}
+
+		// Types
+		switch ( $args['type'] ) {
+			case 'number' :
+			case 'email' :
+			case 'tel' :
+			case 'text' :
+
+				echo $label_open;
+					echo $args['label'] ? $args['label'] . '<br/>' : '';
+					echo $args['label_before'];
+					?>
+					<input type="<?php echo $args['type']; ?>" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>" value="<?php echo esc_attr( $value ); ?>"<?php echo $attributes; ?>/>
+					<?php
+					echo $args['label_after'];
+				echo $label_close;
+				break;
+
+			case 'textarea' :
+
+				$value       = esc_textarea( implode( "\n" , (array) $value ) );
+				$attributes .= empty( $args['attributes']['cols'] ) ? ' cols="50"' : '';
+				$attributes .= empty( $args['attributes']['rows'] ) ? ' rows="5"'  : '';
+
+				echo $label_open;
+					echo $args['label'] ? $args['label'] . '<br/>' : '';
+					echo $args['label_before'];
+					?>
+					<textarea id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>"<?php echo $attributes; ?>><?php echo $value; ?></textarea>
+					<?php
+					echo $args['label_after'];
+				echo $label_close;
+				break;
+
+			case 'select' :
+
+				$value = array_flip( (array) $value );
+				$has_disabled = false;
+
+				echo $label_open;
+					echo $args['label'] ? $args['label'] . '<br/>' : '';
+					echo $args['label_before'];
+					?>
+					<select id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>"<?php echo $attributes; ?>>
+						<?php
+						foreach ( $args['options'] as $val => $title ) {
+							$disabled = '';
+							if ( static::is_pro_feature( $args['name'] . '|' . $val ) ) {
+								$disabled     = ' disabled="disabled"';
+								$has_disabled = true;
+							}
+							?>
+							<option value="<?php echo $val; ?>"<?php selected( isset( $value[ $val ] ) ); ?><?php echo $disabled; ?>><?php echo $title . ( $disabled ? ' (*)' : '' ); ?></option>
+							<?php
+						}
+						?>
+					</select>
+					<?php
+					echo $args['label_after'];
+				echo $label_close;
+				echo $has_disabled ? secupress_get_pro_version_string( '<span class="description">(*) %s</span>' ) : '';
+				break;
+
+			case 'checkbox' :
+
+				echo $label_open;
+					echo $args['label_before'];
+					?>
+					<input type="checkbox" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>" value="1"<?php checked( $value, 1 ); ?><?php echo $attributes; ?>/>
+					<?php
+					echo $args['label'];
+				echo $label_close;
+				break;
+
+			case 'checkboxes' :
+			case 'radioboxes' :
+
+				$value = array_flip( (array) $value );
+
+				foreach ( $args['options'] as $val => $title ) {
+					$args['label_for'] = $args['name'] . '_' . $val;
+					$disabled          = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' disabled="disabled"' : '';
+					?>
+					<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
+						<input type="checkbox" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>[]" value="<?php echo $val; ?>"<?php checked( isset( $value[ $val ] ) ); ?><?php echo $disabled; ?><?php echo $attributes; ?>>
+						<?php echo $title; ?>
+					</label>
+					<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? secupress_get_pro_version_string( '<span class="description">%s</span>' ) : ''; ?>
+					<br/>
+					<?php
+				}
+				break;
+
+			case 'radios' : // Video killed the radio star.
+
+				foreach ( $args['options'] as $val => $title ) {
+					$args['label_for'] = $args['name'] . '_' . $val;
+					$disabled          = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' disabled="disabled"' : '';
+					?>
+					<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
+						<input type="radio" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>" value="<?php echo $val; ?>"<?php checked( $value, $val ); ?><?php echo $disabled; ?><?php echo $attributes; ?>>
+						<?php echo $title; ?>
+					</label>
+					<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? secupress_get_pro_version_string( '<span class="description">%s</span>' ) : ''; ?>
+					<br/>
+					<?php
+				}
+				break;
+
+			case 'roles' :
+
+				$value = array_flip( (array) $value );
+				$roles = new WP_Roles();
+				$roles = $roles->get_names();
+				$roles = array_map( 'translate_user_role', $roles );
+
+				foreach ( $roles as $val => $title ) {
+					?>
+					<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
+						<input type="checkbox" name="<?php echo $name_attribute; ?>[]" value="<?php echo $val; ?>"<?php checked( ! isset( $value[ $val ] ) ); ?><?php echo $attributes; ?>>
+						<?php echo $title; ?>
+					</label>
+					<br/>
+					<?php
+				}
+				break;
+
+			case 'countries' :
+
+				$value = array_flip( (array) $value );
+
+				foreach ( $args['options'] as $code_country => $countries ) {
+					$title = array_shift( $countries );
+					?>
+					<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
+						<input type="checkbox" value="<?php echo $code_country; ?>"<?php checked( isset( $value[ $code_country ] ) ); ?><?php echo $attributes; ?>>
+						<?php echo $title; ?> <em>(<?php _e( 'All countries', 'secupress' ); ?>)</em>
+					</label>
+					<br/>
+					<?php
+					foreach ( $countries as $code => $title ) {
+						$args['label_for'] = $args['name'] . '_' . $code;
+						?>
+						&mdash; <label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
+							<input type="checkbox" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>[]" value="<?php echo $code; ?>"<?php checked( isset( $value[ $code ] ) ); ?> data-code-country="<?php echo $code_country; ?>"<?php echo $attributes; ?>>
+							<?php echo $title; ?>
+						</label>
+						<br/>
+						<?php
+					}
+					echo '<br/>';
+				}
+				break;
+
+			case 'nonlogintimeslot' :
+
+				$from_hour   = isset( $value['from_hour'] )   ? $value['from_hour']   : '';
+				$from_minute = isset( $value['from_minute'] ) ? $value['from_minute'] : '';
+				$to_hour     = isset( $value['to_hour'] )     ? $value['to_hour']     : '';
+				$to_minute   = isset( $value['to_minute'] )   ? $value['to_minute']   : '';
+
+				_e( 'Everyday', 'secupress' );
+				echo '<br>';
+				echo '<span style="display:inline-block;min-width:3em">' . _x( 'From', '*From* xx h xx mn To xx h xx mn', 'secupress' ) . '</span>';
+				?>
+				<label>
+					<input type="number" id="<?php echo $args['name']; ?>_from_hour" name="<?php echo $name_attribute; ?>[from_hour]" value="<?php echo (int) $from_hour; ?>" class="small-text" min="0" max="23"<?php echo $attributes; ?>>
+					<?php _ex( 'h', 'hour', 'secupress' ); ?>
+				</label>
+				<label>
+					<input type="number" id="<?php echo $args['name']; ?>_from_minute" name="<?php echo $name_attribute; ?>[from_minute]" value="<?php echo (int) $from_minute; ?>" class="small-text" min="0" max="45" step="15"<?php echo $attributes; ?>>
+					<?php _ex( 'min', 'minute', 'secupress' ); ?>
+				</label>
+				<br>
+				<?php
+				echo '<span style="display:inline-block;min-width:3em">' . _x( 'To', 'From xx h xx mn *To* xx h xx mn', 'secupress' ) . '</span>';
+				?>
+				<label>
+					<input type="number" id="<?php echo $args['name']; ?>_to_hour" name="<?php echo $name_attribute; ?>[to_hour]" value="<?php echo (int) $to_hour; ?>" class="small-text" min="0" max="23"<?php echo $attributes; ?>>
+					<?php _ex( 'h', 'hour', 'secupress' ); ?>
+				</label>
+				<label>
+					<input type="number" id="<?php echo $args['name']; ?>_to_minute" name="<?php echo $name_attribute; ?>[to_minute]" value="<?php echo (int) $to_minute; ?>" class="small-text" min="0" max="45" step="15"<?php echo $attributes; ?>>
+					<?php _ex( 'min', 'minute', 'secupress' ); ?>
+				</label>
+				<?php
+				break;
+
+			default :
+				if ( method_exists( $this, $args['type'] ) ) {
+					call_user_func( array( $this, $args['type'] ) );
+				} else {
+					echo 'Type manquant ou incorrect'; // ne pas traduire
+				}
+		}
+
+		// Helpers.
+		static::helpers( $args );
+
+		if ( $has_fieldset_end ) {
+			echo '</fieldset>';
+		}
+	}
+
+
+	/**
+	 * Helpers printed after a field.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (array) $args An array containing a 'helpers' key.
+	 *                      This 'helpers' key contains a list of arrays that contain:
+	 *                      - (string) $description The text to print.
+	 *                      - (string) $type        The helper type: 'description', 'help', 'warning'.
+	 *                      - (string) $class       A html class to add to the text.
+	 *                      - (string) $depends     Like in `$this->do_settings_fields()`, used to show/hide the helper depending on a field value.
+	 */
+	protected static function helpers( $args ) {
+		if ( empty( $args['helpers'] ) || ! is_array( $args['helpers'] ) ) {
+			return;
+		}
+
+		foreach ( $args['helpers'] as $helper ) {
+
+			if ( empty( $helper['description'] ) ) {
 				continue;
 			}
 
-			$args['label_for'] = isset( $args['label_for'] )    ? $args['label_for'] : '';
-			$args['name']      = isset( $args['name'] )         ? $args['name'] : $args['label_for'];
-			$option_name       = 'secupress' . ( 'global' !== $this->modulenow ? '_' . $this->modulenow : '' ) . '_settings';
-			$default           = isset( $args['default'] )      ? $args['default'] : '';
-			if ( isset( $args['value'] ) ) {
-				$value         = $args['value'];
-			} elseif ( 'global' === $this->modulenow ) {
-				$value         = secupress_get_option( $args['name'] );
-			} else {
-				$value         = secupress_get_module_option( $args['name'] );
-			}
-			$value             = ! is_null( $value )            ? $value : $default;
-			$parent            = isset( $args['parent'] )       ? 'data-parent="' . sanitize_html_class( $args['parent'] ). '"' : null;
-			$placeholder       = isset( $args['placeholder'] )  ? 'placeholder="'. $args['placeholder'].'" ' : '';
-			$label             = isset( $args['label'] )        ? $args['label'] : '';
-			$required          = isset( $args['required'] )     ? ' data-required="required" data-aria-required="true"' : '';
-			$pattern           = isset( $args['pattern'] )      ? ' data-pattern="' . $args['pattern'] . '"' : '';
-			$title             = isset( $args['title'] )        ? ' title="' . $args['title'] . '"' : '';
-			$cols              = isset( $args['cols'] )         ? (int) $args['cols'] : 50;
-			$rows              = isset( $args['rows'] )         ? (int) $args['rows'] : 5;
-			$size              = isset( $args['size'] )         ? (int) $args['size'] : 1;
-			$disabled          = ! empty( $args['disabled'] ) || static::is_pro_feature( $args['name'] ) ? ' disabled="disabled"' : '';
-			$class             = ! empty( $args['class'] )      ? $args['class'] : '';
-			$radio_style       = 'radioboxes' == $args['type'];
-			$field_type        = 'radioboxes' == $args['type']  ? 'checkboxes' : $args['type'];
-
-			// Classes
-			if ( is_array( $class ) ) {
-				$class = implode( ' ', array_map( 'sanitize_html_class', $class ) );
-			}
-			else {
-				$class = sanitize_html_class( $class );
-			}
-
-			$class .= $parent ? ' has-parent' : '';
-			$class  = $class ? ' ' . trim( $class ) : '';
-
 			$depends = '';
-			if ( ! empty( $args['depends'] ) ) {
-				$args['depends'] = explode( ' ', $args['depends'] );
-				$depends = ' depends-' . implode( ' depends-', $args['depends'] );
+			if ( ! empty( $helper['depends'] ) ) {
+				$helper['depends'] = explode( ' ', $helper['depends'] );
+				$depends           = ' depends-' . implode( ' depends-', $helper['depends'] );
 			}
 
-			$has_fieldset_begin = ! isset( $args['fieldset'] ) || 'start' === $args['fieldset'];
-			$has_fieldset_end   = ! isset( $args['fieldset'] ) || 'end'   === $args['fieldset'];
+			$class = ! empty( $helper['class'] ) ? ' ' . trim( $helper['class'] ) : '';
 
-			// Unless it's an fieldset end or start ONLY, don't wrap helpers in a fieldset tag.
-			if ( $has_fieldset_begin && $has_fieldset_end && substr( $field_type, 0, 7 ) === 'helper_' ) {
-				$has_fieldset_begin = false;
-				$has_fieldset_end   = false;
-			}
+			switch ( $helper['type'] ) {
+				case 'description' :
 
-			$has_fieldset = $has_fieldset_begin || $has_fieldset_end;
-
-			if ( $has_fieldset_begin ) {
-				echo '<fieldset class="fieldname-' . sanitize_html_class( $args['name'] ) . ' fieldtype-' . sanitize_html_class( $field_type ) . $depends . '">';
-			}
-
-			switch ( $field_type ) {//// Supprimer les labels si $label est vide. Supprimer les legend si pas de fieldset.
-				case 'number' :
-				case 'email' :
-				case 'tel' :
-				case 'text' :
-
-					$min = isset( $args['min'] ) ? ' min="' . (int) $args['min'] . '"' : '';
-					$max = isset( $args['max'] ) ? ' max="' . (int) $args['max'] . '"' : '';
-
-					$number_options = $field_type === 'number' ? $min . $max . ' class="small-text"' : '';
-					$autocomplete   = in_array( $args['name'], array( 'consumer_key', 'consumer_email' ) ) ? ' autocomplete="off"' : '';
-					$data_realtype  = 'password' != $field_type ? '' : ' data-realtype="password"';
-					?>
-					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
-					<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
-						<input <?php echo $title; ?><?php echo $autocomplete; ?><?php echo $pattern; ?><?php echo $required; ?><?php echo $data_realtype; ?> type="<?php echo $field_type; ?>"<?php echo $number_options; ?> id="<?php echo $args['label_for']; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]" value="<?php echo esc_attr( $value ); ?>" <?php echo $placeholder; ?><?php echo $disabled; ?>/>
-					<?php echo $label; ?>
-					</label>
-					<?php
-					break;
-
-				case 'textarea' :
-
-					$value = is_array( $value ) ? esc_textarea( implode( "\n" , $value ) ) : esc_textarea( $value );
-					?>
-					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
-					<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
-						<textarea id="<?php echo $args['label_for']; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]" cols="<?php echo $cols; ?>" rows="<?php echo $rows; ?>"<?php echo $disabled; ?><?php echo ! empty( $args['readonly'] ) ? ' readonly="readonly"' : ''; ?>><?php echo $value; ?></textarea>
-					</label>
-					<?php
-					break;
-
-				case 'select' : ?>
-
-					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
-					<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
-						<select size="<?php echo $args['size']; ?>" multiple="multiple" id="<?php echo $args['name']; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]"<?php echo $disabled; ?>>
-							<?php
-							$value = (array) $value;
-
-							foreach ( $args['options'] as $val => $title ) {
-								$disabled = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' disabled="disabled"' : '';
-								?>
-								<option value="<?php echo $val; ?>" <?php selected( in_array( $val, $value ) ); echo $disabled;?>><?php echo $title; ?></option>
-								<?php
-							}
-							?>
-						</select>
-						<?php echo $label; ?>
-					</label>
-
-					<?php
-					break;
-
-				case 'checkbox' :
-
-					if ( isset( $args['label_screen'] ) ) {
-						?>
-						<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
-						<?php
-					}
-					?>
-					<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
-						<input type="checkbox" id="<?php echo $args['name']; ?>" class="<?php echo $class; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]" value="1"<?php echo $disabled; ?> <?php checked( $value, 1 ); ?> <?php echo $parent; ?>/> <?php echo $args['label']; ?>
-					</label>
-					<?php
-					break;
-
-				case 'checkboxes' : ?>
-
-					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
-					<?php
-					$value       = (array) $value;
-					$radio_style = $radio_style ? ' class="radiobox"' : '';
-
-					foreach ( $args['options'] as $val => $title ) {
-						$disabled = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' disabled="disabled"' : '';
-						?>
-						<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
-							<input type="checkbox" id="<?php echo $args['name']; ?>_<?php echo $val; ?>"<?php echo $radio_style; ?> value="<?php echo $val; ?>"<?php checked( in_array( $val, $value ) ); ?> name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][]"<?php echo $disabled; ?>> <?php echo $title; ?>
-						</label>
-						<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? secupress_get_pro_version_string( '<span class="description">%s</span>' ) : ''; ?>
-						<br />
-						<?php
-					}
-
-					break;
-
-				case 'radio' : ?>
-
-					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
-					<?php
-					foreach ( $args['options'] as $val => $title ) {
-						$disabled = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' disabled="disabled"' : '';
-						?>
-						<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
-							<input type="radio" id="<?php echo $args['name']; ?>_<?php echo $val; ?>" value="<?php echo $val; ?>"<?php checked( $value, $val ); ?> name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>]"<?php echo $disabled; ?>> <?php echo $title; ?>
-						</label>
-						<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? secupress_get_pro_version_string( '<span class="description">%s</span>' ) : ''; ?>
-						<br />
-						<?php
-					}
-
-					break;
-
-				case 'roles' : ?>
-
-					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
-					<?php
-					$value = (array) $value;
-					$roles = new WP_Roles();
-					$roles = $roles->get_names();
-					$roles = array_map( 'translate_user_role', $roles );
-
-					foreach ( $roles as $val => $title ) {
-						?>
-						<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
-							<input type="checkbox" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][]" value="<?php echo $val; ?>"<?php checked( ! in_array( $val, $value ) ); ?>> <?php echo $title; ?>
-						</label><br />
-						<input type="hidden" name="<?php echo $option_name; ?>[hidden_<?php echo $args['name']; ?>][]" value="<?php echo $val; ?>">
-						<?php
-					}
-					break;
-
-				case 'countries' : ?>
-
-					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
-					<?php
-					$value = (array) $value;
-
-					foreach ( $args['options'] as $code_country => $countries ) {
-						$title = array_shift( $countries );
-						?>
-						<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
-							<input type="checkbox" class="<?php echo $args['name']; ?>" value="<?php echo $code_country; ?>"<?php checked( in_array( $code_country, $value ) ); ?>> <?php echo $title; ?> <em>(<?php _e( 'All countries', 'secupress' ); ?>)</em>
-						</label>
-						<br />
-						<?php
-						foreach ( $countries as $code => $title ) {
-							?>
-							&mdash; <label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
-								<input type="checkbox" data-code-country="<?php echo $code_country; ?>" id="<?php echo $args['name']; ?>_<?php echo $code; ?>" value="<?php echo $code; ?>"<?php checked( in_array( $code, $value ) ); ?> name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][]"<?php echo $disabled; ?>> <?php echo $title; ?>
-							</label>
-							<br />
-							<?php
-						}
-						echo '<br />';
-					}
-
-					break;
-
-				case 'nonlogintimeslot' : ?>
-
-					<legend class="screen-reader-text"><span><?php echo $args['label_screen']; ?></span></legend>
-					<?php
-					$from_hour   = isset( $value['from_hour'] )   ? $value['from_hour']   : '';
-					$from_minute = isset( $value['from_minute'] ) ? $value['from_minute'] : '';
-					$to_hour     = isset( $value['to_hour'] )     ? $value['to_hour']     : '';
-					$to_minute   = isset( $value['to_minute'] )   ? $value['to_minute']   : '';
-
-					_e( 'Everyday', 'secupress' );
-					echo '<br>';
-					echo '<span style="display:inline-block;min-width:3em">' . _x( 'From', '*From* xx h xx mn To xx h xx mn', 'secupress' ) . '</span>';
-					?>
-					<label>
-						<input type="number" class="small-text" min="0" max="23" id="<?php echo $args['name']; ?>_from_hour" value="<?php echo (int) $from_hour; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][from_hour]"<?php echo $disabled; ?>>
-					</label> <?php _ex( 'h', 'hour', 'secupress' ); ?>
-					<label>
-						<input type="number" class="small-text" min="0" max="45" step="15" id="<?php echo $args['name']; ?>_from_minute" value="<?php echo (int) $from_minute; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][from_minute]"<?php echo $disabled; ?>>
-					</label> <?php _ex( 'min', 'minute', 'secupress' ); ?>
-					<br>
-					<?php
-					echo '<span style="display:inline-block;min-width:3em">' . _x( 'To', 'From xx h xx mn *To* xx h xx mn', 'secupress' ) . '</span>';
-					?>
-					<label>
-						<input type="number" class="small-text" min="0" max="23" id="<?php echo $args['name']; ?>_to_hour" value="<?php echo (int) $to_hour; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][to_hour]"<?php echo $disabled; ?>>
-					</label> <?php _ex( 'h', 'hour', 'secupress' ); ?>
-					<label>
-						<input type="number" class="small-text" min="0" max="45" step="15" id="<?php echo $args['name']; ?>_to_minute" value="<?php echo (int) $to_minute; ?>" name="<?php echo $option_name; ?>[<?php echo $args['name']; ?>][to_minute]"<?php echo $disabled; ?>>
-					</label> <?php _ex( 'min', 'minute', 'secupress' ); ?>
-					<?php
-
-					break;
-
-				case 'helper_description' :
-
-					$description = isset( $args['description'] ) ? '<p class="description desc' . $class . $depends . '">' . $args['description'] . '</p>' : '';
+					$description = '<p class="description desc' . $depends . $class . '">' . $helper['description'] . '</p>';
 					echo apply_filters( 'secupress_help', $description, $args['name'], 'description' );
-
 					break;
 
-				case 'helper_help' :
+				case 'help' :
 
-					$description = isset( $args['description'] ) ? '<p class="description help' . $class . $depends . '">' . $args['description'] . '</p>' : '';
+					$description = '<p class="description help' . $depends . $class . '">' . $helper['description'] . '</p>';
 					echo apply_filters( 'secupress_help', $description, $args['name'], 'help' );
-
-				break;
-
-				case 'helper_warning' :
-
-					$description = isset( $args['description'] ) ? '<p class="description warning' . $class . $depends . '"><strong>' . __( 'Warning: ', 'secupress' ) . '</strong>' . $args['description'] . '</p>' : '';
-					echo apply_filters( 'secupress_help', $description, $args['name'], 'warning' );
-
 					break;
 
-				default :
-					if ( method_exists( $this, $field_type ) ) {
-						call_user_func( array( $this, $field_type ) );
-					} else {
-						echo 'Type manquant ou incorrect'; // ne pas traduire
-					}
+				case 'warning' :
 
+					$description = '<p class="description warning' . $depends . $class . '"><strong>' . __( 'Warning: ', 'secupress' ) . '</strong>' . $helper['description'] . '</p>';
+					echo apply_filters( 'secupress_help', $description, $args['name'], 'warning' );
 			}
-
-			if ( $has_fieldset_end ) {
-				echo '</fieldset>';
-			}
-
 		}
-
 	}
+
 
 	/**
 	 * Outputs the form used by the importers to accept the data to be imported
@@ -538,29 +638,34 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		/**
 		 * Filter the maximum allowed upload size for import files.
 		 *
-		 * @since (WordPress) 2.3.0
+		 * @since 1.0
+		 * @since WP 2.3.0
 		 *
 		 * @see wp_max_upload_size()
 		 *
 		 * @param int $max_upload_size Allowed upload size. Default 1 MB.
 		 */
-		$bytes      = apply_filters( 'import_upload_size_limit', wp_max_upload_size() ); // Filter from WP Core
+		$bytes      = apply_filters( 'import_upload_size_limit', wp_max_upload_size() );
 		$size       = size_format( $bytes );
 		$upload_dir = wp_upload_dir();
-		$disabled = ! secupress_is_pro() ? ' disabled="disabled"' : '';
+		$disabled   = secupress_is_pro() ? '' : ' disabled="disabled"';
+
 		if ( ! empty( $upload_dir['error'] ) ) {
-			?><div class="error"><p><?php _e( 'Before you can upload your import file, you will need to fix the following error:', 'secupress' ); ?></p>
-			<p><strong><?php echo $upload_dir['error']; ?></strong></p></div><?php
-		} else {
 			?>
-			<p>
-			<input type="file" id="upload" name="import" size="25"<?php echo $disabled; ?>/>
-			<br />
+			<div class="error">
+				<p><?php _e( 'Before you can upload your import file, you will need to fix the following error:', 'secupress' ); ?></p>
+				<p><strong><?php echo $upload_dir['error']; ?></strong></p>
+			</div><?php
+			return;
+		}
+		?>
+		<p>
+			<input type="file" id="upload" name="import" size="25"<?php echo $disabled; ?>/><br/>
 			<label for="upload"><?php echo apply_filters( 'secupress_help', __( 'Choose a file from your computer:', 'secupress' ) . ' (' . sprintf( __( 'Maximum size: %s', 'secupress' ), $size ) . ')', 'upload', 'help' ); ?></label>
 			<input type="hidden" name="max_file_size" value="<?php echo $bytes; ?>" />
-			</p>
-			<?php submit_button( __( 'Upload file and import settings', 'secupress' ), 'button', 'import', true, $disabled );
-		}
+		</p>
+		<?php
+		submit_button( __( 'Upload file and import settings', 'secupress' ), 'button', 'import', true, $disabled );
 	}
 
 
@@ -571,13 +676,13 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 */
 	protected function export_form() {
 		if ( secupress_is_pro() ) {
-		?>
+			?>
 			<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_export' ), 'secupress_export' ); ?>" id="export" class="button button-secondary secupressicon"><?php _e( 'Download settings', 'secupress' ); ?></a>
-		<?php
+			<?php
 		} else {
-		?>
+			?>
 			<button class="button button-secondary" disabled="disabled"><?php _e( 'Download settings', 'secupress' ); ?></button>
-		<?php
+			<?php
 		}
 	}
 
@@ -592,7 +697,6 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		echo '<p><em>No scheduled backups yet, create one?</em></p>';
 		echo '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_clear_alerts' ), 'secupress_clear_alerts' ) . '" class="button button-secondary">' . __( 'Clear Alerts', 'secupress' ) . '</a>';
 	}
-
 
 
 	/**
@@ -619,7 +723,6 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	}
 
 
-
 	/**
 	 * Displays the db backups and the CTA to launch one
 	 *
@@ -640,7 +743,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	protected function backup_files() {
 		//// tempo
 		echo '<p><em>No Files Backups found yet, do one?</em></p>';
-		$disabled = ! secupress_is_pro() ? ' disabled="disabled"' : '';
+		$disabled = secupress_is_pro() ? '' : ' disabled="disabled"';
 		echo '<a' . $disabled . ' href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_backup_files' ), 'secupress_backup_files' ) . '" class="button button-secondary">' . __( 'Backup my Files', 'secupress' ) . '</a>';
 	}
 
@@ -661,8 +764,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	protected function virus_scanner() {
-		$disabled = ! secupress_is_pro() ? ' disabled="disabled"' : '';
-		echo '<a' . $disabled . ' href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_get_virus_scan' ), 'secupress_get_virus_scan' ) . '" class="button button-secondary">' . __( 'Search for malicious files', 'secupress' ) . '</a>';
+		echo '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_get_virus_scan' ), 'secupress_get_virus_scan' ) . '" class="button button-secondary' . ( secupress_is_pro() ? '' : ' disabled' ) . '">' . __( 'Search for malicious files', 'secupress' ) . '</a>';
 	}
 
 
@@ -674,43 +776,21 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	// secupress_button()
 	protected function field_button( $args ) {
 
-		$button       = $args['button'];
-		$desc         = isset( $args['helper_description'] ) ? $args['helper_description'] : null;
-		$help         = isset( $args['helper_help'] )        ? $args['helper_help'] : null;
-		$warning      = isset( $args['helper_warning'] )     ? $args['helper_warning'] : null;
-		$id           = isset( $button['button_id'] )        ? ' id="' . sanitize_html_class( $button['button_id'] ) . '"' : null;
-		$button_style = isset( $button['style'] )            ? 'button-' . sanitize_html_class( $button['style'] ) : 'button-secondary';
-		$class        = sanitize_html_class( strip_tags( $button['button_label'] ) );
+		if ( ! empty( $args['label'] ) ) {
+			$class  = sanitize_html_class( $args['name'] );
+			$class .= ! empty( $args['style'] ) ? ' button-' . sanitize_html_class( $args['style'] ) : ' button-secondary';
+			$id     = ! empty( $args['id'] )    ? ' id="' . $args['id'] . '"' : '';
 
-		if ( ! empty( $help ) ) {
-			$help = '<p class="description help ' . $class . '">' . $help['description'] . '</p>';
-		}
-		if ( ! empty( $desc ) ) {
-			$desc = '<p class="description desc ' . $class . '">' . $help['description'] . '</p>';
-		}
-		if ( ! empty( $warning ) ) {
-			$warning = '<p class="description warning file-error ' . $class . '"><b>' . __( 'Warning: ', 'secupress' ) . '</b>' . $warning['description'] . '</p>';
-		}
-		?>
-		<fieldset class="fieldname-<?php echo $class; ?> fieldtype-button">
-			<?php
-			if ( isset( $button['url'] ) ) {
-				echo '<a href="' . esc_url( $button['url'] ) . '"' . $id . ' class="' . $button_style . ' secupressicon secupressicon-'. $class . '">' . wp_kses_post( $button['button_label'] ) . '</a>';
+			if ( ! empty( $args['url'] ) ) {
+				echo '<a' . $id . ' class="secupressicon secupressicon-'. $class . ( ! empty( $args['disabled'] ) ? ' disabled' : '' ) . '" href="' . esc_url( $args['url'] ) . '">' . $args['label'] . '</a>';
 			}
 			else {
-				echo '<button type="button"' . $id . ' class="' . $button_style . ' secupressicon secupressicon-' . $class . '">' . wp_kses_post( $button['button_label'] ) . '</button>';
+				echo '<button' . $id . ' class="secupressicon secupressicon-' . $class . '"' . ( ! empty( $args['disabled'] ) ? ' disabled="disabled"' : '' ) . ' type="button">' . $args['label'] . '</button>';
 			}
+		}
 
-			echo apply_filters( 'secupress_help', $desc,    sanitize_key( strip_tags( $button['button_label'] ) ), 'description' );
-			echo apply_filters( 'secupress_help', $help,    sanitize_key( strip_tags( $button['button_label'] ) ), 'help' );
-			echo apply_filters(
-				'secupress_help',
-				$warning,
-				sanitize_key( strip_tags( $button['button_label'] ) ),
-				'warning' );
-			?>
-		</fieldset>
-		<?php
+		// Helpers
+		static::helpers( $args );
 	}
 
 
@@ -726,13 +806,22 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 
 	// secupress_add_settings_field()
-	protected function add_field( $title, $args, $fields ) {
+	protected function add_field( $args ) {
 
 		$args = wp_parse_args( $args, array(
+			'title'       => '',
+			'description' => '',
 			'name'        => '',
 			'field_type'  => 'field',
-			'description' => '',
 		) );
+
+		if ( empty( $args['name'] ) && ! empty( $args['label_for'] ) ) {
+			$args['name'] = $args['label_for'];
+		}
+
+		// Get the title.
+		$title = $args['title'];
+		unset( $args['title'] );
 
 		// Get the callback.
 		if ( is_array( $args['field_type'] ) ) {
@@ -743,25 +832,20 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$callback = 'secupress_' . $args['field_type'];
 		}
 
-		// If it's a pro feature, add some warning.
-		if ( static::is_pro_feature( $args['name'] ) ) {
-			$format = $args['description'] ? '<br>%s' : '';
-			$args['description'] .= secupress_get_pro_version_string( $format );
-		}
-
 		add_settings_field(
 			'module_' . $this->modulenow . '|' . $this->pluginnow . '|' . $args['name'],
-			$title . static::field_description( $args['description'] ),
+			$title,
 			$callback,
 			$this->get_section_id(),
 			$this->get_section_id(),
-			$fields
+			$args
 		);
 
 		do_action( 'after_module_' . $this->modulenow . '|' . $this->pluginnow );
 
 		return $this;
 	}
+
 
 	/**
 	 * Like the real `do_settings_fields()` but `id` and `class` attributes can be added to the `tr` tag (the `class` attribute appeared in WP 4.3).
@@ -779,12 +863,14 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$id    = '';
 			$class = '';
 
-			if ( ! empty( $field['args']['id'] ) ) {
-				$id = ' id="' . esc_attr( $field['args']['id'] ) . '"';
+			// Row ID.
+			if ( ! empty( $field['args']['row_id'] ) ) {
+				$id = ' id="' . esc_attr( $field['args']['row_id'] ) . '"';
 			}
 
-			if ( ! empty( $field['args']['class'] ) ) {
-				$class = $field['args']['class'];
+			// Row class.
+			if ( ! empty( $field['args']['row_class'] ) ) {
+				$class = $field['args']['row_class'];
 			}
 
 			if ( ! empty( $field['args']['depends'] ) ) {
@@ -796,15 +882,28 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				$class = ' class="' . esc_attr( trim( $class ) ) . '"';
 			}
 
-			unset( $field['args']['id'], $field['args']['class'], $field['args']['depends'] );
+			unset( $field['args']['row_id'], $field['args']['row_class'], $field['args']['depends'] );
 
 			echo "<tr{$id}{$class}>";
 
-				if ( ! empty( $field['args'][0]['label_for'] ) ) {
-					echo '<th scope="row"><label for="' . esc_attr( $field['args'][0]['label_for'] ) . '">' . $field['title'] . '</label></th>';
-				} else {
-					echo '<th scope="row">' . $field['title'] . '</th>';
-				}
+				echo '<th scope="row">';
+					// Row title.
+					if ( ! empty( $field['args']['label_for'] ) ) {
+						echo '<label for="' . esc_attr( $field['args']['label_for'] ) . '">' . $field['title'] . '</label>';
+					} else {
+						echo $field['title'];
+					}
+					// Row description.
+					if ( static::is_pro_feature( $field['args']['name'] ) ) {
+						// If it's a pro feature, add a warning.
+						$format = $field['args']['description'] ? '<br>%s' : '';
+						$field['args']['description'] .= secupress_get_pro_version_string( $format );
+					}
+					if ( $field['args']['description'] ) {
+						echo '<p class="description">' . $field['args']['description'] . '</p>';
+					}
+					unset( $field['args']['description'] );
+				echo '</th>';
 
 				echo '<td>';
 				call_user_func( $field['callback'], $field['args'] );
@@ -854,22 +953,6 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 
 	// Utilities ===================================================================================
-
-	/**
-	 * Output the $text in a P tag with `description` class.
-	 *
-	 * @since 1.0
-	 *
-	 * @param (string) $text The last word of the secupress page slug.
-	 *
-	 * @return (string) The text wrapped in a `<p>` tag.
-	 */
-	public static function field_description( $text = '' ) {
-		if ( '' !== $text ) {
-			return '<p class="description">' . $text . '</p>';
-		}
-	}
-
 
 	/**
 	 * Tell if the option value is for the pro version and we're not using the pro version.

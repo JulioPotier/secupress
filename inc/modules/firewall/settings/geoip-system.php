@@ -6,8 +6,7 @@ $this->set_current_section( 'geoip-system' );
 $this->add_section( __( 'Country Managment', 'secupress' ) );
 
 
-$field_name      = $this->get_field_name( 'type' );
-$main_field_name = $field_name;
+$main_field_name = $this->get_field_name( 'type' );
 $geoip_value     = '-1';
 
 if ( secupress_is_submodule_active( 'firewall', 'geoip-system' ) ) {
@@ -15,39 +14,32 @@ if ( secupress_is_submodule_active( 'firewall', 'geoip-system' ) ) {
 	 * Make sure we have valid value if the submodule is active.
 	 * The default value is 'blacklist'.
 	 */
-	$geoip_value = secupress_get_module_option( $field_name );
+	$geoip_value = secupress_get_module_option( $main_field_name );
 	$geoip_value = 'whitelist' === $geoip_value ? 'whitelist' : 'blacklist';
 }
 
-$this->add_field(
-	__( 'Use the GeoIP Managment', 'secupress' ),
-	array(
-		'name'        => $field_name,
-		'description' => __( 'Country Managment is an effective way to stop attacks of any types and stop malicious activities that originates from a specific region of the world.', 'secupress' ),
+$this->add_field( array(
+	'title'        => __( 'Use the GeoIP Managment', 'secupress' ),
+	'description'  => __( 'Country Managment is an effective way to stop attacks of any types and stop malicious activities that originates from a specific region of the world.', 'secupress' ),
+	'name'         => $main_field_name,
+	'type'         => 'radios',
+	'value'        => $geoip_value,
+	'default'      => '-1',
+	'label_screen' => __( 'Whitelist or Blacklist the countries', 'secupress' ),
+	'options'      => array(
+		'-1'        => __( 'I <strong>do not need</strong> to block or allow countries from visiting my website', 'secupress' ),
+		'blacklist' => __( '<strong>Disallow</strong> the selected countries to visit my website (blacklist)', 'secupress' ),
+		'whitelist' => __( '<strong>Only allow</strong> the selected countries to visit my website (whitelist)', 'secupress' )
 	),
-	array(
+	'helpers'      => array(
 		array(
-			'type'         => 'radio',
-			'name'         => $field_name,
-			'value'        => $geoip_value,
-			'options'      => array(
-				'-1'        => __( 'I <strong>do not need</strong> to block or allow countries from visiting my website', 'secupress' ),
-				'blacklist' => __( '<strong>Disallow</strong> the selected countries to visit my website (blacklist)', 'secupress' ),
-				'whitelist' => __( '<strong>Only allow</strong> the selected countries to visit my website (whitelist)', 'secupress' )
-			),
-			'default'      => '-1',
-			'label_for'    => $field_name,
-			'label_screen' => __( 'Whitelist or Blacklist the countries', 'secupress' ),
-		),
-		array(
-			'type'         => 'helper_description',
-			'name'         => $field_name,
-			'description'  => __( 'Remember that we detect a visit based on the IP address, so it\'s effective for about 99% of automated attacks.', 'secupress' ),
+			'type'        => 'description',
+			'description' => __( 'Remember that we detect a visit based on the IP address, so it\'s effective for about 99% of automated attacks.', 'secupress' ),
 		),
 	)
-);
+) );
 
-$field_name     = $this->get_field_name( 'countries' );
+
 $geoip_instance = new GeoIP;
 $countries      = array(
 	'AF' => array( 'Africa' ),
@@ -58,28 +50,20 @@ $countries      = array(
 	'NA' => array( 'North America' ),
 	'SA' => array( 'South America' ),
 );
+
 foreach( $geoip_instance->GEOIP_CONTINENT_CODES as $index => $code ) {
 	$countries[ $code ][ $geoip_instance->GEOIP_COUNTRY_CODES[ $index ] ] = $geoip_instance->GEOIP_COUNTRY_NAMES [ $index ];
 }
+
 unset( $countries['--'] );
 
-$this->add_field(
-	__( 'Which countries?', 'secupress' ),
-	array(
-		'name'        => $field_name,
-		'description' => __( 'Add or remove countries you want to be manage from your website.', 'secupress' ),
-	),
-	array(
-		'depends'     => $main_field_name . '_blacklist' . ' ' . $main_field_name . '_whitelist',
-		array(
-			'type'         => 'countries',
-			'name'         => $field_name,
-			'options'      => $countries,
-		),
-		array(
-			'type'         => 'helper_description',
-			'name'         => $field_name,
-		),
-	)
-);
+$this->add_field( array(
+	'title'        => __( 'Which countries?', 'secupress' ),
+	'description'  => __( 'Add or remove countries you want to be manage from your website.', 'secupress' ),
+	'depends'      => $main_field_name . '_blacklist' . ' ' . $main_field_name . '_whitelist',
+	'type'         => 'countries',
+	'name'         => $this->get_field_name( 'countries' ),
+	'options'      => $countries,
+) );
+
 unset( $countries );
