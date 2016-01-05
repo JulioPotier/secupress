@@ -230,6 +230,14 @@ label {
 .secupress-code-chunk .secupress-expand-code .dashicons-visibility {
 	display: inline-block;
 }
+/* Time slot */
+.fieldtype-time-slot .label-before {
+	display: inline-block;
+	min-width: 3em;
+}
+.fieldtype-time-slot .small-text {
+	text-align: right;
+}
 /**/
 #form-delete-backups .secupress-boxed-group{
 	max-height: 20em;

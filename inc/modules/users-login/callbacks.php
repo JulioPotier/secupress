@@ -106,10 +106,10 @@ function __secupress_login_protection_settings_callback( $modulenow, &$settings 
 	$settings['login-protection_time_ban']         = ! empty( $settings['login-protection_time_ban'] )        ? secupress_validate_range( $settings['login-protection_time_ban'], 1, 60, 5 )         : 5;
 	$settings['login-protection_nonlogintimeslot'] = ! empty( $settings['login-protection_nonlogintimeslot'] ) && is_array( $settings['login-protection_nonlogintimeslot'] ) ? $settings['login-protection_nonlogintimeslot'] : array();
 
-	$settings['login-protection_nonlogintimeslot']['from_hour']   = ! empty( $settings['login-protection_nonlogintimeslot']['from_hour'] )   ? secupress_validate_range( $settings['login-protection_nonlogintimeslot']['from_hour'], 0, 23, 0 ) : 0;
-	$settings['login-protection_nonlogintimeslot']['from_minute'] = ! empty( $settings['login-protection_nonlogintimeslot']['from_minute'] ) && in_array( $settings['login-protection_nonlogintimeslot']['from_minute'], array( '0', '15', '30', '45' ) ) ? (int) $settings['login-protection_nonlogintimeslot']['from_minute'] : 0;
-	$settings['login-protection_nonlogintimeslot']['to_hour']     = ! empty( $settings['login-protection_nonlogintimeslot']['to_hour'] )     ? secupress_validate_range( $settings['login-protection_nonlogintimeslot']['to_hour'], 0, 23, 0 )   : 0;
-	$settings['login-protection_nonlogintimeslot']['to_minute']   = ! empty( $settings['login-protection_nonlogintimeslot']['to_minute'] )   && in_array( $settings['login-protection_nonlogintimeslot']['to_minute'], array( '0', '15', '30', '45' ) )   ? (int) $settings['login-protection_nonlogintimeslot']['to_minute']   : 0;
+	$settings['login-protection_nonlogintimeslot']['from_hour']   = ! empty( $settings['login-protection_nonlogintimeslot']['from_hour'] )   ? secupress_validate_range( (int) $settings['login-protection_nonlogintimeslot']['from_hour'], 0, 23, 0 )   : 0;
+	$settings['login-protection_nonlogintimeslot']['from_minute'] = ! empty( $settings['login-protection_nonlogintimeslot']['from_minute'] ) ? secupress_validate_range( (int) $settings['login-protection_nonlogintimeslot']['from_minute'], 0, 59, 0 ) : 0;
+	$settings['login-protection_nonlogintimeslot']['to_hour']     = ! empty( $settings['login-protection_nonlogintimeslot']['to_hour'] )     ? secupress_validate_range( (int) $settings['login-protection_nonlogintimeslot']['to_hour'], 0, 23, 0 )     : 0;
+	$settings['login-protection_nonlogintimeslot']['to_minute']   = ! empty( $settings['login-protection_nonlogintimeslot']['to_minute'] )   ? secupress_validate_range( (int) $settings['login-protection_nonlogintimeslot']['to_minute'], 0, 59, 0 )   : 0;
 
 	secupress_manage_submodule( $modulenow, 'only-one-connexion', ! empty( $settings['login-protection_only-one-connexion'] ) && secupress_is_pro() );
 	secupress_manage_submodule( $modulenow, 'sessions-control',   ! empty( $settings['login-protection_sessions_control'] ) && secupress_is_pro() );

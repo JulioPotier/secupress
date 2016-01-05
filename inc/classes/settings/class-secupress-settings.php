@@ -527,37 +527,45 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				}
 				break;
 
-			case 'nonlogintimeslot' :
+			case 'time-slot' :
 
-				$from_hour   = isset( $value['from_hour'] )   ? $value['from_hour']   : '';
-				$from_minute = isset( $value['from_minute'] ) ? $value['from_minute'] : '';
-				$to_hour     = isset( $value['to_hour'] )     ? $value['to_hour']     : '';
-				$to_minute   = isset( $value['to_minute'] )   ? $value['to_minute']   : '';
+				$from_hour   = isset( $value['from_hour'] )   ? (int) $value['from_hour']   : 0;
+				$from_minute = isset( $value['from_minute'] ) ? (int) $value['from_minute'] : 0;
+				$to_hour     = isset( $value['to_hour'] )     ? (int) $value['to_hour']     : 0;
+				$to_minute   = isset( $value['to_minute'] )   ? (int) $value['to_minute']   : 0;
+				$attributes .= ' type="text" class="small-text" size="2" maxlength="2" autocomplete="off"';
 
-				_e( 'Everyday', 'secupress' );
-				echo '<br>';
-				echo '<span style="display:inline-block;min-width:3em">' . _x( 'From', '*From* xx h xx mn To xx h xx mn', 'secupress' ) . '</span>';
+				echo $args['label'] ? '<p id="' . $args['name'] . '-time-slot-label">' . $args['label'] . '</p>' : '';
 				?>
-				<label>
-					<input type="number" id="<?php echo $args['name']; ?>_from_hour" name="<?php echo $name_attribute; ?>[from_hour]" value="<?php echo (int) $from_hour; ?>" class="small-text" min="0" max="23"<?php echo $attributes; ?>>
-					<?php _ex( 'h', 'hour', 'secupress' ); ?>
-				</label>
-				<label>
-					<input type="number" id="<?php echo $args['name']; ?>_from_minute" name="<?php echo $name_attribute; ?>[from_minute]" value="<?php echo (int) $from_minute; ?>" class="small-text" min="0" max="45" step="15"<?php echo $attributes; ?>>
-					<?php _ex( 'min', 'minute', 'secupress' ); ?>
-				</label>
-				<br>
-				<?php
-				echo '<span style="display:inline-block;min-width:3em">' . _x( 'To', 'From xx h xx mn *To* xx h xx mn', 'secupress' ) . '</span>';
-				?>
-				<label>
-					<input type="number" id="<?php echo $args['name']; ?>_to_hour" name="<?php echo $name_attribute; ?>[to_hour]" value="<?php echo (int) $to_hour; ?>" class="small-text" min="0" max="23"<?php echo $attributes; ?>>
-					<?php _ex( 'h', 'hour', 'secupress' ); ?>
-				</label>
-				<label>
-					<input type="number" id="<?php echo $args['name']; ?>_to_minute" name="<?php echo $name_attribute; ?>[to_minute]" value="<?php echo (int) $to_minute; ?>" class="small-text" min="0" max="45" step="15"<?php echo $attributes; ?>>
-					<?php _ex( 'min', 'minute', 'secupress' ); ?>
-				</label>
+				<fieldset aria-labelledby="<?php echo $args['name']; ?>-time-slot-label">
+					<legend class="screen-reader-text"><?php _e( 'Start hour and minute', 'secupress' ); ?></legend>
+					<label>
+						<span class="label-before" aria-hidden="true"><?php _ex( 'From', 'starting hour + minute', 'secupress' ); ?></span>
+						<span class="screen-reader-text"><?php _e( 'Hour' ); ?></span>
+						<input id="<?php echo $args['name']; ?>_from_hour" name="<?php echo $name_attribute; ?>[from_hour]" value="<?php echo str_pad( $from_hour, 2, 0, STR_PAD_LEFT ); ?>" pattern="0?[0-9]|1[0-9]|2[0-3]"<?php echo $attributes; ?>>
+						<span aria-hidden="true"><?php _ex( 'h', 'hour', 'secupress' ); ?></span>
+					</label>
+					<label>
+						<span class="screen-reader-text"><?php _e( 'Minute' ); ?></span>
+						<input id="<?php echo $args['name']; ?>_from_minute" name="<?php echo $name_attribute; ?>[from_minute]" value="<?php echo str_pad( $from_minute, 2, 0, STR_PAD_LEFT ); ?>" pattern="0?[0-9]|[1-5][0-9]"<?php echo $attributes; ?>>
+						<span aria-hidden="true"><?php _ex( 'min', 'minute', 'secupress' ); ?></span>
+					</label>
+				</fieldset>
+
+				<fieldset aria-labelledby="<?php echo $args['name']; ?>-time-slot-label">
+					<legend class="screen-reader-text"><?php _e( 'End hour and minute', 'secupress' ); ?></legend>
+					<label>
+						<span class="label-before" aria-hidden="true"><?php _ex( 'To', 'ending hour + minute', 'secupress' ) ?></span>
+						<span class="screen-reader-text"><?php _e( 'Hour' ); ?></span>
+						<input id="<?php echo $args['name']; ?>_to_hour" name="<?php echo $name_attribute; ?>[to_hour]" value="<?php echo str_pad( $to_hour, 2, 0, STR_PAD_LEFT ); ?>" pattern="0?[0-9]|1[0-9]|2[0-3]"<?php echo $attributes; ?>>
+						<span aria-hidden="true"><?php _ex( 'h', 'hour', 'secupress' ); ?></span>
+					</label>
+					<label>
+						<span class="screen-reader-text"><?php _e( 'Minute' ); ?></span>
+						<input id="<?php echo $args['name']; ?>_to_minute" name="<?php echo $name_attribute; ?>[to_minute]" value="<?php echo str_pad( $to_minute, 2, 0, STR_PAD_LEFT ); ?>" pattern="0?[0-9]|[1-5][0-9]"<?php echo $attributes; ?>>
+						<span aria-hidden="true"><?php _ex( 'min', 'minute', 'secupress' ); ?></span>
+					</label>
+				</fieldset>
 				<?php
 				break;
 
