@@ -101,8 +101,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		$this->set_current_module();
 
 		$modules = static::get_modules();
-		$module  = $module ? $module : $this->modulenow;
-		if ( isset( $modules[ $module ]['with_form'] ) && false === $modules[ $module ]['with_form'] ) {
+
+		if ( isset( $modules[ $this->modulenow ]['with_form'] ) && false === $modules[ $this->modulenow ]['with_form'] ) {
 			$this->form_action = false;
 		} else {
 			$this->form_action = is_network_admin() ? admin_url( 'admin-post.php' ) : admin_url( 'options.php' );
@@ -744,14 +744,14 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			<div class="secupress-swal-form">
 				<fieldset class="secupress-boxed-group">
 					<b><?php _e( 'Unknown tables', 'secupress' ); ?></b><br>
-					<?php 
+					<?php
 					foreach ( $other_tables as $table ) {
 						echo '<input checked="checked" name="other_tables[]" type="checkbox"> ' . $table . '<br>';
 					}
 					?>
 					<hr>
 					<b><?php _e( 'WordPress tables (mandatory)', 'secupress' ); ?></b><br>
-					<?php 
+					<?php
 					foreach ( $wp_tables as $table ) {
 						echo '<input disabled="disabled" checked="checked" type="checkbox"> ' . $table . '<br>';
 					}
@@ -761,7 +761,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			<p class="submit">
 				<img src="<?php echo admin_url( '/images/spinner.gif' ); ?>" id="secupress-db-backup-spinner" class="hidden">&nbsp;
 				<?php
-				submit_button( __( 'Backup my Database', 'secupress' ), 'secondary', 'submit-backup-db', false, 
+				submit_button( __( 'Backup my Database', 'secupress' ), 'secondary', 'submit-backup-db', false,
 					array( 'data-original-i18n' => esc_attr__( 'Backup my Database', 'secupress' ), 'data-loading-i18n' => esc_attr__( 'Backuping &hellip;', 'secupress' ) )
 					);
 				?>
@@ -787,7 +787,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			<div class="secupress-swal-form">
 				<b><?php printf( __( '%1$s%2$s%3$s available Backups', 'secupress' ), '<span id="secupress-available-backups">', number_format_i18n( count( $backup_files ) ), '</span>' ); ?></b>
 				<fieldset class="secupress-boxed-group">
-					<?php 
+					<?php
 					array_map( 'secupress_print_backup_file_formated', array_reverse( $backup_files ) );
 					?>
 				</fieldset>
