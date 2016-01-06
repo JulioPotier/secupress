@@ -134,17 +134,13 @@ function secupressIsEscapeKey( e ) {
 (function($, d, w, undefined) {
 
 	if ( "function" === typeof document.createElement( "input" ).checkValidity ) {
-		$( ".affected-role-row" ).each( function() {
-			var checkboxes = $( this ).find( ':checkbox' );
+		$( ".affected-role-row :checkbox" ).on( "click", function() {
+			this.setCustomValidity( '' );
 
-			checkboxes.on( "click", function() {
-				this.setCustomValidity( '' );
-
-				if ( 0 === checkboxes.filter( ":checked" ).length ) {
-					this.setCustomValidity( w.l10nmodules.selectOneRoleMinimum );
-					$( "#secupress-module-form-settings [type='submit']" ).first().trigger( "click" );
-				}
-			} );
+			if ( 0 === $( '[name="' + this.name + '"]:checked' ).length ) {
+				this.setCustomValidity( w.l10nmodules.selectOneRoleMinimum );
+				$( "#secupress-module-form-settings [type='submit']" ).first().trigger( "click" );
+			}
 		} );
 	} else {
 		$( ".affected-role-row p.warning" ).removeClass( "hide-if-js" );
@@ -153,13 +149,13 @@ function secupressIsEscapeKey( e ) {
 } )(jQuery, document, window);
 
 
-// Radiobox class ==================================================================================
+// Radioboxes ======================================================================================
 (function($, d, w, undefined) {
+
 	$( ".radiobox" ).on( "click", function() {
-		var $this = $( this ),
-			name  = $this.attr( "name" );
-		$( '.radiobox[name="' + name + '"]:checked' ).not( $this ).removeAttr( "checked" ).trigger( "change" );
+		$( '[name="' + this.name + '"]:checked' ).not( this ).removeAttr( "checked" ).trigger( "change" );
 	} );
+
 } )(jQuery, document, window);
 
 
