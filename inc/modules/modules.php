@@ -31,7 +31,6 @@ function secupress_get_modules() {
 			'dashicon'    => 'wordpress-alt',
 			'description' => array(
 				__( 'WordPress can be tweak by so many ways. But are you using the right ones. We will help', 'secupress' ),
-				__( '', 'secupress' ),
 			),
 		),
 		'sensitive-data'  => array(
@@ -83,7 +82,6 @@ function secupress_get_modules() {
 			'dashicon'    => 'list-view',
 			'description' => array(
 				__( 'Logs are very usefull, it acts like a history of what happened on your website, filtered and at any time. You can also read and delete banned IPs from our modules here.', 'secupress' ),
-				__( '', 'secupress' ),
 			),
 		),
 		'alerts'          => array(
@@ -91,7 +89,6 @@ function secupress_get_modules() {
 			'dashicon'    => 'megaphone',
 			'description' => array(
 				__( 'Each time we that an action is a possible attack vector, we add it here, so you can see what happened and when we blocked it or not.', 'secupress' ),
-				__( '', 'secupress' ),
 			),
 		),
 		'tools'           => array(
@@ -99,7 +96,6 @@ function secupress_get_modules() {
 			'dashicon'    => 'admin-tools',
 			'description' => array(
 				__( 'The page contains our tools designed to help you with the plugin. Export and import settings, set your API key, rollback a version or even monitor your website can be done from here.', 'secupress' ),
-				__( '', 'secupress' ),
 			),
 			'with_reset_box' => false,
 		),
@@ -107,8 +103,7 @@ function secupress_get_modules() {
 			'title'       => esc_html__( 'Schedules', 'secupress' ),
 			'dashicon'    => 'calendar-alt',
 			'description' => array(
-				__( 'Scheduling recurrent tasks can be very usefull to gain time and stay safe. At least each week a backup should be done, same for a full scan of vulnerabilities and file changes.', 'secupress' ),
-				__( '', 'secupress' ),
+				__( 'Scheduling recurrent tasks can be very useful to gain time and stay safe. At least each week a backup should be done, same for a full scan of vulnerabilities and file changes.', 'secupress' ),
 			),
 			'with_reset_box' => false,
 		),
