@@ -132,21 +132,22 @@ function secupressIsEscapeKey( e ) {
 
 // Roles: at least one role must be chosen. ========================================================
 (function($, d, w, undefined) {
-	var checkboxes;
 
 	if ( "function" === typeof document.createElement( "input" ).checkValidity ) {
-		checkboxes = $( 'fieldset[class*="_affected_role"] :checkbox' );
+		$( ".affected-role-row" ).each( function() {
+			var checkboxes = $( this ).find( ':checkbox' );
 
-		checkboxes.on( "click", function() {
-			$( this ).get( 0 ).setCustomValidity( '' );
+			checkboxes.on( "click", function() {
+				this.setCustomValidity( '' );
 
-			if ( 0 === checkboxes.filter( ":checked" ).length ) {
-				$( this ).get( 0 ).setCustomValidity( w.l10nmodules.selectOneRoleMinimum );
-				$( "#secupress-module-form-settings [type='submit']" ).first().trigger( "click" );
-			}
+				if ( 0 === checkboxes.filter( ":checked" ).length ) {
+					this.setCustomValidity( w.l10nmodules.selectOneRoleMinimum );
+					$( "#secupress-module-form-settings [type='submit']" ).first().trigger( "click" );
+				}
+			} );
 		} );
 	} else {
-		$( 'fieldset[class*="_affected_role"]' ).siblings( "p.warning" ).removeClass( "hide-if-js" );
+		$( ".affected-role-row p.warning" ).removeClass( "hide-if-js" );
 	}
 
 } )(jQuery, document, window);

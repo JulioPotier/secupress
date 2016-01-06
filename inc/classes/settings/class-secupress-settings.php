@@ -158,6 +158,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			'title'        => '<span class="dashicons dashicons-groups"></span> ' . __( 'Affected Roles', 'secupress' ),
 			'description'  => __( 'Which roles will be affected by this module?', 'secupress' ),
 			'depends'      => 'affected-role-' . $i,
+			'row_class'    => 'affected-role-row',
 			'name'         => $this->get_field_name( 'affected_role' ),
 			'type'         => 'roles',
 			'default'      => array(), //// (TODO) not supported yet why not $args['with_roles']
@@ -352,7 +353,9 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			case 'no' :
 				break;
 			default :
-				if ( 'yes' === $args['fieldset'] || 'checkboxes' === $args['type'] || 'radioboxes' === $args['type'] || 'radios' === $args['type'] ) {
+				$fieldset_auto = array( 'checkboxes' => 1, 'radioboxes' => 1, 'radios' => 1, 'roles' => 1, );
+
+				if ( 'yes' === $args['fieldset'] || isset( $fieldset_auto[ $args['type'] ] ) ) {
 					$has_fieldset_begin = true;
 					$has_fieldset_end   = true;
 				}
