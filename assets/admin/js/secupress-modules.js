@@ -311,7 +311,7 @@ function secupressIsEscapeKey( e ) {
 
 // Action Logs =====================================================================================
 (function($, d, w, undefined) {
-	var transitionTimeout, doingAjax = false;
+	var doingAjax = false;
 
 	if ( ! w.l10nLogs ) {
 		return;
@@ -319,7 +319,7 @@ function secupressIsEscapeKey( e ) {
 
 	function secupressClearLogs( $button, href ) {
 		doingAjax = true;
-		$button.addClass( "disabled" ).attr( "aria-disabled", "true" );
+		$button.addClass( "disabled working" ).attr( "aria-disabled", "true" );
 
 		if ( wp.a11y && wp.a11y.speak ) {
 			wp.a11y.speak( w.l10nLogs.clearingText );
@@ -347,7 +347,7 @@ function secupressIsEscapeKey( e ) {
 
 	function secupressDeleteLog( $button, href ) {
 		doingAjax = true;
-		$button.addClass( "disabled" ).attr( "aria-disabled", "true" );
+		$button.addClass( "disabled working" ).attr( "aria-disabled", "true" );
 
 		if ( wp.a11y && wp.a11y.speak ) {
 			wp.a11y.speak( w.l10nLogs.deletingText );
@@ -394,7 +394,7 @@ function secupressIsEscapeKey( e ) {
 			wp.a11y.speak( w.l10nLogs.errorText );
 		}
 
-		$button.removeClass( "disabled" ).removeAttr( "aria-disabled" );
+		$button.removeClass( "disabled working" ).removeAttr( "aria-disabled" );
 	}
 
 	function secupressDeleteActionLogDisplayError( $button ) {
@@ -407,7 +407,7 @@ function secupressIsEscapeKey( e ) {
 			wp.a11y.speak( w.l10nLogs.errorText );
 		}
 
-		$button.removeClass( "disabled" ).removeAttr( "aria-disabled" );
+		$button.removeClass( "disabled working" ).removeAttr( "aria-disabled" );
 	}
 
 	// Ajax call that clears logs.
@@ -419,7 +419,7 @@ function secupressIsEscapeKey( e ) {
 			return false;
 		}
 
-		if ( e.type === "keyup" && ! secupressIsSpaceOrEnterKey( e ) ) {
+		if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
 			return false;
 		}
 
@@ -457,7 +457,7 @@ function secupressIsEscapeKey( e ) {
 			return false;
 		}
 
-		if ( e.type === "keyup" && ! secupressIsSpaceOrEnterKey( e ) ) {
+		if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
 			return false;
 		}
 
@@ -508,6 +508,288 @@ function secupressIsEscapeKey( e ) {
 	$( "[data-code-country]" ).on( "click", function( e ) {
 		var code = $( this ).data( "code-country" );
 		$( "[value='" + code + "']" ).prop( "checked", Boolean( $( "[data-code-country='" + code + "']:checked" ).length == $( "[data-code-country='" + code + "']" ).length ) );
+	} );
+
+} )(jQuery, document, window);
+
+
+// Backups =========================================================================================
+(function($, d, w, undefined) {
+	var doingAjax = false;
+
+	if ( ! w.l10nmodules ) {
+		return;
+	}
+
+	function secupressUpdateAvailableBackupCounter() {
+		$( "#secupress-available-backups" ).text( $( ".db-backup-row" ).length );
+	}
+
+	function secupressUpdateBackupVisibility() {
+		if ( 0 === $( ".db-backup-row" ).length ) {
+			$( "#form-delete-db-backups" ).hide();
+			$( "#secupress-no-db-backups" ).show();
+		} else {
+			$( "#secupress-no-db-backups" ).hide();
+			$( "#form-delete-db-backups" ).show();
+		}
+	}
+
+	function secupressDisableAjaxButton( $button, speak ) {
+		var text     = $button.attr( "data-loading-i18n" ),
+			isButton = $button.get( 0 ).nodeName.toLowerCase(),
+			value;
+
+		doingAjax = true;
+		isButton  = "button" === isButton || "input" === isButton;
+
+		if ( undefined !== text && text ) {
+			if ( isButton ) {
+				value = $button.val();
+				if ( undefined !== value && value ) {
+					$button.val( text );
+				} else {
+					$button.text( text );
+				}
+			} else {
+				$button.text( text );
+			}
+		}
+
+		if ( isButton ) {
+			$button.addClass( "working" ).attr( { "disabled": "disabled", "aria-disabled": "true" } );
+		} else {
+			$button.addClass( "disabled working" ).attr( "aria-disabled", "true" );
+		}
+
+		if ( wp.a11y && wp.a11y.speak && undefined !== speak && speak ) {
+			wp.a11y.speak( speak );
+		}
+	}
+
+	function secupressEnableAjaxButton( $button, speak ) {
+		var text, isButton, value;
+
+		if ( undefined !== $button && $button && $button.length ) {
+			text     = $button.attr( "data-original-i18n" );
+			isButton = $button.get( 0 ).nodeName.toLowerCase();
+			isButton = "button" === isButton || "input" === isButton;
+
+			if ( undefined !== text && text ) {
+				if ( isButton ) {
+					value = $button.val();
+					if ( undefined !== value && value ) {
+						$button.val( text );
+					} else {
+						$button.text( text );
+					}
+				} else {
+					$button.text( text );
+				}
+			}
+
+			if ( isButton ) {
+				$button.removeClass( "working" ).removeAttr( "disabled aria-disabled" );
+			} else {
+				$button.removeClass( "disabled working" ).removeAttr( "aria-disabled" );
+			}
+		}
+
+		if ( wp.a11y && wp.a11y.speak && undefined !== speak && speak ) {
+			wp.a11y.speak( speak );
+		}
+
+		doingAjax = false;
+	}
+
+	function secupressBackupDisplayError( $button, text ) {
+		if ( undefined === text ) {
+			text = w.l10nmodules.unknownError;
+		}
+
+		swal( {
+			title:             w.l10nmodules.error,
+			text:              text,
+			type:              "error",
+			allowOutsideClick: true
+		} );
+
+		secupressEnableAjaxButton( $button, text );
+	}
+
+	function secupressDeleteAllBackups( $button, href ) {
+		secupressDisableAjaxButton( $button, w.l10nmodules.deletingAllText );
+
+		$.getJSON( href.replace( "admin-post.php", "admin-ajax.php" ) )
+		.done( function( r ) {
+			if ( $.isPlainObject( r ) && r.success ) {
+				swal.close();
+				$button.closest( "form" ).find( "fieldset" ).text( "" );
+
+				secupressUpdateAvailableBackupCounter();
+				secupressUpdateBackupVisibility();
+				secupressEnableAjaxButton( $button, w.l10nmodules.deletedAllText );
+			} else {
+				secupressBackupDisplayError( $button, w.l10nmodules.deleteAllImpossible );
+			}
+		} )
+		.fail( function() {
+			secupressBackupDisplayError( $button );
+		} );
+	}
+
+	function secupressDeleteOneBackup( $button, href ) {
+		secupressDisableAjaxButton( $button, w.l10nmodules.deletingOneText );
+
+		$.getJSON( href.replace( "admin-post.php", "admin-ajax.php" ) )
+		.done( function( r ) {
+			if ( $.isPlainObject( r ) && r.success ) {
+				swal.close();
+
+				$button.closest( ".db-backup-row" ).css( "backgroundColor", "#D73838" ).hide( "normal", function() {
+					$( this ).remove();
+
+					secupressUpdateAvailableBackupCounter();
+					secupressUpdateBackupVisibility();
+					doingAjax = false;
+				} );
+
+				if ( wp.a11y && wp.a11y.speak ) {
+					wp.a11y.speak( w.l10nmodules.deletedOneText );
+				}
+			} else {
+				secupressBackupDisplayError( $button, w.l10nmodules.deleteOneImpossible );
+			}
+		} )
+		.fail( function() {
+			secupressBackupDisplayError( $button );
+		} );
+	}
+
+	function secupressDoBackup( $button, href ) {
+		secupressDisableAjaxButton( $button, w.l10nmodules.backupingText );
+
+		$.post( href.replace( "admin-post.php", "admin-ajax.php" ) )
+		.done( function( r ) {
+			if ( $.isPlainObject( r ) && r.success ) {
+				$( r.data ).addClass( "hidden" ).css( "backgroundColor", "#88BA0E" ).prependTo( "#form-delete-db-backups fieldset" ).show( "normal", function() {
+					$( this ).css( "backgroundColor", "" );
+				} );
+
+				secupressUpdateAvailableBackupCounter();
+				secupressUpdateBackupVisibility();
+				secupressEnableAjaxButton( $button, w.l10nmodules.backupedText );
+			} else {
+				secupressBackupDisplayError( $button, w.l10nmodules.backupImpossible );
+			}
+		} )
+		.fail( function() {
+			secupressBackupDisplayError( $button );
+		} );
+	}
+
+	// Ajax call that delete all backups.
+	$( "#submit-delete-db-backups" ).on( "click keyup", function( e ) {
+		var $this = $( this ),
+			href  = $this.closest( "form" ).attr( "action" );
+
+		if ( undefined === href || ! href ) {
+			return false;
+		}
+
+		if ( "keyup" === e.type && ! secupressIsEnterKey( e ) ) {
+			return false;
+		}
+
+		if ( doingAjax ) {
+			return false;
+		}
+
+		e.preventDefault();
+
+		if ( "function" === typeof w.swal ) {
+			swal( {
+				title:               w.l10nmodules.confirmTitle,
+				text:                w.l10nmodules.confirmDeleteBackups,
+				confirmButtonText:   w.l10nmodules.yesDeleteAll,
+				cancelButtonText:    w.l10nmodules.confirmCancel,
+				type:                "warning",
+				showCancelButton:    true,
+				confirmButtonColor:  "#DD6B55",
+				showLoaderOnConfirm: true,
+				closeOnConfirm:      false,
+				allowOutsideClick:   true
+			},
+			function () {
+				secupressDeleteAllBackups( $this, href );
+			} );
+		} else if ( w.confirm( w.l10nmodules.confirmTitle + "\n" + w.l10nmodules.confirmDeleteBackups ) ) {
+			secupressDeleteAllBackups( $this, href );
+		}
+
+	} );
+
+
+	// Ajax call that delete one Backup.
+	$( "body" ).on( "click keyup", ".a-delete-backup", function( e ) {
+		var $this = $( this ),
+			href  = $this.attr( "href" );
+
+		if ( undefined === href || ! href ) {
+			return false;
+		}
+
+		if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
+			return false;
+		}
+
+		if ( doingAjax ) {
+			return false;
+		}
+
+		e.preventDefault();
+
+		if ( "function" === typeof w.swal ) {
+			swal( {
+				title:               w.l10nmodules.confirmTitle,
+				text:                w.l10nmodules.confirmDeleteBackup,
+				confirmButtonText:   w.l10nmodules.yesDeleteOne,
+				cancelButtonText:    w.l10nmodules.confirmCancel,
+				type:                "warning",
+				showCancelButton:    true,
+				confirmButtonColor:  "#DD6B55",
+				showLoaderOnConfirm: true,
+				closeOnConfirm:      false,
+				allowOutsideClick:   true
+			},
+			function () {
+				secupressDeleteOneBackup( $this, href );
+			} );
+		} else if ( w.confirm( w.l10nmodules.confirmTitle + "\n" + w.l10nmodules.confirmDeleteBackup ) ) {
+			secupressDeleteOneBackup( $this, href );
+		}
+	} );
+
+	// Ajax call that do a Backup.
+	$( "#submit-backup-db" ).on( "click", function( e ) {
+		var $this = $( this ),
+			href  = $this.closest( "form" ).attr( "action" );
+
+		if ( undefined === href || ! href ) {
+			return false;
+		}
+
+		if ( "keyup" === e.type && ! secupressIsEnterKey( e ) ) {
+			return false;
+		}
+
+		if ( doingAjax ) {
+			return false;
+		}
+
+		e.preventDefault();
+
+		secupressDoBackup( $this, href );
 	} );
 
 } )(jQuery, document, window);

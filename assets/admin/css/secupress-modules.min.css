@@ -163,11 +163,11 @@ label {
 }
 .secupress-inline-spinner {
 	display: inline-block;
+	vertical-align: top;
 	visibility: hidden;
 	float: none;
 }
-.disabled + .secupress-inline-spinner,
-[disabled="disabled"] + .secupress-inline-spinner {
+.working + .secupress-inline-spinner {
 	visibility: visible;
 }
 .secupress-delete-log + .secupress-inline-spinner {
@@ -239,18 +239,19 @@ label {
 .fieldtype-time-slot .small-text {
 	text-align: right;
 }
-/**/
-#form-delete-backups .secupress-boxed-group{
+/* Backups */
+#form-delete-db-backups .secupress-boxed-group {
 	max-height: 20em;
 }
-.db-backup-row span{
-	border-bottom: 1px solid #ccc;
-    display: inline-block;
-    padding-bottom: 3px;
-	padding-left: 10px;
-    width: 95%;
+.db-backup-row {
+	margin-right: .5em;
 }
-/**/
-.submit img{
-	vertical-align: middle;
+.db-backup-row + .db-backup-row {
+	padding-top: 4px;
+	border-top: 1px solid #ccc;
+}
+.db-backup-row span {
+	display: inline-block;
+	padding: 0 0 3px 10px;
+	width: 95%;
 }

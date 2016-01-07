@@ -49,6 +49,7 @@ function secupress_feature_is_pro( $feature ) {
 		'schedules_backups'                   => 1,
 		'schedules_scans'                     => 1,
 		'schedules_filemon'                   => 1,
+		'backup-files_backup-file'            => 1,
 		// Field values.
 		'double-auth_type|passwordless'       => 1,
 		'alerts_type|sms'                     => 1,
@@ -57,10 +58,10 @@ function secupress_feature_is_pro( $feature ) {
 		'alerts_type|slack'                   => 1,
 		'alerts_type|skype'                   => 1,
 		'alerts_type|twitter'                 => 1,
-		'backups-storage_location|ftp'         => 1,
-		'backups-storage_location|amazons3'    => 1,
-		'backups-storage_location|dropbox'     => 1,
-		'backups-storage_location|rackspace'   => 1,
+		'backups-storage_location|ftp'        => 1,
+		'backups-storage_location|amazons3'   => 1,
+		'backups-storage_location|dropbox'    => 1,
+		'backups-storage_location|rackspace'  => 1,
 	);
 
 	return isset( $features[ $feature ] );

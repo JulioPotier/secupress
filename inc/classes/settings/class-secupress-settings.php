@@ -795,12 +795,13 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				</fieldset>
 			</div>
 			<p class="submit">
-				<img src="<?php echo admin_url( '/images/spinner.gif' ); ?>" id="secupress-db-backup-spinner" class="hidden">&nbsp;
 				<?php
-				submit_button( __( 'Backup my Database', 'secupress' ), 'secondary', 'submit-backup-db', false,
-					array( 'data-original-i18n' => esc_attr__( 'Backup my Database', 'secupress' ), 'data-loading-i18n' => esc_attr__( 'Backuping &hellip;', 'secupress' ) )
-					);
+				submit_button( __( 'Backup my Database', 'secupress' ), 'secondary', 'submit-backup-db', false, array(
+					'data-original-i18n' => __( 'Backup my Database', 'secupress' ),
+					'data-loading-i18n'  => __( 'Backuping &hellip;', 'secupress' ),
+				) );
 				?>
+				<span class="spinner secupress-inline-spinner"></span>
 			</p>
 		</form>
 		<?php
@@ -812,24 +813,27 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	protected function backup_history() {
-
 		$backup_files = secupress_get_backup_file_list();
-		echo '<p id="secupress-no-db-backups" class="' . ( ! $backup_files ? '' : 'hidden' ) . '"><em>' . __( 'No Backups found yet, do one?', 'secupress' ) . '</em></p>';
 		$wp_tables    = secupress_get_wp_tables();
 		$other_tables = secupress_get_non_wp_tables();
 		?>
-		<form class="<?php echo ! $backup_files ? 'hidden' : ''; ?>" action="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_delete_backups' ), 'secupress_delete_backups' ); ?>" method="post" id="form-delete-db-backups">
+		<p id="secupress-no-db-backups"<?php echo $backup_files ? ' class="hidden"' : ''; ?>><em><?php _e( 'No Backups found yet, do one?', 'secupress' ); ?></em></p>
+		<form id="form-delete-db-backups"<?php echo ! $backup_files ? ' class="hidden"' : ''; ?> action="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_delete_backups' ), 'secupress_delete_backups' ); ?>" method="post">
 			<div class="secupress-swal-form">
-				<b><?php printf( __( '%1$s%2$s%3$s available Backups', 'secupress' ), '<span id="secupress-available-backups">', number_format_i18n( count( $backup_files ) ), '</span>' ); ?></b>
+				<strong><?php printf( __( '%1$s%2$s%3$s available Backups', 'secupress' ), '<span id="secupress-available-backups">', number_format_i18n( count( $backup_files ) ), '</span>' ); ?></strong>
 				<fieldset class="secupress-boxed-group">
-					<?php
-					array_map( 'secupress_print_backup_file_formated', array_reverse( $backup_files ) );
-					?>
+					<?php array_map( 'secupress_print_backup_file_formated', array_reverse( $backup_files ) ); ?>
 				</fieldset>
 			</div>
-			<?php
-			submit_button( __( 'Delete all Database Backups', 'secupress' ), 'secondary', 'submit-delete-db-backups' );
-			?>
+			<p class="submit">
+				<?php
+				submit_button( __( 'Delete all Database Backups', 'secupress' ), 'secondary', 'submit-delete-db-backups', false, array(
+					'data-original-i18n' => __( 'Backup my Database', 'secupress' ),
+					'data-loading-i18n'  => __( 'Backuping &hellip;', 'secupress' ),
+				) );
+				?>
+				<span class="spinner secupress-inline-spinner"></span>
+			</p>
 		</form>
 		<?php
 	}
@@ -842,10 +846,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 */
 	protected function backup_files() {
 		//// create an option so save when we launch a backup, see pro version
-		$ignored_directories = str_replace( ABSPATH, '', WP_CONTENT_DIR . '/cache/' ) . "\n";
+		$ignored_directories  = str_replace( ABSPATH, '', WP_CONTENT_DIR . '/cache/' ) . "\n";
 		$ignored_directories .= str_replace( ABSPATH, '', WP_CONTENT_DIR . '/backups/' );
-
-		$disabled = ! secupress_is_pro() ? ' disabled="disabled"' : '';
 		?>
 		<form action="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_backup_files' ), 'secupress_backup_files' ); ?>" id="form-do-files-backup" method="post">
 			<div class="secupress-swal-form">
@@ -859,13 +861,18 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			</div>
 			<p class="submit">
 				<?php
-				$args = array( 'data-original-i18n' => esc_attr__( 'Backup my Files', 'secupress' ), 'data-loading-i18n' => esc_attr__( 'Backuping &hellip;', 'secupress' ) );
+				$args = array(
+					'data-original-i18n' => __( 'Backup my Files', 'secupress' ),
+					'data-loading-i18n'  => __( 'Backuping &hellip;', 'secupress' ),
+				);
+
 				if ( ! secupress_is_pro() ) {
 					$args['disabled'] = 'disabled';
 				}
+
 				submit_button( __( 'Backup my Files', 'secupress' ), 'secondary', 'submit-backup-files', false, $args );
 				?>
-				<img src="<?php echo admin_url( '/images/spinner.gif' ); ?>" id="secupress-files-backup-spinner" class="spinner secupress-inline-spinner hidden">&nbsp;
+				<span class="spinner secupress-inline-spinner"></span>
 			</p>
 		</form>
 	<?php

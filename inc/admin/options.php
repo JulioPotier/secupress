@@ -106,14 +106,27 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 
 		wp_localize_script( 'secupress-modules-js', 'l10nmodules', array(
 			'selectOneRoleMinimum' => __( 'Select 1 role minimum', 'secupress' ),
-			'areYouSure'           => __( 'Are you sure?', 'secupress' ),
+
+			'confirmTitle'         => __( 'Are you sure?', 'secupress' ),
+			'confirmCancel'        => _x( 'No, cancel', 'verb', 'secupress' ),
+			'error'                => __( 'Error', 'secupress' ),
+			'unknownError'         => __( 'Unknown error.', 'secupress' ),
+
 			'confirmDeleteBackups' => __( 'You are about to delete all your backups.', 'secupress' ),
 			'yesDeleteAll'         => __( 'Yes, delete all backups', 'secupress' ),
-			'unknownError'         => __( 'Unknown error.', 'secupress' ),
-			'error'                => __( 'Error', 'secupress' ),
 			'deleteAllImpossible'  => __( 'Impossible to delete all backups.', 'secupress' ),
+			'deletingAllText'      => __( 'Deleting all backups...', 'secupress' ),
+			'deletedAllText'       => __( 'All backups deleted', 'secupress' ),
+
+			'confirmDeleteBackup'  => __( 'You are about to delete a backup.', 'secupress' ),
+			'yesDeleteOne'         => __( 'Yes, delete this backup', 'secupress' ),
 			'deleteOneImpossible'  => __( 'Impossible to delete this backup.', 'secupress' ),
+			'deletingOneText'      => __( 'Deleting Backup...', 'secupress' ),
+			'deletedOneText'       => __( 'Backup deleted', 'secupress' ),
+
 			'backupImpossible'     => __( 'Impossible to backup the database.', 'secupress' ),
+			'backupingText'        => __( 'Backuping...', 'secupress' ),
+			'backupedText'         => __( 'Backup done', 'secupress' ),
 		) );
 
 	}
