@@ -166,7 +166,8 @@ label {
 	visibility: hidden;
 	float: none;
 }
-.disabled + .secupress-inline-spinner {
+.disabled + .secupress-inline-spinner,
+[disabled="disabled"] + .secupress-inline-spinner {
 	visibility: visible;
 }
 .secupress-delete-log + .secupress-inline-spinner {
