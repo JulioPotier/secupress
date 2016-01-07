@@ -162,11 +162,11 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 			'clearConfirmText'    => __( 'You will not be able to recover these logs.', 'secupress' ),
 			'clearConfirmButton'  => __( 'Yes, clear them', 'secupress' ),
 			'confirmCancel'       => _x( 'No, cancel', 'verb', 'secupress' ),
-			'clearingText'        => __( 'Clearing Logs...', 'secupress' ),
+			'clearingText'        => __( 'Clearing Logs &hellip;', 'secupress' ),
 			'clearedText'         => __( 'Logs cleared', 'secupress' ),
 			'deleteConfirmText'   => __( 'You will not be able to recover this log.', 'secupress' ),
 			'deleteConfirmButton' => __( 'Yes, delete it', 'secupress' ),
-			'deletingText'        => __( 'Deleting Log...', 'secupress' ),
+			'deletingText'        => __( 'Deleting Log &hellip;', 'secupress' ),
 			'deletedText'         => __( 'Log deleted', 'secupress' ),
 			'expandCodeText'      => __( 'Expand or collapse code block', 'secupress' ),
 		) );
