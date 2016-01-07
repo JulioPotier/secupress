@@ -57,10 +57,10 @@ function secupress_feature_is_pro( $feature ) {
 		'alerts_type|slack'                   => 1,
 		'alerts_type|skype'                   => 1,
 		'alerts_type|twitter'                 => 1,
-		'backup-storage_location|ftp'         => 1,
-		'backup-storage_location|amazons3'    => 1,
-		'backup-storage_location|dropbox'     => 1,
-		'backup-storage_location|rackspace'   => 1,
+		'backups-storage_location|ftp'         => 1,
+		'backups-storage_location|amazons3'    => 1,
+		'backups-storage_location|dropbox'     => 1,
+		'backups-storage_location|rackspace'   => 1,
 	);
 
 	return isset( $features[ $feature ] );
