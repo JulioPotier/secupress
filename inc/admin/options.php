@@ -115,17 +115,17 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'confirmDeleteBackups' => __( 'You are about to delete all your backups.', 'secupress' ),
 			'yesDeleteAll'         => __( 'Yes, delete all backups', 'secupress' ),
 			'deleteAllImpossible'  => __( 'Impossible to delete all backups.', 'secupress' ),
-			'deletingAllText'      => __( 'Deleting all backups...', 'secupress' ),
+			'deletingAllText'      => __( 'Deleting all backups &hellip;', 'secupress' ),
 			'deletedAllText'       => __( 'All backups deleted', 'secupress' ),
 
 			'confirmDeleteBackup'  => __( 'You are about to delete a backup.', 'secupress' ),
 			'yesDeleteOne'         => __( 'Yes, delete this backup', 'secupress' ),
 			'deleteOneImpossible'  => __( 'Impossible to delete this backup.', 'secupress' ),
-			'deletingOneText'      => __( 'Deleting Backup...', 'secupress' ),
+			'deletingOneText'      => __( 'Deleting Backup &hellip;', 'secupress' ),
 			'deletedOneText'       => __( 'Backup deleted', 'secupress' ),
 
 			'backupImpossible'     => __( 'Impossible to backup the database.', 'secupress' ),
-			'backupingText'        => __( 'Backuping...', 'secupress' ),
+			'backupingText'        => __( 'Backuping &hellip;', 'secupress' ),
 			'backupedText'         => __( 'Backup done', 'secupress' ),
 		) );
 
