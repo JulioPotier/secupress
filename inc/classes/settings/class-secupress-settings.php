@@ -108,9 +108,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 		$modules = static::get_modules();
 
-		$module  = $module ? $module : $this->modulenow;
-
-		$this->with_form = ! ( isset( $modules[ $module ]['with_form'] ) && false === $modules[ $module ]['with_form'] );
+		$this->with_form = ! ( isset( $modules[ $this->modulenow ]['with_form'] ) && false === $modules[ $this->modulenow ]['with_form'] );
 
 		$this->form_action = is_network_admin() ? admin_url( 'admin-post.php' ) : admin_url( 'options.php' );
 		$this->form_action = esc_url( $this->form_action );
