@@ -796,7 +796,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			</div>
 			<p class="submit">
 				<?php
-				submit_button( __( 'Backup my Database', 'secupress' ), 'secondary', 'submit-backup-db', false, array(
+				submit_button( __( 'Backup my Database', 'secupress' ), 'secondary alignright', 'submit-backup-db', false, array(
 					'data-original-i18n' => __( 'Backup my Database', 'secupress' ),
 					'data-loading-i18n'  => __( 'Backuping &hellip;', 'secupress' ),
 				) );
@@ -827,12 +827,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			</div>
 			<p class="submit">
 				<?php
-				submit_button( __( 'Delete all Database Backups', 'secupress' ), 'secondary', 'submit-delete-db-backups', false, array(
-					'data-original-i18n' => __( 'Backup my Database', 'secupress' ),
-					'data-loading-i18n'  => __( 'Backuping &hellip;', 'secupress' ),
-				) );
+				submit_button( __( 'Delete all Database Backups', 'secupress' ), 'secondary alignright', 'submit-delete-db-backups', false );
 				?>
-				<span class="spinner secupress-inline-spinner"></span>
 			</p>
 		</form>
 		<?php
@@ -870,7 +866,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					$args['disabled'] = 'disabled';
 				}
 
-				submit_button( __( 'Backup my Files', 'secupress' ), 'secondary', 'submit-backup-files', false, $args );
+				submit_button( __( 'Backup my Files', 'secupress' ), 'secondary alignright', 'submit-backup-files', false, $args );
 				?>
 				<span class="spinner secupress-inline-spinner"></span>
 			</p>
