@@ -98,7 +98,6 @@ function secupress_init() {
 	require( SECUPRESS_FUNCTIONS_PATH . 'plugins.php' );
 	require( SECUPRESS_FUNCTIONS_PATH . 'geoip.inc.php' );
 	require( SECUPRESS_FUNCTIONS_PATH . 'db.php' );
-	require( SECUPRESS_FUNCTIONS_PATH . 'backup.php' );
 	require( SECUPRESS_FRONT_PATH     . 'htaccess.php' );
 	require( SECUPRESS_FRONT_PATH     . 'common.php' );
 	require( SECUPRESS_INC_PATH       . 'admin-bar.php' );
@@ -118,6 +117,7 @@ function secupress_init() {
 		secupress_require_class( 'Admin', 'Notices' );
 		SecuPress_Admin_Notices::get_instance();
 
+		require( SECUPRESS_FUNCTIONS_PATH . 'backup.php' );
 		require( SECUPRESS_ADMIN_PATH . 'options.php' );
 		require( SECUPRESS_ADMIN_PATH . 'notices.php' );
 		require( SECUPRESS_ADMIN_PATH . 'admin.php' );
