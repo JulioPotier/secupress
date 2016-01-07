@@ -1,6 +1,23 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
+/*------------------------------------------------------------------------------------------------*/
+/* ON MODULE SETTINGS SAVE ====================================================================== */
+/*------------------------------------------------------------------------------------------------*/
+
+/**
+ * Callback to filter, sanitize.
+ *
+ * @since 1.0
+ * @return array $settings
+ */
+function __secupress_backups_settings_callback( $settings ) {
+	if ( ! isset( $settings['backups-storage_location'] ) || ! in_array( $settings['backups-storage_location'], array( 'local', 'ftp', 'amazons3', 'dropbox', 'rackspace' ) ) ) {
+		$settings['backups-storage_location'] = 'local';
+	}
+	return $settings;
+}
+
 add_action( 'wp_ajax_secupress_backup_db', '__secupress_do_backup_db' );
 add_action( 'admin_post_secupress_backup_db', '__secupress_do_backup_db' );
 function __secupress_do_backup_db() {
@@ -13,13 +30,28 @@ function __secupress_do_backup_db() {
 		}
 	}
 
-	$wp_tables    = secupress_get_wp_tables();
-	$other_tables = secupress_get_non_wp_tables();
-	$backup_file  = secupress_get_backup_path() . secupress_get_db_backup_filename();
+	$wp_tables      = secupress_get_wp_tables();
+	$other_tables   = secupress_get_non_wp_tables();
+	$backup_storage = secupress_get_module_option( 'backups-storage_location', 'local', 'backups' );
+	$backup_file    = '';
 
-	if ( secupress_pre_backup() ) {
-		file_put_contents( $backup_file, secupress_get_db_tables_content( array_merge( $wp_tables, $other_tables ) ) );
-		$backup_file = secupress_zip_backup_file( $backup_file );
+	if ( 'local' == $backup_storage ) {
+		$backup_file  = secupress_get_backup_path() . secupress_get_db_backup_filename();
+
+		if ( secupress_pre_backup() ) {
+			file_put_contents( $backup_file, secupress_get_db_tables_content( array_merge( $wp_tables, $other_tables ) ) );
+			$backup_file = secupress_zip_backup_file( $backup_file );
+		}
+	} else {
+		$backup_file = apply_filters( 'secupress.do_backup.file', $backup_file, $backup_storage );
+	}
+
+	if ( ! $backup_file ) {
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			wp_send_json_error();
+		} else {
+			wp_nonce_ays( '' );
+		}
 	}
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
