@@ -9,22 +9,11 @@ $this->add_section( __( 'Themes & Plugins Uploads', 'secupress' ) );
 
 $plugin = $this->get_current_plugin();
 
-$field_name = $this->get_field_name( 'uploads' );
-
-$this->add_field(
+$this->add_field( array(
 	/* translators: %s is a file extension */
-	sprintf( __( 'Disallow %s uploads', 'secupress' ), '<code>.zip</code>' ),
-	array(
-		'name'        => $field_name,
-	),
-	array(
-		array(
-			'type'         => 'checkbox',
-			'name'         => $field_name,
-			'value'        => (int) secupress_is_submodule_active( 'plugins-themes', 'uploads' ),
-			'label'        => __( 'Yes, disable uploads for themes and plugins', 'secupress' ),
-			'label_for'    => $field_name,
-			'label_screen' => __( 'Yes, disable uploads for themes and plugins', 'secupress' ),
-		),
-	)
-);
+	'title'        => sprintf( __( 'Disallow %s uploads', 'secupress' ), '<code>.zip</code>' ),
+	'label_for'    => $this->get_field_name( 'uploads' ),
+	'type'         => 'checkbox',
+	'value'        => (int) secupress_is_submodule_active( 'plugins-themes', 'uploads' ),
+	'label'        => __( 'Yes, disable uploads for themes and plugins', 'secupress' ),
+) );

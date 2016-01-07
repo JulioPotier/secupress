@@ -132,33 +132,30 @@ function secupressIsEscapeKey( e ) {
 
 // Roles: at least one role must be chosen. ========================================================
 (function($, d, w, undefined) {
-	var checkboxes;
 
 	if ( "function" === typeof document.createElement( "input" ).checkValidity ) {
-		checkboxes = $( 'fieldset[class*="_affected_role"] :checkbox' );
+		$( ".affected-role-row :checkbox" ).on( "click", function() {
+			this.setCustomValidity( '' );
 
-		checkboxes.on( "click", function() {
-			$( this ).get( 0 ).setCustomValidity( '' );
-
-			if ( 0 === checkboxes.filter( ":checked" ).length ) {
-				$( this ).get( 0 ).setCustomValidity( w.l10nmodules.selectOneRoleMinimum );
+			if ( 0 === $( '[name="' + this.name + '"]:checked' ).length ) {
+				this.setCustomValidity( w.l10nmodules.selectOneRoleMinimum );
 				$( "#secupress-module-form-settings [type='submit']" ).first().trigger( "click" );
 			}
 		} );
 	} else {
-		$( 'fieldset[class*="_affected_role"]' ).siblings( "p.warning" ).removeClass( "hide-if-js" );
+		$( ".affected-role-row p.warning" ).removeClass( "hide-if-js" );
 	}
 
 } )(jQuery, document, window);
 
 
-// Radiobox class ==================================================================================
+// Radioboxes ======================================================================================
 (function($, d, w, undefined) {
+
 	$( ".radiobox" ).on( "click", function() {
-		var $this = $( this ),
-			name  = $this.attr( "name" );
-		$( '.radiobox[name="' + name + '"]:checked' ).not( $this ).removeAttr( "checked" ).trigger( "change" );
+		$( '[name="' + this.name + '"]:checked' ).not( this ).removeAttr( "checked" ).trigger( "change" );
 	} );
+
 } )(jQuery, document, window);
 
 
@@ -320,8 +317,75 @@ function secupressIsEscapeKey( e ) {
 		return;
 	}
 
-	function secupressClearActionLogsDisplayError( $this ) {
-		var $parent = $this.closest( "td" );
+	function secupressClearLogs( $button, href ) {
+		doingAjax = true;
+		$button.addClass( "disabled" ).attr( "aria-disabled", "true" );
+
+		if ( wp.a11y && wp.a11y.speak ) {
+			wp.a11y.speak( w.l10nLogs.clearingText );
+		}
+
+		$.post( href.replace( "admin-post.php", "admin-ajax.php" ) )
+		.done( function( r ) {
+			if ( "1" === r ) {
+				$button.closest( "td" ).text( "" ).append( "<p><em>" + w.l10nLogs.noLogsText + "</em></p>" );
+
+				if ( wp.a11y && wp.a11y.speak ) {
+					wp.a11y.speak( w.l10nLogs.clearedText );
+				}
+			} else {
+				secupressClearActionLogsDisplayError( $button );
+			}
+		} )
+		.fail( function() {
+			secupressClearActionLogsDisplayError( $button );
+		} )
+		.always( function() {
+			doingAjax = false;
+		} );
+	}
+
+	function secupressDeleteLog( $button, href ) {
+		doingAjax = true;
+		$button.addClass( "disabled" ).attr( "aria-disabled", "true" );
+
+		if ( wp.a11y && wp.a11y.speak ) {
+			wp.a11y.speak( w.l10nLogs.deletingText );
+		}
+
+		$.getJSON( href.replace( "admin-post.php", "admin-ajax.php" ) )
+		.done( function( r ) {
+			if ( $.isPlainObject( r ) && r.success ) {
+				// r.data contains the number of logs.
+				if ( r.data ) {
+					$( ".logs-count" ).text( r.data );
+
+					$button.closest( "li" ).fadeTo( 100 , 0, function() {
+						$( this ).slideUp( 100, function() {
+							$( this ).remove();
+						} );
+					} );
+				} else {
+					$button.closest( "td" ).text( "" ).append( "<p><em>" + w.l10nLogs.noLogsText + "</em></p>" );
+				}
+
+				if ( wp.a11y && wp.a11y.speak ) {
+					wp.a11y.speak( w.l10nLogs.deletedText );
+				}
+			} else {
+				secupressDeleteActionLogDisplayError( $button );
+			}
+		} )
+		.fail( function() {
+			secupressDeleteActionLogDisplayError( $button );
+		} )
+		.always( function() {
+			doingAjax = false;
+		} );
+	}
+
+	function secupressClearActionLogsDisplayError( $button ) {
+		var $parent = $button.closest( "td" );
 
 		$parent.children( ".error-message" ).remove();
 		$parent.append( "<p class=\"error-message\"><em>" + w.l10nLogs.errorText + "</em></p>" );
@@ -330,11 +394,11 @@ function secupressIsEscapeKey( e ) {
 			wp.a11y.speak( w.l10nLogs.errorText );
 		}
 
-		$this.removeClass( "disabled" ).removeAttr( "aria-disabled" );
+		$button.removeClass( "disabled" ).removeAttr( "aria-disabled" );
 	}
 
-	function secupressDeleteActionLogDisplayError( $this ) {
-		var $parent = $this.parent( ".actions" );
+	function secupressDeleteActionLogDisplayError( $button ) {
+		var $parent = $button.parent( ".actions" );
 
 		$parent.prev( ".error-message" ).remove();
 		$parent.before( "<p class=\"error-message\"><em>" + w.l10nLogs.errorText + "</em></p>" );
@@ -343,7 +407,7 @@ function secupressIsEscapeKey( e ) {
 			wp.a11y.speak( w.l10nLogs.errorText );
 		}
 
-		$this.removeClass( "disabled" ).removeAttr( "aria-disabled" );
+		$button.removeClass( "disabled" ).removeAttr( "aria-disabled" );
 	}
 
 	// Ajax call that clears logs.
@@ -363,36 +427,25 @@ function secupressIsEscapeKey( e ) {
 			return false;
 		}
 
-		if ( ! w.confirm( w.l10nLogs.clearConfirmText ) ) {
-			return false;
-		}
-
-		doingAjax = true;
-		$this.addClass( "disabled" ).attr( "aria-disabled", "true" );
 		e.preventDefault();
 
-		if ( wp.a11y && wp.a11y.speak ) {
-			wp.a11y.speak( w.l10nLogs.clearingText );
+		if ( "function" === typeof w.swal ) {
+			swal( {
+				title:              w.l10nLogs.confirmTitle,
+				text:               w.l10nLogs.clearConfirmText,
+				type:               "warning",
+				showCancelButton:   true,
+				confirmButtonColor: "#DD6B55",
+				confirmButtonText:  w.l10nLogs.clearConfirmButton,
+				cancelButtonText:   w.l10nLogs.confirmCancel,
+				allowOutsideClick:  true
+			},
+			function () {
+				secupressClearLogs( $this, href );
+			} );
+		} else if ( w.confirm( w.l10nLogs.confirmTitle + "\n" + w.l10nLogs.clearConfirmText ) ) {
+			secupressClearLogs( $this, href );
 		}
-
-		$.post( href.replace( "admin-post.php", "admin-ajax.php" ) )
-		.done( function( r ) {
-			if ( "1" === r ) {
-				$this.closest( "td" ).text( "" ).append( "<p><em>" + w.l10nLogs.noLogsText + "</em></p>" );
-
-				if ( wp.a11y && wp.a11y.speak ) {
-					wp.a11y.speak( w.l10nLogs.clearedText );
-				}
-			} else {
-				secupressClearActionLogsDisplayError( $this );
-			}
-		} )
-		.fail( function() {
-			secupressClearActionLogsDisplayError( $this );
-		} )
-		.always( function() {
-			doingAjax = false;
-		} );
 	} );
 
 	// Ajax call that delete a log.
@@ -412,47 +465,25 @@ function secupressIsEscapeKey( e ) {
 			return false;
 		}
 
-		if ( ! w.confirm( w.l10nLogs.deleteConfirmText ) ) {
-			return false;
-		}
-
-		doingAjax = true;
-		$this.addClass( "disabled" ).attr( "aria-disabled", "true" );
 		e.preventDefault();
 
-		if ( wp.a11y && wp.a11y.speak ) {
-			wp.a11y.speak( w.l10nLogs.deletingText );
+		if ( "function" === typeof w.swal ) {
+			swal( {
+				title:              w.l10nLogs.confirmTitle,
+				text:               w.l10nLogs.deleteConfirmText,
+				type:               "warning",
+				showCancelButton:   true,
+				confirmButtonColor: "#DD6B55",
+				confirmButtonText:  w.l10nLogs.deleteConfirmButton,
+				cancelButtonText:   w.l10nLogs.confirmCancel,
+				allowOutsideClick:  true
+			},
+			function () {
+				secupressDeleteLog( $this, href );
+			} );
+		} else if ( w.confirm( w.l10nLogs.confirmTitle + "\n" + w.l10nLogs.deleteConfirmText ) ) {
+			secupressDeleteLog( $this, href );
 		}
-
-		$.getJSON( href.replace( "admin-post.php", "admin-ajax.php" ) )
-		.done( function( r ) {
-			if ( $.isPlainObject( r ) && r.success ) {
-				// r.data contains the number of logs.
-				if ( r.data ) {
-					$( ".logs-count" ).text( r.data );
-
-					$this.closest( "li" ).fadeTo( 100 , 0, function() {
-						$( this ).slideUp( 100, function() {
-							$( this ).remove();
-						} );
-					} );
-				} else {
-					$this.closest( "td" ).text( "" ).append( "<p><em>" + w.l10nLogs.noLogsText + "</em></p>" );
-				}
-
-				if ( wp.a11y && wp.a11y.speak ) {
-					wp.a11y.speak( w.l10nLogs.deletedText );
-				}
-			} else {
-				secupressDeleteActionLogDisplayError( $this );
-			}
-		} )
-		.fail( function() {
-			secupressDeleteActionLogDisplayError( $this );
-		} )
-		.always( function() {
-			doingAjax = false;
-		} );
 	} );
 
 	// Expand <pre> tags.

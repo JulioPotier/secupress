@@ -2,9 +2,11 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /**
- * Return an array containing all informations related to the modules.
+ * Get modules title, icon, description and other informations.
  *
  * @since 1.0
+ *
+ * @return (array) All informations related to the modules.
  */
 function secupress_get_modules() {
 	return array(
@@ -29,9 +31,8 @@ function secupress_get_modules() {
 			'dashicon'    => 'wordpress-alt',
 			'description' => array(
 				__( 'WordPress can be tweak by so many ways. But are you using the right ones. We will help', 'secupress' ),
-				__( '', 'secupress' ),
 			),
-		),		
+		),
 		'sensitive-data'  => array(
 			'title'       => esc_html__( 'Sensitive Data', 'secupress' ),
 			'dashicon'    => 'lock',
@@ -45,7 +46,7 @@ function secupress_get_modules() {
 			'dashicon'    => 'portfolio',
 			'description' => array(
 				__( 'Check the file permissions <em>(chmod)</em> at a glance and run a file monitoring on your installation', 'secupress' ),
-				__( 'Also, an antivus scanner can be performed on your installation, this may taka time but it\'s more efficient.', 'secupress' ),
+				__( 'Also, an antivus scanner can be performed on your installation, this may take time but it\'s more efficient.', 'secupress' ),
 			),
 			'with_reset_box' => false,
 		),
@@ -76,20 +77,18 @@ function secupress_get_modules() {
 				__( 'Malicious requests are badly common. This will checks all incoming requests and quietly blocks all of these containing bad stuff.', 'secupress' ),
 			),
 		),
-		'alerts'          => array(
-			'title'       => esc_html__( 'Alerts', 'secupress' ),
-			'dashicon'    => 'megaphone',
-			'description' => array(
-				__( 'Each time we that an action is a possible attack vector, we add it here, so you can see what happened and when we blocked it or not.', 'secupress' ),
-				__( '', 'secupress' ),
-			),
-		),		
 		'logs'            => array(
 			'title'       => esc_html__( 'Logs', 'secupress' ),
 			'dashicon'    => 'list-view',
 			'description' => array(
 				__( 'Logs are very usefull, it acts like a history of what happened on your website, filtered and at any time. You can also read and delete banned IPs from our modules here.', 'secupress' ),
-				__( '', 'secupress' ),
+			),
+		),
+		'alerts'          => array(
+			'title'       => esc_html__( 'Alerts', 'secupress' ),
+			'dashicon'    => 'megaphone',
+			'description' => array(
+				__( 'Each time we that an action is a possible attack vector, we add it here, so you can see what happened and when we blocked it or not.', 'secupress' ),
 			),
 		),
 		'tools'           => array(
@@ -97,7 +96,6 @@ function secupress_get_modules() {
 			'dashicon'    => 'admin-tools',
 			'description' => array(
 				__( 'The page contains our tools designed to help you with the plugin. Export and import settings, set your API key, rollback a version or even monitor your website can be done from here.', 'secupress' ),
-				__( '', 'secupress' ),
 			),
 			'with_reset_box' => false,
 		),
@@ -105,8 +103,7 @@ function secupress_get_modules() {
 			'title'       => esc_html__( 'Schedules', 'secupress' ),
 			'dashicon'    => 'calendar-alt',
 			'description' => array(
-				__( 'Scheduling recurrent tasks can be very usefull to gain time and stay safe. At least each week a backup should be done, same for a full scan of vulnerabilities and file changes.', 'secupress' ),
-				__( '', 'secupress' ),
+				__( 'Scheduling recurrent tasks can be very useful to gain time and stay safe. At least each week a backup should be done, same for a full scan of vulnerabilities and file changes.', 'secupress' ),
 			),
 			'with_reset_box' => false,
 		),

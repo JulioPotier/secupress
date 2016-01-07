@@ -134,7 +134,7 @@ label {
 	color: red;
 }
 
-.form-table td fieldset label.disabled {
+.form-table label.disabled {
 	color: #ddd;
 	display: inline;
 }
@@ -166,7 +166,8 @@ label {
 	visibility: hidden;
 	float: none;
 }
-.disabled + .secupress-inline-spinner {
+.disabled + .secupress-inline-spinner,
+[disabled="disabled"] + .secupress-inline-spinner {
 	visibility: visible;
 }
 .secupress-delete-log + .secupress-inline-spinner {
@@ -229,6 +230,14 @@ label {
 }
 .secupress-code-chunk .secupress-expand-code .dashicons-visibility {
 	display: inline-block;
+}
+/* Time slot */
+.fieldtype-time-slot .label-before {
+	display: inline-block;
+	min-width: 3em;
+}
+.fieldtype-time-slot .small-text {
+	text-align: right;
 }
 /**/
 #form-delete-backups .secupress-boxed-group{

@@ -470,8 +470,8 @@ function secupress_check_key( $type = 'transient_1', $data = null ) {
 
 		if ( $json ) {
 
-			$secupress_options['consumer_key'] 	= $json->data->consumer_key;
-			$secupress_options['consumer_email']	= $json->data->consumer_email;
+			$secupress_options['consumer_key']   = $json->data->consumer_key;
+			$secupress_options['consumer_email'] = $json->data->consumer_email;
 
 			if ( $json->success ) {
 
