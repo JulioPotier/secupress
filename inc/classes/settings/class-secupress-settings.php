@@ -19,6 +19,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	protected $sections_descriptions = array();
 	protected $sections_save_button  = array();
 	protected $form_action;
+	protected $with_form;
 
 
 	// Setters =====================================================================================
@@ -89,6 +90,11 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	}
 
 
+	final public function get_with_form() {
+		return $this->with_form;
+	}
+
+
 	// Init ========================================================================================
 
 	/**
@@ -102,12 +108,11 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 		$modules = static::get_modules();
 		$module  = $module ? $module : $this->modulenow;
-		if ( isset( $modules[ $module ]['with_form'] ) && false === $modules[ $module ]['with_form'] ) {
-			$this->form_action = false;
-		} else {
-			$this->form_action = is_network_admin() ? admin_url( 'admin-post.php' ) : admin_url( 'options.php' );
-			$this->form_action = esc_url( $this->form_action );
-		}
+
+		$this->with_form = ! ( isset( $modules[ $module ]['with_form'] ) && false === $modules[ $module ]['with_form'] );
+
+		$this->form_action = is_network_admin() ? admin_url( 'admin-post.php' ) : admin_url( 'options.php' );
+		$this->form_action = esc_url( $this->form_action );
 
 	}
 
@@ -132,7 +137,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$actions .= '<button type="button" id="affected-role-' . $i . '" class="hide-if-no-js no-button button-actions-title">' . __( 'Roles', 'secupress' ) . ' <span class="dashicons dashicons-arrow-right" aria-hidden="true"></span></button>';
 		}
 
-		do_action( 'before_section_' . $this->sectionnow );
+		do_action( 'before_section_' . $this->sectionnow, (bool) $args['with_save_button'] );
 
 		add_settings_section(
 			$section_id,
@@ -141,7 +146,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$section_id
 		);
 
-		if ( $args['with_save_button'] ) {
+		if ( (bool) $args['with_save_button'] ) {
 			$this->sections_save_button[ $section_id ] = 1;
 		}
 
@@ -195,11 +200,11 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$this->do_settings_sections();
 		echo '</div>';
 
-		if ( ! empty( $this->sections_save_button[ $section_id ] ) ) {
+		$with_save_button = ! empty( $this->sections_save_button[ $section_id ] );
+		if ( $with_save_button ) {
 			static::submit_button( 'primary small', $this->sectionnow . '_submit' );
-
-			do_action( 'after_section_' . $this->sectionnow );
 		}
+		do_action( 'after_section_' . $this->sectionnow, $with_save_button );
 
 		return $this;
 	}
@@ -666,7 +671,6 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	<?php
 	}
 
-
 	/**
 	 * Displays the old backups
 	 *
@@ -702,10 +706,34 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	protected function backup_files() {
-		//// tempo
-		echo '<p><em>No Files Backups found yet, do one?</em></p>';
+		//// create an option so save when we launch a backup, see pro version
+		$ignored_directories = str_replace( ABSPATH, '', WP_CONTENT_DIR . '/cache/' ) . "\n";
+		$ignored_directories .= str_replace( ABSPATH, '', WP_CONTENT_DIR . '/backups/' );
+
 		$disabled = ! secupress_is_pro() ? ' disabled="disabled"' : '';
-		echo '<a' . $disabled . ' href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_backup_files' ), 'secupress_backup_files' ) . '" class="button button-secondary">' . __( 'Backup my Files', 'secupress' ) . '</a>';
+		?>
+		<form action="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_backup_files' ), 'secupress_backup_files' ); ?>" id="form-do-files-backup" method="post">
+			<div class="secupress-swal-form">
+				<fieldset class="secupress-boxed-group">
+					<b><?php _e( 'Do not backup the following folders', 'secupress' ); ?></b><br>
+					<textarea name="ignored_directories"<?php disabled( ! secupress_is_pro() ); ?>><?php echo $ignored_directories; ?></textarea>
+					<p class="description">
+						<?php _e( 'One folder per line.', 'secupress' ); ?>
+					</p>
+				</fieldset>
+			</div>
+			<p class="submit">
+				<?php
+				$args = array( 'data-original-i18n' => esc_attr__( 'Backup my Files', 'secupress' ), 'data-loading-i18n' => esc_attr__( 'Backuping &hellip;', 'secupress' ) );
+				if ( ! secupress_is_pro() ) {
+					$args['disabled'] = 'disabled';
+				}
+				submit_button( __( 'Backup my Files', 'secupress' ), 'secondary', 'submit-backup-files', false, $args );
+				?>
+				<img src="<?php echo admin_url( '/images/spinner.gif' ); ?>" id="secupress-files-backup-spinner" class="spinner secupress-inline-spinner hidden">&nbsp;
+			</p>
+		</form>
+	<?php
 	}
 
 
