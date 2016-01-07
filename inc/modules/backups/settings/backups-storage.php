@@ -1,8 +1,12 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
-$this->set_current_section( 'backup-storage' );
-$this->add_section( __( 'Backups Storage', 'secupress' ), array( 'with_save_button' => false ) );
+// Add the form manually since i just need it for this block
+add_action( 'before_section_backups-storage', array( $this, 'print_open_form_tag' ) );
+add_action( 'after_section_backups-storage', array( $this, 'print_close_form_tag' ) );
+
+$this->set_current_section( 'backups-storage' );
+$this->add_section( __( 'Backups Storage', 'secupress' ), array( 'with_save_button' => true ) );
 
 $field_name = $this->get_field_name( 'location' );
 $main_field_name = $field_name;
