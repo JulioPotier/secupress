@@ -199,6 +199,138 @@
 
 })(jQuery);
 
+// Password ========================================================================================
+(function($, d, w, undefined) {
+
+	$( "#double-auth_password" ).on( "input pwupdate init.secupress", function() { //// Comparer avec le code qu'utilise actuellement WP.
+		var pass, strengthResult, strength;
+
+		pass = this.value;
+
+		strengthResult = $( "#password-strength" ).removeClass( "short bad good strong" );
+
+		if ( ! pass ) {
+			return;
+		}
+
+		// Get the password strength
+		strength = wp.passwordStrength.meter( pass, wp.passwordStrength.userInputBlacklist(), pass );
+
+		$( "#password_strength_pattern" ).val( strength );
+
+		// Add the strength meter results
+		switch ( strength ) {
+			case 2:
+				strengthResult.addClass( "bad" ).html( w.pwsL10n.bad );
+				break;
+			case 3:
+				strengthResult.addClass( "good" ).html( w.pwsL10n.good );
+				break;
+			case 4:
+				strengthResult.addClass( "strong" ).html( w.pwsL10n.strong );
+				break;
+			case 5:
+				strengthResult.addClass( "short" ).html( w.pwsL10n.mismatch );
+				break;
+			default:
+				strengthResult.addClass( "short" ).html( w.pwsL10n.short );
+		}
+	} ).trigger( "init.secupress" ); //// Dans ton ancien code c'était "input propertyChange". WP semble utiliser ça maintenant. A regarder de près donc.
+
+
+	$( "#password_strength_pattern" ).prop( "disabled", false )
+		.closest( "tr" )
+		// Triggered before the panel is opened: add pattern/required/aria-required attributes.
+		.on( "secupressbeforeshow", function() {
+			var $this   = $( this ),
+				$inputs = $this.find( "input" ),
+				pattern, required, ariaRequired;
+
+			$inputs.each( function(){
+				var $this = $( this );
+
+				if ( "true" === $this.data( "nocheck" ) ) {
+					$this.find( ".new-password" ).show();
+					return true;
+				}
+
+				pattern = $this.data( "pattern" );
+
+				if ( undefined !== pattern && "" !== pattern ) {
+					$this.attr( "pattern", pattern );
+				}
+
+				required = $this.data( "required" );
+
+				if ( undefined !== required && "" !== required ) {
+					$this.attr( "required", required );
+				}
+
+				ariaRequired = $this.data( "aria-required" );
+
+				if ( undefined !== ariaRequired && "" !== ariaRequired ) {
+					$this.attr( "aria-required", ariaRequired );
+				}
+			} );
+		} )
+		// Triggered before the panel is closed: remove pattern/required/aria-required attributes.
+		.on( "secupressbeforehide", function() {
+			var $this   = $( this ),
+				$inputs = $this.find( "input" ),
+				pattern, required, ariaRequired;
+
+			$inputs.each( function(){
+				var $this = $( this );
+
+				if ( "true" === $this.data( "nocheck" ) ) {
+					return true;
+				}
+
+				pattern = $this.data( "pattern" );
+
+				if ( undefined !== pattern && "" !== pattern ) {
+					$this.removeAttr( "pattern" );
+				}
+
+				required = $this.data( "required" );
+
+				if ( undefined !== required && "" !== required ) {
+					$this.removeAttr( "required" );
+				}
+
+				ariaRequired = $this.data( "aria-required" );
+
+				if ( undefined !== ariaRequired && "" !== ariaRequired ) {
+					$this.removeAttr( "aria-required" );
+				}
+			} );
+		} );
+
+} )(jQuery, document, window);
+
+
+// Fixed scroll ====================================================================================
+/*(function($, d, w, undefined) {
+
+	var $sidebar   = $( "h2.nav-tab-wrapper" ),
+		$window    = $( w ),
+		offset     = $sidebar.offset(),
+		topPadding = 35;
+
+	$window.scroll( function() {
+		if ( $window.scrollTop() > offset.top ) {
+			$sidebar.stop().animate( {
+				marginTop: $window.scrollTop() - offset.top + topPadding
+			}, 250 );
+		} else {
+			$sidebar.stop().animate( {
+				marginTop: 0
+			} );
+		}
+	} );
+
+} )(jQuery, document, window);*/
+
 
 
 

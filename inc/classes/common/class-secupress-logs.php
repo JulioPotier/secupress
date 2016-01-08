@@ -134,12 +134,12 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		check_ajax_referer( 'secupress-clear-' . static::LOGS_TYPE . '-logs' );
 
 		if ( ! static::_user_can() ) {
-			wp_die( -1 );
+			wp_send_json_error();
 		}
 
 		static::delete_logs();
 
-		wp_die( 1 );
+		wp_send_json_success();
 	}
 
 

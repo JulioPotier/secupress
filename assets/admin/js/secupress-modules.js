@@ -1,3 +1,21 @@
+// Global vars =====================================================================================
+var SecuPress = {
+	doingAjax:           false,
+	deletedRowColor:     "#FF9966",
+	addedRowColor:       "#CCEEBB",
+	confirmSwalDefaults: {
+		title:               window.l10nmodules.confirmTitle,
+		cancelButtonText:    window.l10nmodules.confirmCancel,
+		type:                "warning",
+		showCancelButton:    true,
+		confirmButtonColor:  "#DD6B55",
+		showLoaderOnConfirm: true,
+		closeOnConfirm:      false,
+		allowOutsideClick:   true
+	}
+};
+
+
 // Tools ===========================================================================================
 // Shorthand to tell if a modifier key is pressed.
 function secupressHasModifierKey( e ) {
@@ -20,114 +38,155 @@ function secupressIsEscapeKey( e ) {
 	return e.which === 27 && ! secupressHasModifierKey( e );
 }
 
-// Password ========================================================================================
-(function($, d, w, undefined) {
+/**
+ * Disable a button that calls an ajax action.
+ * - Add a "working" class, so that the spinner can be displayed.
+ * - Add a "aria-disabled" attribute.
+ * - If it's a link: add a "disabled" attribute. If it's a button or input: add a "disabled" attribute.
+ * - Change the button text if a "data-loading-i18n" attribute is present.
+ * - Use `wp.a11y.speak` if a text is provided.
+ * - Set `SecuPress.doingAjax` to `true`.
+ *
+ * @since 1.0
+ *
+ * @param (object) $button jQuery object of the button.
+ * @param (string) speak   Text for `wp.a11y.speak`.
+ */
+function secupressDisableAjaxButton( $button, speak ) {
+	var text     = $button.attr( "data-loading-i18n" ),
+		isButton = $button.get( 0 ).nodeName.toLowerCase(),
+		value;
 
-	$( "#double-auth_password" ).on( "input pwupdate init.secupress", function() { //// Comparer avec le code qu'utilise actuellement WP.
-		var pass, strengthResult, strength;
+	SecuPress.doingAjax = true;
+	isButton = "button" === isButton || "input" === isButton;
 
-		pass = this.value;
+	if ( undefined !== text && text ) {
+		if ( isButton ) {
+			value = $button.val();
+			if ( undefined !== value && value ) {
+				$button.val( text );
+			} else {
+				$button.text( text );
+			}
+		} else {
+			$button.text( text );
+		}
+	}
 
-		strengthResult = $( "#password-strength" ).removeClass( "short bad good strong" );
+	if ( isButton ) {
+		$button.addClass( "working" ).attr( { "disabled": "disabled", "aria-disabled": "true" } );
+	} else {
+		$button.addClass( "disabled working" ).attr( "aria-disabled", "true" );
+	}
 
-		if ( ! pass ) {
-			return;
+	if ( wp.a11y && wp.a11y.speak && undefined !== speak && speak ) {
+		wp.a11y.speak( speak );
+	}
+}
+
+/**
+ * Enable a button that calls an ajax action.
+ * - Remove the "working" class, so that the spinner can be hidden again.
+ * - Remove the "aria-disabled" attribute.
+ * - If it's a link: remove the "disabled" attribute. If it's a button or input: remove the "disabled" attribute.
+ * - Change the button text if a "data-original-i18n" attribute is present.
+ * - Use `wp.a11y.speak` if a text is provided.
+ * - Set `SecuPress.doingAjax` to `false`.
+ *
+ * @since 1.0
+ *
+ * @param (object) $button jQuery object of the button.
+ * @param (string) speak   Text for `wp.a11y.speak`.
+ */
+function secupressEnableAjaxButton( $button, speak ) {
+	var text, isButton, value;
+
+	if ( undefined !== $button && $button && $button.length ) {
+		text     = $button.attr( "data-original-i18n" );
+		isButton = $button.get( 0 ).nodeName.toLowerCase();
+		isButton = "button" === isButton || "input" === isButton;
+
+		if ( undefined !== text && text ) {
+			if ( isButton ) {
+				value = $button.val();
+				if ( undefined !== value && value ) {
+					$button.val( text );
+				} else {
+					$button.text( text );
+				}
+			} else {
+				$button.text( text );
+			}
 		}
 
-		// Get the password strength
-		strength = wp.passwordStrength.meter( pass, wp.passwordStrength.userInputBlacklist(), pass );
-
-		$( "#password_strength_pattern" ).val( strength );
-
-		// Add the strength meter results
-		switch ( strength ) {
-			case 2:
-				strengthResult.addClass( "bad" ).html( w.pwsL10n.bad );
-				break;
-			case 3:
-				strengthResult.addClass( "good" ).html( w.pwsL10n.good );
-				break;
-			case 4:
-				strengthResult.addClass( "strong" ).html( w.pwsL10n.strong );
-				break;
-			case 5:
-				strengthResult.addClass( "short" ).html( w.pwsL10n.mismatch );
-				break;
-			default:
-				strengthResult.addClass( "short" ).html( w.pwsL10n.short );
+		if ( isButton ) {
+			$button.removeClass( "working" ).removeAttr( "disabled aria-disabled" );
+		} else {
+			$button.removeClass( "disabled working" ).removeAttr( "aria-disabled" );
 		}
-	} ).trigger( "init.secupress" ); //// Dans ton ancien code c'était "input propertyChange". WP semble utiliser ça maintenant. A regarder de près donc.
+	}
 
+	if ( wp.a11y && wp.a11y.speak && undefined !== speak && speak ) {
+		wp.a11y.speak( speak );
+	}
 
-	$( "#password_strength_pattern" ).prop( "disabled", false )
-		.closest( "tr" )
-		// Triggered before the panel is opened: add pattern/required/aria-required attributes.
-		.on( "secupressbeforeshow", function() {
-			var $this   = $( this ),
-				$inputs = $this.find( "input" ),
-				pattern, required, ariaRequired;
+	SecuPress.doingAjax = false;
+}
 
-			$inputs.each( function(){
-				var $this = $( this );
+/**
+ * Before doing an ajax call, do some tests:
+ * - test if we have an URL.
+ * - if the event is "keyup", test if the key is the Space bar or Enter.
+ * - test another ajax call is not running.
+ * Also prevent default event.
+ *
+ * @since 1.0
+ *
+ * @param (string) href The URL.
+ * @param (object) e    The jQuery event object.
+ *
+ * @return (bool|string) False on failure, the ajax URL on success.
+ */
+function secupressPreAjaxCall( href, e ) {
+	if ( undefined === href || ! href ) {
+		return false;
+	}
 
-				if ( "true" === $this.data( "nocheck" ) ) {
-					$this.find( ".new-password" ).show();
-					return true;
-				}
+	if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
+		return false;
+	}
 
-				pattern = $this.data( "pattern" );
+	if ( SecuPress.doingAjax ) {
+		return false;
+	}
 
-				if ( undefined !== pattern && "" !== pattern ) {
-					$this.attr( "pattern", pattern );
-				}
+	e.preventDefault();
 
-				required = $this.data( "required" );
+	return href.replace( "admin-post.php", "admin-ajax.php" );
+}
 
-				if ( undefined !== required && "" !== required ) {
-					$this.attr( "required", required );
-				}
+/**
+ * Display an error message via Sweet Alert and re-enable the button.
+ *
+ * @since 1.0
+ *
+ * @param (object) $button jQuery object of the button.
+ * @param (string) text    Text for swal + `wp.a11y.speak`.
+ */
+function secupressDisplayAjaxError( $button, text ) {
+	if ( undefined === text ) {
+		text = w.l10nmodules.unknownError;
+	}
 
-				ariaRequired = $this.data( "aria-required" );
+	swal( {
+		title:             w.l10nmodules.error,
+		text:              text,
+		type:              "error",
+		allowOutsideClick: true
+	} );
 
-				if ( undefined !== ariaRequired && "" !== ariaRequired ) {
-					$this.attr( "aria-required", ariaRequired );
-				}
-			} );
-		} )
-		// Triggered before the panel is closed: remove pattern/required/aria-required attributes.
-		.on( "secupressbeforehide", function() {
-			var $this   = $( this ),
-				$inputs = $this.find( "input" ),
-				pattern, required, ariaRequired;
-
-			$inputs.each( function(){
-				var $this = $( this );
-
-				if ( "true" === $this.data( "nocheck" ) ) {
-					return true;
-				}
-
-				pattern = $this.data( "pattern" );
-
-				if ( undefined !== pattern && "" !== pattern ) {
-					$this.removeAttr( "pattern" );
-				}
-
-				required = $this.data( "required" );
-
-				if ( undefined !== required && "" !== required ) {
-					$this.removeAttr( "required" );
-				}
-
-				ariaRequired = $this.data( "aria-required" );
-
-				if ( undefined !== ariaRequired && "" !== ariaRequired ) {
-					$this.removeAttr( "aria-required" );
-				}
-			} );
-		} );
-
-} )(jQuery, document, window);
+	secupressEnableAjaxButton( $button, text );
+}
 
 
 // Roles: at least one role must be chosen. ========================================================
@@ -149,7 +208,7 @@ function secupressIsEscapeKey( e ) {
 } )(jQuery, document, window);
 
 
-// Radioboxes ======================================================================================
+// Radioboxes: 1 checked at most. ==================================================================
 (function($, d, w, undefined) {
 
 	$( ".radiobox" ).on( "click", function() {
@@ -309,182 +368,115 @@ function secupressIsEscapeKey( e ) {
 } )(jQuery, document, window);
 
 
-// Action Logs =====================================================================================
+// Action/404 Logs =================================================================================
 (function($, d, w, undefined) {
-	var doingAjax = false;
 
 	if ( ! w.l10nLogs ) {
 		return;
 	}
 
-	function secupressClearLogs( $button, href ) {
-		doingAjax = true;
-		$button.addClass( "disabled working" ).attr( "aria-disabled", "true" );
+	// Delete all logs.
+	function secupressDeleteAllLogs( $button, href ) {
+		secupressDisableAjaxButton( $button, w.l10nLogs.clearingText );
 
-		if ( wp.a11y && wp.a11y.speak ) {
-			wp.a11y.speak( w.l10nLogs.clearingText );
-		}
-
-		$.post( href.replace( "admin-post.php", "admin-ajax.php" ) )
+		$.getJSON( href )
 		.done( function( r ) {
-			if ( "1" === r ) {
+			if ( $.isPlainObject( r ) && r.success ) {
+				swal.close();
+				// Empty the list and add a "No Logs" text.
 				$button.closest( "td" ).text( "" ).append( "<p><em>" + w.l10nLogs.noLogsText + "</em></p>" );
 
-				if ( wp.a11y && wp.a11y.speak ) {
-					wp.a11y.speak( w.l10nLogs.clearedText );
-				}
+				secupressEnableAjaxButton( $button, w.l10nLogs.clearedText );
 			} else {
-				secupressClearActionLogsDisplayError( $button );
+				secupressDisplayAjaxError( $button, w.l10nLogs.clearImpossible );
 			}
 		} )
 		.fail( function() {
-			secupressClearActionLogsDisplayError( $button );
-		} )
-		.always( function() {
-			doingAjax = false;
+			secupressDisplayAjaxError( $button );
 		} );
 	}
 
+	// Delete one log.
 	function secupressDeleteLog( $button, href ) {
-		doingAjax = true;
-		$button.addClass( "disabled working" ).attr( "aria-disabled", "true" );
+		secupressDisableAjaxButton( $button, w.l10nLogs.deletingText );
 
-		if ( wp.a11y && wp.a11y.speak ) {
-			wp.a11y.speak( w.l10nLogs.deletingText );
-		}
-
-		$.getJSON( href.replace( "admin-post.php", "admin-ajax.php" ) )
+		$.getJSON( href )
 		.done( function( r ) {
 			if ( $.isPlainObject( r ) && r.success ) {
+				swal.close();
 				// r.data contains the number of logs.
 				if ( r.data ) {
 					$( ".logs-count" ).text( r.data );
 
-					$button.closest( "li" ).fadeTo( 100 , 0, function() {
-						$( this ).slideUp( 100, function() {
-							$( this ).remove();
-						} );
+					$button.closest( "li" ).css( "backgroundColor", SecuPress.deletedRowColor ).hide( "normal", function() {
+						$( this ).remove();
+						SecuPress.doingAjax = false;
 					} );
 				} else {
+					// Empty the list and add a "No Logs" text.
 					$button.closest( "td" ).text( "" ).append( "<p><em>" + w.l10nLogs.noLogsText + "</em></p>" );
+					SecuPress.doingAjax = false;
 				}
 
 				if ( wp.a11y && wp.a11y.speak ) {
 					wp.a11y.speak( w.l10nLogs.deletedText );
 				}
 			} else {
-				secupressDeleteActionLogDisplayError( $button );
+				secupressDisplayAjaxError( $button, w.l10nLogs.deleteImpossible );
 			}
 		} )
 		.fail( function() {
-			secupressDeleteActionLogDisplayError( $button );
-		} )
-		.always( function() {
-			doingAjax = false;
+			secupressDisplayAjaxError( $button );
 		} );
-	}
-
-	function secupressClearActionLogsDisplayError( $button ) {
-		var $parent = $button.closest( "td" );
-
-		$parent.children( ".error-message" ).remove();
-		$parent.append( "<p class=\"error-message\"><em>" + w.l10nLogs.errorText + "</em></p>" );
-
-		if ( wp.a11y && wp.a11y.speak ) {
-			wp.a11y.speak( w.l10nLogs.errorText );
-		}
-
-		$button.removeClass( "disabled working" ).removeAttr( "aria-disabled" );
-	}
-
-	function secupressDeleteActionLogDisplayError( $button ) {
-		var $parent = $button.parent( ".actions" );
-
-		$parent.prev( ".error-message" ).remove();
-		$parent.before( "<p class=\"error-message\"><em>" + w.l10nLogs.errorText + "</em></p>" );
-
-		if ( wp.a11y && wp.a11y.speak ) {
-			wp.a11y.speak( w.l10nLogs.errorText );
-		}
-
-		$button.removeClass( "disabled working" ).removeAttr( "aria-disabled" );
 	}
 
 	// Ajax call that clears logs.
 	$( ".secupress-clear-logs" ).on( "click keyup", function( e ) {
 		var $this = $( this ),
-			href  = $this.attr( "href" );
+			href  = secupressPreAjaxCall( $this.attr( "href" ), e );
 
-		if ( undefined === href || ! href ) {
+		if ( ! href ) {
 			return false;
 		}
-
-		if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
-			return false;
-		}
-
-		if ( doingAjax ) {
-			return false;
-		}
-
-		e.preventDefault();
 
 		if ( "function" === typeof w.swal ) {
-			swal( {
-				title:              w.l10nLogs.confirmTitle,
-				text:               w.l10nLogs.clearConfirmText,
-				type:               "warning",
-				showCancelButton:   true,
-				confirmButtonColor: "#DD6B55",
-				confirmButtonText:  w.l10nLogs.clearConfirmButton,
-				cancelButtonText:   w.l10nLogs.confirmCancel,
-				allowOutsideClick:  true
-			},
-			function () {
-				secupressClearLogs( $this, href );
-			} );
-		} else if ( w.confirm( w.l10nLogs.confirmTitle + "\n" + w.l10nLogs.clearConfirmText ) ) {
-			secupressClearLogs( $this, href );
+			swal(
+				$.extend( {}, SecuPress.confirmSwalDefaults, {
+					text:              w.l10nLogs.clearConfirmText,
+					confirmButtonText: w.l10nLogs.clearConfirmButton
+				} ),
+				function () {
+					secupressDeleteAllLogs( $this, href );
+				}
+			);
+		} else if ( w.confirm( w.l10nmodules.confirmTitle + "\n" + w.l10nLogs.clearConfirmText ) ) {
+			secupressDeleteAllLogs( $this, href );
 		}
-	} );
+	} ).attr( "role", "button" ).removeAttr( "aria-disabled" );
 
 	// Ajax call that delete a log.
 	$( ".secupress-delete-log" ).on( "click keyup", function( e ) {
 		var $this = $( this ),
-			href  = $this.attr( "href" );
+			href  = secupressPreAjaxCall( $this.attr( "href" ), e );
 
-		if ( undefined === href || ! href ) {
+		if ( ! href ) {
 			return false;
 		}
-
-		if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
-			return false;
-		}
-
-		if ( doingAjax ) {
-			return false;
-		}
-
-		e.preventDefault();
 
 		if ( "function" === typeof w.swal ) {
-			swal( {
-				title:              w.l10nLogs.confirmTitle,
-				text:               w.l10nLogs.deleteConfirmText,
-				type:               "warning",
-				showCancelButton:   true,
-				confirmButtonColor: "#DD6B55",
-				confirmButtonText:  w.l10nLogs.deleteConfirmButton,
-				cancelButtonText:   w.l10nLogs.confirmCancel,
-				allowOutsideClick:  true
-			},
-			function () {
-				secupressDeleteLog( $this, href );
-			} );
-		} else if ( w.confirm( w.l10nLogs.confirmTitle + "\n" + w.l10nLogs.deleteConfirmText ) ) {
+			swal(
+				$.extend( {}, SecuPress.confirmSwalDefaults, {
+					text:              w.l10nLogs.deleteConfirmText,
+					confirmButtonText: w.l10nLogs.deleteConfirmButton
+				} ),
+				function () {
+					secupressDeleteLog( $this, href );
+				}
+			);
+		} else if ( w.confirm( w.l10nmodules.confirmTitle + "\n" + w.l10nLogs.deleteConfirmText ) ) {
 			secupressDeleteLog( $this, href );
 		}
-	} );
+	} ).attr( "role", "button" ).removeAttr( "aria-disabled" );
 
 	// Expand <pre> tags.
 	$( ".secupress-code-chunk" )
@@ -497,25 +489,8 @@ function secupressIsEscapeKey( e ) {
 } )(jQuery, document, window);
 
 
-// Countries =======================================================================================
-(function($, d, w, undefined) {
-
-	$( ".geoip-system_geoip-countries" ).on( "click", function( e ) {
-		var val = $( this ).val();
-		$( ".fieldtype-countries" ).find( "[data-code-country='" + val + "']" ).prop( "checked", $( this ).is( ":checked" ) );
-	} );
-
-	$( "[data-code-country]" ).on( "click", function( e ) {
-		var code = $( this ).data( "code-country" );
-		$( "[value='" + code + "']" ).prop( "checked", Boolean( $( "[data-code-country='" + code + "']:checked" ).length == $( "[data-code-country='" + code + "']" ).length ) );
-	} );
-
-} )(jQuery, document, window);
-
-
 // Backups =========================================================================================
 (function($, d, w, undefined) {
-	var doingAjax = false;
 
 	if ( ! w.l10nmodules ) {
 		return;
@@ -535,92 +510,11 @@ function secupressIsEscapeKey( e ) {
 		}
 	}
 
-	function secupressDisableAjaxButton( $button, speak ) {
-		var text     = $button.attr( "data-loading-i18n" ),
-			isButton = $button.get( 0 ).nodeName.toLowerCase(),
-			value;
-
-		doingAjax = true;
-		isButton  = "button" === isButton || "input" === isButton;
-
-		if ( undefined !== text && text ) {
-			if ( isButton ) {
-				value = $button.val();
-				if ( undefined !== value && value ) {
-					$button.val( text );
-				} else {
-					$button.text( text );
-				}
-			} else {
-				$button.text( text );
-			}
-		}
-
-		if ( isButton ) {
-			$button.addClass( "working" ).attr( { "disabled": "disabled", "aria-disabled": "true" } );
-		} else {
-			$button.addClass( "disabled working" ).attr( "aria-disabled", "true" );
-		}
-
-		if ( wp.a11y && wp.a11y.speak && undefined !== speak && speak ) {
-			wp.a11y.speak( speak );
-		}
-	}
-
-	function secupressEnableAjaxButton( $button, speak ) {
-		var text, isButton, value;
-
-		if ( undefined !== $button && $button && $button.length ) {
-			text     = $button.attr( "data-original-i18n" );
-			isButton = $button.get( 0 ).nodeName.toLowerCase();
-			isButton = "button" === isButton || "input" === isButton;
-
-			if ( undefined !== text && text ) {
-				if ( isButton ) {
-					value = $button.val();
-					if ( undefined !== value && value ) {
-						$button.val( text );
-					} else {
-						$button.text( text );
-					}
-				} else {
-					$button.text( text );
-				}
-			}
-
-			if ( isButton ) {
-				$button.removeClass( "working" ).removeAttr( "disabled aria-disabled" );
-			} else {
-				$button.removeClass( "disabled working" ).removeAttr( "aria-disabled" );
-			}
-		}
-
-		if ( wp.a11y && wp.a11y.speak && undefined !== speak && speak ) {
-			wp.a11y.speak( speak );
-		}
-
-		doingAjax = false;
-	}
-
-	function secupressBackupDisplayError( $button, text ) {
-		if ( undefined === text ) {
-			text = w.l10nmodules.unknownError;
-		}
-
-		swal( {
-			title:             w.l10nmodules.error,
-			text:              text,
-			type:              "error",
-			allowOutsideClick: true
-		} );
-
-		secupressEnableAjaxButton( $button, text );
-	}
-
+	// Delete all backups.
 	function secupressDeleteAllBackups( $button, href ) {
 		secupressDisableAjaxButton( $button, w.l10nmodules.deletingAllText );
 
-		$.getJSON( href.replace( "admin-post.php", "admin-ajax.php" ) )
+		$.getJSON( href )
 		.done( function( r ) {
 			if ( $.isPlainObject( r ) && r.success ) {
 				swal.close();
@@ -630,49 +524,51 @@ function secupressIsEscapeKey( e ) {
 				secupressUpdateBackupVisibility();
 				secupressEnableAjaxButton( $button, w.l10nmodules.deletedAllText );
 			} else {
-				secupressBackupDisplayError( $button, w.l10nmodules.deleteAllImpossible );
+				secupressDisplayAjaxError( $button, w.l10nmodules.deleteAllImpossible );
 			}
 		} )
 		.fail( function() {
-			secupressBackupDisplayError( $button );
+			secupressDisplayAjaxError( $button );
 		} );
 	}
 
+	// Delete a backup.
 	function secupressDeleteOneBackup( $button, href ) {
 		secupressDisableAjaxButton( $button, w.l10nmodules.deletingOneText );
 
-		$.getJSON( href.replace( "admin-post.php", "admin-ajax.php" ) )
+		$.getJSON( href )
 		.done( function( r ) {
 			if ( $.isPlainObject( r ) && r.success ) {
 				swal.close();
 
-				$button.closest( ".db-backup-row" ).css( "backgroundColor", "#D73838" ).hide( "normal", function() {
+				$button.closest( ".db-backup-row" ).css( "backgroundColor", SecuPress.deletedRowColor ).hide( "normal", function() {
 					$( this ).remove();
 
 					secupressUpdateAvailableBackupCounter();
 					secupressUpdateBackupVisibility();
-					doingAjax = false;
+					SecuPress.doingAjax = false;
 				} );
 
 				if ( wp.a11y && wp.a11y.speak ) {
 					wp.a11y.speak( w.l10nmodules.deletedOneText );
 				}
 			} else {
-				secupressBackupDisplayError( $button, w.l10nmodules.deleteOneImpossible );
+				secupressDisplayAjaxError( $button, w.l10nmodules.deleteOneImpossible );
 			}
 		} )
 		.fail( function() {
-			secupressBackupDisplayError( $button );
+			secupressDisplayAjaxError( $button );
 		} );
 	}
 
-	function secupressDoBackup( $button, href ) {
+	// Do a DB backup.
+	function secupressDoDbBackup( $button, href ) {
 		secupressDisableAjaxButton( $button, w.l10nmodules.backupingText );
 
-		$.post( href.replace( "admin-post.php", "admin-ajax.php" ) )
+		$.post( href )
 		.done( function( r ) {
 			if ( $.isPlainObject( r ) && r.success ) {
-				$( r.data ).addClass( "hidden" ).css( "backgroundColor", "#88BA0E" ).prependTo( "#form-delete-db-backups fieldset" ).show( "normal", function() {
+				$( r.data ).addClass( "hidden" ).css( "backgroundColor", SecuPress.addedRowColor ).prependTo( "#form-delete-db-backups fieldset" ).show( "normal", function() {
 					$( this ).css( "backgroundColor", "" );
 				} );
 
@@ -680,91 +576,59 @@ function secupressIsEscapeKey( e ) {
 				secupressUpdateBackupVisibility();
 				secupressEnableAjaxButton( $button, w.l10nmodules.backupedText );
 			} else {
-				secupressBackupDisplayError( $button, w.l10nmodules.backupImpossible );
+				secupressDisplayAjaxError( $button, w.l10nmodules.backupImpossible );
 			}
 		} )
 		.fail( function() {
-			secupressBackupDisplayError( $button );
+			secupressDisplayAjaxError( $button );
 		} );
 	}
 
 	// Ajax call that delete all backups.
 	$( "#submit-delete-db-backups" ).on( "click keyup", function( e ) {
 		var $this = $( this ),
-			href  = $this.closest( "form" ).attr( "action" );
+			href  = secupressPreAjaxCall( $this.closest( "form" ).attr( "action" ), e );
 
-		if ( undefined === href || ! href ) {
+		if ( ! href ) {
 			return false;
 		}
-
-		if ( "keyup" === e.type && ! secupressIsEnterKey( e ) ) {
-			return false;
-		}
-
-		if ( doingAjax ) {
-			return false;
-		}
-
-		e.preventDefault();
 
 		if ( "function" === typeof w.swal ) {
-			swal( {
-				title:               w.l10nmodules.confirmTitle,
-				text:                w.l10nmodules.confirmDeleteBackups,
-				confirmButtonText:   w.l10nmodules.yesDeleteAll,
-				cancelButtonText:    w.l10nmodules.confirmCancel,
-				type:                "warning",
-				showCancelButton:    true,
-				confirmButtonColor:  "#DD6B55",
-				showLoaderOnConfirm: true,
-				closeOnConfirm:      false,
-				allowOutsideClick:   true
-			},
-			function () {
-				secupressDeleteAllBackups( $this, href );
-			} );
+			swal(
+				$.extend( {}, SecuPress.confirmSwalDefaults, {
+					text:              w.l10nmodules.confirmDeleteBackups,
+					confirmButtonText: w.l10nmodules.yesDeleteAll,
+				} ),
+				function () {
+					secupressDeleteAllBackups( $this, href );
+				}
+			);
 		} else if ( w.confirm( w.l10nmodules.confirmTitle + "\n" + w.l10nmodules.confirmDeleteBackups ) ) {
 			secupressDeleteAllBackups( $this, href );
 		}
 
-	} );
+	} ).removeAttr( "disabled aria-disabled" );
 
 
 	// Ajax call that delete one Backup.
 	$( "body" ).on( "click keyup", ".a-delete-backup", function( e ) {
 		var $this = $( this ),
-			href  = $this.attr( "href" );
+			href  = secupressPreAjaxCall( $this.attr( "href" ), e );
 
-		if ( undefined === href || ! href ) {
+		if ( ! href ) {
 			return false;
 		}
-
-		if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
-			return false;
-		}
-
-		if ( doingAjax ) {
-			return false;
-		}
-
-		e.preventDefault();
 
 		if ( "function" === typeof w.swal ) {
-			swal( {
-				title:               w.l10nmodules.confirmTitle,
-				text:                w.l10nmodules.confirmDeleteBackup,
-				confirmButtonText:   w.l10nmodules.yesDeleteOne,
-				cancelButtonText:    w.l10nmodules.confirmCancel,
-				type:                "warning",
-				showCancelButton:    true,
-				confirmButtonColor:  "#DD6B55",
-				showLoaderOnConfirm: true,
-				closeOnConfirm:      false,
-				allowOutsideClick:   true
-			},
-			function () {
-				secupressDeleteOneBackup( $this, href );
-			} );
+			swal(
+				$.extend( {}, SecuPress.confirmSwalDefaults, {
+					text:              w.l10nmodules.confirmDeleteBackup,
+					confirmButtonText: w.l10nmodules.yesDeleteOne
+				} ),
+				function () {
+					secupressDeleteOneBackup( $this, href );
+				}
+			);
 		} else if ( w.confirm( w.l10nmodules.confirmTitle + "\n" + w.l10nmodules.confirmDeleteBackup ) ) {
 			secupressDeleteOneBackup( $this, href );
 		}
@@ -773,46 +637,29 @@ function secupressIsEscapeKey( e ) {
 	// Ajax call that do a Backup.
 	$( "#submit-backup-db" ).on( "click", function( e ) {
 		var $this = $( this ),
-			href  = $this.closest( "form" ).attr( "action" );
+			href  = secupressPreAjaxCall( $this.closest( "form" ).attr( "action" ), e );
 
-		if ( undefined === href || ! href ) {
+		if ( ! href ) {
 			return false;
 		}
 
-		if ( "keyup" === e.type && ! secupressIsEnterKey( e ) ) {
-			return false;
-		}
-
-		if ( doingAjax ) {
-			return false;
-		}
-
-		e.preventDefault();
-
-		secupressDoBackup( $this, href );
-	} );
+		secupressDoDbBackup( $this, href );
+	} ).removeAttr( "disabled aria-disabled" );
 
 } )(jQuery, document, window);
 
 
-// Fixed scroll ====================================================================================
-/*(function($, d, w, undefined) {
+// Countries =======================================================================================
+(function($, d, w, undefined) {
 
-	var $sidebar   = $( "h2.nav-tab-wrapper" ),
-		$window    = $( w ),
-		offset     = $sidebar.offset(),
-		topPadding = 35;
-
-	$window.scroll( function() {
-		if ( $window.scrollTop() > offset.top ) {
-			$sidebar.stop().animate( {
-				marginTop: $window.scrollTop() - offset.top + topPadding
-			}, 250 );
-		} else {
-			$sidebar.stop().animate( {
-				marginTop: 0
-			} );
-		}
+	$( ".geoip-system_geoip-countries" ).on( "click", function( e ) {
+		var val = $( this ).val();
+		$( ".fieldtype-countries" ).find( "[data-code-country='" + val + "']" ).prop( "checked", $( this ).is( ":checked" ) );
 	} );
 
-} )(jQuery, document, window);*/
+	$( "[data-code-country]" ).on( "click", function( e ) {
+		var code = $( this ).data( "code-country" );
+		$( "[value='" + code + "']" ).prop( "checked", Boolean( $( "[data-code-country='" + code + "']:checked" ).length == $( "[data-code-country='" + code + "']" ).length ) );
+	} );
+
+} )(jQuery, document, window);

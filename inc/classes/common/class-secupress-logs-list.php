@@ -156,19 +156,20 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 
 		// JS
 		wp_localize_script( 'secupress-modules-js', 'l10nLogs', array(
-			'noLogsText'          => __( 'Nothing happened yet.', 'secupress' ),
-			'errorText'           => __( 'Error', 'secupress' ),
-			'confirmTitle'        => __( 'Are you sure?', 'secupress' ),
-			'clearConfirmText'    => __( 'You will not be able to recover these logs.', 'secupress' ),
-			'clearConfirmButton'  => __( 'Yes, clear them', 'secupress' ),
-			'confirmCancel'       => _x( 'No, cancel', 'verb', 'secupress' ),
-			'clearingText'        => __( 'Clearing Logs &hellip;', 'secupress' ),
-			'clearedText'         => __( 'Logs cleared', 'secupress' ),
-			'deleteConfirmText'   => __( 'You will not be able to recover this log.', 'secupress' ),
-			'deleteConfirmButton' => __( 'Yes, delete it', 'secupress' ),
-			'deletingText'        => __( 'Deleting Log &hellip;', 'secupress' ),
-			'deletedText'         => __( 'Log deleted', 'secupress' ),
 			'expandCodeText'      => __( 'Expand or collapse code block', 'secupress' ),
+			'noLogsText'          => __( 'Nothing happened yet.', 'secupress' ),
+
+			'clearConfirmText'    => __( 'You are about to delete all your logs.', 'secupress' ),
+			'clearConfirmButton'  => __( 'Yes, delete all logs', 'secupress' ),
+			'clearImpossible'     => __( 'Impossible to delete all logs.', 'secupress' ),
+			'clearingText'        => __( 'Deleting all logs &hellip;', 'secupress' ),
+			'clearedText'         => __( 'All logs deleted', 'secupress' ),
+
+			'deleteConfirmText'   => __( 'You are about to delete a log.', 'secupress' ),
+			'deleteConfirmButton' => __( 'Yes, delete this log', 'secupress' ),
+			'deleteImpossible'    => __( 'Impossible to delete this log.', 'secupress' ),
+			'deletingText'        => __( 'Deleting log &hellip;', 'secupress' ),
+			'deletedText'         => __( 'Log deleted', 'secupress' ),
 		) );
 	}
 
