@@ -136,7 +136,6 @@ label {
 
 .form-table label.disabled {
 	color: #ddd;
-	display: inline;
 }
 
 .secupress-logs li {
