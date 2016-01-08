@@ -162,13 +162,13 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 			'clearConfirmText'    => __( 'You are about to delete all your logs.', 'secupress' ),
 			'clearConfirmButton'  => __( 'Yes, delete all logs', 'secupress' ),
 			'clearImpossible'     => __( 'Impossible to delete all logs.', 'secupress' ),
-			'clearingText'        => __( 'Deleting all logs &hellip;', 'secupress' ),
+			'clearingText'        => __( 'Deleting all logs&hellip;', 'secupress' ),
 			'clearedText'         => __( 'All logs deleted', 'secupress' ),
 
 			'deleteConfirmText'   => __( 'You are about to delete a log.', 'secupress' ),
 			'deleteConfirmButton' => __( 'Yes, delete this log', 'secupress' ),
 			'deleteImpossible'    => __( 'Impossible to delete this log.', 'secupress' ),
-			'deletingText'        => __( 'Deleting log &hellip;', 'secupress' ),
+			'deletingText'        => __( 'Deleting log&hellip;', 'secupress' ),
 			'deletedText'         => __( 'Log deleted', 'secupress' ),
 		) );
 	}
