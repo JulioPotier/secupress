@@ -1015,10 +1015,12 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 				echo '<th scope="row">';
 					// Row title.
-					if ( ! empty( $field['args']['label_for'] ) ) {
-						echo '<label for="' . esc_attr( $field['args']['label_for'] ) . '">' . $field['title'] . '</label>';
-					} else {
-						echo $field['title'];
+					if ( $field['title'] ) {
+						if ( ! empty( $field['args']['label_for'] ) ) {
+							echo '<label for="' . esc_attr( $field['args']['label_for'] ) . '">' . $field['title'] . '</label>';
+						} else {
+							echo $field['title'];
+						}
 					}
 					// Row description.
 					if ( static::is_pro_feature( $field['args']['name'] ) ) {
