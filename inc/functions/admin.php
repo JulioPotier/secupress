@@ -325,6 +325,11 @@ function secupress_activate_module( $module, $settings ) { //// rename this, it 
 function secupress_activate_submodule( $module, $plugin, $incompatibles_modules = array() ) { //// add the possiblity to activate it in "silent mode" (from a scanner fix and not from a user checkbox)?
 	$plugin_file    = sanitize_key( $plugin );
 	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
+	$file_path      = SECUPRESS_MODULES_PATH . $module . '/plugins/' . $plugin_file . '.php';
+
+	if ( ! file_exists( $file_path ) ) {
+		return false;
+	}
 
 	if ( ! in_array_deep( $plugin_file, $active_plugins ) ) {
 		if ( ! empty( $incompatibles_modules ) ) {
@@ -335,13 +340,17 @@ function secupress_activate_submodule( $module, $plugin, $incompatibles_modules 
 		$active_plugins[ $module ][] = $plugin_file;
 
 		update_site_option( SECUPRESS_ACTIVE_SUBMODULES, $active_plugins );
-		require_once( SECUPRESS_MODULES_PATH . $module . '/plugins/' . $plugin_file . '.php' );
+		require_once( $file_path );
 		secupress_add_module_notice( $module, $plugin_file, 'activation' );
 
 		do_action( 'secupress_activate_plugin_' . $plugin_file );
 
 		do_action( 'secupress_activate_plugin', $plugin_file );
+
+		return true;
 	}
+
+	return false;
 }
 
 
