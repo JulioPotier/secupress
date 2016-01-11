@@ -10,11 +10,11 @@ $main_field_name = $this->get_field_name( 'type' );
 $options         = secupress_alerts_labels( true );
 
 $this->add_field( array(
-	'title'        => __( 'How to alert you?', 'secupress' ),
+	'title'        => __( 'Choose which service that will be used:', 'secupress' ),
 	'name'         => $main_field_name,
 	'type'         => 'checkboxes',
 	'value'        => ( secupress_is_submodule_active( 'alerts', 'alerts' ) ? null : array() ),
-	'label_screen' => __( 'Choose which service that will be used:', 'secupress' ),
+	'label_screen' => __( 'How to alert you?', 'secupress' ),
 	'options'      => $options,
 ) );
 
@@ -92,7 +92,7 @@ $label   = explode( '%d', $label );
 $label[] = '';
 
 $this->add_field( array(
-	'title'        => __( 'How often will you be alerted?', 'secupress' ),
+	'title'        => __( 'Choose your alerts frequency:', 'secupress' ),
 	'description'  => __( 'It would be a bad idea to alert you everytime something happens, so we\'ll need to group messages.', 'secupress' ),
 	'depends'      => $main_field_name . '_' . implode( ' ' . $main_field_name . '_', array_keys( $options ) ),
 	'name'         => $this->get_field_name( 'frequency' ),
