@@ -160,6 +160,38 @@ function secupress_prepare_email_for_like_search( $email ) {
 
 
 /**
+ * Get the main blog ID.
+ *
+ * @since 1.0
+ *
+ * @return (int)
+ */
+function secupress_get_main_blog_id() {
+	static $blog_id;
+
+	if ( ! $blog_id ) {
+		$blog_id = 1;
+
+		if ( ! is_multisite() ) {
+			// 1
+		}
+		elseif ( ! empty( $GLOBALS['current_site']->blog_id ) ) {
+			$blog_id = absint( $GLOBALS['current_site']->blog_id );
+		}
+		elseif ( defined( 'BLOG_ID_CURRENT_SITE' ) ) {
+			$blog_id = absint( BLOG_ID_CURRENT_SITE );
+		}
+		elseif ( defined( 'BLOGID_CURRENT_SITE' ) ) { // deprecated.
+			$blog_id = absint( BLOGID_CURRENT_SITE );
+		}
+		$blog_id = $blog_id ? $blog_id : 1;
+	}
+
+	return $blog_id;
+}
+
+
+/**
  * Store, get or delete static data.
  *
  * Getter:   no need to provide a second parameter.
