@@ -17,7 +17,8 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan {
 	 * @var Singleton The reference to *Singleton* instance of this class
 	 */
 	protected static $_instance;
-	public    static $prio = 'high';
+	public    static $prio    = 'high';
+	public    static $fixable = false;
 
 
 	protected static function init() {
@@ -32,7 +33,6 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan {
 		}
 	}
 
-
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// good
@@ -44,12 +44,14 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan {
 			202 => _n_noop( '%1$s is only <strong>%2$d character length</strong>. That is obviously too short!', '%1$s is only <strong>%2$d characters length</strong>.', 'secupress' ),
 			203 => __( '%s is not <strong>complex</strong> enough.', 'secupress' ),
 			// cantfix
-			300 => __( 'I can not fix this, you have to manually change your DB and/or FTP password in your server administration.', 'secupress' ), //// and/or ? better ?
+			300 => __( 'I can not fix this, you have to manually change your DB password in your server administration.', 'secupress' ),
+			301 => __( 'I can not fix this, you have to manually change your DB and/or FTP password in your server administration.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
 			return isset( $messages[ $message_id ] ) ? $messages[ $message_id ] : __( 'Unknown message', 'secupress' );
 		}
+
 
 		return $messages;
 	}
@@ -66,6 +68,7 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan {
 		} elseif ( self::dictionary_attack( DB_PASSWORD ) ) {
 			// bad
 			$this->add_message( 201, array( '<code>DB_PASSWORD</code>' ) );
+			$this->add_pre_fix_message( 301 );
 
 		} elseif ( ( $len = strlen( DB_PASSWORD ) ) <= 6 ) {
 			// bad
@@ -100,6 +103,7 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan {
 
 		// good
 		$this->maybe_set_status( $has_ftp ? 1 : 0 );
+
 
 		return parent::scan();
 	}
