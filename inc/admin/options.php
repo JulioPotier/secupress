@@ -570,6 +570,7 @@ function secupress_main_scan() {
 						$current_test = $class_name::get_instance();
 						$css_class    = ' type-' . sanitize_key( $class_name::$type );
 						$css_class   .= $i % 2 === 0 ? ' alternate-2' : ' alternate-1';
+						$fix_message  = '';
 
 						// Scan
 						$status_text  = ! empty( $scanners[ $option_name ]['status'] ) ? secupress_status( $scanners[ $option_name ]['status'] )    : secupress_status( 'notscannedyet' );
@@ -589,8 +590,6 @@ function secupress_main_scan() {
 
 						if ( ! empty( $fixes[ $option_name ]['msgs'] ) && $status_class !== 'good' ) {
 							$fix_message = secupress_format_message( $fixes[ $option_name ]['msgs'], $class_name_part );
-						} else {
-							$fix_message = '';
 						}
 						?>
 						<tr class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> type-all status-all<?php echo $css_class; ?>">
@@ -624,9 +623,13 @@ function secupress_main_scan() {
 									if ( $current_test::$fixable ) { ?>
 										<a class="button button-secondary button-small secupress-fixit" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $class_name_part ), 'secupress_fixit_' . $class_name_part ); ?>"><?php _e( 'Fix it!', 'secupress' ); ?></a>
 										<?php
-									} else { ?>
+									} elseif( false ) /* //// $needs-pro */ { ?>
 										<button type="button" class="button button-secondary button-small secupress-go-pro"><?php _e( 'Pro Upgrade', 'secupress' ); ?></button>
 										<?php
+									} else { // Really not fixable by the plugin + //// #
+										echo '<em>(';
+										_e( 'Can not be fixed automatically.', 'secupress' );
+										echo '</em>)';
 									}
 									?>
 								</div>
