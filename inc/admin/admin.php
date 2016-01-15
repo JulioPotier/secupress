@@ -82,6 +82,7 @@ function secupress_scanit( $test_name, $format_response = false, $for_current_si
 			'status'  => secupress_status( $response['status'] ),
 			'class'   => sanitize_key( $response['status'] ),
 			'message' => isset( $response['msgs'] ) ? secupress_format_message( $response['msgs'], $test_name ) : '',
+			'fix_msg' => isset( $response['fix_msg'] ) ? secupress_format_message( $response['fix_msg'], $test_name ) : '',
 		);
 	}
 
