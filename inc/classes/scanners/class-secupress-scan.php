@@ -229,6 +229,29 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 
 
 	/*
+	 * Add a pre fix message to inform the user before a fix (usually because the fix can not be done)
+	 *
+	 * good:    the fix performed correctly.
+	 * warning: partial fix. The fix could not perform entirely: some fix(es) worked and some not.
+	 * bad:     error. The fix could not perform correctly.
+	 * cantfix: neutral. The flaw cannot be fixed by this plugin.
+	 */
+
+	public function add_pre_fix_message( $message_id, $params = array() ) {
+		if ( $this->is_for_current_site() ) {
+			return $this->add_subsite_message( $message_id, $params );
+		}
+
+		$this->result['fix_msg'] = isset( $this->result['fix_msg'] ) ? $this->result['fix_msg'] : array();
+		$this->result['fix_msg'][ $message_id ] = $params;
+		$this->result_fix['msgs'] = isset( $this->result['fix_msg'] ) ? $this->result['fix_msg'] : array();
+		$this->result_fix['msgs'][ $message_id ] = $params;
+		$this->update_fix();
+	}
+
+
+
+	/*
 	 * Add a fix message and automatically set the fix status.
 	 *
 	 * good:    the fix performed correctly.
@@ -564,7 +587,6 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 
 
 	final public function update_fix() {
-		$name = strtolower( $this->class_name_part );
 		$name = strtolower( $this->class_name_part );
 
 		if ( $this->is_for_current_site() ) {
