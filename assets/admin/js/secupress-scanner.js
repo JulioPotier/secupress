@@ -701,11 +701,14 @@ jQuery( document ).ready( function( $ ) {
 		var $row;
 
 		// If we have a good result, empty the fix cell.
+		$row = $( ".secupress-item-" + extra.test );
 		if ( extra.data.class === "good" ) {
-			$row = $( ".secupress-item-" + extra.test );
 			secupressSetStatusClass( $row.children( ".secupress-fix-result" ), "cantfix" );
 			secupressAddFixStatusText( $row, "" );
 			secupressAddFixResult( $row, "" );
+		}
+		if ( "" != extra.data.fix_msg ) {
+			secupressAddFixResult( $row, extra.data.fix_msg );
 		}
 	} );
 
