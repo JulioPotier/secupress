@@ -95,9 +95,9 @@ function __secupress_login_protection_settings_callback( $modulenow, &$settings 
 	if ( ! empty( $settings['login-protection_type'] ) ) {
 		$settings['login-protection_type'] = array_flip( $settings['login-protection_type'] );
 
-		secupress_manage_submodule( $modulenow, 'limitloginattempts', ! empty( $settings['login-protection_type']['limitloginattempts'] ) );
-		secupress_manage_submodule( $modulenow, 'bannonexistsuser',   ! empty( $settings['login-protection_type']['bannonexistsuser']   ) );
-		secupress_manage_submodule( $modulenow, 'nonlogintimeslot',   ! empty( $settings['login-protection_type']['nonlogintimeslot']   ) );
+		secupress_manage_submodule( $modulenow, 'limitloginattempts', isset( $settings['login-protection_type']['limitloginattempts'] ) );
+		secupress_manage_submodule( $modulenow, 'bannonexistsuser',   isset( $settings['login-protection_type']['bannonexistsuser']   ) );
+		secupress_manage_submodule( $modulenow, 'nonlogintimeslot',   isset( $settings['login-protection_type']['nonlogintimeslot']   ) );
 	} else {
 		secupress_deactivate_submodule( $modulenow, array( 'bannonexistsuser', 'limitloginattempts', 'nonlogintimeslot' ) );
 	}
