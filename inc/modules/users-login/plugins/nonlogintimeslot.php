@@ -42,35 +42,3 @@ function __secupress_cant_login_now() {
 	login_footer();
 	die();
 }
-
-
-
-function secupress_nonlogintimeslot( $raw_user ) {
-	if ( ! empty( $_POST ) && is_a( $raw_user, 'WP_User' ) ) {
-		$IP                               = secupress_get_ip();
-		$login_protection_number_attempts = secupress_get_module_option( 'login_protection_number_attempts', 10, 'users_login' );
-		$attempts                         = (int) get_user_meta( $uid, '_secupress_limitloginattempts', true );
-		++$attempts;
-
-		if ( $attempts < $login_protection_number_attempts ) {
-			update_user_meta( $uid, '_secupress_limitloginattempts', $attempts );
-			$attempts_left = $login_protection_number_attempts - $attempts;
-
-			if ( $attempts_left <= 3 ) {
-				add_filter( 'login_message', function( $message ) use( $attempts_left ) {
-					return _secupress_limitloginattempts_error_message( $message, $attempts_left );
-				} );
-			}
-		} else {
-			delete_user_meta( $uid, '_secupress_limitloginattempts' );
-			secupress_ban_ip();
-			die();
-		}
-	}
-
-	if ( isset( $raw_user->ID ) ) {
-		delete_user_meta( $raw_user->ID, '_secupress_limitloginattempts' );
-	}
-
-	return $raw_user;
-}
