@@ -1,9 +1,10 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
+global $wpdb;
 
 $this->set_current_section( 'action-logs' );
-$this->add_section( __( 'Logs', 'secupress' ) );
+$this->add_section( _x( 'Logs', 'post type general name', 'secupress' ) );
 
 
 $main_field_name = $this->get_field_name( 'activated' );
@@ -23,17 +24,35 @@ $this->add_field( array(
 	),
 ) );
 
-
 if ( class_exists( 'SecuPress_Action_Logs' ) ) :
 
-	SecuPress_Action_Logs::_maybe_include_list_class();
+	$criticities = array(
+		'high'   => _n_noop( 'High criticity <span class="count">(%s)</span>',   'High criticity <span class="count">(%s)</span>',   'secupress' ),
+		'normal' => _n_noop( 'Normal criticity <span class="count">(%s)</span>', 'Normal criticity <span class="count">(%s)</span>', 'secupress' ),
+		'low'    => _n_noop( 'Low criticity <span class="count">(%s)</span>',    'Low criticity <span class="count">(%s)</span>',    'secupress' ),
+	);
+	$post_type   = SecuPress_Action_Logs::get_instance()->get_post_type();
+	$logs        = $wpdb->get_results( $wpdb->prepare( "SELECT post_status AS critic, COUNT(ID) AS count FROM $wpdb->posts WHERE post_type = %s GROUP BY post_status", $post_type ), OBJECT_K );
+
+	if ( $logs ) {
+		foreach ( $criticities as $criticity => $label ) {
+			if ( isset( $logs[ $criticity ] ) ) {
+				$tmp    = translate_nooped_plural( $label, (int) $logs[ $criticity ]->count, 'secupress' );
+				$text[] = sprintf( $tmp, number_format_i18n( (int) $logs[ $criticity ]->count ) );
+			}
+		}
+		$text = implode( '<br/>', $text );
+	} else {
+		$text = __( 'Nothing happened yet.' );
+	}
 
 	$this->add_field( array(
-		'title'        => __( 'WordPress Logs', 'secupress' ),
+		'title'        => '',
 		'description'  => __( 'What happened on your WordPress website?', 'secupress' ),
 		'depends'      => $main_field_name,
-		'name'         => $this->get_field_name( 'logs' ),
-		'field_type'   => array( SecuPress_Action_Logs_List::get_instance(), 'output' ),
+		'name'         => $this->get_field_name( 'logs-action' ),
+		'type'         => 'html',
+		'value'        => "<p>$text</p>\n",
 	) );
 
 endif;

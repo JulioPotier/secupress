@@ -1,6 +1,8 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
+global $wpdb;
+
 
 $this->set_current_section( '404-logs' );
 $this->add_section( __( 'Pages Logs', 'secupress' ) );
@@ -20,14 +22,22 @@ $this->add_field( array(
 
 if ( class_exists( 'SecuPress_404_Logs' ) ) :
 
-	SecuPress_404_Logs::_maybe_include_list_class();
+	$post_type = SecuPress_404_Logs::get_instance()->get_post_type();
+	$logs      = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ID) FROM $wpdb->posts WHERE post_type = %s", $post_type ) );
+
+	if ( $logs ) {
+		$text = sprintf( _n( '%s error 404.', '%s errors 404.', $logs, 'secupress' ), number_format_i18n( $logs ) );
+	} else {
+		$text = __( 'Nothing happened yet.' );
+	}
 
 	$this->add_field( array(
-		'title'        => __( 'WordPress 404 Pages Logs', 'secupress' ),
-		'description'  => __( 'These addresses have been reached recently.', 'secupress' ),
+		'title'        => '',
+		'description'  => __( 'What happened on your WordPress website?', 'secupress' ),
 		'depends'      => $main_field_name,
-		'name'         => $this->get_field_name( 'logs' ),
-		'field_type'   => array( SecuPress_404_Logs_List::get_instance(), 'output' ),
+		'name'         => $this->get_field_name( 'logs-err404' ),
+		'type'         => 'html',
+		'value'        => "<p>$text</p>\n",
 	) );
 
 endif;
