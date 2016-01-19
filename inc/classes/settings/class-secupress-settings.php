@@ -576,9 +576,14 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				<?php
 				break;
 
+			case 'html' :
+
+				echo $value;
+				break;
+
 			default :
 				if ( method_exists( $this, $args['type'] ) ) {
-					call_user_func( array( $this, $args['type'] ) );
+					call_user_func( array( $this, $args['type'] ), $args );
 				} else {
 					echo 'Type manquant ou incorrect'; // ne pas traduire
 				}
