@@ -1,0 +1,159 @@
+# Copyright (C) 2015 SecuPress
+# This file is distributed under the same license as the SecuPress package.
+# Translators:
+# wpmedia <contact@wp-media.me>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: SecuPress\n"
+"Report-Msgid-Bugs-To: http://secupress.me/\n"
+"POT-Creation-Date: 2016-11-01 21:10+0200\n"
+"PO-Revision-Date: 2016-01-19 23:31+0100\n"
+"Last-Translator: Grégory Viguier <i18n@screenfeed.fr>\n"
+"Language-Team: French (France)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fr_FR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 1.8.6\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: _x:1,2c\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Textdomain-Support: yes\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: Logs
+#: -----------------------------------------------------------------------------
+msgctxt "post type general name"
+msgid "Logs"
+msgstr "Journaux"
+
+msgctxt "post type singular name"
+msgid "Log"
+msgstr "Journal"
+
+msgid "Log"
+msgid_plural "Logs"
+msgstr[0] "Journal"
+msgstr[1] "Journaux"
+
+msgid "All Logs"
+msgstr "Tous les journaux"
+
+msgctxt "secupress_log_action"
+msgid "Add New"
+msgstr "Ajouter"
+
+msgid "Add New Log"
+msgstr "Ajouter un nouveau journal"
+
+msgid "Edit Log"
+msgstr "Modifier le journal"
+
+msgid "New Log"
+msgstr "Nouveau journal"
+
+msgid "View Log"
+msgstr "Afficher le journal"
+
+msgid "Search Logs"
+msgstr "Chercher dans les journaux"
+
+msgid "No logs found."
+msgstr "Aucun journal trouvé."
+
+msgid "No logs found in Trash."
+msgstr "Aucun journal trouvé dans la corbeille."
+
+msgid "Parent Log:"
+msgstr "Journal parent&nbsp;:"
+
+msgid "Log Archives"
+msgstr "Archives des journaux"
+
+msgid "Insert into log"
+msgstr "Insérer dans le journal"
+
+msgid "Uploaded to this log"
+msgstr "Mis en ligne sur ce journal"
+
+msgid "Filter logs list"
+msgstr "Filtrer la liste des journaux"
+
+msgid "Logs list navigation"
+msgstr "Navigation de la liste des journaux"
+
+msgid "Logs list"
+msgstr "Liste des journaux"
+
+msgid "%s log permanently deleted."
+msgid_plural "%s logs permanently deleted."
+msgstr[0] "%s journal définitivement supprimé."
+msgstr[1] "%s journaux définitivement supprimés."
+
+msgctxt "post type general name"
+msgid "404 Error Logs"
+msgstr "Journaux des erreurs 404"
+
+msgctxt "post type singular name"
+msgid "404 Error Log"
+msgstr "Journal des erreurs 404"
+
+msgid "404 Error Log"
+msgid_plural "404 Error Logs"
+msgstr[0] "Journal des erreurs 404"
+msgstr[1] "Journaux des erreurs 404"
+
+msgid "All 404 Error Logs"
+msgstr "Tous les journaux des erreurs 404"
+
+msgctxt "secupress_log"
+msgid "Add New"
+msgstr "Ajouter"
+
+msgid "Add New 404 Error Log"
+msgstr "Ajouter un nouveau journal des erreurs 404"
+
+msgid "Edit 404 Error Log"
+msgstr "Modifier le journal des erreurs 404"
+
+msgid "New 404 Error Log"
+msgstr "Nouveau journal des erreurs 404"
+
+msgid "View 404 Error Log"
+msgstr "Afficher le journal des erreurs 404"
+
+msgid "Search 404 Error Logs"
+msgstr "Chercher dans les journaux des erreurs 404"
+
+msgid "No 404 error logs found."
+msgstr "Aucun journal des erreurs 404 trouvé."
+
+msgid "No 404 error logs found in Trash."
+msgstr "Aucun journal des erreurs 404 trouvé dans la corbeille."
+
+msgid "Parent 404 Error Log:"
+msgstr "Journal des erreurs 404 parent&nbsp;:"
+
+msgid "404 Error Log Archives"
+msgstr "Archives des journaux des erreurs 404"
+
+msgid "Insert into 404 error log"
+msgstr "Insérer dans le journal des erreurs 404"
+
+msgid "Uploaded to this 404 error log"
+msgstr "Mis en ligne sur ce journal des erreurs 404"
+
+msgid "Filter 404 error logs list"
+msgstr "Filtrer la liste des journaux des erreurs 404"
+
+msgid "404 Error Logs list navigation"
+msgstr "Navigation de la liste des journaux des erreurs 404"
+
+msgid "404 Error Logs list"
+msgstr "Liste des journaux des erreurs 404"
+
+msgid "%s 404 error log permanently deleted."
+msgid_plural "%s 404 error logs permanently deleted."
+msgstr[0] "%s journal des erreurs 404 définitivement supprimé."
+msgstr[1] "%s journaux des erreurs 404 définitivement supprimés."

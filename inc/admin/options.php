@@ -76,6 +76,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		SECUPRESS_PLUGIN_SLUG . '_page_secupress_settings' => 1,
 		SECUPRESS_PLUGIN_SLUG . '_page_secupress_modules'  => 1,
 		SECUPRESS_PLUGIN_SLUG . '_page_secupress_scanners' => 1,
+		SECUPRESS_PLUGIN_SLUG . '_page_secupress_logs'     => 1,
 		'toplevel_page_secupress_scanners'                 => 1,
 	);
 	if ( ! isset( $pages[ $hook_suffix ] ) ) {

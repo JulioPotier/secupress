@@ -13,13 +13,13 @@ class SecuPress_404_Logs extends SecuPress_Logs {
 
 	const VERSION = '1.0';
 	/**
-	 * @const (string) The logs type.
-	 */
-	const LOGS_TYPE = '404';
-	/**
-	 * @var The reference to the *Singleton* instance of this class.
+	 * @var (object) The reference to the *Singleton* instance of this class.
 	 */
 	protected static $_instance;
+	/**
+	 * @var (string) The Log type.
+	 */
+	protected $log_type = 'err404';
 
 
 	// Private methods =============================================================================
@@ -30,6 +30,30 @@ class SecuPress_404_Logs extends SecuPress_Logs {
 	 * @since 1.0
 	 */
 	protected function _init() {
+		// Labels for the Custom Post Type.
+		$this->post_type_labels = array(
+			'name'                  => _x( '404 Error Logs', 'post type general name', 'secupress' ),
+			'singular_name'         => _x( '404 Error Log', 'post type singular name', 'secupress' ),
+			'menu_name'             => _x( '404 Error Logs', 'post type general name', 'secupress' ),
+			'all_items'             => __( 'All 404 Error Logs', 'secupress' ),
+			'add_new'               => _x( 'Add New', 'secupress_log', 'secupress' ),
+			'add_new_item'          => __( 'Add New 404 Error Log', 'secupress' ),
+			'edit_item'             => __( 'Edit 404 Error Log', 'secupress' ),
+			'new_item'              => __( 'New 404 Error Log', 'secupress' ),
+			'view_item'             => __( 'View 404 Error Log', 'secupress' ),
+			'items_archive'         => _x( '404 Error Logs', 'post type general name', 'secupress' ),
+			'search_items'          => __( 'Search 404 Error Logs', 'secupress' ),
+			'not_found'             => __( 'No 404 error logs found.', 'secupress' ),
+			'not_found_in_trash'    => __( 'No 404 error logs found in Trash.', 'secupress' ),
+			'parent_item_colon'     => __( 'Parent 404 Error Log:', 'secupress' ),
+			'archives'              => __( '404 Error Log Archives', 'secupress' ),
+			'insert_into_item'      => __( 'Insert into 404 error log', 'secupress' ),
+			'uploaded_to_this_item' => __( 'Uploaded to this 404 error log', 'secupress' ),
+			'filter_items_list'     => __( 'Filter 404 error logs list', 'secupress' ),
+			'items_list_navigation' => __( '404 Error Logs list navigation', 'secupress' ),
+			'items_list'            => __( '404 Error Logs list', 'secupress' ),
+		);
+
 		// Log the 404s.
 		add_action( 'wp', array( $this, '_maybe_log_404' ) );
 
@@ -48,19 +72,17 @@ class SecuPress_404_Logs extends SecuPress_Logs {
 			return;
 		}
 
-		$time = time() . '#';
-		$logs = array(
-			$time => array(
-				'user' => secupress_get_ip(),
-				'data' => array(
-					'uri'  => esc_html( secupress_get_current_url( 'uri' ) ),
-					'get'  => $_GET,
-					'post' => $_POST,
-				),
-			)
-		);
+		// Build the Log array.
+		$log = static::_set_log_time_and_user( array(
+			'type'   => 'error-404',
+			'target' => esc_html( secupress_get_current_url( 'uri' ) ),
+			'data'   => array(
+				'get'  => $_GET,
+				'post' => $_POST,
+			),
+		) );
 
-		parent::_save_logs( $logs );
+		parent::_save_logs( array( $log ) );
 	}
 
 
@@ -74,6 +96,7 @@ class SecuPress_404_Logs extends SecuPress_Logs {
 	 * @return (string) The Log class name.
 	 */
 	public static function _maybe_include_log_class() {
+		// The parent class is needed.
 		parent::_maybe_include_log_class();
 
 		if ( ! class_exists( 'SecuPress_404_Log' ) ) {
@@ -81,24 +104,6 @@ class SecuPress_404_Logs extends SecuPress_Logs {
 		}
 
 		return 'SecuPress_404_Log';
-	}
-
-
-	/**
-	 * Include the files containing the classes `Secupress_Logs_List` and `Secupress_404_Logs_List` if not already done.
-	 *
-	 * @since 1.0
-	 *
-	 * @return (string) The Logs List class name.
-	 */
-	public static function _maybe_include_list_class() {
-		parent::_maybe_include_list_class();
-
-		if ( ! class_exists( 'SecuPress_404_Logs_List' ) ) {
-			require_once( dirname( __FILE__ ) . '/class-secupress-404-logs-list.php' );
-		}
-
-		return 'SecuPress_404_Logs_List';
 	}
 
 }

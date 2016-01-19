@@ -122,19 +122,6 @@ label {
 .logs-order .order-arrow:before {
 	vertical-align: middle;
 }
-.secupress-inline-spinner {
-	display: inline-block;
-	vertical-align: top;
-	visibility: hidden;
-	float: none;
-}
-.working + .secupress-inline-spinner {
-	visibility: visible;
-}
-.secupress-delete-log + .secupress-inline-spinner {
-	float: right;
-	margin-top: 0;
-}
 .secupress-logs .actions {
 	display: block;
 	padding: .25em .5em;

@@ -17,37 +17,56 @@ class SecuPress_404_Log extends SecuPress_Log {
 	// Instance ====================================================================================
 
 	/**
-	 * Instenciate the log.
+	 * Constructor.
 	 *
 	 * @since 1.0
 	 *
-	 * @param (string) $time A timestamp followed with a #. See `SecuPress_Logs::_log()`.
-	 * @param (array)  $args An array containing:
-	 *                       - (array)  $data The log data: basically what will be used in `vsprintf()`.
+	 * @param (array|object) $args An array of arguments. If a `WP_Post` is used, it is converted in an adequate array.
+	 *                             See `SecuPress_Log::__construct()` for the arguments.
+	 *                             The data may need to be preprocessed.
 	 */
-	public function __construct( $time, $args ) {
-		$args = array_merge( array(
-			'user' => '',
-			'data' => array(),
-		), $args );
+	public function __construct( $args ) {
+		parent::__construct( $args );
 
-		$def_data = array(
-			'uri'  => '',
-			'get'  => array(),
-			'post' => array(),
-		);
+		/**
+		 * The URI is stored in the post title: add it at the beginning of the data, it will be displayed in the title and the message.
+		 */
+		$args = get_post( $args );
 
-		$this->time = $time;
-		$this->user = $args['user'];
-		$this->data = $args['data'];
-		$this->data = array_merge( $def_data, $this->data );
-		$this->data = array_intersect_key( $this->data, $def_data );
+		$this->data = array_merge( array(
+			'uri' => '/' . $args->post_title,
+		), $this->data );
+	}
 
-		$this->message  = sprintf( __( '%s: ', 'secupress' ), '<code>URI</code>' ) . '%1$s<br/>';
-		$this->message .= sprintf( __( '%s: ', 'secupress' ), '<code>$_GET</code>' ) . '%2$s<br/>';
+
+	// Private methods =============================================================================
+
+	// Title =======================================================================================
+
+	/**
+	 * Set the Log title.
+	 *
+	 * @since 1.0
+	 */
+	protected function _set_title() {
+		$this->title = __( 'Error 404 for %1$s.', 'secupress' );
+
+		parent::_set_title();
+	}
+
+
+	// Message =====================================================================================
+
+	/**
+	 * Set the Log message.
+	 *
+	 * @since 1.0
+	 */
+	protected function _set_message() {
+		$this->message  = __( 'Error 404 for %1$s.', 'secupress' ) . '<br/>';
+		$this->message .= sprintf( __( '%s: ', 'secupress' ), '<code>$_GET</code>' ) . '%2$s';
 		$this->message .= sprintf( __( '%s: ', 'secupress' ), '<code>$_POST</code>' ) . '%3$s';
 
 		parent::_set_message();
 	}
-
 }

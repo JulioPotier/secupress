@@ -13,74 +13,29 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 
 	const VERSION = '1.0';
 	/**
-	 * Parameters in page URL: must be extended.
-	 */
-	const PAGINATION_PARAM = 'logs-page';
-	const ORDERBY_PARAM    = 'logs-orderby';
-	const ORDER_PARAM      = 'logs-order';
-	/**
-	 * @var The reference to the *Singleton* instance of this class: must be extended.
+	 * @var (object) The reference to the *Singleton* instance of this class.
 	 */
 	protected static $_instance;
 	/**
-	 * @var Logs class name: must be extended.
+	 * @var (object) Logs instance.
 	 */
-	protected $logs_classname = 'SecuPress_Logs';
+	private $logs_instance;
 	/**
-	 * @var Logs type: must be extended.
+	 * @var (string) Current Log type.
 	 */
-	protected $logs_type = '';
+	private $log_type;
 	/**
-	 * @var Log class name.
+	 * @var (string) Current Post type.
 	 */
-	protected $log_classname = '';
+	private $post_type;
 	/**
-	 * @var Will contain the logs.
+	 * @var (string) Log class name.
 	 */
-	protected $logs = array();
+	private $log_classname;
 	/**
-	 * @var Logs count.
+	 * @var (int) ID of the Log currently being displayed.
 	 */
-	protected $count = 0;
-	/**
-	 * @var Pagination: number of logs per page.
-	 */
-	protected $logs_per_page = 20; ////
-	/**
-	 * @var Pagination: last page number.
-	 */
-	protected $max_page = 1;
-	/**
-	 * @var Pagination: current page number.
-	 */
-	protected $page = 1;
-	/**
-	 * @var Pagination: logs offset.
-	 */
-	protected $offset = 0;
-	/**
-	 * @var Order links: current order.
-	 */
-	protected $orderby;
-	/**
-	 * @var Order links: current order direction.
-	 */
-	protected $order;
-	/**
-	 * @var Default order.
-	 */
-	protected $def_orderby = 'date';
-	/**
-	 * @var Default order directions.
-	 */
-	protected $def_orders = array(
-		'date' => 'ASC',
-		'user' => 'ASC',
-	);
-	/**
-	 * @var Page URL without page/orderby/order parameters.
-	 */
-	protected static $page_url;
+	private $current_log_id = 0;
 
 
 	// Init ========================================================================================
@@ -91,412 +46,251 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	protected function _init() {
-		static $init_done = false;
+		$log_types = SecuPress_Logs::_get_log_types();
 
-		$logs_classname      = $this->logs_classname;
+		// Get the Log type.
+		$this->log_type      = ! empty( $_GET['tab'] ) ? $_GET['tab'] : '';
+		$this->log_type      = $this->log_type && isset( $log_types[ $this->log_type ] ) ? $this->log_type : key( $log_types );
+
+		// Get the Logs instance.
+		$logs_classname      = $log_types[ $this->log_type ]['classname'];
+		$this->logs_instance = $logs_classname::get_instance();
+
+		// Get the Log class.
 		$this->log_classname = $logs_classname::_maybe_include_log_class();
-		$this->logs_type     = $logs_classname::LOGS_TYPE;
 
-		// Stored logs.
-		$this->logs  = $logs_classname::get_logs();
-		$this->logs  = is_array( $this->logs ) ? $this->logs : array();
-
-		// Number of logs.
-		$this->count = count( $this->logs );
-		/**
-		 * Filter the number of logs per page.
-		 *
-		 * @since 1.0
-		 *
-		 * @param (int) $this->logs_per_page Default number of logs per page.
-		 * @param (int) $this->count         Total number of logs.
-		 */
-		$this->logs_per_page = apply_filters( 'secupress.logs.logs-per-page', $this->logs_per_page, $this->count );
-		$this->logs_per_page = secupress_minmax_range( $this->logs_per_page, 10, 100 );
-
-		// Number of the last page.
-		$this->max_page = (int) ceil( $this->count / $this->logs_per_page );
-
-		// Current page number.
-		$this->page     = ! empty( $_GET[ static::PAGINATION_PARAM ] ) ? $_GET[ static::PAGINATION_PARAM ] : $this->page;
-		$this->page     = secupress_minmax_range( $this->page, 1, $this->max_page );
-
-		// Orderby.
-		if ( ! empty( $_GET[ static::ORDERBY_PARAM ] ) ) {
-			$this->orderby = $_GET[ static::ORDERBY_PARAM ];
-			$this->orderby = isset( $this->def_orders[ $this->orderby ] ) ? $this->orderby : $this->def_orderby;
-		} else {
-			$this->orderby = $this->def_orderby;
-		}
-
-		// Order.
-		if ( ! empty( $_GET[ static::ORDER_PARAM ] ) ) {
-			$this->order   = strtoupper( $_GET[ static::ORDER_PARAM ] );
-			$this->order   = 'DESC' === $this->order || 'ASC' === $this->order ? $this->order : $this->def_orders[ $this->orderby ];
-		} else {
-			$this->order   = $this->def_orders[ $this->orderby ];
-		}
-
-		// Order logs.
-		if ( $this->logs ) {
-			$this->_order_logs();
-
-			// Logs offset.
-			$this->offset = ( $this->page - 1 ) * $this->logs_per_page;
-			$this->logs   = array_slice( $this->logs, $this->offset, $this->logs_per_page, true );
-		}
-
-		if ( $init_done ) {
-			return;
-		}
-		$init_done = true;
-
-		// Current page URL without page/orderby/order parameters.
-		static::$page_url = esc_url( secupress_admin_url( 'modules', 'logs' ) );
-
-		// JS
-		wp_localize_script( 'secupress-modules-js', 'l10nLogs', array(
-			'expandCodeText'      => __( 'Expand or collapse code block', 'secupress' ),
-			'noLogsText'          => __( 'Nothing happened yet.', 'secupress' ),
-
-			'clearConfirmText'    => __( 'You are about to delete all your logs.', 'secupress' ),
-			'clearConfirmButton'  => __( 'Yes, delete all logs', 'secupress' ),
-			'clearImpossible'     => __( 'Impossible to delete all logs.', 'secupress' ),
-			'clearingText'        => __( 'Deleting all logs&hellip;', 'secupress' ),
-			'clearedText'         => __( 'All logs deleted', 'secupress' ),
-
-			'deleteConfirmText'   => __( 'You are about to delete a log.', 'secupress' ),
-			'deleteConfirmButton' => __( 'Yes, delete this log', 'secupress' ),
-			'deleteImpossible'    => __( 'Impossible to delete this log.', 'secupress' ),
-			'deletingText'        => __( 'Deleting log&hellip;', 'secupress' ),
-			'deletedText'         => __( 'Log deleted', 'secupress' ),
-		) );
-	}
-
-
-	// Public methods ==============================================================================
-
-	/**
-	 * Print the logs list.
-	 *
-	 * @since 1.0
-	 */
-	public function output() {
-		if ( ! $this->logs ) {
-			echo '<p><em>' . __( 'Nothing happened yet.', 'secupress' ) . '</em></p>';
-			return;
-		}
-
-		// Number of logs.
-		$this->_logs_number();
-		// Pagination.
-		$this->_pagination();
-		// Buttons to reorder the logs.
-		$this->_order_links();
-
-		$row_number = $this->offset + 1;
-		$classname  = $this->log_classname;
-
-		// The list.
-		echo "<ul class=\"secupress-logs\">\n";
-			foreach ( $this->logs as $timestamp => $log ) {
-				$log = new $classname( $timestamp, $log );
-				echo '<li>';
-					echo '<em class="secupress-row-header">';
-						$this->_log_header( $log, $row_number );
-					echo '</em> ';
-					echo $log->get_message();
-					echo '<span class="actions">';
-						$this->_delete_log_button( $timestamp );
-					echo '</span>';
-				echo "</li>\n";
-				++$row_number;
-			}
-		echo "</ul>\n";
-
-		// Pagination.
-		$this->_secondary_pagination();
-
-		echo '<p>';
-			// Button to clear logs.
-			$this->_clear_logs_button();
-
-			// Button to download logs.
-			$this->_download_logs_button();
-		echo "</p>\n";
+		// Get the Post type.
+		$this->post_type     = $log_types[ $this->log_type ]['post_type'];
 	}
 
 
 	// Private methods =============================================================================
 
 	/**
-	 * Reorder logs depending of current orderby and order params.
+	 * Prepare the list.
 	 *
 	 * @since 1.0
 	 */
-	protected function _order_logs() {
-		if ( $this->def_orderby === $this->orderby && $this->def_orders[ $this->def_orderby ] !== $this->order ) {
-			krsort( $this->logs );
-		} elseif ( $this->def_orderby !== $this->orderby ) {
-			uasort( $this->logs, array( $this, '_order_callback' ) );
-		}
-	}
+	public function _prepare_list() {
+		global $wp_query, $wp_list_table;
 
+		secupress_require_class( 'Logs', 'List_Table' );
 
-	/**
-	 * Print the number of logs.
-	 *
-	 * @since 1.0
-	 */
-	protected function _logs_number() {
-		echo '<p>';
-			printf(
-				/* translators: %s is a number */
-				_n( '%s Log', '%s Logs', $this->count, 'secupress' ),
-				'<span class="logs-count">' . number_format_i18n( $this->count ) . '</span>'
-			);
-		echo "</p>\n";
-	}
+		// Instantiate the list.
+		$wp_list_table = new SecuPress_Logs_List_Table( array( 'screen' => convert_to_screen( $this->post_type ) ) );
 
+		// Query the Logs.
+		$wp_list_table->prepare_items();
 
-	/**
-	 * Print the list pagination.
-	 *
-	 * @since 1.0
-	 */
-	protected function _pagination() {
-		if ( 1 === $this->max_page ) {
-			return;
-		}
+		/**
+		 * Display a Log content.
+		 * If the Log ID is not in the list we display, remove the "log" parameter and redirect.
+		 */
+		if ( ! empty( $_GET['log'] ) ) {
+			$log_id = (int) $_GET['log'];
 
-		echo '<p class="logs-pagination">';
-			echo '<span class="screen-reader-text">' . __( 'Logs list pagination', 'secupress' ) . '</span>';
-
-			$order_params = $this->_get_order_params( $this->orderby );
-			$page         = 1;
-
-			while ( $page <= $this->max_page ) {
-				$min_log = ( $page - 1 ) * $this->logs_per_page + 1;
-				$min_log = number_format_i18n( $min_log );
-				$max_log = min( $this->count, $page * $this->logs_per_page );
-				$max_log = number_format_i18n( $max_log );
-
-				if ( $page === $this->page ) {
-					/* translators: %s is the page number */
-					echo '<span class="button disabled" title="' . esc_attr( sprintf( __( 'Current page (%s)', 'secupress' ), number_format_i18n( $this->page ) ) ) . '">';
-						echo '[' . $min_log . ' - ' . $max_log . ']';
-					echo '</span> ';
-				} else {
-					echo '<a class="button" href="' . static::$page_url . static::_get_page_param( $page ) . $order_params . '">';
-						echo '[' . $min_log . ' - ' . $max_log . ']';
-					echo '</a> ';
+			if ( ! empty( $wp_query->posts ) ) {
+				foreach ( $wp_query->posts as $post ) {
+					if ( (int) $post->ID === $log_id ) {
+						$this->current_log_id = $log_id;
+						break;
+					}
 				}
-				++$page;
 			}
-		echo "</p>\n";
+
+			if ( ! $this->current_log_id ) {
+				$sendback = $this->_paged_page_url();
+				wp_redirect( $sendback );
+				exit();
+			}
+		}
+
+		// Screen options and stuff.
+		$current_screen = get_current_screen();
+
+		if ( method_exists( $current_screen, 'set_screen_reader_content' ) ) {
+
+			$post_type_object = get_post_type_object( $this->post_type );
+
+			$current_screen->set_screen_reader_content( array(
+				'heading_views'      => $post_type_object->labels->filter_items_list,
+				'heading_pagination' => $post_type_object->labels->items_list_navigation,
+				'heading_list'       => $post_type_object->labels->items_list,
+			) );
+		}
+
+		add_screen_option( 'per_page', array( 'default' => 20, 'option' => 'edit_' . $this->post_type . '_per_page' ) );
 	}
 
 
 	/**
-	 * Print the list secondary pagination.
-	 * Will be shown only if a certain number of logs in the page is reached.
+	 * Display the list.
 	 *
 	 * @since 1.0
 	 */
-	protected function _secondary_pagination() {
-		if ( 1 === $this->max_page ) {
-			return;
-		}
+	public function _display_list() {
+		global $wp_list_table;
+		?>
+		<div class="wrap">
+			<?php
+			// The page title.
+			$this->_screen_title_or_tabs();
+			?>
 
-		// If we display in this page more logs than this `$limit`, the pagination will be shown.
-		$limit = $this->logs_per_page / 4;
+			<div class="secupress-logs-list-wrapper">
+				<?php
+				// Messages.
+				settings_errors();
 
-		if ( $this->count - $this->offset >= $limit ) {
-			$this->_pagination();
-		}
+				// Maybe display a Log infos.
+				$this->_display_current_log();
+				?>
+
+				<div class="secupress-logs-list">
+
+					<?php $wp_list_table->views(); ?>
+
+					<form id="posts-filter" method="get" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+
+						<?php $wp_list_table->display(); ?>
+
+					</form>
+				</div>
+			</div>
+		</div>
+		<?php
 	}
 
 
 	/**
-	 * Print the buttons to reorder the logs.
+	 * The page title, maybe with tabs.
 	 *
 	 * @since 1.0
 	 */
-	protected function _order_links() {
-		if ( $this->count <= 2 ) {
-			return;
+	public function _screen_title_or_tabs() {
+		global $title, $wp_list_table;
+
+		$title_tag = secupress_wp_version_is( '4.3-alpha' ) ? 'h1' : 'h2';
+		$log_types = SecuPress_Logs::_get_log_types();
+
+		// No tabs, somebody messed it up. Fallback.
+		if ( ! $log_types || ! is_array( $log_types ) ) {
+			echo "<$title_tag>$title</$title_tag>\n";
 		}
+		// Only 1 tab, no need to go further.
+		elseif ( 1 === count( $log_types ) ) {
+			echo "<$title_tag>" . $log_types[ $this->log_type ] . "</$title_tag>\n";
+		}
+		else {
+			$i        = 0;
+			$page_url = secupress_admin_url( 'logs' );
 
-		$suffix   = array(
-			'DESC' => array( 'arrow' => ' <span class="order-arrow dashicons-before dashicons-arrow-down" aria-hidden="true"></span>', 'opposite' => 'ASC', ),
-			'ASC'  => array( 'arrow' => ' <span class="order-arrow dashicons-before dashicons-arrow-up" aria-hidden="true"></span>',   'opposite' => 'DESC', )
-		);
-		$orderbys = $this->_get_orderbys();
+			echo "<$title_tag class=\"nav-tab-wrapper\">";
 
-		echo '<p class="logs-order">';
+				foreach ( $log_types as $log_type => $atts ) {
+					$current_url = $i ? add_query_arg( 'tab', $log_type, $page_url ) : $page_url;
+					$label       = get_post_type_object( $atts['post_type'] )->label;
 
-			echo '<span class="screen-reader-text">';
-				printf(
-					/* translators: 1 is "Date" or "User" ; 2 is "ascending" or "descending". */
-					__( 'Current order: by %1$s, %2$s.', 'secupress' ),
-					$orderbys[ $this->orderby ]['label'],
-					( 'ASC' === $this->order ? __( 'ascending', 'secupress' ) : __( 'descending', 'secupress' ) )
-				);
-			echo "</span>\n";
-
-			echo '<span>' . __( 'Order logs by:', 'secupress' ) . "</span>\n";
-
-			echo "<span>\n";
-				$orderbys[ $this->orderby ]['label'] .= $suffix[ $this->order ]['arrow'];
-				$orderbys[ $this->orderby ]['class']  = ' active-filter';
-
-				foreach ( $orderbys as $orderby => $atts ) {
-					echo ' <a class="button' . ( ! empty( $atts['class'] ) ? $atts['class'] : '' ) . '" href="' . static::$page_url . $this->_get_order_params( $orderby, true ) . '">' . $atts['label'] . "</a>\n";
+					echo ( $i ? '<span class="screen-reader-text">, </span>' : '' ) . '<a class="nav-tab' . ( $log_type === $this->log_type ? ' nav-tab-active' : '' ) . '" href="' . esc_url( $current_url ) . '">' . $label . '</a>';
+					++$i;
 				}
-			echo "</span>\n";
 
-		echo "</p>\n";
+			echo "</$title_tag>\n";
+		}
 	}
 
 
 	/**
-	 * Get the parameters that can be used to order the logs.
+	 * Maybe display the current Log infos.
 	 *
 	 * @since 1.0
 	 *
-	 * @return (array) An array containing a label.
+	 * @return True if a Log is displayed. False otherwize.
 	 */
-	protected function _get_orderbys() {
-		return array(
-			'date' => array( 'label' => __( 'Date', 'secupress' ) ),
-			'user' => array( 'label' => __( 'User', 'secupress' ) ),
-		);
+	protected function _display_current_log() {
+		if ( ! $this->current_log_id ) {
+			echo '<div class="secupress-log-content secupress-empty-log-content"><p>' . __( 'No Logs selected', 'secupress' ) . "</p></div>\n";
+			return false;
+		}
+
+		$log_classname = $this->log_classname;
+		$log           = new $log_classname( $this->current_log_id );
+
+		if ( ! $log ) {
+			echo '<div class="secupress-log-content secupress-empty-log-content"><p>' . __( 'No Logs selected', 'secupress' ) . "</p></div>\n";
+			return false;
+		}
+
+		$delete_url = $this->logs_instance->delete_log_url( $this->current_log_id, $this->_page_url() );
+
+		// Add a class to the current Log row.
+		add_filter( 'post_class', array( $this, '_add_current_log_class' ), 10, 3 );
+		?>
+		<div class="secupress-log-content" data-logid="<?php echo $this->current_log_id; ?>">
+			<p class="log-header">
+
+				<a class="secupress-delete-log" href="<?php echo esc_url( $delete_url ); ?>"><?php _e( 'Delete this Log', 'secupress' ); ?></a>
+				<span class="spinner secupress-inline-spinner"></span>
+				<a class="close" href="<?php echo esc_url( $this->_paged_page_url() ); ?>"><?php _e( 'Close' ); ?></a>
+
+			</p>
+
+			<p class="log-user">
+				<?php echo $log->get_user( false, add_query_arg( 'log', $this->current_log_id, $this->_paged_page_url() ) ); ?>
+			</p>
+
+			<p class="log-message">
+				<?php echo $log->get_message(); ?>
+			</p>
+		</div>
+		<?php
+		return true;
 	}
 
 
 	/**
-	 * Get the header content used in the list.
+	 * Add a "current-log" class to the row of the Log currently being displayed.
 	 *
 	 * @since 1.0
 	 *
-	 * @param (object) `SecuPress_Log` object.
-	 * @param (int)    Row number.
+	 * @param (array) $classes An array of post classes.
+	 * @param (array) $class   An array of additional classes added to the post.
+	 * @param (int)   $post_id The post ID.
 	 *
-	 * @return (string) The header content.
+	 * @return (array)
 	 */
-	public function _log_header( $log, $row_number ) {
-		echo number_format_i18n( $row_number ) . '. [' . $log->get_time() . '] - ' . $log->get_user();
-	}
-
-
-	/**
-	 * Print a "Delete log" link.
-	 *
-	 * @since 1.0
-	 *
-	 * @param (string) $timestamp The log timestamp (with the #).
-	 */
-	protected function _delete_log_button( $timestamp ) {
-		$href = urlencode( secupress_admin_url( 'modules', 'logs' ) );
-		$href = admin_url( 'admin-post.php?action=secupress_delete-' . $this->logs_type . '-log&log=' . urlencode( $timestamp ) . '&_wp_http_referer=' . $href );
-		$href = wp_nonce_url( $href, 'secupress-delete-' . $this->logs_type . '-log' );
-
-		echo '<a class="secupress-delete-log" href="' . $href . '">' . __( 'Delete this Log', 'secupress' ) . "</a> <span class=\"spinner secupress-inline-spinner\"></span>\n";
-	}
-
-
-	/**
-	 * Print a "Clear Logs" button.
-	 *
-	 * @since 1.0
-	 */
-	protected function _clear_logs_button() {
-		$href = urlencode( secupress_admin_url( 'modules', 'logs' ) );
-		$href = admin_url( 'admin-post.php?action=secupress_clear-' . $this->logs_type . '-logs&_wp_http_referer=' . $href );
-		$href = wp_nonce_url( $href, 'secupress-clear-' . $this->logs_type . '-logs' );
-
-		echo '<a class="button secupress-clear-logs" href="' . $href . '">' . __( 'Clear Logs', 'secupress' ) . "</a> <span class=\"spinner secupress-inline-spinner\"></span>\n";
-	}
-
-
-	/**
-	 * Print a "Download Logs" button.
-	 *
-	 * @since 1.0
-	 */
-	protected function _download_logs_button() {
-		$href = admin_url( 'admin-post.php?action=secupress_download-' . $this->logs_type . '-logs' );
-		$href = wp_nonce_url( $href, 'secupress-download-' . $this->logs_type . '-logs' );
-
-		echo '<a class="button secupress-download-logs" href="' . $href . '">' . __( 'Download Logs', 'secupress' ) . "</a>\n";
+	public function _add_current_log_class( $classes, $class, $post_id ) {
+		if ( $post_id === $this->current_log_id ) {
+			$classes[] = 'current-log';
+		}
+		return $classes;
 	}
 
 
 	// Tools =======================================================================================
 
 	/**
-	 * Get the "logs-page" parameter string, as an URL parameter.
-	 * For the first page this parameter is useless, so the method returns an empty string in that case.
+	 * The page URL.
 	 *
 	 * @since 1.0
 	 *
-	 * @param (int) $page The page number.
-	 *
 	 * @return (string)
 	 */
-	protected static function _get_page_param( $page ) {
-		return 1 === $page ? '' : '&amp;' . static::PAGINATION_PARAM . '=' . $page;
+	protected function _page_url() {
+		global $wp_list_table;
+		return $wp_list_table->_page_url();
 	}
 
 
 	/**
-	 * Get the "logs-orderby" and "logs-order" parameters string, as URL parameters.
+	 * The page URL, with the page number parameter.
 	 *
 	 * @since 1.0
-	 *
-	 * @param (string) $orderby       The orderby parameter.
-	 * @param (bool)   $reverse_order If true, the order parameter will reversed from the current value (used for the order buttons).
 	 *
 	 * @return (string)
 	 */
-	protected function _get_order_params( $orderby, $reverse_order = false ) {
-		$params  = '';
-		$reverse = array(
-			'DESC' => 'asc',
-			'ASC'  => 'desc',
-		);
-
-		if ( $orderby !== $this->def_orderby ) {
-			$params .= '&amp;' . static::ORDERBY_PARAM . '=' . $orderby;
-		}
-
-		if ( $orderby === $this->orderby ) {
-			if ( $reverse_order && $this->order === $this->def_orders[ $orderby ] ) {
-				$params .= '&amp;' . static::ORDER_PARAM . '=' . $reverse[ $this->order ];
-			} elseif ( ! $reverse_order && $this->order !== $this->def_orders[ $orderby ] ) {
-				$params .= '&amp;' . static::ORDER_PARAM . '=' . strtolower( $this->order );
-			}
-		}
-
-		return $params;
+	protected function _paged_page_url() {
+		global $wp_list_table;
+		return $wp_list_table->_paged_page_url();
 	}
-
-
-	/**
-	 * Callback used with `uasort()` to order the logs.
-	 *
-	 * @since 1.0
-	 *
-	 * @param (array) $log_a The first log.
-	 * @param (array) $log_b The second log.
-	 *
-	 * @return (int)
-	 */
-	public function _order_callback( $log_a, $log_b ) {
-		if ( 'ASC' === $this->order ) {
-			return strcasecmp( $log_a[ $this->orderby ], $log_b[ $this->orderby ] );
-		}
-		return strcasecmp( $log_b[ $this->orderby ], $log_a[ $this->orderby ] );
-	}
-
 }

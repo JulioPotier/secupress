@@ -13,19 +13,56 @@ class SecuPress_Log {
 
 	const VERSION = '1.0';
 	/**
-	 * @var (string) A timestamp followed with a #. See `SecuPress_Logs::_get_timestamp()`.
+	 * @var (string) A DATETIME formated date.
 	 */
-	protected $time    = 0;
+	protected $time = '';
 	/**
-	 * @var (string) User name + user ID, or an IP address.
+	 * @var (int) Part of the result of `microtime()`.
+	 *            Ex: `0.03746700 1452528510` => `3746700`
 	 */
-	protected $user    = '';
+	protected $order = 0;
 	/**
-	 * @var (array)  The log data: basically what will be used in `vsprintf()`.
+	 * @var (string) The Log type: option, network_option, filter, action, err404. ONLY USE `[a-z0-9_]` CHARACTERS, NO `-`!
 	 */
-	protected $data    = array();
+	protected $type = '';
 	/**
-	 * @var (string) The log message.
+	 * @var (string) The Log sub-type: used only with option and network_option, it can be "add" or "update".
+	 */
+	protected $subtype = '';
+	/**
+	 * @var (string) An identifier: option name, hook name...
+	 */
+	protected $target = '';
+	/**
+	 * @var (string) User IP address at the time.
+	 */
+	protected $user_ip = '';
+	/**
+	 * @var (int) User ID.
+	 */
+	protected $user_id = 0;
+	/**
+	 * @var (string) User login at the time.
+	 */
+	protected $user_login = '';
+	/**
+	 * @var (string) The Log criticity.
+	 */
+	protected $critic = '';
+	/**
+	 * @var (array) The Log data: basically its content will be used in `vsprintf()`.
+	 */
+	protected $data = array();
+	/**
+	 * @var (bool) Tell if the data has been prepared and escaped before display.
+	 */
+	protected $data_escaped = false;
+	/**
+	 * @var (string) The Log title.
+	 */
+	protected $title = '';
+	/**
+	 * @var (string) The Log message.
 	 */
 	protected $message = '';
 
@@ -33,64 +70,212 @@ class SecuPress_Log {
 	// Instance ====================================================================================
 
 	/**
-	 * Instenciate the log: must be extended.
+	 * Constructor.
 	 *
 	 * @since 1.0
 	 *
-	 * @param (string) $time A timestamp followed with a #. See `SecuPress_Logs::_log()`.
-	 * @param (array)  $args An array containing at least:
-	 *                       - (string) $user User name + user ID, or an IP address.
-	 *                       - (array)  $data The log data: basically what will be used in `vsprintf()`.
+	 * @param (array|object) $args An array containing the following arguments. If a `WP_Post` is used, it is converted in an adequate array.
+	 *                             - (string) $time       A DATETIME formated date.
+	 *                             - (int)    $order      Part of the result of `microtime()`.
+	 *                             - (string) $type       The Log type + subtype separated with a `|`.
+	 *                             - (string) $target     An identifier.
+	 *                             - (string) $user_ip    User IP address.
+	 *                             - (int)    $user_id    User ID.
+	 *                             - (string) $user_login User login.
+	 *                             - (array)  $data       The Log data: basically what will be used in `vsprintf()` (log title and message).
 	 */
-	public function __construct( $time, $args ) {}
+	public function __construct( $args ) {
+		if ( ! is_array( $args ) ) {
+			// If it's a Post, convert it in an adequate array.
+			$args = static::_post_to_args( $args );
+		}
+
+		$args = array_merge( array(
+			'time'       => '',
+			'order'      => 0,
+			'type'       => '',
+			'target'     => '',
+			'user_ip'    => '',
+			'user_id'    => '',
+			'user_login' => '',
+			'data'       => array(),
+		), $args );
+
+		// Extract the subtype from the type.
+		$args['type'] = static::_split_subtype( $args['type'] );
+
+		$this->time       = esc_html( $args['time'] );
+		$this->order      = (int) $args['order'];
+		$this->type       = esc_html( $args['type']['type'] );
+		$this->subtype    = esc_html( $args['type']['subtype'] );
+		$this->target     = esc_html( $args['target'] );
+		$this->user_ip    = esc_html( $args['user_ip'] );
+		$this->user_id    = (int) $args['user_id'];
+		$this->user_login = esc_html( $args['user_login'] );
+
+		if ( ! empty( $args['critic'] ) ) {
+			// It comes from the post status of a Post.
+			$this->critic = esc_html( $args['critic'] );
+		} else {
+			// Set the criticity, depending on other arguments.
+			$this->_set_criticity();
+		}
+
+		$this->data = (array) $args['data'];
+	}
 
 
 	// Public methods ==============================================================================
 
 	/**
-	 * Get the log formated date based on its timestamp.
+	 * Get the Log formated date and time.
 	 *
 	 * @since 1.0
 	 *
 	 * @param (string) $format See http://de2.php.net/manual/en/function.date.php
 	 *
-	 * @return (string|int) The formated date if a format is provided, the timestamp integer otherwise.
+	 * @return (string) The formated date.
 	 */
-	public function get_time( $format = 'Y-m-d H:i:s' ) {
-		$gmt_offset = get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;
-		$timestamp  = (int) substr( $this->time, 0, strpos( $this->time, '#' ) );
-		$timestamp  = $format ? date_i18n( $format, $timestamp + $gmt_offset ) : $timestamp;
-		return esc_html( $timestamp );
+	public function get_time( $format = false ) {
+		if ( ! is_string( $format ) ) {
+			$format = __( 'Y/m/d g:i:s a' );
+		}
+
+		return mysql2date( $format, $this->time, true );
 	}
 
 
 	/**
-	 * Get the log user.
+	 * Get the Log title.
 	 *
 	 * @since 1.0
 	 *
-	 * @return (string) User name + user ID, or an IP address.
+	 * @return (string) A title containing some related data.
 	 */
-	public function get_user() {
-		return esc_html( $this->user );
+	public function get_title() {
+		$this->_set_title();
+		return $this->title;
 	}
 
 
 	/**
-	 * Get the log message.
+	 * Get the Log message.
 	 *
 	 * @since 1.0
 	 *
-	 * @return (string) A message containing all the related data.
+	 * @return (string) A message containing all related data.
 	 */
 	public function get_message() {
+		$this->_set_message();
 		return $this->message;
+	}
+
+
+	/**
+	 * Get the user infos.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (bool)   $raw     If true, the method will return raw values in an array. If false, the method will return formated infos as a string.
+	 * @param (string) $referer If the user exists and is not the current user, a link to the user's profile is provided. A referer is needed for this link.
+	 *
+	 * @return (array|string) An array of raw infos, or formated infos as a string.
+	 */
+	public function get_user( $raw = false, $referer = false ) {
+		if ( $raw ) {
+			return array(
+				'user_ip'    => $this->user_ip,
+				'user_id'    => $this->user_id,
+				'user_login' => $this->user_login,
+			);
+		}
+
+		$user_login = $this->user_login;
+
+		// If the user exists and is not the current user.
+		if ( get_current_user_id() !== $this->user_id && $data = get_userdata( $this->user_id ) ) {
+
+			// Login changed? Add the current one.
+			if ( $data->data->user_login !== $this->user_login ) {
+				$user_login .= ' (' . esc_html( $data->data->user_login ) . ')';
+			}
+
+			// Add a link to the user's profile page.
+			if ( $referer ) {
+				$user_login = '<a class="user-profile-link" href="' . esc_url( admin_url( 'user-edit.php?user_id=' . $this->user_id . '&wp_http_referer=' . urlencode( $referer ) ) ) . '">' . $user_login . '</a>';
+			}
+		}
+
+		if ( $this->user_id ) {
+			/* translators: 1: IP address, 2: user ID, 3: user login, 4: separator */
+			return sprintf( __( 'IP: %1$s %4$s ID: %2$d %4$s Login: %3$s', 'secupress' ), $this->user_ip, $this->user_id, $user_login, '|' );
+		}
+
+		/* translators: 1: IP address */
+		return sprintf( __( 'IP: %s', 'secupress' ), $this->user_ip );
+	}
+
+
+	/**
+	 * Get the Log criticity.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $mode Tell what format to return. Can be "text", "icon" or whatever else.
+	 *
+	 * @return (string) The criticity formated like this:
+	 *                  - "icon": an icon with a title attribute.
+	 *                  - "text": the criticity name.
+	 *                  - whatever: the criticity value, could be used as a html class.
+	 */
+	public function get_criticity( $mode = 'text' ) {
+		if ( ! $this->critic ) {
+			$this->_set_criticity();
+		}
+
+		if ( 'icon' === $mode ) {
+			switch ( $this->critic ) {
+				case 'high':
+					return '<span class="secupress-icon dashicons dashicons-shield-alt criticity-high" title="' . esc_attr__( 'High criticity', 'secupress' ) . '"></span>';
+				case 'normal':
+					return '<span class="secupress-icon dashicons dashicons-shield-alt criticity-normal" title="' . esc_attr__( 'Normal criticity', 'secupress' ) . '"></span>';
+				case 'low':
+					return '<span class="secupress-icon dashicons dashicons-shield-alt criticity-low" title="' . esc_attr__( 'Low criticity', 'secupress' ) . '"></span>';
+				default:
+					return '<span class="secupress-icon dashicons dashicons-shield-alt criticity-unknown" title="' . esc_attr__( 'Unkown criticity', 'secupress' ) . '"></span>';
+			}
+		} elseif ( 'text' === $mode ) {
+			switch ( $this->critic ) {
+				case 'high':
+					return _x( 'High', 'criticity level', 'secupress' );
+				case 'normal':
+					return _x( 'Normal', 'criticity level', 'secupress' );
+				case 'low':
+					return _x( 'Low', 'criticity level', 'secupress' );
+				default:
+					return _x( 'Unkown', 'criticity level', 'secupress' );
+			}
+		}
+
+		return $this->critic;
 	}
 
 
 	// Private methods =============================================================================
 
-	// Data =====================================================================================
+	// Data ========================================================================================
+
+	/**
+	 * Get the data.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array)
+	 */
+	public function _get_data() {
+		return $this->data;
+	}
+
 
 	/**
 	 * Set the data.
@@ -104,14 +289,24 @@ class SecuPress_Log {
 	}
 
 
-	// Message =====================================================================================
-
 	/**
-	 * Set the log message.
+	 * Prepare and escape the data. This phase is mandatory before displaying it in the Logs list.
 	 *
 	 * @since 1.0
+	 *
+	 * @return (bool) True if ready to be displayed. False if not or empty.
 	 */
-	protected function _set_message() {
+	protected function _escape_data() {
+		if ( ! $this->data ) {
+			return false;
+		}
+
+		if ( $this->data_escaped ) {
+			return true;
+		}
+
+		$this->data_escaped = true;
+
 		// Prepare and escape the data.
 		foreach ( $this->data as $key => $data ) {
 			if ( is_null( $data ) ) {
@@ -125,8 +320,8 @@ class SecuPress_Log {
 			} elseif ( is_scalar( $data ) ) {
 				$count = substr_count( $data, "\n" );
 
-				// 46 seems to be a good limit for the logs module width.
-				if ( $count || strlen( $data ) >= 46 ) {
+				// 50 seems to be a good limit. **Magic Number**
+				if ( $count || strlen( $data ) > 50 ) {
 					$this->data[ $key ] = '<pre' . ( $count > 4 ? ' class="secupress-code-chunk"' : '' ) . '>' . esc_html( $data ) . '</pre>';
 				} else {
 					$this->data[ $key ] = '<code>' . esc_html( $data ) . '</code>';
@@ -138,27 +333,129 @@ class SecuPress_Log {
 			}
 		}
 
-		// Add the data to the message.
-		$this->message = vsprintf( $this->message, $this->data );
+		return true;
+	}
+
+
+	// Title =======================================================================================
+
+	/**
+	 * Set the Log title.
+	 *
+	 * @since 1.0
+	 */
+	protected function _set_title() {
+		/**
+		 * First, `$this->title` must be set by the method extending this one.
+		 */
+		if ( ! $this->_escape_data() ) {
+			return;
+		}
+
+		$data = $this->data;
+
+		// Replace the `<pre>` blocks with `<code>` inline blocks and shorten them.
+		foreach ( $data as $key => $value ) {
+			if ( preg_match( '/^<pre>(.*)<\/pre>$/', $value, $matches ) ) {
+				$data[ $key ] = '<code>' . substr( $matches[1], 0, 50 ) . '&hellip;</code>';
+			}
+		}
+
+		// Add the data to the title.
+		$this->title = vsprintf( $this->title, $data );
+	}
+
+
+	// Message =====================================================================================
+
+	/**
+	 * Set the Log message.
+	 *
+	 * @since 1.0
+	 */
+	protected function _set_message() {
+		/**
+		 * First, `$this->message` must be set by the method extending this one.
+		 */
+		if ( $this->_escape_data() ) {
+			// Add the data to the message.
+			$this->message = vsprintf( $this->message, $this->data );
+		}
+	}
+
+
+	// Criticity ===================================================================================
+
+	/**
+	 * Set the Log criticity.
+	 *
+	 * @since 1.0
+	 */
+	protected function _set_criticity() {
+		$this->critic = 'normal';
 	}
 
 
 	// Tools =======================================================================================
 
 	/**
-	 * Get a user login followed by his ID.
+	 * Convert a Post object into an array that can be used to instanciate a Log.
 	 *
 	 * @since 1.0
 	 *
-	 * @param (int|object) A user ID or a WP_User object.
+	 * @param (int|object) $post A post ID or a `WP_Post` object.
 	 *
-	 * @return (string) This user login followed by his ID.
+	 * @return (array)
 	 */
-	protected static function _format_user_login( $user ) {
-		if ( ! is_object( $user ) ) {
-			$user = get_userdata( $user );
+	protected static function _post_to_args( $post ) {
+		$post = get_post( $post );
+
+		if ( ! $post || ! is_a( $post, 'WP_Post' ) || ! $post->ID ) {
+			return array();
 		}
-		return ( $user ? $user->user_login : '[' . __( 'Unknown user', 'secupress' ) . ']' ) . ' (' . $user->ID . ')';
+
+		$args = array(
+			'time'       => $post->post_date,
+			'order'      => $post->menu_order,
+			'type'       => $post->post_name,
+			'target'     => $post->post_title,
+			'critic'     => $post->post_status,
+			'user_ip'    => get_post_meta( $post->ID, 'user_ip', true ),
+			'user_id'    => get_post_meta( $post->ID, 'user_id', true ),
+			'user_login' => get_post_meta( $post->ID, 'user_login', true ),
+			'data'       => get_post_meta( $post->ID, 'data', true ),
+		);
+
+		$args['type'] = str_replace( '-', '|', $args['type'] );
+
+		return $args;
 	}
 
+
+	/**
+	 * Split a type into type + sub-type.
+	 * Type and sub-type are separated with a "|" caracter. Only option and network_option have a sub-type.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) A Log type.
+	 *
+	 * @return (array) An array containing the type an (maybe) the sub-type.
+	 */
+	protected static function _split_subtype( $type ) {
+		$out = array(
+			'type'    => $type,
+			'subtype' => '',
+		);
+
+		if ( strpos( $type, '|' ) !== false ) {
+			$type   = explode( '|', $type, 2 );
+			$type[] = '';
+
+			$out['type']    = $type[0];
+			$out['subtype'] = $type[1];
+		}
+
+		return $out;
+	}
 }

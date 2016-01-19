@@ -13,15 +13,24 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 
 	const VERSION = '1.0';
 	/**
-	 * @const (string) The logs type.
-	 */
-	const LOGS_TYPE = 'action';
-	/**
-	 * @var The reference to the *Singleton* instance of this class.
+	 * @var (object) The reference to the *Singleton* instance of this class.
 	 */
 	protected static $_instance;
 	/**
-	 * @var Options to log.
+	 * @var (string) The Log type.
+	 */
+	protected $log_type = 'action';
+	/**
+	 * @var (int) The Log type priority (order in the tabs).
+	 */
+	protected $log_type_priority = 1;
+	/**
+	 * @var (array) List of available criticities for this Log type.
+	 */
+	protected $criticities = array( 'low', 'normal', 'high', );
+	/**
+	 * @var (array) Options to Log.
+	 *
 	 * @see `_maybe_log_option()` for an explanation about the values.
 	 */
 	protected $options = array(
@@ -52,7 +61,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 		'active_plugins'         => null,
 	);
 	/**
-	 * @var Network options to log.
+	 * @var (array) Network options to Log.
 	 */
 	protected $network_options = array(
 		'site_name'                => null,
@@ -76,13 +85,13 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 		'active_sitewide_plugins'  => null,
 	);
 	/**
-	 * @var Filters to log.
+	 * @var (array) Filters to Log.
 	 */
 	protected $filters = array(
 		'wpmu_validate_user_signup' => 1, // `wpmu_validate_user_signup()`
 	);
 	/**
-	 * @var Actions to log.
+	 * @var (array) Actions to Log.
 	 */
 	protected $actions = array(
 		'secupress.block'      => 2, // `secupress_block()`
@@ -101,23 +110,9 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 		'http_api_debug'       => 5, // `WP_Http`
 	);
 	/**
-	 * @var Will store the logs.
+	 * @var (array) An array of Log arrays: all things in this page that should be logged will end here, before being saved at the end of the page.
 	 */
-	protected $logs = array();
-
-
-	// Public methods ==============================================================================
-
-	/**
-	 * Get logs created on this page so far.
-	 *
-	 * @since 1.0
-	 *
-	 * @return (array)
-	 */
-	public function get_current_logs() {
-		return $this->logs;
-	}
+	protected $logs_queue = array();
 
 
 	// Private methods =============================================================================
@@ -209,49 +204,51 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	}
 
 
+	// Log a hook ==================================================================================
+
 	/**
-	 * Store a log.
+	 * Temporary store a Log in queue.
 	 *
 	 * @since 1.0
 	 *
-	 * @param (string) $type The log type.
-	 * @param (string) $code The log code.
-	 * @param (mixed)  $data Some data that may be used to describe what happened.
+	 * @param (string) $type   The Log type (action, filter, option|new...).
+	 * @param (string) $target The Log code (action name, filter name, option name).
+	 * @param (array)  $data   Some data that may be used to describe what happened.
 	 */
-	protected function _log( $type, $code, $data = null ) {
+	protected function _log( $type, $target, $data = null ) {
+		static $done = false;
 		static::_maybe_include_log_class();
 
-		$time = static::_get_timestamp();
-		$log  = array(
-			'type'    => $type,
-			'code'    => $code,
-			'user'    => get_current_user_id(),
-			'data'    => (array) $data,
-		);
+		// Build the Log array.
+		$log = static::_set_log_time_and_user( array(
+			'type'   => $type,
+			'target' => $target,
+			'data'   => (array) $data,
+		) );
 
-		if ( $log['user'] ) {
-			$user = get_userdata( $log['user'] );
+		$log_inst = new SecuPress_Action_Log( $log );
 
-			if ( $user ) {
-				$log['user'] = $user->user_login . ' (' . $user->ID . ')';
-			} else {
-				$log['user'] = '';
-			}
-		} else {
-			$log['user'] = secupress_get_ip();
-		}
+		// The data has been preprocessed: add it to the array.
+		$log['data'] = $log_inst->_get_data();
 
-		$data = SecuPress_Action_Log::pre_process_data( $time, $log );
-
-		// Possibility to not log this action.
-		if ( ! $data ) {
+		// Possibility not to log this action.
+		if ( ! $log['data'] ) {
 			return;
 		}
 
-		$log['data'] = $data;
-		$this->logs[ $time ] = $log;
+		// Criticity has been set: add it to the array.
+		$log['critic'] = $log_inst->get_criticity( 'raw' );
 
-		$this->_save_logs_hook();
+		// Add this Log to the queue.
+		$this->logs_queue[] = $log;
+
+		if ( $done ) {
+			return;
+		}
+		$done = true;
+
+		// Launch the hook that will save them all in the database.
+		add_action( 'shutdown', array( $this, '_save_current_logs' ) );
 	}
 
 
@@ -261,7 +258,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	 * @since 1.0
 	 *
 	 * @param (string) $option The option name.
-	 * @param (string) $value  The option new value.
+	 * @param (mixed)  $value  The option new value.
 	 */
 	public function _maybe_log_added_option( $option, $value ) {
 		$this->_maybe_log_option( $option, array( 'new' => $value ) );
@@ -274,8 +271,8 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	 * @since 1.0
 	 *
 	 * @param (string) $option    The option name.
-	 * @param (string) $old_value The option old value.
-	 * @param (string) $value     The option new value.
+	 * @param (mixed)  $old_value The option old value.
+	 * @param (mixed)  $value     The option new value.
 	 */
 	public function _maybe_log_updated_option( $option, $old_value, $value ) {
 		$this->_maybe_log_option( $option, array( 'new' => $value, 'old' => $old_value ) );
@@ -288,7 +285,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	 * @since 1.0
 	 *
 	 * @param (string) $option The option name.
-	 * @param (string) $value  The option new value.
+	 * @param (mixed)  $value  The option new value.
 	 */
 	public function _maybe_log_added_network_option( $option, $value ) {
 		$this->_maybe_log_option( $option, array( 'new' => $value ), true );
@@ -301,8 +298,8 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	 * @since 1.0
 	 *
 	 * @param (string) $option    The option name.
-	 * @param (string) $value     The option new value.
-	 * @param (string) $old_value The option old value.
+	 * @param (mixed)  $value     The option new value.
+	 * @param (mixed)  $old_value The option old value.
 	 */
 	public function _maybe_log_updated_network_option( $option, $value, $old_value ) {
 		$this->_maybe_log_option( $option, array( 'new' => $value, 'old' => $old_value ), true );
@@ -315,8 +312,8 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	 * @since 1.0
 	 *
 	 * @param (string) $option  The option name.
-	 * @param (string) $values  The option values (the new one and maybe the old one).
-	 * @param (string) $network If true, it's a network option.
+	 * @param (array)  $values  The option values (the new one and maybe the old one).
+	 * @param (bool)   $network If true, it's a network option.
 	 */
 	protected function _maybe_log_option( $option, $values, $network = false ) {
 		if ( $network ) {
@@ -362,7 +359,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 				$this->_log( $type, $option, $values );
 			}
 		}
-		// 'open' => only this value will be logged.
+		// 'xxx' => only this value will be logged.
 		elseif ( $compare === $values['new'] ) {
 			$this->_log( $type, $option, $values );
 		}
@@ -374,7 +371,9 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	 *
 	 * @since 1.0
 	 *
-	 * @return (mixed) The filter first parameter.
+	 * @param (mixed) Any number of parameters of various types: see the numbers in `$this->filters`.
+	 *
+	 * @return (mixed) The filter first parameter, we don't wan't to kill everything.
 	 */
 	public function _log_filter() {
 		$tag  = current_filter();
@@ -389,6 +388,8 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	 * Log an action.
 	 *
 	 * @since 1.0
+	 *
+	 * @param (mixed) Any number of parameters of various types: see the numbers in `$this->actions`.
 	 */
 	public function _log_action() {
 		$tag  = current_filter();
@@ -398,49 +399,20 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	}
 
 
-	/**
-	 * Maybe launch the hook that will store the logs in an option.
-	 *
-	 * @since 1.0
-	 */
-	protected function _save_logs_hook() {
-		static $done = false;
-
-		if ( $done || ! $this->get_current_logs() ) {
-			return;
-		}
-
-		$done = true;
-		add_action( 'shutdown', array( $this, '_save_current_logs' ) );
-	}
-
+	// Save Logs ===================================================================================
 
 	/**
-	 * Store all new logs in an option.
+	 * Save all new Logs.
 	 *
 	 * @since 1.0
 	 */
 	public function _save_current_logs() {
-		parent::_save_logs( $this->get_current_logs() );
-		$this->logs = array();
+		parent::_save_logs( $this->logs_queue );
+		$this->logs_queue = array();
 	}
 
 
 	// Tools =======================================================================================
-
-	/**
-	 * Get the header content used in the `.txt` file the user can download.
-	 *
-	 * @since 1.0
-	 *
-	 * @param (object) `SecuPress_Action_Log` object.
-	 *
-	 * @return (string) The header content.
-	 */
-	public static function _get_log_header_for_file( $log ) {
-		return '[' . $log->get_time() . ' || ' . $log->get_criticity() . ' || ' . $log->get_user() . '] ';
-	}
-
 
 	/**
 	 * Include the files containing the classes `Secupress_Log` and `SecuPress_Action_Log` if not already done.
@@ -450,6 +422,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	 * @return (string) The Log class name.
 	 */
 	public static function _maybe_include_log_class() {
+		// The parent class is needed.
 		parent::_maybe_include_log_class();
 
 		if ( ! class_exists( 'SecuPress_Action_Log' ) ) {
@@ -457,24 +430,6 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 		}
 
 		return 'SecuPress_Action_Log';
-	}
-
-
-	/**
-	 * Include the files containing the classes `Secupress_Logs_List` and `Secupress_Action_Logs_List` if not already done.
-	 *
-	 * @since 1.0
-	 *
-	 * @return (string) The Logs List class name.
-	 */
-	public static function _maybe_include_list_class() {
-		parent::_maybe_include_list_class();
-
-		if ( ! class_exists( 'SecuPress_Action_Logs_List' ) ) {
-			require_once( dirname( __FILE__ ) . '/class-secupress-action-logs-list.php' );
-		}
-
-		return 'SecuPress_Action_Logs_List';
 	}
 
 }
