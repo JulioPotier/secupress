@@ -35,12 +35,24 @@ if ( class_exists( 'SecuPress_Action_Logs' ) ) :
 	$logs        = $wpdb->get_results( $wpdb->prepare( "SELECT post_status AS critic, COUNT(ID) AS count FROM $wpdb->posts WHERE post_type = %s GROUP BY post_status", $post_type ), OBJECT_K );
 
 	if ( $logs ) {
+		$log_type = SecuPress_Action_Logs::get_instance()->get_log_type();
+		$page_url = SecuPress_Action_Logs::get_log_type_url( $log_type );
+		$total    = 0;
+
 		foreach ( $criticities as $criticity => $label ) {
 			if ( isset( $logs[ $criticity ] ) ) {
-				$tmp    = translate_nooped_plural( $label, (int) $logs[ $criticity ]->count, 'secupress' );
-				$text[] = sprintf( $tmp, number_format_i18n( (int) $logs[ $criticity ]->count ) );
+				$logs[ $criticity ]->count = (int) $logs[ $criticity ]->count;
+				$total += $logs[ $criticity ]->count;
+
+				$tmp    = translate_nooped_plural( $label, $logs[ $criticity ]->count, 'secupress' );
+				$tmp    = sprintf( $tmp, number_format_i18n( $logs[ $criticity ]->count ) );
+				$text[] = '<a href="' . esc_url( add_query_arg( 'critic', $criticity, $page_url ) ) . '">' . $tmp . '</a>';
 			}
 		}
+
+		$total = '<a href="' . esc_url( $page_url ) . '">' . sprintf( __( 'Total: %s', 'secupress' ), number_format_i18n( $total ) ) . '</a>';
+		array_unshift( $text, $total );
+
 		$text = implode( '<br/>', $text );
 	} else {
 		$text = __( 'Nothing happened yet.' );

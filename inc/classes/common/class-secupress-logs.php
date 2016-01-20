@@ -226,6 +226,31 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	}
 
 
+	/**
+	 * Get the URL of the page displaying the list of a Log type.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $log_type The Log type.
+	 *
+	 * @return (string)
+	 */
+	public static function get_log_type_url( $log_type ) {
+		$log_types = static::_get_log_types();
+		$page_url  = secupress_admin_url( 'logs' );
+		$i         = 0;
+
+		foreach ( $log_types as $type => $atts ) {
+			if ( $type === $log_type ) {
+				return $i ? add_query_arg( 'tab', $log_type, $page_url ) : $page_url;
+			}
+			++$i;
+		}
+
+		return $page_url;
+	}
+
+
 	// Private methods =============================================================================
 
 	/**

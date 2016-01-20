@@ -26,7 +26,9 @@ if ( class_exists( 'SecuPress_404_Logs' ) ) :
 	$logs      = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ID) FROM $wpdb->posts WHERE post_type = %s", $post_type ) );
 
 	if ( $logs ) {
-		$text = sprintf( _n( '%s error 404.', '%s errors 404.', $logs, 'secupress' ), number_format_i18n( $logs ) );
+		$log_type = SecuPress_404_Logs::get_instance()->get_log_type();
+		$text     = sprintf( _n( '%s error 404.', '%s errors 404.', $logs, 'secupress' ), number_format_i18n( $logs ) );
+		$text     = '<a href="' . esc_url( SecuPress_404_Logs::get_log_type_url( $log_type ) ) . '">' . $text . '</a>';
 	} else {
 		$text = __( 'Nothing happened yet.' );
 	}
