@@ -36,4 +36,10 @@ if ( ! did_action( 'secupress_plugins_loaded' ) ) {
  *
  * @param (array) $args Some parameters.
  */
-add_action( 'secupress_deactivate_plugin_404-logs', array( 'SecuPress_404_Logs', 'delete_logs' ) );
+add_action( 'secupress_deactivate_plugin_404-logs', 'secupress_deactivate_plugin_404_logs' );
+
+function secupress_deactivate_plugin_404_logs() {
+	if ( class_exists( 'SecuPress_404_Logs' ) ) {
+		SecuPress_404_Logs::get_instance()->delete_logs();
+	}
+}
