@@ -1011,7 +1011,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			'fields'      => 'ID',
 			'count_total' => false,
 		) );
-		$user_ids = array_intersect( $administrators, $user_ids );
+		$user_ids = array_intersect( $user_ids, $administrators );
 
 		return $user_ids ? (int) reset( $user_ids ) : 0;
 	}
