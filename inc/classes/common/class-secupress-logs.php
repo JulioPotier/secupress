@@ -551,6 +551,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 
 		$switched = false;
 		$added    = 0;
+		$user_id  = 0;
 
 		if ( is_multisite() && secupress_get_main_blog_id() !== (int) $blog_id ) {
 			// On multisites, create posts in the main blog.
@@ -559,14 +560,13 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		}
 
 		// A post author is needed.
-		$user_id = get_users( array(
-			'blog_id'     => secupress_get_main_blog_id(),
-			'role'        => 'administrator',
-			'number'      => 1,
-			'fields'      => 'ID',
-			'count_total' => false,
-		) );
-		$user_id = (int) reset( $user_id );
+		if ( is_multisite() ) {
+			$user_id = static::_get_default_super_administrator();
+		}
+
+		if ( ! $user_id ) {
+			$user_id = static::_get_default_administrator();
+		}
 		/**
 		 * Filter the Logs author.
 		 *
@@ -956,6 +956,64 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 */
 	protected static function _user_can() {
 		return current_user_can( secupress_get_capability() );
+	}
+
+
+	/**
+	 * Get the default administrator.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (int) A user ID.
+	 */
+	protected static function _get_default_administrator() {
+		$user_ids = get_users( array(
+			'blog_id'     => secupress_get_main_blog_id(),
+			'role'        => 'administrator',
+			'number'      => 1,
+			'orderby'     => 'ID',
+			'fields'      => 'ID',
+			'count_total' => false,
+		) );
+
+		return (int) reset( $user_ids );
+	}
+
+
+	/**
+	 * Get the default super-administrator.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (int) A user ID.
+	 */
+	protected static function _get_default_super_administrator() {
+		global $wpdb;
+
+		$super_admins = get_super_admins();
+
+		if ( ! $super_admins || ! is_array( $super_admins ) ) {
+			return 0;
+		}
+
+		$super_admins = implode( "','", esc_sql( $super_admins ) );
+		$user_ids     = $wpdb->get_col( "SELECT ID FROM $wpdb->users WHERE user_login IN ('$super_admins') ORDER BY ID ASC" );
+
+		if ( ! $user_ids ) {
+			return 0;
+		}
+
+		$administrators = get_users( array(
+			'blog_id'     => secupress_get_main_blog_id(),
+			'role'        => 'administrator',
+			'number'      => 100,
+			'orderby'     => 'ID',
+			'fields'      => 'ID',
+			'count_total' => false,
+		) );
+		$user_ids = array_intersect( $administrators, $user_ids );
+
+		return $user_ids ? (int) reset( $user_ids ) : 0;
 	}
 
 
