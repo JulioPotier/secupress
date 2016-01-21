@@ -848,7 +848,7 @@ function __secupress_doubleauth_warning_no_backup_codes() {
 add_action( 'admin_notices', 'secupress_doubleauth_warning_not_set_yet' );
 function secupress_doubleauth_warning_not_set_yet() {
 
-	if ( ! secupress_doubleauth_get_user_option( 'secret' ) ) {
+	if ( ! secupress_doubleauth_get_user_option( 'verified' ) ) {
 	?>
 	<div class="error">
 		<p>
@@ -1047,6 +1047,9 @@ function __secupress_doubleauth_skip_ajax_post_cb() {
 
 	check_admin_referer( 'secupress_doubleauth_skip' );
 
+	array_map( 'secupress_doubleauth_delete_user_option', 
+		array( 'verified', 'skip', 'secret', 'app_password', 'timeout', 'lasttimeslot', 'lost', 'token', 'backupcodes' )
+	);
 	secupress_doubleauth_update_user_option( 'skip', time() + ( 7 * DAY_IN_SECONDS ) );
 
 	wp_safe_redirect( wp_get_referer() );
