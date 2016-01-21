@@ -179,7 +179,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 		}
 		// Only 1 tab, no need to go further.
 		elseif ( 1 === count( $log_types ) ) {
-			echo "<$title_tag>" . $log_types[ $this->log_type ] . "</$title_tag>\n";
+			echo "<$title_tag>" . get_post_type_object( $log_types[ $this->log_type ]['post_type'] )->label . "</$title_tag>\n";
 		}
 		else {
 			$i        = 0;
