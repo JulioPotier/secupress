@@ -31,16 +31,19 @@ function __secupress_alerts_settings_callback( $settings ) {
 
 	// Email
 	if ( ! empty( $settings['alerts_email'] ) ) {
-		if ( secupress_is_pro() ) {
-			$settings['alerts_email'] = explode( ',', $settings['alerts_email'] );
-		} else {
-			$settings['alerts_email'] = (array) $settings['alerts_email'];
-		}
-
+		$settings['alerts_email'] = explode( ',', $settings['alerts_email'] );
 		$settings['alerts_email'] = array_map( 'trim', $settings['alerts_email'] );
 		$settings['alerts_email'] = array_map( 'is_email', $settings['alerts_email'] );
 		$settings['alerts_email'] = array_filter( $settings['alerts_email'] );
-		$settings['alerts_email'] = implode( ', ', $settings['alerts_email'] );
+		if ( $settings['alerts_email'] ) {
+			if ( ! secupress_is_pro() ) {
+				$settings['alerts_email'] = reset( $settings['alerts_email'] );
+			} else {
+				$settings['alerts_email'] = implode( ', ', $settings['alerts_email'] );
+			}
+		} else {
+			unset( $settings['alerts_email'] );
+		}
 	} else {
 		unset( $settings['alerts_email'] );
 	}
