@@ -160,6 +160,28 @@ function secupress_prepare_email_for_like_search( $email ) {
 
 
 /**
+ * Get the email address used when the plugin send a message.
+ *
+ * @since 1.0
+ *
+ * @param (bool) $from_header True to return the "from" header.
+ *
+ * @return (string)
+ */
+function secupress_get_email( $from_header = false ) {
+	$sitename = strtolower( $_SERVER['SERVER_NAME'] );
+
+	if ( substr( $sitename, 0, 4 ) === 'www.' ) {
+		$sitename = substr( $sitename, 4 );
+	}
+
+	$email = SECUPRESS_PLUGIN_SLUG . '@' . $sitename;
+
+	return $from_header ? 'from: ' . SECUPRESS_PLUGIN_NAME . ' <' . $email . '>' : $email;
+}
+
+
+/**
  * Get the main blog ID.
  *
  * @since 1.0
