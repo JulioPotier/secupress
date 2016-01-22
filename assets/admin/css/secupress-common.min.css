@@ -1,5 +1,9 @@
 @charset "UTF-8";
 
+.wrap h2.nav-tab-wrapper.hide-if-no-js {
+	padding: 0;
+}
+
 .form-table {
 	table-layout: fixed;
 }
