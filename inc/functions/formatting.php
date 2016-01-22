@@ -191,11 +191,9 @@ function secupress_get_email( $from_header = false ) {
 function secupress_get_main_blog_id() {
 	static $blog_id;
 
-	if ( ! $blog_id ) {
-		$blog_id = 1;
-
+	if ( ! isset( $blog_id ) ) {
 		if ( ! is_multisite() ) {
-			// 1
+			$blog_id = 1;
 		}
 		elseif ( ! empty( $GLOBALS['current_site']->blog_id ) ) {
 			$blog_id = absint( $GLOBALS['current_site']->blog_id );
@@ -203,10 +201,7 @@ function secupress_get_main_blog_id() {
 		elseif ( defined( 'BLOG_ID_CURRENT_SITE' ) ) {
 			$blog_id = absint( BLOG_ID_CURRENT_SITE );
 		}
-		elseif ( defined( 'BLOGID_CURRENT_SITE' ) ) { // deprecated.
-			$blog_id = absint( BLOGID_CURRENT_SITE );
-		}
-		$blog_id = $blog_id ? $blog_id : 1;
+		$blog_id = ! empty( $blog_id ) ? $blog_id : 1;
 	}
 
 	return $blog_id;
