@@ -63,7 +63,7 @@ class SecuPress_404_Log extends SecuPress_Log {
 	 * @since 1.0
 	 */
 	protected function _set_message() {
-		$this->message  = __( 'Error 404 for %1$s.', 'secupress' ) . '<br/>';
+		$this->message  = __( 'Error 404 for: %1$s', 'secupress' ) . '<br/>';
 		$this->message .= sprintf( __( '%s: ', 'secupress' ), '<code>$_GET</code>' ) . '%2$s';
 		$this->message .= sprintf( __( '%s: ', 'secupress' ), '<code>$_POST</code>' ) . '%3$s';
 
