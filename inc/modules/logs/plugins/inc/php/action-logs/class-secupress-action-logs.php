@@ -69,7 +69,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 		'registration'             => '!none',
 		'registrationnotification' => '!yes',
 		'add_new_users'            => 1,
-		'illegal_names'            => '',
+		'illegal_names'            => null,
 		'limited_email_domains'    => null,
 		'banned_email_domains'     => null,
 		'welcome_email'            => null,
