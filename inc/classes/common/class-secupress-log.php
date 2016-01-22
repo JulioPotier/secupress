@@ -242,7 +242,7 @@ class SecuPress_Log {
 				case 'low':
 					return '<span class="secupress-icon dashicons dashicons-shield-alt criticity-low" title="' . esc_attr__( 'Low criticity', 'secupress' ) . '"></span>';
 				default:
-					return '<span class="secupress-icon dashicons dashicons-shield-alt criticity-unknown" title="' . esc_attr__( 'Unkown criticity', 'secupress' ) . '"></span>';
+					return '<span class="secupress-icon dashicons dashicons-shield-alt criticity-unknown" title="' . esc_attr__( 'Unknown criticity', 'secupress' ) . '"></span>';
 			}
 		} elseif ( 'text' === $mode ) {
 			switch ( $this->critic ) {
@@ -253,7 +253,7 @@ class SecuPress_Log {
 				case 'low':
 					return _x( 'Low', 'criticity level', 'secupress' );
 				default:
-					return _x( 'Unkown', 'criticity level', 'secupress' );
+					return _x( 'Unknown', 'criticity level', 'secupress' );
 			}
 		}
 
