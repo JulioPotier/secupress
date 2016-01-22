@@ -175,7 +175,7 @@ function secupress_get_email( $from_header = false ) {
 		$sitename = substr( $sitename, 4 );
 	}
 
-	$email = SECUPRESS_PLUGIN_SLUG . '@' . $sitename;
+	$email = 'noreply@' . $sitename;
 
 	return $from_header ? 'from: ' . SECUPRESS_PLUGIN_NAME . ' <' . $email . '>' : $email;
 }
