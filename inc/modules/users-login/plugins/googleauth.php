@@ -83,17 +83,18 @@ function secupress_doubleauth_css() {
 	.authinfo img{height:72px; width:72px; float:left; padding-right: 7px }
 	.no-button,.no-button:hover, .no-button:focus {cursor: pointer;text-decoration: none; padding: 0; border: none; margin: 0; font-size: 1em; line-height: inherit; font-style:inherit; text-align: left; text-transform: inherit; color: #427FED; text-shadow: none; background: none; -webkit-border-radius: 0; border-radius: 0; -webkit-box-shadow: none; box-shadow: none; }
 	#form_alt{padding:26px 24px 26px}
+	.blocks button{border: 1px solid #ccc;background: #eee url(https://ssl.gstatic.com/accounts/ui/arrow_right_2x.png) right center no-repeat;background-size: 21px;width: 100%;text-align: left;padding: 2px 30px 2px 10px; height: 55px; cursor: pointer;}
 </style>
 <?php
 }
 
-function secupress_print_doubleauth_head_css() {
-?>
-<style>
-.login h1 a{background-image: url('http://<?php echo $server; ?>.gravatar.com/avatar/<?php echo md5( $user->user_email ); ?>?s=180&d=<?php echo admin_url( '/images/wordpress-logo.svg?ver=20131107' ); ?>') !important; border-radius: 100%}
-.error{color:red}
-</style>
-<?php
+function secupress_print_doubleauth_head_css( $user ) {
+	?>
+	<style>
+	.login h1 a{background-image: url('http://<?php echo rand( 0, 3 ); ?>.gravatar.com/avatar/<?php echo md5( $user->user_email ); ?>?s=180&d=<?php echo admin_url( '/images/wordpress-logo.svg?ver=20131107' ); ?>') !important; border-radius: 100%}
+	.wrong{color:red}
+	</style>
+	<?php
 }
 
 add_action( 'login_form_doubleauth_lost_redir', '__secupress_doubleauth_lost_form_redir' );
@@ -120,9 +121,10 @@ function __secupress_doubleauth_lost_form_redir() {
 			secupress_doubleauth_update_user_option( 'lost', '1', $user->ID );
 			secupress_doubleauth_update_user_option( 'timeout', time() + 10 * MINUTE_IN_SECONDS, $user->ID );
 
-			$redirect_to = add_query_arg( array( 'action' => 'doubleauth_lost_form_' . sanitize_key( $_POST['doubleauth_lost_method'] ),
-												 'token' => $CLEAN['token'],
-												 'rememberme' => $CLEAN['rememberme'] ),
+			$redirect_to = add_query_arg( array( 'action'     => 'doubleauth_lost_form_' . sanitize_key( $_POST['doubleauth_lost_method'] ),
+												 'token'      => $CLEAN['token'],
+												 'rememberme' => $CLEAN['rememberme'],
+												),
 											wp_login_url()
 										);
 			wp_redirect( $redirect_to );
@@ -137,7 +139,7 @@ function __secupress_doubleauth_lost_form_redir() {
 
 	} else {
 
-		if ( ! $CLEAN['token'] || 1 != count( $CLEAN['uid'] ) ) {
+		if ( ! $CLEAN['token'] || ! user_can( $user, 'exist' ) ) {
 			secupress_die( sprintf( __( 'Invalid Link.<br>Please try to <a href="%s">log in again</a>.', 'secupress' ), wp_login_url( '', true ) ) );
 		}
 
@@ -163,9 +165,8 @@ function __secupress_doubleauth_lost_form_backupcode() {
 	$CLEAN['uid']        = $wpdb->get_col( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_value = %s", $CLEAN['token'] ) );
 	$CLEAN['uid']        = (int) reset( $CLEAN['uid'] );
 	$user                = get_user_by( 'id', $CLEAN['uid'] );
-	$server              = rand( 0, 3 );
 
-	if ( ! $CLEAN['token'] || 1 != count( $CLEAN['uid'] ) || ! secupress_doubleauth_get_user_option( 'lost', $CLEAN['uid'] ) ) {
+	if ( ! $CLEAN['token'] || ! $user || ! secupress_doubleauth_get_user_option( 'lost', $CLEAN['uid'] ) ) {
 
 		secupress_die( sprintf( __( 'Invalid Link.<br>Please try to <a href="%s">log in again</a>.', 'secupress' ), wp_login_url( '', true ) ) );
 
@@ -182,10 +183,10 @@ function __secupress_doubleauth_lost_form_backupcode() {
 				secupress_doubleauth_delete_user_option( 'lost', $user->ID );
 				$backupcodes[ array_search( $_POST['otp'], $backupcodes ) ] = false;
 				secupress_doubleauth_update_user_option( 'backupcodes', $backupcodes, $user->ID );
-				$secure_cookie = apply_filters( 'secure_signon_cookie', is_ssl(), array( 'user_login' => $user_by_check->user_login, 'user_password' => time() ) ); // we don't have the real password, just pass something
+				$secure_cookie = apply_filters( 'secure_signon_cookie', is_ssl(), array( 'user_login' => $user->user_login, 'user_password' => time() ) ); // we don't have the real password, just pass something
 				wp_set_auth_cookie( $CLEAN['uid'], $CLEAN['rememberme'], $secure_cookie );
 				do_action( 'wp_login', $user->user_login, $user );
-				$redirect_to = apply_filters( 'login_redirect', admin_url(), admin_url(), $user_by_check );
+				$redirect_to = apply_filters( 'login_redirect', admin_url(), admin_url(), $user );
 				do_action( 'secupress.doubleauth.autologin.success', $user );
 				wp_redirect( $redirect_to );
 				die( 'login_regirect ' . __LINE__ );
@@ -218,17 +219,17 @@ function __secupress_doubleauth_lost_form_backupcode() {
 	login_header( __( 'Log In' ), $messages, $errors );
 
 	if ( $show_form ) {
-		secupress_print_doubleauth_head_css();
+		secupress_print_doubleauth_head_css( $user );
 		?>
 		<form name="loginform" id="loginform" action="<?php echo esc_url( site_url( 'wp-login.php?action=doubleauth_lost_form_backupcode' ) ); ?>" method="post">
 			<p>
 			    <label>
 			    <h3><?php printf( __( '2-Step Verification for %s', 'secupress' ), get_bloginfo( 'name', 'display' ) ); ?></h3>
 			    <span class="authinfo">
-			    	<img src="<?php echo plugins_url( '/inc/img/backup-codes-icon_2X.png', __FILE__ ) ?>">
+			    	<img src="<?php echo plugins_url( '/inc/img/backup-codes-icon_2X.png', __FILE__ ); ?>">
 			    	<i><?php _e( 'Enter one of your backup codes.', 'secupress' ); ?></i>
 			    </span>
-			    <input type="text" class="doubleauth" onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 13" name="otp" id="otp" size="20" style="ime-mode: inactive;" /></label>
+			    <input type="text" class="doubleauth" maxlength="8" placeholder="********" onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 13" name="otp" id="otp" size="20" style="ime-mode: inactive;" /></label>
 			</p>
 			<input type="hidden" name="token" value="<?php echo esc_attr( $CLEAN['token'] ); ?>">
 			<?php if ( $CLEAN['rememberme'] ) { ?>
@@ -257,32 +258,31 @@ function __secupress_doubleauth_lost_form_backupmail() {
 	$CLEAN['uid']        = (int) reset( $CLEAN['uid'] );
 	$user                = get_user_by( 'id', $CLEAN['uid'] );
 
+
 	if ( user_can( $user, 'exist' ) && is_email( get_user_option( 'backup_email', $user->ID ) ) ) {
 
 		$codes = secupress_doubleauth_get_user_option( 'backupcodes', $user->ID );
 
 		if ( is_array( $codes ) && count( array_filter( $codes ) ) ) {
 
- 			$code = reset( array_filter( $codes ) );
+ 			$codes = array_filter( $codes );
+ 			$code = reset( $codes );
 
 		} else {
 
-			$code = str_pad( wp_rand( 0, 9999999999 ), 10, '0', STR_PAD_BOTH );
+			$code = secupress_generate_password( 8, array( 'min' => false, 'maj' => false, 'num' => true, 'special' => false, 'extra' => false, 'custom' => '' ) );
 			$codes[1] = $code;
 			secupress_doubleauth_update_user_option( 'backupcodes', $codes, $user->ID );
 
 		}
 
-		secupress_doubleauth_delete_user_option( 'timeout', $user->ID );
-		secupress_doubleauth_delete_user_option( 'lost', $user->ID );
-
 		$subject = apply_filters( 'secupress.doubleauth.backupcode_email.subject', 
 			sprintf( __( '[%1$s] Mobile Authenticator Backup Code request', 'secupress' ), get_bloginfo( 'name' ) ) );
 		$message = apply_filters( 'secupress.doubleauth.backupcode_email.message', 
 			sprintf( __( 'Hello %1$s, you asked for a backup code, here it comes: %2$s.' ), $user->display_name, $code ) );
-			wp_mail( get_user_option( 'backup_email', $user->ID ), $subject, $message, 'content-type: text/html' );
-			wp_redirect( add_query_arg( array( 'action' => 'doubleauth_lost_form_backupcode', 'token' => $CLEAN['token'], 'rememberme' => $CLEAN['rememberme'], 'emailed' => 1 ), wp_login_url() ) );
-			die();
+		wp_mail( get_user_option( 'backup_email', $user->ID ), $subject, $message, 'content-type: text/html' );
+		wp_redirect( add_query_arg( array( 'action' => 'doubleauth_lost_form_backupcode', 'token' => $CLEAN['token'], 'rememberme' => $CLEAN['rememberme'], 'emailed' => 1 ), wp_login_url() ) );
+		die();
 	}
 }
 
@@ -301,9 +301,8 @@ function __secupress_doubleauth_login_form_add_form() {
 	$CLEAN['uid']        = $wpdb->get_col( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_value = %s", $CLEAN['token'] ) );
 	$CLEAN['uid']        = (int) reset( $CLEAN['uid'] );
 	$user                = get_user_by( 'id', $CLEAN['uid'] );
-	$server              = rand( 0, 3 );
 
-	if ( ! $CLEAN['token'] || 1 != count( $CLEAN['uid'] ) ) {
+	if ( ! $CLEAN['token'] || ! $user ) {
 
 		secupress_die( sprintf( __( 'Invalid Link.<br>Please try to <a href="%s">log in again</a>.', 'secupress' ), wp_login_url( '', true ) ) );
 
@@ -359,7 +358,7 @@ function __secupress_doubleauth_login_form_add_form() {
 		$attempts = isset( $_POST['attempts'] ) ? (int) $_POST['attempts'] : 0;
 		++$attempts;
 
-		secupress_print_doubleauth_head_css();
+		secupress_print_doubleauth_head_css( $user );
 		?>
 		<form name="loginform" id="loginform" action="<?php echo esc_url( site_url( 'wp-login.php?action=doubleauth' ) ); ?>" method="post">
 			<p>
@@ -380,7 +379,7 @@ function __secupress_doubleauth_login_form_add_form() {
 				<input type="submit" name="wp-submit" id="main-submit" class="button button-primary button-large button-full" value="<?php esc_attr_e('Verify'); ?>" />
 			</p>
 			<?php if ( $attempts > 2 ) { ?>
-				<p class="error"><?php _e( 'It looks like you entered a wrong code again.<br>Click on "Problems with your code" below and try to use a backup code to log in.', 'secupress' ); ?></p>
+				<p class="wrong"><?php _e( 'It looks like you entered a wrong code again.<br>Click on "Problems with your code" below and try to use a backup code to log in.', 'secupress' ); ?></p>
 			<?php } ?>
 		</form>
 
@@ -392,13 +391,17 @@ function __secupress_doubleauth_login_form_add_form() {
 			<button type="button" class="no-button button-full hide-if-no-js" id="help_lost"><?php _e( 'Problems with your code?', 'secupress' ); ?> <span class="dashicons dashicons-arrow-right-alt2 dashright"></span></button>
 			<div id="help_info" class="hide-if-js">
 				<h3><?php _e( 'Try one of these alternate methods.', 'secupress' ); ?></h3>
-				<p><label><input type="radio" name="doubleauth_lost_method" value="backupcode" checked="checked"> <?php _e( 'Use a backup code.', 'secupress' ); ?></label></p>
-				<?php if ( get_user_meta( $user->ID, 'backup_email', true ) ) { ?>
-				<p><label><input type="radio" name="doubleauth_lost_method" value="backupmail"> <?php _e( 'Send a backup code on backup email.', 'secupress' ); ?></label></p>
-				<?php } ?>
-				<p class="submit">
-					<input type="submit" id="secondary-submit" class="button button-secondary button-large button-full" value="<?php esc_attr_e( 'Use this method', 'secupress' ); ?>" />
-				</p>
+				<div class="blocks">
+					<button type="submit" name="doubleauth_lost_method" value="backupcode">
+						<span class="dashicons dashicons-format-aside"></span> Use a backup code
+					</button>
+					<button type="submit" name="doubleauth_lost_method" value="backupmail">
+						<span class="dashicons dashicons-email"></span> Send me a new backup code on my recovery email
+					</button>
+					<button type="submit" name="doubleauth_lost_method" value="askadmin">
+						<span class="dashicons dashicons-sos"></span> Ask "Han Solo"'s admin for help getting back into your account
+					</button>
+				</div>
 			</div>
 		</form>
 		<?php
@@ -429,17 +432,13 @@ function __secupress_doubleauth_hideifnojs() {
 	}
 }
 
-/**
- * Login form handling.
- * Check Mobile Authenticator app password, if user has been setup to do so.
- * @param wordpressuser
- * @return user/loginstatus
- */
 add_filter( 'authenticate', '__secupress_doubleauth_otp', PHP_INT_MAX, 3 );
 function __secupress_doubleauth_otp( $raw_user, $username, $password ) {
 
+	$user_id = isset( $raw_user->ID ) ? $raw_user->ID : 0;
+
 	if ( secupress_is_affected_role( 'users-login', 'double-auth', $raw_user ) && 
-		secupress_doubleauth_get_user_option( 'secret', $raw_user->ID ) && secupress_doubleauth_get_user_option( 'verified', $raw_user->ID ) &&
+		secupress_doubleauth_get_user_option( 'secret', $user_id ) && secupress_doubleauth_get_user_option( 'verified', $user_id ) &&
 		defined( 'XMLRPC_REQUEST' ) || defined( 'APP_REQUEST' )
 	) {
 		$user = get_user_by( 'login', $username );
@@ -454,13 +453,13 @@ function __secupress_doubleauth_otp( $raw_user, $username, $password ) {
 	if ( ! is_wp_error( $raw_user ) && ! empty( $_POST ) ) {
 
 		if ( secupress_is_affected_role( 'users-login', 'double-auth', $raw_user ) && 
-			secupress_doubleauth_get_user_option( 'secret', $raw_user->ID ) && secupress_doubleauth_get_user_option( 'verified', $raw_user->ID )
+			secupress_doubleauth_get_user_option( 'secret', $user_id ) && secupress_doubleauth_get_user_option( 'verified', $user_id )
 		) {
 
 			$token = wp_hash( wp_generate_password( 32, false ), 'nonce' );
 
-			secupress_doubleauth_update_user_option( 'token', $token, $raw_user->ID );
-			secupress_doubleauth_update_user_option( 'timeout', time() + 10 * MINUTE_IN_SECONDS, $raw_user->ID );
+			secupress_doubleauth_update_user_option( 'token', $token, $user_id );
+			secupress_doubleauth_update_user_option( 'timeout', time() + 10 * MINUTE_IN_SECONDS, $user_id );
 			$raw_user    = null;
 			$rememberme  = isset( $_POST['rememberme'] );
 			$redirect_to = add_query_arg( array( 'action' => 'doubleauth', 
@@ -557,6 +556,7 @@ function secupress_doubleauth_profile_personal_options() {
 
 			// Display backup codes if the auth is verified (so we have backup codes)
 			if ( secupress_doubleauth_get_user_option( 'verified' ) ) {
+				$backup_codes_count = count( array_filter( (array) $doubleauth_backupcodes ) );
 			?>
 			<tr>			
 				<th>
@@ -566,7 +566,6 @@ function secupress_doubleauth_profile_personal_options() {
 				<td>
 					<p id="backupcodes_codes_description" data-desc="<?php echo esc_attr( sprintf( _n( 'You have %d unused code.', 'You have %d unused codes.', $backup_codes_count, 'secupress' ), 10 ) ); ?>" class="description">
 					<?php
-						$backup_codes_count = count( array_filter( (array) $doubleauth_backupcodes ) );
 						echo esc_html( sprintf( _n( 'You have %d unused code.', 'You have %d unused codes.', $backup_codes_count, 'secupress' ), $backup_codes_count ) );
 					?>
 					</p>
@@ -641,7 +640,7 @@ function secupress_doubleauth_profile_personal_options() {
 
 		// secupress_doubleauth_new_app_password
 		$( "#doubleauth_renew_app_password" ).on( "click", function(e) {
-			e.preventDefault();//// swal?
+			e.preventDefault();
 			if ( confirm( '<?php echo esc_js( __( "Renewing your application password will forbid old password to work again.\nAre you sure to continue?", 'secupress' ) ); ?>' )
 			) {
 				$( "#app_password" ).html( '<img src="<?php echo admin_url( '/images/wpspin_light.gif' ); ?>" />' );
@@ -660,7 +659,7 @@ function secupress_doubleauth_profile_personal_options() {
 
 		// secupress_doubleauth_delete_app_password
 		$( "#doubleauth_delete_app_password" ).on( "click", function(e) {
-			e.preventDefault(); //// swal?
+			e.preventDefault();
 			if ( confirm( '<?php echo esc_js( __( "Deleting your application password will forbid old password to work again.\nAre you sure to continue?", 'secupress' ) ); ?>' )
 			) {
 				$( "#app_password" ).html( '<img src="<?php echo admin_url( '/images/wpspin_light.gif' ); ?>" />' );
@@ -677,7 +676,7 @@ function secupress_doubleauth_profile_personal_options() {
 
 		// googleauthenticator_new_backup_codes
 		$( "#doubleauth_newcodes" ).on( "click", function(e) {
-			e.preventDefault(); //// swal
+			e.preventDefault();
 			if ( confirm( '<?php echo esc_js( __( "Renewing your backup codes will revoke all old ones.\nAre you sure to continue?", 'secupress' ) ); ?>' )
 			) {
 				$( '#backupcodes_codes li' ).html( '<img src="<?php echo admin_url( '/images/wpspin_light.gif' ); ?>" />' );
@@ -990,7 +989,7 @@ function secupress_doubleauth_redirect() {
 					?>
 					</p>
 					<p>
-						<input type="text" name="confirmation_code" id="confirmation_code" maxlength="6" placeholder="******">
+						<input type="text" name="confirmation_code" id="confirmation_code" maxlength="6" placeholder="******" onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 13" name="otp" id="otp" size="20" style="ime-mode: inactive;">
 					<?php
 					if ( isset( $_POST['confirmation_code'] ) ) {
 						_e( 'Invalid Confirmation Code', 'secupress' );
