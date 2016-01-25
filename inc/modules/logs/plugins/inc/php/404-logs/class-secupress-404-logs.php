@@ -56,6 +56,7 @@ class SecuPress_404_Logs extends SecuPress_Logs {
 
 		// Log the 404s.
 		add_action( 'wp', array( $this, '_maybe_log_404' ) );
+		add_action( 'admin_page_access_denied', array( $this, '_log_404' ) );
 
 		// Parent hooks.
 		parent::_init();
@@ -72,6 +73,16 @@ class SecuPress_404_Logs extends SecuPress_Logs {
 			return;
 		}
 
+		$this->_log_404();
+	}
+
+
+	/**
+	 * Log a 404.
+	 *
+	 * @since 1.0
+	 */
+	public function _log_404() {
 		// Build the Log array.
 		$log = static::_set_log_time_and_user( array(
 			'type'   => 'error-404',
