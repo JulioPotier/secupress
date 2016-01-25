@@ -28,7 +28,7 @@ $this->add_field( array(
 	'helpers' => array(
 		array(
 			'type'        => 'warning',
-			'description' => sprintf( __( 'Will be stored in %sPlease, delete them as soon as possible.', 'secupress' ), '<code>' . str_replace( ABSPATH, '', secupress_get_backup_path() ) . '</code>' ),
+			'description' => sprintf( __( 'Will be stored in %sPlease, delete them as soon as possible.', 'secupress' ), '<code>' . str_replace( ABSPATH, '', secupress_get_hashed_folder_name( 'backup', WP_CONTENT_DIR . '/backups' ) ) . '</code>' ),
 			'depends'     => $field_name . '_local',
 		),
 		array(

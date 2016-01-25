@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  *
  */
 function secupress_pre_backup() {
-	$backup_dir    = secupress_get_backup_path();
+	$backup_dir    = secupress_get_hashed_folder_name( 'backup', WP_CONTENT_DIR . '/backups' );
 	$htaccess_file = dirname( $backup_dir ) . '/.htaccess';
 	$fs_chmod_dir  = defined( 'FS_CHMOD_DIR' ) ? FS_CHMOD_DIR : 0755;
 
@@ -20,14 +20,6 @@ function secupress_pre_backup() {
 	}
 
 	return is_writable( $backup_dir ) && file_exists( $htaccess_file );
-}
-
-
-/**
- *
- */
-function secupress_get_backup_path() {
-	return WP_CONTENT_DIR . '/backups/secupress-' . substr( sha1( wp_salt( 'nonce' ) ), 2, 8 ) . '/';
 }
 
 
@@ -57,7 +49,7 @@ function secupress_zip_backup_file( $filename ) {
  *
  */
 function secupress_get_backup_file_list() {
-	return glob( secupress_get_backup_path() . '*.{zip,sql}', GLOB_BRACE );
+	return glob( secupress_get_hashed_folder_name( 'backup', WP_CONTENT_DIR . '/backups' ) . '*.{zip,sql}', GLOB_BRACE );
 }
 
 
