@@ -175,11 +175,11 @@ function secupressPreAjaxCall( href, e ) {
  */
 function secupressDisplayAjaxError( $button, text ) {
 	if ( undefined === text ) {
-		text = w.l10nmodules.unknownError;
+		text = window.l10nmodules.unknownError;
 	}
 
 	swal( {
-		title:             w.l10nmodules.error,
+		title:             window.l10nmodules.error,
 		text:              text,
 		type:              "error",
 		allowOutsideClick: true
