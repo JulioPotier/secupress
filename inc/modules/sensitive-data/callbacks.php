@@ -108,7 +108,7 @@ function __secupress_wp_endpoints_settings_callback( $modulenow, &$settings ) {
 /*
  * Tell if a `robots.txt` file is in use.
  * WordPress does not create a rewrite rule for the `robots.txt` file if it is installed in a folder.
- * If a constant `SECUPRESS_FORCE_ROBOTS_TXT` is defined to `true`, the blackhole plugin will create this rule.
+ * If a constant `SECUPRESS_FORCE_ROBOTS_TXT` is defined to `true`, the field will be available.
  *
  * @since 1.0
  *
