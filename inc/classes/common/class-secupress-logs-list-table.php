@@ -236,7 +236,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 	 *
 	 * @since 1.0
 	 *
-	 * @param (object) $wp `WP` object.
+	 * @param (object) $wp `WP` object, passed by reference.
 	 */
 	public function _filter_request( $wp ) {
 		$wp->query_vars['meta_query'] = isset( $wp->query_vars['meta_query'] ) && is_array( $wp->query_vars['meta_query'] ) ? $wp->query_vars['meta_query'] : array();
