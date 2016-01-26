@@ -344,9 +344,9 @@ function __secupress_settings_action_links( $actions ) {
  *
  * @since 1.0
  */
-add_action( 'admin_post_secupress_resetwl', '__secupress_reset_white_label_values_action' );
+add_action( 'admin_post_secupress_resetwl', '__secupress_reset_white_label_values_ajax_post_cb' );
 
-function __secupress_reset_white_label_values_action() {
+function __secupress_reset_white_label_values_ajax_post_cb() {
 	if ( isset( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'secupress_resetwl' ) ) {
 		secupress_reset_white_label_values( true );
 	}
