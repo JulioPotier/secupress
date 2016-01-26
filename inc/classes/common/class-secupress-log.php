@@ -180,11 +180,11 @@ class SecuPress_Log {
 	 * @param (string) $referer If the user exists and is not the current user, a link to the user's profile is provided. A referer is needed for this link.
 	 * @param (array)  $filters An array of URLs used to filter the list results. Keys are `user_ip`, `user_id` and `user_login`. Values will be used in `sprintf()`.
 	 *
-	 * @return (array|string) An array of raw infos, or formated infos as a string.
+	 * @return (object|string) An object of raw infos, or formated infos as a string.
 	 */
 	public function get_user( $raw = false, $referer = false, $filters = array() ) {
 		if ( $raw ) {
-			return array(
+			return (object) array(
 				'user_ip'    => $this->user_ip,
 				'user_id'    => $this->user_id,
 				'user_login' => $this->user_login,
