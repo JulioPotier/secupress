@@ -221,7 +221,11 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 			return false;
 		}
 
-		$delete_url = $this->logs_instance->delete_log_url( $this->current_log_id, $this->_page_url() );
+		$page_url         = $this->_page_url();
+		$paged_page_url   = $this->_paged_page_url();
+		$user_raw         = $log->get_user( true );
+		$delete_url       = $this->logs_instance->delete_log_url( $this->current_log_id, $page_url );
+		$delete_by_ip_url = $this->logs_instance->delete_logs_by_ip_url( $user_raw->user_ip, $page_url );
 
 		// Add a class to the current Log row.
 		add_filter( 'post_class', array( $this, '_add_current_log_class' ), 10, 3 );
@@ -231,17 +235,21 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 
 				<a class="secupress-delete-log" href="<?php echo esc_url( $delete_url ); ?>"><?php _e( 'Delete this Log', 'secupress' ); ?></a>
 				<span class="spinner secupress-inline-spinner"></span>
-				<a class="close" href="<?php echo esc_url( $this->_paged_page_url() ); ?>"><?php _e( 'Close' ); ?></a>
+
+				<a class="secupress-delete-logs-by-ip" href="<?php echo esc_url( $delete_by_ip_url ); ?>"><?php printf( __( 'Delete Logs with the IP %s', 'secupress' ), '<code>' . $user_raw->user_ip . '</code>' ); ?></a>
+				<span class="spinner secupress-inline-spinner"></span>
+
+				<a class="close" href="<?php echo esc_url( $paged_page_url ); ?>"><?php _e( 'Close' ); ?></a>
 
 			</p>
 
 			<p class="log-user">
 				<?php
-				$referer = add_query_arg( 'log', $this->current_log_id, $this->_paged_page_url() );
+				$referer = add_query_arg( 'log', $this->current_log_id, $paged_page_url );
 				$filters = array(
-					'user_ip'    => add_query_arg( 'user_ip', '%s', $this->_page_url() ),
-					'user_id'    => add_query_arg( 'user_id', '%d', $this->_page_url() ),
-					'user_login' => add_query_arg( 'user_login', '%s', $this->_page_url() ),
+					'user_ip'    => add_query_arg( 'user_ip', '%s', $page_url ),
+					'user_id'    => add_query_arg( 'user_id', '%d', $page_url ),
+					'user_login' => add_query_arg( 'user_login', '%s', $page_url ),
 				);
 				echo $log->get_user( false, $referer, $filters );
 				?>

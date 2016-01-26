@@ -210,6 +210,24 @@ class SecuPress_Logs extends SecuPress_Singleton {
 
 
 	/**
+	 * Get the URL to delete Logs with a certain IP address.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $ip      IP address.
+	 * @param (string) $referer The page referer.
+	 *
+	 * @return (string)
+	 */
+	public function delete_logs_by_ip_url( $ip, $referer ) {
+		$ip   = urlencode( $ip );
+		$href = urlencode( $referer );
+		$href = admin_url( 'admin-post.php?action=secupress_delete-' . $this->log_type . '-logs-by-ip&ip=' . $ip . '&_wp_http_referer=' . $href );
+		return wp_nonce_url( $href, 'secupress-delete-' . $this->log_type . '-logs-by-ip' );
+	}
+
+
+	/**
 	 * Get the URL to delete one Log.
 	 *
 	 * @since 1.0
@@ -292,6 +310,10 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			// Bulk delete Logs.
 			add_action( 'wp_ajax_secupress_bulk_delete-' . $this->log_type . '-logs',    array( $this, '_ajax_bulk_delete_logs_ajax_post_cb' ) );
 			add_action( 'admin_post_secupress_bulk_delete-' . $this->log_type . '-logs', array( $this, '_post_bulk_delete_logs_ajax_post_cb' ) );
+
+			// Delete Logs by IP.
+			add_action( 'wp_ajax_secupress_delete-' . $this->log_type . '-logs-by-ip',    array( $this, '_ajax_bulk_delete_logs_by_ip_ajax_post_cb' ) );
+			add_action( 'admin_post_secupress_delete-' . $this->log_type . '-logs-by-ip', array( $this, '_post_bulk_delete_logs_by_ip_ajax_post_cb' ) );
 
 			// Delete a Log.
 			add_action( 'wp_ajax_secupress_delete-' . $this->log_type . '-log',          array( $this, '_ajax_delete_log_ajax_post_cb' ) );
@@ -796,6 +818,75 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			$deleted = 0;
 		} else {
 			$deleted = $this->delete_logs( $_GET['post'] );
+		}
+
+		add_settings_error( 'general', 'logs_bulk_deleted', sprintf( _n( '%s log permanently deleted.', '%s logs permanently deleted.', $deleted, 'secupress' ), number_format_i18n( $deleted ) ), 'updated' );
+		set_transient( 'settings_errors', get_settings_errors(), 30 );
+
+		$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
+		wp_redirect( $goback );
+		die();
+	}
+
+
+	/**
+	 * Ajax callback that allows to delete several Logs of a certain type and with a certain IP.
+	 *
+	 * @since 1.0
+	 */
+	public function _ajax_bulk_delete_logs_by_ip_ajax_post_cb() {
+		check_ajax_referer( 'secupress-delete-' . $this->log_type . '-logs-by-ip' );
+
+		if ( ! static::_user_can() ) {
+			wp_send_json_error();
+		}
+
+		if ( empty( $_GET['ip'] ) || ! filter_var( $_GET['ip'], FILTER_VALIDATE_IP ) ) {
+			wp_send_json_error( sprintf( _n( '%s Log deleted.', '%s Logs deleted.', 0, 'secupress' ), 0 ) );
+		}
+
+		$posts = $this->get_logs( array(
+			'fields'     => 'ids',
+			'meta_query' => array(
+				array(
+					'key'   => 'user_ip',
+					'value' => urldecode( $_GET['ip'] ),
+				),
+			),
+		) );
+
+		$deleted = $this->delete_logs( $posts );
+
+		wp_send_json_success( sprintf( _n( '%s log permanently deleted.', '%s logs permanently deleted.', $deleted, 'secupress' ), number_format_i18n( $deleted ) ) );
+	}
+
+
+	/**
+	 * Admin post callback that allows to delete several Logs of a certain type and with a certain IP.
+	 *
+	 * @since 1.0
+	 */
+	public function _post_bulk_delete_logs_by_ip_ajax_post_cb() {
+		check_admin_referer( 'secupress-delete-' . $this->log_type . '-logs-by-ip' );
+
+		if ( ! static::_user_can() ) {
+			wp_nonce_ays( '' );
+		}
+
+		if ( empty( $_GET['ip'] ) || ! filter_var( $_GET['ip'], FILTER_VALIDATE_IP ) ) {
+			$deleted = 0;
+		} else {
+			$posts = $this->get_logs( array(
+				'fields'     => 'ids',
+				'meta_query' => array(
+					array(
+						'key'   => 'user_ip',
+						'value' => urldecode( $_GET['ip'] ),
+					),
+				),
+			) );
+
+			$deleted = $this->delete_logs( $posts );
 		}
 
 		add_settings_error( 'general', 'logs_bulk_deleted', sprintf( _n( '%s log permanently deleted.', '%s logs permanently deleted.', $deleted, 'secupress' ), number_format_i18n( $deleted ) ), 'updated' );
