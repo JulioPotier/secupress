@@ -191,7 +191,7 @@ class SecuPress_Log {
 			);
 		}
 
-		$user_ip    = $this->user_ip;
+		$user_ip    = '<code>' . $this->user_ip . '</code>';
 		$user_id    = $this->user_id;
 		$user_login = $this->user_login;
 
