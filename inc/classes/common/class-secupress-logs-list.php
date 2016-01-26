@@ -236,7 +236,15 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 			</p>
 
 			<p class="log-user">
-				<?php echo $log->get_user( false, add_query_arg( 'log', $this->current_log_id, $this->_paged_page_url() ) ); ?>
+				<?php
+				$referer = add_query_arg( 'log', $this->current_log_id, $this->_paged_page_url() );
+				$filters = array(
+					'user_ip'    => add_query_arg( 'user_ip', '%s', $this->_page_url() ),
+					'user_id'    => add_query_arg( 'user_id', '%d', $this->_page_url() ),
+					'user_login' => add_query_arg( 'user_login', '%s', $this->_page_url() ),
+				);
+				echo $log->get_user( false, $referer, $filters );
+				?>
 			</p>
 
 			<p class="log-message">
