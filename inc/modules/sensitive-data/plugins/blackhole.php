@@ -45,7 +45,7 @@ function secupress_blackhole_robots_txt( $output ) {
 add_filter( 'template_include', 'secupress_blackhole_please_click_me', 1 );
 
 function secupress_blackhole_please_click_me( $template ) {
-	$url     = secupress_get_current_url();
+	$url     = trailingslashit( secupress_get_current_url() );
 	$dirname = '/secupress-' . substr( wp_hash( 'blackhole', 'nonce' ), 10, 8 ) . '/';
 
 	if ( substr( $url, - strlen( $dirname ) ) === $dirname ) {
