@@ -841,7 +841,13 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			wp_send_json_error();
 		}
 
-		if ( empty( $_GET['ip'] ) || ! filter_var( $_GET['ip'], FILTER_VALIDATE_IP ) ) {
+		if ( empty( $_GET['ip'] ) ) {
+			wp_send_json_error( sprintf( _n( '%s Log deleted.', '%s Logs deleted.', 0, 'secupress' ), 0 ) );
+		}
+
+		$ip = urldecode( $_GET['ip'] );
+
+		if ( ! filter_var( $ip, FILTER_VALIDATE_IP ) ) {
 			wp_send_json_error( sprintf( _n( '%s Log deleted.', '%s Logs deleted.', 0, 'secupress' ), 0 ) );
 		}
 
@@ -850,7 +856,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			'meta_query' => array(
 				array(
 					'key'   => 'user_ip',
-					'value' => urldecode( $_GET['ip'] ),
+					'value' => $ip,
 				),
 			),
 		) );
@@ -873,20 +879,26 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			wp_nonce_ays( '' );
 		}
 
-		if ( empty( $_GET['ip'] ) || ! filter_var( $_GET['ip'], FILTER_VALIDATE_IP ) ) {
+		if ( empty( $_GET['ip'] ) ) {
 			$deleted = 0;
 		} else {
-			$posts = $this->get_logs( array(
-				'fields'     => 'ids',
-				'meta_query' => array(
-					array(
-						'key'   => 'user_ip',
-						'value' => urldecode( $_GET['ip'] ),
-					),
-				),
-			) );
+			$ip = urldecode( $_GET['ip'] );
 
-			$deleted = $this->delete_logs( $posts );
+			if ( ! filter_var( $ip, FILTER_VALIDATE_IP ) ) {
+				$deleted = 0;
+			} else {
+				$posts = $this->get_logs( array(
+					'fields'     => 'ids',
+					'meta_query' => array(
+						array(
+							'key'   => 'user_ip',
+							'value' => $ip,
+						),
+					),
+				) );
+
+				$deleted = $this->delete_logs( $posts );
+			}
 		}
 
 		add_settings_error( 'general', 'logs_bulk_deleted', sprintf( _n( '%s log permanently deleted.', '%s logs permanently deleted.', $deleted, 'secupress' ), number_format_i18n( $deleted ) ), 'updated' );
