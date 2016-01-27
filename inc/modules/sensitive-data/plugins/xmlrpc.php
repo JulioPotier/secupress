@@ -19,7 +19,7 @@ function secupress_xmlrpc_disable_rpc() {
 	if ( isset( $options['block-all'] ) ) {
 		// Well, why not killing everything here?
 		if ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST ) {
-			wp_die(
+			secupress_die(
 				__( 'XMLRPC functionality is disabled on this site.', 'secupress' ),
 				__( 'XMLRPC is disabled', 'secupress' ),
 				array( 'response' => 403 )
