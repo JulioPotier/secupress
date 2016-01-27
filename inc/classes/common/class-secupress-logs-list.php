@@ -226,6 +226,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 		$user_raw         = $log->get_user( true );
 		$delete_url       = $this->logs_instance->delete_log_url( $this->current_log_id, $page_url );
 		$delete_by_ip_url = $this->logs_instance->delete_logs_by_ip_url( $user_raw->user_ip, $page_url );
+		$ban_ip_url       = wp_nonce_url( admin_url( 'admin-post.php?action=secupress-ban-ip&ip=' . urlencode( $user_raw->user_ip ) . '&_wp_http_referer=' . urlencode( $paged_page_url ) ), 'secupress-ban-ip' );
 
 		// Add a class to the current Log row.
 		add_filter( 'post_class', array( $this, '_add_current_log_class' ), 10, 3 );
@@ -237,6 +238,9 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 				<span class="spinner secupress-inline-spinner"></span>
 
 				<a class="secupress-delete-logs-by-ip" href="<?php echo esc_url( $delete_by_ip_url ); ?>"><?php printf( __( 'Delete Logs with the IP %s', 'secupress' ), '<code>' . $user_raw->user_ip . '</code>' ); ?></a>
+				<span class="spinner secupress-inline-spinner"></span>
+
+				<a class="secupress-ban-ip" href="<?php echo esc_url( $ban_ip_url ); ?>"><?php printf( __( 'Ban the IP %s', 'secupress' ), '<code>' . $user_raw->user_ip . '</code>' ); ?></a>
 				<span class="spinner secupress-inline-spinner"></span>
 
 				<a class="close" href="<?php echo esc_url( $paged_page_url ); ?>"><?php _e( 'Close' ); ?></a>
