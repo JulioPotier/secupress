@@ -216,10 +216,11 @@ function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 		$args = array( 'content' => $args );
 	}
 
+	$ip   = secupress_get_ip();
 	$args = wp_parse_args( $args, array( 'code' => 403, 'content' => '' ) );
 
-	do_action( 'secupress.block.' . $module, secupress_get_ip(), $args );
-	do_action( 'secupress.block', $module, secupress_get_ip(), $args );
+	do_action( 'secupress.block.' . $module, $ip, $args );
+	do_action( 'secupress.block', $module, $ip, $args );
 
 	$module = ucwords( str_replace( '-', ' ', $module ) );
 	$module = preg_replace( '/[^0-9A-Z]/', '', $module );
@@ -233,7 +234,7 @@ function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 		$content = '<p>' . $args['content'] . '</p>';
 	}
 	$details   = '<h4>' . __( 'Logged Details:', 'secupress' ) . '</h4><p>';
-	$details  .= sprintf( __( 'Your IP: %s', 'secupress' ), secupress_get_ip() ) . '<br>';
+	$details  .= sprintf( __( 'Your IP: %s', 'secupress' ), $ip ) . '<br>';
 	$details  .= sprintf( __( 'Time: %s', 'secupress' ), date_i18n( __( 'F j, Y g:i a' ) ) ) . '<br>';
 	$details  .= sprintf( __( 'Block ID: %s', 'secupress' ), $module ) . '</p>';
 	secupress_die( $title_fmt . $content . $details, $title, array( 'response', $args['code'] ) );
