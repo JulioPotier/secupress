@@ -376,8 +376,8 @@ function __secupress_ban_ip_ajax_post_cb() {
 		wp_nonce_ays( '' );
 	}
 
-	if ( secupress_get_ip() === $ip ) {
-		//wp_nonce_ays( '' );
+	if ( ! WP_DEBUG && secupress_get_ip() === $ip ) {
+		wp_nonce_ays( '' );
 	}
 
 	$ban_ips = get_site_option( SECUPRESS_BAN_IP );
