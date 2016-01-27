@@ -240,8 +240,10 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 				<a class="secupress-delete-logs-by-ip" href="<?php echo esc_url( $delete_by_ip_url ); ?>"><?php printf( __( 'Delete Logs with the IP %s', 'secupress' ), '<code>' . $user_raw->user_ip . '</code>' ); ?></a>
 				<span class="spinner secupress-inline-spinner"></span>
 
-				<a class="secupress-ban-ip" href="<?php echo esc_url( $ban_ip_url ); ?>"><?php printf( __( 'Ban the IP %s', 'secupress' ), '<code>' . $user_raw->user_ip . '</code>' ); ?></a>
-				<span class="spinner secupress-inline-spinner"></span>
+				<?php if ( WP_DEBUG || secupress_get_ip() !== $user_raw->user_ip ) : ?>
+					<a class="secupress-ban-ip" href="<?php echo esc_url( $ban_ip_url ); ?>"><?php printf( __( 'Ban the IP %s', 'secupress' ), '<code>' . $user_raw->user_ip . '</code>' ); ?></a>
+					<span class="spinner secupress-inline-spinner"></span>
+				<?php endif; ?>
 
 				<a class="close" href="<?php echo esc_url( $paged_page_url ); ?>"><?php _e( 'Close' ); ?></a>
 
