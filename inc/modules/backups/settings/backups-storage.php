@@ -14,7 +14,7 @@ $field_name = $this->get_field_name( 'location' );
 $this->add_field( array(
 	'title'        => __( 'Storage Location', 'secupress' ),
 	'description'  => __( 'Where do you want to store you backups?', 'secupress' ),
-	'label_for'    => $field_name,
+	'name'         => $field_name,
 	'type'         => 'radios',
 	'default'      => 'local',
 	'label_screen' => __( 'Storage Location', 'secupress' ),
