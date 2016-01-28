@@ -12,6 +12,9 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 add_action( 'secupress_plugins_loaded', 'secupress_restapi_disable_api' );
 
 function secupress_restapi_disable_api() {
+	remove_action( 'init',          'rest_api_init' );
+	remove_action( 'parse_request', 'rest_api_loaded' );
+
 	remove_action( 'xmlrpc_rsd_apis',            'rest_output_rsd' );
 	remove_action( 'wp_head',                    'rest_output_link_wp_head' );
 	remove_action( 'template_redirect',          'rest_output_link_header', 11 );
