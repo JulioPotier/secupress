@@ -236,7 +236,7 @@ function __secupress_move_login_settings_callback( $modulenow, &$settings, $old_
 	}
 	if ( ! empty( $errors['duplicates'] ) ) {
 		$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
-		$message .= __( 'The links can\'t have the same slugs.', 'sf-move-login' );
+		$message .= __( 'The links can\'t have the same slugs.', 'secupress' );
 		add_settings_error( "secupress_{$modulenow}_settings", 'duplicate-slugs', $message, 'error' );
 	}
 
