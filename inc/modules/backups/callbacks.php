@@ -12,16 +12,19 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @return array $settings
  */
 function __secupress_backups_settings_callback( $settings ) {
-	if ( ! isset( $settings['backups-storage_location'] ) || ! in_array( $settings['backups-storage_location'], array( 'local', 'ftp', 'amazons3', 'dropbox', 'rackspace' ) ) ) {
+	$locations = secupress_backups_storage_labels();
+
+	if ( ! isset( $settings['backups-storage_location'] ) || ! secupress_is_pro() || ! isset( $locations[ $settings['backups-storage_location'] ] ) ) {
 		$settings['backups-storage_location'] = 'local';
 	}
+
 	return $settings;
 }
 
 add_action( 'wp_ajax_secupress_backup_db', '__secupress_do_backup_db' );
 add_action( 'admin_post_secupress_backup_db', '__secupress_do_backup_db' );
 function __secupress_do_backup_db() {
-	
+
 	if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress_backup_db' ) ) {
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			wp_send_json_error();
@@ -65,7 +68,7 @@ function __secupress_do_backup_db() {
 // No AJAX support needed here
 add_action( 'admin_post_secupress_download_backup', '__secupress_download_backup_ajax_post_cb' );
 function __secupress_download_backup_ajax_post_cb() {
-	
+
 	if ( ! isset( $_GET['_wpnonce'], $_GET['file'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress_download_backup-' . $_GET['file'] ) ) {
 		wp_nonce_ays( '' );
 	}
@@ -77,7 +80,7 @@ function __secupress_download_backup_ajax_post_cb() {
 		wp_nonce_ays( '' );
 	}
 
-	if( ini_get( 'zlib.output_compression' ) ) { 
+	if( ini_get( 'zlib.output_compression' ) ) {
 		ini_set( 'zlib.output_compression', 'Off' );
 	}
 	header( 'Pragma: public' );
@@ -99,7 +102,7 @@ function __secupress_download_backup_ajax_post_cb() {
 add_action( 'wp_ajax_secupress_delete_backup', '__secupress_delete_backup_ajax_post_cb' );
 add_action( 'admin_post_secupress_delete_backup', '__secupress_delete_backup_ajax_post_cb' );
 function __secupress_delete_backup_ajax_post_cb() {
-	
+
 	if ( ! isset( $_GET['_wpnonce'], $_GET['file'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress_delete_backup-' . $_GET['file'] ) ) {
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			wp_send_json_error();
@@ -131,7 +134,7 @@ function __secupress_delete_backup_ajax_post_cb() {
 add_action( 'wp_ajax_secupress_delete_backups', '__secupress_delete_backups_ajax_post_cb' );
 add_action( 'admin_post_secupress_delete_backups', '__secupress_delete_backups_ajax_post_cb' );
 function __secupress_delete_backups_ajax_post_cb() {
-	
+
 	if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress_delete_backups' ) ) {
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			wp_send_json_error();
@@ -158,4 +161,26 @@ function __secupress_delete_backups_ajax_post_cb() {
 		die();
 	}
 
+}
+
+
+/*------------------------------------------------------------------------------------------------*/
+/* TOOLS ======================================================================================== */
+/*------------------------------------------------------------------------------------------------*/
+
+/**
+ * Return the values/labels used for the backups storage setting.
+ *
+ * @since 1.0
+ *
+ * @return (array) An array with back types as keys and labels as values.
+ */
+function secupress_backups_storage_labels() {
+	return array(
+		'local'     => __( 'Local', 'secupress' ),
+		'ftp'       => __( 'FTP', 'secupress' ),
+		'amazons3'  => __( 'Amazon S3', 'secupress' ),
+		'dropbox'   => __( 'Dropbox', 'secupress' ),
+		'rackspace' => __( 'Rackspace Cloud', 'secupress' ),
+	);
 }

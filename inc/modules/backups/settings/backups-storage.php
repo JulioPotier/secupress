@@ -18,13 +18,7 @@ $this->add_field( array(
 	'type'         => 'radios',
 	'default'      => 'local',
 	'label_screen' => __( 'Storage Location', 'secupress' ),
-	'options'      => array(
-		'local'     => __( 'Local', 'secupress' ),
-		'ftp'       => __( 'FTP', 'secupress' ),
-		'amazons3'  => __( 'Amazon S3', 'secupress' ),
-		'dropbox'   => __( 'Dropbox', 'secupress' ),
-		'rackspace' => __( 'Rackspace Cloud', 'secupress' ),
-	),
+	'options'      => secupress_backups_storage_labels(),
 	'helpers' => array(
 		array(
 			'type'        => 'warning',
