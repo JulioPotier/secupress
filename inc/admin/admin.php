@@ -260,7 +260,7 @@ function secupress_admin_die() {
 
 // A simple shorthand to send a json response, die, or redirect to one of our settings pages, depending on the admin context. It can also send poneys to mars.
 
-function secupress_admin_send_response_or_redirect( $response, $redirect ) {
+function secupress_admin_send_response_or_redirect( $response, $redirect = false ) {
 	if ( ! $response ) {
 		secupress_admin_die();
 	}
@@ -269,7 +269,9 @@ function secupress_admin_send_response_or_redirect( $response, $redirect ) {
 		wp_send_json_success( $response );
 	}
 
-	wp_redirect( secupress_admin_url( $redirect ) );
+	$redirect = $redirect ? secupress_admin_url( $redirect ) : wp_get_referer();
+
+	wp_redirect( $redirect );
 	die();
 }
 
