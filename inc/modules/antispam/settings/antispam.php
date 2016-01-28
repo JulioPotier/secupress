@@ -28,6 +28,13 @@ $this->add_field( array(
 		'fightspam'              => __( 'I <strong>need</strong> this to help my website fighting comment spam', 'secupress' ),
 		'remove-comment-feature' => __( 'I <strong>do not need</strong> comments on my website, remove all the comment features.', 'secupress' ),
 	),
+	'helpers' => array(
+		array(
+			'depends'     => $field_name . '_remove-comment-feature',
+			'type'        => 'warning',
+			'description' => secupress_get_deactivate_plugin_string( 'no-comment/no-comment.php' ),
+		),
+	),
 ) );
 
 
