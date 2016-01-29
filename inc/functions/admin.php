@@ -397,11 +397,11 @@ function secupress_get_module_data( $module, $submodule ) {
 }
 
 
-function secupress_generate_key() {
+function secupress_generate_key( $length = 16 ) {
 	$chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
 
 	$key = '';
-	for ( $i = 0; $i < 16; $i++ ) {
+	for ( $i = 0; $i < $length; $i++ ) {
 		$key .= $chars[ wp_rand( 0, 31 ) ];
 	}
 
