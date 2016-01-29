@@ -299,3 +299,17 @@ function secupress_get_valid_key_string( $format = '' ) {
 	}
 	return $message;
 }
+
+
+/**
+ * Generate a folder name using a hash in it
+ *
+ * @param (string) $context Your context, don't use empty string
+ * @param (string) $path The root base for this folder, optional
+ *
+ * @since 1.0
+ * @return string
+ **/
+function secupress_get_hashed_folder_name( $context, $path = '/' ) {
+	return $path . 'secupress-' . substr( wp_hash( $context, 'nonce' ), 10, 8 ) . '/';
+}
