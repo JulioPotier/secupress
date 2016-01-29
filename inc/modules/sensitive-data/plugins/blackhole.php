@@ -21,7 +21,7 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 add_filter( 'robots_txt', 'secupress_blackhole_robots_txt' );
 
 function secupress_blackhole_robots_txt( $output ) {
-	$dirname = '/secupress-' . substr( wp_hash( 'blackhole', 'nonce' ), 10, 8 ) . '/';
+	$dirname = secupress_get_hashed_folder_name( 'blackhole' );
 
 	if ( false !== strpos( $output, "User-agent: *\n" ) ) {
 		$output  = str_replace( "User-agent: *\n", "User-agent: *\nDisallow: $dirname\n", $output );
@@ -46,7 +46,7 @@ add_filter( 'template_include', 'secupress_blackhole_please_click_me', 1 );
 
 function secupress_blackhole_please_click_me( $template ) {
 	$url     = trailingslashit( secupress_get_current_url() );
-	$dirname = '/secupress-' . substr( wp_hash( 'blackhole', 'nonce' ), 10, 8 ) . '/';
+	$dirname = secupress_get_hashed_folder_name( 'blackhole' );
 
 	if ( substr( $url, - strlen( $dirname ) ) === $dirname ) {
 		return dirname( __FILE__ ) . '/inc/php/blackhole/warning-template.php';
