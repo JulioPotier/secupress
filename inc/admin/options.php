@@ -284,6 +284,16 @@ function __secupress_dashboard() {
 			delete_site_option( SECUPRESS_SCAN_TIMES );
 			delete_site_option( SECUPRESS_FIX_SLUG );
 			delete_site_option( SECUPRESS_SCAN_FIX_SITES_SLUG );
+			delete_site_option( SECUPRESS_BAN_IP );
+			delete_site_option( SECUPRESS_ACTIVE_SUBMODULES );
+			delete_site_option( SECUPRESS_SETTINGS_SLUG );
+			$modules = secupress_get_modules();
+			foreach ( $modules as $module => $atts ) {
+				delete_site_option( 'secupress_' . $module . '_settings' );
+			}
+			delete_site_option( 'secupress_delayed_alerts' );
+			secupress_delete_site_transient( 'secupress_module_activation_' . get_current_user_id() );
+			secupress_delete_site_transient( 'secupress_module_deactivation_' . get_current_user_id() );
 			?>
 		</div>
 	</div>
