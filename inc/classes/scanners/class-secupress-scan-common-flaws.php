@@ -41,7 +41,6 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements iSecuPress_S
 			201 => sprintf( __( 'The server appears to be vulnerable to <strong>Shellshock</strong> (%s).', 'secupress' ), '<em>CVE-2014-6271</em>' ),
 			202 => sprintf( __( 'The server appears to be vulnerable to <strong>Shellshock</strong> (%s).', 'secupress' ), '<em>CVE-2014-7169</em>' ),
 			203 => __( 'Your website should block <strong>malicious requests</strong>.', 'secupress' ),
-			204 => __( 'The list containing the contents to block is empty.', 'secupress' ),
 			// cantfix
 			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);
@@ -126,18 +125,11 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements iSecuPress_S
 
 	public function fix() {
 
-		$settings = array( 'bbq-url-content_bad-contents' => '1' );
-		secupress_activate_module( 'firewall', $settings );
+		// Activate.
+		secupress_activate_submodule( 'firewall', 'bad-url-contents' );
+
 		// good
 		$this->add_fix_message( 1 );
-
-		$bad_url_contents = trim( secupress_get_module_option( 'bbq-url-content_bad-contents-list', '', 'firewall' ) );
-		$bad_url_contents = preg_replace( '/\s*,\s*/', '|', preg_quote( $bad_url_contents, '/' ) );
-
-		if ( ! $bad_url_contents ) {
-			// bad
-			$this->add_fix_message( 204 );
-		}
 
 		return parent::fix();
 	}

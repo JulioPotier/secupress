@@ -69,13 +69,13 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 	public function fix() {
 		global $wpdb;
 
-		// Blacklisted names
+		// Blacklisted names.
 		$names = static::_get_blacklisted_usernames();
 		$ids   = $wpdb->get_col( "SELECT ID from $wpdb->users WHERE user_login IN ( '$names' )" );
 
 		if ( $ids ) {
-			$settings = array( 'blacklist-logins_activated' => 1 );
-			secupress_activate_module( 'users-login', $settings );
+			// Activate.
+			secupress_activate_submodule( 'users-login', 'blacklist-logins' );
 			// good
 			$this->add_fix_message( 1 );
 		}

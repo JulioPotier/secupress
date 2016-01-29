@@ -74,9 +74,10 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements iSecuPress
 
 	public function fix() {
 
-		$settings = array( 'bbq-url-content_bad-url-length' => '1' );
-		secupress_activate_module( 'firewall', $settings );
+		// Activate.
+		secupress_activate_submodule( 'firewall', 'bad-url-length' );
 
+		// good
 		$this->add_fix_message( 1 );
 
 		return parent::fix();

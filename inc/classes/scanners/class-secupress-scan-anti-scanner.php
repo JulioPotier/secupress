@@ -83,9 +83,10 @@ class SecuPress_Scan_Anti_Scanner extends SecuPress_Scan implements iSecuPress_S
 
 	public function fix() {
 
-		$settings = array( 'bbq-url-content_bad-sqli-scan' => '1' );
-		secupress_activate_module( 'firewall', $settings );
+		// Activate.
+		secupress_activate_submodule( 'firewall', 'bad-sqli-scan' );
 
+		// good
 		$this->add_fix_message( 1 );
 
 		return parent::fix();
