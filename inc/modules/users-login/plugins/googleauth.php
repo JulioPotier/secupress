@@ -158,14 +158,9 @@ add_action( 'login_form_doubleauth_lost_form_backupcode', '__secupress_doubleaut
 function __secupress_doubleauth_lost_form_backupcode() {
 	global $wpdb;
 
-	$messages  = array();
 	$errors    = null;
 	$do_delete = true;
 	$show_form = true;
-
-	if ( isset( $_GET['emailed'] ) ) {
-		$messages[] = __( 'You will receive an e-mail on your backup e-mail address, containing a backup code.', 'secupress' );
-	}
 
 	$CLEAN               = array();
 	$CLEAN['token']      = isset( $_REQUEST['token'] ) ? sanitize_key( $_REQUEST['token'] ) : false;
@@ -250,7 +245,9 @@ function __secupress_doubleauth_lost_form_backupcode() {
 		}
 	}
 
-	$messages = count( $messages ) ? '<p class="message error">' . implode( '</p><br><p class="message">', $messages ) . '</p><br>' : '';
+	if ( isset( $_GET['emailed'] ) ) {
+		$messages = '<p class="message">' . __( 'You will receive an e-mail on your backup e-mail address, containing a backup code.', 'secupress' ) . '</p>';
+	}
 
 	login_header( __( 'Log In' ), $messages, $errors );
 
@@ -258,15 +255,15 @@ function __secupress_doubleauth_lost_form_backupcode() {
 		secupress_print_doubleauth_head_css( $user );
 		?>
 		<form name="loginform" id="loginform" action="<?php echo esc_url( site_url( 'wp-login.php?action=doubleauth_lost_form_backupcode' ) ); ?>" method="post">
+			<h3><?php printf( __( '2-Step Verification for %s', 'secupress' ), get_bloginfo( 'name', 'display' ) ); ?></h3>
 			<p>
-				<label>
-					<h3><?php printf( __( '2-Step Verification for %s', 'secupress' ), get_bloginfo( 'name', 'display' ) ); ?></h3>
-					<span class="authinfo">
+				<span class="authinfo">
+					<label for="otp">
 						<img src="<?php echo plugins_url( '/inc/img/backup-codes-icon_2X.png', __FILE__ ); ?>" alt="" role="presentation">
 						<em><?php _e( 'Enter one of your backup codes.', 'secupress' ); ?></em>
-					</span>
-					<input type="text" class="doubleauth" maxlength="8" placeholder="********" onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 13" name="otp" id="otp" size="20" style="ime-mode: inactive;" />
-				</label>
+					</label>
+				</span>
+				<input type="text" class="doubleauth" maxlength="8" placeholder="********" onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 13" name="otp" id="otp" size="20" style="ime-mode: inactive;" />
 			</p>
 
 			<input type="hidden" name="token" value="<?php echo esc_attr( $CLEAN['token'] ); ?>">
@@ -349,9 +346,7 @@ add_action( 'login_form_doubleauth', '__secupress_doubleauth_login_form_add_form
 function __secupress_doubleauth_login_form_add_form() {
 	global $wpdb;
 
-	$messages   = array();
 	$errors     = null;
-	$messages[] = __( 'Your account requires an additionnal verification step.', 'secupress' );
 	$do_delete  = $show_form = true;
 
 	$CLEAN               = array();
@@ -435,8 +430,7 @@ function __secupress_doubleauth_login_form_add_form() {
 		}
 	}
 
-	$messages = count( $messages ) ? '<p class="message error">' . implode( '</p><br><p class="message">', $messages ) . '</p><br>' : '';
-
+	$messages = '<p class="message">' . __( 'Your account requires an additionnal verification step.', 'secupress' ) . '</p>';
 	login_header( __( 'Log In' ), $messages, $errors );
 
 	if ( $show_form ) {
@@ -535,7 +529,7 @@ function __secupress_doubleauth_otp( $raw_user, $username, $password ) {
 	if ( secupress_is_affected_role( 'users-login', 'double-auth', $raw_user ) &&
 		secupress_doubleauth_get_user_option( 'secret', $user_id ) &&
 		secupress_doubleauth_get_user_option( 'verified', $user_id ) &&
-		defined( 'XMLRPC_REQUEST' ) || defined( 'APP_REQUEST' )
+		( defined( 'XMLRPC_REQUEST' ) || defined( 'APP_REQUEST' ) )
 	) {
 		$user = get_user_by( 'login', $username );
 
@@ -664,7 +658,8 @@ function secupress_doubleauth_profile_personal_options() {
 			<?php
 			// Display backup codes if the auth is verified (so we have backup codes).
 			if ( secupress_doubleauth_get_user_option( 'verified' ) ) {
-				$backup_codes_count = count( array_filter( (array) $doubleauth_backupcodes ) );
+				$backup_codes_count        = count( array_filter( (array) $doubleauth_backupcodes ) );
+				$backup_codes_count_string = sprintf( _n( 'You have %d unused code.', 'You have %d unused codes.', $backup_codes_count, 'secupress' ), $backup_codes_count );
 				?>
 				<tr>
 					<th>
@@ -672,9 +667,9 @@ function secupress_doubleauth_profile_personal_options() {
 						<p class="description"><?php _e( 'When your phone is unavailable or just can\'t log in your account using the Mobile Authenticator.', 'secupress' ); ?></p>
 					</th>
 					<td>
-						<p id="backupcodes_codes_description" data-desc="<?php echo esc_attr( sprintf( _n( 'You have %d unused code.', 'You have %d unused codes.', $backup_codes_count, 'secupress' ), 10 ) ); ?>" class="description">
+						<p id="backupcodes_codes_description" data-desc="<?php echo esc_attr( $backup_codes_count_string ); ?>" class="description">
 							<?php
-							echo esc_html( sprintf( _n( 'You have %d unused code.', 'You have %d unused codes.', $backup_codes_count, 'secupress' ), $backup_codes_count ) );
+							echo esc_html( $backup_codes_count_string );
 							?>
 						</p>
 
@@ -1002,7 +997,6 @@ function secupress_doubleauth_redirect() {
 	?>
 	<form class="wrap" action="<?php echo secupress_get_current_url( 'raw' ); ?>" method="post">
 		<h1><?php _e( 'Double Authentication Setting Required', 'secupress' ); ?></h1>
-		<p>
 		<?php
 		switch ( $step ) {
 			// Step 1
@@ -1125,7 +1119,6 @@ function secupress_doubleauth_redirect() {
 		}
 		++$step;
 		?>
-		</p>
 		<input type="hidden" name="step" value="<?php echo $step; ?>">
 		<input type="hidden" name="_wp_http_referer" value="<?php echo urlencode( secupress_get_current_url( 'raw' ) ); ?>">
 		<?php
