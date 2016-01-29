@@ -198,6 +198,7 @@ function secupress_blacklist_logins_new_user_notification( $user ) {
  * Get the blacklisted usernames.
  *
  * @since 1.0
+ * @see `SecuPress_Scan_Bad_Usernames::_get_blacklisted_usernames()` in /inc/classes/scanners/class-secupress-scan-bad-usernames.php
  *
  * @return (array)
  */

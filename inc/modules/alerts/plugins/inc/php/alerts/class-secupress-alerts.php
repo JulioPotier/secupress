@@ -53,7 +53,11 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 			return static::$types;
 		}
 
-		$defaults = array_flip( secupress_alerts_labels( secupress_is_pro() ) );
+		if ( secupress_is_pro() ) {
+			$defaults = array( 'email', 'sms', 'push', 'slack', 'twitter' );
+		} else {
+			$defaults = array( 'email' );
+		}
 
 		static::$types = secupress_get_module_option( 'alerts_type', array(), 'alerts' );
 		static::$types = array_intersect( static::$types, $defaults );

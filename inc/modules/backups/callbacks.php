@@ -12,22 +12,23 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @return array $settings
  */
 function __secupress_backups_settings_callback( $settings ) {
-	if ( ! isset( $settings['backups-storage_location'] ) || ! in_array( $settings['backups-storage_location'], array( 'local', 'ftp', 'amazons3', 'dropbox', 'rackspace' ) ) ) {
+	$locations = secupress_backups_storage_labels();
+
+	if ( ! isset( $settings['backups-storage_location'] ) || ! secupress_is_pro() || ! isset( $locations[ $settings['backups-storage_location'] ] ) ) {
 		$settings['backups-storage_location'] = 'local';
 	}
+
 	return $settings;
 }
 
-add_action( 'wp_ajax_secupress_backup_db', '__secupress_do_backup_db' );
+
+add_action( 'wp_ajax_secupress_backup_db',    '__secupress_do_backup_db' );
 add_action( 'admin_post_secupress_backup_db', '__secupress_do_backup_db' );
+
 function __secupress_do_backup_db() {
-	
+
 	if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress_backup_db' ) ) {
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-			wp_send_json_error();
-		} else {
-			wp_nonce_ays( '' );
-		}
+		secupress_admin_die();
 	}
 
 	$wp_tables      = secupress_get_wp_tables();
@@ -42,16 +43,12 @@ function __secupress_do_backup_db() {
 			file_put_contents( $backup_file, secupress_get_db_tables_content( array_merge( $wp_tables, $other_tables ) ) );
 			$backup_file = secupress_zip_backup_file( $backup_file );
 		}
-	} else {
+	} elseif ( secupress_is_pro() ) {
 		$backup_file = apply_filters( 'secupress.do_backup.file', $backup_file, $backup_storage );
 	}
 
 	if ( ! $backup_file ) {
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-			wp_send_json_error();
-		} else {
-			wp_nonce_ays( '' );
-		}
+		secupress_admin_die();
 	}
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
@@ -62,24 +59,28 @@ function __secupress_do_backup_db() {
 	}
 }
 
+
 // No AJAX support needed here
 add_action( 'admin_post_secupress_download_backup', '__secupress_download_backup_ajax_post_cb' );
+
 function __secupress_download_backup_ajax_post_cb() {
-	
+
 	if ( ! isset( $_GET['_wpnonce'], $_GET['file'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress_download_backup-' . $_GET['file'] ) ) {
 		wp_nonce_ays( '' );
 	}
 
 	$file = glob( secupress_get_hashed_folder_name( 'backup', WP_CONTENT_DIR . '/backups/' ) . '*' . $_GET['file'] . '*.{zip,sql}', GLOB_BRACE );
+
 	if ( $file ) {
 		$file = reset( $file );
 	} else {
 		wp_nonce_ays( '' );
 	}
 
-	if( ini_get( 'zlib.output_compression' ) ) { 
+	if ( ini_get( 'zlib.output_compression' ) ) {
 		ini_set( 'zlib.output_compression', 'Off' );
 	}
+
 	header( 'Pragma: public' );
 	header( 'Expires: 0' );
 	header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0');
@@ -92,70 +93,68 @@ function __secupress_download_backup_ajax_post_cb() {
 	header( 'Connection: close' );
 	readfile($file);
 	die();
-
 }
 
 
-add_action( 'wp_ajax_secupress_delete_backup', '__secupress_delete_backup_ajax_post_cb' );
+add_action( 'wp_ajax_secupress_delete_backup',    '__secupress_delete_backup_ajax_post_cb' );
 add_action( 'admin_post_secupress_delete_backup', '__secupress_delete_backup_ajax_post_cb' );
+
 function __secupress_delete_backup_ajax_post_cb() {
-	
+
 	if ( ! isset( $_GET['_wpnonce'], $_GET['file'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress_delete_backup-' . $_GET['file'] ) ) {
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-			wp_send_json_error();
-		} else {
-			wp_nonce_ays( '' );
-		}
+		secupress_admin_die();
 	}
 
 	$files = glob( secupress_get_hashed_folder_name( 'backup', WP_CONTENT_DIR . '/backups/' ) . '*' . $_GET['file'] . '*.{zip,sql}', GLOB_BRACE );
+
 	if ( ! $files ) {
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-			wp_send_json_error();
-		} else {
-			wp_nonce_ays( '' );
-		}
+		secupress_admin_die();
 	}
 
 	@array_map( 'unlink', $files );
 
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		wp_send_json_success( $_GET['file'] );
-	} else {
-		wp_redirect( wp_get_referer() );
-		die();
-	}
-
+	secupress_admin_send_response_or_redirect( $_GET['file'] );
 }
 
-add_action( 'wp_ajax_secupress_delete_backups', '__secupress_delete_backups_ajax_post_cb' );
+
+add_action( 'wp_ajax_secupress_delete_backups',    '__secupress_delete_backups_ajax_post_cb' );
 add_action( 'admin_post_secupress_delete_backups', '__secupress_delete_backups_ajax_post_cb' );
+
 function __secupress_delete_backups_ajax_post_cb() {
-	
+
 	if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress_delete_backups' ) ) {
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-			wp_send_json_error();
-		} else {
-			wp_nonce_ays( '' );
-		}
+		secupress_admin_die();
 	}
 
 	$files = glob( secupress_get_hashed_folder_name( 'backup', WP_CONTENT_DIR . '/backups/' ) . '*.{zip,sql}', GLOB_BRACE );
+
 	if ( ! $files ) {
-		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-			wp_send_json_error();
-		} else {
-			wp_nonce_ays( '' );
-		}
+		secupress_admin_die();
 	}
 
 	@array_map( 'unlink', $files );
 
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		wp_send_json_success();
-	} else {
-		wp_redirect( wp_get_referer() );
-		die();
-	}
+	secupress_admin_send_response_or_redirect( 1 );
+}
 
+
+/*------------------------------------------------------------------------------------------------*/
+/* TOOLS ======================================================================================== */
+/*------------------------------------------------------------------------------------------------*/
+
+/**
+ * Return the values/labels used for the backups storage setting.
+ *
+ * @since 1.0
+ *
+ * @return (array) An array with back types as keys and labels as values.
+ */
+function secupress_backups_storage_labels() {
+	return array(
+		'local'     => __( 'Local', 'secupress' ),
+		'ftp'       => __( 'FTP', 'secupress' ),
+		'amazons3'  => __( 'Amazon S3', 'secupress' ),
+		'dropbox'   => __( 'Dropbox', 'secupress' ),
+		'rackspace' => __( 'Rackspace Cloud', 'secupress' ),
+	);
 }

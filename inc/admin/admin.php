@@ -260,7 +260,7 @@ function secupress_admin_die() {
 
 // A simple shorthand to send a json response, die, or redirect to one of our settings pages, depending on the admin context. It can also send poneys to mars.
 
-function secupress_admin_send_response_or_redirect( $response, $redirect ) {
+function secupress_admin_send_response_or_redirect( $response, $redirect = false ) {
 	if ( ! $response ) {
 		secupress_admin_die();
 	}
@@ -269,7 +269,9 @@ function secupress_admin_send_response_or_redirect( $response, $redirect ) {
 		wp_send_json_success( $response );
 	}
 
-	wp_redirect( secupress_admin_url( $redirect ) );
+	$redirect = $redirect ? secupress_admin_url( $redirect ) : wp_get_referer();
+
+	wp_redirect( $redirect );
 	die();
 }
 
@@ -344,14 +346,63 @@ function __secupress_settings_action_links( $actions ) {
  *
  * @since 1.0
  */
-add_action( 'admin_post_secupress_resetwl', '__secupress_reset_white_label_values_action' );
+add_action( 'admin_post_secupress_resetwl', '__secupress_reset_white_label_values_ajax_post_cb' );
 
-function __secupress_reset_white_label_values_action() {
+function __secupress_reset_white_label_values_ajax_post_cb() {
 	if ( isset( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'secupress_resetwl' ) ) {
 		secupress_reset_white_label_values( true );
 	}
 
 	wp_safe_redirect( add_query_arg( 'page', 'secupress_settings', wp_get_referer() ) );
+	die();
+}
+
+
+/**
+ * Ban an IP address.
+ *
+ * @since 1.0
+ */
+add_action( 'admin_post_secupress-ban-ip', '__secupress_ban_ip_ajax_post_cb' );
+
+function __secupress_ban_ip_ajax_post_cb() {
+	check_admin_referer( 'secupress-ban-ip' );
+
+	if ( ! current_user_can( secupress_get_capability() ) || empty( $_REQUEST['ip'] ) ) {
+		wp_nonce_ays( '' );
+	}
+
+	$ip = urldecode( $_REQUEST['ip'] );
+
+	if ( ! filter_var( $_REQUEST['ip'], FILTER_VALIDATE_IP ) ) {
+		wp_nonce_ays( '' );
+	}
+
+	if ( ! WP_DEBUG && secupress_get_ip() === $ip ) {
+		wp_nonce_ays( '' );
+	}
+
+	$ban_ips = get_site_option( SECUPRESS_BAN_IP );
+	$ban_ips = is_array( $ban_ips ) ? $ban_ips : array();
+
+	$ban_ips[ $ip ] = time() + YEAR_IN_SECONDS; // Now you got 1 year to think about your future, kiddo. In the meantime, go clean your room.
+
+	update_site_option( SECUPRESS_BAN_IP, $ban_ips );
+
+	/* This hook is documented in /inc/functions/admin.php */
+	do_action( 'secupress.ip_banned', $IP, $ban_ips );
+
+	if ( apply_filters( 'write_ban_in_htaccess', true ) ) {
+		secupress_write_htaccess( 'ban_ip', secupress_get_htaccess_ban_ip() );
+	}
+
+	$msg = sprintf( __( 'The IP address %s has been banned.', 'secupress' ), '<code>' . esc_html( $ip ) . '</code>' );
+
+	add_settings_error( 'general', 'ip_banned', $msg, 'updated' );
+	set_transient( 'settings_errors', get_settings_errors(), 30 );
+
+	$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
+	wp_redirect( $goback );
 	die();
 }
 

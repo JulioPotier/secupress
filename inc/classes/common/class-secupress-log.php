@@ -178,41 +178,69 @@ class SecuPress_Log {
 	 *
 	 * @param (bool)   $raw     If true, the method will return raw values in an array. If false, the method will return formated infos as a string.
 	 * @param (string) $referer If the user exists and is not the current user, a link to the user's profile is provided. A referer is needed for this link.
+	 * @param (array)  $filters An array of URLs used to filter the list results. Keys are `user_ip`, `user_id` and `user_login`. Values will be used in `sprintf()`.
 	 *
-	 * @return (array|string) An array of raw infos, or formated infos as a string.
+	 * @return (object|string) An object of raw infos, or formated infos as a string.
 	 */
-	public function get_user( $raw = false, $referer = false ) {
+	public function get_user( $raw = false, $referer = false, $filters = array() ) {
 		if ( $raw ) {
-			return array(
+			return (object) array(
 				'user_ip'    => $this->user_ip,
 				'user_id'    => $this->user_id,
 				'user_login' => $this->user_login,
 			);
 		}
 
+		$user_ip    = '<code>' . $this->user_ip . '</code>';
+		$user_id    = $this->user_id;
 		$user_login = $this->user_login;
+
+		// Filter Logs by IP.
+		if ( ! empty( $filters['user_ip'] ) ) {
+			$user_ip = '<a title="' . esc_attr( sprintf( __( 'Filter Logs with the IP address %s', 'secupress' ), $user_ip ) ) . '" href="' . esc_url( sprintf( $filters['user_ip'], urlencode( $user_ip ) ) ) . '">' . $user_ip . '</a>';
+		}
+
+		// Filter Logs by id.
+		if ( $user_id && ! empty( $filters['user_id'] ) ) {
+			$user_id = '<a title="' . esc_attr( sprintf( __( 'Filter Logs with the user ID %d', 'secupress' ), $user_id ) ) . '" href="' . esc_url( sprintf( $filters['user_id'], $user_id ) ) . '">' . $user_id . '</a>';
+		}
+
+		// Filter Logs by login.
+		if ( $user_login && ! empty( $filters['user_login'] ) ) {
+			$user_login = '<a title="' . esc_attr( sprintf( __( 'Filter Logs with the user login "%s"', 'secupress' ), $user_login ) ) . '" href="' . esc_url( sprintf( $filters['user_login'], urlencode( $user_login ) ) ) . '">' . $user_login . '</a>';
+		}
 
 		// If the user exists and is not the current user.
 		if ( get_current_user_id() !== $this->user_id && $data = get_userdata( $this->user_id ) ) {
 
 			// Login changed? Add the current one.
 			if ( $data->data->user_login !== $this->user_login ) {
-				$user_login .= ' (' . esc_html( $data->data->user_login ) . ')';
+				$suffix = esc_html( $data->data->user_login );
+			}
+			// Add a link to the user's profile page.
+			elseif ( $referer ) {
+				$suffix = __( 'Profile' ); // WP i18n
+			}
+			else {
+				$suffix = '';
 			}
 
-			// Add a link to the user's profile page.
 			if ( $referer ) {
-				$user_login = '<a class="user-profile-link" href="' . esc_url( admin_url( 'user-edit.php?user_id=' . $this->user_id . '&wp_http_referer=' . urlencode( $referer ) ) ) . '">' . $user_login . '</a>';
+				$suffix = '<a class="user-profile-link" href="' . esc_url( admin_url( 'user-edit.php?user_id=' . $this->user_id . '&wp_http_referer=' . urlencode( $referer ) ) ) . '">' . $suffix . '</a>';
+			}
+
+			if ( $suffix ) {
+				$user_login .= ' (' . $suffix . ')';
 			}
 		}
 
 		if ( $this->user_id ) {
 			/* translators: 1: IP address, 2: user ID, 3: user login, 4: separator */
-			return sprintf( __( 'IP: %1$s %4$s ID: %2$d %4$s Login: %3$s', 'secupress' ), $this->user_ip, $this->user_id, $user_login, '|' );
+			return sprintf( __( 'IP: %1$s %4$s ID: %2$s %4$s Login: %3$s', 'secupress' ), $user_ip, $user_id, $user_login, '|' );
 		}
 
 		/* translators: 1: IP address */
-		return sprintf( __( 'IP: %s', 'secupress' ), $this->user_ip );
+		return sprintf( __( 'IP: %s', 'secupress' ), $user_ip );
 	}
 
 

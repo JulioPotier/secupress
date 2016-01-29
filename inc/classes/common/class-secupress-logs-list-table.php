@@ -187,6 +187,39 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 			$args['posts_per_page'] = 20;
 		}
 
+		// Metas
+		$filter_request = false;
+
+		if ( ! empty( $_GET['user_ip'] ) ) {
+			// User IP.
+			$user_ip = urldecode( $_GET['user_ip'] );
+
+			if ( filter_var( $user_ip, FILTER_VALIDATE_IP ) ) {
+				$args['user_ip'] = $user_ip;
+				$filter_request  = true;
+			}
+		}
+
+		if ( ! empty( $_GET['user_id'] ) ) {
+			// User ID.
+			$user_id = (int) $_GET['user_id'];
+
+			if ( $user_id ) {
+				$args['user_id'] = $user_id;
+				$filter_request  = true;
+			}
+		}
+
+		if ( ! empty( $_GET['user_login'] ) ) {
+			// User login.
+			$args['user_login'] = esc_attr( $_GET['user_login'] );
+			$filter_request     = true;
+		}
+
+		if ( $filter_request ) {
+			add_action( 'parse_request', array( $this, '_filter_request' ) );
+		}
+
 		/** This filter is documented in wp-admin/includes/post.php */
 		$args['posts_per_page'] = apply_filters( 'edit_' . $args['post_type'] . '_per_page', $args['posts_per_page'] );
 
@@ -195,6 +228,42 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 
 		// Get posts.
 		wp( $args );
+	}
+
+
+	/**
+	 * Filter the main request to add custom query vars, like meta queries.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (object) $wp `WP` object, passed by reference.
+	 */
+	public function _filter_request( $wp ) {
+		$wp->query_vars['meta_query'] = isset( $wp->query_vars['meta_query'] ) && is_array( $wp->query_vars['meta_query'] ) ? $wp->query_vars['meta_query'] : array();
+
+		// User IP.
+		if ( ! empty( $wp->extra_query_vars['user_ip'] ) ) {
+			$wp->query_vars['meta_query'][] = array(
+				'key'   => 'user_ip',
+				'value' => $wp->extra_query_vars['user_ip'],
+			);
+		}
+
+		// User ID.
+		if ( ! empty( $wp->extra_query_vars['user_id'] ) ) {
+			$wp->query_vars['meta_query'][] = array(
+				'key'   => 'user_id',
+				'value' => $wp->extra_query_vars['user_id'],
+			);
+		}
+
+		// User login.
+		if ( ! empty( $wp->extra_query_vars['user_login'] ) ) {
+			$wp->query_vars['meta_query'][] = array(
+				'key'   => 'user_login',
+				'value' => $wp->extra_query_vars['user_login'],
+			);
+		}
 	}
 
 

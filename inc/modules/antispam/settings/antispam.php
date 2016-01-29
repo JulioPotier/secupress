@@ -28,6 +28,13 @@ $this->add_field( array(
 		'fightspam'              => __( 'I <strong>need</strong> this to help my website fighting comment spam', 'secupress' ),
 		'remove-comment-feature' => __( 'I <strong>do not need</strong> comments on my website, remove all the comment features.', 'secupress' ),
 	),
+	'helpers' => array(
+		array(
+			'depends'     => $field_name . '_remove-comment-feature',
+			'type'        => 'warning',
+			'description' => secupress_get_deactivate_plugin_string( 'no-comment/no-comment.php' ),
+		),
+	),
 ) );
 
 
@@ -130,27 +137,6 @@ function baw_no_short_coms( $comment )
 	}
 	return $comment;
 }
-<?php
-// Disable X-Pingback HTTP Header.
-add_filter('wp_headers', function($headers, $wp_query){
-    if(isset($headers['X-Pingback'])){
-        // Drop X-Pingback
-        unset($headers['X-Pingback']);
-    }
-    return $headers;
-}, 11, 2);
-// Disable XMLRPC by hijacking and blocking the option.
-add_filter('pre_option_enable_xmlrpc', function($state){
-    return '0'; // return $state; // To leave XMLRPC intact and drop just Pingback
-});
-// Remove rsd_link from filters (<link rel="EditURI" />).
-add_action('wp', function(){
-    remove_action('wp_head', 'rsd_link');
-}, 9);
-// Hijack pingback_url for get_bloginfo (<link rel="pingback" />).
-add_filter('bloginfo_url', function($output, $property){
-    return ($property == 'pingback_url') ? null : $output;
-}, 11, 2);
 // Just disable pingback.ping functionality while leaving XMLRPC intact?
 add_action('xmlrpc_call', function($method){
     if($method != 'pingback.ping') return;

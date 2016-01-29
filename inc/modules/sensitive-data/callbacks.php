@@ -67,7 +67,7 @@ function __secupress_pages_protection_settings_callback( $modulenow, &$settings 
  */
 function __secupress_content_protection_settings_callback( $modulenow, &$settings ) {
 	secupress_manage_submodule( $modulenow, 'hotlink',   ! empty( $settings['content-protect_hotlink'] ) && secupress_is_pro() );
-	secupress_manage_submodule( $modulenow, 'blackhole', ! empty( $settings['content-protect_blackhole'] ) );
+	secupress_manage_submodule( $modulenow, 'blackhole', ! empty( $settings['content-protect_blackhole'] ) && secupress_blackhole_is_robots_txt_enabled() );
 
 	unset( $settings['content-protect_hotlink'], $settings['content-protect_blackhole'] );
 }
@@ -98,4 +98,25 @@ function __secupress_wp_endpoints_settings_callback( $modulenow, &$settings ) {
 	secupress_manage_submodule( $modulenow, 'restapi', ! empty( $settings['wp-endpoints_restapi'] ) && secupress_is_pro() );
 
 	unset( $settings['wp-endpoints_restapi'] );
+}
+
+
+/*------------------------------------------------------------------------------------------------*/
+/* TOOLS ======================================================================================== */
+/*------------------------------------------------------------------------------------------------*/
+
+/*
+ * Tell if a `robots.txt` file is in use.
+ * WordPress does not create a rewrite rule for the `robots.txt` file if it is installed in a folder.
+ * If a constant `SECUPRESS_FORCE_ROBOTS_TXT` is defined to `true`, the field will be available.
+ *
+ * @since 1.0
+ *
+ * @see `WP_Rewrite::rewrite_rules()`.
+ *
+ * @return (bool)
+ */
+function secupress_blackhole_is_robots_txt_enabled() {
+	$home_path = parse_url( home_url() );
+	return empty( $home_path['path'] ) || '/' === $home_path['path'] || defined( 'SECUPRESS_FORCE_ROBOTS_TXT' ) && SECUPRESS_FORCE_ROBOTS_TXT;
 }

@@ -51,3 +51,22 @@ function __secupress_install_antispam_module( $module ) {
 		secupress_update_module_options( $values, 'antispam' );
 	}
 }
+
+
+/*------------------------------------------------------------------------------------------------*/
+/* NOTICES ====================================================================================== */
+/*------------------------------------------------------------------------------------------------*/
+
+/**
+ * Display a notice if the standalone version of Remove Comment Feature is used.
+ *
+ * @since 1.0
+ *
+ * @param (array) $plugins A list of plugin paths, relative to the plugins folder.
+ */
+add_filter( 'secupress.plugins.packed-plugins', 'secupress_remove_comment_feature_add_packed_plugin' );
+
+function secupress_remove_comment_feature_add_packed_plugin( $plugins ) {
+	$plugins['remove-comment-feature'] = 'no-comment/no-comment.php';
+	return $plugins;
+}
