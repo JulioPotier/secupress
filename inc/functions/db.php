@@ -50,7 +50,7 @@ function secupress_create_unique_db_prefix() {
 	$all_tables = $wpdb->get_results( "SHOW TABLES LIKE '{$wpdb->prefix}%'" );
 	$all_tables = wp_list_pluck( $all_tables, 'Tables_in_' . DB_NAME . ' (' . $wpdb->prefix . '%)' );
 	while ( in_array( $new_prefix . 'posts', $all_tables ) ) {
-		$new_prefix = strtolower( 'wp_' . secupress_generate_password( 6, array( 'min' => 'true', 'maj' => false, 'num' => false ) ) . '_' );
+		$new_prefix = strtolower( 'wp_' . strtolower( secupress_generate_key( 6 ) ) . '_' );
 	}
 
 	return $new_prefix;
@@ -151,7 +151,7 @@ function secupress_get_db_tables_content( $tables ) {
 					$values = ",\n(";
 				}
 				foreach ( $row as $key => $value ) {
-					$values .= '"' . $wpdb->escape( $value ) . '",';
+					$values .= '"' . esc_sql( $value ) . '",';
 				}
 				$buffer .= rtrim( $values, ', ' ) . ")";
 			}
