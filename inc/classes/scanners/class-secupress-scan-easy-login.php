@@ -91,7 +91,8 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 			$settings = array( 'double-auth_type' => 'passwordless', 'double-auth_passwordless-type' => 'email', 'double_auth_affected_role' => array() );
 			$this->add_fix_message( 2 );
 		}
-		secupress_activate_module( 'users-login', $settings );
+
+		secupress_update_module_settings( 'users-login', $settings );
 
 		return parent::fix();
 	}

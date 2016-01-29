@@ -276,36 +276,7 @@ function secupress_action_page( $title, $content, $args = array() ) {
 }
 
 
-function secupress_deactivate_submodule( $module, $plugins, $args = array() ) {
-	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
-
-	if ( ! is_array( $plugins ) ) {
-		$plugins = (array) $plugins;
-	}
-
-	foreach ( $plugins as $plugin ) {
-		$plugin_file = sanitize_key( $plugin );
-
-		if ( $active_plugins && isset( $active_plugins[ $module ] ) && in_array_deep( $plugin_file, $active_plugins ) ) {
-
-			$key = array_search( $plugin_file, $active_plugins[ $module ] );
-
-			if ( false !== $key ) {
-				unset( $active_plugins[ $module ][ $key ] );
-
-				update_site_option( SECUPRESS_ACTIVE_SUBMODULES, $active_plugins );
-				secupress_add_module_notice( $module, $plugin_file, 'deactivation' );
-
-				do_action( 'secupress_deactivate_plugin_' . $plugin_file, $args );
-
-				do_action( 'secupress_deactivate_plugin', $plugin_file, $args );
-			}
-		}
-	}
-}
-
-
-function secupress_activate_module( $module, $settings ) { //// rename this, it finally does not ativate any module but just set the correct settings.
+function secupress_update_module_settings( $module, $settings ) {
 	$modules  = secupress_get_modules();
 	$callback = str_replace( '-', '_', $module );
 
@@ -323,9 +294,46 @@ function secupress_activate_module( $module, $settings ) { //// rename this, it 
 }
 
 
+function secupress_deactivate_submodule( $module, $plugins, $args = array() ) {
+	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
+
+	if ( ! is_array( $plugins ) ) {
+		$plugins = (array) $plugins;
+	}
+
+	foreach ( $plugins as $plugin ) {
+		$plugin_file = sanitize_key( $plugin );
+
+		if ( ! $active_plugins || ! isset( $active_plugins[ $module ] ) || ! in_array_deep( $plugin_file, $active_plugins ) ) {
+			continue;
+		}
+
+		$key = array_search( $plugin_file, $active_plugins[ $module ] );
+
+		if ( false === $key ) {
+			continue;
+		}
+
+		unset( $active_plugins[ $module ][ $key ] );
+
+		if ( ! $active_plugins[ $module ] ) {
+			unset( $active_plugins[ $module ] );
+		}
+
+		update_site_option( SECUPRESS_ACTIVE_SUBMODULES, $active_plugins );
+		secupress_add_module_notice( $module, $plugin_file, 'deactivation' );
+
+		do_action( 'secupress_deactivate_plugin_' . $plugin_file, $args );
+
+		do_action( 'secupress_deactivate_plugin', $plugin_file, $args );
+	}
+}
+
+
 function secupress_activate_submodule( $module, $plugin, $incompatibles_modules = array() ) { //// add the possiblity to activate it in "silent mode" (from a scanner fix and not from a user checkbox)?
 	$plugin_file    = sanitize_key( $plugin );
 	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
+	$active_plugins = is_array( $active_plugins ) ? $active_plugins : array();
 	$file_path      = SECUPRESS_MODULES_PATH . $module . '/plugins/' . $plugin_file . '.php';
 
 	if ( ! file_exists( $file_path ) ) {
@@ -335,9 +343,12 @@ function secupress_activate_submodule( $module, $plugin, $incompatibles_modules 
 	if ( ! in_array_deep( $plugin_file, $active_plugins ) ) {
 		if ( ! empty( $incompatibles_modules ) ) {
 			secupress_deactivate_submodule( $module, $incompatibles_modules );
+
+			$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
+			$active_plugins = is_array( $active_plugins ) ? $active_plugins : array();
 		}
 
-		$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
+		$active_plugins[ $module ]   = isset( $active_plugins[ $module ] ) ? $active_plugins[ $module ] : array();
 		$active_plugins[ $module ][] = $plugin_file;
 
 		update_site_option( SECUPRESS_ACTIVE_SUBMODULES, $active_plugins );
