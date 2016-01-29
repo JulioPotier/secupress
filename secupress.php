@@ -117,6 +117,7 @@ function secupress_init() {
 		secupress_require_class( 'Admin', 'Notices' );
 		SecuPress_Admin_Notices::get_instance();
 
+		require( SECUPRESS_FUNCTIONS_PATH . 'modules.php' );
 		require( SECUPRESS_FUNCTIONS_PATH . 'backup.php' );
 		require( SECUPRESS_ADMIN_PATH . 'options.php' );
 		require( SECUPRESS_ADMIN_PATH . 'notices.php' );
