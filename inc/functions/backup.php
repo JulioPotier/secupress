@@ -5,16 +5,15 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  *
  */
 function secupress_pre_backup() {
-	$backup_dir    = secupress_get_hashed_folder_name( 'backup', WP_CONTENT_DIR . '/backups' );
+	$backup_dir    = secupress_get_hashed_folder_name( 'backup', WP_CONTENT_DIR . '/backups/' );
 	$htaccess_file = dirname( $backup_dir ) . '/.htaccess';
 	$fs_chmod_dir  = defined( 'FS_CHMOD_DIR' ) ? FS_CHMOD_DIR : 0755;
-
 	if ( ! is_dir( $backup_dir ) ) {
 		mkdir( $backup_dir, $fs_chmod_dir, true );
 	}
 
 	if ( ! file_exists( $htaccess_file ) ) {
-		$htaccess_file_content  = "Order Allow, Deny\n";
+		$htaccess_file_content  = "Order allow,deny\n";
 		$htaccess_file_content .= "Deny from all";
 		file_put_contents( $htaccess_file, $htaccess_file_content );
 	}
@@ -49,7 +48,7 @@ function secupress_zip_backup_file( $filename ) {
  *
  */
 function secupress_get_backup_file_list() {
-	return glob( secupress_get_hashed_folder_name( 'backup', WP_CONTENT_DIR . '/backups' ) . '*.{zip,sql}', GLOB_BRACE );
+	return glob( secupress_get_hashed_folder_name( 'backup', WP_CONTENT_DIR . '/backups/' ) . '*.{zip,sql}', GLOB_BRACE );
 }
 
 
