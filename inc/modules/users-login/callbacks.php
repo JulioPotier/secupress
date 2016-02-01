@@ -218,12 +218,12 @@ function __secupress_move_login_settings_callback( $modulenow, &$settings, $old_
 	}
 
 	// Access to `wp-login.php`.
-	$wp_login_actions = secupress_move_login_wplogin_access_labels();
-	$settings['move-login_wp-login-access'] = isset( $settings['move-login_wp-login-access'], $wp_login_actions[ $settings['move-login_wp-login-access'] ] ) ? $settings['move-login_wp-login-access'] : 'error';
+	$wp_login_actions = secupress_move_login_login_access_labels();
+	$settings['move-login_login-access'] = isset( $settings['move-login_login-access'], $wp_login_actions[ $settings['move-login_login-access'] ] ) ? $settings['move-login_login-access'] : 'error';
 
 	// Access to `wp-admin`.
-	$admin_actions = secupress_move_login_admin_access_labels();
-	$settings['move-login_admin-access'] = isset( $settings['move-login_admin-access'], $wp_login_actions[ $settings['move-login_admin-access'] ] ) ? $settings['move-login_admin-access'] : 'redir-login';
+	$admin_actions = secupress_move_login_login_redirect_labels();
+	$settings['move-login_login-redirect'] = isset( $settings['move-login_login-redirect'], $wp_login_actions[ $settings['move-login_login-redirect'] ] ) ? $settings['move-login_login-redirect'] : 'redir-login';
 
 	// Handle validation errors.
 	$errors['forbidden']  = array_unique( $errors['forbidden'] );
@@ -339,7 +339,7 @@ function secupress_move_login_slug_labels() {
  *
  * @return (array) Return an array with identifiers as keys and field labels as values.
  */
-function secupress_move_login_wplogin_access_labels() {
+function secupress_move_login_login_access_labels() {
 	return array(
 		'error'      => __( 'Display an error message', 'secupress' ),
 		'redir_404'  => __( 'Redirect to a "Page not found" error page', 'secupress' ),
@@ -355,9 +355,9 @@ function secupress_move_login_wplogin_access_labels() {
  *
  * @return (array) Return an array with identifiers as keys and field labels as values.
  */
-function secupress_move_login_admin_access_labels() {
+function secupress_move_login_login_redirect_labels() {
 	return array(
-		'redir-login' => __( 'Do nothing, redirect to the new login page', 'secupress' ),
+		'redir-login' => __( 'Do nothing, redirect to the new login page', 'secupress' ) . ' <span class="description">(' . __( 'not recommended', 'secupress' ) . ')</span>',
 		'error'       => __( 'Display an error message', 'secupress' ),
 		'redir_404'   => __( 'Redirect to a "Page not found" error page', 'secupress' ),
 		'redir_home'  => __( 'Redirect to the home page', 'secupress' ),
