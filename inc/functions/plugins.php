@@ -232,7 +232,8 @@ function secupress_register_setting( $module, $option_name = false ) {
  **/
 function secupress_get_current_url( $mode = 'base' ) {
 	$mode = (string) $mode;
-	$port = (int) $_SERVER['SERVER_PORT'] !== 80 ? ( ':' . (int) $_SERVER['SERVER_PORT'] ) : '';
+	$port = (int) $_SERVER['SERVER_PORT'];
+	$port = 80 !== $port && 443 !== $port ? ( ':' . $port ) : '';
 	$url  = ! empty( $GLOBALS['HTTP_SERVER_VARS']['REQUEST_URI'] ) ? $GLOBALS['HTTP_SERVER_VARS']['REQUEST_URI'] : ( ! empty( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '' );
 	$url  = 'http' . ( is_ssl() ? 's' : '' ) . '://' . $_SERVER['HTTP_HOST'] . $port . $url;
 
@@ -240,13 +241,13 @@ function secupress_get_current_url( $mode = 'base' ) {
 		case 'raw' :
 			return $url;
 		case 'uri' :
-			$home_url = set_url_scheme( home_url() );
-			$url      = reset( ( explode( '?', $url ) ) );
-			$url      = reset( ( explode( '&', $url ) ) );
-			$url      = str_replace( $home_url, '', $url );
+			$home = set_url_scheme( home_url() );
+			$url  = explode( '?', $url, 2 );
+			$url  = reset( $url );
+			$url  = str_replace( $home, '', $url );
 			return trim( $url, '/' );
 		default :
-			$url = reset( ( explode( '?', $url ) ) );
-			return reset( ( explode( '&', $url ) ) );
+			$url  = explode( '?', $url, 2 );
+			return reset( $url );
 	endswitch;
 }
