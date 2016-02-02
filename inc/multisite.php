@@ -19,7 +19,7 @@ function secupress_load_site_options( $option_names, $prefix = '' ) {
 	$network_id = (int) $wpdb->siteid;
 
 	// Get values.
-	$options   = "'$prefix" . implode( "', '$prefix", $option_names ) . "'";
+	$options   = "'$prefix" . implode( "', '$prefix", esc_sql( $option_names ) ) . "'";
 	$results   = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->sitemeta WHERE meta_key IN ( $options ) AND site_id = %d", $network_id ), OBJECT_K );
 	$not_exist = array();
 
