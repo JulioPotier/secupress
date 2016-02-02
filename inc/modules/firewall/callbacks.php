@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 function __secupress_firewall_settings_callback( $settings ) {
 	$modulenow = 'firewall';
 	$settings  = $settings ? $settings : array();
+	$activate  = secupress_get_submodule_activations( $modulenow );
 
 	/*
 	 * Each submodule has its own sanitization function.
@@ -21,13 +22,13 @@ function __secupress_firewall_settings_callback( $settings ) {
 	 */
 
 	// Bad headers.
-	__secupress_bad_headers_settings_callback( $modulenow, $settings );
+	__secupress_bad_headers_settings_callback( $modulenow, $settings, $activate );
 
 	// Bad contents.
-	__secupress_bad_contents_settings_callback( $modulenow, $settings );
+	__secupress_bad_contents_settings_callback( $modulenow, $settings, $activate );
 
 	// Anti Bruteforce Managment.
-	__secupress_bruteforce_settings_callback( $modulenow, $settings );
+	__secupress_bruteforce_settings_callback( $modulenow, $settings, $activate );
 
 	// Country Managment.
 	__secupress_geoip_settings_callback( $modulenow, $settings );
@@ -37,17 +38,22 @@ function __secupress_firewall_settings_callback( $settings ) {
 
 
 /**
- * (De)Activate Bad Headers plugins and sanitize settings.
+ * Bad Headers plugins.
  *
  * @since 1.0
  *
- * @param (string) $modulenow Current module.
- * @param (array)  $settings  The module settings, passed by reference.
+ * @param (string)     $modulenow Current module.
+ * @param (array)      $settings  The module settings, passed by reference.
+ * @param (bool|array) $activate  Used to (de)activate plugins.
  */
-function __secupress_bad_headers_settings_callback( $modulenow, &$settings ) {
-	secupress_manage_submodule( $modulenow, 'user-agents-header',     ! empty( $settings['bbq-headers_user-agents-header'] ) );
-	secupress_manage_submodule( $modulenow, 'request-methods-header', ! empty( $settings['bbq-headers_request-methods-header'] ) );
+function __secupress_bad_headers_settings_callback( $modulenow, &$settings, $activate ) {
+	// (De)Activation.
+	if ( false !== $activate ) {
+		secupress_manage_submodule( $modulenow, 'user-agents-header',     ! empty( $activate['bbq-headers_user-agents-header'] ) );
+		secupress_manage_submodule( $modulenow, 'request-methods-header', ! empty( $activate['bbq-headers_request-methods-header'] ) );
+	}
 
+	// Settings.
 	if ( ! empty( $settings['bbq-headers_user-agents-list'] ) ) {
 		$settings['bbq-headers_user-agents-list'] = sanitize_text_field( $settings['bbq-headers_user-agents-list'] );
 		$settings['bbq-headers_user-agents-list'] = secupress_sanitize_list( $settings['bbq-headers_user-agents-list'] );
@@ -56,24 +62,27 @@ function __secupress_bad_headers_settings_callback( $modulenow, &$settings ) {
 	if ( empty( $settings['bbq-headers_user-agents-list'] ) ) {
 		$settings['bbq-headers_user-agents-list'] = secupress_firewall_bbq_headers_user_agents_list_default();
 	}
-
-	unset( $settings['bbq-headers_request-methods-header'], $settings['bbq-headers_user-agents-header'] );
 }
 
 
 /**
- * (De)Activate Bad Contents plugins and sanitize settings.
+ * Bad Contents plugins.
  *
  * @since 1.0
  *
- * @param (string) $modulenow Current module.
- * @param (array)  $settings  The module settings, passed by reference.
+ * @param (string)     $modulenow Current module.
+ * @param (array)      $settings  The module settings, passed by reference.
+ * @param (bool|array) $activate  Used to (de)activate plugins.
  */
-function __secupress_bad_contents_settings_callback( $modulenow, &$settings ) {
-	secupress_manage_submodule( $modulenow, 'bad-url-contents', ! empty( $settings['bbq-url-content_bad-contents'] ) );
-	secupress_manage_submodule( $modulenow, 'bad-url-length',   ! empty( $settings['bbq-url-content_bad-url-length'] ) );
-	secupress_manage_submodule( $modulenow, 'bad-sqli-scan',    ! empty( $settings['bbq-url-content_bad-sqli-scan'] ) );
+function __secupress_bad_contents_settings_callback( $modulenow, &$settings, $activate ) {
+	// (De)Activation.
+	if ( false !== $activate ) {
+		secupress_manage_submodule( $modulenow, 'bad-url-contents', ! empty( $activate['bbq-url-content_bad-contents'] ) );
+		secupress_manage_submodule( $modulenow, 'bad-url-length',   ! empty( $activate['bbq-url-content_bad-url-length'] ) );
+		secupress_manage_submodule( $modulenow, 'bad-sqli-scan',    ! empty( $activate['bbq-url-content_bad-sqli-scan'] ) );
+	}
 
+	// Settings.
 	if ( ! empty( $settings['bbq-url-content_bad-contents-list'] ) ) {
 		// Do not sanitize the value or the sky will fall.
 		$settings['bbq-url-content_bad-contents-list'] = secupress_sanitize_list( $settings['bbq-url-content_bad-contents-list'] );
@@ -82,31 +91,32 @@ function __secupress_bad_contents_settings_callback( $modulenow, &$settings ) {
 	if ( empty( $settings['bbq-url-content_bad-contents-list'] ) ) {
 		$settings['bbq-url-content_bad-contents-list'] = secupress_firewall_bbq_url_content_bad_contents_list_default();
 	}
-
-	unset( $settings['bbq-url-content_bad-sqli-scan'], $settings['bbq-url-content_bad-contents'], $settings['bbq-url-content_bad-url-length'] );
 }
 
 
 /**
- * (De)Activate Anti Bruteforce Managment plugin and sanitize settings.
+ * Anti Bruteforce Managment plugin.
  *
  * @since 1.0
  *
- * @param (string) $modulenow Current module.
- * @param (array)  $settings  The module settings, passed by reference.
+ * @param (string)     $modulenow Current module.
+ * @param (array)      $settings  The module settings, passed by reference.
+ * @param (bool|array) $activate  Used to (de)activate plugins.
  */
-function __secupress_bruteforce_settings_callback( $modulenow, &$settings ) {
-	secupress_manage_submodule( $modulenow, 'bruteforce', ! empty( $settings['bruteforce_activated'] ) );
+function __secupress_bruteforce_settings_callback( $modulenow, &$settings, $activate ) {
+	// (De)Activation.
+	if ( false !== $activate ) {
+		secupress_manage_submodule( $modulenow, 'bruteforce', ! empty( $activate['bruteforce_activated'] ) );
+	}
 
+	// Settings.
 	$settings['bruteforce_request_number'] = ! empty( $settings['bruteforce_request_number'] ) ? (int) secupress_validate_range( $settings['bruteforce_request_number'], 3, 1000, 9 ) : 9;
 	$settings['bruteforce_time_ban'] =       ! empty( $settings['bruteforce_time_ban'] )       ? (int) secupress_validate_range( $settings['bruteforce_time_ban'], 1, 60, 5 )         : 5;
-
-	unset( $settings['bruteforce_activated'] );
 }
 
 
 /**
- * (De)Activate Country Managment plugin and sanitize settings.
+ * Country Managment plugin.
  *
  * @since 1.0
  *
@@ -114,15 +124,17 @@ function __secupress_bruteforce_settings_callback( $modulenow, &$settings ) {
  * @param (array)  $settings  The module settings, passed by reference.
  */
 function __secupress_geoip_settings_callback( $modulenow, &$settings ) {
+	// Settings.
 	$geoip_values = array( '-1' => 1, 'blacklist' => 1, 'whitelist' => 1, );
 
 	if ( empty( $settings['geoip-system_type'] ) || ! isset( $geoip_values[ $settings['geoip-system_type'] ] ) ) {
 		$settings['geoip-system_type'] = '-1';
 	}
 
-	secupress_manage_submodule( $modulenow, 'geoip-system', ( '-1' !== $settings['geoip-system_type'] ) );
-
 	$settings['geoip-system_countries'] = ! empty( $settings['geoip-system_countries'] ) && is_array( $settings['geoip-system_countries'] ) ? array_map( 'sanitize_text_field', $settings['geoip-system_countries'] ) : array();
+
+	// (De)Activation.
+	secupress_manage_submodule( $modulenow, 'geoip-system', ( '-1' !== $settings['geoip-system_type'] ) );
 }
 
 

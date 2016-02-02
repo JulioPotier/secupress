@@ -101,6 +101,23 @@ function secupress_manage_submodule( $module, $plugin, $activate ) {
 }
 
 
+function secupress_get_submodule_activations( $module ) {
+	static $done = array();
+
+	if ( isset( $done[ $module ] ) ) {
+		return false;
+	}
+
+	$done[ $module ] = true;
+
+	if ( isset( $_POST['option_page'] ) && 'secupress_' . $module . '_settings' === $_POST['option_page'] ) {
+		return isset( $_POST['secupress-plugin-activation'] ) && is_array( $_POST['secupress-plugin-activation'] ) ? $_POST['secupress-plugin-activation'] : array();
+	}
+
+	return false;
+}
+
+
 function secupress_add_module_notice( $module, $submodule, $action ) {
 	global $current_user;
 

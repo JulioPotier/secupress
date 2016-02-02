@@ -11,13 +11,14 @@ $main_field_name  = $this->get_field_name( 'activated' );
 $is_plugin_active = secupress_is_submodule_active( 'users-login', 'move-login' );
 
 $this->add_field( array(
-	'title'        => __( 'Move the login page', 'secupress' ),
-	'description'  => __( 'This will not totally hide the login form from humans, the main goal is to avoid bots to hit this URL.', 'secupress' ),
-	'label_for'    => $main_field_name,
-	'type'         => 'checkbox',
-	'value'        => (int) $is_plugin_active,
-	'label'        => __( 'Yes, move the login page to avoid bad login attempts', 'secupress' ),
-	'helpers'      => array(
+	'title'             => __( 'Move the login page', 'secupress' ),
+	'description'       => __( 'This will not totally hide the login form from humans, the main goal is to avoid bots to hit this URL.', 'secupress' ),
+	'label_for'         => $main_field_name,
+	'plugin_activation' => true,
+	'type'              => 'checkbox',
+	'value'             => (int) $is_plugin_active,
+	'label'             => __( 'Yes, move the login page to avoid bad login attempts', 'secupress' ),
+	'helpers'           => array(
 		array(
 			'type'        => 'warning',
 			'description' => secupress_get_deactivate_plugin_string( 'sf-move-login/sf-move-login.php' ),

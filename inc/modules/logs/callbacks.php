@@ -15,50 +15,15 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @return (array) The sanitized and validated settings.
  */
 function __secupress_logs_settings_callback( $settings ) {
-	$modulenow    = 'logs';
-	$settings     = $settings ? $settings : array();
-	$old_settings = get_site_option( "secupress_{$modulenow}_settings" );
+	$modulenow = 'logs';
+	$activate  = secupress_get_submodule_activations( $modulenow );
 
-	/*
-	 * Each submodule has its own sanitization function.
-	 * The `$settings` parameter is passed by reference.
-	 */
+	// (De)Activation.
+	if ( false !== $activate ) {
+		secupress_manage_submodule( $modulenow, 'action-logs', ! empty( $activate['action-logs_activated'] ) );
+		secupress_manage_submodule( $modulenow, '404-logs',    ! empty( $activate['404-logs_activated'] ) );
+	}
 
-	// Action Logs
-	__secupress_action_logs_settings_callback( $modulenow, $settings );
-
-	// 404 Logs
-	__secupress_404_logs_settings_callback( $modulenow, $settings );
-
-	return $settings;
-}
-
-
-/**
- * Sanitize and validate Action Logs plugin settings.
- *
- * @since 1.0
- *
- * @param (string) $modulenow Current module.
- * @param (array)  $settings  The module settings, passed by reference.
- */
-function __secupress_action_logs_settings_callback( $modulenow, &$settings ) {
-	// Activate or deactivate plugin.
-	secupress_manage_submodule( $modulenow, 'action-logs', ! empty( $settings['action-logs_activated'] ) );
-	unset( $settings['action-logs_activated'] );
-}
-
-
-/**
- * Sanitize and validate 404 Logs plugin settings.
- *
- * @since 1.0
- *
- * @param (string) $modulenow Current module.
- * @param (array)  $settings  The module settings, passed by reference.
- */
-function __secupress_404_logs_settings_callback( $modulenow, &$settings ) {
-	// Activate or deactivate plugin.
-	secupress_manage_submodule( $modulenow, '404-logs', ! empty( $settings['404-logs_activated'] ) );
-	unset( $settings['404-logs_activated'] );
+	// There are no settings to save.
+	return array();
 }

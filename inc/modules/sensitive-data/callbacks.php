@@ -17,6 +17,7 @@ defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
 function __secupress_sensitive_data_settings_callback( $settings ) {
 	$modulenow = 'sensitive-data';
 	$settings  = $settings ? $settings : array();
+	$activate  = secupress_get_submodule_activations( $modulenow );
 
 	/*
 	 * Each submodule has its own sanitization function.
@@ -24,80 +25,89 @@ function __secupress_sensitive_data_settings_callback( $settings ) {
 	 */
 
 	// Pages Protection
-	__secupress_pages_protection_settings_callback( $modulenow, $settings );
+	__secupress_pages_protection_settings_callback( $modulenow, $activate );
 
 	// Content Protection
-	__secupress_content_protection_settings_callback( $modulenow, $settings );
+	__secupress_content_protection_settings_callback( $modulenow, $activate );
 
 	// WordPress Endpoints
-	__secupress_wp_endpoints_settings_callback( $modulenow, $settings );
+	__secupress_wp_endpoints_settings_callback( $modulenow, $settings, $activate );
 
 	return $settings;
 }
 
 
 /**
- * (De)Activate Pages Protection plugins.
+ * Pages Protection plugins.
  *
  * @since 1.0
  *
- * @param (string) $modulenow Current module.
- * @param (array)  $settings  The module settings, passed by reference.
+ * @param (string)     $modulenow Current module.
+ * @param (bool|array) $activate  Used to (de)activate plugins.
  */
-function __secupress_pages_protection_settings_callback( $modulenow, &$settings ) {
+function __secupress_pages_protection_settings_callback( $modulenow, $activate ) {
+	if ( false === $activate ) {
+		return;
+	}
+
+	// (De)Activation.
 	if ( secupress_is_pro() ) {
-		secupress_manage_submodule( $modulenow, 'page-protect',    ! empty( $settings['page-protect_profile'] ) && ! empty( $settings['page-protect_settings'] ) );
-		secupress_manage_submodule( $modulenow, 'profile-protect', ! empty( $settings['page-protect_profile'] ) );
-		secupress_manage_submodule( $modulenow, 'options-protect', ! empty( $settings['page-protect_settings'] ) );
+		secupress_manage_submodule( $modulenow, 'page-protect',    ! empty( $activate['page-protect_profile'] ) || ! empty( $activate['page-protect_settings'] ) );
+		secupress_manage_submodule( $modulenow, 'profile-protect', ! empty( $activate['page-protect_profile'] ) );
+		secupress_manage_submodule( $modulenow, 'options-protect', ! empty( $activate['page-protect_settings'] ) );
 	} else {
 		secupress_deactivate_submodule( $modulenow, array( 'page-protect', 'profile-protect', 'options-protect' ) );
 	}
-
-	unset( $settings['page-protect_profile'], $settings['page-protect_settings'] );
 }
 
 
 /**
- * (De)Activate Content Protection plugins.
+ * Content Protection plugins.
  *
  * @since 1.0
  *
- * @param (string) $modulenow Current module.
- * @param (array)  $settings  The module settings, passed by reference.
+ * @param (string)     $modulenow Current module.
+ * @param (bool|array) $activate  Used to (de)activate plugins.
  */
-function __secupress_content_protection_settings_callback( $modulenow, &$settings ) {
-	secupress_manage_submodule( $modulenow, 'hotlink',   ! empty( $settings['content-protect_hotlink'] ) && secupress_is_pro() );
-	secupress_manage_submodule( $modulenow, 'blackhole', ! empty( $settings['content-protect_blackhole'] ) && secupress_blackhole_is_robots_txt_enabled() );
-
-	unset( $settings['content-protect_hotlink'], $settings['content-protect_blackhole'] );
-}
-
-
-/**
- * (De)Activate WordPress Endpoints plugins and sanitize settings.
- *
- * @since 1.0
- *
- * @param (string) $modulenow Current module.
- * @param (array)  $settings  The module settings, passed by reference.
- */
-function __secupress_wp_endpoints_settings_callback( $modulenow, &$settings ) {
-	if ( ! empty( $settings['wp-endpoints_xmlrpc'] ) && is_array( $settings['wp-endpoints_xmlrpc'] ) ) {
-		$settings['wp-endpoints_xmlrpc'] = array_intersect( array(
-			'block-all',
-			'block-multi',
-		), $settings['wp-endpoints_xmlrpc'] );
-
-		secupress_manage_submodule( $modulenow, 'xmlrpc', (bool) $settings['wp-endpoints_xmlrpc'] );
-	} else {
-		unset( $settings['wp-endpoints_xmlrpc'] );
-
-		secupress_deactivate_submodule( $modulenow, array( 'xmlrpc' ) );
+function __secupress_content_protection_settings_callback( $modulenow, $activate ) {
+	if ( false === $activate ) {
+		return;
 	}
 
-	secupress_manage_submodule( $modulenow, 'restapi', ! empty( $settings['wp-endpoints_restapi'] ) && secupress_is_pro() );
+	// (De)Activation.
+	secupress_manage_submodule( $modulenow, 'hotlink',   ! empty( $activate['content-protect_hotlink'] ) && secupress_is_pro() );
+	secupress_manage_submodule( $modulenow, 'blackhole', ! empty( $activate['content-protect_blackhole'] ) && secupress_blackhole_is_robots_txt_enabled() );
+}
 
-	unset( $settings['wp-endpoints_restapi'] );
+
+/**
+ * WordPress Endpoints plugins.
+ *
+ * @since 1.0
+ *
+ * @param (string)     $modulenow Current module.
+ * @param (array)      $settings  The module settings, passed by reference.
+ * @param (bool|array) $activate  Used to (de)activate plugins.
+ */
+function __secupress_wp_endpoints_settings_callback( $modulenow, &$settings, $activate ) {
+	// Settings.
+	if ( ! empty( $settings['wp-endpoints_xmlrpc'] ) && is_array( $settings['wp-endpoints_xmlrpc'] ) ) {
+		$xmlrpc = array(
+			'block-all',
+			'block-multi',
+		);
+		$settings['wp-endpoints_xmlrpc'] = array_intersect( $xmlrpc, $settings['wp-endpoints_xmlrpc'] );
+	} else {
+		unset( $settings['wp-endpoints_xmlrpc'] );
+	}
+
+	if ( false === $activate ) {
+		return;
+	}
+
+	// (De)Activation.
+	secupress_manage_submodule( $modulenow, 'xmlrpc',  ! empty( $settings['wp-endpoints_xmlrpc'] ) ); // `$settings`, not `$activate`.
+	secupress_manage_submodule( $modulenow, 'restapi', ! empty( $activate['wp-endpoints_restapi'] ) && secupress_is_pro() );
 }
 
 

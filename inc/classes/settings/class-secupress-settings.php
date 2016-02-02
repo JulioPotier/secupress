@@ -253,40 +253,46 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * @since 1.0
 	 *
 	 * @param (array) $args An array with the following parameters:
-	 *                - (string) $type         The field type: 'number', 'email', 'tel', 'text', 'textarea', 'select', 'checkbox', 'checkboxes', 'radioboxes', 'radios', 'roles', 'countries', 'nonlogintimeslot'.
-	 *                - (string) $name         The name attribute. Also used as id attribute if `$label_for` is not provided.
-	 *                - (string) $label_for    The id attribute. Also used as name attribute if `$name` is not provided.
-	 *                - (mixed)  $default      The default value.
-	 *                - (mixed)  $value        The field value. If not provided the field will look for an option stored in db.
-	 *                - (array)  $options      Used for 'select', 'checkboxes', 'radioboxes' and 'radios': all possible choices for the user (value => label).
-	 *                - (string) $fieldset     Wrap the field in a `<fieldset>` tag. Possible values: 'start', 'end', 'no' and 'yes'. 'checkboxes', 'radioboxes' and 'radios' are automatically wrapped. 'start' and 'end' are not used yet.
-	 *                - (string) $label_screen Used for the `<legend>` tag when a fieldset is used.
-	 *                - (string) $label        A label to display on top of the field. Also used as field label for the 'checkbox' type.
-	 *                - (string) $label_before A label to display before the field.
-	 *                - (string) $label_after  A label to display after the field.
-	 *                - (bool)   $disabled     True to disable the field. Pro fields are autotically disabled on the free version.
-	 *                - (array)  $attributes   An array of html attributes to add to the field (like min and max for a 'number' type).
-	 *                - (array)  $helpers      An array containing the helpers. See `self::helpers()`.
+	 *                - (string) $type              The field type: 'number', 'email', 'tel', 'text', 'textarea', 'select', 'checkbox', 'checkboxes', 'radioboxes', 'radios', 'roles', 'countries', 'nonlogintimeslot'.
+	 *                - (string) $name              The name attribute. Also used as id attribute if `$label_for` is not provided.
+	 *                - (string) $label_for         The id attribute. Also used as name attribute if `$name` is not provided.
+	 *                - (bool)   $plugin_activation Set to true if the field is not used for a setting but to (de)activate a plugin.
+	 *                - (mixed)  $default           The default value.
+	 *                - (mixed)  $value             The field value. If not provided the field will look for an option stored in db.
+	 *                - (array)  $options           Used for 'select', 'checkboxes', 'radioboxes' and 'radios': all possible choices for the user (value => label).
+	 *                - (string) $fieldset          Wrap the field in a `<fieldset>` tag. Possible values: 'start', 'end', 'no' and 'yes'. 'checkboxes', 'radioboxes' and 'radios' are automatically wrapped. 'start' and 'end' are not used yet.
+	 *                - (string) $label_screen      Used for the `<legend>` tag when a fieldset is used.
+	 *                - (string) $label             A label to display on top of the field. Also used as field label for the 'checkbox' type.
+	 *                - (string) $label_before      A label to display before the field.
+	 *                - (string) $label_after       A label to display after the field.
+	 *                - (bool)   $disabled          True to disable the field. Pro fields are autotically disabled on the free version.
+	 *                - (array)  $attributes        An array of html attributes to add to the field (like min and max for a 'number' type).
+	 *                - (array)  $helpers           An array containing the helpers. See `self::helpers()`.
 	 */
 	protected function field( $args ) {
 		$args = array_merge( array(
-			'type'         => '',
-			'name'         => '',
-			'label_for'    => '',
-			'default'      => '',
-			'value'        => null,
-			'options'      => array(),
-			'fieldset'     => null,
-			'label_screen' => '',
-			'label'        => '',
-			'label_before' => '',
-			'label_after'  => '',
-			'disabled'     => false,
-			'attributes'   => array(),
-			'helpers'      => array(),
+			'type'              => '',
+			'name'              => '',
+			'label_for'         => '',
+			'plugin_activation' => false,
+			'default'           => '',
+			'value'             => null,
+			'options'           => array(),
+			'fieldset'          => null,
+			'label_screen'      => '',
+			'label'             => '',
+			'label_before'      => '',
+			'label_after'       => '',
+			'disabled'          => false,
+			'attributes'        => array(),
+			'helpers'           => array(),
 		), $args );
 
-		$option_name    = 'secupress' . ( 'global' !== $this->modulenow ? '_' . $this->modulenow : '' ) . '_settings';
+		if ( $args['plugin_activation'] ) {
+			$option_name = 'secupress-plugin-activation';
+		} else {
+			$option_name = 'secupress' . ( 'global' !== $this->modulenow ? '_' . $this->modulenow : '' ) . '_settings';
+		}
 		$name_attribute = $option_name . '[' . $args['name'] . ']';
 		$disabled       = ! empty( $args['disabled'] ) || static::is_pro_feature( $args['name'] );
 
