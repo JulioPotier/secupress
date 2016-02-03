@@ -190,7 +190,7 @@ function secupress_load_plugins() {
 
 
 /**
- * Make SecuPress the first plugin loaded.
+ * Make SecuPress is the first plugin loaded.
  *
  * @since 1.0
  */
