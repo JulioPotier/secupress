@@ -3,7 +3,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
 
 /**
- * Background File Monitoring class.
+ * Background 	File Monitoring class.
  *
  * @package SecuPress
  * @since 1.0

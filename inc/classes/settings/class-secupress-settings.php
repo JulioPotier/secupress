@@ -886,13 +886,21 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	protected function file_scanner() {
-		if ( false !== ( $time = get_transient( 'secupress_run_file_scan' ) ) ) {
-			echo '<p class="working">' . sprintf( __( 'Job running since %s.', 'secupress' ), human_time_diff( $time, time() ) ) . ' <span class="secupress-inline-spinner"></span></p>';
-			echo '<p><a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_stop_file_scan' ), 'secupress_stop_file_scan' ) . '" class="button button-secondary">' . __( 'Stop task', 'secupress' ) . '</a></p>';
+		if ( false !== ( $time = get_transient( 'secupress_toggle_file_scan' ) ) ) {
+			$label = __( 'Stop task', 'secupress' );
+			$class = ' working';
 		} else {
-			echo '<p>' . __( 'No job running.', 'secupress' ) . '</p>';
-			echo '<p><a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_run_file_scan' ), 'secupress_run_file_scan' ) . '" class="button button-secondary">' . __( 'Search for modified files', 'secupress' ) . '</a></p>';
+			$label = __( 'Search for modified files', 'secupress' );
+			$class = '';
 		}
+		?>
+		<p>
+			<a data-original-i18n="<?php esc_attr_e( 'Search for modified files', 'secupress' ); ?>" data-loading-i18n="<?php esc_attr_e( 'Stop task', 'secupress' ); ?>" id="toggle_file_scanner" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_toggle_file_scan' ), 'secupress_toggle_file_scan' ); ?>" class="button button-secondary<?php echo $class; ?>">
+				<?php echo $label; ?>
+			</a>
+			<span class="secupress-inline-spinner spinner"></span>
+		</p>
+		<?php
 	}
 
 
