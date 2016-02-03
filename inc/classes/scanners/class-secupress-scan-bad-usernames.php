@@ -137,6 +137,6 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 			secupress_cache_data( 'allowed_usernames', array() );
 		}
 
-		return implode( "','", $list );
+		return implode( "','", esc_sql( $list ) );
 	}
 }

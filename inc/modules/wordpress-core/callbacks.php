@@ -16,12 +16,13 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 function __secupress_wordpress_core_settings_callback( $settings ) {
 	$modulenow = 'wordpress-core';
-	$settings  = $settings ? $settings : array();
+	$activate  = secupress_get_submodule_activations( $modulenow );
 
-	secupress_manage_submodule( $modulenow, 'minor-updates', ! empty( $settings['auto-update_minor'] ) );
-	secupress_manage_submodule( $modulenow, 'major-updates', ! empty( $settings['auto-update_major'] ) );
+	if ( false !== $activate ) {
+		secupress_manage_submodule( $modulenow, 'minor-updates', ! empty( $activate['auto-update_minor'] ) );
+		secupress_manage_submodule( $modulenow, 'major-updates', ! empty( $activate['auto-update_major'] ) );
+	}
 
-	unset( $settings['auto-update_minor'], $settings['auto-update_major'] );
-
-	return $settings;
+	// There are no settings to save.
+	return array();
 }

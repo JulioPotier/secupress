@@ -18,13 +18,14 @@ if ( secupress_is_submodule_active( 'antispam', 'remove-comment-feature' ) ) {
 }
 
 $this->add_field( array(
-	'title'        => __( 'Anti Spam', 'secupress' ),
-	'description'  => __( 'If you do not activate this anti-spam or remove the comment feature, please, activate another anti-spam plugin for your security!', 'secupress' ),
-	'name'         => $field_name,
-	'type'         => 'radioboxes',
-	'value'        => $is_plugin_active,
-	'label_screen' => __( 'Which anti-spam do you need', 'secupress' ),
-	'options'      => array(
+	'title'             => __( 'Anti Spam', 'secupress' ),
+	'description'       => __( 'If you do not activate this anti-spam or remove the comment feature, please, activate another anti-spam plugin for your security!', 'secupress' ),
+	'name'              => $field_name,
+	'plugin_activation' => true,
+	'type'              => 'radioboxes',
+	'value'             => $is_plugin_active,
+	'label_screen'      => __( 'Which anti-spam do you need', 'secupress' ),
+	'options'           => array(
 		'fightspam'              => __( 'I <strong>need</strong> this to help my website fighting comment spam', 'secupress' ),
 		'remove-comment-feature' => __( 'I <strong>do not need</strong> comments on my website, remove all the comment features.', 'secupress' ),
 	),

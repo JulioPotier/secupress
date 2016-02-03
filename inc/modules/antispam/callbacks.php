@@ -14,22 +14,17 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 function __secupress_antispam_settings_callback( $settings ) {
 	$modulenow = 'antispam';
 	$settings  = $settings ? $settings : array();
+	$activate  = secupress_get_submodule_activations( $modulenow );
 
-	// Remove Comment Feature
-	if ( isset( $settings['antispam_antispam'] ) && in_array( 'remove-comment-feature', $settings['antispam_antispam'] ) ) {
-		secupress_activate_submodule( $modulenow, 'remove-comment-feature' );
-	} else {
-		secupress_deactivate_submodule( $modulenow, 'remove-comment-feature' );
+	// (De)Activation.
+	if ( false !== $activate ) {
+		$activate = isset( $activate['antispam_antispam'] ) && is_array( $activate['antispam_antispam'] ) ? array_flip( $activate['antispam_antispam'] ) : array();
+
+		secupress_manage_submodule( $modulenow, 'fightspam', isset( $activate['fightspam'] ) );
+		secupress_manage_submodule( $modulenow, 'remove-comment-feature', isset( $activate['remove-comment-feature'] ) );
 	}
 
-	// Fight Spam
-	if ( isset( $settings['antispam_antispam'] ) && in_array( 'fightspam', $settings['antispam_antispam'] ) ) {
-		secupress_activate_submodule( $modulenow, 'fightspam' );
-	} else {
-		secupress_deactivate_submodule( $modulenow, 'fightspam' );
-	}
-
-	unset( $settings['antispam_antispam'] );
+	//// Sanitize settings here.
 
 	return $settings;
 }

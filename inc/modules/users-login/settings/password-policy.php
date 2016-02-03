@@ -22,10 +22,11 @@ $this->add_field( array(
 
 
 $this->add_field( array(
-	'title'        => __( 'Force Strong Passwords', 'secupress' ),
-	'description'  => __( 'When a user is changing his password, a strong password will be required to continue.', 'secupress' ),
-	'label_for'    => $this->get_field_name( 'strong_passwords' ),
-	'type'         => 'checkbox',
-	'value'        => (int) secupress_is_submodule_active( 'users-login', 'strong-passwords' ),
-	'label'        => __( 'Yes, force a strong passwords usage', 'secupress' ),
+	'title'             => __( 'Force Strong Passwords', 'secupress' ),
+	'description'       => __( 'When a user is changing his password, a strong password will be required to continue.', 'secupress' ),
+	'label_for'         => $this->get_field_name( 'strong_passwords' ),
+	'plugin_activation' => true,
+	'type'              => 'checkbox',
+	'value'             => (int) secupress_is_submodule_active( 'users-login', 'strong-passwords' ),
+	'label'             => __( 'Yes, force a strong passwords usage', 'secupress' ),
 ) );

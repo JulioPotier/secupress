@@ -21,13 +21,13 @@ remove_action( 'template_redirect', 'wp_redirect_admin_locations', 1000 );
 
 /*
  * When displaying the login page, if the URL does not matches those in our settings, deny access.
- * Do nothing if the user is logged in.
+ * Does nothing if the user is logged in.
  *
  * @since 1.0
  */
-add_action( 'login_init', 'secupress_move_login_login_init', 0 );
+add_action( 'login_init', 'secupress_move_login_maybe_deny_login_page', 0 );
 
-function secupress_move_login_login_init() {
+function secupress_move_login_maybe_deny_login_page() {
 	// If the user is logged in, do nothing, let WP redirect this user to the administration area.
 	if ( is_user_logged_in() ) {
 		return;
@@ -59,15 +59,26 @@ function secupress_move_login_login_init() {
 		return;
 	}
 
+	// You shall not pass!
+	secupress_move_login_deny_login_access();
+}
+
+
+/**
+ * Perform the action set for the login page: die or redirect.
+ *
+ * @since 1.0
+ */
+function secupress_move_login_deny_login_access() {
 	/*
 	 * If you want to trigger a custom action (redirect, message, die...), add it here.
 	 * Don't forget to exit/die.
 	 *
 	 * @since 1.0
 	 */
-	do_action( 'sfml_wp_login_error' );
+	do_action( 'secupress.plugin.move-login.deny_login_access' );
 
-	$do = secupress_get_module_option( 'move-login_wp-login-access', 'error', 'users-login' );
+	$do = secupress_get_module_option( 'move-login_login-access', 'error', 'users-login' );
 
 	switch ( $do ) {
 		case 'redir_404':
@@ -91,19 +102,19 @@ function secupress_move_login_login_init() {
 
 
 /*------------------------------------------------------------------------------------------------*/
-/* DO NOT REDIRECT FROM ADMIN AREA TO WP-LOGIN.PHP ============================================== */
+/* DO NOT REDIRECT TO THE NEW LOGIN PAGE ======================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
 /*
  * When a logged out user tries to access the admin area, deny access.
- * Do nothing if the user is logged in.
+ * Does nothing if the user is logged in.
  * `admin-post.php` and `admin-ajax.php` are white listed.
  *
  * @since 1.0
  */
-add_action( 'after_setup_theme', 'secupress_move_login_maybe_die_before_admin_redirect', 12 );
+add_action( 'after_setup_theme', 'secupress_move_login_maybe_deny_admin_redirect', 12 );
 
-function secupress_move_login_maybe_die_before_admin_redirect() {
+function secupress_move_login_maybe_deny_admin_redirect() {
 	global $pagenow;
 	// If it's not the administration area, or if it's an ajax call, no need to go further.
 	if ( ! ( is_admin() && ! ( ( defined( 'DOING_AJAX' ) && DOING_AJAX ) || ( 'admin-post.php' === $pagenow && ! empty( $_REQUEST['action'] ) ) ) ) ) {
@@ -127,21 +138,56 @@ function secupress_move_login_maybe_die_before_admin_redirect() {
 		return;
 	}
 
-	if ( 'redir-login' === secupress_get_module_option( 'move-login_admin-access', 'redir-login', 'users-login' ) ) {
-		return;
+	// Nice try. But no.
+	secupress_move_login_deny_login_redirect();
+}
+
+
+/*
+ * When a logged out user tries to access `wp-signup.php` or `wp-register.php`, deny access.
+ * Does nothing if the user is logged in.
+ * Does nothing in multi-site.
+ *
+ * @since 1.0
+ */
+add_filter( 'register_url', 'secupress_move_login_maybe_deny_signup_redirect' );
+
+function secupress_move_login_maybe_deny_signup_redirect( $url ) {
+	if ( empty( $_SERVER['REQUEST_URI'] ) ) {
+		return $url;
+	}
+	if ( false === strpos( $_SERVER['REQUEST_URI'], '/wp-signup.php' ) && false === strpos( $_SERVER['REQUEST_URI'], '/wp-register.php' ) ) {
+		return $url;
+	}
+	if ( is_multisite() || is_user_logged_in() ) {
+		return $url;
 	}
 
+	// Nope!
+	secupress_move_login_deny_login_redirect();
+}
+
+
+/**
+ * Perform the action set for redirections to login page: die or redirect.
+ *
+ * @since 1.0
+ */
+function secupress_move_login_deny_login_redirect() {
 	/*
 	 * If you want to trigger a custom action (redirect, message, die...), add it here.
 	 * Don't forget to exit/die.
 	 *
 	 * @since 1.0
 	 */
-	do_action( 'sfml_wp_admin_error' );
+	do_action( 'secupress.plugin.move-login.deny_login_redirect' );
 
-	$do = secupress_get_module_option( 'move-login_admin-access', 'redir-login', 'users-login' );
+	$do = secupress_get_module_option( 'move-login_login-redirect', 'redir-login', 'users-login' );
 
 	switch ( $do ) {
+		case 'redir-login':
+			// Ok, let WordPress redirect the user to the login page.
+			return;
 		case 'error':
 			wp_die( __( 'Cheatin&#8217; uh?' ), __( 'Nope :)', 'secupress' ), array( 'response' => 501 ) );
 		case 'redir_404':

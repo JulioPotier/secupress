@@ -22,13 +22,14 @@ foreach ( $values as $_plugin => $label ) {
 $main_field_name = $this->get_field_name( 'type' );
 
 $this->add_field( array(
-	'title'        => __( 'Use an attempt blocker', 'secupress' ),
-	'description'  => __( 'You can temporary ban people who try to mess with the login page. This is recommended to avoid to be victim of a brute-force.', 'secupress' ),
-	'name'         => $main_field_name,
-	'type'         => 'checkboxes',
-	'options'      => $values,
-	'value'        => $is_plugin_active,
-	'label_screen' => __( 'Choose your attempts blocker', 'secupress' ),
+	'title'             => __( 'Use an attempt blocker', 'secupress' ),
+	'description'       => __( 'You can temporary ban people who try to mess with the login page. This is recommended to avoid to be victim of a brute-force.', 'secupress' ),
+	'name'              => $main_field_name,
+	'plugin_activation' => true,
+	'type'              => 'checkboxes',
+	'options'           => $values,
+	'value'             => $is_plugin_active,
+	'label_screen'      => __( 'Choose your attempts blocker', 'secupress' ),
 ) );
 
 
@@ -82,12 +83,14 @@ $this->add_field( array(
 
 
 $this->add_field( array(
-	'title'        => __( 'Avoid Double Connexions', 'secupress' ),
-	'description'  => __( 'Once logged in, nobody can log in on your account at the same time as you. You have to disconnect first to allow another connexion.', 'secupress' ),
-	'label_for'    => $this->get_field_name( 'only-one-connexion' ),
-	'type'         => 'checkbox',
-	'label'        => __( 'Yes, do not allow double connexions', 'secupress' ),
-	'helpers'      => array(
+	'title'             => __( 'Avoid Double Connexions', 'secupress' ),
+	'description'       => __( 'Once logged in, nobody can log in on your account at the same time as you. You have to disconnect first to allow another connexion.', 'secupress' ),
+	'label_for'         => $this->get_field_name( 'only-one-connexion' ),
+	'plugin_activation' => true,
+	'type'              => 'checkbox',
+	'value'             => (int) secupress_is_submodule_active( 'users-login', 'only-one-connexion' ),
+	'label'             => __( 'Yes, do not allow double connexions', 'secupress' ),
+	'helpers'           => array(
 		array(
 			'type'        => 'description',
 			'description' => __( 'You will be able to force the disconnection of anyone or everyone when using the <b>Sessions Control</b> module below.', 'secupress' ),
@@ -97,12 +100,14 @@ $this->add_field( array(
 
 
 $this->add_field( array(
-	'title'        => __( 'Sessions Control', 'secupress' ),
-	'description'  => __( 'Disconnect any user in one click, or even every logged in user at the same time in one click (but you).', 'secupress' ),
-	'label_for'    => $this->get_field_name( 'sessions_control' ),
-	'type'         => 'checkbox',
-	'label'        => __( 'Yes, i want to use the Sessions Control Module', 'secupress' ),
-	'helpers'      => array(
+	'title'             => __( 'Sessions Control', 'secupress' ),
+	'description'       => __( 'Disconnect any user in one click, or even every logged in user at the same time in one click (but you).', 'secupress' ),
+	'label_for'         => $this->get_field_name( 'sessions_control' ),
+	'plugin_activation' => true,
+	'type'              => 'checkbox',
+	'value'             => (int) secupress_is_submodule_active( 'users-login', 'sessions-control' ),
+	'label'             => __( 'Yes, i want to use the Sessions Control Module', 'secupress' ),
+	'helpers'           => array(
 		array(
 			'type'        => 'description',
 			'description' => sprintf( __( 'You will find action links on every user\'s row in the <a href="%s">users listing administration page</a>.', 'secupress' ), admin_url( 'users.php' ) ),

@@ -9,12 +9,13 @@ $this->add_section( __( 'Bad Headers', 'secupress' ) );
 $main_field_name = $this->get_field_name( 'user-agents-header' );
 
 $this->add_field( array(
-	'title'        => __( 'Block Bad User-Agents', 'secupress' ),
-	'label_for'    => $main_field_name,
-	'type'         => 'checkbox',
-	'value'        => (int) secupress_is_submodule_active( 'firewall', 'user-agents-header' ),
-	'label'        => __( 'Yes, protect my site from bad user-agents', 'secupress' ),
-	'helpers'      => array(
+	'title'             => __( 'Block Bad User-Agents', 'secupress' ),
+	'label_for'         => $main_field_name,
+	'plugin_activation' => true,
+	'type'              => 'checkbox',
+	'value'             => (int) secupress_is_submodule_active( 'firewall', 'user-agents-header' ),
+	'label'             => __( 'Yes, protect my site from bad user-agents', 'secupress' ),
+	'helpers'           => array(
 		array(
 			'type'        => 'description',
 			'description' => __( 'Bots are commonly using their own headers containing some known bad User-Agent. You can block them to avoid a crawl from their non desired services.', 'secupress' ),
@@ -40,13 +41,14 @@ $this->add_field( array(
 
 
 $this->add_field( array(
-	'title'        => __( 'Block Bad Request Methods', 'secupress' ),
-	'description' => __( 'The 3 known safe request methods are <code>GET</code>, <code>POST</code> and <code>HEAD</code>.', 'secupress' ), //// ?
-	'label_for'    => $this->get_field_name( 'request-methods-header' ),
-	'type'         => 'checkbox',
-	'value'        => (int) secupress_is_submodule_active( 'firewall', 'request-methods-header' ),
-	'label'        => __( 'Yes, protect my site from bad request methods', 'secupress' ),
-	'helpers'      => array(
+	'title'             => __( 'Block Bad Request Methods', 'secupress' ),
+	'description'       => __( 'The 3 known safe request methods are <code>GET</code>, <code>POST</code> and <code>HEAD</code>.', 'secupress' ), //// ?
+	'label_for'         => $this->get_field_name( 'request-methods-header' ),
+	'plugin_activation' => true,
+	'type'              => 'checkbox',
+	'value'             => (int) secupress_is_submodule_active( 'firewall', 'request-methods-header' ),
+	'label'             => __( 'Yes, protect my site from bad request methods', 'secupress' ),
+	'helpers'           => array(
 		array(
 			'type'        => 'description',
 			'description' => __( 'Some other request methods can be used to retreive information from your site, avoid them! This will also block malformed HTTP like old <code>POST HTTP/1.0</code> or <code>POST</code> without a referer.', 'secupress' ),

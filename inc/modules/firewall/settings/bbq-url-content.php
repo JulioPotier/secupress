@@ -9,12 +9,13 @@ $this->add_section( __( 'Bad Contents', 'secupress' ) );
 $main_field_name = $this->get_field_name( 'bad-contents' );
 
 $this->add_field( array(
-	'title'        => __( 'Block Bad Contents', 'secupress' ),
-	'label_for'    => $main_field_name,
-	'type'         => 'checkbox',
-	'value'        => (int) secupress_is_submodule_active( 'firewall', 'bad-url-contents' ),
-	'label'        => __( 'Yes, protect my site from bad contents in URLs', 'secupress' ),
-	'helpers'      => array(
+	'title'             => __( 'Block Bad Contents', 'secupress' ),
+	'label_for'         => $main_field_name,
+	'plugin_activation' => true,
+	'type'              => 'checkbox',
+	'value'             => (int) secupress_is_submodule_active( 'firewall', 'bad-url-contents' ),
+	'label'             => __( 'Yes, protect my site from bad contents in URLs', 'secupress' ),
+	'helpers'           => array(
 		array(
 			'type'        => 'description',
 			'description' => __( 'When accessing your website, attackers or some scripts, scanners will try to add bad params in your URLs to see if a vulnerability could be exploited.', 'secupress' ),
@@ -39,13 +40,14 @@ $this->add_field( array(
 
 
 $this->add_field( array(
-	'title'        => __( 'Block Bad Contents', 'secupress' ),
-	'description'  => __( 'Block any URL containing more than 255 characters.', 'secupress' ),
-	'label_for'    => $this->get_field_name( 'bad-url-length' ),
-	'type'         => 'checkbox',
-	'value'        => (int) secupress_is_submodule_active( 'firewall', 'bad-url-length' ),
-	'label'        => __( 'Yes, protect my site from too long URLs', 'secupress' ),
-	'helpers'      => array(
+	'title'             => __( 'Block Bad Contents', 'secupress' ),
+	'description'       => __( 'Block any URL containing more than 255 characters.', 'secupress' ),
+	'label_for'         => $this->get_field_name( 'bad-url-length' ),
+	'plugin_activation' => true,
+	'type'              => 'checkbox',
+	'value'             => (int) secupress_is_submodule_active( 'firewall', 'bad-url-length' ),
+	'label'             => __( 'Yes, protect my site from too long URLs', 'secupress' ),
+	'helpers'           => array(
 		array(
 			'type'        => 'description',
 			'description' => __( 'Too long URLs are suspicious, there is no need to load a website with a so long URL, this is usually done by scanner to test exploits.', 'secupress' ),
@@ -55,13 +57,14 @@ $this->add_field( array(
 
 
 $this->add_field( array(
-	'title'        => __( 'Block SQLi Scan Attempts', 'secupress' ),
-	'description'  => __( 'Fool SQLi scanner/scripts to always give them a different content on each reload of the same page.', 'secupress' ),
-	'label_for'    => $this->get_field_name( 'bad-sqli-scan' ),
-	'type'         => 'checkbox',
-	'value'        => (int) secupress_is_submodule_active( 'firewall', 'bad-sqli-scan' ),
-	'label'        => __( 'Yes, protect my site from SQL injection scanners', 'secupress' ),
-	'helpers'      => array(
+	'title'             => __( 'Block SQLi Scan Attempts', 'secupress' ),
+	'description'       => __( 'Fool SQLi scanner/scripts to always give them a different content on each reload of the same page.', 'secupress' ),
+	'label_for'         => $this->get_field_name( 'bad-sqli-scan' ),
+	'plugin_activation' => true,
+	'type'              => 'checkbox',
+	'value'             => (int) secupress_is_submodule_active( 'firewall', 'bad-sqli-scan' ),
+	'label'             => __( 'Yes, protect my site from SQL injection scanners', 'secupress' ),
+	'helpers'           => array(
 		array(
 			'type'        => 'description',
 			'description' => __( 'To determine if a URL is vulnerable to SQL Injection flaw, automated scanner requires a triple page reload to be identical. By giving them a different content for each request, it will not be possible for it to work properly.', 'secupress' ),

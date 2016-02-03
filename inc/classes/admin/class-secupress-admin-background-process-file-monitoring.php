@@ -26,7 +26,7 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 
 		$result = array( $version => array() );
 		$locale = isset( $wp_local_package ) ? $wp_local_package : 'en_US';
-		$urls   = array( 	
+		$urls   = array(
 						$locale => 'http://api.wordpress.org/core/checksums/1.0/?locale=' . $locale . '&version=' . $version,
 						'en_US' => 'http://api.wordpress.org/core/checksums/1.0/?locale=en_US&version=' . $version,
 						);
@@ -85,6 +85,6 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 	 */
 	protected function complete() {
 		parent::complete();
-		delete_transient( 'secupress_run_file_scan' );
+		delete_site_transient( 'secupress_run_file_scan' );
 	}
 }
