@@ -150,13 +150,9 @@ function __secupress_install_firewall_module( $module ) {
 	if ( 'all' === $module || 'firewall' === $module ) {
 		update_site_option( 'secupress_firewall_settings', array(
 			// Bad headers.
-			'bbq-headers_user-agents-header'     => '1',
-			'bbq-headers_user-agents-list'       => secupress_firewall_bbq_headers_user_agents_list_default(),
-			'bbq-headers_request-methods-header' => '1',
+			'bbq-headers_user-agents-list'      => secupress_firewall_bbq_headers_user_agents_list_default(),
 			// Bad contents.
-			'bbq-url-content_bad-contents'       => '1',
-			'bbq-url-content_bad-contents-list'  => secupress_firewall_bbq_url_content_bad_contents_list_default(),
-			'bbq-url-content_bad-url-length'     => '1',
+			'bbq-url-content_bad-contents-list' => secupress_firewall_bbq_url_content_bad_contents_list_default(),
 		) );
 	}
 }
