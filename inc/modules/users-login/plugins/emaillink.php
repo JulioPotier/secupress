@@ -18,12 +18,12 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 add_filter( 'authenticate', 'secupress_login_authenticate', PHP_INT_MAX, 2 );
 function secupress_login_authenticate( $raw_user, $username ) {
 	global $pagenow;
-	if ( ! is_wp_error( $raw_user ) && ! empty( $_POST ) && secupress_is_affected_role( 'users_login', 'double_auth', $raw_user ) ) { 
+	if ( ! is_wp_error( $raw_user ) && ! empty( $_POST ) && secupress_is_affected_role( 'users-login', 'double-auth', $raw_user ) ) {
 		$rememberme = isset( $_POST['rememberme'] ) && 'forever' == $_POST['rememberme'];
-		$subject = apply_filters( 'secupress_emaillink_email_subject', 
+		$subject = apply_filters( 'secupress_emaillink_email_subject',
 			sprintf( __( '[%1$s] Secure Login Request', 'secupress' ), get_bloginfo( 'name' ) ) );
-		$message = apply_filters( 'secupress_emaillink_email_message', 
-			sprintf( __( 'Hello %1$s, a log-in has been requested for %2$s. <a href="%3$s">Open this page to really log in</a>.' ), 
+		$message = apply_filters( 'secupress_emaillink_email_message',
+			sprintf( __( 'Hello %1$s, a log-in has been requested for %2$s. <a href="%3$s">Open this page to really log in</a>.' ),
 				$raw_user->display_name, get_bloginfo( 'name' ), secupress_create_activation_url( $raw_user, $rememberme ) ) );
 		if ( 'wp-login.php' == $pagenow ) {
 			wp_mail( $raw_user->user_email, $subject, $message, 'content-type: text/html' );
@@ -42,7 +42,7 @@ function secupress_emaillink_autologin_validation() {
 }
 
 function secupress_check_emaillink_key( $key, $uid ) {
-	
+
 	$token = get_user_meta( (int) $uid, 'emaillink_token', true );
 
 	if ( $key === $token ) {
