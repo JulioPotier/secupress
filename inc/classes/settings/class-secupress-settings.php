@@ -892,7 +892,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	protected function file_scanner() {
-		if ( false !== ( $time = get_transient( 'secupress_run_file_scan' ) ) ) {
+		if ( false !== ( $time = get_site_transient( 'secupress_run_file_scan' ) ) ) {
 			echo '<p class="working">' . sprintf( __( 'Job running since %s.', 'secupress' ), human_time_diff( $time, time() ) ) . ' <span class="secupress-inline-spinner"></span></p>';
 			echo '<p><a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_stop_file_scan' ), 'secupress_stop_file_scan' ) . '" class="button button-secondary">' . __( 'Stop task', 'secupress' ) . '</a></p>';
 		} else {

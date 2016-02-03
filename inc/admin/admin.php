@@ -529,7 +529,7 @@ function __secupress_run_file_scan_ajax_post_cb() {
 	if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress_run_file_scan' ) ) {
 		wp_nonce_ays( '' );
 	}
-	set_transient( 'secupress_run_file_scan', time() );
+	set_site_transient( 'secupress_run_file_scan', time() );
 
 	wp_redirect( wp_get_referer() );
 	die();
@@ -543,11 +543,11 @@ function __secupress_run_file_scan_ajax_post_cb() {
  **/
 add_action( 'admin_post_secupress_stop_file_scan', '__secupress_stop_file_scan_ajax_post_cb' );
 function __secupress_stop_file_scan_ajax_post_cb() {
-	
+
 	if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress_stop_file_scan' ) ) {
 		wp_nonce_ays( '' );
 	}
-	delete_transient( 'secupress_run_file_scan' );
+	delete_site_transient( 'secupress_run_file_scan' );
 
 	wp_redirect( wp_get_referer() );
 	die();
