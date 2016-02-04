@@ -83,16 +83,23 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 
 
 	public function fix() {
+		$roles = new WP_Roles();
+		$roles = $roles->get_names();
+		$roles = array_flip( $roles );
+		$roles = array_combine( $roles, $roles );
+
+		$settings = array( 'double-auth_affected_role' => $roles );
+		secupress_update_module_options( $settings, 'users-login' );
 
 		if ( ! secupress_is_pro() ) {
-			$settings = array( 'double-auth_type' => 'googleauth', 'double_auth_affected_role' => array() );
+			secupress_activate_submodule( 'users-login', 'googleauth' );
 			$this->add_fix_message( 1 );
 		} else {
-			$settings = array( 'double-auth_type' => 'passwordless', 'double-auth_passwordless-type' => 'email', 'double_auth_affected_role' => array() );
+			secupress_activate_submodule( 'users-login', 'passwordless' );
 			$this->add_fix_message( 2 );
 		}
 
-		secupress_update_module_settings( 'users-login', $settings );
+		secupress_update_module_options( $settings, 'users-login' );
 
 		return parent::fix();
 	}
