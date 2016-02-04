@@ -10,7 +10,7 @@ add_action( 'plugins_loaded', 'secupress_check_ban_ips' );
  **/
 function secupress_check_ban_ips() {
 	$ban_ips                   = get_site_option( SECUPRESS_BAN_IP );
-	$login_protection_time_ban = secupress_get_module_option( 'login_protection_time_ban', 5, 'users_login' );
+	$login_protection_time_ban = secupress_get_module_option( 'login-protection_time_ban', 5, 'users-login' );
 	$refresh_htaccess          = false;
 
 	// if we got banned ips

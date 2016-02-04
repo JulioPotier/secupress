@@ -376,7 +376,7 @@ function secupress_get_ip() { //// find the best order
 
 
 function secupress_ban_ip( $IP = null, $die = true ) {
-	$login_protection_time_ban = (int) secupress_get_module_option( 'login_protection_time_ban', 5, 'users_login' );
+	$login_protection_time_ban = (int) secupress_get_module_option( 'login-protection_time_ban', 5, 'users-login' );
 	$IP                        = $IP ? $IP : secupress_get_ip();
 	$ban_ips                   = get_site_option( SECUPRESS_BAN_IP );
 
