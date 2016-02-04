@@ -25,6 +25,10 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 	 */
 	protected static $delay;
 	/**
+	 * @var (string) Name of the option that stores the alerts.
+	 */
+	protected static $option_name = 'secupress_delayed_alerts';
+	/**
 	 * @var (bool) Tells if the notification includes delayed alerts.
 	 */
 	protected $is_delayed = false;
@@ -157,6 +161,9 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 
 		// Maybe send notifications.
 		add_action( 'shutdown', array( $this, '_maybe_notify' ) );
+
+		// Autoload the option.
+		add_filter( '_secupress.options.load_plugins_network_options', array( $this, '_autoload_options' ) );
 	}
 
 
@@ -384,7 +391,7 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 	 */
 	public function _maybe_notify() {
 		$trigger_now = array();
-		$delayed     = get_site_option( 'secupress_delayed_alerts', array() );
+		$delayed     = get_site_option( static::$option_name, array() );
 		$delayed     = is_array( $delayed ) ? $delayed : array();
 		/**
 		 * Testing for:    current-time < alert-time + delay
@@ -441,7 +448,7 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 		}
 
 		// Store the alerts.
-		update_site_option( 'secupress_delayed_alerts', $delayed );
+		update_site_option( static::$option_name, $delayed );
 
 		if ( ! $trigger_now ) {
 			// Nothing to send right now.
@@ -607,5 +614,22 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 		$messages = apply_filters( 'secupress.alerts.messages', $messages );
 
 		return isset( $messages[ $hook ] ) ? $messages[ $hook ] : sprintf( __( 'Missing message for key %s.', 'secupress' ), '<strong>' . $hook . '</strong>' );
+	}
+
+
+	// Various =====================================================================================
+
+	/**
+	 * Add the option(s) we use in this plugin to be autoloaded on multisite.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (array) $option_names An array of network option names.
+	 *
+	 * @return (array)
+	 */
+	public function _autoload_options( $option_names ) {
+		$option_names[] = static::$option_name;
+		return $option_names;
 	}
 }

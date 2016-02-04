@@ -143,8 +143,8 @@ function secupress_get_scanners() {
 		}
 
 		// Cache transients.
-		if ( is_multisite() && ! wp_using_ext_object_cache() ) {
-			secupress_load_site_options( $tests, '_site_transient_secupress_scan_' );
+		if ( ! wp_using_ext_object_cache() ) {
+			secupress_load_network_options( $tests, '_site_transient_secupress_scan_' );
 		}
 	}
 
@@ -195,8 +195,8 @@ function secupress_get_scanner_fixes() {
 		}
 
 		// Cache transients.
-		if ( is_multisite() && ! wp_using_ext_object_cache() ) {
-			secupress_load_site_options( $tests, '_site_transient_secupress_fix_' );
+		if ( ! wp_using_ext_object_cache() ) {
+			secupress_load_network_options( $tests, '_site_transient_secupress_fix_' );
 		}
 	}
 

@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /* !MULTISITE SETTINGS API ====================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-add_filter( 'secupress_whitelist_site_options', 'secupress_site_option_update_filter' );
+add_filter( 'secupress_whitelist_network_options', 'secupress_network_option_update_filter' );
 
 /**
  * {@internal Missing Short Description}}
@@ -15,8 +15,8 @@ add_filter( 'secupress_whitelist_site_options', 'secupress_site_option_update_fi
  * @param (array) $options
  * @return (array)
  */
-function secupress_site_option_update_filter( $options ) {
-	$whitelist = secupress_cache_data( 'new_whitelist_site_options' );
+function secupress_network_option_update_filter( $options ) {
+	$whitelist = secupress_cache_data( 'new_whitelist_network_options' );
 
 	if ( is_array( $whitelist ) ) {
 		$options = add_option_whitelist( $whitelist, $options );
@@ -32,9 +32,9 @@ function secupress_site_option_update_filter( $options ) {
 
 // !options.php do not handle site options. Let's use admin-post.php for multisite installations.
 
-add_action( 'admin_post_update', 'secupress_update_site_option_on_submit' );
+add_action( 'admin_post_update', 'secupress_update_network_option_on_submit' );
 
-function secupress_update_site_option_on_submit() {
+function secupress_update_network_option_on_submit() {
 	$option_groups = array( 'secupress_global_settings' => 1 );
 	$modules       = secupress_get_modules();
 
@@ -54,7 +54,7 @@ function secupress_update_site_option_on_submit() {
 
 	check_admin_referer( $option_group . '-options' );
 
-	$whitelist_options = apply_filters( 'secupress_whitelist_site_options', array() );
+	$whitelist_options = apply_filters( 'secupress_whitelist_network_options', array() );
 
 	if ( ! isset( $whitelist_options[ $option_group ] ) ) {
 		wp_die( __( '<strong>ERROR</strong>: options page not found.' ) );

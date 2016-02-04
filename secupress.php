@@ -83,10 +83,7 @@ function secupress_init() {
 	// Call defines, classes and functions
 	require( SECUPRESS_FUNCTIONS_PATH . 'formatting.php' );
 	require( SECUPRESS_FUNCTIONS_PATH . 'options.php' );
-
-	if ( is_multisite() ) {
-		require( SECUPRESS_INC_PATH . 'multisite.php' );
-	}
+	require( SECUPRESS_INC_PATH . 'network-options-autoload.php' );
 
 	// Last constants
 	define( 'SECUPRESS_PLUGIN_NAME', secupress_get_option( 'wl_plugin_name', 'SecuPress' ) );

@@ -213,11 +213,11 @@ function secupress_register_setting( $module, $option_name = false ) {
 		return;
 	}
 
-	$whitelist = secupress_cache_data( 'new_whitelist_site_options' );
+	$whitelist = secupress_cache_data( 'new_whitelist_network_options' );
 	$whitelist = is_array( $whitelist ) ? $whitelist : array();
 	$whitelist[ $option_group ] = isset( $whitelist[ $option_group ] ) ? $whitelist[ $option_group ] : array();
 	$whitelist[ $option_group ][] = $option_name;
-	secupress_cache_data( 'new_whitelist_site_options', $whitelist );
+	secupress_cache_data( 'new_whitelist_network_options', $whitelist );
 
 	add_filter( "sanitize_option_{$option_name}", $sanitize_callback );
 }

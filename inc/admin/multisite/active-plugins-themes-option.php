@@ -11,10 +11,10 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  *
  * @since 1.0
  */
-add_action( 'add_option_active_plugins',    'secupress_update_active_plugins_site_option', 20, 2 );
-add_action( 'update_option_active_plugins', 'secupress_update_active_plugins_site_option', 20, 2 );
+add_action( 'add_option_active_plugins',    'secupress_update_active_plugins_network_option', 20, 2 );
+add_action( 'update_option_active_plugins', 'secupress_update_active_plugins_network_option', 20, 2 );
 
-function secupress_update_active_plugins_site_option( $do_not_use = false, $value ) {
+function secupress_update_active_plugins_network_option( $do_not_use = false, $value ) {
 	$site_id = get_current_blog_id();
 	$plugins = get_site_option( 'secupress_active_plugins' );
 
@@ -37,10 +37,10 @@ function secupress_update_active_plugins_site_option( $do_not_use = false, $valu
  *
  * @since 1.0
  */
-add_action( 'add_option_stylesheet',    'secupress_update_active_themes_site_option', 20, 2 );
-add_action( 'update_option_stylesheet', 'secupress_update_active_themes_site_option', 20, 2 );
+add_action( 'add_option_stylesheet',    'secupress_update_active_themes_network_option', 20, 2 );
+add_action( 'update_option_stylesheet', 'secupress_update_active_themes_network_option', 20, 2 );
 
-function secupress_update_active_themes_site_option( $do_not_use = false, $value ) {
+function secupress_update_active_themes_network_option( $do_not_use = false, $value ) {
 	$site_id = get_current_blog_id();
 	$themes  = get_site_option( 'secupress_active_themes' );
 
@@ -59,9 +59,9 @@ function secupress_update_active_themes_site_option( $do_not_use = false, $value
  *
  * @since 1.0
  */
-add_action( 'delete_blog', 'secupress_delete_blog_from_active_plugins_and_themes_site_options', 20 );
+add_action( 'delete_blog', 'secupress_delete_blog_from_active_plugins_and_themes_network_options', 20 );
 
-function secupress_delete_blog_from_active_plugins_and_themes_site_options( $blog_id ) {
+function secupress_delete_blog_from_active_plugins_and_themes_network_options( $blog_id ) {
 	$blog_id = (int) $blog_id;
 
 	// Plugins
@@ -90,7 +90,7 @@ function secupress_delete_blog_from_active_plugins_and_themes_site_options( $blo
  *
  * @return (int|bool) Until there are no more results to add, return the number of sites set so far. Return false otherwise.
  */
-function secupress_fill_active_plugins_and_themes_site_options() {
+function secupress_fill_active_plugins_and_themes_network_options() {
 	global $wpdb;
 	$plugins = get_site_option( 'secupress_active_plugins' );
 
@@ -104,7 +104,7 @@ function secupress_fill_active_plugins_and_themes_site_options() {
 	$plugins = is_array( $plugins ) ? $plugins : array();
 	// Set the query boundaries.
 	$offset  = ! empty( $plugins['offset'] ) ? absint( $plugins['offset'] ) : 0;
-	$step    = apply_filters( 'secupress_fill_active_plugins_and_themes_site_options_step', 250 );
+	$step    = apply_filters( 'secupress.multisite.fill_active_plugins_and_themes_network_options_step', 250 );
 	$step    = absint( $step );
 	$limit   = $offset * $step . ', ' . $step;
 
@@ -158,21 +158,23 @@ function secupress_fill_active_plugins_and_themes_site_options() {
  *
  * @since 1.0
  */
-add_action( 'load-secupress_page_secupress_scanners', 'secupress_add_active_plugins_and_themes_site_options' );
+add_action( 'load-secupress_page_secupress_scanners', 'secupress_add_active_plugins_and_themes_network_options' );
 
-function secupress_add_active_plugins_and_themes_site_options() {
-	if ( secupress_fill_active_plugins_and_themes_site_options() ) {
-		$href = urlencode( esc_url( secupress_get_current_url( 'raw' ) ) );
-		$href = admin_url( 'admin-post.php?action=secupress-set-big-data&_wp_http_referer=' . $href );
-		$href = wp_nonce_url( $href, 'secupress-set-big-data' );
-
-		$message = sprintf(
-			/* translators: %s is a "click here" link. */
-			__( 'Your network is quite big. Before doing anything, some data must be set. Please %s.', 'secupress' ),
-			'<a href="' . $href . '" class="secupress-set-big-data">' . __( 'click here', 'secupress' ) . '</a>'
-		);
-		secupress_add_notice( $message, 'error', false );
+function secupress_add_active_plugins_and_themes_network_options() {
+	if ( ! secupress_fill_active_plugins_and_themes_network_options() ) {
+		return;
 	}
+
+	$href = urlencode( esc_url( secupress_get_current_url( 'raw' ) ) );
+	$href = admin_url( 'admin-post.php?action=secupress-set-big-data&_wp_http_referer=' . $href );
+	$href = wp_nonce_url( $href, 'secupress-set-big-data' );
+
+	$message = sprintf(
+		/* translators: %s is a "click here" link. */
+		__( 'Your network is quite big. Before doing anything, some data must be set. Please %s.', 'secupress' ),
+		'<a href="' . $href . '" class="secupress-set-big-data">' . __( 'click here', 'secupress' ) . '</a>'
+	);
+	secupress_add_notice( $message, 'error', false );
 }
 
 
@@ -182,9 +184,9 @@ function secupress_add_active_plugins_and_themes_site_options() {
  *
  * @since 1.0
  */
-add_action( 'wp_ajax_secupress-set-big-data', 'secupress_add_active_plugins_and_themes_site_options_admin_ajax_callback' );
+add_action( 'wp_ajax_secupress-set-big-data', 'secupress_add_active_plugins_and_themes_network_options_admin_ajax_callback' );
 
-function secupress_add_active_plugins_and_themes_site_options_admin_ajax_callback() {
+function secupress_add_active_plugins_and_themes_network_options_admin_ajax_callback() {
 	global $wpdb;
 
 	if ( ! check_ajax_referer( 'secupress-set-big-data', false, false ) ) {
@@ -195,7 +197,7 @@ function secupress_add_active_plugins_and_themes_site_options_admin_ajax_callbac
 		wp_send_json_error();
 	}
 
-	if ( ! ( $count = secupress_fill_active_plugins_and_themes_site_options() ) ) {
+	if ( ! ( $count = secupress_fill_active_plugins_and_themes_network_options() ) ) {
 		wp_send_json_success( false );
 	}
 
@@ -211,9 +213,9 @@ function secupress_add_active_plugins_and_themes_site_options_admin_ajax_callbac
  *
  * @since 1.0
  */
-add_action( 'admin_post_secupress-set-big-data', 'secupress_add_active_plugins_and_themes_site_options_admin_post_callback' );
+add_action( 'admin_post_secupress-set-big-data', 'secupress_add_active_plugins_and_themes_network_options_admin_post_callback' );
 
-function secupress_add_active_plugins_and_themes_site_options_admin_post_callback() {
+function secupress_add_active_plugins_and_themes_network_options_admin_post_callback() {
 	global $wpdb;
 
 	check_admin_referer( 'secupress-set-big-data' );
@@ -222,7 +224,7 @@ function secupress_add_active_plugins_and_themes_site_options_admin_post_callbac
 		wp_nonce_ays( '' );
 	}
 
-	if ( ! ( $count = secupress_fill_active_plugins_and_themes_site_options() ) ) {
+	if ( ! ( $count = secupress_fill_active_plugins_and_themes_network_options() ) ) {
 		wp_safe_redirect( wp_get_referer() );
 		die();
 	}
@@ -240,7 +242,7 @@ function secupress_add_active_plugins_and_themes_site_options_admin_post_callbac
 		printf(
 			/* translators: %s is a "click here" link. */
 			__( 'If this page does not refresh automatically in 2 seconds, please %s.', 'secupress' ),
-			/* For `wp_get_referer()` see the param `_wp_http_referer` in `secupress_add_active_plugins_and_themes_site_options()`. */
+			/* For `wp_get_referer()` see the param `_wp_http_referer` in `secupress_add_active_plugins_and_themes_network_options()`. */
 			'<a href="' . $href . '" class="secupress-set-big-data">' . __( 'click here', 'secupress' ) . '</a>'
 		);
 		?></p>

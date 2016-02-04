@@ -33,7 +33,7 @@ function secupress_get_results_for_ms_scanner_fixes() {
 		// Cache transients.
 		if ( is_multisite() && ! wp_using_ext_object_cache() ) {
 			$tests_lower = array_map( 'strtolower', $tests );
-			secupress_load_site_options( $tests_lower, '_site_transient_' . SECUPRESS_SCAN_FIX_SITES_SLUG . '_' );
+			secupress_load_network_options( $tests_lower, '_site_transient_' . SECUPRESS_SCAN_FIX_SITES_SLUG . '_' );
 		}
 	}
 	// Current results.
@@ -125,7 +125,7 @@ function secupress_get_results_for_ms_scanner_fixes() {
 			}
 
 			if ( $current_site_is_empty ) {
-				do_action( 'secupress_empty_results_for_ms_scanner_fixes' );
+				do_action( 'secupress.multisite.empty_results_for_ms_scanner_fixes' );
 			}
 		}
 	}
