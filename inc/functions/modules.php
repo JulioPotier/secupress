@@ -2,100 +2,6 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 
-/**
- * A wrapper to easily get SecuPress module option
- *
- * @since 1.0
- *
- * @param string $option  The option name
- * @param bool   $default (default: null) The default value of option.
- * @param string $module  The module slug (see array keys from modules.php) default is the current module.
- * @return mixed The option value
- */
-function secupress_get_module_option( $option, $default = null, $module = false ) {
-
-	if ( ! $module ) {
-		if ( ! class_exists( 'SecuPress_Settings' ) ) {
-			secupress_require_class( 'settings' );
-		}
-		if ( ! class_exists( 'SecuPress_Settings_Modules' ) ) {
-			secupress_require_class( 'settings', 'modules' );
-		}
-
-		$module = SecuPress_Settings_Modules::get_instance()->get_current_module();
-	}
-
-	/**
-	 * Pre-filter any SecuPress option before read
-	 *
-	 * @since 1.0
-	 *
-	 * @param variant $default The default value
-	*/
-	$value = apply_filters( 'pre_secupress_get_module_option_' . $option, null, $default, $module );
-
-	if ( null !== $value ) {
-		return $value;
-	}
-
-	$options = get_site_option( "secupress_{$module}_settings" );
-	$value   = isset( $options[ $option ] ) && $options[ $option ] !== false ? $options[ $option ] : $default;
-	/**
-	 * Filter any SecuPress option after read
-	 *
-	 * @since 1.0
-	 *
-	 * @param variant $default The default value
-	*/
-	return apply_filters( 'secupress_get_module_option_' . $option, $value, $default, $module );
-}
-
-
-function secupress_update_module_option( $option, $value, $module = false ) {
-
-	if ( ! $module ) {
-		if ( ! class_exists( 'SecuPress_Settings' ) ) {
-			secupress_require_class( 'settings' );
-		}
-		if ( ! class_exists( 'SecuPress_Settings_Modules' ) ) {
-			secupress_require_class( 'settings', 'modules' );
-		}
-
-		$module = SecuPress_Settings_Modules::get_instance()->get_current_module();
-	}
-
-	$options = get_site_option( "secupress_{$module}_settings" );
-	$options = is_array( $options ) ? $options : array();
-	$options[ $option ] = $value;
-
-	update_site_option( "secupress_{$module}_settings", $options );
-}
-
-
-function secupress_update_module_options( $values, $module = false ) {
-	if ( ! $values || ! is_array( $values ) ) {
-		return null;
-	}
-
-	if ( ! $module ) {
-		if ( ! class_exists( 'SecuPress_Settings' ) ) {
-			secupress_require_class( 'settings' );
-		}
-		if ( ! class_exists( 'SecuPress_Settings_Modules' ) ) {
-			secupress_require_class( 'settings', 'modules' );
-		}
-
-		$module = SecuPress_Settings_Modules::get_instance()->get_current_module();
-	}
-
-	$options = get_site_option( "secupress_{$module}_settings" );
-	$options = is_array( $options ) ? $options : array();
-	$options = array_merge( $options, $values );
-
-	update_site_option( "secupress_{$module}_settings", $options );
-}
-
-
 function secupress_update_module_settings( $module, $settings ) {
 	$modules  = secupress_get_modules();
 	$callback = str_replace( '-', '_', $module );
@@ -110,6 +16,7 @@ function secupress_update_module_settings( $module, $settings ) {
 	call_user_func( "__secupress_{$callback}_settings_callback", $module_options );
 
 	update_site_option( "secupress_{$module}_settings", $module_options );
+
 }
 
 
