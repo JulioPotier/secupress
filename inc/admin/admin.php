@@ -517,6 +517,7 @@ function secupress_register_all_settings() {
 	}
 }
 
+
 /**
  * Set a transient to be read later to launch an async job
  *
@@ -524,15 +525,16 @@ function secupress_register_all_settings() {
  * @return void
  **/
 add_action( 'admin_post_secupress_toggle_file_scan', '__secupress_toggle_file_scan_ajax_post_cb' );
+
 function __secupress_toggle_file_scan_ajax_post_cb() {
 
 	if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress_toggle_file_scan' ) ) {
 		wp_nonce_ays( '' );
 	}
-	if ( false === get_transient( 'secupress_toggle_file_scan' ) ) {
-		set_transient( 'secupress_toggle_file_scan', time() );
+	if ( false === get_site_transient( 'secupress_toggle_file_scan' ) ) {
+		set_site_transient( 'secupress_toggle_file_scan', time() );
 	} else {
-		delete_transient( 'secupress_toggle_file_scan' );
+		delete_site_transient( 'secupress_toggle_file_scan' );
 	}
 
 	wp_redirect( wp_get_referer() );

@@ -313,7 +313,7 @@ function secupress_downgrade_author_administrator() {
 
 add_action( 'secupress_loaded', '__secupress_process_file_monitoring_tasks' );
 function __secupress_process_file_monitoring_tasks() {
-	if ( defined( 'DOING_CRON' ) || ! is_admin() || false === ( get_site_transient( 'secupress_run_file_scan' ) ) ) {
+	if ( defined( 'DOING_CRON' ) || ! is_admin() || false === ( get_site_transient( 'secupress_toggle_file_scan' ) ) ) {
 		return;
 	}
 	/* https://github.com/A5hleyRich/wp-background-processing v1.0 */

@@ -85,6 +85,6 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 	 */
 	protected function complete() {
 		parent::complete();
-		delete_site_transient( 'secupress_run_file_scan' );
+		delete_site_transient( 'secupress_toggle_file_scan' );
 	}
 }
