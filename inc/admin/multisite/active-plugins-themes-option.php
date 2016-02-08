@@ -23,7 +23,6 @@ function secupress_update_active_plugins_network_option( $do_not_use = false, $v
 		return;
 	}
 
-	$value = $value ? $value                       : array();
 	$value = $value ? array_fill_keys( $value, 1 ) : array();
 
 	$plugins[ $site_id ] = $value;
@@ -81,6 +80,10 @@ function secupress_delete_blog_from_active_plugins_and_themes_network_options( $
 	}
 }
 
+
+/*------------------------------------------------------------------------------------------------*/
+/* FILL IN THE FIRST VALUES ===================================================================== */
+/*------------------------------------------------------------------------------------------------*/
 
 /*
  * First complete filling.
