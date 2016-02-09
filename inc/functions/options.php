@@ -435,6 +435,10 @@ function secupress_get_tests() {
 		$tests['medium'][] = 'Wpml_Discloses';
 	}
 
+	if ( class_exists( 'WooCommerce' ) ) {
+		$tests['medium'][] = 'Woocommerce_Discloses';
+	}
+
 	return $tests;
 }
 
