@@ -410,7 +410,7 @@ function secupress_set_site_transient( $transient, $value ) {
  * @return array Tests to scan
  **/
 function secupress_get_tests() {
-	return array(
+	$tests = array(
 		'high' => array(
 			'Core_Update',      'Plugins_Update',    'Themes_Update',
 			'Auto_Update',      'Bad_Old_Plugins',   'Bad_Old_Files',
@@ -430,6 +430,12 @@ function secupress_get_tests() {
 			'DirectoryIndex'
 		)
 	);
+
+	if ( class_exists( 'SitePress' ) ) {
+		$tests['medium'][] = 'Wpml_Discloses';
+	}
+
+	return $tests;
 }
 
 
