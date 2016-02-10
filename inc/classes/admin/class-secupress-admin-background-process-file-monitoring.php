@@ -13,6 +13,12 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 
 	const WP_CORE_FILES_HASHES = 'secupress_wp_core_files_hashes';
 
+	/**
+	 * Will store the wp core files hashes (md5), first from the w.org api, then from the .zip from w.org too
+	 *
+	 * @since 1.0
+	 * @return void
+	 **/
 	public function get_wp_hashes( $version = false ) {
 		global $wp_version, $wp_local_package;
 
@@ -44,7 +50,6 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 				$result[ $version ]['url'] = $url;
 				break;
 			}
-			$result[ $version ]['foo'] = 'bar';
 		}
 
 		if ( ! isset( $result[ $version ]['checksums'] ) || ! $result[ $version ]['checksums'] ) {
@@ -104,9 +109,9 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 	 * @return mixed
 	 */
 	protected function task( $item ) {
-		$this->$item ();
-		set_transient( $item, date( get_option( 'time_format' ) ) );
-		return false;
+		if ( $item ) {
+			$this->$item();
+		}
 	}
 	/**
 	 * Complete
