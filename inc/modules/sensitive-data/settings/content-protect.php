@@ -7,8 +7,8 @@ $this->add_section( __( 'Content Protection', 'secupress' ) );
 
 
 $this->add_field( array(
-	'title'             => __( 'Anti-Hot-link', 'secupress' ),
-	'description'       => __( 'A hot-link is when someone embed your medias directly from your website, stealing your bandwidth.', 'secupress' ),
+	'title'             => __( 'Anti Hotlink', 'secupress' ),
+	'description'       => __( 'A hotlink is when someone embed your medias directly from your website, stealing your bandwidth.', 'secupress' ),
 	'label_for'         => $this->get_field_name( 'hotlink' ),
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
