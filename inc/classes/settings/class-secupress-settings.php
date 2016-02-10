@@ -895,13 +895,16 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		if ( false !== ( $time = get_site_transient( 'secupress_toggle_file_scan' ) ) ) {
 			$label = __( 'Stop task', 'secupress' );
 			$class = ' working';
+			$turn  = 'off';
 		} else {
 			$label = __( 'Search for modified files', 'secupress' );
 			$class = '';
+			$turn  = 'on';
 		}
+		$url       = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_toggle_file_scan&turn=' . $turn ), 'secupress_toggle_file_scan' );
 		?>
 		<p>
-			<a data-original-i18n="<?php esc_attr_e( 'Search for modified files', 'secupress' ); ?>" data-loading-i18n="<?php esc_attr_e( 'Stop task', 'secupress' ); ?>" id="toggle_file_scanner" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_toggle_file_scan' ), 'secupress_toggle_file_scan' ); ?>" class="button button-secondary<?php echo $class; ?>">
+			<a data-original-i18n="<?php esc_attr_e( 'Search for modified files', 'secupress' ); ?>" data-loading-i18n="<?php esc_attr_e( 'Stop task', 'secupress' ); ?>" id="toggle_file_scanner" href="<?php echo $url; ?>" class="button button-secondary<?php echo $class; ?>">
 				<?php echo $label; ?>
 			</a>
 			<span class="secupress-inline-spinner spinner"></span>

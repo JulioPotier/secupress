@@ -528,10 +528,11 @@ add_action( 'admin_post_secupress_toggle_file_scan', '__secupress_toggle_file_sc
 
 function __secupress_toggle_file_scan_ajax_post_cb() {
 
-	if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress_toggle_file_scan' ) ) {
+	if ( ! isset( $_GET['_wpnonce'], $_GET['turn'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress_toggle_file_scan' ) ) {
 		wp_nonce_ays( '' );
 	}
-	if ( false === get_site_transient( 'secupress_toggle_file_scan' ) ) {
+
+	if ( 'on' === $_GET['turn'] ) {
 		set_site_transient( 'secupress_toggle_file_scan', time() );
 	} else {
 		delete_site_transient( 'secupress_toggle_file_scan' );
