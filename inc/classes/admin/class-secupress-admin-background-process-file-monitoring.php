@@ -61,7 +61,6 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 				$zip_md5 = wp_remote_retrieve_body( $response );
 				require_once( ABSPATH . 'wp-admin/includes/file.php' );
 				$tmpfname = download_url( $file );
-				$result[ $version ]['foo'] = $tmpfname;
 				if ( ! is_wp_error( $tmpfname ) && is_readable( $tmpfname ) ) {
 					$file = $tmpfname;
 
