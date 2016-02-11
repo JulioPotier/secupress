@@ -110,4 +110,4 @@ if ( $is_plugin_active && function_exists( 'secupress_move_login_file_is_writabl
 	}
 }
 
-unset( $options, $field_name, $main_field_name, $is_plugin_active, $labels, $message, $rules, $home_path );
+unset( $main_field_name, $is_plugin_active, $labels, $message, $rules );
