@@ -104,7 +104,7 @@ if ( $is_plugin_active && function_exists( 'secupress_move_login_file_is_writabl
 			'value'        => $rules,
 			'attributes'   => array(
 				'readonly' => 'readonly',
-				'rows'     => count( explode( "\n", $rules ) ) + 1,
+				'rows'     => substr_count( $rules, "\n" ) + 1,
 			),
 		) );
 	}
