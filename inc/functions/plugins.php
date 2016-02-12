@@ -224,11 +224,13 @@ function secupress_register_setting( $module, $option_name = false ) {
 
 
 /**
- * Return the current URL
+ * Return the current URL.
  *
- * @param $mode (string) base (before '?'), raw (all), uri (after '?')
  * @since 1.0
- * @return string $url
+ *
+ * @param (string) $mode What to return: raw (all), base (before '?'), uri (before '?', without the domain).
+ *
+ * @return (string)
  **/
 function secupress_get_current_url( $mode = 'base' ) {
 	$mode = (string) $mode;
@@ -250,4 +252,42 @@ function secupress_get_current_url( $mode = 'base' ) {
 			$url  = explode( '?', $url, 2 );
 			return reset( $url );
 	endswitch;
+}
+
+
+/**
+ * Tell if the site frontend is delivered over SSL.
+ *
+ * @since 1.0
+ *
+ * @return (bool)
+ **/
+function secupress_is_site_ssl() {
+	static $is_site_ssl;
+
+	if ( isset( $is_site_ssl ) ) {
+		return $is_site_ssl;
+	}
+
+	if ( is_multisite() ) {
+		switch_to_blog( secupress_get_main_blog_id() );
+		$site_url = get_option( 'siteurl' );
+		$home_url = get_option( 'home' );
+		restore_current_blog();
+	} else {
+		$site_url = get_option( 'siteurl' );
+		$home_url = get_option( 'home' );
+	}
+
+	$is_site_ssl = strpos( $site_url, 'https://' ) === 0 && strpos( $home_url, 'https://' ) === 0;
+	/**
+	 * Filter the value of `$is_site_ssl`, that tells if the site frontend is delivered over SSL.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (bool) $is_site_ssl
+	 */
+	$is_site_ssl = apply_filters( 'secupress.front.is_site_ssl', $is_site_ssl );
+
+	return $is_site_ssl;
 }
