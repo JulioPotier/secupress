@@ -256,7 +256,7 @@ function secupress_get_current_url( $mode = 'base' ) {
 
 
 /**
- * Tell if the site frontend is delivered over SSL.
+ * Tell if the site frontend is served over SSL.
  *
  * @since 1.0
  *
@@ -281,7 +281,7 @@ function secupress_is_site_ssl() {
 
 	$is_site_ssl = strpos( $site_url, 'https://' ) === 0 && strpos( $home_url, 'https://' ) === 0;
 	/**
-	 * Filter the value of `$is_site_ssl`, that tells if the site frontend is delivered over SSL.
+	 * Filter the value of `$is_site_ssl`, that tells if the site frontend is served over SSL.
 	 *
 	 * @since 1.0
 	 *
