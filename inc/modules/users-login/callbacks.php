@@ -252,6 +252,7 @@ function __secupress_move_login_settings_callback( $modulenow, &$settings, $acti
 		$message .= sprintf( _n( 'The slug %s is forbidden.', 'The slugs %s are forbidden.', $nbr_forbidden, 'secupress' ), wp_sprintf( '<code>%l</code>', $errors['forbidden'] ) );
 		add_settings_error( "secupress_{$modulenow}_settings", 'forbidden-slugs', $message, 'error' );
 	}
+
 	if ( ! empty( $errors['duplicates'] ) ) {
 		$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
 		$message .= __( 'The links can\'t have the same slugs.', 'secupress' );
