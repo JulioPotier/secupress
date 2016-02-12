@@ -30,15 +30,18 @@ class SecuPress_Scan_Wpml_Discloses extends SecuPress_Scan implements iSecuPress
 
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
-			// good
-			0   => __( 'The WPML plugin does not reveal sensitive informations.', 'secupress' ),
+			/* translators: %s is a plugin name */
+			0   => sprintf( __( 'The %s plugin does not reveal sensitive informations.', 'secupress' ), 'WPML' ),
 			1   => __( 'The generator meta tag should not be displayed anymore.', 'secupress' ),
-			2   => __( 'The WPML version should be removed from your styles URL now.', 'secupress' ),
-			3   => __( 'The WPML version should be removed from your scripts URL now.', 'secupress' ),
+			/* translators: %s is a plugin name */
+			2   => sprintf( __( 'The %s\'s version should be removed from your styles URL now.', 'secupress' ), 'WPML' ),
+			/* translators: %s is a plugin name */
+			3   => sprintf( __( 'The %s\'s version should be removed from your scripts URL now.', 'secupress' ), 'WPML' ),
 			// warning
 			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
 			// bad
-			200 => __( 'The website displays the <strong>WPML version</strong> in the homepage source code (%s).', 'secupress' ),
+			/* translators: 1 is a plugin name, 2 is some related info */
+			200 => sprintf( __( 'The website displays the <strong>%1$s\'s version</strong> in the homepage source code (%2$s).', 'secupress' ), 'WPML', '%s' ),
 		);
 
 		if ( isset( $message_id ) ) {

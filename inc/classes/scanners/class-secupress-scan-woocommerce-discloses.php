@@ -31,14 +31,18 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements iSe
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// good
-			0   => __( 'The WooCommerce plugin does not reveal sensitive informations.', 'secupress' ),
+			/* translators: %s is a plugin name */
+			0   => sprintf( __( 'The %s plugin does not reveal sensitive informations.', 'secupress' ), 'WooCommerce' ),
 			1   => __( 'The generator meta tag should not be displayed anymore.', 'secupress' ),
-			2   => __( 'The WooCommerce version should be removed from your styles URL now.', 'secupress' ),
-			3   => __( 'The WooCommerce version should be removed from your scripts URL now.', 'secupress' ),
+			/* translators: %s is a plugin name */
+			2   => sprintf( __( 'The %s\'s version should be removed from your styles URL now.', 'secupress' ), 'WooCommerce' ),
+			/* translators: %s is a plugin name */
+			3   => sprintf( __( 'The %s\'s version should be removed from your scripts URL now.', 'secupress' ), 'WooCommerce' ),
 			// warning
 			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
 			// bad
-			200 => __( 'The website displays the <strong>WooCommerce version</strong> in the homepage source code (%s).', 'secupress' ),
+			/* translators: 1 is a plugin name, 2 is some related info */
+			200 => sprintf( __( 'The website displays the <strong>%1$s\'s version</strong> in the homepage source code (%2$s).', 'secupress' ), 'WooCommerce', '%s' ),
 		);
 
 		if ( isset( $message_id ) ) {
