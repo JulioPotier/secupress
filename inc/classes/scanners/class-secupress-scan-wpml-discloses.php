@@ -22,7 +22,8 @@ class SecuPress_Scan_Wpml_Discloses extends SecuPress_Scan implements iSecuPress
 
 	protected static function init() {
 		self::$type  = __( 'Plugins' );
-		self::$title = __( 'Check if the WPML plugin discloses its version.', 'secupress' );
+		/* translators: %s is a plugin name */
+		self::$title = sprintf( __( 'Check if the %s plugin discloses its version.', 'secupress' ), 'WPML' );
 		self::$more  = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of informations. His goal is to find outdated versions of your server softwares or WordPress components. Don\'t let them easily find these informations.', 'secupress' );
 	}
 
