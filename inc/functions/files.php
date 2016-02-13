@@ -145,6 +145,81 @@ function secupress_mkdir_p( $target ) {
 }
 
 
+/*
+ * Get plugins dir path.
+ *
+ * @since 1.0
+ *
+ * @return (string)
+ */
+
+function secupress_get_plugins_path() {
+	static $plugins_dir;
+
+	if ( ! isset( $plugins_dir ) ) {
+		$plugins_dir = realpath( WP_PLUGIN_DIR ) . DIRECTORY_SEPARATOR;
+	}
+
+	return $plugins_dir;
+}
+
+
+/*
+ * Get themes dir path.
+ *
+ * @since 1.0
+ *
+ * @return (string)
+ */
+
+function secupress_get_themes_path() {
+	static $themes_dir;
+
+	if ( ! isset( $themes_dir ) ) {
+		$wp_filesystem = secupress_get_filesystem();
+		$themes_dir    = realpath( $wp_filesystem->wp_themes_dir() ) . DIRECTORY_SEPARATOR;
+	}
+
+	return $themes_dir;
+}
+
+
+/*
+ * Tell if a plugin is symlinked.
+ *
+ * @since 1.0
+ *
+ * @param (string) $plugin_file Plugin main file path, relative to the plugins folder.
+ *
+ * @return (bool)  True if the plugin is symlinked.
+ */
+
+function secupress_is_plugin_symlinked( $plugin_file ) {
+	$plugins_dir = secupress_get_plugins_path();
+	$plugin_path = realpath( $plugins_dir . $plugin_file );
+
+	return ! ( $plugin_path && 0 === strpos( $plugin_path, $plugins_dir ) );
+}
+
+
+/*
+ * Tell if a theme is symlinked.
+ *
+ * @since 1.0
+ *
+ * @param (string) $theme_slug Theme dir name.
+ *
+ * @return (bool)  True if the theme is symlinked.
+ */
+
+function secupress_is_theme_symlinked( $theme_slug ) {
+	$themes_dir = secupress_get_themes_path();
+	$theme_path = realpath( $themes_dir . $theme_slug );
+
+	return ! ( $theme_path && 0 === strpos( $theme_path, $themes_dir ) );
+}
+
+
 /**
  * File creation based on WordPress Filesystem
  *

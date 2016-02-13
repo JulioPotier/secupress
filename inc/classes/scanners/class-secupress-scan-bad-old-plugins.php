@@ -198,7 +198,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 		}
 
 		// Get filesystem.
-		$wp_filesystem = static::get_filesystem();
+		$wp_filesystem = secupress_get_filesystem();
 		//Get the base plugin folder
 		$plugins_dir = $wp_filesystem->wp_plugins_dir();
 
@@ -412,7 +412,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 			$form .= '<fieldset aria-labelledby="secupress-fix-bad-old-plugins" class="secupress-boxed-group">';
 
 				foreach ( $plugins['to_delete'] as $plugin_file => $plugin_name ) {
-					$is_symlinked = static::is_plugin_symlinked( $plugin_file );
+					$is_symlinked = secupress_is_plugin_symlinked( $plugin_file );
 					$plugin_name  = esc_html( strip_tags( $plugin_name ) );
 
 					$form .= '<input type="checkbox" id="secupress-fix-delete-bad-old-plugins-' . sanitize_html_class( $plugin_file ) . '" name="secupress-fix-delete-bad-old-plugins[]" value="' . esc_attr( $plugin_file ) . '" ' . ( $is_symlinked ? 'disabled="disabled"' : 'checked="checked"' ) . '/> ';
@@ -440,7 +440,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 			$form .= '<fieldset aria-labelledby="secupress-fix-bad-old-plugins-deactiv" class="secupress-boxed-group">';
 
 				foreach ( $plugins['to_deactivate'] as $plugin_file => $plugin_name ) {
-					$is_symlinked = static::is_plugin_symlinked( $plugin_file );
+					$is_symlinked = secupress_is_plugin_symlinked( $plugin_file );
 					$plugin_name  = esc_html( strip_tags( $plugin_name ) );
 
 					$form .= '<input type="checkbox" id="secupress-fix-deactivate-bad-old-plugins-' . sanitize_html_class( $plugin_file ) . '" name="secupress-fix-deactivate-bad-old-plugins[]" value="' . esc_attr( $plugin_file ) . '" ' . ( $is_symlinked ? 'disabled="disabled"' : 'checked="checked"' ) . '/> ';
@@ -652,23 +652,5 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 
 		$out['count'] = count( $out['to_delete'] ) + count( $out['to_deactivate'] );
 		return $out;
-	}
-
-
-	/*
-	 * Tell if a plugin is symlinked.
-	 *
-	 * @param (string) $plugin_file: plugin main file path, relative to the plugins folder.
-	 * return (bool)   true if the plugin is symlinked.
-	 */
-	final protected static function is_plugin_symlinked( $plugin_file ) {
-		static $plugins_dir;
-
-		if ( ! isset( $plugins_dir ) ) {
-			$plugins_dir = realpath( WP_PLUGIN_DIR ) . DIRECTORY_SEPARATOR;
-		}
-
-		$plugin_path = realpath( $plugins_dir . $plugin_file );
-		return ! ( $plugin_path && 0 === strpos( $plugin_path, $plugins_dir ) );
 	}
 }

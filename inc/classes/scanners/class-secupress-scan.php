@@ -729,30 +729,6 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
-	// A shothand to get the WP file system class object.
-
-	final protected static function get_filesystem() {
-		global $wp_filesystem;
-
-		if ( ! $wp_filesystem ) {
-			require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php' );
-			require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php' );
-
-			$wp_filesystem = new WP_Filesystem_Direct( new StdClass() );
-
-			// Set the permission constants if not already set.
-			if ( ! defined( 'FS_CHMOD_DIR' ) ) {
-				define( 'FS_CHMOD_DIR', ( fileperms( ABSPATH ) & 0777 | 0755 ) );
-			}
-			if ( ! defined( 'FS_CHMOD_FILE' ) ) {
-				define( 'FS_CHMOD_FILE', ( fileperms( ABSPATH . 'index.php' ) & 0777 | 0644 ) );
-			}
-		}
-
-		return $wp_filesystem;
-	}
-
-
 	// Get the list of the blog IDs.
 
 	final protected static function get_blog_ids() {
@@ -780,7 +756,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	 */
 
 	final protected static function htaccess_success_in_sandbox( $content ) {
-		$wp_filesystem = static::get_filesystem();
+		$wp_filesystem = secupress_get_filesystem();
 		$folder_name   = 'secupress-sandbox-' . uniqid();
 		$folder_path   = ABSPATH . '/' . $folder_name;
 

@@ -115,7 +115,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 
 
 	public function manual_fix() {
-		$wp_filesystem = static::get_filesystem();
+		$wp_filesystem = secupress_get_filesystem();
 		$inactive      = static::get_inactive_plugins_and_themes();
 
 		ob_start();
@@ -348,7 +348,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 			$form .= '<fieldset aria-labelledby="secupress-fix-inactive-plugins" class="secupress-boxed-group">';
 
 				foreach ( $lists['plugins'] as $plugin_file => $plugin_data ) {
-					$is_symlinked = static::is_plugin_symlinked( $plugin_file );
+					$is_symlinked = secupress_is_plugin_symlinked( $plugin_file );
 					$form .= '<input type="checkbox" id="secupress-fix-delete-inactive-plugins-' . sanitize_html_class( $plugin_file ) . '" name="secupress-fix-delete-inactive-plugins[]" value="' . esc_attr( $plugin_file ) . '" ' . ( $is_symlinked ? 'disabled="disabled"' : 'checked="checked"' ) . '/> ';
 					$form .= '<label for="secupress-fix-delete-inactive-plugins-' . sanitize_html_class( $plugin_file ) . '">';
 						if ( $is_symlinked ) {
@@ -372,7 +372,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 			$form .= '<fieldset aria-labelledby="secupress-fix-inactive-themes" class="secupress-boxed-group">';
 
 				foreach ( $lists['themes'] as $theme_file => $theme_data ) {
-					$is_symlinked = static::is_theme_symlinked( $theme_file );
+					$is_symlinked = secupress_is_theme_symlinked( $theme_file );
 					$form .= '<input type="checkbox" id="secupress-fix-delete-inactive-themes-' . sanitize_html_class( $theme_file ) . '" name="secupress-fix-delete-inactive-themes[]" value="' . esc_attr( $theme_file ) . '" ' . ( $is_symlinked ? 'disabled="disabled"' : 'checked="checked"' ) . '/> ';
 					$form .= '<label for="secupress-fix-delete-inactive-themes-' . sanitize_html_class( $theme_file ) . '">';
 						if ( $is_symlinked ) {
@@ -459,44 +459,5 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 		$out['themes'] = array_diff_key( $out['themes'], $active_themes );
 
 		return $out;
-	}
-
-
-	/*
-	 * Tell if a plugin is symlinked.
-	 *
-	 * @param (string) $plugin_file: plugin main file path, relative to the plugins folder.
-	 * return (bool)   true if the plugin is symlinked.
-	 */
-
-	protected static function is_plugin_symlinked( $plugin_file ) {
-		static $plugins_dir;
-
-		if ( ! isset( $plugins_dir ) ) {
-			$plugins_dir = realpath( WP_PLUGIN_DIR ) . DIRECTORY_SEPARATOR;
-		}
-
-		$plugin_path = realpath( $plugins_dir . $plugin_file );
-		return ! ( $plugin_path && 0 === strpos( $plugin_path, $plugins_dir ) );
-	}
-
-
-	/*
-	 * Tell if a theme is symlinked.
-	 *
-	 * @param (string) $theme_slug: theme dir name.
-	 * return (bool)   true if the theme is symlinked.
-	 */
-
-	protected static function is_theme_symlinked( $theme_slug ) {
-		static $themes_dir;
-
-		if ( ! isset( $themes_dir ) ) {
-			$wp_filesystem = static::get_filesystem();
-			$themes_dir    = realpath( $wp_filesystem->wp_themes_dir() ) . DIRECTORY_SEPARATOR;
-		}
-		$theme_path = realpath( $themes_dir . $theme_slug );
-
-		return ! ( $theme_path && 0 === strpos( $theme_path, $themes_dir ) );
 	}
 }

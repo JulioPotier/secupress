@@ -116,7 +116,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 		}
 
 		// Get `.htaccess` content.
-		$wp_filesystem = static::get_filesystem();
+		$wp_filesystem = secupress_get_filesystem();
 		$file_content  = $wp_filesystem->get_contents( $file_path );
 
 		// Maybe remove `Options +Indexes`.

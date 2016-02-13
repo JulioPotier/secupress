@@ -75,7 +75,7 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 			return parent::fix();
 		}
 
-		$wp_filesystem = static::get_filesystem();
+		$wp_filesystem = secupress_get_filesystem();
 		$count_all     = count( $files );
 		$renamed       = array();
 		$suffix        = '.' . time() . '.secupress.php';
