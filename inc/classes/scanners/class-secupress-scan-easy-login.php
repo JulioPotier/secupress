@@ -92,7 +92,7 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 		secupress_update_module_options( $settings, 'users-login' );
 
 		if ( ! secupress_is_pro() ) {
-			secupress_activate_submodule( 'users-login', 'googleauth' );
+			secupress_activate_submodule( 'users-login', 'mobileauth' );
 			$this->add_fix_message( 1 );
 		} else {
 			secupress_activate_submodule( 'users-login', 'passwordless' );

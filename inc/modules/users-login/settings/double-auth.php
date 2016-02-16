@@ -13,7 +13,7 @@ $is_plugin_active = '-1';
 $values           = array(
 	'-1'           => __( 'No thank you', 'secupress' ) . ' <span class="description">(' . __( 'not recommended', 'secupress' ) . ')</span>',
 	'passwordless' => __( 'PasswordLess (notifications by E-mail, mobile, Slack, SMS.)', 'secupress' ),
-	'googleauth'   => __( 'Mobile Authenticator App (Google Auth, FreeOTP, ...)', 'secupress' ),
+	'mobileauth'   => __( 'Mobile Authenticator App (Google Auth, FreeOTP, ...)', 'secupress' ),
 	'emaillink'    => __( 'Email Link', 'secupress' ),
 );
 
@@ -40,7 +40,7 @@ $this->add_field( array(
 		array(
 			'type'        => 'description',
 			'description' => __( 'Users will just have to configure the authentication in their profile.', 'secupress' ),
-			'depends'     => $field_name . '_googleauth',
+			'depends'     => $field_name . '_mobileauth',
 		),
 	),
 ) );

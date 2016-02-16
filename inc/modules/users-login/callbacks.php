@@ -59,10 +59,10 @@ function __secupress_double_auth_settings_callback( $modulenow, &$settings, $act
 	// (De)Activation.
 	if ( ! empty( $activate['double-auth_type'] ) ) {
 		secupress_manage_submodule( $modulenow, 'passwordless', '_passwordless' === $activate['double-auth_type'] && secupress_is_pro() );
-		secupress_manage_submodule( $modulenow, 'googleauth',   'googleauth'    === $activate['double-auth_type'] );
+		secupress_manage_submodule( $modulenow, 'mobileauth',   'mobileauth'    === $activate['double-auth_type'] );
 		secupress_manage_submodule( $modulenow, 'emaillink',    'emaillink'     === $activate['double-auth_type'] );
 	} elseif ( false !== $activate ) {
-		secupress_deactivate_submodule( $modulenow, array( 'passwordless', 'googleauth', 'emaillink' ) );
+		secupress_deactivate_submodule( $modulenow, array( 'passwordless', 'mobileauth', 'emaillink' ) );
 	}
 
 	// Affected roles.
