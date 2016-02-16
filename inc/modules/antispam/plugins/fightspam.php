@@ -214,11 +214,13 @@ endif;
 
 
 /**
- * Get spam status from IP or URL, returning a string "blacklisted" or "safe" or "error".
+ * Get spam status.
  *
  * @since 1.0
  *
- * @return (string)
+ * @param (string) $value Username, IP, email, or URL.
+ *
+ * @return (string) "blacklisted", "safe", or "error".
  */
 function secupress_get_spam_status( $value ) {
 	if ( '' === $value || '::1' === $value || '127.0.0.1' === $value || 0 === strpos( $value, home_url() ) ) {
@@ -226,13 +228,15 @@ function secupress_get_spam_status( $value ) {
 	}
 
 	$spam_cache = get_option( 'secupress_antispam_cache', array() );
+	$spam_cache = is_array( $spam_cache ) ? $spam_cache : array();
 
-	foreach ( $spam_cache as $key => $data ) {
-		if ( time() > $spam_cache[ $key ]['timestamp'] ) {
-			unset( $spam_cache[ $key ] );
+	if ( $spam_cache ) {
+		foreach ( $spam_cache as $key => $data ) {
+			if ( time() > $spam_cache[ $key ]['timestamp'] ) {
+				unset( $spam_cache[ $key ] );
+			}
 		}
 	}
-	unset( $key );
 
 	$is_url = false;
 	$status = 'error';
@@ -243,62 +247,69 @@ function secupress_get_spam_status( $value ) {
 		$is_url = true;
 	}
 
-	$key = md5( $value ); // md5 to avoid keeping readable data in DB (ip & email)
+	$key = md5( $value ); // md5 to avoid keeping readable data in DB (IP & email).
 
 	if ( false !== $value && isset( $spam_cache[ $key ] ) && time() < $spam_cache[ $key ]['timestamp'] ) {
 		return $spam_cache[ $key ]['status'];
 	}
 
+	// URL.
 	if ( false !== $value && $is_url ) {
-
 		$service_base_url = 'http://www.urlvoid.com/';
 
-		// First scan to initialize the entry if new
+		// First scan to initialize the entry if new.
 		$url = $service_base_url . 'scan/' . $value;
 		wp_remote_get( $url, array( 'timeout' => 2, 'blocking' => false ) );
 
-		// Force update the entry
+		// Force update the entry.
 		$url = $service_base_url . 'update-report/' . $value;
 		wp_remote_get( $url, array( 'timeout' => 10 ) );
 
-		// Scan the entry, updated
+		// Scan the entry, updated.
 		$url      = $service_base_url . 'scan/' . $value;
 		$response = wp_remote_get( $url, array( 'timeout' => 10 ) );
 
-		// Manage to get the status doing a parsing job
+		// Manage to get the status doing a parsing job.
 		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 
 			if ( strpos( $response['body'], '<span class="label label-success">' ) > 0 ) {
 				$status = 'safe';
 			} else {
 				$status = 'blacklisted';
-
-				do_action( 'secupress.commentspam.blacklisted', $value );
 			}
-
-			$spam_cache[ $key ] = array( 'timestamp' => time() + 30 * DAY_IN_SECONDS, 'status' => $status );
-			update_option( 'secupress_antispam_cache', $spam_cache );
-
 		}
-
-	} else { // IP, Email, Username
-
+	}
+	// IP, Email, Username.
+	else {
 		$service_base_url = 'http://www.stopforumspam.com/search?export=serial&q=';
 		$response         = wp_remote_get( $service_base_url . $value, array( 'timeout' => 5 ) );
 
 		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 			$results = unserialize( $response['body'] );
 
-			if ( isset( $results[0] ) ) {
-				$status = 'blacklisted';
-				do_action( 'secupress.commentspam.blacklisted', $value );
-			} else {
+			if ( ! isset( $results[0] ) ) {
 				$status = 'safe';
+			} else {
+				$status = 'blacklisted';
 			}
-
-			$spam_cache[ $key ] = array( 'timestamp' => time() + 30 * DAY_IN_SECONDS, 'status' => $status );
-			update_option( 'secupress_antispam_cache', $spam_cache );
 		}
+	}
+
+	if ( 'error' !== $status ) {
+		if ( 'blacklisted' === $status ) {
+			/**
+			 * Trigger an action if the status is "blacklisted".
+			 *
+			 * @since 1.0
+			 *
+			 * @param (string) $value Username, IP, email, or URL.
+			 */
+			do_action( 'secupress.commentspam.blacklisted', $value );
+		}
+
+		// Cache the status for 30 days.
+		$spam_cache[ $key ] = array( 'timestamp' => time() + 30 * DAY_IN_SECONDS, 'status' => $status );
+		update_option( 'secupress_antispam_cache', $spam_cache );
 	}
 
 	return $status;
