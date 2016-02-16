@@ -29,7 +29,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 
 	public static function get_messages( $message_id = null ) {
 		global $is_nginx;
-		
+
 		$nginx_rules = '';
 
 		if ( $is_nginx ) {
@@ -263,27 +263,25 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 				$rules .= "<IfModule mod_rewrite.c>\n";
 				$rules .= "    RewriteEngine On\n";
 				$rules .= "    RewriteBase $base\n";
-				$rules .= "    RewriteRule ^{$from}readme\.html$ [R=404,L]\n";
+				$rules .= "    RewriteRule ^{$from}(README|readme)\.(HTML|html)$ [R=404,L]\n"; // NC flag, why you no work?
 				$rules .= "</IfModule>\n";
 				$rules .= "<IfModule !mod_rewrite.c>\n";
-				$rules .= "    <files readme.html>\n";
+				$rules .= "    <FilesMatch \"^(README|readme)\.(HTML|html)$\">\n";
 				$rules .= "        deny from all\n";
-				$rules .= "    </files>\n";
+				$rules .= "    </FilesMatch>\n";
 				$rules .= "</IfModule>\n";
 			} else {
-				$rules .= "<files readme.html>\n    deny from all\n</files>\n";
+				$rules .= "<FilesMatch \"^(README|readme)\.(HTML|html)$\">\n    deny from all\n</FilesMatch>\n";
 			}
 		}
 
 		// Write in `.htaccess` file.
 		if ( secupress_write_htaccess( $marker, $rules ) ) {
-
 			// good
 			$this->add_fix_message( 1, array( '<code>readme.html</code>', '<code>.htaccess</code>' ) );
 
 			// Test our rule against php version disclosure works.
 			$this->scan_php_disclosure();
-
 		} else {
 			// cantfix
 			$this->add_fix_message( 302, array( '<code>.htaccess</code>', "<pre># BEGIN SecuPress $marker\n$rules# END SecuPress</pre>" ) );
@@ -339,7 +337,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 			$match  = '^' . $bases['home_from'] . 'readme\.html$';
 
 			$rules  = "<rule name=\"SecuPress $marker\" stopProcessing=\"true\">\n";
-			$rules .= "$spaces  <match url=\"$match\"/>\n";
+			$rules .= "$spaces  <match url=\"$match\"/ ignoreCase=\"true\">\n";
 			$rules .= "$spaces  <action type=\"CustomResponse\" statusCode=\"404\"/>\n";
 			$rules .= "$spaces</rule>";
 
@@ -347,10 +345,9 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 			if ( secupress_insert_iis7_nodes( $marker, array( 'nodes_string' => $rules ) ) ) {
 				// good
 				$this->add_fix_message( 1, array( '<code>web.config</code>' ) );
-
 			} else {
 				// cantfix
-				$this->add_fix_message( 302, array( '<code>web.config</code>', "<pre>$rules</pre>" ) );
+				$this->add_fix_message( 302, array( '<code>web.config</code>', "<pre>{$spaces}{$rules}</pre>" ) );
 			}
 		}
 	}
