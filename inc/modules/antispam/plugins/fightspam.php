@@ -41,6 +41,16 @@ function secupress_dont_use_my_identity_to_comment( $commentdata ) {
 }
 
 
+/**
+ * Mark a comments as spam, depending on its author IP, username, email, or URL.
+ *
+ * @since 1.0
+ *
+ * @param (int|string) $approved    The approval status. Accepts 1, 0, 'spam', or 'trash'.
+ * @param (array)      $commentdata Comment data.
+ *
+ * @return (bool|string) 1, 0, 'spam', or 'trash'.
+ */
 add_filter( 'pre_comment_approved', 'secupress_prevoid_comment', 9, 2 );
 
 function secupress_prevoid_comment( $approved, $commentdata ) {
@@ -51,29 +61,54 @@ function secupress_prevoid_comment( $approved, $commentdata ) {
 		return $approved;
 	}
 
-	$approved = 'blacklisted' === secupress_get_spam_status( $commentdata['comment_author_IP'] ) ? $action : $approved;
+	// IP.
+	$status = secupress_get_spam_status( $commentdata['comment_author_IP'] );
+
+	if ( 'error' === $status ) {
+		// The "Error" status does not exist, we use "Pending" instead.
+		return 0;
+	}
+
+	$approved = 'blacklisted' === $status ? $action : $approved;
 
 	if ( $action === $approved ) {
 		return $approved;
 	}
 
-	$approved = 'blacklisted' === secupress_get_spam_status( $commentdata['comment_author'] ) ? $action : $approved;
+	// Username.
+	$status = secupress_get_spam_status( $commentdata['comment_author'] );
+
+	if ( 'error' === $status ) {
+		return 0;
+	}
+
+	$approved = 'blacklisted' === $status ? $action : $approved;
 
 	if ( $action === $approved ) {
 		return $approved;
 	}
 
-	$approved = 'blacklisted' === secupress_get_spam_status( $commentdata['comment_author_email'] ) ? $action : $approved;
+	// Email.
+	$status = secupress_get_spam_status( $commentdata['comment_author_email'] );
+
+	if ( 'error' === $status ) {
+		return 0;
+	}
+
+	$approved = 'blacklisted' === $status ? $action : $approved;
 
 	if ( $action === $approved ) {
 		return $approved;
 	}
 
-	$approved = 'blacklisted' === secupress_get_spam_status( $commentdata['comment_author_url'] ) ? $action : $approved;
+	// URL.
+	$status = secupress_get_spam_status( $commentdata['comment_author_url'] );
 
-	secupress_antispam_set_comment_meta( $approved );
+	if ( 'error' === $status ) {
+		return 0;
+	}
 
-	return $approved;
+	return 'blacklisted' === $status ? $action : $approved;
 }
 
 
@@ -81,6 +116,11 @@ function secupress_prevoid_comment( $approved, $commentdata ) {
  * Trash any pingback and trackback comments.
  *
  * @since 1.0
+ *
+ * @param (int|string) $approved    The approval status. Accepts 1, 0, 'spam', or 'trash'.
+ * @param (array)      $commentdata Comment data.
+ *
+ * @return (bool|string) 1, 0, 'spam', or 'trash'.
  */
 add_filter( 'pre_comment_approved', 'secupress_trash_pingbacks_trackbacks', 10, 2 );
 
@@ -94,15 +134,19 @@ function secupress_trash_pingbacks_trackbacks( $approved, $commentdata ) {
 		do_action( 'secupress.antispam.block', 'pingback+trackback', $approved );
 	}
 
-	secupress_antispam_set_comment_meta( $approved );
 	return $approved;
 }
 
 
 /**
- * Mark shortcodes as spam.
+ * Mark comments with shortcodes as spam.
  *
  * @since 1.0
+ *
+ * @param (int|string) $approved    The approval status. Accepts 1, 0, 'spam', or 'trash'.
+ * @param (array)      $commentdata Comment data.
+ *
+ * @return (bool|string) 1, 0, 'spam', or 'trash'.
  */
 add_filter( 'pre_comment_approved', 'secupress_shortcode_as_spam_check', 10, 2 );
 
@@ -120,11 +164,20 @@ function secupress_shortcode_as_spam_check( $approved, $commentdata ) {
 		}
 	}
 
-	secupress_antispam_set_comment_meta( $approved );
 	return $approved;
 }
 
 
+/**
+ * Mark comments as spam, depending on our improved blacklist.
+ *
+ * @since 1.0
+ *
+ * @param (int|string) $approved    The approval status. Accepts 1, 0, 'spam', or 'trash'.
+ * @param (array)      $commentdata Comment data.
+ *
+ * @return (bool|string) 1, 0, 'spam', or 'trash'.
+ */
 add_filter( 'pre_comment_approved', 'secupress_use_wp_blacklist_check_filter', 10, 2 );
 
 function secupress_use_wp_blacklist_check_filter( $approved, $commentdata ) {
@@ -151,7 +204,6 @@ function secupress_use_wp_blacklist_check_filter( $approved, $commentdata ) {
 
 	do_action( 'secupress.antispam.block', 'blacklist_check', $approved );
 
-	secupress_antispam_set_comment_meta( $approved );
 	return $approved;
 }
 
@@ -298,7 +350,7 @@ function secupress_get_spam_status( $value ) {
 	if ( 'error' !== $status ) {
 		if ( 'blacklisted' === $status ) {
 			/**
-			 * Trigger an action if the status is "blacklisted".
+			 * Fires if the status is "blacklisted".
 			 *
 			 * @since 1.0
 			 *
@@ -321,12 +373,5 @@ add_action( 'admin_print_scripts-post.php', 'secupress_antispam_no_pingstatus_cs
 function secupress_antispam_no_pingstatus_css() {
 	if ( secupress_get_module_option( 'antispam_pings-trackbacks', 'mark-ptb', 'antispam' ) === 'forbid-ptb' ) {
 		echo '<style type="text/css">label[for="ping_status"]{display: none;}</style>';
-	}
-}
-
-
-function secupress_antispam_set_comment_meta( $comment_id, $approved ) {
-	if ( 'trash' === $approved || 'spam' === $approved && false === get_comment_meta( $comment_id, 'secupress_antispam_status' ) ) {
-		add_comment_meta( $comment_id, 'secupress_antispam_status', $approved, true );
 	}
 }
