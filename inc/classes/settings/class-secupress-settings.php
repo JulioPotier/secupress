@@ -19,7 +19,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	protected $sections_descriptions = array();
 	protected $sections_save_button  = array();
 	protected $form_action;
-	protected $with_form;
+	protected $with_form = true;
 
 
 	// Setters =====================================================================================
@@ -103,16 +103,10 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	protected function _init() {
-
 		$this->set_current_module();
-
-		$modules = static::get_modules();
-
-		$this->with_form = ! ( isset( $modules[ $this->modulenow ]['with_form'] ) && false === $modules[ $this->modulenow ]['with_form'] );
 
 		$this->form_action = is_network_admin() ? admin_url( 'admin-post.php' ) : admin_url( 'options.php' );
 		$this->form_action = esc_url( $this->form_action );
-
 	}
 
 

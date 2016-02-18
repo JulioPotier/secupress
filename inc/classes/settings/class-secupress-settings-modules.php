@@ -99,6 +99,22 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	}
 
 
+	// Init ========================================================================================
+
+	/**
+	 * Init: this method is required by the class `SecuPress_Singleton`.
+	 *
+	 * @since 1.0
+	 */
+	protected function _init() {
+		parent::_init();
+
+		$modules = static::get_modules();
+
+		$this->with_form = ! ( isset( $modules[ $this->modulenow ]['with_form'] ) && false === $modules[ $this->modulenow ]['with_form'] );
+	}
+
+
 	// Main template tags ==========================================================================
 
 	public function print_page() {
@@ -178,8 +194,8 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 				?>
 			</div>
 
-		<?php 
-		
+		<?php
+
 		if ( false !== $with_form ) {
 			$this->print_close_form_tag();
 		}
