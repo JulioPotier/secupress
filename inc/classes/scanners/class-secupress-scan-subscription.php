@@ -70,7 +70,7 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements iSecuPress_S
 			$response   = wp_remote_post( wp_registration_url(), array(
 				'body' => array(
 					'user_login' => $user_login,
-					'user_email' => 'secupress_no_mail@fakemail.' . time(),
+					'user_email' => 'secupress_no_mail_SS@fakemail.' . time(),
 				),
 			) );
 

@@ -56,7 +56,7 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 		$temp_id    = wp_insert_user( array(
 			'user_login' => $temp_login,
 			'user_pass'  => $temp_pass,
-			'user_email' => 'secupress_no_mail@fakemail.' . time(),
+			'user_email' => 'secupress_no_mail_EL@fakemail.' . time(),
 			'role'       => 'secupress_no_role_' . time(),
 		) );
 		if ( ! is_wp_error( $temp_id ) ) {

@@ -113,7 +113,7 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 			$user_id = wp_insert_user( array(
 				'user_login' => $username,
 				'user_pass'  => wp_generate_password( 64, 1, 1 ),
-				'user_email' => 'secupress_no_mail@fakemail.' . time(),
+				'user_email' => 'secupress_no_mail_AU@fakemail.' . time(),
 				'role'       => '',
 			) );
 			secupress_cache_data( 'allowed_usernames', array() );
