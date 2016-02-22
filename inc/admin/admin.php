@@ -258,7 +258,7 @@ function secupress_admin_die() {
 }
 
 
-// A simple shorthand to send a json response, die, or redirect to one of our settings pages, depending on the admin context. It can also send poneys to mars.
+// A simple shorthand to send a json response, die, or redirect to one of our settings pages, depending on the admin context.
 
 function secupress_admin_send_response_or_redirect( $response, $redirect = false ) {
 	if ( ! $response ) {
@@ -533,9 +533,11 @@ function __secupress_toggle_file_scan_ajax_post_cb() {
 	}
 
 	if ( 'on' === $_GET['turn'] ) {
-		set_site_transient( 'secupress_toggle_file_scan', time() );
+		set_transient( 'secupress_toggle_file_scan', time() );
+		set_transient( 'secupress_toggle_queue', true, 30 );
 	} else {
-		delete_site_transient( 'secupress_toggle_file_scan' );
+		delete_transient( 'secupress_toggle_file_scan' );
+		delete_transient( 'secupress_toggle_queue' );
 	}
 
 	wp_redirect( wp_get_referer() );
