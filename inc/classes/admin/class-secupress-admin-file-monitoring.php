@@ -13,8 +13,6 @@ class SecuPress_File_Monitoring extends SecuPress_Singleton {
 
 
 	const VERSION   = '1.0';
-	const WP_CORE_FILES_HASHES = 'secupress_wp_core_files_hashes';
-	const SELF_FILETREE        = 'secupress_self_filetree';
 
 	/**
 	 * @var Singleton The reference to *Singleton* instance of this class
@@ -24,29 +22,33 @@ class SecuPress_File_Monitoring extends SecuPress_Singleton {
 
 	// Public methods ==============================================================================
 
-
-	public function scan_folder( $folder ) {
-		return glob( ABSPATH ); //// ok wait for more ... lol
-	}
-
 	/**
 	 * Add tasks to queue and dispatch
 	 *
 	 * @since 1.0
 	 */
 	public function process_handler() {
-		global $wp_version;
+		global $wp_version, $wp_local_package;
 
 		secupress_require_class( 'Admin', 'background-process-file-monitoring' );
-
 		$secupress_background_process_file_monitoring = new SecuPress_Background_Process_File_Monitoring;
 
-		if ( false === ( $wp_core_files_hashes = get_option( self::WP_CORE_FILES_HASHES ) ) || ! isset( $wp_core_files_hashes[ $wp_version ] ) ) {
-			$secupress_background_process_file_monitoring->push_to_queue( 'get_wp_hashes' );
-			$secupress_background_process_file_monitoring->save();
-		}
-		if ( false === ( $self_filetree = get_option( self::SELF_FILETREE ) ) || ! isset( $self_filetree[ $wp_version ] ) ) {
-			$secupress_background_process_file_monitoring->push_to_queue( 'get_self_filetree' );
+		if ( get_transient( 'secupress_toggle_queue' ) ) {
+			
+			delete_transient( 'secupress_toggle_queue' );
+
+			if ( false === ( $wp_core_files_hashes = get_option( SECUPRESS_WP_CORE_FILES_HASHES ) ) || ! isset( $wp_core_files_hashes[ $wp_version ] ) ) {
+				$secupress_background_process_file_monitoring->push_to_queue( 'get_wp_hashes' );
+			}
+
+			if ( isset( $wp_local_package ) && isset( $wp_core_files_hashes['locale'] ) && $wp_core_files_hashes['locale'] != $wp_local_package &&
+				( false === ( $fix_dists = get_option( SECUPRESS_FIX_DISTS ) ) || ! isset( $fix_dists[ $wp_version ] ) )
+			) {
+				$secupress_background_process_file_monitoring->push_to_queue( 'fix_dists' );
+			}
+
+			$secupress_background_process_file_monitoring->push_to_queue( 'get_self_fulltree' );
+
 			$secupress_background_process_file_monitoring->save();
 		}
 		$secupress_background_process_file_monitoring->dispatch();
