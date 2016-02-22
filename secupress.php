@@ -31,6 +31,9 @@ define( 'SECUPRESS_SCAN_SLUG'             , 'secupress_scanners' );
 define( 'SECUPRESS_SCAN_TIMES'            , 'secupress_scanners_times' );
 define( 'SECUPRESS_FIX_SLUG'              , 'secupress_fixes' );
 define( 'SECUPRESS_SCAN_FIX_SITES_SLUG'   , 'secupress_fix_sites' );
+define( 'SECUPRESS_WP_CORE_FILES_HASHES'  , 'secupress_wp_core_files_hashes' );
+define( 'SECUPRESS_FULL_FILETREE'         , 'secupress_full_filetree' );
+define( 'SECUPRESS_FIX_DISTS'             , 'secupress_fix_dists' );
 define( 'SECUPRESS_BAN_IP'                , 'secupress_ban_ip' );
 define( 'SECUPRESS_WEB_MAIN'              , 'http://secupress.me/' );
 define( 'SECUPRESS_WEB_DEMO'              , home_url( '/' ) ); ////
@@ -57,7 +60,7 @@ define( 'SECUPRESS_ADMIN_IMAGES_URL'      , SECUPRESS_ASSETS_URL . 'admin/images
 define( 'SECUPRESS_FRONT_IMAGES_URL'      , SECUPRESS_ASSETS_URL . 'front/images/' );
 
 if ( ! defined( 'SECUPRESS_LASTVERSION' ) ) {
-	define( 'SECUPRESS_LASTVERSION', '0' );
+	define( 'SECUPRESS_LASTVERSION', '0' ); ////
 }
 
 
