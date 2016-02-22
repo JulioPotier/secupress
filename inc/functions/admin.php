@@ -410,3 +410,46 @@ function secupress_ban_ip( $IP = null, $die = true ) {
 		) );
 	}
 }
+
+function secupress_text_diff( $left_string, $right_string, $args = null, $raw = false ) {
+	global $wp_local_package;
+
+	if ( ! class_exists( 'WP_Text_Diff_Renderer_Table' ) ) {
+		require( ABSPATH . WPINC . '/wp-diff.php' );
+	}
+
+	class SecuPress_Text_Diff_Renderer_Table extends WP_Text_Diff_Renderer_Table {
+		public $_leading_context_lines  = 0;
+		public $_trailing_context_lines = 0;
+	}
+
+	$defaults     = array( 'title' => __( 'File Differences', 'secupress' ), 'title_left' => __( 'Real file', 'secupress' ), 'title_right' => __( 'Your file', 'secupress' ) );
+	$args         = wp_parse_args( $args, $defaults );
+	$left_string  = normalize_whitespace( $left_string );
+	$right_string = normalize_whitespace( $right_string );
+	$left_lines   = explode( "\n", $left_string );
+	$right_lines  = explode( "\n", $right_string );
+	$text_diff    = new Text_Diff( $left_lines, $right_lines );
+	$renderer     = new SecuPress_Text_Diff_Renderer_Table( $args );
+	$diff         = $renderer->render( $text_diff );
+
+	if ( $wp_local_package &&  ( ! $diff ||  '&nbsp;&nbsp;$wp_local_package = \'' . $wp_local_package . '\';' == trim( strip_tags( $diff ) ) ) ) {
+		return __( 'No differences', 'secupress' );
+	}
+
+	$r  = '<table class="diff">' . "\n";
+		$r .= '<col class="content diffsplit left" /><col class="content diffsplit middle" /><col class="content diffsplit right" />';
+		$r .= '<thead>';
+			$r .= '<tr class="diff-title"><th colspan="4">' . $args['title'] . '</th></tr>' . "\n";
+		$r .= '</thead>' . "\n";
+		$r .= '<tbody>';
+		$r .= '<tr class="diff-sub-title">' . "\n";
+			$r .= "\t" . '<th>' . $args['title_left'] . '</th><td></td>' . "\n";
+			$r .= "\t" . '<th>' . $args['title_right'] . '</th><td></td>' . "\n";
+		$r .= '</tr>'  ."\n";
+		$r .= $diff;
+		$r .= '</tbody>' . "\n";
+	$r .= '</table>';
+
+	return $r;
+}
