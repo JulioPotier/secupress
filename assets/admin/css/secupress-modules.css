@@ -187,10 +187,15 @@ label {
 .fieldtype-time-slot .small-text {
 	text-align: right;
 }
-/* Backups */
-#form-delete-db-backups .secupress-boxed-group {
+
+.secupress-boxed-group {
 	max-height: 20em;
 }
+.secupress-boxed-group.small-boxed-group li{
+	font-size: smaller;
+	margin: 0;
+}
+/* Backups */
 .db-backup-row {
 	margin-right: .5em;
 }
@@ -202,4 +207,10 @@ label {
 	display: inline-block;
 	padding: 0 0 3px 10px;
 	width: 95%;
+}
+.secupress-actions-li span {
+	display: none;
+}
+.secupress-actions-li:hover span, .secupress-actions-li:focus span {
+	display: inline;
 }

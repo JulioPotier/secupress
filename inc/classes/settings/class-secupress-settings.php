@@ -886,7 +886,9 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	protected function file_scanner() {
-		if ( false !== ( $time = get_site_transient( 'secupress_toggle_file_scan' ) ) ) {
+		global $wp_version;
+
+		if ( false !== ( $time = get_transient( 'secupress_toggle_file_scan' ) ) ) {
 			$label = __( 'Stop task', 'secupress' );
 			$class = ' working';
 			$turn  = 'off';
@@ -894,8 +896,10 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$label = __( 'Search for modified files', 'secupress' );
 			$class = '';
 			$turn  = 'on';
-		}
-		$url       = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_toggle_file_scan&turn=' . $turn ), 'secupress_toggle_file_scan' );
+		} 
+		$url                       = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_toggle_file_scan&turn=' . $turn ), 'secupress_toggle_file_scan' );
+		$orig_full_filetree        = get_option( SECUPRESS_FULL_FILETREE, false );
+		$orig_wp_core_files_hashes = get_option( SECUPRESS_WP_CORE_FILES_HASHES, false )
 		?>
 		<p>
 			<a data-original-i18n="<?php esc_attr_e( 'Search for modified files', 'secupress' ); ?>" data-loading-i18n="<?php esc_attr_e( 'Stop task', 'secupress' ); ?>" id="toggle_file_scanner" href="<?php echo $url; ?>" class="button button-secondary<?php echo $class; ?>">
@@ -904,8 +908,172 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			<span class="secupress-inline-spinner spinner"></span>
 		</p>
 		<?php
-	}
+		if ( false == $orig_full_filetree || false == $orig_wp_core_files_hashes ) {
+			?>
+			<p class="description"><?php _e( 'This version of WordPress has not been scanned yet.', 'secupress' ); ?></p>
+			<?php
+		} else {
 
+			/* Files that are not part of the WordPress installation */
+			$full_filetree        = $orig_full_filetree;
+			$wp_core_files_hashes = $orig_wp_core_files_hashes;
+
+			if ( false !== $full_filetree && false !== $wp_core_files_hashes && isset( $wp_core_files_hashes[ $wp_version ]['checksums'], $full_filetree[ $wp_version ] ) ) {
+				$wp_content_dir       = str_replace( realpath( ABSPATH ) . DIRECTORY_SEPARATOR, '/' , WP_CONTENT_DIR );
+				$wp_core_files_hashes = $wp_core_files_hashes[ $wp_version ]['checksums'];
+				$wp_core_files_hashes[ 'wp-config.php' ] = 'wp-config.php'; // add this since it's not in the zip but depends from WordPress
+
+				if ( is_multisite() ) {
+					$wp_core_files_hashes[ $wp_content_dir . '/sunrise.php' ] = '/sunrise.php'; // add this since it's not in the zip but depends from WordPress MS
+				}
+
+				if ( defined( 'WP_CACHE' ) && WP_CACHE ) {
+					$wp_core_files_hashes[ $wp_content_dir . '/advanced-cache.php' ] = '/advanced-cache.php'; // add this since it's not in the zip but depends from WordPress Cache
+				}
+				$wp_core_files_hashes = apply_filters( 'secupress.wp_core_files_hashes', $wp_core_files_hashes );
+				$full_filetree        = $full_filetree[ $wp_version ];
+				$diff_from_root_core  = array_diff_key( $full_filetree, $wp_core_files_hashes );
+
+				if ( ! empty( $diff_from_root_core ) ) {
+					?>
+					<form id="form-delete-scanned-files" action="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_delete_scanned_files' ), 'secupress_delete_scanned_files' ); ?>" method="post">
+
+					<div class="secupress-swal-form">
+
+					<h4><?php _e( 'The followings are not files from WordPress core', 'secupress' ); ?></h4>
+					<fieldset class="secupress-boxed-group small-boxed-group">
+						<ul>
+						<?php
+							//// echo '<li><input id="diff-file-all" type=checkbox> <label for="diff-file-all">' . __( 'Select all' ) . '</label></li>'; //// uncomment when JS is ok
+							foreach( $diff_from_root_core as $diff_file => $hash ) {
+								printf( '<li><input id="diff-file-%1$s" type="checkbox" name="files[]" value="%3$s"> <label for="diff-file-%1$s">%2$s</label></li>', sanitize_html_class( $diff_file ), esc_html( $diff_file ), esc_attr( $diff_file ) );
+							}
+						?>
+						</ul>
+					</fieldset>
+
+					</div>
+
+					<?php submit_button( __( 'Delete selected files', 'secupress' ), 'secondary alignright', 'submit-delete-files' ); ?>
+					</form>
+					<?php
+				}
+			}
+			/**/
+
+			/* Missing files from WP Core */
+			$full_filetree        = $orig_full_filetree;
+			$wp_core_files_hashes = $orig_wp_core_files_hashes;
+
+			if ( false !== $full_filetree && false !== $wp_core_files_hashes && isset( $wp_core_files_hashes[ $wp_version ]['checksums'], $full_filetree[ $wp_version ] ) ) {
+				$wp_core_files_hashes = array_flip( array_filter( array_flip( $wp_core_files_hashes[ $wp_version ]['checksums'] ), 'secupress_filter_no_content' ) );
+				$missing_from_root_core = array_diff_key( $wp_core_files_hashes, $full_filetree[ $wp_version ] );
+				if ( ! empty( $missing_from_root_core ) ) {
+					?>
+					<form id="form-recover-missing-files" action="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_recover_missing_files' ), 'secupress_recover_missing_files' ); ?>" method="post">
+
+					<div class="secupress-swal-form">
+
+					<h4><?php _e( 'The followings are missing from WordPress core files', 'secupress' ); ?></h4>
+					<fieldset class="secupress-boxed-group small-boxed-group">
+						<ul>
+						<?php
+							//// echo '<li><input id="diff-file-all" type=checkbox> <label for="diff-file-all">' . __( 'Select all' ) . '</label></li>'; //// uncomment when JS is ok
+							foreach( $missing_from_root_core as $miss_file => $hash ) {
+								printf( '<li class="secupress-actions-li"><input id="miss-file-%1$s" type="checkbox" name="files[]" value="%3$s" title="%3$s"> <label for="miss-file-%1$s" title="%3$s">%2$s</label></li>', sanitize_html_class( $miss_file ), esc_html( basename( $miss_file ) ), esc_attr( $miss_file ) );
+							}
+						?>
+						</ul>
+					</fieldset>
+
+					</div>
+
+					<?php submit_button( __( 'Recover selected files', 'secupress' ), 'secondary alignright', 'submit-recover-missing-files' ); ?>
+					</form>
+					<?php
+				}
+			}
+			/**/
+
+			/* old WP files */
+			require_once( ABSPATH . 'wp-admin/includes/update-core.php' );
+			global $_old_files;
+			$wp_old_files = array();
+			foreach ( $_old_files as $file ) {
+				if ( file_exists( ABSPATH . $file ) ) {
+					$wp_old_files[ $file ] = $file;
+				}
+			}
+			if ( ! empty( $wp_old_files ) ) {
+				?>
+				<form id="form-old-files" action="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_old_files' ), 'secupress_old_files' ); ?>" method="post">
+
+				<div class="secupress-swal-form">
+
+				<h4><?php _e( 'The followings are old WordPress core files', 'secupress' ); ?></h4>
+				<fieldset class="secupress-boxed-group small-boxed-group">
+					<ul>
+					<?php
+						//// echo '<li><input id="diff-file-all" type=checkbox> <label for="diff-file-all">' . __( 'Select all' ) . '</label></li>'; //// uncomment when JS is ok
+						foreach( $wp_old_files as $old_file ) {
+							printf( '<li class="secupress-actions-li"><input id="old-file-%1$s" type="checkbox" name="files[]" value="%3$s" title="%3$s"> <label for="old-file-%1$s" title="%3$s">%2$s</label></li>', sanitize_html_class( $old_file ), esc_html( basename( $old_file ) ), esc_attr( $old_file ) );
+						}
+					?>
+					</ul>
+				</fieldset>
+
+				</div>
+
+				<?php submit_button( __( 'Delete selected files', 'secupress' ), 'secondary alignright', 'submit-recover-diff-files' ); ?>
+				</form>
+				<?php
+			}
+			/**/
+
+			/* Modified WP Core files */
+			$full_filetree        = $orig_full_filetree;
+			$wp_core_files_hashes = $orig_wp_core_files_hashes;
+
+			if ( false !== $full_filetree && false !== $wp_core_files_hashes && isset( $wp_core_files_hashes[ $wp_version ]['checksums'], $full_filetree[ $wp_version ] ) ) {
+				$wp_core_files_hashes = apply_filters( 'secupress.wp_core_files_hashes', $wp_core_files_hashes[ $wp_version ]['checksums'] );
+				$diff_from_root_core  = array();
+				$full_filetree        = $full_filetree[ $wp_version ];
+
+				foreach ($wp_core_files_hashes as $file => $hash ) {
+					if ( isset( $full_filetree[ $file ] ) && ! hash_equals( $hash, $full_filetree[ $file ] ) ) {
+						$diff_from_root_core[] = $file;
+					}
+				}
+				if ( ! empty( $diff_from_root_core ) ) {
+					?>
+					<form id="form-recover-diff-files" action="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_recover_diff_files' ), 'secupress_recover_diff_files' ); ?>" method="post">
+
+					<div class="secupress-swal-form">
+
+					<h4><?php _e( 'The followings are modified WordPress core files', 'secupress' ); ?></h4>
+					<fieldset class="secupress-boxed-group small-boxed-group">
+						<ul>
+						<?php
+							//// echo '<li><input id="diff-file-all" type=checkbox> <label for="diff-file-all">' . __( 'Select all' ) . '</label></li>'; //// uncomment when JS is ok
+							foreach( $diff_from_root_core as $diff_file ) {
+								$diff_url = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_diff_file&file=' . $diff_file ), 'secupress_diff_file-' . $diff_file );
+								printf( '<li class="secupress-actions-li"><input id="diff-file-%1$s" type="checkbox" name="files[]" value="%3$s" title="%3$s"> <label for="diff-file-%1$s" title="%3$s">%2$s</label> <span><a target="_blank" href="%4$s">See differences</a></span></li>', sanitize_html_class( $diff_file ), esc_html( basename( $diff_file ) ), esc_attr( $diff_file ), $diff_url );
+							}
+						?>
+						</ul>
+					</fieldset>
+
+					</div>
+
+					<?php submit_button( __( 'Recover selected files', 'secupress' ), 'secondary alignright', 'submit-recover-diff-files' ); ?>
+					</form>
+					<?php
+				}
+			}
+			/**/
+		}
+
+	}
 
 	/**
 	 * Scan the installation and search for malicious files
