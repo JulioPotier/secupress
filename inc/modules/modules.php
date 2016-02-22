@@ -44,6 +44,7 @@ function secupress_get_modules() {
 		'file-system'     => array(
 			'title'       => esc_html__( 'File System', 'secupress' ),
 			'dashicon'    => 'portfolio',
+			'with_form'   => false,
 			'description' => array(
 				__( 'Check the file permissions <em>(chmod)</em> at a glance and run a file monitoring on your installation', 'secupress' ),
 				__( 'Also, an antivus scanner can be performed on your installation, this may take time but it\'s more efficient.', 'secupress' ),
