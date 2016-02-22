@@ -313,3 +313,7 @@ function secupress_get_valid_key_string( $format = '' ) {
 function secupress_get_hashed_folder_name( $context, $path = '/' ) {
 	return $path . 'secupress-' . substr( wp_hash( $context, 'nonce' ), 10, 8 ) . '/';
 }
+
+function secupress_filter_no_content( $item ) {
+	return strpos( $item, 'wp-content/' ) === false;
+}
