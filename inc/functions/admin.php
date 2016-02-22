@@ -181,7 +181,19 @@ function secupress_create_uniqid() {
 function secupress_die( $message = '', $title = '', $args = array() ) {
 	$has_p   = strpos( $message, '<p>' ) !== false;
 	$message = ( $has_p ? '' : '<p>' ) . $message . ( $has_p ? '' : '</p>' );
+	$message = '<h1>' . SECUPRESS_PLUGIN_NAME . '</h1>' . $message;
 	$url     = secupress_get_current_url( 'raw' );
+
+	/**
+	 * Filter the message.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $message The message displayed.
+	 * @param (string) $url     The current URL.
+	 * @param (array)  $_SERVER The superglobal var.
+	 */
+	$message = apply_filters( 'secupress.die.message', $message, $url, $_SERVER );
 
 	/**
 	 * Fires right before `wp_die()`.
@@ -194,7 +206,7 @@ function secupress_die( $message = '', $title = '', $args = array() ) {
 	 */
 	do_action( 'secupress.before.die', $message, $url, $_SERVER );
 
-	wp_die( '<h1>' . SECUPRESS_PLUGIN_NAME . '</h1>' . $message, $title, $args );
+	wp_die( $message, $title, $args );
 }
 
 
@@ -228,15 +240,18 @@ function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 	status_header( $args['code'] );
 	$title     = $args['code']  . ' ' . get_status_header_desc( $args['code'] );
 	$title_fmt = '<h4>' . $title . '</h4>';
+
 	if ( ! $args['content'] ) {
 		$content = '<p>' . __( 'You are not allowed to access the requested page.', 'secupress' ) . '</p>';
 	} else {
 		$content = '<p>' . $args['content'] . '</p>';
 	}
+
 	$details   = '<h4>' . __( 'Logged Details:', 'secupress' ) . '</h4><p>';
 	$details  .= sprintf( __( 'Your IP: %s', 'secupress' ), $ip ) . '<br>';
 	$details  .= sprintf( __( 'Time: %s', 'secupress' ), date_i18n( __( 'F j, Y g:i a' ) ) ) . '<br>';
 	$details  .= sprintf( __( 'Block ID: %s', 'secupress' ), $module ) . '</p>';
+
 	secupress_die( $title_fmt . $content . $details, $title, array( 'response', $args['code'] ) );
 }
 
