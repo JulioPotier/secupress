@@ -313,7 +313,7 @@ function secupress_downgrade_author_administrator() {
 
 add_action( 'secupress_loaded', '__secupress_process_file_monitoring_tasks' );
 function __secupress_process_file_monitoring_tasks() {
-	if ( ! is_admin() || false === ( get_transient( 'secupress_toggle_file_scan' ) ) ) {
+	if ( ! is_admin() || false === ( secupress_get_site_transient( 'secupress_toggle_file_scan' ) ) ) {
 		return;
 	}
 	secupress_require_class_async();

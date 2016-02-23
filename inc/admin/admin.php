@@ -533,11 +533,11 @@ function __secupress_toggle_file_scan_ajax_post_cb() {
 	}
 
 	if ( 'on' === $_GET['turn'] ) {
-		set_transient( 'secupress_toggle_file_scan', time() );
-		set_transient( 'secupress_toggle_queue', true, 30 );
+		secupress_set_site_transient( 'secupress_toggle_file_scan', time() );
+		secupress_set_site_transient( 'secupress_toggle_queue', true, 30 );
 	} else {
-		delete_transient( 'secupress_toggle_file_scan' );
-		delete_transient( 'secupress_toggle_queue' );
+		delete_site_transient( 'secupress_toggle_file_scan' );
+		delete_site_transient( 'secupress_toggle_queue' );
 	}
 
 	wp_redirect( wp_get_referer() );

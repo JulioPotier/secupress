@@ -888,7 +888,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	protected function file_scanner() {
 		global $wp_version;
 
-		if ( false !== ( $time = get_transient( 'secupress_toggle_file_scan' ) ) ) {
+		if ( false !== ( $time = secupress_get_site_transient( 'secupress_toggle_file_scan' ) ) ) {
 			$label = __( 'Stop task', 'secupress' );
 			$class = ' working';
 			$turn  = 'off';

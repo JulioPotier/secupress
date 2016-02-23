@@ -88,8 +88,8 @@ function secupress_get_global_network_option_names_for_autoload() {
 			$option_names = array_merge( $option_names, array(
 				'_site_transient_secupress-admin-as-author-administrator',
 				'_site_transient_secupress_activation',
-				'_transient_secupress_toggle_file_scan',
-				'_transient_timeout_secupress_toggle_file_scan',
+				'_site_transient_secupress_toggle_file_scan',
+				'_site_transient_timeout_secupress_toggle_file_scan',
 			) );
 		}
 	}
