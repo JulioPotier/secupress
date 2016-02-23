@@ -199,15 +199,19 @@ function __secupress_diff_file_ajax_post_cb() {
 	}
 
 	$file    = $_GET['file'];
-	$content = "Error while loading http://core.svn.wordpress.org/tags/$wp_version/$file"; ////
+	$content = '';
 
-	$response = wp_remote_get( "http://core.svn.wordpress.org/tags/$wp_version/$file" );
+	$response = wp_remote_get( esc_url( "http://core.svn.wordpress.org/tags/$wp_version/$file")  );
 	if ( ! is_wp_error( $response ) && 200 == wp_remote_retrieve_response_code( $response ) ) {
 		$text = secupress_text_diff( wp_remote_retrieve_body( $response ), file_get_contents( ABSPATH . $file ), array( 'title' => $file ), 'wp-includes/version.php' == $file );
 		$content = $text ? $text : $content;
 	}
 
-	secupress_action_page( __( 'File Differences', 'secupress' ), $content, array( 'head' => '<link rel="stylesheet" type="text/css" href="' . admin_url( 'css/revisions.css' ) . '">' ) );
+	if ( $content ) {
+		secupress_action_page( __( 'File Differences', 'secupress' ), $content, array( 'head' => '<link rel="stylesheet" type="text/css" href="' . admin_url( 'css/revisions.css' ) . '">' ) );
+	} else {
+		secupress_die( sprintf( __( 'Error while loading %s', 'secupress' ), esc_html( "http://core.svn.wordpress.org/tags/$wp_version/$file" ) ) );
+	}
 
 }
 
