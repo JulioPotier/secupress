@@ -411,6 +411,12 @@ function secupress_ban_ip( $IP = null, $die = true ) {
 	}
 }
 
+/**
+ * Return a <table> containing 2 strings displayed with the Diff_Renderer from WP Core.
+ *
+ * @since 1.0
+ * @return string
+ **/
 function secupress_text_diff( $left_string, $right_string, $args = null ) {
 	global $wp_local_package;
 
@@ -452,4 +458,17 @@ function secupress_text_diff( $left_string, $right_string, $args = null ) {
 	$r .= '</table>';
 
 	return $r;
+}
+
+/**
+ * WIll load the async classes
+ *
+ * @since 1.0
+ * @return void
+ **/
+function secupress_require_class_async() {
+	/* https://github.com/A5hleyRich/wp-background-processing v1.0 */
+	secupress_require_class( 'Admin', 'wp-async-request' );
+	secupress_require_class( 'Admin', 'wp-background-process' );
+	/* */
 }

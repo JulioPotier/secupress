@@ -316,10 +316,7 @@ function __secupress_process_file_monitoring_tasks() {
 	if ( ! is_admin() || false === ( get_transient( 'secupress_toggle_file_scan' ) ) ) {
 		return;
 	}
-	/* https://github.com/A5hleyRich/wp-background-processing v1.0 */
-	secupress_require_class( 'Admin', 'wp-async-request' );
-	secupress_require_class( 'Admin', 'wp-background-process' );
-	/* */
+	secupress_require_class_async();
 	secupress_require_class( 'Admin', 'file-monitoring' );
 
 	SecuPress_File_Monitoring::get_instance();
