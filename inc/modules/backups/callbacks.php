@@ -201,7 +201,7 @@ function __secupress_diff_file_ajax_post_cb() {
 	$file    = $_GET['file'];
 	$content = '';
 
-	$response = wp_remote_get( esc_url( "http://core.svn.wordpress.org/tags/$wp_version/$file")  );
+	$response = wp_remote_get( esc_url( "https://core.svn.wordpress.org/tags/$wp_version/$file")  );
 	if ( ! is_wp_error( $response ) && 200 == wp_remote_retrieve_response_code( $response ) ) {
 		$text = secupress_text_diff( wp_remote_retrieve_body( $response ), file_get_contents( ABSPATH . $file ), array( 'title' => $file ) );
 		$content = $text ? $text : $content;
@@ -210,7 +210,7 @@ function __secupress_diff_file_ajax_post_cb() {
 	if ( $content ) {
 		secupress_action_page( __( 'File Differences', 'secupress' ), $content, array( 'head' => '<link rel="stylesheet" type="text/css" href="' . admin_url( 'css/revisions.css' ) . '">' ) );
 	} else {
-		secupress_die( sprintf( __( 'Error while loading %s', 'secupress' ), esc_html( "http://core.svn.wordpress.org/tags/$wp_version/$file" ) ) );
+		secupress_die( sprintf( __( 'Error while loading %s', 'secupress' ), esc_html( "https://core.svn.wordpress.org/tags/$wp_version/$file" ) ) );
 	}
 
 }
@@ -234,7 +234,7 @@ function __secupress_recover_diff_files_ajax_post_cb() { //// async
 		if ( ! file_exists( ABSPATH . $file ) && isset( $wp_core_files_hashes[ $file ] ) ) {
 			continue;
 		}
-		$response = wp_remote_get( "http://core.svn.wordpress.org/tags/$wp_version/$file" );
+		$response = wp_remote_get( "https://core.svn.wordpress.org/tags/$wp_version/$file" );
 		if ( ! is_wp_error( $response ) && 200 == wp_remote_retrieve_response_code( $response ) ) {
 			$content = wp_remote_retrieve_body( $response );
 			file_put_contents( ABSPATH . $file, $content );
@@ -270,7 +270,7 @@ function __secupress_recover_missing_files_ajax_post_cb() { //// async
 		if ( file_exists( ABSPATH . $file ) && ! isset( $missing_from_root_core[ $file ] ) ) {
 			continue;
 		}
-		$response = wp_remote_get( "http://core.svn.wordpress.org/tags/$wp_version/$file" );
+		$response = wp_remote_get( "https://core.svn.wordpress.org/tags/$wp_version/$file" );
 		if ( ! is_wp_error( $response ) && 200 == wp_remote_retrieve_response_code( $response ) ) {
 			$content = wp_remote_retrieve_body( $response );
 			file_put_contents( ABSPATH . $file, $content );
