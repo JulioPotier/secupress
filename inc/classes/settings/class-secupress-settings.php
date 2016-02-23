@@ -921,7 +921,10 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			if ( false !== $full_filetree && false !== $wp_core_files_hashes && isset( $wp_core_files_hashes[ $wp_version ]['checksums'], $full_filetree[ $wp_version ] ) ) {
 				$wp_content_dir       = str_replace( realpath( ABSPATH ) . DIRECTORY_SEPARATOR, '/' , WP_CONTENT_DIR );
 				$wp_core_files_hashes = $wp_core_files_hashes[ $wp_version ]['checksums'];
-				$wp_core_files_hashes[ 'wp-config.php' ] = 'wp-config.php'; // add this since it's not in the zip but depends from WordPress
+				// add these since it's not in the zip but depends from WordPress
+				$wp_core_files_hashes[ 'wp-config.php' ] = 'wp-config.php';
+				$wp_core_files_hashes[ '.htaccess' ]     = '.htaccess';
+				$wp_core_files_hashes[ 'web.config' ]    = 'web.config';
 
 				if ( is_multisite() ) {
 					$wp_core_files_hashes[ $wp_content_dir . '/sunrise.php' ] = '/sunrise.php'; // add this since it's not in the zip but depends from WordPress MS
