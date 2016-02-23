@@ -411,7 +411,7 @@ function secupress_ban_ip( $IP = null, $die = true ) {
 	}
 }
 
-function secupress_text_diff( $left_string, $right_string, $args = null, $raw = false ) {
+function secupress_text_diff( $left_string, $right_string, $args = null ) {
 	global $wp_local_package;
 
 	if ( ! class_exists( 'WP_Text_Diff_Renderer_Table' ) ) {

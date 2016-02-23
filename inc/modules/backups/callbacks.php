@@ -203,7 +203,7 @@ function __secupress_diff_file_ajax_post_cb() {
 
 	$response = wp_remote_get( esc_url( "http://core.svn.wordpress.org/tags/$wp_version/$file")  );
 	if ( ! is_wp_error( $response ) && 200 == wp_remote_retrieve_response_code( $response ) ) {
-		$text = secupress_text_diff( wp_remote_retrieve_body( $response ), file_get_contents( ABSPATH . $file ), array( 'title' => $file ), 'wp-includes/version.php' == $file );
+		$text = secupress_text_diff( wp_remote_retrieve_body( $response ), file_get_contents( ABSPATH . $file ), array( 'title' => $file ) );
 		$content = $text ? $text : $content;
 	}
 
