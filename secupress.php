@@ -9,10 +9,10 @@
  * Network: true
  * License: GPLv2
  * License URI: http://secupress.me/gpl.txt
-
+ *
  * Text Domain: secupress
  * Domain Path: /languages/
-
+ *
  * Copyright 2012-2015 SecuPress
  */
 
