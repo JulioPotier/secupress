@@ -179,7 +179,7 @@ function secupress_hotlink_remove_rules() {
 			$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Anti Hotlink', 'secupress' ) );
 			$message .= sprintf(
 				/* translators: 1 and 2 are small parts of code, 3 is a file name. */
-				__( 'It seems your %2$s file is not writable. You have to edit the file manually. Please remove the rewrite rules between %1$s and %2$s from the %3$s file.', 'secupress' ),
+				__( 'It seems your %3$s file is not writable. You have to edit the file manually. Please remove the rewrite rules between %1$s and %2$s from the %3$s file.', 'secupress' ),
 				'<code># BEGIN SecuPress hotlink</code>',
 				'<code># END SecuPress</code>',
 				'<code>.htaccess</code>'
@@ -302,7 +302,7 @@ function secupress_hotlink_get_protected_extensions_regex_pattern() {
  * @return (string)
  */
 function secupress_hotlink_get_replacement_url() {
-	$url = SECUPRESS_FRONT_IMAGES_URL . 'hotlink.png';
+	$url = 'data:image/gif;base64,R0lGODdhAQABAPAAAP///wAAACwAAAAAAQABAEACAkQBADs=';
 	/**
 	 * Filter the URL of the image used as replacement when a media is hotlinked.
 	 *
@@ -381,7 +381,7 @@ function secupress_hotlink_get_apache_rules() {
 			$out .= "    RewriteCond %{REQUEST_URI} !^$uri_cond$ [NC]\n";
 		}
 		// Redirect to the replacement image.
-		$out .= "    RewriteRule $ext $repl [NC,R,L]\n";
+		$out .= "    RewriteRule ^ $repl [R,L]\n";
 	$out .= '</IfModule>';
 
 	return $out;
@@ -458,7 +458,6 @@ function secupress_hotlink_get_iis7_rules() {
 	$spaces   = str_repeat( ' ', 10 );
 
 	$out  = "<rule name=\"SecuPress $marker\">\n";
-		$out .= "$spaces  <match url=\"$ext\"/>\n";
 		$out .= "$spaces  <conditions>\n";
 			$out .= "$spaces    <add input=\"{REQUEST_FILENAME}\" matchType=\"isFile\"/>\n";
 			$out .= "$spaces    <add input=\"{REQUEST_FILENAME}\" pattern=\"$ext\" ignoreCase=\"true\"/>\n";
@@ -579,7 +578,7 @@ function secupress_hotlink_get_nginx_rules() {
 			$out .= "    }\n";
 		}
 		$out .= '    if ($cond_hotlink = "' . $rule_val . '") {' . "\n";
-		$out .= "        rewrite $ext $repl redirect;\n";
+		$out .= "        rewrite ^ $repl redirect;\n";
 		$out .= "    }\n";
 	$out .= '}';
 

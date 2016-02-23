@@ -56,7 +56,7 @@ if ( $is_plugin_active && function_exists( 'secupress_hotlink_file_is_writable' 
 
 	if ( $message ) {
 		$this->add_field( array(
-			'title'        => __( 'Rules', 'secupress' ),
+			'title'        => _x( 'Rules', 'rewrite rules', 'secupress' ),
 			'description'  => $message,
 			'depends'      => $main_field_name,
 			'label_for'    => $this->get_field_name( 'rules' ),
