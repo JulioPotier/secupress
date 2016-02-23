@@ -31,6 +31,11 @@ $this->add_field( array(
 	),
 	'helpers' => array(
 		array(
+			'depends'     => $field_name . '_fightspam',
+			'type'        => 'description',
+			'description' => __( 'An anti-usurpation system will also be activated: registered users will be able to comment using their username and email only if they are logged in.', 'secupress' ),
+		),
+		array(
 			'depends'     => $field_name . '_remove-comment-feature',
 			'type'        => 'warning',
 			'description' => secupress_get_deactivate_plugin_string( 'no-comment/no-comment.php' ),
@@ -39,12 +44,13 @@ $this->add_field( array(
 ) );
 
 
-$options = array( 'deletenow' => __( '<strong>Send to trash</strong> any spam', 'secupress' ) );
+$options = array(
+	'spam'  => __( 'Only <strong>mark it as spam</strong>', 'secupress' ),
+	'trash' => __( '<strong>Delete permanently</strong> any spam', 'secupress' ),
+);
 
 if ( defined( 'EMPTY_TRASH_DAYS' ) && is_numeric( EMPTY_TRASH_DAYS ) && EMPTY_TRASH_DAYS > 0 ) {
-	$options['markspam'] = sprintf( __( '<strong>Delete</strong> spam after %s days', 'secupress' ), EMPTY_TRASH_DAYS );
-} else {
-	$options['markspam'] = __( '<strong>Only mark</strong> as spam, i will delete manually.', 'secupress' );
+	$options['trash'] = sprintf( __( '<strong>Send to trash</strong> any spam and delete it after %s days', 'secupress' ), EMPTY_TRASH_DAYS );
 }
 
 $this->add_field( array(
@@ -54,7 +60,7 @@ $this->add_field( array(
 	'name'         => $this->get_field_name( 'mark-as' ),
 	'type'         => 'radios',
 	'options'      => $options,
-	'default'      => 'deletenow',
+	'default'      => 'spam',
 	'label_screen' => __( 'How to mark spam', 'secupress' ),
 ) );
 unset( $options );
@@ -98,55 +104,16 @@ $this->add_field( array(
 
 
 $this->add_field( array(
-	'title'        => __( 'About Pings & Trackbacks', 'secupress' ),
-	'description'  => __( 'If you do not specially use pings and trackbacks, you can forbid the usage, on the contrary, never mark it as spam.', 'secupress' ),
+	'title'        => __( 'About Pingbacks & Trackbacks', 'secupress' ),
+	'description'  => __( 'If you do not especially use Pingbacks & Trackbacks, you can disable their usage.', 'secupress' ),
 	'depends'      => $main_field_name,
-	'name'         => $this->get_field_name( 'pings-trackbacks' ),
-	'type'         => 'radios',
-	'default'      => 'mark-ptb',
-	'label_screen' => __( 'What to do with Pings & Trackbacks', 'secupress' ),
-	'options'      => array(
-		'mark-ptb'   => __( '<strong>Mark</strong> Pings & Trackbacks as spam like comments', 'secupress' ),
-		'forbid-ptb' => __( '<strong>Forbid</strong> the usage of Pings & Trackbacks on this website', 'secupress' )
-	),
+	'label_for'    => $this->get_field_name( 'forbid-pings-trackbacks' ),
+	'type'         => 'checkbox',
+	'label'        => __( '<strong>Forbid</strong> the usage of Pingbacks & Trackbacks', 'secupress' ),
 	'helpers' => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'Forbid will also hide all pingbacks & trackbacks from your post comments.', 'secupress' ),
+			'description' => __( 'it will also hide all Pingbacks & Trackbacks from your post comments.', 'secupress' ),
 		),
 	),
 ) );
-
-
-/* for info, will be marked as spam,:
-url in name
-known ips,
-regular exp
-local db
-add_filter( 'preprocess_comment', 'baw_no_short_coms' );
-function baw_no_short_coms( $comment )
-{
-	if ( is_user_logged_in() ) {
-		return $comment;
-	}
-	$f = array( 'merci', 'génial', 'genial', 'wordpress', 'salut', 'bonjour', 'hello', 'post', 'article', 'pour', 'julio', 'super' );
-	if ( ( $comment['comment_type'] == '' || $comment['comment_type'] == 'comment' ) &&
-		count( array_filter( array_diff( array_unique( explode( ' ', strip_tags( strtolower( $comment['comment_content'] ) ) ) ), $f ), 'more_than_3_chars' ) )<5
-	) {
-		$comment['comment_author_url'] = '';
-		$comment['comment_author'] = reset( explode( '@', $comment['comment_author'] ) );
-	}
-	return $comment;
-}
-// Just disable pingback.ping functionality while leaving XMLRPC intact?
-add_action('xmlrpc_call', function($method){
-    if($method != 'pingback.ping') return;
-    wp_die(
-        'Pingback functionality is disabled on this Blog.',
-        'Pingback Disabled!',
-        array('response' => 403)
-    );
-});
-?>
-http://www.blacklistalert.org/?q=24.159.21.94 post
-*/

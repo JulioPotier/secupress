@@ -24,27 +24,13 @@ function __secupress_antispam_settings_callback( $settings ) {
 		secupress_manage_submodule( $modulenow, 'remove-comment-feature', isset( $activate['remove-comment-feature'] ) );
 	}
 
-	//// Sanitize settings here.
+	// Sanitization.
+	$settings['antispam_mark-as']                  = ! empty( $settings['antispam_mark-as'] ) && 'trash' === $settings['antispam_mark-as'] ? 'trash' : 'spam';
+	$settings['antispam_block-shortcodes']         = (int) ! empty( $settings['antispam_block-shortcodes'] );
+	$settings['antispam_better-blacklist-comment'] = (int) ! empty( $settings['antispam_better-blacklist-comment'] );
+	$settings['antispam_forbid-pings-trackbacks']  = (int) ! empty( $settings['antispam_forbid-pings-trackbacks'] );
 
 	return $settings;
-}
-
-
-/*------------------------------------------------------------------------------------------------*/
-/* INSTALL/RESET ================================================================================ */
-/*------------------------------------------------------------------------------------------------*/
-
-// Create default option on install.
-
-// add_action( 'wp_secupress_first_install', '__secupress_install_antispam_module' );
-
-function __secupress_install_antispam_module( $module ) {
-	if ( 'all' === $module || 'antispam' === $module ) {
-		$values = array(
-			//// pas fini
-		);
-		secupress_update_module_options( $values, 'antispam' );
-	}
 }
 
 
