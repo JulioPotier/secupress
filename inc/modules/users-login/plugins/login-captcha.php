@@ -97,8 +97,8 @@ function secupress_login_captcha_js() {
 			while(curDate-date < millis);
 		}
 		function secupress_captcha_do_fail() {
-		    $('span.checkme').css('background-position-x', 28);
-		    $('span.checkme').css('background-position-y', 0);
+			$('span.checkme').css('background-position-x', 28);
+			$('span.checkme').css('background-position-y', 0);
 			$('#captcha_token').val('');
 			$('#msg').show();
 		}
@@ -189,7 +189,6 @@ function secupress_login_captcha_js() {
 	} );
 	</script>
 	<?php
-	}
 }
 
 
