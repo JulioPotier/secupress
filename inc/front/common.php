@@ -35,7 +35,12 @@ function secupress_check_ban_ips() {
 		$IP = secupress_get_ip();
 
 		if ( array_key_exists( $IP, $ban_ips ) ) {
-			$msg = sprintf( __( 'Your IP address <code>%1$s</code> have been banned for <b>%2$d</b> minute(s), please do not retry until.', 'secupress' ), esc_html( $IP ), $login_protection_time_ban );
+			$msg = sprintf(
+				_n( 'Your IP address <code>%1$s</code> has been banned for <b>%2$d</b> minute, please do not retry until then.', 'Your IP address <code>%1$s</code> has been banned for <b>%2$d</b> minutes, please do not retry until then.', $login_protection_time_ban, 'secupress' ),
+				esc_html( $IP ),
+				$login_protection_time_ban
+			);
+
 			secupress_die( $msg );
 		}
 
