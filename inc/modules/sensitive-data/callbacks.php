@@ -16,8 +16,13 @@ defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
  */
 function __secupress_sensitive_data_settings_callback( $settings ) {
 	$modulenow = 'sensitive-data';
-	$settings  = $settings ? $settings : array();
 	$activate  = secupress_get_submodule_activations( $modulenow );
+	$settings  = $settings ? $settings : array();
+
+	if ( isset( $settings['sanitized'] ) ) {
+		return $settings;
+	}
+	$settings['sanitized'] = 1;
 
 	/*
 	 * Each submodule has its own sanitization function.

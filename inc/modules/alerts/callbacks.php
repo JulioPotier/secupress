@@ -18,6 +18,11 @@ function __secupress_alerts_settings_callback( $settings ) {
 	$modulenow = 'alerts';
 	$settings  = $settings ? $settings : array();
 
+	if ( isset( $settings['sanitized'] ) ) {
+		return $settings;
+	}
+	$settings['sanitized'] = 1;
+
 	// Activate/deactivate.
 	if ( empty( $settings['alerts_type'] ) || ! is_array( $settings['alerts_type'] ) ) {
 		$settings['alerts_type'] = array();

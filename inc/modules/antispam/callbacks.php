@@ -13,8 +13,13 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 function __secupress_antispam_settings_callback( $settings ) {
 	$modulenow = 'antispam';
-	$settings  = $settings ? $settings : array();
 	$activate  = secupress_get_submodule_activations( $modulenow );
+	$settings  = $settings ? $settings : array();
+
+	if ( isset( $settings['sanitized'] ) ) {
+		return $settings;
+	}
+	$settings['sanitized'] = 1;
 
 	// (De)Activation.
 	if ( false !== $activate ) {

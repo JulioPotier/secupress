@@ -13,6 +13,12 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 function __secupress_backups_settings_callback( $settings ) {
 	$locations = secupress_backups_storage_labels();
+	$settings  = $settings ? $settings : array();
+
+	if ( isset( $settings['sanitized'] ) ) {
+		return $settings;
+	}
+	$settings['sanitized'] = 1;
 
 	if ( ! isset( $settings['backups-storage_location'] ) || ! secupress_is_pro() || ! isset( $locations[ $settings['backups-storage_location'] ] ) ) {
 		$settings['backups-storage_location'] = 'local';
@@ -173,7 +179,7 @@ function __secupress_delete_scanned_files_ajax_post_cb() {
 	if ( ! $diff_from_root_core ) {
 		secupress_admin_die();
 	}
-	
+
 	$files = array_intersect( $_POST['files'], $diff_from_root_core );
 
 	foreach ( $files as $file ) {
@@ -241,7 +247,7 @@ function __secupress_recover_diff_files_ajax_post_cb() { //// async
 			$full_filetree[ $wp_version ][ $file ] = md5( $content );
 		}
 	}
-	
+
 	update_option( SECUPRESS_FULL_FILETREE, $full_filetree );
 
 	secupress_admin_send_response_or_redirect( 1 );
@@ -277,7 +283,7 @@ function __secupress_recover_missing_files_ajax_post_cb() { //// async
 			$full_filetree[ $wp_version ][ $file ] = md5( $content );
 		}
 	}
-	
+
 	update_option( SECUPRESS_FULL_FILETREE, $full_filetree );
 
 	secupress_admin_send_response_or_redirect( 1 );
@@ -315,7 +321,7 @@ function __secupress_old_files_ajax_post_cb() {
 			unset( $full_filetree[ $wp_version ][ $file ] );
 		}
 	}
-	
+
 	update_option( SECUPRESS_FULL_FILETREE, $full_filetree );
 
 	secupress_admin_send_response_or_redirect( 1 );

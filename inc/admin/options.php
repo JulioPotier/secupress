@@ -23,6 +23,13 @@ function secupress_register_global_setting() {
  * @since 1.0
  */
 function __secupress_global_settings_callback( $value ) {
+	$value = $value ? $value : array();
+
+	if ( isset( $value['sanitized'] ) ) {
+		return $value;
+	}
+	$value['sanitized'] = 1;
+
 	// License validation
 	$value['consumer_email'] = ! empty( $value['consumer_email'] ) ? sanitize_email( $value['consumer_email'] )    : '';
 	$value['consumer_key']   = ! empty( $value['consumer_key'] )   ? sanitize_text_field( $value['consumer_key'] ) : '';
