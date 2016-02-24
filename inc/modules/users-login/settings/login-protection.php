@@ -63,6 +63,12 @@ $this->add_field( array(
 
 
 $field_name = $this->get_field_name( 'nonlogintimeslot' );
+// Server hour.
+$UTC          = new DateTimeZone( 'UTC' );
+$newTZ        = new DateTimeZone( ini_get( 'date.timezone' ) );
+$date         = new DateTime( '', $UTC );
+$date->setTimezone( $newTZ );
+$server_hour  = $date->format( 'H \h i \m\i\n' );
 
 $this->add_field( array(
 	'title'        => __( 'Non-Login time slot settings', 'secupress' ),
@@ -74,6 +80,10 @@ $this->add_field( array(
 	'fieldset'     => 'yes',
 	'label_screen' => __( 'Choose your time slot', 'secupress' ),
 	'helpers'      => array(
+		array(
+			'type'        => 'help',
+			'description' => sprintf( __( 'Current server time: %s.', 'secupress' ), '<strong>' . $server_hour . '</strong>' ),
+		),
 		array(
 			'type'        => 'description',
 			'description' => __( 'Select the range of time you need to disallow logins.', 'secupress' ),
