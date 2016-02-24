@@ -8,7 +8,6 @@ Version: 1.0
 */
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
-if ( ! function_exists( '__secupress_base32_verify' ) ) :
 /**
  * Check the verification code entered by the user.
  */
@@ -49,8 +48,6 @@ function __secupress_base32_verify( $secretkey, $thistry, $lasttimeslot ) {
 
 	return false;
 }
-
-endif;
 
 /**
  * Get doubleauth a user option easily
@@ -1166,6 +1163,15 @@ function __secupress_doubleauth_skip_ajax_post_cb() {
 	die();
 }
 
+add_action( 'secupress_deactivate_plugin_' . basename( __FILE__, '.php' ), '__secupress_mobileauth_deactivation' );
+function __secupress_mobileauth_deactivation() {
+	global $wpdb;
+
+	delete_metadata( 'user', false, $wpdb->prefix . 'secupress_doubleauth_lasttimeslot', false, true );
+	delete_metadata( 'user', false, $wpdb->prefix . 'secupress_doubleauth_backupcodes',  false, true );
+	delete_metadata( 'user', false, $wpdb->prefix . 'secupress_doubleauth_verified',     false, true );
+	delete_metadata( 'user', false, $wpdb->prefix . 'secupress_doubleauth_secret',       false, true );
+}
 /*
 TODO :
 multiple app password
