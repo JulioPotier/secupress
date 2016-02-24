@@ -283,7 +283,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *                 - (string) $reassign The user to reassign posts and links to: the user name followed by the user ID.
 	 */
 	protected function _pre_process_action_delete_user( $id, $reassign ) {
-		$user     = static::_format_user_login( $user_id );
+		$user     = static::_format_user_login( $id );
 		$reassign = $reassign ? static::_format_user_login( $reassign ) : __( 'Nobody', 'secupress' );
 		return compact( 'user', 'reassign' );
 	}
