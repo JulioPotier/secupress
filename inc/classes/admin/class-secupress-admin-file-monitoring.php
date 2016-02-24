@@ -12,10 +12,10 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 class SecuPress_File_Monitoring extends SecuPress_Singleton {
 
 
-	const VERSION   = '1.0';
+	const VERSION = '1.0';
 
 	/**
-	 * @var Singleton The reference to *Singleton* instance of this class
+	 * @var Singleton The reference to *Singleton* instance of this class.
 	 */
 	protected static $_instance;
 
@@ -23,7 +23,7 @@ class SecuPress_File_Monitoring extends SecuPress_Singleton {
 	// Public methods ==============================================================================
 
 	/**
-	 * Add tasks to queue and dispatch
+	 * Add tasks to queue and dispatch.
 	 *
 	 * @since 1.0
 	 */
@@ -34,7 +34,7 @@ class SecuPress_File_Monitoring extends SecuPress_Singleton {
 		$secupress_background_process_file_monitoring = new SecuPress_Background_Process_File_Monitoring;
 
 		if ( get_transient( 'secupress_toggle_queue' ) ) {
-			
+
 			delete_transient( 'secupress_toggle_queue' );
 
 			if ( false === ( $wp_core_files_hashes = get_option( SECUPRESS_WP_CORE_FILES_HASHES ) ) || ! isset( $wp_core_files_hashes[ $wp_version ] ) ) {
@@ -51,6 +51,7 @@ class SecuPress_File_Monitoring extends SecuPress_Singleton {
 
 			$secupress_background_process_file_monitoring->save();
 		}
+
 		$secupress_background_process_file_monitoring->dispatch();
 
 	}
@@ -60,7 +61,4 @@ class SecuPress_File_Monitoring extends SecuPress_Singleton {
 	protected function _init() {
 		add_action( 'init', array( $this, 'process_handler' ) );
 	}
-
-
-
 }
