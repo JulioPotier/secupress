@@ -410,7 +410,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 		if ( 'session_tokens' === $meta_key ) {
 			return array();
 		}
-		$user = static::_format_user_login( $object_id );
+		$user = $object_id ? static::_format_user_login( $object_id ) : __( 'All Users' ); // WP i18n
 		return compact( 'user', 'meta_key', 'meta_value' );
 	}
 
