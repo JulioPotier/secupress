@@ -870,7 +870,10 @@ class SecuPress_Action_Log extends SecuPress_Log {
 		if ( ! is_object( $user ) ) {
 			$user = get_userdata( $user );
 		}
-		return ( $user ? $user->user_login : '[' . __( 'Unknown user', 'secupress' ) . ']' ) . ' (' . $user->ID . ')';
+
+		$user_id = $user ? $user->ID : 0;
+
+		return ( $user ? $user->user_login : '[' . __( 'Unknown user', 'secupress' ) . ']' ) . ' (' . $user_id . ')';
 	}
 
 }
