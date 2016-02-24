@@ -235,6 +235,13 @@ function secupress_get_blacklisted_usernames() {
 		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 	);
 
+	/**
+	 * Filter the list of blacklisted usernames.
+	 *
+	 * @since 1.0
+	 *
+	 * @param $list (array) List of usernames.
+	 */
 	$list = apply_filters( 'secupress.plugin.blacklist_logins_list', $list );
 
 	// Temporarily allow some blacklisted usernames.
