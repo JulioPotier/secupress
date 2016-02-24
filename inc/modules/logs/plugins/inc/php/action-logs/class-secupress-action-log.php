@@ -284,7 +284,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 */
 	protected function _pre_process_action_delete_user( $id, $reassign ) {
 		$user     = static::_format_user_login( $id );
-		$reassign = $reassign ? static::_format_user_login( $reassign ) : __( 'Nobody', 'secupress' );
+		$reassign = null === $reassign ? static::_format_user_login( $reassign ) : __( 'Nobody', 'secupress' );
 		return compact( 'user', 'reassign' );
 	}
 
@@ -862,16 +862,22 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *
 	 * @since 1.0
 	 *
-	 * @param (int|object) A user ID or a WP_User object.
+	 * @param (int|object) $user_id A user ID or a WP_User object.
 	 *
 	 * @return (string) This user login followed by his ID.
 	 */
-	protected static function _format_user_login( $user ) {
-		if ( ! is_object( $user ) ) {
-			$user = get_userdata( $user );
+	protected static function _format_user_login( $user_id ) {
+		if ( $user_id && is_numeric( $user_id ) ) {
+			$user_id = (int) $user_id;
+			$user    = get_userdata( $user_id );
+			$user_id = $user && ! empty( $user->ID ) ? $user->ID : $user_id;
+		} elseif ( $user_id && is_object( $user_id ) ) {
+			$user    = $user_id;
+			$user_id = $user && ! empty( $user->ID ) ? $user->ID : 0;
+		} else {
+			$user    = false;
+			$user_id = 0;
 		}
-
-		$user_id = $user ? $user->ID : 0;
 
 		return ( $user ? $user->user_login : '[' . __( 'Unknown user', 'secupress' ) . ']' ) . ' (' . $user_id . ')';
 	}
