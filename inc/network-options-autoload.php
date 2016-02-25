@@ -16,17 +16,22 @@ function secupress_load_network_options( $option_names, $prefix = '' ) {
 		return;
 	}
 
-	$network_id = (int) $wpdb->siteid;
-	$option_names = array_flip( array_flip( $option_names ) );
-
 	// Get values.
-	$not_exist = array();
-	$options   = "'$prefix" . implode( "', '$prefix", esc_sql( $option_names ) ) . "'";
+	$not_exist    = array();
+	$option_names = array_flip( array_flip( $option_names ) );
+	$options      = "'$prefix" . implode( "', '$prefix", esc_sql( $option_names ) ) . "'";
 
 	if ( is_multisite() ) {
-		$results = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key as name, meta_value as value FROM $wpdb->sitemeta WHERE meta_key IN ( $options ) AND site_id = %d", $network_id ), OBJECT_K );
+		$network_id     = (int) $wpdb->siteid;
+		$cache_prefix   = "$network_id:";
+		$notoptions_key = "$network_id:notoptions";
+		$cache_group    = 'site-options';
+		$results        = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key as name, meta_value as value FROM $wpdb->sitemeta WHERE meta_key IN ( $options ) AND site_id = %d", $network_id ), OBJECT_K );
 	} else {
-		$results = $wpdb->get_results( "SELECT option_name as name, option_value as value FROM $wpdb->options WHERE option_name IN ( $options )", OBJECT_K );
+		$cache_prefix   = '';
+		$notoptions_key = 'notoptions';
+		$cache_group    = 'options';
+		$results        = $wpdb->get_results( "SELECT option_name as name, option_value as value FROM $wpdb->options WHERE option_name IN ( $options )", OBJECT_K );
 	}
 
 	foreach ( $option_names as $option_name ) {
@@ -35,7 +40,7 @@ function secupress_load_network_options( $option_names, $prefix = '' ) {
 		if ( isset( $results[ $option_name ] ) ) {
 			$value = $results[ $option_name ]->value;
 			$value = maybe_unserialize( $value );
-			wp_cache_set( "$network_id:$option_name", $value, 'site-options' );
+			wp_cache_set( "$cache_prefix$option_name", $value, $cache_group );
 		}
 		// No value.
 		else {
@@ -48,11 +53,10 @@ function secupress_load_network_options( $option_names, $prefix = '' ) {
 	}
 
 	// Cache the options that don't exist in the DB.
-	$notoptions_key = "$network_id:notoptions";
-	$notoptions     = wp_cache_get( $notoptions_key, 'site-options' );
-	$notoptions     = is_array( $notoptions ) ? $notoptions : array();
-	$notoptions     = array_merge( $notoptions, $not_exist );
-	wp_cache_set( $notoptions_key, $notoptions, 'site-options' );
+	$notoptions = wp_cache_get( $notoptions_key, $cache_group );
+	$notoptions = is_array( $notoptions ) ? $notoptions : array();
+	$notoptions = array_merge( $notoptions, $not_exist );
+	wp_cache_set( $notoptions_key, $notoptions, $cache_group );
 }
 
 
