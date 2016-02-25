@@ -11,16 +11,21 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 if ( is_admin() ) {
 
 	add_action( 'admin_print_styles-themes.php', 'secupress_no_theme_add_css' );
+
 	function secupress_no_theme_add_css() {
-		?><style>div.theme.add-new-theme, h2 a.add-new-h2{display:none}</style><?php
+		?><style>div.theme.add-new-theme,h1 a.page-title-action,h2 a.add-new-h2{display:none}</style><?php
 	}
 
+
 	add_action( 'load-theme-install.php', 'secupress_no_theme_install_page' );
+
 	function secupress_no_theme_install_page() {
 		secupress_die( __( 'You do not have sufficient permissions to install themes on this site.' ) );
 	}
 
+
 	add_action( 'check_admin_referer', 'secupress_avoid_switch_theme' );
+
 	function secupress_avoid_switch_theme( $action ) {
 		if ( 'theme-upload' === $action || strpos( $action, 'install-theme_' ) === 0 ) {
 			secupress_die( __( 'You do not have sufficient permissions to install themes on this site.' ) );
