@@ -32,6 +32,12 @@ $this->add_field( array(
 	'type'              => 'checkbox',
 	'value'             => (int) secupress_is_submodule_active( 'plugins-themes', 'theme-installation' ),
 	'label'             => __( 'Yes, disable the installation for themes', 'secupress' ),
+	'helpers'           => array(
+		array(
+			'type'        => 'description',
+			'description' => __( 'This will also disable themes upload.', 'secupress' ),
+		),
+	),
 ) );
 
 
