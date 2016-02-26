@@ -57,6 +57,8 @@ define( 'SECUPRESS_ASSETS_URL'            , SECUPRESS_PLUGIN_URL . 'assets/' );
 define( 'SECUPRESS_ADMIN_CSS_URL'         , SECUPRESS_ASSETS_URL . 'admin/css/' );
 define( 'SECUPRESS_ADMIN_JS_URL'          , SECUPRESS_ASSETS_URL . 'admin/js/' );
 define( 'SECUPRESS_ADMIN_IMAGES_URL'      , SECUPRESS_ASSETS_URL . 'admin/images/' );
+define( 'SECUPRESS_PHP_MIN'               , '5.3' );
+define( 'SECUPRESS_WP_MIN'                , '3.7' );
 
 if ( ! defined( 'SECUPRESS_LASTVERSION' ) ) {
 	define( 'SECUPRESS_LASTVERSION', '0' ); ////
@@ -75,6 +77,8 @@ if ( ! defined( 'SECUPRESS_LASTVERSION' ) ) {
 add_action( 'plugins_loaded', 'secupress_init', 0 );
 
 function secupress_init() {
+	global $wp_version;
+
 	// Nothing to do if autosave
 	if ( defined( 'DOING_AUTOSAVE' ) ) {
 		return;
@@ -83,10 +87,21 @@ function secupress_init() {
 	// Load translations
 	load_plugin_textdomain( 'secupress', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 
+	if ( version_compare( phpversion(), SECUPRESS_PHP_MIN ) < 0 ) {
+		require( ABSPATH . 'wp-admin/includes/plugin.php' );
+		deactivate_plugins( plugin_basename( SECUPRESS_FILE ) );
+		wp_die( sprintf( __( '<b>SecuPress</b> requires PHP %s minimum, your website is actually running version %s.', 'secupress' ), '<code>' . SECUPRESS_PHP_MIN . '</code>', '<code>' . phpversion() . '</code>' ) );
+	}
+	if ( version_compare( $wp_version, SECUPRESS_WP_MIN ) < 0 ) {
+		require( ABSPATH . 'wp-admin/includes/plugin.php' );
+		deactivate_plugins( plugin_basename( SECUPRESS_FILE ) );
+		wp_die( sprintf( __( '<b>SecuPress</b> requires WordPress %s minimum, your website is actually running version %s.', 'secupress' ), '<code>' . SECUPRESS_WP_MIN . '</code>', '<code>' . $wp_version . '</code>' ) );
+	}
+
 	// Call defines, classes and functions
 	require( SECUPRESS_FUNCTIONS_PATH . 'formatting.php' );
 	require( SECUPRESS_FUNCTIONS_PATH . 'options.php' );
-	require( SECUPRESS_INC_PATH . 'network-options-autoload.php' );
+	require( SECUPRESS_INC_PATH       . 'network-options-autoload.php' );
 
 	// Last constants
 	define( 'SECUPRESS_PLUGIN_NAME', secupress_get_option( 'wl_plugin_name', 'SecuPress' ) );
