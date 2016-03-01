@@ -7,6 +7,7 @@ Author: SecuPress
 Version: 1.0
 */
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
-// Fix using filters auto_update_core, allow_major_auto_core_updates
-add_filter( 'auto_update_core', '__return_true', PHP_INT_MAX );
+
+// Fix using filters auto_update_core, allow_major_auto_core_updates.
+add_filter( 'auto_update_core',              '__return_true', PHP_INT_MAX );
 add_filter( 'allow_major_auto_core_updates', '__return_true', PHP_INT_MAX );

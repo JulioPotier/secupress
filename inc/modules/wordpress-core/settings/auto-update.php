@@ -10,7 +10,7 @@ $plugin = $this->get_current_plugin();
 
 $this->add_field( array(
 	'title'             => __( 'Minor Updates', 'secupress' ),
-	'description'       => __( 'Let WordPress updates itself when a minor version is available.<br/>4.3.<strong>1</strong> is a minor version.', 'secupress' ),
+	'description'       => __( 'By default, WordPress updates itself when a minor version is available. But a plugin could disable this feature: this setting will force automatic background updates back.<br/>4.3.<strong>1</strong> is a minor version.', 'secupress' ),
 	'label_for'         => $this->get_field_name( 'minor' ),
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
