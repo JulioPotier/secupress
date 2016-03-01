@@ -537,7 +537,7 @@ function __secupress_toggle_file_scan_ajax_post_cb() {
 		set_site_transient( 'secupress_toggle_queue', true, 30 );
 	} else {
 		delete_site_transient( 'secupress_toggle_file_scan' );
-		site_transient( 'secupress_toggle_queue' );
+		delete_site_transient( 'secupress_toggle_queue' );
 	}
 
 	wp_redirect( wp_get_referer() );

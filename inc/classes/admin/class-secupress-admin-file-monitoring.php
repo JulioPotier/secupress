@@ -33,9 +33,9 @@ class SecuPress_File_Monitoring extends SecuPress_Singleton {
 		secupress_require_class( 'Admin', 'background-process-file-monitoring' );
 		$secupress_background_process_file_monitoring = new SecuPress_Background_Process_File_Monitoring;
 
-		if ( get_transient( 'secupress_toggle_queue' ) ) {
+		if ( secupress_get_site_transient( 'secupress_toggle_queue' ) ) {
 
-			delete_transient( 'secupress_toggle_queue' );
+			delete_site_transient( 'secupress_toggle_queue' );
 
 			if ( false === ( $wp_core_files_hashes = get_option( SECUPRESS_WP_CORE_FILES_HASHES ) ) || ! isset( $wp_core_files_hashes[ $wp_version ] ) ) {
 				$secupress_background_process_file_monitoring->push_to_queue( 'get_wp_hashes' );
