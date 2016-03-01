@@ -21,7 +21,7 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 add_filter( 'robots_txt', 'secupress_blackhole_robots_txt' );
 
 function secupress_blackhole_robots_txt( $output ) {
-	if ( secupress_blackhole_is_whitelisted() ) {
+	if ( is_user_logged_in() || secupress_blackhole_is_whitelisted() ) {
 		return $output;
 	}
 
@@ -49,7 +49,7 @@ function secupress_blackhole_robots_txt( $output ) {
 add_filter( 'template_include', 'secupress_blackhole_please_click_me', 1 );
 
 function secupress_blackhole_please_click_me( $template ) {
-	if ( secupress_blackhole_is_whitelisted() ) {
+	if ( is_user_logged_in() || secupress_blackhole_is_whitelisted() ) {
 		return $template;
 	}
 
