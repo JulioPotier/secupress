@@ -536,7 +536,7 @@ function __secupress_toggle_file_scan_ajax_post_cb() {
 		secupress_set_site_transient( 'secupress_toggle_file_scan', time() );
 		set_site_transient( 'secupress_toggle_queue', true, 30 );
 	} else {
-		delete_site_transient( 'secupress_toggle_file_scan' );
+		secupress_delete_site_transient( 'secupress_toggle_file_scan' );
 		delete_site_transient( 'secupress_toggle_queue' );
 	}
 

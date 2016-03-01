@@ -58,7 +58,7 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 					}
 				}
 			}
-		} else { 
+		} else {
 			static $flag = false;
 
 			if ( $flag !== $path  ) {
@@ -160,7 +160,7 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 	 **/
 	public function get_self_fulltree( $paths = array(), $args = array() ) {
 		self::get_self_filetree( array(), array( 'recursive' => true, 'option' => SECUPRESS_FULL_FILETREE ) );
-		
+
 		return 'map_md5_fulltree';
 	}
 
@@ -214,7 +214,7 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 	public function get_self_filetree( $paths = array(), $args = array() ) {
 		global $wp_version, $wp_local_package;
 		static $result = array();
-		
+
 		$paths      = ! $paths ? array( ABSPATH ) : array_filter( array_map( 'realpath', array_unique( (array) $paths ) ), 'is_dir' );
 		$ext_filter = isset( $args['ext_filter'] ) ? (array) $args['ext_filter'] : array();
 		$ignore     = isset( $args['ignore'] )     ? (array) $args['ignore']     : array();
@@ -230,13 +230,13 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 			if ( ! $root ) {
 				continue;
 			}
-			
+
 			foreach( $root as $value ) {
-				
+
 				$current = $dir . DIRECTORY_SEPARATOR . $value;
 
 				if ( '.' === $value || '..' === $value
-				|| ABSPATH . $value == WP_CONTENT_DIR 
+				|| ABSPATH . $value == WP_CONTENT_DIR
 				|| ABSPATH . $value == WP_PLUGIN_DIR
 				|| ( defined( 'UPLOADS' ) && ABSPATH . $value == UPLOADS )
 				|| in_array( $current, $ignore )
@@ -307,6 +307,6 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 	 */
 	protected function complete() {
 		parent::complete();
-		delete_site_transient( 'secupress_toggle_file_scan' );
+		secupress_delete_site_transient( 'secupress_toggle_file_scan' );
 	}
 }

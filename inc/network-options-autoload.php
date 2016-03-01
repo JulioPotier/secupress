@@ -93,7 +93,6 @@ function secupress_get_global_network_option_names_for_autoload() {
 				'_site_transient_secupress-admin-as-author-administrator',
 				'_site_transient_secupress_activation',
 				'_site_transient_secupress_toggle_file_scan',
-				'_site_transient_timeout_secupress_toggle_file_scan',
 			) );
 		}
 	}
