@@ -13,64 +13,42 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 
 	const VERSION = '1.0';
 
+	/**
+	 * @var string
+	 */
+	protected $prefix = 'secupress';
 
 	/**
-	 * Will store the possible dists file from wp core files hashes (md5), first from the w.org api, then from the .zip from w.org too.
+	 * @var string
+	 */
+	protected $action = 'background_process_file_monitoring';
+
+
+	/**
+	 * Task
+	 *
+	 * @param mixed $item Queue item to iterate over
 	 *
 	 * @since 1.0
 	 *
-	 * @return void
+	 * @return mixed
 	 */
-	public function fix_dists( $type = 'branches', $path = '', $pre = '' ) {
-		global $wp_version, $wp_local_package;
-		static $wp_files_hashes;
-		static $flag = false;
-
-		if ( ! isset( $wp_files_hashes ) ) {
-			update_option( SECUPRESS_FIX_DISTS, array( $wp_version => array() ), false );
+	protected function task( $item ) {
+		if ( $item ) {
+			return $this->$item();
 		}
+		return $item;
+	}
 
-		$branch   = 'branches' === $type ? substr( $wp_version, 0, 3 ) : $wp_version;
-		$i18n_url = ! $path ? "http://i18n.svn.wordpress.org/$wp_local_package/$type/$branch/dist/" : $path;
-		$response = wp_remote_get( $i18n_url );
 
-		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
-
-			$links = strip_tags( wp_remote_retrieve_body( $response ), '<a>' );
-			preg_match_all( "/>(.*)<\/a>/", $links, $links );
-
-			if ( isset( $links[1] ) ) {
-
-				$links = $links[1];
-				unset( $links[0], $links[ count( $links ) ] );
-
-				foreach ( $links as $dist ) {
-					set_time_limit(0);
-
-					if ( '/' !== substr( $dist, -1 ) ) {
-
-						$response = wp_remote_get( $i18n_url . $dist );
-
-						if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
-
-							$content = wp_remote_retrieve_body( $response );
-							$wp_files_hashes[ $wp_version ][ $pre . $dist ] = md5( $content );
-						}
-
-					} else {
-						self::fix_dists( $type, $i18n_url . $dist, $pre . $dist );
-					}
-				}
-			}
-		} elseif ( $flag !== $path  ) {
-			$this->fix_dists( 'tags', $path, $pre );
-			$flag = $path;
-		}
-
-		update_option( SECUPRESS_FIX_DISTS, $wp_files_hashes, false );
-
-		return false;
-
+	/**
+	 * Complete.
+	 *
+	 * @since 1.0
+	 */
+	protected function complete() {
+		parent::complete();
+		secupress_delete_site_transient( 'secupress_toggle_file_scan' );
 	}
 
 
@@ -163,60 +141,61 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 
 
 	/**
-	 * Wrapper for get_self_filetree() with full recursivity
+	 * Will store the possible dists file from wp core files hashes (md5), first from the w.org api, then from the .zip from w.org too.
 	 *
 	 * @since 1.0
 	 *
-	 * @return 'map_md5_fulltree' (the next queue)
+	 * @return void
 	 */
-	public function get_self_fulltree( $paths = array(), $args = array() ) {
-		self::get_self_filetree( array(), array( 'recursive' => true, 'option' => SECUPRESS_FULL_FILETREE ) );
+	public function fix_dists( $type = 'branches', $path = '', $pre = '' ) {
+		global $wp_version, $wp_local_package;
+		static $wp_files_hashes;
+		static $flag = false;
 
-		return 'map_md5_fulltree';
-	}
-
-
-	/**
-	 * undocumented function
-	 *
-	 * @return false.
-	 *
-	 * @since 1.0
-	 */
-	public function map_md5_fulltree() {
-		global $wp_version;
-
-		$full_filetree = get_option( SECUPRESS_FULL_FILETREE, false );
-
-		if ( false === $full_filetree || ! isset( $full_filetree[ $wp_version ] ) ) {
-			return false;
+		if ( ! isset( $wp_files_hashes ) ) {
+			update_option( SECUPRESS_FIX_DISTS, array( $wp_version => array() ), false );
 		}
 
-		$all_done = true;
-		$n        = 0;
+		$branch   = 'branches' === $type ? substr( $wp_version, 0, 3 ) : $wp_version;
+		$i18n_url = ! $path ? "http://i18n.svn.wordpress.org/$wp_local_package/$type/$branch/dist/" : $path;
+		$response = wp_remote_get( $i18n_url );
 
-		foreach ( $full_filetree[ $wp_version ] as $key => $hash_or_file ) {
+		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 
-			if ( strlen( $hash_or_file ) == 32 && strpos( $hash_or_file, '/' ) === false ) {
-				$all_done = $all_done || true;
-				continue;
+			$links = strip_tags( wp_remote_retrieve_body( $response ), '<a>' );
+			preg_match_all( "/>(.*)<\/a>/", $links, $links );
+
+			if ( isset( $links[1] ) ) {
+
+				$links = $links[1];
+				unset( $links[0], $links[ count( $links ) ] );
+
+				foreach ( $links as $dist ) {
+					set_time_limit(0);
+
+					if ( '/' !== substr( $dist, -1 ) ) {
+
+						$response = wp_remote_get( $i18n_url . $dist );
+
+						if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
+
+							$content = wp_remote_retrieve_body( $response );
+							$wp_files_hashes[ $wp_version ][ $pre . $dist ] = md5( $content );
+						}
+
+					} else {
+						self::fix_dists( $type, $i18n_url . $dist, $pre . $dist );
+					}
+				}
 			}
-
-			$all_done = false;
-			++$n;
-			$full_filetree[ $wp_version ][ $key ] = md5_file( $hash_or_file );
-
-			if ( 20 == $n ) {
-				update_option( SECUPRESS_FULL_FILETREE, $full_filetree );
-				$n = 0;
-			}
+		} elseif ( $flag !== $path  ) {
+			$this->fix_dists( 'tags', $path, $pre );
+			$flag = $path;
 		}
 
-		if ( $n > 0 ) {
-			update_option( SECUPRESS_FULL_FILETREE, $full_filetree );
-		}
+		update_option( SECUPRESS_FIX_DISTS, $wp_files_hashes, false );
 
-		return $all_done;
+		return false;
 	}
 
 
@@ -291,36 +270,62 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 
 		return false;
 	}
-	/**
-	 * @var string
-	 */
-	protected $action = 'background_process_file_monitoring';
 
 
 	/**
-	 * Task
-	 *
-	 * @param mixed $item Queue item to iterate over
+	 * Wrapper for get_self_filetree() with full recursivity
 	 *
 	 * @since 1.0
 	 *
-	 * @return mixed
+	 * @return 'map_md5_fulltree' (the next queue)
 	 */
-	protected function task( $item ) {
-		if ( $item ) {
-			return $this->$item();
-		}
-		return $item;
+	public function get_self_fulltree( $paths = array(), $args = array() ) {
+		self::get_self_filetree( array(), array( 'recursive' => true, 'option' => SECUPRESS_FULL_FILETREE ) );
+
+		return 'map_md5_fulltree';
 	}
 
 
 	/**
-	 * Complete.
+	 * undocumented function
+	 *
+	 * @return false.
 	 *
 	 * @since 1.0
 	 */
-	protected function complete() {
-		parent::complete();
-		secupress_delete_site_transient( 'secupress_toggle_file_scan' );
+	public function map_md5_fulltree() {
+		global $wp_version;
+
+		$full_filetree = get_option( SECUPRESS_FULL_FILETREE, false );
+
+		if ( false === $full_filetree || ! isset( $full_filetree[ $wp_version ] ) ) {
+			return false;
+		}
+
+		$all_done = true;
+		$n        = 0;
+
+		foreach ( $full_filetree[ $wp_version ] as $key => $hash_or_file ) {
+
+			if ( strlen( $hash_or_file ) == 32 && strpos( $hash_or_file, '/' ) === false ) {
+				$all_done = $all_done || true;
+				continue;
+			}
+
+			$all_done = false;
+			++$n;
+			$full_filetree[ $wp_version ][ $key ] = md5_file( $hash_or_file );
+
+			if ( 20 == $n ) {
+				update_option( SECUPRESS_FULL_FILETREE, $full_filetree );
+				$n = 0;
+			}
+		}
+
+		if ( $n > 0 ) {
+			update_option( SECUPRESS_FULL_FILETREE, $full_filetree );
+		}
+
+		return $all_done;
 	}
 }
