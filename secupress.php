@@ -4,7 +4,7 @@
  * Plugin URI: http://secupress.me
  * Description: WordPress Security by SecuPress, the best and simpler way to protect your websites.
  * Author: SecuPress, WP Media
- * Version: 1.0-alpha
+ * Version: 1.0-beta1
  * Author URI: http://secupress.me
  * Network: true
  * License: GPLv2
@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /* DEFINES ====================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-define( 'SECUPRESS_VERSION'               , '1.0-alpha' );
+define( 'SECUPRESS_VERSION'               , '1.0-beta1' );
 define( 'SECUPRESS_PRIVATE_KEY'           , false );
 define( 'SECUPRESS_ACTIVE_SUBMODULES'     , 'secupress_active_submodules' );
 define( 'SECUPRESS_SETTINGS_SLUG'         , 'secupress_settings' );
