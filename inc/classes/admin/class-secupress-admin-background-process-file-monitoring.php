@@ -200,6 +200,64 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 
 
 	/**
+	 * Wrapper for get_self_filetree() with full recursivity
+	 *
+	 * @since 1.0
+	 *
+	 * @return 'map_md5_fulltree' (the next queue)
+	 */
+	public function get_self_fulltree( $paths = array(), $args = array() ) {
+		self::get_self_filetree( array(), array( 'recursive' => true, 'option' => SECUPRESS_FULL_FILETREE ) );
+
+		return 'map_md5_fulltree';
+	}
+
+
+	/**
+	 * undocumented function
+	 *
+	 * @return false.
+	 *
+	 * @since 1.0
+	 */
+	public function map_md5_fulltree() {
+		global $wp_version;
+
+		$full_filetree = get_option( SECUPRESS_FULL_FILETREE, false );
+
+		if ( false === $full_filetree || ! isset( $full_filetree[ $wp_version ] ) ) {
+			return false;
+		}
+
+		$all_done = true;
+		$n        = 0;
+
+		foreach ( $full_filetree[ $wp_version ] as $key => $hash_or_file ) {
+
+			if ( strlen( $hash_or_file ) == 32 && strpos( $hash_or_file, '/' ) === false ) {
+				$all_done = $all_done || true;
+				continue;
+			}
+
+			$all_done = false;
+			++$n;
+			$full_filetree[ $wp_version ][ $key ] = md5_file( $hash_or_file );
+
+			if ( 20 == $n ) {
+				update_option( SECUPRESS_FULL_FILETREE, $full_filetree );
+				$n = 0;
+			}
+		}
+
+		if ( $n > 0 ) {
+			update_option( SECUPRESS_FULL_FILETREE, $full_filetree );
+		}
+
+		return $all_done;
+	}
+
+
+	/**
 	 * Will store the wp core files hashes (md5), first from the w.org api, then from the .zip from w.org too
 	 *
 	 * @since 1.0
@@ -269,63 +327,5 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 		update_option( $option, $result );
 
 		return false;
-	}
-
-
-	/**
-	 * Wrapper for get_self_filetree() with full recursivity
-	 *
-	 * @since 1.0
-	 *
-	 * @return 'map_md5_fulltree' (the next queue)
-	 */
-	public function get_self_fulltree( $paths = array(), $args = array() ) {
-		self::get_self_filetree( array(), array( 'recursive' => true, 'option' => SECUPRESS_FULL_FILETREE ) );
-
-		return 'map_md5_fulltree';
-	}
-
-
-	/**
-	 * undocumented function
-	 *
-	 * @return false.
-	 *
-	 * @since 1.0
-	 */
-	public function map_md5_fulltree() {
-		global $wp_version;
-
-		$full_filetree = get_option( SECUPRESS_FULL_FILETREE, false );
-
-		if ( false === $full_filetree || ! isset( $full_filetree[ $wp_version ] ) ) {
-			return false;
-		}
-
-		$all_done = true;
-		$n        = 0;
-
-		foreach ( $full_filetree[ $wp_version ] as $key => $hash_or_file ) {
-
-			if ( strlen( $hash_or_file ) == 32 && strpos( $hash_or_file, '/' ) === false ) {
-				$all_done = $all_done || true;
-				continue;
-			}
-
-			$all_done = false;
-			++$n;
-			$full_filetree[ $wp_version ][ $key ] = md5_file( $hash_or_file );
-
-			if ( 20 == $n ) {
-				update_option( SECUPRESS_FULL_FILETREE, $full_filetree );
-				$n = 0;
-			}
-		}
-
-		if ( $n > 0 ) {
-			update_option( SECUPRESS_FULL_FILETREE, $full_filetree );
-		}
-
-		return $all_done;
 	}
 }
