@@ -11,26 +11,30 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
 class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process {
 
+	const VERSION = '1.0';
+
 
 	/**
-	 * Will store the possible dists file from wp core files hashes (md5), first from the w.org api, then from the .zip from w.org too
+	 * Will store the possible dists file from wp core files hashes (md5), first from the w.org api, then from the .zip from w.org too.
 	 *
 	 * @since 1.0
+	 *
 	 * @return void
-	 **/
+	 */
 	public function fix_dists( $type = 'branches', $path = '', $pre = '' ) {
 		global $wp_version, $wp_local_package;
 		static $wp_files_hashes;
+		static $flag = false;
 
 		if ( ! isset( $wp_files_hashes ) ) {
 			update_option( SECUPRESS_FIX_DISTS, array( $wp_version => array() ), false );
 		}
 
-		$branch   = 'branches' == $type ? substr( $wp_version, 0, 3 ) : $wp_version;
+		$branch   = 'branches' === $type ? substr( $wp_version, 0, 3 ) : $wp_version;
 		$i18n_url = ! $path ? "http://i18n.svn.wordpress.org/$wp_local_package/$type/$branch/dist/" : $path;
 		$response = wp_remote_get( $i18n_url );
 
-		if ( ! is_wp_error( $response ) && 200 == wp_remote_retrieve_response_code( $response ) ) {
+		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 
 			$links = strip_tags( wp_remote_retrieve_body( $response ), '<a>' );
 			preg_match_all( "/>(.*)<\/a>/", $links, $links );
@@ -43,11 +47,11 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 				foreach ( $links as $dist ) {
 					set_time_limit(0);
 
-					if ( '/' != substr( $dist, -1 ) ) {
+					if ( '/' !== substr( $dist, -1 ) ) {
 
 						$response = wp_remote_get( $i18n_url . $dist );
 
-						if ( ! is_wp_error( $response ) && 200 == wp_remote_retrieve_response_code( $response ) ) {
+						if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 
 							$content = wp_remote_retrieve_body( $response );
 							$wp_files_hashes[ $wp_version ][ $pre . $dist ] = md5( $content );
@@ -58,14 +62,9 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 					}
 				}
 			}
-		} else {
-			static $flag = false;
-
-			if ( $flag !== $path  ) {
-				$this->fix_dists( 'tags', $path, $pre );
-				$flag = $path;
-			}
-
+		} elseif ( $flag !== $path  ) {
+			$this->fix_dists( 'tags', $path, $pre );
+			$flag = $path;
 		}
 
 		update_option( SECUPRESS_FIX_DISTS, $wp_files_hashes, false );
@@ -74,12 +73,14 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 
 	}
 
+
 	/**
 	 * Will store the wp core files hashes (md5), first from the w.org api, then from the .zip from w.org too
 	 *
 	 * @since 1.0
+	 *
 	 * @return void
-	 **/
+	 */
 	public function get_wp_hashes() {
 		global $wp_version, $wp_local_package;
 
@@ -92,15 +93,18 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 		$result = array( $wp_version => array() );
 		$locale = isset( $wp_local_package ) ? $wp_local_package : 'en_US';
 		$urls   = array(
-						$locale => 'http://api.wordpress.org/core/checksums/1.0/?locale=' . $locale . '&version=' . $wp_version,
-						'en_US' => 'http://api.wordpress.org/core/checksums/1.0/?locale=en_US&version=' . $wp_version,
-						);
+			$locale => 'http://api.wordpress.org/core/checksums/1.0/?locale=' . $locale . '&version=' . $wp_version,
+		);
+
+		if ( 'en_US' !== $locale ) {
+			$urls['en_US'] = 'http://api.wordpress.org/core/checksums/1.0/?locale=en_US&version=' . $wp_version;
+		}
 
 		foreach ( $urls as $locale => $url ) {
 
 			$response = wp_remote_get( $url );
 
-			if ( ! is_wp_error( $response ) && 200 == wp_remote_retrieve_response_code( $response ) ) {
+			if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 				$result[ $wp_version ] = json_decode( wp_remote_retrieve_body( $response ), true );
 			}
 
@@ -113,23 +117,29 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 
 		if ( ! isset( $result[ $wp_version ]['checksums'] ) || ! $result[ $wp_version ]['checksums'] ) {
 
-			$file = "http://wordpress.org/wordpress-$wp_version-no-content.zip";
+			$file     = "http://wordpress.org/wordpress-$wp_version-no-content.zip";
 			$file_md5 = "http://wordpress.org/wordpress-$wp_version.zip.md5";
 			$response = wp_remote_get( $file_md5 );
-			if ( ! is_wp_error( $response ) && 200 == wp_remote_retrieve_response_code( $response ) ) {
-				$zip_md5 = wp_remote_retrieve_body( $response );
+
+			if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 				require_once( ABSPATH . 'wp-admin/includes/file.php' );
+
+				$zip_md5  = wp_remote_retrieve_body( $response );
 				$tmpfname = download_url( $file );
+
 				if ( ! is_wp_error( $tmpfname ) && is_readable( $tmpfname ) ) {
 					$file = $tmpfname;
+					$zip  = zip_open( $file );
 
 					$result[ $wp_version ]['checksums'] = array();
-					$zip = zip_open( $file );
+
 					if ( is_resource( $zip ) ) {
+
 						while ( $zip_entry = zip_read( $zip ) ) {
 							zip_entry_open( $zip, $zip_entry, "r" );
 							$zfile = zip_entry_read( $zip_entry, zip_entry_filesize( $zip_entry ) );
 							list( $wp, $filename ) = explode( '/', zip_entry_name( $zip_entry ), 2 );
+
 							if ( $filename ) {
 								$md5tmp = md5( $zfile );
 								$result[ $wp_version ]['checksums'][ $filename ] = $md5tmp;
@@ -149,27 +159,30 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 		update_option( SECUPRESS_WP_CORE_FILES_HASHES, $result );
 
 		return false;
-
 	}
+
 
 	/**
 	 * Wrapper for get_self_filetree() with full recursivity
 	 *
 	 * @since 1.0
+	 *
 	 * @return 'map_md5_fulltree' (the next queue)
-	 **/
+	 */
 	public function get_self_fulltree( $paths = array(), $args = array() ) {
 		self::get_self_filetree( array(), array( 'recursive' => true, 'option' => SECUPRESS_FULL_FILETREE ) );
 
 		return 'map_md5_fulltree';
 	}
 
+
 	/**
 	 * undocumented function
 	 *
 	 * @return false.
+	 *
 	 * @since 1.0
-	 **/
+	 */
 	public function map_md5_fulltree() {
 		global $wp_version;
 
@@ -198,6 +211,7 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 				$n = 0;
 			}
 		}
+
 		if ( $n > 0 ) {
 			update_option( SECUPRESS_FULL_FILETREE, $full_filetree );
 		}
@@ -205,12 +219,14 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 		return $all_done;
 	}
 
+
 	/**
 	 * Will store the wp core files hashes (md5), first from the w.org api, then from the .zip from w.org too
 	 *
 	 * @since 1.0
+	 *
 	 * @return void
-	 **/
+	 */
 	public function get_self_filetree( $paths = array(), $args = array() ) {
 		global $wp_version, $wp_local_package;
 		static $result = array();
@@ -236,11 +252,11 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 				$current = $dir . DIRECTORY_SEPARATOR . $value;
 
 				if ( '.' === $value || '..' === $value
-				|| ABSPATH . $value == WP_CONTENT_DIR
-				|| ABSPATH . $value == WP_PLUGIN_DIR
-				|| ( defined( 'UPLOADS' ) && ABSPATH . $value == UPLOADS )
-				|| in_array( $current, $ignore )
-				) {
+					|| ABSPATH . $value === WP_CONTENT_DIR
+					|| ABSPATH . $value === WP_PLUGIN_DIR
+					|| ( defined( 'UPLOADS' ) && ABSPATH . $value == UPLOADS )
+					|| in_array( $current, $ignore )
+					) {
 					continue;
 				}
 
@@ -274,22 +290,19 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 		update_option( $option, $result );
 
 		return false;
-
 	}
-
 	/**
 	 * @var string
 	 */
 	protected $action = 'background_process_file_monitoring';
+
+
 	/**
 	 * Task
 	 *
-	 * Override this method to perform any actions required on each
-	 * queue item. Return the modified item for further processing
-	 * in the next pass through. Or, return false to remove the
-	 * item from the queue.
-	 *
 	 * @param mixed $item Queue item to iterate over
+	 *
+	 * @since 1.0
 	 *
 	 * @return mixed
 	 */
@@ -299,11 +312,12 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 		}
 		return $item;
 	}
+
+
 	/**
-	 * Complete
+	 * Complete.
 	 *
-	 * Override if applicable, but ensure that the below actions are
-	 * performed, or, call parent::complete().
+	 * @since 1.0
 	 */
 	protected function complete() {
 		parent::complete();
