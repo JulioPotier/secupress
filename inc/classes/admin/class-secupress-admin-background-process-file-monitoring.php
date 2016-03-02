@@ -21,7 +21,7 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 	/**
 	 * @var string
 	 */
-	protected $action = 'background_process_file_monitoring';
+	protected $action = 'file_monitoring';
 
 
 	/**
@@ -34,10 +34,10 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 	 * @return mixed
 	 */
 	protected function task( $item ) {
-		if ( $item ) {
-			return $this->$item();
+		if ( ! $item || ! is_string( $item ) || ! method_exists( $this, $item ) ) {
+			return false;
 		}
-		return $item;
+		return $this->$item();
 	}
 
 
@@ -206,7 +206,7 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 	 *
 	 * @return 'map_md5_fulltree' (the next queue)
 	 */
-	public function get_self_fulltree( $paths = array(), $args = array() ) {
+	public function get_self_fulltree() {
 		self::get_self_filetree( array(), array( 'recursive' => true, 'option' => SECUPRESS_FULL_FILETREE ) );
 
 		return 'map_md5_fulltree';
@@ -223,7 +223,7 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 	public function map_md5_fulltree() {
 		global $wp_version;
 
-		$full_filetree = get_option( SECUPRESS_FULL_FILETREE, false );
+		$full_filetree = get_option( SECUPRESS_FULL_FILETREE );
 
 		if ( false === $full_filetree || ! isset( $full_filetree[ $wp_version ] ) ) {
 			return false;
@@ -234,7 +234,7 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 
 		foreach ( $full_filetree[ $wp_version ] as $key => $hash_or_file ) {
 
-			if ( strlen( $hash_or_file ) == 32 && strpos( $hash_or_file, '/' ) === false ) {
+			if ( strlen( $hash_or_file ) === 32 && strpos( $hash_or_file, '/' ) === false ) {
 				$all_done = $all_done || true;
 				continue;
 			}
@@ -243,7 +243,7 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 			++$n;
 			$full_filetree[ $wp_version ][ $key ] = md5_file( $hash_or_file );
 
-			if ( 20 == $n ) {
+			if ( 20 === $n ) {
 				update_option( SECUPRESS_FULL_FILETREE, $full_filetree );
 				$n = 0;
 			}
@@ -264,7 +264,7 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 	 *
 	 * @return void
 	 */
-	public function get_self_filetree( $paths = array(), $args = array() ) {
+	public static function get_self_filetree( $paths = array(), $args = array() ) {
 		global $wp_version, $wp_local_package;
 		static $result = array();
 
