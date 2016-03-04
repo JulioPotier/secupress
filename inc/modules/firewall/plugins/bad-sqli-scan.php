@@ -6,6 +6,7 @@ Main Module: firewall
 Author: SecuPress
 Version: 1.0
 */
+defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 add_action( 'admin_footer', 'secupress_block_sqli_scanners' );
 add_action( 'wp_footer', 'secupress_block_sqli_scanners' );

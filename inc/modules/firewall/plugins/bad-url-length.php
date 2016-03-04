@@ -6,6 +6,7 @@ Main Module: firewall
 Author: SecuPress
 Version: 1.0
 */
+defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 $parse_url = explode( '?', $_SERVER['REQUEST_URI'] );
 $parse_url = parse_str( end( $parse_url ), $args );
