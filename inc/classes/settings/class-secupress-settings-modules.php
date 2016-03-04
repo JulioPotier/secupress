@@ -136,7 +136,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	}
 
 
-	protected function print_tabs() {
+	/*protected function print_tabs() {
 		foreach ( static::get_modules() as $key => $module ) {
 			$class = $this->get_current_module() === $key  ? ' nav-tab-active'    : '';
 			$icon  = isset( $module['dashicon'] )          ?  $module['dashicon'] : 'admin-generic';
@@ -146,7 +146,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			</a>
 			<?php
 		}
-	}
+	}*/
 
 	final public function print_open_form_tag() {
 		?><form id="secupress-module-form-settings" method="post" action="<?php echo $this->get_form_action(); ?>"><?php

@@ -261,18 +261,18 @@ function secupress_create_menus() {
 	add_menu_page( SECUPRESS_PLUGIN_NAME, SECUPRESS_PLUGIN_NAME, $cap, 'secupress', '__secupress_dashboard', 'dashicons-shield-alt' );
 
 	// Sub-menus
-	// add_submenu_page( 'secupress', __( 'Dashboard' ),             __( 'Dashboard' ),                      $cap, 'secupress',          '__secupress_dashboard' );
-	add_submenu_page( 'secupress', __( 'Settings' ),              __( 'Settings' ),                       $cap, 'secupress', '__secupress_global_settings' );
+//	add_submenu_page( 'secupress', __( 'Dashboard' ),             __( 'Dashboard' ),                      $cap, 'secupress',          '__secupress_dashboard' );
+	add_submenu_page( 'secupress', __( 'Settings' ),              __( 'Settings' ),                       $cap, 'secupress',          '__secupress_global_settings' );
 	add_submenu_page( 'secupress', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ) . $count, $cap, 'secupress_scanners', '__secupress_scanners' );
 	add_submenu_page( 'secupress', __( 'Modules', 'secupress' ),  __( 'Modules', 'secupress' ),           $cap, 'secupress_modules',  '__secupress_modules' );
 
-	if ( isset( $_GET['page'] ) && 'secupress_modules' == $_GET['page'] ) { 
+	if ( isset( $_GET['page'] ) && 'secupress_modules' == $_GET['page'] ) {
 		$modules = secupress_get_modules();
 		foreach ( $modules as $key => $module ) {
 			add_submenu_page( 'secupress', $module['title'],  '<span class="current-' . $key . '"><span class="dashicons dashicons-' . $module['dashicon'] . '" aria-hidden="true"></span> ' . $module['title'] . '</span>', $cap, 'secupress_modules&module=' . $key,  '__secupress_modules' );
 		}
 	}
- 	
+
 	// Add the counter to the main menu: it can't be added with `add_menu_page()` because it would change the value of the screen ID (yes, it's utterly stupid).
 	end( $menu );
 	$key = key( $menu );
