@@ -37,7 +37,7 @@ function secupress_move_login_activate() {
 	// Apache
 	elseif ( $is_apache ) {
 		if ( ! function_exists( 'got_mod_rewrite' ) ) {
-			require_once(ABSPATH . 'wp-admin/includes/misc.php');
+			require_once( ABSPATH . 'wp-admin/includes/misc.php' );
 		}
 		if ( ! got_mod_rewrite() ) {
 			$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );

@@ -72,8 +72,8 @@ class SecuPress_Action_Log extends SecuPress_Log {
 		}
 
 		// Pre-proccess (maybe).
-		$method_name = str_replace( array( '.', '-', '|' ), '_', $this->type );
-		$method_name = '_pre_process_' . $method_name . '_' . $this->target;
+		$method_name = str_replace( array( '.', '-', '|' ), '_', $this->target );
+		$method_name = '_pre_process_' . $this->type . '_' . $method_name;
 
 		if ( method_exists( $this, $method_name ) ) {
 			$this->data = (array) call_user_func_array( array( $this, $method_name ), $this->data );
@@ -615,9 +615,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 */
 	protected function _set_action_title() {
 		$titles = array(
-			'secupress.block'     => str_replace( '%PLUGIN-NAME%', '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>',
-				__( '%PLUGIN-NAME% prevented a request at %1$s.', 'secupress' )
-			),
+			'secupress.block'     => str_replace( '%PLUGIN-NAME%', '<b>' . SECUPRESS_PLUGIN_NAME . '</b>', __( '%PLUGIN-NAME% prevented a request at %1$s.', 'secupress' ) ),
 			'secupress.ip_banned' => __( 'IP banned: %s.', 'secupress' ),
 			'switch_theme'        => __( 'Theme activated: %s.', 'secupress' ),
 			'wp_login'            => __( 'Administrator %s logged in.', 'secupress' ),
@@ -756,9 +754,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 */
 	protected function _set_action_message() {
 		$messages = array(
-			'secupress.block'     => str_replace( '%PLUGIN-NAME%', '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>',
-				__( '%PLUGIN-NAME% prevented a request at %1$s from the IP %2$s. Block ID: %3$s. The server configuration at the moment: %4$s', 'secupress' )
-			),
+			'secupress.block'     => str_replace( '%PLUGIN-NAME%', '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>', __( '%PLUGIN-NAME% prevented a request at %1$s from the IP %2$s. Block ID: %3$s. The server configuration at the moment: %4$s', 'secupress' ) ),
 			'secupress.ip_banned' => __( 'IP banned: %s.', 'secupress' ),
 			'switch_theme'        => __( 'Theme activated: %s.', 'secupress' ),
 			'wp_login'            => __( 'Administrator %s logged in.', 'secupress' ),
