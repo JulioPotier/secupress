@@ -99,6 +99,7 @@ function secupress_init() {
 	}
 
 	// Call defines, classes and functions
+	require( SECUPRESS_FUNCTIONS_PATH . 'compat.php' );
 	require( SECUPRESS_FUNCTIONS_PATH . 'formatting.php' );
 	require( SECUPRESS_FUNCTIONS_PATH . 'options.php' );
 	require( SECUPRESS_INC_PATH       . 'network-options-autoload.php' );

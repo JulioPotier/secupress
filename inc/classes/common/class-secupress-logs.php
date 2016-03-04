@@ -37,6 +37,10 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 */
 	private $post_type = '';
 	/**
+	 * @var (string) The name of the transient that will store the delayed Logs.
+	 */
+	private $delayed_logs_transient_name = '';
+	/**
 	 * @var (array) List of all criticities for all Log types.
 	 */
 	private static $all_criticities = array();
@@ -375,9 +379,17 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 */
 	protected function _init() {
 		static $done = false;
+		$init_now = did_action( 'init' ) || doing_action( 'init' );
 
 		// Register the Post Type.
-		$this->_register_post_type();
+		if ( $init_now ) {
+			$this->_register_post_type();
+		} else {
+			add_action( 'init', array( $this, '_register_post_type' ), 1 );
+
+			// Some Logs creation may have been delayed.
+			add_action( 'init', array( $this, '_save_delayed_logs' ) );
+		}
 
 		// Filter the post slug to allow duplicates.
 		add_filter( 'wp_unique_post_slug', array( $this, '_allow_log_name_duplicates' ), 10, 6 );
@@ -425,8 +437,18 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			$done = true;
 
 			// Register the Post Statuses.
-			add_action( 'init', array( __CLASS__, '_register_post_statuses' ) );
+			if ( $init_now ) {
+				self::_register_post_statuses();
+			} else {
+				add_action( 'init', array( __CLASS__, '_register_post_statuses' ), 5 );
+			}
 		}
+
+		// Delayed Logs.
+		$this->delayed_logs_transient_name = 'secupress_delayed_' . $this->get_log_type() . '_logs';
+
+		// Autoload the transient.
+		add_filter( '_secupress.options.load_plugins_network_options', array( $this, '_autoload_options' ) );
 	}
 
 
@@ -666,24 +688,18 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @return (int) Number of Logs added.
 	 */
 	protected function _save_logs( $new_logs ) {
-		global $blog_id;
-
 		if ( ! $new_logs ) {
 			return 0;
 		}
 
-		$switched = false;
-		$added    = 0;
-		$user_id  = 0;
+		$added   = 0;
+		$user_id = 0;
 
-		if ( is_multisite() && secupress_get_main_blog_id() !== (int) $blog_id ) {
-			// On multisites, create posts in the main blog.
-			switch_to_blog( secupress_get_main_blog_id() );
-			$switched = true;
-		}
-
-		// A post author is needed.
 		if ( is_multisite() ) {
+			// On multisite, create posts in the main blog.
+			switch_to_blog( secupress_get_main_blog_id() );
+
+			// A post author is needed.
 			$user_id = static::_get_default_super_administrator();
 		}
 
@@ -698,6 +714,15 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		 * @param (int) $user_id A user ID. That should be a user that won't be deleted anytime soon.
 		 */
 		$user_id = apply_filters( 'secupress.logs.author', $user_id );
+
+		// Maybe it's too soon, we can't save logs before the 'init' hook.
+		$log_now = did_action( 'init' ) || doing_action( 'init' );
+
+		if ( ! $log_now ) {
+			// We're before the 'init' hook, we will store the logs in a transient and create them later.
+			$delayed_logs = secupress_get_site_transient( $this->delayed_logs_transient_name );
+			$delayed_logs = is_array( $delayed_logs ) ? $delayed_logs : array();
+		}
 
 		foreach ( $new_logs as $new_log ) {
 			$args = array(
@@ -741,53 +766,134 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			$args['guid'] = $args['post_date'] . str_pad( $args['menu_order'], 8, '0', STR_PAD_RIGHT );
 			$args['guid'] = str_replace( array( ' ', '-', ':' ), '', $args['guid'] );
 
+			// It's too soon, we need to delay the log creation.
+			if ( ! $log_now ) {
+				$delayed_logs[] = array( 'args' => $args, 'metas' => $new_log );
+				++$added;
+			}
 			// Create the Log.
-			if ( $post_id = wp_insert_post( $args ) ) {
-				// Meta: data.
-				if ( ! empty( $new_log['data'] ) ) {
-					update_post_meta( $post_id, 'data', $new_log['data'] );
-				}
+			elseif ( $post_id = static::_insert_log( $args, $new_log ) ) {
+				++$added;
+			}
+		}
 
-				// Meta: user IP.
-				if ( ! empty( $new_log['user_ip'] ) ) {
-					update_post_meta( $post_id, 'user_ip', esc_html( $new_log['user_ip'] ) );
-				}
+		if ( $added ) {
+			if ( ! $log_now ) {
+				// Store the delayed logs.
+				secupress_set_site_transient( $this->delayed_logs_transient_name, $delayed_logs );
+			}
+			else {
+				// Limit the number of Logs stored in the database.
+				$this->_limit_logs_number();
+			}
+		}
 
-				// Meta: user ID.
-				if ( ! empty( $new_log['user_id'] ) ) {
-					update_post_meta( $post_id, 'user_id', (int) $new_log['user_id'] );
-				}
+		if ( is_multisite() ) {
+			restore_current_blog();
+		}
 
-				// Meta: user login.
-				if ( ! empty( $new_log['user_login'] ) ) {
-					update_post_meta( $post_id, 'user_login', esc_html( $new_log['user_login'] ) );
-				}
+		return $added;
+	}
 
+
+	/**
+	 * If some Logs have been delayed, create them now.
+	 *
+	 * @since 1.0
+	 */
+	public function _save_delayed_logs() {
+		$logs = secupress_get_site_transient( $this->delayed_logs_transient_name );
+
+		if ( ! $logs || ! is_array( $logs ) ) {
+			return;
+		}
+
+		delete_site_transient( $this->delayed_logs_transient_name );
+
+		$added = 0;
+
+		if ( is_multisite() ) {
+			// On multisites, create posts in the main blog.
+			switch_to_blog( secupress_get_main_blog_id() );
+		}
+
+		foreach ( $logs as $log ) {
+			// Create the Log.
+			if ( isset( $log['args'], $log['metas'] ) && $post_id = static::_insert_log( $log['args'], $log['metas'] ) ) {
 				++$added;
 			}
 		}
 
 		// Limit the number of Logs stored in the database.
 		if ( $added ) {
-			$limit = $this->get_logs_limit();
-			$logs  = $this->get_logs( array(
-				'fields'         => 'ids',
-				'offset'         => $limit,
-				'posts_per_page' => $limit, // If -1, 'offset' won't work. Any large number does the trick.
-			) );
-
-			if ( $logs ) {
-				foreach ( $logs as $post_id ) {
-					$this->delete_log( $post_id );
-				}
-			}
+			$this->_limit_logs_number();
 		}
 
-		if ( $switched ) {
+		if ( is_multisite() ) {
 			restore_current_blog();
 		}
+	}
 
-		return $added;
+
+	/**
+	 * Create a Log.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (array) $args  Arguments for `wp_insert_post()`.
+	 * @param (array) $metas An array containing some post metas to add.
+	 *
+	 * @return (bool|int) The post ID on success. False on failure.
+	 */
+	protected static function _insert_log( $args, $metas ) {
+		// Create the Log.
+		$post_id = wp_insert_post( $args );
+
+		if ( ! $post_id ) {
+			return false;
+		}
+
+		// Meta: data.
+		if ( ! empty( $metas['data'] ) ) {
+			update_post_meta( $post_id, 'data', $metas['data'] );
+		}
+
+		// Meta: user IP.
+		if ( ! empty( $metas['user_ip'] ) ) {
+			update_post_meta( $post_id, 'user_ip', esc_html( $metas['user_ip'] ) );
+		}
+
+		// Meta: user ID.
+		if ( ! empty( $metas['user_id'] ) ) {
+			update_post_meta( $post_id, 'user_id', (int) $metas['user_id'] );
+		}
+
+		// Meta: user login.
+		if ( ! empty( $metas['user_login'] ) ) {
+			update_post_meta( $post_id, 'user_login', esc_html( $metas['user_login'] ) );
+		}
+
+		return $post_id;
+	}
+
+
+	/**
+	 * Limit the number of Logs by deleting the old ones.
+	 *
+	 * @since 1.0
+	 */
+	protected function _limit_logs_number() {
+		$logs = $this->get_logs( array(
+			'fields'         => 'ids',
+			'offset'         => $this->get_logs_limit(),
+			'posts_per_page' => 100000, // If -1, 'offset' won't work. Any large number does the trick.
+		) );
+
+		if ( $logs ) {
+			foreach ( $logs as $post_id ) {
+				$this->delete_log( $post_id );
+			}
+		}
 	}
 
 
@@ -1094,6 +1200,23 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
 		wp_redirect( $goback );
 		die();
+	}
+
+
+	// Various =====================================================================================
+
+	/**
+	 * Add the transient we use to store the delayed logs to be autoloaded on multisite.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (array) $option_names An array of network option names.
+	 *
+	 * @return (array)
+	 */
+	public function _autoload_options( $option_names ) {
+		$option_names[] = '_site_transient_' . $this->delayed_logs_transient_name;
+		return $option_names;
 	}
 
 
