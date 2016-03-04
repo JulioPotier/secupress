@@ -163,7 +163,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			'label_screen' => __( 'Affected Roles', 'secupress' ),
 			'helpers'      => array(
 				array(
-					'type'        => 'helper_description',
+					'type'        => 'description',
 					'description' => __( 'Future roles will be automatically checked.', 'secupress' )
 				),
 				array(
