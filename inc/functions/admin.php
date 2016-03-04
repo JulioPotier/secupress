@@ -213,12 +213,13 @@ function secupress_die( $message = '', $title = '', $args = array() ) {
 /**
  * Block a request and die with more informations
  *
- * @param $module string The related module
- * @param $args array|int|string Contains the "code" (def. 403) and a "content" (def. empty), this content will replace the default message
- * $args can be used only for the "code" or "content" or both using an array
- *
  * @since 1.0
- * @return string
+ *
+ * @param (string)           $module The related module
+ * @param (array|int|string) $args   Contains the "code" (def. 403) and a "content" (def. empty), this content will replace the default message.
+ *                                   $args can be used only for the "code" or "content" or both using an array.
+ *
+ * @return (string)
  */
 function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 
