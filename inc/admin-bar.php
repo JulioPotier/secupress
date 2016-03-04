@@ -34,13 +34,13 @@ function secupress_admin_bar( $wp_admin_bar ) {
 		),
 	) );
 
-	// Dashboard
-	$wp_admin_bar->add_menu( array(
-		'parent' => 'secupress',
-		'id' 	 => 'secupress-dashboard',
-		'title'  => SECUPRESS_PLUGIN_NAME,
-		'href'   => secupress_admin_url( 'dashboard' ),
-	) );
+	// // Dashboard
+	// $wp_admin_bar->add_menu( array(
+	// 	'parent' => 'secupress',
+	// 	'id' 	 => 'secupress-dashboard',
+	// 	'title'  => SECUPRESS_PLUGIN_NAME,
+	// 	'href'   => secupress_admin_url( 'dashboard' ),
+	// ) );
 
 	// Settings
 	$wp_admin_bar->add_menu( array(
@@ -50,19 +50,19 @@ function secupress_admin_bar( $wp_admin_bar ) {
 		'href'   => secupress_admin_url( 'secupress_settings' ),
 	) );
 
-	// Modules
-	$wp_admin_bar->add_menu( array(
-		'parent' => 'secupress',
-		'id' 	 => 'secupress-modules',
-		'title'  => __( 'Modules', 'secupress' ),
-		'href'   => secupress_admin_url( 'secupress_modules' ),
-	) );
-
 	// Scanners
 	$wp_admin_bar->add_menu( array(
 		'parent' => 'secupress',
 		'id' 	 => 'secupress-scanners',
 		'title'  => __( 'Scanners', 'secupress' ),
 		'href'   => secupress_admin_url( 'secupress_scanners' ),
+	) );
+
+	// Modules
+	$wp_admin_bar->add_menu( array(
+		'parent' => 'secupress',
+		'id' 	 => 'secupress-modules',
+		'title'  => __( 'Modules', 'secupress' ),
+		'href'   => secupress_admin_url( 'secupress_modules' ),
 	) );
 }

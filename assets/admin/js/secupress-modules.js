@@ -15,7 +15,6 @@ var SecuPress = {
 	}
 };
 
-
 // Tools ===========================================================================================
 // Shorthand to tell if a modifier key is pressed.
 function secupressHasModifierKey( e ) {
@@ -661,5 +660,12 @@ function secupressDisplayAjaxError( $button, text ) {
 		var code = $( this ).data( "code-country" );
 		$( "[value='" + code + "']" ).prop( "checked", Boolean( $( "[data-code-country='" + code + "']:checked" ).length == $( "[data-code-country='" + code + "']" ).length ) );
 	} );
+
+} )(jQuery, document, window);
+
+// Current menu =======================================================================================
+(function($, d, w, undefined) {
+
+	$( "#toplevel_page_secupress .current-" + l10nmodules._GET_module ).css( { color: 'white', fontWeight: 'bold' } );
 
 } )(jQuery, document, window);
