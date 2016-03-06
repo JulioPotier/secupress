@@ -12,7 +12,7 @@ add_action( 'authenticate', 'secupress_bannonexistsuser_auth', PHP_INT_MAX - 10,
 
 function secupress_bannonexistsuser_auth( $raw_user, $username ) {
 	if ( ! empty( $_POST ) && is_wp_error( $raw_user ) && ! username_exists( $username ) ) {
-		secupress_ban_ip();
+		secupress_ban_ip( (int) secupress_get_module_option( 'login-protection_time_ban', 5, 'users-login' ) );
 	}
 	return $raw_user;
 }

@@ -26,8 +26,7 @@ function secupress_limitloginattempts( $raw_user, $username ) {
 
 	if ( $user_attempts >= $max_attempts ) {
 		delete_user_meta( $uid, '_secupress_limitloginattempts' );
-		secupress_ban_ip();
-		die();
+		secupress_ban_ip( (int) secupress_get_module_option( 'login-protection_time_ban', 5, 'users-login' ) );
 	}
 
 	update_user_meta( $uid, '_secupress_limitloginattempts', $user_attempts );
