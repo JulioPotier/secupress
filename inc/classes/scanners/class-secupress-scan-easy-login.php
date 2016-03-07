@@ -31,8 +31,8 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 		$messages = array(
 			// good
 			0   => __( 'The login page seems to be protected by double authentication or a custom script.', 'secupress' ),
-			1   => __( 'The <strong>Double Authentication</strong> module has been activated with <strong>Mobile Authenticator App</strong> option.', 'secupress' ),
-			2   => __( 'The <strong>Double Authentication</strong> module has been activated with <strong>PasswordLess - Email</strong> option. Users will receive an email to log-in now.', 'secupress' ),
+			1   => __( 'The <strong>Double Authentication</strong> module has been activated with <strong>Email Link</strong> option for every role. Users will receive an email to log-in now.', 'secupress' ),
+			2   => __( 'The <strong>Double Authentication</strong> module has been activated with <strong>PasswordLess - Email</strong> option for every role. Users will receive an email to log-in now.', 'secupress' ),
 			// warning
 			100 => __( 'Unable to create a user to test the login authentication system.', 'secupress' ),
 			// bad
@@ -63,7 +63,7 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 
 			$check = wp_authenticate( $temp_login, $temp_pass );
 
-			wp_delete_user( $temp_id ); //// mettre cet ID en TR et le delete au prochain reload au cas où (déjà eu le cas mais pas compris why)
+			wp_delete_user( $temp_id );
 
 			if ( is_a( $check, 'WP_User' ) ) {
 				// bad
@@ -83,23 +83,17 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 
 
 	public function fix() {
-		$roles = new WP_Roles();
-		$roles = $roles->get_names();
-		$roles = array_flip( $roles );
-		$roles = array_combine( $roles, $roles );
 
-		$settings = array( 'double-auth_affected_role' => $roles );
+		$settings = array( 'double-auth_affected_role' => array() );
 		secupress_update_module_options( $settings, 'users-login' );
 
 		if ( ! secupress_is_pro() ) {
-			secupress_activate_submodule( 'users-login', 'mobileauth' );
+			secupress_activate_submodule( 'users-login', 'emaillink' );
 			$this->add_fix_message( 1 );
 		} else {
 			secupress_activate_submodule( 'users-login', 'passwordless' );
 			$this->add_fix_message( 2 );
 		}
-
-		secupress_update_module_options( $settings, 'users-login' );
 
 		return parent::fix();
 	}
