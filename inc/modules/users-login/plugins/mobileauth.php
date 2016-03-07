@@ -934,7 +934,7 @@ function __secupress_doubleauth_warning_no_backup_codes() {
 		<div class="error">
 			<p>
 				<strong><?php echo SECUPRESS_PLUGIN_NAME; ?></strong>:
-				<?php printf( __( 'You ran out of backup codes! Please <a href="%s">renew it</a>!', 'secupress' ), get_edit_profile_url() . '#doubleauth_secret' ); ?>
+				<?php printf( __( 'You ran out of backup codes! Please <a href="%s">renew it</a>!', 'secupress' ), get_edit_profile_url( get_current_user_id() ) . '#doubleauth_secret' ); ?>
 			</p>
 		</div>
 		<?php
@@ -957,7 +957,7 @@ function secupress_doubleauth_warning_not_set_yet() {
 	<div class="error">
 		<p>
 			<strong><?php echo SECUPRESS_PLUGIN_NAME; ?></strong>:
-			<?php printf( __( 'Your account requires a double authentication using a Mobile Authenticator, you have to <a href="%s">generate an application key</a>.', 'secupress' ), get_edit_profile_url() . '#doubleauth_secret' ); ?>
+			<?php printf( __( 'Your account requires a double authentication using a Mobile Authenticator, you have to <a href="%s">generate an application key</a>.', 'secupress' ), get_edit_profile_url( get_current_user_id() ) . '#doubleauth_secret' ); ?>
 		</p>
 	</div>
 	<?php
@@ -1101,7 +1101,7 @@ function secupress_doubleauth_redirect() {
 
 			// No Step
 			default:
-				echo strip_tags( sprintf( __( 'Your account requires a double authentication using a Mobile Authenticator, you have to <a href="%s">generate an application key</a>.', 'secupress' ), get_edit_profile_url() . '#doubleauth' ) );
+				echo strip_tags( sprintf( __( 'Your account requires a double authentication using a Mobile Authenticator, you have to <a href="%s">generate an application key</a>.', 'secupress' ), get_edit_profile_url( get_current_user_id() ) . '#doubleauth' ) );
 				?>
 				<p class="description"><?php
 					printf(

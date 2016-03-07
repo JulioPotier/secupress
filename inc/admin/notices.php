@@ -318,7 +318,7 @@ function secupress_warning_no_backup_email() {
 	}
 
 	$message  = sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
-	$message .= sprintf( __( 'Your <a href="%s">Backup E-mail</a> isn\'t yet set. Please do it.', 'secupress' ), get_edit_profile_url() . '#secupress_backup_email' );
+	$message .= sprintf( __( 'Your <a href="%s">Backup E-mail</a> isn\'t yet set. Please do it.', 'secupress' ), get_edit_profile_url( get_current_user_id() ) . '#secupress_backup_email' );
 
 	secupress_add_notice( $message, 'error', false );
 }
