@@ -30,3 +30,19 @@ $this->add_field( array(
 	'value'             => (int) secupress_is_submodule_active( 'users-login', 'strong-passwords' ),
 	'label'             => __( 'Yes, force a strong passwords usage', 'secupress' ),
 ) );
+
+
+$this->add_field( array(
+	'title'             => __( 'Password changement', 'secupress' ),
+	'label_for'         => $this->get_field_name( 'ask-old-password' ),
+	'plugin_activation' => true,
+	'type'              => 'checkbox',
+	'value'             => (int) secupress_is_submodule_active( 'users-login', 'ask-old-password' ),
+	'label'             => __( 'Ask for old password when a user changes it', 'secupress' ),
+	'helpers'           => array(
+		array(
+			'type'        => 'description',
+			'description' => __( 'For all users.', 'secupress' ),
+		),
+	),
+) );

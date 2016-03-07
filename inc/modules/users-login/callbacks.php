@@ -152,6 +152,8 @@ function __secupress_password_policy_settings_callback( $modulenow, &$settings, 
 
 	// (De)Activation.
 	if ( false !== $activate ) {
+		secupress_manage_submodule( $modulenow, 'ask-old-password', ! empty( $activate['password-policy_ask-old-password'] ) );
+
 		if ( secupress_is_pro() ) {
 			secupress_manage_submodule( $modulenow, 'password-expiration', $settings['password-policy_password_expiration'] > 0 ); // `$settings`, not `$activate`.
 			secupress_manage_submodule( $modulenow, 'strong-passwords', ! empty( $activate['password-policy_strong_passwords'] ) );
