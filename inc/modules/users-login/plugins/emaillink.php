@@ -20,8 +20,12 @@ add_filter( 'authenticate', 'secupress_login_authenticate', PHP_INT_MAX, 2 );
 function secupress_login_authenticate( $raw_user, $username ) {
 	global $pagenow;
 
-	if ( is_wp_error( $raw_user ) || empty( $_POST ) || ! secupress_is_affected_role( 'users-login', 'double-auth', $raw_user ) ) {
+	if ( is_wp_error( $raw_user ) || ! secupress_is_affected_role( 'users-login', 'double-auth', $raw_user ) ) {
 		return $raw_user;
+	}
+
+	if ( empty( $_POST ) ) {
+		return null;
 	}
 
 	$rememberme = isset( $_POST['rememberme'] ) && 'forever' === $_POST['rememberme'];
@@ -30,7 +34,7 @@ function secupress_login_authenticate( $raw_user, $username ) {
 	/**
 	 *
 	 */
-	$subject = apply_filters( 'secupress_emaillink_email_subject', $subject );
+	$subject = apply_filters( 'secupress.plugin.emaillink_email_subject', $subject );
 
 	$message = sprintf(
 		__( 'Hello %1$s, a log-in has been requested for %2$s. <a href="%3$s">Open this page to really log in</a>.' ),
@@ -41,13 +45,11 @@ function secupress_login_authenticate( $raw_user, $username ) {
 	/**
 	 *
 	 */
-	$message = apply_filters( 'secupress_emaillink_email_message', $message );
+	$message = apply_filters( 'secupress.plugin.emaillink_email_message', $message );
 
-	if ( 'wp-login.php' === $pagenow ) {
-		wp_mail( $raw_user->user_email, $subject, $message, 'content-type: text/html' );
-		wp_redirect( add_query_arg( 'action', 'emaillink_autologin', wp_login_url() ) );
-		die();
-	}
+	wp_mail( $raw_user->user_email, $subject, $message, 'content-type: text/html' );
+	wp_redirect( add_query_arg( 'action', 'emaillink_autologin', site_url( 'wp-login.php' ) ) );
+	die();
 
 	return $raw_user;
 }
@@ -135,7 +137,7 @@ function secupress_emaillink_autologin() {
 		/**
 		 *
 		 */
-		do_action( 'emaillink_autologin_success', $CLEAN['uid'], $_GET['token'] );
+		do_action( 'secupress.plugin.emaillink_autologin_success', $CLEAN['uid'], $_GET['token'] );
 
 		wp_redirect( $redirect_to );
 		die( 'login_redirect' );
@@ -144,7 +146,7 @@ function secupress_emaillink_autologin() {
 	/**
 	 *
 	 */
-	do_action( 'secupress_autologin_error', $CLEAN['uid'], $_GET['token'], 'expired key' );
+	do_action( 'secupress.plugin.emaillink_autologin_error', $CLEAN['uid'], $_GET['token'], 'expired key' );
 
 	secupress_die( sprintf( __( 'This link is now expired, please try to <a href="%s">log-in again</a>.', 'secupress' ), wp_login_url( '', true ) ) );
 }
@@ -162,17 +164,6 @@ function secupress_create_activation_url( $user, $rememberme ) {
 	// Generate something random for a password reset key.
 	remove_all_filters( 'random_password' );
 	$key = wp_generate_password( 32, false );
-
-	if ( strlen( $key ) !== 32 ) { // because wp_generate_password() is a pluggable function
-		/**
-		 *
-		 */
-		do_action( 'secupress_create_random_password_error' );
-
-		/* translators: %s is a function name. */
-		$message = sprintf( __( '%s has been badly modified, this is not secure!', 'secupress' ), '<code>wp_generate_password()</code>' );
-		wp_die( $message );
-	}
 
 	update_user_meta( $user->ID, 'emaillink_token', $key );
 	update_user_meta( $user->ID, 'emaillink_timeout', time() + 10 * MINUTE_IN_SECONDS );
