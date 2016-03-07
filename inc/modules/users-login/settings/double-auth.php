@@ -39,8 +39,13 @@ $this->add_field( array(
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'Users will just have to configure the authentication in their profile.', 'secupress' ),
+			'description' => __( 'Users will just have to configure a 2 factor authentication now.', 'secupress' ),
 			'depends'     => $field_name . '_mobileauth',
+		),
+		array(
+			'type'        => 'description',
+			'description' => __( 'Users will have to click on a link received by email to log in now.', 'secupress' ),
+			'depends'     => $field_name . '_emaillink',
 		),
 	),
 ) );
