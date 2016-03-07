@@ -619,7 +619,7 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPres
 		$admins_per_blog = array();
 		$user_logins     = array();
 
-		$prefix  = $wpdb->esc_like( $wpdb->prefix );
+		$prefix  = secupress_esc_like( $wpdb->prefix );
 		$results = $wpdb->get_results( "SELECT user_id, user_login, meta_key FROM $wpdb->usermeta AS um RIGHT JOIN $wpdb->users AS u ON um.user_id = u.ID WHERE meta_key LIKE '$prefix%capabilities' AND meta_value LIKE '%s:13:\"administrator\";b:1;%'" );
 
 		if ( $results ) {

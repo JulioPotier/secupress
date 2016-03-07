@@ -149,10 +149,9 @@ function secupress_remove_email_alias( $email ) {
  * @return (string)
  **/
 function secupress_prepare_email_for_like_search( $email ) {
-	global $wpdb;
 	$email    = secupress_remove_email_alias( $email );
 	$provider = strstr( $email, '@' );
-	$email    = $wpdb->esc_like( strstr( $email, '@', true ) );
+	$email    = secupress_esc_like( strstr( $email, '@', true ) );
 	$email    = str_split( $email );
 	$email    = implode( '%', $email );
 	return $email . '%' . $provider;

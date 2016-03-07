@@ -91,7 +91,7 @@ function secupress_get_non_wp_tables() {
 		$dup_tables = array_merge( $dup_tables, $wpdb->get_results( "SHOW TABLES LIKE '{$wpdb->prefix}{$dup_prefix}%'" ) );
 		$dup_tables = wp_list_pluck( $dup_tables, 'Tables_in_' . DB_NAME . ' (' . $wpdb->prefix . $dup_prefix . '%)' );
 	}
-	
+
 	$good_tables = array_diff( $all_tables, $dup_tables );
 	$good_tables = array_diff( $good_tables, $wp_tables );
 
@@ -106,9 +106,11 @@ function secupress_get_non_wp_tables() {
  **/
 function secupress_get_wp_tables() {
 	global $wpdb;
+
 	$wp_tables = $wpdb->tables();
+
 	if ( is_multisite() ) {
-		$query = $wpdb->prepare( "SHOW TABLES LIKE %s", $wpdb->esc_like( $wpdb->sitecategories ) );
+		$query = $wpdb->prepare( "SHOW TABLES LIKE %s", secupress_esc_like( $wpdb->sitecategories ) );
 	 	if ( ! $wpdb->get_var( $query ) ) {
 			unset( $wp_tables['sitecategories'] );
 		}
