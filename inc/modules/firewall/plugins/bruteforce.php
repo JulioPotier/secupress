@@ -25,10 +25,10 @@ function secupress_bruteforce_activation() {
 
 	if ( $wpdb->get_var( 'SHOW TABLES LIKE "' . SECUPRESS_BRUTEFORCE_TABLE .'"' ) != SECUPRESS_BRUTEFORCE_TABLE ) {
 		$sql = 'CREATE TABLE ' . SECUPRESS_BRUTEFORCE_TABLE . ' (
-			ip varchar(46) NOT NULL,
+			id varchar(32) NOT NULL,
 			timestamp bigint(20) NOT NULL,
 			hits bigint(20) DEFAULT 0 NOT NULL,
-			UNIQUE KEY ip (ip)
+			UNIQUE KEY id (id)
 		);';
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
@@ -74,19 +74,21 @@ add_action( 'secupress_plugins_loaded', 'secupress_check_bruteforce' );
 function secupress_check_bruteforce() {
 	global $wpdb;
 
-	if ( ! get_option( 'secupress_bruteforce_installed' ) ) {
+	if ( current_user_can( 'administrator' ) || ! get_option( 'secupress_bruteforce_installed' ) ) {
 		return;
 	}
 
 	$IP   = secupress_get_ip();
 	$time = time();
+	$id   = md5( $IP . $time . wp_salt( 'nonce' ) );
 	$hits = secupress_get_module_option( 'bruteforce_request_number', 9, 'firewall' );
 
-	$wpdb->query( $wpdb->prepare( 'INSERT INTO ' . SECUPRESS_BRUTEFORCE_TABLE . ' ( ip, timestamp, hits ) VALUES ( %s, %d, %d ) ON DUPLICATE KEY UPDATE hits = hits+1', $IP, $time, 1, $IP ) );
-	$result = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . SECUPRESS_BRUTEFORCE_TABLE . ' WHERE ip = %s AND timestamp = %d AND hits = %d LIMIT 1', $IP, $time, $hits ) );
+	$wpdb->query( $wpdb->prepare( 'INSERT INTO ' . SECUPRESS_BRUTEFORCE_TABLE . ' ( id, timestamp, hits ) VALUES ( %s, %d, %d ) ON DUPLICATE KEY UPDATE hits = hits+1', $id, $time, 1 ) );
+	$result = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . SECUPRESS_BRUTEFORCE_TABLE . ' WHERE id = %s AND timestamp = %d AND hits >= %d LIMIT 1', $id, $time, $hits ) );
 
 	if ( $result ) {
-		do_action( 'secupress.plugin.bruteforce.triggered', $IP, $hits );
+		do_action( 'secupress.plugin.bruteforce.triggered', $IP, $hits, $id );
+		$wpdb->delete( SECUPRESS_BRUTEFORCE_TABLE, array( 'id' => $id ) );
 		$time_ban = secupress_get_module_option( 'bruteforce_time_ban', 5, 'firewall' );
 		secupress_ban_ip( $time_ban );
 	}
