@@ -591,6 +591,20 @@ function secupress_main_scan() {
 					$class_name_parts = array_merge( $this_prio_before_not_scanned, $class_name_parts, $this_prio_after_not_scanned );
 					unset( $ordered_scan_names, $this_prio_before_not_scanned, $this_prio_after_not_scanned );
 
+					// Allowed tags in "Learn more" contents.
+					$allowed_tags = array(
+						'a'      => array( 'href' => array(),'title' => array(), 'target' => array(), ),
+						'abbr'   => array( 'title' => array() ),
+						'code'   => array(),
+						'em'     => array(),
+						'strong' => array(),
+						'ul'     => array(),
+						'ol'     => array(),
+						'li'     => array(),
+						'p'      => array(),
+						'br'     => array(),
+					);
+
 					// Print the rows.
 					foreach ( $class_name_parts as $option_name => $class_name_part ) {
 						++$i;
@@ -700,13 +714,13 @@ function secupress_main_scan() {
 						<tr id="details-<?php echo $class_name_part; ?>" class="details hide-if-js">
 							<td colspan="6">
 								<?php _e( 'Scan Details: ', 'secupress' ); ?>
-								<span class="details-content"><?php echo wp_kses_post( $current_test::$more ); ?></span>
+								<span class="details-content"><?php echo wp_kses( $current_test::$more, $allowed_tags ); ?></span>
 							</td>
 						</tr>
 						<tr id="details-fix-<?php echo $class_name_part; ?>" class="details hide-if-js">
 							<td colspan="6">
 								<?php _e( 'Fix Details: ', 'secupress' ); ?>
-								<span class="details-content"><?php echo wp_kses_post( $current_test::$more_fix ); ?></span>
+								<span class="details-content"><?php echo wp_kses( $current_test::$more_fix, $allowed_tags ); ?></span>
 							</td>
 						</tr>
 						<?php
