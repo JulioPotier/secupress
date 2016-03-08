@@ -258,7 +258,7 @@ function secupress_create_menus() {
 	$cap   = secupress_get_capability();
 
 	// Main menu item
-	add_menu_page( SECUPRESS_PLUGIN_NAME, SECUPRESS_PLUGIN_NAME, $cap, 'secupress', '__secupress_dashboard', 'dashicons-shield-alt' );
+	add_menu_page( SECUPRESS_PLUGIN_NAME, SECUPRESS_PLUGIN_NAME, $cap, 'secupress', '__secupress_global_settings', 'dashicons-shield-alt' );
 
 	// Sub-menus
 //	add_submenu_page( 'secupress', __( 'Dashboard' ),             __( 'Dashboard' ),                      $cap, 'secupress',          '__secupress_dashboard' );
