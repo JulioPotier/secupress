@@ -659,6 +659,11 @@ function secupress_main_scan() {
 										echo '</em>)';
 									}
 									?>
+									<div class="secupress-row-actions">
+										<span class="hide-if-no-js">
+											<button type="button" class="secupress-details-fix link-like" data-test="<?php echo $class_name_part; ?>" title="<?php esc_attr_e( 'Get fix details', 'secupress' ); ?>"><?php _e( 'Learn more', 'secupress' ); ?></button>
+										</span>
+									</div>
 								</div>
 							</td>
 							<td class="secupress-fix-result">
@@ -693,6 +698,11 @@ function secupress_main_scan() {
 						<tr id="details-<?php echo $class_name_part; ?>" class="details hide-if-js">
 							<td colspan="6">
 								<?php echo wp_kses_post( $current_test::$more ); ?>
+							</td>
+						</tr>
+						<tr id="details-fix-<?php echo $class_name_part; ?>" class="details hide-if-js">
+							<td colspan="6">
+								<?php echo wp_kses_post( $current_test::$more_fix ); ?>
 							</td>
 						</tr>
 						<?php
