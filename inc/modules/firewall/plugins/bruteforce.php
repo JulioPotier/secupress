@@ -83,7 +83,7 @@ function secupress_check_bruteforce() {
 	$id   = md5( $IP . $time . wp_salt( 'nonce' ) );
 	$hits = secupress_get_module_option( 'bruteforce_request_number', 9, 'firewall' );
 
-	$wpdb->query( $wpdb->prepare( 'INSERT INTO ' . SECUPRESS_BRUTEFORCE_TABLE . ' ( id, timestamp, hits ) VALUES ( %s, %d ) ON DUPLICATE KEY UPDATE hits = hits+1', $id, $time ) );
+	$wpdb->query( $wpdb->prepare( 'INSERT INTO ' . SECUPRESS_BRUTEFORCE_TABLE . ' ( id, timestamp ) VALUES ( %s, %d ) ON DUPLICATE KEY UPDATE hits = hits+1', $id, $time ) );
 	$result = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . SECUPRESS_BRUTEFORCE_TABLE . ' WHERE id = %s AND timestamp = %d AND hits >= %d LIMIT 1', $id, $time, $hits ) );
 
 	if ( $result ) {

@@ -187,6 +187,8 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'oneManualFix'    => __( 'One fix requires your intervention.', 'secupress' ),
 			'someManualFixes' => __( 'Some fixes require your intervention.', 'secupress' ),
 			'spinnerUrl'      => admin_url( 'images/wpspin_light-2x.gif' ),
+			'scanDetails'     => __( 'Scan Details', 'secupress' ),
+			'fixDetails'      => __( 'Fix Details', 'secupress' ),
 		) );
 	}
 
@@ -649,6 +651,11 @@ function secupress_main_scan() {
 									<?php
 									if ( $current_test::$fixable ) { ?>
 										<a class="button button-secondary button-small secupress-fixit" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $class_name_part ), 'secupress_fixit_' . $class_name_part ); ?>"><?php _e( 'Fix it!', 'secupress' ); ?></a>
+										<div class="secupress-row-actions">
+											<span class="hide-if-no-js">
+												<button type="button" class="secupress-details-fix link-like" data-test="<?php echo $class_name_part; ?>" title="<?php esc_attr_e( 'Get fix details', 'secupress' ); ?>"><?php _e( 'Learn more', 'secupress' ); ?></button>
+											</span>
+										</div>
 										<?php
 									} elseif( false ) /* //// $needs-pro */ { ?>
 										<button type="button" class="button button-secondary button-small secupress-go-pro"><?php _e( 'Pro Upgrade', 'secupress' ); ?></button>
@@ -659,11 +666,6 @@ function secupress_main_scan() {
 										echo '</em>)';
 									}
 									?>
-									<div class="secupress-row-actions">
-										<span class="hide-if-no-js">
-											<button type="button" class="secupress-details-fix link-like" data-test="<?php echo $class_name_part; ?>" title="<?php esc_attr_e( 'Get fix details', 'secupress' ); ?>"><?php _e( 'Learn more', 'secupress' ); ?></button>
-										</span>
-									</div>
 								</div>
 							</td>
 							<td class="secupress-fix-result">
@@ -697,12 +699,14 @@ function secupress_main_scan() {
 						?>
 						<tr id="details-<?php echo $class_name_part; ?>" class="details hide-if-js">
 							<td colspan="6">
-								<?php echo wp_kses_post( $current_test::$more ); ?>
+								<?php _e( 'Scan Details: ', 'secupress' ); ?>
+								<span class="details-content"><?php echo wp_kses_post( $current_test::$more ); ?></span>
 							</td>
 						</tr>
 						<tr id="details-fix-<?php echo $class_name_part; ?>" class="details hide-if-js">
 							<td colspan="6">
-								<?php echo wp_kses_post( $current_test::$more_fix ); ?>
+								<?php _e( 'Fix Details: ', 'secupress' ); ?>
+								<span class="details-content"><?php echo wp_kses_post( $current_test::$more_fix ); ?></span>
 							</td>
 						</tr>
 						<?php

@@ -338,6 +338,12 @@ function __secupress_subsite_scanners() {
 												$current_test->get_fix_action_fields( $fix_actions );
 												?>
 											</form>
+
+											<div class="secupress-row-actions">
+												<span class="hide-if-no-js">
+													<button type="button" class="secupress-details-fix link-like" data-test="<?php echo $class_name_part; ?>" title="<?php esc_attr_e( 'Get fix details', 'secupress' ); ?>"><?php _e( 'Learn more', 'secupress' ); ?></button>
+												</span>
+											</div>
 										</td>
 									</tr>
 									<?php
@@ -348,7 +354,14 @@ function __secupress_subsite_scanners() {
 							?>
 							<tr id="details-<?php echo $class_name_part; ?>" class="details hide-if-js">
 								<td colspan="5">
+									<?php _e( 'Scan Details', 'secupress' ); ?>
 									<?php echo wp_kses_post( $current_test::$more ); ?>
+								</td>
+							</tr>
+							<tr id="detailsfix--<?php echo $class_name_part; ?>" class="details hide-if-js">
+								<td colspan="5">
+									<?php _e( 'Fix Details', 'secupress' ); ?>
+									<?php echo wp_kses_post( $current_test::$more_fix ); ?>
 								</td>
 							</tr>
 							<?php
