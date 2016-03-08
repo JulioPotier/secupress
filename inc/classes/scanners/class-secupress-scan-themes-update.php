@@ -21,9 +21,10 @@ class SecuPress_Scan_Themes_Update extends SecuPress_Scan implements iSecuPress_
 
 
 	protected static function init() {
-		self::$type    = 'WordPress';
-		self::$title   = __( 'Check if your themes are up to date.', 'secupress' );
-		self::$more    = __( 'It\'s very important to maintain your WordPress installation up to date. If you can not update because of a theme, contact its author and submit your issue.', 'secupress' );
+		self::$type     = 'WordPress';
+		self::$title    = __( 'Check if your themes are up to date.', 'secupress' );
+		self::$more     = __( 'It\'s very important to maintain your WordPress installation up to date. If you can not update because of a theme, contact its author and submit your issue.', 'secupress' );
+		self::$more_fix = __( 'The fix will autoupdate all your themes that are not up to date..', 'secupress' );
 	}
 
 
