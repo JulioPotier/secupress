@@ -27,7 +27,7 @@ function secupress_bruteforce_activation() {
 		$sql = 'CREATE TABLE ' . SECUPRESS_BRUTEFORCE_TABLE . ' (
 			id varchar(32) NOT NULL,
 			timestamp bigint(20) NOT NULL,
-			hits bigint(20) DEFAULT 0 NOT NULL,
+			hits bigint(20) DEFAULT 1 NOT NULL,
 			UNIQUE KEY id (id)
 		);';
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -83,10 +83,15 @@ function secupress_check_bruteforce() {
 	$id   = md5( $IP . $time . wp_salt( 'nonce' ) );
 	$hits = secupress_get_module_option( 'bruteforce_request_number', 9, 'firewall' );
 
-	$wpdb->query( $wpdb->prepare( 'INSERT INTO ' . SECUPRESS_BRUTEFORCE_TABLE . ' ( id, timestamp, hits ) VALUES ( %s, %d, %d ) ON DUPLICATE KEY UPDATE hits = hits+1', $id, $time, 1 ) );
+	$wpdb->query( $wpdb->prepare( 'INSERT INTO ' . SECUPRESS_BRUTEFORCE_TABLE . ' ( id, timestamp, hits ) VALUES ( %s, %d ) ON DUPLICATE KEY UPDATE hits = hits+1', $id, $time ) );
 	$result = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . SECUPRESS_BRUTEFORCE_TABLE . ' WHERE id = %s AND timestamp = %d AND hits >= %d LIMIT 1', $id, $time, $hits ) );
 
 	if ( $result ) {
+		/**
+		 * Fires before we ban the IP address that just brute force us.
+		 *
+		 * @since 1.0
+		 */		
 		do_action( 'secupress.plugin.bruteforce.triggered', $IP, $hits, $id );
 		$wpdb->delete( SECUPRESS_BRUTEFORCE_TABLE, array( 'id' => $id ) );
 		$time_ban = secupress_get_module_option( 'bruteforce_time_ban', 5, 'firewall' );
