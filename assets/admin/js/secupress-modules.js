@@ -495,8 +495,8 @@ function secupressDisplayAjaxError( $button, text ) {
 		return;
 	}
 
-	function secupressUpdateAvailableBackupCounter() {
-		$( "#secupress-available-backups" ).text( $( ".db-backup-row" ).length );
+	function secupressUpdateAvailableBackupCounter( r ) {
+		$( "#secupress-available-backups" ).text( r.data.countText );
 	}
 
 	function secupressUpdateBackupVisibility() {
@@ -519,7 +519,6 @@ function secupressDisplayAjaxError( $button, text ) {
 				swal.close();
 				$button.closest( "form" ).find( "fieldset" ).text( "" );
 
-				secupressUpdateAvailableBackupCounter();
 				secupressUpdateBackupVisibility();
 				secupressEnableAjaxButton( $button, w.l10nmodules.deletedAllText );
 			} else {
@@ -543,7 +542,7 @@ function secupressDisplayAjaxError( $button, text ) {
 				$button.closest( ".db-backup-row" ).css( "backgroundColor", SecuPress.deletedRowColor ).hide( "normal", function() {
 					$( this ).remove();
 
-					secupressUpdateAvailableBackupCounter();
+					secupressUpdateAvailableBackupCounter( r );
 					secupressUpdateBackupVisibility();
 					SecuPress.doingAjax = false;
 				} );
@@ -567,11 +566,11 @@ function secupressDisplayAjaxError( $button, text ) {
 		$.post( href )
 		.done( function( r ) {
 			if ( $.isPlainObject( r ) && r.success ) {
-				$( r.data ).addClass( "hidden" ).css( "backgroundColor", SecuPress.addedRowColor ).prependTo( "#form-delete-db-backups fieldset" ).show( "normal", function() {
+				$( r.data.elemRow ).addClass( "hidden" ).css( "backgroundColor", SecuPress.addedRowColor ).prependTo( "#form-delete-db-backups fieldset" ).show( "normal", function() {
 					$( this ).css( "backgroundColor", "" );
 				} );
 
-				secupressUpdateAvailableBackupCounter();
+				secupressUpdateAvailableBackupCounter( r );
 				secupressUpdateBackupVisibility();
 				secupressEnableAjaxButton( $button, w.l10nmodules.backupedText );
 			} else {

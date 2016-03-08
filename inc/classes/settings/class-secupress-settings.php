@@ -825,7 +825,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		<p id="secupress-no-db-backups"<?php echo $backup_files ? ' class="hidden"' : ''; ?>><em><?php _e( 'No Backups found yet, do one?', 'secupress' ); ?></em></p>
 		<form id="form-delete-db-backups"<?php echo ! $backup_files ? ' class="hidden"' : ''; ?> action="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_delete_backups' ), 'secupress_delete_backups' ); ?>" method="post">
 			<div class="secupress-swal-form">
-				<strong><?php printf( __( '%1$s%2$s%3$s available Backups', 'secupress' ), '<span id="secupress-available-backups">', number_format_i18n( count( $backup_files ) ), '</span>' ); ?></strong>
+				<strong id="secupress-available-backups"><?php printf( _n( '%s available Backup', '%s available Backups', count( $backup_files ), 'secupress' ), number_format_i18n( count( $backup_files ) ) ); ?></strong>
 				<fieldset class="secupress-boxed-group">
 					<?php array_map( 'secupress_print_backup_file_formated', array_reverse( $backup_files ) ); ?>
 				</fieldset>

@@ -63,11 +63,16 @@ function __secupress_do_backup_db() {
 	}
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		wp_send_json_success( secupress_print_backup_file_formated( $backup_file, false ) );
-	} else {
-		wp_redirect( wp_get_referer() );
-		die();
+		$backup_files = secupress_get_backup_file_list();
+
+		wp_send_json_success( array(
+			'elemRow'   => secupress_print_backup_file_formated( $backup_file, false ),
+			'countText' => sprintf( _n( '%s available Backup', '%s available Backups', count( $backup_files ), 'secupress' ), number_format_i18n( count( $backup_files ) ) ),
+		) );
 	}
+
+	wp_redirect( wp_get_referer() );
+	die();
 }
 
 /**
@@ -134,7 +139,16 @@ function __secupress_delete_backup_ajax_post_cb() {
 
 	@array_map( 'unlink', $files );
 
-	secupress_admin_send_response_or_redirect( $_GET['file'] );
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		$backup_files = secupress_get_backup_file_list();
+
+		wp_send_json_success( array(
+			'countText' => sprintf( _n( '%s available Backup', '%s available Backups', count( $backup_files ), 'secupress' ), number_format_i18n( count( $backup_files ) ) ),
+		) );
+	}
+
+	wp_redirect( wp_get_referer() );
+	die();
 }
 
 /**
