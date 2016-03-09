@@ -855,6 +855,7 @@ jQuery( document ).ready( function( $ ) {
 			showCancelButton: true,
 			confirmButtonText: SecuPressi18nScanner.fixit,
 			closeOnConfirm: false,
+			html: true,
 			showLoaderOnConfirm: true,
 			timer: 1000,
 		},
