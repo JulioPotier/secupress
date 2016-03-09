@@ -1210,10 +1210,10 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					// Row title.
 					if ( $field['title'] ) {
 						if ( ! empty( $field['args']['label_for'] ) ) {
-							echo '<h4 class="throw" id="' . sanitize_html_class( $field['title'] ) . '">' . $field['title'] . '</h4>';
+							echo '<h4 class="throw" id="' . sanitize_html_class( str_replace( ' ', '_', $field['title'] ) ) . '">' . $field['title'] . '</h4>';
 							echo '<label for="' . esc_attr( $field['args']['label_for'] ) . '">' . $field['title'] . '</label>';
 						} else {
-							echo '<h4 id="' . sanitize_html_class( $field['title'] ) . '">' . $field['title'] . '</h4>';
+							echo '<h4 id="' . sanitize_html_class( str_replace( ' ', '_', $field['title'] ) ) . '">' . $field['title'] . '</h4>';
 						}
 					}
 					// Row description.
