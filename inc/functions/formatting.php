@@ -12,9 +12,9 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @return (string) The URL.
  */
 function secupress_admin_url( $page, $module = '' ) {
-	$module = $module ? '&module=' . sanitize_key( $module ) : '';
+	$module = $module ? '&module=' . $module : '';
 	$page   = str_replace( '&', '_', $page );
-	$url    = 'admin.php?page=secupress_' . sanitize_key( $page ) . $module;
+	$url    = 'admin.php?page=secupress_' . $page . $module;
 
 	return is_multisite() ? network_admin_url( $url ) : admin_url( $url );
 }
