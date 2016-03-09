@@ -838,7 +838,7 @@ jQuery( document ).ready( function( $ ) {
 		var test = $( this ).attr( "data-test" );
 		swal( {
 			title: SecuPressi18nScanner.scanDetails,
-			text:  $( "#details-" + test + " .details-content" ).text(),
+			text:  $( "#details-" + test + " .details-content" ).html(),
 			type:  'info',
 			allowOutsideClick: true,
 		} );
@@ -849,7 +849,7 @@ jQuery( document ).ready( function( $ ) {
 		var test = $( this ).attr( "data-test" );
 		swal( {
 			title: SecuPressi18nScanner.fixDetails,
-			text:  $( "#details-fix-" + test + " .details-content" ).text(),
+			text:  $( "#details-fix-" + test + " .details-content" ).html(),
 			type:  'info',
 			allowOutsideClick: true,
 			showCancelButton: true,
