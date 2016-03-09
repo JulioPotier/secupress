@@ -46,16 +46,29 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements iSecuPress
 
 
 	public static function get_messages( $message_id = null ) {
+		global $is_nginx;
+		$nginx_rules = '';
+
+		if ( $is_nginx ) {
+			$marker      = 'DirectoryIndex';
+			$nginx_rules = 'index index.php;';
+			$nginx_rules = "server {\n\t# BEGIN SecuPress $marker\n\t$nginx_rules\n\t# END SecuPress\n}";
+		}
+
 		$messages = array(
 			// good
 			0   => sprintf( __( '%s is the first file loaded, perfect.', 'secupress' ), '<code>index.php</code>' ),
-			1   => __( 'Protection activated', 'secupress' ),
+			1   => __( 'Your %s file has been successfully edited.', 'secupress' ),
 			// warning
 			100 => __( 'Unable to determine status of the directory index.', 'secupress' ),
 			// bad
 			200 => __( 'Your website should load %1$s first, actually it loads %2$s first.', 'secupress' ),
 			// cantfix
-			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),////
+			/* translators: 1 is a block name, 2 is a file name, 3 is some code */
+			300 => sprintf( __( 'Your server runs a nginx system, the directory index cannot be fixed automatically but you can do it yourself by adding the following code inside the %1$s block of your %2$s file: %3$s.', 'secupress' ), '"server"', '<code>nginx.conf</code>', "<pre>$nginx_rules</pre>" ),
+			301 => __( 'Your server runs a non recognized system. The directory index cannot be fixed automatically.', 'secupress' ),
+			/* translators: 1 si a file name, 2 is some code */
+			302 => __( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -103,12 +116,51 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements iSecuPress
 
 
 	public function fix() {
+		global $is_apache, $is_iis7;
 
-		$rules = "<ifModule mod_dir.c>\n\tDirectoryIndex index.php index.html index.htm index.cgi index.pl index.xhtml\n</ifModule>";
-		secupress_write_htaccess( 'DirectoryIndex', $rules );
-
-		$this->add_fix_message( 1 );
+		if ( $is_apache ) {
+			$this->fix_apache();
+		} elseif ( $is_iis7 ) {
+			$this->fix_iis7();
+		}
 
 		return parent::fix();
+	}
+
+
+	protected function fix_apache() {
+		$marker = 'DirectoryIndex';
+		$rules  = "<ifModule mod_dir.c>\n\tDirectoryIndex index.php index.html index.htm index.cgi index.pl index.xhtml\n</ifModule>";
+
+		if ( secupress_write_htaccess( $marker, $rules ) ) {
+			// good
+			$this->add_fix_message( 1, array( '<code>.htaccess</code>' ) );
+		} else {
+			// cantfix
+			$this->add_fix_message( 302, array( '<code>.htaccess</code>', "<pre># BEGIN SecuPress $marker\n$rules\n# END SecuPress</pre>" ) );
+		}
+
+		return parent::fix();
+	}
+
+
+	protected function fix_iis7() {
+		$marker = 'DirectoryIndex';
+		$spaces = str_repeat( ' ', 10 );
+
+		$node   = "<defaultDocument name=\"SecuPress $marker\">\n";
+			$node  .= "$spaces  <files>\n";
+			$node  .= "$spaces    <remove value=\"index.php\" />\n";
+			$node  .= "$spaces    <add value=\"index.php\" />\n";
+			$node  .= "$spaces  </files>\n";
+		$node  .= "$spaces</defaultDocument>";
+
+		if ( secupress_insert_iis7_nodes( $marker, array( 'nodes_string' => $node, 'node_types' => 'defaultDocument' ) ) ) {
+			// good
+			$this->add_fix_message( 1, array( '<code>web.config</code>' ) );
+		} else {
+			// cantfix
+			$this->add_fix_message( 302, array( '<code>web.config</code>', "<pre>$node</pre>" ) );
+		}
 	}
 }
