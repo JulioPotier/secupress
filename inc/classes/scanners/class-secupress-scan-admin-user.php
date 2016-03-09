@@ -24,7 +24,7 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 		self::$type     = 'WordPress';
 		self::$title    = __( 'Check if the <em>admin</em> account is correctly protected.', 'secupress' );
 		self::$more     = __( 'It is important to protect the famous <em>admin</em> account to avoid simple brute-force attacks on it. This account is most of the time the first one created when you install WordPress, and it is well known by attackers.', 'secupress' );
-		self::$more_fix = __( 'The fix will ask you to downgrade the admin account and/or create the admin account with no role if your subscriptions are open.', 'secupress' );
+		self::$more_fix = __( 'The fix will ask you to downgrade the admin account or create the admin account with no role if your subscriptions are open.', 'secupress' );
 	}
 
 
