@@ -671,7 +671,7 @@ function secupress_main_scan() {
 											</span>
 										</div>
 										<?php
-									} elseif( false ) /* //// $needs-pro */ { ?>
+									} elseif ( false ) /* //// $needs-pro */ { ?>
 										<button type="button" class="button button-secondary button-small secupress-go-pro"><?php _e( 'Pro Upgrade', 'secupress' ); ?></button>
 										<?php
 									} else { // Really not fixable by the plugin + //// #

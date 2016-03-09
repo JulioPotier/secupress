@@ -24,7 +24,11 @@ class SecuPress_Scan_Block_HTTP_1_0 extends SecuPress_Scan implements iSecuPress
 		self::$type     = 'WordPress';
 		self::$title    = __( 'Check if POST requests using HTTP 1.0 can reach your website.', 'secupress' );
 		self::$more     = __( 'POST requests is the opposite of GET. Instead of grabbing resources from the server, data is being sent. Using HTTP 1.0, rather than HTTP 1.1, is bad because it does not require a Host header.', 'secupress' );
-		self::$more_fix = sprintf( __( 'The fix will activate the option <em>%1$s</em> from the module <a href="%2$s">%3$s</a>.', 'secupress' ), __( 'Block Bad Request Methods', 'secupress' ), secupress_admin_url( 'modules', 'firewall#Block_Bad_Request_Methods' ), __( 'Firewall', 'secupress' ) );
+		self::$more_fix = sprintf(
+			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
+			'<em>' . __( 'Block Bad Request Methods', 'secupress' ) . '</em>',
+			'<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#Block_Bad_Request_Methods">' . __( 'Firewall', 'secupress' ) . '</a>'
+		);
 	}
 
 

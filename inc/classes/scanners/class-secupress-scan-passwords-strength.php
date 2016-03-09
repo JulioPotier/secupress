@@ -31,7 +31,7 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan {
 			self::$title = __( 'Test the strength of WordPress database password.', 'secupress' );
 			self::$more  = __( 'The password of the database has to be strong to avoid a possible brute-force attack.', 'secupress' );
 		}
-		self::$more_fix  = ''; // Can't be fixed
+		self::$more_fix  = static::get_messages( 300 );
 	}
 
 	public static function get_messages( $message_id = null ) {
@@ -45,8 +45,9 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan {
 			202 => _n_noop( '%1$s is only <strong>%2$d character length</strong>. That is obviously too short!', '%1$s is only <strong>%2$d characters length</strong>.', 'secupress' ),
 			203 => __( '%s is not <strong>complex</strong> enough.', 'secupress' ),
 			// cantfix
-			300 => __( 'I can not fix this, you have to manually change your DB password in your server administration.', 'secupress' ),
-			301 => __( 'I can not fix this, you have to manually change your DB and/or FTP password in your server administration.', 'secupress' ),
+			300 => __( 'I cannot fix this, you have to manually change your DB and/or FTP password in your server administration.', 'secupress' ),
+			301 => __( 'I cannot fix this, you have to manually change your DB password in your server administration.', 'secupress' ),
+			302 => __( 'I cannot fix this, you have to manually change your FTP password in your server administration.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -65,6 +66,7 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan {
 		if ( '' === DB_PASSWORD ) {
 			// bad
 			$this->add_message( 200, array( '<code>DB_PASSWORD</code>' ) );
+			$this->add_pre_fix_message( 301 );
 
 		} elseif ( self::dictionary_attack( DB_PASSWORD ) ) {
 			// bad
@@ -74,10 +76,12 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan {
 		} elseif ( ( $len = strlen( DB_PASSWORD ) ) <= 6 ) {
 			// bad
 			$this->add_message( 202, array( $len, '<code>DB_PASSWORD</code>', $len ) );
+			$this->add_pre_fix_message( 301 );
 
 		} elseif ( sizeof( count_chars( DB_PASSWORD, 1 ) ) < 5 ) {
 			// bad
 			$this->add_message( 203, array( '<code>DB_PASSWORD</code>' ) );
+			$this->add_pre_fix_message( 301 );
 
 		}
 
@@ -86,18 +90,22 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan {
 			if ( '' === FTP_PASS ) {
 					// bad
 				$this->add_message( 200, array( '<code>FTP_PASS</code>' ) );
+				$this->add_pre_fix_message( 302 );
 
 			} elseif ( self::dictionary_attack( FTP_PASS ) ) {
 					// bad
 				$this->add_message( 201, array( '<code>FTP_PASS</code>' ) );
+				$this->add_pre_fix_message( 302 );
 
 			} elseif ( ( $len = strlen( FTP_PASS ) ) <= 6 ) {
 					// bad
 				$this->add_message( 202, array( $len, '<code>FTP_PASS</code>', $len ) );
+				$this->add_pre_fix_message( 302 );
 
 			} elseif ( sizeof( count_chars( FTP_PASS, 1 ) ) < 5 ) {
 					// bad
 				$this->add_message( 203, array( '<code>FTP_PASS</code>' ) );
+				$this->add_pre_fix_message( 302 );
 
 			}
 		}
@@ -111,9 +119,6 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan {
 
 
 	public function fix() {
-
-		$this->add_fix_message( 300 );
-
 		return parent::fix();
 	}
 

@@ -24,8 +24,12 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements iSecuPress_S
 		self::$type      = 'WordPress';
 		self::$title     = __( 'Check if the subscription settings are set correctly.', 'secupress' );
 		self::$more      = __( 'If user registrations are open, the default user role should be Subscriber. Moreover, your registration page should be protected from bots.', 'secupress' );
-		self::$more_fix  = sprintf( __( 'The fix will activate the option <em>%1$s</em> from the module <a href="%2$s">%3$s</a>.', 'secupress' ), __( 'Use a Captcha for everyone', 'secupress' ), secupress_admin_url( 'modules', 'users-login#Use_a_Captcha_for_everyone' ), __( 'Users & Login', 'secupress' ) );
-		self::$more_fix .= __( 'And will also set the new user\'s role to Subscriber.', 'secupress' );
+		self::$more_fix = sprintf(
+			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
+			'<em>' . __( 'Use a Captcha for everyone', 'secupress' ) . '</em>',
+			'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#BUse_a_Captcha_for_everyone">' . __( 'Users & Login', 'secupress' ) . '</a>'
+		);
+		self::$more_fix .= '<br/>' . __( 'It will also set the new user\'s role to Subscriber.', 'secupress' );
 	}
 
 

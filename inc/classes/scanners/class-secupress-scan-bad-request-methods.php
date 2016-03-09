@@ -24,7 +24,11 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements iSecu
 		self::$type     = 'WordPress';
 		self::$title    = __( 'Check if bad request methods can reach your website.', 'secupress' );
 		self::$more     = __( 'There are malicious scripts and bots out there, hammering your site with bad HTTP GET requests. Let\'s check if your website can handle that.', 'secupress' );
-		self::$more_fix = sprintf( __( 'The fix will activate the option <em>%1$s</em> from the module <a href="%2$s">%3$s</a>.', 'secupress' ), __( 'Block Bad Request Methods', 'secupress' ), secupress_admin_url( 'modules', 'firewall#Block_Bad_Request_Methods' ), __( 'Firewall', 'secupress' ) );
+		self::$more_fix = sprintf(
+			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
+			'<em>' . __( 'Block Bad Request Methods', 'secupress' ) . '</em>',
+			'<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#Block_Bad_Request_Methods">' . __( 'Firewall', 'secupress' ) . '</a>'
+		);
 	}
 
 

@@ -27,18 +27,20 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 		self::$title = __( 'Check if your WordPress site discloses sensitive informations.', 'secupress' );
 		self::$more  = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of information. His goal is to find outdated versions of your server softwares or WordPress component. Don\'t let him easily find these informations.', 'secupress' );
 
-		$config_file = '';
 		if ( $is_apache ) {
 			$config_file = '.htaccess';
-		} elseif( $is_iis7 ) {
+		} elseif ( $is_iis7 ) {
 			$config_file = 'web.config';
-		} elseif( $is_nginx ) {
-			$config_file = 'nginx.conf';
-		}
-		if ( $config_file ) {
-			self::$more_fix = sprintf( __( 'The fix will add rules in your %s file to avoid attackers to read sentitive informations from your installation.', 'secupress' ), '<code>' . $config_file . '</code>' );
 		} else {
-			self::$more_fix = __( 'Your server runs a non recognized system. This cannot be fixed automatically.', 'secupress' );
+			self::$fixable = false;
+		}
+
+		if ( self::$fixable ) {
+			self::$more_fix = sprintf( __( 'This will add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>' . $config_file . '</code>' );
+		} elseif ( $is_nginx ) {
+			self::$more_fix = static::get_messages( 300 );
+		} else {
+			self::$more_fix = static::get_messages( 301 );
 		}
 	}
 
@@ -82,6 +84,8 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 
 
 	public function scan() {
+		global $is_nginx;
+
 		// Avoid plugin's hooks.
 		remove_all_filters( 'site_url' );
 		remove_all_filters( 'includes_url' );
@@ -118,6 +122,12 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 		if ( $bads ) {
 			// bad
 			$this->add_message( 200, array( count( $bads ), $bads ) );
+
+			if ( $is_nginx ) {
+				$this->add_pre_fix_message( 300 );
+			} elseif ( ! self::$fixable ) {
+				$this->add_pre_fix_message( 301 );
+			}
 		}
 
 		if ( $warnings ) {
@@ -133,16 +143,12 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 
 
 	public function fix() {
-		global $is_apache, $is_nginx, $is_iis7;
+		global $is_apache, $is_iis7;
 
 		if ( $is_apache ) {
 			$this->fix_apache();
 		} elseif ( $is_iis7 ) {
 			$this->fix_iis7();
-		} elseif ( $is_nginx ) {
-			$this->add_fix_message( 300 );
-		} else {
-			$this->add_fix_message( 301 );
 		}
 
 		return parent::fix();

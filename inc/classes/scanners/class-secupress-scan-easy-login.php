@@ -26,7 +26,12 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 		self::$more     = __( 'The login vector is often use in web attacks, every hour, your website is targeted by random bots whom try to log in your site. Adding another layer of login can improve the security.', 'secupress' );
 
 		$submodule      = ! secupress_is_pro() ? __( 'Email Link', 'secupress' ) : __( 'PasswordLess', 'secupress' );
-		self::$more_fix = sprintf( __( 'The fix will activate the option <em>%1$s</em> from the module <a href="%2$s">%3$s</a>.', 'secupress' ), __( 'Use a Double Authentication', 'secupress' ) . ' <em>(set on ' . $submodule . ')</em>', secupress_admin_url( 'modules', 'users-login#Use_a_Double_Authentication' ), __( 'Users & Login', 'secupress' ) );
+		self::$more_fix = sprintf(
+			__( 'This will activate the option %1$s (set on %2$s) from the module %3$s.', 'secupress' ),
+			'<em>' . __( 'Use a Double Authentication', 'secupress' ) . '</em>',
+			$submodule,
+			'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#Use_a_Double_Authentication">' . __( 'Users & Login', 'secupress' ) . '</a>'
+		);
 	}
 
 

@@ -28,18 +28,20 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements iSecuPre
 		self::$title = sprintf( __( 'Check if the %s files from your plugins and themes are protected.', 'secupress' ), '<code>readme.txt</code>' );
 		self::$more  = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of informations. His goal is to find outdated versions of your server softwares or WordPress components. Don\'t let them easily find these informations.', 'secupress' );
 
-		$config_file = '';
 		if ( $is_apache ) {
 			$config_file = '.htaccess';
-		} elseif( $is_iis7 ) {
+		} elseif ( $is_iis7 ) {
 			$config_file = 'web.config';
-		} elseif( $is_nginx ) {
-			$config_file = 'nginx.conf';
-		}
-		if ( $config_file ) {
-			self::$more_fix = sprintf( __( 'The fix will add rules in your %s file to avoid attackers to read sentitive informations from your installation,', 'secupress' ), '<code>' . $config_file . '</code>' );
 		} else {
-			self::$more_fix = __( 'Your server runs a non recognized system. This cannot be fixed automatically.', 'secupress' );
+			self::$fixable = false;
+		}
+
+		if ( self::$fixable ) {
+			self::$more_fix = sprintf( __( 'This will add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>' . $config_file . '</code>' );
+		} elseif ( $is_nginx ) {
+			self::$more_fix = static::get_messages( 300 );
+		} else {
+			self::$more_fix = static::get_messages( 301 );
 		}
 	}
 
@@ -92,6 +94,8 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements iSecuPre
 
 
 	public function scan() {
+		global $is_nginx;
+
 		$protected = static::_are_files_protected();
 
 		if ( is_null( $protected ) ) {
@@ -105,6 +109,12 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements iSecuPre
 		} else {
 			// bad
 			$this->add_message( 200 );
+
+			if ( $is_nginx ) {
+				$this->add_pre_fix_message( 300 );
+			} elseif ( ! self::$fixable ) {
+				$this->add_pre_fix_message( 301 );
+			}
 		}
 
 		return parent::scan();
@@ -112,7 +122,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements iSecuPre
 
 
 	public function fix() {
-		global $is_apache, $is_nginx, $is_iis7;
+		global $is_apache, $is_iis7;
 
 		$protected = static::_are_files_protected();
 
@@ -132,10 +142,6 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements iSecuPre
 			$this->_fix_apache();
 		} elseif ( $is_iis7 ) {
 			$this->_fix_iis7();
-		} elseif ( $is_nginx ) {
-			$this->add_fix_message( 300 );
-		} else {
-			$this->add_fix_message( 301 );
 		}
 
 		// good

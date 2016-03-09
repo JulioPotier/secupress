@@ -20,22 +20,24 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements iSecuPress_Sca
 	public    static $prio         = 'medium';
 	public    static $php_ver_min  = '5.5.30';
 	public    static $php_ver_best = '5.6.15';
-	public    static $fixable = false;
+	public    static $fixable      = false;
 
 	protected static function init() {
 		self::$type     = __( 'File System', 'secupress' );
 		self::$title    = __( 'Check if your installation is using a supported version of PHP.', 'secupress' );
 		self::$more     = __( 'Every year old PHP version are not supported anymore, even for security patches so it\'s important to stay updated.', 'secupress' );
-		self::$more_fix = ''; // Can't be fixed
+		self::$more_fix = static::get_messages( 300 );
 
 		if ( false === ( $php_vers = get_site_transient( 'secupress_php_versions' ) ) ) {
 			$response = wp_remote_get( 'http://php.net/releases/index.php?json&version=5&max=2' );
+
 			if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 				$php_vers = json_decode( wp_remote_retrieve_body( $response ) );
 				$php_vers = array_keys( (array) $php_vers );
 				set_site_transient( 'secupress_php_versions', $php_vers, 7 * DAY_IN_SECONDS );
 			}
 		}
+
 		if ( $php_vers ) {
 			list( self::$php_ver_best, self::$php_ver_min ) = $php_vers;
 		}
@@ -82,10 +84,6 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements iSecuPress_Sca
 
 
 	public function fix() {
-
-
 		return parent::fix();
 	}
-
-
 }

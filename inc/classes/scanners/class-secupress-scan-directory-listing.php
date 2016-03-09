@@ -26,19 +26,21 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 		self::$type     = 'WordPress';
 		self::$title    = __( 'Check if your WordPress site discloses files in directory (known as Directory Listing).', 'secupress' );
 		self::$more     = __( 'Without the appropriate protection, anybody could browse your site files. While browsing some of your files might not be a security risk, most of them are sensitive.', 'secupress' );
-		
-		$config_file = '';
+
 		if ( $is_apache ) {
 			$config_file = '.htaccess';
-		} elseif( $is_iis7 ) {
+		} elseif ( $is_iis7 ) {
 			$config_file = 'web.config';
-		} elseif( $is_nginx ) {
-			$config_file = 'nginx.conf';
-		}
-		if ( $config_file ) {
-			self::$more_fix = sprintf( __( 'The fix will add rules in your %s file to avoid attackers to read the content of empty folder in your installation.', 'secupress' ), '<code>' . $config_file . '</code>' );
 		} else {
-			self::$more_fix = __( 'Your server runs a non recognized system. This cannot be fixed automatically.', 'secupress' );
+			self::$fixable = false;
+		}
+
+		if ( self::$fixable ) {
+			self::$more_fix = sprintf( __( 'This will add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>' . $config_file . '</code>' );
+		} elseif ( $is_nginx ) {
+			self::$more_fix = static::get_messages( 300 );
+		} else {
+			self::$more_fix = static::get_messages( 301 );
 		}
 	}
 
@@ -80,6 +82,8 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 
 
 	public function scan() {
+		global $is_nginx;
+
 		$upload_dir = wp_upload_dir();
 		$base_url   = user_trailingslashit( $upload_dir['baseurl'] );
 		$response   = wp_remote_get( $base_url, array( 'redirection' => 0 ) );
@@ -89,6 +93,12 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
 				// bad
 				$this->add_message( 200, array( '<code>' . $base_url . '</code>' ) );
+
+				if ( $is_nginx ) {
+					$this->add_pre_fix_message( 300 );
+				} elseif ( ! self::$fixable ) {
+					$this->add_pre_fix_message( 301 );
+				}
 			}
 
 		} else {
@@ -104,16 +114,12 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 
 
 	public function fix() {
-		global $is_apache, $is_nginx, $is_iis7;
+		global $is_apache, $is_iis7;
 
 		if ( $is_apache ) {
 			$this->fix_apache();
 		} elseif ( $is_iis7 ) {
 			$this->fix_iis7();
-		} elseif ( $is_nginx ) {
-			$this->add_fix_message( 300 );
-		} else {
-			$this->add_fix_message( 301 );
 		}
 
 		return parent::fix();

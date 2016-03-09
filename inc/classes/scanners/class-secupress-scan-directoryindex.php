@@ -26,19 +26,21 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements iSecuPress
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if <em>.php</em> files are loaded in priority instead of <em>.html</em> or <em>.htm</em> etc.', 'secupress' );
 		self::$more  = sprintf( __( 'If your website is victim of a defacement using the addition of a file like %1$s, this file could be loaded first instead of the one from WordPress. This is why we have to load %2$s first..', 'secupress' ), '<code>index.htm</code>', '<code>index.php</code>' );
-		
-		$config_file = '';
+
 		if ( $is_apache ) {
 			$config_file = '.htaccess';
-		} elseif( $is_iis7 ) {
+		} elseif ( $is_iis7 ) {
 			$config_file = 'web.config';
-		} elseif( $is_nginx ) {
-			$config_file = 'nginx.conf';
-		}
-		if ( $config_file ) {
-			self::$more_fix = sprintf( __( 'The fix will add rules in your %s file to avoid attackers to add .html/.html files to be loaded before the .php one.', 'secupress' ), '<code>' . $config_file . '</code>' );
 		} else {
-			self::$more_fix = __( 'Your server runs a non recognized system. This cannot be fixed automatically.', 'secupress' );
+			self::$fixable = false;
+		}
+
+		if ( self::$fixable ) {
+			self::$more_fix = sprintf( __( 'This will add rules in your %s file to avoid attackers to add <code>.html</code>/<code>.htm</code> files to be loaded before the <code>.php</code> one.', 'secupress' ), '<code>' . $config_file . '</code>' );
+		} elseif ( $is_nginx ) {
+			self::$more_fix = static::get_messages( 300 );
+		} else {
+			self::$more_fix = static::get_messages( 301 );
 		}
 	}
 
@@ -65,6 +67,8 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements iSecuPress
 
 
 	public function scan() {
+		global $is_nginx;
+
 		$response = wp_remote_get( SECUPRESS_PLUGIN_URL . 'inc/DirectoryIndex', array( 'redirection' => 1 ) );
 
 		if ( ! is_wp_error( $response ) ) {
@@ -77,6 +81,12 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements iSecuPress
 				} else {
 					// bad
 					$this->add_message( 200, array( '<code>index.php</code>', '<code>' . esc_html( $response_body ) . '</code>' ) );
+
+					if ( $is_nginx ) {
+						$this->add_pre_fix_message( 300 );
+					} elseif ( ! self::$fixable ) {
+						$this->add_pre_fix_message( 301 );
+					}
 				}
 			} else {
 				// warning

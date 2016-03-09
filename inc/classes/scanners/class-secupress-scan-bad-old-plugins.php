@@ -24,7 +24,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 		self::$type     = 'WordPress';
 		self::$title    = __( 'Check if you are using plugins that have been deleted from the official repository or not updated since two years at least.', 'secupress' );
 		self::$more     = __( 'Avoid to use a plugin that have been removed from the official repository, and avoid using a plugin that have not been maintained for two years at least.', 'secupress' );
-		self::$more_fix = __( 'The fix will ask you to deactivate or delete these plugins.', 'secupress' );
+		self::$more_fix = __( 'This will ask you to deactivate or delete these plugins.', 'secupress' );
 	}
 
 
