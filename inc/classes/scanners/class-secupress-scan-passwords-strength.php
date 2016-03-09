@@ -22,7 +22,7 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan {
 
 
 	protected static function init() {
-		self::$type  = __( '3rd party', 'secupress' );
+		self::$type      = __( '3rd party', 'secupress' );
 
 		if ( defined( 'FTP_PASS' ) ) {
 			self::$title = __( 'Test the strength of WordPress database and FTP passwords.', 'secupress' );
@@ -31,6 +31,7 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan {
 			self::$title = __( 'Test the strength of WordPress database password.', 'secupress' );
 			self::$more  = __( 'The password of the database has to be strong to avoid a possible brute-force attack.', 'secupress' );
 		}
+		self::$more_fix  = ''; // Can't be fixed
 	}
 
 	public static function get_messages( $message_id = null ) {

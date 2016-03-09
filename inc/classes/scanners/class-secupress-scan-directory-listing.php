@@ -21,9 +21,25 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements iSecuPr
 
 
 	protected static function init() {
-		self::$type  = 'WordPress';
-		self::$title = __( 'Check if your WordPress site discloses files in directory (known as Directory Listing).', 'secupress' );
-		self::$more  = __( 'Without the appropriate protection, anybody could browse your site files. While browsing some of your files might not be a security risk, most of them are sensitive.', 'secupress' );
+		global $is_apache, $is_nginx, $is_iis7;
+
+		self::$type     = 'WordPress';
+		self::$title    = __( 'Check if your WordPress site discloses files in directory (known as Directory Listing).', 'secupress' );
+		self::$more     = __( 'Without the appropriate protection, anybody could browse your site files. While browsing some of your files might not be a security risk, most of them are sensitive.', 'secupress' );
+		
+		$config_file = '';
+		if ( $is_apache ) {
+			$config_file = '.htaccess';
+		} elseif( $is_iis7 ) {
+			$config_file = 'web.config';
+		} elseif( $is_nginx ) {
+			$config_file = 'nginx.conf';
+		}
+		if ( $config_file ) {
+			self::$more_fix = sprintf( __( 'The fix will add rules in your %s file to avoid attackers to read the content of empty folder in your installation.', 'secupress' ), '<code>' . $config_file . '</code>' );
+		} else {
+			self::$more_fix = __( 'Your server runs a non recognized system. This cannot be fixed automatically.', 'secupress' );
+		}
 	}
 
 

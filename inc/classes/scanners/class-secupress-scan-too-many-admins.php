@@ -22,9 +22,10 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPres
 
 
 	protected static function init() {
-		self::$type  = 'WordPress';
-		self::$title = __( 'Check if there are more than three Administrators on this site.', 'secupress' );
-		self::$more  = __( 'Accounts with Administrator privileges can perform any kind of action. The less Administrators you have, the lower the risk that any account has been compromised is.', 'secupress' );
+		self::$type     = 'WordPress';
+		self::$title    = __( 'Check if there are more than three Administrators on this site.', 'secupress' );
+		self::$more     = __( 'Accounts with Administrator privileges can perform any kind of action. The less Administrators you have, the lower the risk that any account has been compromised is.', 'secupress' );
+		self::$more_fix = __( 'The fix will ask you to keep a maximum of 3 administrators on your website. You will have to choose between delete or downgrade some administrators.', 'secupress' );
 	}
 
 

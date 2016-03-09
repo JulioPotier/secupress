@@ -21,10 +21,26 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements iSecuPre
 
 
 	protected static function init() {
+		global $is_apache, $is_nginx, $is_iis7;
+
 		self::$type  = __( 'Plugins and Themes', 'secupress' );
 		/* translators: %s is a file name */
 		self::$title = sprintf( __( 'Check if the %s files from your plugins and themes are protected.', 'secupress' ), '<code>readme.txt</code>' );
 		self::$more  = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of informations. His goal is to find outdated versions of your server softwares or WordPress components. Don\'t let them easily find these informations.', 'secupress' );
+
+		$config_file = '';
+		if ( $is_apache ) {
+			$config_file = '.htaccess';
+		} elseif( $is_iis7 ) {
+			$config_file = 'web.config';
+		} elseif( $is_nginx ) {
+			$config_file = 'nginx.conf';
+		}
+		if ( $config_file ) {
+			self::$more_fix = sprintf( __( 'The fix will add rules in your %s file to avoid attackers to read sentitive informations from your installation,', 'secupress' ), '<code>' . $config_file . '</code>' );
+		} else {
+			self::$more_fix = __( 'Your server runs a non recognized system. This cannot be fixed automatically.', 'secupress' );
+		}
 	}
 
 

@@ -21,9 +21,10 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements iSecuPress
 
 
 	protected static function init() {
-		self::$type  = 'WordPress';
-		self::$title = sprintf( __( 'Check if long URL can reach your website (more than %s chars).', 'secupress' ), number_format_i18n( apply_filters( 'secupress.plugin.len.bad-url-length', 300 ) ) );
-		self::$more  = sprintf( __( 'A usual URL has no more than %s characters, but attackers often need to test very long strings when they try to hack something.', 'secupress' ), number_format_i18n( apply_filters( 'secupress.plugin.len.bad-url-length', 300 ) ) );
+		self::$type     = 'WordPress';
+		self::$title    = sprintf( __( 'Check if long URL can reach your website (more than %s chars).', 'secupress' ), number_format_i18n( apply_filters( 'secupress.plugin.len.bad-url-length', 300 ) ) );
+		self::$more     = sprintf( __( 'A usual URL has no more than %s characters, but attackers often need to test very long strings when they try to hack something.', 'secupress' ), number_format_i18n( apply_filters( 'secupress.plugin.len.bad-url-length', 300 ) ) );
+		self::$more_fix = sprintf( __( 'The fix will activate the option <em>%1$s</em> from the module <a href="%2$s">%3$s</a>.', 'secupress' ), __( 'Block Long URLs', 'secupress' ), secupress_admin_url( 'modules', 'firewall#Block_Long_URLs' ), __( 'firewall', 'secupress' ) );
 	}
 
 

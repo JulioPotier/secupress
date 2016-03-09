@@ -20,12 +20,13 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements iSecuPress_Sca
 	public    static $prio         = 'medium';
 	public    static $php_ver_min  = '5.5.30';
 	public    static $php_ver_best = '5.6.15';
-
+	public    static $fixable = false;
 
 	protected static function init() {
-		self::$type  = __( 'File System', 'secupress' );
-		self::$title = __( 'Check if your installation is using a supported version of PHP.', 'secupress' );
-		self::$more  = __( 'Every year old PHP version are not supported anymore, even for security patches so it\'s important to stay updated.', 'secupress' );
+		self::$type     = __( 'File System', 'secupress' );
+		self::$title    = __( 'Check if your installation is using a supported version of PHP.', 'secupress' );
+		self::$more     = __( 'Every year old PHP version are not supported anymore, even for security patches so it\'s important to stay updated.', 'secupress' );
+		self::$more_fix = ''; // Can't be fixed
 
 		if ( false === ( $php_vers = get_site_transient( 'secupress_php_versions' ) ) ) {
 			$response = wp_remote_get( 'http://php.net/releases/index.php?json&version=5&max=2' );
@@ -51,7 +52,7 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements iSecuPress_Sca
 			// bad
 			200   => sprintf( __( 'You are using <strong>PHP v%1$s</strong>, but the latest supported version is <strong>PHP v%2$s</strong>, and the best is <strong>PHP v%3$s</strong>.', 'secupress' ), phpversion(), self::$php_ver_min, self::$php_ver_best ),
 			// cantfix
-			300 => __( 'I can not fix this, you have to contact you host provider to ask him to <strong>upgrade you version of PHP</strong>.', 'secupress' ),
+			300 => __( 'This cannot be automatically fixed. You have to contact you host provider to ask him to <strong>upgrade you version of PHP</strong>.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -66,6 +67,7 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements iSecuPress_Sca
 
 		if ( version_compare( phpversion(), self::$php_ver_min ) < 0 ) {
 			$this->add_message( 200 );
+			$this->add_pre_fix_message( 300 );
 		}
 
 		// good
@@ -81,7 +83,6 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements iSecuPress_Sca
 
 	public function fix() {
 
-		$this->add_fix_message( 300 );
 
 		return parent::fix();
 	}

@@ -21,9 +21,10 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 
 
 	protected static function init() {
-		self::$type  = 'WordPress';
-		self::$title = __( 'Check if your users username are not blacklisted.', 'secupress' );
-		self::$more  = __( 'Some usernames are known to be used for malicious usage, or created by bots.', 'secupress' );
+		self::$type     = 'WordPress';
+		self::$title    = __( 'Check if your users username are not blacklisted.', 'secupress' );
+		self::$more     = __( 'Some usernames are known to be used for malicious usage, or created by bots.', 'secupress' );
+		self::$more_fix = sprintf( __( 'The fix will activate the option <em>%1$s</em> from the module <a href="%2$s">%3$s</a>.', 'secupress' ), __( 'Forbid usernames', 'secupress' ), secupress_admin_url( 'modules', 'users-login#' ), __( 'Users & Login', 'secupress' ) );
 	}
 
 

@@ -24,6 +24,7 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements iSecuPress_S
 		self::$type  = 'PHP';
 		self::$title = __( 'Check if your website can easily be the target of common flaws.', 'secupress' );
 		self::$more  = __( 'Every year, new flaws are discovered. You have to be sure that your website cannot be a target.', 'secupress' );
+		self::$more_fix = sprintf( __( 'The fix will activate the option <em>%1$s</em> from the module <a href="%2$s">%3$s</a>.', 'secupress' ), __( 'Block Bad Contents', 'secupress' ), secupress_admin_url( 'modules', 'firewall#Block_Bad_Contents' ), __( 'Firewall', 'secupress' ) );
 	}
 
 

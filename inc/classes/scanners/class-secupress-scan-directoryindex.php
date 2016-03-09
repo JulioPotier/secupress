@@ -21,9 +21,25 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements iSecuPress
 
 
 	protected static function init() {
+		global $is_apache, $is_nginx, $is_iis7;
+
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if <em>.php</em> files are loaded in priority instead of <em>.html</em> or <em>.htm</em> etc.', 'secupress' );
 		self::$more  = sprintf( __( 'If your website is victim of a defacement using the addition of a file like %1$s, this file could be loaded first instead of the one from WordPress. This is why we have to load %2$s first..', 'secupress' ), '<code>index.htm</code>', '<code>index.php</code>' );
+		
+		$config_file = '';
+		if ( $is_apache ) {
+			$config_file = '.htaccess';
+		} elseif( $is_iis7 ) {
+			$config_file = 'web.config';
+		} elseif( $is_nginx ) {
+			$config_file = 'nginx.conf';
+		}
+		if ( $config_file ) {
+			self::$more_fix = sprintf( __( 'The fix will add rules in your %s file to avoid attackers to add .html/.html files to be loaded before the .php one.', 'secupress' ), '<code>' . $config_file . '</code>' );
+		} else {
+			self::$more_fix = __( 'Your server runs a non recognized system. This cannot be fixed automatically.', 'secupress' );
+		}
 	}
 
 

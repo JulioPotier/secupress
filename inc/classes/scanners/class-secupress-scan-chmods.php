@@ -21,9 +21,10 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements iSecuPress_Scan {
 
 
 	protected static function init() {
-		self::$type  = __( 'File System', 'secupress' );
-		self::$title = __( 'Check if your files and folders have the correct write permissions (chmod).', 'secupress' );
-		self::$more  = __( 'CHMOD is the way to give read/write/execute rights to a file or a folder. The bad guy is known as <code>0777</code> and should be avoided. This test will check some strategic files and folders.', 'secupress' );
+		self::$type     = __( 'File System', 'secupress' );
+		self::$title    = __( 'Check if your files and folders have the correct write permissions (chmod).', 'secupress' );
+		self::$more     = __( 'CHMOD is the way to give read/write/execute rights to a file or a folder. The bad guy is known as <code>0777</code> and should be avoided. This test will check some strategic files and folders.', 'secupress' );
+		self::$more_fix = __( 'The fix will change the files mode to the recommanded one for each bad mode.', 'secupress' );
 	}
 
 

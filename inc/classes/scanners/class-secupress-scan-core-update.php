@@ -21,9 +21,10 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements iSecuPress_Sc
 
 
 	protected static function init() {
-		self::$type    = 'WordPress';
-		self::$title   = __( 'Check if your WordPress core is up to date.', 'secupress' );
-		self::$more    = __( 'It\'s very important to maintain your WordPress installation up to date. If you can not update for any reason, contact your hosting provider as soon as possible.', 'secupress' );
+		self::$type     = 'WordPress';
+		self::$title    = __( 'Check if your WordPress core is up to date.', 'secupress' );
+		self::$more     = __( 'It\'s very important to maintain your WordPress installation up to date. If you can not update for any reason, contact your hosting provider as soon as possible.', 'secupress' );
+		self::$more_fix = __( 'This will will update your WordPress installation.', 'secupress' );
 	}
 
 
@@ -32,7 +33,7 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements iSecuPress_Sc
 			// good
 			0   => __( 'WordPress core is up to date.', 'secupress' ),
 			1   => __( 'WordPress has been updated to version <strong>%s</strong>.', 'secupress' ),
-			2 => '%s', // already translated
+			2   => '%s', // already translated
 			// bad
 			200 => __( 'WordPress core is <strong>not up to date</strong>.', 'secupress' ),
 			// cantfix

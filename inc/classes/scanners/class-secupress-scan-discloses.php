@@ -21,9 +21,25 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 
 
 	protected static function init() {
-		self::$type  = 'WordPress';
-		self::$title = __( 'Check if your WordPress site discloses its version.', 'secupress' );
-		self::$more  = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of informations. His goal is to find outdated versions of your server softwares or WordPress components. Don\'t let them easily find these informations.', 'secupress' );
+		global $is_apache, $is_nginx, $is_iis7;
+
+		self::$type     = 'WordPress';
+		self::$title    = __( 'Check if your WordPress site discloses its version.', 'secupress' );
+		self::$more     = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of informations. His goal is to find outdated versions of your server softwares or WordPress components. Don\'t let them easily find these informations.', 'secupress' );
+
+		$config_file = '';
+		if ( $is_apache ) {
+			$config_file = '.htaccess';
+		} elseif( $is_iis7 ) {
+			$config_file = 'web.config';
+		} elseif( $is_nginx ) {
+			$config_file = 'nginx.conf';
+		}
+		if ( $config_file ) {
+			self::$more_fix = sprintf( __( 'The fix will add rules in your %s file to avoid attackers to read sentitive informations from your installation.', 'secupress' ), '<code>' . $config_file . '</code>' );
+		} else {
+			self::$more_fix = __( 'Your server runs a non recognized system. This cannot be fixed automatically.', 'secupress' );
+		}
 	}
 
 

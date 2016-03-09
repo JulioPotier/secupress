@@ -24,7 +24,7 @@ class SecuPress_Scan_Anti_Scanner extends SecuPress_Scan implements iSecuPress_S
 		self::$type     = 'WordPress';
 		self::$title    = __( 'Check if automated scanner can target your website.', 'secupress' );
 		self::$more     = __( 'Automated scanner requires a triple page reload to be identical regarding contents. By giving them a different content for each request, it will not be possible for it to work properly.', 'secupress' );
-		self::$more_fix = sprintf( __( 'The fix will activate the option <em>Block SQLi Scan Attempts</em> from the module <a href="%s">Firewall</a>.', 'secupress' ), secupress_admin_url( 'modules', 'firewall#BlockSQLiScanAttempts' ) );
+		self::$more_fix = sprintf( __( 'The fix will activate the option <em>%1$s</em> from the module <a href="%2$s">%3$s</a>.', 'secupress' ), __( 'Block SQLi Scan Attempts', 'secupress' ), secupress_admin_url( 'modules', 'firewall#Block_SQLi_Scan_Attempts' ), __( 'Firewall', 'secupress' ) );
 	}
 
 

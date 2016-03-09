@@ -21,9 +21,25 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 
 
 	protected static function init() {
+		global $is_apache, $is_nginx, $is_iis7;
+
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if your WordPress site discloses sensitive informations.', 'secupress' );
 		self::$more  = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of information. His goal is to find outdated versions of your server softwares or WordPress component. Don\'t let him easily find these informations.', 'secupress' );
+
+		$config_file = '';
+		if ( $is_apache ) {
+			$config_file = '.htaccess';
+		} elseif( $is_iis7 ) {
+			$config_file = 'web.config';
+		} elseif( $is_nginx ) {
+			$config_file = 'nginx.conf';
+		}
+		if ( $config_file ) {
+			self::$more_fix = sprintf( __( 'The fix will add rules in your %s file to avoid attackers to read sentitive informations from your installation.', 'secupress' ), '<code>' . $config_file . '</code>' );
+		} else {
+			self::$more_fix = __( 'Your server runs a non recognized system. This cannot be fixed automatically.', 'secupress' );
+		}
 	}
 
 

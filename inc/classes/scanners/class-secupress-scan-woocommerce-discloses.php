@@ -21,10 +21,11 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements iSe
 
 
 	protected static function init() {
-		self::$type  = __( 'Plugins' );
+		self::$type     = __( 'Plugins' );
 		/* translators: %s is a plugin name */
-		self::$title = sprintf( __( 'Check if the %s plugin discloses its version.', 'secupress' ), 'WooCommerce' );
-		self::$more  = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of informations. His goal is to find outdated versions of your server softwares or WordPress components. Don\'t let them easily find these informations.', 'secupress' );
+		self::$title    = sprintf( __( 'Check if the %s plugin discloses its version.', 'secupress' ), 'WooCommerce' );
+		self::$more     = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of informations. His goal is to find outdated versions of your server softwares or WordPress components. Don\'t let them easily find these informations.', 'secupress' );
+		self::$more_fix = __( 'The fix will hide plugins version to avoid being read by attackers.', 'secupress' );
 	}
 
 
