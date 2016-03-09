@@ -27,7 +27,7 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements iSecuPress_S
 		self::$more_fix = sprintf(
 			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
 			'<em>' . __( 'Use a Captcha for everyone', 'secupress' ) . '</em>',
-			'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#BUse_a_Captcha_for_everyone">' . __( 'Users & Login', 'secupress' ) . '</a>'
+			'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#Use_a_Captcha_for_everyone">' . __( 'Users & Login', 'secupress' ) . '</a>'
 		);
 		self::$more_fix .= '<br/>' . __( 'It will also set the new user\'s role to Subscriber.', 'secupress' );
 	}
