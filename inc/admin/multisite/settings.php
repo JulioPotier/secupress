@@ -253,6 +253,20 @@ function __secupress_subsite_scanners() {
 
 						<tbody>
 						<?php
+						// Allowed tags in "Learn more" contents.
+						$allowed_tags = array(
+							'a'      => array( 'href' => array(),'title' => array(), 'target' => array(), ),
+							'abbr'   => array( 'title' => array() ),
+							'code'   => array(),
+							'em'     => array(),
+							'strong' => array(),
+							'ul'     => array(),
+							'ol'     => array(),
+							'li'     => array(),
+							'p'      => array(),
+							'br'     => array(),
+						);
+
 						$i = 0;
 						foreach ( $class_name_parts as $class_name_part ) {
 							$option_name = strtolower( $class_name_part );
@@ -314,7 +328,24 @@ function __secupress_subsite_scanners() {
 									<div class="secupress-status"><?php echo $fix_status_text; ?></div>
 
 									<div class="secupress-row-actions">
-										<a class="button button-secondary button-small secupress-fixit" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?for-current-site=1&action=secupress_fixit&test=' . $class_name_part ), 'secupress_fixit_' . $class_name_part ); ?>"><?php _e( 'Fix it!', 'secupress' ); ?></a>
+										<?php
+										if ( $current_test::$fixable ) { ?>
+											<a class="button button-secondary button-small secupress-fixit" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?for-current-site=1&action=secupress_fixit&test=' . $class_name_part ), 'secupress_fixit_' . $class_name_part ); ?>"><?php _e( 'Fix it!', 'secupress' ); ?></a>
+											<div class="secupress-row-actions">
+												<span class="hide-if-no-js">
+													<button type="button" class="secupress-details-fix link-like" data-test="<?php echo $class_name_part; ?>" title="<?php esc_attr_e( 'Get fix details', 'secupress' ); ?>"><?php _e( 'Learn more', 'secupress' ); ?></button>
+												</span>
+											</div>
+											<?php
+										} elseif ( false ) /* //// $needs-pro */ { ?>
+											<button type="button" class="button button-secondary button-small secupress-go-pro"><?php _e( 'Pro Upgrade', 'secupress' ); ?></button>
+											<?php
+										} else { // Really not fixable by the plugin + //// #
+											echo '<em>(';
+											_e( 'Cannot be fixed automatically.', 'secupress' );
+											echo '</em>)';
+										}
+										?>
 									</div>
 								</td>
 								<td class="secupress-fix-result">
@@ -329,7 +360,7 @@ function __secupress_subsite_scanners() {
 
 								if ( $fix_actions ) { ?>
 									<tr class="test-fix-action">
-										<td colspan="6">
+										<td colspan="5">
 											<form method="post" action="<?php echo admin_url( 'admin-post.php' ); ?>">
 												<h3><?php echo _n( 'This action requires your attention', 'These actions require your attention', count( $fix_actions ), 'secupress' ); ?></h3>
 												<?php
@@ -354,14 +385,14 @@ function __secupress_subsite_scanners() {
 							?>
 							<tr id="details-<?php echo $class_name_part; ?>" class="details hide-if-js">
 								<td colspan="5">
-									<?php _e( 'Scan Details', 'secupress' ); ?>
-									<?php echo wp_kses_post( $current_test::$more ); ?>
+									<?php _e( 'Scan Details: ', 'secupress' ); ?>
+									<span class="details-content"><?php echo wp_kses( $current_test::$more, $allowed_tags ); ?></span>
 								</td>
 							</tr>
-							<tr id="detailsfix--<?php echo $class_name_part; ?>" class="details hide-if-js">
+							<tr id="details-fix-<?php echo $class_name_part; ?>" class="details hide-if-js">
 								<td colspan="5">
-									<?php _e( 'Fix Details', 'secupress' ); ?>
-									<?php echo wp_kses_post( $current_test::$more_fix ); ?>
+									<?php _e( 'Fix Details: ', 'secupress' ); ?>
+									<span class="details-content"><?php echo wp_kses( $current_test::$more_fix, $allowed_tags ); ?></span>
 								</td>
 							</tr>
 							<?php

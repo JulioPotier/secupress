@@ -101,7 +101,6 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		// CSS
 		wp_enqueue_style( 'secupress-settings-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-settings' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 	}
-
 	// Modules page.
 	elseif ( SECUPRESS_PLUGIN_SLUG . '_page_secupress_modules' === $hook_suffix ) {
 		// CSS
@@ -191,7 +190,6 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'fixDetails'      => __( 'Fix Details', 'secupress' ),
 		) );
 	}
-
 	// Scanners page (sub site).
 	elseif ( 'toplevel_page_secupress_scanners' === $hook_suffix ) {
 		// CSS
@@ -211,6 +209,8 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'oneManualFix'    => __( 'One fix requires your intervention.', 'secupress' ),
 			'someManualFixes' => __( 'Some fixes require your intervention.', 'secupress' ),
 			'spinnerUrl'      => admin_url( 'images/wpspin_light-2x.gif' ),
+			'scanDetails'     => __( 'Scan Details', 'secupress' ),
+			'fixDetails'      => __( 'Fix Details', 'secupress' ),
 		) );
 	}
 
