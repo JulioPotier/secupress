@@ -400,6 +400,11 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 			// good
 			$this->add_fix_message( 5 );
 
+			// Promote as Super Admin.
+			if ( is_super_admin() ) {
+				grant_super_admin( $user_id );
+			}
+
 			// Next time the new Administrator logs in, this current account will be downgraded.
 			secupress_set_site_transient( 'secupress-admin-as-author-administrator', $user_id . '|' . get_current_user_id() );
 
@@ -595,6 +600,9 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 						$form .= '<label for="secupress-fix-current-admin-as-author_new-admin">';
 							/* translators: %s is a user role name. */
 							$form .= sprintf( __( 'Create a new <strong>Administrator</strong> account and downgrade this account to %s.', 'secupress' ), $role_name_star );
+							if ( is_super_admin( $current_admin ) ) {
+								$form .= '<br/>' . __( 'Also, make this new user a <strong>Network Administrator</strong>.', 'secupress' );
+							}
 						$form .= '</label>';
 					$form .= '</li>';
 

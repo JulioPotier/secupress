@@ -309,6 +309,11 @@ function secupress_downgrade_author_administrator() {
 	$user->remove_role( 'administrator' );
 	$user->add_role( $role );
 
+	// Not a Super Admin anymore.
+	if ( is_super_admin() && is_super_admin( $old_user_id ) ) {
+		revoke_super_admin( $old_user_id );
+	}
+
 	// Update scan result.
 	secupress_scanit( 'Admin_As_Author' );
 
