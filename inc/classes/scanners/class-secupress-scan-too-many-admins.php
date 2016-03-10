@@ -33,7 +33,7 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPres
 		$messages = array(
 			// good
 			0   => _n_noop( 'You have only <strong>%d Administrator</strong>, fine.', 'You have only <strong>%d Administrators</strong>, fine.', 'secupress' ),
-			1   => __( 'None of your sites have more than <strong>%d Administrator</strong>, fine.', 'secupress' ),
+			1   => _n( 'None of your sites have more than <strong>%d Administrator</strong>, fine.', 'None of your sites have more than <strong>%d Administrators</strong>, fine.', static::$max_admins, 'secupress' ),
 			/* translators: 1 is a user name (or a list of user names), 2 is a user role. */
 			2   => _n_noop( '%1$s successfully downgraded to %2$s.', '%1$s successfully downgraded to %2$s.', 'secupress' ),
 			/* translators: %s is a user name (or a list of user names). */
@@ -98,12 +98,6 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPres
 
 	public function fix() {
 
-		// MULTISITE ===============
-		if ( $this->is_network_admin() ) {
-			$this->fix_network();
-			return parent::fix();
-		}
-
 		// MONOSITE ================
 		$count = count( get_users( array(
 			'fields' => 'ids',
@@ -127,12 +121,6 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPres
 		global $wpdb;
 
 		if ( ! $this->has_fix_action_part( 'too-many-admins' ) ) {
-			return parent::manual_fix();
-		}
-
-		// MULTISITE ===============
-		if ( $this->is_network_admin() ) {
-			$this->fix_network();
 			return parent::manual_fix();
 		}
 
@@ -320,13 +308,6 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPres
 
 
 	protected function get_fix_action_template_parts() {
-
-		// MULTISITE ===============
-		if ( $this->is_network_admin() ) {
-			return array(
-				'too-many-admins' => static::get_messages( 301 ),
-			);
-		}
 
 		// MONOSITE ================
 		$admins = static::get_admins( 'user_login' );
@@ -560,17 +541,8 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPres
 
 			// bad
 			$this->add_message( 201, array( count( $blog_names ), static::$max_admins, $blog_names ) );
-		} else {
-			// good
-			$this->add_message( 1, array( static::$max_admins ) );
-		}
-	}
 
-
-	protected function fix_network() {
-		$admins = static::get_usernames_per_blog();
-
-		if ( $admins ) {
+			// Messages for sub-sites.
 			$blogs = static::get_blog_ids();
 
 			foreach ( $blogs as $site_id ) {
@@ -583,13 +555,14 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPres
 					$this->set_empty_data_for_subsite( $site_id );
 				}
 			}
+
 			// cantfix
-			$this->add_fix_message( 301 );
+			$this->add_pre_fix_message( 301 );
 		} else {
+			// good
+			$this->add_message( 1, array( static::$max_admins ) );
 			// Remove all previously stored messages for sub-sites.
 			$this->set_empty_data_for_subsites();
-			// good
-			$this->add_fix_message( 0 );
 		}
 	}
 

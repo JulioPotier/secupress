@@ -30,32 +30,36 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	const VERSION = '1.0';
 
 	// Filled when fixes need manual actions.
-	private       $fix_actions = array();
+	private          $fix_actions = array();
 
 	// The part of the class that extends this one, like SecuPress_Scan_{$class_name_part}.
-	protected     $class_name_part;
-	// Contain scan results.
-	protected     $result     = array();
-	// Contain fix results.
-	protected     $result_fix = array();
+	protected        $class_name_part;
+	// Contains scan results.
+	protected        $result     = array();
+	// Contains fix results.
+	protected        $result_fix = array();
 	/*
 	 * On multisite, some fixes can't be performed from the network admin.
 	 * This array will contain a list of site IDs with scan messages.
 	 */
-	protected     $fix_sites;
+	protected        $fix_sites;
 	/*
 	 * On multisite, if `$for_current_site` is true, then the scan/fix/etc are performed for the current site, not wetwork-widely.
 	 * If needed, should be set right after instanciation.
 	 * Does nothing on non-multisite installations.
 	 */
-	protected     $for_current_site = false;
+	protected        $for_current_site = false;
+	/*
+	 * Contains part of class names used for the "MS fixes" (the ones we do on each sub-site).
+	 */
+	protected static $tests_for_ms_scanner_fixes;
 
-	public static $prio     = '';
-	public static $type     = '';
-	public static $title    = '';
-	public static $more     = '';
-	public static $more_fix = '';
-	public static $fixable  = true;
+	public    static $prio     = '';
+	public    static $type     = '';
+	public    static $title    = '';
+	public    static $more     = '';
+	public    static $more_fix = '';
+	public    static $fixable  = true;
 
 
 	// Init ========================================================================================
@@ -67,6 +71,22 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	 */
 	protected function _init() {
 		$this->class_name_part = substr( get_called_class(), 15 ); // 15 is 'SecuPress_Scan_' length.
+
+		if ( ! isset( $tests_for_ms_scanner_fixes ) ) {
+			static::$tests_for_ms_scanner_fixes = secupress_get_tests_for_ms_scanner_fixes();
+			static::$tests_for_ms_scanner_fixes = array_flip( static::$tests_for_ms_scanner_fixes );
+		}
+
+		/**
+		 * Automatically set the $fixable property for scanners that need to perform the fix in each sub-site:
+		 * - fixable in sub-sites,
+		 * - not fixable in network admin.
+		 * We don't use `$this->is_network_admin()` here because `$this->for_current_site` is not set yet.
+		 */
+		if ( isset( static::$tests_for_ms_scanner_fixes[ $this->class_name_part ] ) && is_network_admin() ) {
+			self::$fixable = false;
+		}
+
 		static::init();
 	}
 
@@ -101,6 +121,16 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 
 	final public function for_current_site( $for_current_site = null ) {
 		$this->for_current_site = (bool) $for_current_site;
+
+		/**
+		 * Automatically set the $fixable property for scanners that need to perform the fix in each sub-site:
+		 * - fixable in sub-sites,
+		 * - not fixable in network admin.
+		 */
+		if ( isset( static::$tests_for_ms_scanner_fixes[ $this->class_name_part ] ) ) {
+			self::$fixable = ! $this->is_network_admin();
+		}
+
 		return $this;
 	}
 
