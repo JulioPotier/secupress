@@ -34,9 +34,9 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 
 	// The part of the class that extends this one, like SecuPress_Scan_{$class_name_part}.
 	protected     $class_name_part;
-	// Contain scan results.
+	// Contains scan results.
 	protected     $result     = array();
-	// Contain fix results.
+	// Contains fix results.
 	protected     $result_fix = array();
 	/*
 	 * On multisite, some fixes can't be performed from the network admin.

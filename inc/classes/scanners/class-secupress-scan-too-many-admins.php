@@ -25,7 +25,27 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPres
 		self::$type     = 'WordPress';
 		self::$title    = __( 'Check if there are more than three Administrators on this site.', 'secupress' );
 		self::$more     = __( 'Accounts with Administrator privileges can perform any kind of action. The less Administrators you have, the lower the risk that any account has been compromised is.', 'secupress' );
-		self::$more_fix = __( 'This will ask you to keep a maximum of 3 administrators on your website. You will have to choose between delete or downgrade some administrators.', 'secupress' );
+		if ( is_network_admin() ) {
+			self::$more_fix = sprintf(
+				_n(
+					'This will create a new page similar to this one in each related site, where administrators will be asked to keep a maximum of %d administrator on their website. They will have to choose between delete or downgrade some administrators.',
+					'This will create a new page similar to this one in each related site, where administrators will be asked to keep a maximum of %d administrators on their website. They will have to choose between delete or downgrade some administrators.',
+					static::$max_admins,
+					'secupress'
+				),
+				static::$max_admins
+			);
+		} else {
+			self::$more_fix = sprintf(
+				_n(
+					'This will ask you to keep a maximum of %d administrator on your website. You will have to choose between delete or downgrade some administrators.',
+					'This will ask you to keep a maximum of %d administrators on your website. You will have to choose between delete or downgrade some administrators.',
+					static::$max_admins,
+					'secupress'
+				),
+				static::$max_admins
+			);
+		}
 	}
 
 
@@ -33,7 +53,7 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPres
 		$messages = array(
 			// good
 			0   => _n_noop( 'You have only <strong>%d Administrator</strong>, fine.', 'You have only <strong>%d Administrators</strong>, fine.', 'secupress' ),
-			1   => __( 'None of your sites have more than <strong>%d Administrator</strong>, fine.', 'secupress' ),
+			1   => sprintf( _n( 'None of your sites have more than <strong>%d Administrator</strong>, fine.', 'None of your sites have more than <strong>%d Administrators</strong>, fine.', static::$max_admins, 'secupress' ), static::$max_admins ),
 			/* translators: 1 is a user name (or a list of user names), 2 is a user role. */
 			2   => _n_noop( '%1$s successfully downgraded to %2$s.', '%1$s successfully downgraded to %2$s.', 'secupress' ),
 			/* translators: %s is a user name (or a list of user names). */
@@ -562,7 +582,7 @@ class SecuPress_Scan_Too_Many_Admins extends SecuPress_Scan implements iSecuPres
 			$this->add_message( 201, array( count( $blog_names ), static::$max_admins, $blog_names ) );
 		} else {
 			// good
-			$this->add_message( 1, array( static::$max_admins ) );
+			$this->add_message( 1 );
 		}
 	}
 

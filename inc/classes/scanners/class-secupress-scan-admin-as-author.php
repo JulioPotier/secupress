@@ -24,7 +24,11 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 		self::$type     = 'WordPress';
 		self::$title    = __( 'Check if any Administrator already created public posts.', 'secupress' );
 		self::$more     = __( 'The <strong>Administrator</strong> role is to fully manage the website but not to create posts. There are other roles for that like <strong>Editor</strong> or <strong>Author</strong>. But mainly, it means that your Administrator account is always logged in. An attacker could then perform actions on your behalf (<abbr title="Cross-Site Request Forgery">CSRF</abbr> flaw).', 'secupress' );
-		self::$more_fix = __( 'This will ask you to assign the administrators\' posts to another user (and create it if needed), or downgrade this administrator as an Editor.', 'secupress' );
+		if ( is_network_admin() ) {
+			self::$more_fix = __( 'This will create a new page similar to this one in each related site, where administrators will be asked to assign the administrators\' posts to another user (and create it if needed), or downgrade these administrators as Editors.', 'secupress' );
+		} else {
+			self::$more_fix = __( 'This will ask you to assign the administrators\' posts to another user (and create it if needed), or downgrade these administrators as Editors.', 'secupress' );
+		}
 	}
 
 
@@ -118,15 +122,15 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 		}
 
 		// MONOSITE ================
-		$admins       = static::get_admins( 'user_login' );
-		$count_admins = count( $admins );
+		$admins = static::get_admins( 'user_login' );
 
-		if ( ! $count_admins ) {
+		if ( ! $admins ) {
 			// good
 			$this->add_fix_message( 1 );
 			return parent::fix();
 		}
 
+		$count_admins            = count( $admins );
 		$current_admin           = get_current_user_id();
 		$current_admin_is_author = isset( $admins[ $current_admin ] );
 		$has_other_admin_authors = ! $current_admin_is_author || ( $current_admin_is_author && $count_admins > 1 );
@@ -191,15 +195,15 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 	 * - Maybe downgrade Administrators.
 	 */
 	protected function manual_fix_main_action() {
-		$admins       = static::get_admins( 'user_login' );
-		$count_admins = count( $admins );
+		$admins = static::get_admins( 'user_login' );
 
 		// No admins with Posts left.
-		if ( ! $count_admins ) {
+		if ( ! $admins ) {
 			// good
 			return $this->add_fix_message( 1 );
 		}
 
+		$count_admins  = count( $admins );
 		$final_test    = true;
 		$current_admin = get_current_user_id();
 		$new_role      = static::get_new_role();
