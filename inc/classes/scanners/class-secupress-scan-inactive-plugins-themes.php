@@ -44,10 +44,8 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 			// bad
 			200 => _n_noop( '<strong>%1$d deactivated plugin</strong>, if you don\'t need it, delete it: %2$s.', '<strong>%1$d deactivated plugins</strong>, if you don\'t need them, delete them: %2$s.', 'secupress' ),
 			201 => _n_noop( '<strong>%1$d deactivated theme</strong>, if you don\'t need it, delete it: %2$s.', '<strong>%1$d deactivated themes</strong>, if you don\'t need them, delete them: %2$s.', 'secupress' ),
-			// 202 => __( '<strong>%1$d deactivated plugins</strong>, if you don\'t need them, delete them: %2$s... and %3$d others.', 'secupress' ),
-			// 203 => __( '<strong>%1$d deactivated themes</strong>, if you don\'t need them, delete them: %2$s... and %3$d others.', 'secupress' ),
-			204 => _n_noop( 'Sorry, this plugin could not be deleted.', 'Sorry, those plugins could not be deleted.', 'secupress' ),
-			205 => _n_noop( 'Sorry, this theme could not be deleted.', 'Sorry, those themes could not be deleted.', 'secupress' ),
+			202 => _n_noop( 'Sorry, this plugin could not be deleted.', 'Sorry, those plugins could not be deleted.', 'secupress' ),
+			203 => _n_noop( 'Sorry, this theme could not be deleted.', 'Sorry, those themes could not be deleted.', 'secupress' ),
 			// cantfix
 			300 => _n_noop( '%d plugin is deactivated.', '%d plugins are deactivated.', 'secupress' ),
 			301 => _n_noop( '%d theme is deactivated.', '%d themes are deactivated.', 'secupress' ),
@@ -66,7 +64,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 
 	public function scan() {
 		$lists = static::get_inactive_plugins_and_themes();
-		$glue  = sprintf( __('%s, %s'), '', '' ); // WP i18n
+		$glue  = sprintf( __( '%s, %s' ), '', '' ); // WP i18n
 
 		// Inactive plugins
 		if ( $count = count( $lists['plugins'] ) ) {
@@ -253,7 +251,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 		// No plugins deleted.
 		elseif ( ! $count_deleted ) {
 			// bad
-			$this->add_fix_message( 204, array( $count_inactive ) );
+			$this->add_fix_message( 202, array( $count_inactive ) );
 		}
 		// Some plugins could not be deleted.
 		else {
@@ -325,7 +323,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 		// No themes deleted.
 		elseif ( ! $count_deleted ) {
 			// bad
-			$this->add_fix_message( 205, array( $count_inactive ) );
+			$this->add_fix_message( 203, array( $count_inactive ) );
 		}
 		// Some themes could not be deleted.
 		else {
