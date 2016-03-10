@@ -676,7 +676,7 @@ function secupress_main_scan() {
 										<?php
 									} else { // Really not fixable by the plugin + //// #
 										echo '<em>(';
-										_e( 'Can not be fixed automatically.', 'secupress' );
+										_e( 'Cannot be fixed automatically.', 'secupress' );
 										echo '</em>)';
 									}
 									?>
