@@ -33,7 +33,7 @@ class SecuPress_Scan_Plugins_Update extends SecuPress_Scan implements iSecuPress
 			// good
 			0   => __( 'Your plugins are up to date.', 'secupress' ),
 			// bad
-			200 => _n_noop( '<strong>%1$d plugin</strong> isn\'t up to date: %2$s.', '<strong>%1$d plugins</strong> aren\'t up to date: %2$s.', 'secupress' ),
+			200 => _n_noop( '<strong>%1$d plugin</strong> is not up to date: %2$s.', '<strong>%1$d plugins</strong> are not up to date: %2$s.', 'secupress' ),
 			// cantfix
 			300 => __( 'Some plugins could not be updated correctly.', 'secupress' ),
 		);
@@ -49,13 +49,14 @@ class SecuPress_Scan_Plugins_Update extends SecuPress_Scan implements iSecuPress
 	public function scan() {
 		ob_start();
 
-		// Plugins
 		wp_update_plugins();
 		$current        = get_site_transient( 'update_plugins' );
 		$plugin_updates = array();
 
 		if ( isset( $current->response ) && is_array( $current->response ) ) {
-			$plugin_updates = wp_list_pluck( array_intersect_key( get_plugins(), array_flip( array_keys( $current->response ) ) ), 'Name' );
+			$plugin_updates = array_flip( array_keys( $current->response ) );
+			$plugin_updates = array_intersect_key( get_plugins(), $plugin_updates );
+			$plugin_updates = wp_list_pluck( $plugin_updates, 'Name' );
 		}
 
 		ob_flush();
@@ -80,23 +81,28 @@ class SecuPress_Scan_Plugins_Update extends SecuPress_Scan implements iSecuPress
 		// Plugins
 		$plugins = get_site_transient( 'update_plugins' );
 		$plugins = isset( $plugins->response ) ? array_keys( $plugins->response ) : false;
+
 		if ( $plugins ) {
-			// remove the WP upgrade process for translation since it will output data, use our own based on core but using a silent upgrade
+			// remove the WP upgrade process for translation since it will output data, use our own based on core but using a silent upgrade.
 			remove_action( 'upgrader_process_complete', array( 'Language_Pack_Upgrader', 'async_upgrade' ), 20 );
 			add_action( 'upgrader_process_complete', 'secupress_async_upgrades', 20 );
 
-			$url = 'update.php?action=update-selected&amp;plugins=' . urlencode( implode( ',', $plugins ) );
-			$nonce = 'bulk-update-plugins';
 			include_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
-			$skin = new Automatic_Upgrader_Skin( compact( 'nonce', 'url' ) );
+
+			$nonce    = 'bulk-update-plugins';
+			$url      = implode( ',', $plugins );
+			$url      = 'update.php?action=update-selected&amp;plugins=' . urlencode( $url );
+			$skin     = new Automatic_Upgrader_Skin( array( 'nonce' => $nonce, 'url' => $url ) );
 			$upgrader = new Plugin_Upgrader( $skin );
+
 			$upgrader->bulk_upgrade( $plugins );
 		}
 
 		ob_end_clean();
 
 		$plugins = get_site_transient( 'update_plugins' );
-		$plugins = isset( $plugins->response ) ? array_keys( $plugins->response ) : false;
+		$plugins = isset( $plugins->response ) ? $plugins->response : false;
+
 		if ( ! $plugins ) {
 			$this->add_fix_message( 0 );
 		} else {
