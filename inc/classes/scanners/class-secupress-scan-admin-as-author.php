@@ -118,15 +118,15 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 		}
 
 		// MONOSITE ================
-		$admins = static::get_admins( 'user_login' );
+		$admins       = static::get_admins( 'user_login' );
+		$count_admins = count( $admins );
 
-		if ( ! $admins ) {
+		if ( ! $count_admins ) {
 			// good
 			$this->add_fix_message( 1 );
 			return parent::fix();
 		}
 
-		$count_admins            = count( $admins );
 		$current_admin           = get_current_user_id();
 		$current_admin_is_author = isset( $admins[ $current_admin ] );
 		$has_other_admin_authors = ! $current_admin_is_author || ( $current_admin_is_author && $count_admins > 1 );
@@ -191,15 +191,15 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 	 * - Maybe downgrade Administrators.
 	 */
 	protected function manual_fix_main_action() {
-		$admins = static::get_admins( 'user_login' );
+		$admins       = static::get_admins( 'user_login' );
+		$count_admins = count( $admins );
 
 		// No admins with Posts left.
-		if ( ! $admins ) {
+		if ( ! $count_admins ) {
 			// good
 			return $this->add_fix_message( 1 );
 		}
 
-		$count_admins  = count( $admins );
 		$final_test    = true;
 		$current_admin = get_current_user_id();
 		$new_role      = static::get_new_role();
@@ -515,6 +515,15 @@ class SecuPress_Scan_Admin_As_Author extends SecuPress_Scan implements iSecuPres
 	 * Template parts.
 	 */
 	protected function get_fix_action_template_parts() {
+
+		// MULTISITE ===============
+		if ( $this->is_network_admin() ) {
+			return array(
+				'admin-as-author'                   => static::get_messages( 303 ),
+				'admin-as-author-new-editor'        => static::get_messages( 303 ),
+				'admin-as-author-new-administrator' => static::get_messages( 303 ),
+			);
+		}
 
 		// MONOSITE ================
 		$admins = static::get_admins( 'user_login' );
