@@ -381,7 +381,7 @@ function secupress_get_ip() { //// find the best order
 			$ip = end( $ip );
 
 			if ( false !== filter_var( $ip, FILTER_VALIDATE_IP ) ) {
-				// return apply_filters( 'secupress_get_ip', $ip ); //// maybe not
+				return apply_filters( 'secupress_get_ip', $ip ); //// maybe not
 				return $ip;
 			}
 		}
