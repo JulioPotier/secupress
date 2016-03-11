@@ -82,22 +82,28 @@ function secupress_rename_admin_username_logout() {
 
 	secupress_delete_site_transient( 'secupress-rename-admin-username' );
 
-	$wpdb->update( $wpdb->users, array( 'user_login' => $data['username'] ), array( 'user_login' => 'admin' ) );
-	// Current user auth cookie is now invalid, log in again is mandatory
+	$is_super_admin = false;
 
+	if ( is_multisite() && is_super_admin() ) {
+		require_once( ABSPATH . 'wp-admin/includes/ms.php' );
+		revoke_super_admin( $current_user->ID );
+		$is_super_admin = true;
+	}
+
+	$wpdb->update( $wpdb->users, array( 'user_login' => $data['username'] ), array( 'user_login' => 'admin' ) );
+
+	// Current user auth cookie is now invalid, log in again is mandatory.
 	wp_clear_auth_cookie();
 	wp_destroy_current_session();
 
+	if ( $is_super_admin ) {
+		wp_cache_delete( $current_user->ID, 'users' );
+		grant_super_admin( $current_user->ID );
+	}
+
+	// Auto-login.
 	$token = md5( time() );
 	secupress_set_site_transient( 'secupress_auto_login_' . $token, array( $data['username'], 'Admin_User' ) );
-
-	// Store a good scan result.
-	secupress_set_site_transient( 'secupress_scan_admin_user', array(
-		'status' => 'good',
-		'msgs'   => array(
-			0 => array( '<em>admin</em>' ),
-		),
-	) );
 
 	wp_safe_redirect( esc_url_raw( add_query_arg( 'secupress_auto_login_token', $token ) ) );
 	die();
