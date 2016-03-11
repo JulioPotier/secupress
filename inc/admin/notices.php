@@ -340,6 +340,18 @@ function secupress_add_notice( $message, $error_code = null, $notice_id = '' ) {
 	SecuPress_Admin_Notices::get_instance()->add( $message, $error_code, $notice_id );
 }
 
+/**
+ * Add a temporary notice with the SecuPress_Admin_Notices class.
+ *
+ * @since 1.0
+ *
+ * @param (string)      $message    The message to display in the notice.
+ * @param (string)      $error_code Like WordPress notices: "error" or "updated". Default is "updated".
+ */
+function secupress_add_transient_notice( $message, $error_code = null ) {
+	SecuPress_Admin_Notices::get_instance()->add_temporary( $message, $error_code );
+}
+
 
 /**
  * Dismiss a notice added with the SecuPress_Admin_Notices class.
@@ -382,4 +394,27 @@ function secupress_reinit_notice( $notice_id, $user_id = 0 ) {
  */
 function secupress_notice_is_dismissed( $notice_id ) {
 	return SecuPress_Admin_Notices::is_dismissed( $notice_id );
+}
+
+/**
+ * Will lately add admin notices added by secupress_add_transient_notice()
+ *
+ * @return void
+ * @since 1.0
+ **/
+add_action( 'admin_menu', 'secupress_display_transient_notices' );
+function secupress_display_transient_notices() {
+	global $current_user;
+
+	$notices = secupress_get_transient( 'secupress-notices-' . $current_user->ID );
+
+	if ( ! $notices ) {
+		return;
+	}
+
+	foreach( $notices as $notice ) {
+		SecuPress_Admin_Notices::get_instance()->add( $notice['message'], $notice['error_code'], false );
+	}
+
+	delete_transient( 'secupress-notices-' . $current_user->ID );
 }

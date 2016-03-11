@@ -76,17 +76,37 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 				'sp-dismissible' => array(),
 			);
 		}
-
 		if ( false === $notice_id ) {
 			// The notice is not dismissible.
 			$this->notices[ $error_code ]['permanent'][] = $message;
 		} elseif ( $notice_id ) {
-			// The notice is dissmissible, with a custom ajax call.
+			// The notice is dismissible, with a custom ajax call.
 			$this->notices[ $error_code ]['sp-dismissible'][ $notice_id ] = $message;
 		} else {
 			// The notice is dismissible.
 			$this->notices[ $error_code ]['wp-dismissible'][] = $message;
 		}
+
+	}
+
+	/**
+	 * Add a temporary admin notice.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string)      $message    The message to display in the notice.
+	 * @param (string)      $error_code Like WordPress notices: "error" or "updated". Default is "updated".
+	 */
+	public function add_temporary( $message, $error_code = 'updated' ) {
+		global $current_user;
+
+		$error_code = 'error' === $error_code ? 'error' : 'updated';
+
+		$notices   = secupress_get_transient( 'secupress-notices-' . $current_user->ID );
+		$notices   = $notices ? $notices : array();
+		$notices[] = compact( 'message', 'error_code' );
+		secupress_set_transient( 'secupress-notices-' . $current_user->ID, $notices );
+
 	}
 
 
@@ -242,7 +262,6 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 		if ( ! $this->notices ) {
 			return;
 		}
-
 		$compat  = secupress_wp_version_is( '4.2-beta4' ) ? '' : ' secupress-compat-notice';
 		$referer = urlencode( esc_url( secupress_get_current_url( 'raw' ) ) );
 
