@@ -112,7 +112,6 @@ function secupress_init() {
 	require( SECUPRESS_FUNCTIONS_PATH . 'files.php' );
 	require( SECUPRESS_FUNCTIONS_PATH . 'admin.php' );
 	require( SECUPRESS_FUNCTIONS_PATH . 'plugins.php' );
-	require( SECUPRESS_FUNCTIONS_PATH . 'geoip.inc.php' );
 	require( SECUPRESS_FUNCTIONS_PATH . 'db.php' );
 	require( SECUPRESS_FRONT_PATH     . 'htaccess.php' );
 	require( SECUPRESS_FRONT_PATH     . 'common.php' );
