@@ -137,6 +137,20 @@ function __secupress_geoip_settings_callback( $modulenow, &$settings ) {
 	}
 
 	$settings['geoip-system_countries'] = ! empty( $settings['geoip-system_countries'] ) && is_array( $settings['geoip-system_countries'] ) ? array_map( 'sanitize_text_field', $settings['geoip-system_countries'] ) : array();
+	if ( empty( $settings['geoip-system_countries'] ) ) {
+		// Deactivate the plugin if nothing is selected, you don't need it in fact.
+		$settings['geoip-system_type'] = '-1';
+	} elseif ( '-1' != $settings['geoip-system_type'] && function_exists( 'secupress_geoip2country' ) ) {
+		$country_code = secupress_geoip2country( secupress_get_ip() );
+		$is_whitelist = 'whitelist' == $settings['geoip-system_type'];
+		$countries    = $settings['geoip-system_countries'];
+		if ( in_array( $country_code, $countries ) && ! $is_whitelist ) {
+			unset( $countries[ array_search( $country_code, $countries ) ] );
+		} elseif( ! in_array( $country_code, $countries ) && $is_whitelist ) {
+			$countries[] = $country_code;
+		}
+		$settings['geoip-system_countries'] = $countries;
+	}
 
 	// (De)Activation.
 	secupress_manage_submodule( $modulenow, 'geoip-system', ( '-1' !== $settings['geoip-system_type'] ) );
