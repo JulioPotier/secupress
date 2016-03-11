@@ -39,31 +39,10 @@ $this->add_field( array(
 	)
 ) );
 
-
-$geoip_instance = new GeoIP;
-$countries      = array(
-	'AF' => array( 'Africa' ),
-	'AN' => array( 'Antarctica' ),
-	'AS' => array( 'Asia' ),
-	'EU' => array( 'Europe' ),
-	'OC' => array( 'Oceania' ),
-	'NA' => array( 'North America' ),
-	'SA' => array( 'South America' ),
-);
-
-foreach( $geoip_instance->GEOIP_CONTINENT_CODES as $index => $code ) {
-	$countries[ $code ][ $geoip_instance->GEOIP_COUNTRY_CODES[ $index ] ] = $geoip_instance->GEOIP_COUNTRY_NAMES [ $index ];
-}
-
-unset( $countries['--'] );
-
 $this->add_field( array(
 	'title'        => __( 'Which countries?', 'secupress' ),
 	'description'  => __( 'Add or remove countries you want to be manage from your website.', 'secupress' ),
 	'depends'      => $main_field_name . '_blacklist' . ' ' . $main_field_name . '_whitelist',
 	'type'         => 'countries',
 	'name'         => $this->get_field_name( 'countries' ),
-	'options'      => $countries,
 ) );
-
-unset( $countries );
