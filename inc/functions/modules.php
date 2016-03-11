@@ -105,11 +105,11 @@ function secupress_add_module_notice( $module, $submodule, $action ) {
 
 	$transient_name = "secupress_module_{$action}_{$current_user->ID}";
 	$submodule_data = secupress_get_module_data( $module , $submodule );
-	$current        = secupress_get_site_transient( $transient_name );
+	$current        = secupress_get_transient( $transient_name );
 	$current        = is_array( $current ) ? $current : array();
 	$current[]      = $submodule_data['Name'];
 
-	secupress_set_site_transient( $transient_name, $current );
+	secupress_set_transient( $transient_name, $current );
 
 	do_action( 'module_notice_' . $action, $module, $submodule );
 }
