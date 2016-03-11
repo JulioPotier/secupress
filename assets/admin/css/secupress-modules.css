@@ -213,4 +213,8 @@ label {
 .secupress-actions-li:hover span, .secupress-actions-li:focus span {
 	display: inline;
 }
-h4.throw{display:none;}
+.expand_country{
+	border: none;
+	cursor: pointer;
+	background-color: transparent;
+}
