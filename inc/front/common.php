@@ -310,7 +310,7 @@ function secupress_downgrade_author_administrator() {
 	$user->add_role( $role );
 
 	// Not a Super Admin anymore.
-	if ( is_super_admin() && is_super_admin( $old_user_id ) ) {
+	if ( is_multisite() && is_super_admin() && is_super_admin( $old_user_id ) ) {
 		revoke_super_admin( $old_user_id );
 	}
 
