@@ -610,7 +610,7 @@ function secupress_get_tests() {
 		'high' => array(
 			'Core_Update',      'Plugins_Update',    'Themes_Update',
 			'Auto_Update',      'Bad_Old_Plugins',   'Bad_Old_Files',
-			'Bad_Config_Files', 'Directory_Listing',// 'PHP_INI',
+			'Bad_Config_Files', 'Directory_Listing', /*'PHP_INI',*/
 			'Admin_User',       'Easy_Login',        'Subscription',
 			'WP_Config',        'Salt_Keys',         'Passwords_Strength',
 			'Chmods',           'Common_Flaws',      'Bad_User_Agent',
@@ -618,12 +618,12 @@ function secupress_get_tests() {
 		),
 		'medium' => array(
 			'Inactive_Plugins_Themes', 'Bad_Url_Access', 'Bad_Usernames',
-			'Bad_Request_Methods',     'PhpVersion',     'Too_Many_Admins',
+			'Bad_Request_Methods',     'PhpVersion',     /*'Too_Many_Admins',*/
 			'Block_HTTP_1_0',          'Discloses',      'Block_Long_URL',
 			'Readme_Discloses',
 		),
 		'low' => array(
-			'Login_Errors_Disclose', 'PHP_Disclosure', 'Admin_As_Author',
+			'Login_Errors_Disclose', 'PHP_Disclosure', /*'Admin_As_Author',*/
 			'DirectoryIndex'
 		)
 	);
@@ -650,8 +650,8 @@ function secupress_get_tests() {
 function secupress_get_tests_for_ms_scanner_fixes() {
 	return array(
 		'Bad_Old_Plugins',
-		'Too_Many_Admins',
-		'Admin_As_Author',
+//		'Too_Many_Admins',
+//		'Admin_As_Author',
 	);
 }
 
