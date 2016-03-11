@@ -521,7 +521,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 						<?php echo $title; ?>
 					</label>
 					<button type="button" class="hide-if-no-js expand_country"><img src="data:image/gif;base64,R0lGODlhEAAQAMQAAAAAAM/Iu3iYtcK4qPX18bDC09/b0ubm5v///9jTye3t59LMv8a+ruXh2tzYz/j4+PDw7NbRxuTh2f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAUUABMALAAAAAAQABAAAAVI4CSOZGmeaKqubFkIcCwUp4DcOCLUOHA/O5PgQQQ8II1gSUAAOJ0GJUkAgSgAB4lDOhJoE4DIIsAVCRaMgVpdnrxkMFprjgoBADs=" alt="+" title="<?php __( 'Expand', 'secupress' ); ?>" /></button>
-					<fieldset class="hidden">
+					<fieldset class="hide-if-js">
 						<br />
 						<?php
 						foreach ( $countries as $code => $title ) {
