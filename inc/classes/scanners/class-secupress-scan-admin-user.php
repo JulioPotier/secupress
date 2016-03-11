@@ -24,7 +24,14 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 		self::$type     = 'WordPress';
 		self::$title    = __( 'Check if the <em>admin</em> account is correctly protected.', 'secupress' );
 		self::$more     = __( 'It is important to protect the famous <em>admin</em> account to avoid simple brute-force attacks on it. This account is most of the time the first one created when you install WordPress, and it is well known by attackers.', 'secupress' );
-		self::$more_fix = __( 'This will ask you to downgrade the admin account or create the admin account with no role if your subscriptions are open.', 'secupress' );
+
+		$current_user = wp_get_current_user();
+
+		if ( 'admin' === $current_user->user_login ) {
+			self::$more_fix = __( 'You will be asked for a new username and your account will be renamed.', 'secupress' );
+		} else {
+			self::$more_fix = __( 'This will remove all roles and capabilities from the <em>admin</em> account if it exists. If it does not exist and user subscriptions are open, the account will be created with no role nor capabilities.', 'secupress' );
+		}
 	}
 
 
@@ -32,17 +39,17 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 		$messages = array(
 			// good
 			0   => __( 'The %s account is correctly protected.', 'secupress' ),
-			1   => __( 'The %s account is not an Administrator anymore.', 'secupress' ),
+			1   => __( 'The %s account has no role anymore.', 'secupress' ),
 			// warning
 			100 => __( 'This fix is <strong>pending</strong>, please reload the page to apply it now.', 'secupress' ),
 			// bad
-			200 => __( 'The %s account role should not be <strong>Administrator</strong> but should have no role at all.', 'secupress' ),
+			200 => __( 'The %s account should have no role at all.', 'secupress' ),
 			201 => __( 'Because the user registration is open, the %s account should exist (with no role) to avoid someone to register it.', 'secupress' ),
 			202 => __( 'Sorry, the username %s is forbidden!', 'secupress' ),
 			203 => __( 'Cannot create a user with an empty login name!' ), // WPi18n
 			204 => __( 'Sorry, the username %s already exists!', 'secupress' ),
-			205 => __( 'The username %s is invalid because it uses illegal characters.', 'secupress' ),
-			206 => __( 'Sorry, I couldn\'t remove the <strong>Administrator</strong> role from the %s account. You should try to remove its role manually.', 'secupress' ),
+			205 => __( 'The username %1$s is invalid because it uses illegal characters. Spot the differences: %2$s.', 'secupress' ),
+			206 => __( 'Sorry, I could not remove the role from the %s account. You should try to remove it manually.', 'secupress' ),
 			207 => __( 'Sorry, the %s account could not be created. You should try to create it manually and then remove its role.', 'secupress' ),
 			// cantfix
 			300 => __( 'Oh! The %s account is yours! Please choose a new login for your account.', 'secupress' ),
@@ -57,24 +64,26 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 
 
 	public function scan() {
-		$username = 'admin';
-		$check    = username_exists( $username );
-
 		if ( secupress_get_site_transient( 'secupress-rename-admin-username' ) ) {
 			$this->add_message( 100 );
-		} else {
-			// Should not be administrator.
-			if ( false !== $check && user_can( $check, 'administrator' ) ) {
-				// bad
-				$this->add_message( 200, array( '<em>' . $username . '</em>' ) );
-			}
-
-			// // "admin" user should exist to avoid the creation of this user.
-			if ( get_option( 'users_can_register' ) && false === $check ) {
-				// bad
-				$this->add_message( 201, array( '<em>' . $username . '</em>' ) );
-			}
+			return parent::scan();
 		}
+
+		$username = 'admin';
+		$user_id  = username_exists( $username );
+
+		// The "admin" account exists, it should have no role.
+		if ( static::user_has_capas( $user_id ) ) {
+			// bad
+			$this->add_message( 200, array( '<em>' . $username . '</em>' ) );
+		}
+
+		// The "admin" account should exist to avoid its creation when users can register.
+		if ( ! $user_id && static::users_can_register() ) {
+			// bad
+			$this->add_message( 201, array( '<em>' . $username . '</em>' ) );
+		}
+
 		// good
 		$this->maybe_set_status( 0, array( '<em>' . $username . '</em>' ) );
 
@@ -83,33 +92,44 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 
 
 	public function fix() {
+		global $wpdb;
 
-		$username     = 'admin';
-		$check        = username_exists( $username );
-		$current_user = wp_get_current_user();
+		$username = 'admin';
+		$user_id  = username_exists( $username );
 
-		// Should not be administrator.
-		if ( false !== $check && user_can( $check, 'administrator' ) ) {
-			if ( $check != $current_user->ID ) {
-				$user = new WP_User( $check );
-				$user->remove_role( 'administrator' );
+		// The "admin" account exists.
+		if ( static::user_has_capas( $user_id ) ) {
 
-				if ( user_can( $user, 'administrator' ) ) {
+			$current_user_id = get_current_user_id();
+
+			// It's not you: remove all roles and capabilities.
+			if ( $user_id !== $current_user_id ) {
+				// Remove all capabilities.
+				$wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->usermeta WHERE user_id = %d AND meta_key REGEXP '{$wpdb->base_prefix}([0-9]+_)?capabilities'", $user_id ) );
+
+				if ( is_multisite() ) {
+					// Not a network administrator anymore.
+					revoke_super_admin( $user_id );
+				}
+
+				if ( static::user_has_capas( $user_id ) ) {
 					// bad
 					$this->add_fix_message( 206, array( '<em>' . $username . '</em>' ) );
 				} else {
 					// good
 					$this->add_fix_message( 1, array( '<em>' . $username . '</em>' ) );
 				}
-			} else {
+			}
+			// It's you, you must change your username.
+			else {
 				// This fix requires the user to take action.
 				$this->add_fix_message( 300, array( '<em>' . $username . '</em>' ) );
 				$this->add_fix_action( 'rename-admin-username' );
 			}
 		}
 
-		// "admin" user should exist to avoid the creation of this user.
-		if ( false === $check && get_option( 'users_can_register' ) ) {
+		// Registrations are open: the "admin" account should exist to avoid the creation of this user.
+		if ( ! $user_id && static::users_can_register() ) {
 			secupress_cache_data( 'allowed_usernames', $username );
 			$user_id = wp_insert_user( array(
 				'user_login' => $username,
@@ -156,18 +176,19 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 			$this->add_fix_action( 'rename-admin-username' );
 		} elseif ( $username !== sanitize_user( $username, true ) ) {
 			// bad
-			$this->add_fix_message( 205, array( '<em>' . $username . '</em>' ) );
+			$this->add_fix_message( 205, array( '<em>' . $username . '</em>', '<em>' . sanitize_user( $username, true ) . '</em>' ) );
 			$this->add_fix_action( 'rename-admin-username' );
 		} else {
 			// $username ok, can't rename now or all nonces will be broken and the user disconnected
-			$current_user = wp_get_current_user();
-			secupress_set_site_transient( 'secupress-rename-admin-username', array( 'ID' => $current_user->ID, 'username' => $username ) );
+			$current_user_id = get_current_user_id();
+			secupress_set_site_transient( 'secupress-rename-admin-username', array( 'ID' => $current_user_id, 'username' => $username ) );
 			// warning
 			$this->add_fix_message( 100 );
 		}
 
 		return parent::manual_fix();
 	}
+
 
 	protected function get_fix_action_template_parts() {
 		$form  = '<h4>' . __( 'Choose a new login for your account:', 'secupress' ) . '</h4>';
@@ -176,5 +197,56 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 		$form .= '<p>' . sprintf( __( 'Allowed characters: %s.', 'secupress' ), '<code>A-Z, a-z, 0-9, _, ., -, @</code>' ) . '</p>';
 
 		return array( 'rename-admin-username' => $form );
+	}
+
+
+	/**
+	 * Tell if a user has a role, capabilities, or is network admin.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int) $user_id The user ID.
+	 *
+	 * @return (bool)
+	 */
+	protected static function user_has_capas( $user_id ) {
+		global $wpdb;
+
+		if ( ! $user_id ) {
+			return false;
+		}
+
+		if ( is_super_admin( $user_id ) ) {
+			return true;
+		}
+
+		// Get all user metas "wp_capabilities",  "wp_2_capabilities" (MS)...
+		$caps = $wpdb->get_var( $wpdb->prepare( "SELECT meta_key FROM $wpdb->usermeta WHERE user_id = %d AND meta_value != 'a:0:{}' AND meta_key REGEXP '{$wpdb->base_prefix}([0-9]+_)?capabilities' LIMIT 1", $user_id ) );
+
+		return (bool) $caps;
+	}
+
+
+	/**
+	 * Tell if users can register.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (bool)
+	 */
+	protected static function users_can_register() {
+		if ( ! is_multisite() && get_option( 'users_can_register' ) ) {
+			return true;
+		}
+
+		if ( is_multisite() ) {
+			$registration = get_site_option( 'registration' );
+
+			if ( 'user' === $registration || 'all' === $registration ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
