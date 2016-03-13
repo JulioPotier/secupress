@@ -62,9 +62,11 @@ function secupress_auth_redirect_blacklist_logins( $user_id ) {
 					// Send the new login by email.
 					secupress_blacklist_logins_new_user_notification( $user_id );
 
-					// Kill Bill session.
+					// Kill session.
 					wp_clear_auth_cookie();
-					wp_destroy_current_session();
+					if ( function_exists( 'wp_destroy_current_session' ) ) { // WP 4.0 min
+						wp_destroy_current_session();
+					}
 
 					// Redirect the user to the login page.
 					$login_url = wp_login_url( secupress_get_current_url( 'raw' ), true );

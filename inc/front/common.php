@@ -76,7 +76,9 @@ function secupress_rename_admin_username_logout() {
 		// Current user auth cookie is now invalid, log in again is mandatory
 
 		wp_clear_auth_cookie();
-		wp_destroy_current_session();
+		if ( function_exists( 'wp_destroy_current_session' ) ) { // WP 4.0 min
+			wp_destroy_current_session();
+		}
 
 		$token = md5( time() );
 		secupress_set_site_transient( 'secupress_auto_login_' . $token, array( $data['username'], 'Admin_User' ) );
@@ -120,7 +122,9 @@ function secupress_add_cookiehash_muplugin() {
 		$contents .= 'define( \'COOKIEHASH\', md5( __FILE__ . \'' . wp_generate_password( 64 ) . '\' ) );';
 		if ( secupress_create_mu_plugin( 'COOKIEHASH_' . uniqid(), $contents ) ) {
 			wp_clear_auth_cookie();
-			wp_destroy_current_session();
+			if ( function_exists( 'wp_destroy_current_session' ) ) { // WP 4.0 min
+				wp_destroy_current_session();
+			}
 
 			$token = md5( time() );
 			secupress_set_site_transient( 'secupress_auto_login_' . $token, array( $data['username'], 'WP_Config' ) );
@@ -167,7 +171,9 @@ function secupress_add_salt_muplugin() {
 		}
 
 		wp_clear_auth_cookie();
-		wp_destroy_current_session();
+		if ( function_exists( 'wp_destroy_current_session' ) ) { // WP 4.0 min
+			wp_destroy_current_session();
+		}
 
 		foreach ( $keys as $constant ) {
 			delete_site_option( $constant );
