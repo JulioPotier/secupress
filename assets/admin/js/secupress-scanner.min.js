@@ -557,7 +557,12 @@ jQuery( document ).ready( function( $ ) {
 		}
 
 		if ( ! secupressIsFixable( $row ) ) {
+			secupressDoingFix = false;
+			delete doingFix[ test ];
+
 			secupressUncheckTest( $row );
+			$row.removeClass( "fixing" );
+			$( ".secupress-fixit" ).removeClass( "disabled" );
 			return;
 		}
 
@@ -890,11 +895,12 @@ jQuery( document ).ready( function( $ ) {
 
 	// Perform a fix on click.
 	$( "body" ).on( "click fix.secupress bulkfix.secupress", ".secupress-fixit", function( e ) {
-		$(".secupress-fixit").addClass('disabled');
 		var $this = $( this ),
 			href, test, $row, isBulk;
 
 		e.preventDefault();
+
+		$( ".secupress-fixit" ).addClass( "disabled" );
 
 		href   = $this.attr( "href" );
 		test   = secupressGetTestFromUrl( href );
