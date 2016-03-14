@@ -79,7 +79,7 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 		}
 
 		// The "admin" account should exist to avoid its creation when users can register.
-		if ( ! $user_id && static::users_can_register() ) {
+		if ( ! $user_id && secupress_users_can_register() ) {
 			// bad
 			$this->add_message( 201, array( '<em>' . $username . '</em>' ) );
 		}
@@ -129,7 +129,7 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 		}
 
 		// Registrations are open: the "admin" account should exist to avoid the creation of this user.
-		if ( ! $user_id && static::users_can_register() ) {
+		if ( ! $user_id && secupress_users_can_register() ) {
 			secupress_cache_data( 'allowed_usernames', $username );
 			$user_id = wp_insert_user( array(
 				'user_login' => $username,
@@ -224,29 +224,5 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 		$caps = $wpdb->get_var( $wpdb->prepare( "SELECT meta_key FROM $wpdb->usermeta WHERE user_id = %d AND meta_value != 'a:0:{}' AND meta_key REGEXP '{$wpdb->base_prefix}([0-9]+_)?capabilities' LIMIT 1", $user_id ) );
 
 		return (bool) $caps;
-	}
-
-
-	/**
-	 * Tell if users can register.
-	 *
-	 * @since 1.0
-	 *
-	 * @return (bool)
-	 */
-	protected static function users_can_register() {
-		if ( ! is_multisite() && get_option( 'users_can_register' ) ) {
-			return true;
-		}
-
-		if ( is_multisite() ) {
-			$registration = get_site_option( 'registration' );
-
-			if ( 'user' === $registration || 'all' === $registration ) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 }

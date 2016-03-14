@@ -208,6 +208,24 @@ function secupress_get_main_blog_id() {
 
 
 /**
+ * Tell if users can register, whatever we're in a Multisite or not.
+ *
+ * @since 1.0
+ *
+ * @return (bool)
+ */
+function secupress_users_can_register() {
+	if ( ! is_multisite() ) {
+		return (bool) get_option( 'users_can_register' );
+	}
+
+	$registration = get_site_option( 'registration' );
+
+	return 'user' === $registration || 'all' === $registration;
+}
+
+
+/**
  * Store, get or delete static data.
  *
  * Getter:   no need to provide a second parameter.
