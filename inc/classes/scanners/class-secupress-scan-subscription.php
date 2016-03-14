@@ -59,46 +59,49 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements iSecuPress_S
 	public function scan() {
 		global $wp_roles;
 
-		// Open subscriptions
-		if ( get_option( 'users_can_register' ) ) {
-
-			// Default role
-			$role = get_option( 'default_role' );
-
-			if ( 'subscriber' !== $role ) {
-				// bad
-				$role = isset( $wp_roles->role_names[ $role ] ) ? translate_user_role( $wp_roles->role_names[ $role ] ) : __( 'None' );
-				$this->add_message( 200, array( $role ) );
-			}
-
-			// Bots
-			$user_login = 'secupress_' . time();
-			$response   = wp_remote_post( wp_registration_url(), array(
-				'body' => array(
-					'user_login' => $user_login,
-					'user_email' => 'secupress_no_mail_SS@fakemail.' . time(),
-				),
-			) );
-
-			if ( ! is_wp_error( $response ) ) {
-
-				if ( $user_id = username_exists( $user_login ) ) {
-
-					wp_delete_user( $user_id );
-
-					if ( 'failed' === get_transient( 'secupress_registration_test' ) ) {
-						// bad
-						$this->add_message( 201 );
-					}
-				}
-
-			} else {
-				// warning
-				$this->add_message( 100 );
-			}
-
-			delete_transient( 'secupress_registration_test' );
+		// Subscriptions are closed.
+		if ( ! secupress_users_can_register() ) {
+			// good
+			$this->add_message( 0 );
+			return parent::scan();
 		}
+
+		// Default role
+		$role = get_option( 'default_role' );
+
+		if ( 'subscriber' !== $role ) {
+			// bad
+			$role = isset( $wp_roles->role_names[ $role ] ) ? translate_user_role( $wp_roles->role_names[ $role ] ) : __( 'None' );
+			$this->add_message( 200, array( $role ) );
+		}
+
+		// Bots
+		$user_login = 'secupress_' . time();
+		$response   = wp_remote_post( wp_registration_url(), array(
+			'body' => array(
+				'user_login' => $user_login,
+				'user_email' => 'secupress_no_mail_SS@fakemail.' . time(),
+			),
+		) );
+
+		if ( ! is_wp_error( $response ) ) {
+
+			if ( $user_id = username_exists( $user_login ) ) {
+
+				wp_delete_user( $user_id );
+
+				if ( 'failed' === get_transient( 'secupress_registration_test' ) ) {
+					// bad
+					$this->add_message( 201 );
+				}
+			}
+
+		} else {
+			// warning
+			$this->add_message( 100 );
+		}
+
+		delete_transient( 'secupress_registration_test' );
 
 		// good
 		$this->maybe_set_status( 0 );
@@ -109,7 +112,7 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements iSecuPress_S
 
 	public function fix() {
 
-		if ( ! get_option( 'users_can_register' ) ) {
+		if ( ! secupress_users_can_register() ) {
 			return parent::fix();
 		}
 
