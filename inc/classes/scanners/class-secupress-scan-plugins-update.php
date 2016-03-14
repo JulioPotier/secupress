@@ -32,10 +32,13 @@ class SecuPress_Scan_Plugins_Update extends SecuPress_Scan implements iSecuPress
 		$messages = array(
 			// good
 			0   => __( 'Your plugins are up to date.', 'secupress' ),
+			// warning
+			100 => _n_noop( '<strong>%d symlinked plugin</strong> is not up to date, and I cannot update it automatically.', '<strong>%d symlinked plugins</strong> are not up to date, and I cannot update them automatically.', 'secupress' ),
 			// bad
 			200 => _n_noop( '<strong>%1$d plugin</strong> is not up to date: %2$s.', '<strong>%1$d plugins</strong> are not up to date: %2$s.', 'secupress' ),
 			// cantfix
 			300 => __( 'Some plugins could not be updated correctly.', 'secupress' ),
+			301 => _n_noop( '<strong>%d symlinked plugin</strong> is not up to date, and I cannot update it automatically.', '<strong>%d symlinked plugins</strong> are not up to date, and I cannot update them automatically.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -50,20 +53,28 @@ class SecuPress_Scan_Plugins_Update extends SecuPress_Scan implements iSecuPress
 		ob_start();
 
 		wp_update_plugins();
-		$current        = get_site_transient( 'update_plugins' );
-		$plugin_updates = array();
+		$plugins           = get_site_transient( 'update_plugins' );
+		$plugins           = ! empty( $plugins->response ) && is_array( $plugins->response ) ? array_keys( $plugins->response ) : array();
+		$symlinked_plugins = array();
 
-		if ( isset( $current->response ) && is_array( $current->response ) ) {
-			$plugin_updates = array_flip( array_keys( $current->response ) );
-			$plugin_updates = array_intersect_key( get_plugins(), $plugin_updates );
-			$plugin_updates = wp_list_pluck( $plugin_updates, 'Name' );
+		if ( $plugins ) {
+			$symlinked_plugins = array_filter( $plugins, 'secupress_is_plugin_symlinked' );
+			$plugins           = array_diff( $plugins, $symlinked_plugins );
+			$plugins           = array_flip( $plugins );
+			$plugins           = array_intersect_key( get_plugins(), $plugins );
+			$plugins           = wp_list_pluck( $plugins, 'Name' );
 		}
 
 		ob_flush();
 
-		if ( $count = count( $plugin_updates ) ) {
+		if ( $count = count( $plugins ) ) {
 			// bad
-			$this->add_message( 200, array( $count, $count, self::wrap_in_tag( $plugin_updates ) ) );
+			$this->add_message( 200, array( $count, $count, self::wrap_in_tag( $plugins ) ) );
+		}
+
+		if ( $count = count( $symlinked_plugins ) ) {
+			// warning
+			$this->add_message( 100, array( $count, $count ) );
 		}
 
 		// good
@@ -74,15 +85,19 @@ class SecuPress_Scan_Plugins_Update extends SecuPress_Scan implements iSecuPress
 
 
 	public function fix() {
-
-		ob_start();
-		@set_time_limit( 0 );
-
 		// Plugins
 		$plugins = get_site_transient( 'update_plugins' );
-		$plugins = isset( $plugins->response ) ? array_keys( $plugins->response ) : false;
+		$plugins = ! empty( $plugins->response ) && is_array( $plugins->response ) ? array_keys( $plugins->response ) : array();
 
 		if ( $plugins ) {
+			$symlinked_plugins = array_filter( $plugins, 'secupress_is_plugin_symlinked' );
+			$plugins           = array_diff( $plugins, $symlinked_plugins );
+		}
+
+		if ( $plugins ) {
+			ob_start();
+			@set_time_limit( 0 );
+
 			// remove the WP upgrade process for translation since it will output data, use our own based on core but using a silent upgrade.
 			remove_action( 'upgrader_process_complete', array( 'Language_Pack_Upgrader', 'async_upgrade' ), 20 );
 			add_action( 'upgrader_process_complete', 'secupress_async_upgrades', 20 );
@@ -96,17 +111,28 @@ class SecuPress_Scan_Plugins_Update extends SecuPress_Scan implements iSecuPress
 			$upgrader = new Plugin_Upgrader( $skin );
 
 			$upgrader->bulk_upgrade( $plugins );
+
+			ob_end_clean();
 		}
 
-		ob_end_clean();
-
+		// Test if we succeeded.
 		$plugins = get_site_transient( 'update_plugins' );
-		$plugins = isset( $plugins->response ) ? $plugins->response : false;
+		$plugins = ! empty( $plugins->response ) && is_array( $plugins->response ) ? array_keys( $plugins->response ) : array();
 
 		if ( ! $plugins ) {
+			// good
 			$this->add_fix_message( 0 );
 		} else {
-			$this->add_fix_message( 300 );
+			$symlinked_plugins = array_filter( $plugins, 'secupress_is_plugin_symlinked' );
+			$plugins           = array_diff( $plugins, $symlinked_plugins );
+
+			if ( $count = count( $symlinked_plugins ) ) {
+				// cantfix
+				$this->add_fix_message( 301, array( $count, $count ) );
+			} else {
+				// cantfix
+				$this->add_fix_message( 300 );
+			}
 		}
 
 		return parent::fix();
