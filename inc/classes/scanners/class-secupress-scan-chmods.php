@@ -38,8 +38,6 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements iSecuPress_Scan {
 			// bad
 			200 => _x( 'File permissions for %1$s <strong>should be %2$s</strong>, NOT %3$s!', '1: file path, 2: chmod required, 3: current chmod', 'secupress' ),
 			201 => __( 'Unable to apply new file permissions to %s.', 'secupress' ),
-			// cantfix
-			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {

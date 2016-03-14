@@ -44,8 +44,6 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements iSecuPress_S
 			// bad
 			200 => __( 'The default role in your installation is <strong>%s</strong> and it should be <strong>Subscriber</strong>, or registrations should be <strong>closed</strong>.', 'secupress' ),
 			201 => __( 'The registration page is <strong>not protected</strong> from bots.', 'secupress' ),
-			// cantfix
-			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {

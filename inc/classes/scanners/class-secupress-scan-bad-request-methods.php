@@ -41,8 +41,6 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements iSecu
 			100 => _n_noop( 'Unable to determine status of your homepage for %s request method.', 'Unable to determine status of your homepage for %s request methods.', 'secupress' ),
 			// bad
 			200 => _n_noop( 'Your website should block %s request method.', 'Your website should block %s request methods.', 'secupress' ),
-			// cantfix
-			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {

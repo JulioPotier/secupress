@@ -41,8 +41,6 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements iSecuPress
 			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
 			// bad
 			200 => __( 'Your website should block <strong>too long string requests</strong>.', 'secupress' ),
-			// cantfix
-			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);
 
 		if ( isset( $id ) ) {

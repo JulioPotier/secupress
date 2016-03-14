@@ -51,7 +51,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 			106 => _n_noop( 'Sorry, the following plugin could not be deactivated: %s.', 'Sorry, the following plugins could not be deactivated: %s.', 'secupress' ),
 			// bad
 			/* translators: 1 is a number, 2 is a plugin name (or a list of plugin names). */
-			200 => _n_noop( '<strong>%1$d plugin</strong> is no longer in the WordPress directory: %2$s.',   '<strong>%1$d plugins</strong> are no longer in the WordPress directory: %2$s.',   'secupress' ),
+			200 => _n_noop( '<strong>%1$d plugin</strong> is no longer in the WordPress directory: %2$s.', '<strong>%1$d plugins</strong> are no longer in the WordPress directory: %2$s.', 'secupress' ),
 			/* translators: 1 is a number, 2 is a plugin name (or a list of plugin names). */
 			201 => _n_noop( '<strong>%1$d plugin</strong> has not been updated for 2 years at least: %2$s.', '<strong>%1$d plugins</strong> have not been updated for 2 years at least: %2$s.', 'secupress' ),
 			/* translators: %s is a plugin name. */
@@ -61,7 +61,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 			205 => _n_noop( 'Sorry, this plugin could not be deactivated.', 'Sorry, those plugins could not be deactivated.', 'secupress' ),
 			// cantfix
 			/* translators: %d is a number. */
-			300 => _n_noop( '<strong>%d</strong> plugin can be <strong>deleted</strong>.',   '<strong>%d</strong> plugins can be <strong>deleted</strong>.',   'secupress' ),
+			300 => _n_noop( '<strong>%d</strong> plugin can be <strong>deleted</strong>.', '<strong>%d</strong> plugins can be <strong>deleted</strong>.', 'secupress' ),
 			/* translators: %d is a number. */
 			301 => _n_noop( '<strong>%d</strong> plugin can be <strong>deactivated</strong>.', '<strong>%d</strong> plugins can be <strong>deactivated</strong>.', 'secupress' ),
 			302 => __( 'Unable to locate WordPress Plugin directory.' ), // WPi18n

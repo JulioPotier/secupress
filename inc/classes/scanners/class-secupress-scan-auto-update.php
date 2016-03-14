@@ -45,8 +45,6 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements iSecuPress_Sc
 			204 => __( 'The filter <code>automatic_updater_disabled</code> should not be used or set to return <code>FALSE</code>.', 'secupress' ),
 			205 => __( 'The filter <code>allow_minor_auto_core_updates</code> should not be used or set to return <code>TRUE</code>.', 'secupress' ),
 			206 => __( 'The filters <code>automatic_updater_disabled</code> and <code>allow_minor_auto_core_updates</code> should not be used or set to return respectively  <code>FALSE</code> and <code>TRUE</code>.', 'secupress' ),
-			// cantfix
-			300 => __( 'The filter <code>automatic_updater_disabled</code> should not be used, we can not overwrite it.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {

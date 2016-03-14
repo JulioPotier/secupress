@@ -41,8 +41,6 @@ class SecuPress_Scan_Block_HTTP_1_0 extends SecuPress_Scan implements iSecuPress
 			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
 			// bad
 			200 => sprintf( __( 'Your website should block <code>%s</code> requests.', 'secupress' ), 'HTTP/1.0 POST' ),
-			// cantfix
-			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {

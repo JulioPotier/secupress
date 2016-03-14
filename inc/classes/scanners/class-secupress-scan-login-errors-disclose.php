@@ -35,8 +35,6 @@ class SecuPress_Scan_Login_Errors_Disclose extends SecuPress_Scan implements iSe
 			1   => __( 'Protection activated', 'secupress' ),
 			// bad
 			200 => __( '<strong>Login errors</strong> should not be displayed.', 'secupress' ),
-			// cantfix
-			300 => __( 'I can not fix this, you have to do it yourself, have fun.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
