@@ -228,11 +228,10 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 					}
 					break;
 				case 'elf':
-					if ( ! is_null( $check ) ) {
-						$replaced = secupress_replace_content( $wpconfig_filename, "/define\(.*('" . $constant . "'|\"" . $constant . "\").*,/", "/*Commented by SecuPress*/ // $0" );
+					if ( is_null( $check ) ) {
+						$errorlogfile = dirname( ini_get( 'error_log' ) ) . '/wp_errorlogfile.log';
+						$new_content .= "define( '{$constant}', '{$errorlogfile}' ); // Added by SecuPress\n";
 					}
-					$errorlogfile = dirname( ini_get( 'error_log' ) ) . '/wp_errorlogfile.log';
-					$new_content .= "define( '{$constant}', '{$errorlogfile}' ); // Added by SecuPress\n";
 					break;
 				case 1:
 					if ( ! $check ) {
@@ -271,7 +270,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 		}
 
 		if ( $new_content ) {
-			secupress_put_contents( $wpconfig_filename, $new_content, array( 'marker' => 'Correct Constants Values', 'put' => 'append', 'text' => '<?php' ) );
+			secupress_put_contents( $wpconfig_filename, $new_content, array( 'marker' => 'Correct Constants Values', 'put' => 'append', 'text' => '<?php', 'keep_old' => true ) );
 		}
 
 		// COOKIEHASH
