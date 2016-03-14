@@ -848,16 +848,15 @@ jQuery( document ).ready( function( $ ) {
 	$( "body" ).on( "click", ".secupress-details-fix", function( e ) {
 		var test = $( this ).attr( "data-test" );
 		swal( {
-			title: SecuPressi18nScanner.fixDetails,
-			text:  $( "#details-fix-" + test + " .details-content" ).html(),
-			type:  'info',
-			allowOutsideClick: true,
-			showCancelButton: true,
-			confirmButtonText: SecuPressi18nScanner.fixit,
-			closeOnConfirm: false,
-			html: true,
+			text:                $( "#details-fix-" + test + " .details-content" ).html(),
+			title:               SecuPressi18nScanner.fixDetails,
+			confirmButtonText:   SecuPressi18nScanner.fixit,
+			type:                'info',
+			closeOnConfirm:      false,
 			showLoaderOnConfirm: true,
-			timer: 1000,
+			allowOutsideClick:   true,
+			showCancelButton:    true,
+			html:                true,
 		},
 			function( isConfirm ) {
 				if ( isConfirm ) {
