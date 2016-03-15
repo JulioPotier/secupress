@@ -179,6 +179,7 @@ function secupress_load_user_network_options( $cookie_elements, $user ) {
 			'_site_transient_' . $current_user_id . '_donotdeactivatesecupress',
 			'_site_transient_secupress_module_activation_' . $current_user_id,
 			'_site_transient_secupress_module_deactivation_' . $current_user_id,
+			'_transient_secupress-notices-' . $current_user_id,
 		);
 	}
 

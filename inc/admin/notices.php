@@ -396,25 +396,24 @@ function secupress_notice_is_dismissed( $notice_id ) {
 	return SecuPress_Admin_Notices::is_dismissed( $notice_id );
 }
 
-/**
- * Will lately add admin notices added by secupress_add_transient_notice()
- *
- * @return void
- * @since 1.0
- **/
-add_action( 'admin_menu', 'secupress_display_transient_notices' );
-function secupress_display_transient_notices() {
-	global $current_user;
 
-	$notices = secupress_get_transient( 'secupress-notices-' . $current_user->ID );
+/**
+ * Will lately add admin notices added by `secupress_add_transient_notice()`.
+ *
+ * @since 1.0
+ */
+add_action( 'admin_menu', 'secupress_display_transient_notices' );
+
+function secupress_display_transient_notices() {
+	$notices = secupress_get_transient( 'secupress-notices-' . get_current_user_id() );
 
 	if ( ! $notices ) {
 		return;
 	}
 
 	foreach( $notices as $notice ) {
-		SecuPress_Admin_Notices::get_instance()->add( $notice['message'], $notice['error_code'], false );
+		secupress_add_notice( $notice['message'], $notice['error_code'], false );
 	}
 
-	delete_transient( 'secupress-notices-' . $current_user->ID );
+	delete_transient( 'secupress-notices-' . get_current_user_id() );
 }

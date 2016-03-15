@@ -98,14 +98,12 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 	 * @param (string)      $error_code Like WordPress notices: "error" or "updated". Default is "updated".
 	 */
 	public function add_temporary( $message, $error_code = 'updated' ) {
-		global $current_user;
-
 		$error_code = 'error' === $error_code ? 'error' : 'updated';
+		$notices    = secupress_get_transient( 'secupress-notices-' . get_current_user_id() );
+		$notices    = is_array( $notices ) ? $notices : array();
+		$notices[]  = compact( 'message', 'error_code' );
 
-		$notices   = secupress_get_transient( 'secupress-notices-' . $current_user->ID );
-		$notices   = $notices ? $notices : array();
-		$notices[] = compact( 'message', 'error_code' );
-		secupress_set_transient( 'secupress-notices-' . $current_user->ID, $notices );
+		secupress_set_transient( 'secupress-notices-' . get_current_user_id(), $notices );
 
 	}
 
