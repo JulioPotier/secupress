@@ -101,15 +101,43 @@ function secupress_get_submodule_activations( $module ) {
 
 
 function secupress_add_module_notice( $module, $submodule, $action ) {
-	$transient_name = 'secupress_module_' . $action . '_' . get_current_user_id();
-	$submodule_data = secupress_get_module_data( $module, $submodule );
-	$current        = secupress_get_site_transient( $transient_name );
-	$current        = is_array( $current ) ? $current : array();
-	$current[]      = $submodule_data['Name'];
+	$submodule_name    = secupress_get_module_data( $module, $submodule );
+	$submodule_name    = $submodule_name['Name'];
+	$transient_name    = 'secupress_module_' . $action . '_' . get_current_user_id();
+	$transient_value   = secupress_get_site_transient( $transient_name );
+	$transient_value   = is_array( $transient_value ) ? $transient_value : array();
+	$transient_value[] = $submodule_name;
 
-	secupress_set_site_transient( $transient_name, $current );
+	secupress_set_site_transient( $transient_name, $transient_value );
 
 	do_action( 'module_notice_' . $action, $module, $submodule );
+}
+
+
+function secupress_remove_module_notice( $module, $submodule, $action ) {
+	$submodule_name  = secupress_get_module_data( $module, $submodule );
+	$submodule_name  = $submodule_name['Name'];
+	$transient_name  = 'secupress_module_' . $action . '_' . get_current_user_id();
+	$transient_value = secupress_get_site_transient( $transient_name );
+
+	if ( ! $transient_value || ! is_array( $transient_value ) ) {
+		return;
+	}
+
+	$transient_value = array_flip( $transient_value );
+
+	if ( ! isset( $transient_value[ $submodule_name ] ) ) {
+		return;
+	}
+
+	unset( $transient_value[ $submodule_name ] );
+
+	if ( $transient_value ) {
+		$transient_value = array_flip( $transient_value );
+		secupress_set_site_transient( $transient_name, $transient_value );
+	} else {
+		secupress_delete_site_transient( $transient_name );
+	}
 }
 
 
