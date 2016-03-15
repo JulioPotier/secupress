@@ -50,6 +50,8 @@ class SecuPress_Scan_Plugins_Update extends SecuPress_Scan implements iSecuPress
 
 
 	public function scan() {
+		ob_start();
+
 		wp_update_plugins();
 		$plugins           = get_site_transient( 'update_plugins' );
 		$plugins           = ! empty( $plugins->response ) && is_array( $plugins->response ) ? array_keys( $plugins->response ) : array();
@@ -62,6 +64,8 @@ class SecuPress_Scan_Plugins_Update extends SecuPress_Scan implements iSecuPress
 			$plugins           = array_intersect_key( get_plugins(), $plugins );
 			$plugins           = wp_list_pluck( $plugins, 'Name' );
 		}
+
+		ob_flush();
 
 		if ( $count = count( $plugins ) ) {
 			// bad
@@ -81,6 +85,7 @@ class SecuPress_Scan_Plugins_Update extends SecuPress_Scan implements iSecuPress
 
 
 	public function fix() {
+		// Plugins
 		$plugins = get_site_transient( 'update_plugins' );
 		$plugins = ! empty( $plugins->response ) && is_array( $plugins->response ) ? array_keys( $plugins->response ) : array();
 
