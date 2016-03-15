@@ -50,6 +50,8 @@ class SecuPress_Scan_Themes_Update extends SecuPress_Scan implements iSecuPress_
 
 
 	public function scan() {
+		ob_start();
+
 		wp_update_themes();
 		$themes           = get_site_transient( 'update_themes' );
 		$themes           = ! empty( $themes->response ) && is_array( $themes->response ) ? array_keys( $themes->response ) : array();
@@ -62,6 +64,8 @@ class SecuPress_Scan_Themes_Update extends SecuPress_Scan implements iSecuPress_
 			$themes           = array_intersect_key( wp_get_themes(), $themes );
 			$themes           = wp_list_pluck( $themes, 'Name' );
 		}
+
+		ob_flush();
 
 		if ( $count = count( $themes ) ) {
 			// bad
