@@ -119,26 +119,29 @@ pre code, pre samp, pre kbd {
 	margin: -.33em 0 1em;
 	font-size: 1em;
 }
-.secupress-swal-form .secupress-boxed-group,
-.secupress-swal-form .secupress-scrollable {
+.secupress-boxed-group,
+.secupress-scrollable {
 	max-height: 370px;
 	overflow-y: auto;
 }
-.secupress-swal-form .secupress-boxed-group,
-.secupress-swal-form .secupress-group {
+.secupress-boxed-group,
+.secupress-group {
 	margin-top: 1em;
 }
-.secupress-swal-form .secupress-boxed-group {
-	max-height: 8.5em;
+.secupress-boxed-group {
+	max-height: 20em;
 	padding: 0 0 .2em .5em;
 	border: solid 1px #dfdfdf;
 }
-.secupress-swal-form .secupress-boxed-group > legend,
-.secupress-swal-form .secupress-group > legend {
+.secupress-swal-form .secupress-boxed-group {
+	max-height: 8.5em;
+}
+.secupress-boxed-group > legend,
+.secupress-group > legend {
 	margin-bottom: .5em;
 }
-.secupress-swal-form .secupress-boxed-group > fieldset,
-.secupress-swal-form .secupress-group > fieldset {
+.secupress-boxed-group > fieldset,
+.secupress-group > fieldset {
 	margin-left: .875em;
 }
 .secupress-swal-form .show-input ul {

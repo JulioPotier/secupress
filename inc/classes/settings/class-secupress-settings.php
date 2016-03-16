@@ -792,23 +792,21 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		$other_tables = secupress_get_non_wp_tables();
 		?>
 		<form action="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_backup_db' ), 'secupress_backup_db' ); ?>" id="form-do-db-backup" method="post">
-			<div class="secupress-swal-form">
-				<fieldset class="secupress-boxed-group">
-					<b><?php _e( 'Unknown tables', 'secupress' ); ?></b><br>
-					<?php
-					foreach ( $other_tables as $table ) {
-						echo '<input checked="checked" name="other_tables[]" type="checkbox"> ' . $table . '<br>';
-					}
-					?>
-					<hr>
-					<b><?php _e( 'WordPress tables (mandatory)', 'secupress' ); ?></b><br>
-					<?php
-					foreach ( $wp_tables as $table ) {
-						echo '<input disabled="disabled" checked="checked" type="checkbox"> ' . $table . '<br>';
-					}
-					?>
-				</fieldset>
-			</div>
+			<fieldset class="secupress-boxed-group">
+				<b><?php _e( 'Unknown tables', 'secupress' ); ?></b><br>
+				<?php
+				foreach ( $other_tables as $table ) {
+					echo '<label><input checked="checked" name="other_tables[]" type="checkbox"> ' . $table . '</label><br>';
+				}
+				?>
+				<hr>
+				<b><?php _e( 'WordPress tables (mandatory)', 'secupress' ); ?></b><br>
+				<?php
+				foreach ( $wp_tables as $table ) {
+					echo '<label><input disabled="disabled" checked="checked" type="checkbox"> ' . $table . '</label><br>';
+				}
+				?>
+			</fieldset>
 			<p class="submit">
 				<?php
 				submit_button( __( 'Backup my Database', 'secupress' ), 'secondary alignright', 'submit-backup-db', false, array(
@@ -833,18 +831,17 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		$other_tables = secupress_get_non_wp_tables();
 		?>
 		<p id="secupress-no-db-backups"<?php echo $backup_files ? ' class="hidden"' : ''; ?>><em><?php _e( 'No Backups found yet, do one?', 'secupress' ); ?></em></p>
+
 		<form id="form-delete-db-backups"<?php echo ! $backup_files ? ' class="hidden"' : ''; ?> action="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_delete_backups' ), 'secupress_delete_backups' ); ?>" method="post">
-			<div class="secupress-swal-form">
-				<strong id="secupress-available-backups"><?php printf( _n( '%s available Backup', '%s available Backups', count( $backup_files ), 'secupress' ), number_format_i18n( count( $backup_files ) ) ); ?></strong>
-				<fieldset class="secupress-boxed-group">
-					<?php array_map( 'secupress_print_backup_file_formated', array_reverse( $backup_files ) ); ?>
-				</fieldset>
-			</div>
-			<p class="submit">
-				<?php
-				submit_button( __( 'Delete all Database Backups', 'secupress' ), 'secondary alignright', 'submit-delete-db-backups', false );
-				?>
-			</p>
+
+			<strong id="secupress-available-backups"><?php printf( _n( '%s available Backup', '%s available Backups', count( $backup_files ), 'secupress' ), number_format_i18n( count( $backup_files ) ) ); ?></strong>
+
+			<fieldset class="secupress-boxed-group">
+				<?php array_map( 'secupress_print_backup_file_formated', array_reverse( $backup_files ) ); ?>
+			</fieldset>
+
+			<?php submit_button( __( 'Delete all Database Backups', 'secupress' ), 'secondary alignright', 'submit-delete-db-backups' ); ?>
+
 		</form>
 		<?php
 	}
@@ -861,15 +858,15 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		$ignored_directories .= str_replace( ABSPATH, '', WP_CONTENT_DIR . '/backups/' );
 		?>
 		<form action="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_backup_files' ), 'secupress_backup_files' ); ?>" id="form-do-files-backup" method="post">
-			<div class="secupress-swal-form">
-				<fieldset class="secupress-boxed-group">
-					<b><?php _e( 'Do not backup the following folders', 'secupress' ); ?></b><br>
-					<textarea name="ignored_directories"<?php disabled( ! secupress_is_pro() ); ?>><?php echo $ignored_directories; ?></textarea>
-					<p class="description">
-						<?php _e( 'One folder per line.', 'secupress' ); ?>
-					</p>
-				</fieldset>
-			</div>
+
+			<fieldset>
+				<p><strong><?php _e( 'Do not backup the following folders', 'secupress' ); ?></strong></p>
+				<textarea name="ignored_directories"<?php disabled( ! secupress_is_pro() ); ?>><?php echo $ignored_directories; ?></textarea>
+				<p class="description">
+					<?php _e( 'One folder per line.', 'secupress' ); ?>
+				</p>
+			</fieldset>
+
 			<p class="submit">
 				<?php
 				$args = array(
@@ -885,6 +882,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				?>
 				<span class="spinner secupress-inline-spinner"></span>
 			</p>
+
 		</form>
 	<?php
 	}
@@ -952,23 +950,21 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				?>
 				<form id="form-delete-scanned-files" action="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_delete_scanned_files' ), 'secupress_delete_scanned_files' ); ?>" method="post">
 
-				<div class="secupress-swal-form">
+					<h4><?php _e( 'The followings are not files from WordPress core', 'secupress' ); ?></h4>
 
-				<h4><?php _e( 'The followings are not files from WordPress core', 'secupress' ); ?></h4>
-				<fieldset class="secupress-boxed-group small-boxed-group">
-					<ul>
-					<?php
-						//// echo '<li><input id="diff-file-all" type=checkbox> <label for="diff-file-all">' . __( 'Select all' ) . '</label></li>'; //// uncomment when JS is ok
-						foreach ( $diff_from_root_core as $diff_file => $hash ) {
-							printf( '<li><input id="diff-file-%1$s" type="checkbox" name="files[]" value="%3$s"> <label for="diff-file-%1$s">%2$s</label></li>', sanitize_html_class( $diff_file ), esc_html( $diff_file ), esc_attr( $diff_file ) );
-						}
-					?>
-					</ul>
-				</fieldset>
+					<fieldset class="secupress-boxed-group small-boxed-group">
+						<ul>
+						<?php
+							//// echo '<li><input id="diff-file-all" type=checkbox> <label for="diff-file-all">' . __( 'Select all' ) . '</label></li>'; //// uncomment when JS is ok
+							foreach ( $diff_from_root_core as $diff_file => $hash ) {
+								printf( '<li><input id="diff-file-%1$s" type="checkbox" name="files[]" value="%3$s"> <label for="diff-file-%1$s">%2$s</label></li>', sanitize_html_class( $diff_file ), esc_html( $diff_file ), esc_attr( $diff_file ) );
+							}
+						?>
+						</ul>
+					</fieldset>
 
-				</div>
+					<?php submit_button( __( 'Delete selected files', 'secupress' ), 'secondary alignright', 'submit-delete-files' ); ?>
 
-				<?php submit_button( __( 'Delete selected files', 'secupress' ), 'secondary alignright', 'submit-delete-files' ); ?>
 				</form>
 				<?php
 			}
@@ -987,23 +983,21 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				?>
 				<form id="form-recover-missing-files" action="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_recover_missing_files' ), 'secupress_recover_missing_files' ); ?>" method="post">
 
-				<div class="secupress-swal-form">
+					<h4><?php _e( 'The followings are missing from WordPress core files', 'secupress' ); ?></h4>
 
-				<h4><?php _e( 'The followings are missing from WordPress core files', 'secupress' ); ?></h4>
-				<fieldset class="secupress-boxed-group small-boxed-group">
-					<ul>
-					<?php
-						//// echo '<li><input id="diff-file-all" type=checkbox> <label for="diff-file-all">' . __( 'Select all' ) . '</label></li>'; //// uncomment when JS is ok
-						foreach ( $missing_from_root_core as $miss_file => $hash ) {
-							printf( '<li class="secupress-actions-li"><input id="miss-file-%1$s" type="checkbox" name="files[]" value="%3$s" title="%3$s"> <label for="miss-file-%1$s" title="%3$s">%2$s</label></li>', sanitize_html_class( $miss_file ), esc_html( basename( $miss_file ) ), esc_attr( $miss_file ) );
-						}
-					?>
-					</ul>
-				</fieldset>
+					<fieldset class="secupress-boxed-group small-boxed-group">
+						<ul>
+						<?php
+							//// echo '<li><input id="diff-file-all" type=checkbox> <label for="diff-file-all">' . __( 'Select all' ) . '</label></li>'; //// uncomment when JS is ok
+							foreach ( $missing_from_root_core as $miss_file => $hash ) {
+								printf( '<li class="secupress-actions-li"><input id="miss-file-%1$s" type="checkbox" name="files[]" value="%3$s" title="%3$s"> <label for="miss-file-%1$s" title="%3$s">%2$s</label></li>', sanitize_html_class( $miss_file ), esc_html( basename( $miss_file ) ), esc_attr( $miss_file ) );
+							}
+						?>
+						</ul>
+					</fieldset>
 
-				</div>
+					<?php submit_button( __( 'Recover selected files', 'secupress' ), 'secondary alignright', 'submit-recover-missing-files' ); ?>
 
-				<?php submit_button( __( 'Recover selected files', 'secupress' ), 'secondary alignright', 'submit-recover-missing-files' ); ?>
 				</form>
 				<?php
 			}
@@ -1023,23 +1017,21 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			?>
 			<form id="form-old-files" action="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_old_files' ), 'secupress_old_files' ); ?>" method="post">
 
-			<div class="secupress-swal-form">
+				<h4><?php _e( 'The followings are old WordPress core files', 'secupress' ); ?></h4>
 
-			<h4><?php _e( 'The followings are old WordPress core files', 'secupress' ); ?></h4>
-			<fieldset class="secupress-boxed-group small-boxed-group">
-				<ul>
-				<?php
-					//// echo '<li><input id="diff-file-all" type=checkbox> <label for="diff-file-all">' . __( 'Select all' ) . '</label></li>'; //// uncomment when JS is ok
-					foreach ( $wp_old_files as $old_file ) {
-						printf( '<li class="secupress-actions-li"><input id="old-file-%1$s" type="checkbox" name="files[]" value="%3$s" title="%3$s"> <label for="old-file-%1$s" title="%3$s">%2$s</label></li>', sanitize_html_class( $old_file ), esc_html( basename( $old_file ) ), esc_attr( $old_file ) );
-					}
-				?>
-				</ul>
-			</fieldset>
+				<fieldset class="secupress-boxed-group small-boxed-group">
+					<ul>
+					<?php
+						//// echo '<li><input id="diff-file-all" type=checkbox> <label for="diff-file-all">' . __( 'Select all' ) . '</label></li>'; //// uncomment when JS is ok
+						foreach ( $wp_old_files as $old_file ) {
+							printf( '<li class="secupress-actions-li"><input id="old-file-%1$s" type="checkbox" name="files[]" value="%3$s" title="%3$s"> <label for="old-file-%1$s" title="%3$s">%2$s</label></li>', sanitize_html_class( $old_file ), esc_html( basename( $old_file ) ), esc_attr( $old_file ) );
+						}
+					?>
+					</ul>
+				</fieldset>
 
-			</div>
+				<?php submit_button( __( 'Delete selected files', 'secupress' ), 'secondary alignright', 'submit-recover-diff-files' ); ?>
 
-			<?php submit_button( __( 'Delete selected files', 'secupress' ), 'secondary alignright', 'submit-recover-diff-files' ); ?>
 			</form>
 			<?php
 		}
@@ -1063,24 +1055,22 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				?>
 				<form id="form-recover-diff-files" action="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_recover_diff_files' ), 'secupress_recover_diff_files' ); ?>" method="post">
 
-				<div class="secupress-swal-form">
+					<h4><?php _e( 'The followings are modified WordPress core files', 'secupress' ); ?></h4>
 
-				<h4><?php _e( 'The followings are modified WordPress core files', 'secupress' ); ?></h4>
-				<fieldset class="secupress-boxed-group small-boxed-group">
-					<ul>
-					<?php
-						//// echo '<li><input id="diff-file-all" type=checkbox> <label for="diff-file-all">' . __( 'Select all' ) . '</label></li>'; //// uncomment when JS is ok
-						foreach ( $diff_from_root_core as $diff_file ) {
-							$diff_url = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_diff_file&file=' . $diff_file ), 'secupress_diff_file-' . $diff_file );
-							printf( '<li class="secupress-actions-li"><input id="diff-file-%1$s" type="checkbox" name="files[]" value="%3$s" title="%3$s"> <label for="diff-file-%1$s" title="%3$s">%2$s</label> <span><a target="_blank" href="%4$s">See differences</a></span></li>', sanitize_html_class( $diff_file ), esc_html( basename( $diff_file ) ), esc_attr( $diff_file ), $diff_url );
-						}
-					?>
-					</ul>
-				</fieldset>
+					<fieldset class="secupress-boxed-group small-boxed-group">
+						<ul>
+						<?php
+							//// echo '<li><input id="diff-file-all" type=checkbox> <label for="diff-file-all">' . __( 'Select all' ) . '</label></li>'; //// uncomment when JS is ok
+							foreach ( $diff_from_root_core as $diff_file ) {
+								$diff_url = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_diff_file&file=' . $diff_file ), 'secupress_diff_file-' . $diff_file );
+								printf( '<li class="secupress-actions-li"><input id="diff-file-%1$s" type="checkbox" name="files[]" value="%3$s" title="%3$s"> <label for="diff-file-%1$s" title="%3$s">%2$s</label> <span><a target="_blank" href="%4$s">See differences</a></span></li>', sanitize_html_class( $diff_file ), esc_html( basename( $diff_file ) ), esc_attr( $diff_file ), $diff_url );
+							}
+						?>
+						</ul>
+					</fieldset>
 
-				</div>
+					<?php submit_button( __( 'Recover selected files', 'secupress' ), 'secondary alignright', 'submit-recover-diff-files' ); ?>
 
-				<?php submit_button( __( 'Recover selected files', 'secupress' ), 'secondary alignright', 'submit-recover-diff-files' ); ?>
 				</form>
 				<?php
 			}

@@ -187,14 +187,6 @@ label {
 .fieldtype-time-slot .small-text {
 	text-align: right;
 }
-
-.secupress-boxed-group {
-	max-height: 20em;
-}
-.secupress-boxed-group.small-boxed-group li{
-	font-size: smaller;
-	margin: 0;
-}
 /* Backups */
 .db-backup-row {
 	margin-right: .5em;
@@ -208,12 +200,18 @@ label {
 	padding: 0 0 3px 10px;
 	width: 95%;
 }
+.secupress-boxed-group.small-boxed-group li {
+	font-size: smaller;
+	margin: 0;
+}
 .secupress-actions-li span {
 	display: none;
 }
-.secupress-actions-li:hover span, .secupress-actions-li:focus span {
+.secupress-actions-li:hover span,
+.secupress-actions-li:focus span {
 	display: inline;
 }
+/* Countries */
 .expand_country{
 	border: none;
 	cursor: pointer;
