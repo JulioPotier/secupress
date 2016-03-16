@@ -857,7 +857,7 @@ jQuery( document ).ready( function( $ ) {
 			title:               SecuPressi18nScanner.fixDetails,
 			confirmButtonText:   SecuPressi18nScanner.fixit,
 			type:                'info',
-			closeOnConfirm:      false,
+			closeOnConfirm:      true,
 			showLoaderOnConfirm: true,
 			allowOutsideClick:   true,
 			showCancelButton:    true,
