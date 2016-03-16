@@ -8,13 +8,13 @@ Version: 1.0
 */
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
-$GLOBALS['wpdb']->secupress_geoips = $wpdb->prefix . 'secupress_geoips';
+define( 'SECUPRESS_GEOIP_TABLE', $GLOBALS['wpdb']->prefix . 'secupress_geoips' );
 
 function secupress_geoip2country( $ip ) {
 	global $wpdb;
 	
 	$ip2long = sprintf( "%u", ip2long( $ip ) );
-	$var     = $wpdb->get_var( $wpdb->prepare( 'SELECT country_code FROM ' . $wpdb->secupress_geoips . ' WHERE %d BETWEEN begin_ip AND end_ip LIMIT 1', $ip2long ) );
+	$var     = $wpdb->get_var( $wpdb->prepare( 'SELECT country_code FROM ' . SECUPRESS_GEOIP_TABLE . ' WHERE %d BETWEEN begin_ip AND end_ip LIMIT 1', $ip2long ) );
 	
 	return $var;
 }
@@ -40,8 +40,8 @@ function secupress_geoip_activation() {
 		return;
 	}
 
-	if ( $wpdb->get_var( 'SHOW TABLES LIKE "' . $wpdb->secupress_geoips .'"' ) != $wpdb->secupress_geoips ) {
-		$sql = 'CREATE TABLE ' . $wpdb->secupress_geoips . ' (
+	if ( $wpdb->get_var( 'SHOW TABLES LIKE "' . SECUPRESS_GEOIP_TABLE .'"' ) != SECUPRESS_GEOIP_TABLE ) {
+		$sql = 'CREATE TABLE ' . SECUPRESS_GEOIP_TABLE . ' (
 			id int(10) unsigned NOT NULL AUTO_INCREMENT,
 			begin_ip bigint(20) COLLATE utf8_unicode_ci DEFAULT NULL,
 			end_ip bigint(20) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -55,7 +55,7 @@ function secupress_geoip_activation() {
 		$queries = array_chunk( $queries, 1000 );
 		foreach ( $queries as $query ) {
 			$query = rtrim( rtrim( implode( "),\n(", $query ) ), ',' );
-			$wpdb->query( 'INSERT INTO ' . $wpdb->secupress_geoips . ' (begin_ip, end_ip, country_code) VALUES (' . $query . ')' );
+			$wpdb->query( 'INSERT INTO ' . SECUPRESS_GEOIP_TABLE . ' (begin_ip, end_ip, country_code) VALUES (' . $query . ')' );
 		}
 		update_option( 'secupress_geoip_installed', 1 );
 
@@ -84,8 +84,8 @@ add_action( 'secupress_deactivate_plugin_' . basename( __FILE__, '.php' ), 'secu
 function secupress_geoip_deactivation() {
 	global $wpdb;
 
-	if ( $wpdb->get_var( 'SHOW TABLES LIKE "' . $wpdb->secupress_geoips .'"' ) == $wpdb->secupress_geoips ) {
-		$wpdb->query( 'DROP TABLE ' . $wpdb->secupress_geoips );
+	if ( $wpdb->get_var( 'SHOW TABLES LIKE "' . SECUPRESS_GEOIP_TABLE .'"' ) == SECUPRESS_GEOIP_TABLE ) {
+		$wpdb->query( 'DROP TABLE ' . SECUPRESS_GEOIP_TABLE );
 	}
 	delete_option( 'secupress_geoip_installed' );
 }
