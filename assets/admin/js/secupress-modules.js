@@ -15,6 +15,7 @@ var SecuPress = {
 	}
 };
 
+
 // Tools ===========================================================================================
 // Shorthand to tell if a modifier key is pressed.
 function secupressHasModifierKey( e ) {
@@ -684,12 +685,5 @@ function secupressDisplayAjaxError( $button, text ) {
 	$( ".expand_country" ).on( "click", function( e ) {
 		$( this ).next( 'fieldset' ).toggleClass( 'hidden' );
 	} );
-
-} )(jQuery, document, window);
-
-// Current menu =======================================================================================
-(function($, d, w, undefined) {
-
-	$( "#toplevel_page_secupress .current-" + l10nmodules._GET_module ).css( { color: 'white', fontWeight: 'bold' } );
 
 } )(jQuery, document, window);
