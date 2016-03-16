@@ -98,6 +98,10 @@ function secupress_geoip_deactivation() {
  **/
 add_action( 'secupress_plugins_loaded', 'secupress_geoip_check_country' );
 function secupress_geoip_check_country() {
+	if ( ! get_option( 'secupress_geoip_installed' ) ) {
+		return;
+	}
+	
 	$country_code = secupress_geoip2country( secupress_get_ip() );
 	$countries    = array_flip( secupress_get_module_option( 'geoip-system_countries', -1, 'firewall' ) );
 	$is_whitelist = secupress_get_module_option( 'geoip-system_type', -1, 'firewall' ) == 'whitelist';
