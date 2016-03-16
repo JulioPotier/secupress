@@ -683,7 +683,7 @@ function secupressDisplayAjaxError( $button, text ) {
 	} );
 
 	$( ".expand_country" ).on( "click", function( e ) {
-		$( this ).next( 'fieldset' ).toggleClass( 'hidden' );
+		$( this ).next( 'fieldset' ).toggleClass( 'hide-if-js' );
 	} );
 
 } )(jQuery, document, window);
