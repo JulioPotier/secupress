@@ -251,7 +251,7 @@ function secupress_put_contents( $file, $new_content = '', $args = array() ) {
 		$pattern      = '/' . $comment_char . ' BEGIN SecuPress ' . $args['marker'] . '(.*)' . $comment_char . ' END SecuPress\s*?/isU';
 		$file_content = file_get_contents( $file );
 		if ( $args['keep_old'] ) {
-			preg_match_all( $pattern, $file_content, $keep_old );
+			preg_match( $pattern, $file_content, $keep_old );
 		}
 		$file_content = preg_replace( $pattern, '', $file_content );
 	}
@@ -260,7 +260,7 @@ function secupress_put_contents( $file, $new_content = '', $args = array() ) {
 
 		$content  = $comment_char . ' BEGIN SecuPress ' . $args['marker'] . PHP_EOL;
 		if ( $args['keep_old'] && isset( $keep_old[1] ) ) {
-			$content .= trim( implode( "\n", $keep_old[1] ) ) . "\n";
+			$content .= trim( $keep_old[1] ) . "\n";
 		}
 		$content .= trim( $new_content ) . PHP_EOL;
 		$content .= $comment_char . ' END SecuPress' . PHP_EOL . PHP_EOL;
