@@ -36,7 +36,7 @@ function __secupress_firewall_settings_callback( $settings ) {
 	__secupress_bruteforce_settings_callback( $modulenow, $settings, $activate );
 
 	// Country Managment.
-	__secupress_geoip_settings_callback( $modulenow, $settings );
+	__secupress_geoip_settings_callback( $modulenow, $settings, $activate );
 
 	return $settings;
 }
@@ -127,33 +127,45 @@ function __secupress_bruteforce_settings_callback( $modulenow, &$settings, $acti
  *
  * @param (string) $modulenow Current module.
  * @param (array)  $settings  The module settings, passed by reference.
+ * @param (bool|array) $activate  Used to (de)activate plugins.
  */
-function __secupress_geoip_settings_callback( $modulenow, &$settings ) {
+function __secupress_geoip_settings_callback( $modulenow, &$settings, $activate ) {
 	// Settings.
 	$geoip_values = array( '-1' => 1, 'blacklist' => 1, 'whitelist' => 1, );
 
-	if ( empty( $settings['geoip-system_type'] ) || ! isset( $geoip_values[ $settings['geoip-system_type'] ] ) ) {
-		$settings['geoip-system_type'] = '-1';
-	}
-
 	$settings['geoip-system_countries'] = ! empty( $settings['geoip-system_countries'] ) && is_array( $settings['geoip-system_countries'] ) ? array_map( 'sanitize_text_field', $settings['geoip-system_countries'] ) : array();
-	if ( empty( $settings['geoip-system_countries'] ) ) {
-		// Deactivate the plugin if nothing is selected, you don't need it in fact.
+
+	if ( ! $settings['geoip-system_countries'] || empty( $settings['geoip-system_type'] ) || ! isset( $geoip_values[ $settings['geoip-system_type'] ] ) ) {
 		$settings['geoip-system_type'] = '-1';
-	} elseif ( '-1' != $settings['geoip-system_type'] && function_exists( 'secupress_geoip2country' ) ) {
-		$country_code = secupress_geoip2country( secupress_get_ip() );
-		$is_whitelist = 'whitelist' == $settings['geoip-system_type'];
-		$countries    = $settings['geoip-system_countries'];
-		if ( in_array( $country_code, $countries ) && ! $is_whitelist ) {
-			unset( $countries[ array_search( $country_code, $countries ) ] );
-		} elseif( ! in_array( $country_code, $countries ) && $is_whitelist ) {
-			$countries[] = $country_code;
-		}
-		$settings['geoip-system_countries'] = $countries;
 	}
 
 	// (De)Activation.
-	secupress_manage_submodule( $modulenow, 'geoip-system', ( '-1' !== $settings['geoip-system_type'] ) );
+	if ( false !== $activate ) {
+		secupress_manage_submodule( $modulenow, 'geoip-system', ( '-1' !== $settings['geoip-system_type'] ) );
+	}
+
+	// Make sure to not block the user.
+	if ( '-1' !== $settings['geoip-system_type'] && function_exists( 'secupress_geoip2country' ) ) {
+
+		$country_code = secupress_geoip2country( secupress_get_ip() );
+
+		if ( $country_code ) {
+			$is_whitelist = 'whitelist' === $settings['geoip-system_type'];
+			$countries    = array_flip( $settings['geoip-system_countries'] );
+
+			if ( isset( $countries[ $country_code ] ) && ! $is_whitelist ) {
+				// Unblacklist the user country.
+				unset( $countries[ $country_code ] );
+				$settings['geoip-system_countries'] = array_flip( $countries );
+
+			} elseif ( ! isset( $countries[ $country_code ] ) && $is_whitelist ) {
+				// Whitelist the user country.
+				$countries   = array_flip( $countries );
+				$countries[] = $country_code;
+				$settings['geoip-system_countries'] = $countries;
+			}
+		}
+	}
 }
 
 
