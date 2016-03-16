@@ -651,10 +651,24 @@ function secupressDisplayAjaxError( $button, text ) {
 // Countries =======================================================================================
 (function($, d, w, undefined) {
 
-	$( ".continent, .continent input" ).on( "click", function( e ) {
-		var val = $( this ).val().replace( 'continent-', '' );
-		$( this ).css( '-webkit-appearance', 'none' );
-		$( ".depends-geoip-system_type_blacklist.depends-geoip-system_type_whitelist [data-code-country='" + val + "']" ).prop( "checked", $( this ).is( ":checked" ) );
+	function secupress_set_indeterminate_state( code ) {
+		var all_boxes     = $( "[data-code-country='" + code + "']" ).length,
+			checked_boxes = $( "[data-code-country='" + code + "']:checked" ).length;
+
+		if ( checked_boxes === all_boxes ) {
+			$( "[value='continent-" + code + "']" ).prop( { "checked": true, "indeterminate": false } ).css( "-webkit-appearance", "none" );
+		} else if ( checked_boxes === 0 ) {
+			$( "[value='continent-" + code + "']" ).prop( { "checked": false, "indeterminate": false } ).css( "-webkit-appearance", "none" );
+		} else {
+			$( "[value='continent-" + code + "']" ).prop( { "checked": false, "indeterminate": true } ).css( "-webkit-appearance", "checkbox" );
+		}
+	}
+
+	$( ".continent input" ).on( "click", function( e ) {
+		var $this = $( this ),
+			val   = $this.css( "-webkit-appearance", "none" ).val().replace( "continent-", "" );
+
+		$( ".depends-geoip-system_type_blacklist.depends-geoip-system_type_whitelist [data-code-country='" + val + "']" ).prop( "checked", $this.is( ":checked" ) );
 	} );
 
 	$( "[data-code-country]" ).on( "click", function( e ) {
@@ -662,28 +676,13 @@ function secupressDisplayAjaxError( $button, text ) {
 		secupress_set_indeterminate_state( code );
 	} );
 
-	function secupress_set_indeterminate_state( code ) {
-		var all_boxes = $( "[data-code-country='" + code + "']" ).length;
-		var checked_boxes = $( "[data-code-country='" + code + "']:checked" ).length;
-		if ( checked_boxes == all_boxes ) {
-			$( "[value='continent-" + code + "']" ).prop( "checked", true );
-			$( "[value='continent-" + code + "']" ).prop( "indeterminate", false ).css( '-webkit-appearance', 'none' );
-		} else if ( checked_boxes == 0 ) {
-			$( "[value='continent-" + code + "']" ).prop( "checked", false );
-			$( "[value='continent-" + code + "']" ).prop( "indeterminate", false ).css( '-webkit-appearance', 'none' );
-		} else {
-			$( "[value='continent-" + code + "']" ).prop( "checked", false );
-			$( "[value='continent-" + code + "']" ).prop( "indeterminate", true ).css( '-webkit-appearance', 'checkbox' );
-		}
-	}
-
-	$( ".continent input" ).each( function(i) {
-		var code = $( this ).val().replace( 'continent-', '' );
+	$( ".continent input" ).each( function( i ) {
+		var code = $( this ).val().replace( "continent-", "" );
 		secupress_set_indeterminate_state( code );
 	} );
 
 	$( ".expand_country" ).on( "click", function( e ) {
-		$( this ).next( 'fieldset' ).toggleClass( 'hide-if-js' );
+		$( this ).next( "fieldset" ).toggleClass( "hide-if-js" );
 	} );
 
 } )(jQuery, document, window);
