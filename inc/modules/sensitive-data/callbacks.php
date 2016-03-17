@@ -112,7 +112,7 @@ function __secupress_wp_endpoints_settings_callback( $modulenow, &$settings, $ac
 
 	// (De)Activation.
 	secupress_manage_submodule( $modulenow, 'xmlrpc',  ! empty( $settings['wp-endpoints_xmlrpc'] ) ); // `$settings`, not `$activate`.
-	secupress_manage_submodule( $modulenow, 'restapi', ! empty( $activate['wp-endpoints_restapi'] ) && secupress_is_pro() );
+	secupress_manage_submodule( $modulenow, 'restapi', ! empty( $activate['wp-endpoints_restapi'] ) );
 }
 
 
