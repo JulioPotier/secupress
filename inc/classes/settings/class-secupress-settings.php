@@ -775,10 +775,41 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 *
 	 * @since 1.0
 	 */
-	protected function banned_ips() {
-		//// tempo
-		echo '<p><em>No Banned IPs found yet</em></p>';
-		echo '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_clear_ips' ), 'secupress_clear_ips' ) . '" class="button button-secondary">' . __( 'Clear Banned IPs', 'secupress' ) . '</a>';
+	protected function banned_ips() {// secupress_ban_ip( 50, '80.12.59.110', false ); secupress_ban_ip( 50, '80.12.59.111', false );
+		$ban_ips = get_site_option( SECUPRESS_BAN_IP );
+		$ban_ips = is_array( $ban_ips ) ? $ban_ips : array();
+		$offset  = get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;
+
+		// Nothing to display.
+		if ( ! $ban_ips ) {
+			echo '<ul class="secupress-boxed-group"><li id="no-ips">' . __( 'No Banned IPs found yet.', 'secupress' ) . "</li></ul>\n";
+			return;
+		}
+
+		// Slice the list a bit.
+		if ( count( $ban_ips ) > 100 ) {
+			$ban_ips   = array_slice( $ban_ips, -100 );
+			$count_ips = count( $ban_ips );
+
+			echo '<p>' . sprintf( __( 'Last %d banned IPs:', 'secupress' ), $count_ips ) . "</p>\n";
+		}
+
+		// Display the list.
+		echo '<ul class="secupress-boxed-group">';
+			foreach ( $ban_ips as $ip => $time ) {
+				echo '<li class="secupress-large-row">';
+					$format = __( 'M jS Y', 'secupress' ) . ' ' . __( 'G:i', 'secupress' );
+					$time   = date_i18n( $format, $time + $offset );
+					$href   = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_unban_ip&ip=' . esc_attr( $ip ) ), 'secupress-unban-ip' );
+
+					printf( '<strong>%s</strong> <em>(%s)</em>', esc_html( $ip ), $time );
+					printf( '<span><a class="a-unban-ip" data-ip="%s" href="%s">%s</a></span>', esc_attr( $ip ), $href, __( 'Delete', 'secupress' ) );
+				echo "</li>\n";
+			}
+		echo "</ul>\n";
+
+		// Display a button to unban all IPs.
+		echo '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_clear_ips' ), 'secupress-clear-ips' ) . '" class="button button-secondary">' . __( 'Clear all banned IPs', 'secupress' ) . "</a>\n";
 	}
 
 

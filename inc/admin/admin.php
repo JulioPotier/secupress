@@ -408,6 +408,127 @@ function __secupress_ban_ip_ajax_post_cb() {
 
 
 /**
+ * Unan an IP address.
+ *
+ * @since 1.0
+ */
+add_action( 'admin_post_secupress_unban_ip', '__secupress_unban_ip_ajax_post_cb' );
+add_action( 'wp_ajax_secupress_unban_ip',    '__secupress_unban_ip_ajax_post_cb' );
+
+function __secupress_unban_ip_ajax_post_cb() {
+	// Make all security tests.
+	if ( ! isset( $_GET['ip'], $_GET['_wpnonce'] ) ) {
+		secupress_admin_die();
+	}
+
+	if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress-unban-ip' ) ) {
+		secupress_admin_die();
+	}
+
+	if ( ! current_user_can( secupress_get_capability() ) ) {
+		secupress_admin_die();
+	}
+
+	// Test the IP.
+	$ip = esc_html( $_GET['ip'] );
+
+	if ( ! $ip || ! filter_var( $ip, FILTER_VALIDATE_IP ) ) {
+		secupress_admin_die();
+	}
+
+	// Remove the IP from the option.
+	$ban_ips = get_site_option( SECUPRESS_BAN_IP );
+	$ban_ips = is_array( $ban_ips ) ? $ban_ips : array();
+
+	unset( $ban_ips[ $ip ] );
+
+	if ( $ban_ips ) {
+		update_site_option( SECUPRESS_BAN_IP, $ban_ips );
+	} else {
+		delete_site_option( SECUPRESS_BAN_IP );
+	}
+
+	/**
+	 * Fires once a IP is unbanned.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $IP      The IP unbanned.
+	 * @param (array)  $ban_ips The list of IPs banned (keys) and the time they were banned (values).
+	 */
+	do_action( 'secupress.ip_unbanned', $ip, $ban_ips );
+
+	// Remove the IP from the `.htaccess` file.
+	if ( apply_filters( 'write_ban_in_htaccess', true ) ) {
+		secupress_write_htaccess( 'ban_ip', secupress_get_htaccess_ban_ip() );
+	}
+
+	// Send a response.
+	$msg = sprintf( __( 'The IP address %s has been unbanned.', 'secupress' ), '<code>' . $ip . '</code>' );
+
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		wp_send_json_success( $msg );
+	}
+
+	add_settings_error( 'general', 'ip_unbanned', $msg, 'updated' );
+	set_transient( 'settings_errors', get_settings_errors(), 30 );
+
+	$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
+	wp_redirect( $goback );
+	die();
+}
+
+
+/**
+ * Unan an IP address.
+ *
+ * @since 1.0
+ */
+add_action( 'admin_post_secupress_clear_ips', '__secupress_clear_ips_ajax_post_cb' );
+add_action( 'wp_ajax_secupress_clear_ips',    '__secupress_clear_ips_ajax_post_cb' );
+
+function __secupress_clear_ips_ajax_post_cb() {
+	// Make all security tests.
+	if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress-clear-ips' ) ) {
+		secupress_admin_die();
+	}
+
+	if ( ! current_user_can( secupress_get_capability() ) ) {
+		secupress_admin_die();
+	}
+
+	// Remove all IPs from the option.
+	delete_site_option( SECUPRESS_BAN_IP );
+
+	/**
+	 * Fires once the IPs are unbanned.
+	 *
+	 * @since 1.0
+	 */
+	do_action( 'secupress.banned_ips_cleared' );
+
+	// Remove the IP from the `.htaccess` file.
+	if ( apply_filters( 'write_ban_in_htaccess', true ) ) {
+		secupress_write_htaccess( 'ban_ip' );
+	}
+
+	// Send a response.
+	$msg = __( 'All IP addresses have been unbanned.', 'secupress' );
+
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		wp_send_json_success( $msg );
+	}
+
+	add_settings_error( 'general', 'banned_ips_cleared', $msg, 'updated' );
+	set_transient( 'settings_errors', get_settings_errors(), 30 );
+
+	$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
+	wp_redirect( $goback );
+	die();
+}
+
+
+/**
  *
  *
  * @since 1.0
