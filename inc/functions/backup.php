@@ -64,7 +64,7 @@ function secupress_print_backup_file_formated( $file, $echo = true ) {
 	$download_url = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_download_backup&file=' . $file_uniqid ), 'secupress_download_backup-' . $file_uniqid );
 	$delete_url   = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_delete_backup&file=' . $file_uniqid ), 'secupress_delete_backup-' . $file_uniqid );
 
-	$file_format  = sprintf( '<p class="db-backup-row">%s <strong>%s</strong> <em>(%s)</em>', ucwords( $_type ), $_prefix, $_date );
+	$file_format  = sprintf( '<p class="secupress-large-row">%s <strong>%s</strong> <em>(%s)</em>', ucwords( $_type ), $_prefix, $_date );
 	$file_format .= sprintf( '<span><a href="%s">%s</a> | <a href="%s" class="a-delete-backup" data-file-uniqid="%s">%s</a></span></p>', $download_url, _x( 'Download', 'verb', 'secupress' ), $delete_url, $file_uniqid, __( 'Delete', 'secupress' ) );
 
 	if ( $echo ) {

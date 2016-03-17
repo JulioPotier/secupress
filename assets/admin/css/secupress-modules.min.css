@@ -188,14 +188,7 @@ label {
 	text-align: right;
 }
 /* Backups */
-.db-backup-row {
-	margin-right: .5em;
-}
-.db-backup-row + .db-backup-row {
-	padding-top: 4px;
-	border-top: 1px solid #ccc;
-}
-.db-backup-row span {
+.secupress-large-row span {
 	display: inline-block;
 	padding: 0 0 3px 10px;
 	width: 95%;

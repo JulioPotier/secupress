@@ -144,6 +144,23 @@ pre code, pre samp, pre kbd {
 .secupress-group > fieldset {
 	margin-left: .875em;
 }
+.secupress-boxed-group > li,
+.secupress-group > li {
+	margin: .6em .5em .4em 0;
+}
+.secupress-boxed-group > li + li,
+.secupress-group > li + li {
+	margin-top: .4em;
+}
+.secupress-boxed-group > .secupress-large-row,
+.secupress-group > .secupress-large-row {
+	margin: 4px .5em 0 0;
+}
+.secupress-boxed-group > .secupress-large-row + .secupress-large-row,
+.secupress-group > .secupress-large-row + .secupress-large-row {
+	padding-top: 4px;
+	border-top: 1px solid #ccc;
+}
 .secupress-swal-form .show-input ul {
 	margin-top: 0;
 }
