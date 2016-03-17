@@ -276,6 +276,17 @@ function secupress_admin_send_response_or_redirect( $response, $redirect = false
 }
 
 
+/**
+ * A shorthand to test if the current user can perform SecuPress operations. Die otherwise.
+ *
+ * @since 1.0
+ **/
+function secupress_check_user_capability() {
+	if ( ! current_user_can( secupress_get_capability() ) ) {
+		secupress_admin_die();
+	}
+}
+
 
 // Retrieve messages by their ID and format them by wrapping them in `<ul>` and `<li>` tags.
 
@@ -368,20 +379,21 @@ add_action( 'admin_post_secupress-ban-ip', '__secupress_ban_ip_ajax_post_cb' );
 function __secupress_ban_ip_ajax_post_cb() {
 	// Make all security tests.
 	check_admin_referer( 'secupress-ban-ip' );
+	secupress_check_user_capability();
 
-	if ( ! current_user_can( secupress_get_capability() ) || empty( $_REQUEST['ip'] ) ) {
-		wp_nonce_ays( '' );
+	if ( empty( $_REQUEST['ip'] ) ) {
+		secupress_admin_die();
 	}
 
 	// Test the IP.
 	$ip = urldecode( $_REQUEST['ip'] );
 
 	if ( ! filter_var( $_REQUEST['ip'], FILTER_VALIDATE_IP ) ) {
-		wp_nonce_ays( '' );
+		secupress_admin_die();
 	}
 
 	if ( ! WP_DEBUG && secupress_get_ip() === $ip ) {
-		wp_nonce_ays( '' );
+		secupress_admin_die();
 	}
 
 	// Add the IP to the option.
@@ -430,9 +442,7 @@ function __secupress_unban_ip_ajax_post_cb() {
 		secupress_admin_die();
 	}
 
-	if ( ! current_user_can( secupress_get_capability() ) ) {
-		secupress_admin_die();
-	}
+	secupress_check_user_capability();
 
 	// Test the IP.
 	$ip = esc_html( $_GET['ip'] );
@@ -498,9 +508,7 @@ function __secupress_clear_ips_ajax_post_cb() {
 		secupress_admin_die();
 	}
 
-	if ( ! current_user_can( secupress_get_capability() ) ) {
-		secupress_admin_die();
-	}
+	secupress_check_user_capability();
 
 	// Remove all IPs from the option.
 	delete_site_option( SECUPRESS_BAN_IP );
@@ -655,7 +663,7 @@ add_action( 'admin_post_secupress_toggle_file_scan', '__secupress_toggle_file_sc
 function __secupress_toggle_file_scan_ajax_post_cb() {
 
 	if ( ! isset( $_GET['_wpnonce'], $_GET['turn'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress_toggle_file_scan' ) ) {
-		wp_nonce_ays( '' );
+		secupress_admin_die();
 	}
 
 	if ( 'on' === $_GET['turn'] ) {
