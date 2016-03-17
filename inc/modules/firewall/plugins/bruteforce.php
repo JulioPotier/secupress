@@ -91,6 +91,7 @@ function secupress_check_bruteforce() {
 	 *		return $value;
 	 * }
 	 *
+	 * @param false or true
 	 * @since 1.0
 	 */
 	$edged_case = apply_filters( 'secupress.plugin.bruteforce.edgecase', false );
@@ -111,22 +112,37 @@ function secupress_check_bruteforce() {
 	/**
 	 * Set a maximum hit times in 1 second, more than that = IP banned
 	 *
+	 * @param $hits How much hits maximum before being banned
+	 * @param $method The request method
+	 *
 	 * @since 1.0
 	 */
 	$hits   = apply_filters( 'secupress.plugin.bruteforce.maxhits', $hits, $method );
 	$wpdb->query( $wpdb->prepare( "INSERT INTO $wpdb->secupress_bruteforce ( id, timestamp ) VALUES ( %s, %d ) ON DUPLICATE KEY UPDATE hits = hits+1", $id, $time ) );
-	$result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->secupress_bruteforce WHERE id = %s AND timestamp = %d AND hits >= %d LIMIT 1", $id, $time, $hits ) );
+	$result = $wpdb->get_var( $wpdb->prepare( "SELECT hits FROM $wpdb->secupress_bruteforce WHERE id = %s AND timestamp = %d AND hits >= %d LIMIT 1", $id, $time, $hits ) );
 
-	if ( $result ) {
+	if ( $hits == $result ) {
 		/**
 		 * Fires before we ban the IP address that just brute force us.
 		 *
+		 * @param '>' or '=' means if the actual counter of hits, reach the hits, or ir superior
+		 * @param $IP The IP address that triggered the event
+		 * @param $hits How much hits the IP just did
+		 * @param $id The id of the trigger
+		 * @param $method The request method
 		 * @since 1.0
 		 */		
-		do_action( 'secupress.plugin.bruteforce.triggered', $IP, $hits, $id, $method );
+		do_action( 'secupress.plugin.bruteforce.triggered', '=', $IP, $hits, $id, $method );
+		$time_ban = secupress_get_module_option( 'bruteforce_time_ban', 5, 'firewall' );
+		secupress_die( sprintf( __( 'Slow down, you move too fast.<br>Please wait a while before opening a new page or your IP address <em>%s</em> will be blocked for %d minutes.', 'secupress' ), $IP, $time_ban ) );
+
+	} elseif( $hits < $results ) {
+
+		do_action( 'secupress.plugin.bruteforce.triggered', '>', $IP, $hits, $id, $method );
 		$wpdb->delete( $wpdb->secupress_bruteforce, array( 'id' => $id ) );
 		$time_ban = secupress_get_module_option( 'bruteforce_time_ban', 5, 'firewall' );
 		secupress_ban_ip( $time_ban );
+
 	}
 
 }
