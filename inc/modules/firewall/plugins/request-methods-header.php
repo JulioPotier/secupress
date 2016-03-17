@@ -11,7 +11,11 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 if ( ! defined( 'DOING_CRON' ) ) :
 
 // Block Bad request methods
-if ( ! in_array( $_SERVER['REQUEST_METHOD'], array( 'GET', 'POST', 'HEAD' ) ) ) {
+$basic_methods = array( 'GET', 'POST', 'HEAD' );
+$rest_methods  = array( 'PUT', 'PATCH', 'DELETE' );
+$methods       = secupress_is_submodule_active( 'sensitive-data', 'restapi' ) ? array_merge( $basic_methods, $rest_methods ) : $basic_methods;
+
+if ( ! in_array( $_SERVER['REQUEST_METHOD'], $methods ) ) {
 	secupress_block( 'RMHM', 405 );
 }
 

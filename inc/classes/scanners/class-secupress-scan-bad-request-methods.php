@@ -53,9 +53,11 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements iSecu
 
 	public function scan() {
 
-		$methods  = array( 'TRACE', 'TRACK', 'HEAD', 'PUT', 'OPTIONS', 'DELETE', 'CONNECT', 'SECUPRESS_TEST_' . time() );
-		$bads     = array();
-		$warnings = array();
+		$basic_methods = array( 'TRACE', 'TRACK', 'OPTIONS', 'CONNECT', 'SECUPRESS_TEST_' . time() );
+		$rest_methods  = array( 'PUT', 'PATCH', 'DELETE' );
+		$methods       = ! secupress_is_submodule_active( 'sensitive-data', 'restapi' ) ? array_merge( $basic_methods, $rest_methods ) : $basic_methods;
+		$bads          = array();
+		$warnings      = array();
 
 		foreach ( $methods as $method ) {
 
