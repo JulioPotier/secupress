@@ -79,15 +79,41 @@ add_action( 'secupress_plugins_loaded', 'secupress_check_bruteforce' );
 function secupress_check_bruteforce() {
 	global $wpdb, $pagenow;
 
-	if ( current_user_can( 'administrator' ) || ! get_option( 'secupress_bruteforce_installed' ) || defined( 'DOING_AJAX' ) || ( is_admin() && 'admin-post.php' == $pagenow ) ) {
+	/**
+	 * Set to true to avoid been locked by the Brute Force
+	 * The goal is to easily manage any edge case
+	 * Usage example: 
+	 * add_filter( 'secupress.plugin.bruteforce.edgecase', '_manage_bruteforce_edgecase', 1 );
+	 * function _manage_bruteforce_edgecase( $value ) {
+	 *		if ( defined( 'SOME_CONSTANT' ) ) { // or any other test
+	 *			return true;
+	 *		}
+	 *		return $value;
+	 * }
+	 *
+	 * @since 1.0
+	 */
+	$edged_case = apply_filters( 'secupress.plugin.bruteforce.edgecase', false );
+
+	if ( $edge_case || current_user_can( 'administrator' ) || ! get_option( 'secupress_bruteforce_installed' ) || defined( 'DOING_AJAX' ) || ( is_admin() && 'admin-post.php' == $pagenow ) ) {
 		return;
 	}
 
-	$IP   = secupress_get_ip();
-	$time = time();
-	$id   = md5( $IP . $time . wp_salt( 'nonce' ) );
-	$hits = secupress_get_module_option( 'bruteforce_request_number', 9, 'firewall' );
-
+	$IP           = secupress_get_ip();
+	$time         = time();
+	$method       = $_SERVER['REQUEST_METHOD'];
+	$id           = md5( $method . $IP . $time . wp_salt( 'nonce' ) );
+	switch( $method ) {
+		case 'GET':  $hits = 9; break;
+		case 'POST': $hits = 3; break;
+		default:     $hots = 5; break;
+	}
+	/**
+	 * Set a maximum hit times in 1 second, more than that = IP banned
+	 *
+	 * @since 1.0
+	 */
+	$hits   = apply_filters( 'secupress.plugin.bruteforce.maxhits', $hits, $method );
 	$wpdb->query( $wpdb->prepare( "INSERT INTO $wpdb->secupress_bruteforce ( id, timestamp ) VALUES ( %s, %d ) ON DUPLICATE KEY UPDATE hits = hits+1", $id, $time ) );
 	$result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->secupress_bruteforce WHERE id = %s AND timestamp = %d AND hits >= %d LIMIT 1", $id, $time, $hits ) );
 
@@ -97,7 +123,7 @@ function secupress_check_bruteforce() {
 		 *
 		 * @since 1.0
 		 */		
-		do_action( 'secupress.plugin.bruteforce.triggered', $IP, $hits, $id );
+		do_action( 'secupress.plugin.bruteforce.triggered', $IP, $hits, $id, $method );
 		$wpdb->delete( $wpdb->secupress_bruteforce, array( 'id' => $id ) );
 		$time_ban = secupress_get_module_option( 'bruteforce_time_ban', 5, 'firewall' );
 		secupress_ban_ip( $time_ban );
