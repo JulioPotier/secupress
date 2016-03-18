@@ -136,7 +136,7 @@ function secupress_check_bruteforce() {
 		$time_ban = secupress_get_module_option( 'bruteforce_time_ban', 5, 'firewall' );
 		secupress_die( sprintf( __( 'Slow down, you move too fast.<br>Please wait a while before opening a new page or your IP address <em>%s</em> will be blocked for %d minutes.', 'secupress' ), $IP, $time_ban ) );
 
-	} elseif( $hits < $results ) {
+	} elseif( $hits < $result ) {
 
 		do_action( 'secupress.plugin.bruteforce.triggered', '>', $IP, $hits, $id, $method );
 		$wpdb->delete( $wpdb->secupress_bruteforce, array( 'id' => $id ) );
