@@ -382,18 +382,33 @@ function __secupress_ban_ip_ajax_post_cb() {
 	secupress_check_user_capability();
 
 	if ( empty( $_REQUEST['ip'] ) ) {
-		secupress_admin_die();
+		wp_redirect( wp_get_referer() );
+		die();
 	}
 
 	// Test the IP.
 	$ip = urldecode( $_REQUEST['ip'] );
 
-	if ( ! filter_var( $_REQUEST['ip'], FILTER_VALIDATE_IP ) ) {
-		secupress_admin_die();
+	if ( ! filter_var( $ip, FILTER_VALIDATE_IP ) ) {
+		$msg = sprintf( __( '%s is not a valid IP address.', 'secupress' ), '<code>' . esc_html( $ip ) . '</code>' );
+
+		add_settings_error( 'general', 'invalid_ip', $msg, 'updated' );
+		set_transient( 'settings_errors', get_settings_errors(), 30 );
+
+		$goback = add_query_arg( 'settings-updated', 'true', wp_get_referer() );
+		wp_redirect( $goback );
+		die();
 	}
 
-	if ( ! WP_DEBUG && secupress_get_ip() === $ip ) {
-		secupress_admin_die();
+	if ( ! WP_DEBUG && ( '127.0.0.1' === $ip || secupress_get_ip() === $ip ) ) {
+		$msg = __( 'Ban yourself is not a good idea.', 'secupress' );
+
+		add_settings_error( 'general', 'own_ip', $msg, 'updated' );
+		set_transient( 'settings_errors', get_settings_errors(), 30 );
+
+		$goback = add_query_arg( 'settings-updated', 'true', wp_get_referer() );
+		wp_redirect( $goback );
+		die();
 	}
 
 	// Add the IP to the option.
@@ -418,19 +433,19 @@ function __secupress_ban_ip_ajax_post_cb() {
 	add_settings_error( 'general', 'ip_banned', $msg, 'updated' );
 	set_transient( 'settings_errors', get_settings_errors(), 30 );
 
-	$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
+	$goback = add_query_arg( 'settings-updated', 'true', wp_get_referer() );
 	wp_redirect( $goback );
 	die();
 }
 
 
 /**
- * Unan an IP address.
+ * Unban an IP address.
  *
  * @since 1.0
  */
-add_action( 'admin_post_secupress_unban_ip', '__secupress_unban_ip_ajax_post_cb' );
-add_action( 'wp_ajax_secupress_unban_ip',    '__secupress_unban_ip_ajax_post_cb' );
+add_action( 'admin_post_secupress-unban-ip', '__secupress_unban_ip_ajax_post_cb' );
+add_action( 'wp_ajax_secupress-unban-ip',    '__secupress_unban_ip_ajax_post_cb' );
 
 function __secupress_unban_ip_ajax_post_cb() {
 	// Make all security tests.
@@ -499,8 +514,8 @@ function __secupress_unban_ip_ajax_post_cb() {
  *
  * @since 1.0
  */
-add_action( 'admin_post_secupress_clear_ips', '__secupress_clear_ips_ajax_post_cb' );
-add_action( 'wp_ajax_secupress_clear_ips',    '__secupress_clear_ips_ajax_post_cb' );
+add_action( 'admin_post_secupress-clear-ips', '__secupress_clear_ips_ajax_post_cb' );
+add_action( 'wp_ajax_secupress-clear-ips',    '__secupress_clear_ips_ajax_post_cb' );
 
 function __secupress_clear_ips_ajax_post_cb() {
 	// Make all security tests.

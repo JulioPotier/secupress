@@ -781,6 +781,13 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		$offset  = get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;
 		$value   = '';
 
+		// Ban form.
+		echo '<form action="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress-ban-ip' ), 'secupress-ban-ip' ) . '" id="form-ban-ip" method="post">';
+			echo '<label for="secupress-ban-ip" class="screen-reader-text">' . __( 'Ban IP', 'secupress' ) . '</label><br/>';
+			echo '<input type="search" id="secupress-ban-ip" name="ip" value=""/> ';
+			echo '<button type="submit" class="button button-primary">' . __( 'Ban IP', 'secupress' ) . '</button>';
+		echo "</form>\n";
+
 		// Nothing to display.
 		if ( ! $ban_ips ) {
 			echo '<ul class="secupress-boxed-group"><li id="no-ips">' . __( 'No Banned IPs found yet.', 'secupress' ) . "</li></ul>\n";
@@ -817,7 +824,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		echo '<form id="form-search-ip" method="post">';
 			echo '<label for="secupress-search-ip" class="screen-reader-text">' . __( 'Search IP', 'secupress' ) . '</label><br/>';
 			echo '<input type="search" id="secupress-search-ip" name="secupress-search-ip" value="' . $value . '"/> ';
-			echo '<button type="submit" class="button button-primary">' . __( 'Search IPs', 'secupress' ) . '</button>';
+			echo '<button type="submit" class="button button-primary">' . __( 'Search IP', 'secupress' ) . '</button>';
 		echo "</form>\n";
 
 		// Display the list.
@@ -826,7 +833,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				echo '<li class="secupress-large-row">';
 					$format = __( 'M jS Y', 'secupress' ) . ' ' . __( 'G:i', 'secupress' );
 					$time   = date_i18n( $format, $time + $offset );
-					$href   = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_unban_ip&ip=' . esc_attr( $IP ) ), 'secupress-unban-ip_' . $IP );
+					$href   = wp_nonce_url( admin_url( 'admin-post.php?action=secupress-unban-ip&ip=' . esc_attr( $IP ) ), 'secupress-unban-ip_' . $IP );
 
 					printf( '<strong>%s</strong> <em>(%s)</em>', esc_html( $IP ), $time );
 					printf( '<span><a class="a-unban-ip" data-ip="%s" href="%s">%s</a></span>', esc_attr( $IP ), $href, __( 'Delete', 'secupress' ) );
@@ -837,7 +844,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		// Actions.
 		echo '<p id="secupress-banned-ips-actions">';
 			// Display a button to unban all IPs.
-			echo '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_clear_ips' ), 'secupress-clear-ips' ) . '" class="button button-secondary">' . __( 'Clear all banned IPs', 'secupress' ) . "</a>\n";
+			echo '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress-clear-ips' ), 'secupress-clear-ips' ) . '" class="button button-secondary">' . __( 'Clear all banned IPs', 'secupress' ) . "</a>\n";
 		echo "</p>\n";
 	}
 
