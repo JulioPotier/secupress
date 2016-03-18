@@ -88,10 +88,10 @@ function secupress_blackhole_ban_ip() {
 	update_site_option( SECUPRESS_BAN_IP, $ban_ips );
 
 	/* This hook is documented in /inc/functions/admin.php */
-	do_action( 'secupress.ip_banned', $IP, $ban_ips );
+	do_action( 'secupress.ban.ip_banned', $IP, $ban_ips );
 
 	/* This hook is documented in /inc/functions/admin.php */
-	if ( apply_filters( 'write_ban_in_htaccess', true ) ) {
+	if ( apply_filters( 'secupress.ban.write_in_htaccess', true ) ) {
 		secupress_write_htaccess( 'ban_ip', secupress_get_htaccess_ban_ip() );
 	}
 

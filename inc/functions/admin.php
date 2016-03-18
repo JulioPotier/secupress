@@ -412,9 +412,9 @@ function secupress_ban_ip( $time_ban = 5, $IP = null, $die = true ) {
 	 * @param (string) $IP      The IP banned.
 	 * @param (array)  $ban_ips The list of IPs banned (keys) and the time they were banned (values).
 	 */
-	do_action( 'secupress.ip_banned', $IP, $ban_ips );
+	do_action( 'secupress.ban.ip_banned', $IP, $ban_ips );
 
-	if ( apply_filters( 'write_ban_in_htaccess', true ) ) {
+	if ( apply_filters( 'secupress.ban.write_in_htaccess', true ) ) {
 		secupress_write_htaccess( 'ban_ip', secupress_get_htaccess_ban_ip() );
 	}
 

@@ -405,12 +405,12 @@ function __secupress_ban_ip_ajax_post_cb() {
 	update_site_option( SECUPRESS_BAN_IP, $ban_ips );
 
 	// Add the IP to the `.htaccess` file.
-	if ( apply_filters( 'write_ban_in_htaccess', true ) ) {
+	if ( apply_filters( 'secupress.ban.write_in_htaccess', true ) ) {
 		secupress_write_htaccess( 'ban_ip', secupress_get_htaccess_ban_ip() );
 	}
 
 	/* This hook is documented in /inc/functions/admin.php */
-	do_action( 'secupress.ip_banned', $ip, $ban_ips );
+	do_action( 'secupress.ban.ip_banned', $ip, $ban_ips );
 
 	// Send a response.
 	$msg = sprintf( __( 'The IP address %s has been banned.', 'secupress' ), '<code>' . esc_html( $ip ) . '</code>' );
@@ -464,7 +464,7 @@ function __secupress_unban_ip_ajax_post_cb() {
 	}
 
 	// Remove the IP from the `.htaccess` file.
-	if ( apply_filters( 'write_ban_in_htaccess', true ) ) {
+	if ( apply_filters( 'secupress.ban.write_in_htaccess', true ) ) {
 		secupress_write_htaccess( 'ban_ip', secupress_get_htaccess_ban_ip() );
 	}
 
@@ -476,7 +476,7 @@ function __secupress_unban_ip_ajax_post_cb() {
 	 * @param (string) $IP      The IP unbanned.
 	 * @param (array)  $ban_ips The list of IPs banned (keys) and the time they were banned (values).
 	 */
-	do_action( 'secupress.ip_unbanned', $ip, $ban_ips );
+	do_action( 'secupress.ban.ip_unbanned', $ip, $ban_ips );
 
 	// Send a response.
 	$msg = sprintf( __( 'The IP address %s has been unbanned.', 'secupress' ), '<code>' . esc_html( $ip ) . '</code>' );
