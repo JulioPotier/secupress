@@ -1,29 +1,45 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
-/*------------------------------------------------------------------------------------------------*/
-/* ON MODULE SETTINGS SAVE ====================================================================== */
-/*------------------------------------------------------------------------------------------------*/
-
 /**
- * Callback to filter, sanitize, validate and de/activate submodules.
+ * Activate or deactivate "action" Logs.
  *
  * @since 1.0
- *
- * @param (array) $settings The module settings.
- *
- * @return (array) The sanitized and validated settings.
- */
-function __secupress_logs_settings_callback( $settings ) {
-	$modulenow = 'logs';
-	$activate  = secupress_get_submodule_activations( $modulenow );
+ **/
+add_action( 'admin_post_secupress_activate_action_logs', '__secupress_activate_action_logs' );
 
-	// (De)Activation.
-	if ( false !== $activate ) {
-		secupress_manage_submodule( $modulenow, 'action-logs', ! empty( $activate['action-logs_activated'] ) );
-		secupress_manage_submodule( $modulenow, '404-logs',    ! empty( $activate['404-logs_activated'] ) );
-	}
+function __secupress_activate_action_logs() {
+	// Make all security tests.
+	check_admin_referer( 'secupress_activate_action_logs' );
+	secupress_check_user_capability();
 
-	// There are no settings to save.
-	return array();
+	// (De)Activate.
+	$activate = ! empty( $_POST['secupress-plugin-activation']['action-logs_activated'] );
+	secupress_manage_submodule( 'logs', 'action-logs', $activate );
+
+	// Redirect.
+	wp_redirect( wp_get_referer() );
+	die();
+}
+
+
+/**
+ * Activate or deactivate "404" Logs.
+ *
+ * @since 1.0
+ **/
+add_action( 'admin_post_secupress_activate_404_logs', '__secupress_activate_404_logs' );
+
+function __secupress_activate_404_logs() {
+	// Make all security tests.
+	check_admin_referer( 'secupress_activate_404_logs' );
+	secupress_check_user_capability();
+
+	// (De)Activate.
+	$activate = ! empty( $_POST['secupress-plugin-activation']['404-logs_activated'] );
+	secupress_manage_submodule( 'logs', '404-logs', $activate );
+
+	// Redirect.
+	wp_redirect( wp_get_referer() );
+	die();
 }

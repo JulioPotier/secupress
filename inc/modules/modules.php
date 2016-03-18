@@ -81,6 +81,7 @@ function secupress_get_modules() {
 		'logs'            => array(
 			'title'       => esc_html__( 'Logs', 'secupress' ),
 			'dashicon'    => 'list-view',
+			'with_form'   => false,
 			'description' => array(
 				__( 'Logs are very usefull, it acts like a history of what happened on your website, filtered and at any time. You can also read and delete banned IPs from our modules here.', 'secupress' ),
 			),

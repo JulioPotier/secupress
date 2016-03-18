@@ -814,6 +814,82 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 
 	/**
+	 * Displays the checkbox to activate the "action" Logs.
+	 *
+	 * @since 1.0
+	 */
+	protected function activate_action_logs( $args ) {
+		$name_attribute = 'secupress-plugin-activation[' . $args['name'] . ']';
+		$disabled       = ! empty( $args['disabled'] ) || static::is_pro_feature( $args['name'] );
+		$disabled       = $disabled ? ' disabled="disabled"' : '';
+		$value          = (int) secupress_is_submodule_active( 'logs', 'action-logs' );
+
+		// Labels
+		$label_open  = '';
+		$label_close = '';
+		if ( '' !== $args['label_before'] || '' !== $args['label'] || '' !== $args['label_after'] ) {
+			$label_open  = '<label' . ( $disabled ? ' class="disabled"' : '' ) . '>';
+			$label_close = '</label>';
+		}
+		?>
+		<form action="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_activate_action_logs' ), 'secupress_activate_action_logs' ); ?>" id="form-activate-action-logs" method="post">
+			<?php
+			echo $label_open;
+				echo $args['label_before'];
+				?>
+				<input type="checkbox" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>" value="1"<?php checked( $value, 1 ); ?><?php echo $disabled; ?>/>
+				<?php
+				echo $args['label'];
+			echo $label_close;
+
+			echo '<p class="description desc">';
+				_e( 'We will not log post action like creation or update but rather password and profile update, email changes, new administrator user, admin has logged in...', 'secupress' );
+			echo "</p>\n";
+
+			submit_button( __( 'Submit' ) );
+			?>
+		</form>
+		<?php
+	}
+
+
+	/**
+	 * Displays the checkbox to activate the "404" Logs.
+	 *
+	 * @since 1.0
+	 */
+	protected function activate_404_logs( $args ) {
+		$name_attribute = 'secupress-plugin-activation[' . $args['name'] . ']';
+		$disabled       = ! empty( $args['disabled'] ) || static::is_pro_feature( $args['name'] );
+		$disabled       = $disabled ? ' disabled="disabled"' : '';
+		$value          = (int) secupress_is_submodule_active( 'logs', '404-logs' );
+
+		// Labels
+		$label_open  = '';
+		$label_close = '';
+		if ( '' !== $args['label_before'] || '' !== $args['label'] || '' !== $args['label_after'] ) {
+			$label_open  = '<label' . ( $disabled ? ' class="disabled"' : '' ) . '>';
+			$label_close = '</label>';
+		}
+		?>
+		<form action="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_activate_404_logs' ), 'secupress_activate_404_logs' ); ?>" id="form-activate-404-logs" method="post">
+			<?php
+			echo $label_open;
+				echo $args['label_before'];
+				?>
+				<input type="checkbox" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>" value="1"<?php checked( $value, 1 ); ?><?php echo $disabled; ?>/>
+				<?php
+				echo $args['label'];
+			echo $label_close;
+
+			submit_button( __( 'Submit' ) );
+			?>
+		</form>
+		<?php
+	}
+
+
+	/**
 	 * Displays the tables to launch a backup
 	 *
 	 * @since 1.0
