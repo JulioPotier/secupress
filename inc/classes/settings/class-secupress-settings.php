@@ -796,14 +796,14 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 		// Display the list.
 		echo '<ul class="secupress-boxed-group">';
-			foreach ( $ban_ips as $ip => $time ) {
+			foreach ( $ban_ips as $IP => $time ) {
 				echo '<li class="secupress-large-row">';
 					$format = __( 'M jS Y', 'secupress' ) . ' ' . __( 'G:i', 'secupress' );
 					$time   = date_i18n( $format, $time + $offset );
-					$href   = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_unban_ip&ip=' . esc_attr( $ip ) ), 'secupress-unban-ip' );
+					$href   = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_unban_ip&ip=' . esc_attr( $IP ) ), 'secupress-unban-ip_' . $IP );
 
-					printf( '<strong>%s</strong> <em>(%s)</em>', esc_html( $ip ), $time );
-					printf( '<span><a class="a-unban-ip" data-ip="%s" href="%s">%s</a></span>', esc_attr( $ip ), $href, __( 'Delete', 'secupress' ) );
+					printf( '<strong>%s</strong> <em>(%s)</em>', esc_html( $IP ), $time );
+					printf( '<span><a class="a-unban-ip" data-ip="%s" href="%s">%s</a></span>', esc_attr( $IP ), $href, __( 'Delete', 'secupress' ) );
 				echo "</li>\n";
 			}
 		echo "</ul>\n";
