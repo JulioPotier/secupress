@@ -27,8 +27,9 @@ function __secupress_backups_settings_callback( $settings ) {
 	return $settings;
 }
 
+
 /**
- * Will do a DB backup
+ * Will do a DB backup.
  *
  * @return void
  * @since 1.0
@@ -41,6 +42,8 @@ function __secupress_do_backup_db() {
 	if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress_backup_db' ) ) {
 		secupress_admin_die();
 	}
+
+	secupress_check_user_capability();
 
 	$wp_tables      = secupress_get_wp_tables();
 	$other_tables   = secupress_get_non_wp_tables();
@@ -75,27 +78,30 @@ function __secupress_do_backup_db() {
 	die();
 }
 
+
 /**
- * Will download a requested backup
+ * Will download a requested backup.
  *
  * @return void
  * @since 1.0
  **/
 add_action( 'admin_post_secupress_download_backup', '__secupress_download_backup_ajax_post_cb' );
-// No need any AJAX support here
+// No need any AJAX support here.
 
 function __secupress_download_backup_ajax_post_cb() {
 
 	if ( ! isset( $_GET['_wpnonce'], $_GET['file'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress_download_backup-' . $_GET['file'] ) ) {
-		wp_nonce_ays( '' );
+		secupress_admin_die();
 	}
+
+	secupress_check_user_capability();
 
 	$file = glob( secupress_get_hashed_folder_name( 'backup', WP_CONTENT_DIR . '/backups/' ) . '*' . $_GET['file'] . '*.{zip,sql}', GLOB_BRACE );
 
 	if ( $file ) {
 		$file = reset( $file );
 	} else {
-		wp_nonce_ays( '' );
+		secupress_admin_die();
 	}
 
 	if ( ini_get( 'zlib.output_compression' ) ) {
@@ -116,8 +122,9 @@ function __secupress_download_backup_ajax_post_cb() {
 	die();
 }
 
+
 /**
- * Will delete a specified backup file
+ * Will delete a specified backup file.
  *
  * @return void
  * @since 1.0
@@ -130,6 +137,8 @@ function __secupress_delete_backup_ajax_post_cb() {
 	if ( ! isset( $_GET['_wpnonce'] ) || ! isset( $_GET['file'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress_delete_backup-' . $_GET['file'] ) ) {
 		secupress_admin_die();
 	}
+
+	secupress_check_user_capability();
 
 	$files = glob( secupress_get_hashed_folder_name( 'backup', WP_CONTENT_DIR . '/backups/' ) . '*' . $_GET['file'] . '*.{zip,sql}', GLOB_BRACE );
 
@@ -151,13 +160,13 @@ function __secupress_delete_backup_ajax_post_cb() {
 	die();
 }
 
+
 /**
- * Will delete all the backups
+ * Will delete all the backups.
  *
  * @return void
  * @since 1.0
  **/
-
 add_action( 'wp_ajax_secupress_delete_backups',    '__secupress_delete_backups_ajax_post_cb' );
 add_action( 'admin_post_secupress_delete_backups', '__secupress_delete_backups_ajax_post_cb' );
 
@@ -166,6 +175,8 @@ function __secupress_delete_backups_ajax_post_cb() {
 	if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress_delete_backups' ) ) {
 		secupress_admin_die();
 	}
+
+	secupress_check_user_capability();
 
 	$files = glob( secupress_get_hashed_folder_name( 'backup', WP_CONTENT_DIR . '/backups/' ) . '*.{zip,sql}', GLOB_BRACE );
 
@@ -177,6 +188,7 @@ function __secupress_delete_backups_ajax_post_cb() {
 
 	secupress_admin_send_response_or_redirect( 1 );
 }
+
 
 /*------------------------------------------------------------------------------------------------*/
 /* TOOLS ======================================================================================== */
