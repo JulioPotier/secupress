@@ -445,7 +445,7 @@ function __secupress_unban_ip_ajax_post_cb() {
 	secupress_check_user_capability();
 
 	// Test the IP.
-	$ip = esc_html( $_GET['ip'] );
+	$ip = $_GET['ip'];
 
 	if ( ! $ip || ! filter_var( $ip, FILTER_VALIDATE_IP ) ) {
 		secupress_admin_die();
@@ -479,7 +479,7 @@ function __secupress_unban_ip_ajax_post_cb() {
 	do_action( 'secupress.ip_unbanned', $ip, $ban_ips );
 
 	// Send a response.
-	$msg = sprintf( __( 'The IP address %s has been unbanned.', 'secupress' ), '<code>' . $ip . '</code>' );
+	$msg = sprintf( __( 'The IP address %s has been unbanned.', 'secupress' ), '<code>' . esc_html( $ip ) . '</code>' );
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 		wp_send_json_success( $msg );
