@@ -196,9 +196,7 @@ function secupress_add_active_plugins_and_themes_network_options_admin_ajax_call
 		wp_send_json_error();
 	}
 
-	if ( ! current_user_can( secupress_get_capability() ) ) {
-		wp_send_json_error();
-	}
+	secupress_check_user_capability();
 
 	if ( ! ( $count = secupress_fill_active_plugins_and_themes_network_options() ) ) {
 		wp_send_json_success( false );
@@ -223,9 +221,7 @@ function secupress_add_active_plugins_and_themes_network_options_admin_post_call
 
 	check_admin_referer( 'secupress-set-big-data' );
 
-	if ( ! current_user_can( secupress_get_capability() ) ) {
-		wp_nonce_ays( '' );
-	}
+	secupress_check_user_capability();
 
 	if ( ! ( $count = secupress_fill_active_plugins_and_themes_network_options() ) ) {
 		wp_safe_redirect( wp_get_referer() );

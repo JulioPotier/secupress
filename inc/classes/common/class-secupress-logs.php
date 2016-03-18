@@ -907,9 +907,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	public function _post_download_logs_ajax_post_cb() {
 		check_admin_referer( 'secupress-download-' . $this->log_type . '-logs' );
 
-		if ( ! static::_user_can() ) {
-			wp_nonce_ays( '' );
-		}
+		secupress_check_user_capability();
 
 		if ( ini_get( 'zlib.output_compression' ) ) {
 			ini_set( 'zlib.output_compression', 'Off' );
@@ -954,9 +952,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	public function _ajax_clear_logs_ajax_post_cb() {
 		check_ajax_referer( 'secupress-clear-' . $this->log_type . '-logs' );
 
-		if ( ! static::_user_can() ) {
-			wp_send_json_error();
-		}
+		secupress_check_user_capability();
 
 		$this->delete_logs();
 
@@ -972,9 +968,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	public function _post_clear_logs_ajax_post_cb() {
 		check_admin_referer( 'secupress-clear-' . $this->log_type . '-logs' );
 
-		if ( ! static::_user_can() ) {
-			wp_nonce_ays( '' );
-		}
+		secupress_check_user_capability();
 
 		$this->delete_logs();
 
@@ -995,9 +989,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	public function _ajax_bulk_delete_logs_ajax_post_cb() {
 		check_ajax_referer( 'secupress-bulk-' . $this->log_type . '-log' );
 
-		if ( ! static::_user_can() ) {
-			wp_send_json_error();
-		}
+		secupress_check_user_capability();
 
 		if ( empty( $_GET['post'] ) || ! is_array( $_GET['post'] ) ) {
 			wp_send_json_error( sprintf( _n( '%s Log deleted.', '%s Logs deleted.', 0, 'secupress' ), 0 ) );
@@ -1017,9 +1009,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	public function _post_bulk_delete_logs_ajax_post_cb() {
 		check_admin_referer( 'secupress-bulk-' . $this->log_type . '-logs' );
 
-		if ( ! static::_user_can() ) {
-			wp_nonce_ays( '' );
-		}
+		secupress_check_user_capability();
 
 		if ( empty( $_GET['post'] ) || ! is_array( $_GET['post'] ) ) {
 			$deleted = 0;
@@ -1044,9 +1034,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	public function _ajax_bulk_delete_logs_by_user_id_ajax_post_cb() {
 		check_ajax_referer( 'secupress-delete-' . $this->log_type . '-logs-by-user_id' );
 
-		if ( ! static::_user_can() ) {
-			wp_send_json_error();
-		}
+		secupress_check_user_capability();
 
 		if ( ! isset( $_GET['id'] ) ) {
 			wp_send_json_error( sprintf( _n( '%s Log deleted.', '%s Logs deleted.', 0, 'secupress' ), 0 ) );
@@ -1067,9 +1055,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	public function _post_bulk_delete_logs_by_user_id_ajax_post_cb() {
 		check_admin_referer( 'secupress-delete-' . $this->log_type . '-logs-by-user_id' );
 
-		if ( ! static::_user_can() ) {
-			wp_nonce_ays( '' );
-		}
+		secupress_check_user_capability();
 
 		if ( ! isset( $_GET['id'] ) ) {
 			$deleted = 0;
@@ -1095,9 +1081,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	public function _ajax_bulk_delete_logs_by_ip_ajax_post_cb() {
 		check_ajax_referer( 'secupress-delete-' . $this->log_type . '-logs-by-ip' );
 
-		if ( ! static::_user_can() ) {
-			wp_send_json_error();
-		}
+		secupress_check_user_capability();
 
 		if ( empty( $_GET['ip'] ) ) {
 			wp_send_json_error( sprintf( _n( '%s Log deleted.', '%s Logs deleted.', 0, 'secupress' ), 0 ) );
@@ -1124,9 +1108,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	public function _post_bulk_delete_logs_by_ip_ajax_post_cb() {
 		check_admin_referer( 'secupress-delete-' . $this->log_type . '-logs-by-ip' );
 
-		if ( ! static::_user_can() ) {
-			wp_nonce_ays( '' );
-		}
+		secupress_check_user_capability();
 
 		if ( empty( $_GET['ip'] ) ) {
 			$deleted = 0;
@@ -1158,11 +1140,9 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	public function _ajax_delete_log_ajax_post_cb() {
 		check_ajax_referer( 'secupress-delete-' . $this->log_type . '-log' );
 
-		if ( empty( $_GET['log'] ) ) {
-			wp_send_json_error();
-		}
+		secupress_check_user_capability();
 
-		if ( ! static::_user_can() ) {
+		if ( empty( $_GET['log'] ) ) {
 			wp_send_json_error();
 		}
 
@@ -1182,16 +1162,14 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	public function _post_delete_log_ajax_post_cb() {
 		check_admin_referer( 'secupress-delete-' . $this->log_type . '-log' );
 
-		if ( empty( $_GET['log'] ) ) {
-			wp_nonce_ays( '' );
-		}
+		secupress_check_user_capability();
 
-		if ( ! static::_user_can() ) {
-			wp_nonce_ays( '' );
+		if ( empty( $_GET['log'] ) ) {
+			secupress_admin_die();
 		}
 
 		if ( ! $this->delete_log( $_GET['log'] ) ) {
-			wp_nonce_ays( '' );
+			secupress_admin_die();
 		}
 
 		add_settings_error( 'general', 'log_deleted', __( 'Log permanently deleted.', 'secupress' ), 'updated' );
@@ -1304,18 +1282,6 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		}
 
 		return $log;
-	}
-
-
-	/**
-	 * Tell if the current user can download or delete Logs.
-	 *
-	 * @since 1.0
-	 *
-	 * @return (bool).
-	 */
-	protected static function _user_can() {
-		return current_user_can( secupress_get_capability() );
 	}
 
 

@@ -846,7 +846,7 @@ function __secupress_doubleauth_regen_secret_ajax_post_cb() {
 		die();
 	}
 
-	wp_nonce_ays( '' );
+	secupress_admin_die();
 }
 
 
@@ -1146,10 +1146,6 @@ add_action( 'admin_post_secupress_doubleauth_skip', '__secupress_doubleauth_skip
 
 function __secupress_doubleauth_skip_ajax_post_cb() {
 	global $current_user;
-
-	if ( ! isset( $_GET['_wpnonce'] ) ) {
-		wp_nonce_ays( '' );
-	}
 
 	check_admin_referer( 'secupress_doubleauth_skip' );
 
