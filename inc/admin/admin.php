@@ -445,7 +445,7 @@ function __secupress_unban_ip_ajax_post_cb() {
 	secupress_check_user_capability();
 
 	// Test the IP.
-	$ip = $_GET['ip'];
+	$ip = urldecode( $_GET['ip'] );
 
 	if ( ! $ip || ! filter_var( $ip, FILTER_VALIDATE_IP ) ) {
 		secupress_admin_die();
