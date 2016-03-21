@@ -276,6 +276,56 @@ function secupress_admin_send_response_or_redirect( $response, $redirect = false
 }
 
 
+/*
+ * A simple shorthand to send a json response with message, die, or redirect with a message, depending on the admin context.
+ *
+ * @since 1.0
+ *
+ * @param (array) $args An array of arguments like:
+ *                      (string)      $message     The message to return.
+ *                      (string|bool) $redirect_to The URL to redirect to: false for the referer, or a complete URL, or the slug of one of our settings pages.
+ *                      (string)      $code        An error code used by `add_settings_error()`.
+ *                      (string)      $type        `success` (default) or `error`. Will decide to send a success or an error message.
+ **/
+function secupress_admin_send_message_die( $args ) {
+	$args = array_merge( array(
+		'message'     => '',
+		'redirect_to' => false,
+		'code'        => '',
+		'type'        => 'success',
+	), $args );
+
+	if ( ! $args['message'] ) {
+		secupress_admin_die();
+	}
+
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		if ( 'success' === $args['type'] ) {
+			unset( $args['redirect_to'], $args['type'] );
+			wp_send_json_success( $args );
+		}
+
+		unset( $args['redirect_to'], $args['type'] );
+		wp_send_json_error( $args );
+	}
+
+	if ( ! $args['redirect_to'] ) {
+		$args['redirect_to'] = wp_get_referer();
+	} elseif ( 0 !== strpos( $args['redirect_to'], 'http' ) ) {
+		$args['redirect_to'] = secupress_admin_url( $args['redirect_to'] );
+	}
+
+	$args['type'] = 'success' === $args['type'] ? 'updated' : 'error';
+
+	add_settings_error( 'general', $args['code'], $args['message'], $args['type'] );
+	set_transient( 'settings_errors', get_settings_errors(), 30 );
+
+	$goback = add_query_arg( 'settings-updated', 'true', $args['redirect_to'] );
+	wp_redirect( $goback );
+	die();
+}
+
+
 /**
  * A shorthand to test if the current user can perform SecuPress operations. Die otherwise.
  *
@@ -284,6 +334,22 @@ function secupress_admin_send_response_or_redirect( $response, $redirect = false
 function secupress_check_user_capability() {
 	if ( ! current_user_can( secupress_get_capability() ) ) {
 		secupress_admin_die();
+	}
+}
+
+
+/**
+ * A `check_admin_referer()` that also works for ajax.
+ *
+ * @since 1.0
+ **/
+function secupress_check_admin_referer( $action = -1, $query_arg = '_wpnonce' ) {
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		if ( false === check_ajax_referer( $action, $query_arg, false ) ) {
+			wp_send_json_error();
+		}
+	} else {
+		check_admin_referer( $action, $query_arg );
 	}
 }
 
