@@ -120,9 +120,9 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 		 * Actions.
 		 */
 		$hooks = array(
-			'secupress.block'     => array( 'immediately' => false ),
-			'secupress.ip_banned' => array( 'immediately' => false ),
-			'wp_login'            => array( 'test_cb' => array( __CLASS__, '_wp_login_test' ), 'nbr_args' => 2 ),
+			'secupress.block'         => array( 'immediately' => false ),
+			'secupress.ban.ip_banned' => array( 'immediately' => false ),
+			'wp_login'                => array( 'test_cb' => array( __CLASS__, '_wp_login_test' ), 'nbr_args' => 2 ),
 			//// File modif scan
 			//// Malware scan
 		);
@@ -600,7 +600,7 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 			'update_site_option_limited_email_domains'    => __( 'The list of email domains allowed to create sites has been modified.', 'secupress' ),
 			'update_site_option_banned_email_domains'     => __( 'The list of email domains not allowed to create sites has been modified.', 'secupress' ),
 			'secupress.block'                             => __( 'The IP address %2$s has been blocked.<br/>Module: %1$s<br/>Data: %3$s', 'secupress' ),
-			'secupress.ip_banned'                         => __( 'The IP address %1$s has been banned.', 'secupress' ),
+			'secupress.ban.ip_banned'                     => __( 'The IP address %1$s has been banned.', 'secupress' ),
 			'wp_login'                                    => __( 'The user %s just logged in.', 'secupress' ),
 		);
 

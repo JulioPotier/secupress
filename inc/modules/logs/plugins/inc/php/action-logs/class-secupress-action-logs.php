@@ -94,20 +94,20 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	 * @var (array) Actions to Log.
 	 */
 	protected $actions = array(
-		'secupress.block'      => 2, // `secupress_block()`
-		'secupress.ip_banned'  => 1, // `secupress_ban_ip()`
-		'switch_theme'         => 1, // `switch_theme()`
-		'wp_login'             => 2, // `wp_signon()`
-		'delete_user'          => 2, // `wp_delete_user()`
-		'profile_update'       => 2, // 'wp_insert_user()'
-		'user_register'        => 1, // 'wp_insert_user()'
-		'added_user_meta'      => 4, // `add_metadata()`
-		'updated_user_meta'    => 4, // `update_metadata()`
-		'deleted_user_meta'    => 4, // `delete_metadata()`
-		'wpmu_new_blog'        => 2, // `wpmu_create_blog()`
-		'delete_blog'          => 1, // `wpmu_delete_blog()`
-		'phpmailer_init'       => 1, // `wp_mail()`
-		'http_api_debug'       => 5, // `WP_Http`
+		'secupress.block'          => 2, // `secupress_block()`
+		'secupress.ban.ip_banned'  => 1, // `secupress_ban_ip()`
+		'switch_theme'             => 1, // `switch_theme()`
+		'wp_login'                 => 2, // `wp_signon()`
+		'delete_user'              => 2, // `wp_delete_user()`
+		'profile_update'           => 2, // 'wp_insert_user()'
+		'user_register'            => 1, // 'wp_insert_user()'
+		'added_user_meta'          => 4, // `add_metadata()`
+		'updated_user_meta'        => 4, // `update_metadata()`
+		'deleted_user_meta'        => 4, // `delete_metadata()`
+		'wpmu_new_blog'            => 2, // `wpmu_create_blog()`
+		'delete_blog'              => 1, // `wpmu_delete_blog()`
+		'phpmailer_init'           => 1, // `wp_mail()`
+		'http_api_debug'           => 5, // `WP_Http`
 	);
 	/**
 	 * @var (array) An array of Log arrays: all things in this page that should be logged will end here, before being saved at the end of the page.

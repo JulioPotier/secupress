@@ -595,7 +595,7 @@ function __secupress_clear_ips_ajax_post_cb() {
 	delete_site_option( SECUPRESS_BAN_IP );
 
 	// Remove all IPs from the `.htaccess` file.
-	if ( apply_filters( 'write_ban_in_htaccess', true ) ) {
+	if ( apply_filters( 'secupress.ban.write_in_htaccess', true ) ) {
 		secupress_write_htaccess( 'ban_ip' );
 	}
 
