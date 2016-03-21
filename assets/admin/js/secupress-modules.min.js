@@ -1,6 +1,6 @@
 // Global vars =====================================================================================
 var SecuPress = {
-	doingAjax:           false,
+	doingAjax:           {},
 	deletedRowColor:     "#FF9966",
 	addedRowColor:       "#CCEEBB",
 	confirmSwalDefaults: {
@@ -45,19 +45,21 @@ function secupressIsEscapeKey( e ) {
  * - If it's a link: add a "disabled" attribute. If it's a button or input: add a "disabled" attribute.
  * - Change the button text if a "data-loading-i18n" attribute is present.
  * - Use `wp.a11y.speak` if a text is provided.
- * - Set `SecuPress.doingAjax` to `true`.
+ * - Set a `SecuPress.doingAjax` attribute to `true`.
  *
  * @since 1.0
  *
  * @param (object) $button jQuery object of the button.
  * @param (string) speak   Text for `wp.a11y.speak`.
+ * @param (string) ajaxID  An identifier used for `SecuPress.doingAjax`. Default: "global".
  */
-function secupressDisableAjaxButton( $button, speak ) {
+function secupressDisableAjaxButton( $button, speak, ajaxID ) {
 	var text     = $button.attr( "data-loading-i18n" ),
 		isButton = $button.get( 0 ).nodeName.toLowerCase(),
 		value;
 
-	SecuPress.doingAjax = true;
+	ajaxID = undefined !== ajaxID ? ajaxID : "global";
+	SecuPress.doingAjax[ ajaxID ] = true;
 	isButton = "button" === isButton || "input" === isButton;
 
 	if ( undefined !== text && text ) {
@@ -70,6 +72,10 @@ function secupressDisableAjaxButton( $button, speak ) {
 			}
 		} else {
 			$button.text( text );
+		}
+
+		if ( undefined === speak || ! speak ) {
+			speak = text;
 		}
 	}
 
@@ -91,14 +97,15 @@ function secupressDisableAjaxButton( $button, speak ) {
  * - If it's a link: remove the "disabled" attribute. If it's a button or input: remove the "disabled" attribute.
  * - Change the button text if a "data-original-i18n" attribute is present.
  * - Use `wp.a11y.speak` if a text is provided.
- * - Set `SecuPress.doingAjax` to `false`.
+ * - Set a `SecuPress.doingAjax` attribute to `false`.
  *
  * @since 1.0
  *
  * @param (object) $button jQuery object of the button.
  * @param (string) speak   Text for `wp.a11y.speak`.
+ * @param (string) ajaxID  An identifier used for `SecuPress.doingAjax`. Default: "global".
  */
-function secupressEnableAjaxButton( $button, speak ) {
+function secupressEnableAjaxButton( $button, speak, ajaxID ) {
 	var text, isButton, value;
 
 	if ( undefined !== $button && $button && $button.length ) {
@@ -130,7 +137,8 @@ function secupressEnableAjaxButton( $button, speak ) {
 		wp.a11y.speak( speak );
 	}
 
-	SecuPress.doingAjax = false;
+	ajaxID = undefined !== ajaxID ? ajaxID : "global";
+	SecuPress.doingAjax[ ajaxID ] = false;
 }
 
 /**
@@ -144,10 +152,11 @@ function secupressEnableAjaxButton( $button, speak ) {
  *
  * @param (string) href The URL.
  * @param (object) e    The jQuery event object.
+ * @param (string) ajaxID  An identifier used for `SecuPress.doingAjax`. Default: "global".
  *
  * @return (bool|string) False on failure, the ajax URL on success.
  */
-function secupressPreAjaxCall( href, e ) {
+function secupressPreAjaxCall( href, e, ajaxID ) {
 	if ( undefined === href || ! href ) {
 		return false;
 	}
@@ -156,7 +165,13 @@ function secupressPreAjaxCall( href, e ) {
 		return false;
 	}
 
-	if ( SecuPress.doingAjax ) {
+	ajaxID = undefined !== ajaxID ? ajaxID : "global";
+
+	if ( typeof SecuPress.doingAjax[ ajaxID ] === "undefined" ) {
+		SecuPress.doingAjax[ ajaxID ] = false;
+	}
+
+	if ( SecuPress.doingAjax[ ajaxID ] ) {
 		return false;
 	}
 
@@ -172,8 +187,9 @@ function secupressPreAjaxCall( href, e ) {
  *
  * @param (object) $button jQuery object of the button.
  * @param (string) text    Text for swal + `wp.a11y.speak`.
+ * @param (string) ajaxID  An identifier used for `SecuPress.doingAjax`. Default: "global".
  */
-function secupressDisplayAjaxError( $button, text ) {
+function secupressDisplayAjaxError( $button, text, ajaxID ) {
 	if ( undefined === text ) {
 		text = window.l10nmodules.unknownError;
 	}
@@ -185,7 +201,8 @@ function secupressDisplayAjaxError( $button, text ) {
 		allowOutsideClick: true
 	} );
 
-	secupressEnableAjaxButton( $button, text );
+	ajaxID = undefined !== ajaxID ? ajaxID : "global";
+	secupressEnableAjaxButton( $button, text, ajaxID );
 }
 
 
@@ -391,7 +408,7 @@ function secupressDisplayAjaxError( $button, text ) {
 
 	// Delete all backups.
 	function secupressDeleteAllBackups( $button, href ) {
-		secupressDisableAjaxButton( $button, w.l10nmodules.deletingAllText );
+		secupressDisableAjaxButton( $button, w.l10nmodules.deletingAllText, "backup" );
 
 		$.getJSON( href )
 		.done( function( r ) {
@@ -400,19 +417,19 @@ function secupressDisplayAjaxError( $button, text ) {
 				$button.closest( "form" ).find( "fieldset" ).text( "" );
 
 				secupressUpdateBackupVisibility();
-				secupressEnableAjaxButton( $button, w.l10nmodules.deletedAllText );
+				secupressEnableAjaxButton( $button, w.l10nmodules.deletedAllText, "backup" );
 			} else {
-				secupressDisplayAjaxError( $button, w.l10nmodules.deleteAllImpossible );
+				secupressDisplayAjaxError( $button, w.l10nmodules.deleteAllImpossible, "backup" );
 			}
 		} )
 		.fail( function() {
-			secupressDisplayAjaxError( $button );
+			secupressDisplayAjaxError( $button, null, "backup" );
 		} );
 	}
 
 	// Delete a backup.
 	function secupressDeleteOneBackup( $button, href ) {
-		secupressDisableAjaxButton( $button, w.l10nmodules.deletingOneText );
+		secupressDisableAjaxButton( $button, w.l10nmodules.deletingOneText, "backup" );
 
 		$.getJSON( href )
 		.done( function( r ) {
@@ -424,24 +441,24 @@ function secupressDisplayAjaxError( $button, text ) {
 
 					secupressUpdateAvailableBackupCounter( r );
 					secupressUpdateBackupVisibility();
-					SecuPress.doingAjax = false;
+					SecuPress.doingAjax.backup = false;
 				} );
 
 				if ( wp.a11y && wp.a11y.speak ) {
 					wp.a11y.speak( w.l10nmodules.deletedOneText );
 				}
 			} else {
-				secupressDisplayAjaxError( $button, w.l10nmodules.deleteOneImpossible );
+				secupressDisplayAjaxError( $button, w.l10nmodules.deleteOneImpossible, "backup" );
 			}
 		} )
 		.fail( function() {
-			secupressDisplayAjaxError( $button );
+			secupressDisplayAjaxError( $button, null, "backup" );
 		} );
 	}
 
 	// Do a DB backup.
 	function secupressDoDbBackup( $button, href ) {
-		secupressDisableAjaxButton( $button, w.l10nmodules.backupingText );
+		secupressDisableAjaxButton( $button, w.l10nmodules.backupingText, "backup" );
 
 		$.post( href )
 		.done( function( r ) {
@@ -452,13 +469,13 @@ function secupressDisplayAjaxError( $button, text ) {
 
 				secupressUpdateAvailableBackupCounter( r );
 				secupressUpdateBackupVisibility();
-				secupressEnableAjaxButton( $button, w.l10nmodules.backupedText );
+				secupressEnableAjaxButton( $button, w.l10nmodules.backupedText, "backup" );
 			} else {
-				secupressDisplayAjaxError( $button, w.l10nmodules.backupImpossible );
+				secupressDisplayAjaxError( $button, w.l10nmodules.backupImpossible, "backup" );
 			}
 		} )
 		.fail( function() {
-			secupressDisplayAjaxError( $button );
+			secupressDisplayAjaxError( $button, null, "backup" );
 		} );
 	}
 
