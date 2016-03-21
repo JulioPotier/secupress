@@ -276,47 +276,6 @@ function secupress_admin_send_response_or_redirect( $response, $redirect = false
 }
 
 
-// A simple shorthand to send a json response with message, die, or redirect to one of our settings pages with a message, depending on the admin context.
-
-function secupress_admin_send_message_die( $args ) {
-	$args = array_merge( array(
-		'message'     => '',
-		'redirect_to' => false,
-		'code'        => '',
-		'type'        => 'success',
-	), $args );
-
-	if ( ! $args['message'] ) {
-		secupress_admin_die();
-	}
-
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		if ( 'success' === $args['type'] ) {
-			unset( $args['redirect_to'], $args['type'] );
-			wp_send_json_success( $args );
-		}
-
-		unset( $args['redirect_to'], $args['type'] );
-		wp_send_json_error( $args );
-	}
-
-	if ( ! $args['redirect_to'] ) {
-		$args['redirect_to'] = wp_get_referer();
-	} elseif ( 0 !== strpos( $args['redirect_to'], 'http' ) ) {
-		$args['redirect_to'] = secupress_admin_url( $args['redirect_to'] );
-	}
-
-	$args['type'] = 'success' === $args['type'] ? 'updated' : 'error';
-
-	add_settings_error( 'general', $args['code'], $args['message'], $args['type'] );
-	set_transient( 'settings_errors', get_settings_errors(), 30 );
-
-	$goback = add_query_arg( 'settings-updated', 'true', $args['redirect_to'] );
-	wp_redirect( $goback );
-	die();
-}
-
-
 /**
  * A shorthand to test if the current user can perform SecuPress operations. Die otherwise.
  *
@@ -325,22 +284,6 @@ function secupress_admin_send_message_die( $args ) {
 function secupress_check_user_capability() {
 	if ( ! current_user_can( secupress_get_capability() ) ) {
 		secupress_admin_die();
-	}
-}
-
-
-/**
- * A `check_admin_referer()` that also works for ajax.
- *
- * @since 1.0
- **/
-function secupress_check_admin_referer( $action = -1, $query_arg = '_wpnonce' ) {
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		if ( false === check_ajax_referer( $action, $query_arg, false ) ) {
-			wp_send_json_error();
-		}
-	} else {
-		check_admin_referer( $action, $query_arg );
 	}
 }
 
@@ -432,42 +375,47 @@ function __secupress_reset_white_label_values_ajax_post_cb() {
  * @since 1.0
  */
 add_action( 'admin_post_secupress-ban-ip', '__secupress_ban_ip_ajax_post_cb' );
-add_action( 'wp_ajax_secupress-ban-ip',    '__secupress_ban_ip_ajax_post_cb' );
 
 function __secupress_ban_ip_ajax_post_cb() {
 	// Make all security tests.
-	secupress_check_admin_referer( 'secupress-ban-ip' );
+	check_admin_referer( 'secupress-ban-ip' );
 	secupress_check_user_capability();
 
 	if ( empty( $_REQUEST['ip'] ) ) {
-		secupress_admin_send_response_or_redirect( 'noip' );
+		wp_redirect( wp_get_referer() );
+		die();
 	}
 
 	// Test the IP.
 	$ip = urldecode( $_REQUEST['ip'] );
 
 	if ( ! filter_var( $ip, FILTER_VALIDATE_IP ) ) {
-		secupress_admin_send_message_die( array(
-			'message' => sprintf( __( '%s is not a valid IP address.', 'secupress' ), '<code>' . esc_html( $ip ) . '</code>' ),
-			'code'    => 'invalid_ip',
-			'type'    => 'error',
-		) );
+		$msg = sprintf( __( '%s is not a valid IP address.', 'secupress' ), '<code>' . esc_html( $ip ) . '</code>' );
+
+		add_settings_error( 'general', 'invalid_ip', $msg, 'updated' );
+		set_transient( 'settings_errors', get_settings_errors(), 30 );
+
+		$goback = add_query_arg( 'settings-updated', 'true', wp_get_referer() );
+		wp_redirect( $goback );
+		die();
 	}
 
 	if ( ! WP_DEBUG && ( '127.0.0.1' === $ip || secupress_get_ip() === $ip ) ) {
-		secupress_admin_send_message_die( array(
-			'message' => __( 'Ban yourself is not a good idea.', 'secupress' ),
-			'code'    => 'own_ip',
-			'type'    => 'error',
-		) );
+		$msg = __( 'Ban yourself is not a good idea.', 'secupress' );
+
+		add_settings_error( 'general', 'own_ip', $msg, 'updated' );
+		set_transient( 'settings_errors', get_settings_errors(), 30 );
+
+		$goback = add_query_arg( 'settings-updated', 'true', wp_get_referer() );
+		wp_redirect( $goback );
+		die();
 	}
 
 	// Add the IP to the option.
 	$ban_ips = get_site_option( SECUPRESS_BAN_IP );
 	$ban_ips = is_array( $ban_ips ) ? $ban_ips : array();
-	$time    = time() + YEAR_IN_SECONDS;
 
-	$ban_ips[ $ip ] = $time; // Now you got 1 year to think about your future, kiddo. In the meantime, go clean your room.
+	$ban_ips[ $ip ] = time() + YEAR_IN_SECONDS; // Now you got 1 year to think about your future, kiddo. In the meantime, go clean your room.
 
 	update_site_option( SECUPRESS_BAN_IP, $ban_ips );
 
@@ -479,20 +427,15 @@ function __secupress_ban_ip_ajax_post_cb() {
 	/* This hook is documented in /inc/functions/admin.php */
 	do_action( 'secupress.ban.ip_banned', $ip, $ban_ips );
 
-	$format      = __( 'M jS Y', 'secupress' ) . ' ' . __( 'G:i', 'secupress' );
-	$offset      = get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;
-	$referer_arg = '&_wp_http_referer=' . urlencode( secupress_admin_url( 'modules', 'logs' ) );
-
 	// Send a response.
-	secupress_admin_send_message_die( array(
-		'message'    => sprintf( __( 'The IP address %s has been banned.', 'secupress' ), '<code>' . $ip . '</code>' ),
-		'code'       => 'ip_banned',
-		'tmplValues' => array(
-			'ip'   => $ip,
-			'time' => date_i18n( $format, $time + $offset ),
-			'href' => wp_nonce_url( admin_url( 'admin-post.php?action=secupress-unban-ip&ip=' . $ip . $referer_arg ), 'secupress-unban-ip_' . $ip )
-		),
-	) );
+	$msg = sprintf( __( 'The IP address %s has been banned.', 'secupress' ), '<code>' . esc_html( $ip ) . '</code>' );
+
+	add_settings_error( 'general', 'ip_banned', $msg, 'updated' );
+	set_transient( 'settings_errors', get_settings_errors(), 30 );
+
+	$goback = add_query_arg( 'settings-updated', 'true', wp_get_referer() );
+	wp_redirect( $goback );
+	die();
 }
 
 
