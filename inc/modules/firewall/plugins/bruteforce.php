@@ -107,7 +107,7 @@ function secupress_check_bruteforce() {
 	switch( $method ) {
 		case 'GET':  $hits = 9; break;
 		case 'POST': $hits = 3; break;
-		default:     $hots = 5; break;
+		default:     $hits = 5; break;
 	}
 	/**
 	 * Set a maximum hit times in 1 second, more than that = IP banned
