@@ -14,7 +14,7 @@ global $wpdb;
 $wpdb->secupress_bruteforce = $wpdb->prefix . 'secupress_bruteforce';
 
 /**
- * Create our brute force table to contains every IP address that reach the website 
+ * Create our brute force table to contains every IP address that reach the website
  * Set the option that the table is installed
  * Schedule the purge event to avoid huge useless table
  *
@@ -82,7 +82,7 @@ function secupress_check_bruteforce() {
 	/**
 	 * Set to true to avoid been locked by the Brute Force
 	 * The goal is to easily manage any edge case
-	 * Usage example: 
+	 * Usage example:
 	 * add_filter( 'secupress.plugin.bruteforce.edgecase', '_manage_bruteforce_edgecase', 1 );
 	 * function _manage_bruteforce_edgecase( $value ) {
 	 *		if ( defined( 'SOME_CONSTANT' ) ) { // or any other test
@@ -131,7 +131,7 @@ function secupress_check_bruteforce() {
 		 * @param $id The id of the trigger
 		 * @param $method The request method
 		 * @since 1.0
-		 */		
+		 */
 		do_action( 'secupress.plugin.bruteforce.triggered', '=', $IP, $hits, $id, $method );
 		$time_ban = secupress_get_module_option( 'bruteforce_time_ban', 5, 'firewall' );
 		secupress_die( sprintf( __( 'Slow down, you move too fast.<br>Please wait a while before opening a new page or your IP address <em>%s</em> will be blocked for %d minutes.', 'secupress' ), $IP, $time_ban ) );
