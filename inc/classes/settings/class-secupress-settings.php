@@ -515,7 +515,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 				foreach ( $_countries as $code_country => $countries ) {
 					$title   = array_shift( $countries );
-					$checked = ! empty( array_intersect_key( $value, $countries ) );
+					$checked = array_intersect_key( $value, $countries );
+					$checked = ! empty( $checked );
 					?>
 					<label class="continent<?php echo $disabled_class; ?>">
 						<input type="checkbox" value="continent-<?php echo $code_country; ?>"<?php checked( $checked ); ?><?php echo $attributes; ?>>
