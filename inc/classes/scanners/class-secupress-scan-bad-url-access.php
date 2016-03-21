@@ -132,7 +132,7 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 
 		if ( $warnings ) {
 			// warning
-			$this->add_message( 100, array( count( $warnings ), $warnings ) );
+			$this->add_message( 100, array( $warnings ) );
 		}
 
 		// good
