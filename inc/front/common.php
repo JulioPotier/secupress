@@ -94,12 +94,17 @@ function secupress_rename_admin_username_logout() {
 
 	// Current user auth cookie is now invalid, log in again is mandatory.
 	wp_clear_auth_cookie();
-	wp_destroy_current_session();
+	if ( function_exists( 'wp_destroy_current_session' ) ) { // WP 4.0 min
+		wp_destroy_current_session();
+	}
+	
+	wp_cache_delete( $current_user->ID, 'users' );
 
 	if ( $is_super_admin ) {
-		wp_cache_delete( $current_user->ID, 'users' );
 		grant_super_admin( $current_user->ID );
 	}
+
+	secupress_fixit( 'Admin_User' );
 
 	// Auto-login.
 	$token = md5( time() );
