@@ -540,6 +540,11 @@ jQuery( document ).ready( function( $ ) {
 	function secupressFixit( test, $row, href, isBulk ) {
 		var $button;
 
+		if ( ! secupressIsFixable( $row ) ) {
+			secupressUncheckTest( $row );
+			return;
+		}
+
 		// One fix at a time if no bulk.
 		if ( ! isBulk && secupressDoingFix ) {
 			return false;
@@ -556,15 +561,7 @@ jQuery( document ).ready( function( $ ) {
 			return;
 		}
 
-		if ( ! secupressIsFixable( $row ) ) {
-			secupressDoingFix = false;
-			delete doingFix[ test ];
-
-			secupressUncheckTest( $row );
-			$row.removeClass( "fixing" );
-			$( ".secupress-fixit" ).removeClass( "disabled" );
-			return;
-		}
+		$( ".secupress-fixit" ).addClass( "disabled" );
 
 		// Show our fix is running.
 		doingFix[ test ] = 1;
@@ -899,8 +896,6 @@ jQuery( document ).ready( function( $ ) {
 			href, test, $row, isBulk;
 
 		e.preventDefault();
-
-		$( ".secupress-fixit" ).addClass( "disabled" );
 
 		href   = $this.attr( "href" );
 		test   = secupressGetTestFromUrl( href );
