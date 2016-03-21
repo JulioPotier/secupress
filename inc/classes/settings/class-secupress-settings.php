@@ -784,8 +784,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 		// Ban form.
 		echo '<form action="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress-ban-ip' . $referer_arg ), 'secupress-ban-ip' ) . '" id="form-ban-ip" method="post">';
-			echo '<label for="secupress-ban-ip" class="screen-reader-text">' . __( 'Ban IP', 'secupress' ) . '</label><br/>';
-			echo '<input type="search" id="secupress-ban-ip" name="ip" value=""/> ';
+			echo '<label for="secupress-ban-ip" class="screen-reader-text">' . __( 'Specify an IP to ban (for one year).', 'secupress' ) . '</label><br/>';
+			echo '<input type="text" id="secupress-ban-ip" name="ip" value=""/> ';
 			echo '<button type="submit" class="button button-primary">' . __( 'Ban IP', 'secupress' ) . '</button>';
 		echo "</form>\n";
 
@@ -813,7 +813,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			}
 		}
 
-		// Slice the list a bit.
+		// Slice the list a bit: limit to 100 last results.
 		if ( count( $ban_ips ) > 100 ) {
 			$ban_ips   = array_slice( $ban_ips, -100 );
 			$count_ips = count( $ban_ips );
