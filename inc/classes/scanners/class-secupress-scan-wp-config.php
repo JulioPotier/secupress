@@ -252,7 +252,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 							$replaced = secupress_replace_content( $wpconfig_filename, "/define\(.*('" . $constant . "'|\"" . $constant . "\").*,/", "/*Commented by SecuPress*/ // $0" );
 						}
 
-						if ( ! defined( $constant ) || $replaced ) {
+						if ( ! defined( $constant ) || $replaced || 'WP_DEBUG_DISPLAY' == $constant ) {
 							$new_content .= "define( '{$constant}', FALSE ); // Added by SecuPress\n";
 						} else {
 							$not_fixed[] = sprintf( '<code>%s</code>', $constant );
