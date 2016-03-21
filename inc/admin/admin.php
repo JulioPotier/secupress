@@ -125,7 +125,7 @@ function __secupress_fixit_action_callback() {
  *
  * @since 1.0
  *
- * @param (string) $test_name        The suffix of the class name.
+ * @param (string) $test_name        The suffix of the class name. Format example: Admin_User (not admin-user)
  * @param (bool)   $format_response  Change the output format.
  * @param (bool)   $for_current_site If multisite, tell to perform the fix for the current site, not network-wide.
  *                                   It has no effect on non multisite installations.
