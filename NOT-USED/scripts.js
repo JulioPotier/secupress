@@ -309,6 +309,127 @@
 } )(jQuery, document, window);
 
 
+// Action/404 Logs =================================================================================
+(function($, d, w, undefined) {
+
+	if ( ! w.l10nLogs ) {
+		return;
+	}
+
+	// Delete all logs.
+	function secupressDeleteAllLogs( $button, href ) {
+		secupressDisableAjaxButton( $button, w.l10nLogs.clearingText );
+
+		$.getJSON( href )
+		.done( function( r ) {
+			if ( $.isPlainObject( r ) && r.success ) {
+				swal.close();
+				// Empty the list and add a "No Logs" text.
+				$button.closest( "td" ).text( "" ).append( "<p><em>" + w.l10nLogs.noLogsText + "</em></p>" );
+
+				secupressEnableAjaxButton( $button, w.l10nLogs.clearedText );
+			} else {
+				secupressDisplayAjaxError( $button, w.l10nLogs.clearImpossible );
+			}
+		} )
+		.fail( function() {
+			secupressDisplayAjaxError( $button );
+		} );
+	}
+
+	// Delete one log.
+	function secupressDeleteLog( $button, href ) {
+		secupressDisableAjaxButton( $button, w.l10nLogs.deletingText );
+
+		$.getJSON( href )
+		.done( function( r ) {
+			if ( $.isPlainObject( r ) && r.success ) {
+				swal.close();
+				// r.data contains the number of logs.
+				if ( r.data ) {
+					$( ".logs-count" ).text( r.data );
+
+					$button.closest( "li" ).css( "backgroundColor", SecuPress.deletedRowColor ).hide( "normal", function() {
+						$( this ).remove();
+						SecuPress.doingAjax.global = false;
+					} );
+				} else {
+					// Empty the list and add a "No Logs" text.
+					$button.closest( "td" ).text( "" ).append( "<p><em>" + w.l10nLogs.noLogsText + "</em></p>" );
+					SecuPress.doingAjax.global = false;
+				}
+
+				if ( wp.a11y && wp.a11y.speak ) {
+					wp.a11y.speak( w.l10nLogs.deletedText );
+				}
+			} else {
+				secupressDisplayAjaxError( $button, w.l10nLogs.deleteImpossible );
+			}
+		} )
+		.fail( function() {
+			secupressDisplayAjaxError( $button );
+		} );
+	}
+
+	// Ajax call that clears logs.
+	$( ".secupress-clear-logs" ).on( "click keyup", function( e ) {
+		var $this = $( this ),
+			href  = secupressPreAjaxCall( $this.attr( "href" ), e );
+
+		if ( ! href ) {
+			return false;
+		}
+
+		if ( "function" === typeof w.swal ) {
+			swal(
+				$.extend( {}, SecuPress.confirmSwalDefaults, {
+					text:              w.l10nLogs.clearConfirmText,
+					confirmButtonText: w.l10nLogs.clearConfirmButton
+				} ),
+				function () {
+					secupressDeleteAllLogs( $this, href );
+				}
+			);
+		} else if ( w.confirm( w.l10nmodules.confirmTitle + "\n" + w.l10nLogs.clearConfirmText ) ) {
+			secupressDeleteAllLogs( $this, href );
+		}
+	} ).attr( "role", "button" ).removeAttr( "aria-disabled" );
+
+	// Ajax call that delete a log.
+	$( ".secupress-delete-log" ).on( "click keyup", function( e ) {
+		var $this = $( this ),
+			href  = secupressPreAjaxCall( $this.attr( "href" ), e );
+
+		if ( ! href ) {
+			return false;
+		}
+
+		if ( "function" === typeof w.swal ) {
+			swal(
+				$.extend( {}, SecuPress.confirmSwalDefaults, {
+					text:              w.l10nLogs.deleteConfirmText,
+					confirmButtonText: w.l10nLogs.deleteConfirmButton
+				} ),
+				function () {
+					secupressDeleteLog( $this, href );
+				}
+			);
+		} else if ( w.confirm( w.l10nmodules.confirmTitle + "\n" + w.l10nLogs.deleteConfirmText ) ) {
+			secupressDeleteLog( $this, href );
+		}
+	} ).attr( "role", "button" ).removeAttr( "aria-disabled" );
+
+	// Expand <pre> tags.
+	$( ".secupress-code-chunk" )
+		.prepend( '<button type="button" class="no-button secupress-expand-code"><span class="dashicons-before dashicons-visibility" aria-hidden="true"></span><span class="dashicons-before dashicons-hidden" aria-hidden="true"></span><span class="screen-reader-text">' + w.l10nLogs.expandCodeText + '</span></button>' )
+		.children( ".secupress-expand-code" )
+		.on( "click", function() {
+			$( this ).parent().toggleClass( "secupress-code-chunk" );
+		} );
+
+} )(jQuery, document, window);
+
+
 // Fixed scroll ====================================================================================
 /*(function($, d, w, undefined) {
 
