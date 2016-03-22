@@ -139,8 +139,6 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements iSecuPress
 			// cantfix
 			$this->add_fix_message( 302, array( '<code>.htaccess</code>', "<pre># BEGIN SecuPress $marker\n$rules\n# END SecuPress</pre>" ) );
 		}
-
-		return parent::fix();
 	}
 
 
