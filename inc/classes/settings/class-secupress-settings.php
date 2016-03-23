@@ -760,7 +760,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 
 	/**
-	 * Displays the banned IPs and add actions to delete it
+	 * Displays the banned IPs and add actions to delete them or add new ones.
 	 *
 	 * @since 1.0
 	 */
@@ -787,7 +787,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$search    = urldecode( trim( $_POST['secupress-search-banned-ip'] ) );
 			$is_search = true;
 
-			if ( filter_var( $search, FILTER_VALIDATE_IP ) ) {
+			if ( secupress_ip_is_valid( $search ) ) {
 				$search_val = esc_attr( $search );
 
 				if ( isset( $ban_ips[ $search ] ) ) {

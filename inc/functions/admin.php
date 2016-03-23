@@ -380,7 +380,7 @@ function secupress_get_ip() { //// find the best order
 			$ip = explode( ',', $_SERVER[ $key ] );
 			$ip = end( $ip );
 
-			if ( false !== filter_var( $ip, FILTER_VALIDATE_IP ) ) {
+			if ( false !== secupress_ip_is_valid( $ip ) ) {
 				return apply_filters( 'secupress_get_ip', $ip ); //// maybe not
 				return $ip;
 			}

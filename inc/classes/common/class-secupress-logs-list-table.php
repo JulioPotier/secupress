@@ -194,7 +194,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 			// User IP.
 			$user_ip = urldecode( $_GET['user_ip'] );
 
-			if ( filter_var( $user_ip, FILTER_VALIDATE_IP ) ) {
+			if ( secupress_ip_is_valid( $user_ip ) ) {
 				$args['user_ip'] = $user_ip;
 				$filter_request  = true;
 			}

@@ -181,6 +181,20 @@ function secupress_get_email( $from_header = false ) {
 
 
 /**
+ * Tell if an IP address is valid.
+ *
+ * @since 1.0
+ *
+ * @param (string) $ip An IP address.
+ *
+ * @return (string|bool) The IP address if valid. False otherwize.
+ */
+function secupress_ip_is_valid( $ip ) {
+	return filter_var( (string) $ip, FILTER_VALIDATE_IP );
+}
+
+
+/**
  * Get the main blog ID.
  *
  * @since 1.0

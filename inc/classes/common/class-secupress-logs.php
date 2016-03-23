@@ -1089,7 +1089,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 
 		$ip = urldecode( $_GET['ip'] );
 
-		if ( ! filter_var( $ip, FILTER_VALIDATE_IP ) ) {
+		if ( ! secupress_ip_is_valid( $ip ) ) {
 			wp_send_json_error( sprintf( _n( '%s Log deleted.', '%s Logs deleted.', 0, 'secupress' ), 0 ) );
 		}
 
@@ -1115,7 +1115,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		} else {
 			$ip = urldecode( $_GET['ip'] );
 
-			if ( ! filter_var( $ip, FILTER_VALIDATE_IP ) ) {
+			if ( ! secupress_ip_is_valid( $ip ) ) {
 				$deleted = 0;
 			} else {
 				$posts   = $this->get_logs_from_ip( $ip, true );

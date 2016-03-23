@@ -461,7 +461,7 @@ function __secupress_ban_ip_ajax_post_cb() {
 	// Test the IP.
 	$ip = urldecode( $_REQUEST['ip'] );
 
-	if ( ! filter_var( $ip, FILTER_VALIDATE_IP ) ) {
+	if ( ! secupress_ip_is_valid( $ip ) ) {
 		secupress_admin_send_message_die( array(
 			'message' => sprintf( __( '%s is not a valid IP address.', 'secupress' ), '<code>' . esc_html( $ip ) . '</code>' ),
 			'code'    => 'invalid_ip',
@@ -534,7 +534,7 @@ function __secupress_unban_ip_ajax_post_cb() {
 	// Test the IP.
 	$ip = urldecode( $_REQUEST['ip'] );
 
-	if ( ! filter_var( $ip, FILTER_VALIDATE_IP ) ) {
+	if ( ! secupress_ip_is_valid( $ip ) ) {
 		secupress_admin_send_message_die( array(
 			'message' => sprintf( __( '%s is not a valid IP address.', 'secupress' ), '<code>' . esc_html( $ip ) . '</code>' ),
 			'code'    => 'invalid_ip',
