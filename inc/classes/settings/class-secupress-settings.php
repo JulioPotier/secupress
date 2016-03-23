@@ -853,6 +853,55 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 
 	/**
+	 * Displays the textarea that lists the IP addresses not to ban.
+	 *
+	 * @since 1.0
+	 */
+	protected function ips_whitelist( $args ) {
+		$name_attribute = 'secupress_' . $this->modulenow . '_settings[' . $args['name'] . ']';
+		$disabled       = ! empty( $args['disabled'] ) || static::is_pro_feature( $args['name'] );
+		$disabled       = $disabled ? ' disabled="disabled"' : '';
+		$attributes     = $disabled;
+		$attributes    .= empty( $args['attributes']['cols'] ) ? ' cols="50"' : '';
+		$attributes    .= empty( $args['attributes']['rows'] ) ? ' rows="5"'  : '';
+		$whitelist      = secupress_get_module_option( $args['name'] );
+
+		if ( $whitelist ) {
+			$whitelist = explode( "\n", $whitelist );
+			$whitelist = array_map( 'secupress_ip_is_valid', $whitelist );
+			$whitelist = array_filter( $whitelist );
+			natsort( $whitelist );
+			$whitelist = implode( "\n", $whitelist );
+		} else {
+			$whitelist = '';
+		}
+
+		// Labels
+		$label_open  = '';
+		$label_close = '';
+		if ( '' !== $args['label_before'] || '' !== $args['label'] || '' !== $args['label_after'] ) {
+			$label_open  = '<label' . ( $disabled ? ' class="disabled"' : '' ) . '>';
+			$label_close = '</label>';
+		}
+
+		$this->print_open_form_tag();
+
+			echo $label_open;
+				echo $args['label'] ? $args['label'] . '<br/>' : '';
+				echo $args['label_before'];
+				echo '<textarea id="' . $args['label_for'] . '" name="' . $name_attribute . '"' . $attributes . '>' . esc_textarea( $whitelist ) . "</textarea>\n";
+				echo $args['label_after'];
+			echo $label_close;
+
+			echo '<p class="description">' . __( 'One IP address per line.', 'secupress' ) . "</p>\n";
+
+			submit_button( __( 'Save whitelist', 'secupress' ), 'primary', 'submit', true, $disabled );
+
+		$this->print_close_form_tag();
+	}
+
+
+	/**
 	 * Displays the checkbox to activate the "action" Logs.
 	 *
 	 * @since 1.0
