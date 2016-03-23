@@ -188,10 +188,13 @@ label {
 	text-align: right;
 }
 /* Backups */
-.secupress-large-row span {
+.secupress-large-row > span {
 	display: inline-block;
 	padding: 0 0 3px 10px;
 	width: 95%;
+}
+.secupress-large-row > span a {
+	vertical-align: middle;
 }
 .secupress-boxed-group.small-boxed-group li {
 	font-size: smaller;

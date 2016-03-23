@@ -777,76 +777,89 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	protected function banned_ips() {
-		$ban_ips     = get_site_option( SECUPRESS_BAN_IP );
-		$ban_ips     = is_array( $ban_ips ) ? $ban_ips : array();
-		$offset      = get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;
-		$referer_arg = '&_wp_http_referer=' . urlencode( secupress_admin_url( 'modules', 'logs' ) );
-		$search_val  = '';
+		$ban_ips            = get_site_option( SECUPRESS_BAN_IP );
+		$ban_ips            = is_array( $ban_ips ) ? $ban_ips : array();
+		$offset             = get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;
+		$in_ten_years       = time() + YEAR_IN_SECONDS * 10;
+		$page_url           = secupress_admin_url( 'modules', 'logs' );
+		$referer_arg        = '&_wp_http_referer=' . urlencode( $page_url );
+		$is_search          = false;
+		$search_val         = '';
+		$empty_list_message = __( 'No Banned IPs yet.', 'secupress' );
 
 		// Ban form.
-		echo '<form action="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress-ban-ip' . $referer_arg ), 'secupress-ban-ip' ) . '" id="form-ban-ip" method="post">';
-			echo '<label for="secupress-ban-ip" class="screen-reader-text">' . __( 'Specify an IP to ban (for one year).', 'secupress' ) . '</label><br/>';
+		echo '<form id="form-ban-ip" class="hide-if-js" action="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress-ban-ip' . $referer_arg ), 'secupress-ban-ip' ) . '" method="post">';
+			echo '<label for="secupress-ban-ip" class="screen-reader-text">' . __( 'Specify an IP to ban.', 'secupress' ) . '</label><br/>';
 			echo '<input type="text" id="secupress-ban-ip" name="ip" value=""/> ';
 			echo '<button type="submit" class="button button-primary">' . __( 'Ban IP', 'secupress' ) . '</button>';
 		echo "</form>\n";
 
-		// Nothing to display.
-		if ( ! $ban_ips ) {
-			echo '<ul class="secupress-boxed-group"><li id="no-ips">' . __( 'No Banned IPs found yet.', 'secupress' ) . "</li></ul>\n";
-			return;
-		}
-
 		// Search.
-		if ( ! empty( $_POST['secupress-search-ip'] ) ) {
-			$search = urldecode( $_POST['secupress-search-ip'] );
+		if ( $ban_ips && ! empty( $_POST['secupress-search-banned-ip'] ) ) {
+			$search    = urldecode( trim( $_POST['secupress-search-banned-ip'] ) );
+			$is_search = true;
 
 			if ( filter_var( $search, FILTER_VALIDATE_IP ) ) {
+				$search_val = esc_attr( $search );
+
 				if ( isset( $ban_ips[ $search ] ) ) {
-					$search_val = esc_attr( $search );
-					$ban_ips    = array(
+					$ban_ips = array(
 						$search => $ban_ips[ $search ],
 					);
 				} else {
-					echo '<p class="error-message">' . __( 'IP not found.', 'secupress' ) . "</p>\n";
+					$ban_ips            = array();
+					$empty_list_message = __( 'IP not found.', 'secupress' );
 				}
 			} else {
-				echo '<p class="error-message">' . __( 'Not a valid IP.', 'secupress' ) . "</p>\n";
+				$ban_ips            = array();
+				$empty_list_message = __( 'Not a valid IP.', 'secupress' );
 			}
 		}
 
-		// Slice the list a bit: limit to 100 last results.
-		if ( count( $ban_ips ) > 100 ) {
-			$ban_ips   = array_slice( $ban_ips, -100 );
-			$count_ips = count( $ban_ips );
-
-			echo '<p>' . sprintf( __( 'Last %d banned IPs:', 'secupress' ), $count_ips ) . "</p>\n";
-		}
-
 		// Search form.
-		echo '<form id="form-search-ip" method="post">';
-			echo '<label for="secupress-search-ip" class="screen-reader-text">' . __( 'Search IP', 'secupress' ) . '</label><br/>';
-			echo '<input type="search" id="secupress-search-ip" name="secupress-search-ip" value="' . $search_val . '"/> ';
-			echo '<button type="submit" class="button button-primary">' . __( 'Search IP', 'secupress' ) . '</button>';
+		echo '<form id="form-search-ip"' . ( $ban_ips || $is_search ? '' : ' class="hidden"' ) . ' method="post">';
+			echo '<label for="secupress-search-banned-ip" class="screen-reader-text">' . __( 'Search IP', 'secupress' ) . '</label><br/>';
+			echo '<input type="search" id="secupress-search-banned-ip" name="secupress-search-banned-ip" value="' . $search_val . '"/> ';
+			echo '<button type="submit" class="button button-primary" data-loading-i18n="' . esc_attr__( 'Searching...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Search IP', 'secupress' ) . '">' . __( 'Search IP', 'secupress' ) . '</button> ';
+			echo '<span class="spinner secupress-inline-spinner hide-if-no-js"></span>';
+			echo '<a class="button button-secondary' . ( $search_val ? '' : ' hidden' ) . '" id="reset-banned-ips-list" href="' . esc_url( $page_url ) . '" data-loading-i18n="' . esc_attr__( 'Reseting...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Reset', 'secupress' ) . '">' . __( 'Reset', 'secupress' ) . '</a> ';
+			echo '<span class="spinner secupress-inline-spinner' . ( $search_val ? ' hide-if-no-js' : ' hidden' ) . '"></span>';
 		echo "</form>\n";
 
-		// Display the list.
-		echo '<ul class="secupress-boxed-group">';
-			foreach ( $ban_ips as $ip => $time ) {
-				echo '<li class="secupress-large-row">';
-					$format = __( 'M jS Y', 'secupress' ) . ' ' . __( 'G:i', 'secupress' );
-					$time   = date_i18n( $format, $time + $offset );
-					$href   = wp_nonce_url( admin_url( 'admin-post.php?action=secupress-unban-ip&ip=' . esc_attr( $ip ) . $referer_arg ), 'secupress-unban-ip_' . $ip );
+		// Slice the list a bit: limit to 100 last results.
+		if ( count( $ban_ips ) > 100 ) {
+			$ban_ips = array_slice( $ban_ips, -100 );
+			/* translators: %d is 100 */
+			echo '<p>' . sprintf( __( 'Last %d banned IPs:', 'secupress' ), 100 ) . "</p>\n";
+		}
 
-					printf( '<strong>%s</strong> <em>(%s)</em>', esc_html( $ip ), $time );
-					printf( '<span><a class="a-unban-ip" data-ip="%s" href="%s">%s</a></span>', esc_attr( $ip ), $href, __( 'Delete', 'secupress' ) );
-				echo "</li>\n";
+		// Display the list.
+		echo '<ul id="secupress-banned-ips-list" class="secupress-boxed-group">';
+			if ( $ban_ips ) {
+				foreach ( $ban_ips as $ip => $time ) {
+					echo '<li class="secupress-large-row">';
+						$format = __( 'M jS Y', 'secupress' ) . ' ' . __( 'G:i', 'secupress' );
+						$time   =  $time > $in_ten_years ? __( 'Forever', 'secupress' ) : date_i18n( $format, $time + $offset );
+						$href   = wp_nonce_url( admin_url( 'admin-post.php?action=secupress-unban-ip&ip=' . esc_attr( $ip ) . $referer_arg ), 'secupress-unban-ip_' . $ip );
+
+						printf( '<strong>%s</strong> <em>(%s)</em>', esc_html( $ip ), $time );
+						printf( '<span><a class="a-unban-ip" href="%s">%s</a> <span class="spinner secupress-inline-spinner hide-if-no-js"></span></span>', $href, __( 'Delete', 'secupress' ) );
+					echo "</li>\n";
+				}
+			} else {
+				echo '<li id="no-ips">' . $empty_list_message . '</li>';
 			}
 		echo "</ul>\n";
 
 		// Actions.
 		echo '<p id="secupress-banned-ips-actions">';
 			// Display a button to unban all IPs.
-			echo '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress-clear-ips' . $referer_arg ), 'secupress-clear-ips' ) . '" class="button button-secondary">' . __( 'Clear all banned IPs', 'secupress' ) . "</a>\n";
+			$clear_href = wp_nonce_url( admin_url( 'admin-post.php?action=secupress-clear-ips' . $referer_arg ), 'secupress-clear-ips' );
+			echo '<a class="button button-secondary' . ( $ban_ips || $is_search ? '' : ' hidden' ) . '" id="secupress-clear-ips-button" href="' . $clear_href . '" data-loading-i18n="' . esc_attr__( 'Clearing...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Clear all IPs', 'secupress' ) . '">' . __( 'Clear all IPs', 'secupress' ) . "</a>\n";
+			echo '<span class="spinner secupress-inline-spinner' . ( $ban_ips || $is_search ? ' hide-if-no-js' : ' hidden' ) . '"></span>';
+			// For JS: ban a IP.
+			echo '<button type="button" class="button button-primary hide-if-no-js" id="secupress-ban-ip-button" data-loading-i18n="' . esc_attr__( 'Banishing...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Ban new IP', 'secupress' ) . '">' . __( 'Ban new IP', 'secupress' ) . "</button>\n";
+			echo '<span class="spinner secupress-inline-spinner hide-if-no-js"></span>';
 		echo "</p>\n";
 	}
 

@@ -295,11 +295,13 @@ function secupress_admin_send_message_die( $args ) {
 		'type'        => 'success',
 	), $args );
 
-	if ( ! $args['message'] ) {
+	$is_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
+
+	if ( ! $args['message'] && ! $is_ajax ) {
 		secupress_admin_die();
 	}
 
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+	if ( $is_ajax ) {
 		if ( 'success' === $args['type'] ) {
 			unset( $args['redirect_to'], $args['type'] );
 			wp_send_json_success( $args );
@@ -478,9 +480,8 @@ function __secupress_ban_ip_ajax_post_cb() {
 	// Add the IP to the option.
 	$ban_ips = get_site_option( SECUPRESS_BAN_IP );
 	$ban_ips = is_array( $ban_ips ) ? $ban_ips : array();
-	$time    = time() + YEAR_IN_SECONDS;
 
-	$ban_ips[ $ip ] = $time; // Now you got 1 year to think about your future, kiddo. In the meantime, go clean your room.
+	$ban_ips[ $ip ] = time() + YEAR_IN_SECONDS * 100; // Now you got 100 years to think about your future, kiddo. In the meantime, go clean your room.
 
 	update_site_option( SECUPRESS_BAN_IP, $ban_ips );
 
@@ -492,8 +493,6 @@ function __secupress_ban_ip_ajax_post_cb() {
 	/* This hook is documented in /inc/functions/admin.php */
 	do_action( 'secupress.ban.ip_banned', $ip, $ban_ips );
 
-	$format      = __( 'M jS Y', 'secupress' ) . ' ' . __( 'G:i', 'secupress' );
-	$offset      = get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;
 	$referer_arg = '&_wp_http_referer=' . urlencode( secupress_admin_url( 'modules', 'logs' ) );
 
 	// Send a response.
@@ -501,9 +500,11 @@ function __secupress_ban_ip_ajax_post_cb() {
 		'message'    => sprintf( __( 'The IP address %s has been banned.', 'secupress' ), '<code>' . esc_html( $ip ) . '</code>' ),
 		'code'       => 'ip_banned',
 		'tmplValues' => array(
-			'ip'        => $ip,
-			'time'      => date_i18n( $format, $time + $offset ),
-			'unban_url' => wp_nonce_url( admin_url( 'admin-post.php?action=secupress-unban-ip&ip=' . esc_attr( $ip ) . $referer_arg ), 'secupress-unban-ip_' . $ip )
+			array(
+				'ip'        => $ip,
+				'time'      => __( 'Forever', 'secupress' ),
+				'unban_url' => wp_nonce_url( admin_url( 'admin-post.php?action=secupress-unban-ip&ip=' . esc_attr( $ip ) . $referer_arg ), 'secupress-unban-ip_' . $ip ),
+			),
 		),
 	) );
 }
@@ -521,7 +522,7 @@ function __secupress_unban_ip_ajax_post_cb() {
 	// Make all security tests.
 	if ( empty( $_REQUEST['ip'] ) ) {
 		secupress_admin_send_message_die( array(
-			'message' => __( 'The IP field is empty.', 'secupress' ),
+			'message' => __( 'IP address not provided.', 'secupress' ),
 			'code'    => 'no_ip',
 			'type'    => 'error',
 		) );
@@ -549,7 +550,6 @@ function __secupress_unban_ip_ajax_post_cb() {
 		secupress_admin_send_message_die( array(
 			'message' => sprintf( __( 'The IP address %s is not banned.', 'secupress' ), '<code>' . esc_html( $ip ) . '</code>' ),
 			'code'    => 'ip_not_banned',
-			'type'    => 'error',
 		) );
 	}
 
@@ -578,19 +578,14 @@ function __secupress_unban_ip_ajax_post_cb() {
 
 	// Send a response.
 	secupress_admin_send_message_die( array(
-		'message'    => sprintf( __( 'The IP address %s has been unbanned.', 'secupress' ), '<code>' . esc_html( $ip ) . '</code>' ),
-		'code'       => 'ip_unbanned',
-		'tmplValues' => array(
-			'ip'        => $ip,
-			'time'      => date_i18n( $format, $time + $offset ),
-			'unban_url' => wp_nonce_url( admin_url( 'admin-post.php?action=secupress-unban-ip&ip=' . esc_attr( $ip ) . $referer_arg ), 'secupress-unban-ip_' . $ip )
-		),
+		'message' => sprintf( __( 'The IP address %s has been unbanned.', 'secupress' ), '<code>' . esc_html( $ip ) . '</code>' ),
+		'code'    => 'ip_unbanned',
 	) );
 }
 
 
 /**
- * Unan an IP address.
+ * Unban all IP addresses.
  *
  * @since 1.0
  */

@@ -11,4 +11,5 @@ $this->add_field( array(
 	'description'  => __( 'Some modules are made to ban bad IPs addresses, you can see it and unban it if needed', 'secupress' ),
 	'name'         => $this->get_field_name( 'banned-ips' ),
 	'type'         => 'banned_ips',
+	'row_id'       => 'banned-ips-row',
 ) );

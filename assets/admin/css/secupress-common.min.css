@@ -175,6 +175,9 @@ pre code, pre samp, pre kbd {
 	visibility: hidden;
 	float: none;
 }
+.secupress-inline-spinner.hidden {
+	display: none;
+}
 .working + .secupress-inline-spinner {
 	visibility: visible;
 }
