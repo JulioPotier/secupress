@@ -760,18 +760,6 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 
 	/**
-	 * Displays the alerts and add actions to delete it
-	 *
-	 * @since 1.0
-	 */
-	protected function alerts() {
-		//// tempo
-		echo '<p><em>No alerts found yet</em></p>';
-		echo '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_clear_alerts' ), 'secupress_clear_alerts' ) . '" class="button button-secondary">' . __( 'Clear Alerts', 'secupress' ) . '</a>';
-	}
-
-
-	/**
 	 * Displays the banned IPs and add actions to delete it
 	 *
 	 * @since 1.0
