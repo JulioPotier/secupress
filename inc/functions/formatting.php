@@ -190,7 +190,12 @@ function secupress_get_email( $from_header = false ) {
  * @return (string|bool) The IP address if valid. False otherwize.
  */
 function secupress_ip_is_valid( $ip ) {
-	return filter_var( (string) $ip, FILTER_VALIDATE_IP );
+	if ( ! is_string( $ip ) ) {
+		return false;
+	}
+
+	$ip = trim( $ip );
+	return filter_var( $ip, FILTER_VALIDATE_IP );
 }
 
 
