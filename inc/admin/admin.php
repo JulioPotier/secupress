@@ -469,7 +469,7 @@ function __secupress_ban_ip_ajax_post_cb() {
 		) );
 	}
 
-	if ( ! WP_DEBUG && ( '127.0.0.1' === $ip || secupress_get_ip() === $ip ) ) {
+	if ( '127.0.0.1' === $ip || secupress_get_ip() === $ip ) {
 		secupress_admin_send_message_die( array(
 			'message' => __( 'Ban yourself is not a good idea.', 'secupress' ),
 			'code'    => 'own_ip',
