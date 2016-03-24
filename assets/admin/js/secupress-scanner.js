@@ -144,7 +144,7 @@ jQuery( document ).ready( function( $ ) {
 
 	// !Big network: set some data ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	$( ".secupress-set-big-data" ).on( "click", function( e ) {
+	$( ".secupress-centralize-blog-options" ).on( "click", function( e ) {
 		var $this    = $( this ),
 			href     = $this.attr( "href" ).replace( "admin-post.php", "admin-ajax.php" ),
 			$spinner = $( '<img src="' + SecuPressi18nScanner.spinnerUrl + '" alt="" class="secupress-spinner" />' ),

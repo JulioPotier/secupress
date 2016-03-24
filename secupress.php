@@ -124,7 +124,7 @@ function secupress_init() {
 	if ( is_admin() ) {
 
 		if ( is_multisite() ) {
-			require( SECUPRESS_ADMIN_PATH . 'multisite/active-plugins-themes-option.php' );
+			require( SECUPRESS_ADMIN_PATH . 'multisite/centralize-blog-options.php' );
 			require( SECUPRESS_ADMIN_PATH . 'multisite/options.php' );
 			require( SECUPRESS_ADMIN_PATH . 'multisite/settings.php' );
 		}
