@@ -391,16 +391,16 @@ function secupress_get_ip() { //// find the best order
 }
 
 
-function secupress_ban_ip( $time_ban = 5, $IP = null, $die = true ) {
+function secupress_ban_ip( $time_ban = 5, $ip = null, $die = true ) {
 	$time_ban = (int) $time_ban > 0 ? (int) $time_ban : 5;
-	$IP       = $IP ? $IP : secupress_get_ip();
+	$ip       = $ip ? $ip : secupress_get_ip();
 	$ban_ips  = get_site_option( SECUPRESS_BAN_IP );
 
 	if ( ! is_array( $ban_ips ) ) {
 		$ban_ips = array();
 	}
 
-	$ban_ips[ $IP ] = time();
+	$ban_ips[ $ip ] = time();
 
 	update_site_option( SECUPRESS_BAN_IP, $ban_ips );
 
@@ -409,10 +409,10 @@ function secupress_ban_ip( $time_ban = 5, $IP = null, $die = true ) {
 	 *
 	 * @since 1.0
 	 *
-	 * @param (string) $IP      The IP banned.
+	 * @param (string) $ip      The IP banned.
 	 * @param (array)  $ban_ips The list of IPs banned (keys) and the time they were banned (values).
 	 */
-	do_action( 'secupress.ban.ip_banned', $IP, $ban_ips );
+	do_action( 'secupress.ban.ip_banned', $ip, $ban_ips );
 
 	if ( apply_filters( 'secupress.ban.write_in_htaccess', true ) ) {
 		secupress_write_htaccess( 'ban_ip', secupress_get_htaccess_ban_ip() );
@@ -421,7 +421,7 @@ function secupress_ban_ip( $time_ban = 5, $IP = null, $die = true ) {
 	if ( $die ) {
 		secupress_die( sprintf(
 			_n( 'Your IP address %1$s has been banned for %2$s minute, please do not retry until then.', 'Your IP address %1$s has been banned for %2$s minutes, please do not retry until then.', $time_ban, 'secupress' ),
-			'<code>' . esc_html( $IP ) . '</code>',
+			'<code>' . esc_html( $ip ) . '</code>',
 			'<strong>' . number_format_i18n( $time_ban ) . '</strong>'
 		) );
 	}
