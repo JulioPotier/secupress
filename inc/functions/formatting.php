@@ -223,8 +223,8 @@ function secupress_ip_is_whitelisted() {
 
 	// Some hardcoded IPs that are always whitelisted.
 	$whitelist = array(
-		'127.0.0.1' => 1,
-		'::1'       => 1,
+		$_SERVER['SERVER_ADDR'] => 1,
+		'::1'                   => 1,
 	);
 
 	if ( isset( $whitelist[ $ip ] ) ) {
