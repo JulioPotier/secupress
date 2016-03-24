@@ -73,9 +73,9 @@
 			$( "span.checkme" ).css( "background-position", bgposx + "px " + bgposy + "px" );
 
 			// If animation returned to start.
-			if ( cont == 0 ) {
+			if ( cont === 0 ) {
 				inc = 1;
-				if ( flag == 2 ) {
+				if ( flag === 2 ) {
 					clearInterval( animation );
 				}
 			}
@@ -122,5 +122,8 @@
 			doing_ajax = false;
 		} );
 	} );
+
+	// Honeypot.
+	$( "#loginform" ).prepend( '<p class="screen-reader-text"><label for="user_name">' + w.spCaptchaL10n.hPotText + '<br /><input name="sp_name" id="user_name" class="input" value="" autocomplete="off" size="20" type="text" /></label>' );
 
 } )(jQuery, document, window);

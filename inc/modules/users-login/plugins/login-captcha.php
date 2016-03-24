@@ -42,7 +42,10 @@ function secupress_login_captcha_scripts() {
 	wp_print_styles( 'secupress-captcha' );
 
 	wp_enqueue_script( 'secupress-captcha', $url . 'js/captcha' . $min . '.js', array( 'jquery' ), $ver, true );
-	wp_localize_script( 'secupress-captcha', 'spCaptchaL10n', array( 'ajaxurl' => esc_url( admin_url( 'admin-ajax.php' ) ), ) );
+	wp_localize_script( 'secupress-captcha', 'spCaptchaL10n', array(
+		'ajaxurl'  => esc_url( admin_url( 'admin-ajax.php' ) ),
+		'hPotText' => __( 'Do not fill this field.', 'secupress' ),
+	) );
 }
 
 
@@ -86,6 +89,10 @@ function secupress_manage_captcha( $raw_user, $username ) {
 
 	if ( is_wp_error( $raw_user ) || ! isset( $_POST['log'], $_POST['pwd'] ) ) {
 		return $raw_user;
+	}
+
+	if ( ! isset( $_POST['sp_name'] ) || '' !== $_POST['sp_name'] ) {
+		return new WP_Error( 'authentication_failed', __( '<strong>ERROR</strong>: The Human verification is incorrect.', 'secupress' ) );
 	}
 
 	$captcha_key  = isset( $_POST['captcha_key'] ) ? $_POST['captcha_key'] : null;

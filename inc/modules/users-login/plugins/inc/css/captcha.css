@@ -43,3 +43,11 @@ i.checkme:hover {
 .hidden {
 	display: none;
 }
+.screen-reader-text {
+	position: absolute;
+	left: -1000em;
+	top: -1000em;
+	height: 1px;
+	width: 1px;
+	overflow: hidden;
+}
