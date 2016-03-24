@@ -64,15 +64,15 @@ add_action( 'update_option_default_role', 'secupress_update_default_role_central
 
 function secupress_update_default_role_centralized_blog_option( $do_not_use = false, $value ) {
 	$site_id = get_current_blog_id();
-	$themes  = get_site_option( 'secupress_default_role' );
+	$roles   = get_site_option( 'secupress_default_role' );
 
 	// Don't go further until the first complete filling is done.
-	if ( ! is_array( $themes ) ) {
+	if ( ! is_array( $roles ) ) {
 		return;
 	}
 
-	$themes[ $site_id ] = $value;
-	update_site_option( 'secupress_default_role', $themes );
+	$roles[ $site_id ] = $value;
+	update_site_option( 'secupress_default_role', $roles );
 }
 
 
