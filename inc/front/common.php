@@ -9,24 +9,23 @@ add_action( 'plugins_loaded', 'secupress_check_ban_ips' );
  * @return void
  **/
 function secupress_check_ban_ips() {
-	$ban_ips                   = get_site_option( SECUPRESS_BAN_IP );
-	$login_protection_time_ban = secupress_get_module_option( 'login-protection_time_ban', 5, 'users-login' );
-	$refresh_htaccess          = false;
+	$ban_ips  = get_site_option( SECUPRESS_BAN_IP );
+	$time_ban = secupress_get_module_option( 'login-protection_time_ban', 5, 'users-login' );
+	$update   = false;
 
 	// if we got banned ips
 	if ( is_array( $ban_ips ) && count( $ban_ips ) ) {
 
 		foreach ( $ban_ips as $IP => $time ) {
 			// purge the expired banned IPs
-			if ( ( $time + ( $login_protection_time_ban * 60 ) ) < time() ) {
+			if ( ( $time + ( $time_ban * 60 ) ) < time() ) {
 				unset( $ban_ips[ $IP ] );
-				$refresh_htaccess = true;
+				$update = true;
 			}
 		}
 
-		update_site_option( SECUPRESS_BAN_IP, $ban_ips );
-
-		if ( $refresh_htaccess ) {
+		if ( $update ) {
+			update_site_option( SECUPRESS_BAN_IP, $ban_ips );
 			wp_load_alloptions();
 			secupress_write_htaccess( 'ban_ip', secupress_get_htaccess_ban_ip() );
 		}
@@ -36,9 +35,9 @@ function secupress_check_ban_ips() {
 
 		if ( array_key_exists( $IP, $ban_ips ) ) {
 			$msg = sprintf(
-				_n( 'Your IP address <code>%1$s</code> has been banned for <b>%2$d</b> minute, please do not retry until then.', 'Your IP address <code>%1$s</code> has been banned for <b>%2$d</b> minutes, please do not retry until then.', $login_protection_time_ban, 'secupress' ),
+				_n( 'Your IP address <code>%1$s</code> has been banned for <b>%2$d</b> minute, please do not retry until then.', 'Your IP address <code>%1$s</code> has been banned for <b>%2$d</b> minutes, please do not retry until then.', $time_ban, 'secupress' ),
 				esc_html( $IP ),
-				$login_protection_time_ban
+				$time_ban
 			);
 
 			secupress_die( $msg );
@@ -97,7 +96,7 @@ function secupress_rename_admin_username_logout() {
 	if ( function_exists( 'wp_destroy_current_session' ) ) { // WP 4.0 min
 		wp_destroy_current_session();
 	}
-	
+
 	wp_cache_delete( $current_user->ID, 'users' );
 
 	if ( $is_super_admin ) {
