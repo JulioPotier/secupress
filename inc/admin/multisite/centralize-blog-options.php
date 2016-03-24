@@ -54,6 +54,29 @@ function secupress_update_active_themes_centralized_blog_option( $do_not_use = f
 
 
 /*
+ * Use a site option to store the default user role of each site.
+ * Each time a blog option is added or modified, we store the new value in our network option.
+ *
+ * @since 1.0
+ */
+add_action( 'add_option_default_role',    'secupress_update_default_role_centralized_blog_option', 20, 2 );
+add_action( 'update_option_default_role', 'secupress_update_default_role_centralized_blog_option', 20, 2 );
+
+function secupress_update_default_role_centralized_blog_option( $do_not_use = false, $value ) {
+	$site_id = get_current_blog_id();
+	$themes  = get_site_option( 'secupress_default_role' );
+
+	// Don't go further until the first complete filling is done.
+	if ( ! is_array( $themes ) ) {
+		return;
+	}
+
+	$themes[ $site_id ] = $value;
+	update_site_option( 'secupress_default_role', $themes );
+}
+
+
+/*
  * When a blog is deleted, remove the corresponding row from the site options.
  *
  * @since 1.0
@@ -77,6 +100,14 @@ function secupress_delete_blog_from_centralized_blog_options( $blog_id ) {
 	if ( is_array( $themes ) && isset( $themes[ $blog_id ] ) ) {
 		unset( $themes[ $blog_id ] );
 		update_site_option( 'secupress_active_themes', $themes );
+	}
+
+	// Default user role
+	$themes = get_site_option( 'secupress_default_role' );
+
+	if ( is_array( $themes ) && isset( $themes[ $blog_id ] ) ) {
+		unset( $themes[ $blog_id ] );
+		update_site_option( 'secupress_default_role', $themes );
 	}
 }
 
@@ -103,8 +134,10 @@ function secupress_fill_centralized_blog_options() {
 	}
 
 	$themes  = get_site_option( 'secupress_active_themes' );
-	$themes  = is_array( $themes )  ? $themes  : array();
+	$roles   = get_site_option( 'secupress_default_role' );
 	$plugins = is_array( $plugins ) ? $plugins : array();
+	$themes  = is_array( $themes )  ? $themes  : array();
+	$roles   = is_array( $roles )   ? $roles   : array();
 	// Set the query boundaries.
 	$offset  = ! empty( $plugins['offset'] ) ? absint( $plugins['offset'] ) : 0;
 	/**
@@ -132,7 +165,7 @@ function secupress_fill_centralized_blog_options() {
 	foreach ( $blogs as $blog_id ) {
 		$blog_id      = (int) $blog_id;
 		$table_prefix = $wpdb->get_blog_prefix( $blog_id );
-		$blog_actives = $wpdb->get_results( "SELECT option_name, option_value FROM {$table_prefix}options WHERE option_name = 'active_plugins' OR option_name = 'stylesheet'", OBJECT_K );
+		$blog_actives = $wpdb->get_results( "SELECT option_name, option_value FROM {$table_prefix}options WHERE option_name = 'active_plugins' OR option_name = 'stylesheet' OR option_name = 'default_role'", OBJECT_K );
 
 		// Plugins
 		$plugins[ $blog_id ] = ! empty( $blog_actives['active_plugins']->option_value ) ? unserialize( $blog_actives['active_plugins']->option_value ) : array();
@@ -143,6 +176,9 @@ function secupress_fill_centralized_blog_options() {
 
 		// Themes
 		$themes[ $blog_id ] = ! empty( $blog_actives['stylesheet']->option_value ) ? $blog_actives['stylesheet']->option_value : '';
+
+		// Default user role
+		$roles[ $blog_id ] = ! empty( $blog_actives['default_role']->option_value ) ? $blog_actives['default_role']->option_value : '';
 	}
 
 	// We need more results (or we are "unlucky").
@@ -152,6 +188,7 @@ function secupress_fill_centralized_blog_options() {
 		// Update our options.
 		update_site_option( 'secupress_active_plugins', $plugins );
 		update_site_option( 'secupress_active_themes', $themes );
+		update_site_option( 'secupress_default_role', $roles );
 		// Return the number of sites set so far.
 		return count( $plugins ) - 1;
 	}
@@ -160,6 +197,7 @@ function secupress_fill_centralized_blog_options() {
 	unset( $plugins['offset'] );
 	update_site_option( 'secupress_active_plugins', $plugins );
 	update_site_option( 'secupress_active_themes', $themes );
+	update_site_option( 'secupress_default_role', $roles );
 	return false;
 }
 
