@@ -567,7 +567,7 @@ function secupress_fightspam_needs_spam_check( $commentdata ) {
  * @return (string) "blacklisted", "safe", or "error".
  */
 function secupress_fightspam_get_spam_status( $value ) {
-	if ( '' === $value || '::1' === $value || '127.0.0.1' === $value || 0 === strpos( $value, home_url() ) ) {
+	if ( '' === $value || secupress_ip_is_whitelisted( $value ) || 0 === strpos( $value, home_url() ) ) {
 		return 'safe';
 	}
 

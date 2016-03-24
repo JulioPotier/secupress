@@ -244,7 +244,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 				<a class="secupress-delete-logs-by-ip" href="<?php echo esc_url( $delete_by_ip_url ); ?>"><?php printf( __( 'Delete Logs with the IP %s', 'secupress' ), '<code>' . $user_raw->user_ip . '</code>' ); ?></a>
 				<span class="spinner secupress-inline-spinner"></span>
 
-				<?php if ( WP_DEBUG || '127.0.0.1' !== $user_raw->user_ip && secupress_get_ip() !== $user_raw->user_ip ) : ?>
+				<?php if ( ! secupress_ip_is_whitelisted( $user_raw->user_ip ) && secupress_get_ip() !== $user_raw->user_ip ) : ?>
 					<a class="secupress-ban-ip" href="<?php echo esc_url( $ban_ip_url ); ?>"><?php printf( __( 'Ban the IP %s', 'secupress' ), '<code>' . $user_raw->user_ip . '</code>' ); ?></a>
 					<span class="spinner secupress-inline-spinner"></span>
 				<?php endif; ?>

@@ -392,8 +392,13 @@ function secupress_get_ip() { //// find the best order
 
 
 function secupress_ban_ip( $time_ban = 5, $ip = null, $die = true ) {
+	$ip = $ip ? $ip : secupress_get_ip();
+
+	if ( secupress_ip_is_whitelisted( $ip ) ) {
+		return;
+	}
+
 	$time_ban = (int) $time_ban > 0 ? (int) $time_ban : 5;
-	$ip       = $ip ? $ip : secupress_get_ip();
 	$ban_ips  = get_site_option( SECUPRESS_BAN_IP );
 
 	if ( ! is_array( $ban_ips ) ) {

@@ -11,7 +11,7 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 add_action( 'authenticate', 'secupress_limitloginattempts', PHP_INT_MAX - 20, 2 );
 
 function secupress_limitloginattempts( $raw_user, $username ) {
-	if ( empty( $_POST ) || ! is_wp_error( $raw_user ) || false === ( $uid = username_exists( $username ) ) ) {
+	if ( empty( $_POST ) || ! is_wp_error( $raw_user ) || false === ( $uid = username_exists( $username ) ) || secupress_ip_is_whitelisted() ) {
 		if ( ! empty( $raw_user->ID ) ) {
 			delete_user_meta( $raw_user->ID, '_secupress_limitloginattempts' );
 		}

@@ -452,7 +452,7 @@ function __secupress_ban_ip_ajax_post_cb() {
 
 	if ( empty( $_REQUEST['ip'] ) ) {
 		secupress_admin_send_message_die( array(
-			'message' => __( 'The IP field is empty.', 'secupress' ),
+			'message' => __( 'IP address not provided.', 'secupress' ),
 			'code'    => 'no_ip',
 			'type'    => 'error',
 		) );
@@ -469,9 +469,9 @@ function __secupress_ban_ip_ajax_post_cb() {
 		) );
 	}
 
-	if ( '127.0.0.1' === $ip || secupress_get_ip() === $ip ) {
+	if ( secupress_ip_is_whitelisted( $ip ) || secupress_get_ip() === $ip ) {
 		secupress_admin_send_message_die( array(
-			'message' => __( 'Ban yourself is not a good idea.', 'secupress' ),
+			'message' => sprintf( __( 'The IP address %s is whitelisted.', 'secupress' ), '<code>' . esc_html( $ip ) . '</code>' ),
 			'code'    => 'own_ip',
 			'type'    => 'error',
 		) );

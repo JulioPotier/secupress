@@ -190,12 +190,68 @@ function secupress_get_email( $from_header = false ) {
  * @return (string|bool) The IP address if valid. False otherwize.
  */
 function secupress_ip_is_valid( $ip ) {
-	if ( ! is_string( $ip ) ) {
+	if ( ! $ip || ! is_string( $ip ) ) {
 		return false;
 	}
 
 	$ip = trim( $ip );
 	return filter_var( $ip, FILTER_VALIDATE_IP );
+}
+
+
+/**
+ * Tell if an IP address is whitelisted.
+ *
+ * @since 1.0
+ *
+ * @param (string) $ip An IP address. If not provided, the current IP by default.
+ *
+ * @return (bool).
+ */
+function secupress_ip_is_whitelisted() {
+	$func_get_args = func_get_args();
+
+	if ( array_key_exists( 0, $func_get_args ) ) {
+		$ip = $func_get_args[0];
+	} else {
+		$ip = secupress_get_ip();
+	}
+
+	if ( ! $ip = secupress_ip_is_valid( $ip ) ) {
+		return false;
+	}
+
+	// Some hardcoded IPs that are always whitelisted.
+	$whitelist = array(
+		'127.0.0.1' => 1,
+		'::1'       => 1,
+	);
+
+	if ( isset( $whitelist[ $ip ] ) ) {
+		return true;
+	}
+
+	// The IPs from the settings page.
+	$whitelist = secupress_get_module_option( 'banned-ips_whitelist', '', 'logs' );
+
+	if ( ! $whitelist ) {
+		return false;
+	}
+
+	$whitelist      = explode( "\n", $whitelist );
+	$whitelist      = array_flip( $whitelist );
+	$is_whitelisted = isset( $whitelist[ $ip ] );
+
+	/**
+	 * Filter the whitelist result.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (bool)   $is_whitelisted The whitelist result.
+	 * @param (string) $ip             The IP address.
+	 * @param (array)  $whitelist      The whitelist. IPs are the array keys.
+	 */
+	return apply_filters( 'secupress.ip_is_whitelisted', $is_whitelisted, $ip, $whitelist );
 }
 
 

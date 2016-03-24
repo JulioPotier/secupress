@@ -22,6 +22,7 @@ $wpdb->secupress_bruteforce = $wpdb->prefix . 'secupress_bruteforce';
  * @return void
  **/
 add_action( 'secupress_activate_plugin_' . basename( __FILE__, '.php' ), 'secupress_bruteforce_activation' );
+
 function secupress_bruteforce_activation() {
 	global $wpdb;
 	if ( $wpdb->get_var( "SHOW TABLES LIKE '$wpdb->secupress_bruteforce'" ) === $wpdb->secupress_bruteforce ) {
@@ -59,6 +60,7 @@ function secupress_bruteforce_purge_old_timestamps() {
  * @return void
  **/
 add_action( 'secupress_deactivate_plugin_' . basename( __FILE__, '.php' ), 'secupress_bruteforce_deactivation' );
+
 function secupress_bruteforce_deactivation() {
 	global $wpdb;
 
@@ -76,8 +78,13 @@ function secupress_bruteforce_deactivation() {
  * @return void
  **/
 add_action( 'secupress_plugins_loaded', 'secupress_check_bruteforce' );
+
 function secupress_check_bruteforce() {
 	global $wpdb, $pagenow;
+
+	if ( secupress_ip_is_whitelisted() ) {
+		return;
+	}
 
 	/**
 	 * Set to true to avoid been locked by the Brute Force
@@ -104,6 +111,7 @@ function secupress_check_bruteforce() {
 	$time         = time();
 	$method       = $_SERVER['REQUEST_METHOD'];
 	$id           = md5( $method . $IP . $time . wp_salt( 'nonce' ) );
+
 	switch( $method ) {
 		case 'GET':  $hits = 9; break;
 		case 'POST': $hits = 3; break;
@@ -144,5 +152,4 @@ function secupress_check_bruteforce() {
 		secupress_ban_ip( $time_ban );
 
 	}
-
 }

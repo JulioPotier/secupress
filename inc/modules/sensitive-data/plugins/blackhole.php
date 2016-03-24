@@ -111,7 +111,8 @@ function secupress_blackhole_is_whitelisted() {
 	$ip = secupress_get_ip();
 	$ua = ! empty( $_SERVER['HTTP_USER_AGENT'] ) ? esc_html( $_SERVER['HTTP_USER_AGENT'] ) : '';
 
-	if ( '127.0.0.1' === $ip ) {
+	// The IP address may be whitelisted.
+	if ( secupress_ip_is_whitelisted( $ip ) ) {
 		return true;
 	}
 

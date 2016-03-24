@@ -24,7 +24,7 @@ $wpdb->secupress_geoips = $wpdb->prefix . 'secupress_geoips';
 function secupress_geoip2country( $ip ) {
 	global $wpdb;
 
-	if ( '127.0.0.1' === $ip ) {
+	if ( '127.0.0.1' === $ip || '::1' === $ip ) {
 		// Save a useless query >_>
 		return null;
 	}
