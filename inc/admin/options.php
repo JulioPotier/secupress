@@ -743,6 +743,8 @@ function secupress_main_scan() {
 				pre_print_r(get_site_option( 'secupress_active_plugins' ),1);
 				echo '<code>$active_themes</code>:';
 				pre_print_r(get_site_option( 'secupress_active_themes' ),1);
+				echo '<code>$default_roles</code>:';
+				pre_print_r(get_site_option( 'secupress_default_role' ),1);
 			}
 		}
 		?>

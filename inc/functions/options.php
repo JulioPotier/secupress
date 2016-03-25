@@ -650,6 +650,7 @@ function secupress_get_tests() {
 function secupress_get_tests_for_ms_scanner_fixes() {
 	return array(
 		'Bad_Old_Plugins',
+		'Subscription',
 //		'Too_Many_Admins',
 //		'Admin_As_Author',
 	);
