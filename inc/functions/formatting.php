@@ -208,14 +208,8 @@ function secupress_ip_is_valid( $ip ) {
  *
  * @return (bool).
  */
-function secupress_ip_is_whitelisted() {
-	$func_get_args = func_get_args();
-
-	if ( array_key_exists( 0, $func_get_args ) ) {
-		$ip = $func_get_args[0];
-	} else {
-		$ip = secupress_get_ip();
-	}
+function secupress_ip_is_whitelisted( $ip = null ) {
+	$ip = $ip ? $ip : secupress_get_ip();
 
 	if ( ! $ip = secupress_ip_is_valid( $ip ) ) {
 		return false;
