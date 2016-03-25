@@ -10,7 +10,7 @@ $this->add_section( _x( 'Logs', 'post type general name', 'secupress' ), array( 
 $main_field_name = $this->get_field_name( 'activated' );
 
 $this->add_field( array(
-	'title'             => __( 'WordPress Logs', 'secupress' ),
+	'title'             => __( 'WordPress action Logs', 'secupress' ),
 	'description'       => __( 'What happened on your WordPress website? By activating this module, most sensible actions will be recorded, lightly.', 'secupress' ),
 	'label_for'         => $main_field_name,
 	'type'              => 'activate_action_logs',

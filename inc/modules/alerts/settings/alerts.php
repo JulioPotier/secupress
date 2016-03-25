@@ -9,6 +9,12 @@ $this->add_section( __( 'Alerts Manager', 'secupress' ) );
 $main_field_name = $this->get_field_name( 'type' );
 $options         = secupress_alerts_labels( true );
 
+if ( secupress_is_submodule_active( 'logs', 'action-logs' ) ) {
+	$help = sprintf( __( 'If you want to get the alerts here in the back-end, %s.', 'secupress' ), '<a href="' . esc_url( secupress_admin_url( 'logs' ) ) . '">' . __( 'just take a look at the WordPress action Logs', 'secupress' ) . '</a>' );
+} else {
+	$help = sprintf( __( 'If you want to get the alerts here in the back-end, %s.', 'secupress' ), '<a href="' . esc_url( secupress_admin_url( 'modules', 'logs' ) ) . '#WordPress_Logs">' . __( 'please activate the WordPress action Logs', 'secupress' ) . '</a>' );
+}
+
 $this->add_field( array(
 	'title'        => __( 'Choose which service that will be used', 'secupress' ),
 	'name'         => $main_field_name,
@@ -16,6 +22,12 @@ $this->add_field( array(
 	'value'        => ( secupress_is_submodule_active( 'alerts', 'alerts' ) ? null : array() ),
 	'label_screen' => __( 'How to alert you?', 'secupress' ),
 	'options'      => $options,
+	'helpers'      => array(
+		array(
+			'type'        => 'help',
+			'description' => $help,
+		),
+	),
 ) );
 
 
