@@ -79,6 +79,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 
 
 	public function scan() {
+		// Multisite, for the current site.
 		if ( $this->is_for_current_site() ) {
 			// Plugins no longer in directory or not updated in over 2 years.
 			$bad_plugins = $this->get_installed_plugins_to_remove();
@@ -88,13 +89,14 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 				// bad
 				$this->add_message( 204, array( $count, $bad_plugins ) );
 			}
-		} else {
+		}
+		// Network admin or not Multisite.
+		else {
 			// If we're in a sub-site, don't list the plugins enabled in the network.
-			$to_keep = $this->is_for_current_site() ? get_site_option( 'active_sitewide_plugins' ) : array();
+			$to_keep = array();
 
 			// Plugins no longer in directory.
 			$bad_plugins = static::get_installed_plugins_no_longer_in_directory();
-			$bad_plugins = $to_keep ? array_diff_key( $bad_plugins, $to_keep ) : $bad_plugins;
 
 			if ( $count = count( $bad_plugins ) ) {
 				// bad
