@@ -221,6 +221,7 @@ function secupress_ip_is_whitelisted( $ip = null ) {
 		'::1'                   => 1,
 		'37.187.85.82'          => 1, // wprocketbot
 		'37.187.58.236'         => 1, // wprocketbot
+		'167.114.234.234'       => 1, // wprocketbot
 	);
 
 	if ( isset( $whitelist[ $ip ] ) ) {
