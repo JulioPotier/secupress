@@ -219,6 +219,8 @@ function secupress_ip_is_whitelisted( $ip = null ) {
 	$whitelist = array(
 		$_SERVER['SERVER_ADDR'] => 1,
 		'::1'                   => 1,
+		'37.187.85.82'          => 1, // wprocketbot
+		'37.187.58.236'         => 1, // wprocketbot
 	);
 
 	if ( isset( $whitelist[ $ip ] ) ) {
@@ -226,12 +228,7 @@ function secupress_ip_is_whitelisted( $ip = null ) {
 	}
 
 	// The IPs from the settings page.
-	$whitelist = secupress_get_module_option( 'banned-ips_whitelist', '', 'logs' );
-
-	if ( ! $whitelist ) {
-		return false;
-	}
-
+	$whitelist      = secupress_get_module_option( 'banned-ips_whitelist', '', 'logs' );
 	$whitelist      = explode( "\n", $whitelist );
 	$whitelist      = array_flip( $whitelist );
 	$is_whitelisted = isset( $whitelist[ $ip ] );
