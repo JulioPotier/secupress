@@ -473,23 +473,22 @@ function secupress_main_scan() {
 	// Auto-scans: scans that will be executed on page load.
 	$autoscans       = SecuPress_Scan::get_and_delete_autoscans();
 
-	// Store the scans in 2 variables. They will be used to order the scans by status: 'bad', 'warning', 'notscannedyet', 'good'.
-	$before_not_scanned = array( 'bad' => array(), 'warning' => array(), );
-	$after_not_scanned  = array( 'good' => array(), );
+	// Store the scans in 3 variables. They will be used to order the scans by status: 'bad', 'warning', 'notscannedyet', 'good'.
+	$bad_scans     = array();
+	$warning_scans = array();
+	$good_scans    = array();
 
 	if ( ! empty( $scanners ) ) {
 		foreach ( $scanners as $class_name_part => $details ) {
-			if ( isset( $before_not_scanned[ $details['status'] ] ) ) {
-				$before_not_scanned[ $details['status'] ][ $class_name_part ] = $details['status'];
-			}
-			elseif ( isset( $after_not_scanned[ $details['status'] ] ) ) {
-				$after_not_scanned[ $details['status'] ][ $class_name_part ] = $details['status'];
+			if ( 'bad' === $details['status'] ) {
+				$bad_scans[ $class_name_part ] = $details['status'];
+			} elseif ( 'warning' === $details['status'] ) {
+				$warning_scans[ $class_name_part ] = $details['status'];
+			} elseif ( 'good' === $details['status'] ) {
+				$good_scans[ $class_name_part ] = $details['status'];
 			}
 		}
 	}
-
-	$before_not_scanned = array_merge( $before_not_scanned['bad'], $before_not_scanned['warning'] );
-	$after_not_scanned  = $after_not_scanned['good'];
 	?>
 	<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=all' ), 'secupress_scanner_all' ); ?>" class="button button-primary button-large button-secupress-scan">
 		<?php _e( 'One Click Scan', 'secupress' ); ?>
@@ -567,7 +566,7 @@ function secupress_main_scan() {
 
 					<tbody>
 					<?php
-					// For this priority, order the scans by result status.
+					// For this priority, order the scans by status: 'bad', 'warning', 'notscannedyet', 'good'.
 					$ordered_scan_names = array();
 
 					foreach ( $class_name_parts as $class_name_part ) {
@@ -583,11 +582,12 @@ function secupress_main_scan() {
 
 					$class_name_parts = $ordered_scan_names;
 
-					$this_prio_before_not_scanned = array_intersect_key( $class_name_parts, $before_not_scanned );
-					$this_prio_after_not_scanned  = array_intersect_key( $class_name_parts, $after_not_scanned );
-					$class_name_parts = array_diff_key( $class_name_parts, $this_prio_after_not_scanned );
-					$class_name_parts = array_merge( $this_prio_before_not_scanned, $class_name_parts, $this_prio_after_not_scanned );
-					unset( $ordered_scan_names, $this_prio_before_not_scanned, $this_prio_after_not_scanned );
+					$this_prio_bad_scans     = array_intersect_key( $class_name_parts, $bad_scans );
+					$this_prio_warning_scans = array_intersect_key( $class_name_parts, $warning_scans );
+					$this_prio_good_scans    = array_intersect_key( $class_name_parts, $good_scans );
+					$class_name_parts        = array_diff_key( $class_name_parts, $this_prio_bad_scans, $this_prio_warning_scans, $this_prio_good_scans );
+					$class_name_parts        = array_merge( $this_prio_bad_scans, $this_prio_warning_scans, $class_name_parts, $this_prio_good_scans );
+					unset( $ordered_scan_names, $this_prio_bad_scans, $this_prio_warning_scans, $this_prio_good_scans );
 
 					// Allowed tags in "Learn more" contents.
 					$allowed_tags = array(
