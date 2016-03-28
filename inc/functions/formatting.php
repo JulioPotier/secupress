@@ -228,21 +228,21 @@ function secupress_ip_is_whitelisted( $ip = null ) {
 	}
 
 	// The IPs from the settings page.
-	$whitelist      = secupress_get_module_option( 'banned-ips_whitelist', '', 'logs' );
-	$whitelist      = explode( "\n", $whitelist );
-	$whitelist      = array_flip( $whitelist );
-	$is_whitelisted = isset( $whitelist[ $ip ] );
+	$whitelist = secupress_get_module_option( 'banned-ips_whitelist', '', 'logs' );
+	$whitelist = explode( "\n", $whitelist );
+	$whitelist = array_flip( $whitelist );
 
 	/**
-	 * Filter the whitelist result.
+	 * Filter the whitelist.
 	 *
 	 * @since 1.0
 	 *
-	 * @param (bool)   $is_whitelisted The whitelist result.
-	 * @param (string) $ip             The IP address.
-	 * @param (array)  $whitelist      The whitelist. IPs are the array keys.
+	 * @param (array)  $whitelist The whitelist. IPs are the array keys.
+	 * @param (string) $ip        The IP address.
 	 */
-	return apply_filters( 'secupress.ip_is_whitelisted', $is_whitelisted, $ip, $whitelist );
+	$whitelist = apply_filters( 'secupress.ips_whitelist', $whitelist, $ip );
+
+	return isset( $whitelist[ $ip ] );
 }
 
 
