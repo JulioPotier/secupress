@@ -25,17 +25,15 @@ function secupress_move_login_activate() {
 	}
 	// IIS7
 	if ( $is_iis7 && ! secupress_has_url_rewriting() ) {
-			$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
-			$message .= __( 'It seems the URL rewrite module is not activated on your server. The login page can\'t be moved.', 'secupress' );
-			add_settings_error( 'secupress_users-login_settings', 'no_iis7_rewrite', $message, 'error' );
-		}
+		$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
+		$message .= __( 'It seems the URL rewrite module is not activated on your server. The login page can\'t be moved.', 'secupress' );
+		add_settings_error( 'secupress_users-login_settings', 'no_iis7_rewrite', $message, 'error' );
 	}
 	// Apache
 	elseif ( $is_apache && ! secupress_has_url_rewriting() ) {
-			$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
-			$message .= __( 'It seems the URL rewrite module is not activated on your server. The login page can\'t be moved.', 'secupress' );
-			add_settings_error( 'secupress_users-login_settings', 'no_apache_rewrite', $message, 'error' );
-		}
+		$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
+		$message .= __( 'It seems the URL rewrite module is not activated on your server. The login page can\'t be moved.', 'secupress' );
+		add_settings_error( 'secupress_users-login_settings', 'no_apache_rewrite', $message, 'error' );
 	}
 	// None
 	elseif ( ! $is_iis7 && ! $is_apache && ! $is_nginx ) {
@@ -82,6 +80,10 @@ function secupress_move_login_deactivate( $args = array() ) {
 	secupress_move_login_remove_rules();
 }
 
+
+/*------------------------------------------------------------------------------------------------*/
+/* UPDATE SETTINGS ============================================================================== */
+/*------------------------------------------------------------------------------------------------*/
 
 /**
  * Add rewrite rules into the `.htaccess`/`web.config` file when settings are updated.
