@@ -178,7 +178,7 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 		$bases  = secupress_get_rewrite_bases();
 
 		// We can use rewrite rules \o/
-		if ( got_mod_rewrite() ) {
+		if ( secupress_has_url_rewriting() ) {
 			$base   = $bases['base'];
 			$match  = '^(' . $bases['home_from'] . 'php\.ini|' . $bases['site_from'] . WPINC . '/.+\.php|' . $bases['site_from'] . 'wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$';
 			// Trigger a 404 error, because forbidding access to a file is nice, but making it also invisible is more fun :)
@@ -238,7 +238,7 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 
 
 	protected function fix_iis7() {
-		if ( ! iis7_supports_permalinks() ) {
+		if ( ! secupress_has_url_rewriting() ) {
 			// cantfix
 			$this->add_fix_message( 304 );
 			return;

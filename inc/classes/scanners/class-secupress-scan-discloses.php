@@ -283,7 +283,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 
 		// `readme.html` file.
 		if ( isset( $todo['readme'] ) ) {
-			if ( got_mod_rewrite() ) {
+			if ( secupress_has_url_rewriting() ) {
 				$bases  = secupress_get_rewrite_bases();
 				$base   = $bases['base'];
 				$from   = $bases['home_from'];
@@ -317,7 +317,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements iSecuPress_Scan
 
 
 	protected function fix_iis7() {
-		if ( ! iis7_supports_permalinks() ) {
+		if ( ! secupress_has_url_rewriting() ) {
 			// cantfix
 			$this->add_fix_message( 303 );
 			return;

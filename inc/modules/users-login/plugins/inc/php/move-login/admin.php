@@ -24,22 +24,14 @@ function secupress_move_login_activate() {
 		add_settings_error( 'secupress_users-login_settings', 'no_request_uri', $message, 'error' );
 	}
 	// IIS7
-	if ( $is_iis7 ) {
-		if ( ! function_exists( 'iis7_supports_permalinks' ) ) {
-			require_once( ABSPATH . WPINC . '/functions.php' );
-		}
-		if ( ! iis7_supports_permalinks() ) {
+	if ( $is_iis7 && ! secupress_has_url_rewriting() ) {
 			$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
 			$message .= __( 'It seems the URL rewrite module is not activated on your server. The login page can\'t be moved.', 'secupress' );
 			add_settings_error( 'secupress_users-login_settings', 'no_iis7_rewrite', $message, 'error' );
 		}
 	}
 	// Apache
-	elseif ( $is_apache ) {
-		if ( ! function_exists( 'got_mod_rewrite' ) ) {
-			require_once( ABSPATH . 'wp-admin/includes/misc.php' );
-		}
-		if ( ! got_mod_rewrite() ) {
+	elseif ( $is_apache && ! secupress_has_url_rewriting() ) {
 			$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
 			$message .= __( 'It seems the URL rewrite module is not activated on your server. The login page can\'t be moved.', 'secupress' );
 			add_settings_error( 'secupress_users-login_settings', 'no_apache_rewrite', $message, 'error' );

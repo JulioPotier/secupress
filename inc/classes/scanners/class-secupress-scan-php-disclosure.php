@@ -129,7 +129,7 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements iSecuPress
 		$rules .= "    RewriteRule .* - [F]\n";
 		$rules .= "</IfModule>";
 
-		if ( ! got_mod_rewrite() ) {
+		if ( ! secupress_has_url_rewriting() ) {
 			// cantfix
 			$this->add_fix_message( 303 );
 		} elseif ( secupress_write_htaccess( $marker, $rules ) ) {
@@ -153,7 +153,7 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements iSecuPress
 			$node  .= "$spaces  <action type=\"AbortRequest\"/>\n";
 		$node  .= "$spaces</rule>";
 
-		if ( ! iis7_supports_permalinks() ) {
+		if ( ! secupress_has_url_rewriting() ) {
 			// cantfix
 			$this->add_fix_message( 303 );
 		} elseif ( secupress_insert_iis7_nodes( $marker, array( 'nodes_string' => $node ) ) ) {

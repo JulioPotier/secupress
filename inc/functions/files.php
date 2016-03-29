@@ -645,6 +645,45 @@ function secupress_prepend_iis7_node( $container_node, $new_node ) {
 
 
 /**
+ * Try to tell if URL rewriting is available on the server.
+ *
+ * @since 1.0
+ *
+ * @return (bool) Will return null for nginx (because we can't tell) et for unsupported systems.
+ */
+function secupress_has_url_rewriting() {
+	global $is_apache, $is_iis7, $is_nginx;
+	static $has = 'nope';
+
+	if ( ! is_string( $has ) ) {
+		return $has;
+	}
+
+	$has = null;
+
+	if ( $is_apache ) {
+
+		if ( ! function_exists( 'got_mod_rewrite' ) ) {
+			require_once( ABSPATH . 'wp-admin/includes/misc.php' );
+		}
+
+		$has = got_mod_rewrite();
+
+	} elseif ( $is_iis7 ) {
+
+		if ( ! function_exists( 'iis7_supports_permalinks' ) ) {
+			require_once( ABSPATH . WPINC . '/functions.php' );
+		}
+
+		$has = iis7_supports_permalinks();
+
+	}
+
+	return $has;
+}
+
+
+/**
  * Is WP a MultiSite and a subfolder install?
  *
  * @since 1.0

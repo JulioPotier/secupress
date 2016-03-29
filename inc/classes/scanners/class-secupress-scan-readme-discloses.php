@@ -155,7 +155,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements iSecuPre
 		$marker  = 'readme_discloses';
 		$pattern = '(README|CHANGELOG|readme|changelog)\.(TXT|MD|HTML|txt|md|html)$';
 
-		if ( got_mod_rewrite() ) {
+		if ( secupress_has_url_rewriting() ) {
 			$rules  = "<IfModule mod_rewrite.c>\n";
 			$rules .= "    RewriteEngine On\n";
 			$rules .= "    RewriteRule /$pattern [R=404,L]\n"; // NC flag, why you no work?
@@ -181,7 +181,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements iSecuPre
 
 
 	protected function _fix_iis7() {
-		if ( ! iis7_supports_permalinks() ) {
+		if ( ! secupress_has_url_rewriting() ) {
 			// cantfix
 			$this->add_fix_message( 303 );
 			return;
