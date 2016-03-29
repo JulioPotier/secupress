@@ -48,6 +48,9 @@ function secupress_move_login_activate() {
 	if ( ! empty( $message ) ) {
 		// Deactivate the plugin.
 		secupress_deactivate_submodule( 'users-login', 'move-login', array( 'no-tests' => 1 ) );
+		// Remove (de)activation notices.
+		secupress_remove_module_notice( 'users-login', 'move-login', 'activation' );
+		secupress_remove_module_notice( 'users-login', 'move-login', 'deactivation' );
 		return;
 	}
 
