@@ -486,7 +486,7 @@ function __secupress_ban_ip_ajax_post_cb() {
 	update_site_option( SECUPRESS_BAN_IP, $ban_ips );
 
 	// Add the IP to the `.htaccess` file.
-	if ( apply_filters( 'secupress.ban.write_in_htaccess', true ) ) {
+	if ( secupress_write_in_htaccess_on_ban() ) {
 		secupress_write_htaccess( 'ban_ip', secupress_get_htaccess_ban_ip() );
 	}
 
@@ -562,7 +562,7 @@ function __secupress_unban_ip_ajax_post_cb() {
 	}
 
 	// Remove the IP from the `.htaccess` file.
-	if ( apply_filters( 'secupress.ban.write_in_htaccess', true ) ) {
+	if ( secupress_write_in_htaccess_on_ban() ) {
 		secupress_write_htaccess( 'ban_ip', secupress_get_htaccess_ban_ip() );
 	}
 
@@ -601,7 +601,7 @@ function __secupress_clear_ips_ajax_post_cb() {
 	delete_site_option( SECUPRESS_BAN_IP );
 
 	// Remove all IPs from the `.htaccess` file.
-	if ( apply_filters( 'secupress.ban.write_in_htaccess', true ) ) {
+	if ( secupress_write_in_htaccess_on_ban() ) {
 		secupress_write_htaccess( 'ban_ip' );
 	}
 

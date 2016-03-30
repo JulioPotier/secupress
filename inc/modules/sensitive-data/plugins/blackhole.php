@@ -90,8 +90,7 @@ function secupress_blackhole_ban_ip() {
 	/* This hook is documented in /inc/functions/admin.php */
 	do_action( 'secupress.ban.ip_banned', $IP, $ban_ips );
 
-	/* This hook is documented in /inc/functions/admin.php */
-	if ( apply_filters( 'secupress.ban.write_in_htaccess', true ) ) {
+	if ( secupress_write_in_htaccess_on_ban() ) {
 		secupress_write_htaccess( 'ban_ip', secupress_get_htaccess_ban_ip() );
 	}
 

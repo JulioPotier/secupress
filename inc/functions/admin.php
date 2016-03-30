@@ -419,7 +419,7 @@ function secupress_ban_ip( $time_ban = 5, $ip = null, $die = true ) {
 	 */
 	do_action( 'secupress.ban.ip_banned', $ip, $ban_ips );
 
-	if ( apply_filters( 'secupress.ban.write_in_htaccess', true ) ) {
+	if ( secupress_write_in_htaccess_on_ban() ) {
 		secupress_write_htaccess( 'ban_ip', secupress_get_htaccess_ban_ip() );
 	}
 
@@ -431,6 +431,25 @@ function secupress_ban_ip( $time_ban = 5, $ip = null, $die = true ) {
 		) );
 	}
 }
+
+
+/**
+ * Tell if rules should be inserted in the `.htaccess` file when an IP in banned.
+ *
+ * @since 1.0
+ *
+ * @return (bool)
+ */
+function secupress_write_in_htaccess_on_ban() {
+	$write = false;
+	/**
+	 * @since 1.0
+	 *
+	 * @param (bool) $write False by default.
+	 */
+	return apply_filters( 'secupress.ban.write_in_htaccess', $write );
+}
+
 
 /**
  * Return a <table> containing 2 strings displayed with the Diff_Renderer from WP Core.
