@@ -234,7 +234,7 @@ function secupress_warning_wp_config_permissions() {
  *
  * @since 1.0
  */
-add_action( 'admin_admin', 'secupress_warning_htaccess_permissions' );
+add_action( 'admin_init', 'secupress_warning_htaccess_permissions' );
 
 function secupress_warning_htaccess_permissions() {
 	global $pagenow, $is_apache, $is_iis7;
