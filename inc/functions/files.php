@@ -145,6 +145,29 @@ function secupress_mkdir_p( $target ) {
 }
 
 
+/**
+ * Tell if a file located in the home folder is writable.
+ * If the file does not exist, tell if the home folder is writable.
+ *
+ * @since 1.0
+ *
+ * @param (string) $file File name.
+ *
+ * @return (bool)
+ */
+function secupress_root_file_is_writable( $file ) {
+	static $home_path;
+
+	if ( ! isset( $home_path ) ) {
+		$home_path = secupress_get_home_path();
+	}
+
+	$file_exists = file_exists( $home_path . $file );
+
+	return ! $file_exists && wp_is_writable( $home_path ) || $file_exists && wp_is_writable( $home_path . $file );
+}
+
+
 /*
  * Get plugins dir path.
  *
@@ -430,7 +453,7 @@ function secupress_create_mu_plugin( $filename_part, $contents ) {
  * @return (bool) true on success.
  **/
 function secupress_insert_iis7_nodes( $marker, $args ) {
-	static $home_path;
+	static $web_config_file;
 
 	$args = wp_parse_args( $args, array(
 		'nodes_string' => '',
@@ -448,26 +471,21 @@ function secupress_insert_iis7_nodes( $marker, $args ) {
 		return false;
 	}
 
-	if ( ! isset( $home_path ) ) {
-		$home_path = secupress_get_home_path();
+	if ( ! isset( $web_config_file ) ) {
+		$web_config_file = secupress_get_home_path() . 'web.config';
 	}
-
-	// About the file.
-	$web_config_file = $home_path . 'web.config';
-	$has_web_config  = file_exists( $web_config_file );
-	$is_writable     = $has_web_config && wp_is_writable( $web_config_file );
 
 	// New content
 	$marker       = strpos( $marker, 'SecuPress' ) === 0 ? $marker : 'SecuPress ' . $marker;
 	$nodes_string = is_array( $nodes_string ) ? implode( "\n", $nodes_string ) : $nodes_string;
 	$nodes_string = trim( $nodes_string, "\r\n\t " );
 
-	if ( ! ( $is_writable || ! $has_web_config && wp_is_writable( $home_path ) && $nodes_string ) ) {
+	if ( ! secupress_root_file_is_writable( 'web.config' ) || ! $nodes_string ) {
 		return false;
 	}
 
 	// If configuration file does not exist then we create one.
-	if ( ! $has_web_config ) {
+	if ( ! file_exists( $web_config_file ) ) {
 		$fp = fopen( $web_config_file, 'w' );
 		fwrite( $fp, '<configuration/>' );
 		fclose( $fp );

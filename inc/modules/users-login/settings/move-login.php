@@ -68,9 +68,9 @@ $this->add_field( array(
 ) );
 
 
-// If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules.
+// If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for Move Login.
 
-if ( $is_plugin_active && function_exists( 'secupress_move_login_file_is_writable' ) ) {
+if ( $is_plugin_active && function_exists( 'secupress_move_login_get_rules' ) ) {
 	$message = false;
 
 	// Nginx
@@ -81,14 +81,14 @@ if ( $is_plugin_active && function_exists( 'secupress_move_login_file_is_writabl
 		$rules   = "# BEGIN SecuPress move_login\n$rules\n# END SecuPress";
 	}
 	// Apache
-	elseif ( $is_apache && ! secupress_move_login_file_is_writable( '.htaccess' ) ) {
+	elseif ( $is_apache && ! secupress_root_file_is_writable( '.htaccess' ) ) {
 		/* translators: %s is a file name */
 		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code inside:', 'secupress' ), '<code>.htaccess</code>' );
 		$rules   = secupress_move_login_get_apache_rules( secupress_move_login_get_rules() );
 		$rules   = "# BEGIN SecuPress move_login\n$rules\n# END SecuPress";
 	}
 	// IIS7
-	elseif ( $is_iis7 && ! secupress_move_login_file_is_writable( 'web.config' ) ) {
+	elseif ( $is_iis7 && ! secupress_root_file_is_writable( 'web.config' ) ) {
 		/* translators: %s is a file name */
 		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code inside:', 'secupress' ), '<code>web.config</code>' );
 		$rules   = secupress_move_login_get_iis7_rules( secupress_move_login_get_rules() );
