@@ -161,8 +161,15 @@ add_action( 'secupress_loaded', 'secupress_load_plugins' );
 function secupress_load_plugins() {
 	$modules = secupress_get_modules();
 
-	if ( $modules && is_admin() ) {
+	if ( $modules ) {
 		foreach ( $modules as $key => $module ) {
+			$file = SECUPRESS_MODULES_PATH . sanitize_key( $key ) . '/tools.php';
+			if ( file_exists( $file ) ) {
+				require_once( $file );
+			}
+			if ( ! is_admin() ) {
+				continue;
+			}
 			$file = SECUPRESS_MODULES_PATH . sanitize_key( $key ) . '/callbacks.php';
 			if ( file_exists( $file ) ) {
 				require_once( $file );
