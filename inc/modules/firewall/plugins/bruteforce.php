@@ -30,8 +30,8 @@ function secupress_bruteforce_activation() {
 	}
 	$sql = "CREATE TABLE $wpdb->secupress_bruteforce (
 		id varchar(32) NOT NULL,
-		timestamp bigint(20) NOT NULL,
-		hits bigint(20) DEFAULT 1 NOT NULL,
+		timestamp int(20) NOT NULL,
+		hits int(20) DEFAULT 1 NOT NULL,
 		UNIQUE KEY id (id)
 	);";
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -101,7 +101,7 @@ function secupress_check_bruteforce() {
 	 * @param false or true
 	 * @since 1.0
 	 */
-	$edged_case = apply_filters( 'secupress.plugin.bruteforce.edgecase', false );
+	$edge_case = apply_filters( 'secupress.plugin.bruteforce.edgecase', false );
 
 	if ( $edge_case || current_user_can( 'administrator' ) || ! get_option( 'secupress_bruteforce_installed' ) || defined( 'DOING_AJAX' ) || ( is_admin() && 'admin-post.php' == $pagenow ) ) {
 		return;
