@@ -162,9 +162,7 @@ function secupress_root_file_is_writable( $file ) {
 		$home_path = secupress_get_home_path();
 	}
 
-	$file_exists = file_exists( $home_path . $file );
-
-	return ! $file_exists && wp_is_writable( $home_path ) || $file_exists && wp_is_writable( $home_path . $file );
+	return wp_is_writable( $home_path . $file ) || ! file_exists( $home_path . $file ) && wp_is_writable( $home_path );
 }
 
 
