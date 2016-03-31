@@ -52,11 +52,8 @@ function secupress_geoip_activation() {
 
 	if ( ! $queries ) {
 		secupress_add_transient_notice( sprintf( __( 'The module GeoIP Management has not been activated because the file %s cannot be read.', 'secupress' ), '<code>' . str_replace( realpath( ABSPATH ), '', $filename ) . '</code>' ), 'error' );
-		// Deactivate the plugin.
-		secupress_manage_submodule( 'firewall', 'geoip-system', false );
-		// Remove (de)activation notices.
-		secupress_remove_module_notice( 'firewall', basename( __FILE__, '.php' ), 'activation' );
-		secupress_remove_module_notice( 'firewall', basename( __FILE__, '.php' ), 'deactivation' );
+		// Deactivate the plugin silently.
+		secupress_deactivate_submodule_silently( 'firewall', basename( __FILE__, '.php' ) );
 		return;
 	}
 
