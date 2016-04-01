@@ -331,7 +331,7 @@ function secupress_warning_no_backup_email() {
  *
  * @param (string)      $message    The message to display in the notice.
  * @param (string)      $error_code Like WordPress notices: "error" or "updated". Default is "updated".
- * @param (string|bool) $notice_id  A unique identifier to tell id the notice is dismissible.
+ * @param (string|bool) $notice_id  A unique identifier to tell if the notice is dismissible.
  *                                  false: the notice is not dismissible.
  *                                  string: the notice is dismissible and send an ajax call to store the "dismissed" state into a user meta to prevent it to popup again.
  *                                  enpty string: meant for a one-shot use. The notice is dismissible but the "dismissed" state is not stored, it will popup again. This is the exact same behavior than the WordPress dismissible notices.
