@@ -96,18 +96,65 @@ function secupress_get_vulnerable_plugins() {
 }
 
 /**
- * Get the plugins vulnerable from an option, set 
+ * Get the vulnerable plugins from an option
  *
- * @return array The plugins removed from the repo
  * @since 1.0
  **/
 function secupress_refresh_vulnerable_plugins() { //// GO PRO
 	$plugins  = get_plugins();
 	$plugins  = wp_list_pluck( $plugins, 'Version' );
-	$args     = array( 'body' => array( 'plugins' => $plugins ), 'headers' => array( 'X-Secupress' => SECUPRESS_VERSION ) ); //// use client licence here
+	$args     = array( 'body' => array( 'items' => $plugins, 'type' => 'plugin' ), 'headers' => array( 'X-Secupress' => SECUPRESS_VERSION ) ); //// use client licence here
 
 	$response = wp_remote_post( SECUPRESS_WEB_DEMO . '/wpvulndb.php', $args ); //// url temp
 	if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 		update_site_option( 'secupress_bad_plugins', wp_remote_retrieve_body( $response ) );
 	}
+}
+
+/* THEMES */
+
+/**
+ * Get the vulnerable themes from an option
+ *
+ * @since 1.0
+ **/
+function secupress_refresh_vulnerable_themes() { //// GO PRO
+	$themes = wp_get_themes();
+	$themes = wp_list_pluck( $themes, 'Version' );
+
+	$args   = array( 'body' => array( 'items' => $themes, 'type' => 'theme' ), 'headers' => array( 'X-Secupress' => SECUPRESS_VERSION ) ); //// use client licence here
+
+	$response = wp_remote_post( SECUPRESS_WEB_DEMO . '/wpvulndb.php', $args ); //// url temp
+	if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
+		update_site_option( 'secupress_bad_themes', wp_remote_retrieve_body( $response ) );
+	}
+}
+
+/**
+ * Get the vulnerable themes from an option, from our option, set by secupress_refresh_vulnerable_themes()
+ *
+ * @return array The vulnerables themes
+ * @since 1.0
+ **/
+function secupress_get_vulnerable_themes() {
+	static $vulnerable_themes;
+
+	if ( isset( $vulnerable_themes ) ) {
+		return $vulnerable_themes;
+	}
+
+	if ( false !== ( $from_transient = get_site_transient( __FUNCTION__ ) ) ) {
+		return $from_transient;
+	}
+
+	$temp = get_site_option( 'secupress_bad_themes' );
+	$temp = $temp ? (array) json_decode( $temp ) : array();
+
+	if ( $temp ) {
+		$vulnerable_themes = $temp;
+		set_site_transient( __FUNCTION__, $vulnerable_themes, 6 * HOUR_IN_SECONDS );
+		return $vulnerable_themes;
+	}
+
+	return array();
 }
