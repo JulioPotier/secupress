@@ -78,6 +78,15 @@ function __secupress_global_settings_callback( $value ) {
 add_action( 'admin_enqueue_scripts', '__secupress_add_settings_scripts' );
 
 function __secupress_add_settings_scripts( $hook_suffix ) {
+	$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+	$version = $suffix ? SECUPRESS_VERSION : time();
+
+	// WordPress Common CSS
+	wp_enqueue_style( 'secupress-wordpress-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-wordpress' . $suffix . '.css', array(), $version );
+
+	// WordPress Common JS
+	wp_enqueue_script( 'secupress-wordpress-js', SECUPRESS_ADMIN_JS_URL . 'secupress-wordpress' . $suffix . '.js', array(), $version, true );
+
 	$pages = array(
 		'toplevel_page_secupress'                          => 1,
 		SECUPRESS_PLUGIN_SLUG . '_page_secupress_settings' => 1,
@@ -86,14 +95,12 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		SECUPRESS_PLUGIN_SLUG . '_page_secupress_logs'     => 1,
 		'toplevel_page_secupress_scanners'                 => 1,
 	);
+	
 	if ( ! isset( $pages[ $hook_suffix ] ) ) {
 		return;
 	}
 
-	$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-	$version = $suffix ? SECUPRESS_VERSION : time();
-
-	// Common CSS
+	// SecuPress Common CSS
 	wp_enqueue_style( 'secupress-common-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-common' . $suffix . '.css', array(), $version );
 
 	// Global settings page.
