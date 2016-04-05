@@ -8,6 +8,12 @@ Version: 1.0
 */
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
+/**
+ * 4 times a day, launch an async call to refresh the vulnerable plugins
+ *
+ * @return void
+ * @since 1.0
+ **/
 add_action( 'admin_footer', 'secupress_detect_bad_plugins_async_get_infos' );
 function secupress_detect_bad_plugins_async_get_infos() {
 	if ( false === get_site_transient( 'secupress-detect-bad-plugins' ) ) {
@@ -22,6 +28,12 @@ function secupress_detect_bad_plugins_async_get_infos() {
 	}
 }
 
+/**
+ * Call the refresh of the vulnerable plugins
+ *
+ * @return void
+ * @since 1.0
+ **/
 add_action( 'admin_post_secupress_refresh_bad_plugins', '__secupress_refresh_bad_plugins_ajax_post_cb' );
 function __secupress_refresh_bad_plugins_ajax_post_cb() {
 	if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'detect-bad-plugins' ) ) {
@@ -30,9 +42,15 @@ function __secupress_refresh_bad_plugins_ajax_post_cb() {
 	secupress_refresh_vulnerable_plugins();
 }
 
+/**
+ * Add a red banner on each "bad" plugin on plugins page
+ *
+ * @return void
+ * @since 1.0
+ **/
 add_action( 'after_plugin_row', 'secupress_detect_bad_plugins_after_plugin_row', 10, 3 );
 function secupress_detect_bad_plugins_after_plugin_row( $plugin_file, $plugin_data, $context ) {
-	if ( ( is_network_admin() || ! is_multisite() ) && ! current_user_can('update_plugins') && ! current_user_can('delete_plugins') && ! current_user_can('activate_plugins') ) { // ie. Administrator
+	if ( ( is_network_admin() || ! is_multisite() ) && ! current_user_can( 'update_plugins' ) && ! current_user_can( 'delete_plugins' ) && ! current_user_can( 'activate_plugins' ) ) { // ie. Administrator
 		return; 
 	}
 
@@ -69,13 +87,7 @@ function secupress_detect_bad_plugins_after_plugin_row( $plugin_file, $plugin_da
 	if ( $is_vuln ) {
 
 		$plugin_vuln->flaws = unserialize( $plugin_vuln->flaws );
-		$plugin_vuln->refs  = unserialize( $plugin_vuln->refs );
 
-		foreach( $plugin_vuln->refs as $k => $link ) {
-			$plugin_vuln->refs[ $k ] = sprintf( '<a href="%1$s" target="_blank">%1$s</a>', $link );
-		}
-
-		$flaws = wp_sprintf( '%l', $plugin_vuln->refs );
 		printf( _n(	__( '<strong>%1$s %2$s</strong> is known to contain this vulnerability: %3$s.', 'secupress' ), 
 					__( '<strong>%1$s %2$s</strong> is known to contain these vulnerabilities: %3$s.', 'secupress' ), 
 					count( $plugin_vuln->flaws ), 'secupress' ), 
@@ -85,7 +97,7 @@ function secupress_detect_bad_plugins_after_plugin_row( $plugin_file, $plugin_da
 				); 
 		
 		echo ' ';
-		printf( __( 'More information: %s', 'secupress' ), $flaws );
+		printf( __( '<a href="%s" target="_blank">More information</a>', 'secupress' ), $plugin_vuln->refs );
 
 		if ( $plugin_vuln->fixed_in && current_user_can( 'update_plugins' ) ) {
 			
@@ -130,13 +142,19 @@ function secupress_detect_bad_plugins_after_plugin_row( $plugin_file, $plugin_da
 <?php
 }
 
+/**
+ * Add a notice if a plugin is considered as "bad"
+ *
+ * @return void
+ * @since 1.0
+ **/
 add_action( 'admin_head', 'secupress_detect_bad_plugins_add_notices' );
 function secupress_detect_bad_plugins_add_notices() {
 	global $pagenow;
 
 	// don't display the notice yet, next reload.
 	if ( false === get_site_transient( 'secupress-detect-bad-plugins' ) || 'plugins.php' == $pagenow ||
-	( is_network_admin() || ! is_multisite() ) && ! current_user_can('update_plugins') && ! current_user_can('delete_plugins') && ! current_user_can('activate_plugins') ) { // ie. Administrator
+	( is_network_admin() || ! is_multisite() ) && ! current_user_can( 'update_plugins' ) && ! current_user_can( 'delete_plugins' ) && ! current_user_can( 'activate_plugins' ) ) { // ie. Administrator
 		return; 
 	}
 
@@ -152,8 +170,8 @@ function secupress_detect_bad_plugins_add_notices() {
 		$message  = sprintf( 
 						_n( 'Your installation contains %1$s plugin considered as <em>bad</em>, check the details in <a href="%2$s">the plugins page</a>.', 
 							'Your installation contains %1$s plugins considered as <em>bad</em>, check the details in <a href="%2$s">the plugins page</a>.', 
-							'<strong>' . $counter . '</strong>', 'secupress' ), 
-					$counter, $url );
-		secupress_add_notice( $message, 'error', 'badplugins' );
+							$counter, 'secupress' ), 
+					'<strong>' . $counter . '</strong>', $url );
+		secupress_add_notice( $message, 'error', 'bad-plugins' );
 	}
 }
