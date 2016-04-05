@@ -1,0 +1,11 @@
+.secupress-bad-theme{
+	line-height: 2em !important;
+	height: 256px !important;
+}
+.secupress-bad-theme a{
+	font-weight: bold;
+	color: white
+}
+.secupress-bad-theme:before{
+	content: "\f334" !important;
+}
