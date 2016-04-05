@@ -1,0 +1,162 @@
+<?php
+/*
+Module Name: PHP Disclosure.
+Description: Protect against PHP Easter Egg.
+Main Module: sensitive_data
+Author: SecuPress
+Version: 1.0
+*/
+defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
+
+/*------------------------------------------------------------------------------------------------*/
+/* ACTIVATION / DEACTIVATION ==================================================================== */
+/*------------------------------------------------------------------------------------------------*/
+
+/**
+ * On module activation, maybe write the rules.
+ *
+ * @since 1.0
+ */
+add_action( 'secupress_activate_plugin_' . basename( __FILE__, '.php' ), 'secupress_php_disclosure_activation' );
+
+function secupress_php_disclosure_activation() {
+	global $is_apache, $is_nginx, $is_iis7;
+
+	// Apache
+	if ( $is_apache ) {
+		$rules = secupress_php_disclosure_apache_rules();
+	}
+	// IIS7
+	elseif ( $is_iis7 ) {
+		$rules = secupress_php_disclosure_iis7_rules();
+	}
+	// Nginx
+	elseif ( $is_nginx ) {
+		$rules = secupress_php_disclosure_nginx_rules();
+	}
+	// Not supported.
+	else {
+		$rules = '';
+	}
+
+	secupress_add_module_rules_or_notice_and_deactivate( array(
+		'rules'     => $rules,
+		'marker'    => 'php_disclosure',
+		'module'    => 'sensitive-data',
+		'submodule' => basename( __FILE__, '.php' ),
+		'title'     => __( 'PHP Disclosure', 'secupress' ),
+	) );
+}
+
+
+/**
+ * On module deactivation, maybe remove rewrite rules from the `.htaccess`/`web.config` file.
+ *
+ * @since 1.0
+ *
+ * @param (array) $args Some parameters.
+ */
+add_action( 'secupress_deactivate_plugin_' . basename( __FILE__, '.php' ), 'secupress_php_disclosure_deactivate' );
+
+function secupress_php_disclosure_deactivate( $args = array() ) {
+	if ( empty( $args['no-tests'] ) ) {
+		secupress_remove_module_rules_or_notice( 'php_disclosure', __( 'PHP Disclosure', 'secupress' ) );
+	}
+}
+
+
+/**
+ * On SecuPress activation, add the rules to the list of the rules to write.
+ *
+ * @since 1.0
+ *
+ * @param (array) $rules Other rules to write.
+ *
+ * @return (array) Rules to write.
+ */
+add_filter( 'secupress.plugins.activation.write_rules', 'secupress_php_disclosure_plugin_activate', 10, 2 );
+
+function secupress_php_disclosure_plugin_activate( $rules ) {
+	global $is_apache, $is_nginx, $is_iis7;
+	$marker = 'php_disclosure';
+
+	if ( $is_apache ) {
+		$rules[ $marker ] = secupress_php_disclosure_apache_rules();
+	} elseif ( $is_iis7 ) {
+		$rules[ $marker ] = array( 'nodes_string' => secupress_php_disclosure_iis7_rules() );
+	} elseif ( $is_nginx ) {
+		$rules[ $marker ] = secupress_php_disclosure_nginx_rules();
+	}
+
+	return $rules;
+}
+
+
+/*------------------------------------------------------------------------------------------------*/
+/* RULES ======================================================================================== */
+/*------------------------------------------------------------------------------------------------*/
+
+/**
+ * PHP Disclosure: get rules for apache.
+ *
+ * @since 1.0
+ *
+ * @return (string)
+ */
+function secupress_php_disclosure_apache_rules() {
+	$rules  = "<IfModule mod_rewrite.c>\n";
+	$rules .= "    RewriteEngine on\n";
+	$rules .= "    RewriteCond %{QUERY_STRING} \=PHP[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12} [NC]\n";
+	$rules .= "    RewriteRule .* - [F]\n";
+	$rules .= "</IfModule>";
+
+	return $rules;
+}
+
+
+/**
+ * PHP Disclosure: get rules for iis7.
+ *
+ * @since 1.0
+ *
+ * @return (string)
+ */
+function secupress_php_disclosure_iis7_rules() {
+	$marker = 'php_disclosure';
+	$spaces = str_repeat( ' ', 8 );
+
+	$rules  = "<rule name=\"SecuPress $marker\" stopProcessing=\"true\">\n";
+	$rules .= "$spaces  <match url=\".*\"/>\n";
+	$rules .= "$spaces  <conditions>\n";
+	$rules .= "$spaces    <add input=\"{URL}\" pattern=\"\=PHP[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\" ignoreCase=\"true\"/>\n";
+	$rules .= "$spaces  </conditions>\n";
+	$rules .= "$spaces  <action type=\"AbortRequest\"/>\n";
+	$rules .= "$spaces</rule>";
+
+	return $rules;
+}
+
+
+/**
+ * PHP Disclosure: get rules for nginx.
+ *
+ * @since 1.0
+ *
+ * @return (string)
+ */
+function secupress_php_disclosure_nginx_rules() {
+	$marker = 'php_disclosure';
+
+	$rules  = "
+server {
+	# BEGIN SecuPress $marker
+	location / {
+		if ( \$query_string ~* \"\=PHP[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\" ) {
+			return 403;
+		}
+	}
+	# END SecuPress
+}";
+
+	return trim( $rules );
+}

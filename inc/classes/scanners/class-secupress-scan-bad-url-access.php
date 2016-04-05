@@ -31,14 +31,14 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 			$config_file = '.htaccess';
 		} elseif ( $is_iis7 ) {
 			$config_file = 'web.config';
-		} else {
+		} elseif ( ! $is_nginx ) {
 			self::$fixable = false;
 		}
 
-		if ( self::$fixable ) {
-			self::$more_fix = sprintf( __( 'This will add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>' . $config_file . '</code>' );
-		} elseif ( $is_nginx ) {
-			self::$more_fix = static::get_messages( 300 );
+		if ( $is_nginx ) {
+			self::$more_fix = sprintf( __( 'Since your %s file cannot be edited automatically, this will give you the rules to add into it manually, to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>nginx.conf</code>' );
+		} elseif ( self::$fixable ) {
+			self::$more_fix = sprintf( __( 'This will add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), "<code>$config_file</code>" );
 		} else {
 			self::$more_fix = static::get_messages( 301 );
 		}
@@ -46,33 +46,24 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 
 
 	public static function get_messages( $message_id = null ) {
-		global $is_nginx;
-		$nginx_rules = '';
-
-		if ( $is_nginx ) {
-			$bases       = secupress_get_rewrite_bases();
-			$marker      = 'bad_url_access';
-			$nginx_rules = "location ~ ^(" . $bases['home_from'] . 'php\.ini|' . $bases['site_from'] . WPINC . '/.+\.php|' . $bases['site_from'] . "wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$ {\n\t\treturn 404;\n\t}";
-			$nginx_rules = "server {\n\t# BEGIN SecuPress $marker\n\t$nginx_rules\n\t# END SecuPress\n}";
-		}
-
 		$messages = array(
 			// good
 			0   => __( 'Your site does not reveal sensitive informations.', 'secupress' ),
 			1   => __( 'Your %s file has been successfully edited.', 'secupress' ),
-			2   => _n_noop( 'The following file has been successfully edited: %s.', 'The following files have been successfully edited: %s.', 'secupress' ),
 			// warning
+			/* translators: %s is a URL, or a list of URLs. */
 			100 => __( 'Unable to determine status of %s.', 'secupress' ),
 			// bad
+			/* translators: %s is a URL, or a list of URLs. */
 			200 => _n_noop( '%s should not be accessible by anyone.', '%s should not be accessible by anyone.', 'secupress' ),
 			// cantfix
-			/* translators: 1 is a block name, 2 is a file name, 3 is some code */
-			300 => sprintf( __( 'Your server runs a nginx system, these sensitive informations disclosures cannot be fixed automatically but you can do it yourself by adding the following code inside the %1$s block of your %2$s file: %3$s.', 'secupress' ), '"server"', '<code>nginx.conf</code>', "<pre>$nginx_rules</pre>" ),
-			301 => __( 'Your server runs a non recognized system. These sensitive informations disclosures cannot be fixed automatically.', 'secupress' ),
-			/* translators: 1 si a file name, 2 is some code */
+			/* translators: 1 is a file name, 2 is some code */
+			300 => sprintf( __( 'Your server runs a nginx system, the sensitive information disclosure cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
+			301 => __( 'Your server runs a non recognized system. The sensitive information disclosure cannot be fixed automatically.', 'secupress' ),
+			/* translators: 1 is a file name, 2 is some code */
 			302 => __( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ),
-			303 => _n_noop( 'The following file is not writable. Please add the those lines at the beginning of the file: %s', 'The following files are not writable. Please add the those lines at the beginning of each file: %s', 'secupress' ),
-			304 => __( 'It seems URL rewriting is not enabled on your server. The sensitive information disclosure cannot be fixed.', 'secupress' ),
+			/* translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
+			303 => __( 'Your %1$s file is not writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -84,8 +75,6 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 
 
 	public function scan() {
-		global $is_nginx;
-
 		// Avoid plugin's hooks.
 		remove_all_filters( 'site_url' );
 		remove_all_filters( 'includes_url' );
@@ -123,9 +112,7 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 			// bad
 			$this->add_message( 200, array( count( $bads ), $bads ) );
 
-			if ( $is_nginx ) {
-				$this->add_pre_fix_message( 300 );
-			} elseif ( ! self::$fixable ) {
+			if ( ! self::$fixable ) {
 				$this->add_pre_fix_message( 301 );
 			}
 		}
@@ -143,123 +130,78 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 
 
 	public function fix() {
-		global $is_apache, $is_iis7;
+		global $is_apache, $is_nginx, $is_iis7;
 
 		if ( $is_apache ) {
-			$this->fix_apache();
+			$this->_fix_apache();
 		} elseif ( $is_iis7 ) {
-			$this->fix_iis7();
+			$this->_fix_iis7();
+		} elseif ( $is_nginx ) {
+			$this->_fix_nginx();
 		}
+
+		// good
+		$this->maybe_set_fix_status( 0 );
 
 		return parent::fix();
 	}
 
 
-	protected function fix_apache() {
-		/*
-		 * ^php\.ini$
-		 *
-		 * ^wp-admin/admin-functions\.php$
-		 * ^wp-admin/install\.php$
-		 * ^wp-admin/menu-header\.php$
-		 * ^wp-admin/menu\.php$
-		 * ^wp-admin/setup-config\.php$
-		 * ^wp-admin/upgrade-functions\.php$
-		 *
-		 * ^wp-admin/includes/.+\.php$
-		 *
-		 * ^wp-admin/network/menu\.php$
-		 *
-		 * ^wp-admin/user/menu\.php$
-		 *
-		 * ^wp-includes/.+\.php$
-		 */
-		$marker = 'bad_url_access';
-		$bases  = secupress_get_rewrite_bases();
+	protected function _fix_apache() {
+		global $wp_settings_errors;
 
-		// We can use rewrite rules \o/
-		if ( secupress_has_url_rewriting() ) {
-			$base   = $bases['base'];
-			$match  = '^(' . $bases['home_from'] . 'php\.ini|' . $bases['site_from'] . WPINC . '/.+\.php|' . $bases['site_from'] . 'wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$';
-			// Trigger a 404 error, because forbidding access to a file is nice, but making it also invisible is more fun :)
-			$rules  = "<IfModule mod_rewrite.c>\n";
-			$rules .= "    RewriteEngine On\n";
-			$rules .= "    RewriteBase $base\n";
-			$rules .= "    RewriteRule $match [R=404,L]\n";
-			$rules .= "</IfModule>\n";
+		secupress_activate_submodule( 'sensitive-data', 'bad-url-access' );
 
-			if ( secupress_write_htaccess( $marker, $rules ) ) {
-				// good
-				$this->add_fix_message( 1, array( '<code>.htaccess</code>' ) );
-			} else {
-				// cantfix
-				$this->add_fix_message( 302, array( '<code>.htaccess</code>', "<pre># BEGIN SecuPress $marker\n$rules\n# END SecuPress</pre>" ) );
-			}
+		// Got error?
+		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
+
+		if ( $last_error && 'general' === $last_error['setting'] && 'apache_manual_edit' === $last_error['code'] ) {
+			// cantfix
+			$this->add_fix_message( 302, array( '<code>.htaccess</code>', static::_get_rules_from_error( $last_error ) ) );
+			array_pop( $wp_settings_errors );
 			return;
 		}
 
-		// If the rewrite module is disabled (unlikely), forbid access: we have to create a `.htaccess` file in 6 different locations.
-		$regexs = array(
-			''                                     => 'php.ini',
-			$bases['wpdir'] . WPINC . '/'          => '^.+\.php$',
-			$bases['wpdir'] . 'wp-admin/'          => '^(admin-functions|install|menu-header|setup-config|menu|upgrade-functions)\.php$',
-			$bases['wpdir'] . 'wp-admin/includes/' => '^.+\.php$',
-			$bases['wpdir'] . 'wp-admin/network/'  => 'menu\.php',
-			$bases['wpdir'] . 'wp-admin/user/'     => 'menu\.php',
-		);
-		$done = array();
-		$fail = array();
-
-		foreach ( $regexs as $path => $regex ) {
-			$tag    = strpos( $regex, '^' ) === 0 ? 'FilesMatch' : 'Files';
-			$rules  = "<$tag \"$regex\">\n";
-			$rules .= "    deny from all\n";
-			$rules .= "</$tag>\n";
-
-			if ( secupress_write_htaccess( $marker, $rules, $path ) ) {
-				// good
-				$done[] = "<code>$path.htaccess</code>";
-			} else {
-				// cantfix
-				$fail[] = "<code>$path.htaccess</code><pre># BEGIN SecuPress $marker\n$rules\n# END SecuPress</pre>";
-			}
-		}
-
-		if ( $done ) {
-			// good
-			$this->add_fix_message( 2, array( count( $done ), $done ) );
-		}
-
-		if ( $fail ) {
-			// cantfix
-			$this->add_fix_message( 303, array( count( $fail ), '<br/>' . implode( '', $fail ) ) );
-		}
+		// good
+		$this->add_fix_message( 1, array( '<code>.htaccess</code>' ) );
 	}
 
 
-	protected function fix_iis7() {
-		if ( ! secupress_has_url_rewriting() ) {
+	protected function _fix_iis7() {
+		global $wp_settings_errors;
+
+		secupress_activate_submodule( 'sensitive-data', 'bad-url-access' );
+
+		// Got error?
+		$last_error = end( $wp_settings_errors );
+
+		if ( $last_error && 'general' === $last_error['setting'] && 'iis7_manual_edit' === $last_error['code'] ) {
 			// cantfix
-			$this->add_fix_message( 304 );
+			$this->add_fix_message( 303, array( '<code>web.config</code>', '/configuration/system.webServer/rewrite/rules', static::_get_rules_from_error( $last_error ) ) );
+			array_pop( $wp_settings_errors );
 			return;
 		}
 
-		$marker = 'bad_url_access';
-		$spaces = str_repeat( ' ', 10 );
-		$bases  = secupress_get_rewrite_bases();
-		$match  = '^(' . $bases['home_from'] . 'php\.ini|' . $bases['site_from'] . WPINC . '/.+\.php|' . $bases['site_from'] . 'wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$';
+		// good
+		$this->add_fix_message( 1, array( '<code>web.config</code>' ) );
+	}
 
-		$node   = "<rule name=\"SecuPress $marker\" stopProcessing=\"true\">\n";
-			$node  .= "$spaces  <match url=\"$match\"/>\n";
-			$node  .= "$spaces  <action type=\"CustomResponse\" statusCode=\"404\"/>\n";
-		$node  .= "$spaces</rule>";
 
-		if ( secupress_insert_iis7_nodes( $marker, array( 'nodes_string' => $node ) ) ) {
-			// good
-			$this->add_fix_message( 1, array( '<code>web.config</code>' ) );
-		} else {
-			// cantfix
-			$this->add_fix_message( 302, array( '<code>web.config</code>', "<pre>$node</pre>" ) );
+	protected function _fix_nginx() {
+		global $wp_settings_errors;
+
+		secupress_activate_submodule( 'sensitive-data', 'bad-url-access' );
+
+		// Get the error.
+		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
+		$rules      = '<code>Error</code>';
+
+		if ( $last_error && 'general' === $last_error['setting'] && 'nginx_manual_edit' === $last_error['code'] ) {
+			$rules = static::_get_rules_from_error( $last_error );
+			array_pop( $wp_settings_errors );
 		}
+
+		// cantfix
+		$this->add_fix_message( 300, array( $rules ) );
 	}
 }

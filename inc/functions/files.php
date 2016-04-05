@@ -265,7 +265,7 @@ function secupress_put_contents( $file, $new_content = '', $args = array() ) {
 
 	$wp_filesystem = secupress_get_filesystem();
 	$file_content  = '';
-	$comment_char  = 'php.ini' != basename( $file ) ? '#' : ';';
+	$comment_char  = 'php.ini' !== basename( $file ) ? '#' : ';';
 
 	// Get the whole content of file and remove old marker content.
 	if ( file_exists( $file ) ) {
@@ -329,10 +329,9 @@ function secupress_replace_content( $file, $old_content, $new_content ) {
 	$wp_filesystem = secupress_get_filesystem();
 	$file_content  = $wp_filesystem->get_contents( $file );
 
-	$chmod        = defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : 0644;
 	$new_content  = preg_replace( $old_content, $new_content, $file_content );
-	$replaced     =  $new_content != null && $new_content != $file_content;
-	$put_contents = $wp_filesystem->put_contents( $file, $new_content, $chmod );
+	$replaced     =  $new_content !== null && $new_content !== $file_content;
+	$put_contents = $wp_filesystem->put_contents( $file, $new_content, FS_CHMOD_FILE );
 
 	return $put_contents && $replaced;
 }
@@ -657,45 +656,6 @@ function secupress_prepend_iis7_node( $container_node, $new_node ) {
 	}
 
 	return $container_node;
-}
-
-
-/**
- * Try to tell if URL rewriting is available on the server.
- *
- * @since 1.0
- *
- * @return (bool) Will return null for nginx (because we can't tell) et for unsupported systems.
- */
-function secupress_has_url_rewriting() {
-	global $is_apache, $is_iis7, $is_nginx;
-	static $has = 'nope';
-
-	if ( ! is_string( $has ) ) {
-		return $has;
-	}
-
-	$has = null;
-
-	if ( $is_apache ) {
-
-		if ( ! function_exists( 'got_mod_rewrite' ) ) {
-			require_once( ABSPATH . 'wp-admin/includes/misc.php' );
-		}
-
-		$has = got_mod_rewrite();
-
-	} elseif ( $is_iis7 ) {
-
-		if ( ! function_exists( 'iis7_supports_permalinks' ) ) {
-			require_once( ABSPATH . WPINC . '/functions.php' );
-		}
-
-		$has = iis7_supports_permalinks();
-
-	}
-
-	return $has;
 }
 
 

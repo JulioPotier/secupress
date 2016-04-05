@@ -70,6 +70,12 @@ if ( ! defined( 'SECUPRESS_LASTVERSION' ) ) {
 /*------------------------------------------------------------------------------------------------*/
 
 /**
+ * All the stuff for the plugin activation and deactivation.
+ */
+require( SECUPRESS_INC_PATH . 'activation.php' );
+
+
+/**
  * Tell WP what to do when plugin is loaded
  *
  * @since 1.0
@@ -198,6 +204,7 @@ function secupress_load_plugins() {
 		 * Fires once SecuPress is activated, after the SecuPress's plugins are loaded.
 		 *
 		 * @since 1.0
+		 * @see `secupress_activation()`
 		 */
 		do_action( 'secupress.plugins.activation' );
 	}
@@ -212,7 +219,7 @@ function secupress_load_plugins() {
 
 
 /**
- * Make SecuPress is the first plugin loaded.
+ * Make SecuPress the first plugin loaded.
  *
  * @since 1.0
  */
@@ -258,63 +265,4 @@ function secupress_load_default_textdomain_translations() {
 	if ( ! defined( 'DOING_AUTOSAVE' ) ) {
 		load_plugin_textdomain( 'default', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 	}
-}
-
-
-/*------------------------------------------------------------------------------------------------*/
-/* ACTIVATE/DEACTIVATE ========================================================================== */
-/*------------------------------------------------------------------------------------------------*/
-
-/**
- * Tell WP what to do when plugin is activated
- *
- * @since 1.1.0
- */
-register_activation_hook( __FILE__, 'secupress_activation' );
-
-function secupress_activation() {
-	// Last constants
-	define( 'SECUPRESS_PLUGIN_NAME', 'SecuPress' );
-	define( 'SECUPRESS_PLUGIN_SLUG', sanitize_key( SECUPRESS_PLUGIN_NAME ) );
-
-	/**
-	 * Fires on SecuPress activation.
-	 *
-	 * @since 1.0
-	 */
-	do_action( 'secupress_activation' );
-
-	/**
-	 * As this activation hook appends before our plugins are loaded (and the page is reloaded right after that),
-	 * this transient will trigger a custom activation hook in `secupress_load_plugins()`.
-	 */
-	set_site_transient( 'secupress_activation', 1 );
-}
-
-
-/**
- * Tell WP what to do when plugin is deactivated.
- *
- * @since 1.0
- */
-register_deactivation_hook( __FILE__, 'secupress_deactivation' );
-
-function secupress_deactivation() {
-	// Pause the licence.
-	wp_remote_get( SECUPRESS_WEB_MAIN . 'pause-licence.php' );
-
-	// While the plugin is deactivated, some sites may activate or deactivate other plugins.
-	if ( is_multisite() ) {
-		delete_site_option( 'secupress_active_plugins' );
-		delete_site_option( 'secupress_active_themes' );
-	}
-
-	/**
-	 * Fires on SecuPress deactivation.
-	 *
-	 * @since 1.0
-	 *
-	 * @param (array) An empty array to mimic the `$args` parameter from `secupress_deactivate_submodule()`.
-	 */
-	do_action( 'secupress_deactivation', array() );
 }

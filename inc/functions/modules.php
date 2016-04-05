@@ -167,3 +167,184 @@ function secupress_get_module_data( $module, $submodule ) {
 
 	return array();
 }
+
+
+/**
+ * Remove (rewrite) rules from the `.htaccess`/`web.config` file.
+ * An error notice is displayed on nginx systems or if the file is not writable.
+ * This is usually used on the module deactivation.
+ *
+ * @since 1.0
+ *
+ * @param (string) $marker      Marker used in "BEGIN SecuPress ***".
+ * @param (string) $module_name The module name.
+ *
+ * @return (bool) True if the file has been edited.
+ */
+function secupress_remove_module_rules_or_notice( $marker, $module_name ) {
+	global $is_apache, $is_nginx, $is_iis7;
+
+	// Apache
+	if ( $is_apache && ! secupress_write_htaccess( $marker ) ) {
+		$message  = sprintf( __( '%s: ', 'secupress' ), $module_name );
+		$message .= sprintf(
+			/* translators: 1 is a file name, 2 and 3 are small parts of code. */
+			__( 'Your %1$s file is not writable, you have to edit it manually. Please remove the rules between %2$s and %3$s from the %1$s file.', 'secupress' ),
+			'<code>.htaccess</code>',
+			"<code># BEGIN SecuPress $marker</code>",
+			'<code># END SecuPress</code>'
+		);
+		add_settings_error( 'general', 'apache_manual_edit', $message, 'error' );
+		return false;
+	}
+
+	// IIS7
+	if ( $is_iis7 && ! secupress_insert_iis7_nodes( $marker ) ) {
+		$message  = sprintf( __( '%s: ', 'secupress' ), $module_name );
+		$message .= sprintf(
+			/* translators: 1 is a file name, 2 is a small part of code. */
+			__( 'Your %1$s file is not writable, you have to edit it manually. Please remove the rules with %2$s from the %1$s file.', 'secupress' ),
+			'<code>web.config</code>',
+			"<code>SecuPress $marker</code>"
+		);
+		add_settings_error( 'general', 'iis7_manual_edit', $message, 'error' );
+		return false;
+	}
+
+	// Nginx
+	if ( $is_nginx ) {
+		$message  = sprintf( __( '%s: ', 'secupress' ), $module_name );
+		$message .= sprintf(
+			/* translators: 1 is a file name, 2 and 3 are small parts of code. */
+			__( 'Your server uses a <i>Nginx</i> system, you have to edit the configuration file manually. Please remove the rules between %2$s and %3$s from the %1$s file.', 'secupress' ),
+			'<code>nginx.conf</code>',
+			"<code># BEGIN SecuPress $marker</code>",
+			'<code># END SecuPress</code>'
+		);
+		add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
+		return false;
+	}
+
+	return true;
+}
+
+
+/**
+ * Add (rewrite) rules to the `.htaccess`/`web.config` file.
+ * An error notice is displayed on nginx or not supported systems, or if the file is not writable. It will also deactivate the submodule silently if there is an error.
+ * This is usually used on the module activation.
+ *
+ * @since 1.0
+ *
+ * @param (array) $args An array of arguments.
+ *
+ * @return (bool) True if the file has been edited.
+ */
+function secupress_add_module_rules_or_notice_and_deactivate( $args ) {
+	global $is_apache, $is_nginx, $is_iis7;
+
+	$args = array_merge( array(
+		'rules'     => '',
+		'marker'    => '',
+		'iis_args'  => array(),
+		'module'    => '',
+		'submodule' => '',
+		'title'     => '', // Submodule name.
+	), $args );
+
+	$rules     = $args['rules'];
+	$marker    = $args['marker'];
+	$iis_args  = $args['iis_args'];
+	$module    = $args['module'];
+	$submodule = $args['submodule'];
+	$title     = $args['title'];
+
+	// Apache
+	if ( $is_apache ) {
+		// Write in `.htaccess` file.
+		if ( ! secupress_write_htaccess( $marker, $rules ) ) {
+			// File not writable.
+			$rules    = esc_html( $rules );
+			$message  = sprintf( __( '%s: ', 'secupress' ), $title );
+			$message .= sprintf(
+				/* translators: 1 is a file name, 2 is some code */
+				__( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ),
+				'<code>.htaccess</code>',
+				"<pre># BEGIN SecuPress $marker\n$rules# END SecuPress</pre>"
+			);
+			add_settings_error( 'general', 'apache_manual_edit', $message, 'error' );
+
+			secupress_deactivate_submodule_silently( $module, $submodule );
+			return false;
+		}
+
+		return true;
+	}
+
+	// IIS7
+	if ( $is_iis7 ) {
+		$iis_args['nodes_string'] = $rules;
+
+		// Write in `web.config` file.
+		if ( ! secupress_insert_iis7_nodes( $marker, $iis_args ) ) {
+			// File not writable.
+			$path     = ! empty( $iis_args['path'] ) ? $iis_args['path'] : '';
+			$path_end = ! $path && strpos( ltrim( $rules ), '<rule ' ) === 0 ? '/rewrite/rules' : '';
+			$path     = '/configuration/system.webServer' . ( $path ? '/' . trim( $path, '/' ) : '' ) . $path_end;
+			$spaces   = explode( '/', trim( $path, '/' ) );
+			$spaces   = count( $spaces ) - 1;
+			$spaces   = str_repeat( ' ', $spaces * 2 );
+			$rules    = esc_html( $rules );
+			$message  = sprintf( __( '%s: ', 'secupress' ), $title );
+
+			if ( ! empty( $iis_args['node_types'] ) ) {
+				$message .= sprintf(
+					/* translators: 1 is a file name, 2 is a tag name, 3 is a folder path (kind of), 4 is some code */
+					__( 'Your %1$s file is not writable. Please remove any previous %2$s tag and add the following lines inside the tags hierarchy %3$s (create it if does not exist): %4$s', 'secupress' ),
+					'<code>web.config</code>',
+					'<code>' . $iis_args['node_types'] . '</code>',
+					$path,
+					"<pre>{$spaces}{$rules}</pre>"
+				);
+			} else {
+				$message .= sprintf(
+					/* translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
+					__( 'Your %1$s file is not writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ),
+					'<code>web.config</code>',
+					$path,
+					"<pre>{$spaces}{$rules}</pre>"
+				);
+			}
+			add_settings_error( 'general', 'iis7_manual_edit', $message, 'error' );
+
+			secupress_deactivate_submodule_silently( $module, $submodule );
+			return false;
+		}
+
+		return true;
+	}
+
+	// Nginx
+	if ( $is_nginx ) {
+		// We can't edit the file, so we'll tell the user how to do.
+		$message  = sprintf( __( '%s: ', 'secupress' ), $title );
+		$message .= sprintf(
+			/* translators: 1 is a file name, 2 is some code */
+			__( 'Your server uses a <i>Nginx</i> system, you have to edit the configuration file manually. Please add the following code into your %1$s file: %2$s', 'secupress' ),
+			'<code>nginx.conf</code>',
+			"<pre>$rules</pre>"
+		);
+		add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
+
+		secupress_deactivate_submodule_silently( $module, $submodule );
+		return false;
+	}
+
+	// Server not supported.
+	$message  = sprintf( __( '%s: ', 'secupress' ), $title );
+	$message .= __( 'It seems your server does not use <i>Apache</i>, <i>Nginx</i>, nor <i>IIS7</i>. This module won\'t work.', 'secupress' );
+	add_settings_error( 'general', 'unknown_os', $message, 'error' );
+
+	secupress_deactivate_submodule_silently( $module, $submodule );
+	return false;
+}

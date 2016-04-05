@@ -755,7 +755,6 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	 * @return (WP_Error|bool) Return true if the server does not trigger an error 500, false otherwise.
 	 *                         Return a WP_Error object if the sandbox creation fails or if the HTTP request fails.
 	 */
-
 	final protected static function htaccess_success_in_sandbox( $content ) {
 		$wp_filesystem = secupress_get_filesystem();
 		$folder_name   = 'secupress-sandbox-' . uniqid();
@@ -793,4 +792,23 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 		return 500 !== wp_remote_retrieve_response_code( $response );
 	}
 
+
+	/*
+	 * Extract a `<pre/>` content from a message.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (array) $error An array where `message` is the key of our message.
+	 *
+	 * @return (string) The `<pre/>` tag and its content, or `<code>Error</code>` if no `<pre/>` tag is found.
+	 */
+	final protected static function _get_rules_from_error( $error ) {
+		$rules = '<code>Error</code>';
+
+		if ( preg_match( '@<pre>.+</pre>@ms', $error['message'], $matches ) ) {
+			$rules = $matches[0];
+		}
+
+		return $rules;
+	}
 }

@@ -32,14 +32,14 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements iSecuPre
 			$config_file = '.htaccess';
 		} elseif ( $is_iis7 ) {
 			$config_file = 'web.config';
-		} else {
+		} elseif ( ! $is_nginx ) {
 			self::$fixable = false;
 		}
 
-		if ( self::$fixable ) {
-			self::$more_fix = sprintf( __( 'This will add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>' . $config_file . '</code>' );
-		} elseif ( $is_nginx ) {
-			self::$more_fix = static::get_messages( 300 );
+		if ( $is_nginx ) {
+			self::$more_fix = sprintf( __( 'Since your %s file cannot be edited automatically, this will give you the rules to add into it manually, to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>nginx.conf</code>' );
+		} elseif ( self::$fixable ) {
+			self::$more_fix = sprintf( __( 'This will add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), "<code>$config_file</code>" );
 		} else {
 			self::$more_fix = static::get_messages( 301 );
 		}
@@ -47,25 +47,10 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements iSecuPre
 
 
 	public static function get_messages( $message_id = null ) {
-		global $is_nginx;
-
-		$nginx_rules = '';
-
-		if ( $is_nginx ) {
-			$base         = secupress_get_rewrite_bases();
-			$base         = rtrim( $bases['home_from'], '/' );
-			$marker       = 'readme_discloses';
-			$pattern      = '(readme|changelog)\.(txt|md|html)$';
-			// http://nginx.org/en/docs/http/ngx_http_core_module.html#location
-			$nginx_rules .= "server {\n\t# BEGIN SecuPress $marker\n";
-				$nginx_rules .= "\tlocation ~* ^$base(/|/.+/)$pattern {\n\t\treturn 404;\n\t}\n";
-			$nginx_rules .= "\t# END SecuPress\n}";
-		}
-
 		$messages = array(
 			// good
 			/* translators: %s is a file name */
-			0   => sprintf( __( 'The %s files from your plugins and themes are protected.', 'secupress' ), '<code>readme.txt</code>' ),
+			0   => sprintf( __( 'The %s files are protected.', 'secupress' ), '<code>readme.txt</code>' ),
 			/* translators: 1 and 2 are file names */
 			1   => sprintf( __( 'The rules forbidding access to your %1$s files have been successfully added to your %2$s file.', 'secupress' ), '<code>readme.txt</code>', '%s' ),
 			// warning
@@ -73,16 +58,16 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements iSecuPre
 			100 => sprintf( __( 'Unable to determine status of the %s files.', 'secupress' ), '<code>readme.txt</code>' ),
 			// bad
 			/* translators: %s is a file name */
-			200 => sprintf( __( 'The %s files from your plugins and themes are accessible to anyone.', 'secupress' ), '<code>readme.txt</code>' ),
+			200 => sprintf( __( 'The %s files should not be accessible to anyone.', 'secupress' ), '<code>readme.txt</code>' ),
 			// cantfix
-			/* translators: 1 and 2 are file names, 2 is some code */
-			300 => sprintf( __( 'Your server runs a nginx system, the %1$s files from your plugins and themes cannot be protected automatically but you can do it yourself by adding the following code into your %1$s file: %2$s.', 'secupress' ), '<code>readme.txt</code>', '<code>nginx.conf</code>', "<pre>$nginx_rules</pre>" ),
+			/* translators: 1 and 2 are a file names, 3 is some code */
+			300 => sprintf( __( 'Your server runs a nginx system, the %1$s files cannot be protected automatically but you can do it yourself by adding the following code into your %2$s file: %3$s', 'secupress' ), '<code>readme.txt</code>', '<code>nginx.conf</code>', '%s' ),
 			/* translators: %s is a file name */
-			301 => sprintf( __( 'Your server runs a non recognized system. The %s files from your plugins and themes cannot be protected automatically.', 'secupress' ), '<code>readme.txt</code>' ),
+			301 => sprintf( __( 'Your server runs a non recognized system. The %s files cannot be protected automatically.', 'secupress' ), '<code>readme.txt</code>' ),
 			/* translators: 1 is a file name, 2 is some code */
-			302 => __( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s.', 'secupress' ),
-			/* translators: %s is a file name */
-			303 => sprintf( __( 'It seems URL rewriting is not enabled on your server. The %s files from your plugins and themes cannot be protected.', 'secupress' ), '<code>readme.txt</code>' ),
+			302 => __( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ),
+			/* translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
+			303 => __( 'Your %1$s file is not writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -94,35 +79,30 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements iSecuPre
 
 
 	public function scan() {
-		global $is_nginx;
-
 		$protected = static::_are_files_protected();
 
 		if ( is_null( $protected ) ) {
 			// warning
 			$this->add_message( 100 );
 
-		} elseif ( $protected ) {
-			// good
-			$this->add_message( 0 );
-
-		} else {
+		} elseif ( ! $protected ) {
 			// bad
 			$this->add_message( 200 );
 
-			if ( $is_nginx ) {
-				$this->add_pre_fix_message( 300 );
-			} elseif ( ! self::$fixable ) {
+			if ( ! self::$fixable ) {
 				$this->add_pre_fix_message( 301 );
 			}
 		}
+
+		// good
+		$this->maybe_set_status( 0 );
 
 		return parent::scan();
 	}
 
 
 	public function fix() {
-		global $is_apache, $is_iis7;
+		global $is_apache, $is_nginx, $is_iis7;
 
 		$protected = static::_are_files_protected();
 
@@ -142,6 +122,8 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements iSecuPre
 			$this->_fix_apache();
 		} elseif ( $is_iis7 ) {
 			$this->_fix_iis7();
+		} elseif ( $is_nginx ) {
+			$this->_fix_nginx();
 		}
 
 		// good
@@ -152,59 +134,61 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements iSecuPre
 
 
 	protected function _fix_apache() {
-		$marker  = 'readme_discloses';
-		$pattern = '(README|CHANGELOG|readme|changelog)\.(TXT|MD|HTML|txt|md|html)$';
+		global $wp_settings_errors;
 
-		if ( secupress_has_url_rewriting() ) {
-			$rules  = "<IfModule mod_rewrite.c>\n";
-			$rules .= "    RewriteEngine On\n";
-			$rules .= "    RewriteRule /$pattern [R=404,L]\n"; // NC flag, why you no work?
-			$rules .= "</IfModule>\n";
-			$rules .= "<IfModule !mod_rewrite.c>\n";
-			$rules .= "    <FilesMatch \"^$pattern\">\n";
-			$rules .= "        deny from all\n";
-			$rules .= "    </FilesMatch>\n";
-			$rules .= "</IfModule>\n";
-		} else {
-			$rules  = "<FilesMatch \"^$pattern\">\n    deny from all\n</FilesMatch>\n";
-		}
+		secupress_activate_submodule( 'discloses', 'readmes' );
 
-		// Write in `.htaccess` file.
-		if ( secupress_write_htaccess( $marker, $rules ) ) {
-			// good
-			$this->add_fix_message( 1, array( '<code>.htaccess</code>' ) );
-		} else {
+		// Got error?
+		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
+
+		if ( $last_error && 'general' === $last_error['setting'] && 'apache_manual_edit' === $last_error['code'] ) {
 			// cantfix
-			$this->add_fix_message( 302, array( '<code>.htaccess</code>', "<pre># BEGIN SecuPress $marker\n$rules# END SecuPress</pre>" ) );
+			$this->add_fix_message( 302, array( '<code>.htaccess</code>', static::_get_rules_from_error( $last_error ) ) );
+			array_pop( $wp_settings_errors );
+			return;
 		}
+
+		// good
+		$this->add_fix_message( 1, array( '<code>.htaccess</code>' ) );
 	}
 
 
 	protected function _fix_iis7() {
-		if ( ! secupress_has_url_rewriting() ) {
+		global $wp_settings_errors;
+
+		secupress_activate_submodule( 'discloses', 'readmes' );
+
+		// Got error?
+		$last_error = end( $wp_settings_errors );
+
+		if ( $last_error && 'general' === $last_error['setting'] && 'iis7_manual_edit' === $last_error['code'] ) {
 			// cantfix
-			$this->add_fix_message( 303 );
+			$this->add_fix_message( 303, array( '<code>web.config</code>', '/configuration/system.webServer/rewrite/rules', static::_get_rules_from_error( $last_error ) ) );
+			array_pop( $wp_settings_errors );
 			return;
 		}
 
-		$marker = 'readme_discloses';
-		$spaces = str_repeat( ' ', 10 );
-		$bases  = secupress_get_rewrite_bases();
-		$match  = '^' . $bases['home_from'] . '.*/(readme|changelog)\.(txt|md|html)$';
+		// good
+		$this->add_fix_message( 1, array( '<code>web.config</code>' ) );
+	}
 
-		$rules  = "<rule name=\"SecuPress $marker\" stopProcessing=\"true\">\n";
-		$rules .= "$spaces  <match url=\"$match\"/ ignoreCase=\"true\">\n";
-		$rules .= "$spaces  <action type=\"CustomResponse\" statusCode=\"404\"/>\n";
-		$rules .= "$spaces</rule>";
 
-		// Write in `web.config` file.
-		if ( secupress_insert_iis7_nodes( $marker, array( 'nodes_string' => $rules ) ) ) {
-			// good
-			$this->add_fix_message( 1, array( '<code>web.config</code>' ) );
-		} else {
-			// cantfix
-			$this->add_fix_message( 302, array( '<code>web.config</code>', "<pre>{$spaces}{$rules}</pre>" ) );
+	protected function _fix_nginx() {
+		global $wp_settings_errors;
+
+		secupress_activate_submodule( 'discloses', 'readmes' );
+
+		// Get the error.
+		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
+		$rules      = '<code>Error</code>';
+
+		if ( $last_error && 'general' === $last_error['setting'] && 'nginx_manual_edit' === $last_error['code'] ) {
+			$rules = static::_get_rules_from_error( $last_error );
+			array_pop( $wp_settings_errors );
 		}
+
+		// cantfix
+		$this->add_fix_message( 300, array( $rules ) );
 	}
 
 
@@ -224,6 +208,10 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements iSecuPre
 		// Get the first file path, relative to the root of the site.
 		$abspath = wp_normalize_path( ABSPATH );
 		$file    = reset( $files );
+		if ( isset( $files[1] ) && false !== strpos( $file, '/akismet/' ) ) {
+			// Akismet protects its files.
+			$file = $files[1];
+		}
 		$file    = wp_normalize_path( $file );
 		$file    = ltrim( str_replace( $abspath, '', $file ), '/' );
 

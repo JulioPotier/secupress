@@ -6,49 +6,33 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 /*------------------------------------------------------------------------------------------------*/
 
 /**
- * On SecuPress activation and plugin activation, test if the server has what we need.
+ * On module activation, test if the server has what we need.
  * If not, deactivate. If yes, write the rules.
  *
  * @since 1.0
  */
 add_action( 'secupress_activate_plugin_move-login', 'secupress_move_login_activate' );
-add_action( 'secupress.plugins.activation',         'secupress_move_login_activate' );
 
 function secupress_move_login_activate() {
 	global $is_apache, $is_nginx, $is_iis7;
 
-	// The plugin needs the request uri
+	// The plugin needs the request uri.
 	if ( empty( $GLOBALS['HTTP_SERVER_VARS']['REQUEST_URI'] ) && empty( $_SERVER['REQUEST_URI'] ) ) {
 		$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
-		$message .= __( 'It seems your server configuration prevent the plugin to work properly. The login page can\'t be moved.', 'secupress' );
+		$message .= __( 'It seems your server configuration prevent the plugin to work properly. The login page cannot be moved.', 'secupress' );
 		add_settings_error( 'secupress_users-login_settings', 'no_request_uri', $message, 'error' );
 	}
-	// IIS7
-	if ( $is_iis7 && ! secupress_has_url_rewriting() ) {
+	// Server not supported.
+	if ( ! $is_iis7 && ! $is_apache && ! $is_nginx ) {
 		$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
-		$message .= __( 'It seems the URL rewrite module is not activated on your server. The login page can\'t be moved.', 'secupress' );
-		add_settings_error( 'secupress_users-login_settings', 'no_iis7_rewrite', $message, 'error' );
-	}
-	// Apache
-	elseif ( $is_apache && ! secupress_has_url_rewriting() ) {
-		$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
-		$message .= __( 'It seems the URL rewrite module is not activated on your server. The login page can\'t be moved.', 'secupress' );
-		add_settings_error( 'secupress_users-login_settings', 'no_apache_rewrite', $message, 'error' );
-	}
-	// None
-	elseif ( ! $is_iis7 && ! $is_apache && ! $is_nginx ) {
-		$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
-		$message .= __( 'It seems your server does not use <i>Apache</i>, <i>Nginx</i>, nor <i>IIS7</i>. The login page can\'t be moved.', 'secupress' );
+		$message .= __( 'It seems your server does not use <i>Apache</i>, <i>Nginx</i>, nor <i>IIS7</i>. The login page cannot be moved.', 'secupress' );
 		add_settings_error( 'secupress_users-login_settings', 'unknown_os', $message, 'error' );
 	}
 
 	// If a message is set, the plugin can't work.
 	if ( ! empty( $message ) ) {
-		// Deactivate the plugin.
-		secupress_deactivate_submodule( 'users-login', 'move-login', array( 'no-tests' => 1 ) );
-		// Remove (de)activation notices.
-		secupress_remove_module_notice( 'users-login', 'move-login', 'activation' );
-		secupress_remove_module_notice( 'users-login', 'move-login', 'deactivation' );
+		// Deactivate the plugin silently.
+		secupress_deactivate_submodule_silently( 'users-login', 'move-login' );
 		return;
 	}
 
@@ -58,26 +42,54 @@ function secupress_move_login_activate() {
 
 
 /**
- * On SecuPress deactivation and plugin deactivation, remove rewrite rules from the `.htaccess`/`web.config` file.
+ * On module deactivation, remove rewrite rules from the `.htaccess`/`web.config` file.
  *
  * @since 1.0
  *
  * @param (array) $args Some parameters.
  */
 add_action( 'secupress_deactivate_plugin_move-login', 'secupress_move_login_deactivate' );
-add_action( 'secupress_deactivation',                 'secupress_move_login_deactivate' );
 
 function secupress_move_login_deactivate( $args = array() ) {
-	global $is_apache, $is_nginx, $is_iis7;
-
-	if ( ! $is_iis7 && ! $is_apache && ! $is_nginx ) {
-		return;
+	if ( empty( $args['no-tests'] ) ) {
+		secupress_remove_module_rules_or_notice( 'move_login', __( 'Move Login', 'secupress' ) );;
 	}
-	if ( ! empty( $args['no-tests'] ) ) {
-		return;
+}
+
+
+/**
+ * On SecuPress activation, add the rules to the list of the rules to write.
+ *
+ * @since 1.0
+ *
+ * @param (array) $rules Other rules to write.
+ *
+ * @return (array) Rules to write.
+ */
+add_filter( 'secupress.plugins.activation.write_rules', 'secupress_move_login_plugin_activate', 10, 2 );
+
+function secupress_move_login_plugin_activate( $rules ) {
+	global $is_apache, $is_iis7;
+
+	// The plugin needs the request uri.
+	if ( empty( $GLOBALS['HTTP_SERVER_VARS']['REQUEST_URI'] ) && empty( $_SERVER['REQUEST_URI'] ) ) {
+		// Deactivate the plugin.
+		secupress_deactivate_submodule( 'users-login', 'move-login', array( 'no-tests' => 1 ) );
+		return $rules;
 	}
 
-	secupress_move_login_remove_rules();
+	// Add the rules.
+	$marker = 'move_login';
+
+	if ( $is_apache ) {
+		$rules[ $marker ] = secupress_move_login_get_apache_rules( secupress_move_login_get_rules() );
+	} elseif ( $is_iis7 ) {
+		$rules[ $marker ] = array( 'nodes_string' => secupress_move_login_get_iis7_rules( secupress_move_login_get_rules() ) );
+	} else {
+		$rules[ $marker ] = secupress_move_login_get_nginx_rules( secupress_move_login_get_rules() );
+	}
+
+	return $rules;
 }
 
 
@@ -155,92 +167,48 @@ function secupress_move_login_write_rules_on_network_update( $option, $value, $o
 function secupress_move_login_write_rules() {
 	global $is_apache, $is_nginx, $is_iis7;
 
-	// Nginx: we can't edit the file.
-	if ( $is_nginx ) {
-		$link     = '<a href="' . esc_url( secupress_admin_url( 'secupress_scanners', 'users-login' ) ) . '#move-login_rules">' . __( 'the dedicated section', 'secupress' ) . '</a>';
-		$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
-		/* translators: 1 is a link "the dedicated section", 2 is a file name. */
-		$message .= sprintf( __( 'It seems your server uses a <i>Nginx</i> system. You have to edit the configuration file manually. Please see the rewrite rules provided %1$s and copy/paste it into the %2$s file.', 'secupress' ), $link, '<code>nginx.conf</code>' );
-		add_settings_error( 'secupress_users-login_settings', 'nginx_manual_edit', $message, 'error' );
-		return;
-	}
-
 	// Apache
 	if ( $is_apache ) {
 		if ( ! secupress_move_login_write_apache_rules( secupress_move_login_get_rules() ) ) {
 			// File is not writable.
-			$link     = '<a href="' . esc_url( secupress_admin_url( 'secupress_scanners', 'users-login' ) ) . '#move-login_rules">' . __( 'the dedicated section', 'secupress' ) . '</a>';
 			$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
-			/* translators: 1 is a link "the dedicated section", 2 is a file name. */
-			$message .= sprintf( __( 'It seems your %2$s file is not writable. You have to edit the file manually. Please see the rewrite rules provided %1$s and copy/paste it into the %2$s file.', 'secupress' ), $link, '<code>.htaccess</code>' );
-			add_settings_error( 'secupress_users-login_settings', 'apache_manual_edit', $message, 'error' );
+			$message .= sprintf(
+				/* translators: 1 is a link "the dedicated section", 2 is a file name. */
+				__( 'It seems your %2$s file is not writable. You have to edit the file manually. Please see the rewrite rules provided %1$s and copy/paste it into the %2$s file.', 'secupress' ),
+				'<a href="' . esc_url( secupress_admin_url( 'secupress_scanners', 'users-login' ) ) . '#move-login_rules">' . __( 'the dedicated section', 'secupress' ) . '</a>',
+				'<code>.htaccess</code>'
+			);
+			add_settings_error( 'general', 'apache_manual_edit', $message, 'error' );
 		}
 		return;
 	}
 
 	// IIS7
-	if ( ! secupress_move_login_write_iis7_rules( secupress_move_login_get_rules() ) ) {
-		// File is not writable.
-		$link     = '<a href="' . esc_url( secupress_admin_url( 'secupress_scanners', 'users-login' ) ) . '#move-login_rules">' . __( 'the dedicated section', 'secupress' ) . '</a>';
-		$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
-		/* translators: 1 is a link "the dedicated section", 2 is a file name. */
-		$message .= sprintf( __( 'It seems your %2$s file is not writable. You have to edit the file manually. Please see the rewrite rules provided %1$s and copy/paste it into the %2$s file.', 'secupress' ), $link, '<code>web.config</code>' );
-		add_settings_error( 'secupress_users-login_settings', 'iis7_manual_edit', $message, 'error' );
+	if ( $is_iis7 ) {
+		if ( ! secupress_move_login_write_iis7_rules( secupress_move_login_get_rules() ) ) {
+			// File is not writable.
+			$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
+			$message .= sprintf(
+				/* translators: 1 is a link "the dedicated section", 2 is a file name. */
+				__( 'It seems your %2$s file is not writable. You have to edit the file manually. Please see the rewrite rules provided %1$s and copy/paste it into the %2$s file.', 'secupress' ),
+				'<a href="' . esc_url( secupress_admin_url( 'secupress_scanners', 'users-login' ) ) . '#move-login_rules">' . __( 'the dedicated section', 'secupress' ) . '</a>',
+				'<code>web.config</code>'
+			);
+			add_settings_error( 'general', 'iis7_manual_edit', $message, 'error' );
+		}
+		return;
 	}
-}
 
-
-/**
- * Remove rewrite rules from the `.htaccess`/`web.config` file.
- * An error notice is displayed on nginx servers or if the file is not writable.
- *
- * @since 1.0
- */
-function secupress_move_login_remove_rules() {
-	global $is_apache, $is_nginx, $is_iis7;
-
-	// Nginx
+	// Nginx: we can't edit the file.
 	if ( $is_nginx ) {
 		$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
 		$message .= sprintf(
-			/* translators: 1 and 2 are small parts of code, 3 is a file name. */
-			__( 'It seems your server uses a <i>Nginx</i> system. You have to edit the configuration file manually. Please remove the rewrite rules between %1$s and %2$s from the %3$s file.', 'secupress' ),
-			'<code># BEGIN SecuPress move_login</code>',
-			'<code># END SecuPress</code>',
+			/* translators: 1 is a link "the dedicated section", 2 is a file name. */
+			__( 'It seems your server uses a <i>Nginx</i> system. You have to edit the configuration file manually. Please see the rewrite rules provided %1$s and copy/paste it into the %2$s file.', 'secupress' ),
+			'<a href="' . esc_url( secupress_admin_url( 'secupress_scanners', 'users-login' ) ) . '#move-login_rules">' . __( 'the dedicated section', 'secupress' ) . '</a>',
 			'<code>nginx.conf</code>'
 		);
-		add_settings_error( 'secupress_users-login_settings', 'nginx_manual_edit', $message, 'error' );
-		return;
-	}
-
-	// Apache
-	if ( $is_apache ) {
-		// Remove the rules from the file.
-		if ( ! secupress_move_login_write_apache_rules() ) {
-			$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
-			$message .= sprintf(
-				/* translators: 1 and 2 are small parts of code, 3 is a file name. */
-				__( 'It seems your %2$s file is not writable. You have to edit the file manually. Please remove the rewrite rules between %1$s and %2$s from the %3$s file.', 'secupress' ),
-				'<code># BEGIN SecuPress move_login</code>',
-				'<code># END SecuPress</code>',
-				'<code>.htaccess</code>'
-			);
-			add_settings_error( 'secupress_users-login_settings', 'apache_manual_edit', $message, 'error' );
-		}
-		return;
-	}
-
-	// IIS7
-	// Remove the rules from the file.
-	if ( ! secupress_move_login_write_iis7_rules() ) {
-		$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
-		$message .= sprintf(
-			/* translators: 1 is a small part of code, 2 is a file name. */
-			__( 'It seems your %2$s file is not writable. You have to edit the file manually. Please remove the rewrite rules with %1$s from the %2$s file.', 'secupress' ),
-			'<code>SecuPress move_login</code>',
-			'<code>web.config</code>'
-		);
-		add_settings_error( 'secupress_users-login_settings', 'iis7_manual_edit', $message, 'error' );
+		add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
 	}
 }
 
@@ -267,23 +235,6 @@ function secupress_move_login_get_rules() {
 	}
 
 	return $rules;
-}
-
-
-/**
- * Tell if a file located in the home folder is writable.
- * If the file does not exist, tell if the home folder is writable.
- *
- * @since 1.0
- *
- * @param (string) $file File name.
- *
- * @return (bool)
- */
-function secupress_move_login_file_is_writable( $file ) {
-	$home_path = secupress_get_home_path();
-
-	return wp_is_writable( $home_path . $file ) || ( ! file_exists( $home_path . $file ) && wp_is_writable( $home_path ) );
 }
 
 
@@ -333,7 +284,7 @@ function secupress_move_login_get_apache_rules( $rules = array() ) {
  */
 function secupress_move_login_write_apache_rules( $rules = array() ) {
 
-	if ( ! secupress_move_login_file_is_writable( '.htaccess' ) ) {
+	if ( ! secupress_root_file_is_writable( '.htaccess' ) ) {
 		return false;
 	}
 
@@ -362,13 +313,13 @@ function secupress_move_login_get_iis7_rules( $rules = array() ) {
 	if ( $rules ) {
 		$rule_i = 1;
 		$marker = 'move_login';
-		$space  = str_repeat( ' ', 16 );
+		$space  = str_repeat( ' ', 8 );
 		$bases  = secupress_get_rewrite_bases();
 
 		foreach ( $rules as $slug => $rule ) {
 			$out[] = $space . '<rule name="SecuPress ' . $marker . ' Rule ' . $rule_i . '" stopProcessing="true">' . "\n"
-			       . $space . '    <match url="^' . $bases['site_from'] . $slug . '/?$" ignoreCase="false" />' . "\n"
-			       . $space . '    <action type="Redirect" url="' . $bases['site_to'] . $rule . '" redirectType="Permanent" />' . "\n"
+			       . $space . '  <match url="^' . $bases['site_from'] . $slug . '/?$" ignoreCase="false" />' . "\n"
+			       . $space . '  <action type="Redirect" url="' . $bases['site_to'] . $rule . '" redirectType="Permanent" />' . "\n"
 			       . $space . "</rule>\n";
 			$rule_i++;
 		}
@@ -389,7 +340,7 @@ function secupress_move_login_get_iis7_rules( $rules = array() ) {
  */
 function secupress_move_login_write_iis7_rules( $rules = array() ) {
 
-	if ( ! secupress_move_login_file_is_writable( 'web.config' ) ) {
+	if ( ! secupress_root_file_is_writable( 'web.config' ) ) {
 		return false;
 	}
 

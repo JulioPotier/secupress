@@ -31,14 +31,14 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements iSecuPress
 			$config_file = '.htaccess';
 		} elseif ( $is_iis7 ) {
 			$config_file = 'web.config';
-		} else {
+		} elseif ( ! $is_nginx ) {
 			self::$fixable = false;
 		}
 
-		if ( self::$fixable ) {
-			self::$more_fix = sprintf( __( 'This will add rules in your %s file to avoid attackers to add <code>.html</code>/<code>.htm</code> files to be loaded before the <code>.php</code> one.', 'secupress' ), '<code>' . $config_file . '</code>' );
-		} elseif ( $is_nginx ) {
-			self::$more_fix = static::get_messages( 300 );
+		if ( $is_nginx ) {
+			self::$more_fix = sprintf( __( 'Since your %s file cannot be edited automatically, this will give you the rules to add into it manually, to avoid attackers to load <code>.html</code>/<code>.htm</code> files before the <code>.php</code> one.', 'secupress' ), '<code>nginx.conf</code>' );
+		} elseif ( self::$fixable ) {
+			self::$more_fix = sprintf( __( 'This will add rules in your %s file to avoid attackers to load <code>.html</code>/<code>.htm</code> files before the <code>.php</code> one.', 'secupress' ), "<code>$config_file</code>" );
 		} else {
 			self::$more_fix = static::get_messages( 301 );
 		}
@@ -46,15 +46,6 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements iSecuPress
 
 
 	public static function get_messages( $message_id = null ) {
-		global $is_nginx;
-		$nginx_rules = '';
-
-		if ( $is_nginx ) {
-			$marker      = 'DirectoryIndex';
-			$nginx_rules = 'index index.php;';
-			$nginx_rules = "server {\n\t# BEGIN SecuPress $marker\n\t$nginx_rules\n\t# END SecuPress\n}";
-		}
-
 		$messages = array(
 			// good
 			0   => sprintf( __( '%s is the first file loaded, perfect.', 'secupress' ), '<code>index.php</code>' ),
@@ -62,13 +53,15 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements iSecuPress
 			// warning
 			100 => __( 'Unable to determine status of the directory index.', 'secupress' ),
 			// bad
-			200 => __( 'Your website should load %1$s first, actually it loads %2$s first.', 'secupress' ),
+			200 => sprintf( __( 'Your website should load %1$s first, actually it loads %2$s first.', 'secupress' ), '<code>index.php</code>', '%s' ),
 			// cantfix
-			/* translators: 1 is a block name, 2 is a file name, 3 is some code */
-			300 => sprintf( __( 'Your server runs a nginx system, the directory index cannot be fixed automatically but you can do it yourself by adding the following code inside the %1$s block of your %2$s file: %3$s.', 'secupress' ), '"server"', '<code>nginx.conf</code>', "<pre>$nginx_rules</pre>" ),
+			/* translators: 1 is a file name, 2 is some code */
+			300 => sprintf( __( 'Your server runs a nginx system, the directory index cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
 			301 => __( 'Your server runs a non recognized system. The directory index cannot be fixed automatically.', 'secupress' ),
-			/* translators: 1 si a file name, 2 is some code */
+			/* translators: 1 is a file name, 2 is some code */
 			302 => __( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ),
+			/* translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
+			303 => __( 'Your %1$s file is not writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -80,30 +73,19 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements iSecuPress
 
 
 	public function scan() {
-		global $is_nginx;
-
 		$response = wp_remote_get( SECUPRESS_PLUGIN_URL . 'inc/DirectoryIndex', array( 'redirection' => 1 ) );
 
-		if ( ! is_wp_error( $response ) ) {
+		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 
-			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
-				$response_body = wp_remote_retrieve_body( $response );
-				if ( 'index.php' == $response_body ) {
-					// good
-					$this->add_message( 0 );
-				} else {
-					// bad
-					$this->add_message( 200, array( '<code>index.php</code>', '<code>' . esc_html( $response_body ) . '</code>' ) );
+			$response_body = wp_remote_retrieve_body( $response );
 
-					if ( $is_nginx ) {
-						$this->add_pre_fix_message( 300 );
-					} elseif ( ! self::$fixable ) {
-						$this->add_pre_fix_message( 301 );
-					}
+			if ( 'index.php' !== $response_body ) {
+				// bad
+				$this->add_message( 200, array( '<code>' . esc_html( $response_body ) . '</code>' ) );
+
+				if ( ! self::$fixable ) {
+					$this->add_pre_fix_message( 301 );
 				}
-			} else {
-				// warning
-				$this->add_message( 100 );
 			}
 
 		} else {
@@ -111,54 +93,86 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements iSecuPress
 			$this->add_message( 100 );
 		}
 
+		// good
+		$this->maybe_set_status( 0 );
+
 		return parent::scan();
 	}
 
 
 	public function fix() {
-		global $is_apache, $is_iis7;
+		global $is_apache, $is_nginx, $is_iis7;
 
 		if ( $is_apache ) {
-			$this->fix_apache();
+			$this->_fix_apache();
 		} elseif ( $is_iis7 ) {
-			$this->fix_iis7();
+			$this->_fix_iis7();
+		} elseif ( $is_nginx ) {
+			$this->_fix_nginx();
 		}
+
+		// good
+		$this->maybe_set_fix_status( 0 );
 
 		return parent::fix();
 	}
 
 
-	protected function fix_apache() {
-		$marker = 'DirectoryIndex';
-		$rules  = "<ifModule mod_dir.c>\n\tDirectoryIndex index.php index.html index.htm index.cgi index.pl index.xhtml\n</ifModule>";
+	protected function _fix_apache() {
+		global $wp_settings_errors;
 
-		if ( secupress_write_htaccess( $marker, $rules ) ) {
-			// good
-			$this->add_fix_message( 1, array( '<code>.htaccess</code>' ) );
-		} else {
+		secupress_activate_submodule( 'file-system', 'directory-index' );
+
+		// Got error?
+		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
+
+		if ( $last_error && 'general' === $last_error['setting'] && 'apache_manual_edit' === $last_error['code'] ) {
 			// cantfix
-			$this->add_fix_message( 302, array( '<code>.htaccess</code>', "<pre># BEGIN SecuPress $marker\n$rules\n# END SecuPress</pre>" ) );
+			$this->add_fix_message( 302, array( '<code>.htaccess</code>', static::_get_rules_from_error( $last_error ) ) );
+			array_pop( $wp_settings_errors );
+			return;
 		}
+
+		// good
+		$this->add_fix_message( 1, array( '<code>.htaccess</code>' ) );
 	}
 
 
-	protected function fix_iis7() {
-		$marker = 'DirectoryIndex';
-		$spaces = str_repeat( ' ', 10 );
+	protected function _fix_iis7() {
+		global $wp_settings_errors;
 
-		$node   = "<defaultDocument name=\"SecuPress $marker\">\n";
-			$node  .= "$spaces  <files>\n";
-			$node  .= "$spaces    <remove value=\"index.php\" />\n";
-			$node  .= "$spaces    <add value=\"index.php\" />\n";
-			$node  .= "$spaces  </files>\n";
-		$node  .= "$spaces</defaultDocument>";
+		secupress_activate_submodule( 'file-system', 'directory-index' );
 
-		if ( secupress_insert_iis7_nodes( $marker, array( 'nodes_string' => $node, 'node_types' => 'defaultDocument' ) ) ) {
-			// good
-			$this->add_fix_message( 1, array( '<code>web.config</code>' ) );
-		} else {
+		// Got error?
+		$last_error = end( $wp_settings_errors );
+
+		if ( $last_error && 'general' === $last_error['setting'] && 'iis7_manual_edit' === $last_error['code'] ) {
 			// cantfix
-			$this->add_fix_message( 302, array( '<code>web.config</code>', "<pre>$node</pre>" ) );
+			$this->add_fix_message( 303, array( '<code>web.config</code>', '/configuration/system.webServer', static::_get_rules_from_error( $last_error ) ) );
+			array_pop( $wp_settings_errors );
+			return;
 		}
+
+		// good
+		$this->add_fix_message( 1, array( '<code>web.config</code>' ) );
+	}
+
+
+	protected function _fix_nginx() {
+		global $wp_settings_errors;
+
+		secupress_activate_submodule( 'file-system', 'directory-index' );
+
+		// Get the error.
+		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
+		$rules      = '<code>Error</code>';
+
+		if ( $last_error && 'general' === $last_error['setting'] && 'nginx_manual_edit' === $last_error['code'] ) {
+			$rules = static::_get_rules_from_error( $last_error );
+			array_pop( $wp_settings_errors );
+		}
+
+		// cantfix
+		$this->add_fix_message( 300, array( $rules ) );
 	}
 }
