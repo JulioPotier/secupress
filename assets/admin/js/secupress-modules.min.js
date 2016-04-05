@@ -425,7 +425,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	}
 
 	function secupressUpdateBackupVisibility() {
-		if ( 0 === $( ".db-backup-row" ).length ) {
+		if ( 0 === $( ".secupress-large-row" ).length ) {
 			$( "#form-delete-db-backups" ).hide();
 			$( "#secupress-no-db-backups" ).show();
 		} else {
