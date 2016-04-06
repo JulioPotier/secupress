@@ -1,7 +1,6 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
-
 $this->set_current_section( 'rollback' );
 $this->add_section( __( 'Rollbacks', 'secupress' ), array( 'with_save_button' => false ) );
 
@@ -24,5 +23,5 @@ $this->add_field( array(
 
 if ( secupress_is_pro() ) {
 	//// doc hook
-	do_action( 'module.pro.rollback' );
+	do_action( 'secupress.module.pro.rollback' );
 }
