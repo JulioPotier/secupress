@@ -441,13 +441,12 @@ function secupress_ban_ip( $time_ban = 5, $ip = null, $die = true ) {
  * @return (bool)
  */
 function secupress_write_in_htaccess_on_ban() {
-	$write = false;
 	/**
 	 * @since 1.0
 	 *
 	 * @param (bool) $write False by default.
 	 */
-	return apply_filters( 'secupress.ban.write_in_htaccess', $write );
+	return apply_filters( 'secupress.ban.write_in_htaccess', false );
 }
 
 
