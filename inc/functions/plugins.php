@@ -29,6 +29,7 @@ function secupress_feature_is_pro( $feature ) {
 		// Field names.
 		'login-protection_only-one-connexion' => 1,
 		'login-protection_sessions_control'   => 1,
+		'double-auth_type'                    => 1,
 		'password-policy_password_expiration' => 1,
 		'password-policy_strong_passwords'    => 1,
 		'plugins_activation'                  => 1,
@@ -51,7 +52,6 @@ function secupress_feature_is_pro( $feature ) {
 		'schedules_filemon'                   => 1,
 		'backup-files_backup-file'            => 1,
 		// Field values.
-		'double-auth_type|passwordless'       => 1,
 		'alerts_type|sms'                     => 1,
 		'alerts_type|push'                    => 1,
 		'alerts_type|rss'                     => 1,

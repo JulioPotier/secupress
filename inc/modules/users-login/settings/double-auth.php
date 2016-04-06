@@ -29,23 +29,16 @@ $field_name = $this->get_field_name( 'type' );
 
 $this->add_field( array(
 	'title'             => __( 'Use a Double Authentication', 'secupress' ),
-	'description'       => sprintf( __( 'We recommend %s.<br/>Still hard to decide?<br/>Check this <a href="#">quick tutorial video</a>.', 'secupress' ), '<label for="' . $field_name . '_passwordless"><strong>PassWordLess</strong></label>' ),//// href
 	'name'              => $field_name,
 	'plugin_activation' => true,
-	'type'              => 'radios',
-	'options'           => $values,
+	'type'              => 'checkbox',
+	'label'             => __( 'Yes, use the <strong>PasswordLess</strong> method', 'secupress' ),
 	'value'             => $is_plugin_active,
 	'label_screen'      => __( 'Choose your Double Authentication method', 'secupress' ),
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'Users will just have to configure a 2 factor authentication now.', 'secupress' ),
-			'depends'     => $field_name . '_mobileauth',
-		),
-		array(
-			'type'        => 'description',
-			'description' => __( 'Users will have to click on a link received by email to log in now.', 'secupress' ),
-			'depends'     => $field_name . '_emaillink',
+			'description' => __( 'Users will just have to enter their e-mail when log in, then click on a click in this mail.', 'secupress' ),
 		),
 	),
 ) );
