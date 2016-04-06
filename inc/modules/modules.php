@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @return (array) All informations related to the modules.
  */
 function secupress_get_modules() {
-	return array(
+	$modules = array(
 		'users-login'     => array(
 			'title'       => esc_html__( 'Users & Login', 'secupress' ),
 			'dashicon'    => 'admin-users',
@@ -42,14 +42,21 @@ function secupress_get_modules() {
 			),
 		),
 		'file-system'     => array(
-			'title'       => esc_html__( 'File System', 'secupress' ),
-			'dashicon'    => 'portfolio',
+			'title'       => esc_html__( 'Malware Scan', 'secupress' ),
+			'dashicon'    => 'search',
 			'with_form'   => false,
 			'description' => array(
 				__( 'Check the file permissions <em>(chmod)</em> at a glance and run a file monitoring on your installation', 'secupress' ),
 				__( 'Also, an antivus scanner can be performed on your installation, this may take time but it\'s more efficient.', 'secupress' ),
 			),
 			'with_reset_box' => false,
+		),
+		'firewall'     => array(
+			'title'       => esc_html__( 'Firewall', 'secupress' ),
+			'dashicon'    => 'shield',
+			'description' => array(
+				__( 'Malicious requests are badly common. This will checks all incoming requests and quietly blocks all of these containing bad stuff.', 'secupress' ),
+			),
 		),
 		'backups'         => array(
 			'title'       => esc_html__( 'Backups', 'secupress' ),
@@ -71,13 +78,6 @@ function secupress_get_modules() {
 				__( 'Also by default, we block bad IPs, author name, email and website url known as spammer.', 'secupress' ),
 			),
 		),
-		'firewall'     => array(
-			'title'       => esc_html__( 'Firewall', 'secupress' ),
-			'dashicon'    => 'shield',
-			'description' => array(
-				__( 'Malicious requests are badly common. This will checks all incoming requests and quietly blocks all of these containing bad stuff.', 'secupress' ),
-			),
-		),
 		'logs'            => array(
 			'title'       => esc_html__( 'Logs', 'secupress' ),
 			'dashicon'    => 'list-view',
@@ -93,14 +93,6 @@ function secupress_get_modules() {
 				__( 'Each time we that an action is a possible attack vector, we add it here, so you can see what happened and when we blocked it or not.', 'secupress' ),
 			),
 		),
-		'tools'           => array(
-			'title'       => esc_html__( 'Tools', 'secupress' ),
-			'dashicon'    => 'admin-tools',
-			'description' => array(
-				__( 'The page contains our tools designed to help you with the plugin. Export and import settings, set your API key, rollback a version or even monitor your website can be done from here.', 'secupress' ),
-			),
-			'with_reset_box' => false,
-		),
 		'schedules'       => array(
 			'title'       => esc_html__( 'Schedules', 'secupress' ),
 			'dashicon'    => 'calendar-alt',
@@ -109,5 +101,24 @@ function secupress_get_modules() {
 			),
 			'with_reset_box' => false,
 		),
+		'services'        => array(
+			'title'       => esc_html__( 'Services', 'secupress' ),
+			'dashicon'    => 'heart',
+			'description' => array(
+				__( 'The page contains our services designed to help you with the plugin.', 'secupress' ),
+			),
+			'with_reset_box' => false,
+		),
 	);
+	if ( ! secupress_is_pro() ) {
+		$modules['pro'] = array(
+			'title'       => esc_html__( 'Get PRO!', 'secupress' ),
+			'dashicon'    => 'star-filled',
+			'description' => array(
+				__( 'Discover all the features only available in the PRO version.', 'secupress' ),
+			),
+			'with_reset_box' => false,
+		);
+	}
+	return $modules;
 }
