@@ -869,7 +869,7 @@ jQuery( document ).ready( function( $ ) {
 	} );
 
 	// Perform a scan on click.
-	$( "body" ).on( "click scan.secupress bulkscan.secupress", ".button-secupress-scan, .secupress-scanit", function( e ) {
+	$( "body" ).on( "click scan.secupress bulkscan.secupress", ".secupress-scanit", function( e ) {
 		var $this = $( this ),
 			href, test, $row, isBulk;
 
@@ -891,11 +891,17 @@ jQuery( document ).ready( function( $ ) {
 
 
 	// Perform a fix on click.
-	$( "body" ).on( "click fix.secupress bulkfix.secupress", ".secupress-fixit", function( e ) {
+	$( "body" ).on( "click fix.secupress bulkfix.secupress", ".button-secupress-fix, .secupress-fixit", function( e ) {
 		var $this = $( this ),
 			href, test, $row, isBulk;
 
 		e.preventDefault();
+
+		if ( $this.hasClass( "button-secupress-fix" ) ) {
+			// It's the "One Click Fix" button.
+			$( ".secupress-fixit" ).trigger( "bulkfix.secupress" );
+			return;
+		}
 
 		href   = $this.attr( "href" );
 		test   = secupressGetTestFromUrl( href );

@@ -497,9 +497,14 @@ function secupress_main_scan() {
 		}
 	}
 	?>
-	<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=all' ), 'secupress_scanner_all' ); ?>" class="button button-primary button-large button-secupress-scan">
+	<button class="button button-primary button-secupress-scan" type="button">
 		<?php _e( 'One Click Scan', 'secupress' ); ?>
-	</a>
+	</button>
+
+	<button class="button button-primary button-secupress-fix" type="button">
+		<?php _e( 'One Click Fix', 'secupress' ); ?>
+	</button>
+
 
 	<div class="square-filter priorities hide-if-no-js">
 		<button type="button" class="active" data-type="all"><?php _ex( 'All Priorities', 'priority', 'secupress' ); ?></button><?php

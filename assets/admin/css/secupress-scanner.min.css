@@ -13,7 +13,7 @@
 	color: #555;
 }
 
-#wpbody-content .button-secupress-scan {
+#wpbody-content .button-secupress-scan, #wpbody-content .button-secupress-fix {
 	max-width: 435px;
 	height: auto;
 	padding: .25em .5em;
