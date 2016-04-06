@@ -291,30 +291,6 @@ function secupress_move_login_add_packed_plugin( $plugins ) {
 
 
 /*------------------------------------------------------------------------------------------------*/
-/* INSTALL/RESET ================================================================================ */
-/*------------------------------------------------------------------------------------------------*/
-
-/*
- * Create default option on install.
- *
- * @since 1.0
- *
- * @param (string) $module The module(s) that will be reset to default. `all` means "all modules".
- */
-
-add_action( 'wp_secupress_first_install', '__secupress_install_users_login_module' );
-
-function __secupress_install_users_login_module( $module ) {
-	if ( 'all' === $module || 'users-login' === $module ) {
-		$values = array(
-			//// pas fini
-		);
-		secupress_update_module_options( $values, 'users-login' );
-	}
-}
-
-
-/*------------------------------------------------------------------------------------------------*/
 /* DEFAULT VALUES =============================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 

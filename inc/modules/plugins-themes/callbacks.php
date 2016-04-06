@@ -107,3 +107,24 @@ function __secupress_uploads_settings_callback( $modulenow, $activate ) {
 		secupress_manage_submodule( $modulenow, 'uploads', ! empty( $activate['uploads_activate'] ) );
 	}
 }
+
+
+/*------------------------------------------------------------------------------------------------*/
+/* INSTALL/RESET ================================================================================ */
+/*------------------------------------------------------------------------------------------------*/
+
+/**
+ * On SecuPress first install, auto-activate "Detect Bad Plugins/Themes" submodules.
+ *
+ * @since 1.0
+ *
+ * @param (string) $module The module(s) that will be reset to default. `all` means "all modules".
+ */
+add_action( 'wp_secupress_first_install', 'secupress_plugins_themes_module_activation' );
+
+function secupress_plugins_themes_module_activation( $module ) {
+	if ( 'all' === $module ) {
+		secupress_activate_submodule( 'plugins-themes', 'detect-bad-plugins' );
+		secupress_activate_submodule( 'plugins-themes', 'detect-bad-themes' );
+	}
+}

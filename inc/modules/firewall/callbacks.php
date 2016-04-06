@@ -170,11 +170,16 @@ function __secupress_geoip_settings_callback( $modulenow, &$settings, $activate 
 
 
 /*------------------------------------------------------------------------------------------------*/
-/* INSTALL ====================================================================================== */
+/* INSTALL/RESET ================================================================================ */
 /*------------------------------------------------------------------------------------------------*/
 
-// Create default option on install.
-
+/*
+ * Create default option on install and reset.
+ *
+ * @since 1.0
+ *
+ * @param (string) $module The module(s) that will be reset to default. `all` means "all modules".
+ */
 add_action( 'wp_secupress_first_install', '__secupress_install_firewall_module' );
 
 function __secupress_install_firewall_module( $module ) {
