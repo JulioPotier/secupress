@@ -17,6 +17,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 function __secupress_alerts_settings_callback( $settings ) {
 	$modulenow = 'alerts';
 	$settings  = $settings ? $settings : array();
+	$activate  = secupress_get_submodule_activations( $modulenow );
 
 	if ( isset( $settings['sanitized'] ) ) {
 		return $settings;
@@ -67,9 +68,38 @@ function __secupress_alerts_settings_callback( $settings ) {
 	// Frequency
 	$settings['alerts_frequency'] = secupress_minmax_range( $settings['alerts_frequency'], 5, 60 );
 
+	// Uptime monitoring
+	__secupress_uptime_monitoring_settings_callback( $modulenow, $settings, $activate );
+
 	return $settings;
 }
 
+/**
+ * Uptime Monitor Callback.
+ *
+ * @since 1.0
+ *
+ * @param (string)     $modulenow Current module.
+ * @param (array)      $settings  The module settings, passed by reference.
+ * @param (bool|array) $activate  Used to (de)activate plugins.
+ */
+function __secupress_uptime_monitoring_settings_callback( $modulenow, &$settings, $activate ) {
+	// (De)Activation.
+	if ( false !== $activate ) {
+		secupress_manage_submodule( $modulenow, 'uptime-monitoring', ! empty( $activate['monitoring_activated'] ) );
+	}
+
+	// Settings.
+	if ( empty( $settings['uptime-monitoring-token'] ) ) {
+		$old_settings = get_site_option( "secupress_{$modulenow}_settings" );
+
+		if ( ! empty( $old_settings['uptime-monitoring-token'] ) ) {
+			$settings['uptime-monitoring-token'] = $old_settings['uptime-monitoring-token'];
+		}
+	} else {
+		$settings['uptime-monitoring-token'] = sanitize_text_field( $settings['uptime-monitoring-token'] );
+	}
+}
 
 /*------------------------------------------------------------------------------------------------*/
 /* TOOLS ======================================================================================== */
