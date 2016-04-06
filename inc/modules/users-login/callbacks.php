@@ -291,6 +291,41 @@ function secupress_move_login_add_packed_plugin( $plugins ) {
 
 
 /*------------------------------------------------------------------------------------------------*/
+/* INSTALL/RESET ================================================================================ */
+/*------------------------------------------------------------------------------------------------*/
+
+/*
+ * Create default option on install and reset.
+ *
+ * @since 1.0
+ *
+ * @param (string) $module The module(s) that will be reset to default. `all` means "all modules".
+ */
+add_action( 'wp_secupress_first_install', '__secupress_install_users_login_module' );
+
+function __secupress_install_users_login_module( $module ) {
+	// First install.
+	if ( 'all' === $module ) {
+		// Activate "Ask for old password" submodule.
+		secupress_activate_submodule( 'users-login', 'ask-old-password' );
+	}
+
+	// First install or reset.
+	if ( 'all' === $module && 'users-login' === $module ) {
+		// Set default non-login time slot.
+		update_site_option( 'secupress_users-login_settings', array(
+			'login-protection_nonlogintimeslot' => array(
+				'from_hour'   => 19,
+				'from_minute' => 0,
+				'to_hour'     => 8,
+				'to_minute'   => 0,
+			),
+		) );
+	}
+}
+
+
+/*------------------------------------------------------------------------------------------------*/
 /* DEFAULT VALUES =============================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
