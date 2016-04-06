@@ -17,6 +17,9 @@ function secupress_activation() {
 	define( 'SECUPRESS_PLUGIN_NAME', 'SecuPress' );
 	define( 'SECUPRESS_PLUGIN_SLUG', sanitize_key( SECUPRESS_PLUGIN_NAME ) );
 
+	// Make sure our texts are translated.
+	secupress_load_plugin_textdomain_translations();
+
 	/**
 	 * Fires on SecuPress activation.
 	 *
@@ -248,6 +251,9 @@ function secupress_deactivation() {
 		delete_site_option( 'secupress_default_role' );
 	}
 
+	// Make sure our texts are translated.
+	secupress_load_plugin_textdomain_translations();
+
 	/**
 	 * Fires on SecuPress deactivation.
 	 *
@@ -280,7 +286,7 @@ function secupress_maybe_remove_rules_on_deactivation() {
 				'<code># END SecuPress</code>',
 				'<code>nginx.conf</code>'
 			);
-			wp_die( $message );
+			secupress_create_deactivation_notice_muplugin( 'nginx_remove_rules', $message );
 		}
 		return;
 	}
@@ -306,7 +312,7 @@ function secupress_maybe_remove_rules_on_deactivation() {
 				'<code># END SecuPress</code>',
 				'<code>.htaccess</code>'
 			);
-			wp_die( $message );
+			secupress_create_deactivation_notice_muplugin( 'apache_remove_rules', $message );
 		}
 
 		// Get the whole content of the file.
@@ -347,7 +353,7 @@ function secupress_maybe_remove_rules_on_deactivation() {
 			'<code>SecuPress</code>',
 			'<code>web.config</code>'
 		);
-		wp_die( $message );
+		secupress_create_deactivation_notice_muplugin( 'iis7_remove_rules', $message );
 	}
 
 	// Remove old content.
@@ -364,3 +370,73 @@ function secupress_maybe_remove_rules_on_deactivation() {
 	$doc->formatOutput = true;
 	saveDomDocument( $doc, $file_path );
 }
+
+
+/**
+ * Create a MU plugin that will display an admin notice. When the user click the button, the MU plugin is destroyed.
+ * This is used to display a message after SecuPress is deactivated.
+ *
+ * @since 1.0
+ *
+ * @param (string) $plugin_id A unique identifier for the MU plugin.
+ * @param (string) $message   The message to display.
+ */
+function secupress_create_deactivation_notice_muplugin( $plugin_id, $message ) {
+	global $wp_filesystem;
+	static $authenticated;
+
+	if ( ! function_exists( 'wp_validate_auth_cookie' ) ) {
+		return;
+	}
+
+	if ( ! isset( $authenticated ) ) {
+		$authenticated = wp_validate_auth_cookie();
+	}
+
+	$filename = WPMU_PLUGIN_DIR . "/_secupress_deactivation-notice-$plugin_id.php";
+
+	if ( ! $authenticated || file_exists( $filename ) ) {
+		return;
+	}
+
+	// Filesystem.
+	if ( ! $wp_filesystem ) {
+		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php' );
+		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php' );
+
+		$wp_filesystem = new WP_Filesystem_Direct( new StdClass() );
+	}
+
+	if ( ! defined( 'FS_CHMOD_DIR' ) ) {
+		define( 'FS_CHMOD_DIR', ( fileperms( ABSPATH ) & 0777 | 0755 ) );
+	}
+	if ( ! defined( 'FS_CHMOD_FILE' ) ) {
+		define( 'FS_CHMOD_FILE', ( fileperms( ABSPATH . 'index.php' ) & 0777 | 0644 ) );
+	}
+
+	// Plugin contents.
+	$contents = $wp_filesystem->get_contents( SECUPRESS_INC_PATH . 'data/deactivation-mu-plugin.data' );
+
+	// Add new contents.
+	$args = array(
+		'PLUGIN_ID'   => $plugin_id,
+		'MESSAGE'     => addcslashes( $message, "'" ),
+		'USER_ID'     => get_current_user_id(),
+		'BUTTON_TEXT' => __( 'OK, got it!', 'secupress' ),
+	);
+
+	foreach ( $args as $tag => $value ) {
+		$contents = str_replace( "##$tag##", $value, $contents );
+	}
+
+	if ( ! file_exists( WPMU_PLUGIN_DIR ) ) {
+		$wp_filesystem->mkdir( WPMU_PLUGIN_DIR );
+	}
+
+	if ( ! file_exists( WPMU_PLUGIN_DIR ) ) {
+		return;
+	}
+
+	$wp_filesystem->put_contents( $filename, $contents );
+}
+
