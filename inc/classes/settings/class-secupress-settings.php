@@ -592,6 +592,11 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				echo $value;
 				break;
 
+			case 'submit' :
+
+				submit_button( $args['label'], 'button-secondary', $args['name'], false );
+				break;
+
 			default :
 				if ( method_exists( $this, $args['type'] ) ) {
 					call_user_func( array( $this, $args['type'] ), $args );
