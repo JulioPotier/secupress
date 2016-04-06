@@ -1,6 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
-
+defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
 $this->set_current_section( 'import_export' );
 $this->add_section( __( 'Settings Manager', 'secupress' ), array( 'with_save_button' => false ) );
