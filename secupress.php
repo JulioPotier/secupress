@@ -72,7 +72,7 @@ if ( ! defined( 'SECUPRESS_LASTVERSION' ) ) {
 /**
  * All the stuff for the plugin activation and deactivation.
  */
-require( SECUPRESS_INC_PATH . 'activation.php' );
+require( SECUPRESS_ADMIN_PATH . 'activation.php' );
 
 
 /**
