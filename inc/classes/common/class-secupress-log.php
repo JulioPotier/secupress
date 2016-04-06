@@ -226,7 +226,7 @@ class SecuPress_Log {
 			}
 
 			if ( $referer ) {
-				$suffix = '<a class="user-profile-link" href="' . esc_url( admin_url( 'user-edit.php?user_id=' . $this->user_id . '&wp_http_referer=' . urlencode( $referer ) ) ) . '">' . $suffix . '</a>';
+				$suffix = '<a class="user-profile-link" href="' . esc_url( admin_url( 'user-edit.php?user_id=' . $this->user_id . '&wp_http_referer=' . urlencode( esc_url_raw( $referer ) ) ) ) . '">' . $suffix . '</a>';
 			}
 
 			if ( $suffix ) {

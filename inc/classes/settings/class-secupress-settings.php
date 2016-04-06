@@ -775,7 +775,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		$offset             = get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;
 		$in_ten_years       = time() + YEAR_IN_SECONDS * 10;
 		$page_url           = secupress_admin_url( 'modules', 'logs' );
-		$referer_arg        = '&_wp_http_referer=' . urlencode( $page_url );
+		$referer_arg        = '&_wp_http_referer=' . urlencode( esc_url_raw( $page_url ) );
 		$is_search          = false;
 		$search_val         = '';
 		$empty_list_message = __( 'No Banned IPs yet.', 'secupress' );

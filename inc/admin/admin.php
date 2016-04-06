@@ -493,7 +493,7 @@ function __secupress_ban_ip_ajax_post_cb() {
 	/* This hook is documented in /inc/functions/admin.php */
 	do_action( 'secupress.ban.ip_banned', $ip, $ban_ips );
 
-	$referer_arg = '&_wp_http_referer=' . urlencode( secupress_admin_url( 'modules', 'logs' ) );
+	$referer_arg = '&_wp_http_referer=' . urlencode( esc_url_raw( secupress_admin_url( 'modules', 'logs' ) ) );
 
 	// Send a response.
 	secupress_admin_send_message_die( array(

@@ -1117,7 +1117,7 @@ function secupress_doubleauth_redirect() {
 		++$step;
 		?>
 		<input type="hidden" name="step" value="<?php echo $step; ?>">
-		<input type="hidden" name="_wp_http_referer" value="<?php echo urlencode( secupress_get_current_url( 'raw' ) ); ?>">
+		<input type="hidden" name="_wp_http_referer" value="<?php echo urlencode( esc_url_raw( secupress_get_current_url( 'raw' ) ) ); ?>">
 		<?php
 		submit_button( $submit_value );
 

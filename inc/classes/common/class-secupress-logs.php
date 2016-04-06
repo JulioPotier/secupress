@@ -270,7 +270,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @return (string)
 	 */
 	public function download_logs_url( $referer ) {
-		$href = urlencode( $referer );
+		$href = urlencode( esc_url_raw( $referer ) );
 		$href = admin_url( 'admin-post.php?action=secupress_download-' . $this->log_type . '-logs&_wp_http_referer=' . $href );
 		return wp_nonce_url( $href, 'secupress-download-' . $this->log_type . '-logs' );
 	}
@@ -286,7 +286,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @return (string)
 	 */
 	public function delete_logs_url( $referer ) {
-		$href = urlencode( $referer );
+		$href = urlencode( esc_url_raw( $referer ) );
 		$href = admin_url( 'admin-post.php?action=secupress_clear-' . $this->log_type . '-logs&_wp_http_referer=' . $href );
 		return wp_nonce_url( $href, 'secupress-clear-' . $this->log_type . '-logs' );
 	}
@@ -304,7 +304,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 */
 	public function delete_logs_by_user_id_url( $id, $referer ) {
 		$id   = (int) $id;
-		$href = urlencode( $referer );
+		$href = urlencode( esc_url_raw( $referer ) );
 		$href = admin_url( 'admin-post.php?action=secupress_delete-' . $this->log_type . '-logs-by-user_id&id=' . $id . '&_wp_http_referer=' . $href );
 		return wp_nonce_url( $href, 'secupress-delete-' . $this->log_type . '-logs-by-user_id' );
 	}
@@ -322,7 +322,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 */
 	public function delete_logs_by_ip_url( $ip, $referer ) {
 		$ip   = urlencode( $ip );
-		$href = urlencode( $referer );
+		$href = urlencode( esc_url_raw( $referer ) );
 		$href = admin_url( 'admin-post.php?action=secupress_delete-' . $this->log_type . '-logs-by-ip&ip=' . $ip . '&_wp_http_referer=' . $href );
 		return wp_nonce_url( $href, 'secupress-delete-' . $this->log_type . '-logs-by-ip' );
 	}
@@ -339,7 +339,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @return (string)
 	 */
 	public function delete_log_url( $post_id, $referer ) {
-		$href = urlencode( $referer );
+		$href = urlencode( esc_url_raw( $referer ) );
 		$href = admin_url( 'admin-post.php?action=secupress_delete-' . $this->log_type . '-log&log=' . $post_id . '&_wp_http_referer=' . $href );
 		return wp_nonce_url( $href, 'secupress-delete-' . $this->log_type . '-log' );
 	}

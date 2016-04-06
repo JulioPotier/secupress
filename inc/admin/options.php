@@ -95,7 +95,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		SECUPRESS_PLUGIN_SLUG . '_page_secupress_logs'     => 1,
 		'toplevel_page_secupress_scanners'                 => 1,
 	);
-	
+
 	if ( ! isset( $pages[ $hook_suffix ] ) ) {
 		return;
 	}
@@ -428,7 +428,7 @@ function __secupress_scanners() {
 				'<hr>' .
 				'<span class="dashicons dashicons-twitter"></span> ' .
 				'<i>' . __( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ) . '</i> ' .
-				'<a class="button button-small" href="https://twitter.com/intent/tweet?via=secupress&amp;url=' . urlencode( 'http://secupress.fr&text=' . __( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ) ) . '">Tweet &raquo;</a>' .
+				'<a class="button button-small" href="https://twitter.com/intent/tweet?via=secupress&amp;url=' . urlencode( esc_url_raw( 'http://secupress.fr&text=' . __( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ) ) ) . '">Tweet &raquo;</a>' .
 			'</div>'
 		),
 	);

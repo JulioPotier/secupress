@@ -227,7 +227,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 		$delete_url            = $this->logs_instance->delete_log_url( $this->current_log_id, $page_url );
 		$delete_by_ip_url      = $this->logs_instance->delete_logs_by_ip_url( $user_raw->user_ip, $page_url );
 		$delete_by_user_id_url = $this->logs_instance->delete_logs_by_user_id_url( $user_raw->user_id, $page_url );
-		$ban_ip_url            = wp_nonce_url( admin_url( 'admin-post.php?action=secupress-ban-ip&ip=' . urlencode( $user_raw->user_ip ) . '&_wp_http_referer=' . urlencode( $paged_page_url ) ), 'secupress-ban-ip' );
+		$ban_ip_url            = wp_nonce_url( admin_url( 'admin-post.php?action=secupress-ban-ip&ip=' . urlencode( $user_raw->user_ip ) . '&_wp_http_referer=' . urlencode( esc_url_raw( $paged_page_url ) ) ), 'secupress-ban-ip' );
 
 		// Add a class to the current Log row.
 		add_filter( 'post_class', array( $this, '_add_current_log_class' ), 10, 3 );
