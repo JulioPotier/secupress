@@ -21,7 +21,6 @@ if ( ! did_action( 'secupress_plugins_loaded' ) ) {
 	require_once( SECUPRESS_MODULES_PATH . 'logs/plugins/inc/php/404-logs/class-secupress-404-logs.php' );
 
 	SecuPress_404_Logs::get_instance();
-
 }
 
 
@@ -37,6 +36,7 @@ if ( ! did_action( 'secupress_plugins_loaded' ) ) {
  * @param (array) $args Some parameters.
  */
 add_action( 'secupress_deactivate_plugin_404-logs', 'secupress_deactivate_plugin_404_logs' );
+add_action( 'secupress_deactivation',               'secupress_deactivate_plugin_404_logs' );
 
 function secupress_deactivate_plugin_404_logs() {
 	if ( class_exists( 'SecuPress_404_Logs' ) ) {

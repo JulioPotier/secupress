@@ -21,7 +21,6 @@ if ( ! did_action( 'secupress_plugins_loaded' ) ) {
 	require_once( SECUPRESS_MODULES_PATH . 'logs/plugins/inc/php/action-logs/class-secupress-action-logs.php' );
 
 	SecuPress_Action_Logs::get_instance();
-
 }
 
 
@@ -37,6 +36,7 @@ if ( ! did_action( 'secupress_plugins_loaded' ) ) {
  * @param (array) $args Some parameters.
  */
 add_action( 'secupress_deactivate_plugin_action-logs', 'secupress_deactivate_plugin_action_logs' );
+add_action( 'secupress_deactivation',                  'secupress_deactivate_plugin_action_logs' );
 
 function secupress_deactivate_plugin_action_logs() {
 	if ( class_exists( 'SecuPress_Action_Logs' ) ) {
