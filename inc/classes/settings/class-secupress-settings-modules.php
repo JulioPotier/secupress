@@ -145,7 +145,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			$class = $this->get_current_module() === $key  ? ' nav-tab-active'    : '';
 			$icon  = isset( $module['dashicon'] )          ?  $module['dashicon'] : 'admin-generic';
 			?>
-			<a href="<?php echo secupress_admin_url( 'modules', $key ); ?>" class="nav-tab<?php echo $class; ?> active_module">
+			<a href="<?php echo secupress_admin_url( 'modules', $key ); ?>" class="nav-tab<?php echo $class; ?> active_module module-<?php echo sanitize_key( $key ); ?>">
 				<span class="dashicons dashicons-<?php echo $icon; ?>" aria-hidden="true"></span> <?php echo $module['title']; ?>
 			</a>
 			<?php
