@@ -42,7 +42,7 @@ $this->add_field( array(
 
 $this->add_field( array(
 	'title'             => __( 'Block Bad Request Methods', 'secupress' ),
-	'description'       => __( 'The 3 known safe request methods are <code>GET</code>, <code>POST</code> and <code>HEAD</code>.', 'secupress' ), //// ?
+	'description'       => __( 'The 3 known safe request methods are <code>GET</code>, <code>POST</code> and <code>HEAD</code>.', 'secupress' ),
 	'label_for'         => $this->get_field_name( 'request-methods-header' ),
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
