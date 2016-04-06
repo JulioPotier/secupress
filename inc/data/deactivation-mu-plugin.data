@@ -39,7 +39,7 @@ function secupress_mup_notice_##PLUGIN_ID##() {
 	$button  = '<a href="' . esc_url( $button ) . '" class="button button-primary" style="float:right;margin-top:-.35em">##BUTTON_TEXT##</a>';
 	?>
 	<div class="updated notice secupress-mup-notice"><p>
-		<?php echo '##MESSAGE##'; ?>
+		##MESSAGE##
 		<?php echo $button; ?>
 	</p></div>
 	<?php
