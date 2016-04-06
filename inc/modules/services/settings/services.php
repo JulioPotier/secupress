@@ -6,11 +6,11 @@ $this->add_section( __( 'Services', 'secupress' ), array( 'with_save_button' => 
 $main_field_name = $this->get_field_name( 'config-pro' );
 
 $this->add_field( array(
-	'title'        => __( 'Profesionnal Configuration', 'secupress' ),
+	'title'        => __( 'Professional Configuration', 'secupress' ),
 	'description'  => __( 'You may need help to configure the plugin perfectly, we might do this for you for $200.', 'secupress' ),
 	'name'         => $this->get_field_name( 'proconfig' ),
 	'field_type'   => 'field_button',
-	'label'        => __( 'Request a Profesionnal Configuration', 'secupress' ),
+	'label'        => __( 'Request a Professional Configuration', 'secupress' ),
 	'url'          => wp_nonce_url( admin_url( 'admin-post.php?action=secupress_get_pro_config' ), 'secupress_get_pro_config' ),
 ) );
 
