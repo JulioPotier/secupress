@@ -344,6 +344,7 @@ class SecuPress_Log {
 			} elseif ( false === $data ) {
 				$this->data[ $key ] = '<em>[false]</em>';
 			} elseif ( '' === $data ) {
+				// If changed, also change it in `SecuPress_Action_Log::_set_option_title()`, `::_set_network_option_title()`, `::_set_option_message()`, and `::_set_network_option_message()`.
 				$this->data[ $key ] = '<em>[' . __( 'empty string', 'secupress' ) . ']</em>';
 			} elseif ( is_scalar( $data ) ) {
 				$count = substr_count( $data, "\n" );

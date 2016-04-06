@@ -73,7 +73,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 
 		// Pre-proccess (maybe).
 		$method_name = str_replace( array( '.', '-', '|' ), '_', $this->target );
-		$method_name = '_pre_process_' . $this->type . '_' . $method_name;
+		$method_name = '_pre_process_' . $this->type . ( $this->subtype ? '_' . $this->subtype : '' ) . '_' . $method_name;
 
 		if ( method_exists( $this, $method_name ) ) {
 			$this->data = (array) call_user_func_array( array( $this, $method_name ), $this->data );
@@ -533,11 +533,13 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 */
 	protected function _set_option_title() {
 		if ( 'active_plugins' === $this->target ) {
+			$has_deactivated = ! empty( $this->data['deactivated'] ) && $this->data['deactivated'] !== '<em>[' . __( 'empty string', 'secupress' ) . ']</em>';
+
 			if ( 'add' === $this->subtype ) {
 
 				$this->title = __( 'Plugin(s) activated.', 'secupress' );
 
-			} elseif ( ! empty( $this->data['activated'] ) && ! empty( $this->data['deactivated'] ) ) {
+			} elseif ( ! empty( $this->data['activated'] ) && $has_deactivated ) {
 
 				$this->title = __( 'Plugin(s) activated and deactivated.', 'secupress' );
 
@@ -545,9 +547,13 @@ class SecuPress_Action_Log extends SecuPress_Log {
 
 				$this->title = __( 'Plugin(s) activated.', 'secupress' );
 
-			} elseif ( ! empty( $this->data['deactivated'] ) ) {
+			} elseif ( $has_deactivated ) {
 
 				$this->title = __( 'Plugin(s) deactivated.', 'secupress' );
+
+			} else {
+				// Bug.
+				$this->title = __( 'Plugin(s) activated and/or deactivated.', 'secupress' );
 			}
 			return;
 		}
@@ -567,11 +573,13 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 */
 	protected function _set_network_option_title() {
 		if ( 'active_sitewide_plugins' === $this->target ) {
+			$has_deactivated = ! empty( $this->data['deactivated'] ) && $this->data['deactivated'] !== '<em>[' . __( 'empty string', 'secupress' ) . ']</em>';
+
 			if ( 'add' === $this->subtype ) {
 
 				$this->title = __( 'Plugin(s) network activated.', 'secupress' );
 
-			} elseif ( ! empty( $this->data['activated'] ) && ! empty( $this->data['deactivated'] ) ) {
+			} elseif ( ! empty( $this->data['activated'] ) && $has_deactivated ) {
 
 				$this->title = __( 'Plugin(s) network activated and network deactivated.', 'secupress' );
 
@@ -579,9 +587,13 @@ class SecuPress_Action_Log extends SecuPress_Log {
 
 				$this->title = __( 'Plugin(s) network activated.', 'secupress' );
 
-			} elseif ( ! empty( $this->data['deactivated'] ) ) {
+			} elseif ( $has_deactivated ) {
 
 				$this->title = __( 'Plugin(s) network deactivated.', 'secupress' );
+
+			} else {
+				// Bug.
+				$this->title = __( 'Plugin(s) network activated and/or network deactivated.', 'secupress' );
 			}
 			return;
 		}
@@ -672,11 +684,13 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 */
 	protected function _set_option_message() {
 		if ( 'active_plugins' === $this->target ) {
+			$has_deactivated = ! empty( $this->data['deactivated'] ) && $this->data['deactivated'] !== '<em>[' . __( 'empty string', 'secupress' ) . ']</em>';
+
 			if ( 'add' === $this->subtype ) {
 
 				$this->message = __( 'Plugin(s) activated: %s.', 'secupress' );
 
-			} elseif ( ! empty( $this->data['activated'] ) && ! empty( $this->data['deactivated'] ) ) {
+			} elseif ( ! empty( $this->data['activated'] ) && $has_deactivated ) {
 
 				$this->message = __( 'Plugin(s) activated: %1$s. Plugin(s) deactivated: %2$s.', 'secupress' );
 
@@ -684,9 +698,13 @@ class SecuPress_Action_Log extends SecuPress_Log {
 
 				$this->message = __( 'Plugin(s) activated: %s.', 'secupress' );
 
-			} elseif ( ! empty( $this->data['deactivated'] ) ) {
+			} elseif ( $has_deactivated ) {
 
 				$this->message = __( 'Plugin(s) deactivated: %2$s.', 'secupress' );
+
+			} else {
+				// Bug.
+				$this->message = __( 'Raw data: %2$s %3$s', 'secupress' );
 			}
 			return;
 		}
@@ -706,11 +724,13 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 */
 	protected function _set_network_option_message() {
 		if ( 'active_sitewide_plugins' === $this->target ) {
+			$has_deactivated = ! empty( $this->data['deactivated'] ) && $this->data['deactivated'] !== '<em>[' . __( 'empty string', 'secupress' ) . ']</em>';
+
 			if ( 'add' === $this->subtype ) {
 
 				$this->message = __( 'Plugin(s) network activated: %s.', 'secupress' );
 
-			} elseif ( ! empty( $this->data['activated'] ) && ! empty( $this->data['deactivated'] ) ) {
+			} elseif ( ! empty( $this->data['activated'] ) && $has_deactivated ) {
 
 				$this->message = __( 'Plugin(s) network activated: %1$s. Plugin(s) network deactivated: %2$s.', 'secupress' );
 
@@ -718,9 +738,13 @@ class SecuPress_Action_Log extends SecuPress_Log {
 
 				$this->message = __( 'Plugin(s) network activated: %s.', 'secupress' );
 
-			} elseif ( ! empty( $this->data['deactivated'] ) ) {
+			} elseif ( $has_deactivated ) {
 
 				$this->message = __( 'Plugin(s) network deactivated: %2$s.', 'secupress' );
+
+			} else {
+				// Bug.
+				$this->message = __( 'Raw data: %2$s %3$s', 'secupress' );
 			}
 			return;
 		}
