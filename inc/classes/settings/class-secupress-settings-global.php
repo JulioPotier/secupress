@@ -31,8 +31,10 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 
 	public function print_page() {
 		$setting_modules = array(
-			'api-key',
-			'auto-config',
+			// 'api-key',
+			// 'auto-config', >1.0
+			'settings-manager',
+			// 'rollback', > 1.0
 		);
 		$setting_modules = apply_filters( 'secupress_global_settings_modules', $setting_modules );
 		?>
@@ -43,11 +45,6 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 			<form action="<?php echo $this->get_form_action(); ?>" method="post" id="secupress_settings" class="secupress-wrapper">
 
 				<?php array_map( array( $this, 'load_module_settings'), $setting_modules ); ?>
-
-				<div class="secublock">
-					<h2><?php _e( 'That\'s all!', 'secupress' ); ?></h2>
-					<p><?php printf( __( 'Looking for more settings? Each other setting is included in its own module, just <a href="%s">check them</a> if you need.', 'secupress' ), esc_url( secupress_admin_url( 'secupress' ) ) ); ?></p>
-				</div>
 
 				<?php settings_fields( 'secupress_global_settings' ); ?>
 
