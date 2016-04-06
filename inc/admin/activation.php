@@ -419,15 +419,13 @@ function secupress_create_deactivation_notice_muplugin( $plugin_id, $message ) {
 
 	// Add new contents.
 	$args = array(
-		'PLUGIN_ID'   => $plugin_id,
-		'MESSAGE'     => addcslashes( $message, "'" ),
-		'USER_ID'     => get_current_user_id(),
-		'BUTTON_TEXT' => __( 'OK, got it!', 'secupress' ),
+		'##PLUGIN_ID##'   => $plugin_id,
+		'##MESSAGE##'     => addcslashes( $message, "'" ),
+		'##USER_ID##'     => get_current_user_id(),
+		'##BUTTON_TEXT##' => __( 'OK, got it!', 'secupress' ),
 	);
 
-	foreach ( $args as $tag => $value ) {
-		$contents = str_replace( "##$tag##", $value, $contents );
-	}
+	$contents = str_replace( array_keys( $args ), $args, $contents );
 
 	if ( ! file_exists( WPMU_PLUGIN_DIR ) ) {
 		$wp_filesystem->mkdir( WPMU_PLUGIN_DIR );
