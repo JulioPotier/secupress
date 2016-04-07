@@ -78,21 +78,3 @@ $this->add_field( array(
 		),
 	),
 ) );
-
-
-$this->add_field( array(
-	'title'             => __( 'Auto-Update Bad Themes', 'secupress' ),
-	'description'       => __( 'Only for themes from official repository.', 'secupress' ),
-	'depends'           => $main_field_name,
-	'label_for'         => $this->get_field_name( 'autoupdate_bad_themes' ),
-	'plugin_activation' => true,
-	'type'              => 'checkbox',
-	'value'             => (int) secupress_is_submodule_active( 'plugins-themes', 'autoupdate-bad-themes' ),
-	'label'             => __( 'Yes, enable the auto-update if a theme I use is known as vulnerable', 'secupress' ),
-	'helpers'           => array(
-		array(
-			'type'        => 'description',
-			'description' => __( 'Based on our Daily Security Monitoring, we will push updates for themes newly known as vulnerables.', 'secupress' ),
-		),
-	),
-) );
