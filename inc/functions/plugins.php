@@ -43,7 +43,7 @@ function secupress_feature_is_pro( $feature ) {
 		'page-protect_profile'                   => 1,
 		'page-protect_settings'                  => 1,
 		'content-protect_hotlink'                => 1,
-		'file-scanner_virus-scanner'             => 1,
+		'file-scanner_file-scanner'              => 1,
 		'backup-files_backup-file'               => 1,
 		'import-export_export_settings'          => 1,
 		'import-export_import_settings'          => 1,
