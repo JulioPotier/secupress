@@ -48,6 +48,7 @@ function secupress_feature_is_pro( $feature ) {
 		'import-export_export_settings'          => 1,
 		'import-export_import_settings'          => 1,
 		'geoip-system_type'                      => 1,
+		'bruteforce_activated'                   => 1,
 		'schedules_backups'                      => 1,
 		'schedules_scans'                        => 1,
 		'schedules_filemon'                      => 1,
