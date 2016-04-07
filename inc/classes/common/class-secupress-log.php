@@ -197,7 +197,7 @@ class SecuPress_Log {
 
 		// Filter Logs by IP.
 		if ( ! empty( $filters['user_ip'] ) ) {
-			$user_ip = '<a title="' . esc_attr( sprintf( __( 'Filter Logs with the IP address %s', 'secupress' ), $user_ip ) ) . '" href="' . esc_url( sprintf( $filters['user_ip'], urlencode( $user_ip ) ) ) . '">' . $user_ip . '</a>';
+			$user_ip = '<a title="' . esc_attr( sprintf( __( 'Filter Logs with the IP address %s', 'secupress' ), $this->user_ip ) ) . '" href="' . esc_url( sprintf( $filters['user_ip'], urlencode( $this->user_ip ) ) ) . '">' . $user_ip . '</a>';
 		}
 
 		// Filter Logs by id.
