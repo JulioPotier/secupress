@@ -36,7 +36,7 @@ function secupress_feature_is_pro( $feature ) {
 		'plugins_activation'                     => 1,
 		'plugins_deactivation'                   => 1,
 		'plugins_deletion'                       => 1,
-		'plugins_autoupdate_bad_plugins'         => 1,
+		'plugins_detect_bad_plugins'             => 1,
 		'themes_activation'                      => 1,
 		'themes_deletion'                        => 1,
 		'themes_autoupdate_bad_themes'           => 1,
