@@ -17,7 +17,7 @@ $this->add_field( array(
 	'label_for'         => $this->get_field_name( 'activated' ),
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
-	'value'             => (int) secupress_is_submodule_active( 'tools', 'uptime-monitoring' ),
+	'value'             => (int) secupress_is_submodule_active( 'alerts', 'uptime-monitoring' ),
 	'label'             => __( 'Yes, monitor the uptime of my website and alert me if needed', 'secupress' ),
 	'disabled'          => empty( $consumer_email ),
 	'helpers'           => array(
@@ -27,7 +27,7 @@ $this->add_field( array(
 		),
 		array(
 			'type'        => 'warning',
-			'description' => $consumer_email ? sprintf( __( 'The following email address will be used: %s', 'secupress' ), '<code>' . $consumer_email . '</code>' ) : __( 'You need a free API Key to use this module. <a href="#" class="button">Get one!</a>', 'secupress' ),
+			'description' => $consumer_email ? sprintf( __( 'The following email address will be used: %s', 'secupress' ), '<code>' . $consumer_email . '</code>' ) : __( 'You need a free API Key to use this module. <a href="#" class="button">Get one!</a>', 'secupress' ),////
 		),
 		array(
 			'type'        => 'warning',
