@@ -88,21 +88,3 @@ $this->add_field( array(
 		),
 	),
 ) );
-
-
-$this->add_field( array(
-	'title'             => __( 'Auto-Update Bad Plugins', 'secupress' ),
-	'description'       => __( 'Only for plugins from official repository.', 'secupress' ),
-	'depends'           => $main_field_name,
-	'label_for'         => $this->get_field_name( 'autoupdate_bad_plugins' ),
-	'plugin_activation' => true,
-	'type'              => 'checkbox',
-	'value'             => (int) secupress_is_submodule_active( 'plugins-themes', 'autoupdate-bad-plugins' ),
-	'label'             => __( 'Yes, also enable the auto-update if these plugins', 'secupress' ),
-	'helpers'           => array(
-		array(
-			'type'        => 'description',
-			'description' => __( 'We will also push updates for plugins newly known as vulnerables.', 'secupress' ),
-		),
-	),
-) );
