@@ -24,6 +24,25 @@ function __secupress_alerts_settings_callback( $settings ) {
 	}
 	$settings['sanitized'] = 1;
 
+	// Alerts Manager
+	__secupress_alerts_manager_settings_callback( $modulenow, $settings );
+
+	// Uptime monitoring
+	__secupress_uptime_monitoring_settings_callback( $modulenow, $settings, $activate );
+
+	return $settings;
+}
+
+
+/**
+ * Alerts Manager Callback.
+ *
+ * @since 1.0
+ *
+ * @param (string) $modulenow Current module.
+ * @param (array)  $settings  The module settings, passed by reference.
+ */
+function __secupress_alerts_manager_settings_callback( $modulenow, &$settings ) {
 	// Activate/deactivate.
 	if ( empty( $settings['alerts_type'] ) || ! is_array( $settings['alerts_type'] ) ) {
 		$settings['alerts_type'] = array();
@@ -41,6 +60,7 @@ function __secupress_alerts_settings_callback( $settings ) {
 		$settings['alerts_email'] = array_map( 'trim', $settings['alerts_email'] );
 		$settings['alerts_email'] = array_map( 'is_email', $settings['alerts_email'] );
 		$settings['alerts_email'] = array_filter( $settings['alerts_email'] );
+
 		if ( $settings['alerts_email'] ) {
 			if ( ! secupress_is_pro() ) {
 				$settings['alerts_email'] = reset( $settings['alerts_email'] );
@@ -67,12 +87,8 @@ function __secupress_alerts_settings_callback( $settings ) {
 
 	// Frequency
 	$settings['alerts_frequency'] = secupress_minmax_range( $settings['alerts_frequency'], 5, 60 );
-
-	// Uptime monitoring
-	__secupress_uptime_monitoring_settings_callback( $modulenow, $settings, $activate );
-
-	return $settings;
 }
+
 
 /**
  * Uptime Monitor Callback.
@@ -100,6 +116,7 @@ function __secupress_uptime_monitoring_settings_callback( $modulenow, &$settings
 		$settings['uptime-monitoring-token'] = sanitize_text_field( $settings['uptime-monitoring-token'] );
 	}
 }
+
 
 /*------------------------------------------------------------------------------------------------*/
 /* TOOLS ======================================================================================== */
