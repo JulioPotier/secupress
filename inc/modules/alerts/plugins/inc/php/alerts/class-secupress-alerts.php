@@ -123,9 +123,9 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 			'secupress.block'         => array( 'immediately' => false ),
 			'secupress.ban.ip_banned' => array( 'immediately' => false ),
 			'wp_login'                => array( 'test_cb' => array( __CLASS__, '_wp_login_test' ), 'nbr_args' => 2 ),
-			//// File modif scan
-			//// Malware scan
 		);
+
+		$hooks = apply_filters( 'secupress.alerts.hooks', $hooks );
 
 		foreach ( $hooks as $hook => $atts ) {
 			// Fill the blanks.
