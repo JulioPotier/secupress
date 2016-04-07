@@ -74,6 +74,27 @@ function secupress_deactivate_submodule( $module, $plugins, $args = array() ) {
 }
 
 
+function secupress_activate_submodule_silently( $module, $plugin ) {
+	// Remove deactivation notice.
+	secupress_remove_module_notice( $module, $plugin, 'deactivation' );
+
+	// Activate the submodule.
+	$plugin_slug    = sanitize_key( $plugin );
+	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
+	$active_plugins = is_array( $active_plugins ) ? $active_plugins : array();
+	$file_path      = SECUPRESS_MODULES_PATH . $module . '/plugins/' . $plugin_slug . '.php';
+
+	if ( ! file_exists( $file_path ) || in_array_deep( $plugin_slug, $active_plugins ) ) {
+		return;
+	}
+
+	$active_plugins[ $module ]   = isset( $active_plugins[ $module ] ) ? $active_plugins[ $module ] : array();
+	$active_plugins[ $module ][] = $plugin_slug;
+
+	update_site_option( SECUPRESS_ACTIVE_SUBMODULES, $active_plugins );
+}
+
+
 function secupress_deactivate_submodule_silently( $module, $plugins, $args = array( 'no-tests' => 1 ) ) {
 	// Deactivate the submodule.
 	secupress_deactivate_submodule( $module, $plugins, $args );
