@@ -29,7 +29,6 @@ function secupress_feature_is_pro( $feature ) {
 		// Field names.
 		'login-protection_only-one-connexion'    => 1,
 		'login-protection_sessions_control'      => 1,
-		'login-protection_type|nonlogintimeslot' => 1,
 		'double-auth_type'                       => 1,
 		'password-policy_password_expiration'    => 1,
 		'password-policy_strong_passwords'       => 1,
@@ -59,6 +58,7 @@ function secupress_feature_is_pro( $feature ) {
 		'alerts_type|slack'                      => 1,
 		'alerts_type|skype'                      => 1,
 		'alerts_type|twitter'                    => 1,
+		'login-protection_type|nonlogintimeslot' => 1,
 		'backups-storage_location|ftp'           => 1,
 		'backups-storage_location|amazons3'      => 1,
 		'backups-storage_location|dropbox'       => 1,
