@@ -393,7 +393,7 @@ function secupress_create_deactivation_notice_muplugin( $plugin_id, $message ) {
 		$authenticated = wp_validate_auth_cookie();
 	}
 
-	$filename = WPMU_PLUGIN_DIR . "/_secupress_deactivation-notice-$plugin_id.php";
+	$filename = WPMU_PLUGIN_DIR . "/_secupress_deactivation-notice-{$plugin_id}.php";
 
 	if ( ! $authenticated || file_exists( $filename ) ) {
 		return;
