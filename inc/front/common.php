@@ -1,51 +1,232 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
-add_action( 'plugins_loaded', 'secupress_check_ban_ips' );
 /**
- * Will add or remove banned IPs
+ * Will remove expired banned IPs, then block the remaining ones. A form will be displayed to allow clumsy Administrators to unlock themselves.
  *
  * @since 1.0
- * @return void
  **/
+add_action( 'plugins_loaded', 'secupress_check_ban_ips' );
+
 function secupress_check_ban_ips() {
 	$ban_ips  = get_site_option( SECUPRESS_BAN_IP );
-	$time_ban = secupress_get_module_option( 'login-protection_time_ban', 5, 'users-login' );
+	$time_ban = (int) secupress_get_module_option( 'login-protection_time_ban', 5, 'users-login' );
 	$update   = false;
+	$redirect = false;
 
-	// if we got banned ips
-	if ( is_array( $ban_ips ) && count( $ban_ips ) ) {
+	// If we got banned ips.
+	if ( $ban_ips && is_array( $ban_ips ) ) {
+		// The link to be unlocked?
+		if ( ! empty( $_GET['action'] ) && 'secupress_self-unban-ip' === $_GET['action'] ) {
+			$ip     = secupress_get_ip();
+			$result = ! empty( $_GET['_wpnonce'] ) ? wp_verify_nonce( $_GET['_wpnonce'], 'secupress_self-unban-ip-' . $ip ) : false;
 
-		foreach ( $ban_ips as $IP => $time ) {
-			// purge the expired banned IPs
+			if ( $result ) {
+				// You're good to go.
+				unset( $ban_ips[ $ip ] );
+				$update   = true;
+				$redirect = true;
+			} elseif ( isset( $ban_ips[ $ip ] ) ) {
+				// Cheating?
+				$title   = 403 . ' ' . get_status_header_desc( 403 );
+				$content = __( 'Your unlock link expired (or you\'re cheating).', 'secupress' );
+
+				secupress_die( $content, $title, array( 'response' => 403 ) );
+			}
+		}
+
+		// Purge the expired banned IPs.
+		foreach ( $ban_ips as $ip => $time ) {
 			if ( ( $time + ( $time_ban * 60 ) ) < time() ) {
-				unset( $ban_ips[ $IP ] );
+				unset( $ban_ips[ $ip ] );
 				$update = true;
 			}
 		}
 
+		// Save the changes.
 		if ( $update ) {
 			update_site_option( SECUPRESS_BAN_IP, $ban_ips );
-			wp_load_alloptions();
-			secupress_write_htaccess( 'ban_ip', secupress_get_htaccess_ban_ip() );
 		}
 
-		// check if the IP is still in the array
-		$IP = secupress_get_ip();
-
-		if ( array_key_exists( $IP, $ban_ips ) ) {
-			$msg = sprintf(
-				_n( 'Your IP address <code>%1$s</code> has been banned for <b>%2$d</b> minute, please do not retry until then.', 'Your IP address <code>%1$s</code> has been banned for <b>%2$d</b> minutes, please do not retry until then.', $time_ban, 'secupress' ),
-				esc_html( $IP ),
-				$time_ban
-			);
-
-			secupress_die( $msg );
+		// The user just got unlocked. Redirect to homepage.
+		if ( $redirect ) {
+			wp_redirect( home_url() );
+			die();
 		}
 
+		// Block the user if the IP is still in the array.
+		$ip = secupress_get_ip();
+
+		if ( array_key_exists( $ip, $ban_ips ) ) {
+			// Display a form in case of accidental ban.
+			$unban_atts = secupress_check_ban_ips_maybe_send_unban_email( $ip );
+
+			$title = ! empty( $unban_atts['title'] ) ? $unban_atts['title'] : ( 403 . ' ' . get_status_header_desc( 403 ) );
+
+			if ( $unban_atts['display_form'] ) {
+				$in_ten_years = time() + YEAR_IN_SECONDS * 10;
+				$time_ban     = $ban_ips[ $ip ] > $in_ten_years ? 0 : $time_ban;
+				$error        = $unban_atts['message'];
+				$content      = secupress_check_ban_ips_form( compact( 'ip', 'time_ban', 'error' ) );
+			} else {
+				$content = $unban_atts['message'];
+			}
+
+			secupress_die( $content, $title, array( 'response' => 403 ) );
+		}
 	} elseif ( false !== $ban_ips ) {
 		delete_site_option( SECUPRESS_BAN_IP );
 	}
+}
+
+
+/**
+ * After submiting the email address with the form, send an email to the user or return an error.
+ *
+ * @since 1.0
+ *
+ * @param (string) $ip The user IP address.
+ *
+ * @return (array) An array containing at least a message and a "display_form" key to display or not the form after. Can contain a title.
+ */
+function secupress_check_ban_ips_maybe_send_unban_email( $ip ) {
+	global $wpdb;
+
+	if ( ! isset( $_POST['email'] ) ) {
+		return array(
+			'message'      => '',
+			'display_form' => true,
+		);
+	}
+	// Check nonce and referer.
+	$siteurl = strtolower( set_url_scheme( site_url() ) );
+	$referer = strtolower( wp_unslash( $_POST['_wp_http_referer'] ) );
+	$result  = ! empty( $_POST['_wpnonce'] ) ? wp_verify_nonce( $_POST['_wpnonce'], 'secupress-unban-ip-' . $ip ) : false;
+
+	if ( strpos( $referer, 'http' ) !== 0 ) {
+		$port    = (int) $_SERVER['SERVER_PORT'];
+		$port    = 80 !== $port && 443 !== $port ? ( ':' . $port ) : '';
+		$url     = 'http' . ( is_ssl() ? 's' : '' ) . '://' . $_SERVER['HTTP_HOST'] . $port;
+		$referer = $url . $referer;
+	}
+
+	if ( ! $result || strpos( $referer, $siteurl ) !== 0 ) {
+		return array(
+			'title'        => __( 'Cheatin&#8217; uh?' ),
+			'message'      => __( 'Cheatin&#8217; uh?' ),
+			'display_form' => false,
+		);
+	}
+
+	// Check email.
+	if ( empty( $_POST['email'] ) ) {
+		return array(
+			'message'      => __( '<strong>Error</strong>: the email field is empty.', 'secupress' ),
+			'display_form' => true,
+		);
+	}
+
+	$email    = wp_unslash( $_POST['email'] );
+	$is_email = is_email( $email );
+
+	if ( ! $is_email ) {
+		return array(
+			/* translators: guess what, %s is an email address */
+			'message'      => sprintf( __( '<strong>Error</strong>: the email address %s is not valid.', 'secupress' ), '<code>' . esc_html( $email ) . '</code>' ),
+			'display_form' => true,
+		);
+	}
+	$email = $is_email;
+
+	// Check user.
+	$user = get_user_by( 'email', $email );
+
+	if ( ! $user ) {
+		// Try with the backup email.
+		$user = (int) $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'backup_email' AND meta_value = %s LIMIT 1", $email ) );
+		$user = $user ? get_userdata( $user ) : 0;
+	}
+
+	if ( ! $user || ! user_can( $user, secupress_get_capability() ) ) {
+		return array(
+			'message'      => __( '<strong>Error</strong>: this email address does not belong to an Administrator.', 'secupress' ),
+			'display_form' => true,
+		);
+	}
+
+	// Send message.
+	$message  = '<p>' . __( 'A bit clumsy and got yourself locked out? No problem, it happens sometimes. I\'ve got your back! I won\'t tell anybody. Or maybe I will. It could be a great story to tell during a long winter evening.', 'secupress' ) . '</p>';
+	$message .= '<p>' . sprintf(
+		/* translators: %s is a "follow this link" link */
+		__( 'Anyway, simply %s to unlock yourself.', 'secupress' ),
+		'<a href="' . esc_url( wp_nonce_url( home_url() . '?action=secupress_self-unban-ip', 'secupress_self-unban-ip-' . $ip ) ) . '">' . __( 'follow this link', 'secupress' ) . '</a>'
+	) . '</p>';
+
+	$headers = array(
+		secupress_get_email( true ),
+		'content-type: text/html',
+	);
+
+	$bcc = get_user_meta( $user->ID, 'backup_email', true );
+
+	if ( $bcc && $bcc = is_email( $bcc ) ) {
+		$headers[] = 'bcc: ' . $bcc;
+	}
+
+	$sent = wp_mail( $user->user_email, SECUPRESS_PLUGIN_NAME, $message, $headers );
+
+	if ( ! $sent ) {
+		return array(
+			'title'        => __( 'Oh ooooooh...', 'secupress' ),
+			'message'      => __( 'The message could not be sent. I guess you have to wait now :(', 'secupress' ),
+			'display_form' => false,
+		);
+	}
+
+	return array(
+		'title'        => __( 'Message sent', 'secupress' ),
+		'message'      => __( 'Everything went fine, your message is on its way to your mailbox.', 'secupress' ),
+		'display_form' => false,
+	);
+}
+
+
+/**
+ * Return the form where the user can enter his email address.
+ *
+ * @since 1.0
+ *
+ * @param (array) An array with the following:
+ *                - (string) $ip       The user IP.
+ *                - (int)    $time_ban Banishment duration in minutes. 0 means forever.
+ *                - (string) $error    An error text.
+ *
+ * @return (string) The form.
+ */
+function secupress_check_ban_ips_form( $args ) {
+	$args = array_merge( array(
+		'ip'       => '',
+		'time_ban' => 0,
+		'error'    => '',
+	), $args );
+
+	if ( $args['time_ban'] ) {
+		$content = '<p>' . sprintf( _n( 'Your IP address <code>%1$s</code> has been banned for <strong>%2$d</strong> minute.', 'Your IP address <code>%1$s</code> has been banned for <strong>%2$d</strong> minutes.', $args['time_ban'], 'secupress' ), esc_html( $args['ip'] ), $args['time_ban'] ) . '</p>';
+	} else {
+		$content = '<p>' . sprintf( __( 'Your IP address <code>%s</code> has been banned.', 'secupress' ), esc_html( $args['ip'] ) ) . '</p>';
+	}
+	$content .= '<form method="post" autocomplete="on">';
+		$content .= '<p>' . __( 'If you are an Administrator and have been accidentally locked out, enter your main email address or the backup one in the following field. A message will be sent to both addresses with a link allowing you to unlock yourself.', 'secupress' ) . '</p>';
+		$content .= '<label for="email">';
+			$content .= __( 'Your email address:', 'secupress' );
+			$content .= ' <input id="email" type="email" name="email" value="" required="required" aria-required="true" />';
+			$content .= $args['error'] ? '<br/><span class="error">' . $args['error'] . '</span>' : '';
+		$content .= '</label>';
+		$content .= '<p class="submit"><button type="submit" name="submit" class="button button-primary button-large">' . __( 'Submit', 'secupress' ) . '</button></p>';
+		$content .= wp_nonce_field( 'secupress-unban-ip-' . $args['ip'], '_wpnonce', true , false );
+	$content .= '</form>';
+
+	return $content;
 }
 
 
