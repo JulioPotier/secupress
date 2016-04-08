@@ -238,22 +238,21 @@ function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 	$module = ucwords( str_replace( '-', ' ', $module ) );
 	$module = preg_replace( '/[^0-9A-Z]/', '', $module );
 
-	status_header( $args['code'] );
-	$title     = $args['code']  . ' ' . get_status_header_desc( $args['code'] );
-	$title_fmt = '<h4>' . $title . '</h4>';
+	$title   = $args['code'] . ' ' . get_status_header_desc( $args['code'] );
+	$content = '<h4>' . $title . '</h4>';
 
 	if ( ! $args['content'] ) {
-		$content = '<p>' . __( 'You are not allowed to access the requested page.', 'secupress' ) . '</p>';
+		$content .= '<p>' . __( 'You are not allowed to access the requested page.', 'secupress' ) . '</p>';
 	} else {
-		$content = '<p>' . $args['content'] . '</p>';
+		$content .= '<p>' . $args['content'] . '</p>';
 	}
 
-	$details   = '<h4>' . __( 'Logged Details:', 'secupress' ) . '</h4><p>';
-	$details  .= sprintf( __( 'Your IP: %s', 'secupress' ), $ip ) . '<br>';
-	$details  .= sprintf( __( 'Time: %s', 'secupress' ), date_i18n( __( 'F j, Y g:i a' ) ) ) . '<br>';
-	$details  .= sprintf( __( 'Block ID: %s', 'secupress' ), $module ) . '</p>';
+	$content  = '<h4>' . __( 'Logged Details:', 'secupress' ) . '</h4><p>';
+	$content .= sprintf( __( 'Your IP: %s', 'secupress' ), $ip ) . '<br>';
+	$content .= sprintf( __( 'Time: %s', 'secupress' ), date_i18n( __( 'F j, Y g:i a' ) ) ) . '<br>';
+	$content .= sprintf( __( 'Block ID: %s', 'secupress' ), $module ) . '</p>';
 
-	secupress_die( $title_fmt . $content . $details, $title, array( 'response', $args['code'] ) );
+	secupress_die( $content, $title, array( 'response' => $args['code'] ) );
 }
 
 
