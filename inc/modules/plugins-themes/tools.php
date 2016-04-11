@@ -22,7 +22,7 @@ function secupress_get_removed_plugins() {
 	if ( is_readable( $plugins_list_file ) ) {
 		$removed_plugins = array_flip( array_map( 'trim', file( $plugins_list_file ) ) );
 	} else {
-		return array();
+		return false;
 	}
 	$all_plugins = array_keys( get_plugins() );
 	$all_plugins = array_map( 'dirname', $all_plugins );
@@ -56,7 +56,7 @@ function secupress_get_notupdated_plugins() {
 	if ( is_readable( $plugins_list_file ) ) {
 		$notupdated_plugins = array_flip( array_map( 'trim', file( $plugins_list_file ) ) );
 	} else {
-		return array();
+		return false;
 	}
 
 	$all_plugins = array_keys( get_plugins() );
