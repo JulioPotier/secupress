@@ -869,7 +869,7 @@ jQuery( document ).ready( function( $ ) {
 	} );
 
 	// Perform a scan on click.
-	$( "body" ).on( "click scan.secupress bulkscan.secupress", ".secupress-scanit", function( e ) {
+	$( "body" ).on( "click scan.secupress bulkscan.secupress", ".button-secupress-scan, .secupress-scanit", function( e ) {
 		var $this = $( this ),
 			href, test, $row, isBulk;
 
