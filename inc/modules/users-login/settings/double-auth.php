@@ -38,7 +38,7 @@ $this->add_field( array(
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'Users will just have to enter their e-mail when log in, then click on a click in this mail.', 'secupress' ),
+			'description' => __( 'Users will just have to enter their email address when log in, then click on a link in this mail.', 'secupress' ),
 		),
 	),
 ) );
