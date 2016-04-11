@@ -3,8 +3,6 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 $this->add_section( __( 'Services', 'secupress' ), array( 'with_save_button' => false ) );
 
-$main_field_name = $this->get_field_name( 'config-pro' );
-
 $this->add_field( array(
 	'title'        => __( 'Professional Configuration', 'secupress' ),
 	'description'  => __( 'You may need help to configure the plugin perfectly, we might do this for you for $200.', 'secupress' ),
