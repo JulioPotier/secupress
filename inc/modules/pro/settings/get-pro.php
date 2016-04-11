@@ -3,8 +3,6 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 $this->add_section( __( 'SecuPress PRO', 'secupress' ), array( 'with_save_button' => false ) );
 
-$main_field_name = $this->get_field_name( 'get-pro' );
-
 $this->add_field( array(
 	'title'        => __( 'SecuPress version PRO', 'secupress' ),
 	'description'  => __( 'Discover our pro version.', 'secupress' ),
