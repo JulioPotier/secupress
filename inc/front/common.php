@@ -157,9 +157,9 @@ function secupress_check_ban_ips_maybe_send_unban_email( $ip ) {
 	// Send message.
 	$message  = '<p>' . __( 'A bit clumsy and got yourself locked out? No problem, it happens sometimes. I\'ve got your back! I won\'t tell anybody. Or maybe I will. It could be a great story to tell during a long winter evening.', 'secupress' ) . '</p>';
 	$message .= '<p>' . sprintf(
-		/* translators: %s is a "follow this link" link */
-		__( 'Anyway, simply %s to unlock yourself.', 'secupress' ),
-		'<a href="' . esc_url( wp_nonce_url( home_url() . '?action=secupress_self-unban-ip', 'secupress_self-unban-ip-' . $ip ) ) . '">' . __( 'follow this link', 'secupress' ) . '</a>'
+		/* translators: %s is a "" link */
+		__( 'Anyway, simply follow this link to %s.', 'secupress' ),
+		'<a href="' . esc_url( wp_nonce_url( home_url() . '?action=secupress_self-unban-ip', 'secupress_self-unban-ip-' . $ip ) ) . '">' . __( 'unlock yourself', 'secupress' ) . '</a>'
 	) . '</p>';
 
 	$headers = array(
