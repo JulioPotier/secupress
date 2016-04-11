@@ -28,7 +28,7 @@ function secupress_check_ban_ips() {
 				$redirect = true;
 			} elseif ( isset( $ban_ips[ $ip ] ) ) {
 				// Cheating?
-				$title   = 403 . ' ' . get_status_header_desc( 403 );
+				$title   = '403 ' . get_status_header_desc( 403 );
 				$content = __( 'Your unlock link expired (or you\'re cheating).', 'secupress' );
 
 				secupress_die( $content, $title, array( 'response' => 403 ) );
@@ -61,7 +61,7 @@ function secupress_check_ban_ips() {
 			// Display a form in case of accidental ban.
 			$unban_atts = secupress_check_ban_ips_maybe_send_unban_email( $ip );
 
-			$title = ! empty( $unban_atts['title'] ) ? $unban_atts['title'] : ( 403 . ' ' . get_status_header_desc( 403 ) );
+			$title = ! empty( $unban_atts['title'] ) ? $unban_atts['title'] : ( '403 ' . get_status_header_desc( 403 ) );
 
 			if ( $unban_atts['display_form'] ) {
 				$in_ten_years = time() + YEAR_IN_SECONDS * 10;
