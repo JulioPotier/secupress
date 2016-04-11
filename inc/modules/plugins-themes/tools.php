@@ -14,13 +14,15 @@ function secupress_get_removed_plugins() {
 		return $removed_plugins;
 	}
 
-	if ( false !== ( $from_transient = get_site_transient( __FUNCTION__ ) ) ) {
+	if ( false !== ( $from_transient = get_site_transient( 'secupress_removed_plugins' ) ) ) {
 		return $from_transient;
 	}
 
 	$plugins_list_file = SECUPRESS_INC_PATH . 'data/no-longer-in-directory-plugin-list.data';
 	if ( is_readable( $plugins_list_file ) ) {
 		$removed_plugins = array_flip( array_map( 'trim', file( $plugins_list_file ) ) );
+	} else {
+		return array();
 	}
 	$all_plugins = array_keys( get_plugins() );
 	$all_plugins = array_map( 'dirname', $all_plugins );
@@ -28,7 +30,7 @@ function secupress_get_removed_plugins() {
 	$all_plugins = array_intersect_key( $all_plugins, $removed_plugins );
 
 	$removed_plugins = $all_plugins;
-	set_site_transient( __FUNCTION__, $removed_plugins, 6 * HOUR_IN_SECONDS );
+	set_site_transient( 'secupress_removed_plugins', $removed_plugins, 6 * HOUR_IN_SECONDS );
 
 	return $removed_plugins;
 }
@@ -46,13 +48,15 @@ function secupress_get_notupdated_plugins() {
 		return $notupdated_plugins;
 	}
 
-	if ( false !== ( $from_transient = get_site_transient( __FUNCTION__ ) ) ) {
+	if ( false !== ( $from_transient = get_site_transient( 'secupress_notupdated_plugins' ) ) ) {
 		return $from_transient;
 	}
 
 	$plugins_list_file = SECUPRESS_INC_PATH . 'data/not-updated-in-over-two-years-plugin-list.data';
 	if ( is_readable( $plugins_list_file ) ) {
 		$notupdated_plugins = array_flip( array_map( 'trim', file( $plugins_list_file ) ) );
+	} else {
+		return array();
 	}
 
 	$all_plugins = array_keys( get_plugins() );
@@ -61,7 +65,7 @@ function secupress_get_notupdated_plugins() {
 	$all_plugins = array_intersect_key( $all_plugins, $notupdated_plugins );
 
 	$notupdated_plugins = $all_plugins;
-	set_site_transient( __FUNCTION__, $notupdated_plugins, 6 * HOUR_IN_SECONDS );
+	set_site_transient( 'secupress_notupdated_plugins', $notupdated_plugins, 6 * HOUR_IN_SECONDS );
 
 	return $notupdated_plugins;
 }
@@ -79,7 +83,7 @@ function secupress_get_vulnerable_plugins() {
 		return $vulnerable_plugins;
 	}
 
-	if ( false !== ( $from_transient = get_site_transient( __FUNCTION__ ) ) ) {
+	if ( false !== ( $from_transient = get_site_transient( 'secupress_vulnerable_plugins' ) ) ) {
 		return $from_transient;
 	}
 
@@ -88,7 +92,7 @@ function secupress_get_vulnerable_plugins() {
 
 	if ( $temp ) {
 		$vulnerable_plugins = $temp;
-		set_site_transient( __FUNCTION__, $vulnerable_plugins, 6 * HOUR_IN_SECONDS );
+		set_site_transient( 'secupress_vulnerable_plugins', $vulnerable_plugins, 6 * HOUR_IN_SECONDS );
 		return $vulnerable_plugins;
 	}
 
@@ -143,7 +147,7 @@ function secupress_get_vulnerable_themes() {
 		return $vulnerable_themes;
 	}
 
-	if ( false !== ( $from_transient = get_site_transient( __FUNCTION__ ) ) ) {
+	if ( false !== ( $from_transient = get_site_transient( 'secupress_vulnerable_themes' ) ) ) {
 		return $from_transient;
 	}
 
@@ -152,7 +156,7 @@ function secupress_get_vulnerable_themes() {
 
 	if ( $temp ) {
 		$vulnerable_themes = $temp;
-		set_site_transient( __FUNCTION__, $vulnerable_themes, 6 * HOUR_IN_SECONDS );
+		set_site_transient( 'secupress_vulnerable_themes', $vulnerable_themes, 6 * HOUR_IN_SECONDS );
 		return $vulnerable_themes;
 	}
 
