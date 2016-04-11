@@ -230,6 +230,27 @@ function secupress_check_ban_ips_form( $args ) {
 }
 
 
+/**
+ * If user registrations are open, the "admin" user should not be blacklisted.
+ * This is to avoid a conflict between "admin should exist" and "admin is a blacklisted username".
+ *
+ * @since 1.0
+ *
+ * @param (array) $list List of usernames.
+ *
+ * @return (array) List of usernames minus "admin" if registrations are open.
+ */
+add_filter( 'secupress.plugin.blacklist_logins_list', 'secupress_maybe_remove_admin_from_blacklist' );
+
+function secupress_maybe_remove_admin_from_blacklist( $list ) {
+	if ( secupress_users_can_register() ) {
+		$list = array_diff( $list, array( 'admin' ) );
+	}
+
+	return $list;
+}
+
+
 add_action( 'plugins_loaded', 'secupress_rename_admin_username_logout', 50 );
 /**
  * Will rename the "admin" account after the rename-admin-username manual fix

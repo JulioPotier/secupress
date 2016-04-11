@@ -72,7 +72,7 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 		$username = 'admin';
 		$user_id  = username_exists( $username );
 
-		// The "admin" account exists, it should have no role.
+		// The "admin" account exists and has a role or capabilities: it should have no role.
 		if ( static::user_has_capas( $user_id ) ) {
 			// bad
 			$this->add_message( 200, array( '<em>' . $username . '</em>' ) );
@@ -97,7 +97,7 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 		$username = 'admin';
 		$user_id  = username_exists( $username );
 
-		// The "admin" account exists.
+		// The "admin" account exists and has a role or capabilities.
 		if ( static::user_has_capas( $user_id ) ) {
 
 			$current_user_id = get_current_user_id();
