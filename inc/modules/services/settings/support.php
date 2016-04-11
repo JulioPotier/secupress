@@ -29,9 +29,9 @@ $this->add_field( array(
 	'type'              => 'textarea',
 	'name'              => $this->get_field_name( 'description' ),
 	'depends'           => $main_field_name,
-	'rows'	            => 10,
-	'default'  	        => __( 'Please provide the specific url(s) where we can see each issue. e.g. the request doesn\'t work on this page: example.com/this-page', 'secupress' ) . "\n\n" .
-							__( 'Please let us know how we will recognize the issue or can reproduce the issue. What is supposed to happen, and what is actually happening instead?', 'secupress' ) . "\n",
+	'rows'              => 10,
+	'default'           => __( 'Please provide the specific url(s) where we can see each issue. e.g. the request doesn\'t work on this page: example.com/this-page', 'secupress' ) . "\n\n" .
+	                       __( 'Please let us know how we will recognize the issue or can reproduce the issue. What is supposed to happen, and what is actually happening instead?', 'secupress' ) . "\n",
 ) );
 
 $this->add_field( array(
