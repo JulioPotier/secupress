@@ -263,8 +263,10 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 
 		// Force refresh of plugin update information.
 		if ( $count_deleted && $current = get_site_transient( 'update_plugins' ) ) {
-			$current->response = array_diff_key( $current->response, $deleted_plugins );
+			$current->response  = array_diff_key( $current->response, $deleted_plugins );
+			$current->no_update = array_diff_key( $current->no_update, $deleted_plugins );
 			set_site_transient( 'update_plugins', $current );
+			wp_cache_delete( 'plugins', 'plugins' );
 		}
 	}
 
@@ -333,8 +335,10 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 			$this->add_fix_message( 105, array( count( $not_removed ), $not_removed ) );
 		}
 
-		// Force refresh of theme update information
+		// Force refresh of theme update information.
 		delete_site_transient( 'update_themes' );
+		// Force refresh of themes list.
+		search_theme_directories( true );
 	}
 
 
