@@ -88,12 +88,10 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	wp_enqueue_script( 'secupress-wordpress-js', SECUPRESS_ADMIN_JS_URL . 'secupress-wordpress' . $suffix . '.js', array(), $version, true );
 
 	$pages = array(
-		'toplevel_page_secupress'                          => 1,
-		SECUPRESS_PLUGIN_SLUG . '_page_secupress_settings' => 1,
-		SECUPRESS_PLUGIN_SLUG . '_page_secupress_modules'  => 1,
-		SECUPRESS_PLUGIN_SLUG . '_page_secupress_scanners' => 1,
-		SECUPRESS_PLUGIN_SLUG . '_page_secupress_logs'     => 1,
 		'toplevel_page_secupress_scanners'                 => 1,
+		SECUPRESS_PLUGIN_SLUG . '_page_secupress_modules'  => 1,
+		SECUPRESS_PLUGIN_SLUG . '_page_secupress_settings' => 1,
+		SECUPRESS_PLUGIN_SLUG . '_page_secupress_logs'     => 1,
 	);
 
 	if ( ! isset( $pages[ $hook_suffix ] ) ) {
@@ -273,14 +271,12 @@ function secupress_create_menus() {
 	$cap   = secupress_get_capability();
 
 	// Main menu item
-	add_menu_page( SECUPRESS_PLUGIN_NAME, SECUPRESS_PLUGIN_NAME, $cap, 'secupress', '__secupress_global_settings', 'dashicons-shield-alt' );
+	add_menu_page( SECUPRESS_PLUGIN_NAME, SECUPRESS_PLUGIN_NAME, $cap, 'secupress_scanners', '__secupress_scanners', 'dashicons-shield-alt' );
 
 	// Sub-menus
-	// add_submenu_page( 'secupress', __( 'Dashboard' ),             __( 'Dashboard' ),                      $cap, 'secupress',          '__secupress_dashboard' );
-	add_submenu_page( 'secupress', __( 'Settings' ),              __( 'Settings' ),                       $cap, 'secupress', '__secupress_global_settings' );
-	add_submenu_page( 'secupress', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ) . $count, $cap, 'secupress_scanners', '__secupress_scanners' );
-	add_submenu_page( 'secupress', __( 'Modules', 'secupress' ),  __( 'Modules', 'secupress' ),           $cap, 'secupress_modules',  '__secupress_modules' );
-	// Add the counter to the main menu: it can't be added with `add_menu_page()` because it would change the value of the screen ID (yes, it's utterly stupid).
+	add_submenu_page( 'secupress_scanners', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ) . $count, $cap, 'secupress_scanners', '__secupress_scanners' );
+	add_submenu_page( 'secupress_scanners', __( 'Modules', 'secupress' ),  __( 'Modules', 'secupress' ),           $cap, 'secupress_modules',  '__secupress_modules' );
+	add_submenu_page( 'secupress_scanners', __( 'Settings' ),              __( 'Settings' ),                       $cap, 'secupress',          '__secupress_global_settings' );
 	end( $menu );
 	$key = key( $menu );
 	$menu[ $key ][0] .= $count;
