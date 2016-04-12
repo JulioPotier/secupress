@@ -543,12 +543,13 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 
 	final public function get_fix_action_fields( $fix_actions = false, $echo = true ) {
 		$fix_actions = $fix_actions ? $fix_actions : $this->fix_actions;
-		$output  = '<input type="hidden" name="action" value="secupress_manual_fixit" />';
-		$output .= '<input type="hidden" name="test" value="' . $this->class_name_part . '" />';
-		$output .= '<input type="hidden" name="test-parts" value="' . implode( ',', $fix_actions ) . '" />';
-		$output .= wp_nonce_field( 'secupress_manual_fixit-' . $this->class_name_part, 'secupress_manual_fixit-nonce', false, false );
+		$output  = "\n";
+		$output .= '<input type="hidden" name="action" value="secupress_manual_fixit" />' . "\n";
+		$output .= '<input type="hidden" name="test" value="' . $this->class_name_part . '" />' . "\n";
+		$output .= '<input type="hidden" name="test-parts" value="' . implode( ',', $fix_actions ) . '" />' . "\n";
+		$output .= wp_nonce_field( 'secupress_manual_fixit-' . $this->class_name_part, 'secupress_manual_fixit-nonce', false, false ) . "\n";
 		if ( $this->is_for_current_site() ) {
-			$output .= '<input type="hidden" name="for-current-site" value="1" />';
+			$output .= '<input type="hidden" name="for-current-site" value="1" />' . "\n";
 		}
 
 		if ( ! $echo ) {

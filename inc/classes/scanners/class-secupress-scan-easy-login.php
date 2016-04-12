@@ -25,10 +25,8 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 		self::$type     = 'WordPress';
 		self::$title    = __( 'Check if your login page is protected by double authentication or something like that (may be a custom script).', 'secupress' );
 		self::$more     = __( 'The login vector is often use in web attacks, every hour, your website is targeted by random bots whom try to log in your site. Adding another layer of login can improve the security.', 'secupress' );
-
 		self::$more_fix = sprintf(
-			__( 'This will activate the option %1$s (set on PasswordLess) from the module %2$s.', 'secupress' ),
-			'<em>' . __( 'Use a Double Authentication', 'secupress' ) . '</em>',
+			__( 'This will activate the <strong>PasswordLess Double Authentication</strong> from the module %s.', 'secupress' ),
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#Use_a_Double_Authentication">' . __( 'Users & Login', 'secupress' ) . '</a>'
 		);
 	}
@@ -38,7 +36,7 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 		$messages = array(
 			// good
 			0   => __( 'The login page seems to be protected by double authentication or a custom script.', 'secupress' ),
-			1   => __( 'The <strong>Double Authentication</strong> module has been activated with <strong>PasswordLess - Email</strong> option for every role. Users will receive an email to log-in now.', 'secupress' ),
+			1   => __( 'The <strong>PasswordLess Double Authentication</strong> has been activated for every role. Users will receive an email to log-in now.', 'secupress' ),
 			// warning
 			100 => __( 'Unable to create a user to test the login authentication system.', 'secupress' ),
 			// bad

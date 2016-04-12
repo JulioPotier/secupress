@@ -29,8 +29,9 @@ function __secupress_scanit_action_callback() {
 		secupress_admin_die();
 	}
 
+	$doing_ajax       = defined( 'DOING_AJAX' ) && DOING_AJAX;
 	$for_current_site = ! empty( $_GET['for-current-site'] );
-	$response = secupress_scanit( $test_name, true, $for_current_site );
+	$response         = secupress_scanit( $test_name, $doing_ajax, $for_current_site );
 
 /*	$times   = (array) get_site_option( SECUPRESS_SCAN_TIMES );
 	$counts  = secupress_get_scanner_counts();
@@ -39,7 +40,7 @@ function __secupress_scanit_action_callback() {
 	$times   = array_filter( array_slice( $times , -5 ) );
 	update_site_option( SECUPRESS_SCAN_TIMES, $times );*////
 
-	secupress_admin_send_response_or_redirect( $response, 'scanners' );
+	secupress_admin_send_response_or_redirect( $response, 'scanners#' . $test_name );
 }
 
 
@@ -113,10 +114,16 @@ function __secupress_fixit_action_callback() {
 		secupress_admin_die();
 	}
 
+	$doing_ajax       = defined( 'DOING_AJAX' ) && DOING_AJAX;
 	$for_current_site = ! empty( $_GET['for-current-site'] );
-	$response = secupress_fixit( $test_name, true, $for_current_site );
+	$response         = secupress_fixit( $test_name, $doing_ajax, $for_current_site );
 
-	secupress_admin_send_response_or_redirect( $response, 'scanners' );
+	// If not ajax, perform a scan.
+	if ( ! $doing_ajax ) {
+		secupress_scanit( $test_name, false, $for_current_site );
+	}
+
+	secupress_admin_send_response_or_redirect( $response, 'scanners#' . $test_name );
 }
 
 
@@ -190,10 +197,16 @@ function __secupress_manual_fixit_action_callback() {
 		secupress_admin_die();
 	}
 
+	$doing_ajax       = defined( 'DOING_AJAX' ) && DOING_AJAX;
 	$for_current_site = ! empty( $_POST['for-current-site'] );
-	$response = secupress_manual_fixit( $test_name, true, $for_current_site );
+	$response         = secupress_manual_fixit( $test_name, $doing_ajax, $for_current_site );
 
-	secupress_admin_send_response_or_redirect( $response, 'scanners' );
+	// If not ajax, perform a scan.
+	if ( ! $doing_ajax ) {
+		secupress_scanit( $test_name, false, $for_current_site );
+	}
+
+	secupress_admin_send_response_or_redirect( $response, 'scanners#' . $test_name );
 }
 
 
@@ -269,7 +282,12 @@ function secupress_admin_send_response_or_redirect( $response, $redirect = false
 		wp_send_json_success( $response );
 	}
 
-	$redirect = $redirect ? secupress_admin_url( $redirect ) : wp_get_referer();
+	if ( $redirect ) {
+		$redirect = explode( '#', $redirect );
+		$redirect = secupress_admin_url( $redirect[0] ) . ( ! empty( $redirect[1] ) ? '#' . $redirect[1] : '' );
+	} else {
+		$redirect = wp_get_referer();
+	}
 
 	wp_redirect( $redirect );
 	die();

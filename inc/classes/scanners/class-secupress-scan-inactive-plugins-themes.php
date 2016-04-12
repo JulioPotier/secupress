@@ -263,8 +263,10 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 
 		// Force refresh of plugin update information.
 		if ( $count_deleted && $current = get_site_transient( 'update_plugins' ) ) {
-			$current->response = array_diff_key( $current->response, $deleted_plugins );
+			$current->response  = array_diff_key( $current->response, $deleted_plugins );
+			$current->no_update = array_diff_key( $current->no_update, $deleted_plugins );
 			set_site_transient( 'update_plugins', $current );
+			wp_cache_delete( 'plugins', 'plugins' );
 		}
 	}
 
@@ -333,8 +335,10 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 			$this->add_fix_message( 105, array( count( $not_removed ), $not_removed ) );
 		}
 
-		// Force refresh of theme update information
+		// Force refresh of theme update information.
 		delete_site_transient( 'update_themes' );
+		// Force refresh of themes list.
+		search_theme_directories( true );
 	}
 
 
@@ -344,7 +348,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 
 		if ( $lists['plugins'] ) {
 			$form  = '<h4 id="secupress-fix-inactive-plugins">' . __( 'Checked plugins will be deleted:', 'secupress' ) . '</h4>';
-			$form .= '<fieldset aria-labelledby="secupress-fix-inactive-plugins" class="secupress-boxed-group">';
+			$form .= '<fieldset aria-labelledby="secupress-fix-inactive-plugins" class="secupress-boxed-group">' . "\n";
 
 				foreach ( $lists['plugins'] as $plugin_file => $plugin_data ) {
 					$is_symlinked = secupress_is_plugin_symlinked( $plugin_file );
@@ -355,10 +359,10 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 						} else {
 							$form .= esc_html( $plugin_data['Name'] );
 						}
-					$form .= '</label><br/>';
+					$form .= "</label><br/>\n";
 				}
 
-			$form .= '</fieldset>';
+			$form .= "</fieldset>\n";
 		}
 		else {
 			$form = __( 'No inactive plugins', 'secupress' );
@@ -368,7 +372,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 
 		if ( $lists['themes'] ) {
 			$form  = '<h4 id="secupress-fix-inactive-themes">' . __( 'Checked themes will be deleted:', 'secupress' ) . '</h4>';
-			$form .= '<fieldset aria-labelledby="secupress-fix-inactive-themes" class="secupress-boxed-group">';
+			$form .= '<fieldset aria-labelledby="secupress-fix-inactive-themes" class="secupress-boxed-group">' . "\n";
 
 				foreach ( $lists['themes'] as $theme_file => $theme_data ) {
 					$is_symlinked = secupress_is_theme_symlinked( $theme_file );
@@ -379,10 +383,10 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements i
 						} else {
 							$form .= esc_html( $theme_data->Name );
 						}
-					$form .= '</label><br/>';
+					$form .= "</label><br/>\n";
 				}
 
-			$form .= '</fieldset>';
+			$form .= "</fieldset>\n";
 		}
 		else {
 			$form = __( 'No inactive themes', 'secupress' );

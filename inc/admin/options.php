@@ -645,7 +645,7 @@ function secupress_main_scan() {
 							$fix_message = secupress_format_message( $fixes[ $option_name ]['msgs'], $class_name_part );
 						}
 						?>
-						<tr class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> type-all status-all<?php echo $css_class; ?>">
+						<tr id="<?php echo $class_name_part; ?>" class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> type-all status-all<?php echo $css_class; ?>">
 							<th scope="row" class="secupress-check-column hide-if-no-js">
 								<label class="screen-reader-text" for="cb-select-<?php echo $class_name_part; ?>"><?php _e( 'Select this scan', 'secupress' ); ?></label>
 								<input id="cb-select-<?php echo $class_name_part; ?>" type="checkbox" class="secupress-checkbox-<?php echo $prio_key; ?>" />
@@ -710,7 +710,7 @@ function secupress_main_scan() {
 											<?php
 											echo implode( '', $fix_actions );
 											submit_button( __( 'Fix it!', 'secupress' ) );
-											$current_test->get_fix_action_fields( $fix_actions );
+											$current_test->get_fix_action_fields( array_keys( $fix_actions ) );
 											?>
 										</form>
 									</td>

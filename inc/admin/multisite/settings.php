@@ -305,7 +305,7 @@ function __secupress_subsite_scanners() {
 								$fix_message = '';
 							}
 							?>
-							<tr class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> type-all status-all<?php echo $css_class; ?>">
+							<tr id="<?php echo $class_name_part; ?>" class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> type-all status-all<?php echo $css_class; ?>">
 								<th scope="row">
 									<?php echo $class_name::$title; ?>
 									<div class="secupress-row-actions">

@@ -620,11 +620,11 @@ function secupress_get_tests() {
 			'Inactive_Plugins_Themes', 'Non_Login_Time_Slot', 'Bad_Usernames',
 			'Bad_Request_Methods',     'PhpVersion',     /*'Too_Many_Admins',*/
 			'Block_HTTP_1_0',          'Discloses',      'Block_Long_URL',
-			'Readme_Discloses',        'Bad_Url_Access', 
+			'Readme_Discloses',        'Bad_Url_Access', 'Uptime_Monitor',
 		),
 		'low' => array(
 			'Login_Errors_Disclose', 'PHP_Disclosure', /*'Admin_As_Author',*/
-			'DirectoryIndex'
+			'DirectoryIndex',
 		)
 	);
 
