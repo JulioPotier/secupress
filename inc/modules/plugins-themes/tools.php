@@ -6,7 +6,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
  *
  * @since 1.0
  *
- * @return (array) The plugins removed from the repository: dirname as array keys and plugin path as values.
+ * @return (array|bool) The plugins removed from the repository: dirname as array keys and plugin path as values. Return false if the file is not readable.
  **/
 function secupress_get_removed_plugins() {
 	static $removed_plugins;
@@ -42,7 +42,7 @@ function secupress_get_removed_plugins() {
  *
  * @since 1.0
  *
- * @return (array) The plugins from the repository not updated for 2 years: dirname as array keys and plugin path as values.
+ * @return (array|bool) The plugins from the repository not updated for 2 years: dirname as array keys and plugin path as values. Return false if the file is not readable.
  **/
 function secupress_get_notupdated_plugins() {
 	static $notupdated_plugins;
@@ -116,6 +116,33 @@ function secupress_refresh_vulnerable_plugins() { //// GO PRO
 	if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 		update_site_option( 'secupress_bad_plugins', wp_remote_retrieve_body( $response ) );
 	}
+}
+
+/**
+ * Get the plugins whitelist from our local file.
+ *
+ * @since 1.0
+ *
+ * @return (array|bool) The plugins whitelist, with dirname as keys. Return false if the file is not readable.
+ **/
+function secupress_get_plugins_whitelist() {
+	static $whitelist;
+
+	if ( isset( $whitelist ) ) {
+		return $whitelist;
+	}
+
+	$whitelist_file = SECUPRESS_INC_PATH . 'data/whitelist-plugin-list.data';
+
+	if ( ! is_readable( $whitelist_file ) ) {
+		return false;
+	}
+
+	$whitelist = file( $whitelist_file );
+	$whitelist = array_map( 'trim', $whitelist );
+	$whitelist = array_flip( $whitelist );
+
+	return $whitelist;
 }
 
 /* THEMES */
