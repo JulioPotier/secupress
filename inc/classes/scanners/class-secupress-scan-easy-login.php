@@ -44,6 +44,7 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 			// bad
 			200 => __( 'Your login system is <strong>not strong enough</strong>, you need a <strong>double authentication system</strong>.', 'secupress' ),
 			201 => __( 'The registration page is <strong>not protected</strong> from bots.', 'secupress' ),
+			202 => sprintf( __( 'Our module <a href="%s">%s</a> could fix this.', 'secupress' ), secupress_admin_url( 'modules', 'users-login#Use_a_Double_Authentication' ), __( 'PasswordLess', 'secupress' ) ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -72,6 +73,7 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 			if ( is_a( $check, 'WP_User' ) ) {
 				// bad
 				$this->add_message( 200 );
+				$this->add_pre_fix_message( 202 );
 			}
 
 		} else {
@@ -88,11 +90,10 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 
 	public function fix() {
 
-		$settings = array( 'double-auth_affected_role' => array() );
-		secupress_update_module_options( $settings, 'users-login' );
-
-		secupress_activate_submodule( 'users-login', 'passwordless' );
-		$this->add_fix_message( 1 );
+		if ( secupress_is_pro() && function_exists( 'secupress_pro_fix_easy_login' ) ) {
+				secupress_pro_fix_easy_login();
+			}
+		}
 
 		return parent::fix();
 	}
