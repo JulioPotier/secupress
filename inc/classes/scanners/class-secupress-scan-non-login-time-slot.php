@@ -68,6 +68,11 @@ class SecuPress_Scan_Non_Login_Time_Slot extends SecuPress_Scan implements iSecu
 
 	public function fix() {
 
+		if ( secupress_is_pro() && function_exists( 'secupress_pro_fix_non_login_time_slot' ) ) {
+				secupress_pro_fix_non_login_time_slot();
+			}
+		}
+
 		return parent::fix();
 	}
 }
