@@ -17,7 +17,8 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 	 * @var Singleton The reference to *Singleton* instance of this class
 	 */
 	protected static $_instance;
-	public    static $prio = 'high';
+	public    static $prio    = 'high';
+	public    static $fixable = 'pro';
 
 
 	protected static function init() {
@@ -25,11 +26,9 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 		self::$title    = __( 'Check if your login page is protected by double authentication or something like that (may be a custom script).', 'secupress' );
 		self::$more     = __( 'The login vector is often use in web attacks, every hour, your website is targeted by random bots whom try to log in your site. Adding another layer of login can improve the security.', 'secupress' );
 
-		$submodule      = ! secupress_is_pro() ? __( 'Email Link', 'secupress' ) : __( 'PasswordLess', 'secupress' );
 		self::$more_fix = sprintf(
-			__( 'This will activate the option %1$s (set on %2$s) from the module %3$s.', 'secupress' ),
+			__( 'This will activate the option %1$s (set on PasswordLess) from the module %2$s.', 'secupress' ),
 			'<em>' . __( 'Use a Double Authentication', 'secupress' ) . '</em>',
-			$submodule,
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#Use_a_Double_Authentication">' . __( 'Users & Login', 'secupress' ) . '</a>'
 		);
 	}
@@ -39,8 +38,7 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 		$messages = array(
 			// good
 			0   => __( 'The login page seems to be protected by double authentication or a custom script.', 'secupress' ),
-			1   => __( 'The <strong>Double Authentication</strong> module has been activated with <strong>Email Link</strong> option for every role. Users will receive an email to log-in now.', 'secupress' ),
-			2   => __( 'The <strong>Double Authentication</strong> module has been activated with <strong>PasswordLess - Email</strong> option for every role. Users will receive an email to log-in now.', 'secupress' ),
+			1   => __( 'The <strong>Double Authentication</strong> module has been activated with <strong>PasswordLess - Email</strong> option for every role. Users will receive an email to log-in now.', 'secupress' ),
 			// warning
 			100 => __( 'Unable to create a user to test the login authentication system.', 'secupress' ),
 			// bad
@@ -93,13 +91,8 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 		$settings = array( 'double-auth_affected_role' => array() );
 		secupress_update_module_options( $settings, 'users-login' );
 
-		if ( ! secupress_is_pro() ) {
-			secupress_activate_submodule( 'users-login', 'emaillink' );
-			$this->add_fix_message( 1 );
-		} else {
-			secupress_activate_submodule( 'users-login', 'passwordless' );
-			$this->add_fix_message( 2 );
-		}
+		secupress_activate_submodule( 'users-login', 'passwordless' );
+		$this->add_fix_message( 1 );
 
 		return parent::fix();
 	}
