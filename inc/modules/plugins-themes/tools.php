@@ -2,10 +2,11 @@
 defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
 /**
- * Get the plugins removed from repo from our local file
+ * Get the plugins removed from repo from our local file.
  *
- * @return array The plugins removed from the repo
  * @since 1.0
+ *
+ * @return (array) The plugins removed from the repository: dirname as array keys and plugin path as values.
  **/
 function secupress_get_removed_plugins() {
 	static $removed_plugins;
@@ -19,14 +20,15 @@ function secupress_get_removed_plugins() {
 	}
 
 	$plugins_list_file = SECUPRESS_INC_PATH . 'data/no-longer-in-directory-plugin-list.data';
-	if ( is_readable( $plugins_list_file ) ) {
-		$removed_plugins = array_flip( array_map( 'trim', file( $plugins_list_file ) ) );
-	} else {
+
+	if ( ! is_readable( $plugins_list_file ) ) {
 		return false;
 	}
+
+	$removed_plugins = array_flip( array_map( 'trim', file( $plugins_list_file ) ) );
+
 	$all_plugins = array_keys( get_plugins() );
-	$all_plugins = array_map( 'dirname', $all_plugins );
-	$all_plugins = array_flip( $all_plugins );
+	$all_plugins = array_combine( array_map( 'dirname', $all_plugins ), $all_plugins );
 	$all_plugins = array_intersect_key( $all_plugins, $removed_plugins );
 
 	$removed_plugins = $all_plugins;
@@ -36,10 +38,11 @@ function secupress_get_removed_plugins() {
 }
 
 /**
- * Get the plugins not update since 2 years from repo from our local file
+ * Get the plugins not update since 2 years from repo from our local file.
  *
- * @return array The plugins not update since 2 years from the repo
  * @since 1.0
+ *
+ * @return (array) The plugins from the repository not updated for 2 years: dirname as array keys and plugin path as values.
  **/
 function secupress_get_notupdated_plugins() {
 	static $notupdated_plugins;
@@ -53,15 +56,15 @@ function secupress_get_notupdated_plugins() {
 	}
 
 	$plugins_list_file = SECUPRESS_INC_PATH . 'data/not-updated-in-over-two-years-plugin-list.data';
-	if ( is_readable( $plugins_list_file ) ) {
-		$notupdated_plugins = array_flip( array_map( 'trim', file( $plugins_list_file ) ) );
-	} else {
+
+	if ( ! is_readable( $plugins_list_file ) ) {
 		return false;
 	}
 
+	$notupdated_plugins = array_flip( array_map( 'trim', file( $plugins_list_file ) ) );
+
 	$all_plugins = array_keys( get_plugins() );
-	$all_plugins = array_map( 'dirname', $all_plugins );
-	$all_plugins = array_flip( $all_plugins );
+	$all_plugins = array_combine( array_map( 'dirname', $all_plugins ), $all_plugins );
 	$all_plugins = array_intersect_key( $all_plugins, $notupdated_plugins );
 
 	$notupdated_plugins = $all_plugins;
