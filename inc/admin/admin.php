@@ -118,6 +118,11 @@ function __secupress_fixit_action_callback() {
 	$for_current_site = ! empty( $_GET['for-current-site'] );
 	$response         = secupress_fixit( $test_name, $doing_ajax, $for_current_site );
 
+	// If not ajax, perform a scan.
+	if ( ! $doing_ajax ) {
+		secupress_scanit( $test_name, false, $for_current_site );
+	}
+
 	secupress_admin_send_response_or_redirect( $response, 'scanners#' . $test_name );
 }
 
