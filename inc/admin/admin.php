@@ -40,7 +40,7 @@ function __secupress_scanit_action_callback() {
 	$times   = array_filter( array_slice( $times , -5 ) );
 	update_site_option( SECUPRESS_SCAN_TIMES, $times );*////
 
-	secupress_admin_send_response_or_redirect( $response, 'scanners' );
+	secupress_admin_send_response_or_redirect( $response, 'scanners#' . $test_name );
 }
 
 
@@ -118,7 +118,7 @@ function __secupress_fixit_action_callback() {
 	$for_current_site = ! empty( $_GET['for-current-site'] );
 	$response         = secupress_fixit( $test_name, $doing_ajax, $for_current_site );
 
-	secupress_admin_send_response_or_redirect( $response, 'scanners' );
+	secupress_admin_send_response_or_redirect( $response, 'scanners#' . $test_name );
 }
 
 
