@@ -329,7 +329,7 @@ function __secupress_subsite_scanners() {
 
 									<div class="secupress-row-actions">
 										<?php
-										if ( $current_test::$fixable ) { ?>
+										if ( true === $current_test::$fixable ) { ?>
 											<a class="button button-secondary button-small secupress-fixit" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?for-current-site=1&action=secupress_fixit&test=' . $class_name_part ), 'secupress_fixit_' . $class_name_part ); ?>"><?php _e( 'Fix it!', 'secupress' ); ?></a>
 											<div class="secupress-row-actions">
 												<span class="hide-if-no-js">
@@ -337,7 +337,7 @@ function __secupress_subsite_scanners() {
 												</span>
 											</div>
 											<?php
-										} elseif ( false ) /* //// $needs-pro */ { ?>
+										} elseif ( 'pro' == $current_test::$fixable ) /* //// $needs-pro */ { ?>
 											<button type="button" class="button button-secondary button-small secupress-go-pro"><?php _e( 'Pro Upgrade', 'secupress' ); ?></button>
 											<?php
 										} else { // Really not fixable by the plugin + //// #
