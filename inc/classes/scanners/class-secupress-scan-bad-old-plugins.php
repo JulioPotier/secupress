@@ -502,31 +502,37 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 	}
 
 
-	// Plugins no longer in directory - http://plugins.svn.wordpress.org/no-longer-in-directory/trunk/
+	// Plugins no longer in directory.
 
 	final protected static function get_installed_plugins_no_longer_in_directory( $for_fix = false ) {
-		$plugins_list_file = 'data/no-longer-in-directory-plugin-list.data';
-		return static::get_installed_bad_plugins( $plugins_list_file, $for_fix );
+		return static::get_installed_bad_plugins( 'removed_plugins', $for_fix );
 	}
 
 
-	// Plugins not updated in over 2 years - http://plugins.svn.wordpress.org/no-longer-in-directory/trunk/
+	// Plugins not updated in over 2 years.
 
 	final protected static function get_installed_plugins_over_2_years( $for_fix = false ) {
-		$plugins_list_file = 'data/not-updated-in-over-two-years-plugin-list.data';
-		return static::get_installed_bad_plugins( $plugins_list_file, $for_fix );
+		return static::get_installed_bad_plugins( 'notupdated_plugins', $for_fix );
 	}
 
 
 	// Return an array of plugin names like `array( $path => $name, $path => $name )`.
 
-	final protected static function get_installed_bad_plugins( $plugins_list_file, $for_fix = false ) {
-		static $whitelist;
+	final protected static function get_installed_bad_plugins( $plugins_type, $for_fix = false ) {
+		static $whitelist_error = false;
 
-		$plugins_list_file = SECUPRESS_INC_PATH . $plugins_list_file;
+		if ( 'notupdated_plugins' === $plugins_type ) {
+			$bad_plugins  = secupress_get_notupdated_plugins();
+			$plugins_file = 'data/not-updated-in-over-two-years-plugin-list.data';
+		} else {
+			$bad_plugins  = secupress_get_removed_plugins();
+			$plugins_file = 'data/no-longer-in-directory-plugin-list.data';
+		}
 
-		if ( ! is_readable( $plugins_list_file ) ) {
-			$args =  array( '<code>' . str_replace( ABSPATH, '', $plugins_list_file ) . '</code>' );
+		if ( false === $bad_plugins ) {
+			// The file is not readable.
+			$plugins_file = SECUPRESS_INC_PATH . $plugins_file;
+			$args         = array( '<code>' . str_replace( ABSPATH, '', $plugins_file ) . '</code>' );
 			// warning
 			if ( $for_fix ) {
 				$this->add_fix_message( 100, $args );
@@ -536,47 +542,41 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 			return false;
 		}
 
-		// Deal with the white list.
-		if ( ! isset( $whitelist ) ) {
-			$whitelist_file = SECUPRESS_INC_PATH . 'data/whitelist-plugin-list.data';
+		if ( ! $bad_plugins ) {
+			return array();
+		}
 
-			if ( ! is_readable( $whitelist_file ) ) {
-				$args = array( '<code>' . str_replace( ABSPATH, '', $whitelist_file ) . '</code>' );
+		// Deal with the white list.
+		$whitelist = secupress_get_plugins_whitelist();
+
+		if ( false === $whitelist ) {
+			// The file is not readable.
+			$whitelist = array();
+
+			if ( ! $whitelist_error ) {
+				// No need to trigger the error more than once.
+				$whitelist_error = true;
+				$whitelist_file  = SECUPRESS_INC_PATH . 'data/whitelist-plugin-list.data';
+				$args            = array( '<code>' . str_replace( ABSPATH, '', $whitelist_file ) . '</code>' );
 				// warning
 				if ( $for_fix ) {
 					$this->add_fix_message( 100, $args );
 				} else {
 					$this->add_message( 100, $args );
 				}
-				$whitelist_file = false;
-				return false;
-			}
-
-			$whitelist = file( $whitelist_file );
-			$whitelist = array_map( 'trim', $whitelist );
-			$whitelist = array_flip( $whitelist );
-		}
-
-		if ( ! $whitelist ) {
-			// No need to trigger a new warning, already done.
-			return false;
-		}
-
-		$plugins_by_path = get_plugins();
-
-		$not_in_directory = file( $plugins_list_file );
-		$not_in_directory = array_map( 'trim', $not_in_directory );
-		$not_in_directory = array_flip( $not_in_directory );
-		$not_in_directory = array_diff_key( $not_in_directory, $whitelist );
-		$bad_plugins      = array();
-
-		foreach ( $plugins_by_path as $plugin_path => $plugin_data ) {
-			if ( preg_match( '/([^\/]+)\//', $plugin_path, $matches ) ) {
-				if ( isset( $not_in_directory[ $matches[1] ] ) ) {
-					$bad_plugins[ $plugin_path ] = $plugin_data['Name'];
-				}
 			}
 		}
+
+		$bad_plugins = array_diff_key( $bad_plugins, $whitelist );
+
+		if ( ! $bad_plugins ) {
+			return array();
+		}
+
+		$all_plugins = get_plugins();
+		$bad_plugins = array_flip( $bad_plugins );
+		$bad_plugins = array_intersect_key( $all_plugins, $bad_plugins );
+		$bad_plugins = wp_list_pluck( $bad_plugins, 'Name' );
 
 		return $bad_plugins;
 	}
