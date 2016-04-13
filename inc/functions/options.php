@@ -614,7 +614,7 @@ function secupress_get_tests() {
 			'Admin_User',       'Easy_Login',        'Subscription',
 			'WP_Config',        'Salt_Keys',         'Passwords_Strength',
 			'Chmods',           'Common_Flaws',      'Bad_User_Agent',
-			'SQLi',             'Anti_Scanner',
+			'SQLi',             'Anti_Scanner',      'Anti_Front_Bruteforce',
 		),
 		'medium' => array(
 			'Inactive_Plugins_Themes', 'Non_Login_Time_Slot', 'Bad_Usernames',
