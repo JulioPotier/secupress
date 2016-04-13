@@ -158,7 +158,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 
 		// JS
 		$depts = array();
-		if ( is_network_admin() ) {
+		if ( is_network_admin() || ! is_multisite() ) {
 			wp_enqueue_script( 'secupress-chartjs', SECUPRESS_ADMIN_JS_URL . 'chart' . $suffix . '.js', array(), '1.0.2.1', true );
 			wp_enqueue_script( 'jquery-timeago',    SECUPRESS_ADMIN_JS_URL . 'jquery.timeago.js', array( 'jquery' ), '1.4.1', true );
 			$depts = array( 'secupress-chartjs', 'jquery-timeago' );
