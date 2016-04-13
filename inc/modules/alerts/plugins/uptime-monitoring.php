@@ -114,7 +114,7 @@ function secupress_uptime_monitoring_stop() {
 	$token = secupress_get_module_option( 'uptime-monitoring-token', false, 'alerts' );
 
 	// Send the request.
-	$response = wp_remote_post(
+	$response = wp_remote_request(
 		SECUPRESS_UPTIME_MONITOR_URL,
 		array(
 			'method'     => 'PUT',
