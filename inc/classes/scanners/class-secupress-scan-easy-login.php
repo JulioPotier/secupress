@@ -89,8 +89,7 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 	public function fix() {
 
 		if ( secupress_is_pro() && function_exists( 'secupress_pro_fix_easy_login' ) ) {
-				secupress_pro_fix_easy_login();
-			}
+			secupress_pro_fix_easy_login();
 		}
 
 		return parent::fix();
