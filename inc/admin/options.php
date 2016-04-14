@@ -620,7 +620,7 @@ function secupress_main_scan() {
 
 								<div class="secupress-row-actions">
 									<?php
-									if ( true === $current_test::$fixable ) {
+									if ( true === $current_test::$fixable || 'pro' === $current_test::$fixable && secupress_is_pro() ) {
 										?>
 										<a class="button button-secondary button-small secupress-fixit<?php echo $current_test::$delayed_fix ? ' delayed-fix' : '' ?>" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $class_name_part ), 'secupress_fixit_' . $class_name_part ); ?>"><?php _e( 'Fix it!', 'secupress' ); ?></a>
 										<div class="secupress-row-actions">
@@ -629,7 +629,7 @@ function secupress_main_scan() {
 											</span>
 										</div>
 										<?php
-									} elseif ( 'pro' === $current_test::$fixable && ! secupress_is_pro() ) { /* //// $needs-pro */
+									} elseif ( 'pro' === $current_test::$fixable ) { /* //// $needs-pro */
 										?>
 										<button type="button" class="button button-secondary button-small secupress-go-pro"><?php _e( 'Pro Upgrade', 'secupress' ); ?></button>
 										<?php
