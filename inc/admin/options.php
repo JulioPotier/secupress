@@ -609,6 +609,7 @@ function secupress_main_scan() {
 						$status_class = ! empty( $scanners[ $option_name ]['status'] ) ? sanitize_html_class( $scanners[ $option_name ]['status'] ) : 'notscannedyet';
 						$css_class   .= ' status-' . $status_class;
 						$css_class   .= isset( $autoscans[ $class_name_part ] ) ? ' autoscan' : '';
+						$css_class   .= false === $current_test::$fixable || 'pro' === $current_test::$fixable && ! secupress_is_pro() ? ' not-fixable' : '';
 
 						if ( ! empty( $scanners[ $option_name ]['msgs'] ) ) {
 							$scan_message = secupress_format_message( $scanners[ $option_name ]['msgs'], $class_name_part );
@@ -652,21 +653,21 @@ function secupress_main_scan() {
 
 								<div class="secupress-row-actions">
 									<?php
-									if ( true === $current_test::$fixable ) { ?>
-										<a class="button button-secondary button-small secupress-fixit" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $class_name_part ), 'secupress_fixit_' . $class_name_part ); ?>"><?php _e( 'Fix it!', 'secupress' ); ?></a>
+									if ( true === $current_test::$fixable ) {
+										?>
+										<a class="button button-secondary button-small secupress-fixit<?php echo $current_test::$delayed_fix ? ' delayed-fix' : '' ?>" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $class_name_part ), 'secupress_fixit_' . $class_name_part ); ?>"><?php _e( 'Fix it!', 'secupress' ); ?></a>
 										<div class="secupress-row-actions">
 											<span class="hide-if-no-js">
 												<button type="button" class="secupress-details-fix link-like" data-test="<?php echo $class_name_part; ?>" title="<?php esc_attr_e( 'Get fix details', 'secupress' ); ?>"><?php _e( 'Learn more', 'secupress' ); ?></button>
 											</span>
 										</div>
 										<?php
-									} elseif ( 'pro' == $current_test::$fixable ) /* //// $needs-pro */ { ?>
+									} elseif ( 'pro' === $current_test::$fixable && ! secupress_is_pro() ) { /* //// $needs-pro */
+										?>
 										<button type="button" class="button button-secondary button-small secupress-go-pro"><?php _e( 'Pro Upgrade', 'secupress' ); ?></button>
 										<?php
-									} else { // Really not fixable by the plugin + //// #
-										echo '<em>(';
-										_e( 'Cannot be fixed automatically.', 'secupress' );
-										echo '</em>)';
+									} else { // Really not fixable by the plugin
+										printf( '<em>(%s)</em>', __( 'Cannot be fixed automatically.', 'secupress' ) );
 									}
 									?>
 								</div>

@@ -17,7 +17,8 @@ class SecuPress_Scan_Themes_Update extends SecuPress_Scan implements iSecuPress_
 	 * @var Singleton The reference to *Singleton* instance of this class
 	 */
 	protected static $_instance;
-	public    static $prio = 'high';
+	public    static $prio        = 'high';
+	public    static $delayed_fix = true;
 
 
 	protected static function init() {
