@@ -88,12 +88,10 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	wp_enqueue_script( 'secupress-wordpress-js', SECUPRESS_ADMIN_JS_URL . 'secupress-wordpress' . $suffix . '.js', array(), $version, true );
 
 	$pages = array(
-		'toplevel_page_secupress'                          => 1,
-		SECUPRESS_PLUGIN_SLUG . '_page_secupress_settings' => 1,
-		SECUPRESS_PLUGIN_SLUG . '_page_secupress_modules'  => 1,
-		SECUPRESS_PLUGIN_SLUG . '_page_secupress_scanners' => 1,
-		SECUPRESS_PLUGIN_SLUG . '_page_secupress_logs'     => 1,
 		'toplevel_page_secupress_scanners'                 => 1,
+		SECUPRESS_PLUGIN_SLUG . '_page_secupress_modules'  => 1,
+		SECUPRESS_PLUGIN_SLUG . '_page_secupress_settings' => 1,
+		SECUPRESS_PLUGIN_SLUG . '_page_secupress_logs'     => 1,
 	);
 
 	if ( ! isset( $pages[ $hook_suffix ] ) ) {
@@ -119,98 +117,81 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		wp_enqueue_script( 'secupress-modules-js',  SECUPRESS_ADMIN_JS_URL . 'secupress-modules' . $suffix . '.js', array( 'wpmedia-js-sweetalert' ), $version, true );
 
 		wp_localize_script( 'secupress-modules-js', 'l10nmodules', array(
-			'selectOneRoleMinimum'  => __( 'Select 1 role minimum', 'secupress' ),
+			'selectOneRoleMinimum' => __( 'Select 1 role minimum', 'secupress' ),
 
-			'confirmTitle'          => __( 'Are you sure?', 'secupress' ),
-			'confirmCancel'         => _x( 'No, cancel', 'verb', 'secupress' ),
-			'error'                 => __( 'Error', 'secupress' ),
-			'unknownError'          => __( 'Unknown error.', 'secupress' ),
-			'delete'                => __( 'Delete', 'secupress' ),
-			'done'                  => __( 'Done!', 'secupress' ),
+			'confirmTitle'         => __( 'Are you sure?', 'secupress' ),
+			'confirmCancel'        => _x( 'No, cancel', 'verb', 'secupress' ),
+			'error'                => __( 'Error', 'secupress' ),
+			'unknownError'         => __( 'Unknown error.', 'secupress' ),
+			'delete'               => __( 'Delete', 'secupress' ),
+			'done'                 => __( 'Done!', 'secupress' ),
 
-			'confirmDeleteBackups'  => __( 'You are about to delete all your backups.', 'secupress' ),
-			'yesDeleteAll'          => __( 'Yes, delete all backups', 'secupress' ),
-			'deleteAllImpossible'   => __( 'Impossible to delete all backups.', 'secupress' ),
-			'deletingAllText'       => __( 'Deleting all backups&hellip;', 'secupress' ),
-			'deletedAllText'        => __( 'All backups deleted', 'secupress' ),
+			'confirmDeleteBackups' => __( 'You are about to delete all your backups.', 'secupress' ),
+			'yesDeleteAll'         => __( 'Yes, delete all backups', 'secupress' ),
+			'deleteAllImpossible'  => __( 'Impossible to delete all backups.', 'secupress' ),
+			'deletingAllText'      => __( 'Deleting all backups&hellip;', 'secupress' ),
+			'deletedAllText'       => __( 'All backups deleted', 'secupress' ),
 
-			'confirmDeleteBackup'   => __( 'You are about to delete a backup.', 'secupress' ),
-			'yesDeleteOne'          => __( 'Yes, delete this backup', 'secupress' ),
-			'deleteOneImpossible'   => __( 'Impossible to delete this backup.', 'secupress' ),
-			'deletingOneText'       => __( 'Deleting Backup&hellip;', 'secupress' ),
-			'deletedOneText'        => __( 'Backup deleted', 'secupress' ),
+			'confirmDeleteBackup'  => __( 'You are about to delete a backup.', 'secupress' ),
+			'yesDeleteOne'         => __( 'Yes, delete this backup', 'secupress' ),
+			'deleteOneImpossible'  => __( 'Impossible to delete this backup.', 'secupress' ),
+			'deletingOneText'      => __( 'Deleting Backup&hellip;', 'secupress' ),
+			'deletedOneText'       => __( 'Backup deleted', 'secupress' ),
 
-			'backupImpossible'      => __( 'Impossible to backup the database.', 'secupress' ),
-			'backupingText'         => __( 'Backuping&hellip;', 'secupress' ),
-			'backupedText'          => __( 'Backup done', 'secupress' ),
+			'backupImpossible'     => __( 'Impossible to backup the database.', 'secupress' ),
+			'backupingText'        => __( 'Backuping&hellip;', 'secupress' ),
+			'backupedText'         => __( 'Backup done', 'secupress' ),
 
-			'noBannedIPs'              => __( 'No Banned IPs anymore.', 'secupress' ),
-			'IPnotFound'               => __( 'IP not found.', 'secupress' ),
-			'IPremoved'                => __( 'IP removed.', 'secupress' ),
-			'searchResults'            => __( 'See search result below.', 'adjective', 'secupress' ),
-			'searchReset'              => _x( 'Search reset.', 'adjective', 'secupress' ),
+			'noBannedIPs'          => __( 'No Banned IPs anymore.', 'secupress' ),
+			'IPnotFound'           => __( 'IP not found.', 'secupress' ),
+			'IPremoved'            => __( 'IP removed.', 'secupress' ),
+			'searchResults'        => __( 'See search result below.', 'adjective', 'secupress' ),
+			'searchReset'          => _x( 'Search reset.', 'adjective', 'secupress' ),
 		) );
 
 	}
 	// Scanners page.
-	elseif ( SECUPRESS_PLUGIN_SLUG . '_page_secupress_scanners' === $hook_suffix ) {
-		// CSS
-		wp_enqueue_style( 'secupress-scanner-css',  SECUPRESS_ADMIN_CSS_URL . 'secupress-scanner' . $suffix . '.css', array( 'secupress-common-css' ), $version );
-		wp_enqueue_style( 'wpmedia-css-sweetalert', SECUPRESS_ADMIN_CSS_URL . 'sweetalert' . $suffix . '.css', array(), '1.1.0' );
-
-		// JS
-		wp_enqueue_script( 'secupress-chartjs',     SECUPRESS_ADMIN_JS_URL . 'chart' . $suffix . '.js', array(), '1.0.2.1', true );
-		wp_enqueue_script( 'jquery-timeago',        SECUPRESS_ADMIN_JS_URL . 'jquery.timeago.js', array( 'jquery' ), '1.4.1', true );
-		wp_enqueue_script( 'secupress-scanner-js',  SECUPRESS_ADMIN_JS_URL . 'secupress-scanner' . $suffix . '.js', array( 'secupress-chartjs', 'jquery-timeago' ), $version, true );
-		wp_enqueue_script( 'wpmedia-js-sweetalert', SECUPRESS_ADMIN_JS_URL . 'sweetalert' . $suffix . '.js', array(), '1.1.0', true );
-
-		$counts = secupress_get_scanner_counts();
-		wp_localize_script( 'secupress-chartjs', 'SecuPressi18nChart', array(
-			'good'          => array( 'value' => $counts['good'],          'text' => __( 'Good', 'secupress' ) ),
-			'warning'       => array( 'value' => $counts['warning'],       'text' => __( 'Warning', 'secupress' ) ),
-			'bad'           => array( 'value' => $counts['bad'],           'text' => __( 'Bad', 'secupress' ) ),
-			'notscannedyet' => array( 'value' => $counts['notscannedyet'], 'text' => __( 'Not Scanned Yet', 'secupress' ) ),
-		) );
-
-		wp_localize_script( 'jquery-timeago', 'SecuPressi18nTimeago', array(
-			'prefixAgo'     => _x( '', 'timeago.prefixAgo', 'secupress' ),
-			'prefixFromNow' => _x( '', 'timeago.prefixFromNow', 'secupress' ),
-			'suffixAgo'     => _x( 'ago', 'timeago.suffixAgo', 'secupress' ),
-			'suffixFromNow' => _x( '', 'timeago.suffixFromNow', 'secupress' ),
-			'seconds'       => _x( 'a few seconds', 'timeago.seconds', 'secupress' ),
-			'minute'        => _x( '1 minute', 'timeago.minute', 'secupress' ),
-			'minutes'       => _x( '%d minutes', 'timeago.minutes', 'secupress' ),
-			'hour'          => _x( '1 hour', 'timeago.hour', 'secupress' ),
-			'hours'         => _x( '%d hours', 'timeago.hours', 'secupress' ),
-			'day'           => _x( '1 day', 'timeago.day', 'secupress' ),
-			'days'          => _x( '%d days', 'timeago.days', 'secupress' ),
-			'month'         => _x( '1 month', 'timeago.month', 'secupress' ),
-			'months'        => _x( '%d months', 'timeago.months', 'secupress' ),
-			'year'          => _x( '1 year', 'timeago.year', 'secupress' ),
-			'years'         => _x( '%d years', 'timeago.years', 'secupress' ),
-			'wordSeparator' => _x( " ", 'timeago.wordSeparator', 'secupress' ),
-		) );
-		wp_localize_script( 'secupress-scanner-js', 'SecuPressi18nScanner', array(
-			'fixed'           => __( 'Fixed', 'secupress' ),
-			'fixedPartial'    => __( 'Partially fixed', 'secupress' ),
-			'notFixed'        => __( 'Not Fixed', 'secupress' ),
-			'fixit'           => __( 'Fix it!', 'secupress' ),
-			'error'           => __( 'Error', 'secupress' ),
-			'oneManualFix'    => __( 'One fix requires your intervention.', 'secupress' ),
-			'someManualFixes' => __( 'Some fixes require your intervention.', 'secupress' ),
-			'spinnerUrl'      => admin_url( 'images/wpspin_light-2x.gif' ),
-			'scanDetails'     => __( 'Scan Details', 'secupress' ),
-			'fixDetails'      => __( 'Fix Details', 'secupress' ),
-		) );
-	}
-	// Scanners page (sub site).
 	elseif ( 'toplevel_page_secupress_scanners' === $hook_suffix ) {
 		// CSS
 		wp_enqueue_style( 'secupress-scanner-css',  SECUPRESS_ADMIN_CSS_URL . 'secupress-scanner' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 		wp_enqueue_style( 'wpmedia-css-sweetalert', SECUPRESS_ADMIN_CSS_URL . 'sweetalert' . $suffix . '.css', array(), '1.1.0' );
 
 		// JS
-		wp_enqueue_script( 'secupress-scanner-js',  SECUPRESS_ADMIN_JS_URL . 'secupress-scanner' . $suffix . '.js', array(), $version, true );
+		$depts = array();
+		if ( is_network_admin() || ! is_multisite() ) {
+			wp_enqueue_script( 'secupress-chartjs', SECUPRESS_ADMIN_JS_URL . 'chart' . $suffix . '.js', array(), '1.0.2.1', true );
+			wp_enqueue_script( 'jquery-timeago',    SECUPRESS_ADMIN_JS_URL . 'jquery.timeago.js', array( 'jquery' ), '1.4.1', true );
+			$depts = array( 'secupress-chartjs', 'jquery-timeago' );
+
+			$counts = secupress_get_scanner_counts();
+			wp_localize_script( 'secupress-chartjs', 'SecuPressi18nChart', array(
+				'good'          => array( 'value' => $counts['good'],          'text' => __( 'Good', 'secupress' ) ),
+				'warning'       => array( 'value' => $counts['warning'],       'text' => __( 'Warning', 'secupress' ) ),
+				'bad'           => array( 'value' => $counts['bad'],           'text' => __( 'Bad', 'secupress' ) ),
+				'notscannedyet' => array( 'value' => $counts['notscannedyet'], 'text' => __( 'Not Scanned Yet', 'secupress' ) ),
+			) );
+
+			wp_localize_script( 'jquery-timeago', 'SecuPressi18nTimeago', array(
+				'prefixAgo'     => _x( '', 'timeago.prefixAgo', 'secupress' ),
+				'prefixFromNow' => _x( '', 'timeago.prefixFromNow', 'secupress' ),
+				'suffixAgo'     => _x( 'ago', 'timeago.suffixAgo', 'secupress' ),
+				'suffixFromNow' => _x( '', 'timeago.suffixFromNow', 'secupress' ),
+				'seconds'       => _x( 'a few seconds', 'timeago.seconds', 'secupress' ),
+				'minute'        => _x( '1 minute', 'timeago.minute', 'secupress' ),
+				'minutes'       => _x( '%d minutes', 'timeago.minutes', 'secupress' ),
+				'hour'          => _x( '1 hour', 'timeago.hour', 'secupress' ),
+				'hours'         => _x( '%d hours', 'timeago.hours', 'secupress' ),
+				'day'           => _x( '1 day', 'timeago.day', 'secupress' ),
+				'days'          => _x( '%d days', 'timeago.days', 'secupress' ),
+				'month'         => _x( '1 month', 'timeago.month', 'secupress' ),
+				'months'        => _x( '%d months', 'timeago.months', 'secupress' ),
+				'year'          => _x( '1 year', 'timeago.year', 'secupress' ),
+				'years'         => _x( '%d years', 'timeago.years', 'secupress' ),
+				'wordSeparator' => _x( " ", 'timeago.wordSeparator', 'secupress' ),
+			) );
+		}
+
+		wp_enqueue_script( 'secupress-scanner-js',  SECUPRESS_ADMIN_JS_URL . 'secupress-scanner' . $suffix . '.js', $depts, $version, true );
 		wp_enqueue_script( 'wpmedia-js-sweetalert', SECUPRESS_ADMIN_JS_URL . 'sweetalert' . $suffix . '.js', array(), '1.1.0', true );
 
 		wp_localize_script( 'secupress-scanner-js', 'SecuPressi18nScanner', array(
@@ -227,7 +208,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		) );
 	}
 
-	// Add the favicon, no need to test again the page we're in.
+	// Add the favicon.
 	add_action( 'admin_head', 'secupress_favicon' );
 }
 
@@ -273,14 +254,12 @@ function secupress_create_menus() {
 	$cap   = secupress_get_capability();
 
 	// Main menu item
-	add_menu_page( SECUPRESS_PLUGIN_NAME, SECUPRESS_PLUGIN_NAME, $cap, 'secupress', '__secupress_global_settings', 'dashicons-shield-alt' );
+	add_menu_page( SECUPRESS_PLUGIN_NAME, SECUPRESS_PLUGIN_NAME, $cap, 'secupress_scanners', '__secupress_scanners', 'dashicons-shield-alt' );
 
 	// Sub-menus
-	// add_submenu_page( 'secupress', __( 'Dashboard' ),             __( 'Dashboard' ),                      $cap, 'secupress',          '__secupress_dashboard' );
-	add_submenu_page( 'secupress', __( 'Settings' ),              __( 'Settings' ),                       $cap, 'secupress', '__secupress_global_settings' );
-	add_submenu_page( 'secupress', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ) . $count, $cap, 'secupress_scanners', '__secupress_scanners' );
-	add_submenu_page( 'secupress', __( 'Modules', 'secupress' ),  __( 'Modules', 'secupress' ),           $cap, 'secupress_modules',  '__secupress_modules' );
-	// Add the counter to the main menu: it can't be added with `add_menu_page()` because it would change the value of the screen ID (yes, it's utterly stupid).
+	add_submenu_page( 'secupress_scanners', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ) . $count, $cap, 'secupress_scanners', '__secupress_scanners' );
+	add_submenu_page( 'secupress_scanners', __( 'Modules', 'secupress' ),  __( 'Modules', 'secupress' ),           $cap, 'secupress_modules',  '__secupress_modules' );
+	add_submenu_page( 'secupress_scanners', __( 'Settings' ),              __( 'Settings' ),                       $cap, 'secupress',          '__secupress_global_settings' );
 	end( $menu );
 	$key = key( $menu );
 	$menu[ $key ][0] .= $count;
@@ -292,40 +271,7 @@ function secupress_create_menus() {
 /*------------------------------------------------------------------------------------------------*/
 
 /**
- * Dashboard page.
- *
- * @since 1.0
- */
-function __secupress_dashboard() {
-	?>
-	<div class="wrap">
-		<?php secupress_admin_heading( __( 'Dashboard' ) ); ?>
-
-		<div class="secupress-wrapper">
-			<?php
-			delete_site_option( SECUPRESS_SCAN_SLUG );
-			delete_site_option( SECUPRESS_SCAN_TIMES );
-			delete_site_option( SECUPRESS_FIX_SLUG );
-			delete_site_option( SECUPRESS_SCAN_FIX_SITES_SLUG );
-			delete_site_option( SECUPRESS_BAN_IP );
-			delete_site_option( SECUPRESS_ACTIVE_SUBMODULES );
-			delete_site_option( SECUPRESS_SETTINGS_SLUG );
-			$modules = secupress_get_modules();
-			foreach ( $modules as $module => $atts ) {
-				delete_site_option( 'secupress_' . $module . '_settings' );
-			}
-			delete_site_option( 'secupress_delayed_alerts' );
-			secupress_delete_site_transient( 'secupress_module_activation_' . get_current_user_id() );
-			secupress_delete_site_transient( 'secupress_module_deactivation_' . get_current_user_id() );
-			?>
-		</div>
-	</div>
-	<?php
-}
-
-
-/**
- * Global settings page.
+ * Settings page.
  *
  * @since 1.0
  */
@@ -630,6 +576,7 @@ function secupress_main_scan() {
 						$status_class = ! empty( $scanners[ $option_name ]['status'] ) ? sanitize_html_class( $scanners[ $option_name ]['status'] ) : 'notscannedyet';
 						$css_class   .= ' status-' . $status_class;
 						$css_class   .= isset( $autoscans[ $class_name_part ] ) ? ' autoscan' : '';
+						$css_class   .= false === $current_test::$fixable || 'pro' === $current_test::$fixable && ! secupress_is_pro() ? ' not-fixable' : '';
 
 						if ( ! empty( $scanners[ $option_name ]['msgs'] ) ) {
 							$scan_message = secupress_format_message( $scanners[ $option_name ]['msgs'], $class_name_part );
@@ -673,15 +620,16 @@ function secupress_main_scan() {
 
 								<div class="secupress-row-actions">
 									<?php
-									if ( true === $current_test::$fixable ) { ?>
-										<a class="button button-secondary button-small secupress-fixit" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $class_name_part ), 'secupress_fixit_' . $class_name_part ); ?>"><?php _e( 'Fix it!', 'secupress' ); ?></a>
+									if ( true === $current_test::$fixable || 'pro' === $current_test::$fixable && secupress_is_pro() ) {
+										?>
+										<a class="button button-secondary button-small secupress-fixit<?php echo $current_test::$delayed_fix ? ' delayed-fix' : '' ?>" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $class_name_part ), 'secupress_fixit_' . $class_name_part ); ?>"><?php _e( 'Fix it!', 'secupress' ); ?></a>
 										<div class="secupress-row-actions">
 											<span class="hide-if-no-js">
 												<button type="button" class="secupress-details-fix link-like" data-test="<?php echo $class_name_part; ?>" title="<?php esc_attr_e( 'Get fix details', 'secupress' ); ?>"><?php _e( 'Learn more', 'secupress' ); ?></button>
 											</span>
 										</div>
 										<?php
-									} elseif ( 'pro' == $current_test::$fixable ) { //// # ?>
+									} elseif ( 'pro' === $current_test::$fixable ) { //// # ?>
 										<button type="button" class="button button-secondary button-small secupress-go-pro"><?php _e( 'Pro Upgrade', 'secupress' ); ?></button>
 										<?php
 									} else { // Really not fixable by the plugin

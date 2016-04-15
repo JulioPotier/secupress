@@ -50,12 +50,13 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	 */
 	protected     $for_current_site = false;
 
-	public static $prio     = '';
-	public static $type     = '';
-	public static $title    = '';
-	public static $more     = '';
-	public static $more_fix = '';
-	public static $fixable  = true;
+	public static $prio        = '';
+	public static $type        = '';
+	public static $title       = '';
+	public static $more        = '';
+	public static $more_fix    = '';
+	public static $fixable     = true;
+	public static $delayed_fix = false;
 
 
 	// Init ========================================================================================

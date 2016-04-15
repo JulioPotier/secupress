@@ -643,7 +643,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 
 		// Create the menu item.
 		add_submenu_page(
-			'secupress',
+			'secupress_scanners',
 			_x( 'Logs', 'post type general name', 'secupress' ),
 			_x( 'Logs', 'post type general name', 'secupress' ),
 			secupress_get_capability(),

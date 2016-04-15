@@ -9,7 +9,7 @@ Version: 1.0
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 define( 'SECUPRESS_UPTIME_MONITOR_URL', 'https://support.wp-rocket.me/api/monitoring/process.php' );
-define( 'SECUPRESS_UPTIME_MONITOR_UA',  'WP-Rocket' );
+define( 'SECUPRESS_UPTIME_MONITOR_UA',  'SecuPress' );
 
 /*------------------------------------------------------------------------------------------------*/
 /* ACTIVATION / DEACTIVATION ==================================================================== */
@@ -77,9 +77,7 @@ function secupress_uptime_monitoring_pre_update_email( $newvalue, $oldvalue ) {
  * @since 1.0
  */
 function secupress_uptime_monitoring_start() {
-	$token  = secupress_get_module_option( 'uptime-monitoring-token', false, 'alerts' );
-	// Guess the action: if the token exists, "update". "add" otherwise.
-	$action = $token ? 'update' : 'add';
+	$token = secupress_get_module_option( 'uptime-monitoring-token', false, 'alerts' );
 
 	// Send the request.
 	$response = wp_remote_post(
@@ -88,35 +86,21 @@ function secupress_uptime_monitoring_start() {
 			'user-agent' => SECUPRESS_UPTIME_MONITOR_UA,
 			'timeout'	 => 10,
 			'body'       => array(
-				'action' => $action,
-				'url'    => home_url(),
+				'url'    => esc_url( home_url() ),
 				'email'  => sanitize_email( secupress_get_option( 'consumer_email' ) ),
-				'token'  => $token,
-				'source' => 'SecuPress',
+				'token'  => esc_attr( $token ),
+				'source' => SECUPRESS_UPTIME_MONITOR_UA,
 			)
 		)
 	);
 
 	// Error?
-	if ( ! secupress_uptime_monitoring_connexion_succeeded( $response ) ) {
-		return;
-	}
+	$new_token = secupress_uptime_monitoring_connexion_succeeded( $response );
 
 	// Store a token if it's a new subscription.
-	if ( 'add' === $action ) {
-		$data = wp_remote_retrieve_body( $response );
-		$data = json_decode( $data );
-
-		if ( is_object( $data ) && ! empty( $data->status ) && 'success' === $data->status ) {
-			// Save the token.
-			secupress_update_module_option( 'uptime-monitoring-token', $data->token, 'alerts' );
-		} else {
-			// Trigger an error and re-deactivate the submodule.
-			secupress_deactivate_submodule_silently( 'alerts', 'uptime-monitoring' );
-
-			$message = __( '<strong>Error:</strong> the monitoring couldn\'t be activated. Please contact our support.', 'secupress' );
-			add_settings_error( 'general', 'monitor_token_failed', $message, 'error' );
-		}
+	if ( ! $token && $new_token ) {
+		// Save the token.
+		secupress_update_module_option( 'uptime-monitoring-token', $new_token, 'alerts' );
 	}
 }
 
@@ -130,16 +114,17 @@ function secupress_uptime_monitoring_stop() {
 	$token = secupress_get_module_option( 'uptime-monitoring-token', false, 'alerts' );
 
 	// Send the request.
-	$response = wp_remote_post(
+	$response = wp_remote_request(
 		SECUPRESS_UPTIME_MONITOR_URL,
 		array(
+			'method'     => 'PUT',
 			'user-agent' => SECUPRESS_UPTIME_MONITOR_UA,
 			'timeout'	 => 10,
 			'body'       => array(
-				'action' => 'delete',
-				'url'    => home_url(),
-				'token'  => $token,
-				'source' => 'SecuPress',
+				'pause'  => 1,
+				'url'    => esc_url( home_url() ),
+				'token'  => esc_attr( $token ),
+				'source' => SECUPRESS_UPTIME_MONITOR_UA,
 			)
 		)
 	);
@@ -151,7 +136,7 @@ function secupress_uptime_monitoring_stop() {
 
 /**
  * Handle monitoring connexion failure.
- * If the request fails or if the distant server doesn't return an HTTP code 200, an error is triggered.
+ * If the request fails, or if the distant server doesn't return an HTTP code 200, or if an error status is returned: an error is triggered.
  * In that case, the submodule will also be re-activated or re-deactivated, depending of the previous status.
  *
  * @since 1.0
@@ -159,7 +144,7 @@ function secupress_uptime_monitoring_stop() {
  * @param (WP_Error|array) $response The request response array or WP_Error object on failure.
  * @param (string)         $type     What we're doing: "start" or "stop" monitoring.
  *
- * @return (bool) False if an error occured. True otherwise.
+ * @return (string|bool) The token on success. False if an error occured.
  */
 function secupress_uptime_monitoring_connexion_succeeded( $response, $type = 'start' ) {
 
@@ -189,5 +174,23 @@ function secupress_uptime_monitoring_connexion_succeeded( $response, $type = 'st
 		return false;
 	}
 
-	return true;
+	// Check the response body.
+	$data = wp_remote_retrieve_body( $response );
+	$data = json_decode( $data );
+
+	if ( ! is_object( $data ) || empty( $data->status ) || 'success' !== $data->status ) {
+
+		if ( 'start' === $type ) {
+			secupress_deactivate_submodule_silently( 'alerts', 'uptime-monitoring' );
+		} else {
+			secupress_activate_submodule_silently( 'alerts', 'uptime-monitoring' );
+		}
+
+		$message = __( '<strong>Error:</strong> the Monitor server returned an error status. Please contact our support.', 'secupress' );
+		add_settings_error( 'general', 'monitor_start_monitor_server_error', $message, 'error' );
+		return false;
+	}
+
+	// Return the token.
+	return sanitize_text_field( $data->token );
 }
