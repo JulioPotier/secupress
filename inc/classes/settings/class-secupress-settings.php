@@ -598,7 +598,9 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				break;
 
 			default :
-				if ( method_exists( $this, $args['type'] ) ) {
+				if ( secupress_is_pro() && function_exists( 'secupress_pro_' . $args['type'] . '_field', $args, $this ) ) {
+					call_user_func( 'secupress_pro_' . $args['type'] . '_field' );
+				} elseif ( method_exists( $this, $args['type'] ) ) {
 					call_user_func( array( $this, $args['type'] ), $args );
 				} else {
 					echo 'Type manquant ou incorrect'; // ne pas traduire
