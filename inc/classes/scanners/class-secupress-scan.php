@@ -708,7 +708,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 		if ( $count > 0 ) {
 			$items = array_slice( $items, 0, $max_count );
 			array_push( $items, sprintf( _n( '%s other', '%s others', $count ), number_format_i18n( $count ) ) );
-			// array_push( $items, '<button>more</button>&#160;&hellip;' ); //// css class to looks like link + js to deploy all the items (so finally don't really slice but hide in a span, ykwim)
+			// array_push( $items, '<button>more</button>&#160;&hellip;' ); ////>1.0//// css class to looks like link + js to deploy all the items (so finally don't really slice but hide in a span, ykwim)
 		}
 	}
 

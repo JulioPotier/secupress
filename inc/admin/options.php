@@ -681,10 +681,10 @@ function secupress_main_scan() {
 											</span>
 										</div>
 										<?php
-									} elseif ( 'pro' == $current_test::$fixable ) /* //// $needs-pro */ { ?>
+									} elseif ( 'pro' == $current_test::$fixable ) { //// # ?>
 										<button type="button" class="button button-secondary button-small secupress-go-pro"><?php _e( 'Pro Upgrade', 'secupress' ); ?></button>
 										<?php
-									} else { // Really not fixable by the plugin + //// #
+									} else { // Really not fixable by the plugin
 										echo '<em>(';
 										_e( 'Cannot be fixed automatically.', 'secupress' );
 										echo '</em>)';

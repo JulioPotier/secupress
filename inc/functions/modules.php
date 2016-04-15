@@ -2,7 +2,7 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 
-function secupress_activate_submodule( $module, $plugin, $incompatibles_modules = array() ) { //// add the possiblity to activate it in "silent mode" (from a scanner fix and not from a user checkbox)?
+function secupress_activate_submodule( $module, $plugin, $incompatibles_modules = array() ) {
 	$plugin_slug    = sanitize_key( $plugin );
 	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
 	$active_plugins = is_array( $active_plugins ) ? $active_plugins : array();

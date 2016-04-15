@@ -361,7 +361,7 @@ function secupress_manage_affected_roles( &$settings, $plugin ) {
 }
 
 
-function secupress_get_ip() { //// find the best order
+function secupress_get_ip() { // find the best order
 	$keys = array(
 		'HTTP_CF_CONNECTING_IP', // CF = CloudFlare
 		'HTTP_CLIENT_IP',
@@ -380,8 +380,7 @@ function secupress_get_ip() { //// find the best order
 			$ip = end( $ip );
 
 			if ( false !== secupress_ip_is_valid( $ip ) ) {
-				return apply_filters( 'secupress_get_ip', $ip ); //// maybe not
-				return $ip;
+				return apply_filters( 'secupress_get_ip', $ip );
 			}
 		}
 	}
