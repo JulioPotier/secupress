@@ -8,41 +8,43 @@ jQuery( document ).ready( function( $ ) {
 	if ( secupressChartEl && window.Chart ) {
 		secupressChartData = [
 			{
-				value: SecuPressi18nChart.good.value,
-				color:"#88BA0E",
-				highlight: "#97cc0f",
-				label: SecuPressi18nChart.good.text,
-				status: 'good',
+				value		: SecuPressi18nChart.good.value,
+				color		: '#26B3A9',
+				highlight	: '#2BCDC1',
+				label		: SecuPressi18nChart.good.text,
+				status		: 'good',
 			},
 			{
-				value: SecuPressi18nChart.bad.value,
-				color: "#D73838",
-				highlight: "#db4848",
-				label: SecuPressi18nChart.bad.text,
-				status: 'bad',
+				value		: SecuPressi18nChart.bad.value,
+				color		: '#CB234F',
+				highlight	: '#F2295E',
+				label		: SecuPressi18nChart.bad.text,
+				status		: 'bad',
 			},
 			{
-				value: SecuPressi18nChart.warning.value,
-				color: "#FFA500",
-				highlight: "#ffad14",
-				label: SecuPressi18nChart.warning.text,
-				status: 'warning',
+				value		: SecuPressi18nChart.warning.value,
+				color		: '#F7AB13',
+				highlight	: '#F1C40F',
+				label		: SecuPressi18nChart.warning.text,
+				status		: 'warning',
 			},
 			{
-				value: SecuPressi18nChart.notscannedyet.value,
-				color: "#555",
-				highlight: "#5e5e5e",
-				label: SecuPressi18nChart.notscannedyet.text,
-				status: 'notscannedyet',
+				value		: SecuPressi18nChart.notscannedyet.value,
+				color		: '#5A626F',
+				highlight	: '#888888',
+				label		: SecuPressi18nChart.notscannedyet.text,
+				status		: 'notscannedyet',
 			},
 		];
 
 		secupressChart = new Chart( secupressChartEl.getContext( "2d" ) ).Doughnut( secupressChartData, {
-			animationEasing    : 'easeInOutQuart',
-			tooltipEvents      : [],
-			showTooltips       : true,
-			onAnimationComplete: function() {
-				this.showTooltip( [ this.segments[0] ], true );
+			animationEasing			: 'easeInOutQuart',
+			tooltipEvents			: [],
+			showTooltips			: false,
+			segmentShowStroke		: false,
+			percentageInnerCutout	: 93,
+			onAnimationComplete 	: function() {
+				//this.showTooltip( [ this.segments[0] ], true );
 			}
 		} );
 
@@ -54,77 +56,77 @@ jQuery( document ).ready( function( $ ) {
 
 	if ( jQuery.timeago ) {
 		jQuery.timeago.settings.strings = jQuery.extend( { numbers: [] }, SecuPressi18nTimeago );
-		$( ".timeago" ).timeago();
+		$( '.timeago' ).timeago();
 	}
 
 	function secupressPrependDataLi( percent, now ) {
-		$( ".score_results ul" ).prepend( '<li class="hidden" data-percent="' + percent + '">' + now + "</li>" ).find( "li.hidden" ).slideDown( 250 );
+		$( '.score_results ul' ).prepend( '<li class="hidden" data-percent="' + percent + '">' + now + '</li>' ).find( 'li.hidden' ).slideDown( 250 );
 		if ( jQuery.timeago ) {
-			$( ".timeago:first" ).timeago();
+			$( '.timeago:first' ).timeago();
 		}
 	}
 
 	function secupressUpdateScore( refresh ) {
 		var total, status_good, status_warning, status_bad, status_notscannedyet, percent, letter,
-			d, the_date, dashicon, score_results_ul, replacement, last_percent, now;
+			d, the_date, dashicon, $score_results_ul, replacement, last_percent, now;
 
 		if ( ! secupressChartEl || ! jQuery.timeago ) {
 			return;
 		}
 
-		total                = $( ".status-all" ).length;
-		status_good          = $( ".table-prio-all tr.status-good" ).length;
-		status_warning       = $( ".table-prio-all tr.status-warning" ).length;
-		status_bad           = $( ".table-prio-all tr.status-bad" ).length;
-		status_notscannedyet = $( ".table-prio-all tr.status-notscannedyet" ).length;
+		total                = $( '.status-all' ).length;
+		status_good          = $( '.table-prio-all tr.status-good' ).length;
+		status_warning       = $( '.table-prio-all tr.status-warning' ).length;
+		status_bad           = $( '.table-prio-all tr.status-bad' ).length;
+		status_notscannedyet = $( '.table-prio-all tr.status-notscannedyet' ).length;
 		percent              = Math.floor( status_good * 100 / total );
-		letter               = "&ndash;";
+		letter               = '∅';
 
-		$( ".score_info2 .percent" ).text( "(" + percent + " %)" );
+		$( '.secupress-score' ).find( '.percent' ).text( percent + '%' );
 
 		if ( total != status_notscannedyet ) {
 			if ( percent >= 90 ) {
-				letter = "A";
+				letter = 'A';
 			} else if ( percent >= 80 ) {
-				letter = "B";
+				letter = 'B';
 			} else if ( percent >= 70 ) {
-				letter = "C";
+				letter = 'C';
 			} else if ( percent >= 60 ) {
-				letter = "D";
+				letter = 'D';
 			} else if ( percent >= 50 ) {
-				letter = "E";
+				letter = 'E';
 			} else {
-				letter = "F";
+				letter = 'F';
 			}
 		}
 
-		if ( "A" === letter ) {
-			$( "#tweeterA" ).slideDown();
+		if ( 'A' === letter ) {
+			$( '#tweeterA' ).slideDown();
 		} else {
-			$( "#tweeterA" ).slideUp();
+			$( '#tweeterA' ).slideUp();
 		}
 
-		$( ".score_info2 .letter" ).html( letter ).removeClass( "lA lB lC lD lE lF" ).addClass( "l" + letter );
+		$( '.secupress-score' ).find( '.letter' ).html( letter ).removeClass( 'lA lB lC lD lE lF' ).addClass( 'l' + letter );
 
 		if ( refresh ) {
 			d                = new Date();
 			the_date         = d.getFullYear() + "-" + ( "0" + ( d.getMonth() + 01 ) ).slice( -2 ) + "-" + ( "0" + d.getDate() ).slice( -2 ) + " " + ( "0" + d.getHours() ).slice( -2 ) + ":" + ( "0" + d.getMinutes() ).slice( -2 );
 			dashicon         = '<span class="dashicons mini dashicons-arrow-?-alt2"></span>';
-			score_results_ul = $( ".score_results ul" );
-			replacement      = "right";
-			last_percent     = score_results_ul.find( "li:first" ).data( "percent" );
+			$score_results_ul= $( '.score_results ul' );
+			replacement      = 'right';
+			last_percent     = $score_results_ul.find( "li:first" ).data( "percent" );
 
 			if ( last_percent < percent ) {
-				replacement = "up";
+				replacement = 'up';
 			} else if ( last_percent > percent ) {
-				replacement = "down";
+				replacement = 'down';
 			}
 
 			dashicon = dashicon.replace( "?", replacement );
-			now = "<strong>" + dashicon + letter + " (" + percent + ' %)</strong> <span class="timeago" title="' + the_date + '">' + the_date + "</span>";
+			now = '<strong>' + dashicon + letter + ' (' + percent + ' %)</strong> <span class="timeago" title="' + the_date + '">' + the_date + '</span>';
 
-			if ( score_results_ul.find( "li" ).length === 5 ) {
-				score_results_ul.find( "li:last" ).slideUp( 250, function() {
+			if ( $score_results_ul.find( 'li' ).length === 5 ) {
+				$score_results_ul.find( 'li:last' ).slideUp( 250, function() {
 					$( this ).remove();
 					secupressPrependDataLi( percent, now );
 				} );
@@ -149,12 +151,12 @@ jQuery( document ).ready( function( $ ) {
 			$.getJSON( href )
 			.done( function( r ) {
 				if ( ! r.success ) {
-					$spinner.replaceWith( '<span class="secupress-error-notif">' + SecuPressi18nScanner.error + "</span>" );
+					$spinner.replaceWith( '<span class="secupress-error-notif">' + SecuPressi18nScanner.error + '</span>' );
 					$percent.remove();
 					return;
 				}
 				if ( r.data ) {
-					$percent.text( r.data + "%" );
+					$percent.text( r.data + '%' );
 
 					if ( r.data !== 100 ) {
 						// We need more data.
@@ -163,35 +165,35 @@ jQuery( document ).ready( function( $ ) {
 					}
 				}
 				// Finish.
-				$button.closest( ".secupress-notice" ).fadeTo( 100 , 0, function() {
+				$button.closest( '.secupress-notice' ).fadeTo( 100 , 0, function() {
 					$( this ).slideUp( 100, function() {
 						$( this ).remove();
 					} );
 				} );
 			} )
 			.fail( function() {
-				$spinner.replaceWith( '<span class="secupress-error-notif">' + SecuPressi18nScanner.error + "</span>" );
+				$spinner.replaceWith( '<span class="secupress-error-notif">' + SecuPressi18nScanner.error + '</span>' );
 				$percent.remove();
 			} );
 		}
 
 
-		$( ".secupress-centralize-blog-options" ).on( "click", function( e ) {
+		$( '.secupress-centralize-blog-options' ).on( 'click', function( e ) {
 			var $this    = $( this ),
-				href     = $this.attr( "href" ).replace( "admin-post.php", "admin-ajax.php" ),
+				href     = $this.attr( 'href' ).replace( 'admin-post.php', 'admin-ajax.php' ),
 				$spinner = $( '<img src="' + SecuPressi18nScanner.spinnerUrl + '" alt="" class="secupress-spinner" />' ),
 				$percent = $( '<span class="secupress-ajax-percent">0%</span>' );
 
-			if ( $this.hasClass( "running" ) ) {
+			if ( $this.hasClass( 'running' ) ) {
 				return false;
 			}
-			$this.addClass( "running" ).parent().append( $spinner ).append( $percent ).find( ".secupress-error-notif" ).remove();
+			$this.addClass( 'running' ).parent().append( $spinner ).append( $percent ).find( '.secupress-error-notif' ).remove();
 
 			e.preventDefault();
 
 			secupressSetBigData( href, $this, $spinner, $percent );
 		} );
-	} )(window, document, $);
+	} )( window, document, $ );
 
 
 	// !Filter rows ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

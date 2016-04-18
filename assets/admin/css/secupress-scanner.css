@@ -1,28 +1,70 @@
-.status-good .secupress-dashicon:before {
-	color: #88BA0E;
+@charset "UTF-8";
+
+/**
+ * ==== TABLE OF COLORS ===
+ *
+ * Yellow		: #F1C40F;
+ * YellowDark	: #F7AB13;
+ * Red			: #F2295E;
+ * RedDark		: #CB234F;
+ * Green		: #2BCDC1;
+ * GreenDark	: #26B3A9;
+ * Dark			: #222831;
+ * GrayLight	: #F2F2F6;
+ * GrayMedium	: #5A626F;
+ * GrayDark		: #393E46;
+ * 
+ */
+
+/* Little pieces of colors for chart legend or item status */
+.secupress-chart-legend {
+	text-transform: uppercase;
+	font-weight: bold;
+	font-size: 10px;
 }
-.status-warning .secupress-dashicon:before {
-	color: orange;
+.secupress-chart-container + .secupress-chart-legend {
+	margin-left: 30px;
 }
-.status-bad .secupress-dashicon:before,
-.status-error .secupress-dashicon:before {
-	color: #D73838;
+.secupress-carret {
+	display: inline-block;
+	height: 1.75em;
+	width: 5px;
+	margin-right: 5px;
+	vertical-align: -.5em;
 }
-.status-notscannedyet .secupress-dashicon:before,
-.status-cantfix .secupress-dashicon:before {
-	color: #555;
+.status-good .secupress-carret {
+	background: #26B3A9;
+}
+.status-warning .secupress-carret {
+	background: #F7AB13;
+}
+.status-bad .secupress-carret,
+.status-error .secupress-carret {
+	background: #CB234F;
+}
+.status-notscannedyet .secupress-carret,
+.status-cantfix .secupress-carret {
+	background: #5A626F;
 }
 
-#wpbody-content .button-secupress-scan, #wpbody-content .button-secupress-fix {
-	max-width: 435px;
-	height: auto;
-	padding: .25em .5em;
-	margin-bottom: 5px;
-	font-size: 3em;
-	line-height: 1.2;
-	font-style: italic;
-	text-align: center;
-	overflow: hidden;
+/* WordPress generic style fix */
+[class^="secupress-"] .status-warning {
+	color: inherit;
+}
+
+/* Doughnut Chart */
+.secupress-chart-container {
+	position: relative;
+}
+.secupress-chart-container:after {
+	content: "\e903";
+	position: absolute;
+	top: 50%; left: 50%;
+	line-height: 110px;
+	margin: -50px 0 0 -57px;
+	font-family: "secupress";
+	font-size: 110px;
+	color: rgba(255,255,255,.07);
 }
 
 .secupress-row-actions {
@@ -138,47 +180,63 @@ th.secupress-check {
 	padding: 0 0 5px 10px;
 	line-height: 1em;
 }
-.percent {
-	position: relative;
-	top: 80px;
-	font-size: 35px;
-	font-weight: 700;
+
+.secupress-chart,
+.secupress-scan-infos {
+	float: left;
+	-webkit-box-flex: 1;
+	-webkit-flex-grow: 1;
+	-ms-flex-positive: 1;
+	flex-grow: 1;
+	-webkit-flex-shrink: 0;
+	-ms-flex-negative: 0;
+	flex-shrink: 0;
 }
-.letter {
-	display: block;
-	position: relative;
-	top: 30px;
-	font-family: "Arial Black";
-	font-size: 100px;
+.secupress-chart {
+	-webkit-box-flex: 0;
+	-webkit-flex-grow: 0;
+	-ms-flex-positive: 0;
+	flex-grow: 0;
+	-webkit-flex-basis: 430px;
+	-ms-flex-preferred-size: 430px;
+	flex-basis: 430px;
+	width: 430px;
+	max-width: 100%;
+	padding-left: 35px;
 }
-.letter.lA {
-	color: #88BA0E;
+.secupress-score .letter {
+	position: absolute;
+	font-size: 82px;
+	top: 50%; left: 50%;
+	margin: -12px 0 0 -26px;
+	font-family: Arial, Helvetica, sans-serif;
 }
-.letter.lB {
-	color: #C4B007;
+.secupress-score .l∅ {
+	font-size: 64px;
+	margin: -6px 0 0 -28px;
 }
-.letter.lC {
-	color: orange;
+.secupress-score .lA {
+	color: #2BCDC1;
 }
-.letter.lD {
-	color: #EB6F1C;
+.secupress-score .lB {
+	color: #F1C40F;
 }
-.letter.lE {
-	color: #D73838;
+.secupress-score .lC {
+	color: #F7AB13;
 }
-.letter.lF {
+.secupress-score .lD {
+	color: #F2295E;
+}
+.secupress-score .lE {
+	color: #CB234F;
+}
+.secupress-score .lF {
 	color: #c32222;
 }
 .score_info {
 	display: inline-block;
 	width: 69%;
 	height: 300px;
-}
-.score_info2 {
-	display: inline-block;
-	width: 30%;
-	padding-left: 50px;
-	vertical-align: top;
 }
 .score_results {
 	display: inline-block;
