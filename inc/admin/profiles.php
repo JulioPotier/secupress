@@ -10,7 +10,7 @@ add_filter( 'user_contactmethods', '__secupress_add_user_contactmethods', 0, 2 )
  **/
 function __secupress_add_user_contactmethods( $methods, $user ) {
 	if ( $user->ID == $GLOBALS['current_user']->ID ) {
-		$methods['backup_email'] = __( '<span id="secupress_backup_email">Backup E-mail</span><p class="description">For security reasons, you may need to retreive some private informations on an alternate email address.</p>', 'secupress' );
+		$methods['backup_email'] = __( '<span id="secupress_backup_email">Backup E-mail</span><p class="description">For security reasons, you may need to retrieve some private informations on an alternate email address.</p>', 'secupress' );
 	}
 	return $methods;
 }
@@ -39,6 +39,7 @@ function __secupress_callback_update_user_contactmethods( $user_id ) {
 		}
 	}
 }
+
 
 add_action( 'user_profile_update_errors', 'secupress_user_profile_update_errors', 10, 3 );
 /**
