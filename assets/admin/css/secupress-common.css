@@ -1,5 +1,556 @@
 @charset "UTF-8";
 
+/**
+ * ==== TABLE OF COLORS ===
+ *
+ * Yellow		: #F1C40F;
+ * YellowDark	: #F7AB13;
+ * Red			: #F2295E;
+ * RedDark		: #CB234F;
+ * Green		: #2BCDC1;
+ * GreenDark	: #26B3A9;
+ * Dark			: #222831;
+ * GrayLight	: #F2F2F6;
+ * GrayMedium	: #5A626F;
+ * GrayDark		: #393E46;
+ * 
+ */
+
+/**
+ * SecuPress Icons
+ * FontAwesome + Customs
+ */
+
+@font-face {
+	font-family: 'secupress';
+	src:url('../fonts/secupress.eot?u9qhyb');
+	src:url('../fonts/secupress.eot?u9qhyb#iefix') format('embedded-opentype'),
+		url('../fonts/secupress.ttf?u9qhyb') format('truetype'),
+		url('../fonts/secupress.woff?u9qhyb') format('woff'),
+		url('../fonts/secupress.svg?u9qhyb#secupress') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class^="secupress-"] [class^="icon-"],
+[class^="secupress-"] [class*=" icon-"] {
+	/* use !important to prevent issues with browser extensions that change fonts */
+	font-family: 'secupress' !important;
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-question-circle:before { content: "\e904"; }
+.icon-radar:before { content: "\e900"; }
+.icon-info:before { content: "\e901"; }
+.icon-ask:before { content: "\e902"; }
+.icon-secupress:before { content: "\e903"; }
+.icon-star:before { content: "\f005"; }
+.icon-star-empty:before { content: "\f006"; }
+.icon-user:before { content: "\f007"; }
+.icon-film:before { content: "\f008"; }
+.icon-check:before { content: "\f00c"; }
+.icon-cross:before { content: "\f00d"; }
+.icon-download:before { content: "\f019"; }
+.icon-refresh:before { content: "\f021"; }
+.icon-lock:before { content: "\f023"; }
+.icon-info-disk:before { content: "\f05a"; }
+.icon-arrow-up:before { content: "\f062"; }
+.icon-key:before { content: "\f084"; }
+.icon-upload:before { content: "\f093"; }
+.icon-mail:before { content: "\f0e0"; }
+.icon-file-text:before { content: "\f0f6"; }
+.icon-back:before { content: "\f112"; }
+.icon-shield:before { content: "\f132"; }
+.icon-calendar:before { content: "\f133"; }
+.icon-file:before { content: "\f15b"; }
+.icon-wordpress:before { content: "\f19a"; }
+.icon-plugin:before { content: "\f1e6"; }
+.icon-calendar-add:before { content: "\f271"; }
+.icon-calendar-remove:before { content: "\f272"; }
+
+.icon-radar:before {
+	font-size: 1.3em;
+	vertical-align: -0.16em;
+}
+
+/**
+ * === Usual Classes
+ */
+
+/* Rowing (vertical spacing) */
+.secupress-row {
+	clear: both;
+	margin: 35px 0;
+}
+
+/* Flexboxes */
+.secupress-flex {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: horizontal;
+	-webkit-box-direction: normal;
+	-webkit-flex-direction: row;
+	-ms-flex-direction: row;
+	flex-direction: row;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	-ms-flex-align: center;
+	-ms-grid-row-align: center;
+	align-items: center;
+}
+.secupress-flex-spaced {
+	-webkit-box-pack: justify;
+	-webkit-justify-content: space-between;
+	-ms-flex-pack: justify;
+	justify-content: space-between;
+}
+.secupress-flex-col {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-webkit-flex-direction: column;
+	-ms-flex-direction: column;
+	flex-direction: column;
+}
+
+/* Font sizes */
+.secupress-text-big {
+	font-size: 36px;
+	color: inherit;
+	font-weight: normal;
+}
+.secupress-text-medium {
+	font-size: 21px;
+	color: inherit;
+	font-weight: normal;
+}
+.secupress-text-mini {
+	font-size: 10px;
+	color: inherit;
+	font-weight: normal;
+}
+
+/* alignments */
+.secupress-text-start {
+	text-align: left;
+}
+.secupress-text-center {
+	text-align: center;
+}
+.secupress-text-end {
+	text-align: right;
+}
+
+/* floating */
+.secupress-start {
+	float: left;
+}
+.secupress-end {
+	float: right;
+}
+.secupress-clear {
+	clear: both;
+}
+.secupress-clearfix:after,
+.secupress-section:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+/* Spacing */
+.secupress-m0.secupress-m0 {
+	margin: 0;
+}
+.secupress-mt1.secupress-mt1 {
+	margin-top: 1em;
+}
+.secupress-mt2.secupress-mt2 {
+	margin-top: 2em;
+}
+.secupress-mb1.secupress-mb1 {
+	margin-bottom: 1em;
+}
+.secupress-mb2.secupress-mb2 {
+	margin-bottom: 2em;
+}
+
+.secupress-p0.secupress-p0 {
+	padding: 0;
+}
+.secupress-pb1.secupress-pb1 {
+	padding-bottom: 1em;
+}
+.secupress-pb2.secupress-pb2 {
+	padding-bottom: 2em;
+}
+.secupress-pt1.secupress-pt1 {
+	padding-top: 1em;
+}
+.secupress-pt2.secupress-pt2 {
+	padding-top: 2em;
+}
+
+/**
+ * === Main Sections
+ */
+.secupress-section,
+[class^="secupress-section-"] {
+	padding: 25px;
+}
+.secupress-section > :first-child,
+[class^="secupress-section-"] > :first-child,
+.secupress-heading > :first-child {
+	margin-top: 0;
+}
+.secupress-section > :last-child,
+[class^="secupress-section-"] > :last-child,
+.secupress-heading > :last-child {
+	margin-bottom: 0;
+}
+
+/* Sections Colors */
+
+.secupress-section-dark {
+	background: #222831;
+	color: #FFF;
+}
+.secupress-section-light {
+	background: #FFF;
+	color: #393E46;
+}
+.secupress-section-gray {
+	background: #F2F2F6;
+	color: #393E46;
+}
+
+/* Border in sections */
+.secupress-bordered {
+	border: 1px solid #CCC;
+}
+.secupress-lined {
+	border-top: 1px solid #CCC;
+	border-bottom: 1px solid #CCC;
+}
+.secupress-bordered-lat {
+	border-left: 1px solid #CCC;
+	border-right: 1px solid #CCC;
+}
+
+.secupress-heading {
+	padding: 1px 0 20px;
+}
+
+/**
+ * === Animations / Transitions
+ */
+[class^="secupress-"] a,
+[class^="secupress-"] button,
+[class^="secupress-"] input {
+	transition: all .275s;
+}
+
+/**
+ * === Buttons
+ */
+
+.secupress-button.secupress-button,
+[class^="secupress-button-"][class^="secupress-button-"] {
+	display: inline-block;
+	margin: .1em 0;
+	padding: 7px 20px 8px;
+	border: 0;
+	font-size: 14px;
+	line-height: 1.5;
+	font-weight: bold;
+	text-transform: uppercase;
+	color: #FFF;
+	text-decoration: none;
+	text-shadow: none;
+	background: #5A626F;
+	box-shadow: none;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	-webkit-appearance: none;
+	cursor: pointer;
+}
+.secupress-button.secupress-button:hover,
+.secupress-button.secupress-button:focus,
+[class^="secupress-button-"][class^="secupress-button-"]:hover,
+[class^="secupress-button-"][class^="secupress-button-"]:focus {
+	color: #FFF;
+	background: #393E46;
+}
+[class^="secupress-button-"]::-moz-focus-inner,
+.secupress-button::-moz-focus-inner {
+    padding: 0;
+    border: 0
+}
+.secupress-button .icon,
+[class^="secupress-button-"] .icon,
+.secupress-button .text,
+[class^="secupress-button-"] .text {
+	display: inline-block;
+	vertical-align: middle;
+}
+.secupress-button .icon,
+[class^="secupress-button-"] .icon {
+	position: relative;
+	padding-right: 8px;
+	margin-left: -10px;
+	margin-right: 5px;
+}
+.secupress-button .icon:after,
+[class^="secupress-button-"] .icon:after {
+	content: "";
+	position: absolute;
+	width: 1px; height: 20px;
+	right: 0; top: 50%;
+	margin-top: -10px;
+	background: rgba(255,255,255,.3);
+}
+
+/* Button Colors */
+.secupress-button-primary.secupress-button-primary {
+	background: #2BCDC1;
+}
+.secupress-button-primary.secupress-button-primary:hover,
+.secupress-button-primary.secupress-button-primary:focus {
+	background: #26B3A9;
+}
+.secupress-button-secondary.secupress-button-secondary {
+	background: #F2295E;
+}
+.secupress-button-secondary.secupress-button-secondary:hover,
+.secupress-button-secondary.secupress-button-secondary:focus {
+	background: #CB234F;
+}
+.secupress-button-tertiary.secupress-button-tertiary {
+	background: #F1C40F;
+}
+.secupress-button-tertiary.secupress-button-tertiary:hover,
+.secupress-button-tertiary.secupress-button-tertiary:focus {
+	background: #F7AB13;
+}
+
+/* Buttons sizes */
+.secupress-button-mini.secupress-button-mini {
+	font-size: 11px;
+	padding: 3px 5px;
+}
+.secupress-button-mini.secupress-button-mini .icon i:before,
+.secupress-button-mini.secupress-button-mini .icon i {
+	font-size: 15px;
+	height: 15px;
+	line-height: 1;
+	width: 15px;
+	vertical-align: -1.5px;
+}
+.secupress-button-mini.secupress-button-mini .icon {
+	margin: 0 1px 0 0;
+	padding: 0;
+}
+.secupress-button-mini.secupress-button-mini .icon:after {
+	display: none;
+}
+
+.secupress-button-big.secupress-button-big {
+	font-size: 18px;
+}
+.secupress-button-big.secupress-button-big .icon i:before,
+.secupress-button-big.secupress-button-big .icon i {
+	font-size: 25px;
+	height: 25px;
+	line-height: 1;
+	width: 25px;
+	vertical-align: -2px
+}
+.secupress-button-big.secupress-button-big .icon:after {
+	height: 30px;
+	margin-top: -15px;
+}
+
+/* Buttons container */
+.secupress-actions-line {
+	margin: 25px -10px;
+}
+.secupress-actions-line [class*="secupress-button"] {
+	margin: 0 10px;
+}
+
+/**
+ * Checkboxes
+ */
+
+.secupress-checkbox.secupress-checkbox:not(:checked),
+.secupress-checkbox.secupress-checkbox:checked {
+	position: absolute;
+	opacity: 0.01;
+	margin: 3px 0 0 3px;
+}
+.secupress-checkbox:not(:checked) + label,
+.secupress-checkbox:checked + label {
+	position: relative;
+	display: inline-block;
+	padding-left: 35px;
+	margin: .3em 0;
+}
+.secupress-checkbox:not(:checked) + label:before,
+.secupress-checkbox:checked + label:before {
+	content: "";
+	position: absolute;
+	left: 0; top: 0;
+	width: 20px; height: 20px;
+	border: 2px solid #000;
+	border-color: currentColor;
+	background: #F2F2F6;
+	border-radius: 3px;
+	transition: all .275s;
+}
+.secupress-checkbox:not(:checked) + label:after,
+.secupress-checkbox:checked + label:after {
+	content: "\f00c";
+	position: absolute;
+	left: 5px; top: 1.5px;
+	font-family: "secupress";
+	font-size: 14px;
+	transition: all .275s;
+}
+.secupress-checkbox:not(:checked) + label:after {
+	transform: scale(0);
+}
+.secupress-checkbox:checked + label:after {
+	transform: scale(1);
+}
+.secupress-section-light .secupress-checkbox:not(:checked) + label:before,
+.secupress-section-light .secupress-checkbox:checked + label:before {
+	background: #FFF;
+}
+.secupress-section-dark .secupress-checkbox:not(:checked) + label:before,
+.secupress-section-dark .secupress-checkbox:checked + label:before {
+	background: #222831;
+}
+
+/* Disabled */
+.secupress-checkbox:disabled:not(:checked) + label:after,
+.secupress-checkbox:disabled:checked + label:after {
+	opacity: .5;
+}
+.secupress-checkbox:disabled:not(:checked) + label:before,
+.secupress-checkbox:disabled:checked + label:before {
+	border-color: #888;
+	background: #ddd;
+}
+.secupress-section-dark .secupress-checkbox:disabled:not(:checked) + label:after,
+.secupress-section-dark .secupress-checkbox:disabled:checked + label:after {
+	color: rgba(0,0,0,.5);
+}
+
+/**
+ * === Tabs
+ */
+
+.secupress-light-tabs,
+.secupress-tabs {
+	padding: 0;
+	margin: 1em 0 0 0;
+	text-align: center;
+}
+.secupress-light-tabs i,
+.secupress-tabs i {
+	margin-right: 5px;
+	font-size: 1.1em;
+}
+.secupress-light-tabs li,
+.secupress-tabs li {
+	position: relative;
+	margin: 0;
+	-webkit-box-flex: 1;
+	-webkit-flex-grow: 1;
+	-ms-flex-positive: 1;
+	flex-grow: 1;
+	-webkit-flex-shrink: 1;
+	-ms-flex-negative: 1;
+	flex-shrink: 1;
+}
+.secupress-light-tabs a,
+.secupress-tabs a {
+	display: block;
+	padding: 10px 15px;
+	text-transform: uppercase;
+	color: inherit;
+	text-decoration: none;
+}
+
+.secupress-light-tabs li:only-of-type,
+.secupress-tabs li:only-of-type {
+	width: 100%;
+	-webkit-flex-basis: 100%;
+	-ms-flex-preferred-size: 100%;
+	flex-basis: 100%;
+}
+.secupress-light-tabs li:nth-last-child(2):first-child,
+.secupress-light-tabs li:nth-last-child(2):first-child ~ li,
+.secupress-tabs li:nth-last-child(2):first-child,
+.secupress-tabs li:nth-last-child(2):first-child ~ li {
+	width: 50%;
+	-webkit-flex-basis: 50%;
+	-ms-flex-preferred-size: 50%;
+	flex-basis: 50%;
+}
+.secupress-light-tabs li:nth-last-child(3):first-child,
+.secupress-light-tabs li:nth-last-child(3):first-child ~ li,
+.secupress-tabs li:nth-last-child(3):first-child,
+.secupress-tabs li:nth-last-child(3):first-child ~ li {
+	width: 33.333%;
+	-webkit-flex-basis: 33.333%;
+	-ms-flex-preferred-size: 33.333%;
+	flex-basis: 33.333%;
+}
+.secupress-light-tabs li:nth-last-child(4):first-child,
+.secupress-light-tabs li:nth-last-child(4):first-child ~ li,
+.secupress-tabs li:nth-last-child(4):first-child,
+.secupress-tabs li:nth-last-child(4):first-child ~ li {
+	width: 25%;
+	-webkit-flex-basis: 25%;
+	-ms-flex-preferred-size: 25%;
+	flex-basis: 25%;
+}
+
+.secupress-section-dark .secupress-light-tabs {
+	border-bottom: 1px solid #5A626F;
+}
+.secupress-section-dark .secupress-light-tabs .secupress-current a,
+.secupress-section-dark .secupress-light-tabs a:hover,
+.secupress-section-dark .secupress-light-tabs a:focus {
+	color: #FFF;
+}
+.secupress-section-dark .secupress-light-tabs .secupress-current a:after {
+	content: "";
+	position: absolute;
+	bottom: -1.5px; left: 0; right: 0;
+	height: 3px;
+	background: #FFF;
+}
+.secupress-section-dark .secupress-light-tabs a {
+	color: #5A626F;
+}
+
+
 .wrap h2.nav-tab-wrapper.hide-if-no-js {
 	padding: 0;
 }
