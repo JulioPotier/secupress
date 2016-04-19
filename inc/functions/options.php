@@ -25,7 +25,7 @@ function secupress_get_option( $option, $default = false ) {
 	}
 
 	$options = get_site_option( SECUPRESS_SETTINGS_SLUG );
-	$value   = isset( $options[ $option ] ) && $options[ $option ] !== false ? $options[ $option ] : $default;
+	$value   = is_array( $options ) && isset( $options[ $option ] ) && $options[ $option ] !== false ? $options[ $option ] : $default;
 	/**
 	 * Filter any SecuPress option after read
 	 *
@@ -74,7 +74,7 @@ function secupress_get_module_option( $option, $default = null, $module = false 
 	}
 
 	$options = get_site_option( "secupress_{$module}_settings" );
-	$value   = isset( $options[ $option ] ) && $options[ $option ] !== false ? $options[ $option ] : $default;
+	$value   = is_array( $options ) && isset( $options[ $option ] ) && $options[ $option ] !== false ? $options[ $option ] : $default;
 	/**
 	 * Filter any SecuPress option after read
 	 *
@@ -727,7 +727,7 @@ function secupress_check_key( $type = 'transient_1', $data = null ) {
  * @since 1.0
  */
 function secupress_valid_key() {
-	return 8 == strlen( secupress_get_option( 'consumer_key' ) ) && secupress_get_option( 'secret_key' ) === hash( 'crc32', secupress_get_option( 'consumer_email' ) );
+	return 8 === strlen( secupress_get_option( 'consumer_key' ) ) && secupress_get_option( 'secret_key' ) === hash( 'crc32', secupress_get_option( 'consumer_email' ) );
 }
 
 
