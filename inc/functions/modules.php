@@ -45,9 +45,7 @@ function secupress_deactivate_submodule( $module, $plugins, $args = array() ) {
 		return;
 	}
 
-	if ( ! is_array( $plugins ) ) {
-		$plugins = (array) $plugins;
-	}
+	$plugins = (array) $plugins;
 
 	foreach ( $plugins as $plugin ) {
 		$plugin_slug = sanitize_key( $plugin );
@@ -106,13 +104,11 @@ function secupress_deactivate_submodule_silently( $module, $plugins, $args = arr
 		return;
 	}
 
-	if ( ! is_array( $plugins ) ) {
-		$plugins = (array) $plugins;
-	}
+	$plugins = (array) $plugins;
 
 	foreach ( $plugins as $plugin ) {
 		// Remove activation notice.
-		secupress_remove_module_notice( $module, $plugins, 'activation' );
+		secupress_remove_module_notice( $module, $plugin, 'activation' );
 
 		// Deactivate the submodule.
 		$plugin_slug = sanitize_key( $plugin );
