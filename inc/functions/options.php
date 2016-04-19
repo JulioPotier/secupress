@@ -731,4 +731,16 @@ function secupress_valid_key() {
 }
 
 
+/**
+ * Tell if the consumer email is valid.
+ *
+ * @since 1.0
+ *
+ * @return (string|bool) The email if valid. False otherwise.
+ */
+function secupress_get_consumer_email() {
+	return is_email( secupress_get_option( 'consumer_email' ) );
+}
+
+
 function secupress_need_api_key() {}
