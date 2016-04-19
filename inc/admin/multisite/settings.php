@@ -235,7 +235,7 @@ function __secupress_subsite_scanners() {
 							<tr>
 								<th scope="col" class="secupress-desc"><?php _e( 'Description', 'secupress' ); ?></th>
 								<th scope="col" class="secupress-scan-status" data-sort="string"><?php _e( 'Scan Status', 'secupress' ); ?></th>
-								<th scope="col" class=".secupress-scan-result"><?php _e( 'Scan Result', 'secupress' ); ?></th>
+								<th scope="col" class="secupress-scan-result"><?php _e( 'Scan Result', 'secupress' ); ?></th>
 								<th scope="col" class="secupress-fix-status"><?php _e( 'Fix Status', 'secupress' ); ?></th>
 								<th scope="col" class="secupress-fix-result"><?php _e( 'Fix Result', 'secupress' ); ?></th>
 							</tr>
@@ -245,7 +245,7 @@ function __secupress_subsite_scanners() {
 							<tr>
 								<th scope="col" class="secupress-desc"><?php _e( 'Description', 'secupress' ); ?></th>
 								<th scope="col" class="secupress-scan-status"><?php _e( 'Scan Status', 'secupress' ); ?></th>
-								<th scope="col" class=".secupress-scan-result"><?php _e( 'Scan Result', 'secupress' ); ?></th>
+								<th scope="col" class="secupress-scan-result"><?php _e( 'Scan Result', 'secupress' ); ?></th>
 								<th scope="col" class="secupress-fix-status"><?php _e( 'Fix Status', 'secupress' ); ?></th>
 								<th scope="col" class="secupress-fix-result"><?php _e( 'Fix Result', 'secupress' ); ?></th>
 							</tr>
