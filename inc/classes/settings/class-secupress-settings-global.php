@@ -31,7 +31,7 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 
 	public function print_page() {
 		$setting_modules = array(
-			// 'api-key',
+			'api-key',
 			// 'auto-config', >1.0
 			'settings-manager',
 			// 'rollback', > 1.0
