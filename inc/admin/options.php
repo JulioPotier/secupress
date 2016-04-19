@@ -362,7 +362,7 @@ function __secupress_scanners() {
 				<div class="secupress-heading secupress-flex secupress-flex-spaced secupress-wrap">
 					<p class="secupress-text-medium"><?php esc_html_e( 'Welcome to SecuPress the best way to secure your website!', 'secupress' ); ?></p>
 					<p class="secupress-text-end hide-if-no-js">
-						<a href="#secupress-more-info" class="secupress-link-icon" data-trigger="slidedown" data-target="secupress-more-info">
+						<a href="#secupress-more-info" class="secupress-link-icon secupress-open-moreinfo" data-trigger="slidedown" data-target="secupress-more-info">
 							<span class="icon">
 								<i class="icon-info" aria-hidden="true"></i>
 							</span>
@@ -372,25 +372,50 @@ function __secupress_scanners() {
 						</a>
 					</p>
 
-					<div id="secupress-more-info" class="secupress-flex secupress-flex-spaced secupress-full-wide">
-						<div class="secupress-col">
-							<p>Content</p>
-						</div>
-						<div class="secupress-col">
-							<p>Content</p>
-						</div>
-						<div class="secupress-col">
-							<p>Content</p>
+					<div id="secupress-more-info" class="secupress-full-wide secupress-counter">
+						<div class="secupress-flex secupress-flex-top">
+							<div class="secupress-col-1-3">
+								<div class="secupress-blob secupress-counter-put">
+									<div class="secupress-blob-icon">
+										<i class="icon-radar" aria-hidden="true"></i>
+									</div>
+									<div class="secupress-blob-content">
+										<p><?php esc_html_e( 'Start a checking of all security points with the One Click Scan button.', 'secupress' ); ?></p>
+									</div>
+								</div>
+							</div>
+							<div class="secupress-col-1-3">
+								<div class="secupress-blob secupress-counter-put">
+									<div class="secupress-blob-icon">
+										<i class="icon-pad-list" aria-hidden="true"></i>
+									</div>
+									<div class="secupress-blob-content">
+										<p><?php esc_html_e( 'Take a look at validated points and points you have to fix.', 'secupress' ); ?></p>
+									</div>
+								</div>
+							</div>
+							<div class="secupress-col-1-3">
+								<div class="secupress-blob secupress-counter-put">
+									<div class="secupress-blob-icon">
+										<i class="icon-pad-check" aria-hidden="true"></i>
+									</div>
+									<div class="secupress-blob-content">
+										<p><?php esc_html_e( 'Fix all points automatically with the One Click Fix button or do it manually if you are a warrior.', 'secupress' ); ?></p>
+									</div>
+								</div>
+							</div>
 						</div>
 
-						<a href="#secupress-more-info" class="secupress-link-icon" data-trigger="slideup" data-target="secupress-more-info">
-							<span class="icon">
-								<i class="icon-cross" aria-hidden="true"></i>
-							</span>
-							<span class="text">
-								<?php esc_html_e( 'I\'ve got it!', 'secupress' ); ?>
-							</span>
-						</a>
+						<p class="secupress-text-end secupress-m0">
+							<a href="#secupress-more-info" class="secupress-link-icon secupress-icon-right secupress-close-moreinfo" data-trigger="slideup" data-target="secupress-more-info">
+								<span class="icon">
+									<i class="icon-cross" aria-hidden="true"></i>
+								</span>
+								<span class="text">
+									<?php esc_html_e( 'I\'ve got it!', 'secupress' ); ?>
+								</span>
+							</a>
+						</p>
 					</div>
 				</div>
 
