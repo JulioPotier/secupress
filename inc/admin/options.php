@@ -259,7 +259,8 @@ function secupress_create_menus() {
 	// Sub-menus
 	add_submenu_page( 'secupress_scanners', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ) . $count, $cap, 'secupress_scanners', '__secupress_scanners' );
 	add_submenu_page( 'secupress_scanners', __( 'Modules', 'secupress' ),  __( 'Modules', 'secupress' ),           $cap, 'secupress_modules',  '__secupress_modules' );
-	add_submenu_page( 'secupress_scanners', __( 'Settings' ),              __( 'Settings' ),                       $cap, 'secupress',          '__secupress_global_settings' );
+	add_submenu_page( 'secupress_scanners', __( 'Settings' ),              __( 'Settings' ),                       $cap, 'secupress_settings', '__secupress_global_settings' );
+
 	end( $menu );
 	$key = key( $menu );
 	$menu[ $key ][0] .= $count;
