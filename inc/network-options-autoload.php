@@ -176,7 +176,6 @@ function secupress_load_user_network_options( $cookie_elements, $user ) {
 	// Transients.
 	if ( ! wp_using_ext_object_cache() && $user_can ) {
 		$option_names = array(
-			'_site_transient_' . $current_user_id . '_donotdeactivatesecupress',
 			'_site_transient_secupress_module_activation_' . $current_user_id,
 			'_site_transient_secupress_module_deactivation_' . $current_user_id,
 			'_transient_secupress-notices-' . $current_user_id,
