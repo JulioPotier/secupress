@@ -386,7 +386,7 @@
 
 /* Buttons container */
 .secupress-actions-line {
-	margin: 25px -10px;
+	margin: 30px -10px 20px;
 }
 .secupress-actions-line [class*="secupress-button"] {
 	margin: 0 10px;
@@ -464,18 +464,15 @@
  * === Tabs
  */
 
-.secupress-light-tabs,
 .secupress-tabs {
 	padding: 0;
 	margin: 1em 0 0 0;
 	text-align: center;
 }
-.secupress-light-tabs i,
 .secupress-tabs i {
 	margin-right: 5px;
 	font-size: 1.1em;
 }
-.secupress-light-tabs li,
 .secupress-tabs li {
 	position: relative;
 	margin: 0;
@@ -487,7 +484,6 @@
 	-ms-flex-negative: 1;
 	flex-shrink: 1;
 }
-.secupress-light-tabs a,
 .secupress-tabs a {
 	display: block;
 	padding: 10px 15px;
@@ -495,16 +491,12 @@
 	color: inherit;
 	text-decoration: none;
 }
-
-.secupress-light-tabs li:only-of-type,
 .secupress-tabs li:only-of-type {
 	width: 100%;
 	-webkit-flex-basis: 100%;
 	-ms-flex-preferred-size: 100%;
 	flex-basis: 100%;
 }
-.secupress-light-tabs li:nth-last-child(2):first-child,
-.secupress-light-tabs li:nth-last-child(2):first-child ~ li,
 .secupress-tabs li:nth-last-child(2):first-child,
 .secupress-tabs li:nth-last-child(2):first-child ~ li {
 	width: 50%;
@@ -512,8 +504,6 @@
 	-ms-flex-preferred-size: 50%;
 	flex-basis: 50%;
 }
-.secupress-light-tabs li:nth-last-child(3):first-child,
-.secupress-light-tabs li:nth-last-child(3):first-child ~ li,
 .secupress-tabs li:nth-last-child(3):first-child,
 .secupress-tabs li:nth-last-child(3):first-child ~ li {
 	width: 33.333%;
@@ -521,8 +511,6 @@
 	-ms-flex-preferred-size: 33.333%;
 	flex-basis: 33.333%;
 }
-.secupress-light-tabs li:nth-last-child(4):first-child,
-.secupress-light-tabs li:nth-last-child(4):first-child ~ li,
 .secupress-tabs li:nth-last-child(4):first-child,
 .secupress-tabs li:nth-last-child(4):first-child ~ li {
 	width: 25%;
@@ -534,22 +522,123 @@
 .secupress-section-dark .secupress-light-tabs {
 	border-bottom: 1px solid #5A626F;
 }
-.secupress-section-dark .secupress-light-tabs .secupress-current a,
+.secupress-section-dark .secupress-light-tabs .secupress-current ,
 .secupress-section-dark .secupress-light-tabs a:hover,
 .secupress-section-dark .secupress-light-tabs a:focus {
 	color: #FFF;
+	box-shadow: none;
+	outline: none;
 }
-.secupress-section-dark .secupress-light-tabs .secupress-current a:after {
+.secupress-light-tabs a:after {
 	content: "";
 	position: absolute;
 	bottom: -1.5px; left: 0; right: 0;
-	height: 3px;
+	height: 0;
+	transition: all .275s;
+}
+.secupress-section-dark .secupress-light-tabs a:after {
 	background: #FFF;
+}
+.secupress-section-dark .secupress-light-tabs .secupress-current:after {
+	height: 3px;
 }
 .secupress-section-dark .secupress-light-tabs a {
 	color: #5A626F;
 }
 
+/* Big tabs (should may be in secupress-scanner.css) */
+.secupress-text-start.secupress-tabs a {
+	text-align: left;
+}
+.secupress-tab-subtitle {
+	display: block;
+	text-transform: none;
+	font-size: 10px;
+	font-weight: bolder;
+}
+/* Bubble */
+.secupress-big-tabs a {
+	position: relative;
+	font-weight: bold;
+}
+.secupress-big-tabs a:after {
+	content: "";
+	position: absolute;
+	top: 50%; right: 15px;
+	width: 10px; height: 10px;
+	margin-top: -5px;
+	border-radius: 5px;
+	background: #FFF;
+}
+/* Separator */
+.secupress-big-tabs li + li:before {
+	content: "";
+	position: absolute;
+	left: 0; top: 50%;
+	height: 2.2em; width: 1px;
+	margin-top: -1.1em;
+	background: rgba(255,255,255,.15);
+}
+/* Futur overline */
+.secupress-big-tabs a:before {
+	content: "";
+	position: absolute;
+	top: 0; left: 0; right: 0;
+	height: 3px;
+	background: transparent;
+	transition: all .275s;
+}
+/* star */
+.secupress-big-tab-notscannedyet a:after {
+	content: "\f005";
+	font-family: "secupress";
+	color: #FFF;
+	background: none;
+	margin-top: -.7em;
+}
+
+/* Colors */
+.secupress-section-dark .secupress-big-tabs {
+	border-radius: 3px 3px 0 0;
+	background: #393E46;
+	overflow: hidden;
+}
+.secupress-section-dark .secupress-big-tabs:last-child {
+	margin-bottom: -25px;
+}
+.secupress-section-dark .secupress-big-tabs .secupress-current {
+	background: #F2F2F6;
+	color: #393E46;
+}
+.secupress-section-dark .secupress-big-tab-notscannedyet .secupress-current:after {
+	color: #393E46;	
+}
+.secupress-big-tab-bad a:after,
+.secupress-big-tab-bad a.secupress-current:before {
+	background: #F2295E; 
+}
+.secupress-big-tab-bad .secupress-tab-subtitle {
+	color: #F2295E;
+}
+.secupress-big-tab-warning a:after,
+.secupress-big-tab-warning a.secupress-current:before {
+	background: #F1C40F; 
+}
+.secupress-big-tab-warning .secupress-tab-subtitle {
+	color: #F1C40F;
+}
+.secupress-big-tab-good a:after,
+.secupress-big-tab-good a.secupress-current:before {
+	background: #2BCDC1; 
+}
+.secupress-big-tab-good .secupress-tab-subtitle {
+	color: #2BCDC1;
+}
+ 
+
+/**
+ * === Existing
+ */
 
 .wrap h2.nav-tab-wrapper.hide-if-no-js {
 	padding: 0;

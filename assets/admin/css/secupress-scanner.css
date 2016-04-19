@@ -21,9 +21,16 @@
 	text-transform: uppercase;
 	font-weight: bold;
 	font-size: 10px;
+	letter-spacing: 0.01em;
 }
 .secupress-chart-container + .secupress-chart-legend {
 	margin-left: 30px;
+}
+.secupress-chart-legend li {
+	margin: 0;
+}
+.secupress-chart-legend li + li {
+	margin-top: 1em;
 }
 .secupress-carret {
 	display: inline-block;
@@ -45,6 +52,13 @@
 .status-notscannedyet .secupress-carret,
 .status-cantfix .secupress-carret {
 	background: #5A626F;
+}
+
+.secupress-chart-legend [class^="secupress-count-"]:not(:empty):before {
+	content: "(";
+}
+.secupress-chart-legend [class^="secupress-count-"]:not(:empty):after {
+	content: ")";
 }
 
 /* WordPress generic style fix */
@@ -204,14 +218,18 @@ th.secupress-check {
 	max-width: 100%;
 	padding-left: 35px;
 }
-.secupress-score .letter {
+.secupress-chart .secupress-score .letter {
 	position: absolute;
 	font-size: 82px;
 	top: 50%; left: 50%;
 	margin: -12px 0 0 -26px;
 	font-family: Arial, Helvetica, sans-serif;
 }
-.secupress-score .l∅ {
+.secupress-scan-infos .letter {
+	font-weight: bold;
+	font-size: 1.2em;
+}
+.secupress-chart .secupress-score .l∅ {
 	font-size: 64px;
 	margin: -6px 0 0 -28px;
 }
@@ -233,16 +251,7 @@ th.secupress-check {
 .secupress-score .lF {
 	color: #c32222;
 }
-.score_info {
-	display: inline-block;
-	width: 69%;
-	height: 300px;
-}
-.score_results {
-	display: inline-block;
-	position: relative;
-	top: 100px;
-}
+
 .mini {
 	font-size: 12px;
 	line-height: 1.7em;
@@ -275,34 +284,6 @@ th.secupress-check {
 .link-like:hover,
 .link-like:focus {
 	color: #00A0D2;
-}
-/**/
-.square-filter {
-	padding: 0;
-}
-.square-filter button {
-	min-width: 11em;
-	padding: .77em .38em;
-	border: 1px solid #CCC;
-	margin: .77em -1px 0 0;
-	font-size: 1em;
-	line-height: inherit;
-	text-align: center;
-	text-transform: none;
-	color: inherit;
-	text-shadow: none;
-	background: #FFF;
-	border-radius: 0;
-	box-shadow: none;
-	cursor: pointer;
-}
-.square-filter button:hover,
-.square-filter button:focus {
-	background: #eee;
-}
-.square-filter button.active {
-	font-weight: 700;
-	background: #eef;
 }
 /**/
 .widefat .secupress-check-column {
@@ -377,8 +358,21 @@ ul.secupress-checkbox-group-vertical,
 	margin-top: .5em;
 }
 /**/
-#tweeterA span {
+[id="tweeterA"] span {
 	color: #55acee;
+}
+[id="tweeterA"] i {
+	display: block;
+	font-size: 1.2em;
+	color: rgba(255,255,255,.65);
+}
+[id="tweeterA"] i:before {
+	content: "“";
+	margin-right: .2em;
+	font-size: 3em;
+	color: rgba(255,255,255,.2);
+	font-family: Georgia, Times, serif;
+	vertical-align: -0.4em;
 }
 .disabled {
 	border-color: #ccc;

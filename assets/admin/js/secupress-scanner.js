@@ -40,9 +40,10 @@ jQuery( document ).ready( function( $ ) {
 		secupressChart = new Chart( secupressChartEl.getContext( "2d" ) ).Doughnut( secupressChartData, {
 			animationEasing			: 'easeInOutQuart',
 			tooltipEvents			: [],
-			showTooltips			: false,
+			showTooltips			: true,
 			segmentShowStroke		: false,
 			percentageInnerCutout	: 93,
+			tooltipEvents			: ["mousemove"],
 			onAnimationComplete 	: function() {
 				//this.showTooltip( [ this.segments[0] ], true );
 			}
@@ -106,7 +107,7 @@ jQuery( document ).ready( function( $ ) {
 			$( '#tweeterA' ).slideUp();
 		}
 
-		$( '.secupress-score' ).find( '.letter' ).html( letter ).removeClass( 'lA lB lC lD lE lF' ).addClass( 'l' + letter );
+		$( '.secupress-score' ).find( '.letter' ).html( letter ).removeClass( 'l∅ lA lB lC lD lE lF' ).addClass( 'l' + letter );
 
 		if ( refresh ) {
 			d                = new Date();
@@ -140,6 +141,12 @@ jQuery( document ).ready( function( $ ) {
 		secupressChart.segments[2].value = status_warning;
 		secupressChart.segments[3].value = status_notscannedyet;
 		secupressChart.update();
+
+		// legend counters
+		$('.secupress-count-good').text( status_good );
+		$('.secupress-count-bad').text( status_bad );
+		$('.secupress-count-warning').text( status_warning );
+		$('.secupress-count-notscannedyet').text( status_notscannedyet );
 	}
 
 	secupressUpdateScore();
@@ -225,6 +232,29 @@ jQuery( document ).ready( function( $ ) {
 			$tr.filter( ":odd" ).addClass( "alternate-2" );
 			$tr.filter( ":even" ).addClass( "alternate-1" );
 		} );
+	} )(window, document, $);
+
+	// !Filter Rows Alternative ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	(function( w, d, $, undefined ) {
+		$( '#secupress-type-filters' ).find('a').on( 'click.secupress', function( e ) {
+			var $this		= $( this ),
+				priority	= $this.data( 'type' ),
+				current		= 'active',
+				$tr;
+
+			if ( $this.hasClass( current ) ) {
+				return false;
+			}
+
+			$this.closest('ul').find('a').removeClass( current );
+			$this.addClass( current );
+
+			$( '.status-all' ).addClass( 'hidden' ).attr( 'aria-hidden', true );
+			$( '.status-' + priority ).removeClass( 'hidden' ).attr( 'aria-hidden', false );
+		} );
+
+		// pre-show Bad
+		$( '#secupress-type-filters' ).find('.secupress-big-tab-bad').find('a').trigger('click');
 	} )(window, document, $);
 
 

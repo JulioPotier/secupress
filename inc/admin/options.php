@@ -98,6 +98,9 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		return;
 	}
 
+	// WordPress Common JS
+	wp_enqueue_script( 'secupress-common-js', SECUPRESS_ADMIN_JS_URL . 'secupress-common' . $suffix . '.js', array('jquery'), $version, true );
+
 	// SecuPress Common CSS
 	wp_enqueue_style( 'secupress-common-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-common' . $suffix . '.css', array(), $version );
 
@@ -370,12 +373,12 @@ function __secupress_scanners() {
 				'<span class="status-warning"><span class="secupress-dashicon dashicons dashicons-shield-alt" aria-hidden="true"></span> ' . __( 'Warning', 'secupress' ) . '</span> | ' .
 				'<span class="status-notscannedyet"><span class="secupress-dashicon dashicons dashicons-shield-alt" aria-hidden="true"></span> ' . __( 'Not scanned yet', 'secupress' ) . '</span>' .
 			'</div>' .
-			'<div id="tweeterA" class="hidden">' .
+			'<!--div id="tweeterA" class="hidden">' .
 				'<hr>' .
 				'<span class="dashicons dashicons-twitter"></span> ' .
 				'<i>' . __( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ) . '</i> ' .
 				'<a class="button button-small" href="https://twitter.com/intent/tweet?via=secupress&amp;url=' . urlencode( esc_url_raw( 'http://secupress.fr&text=' . __( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ) ) ) . '">Tweet &raquo;</a>' .
-			'</div>'
+			'</div-->'
 		),
 	);
 	?>
@@ -389,9 +392,9 @@ function __secupress_scanners() {
 					<p class="secupress-text-medium"><?php esc_html_e( 'Welcome to SecuPress the best way to secure your website!', 'secupress' ); ?></p>
 				</div>
 
-				<ul class="secupress-flex secupress-light-tabs" role="tablist">
-					<li class="secupress-light-tab secupress-current">
-						<a href="#secupress-scan" role="tab" aria-selected="true" aria-control="secupress-scan">
+				<ul class="secupress-flex secupress-tabs secupress-light-tabs" role="tablist" data-content="#sp-tab-scans">
+					<li>
+						<a href="#secupress-scan" role="tab" aria-selected="true" aria-control="secupress-scan" class="secupress-current">
 							<i class="icon-radar" aria-hidden="true"></i>
 							<?php esc_html_e( 'Scan Security Points', 'secupress' ); ?>
 						</a>
@@ -410,7 +413,7 @@ function __secupress_scanners() {
 					</li>
 				</ul>
 				
-				<div class="secupress-tabs-contents">
+				<div id="sp-tab-scans" class="secupress-tabs-contents">
 					<div id="secupress-scan" class="secupress-tab-content">
 						<div class="secupress-flex secupress-row">
 							<div class="secupress-flex secupress-chart">
@@ -426,18 +429,22 @@ function __secupress_scanners() {
 									<li class="status-good">
 										<span class="secupress-carret"></span>
 										<?php esc_html_e( 'Good', 'secupress' ); ?>
+										<span class="secupress-count-good"></span>
 									</li>
 									<li class="status-bad">
 										<span class="secupress-carret"></span>
 										<?php esc_html_e( 'Bad', 'secupress' ); ?>
+										<span class="secupress-count-bad"></span>
 									</li>
 									<li class="status-warning">
 										<span class="secupress-carret"></span>
 										<?php esc_html_e( 'Warning', 'secupress' ); ?>
+										<span class="secupress-count-warning"></span>
 									</li>
 									<li class="status-notscannedyet">
 										<span class="secupress-carret"></span>
 										<?php esc_html_e( 'Not scanned yet', 'secupress' ); ?>
+										<span class="secupress-count-notscannedyet"></span>
 									</li>
 								</ul><!-- .secupress-chart-legend -->
 							</div><!-- .secupress-chart.secupress-flex -->
@@ -446,7 +453,7 @@ function __secupress_scanners() {
 								<p class="secupress-text-big secupress-m0">
 									<?php esc_html_e( 'Congratulations', 'secupress' ); ?>
 								</p>
-								<p class="secupress-score secupress-m0"><?php printf( esc_html__( 'Your note is %s: %s scanned items are good.', 'secupress' ), '<span class="letter">∅</span>', '<span class="percent"></span>' ); ?></p>
+								<p class="secupress-score secupress-m0"><?php printf( esc_html__( 'Your note is %s — %s scanned items are good.', 'secupress' ), '<span class="letter">∅</span>', '<span class="percent"></span>' ); ?></p>
 
 								<p class="secupress-actions-line">
 									<button class="secupress-button button-secupress-scan" type="button">
@@ -467,6 +474,15 @@ function __secupress_scanners() {
 										</span>
 									</button>
 								</p>
+
+								<div id="tweeterA" class="hidden">
+										<i><?php esc_html_e( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ); ?></i>
+
+										<a class="button button-small" href="https://twitter.com/intent/tweet?via=secupress&amp;url=<?php echo urlencode( esc_url_raw( 'http://secupress.fr&text=' . __( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ) ) ); ?>">
+											<span class="icon"><span class="dashicons dashicons-twitter"></span></span>
+											<span class="text"><?php esc_html_e( 'Tweet that', 'secupress' ); ?></span>
+										</a>
+								</div>
 							</div>
 
 						</div><!-- .secupress-flex -->
@@ -474,28 +490,64 @@ function __secupress_scanners() {
 
 					<div id="secupress-latest" class="secupress-tab-content">
 						<p class="secupress-text-big">
-							Something for Latest
+							<?php esc_html_e( 'Latest Scans', 'secupress' ) ; ?>
 						</p>
+						<?php if ( (bool) $reports ) { ?>
+						<ul>
+							<?php foreach ( $reports as $report ) { ?>
+							<li><?php echo $report; ?></li>
+							<?php } ?>
+						</ul>
+						<?php } else { ?>
+						<p>
+							<em><?php esc_html_e( 'You have no other reports for now.', 'secupress' ); ?></em>
+						</p>
+						<?php } ?>
 					</div><!-- .secupress-tab-content -->
 
 					<div id="secupress-schedule" class="secupress-tab-content">
 						<p class="secupress-text-big">
-							Something for Schedule
+							<?php esc_html_e( 'Schedule Scans', 'secupress' ); ?>
 						</p>
 					</div><!-- .secupress-tab-content -->
-					
+
 				</div><!-- .secupress-tabs-contents -->
+
+				<ul id="secupress-type-filters" class="secupress-big-tabs secupress-tabs secupress-flex secupress-text-start hide-if-no-js" role="tabpanel">
+				<?php
+					$tabs = array(
+						'notscannedyet'	=> esc_html__( 'New', 'secupress' ),
+						'bad'			=> esc_html__( 'Bad', 'secupress' ),
+						'warning'		=> esc_html__( 'Warning', 'secupress' ),
+						'good'			=> esc_html__( 'Good', 'secupress' ),
+					);
+					$current = 'bad';
+					foreach ( $tabs as $slug => $name ) {
+				?>
+					<li class="secupress-big-tab-<?php echo $slug; ?>">
+						<a href="#tab-<?php echo $slug; ?>" aria-control="tab-<?php echo $slug; ?>" role="tab"<?php echo ( $slug === $current ? ' class="secupress-current"' : '' ); ?> data-type="<?php echo $slug; ?>">
+							<span class="secupress-tab-title"><?php echo $name; ?></span>
+							<span class="secupress-tab-subtitle">
+								<?php printf( esc_html__( '%s issues', 'secupress' ), '<span class="secupress-count-' . $slug . ' secupress-count"></span>' );  ?>
+							</span>
+						</a>
+					</li>
+				<?php
+					}
+				?>
+				</ul>
 
 			</div><!-- .secupress-section-dark -->
 
+			<div class="secupress-section-gray secupress-bordered-lat">
+				<p></p>
+			</div>
+			<div class="secupress-section-light secupress-bordered-lat">
+				<?php secupress_main_scan(); ?>
+			</div>
+
 			<?php
-			foreach ( $boxes as $id => $box ) {
-				secupress_sidebox( array( 'id' => $id, 'title' => $box[0], 'content' => $box[1], 'context' => 'top' ) );
-			}
-
-			secupress_main_scan();
-
-			wp_nonce_field( 'secupress_score', 'secupress_score', false );
+				wp_nonce_field( 'secupress_score', 'secupress_score', false );
 			?>
 		</div>
 
@@ -548,28 +600,11 @@ function secupress_main_scan() {
 		}
 	}
 	?>
-	<button class="button button-primary button-secupress-scan" type="button">
-		<?php _e( 'One Click Scan', 'secupress' ); ?>
-	</button>
-
-	<button class="button button-primary button-secupress-fix" type="button">
-		<?php _e( 'One Click Fix', 'secupress' ); ?>
-	</button>
-
-
 	<div class="square-filter priorities hide-if-no-js">
 		<button type="button" class="active" data-type="all"><?php _ex( 'All Priorities', 'priority', 'secupress' ); ?></button><?php
 		?><button type="button" data-type="high"><?php _ex( 'High Priority', 'priority', 'secupress' ); ?></button><?php
 		?><button type="button" data-type="medium"><?php _ex( 'Medium Priority', 'priority', 'secupress' ); ?></button><?php
 		?><button type="button" data-type="low"><?php _ex( 'Low Priority', 'priority', 'secupress' ); ?></button>
-	</div>
-
-	<div class="square-filter statuses hide-if-no-js">
-		<button type="button" class="active" data-type="all"><?php _ex( 'All Statuses', 'priority', 'secupress' ); ?></button><?php
-		?><button type="button" data-type="good"><?php _ex( 'Good Status', 'priority', 'secupress' ); ?></button><?php
-		?><button type="button" data-type="warning"><?php _ex( 'Warning Status', 'priority', 'secupress' ); ?></button><?php
-		?><button type="button" data-type="bad"><?php _ex( 'Bad Status', 'priority', 'secupress' ); ?></button><?php
-		?><button type="button" data-type="notscannedyet"><?php _ex( 'Not Scanned Yet', 'priority', 'secupress' ); ?></button>
 	</div>
 
 	<div id="secupress-tests">
