@@ -53,15 +53,11 @@ function secupress_protect_readmes_activation() {
  * On module deactivation, maybe remove rewrite rules from the `.htaccess`/`web.config` file.
  *
  * @since 1.0
- *
- * @param (array) $args Some parameters.
  */
 add_action( 'secupress_deactivate_plugin_' . basename( __FILE__, '.php' ), 'secupress_protect_readmes_deactivate' );
 
-function secupress_protect_readmes_deactivate( $args = array() ) {
-	if ( empty( $args['no-tests'] ) ) {
-		secupress_remove_module_rules_or_notice( 'readme_discloses', __( 'Protect readme\'s', 'secupress' ) );
-	}
+function secupress_protect_readmes_deactivate() {
+	secupress_remove_module_rules_or_notice( 'readme_discloses', __( 'Protect readme\'s', 'secupress' ) );
 }
 
 

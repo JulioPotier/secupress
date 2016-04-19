@@ -53,15 +53,11 @@ function secupress_bad_url_access_activation() {
  * On module deactivation, maybe remove rewrite rules from the `.htaccess`/`web.config` file.
  *
  * @since 1.0
- *
- * @param (array) $args Some parameters.
  */
 add_action( 'secupress_deactivate_plugin_' . basename( __FILE__, '.php' ), 'secupress_bad_url_access_deactivate' );
 
-function secupress_bad_url_access_deactivate( $args = array() ) {
-	if ( empty( $args['no-tests'] ) ) {
-		secupress_remove_module_rules_or_notice( 'bad_url_access', __( 'Bad URL Access', 'secupress' ) );
-	}
+function secupress_bad_url_access_deactivate() {
+	secupress_remove_module_rules_or_notice( 'bad_url_access', __( 'Bad URL Access', 'secupress' ) );
 }
 
 

@@ -41,6 +41,10 @@ function secupress_activate_submodule( $module, $plugin, $incompatibles_modules 
 function secupress_deactivate_submodule( $module, $plugins, $args = array() ) {
 	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
 
+	if ( ! $active_plugins ) {
+		return;
+	}
+
 	if ( ! is_array( $plugins ) ) {
 		$plugins = (array) $plugins;
 	}
@@ -48,7 +52,7 @@ function secupress_deactivate_submodule( $module, $plugins, $args = array() ) {
 	foreach ( $plugins as $plugin ) {
 		$plugin_slug = sanitize_key( $plugin );
 
-		if ( ! $active_plugins || ! isset( $active_plugins[ $module ] ) || ! in_array_deep( $plugin_slug, $active_plugins ) ) {
+		if ( ! isset( $active_plugins[ $module ] ) || ! in_array_deep( $plugin_slug, $active_plugins ) ) {
 			continue;
 		}
 
@@ -95,12 +99,42 @@ function secupress_activate_submodule_silently( $module, $plugin ) {
 }
 
 
-function secupress_deactivate_submodule_silently( $module, $plugins, $args = array( 'no-tests' => 1 ) ) {
-	// Deactivate the submodule.
-	secupress_deactivate_submodule( $module, $plugins, $args );
-	// Remove (de)activation notices.
-	secupress_remove_module_notice( $module, $plugins, 'activation' );
-	secupress_remove_module_notice( $module, $plugins, 'deactivation' );
+function secupress_deactivate_submodule_silently( $module, $plugins, $args = array() ) {
+	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
+
+	if ( ! $active_plugins ) {
+		return;
+	}
+
+	if ( ! is_array( $plugins ) ) {
+		$plugins = (array) $plugins;
+	}
+
+	foreach ( $plugins as $plugin ) {
+		// Remove activation notice.
+		secupress_remove_module_notice( $module, $plugins, 'activation' );
+
+		// Deactivate the submodule.
+		$plugin_slug = sanitize_key( $plugin );
+
+		if ( ! isset( $active_plugins[ $module ] ) || ! in_array_deep( $plugin_slug, $active_plugins ) ) {
+			continue;
+		}
+
+		$key = array_search( $plugin_slug, $active_plugins[ $module ] );
+
+		if ( false === $key ) {
+			continue;
+		}
+
+		unset( $active_plugins[ $module ][ $key ] );
+
+		if ( ! $active_plugins[ $module ] ) {
+			unset( $active_plugins[ $module ] );
+		}
+	}
+
+	update_site_option( SECUPRESS_ACTIVE_SUBMODULES, $active_plugins );
 }
 
 
