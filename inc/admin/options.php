@@ -352,35 +352,6 @@ function __secupress_scanners() {
 			);
 		}
 	}
-
-	$boxes = array(
-		'score' => array(
-			__( 'Your Score', 'secupress' ),
-			'<!--canvas id="status_chart" width="197" height="197"></canvas-->' .
-			'<div class="score_info2">' .
-				'<span class="letter">&ndash;</span>' .
-				'<span class="percent">(0 %)</span>' .
-				'<div class="score_results">' .
-					sprintf( __( '%s: ', 'secupress' ), '<strong>' . __( 'Latest Reports', 'secupress' ) . '</strong>' ) . '<br>' .
-					'<ul>' .
-						implode( "\n", array_reverse( $reports ) ) .
-					'</ul>' .
-				'</div>' .
-			'</div>' .
-			'<div class="legend">' .
-				'<span class="status-good"><span class="secupress-dashicon dashicons dashicons-shield-alt" aria-hidden="true"></span> ' . __( 'Good', 'secupress' ) . '</span> | ' .
-				'<span class="status-bad"><span class="secupress-dashicon dashicons dashicons-shield-alt" aria-hidden="true"></span> ' . __( 'Bad', 'secupress' ) . '</span> | ' .
-				'<span class="status-warning"><span class="secupress-dashicon dashicons dashicons-shield-alt" aria-hidden="true"></span> ' . __( 'Warning', 'secupress' ) . '</span> | ' .
-				'<span class="status-notscannedyet"><span class="secupress-dashicon dashicons dashicons-shield-alt" aria-hidden="true"></span> ' . __( 'Not scanned yet', 'secupress' ) . '</span>' .
-			'</div>' .
-			'<!--div id="tweeterA" class="hidden">' .
-				'<hr>' .
-				'<span class="dashicons dashicons-twitter"></span> ' .
-				'<i>' . __( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ) . '</i> ' .
-				'<a class="button button-small" href="https://twitter.com/intent/tweet?via=secupress&amp;url=' . urlencode( esc_url_raw( 'http://secupress.fr&text=' . __( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ) ) ) . '">Tweet &raquo;</a>' .
-			'</div-->'
-		),
-	);
 	?>
 	<div class="wrap">
 		<?php secupress_admin_heading( __( 'Scanners', 'secupress' ) ); ?>
@@ -388,8 +359,39 @@ function __secupress_scanners() {
 		<div class="secupress-wrapper">
 			
 			<div class="secupress-section-dark">
-				<div class="secupress-heading">
+				<div class="secupress-heading secupress-flex secupress-flex-spaced secupress-wrap">
 					<p class="secupress-text-medium"><?php esc_html_e( 'Welcome to SecuPress the best way to secure your website!', 'secupress' ); ?></p>
+					<p class="secupress-text-end hide-if-no-js">
+						<a href="#secupress-more-info" class="secupress-link-icon" data-trigger="slidedown" data-target="secupress-more-info">
+							<span class="icon">
+								<i class="icon-info" aria-hidden="true"></i>
+							</span>
+							<span class="text">
+								<?php esc_html_e( 'How does it work?', 'secupress' ); ?>
+							</span>
+						</a>
+					</p>
+
+					<div id="secupress-more-info" class="secupress-flex secupress-flex-spaced secupress-full-wide">
+						<div class="secupress-col">
+							<p>Content</p>
+						</div>
+						<div class="secupress-col">
+							<p>Content</p>
+						</div>
+						<div class="secupress-col">
+							<p>Content</p>
+						</div>
+
+						<a href="#secupress-more-info" class="secupress-link-icon" data-trigger="slideup" data-target="secupress-more-info">
+							<span class="icon">
+								<i class="icon-cross" aria-hidden="true"></i>
+							</span>
+							<span class="text">
+								<?php esc_html_e( 'I\'ve got it!', 'secupress' ); ?>
+							</span>
+						</a>
+					</div>
 				</div>
 
 				<ul class="secupress-flex secupress-tabs secupress-light-tabs" role="tablist" data-content="#sp-tab-scans">

@@ -92,6 +92,13 @@
 	margin: 35px 0;
 }
 
+.secupress-full-wide {
+	width: 100%;
+	-webkit-flex-basis: 100%;
+	-ms-flex-preferred-size: 100%;
+	flex-basis: 100%;
+}
+
 /* Flexboxes */
 .secupress-flex {
 	display: -webkit-box;
@@ -109,11 +116,19 @@
 	-ms-grid-row-align: center;
 	align-items: center;
 }
+.secupress-flex > * {
+	margin: 0;
+}
 .secupress-flex-spaced {
 	-webkit-box-pack: justify;
 	-webkit-justify-content: space-between;
 	-ms-flex-pack: justify;
 	justify-content: space-between;
+}
+.secupress-wrap {
+	-webkit-flex-wrap: wrap;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;	
 }
 .secupress-flex-col {
 	display: -webkit-box;
