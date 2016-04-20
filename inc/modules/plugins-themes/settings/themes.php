@@ -74,7 +74,7 @@ $this->add_field( array(
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'Based on our Daily Security Monitoring, we will push notices for themes newly known as vulnerables.', 'secupress' ),
+			'description' => __( 'Based on our Daily Security Monitoring, we will push notices for themes newly known as vulnerable.', 'secupress' ),
 		),
 	),
 ) );
