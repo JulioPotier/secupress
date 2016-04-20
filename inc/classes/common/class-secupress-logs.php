@@ -905,8 +905,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	public function _post_download_logs_ajax_post_cb() {
-		check_admin_referer( 'secupress-download-' . $this->log_type . '-logs' );
-
+		secupress_check_admin_referer( 'secupress-download-' . $this->log_type . '-logs' );
 		secupress_check_user_capability();
 
 		if ( ini_get( 'zlib.output_compression' ) ) {
@@ -950,8 +949,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	public function _ajax_clear_logs_ajax_post_cb() {
-		check_ajax_referer( 'secupress-clear-' . $this->log_type . '-logs' );
-
+		secupress_check_admin_referer( 'secupress-clear-' . $this->log_type . '-logs' );
 		secupress_check_user_capability();
 
 		$this->delete_logs();
@@ -966,8 +964,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	public function _post_clear_logs_ajax_post_cb() {
-		check_admin_referer( 'secupress-clear-' . $this->log_type . '-logs' );
-
+		secupress_check_admin_referer( 'secupress-clear-' . $this->log_type . '-logs' );
 		secupress_check_user_capability();
 
 		$this->delete_logs();
@@ -976,7 +973,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		set_transient( 'settings_errors', get_settings_errors(), 30 );
 
 		$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
-		wp_redirect( $goback );
+		wp_redirect( esc_url_raw( $goback ) );
 		die();
 	}
 
@@ -987,8 +984,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	public function _ajax_bulk_delete_logs_ajax_post_cb() {
-		check_ajax_referer( 'secupress-bulk-' . $this->log_type . '-log' );
-
+		secupress_check_admin_referer( 'secupress-bulk-' . $this->log_type . '-log' );
 		secupress_check_user_capability();
 
 		if ( empty( $_GET['post'] ) || ! is_array( $_GET['post'] ) ) {
@@ -1007,8 +1003,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	public function _post_bulk_delete_logs_ajax_post_cb() {
-		check_admin_referer( 'secupress-bulk-' . $this->log_type . '-logs' );
-
+		secupress_check_admin_referer( 'secupress-bulk-' . $this->log_type . '-logs' );
 		secupress_check_user_capability();
 
 		if ( empty( $_GET['post'] ) || ! is_array( $_GET['post'] ) ) {
@@ -1021,7 +1016,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		set_transient( 'settings_errors', get_settings_errors(), 30 );
 
 		$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
-		wp_redirect( $goback );
+		wp_redirect( esc_url_raw( $goback ) );
 		die();
 	}
 
@@ -1032,8 +1027,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	public function _ajax_bulk_delete_logs_by_user_id_ajax_post_cb() {
-		check_ajax_referer( 'secupress-delete-' . $this->log_type . '-logs-by-user_id' );
-
+		secupress_check_admin_referer( 'secupress-delete-' . $this->log_type . '-logs-by-user_id' );
 		secupress_check_user_capability();
 
 		if ( ! isset( $_GET['id'] ) ) {
@@ -1053,8 +1047,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	public function _post_bulk_delete_logs_by_user_id_ajax_post_cb() {
-		check_admin_referer( 'secupress-delete-' . $this->log_type . '-logs-by-user_id' );
-
+		secupress_check_admin_referer( 'secupress-delete-' . $this->log_type . '-logs-by-user_id' );
 		secupress_check_user_capability();
 
 		if ( ! isset( $_GET['id'] ) ) {
@@ -1068,7 +1061,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		set_transient( 'settings_errors', get_settings_errors(), 30 );
 
 		$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
-		wp_redirect( $goback );
+		wp_redirect( esc_url_raw( $goback ) );
 		die();
 	}
 
@@ -1079,8 +1072,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	public function _ajax_bulk_delete_logs_by_ip_ajax_post_cb() {
-		check_ajax_referer( 'secupress-delete-' . $this->log_type . '-logs-by-ip' );
-
+		secupress_check_admin_referer( 'secupress-delete-' . $this->log_type . '-logs-by-ip' );
 		secupress_check_user_capability();
 
 		if ( empty( $_GET['ip'] ) ) {
@@ -1106,8 +1098,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	public function _post_bulk_delete_logs_by_ip_ajax_post_cb() {
-		check_admin_referer( 'secupress-delete-' . $this->log_type . '-logs-by-ip' );
-
+		secupress_check_admin_referer( 'secupress-delete-' . $this->log_type . '-logs-by-ip' );
 		secupress_check_user_capability();
 
 		if ( empty( $_GET['ip'] ) ) {
@@ -1127,7 +1118,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		set_transient( 'settings_errors', get_settings_errors(), 30 );
 
 		$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
-		wp_redirect( $goback );
+		wp_redirect( esc_url_raw( $goback ) );
 		die();
 	}
 
@@ -1138,8 +1129,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	public function _ajax_delete_log_ajax_post_cb() {
-		check_ajax_referer( 'secupress-delete-' . $this->log_type . '-log' );
-
+		secupress_check_admin_referer( 'secupress-delete-' . $this->log_type . '-log' );
 		secupress_check_user_capability();
 
 		if ( empty( $_GET['log'] ) ) {
@@ -1160,8 +1150,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	public function _post_delete_log_ajax_post_cb() {
-		check_admin_referer( 'secupress-delete-' . $this->log_type . '-log' );
-
+		secupress_check_admin_referer( 'secupress-delete-' . $this->log_type . '-log' );
 		secupress_check_user_capability();
 
 		if ( empty( $_GET['log'] ) ) {
@@ -1176,7 +1165,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		set_transient( 'settings_errors', get_settings_errors(), 30 );
 
 		$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
-		wp_redirect( $goback );
+		wp_redirect( esc_url_raw( $goback ) );
 		die();
 	}
 

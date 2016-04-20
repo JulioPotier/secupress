@@ -50,7 +50,7 @@ function secupress_check_ban_ips() {
 
 		// The user just got unlocked. Redirect to homepage.
 		if ( $redirect ) {
-			wp_redirect( home_url() );
+			wp_redirect( esc_url_raw( home_url() ) );
 			die();
 		}
 
@@ -349,7 +349,7 @@ function secupress_add_cookiehash_muplugin() {
 			$token = md5( time() );
 			secupress_set_site_transient( 'secupress_auto_login_' . $token, array( $data['username'], 'WP_Config' ) );
 
-			wp_safe_redirect( add_query_arg( 'secupress_auto_login_token', $token, secupress_get_current_url( 'raw' ) ) );
+			wp_safe_redirect( esc_url_raw( add_query_arg( 'secupress_auto_login_token', $token, secupress_get_current_url( 'raw' ) ) ) );
 			die();
 		}
 	}
@@ -402,7 +402,7 @@ function secupress_add_salt_muplugin() {
 		$token = md5( time() );
 		secupress_set_site_transient( 'secupress_auto_login_' . $token, array( $data['username'], 'Salt_Keys' ) );
 
-		wp_safe_redirect( add_query_arg( 'secupress_auto_login_token', $token, secupress_get_current_url( 'raw' ) ) );
+		wp_safe_redirect( esc_url_raw( add_query_arg( 'secupress_auto_login_token', $token, secupress_get_current_url( 'raw' ) ) ) );
 		die();
 	}
 }
@@ -437,7 +437,7 @@ function secupress_auto_username_login() {
 			if ( $action ) {
 				secupress_scanit( $action );
 			}
-			wp_safe_redirect( remove_query_arg( 'secupress_auto_login_token', secupress_get_current_url( 'raw' ) ) );
+			wp_safe_redirect( esc_url_raw( remove_query_arg( 'secupress_auto_login_token', secupress_get_current_url( 'raw' ) ) ) );
 			die();
 		}
 	}

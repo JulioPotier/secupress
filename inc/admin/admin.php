@@ -17,17 +17,13 @@ add_action( 'wp_ajax_secupress_scanner',    '__secupress_scanit_action_callback'
  * @return (string) json format or redirects the user.
  **/
 function __secupress_scanit_action_callback() {
-
-	if ( empty( $_GET['test'] ) || empty( $_GET['_wpnonce'] ) ) {
+	if ( empty( $_GET['test'] ) ) {
 		secupress_admin_die();
 	}
 
 	$test_name = esc_attr( $_GET['test'] );
-	$nonce     = wp_verify_nonce( $_GET['_wpnonce'], 'secupress_scanner_' . $test_name );
-
-	if ( ! $test_name || ! $nonce ) {
-		secupress_admin_die();
-	}
+	secupress_check_user_capability();
+	secupress_check_admin_referer( 'secupress_scanner_' . $test_name );
 
 	$doing_ajax       = defined( 'DOING_AJAX' ) && DOING_AJAX;
 	$for_current_site = ! empty( $_GET['for-current-site'] );
@@ -95,17 +91,13 @@ add_action( 'wp_ajax_secupress_fixit',    '__secupress_fixit_action_callback' );
  * @return (string) json format or redirects the user
  **/
 function __secupress_fixit_action_callback() {
-
-	if ( empty( $_GET['test'] ) || empty( $_GET['_wpnonce'] ) ) {
+	if ( empty( $_GET['test'] ) ) {
 		secupress_admin_die();
 	}
 
 	$test_name = esc_attr( $_GET['test'] );
-	$nonce     = wp_verify_nonce( $_GET['_wpnonce'], 'secupress_fixit_' . $test_name );
-
-	if ( ! $test_name || ! $nonce ) {
-		secupress_admin_die();
-	}
+	secupress_check_user_capability();
+	secupress_check_admin_referer( 'secupress_fixit_' . $test_name );
 
 	$doing_ajax       = defined( 'DOING_AJAX' ) && DOING_AJAX;
 	$for_current_site = ! empty( $_GET['for-current-site'] );
@@ -178,17 +170,13 @@ add_action( 'wp_ajax_secupress_manual_fixit',    '__secupress_manual_fixit_actio
  * @return (string) json format or redirects the user.
  **/
 function __secupress_manual_fixit_action_callback() {
-
-	if ( empty( $_POST['test'] ) || empty( $_POST['secupress_manual_fixit-nonce'] ) ) {
+	if ( empty( $_POST['test'] ) ) {
 		secupress_admin_die();
 	}
 
 	$test_name = esc_attr( $_POST['test'] );
-	$nonce     = wp_verify_nonce( $_POST['secupress_manual_fixit-nonce'], 'secupress_manual_fixit-' . $test_name );
-
-	if ( ! $test_name || ! $nonce ) {
-		secupress_admin_die();
-	}
+	secupress_check_user_capability();
+	secupress_check_admin_referer( 'secupress_manual_fixit-' . $test_name, 'secupress_manual_fixit-nonce' );
 
 	$doing_ajax       = defined( 'DOING_AJAX' ) && DOING_AJAX;
 	$for_current_site = ! empty( $_POST['for-current-site'] );
@@ -329,7 +317,7 @@ function secupress_admin_send_response_or_redirect( $response, $redirect = false
 		$redirect = wp_get_referer();
 	}
 
-	wp_redirect( $redirect );
+	wp_redirect( esc_url_raw( $redirect ) );
 	die();
 }
 
@@ -381,7 +369,7 @@ function secupress_admin_send_message_die( $args ) {
 	set_transient( 'settings_errors', get_settings_errors(), 30 );
 
 	$goback = add_query_arg( 'settings-updated', 'true', $args['redirect_to'] );
-	wp_redirect( $goback );
+	wp_redirect( esc_url_raw( $goback ) );
 	die();
 }
 
@@ -486,11 +474,11 @@ function __secupress_settings_action_links( $actions ) {
 add_action( 'admin_post_secupress_resetwl', '__secupress_reset_white_label_values_ajax_post_cb' );
 
 function __secupress_reset_white_label_values_ajax_post_cb() {
-	if ( isset( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'secupress_resetwl' ) ) {
+	if ( current_user_can( secupress_get_capability() ) && isset( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'secupress_resetwl' ) ) {
 		secupress_reset_white_label_values( true );
 	}
 
-	wp_safe_redirect( add_query_arg( 'page', 'secupress_settings', wp_get_referer() ) );
+	wp_safe_redirect( esc_url_raw( add_query_arg( 'page', 'secupress_settings', wp_get_referer() ) ) );
 	die();
 }
 
@@ -686,11 +674,11 @@ function __secupress_clear_ips_ajax_post_cb() {
 add_action( 'admin_post_secupress_reset_settings', '__secupress_admin_post_reset_settings' );
 
 function __secupress_admin_post_reset_settings() {
-	if ( isset( $_GET['_wpnonce'], $_GET['module'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'secupress_reset_' . $_GET['module'] ) ) {
+	if ( current_user_can( secupress_get_capability() ) && isset( $_GET['_wpnonce'], $_GET['module'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'secupress_reset_' . $_GET['module'] ) ) {
 		do_action( 'wp_secupress_first_install', $_GET['module'] );
 	}
 
-	wp_safe_redirect( secupress_admin_url( 'modules', $_GET['module'] ) );
+	wp_safe_redirect( esc_url_raw( secupress_admin_url( 'modules', $_GET['module'] ) ) );
 	die();
 }
 
@@ -735,7 +723,7 @@ function __secupress_check_no_empty_name() {
 
 	if ( empty( $wl_plugin_name ) ) {
 		secupress_reset_white_label_values( false );
-		wp_safe_redirect( $_SERVER['REQUEST_URI'] );
+		wp_safe_redirect( esc_url_raw( $_SERVER['REQUEST_URI'] ) );
 		die();
 	}
 }
@@ -798,10 +786,12 @@ function secupress_register_all_settings() {
 add_action( 'admin_post_secupress_toggle_file_scan', '__secupress_toggle_file_scan_ajax_post_cb' );
 
 function __secupress_toggle_file_scan_ajax_post_cb() {
-
-	if ( ! isset( $_GET['_wpnonce'], $_GET['turn'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress_toggle_file_scan' ) ) {
+	if ( empty( $_GET['turn'] ) ) {
 		secupress_admin_die();
 	}
+
+	secupress_check_user_capability();
+	secupress_check_admin_referer( 'secupress_toggle_file_scan' );
 
 	if ( 'on' === $_GET['turn'] ) {
 		secupress_set_site_transient( 'secupress_toggle_file_scan', time() );
@@ -811,6 +801,6 @@ function __secupress_toggle_file_scan_ajax_post_cb() {
 		delete_site_transient( 'secupress_toggle_queue' );
 	}
 
-	wp_redirect( wp_get_referer() );
+	wp_redirect( esc_url_raw( wp_get_referer() ) );
 	die();
 }

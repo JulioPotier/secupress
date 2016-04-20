@@ -74,7 +74,7 @@ function __secupress_do_backup_db() {
 		) );
 	}
 
-	wp_redirect( wp_get_referer() );
+	wp_redirect( esc_url_raw( wp_get_referer() ) );
 	die();
 }
 
@@ -156,7 +156,7 @@ function __secupress_delete_backup_ajax_post_cb() {
 		) );
 	}
 
-	wp_redirect( wp_get_referer() );
+	wp_redirect( esc_url_raw( wp_get_referer() ) );
 	die();
 }
 

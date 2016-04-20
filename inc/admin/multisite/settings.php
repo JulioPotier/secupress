@@ -48,11 +48,8 @@ function secupress_update_network_option_on_submit() {
 
 	$option_group = $_POST['option_page'];
 
-	if ( ! current_user_can( secupress_get_capability() ) ) {
-		wp_die( __( 'Cheatin&#8217; uh?' ), 403 );
-	}
-
-	check_admin_referer( $option_group . '-options' );
+	secupress_check_admin_referer( $option_group . '-options' );
+	secupress_check_user_capability();
 
 	$whitelist_options = apply_filters( 'secupress_whitelist_network_options', array() );
 
@@ -94,7 +91,7 @@ function secupress_update_network_option_on_submit() {
 	 * Redirect back to the settings page that was submitted
 	 */
 	$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
-	wp_redirect( $goback );
+	wp_redirect( esc_url_raw( $goback ) );
 	exit;
 }
 

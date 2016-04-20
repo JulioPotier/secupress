@@ -71,7 +71,7 @@ function secupress_auth_redirect_blacklist_logins( $user_id ) {
 					// Redirect the user to the login page.
 					$login_url = wp_login_url( secupress_get_current_url( 'raw' ), true );
 					$login_url = add_query_arg( 'secupress-relog', 1, $login_url );
-					wp_redirect( $login_url );
+					wp_redirect( esc_url_raw( $login_url ) );
 					exit();
 				}
 			}

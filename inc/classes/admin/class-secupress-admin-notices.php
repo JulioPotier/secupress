@@ -320,7 +320,7 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 			wp_die( -1 );
 		}
 
-		check_ajax_referer( 'secupress-notices' );
+		secupress_check_admin_referer( 'secupress-notices' );
 
 		/*
 		 * Filter the capability needed to dismiss the notice.
@@ -355,7 +355,7 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 			secupress_admin_die();
 		}
 
-		check_admin_referer( 'secupress-notices' );
+		secupress_check_admin_referer( 'secupress-notices' );
 
 		/*
 		 * Filter the capability needed to dismiss the notice.
@@ -374,7 +374,7 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 		}
 
 		if ( self::dismiss( $_GET['notice_id'] ) ) {
-			wp_safe_redirect( wp_get_referer() );
+			wp_safe_redirect( esc_url_raw( wp_get_referer() ) );
 			die();
 		}
 		secupress_admin_die();

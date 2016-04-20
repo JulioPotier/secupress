@@ -266,7 +266,7 @@ function secupress_add_centralized_blog_options_admin_post_callback() {
 	secupress_check_user_capability();
 
 	if ( ! ( $count = secupress_fill_centralized_blog_options() ) ) {
-		wp_safe_redirect( wp_get_referer() );
+		wp_safe_redirect( esc_url_raw( wp_get_referer() ) );
 		die();
 	}
 

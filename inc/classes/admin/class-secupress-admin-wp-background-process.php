@@ -142,7 +142,7 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 				wp_die();
 			}
 
-			check_ajax_referer( $this->identifier, 'nonce' );
+			secupress_check_admin_referer( $this->identifier, 'nonce' );
 
 			$this->handle();
 

@@ -100,7 +100,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 
 			if ( ! $this->current_log_id ) {
 				$sendback = $this->_paged_page_url();
-				wp_redirect( $sendback );
+				wp_redirect( esc_url_raw( $sendback ) );
 				exit();
 			}
 		}

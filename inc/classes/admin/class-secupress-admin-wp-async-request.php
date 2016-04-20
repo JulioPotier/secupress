@@ -111,7 +111,7 @@ if ( ! class_exists( 'WP_Async_Request' ) ) {
 		 * Check for correct nonce and pass to handler.
 		 */
 		public function maybe_handle() {
-			check_ajax_referer( $this->identifier, 'nonce' );
+			secupress_check_admin_referer( $this->identifier, 'nonce' );
 
 			$this->handle();
 
