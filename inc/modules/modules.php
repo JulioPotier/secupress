@@ -64,7 +64,7 @@ function secupress_get_modules() {
 			'with_form'   => false,
 			'description' => array(
 				__( 'Backuping your database daily and you files weekly can reduce the risks to lose your content because of an attack.', 'secupress' ),
-				sprintf( __( 'Don\'t forget to <a href="%s">schedule backups</a> as soon as possible.', 'secupress' ), secupress_admin_url( 'modules', 'schedules' ) ),
+				sprintf( __( 'Don\'t forget to <a href="%s">schedule backups</a> as soon as possible.', 'secupress' ), esc_url( secupress_admin_url( 'modules', 'schedules' ) ) ),
 			),
 			'with_reset_box' => false,
 		),
@@ -73,7 +73,7 @@ function secupress_get_modules() {
 			'dashicon'    => 'email-alt',
 			'description' => array(
 				__( 'Comments are great for your website, but bot traffic represent about 60 % of the internet. Spams are done by these bots, and they just want to add their content in your website. Don\'t let them do that!', 'secupress' ),
-				sprintf( __( 'Do not forget to visit the <a href="%s">Settings &rsaquo; Discussion</a> area to add words to the blacklist and other usual settings regarding comments.', 'secupress' ), admin_url( 'options-discussion.php' ) ),
+				sprintf( __( 'Do not forget to visit the <a href="%s">Settings &rsaquo; Discussion</a> area to add words to the blacklist and other usual settings regarding comments.', 'secupress' ), esc_url( admin_url( 'options-discussion.php' ) ) ),
 				__( 'By default, we block identity usurpation, so if someone tries to comment using your email/name, the comment will be blocked.', 'secupress' ),
 				__( 'Also by default, we block bad IPs, author name, email and website url known as spammer.', 'secupress' ),
 			),
@@ -90,7 +90,7 @@ function secupress_get_modules() {
 			'title'       => esc_html__( 'Alerts', 'secupress' ),
 			'dashicon'    => 'megaphone',
 			'description' => array(
-				__( 'Each time we that an action is a possible attack vector, we add it here, so you can see what happened and when we blocked it or not.', 'secupress' ),////
+				__( 'Being alerted of some important events might help to react quickly in case of possible attack vector.', 'secupress' ),
 			),
 		),
 		'schedules'       => array(

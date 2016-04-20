@@ -44,8 +44,7 @@ function secupress_get_scanner_counts( $type = '' ) {
  *
  * @since 1.0
  */
-function secupress_user_agent( $user_agent ) {
-
+function secupress_user_agent( $user_agent ) {////
 	$bonus  = ! secupress_is_white_label() ? '' : '*';
 	$bonus .= ! secupress_get_option( 'do_beta' ) ? '' : '+';
 	$new_ua = sprintf( '%s;SecuPress|%s%s|%s|;', $user_agent, SECUPRESS_VERSION, $bonus, esc_url( home_url() ) );

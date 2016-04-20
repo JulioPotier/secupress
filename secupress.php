@@ -61,7 +61,7 @@ define( 'SECUPRESS_PHP_MIN'               , '5.3' );
 define( 'SECUPRESS_WP_MIN'                , '3.7' );
 
 if ( ! defined( 'SECUPRESS_LASTVERSION' ) ) {
-	define( 'SECUPRESS_LASTVERSION', '0' ); ////
+	define( 'SECUPRESS_LASTVERSION', '0' );
 }
 
 

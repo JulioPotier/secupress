@@ -84,12 +84,10 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements iSecuPre
 
 
 	public function scan() {
-
 		// Multisite, for the current site.
 		if ( $this->is_for_current_site() ) {
 			// Plugins vulnerables
 			$bad_plugins = $this->get_installed_plugins_to_remove();
-			$bad_plugins = 1; ////
 
 			if ( is_numeric( $bad_plugins ) ) {
 				$this->add_message( 206 );
@@ -106,10 +104,8 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements iSecuPre
 		else {
 			// If we're in a sub-site, don't list the plugins enabled in the network.
 			$to_keep = array();
-
 			// Plugins no longer in directory.
 			$bad_plugins = static::get_installed_plugins_vulnerables();
-			$bad_plugins = 1; ////
 
 			if ( is_numeric( $bad_plugins ) ) {
 				$this->add_message( 206 );
@@ -117,7 +113,6 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements iSecuPre
 				// bad
 				$this->add_message( 200, array( $count, $count, self::wrap_in_tag( $bad_plugins ) ) );
 			}
-
 		}
 		// good
 		$this->maybe_set_status( 0 );
@@ -135,7 +130,8 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements iSecuPre
 		return parent::fix();
 	}
 
-// Return an array of plugin names like `array( $path => $name, $path => $name )`.
+
+	// Return an array of plugin names like `array( $path => $name, $path => $name )`.
 
 	final protected static function get_installed_plugins_vulnerables( $for_fix = false ) {
 		static $whitelist_error = false;

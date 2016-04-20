@@ -129,7 +129,7 @@ function secupress_load_plugins_network_options() {
 		}
 	}
 
-	$option_names['secupress_users-login_settings'] = 1; // It is used for the "Ban IP" duration, even if the submodule is not activated. //// Normal ? Voir secupress_check_ban_ips().
+	$option_names['secupress_users-login_settings'] = 1; // It is used for the "Ban IP" duration, even if the submodule is not activated. See `secupress_check_ban_ips()`.
 	$option_names = array_keys( $option_names );
 
 	/**

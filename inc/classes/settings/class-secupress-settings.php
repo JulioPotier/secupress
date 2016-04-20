@@ -159,7 +159,6 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			'row_class'    => 'affected-role-row',
 			'name'         => $this->get_field_name( 'affected_role' ),
 			'type'         => 'roles',
-			'default'      => array(), //// (TODO) not supported yet why not $args['with_roles']
 			'label_screen' => __( 'Affected Roles', 'secupress' ),
 			'helpers'      => array(
 				array(
@@ -1088,7 +1087,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			</p>
 
 		</form>
-	<?php
+		<?php
 	}
 
 

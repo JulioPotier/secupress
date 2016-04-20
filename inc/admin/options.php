@@ -778,23 +778,6 @@ function secupress_main_scan() {
 			</div>
 			<?php
 		} // foreach prio
-
-		if ( WP_DEBUG && function_exists( 'pre_print_r' ) ) {////
-			echo '<code>$scanners</code>:';
-			pre_print_r($scanners,1);
-			echo '<code>$fixes</code>:';
-			pre_print_r($fixes,1);
-			if ( is_multisite() ) {
-				echo '<code>$sub_sites</code>:';
-				pre_print_r(secupress_get_results_for_ms_scanner_fixes(),1);
-				echo '<code>$active_plugins</code>:';
-				pre_print_r(get_site_option( 'secupress_active_plugins' ),1);
-				echo '<code>$active_themes</code>:';
-				pre_print_r(get_site_option( 'secupress_active_themes' ),1);
-				echo '<code>$default_roles</code>:';
-				pre_print_r(get_site_option( 'secupress_default_role' ),1);
-			}
-		}
 		?>
 	</div>
 	<?php
