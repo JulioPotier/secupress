@@ -567,7 +567,29 @@ function __secupress_scanners() {
 			</div><!-- .secupress-section-dark -->
 
 			<div class="secupress-section-gray secupress-bordered-lat">
-				<p></p>
+				<div class="secupress-flex secupress-flex-spaced secupress-wrap">
+					<div>
+						<p class="secupress-text-basup secupress-bold secupress-m0"><?php esc_html_e( 'List of analyzed security points', 'secupress' ); ?></p>
+						<p class="secupress-m0 secupress-gray"><?php esc_html_e( 'These issues should be fixed right now!', 'secupress' ); ?></p>
+					</div>
+					<div>
+						<p class="secupress-childs-ib secupress-ib-spaced secupress-gray-medium">
+							<span class="secupress-gray"><?php esc_html_e( 'Filter by priority', 'secupress' ); ?></span>
+							<span>
+								<input id="filter-hight" type="checkbox" class="secupress-checkbox" name="hight">
+								<label for="filter-hight"><?php esc_html_e( 'High', 'secupress' ); ?></label>
+							</span>
+							<span>
+								<input id="filter-medium" type="checkbox" class="secupress-checkbox" name="medium">
+								<label for="filter-medium"><?php esc_html_e( 'Medium', 'secupress' ); ?></label>
+							</span>
+							<span>
+								<input id="filter-low" type="checkbox" class="secupress-checkbox" name="low">
+								<label for="filter-low"><?php esc_html_e( 'Low', 'secupress' ); ?></label>
+							</span>
+						</p>
+					</div>
+				</div>
 			</div>
 			<div class="secupress-section-light secupress-bordered-lat">
 				<?php secupress_main_scan(); ?>
