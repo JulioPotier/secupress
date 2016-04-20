@@ -138,31 +138,6 @@ function secupress_is_white_label() {
 
 
 /**
- * Reset white label options
- *
- * @since 1.0
- * @return void
- */
-function secupress_reset_white_label_values( $hack_post ) {
-	// White Label default values - !!! DO NOT TRANSLATE !!!
-	$options = get_site_option( SECUPRESS_SETTINGS_SLUG );
-	$options['wl_plugin_name'] = 'SecuPress';
-	$options['wl_plugin_slug'] = 'secupress';
-	$options['wl_plugin_URI']  = 'http://secupress.me';
-	$options['wl_description'] = array( 'The best WordPress security plugin.' );
-	$options['wl_author']      = 'WP Media';
-	$options['wl_author_URI']  = 'http://secupress.me';
-
-	if ( $hack_post ) {
-		// hack $_POST to force refresh of files, sorry
-		$_POST['page'] = 'secupress';
-	}
-
-	update_site_option( SECUPRESS_SETTINGS_SLUG, $options );
-}
-
-
-/**
  * Create a unique id for some secupress options and functions
  *
  * @since 1.0

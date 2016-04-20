@@ -467,23 +467,6 @@ function __secupress_settings_action_links( $actions ) {
 
 
 /**
- * Reset White Label values to SecuPress default values
- *
- * @since 1.0
- */
-add_action( 'admin_post_secupress_resetwl', '__secupress_reset_white_label_values_ajax_post_cb' );
-
-function __secupress_reset_white_label_values_ajax_post_cb() {
-	if ( current_user_can( secupress_get_capability() ) && isset( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'secupress_resetwl' ) ) {
-		secupress_reset_white_label_values( true );
-	}
-
-	wp_safe_redirect( esc_url_raw( add_query_arg( 'page', 'secupress_settings', wp_get_referer() ) ) );
-	die();
-}
-
-
-/**
  * Ban an IP address.
  *
  * @since 1.0
@@ -680,52 +663,6 @@ function __secupress_admin_post_reset_settings() {
 
 	wp_safe_redirect( esc_url_raw( secupress_admin_url( 'modules', $_GET['module'] ) ) );
 	die();
-}
-
-
-/**
- * White Label the plugin, if you need to
- *
- * @since 1.0
- *
- */
-// add_filter( 'all_plugins', '__secupress_white_label' );
-function __secupress_white_label( $plugins ) {
-	if ( ! secupress_is_white_label() ) {
-		return $plugins;
-	}
-
-	// We change the plugin's header
-	$plugins[ SECUPRESS_PLUGIN_FILE ] = array(
-		'Name'        => secupress_get_option( 'wl_plugin_name' ),
-		'PluginURI'   => secupress_get_option( 'wl_plugin_URI' ),
-		'Version'     => isset( $plugins[ SECUPRESS_PLUGIN_FILE ]['Version'] ) ? $plugins[ SECUPRESS_PLUGIN_FILE ]['Version'] : '',
-		'Description' => reset( ( secupress_get_option( 'wl_description', array() ) ) ),
-		'Author'      => secupress_get_option( 'wl_author' ),
-		'AuthorURI'   => secupress_get_option( 'wl_author_URI' ),
-		'TextDomain'  => isset( $plugins[ SECUPRESS_PLUGIN_FILE ]['TextDomain'] ) ? $plugins[ SECUPRESS_PLUGIN_FILE ]['TextDomain'] : '',
-		'DomainPath'  => isset( $plugins[ SECUPRESS_PLUGIN_FILE ]['DomainPath'] ) ? $plugins[ SECUPRESS_PLUGIN_FILE ]['DomainPath'] : '',
-	);
-
-	return $plugins;
-}
-
-
-/**
- * When you're doing an update, the constant does not contain yet your option or any value, reset and redirect!
- *
- * @since 1.0
- */
-// add_action( 'admin_init', '__secupress_check_no_empty_name', 11 ); ////
-
-function __secupress_check_no_empty_name() {
-	$wl_plugin_name = trim( secupress_get_option( 'wl_plugin_name' ) );
-
-	if ( empty( $wl_plugin_name ) ) {
-		secupress_reset_white_label_values( false );
-		wp_safe_redirect( esc_url_raw( $_SERVER['REQUEST_URI'] ) );
-		die();
-	}
 }
 
 

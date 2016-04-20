@@ -390,21 +390,6 @@ function __secupress_global_settings() {
 
 
 /**
- * Add White Label in the list of settings modules.
- *
- * @since 1.0
- */
-add_filter( 'secupress_global_settings_modules', '__secupress_add_white_label_settings_block' );
-
-function __secupress_add_white_label_settings_block( $modules ) {
-	if ( defined( 'WP_SWL' ) && WP_SWL ) {
-		$modules[] = 'white-label';
-	}
-	return $modules;
-}
-
-
-/**
  * Modules page.
  *
  * @since 1.0
