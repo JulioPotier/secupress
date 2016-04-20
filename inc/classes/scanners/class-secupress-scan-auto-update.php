@@ -27,7 +27,7 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements iSecuPress_Sc
 		self::$more_fix = sprintf(
 			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
 			'<em>' . __( 'Minor updates', 'secupress' ) . '</em>',
-			'<a href="' . esc_url( secupress_admin_url( 'modules', 'wordpress-core' ) ) . '#Minor_Updates">' . __( 'WordPress Core', 'secupress' ) . '</a>'
+			'<a href="' . esc_url( secupress_admin_url( 'modules', 'wordpress-core' ) ) . '#row-auto-update_minor">' . __( 'WordPress Core', 'secupress' ) . '</a>'
 		);
 	}
 

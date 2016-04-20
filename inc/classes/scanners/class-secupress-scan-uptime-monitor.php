@@ -26,7 +26,7 @@ class SecuPress_Scan_Uptime_Monitor extends SecuPress_Scan implements iSecuPress
 		self::$more     = __( 'Monitoring your website uptime allows you to be alerted if it goes down. While it is not necessary because it has been hacked, it allows you to investigate rapidly.', 'secupress' );
 		self::$more_fix = sprintf(
 			__( 'This will activate the %s feature.', 'secupress' ),
-			'<a href="' . esc_url( secupress_admin_url( 'modules', 'alerts' ) ) . '#Monitor_my_website">' . __( 'Uptime Monitoring', 'secupress' ) . '</a>'
+			'<a href="' . esc_url( secupress_admin_url( 'modules', 'alerts' ) ) . '#row-monitoring_activated">' . __( 'Uptime Monitoring', 'secupress' ) . '</a>'
 		);
 	}
 

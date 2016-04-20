@@ -28,7 +28,7 @@ class SecuPress_Scan_Anti_Front_Bruteforce extends SecuPress_Scan implements iSe
 		self::$more_fix = sprintf(
 			__( 'This will activate the <strong>%1$s</strong> from the module %2$s.', 'secupress' ),
 			__( '', 'secupress' ),
-			'<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#antibruteforcemanagement">' . __( 'Firewall', 'secupress' ) . '</a>'
+			'<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bruteforce_activated">' . __( 'Firewall', 'secupress' ) . '</a>'
 		);
 	}
 
@@ -42,7 +42,7 @@ class SecuPress_Scan_Anti_Front_Bruteforce extends SecuPress_Scan implements iSe
 			100 => __( 'Unable to determinate status of your homepage.', 'secupress' ),
 			// bad
 			200 => __( 'Your website is not protected from multiple and quick requests.', 'secupress' ),
-			201 => sprintf( __( 'Our module <a href="%s">%s</a> could fix this.', 'secupress' ), secupress_admin_url( 'modules', 'firewall#antibruteforcemanagement' ), __( 'Anti Front Bruteforce', 'secupress' ) ),
+			201 => sprintf( __( 'Our module <a href="%s">%s</a> could fix this.', 'secupress' ), esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bruteforce_activated', __( 'Anti Front Bruteforce', 'secupress' ) ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -59,7 +59,7 @@ class SecuPress_Scan_Anti_Front_Bruteforce extends SecuPress_Scan implements iSe
 			// bad
 			$this->add_message( 200 );
 			$this->add_pre_fix_message( 201 );
-		} 
+		}
 		delete_site_transient( 'secupress_dont_ban_me_on_bruteforce' );
 
 		// good

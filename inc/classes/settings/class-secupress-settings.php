@@ -221,7 +221,9 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 		foreach ( (array) $wp_settings_sections[ $section_id ] as $section ) {
 			if ( $section['title'] ) {
-				echo '<h3 id="' . sanitize_key( $section['title'] ) . '">' . $section['title'] . '</h3>' . "\n";
+				$id = explode( '|', $section['id'] );
+				$id = end( $id );
+				echo '<h3 id="module-' . sanitize_html_class( $id ) . '">' . $section['title'] . '</h3>' . "\n";
 			}
 
 			if ( $section['callback'] ) {
@@ -1233,11 +1235,13 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				echo '<th scope="row">';
 					// Row title.
 					if ( $field['title'] ) {
+						$id = explode( '|', $field['id'] );
+						$id = end( $id );
 						if ( ! empty( $field['args']['label_for'] ) ) {
-							echo '<h4 class="screen-reader-text" id="' . sanitize_html_class( str_replace( ' ', '_', $field['title'] ) ) . '">' . $field['title'] . '</h4>';
+							echo '<h4 id="row-' . sanitize_html_class( $id ) . '" class="screen-reader-text">' . $field['title'] . '</h4>';
 							echo '<label for="' . esc_attr( $field['args']['label_for'] ) . '">' . $field['title'] . '</label>';
 						} else {
-							echo '<h4 id="' . sanitize_html_class( str_replace( ' ', '_', $field['title'] ) ) . '">' . $field['title'] . '</h4>';
+							echo '<h4 id="row-' . sanitize_html_class( $id ) . '">' . $field['title'] . '</h4>';
 						}
 					}
 					// Row description.

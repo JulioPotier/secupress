@@ -28,7 +28,7 @@ class SecuPress_Scan_Non_Login_Time_Slot extends SecuPress_Scan implements iSecu
 		self::$more_fix = sprintf(
 			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
 			'<em>' . __( 'Non Login Time Slot', 'secupress' ) . '</em>',
-			'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#Use_an_attempt_blocker">' . __( 'Users & Login', 'secupress' ) . '</a>'
+			'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#row-login-protection_type">' . __( 'Users & Login', 'secupress' ) . '</a>'
 		);
 	}
 
@@ -40,7 +40,7 @@ class SecuPress_Scan_Non_Login_Time_Slot extends SecuPress_Scan implements iSecu
 			1   => __( 'Protection activated', 'secupress' ),
 			// bad
 			200 => __( 'Your website should be <strong>locked out sometimes</strong>.', 'secupress' ),
-			201 => sprintf( __( 'Our module <a href="%s">%s</a> could fix this.', 'secupress' ), secupress_admin_url( 'modules', 'users-login#Use_an_attempt_blocker' ), __( 'Non Login Time Slot', 'secupress' ) ),
+			201 => sprintf( __( 'Our module <a href="%s">%s</a> could fix this.', 'secupress' ), esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . 'row-login-protection_type', __( 'Non Login Time Slot', 'secupress' ) ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -57,8 +57,8 @@ class SecuPress_Scan_Non_Login_Time_Slot extends SecuPress_Scan implements iSecu
 			// bad
 			$this->add_message( 200 );
 			$this->add_pre_fix_message( 201 );
-		} 
-		
+		}
+
 		// good
 		$this->maybe_set_status( 0 );
 

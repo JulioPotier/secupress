@@ -28,7 +28,7 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 		self::$more_fix = sprintf(
 			__( 'This will activate the <strong>%1$s</strong> from the module %2$s.', 'secupress' ),
 			__( 'PasswordLess Double Authentication', 'secupress' ),
-			'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#Use_a_Double_Authentication">' . __( 'Users & Login', 'secupress' ) . '</a>'
+			'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#row-double-auth_type">' . __( 'Users & Login', 'secupress' ) . '</a>'
 		);
 	}
 
@@ -43,7 +43,7 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements iSecuPress_Sca
 			// bad
 			200 => __( 'Your login system is <strong>not strong enough</strong>, you need a <strong>double authentication system</strong>.', 'secupress' ),
 			201 => __( 'The registration page is <strong>not protected</strong> from bots.', 'secupress' ),
-			202 => sprintf( __( 'Our module <a href="%s">%s</a> could fix this.', 'secupress' ), secupress_admin_url( 'modules', 'users-login#Use_a_Double_Authentication' ), __( 'PasswordLess', 'secupress' ) ),
+			202 => sprintf( __( 'Our module <a href="%s">%s</a> could fix this.', 'secupress' ), esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#row-double-auth_type', __( 'PasswordLess', 'secupress' ) ),
 		);
 
 		if ( isset( $message_id ) ) {

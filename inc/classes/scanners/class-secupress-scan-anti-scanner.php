@@ -27,7 +27,7 @@ class SecuPress_Scan_Anti_Scanner extends SecuPress_Scan implements iSecuPress_S
 		self::$more_fix = sprintf(
 			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
 			'<em>' . __( 'Block SQLi Scan Attempts', 'secupress' ) . '</em>',
-			'<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#Block_SQLi_Scan_Attempts">' . __( 'Firewall', 'secupress' ) . '</a>'
+			'<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-url-content_bad-sqli-scan">' . __( 'Firewall', 'secupress' ) . '</a>'
 		);
 	}
 

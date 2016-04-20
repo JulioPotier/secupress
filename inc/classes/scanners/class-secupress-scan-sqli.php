@@ -27,7 +27,7 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements iSecuPress_Scan {
 		self::$more_fix = sprintf(
 			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
 			'<em>' . __( 'Block Bad Contents', 'secupress' ) . '</em>',
-			'<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#Block_Bad_Contents">' . __( 'Firewall', 'secupress' ) . '</a>'
+			'<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-url-content_bad-contents">' . __( 'Firewall', 'secupress' ) . '</a>'
 		);
 	}
 
