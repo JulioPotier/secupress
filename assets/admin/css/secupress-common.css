@@ -333,6 +333,9 @@
 	border-top: 1px solid #CCC;
 	border-bottom: 1px solid #CCC;
 }
+.secupress-lined-b {
+	border-bottom: 1px solid #CCC;
+}
 .secupress-bordered-lat {
 	border-left: 1px solid #CCC;
 	border-right: 1px solid #CCC;

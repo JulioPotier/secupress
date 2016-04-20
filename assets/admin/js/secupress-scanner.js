@@ -203,44 +203,12 @@ jQuery( document ).ready( function( $ ) {
 	} )( window, document, $ );
 
 
-	// !Filter rows ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	(function( w, d, $, undefined ) {
-		$( "body" ).on( "click filter.secupress", ".square-filter button", function( e ) {
-			var $this    = $( this ),
-				priority = $this.data( "type" ),
-				$tr;
-
-			if ( $this.hasClass( "active" ) ) {
-				return;
-			}
-
-			$this.addClass( "active" ).siblings().removeClass( "active" );
-
-			if ( $this.parent().hasClass( "statuses" ) ) {
-
-				$( ".status-all" ).addClass( "hidden" );
-				$( ".status-" + priority ).removeClass( "hidden" );
-
-			} else if ( $this.parent().hasClass( "priorities" ) ) {
-
-				$( ".table-prio-all" ).addClass( "hidden" );
-				$( ".table-prio-" + priority ).removeClass( "hidden" );
-
-			}
-
-			$tr = $( ".table-prio-all table tbody tr.secupress-item-all" ).removeClass( "alternate-1 alternate-2" ).filter( ":visible" );
-			$tr.filter( ":odd" ).addClass( "alternate-2" );
-			$tr.filter( ":even" ).addClass( "alternate-1" );
-		} );
-	} )(window, document, $);
-
-	// !Filter Rows Alternative ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// !Filter Rows (Status) ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	(function( w, d, $, undefined ) {
 		$( '#secupress-type-filters' ).find('a').on( 'click.secupress', function( e ) {
 			var $this		= $( this ),
 				priority	= $this.data( 'type' ),
-				current		= 'active',
-				$tr;
+				current		= 'active';
 
 			if ( $this.hasClass( current ) ) {
 				return false;
@@ -255,6 +223,23 @@ jQuery( document ).ready( function( $ ) {
 
 		// pre-show Bad
 		$( '#secupress-type-filters' ).find('.secupress-big-tab-bad').find('a').trigger('click');
+	} )(window, document, $);
+
+
+	// !Filter Rows (Priority) ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	(function( w, d, $, undefined ) {
+		$( '#secupress-priority-filters' ).find('input').on( 'change.secupress', function( e ) {
+			var $this		= $( this ),
+				priority	= $this.attr( 'name' );
+
+			console.log(priority);
+			if ( $this.is(':checked') ) {
+				$('.secupress-table-prio-' + priority ).spFadeIn();
+			} else {
+				$('.secupress-table-prio-' + priority ).spHide();
+			}
+			return false;
+		} );
 	} )(window, document, $);
 
 

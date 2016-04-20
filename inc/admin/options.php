@@ -572,26 +572,26 @@ function __secupress_scanners() {
 						<p class="secupress-text-basup secupress-bold secupress-m0"><?php esc_html_e( 'List of analyzed security points', 'secupress' ); ?></p>
 						<p class="secupress-m0 secupress-gray"><?php esc_html_e( 'These issues should be fixed right now!', 'secupress' ); ?></p>
 					</div>
-					<div>
+					<div id="secupress-priority-filters" class="hide-if-no-js">
 						<p class="secupress-childs-ib secupress-ib-spaced secupress-gray-medium">
 							<span class="secupress-gray"><?php esc_html_e( 'Filter by priority', 'secupress' ); ?></span>
 							<span>
-								<input id="filter-hight" type="checkbox" class="secupress-checkbox" name="hight">
-								<label for="filter-hight"><?php esc_html_e( 'High', 'secupress' ); ?></label>
+								<input id="filter-high" type="checkbox" class="secupress-checkbox" name="high" checked="checked">
+								<label for="filter-high"><?php esc_html_e( 'High', 'secupress' ); ?></label>
 							</span>
 							<span>
-								<input id="filter-medium" type="checkbox" class="secupress-checkbox" name="medium">
+								<input id="filter-medium" type="checkbox" class="secupress-checkbox" name="medium" checked="checked">
 								<label for="filter-medium"><?php esc_html_e( 'Medium', 'secupress' ); ?></label>
 							</span>
 							<span>
-								<input id="filter-low" type="checkbox" class="secupress-checkbox" name="low">
+								<input id="filter-low" type="checkbox" class="secupress-checkbox" name="low" checked="checked">
 								<label for="filter-low"><?php esc_html_e( 'Low', 'secupress' ); ?></label>
 							</span>
 						</p>
 					</div>
 				</div>
 			</div>
-			<div class="secupress-section-light secupress-bordered-lat">
+			<div class="secupress-section-light secupress-bordered-lat secupress-lined-b">
 				<?php secupress_main_scan(); ?>
 			</div>
 
@@ -649,20 +649,13 @@ function secupress_main_scan() {
 		}
 	}
 	?>
-	<div class="square-filter priorities hide-if-no-js">
-		<button type="button" class="active" data-type="all"><?php _ex( 'All Priorities', 'priority', 'secupress' ); ?></button><?php
-		?><button type="button" data-type="high"><?php _ex( 'High Priority', 'priority', 'secupress' ); ?></button><?php
-		?><button type="button" data-type="medium"><?php _ex( 'Medium Priority', 'priority', 'secupress' ); ?></button><?php
-		?><button type="button" data-type="low"><?php _ex( 'Low Priority', 'priority', 'secupress' ); ?></button>
-	</div>
-
 	<div id="secupress-tests">
 		<?php
 		foreach ( $secupress_tests as $prio_key => $class_name_parts ) {
 			$i         = 0;
 			$prio_data = SecuPress_Scan::get_priorities( $prio_key );
 			?>
-			<div class="table-prio-all table-prio-<?php echo $prio_key; ?>">
+			<div class="secupress-table-prio-all secupress-table-prio-<?php echo $prio_key; ?>">
 
 				<div class="prio-<?php echo $prio_key; ?>">
 					<?php echo '<' . $heading_tag . '>' . $prio_data['title'] . '</' . $heading_tag . '>'; ?>
