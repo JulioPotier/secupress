@@ -1078,6 +1078,32 @@ jQuery( document ).ready( function( $ ) {
 		$( ".secupress-item-all.autoscan .secupress-scanit" ).trigger( "bulkscan.secupress" );
 
 
+		// One Click Scan auto.
+		function secupressFirstOneClickScan() {
+			var parts;
+
+			if ( ! $.isEmptyObject( secupressScans.doingScan ) || ! $.isEmptyObject( secupressScans.doingFix ) || secupressScans.delayedFixes.length || ! $.isEmptyObject( secupressScans.manualFix ) ) {
+				return;
+			}
+
+			if ( $( ".score_results li" ).length ) {
+				return;
+			}
+
+			parts = w.location.href.split( "&" );
+			parts.shift();
+
+			$.each( parts, function( i, v ) {
+				if ( "oneclick-scan=1" === v ) {
+					$( ".button-secupress-scan" ).trigger( "scan.secupress" );
+					return;
+				}
+			} );
+		}
+
+		secupressFirstOneClickScan();
+
+
 		// Bulk.
 		$( "#doaction-high, #doaction-medium, #doaction-low" ).on( "click", function( e ) {
 			var $this    = $( this ),

@@ -161,7 +161,7 @@ function secupress_warning_wp_config_permissions() {
 add_action( 'admin_init', 'secupress_warning_htaccess_permissions' );
 
 function secupress_warning_htaccess_permissions() {
-	global $pagenow, $is_apache, $is_iis7;
+	global $is_apache, $is_iis7;
 
 	if ( ! current_user_can( secupress_get_capability() ) ) {
 		return;
@@ -245,6 +245,38 @@ function secupress_warning_no_backup_email() {
 	$message .= sprintf( __( 'Your <a href="%s">Backup E-mail</a> isn\'t yet set. Please do it.', 'secupress' ), get_edit_profile_url( get_current_user_id() ) . '#secupress_backup_email' );
 
 	secupress_add_notice( $message, 'error', false );
+}
+
+
+/**
+ * This warning is displayed if no "One-Click Scan" has been performed yet.
+ *
+ * @since 1.0
+ */
+add_action( 'all_admin_notices', 'secupress_warning_no_oneclick_scan_yet', 50 );
+
+function secupress_warning_no_oneclick_scan_yet() {
+	$screen_id = get_current_screen();
+	$screen_id = $screen_id && ! empty( $screen_id->id ) ? $screen_id->id : false;
+
+	if ( 'toplevel_page_secupress_scanners' === $screen_id || ! current_user_can( secupress_get_capability() ) ) {
+		return;
+	}
+
+	$times = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
+
+	if ( $times ) {
+		return;
+	}
+
+	echo '<div class="secupress-no-oneclick-scan-yet-notice hide-if-no-js">';
+		printf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
+		printf(
+			/* translators: %s is "One Click Scan". */
+			__( 'Why not run your first %s now?', 'secupress' ), ////
+			'<a href="' . esc_url( secupress_admin_url( 'scanners' ) ) . '&oneclick-scan=1">' . __( 'One Click Scan', 'secupress' ) . '</a>'
+		);
+	echo "</div>\n";
 }
 
 
