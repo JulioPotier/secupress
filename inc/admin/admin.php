@@ -286,7 +286,7 @@ function __secupress_update_oneclick_scan_date() {
 	}
 
 	$out = sprintf(
-		'<li data-percent="%1$d"><span class="dashicons mini dashicons-arrow-%2$s-alt2" aria-hidden="true"></span><strong>%3$s (%1$d %%)</strong> <span class="timeago">%4$s</span></li>',
+		'<li class="hidden" data-percent="%1$d"><span class="dashicons mini dashicons-arrow-%2$s-alt2" aria-hidden="true"></span><strong>%3$s (%1$d %%)</strong> <span class="timeago">%4$s</span></li>',
 		$time['percent'],
 		$icon,
 		$time['grade'],
