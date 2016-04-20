@@ -745,7 +745,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	protected function export_form() {
 		if ( secupress_is_pro() ) {
 			?>
-			<a href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_export' ), 'secupress_export' ); ?>" id="export" class="button button-secondary secupressicon"><?php _e( 'Download settings', 'secupress' ); ?></a>
+			<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_export' ), 'secupress_export' ) ); ?>" id="export" class="button button-secondary secupressicon"><?php _e( 'Download settings', 'secupress' ); ?></a>
 			<?php
 		} else {
 			?>
@@ -763,7 +763,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	protected function scheduled_backups() {
 		//// tempo
 		echo '<p><em>No scheduled backups yet, create one?</em></p>';
-		echo '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_clear_alerts' ), 'secupress_clear_alerts' ) . '" class="button button-secondary">' . __( 'Clear Alerts', 'secupress' ) . '</a>';
+		echo '<a href="' . esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_clear_alerts' ), 'secupress_clear_alerts' ) ) . '" class="button button-secondary">' . __( 'Clear Alerts', 'secupress' ) . '</a>';
 	}
 
 
@@ -784,7 +784,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		$empty_list_message = __( 'No Banned IPs yet.', 'secupress' );
 
 		// Ban form.
-		echo '<form id="form-ban-ip" class="hide-if-js" action="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress-ban-ip' . $referer_arg ), 'secupress-ban-ip' ) . '" method="post">';
+		echo '<form id="form-ban-ip" class="hide-if-js" action="' . esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress-ban-ip' . $referer_arg ), 'secupress-ban-ip' ) ) . '" method="post">';
 			echo '<label for="secupress-ban-ip" class="screen-reader-text">' . __( 'Specify an IP to ban.', 'secupress' ) . '</label><br/>';
 			echo '<input type="text" id="secupress-ban-ip" name="ip" value=""/> ';
 			echo '<button type="submit" class="button button-primary">' . __( 'Ban IP', 'secupress' ) . '</button>';
@@ -839,7 +839,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 						$href   = wp_nonce_url( admin_url( 'admin-post.php?action=secupress-unban-ip&ip=' . esc_attr( $ip ) . $referer_arg ), 'secupress-unban-ip_' . $ip );
 
 						printf( '<strong>%s</strong> <em>(%s)</em>', esc_html( $ip ), $time );
-						printf( '<span><a class="a-unban-ip" href="%s">%s</a> <span class="spinner secupress-inline-spinner hide-if-no-js"></span></span>', $href, __( 'Delete', 'secupress' ) );
+						printf( '<span><a class="a-unban-ip" href="%s">%s</a> <span class="spinner secupress-inline-spinner hide-if-no-js"></span></span>', esc_url( $href ), __( 'Delete', 'secupress' ) );
 					echo "</li>\n";
 				}
 			} else {
@@ -851,7 +851,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		echo '<p id="secupress-banned-ips-actions">';
 			// Display a button to unban all IPs.
 			$clear_href = wp_nonce_url( admin_url( 'admin-post.php?action=secupress-clear-ips' . $referer_arg ), 'secupress-clear-ips' );
-			echo '<a class="button button-secondary' . ( $ban_ips || $is_search ? '' : ' hidden' ) . '" id="secupress-clear-ips-button" href="' . $clear_href . '" data-loading-i18n="' . esc_attr__( 'Clearing...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Clear all IPs', 'secupress' ) . '">' . __( 'Clear all IPs', 'secupress' ) . "</a>\n";
+			echo '<a class="button button-secondary' . ( $ban_ips || $is_search ? '' : ' hidden' ) . '" id="secupress-clear-ips-button" href="' . esc_url( $clear_href ) . '" data-loading-i18n="' . esc_attr__( 'Clearing...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Clear all IPs', 'secupress' ) . '">' . __( 'Clear all IPs', 'secupress' ) . "</a>\n";
 			echo '<span class="spinner secupress-inline-spinner' . ( $ban_ips || $is_search ? ' hide-if-no-js' : ' hidden' ) . '"></span>';
 			// For JS: ban a IP.
 			echo '<button type="button" class="button button-primary hide-if-no-js" id="secupress-ban-ip-button" data-loading-i18n="' . esc_attr__( 'Banishing...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Ban new IP', 'secupress' ) . '">' . __( 'Ban new IP', 'secupress' ) . "</button>\n";
@@ -928,7 +928,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$label_close = '</label>';
 		}
 		?>
-		<form action="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_activate_action_logs' ), 'secupress_activate_action_logs' ); ?>" id="form-activate-action-logs" method="post">
+		<form action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_activate_action_logs' ), 'secupress_activate_action_logs' ) ); ?>" id="form-activate-action-logs" method="post">
 			<?php
 			echo $label_open;
 				echo $args['label_before'];
@@ -968,7 +968,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$label_close = '</label>';
 		}
 		?>
-		<form action="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_activate_404_logs' ), 'secupress_activate_404_logs' ); ?>" id="form-activate-404-logs" method="post">
+		<form action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_activate_404_logs' ), 'secupress_activate_404_logs' ) ); ?>" id="form-activate-404-logs" method="post">
 			<?php
 			echo $label_open;
 				echo $args['label_before'];
@@ -994,7 +994,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		$wp_tables    = secupress_get_wp_tables();
 		$other_tables = secupress_get_non_wp_tables();
 		?>
-		<form action="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_backup_db' ), 'secupress_backup_db' ); ?>" id="form-do-db-backup" method="post">
+		<form action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_backup_db' ), 'secupress_backup_db' ) ); ?>" id="form-do-db-backup" method="post">
 			<fieldset class="secupress-boxed-group">
 				<b><?php _e( 'Unknown tables', 'secupress' ); ?></b><br>
 				<?php
@@ -1035,7 +1035,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		?>
 		<p id="secupress-no-db-backups"<?php echo $backup_files ? ' class="hidden"' : ''; ?>><em><?php _e( 'No Backups found yet, do one?', 'secupress' ); ?></em></p>
 
-		<form id="form-delete-db-backups"<?php echo ! $backup_files ? ' class="hidden"' : ''; ?> action="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_delete_backups' ), 'secupress_delete_backups' ); ?>" method="post">
+		<form id="form-delete-db-backups"<?php echo ! $backup_files ? ' class="hidden"' : ''; ?> action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_delete_backups' ), 'secupress_delete_backups' ) ); ?>" method="post">
 
 			<strong id="secupress-available-backups"><?php printf( _n( '%s available Backup', '%s available Backups', count( $backup_files ), 'secupress' ), number_format_i18n( count( $backup_files ) ) ); ?></strong>
 
@@ -1060,7 +1060,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		$ignored_directories  = str_replace( ABSPATH, '', WP_CONTENT_DIR . '/cache/' ) . "\n";
 		$ignored_directories .= str_replace( ABSPATH, '', WP_CONTENT_DIR . '/backups/' );
 		?>
-		<form action="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_backup_files' ), 'secupress_backup_files' ); ?>" id="form-do-files-backup" method="post">
+		<form action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_backup_files' ), 'secupress_backup_files' ) ); ?>" id="form-do-files-backup" method="post">
 
 			<fieldset>
 				<p><strong><?php _e( 'Do not backup the following folders', 'secupress' ); ?></strong></p>

@@ -141,7 +141,7 @@ function secupress_create_subsite_menu() {
 	// Display a notice for Administrators.
 	if ( 'admin.php' !== $pagenow || empty( $_GET['page'] ) || 'secupress_scanners' !== $_GET['page'] ) {
 		/* translators: 1 is an URL, 2 is the plugin name */
-		$message = sprintf( __( 'Some security issues must be fixed, please visit <a href="%1$s">%2$s\'s page</a>.', 'secupress' ), admin_url( 'admin.php?page=secupress_scanners' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
+		$message = sprintf( __( 'Some security issues must be fixed, please visit <a href="%1$s">%2$s\'s page</a>.', 'secupress' ), esc_url( admin_url( 'admin.php?page=secupress_scanners' ) ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
 		secupress_add_notice( $message, null, 'subsite-security-issues' );
 	} else {
 		// The user is on the plugin page: make sure to not display the notice.
@@ -316,7 +316,7 @@ function __secupress_subsite_scanners() {
 									<div class="secupress-status"><?php echo $status_text; ?></div>
 
 									<div class="secupress-row-actions">
-										<a class="button button-secondary button-small secupress-scanit" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?for-current-site=1&action=secupress_scanner&test=' . $class_name_part ), 'secupress_scanner_' . $class_name_part ); ?>"><?php _ex( 'Scan', 'scan a test', 'secupress' ); ?></a>
+										<a class="button button-secondary button-small secupress-scanit" href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?for-current-site=1&action=secupress_scanner&test=' . $class_name_part ), 'secupress_scanner_' . $class_name_part ) ); ?>"><?php _ex( 'Scan', 'scan a test', 'secupress' ); ?></a>
 									</div>
 								</td>
 								<td class="secupress-scan-result">
@@ -329,7 +329,7 @@ function __secupress_subsite_scanners() {
 										<?php
 										if ( true === $current_test::$fixable || 'pro' === $current_test::$fixable && secupress_is_pro() ) {
 											?>
-											<a class="button button-secondary button-small secupress-fixit<?php echo $current_test::$delayed_fix ? ' delayed-fix' : '' ?>" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?for-current-site=1&action=secupress_fixit&test=' . $class_name_part ), 'secupress_fixit_' . $class_name_part ); ?>"><?php _e( 'Fix it!', 'secupress' ); ?></a>
+											<a class="button button-secondary button-small secupress-fixit<?php echo $current_test::$delayed_fix ? ' delayed-fix' : '' ?>" href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?for-current-site=1&action=secupress_fixit&test=' . $class_name_part ), 'secupress_fixit_' . $class_name_part ) ); ?>"><?php _e( 'Fix it!', 'secupress' ); ?></a>
 											<div class="secupress-row-actions">
 												<span class="hide-if-no-js">
 													<button type="button" class="secupress-details-fix link-like" data-test="<?php echo $class_name_part; ?>" title="<?php esc_attr_e( 'Get fix details', 'secupress' ); ?>"><?php _e( 'Learn more', 'secupress' ); ?></button>
@@ -360,7 +360,7 @@ function __secupress_subsite_scanners() {
 								if ( $fix_actions ) { ?>
 									<tr class="test-fix-action">
 										<td colspan="5">
-											<form method="post" action="<?php echo admin_url( 'admin-post.php' ); ?>">
+											<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 												<h3><?php echo _n( 'This action requires your attention', 'These actions require your attention', count( $fix_actions ), 'secupress' ); ?></h3>
 												<?php
 												echo implode( '', $fix_actions );

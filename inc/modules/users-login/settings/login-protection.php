@@ -120,7 +120,7 @@ $this->add_field( array(
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
-			'description' => sprintf( __( 'You will find action links on every user\'s row in the <a href="%s">users listing administration page</a>.', 'secupress' ), admin_url( 'users.php' ) ),
+			'description' => sprintf( __( 'You will find action links on every user\'s row in the <a href="%s">users listing administration page</a>.', 'secupress' ), esc_url( admin_url( 'users.php' ) ) ),
 		),
 	),
 ) );

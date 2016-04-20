@@ -28,7 +28,7 @@ function secupress_plugins_to_deactivate() {
 	$message .= '</p><ul>';
 	foreach ( $plugins_to_deactivate as $plugin ) {
 		$plugin_data = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin );
-		$message .= '<li>' . $plugin_data['Name'] . '</span> <a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=deactivate_plugin&plugin=' . urlencode( $plugin ) ), 'deactivate_plugin' ) . '" class="button-secondary alignright">' . __( 'Deactivate' ) . '</a></li>';
+		$message .= '<li>' . $plugin_data['Name'] . '</span> <a href="' . esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=deactivate_plugin&plugin=' . urlencode( $plugin ) ), 'deactivate_plugin' ) ) . '" class="button-secondary alignright">' . __( 'Deactivate' ) . '</a></li>';
 	}
 	$message .= '</ul>';
 
@@ -72,7 +72,7 @@ function secupress_add_packed_plugins_notice() {
 	$message .= '</p><ul>';
 	foreach ( $plugins as $plugin ) {
 		$plugin_data = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin );
-		$message .= '<li>' . $plugin_data['Name'] . '</span> <a href="' . wp_nonce_url( admin_url( 'plugins.php?action=deactivate&plugin=' . urlencode( $plugin ) ), 'deactivate-plugin_' . $plugin ) . '" class="button-secondary alignright">' . __( 'Deactivate' ) . '</a></li>';
+		$message .= '<li>' . $plugin_data['Name'] . '</span> <a href="' . esc_url( wp_nonce_url( admin_url( 'plugins.php?action=deactivate&plugin=' . urlencode( $plugin ) ), 'deactivate-plugin_' . $plugin ) ) . '" class="button-secondary alignright">' . __( 'Deactivate' ) . '</a></li>';
 	}
 	$message .= '</ul>';
 

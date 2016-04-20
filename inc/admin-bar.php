@@ -46,7 +46,7 @@ function secupress_admin_bar( $wp_admin_bar ) {
 		'parent' => 'secupress',
 		'id' 	 => 'secupress-scanners',
 		'title'  => __( 'Scanners', 'secupress' ),
-		'href'   => secupress_admin_url( 'secupress_scanners' ),
+		'href'   => esc_url( secupress_admin_url( 'secupress_scanners' ) ),
 	) );
 
 	// Modules
@@ -54,7 +54,7 @@ function secupress_admin_bar( $wp_admin_bar ) {
 		'parent' => 'secupress',
 		'id' 	 => 'secupress-modules',
 		'title'  => __( 'Modules', 'secupress' ),
-		'href'   => secupress_admin_url( 'secupress_modules' ),
+		'href'   => esc_url( secupress_admin_url( 'secupress_modules' ) ),
 	) );
 
 	// Settings
@@ -62,6 +62,6 @@ function secupress_admin_bar( $wp_admin_bar ) {
 		'parent' => 'secupress',
 		'id' 	 => 'secupress-settings',
 		'title'  => __( 'Settings', 'secupress' ),
-		'href'   => secupress_admin_url( 'secupress_settings' ),
+		'href'   => esc_url( secupress_admin_url( 'secupress_settings' ) ),
 	) );
 }

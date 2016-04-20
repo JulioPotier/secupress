@@ -460,7 +460,7 @@ function __secupress_settings_action_links( $actions ) {
 		array_unshift( $actions, sprintf( '<a href="%s">%s</a>', 'http://docs.secupress.me', __( 'Docs', 'secupress' ) ) );
 	}
 
-	array_unshift( $actions, sprintf( '<a href="%s">%s</a>', secupress_admin_url( 'settings' ), __( 'Settings' ) ) );
+	array_unshift( $actions, sprintf( '<a href="%s">%s</a>', esc_url( secupress_admin_url( 'settings' ) ), __( 'Settings' ) ) );
 
 	return $actions;
 }
@@ -532,7 +532,7 @@ function __secupress_ban_ip_ajax_post_cb() {
 			array(
 				'ip'        => $ip,
 				'time'      => __( 'Forever', 'secupress' ),
-				'unban_url' => wp_nonce_url( admin_url( 'admin-post.php?action=secupress-unban-ip&ip=' . esc_attr( $ip ) . $referer_arg ), 'secupress-unban-ip_' . $ip ),
+				'unban_url' => esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress-unban-ip&ip=' . esc_attr( $ip ) . $referer_arg ), 'secupress-unban-ip_' . $ip ) ),
 			),
 		),
 	) );
