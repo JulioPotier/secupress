@@ -90,7 +90,7 @@ function secupress_get_modules() {
 			'title'       => esc_html__( 'Alerts', 'secupress' ),
 			'dashicon'    => 'megaphone',
 			'description' => array(
-				__( 'Each time we that an action is a possible attack vector, we add it here, so you can see what happened and when we blocked it or not.', 'secupress' ),
+				__( 'Each time we that an action is a possible attack vector, we add it here, so you can see what happened and when we blocked it or not.', 'secupress' ),////
 			),
 		),
 		'schedules'       => array(
@@ -110,6 +110,7 @@ function secupress_get_modules() {
 			'with_reset_box' => false,
 		),
 	);
+
 	if ( ! secupress_is_pro() ) {
 		$modules['pro'] = array(
 			'title'       => esc_html__( 'Get PRO!', 'secupress' ),
@@ -120,5 +121,6 @@ function secupress_get_modules() {
 			'with_reset_box' => false,
 		);
 	}
+
 	return $modules;
 }

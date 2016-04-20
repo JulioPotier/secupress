@@ -6,7 +6,7 @@ $this->set_current_section( 'uptime-monitoring' );
 $this->add_section( __( 'Uptime Monitoring', 'secupress' ) );
 
 
-$consumer_email = sanitize_email( secupress_get_option( 'consumer_email' ) );
+$has_consumer_email = secupress_get_consumer_email();
 
 $this->add_field( array(
 	'title'             => __( 'Monitor my website', 'secupress' ),
@@ -19,7 +19,7 @@ $this->add_field( array(
 	'type'              => 'checkbox',
 	'value'             => (int) secupress_is_submodule_active( 'alerts', 'uptime-monitoring' ),
 	'label'             => __( 'Yes, monitor the uptime of my website and alert me if needed', 'secupress' ),
-	'disabled'          => empty( $consumer_email ),
+	'disabled'          => ! $has_consumer_email,
 	'helpers'           => array(
 		array(
 			'type'        => 'help',
@@ -27,7 +27,7 @@ $this->add_field( array(
 		),
 		array(
 			'type'        => 'warning',
-			'description' => $consumer_email ? sprintf( __( 'The following email address will be used: %s', 'secupress' ), '<code>' . $consumer_email . '</code>' ) : __( 'You need a free API Key to use this module. <a href="#" class="button">Get one!</a>', 'secupress' ),////
+			'description' => secupress_get_consumer_email() ? '' : sprintf( __( 'A free account is needed to enable these features. Get one <a href="%s">on the settings page</a>.', 'secupress' ), esc_url( secupress_admin_url( 'settings' ) ) ),
 		),
 		array(
 			'type'        => 'warning',

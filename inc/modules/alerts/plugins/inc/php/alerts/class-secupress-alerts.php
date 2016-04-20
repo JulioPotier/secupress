@@ -57,13 +57,9 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 			return static::$types;
 		}
 
-		if ( secupress_is_pro() ) {
-			$defaults = array( 'email', 'sms', 'push', 'slack', 'twitter' );
-		} else {
-			$defaults = array( 'email' );
-		}
+		$defaults = array_flip( secupress_alert_types_labels( secupress_is_pro() ) );
 
-		static::$types = secupress_get_module_option( 'alerts_type', array(), 'alerts' );
+		static::$types = secupress_get_module_option( 'notification-types_types', array(), 'alerts' );
 		static::$types = array_intersect( static::$types, $defaults );
 		static::$types = array_combine( static::$types, static::$types );
 
@@ -474,17 +470,10 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 		$count = array_sum( array_map( 'count', $this->alerts ) );
 
 		// To
-		$to = secupress_get_module_option( 'alerts_email', '', 'alerts' );
-		$to = explode( ',', $to );
+		$to = secupress_alerts_get_emails();
 
 		if ( ! $to ) {
 			return;
-		}
-
-		$to = array_map( 'trim', $to );
-
-		if ( ! secupress_is_pro() ) {
-			$to = array( reset( $to ) );
 		}
 
 		// From

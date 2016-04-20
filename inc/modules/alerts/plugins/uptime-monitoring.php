@@ -29,41 +29,73 @@ add_action( 'secupress.plugins.activation',                'secupress_uptime_mon
  *
  * @since 1.0
  */
-add_action( 'secupress_deactivate_plugin_uptime-monitoring', 'secupress_uptime_monitoring_deactivate' );
-add_action( 'secupress_deactivation',                        'secupress_uptime_monitoring_deactivate' );
-
-
-/**
- * Maybe stop monitoring.
- *
- * @since 1.0
- *
- * @param (array) $args Some parameters.
- */
-function secupress_uptime_monitoring_deactivate( $args = array() ) {
-	if ( empty( $args['no-tests'] ) ) {
-		secupress_uptime_monitoring_stop();
-	}
-}
+add_action( 'secupress_deactivate_plugin_uptime-monitoring', 'secupress_uptime_monitoring_stop' );
+add_action( 'secupress_deactivation',                        'secupress_uptime_monitoring_stop' );
 
 
 /*------------------------------------------------------------------------------------------------*/
 /* UPDATE ======================================================================================= */
 /*------------------------------------------------------------------------------------------------*/
+
 /**
- * If the email address is changed, start monitoring.
- * Since this email address is set on SecuPress installation and never changes, this should be useless.
+ * If the consumer email address is changed, notify our server.
  *
  * @since 1.0
  */
-add_action( 'pre_update_option_' . SECUPRESS_SETTINGS_SLUG, 'secupress_uptime_monitoring_pre_update_email', 10, 2 );
+add_action( 'secupress.added-consumer_email',   'secupress_uptime_monitoring_start' );
+add_action( 'secupress.updated-consumer_email', 'secupress_uptime_monitoring_start' );
+add_action( 'secupress.deleted-consumer_email', 'secupress_uptime_monitoring_stop' );
 
-function secupress_uptime_monitoring_pre_update_email( $newvalue, $oldvalue ) {
-	if ( $oldvalue['consumer_email'] !== $newvalue['consumer_email'] ) {
-		secupress_uptime_monitoring_start();
+
+/**
+ * If the notification settings are changed, notify our server.
+ *
+ * @since 1.0
+ */
+add_action( 'add_site_option_secupress_alerts_settings',    'secupress_uptime_monitoring_update_alerts_settings', 20, 2 );
+add_action( 'update_site_option_secupress_alerts_settings', 'secupress_uptime_monitoring_update_alerts_settings', 20, 3 );
+add_action( 'delete_site_option_secupress_alerts_settings', 'secupress_uptime_monitoring_stop' );
+
+function secupress_uptime_monitoring_update_alerts_settings( $option, $newvalue, $oldvalue = false ) {
+	if ( ! secupress_get_consumer_email() || ! secupress_is_submodule_active( 'alerts', 'uptime-monitoring' ) ) {
+		return;
 	}
 
-	return $newvalue;
+	// Types of Notification.
+	$new_types = isset( $newvalue['notification-types_types'] ) ? $newvalue['notification-types_types'] : array();
+	$old_types = isset( $oldvalue['notification-types_types'] ) ? $oldvalue['notification-types_types'] : array();
+
+	if ( $old_types && $new_types && $old_types !== $new_types ) {
+		return secupress_uptime_monitoring_start();
+	}
+
+	$new_types = array_combine( $new_types, $new_types );
+
+	// By Email.
+	if ( isset( $new_types['email'] ) ) {
+		$new = isset( $newvalue['notification-types_emails'] ) ? $newvalue['notification-types_emails'] : array();
+		$old = isset( $oldvalue['notification-types_emails'] ) ? $oldvalue['notification-types_emails'] : array();
+
+		if ( $old !== $new ) {
+			return secupress_uptime_monitoring_start();
+		}
+	}
+
+	// Other types.
+	$types = array( 'notification-types_sms_number', 'notification-types_push', 'notification-types_slack', 'notification-types_twitter' );
+
+	foreach ( $types as $type ) {
+		if ( ! isset( $new_types[ $type ] ) ) {
+			continue;
+		}
+
+		$new = isset( $newvalue[ $type ] ) ? $newvalue[ $type ] : '';
+		$old = isset( $oldvalue[ $type ] ) ? $oldvalue[ $type ] : '';
+
+		if ( $old !== $new ) {
+			return secupress_uptime_monitoring_start();
+		}
+	}
 }
 
 
@@ -77,7 +109,29 @@ function secupress_uptime_monitoring_pre_update_email( $newvalue, $oldvalue ) {
  * @since 1.0
  */
 function secupress_uptime_monitoring_start() {
-	$token = secupress_get_module_option( 'uptime-monitoring-token', false, 'alerts' );
+	$account_token = secupress_get_option( 'uptime_monitoring_account_key' );
+	$site_token    = secupress_get_option( 'uptime_monitoring_site_key' );
+	$types         = secupress_get_module_option( 'notification-types_types', array(), 'alerts' );
+	$methods       = array();
+
+	if ( $types && is_array( $types ) ) {
+		$build_types = array_flip( secupress_alert_types_labels( secupress_is_pro() ) );
+		$types       = array_intersect( $types, $build_types );
+
+		if ( $types ) {
+			foreach ( $types as $type ) {
+				$methods[ $type ] = array();
+
+				if ( 'email' === $type ) {
+					$emails = secupress_alerts_get_emails();
+					$emails = array_unique( $emails );
+					$methods[ $type ]['emails'] = implode( ',', $emails );
+				} else {
+					// SMS, push, Slack, Twitter. ////
+				}
+			}
+		}
+	}
 
 	// Send the request.
 	$response = wp_remote_post(
@@ -86,21 +140,40 @@ function secupress_uptime_monitoring_start() {
 			'user-agent' => SECUPRESS_UPTIME_MONITOR_UA,
 			'timeout'	 => 10,
 			'body'       => array(
-				'url'    => esc_url( home_url() ),
-				'email'  => sanitize_email( secupress_get_option( 'consumer_email' ) ),
-				'token'  => esc_attr( $token ),
-				'source' => SECUPRESS_UPTIME_MONITOR_UA,
+				'url'           => esc_url( home_url() ),
+				'email'         => secupress_get_consumer_email(),
+				'account_token' => esc_attr( $account_token ),
+				'site_token'    => esc_attr( $site_token ),
+				'source'        => SECUPRESS_UPTIME_MONITOR_UA,
+				'methods'       => json_encode( $methods ),
 			)
 		)
 	);
 
 	// Error?
-	$new_token = secupress_uptime_monitoring_connexion_succeeded( $response );
+	$new_tokens = secupress_uptime_monitoring_connexion_succeeded( $response );
 
-	// Store a token if it's a new subscription.
-	if ( ! $token && $new_token ) {
-		// Save the token.
-		secupress_update_module_option( 'uptime-monitoring-token', $new_token, 'alerts' );
+	if ( ! $new_tokens ) {
+		return;
+	}
+
+	// Store the tokens.
+	$options = get_site_option( SECUPRESS_SETTINGS_SLUG );
+	$options = is_array( $options ) ? $options : array();
+	$update  = false;
+
+	if ( $account_token !== $new_tokens['account_token'] ) {
+		$options['uptime_monitoring_account_token'] = $new_tokens['account_token'];
+		$update = true;
+	}
+
+	if ( $site_token !== $new_tokens['site_token'] ) {
+		$options['uptime_monitoring_site_token'] = $new_tokens['site_token'];
+		$update = true;
+	}
+
+	if ( $update ) {
+		update_site_option( SECUPRESS_SETTINGS_SLUG, $options );
 	}
 }
 
@@ -111,7 +184,8 @@ function secupress_uptime_monitoring_start() {
  * @since 1.0
  */
 function secupress_uptime_monitoring_stop() {
-	$token = secupress_get_module_option( 'uptime-monitoring-token', false, 'alerts' );
+	$account_token = secupress_get_option( 'uptime_monitoring_account_key' );
+	$site_token    = secupress_get_option( 'uptime_monitoring_site_key' );
 
 	// Send the request.
 	$response = wp_remote_request(
@@ -121,10 +195,12 @@ function secupress_uptime_monitoring_stop() {
 			'user-agent' => SECUPRESS_UPTIME_MONITOR_UA,
 			'timeout'	 => 10,
 			'body'       => array(
-				'pause'  => 1,
-				'url'    => esc_url( home_url() ),
-				'token'  => esc_attr( $token ),
-				'source' => SECUPRESS_UPTIME_MONITOR_UA,
+				'pause'         => 1,
+				'url'           => esc_url( home_url() ),
+				'email'         => secupress_get_consumer_email(),
+				'account_token' => esc_attr( $account_token ),
+				'site_token'    => esc_attr( $site_token ),
+				'source'        => SECUPRESS_UPTIME_MONITOR_UA,
 			)
 		)
 	);
@@ -133,6 +209,10 @@ function secupress_uptime_monitoring_stop() {
 	secupress_uptime_monitoring_connexion_succeeded( $response, 'stop' );
 }
 
+
+/*------------------------------------------------------------------------------------------------*/
+/* TOOLS ======================================================================================== */
+/*------------------------------------------------------------------------------------------------*/
 
 /**
  * Handle monitoring connexion failure.
@@ -148,6 +228,7 @@ function secupress_uptime_monitoring_stop() {
  */
 function secupress_uptime_monitoring_connexion_succeeded( $response, $type = 'start' ) {
 
+	// Error during the request itself.
 	if ( is_wp_error( $response ) ) {
 
 		if ( 'start' === $type ) {
@@ -161,6 +242,7 @@ function secupress_uptime_monitoring_connexion_succeeded( $response, $type = 'st
 		return false;
 	}
 
+	// The distant server is down (or something).
 	if ( 200 !== wp_remote_retrieve_response_code( $response ) ) {
 
 		if ( 'start' === $type ) {
@@ -178,7 +260,7 @@ function secupress_uptime_monitoring_connexion_succeeded( $response, $type = 'st
 	$data = wp_remote_retrieve_body( $response );
 	$data = json_decode( $data );
 
-	if ( ! is_object( $data ) || empty( $data->status ) || 'success' !== $data->status ) {
+	if ( ! is_object( $data ) || empty( $data->status ) || 'success' !== $data->status || empty( $data->account_token ) || empty( $data->site_token ) ) {
 
 		if ( 'start' === $type ) {
 			secupress_deactivate_submodule_silently( 'alerts', 'uptime-monitoring' );
@@ -186,11 +268,14 @@ function secupress_uptime_monitoring_connexion_succeeded( $response, $type = 'st
 			secupress_activate_submodule_silently( 'alerts', 'uptime-monitoring' );
 		}
 
-		$message = __( '<strong>Error:</strong> the Monitor server returned an error status. Please contact our support.', 'secupress' );
+		$message = __( '<strong>Error:</strong> the Monitor server returned an error status. Please try again in few minutes or contact our support team.', 'secupress' );
 		add_settings_error( 'general', 'monitor_start_monitor_server_error', $message, 'error' );
 		return false;
 	}
 
-	// Return the token.
-	return sanitize_text_field( $data->token );
+	// Return the tokens.
+	return array(
+		'account_token' => sanitize_text_field( $data->account_token ),
+		'site_token'    => sanitize_text_field( $data->site_token ),
+	);
 }
