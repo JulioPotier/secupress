@@ -545,11 +545,11 @@ function secupress_main_scan() {
 		}
 	}
 	?>
-	<button class="button button-primary button-secupress-scan" type="button">
+	<button class="button button-primary button-secupress-scan hide-if-no-js" type="button">
 		<?php _e( 'One Click Scan', 'secupress' ); ?>
 	</button>
 
-	<button class="button button-primary button-secupress-fix" type="button">
+	<button class="button button-primary button-secupress-fix hide-if-no-js" type="button">
 		<?php _e( 'One Click Fix', 'secupress' ); ?>
 	</button>
 
