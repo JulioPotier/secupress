@@ -427,29 +427,30 @@ function __secupress_modules() {
  * @since 1.0
  */
 function __secupress_scanners() {
-	$times        = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
-	$reports      = array();
-	$last_percent = -1;
+	$times   = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
+	$reports = array();
+	$last_pc = -1;
 
-	if ( ! empty( $times ) && is_array( $times ) ) {
+	if ( $times ) {
 		foreach ( $times as $time ) {
-			$replacement = 'right';
+			$icon = 'right';
 
-			if ( $last_percent > -1 && $last_percent < $time['percent'] ) {
-				$replacement = 'up';
-			}
-			else if ( $last_percent > -1 && $last_percent > $time['percent'] ) {
-				$replacement = 'down';
+			if ( $last_pc > -1 ) {
+				$icon = $last_pc > $time['percent'] ? 'up' : 'down';
 			}
 
-			$last_percent = $time['percent'];
-			$date         = sprintf( __( '%s ago' ), human_time_diff( $time['time'] ) );
+			$last_pc = $time['percent'];
 
 			$reports[] = sprintf(
 				'<li data-percent="%1$d"><span class="dashicons mini dashicons-arrow-%2$s-alt2" aria-hidden="true"></span><strong>%3$s (%1$d %%)</strong> <span class="timeago">%4$s</span></li>',
-				$time['percent'], $replacement, $time['grade'], $date
+				$time['percent'],
+				$icon,
+				$time['grade'],
+				sprintf( __( '%s ago' ), human_time_diff( $time['time'] ) )
 			);
 		}
+
+		$reports = array_reverse( $reports );
 	}
 
 	$boxes = array(
@@ -462,7 +463,7 @@ function __secupress_scanners() {
 				'<div class="score_results">' .
 					sprintf( __( '%s: ', 'secupress' ), '<strong>' . __( 'Latest Reports', 'secupress' ) . '</strong>' ) . '<br>' .
 					'<ul>' .
-						implode( "\n", array_reverse( $reports ) ) .
+						implode( "\n", $reports ) .
 					'</ul>' .
 				'</div>' .
 			'</div>' .
@@ -545,7 +546,7 @@ function secupress_main_scan() {
 		}
 	}
 	?>
-	<button class="button button-primary button-secupress-scan hide-if-no-js" type="button">
+	<button class="button button-primary button-secupress-scan hide-if-no-js" type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ); ?>">
 		<?php _e( 'One Click Scan', 'secupress' ); ?>
 	</button>
 

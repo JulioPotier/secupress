@@ -57,16 +57,12 @@ jQuery( document ).ready( function( $ ) {
 		$( ".timeago" ).timeago();
 	}
 
-	function secupressPrependDataLi( percent, now ) {
-		$( ".score_results ul" ).prepend( '<li class="hidden" data-percent="' + percent + '">' + now + "</li>" ).find( "li.hidden" ).slideDown( 250 );
-		if ( jQuery.timeago ) {
-			$( ".timeago:first" ).timeago();
-		}
+	function secupressPrependDataLi( row ) {
+		$( ".score_results ul" ).prepend( row ).find( "li.hidden" ).slideDown( 250 );
 	}
 
-	function secupressUpdateScore( refresh ) {
-		var total, status_good, status_warning, status_bad, status_notscannedyet, percent, letter,
-			d, the_date, dashicon, score_results_ul, replacement, last_percent, now;
+	function secupressUpdateScore( refreshDate ) {
+		var total, status_good, status_warning, status_bad, status_notscannedyet, percent, letter, scoreResultsUl;
 
 		if ( ! secupressChartEl || ! jQuery.timeago ) {
 			return;
@@ -106,30 +102,16 @@ jQuery( document ).ready( function( $ ) {
 
 		$( ".score_info2 .letter" ).html( letter ).removeClass( "lA lB lC lD lE lF" ).addClass( "l" + letter );
 
-		if ( refresh ) {
-			d                = new Date();
-			the_date         = d.getFullYear() + "-" + ( "0" + ( d.getMonth() + 01 ) ).slice( -2 ) + "-" + ( "0" + d.getDate() ).slice( -2 ) + " " + ( "0" + d.getHours() ).slice( -2 ) + ":" + ( "0" + d.getMinutes() ).slice( -2 );
-			dashicon         = '<span class="dashicons mini dashicons-arrow-?-alt2"></span>';
-			score_results_ul = $( ".score_results ul" );
-			replacement      = "right";
-			last_percent     = score_results_ul.find( "li:first" ).data( "percent" );
+		if ( refreshDate ) {
+			scoreResultsUl = $( ".score_results ul" );
 
-			if ( last_percent < percent ) {
-				replacement = "up";
-			} else if ( last_percent > percent ) {
-				replacement = "down";
-			}
-
-			dashicon = dashicon.replace( "?", replacement );
-			now = "<strong>" + dashicon + letter + " (" + percent + ' %)</strong> <span class="timeago" title="' + the_date + '">' + the_date + "</span>";
-
-			if ( score_results_ul.find( "li" ).length === 5 ) {
-				score_results_ul.find( "li:last" ).slideUp( 250, function() {
+			if ( scoreResultsUl.find( "li" ).length === 5 ) {
+				scoreResultsUl.find( "li:last" ).slideUp( 250, function() {
 					$( this ).remove();
-					secupressPrependDataLi( percent, now );
+					secupressPrependDataLi( refreshDate );
 				} );
 			} else {
-				secupressPrependDataLi( percent, now );
+				secupressPrependDataLi( refreshDate );
 			}
 		}
 
@@ -808,7 +790,7 @@ jQuery( document ).ready( function( $ ) {
 					var params = $( "#form_manual_fix" ).serializeArray(),
 						$row   = $( "#" + test );
 
-					$.post( ajaxurl, params )
+					$.post( ajaxurl, params, null, "json" )
 					.done( function( r ) {
 						// Display fix result.
 						if ( secupressDisplayFixResult( r, test, true ) ) {
@@ -872,9 +854,35 @@ jQuery( document ).ready( function( $ ) {
 			* Available extras:
 			* extra.isBulk: tell if it's a bulk scan.
 			*/
+			var $button = $( ".button-secupress-scan" ),
+				params;
 
-			// Update the donut only when all scans are done.
-			secupressUpdateScore( true );
+			// If it's a One-click Scan, keep track of the date.
+			if ( $button.attr( "disabled" ) ) {
+				params = {
+					"action":   "secupress-update-oneclick-scan-date",
+					"_wpnonce": $button.data( "nonce" )
+				};
+
+				$.getJSON( ajaxurl, params )
+				.done( function( r ) {
+					if ( $.isPlainObject( r ) && r.success && r.data ) {
+						// Update the donut only when all scans are done.
+						secupressUpdateScore( r.data );
+					} else {
+						secupressUpdateScore();
+					}
+				} )
+				.fail( function() {
+					secupressUpdateScore();
+				} )
+				.always( function() {
+					$button.removeAttr( "disabled aria-disabled" );
+				} );
+			} else {
+				// Update the donut only when all scans are done.
+				secupressUpdateScore();
+			}
 		} );
 
 
@@ -936,7 +944,7 @@ jQuery( document ).ready( function( $ ) {
 			}
 
 			// Update the donut only when all fixes are done.
-			secupressUpdateScore( true );
+			secupressUpdateScore();
 		} );
 
 
@@ -1030,6 +1038,7 @@ jQuery( document ).ready( function( $ ) {
 
 			if ( $this.hasClass( "button-secupress-scan" ) ) {
 				// It's the "One Click Scan" button.
+				$this.attr( { "disabled": "disabled", "aria-disabled": "true" } );
 				$( ".secupress-scanit" ).trigger( "bulkscan.secupress" );
 				return;
 			}
