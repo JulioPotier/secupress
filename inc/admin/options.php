@@ -553,26 +553,10 @@ function secupress_main_scan() {
 					<?php echo $prio_data['description']; ?>
 				</div>
 
-				<div class="tablenav top hide-if-no-js">
-					<div class="alignleft actions bulkactions">
-						<label for="bulk-action-<?php echo $prio_key; ?>" class="screen-reader-text"><?php _e( 'Select bulk action' ); ?></label>
-						<select name="action" id="bulk-action-<?php echo $prio_key; ?>">
-							<option value="-1" selected="selected"><?php _e( 'Bulk Actions' ); ?></option>
-							<option value="scanit"><?php _e( 'Scan it', 'secupress' ); ?></option>
-							<option value="fixit"><?php _e( 'Fix it', 'secupress' ); ?></option>
-						</select>
-						<input type="button" id="doaction-<?php echo $prio_key; ?>" class="button action" value="<?php _e( 'Apply' ); ?>">
-					</div>
-				</div>
-
 
 				<table class="wp-list-table widefat">
 					<thead>
 						<tr>
-							<td class="manage-column column-cb secupress-check-column hide-if-no-js">
-								<label for="cb-select-all-<?php echo $prio_key; ?>-1" class="screen-reader-text"><?php _e( 'Select All' ); ?></label>
-								<input id="cb-select-all-<?php echo $prio_key; ?>-1" type="checkbox"/>
-							</td>
 							<th scope="col" class="secupress-desc"><?php _e( 'Description', 'secupress' ); ?></th>
 							<th scope="col" class="secupress-scan-status" data-sort="string"><?php _e( 'Scan Status', 'secupress' ); ?></th>
 							<th scope="col" class="secupress-scan-result"><?php _e( 'Scan Result', 'secupress' ); ?></th>
@@ -583,10 +567,6 @@ function secupress_main_scan() {
 
 					<tfoot>
 						<tr>
-							<td class="manage-column column-cb secupress-check-column hide-if-no-js">
-								<label for="cb-select-all-<?php echo $prio_key; ?>-2" class="screen-reader-text"><?php _e( 'Select All' ); ?></label>
-								<input id="cb-select-all-<?php echo $prio_key; ?>-2" type="checkbox"/>
-							</td>
 							<th scope="col" class="secupress-desc"><?php _e( 'Description', 'secupress' ); ?></th>
 							<th scope="col" class="secupress-scan-status"><?php _e( 'Scan Status', 'secupress' ); ?></th>
 							<th scope="col" class="secupress-scan-result"><?php _e( 'Scan Result', 'secupress' ); ?></th>
@@ -666,18 +646,14 @@ function secupress_main_scan() {
 						}
 						?>
 						<tr id="<?php echo $class_name_part; ?>" class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> type-all status-all<?php echo $css_class; ?>">
-							<th scope="row" class="secupress-check-column hide-if-no-js">
-								<label class="screen-reader-text" for="cb-select-<?php echo $class_name_part; ?>"><?php _e( 'Select this scan', 'secupress' ); ?></label>
-								<input id="cb-select-<?php echo $class_name_part; ?>" type="checkbox" class="secupress-checkbox-<?php echo $prio_key; ?>" />
-							</th>
-							<td>
+							<th>
 								<?php echo $class_name::$title; ?>
 								<div class="secupress-row-actions">
 									<span class="hide-if-no-js">
 										<button type="button" class="secupress-details link-like" data-test="<?php echo $class_name_part; ?>" title="<?php esc_attr_e( 'Get details', 'secupress' ); ?>"><?php _e( 'Learn more', 'secupress' ); ?></button>
 									</span>
 								</div>
-							</td>
+							</th>
 							<td class="secupress-scan-status">
 								<div class="secupress-status"><?php echo $status_text; ?></div>
 
@@ -725,7 +701,7 @@ function secupress_main_scan() {
 
 							if ( $fix_actions ) { ?>
 								<tr class="test-fix-action">
-									<td colspan="6">
+									<td colspan="5">
 										<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 											<h3><?php echo _n( 'This action requires your attention', 'These actions require your attention', count( $fix_actions ), 'secupress' ); ?></h3>
 											<?php
@@ -743,13 +719,13 @@ function secupress_main_scan() {
 						}
 						?>
 						<tr id="details-<?php echo $class_name_part; ?>" class="details hide-if-js">
-							<td colspan="6">
+							<td colspan="5">
 								<?php _e( 'Scan Details: ', 'secupress' ); ?>
 								<span class="details-content"><?php echo wp_kses( $current_test::$more, $allowed_tags ); ?></span>
 							</td>
 						</tr>
 						<tr id="details-fix-<?php echo $class_name_part; ?>" class="details hide-if-js">
-							<td colspan="6">
+							<td colspan="5">
 								<?php _e( 'Fix Details: ', 'secupress' ); ?>
 								<span class="details-content"><?php echo wp_kses( $current_test::$more_fix, $allowed_tags ); ?></span>
 							</td>
