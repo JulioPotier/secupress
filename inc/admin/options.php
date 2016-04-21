@@ -519,17 +519,15 @@ function __secupress_scanners() {
 						<p class="secupress-text-big">
 							<?php esc_html_e( 'Latest Scans', 'secupress' ) ; ?>
 						</p>
+						<ul class="secupress-reports-list">
 						<?php if ( (bool) $reports ) { ?>
-						<ul>
 							<?php foreach ( $reports as $report ) { ?>
 							<li><?php echo $report; ?></li>
 							<?php } ?>
-						</ul>
 						<?php } else { ?>
-						<p>
-							<em><?php esc_html_e( 'You have no other reports for now.', 'secupress' ); ?></em>
-						</p>
+							<li class="secupress-empty"><em><?php esc_html_e( 'You have no other reports for now.', 'secupress' ); ?></em></li>
 						<?php } ?>
+						</ul>
 					</div><!-- .secupress-tab-content -->
 
 					<div id="secupress-schedule" class="secupress-tab-content">
@@ -733,7 +731,7 @@ function secupress_main_scan() {
 					?>
 					<div id="<?php echo $class_name_part; ?>" class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> type-all status-all<?php echo $css_class; ?>">
 						
-						<div class="secupress-flex secupress-flex-top">
+						<div class="secupress-flex secupress-flex-top secupress-flex-spaced">
 							<div class="secupress-item-title">
 								<?php echo $class_name::$title; ?>
 								<div class="secupress-row-actions">
@@ -785,6 +783,18 @@ function secupress_main_scan() {
 								
 							</div>
 						</div>
+						
+						<?php // hidden items used for Sweet Alerts  ?>
+						<div id="details-<?php echo $class_name_part; ?>" class="details hide-if-js">
+							<?php _e( 'Scan Details: ', 'secupress' ); ?>
+							<span class="details-content"><?php echo wp_kses( $current_test::$more, $allowed_tags ); ?></span>
+						</div>
+						<div id="details-fix-<?php echo $class_name_part; ?>" class="details hide-if-js">
+							
+							<?php _e( 'Fix Details: ', 'secupress' ); ?>
+							<span class="details-content"><?php echo wp_kses( $current_test::$more_fix, $allowed_tags ); ?></span>
+						</div>
+						
 					</div><!-- </tr> -->
 					
 					<?php
@@ -809,17 +819,6 @@ function secupress_main_scan() {
 
 						$fix_actions = array( 0 => false );
 					}
-					?>
-					<div id="details-<?php echo $class_name_part; ?>" class="details hide-if-js">
-						<?php _e( 'Scan Details: ', 'secupress' ); ?>
-						<span class="details-content"><?php echo wp_kses( $current_test::$more, $allowed_tags ); ?></span>
-					</div>
-					<div id="details-fix-<?php echo $class_name_part; ?>" class="details hide-if-js">
-						
-						<?php _e( 'Fix Details: ', 'secupress' ); ?>
-						<span class="details-content"><?php echo wp_kses( $current_test::$more_fix, $allowed_tags ); ?></span>
-					</div>
-					<?php
 				}
 				?>
 
