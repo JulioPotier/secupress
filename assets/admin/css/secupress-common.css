@@ -312,15 +312,18 @@
 
 /* Sections Colors */
 
-.secupress-section-dark {
+.secupress-section-dark,
+.secupress-bg-dark {
 	background: #222831;
 	color: #FFF;
 }
-.secupress-section-light {
+.secupress-section-light,
+.secupress-bg-light {
 	background: #FFF;
 	color: #393E46;
 }
-.secupress-section-gray {
+.secupress-section-gray,
+.secupress-bg-gray {
 	background: #F2F2F6;
 	color: #393E46;
 }

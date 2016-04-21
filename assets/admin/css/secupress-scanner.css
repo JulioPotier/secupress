@@ -165,6 +165,26 @@ th.secupress-check {
 .form-table td {
 	vertical-align: top;
 }
+
+.secupress-prio-title {
+	padding: 5px 10px;
+	margin: 0 0 1em;
+	background: #ECF0F1;
+	color: #5A626F;
+	font-weight: bold;
+	letter-spacing: 0.125em;
+}
+.secupress-prio-h {
+	color: inherit;
+	margin: 0;
+	font-size: 11px;
+	text-transform: uppercase;
+}
+.secupress-prio-h + p {
+	font-size: 10px;
+	margin: 0;
+	opacity: 0.8;
+}
 .secupress-table-prio-all .details {
 	font-style: italic;
 	background: #ddf;
