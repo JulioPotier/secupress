@@ -72,7 +72,7 @@ jQuery( document ).ready( function( $ ) {
 	}
 
 	function secupressPrependDataLi( percent, now ) {
-		$( '.score_results ul' ).prepend( '<li class="hidden" data-percent="' + percent + '">' + now + '</li>' ).find( 'li.hidden' ).slideDown( 250 );
+		$( '#secupress-latest').find( 'ul' ).prepend( '<li class="hidden" data-percent="' + percent + '">' + now + '</li>' ).find( 'li.hidden' ).slideDown( 250 );
 		if ( jQuery.timeago ) {
 			$( '.timeago:first' ).timeago();
 		}
@@ -124,7 +124,7 @@ jQuery( document ).ready( function( $ ) {
 			d                = new Date();
 			the_date         = d.getFullYear() + "-" + ( "0" + ( d.getMonth() + 01 ) ).slice( -2 ) + "-" + ( "0" + d.getDate() ).slice( -2 ) + " " + ( "0" + d.getHours() ).slice( -2 ) + ":" + ( "0" + d.getMinutes() ).slice( -2 );
 			dashicon         = '<span class="dashicons mini dashicons-arrow-?-alt2"></span>';
-			$score_results_ul= $( '.score_results ul' );
+			$score_results_ul= $( '#secupress-latest').find( 'ul' );
 			replacement      = 'right';
 			last_percent     = $score_results_ul.find( 'li:first' ).data( 'percent' );
 
@@ -135,8 +135,13 @@ jQuery( document ).ready( function( $ ) {
 			}
 
 			dashicon = dashicon.replace( '?', replacement );
-			now = '<strong>' + dashicon + letter + ' (' + percent + ' %)</strong> <span class="timeago" title="' + the_date + '">' + the_date + '</span>';
+			now = '<strong>' + dashicon + '<span class="letter l' + letter + '">' + letter + '</span> (' + percent + ' %)</strong> <span class="timeago" title="' + the_date + '">' + the_date + '</span>';
 
+			if ( $score_results_ul.find('.secupress-empty') ) {
+				$score_results_ul.find('.secupress-empty').slideUp( 250, function() {
+					$( this ).remove();
+				});
+			}
 			if ( $score_results_ul.find( 'li' ).length === 5 ) {
 				$score_results_ul.find( 'li:last' ).slideUp( 250, function() {
 					$( this ).remove();

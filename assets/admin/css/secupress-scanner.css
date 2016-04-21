@@ -141,29 +141,20 @@
 	display: none;
 }
 
+.secupress-reports-list {
+	margin-bottom: 3em;
+	font-size: 1.1em;
+}
+.secupress-reports-list .timeago {
+	color: rgba(255, 255, 255, 0.6);
+	font-size: 0.875em;
+}
+
 #table-secupress-tests ul {
 	list-style: disc outside;
 }
-th.secupress-type {
-	width: 100px;
-}
-td.secupress-scan-status,
-td.secupress-fix-status {
-	width: 11em;
-	height: 48px;
-}
 .dashicons-external {
 	font-size: 1.2em;
-}
-#table-secupress-tests th {
-	padding: 5px;
-}
-th.secupress-check {
-	width: 1%;
-	padding: 4px 0 0 2px;
-}
-.form-table td {
-	vertical-align: top;
 }
 
 .secupress-prio-title {
@@ -292,30 +283,40 @@ th.secupress-check {
 	margin: -12px 0 0 -26px;
 	font-family: Arial, Helvetica, sans-serif;
 }
-.secupress-scan-infos .letter {
+.secupress-scan-infos .letter,
+.secupress-reports-list .letter {
 	font-weight: bold;
 	font-size: 1.2em;
+}
+.secupress-reports-list .letter {
+	vertical-align: -1px;
 }
 .secupress-chart .secupress-score .l∅ {
 	font-size: 64px;
 	margin: -6px 0 0 -28px;
 }
-.secupress-score .lA {
+.secupress-score .lA,
+.secupress-reports-list .lA {
 	color: #2BCDC1;
 }
-.secupress-score .lB {
+.secupress-score .lB,
+.secupress-reports-list .lB {
 	color: #F1C40F;
 }
-.secupress-score .lC {
+.secupress-score .lC,
+.secupress-reports-list .lC {
 	color: #F7AB13;
 }
-.secupress-score .lD {
+.secupress-score .lD,
+.secupress-reports-list .lD {
 	color: #F2295E;
 }
-.secupress-score .lE {
+.secupress-score .lE,
+.secupress-reports-list .lE {
 	color: #CB234F;
 }
-.secupress-score .lF {
+.secupress-score .lF,
+.secupress-reports-list .lF {
 	color: #c32222;
 }
 
