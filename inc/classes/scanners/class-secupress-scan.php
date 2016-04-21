@@ -658,20 +658,37 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	// Schedule an auto-scan that will be executed on page load.
 
 	final public function schedule_autoscan() {
-		$transient = secupress_get_site_transient( 'secupress_autoscans' );
-		$transient = is_array( $transient ) ? $transient : array();
+		if ( $this->is_for_current_site() ) {
+			$transient = secupress_get_transient( 'secupress_autoscans' );
+			$transient = is_array( $transient ) ? $transient : array();
 
-		$transient[ $this->class_name_part ] = $this->class_name_part;
+			$transient[ $this->class_name_part ] = $this->class_name_part;
 
-		secupress_set_site_transient( 'secupress_autoscans', $transient );
+			secupress_set_transient( 'secupress_autoscans', $transient );
+		} else {
+			$transient = secupress_get_site_transient( 'secupress_autoscans' );
+			$transient = is_array( $transient ) ? $transient : array();
+
+			$transient[ $this->class_name_part ] = $this->class_name_part;
+
+			secupress_set_site_transient( 'secupress_autoscans', $transient );
+		}
 	}
 
 
 	final public static function get_and_delete_autoscans() {
-		$transient = secupress_get_site_transient( 'secupress_autoscans' );
-		if ( false !== $transient ) {
-			secupress_delete_site_transient( 'secupress_autoscans' );
+		if ( $this->is_for_current_site() ) {
+			$transient = secupress_get_transient( 'secupress_autoscans' );
+			if ( false !== $transient ) {
+				secupress_delete_transient( 'secupress_autoscans' );
+			}
+		} else {
+			$transient = secupress_get_site_transient( 'secupress_autoscans' );
+			if ( false !== $transient ) {
+				secupress_delete_site_transient( 'secupress_autoscans' );
+			}
 		}
+
 		return is_array( $transient ) ? $transient : array();
 	}
 
