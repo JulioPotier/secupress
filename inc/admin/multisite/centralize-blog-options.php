@@ -207,7 +207,7 @@ function secupress_fill_centralized_blog_options() {
  *
  * @since 1.0
  */
-add_action( 'load-secupress_page_secupress_scanners', 'secupress_add_centralized_blog_options' );
+add_action( 'load-toplevel_page_secupress_scanners', 'secupress_add_centralized_blog_options' );
 
 function secupress_add_centralized_blog_options() {
 	if ( ! secupress_fill_centralized_blog_options() ) {
