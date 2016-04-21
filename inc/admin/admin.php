@@ -270,12 +270,16 @@ function __secupress_update_oneclick_scan_date() {
 	$icon = 'right';
 
 	if ( $last_pc > -1 ) {
-		$icon = $last_pc > $time['percent'] ? 'up' : 'down';
+		if ( $last_pc < $time['percent'] ) {
+			$icon = 'up';
+		} elseif ( $last_pc > $time['percent'] ) {
+			$icon = 'down';
+		}
 	}
 
 	$out = sprintf(
 		'<li class="hidden" data-percent="%1$d"><span class="dashicons mini dashicons-arrow-%2$s-alt2" aria-hidden="true"></span><strong>%3$s (%1$d %%)</strong> <span class="timeago">%4$s</span></li>',
-		$time['percent'],
+		round( $time['percent'] ),
 		$icon,
 		$time['grade'],
 		sprintf( __( '%s ago' ), human_time_diff( $time['time'] ) )

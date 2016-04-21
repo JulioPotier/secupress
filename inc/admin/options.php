@@ -402,7 +402,11 @@ function __secupress_scanners() {
 			$icon = 'right';
 
 			if ( $last_pc > -1 ) {
-				$icon = $last_pc > $time['percent'] ? 'up' : 'down';
+				if ( $last_pc < $time['percent'] ) {
+					$icon = 'up';
+				} elseif ( $last_pc > $time['percent'] ) {
+					$icon = 'down';
+				}
 			}
 
 			$last_pc = $time['percent'];
