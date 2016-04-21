@@ -355,15 +355,17 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 		if ( $this->is_network_admin() ) {
 			$active_subsites_plugins = get_site_option( 'secupress_active_plugins' );
 
-			foreach ( $active_subsites_plugins as $site_id => $active_subsite_plugins ) {
-				$data = array_intersect_key( $selected_plugins, $active_subsite_plugins );
+			if ( $active_subsites_plugins && is_array( $active_subsites_plugins ) ) {
+				foreach ( $active_subsites_plugins as $site_id => $active_subsite_plugins ) {
+					$data = array_intersect_key( $selected_plugins, $active_subsite_plugins );
 
-				if ( $data ) {
-					$data = array( count( $data ), $data );
-					// Add a scan message for each listed sub-site.
-					$this->add_subsite_message( 204, $data, 'scan', $site_id );
-				} else {
-					$this->set_empty_data_for_subsite( $site_id );
+					if ( $data ) {
+						$data = array( count( $data ), $data );
+						// Add a scan message for each listed sub-site.
+						$this->add_subsite_message( 204, $data, 'scan', $site_id );
+					} else {
+						$this->set_empty_data_for_subsite( $site_id );
+					}
 				}
 			}
 			// cantfix
@@ -619,8 +621,10 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 				$active_subsites_plugins_tmp = get_site_option( 'secupress_active_plugins' );
 				$active_subsites_plugins     = array();
 
-				foreach ( $active_subsites_plugins_tmp as $site_id => $active_subsite_plugins ) {
-					$active_subsites_plugins = array_merge( $active_subsites_plugins, $active_subsite_plugins );
+				if ( $active_subsites_plugins_tmp && is_array( $active_subsites_plugins_tmp ) ) {
+					foreach ( $active_subsites_plugins_tmp as $site_id => $active_subsite_plugins ) {
+						$active_subsites_plugins = array_merge( $active_subsites_plugins, $active_subsite_plugins );
+					}
 				}
 
 				// Let's act like Hello Dolly is not enabled in any sub-site, so we won't need Administrators aproval and we'll be able to delete it directly.
