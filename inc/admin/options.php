@@ -460,8 +460,33 @@ function __secupress_scanners() {
 			foreach ( $boxes as $id => $box ) {
 				secupress_sidebox( array( 'id' => $id, 'title' => $box[0], 'content' => $box[1], 'context' => 'top' ) );
 			}
+			?>
+			<button class="button button-primary button-secupress-scan hide-if-no-js" type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ); ?>">
+				<?php _e( 'One Click Scan', 'secupress' ); ?>
+			</button>
 
-			secupress_main_scan();
+			<button class="button button-primary button-secupress-fix hide-if-no-js" type="button">
+				<?php _e( 'One Click Fix', 'secupress' ); ?>
+			</button>
+
+
+			<div class="square-filter priorities hide-if-no-js">
+				<button type="button" class="active" data-type="all"><?php _ex( 'All Priorities', 'priority', 'secupress' ); ?></button><?php
+				?><button type="button" data-type="high"><?php _ex( 'High Priority', 'priority', 'secupress' ); ?></button><?php
+				?><button type="button" data-type="medium"><?php _ex( 'Medium Priority', 'priority', 'secupress' ); ?></button><?php
+				?><button type="button" data-type="low"><?php _ex( 'Low Priority', 'priority', 'secupress' ); ?></button>
+			</div>
+
+			<div class="square-filter statuses hide-if-no-js">
+				<button type="button" class="active" data-type="all"><?php _ex( 'All Statuses', 'priority', 'secupress' ); ?></button><?php
+				?><button type="button" data-type="good"><?php _ex( 'Good Status', 'priority', 'secupress' ); ?></button><?php
+				?><button type="button" data-type="warning"><?php _ex( 'Warning Status', 'priority', 'secupress' ); ?></button><?php
+				?><button type="button" data-type="bad"><?php _ex( 'Bad Status', 'priority', 'secupress' ); ?></button><?php
+				?><button type="button" data-type="notscannedyet"><?php _ex( 'Not Scanned Yet', 'priority', 'secupress' ); ?></button>
+			</div>
+
+			<?php
+			secupress_scanners_template();
 
 			wp_nonce_field( 'secupress_score', 'secupress_score', false );
 			?>
@@ -487,72 +512,83 @@ function secupress_admin_heading( $title = '' ) {
 }
 
 
-function secupress_main_scan() {
+function secupress_scanners_template() {
 	secupress_require_class( 'scan' );
 
-	$secupress_tests = secupress_get_tests();
-	$scanners        = secupress_get_scanners();
-	$fixes           = secupress_get_scanner_fixes();
-	$heading_tag     = secupress_wp_version_is( '4.4-alpha' ) ? 'h2' : 'h3';
+	$is_subsite   = is_multisite() && ! is_network_admin();
+	$heading_tag  = secupress_wp_version_is( '4.4-alpha' ) ? 'h2' : 'h3';
+	// Allowed tags in "Learn more" contents.
+	$allowed_tags = array(
+		'a'      => array( 'href' => array(),'title' => array(), 'target' => array(), ),
+		'abbr'   => array( 'title' => array() ),
+		'code'   => array(),
+		'em'     => array(),
+		'strong' => array(),
+		'ul'     => array(),
+		'ol'     => array(),
+		'li'     => array(),
+		'p'      => array(),
+		'br'     => array(),
+	);
 	// Actions the user needs to perform for a fix.
 	$fix_actions     = SecuPress_Scan::get_and_delete_fix_actions();
 	// Auto-scans: scans that will be executed on page load.
 	$autoscans       = SecuPress_Scan::get_and_delete_autoscans();
 
-	// Store the scans in 3 variables. They will be used to order the scans by status: 'bad', 'warning', 'notscannedyet', 'good'.
-	$bad_scans     = array();
-	$warning_scans = array();
-	$good_scans    = array();
+	if ( ! $is_subsite ) {
+		$secupress_tests = secupress_get_tests();
+		$scanners        = secupress_get_scanners();
+		$fixes           = secupress_get_scanner_fixes();
 
-	if ( ! empty( $scanners ) ) {
-		foreach ( $scanners as $class_name_part => $details ) {
-			if ( 'bad' === $details['status'] ) {
-				$bad_scans[ $class_name_part ] = $details['status'];
-			} elseif ( 'warning' === $details['status'] ) {
-				$warning_scans[ $class_name_part ] = $details['status'];
-			} elseif ( 'good' === $details['status'] ) {
-				$good_scans[ $class_name_part ] = $details['status'];
+		// Store the scans in 3 variables. They will be used to order the scans by status: 'bad', 'warning', 'notscannedyet', 'good'.
+		$bad_scans     = array();
+		$warning_scans = array();
+		$good_scans    = array();
+
+		if ( ! empty( $scanners ) ) {
+			foreach ( $scanners as $class_name_part => $details ) {
+				if ( 'bad' === $details['status'] ) {
+					$bad_scans[ $class_name_part ] = $details['status'];
+				} elseif ( 'warning' === $details['status'] ) {
+					$warning_scans[ $class_name_part ] = $details['status'];
+				} elseif ( 'good' === $details['status'] ) {
+					$good_scans[ $class_name_part ] = $details['status'];
+				}
+			}
+		}
+	} else {
+		$secupress_tests = array( secupress_get_tests_for_ms_scanner_fixes() );
+		$sites           = secupress_get_results_for_ms_scanner_fixes();
+		$site_id         = get_current_blog_id();
+		$scanners        = array();
+		$fixes           = array();
+
+		foreach ( $sites as $test => $site_data ) {
+			if ( ! empty( $site_data[ $site_id ] ) ) {
+				$scanners[ $test ] = ! empty( $site_data[ $site_id ]['scan'] ) ? $site_data[ $site_id ]['scan'] : array();
+				$fixes[ $test ]    = ! empty( $site_data[ $site_id ]['fix'] )  ? $site_data[ $site_id ]['fix']  : array();
 			}
 		}
 	}
 	?>
-	<button class="button button-primary button-secupress-scan hide-if-no-js" type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ); ?>">
-		<?php _e( 'One Click Scan', 'secupress' ); ?>
-	</button>
-
-	<button class="button button-primary button-secupress-fix hide-if-no-js" type="button">
-		<?php _e( 'One Click Fix', 'secupress' ); ?>
-	</button>
-
-
-	<div class="square-filter priorities hide-if-no-js">
-		<button type="button" class="active" data-type="all"><?php _ex( 'All Priorities', 'priority', 'secupress' ); ?></button><?php
-		?><button type="button" data-type="high"><?php _ex( 'High Priority', 'priority', 'secupress' ); ?></button><?php
-		?><button type="button" data-type="medium"><?php _ex( 'Medium Priority', 'priority', 'secupress' ); ?></button><?php
-		?><button type="button" data-type="low"><?php _ex( 'Low Priority', 'priority', 'secupress' ); ?></button>
-	</div>
-
-	<div class="square-filter statuses hide-if-no-js">
-		<button type="button" class="active" data-type="all"><?php _ex( 'All Statuses', 'priority', 'secupress' ); ?></button><?php
-		?><button type="button" data-type="good"><?php _ex( 'Good Status', 'priority', 'secupress' ); ?></button><?php
-		?><button type="button" data-type="warning"><?php _ex( 'Warning Status', 'priority', 'secupress' ); ?></button><?php
-		?><button type="button" data-type="bad"><?php _ex( 'Bad Status', 'priority', 'secupress' ); ?></button><?php
-		?><button type="button" data-type="notscannedyet"><?php _ex( 'Not Scanned Yet', 'priority', 'secupress' ); ?></button>
-	</div>
-
 	<div id="secupress-tests">
 		<?php
 		foreach ( $secupress_tests as $prio_key => $class_name_parts ) {
-			$i         = 0;
-			$prio_data = SecuPress_Scan::get_priorities( $prio_key );
+			$i = 0;
 			?>
-			<div class="table-prio-all table-prio-<?php echo $prio_key; ?>">
+			<div class="table-prio-all<?php echo $is_subsite ? '' : " table-prio-$prio_key"; ?>">
 
-				<div class="prio-<?php echo $prio_key; ?>">
-					<?php echo '<' . $heading_tag . '>' . $prio_data['title'] . '</' . $heading_tag . '>'; ?>
-					<?php echo $prio_data['description']; ?>
-				</div>
-
+				<?php
+				if ( ! $is_subsite ) {
+					$prio_data = SecuPress_Scan::get_priorities( $prio_key );
+					?>
+					<div class="prio-<?php echo $prio_key; ?>">
+						<?php echo '<' . $heading_tag . '>' . $prio_data['title'] . '</' . $heading_tag . '>'; ?>
+						<?php echo $prio_data['description']; ?>
+					</div>
+					<?php
+				}
+				?>
 
 				<table class="wp-list-table widefat">
 					<thead>
@@ -577,52 +613,49 @@ function secupress_main_scan() {
 
 					<tbody>
 					<?php
-					// For this priority, order the scans by status: 'bad', 'warning', 'notscannedyet', 'good'.
-					$ordered_scan_names = array();
+					$class_name_parts = array_combine( array_map( 'strtolower', $class_name_parts ), $class_name_parts );
 
-					foreach ( $class_name_parts as $class_name_part ) {
-						if ( ! file_exists( secupress_class_path( 'scan', $class_name_part ) ) ) {
-							continue;
+					if ( ! $is_subsite ) {
+						foreach ( $class_name_parts as $option_name => $class_name_part ) {
+							if ( ! file_exists( secupress_class_path( 'scan', $class_name_part ) ) ) {
+								unset( $class_name_parts[ $option_name ] );
+								continue;
+							}
+
+							secupress_require_class( 'scan', $class_name_part );
 						}
 
-						secupress_require_class( 'scan', $class_name_part );
+						// For this priority, order the scans by status: 'bad', 'warning', 'notscannedyet', 'good'.
+						$this_prio_bad_scans     = array_intersect_key( $class_name_parts, $bad_scans );
+						$this_prio_warning_scans = array_intersect_key( $class_name_parts, $warning_scans );
+						$this_prio_good_scans    = array_intersect_key( $class_name_parts, $good_scans );
+						$class_name_parts        = array_diff_key( $class_name_parts, $this_prio_bad_scans, $this_prio_warning_scans, $this_prio_good_scans );
+						$class_name_parts        = array_merge( $this_prio_bad_scans, $this_prio_warning_scans, $class_name_parts, $this_prio_good_scans );
+						unset( $this_prio_bad_scans, $this_prio_warning_scans, $this_prio_good_scans );
+					} else {
+						foreach ( $class_name_parts as $option_name => $class_name_part ) {
+							// Display only scanners where we have a scan result or a fix to be done.
+							if ( empty( $scanners[ $option_name ] ) && empty( $fixes[ $option_name ] ) || ! file_exists( secupress_class_path( 'scan', $option_name ) ) ) {
+								unset( $class_name_parts[ $option_name ] );
+								continue;
+							}
 
-						$option_name = strtolower( $class_name_part );
-						$ordered_scan_names[ $option_name ] = $class_name_part;
+							secupress_require_class( 'scan', $class_name_part );
+						}
 					}
-
-					$class_name_parts = $ordered_scan_names;
-
-					$this_prio_bad_scans     = array_intersect_key( $class_name_parts, $bad_scans );
-					$this_prio_warning_scans = array_intersect_key( $class_name_parts, $warning_scans );
-					$this_prio_good_scans    = array_intersect_key( $class_name_parts, $good_scans );
-					$class_name_parts        = array_diff_key( $class_name_parts, $this_prio_bad_scans, $this_prio_warning_scans, $this_prio_good_scans );
-					$class_name_parts        = array_merge( $this_prio_bad_scans, $this_prio_warning_scans, $class_name_parts, $this_prio_good_scans );
-					unset( $ordered_scan_names, $this_prio_bad_scans, $this_prio_warning_scans, $this_prio_good_scans );
-
-					// Allowed tags in "Learn more" contents.
-					$allowed_tags = array(
-						'a'      => array( 'href' => array(),'title' => array(), 'target' => array(), ),
-						'abbr'   => array( 'title' => array() ),
-						'code'   => array(),
-						'em'     => array(),
-						'strong' => array(),
-						'ul'     => array(),
-						'ol'     => array(),
-						'li'     => array(),
-						'p'      => array(),
-						'br'     => array(),
-					);
 
 					// Print the rows.
 					foreach ( $class_name_parts as $option_name => $class_name_part ) {
 						++$i;
-
 						$class_name   = 'SecuPress_Scan_' . $class_name_part;
 						$current_test = $class_name::get_instance();
 						$css_class    = ' type-' . sanitize_key( $class_name::$type );
-						$css_class   .= $i % 2 === 0 ? ' alternate-2' : ' alternate-1';
-						$fix_message  = '';
+
+						if ( $is_subsite ) {
+							$css_class .= $i % 2 === 0 ? '' : ' alternate';
+						} else {
+							$css_class .= $i % 2 === 0 ? ' alternate-2' : ' alternate-1';
+						}
 
 						// Scan
 						$status_text  = ! empty( $scanners[ $option_name ]['status'] ) ? secupress_status( $scanners[ $option_name ]['status'] )    : secupress_status( 'notscannedyet' );
@@ -643,10 +676,12 @@ function secupress_main_scan() {
 
 						if ( ! empty( $fixes[ $option_name ]['msgs'] ) && $status_class !== 'good' ) {
 							$fix_message = secupress_format_message( $fixes[ $option_name ]['msgs'], $class_name_part );
+						} else {
+							$fix_message = '';
 						}
 						?>
 						<tr id="<?php echo $class_name_part; ?>" class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> type-all status-all<?php echo $css_class; ?>">
-							<th>
+							<th scope="row">
 								<?php echo $class_name::$title; ?>
 								<div class="secupress-row-actions">
 									<span class="hide-if-no-js">
@@ -658,7 +693,7 @@ function secupress_main_scan() {
 								<div class="secupress-status"><?php echo $status_text; ?></div>
 
 								<div class="secupress-row-actions">
-									<a class="button button-secondary button-small secupress-scanit" href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $class_name_part ), 'secupress_scanner_' . $class_name_part ) ); ?>"><?php _ex( 'Scan', 'scan a test', 'secupress' ); ?></a>
+									<a class="button button-secondary button-small secupress-scanit" href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $class_name_part . ( $is_subsite ? '&for-current-site=1' : '' ) ), 'secupress_scanner_' . $class_name_part ) ); ?>"><?php _ex( 'Scan', 'scan a test', 'secupress' ); ?></a>
 								</div>
 							</td>
 							<td class="secupress-scan-result">
@@ -671,7 +706,7 @@ function secupress_main_scan() {
 									<?php
 									if ( true === $current_test::$fixable || 'pro' === $current_test::$fixable && secupress_is_pro() ) {
 										?>
-										<a class="button button-secondary button-small secupress-fixit<?php echo $current_test::$delayed_fix ? ' delayed-fix' : '' ?>" href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $class_name_part ), 'secupress_fixit_' . $class_name_part ) ); ?>"><?php _e( 'Fix it!', 'secupress' ); ?></a>
+										<a class="button button-secondary button-small secupress-fixit<?php echo $current_test::$delayed_fix ? ' delayed-fix' : '' ?>" href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $class_name_part ), 'secupress_fixit_' . $class_name_part . ( $is_subsite ? '&for-current-site=1' : '' ) ) ); ?>"><?php _e( 'Fix it!', 'secupress' ); ?></a>
 										<div class="secupress-row-actions">
 											<span class="hide-if-no-js">
 												<button type="button" class="secupress-details-fix link-like" data-test="<?php echo $class_name_part; ?>" title="<?php esc_attr_e( 'Get fix details', 'secupress' ); ?>"><?php _e( 'Learn more', 'secupress' ); ?></button>
