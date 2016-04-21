@@ -453,22 +453,22 @@ function __secupress_scanners() {
 								</div>
 
 								<ul class="secupress-chart-legend">
-									<li class="status-good">
+									<li class="status-good" data-status="good">
 										<span class="secupress-carret"></span>
 										<?php esc_html_e( 'Good', 'secupress' ); ?>
 										<span class="secupress-count-good"></span>
 									</li>
-									<li class="status-bad">
+									<li class="status-bad" data-status="bad">
 										<span class="secupress-carret"></span>
 										<?php esc_html_e( 'Bad', 'secupress' ); ?>
 										<span class="secupress-count-bad"></span>
 									</li>
-									<li class="status-warning">
+									<li class="status-warning" data-status="warning">
 										<span class="secupress-carret"></span>
 										<?php esc_html_e( 'Warning', 'secupress' ); ?>
 										<span class="secupress-count-warning"></span>
 									</li>
-									<li class="status-notscannedyet">
+									<li class="status-notscannedyet" data-status="notscannedyet">
 										<span class="secupress-carret"></span>
 										<?php esc_html_e( 'Not scanned yet', 'secupress' ); ?>
 										<span class="secupress-count-notscannedyet"></span>

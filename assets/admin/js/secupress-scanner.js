@@ -42,19 +42,30 @@ jQuery( document ).ready( function( $ ) {
 			tooltipEvents			: [],
 			showTooltips			: true,
 			segmentShowStroke		: false,
-			percentageInnerCutout	: 93,
-			tooltipEvents			: ['mousemove'],
-			onAnimationComplete 	: function() {
-				//this.showTooltip( [ this.segments[0] ], true );
+			percentageInnerCutout	: 90,
+			tooltipEvents			: ['mousemove'], // active "hover" effect…
+			customTooltips			: function( tooltip ) { //… but remove tooltips
+				if ( ! tooltip ) {
+					return;
+				}
 			}
 		} );
 
-		secupressChartEl.onclick = function( e ){
+		// Trigger a filter action on Chart Segment click
+		secupressChartEl.onclick = function( e ) {
 			var activePoints = secupressChart.getSegmentsAtEvent( e );
-			$( '.square-filter.statuses button[data-type="' + activePoints[0].status + '"]' ).trigger( "filter.secupress" );
+			if ( activePoints[0] ) {
+				$( '#secupress-type-filters').find('.secupress-big-tab-' + activePoints[0].status ).find('a').trigger( 'click.secupress' );
+			}
 		};
+
+		// Trigger a filter action on Legend item click
+		$('.secupress-chart-legend').find('li').on('click.secupress', function() {
+			$( '#secupress-type-filters').find('.secupress-big-tab-' + $(this).data('status') ).find('a').trigger( 'click.secupress' );
+		});
 	}
 
+	// Format Time ago for Latest Scans
 	if ( jQuery.timeago ) {
 		jQuery.timeago.settings.strings = jQuery.extend( { numbers: [] }, SecuPressi18nTimeago );
 		$( '.timeago' ).timeago();
