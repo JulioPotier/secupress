@@ -21,13 +21,14 @@ function __secupress_scanit_action_callback() {
 		secupress_admin_die();
 	}
 
-	$test_name = esc_attr( $_GET['test'] );
-	secupress_check_user_capability();
+	$test_name        = esc_attr( $_GET['test'] );
+	$for_current_site = ! empty( $_GET['for-current-site'] );
+
+	secupress_check_user_capability( $for_current_site );
 	secupress_check_admin_referer( 'secupress_scanner_' . $test_name );
 
-	$doing_ajax       = defined( 'DOING_AJAX' ) && DOING_AJAX;
-	$for_current_site = ! empty( $_GET['for-current-site'] );
-	$response         = secupress_scanit( $test_name, $doing_ajax, $for_current_site );
+	$doing_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
+	$response   = secupress_scanit( $test_name, $doing_ajax, $for_current_site );
 
 	secupress_admin_send_response_or_redirect( $response, 'scanners#' . $test_name );
 }
@@ -95,13 +96,14 @@ function __secupress_fixit_action_callback() {
 		secupress_admin_die();
 	}
 
-	$test_name = esc_attr( $_GET['test'] );
-	secupress_check_user_capability();
+	$test_name        = esc_attr( $_GET['test'] );
+	$for_current_site = ! empty( $_GET['for-current-site'] );
+
+	secupress_check_user_capability( $for_current_site );
 	secupress_check_admin_referer( 'secupress_fixit_' . $test_name );
 
-	$doing_ajax       = defined( 'DOING_AJAX' ) && DOING_AJAX;
-	$for_current_site = ! empty( $_GET['for-current-site'] );
-	$response         = secupress_fixit( $test_name, $doing_ajax, $for_current_site );
+	$doing_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
+	$response   = secupress_fixit( $test_name, $doing_ajax, $for_current_site );
 
 	// If not ajax, perform a scan.
 	if ( ! $doing_ajax ) {
@@ -174,13 +176,14 @@ function __secupress_manual_fixit_action_callback() {
 		secupress_admin_die();
 	}
 
-	$test_name = esc_attr( $_POST['test'] );
-	secupress_check_user_capability();
+	$test_name        = esc_attr( $_POST['test'] );
+	$for_current_site = ! empty( $_POST['for-current-site'] );
+
+	secupress_check_user_capability( $for_current_site );
 	secupress_check_admin_referer( 'secupress_manual_fixit-' . $test_name, 'secupress_manual_fixit-nonce' );
 
-	$doing_ajax       = defined( 'DOING_AJAX' ) && DOING_AJAX;
-	$for_current_site = ! empty( $_POST['for-current-site'] );
-	$response         = secupress_manual_fixit( $test_name, $doing_ajax, $for_current_site );
+	$doing_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
+	$response   = secupress_manual_fixit( $test_name, $doing_ajax, $for_current_site );
 
 	// If not ajax, perform a scan.
 	if ( ! $doing_ajax ) {
