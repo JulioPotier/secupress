@@ -260,35 +260,16 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		// JS
 		$depts = array();
 		if ( is_network_admin() || ! is_multisite() ) {
-			wp_enqueue_script( 'secupress-chartjs', SECUPRESS_ADMIN_JS_URL . 'chart' . $suffix . '.js', array(), '1.0.2.1', true );
-			wp_enqueue_script( 'jquery-timeago',    SECUPRESS_ADMIN_JS_URL . 'jquery.timeago.js', array( 'jquery' ), '1.4.1', true );
-			$depts = array( 'secupress-chartjs', 'jquery-timeago' );
-
+			$depts  = array( 'secupress-chartjs' );
 			$counts = secupress_get_scanner_counts();
+
+			wp_enqueue_script( 'secupress-chartjs', SECUPRESS_ADMIN_JS_URL . 'chart' . $suffix . '.js', array(), '1.0.2.1', true );
+
 			wp_localize_script( 'secupress-chartjs', 'SecuPressi18nChart', array(
 				'good'          => array( 'value' => $counts['good'],          'text' => __( 'Good', 'secupress' ) ),
 				'warning'       => array( 'value' => $counts['warning'],       'text' => __( 'Warning', 'secupress' ) ),
 				'bad'           => array( 'value' => $counts['bad'],           'text' => __( 'Bad', 'secupress' ) ),
 				'notscannedyet' => array( 'value' => $counts['notscannedyet'], 'text' => __( 'Not Scanned Yet', 'secupress' ) ),
-			) );
-
-			wp_localize_script( 'jquery-timeago', 'SecuPressi18nTimeago', array(
-				'prefixAgo'     => _x( '', 'timeago.prefixAgo', 'secupress' ),
-				'prefixFromNow' => _x( '', 'timeago.prefixFromNow', 'secupress' ),
-				'suffixAgo'     => _x( 'ago', 'timeago.suffixAgo', 'secupress' ),
-				'suffixFromNow' => _x( '', 'timeago.suffixFromNow', 'secupress' ),
-				'seconds'       => _x( 'a few seconds', 'timeago.seconds', 'secupress' ),
-				'minute'        => _x( '1 minute', 'timeago.minute', 'secupress' ),
-				'minutes'       => _x( '%d minutes', 'timeago.minutes', 'secupress' ),
-				'hour'          => _x( '1 hour', 'timeago.hour', 'secupress' ),
-				'hours'         => _x( '%d hours', 'timeago.hours', 'secupress' ),
-				'day'           => _x( '1 day', 'timeago.day', 'secupress' ),
-				'days'          => _x( '%d days', 'timeago.days', 'secupress' ),
-				'month'         => _x( '1 month', 'timeago.month', 'secupress' ),
-				'months'        => _x( '%d months', 'timeago.months', 'secupress' ),
-				'year'          => _x( '1 year', 'timeago.year', 'secupress' ),
-				'years'         => _x( '%d years', 'timeago.years', 'secupress' ),
-				'wordSeparator' => _x( " ", 'timeago.wordSeparator', 'secupress' ),
 			) );
 		}
 

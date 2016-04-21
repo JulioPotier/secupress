@@ -52,11 +52,6 @@ jQuery( document ).ready( function( $ ) {
 		};
 	}
 
-	if ( jQuery.timeago ) {
-		jQuery.timeago.settings.strings = jQuery.extend( { numbers: [] }, SecuPressi18nTimeago );
-		$( ".timeago" ).timeago();
-	}
-
 	function secupressPrependDataLi( row ) {
 		$( ".score_results ul" ).prepend( row ).find( "li.hidden" ).slideDown( 250 );
 	}
@@ -64,7 +59,7 @@ jQuery( document ).ready( function( $ ) {
 	function secupressUpdateScore( refreshDate ) {
 		var total, status_good, status_warning, status_bad, status_notscannedyet, percent, letter, scoreResultsUl;
 
-		if ( ! secupressChartEl || ! jQuery.timeago ) {
+		if ( ! secupressChartEl ) {
 			return;
 		}
 
