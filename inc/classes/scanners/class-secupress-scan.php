@@ -636,7 +636,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
-	final public function get_and_delete_fix_actions() {
+	final public static function get_and_delete_fix_actions() {
 		$transient_name = 'secupress_fix_actions-' . get_current_user_id();
 
 		if ( $this->is_for_current_site() ) {
@@ -676,7 +676,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
-	final public function get_and_delete_autoscans() {
+	final public static function get_and_delete_autoscans() {
 		if ( $this->is_for_current_site() ) {
 			$transient = secupress_get_transient( 'secupress_autoscans' );
 			if ( false !== $transient ) {
