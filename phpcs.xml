@@ -5,7 +5,7 @@
 	<arg name="extensions" value="php"/>
 	<arg value="s"/>
 
-	<file>inc/front</file>
+	<file>inc/functions/admin.php</file>
 
 	<exclude-pattern>*.js</exclude-pattern>
 
@@ -21,6 +21,7 @@
 		<exclude name="Squiz.Commenting.InlineComment.SpacingAfter"/>
 		<exclude name="WordPress.Variables.GlobalVariables.OverrideProhibited"/>
 		<exclude name="WordPress.VIP"/>
+		<exclude name="WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet"/>
 		<exclude name="WordPress.XSS.EscapeOutput"/>
 	</rule>
 </ruleset>
