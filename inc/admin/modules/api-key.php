@@ -7,7 +7,7 @@ $description = implode( "<br/>\n", array(
 	sprintf(
 		/* translators: %s is a "Buy a licence" link */
 		__( 'You can %s, or only <strong>enter your email address</strong> below and <strong>save</strong> to get your free account.', 'secupress' ),
-		'<a href="#" target="_blank">' . __( 'buy a licence to unlock all the features', 'secupress' ) . '</a>'////
+		'<a href="#" target="_blank">' . __( 'buy a licence to unlock all the features', 'secupress' ) . '</a>'// ////.
 	),
 ) );
 

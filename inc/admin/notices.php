@@ -1,13 +1,12 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
+add_action( 'admin_init', 'secupress_plugins_to_deactivate' );
 /**
  * This warning is displayed when some plugins may conflict with SecuPress.
  *
  * @since 1.0
  */
-add_action( 'admin_init', 'secupress_plugins_to_deactivate' );
-
 function secupress_plugins_to_deactivate() {
 	if ( ! current_user_can( secupress_get_capability() ) ) {
 		return;
@@ -36,19 +35,18 @@ function secupress_plugins_to_deactivate() {
 }
 
 
+add_action( 'admin_init', 'secupress_add_packed_plugins_notice' );
 /**
  * Display a notice if the standalone version of a plugin packed in SecuPress is used.
  *
  * @since 1.0
  */
-add_action( 'admin_init', 'secupress_add_packed_plugins_notice' );
-
 function secupress_add_packed_plugins_notice() {
 	if ( ! current_user_can( secupress_get_capability() ) ) {
 		return;
 	}
 
-	/*
+	/**
 	 * Filter the list of plugins packed in SecuPress.
 	 *
 	 * @since 1.0
@@ -80,15 +78,14 @@ function secupress_add_packed_plugins_notice() {
 }
 
 
-/*
+add_action( 'activate_plugin', 'secupress_reset_packed_plugins_notice_on_plugins_activation' );
+/**
  * When the standalone version of a plugin packed in SecuPress is activated, reinit the notice.
  *
  * @since 1.0
  *
  * @param (string) $plugin The plugin path, relative to the plugins folder.
  */
-add_action( 'activate_plugin', 'secupress_reset_packed_plugins_notice_on_plugins_activation' );
-
 function secupress_reset_packed_plugins_notice_on_plugins_activation( $plugin ) {
 	if ( ! current_user_can( secupress_get_capability() ) ) {
 		return;
@@ -109,15 +106,14 @@ function secupress_reset_packed_plugins_notice_on_plugins_activation( $plugin ) 
 }
 
 
-/*
+add_action( 'secupress_activate_plugin', 'secupress_deactivate_standalone_plugin_on_packed_plugin_activation' );
+/**
  * When a plugin packed in SecuPress is activated, deactivate the standalone version.
  *
  * @since 1.0
  *
  * @param (string) $plugin The name of the packed plugin.
  */
-add_action( 'secupress_activate_plugin', 'secupress_deactivate_standalone_plugin_on_packed_plugin_activation' );
-
 function secupress_deactivate_standalone_plugin_on_packed_plugin_activation( $plugin ) {
 	/** This action is documented in inc/admin/notices.php */
 	$plugins = apply_filters( 'secupress.plugins.packed-plugins', array() );
@@ -128,13 +124,12 @@ function secupress_deactivate_standalone_plugin_on_packed_plugin_activation( $pl
 }
 
 
+add_action( 'admin_init', 'secupress_warning_wp_config_permissions' );
 /**
  * This warning is displayed when the wp-config.php file isn't writable.
  *
  * @since 1.0
  */
-add_action( 'admin_init', 'secupress_warning_wp_config_permissions' );
-
 function secupress_warning_wp_config_permissions() {
 	global $pagenow;
 
@@ -153,13 +148,12 @@ function secupress_warning_wp_config_permissions() {
 }
 
 
+add_action( 'admin_init', 'secupress_warning_htaccess_permissions' );
 /**
  * This warning is displayed when the .htaccess file or the web.config file doesn't exist or isn't writable.
  *
  * @since 1.0
  */
-add_action( 'admin_init', 'secupress_warning_htaccess_permissions' );
-
 function secupress_warning_htaccess_permissions() {
 	global $is_apache, $is_iis7;
 
@@ -192,13 +186,12 @@ function secupress_warning_htaccess_permissions() {
 }
 
 
+add_action( 'admin_init', 'secupress_warning_module_activity' );
 /**
  * These warnings are displayed when a module has been activated/deactivated.
  *
  * @since 1.0
  */
-add_action( 'admin_init', 'secupress_warning_module_activity' );
-
 function secupress_warning_module_activity() {
 	$current_user_id = get_current_user_id();
 
@@ -229,13 +222,12 @@ function secupress_warning_module_activity() {
 }
 
 
+add_action( 'admin_init', 'secupress_warning_no_backup_email' );
 /**
  * This warning is displayed when the backup email is not set.
  *
  * @since 1.0
  */
-add_action( 'admin_init', 'secupress_warning_no_backup_email' );
-
 function secupress_warning_no_backup_email() {
 	if ( get_user_meta( get_current_user_id(), 'backup_email', true ) ) {
 		return;
@@ -248,13 +240,12 @@ function secupress_warning_no_backup_email() {
 }
 
 
+add_action( 'all_admin_notices', 'secupress_warning_no_oneclick_scan_yet', 50 );
 /**
  * This warning is displayed if no "One-Click Scan" has been performed yet.
  *
  * @since 1.0
  */
-add_action( 'all_admin_notices', 'secupress_warning_no_oneclick_scan_yet', 50 );
-
 function secupress_warning_no_oneclick_scan_yet() {
 	$screen_id = get_current_screen();
 	$screen_id = $screen_id && ! empty( $screen_id->id ) ? $screen_id->id : false;
@@ -270,13 +261,34 @@ function secupress_warning_no_oneclick_scan_yet() {
 	}
 
 	echo '<div class="secupress-no-oneclick-scan-yet-notice hide-if-no-js">';
-		printf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
-		printf(
-			/* translators: %s is "One Click Scan". */
-			__( 'Why not run your first %s now?', 'secupress' ), ////
-			'<a href="' . esc_url( secupress_admin_url( 'scanners' ) ) . '&oneclick-scan=1">' . __( 'One Click Scan', 'secupress' ) . '</a>'
-		);
+	printf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
+	printf(
+		/* Translators: %s is "One Click Scan". */
+		__( 'Why not run your first %s now?', 'secupress' ), // ////.
+		'<a href="' . esc_url( secupress_admin_url( 'scanners' ) ) . '&oneclick-scan=1">' . __( 'One Click Scan', 'secupress' ) . '</a>'
+	);
 	echo "</div>\n";
+}
+
+
+add_action( 'admin_menu', 'secupress_display_transient_notices' );
+/**
+ * Will lately add admin notices added by `secupress_add_transient_notice()`.
+ *
+ * @since 1.0
+ */
+function secupress_display_transient_notices() {
+	$notices = secupress_get_transient( 'secupress-notices-' . get_current_user_id() );
+
+	if ( ! $notices ) {
+		return;
+	}
+
+	foreach ( $notices as $notice ) {
+		secupress_add_notice( $notice['message'], $notice['error_code'], false );
+	}
+
+	delete_transient( 'secupress-notices-' . get_current_user_id() );
 }
 
 
@@ -301,8 +313,8 @@ function secupress_add_notice( $message, $error_code = null, $notice_id = '' ) {
  *
  * @since 1.0
  *
- * @param (string)      $message    The message to display in the notice.
- * @param (string)      $error_code Like WordPress notices: "error" or "updated". Default is "updated".
+ * @param (string) $message    The message to display in the notice.
+ * @param (string) $error_code Like WordPress notices: "error" or "updated". Default is "updated".
  */
 function secupress_add_transient_notice( $message, $error_code = null ) {
 	SecuPress_Admin_Notices::get_instance()->add_temporary( $message, $error_code );
@@ -350,26 +362,4 @@ function secupress_reinit_notice( $notice_id, $user_id = 0 ) {
  */
 function secupress_notice_is_dismissed( $notice_id ) {
 	return SecuPress_Admin_Notices::is_dismissed( $notice_id );
-}
-
-
-/**
- * Will lately add admin notices added by `secupress_add_transient_notice()`.
- *
- * @since 1.0
- */
-add_action( 'admin_menu', 'secupress_display_transient_notices' );
-
-function secupress_display_transient_notices() {
-	$notices = secupress_get_transient( 'secupress-notices-' . get_current_user_id() );
-
-	if ( ! $notices ) {
-		return;
-	}
-
-	foreach( $notices as $notice ) {
-		secupress_add_notice( $notice['message'], $notice['error_code'], false );
-	}
-
-	delete_transient( 'secupress-notices-' . get_current_user_id() );
 }

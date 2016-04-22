@@ -1,13 +1,14 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
+add_action( 'admin_bar_menu', 'secupress_admin_bar', 100 );
 /**
  * Add menu in tool bar.
  *
  * @since 1.0
+ *
+ * @param (object) $wp_admin_bar WP_Admin_Bar object.
  */
-add_action( 'admin_bar_menu', 'secupress_admin_bar', 100 );
-
 function secupress_admin_bar( $wp_admin_bar ) {
 	if ( ! current_user_can( secupress_get_capability() ) ) {
 		return;
@@ -25,7 +26,7 @@ function secupress_admin_bar( $wp_admin_bar ) {
 		$grade = '';
 	}
 
-	// Parent
+	// Parent.
 	$wp_admin_bar->add_menu( array(
 		'id'    => 'secupress',
 		'title' => '<span class="ab-icon dashicons-shield-alt"></span><span class="screen-reader-text">' . SECUPRESS_PLUGIN_NAME . ' </span>' . $grade,
@@ -34,14 +35,14 @@ function secupress_admin_bar( $wp_admin_bar ) {
 		),
 	) );
 
-	// Placeholder to display the plugin name. ////
+	// Placeholder to display the plugin name. ////.
 	$wp_admin_bar->add_menu( array(
 		'parent' => 'secupress',
 		'id' 	 => 'secupress-dashboard',
 		'title'  => SECUPRESS_PLUGIN_NAME,
 	) );
 
-	// Scanners
+	// Scanners.
 	$wp_admin_bar->add_menu( array(
 		'parent' => 'secupress',
 		'id' 	 => 'secupress-scanners',
@@ -49,7 +50,7 @@ function secupress_admin_bar( $wp_admin_bar ) {
 		'href'   => esc_url( secupress_admin_url( 'secupress_scanners' ) ),
 	) );
 
-	// Modules
+	// Modules.
 	$wp_admin_bar->add_menu( array(
 		'parent' => 'secupress',
 		'id' 	 => 'secupress-modules',
@@ -57,7 +58,7 @@ function secupress_admin_bar( $wp_admin_bar ) {
 		'href'   => esc_url( secupress_admin_url( 'secupress_modules' ) ),
 	) );
 
-	// Settings
+	// Settings.
 	$wp_admin_bar->add_menu( array(
 		'parent' => 'secupress',
 		'id' 	 => 'secupress-settings',

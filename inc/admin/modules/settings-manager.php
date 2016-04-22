@@ -15,7 +15,7 @@ $this->add_field( array(
 
 $this->add_field( array(
 	'title'        => __( 'Settings Importer', 'secupress' ),
-	'description'  => __( 'Import previously exported settings from another website or from a previous save point', 'secupress' ), //// wording save point
+	'description'  => __( 'Import previously exported settings from another website or from a previous save point', 'secupress' ), // //// wording save point.
 	'label_for'    => 'upload',
 	'name'         => $this->get_field_name( 'import_settings' ),
 	'type'         => 'import_upload_form',

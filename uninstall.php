@@ -1,5 +1,5 @@
 <?php
-// If uninstall not called from WordPress exit
+// If uninstall not called from WordPress exit.
 defined( 'WP_UNINSTALL_PLUGIN' ) or die( 'Cheatin&#8217; uh?' );
 
 global $wpdb;
@@ -22,7 +22,7 @@ $options = $wpdb->get_col( "SELECT option_name FROM $wpdb->options WHERE option_
 array_map( 'delete_option', $options );
 
 if ( is_multisite() ) {
-	// Site options
+	// Site options.
 	$options = $wpdb->get_col( "SELECT meta_key FROM $wpdb->sitemeta WHERE meta_key LIKE 'secupress_%'" );
 	array_map( 'delete_site_option', $options );
 }

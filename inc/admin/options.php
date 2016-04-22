@@ -5,13 +5,12 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /* MAIN OPTION ================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
+add_action( 'admin_init', 'secupress_register_global_setting' );
 /**
  * Whitelist our global settings.
  *
  * @since 1.0
  */
-add_action( 'admin_init', 'secupress_register_global_setting' );
-
 function secupress_register_global_setting() {
 	secupress_register_setting( 'global', SECUPRESS_SETTINGS_SLUG );
 }
@@ -21,6 +20,8 @@ function secupress_register_global_setting() {
  * Sanitize our global settings.
  *
  * @since 1.0
+ *
+ * @param (array) $value Our global settings.
  */
 function __secupress_global_settings_callback( $value ) {
 	$value = $value ? $value : array();
@@ -43,7 +44,7 @@ function __secupress_global_settings_callback( $value ) {
 						'user_email' => $value['consumer_email'],
 						'user_key'   => $value['consumer_key'],
 						'action'     => 'create_free_licence',
-					)
+					),
 				),
 			)
 		);
@@ -72,14 +73,17 @@ function __secupress_global_settings_callback( $value ) {
 /* TRACK CHANGES IN CONSUMER EMAIL ============================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
+add_action( 'add_site_option_' . SECUPRESS_SETTINGS_SLUG,    'secupress_updated_consumer_email_option', 20, 2 );
+add_action( 'update_site_option_' . SECUPRESS_SETTINGS_SLUG, 'secupress_updated_consumer_email_option', 20, 3 );
 /**
  * If the consumer email address is changed, trigger a custom event.
  *
  * @since 1.0
+ *
+ * @param (string) $option   Name of the option.
+ * @param (mixed)  $newvalue The new value of the option.
+ * @param (mixed)  $oldvalue The old value of the option.
  */
-add_action( 'add_site_option_' . SECUPRESS_SETTINGS_SLUG,    'secupress_updated_consumer_email_option', 20, 2 );
-add_action( 'update_site_option_' . SECUPRESS_SETTINGS_SLUG, 'secupress_updated_consumer_email_option', 20, 3 );
-
 function secupress_updated_consumer_email_option( $option, $newvalue, $oldvalue = false ) {
 	$old_email = isset( $oldvalue['consumer_email'] ) ? is_email( $oldvalue['consumer_email'] ) : false;
 	$new_email = isset( $newvalue['consumer_email'] ) ? is_email( $newvalue['consumer_email'] ) : false;
@@ -126,6 +130,7 @@ function secupress_updated_consumer_email_option( $option, $newvalue, $oldvalue 
 }
 
 
+add_action( 'pre_delete_site_option_' . SECUPRESS_SETTINGS_SLUG, 'secupress_before_delete_consumer_email_option', 20 );
 /**
  * Before deleting the whole option, test if the consumer email exists.
  * Store the current value and use it later in `secupress_deleted_consumer_email_option()`.
@@ -133,8 +138,6 @@ function secupress_updated_consumer_email_option( $option, $newvalue, $oldvalue 
  *
  * @since 1.0
  */
-add_action( 'pre_delete_site_option_' . SECUPRESS_SETTINGS_SLUG, 'secupress_before_delete_consumer_email_option', 20 );
-
 function secupress_before_delete_consumer_email_option() {
 	$old_email = get_site_option( SECUPRESS_SETTINGS_SLUG );
 	$old_email = isset( $old_email['consumer_email'] ) ? is_email( $old_email['consumer_email'] ) : false;
@@ -142,13 +145,12 @@ function secupress_before_delete_consumer_email_option() {
 }
 
 
+add_action( 'delete_site_option_' . SECUPRESS_SETTINGS_SLUG, 'secupress_deleted_consumer_email_option', 20 );
 /**
  * If the consumer email address is deleted, trigger a custom event.
  *
  * @since 1.0
  */
-add_action( 'delete_site_option_' . SECUPRESS_SETTINGS_SLUG, 'secupress_deleted_consumer_email_option', 20 );
-
 function secupress_deleted_consumer_email_option() {
 	$old_email = secupress_cache_data( 'old_consumer_email' );
 
@@ -171,21 +173,22 @@ function secupress_deleted_consumer_email_option() {
 /* CSS, JS, FAVICON ============================================================================= */
 /*------------------------------------------------------------------------------------------------*/
 
+add_action( 'admin_enqueue_scripts', '__secupress_add_settings_scripts' );
 /**
  * Add some CSS and JS to our settings pages.
  *
  * @since 1.0
+ *
+ * @param (string) $hook_suffix The current admin page.
  */
-add_action( 'admin_enqueue_scripts', '__secupress_add_settings_scripts' );
-
 function __secupress_add_settings_scripts( $hook_suffix ) {
 	$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 	$version = $suffix ? SECUPRESS_VERSION : time();
 
-	// WordPress Common CSS
+	// WordPress Common CSS.
 	wp_enqueue_style( 'secupress-wordpress-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-wordpress' . $suffix . '.css', array(), $version );
 
-	// WordPress Common JS
+	// WordPress Common JS.
 	wp_enqueue_script( 'secupress-wordpress-js', SECUPRESS_ADMIN_JS_URL . 'secupress-wordpress' . $suffix . '.js', array(), $version, true );
 
 	$pages = array(
@@ -199,50 +202,51 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		return;
 	}
 
-	// SecuPress Common CSS
+	// SecuPress Common CSS.
 	wp_enqueue_style( 'secupress-common-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-common' . $suffix . '.css', array(), $version );
 
 	// Global settings page.
 	if ( SECUPRESS_PLUGIN_SLUG . '_page_secupress_settings' === $hook_suffix ) {
-		// CSS
+		// CSS.
 		wp_enqueue_style( 'secupress-settings-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-settings' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 	}
 	// Modules page.
 	elseif ( SECUPRESS_PLUGIN_SLUG . '_page_secupress_modules' === $hook_suffix ) {
-		// CSS
+		// CSS.
 		wp_enqueue_style( 'secupress-modules-css',  SECUPRESS_ADMIN_CSS_URL . 'secupress-modules' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 		wp_enqueue_style( 'wpmedia-css-sweetalert', SECUPRESS_ADMIN_CSS_URL . 'sweetalert' . $suffix . '.css', array(), '1.1.0' );
 
-		// JS
+		// JS.
 		wp_enqueue_script( 'wpmedia-js-sweetalert', SECUPRESS_ADMIN_JS_URL . 'sweetalert' . $suffix . '.js', array(), '1.1.0', true );
 		wp_enqueue_script( 'secupress-modules-js',  SECUPRESS_ADMIN_JS_URL . 'secupress-modules' . $suffix . '.js', array( 'wpmedia-js-sweetalert' ), $version, true );
 
 		wp_localize_script( 'secupress-modules-js', 'l10nmodules', array(
+			// Roles.
 			'selectOneRoleMinimum' => __( 'Select 1 role minimum', 'secupress' ),
-
+			// Generic.
 			'confirmTitle'         => __( 'Are you sure?', 'secupress' ),
 			'confirmCancel'        => _x( 'No, cancel', 'verb', 'secupress' ),
 			'error'                => __( 'Error', 'secupress' ),
 			'unknownError'         => __( 'Unknown error.', 'secupress' ),
 			'delete'               => __( 'Delete', 'secupress' ),
 			'done'                 => __( 'Done!', 'secupress' ),
-
+			// Backups.
 			'confirmDeleteBackups' => __( 'You are about to delete all your backups.', 'secupress' ),
 			'yesDeleteAll'         => __( 'Yes, delete all backups', 'secupress' ),
 			'deleteAllImpossible'  => __( 'Impossible to delete all backups.', 'secupress' ),
 			'deletingAllText'      => __( 'Deleting all backups&hellip;', 'secupress' ),
 			'deletedAllText'       => __( 'All backups deleted', 'secupress' ),
-
+			// Backup.
 			'confirmDeleteBackup'  => __( 'You are about to delete a backup.', 'secupress' ),
 			'yesDeleteOne'         => __( 'Yes, delete this backup', 'secupress' ),
 			'deleteOneImpossible'  => __( 'Impossible to delete this backup.', 'secupress' ),
 			'deletingOneText'      => __( 'Deleting Backup&hellip;', 'secupress' ),
 			'deletedOneText'       => __( 'Backup deleted', 'secupress' ),
-
+			// Backup actions.
 			'backupImpossible'     => __( 'Impossible to backup the database.', 'secupress' ),
 			'backupingText'        => __( 'Backuping&hellip;', 'secupress' ),
 			'backupedText'         => __( 'Backup done', 'secupress' ),
-
+			// Ban IPs.
 			'noBannedIPs'          => __( 'No Banned IPs anymore.', 'secupress' ),
 			'IPnotFound'           => __( 'IP not found.', 'secupress' ),
 			'IPremoved'            => __( 'IP removed.', 'secupress' ),
@@ -253,11 +257,11 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	}
 	// Scanners page.
 	elseif ( 'toplevel_page_secupress_scanners' === $hook_suffix ) {
-		// CSS
+		// CSS.
 		wp_enqueue_style( 'secupress-scanner-css',  SECUPRESS_ADMIN_CSS_URL . 'secupress-scanner' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 		wp_enqueue_style( 'wpmedia-css-sweetalert', SECUPRESS_ADMIN_CSS_URL . 'sweetalert' . $suffix . '.css', array(), '1.1.0' );
 
-		// JS
+		// JS.
 		$depts = array();
 		if ( is_network_admin() || ! is_multisite() ) {
 			$depts  = array( 'secupress-chartjs' );
@@ -310,13 +314,12 @@ function secupress_favicon() {
 /* ADMIN MENU =================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
+add_action( ( is_multisite() ? 'network_' : '' ) . 'admin_menu', 'secupress_create_menus' );
 /**
  * Create the plugin menu and submenus.
  *
  * @since 1.0
  */
-add_action( ( is_multisite() ? 'network_' : '' ) . 'admin_menu', 'secupress_create_menus' );
-
 function secupress_create_menus() {
 	global $menu;
 
@@ -335,10 +338,10 @@ function secupress_create_menus() {
 	$count = sprintf( ' <span class="update-plugins count-%1$d"><span class="update-count">%1$d</span></span>', $count );
 	$cap   = secupress_get_capability();
 
-	// Main menu item
+	// Main menu item.
 	add_menu_page( SECUPRESS_PLUGIN_NAME, SECUPRESS_PLUGIN_NAME, $cap, 'secupress_scanners', '__secupress_scanners', 'dashicons-shield-alt' );
 
-	// Sub-menus
+	// Sub-menus.
 	add_submenu_page( 'secupress_scanners', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ) . $count, $cap, 'secupress_scanners', '__secupress_scanners' );
 	add_submenu_page( 'secupress_scanners', __( 'Modules', 'secupress' ),  __( 'Modules', 'secupress' ),           $cap, 'secupress_modules',  '__secupress_modules' );
 	add_submenu_page( 'secupress_scanners', __( 'Settings' ),              __( 'Settings' ),                       $cap, 'secupress_settings', '__secupress_global_settings' );
@@ -426,29 +429,29 @@ function __secupress_scanners() {
 	$boxes = array(
 		'score' => array(
 			__( 'Your Score', 'secupress' ),
-			'<canvas id="status_chart" width="300" height="300"></canvas>' .
-			'<div class="score_info2">' .
-				'<span class="letter">&ndash;</span>' .
-				'<span class="percent">(0 %)</span>' .
-				'<div class="score_results">' .
-					sprintf( __( '%s: ', 'secupress' ), '<strong>' . __( 'Latest Reports', 'secupress' ) . '</strong>' ) . '<br>' .
-					'<ul>' .
+			'<canvas id="status_chart" width="300" height="300"></canvas>
+			<div class="score_info2">
+				<span class="letter">&ndash;</span>
+				<span class="percent">(0 %)</span>
+				<div class="score_results">' .
+					sprintf( __( '%s: ', 'secupress' ), '<strong>' . __( 'Latest Reports', 'secupress' ) . '</strong>' ) . '<br>
+					<ul>' .
 						implode( "\n", $reports ) .
-					'</ul>' .
-				'</div>' .
-			'</div>' .
-			'<div class="legend">' .
-				'<span class="status-good"><span class="secupress-dashicon dashicons dashicons-shield-alt" aria-hidden="true"></span> ' . __( 'Good', 'secupress' ) . '</span> | ' .
-				'<span class="status-bad"><span class="secupress-dashicon dashicons dashicons-shield-alt" aria-hidden="true"></span> ' . __( 'Bad', 'secupress' ) . '</span> | ' .
-				'<span class="status-warning"><span class="secupress-dashicon dashicons dashicons-shield-alt" aria-hidden="true"></span> ' . __( 'Warning', 'secupress' ) . '</span> | ' .
-				'<span class="status-notscannedyet"><span class="secupress-dashicon dashicons dashicons-shield-alt" aria-hidden="true"></span> ' . __( 'Not scanned yet', 'secupress' ) . '</span>' .
-			'</div>' .
-			'<div id="tweeterA" class="hidden">' .
-				'<hr>' .
-				'<span class="dashicons dashicons-twitter"></span> ' .
-				'<i>' . __( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ) . '</i> ' .
-				'<a class="button button-small" href="https://twitter.com/intent/tweet?via=secupress&amp;url=' . urlencode( esc_url_raw( 'http://secupress.fr&text=' . __( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ) ) ) . '">Tweet &raquo;</a>' .
-			'</div>'
+					'</ul>
+				</div>
+			</div>
+			<div class="legend">
+				<span class="status-good"><span class="secupress-dashicon dashicons dashicons-shield-alt" aria-hidden="true"></span> ' . __( 'Good', 'secupress' ) . '</span> |
+				<span class="status-bad"><span class="secupress-dashicon dashicons dashicons-shield-alt" aria-hidden="true"></span> ' . __( 'Bad', 'secupress' ) . '</span> |
+				<span class="status-warning"><span class="secupress-dashicon dashicons dashicons-shield-alt" aria-hidden="true"></span> ' . __( 'Warning', 'secupress' ) . '</span> |
+				<span class="status-notscannedyet"><span class="secupress-dashicon dashicons dashicons-shield-alt" aria-hidden="true"></span> ' . __( 'Not scanned yet', 'secupress' ) . '</span>
+			</div>
+			<div id="tweeterA" class="hidden">
+				<hr>
+				<span class="dashicons dashicons-twitter"></span>
+				<i>' . __( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ) . '</i>
+				<a class="button button-small" href="https://twitter.com/intent/tweet?via=secupress&amp;url=' . urlencode( esc_url_raw( 'http://secupress.fr&text=' . __( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ) ) ) . '">Tweet &raquo;</a>
+			</div>',
 		),
 	);
 	?>
@@ -458,7 +461,7 @@ function __secupress_scanners() {
 		<div class="secupress-wrapper">
 			<?php
 			foreach ( $boxes as $id => $box ) {
-				secupress_sidebox( array( 'id' => $id, 'title' => $box[0], 'content' => $box[1], 'context' => 'top' ) );
+				secupress_sidebox( array( 'id' => $id, 'title' => $box[0], 'content' => $box[1] ) );
 			}
 			?>
 			<button class="button button-primary button-secupress-scan hide-if-no-js" type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ); ?>">
@@ -505,6 +508,8 @@ function __secupress_scanners() {
  * Print the settings page title.
  *
  * @since 1.0
+ *
+ * @param (string) $title The title.
  */
 function secupress_admin_heading( $title = '' ) {
 	$heading_tag = secupress_wp_version_is( '4.3-alpha' ) ? 'h1' : 'h2';
@@ -512,6 +517,11 @@ function secupress_admin_heading( $title = '' ) {
 }
 
 
+/**
+ * Print the scanners page content.
+ *
+ * @since 1.0
+ */
 function secupress_scanners_template() {
 	secupress_require_class( 'scan' );
 
@@ -519,7 +529,7 @@ function secupress_scanners_template() {
 	$heading_tag  = secupress_wp_version_is( '4.4-alpha' ) ? 'h2' : 'h3';
 	// Allowed tags in "Learn more" contents.
 	$allowed_tags = array(
-		'a'      => array( 'href' => array(),'title' => array(), 'target' => array(), ),
+		'a'      => array( 'href' => array(),'title' => array(), 'target' => array() ),
 		'abbr'   => array( 'title' => array() ),
 		'code'   => array(),
 		'em'     => array(),
@@ -653,12 +663,12 @@ function secupress_scanners_template() {
 						$css_class    = ' type-' . sanitize_key( $class_name::$type );
 
 						if ( $is_subsite ) {
-							$css_class .= $i % 2 === 0 ? '' : ' alternate';
+							$css_class .= 0 === $i % 2 ? '' : ' alternate';
 						} else {
-							$css_class .= $i % 2 === 0 ? ' alternate-2' : ' alternate-1';
+							$css_class .= 0 === $i % 2 ? ' alternate-2' : ' alternate-1';
 						}
 
-						// Scan
+						// Scan.
 						$status_text  = ! empty( $scanners[ $option_name ]['status'] ) ? secupress_status( $scanners[ $option_name ]['status'] )    : secupress_status( 'notscannedyet' );
 						$status_class = ! empty( $scanners[ $option_name ]['status'] ) ? sanitize_html_class( $scanners[ $option_name ]['status'] ) : 'notscannedyet';
 						$scan_nonce   = 'secupress_scanner_' . $class_name_part . ( $is_subsite ? '-' . $site_id : '' );
@@ -673,13 +683,13 @@ function secupress_scanners_template() {
 							$scan_message = '&#175;';
 						}
 
-						// Fix
-						$fix_status_text  = ! empty( $fixes[ $option_name ]['status'] ) && $fixes[ $option_name ]['status'] !== 'good' ? secupress_status( $fixes[ $option_name ]['status'] ) : '&#160;';
+						// Fix.
+						$fix_status_text  = ! empty( $fixes[ $option_name ]['status'] ) && 'good' !== $fixes[ $option_name ]['status'] ? secupress_status( $fixes[ $option_name ]['status'] ) : '&#160;';
 						$fix_css_class    = ! empty( $fixes[ $option_name ]['status'] ) ? ' status-' . sanitize_html_class( $fixes[ $option_name ]['status'] ) : ' status-cantfix';
 						$fix_nonce        = 'secupress_fixit_' . $class_name_part . ( $is_subsite ? '-' . $site_id : '' );
 						$fix_nonce        = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $class_name_part . '&_wp_http_referer=' . $referer . ( $is_subsite ? '&for-current-site=1&site=' . $site_id : '' ) ), $fix_nonce );
 
-						if ( ! empty( $fixes[ $option_name ]['msgs'] ) && $status_class !== 'good' ) {
+						if ( ! empty( $fixes[ $option_name ]['msgs'] ) && 'good' !== $status_class ) {
 							$fix_message = secupress_format_message( $fixes[ $option_name ]['msgs'], $class_name_part );
 						} else {
 							$fix_message = '';
@@ -718,10 +728,10 @@ function secupress_scanners_template() {
 											</span>
 										</div>
 										<?php
-									} elseif ( 'pro' === $current_test::$fixable ) { //// # ?>
+									} elseif ( 'pro' === $current_test::$fixable ) { // //// #. ?>
 										<button type="button" class="button button-secondary button-small secupress-go-pro"><?php _e( 'Pro Upgrade', 'secupress' ); ?></button>
 										<?php
-									} else { // Really not fixable by the plugin
+									} else { // Really not fixable by the plugin.
 										echo '<em>(';
 										_e( 'Cannot be fixed automatically.', 'secupress' );
 										echo '</em>)';
@@ -785,10 +795,19 @@ function secupress_scanners_template() {
 }
 
 
+/**
+ * Get a scan or fix status, formatted with icon and human readable text.
+ *
+ * @since 1.0
+ *
+ * @param (string) $status The status code.
+ *
+ * @return (string) Formatted status.
+ */
 function secupress_status( $status ) {
 	$template = '<span class="dashicons dashicons-shield-alt secupress-dashicon" aria-hidden="true"></span> %s';
 
-	switch ( $status ):
+	switch ( $status ) :
 		case 'bad':
 			return wp_sprintf( $template, __( 'Bad', 'secupress' ) );
 		case 'good':
@@ -803,17 +822,22 @@ function secupress_status( $status ) {
 }
 
 
+/**
+ * Print a box with title.
+ *
+ * @since 1.0
+ *
+ * @param (array) $args An array containing the box title, content and id.
+ */
 function secupress_sidebox( $args ) {
-	$defaults = array(
+	$args = wp_parse_args( $args, array(
 		'id'      => '',
 		'title'   => 'Missing',
 		'content' => 'Missing',
-		'context' => 'side', // side or top
-	);
-	$args    = wp_parse_args( $args, $defaults );
-	$return  = '<div class="secupress-postbox postbox" id="' . $args['id'] . '">';
-	$return .= '<h3 class="hndle"><span><b>' . $args['title'] . '</b></span></h3>';
-	$return .= '<div class="inside">' . $args['content'] . '</div></div>';
+	) );
 
-	echo $return;
+	echo '<div class="secupress-postbox postbox" id="' . $args['id'] . '">';
+		echo '<h3 class="hndle"><span><b>' . $args['title'] . '</b></span></h3>';
+		echo'<div class="inside">' . $args['content'] . '</div>';
+	echo "</div>\n";
 }
