@@ -33,11 +33,11 @@
 
 @font-face {
 	font-family: 'secupress';
-	src:url('../fonts/secupress.eot?bdf7js');
-	src:url('../fonts/secupress.eot?bdf7js#iefix') format('embedded-opentype'),
-		url('../fonts/secupress.ttf?bdf7js') format('truetype'),
-		url('../fonts/secupress.woff?bdf7js') format('woff'),
-		url('../fonts/secupress.svg?bdf7js#secupress') format('svg');
+	src:url('../fonts/secupress.eot?8gy4qc');
+	src:url('../fonts/secupress.eot?8gy4qc#iefix') format('embedded-opentype'),
+		url('../fonts/secupress.ttf?8gy4qc') format('truetype'),
+		url('../fonts/secupress.woff?8gy4qc') format('woff'),
+		url('../fonts/secupress.svg?8gy4qc#secupress') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -64,6 +64,7 @@
 .icon-radar:before { content: "\e900"; }
 .icon-info:before { content: "\e901"; }
 .icon-ask:before { content: "\e902"; }
+.icon-secupress-simple:before { content: "\e907"; }
 .icon-secupress:before { content: "\e903"; }
 .icon-star:before { content: "\f005"; }
 .icon-star-empty:before { content: "\f006"; }
@@ -277,6 +278,12 @@
 .secupress-p0.secupress-p0 {
 	padding: 0;
 }
+.secupress-pt0.secupress-pt0 {
+	padding-top: 0;
+}
+.secupress-pt1p.secupress-pt1p {
+	padding-top: 1px;
+}
 .secupress-pb1.secupress-pb1 {
 	padding-bottom: 1em;
 }
@@ -447,18 +454,20 @@
 /* Buttons sizes */
 .secupress-button-mini.secupress-button-mini {
 	font-size: 11px;
-	padding: 3px 5px;
+	padding: 2px 10px 3px;
+	letter-spacing: 0.05em;
 }
 .secupress-button-mini.secupress-button-mini .icon i:before,
 .secupress-button-mini.secupress-button-mini .icon i {
+	display: inline-block;
 	font-size: 15px;
 	height: 15px;
-	line-height: 1;
+	line-height: 0.8;
 	width: 15px;
-	vertical-align: -1.5px;
+	vertical-align: -1px;
 }
 .secupress-button-mini.secupress-button-mini .icon {
-	margin: 0 1px 0 0;
+	margin: 0 3px 0 0;
 	padding: 0;
 }
 .secupress-button-mini.secupress-button-mini .icon:after {
@@ -487,6 +496,23 @@
 }
 .secupress-actions-line [class*="secupress-button"] {
 	margin: 0 10px;
+}
+
+/* Pro button with right icon */
+.secupress-go-pro.secupress-go-pro {
+	overflow: hidden;
+	position: relative;
+	padding: 4px 40px 4px 10px;
+	background: #26B3A9;
+}
+.secupress-go-pro.secupress-go-pro:hover,
+.secupress-go-pro.secupress-go-pro:focus {
+	background: #2bcdc1;
+}
+.secupress-go-pro i {
+	position: absolute;
+	right: -10px; top: -7px;
+	font-size: 38px;
 }
 
 /* Link + icon */
