@@ -604,9 +604,6 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 	 * @since 1.0
 	 */
 	final protected function separate_deletable_from_deactivable( $plugins ) {
-		static $active_subsites_plugins;
-		static $subsite_plugins;
-
 		if ( ! $plugins ) {
 			return array(
 				'to_delete'     => array(),
@@ -617,20 +614,18 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 
 		// Network: plugins activated in sub-sites must be deactivated in each sub-site first.
 		if ( $this->is_network_admin() ) {
-			if ( ! isset( $active_subsites_plugins ) ) {
-				$active_subsites_plugins_tmp = get_site_option( 'secupress_active_plugins' );
-				$active_subsites_plugins     = array();
+			$active_subsites_plugins_tmp = get_site_option( 'secupress_active_plugins' );
+			$active_subsites_plugins     = array();
 
-				if ( $active_subsites_plugins_tmp && is_array( $active_subsites_plugins_tmp ) ) {
-					foreach ( $active_subsites_plugins_tmp as $site_id => $active_subsite_plugins ) {
-						$active_subsites_plugins = array_merge( $active_subsites_plugins, $active_subsite_plugins );
-					}
+			if ( $active_subsites_plugins_tmp && is_array( $active_subsites_plugins_tmp ) ) {
+				foreach ( $active_subsites_plugins_tmp as $site_id => $active_subsite_plugins ) {
+					$active_subsites_plugins = array_merge( $active_subsites_plugins, $active_subsite_plugins );
 				}
-
-				// Let's act like Hello Dolly is not enabled in any sub-site, so we won't need Administrators aproval and we'll be able to delete it directly.
-				unset( $active_subsites_plugins_tmp, $active_subsites_plugins['hello.php'] );
-				$active_subsites_plugins = array_diff_key( $active_subsites_plugins, get_site_option( 'active_sitewide_plugins' ) );
 			}
+
+			// Let's act like Hello Dolly is not enabled in any sub-site, so we won't need Administrators aproval and we'll be able to delete it directly.
+			unset( $active_subsites_plugins_tmp, $active_subsites_plugins['hello.php'] );
+			$active_subsites_plugins = array_diff_key( $active_subsites_plugins, get_site_option( 'active_sitewide_plugins' ) );
 
 			$out = array(
 				// Plugins that are network activated or not activated in any site can be deleted.
@@ -641,11 +636,9 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements iSecuPres
 		}
 		// Sub-site: limit to plugins activated in this sub-site.
 		elseif ( $this->is_for_current_site() ) {
-			if ( ! isset( $subsite_plugins ) ) {
-				$site_id         = get_current_blog_id();
-				$subsite_plugins = get_site_option( 'secupress_active_plugins' );
-				$subsite_plugins = ! empty( $subsite_plugins[ $site_id ] ) ? $subsite_plugins[ $site_id ] : array();
-			}
+			$site_id         = get_current_blog_id();
+			$subsite_plugins = get_site_option( 'secupress_active_plugins' );
+			$subsite_plugins = ! empty( $subsite_plugins[ $site_id ] ) ? $subsite_plugins[ $site_id ] : array();
 
 			$out = array(
 				// In a sub-site we don't delete any plugin.

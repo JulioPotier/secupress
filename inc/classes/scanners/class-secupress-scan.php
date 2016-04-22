@@ -544,14 +544,20 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 
 	final public function get_fix_action_fields( $fix_actions = false, $echo = true ) {
 		$fix_actions = $fix_actions ? $fix_actions : $this->fix_actions;
-		$output  = "\n";
+		$nonce       = 'secupress_manual_fixit_' . $this->class_name_part;
+		$output      = "\n";
+
+		if ( $this->is_for_current_site() ) {
+			$nonce  .= '-' . get_current_blog_id();
+			$output .= '<input type="hidden" name="for-current-site" value="1" />' . "\n";
+			$output .= '<input type="hidden" name="site" value="' . get_current_blog_id() . '" />' . "\n";
+		}
+
 		$output .= '<input type="hidden" name="action" value="secupress_manual_fixit" />' . "\n";
 		$output .= '<input type="hidden" name="test" value="' . $this->class_name_part . '" />' . "\n";
 		$output .= '<input type="hidden" name="test-parts" value="' . implode( ',', $fix_actions ) . '" />' . "\n";
-		$output .= wp_nonce_field( 'secupress_manual_fixit-' . $this->class_name_part, 'secupress_manual_fixit-nonce', false, false ) . "\n";
-		if ( $this->is_for_current_site() ) {
-			$output .= '<input type="hidden" name="for-current-site" value="1" />' . "\n";
-		}
+		$output .= '<input type="hidden" name="_wpnonce" value="' . wp_create_nonce( $nonce ) . '" />' . "\n";
+		$output .= '<input type="hidden" name="_wp_http_referer" value="'. esc_attr( wp_unslash( $_SERVER['REQUEST_URI'] ) ) . '#' . $this->class_name_part . '" />' . "\n";
 
 		if ( ! $echo ) {
 			return $output;

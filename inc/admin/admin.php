@@ -23,14 +23,15 @@ function __secupress_scanit_action_callback() {
 
 	$test_name        = esc_attr( $_GET['test'] );
 	$for_current_site = ! empty( $_GET['for-current-site'] );
+	$site_id          = $for_current_site && ! empty( $_GET['site'] ) ? '-' . absint( $_GET['site'] ) : '';
 
 	secupress_check_user_capability( $for_current_site );
-	secupress_check_admin_referer( 'secupress_scanner_' . $test_name );
+	secupress_check_admin_referer( 'secupress_scanner_' . $test_name . $site_id );
 
 	$doing_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
 	$response   = secupress_scanit( $test_name, $doing_ajax, $for_current_site );
 
-	secupress_admin_send_response_or_redirect( $response, 'scanners#' . $test_name );
+	secupress_admin_send_response_or_redirect( $response );
 }
 
 
@@ -60,12 +61,12 @@ function secupress_scanit( $test_name, $format_response = false, $for_current_si
 
 	if ( class_exists( $classname ) ) {
 		ob_start();
-			@set_time_limit( 0 );
-			$response = $classname::get_instance()->for_current_site( $for_current_site )->scan();
-			/*
-			 * $response is an array that MUST contain "status" and MUST contain "msgs".
-			 */
-		ob_end_flush();
+		@set_time_limit( 0 );
+		$response = $classname::get_instance()->for_current_site( $for_current_site )->scan();
+		/*
+		 * $response is an array that MUST contain "status" and MUST contain "msgs".
+		 */
+		ob_end_clean();
 	}
 
 	if ( $response && $format_response ) {
@@ -98,9 +99,10 @@ function __secupress_fixit_action_callback() {
 
 	$test_name        = esc_attr( $_GET['test'] );
 	$for_current_site = ! empty( $_GET['for-current-site'] );
+	$site_id          = $for_current_site && ! empty( $_GET['site'] ) ? '-' . absint( $_GET['site'] ) : '';
 
 	secupress_check_user_capability( $for_current_site );
-	secupress_check_admin_referer( 'secupress_fixit_' . $test_name );
+	secupress_check_admin_referer( 'secupress_fixit_' . $test_name . $site_id );
 
 	$doing_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
 	$response   = secupress_fixit( $test_name, $doing_ajax, $for_current_site );
@@ -110,7 +112,7 @@ function __secupress_fixit_action_callback() {
 		secupress_scanit( $test_name, false, $for_current_site );
 	}
 
-	secupress_admin_send_response_or_redirect( $response, 'scanners#' . $test_name );
+	secupress_admin_send_response_or_redirect( $response );
 }
 
 
@@ -140,12 +142,12 @@ function secupress_fixit( $test_name, $format_response = false, $for_current_sit
 
 	if ( class_exists( $classname ) ) {
 		ob_start();
-			@set_time_limit( 0 );
-			$response = $classname::get_instance()->for_current_site( $for_current_site )->fix();
-			/*
-			 * $response is an array that MUST contain "status" and MUST contain "msgs".
-			 */
-		ob_end_flush();
+		@set_time_limit( 0 );
+		$response = $classname::get_instance()->for_current_site( $for_current_site )->fix();
+		/*
+		 * $response is an array that MUST contain "status" and MUST contain "msgs".
+		 */
+		ob_end_clean();
 	}
 
 	if ( $response && $format_response ) {
@@ -178,9 +180,10 @@ function __secupress_manual_fixit_action_callback() {
 
 	$test_name        = esc_attr( $_POST['test'] );
 	$for_current_site = ! empty( $_POST['for-current-site'] );
+	$site_id          = $for_current_site && ! empty( $_POST['site'] ) ? '-' . absint( $_POST['site'] ) : '';
 
 	secupress_check_user_capability( $for_current_site );
-	secupress_check_admin_referer( 'secupress_manual_fixit-' . $test_name, 'secupress_manual_fixit-nonce' );
+	secupress_check_admin_referer( 'secupress_manual_fixit_' . $test_name . $site_id );
 
 	$doing_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
 	$response   = secupress_manual_fixit( $test_name, $doing_ajax, $for_current_site );
@@ -190,7 +193,7 @@ function __secupress_manual_fixit_action_callback() {
 		secupress_scanit( $test_name, false, $for_current_site );
 	}
 
-	secupress_admin_send_response_or_redirect( $response, 'scanners#' . $test_name );
+	secupress_admin_send_response_or_redirect( $response );
 }
 
 
@@ -220,12 +223,12 @@ function secupress_manual_fixit( $test_name, $format_response = false, $for_curr
 
 	if ( class_exists( $classname ) ) {
 		ob_start();
-			@set_time_limit( 0 );
-			$response = $classname::get_instance()->for_current_site( $for_current_site )->manual_fix();
-			/*
-			 * $response is an array that MUST contain "status" and MUST contain "msgs".
-			 */
-		ob_end_flush();
+		@set_time_limit( 0 );
+		$response = $classname::get_instance()->for_current_site( $for_current_site )->manual_fix();
+		/*
+		 * $response is an array that MUST contain "status" and MUST contain "msgs".
+		 */
+		ob_end_clean();
 	}
 
 	if ( $response && $format_response ) {

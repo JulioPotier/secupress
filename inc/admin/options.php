@@ -649,6 +649,7 @@ function secupress_scanners_template() {
 						++$i;
 						$class_name   = 'SecuPress_Scan_' . $class_name_part;
 						$current_test = $class_name::get_instance();
+						$referer      = urlencode( esc_url_raw( self_admin_url( 'admin.php?page=secupress_scanners' . ( $is_subsite ? '' : '#' . $class_name_part ) ) ) );
 						$css_class    = ' type-' . sanitize_key( $class_name::$type );
 
 						if ( $is_subsite ) {
@@ -660,6 +661,8 @@ function secupress_scanners_template() {
 						// Scan
 						$status_text  = ! empty( $scanners[ $option_name ]['status'] ) ? secupress_status( $scanners[ $option_name ]['status'] )    : secupress_status( 'notscannedyet' );
 						$status_class = ! empty( $scanners[ $option_name ]['status'] ) ? sanitize_html_class( $scanners[ $option_name ]['status'] ) : 'notscannedyet';
+						$scan_nonce   = 'secupress_scanner_' . $class_name_part . ( $is_subsite ? '-' . $site_id : '' );
+						$scan_nonce   = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $class_name_part . '&_wp_http_referer=' . $referer . ( $is_subsite ? '&for-current-site=1&site=' . $site_id : '' ) ), $scan_nonce );
 						$css_class   .= ' status-' . $status_class;
 						$css_class   .= isset( $autoscans[ $class_name_part ] ) ? ' autoscan' : '';
 						$css_class   .= false === $current_test::$fixable || 'pro' === $current_test::$fixable && ! secupress_is_pro() ? ' not-fixable' : '';
@@ -673,6 +676,8 @@ function secupress_scanners_template() {
 						// Fix
 						$fix_status_text  = ! empty( $fixes[ $option_name ]['status'] ) && $fixes[ $option_name ]['status'] !== 'good' ? secupress_status( $fixes[ $option_name ]['status'] ) : '&#160;';
 						$fix_css_class    = ! empty( $fixes[ $option_name ]['status'] ) ? ' status-' . sanitize_html_class( $fixes[ $option_name ]['status'] ) : ' status-cantfix';
+						$fix_nonce        = 'secupress_fixit_' . $class_name_part . ( $is_subsite ? '-' . $site_id : '' );
+						$fix_nonce        = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $class_name_part . '&_wp_http_referer=' . $referer . ( $is_subsite ? '&for-current-site=1&site=' . $site_id : '' ) ), $fix_nonce );
 
 						if ( ! empty( $fixes[ $option_name ]['msgs'] ) && $status_class !== 'good' ) {
 							$fix_message = secupress_format_message( $fixes[ $option_name ]['msgs'], $class_name_part );
@@ -693,7 +698,7 @@ function secupress_scanners_template() {
 								<div class="secupress-status"><?php echo $status_text; ?></div>
 
 								<div class="secupress-row-actions">
-									<a class="button button-secondary button-small secupress-scanit" href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $class_name_part . ( $is_subsite ? '&for-current-site=1' : '' ) ), 'secupress_scanner_' . $class_name_part ) ); ?>"><?php _ex( 'Scan', 'scan a test', 'secupress' ); ?></a>
+									<a class="button button-secondary button-small secupress-scanit" href="<?php echo esc_url( $scan_nonce ); ?>"><?php _ex( 'Scan', 'scan a test', 'secupress' ); ?></a>
 								</div>
 							</td>
 							<td class="secupress-scan-result">
@@ -706,7 +711,7 @@ function secupress_scanners_template() {
 									<?php
 									if ( true === $current_test::$fixable || 'pro' === $current_test::$fixable && secupress_is_pro() ) {
 										?>
-										<a class="button button-secondary button-small secupress-fixit<?php echo $current_test::$delayed_fix ? ' delayed-fix' : '' ?>" href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $class_name_part ), 'secupress_fixit_' . $class_name_part . ( $is_subsite ? '&for-current-site=1' : '' ) ) ); ?>"><?php _e( 'Fix it!', 'secupress' ); ?></a>
+										<a class="button button-secondary button-small secupress-fixit<?php echo $current_test::$delayed_fix ? ' delayed-fix' : '' ?>" href="<?php echo esc_url( $fix_nonce ); ?>"><?php _e( 'Fix it!', 'secupress' ); ?></a>
 										<div class="secupress-row-actions">
 											<span class="hide-if-no-js">
 												<button type="button" class="secupress-details-fix link-like" data-test="<?php echo $class_name_part; ?>" title="<?php esc_attr_e( 'Get fix details', 'secupress' ); ?>"><?php _e( 'Learn more', 'secupress' ); ?></button>
@@ -742,7 +747,7 @@ function secupress_scanners_template() {
 											<?php
 											echo implode( '', $fix_actions );
 											submit_button( __( 'Fix it!', 'secupress' ) );
-											$current_test->get_fix_action_fields( array_keys( $fix_actions ) );
+											$current_test->for_current_site( $is_subsite )->get_fix_action_fields( array_keys( $fix_actions ) );
 											?>
 										</form>
 									</td>
