@@ -135,10 +135,12 @@
 
 .scanning .secupress-row-actions,
 .fixing .secupress-row-actions,
-.status-good .secupress-fix-status .secupress-row-actions,
-.status-warning .secupress-fix-status .secupress-row-actions,
-.status-notscannedyet .secupress-fix-status .secupress-row-actions {
+.status-good .secupress-fix-status-actions,
+.status-warning .secupress-fix-status-actions,
+.status-notscannedyet .secupress-fix-status-actions {
 	display: none;
+	visibility: hidden;
+	speak: none;
 }
 
 .secupress-reports-list {
@@ -159,7 +161,7 @@
 
 .secupress-prio-title {
 	padding: 5px 10px;
-	margin: 0 0 1em;
+	margin: 3.5em 0 1em;
 	background: #ECF0F1;
 	color: #5A626F;
 	font-weight: bold;
@@ -190,38 +192,31 @@
 .secupress-result-list {
 	margin: 0;
 }
-.secupress-table-prio-high .alternate-1 {
-	background-color: #FDD;
-}
-.secupress-table-prio-high .alternate-2 {
-	background-color: #FEE;
-}
-.secupress-table-prio-medium .alternate-1 {
-	background-color: #FFFFDF;
-}
-.secupress-table-prio-medium .alternate-2 {
-	background-color: #FFFFED;
-}
-.secupress-table-prio-low .alternate-1 {
-	background-color: #E1F4FD;
-}
-.secupress-table-prio-low .alternate-2 {
-	background-color: #EFF9FD;
-}
-.secupress-item-all.status-good.alternate-1 {
-	background-color: #E5FFDD;
-}
-.secupress-item-all.status-good.alternate-2 {
-	background-color: #EFFFEE;
-}
+
 .secupress-item-all.scanning,
 .secupress-item-all.fixing {
-	background-image: repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(200, 200, 200, 0.1) 10px, rgba(200, 200, 200, 0.1) 20px);
+
+
+	/*
+	 *
+	 * TODO: add styles for scanning or fixing states
+	 * 
+	 */
+
+
 }
-.form-table th {
-	padding: 10px 0 10px 2px;
-	line-height: 1em;
+.secupress-item-all.scanning .icon-refresh {
+	animation: rotation 2s infinite linear;
 }
+@keyframes rotation {
+	0 {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
 .secupress-scan-result ul,
 .secupress-fix-result ul {
 	margin: 0;
@@ -241,16 +236,6 @@
 	padding-bottom: 0;
 	margin-bottom: 0;
 	text-align: left;
-}
-.secupress-postbox {
-	display: inline-block;
-	width: 60%;
-	margin: 0 10px 10px 0;
-	vertical-align: top;
-}
-.secupress-postbox .hndle {
-	padding: 0 0 5px 10px;
-	line-height: 1em;
 }
 
 .secupress-chart,
@@ -296,7 +281,8 @@
 	margin: -6px 0 0 -28px;
 }
 .secupress-score .lA,
-.secupress-reports-list .lA {
+.secupress-reports-list .lA,
+.dashicons-arrow-up-alt2 {
 	color: #2BCDC1;
 }
 .secupress-score .lB,
@@ -304,7 +290,8 @@
 	color: #F1C40F;
 }
 .secupress-score .lC,
-.secupress-reports-list .lC {
+.secupress-reports-list .lC,
+.dashicons-arrow-down-alt2 {
 	color: #F7AB13;
 }
 .secupress-score .lD,
@@ -323,12 +310,6 @@
 .mini {
 	font-size: 12px;
 	line-height: 1.7em;
-}
-.dashicons-arrow-up-alt2 {
-	color: #88BA0E;
-}
-.dashicons-arrow-down-alt2 {
-	color: #D73838;
 }
 /**/
 .link-like {
@@ -353,26 +334,111 @@
 .link-like:focus {
 	color: #00A0D2;
 }
-/**/
-.widefat .secupress-check-column {
-	width: 2.2em;
-	padding: 6px 0 25px;
-	vertical-align: top;
+
+/**
+ * === Sanned Items
+ */
+[id="secupress-tests"] .secupress-item-all {
+	position: relative;
+	padding-left: 10px;
+	margin: 1.5em 0;
+	border: 1px solid #ECF0F1;
+	background: #FFF;
+	border-radius: 3px;
+	box-shadow: 0 2px 0 #ECF0F1;
 }
-#secupress-tests thead .secupress-check-column,
-#secupress-tests tfoot .secupress-check-column {
-	padding: 0 0 0 3px;
+[id="secupress-tests"] .secupress-item-all:after {
+	content: "";
+	position: absolute;
+	top: 0; bottom: 0; left: 0;
+	width: 10px;
+	background: #5a626f;
+	border-radius: 3px 2px 2px 3px;
+}
+.secupress-item-all.status-bad:after {
+	background: #F2295E;
+}
+.secupress-item-all.status-good:after {
+	background: #2BCDC1;
+}
+.secupress-item-all.status-warning:after {
+	background: #F1C40F;
+}
+.secupress-item-header {
+	padding: 5px 25px 5px 15px;
+}
+.secupress-item-title {
+	font-size: 16px;
+	margin: 5px 0 0 0;
+}
+
+/* Row under item title */
+.secupress-row-actions .link-like {
+	color: #9B9B9B;
+	font-size: 11px;
+	font-weight: bold;
+	font-style: italic;
+	letter-spacing: 0.05em;
+	text-transform: lowercase;
+}
+.secupress-row-actions .link-like > * {
+	display: inline-block;
 	vertical-align: middle;
 }
-#secupress-tests thead input,
-#secupress-tests tfoot input {
-	margin-top: 2px;
+.secupress-row-actions .link-like .icon {
+	line-height: 0.8;
 }
-/**/
-.secupress-scan-result,
-.secupress-fix-result {
-	width: 25%;
+.secupress-row-actions .link-like .icon i {
+	font-size: 1.2em;
+	margin-right: 2px;
 }
+
+/* Col with Fix-it button */
+.secupress-item-actions-fix,
+.secupress-scan-actions,
+.secupress-fix-result-retryfix {
+	padding-right: 15px;
+	text-align: right;
+	-webkit-flex-basis: 270px;
+	-ms-flex-preferred-size: 270px;
+	flex-basis: 270px;
+}
+
+.secupress-item-actions-fix {
+	padding-top: 10px;
+}
+
+/* Scan result and actions */
+.secupress-scan-result-n-actions {
+	border-top: 1px solid #ECF0F1;
+	margin: 8px 0 0 15px;
+	padding: 8px 0;
+	color: #5A626F;
+}
+
+.secupress-item-all code {
+	padding: 0px 3px 0px;
+	background: none;
+	color: #393e46;
+}
+
+.secupress-fix-result-message,
+.secupress-fix-result-actions {
+	padding: 10px 15px;
+}
+
+.secupress-fix-result-actions p {
+	margin: 0;
+}
+
+.secupress-ask-support {
+	opacity: .5;
+}
+.secupress-ask-support:focus,
+.secupress-ask-support:hover {
+	opacity: .9;
+}
+
 /**/
 .sweet-alert .sa-error-container .icon {
 	margin-right: 10px;

@@ -589,7 +589,7 @@ function __secupress_scanners() {
 					</div>
 				</div>
 			</div>
-			<div class="secupress-section-light secupress-bordered-lat secupress-lined-b">
+			<div class="secupress-section-light secupress-bordered-lat secupress-lined-b secupress-pt1p">
 				<?php secupress_main_scan(); ?>
 			</div>
 
@@ -722,7 +722,7 @@ function secupress_main_scan() {
 					}
 
 					// Fix
-					$fix_status_text  = ! empty( $fixes[ $option_name ]['status'] ) && $fixes[ $option_name ]['status'] !== 'good' ? secupress_status( $fixes[ $option_name ]['status'] ) : '&#160;';
+					$fix_status_text  = ! empty( $fixes[ $option_name ]['status'] ) && $fixes[ $option_name ]['status'] !== 'good' ? secupress_status( $fixes[ $option_name ]['status'] ) : '';
 					$fix_css_class    = ! empty( $fixes[ $option_name ]['status'] ) ? ' status-' . sanitize_html_class( $fixes[ $option_name ]['status'] ) : ' status-cantfix';
 
 					if ( ! empty( $fixes[ $option_name ]['msgs'] ) && $status_class !== 'good' ) {
@@ -732,56 +732,116 @@ function secupress_main_scan() {
 					<div id="<?php echo $class_name_part; ?>" class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> type-all status-all<?php echo $css_class; ?>">
 						
 						<div class="secupress-flex secupress-flex-top secupress-flex-spaced">
-							<div class="secupress-item-title">
-								<?php echo $class_name::$title; ?>
+							<div class="secupress-item-header">
+								<p class="secupress-item-title"><?php echo $class_name::$title; ?></p>
 								<div class="secupress-row-actions">
 									<span class="hide-if-no-js">
-										<button type="button" class="secupress-details link-like" data-test="<?php echo $class_name_part; ?>" title="<?php esc_attr_e( 'Get details', 'secupress' ); ?>"><?php _e( 'Learn more', 'secupress' ); ?></button>
+										<button type="button" class="secupress-details link-like" data-test="<?php echo $class_name_part; ?>" title="<?php esc_attr_e( 'Get details', 'secupress' ); ?>">
+											<span class="icon">
+												<i class="icon-info-disk" aria-hidden="true"></i>
+											</span>
+											<span class="text">
+												<?php _e( 'Learn more', 'secupress' ); ?>
+											</span>
+										</button>
 									</span>
 								</div>
-							</div><!-- .secupress-item-title -->
+							</div><!-- .secupress-item-header -->
 							<div class="secupress-item-actions-fix">
 								<div class="secupress-fix-status-text"><?php echo $fix_status_text; ?></div>
+
+								<div class="secupress-fix-status-actions">
 								<?php
 								if ( true === $current_test::$fixable ) {
 									?>
-									<a class="button button-secondary button-small secupress-fixit<?php echo $current_test::$delayed_fix ? ' delayed-fix' : '' ?>" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $class_name_part ), 'secupress_fixit_' . $class_name_part ); ?>"><?php _e( 'Fix it!', 'secupress' ); ?></a>
+									<a class="secupress-button-primary secupress-button-mini secupress-fixit<?php echo $current_test::$delayed_fix ? ' delayed-fix' : '' ?>" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $class_name_part ), 'secupress_fixit_' . $class_name_part ); ?>">
+										<span class="icon">
+											<i class="icon-shield" aria-hidden="true"></i>
+										</span>
+										<span class="text">
+											<?php _e( 'Fix it', 'secupress' ); ?>
+										</span>
+									</a>
 									<div class="secupress-row-actions">
 										<span class="hide-if-no-js">
-											<button type="button" class="secupress-details-fix link-like" data-test="<?php echo $class_name_part; ?>" title="<?php esc_attr_e( 'Get fix details', 'secupress' ); ?>"><?php _e( 'Learn more', 'secupress' ); ?></button>
+											<button type="button" class="secupress-details-fix link-like" data-test="<?php echo $class_name_part; ?>" title="<?php esc_attr_e( 'Get fix details', 'secupress' ); ?>">
+													<?php _e( 'How does it work?', 'secupress' ); ?>
+											</button>
 										</span>
 									</div>
 									<?php
 								} elseif ( 'pro' === $current_test::$fixable && ! secupress_is_pro() ) { /* //// $needs-pro */
 									?>
-									<button type="button" class="button button-secondary button-small secupress-go-pro"><?php _e( 'Pro Upgrade', 'secupress' ); ?></button>
+									<button type="button" class="secupress-button-primary secupress-button-mini secupress-go-pro">
+										<?php esc_html_e( 'Fix it with Pro', 'secupress' ); ?>
+										<i class="icon-secupress-simple" aria-hidden="true"></i>
+									</button>
 									<?php
 								} else { // Really not fixable by the plugin
-									printf( '<em>(%s)</em>', __( 'Cannot be fixed automatically.', 'secupress' ) );
+									printf( '<em>(%s)</em>', esc_html__( 'Cannot be fixed automatically.', 'secupress' ) );
 								}
 								?>
+								</div><!-- .secupress-fix-status-actions -->
 							</div>
 						</div><!-- .secupress-flex -->
 
-						<div class="secupress-flex">
+						<div class="secupress-flex secupress-flex-spaced secupress-scan-result-n-actions">
 							<div class="secupress-scan-result">
 								<div class="secupress-scan-message">
 									<?php echo $scan_message; ?>
 								</div>
 							</div>
 							<div class="secupress-scan-actions">
-								<div class="secupress-status-text"><?php echo $status_text; ?></div>
-								<p><a class="button button-secondary button-small secupress-scanit" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $class_name_part ), 'secupress_scanner_' . $class_name_part ); ?>"><?php _ex( 'Scan', 'scan a test', 'secupress' ); ?></a></p>
+								<p>
+									<a class="secupress-button secupress-button-mini secupress-scanit" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $class_name_part ), 'secupress_scanner_' . $class_name_part ); ?>">
+										<span class="icon">
+											<i class="icon-refresh" aria-hidden="true"></i>
+										</span>
+										<span class="text">
+											<?php _ex( 'Re-Scan', 'scan a test', 'secupress' ); ?>
+										</span>
+									</a>
+								</p>
 							</div>
 						</div>
-
-						<div class="secupress-row secupress-bg-gray secupress-fix-result">
+						
+						<?php if ( ! empty( $fix_message ) ) { ?>
+						<div class="secupress-flex secupress-flex-spaced secupress-fix-result secupress-bg-gray">
 							<div class="secupress-fix-result-message">
 								<?php echo $fix_message; ?>
 							</div>
-							<div class="secupress-fix-result-actions">
-								
+							<div class="secupress-fix-result-retryfix">
+								<a href="#" class="secupress-button secupress-button-primary secupress-button-mini">
+									<span class="icon">
+										<i class="icon-shield"></i>
+									</span>
+									<span class="text">
+										<?php esc_html_e( 'Retry to fix', 'secupress' ); ?>
+									</span>
+								</a>
 							</div>
+						</div>
+						<?php } ?>
+						<?php // TODO: Make it appears dynamically ?>
+						<div class="secupress-fix-result-actions secupress-bg-gray">
+								<p>
+									<a href="#" class="secupress-button secupress-button-mini">
+										<span class="icon">
+											<i class="icon-file-text"></i>
+										</span>
+										<span class="text">
+											<?php esc_html_e( 'Read the documentation', 'secupress' ); ?>
+										</span>
+									</a>
+									<a href="#" class="secupress-button secupress-button-mini secupress-ask-support">
+										<span class="icon">
+											<i class="icon-ask"></i>
+										</span>
+										<span class="text">
+											<?php esc_html_e( 'Ask support about it', 'secupress' ); ?>
+										</span>
+									</a>
+								</p>
 						</div>
 						
 						<?php // hidden items used for Sweet Alerts  ?>
@@ -794,7 +854,7 @@ function secupress_main_scan() {
 							<?php _e( 'Fix Details: ', 'secupress' ); ?>
 							<span class="details-content"><?php echo wp_kses( $current_test::$more_fix, $allowed_tags ); ?></span>
 						</div>
-						
+
 					</div><!-- </tr> -->
 					
 					<?php
