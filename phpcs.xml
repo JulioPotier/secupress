@@ -5,7 +5,7 @@
 	<arg name="extensions" value="php"/>
 	<arg value="s"/>
 
-	<file>inc/functions/admin.php</file>
+	<file>inc/functions</file>
 
 	<exclude-pattern>*.js</exclude-pattern>
 

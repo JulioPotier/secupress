@@ -1,35 +1,47 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
-
-function secupress_activate_submodule( $module, $plugin, $incompatibles_modules = array() ) {
-	$plugin_slug    = sanitize_key( $plugin );
+/**
+ * Activate a sub-module.
+ *
+ * @since 1.0
+ *
+ * @param (string) $module                  The module.
+ * @param (string) $submodule               The sub-module.
+ * @param (array)  $incompatible_submodules An array of sub-modules to deactivate.
+ *
+ * @return (bool) True on success. False on failure.
+ */
+function secupress_activate_submodule( $module, $submodule, $incompatible_submodules = array() ) {
+	$submodule_slug = sanitize_key( $submodule );
 	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
 	$active_plugins = is_array( $active_plugins ) ? $active_plugins : array();
-	$file_path      = SECUPRESS_MODULES_PATH . $module . '/plugins/' . $plugin_slug . '.php';
+	$file_path      = SECUPRESS_MODULES_PATH . $module . '/plugins/' . $submodule_slug . '.php';
 
 	if ( ! file_exists( $file_path ) ) {
 		return false;
 	}
 
-	if ( ! in_array_deep( $plugin_slug, $active_plugins ) ) {
-		if ( ! empty( $incompatibles_modules ) ) {
-			secupress_deactivate_submodule( $module, $incompatibles_modules );
+	if ( ! in_array_deep( $submodule_slug, $active_plugins ) ) {
+		if ( ! empty( $incompatible_submodules ) ) {
+			secupress_deactivate_submodule( $module, $incompatible_submodules );
 
 			$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
 			$active_plugins = is_array( $active_plugins ) ? $active_plugins : array();
 		}
 
 		$active_plugins[ $module ]   = isset( $active_plugins[ $module ] ) ? $active_plugins[ $module ] : array();
-		$active_plugins[ $module ][] = $plugin_slug;
+		$active_plugins[ $module ][] = $submodule_slug;
 
 		update_site_option( SECUPRESS_ACTIVE_SUBMODULES, $active_plugins );
+
 		require_once( $file_path );
-		secupress_add_module_notice( $module, $plugin_slug, 'activation' );
 
-		do_action( 'secupress_activate_plugin_' . $plugin_slug );
+		secupress_add_module_notice( $module, $submodule_slug, 'activation' );
 
-		do_action( 'secupress_activate_plugin', $plugin_slug );
+		do_action( 'secupress_activate_plugin_' . $submodule_slug );
+
+		do_action( 'secupress_activate_plugin', $submodule_slug );
 
 		return true;
 	}
@@ -38,23 +50,32 @@ function secupress_activate_submodule( $module, $plugin, $incompatibles_modules 
 }
 
 
-function secupress_deactivate_submodule( $module, $plugins, $args = array() ) {
+/**
+ * Deactivate a sub-module.
+ *
+ * @since 1.0
+ *
+ * @param (string)       $module     The module.
+ * @param (string|array) $submodules The sub-module. Can be an array, deactivate multiple sub-modules.
+ * @param (array)        $args       An array of arguments to pass to the hooks.
+ */
+function secupress_deactivate_submodule( $module, $submodules, $args = array() ) {
 	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
 
 	if ( ! $active_plugins ) {
 		return;
 	}
 
-	$plugins = (array) $plugins;
+	$submodules = (array) $submodules;
 
-	foreach ( $plugins as $plugin ) {
-		$plugin_slug = sanitize_key( $plugin );
+	foreach ( $submodules as $submodule ) {
+		$submodule_slug = sanitize_key( $submodule );
 
-		if ( ! isset( $active_plugins[ $module ] ) || ! in_array_deep( $plugin_slug, $active_plugins ) ) {
+		if ( ! isset( $active_plugins[ $module ] ) || ! in_array_deep( $submodule_slug, $active_plugins ) ) {
 			continue;
 		}
 
-		$key = array_search( $plugin_slug, $active_plugins[ $module ] );
+		$key = array_search( $submodule_slug, $active_plugins[ $module ] );
 
 		if ( false === $key ) {
 			continue;
@@ -67,57 +88,75 @@ function secupress_deactivate_submodule( $module, $plugins, $args = array() ) {
 		}
 
 		update_site_option( SECUPRESS_ACTIVE_SUBMODULES, $active_plugins );
-		secupress_add_module_notice( $module, $plugin_slug, 'deactivation' );
 
-		do_action( 'secupress_deactivate_plugin_' . $plugin_slug, $args );
+		secupress_add_module_notice( $module, $submodule_slug, 'deactivation' );
 
-		do_action( 'secupress_deactivate_plugin', $plugin_slug, $args );
+		do_action( 'secupress_deactivate_plugin_' . $submodule_slug, $args );
+
+		do_action( 'secupress_deactivate_plugin', $submodule_slug, $args );
 	}
 }
 
 
-function secupress_activate_submodule_silently( $module, $plugin ) {
+/**
+ * Activate a sub-module silently. This will remove a previous activation notice and trigger no activation hook.
+ *
+ * @since 1.0
+ *
+ * @param (string) $module    The module.
+ * @param (string) $submodule The sub-module.
+ */
+function secupress_activate_submodule_silently( $module, $submodule ) {
 	// Remove deactivation notice.
-	secupress_remove_module_notice( $module, $plugin, 'deactivation' );
+	secupress_remove_module_notice( $module, $submodule, 'deactivation' );
 
 	// Activate the submodule.
-	$plugin_slug    = sanitize_key( $plugin );
+	$submodule_slug = sanitize_key( $submodule );
 	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
 	$active_plugins = is_array( $active_plugins ) ? $active_plugins : array();
-	$file_path      = SECUPRESS_MODULES_PATH . $module . '/plugins/' . $plugin_slug . '.php';
+	$file_path      = SECUPRESS_MODULES_PATH . $module . '/plugins/' . $submodule_slug . '.php';
 
-	if ( ! file_exists( $file_path ) || in_array_deep( $plugin_slug, $active_plugins ) ) {
+	if ( ! file_exists( $file_path ) || in_array_deep( $submodule_slug, $active_plugins ) ) {
 		return;
 	}
 
 	$active_plugins[ $module ]   = isset( $active_plugins[ $module ] ) ? $active_plugins[ $module ] : array();
-	$active_plugins[ $module ][] = $plugin_slug;
+	$active_plugins[ $module ][] = $submodule_slug;
 
 	update_site_option( SECUPRESS_ACTIVE_SUBMODULES, $active_plugins );
 }
 
 
-function secupress_deactivate_submodule_silently( $module, $plugins, $args = array() ) {
+/**
+ * Deactivate a sub-module silently. This will remove all previous activation noticel and trigger no deactivation hook.
+ *
+ * @since 1.0
+ *
+ * @param (string)       $module     The module.
+ * @param (string|array) $submodules The sub-module. Can be an array, deactivate multiple sub-modules.
+ * @param (array)        $args       An array of arguments to pass to the hooks.
+ */
+function secupress_deactivate_submodule_silently( $module, $submodules, $args = array() ) {
 	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
 
 	if ( ! $active_plugins ) {
 		return;
 	}
 
-	$plugins = (array) $plugins;
+	$submodules = (array) $submodules;
 
-	foreach ( $plugins as $plugin ) {
+	foreach ( $submodules as $submodule ) {
 		// Remove activation notice.
-		secupress_remove_module_notice( $module, $plugin, 'activation' );
+		secupress_remove_module_notice( $module, $submodule, 'activation' );
 
 		// Deactivate the submodule.
-		$plugin_slug = sanitize_key( $plugin );
+		$submodule_slug = sanitize_key( $submodule );
 
-		if ( ! isset( $active_plugins[ $module ] ) || ! in_array_deep( $plugin_slug, $active_plugins ) ) {
+		if ( ! isset( $active_plugins[ $module ] ) || ! in_array_deep( $submodule_slug, $active_plugins ) ) {
 			continue;
 		}
 
-		$key = array_search( $plugin_slug, $active_plugins[ $module ] );
+		$key = array_search( $submodule_slug, $active_plugins[ $module ] );
 
 		if ( false === $key ) {
 			continue;
@@ -134,15 +173,34 @@ function secupress_deactivate_submodule_silently( $module, $plugins, $args = arr
 }
 
 
-function secupress_manage_submodule( $module, $plugin, $activate ) {
+/**
+ * Depending on the value of `$activate`, will activate or deactivate a sub-module.
+ *
+ * @since 1.0
+ *
+ * @param (string) $module    The module.
+ * @param (string) $submodule The sub-module.
+ * @param (bool)   $activate  True to activate, false to deactivate.
+ */
+function secupress_manage_submodule( $module, $submodule, $activate ) {
 	if ( $activate ) {
-		secupress_activate_submodule( $module, $plugin );
+		secupress_activate_submodule( $module, $submodule );
 	} else {
-		secupress_deactivate_submodule( $module, $plugin );
+		secupress_deactivate_submodule( $module, $submodule );
 	}
 }
 
 
+/**
+ * This is used when submitting a module form.
+ * If we submitted the given module form, it will return an array containing the values of sub-modules to activate.
+ *
+ * @since 1.0
+ *
+ * @param (string) $module The module.
+ *
+ * @return (array|bool) False if we're not submitting the module form. An array like `array( 'submodule1' => 1, 'submodule2' => 1 )` otherwise.
+ */
 function secupress_get_submodule_activations( $module ) {
 	static $done = array();
 
@@ -152,14 +210,23 @@ function secupress_get_submodule_activations( $module ) {
 
 	$done[ $module ] = true;
 
-	if ( isset( $_POST['option_page'] ) && 'secupress_' . $module . '_settings' === $_POST['option_page'] ) {
-		return isset( $_POST['secupress-plugin-activation'] ) && is_array( $_POST['secupress-plugin-activation'] ) ? $_POST['secupress-plugin-activation'] : array();
+	if ( isset( $_POST['option_page'] ) && 'secupress_' . $module . '_settings' === $_POST['option_page'] ) { // WPCS: CSRF ok.
+		return isset( $_POST['secupress-plugin-activation'] ) && is_array( $_POST['secupress-plugin-activation'] ) ? $_POST['secupress-plugin-activation'] : array(); // WPCS: CSRF ok.
 	}
 
 	return false;
 }
 
 
+/**
+ * Add a sub-module (de)activation notice.
+ *
+ * @since 1.0
+ *
+ * @param (string) $module    The module.
+ * @param (string) $submodule The sub-module.
+ * @param (string) $action    "activation" or "deactivation".
+ */
 function secupress_add_module_notice( $module, $submodule, $action ) {
 	$submodule_name    = secupress_get_module_data( $module, $submodule );
 	$submodule_name    = $submodule_name['Name'];
@@ -174,6 +241,15 @@ function secupress_add_module_notice( $module, $submodule, $action ) {
 }
 
 
+/**
+ * Remove a sub-module (de)activation notice.
+ *
+ * @since 1.0
+ *
+ * @param (string) $module    The module.
+ * @param (string) $submodule The sub-module.
+ * @param (string) $action    "activation" or "deactivation".
+ */
 function secupress_remove_module_notice( $module, $submodule, $action ) {
 	$submodule_name  = secupress_get_module_data( $module, $submodule );
 	$submodule_name  = $submodule_name['Name'];
@@ -201,6 +277,16 @@ function secupress_remove_module_notice( $module, $submodule, $action ) {
 }
 
 
+/**
+ * Get a sub-module data (name, parent module, version, description, author).
+ *
+ * @since 1.0
+ *
+ * @param (string) $module    The module.
+ * @param (string) $submodule The sub-module.
+ *
+ * @return (array)
+ */
 function secupress_get_module_data( $module, $submodule ) {
 	$default_headers = array(
 		'Name'        => 'Module Name',
@@ -235,7 +321,7 @@ function secupress_get_module_data( $module, $submodule ) {
 function secupress_remove_module_rules_or_notice( $marker, $module_name ) {
 	global $is_apache, $is_nginx, $is_iis7;
 
-	// Apache
+	// Apache.
 	if ( $is_apache && ! secupress_write_htaccess( $marker ) ) {
 		$message  = sprintf( __( '%s: ', 'secupress' ), $module_name );
 		$message .= sprintf(
@@ -249,7 +335,7 @@ function secupress_remove_module_rules_or_notice( $marker, $module_name ) {
 		return false;
 	}
 
-	// IIS7
+	// IIS7.
 	if ( $is_iis7 && ! secupress_insert_iis7_nodes( $marker ) ) {
 		$message  = sprintf( __( '%s: ', 'secupress' ), $module_name );
 		$message .= sprintf(
@@ -262,7 +348,7 @@ function secupress_remove_module_rules_or_notice( $marker, $module_name ) {
 		return false;
 	}
 
-	// Nginx
+	// Nginx.
 	if ( $is_nginx ) {
 		$message  = sprintf( __( '%s: ', 'secupress' ), $module_name );
 		$message .= sprintf(
@@ -310,7 +396,7 @@ function secupress_add_module_rules_or_notice_and_deactivate( $args ) {
 	$submodule = $args['submodule'];
 	$title     = $args['title'];
 
-	// Apache
+	// Apache.
 	if ( $is_apache ) {
 		// Write in `.htaccess` file.
 		if ( ! secupress_write_htaccess( $marker, $rules ) ) {
@@ -332,7 +418,7 @@ function secupress_add_module_rules_or_notice_and_deactivate( $args ) {
 		return true;
 	}
 
-	// IIS7
+	// IIS7.
 	if ( $is_iis7 ) {
 		$iis_args['nodes_string'] = $rules;
 
@@ -375,7 +461,7 @@ function secupress_add_module_rules_or_notice_and_deactivate( $args ) {
 		return true;
 	}
 
-	// Nginx
+	// Nginx.
 	if ( $is_nginx ) {
 		// We can't edit the file, so we'll tell the user how to do.
 		$message  = sprintf( __( '%s: ', 'secupress' ), $title );

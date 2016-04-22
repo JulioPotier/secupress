@@ -6,8 +6,8 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  *
  * @since 1.0
  *
- * @param (string) $page  : the last word of the secupress page slug.
- * @param (string) $module: the required module.
+ * @param (string) $page   The last word of the secupress page slug.
+ * @param (string) $module The required module.
  *
  * @return (string) The URL.
  */
@@ -25,7 +25,7 @@ function secupress_admin_url( $page, $module = '' ) {
  *
  * @since 1.0
  *
- * @param (bool) $force_mono: set to true to get the capability for monosite, whatever we're on multisite or not.
+ * @param (bool) $force_mono Set to true to get the capability for monosite, whatever we're on multisite or not.
  *
  * @return (string) The capability.
  */
@@ -37,18 +37,21 @@ function secupress_get_capability( $force_mono = false ) {
 }
 
 
-/**
- * Like in_array but for nested arrays.
- *
- * @since 1.0
- *
- * @return (bool)
- */
 if ( ! function_exists( 'in_array_deep' ) ) :
+	/**
+	 * Like in_array but for nested arrays.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (mixed) $needle   The value to find.
+	 * @param (array) $haystack The array to search.
+	 *
+	 * @return (bool)
+	 */
 	function in_array_deep( $needle, $haystack ) {
 		if ( $haystack ) {
 			foreach ( $haystack as $item ) {
-				if ( $item == $needle || ( is_array( $item ) && in_array_deep( $needle, $item ) ) ) {
+				if ( $item === $needle || ( is_array( $item ) && in_array_deep( $needle, $item ) ) ) {
 					return true;
 				}
 			}
@@ -63,8 +66,8 @@ endif;
  *
  * @since 1.0
  *
- * @param (string) $prefix         : only one possible value so far: "scan".
- * @param (string) $class_name_part: the classes name is built as follow: "SecuPress_{$prefix}_{$class_name_part}".
+ * @param (string) $prefix          Only one possible value so far: "scan".
+ * @param (string) $class_name_part The classes name is built as follow: "SecuPress_{$prefix}_{$class_name_part}".
  *
  * @return (string) Path of the class.
  */
@@ -91,9 +94,9 @@ function secupress_class_path( $prefix, $class_name_part = '' ) {
  *
  * @since 1.0
  *
- * @param (string) $prefix         : only one possible value so far: "scan".
- * @param (string) $class_name_part: the classes name is built as follow: "SecuPress_{$prefix}_{$class_name_part}".
-*/
+ * @param (string) $prefix          Only one possible value so far: "scan".
+ * @param (string) $class_name_part The classes name is built as follow: "SecuPress_{$prefix}_{$class_name_part}".
+ */
 function secupress_require_class( $prefix, $class_name_part = '' ) {
 	$path = secupress_class_path( $prefix, $class_name_part );
 
@@ -108,7 +111,7 @@ function secupress_require_class( $prefix, $class_name_part = '' ) {
  *
  * @since 1.0
  *
- * @param (string) $version: the version to test.
+ * @param (string) $version The version to test.
  *
  * @return (bool) Result of the `version_compare()`.
  */
@@ -127,10 +130,12 @@ function secupress_wp_version_is( $version ) {
 /**
  * Return the "unaliased" version of an email address.
  *
- * @param (string) $email
  * @since 1.0
+ *
+ * @param (string) $email An email address.
+ *
  * @return (string)
- **/
+ */
 function secupress_remove_email_alias( $email ) {
 	$provider = strstr( $email, '@' );
 	$email    = strstr( $email, '@', true );
@@ -144,10 +149,12 @@ function secupress_remove_email_alias( $email ) {
 /**
  * Return the email "example@example.com" like "e%x%a%m%p%l%e%@example.com"
  *
- * @param (string) $email
  * @since 1.0
+ *
+ * @param (string) $email An email address.
+ *
  * @return (string)
- **/
+ */
 function secupress_prepare_email_for_like_search( $email ) {
 	$email    = secupress_remove_email_alias( $email );
 	$provider = strstr( $email, '@' );
@@ -187,7 +194,7 @@ function secupress_get_email( $from_header = false ) {
  *
  * @param (string) $ip An IP address.
  *
- * @return (string|bool) The IP address if valid. False otherwize.
+ * @return (string|bool) The IP address if valid. False otherwise.
  */
 function secupress_ip_is_valid( $ip ) {
 	if ( ! $ip || ! is_string( $ip ) ) {
@@ -219,9 +226,9 @@ function secupress_ip_is_whitelisted( $ip = null ) {
 	$whitelist = array(
 		$_SERVER['SERVER_ADDR'] => 1,
 		'::1'                   => 1,
-		'37.187.85.82'          => 1, // wprocketbot
-		'37.187.58.236'         => 1, // wprocketbot
-		'167.114.234.234'       => 1, // wprocketbot
+		'37.187.85.82'          => 1, // WPRocketbot.
+		'37.187.58.236'         => 1, // WPRocketbot.
+		'167.114.234.234'       => 1, // WPRocketbot.
 	);
 
 	if ( isset( $whitelist[ $ip ] ) ) {
@@ -294,14 +301,13 @@ function secupress_users_can_register() {
 
 /**
  * Store, get or delete static data.
- *
  * Getter:   no need to provide a second parameter.
  * Setter:   provide a second parameter for the value.
  * Deletter: provide null as second parameter to remove the previous value.
  *
  * @since 1.0
  *
- * @param (string) $key:  An identifier key.
+ * @param (string) $key An identifier key.
  *
  * @return (mixed) The stored data or null.
  */
@@ -330,17 +336,19 @@ function secupress_cache_data( $key ) {
  * @return (bool) true if WP is installing, otherwise false.
  */
 function secupress_wp_installing() {
-	function_exists( 'wp_installing' ) ? wp_installing() : defined( 'WP_INSTALLING' ) && WP_INSTALLING;
+	return function_exists( 'wp_installing' ) ? wp_installing() : defined( 'WP_INSTALLING' ) && WP_INSTALLING;
 }
 
 
 /**
  * Returns a i18n message used with a packed plugin activation checkbox to tell the user that the standalone plugin will be deactivated.
  *
- * @param (string) $plugin_basename The standalone plugin basename.
  * @since 1.0
+ *
+ * @param (string) $plugin_basename The standalone plugin basename.
+ *
  * @return (string|null) Return null if the plugin is not activated.
- **/
+ */
 function secupress_get_deactivate_plugin_string( $plugin_basename ) {
 	if ( ! is_plugin_active( $plugin_basename ) ) {
 		return null;
@@ -354,14 +362,16 @@ function secupress_get_deactivate_plugin_string( $plugin_basename ) {
 
 
 /**
- * Returns a i18n message to act like a CTA on pro version
+ * Returns a i18n message to act like a CTA on pro version.
+ *
+ * @since 1.0
  *
  * @param (string) $format You can use it to embed the message in a HTML tag, usage of "%s" is mandatory.
- * @since 1.0
+ *
  * @return (string)
- **/
+ */
 function secupress_get_pro_version_string( $format = '' ) {
-	$message = sprintf( __( 'Available in <a href="%s">Pro Version</a>.', 'secupress' ), '#' ); //// #
+	$message = sprintf( __( 'Available in <a href="%s">Pro Version</a>.', 'secupress' ), '#' ); // //// #.
 	if ( $format ) {
 		$message = sprintf( $format, $message );
 	}
@@ -370,14 +380,16 @@ function secupress_get_pro_version_string( $format = '' ) {
 
 
 /**
- * Returns a i18n message to act like a CTA to get an API key
+ * Returns a i18n message to act like a CTA to get an API key.
+ *
+ * @since 1.0
  *
  * @param (string) $format You can use it to embed the message in a HTML tag, usage of "%s" is mandatory.
- * @since 1.0
+ *
  * @return (string)
- **/
+ */
 function secupress_get_valid_key_string( $format = '' ) {
-	$message = sprintf( __( 'Requires a <a href="%s">Free API Key</a>.', 'secupress' ), '#' ); //// # + wording
+	$message = sprintf( __( 'Requires a <a href="%s">Free API Key</a>.', 'secupress' ), '#' ); // //// # + wording.
 	if ( $format ) {
 		$message = sprintf( $format, $message );
 	}
@@ -386,19 +398,29 @@ function secupress_get_valid_key_string( $format = '' ) {
 
 
 /**
- * Generate a folder name using a hash in it
- *
- * @param (string) $context Your context, don't use empty string
- * @param (string) $path The root base for this folder, optional
+ * Generate a folder name using a hash in it.
  *
  * @since 1.0
- * @return string
- **/
+ *
+ * @param (string) $context Your context, don't use empty string.
+ * @param (string) $path The root base for this folder, optional.
+ *
+ * @return (string)
+ */
 function secupress_get_hashed_folder_name( $context, $path = '/' ) {
 	return $path . 'secupress-' . substr( wp_hash( $context, 'nonce' ), 10, 8 ) . '/';
 }
 
 
+/**
+ * Used in `array_filter()`: return true if the given path is not in the `wp-content` folder.
+ *
+ * @since 1.0
+ *
+ * @param (string) $item A file path.
+ *
+ * @return (bool)
+ */
 function secupress_filter_no_content( $item ) {
 	$item = str_replace( '\\', '/', $item );
 	return strpos( "/$item/", '/wp-content/' ) === false;

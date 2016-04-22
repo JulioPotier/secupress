@@ -2,7 +2,7 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /**
- * Get WP Direct filesystem object.
+ * Get WP Direct filesystem object. Also define chmod constants if not done yet.
  *
  * @since 1.0
  *
@@ -31,24 +31,23 @@ function secupress_get_filesystem() {
 
 
 /**
- * Remove a single file or a folder recursively
+ * Remove a single file or a folder recursively.
  *
  * @since 1.0
  *
- * @param string $dir File/Directory to delete
- * @param array $dirs_to_preserve (default: array()) Dirs that should not be deleted
- * @return void
+ * @param (string) $dir              File/Directory to delete.
+ * @param (array)  $dirs_to_preserve Dirs that should not be deleted. Default: array().
  */
 function secupress_rrmdir( $dir, $dirs_to_preserve = array() ) {
 	$dir = rtrim( $dir, '/' );
 
 	/**
-	 * Fires after a file/directory cache was deleted
+	 * Fires after a file/directory cache was deleted.
 	 *
 	 * @since 1.0
 	 *
-	 * @param string $dir File/Directory to delete
-	 * @param array $dirs_to_preserve Directories that should not be deleted
+	 * @param (string) $dir              File/Directory to delete.
+	 * @param (array)  $dirs_to_preserve Directories that should not be deleted.
 	 */
 	do_action( 'before_secupress_rrmdir', $dir, $dirs_to_preserve );
 
@@ -79,24 +78,25 @@ function secupress_rrmdir( $dir, $dirs_to_preserve = array() ) {
 	@rmdir( $dir );
 
 	/**
-	 * Fires before a file/directory cache was deleted
+	 * Fires before a file/directory cache was deleted.
 	 *
 	 * @since 1.0
 	 *
-	 * @param string $dir File/Directory to delete
-	 * @param array $dirs_to_preserve Dirs that should not be deleted
+	 * @param (string) $dir              File/Directory to delete.
+	 * @param (array)  $dirs_to_preserve Dirs that should not be deleted.
 	 */
 	do_action( 'after_secupress_rrmdir', $dir, $dirs_to_preserve );
 }
 
 
 /**
- * Directory creation based on WordPress Filesystem
+ * Directory creation based on WordPress Filesystem.
  *
  * @since 1.0
  *
- * @param string $dir The path of directory will be created
- * @return bool
+ * @param (string) $dir The path of directory will be created.
+ *
+ * @return (bool)
  */
 function secupress_mkdir( $dir ) {
 	$wp_filesystem = secupress_get_filesystem();
@@ -111,14 +111,17 @@ function secupress_mkdir( $dir ) {
  * Recursive directory creation based on full path.
  *
  * @since 1.0
+ * @source wp_mkdir_p() in `/wp-includes/functions.php`.
  *
- * @source wp_mkdir_p() in /wp-includes/functions.php
+ * @param (string) $target A folder path.
+ *
+ * @return True on success.
  */
 function secupress_mkdir_p( $target ) {
-	// from php.net/mkdir user contributed notes
+	// From php.net/mkdir user contributed notes.
 	$target = str_replace( '//', '/', $target );
 
-	// safe mode fails with a trailing slash under certain PHP versions.
+	// Safe mode fails with a trailing slash under certain PHP versions.
 	$target = rtrim( $target, '/' );
 
 	if ( empty( $target ) ) {
@@ -137,7 +140,7 @@ function secupress_mkdir_p( $target ) {
 	}
 
 	// If the above failed, attempt to create the parent node, then try again.
-	if ( ( $target !== '/' ) && ( secupress_mkdir_p( dirname( $target ) ) ) ) {
+	if ( '/' !== $target && secupress_mkdir_p( dirname( $target ) ) ) {
 		return secupress_mkdir_p( $target );
 	}
 
@@ -166,14 +169,13 @@ function secupress_root_file_is_writable( $file ) {
 }
 
 
-/*
+/**
  * Get plugins dir path.
  *
  * @since 1.0
  *
  * @return (string)
  */
-
 function secupress_get_plugins_path() {
 	static $plugins_dir;
 
@@ -185,14 +187,13 @@ function secupress_get_plugins_path() {
 }
 
 
-/*
+/**
  * Get themes dir path.
  *
  * @since 1.0
  *
  * @return (string)
  */
-
 function secupress_get_themes_path() {
 	static $themes_dir;
 
@@ -205,16 +206,15 @@ function secupress_get_themes_path() {
 }
 
 
-/*
+/**
  * Tell if a plugin is symlinked.
  *
  * @since 1.0
  *
  * @param (string) $plugin_file Plugin main file path, relative to the plugins folder.
  *
- * @return (bool)  True if the plugin is symlinked.
+ * @return (bool) True if the plugin is symlinked.
  */
-
 function secupress_is_plugin_symlinked( $plugin_file ) {
 	$plugins_dir = secupress_get_plugins_path();
 	$plugin_path = realpath( $plugins_dir . $plugin_file );
@@ -223,16 +223,15 @@ function secupress_is_plugin_symlinked( $plugin_file ) {
 }
 
 
-/*
+/**
  * Tell if a theme is symlinked.
  *
  * @since 1.0
  *
  * @param (string) $theme_slug Theme dir name.
  *
- * @return (bool)  True if the theme is symlinked.
+ * @return (bool) True if the theme is symlinked.
  */
-
 function secupress_is_theme_symlinked( $theme_slug ) {
 	$themes_dir = secupress_get_themes_path();
 	$theme_path = realpath( $themes_dir . $theme_slug );
@@ -242,20 +241,19 @@ function secupress_is_theme_symlinked( $theme_slug ) {
 
 
 /**
- * File creation based on WordPress Filesystem
+ * File creation based on WordPress Filesystem.
  *
  * @since 1.0
  *
- * @param string $file The path of file
- * @param string $new_content The content that will be added to the file
- * @param array  $args (optional)
- *               marker (string): An additional suffix string to add to the "SecuPress" marker, Default ''
- *               put    (string): (prepend|append|replace): Prepend or append content in the file, Default 'prepend'
- *               text   (string): When (prepend|append) is used for "put", you can speficy a text to find, it will be pre/appended around this text
- * @return bool
+ * @param (string) $file The path of file.
+ * @param (string) $new_content The content that will be added to the file.
+ * @param (array)  $args (optional)
+ *                 marker (string): An additional suffix string to add to the "SecuPress" marker, Default ''.
+ *                 put    (string): (prepend|append|replace): Prepend or append content in the file, Default 'prepend'.
+ *                 text   (string): When (prepend|append) is used for "put", you can speficy a text to find, it will be pre/appended around this text.
+ * @return (bool)
  */
 function secupress_put_contents( $file, $new_content = '', $args = array() ) {
-
 	$args = wp_parse_args( $args, array(
 		'marker'   => '',
 		'put'      => 'prepend',
@@ -265,7 +263,7 @@ function secupress_put_contents( $file, $new_content = '', $args = array() ) {
 
 	$wp_filesystem = secupress_get_filesystem();
 	$file_content  = '';
-	$comment_char  = 'php.ini' !== basename( $file ) ? '#' : ';';
+	$comment_char  = basename( $file ) !== 'php.ini' ? '#' : ';';
 
 	// Get the whole content of file and remove old marker content.
 	if ( file_exists( $file ) ) {
@@ -285,7 +283,6 @@ function secupress_put_contents( $file, $new_content = '', $args = array() ) {
 		}
 		$content .= trim( $new_content ) . PHP_EOL;
 		$content .= $comment_char . ' END SecuPress' . PHP_EOL . PHP_EOL;
-
 
 		if ( '' !== $args['text'] && strpos( $file_content, $args['text'] ) !== false ) {
 			if ( 'append' === $args['put'] ) {
@@ -311,17 +308,17 @@ function secupress_put_contents( $file, $new_content = '', $args = array() ) {
 
 
 /**
- * File creation based on WordPress Filesystem
+ * File creation based on WordPress Filesystem.
  *
  * @since 1.0
  *
- * @param string $file        The path of file will be created
- * @param string $old_content The content to be replaced from the file (preg_replace)
- * @param string $new_content The new content (preg_replace)
- * @return bool
+ * @param (string) $file        The path of file will be created.
+ * @param (string) $old_content The content to be replaced from the file (preg_replace).
+ * @param (string) $new_content The new content (preg_replace).
+ *
+ * @return (bool)
  */
 function secupress_replace_content( $file, $old_content, $new_content ) {
-
 	if ( ! file_exists( $file ) ) {
 		return false;
 	}
@@ -330,7 +327,7 @@ function secupress_replace_content( $file, $old_content, $new_content ) {
 	$file_content  = $wp_filesystem->get_contents( $file );
 
 	$new_content  = preg_replace( $old_content, $new_content, $file_content );
-	$replaced     =  $new_content !== null && $new_content !== $file_content;
+	$replaced     = null !== $new_content && $new_content !== $file_content;
 	$put_contents = $wp_filesystem->put_contents( $file, $new_content, FS_CHMOD_FILE );
 
 	return $put_contents && $replaced;
@@ -338,11 +335,11 @@ function secupress_replace_content( $file, $old_content, $new_content ) {
 
 
 /**
- * Try to find the correct wp-config.php file, support one level up in filetree
+ * Try to find the correct `wp-config.php` file, support one level up in filetree.
  *
  * @since 1.0
  *
- * @return string|bool The path of wp-config.php file or false
+ * @return string|bool The path of `wp-config.php` file or false.
  */
 function secupress_find_wpconfig_path() {
 	$config_file     = ABSPATH . 'wp-config.php';
@@ -355,17 +352,16 @@ function secupress_find_wpconfig_path() {
 		return $config_file_alt;
 	}
 
-	// No writable file found
+	// No writable file found.
 	return false;
 }
 
 
 /**
- * From WP Core async_upgrade() but using Automatic_Upgrader_Skin instead of Language_Pack_Upgrader_Skin to have a silent upgrade
+ * From WP Core `async_upgrade()` but using `Automatic_Upgrader_Skin` instead of `Language_Pack_Upgrader_Skin` to have a silent upgrade.
  *
  * @since 1.0
- * @return void
- **/
+ */
 function secupress_async_upgrades() {
 	// Nothing to do?
 	$language_updates = wp_get_translation_updates();
@@ -387,10 +383,11 @@ function secupress_async_upgrades() {
 		/**
 		 * Filter whether to asynchronously update translation for core, a plugin, or a theme.
 		 *
-		 * @since 4.0.0
+		 * @since 1.0
+		 * @since WP 4.0.0
 		 *
-		 * @param bool   $update          Whether to update.
-		 * @param object $language_update The update offer.
+		 * @param (bool)   $update          Whether to update.
+		 * @param (object) $language_update The update offer.
 		 */
 		$update = apply_filters( 'async_update_translation', $update, $language_update );
 
@@ -411,11 +408,15 @@ function secupress_async_upgrades() {
 
 
 /**
- * Create a MU-PLUGIN
+ * Create a MU-PLUGIN.
  *
  * @since 1.0
- * @return bool
- **/
+ *
+ * @param (string) $filename_part The file name part in `_secupress_{$filename_part}.php`.
+ * @param (string) $contents      The file content.
+ *
+ * @return (bool) True on success.
+ */
 function secupress_create_mu_plugin( $filename_part, $contents ) {
 
 	$wp_filesystem = secupress_get_filesystem();
@@ -441,14 +442,14 @@ function secupress_create_mu_plugin( $filename_part, $contents ) {
  *
  * @since 1.0
  *
- * @param (string)       $marker       An additional suffix string to add to the "SecuPress" marker.
- * @param (array)        $args         An array containing the following arguments:
- *        (array|string) $nodes_string Content to insert in the file.
- *        (array|string) $node_types   Node types: used to removed old nodes. Optional.
- *        (string)       $path         Path where nodes should be created, relative to `/configuration/system.webServer`.
+ * @param (string) $marker An additional suffix string to add to the "SecuPress" marker.
+ * @param (array)  $args   An array containing the following arguments:
+ *                         (array|string) $nodes_string Content to insert in the file.
+ *                         (array|string) $node_types   Node types: used to removed old nodes. Optional.
+ *                         (string)       $path         Path where nodes should be created, relative to `/configuration/system.webServer`.
  *
  * @return (bool) true on success.
- **/
+ */
 function secupress_insert_iis7_nodes( $marker, $args ) {
 	static $web_config_file;
 
@@ -472,7 +473,7 @@ function secupress_insert_iis7_nodes( $marker, $args ) {
 		$web_config_file = secupress_get_home_path() . 'web.config';
 	}
 
-	// New content
+	// New content.
 	$marker       = strpos( $marker, 'SecuPress' ) === 0 ? $marker : 'SecuPress ' . $marker;
 	$nodes_string = is_array( $nodes_string ) ? implode( "\n", $nodes_string ) : $nodes_string;
 	$nodes_string = trim( $nodes_string, "\r\n\t " );
@@ -559,7 +560,7 @@ function secupress_insert_iis7_nodes( $marker, $args ) {
  * @since 1.0
  *
  * @return (string) The home path.
- **/
+ */
 function secupress_get_home_path() {
 	$home    = set_url_scheme( get_option( 'home' ), 'http' );
 	$siteurl = set_url_scheme( get_option( 'siteurl' ), 'http' );
@@ -574,29 +575,7 @@ function secupress_get_home_path() {
 		$home_path = ABSPATH;
 	}
 
-	return secupress_normalize_path( $home_path );
-}
-
-
-/**
- * A `wp_normalize_path()`-like, but available for WP < 3.9.0.
- *
- * @since 1.0
- *
- * @param (string) The path to normalize.
- *
- * @return (string) The normalized path.
- **/
-function secupress_normalize_path( $path ) {
-	if ( function_exists( 'wp_normalize_path' ) ) {
-		return wp_normalize_path( $path );
-	}
-	$path = str_replace( '\\', '/', $path );
-	$path = preg_replace( '|/+|','/', $path );
-	if ( ':' === substr( $path, 1, 1 ) ) {
-		$path = ucfirst( $path );
-	}
-	return $path;
+	return wp_normalize_path( $home_path );
 }
 
 
@@ -612,7 +591,7 @@ function secupress_normalize_path( $path ) {
  * @param (object) $child DOMNode to be prepended.
  *
  * @return (object) The DOMNode node.
- **/
+ */
 function __secupress_get_iis7_node( $doc, $xpath, $path, $child ) {
 	$nodelist = $xpath->query( $path );
 
@@ -643,7 +622,7 @@ function __secupress_get_iis7_node( $doc, $xpath, $path, $child ) {
  * @param (object) $new_node       DOMNode to be prepended.
  *
  * @return (object) DOMNode containing the new node.
- **/
+ */
 function secupress_prepend_iis7_node( $container_node, $new_node ) {
 	if ( ! $new_node ) {
 		return $container_node;
@@ -665,7 +644,7 @@ function secupress_prepend_iis7_node( $container_node, $new_node ) {
  * @since 1.0
  *
  * @return (bool).
- **/
+ */
 function secupress_is_subfolder_install() {
 	global $wpdb;
 	static $subfolder_install;
@@ -693,10 +672,10 @@ function secupress_is_subfolder_install() {
  *
  * @since 1.0
  *
- * @param (string) A path.
+ * @param (string) $slug A path.
  *
  * @return (string) The path with no heading slash and a trailing slash.
- **/
+ */
 function secupress_trailingslash_only( $slug ) {
 	return ltrim( trim( $slug, '/' ) . '/', '/' );
 }
@@ -709,7 +688,7 @@ function secupress_trailingslash_only( $slug ) {
  * @see http://codex.wordpress.org/Giving_WordPress_Its_Own_Directory
  *
  * @return (string) The directory containing WP.
- **/
+ */
 function secupress_get_wp_directory() {
 	static $wp_siteurl_subdir;
 
@@ -745,7 +724,7 @@ function secupress_get_wp_directory() {
  *         'site_to'   => first part of the rewrited address (WP files),
  *         'home_from' => regex for first part of the rewrite rule (home),
  *         'home_to'   => first part of the rewrited address (home).
- **/
+ */
 function secupress_get_rewrite_bases() {
 	global $is_apache, $is_nginx, $is_iis7;
 	static $bases;
@@ -757,7 +736,7 @@ function secupress_get_rewrite_bases() {
 	$base   = parse_url( trailingslashit( get_option( 'home' ) ), PHP_URL_PATH );
 	$wp_dir = secupress_get_wp_directory();
 
-	// Apache
+	// Apache.
 	if ( $is_apache ) {
 		if ( secupress_is_subfolder_install() ) {
 			return ( $bases = array(
@@ -783,7 +762,7 @@ function secupress_get_rewrite_bases() {
 		}
 	}
 
-	// Nginx
+	// Nginx.
 	if ( $is_nginx ) {
 		if ( secupress_is_subfolder_install() ) {
 			return ( $bases = array(
@@ -809,7 +788,7 @@ function secupress_get_rewrite_bases() {
 		}
 	}
 
-	// iis7
+	// IIS7.
 	if ( $is_iis7 ) {
 		$base = secupress_trailingslash_only( $base );
 
