@@ -74,7 +74,7 @@ function secupress_user_profile_update_errors( &$errors, $update, &$user ) {
 	$user_emails                = array_map( 'secupress_remove_email_alias', $user_emails );
 
 	$user_exists                = (bool) $wpdb->get_col( $wpdb->prepare( 'SELECT user_id FROM ' . $wpdb->usermeta . ' WHERE user_id != %d AND meta_key = "backup_email_no_alias" AND meta_value = %s', $user->ID, $backup_email_no_alias ) );
-	$user_exists                = $user_exists || in_array( $backup_email_no_alias, $user_emails ) || in_array( $user_email_no_alias, $user_emails );
+	$user_exists                = $user_exists || in_array( $backup_email_no_alias, $user_emails, true ) || in_array( $user_email_no_alias, $user_emails, true );
 
 	if ( $user_exists ) {
 		$errors->add( 'email_exists', __( '<strong>ERROR</strong>: This email is already registered, please choose another one.' ), array( 'form-field' => 'email' ) );

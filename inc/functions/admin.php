@@ -394,6 +394,7 @@ function secupress_text_diff( $left_string, $right_string, $args = array() ) {
 		class SecuPress_Text_Diff_Renderer_Table extends WP_Text_Diff_Renderer_Table {
 			/**
 			 * Number of leading context "lines" to preserve.
+			 *
 			 * @var int
 			 * @access public
 			 * @since 1.0
@@ -401,6 +402,7 @@ function secupress_text_diff( $left_string, $right_string, $args = array() ) {
 			public $_leading_context_lines  = 0;
 			/**
 			 * Number of trailing context "lines" to preserve.
+			 *
 			 * @var int
 			 * @access public
 			 * @since 1.0

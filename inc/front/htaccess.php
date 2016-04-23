@@ -78,8 +78,8 @@ function secupress_get_htaccess_ban_ip() {
 
 	$content = 'Order Deny,Allow' . PHP_EOL;
 
-	foreach ( $ban_ips as $IP => $time ) {
-		$content .= 'Deny from ' . $IP . PHP_EOL;
+	foreach ( $ban_ips as $ip => $time ) {
+		$content .= 'Deny from ' . $ip . PHP_EOL;
 	}
 
 	return $content;

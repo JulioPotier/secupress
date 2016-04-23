@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 function secupress_db_access_granted() {
 	global $wpdb;
 	// Get privilege for the WP user.
-	$results = $wpdb->get_results( 'SHOW GRANTS FOR ' . DB_USER . '@' . DB_HOST );
+	$results = $wpdb->get_results( 'SHOW GRANTS FOR ' . DB_USER . '@' . DB_HOST ); // WPCS: unprepared SQL ok.
 
 	// We got something.
 	if ( ! isset( $results[0]->{'Grants for ' . DB_USER . '@' . DB_HOST} ) ) {
@@ -52,8 +52,9 @@ function secupress_create_unique_db_prefix() {
 	$new_prefix = $wpdb->prefix;
 	$all_tables = $wpdb->get_results( "SHOW TABLES LIKE '{$wpdb->prefix}%'" );
 	$all_tables = wp_list_pluck( $all_tables, 'Tables_in_' . DB_NAME . ' (' . $wpdb->prefix . '%)' );
+	$all_tables = array_flip( $all_tables );
 
-	while ( in_array( $new_prefix . 'posts', $all_tables ) ) {
+	while ( isset( $all_tables[ $new_prefix . 'posts' ] ) ) {
 		$new_prefix = strtolower( 'wp_' . strtolower( secupress_generate_key( 6 ) ) . '_' );
 	}
 

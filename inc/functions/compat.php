@@ -32,7 +32,7 @@ if ( ! function_exists( 'doing_filter' ) ) :
 			return ! empty( $wp_current_filter );
 		}
 
-		return in_array( $filter, $wp_current_filter );
+		return in_array( $filter, $wp_current_filter, true );
 	}
 endif;
 

@@ -656,7 +656,6 @@ function secupress_get_tests() {
 			'Bad_Old_Files',
 			'Bad_Config_Files',
 			'Bad_Vuln_Plugins',
-			/*'PHP_INI',*/
 			'Admin_User',
 			'Easy_Login',
 			'Subscription',
@@ -677,7 +676,6 @@ function secupress_get_tests() {
 			'Bad_Usernames',
 			'Bad_Request_Methods',
 			'PhpVersion',
-			/*'Too_Many_Admins',*/
 			'Block_HTTP_1_0',
 			'Discloses',
 			'Block_Long_URL',
@@ -688,7 +686,6 @@ function secupress_get_tests() {
 		'low' => array(
 			'Login_Errors_Disclose',
 			'PHP_Disclosure',
-			/*'Admin_As_Author',*/
 			'DirectoryIndex',
 		),
 	);
@@ -716,8 +713,6 @@ function secupress_get_tests_for_ms_scanner_fixes() {
 	return array(
 		'Bad_Old_Plugins',
 		'Subscription',
-		// 'Too_Many_Admins',
-		// 'Admin_As_Author',
 	);
 }
 
