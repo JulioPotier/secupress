@@ -8,26 +8,44 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @subpackage SecuPress_Settings
  * @since 1.0
  */
-
 class SecuPress_Settings_Modules extends SecuPress_Settings {
 
 	const VERSION = '1.0';
 
+	/**
+	 * All the modules, with (mainly) title, icon, description.
+	 *
+	 * @var (array)
+	 */
 	protected static $modules;
 
 	/**
-	 * @var Singleton The reference to *Singleton* instance of this class
+	 * The reference to *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
 
 
-	// Setters =====================================================================================
+	// Setters =====================================================================================.
 
+	/**
+	 * Set the modules infos.
+	 *
+	 * @since 1.0
+	 */
 	final protected static function set_modules() {
 		static::$modules = secupress_get_modules();
 	}
 
 
+	/**
+	 * Set the current module.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (object) The class instance.
+	 */
 	final protected function set_current_module() {
 		$this->modulenow = isset( $_GET['module'] ) ? $_GET['module'] : 'welcome';
 		$this->modulenow = array_key_exists( $this->modulenow, static::get_modules() ) && file_exists( SECUPRESS_MODULES_PATH . $this->modulenow . '/settings.php' ) ? $this->modulenow : 'welcome';
@@ -35,8 +53,15 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	}
 
 
-	// Getters =====================================================================================
+	// Getters =====================================================================================.
 
+	/**
+	 * Set the modules infos.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The modules.
+	 */
 	final public static function get_modules() {
 		if ( empty( static::$modules ) ) {
 			static::set_modules();
@@ -51,7 +76,9 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 *
 	 * @since 1.0
 	 *
-	 * @param (string) $module : the desired module.
+	 * @param (string) $module The desired module.
+	 *
+	 * @return (string)
 	*/
 	final public function get_module_title( $module = false ) {
 		$modules = static::get_modules();
@@ -70,7 +97,9 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 *
 	 * @since 1.0
 	 *
-	 * @param (string) $module : the desired module.
+	 * @param (string) $module The desired module.
+	 *
+	 * @return (array)
 	*/
 	final public function get_module_descriptions( $module = false ) {
 		$modules = static::get_modules();
@@ -85,11 +114,13 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 
 
 	/**
-	 * Tell if the reset box should be displayed for a specific module.
+	 * Tells if the reset box should be displayed for a specific module.
 	 *
 	 * @since 1.0
 	 *
-	 * @param (string) $module : the desired module.
+	 * @param (string) $module The desired module.
+	 *
+	 * @return (bool)
 	*/
 	final public function display_module_reset_box( $module = false ) {
 		$modules = static::get_modules();
@@ -99,7 +130,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	}
 
 
-	// Init ========================================================================================
+	// Init ========================================================================================.
 
 	/**
 	 * Init: this method is required by the class `SecuPress_Singleton`.
@@ -115,8 +146,13 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	}
 
 
-	// Main template tags ==========================================================================
+	// Main template tags ==========================================================================.
 
+	/**
+	 * Print the page content.
+	 *
+	 * @since 1.0
+	 */
 	public function print_page() {
 		?>
 		<div class="wrap">
@@ -140,6 +176,11 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	}
 
 
+	/**
+	 * Print the tabs to switch between modules.
+	 *
+	 * @since 1.0
+	 */
 	protected function print_tabs() {
 		foreach ( static::get_modules() as $key => $module ) {
 			$class = $this->get_current_module() === $key  ? ' nav-tab-active'    : '';
@@ -152,17 +193,40 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		}
 	}
 
+
+	/**
+	 * Print the opening form tag.
+	 *
+	 * @since 1.0
+	 */
 	final public function print_open_form_tag() {
-		?><form id="secupress-module-form-settings" method="post" action="<?php echo $this->get_form_action(); ?>"><?php
+		if ( $this->get_with_form() ) {
+			?>
+			<form id="secupress-module-form-settings" method="post" action="<?php echo $this->get_form_action(); ?>">
+			<?php
+		}
 	}
 
+
+	/**
+	 * Print the closing form tag and the hidden settings fields.
+	 *
+	 * @since 1.0
+	 */
 	final public function print_close_form_tag() {
-		settings_fields( 'secupress_' . $this->get_current_module() . '_settings' );
-		echo '</form>';
+		if ( $this->get_with_form() ) {
+			settings_fields( 'secupress_' . $this->get_current_module() . '_settings' );
+			echo '</form>';
+		}
 	}
 
-	protected function print_current_module() {
 
+	/**
+	 * Print the current module.
+	 *
+	 * @since 1.0
+	 */
+	protected function print_current_module() {
 		// No module.
 		if ( 'welcome' === $this->get_current_module() ) {
 			?>
@@ -172,46 +236,42 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			<?php
 			return;
 		}
-
 		?>
+
 		<div class="secublock">
 			<?php
 			$this->print_module_title();
 			$this->print_module_description();
 			?>
 		</div>
-		<?php
-		$with_form = $this->get_with_form();
-		if ( false !== $with_form ) {
-			$this->print_open_form_tag();
-		}
-		?>
 
-			<div id="block-advanced_options" data-module="<?php echo $this->get_current_module(); ?>">
-				<?php
-				$this->load_module_settings();
-				$this->print_module_reset_box();
-				?>
-			</div>
+		<?php $this->print_open_form_tag(); ?>
+
+		<div id="block-advanced_options" data-module="<?php echo $this->get_current_module(); ?>">
+			<?php
+			$this->load_module_settings();
+			$this->print_module_reset_box();
+			?>
+		</div>
 
 		<?php
-
-		if ( false !== $with_form ) {
-			$this->print_close_form_tag();
-		}
-		?>
-		<?php
+		$this->print_close_form_tag();
 	}
 
 
+	/**
+	 * Print a box allowing to reset the current module settings.
+	 *
+	 * @since 1.0
+	 */
 	protected function print_module_reset_box() {
 		if ( ! $this->display_module_reset_box() ) {
 			return;
 		}
-		//// todo save settings with history
+		// //// Todo save settings with history.
 		$this->set_current_section( 'reset' );
 		$this->set_section_description( __( 'If you need to reset this module\'s settings to the default ones, you just have to do it here, we will set the best for your site.', 'secupress' ) );
-		$this->add_section( __( 'Module settings', 'secupress' ), array( 'with_save_button' => false, ) );
+		$this->add_section( __( 'Module settings', 'secupress' ), array( 'with_save_button' => false ) );
 
 		$this->set_current_plugin( 'reset' );
 
@@ -227,12 +287,28 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	}
 
 
+	/**
+	 * Print the module title.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $tag The title tag to use.
+	 *
+	 * @return (object) The class instance.
+	 */
 	protected function print_module_title( $tag = 'h3' ) {
 		echo "<$tag>" . $this->get_module_title() . "</$tag>\n";
 		return $this;
 	}
 
 
+	/**
+	 * Print the module descriptions.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (object) The class instance.
+	 */
 	protected function print_module_description() {
 		if ( $this->get_module_descriptions() ) {
 			echo '<p>' . implode( "</p>\n<p>", $this->get_module_descriptions() ) . "</p>\n";
@@ -241,8 +317,15 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	}
 
 
-	// Includes ====================================================================================
+	// Includes ====================================================================================.
 
+	/**
+	 * Include the current module settings file.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (object) The class instance.
+	 */
 	final protected function load_module_settings() {
 		$module_file = SECUPRESS_MODULES_PATH . $this->modulenow . '/settings.php';
 
@@ -254,7 +337,15 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	}
 
 
-	// secupress_load_settings()
+	/**
+	 * Include a plugin settings file. Also, automatically set the current module and print the sections.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $plugin The plugin.
+	 *
+	 * @return (object) The class instance.
+	 */
 	final protected function load_plugin_settings( $plugin ) {
 		$plugin_file = SECUPRESS_MODULES_PATH . $this->modulenow . '/settings/' . $plugin . '.php';
 

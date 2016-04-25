@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die('Cheatin\' uh?');
+defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
 
 /**
@@ -8,94 +8,220 @@ defined( 'ABSPATH' ) or die('Cheatin\' uh?');
  * @package SecuPress
  * @since 1.0
  */
-
 abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 	const VERSION = '1.0';
 
-	protected $modulenow;  // Tab (page), like `users_login`.
-	protected $sectionnow; // Section, like `login_auth`.
-	protected $pluginnow;  // Field, like `double_auth`.
-	protected $sections_descriptions = array();
-	protected $sections_save_button  = array();
+	/**
+	 * Current module: corresponds to the page tab, like `users_login`.
+	 *
+	 * @var (string)
+	 */
+	protected $modulenow;
+
+	/**
+	 * Current section: corresponds to a block, like `login_auth`.
+	 *
+	 * @var (string)
+	 */
+	protected $sectionnow;
+
+	/**
+	 * Current plugin (or sub-module): corresponds to a field, like `captcha`.
+	 *
+	 * @var (string)
+	 */
+	protected $pluginnow;
+
+	/**
+	 * Section descriptions.
+	 *
+	 * @var (array)
+	 */
+	protected $section_descriptions = array();
+
+	/**
+	 * Section Save buttons.
+	 *
+	 * @var (array)
+	 */
+	protected $section_save_buttons = array();
+
+	/**
+	 * Form action attribute (URL).
+	 *
+	 * @var (string)
+	 */
 	protected $form_action;
+
+	/**
+	 * Tells if the current module should be wrapped in a form.
+	 *
+	 * @var (bool)
+	 */
 	protected $with_form = true;
 
 
-	// Setters =====================================================================================
+	// Setters =====================================================================================.
 
+	/**
+	 * Set the current module.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (object) The class instance.
+	 */
 	protected function set_current_module() {
 		die( 'Method SecuPress_Settings::set_current_module() must be over-ridden in a sub-class.' );
+		return $this;
 	}
 
 
+	/**
+	 * Set the current section.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $section The section to set.
+	 *
+	 * @return (object) The class instance.
+	 */
 	final protected function set_current_section( $section ) {
 		$this->sectionnow = $section;
 		return $this;
 	}
 
 
+	/**
+	 * Set the current plugin.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $plugin The plugin to set.
+	 *
+	 * @return (object) The class instance.
+	 */
 	final protected function set_current_plugin( $plugin ) {
 		$this->pluginnow = $plugin;
 		return $this;
 	}
 
 
+	/**
+	 * Set the current section description.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $description The description to set.
+	 *
+	 * @return (object) The class instance.
+	 */
 	final protected function set_section_description( $description ) {
 		$section_id = $this->modulenow . '|' . $this->sectionnow;
 
-		$this->sections_descriptions[ $section_id ] = $description;
+		$this->section_descriptions[ $section_id ] = $description;
 
 		return $this;
 	}
 
 
+	/**
+	 * Tell if the current section should display a Save button.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (bool) $value True to display the button. False to hide it.
+	 *
+	 * @return (object) The class instance.
+	 */
 	final protected function set_section_save_button( $value ) {
 		$section_id = $this->get_section_id();
 
 		if ( $value ) {
-			$this->sections_save_button[ $section_id ] = 1;
+			$this->section_save_buttons[ $section_id ] = 1;
 		} else {
-			unset( $this->sections_save_button[ $section_id ] );
+			unset( $this->section_save_buttons[ $section_id ] );
 		}
 
 		return $this;
 	}
 
 
-	// Getters =====================================================================================
+	// Getters =====================================================================================.
 
+	/**
+	 * Get the current module.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (string) The current module.
+	 */
 	final public function get_current_module() {
 		return $this->modulenow;
 	}
 
 
+	/**
+	 * Get the current section.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (string) The current section.
+	 */
 	final public function get_current_section() {
 		return $this->sectionnow;
 	}
 
 
+	/**
+	 * Get the current plugin.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (string) The current plugin.
+	 */
 	final public function get_current_plugin() {
 		return $this->pluginnow;
 	}
 
 
+	/**
+	 * Get the current section ID.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (string) The current section ID.
+	 */
 	public function get_section_id() {
 		return 'module_' . $this->modulenow . '|' . $this->sectionnow;
 	}
 
 
+	/**
+	 * Get the form action attribute (URL).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (string) The attribute.
+	 */
 	final public function get_form_action() {
 		return $this->form_action;
 	}
 
 
+	/**
+	 * Tells if the current module should be wrapped in a form.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (bool)
+	 */
 	final public function get_with_form() {
 		return $this->with_form;
 	}
 
 
-	// Init ========================================================================================
+	// Init ========================================================================================.
 
 	/**
 	 * Init: this method is required by the class `SecuPress_Singleton`.
@@ -110,10 +236,10 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	}
 
 
-	// Sections ====================================================================================
+	// Sections ====================================================================================.
 
 	/**
-	 * Add a new block in the page.
+	 * Add a section in the page (a block).
 	 *
 	 * @since 1.0
 	 *
@@ -145,7 +271,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		);
 
 		if ( (bool) $args['with_save_button'] ) {
-			$this->sections_save_button[ $section_id ] = 1;
+			$this->section_save_buttons[ $section_id ] = 1;
 		}
 
 		if ( ! $args['with_roles'] ) {
@@ -163,12 +289,12 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			'helpers'      => array(
 				array(
 					'type'        => 'description',
-					'description' => __( 'Future roles will be automatically checked.', 'secupress' )
+					'description' => __( 'Future roles will be automatically checked.', 'secupress' ),
 				),
 				array(
 					'type'        => 'warning',
 					'class'       => 'hide-if-js',
-					'description' => __( 'Select 1 role minimum', 'secupress' )
+					'description' => __( 'Select 1 role minimum', 'secupress' ),
 				),
 			),
 		) );
@@ -194,7 +320,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$this->do_settings_sections();
 		echo '</div>';
 
-		$with_save_button = ! empty( $this->sections_save_button[ $section_id ] );
+		$with_save_button = ! empty( $this->section_save_buttons[ $section_id ] );
 		if ( $with_save_button ) {
 			static::submit_button( 'primary small', $this->sectionnow . '_submit' );
 		}
@@ -240,7 +366,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	}
 
 
-	// Generic fields ==============================================================================
+	// Generic fields ==============================================================================.
 
 	/**
 	 * The main callback that prints basic fields.
@@ -291,10 +417,10 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		$name_attribute = $option_name . '[' . $args['name'] . ']';
 		$disabled       = ! empty( $args['disabled'] ) || static::is_pro_feature( $args['name'] );
 
-		// Type
+		// Type.
 		$args['type'] = 'radio' === $args['type'] ? 'radios' : $args['type'];
 
-		// Value
+		// Value.
 		if ( isset( $args['value'] ) ) {
 			$value = $args['value'];
 		} elseif ( 'global' === $this->modulenow ) {
@@ -307,7 +433,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$value = $args['default'];
 		}
 
-		// HTML attributes
+		// HTML attributes.
 		$attributes = '';
 		$args['attributes']['class'] = ! empty( $args['attributes']['class'] ) ? (array) $args['attributes']['class'] : array();
 
@@ -344,7 +470,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			}
 		}
 
-		// Fieldset
+		// Fieldset.
 		$has_fieldset_begin = false;
 		$has_fieldset_end   = false;
 
@@ -358,7 +484,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			case 'no' :
 				break;
 			default :
-				$fieldset_auto = array( 'checkboxes' => 1, 'radioboxes' => 1, 'radios' => 1, 'roles' => 1, );
+				$fieldset_auto = array( 'checkboxes' => 1, 'radioboxes' => 1, 'radios' => 1, 'roles' => 1 );
 
 				if ( 'yes' === $args['fieldset'] || isset( $fieldset_auto[ $args['type'] ] ) ) {
 					$has_fieldset_begin = true;
@@ -374,7 +500,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			}
 		}
 
-		// Labels
+		// Labels.
 		$label_open  = '';
 		$label_close = '';
 		if ( '' !== $args['label_before'] || '' !== $args['label'] || '' !== $args['label_after'] ) {
@@ -382,20 +508,21 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$label_close = '</label>';
 		}
 
-		// Types
+		// Types.
 		switch ( $args['type'] ) {
 			case 'number' :
 			case 'email' :
 			case 'tel' :
 			case 'text' :
 
-				echo $label_open;
+				echo $label_open; ?>
+					<?php
 					echo $args['label'] ? $args['label'] . '<br/>' : '';
 					echo $args['label_before'];
-					?>
-					<input type="<?php echo $args['type']; ?>" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>" value="<?php echo esc_attr( $value ); ?>"<?php echo $attributes; ?>/>
-					<?php
+					echo '<input type="' . $args['type'] . '" id="' . $args['label_for'] . '" name="' . $name_attribute . '" value="' . esc_attr( $value ) . '"' . $attributes . '/>';
 					echo $args['label_after'];
+					?>
+				<?php
 				echo $label_close;
 				break;
 
@@ -405,13 +532,14 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				$attributes .= empty( $args['attributes']['cols'] ) ? ' cols="50"' : '';
 				$attributes .= empty( $args['attributes']['rows'] ) ? ' rows="5"'  : '';
 
-				echo $label_open;
+				echo $label_open; ?>
+					<?php
 					echo $args['label'] ? $args['label'] . '<br/>' : '';
 					echo $args['label_before'];
-					?>
-					<textarea id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>"<?php echo $attributes; ?>><?php echo $value; ?></textarea>
-					<?php
+					echo '<textarea id="' . $args['label_for'] . '" name="' . $name_attribute . '"' . $attributes . '>' . $value . '</textarea>';
 					echo $args['label_after'];
+					?>
+				<?php
 				echo $label_close;
 				break;
 
@@ -420,7 +548,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				$value = array_flip( (array) $value );
 				$has_disabled = false;
 
-				echo $label_open;
+				echo $label_open; ?>
+					<?php
 					echo $args['label'] ? $args['label'] . '<br/>' : '';
 					echo $args['label_before'];
 					?>
@@ -440,19 +569,21 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					</select>
 					<?php
 					echo $args['label_after'];
+					?>
+				<?php
 				echo $label_close;
 				echo $has_disabled ? secupress_get_pro_version_string( '<span class="description">(*) %s</span>' ) : '';
 				break;
 
 			case 'checkbox' :
 
-				echo $label_open;
-					echo $args['label_before'];
-					?>
-					<input type="checkbox" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>" value="1"<?php checked( $value, 1 ); ?><?php echo $attributes; ?>/>
+				echo $label_open; ?>
 					<?php
+					echo $args['label_before'];
+					echo '<input type="checkbox" id="' . $args['label_for'] . '" name="' . $name_attribute . '" value="1"' . checked( $value, 1, false ) . $attributes . '/>';
 					echo $args['label'];
-				echo $label_close;
+					?>
+				<?php echo $label_close;
 				break;
 
 			case 'checkboxes' :
@@ -512,7 +643,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				$value          = array_flip( (array) array_filter( $value ) );
 				$disabled_class = $disabled ? ' disabled' : '';
 				$disabled_attr  = $disabled ? ' class="disabled"' : '';
-				$_countries     = array ( 'AF' => array ( 0 => 'Africa', 'AO' => 'Angola', 'BF' => 'Burkina Faso', 'BI' => 'Burundi', 'BJ' => 'Benin', 'BW' => 'Botswana', 'CD' => 'Congo, The Democratic Republic of the', 'CF' => 'Central African Republic', 'CG' => 'Congo', 'CI' => 'Cote D\'Ivoire', 'CM' => 'Cameroon', 'CV' => 'Cape Verde', 'DJ' => 'Djibouti', 'DZ' => 'Algeria', 'EG' => 'Egypt', 'EH' => 'Western Sahara', 'ER' => 'Eritrea', 'ET' => 'Ethiopia', 'GA' => 'Gabon', 'GH' => 'Ghana', 'GM' => 'Gambia', 'GN' => 'Guinea', 'GQ' => 'Equatorial Guinea', 'GW' => 'Guinea-Bissau', 'KE' => 'Kenya', 'KM' => 'Comoros', 'LR' => 'Liberia', 'LS' => 'Lesotho', 'LY' => 'Libya', 'MA' => 'Morocco', 'MG' => 'Madagascar', 'ML' => 'Mali', 'MR' => 'Mauritania', 'MU' => 'Mauritius', 'MW' => 'Malawi', 'MZ' => 'Mozambique', 'NA' => 'Namibia', 'NE' => 'Niger', 'NG' => 'Nigeria', 'RE' => 'Reunion', 'RW' => 'Rwanda', 'SC' => 'Seychelles', 'SD' => 'Sudan', 'SH' => 'Saint Helena', 'SL' => 'Sierra Leone', 'SN' => 'Senegal', 'SO' => 'Somalia', 'ST' => 'Sao Tome and Principe', 'SZ' => 'Swaziland', 'TD' => 'Chad', 'TG' => 'Togo', 'TN' => 'Tunisia', 'TZ' => 'Tanzania, United Republic of', 'UG' => 'Uganda', 'YT' => 'Mayotte', 'ZA' => 'South Africa', 'ZM' => 'Zambia', 'ZW' => 'Zimbabwe', 'SS' => 'South Sudan', ), 'AN' => array ( 0 => 'Antarctica', 'AQ' => 'Antarctica', 'BV' => 'Bouvet Island', 'GS' => 'South Georgia and the South Sandwich Islands', 'HM' => 'Heard Island and McDonald Islands', 'TF' => 'French Southern Territories', ), 'AS' => array ( 0 => 'Asia', 'AP' => 'Asia/Pacific Region', 'AE' => 'United Arab Emirates', 'AF' => 'Afghanistan', 'AM' => 'Armenia', 'AZ' => 'Azerbaijan', 'BD' => 'Bangladesh', 'BH' => 'Bahrain', 'BN' => 'Brunei Darussalam', 'BT' => 'Bhutan', 'CC' => 'Cocos (Keeling) Islands', 'CN' => 'China', 'CX' => 'Christmas Island', 'CY' => 'Cyprus', 'GE' => 'Georgia', 'HK' => 'Hong Kong', 'ID' => 'Indonesia', 'IL' => 'Israel', 'IN' => 'India', 'IO' => 'British Indian Ocean Territory', 'IQ' => 'Iraq', 'IR' => 'Iran, Islamic Republic of', 'JO' => 'Jordan', 'JP' => 'Japan', 'KG' => 'Kyrgyzstan', 'KH' => 'Cambodia', 'KP' => 'Korea, Democratic People\'s Republic of', 'KR' => 'Korea, Republic of', 'KW' => 'Kuwait', 'KZ' => 'Kazakhstan', 'LA' => 'Lao People\'s Democratic Republic', 'LB' => 'Lebanon', 'LK' => 'Sri Lanka', 'MM' => 'Myanmar', 'MN' => 'Mongolia', 'MO' => 'Macau', 'MV' => 'Maldives', 'MY' => 'Malaysia', 'NP' => 'Nepal', 'OM' => 'Oman', 'PH' => 'Philippines', 'PK' => 'Pakistan', 'PS' => 'Palestinian Territory', 'QA' => 'Qatar', 'SA' => 'Saudi Arabia', 'SG' => 'Singapore', 'SY' => 'Syrian Arab Republic', 'TH' => 'Thailand', 'TJ' => 'Tajikistan', 'TM' => 'Turkmenistan', 'TL' => 'Timor-Leste', 'TW' => 'Taiwan', 'UZ' => 'Uzbekistan', 'VN' => 'Vietnam', 'YE' => 'Yemen', ), 'EU' => array ( 0 => 'Europe', 'AD' => 'Andorra', 'AL' => 'Albania', 'AT' => 'Austria', 'BA' => 'Bosnia and Herzegovina', 'BE' => 'Belgium', 'BG' => 'Bulgaria', 'BY' => 'Belarus', 'CH' => 'Switzerland', 'CZ' => 'Czech Republic', 'DE' => 'Germany', 'DK' => 'Denmark', 'EE' => 'Estonia', 'ES' => 'Spain', 'FI' => 'Finland', 'FO' => 'Faroe Islands', 'FR' => 'France', 'GB' => 'United Kingdom', 'GI' => 'Gibraltar', 'GR' => 'Greece', 'HR' => 'Croatia', 'HU' => 'Hungary', 'IE' => 'Ireland', 'IS' => 'Iceland', 'IT' => 'Italy', 'LI' => 'Liechtenstein', 'LT' => 'Lithuania', 'LU' => 'Luxembourg', 'LV' => 'Latvia', 'MC' => 'Monaco', 'MD' => 'Moldova, Republic of', 'MK' => 'Macedonia', 'MT' => 'Malta', 'NL' => 'Netherlands', 'NO' => 'Norway', 'PL' => 'Poland', 'PT' => 'Portugal', 'RO' => 'Romania', 'RU' => 'Russian Federation', 'SE' => 'Sweden', 'SI' => 'Slovenia', 'SJ' => 'Svalbard and Jan Mayen', 'SK' => 'Slovakia', 'SM' => 'San Marino', 'TR' => 'Turkey', 'UA' => 'Ukraine', 'VA' => 'Holy See (Vatican City State)', 'RS' => 'Serbia', 'ME' => 'Montenegro', 'AX' => 'Aland Islands', 'GG' => 'Guernsey', 'IM' => 'Isle of Man', 'JE' => 'Jersey', ), 'OC' => array ( 0 => 'Oceania', 'AS' => 'American Samoa', 'AU' => 'Australia', 'CK' => 'Cook Islands', 'FJ' => 'Fiji', 'FM' => 'Micronesia, Federated States of', 'GU' => 'Guam', 'KI' => 'Kiribati', 'MH' => 'Marshall Islands', 'MP' => 'Northern Mariana Islands', 'NC' => 'New Caledonia', 'NF' => 'Norfolk Island', 'NR' => 'Nauru', 'NU' => 'Niue', 'NZ' => 'New Zealand', 'PF' => 'French Polynesia', 'PG' => 'Papua New Guinea', 'PN' => 'Pitcairn Islands', 'PW' => 'Palau', 'SB' => 'Solomon Islands', 'TK' => 'Tokelau', 'TO' => 'Tonga', 'TV' => 'Tuvalu', 'UM' => 'United States Minor Outlying Islands', 'VU' => 'Vanuatu', 'WF' => 'Wallis and Futuna', 'WS' => 'Samoa', ), 'NA' => array ( 0 => 'North America', 'AG' => 'Antigua and Barbuda', 'AI' => 'Anguilla', 'CW' => 'Curacao', 'AW' => 'Aruba', 'BB' => 'Barbados', 'BM' => 'Bermuda', 'BS' => 'Bahamas', 'BZ' => 'Belize', 'CA' => 'Canada', 'CR' => 'Costa Rica', 'CU' => 'Cuba', 'DM' => 'Dominica', 'DO' => 'Dominican Republic', 'SX' => 'Sint Maarten (Dutch part)', 'GD' => 'Grenada', 'GL' => 'Greenland', 'GP' => 'Guadeloupe', 'GT' => 'Guatemala', 'HN' => 'Honduras', 'HT' => 'Haiti', 'JM' => 'Jamaica', 'KN' => 'Saint Kitts and Nevis', 'KY' => 'Cayman Islands', 'LC' => 'Saint Lucia', 'MQ' => 'Martinique', 'MS' => 'Montserrat', 'MX' => 'Mexico', 'NI' => 'Nicaragua', 'PA' => 'Panama', 'PM' => 'Saint Pierre and Miquelon', 'PR' => 'Puerto Rico', 'SV' => 'El Salvador', 'TC' => 'Turks and Caicos Islands', 'TT' => 'Trinidad and Tobago', 'US' => 'United States', 'VC' => 'Saint Vincent and the Grenadines', 'VG' => 'Virgin Islands, British', 'VI' => 'Virgin Islands, U.S.', 'BL' => 'Saint Barthelemy', 'MF' => 'Saint Martin', 'BQ' => 'Bonaire, Saint Eustatius and Saba', ), 'SA' => array ( 0 => 'South America', 'AR' => 'Argentina', 'BO' => 'Bolivia', 'BR' => 'Brazil', 'CL' => 'Chile', 'CO' => 'Colombia', 'EC' => 'Ecuador', 'FK' => 'Falkland Islands (Malvinas)', 'GF' => 'French Guiana', 'GY' => 'Guyana', 'PE' => 'Peru', 'PY' => 'Paraguay', 'SR' => 'Suriname', 'UY' => 'Uruguay', 'VE' => 'Venezuela', ), );
+				$_countries     = array( 'AF' => array( 0 => 'Africa', 'AO' => 'Angola', 'BF' => 'Burkina Faso', 'BI' => 'Burundi', 'BJ' => 'Benin', 'BW' => 'Botswana', 'CD' => 'Congo, The Democratic Republic of the', 'CF' => 'Central African Republic', 'CG' => 'Congo', 'CI' => 'Cote D\'Ivoire', 'CM' => 'Cameroon', 'CV' => 'Cape Verde', 'DJ' => 'Djibouti', 'DZ' => 'Algeria', 'EG' => 'Egypt', 'EH' => 'Western Sahara', 'ER' => 'Eritrea', 'ET' => 'Ethiopia', 'GA' => 'Gabon', 'GH' => 'Ghana', 'GM' => 'Gambia', 'GN' => 'Guinea', 'GQ' => 'Equatorial Guinea', 'GW' => 'Guinea-Bissau', 'KE' => 'Kenya', 'KM' => 'Comoros', 'LR' => 'Liberia', 'LS' => 'Lesotho', 'LY' => 'Libya', 'MA' => 'Morocco', 'MG' => 'Madagascar', 'ML' => 'Mali', 'MR' => 'Mauritania', 'MU' => 'Mauritius', 'MW' => 'Malawi', 'MZ' => 'Mozambique', 'NA' => 'Namibia', 'NE' => 'Niger', 'NG' => 'Nigeria', 'RE' => 'Reunion', 'RW' => 'Rwanda', 'SC' => 'Seychelles', 'SD' => 'Sudan', 'SH' => 'Saint Helena', 'SL' => 'Sierra Leone', 'SN' => 'Senegal', 'SO' => 'Somalia', 'ST' => 'Sao Tome and Principe', 'SZ' => 'Swaziland', 'TD' => 'Chad', 'TG' => 'Togo', 'TN' => 'Tunisia', 'TZ' => 'Tanzania, United Republic of', 'UG' => 'Uganda', 'YT' => 'Mayotte', 'ZA' => 'South Africa', 'ZM' => 'Zambia', 'ZW' => 'Zimbabwe', 'SS' => 'South Sudan' ), 'AN' => array( 0 => 'Antarctica', 'AQ' => 'Antarctica', 'BV' => 'Bouvet Island', 'GS' => 'South Georgia and the South Sandwich Islands', 'HM' => 'Heard Island and McDonald Islands', 'TF' => 'French Southern Territories' ), 'AS' => array( 0 => 'Asia', 'AP' => 'Asia/Pacific Region', 'AE' => 'United Arab Emirates', 'AF' => 'Afghanistan', 'AM' => 'Armenia', 'AZ' => 'Azerbaijan', 'BD' => 'Bangladesh', 'BH' => 'Bahrain', 'BN' => 'Brunei Darussalam', 'BT' => 'Bhutan', 'CC' => 'Cocos (Keeling) Islands', 'CN' => 'China', 'CX' => 'Christmas Island', 'CY' => 'Cyprus', 'GE' => 'Georgia', 'HK' => 'Hong Kong', 'ID' => 'Indonesia', 'IL' => 'Israel', 'IN' => 'India', 'IO' => 'British Indian Ocean Territory', 'IQ' => 'Iraq', 'IR' => 'Iran, Islamic Republic of', 'JO' => 'Jordan', 'JP' => 'Japan', 'KG' => 'Kyrgyzstan', 'KH' => 'Cambodia', 'KP' => 'Korea, Democratic People\'s Republic of', 'KR' => 'Korea, Republic of', 'KW' => 'Kuwait', 'KZ' => 'Kazakhstan', 'LA' => 'Lao People\'s Democratic Republic', 'LB' => 'Lebanon', 'LK' => 'Sri Lanka', 'MM' => 'Myanmar', 'MN' => 'Mongolia', 'MO' => 'Macau', 'MV' => 'Maldives', 'MY' => 'Malaysia', 'NP' => 'Nepal', 'OM' => 'Oman', 'PH' => 'Philippines', 'PK' => 'Pakistan', 'PS' => 'Palestinian Territory', 'QA' => 'Qatar', 'SA' => 'Saudi Arabia', 'SG' => 'Singapore', 'SY' => 'Syrian Arab Republic', 'TH' => 'Thailand', 'TJ' => 'Tajikistan', 'TM' => 'Turkmenistan', 'TL' => 'Timor-Leste', 'TW' => 'Taiwan', 'UZ' => 'Uzbekistan', 'VN' => 'Vietnam', 'YE' => 'Yemen' ), 'EU' => array( 0 => 'Europe', 'AD' => 'Andorra', 'AL' => 'Albania', 'AT' => 'Austria', 'BA' => 'Bosnia and Herzegovina', 'BE' => 'Belgium', 'BG' => 'Bulgaria', 'BY' => 'Belarus', 'CH' => 'Switzerland', 'CZ' => 'Czech Republic', 'DE' => 'Germany', 'DK' => 'Denmark', 'EE' => 'Estonia', 'ES' => 'Spain', 'FI' => 'Finland', 'FO' => 'Faroe Islands', 'FR' => 'France', 'GB' => 'United Kingdom', 'GI' => 'Gibraltar', 'GR' => 'Greece', 'HR' => 'Croatia', 'HU' => 'Hungary', 'IE' => 'Ireland', 'IS' => 'Iceland', 'IT' => 'Italy', 'LI' => 'Liechtenstein', 'LT' => 'Lithuania', 'LU' => 'Luxembourg', 'LV' => 'Latvia', 'MC' => 'Monaco', 'MD' => 'Moldova, Republic of', 'MK' => 'Macedonia', 'MT' => 'Malta', 'NL' => 'Netherlands', 'NO' => 'Norway', 'PL' => 'Poland', 'PT' => 'Portugal', 'RO' => 'Romania', 'RU' => 'Russian Federation', 'SE' => 'Sweden', 'SI' => 'Slovenia', 'SJ' => 'Svalbard and Jan Mayen', 'SK' => 'Slovakia', 'SM' => 'San Marino', 'TR' => 'Turkey', 'UA' => 'Ukraine', 'VA' => 'Holy See (Vatican City State)', 'RS' => 'Serbia', 'ME' => 'Montenegro', 'AX' => 'Aland Islands', 'GG' => 'Guernsey', 'IM' => 'Isle of Man', 'JE' => 'Jersey' ), 'OC' => array( 0 => 'Oceania', 'AS' => 'American Samoa', 'AU' => 'Australia', 'CK' => 'Cook Islands', 'FJ' => 'Fiji', 'FM' => 'Micronesia, Federated States of', 'GU' => 'Guam', 'KI' => 'Kiribati', 'MH' => 'Marshall Islands', 'MP' => 'Northern Mariana Islands', 'NC' => 'New Caledonia', 'NF' => 'Norfolk Island', 'NR' => 'Nauru', 'NU' => 'Niue', 'NZ' => 'New Zealand', 'PF' => 'French Polynesia', 'PG' => 'Papua New Guinea', 'PN' => 'Pitcairn Islands', 'PW' => 'Palau', 'SB' => 'Solomon Islands', 'TK' => 'Tokelau', 'TO' => 'Tonga', 'TV' => 'Tuvalu', 'UM' => 'United States Minor Outlying Islands', 'VU' => 'Vanuatu', 'WF' => 'Wallis and Futuna', 'WS' => 'Samoa' ), 'NA' => array( 0 => 'North America', 'AG' => 'Antigua and Barbuda', 'AI' => 'Anguilla', 'CW' => 'Curacao', 'AW' => 'Aruba', 'BB' => 'Barbados', 'BM' => 'Bermuda', 'BS' => 'Bahamas', 'BZ' => 'Belize', 'CA' => 'Canada', 'CR' => 'Costa Rica', 'CU' => 'Cuba', 'DM' => 'Dominica', 'DO' => 'Dominican Republic', 'SX' => 'Sint Maarten (Dutch part)', 'GD' => 'Grenada', 'GL' => 'Greenland', 'GP' => 'Guadeloupe', 'GT' => 'Guatemala', 'HN' => 'Honduras', 'HT' => 'Haiti', 'JM' => 'Jamaica', 'KN' => 'Saint Kitts and Nevis', 'KY' => 'Cayman Islands', 'LC' => 'Saint Lucia', 'MQ' => 'Martinique', 'MS' => 'Montserrat', 'MX' => 'Mexico', 'NI' => 'Nicaragua', 'PA' => 'Panama', 'PM' => 'Saint Pierre and Miquelon', 'PR' => 'Puerto Rico', 'SV' => 'El Salvador', 'TC' => 'Turks and Caicos Islands', 'TT' => 'Trinidad and Tobago', 'US' => 'United States', 'VC' => 'Saint Vincent and the Grenadines', 'VG' => 'Virgin Islands, British', 'VI' => 'Virgin Islands, U.S.', 'BL' => 'Saint Barthelemy', 'MF' => 'Saint Martin', 'BQ' => 'Bonaire, Saint Eustatius and Saba' ), 'SA' => array( 0 => 'South America', 'AR' => 'Argentina', 'BO' => 'Bolivia', 'BR' => 'Brazil', 'CL' => 'Chile', 'CO' => 'Colombia', 'EC' => 'Ecuador', 'FK' => 'Falkland Islands (Malvinas)', 'GF' => 'French Guiana', 'GY' => 'Guyana', 'PE' => 'Peru', 'PY' => 'Paraguay', 'SR' => 'Suriname', 'UY' => 'Uruguay', 'VE' => 'Venezuela' ) );
 
 				foreach ( $_countries as $code_country => $countries ) {
 					$title   = array_shift( $countries );
@@ -604,7 +735,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				} elseif ( method_exists( $this, $args['type'] ) ) {
 					call_user_func( array( $this, $args['type'] ), $args );
 				} else {
-					echo 'Type manquant ou incorrect'; // ne pas traduire
+					echo 'Missing or incorrect type'; // Do not translate.
 				}
 		}
 
@@ -621,6 +752,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * Used to display buttons.
 	 *
 	 * @since 1.0
+	 *
+	 * @param (array) $args An array of parameters. See `::field()`.
 	 */
 	protected function field_button( $args ) {
 
@@ -637,7 +770,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			}
 		}
 
-		// Helpers
+		// Helpers.
 		static::helpers( $args );
 	}
 
@@ -695,7 +828,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	}
 
 
-	// Specific fields =============================================================================
+	// Specific fields =============================================================================.
 
 	/**
 	 * Outputs the form used by the importers to accept the data to be imported.
@@ -761,7 +894,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	protected function scheduled_backups() {
-		//// tempo
+		// //// Tempo.
 		echo '<p><em>No scheduled backups yet, create one?</em></p>';
 		echo '<a href="' . esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_clear_alerts' ), 'secupress_clear_alerts' ) ) . '" class="button button-secondary">' . __( 'Clear Alerts', 'secupress' ) . '</a>';
 	}
@@ -791,8 +924,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		echo "</form>\n";
 
 		// Search.
-		if ( $ban_ips && ! empty( $_POST['secupress-search-banned-ip'] ) ) {
-			$search    = urldecode( trim( $_POST['secupress-search-banned-ip'] ) );
+		if ( $ban_ips && ! empty( $_POST['secupress-search-banned-ip'] ) ) { // WPCS: CSRF ok.
+			$search    = urldecode( trim( $_POST['secupress-search-banned-ip'] ) ); // WPCS: CSRF ok.
 			$is_search = true;
 
 			if ( secupress_ip_is_valid( $search ) ) {
@@ -831,20 +964,20 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 		// Display the list.
 		echo '<ul id="secupress-banned-ips-list" class="secupress-boxed-group">';
-			if ( $ban_ips ) {
-				foreach ( $ban_ips as $ip => $time ) {
-					echo '<li class="secupress-large-row">';
-						$format = __( 'M jS Y', 'secupress' ) . ' ' . __( 'G:i', 'secupress' );
-						$time   =  $time > $in_ten_years ? __( 'Forever', 'secupress' ) : date_i18n( $format, $time + $offset );
-						$href   = wp_nonce_url( admin_url( 'admin-post.php?action=secupress-unban-ip&ip=' . esc_attr( $ip ) . $referer_arg ), 'secupress-unban-ip_' . $ip );
+		if ( $ban_ips ) {
+			foreach ( $ban_ips as $ip => $time ) {
+				echo '<li class="secupress-large-row">';
+					$format = __( 'M jS Y', 'secupress' ) . ' ' . __( 'G:i', 'secupress' );
+					$time   = $time > $in_ten_years ? __( 'Forever', 'secupress' ) : date_i18n( $format, $time + $offset );
+					$href   = wp_nonce_url( admin_url( 'admin-post.php?action=secupress-unban-ip&ip=' . esc_attr( $ip ) . $referer_arg ), 'secupress-unban-ip_' . $ip );
 
-						printf( '<strong>%s</strong> <em>(%s)</em>', esc_html( $ip ), $time );
-						printf( '<span><a class="a-unban-ip" href="%s">%s</a> <span class="spinner secupress-inline-spinner hide-if-no-js"></span></span>', esc_url( $href ), __( 'Delete', 'secupress' ) );
-					echo "</li>\n";
-				}
-			} else {
-				echo '<li id="no-ips">' . $empty_list_message . '</li>';
+					printf( '<strong>%s</strong> <em>(%s)</em>', esc_html( $ip ), $time );
+					printf( '<span><a class="a-unban-ip" href="%s">%s</a> <span class="spinner secupress-inline-spinner hide-if-no-js"></span></span>', esc_url( $href ), __( 'Delete', 'secupress' ) );
+				echo "</li>\n";
 			}
+		} else {
+			echo '<li id="no-ips">' . $empty_list_message . '</li>';
+		}
 		echo "</ul>\n";
 
 		// Actions.
@@ -864,6 +997,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * Displays the textarea that lists the IP addresses not to ban.
 	 *
 	 * @since 1.0
+	 *
+	 * @param (array) $args An array of parameters. See `::field()`.
 	 */
 	protected function ips_whitelist( $args ) {
 		$name_attribute = 'secupress_' . $this->modulenow . '_settings[' . $args['name'] . ']';
@@ -884,7 +1019,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$whitelist = '';
 		}
 
-		// Labels
+		// Labels.
 		$label_open  = '';
 		$label_close = '';
 		if ( '' !== $args['label_before'] || '' !== $args['label'] || '' !== $args['label_after'] ) {
@@ -913,6 +1048,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * Displays the checkbox to activate the "action" Logs.
 	 *
 	 * @since 1.0
+	 *
+	 * @param (array) $args An array of parameters. See `::field()`.
 	 */
 	protected function activate_action_logs( $args ) {
 		$name_attribute = 'secupress-plugin-activation[' . $args['name'] . ']';
@@ -920,7 +1057,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		$disabled       = $disabled ? ' disabled="disabled"' : '';
 		$value          = (int) secupress_is_submodule_active( 'logs', 'action-logs' );
 
-		// Labels
+		// Labels.
 		$label_open  = '';
 		$label_close = '';
 		if ( '' !== $args['label_before'] || '' !== $args['label'] || '' !== $args['label_after'] ) {
@@ -929,14 +1066,13 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		}
 		?>
 		<form action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_activate_action_logs' ), 'secupress_activate_action_logs' ) ); ?>" id="form-activate-action-logs" method="post">
-			<?php
-			echo $label_open;
-				echo $args['label_before'];
-				?>
-				<input type="checkbox" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>" value="1"<?php checked( $value, 1 ); ?><?php echo $disabled; ?>/>
+			<?php echo $label_open; ?>
 				<?php
+				echo $args['label_before'];
+				echo ' <input type="checkbox" id="' . $args['label_for'] . '" name="' . $name_attribute . '" value="1"' . checked( $value, 1, false ) .  $disabled . '/> ';
 				echo $args['label'];
-			echo $label_close;
+				?>
+			<?php echo $label_close;
 
 			echo '<p class="description desc">';
 				_e( 'We will not log post action like creation or update but rather password and profile update, email changes, new administrator user, admin has logged in...', 'secupress' );
@@ -953,6 +1089,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * Displays the checkbox to activate the "404" Logs.
 	 *
 	 * @since 1.0
+	 *
+	 * @param (array) $args An array of parameters. See `::field()`.
 	 */
 	protected function activate_404_logs( $args ) {
 		$name_attribute = 'secupress-plugin-activation[' . $args['name'] . ']';
@@ -960,7 +1098,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		$disabled       = $disabled ? ' disabled="disabled"' : '';
 		$value          = (int) secupress_is_submodule_active( 'logs', '404-logs' );
 
-		// Labels
+		// Labels.
 		$label_open  = '';
 		$label_close = '';
 		if ( '' !== $args['label_before'] || '' !== $args['label'] || '' !== $args['label_after'] ) {
@@ -969,17 +1107,15 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		}
 		?>
 		<form action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_activate_404_logs' ), 'secupress_activate_404_logs' ) ); ?>" id="form-activate-404-logs" method="post">
-			<?php
-			echo $label_open;
-				echo $args['label_before'];
-				?>
-				<input type="checkbox" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>" value="1"<?php checked( $value, 1 ); ?><?php echo $disabled; ?>/>
+			<?php echo $label_open; ?>
 				<?php
+				echo $args['label_before'];
+				echo ' <input type="checkbox" id="' . $args['label_for'] . '" name="' . $name_attribute . '" value="1"' . checked( $value, 1, false ) .  $disabled . '/> ';
 				echo $args['label'];
-			echo $label_close;
+				?>
+			<?php echo $label_close; ?>
 
-			submit_button( __( 'Submit' ) );
-			?>
+			<?php submit_button( __( 'Submit' ) ); ?>
 		</form>
 		<?php
 	}
@@ -1056,7 +1192,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	protected function backup_files() {
-		//// create an option so save when we launch a backup, see pro version
+		// //// Create an option so save when we launch a backup, see pro version.
 		$ignored_directories  = str_replace( ABSPATH, '', WP_CONTENT_DIR . '/cache/' ) . "\n";
 		$ignored_directories .= str_replace( ABSPATH, '', WP_CONTENT_DIR . '/backups/' );
 		?>
@@ -1113,12 +1249,15 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		}
 	}
 
-	// Fields related ==============================================================================
+
+	// Fields related ==============================================================================.
 
 	/**
-	 * Output a correct name for setting fields.
+	 * Get a correct name for setting fields based on the current module.
 	 *
 	 * @since 1.0
+	 *
+	 * @param (string) $field A field name.
 	 *
 	 * @return (string)
 	 */
@@ -1228,10 +1367,11 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			}
 
 			unset( $field['args']['row_id'], $field['args']['row_class'], $field['args']['depends'] );
+			?>
+			<tr<?php echo $id . $class; ?>>
 
-			echo "<tr{$id}{$class}>";
-
-				echo '<th scope="row">';
+				<th scope="row">
+					<?php
 					// Row title.
 					if ( $field['title'] ) {
 						$id = explode( '|', $field['id'] );
@@ -1253,18 +1393,20 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 						echo '<p class="description">' . $field['args']['description'] . '</p>';
 					}
 					unset( $field['args']['description'] );
-				echo '</th>';
+					?>
+				</th>
 
-				echo '<td>';
-				call_user_func( $field['callback'], $field['args'] );
-				echo '</td>';
+				<td>
+					<?php call_user_func( $field['callback'], $field['args'] ); ?>
+				</td>
 
-			echo '</tr>';
+			</tr>
+			<?php
 		}
 	}
 
 
-	// Main template tags ==========================================================================
+	// Main template tags ==========================================================================.
 
 	/**
 	 * Print the page content. Must be extended.
@@ -1276,7 +1418,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	}
 
 
-	// Other template tags =========================================================================
+	// Other template tags =========================================================================.
 
 	/**
 	 * Print the current section description (because you wouldn't guess by the method's name, be thankful).
@@ -1288,9 +1430,9 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	protected function print_section_description() {
 		$key = $this->modulenow . '|' . $this->sectionnow;
 
-		if ( ! empty( $this->sections_descriptions[ $key ] ) ) {
+		if ( ! empty( $this->section_descriptions[ $key ] ) ) {
 			echo '<div class="secupress-section-description"><em>';
-				echo $this->sections_descriptions[ $key ];
+				echo $this->section_descriptions[ $key ];
 			echo '</em></div>';
 		}
 
@@ -1332,7 +1474,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	}
 
 
-	// Utilities ===================================================================================
+	// Utilities ===================================================================================.
 
 	/**
 	 * Tell if the option value is for the pro version and we're not using the pro version.
@@ -1348,7 +1490,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	}
 
 
-	// Includes ====================================================================================
+	// Includes ====================================================================================.
 
 	/**
 	 * Include a module settings file. Also, automatically set the current module and print the sections.
@@ -1372,5 +1514,4 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 		return $this;
 	}
-
 }

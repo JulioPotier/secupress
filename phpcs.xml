@@ -5,7 +5,7 @@
 	<arg name="extensions" value="php"/>
 	<arg value="s"/>
 
-	<file>secupress.php</file>
+	<!--<file>secupress.php</file>
 	<file>uninstall.php</file>
 
 	<file>inc/admin</file>
@@ -13,11 +13,12 @@
 	<file>inc/functions</file>
 	<file>inc/classes/admin</file>
 	<file>inc/classes/common</file>
-	<file>inc/classes/scanners</file>
+	<file>inc/classes/scanners</file>-->
+	<file>inc/classes/settings</file>
 
-	<file>inc/admin-bar.php</file>
+	<!--<file>inc/admin-bar.php</file>
 	<file>inc/cron.php</file>
-	<file>inc/network-options-autoload.php</file>
+	<file>inc/network-options-autoload.php</file>-->
 
 	<exclude-pattern>*.js</exclude-pattern>
 
