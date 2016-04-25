@@ -8,18 +8,30 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @subpackage SecuPress_Scan
  * @since 1.0
  */
-
-class SecuPress_Scan_Subscription extends SecuPress_Scan implements iSecuPress_Scan {
+class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
 	const VERSION = '1.0';
 
 	/**
-	 * @var Singleton The reference to *Singleton* instance of this class
+	 * The reference to *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
-	public    static $prio = 'high';
+
+	/**
+	 * Priority.
+	 *
+	 * @var (string)
+	 */
+	public    static $prio    = 'high';
 
 
+	/**
+	 * Init.
+	 *
+	 * @since 1.0
+	 */
 	protected static function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if the subscription settings are set correctly.', 'secupress' );
@@ -44,15 +56,24 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements iSecuPress_S
 	}
 
 
+	/**
+	 * Get messages.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int) $message_id A message ID.
+	 *
+	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
+	 */
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
-			// good
+			// "good"
 			0   => __( 'Your subscription settings are set correctly.', 'secupress' ),
 			1   => __( 'A captcha module has been activated to block bot registration.', 'secupress' ),
 			2   => __( 'The user role for new registrations has been set to <strong>Subscriber</strong>.', 'secupress' ),
-			// warning
+			// "warning"
 			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
-			// bad
+			// "bad"
 			200 => __( 'The default role in your installation is <strong>%s</strong> and it should be <strong>Subscriber</strong>, or registrations should be <strong>closed</strong>.', 'secupress' ),
 			201 => __( 'The registration page is <strong>not protected</strong> from bots.', 'secupress' ),
 			202 => _n_noop( 'The default role is not Subscriber in %s of your sites.', 'The default role is not Subscriber in %s of your sites.', 'secupress' ),
@@ -68,17 +89,24 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements iSecuPress_S
 	}
 
 
+	/**
+	 * Scan for flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The scan results.
+	 */
 	public function scan() {
 		global $wp_roles;
 
 		// Subscriptions are closed.
 		if ( ! secupress_users_can_register() ) {
-			// good
+			// "good"
 			$this->add_message( 0 );
 			return parent::scan();
 		}
 
-		// Default role
+		// Default role.
 		if ( $this->is_network_admin() ) {
 			$roles = get_site_option( 'secupress_default_role' );
 			$blogs = array();
@@ -90,20 +118,20 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements iSecuPress_S
 			}
 
 			if ( $count = count( $blogs ) ) {
-				// bad
+				// "bad"
 				$this->add_message( 202, array( $count, $count ) );
 			}
 		} else {
 			$role = get_option( 'default_role' );
 
 			if ( 'subscriber' !== $role ) {
-				// bad
+				// "bad"
 				$role = isset( $wp_roles->role_names[ $role ] ) ? translate_user_role( $wp_roles->role_names[ $role ] ) : __( 'None' );
 				$this->add_message( 200, array( $role ) );
 			}
 		}
 
-		// Bots
+		// Bots.
 		$user_login = 'secupress_' . time();
 		$response   = wp_remote_post( wp_registration_url(), array(
 			'body' => array(
@@ -119,25 +147,31 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements iSecuPress_S
 				wp_delete_user( $user_id );
 
 				if ( 'failed' === get_transient( 'secupress_registration_test' ) ) {
-					// bad
+					// "bad"
 					$this->add_message( 201 );
 				}
 			}
-
 		} else {
-			// warning
+			// "warning"
 			$this->add_message( 100 );
 		}
 
 		delete_transient( 'secupress_registration_test' );
 
-		// good
+		// "good"
 		$this->maybe_set_status( 0 );
 
 		return parent::scan();
 	}
 
 
+	/**
+	 * Try to fix the flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The fix results.
+	 */
 	public function fix() {
 		global $wp_roles;
 
@@ -145,7 +179,7 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements iSecuPress_S
 			return parent::fix();
 		}
 
-		// Default role
+		// Default role.
 		if ( $this->is_network_admin() ) {
 
 			$roles  = get_site_option( 'secupress_default_role' );
@@ -164,20 +198,19 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements iSecuPress_S
 			}
 
 			if ( $is_bad ) {
-				// cantfix
+				// "cantfix"
 				$this->add_fix_message( 300 );
 			}
-
 		} elseif ( 'subscriber' !== get_option( 'default_role' ) ) {
 			update_option( 'default_role', 'subscriber' );
-			// good
+			// "good"
 			$this->add_fix_message( 2 );
 		}
 
 		// Bots: use a captcha.
 		secupress_activate_submodule( 'users-login', 'login-captcha' );
 
-		// good
+		// "good"
 		$this->add_fix_message( 1 );
 
 		return parent::fix();

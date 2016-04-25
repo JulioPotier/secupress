@@ -8,18 +8,30 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @subpackage SecuPress_Scan
  * @since 1.0
  */
-
-class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements iSecuPress_Scan {
+class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
 	const VERSION = '1.0';
 
 	/**
-	 * @var Singleton The reference to *Singleton* instance of this class
+	 * The reference to *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
-	public    static $prio = 'high';
+
+	/**
+	 * Priority.
+	 *
+	 * @var (string)
+	 */
+	public    static $prio    = 'high';
 
 
+	/**
+	 * Init.
+	 *
+	 * @since 1.0
+	 */
 	protected static function init() {
 		self::$type  = 'PHP';
 		self::$title = __( 'Check if your website can easily be the target of common flaws.', 'secupress' );
@@ -32,16 +44,25 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements iSecuPress_S
 	}
 
 
+	/**
+	 * Get messages.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int) $message_id A message ID.
+	 *
+	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
+	 */
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
-			// good
+			// "good"
 			0   => _n_noop( 'All is ok, %d test passed.', 'All is ok, %d tests passed.', 'secupress' ),
 			1   => __( 'Protection activated', 'secupress' ),
-			// warning
+			// "warning"
 			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
 			101 => sprintf( __( 'Unable to determine status of <strong>Shellshock</strong> flaw (%s).', 'secupress' ), '<em>CVE-2014-6271</em>' ),
 			102 => sprintf( __( 'Unable to determine status of <strong>Shellshock</strong> flaw (%s).', 'secupress' ), '<em>CVE-2014-7169</em>' ),
-			// bad
+			// "bad"
 			200 => __( 'Your website pages should be <strong>different</strong> for each reload.', 'secupress' ),
 			201 => sprintf( __( 'The server appears to be vulnerable to <strong>Shellshock</strong> (%s).', 'secupress' ), '<em>CVE-2014-6271</em>' ),
 			202 => sprintf( __( 'The server appears to be vulnerable to <strong>Shellshock</strong> (%s).', 'secupress' ), '<em>CVE-2014-7169</em>' ),
@@ -56,10 +77,17 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements iSecuPress_S
 	}
 
 
+	/**
+	 * Scan for flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The scan results.
+	 */
 	public function scan() {
 		$nbr_tests = 0;
 
-		// Shellshock - http://plugins.svn.wordpress.org/shellshock-check/trunk/shellshock-check.php
+		// Shellshock - http://plugins.svn.wordpress.org/shellshock-check/trunk/shellshock-check.php.
 		if ( 'WIN' !== strtoupper( substr( PHP_OS, 0, 3 ) ) ) {
 			++$nbr_tests;
 
@@ -71,67 +99,69 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements iSecuPress_S
 				2 => array( 'pipe', 'w' ),
 			);
 
-			// CVE-2014-6271
+			// CVE-2014-6271.
 			$p      = proc_open( 'bash -c "echo Test"', $desc, $pipes, null, $env );
 			$output = isset( $pipes[1] ) ? stream_get_contents( $pipes[1] ) : 'error';
 			proc_close( $p );
 
-			if ( false === strpos( $output, 'VULNERABLE' ) ) {
-				// good
-			} elseif ( 'error' === $output ) {
-				// warning
+			if ( 'error' === $output ) {
+				// "warning"
 				$this->add_message( 101 );
-			} else {
-				// bad
+			} elseif ( false !== strpos( $output, 'VULNERABLE' ) ) {
+				// "bad"
 				$this->add_message( 201 );
 			}
 
-			// CVE-2014-7169
+			// CVE-2014-7169.
 			$test_date = date( 'Y' );
 			$p         = proc_open( "rm -f echo; env 'x=() { (a)=>\' bash -c \"echo date +%Y\"; cat echo", $desc, $pipes, sys_get_temp_dir() );
 			$output    = isset( $pipes[1] ) ? stream_get_contents( $pipes[1] ) : 'error';
 			proc_close( $p );
 
-			if ( trim( $output ) !== $test_date ) {
-				// good
-			} elseif ( 'error' === $output ) {
-				// warning
+			if ( 'error' === $output ) {
+				// "warning"
 				$this->add_message( 102 );
-			} else {
-				// bad
+			} elseif ( trim( $output ) === $test_date ) {
+				// "bad"
 				$this->add_message( 202 );
 			}
 		}
 
-		// wp-config.php access
+		// `wp-config.php` access.
 		++$nbr_tests;
 		$response = wp_remote_get( user_trailingslashit( home_url() ) . '?' . time() . '=wp-config.php', array( 'redirection' => 0 ) );
 
 		if ( ! is_wp_error( $response ) ) {
 
 			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
-				// bad
+				// "bad"
 				$this->add_message( 203 );
 			}
-
 		} else {
-			// warning
+			// "warning"
 			$this->add_message( 100 );
 		}
 
-		// good
+		// "good"
 		$this->maybe_set_status( 0, array( $nbr_tests, $nbr_tests ) );
 
 		return parent::scan();
 	}
 
 
+	/**
+	 * Try to fix the flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The fix results.
+	 */
 	public function fix() {
 
 		// Activate.
 		secupress_activate_submodule( 'firewall', 'bad-url-contents' );
 
-		// good
+		// "good"
 		$this->add_fix_message( 1 );
 
 		return parent::fix();

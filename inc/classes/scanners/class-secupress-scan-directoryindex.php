@@ -8,18 +8,30 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @subpackage SecuPress_Scan
  * @since 1.0
  */
-
-class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements iSecuPress_Scan {
+class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
 	const VERSION = '1.0';
 
 	/**
-	 * @var Singleton The reference to *Singleton* instance of this class
+	 * The reference to *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
-	public    static $prio = 'low';
+
+	/**
+	 * Priority.
+	 *
+	 * @var (string)
+	 */
+	public    static $prio    = 'low';
 
 
+	/**
+	 * Init.
+	 *
+	 * @since 1.0
+	 */
 	protected static function init() {
 		global $is_apache, $is_nginx, $is_iis7;
 
@@ -45,16 +57,25 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements iSecuPress
 	}
 
 
+	/**
+	 * Get messages.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int) $message_id A message ID.
+	 *
+	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
+	 */
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
-			// good
+			// "good"
 			0   => sprintf( __( '%s is the first file loaded, perfect.', 'secupress' ), '<code>index.php</code>' ),
 			1   => __( 'Your %s file has been successfully edited.', 'secupress' ),
-			// warning
+			// "warning"
 			100 => __( 'Unable to determine status of the directory index.', 'secupress' ),
-			// bad
+			// "bad"
 			200 => sprintf( __( 'Your website should load %1$s first, actually it loads %2$s first.', 'secupress' ), '<code>index.php</code>', '%s' ),
-			// cantfix
+			// "cantfix"
 			/* translators: 1 is a file name, 2 is some code */
 			300 => sprintf( __( 'Your server runs a nginx system, the directory index cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
 			301 => __( 'Your server runs a non recognized system. The directory index cannot be fixed automatically.', 'secupress' ),
@@ -72,6 +93,13 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements iSecuPress
 	}
 
 
+	/**
+	 * Scan for flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The scan results.
+	 */
 	public function scan() {
 		$response = wp_remote_get( SECUPRESS_PLUGIN_URL . 'inc/DirectoryIndex', array( 'redirection' => 1 ) );
 
@@ -80,26 +108,32 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements iSecuPress
 			$response_body = wp_remote_retrieve_body( $response );
 
 			if ( 'index.php' !== $response_body ) {
-				// bad
+				// "bad"
 				$this->add_message( 200, array( '<code>' . esc_html( $response_body ) . '</code>' ) );
 
 				if ( ! self::$fixable ) {
 					$this->add_pre_fix_message( 301 );
 				}
 			}
-
 		} else {
-			// warning
+			// "warning"
 			$this->add_message( 100 );
 		}
 
-		// good
+		// "good"
 		$this->maybe_set_status( 0 );
 
 		return parent::scan();
 	}
 
 
+	/**
+	 * Try to fix the flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The fix results.
+	 */
 	public function fix() {
 		global $is_apache, $is_nginx, $is_iis7;
 
@@ -111,13 +145,18 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements iSecuPress
 			$this->_fix_nginx();
 		}
 
-		// good
+		// "good"
 		$this->maybe_set_fix_status( 0 );
 
 		return parent::fix();
 	}
 
 
+	/**
+	 * Fix for Apache system.
+	 *
+	 * @since 1.0
+	 */
 	protected function _fix_apache() {
 		global $wp_settings_errors;
 
@@ -127,17 +166,22 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements iSecuPress
 		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
 
 		if ( $last_error && 'general' === $last_error['setting'] && 'apache_manual_edit' === $last_error['code'] ) {
-			// cantfix
+			// "cantfix"
 			$this->add_fix_message( 302, array( '<code>.htaccess</code>', static::_get_rules_from_error( $last_error ) ) );
 			array_pop( $wp_settings_errors );
 			return;
 		}
 
-		// good
+		// "good"
 		$this->add_fix_message( 1, array( '<code>.htaccess</code>' ) );
 	}
 
 
+	/**
+	 * Fix for IIS7 system.
+	 *
+	 * @since 1.0
+	 */
 	protected function _fix_iis7() {
 		global $wp_settings_errors;
 
@@ -147,17 +191,22 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements iSecuPress
 		$last_error = end( $wp_settings_errors );
 
 		if ( $last_error && 'general' === $last_error['setting'] && 'iis7_manual_edit' === $last_error['code'] ) {
-			// cantfix
+			// "cantfix"
 			$this->add_fix_message( 303, array( '<code>web.config</code>', '/configuration/system.webServer', static::_get_rules_from_error( $last_error ) ) );
 			array_pop( $wp_settings_errors );
 			return;
 		}
 
-		// good
+		// "good"
 		$this->add_fix_message( 1, array( '<code>web.config</code>' ) );
 	}
 
 
+	/**
+	 * Fix for nginx system.
+	 *
+	 * @since 1.0
+	 */
 	protected function _fix_nginx() {
 		global $wp_settings_errors;
 
@@ -172,7 +221,7 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements iSecuPress
 			array_pop( $wp_settings_errors );
 		}
 
-		// cantfix
+		// "cantfix"
 		$this->add_fix_message( 300, array( $rules ) );
 	}
 }

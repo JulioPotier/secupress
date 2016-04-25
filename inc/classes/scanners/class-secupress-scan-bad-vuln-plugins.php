@@ -8,19 +8,37 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @subpackage SecuPress_Scan
  * @since 1.0
  */
-
-class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements iSecuPress_Scan {
+class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
 	const VERSION = '1.0';
 
 	/**
-	 * @var Singleton The reference to *Singleton* instance of this class
+	 * The reference to *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
+
+	/**
+	 * Priority.
+	 *
+	 * @var (string)
+	 */
 	public    static $prio    = 'high';
+
+	/**
+	 * Tells if a scanner is fixable by SecuPress. The value "pro" means it's fixable only with the version PRO.
+	 *
+	 * @var (bool|string)
+	 */
 	public    static $fixable = 'pro';
 
 
+	/**
+	 * Init.
+	 *
+	 * @since 1.0
+	 */
 	protected static function init() {
 		self::$type     = 'WordPress';
 		self::$title    = __( 'Check if you are using plugins known to be vulnerable.', 'secupress' );
@@ -36,15 +54,24 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements iSecuPre
 	}
 
 
+	/**
+	 * Get messages.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int) $message_id A message ID.
+	 *
+	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
+	 */
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
-			// good
+			// "good"
 			0   => __( 'You don\'t use plugins known to be vulnerable.', 'secupress' ),
 			1   => __( 'You don\'t use plugins known to be vulnerable anymore.', 'secupress' ),
 			2   => __( 'All plugins known to be vulnerable have been deleted.', 'secupress' ),
 			3   => __( 'All deletable plugins known to be vulnerable have been deleted.', 'secupress' ),
 			4   => __( 'All plugins known to be vulnerable have been deactivated.', 'secupress' ),
-			// warning
+			// "warning"
 			/* translators: %s is a file name. */
 			100 => __( 'Error, could not read %s.', 'secupress' ),
 			101 => __( 'No plugins selected for deletion.', 'secupress' ),
@@ -53,7 +80,7 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements iSecuPre
 			104 => __( 'No plugins selected for deactivation.', 'secupress' ),
 			105 => _n_noop( 'Selected plugin has been deactivated (but some are still there).', 'All selected plugins have been deactivated (but some are still there).', 'secupress' ),
 			106 => _n_noop( 'Sorry, the following plugin could not be deactivated: %s.', 'Sorry, the following plugins could not be deactivated: %s.', 'secupress' ),
-			// bad
+			// "bad"
 			/* translators: 1 is a number, 2 is a plugin name (or a list of plugin names). */
 			200 => _n_noop( '<strong>%1$d plugin</strong> is known to be vulnerable: %2$s.', '<strong>%1$d plugins</strong> are known to be vulnerables: %2$s.', 'secupress' ),
 			/* translators: 1 is a number, 2 is a plugin name (or a list of plugin names). */
@@ -64,7 +91,7 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements iSecuPre
 			204 => _n_noop( 'The following plugin should be deactivated if you don\'t need it: %s.', 'The following plugins should be deactivated if you don\'t need them: %s.', 'secupress' ),
 			205 => _n_noop( 'Sorry, this plugin could not be deactivated.', 'Sorry, those plugins could not be deactivated.', 'secupress' ),
 			206 => __( 'Your installation contains some plugins known to be vulnerable. The pro version can be more accurate.', 'secupress' ),
-			// cantfix
+			// "cantfix"
 			/* translators: %d is a number. */
 			300 => _n_noop( '<strong>%d</strong> plugin can be <strong>deleted</strong>.', '<strong>%d</strong> plugins can be <strong>deleted</strong>.', 'secupress' ),
 			/* translators: %d is a number. */
@@ -83,10 +110,17 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements iSecuPre
 	}
 
 
+	/**
+	 * Scan for flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The scan results.
+	 */
 	public function scan() {
 		// Multisite, for the current site.
 		if ( $this->is_for_current_site() ) {
-			// Plugins vulnerables
+			// Plugins vulnerables.
 			$bad_plugins = $this->get_installed_plugins_to_remove();
 
 			if ( is_numeric( $bad_plugins ) ) {
@@ -95,7 +129,7 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements iSecuPre
 				$bad_plugins = $bad_plugins['to_deactivate'];
 
 				if ( $count = count( $bad_plugins ) ) {
-					// bad
+					// "bad"
 					$this->add_message( 204, array( $count, $bad_plugins ) );
 				}
 			}
@@ -110,17 +144,24 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements iSecuPre
 			if ( is_numeric( $bad_plugins ) ) {
 				$this->add_message( 206 );
 			} elseif ( $count = count( $bad_plugins ) ) {
-				// bad
+				// "bad"
 				$this->add_message( 200, array( $count, $count, self::wrap_in_tag( $bad_plugins ) ) );
 			}
 		}
-		// good
+		// "good"
 		$this->maybe_set_status( 0 );
 
 		return parent::scan();
 	}
 
 
+	/**
+	 * Try to fix the flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The fix results.
+	 */
 	public function fix() {
 
 		if ( secupress_is_pro() && function_exists( 'secupress_pro_fix_bad_vuln_plugins' ) ) {
@@ -131,8 +172,15 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements iSecuPre
 	}
 
 
-	// Return an array of plugin names like `array( $path => $name, $path => $name )`.
-
+	/**
+	 * Get an array of installed plugins that are vulnerable.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (bool) $for_fix False: for scan. True: for fix.
+	 *
+	 * @return (array) An array like `array( path => plugin_name, path => plugin_name )`.
+	 */
 	final protected static function get_installed_plugins_vulnerables( $for_fix = false ) {
 		static $whitelist_error = false;
 
@@ -143,7 +191,7 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements iSecuPre
 		}
 
 		if ( is_numeric( $bad_plugins ) ) {
-			return 1; // free api call
+			return 1; // Free api call.
 		}
 
 		// Deal with the white list.
@@ -158,7 +206,7 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements iSecuPre
 				$whitelist_error = true;
 				$whitelist_file  = SECUPRESS_INC_PATH . 'data/whitelist-plugin-list.data';
 				$args            = array( '<code>' . str_replace( ABSPATH, '', $whitelist_file ) . '</code>' );
-				// warning
+				// "warning"
 				if ( $for_fix ) {
 					$this->add_fix_message( 100, $args );
 				} else {

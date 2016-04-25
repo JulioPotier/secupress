@@ -8,18 +8,30 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @subpackage SecuPress_Scan
  * @since 1.0
  */
-
-class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements iSecuPress_Scan {
+class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
 	const VERSION = '1.0';
 
 	/**
-	 * @var Singleton The reference to *Singleton* instance of this class
+	 * The reference to *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
-	public    static $prio = 'high';
+
+	/**
+	 * Priority.
+	 *
+	 * @var (string)
+	 */
+	public    static $prio    = 'high';
 
 
+	/**
+	 * Init.
+	 *
+	 * @since 1.0
+	 */
 	protected static function init() {
 		self::$type     = 'WordPress';
 		self::$title    = __( 'Check if your installation still contains old files from WordPress 2.0 to your current version.', 'secupress' );
@@ -28,12 +40,21 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements iSecuPress_
 	}
 
 
+	/**
+	 * Get messages.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int) $message_id A message ID.
+	 *
+	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
+	 */
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
-			// good
+			// "good"
 			0   => __( 'Your installation is free of old files.', 'secupress' ),
 			1   => __( 'All old files have been deleted.', 'secupress' ),
-			// bad
+			// "bad"
 			/* translators: 1 is a number, 2 is a file name (or a list of file names). */
 			200 => _n_noop( 'Your installation contains <strong>%1$d old file</strong>: %2$s.', 'Your installation contains <strong>%1$d old files</strong>: %2$s.', 'secupress' ),
 			201 => _n_noop( 'The following file could not be deleted: %s.', 'The following files could not be deleted: %s.', 'secupress' ),
@@ -47,6 +68,13 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements iSecuPress_
 	}
 
 
+	/**
+	 * Scan for flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The scan results.
+	 */
 	public function scan() {
 		global $_old_files;
 
@@ -62,17 +90,17 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements iSecuPress_
 
 		foreach ( $_old_files as $file ) {
 			if ( @file_exists( ABSPATH . $file ) ) {
-				// bad
+				// "bad"
 				$bads[] = sprintf( '<code>%s</code>', $file );
 			}
 		}
 
 		if ( $count = count( $bads ) ) {
-			// bad
+			// "bad"
 			$this->slice_and_dice( $bads, 10 );
 			$this->add_message( 200, array( $count, $count, $bads ) );
 		} else {
-			// good
+			// "good"
 			$this->add_message( 0 );
 		}
 
@@ -80,6 +108,13 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements iSecuPress_
 	}
 
 
+	/**
+	 * Try to fix the flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The fix results.
+	 */
 	public function fix() {
 		global $_old_files;
 
@@ -99,10 +134,10 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements iSecuPress_
 		}
 
 		if ( $count = count( $not_deleted ) ) {
-			// bad
+			// "bad"
 			$this->add_fix_message( 201, array( $count, $count, $not_deleted ) );
 		} else {
-			// good
+			// "good"
 			$this->add_fix_message( 1 );
 		}
 

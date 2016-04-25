@@ -8,18 +8,30 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @subpackage SecuPress_Scan
  * @since 1.0
  */
-
-class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements iSecuPress_Scan {
+class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
 	const VERSION = '1.0';
 
 	/**
-	 * @var Singleton The reference to *Singleton* instance of this class
+	 * The reference to *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
-	public    static $prio = 'high';
+
+	/**
+	 * Priority.
+	 *
+	 * @var (string)
+	 */
+	public    static $prio    = 'high';
 
 
+	/**
+	 * Init.
+	 *
+	 * @since 1.0
+	 */
 	protected static function init() {
 		self::$type     = 'WordPress';
 		self::$title    = __( 'Check if the security keys are correctly set.', 'secupress' );
@@ -27,25 +39,42 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements iSecuPress_Scan
 		self::$more_fix = __( 'This will create a <a href="https://codex.wordpress.org/Must_Use_Plugins">must-use plugin</a> to replace your actual keys stored in <code>wp-config.php</code> or in your database to keep them safer.', 'secupress' );
 	}
 
+
+	/**
+	 * Get salt keys.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array)
+	 */
 	protected static function get_keys() {
-		return array( 'AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'NONCE_KEY', 'AUTH_SALT', 'SECURE_AUTH_SALT', 'LOGGED_IN_SALT', 'NONCE_SALT', );
+		return array( 'AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'NONCE_KEY', 'AUTH_SALT', 'SECURE_AUTH_SALT', 'LOGGED_IN_SALT', 'NONCE_SALT' );
 	}
 
 
+	/**
+	 * Get messages.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int) $message_id A message ID.
+	 *
+	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
+	 */
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
-			// good
+			// "good"
 			0   => __( 'All keys are properly set.', 'secupress' ),
-			// warning
+			// "warning"
 			100 => __( 'This fix is <strong>pending</strong>, please reload the page to apply it now.', 'secupress' ),
-			// bad
+			// "bad"
 			200 => __( 'The following security keys are not set correctly:', 'secupress' ),
 			201 => _n_noop( '<strong>&middot; Not Set:</strong> %s.',       '<strong>&middot; Not Set:</strong> %s.',       'secupress' ),
 			202 => _n_noop( '<strong>&middot; Default Value:</strong> %s.', '<strong>&middot; Default Value:</strong> %s.', 'secupress' ),
 			203 => _n_noop( '<strong>&middot; Too Short:</strong> %s.',     '<strong>&middot; Too Short:</strong> %s.',     'secupress' ),
 			204 => _n_noop( '<strong>&middot; Hardcoded:</strong> %s.',     '<strong>&middot; Hardcoded:</strong> %s.',     'secupress' ),
 			205 => _n_noop( '<strong>&middot; From DB:</strong> %s.',       '<strong>&middot; From DB:</strong> %s.',       'secupress' ),
-			// cantfix
+			// "cantfix"
 			300 => __( 'I can not write into wp-config.php so i can not change the salt keys.', 'secupress' ),
 			301 => __( 'The fix has been applied but there is still keys that i can\'t modify.', 'secupress' ),
 		);
@@ -58,6 +87,13 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements iSecuPress_Scan
 	}
 
 
+	/**
+	 * Scan for flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The scan results.
+	 */
 	public function scan() {
 		$keys     = $this->get_keys();
 		$bad_keys = array(
@@ -68,51 +104,50 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements iSecuPress_Scan
 			205 => array(),
 		);
 
-		// Get code only from wp-config.php
+		// Get code only from wp-config.php.
 		$wp_config_content = self::remove_comments( file_get_contents( secupress_find_wpconfig_path() ) );
 
 		preg_match_all( '/' . implode( '|', $keys ) . '/', $wp_config_content, $matches );
 
 		if ( ! empty( $matches[0] ) ) {
-			// Hardcoded
+			// Hardcoded.
 			$bad_keys[204] = self::wrap_in_tag( $matches[0] );
 		}
 
 		foreach ( $keys as $key ) {
 
-			// Check constant
+			// Check constant.
 			$constant = defined( $key ) ? constant( $key ) : null;
 
 			switch ( true ) {
 				case is_null( $constant ) :
-					// Not Set
+					// Not Set.
 					$bad_keys[201][] = '<code>' . $key . '</code>';
 					break;
 				case 'put your unique phrase here' === $constant :
-					// Default Value
+					// Default Value.
 					$bad_keys[202][] = '<code>' . $key . '</code>';
 					break;
 				case strlen( $constant ) < 64 :
-					// Too Short
+					// Too Short.
 					$bad_keys[203][] = '<code>' . $key . '</code>';
 					break;
 			}
 
-			// Check DB
+			// Check DB.
 			$key = strtolower( $key );
 			$db  = get_site_option( $key, null );
 
 			if ( ! is_null( $db ) ) {
-				// From DB
+				// From DB.
 				$bad_keys[205][] = '<code>' . $key . '</code>';
 			}
-
 		}
 
 		$bad_keys = array_filter( $bad_keys );
 
 		if ( count( $bad_keys ) ) {
-			// bad
+			// "bad"
 			$this->add_message( 200 );
 
 			foreach ( $bad_keys as $message_id => $keys ) {
@@ -120,13 +155,20 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements iSecuPress_Scan
 			}
 		}
 
-		// good
+		// "good"
 		$this->maybe_set_status( 0 );
 
 		return parent::scan();
 	}
 
 
+	/**
+	 * Try to fix the flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The fix results.
+	 */
 	public function fix() {
 		global $current_user;
 
@@ -151,6 +193,15 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements iSecuPress_Scan
 	}
 
 
+	/**
+	 * Remove comments from a content.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $string The content.
+	 *
+	 * @return (array) The fix results.
+	 */
 	public static function remove_comments( $string ) {
 		$string = preg_replace( '%(#|(//)).*%', '', $string );
 		$string = preg_replace( '%/\*(?:(?!\*/).)*\*/%s', '', $string );

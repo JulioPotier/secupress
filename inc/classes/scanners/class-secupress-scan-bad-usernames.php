@@ -8,18 +8,30 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @subpackage SecuPress_Scan
  * @since 1.0
  */
-
-class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_Scan {
+class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
 	const VERSION = '1.0';
 
 	/**
-	 * @var Singleton The reference to *Singleton* instance of this class
+	 * The reference to *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
-	public    static $prio = 'medium';
+
+	/**
+	 * Priority.
+	 *
+	 * @var (string)
+	 */
+	public    static $prio    = 'medium';
 
 
+	/**
+	 * Init.
+	 *
+	 * @since 1.0
+	 */
 	protected static function init() {
 		self::$type     = 'WordPress';
 		self::$title    = __( 'Check if your users username are not blacklisted.', 'secupress' );
@@ -32,14 +44,23 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 	}
 
 
+	/**
+	 * Get messages.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int) $message_id A message ID.
+	 *
+	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
+	 */
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
-			// good
+			// "good"
 			0   => __( 'All the user names are correct.', 'secupress' ),
 			1   => __( 'Module activated: the users with a blacklisted username will be asked to change it.', 'secupress' ),
-			// bad
+			// "bad"
 			200 => _n_noop( '<strong>%s user</strong> has a forbidden username: %s', '<strong>%s users</strong> have a forbidden username: %s', 'secupress' ),
-			// cantfix
+			// "cantfix"
 			300 => __( 'The module is already activated. Let\'s give your users some time to change their username.', 'secupress' ),
 		);
 
@@ -51,58 +72,72 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements iSecuPress_
 	}
 
 
+	/**
+	 * Scan for flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The scan results.
+	 */
 	public function scan() {
 		global $wpdb;
 
-		// Blacklisted names
+		// Blacklisted names.
 		$names  = static::_get_blacklisted_usernames();
-		$logins = $wpdb->get_col( "SELECT user_login from $wpdb->users WHERE user_login IN ( '$names' )" );
+		$logins = $wpdb->get_col( "SELECT user_login from $wpdb->users WHERE user_login IN ( '$names' )" ); // WPCS: unprepared SQL ok.
 		$ids    = count( $logins );
 
-		// bad
+		// "bad"
 		if ( $ids ) {
 			$this->slice_and_dice( $logins, 10 );
 			// 2nd param: 1st item is used for the noop if needed, the rest for sprintf.
 			$this->add_message( 200, array( $ids, $ids, static::wrap_in_tag( $logins, 'strong' ) ) );
 		}
 
-		// good
+		// "good"
 		$this->maybe_set_status( 0 );
 
 		return parent::scan();
 	}
 
 
+	/**
+	 * Try to fix the flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The fix results.
+	 */
 	public function fix() {
 		global $wpdb;
 
 		// Blacklisted names.
 		$names = static::_get_blacklisted_usernames();
-		$ids   = $wpdb->get_col( "SELECT ID from $wpdb->users WHERE user_login IN ( '$names' )" );
+		$ids   = $wpdb->get_col( "SELECT ID from $wpdb->users WHERE user_login IN ( '$names' )" ); // WPCS: unprepared SQL ok.
 
 		if ( $ids ) {
 			$activated = secupress_is_submodule_active( 'users-login', 'blacklist-logins' );
 
 			if ( $activated ) {
 				// Well... Can't do better.
-				// cantfix
+				// "cantfix".
 				$this->add_fix_message( 300 );
 			} else {
 				// Activate.
 				secupress_activate_submodule( 'users-login', 'blacklist-logins' );
-				// good
+				// "good"
 				$this->add_fix_message( 1 );
 			}
 		}
 
-		// good
+		// "good"
 		$this->maybe_set_fix_status( 0 );
 
 		return parent::fix();
 	}
 
 
-	/*
+	/**
 	 * Get the blacklisted usernames.
 	 *
 	 * @since 1.0

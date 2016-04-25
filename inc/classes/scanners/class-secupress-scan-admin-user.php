@@ -8,18 +8,30 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @subpackage SecuPress_Scan
  * @since 1.0
  */
-
-class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Scan {
+class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
 	const VERSION = '1.0';
 
 	/**
-	 * @var Singleton The reference to *Singleton* instance of this class
+	 * The reference to *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
+
+	/**
+	 * Priority.
+	 *
+	 * @var (string)
+	 */
 	public    static $prio = 'high';
 
 
+	/**
+	 * Init.
+	 *
+	 * @since 1.0
+	 */
 	protected static function init() {
 		self::$type     = 'WordPress';
 		self::$title    = __( 'Check if the <em>admin</em> account is correctly protected.', 'secupress' );
@@ -35,23 +47,32 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 	}
 
 
+	/**
+	 * Get messages.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int) $message_id A message ID.
+	 *
+	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
+	 */
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
-			// good
+			// "good"
 			0   => __( 'The %s account is correctly protected.', 'secupress' ),
 			1   => __( 'The %s account has no role anymore.', 'secupress' ),
-			// warning
+			// "warning"
 			100 => __( 'This fix is <strong>pending</strong>, please reload the page to apply it now.', 'secupress' ),
-			// bad
+			// "bad"
 			200 => __( 'The %s account should have no role at all.', 'secupress' ),
 			201 => __( 'Because the user registration is open, the %s account should exist (with no role) to avoid someone to register it.', 'secupress' ),
 			202 => __( 'Sorry, the username %s is forbidden!', 'secupress' ),
-			203 => __( 'Cannot create a user with an empty login name!' ), // WPi18n
+			203 => __( 'Cannot create a user with an empty login name!' ), // WPi18n.
 			204 => __( 'Sorry, the username %s already exists!', 'secupress' ),
 			205 => __( 'The username %1$s is invalid because it uses illegal characters. Spot the differences: %2$s.', 'secupress' ),
 			206 => __( 'Sorry, I could not remove the role from the %s account. You should try to remove it manually.', 'secupress' ),
 			207 => __( 'Sorry, the %s account could not be created. You should try to create it manually and then remove its role.', 'secupress' ),
-			// cantfix
+			// "cantfix"
 			300 => __( 'Oh! The %s account is yours! Please choose a new login for your account.', 'secupress' ),
 		);
 
@@ -63,6 +84,13 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 	}
 
 
+	/**
+	 * Scan for flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The scan results.
+	 */
 	public function scan() {
 		if ( secupress_get_site_transient( 'secupress-rename-admin-username' ) ) {
 			$this->add_message( 100 );
@@ -74,23 +102,30 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 
 		// The "admin" account exists and has a role or capabilities: it should have no role.
 		if ( static::user_has_capas( $user_id ) ) {
-			// bad
+			// "bad"
 			$this->add_message( 200, array( '<em>' . $username . '</em>' ) );
 		}
 
 		// The "admin" account should exist to avoid its creation when users can register.
 		if ( ! $user_id && secupress_users_can_register() ) {
-			// bad
+			// "bad"
 			$this->add_message( 201, array( '<em>' . $username . '</em>' ) );
 		}
 
-		// good
+		// "good"
 		$this->maybe_set_status( 0, array( '<em>' . $username . '</em>' ) );
 
 		return parent::scan();
 	}
 
 
+	/**
+	 * Try to fix the flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The fix results.
+	 */
 	public function fix() {
 		global $wpdb;
 
@@ -113,10 +148,10 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 				}
 
 				if ( static::user_has_capas( $user_id ) ) {
-					// bad
+					// "bad"
 					$this->add_fix_message( 206, array( '<em>' . $username . '</em>' ) );
 				} else {
-					// good
+					// "good"
 					$this->add_fix_message( 1, array( '<em>' . $username . '</em>' ) );
 				}
 			}
@@ -140,49 +175,56 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 			secupress_cache_data( 'allowed_usernames', array() );
 
 			if ( is_wp_error( $user_id ) || ! $user_id ) {
-				// bad
+				// "bad"
 				$this->add_fix_message( 207, array( '<em>' . $username . '</em>' ) );
 			} else {
-				// good
+				// "good"
 				$this->add_fix_message( 0, array( '<em>' . $username . '</em>' ) );
 			}
 		}
 
-		// good
+		// "good"
 		$this->maybe_set_fix_status( 0, array( '<em>' . $username . '</em>' ) );
 
 		return parent::fix();
 	}
 
 
+	/**
+	 * Try to fix the flaw(s) after requiring user action.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The fix results.
+	 */
 	public function manual_fix() {
 		if ( ! $this->has_fix_action_part( 'rename-admin-username' ) ) {
 			return parent::manual_fix();
 		}
 
-		$username = ! empty( $_POST['secupress-fix-rename-admin-username'] ) ? sanitize_user( $_POST['secupress-fix-rename-admin-username'] ) : null;
+		$username = ! empty( $_POST['secupress-fix-rename-admin-username'] ) ? sanitize_user( $_POST['secupress-fix-rename-admin-username'] ) : null; // WPCS: CSRF ok.
 
 		if ( 'admin' === $username ) {
-			// bad
+			// "bad"
 			$this->add_fix_message( 202, array( '<em>' . $username . '</em>' ) );
 			$this->add_fix_action( 'rename-admin-username' );
 		} elseif ( ! $username ) {
-			// bad
+			// "bad"
 			$this->add_fix_message( 203 );
 			$this->add_fix_action( 'rename-admin-username' );
 		} elseif ( username_exists( $username ) ) {
-			// bad
+			// "bad"
 			$this->add_fix_message( 204, array( '<em>' . $username . '</em>' ) );
 			$this->add_fix_action( 'rename-admin-username' );
-		} elseif ( $username !== sanitize_user( $username, true ) ) {
-			// bad
+		} elseif ( sanitize_user( $username, true ) !== $username ) {
+			// "bad"
 			$this->add_fix_message( 205, array( '<em>' . $username . '</em>', '<em>' . sanitize_user( $username, true ) . '</em>' ) );
 			$this->add_fix_action( 'rename-admin-username' );
 		} else {
 			// $username ok, can't rename now or all nonces will be broken and the user disconnected
 			$current_user_id = get_current_user_id();
 			secupress_set_site_transient( 'secupress-rename-admin-username', array( 'ID' => $current_user_id, 'username' => $username ) );
-			// warning
+			// "warning"
 			$this->add_fix_message( 100 );
 		}
 
@@ -190,6 +232,13 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements iSecuPress_Sca
 	}
 
 
+	/**
+	 * Get an array containing ALL the forms that would fix the scan if it requires user action.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) An array of HTML templates (form contents most of the time).
+	 */
 	protected function get_fix_action_template_parts() {
 		$form  = '<h4>' . __( 'Choose a new login for your account:', 'secupress' ) . '</h4>';
 		$form .= '<p><span style="color:red">' . __( 'Your username will be renamed on the next page change.', 'secupress' ) . '</span></p>';

@@ -8,18 +8,30 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @subpackage SecuPress_Scan
  * @since 1.0
  */
-
-class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements iSecuPress_Scan {
+class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
 	const VERSION = '1.0';
 
 	/**
-	 * @var Singleton The reference to *Singleton* instance of this class
+	 * The reference to *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
-	public    static $prio = 'medium';
+
+	/**
+	 * Priority.
+	 *
+	 * @var (string)
+	 */
+	public    static $prio    = 'medium';
 
 
+	/**
+	 * Init.
+	 *
+	 * @since 1.0
+	 */
 	protected static function init() {
 		self::$type     = 'WordPress';
 		self::$title    = sprintf( __( 'Check if long URL can reach your website (more than %s chars).', 'secupress' ), number_format_i18n( apply_filters( 'secupress.plugin.len.bad-url-length', 300 ) ) );
@@ -32,25 +44,41 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements iSecuPress
 	}
 
 
-	public static function get_messages( $id = null ) {
+	/**
+	 * Get messages.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int) $message_id A message ID.
+	 *
+	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
+	 */
+	public static function get_messages( $message_id = null ) {
 		$messages = array(
-			// good
+			// "good"
 			0   => __( 'You are currently blocking too long string requests.', 'secupress' ),
 			1   => __( 'Protection activated', 'secupress' ),
-			// warning
+			// "warning"
 			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
-			// bad
+			// "bad"
 			200 => __( 'Your website should block <strong>too long string requests</strong>.', 'secupress' ),
 		);
 
-		if ( isset( $id ) ) {
-			return isset( $messages[ $id ] ) ? $messages[ $id ] : __( 'Unknown message', 'secupress' );
+		if ( isset( $message_id ) ) {
+			return isset( $messages[ $message_id ] ) ? $messages[ $message_id ] : __( 'Unknown message', 'secupress' );
 		}
 
 		return $messages;
 	}
 
 
+	/**
+	 * Scan for flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The scan results.
+	 */
 	public function scan() {
 
 		$test_len = apply_filters( 'secupress.plugin.len.bad-url-length', 300 );
@@ -59,15 +87,14 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements iSecuPress
 		if ( ! is_wp_error( $response ) ) {
 
 			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
-				// bad
+				// "bad"
 				$this->add_message( 200 );
 			} else {
-				// good
+				// "good"
 				$this->add_message( 0 );
 			}
-
 		} else {
-			// warning
+			// "warning"
 			$this->add_message( 100 );
 		}
 
@@ -75,12 +102,19 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements iSecuPress
 	}
 
 
+	/**
+	 * Try to fix the flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The fix results.
+	 */
 	public function fix() {
 
 		// Activate.
 		secupress_activate_submodule( 'firewall', 'bad-url-length' );
 
-		// good
+		// "good"
 		$this->add_fix_message( 1 );
 
 		return parent::fix();

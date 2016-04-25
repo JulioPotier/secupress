@@ -8,18 +8,30 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @subpackage SecuPress_Scan
  * @since 1.0
  */
-
-class SecuPress_Scan_Chmods extends SecuPress_Scan implements iSecuPress_Scan {
+class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
 	const VERSION = '1.0';
 
 	/**
-	 * @var Singleton The reference to *Singleton* instance of this class
+	 * The reference to *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
-	public    static $prio = 'high';
+
+	/**
+	 * Priority.
+	 *
+	 * @var (string)
+	 */
+	public    static $prio    = 'high';
 
 
+	/**
+	 * Init.
+	 *
+	 * @since 1.0
+	 */
 	protected static function init() {
 		self::$type     = __( 'File System', 'secupress' );
 		self::$title    = __( 'Check if your files and folders have the correct write permissions (chmod).', 'secupress' );
@@ -28,14 +40,23 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements iSecuPress_Scan {
 	}
 
 
+	/**
+	 * Get messages.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int) $message_id A message ID.
+	 *
+	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
+	 */
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
-			// good
+			// "good"
 			0   => __( 'All files permissions are good.', 'secupress' ),
 			1   => __( 'All files permissions are fixed.', 'secupress' ),
-			// warning
+			// "warning"
 			100 => __( 'Unable to determine status of %s.', 'secupress' ),
-			// bad
+			// "bad"
 			200 => _x( 'File permissions for %1$s <strong>should be %2$s</strong>, NOT %3$s!', '1: file path, 2: chmod required, 3: current chmod', 'secupress' ),
 			201 => __( 'Unable to apply new file permissions to %s.', 'secupress' ),
 		);
@@ -48,6 +69,13 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements iSecuPress_Scan {
 	}
 
 
+	/**
+	 * Scan for flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The scan results.
+	 */
 	public function scan() {
 
 		$warnings = array();
@@ -55,17 +83,17 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements iSecuPress_Scan {
 		$abspath  = realpath( ABSPATH );
 
 		foreach ( $files as $file => $chmod ) {
-			// Current file perm
+			// Current file perm.
 			$current = (int) decoct( fileperms( $file ) & 0777 );
 			$file    = ltrim( str_replace( $abspath, '', realpath( $file ) ), '\\' );
 			$file    = '' === $file ? '/' : $file;
 
 			if ( ! $current ) {
-				// warning: unable to determine file perm.
+				// "warning": unable to determine file perm.
 				$warnings[] = sprintf( '<code>%s</code>', $file );
 
 			} elseif ( $current > $chmod ) {
-				// bad
+				// "bad"
 				$this->add_message( 200, array(
 					sprintf( '<code>%s</code>', $file ),
 					sprintf( '<code>0%s</code>', $chmod ),
@@ -75,17 +103,24 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements iSecuPress_Scan {
 		}
 
 		if ( $warnings ) {
-			// warning
+			// "warning"
 			$this->add_message( 100, array( $warnings ) );
 		}
 
-		// good
+		// "good"
 		$this->maybe_set_status( 0 );
 
 		return parent::scan();
 	}
 
 
+	/**
+	 * Try to fix the flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The fix results.
+	 */
 	public function fix() {
 
 		$warnings  = array();
@@ -95,7 +130,7 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements iSecuPress_Scan {
 		$abspath   = realpath( ABSPATH );
 
 		foreach ( $files as $file => $chmod ) {
-			// Current file perm
+			// Current file perm.
 			$current = (int) decoct( fileperms( $file ) & 0777 );
 
 			if ( ! $current || $current > $chmod ) {
@@ -115,37 +150,44 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements iSecuPress_Scan {
 			$file    = '' === $file ? '/' : $file;
 
 			if ( ! $current ) {
-				// warning: unable to determine file perm.
+				// "warning": unable to determine file perm.
 				$warnings[] = sprintf( '<code>%s</code>', $file );
 			} elseif ( $current > $chmod ) {
-				// bad: unable to apply the file perm.
+				// "bad": unable to apply the file perm.
 				$bads[] = sprintf( '<code>%s</code>', $file );
 			}
 		}
 
 		if ( ! $count ) {
-			// good (there was nothing to fix).
+			// "good" (there was nothing to fix).
 			$this->add_fix_message( 0 );
 			return parent::fix();
 		}
 
 		if ( $bads ) {
-			// bad
+			// "bad"
 			$this->add_fix_message( 201, array( $bads ) );
 		}
 
 		if ( $warnings ) {
-			// warning
+			// "warning"
 			$this->add_fix_message( 100, array( $warnings ) );
 		}
 
-		// good
+		// "good"
 		$this->maybe_set_fix_status( 1 );
 
 		return parent::fix();
 	}
 
 
+	/**
+	 * Get chmod values that some directories or files that should be set to.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) An array of path => chmod.
+	 */
 	protected static function get_file_perms() {
 		global $is_apache;
 

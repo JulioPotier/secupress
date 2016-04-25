@@ -2,24 +2,36 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /**
- * wp-config.php scan class.
+ * `wp-config.php` scan class.
  *
  * @package SecuPress
  * @subpackage SecuPress_Scan
  * @since 1.0
  */
-
-class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan {
+class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
 	const VERSION = '1.0';
 
 	/**
-	 * @var Singleton The reference to *Singleton* instance of this class
+	 * The reference to *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
-	public    static $prio = 'high';
+
+	/**
+	 * Priority.
+	 *
+	 * @var (string)
+	 */
+	public    static $prio    = 'high';
 
 
+	/**
+	 * Init.
+	 *
+	 * @since 1.0
+	 */
 	protected static function init() {
 		self::$type     = 'WordPress';
 		self::$title    = __( 'Check your <code>wp-config.php</code> file, especially the PHP constants.', 'secupress' );
@@ -28,15 +40,24 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 	}
 
 
+	/**
+	 * Get messages.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int) $message_id A message ID.
+	 *
+	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
+	 */
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
-			// good
+			// "good"
 			0   => __( 'Your <code>wp-config.php</code> file is correct.', 'secupress' ),
 			1   => __( 'Your WordPress tables has been renamed using the new following prefix <strong>%s</strong>.', 'secupress' ),
 			2   => __( 'A must use plugin has been added in order to change the default value for <code>COOKIEHASH</code>.', 'secupress' ),
-			// warning
+			// "warning"
 			100 => __( 'This fix is <strong>pending</strong>, please reload the page to apply it now.', 'secupress' ),
-			// bad
+			// "bad"
 			200 => __( 'The database prefix should not be %s. Choose something else than <code>wp_</code> or <code>wordpress_</code>, they are too easy to guess.', 'secupress' ),
 			201 => __( '%s should not be set with the default value.', 'secupress' ),
 			202 => __( '%s should be set.', 'secupress' ),
@@ -44,7 +65,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 			204 => __( '%s should not be empty.', 'secupress' ),
 			205 => __( '%1$s should be set on %2$s.', 'secupress' ),
 			206 => __( '%1$s should be set on %2$s or less.', 'secupress' ),
-			// cantfix
+			// "cantfix"
 			300 => __( 'Some constants could not be set correctly: %s.', 'secupress' ),
 			301 => __( 'The DataBase user can not alter tables and so i can not change the DB prefix.', 'secupress' ),
 			302 => __( 'I can not write into wp-config.php so i can not change the DB prefix.', 'secupress' ),
@@ -61,39 +82,54 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 	}
 
 
+	/**
+	 * Scan for flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The scan results.
+	 */
 	public function scan() {
 		global $wpdb;
 		if ( get_transient( 'select-db-tables-to-rename' ) ) {
 			$this->add_message( 100 );
 		} else {
-			// Check db prefix
-			$check = $wpdb->prefix === 'wp_' || $wpdb->prefix === 'wordpress_';
+			// Check db prefix.
+			$check = 'wp_' === $wpdb->prefix || 'wordpress_' === $wpdb->prefix;
 
 			if ( $check ) {
-				// bad
+				// "bad"
 				$this->add_message( 200, array( '<code>' . $wpdb->prefix . '</code>' ) );
 			}
 
-			// COOKIEHASH
+			// COOKIEHASH.
 			$check = defined( 'COOKIEHASH' ) && COOKIEHASH === md5( get_site_option( 'siteurl' ) );
 
 			if ( $check ) {
-				// bad
+				// "bad"
 				$this->add_message( 201, array( '<code>COOKIEHASH</code>' ) );
 			}
 
-			// NOBLOGREDIRECT
+			// NOBLOGREDIRECT.
 			if ( is_multisite() && is_subdomain_install() && ! has_action( 'ms_site_not_found' ) && ( ! defined( 'NOBLOGREDIRECT' ) || ! NOBLOGREDIRECT || ! apply_filters( 'blog_redirect_404', NOBLOGREDIRECT ) ) ) {
-				// bad
+				// "bad"
 				$this->add_message( 202, array( '<code>NOBLOGREDIRECT</code>' ) );
 			}
 
-			// Other constants
+			// Other constants.
 			$constants = array(
-				'ALLOW_UNFILTERED_UPLOADS' => false,    'DIEONDBERROR'     => false,    'DISALLOW_FILE_EDIT' => 1,
-				'DISALLOW_UNFILTERED_HTML' => 1,        'ERRORLOGFILE'     => '!empty', 'FS_CHMOD_DIR'       => 755,
-				'FS_CHMOD_FILE'            => 644,      'RELOCATE'         => false,    'SCRIPT_DEBUG'       => false,
-				'WP_ALLOW_REPAIR'          => '!isset', 'WP_DEBUG'         => false,    'WP_DEBUG_DISPLAY'   => false,
+				'ALLOW_UNFILTERED_UPLOADS' => false,
+				'DIEONDBERROR'             => false,
+				'DISALLOW_FILE_EDIT'       => 1,
+				'DISALLOW_UNFILTERED_HTML' => 1,
+				'ERRORLOGFILE'             => '!empty',
+				'FS_CHMOD_DIR'             => 755,
+				'FS_CHMOD_FILE'            => 644,
+				'RELOCATE'                 => false,
+				'SCRIPT_DEBUG'             => false,
+				'WP_ALLOW_REPAIR'          => '!isset',
+				'WP_DEBUG'                 => false,
+				'WP_DEBUG_DISPLAY'         => false,
 			);
 
 			$results = array();
@@ -139,7 +175,6 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 						}
 						break;
 				}
-
 			}
 
 			if ( $results ) {
@@ -148,34 +183,38 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 					if ( is_array( $maybe_constants ) ) {
 
 						foreach ( $maybe_constants as $compare => $constants ) {
-							// bad
+							// "bad"
 							$this->add_message( $message_id, array( wp_sprintf_l( '%l', $constants ), '<code>' . $compare . '</code>' ) );
 						}
-
 					} else {
-						// bad
+						// "bad"
 						$this->add_message( $message_id, array( wp_sprintf_l( '%l', $constants ) ) );
 					}
-
 				}
-
 			}
 		}
-		// good
+		// "good"
 		$this->maybe_set_status( 0 );
 
 		return parent::scan();
 	}
 
 
+	/**
+	 * Try to fix the flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The fix results.
+	 */
 	public function fix() {
 
 		global $wpdb, $current_user;
 
 		$wpconfig_filename = secupress_find_wpconfig_path();
 
-		// Check db prefix
-		$check = $wpdb->prefix === 'wp_' || $wpdb->prefix === 'wordpress_';
+		// Check db prefix.
+		$check = 'wp_' === $wpdb->prefix || 'wordpress_' === $wpdb->prefix;
 
 		if ( $check ) {
 
@@ -195,7 +234,6 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 					} else {
 						$this->manual_fix();
 					}
-
 				} else {
 					$this->add_fix_message( 302 );
 				}
@@ -205,12 +243,20 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 		}
 
 		$new_content = '';
-		// Other constants
+		// Other constants.
 		$constants = array(
-			'ALLOW_UNFILTERED_UPLOADS' => false,    'DIEONDBERROR'     => false,    'DISALLOW_FILE_EDIT' => 1,
-			'DISALLOW_UNFILTERED_HTML' => 1,        'ERRORLOGFILE'     => 'elf',    'FS_CHMOD_DIR'       => 755,
-			'FS_CHMOD_FILE'            => 644,      'RELOCATE'         => false,    'SCRIPT_DEBUG'       => false,
-			'WP_ALLOW_REPAIR'          => '!isset', 'WP_DEBUG'         => false,    'WP_DEBUG_DISPLAY'   => false,
+			'ALLOW_UNFILTERED_UPLOADS' => false,
+			'DIEONDBERROR'             => false,
+			'DISALLOW_FILE_EDIT'       => 1,
+			'DISALLOW_UNFILTERED_HTML' => 1,
+			'ERRORLOGFILE'             => 'elf',
+			'FS_CHMOD_DIR'             => 755,
+			'FS_CHMOD_FILE'            => 644,
+			'RELOCATE'                 => false,
+			'SCRIPT_DEBUG'             => false,
+			'WP_ALLOW_REPAIR'          => '!isset',
+			'WP_DEBUG'                 => false,
+			'WP_DEBUG_DISPLAY'         => false,
 		);
 
 		$results = array();
@@ -236,7 +282,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 				case 1:
 					if ( ! $check ) {
 						if ( defined( $constant ) ) {
-							$replaced = secupress_replace_content( $wpconfig_filename, "/define\(.*('" . $constant . "'|\"" . $constant . "\").*,/", "/*Commented by SecuPress*/ // $0" );
+							$replaced = secupress_replace_content( $wpconfig_filename, "/define\(.*('$constant'|\"$constant\").*,/", '/*Commented by SecuPress*/ // $0' );
 						}
 
 						if ( ! defined( $constant ) || $replaced ) {
@@ -249,10 +295,10 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 				case false:
 					if ( $check ) {
 						if ( defined( $constant ) ) {
-							$replaced = secupress_replace_content( $wpconfig_filename, "/define\(.*('" . $constant . "'|\"" . $constant . "\").*,/", "/*Commented by SecuPress*/ // $0" );
+							$replaced = secupress_replace_content( $wpconfig_filename, "/define\(.*('$constant'|\"$constant\").*,/", '/*Commented by SecuPress*/ // $0' );
 						}
 
-						if ( ! defined( $constant ) || $replaced || 'WP_DEBUG_DISPLAY' == $constant ) {
+						if ( ! defined( $constant ) || $replaced || 'WP_DEBUG_DISPLAY' === $constant ) {
 							$new_content .= "define( '{$constant}', FALSE ); // Added by SecuPress\n";
 						} else {
 							$not_fixed[] = sprintf( '<code>%s</code>', $constant );
@@ -261,23 +307,19 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 					break;
 				default:
 					$check = decoct( $check ) <= $compare;
-
-					if ( ! $check ) {
-					}
 					break;
 			}
-
 		}
 
 		if ( $new_content ) {
 			secupress_put_contents( $wpconfig_filename, $new_content, array( 'marker' => 'Correct Constants Values', 'put' => 'append', 'text' => '<?php', 'keep_old' => true ) );
 		}
 
-		// COOKIEHASH
+		// COOKIEHASH.
 		$check = defined( 'COOKIEHASH' ) && COOKIEHASH === md5( get_site_option( 'siteurl' ) );
 
 		if ( $check ) {
-			// bad
+			// "bad"
 			secupress_set_site_transient( 'secupress-add-cookiehash-muplugin', array( 'ID' => $current_user->ID, 'username' => $current_user->user_login ) );
 			$this->add_fix_message( 100 );
 		}
@@ -292,8 +334,15 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 	}
 
 
+	/**
+	 * Try to fix the flaw(s) after requiring user action.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The fix results.
+	 */
 	public function manual_fix() {
-		if ( ! empty( $_POST ) && ! $this->has_fix_action_part( 'select-db-tables-to-rename' ) ) {
+		if ( ! empty( $_POST ) && ! $this->has_fix_action_part( 'select-db-tables-to-rename' ) ) { // WPCS: CSRF ok.
 			return parent::manual_fix();
 		}
 		global $wpdb;
@@ -303,12 +352,15 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 		$good_tables  = secupress_get_non_wp_tables();
 		$wp_tables    = secupress_get_wp_tables();
 
-		if ( isset( $_POST['secupress-select-db-tables-to-rename-flag'] ) ) {
-			$good_tables = array_intersect( (array) $_POST['secupress-select-db-tables-to-rename'], $good_tables );
+		if ( isset( $_POST['secupress-select-db-tables-to-rename-flag'] ) ) { // WPCS: CSRF ok.
+			$good_tables = array_intersect( (array) $_POST['secupress-select-db-tables-to-rename'], $good_tables ); // WPCS: CSRF ok.
 		}
+
 		$good_tables = array_merge( $good_tables, $wp_tables );
+
 		if ( is_multisite() ) {
 			$blog_ids = $wpdb->get_col( "SELECT blog_id FROM {$wpdb->blogs} WHERE blog_id > 1" );
+
 			if ( $blog_ids ) {
 				foreach ( $blog_ids as $blog_id ) {
 					foreach ( $wpdb->tables( 'blog' ) as $table ) {
@@ -318,27 +370,30 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 				}
 			}
 		}
+
 		foreach ( $good_tables as $table ) {
 			$new_table      = substr_replace( $table, $new_prefix, 0, strlen( $wpdb->prefix ) );
 			$query_tables[] = "`{$table}` TO `{$new_table}`";
 		}
 
-		$wpdb->query( "RENAME TABLE " . implode( ', ', $query_tables ) );
-		if ( reset( $wpdb->get_col( "SHOW TABLES LIKE '{$new_prefix}options'" ) ) != $new_prefix . 'options' ) {
+		$wpdb->query( 'RENAME TABLE ' . implode( ', ', $query_tables ) ); // WPCS: unprepared SQL ok.
+
+		if ( reset( $wpdb->get_col( "SHOW TABLES LIKE '{$new_prefix}options'" ) ) !== $new_prefix . 'options' ) { // WPCS: unprepared SQL ok.
 			$this->add_fix_message( 303 );
 		} else {
 			secupress_replace_content( secupress_find_wpconfig_path(), '/\$table_prefix.*=.*(\'' . $old_prefix . '\'|"' . $old_prefix . '");.*/', '$table_prefix  = \'' . $new_prefix . '\'; // Modified by SecuPress' . "\n" . '/*Commented by SecuPress*/ // $0' );
 			$old_prefix_len  = strlen( $old_prefix );
 			$old_prefix_len1 = $old_prefix_len + 1;
-			$wpdb->update( $new_prefix . 'options', array( 'option_name'  => $new_prefix . 'user_roles' ), array( 'option_name' => $old_prefix . 'user_roles' ) );
-			$wpdb->query( "UPDATE {$new_prefix}usermeta SET meta_key = CONCAT( REPLACE( LEFT( meta_key, {$old_prefix_len}), '$old_prefix', '$new_prefix' ), SUBSTR( meta_key, {$old_prefix_len1} ) )" );
+			$wpdb->update( $new_prefix . 'options', array( 'option_name' => $new_prefix . 'user_roles' ), array( 'option_name' => $old_prefix . 'user_roles' ) );
+			$wpdb->query( "UPDATE {$new_prefix}usermeta SET meta_key = CONCAT( REPLACE( LEFT( meta_key, {$old_prefix_len}), '$old_prefix', '$new_prefix' ), SUBSTR( meta_key, {$old_prefix_len1} ) )" ); // WPCS: unprepared SQL ok.
+
 			if ( isset( $blog_ids ) && $blog_ids ) {
 				foreach ( $blog_ids as $blog_id ) {
 					$old_prefix_len  = strlen( $old_prefix ) + strlen( $blog_id ) + 1; // + 1 = "_"
 					$old_prefix_len1 = $old_prefix_len + 1;
 					$ms_prefix       = $new_prefix . $blog_id . '_';
-					$wpdb->update( $ms_prefix . 'options', array( 'option_name'  => $ms_prefix . 'user_roles' ), array( 'option_name' => $old_prefix . 'user_roles' ) );
-					$wpdb->query( "UPDATE {$ms_prefix}usermeta SET meta_key = CONCAT( REPLACE( LEFT( meta_key, {$old_prefix_len}), '$old_prefix', '$ms_prefix' ), SUBSTR( meta_key, {$old_prefix_len1} ) )" );
+					$wpdb->update( $ms_prefix . 'options', array( 'option_name' => $ms_prefix . 'user_roles' ), array( 'option_name' => $old_prefix . 'user_roles' ) );
+					$wpdb->query( "UPDATE {$ms_prefix}usermeta SET meta_key = CONCAT( REPLACE( LEFT( meta_key, {$old_prefix_len}), '$old_prefix', '$ms_prefix' ), SUBSTR( meta_key, {$old_prefix_len1} ) )" ); // WPCS: unprepared SQL ok.
 				}
 			}
 
@@ -348,8 +403,16 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 		return parent::manual_fix();
 	}
 
+	/**
+	 * Get an array containing ALL the forms that would fix the scan if it requires user action.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) An array of HTML templates (form contents most of the time).
+	 */
 	protected function get_fix_action_template_parts() {
 		global $wpdb;
+
 		$good_tables = secupress_get_non_wp_tables();
 		$wp_tables   = secupress_get_wp_tables();
 		$blog_ids    = ! is_multisite() ? array( '1' ) : $wpdb->get_col( "SELECT blog_id FROM {$wpdb->blogs}" );
@@ -365,7 +428,8 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements iSecuPress_Scan
 		}
 		$form .= '<b>' . __( 'WordPress tables (mandatory)', 'secupress' ) . '</b><br>';
 		foreach ( $blog_ids as $blog_id ) {
-			$blog_id = 1 == $blog_id ? '' : $blog_id . '_';
+			$blog_id = 1 === $blog_id ? '' : $blog_id . '_';
+
 			foreach ( $wp_tables as $table ) {
 				$table = substr_replace( $table, $wpdb->prefix . $blog_id, 0, strlen( $wpdb->prefix ) );
 				$form .= '<input type="checkbox" id="secupress-select-db-tables-to-rename-' . $table . '" checked="checked" disabled="disabled"><label>' . $table . '</label><br>';

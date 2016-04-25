@@ -1,6 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die('Cheatin\' uh?');
-
+defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
 /**
  * Base scan interface.
@@ -8,13 +7,30 @@ defined( 'ABSPATH' ) or die('Cheatin\' uh?');
  * @package SecuPress
  * @since 1.0
  */
+interface SecuPress_Scan_Interface {
 
-interface iSecuPress_Scan {
-
+	/**
+	 * Get messages.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int) $message_id A message ID.
+	 */
 	public static function get_messages( $message_id = null );
-	public function scan();
-	public function fix();
 
+	/**
+	 * Scan for flaw(s).
+	 *
+	 * @since 1.0
+	 */
+	public function scan();
+
+	/**
+	 * Try to fix the flaw(s).
+	 *
+	 * @since 1.0
+	 */
+	public function fix();
 }
 
 
@@ -24,42 +40,106 @@ interface iSecuPress_Scan {
  * @package SecuPress
  * @since 1.0
  */
-
-abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_Scan {
+abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_Scan_Interface {
 
 	const VERSION = '1.0';
 
-	// Filled when fixes need manual actions.
+	/**
+	 * Filled when fixes need manual actions.
+	 *
+	 * @var (array)
+	 */
 	private       $fix_actions = array();
 
-	// The part of the class that extends this one, like SecuPress_Scan_{$class_name_part}.
+	/**
+	 * The part of the class that extends this one, like SecuPress_Scan_{$class_name_part}.
+	 *
+	 * @var (string)
+	 */
 	protected     $class_name_part;
-	// Contains scan results.
+
+	/**
+	 * Contains scan results.
+	 *
+	 * @var (array)
+	 */
 	protected     $result     = array();
-	// Contains fix results.
+
+	/**
+	 * Contains fix results.
+	 *
+	 * @var (array)
+	 */
 	protected     $result_fix = array();
-	/*
+
+	/**
 	 * On multisite, some fixes can't be performed from the network admin.
 	 * This array will contain a list of site IDs with scan messages.
+	 *
+	 * @var (array)
 	 */
 	protected     $fix_sites;
-	/*
+
+	/**
 	 * On multisite, if `$for_current_site` is true, then the scan/fix/etc are performed for the current site, not wetwork-widely.
 	 * If needed, should be set right after instanciation.
 	 * Does nothing on non-multisite installations.
+	 *
+	 * @var (bool)
 	 */
 	protected     $for_current_site = false;
 
+	/**
+	 * Priority.
+	 *
+	 * @var (string)
+	 */
 	public static $prio        = '';
+
+	/**
+	 * Scanner type.
+	 *
+	 * @var (string)
+	 */
 	public static $type        = '';
+
+	/**
+	 * Scanner title.
+	 *
+	 * @var (string)
+	 */
 	public static $title       = '';
+
+	/**
+	 * Scan description.
+	 *
+	 * @var (string)
+	 */
 	public static $more        = '';
+
+	/**
+	 * Fix description.
+	 *
+	 * @var (string)
+	 */
 	public static $more_fix    = '';
+
+	/**
+	 * Tells if a scanner is fixable by SecuPress. The value "pro" means it's fixable only with the version PRO.
+	 *
+	 * @var (bool|string)
+	 */
 	public static $fixable     = true;
+
+	/**
+	 * Tells if the fix must occur after all other scans and fixes, while no other scan/fix is running.
+	 *
+	 * @var (bool)
+	 */
 	public static $delayed_fix = false;
 
 
-	// Init ========================================================================================
+	// Init ========================================================================================.
 
 	/**
 	 * Init: this method is required by the class `SecuPress_Singleton`.
@@ -82,44 +162,79 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
-	// Multisite specifics =========================================================================
+	// Multisite specifics =========================================================================.
 
-	// Get `$for_current_site`.
-
+	/**
+	 * Get `$for_current_site`.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (bool)
+	 */
 	final public function is_for_current_site() {
 		return $this->for_current_site;
 	}
 
 
-	// `is_network_admin()` does not work in an ajax callback.
-
+	/**
+	 * `is_network_admin()` does not work in an ajax callback.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (bool)
+	 */
 	final public function is_network_admin() {
 		return is_multisite() && ! $this->is_for_current_site();
 	}
 
 
-	// Set `$for_current_site`.
-
+	/**
+	 * Set `$for_current_site`.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (bool) $for_current_site The new value for `$for_current_site`.
+	 *
+	 * @return $this
+	 */
 	final public function for_current_site( $for_current_site = null ) {
 		$this->for_current_site = (bool) $for_current_site;
 		return $this;
 	}
 
 
-	// Messages for scans and fixes ================================================================
+	// Messages for scans and fixes ================================================================.
 
-	// Get messages.
-
+	/**
+	 * Get messages.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int) $message_id A message ID.
+	 */
 	public static function get_messages( $message_id = null ) {
 		die( 'Method SecuPress_Scan::get_messages() must be over-ridden in a sub-class.' );
 	}
 
 
-	// Status and messages for scans ===============================================================
+	// Status and messages for scans ===============================================================.
 
-	// Maybe set current scan status.
-
+	/**
+	 * Maybe set current scan status, only if it isn't set yet.
+	 * If the status was already set, only allow to "upgrade" to a superior status.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $status The status code.
+	 * @param (bool)   $force  Set the status, even if it was already set.
+	 *
+	 * @return (string|bool) The current status. False on failure.
+	 */
 	final protected function set_status( $status, $force = false ) {
+		if ( $this->is_for_current_site() ) {
+			return $this->set_subsite_status( $status, 'scan', 0, $force );
+		}
+
 		$statuses = array(
 			'cantfix' => 0,
 			'good'    => 1,
@@ -127,16 +242,12 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 			'bad'     => 3,
 		);
 
-		if ( $this->is_for_current_site() ) {
-			return $this->set_subsite_status( $status, 'scan', 0, $force );
-		}
-
-		// Unkown status
+		// Unkown status.
 		if ( ! isset( $statuses[ $status ] ) ) {
 			return false;
 		}
 
-		// No previous status
+		// No previous status.
 		if ( empty( $this->result['status'] ) || $force ) {
 			$this->result['status'] = $status;
 			return $status;
@@ -151,14 +262,18 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
-	/*
+	/**
 	 * Add a scan message and automatically set the scan status.
 	 *
-	 * good:    the scan performed correctly and returned a good result.
-	 * warning: the scan could not perform correctly.
-	 * bad:     the scan performed correctly but returned a bad result.
+	 * "good":    the scan performed correctly and returned a good result.
+	 * "warning": the scan could not perform correctly.
+	 * "bad":     the scan performed correctly but returned a bad result.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int)   $message_id The message ID.
+	 * @param (array) $params     The arguments to use with `vsprintf()`.
 	 */
-
 	final protected function add_message( $message_id, $params = array() ) {
 		if ( $this->is_for_current_site() ) {
 			return $this->add_subsite_message( $message_id, $params );
@@ -170,8 +285,13 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
-	// Are scan status and message(s) set?
-
+	/**
+	 * Are scan status and message(s) set?
+	 *
+	 * @since 1.0
+	 *
+	 * @return (bool)
+	 */
 	final protected function has_status() {
 		if ( $this->is_for_current_site() ) {
 			return $this->has_subsite_status();
@@ -181,8 +301,14 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
-	// Set a scan status + message only if no status is set yet.
-
+	/**
+	 * Set a scan status + message only if no status is set yet.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int)   $message_id The message ID.
+	 * @param (array) $params     The arguments to use with `vsprintf()`.
+	 */
 	final protected function maybe_set_status( $message_id, $params = array() ) {
 		if ( $this->is_for_current_site() ) {
 			return $this->maybe_set_subsite_status( $message_id, $params );
@@ -194,11 +320,24 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
-	// Status and messages for fixes ===============================================================
+	// Status and messages for fixes ===============================================================.
 
-	// Maybe set current fix status.
-
+	/**
+	 * Maybe set current fix status, only if it isn't set yet.
+	 * If the status was already set, only allow to "upgrade" to a superior status.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $status The status code.
+	 * @param (bool)   $force  Set the status, even if it was already set.
+	 *
+	 * @return (string|bool) The current status. False on failure.
+	 */
 	final protected function set_fix_status( $status, $force = false ) {
+		if ( $this->is_for_current_site() ) {
+			return $this->set_subsite_status( $status, 'fix', 0, $force );
+		}
+
 		$statuses = array(
 			'cantfix' => 0,
 			'good'    => 1,
@@ -206,16 +345,12 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 			'bad'     => 3,
 		);
 
-		if ( $this->is_for_current_site() ) {
-			return $this->set_subsite_status( $status, 'fix', 0, $force );
-		}
-
-		// Unkown status
+		// Unkown status.
 		if ( ! isset( $statuses[ $status ] ) ) {
 			return false;
 		}
 
-		// No previous status
+		// No previous status.
 		if ( empty( $this->result_fix['status'] ) || $force ) {
 			$this->result_fix['status'] = $status;
 			return $status;
@@ -230,15 +365,78 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
-	/*
-	 * Add a pre fix message to inform the user before a fix (usually because the fix can not be done)
+	/**
+	 * Add a fix message and automatically set the fix status.
 	 *
-	 * good:    the fix performed correctly.
-	 * warning: partial fix. The fix could not perform entirely: some fix(es) worked and some not.
-	 * bad:     error. The fix could not perform correctly.
-	 * cantfix: neutral. The flaw cannot be fixed by this plugin.
+	 * "good":    the fix performed correctly.
+	 * "warning": partial fix. The fix could not perform entirely: some fix(es) worked and some not.
+	 * "bad":     error. The fix could not perform correctly.
+	 * "cantfix": neutral. The flaw cannot be fixed by this plugin.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int)   $message_id The message ID.
+	 * @param (array) $params     The arguments to use with `vsprintf()`.
 	 */
+	public function add_fix_message( $message_id, $params = array() ) {
+		if ( $this->is_for_current_site() ) {
+			return $this->add_subsite_message( $message_id, $params, 'fix' );
+		}
 
+		$this->result_fix['msgs'] = isset( $this->result_fix['msgs'] ) ? $this->result_fix['msgs'] : array();
+		$this->result_fix['msgs'][ $message_id ] = $params;
+		$this->set_fix_status( static::get_status_from_message_id( $message_id ) );
+	}
+
+
+	/**
+	 * Are fix status and message(s) set?
+	 *
+	 * @since 1.0
+	 *
+	 * @return (bool)
+	 */
+	final protected function has_fix_status() {
+		if ( $this->is_for_current_site( 'fix' ) ) {
+			return $this->has_subsite_status( 'fix' );
+		}
+
+		return ! empty( $this->result_fix );
+	}
+
+
+	/**
+	 * Set a fix status + message only if no status is set yet.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int)   $message_id The message ID.
+	 * @param (array) $params     The arguments to use with `vsprintf()`.
+	 */
+	final protected function maybe_set_fix_status( $message_id, $params = array() ) {
+		if ( $this->is_for_current_site() ) {
+			return $this->maybe_set_subsite_status( $message_id, $params, 'fix' );
+		}
+
+		if ( ! $this->has_fix_status() ) {
+			$this->add_fix_message( $message_id, $params );
+		}
+	}
+
+
+	/**
+	 * Add a pre fix message to inform the user before a fix (usually because the fix can not be done).
+	 *
+	 * "good":    the fix performed correctly.
+	 * "warning": partial fix. The fix could not perform entirely: some fix(es) worked and some not.
+	 * "bad":     error. The fix could not perform correctly.
+	 * "cantfix": neutral. The flaw cannot be fixed by this plugin.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int)   $message_id The message ID.
+	 * @param (array) $params     The arguments to use with `vsprintf()`.
+	 */
 	public function add_pre_fix_message( $message_id, $params = array() ) {
 		if ( $this->is_for_current_site() ) {
 			return $this->add_subsite_message( $message_id, $params );
@@ -252,54 +450,9 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
+	// Messages for subsites =======================================================================.
 
-	/*
-	 * Add a fix message and automatically set the fix status.
-	 *
-	 * good:    the fix performed correctly.
-	 * warning: partial fix. The fix could not perform entirely: some fix(es) worked and some not.
-	 * bad:     error. The fix could not perform correctly.
-	 * cantfix: neutral. The flaw cannot be fixed by this plugin.
-	 */
-
-	public function add_fix_message( $message_id, $params = array() ) {
-		if ( $this->is_for_current_site() ) {
-			return $this->add_subsite_message( $message_id, $params, 'fix' );
-		}
-
-		$this->result_fix['msgs'] = isset( $this->result_fix['msgs'] ) ? $this->result_fix['msgs'] : array();
-		$this->result_fix['msgs'][ $message_id ] = $params;
-		$this->set_fix_status( static::get_status_from_message_id( $message_id ) );
-	}
-
-
-	// Are fix status and message(s) set?
-
-	final protected function has_fix_status() {
-		if ( $this->is_for_current_site( 'fix' ) ) {
-			return $this->has_subsite_status( 'fix' );
-		}
-
-		return ! empty( $this->result_fix );
-	}
-
-
-	// Set a fix status + message only if no status is set yet.
-
-	final protected function maybe_set_fix_status( $message_id, $params = array() ) {
-		if ( $this->is_for_current_site() ) {
-			return $this->maybe_set_subsite_status( $message_id, $params, 'fix' );
-		}
-
-		if ( ! $this->has_fix_status() ) {
-			$this->add_fix_message( $message_id, $params );
-		}
-	}
-
-
-	// Messages for subsites =======================================================================
-
-	/*
+	/**
 	 * On multisite, some fixes can't be performed from the network admin.
 	 * Here we store a list of site IDs with some data:
 	 * array(
@@ -322,8 +475,18 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	 * )
 	 */
 
-	// Maybe set current fix status.
-
+	/**
+	 * Maybe set current fix status.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $status      The status code.
+	 * @param (string) $scan_or_fix For a scan or a fix.
+	 * @param (int)    $site_id     The site ID.
+	 * @param (bool)   $force  Set the status, even if it was already set.
+	 *
+	 * @return (string|bool) The current status. False on failure.
+	 */
 	final protected function set_subsite_status( $status, $scan_or_fix = 'scan', $site_id = 0, $force = false ) {
 		$statuses = array(
 			'cantfix' => 0,
@@ -332,7 +495,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 			'bad'     => 3,
 		);
 
-		// Unkown status
+		// Unkown status.
 		if ( ! isset( $statuses[ $status ] ) ) {
 			return false;
 		}
@@ -342,7 +505,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 
 		$this->set_subsite_defaults( $scan_or_fix, $site_id );
 
-		// No previous status
+		// No previous status.
 		if ( empty( $this->fix_sites[ $site_id ][ $scan_or_fix ]['status'] ) || $force ) {
 			$this->fix_sites[ $site_id ][ $scan_or_fix ]['status'] = $status;
 		}
@@ -355,8 +518,16 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
-	// Add a message and automatically set the fix status.
-
+	/**
+	 * Add a message and automatically set the fix status.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int)    $message_id The message ID.
+	 * @param (array)  $params     The arguments to use with `vsprintf()`.
+	 * @param (string) $scan_or_fix For a scan or a fix.
+	 * @param (int)    $site_id     The site ID.
+	 */
 	final protected function add_subsite_message( $message_id, $params = array(), $scan_or_fix = 'scan', $site_id = 0 ) {
 		$scan_or_fix = 'fix' === $scan_or_fix ? 'fix' : 'scan';
 		$site_id     = $site_id ? $site_id : get_current_blog_id();
@@ -366,8 +537,16 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
-	// Are status and message(s) set?
-
+	/**
+	 * Are status and message(s) set?
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $scan_or_fix For a scan or a fix.
+	 * @param (int)    $site_id     The site ID.
+	 *
+	 * @return (bool)
+	 */
 	final protected function has_subsite_status( $scan_or_fix = 'scan', $site_id = 0 ) {
 		$scan_or_fix = 'fix' === $scan_or_fix ? 'fix' : 'scan';
 		$site_id     = $site_id ? $site_id : get_current_blog_id();
@@ -375,8 +554,16 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
-	// Set a status + message only if no status is set yet.
-
+	/**
+	 * Set a status + message only if no status is set yet.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int)    $message_id The message ID.
+	 * @param (array)  $params     The arguments to use with `vsprintf()`.
+	 * @param (string) $scan_or_fix For a scan or a fix.
+	 * @param (int)    $site_id     The site ID.
+	 */
 	final protected function maybe_set_subsite_status( $message_id, $params = array(), $scan_or_fix = 'scan', $site_id = 0 ) {
 		if ( ! $this->has_subsite_status( $scan_or_fix, $site_id ) ) {
 			$this->add_subsite_message( $message_id, $params, $scan_or_fix, $site_id );
@@ -384,8 +571,14 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
-	// Set defaults.
-
+	/**
+	 * Set defaults.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $scan_or_fix For a scan or a fix.
+	 * @param (int)    $site_id     The site ID.
+	 */
 	final protected function set_subsite_defaults( $scan_or_fix = 'scan', $site_id = 0 ) {
 		$scan_or_fix = 'fix' === $scan_or_fix ? 'fix' : 'scan';
 		$site_id     = $site_id ? $site_id : get_current_blog_id();
@@ -398,18 +591,24 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
-	/*
+	/**
 	 * Remove all previously stored messages for sub-sites.
 	 * This will allow to set an empty transient, and then empty the option later.
+	 *
+	 * @since 1.0
 	 */
 	final protected function set_empty_data_for_subsites() {
 		$this->fix_sites = array_fill_keys( static::get_blog_ids(), array() );
 	}
 
 
-	/*
+	/**
 	 * Remove all previously stored messages for a particular sub-site.
 	 * This will allow to set an empty transient, and then empty the option later for this sub-site.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int) $site_id The site ID.
 	 */
 	final protected function set_empty_data_for_subsite( $site_id = 0 ) {
 		$site_id = $site_id ? $site_id : get_current_blog_id();
@@ -418,6 +617,16 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
+	/**
+	 * Get a sub-site scan/fix results.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $scan_or_fix For a scan or a fix.
+	 * @param (int)    $site_id     The site ID.
+	 *
+	 * @return (array)
+	 */
 	final protected function get_subsite_result( $scan_or_fix = 'scan', $site_id = 0 ) {
 		$scan_or_fix        = 'fix' === $scan_or_fix ? 'fix' : 'scan';
 		$scan_or_fix_invert = 'fix' === $scan_or_fix ? 'scan' : 'fix';
@@ -441,10 +650,15 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
-	// Scan and fix ================================================================================
+	// Scan and fix ================================================================================.
 
-	// Scan for flaw(s).
-
+	/**
+	 * Scan for flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The scan results.
+	 */
 	public function scan() {
 		$this->update();
 
@@ -459,13 +673,18 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
-	// Try to fix the flaw(s).
-
+	/**
+	 * Try to fix the flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The fix results.
+	 */
 	public function fix() {
 		$this->update_fix();
 
 		if ( $this->fix_actions ) {
-			// Ajax
+			// Ajax.
 			if ( defined( 'DOING_AJAX' ) ) {
 				// Add the fixes that require user action in the returned data.
 				$form = array(
@@ -484,7 +703,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 
 				$this->fix_actions = array();
 			}
-			// No ajax
+			// No ajax.
 			else {
 				// Set a transient with fixes that require user action.
 				$this->set_fix_actions();
@@ -501,47 +720,83 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 		return $result;
 	}
 
-
-	// Try to fix the flaw(s) after requiring user action.
-
+	/**
+	 * Try to fix the flaw(s) after requiring user action.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The fix results.
+	 */
 	public function manual_fix() {
 		// Don't use `$this->` here, we need to call the one from this class.
 		return self::fix();
 	}
 
 
-	// Store IDs related to fixes that require user action.
-
+	/**
+	 * Store IDs related to fixes that require user action.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $fix_id A fix action identifier.
+	 */
 	final protected function add_fix_action( $fix_id ) {
 		$this->fix_actions[ $fix_id ] = $fix_id;
 	}
 
 
-	// Return an array containing ONLY THE REQUIRED forms that would fix the scan if it requires user action.
-
+	/**
+	 * Get an array containing ONLY THE REQUIRED forms that would fix the scan if it requires user action.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (array) $fix_actions An array of fix actions.
+	 *
+	 * @return (array) An array of HTML templates (form contents most of the time).
+	 */
 	final public function get_required_fix_action_template_parts( $fix_actions = false ) {
 		$fix_actions = $fix_actions ? $fix_actions : $this->fix_actions;
 		return array_intersect_key( $this->get_fix_action_template_parts(), $fix_actions );
 	}
 
 
-	// Return an array containing ALL the forms that would fix the scan if it requires user action.
-
+	/**
+	 * Get an array containing ALL the forms that would fix the scan if it requires user action.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) An array of HTML templates (form contents most of the time).
+	 */
 	protected function get_fix_action_template_parts() {
 		return array();
 	}
 
 
-	// Tell if a fix action part is needed.
-
+	/**
+	 * Tell if a fix action part is needed.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $fix_id A fix action identifier.
+	 *
+	 * @return (bool)
+	 */
 	final protected function has_fix_action_part( $fix_id ) {
-		$fix_ids = ! empty( $_POST['test-parts'] ) ? ',' . $_POST['test-parts'] . ',' : '';
+		$fix_ids = ! empty( $_POST['test-parts'] ) ? ',' . $_POST['test-parts'] . ',' : ''; // WPCS: CSRF ok.
 		return false !== strpos( $fix_ids, ',' . $fix_id . ',' );
 	}
 
 
-	// Print the required fields for the user fix form.
-
+	/**
+	 * Get the required fields for the user fix form (nonce, referrer, action, etc).
+	 *
+	 * @since 1.0
+	 *
+	 * @param (array) $fix_actions An array of fix actions.
+	 * @param (bool)  $echo        True to print the outpout, False to return it.
+	 *
+	 * @return (string)
+	 */
 	final public function get_fix_action_fields( $fix_actions = false, $echo = true ) {
 		$fix_actions = $fix_actions ? $fix_actions : $this->fix_actions;
 		$nonce       = 'secupress_manual_fixit_' . $this->class_name_part;
@@ -565,10 +820,15 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 		echo $output;
 	}
 
-	// Options =====================================================================================
+	// Options =====================================================================================.
 
-	// Set option.
-
+	/**
+	 * Set options: scan results.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) Scan results.
+	 */
 	final public function update() {
 		$name = strtolower( $this->class_name_part );
 
@@ -595,6 +855,13 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
+	/**
+	 * Set options: fix results.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) Fix results.
+	 */
 	final public function update_fix() {
 		$name = strtolower( $this->class_name_part );
 
@@ -625,10 +892,13 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 		return $this->result_fix;
 	}
 
-	// Other transients ============================================================================
+	// Other transients ============================================================================.
 
-	// Fixes that require user action.
-
+	/**
+	 * Fixes that require user action: set fix actions.
+	 *
+	 * @since 1.0
+	 */
 	final protected function set_fix_actions() {
 		$transient_name = 'secupress_fix_actions-' . get_current_user_id();
 
@@ -642,6 +912,13 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
+	/**
+	 * Fixes that require user action: get fix actions and delete the transient used to store them.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) Scan results.
+	 */
 	final public static function get_and_delete_fix_actions() {
 		$transient_name = 'secupress_fix_actions-' . get_current_user_id();
 
@@ -661,8 +938,11 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
-	// Schedule an auto-scan that will be executed on page load.
-
+	/**
+	 * Auto-scan: schedule an auto-scan that will be executed on page load.
+	 *
+	 * @since 1.0
+	 */
 	final public function schedule_autoscan() {
 		if ( $this->is_for_current_site() ) {
 			$transient = secupress_get_transient( 'secupress_autoscans' );
@@ -682,6 +962,13 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
+	/**
+	 * Auto-scan: get auto-scans and delete the transient used to store them.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) Scan results.
+	 */
 	final public static function get_and_delete_autoscans() {
 		if ( is_multisite() && ! is_network_admin() ) {
 			$transient = secupress_get_transient( 'secupress_autoscans' );
@@ -699,10 +986,17 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
-	// Tools =======================================================================================
+	// Tools =======================================================================================.
 
-	// Get prioritie(s).
-
+	/**
+	 * Prioritie(s): get an array containing title and description of the given priority.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $level A priority.
+	 *
+	 * @return (array) An array containing title and description. If `$level` is not provided, will return an array containing all Priorities.
+	 */
 	final public static function get_priorities( $level = null ) {
 		$priorities = array(
 			'high' => array(
@@ -727,23 +1021,37 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
-	// Given an array of items and wrap it in a HTML tag.
+	/**
+	 * Given an array of items, wrap them in a HTML tag.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (array)  $items An array of items.
+	 * @param (string) $tag   The tag.
+	 *
+	 * @return (array).
+	 */
+	final public static function wrap_in_tag( $items, $tag = 'code' ) {
+		if ( $items ) {
+			$items = (array) $items;
 
-	final public static function wrap_in_tag( $array, $tag = 'code' ) {
-		if ( $array ) {
-			$array = (array) $array;
-
-			foreach ( $array as $k => $item ) {
-				$array[ $k ] = sprintf( '<%2$s>%1$s</%2$s>', $item, $tag );
+			foreach ( $items as $k => $item ) {
+				$items[ $k ] = sprintf( '<%2$s>%1$s</%2$s>', $item, $tag );
 			}
 		}
 
-		return $array ? $array : array();
+		return $items ? $items : array();
 	}
 
 
-	// Slide the items if there are too many
-
+	/**
+	 * Slice the items if there are too many. Will add a "XX others" item.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (array) $items     An array of items.
+	 * @param (int)   $max_count The maximum length of the array.
+	 */
 	final public static function slice_and_dice( &$items, $max_count ) {
 		$count = count( $items ) - $max_count;
 		if ( $count > 0 ) {
@@ -753,8 +1061,13 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
-	//
-
+	/**
+	 * Get the status code from a message identifier.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int) $message_id The message ID.
+	 */
 	final protected static function get_status_from_message_id( $message_id ) {
 		if ( $message_id < 100 ) {
 			return 'good';
@@ -771,8 +1084,13 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
-	// Get the list of the blog IDs.
-
+	/**
+	 * Get the list of the blog IDs.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array)
+	 */
 	final protected static function get_blog_ids() {
 		global $wpdb;
 		static $blogs;
@@ -787,14 +1105,17 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
-	/*
+	/**
 	 * A sandbox for doing crazy things with `.htaccess`.
 	 * Create a folder containing a `.htaccess` file with the provided content and a `secupress.html` file.
 	 * Then, make a request to the `secupress.html` file to test if a server error is triggered.
 	 *
-	 * @param  (string)        The content to put in the `.htaccess` file.
-	 * @return (WP_Error|bool) Return true if the server does not trigger an error 500, false otherwise.
-	 *                         Return a WP_Error object if the sandbox creation fails or if the HTTP request fails.
+	 * @since 1.0
+	 *
+	 * @param (string) $content The content to put in the `.htaccess` file.
+	 *
+	 * @return (object|bool) Return true if the server does not trigger an error 500, false otherwise.
+	 *                       Return a WP_Error object if the sandbox creation fails or if the HTTP request fails.
 	 */
 	final protected static function htaccess_success_in_sandbox( $content ) {
 		$wp_filesystem = secupress_get_filesystem();
@@ -834,7 +1155,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements iSecuPress_
 	}
 
 
-	/*
+	/**
 	 * Extract a `<pre/>` content from a message.
 	 *
 	 * @since 1.0
