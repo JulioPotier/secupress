@@ -137,9 +137,9 @@ function secupress_die( $message = '', $title = '', $args = array() ) {
 	 *
 	 * @param (string) $message The message displayed.
 	 * @param (string) $url     The current URL.
-	 * @param (array)  $_SERVER The superglobal var.
+	 * @param (array)  $args    Facultative arguments.
 	 */
-	$message = apply_filters( 'secupress.die.message', $message, $url, $_SERVER );
+	$message = apply_filters( 'secupress.die.message', $message, $url, $args );
 
 	/**
 	 * Fires right before `wp_die()`.
@@ -148,9 +148,9 @@ function secupress_die( $message = '', $title = '', $args = array() ) {
 	 *
 	 * @param (string) $message The message displayed.
 	 * @param (string) $url     The current URL.
-	 * @param (array)  $_SERVER The superglobal var.
+	 * @param (array)  $args    Facultative arguments.
 	 */
-	do_action( 'secupress.before.die', $message, $url, $_SERVER );
+	do_action( 'secupress.before.die', $message, $url, $args );
 
 	wp_die( $message, $title, $args );
 }
