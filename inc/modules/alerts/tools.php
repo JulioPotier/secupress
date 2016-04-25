@@ -1,7 +1,7 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
-/*
+/**
  * Get available alert types.
  *
  * @since 1.0
@@ -27,6 +27,13 @@ function secupress_alert_types_labels( $all = false ) {
 }
 
 
+/**
+ * Get email addresses set by the user in the settings.
+ *
+ * @since 1.0
+ *
+ * @return (array) An array of valid email addresses.
+ */
 function secupress_alerts_get_emails() {
 	$emails = secupress_get_module_option( 'notification-types_emails', '', 'alerts' );
 

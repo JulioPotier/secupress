@@ -66,7 +66,7 @@ if ( secupress_is_pro() ) :
 		'depends'      => $activated_field_name . '_push',
 		'label_for'    => $this->get_field_name( 'push' ),
 		'type'         => 'text',
-		'label'        => __( 'I don\'t know what I need yet:', 'secupress' ),////
+		'label'        => __( 'I don\'t know what I need yet:', 'secupress' ), // ////.
 	) );
 
 
@@ -76,7 +76,7 @@ if ( secupress_is_pro() ) :
 		'depends'      => $activated_field_name . '_slack',
 		'label_for'    => $this->get_field_name( 'slack' ),
 		'type'         => 'text',
-		'label'        => __( 'I don\'t know what I need yet:', 'secupress' ),////
+		'label'        => __( 'I don\'t know what I need yet:', 'secupress' ), // ////.
 	) );
 
 
@@ -86,7 +86,7 @@ if ( secupress_is_pro() ) :
 		'depends'      => $activated_field_name . '_twitter',
 		'label_for'    => $this->get_field_name( 'twitter' ),
 		'type'         => 'text',
-		'label'        => __( 'I don\'t know what I need yet:', 'secupress' ),////
+		'label'        => __( 'I don\'t know what I need yet:', 'secupress' ), // ////.
 	) );
 
 endif;

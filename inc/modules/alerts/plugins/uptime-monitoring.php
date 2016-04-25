@@ -56,6 +56,16 @@ add_action( 'add_site_option_secupress_alerts_settings',    'secupress_uptime_mo
 add_action( 'update_site_option_secupress_alerts_settings', 'secupress_uptime_monitoring_update_alerts_settings', 20, 3 );
 add_action( 'delete_site_option_secupress_alerts_settings', 'secupress_uptime_monitoring_stop' );
 
+
+/**
+ * When the notification settings are changed, notify our server.
+ *
+ * @since 1.0
+ *
+ * @param (string) $option   Name of the network option.
+ * @param (mixed)  $newvalue Current value of the network option.
+ * @param (mixed)  $oldvalue Old value of the network option.
+ */
 function secupress_uptime_monitoring_update_alerts_settings( $option, $newvalue, $oldvalue = false ) {
 	if ( ! secupress_get_consumer_email() || ! secupress_is_submodule_active( 'alerts', 'uptime-monitoring' ) ) {
 		return;
@@ -127,7 +137,8 @@ function secupress_uptime_monitoring_start() {
 					$emails = array_unique( $emails );
 					$methods[ $type ]['emails'] = implode( ',', $emails );
 				} else {
-					// SMS, push, Slack, Twitter. ////
+					// SMS, push, Slack, Twitter. ////.
+					$methods[ $type ];
 				}
 			}
 		}
@@ -145,8 +156,8 @@ function secupress_uptime_monitoring_start() {
 				'account_token' => esc_attr( $account_token ),
 				'site_token'    => esc_attr( $site_token ),
 				'source'        => SECUPRESS_UPTIME_MONITOR_UA,
-				'methods'       => json_encode( $methods ),
-			)
+				'methods'       => wp_json_encode( $methods ),
+			),
 		)
 	);
 
@@ -201,7 +212,7 @@ function secupress_uptime_monitoring_stop() {
 				'account_token' => esc_attr( $account_token ),
 				'site_token'    => esc_attr( $site_token ),
 				'source'        => SECUPRESS_UPTIME_MONITOR_UA,
-			)
+			),
 		)
 	);
 

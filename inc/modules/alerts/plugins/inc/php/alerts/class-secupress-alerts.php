@@ -8,42 +8,62 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
  * @package SecuPress
  * @since 1.0
  */
-
 class SecuPress_Alerts extends SecuPress_Singleton {
 
 	const VERSION = '1.0';
+
 	/**
-	 * @var (object) The reference to the *Singleton* instance of this class.
+	 * The reference to *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
+
 	/**
-	 * @var (array) Notification types selected by the user (email, SMS...).
+	 * Notification types selected by the user (email, SMS...).
+	 *
+	 * @var (array)
 	 */
 	protected static $types;
+
 	/**
-	 * @var (int) Delay in seconds between two notifications of alerts of the same type.
+	 * Delay in seconds between two notifications of alerts of the same type.
+	 *
+	 * @var (int)
 	 */
 	protected static $delay;
+
 	/**
-	 * @var (string) Name of the option that stores the alerts.
+	 * Name of the option that stores the alerts.
+	 *
+	 * @var (string)
 	 */
 	protected static $option_name = 'secupress_delayed_alerts';
+
 	/**
-	 * @var (bool) Tells if the notification includes delayed alerts.
+	 * Tells if the notification includes delayed alerts.
+	 *
+	 * @var (bool)
 	 */
 	protected $is_delayed = false;
+
 	/**
-	 * @var (array) Hooks that trigger an alert.
+	 * Hooks that trigger an alert.
+	 *
+	 * @var (array)
 	 * @see `secupress.alerts.hooks` filter.
 	 */
 	protected $hooks;
+
 	/**
-	 * @var (array) Alerts that will be sent.
+	 * Alerts that will be sent.
+	 *
+	 * @var (array)
 	 */
 	protected $alerts = array();
 
 
-	// Public methods ==============================================================================
+	// Public methods ==============================================================================.
 
 	/**
 	 * Get notification types selected by the user.
@@ -67,7 +87,7 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 	}
 
 
-	// Private methods =============================================================================
+	// Private methods =============================================================================.
 
 	/**
 	 * Launch main hooks.
@@ -163,7 +183,7 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 	}
 
 
-	// Hook callbacks ==============================================================================
+	// Hook callbacks ==============================================================================.
 
 	/**
 	 * Maybe queue an option hook.
@@ -184,8 +204,6 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 	 * Maybe queue a non option hook.
 	 *
 	 * @since 1.0
-	 *
-	 * @param (mixed) Depends on which hook is currently triggered.
 	 */
 	public function _action_cb() {
 		$hook = current_filter();
@@ -247,7 +265,7 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 	}
 
 
-	// Test callbacks ==============================================================================
+	// Test callbacks ==============================================================================.
 
 	/**
 	 * Tell if the option should trigger an alert, depending no its value.
@@ -262,7 +280,7 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 		$hook    = current_filter();
 		$compare = $this->hooks[ $hook ]['test_value'];
 
-		// null => any change will be logged.
+		// Null => any change will be logged.
 		if ( null === $compare ) {
 			return true;
 		}
@@ -311,7 +329,7 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 	}
 
 
-	// Data ========================================================================================
+	// Data ========================================================================================.
 
 	/**
 	 * Pre-process data for the `default_role` option: given a role name, return a translated role label instead.
@@ -360,14 +378,14 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 			} elseif ( is_scalar( $data ) ) {
 				$count = substr_count( $data, "\n" );
 
-				// 50 seems to be a good limit. **Magic Number**
+				// 50 seems to be a good limit.
 				if ( $count || strlen( $data ) > 50 ) {
 					$args[ $key ] = '<pre>' . esc_html( $data ) . '</pre>';
 				} else {
 					$args[ $key ] = '<code>' . esc_html( $data ) . '</code>';
 				}
 			} else {
-				$args[ $key ] = '<pre>' . esc_html( print_r( $data, true ) ) . '</pre>';
+				$args[ $key ] = '<pre>' . esc_html( call_user_func( 'print_r', $data, true ) ) . '</pre>';
 			}
 		}
 
@@ -375,7 +393,7 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 	}
 
 
-	// Notifications ===============================================================================
+	// Notifications ===============================================================================.
 
 	/**
 	 * Send notifications if needed, store the remaining ones.
@@ -469,20 +487,20 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 	protected function _notify_email() {
 		$count = array_sum( array_map( 'count', $this->alerts ) );
 
-		// To
+		// To.
 		$to = secupress_alerts_get_emails();
 
 		if ( ! $to ) {
 			return;
 		}
 
-		// From
+		// From.
 		$from = secupress_get_email( true );
 
-		// Subject
+		// Subject.
 		$subject = _n( 'New important event on your site', 'New important events on your site', $count, 'secupress' );
 
-		// Message
+		// Message.
 		$messages = array();
 
 		foreach ( $this->alerts as $hook => $hooks ) {
@@ -511,7 +529,7 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 			$messages = sprintf( _n( 'An important event happened on your site for the last %d minutes:', 'Some important events happened on your site for the last %d minutes:', $count, 'secupress' ), $mins ) . $messages;
 		}
 
-		// Headers
+		// Headers.
 		$headers = array(
 			$from,
 			'content-type: text/html',
@@ -528,7 +546,7 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	protected function _notify_sms() {
-		//// Nothing yet.
+		// //// Nothing yet.
 	}
 
 
@@ -538,7 +556,7 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	protected function _notify_push() {
-		//// Nothing yet.
+		// //// Nothing yet.
 	}
 
 
@@ -548,7 +566,7 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	protected function _notify_slack() {
-		//// Nothing yet.
+		// //// Nothing yet.
 	}
 
 
@@ -558,7 +576,7 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	protected function _notify_twitter() {
-		//// Nothing yet.
+		// //// Nothing yet.
 	}
 
 
@@ -606,7 +624,7 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 	}
 
 
-	// Various =====================================================================================
+	// Various =====================================================================================.
 
 	/**
 	 * Add the option(s) we use in this plugin to be autoloaded on multisite.

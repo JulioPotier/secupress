@@ -24,13 +24,13 @@ function __secupress_alerts_settings_callback( $settings ) {
 	}
 	$settings['sanitized'] = 1;
 
-	// Types of Notification
+	// Types of Notification.
 	__secupress_types_of_notification_settings_callback( $modulenow, $settings );
 
-	// Event Alerts
+	// Event Alerts.
 	__secupress_event_alerts_settings_callback( $modulenow, $settings, $activate );
 
-	// Uptime monitoring
+	// Uptime monitoring.
 	__secupress_uptime_monitoring_settings_callback( $modulenow, $settings, $activate );
 
 	return $settings;
