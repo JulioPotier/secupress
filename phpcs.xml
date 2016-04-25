@@ -11,6 +11,7 @@
 	<file>inc/admin</file>
 	<file>inc/front</file>
 	<file>inc/functions</file>
+	<file>inc/classes/admin</file>
 
 	<file>inc/admin-bar.php</file>
 	<file>inc/cron.php</file>

@@ -1,27 +1,39 @@
 <?php
 
 if ( ! class_exists( 'WP_Background_Process' ) ) {
+	/**
+	 * Background process class.
+	 *
+	 * @package SecuPress
+	 * @since 1.0
+	 */
 	abstract class WP_Background_Process extends WP_Async_Request {
 
 		/**
-		 * @var
+		 * Suffix used to build the global process identifier.
+		 *
+		 * @var (string)
 		 */
 		protected $action = 'background_process';
 
 		/**
-		 * Start time of current process
+		 * Start time of current process.
 		 *
-		 * @var int
+		 * @var (int)
 		 */
 		protected $start_time = 0;
 
 		/**
-		 * @var string
+		 * Cron hook name.
+		 *
+		 * @var (string)
 		 */
 		protected $cron_hook_identifier;
 
 		/**
-		 * @var string
+		 * Cron interval identifier.
+		 *
+		 * @var (string)
 		 */
 		protected $cron_interval_identifier;
 
@@ -39,22 +51,22 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 		}
 
 		/**
-		 * Dispatch
+		 * Dispatch.
 		 *
-		 * @return array|WP_Error
+		 * @return (array|WP_Error)
 		 */
 		public function dispatch() {
-			// Schedule the cron healthcheck
+			// Schedule the cron healthcheck.
 			$this->schedule_event();
 
-			// Perform remote post
-			parent::dispatch();
+			// Perform remote post.
+			return parent::dispatch();
 		}
 
 		/**
-		 * Push to queue
+		 * Push to queue.
 		 *
-		 * @param mixed $data
+		 * @param (mixed) $data The data.
 		 *
 		 * @return $this
 		 */
@@ -65,7 +77,7 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 		}
 
 		/**
-		 * Save queue
+		 * Save queue.
 		 *
 		 * @return $this
 		 */
@@ -80,10 +92,10 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 		}
 
 		/**
-		 * Update queue
+		 * Update queue.
 		 *
-		 * @param string $key
-		 * @param array  $data
+		 * @param (string) $key  Key.
+		 * @param (array)  $data Data.
 		 *
 		 * @return $this
 		 */
@@ -96,9 +108,9 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 		}
 
 		/**
-		 * Delete queue
+		 * Delete queue.
 		 *
-		 * @param string $key
+		 * @param (string) $key Key to delete.
 		 *
 		 * @return $this
 		 */
@@ -109,12 +121,12 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 		}
 
 		/**
-		 * Generate key
+		 * Generate key.
 		 *
 		 * Generates a unique key based on microtime. Queue items are
 		 * given a unique key so that they can be merged upon save.
 		 *
-		 * @param int $length
+		 * @param (int) $length Key length.
 		 *
 		 * @return string
 		 */
@@ -126,19 +138,19 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 		}
 
 		/**
-		 * Maybe process queue
+		 * Maybe process queue.
 		 *
 		 * Checks whether data exists within the queue and that
 		 * the process is not already running.
 		 */
 		public function maybe_handle() {
 			if ( $this->is_process_running() ) {
-				// Background process already running
+				// Background process already running.
 				wp_die();
 			}
 
 			if ( $this->is_queue_empty() ) {
-				// No data to process
+				// No data to process.
 				wp_die();
 			}
 
@@ -150,9 +162,9 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 		}
 
 		/**
-		 * Is queue empty
+		 * Is queue empty.
 		 *
-		 * @return bool
+		 * @return (bool)
 		 */
 		protected function is_queue_empty() {
 			global $wpdb;
@@ -167,24 +179,20 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 
 			$key = $this->identifier . '_batch_%';
 
-			$count = $wpdb->get_var( $wpdb->prepare( "
-			SELECT COUNT(*)
-			FROM {$table}
-			WHERE {$column} LIKE %s
-		", $key ) );
+			$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$table} WHERE {$column} LIKE %s ", $key ) ); // WPCS: unprepared SQL ok.
 
 			return ( $count > 0 ) ? false : true;
 		}
 
 		/**
-		 * Is process running
+		 * Is process running.
 		 *
 		 * Check whether the current process is already running
 		 * in a background process.
 		 */
 		protected function is_process_running() {
 			if ( get_site_transient( $this->identifier . '_process_lock' ) ) {
-				// Process already running
+				// Process already running.
 				return true;
 			}
 
@@ -192,23 +200,23 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 		}
 
 		/**
-		 * Lock process
+		 * Lock process.
 		 *
 		 * Lock the process so that multiple instances can't run simultaneously.
 		 * Override if applicable, but the duration should be greater than that
 		 * defined in the time_exceeded() method.
 		 */
 		protected function lock_process() {
-			$this->start_time = time(); // Set start time of current process
+			$this->start_time = time(); // Set start time of current process.
 
-			$lock_duration = ( property_exists( $this, 'queue_lock_time' ) ) ? $this->queue_lock_time : 60; // 1 minute
+			$lock_duration = ( property_exists( $this, 'queue_lock_time' ) ) ? $this->queue_lock_time : 60; // 1 minute.
 			$lock_duration = apply_filters( $this->identifier . '_queue_lock_time', $lock_duration );
 
 			set_site_transient( $this->identifier . '_process_lock', microtime(), $lock_duration );
 		}
 
 		/**
-		 * Unlock process
+		 * Unlock process.
 		 *
 		 * Unlock the process so that other instances can spawn.
 		 *
@@ -221,9 +229,9 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 		}
 
 		/**
-		 * Get batch
+		 * Get batch.
 		 *
-		 * @return stdClass Return the first batch from the queue
+		 * @return (stdClass) Return the first batch from the queue.
 		 */
 		protected function get_batch() {
 			global $wpdb;
@@ -242,13 +250,7 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 
 			$key = $this->identifier . '_batch_%';
 
-			$query = $wpdb->get_row( $wpdb->prepare( "
-			SELECT *
-			FROM {$table}
-			WHERE {$column} LIKE %s
-			ORDER BY {$key_column} ASC
-			LIMIT 1
-		", $key ) );
+			$query = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE {$column} LIKE %s ORDER BY {$key_column} ASC LIMIT 1", $key ) ); // WPCS: unprepared SQL ok.
 
 			$batch       = new stdClass();
 			$batch->key  = $query->$column;
@@ -258,7 +260,7 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 		}
 
 		/**
-		 * Handle
+		 * Handle.
 		 *
 		 * Pass each queue item to the task handler, while remaining
 		 * within server memory and time limit constraints.
@@ -279,12 +281,12 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 					}
 
 					if ( $this->time_exceeded() || $this->memory_exceeded() ) {
-						// Batch limits reached
+						// Batch limits reached.
 						break;
 					}
 				}
 
-				// Update or delete current batch
+				// Update or delete current batch.
 				if ( ! empty( $batch->data ) ) {
 					$this->update( $batch->key, $batch->data );
 				} else {
@@ -294,7 +296,7 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 
 			$this->unlock_process();
 
-			// Start next batch or complete process
+			// Start next batch or complete process.
 			if ( ! $this->is_queue_empty() ) {
 				$this->dispatch();
 			} else {
@@ -305,15 +307,15 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 		}
 
 		/**
-		 * Memory exceeded
+		 * Memory exceeded.
 		 *
 		 * Ensures the batch process never exceeds 90%
 		 * of the maximum WordPress memory.
 		 *
-		 * @return bool
+		 * @return (bool)
 		 */
 		protected function memory_exceeded() {
-			$memory_limit   =  $this->get_memory_limit() * 0.9; // 90% of max memory
+			$memory_limit   = $this->get_memory_limit() * 0.9; // 90% of max memory.
 			$current_memory = memory_get_usage( true );
 			$return         = false;
 
@@ -325,20 +327,20 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 		}
 
 		/**
-		 * Get memory limit
+		 * Get memory limit.
 		 *
-		 * @return int
+		 * @return (int)
 		 */
 		protected function get_memory_limit() {
 			if ( function_exists( 'ini_get' ) ) {
 				$memory_limit = ini_get( 'memory_limit' );
 			} else {
-				// Sensible default
+				// Sensible default.
 				$memory_limit = '128M';
 			}
 
-			if ( ! $memory_limit || -1 == $memory_limit ) {
-				// Unlimited, set to 32GB
+			if ( ! $memory_limit || -1 === $memory_limit ) {
+				// Unlimited, set to 32GB.
 				$memory_limit = '32000M';
 			}
 
@@ -346,15 +348,15 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 		}
 
 		/**
-		 * Time exceeded
+		 * Time exceeded.
 		 *
 		 * Ensures the batch never exceeds a sensible time limit.
 		 * A timeout limit of 30s is common on shared hosting.
 		 *
-		 * @return bool
+		 * @return (bool)
 		 */
 		protected function time_exceeded() {
-			$finish = $this->start_time + apply_filters( $this->identifier . '_default_time_limit', 20 ); // 20 seconds
+			$finish = $this->start_time + apply_filters( $this->identifier . '_default_time_limit', 20 ); // 20 seconds.
 			$return = false;
 
 			if ( time() >= $finish ) {
@@ -365,22 +367,22 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 		}
 
 		/**
-		 * Complete
+		 * Complete.
 		 *
 		 * Override if applicable, but ensure that the below actions are
 		 * performed, or, call parent::complete().
 		 */
 		protected function complete() {
-			// Unschedule the cron healthcheck
+			// Unschedule the cron healthcheck.
 			$this->clear_scheduled_event();
 		}
 
 		/**
-		 * Schedule cron healthcheck
+		 * Schedule cron healthcheck.
 		 *
-		 * @param $schedules
+		 * @param (array) $schedules Schedules.
 		 *
-		 * @return mixed
+		 * @return (array)
 		 */
 		public function schedule_cron_healthcheck( $schedules ) {
 			$interval = apply_filters( $this->identifier . '_cron_interval', 5 );
@@ -399,19 +401,19 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 		}
 
 		/**
-		 * Handle cron healthcheck
+		 * Handle cron healthcheck.
 		 *
 		 * Restart the background process if not already running
 		 * and data exists in the queue.
 		 */
 		public function handle_cron_healthcheck() {
 			if ( $this->is_process_running() ) {
-				// Background process already running
+				// Background process already running.
 				exit;
 			}
 
 			if ( $this->is_queue_empty() ) {
-				// No data to process
+				// No data to process.
 				$this->clear_scheduled_event();
 				exit;
 			}
@@ -420,7 +422,7 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 		}
 
 		/**
-		 * Schedule event
+		 * Schedule event.
 		 */
 		protected function schedule_event() {
 			if ( ! wp_next_scheduled( $this->cron_hook_identifier ) ) {
@@ -429,7 +431,7 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 		}
 
 		/**
-		 * Clear scheduled event
+		 * Clear scheduled event.
 		 */
 		protected function clear_scheduled_event() {
 			$timestamp = wp_next_scheduled( $this->cron_hook_identifier );
@@ -440,18 +442,17 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 		}
 
 		/**
-		 * Task
+		 * Task.
 		 *
 		 * Override this method to perform any actions required on each
 		 * queue item. Return the modified item for further processing
 		 * in the next pass through. Or, return false to remove the
 		 * item from the queue.
 		 *
-		 * @param mixed $item Queue item to iterate over
+		 * @param (mixed) $item Queue item to iterate over.
 		 *
-		 * @return mixed
+		 * @return (mixed)
 		 */
 		abstract protected function task( $item );
-
 	}
 }

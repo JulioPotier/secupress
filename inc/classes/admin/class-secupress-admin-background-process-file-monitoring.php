@@ -3,35 +3,38 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
 
 /**
- * Background 	File Monitoring class.
+ * Background File Monitoring class.
  *
  * @package SecuPress
  * @since 1.0
  */
-
 class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process {
 
 	const VERSION = '1.0';
 
 	/**
-	 * @var string
+	 * Prefix used to build the global process identifier.
+	 *
+	 * @var (string)
 	 */
 	protected $prefix = 'secupress';
 
 	/**
-	 * @var string
+	 * Suffix used to build the global process identifier.
+	 *
+	 * @var (string)
 	 */
 	protected $action = 'file_monitoring';
 
 
 	/**
-	 * Task
+	 * Task.
 	 *
-	 * @param mixed $item Queue item to iterate over
+	 * @param (mixed) $item Queue item to iterate over.
 	 *
 	 * @since 1.0
 	 *
-	 * @return mixed
+	 * @return (mixed)
 	 */
 	protected function task( $item ) {
 		if ( ! $item || ! is_string( $item ) || ! method_exists( $this, $item ) ) {
@@ -53,11 +56,9 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 
 
 	/**
-	 * Will store the wp core files hashes (md5), first from the w.org api, then from the .zip from w.org too
+	 * Will store the wp core files hashes (md5), first from the w.org api, then from the .zip from w.org too.
 	 *
 	 * @since 1.0
-	 *
-	 * @return void
 	 */
 	public function get_wp_hashes() {
 		global $wp_version, $wp_local_package;
@@ -114,7 +115,7 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 					if ( is_resource( $zip ) ) {
 
 						while ( $zip_entry = zip_read( $zip ) ) {
-							zip_entry_open( $zip, $zip_entry, "r" );
+							zip_entry_open( $zip, $zip_entry, 'r' );
 							$zfile = zip_entry_read( $zip_entry, zip_entry_filesize( $zip_entry ) );
 							list( $wp, $filename ) = explode( '/', zip_entry_name( $zip_entry ), 2 );
 
@@ -131,12 +132,9 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 			} else {
 				$result[ $wp_version ]['checksums'] = $response;
 			}
-
 		}
 
 		update_option( SECUPRESS_WP_CORE_FILES_HASHES, $result );
-
-		return false;
 	}
 
 
@@ -145,7 +143,9 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 	 *
 	 * @since 1.0
 	 *
-	 * @return void
+	 * @param (string) $type ////.
+	 * @param (string) $path ////.
+	 * @param (string) $pre  ////.
 	 */
 	public function fix_dists( $type = 'branches', $path = '', $pre = '' ) {
 		global $wp_version, $wp_local_package;
@@ -163,7 +163,7 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 
 			$links = strip_tags( wp_remote_retrieve_body( $response ), '<a>' );
-			preg_match_all( "/>(.*)<\/a>/", $links, $links );
+			preg_match_all( '/>(.*)<\/a>/', $links, $links );
 
 			if ( isset( $links[1] ) ) {
 
@@ -171,7 +171,7 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 				unset( $links[0], $links[ count( $links ) ] );
 
 				foreach ( $links as $dist ) {
-					set_time_limit(0);
+					set_time_limit( 0 );
 
 					if ( '/' !== substr( $dist, -1 ) ) {
 
@@ -182,7 +182,6 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 							$content = wp_remote_retrieve_body( $response );
 							$wp_files_hashes[ $wp_version ][ $pre . $dist ] = md5( $content );
 						}
-
 					} else {
 						self::fix_dists( $type, $i18n_url . $dist, $pre . $dist );
 					}
@@ -194,8 +193,6 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 		}
 
 		update_option( SECUPRESS_FIX_DISTS, $wp_files_hashes, false );
-
-		return false;
 	}
 
 
@@ -214,11 +211,11 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 
 
 	/**
-	 * undocumented function
-	 *
-	 * @return false.
+	 * Undocumented function ////.
 	 *
 	 * @since 1.0
+	 *
+	 * @return false ////.
 	 */
 	public function map_md5_fulltree() {
 		global $wp_version;
@@ -258,11 +255,12 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 
 
 	/**
-	 * Will store the wp core files hashes (md5), first from the w.org api, then from the .zip from w.org too
+	 * Will store the wp core files hashes (md5), first from the w.org api, then from the .zip from w.org too.
 	 *
 	 * @since 1.0
 	 *
-	 * @return void
+	 * @param (array) $paths An array of directory paths. Default is `array( ABSPATH )`.
+	 * @param (array) $args  An array of arguments. //// Préciser.
 	 */
 	public static function get_self_filetree( $paths = array(), $args = array() ) {
 		global $wp_version, $wp_local_package;
@@ -276,7 +274,7 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 
 		update_option( $option, array( $wp_version => array() ), false );
 
-		foreach( $paths as $dir ) {
+		foreach ( $paths as $dir ) {
 
 			$root = scandir( $dir );
 
@@ -284,22 +282,22 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 				continue;
 			}
 
-			foreach( $root as $value ) {
+			foreach ( $root as $value ) {
 
 				$current = $dir . DIRECTORY_SEPARATOR . $value;
 
 				if ( '.' === $value || '..' === $value
-					|| ABSPATH . $value === WP_CONTENT_DIR
-					|| ABSPATH . $value === WP_PLUGIN_DIR
-					|| ( defined( 'UPLOADS' ) && ABSPATH . $value == UPLOADS )
-					|| in_array( $current, $ignore )
+					|| WP_CONTENT_DIR === ABSPATH . $value
+					|| WP_PLUGIN_DIR === ABSPATH . $value
+					|| ( defined( 'UPLOADS' ) && UPLOADS === ABSPATH . $value )
+					|| in_array( $current, $ignore, true )
 					) {
 					continue;
 				}
 
 				if ( is_file( $dir . DIRECTORY_SEPARATOR . $value ) ) {
 
-					if ( ! $ext_filter || in_array( strtolower( pathinfo( $current, PATHINFO_EXTENSION ) ), $ext_filter ) ) {
+					if ( ! $ext_filter || in_array( strtolower( pathinfo( $current, PATHINFO_EXTENSION ) ), $ext_filter, true ) ) {
 						$key = ltrim( str_replace( realpath( ABSPATH ), '', $current ), '/' );
 						$key = explode( '\\', $key );
 						$key = array_filter( $key );
@@ -307,25 +305,14 @@ class SecuPress_Background_Process_File_Monitoring extends WP_Background_Process
 						$result[ $wp_version ][ $key ] = realpath( $current );
 					}
 					continue;
-
-				// } elseif( is_dir( $current ) && 'wp-admin' != basename( $current ) && 'wp-includes' != basename( $current ) ) {
-				// 	$key = ltrim( str_replace( realpath( ABSPATH ), '', $current ), '/' );
-				// 	$key = explode( '\\', $key );
-				// 	$key = array_filter( $key );
-				// 	$key = implode( '/', $key );
-				// 	$result[ $wp_version ][ $key ] = realpath( $current ); //// // a tester
 				}
 
 				if ( $recursive ) {
 					self::get_self_filetree( $current, $args );
 				}
-
 			}
-
 		}
 
 		update_option( $option, $result );
-
-		return false;
 	}
 }
