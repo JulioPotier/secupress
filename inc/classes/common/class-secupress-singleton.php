@@ -1,14 +1,12 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
-
 /**
  * Singleton class.
  *
  * @package SecuPress
  * @since 1.0
  */
-
 class SecuPress_Singleton {
 
 	const VERSION = '1.0';
@@ -16,7 +14,9 @@ class SecuPress_Singleton {
 	/**
 	 * Sub-classes must declare a Singleton property as follow:
 	 *
-	 * @var The reference to *Singleton* instance of this class.
+	 * The reference to *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
 
@@ -35,7 +35,7 @@ class SecuPress_Singleton {
 	 *
 	 * @since 1.0
 	 *
-	 * @return Singleton The *Singleton* instance.
+	 * @return (object) The *Singleton* instance.
 	 */
 	final public static function get_instance() {
 		if ( ! isset( static::$_instance ) ) {
@@ -70,5 +70,4 @@ class SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	final private function __wakeup() {}
-
 }

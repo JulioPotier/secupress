@@ -12,6 +12,7 @@
 	<file>inc/front</file>
 	<file>inc/functions</file>
 	<file>inc/classes/admin</file>
+	<file>inc/classes/common</file>
 
 	<file>inc/admin-bar.php</file>
 	<file>inc/cron.php</file>
@@ -29,6 +30,7 @@
 		<exclude name="Squiz.Commenting.FileComment.MissingPackageTag"/>
 		<exclude name="Squiz.Commenting.FileComment.WrongStyle"/>
 		<exclude name="Squiz.Commenting.InlineComment.SpacingAfter"/>
+		<exclude name="Squiz.PHP.CommentedOutCode.Found"/>
 		<exclude name="WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar"/>
 		<exclude name="WordPress.Variables.GlobalVariables.OverrideProhibited"/>
 		<exclude name="WordPress.VIP"/>
