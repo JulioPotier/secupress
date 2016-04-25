@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: WordPress Security by SecuPress
+ * Plugin Name: WordPress Security by SecuPress (Free)
  * Plugin URI: http://secupress.me
  * Description: WordPress Security by SecuPress, the best and simpler way to protect your websites.
  * Author: SecuPress, WP Media
  * Version: 1.0-beta2
- * Author URI: http://secupress.me
+ * Author URI: http://wp-media.me
  * Network: true
  * License: GPLv2
  * License URI: http://secupress.me/gpl.txt
