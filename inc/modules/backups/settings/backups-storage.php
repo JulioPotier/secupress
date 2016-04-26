@@ -1,7 +1,7 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
-// Add the form manually since i just need it for this block
+// Add the form manually since i just need it for this block.
 add_action( 'before_section_backups-storage', array( $this, 'print_open_form_tag' ) );
 add_action( 'after_section_backups-storage', array( $this, 'print_close_form_tag' ) );
 
@@ -28,7 +28,7 @@ $this->add_field( array(
 		),
 		array(
 			'type'        => 'warning',
-			'description' => sprintf( __( 'Your FTP constants present in your %1$s file will be used, so, you have to fill this first.<br/><a href="%2$s" target="_blank">Need help do to it?</a>', 'secupress' ), '<code>wp-config.php</code>', '#' ), ////
+			'description' => sprintf( __( 'Your FTP constants present in your %1$s file will be used, so, you have to fill this first.<br/><a href="%2$s" target="_blank">Need help do to it?</a>', 'secupress' ), '<code>wp-config.php</code>', '#' ), // ////.
 			'depends'     => $field_name . '_ftp',
 		),
 	),

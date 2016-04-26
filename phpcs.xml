@@ -14,6 +14,7 @@
 	<file>inc/classes</file>
 	<file>inc/modules/alerts</file>
 	<file>inc/modules/antispam</file>
+	<file>inc/modules/backups</file>
 
 	<file>inc/admin-bar.php</file>
 	<file>inc/cron.php</file>
