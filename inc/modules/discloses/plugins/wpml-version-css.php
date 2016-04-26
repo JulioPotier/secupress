@@ -34,20 +34,24 @@ if ( ! function_exists( 'secupress_replace_wpml_version_in_src' ) ) :
 endif;
 
 
+add_action( 'widgets_init', 'secupress_wpml_language_selector_widget_init', 8 );
 /**
  * Replace the WPML version with a fake version in source code. Let's get dirty.
  * This is required for `language-selector.css` -_-'
  *
  * @since 1.0
  */
-add_action( 'widgets_init', 'secupress_wpml_language_selector_widget_init', 8 );
-
 function secupress_wpml_language_selector_widget_init() {
 	add_action( 'template_redirect', 'secupress_wpml_icl_lang_sel_nav_ob_start', 0 );
 	add_action( 'wp_head',           'secupress_wpml_icl_lang_sel_nav_ob_end' );
 }
 
 
+/**
+ * Start page buffer.
+ *
+ * @since 1.0
+ */
 function secupress_wpml_icl_lang_sel_nav_ob_start() {
 	if ( ! is_feed() ) {
 		ob_start( 'secupress_wpml_icl_change_lang_sel_nav_version' );
@@ -55,7 +59,12 @@ function secupress_wpml_icl_lang_sel_nav_ob_start() {
 }
 
 
-function secupress_wpml_icl_lang_sel_nav_ob_end(){
+/**
+ * Stop page buffer.
+ *
+ * @since 1.0
+ */
+function secupress_wpml_icl_lang_sel_nav_ob_end() {
 	if ( is_feed() ) {
 		return;
 	}
@@ -69,6 +78,15 @@ function secupress_wpml_icl_lang_sel_nav_ob_end(){
 }
 
 
+/**
+ * Output the buffer and replace the WPML version with a fake version in source code.
+ *
+ * @since 1.0
+ *
+ * @param (string) $buffer Page buffer.
+ *
+ * @return (string) Page contents without the WPML version.
+ */
 function secupress_wpml_icl_change_lang_sel_nav_version( $buffer ) {
 	if ( defined( 'ICL_DONT_LOAD_LANGUAGE_SELECTOR_CSS' ) && ICL_DONT_LOAD_LANGUAGE_SELECTOR_CSS ) {
 		return $buffer;
