@@ -413,6 +413,30 @@ function secupress_get_hashed_folder_name( $context, $path = '/' ) {
 
 
 /**
+ * Generate a hash.
+ *
+ * @since 1.0
+ *
+ * @param (string) $context Your context, don't use empty string.
+ * @param (int)    $start   Start of the `substr()`.
+ * @param (int)    $length  Length of the hash.
+ *
+ * @return (string)
+ */
+function secupress_generate_hash( $context, $start = 2, $length = 6 ) {
+	static $hash = array();
+
+	$key = "$context|$start|$length";
+
+	if ( ! isset( $hash[ $key ] ) ) {
+		$hash[ $key ] = substr( md5( wp_salt( $context, 'nonce' ) ), $start, $length );
+	}
+
+	return $hash[ $key ];
+}
+
+
+/**
  * Used in `array_filter()`: return true if the given path is not in the `wp-content` folder.
  *
  * @since 1.0

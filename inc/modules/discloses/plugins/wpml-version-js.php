@@ -15,28 +15,20 @@ if ( ! class_exists( 'SitePress' ) ) {
 
 /**
  * Replace the WPML version with a fake version in script src.
- *
- * @since 1.0
  */
 add_filter( 'script_loader_src', 'secupress_replace_wpml_version_in_src', PHP_INT_MAX );
 
 if ( ! function_exists( 'secupress_replace_wpml_version_in_src' ) ) :
+	/**
+	 * Replace the WPML version with a fake version.
+	 *
+	 * @param (string) $src A content containing the string `ver={$wpml_version}`.
+	 *
+	 * @return (string)
+	 */
 	function secupress_replace_wpml_version_in_src( $src ) {
-		$hash = secupress_wpml_get_hash();
+		$hash = secupress_generate_hash( ICL_SITEPRESS_VERSION );
 
 		return str_replace( 'ver=' . ICL_SITEPRESS_VERSION, 'ver=' . $hash, $src );
-	}
-endif;
-
-
-if ( ! function_exists( 'secupress_wpml_get_hash' ) ) :
-	function secupress_wpml_get_hash() {
-		static $hash;
-
-		if ( ! isset( $hash ) ) {
-			$hash = substr( md5( wp_salt( 'nonce' ) . ICL_SITEPRESS_VERSION ), 2, 6 );
-		}
-
-		return $hash;
 	}
 endif;
