@@ -13,8 +13,7 @@ add_action( 'secupress_plugins_loaded', 'secupress_block_bad_url_contents', 0 );
  * Filter the query string to block the request or not
  *
  * @since 1.0
- * @return void
- **/
+ */
 function secupress_block_bad_url_contents() {
 
 	if ( empty( $_SERVER['QUERY_STRING'] ) ) {

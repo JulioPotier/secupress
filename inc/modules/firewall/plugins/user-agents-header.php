@@ -13,8 +13,7 @@ add_action( 'secupress_plugins_loaded', 'secupress_block_bad_user_agents', 0 );
  * Filter the user agent to block it or not
  *
  * @since 1.0
- * @return void
- **/
+ */
 function secupress_block_bad_user_agents() {
 	$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? trim( $_SERVER['HTTP_USER_AGENT'] ) : '';
 

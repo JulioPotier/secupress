@@ -17,6 +17,7 @@
 	<file>inc/modules/backups</file>
 	<file>inc/modules/discloses</file>
 	<file>inc/modules/file-system</file>
+	<file>inc/modules/firewall</file>
 
 	<file>inc/admin-bar.php</file>
 	<file>inc/cron.php</file>
@@ -40,5 +41,9 @@
 		<exclude name="WordPress.VIP"/>
 		<exclude name="WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet"/>
 		<exclude name="WordPress.XSS.EscapeOutput"/>
+	</rule>
+
+	<rule ref="Generic.Strings.UnnecessaryStringConcat.Found">
+		<exclude-pattern>*/secupress-free/inc/modules/firewall/callbacks.php</exclude-pattern>
 	</rule>
 </ruleset>
