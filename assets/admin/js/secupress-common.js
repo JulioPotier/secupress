@@ -4,27 +4,27 @@
 	 * Basic plugins
 	 */
 	$.fn.spHide = function() {
-	    return this.hide().attr( 'aria-hidden', true ).removeClass('secupress-open');
+		return this.hide().attr( 'aria-hidden', true ).removeClass('secupress-open');
 	};
 	$.fn.spFadeIn = function() {
-	    return this.fadeIn(300, function(){
-	    	$(this).addClass('secupress-open');
-	    }).attr( 'aria-hidden', false );
+		return this.fadeIn(300, function(){
+			$(this).addClass('secupress-open');
+		}).attr( 'aria-hidden', false );
 	};
 	$.fn.spFadeOut = function() {
-	    return this.fadeOut(300, function(){
-	    	$(this).removeClass('secupress-open');
-	    }).attr( 'aria-hidden', true );
+		return this.fadeOut(300, function(){
+			$(this).removeClass('secupress-open');
+		}).attr( 'aria-hidden', true );
 	};
 	$.fn.spSlideDown = function() {
-	    return this.slideDown(400, function(){
-	    	$(this).addClass('secupress-open');
-	    }).attr( 'aria-hidden', false );
+		return this.slideDown(400, function(){
+			$(this).addClass('secupress-open');
+		}).attr( 'aria-hidden', false );
 	};
 	$.fn.spSlideUp = function() {
-	    return this.slideUp(400, function(){
-	    	$(this).removeClass('secupress-open');
-	    }).attr( 'aria-hidden', true );
+		return this.slideUp(400, function(){
+			$(this).removeClass('secupress-open');
+		}).attr( 'aria-hidden', true );
 	};
 	$.fn.spAnimate = function( effect ) {
 		var effect = effect || 'fadein';
