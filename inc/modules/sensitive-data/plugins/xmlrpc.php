@@ -10,7 +10,11 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 
 add_action( 'secupress_plugins_loaded', 'secupress_xmlrpc_disable_rpc' );
-
+/**
+ * Disable XML-RPC by launching and removing hooks.
+ *
+ * @since 1.0
+ */
 function secupress_xmlrpc_disable_rpc() {
 	$options   = secupress_get_module_option( 'wp-endpoints_xmlrpc', array(), 'sensitive-data' );
 	$options   = array_flip( $options );
@@ -22,7 +26,7 @@ function secupress_xmlrpc_disable_rpc() {
 		// Well, why not killing everything here?
 		if ( $is_xmlrpc ) {
 			secupress_die(
-				__( 'XML-RPC services are disabled on this site.' ), // WP i18n
+				__( 'XML-RPC services are disabled on this site.' ), // WP i18n.
 				__( 'XMLRPC is disabled', 'secupress' ),
 				array( 'response' => 403 )
 			);
@@ -45,7 +49,6 @@ function secupress_xmlrpc_disable_rpc() {
 		// Disable the multiple authentications.
 		add_filter( 'xmlrpc_methods', 'secupress_xmlrpc_remove_multicall_methods', 0 );
 		add_filter( 'authenticate',   'secupress_xmlrpc_block_multiauth_attempts', 0, 3 );
-
 	}
 }
 
@@ -123,7 +126,7 @@ function secupress_xmlrpc_block_multiauth_attempts( $user, $username, $password 
 	}
 
 	secupress_die(
-		__( 'XML-RPC services are disabled on this site.' ), // WP i18n
+		__( 'XML-RPC services are disabled on this site.' ), // WP i18n.
 		__( 'XMLRPC is disabled', 'secupress' ),
 		array( 'response' => 403 )
 	);

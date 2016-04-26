@@ -33,21 +33,21 @@ $this->add_field( array(
 if ( $is_plugin_active && function_exists( 'secupress_hotlink_get_apache_rules' ) ) {
 	$message = false;
 
-	// Nginx
+	// Nginx.
 	if ( $is_nginx ) {
 		/* translators: 1 is a file name, 2 is a tag name */
 		$message = sprintf( __( 'You need to add the following code into your %1$s file, inside the %2$s block:', 'secupress' ), '<code>nginx.conf</code>', '<code>server</code>' );
 		$rules   = secupress_hotlink_get_nginx_rules();
 		$rules   = "# BEGIN SecuPress move_login\n$rules\n# END SecuPress";
 	}
-	// Apache
+	// Apache.
 	elseif ( $is_apache && ! secupress_root_file_is_writable( '.htaccess' ) ) {
 		/* translators: %s is a file name */
 		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code inside:', 'secupress' ), '<code>.htaccess</code>' );
 		$rules   = secupress_hotlink_get_apache_rules();
 		$rules   = "# BEGIN SecuPress move_login\n$rules\n# END SecuPress";
 	}
-	// IIS7
+	// IIS7.
 	elseif ( $is_iis7 && ! secupress_root_file_is_writable( 'web.config' ) ) {
 		/* translators: %s is a file name */
 		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code inside:', 'secupress' ), '<code>web.config</code>' );
@@ -86,7 +86,7 @@ $this->add_field( array(
 		array(
 			'type'        => 'description',
 			'description' => $robots_enabled ? false : __( 'This feature is not available for sites not installed at the domain root.', 'secupress' ),
-		)
+		),
 	),
 ) );
 

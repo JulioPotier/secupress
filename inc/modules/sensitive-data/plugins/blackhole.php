@@ -9,17 +9,16 @@ Version: 1.0
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 
+add_filter( 'robots_txt', 'secupress_blackhole_robots_txt' );
 /**
  * Add forbidden URI in `robots.txt` file.
  *
  * @since 1.0
  *
- * @param (string) File content.
+ * @param (string) $output File content.
  *
  * @return (string) File content.
  */
-add_filter( 'robots_txt', 'secupress_blackhole_robots_txt' );
-
 function secupress_blackhole_robots_txt( $output ) {
 	if ( is_user_logged_in() || secupress_blackhole_is_whitelisted() ) {
 		return $output;
@@ -37,17 +36,16 @@ function secupress_blackhole_robots_txt( $output ) {
 }
 
 
+add_filter( 'template_include', 'secupress_blackhole_please_click_me', 1 );
 /**
  * Use a custom template for our trap.
  *
  * @since 1.0
  *
- * @param (string) Template path.
+ * @param (string) $template Template path.
  *
  * @return (string) Template path.
  */
-add_filter( 'template_include', 'secupress_blackhole_please_click_me', 1 );
-
 function secupress_blackhole_please_click_me( $template ) {
 	if ( is_user_logged_in() || secupress_blackhole_is_whitelisted() ) {
 		return $template;
@@ -64,37 +62,36 @@ function secupress_blackhole_please_click_me( $template ) {
 }
 
 
+add_action( 'admin_post_nopriv_secupress-ban-me-please', 'secupress_blackhole_ban_ip' );
 /**
  * Ban an IP address and die.
  *
  * @since 1.0
  */
-add_action( 'admin_post_nopriv_secupress-ban-me-please', 'secupress_blackhole_ban_ip' );
-
 function secupress_blackhole_ban_ip() {
 	if ( secupress_blackhole_is_whitelisted() ) {
 		return;
 	}
 
-	$IP      = secupress_get_ip();
+	$ip      = secupress_get_ip();
 	$ban_ips = get_site_option( SECUPRESS_BAN_IP );
 
 	if ( ! is_array( $ban_ips ) ) {
 		$ban_ips = array();
 	}
 
-	$ban_ips[ $IP ] = time() + MONTH_IN_SECONDS; // Now you got 1 month to think about your future, kiddo. In the meantime, go clean your room.
+	$ban_ips[ $ip ] = time() + MONTH_IN_SECONDS; // Now you got 1 month to think about your future, kiddo. In the meantime, go clean your room.
 
 	update_site_option( SECUPRESS_BAN_IP, $ban_ips );
 
 	/* This hook is documented in /inc/functions/admin.php */
-	do_action( 'secupress.ban.ip_banned', $IP, $ban_ips );
+	do_action( 'secupress.ban.ip_banned', $ip, $ban_ips );
 
 	if ( secupress_write_in_htaccess_on_ban() ) {
 		secupress_write_htaccess( 'ban_ip', secupress_get_htaccess_ban_ip() );
 	}
 
-	$msg = sprintf( __( 'Your IP address %s has been banned.', 'secupress' ), '<code>' . esc_html( $IP ) . '</code>' );
+	$msg = sprintf( __( 'Your IP address %s has been banned.', 'secupress' ), '<code>' . esc_html( $ip ) . '</code>' );
 	secupress_die( $msg );
 }
 
