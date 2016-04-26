@@ -28,16 +28,13 @@ if ( ! did_action( 'secupress_plugins_loaded' ) ) {
 /* ACTIVATION / DEACTIVATION ==================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-/*
+add_action( 'secupress_deactivate_plugin_404-logs', 'secupress_deactivate_plugin_404_logs' );
+add_action( 'secupress_deactivation',               'secupress_deactivate_plugin_404_logs' );
+/**
  * Delete logs on deactivation.
  *
  * @since 1.0
- *
- * @param (array) $args Some parameters.
  */
-add_action( 'secupress_deactivate_plugin_404-logs', 'secupress_deactivate_plugin_404_logs' );
-add_action( 'secupress_deactivation',               'secupress_deactivate_plugin_404_logs' );
-
 function secupress_deactivate_plugin_404_logs() {
 	if ( class_exists( 'SecuPress_404_Logs' ) ) {
 		SecuPress_404_Logs::get_instance()->delete_logs();

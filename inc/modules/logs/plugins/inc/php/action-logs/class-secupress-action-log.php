@@ -1,20 +1,18 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
-
 /**
  * Actions Log class.
  *
  * @package SecuPress
  * @since 1.0
  */
-
 class SecuPress_Action_Log extends SecuPress_Log {
 
 	const VERSION = '1.0';
 
 
-	// Instance ====================================================================================
+	// Instance ====================================================================================.
 
 	/**
 	 * Constructor.
@@ -43,9 +41,9 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	}
 
 
-	// Private methods =============================================================================
+	// Private methods =============================================================================.
 
-	// Pre-process data ============================================================================
+	// Pre-process data ============================================================================.
 
 	/**
 	 * Prepare the data to be ready for `vsprintf()`.
@@ -314,7 +312,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 		$new = array();
 
 		foreach ( $user_keys as $data_name ) {
-			if ( ! isset( $old_user_data[ $data_name ], $user_data[ $data_name ] ) || $old_user_data[ $data_name ] != $user_data[ $data_name ] ) {
+			if ( ! isset( $old_user_data[ $data_name ], $user_data[ $data_name ] ) || $old_user_data[ $data_name ] !== $user_data[ $data_name ] ) {
 				$old[ $data_name ] = isset( $old_user_data[ $data_name ] ) ? $old_user_data[ $data_name ] : '';
 				$new[ $data_name ] = isset( $user_data[ $data_name ] )     ? $user_data[ $data_name ]     : '';
 			}
@@ -410,7 +408,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 		if ( 'session_tokens' === $meta_key ) {
 			return array();
 		}
-		$user = $object_id ? static::_format_user_login( $object_id ) : __( 'All Users' ); // WP i18n
+		$user = $object_id ? static::_format_user_login( $object_id ) : __( 'All Users' ); // WP i18n.
 		return compact( 'user', 'meta_key', 'meta_value' );
 	}
 
@@ -497,7 +495,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	}
 
 
-	// Title =======================================================================================
+	// Title =======================================================================================.
 
 	/**
 	 * Set the Log title.
@@ -533,7 +531,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 */
 	protected function _set_option_title() {
 		if ( 'active_plugins' === $this->target ) {
-			$has_deactivated = ! empty( $this->data['deactivated'] ) && $this->data['deactivated'] !== '<em>[' . __( 'empty string', 'secupress' ) . ']</em>';
+			$has_deactivated = ! empty( $this->data['deactivated'] ) && '<em>[' . __( 'empty string', 'secupress' ) . ']</em>' !== $this->data['deactivated'];
 
 			if ( 'add' === $this->subtype ) {
 
@@ -573,7 +571,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 */
 	protected function _set_network_option_title() {
 		if ( 'active_sitewide_plugins' === $this->target ) {
-			$has_deactivated = ! empty( $this->data['deactivated'] ) && $this->data['deactivated'] !== '<em>[' . __( 'empty string', 'secupress' ) . ']</em>';
+			$has_deactivated = ! empty( $this->data['deactivated'] ) && '<em>[' . __( 'empty string', 'secupress' ) . ']</em>' !== $this->data['deactivated'];
 
 			if ( 'add' === $this->subtype ) {
 
@@ -647,7 +645,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	}
 
 
-	// Message =====================================================================================
+	// Message =====================================================================================.
 
 	/**
 	 * Set the Log message.
@@ -684,7 +682,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 */
 	protected function _set_option_message() {
 		if ( 'active_plugins' === $this->target ) {
-			$has_deactivated = ! empty( $this->data['deactivated'] ) && $this->data['deactivated'] !== '<em>[' . __( 'empty string', 'secupress' ) . ']</em>';
+			$has_deactivated = ! empty( $this->data['deactivated'] ) && '<em>[' . __( 'empty string', 'secupress' ) . ']</em>' !== $this->data['deactivated'];
 
 			if ( 'add' === $this->subtype ) {
 
@@ -724,7 +722,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 */
 	protected function _set_network_option_message() {
 		if ( 'active_sitewide_plugins' === $this->target ) {
-			$has_deactivated = ! empty( $this->data['deactivated'] ) && $this->data['deactivated'] !== '<em>[' . __( 'empty string', 'secupress' ) . ']</em>';
+			$has_deactivated = ! empty( $this->data['deactivated'] ) && '<em>[' . __( 'empty string', 'secupress' ) . ']</em>' !== $this->data['deactivated'];
 
 			if ( 'add' === $this->subtype ) {
 
@@ -798,7 +796,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	}
 
 
-	// Criticity ===================================================================================
+	// Criticity ===================================================================================.
 
 	/**
 	 * Set the Log criticity.
@@ -875,7 +873,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	}
 
 
-	// Tools =======================================================================================
+	// Tools =======================================================================================.
 
 	/**
 	 * Get a user login followed by his/her ID.
@@ -901,5 +899,4 @@ class SecuPress_Action_Log extends SecuPress_Log {
 
 		return ( $user ? $user->user_login : '[' . __( 'Unknown user', 'secupress' ) . ']' ) . ' (' . $user_id . ')';
 	}
-
 }

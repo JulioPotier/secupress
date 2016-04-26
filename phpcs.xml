@@ -18,6 +18,7 @@
 	<file>inc/modules/discloses</file>
 	<file>inc/modules/file-system</file>
 	<file>inc/modules/firewall</file>
+	<file>inc/modules/logs</file>
 
 	<file>inc/admin-bar.php</file>
 	<file>inc/cron.php</file>

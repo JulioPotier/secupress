@@ -1,37 +1,51 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
-
 /**
  * Actions Logs class.
  *
  * @package SecuPress
  * @since 1.0
  */
-
 class SecuPress_Action_Logs extends SecuPress_Logs {
 
 	const VERSION = '1.0';
+
+
 	/**
-	 * @var (object) The reference to the *Singleton* instance of this class.
+	 * The reference to the *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
+
 	/**
-	 * @var (string) The Log type.
+	 * The Log type.
+	 *
+	 * @var (string)
 	 */
 	protected $log_type = 'action';
+
 	/**
-	 * @var (int) The Log type priority (order in the tabs).
+	 * The Log type priority (order in the tabs).
+	 *
+	 * @var (int)
 	 */
 	protected $log_type_priority = 1;
+
 	/**
-	 * @var (array) List of available criticities for this Log type.
+	 * List of available criticities for this Log type.
+	 *
+	 * @var (array)
 	 */
-	protected $criticities = array( 'low', 'normal', 'high', );
+	protected $criticities = array( 'low', 'normal', 'high' );
+
 	/**
-	 * @var (array) Options to Log.
+	 * Options to Log.
 	 *
 	 * @see `_maybe_log_option()` for an explanation about the values.
+	 *
+	 * @var (array)
 	 */
 	protected $options = array(
 		'blogname'               => null,
@@ -60,8 +74,11 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 		'tag_base'               => '!',
 		'active_plugins'         => null,
 	);
+
 	/**
-	 * @var (array) Network options to Log.
+	 * Network options to Log.
+	 *
+	 * @var (array)
 	 */
 	protected $network_options = array(
 		'site_name'                => null,
@@ -84,14 +101,20 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 		'fileupload_maxk'          => null,
 		'active_sitewide_plugins'  => null,
 	);
+
 	/**
-	 * @var (array) Filters to Log.
+	 * Filters to Log.
+	 *
+	 * @var (array)
 	 */
 	protected $filters = array(
 		'wpmu_validate_user_signup' => 1, // `wpmu_validate_user_signup()`
 	);
+
 	/**
-	 * @var (array) Actions to Log.
+	 * Actions to Log.
+	 *
+	 * @var (array)
 	 */
 	protected $actions = array(
 		'secupress.block'          => 2, // `secupress_block()`
@@ -109,13 +132,16 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 		'phpmailer_init'           => 1, // `wp_mail()`
 		'http_api_debug'           => 5, // `WP_Http`
 	);
+
 	/**
-	 * @var (array) An array of Log arrays: all things in this page that should be logged will end here, before being saved at the end of the page.
+	 * An array of Log arrays: all things in this page that should be logged will end here, before being saved at the end of the page.
+	 *
+	 * @var (array)
 	 */
 	protected $logs_queue = array();
 
 
-	// Private methods =============================================================================
+	// Private methods =============================================================================.
 
 	/**
 	 * Launch main hooks.
@@ -140,7 +166,6 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 		add_action( 'added_option',   array( $this, '_maybe_log_added_option' ), 1000, 2 );
 		add_action( 'updated_option', array( $this, '_maybe_log_updated_option' ), 1000, 3 );
 
-
 		// Network options.
 		if ( is_multisite() ) {
 			$hooks = $this->network_options;
@@ -160,7 +185,6 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 			add_action( 'update_site_option', array( $this, '_maybe_log_updated_network_option' ), 1000, 3 );
 		}
 
-
 		// Filters.
 		$hooks = $this->filters;
 		/**
@@ -178,7 +202,6 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 		foreach ( $this->filters as $tag => $accepted_args ) {
 			add_action( $tag, array( $this, '_log_filter' ), 1000, $accepted_args );
 		}
-
 
 		// Actions.
 		$hooks = $this->actions;
@@ -198,13 +221,12 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 			add_action( $tag, array( $this, '_log_action' ), 1000, $accepted_args );
 		}
 
-
 		// Parent hooks.
 		parent::_init();
 	}
 
 
-	// Log a hook ==================================================================================
+	// Log a hook ==================================================================================.
 
 	/**
 	 * Temporary store a Log in queue.
@@ -334,7 +356,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 		$type   .= '|' . $subtype;
 		$values  = array_merge( array( 'option' => $option ), $values );
 
-		// null => any change will be logged.
+		// Null => any change will be logged.
 		if ( null === $compare ) {
 			$this->_log( $type, $option, $values );
 		}
@@ -368,10 +390,9 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 
 	/**
 	 * Log a filter.
+	 * Params: (mixed) Any number of parameters of various types: see the numbers in `$this->filters`.
 	 *
 	 * @since 1.0
-	 *
-	 * @param (mixed) Any number of parameters of various types: see the numbers in `$this->filters`.
 	 *
 	 * @return (mixed) The filter first parameter, we don't wan't to kill everything.
 	 */
@@ -386,10 +407,9 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 
 	/**
 	 * Log an action.
+	 * Params: (mixed) Any number of parameters of various types: see the numbers in `$this->actions`.
 	 *
 	 * @since 1.0
-	 *
-	 * @param (mixed) Any number of parameters of various types: see the numbers in `$this->actions`.
 	 */
 	public function _log_action() {
 		$tag  = current_filter();
@@ -399,7 +419,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	}
 
 
-	// Save Logs ===================================================================================
+	// Save Logs ===================================================================================.
 
 	/**
 	 * Save all new Logs.
@@ -412,7 +432,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	}
 
 
-	// Tools =======================================================================================
+	// Tools =======================================================================================.
 
 	/**
 	 * Include the files containing the classes `Secupress_Log` and `SecuPress_Action_Log` if not already done.
@@ -431,5 +451,4 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 
 		return 'SecuPress_Action_Log';
 	}
-
 }
