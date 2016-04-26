@@ -23,6 +23,7 @@
 	<file>inc/modules/pro</file>
 	<file>inc/modules/schedules</file>
 	<file>inc/modules/sensitive-data</file>
+	<file>inc/modules/services</file>
 
 	<file>inc/admin-bar.php</file>
 	<file>inc/cron.php</file>
