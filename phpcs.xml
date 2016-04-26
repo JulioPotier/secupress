@@ -16,6 +16,7 @@
 	<file>inc/modules/antispam</file>
 	<file>inc/modules/backups</file>
 	<file>inc/modules/discloses</file>
+	<file>inc/modules/file-system</file>
 
 	<file>inc/admin-bar.php</file>
 	<file>inc/cron.php</file>
