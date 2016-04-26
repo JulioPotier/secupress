@@ -565,7 +565,7 @@ function __secupress_scanners() {
 			</div><!-- .secupress-section-dark -->
 
 			<div class="secupress-section-gray secupress-bordered-lat">
-				<div class="secupress-flex secupress-flex-spaced secupress-wrap">
+				<div class="secupress-flex-spaced secupress-wrap">
 					<div>
 						<p class="secupress-text-basup secupress-bold secupress-m0"><?php esc_html_e( 'List of analyzed security points', 'secupress' ); ?></p>
 						<p class="secupress-m0 secupress-gray"><?php esc_html_e( 'These issues should be fixed right now!', 'secupress' ); ?></p>
@@ -656,8 +656,7 @@ function secupress_main_scan() {
 			<div class="secupress-table-prio-all secupress-table-prio-<?php echo $prio_key; ?>">
 
 				<div class="secupress-prio-title prio-<?php echo $prio_key; ?>">
-					<?php echo '<' . $heading_tag . ' class="secupress-prio-h">' . $prio_data['title'] . '</' . $heading_tag . '>'; ?>
-					<p><?php echo $prio_data['description']; ?></p>
+					<?php echo '<' . $heading_tag . ' class="secupress-prio-h" title="' . $prio_data['description'] . '">' . $prio_data['title'] . '</' . $heading_tag . '>'; ?>
 				</div>
 				
 				<?php

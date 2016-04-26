@@ -70,6 +70,12 @@
 	font-size: 10px;
 	letter-spacing: 0.01em;
 }
+.secupress-chart-container.secupress-chart-container {
+	-webkit-box-flex: 0;
+	-webkit-flex-grow: 0;
+	-ms-flex-positive: 0;
+	flex-grow: 0;
+}
 .secupress-chart-container + .secupress-chart-legend {
 	margin-left: 30px;
 }
@@ -129,7 +135,6 @@
 }
 
 .secupress-row-actions {
-	margin-top: 4px;
 	font-size: 13px;
 }
 
@@ -159,7 +164,7 @@
 }
 
 .secupress-prio-title {
-	padding: 5px 10px;
+	padding: 8px 10px;
 	margin: 3.5em 0 1em;
 	background: #ECF0F1;
 	color: #5A626F;
@@ -440,7 +445,7 @@
 .secupress-scan-result-n-actions {
 	border-top: 1px solid #ECF0F1;
 	margin: 8px 0 0 15px;
-	padding: 8px 0;
+	padding: 6px 0;
 	color: #5A626F;
 }
 
@@ -450,9 +455,11 @@
 	color: #393e46;
 }
 
-.secupress-fix-result-message,
-.secupress-fix-result-actions {
+.secupress-fix-result-message {
 	padding: 10px 15px;
+}
+.secupress-fix-result-actions {
+	padding: 1px 15px 8px;
 }
 
 .secupress-fix-result-actions p {
