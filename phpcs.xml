@@ -3,32 +3,9 @@
 	<description>Security plugin for WordPress by WP Media.</description>
 
 	<arg name="extensions" value="php"/>
-	<arg value="s"/>
+	<!--<arg value="s"/>-->
 
-	<file>secupress.php</file>
-	<file>uninstall.php</file>
-
-	<file>inc/admin</file>
-	<file>inc/front</file>
-	<file>inc/functions</file>
-	<file>inc/classes</file>
-	<file>inc/modules/alerts</file>
-	<file>inc/modules/antispam</file>
-	<file>inc/modules/backups</file>
-	<file>inc/modules/discloses</file>
-	<file>inc/modules/file-system</file>
-	<file>inc/modules/firewall</file>
-	<file>inc/modules/logs</file>
-	<file>inc/modules/plugins-themes</file>
-	<file>inc/modules/pro</file>
-	<file>inc/modules/schedules</file>
-	<file>inc/modules/sensitive-data</file>
-	<file>inc/modules/services</file>
-	<file>inc/modules/users-login</file>
-
-	<file>inc/admin-bar.php</file>
-	<file>inc/cron.php</file>
-	<file>inc/network-options-autoload.php</file>
+	<file>.</file>
 
 	<exclude-pattern>*.js</exclude-pattern>
 	<exclude-pattern>*/secupress-free/inc/modules/users-login/plugins/inc/php/base32.php</exclude-pattern>
