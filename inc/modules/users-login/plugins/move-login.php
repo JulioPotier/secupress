@@ -16,7 +16,7 @@ if ( is_admin() ) {
 	include( SECUPRESS_MODULES_PATH . 'users-login/plugins/inc/php/move-login/admin.php' );
 }
 
-// !EMERGENCY BYPASS
+// EMERGENCY BYPASS!
 if ( ! defined( 'SFML_ALLOW_LOGIN_ACCESS' ) || ! SFML_ALLOW_LOGIN_ACCESS ) {
 	include( SECUPRESS_MODULES_PATH . 'users-login/plugins/inc/php/move-login/url-filters.php' );
 	include( SECUPRESS_MODULES_PATH . 'users-login/plugins/inc/php/move-login/redirections-and-dies.php' );
@@ -27,6 +27,13 @@ if ( ! defined( 'SFML_ALLOW_LOGIN_ACCESS' ) || ! SFML_ALLOW_LOGIN_ACCESS ) {
 /* TOOLS ======================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
+/**
+ * Get default slugs.
+ *
+ * @since 1.0
+ *
+ * @return (array)
+ */
 function secupress_move_login_get_default_slugs() {
 	$slugs = array(
 		'login'        => 1,
@@ -50,7 +57,13 @@ function secupress_move_login_get_default_slugs() {
 	return $slugs;
 }
 
-
+/**
+ * Get the slugs the user has set.
+ *
+ * @since 1.0
+ *
+ * @return (array)
+ */
 function secupress_move_login_get_slugs() {
 	$slugs = secupress_move_login_get_default_slugs();
 

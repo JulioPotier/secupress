@@ -5,7 +5,7 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 /* REMOVE DEFAULT WORDPRESS REDIRECTIONS TO LOGIN AND ADMIN AREAS =============================== */
 /*------------------------------------------------------------------------------------------------*/
 
-/*
+/**
  * WordPress redirects some URLs (`wp-admin`, `dashboard`, `admin`) to the administration area,
  * and some others (`wp-login.php`, `login`) to the login page.
  * We don't want that, so we remove the hook.
@@ -19,14 +19,13 @@ remove_action( 'template_redirect', 'wp_redirect_admin_locations', 1000 );
 /* DENY ACCESS TO THE LOGIN FORM ================================================================ */
 /*------------------------------------------------------------------------------------------------*/
 
-/*
+add_action( 'login_init', 'secupress_move_login_maybe_deny_login_page', 0 );
+/**
  * When displaying the login page, if the URL does not matches those in our settings, deny access.
  * Does nothing if the user is logged in.
  *
  * @since 1.0
  */
-add_action( 'login_init', 'secupress_move_login_maybe_deny_login_page', 0 );
-
 function secupress_move_login_maybe_deny_login_page() {
 	// If the user is logged in, do nothing, let WP redirect this user to the administration area.
 	if ( is_user_logged_in() ) {
@@ -105,15 +104,14 @@ function secupress_move_login_deny_login_access() {
 /* DO NOT REDIRECT TO THE NEW LOGIN PAGE ======================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-/*
+add_action( 'after_setup_theme', 'secupress_move_login_maybe_deny_admin_redirect', 12 );
+/**
  * When a logged out user tries to access the admin area, deny access.
  * Does nothing if the user is logged in.
  * `admin-post.php` and `admin-ajax.php` are white listed.
  *
  * @since 1.0
  */
-add_action( 'after_setup_theme', 'secupress_move_login_maybe_deny_admin_redirect', 12 );
-
 function secupress_move_login_maybe_deny_admin_redirect() {
 	global $pagenow;
 	// If it's not the administration area, or if it's an ajax call, no need to go further.
@@ -143,15 +141,16 @@ function secupress_move_login_maybe_deny_admin_redirect() {
 }
 
 
-/*
+add_filter( 'register_url', 'secupress_move_login_maybe_deny_signup_redirect' );
+/**
  * When a logged out user tries to access `wp-signup.php` or `wp-register.php`, deny access.
  * Does nothing if the user is logged in.
  * Does nothing in multi-site.
  *
  * @since 1.0
+ *
+ * @param (string) $url The URL.
  */
-add_filter( 'register_url', 'secupress_move_login_maybe_deny_signup_redirect' );
-
 function secupress_move_login_maybe_deny_signup_redirect( $url ) {
 	if ( empty( $_SERVER['REQUEST_URI'] ) ) {
 		return $url;

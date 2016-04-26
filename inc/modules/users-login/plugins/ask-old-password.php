@@ -8,6 +8,7 @@ Version: 1.0
 */
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
+add_filter( 'show_password_fields', 'secupress_oldpassword_prepare_field', PHP_INT_MAX );
 /**
  * Start the process that will add the password field.
  * Basically it does a `ob_start()` and launches the hooks that will `ob_get_clean()`.
@@ -18,8 +19,6 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
  *
  * @return (bool) Unchanged value of `$show`.
  */
-add_filter( 'show_password_fields', 'secupress_oldpassword_prepare_field', PHP_INT_MAX );
-
 function secupress_oldpassword_prepare_field( $show ) {
 	global $pagenow;
 
@@ -45,7 +44,7 @@ function secupress_oldpassword_add_field() {
 	$after  = '';
 	$sep    = '<tr class="user-sessions-wrap hide-if-no-js">';
 
-	// Let's start the hellish stuff... >_>
+	// Let's start the hellish stuff... >_>.
 	if ( secupress_wp_version_is( '4.3' ) ) {
 		$field = '
 <tr class="user-pass-old-wrap hide-if-js">
@@ -100,7 +99,7 @@ function secupress_oldpassword_add_field() {
 		$after  = ( ! empty( $before[1] ) ? $sep : '' ) . $before[1];
 		$before = $before[0];
 
-	} elseif ( preg_match( "@^(.*</tr>)(\s*</table>\s*)$@s", $before, $matches ) ) {
+	} elseif ( preg_match( '@^(.*</tr>)(\s*</table>\s*)$@s', $before, $matches ) ) {
 
 		$before = $matches[1];
 		$after  = $matches[2];
@@ -111,6 +110,7 @@ function secupress_oldpassword_add_field() {
 }
 
 
+add_action( 'user_profile_update_errors', 'secupress_oldpassword_check_old_password', 10, 3 );
 /**
  * When a user submits a new password, check the old one is provided and correct.
  * If not, trigger an error.
@@ -121,14 +121,12 @@ function secupress_oldpassword_add_field() {
  * @param (bool)   $update Whether this is a user update.
  * @param (object) $user   WP_User object, passed by reference.
  */
-add_action( 'user_profile_update_errors', 'secupress_oldpassword_check_old_password', 10, 3 );
-
 function secupress_oldpassword_check_old_password( $errors, $update, &$user ) {
 	if ( empty( $user->user_pass ) ) {
 		return;
 	}
 
-	$old_pass = isset( $_POST['pass-old'] ) ? $_POST['pass-old'] : '';
+	$old_pass = isset( $_POST['pass-old'] ) ? $_POST['pass-old'] : ''; // WPCS: CSRF ok.
 	$old_hash = get_userdata( $user->ID )->user_pass;
 
 	if ( ! $old_pass || ! wp_check_password( $old_pass, $old_hash, $user->ID ) ) {

@@ -2,7 +2,7 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 
-/*
+/**
  * Get the blacklisted usernames.
  *
  * @since 1.0

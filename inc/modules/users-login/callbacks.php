@@ -29,22 +29,22 @@ function __secupress_users_login_settings_callback( $settings ) {
 	 * The `$settings` parameter is passed by reference.
 	 */
 
-	// Double authentication
+	// Double authentication.
 	__secupress_double_auth_settings_callback( $modulenow, $settings, $activate );
 
-	// Captcha
+	// Captcha.
 	__secupress_captcha_settings_callback( $modulenow, $activate );
 
-	// Login protection
+	// Login protection.
 	__secupress_login_protection_settings_callback( $modulenow, $settings, $activate );
 
-	// Password Policy
+	// Password Policy.
 	__secupress_password_policy_settings_callback( $modulenow, $settings, $activate );
 
-	// Logins blacklist
+	// Logins blacklist.
 	__secupress_logins_blacklist_settings_callback( $modulenow, $activate );
 
-	// Move Login
+	// Move Login.
 	__secupress_move_login_settings_callback( $modulenow, $settings, $activate );
 
 	return $settings;
@@ -58,7 +58,7 @@ function __secupress_users_login_settings_callback( $settings ) {
  *
  * @param (string)     $modulenow Current module.
  * @param (array)      $settings  The module settings, passed by reference.
- * @param (bool|array) $activate  Used to (de)activate plugins.
+ * @param (array|bool) $activate  An array containing the fields related to the sub-module being activated. False if not on this module page.
  */
 function __secupress_double_auth_settings_callback( $modulenow, &$settings, $activate ) {
 	// (De)Activation.
@@ -79,7 +79,7 @@ function __secupress_double_auth_settings_callback( $modulenow, &$settings, $act
  * @since 1.0
  *
  * @param (string)     $modulenow Current module.
- * @param (bool|array) $activate  Used to (de)activate plugins.
+ * @param (array|bool) $activate  An array containing the fields related to the sub-module being activated. False if not on this module page.
  */
 function __secupress_captcha_settings_callback( $modulenow, $activate ) {
 	// (De)Activation.
@@ -96,7 +96,7 @@ function __secupress_captcha_settings_callback( $modulenow, $activate ) {
  *
  * @param (string)     $modulenow Current module.
  * @param (array)      $settings  The module settings, passed by reference.
- * @param (bool|array) $activate  Used to (de)activate plugins.
+ * @param (array|bool) $activate  An array containing the fields related to the sub-module being activated. False if not on this module page.
  */
 function __secupress_login_protection_settings_callback( $modulenow, &$settings, $activate ) {
 	// (De)Activation.
@@ -104,26 +104,26 @@ function __secupress_login_protection_settings_callback( $modulenow, &$settings,
 		$activate['login-protection_type'] = array_flip( $activate['login-protection_type'] );
 
 		secupress_manage_submodule( $modulenow, 'limitloginattempts', isset( $activate['login-protection_type']['limitloginattempts'] ) );
-		secupress_manage_submodule( $modulenow, 'bannonexistsuser',   isset( $activate['login-protection_type']['bannonexistsuser']   ) );
-		secupress_manage_submodule( $modulenow, 'nonlogintimeslot',   isset( $activate['login-protection_type']['nonlogintimeslot']   ) );
+		secupress_manage_submodule( $modulenow, 'bannonexistsuser', isset( $activate['login-protection_type']['bannonexistsuser'] ) );
+		secupress_manage_submodule( $modulenow, 'nonlogintimeslot', isset( $activate['login-protection_type']['nonlogintimeslot'] ) );
 	} elseif ( false !== $activate ) {
 		secupress_deactivate_submodule( $modulenow, array( 'bannonexistsuser', 'limitloginattempts', 'nonlogintimeslot' ) );
 	}
 
 	// Settings.
 	$settings['login-protection_number_attempts']  = ! empty( $settings['login-protection_number_attempts'] ) ? secupress_validate_range( $settings['login-protection_number_attempts'], 3, 99, 10 ) : 10;
-	$settings['login-protection_time_ban']         = ! empty( $settings['login-protection_time_ban'] )        ? secupress_validate_range( $settings['login-protection_time_ban'], 1, 60, 5 )         : 5;
+	$settings['login-protection_time_ban']         = ! empty( $settings['login-protection_time_ban'] ) ? secupress_validate_range( $settings['login-protection_time_ban'], 1, 60, 5 ) : 5;
 	$settings['login-protection_nonlogintimeslot'] = ! empty( $settings['login-protection_nonlogintimeslot'] ) && is_array( $settings['login-protection_nonlogintimeslot'] ) ? $settings['login-protection_nonlogintimeslot'] : array();
 
-	$settings['login-protection_nonlogintimeslot']['from_hour']   = ! empty( $settings['login-protection_nonlogintimeslot']['from_hour'] )   ? secupress_validate_range( (int) $settings['login-protection_nonlogintimeslot']['from_hour'], 0, 23, 0 )   : 0;
+	$settings['login-protection_nonlogintimeslot']['from_hour']   = ! empty( $settings['login-protection_nonlogintimeslot']['from_hour'] ) ? secupress_validate_range( (int) $settings['login-protection_nonlogintimeslot']['from_hour'], 0, 23, 0 ) : 0;
 	$settings['login-protection_nonlogintimeslot']['from_minute'] = ! empty( $settings['login-protection_nonlogintimeslot']['from_minute'] ) ? secupress_validate_range( (int) $settings['login-protection_nonlogintimeslot']['from_minute'], 0, 59, 0 ) : 0;
-	$settings['login-protection_nonlogintimeslot']['to_hour']     = ! empty( $settings['login-protection_nonlogintimeslot']['to_hour'] )     ? secupress_validate_range( (int) $settings['login-protection_nonlogintimeslot']['to_hour'], 0, 23, 0 )     : 0;
-	$settings['login-protection_nonlogintimeslot']['to_minute']   = ! empty( $settings['login-protection_nonlogintimeslot']['to_minute'] )   ? secupress_validate_range( (int) $settings['login-protection_nonlogintimeslot']['to_minute'], 0, 59, 0 )   : 0;
+	$settings['login-protection_nonlogintimeslot']['to_hour']     = ! empty( $settings['login-protection_nonlogintimeslot']['to_hour'] ) ? secupress_validate_range( (int) $settings['login-protection_nonlogintimeslot']['to_hour'], 0, 23, 0 ) : 0;
+	$settings['login-protection_nonlogintimeslot']['to_minute']   = ! empty( $settings['login-protection_nonlogintimeslot']['to_minute'] ) ? secupress_validate_range( (int) $settings['login-protection_nonlogintimeslot']['to_minute'], 0, 59, 0 ) : 0;
 
 	// (De)Activation.
 	if ( false !== $activate ) {
 		secupress_manage_submodule( $modulenow, 'only-one-connexion', ! empty( $activate['login-protection_only-one-connexion'] ) && secupress_is_pro() );
-		secupress_manage_submodule( $modulenow, 'sessions-control',   ! empty( $activate['login-protection_sessions_control'] ) && secupress_is_pro() );
+		secupress_manage_submodule( $modulenow, 'sessions-control', ! empty( $activate['login-protection_sessions_control'] ) && secupress_is_pro() );
 	}
 }
 
@@ -135,7 +135,7 @@ function __secupress_login_protection_settings_callback( $modulenow, &$settings,
  *
  * @param (string)     $modulenow Current module.
  * @param (array)      $settings  The module settings, passed by reference.
- * @param (bool|array) $activate  Used to (de)activate plugins.
+ * @param (array|bool) $activate  An array containing the fields related to the sub-module being activated. False if not on this module page.
  */
 function __secupress_password_policy_settings_callback( $modulenow, &$settings, $activate ) {
 	// Settings.
@@ -168,7 +168,7 @@ function __secupress_password_policy_settings_callback( $modulenow, &$settings, 
  * @since 1.0
  *
  * @param (string)     $modulenow Current module.
- * @param (bool|array) $activate  Used to (de)activate plugins.
+ * @param (array|bool) $activate  An array containing the fields related to the sub-module being activated. False if not on this module page.
  */
 function __secupress_logins_blacklist_settings_callback( $modulenow, $activate ) {
 	// (De)Activation.
@@ -183,9 +183,9 @@ function __secupress_logins_blacklist_settings_callback( $modulenow, $activate )
  *
  * @since 1.0
  *
- * @param (string) $modulenow    Current module.
- * @param (array)  $settings     The module settings, passed by reference.
- * @param (array)  $old_settings The module previous settings.
+ * @param (string)     $modulenow Current module.
+ * @param (array)      $settings  The module settings, passed by reference.
+ * @param (array|bool) $activate  An array containing the fields related to the sub-module being activated. False if not on this module page.
  */
 function __secupress_move_login_settings_callback( $modulenow, &$settings, $activate ) {
 	$old_settings = get_site_option( "secupress_{$modulenow}_settings" );
@@ -275,6 +275,7 @@ function __secupress_move_login_settings_callback( $modulenow, &$settings, $acti
 /* NOTICES ====================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
+add_filter( 'secupress.plugins.packed-plugins', 'secupress_move_login_add_packed_plugin' );
 /**
  * Display a notice if the standalone version of Move Login is used.
  *
@@ -282,8 +283,6 @@ function __secupress_move_login_settings_callback( $modulenow, &$settings, $acti
  *
  * @param (array) $plugins A list of plugin paths, relative to the plugins folder.
  */
-add_filter( 'secupress.plugins.packed-plugins', 'secupress_move_login_add_packed_plugin' );
-
 function secupress_move_login_add_packed_plugin( $plugins ) {
 	$plugins['move-login'] = 'sf-move-login/sf-move-login.php';
 	return $plugins;
@@ -294,15 +293,14 @@ function secupress_move_login_add_packed_plugin( $plugins ) {
 /* INSTALL/RESET ================================================================================ */
 /*------------------------------------------------------------------------------------------------*/
 
-/*
+add_action( 'wp_secupress_first_install', '__secupress_install_users_login_module' );
+/**
  * Create default option on install and reset.
  *
  * @since 1.0
  *
  * @param (string) $module The module(s) that will be reset to default. `all` means "all modules".
  */
-add_action( 'wp_secupress_first_install', '__secupress_install_users_login_module' );
-
 function __secupress_install_users_login_module( $module ) {
 	// First install.
 	if ( 'all' === $module ) {
@@ -329,7 +327,7 @@ function __secupress_install_users_login_module( $module ) {
 /* DEFAULT VALUES =============================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-/*
+/**
  * Move Login: return the list of customizable login actions.
  *
  * @since 1.0
@@ -367,7 +365,7 @@ function secupress_move_login_slug_labels() {
 /* TOOLS ======================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-/*
+/**
  * Move Login: return the list of available actions to perform when someone reaches the old login page.
  *
  * @since 1.0
@@ -383,7 +381,7 @@ function secupress_move_login_login_access_labels() {
 }
 
 
-/*
+/**
  * Move Login: return the list of available actions to perform when a logged out user reaches the administration area.
  *
  * @since 1.0

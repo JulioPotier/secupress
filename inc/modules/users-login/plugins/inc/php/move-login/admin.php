@@ -5,14 +5,13 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 /* ACTIVATION / DEACTIVATION ==================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
+add_action( 'secupress_activate_plugin_move-login', 'secupress_move_login_activate' );
 /**
  * On module activation, test if the server has what we need.
  * If not, deactivate. If yes, write the rules.
  *
  * @since 1.0
  */
-add_action( 'secupress_activate_plugin_move-login', 'secupress_move_login_activate' );
-
 function secupress_move_login_activate() {
 	global $is_apache, $is_nginx, $is_iis7;
 
@@ -41,18 +40,18 @@ function secupress_move_login_activate() {
 }
 
 
+add_action( 'secupress_deactivate_plugin_move-login', 'secupress_move_login_deactivate' );
 /**
  * On module deactivation, remove rewrite rules from the `.htaccess`/`web.config` file.
  *
  * @since 1.0
  */
-add_action( 'secupress_deactivate_plugin_move-login', 'secupress_move_login_deactivate' );
-
 function secupress_move_login_deactivate() {
-	secupress_remove_module_rules_or_notice( 'move_login', __( 'Move Login', 'secupress' ) );;
+	secupress_remove_module_rules_or_notice( 'move_login', __( 'Move Login', 'secupress' ) );
 }
 
 
+add_filter( 'secupress.plugins.activation.write_rules', 'secupress_move_login_plugin_activate', 10, 2 );
 /**
  * On SecuPress activation, add the rules to the list of the rules to write.
  *
@@ -62,8 +61,6 @@ function secupress_move_login_deactivate() {
  *
  * @return (array) Rules to write.
  */
-add_filter( 'secupress.plugins.activation.write_rules', 'secupress_move_login_plugin_activate', 10, 2 );
-
 function secupress_move_login_plugin_activate( $rules ) {
 	global $is_apache, $is_iis7;
 
@@ -93,6 +90,7 @@ function secupress_move_login_plugin_activate( $rules ) {
 /* UPDATE SETTINGS ============================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
+add_action( 'update_option_secupress_users-login_settings', 'secupress_move_login_write_rules_on_update', 10, 2 );
 /**
  * Add rewrite rules into the `.htaccess`/`web.config` file when settings are updated.
  *
@@ -101,8 +99,6 @@ function secupress_move_login_plugin_activate( $rules ) {
  * @param (array) $old_value Old value of the whole module option.
  * @param (array) $value     New value of the whole module option.
  */
-add_action( 'update_option_secupress_users-login_settings', 'secupress_move_login_write_rules_on_update', 10, 2 );
-
 function secupress_move_login_write_rules_on_update( $old_value, $value ) {
 	global $is_apache, $is_nginx, $is_iis7;
 
@@ -134,6 +130,7 @@ function secupress_move_login_write_rules_on_update( $old_value, $value ) {
 }
 
 
+add_action( 'update_site_option_secupress_users-login_settings', 'secupress_move_login_write_rules_on_network_update', 10, 3 );
 /**
  * Add rewrite rules into the `.htaccess`/`web.config` file when settings are (network) updated.
  *
@@ -143,8 +140,6 @@ function secupress_move_login_write_rules_on_update( $old_value, $value ) {
  * @param (array)  $value     New value of the whole module option.
  * @param (array)  $old_value Old value of the whole module option.
  */
-add_action( 'update_site_option_secupress_users-login_settings', 'secupress_move_login_write_rules_on_network_update', 10, 3 );
-
 function secupress_move_login_write_rules_on_network_update( $option, $value, $old_value ) {
 	secupress_move_login_activate( $old_value, $value );
 }
@@ -163,7 +158,7 @@ function secupress_move_login_write_rules_on_network_update( $option, $value, $o
 function secupress_move_login_write_rules() {
 	global $is_apache, $is_nginx, $is_iis7;
 
-	// Apache
+	// Apache.
 	if ( $is_apache ) {
 		if ( ! secupress_move_login_write_apache_rules( secupress_move_login_get_rules() ) ) {
 			// File is not writable.
@@ -179,7 +174,7 @@ function secupress_move_login_write_rules() {
 		return;
 	}
 
-	// IIS7
+	// IIS7.
 	if ( $is_iis7 ) {
 		if ( ! secupress_move_login_write_iis7_rules( secupress_move_login_get_rules() ) ) {
 			// File is not writable.

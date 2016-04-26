@@ -24,12 +24,14 @@
 	<file>inc/modules/schedules</file>
 	<file>inc/modules/sensitive-data</file>
 	<file>inc/modules/services</file>
+	<file>inc/modules/users-login</file>
 
 	<file>inc/admin-bar.php</file>
 	<file>inc/cron.php</file>
 	<file>inc/network-options-autoload.php</file>
 
 	<exclude-pattern>*.js</exclude-pattern>
+	<exclude-pattern>*/secupress-free/inc/modules/users-login/plugins/inc/php/base32.php</exclude-pattern>
 
 	<rule ref="WordPress">
 		<exclude name="Generic.PHP.NoSilencedErrors.Discouraged"/>
@@ -51,5 +53,10 @@
 
 	<rule ref="Generic.Strings.UnnecessaryStringConcat.Found">
 		<exclude-pattern>*/secupress-free/inc/modules/firewall/callbacks.php</exclude-pattern>
+		<exclude-pattern>*/secupress-free/inc/modules/users-login/tools.php</exclude-pattern>
+	</rule>
+
+	<rule ref="WordPress.Arrays.ArrayDeclaration.ValueNoNewline">
+		<exclude-pattern>*/secupress-free/inc/modules/users-login/tools.php</exclude-pattern>
 	</rule>
 </ruleset>
