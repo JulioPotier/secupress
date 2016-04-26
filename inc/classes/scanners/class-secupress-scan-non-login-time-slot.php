@@ -8,19 +8,37 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @subpackage SecuPress_Scan
  * @since 1.0
  */
-
-class SecuPress_Scan_Non_Login_Time_Slot extends SecuPress_Scan implements iSecuPress_Scan {
+class SecuPress_Scan_Non_Login_Time_Slot extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
 	const VERSION = '1.0';
 
 	/**
-	 * @var Singleton The reference to *Singleton* instance of this class
+	 * The reference to *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
+
+	/**
+	 * Priority.
+	 *
+	 * @var (string)
+	 */
 	public    static $prio    = 'medium';
+
+	/**
+	 * Tells if a scanner is fixable by SecuPress. The value "pro" means it's fixable only with the version PRO.
+	 *
+	 * @var (bool|string)
+	 */
 	public    static $fixable = 'pro';
 
 
+	/**
+	 * Init.
+	 *
+	 * @since 1.0
+	 */
 	protected static function init() {
 		self::$type     = 'WordPress';
 		self::$title    = __( 'Check if you\'re back-end is accessible 24h/24.', 'secupress' );
@@ -28,19 +46,28 @@ class SecuPress_Scan_Non_Login_Time_Slot extends SecuPress_Scan implements iSecu
 		self::$more_fix = sprintf(
 			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
 			'<em>' . __( 'Non Login Time Slot', 'secupress' ) . '</em>',
-			'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#Use_an_attempt_blocker">' . __( 'Users & Login', 'secupress' ) . '</a>'
+			'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#row-login-protection_type">' . __( 'Users & Login', 'secupress' ) . '</a>'
 		);
 	}
 
 
+	/**
+	 * Get messages.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int) $message_id A message ID.
+	 *
+	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
+	 */
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
-			// good
+			// "good"
 			0   => __( 'You are currently <strong>locking</strong> your back-end, sometimes.', 'secupress' ),
 			1   => __( 'Protection activated', 'secupress' ),
-			// bad
+			// "bad"
 			200 => __( 'Your website should be <strong>locked out sometimes</strong>.', 'secupress' ),
-			201 => sprintf( __( 'Our module <a href="%s">%s</a> could fix this.', 'secupress' ), secupress_admin_url( 'modules', 'users-login#Use_an_attempt_blocker' ), __( 'Non Login Time Slot', 'secupress' ) ),
+			201 => sprintf( __( 'Our module <a href="%s">%s</a> could fix this.', 'secupress' ), esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . 'row-login-protection_type', __( 'Non Login Time Slot', 'secupress' ) ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -51,21 +78,35 @@ class SecuPress_Scan_Non_Login_Time_Slot extends SecuPress_Scan implements iSecu
 	}
 
 
+	/**
+	 * Scan for flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The scan results.
+	 */
 	public function scan() {
 
 		if ( ! secupress_is_submodule_active( 'users-login', 'nonlogintimeslot' ) ) {
-			// bad
+			// "bad"
 			$this->add_message( 200 );
 			$this->add_pre_fix_message( 201 );
-		} 
-		
-		// good
+		}
+
+		// "good"
 		$this->maybe_set_status( 0 );
 
 		return parent::scan();
 	}
 
 
+	/**
+	 * Try to fix the flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The fix results.
+	 */
 	public function fix() {
 
 		if ( secupress_is_pro() && function_exists( 'secupress_pro_fix_non_login_time_slot' ) ) {

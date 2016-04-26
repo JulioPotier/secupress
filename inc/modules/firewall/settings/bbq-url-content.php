@@ -71,5 +71,3 @@ $this->add_field( array(
 		),
 	),
 ) );
-
-//// ajouter un content rand, voir breach

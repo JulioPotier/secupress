@@ -8,18 +8,30 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @subpackage SecuPress_Scan
  * @since 1.0
  */
-
-class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements iSecuPress_Scan {
+class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
 	const VERSION = '1.0';
 
 	/**
-	 * @var Singleton The reference to *Singleton* instance of this class
+	 * The reference to *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
-	public    static $prio = 'high';
+
+	/**
+	 * Priority.
+	 *
+	 * @var (string)
+	 */
+	public    static $prio    = 'high';
 
 
+	/**
+	 * Init.
+	 *
+	 * @since 1.0
+	 */
 	protected static function init() {
 		self::$type     = 'WordPress';
 		self::$title    = __( 'Check if your WordPress core can perform auto-updates for minor versions.', 'secupress' );
@@ -27,17 +39,26 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements iSecuPress_Sc
 		self::$more_fix = sprintf(
 			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
 			'<em>' . __( 'Minor updates', 'secupress' ) . '</em>',
-			'<a href="' . esc_url( secupress_admin_url( 'modules', 'wordpress-core' ) ) . '#Minor_Updates">' . __( 'WordPress Core', 'secupress' ) . '</a>'
+			'<a href="' . esc_url( secupress_admin_url( 'modules', 'wordpress-core' ) ) . '#row-auto-update_minor">' . __( 'WordPress Core', 'secupress' ) . '</a>'
 		);
 	}
 
 
+	/**
+	 * Get messages.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int) $message_id A message ID.
+	 *
+	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
+	 */
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
-			// good
+			// "good"
 			0   => __( 'Your installation <strong>can auto-update</strong> itself.', 'secupress' ),
 			1   => __( 'Protection activated', 'secupress' ),
-			// bad
+			// "bad"
 			200 => __( 'Your installation <strong>can not auto-update</strong> itself.', 'secupress' ),
 			201 => __( '<code>DISALLOW_FILE_MODS</code> should be set on <code>FALSE</code>.', 'secupress' ),
 			202 => __( '<code>AUTOMATIC_UPDATER_DISABLED</code> should be set on <code>FALSE</code>.', 'secupress' ),
@@ -55,9 +76,16 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements iSecuPress_Sc
 	}
 
 
+	/**
+	 * Scan for flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The scan results.
+	 */
 	public function scan() {
 
-		// bad
+		// "bad"
 		$constants = 0;
 		$filters   = 0;
 		if ( defined( 'DISALLOW_FILE_MODS' ) && DISALLOW_FILE_MODS ) {
@@ -88,23 +116,31 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements iSecuPress_Sc
 			$this->add_message( 0 );
 		}
 
-		// good
+		// "good"
 		$this->maybe_set_status( 0 );
 
 		return parent::scan();
 	}
 
 
+	/**
+	 * Try to fix the flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The fix results.
+	 */
 	public function fix() {
 
 		secupress_activate_submodule( 'wordpress-core', 'minor-updates' );
 
 		$wpconfig_filename = secupress_find_wpconfig_path();
 		$constants         = array( 'AUTOMATIC_UPDATER_DISABLED' => true, 'WP_AUTO_UPDATE_CORE' => false );
-		foreach( $constants as $constant => $val ) {
-			if ( defined( $constant ) && $val === (bool) constant( $constant ) ) {
-				$str_val = $val === false ? 'true' : 'false';
-				secupress_replace_content( $wpconfig_filename, "/define\(.*('" . $constant . "'|\"" . $constant . "\").*,/", "define('$constant', $str_val ); // Modified by SecuPress\n/*Commented by SecuPress*/ // $0" );
+
+		foreach ( $constants as $constant => $val ) {
+			if ( defined( $constant ) && (bool) constant( $constant ) === $val ) {
+				$str_val = false === $val ? 'true' : 'false';
+				secupress_replace_content( $wpconfig_filename, "/define\(.*('$constant'|\"$constant\").*,/", "define('$constant', $str_val ); // Modified by SecuPress\n/*Commented by SecuPress*/ // $0" );
 			}
 		}
 
@@ -112,6 +148,4 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements iSecuPress_Sc
 
 		return parent::fix();
 	}
-
-
 }

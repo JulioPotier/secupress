@@ -8,18 +8,30 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @subpackage SecuPress_Scan
  * @since 1.0
  */
-
-class SecuPress_Scan_Anti_Scanner extends SecuPress_Scan implements iSecuPress_Scan {
+class SecuPress_Scan_Anti_Scanner extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
 	const VERSION = '1.0';
 
 	/**
-	 * @var Singleton The reference to *Singleton* instance of this class
+	 * The reference to *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
-	public    static $prio = 'high';
+
+	/**
+	 * Priority.
+	 *
+	 * @var (string)
+	 */
+	public    static $prio    = 'high';
 
 
+	/**
+	 * Init.
+	 *
+	 * @since 1.0
+	 */
 	protected static function init() {
 		self::$type     = 'WordPress';
 		self::$title    = __( 'Check if automated scanner can target your website.', 'secupress' );
@@ -27,19 +39,28 @@ class SecuPress_Scan_Anti_Scanner extends SecuPress_Scan implements iSecuPress_S
 		self::$more_fix = sprintf(
 			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
 			'<em>' . __( 'Block SQLi Scan Attempts', 'secupress' ) . '</em>',
-			'<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#Block_SQLi_Scan_Attempts">' . __( 'Firewall', 'secupress' ) . '</a>'
+			'<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-url-content_bad-sqli-scan">' . __( 'Firewall', 'secupress' ) . '</a>'
 		);
 	}
 
 
+	/**
+	 * Get messages.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int) $message_id A message ID.
+	 *
+	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
+	 */
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
-			// good
+			// "good"
 			0   => __( 'You are currently blocking <strong>automated scanning</strong>.', 'secupress' ),
 			1   => __( 'Protection activated', 'secupress' ),
-			// warning
+			// "warning"
 			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
-			// bad
+			// "bad"
 			200 => __( 'Your website should block <strong>automated scanning</strong>.', 'secupress' ),
 		);
 
@@ -51,9 +72,16 @@ class SecuPress_Scan_Anti_Scanner extends SecuPress_Scan implements iSecuPress_S
 	}
 
 
+	/**
+	 * Scan for flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The scan results.
+	 */
 	public function scan() {
 
-		// Scanners and Breach
+		// Scanners and Breach.
 		$hashes = array();
 
 		for ( $i = 0 ; $i < 3 ; ++$i ) {
@@ -67,15 +95,15 @@ class SecuPress_Scan_Anti_Scanner extends SecuPress_Scan implements iSecuPress_S
 		$hashes = array_values( array_flip( array_flip( $hashes ) ) );
 
 		if ( isset( $hashes[2] ) ) { // = 3 different
-			// good
+			// "good"
 			$this->add_message( 0 );
 
 		} elseif ( ! isset( $hashes[0] ) ) { // = error during page request
-			// warning
+			// "warning"
 			$this->add_message( 100 );
 
 		} else { // = we got 1 or 2 different hashes only.
-			// bad
+			// "bad"
 			$this->add_message( 200 );
 
 		}
@@ -84,12 +112,19 @@ class SecuPress_Scan_Anti_Scanner extends SecuPress_Scan implements iSecuPress_S
 	}
 
 
+	/**
+	 * Try to fix the flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The fix results.
+	 */
 	public function fix() {
 
 		// Activate.
 		secupress_activate_submodule( 'firewall', 'bad-sqli-scan' );
 
-		// good
+		// "good"
 		$this->add_fix_message( 1 );
 
 		return parent::fix();

@@ -8,66 +8,104 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
  * @package SecuPress
  * @since 1.0
  */
-
 class SecuPress_Log {
 
 	const VERSION = '1.0';
+
 	/**
-	 * @var (string) A DATETIME formated date.
+	 * A DATETIME formated date.
+	 *
+	 * @var (string)
 	 */
 	protected $time = '';
+
 	/**
-	 * @var (int) Part of the result of `microtime()`.
-	 *            Ex: `0.03746700 1452528510` => `3746700`
+	 * Part of the result of `microtime()`.
+	 * Ex: `0.03746700 1452528510` => `3746700`.
+	 *
+	 * @var (int)
 	 */
 	protected $order = 0;
+
 	/**
-	 * @var (string) The Log type: option, network_option, filter, action, err404. ONLY USE `[a-z0-9_]` CHARACTERS, NO `-`!
+	 * The Log type: option, network_option, filter, action, err404. ONLY USE `[a-z0-9_]` CHARACTERS, NO `-`!
+	 *
+	 * @var (string)
 	 */
 	protected $type = '';
+
 	/**
-	 * @var (string) The Log sub-type: used only with option and network_option, it can be "add" or "update".
+	 * The Log sub-type: used only with option and network_option, it can be "add" or "update".
+	 *
+	 * @var (string)
 	 */
 	protected $subtype = '';
+
 	/**
-	 * @var (string) An identifier: option name, hook name...
+	 * An identifier: option name, hook name...
+	 *
+	 * @var (string)
 	 */
 	protected $target = '';
+
 	/**
-	 * @var (string) User IP address at the time.
+	 * User IP address at the time.
+	 *
+	 * @var (string)
 	 */
 	protected $user_ip = '';
+
 	/**
-	 * @var (int) User ID.
+	 * User ID.
+	 *
+	 * @var (int)
 	 */
 	protected $user_id = 0;
+
 	/**
-	 * @var (string) User login at the time.
+	 * User login at the time.
+	 *
+	 * @var (string)
 	 */
 	protected $user_login = '';
+
 	/**
-	 * @var (string) The Log criticity.
+	 * The Log criticity.
+	 *
+	 * @var (string)
 	 */
 	protected $critic = '';
+
 	/**
-	 * @var (array) The Log data: basically its content will be used in `vsprintf()`.
+	 * The Log data: basically its content will be used in `vsprintf()`.
+	 *
+	 * @var (array)
 	 */
 	protected $data = array();
+
 	/**
-	 * @var (bool) Tell if the data has been prepared and escaped before display.
+	 * Tell if the data has been prepared and escaped before display.
+	 *
+	 * @var (bool)
 	 */
 	protected $data_escaped = false;
+
 	/**
-	 * @var (string) The Log title.
+	 * The Log title.
+	 *
+	 * @var (string)
 	 */
 	protected $title = '';
+
 	/**
-	 * @var (string) The Log message.
+	 * The Log message.
+	 *
+	 * @var (string)
 	 */
 	protected $message = '';
 
 
-	// Instance ====================================================================================
+	// Instance ====================================================================================.
 
 	/**
 	 * Constructor.
@@ -125,14 +163,14 @@ class SecuPress_Log {
 	}
 
 
-	// Public methods ==============================================================================
+	// Public methods ==============================================================================.
 
 	/**
 	 * Get the Log formated date and time.
 	 *
 	 * @since 1.0
 	 *
-	 * @param (string) $format See http://de2.php.net/manual/en/function.date.php
+	 * @param (string) $format See http://de2.php.net/manual/en/function.date.php.
 	 *
 	 * @return (string) The formated date.
 	 */
@@ -219,7 +257,7 @@ class SecuPress_Log {
 			}
 			// Add a link to the user's profile page.
 			elseif ( $referer ) {
-				$suffix = __( 'Profile' ); // WP i18n
+				$suffix = __( 'Profile' ); // WP i18n.
 			}
 			else {
 				$suffix = '';
@@ -235,7 +273,7 @@ class SecuPress_Log {
 		}
 
 		if ( $this->user_id ) {
-			/* translators: 1: IP address, 2: user ID, 3: user login, 4: separator */
+			/* Translators: 1: IP address, 2: user ID, 3: user login, 4: separator. */
 			return sprintf( __( 'IP: %1$s %4$s ID: %2$s %4$s Login: %3$s', 'secupress' ), $user_ip, $user_id, $user_login, '|' );
 		}
 
@@ -289,9 +327,9 @@ class SecuPress_Log {
 	}
 
 
-	// Private methods =============================================================================
+	// Private methods =============================================================================.
 
-	// Data ========================================================================================
+	// Data ========================================================================================.
 
 	/**
 	 * Get the data.
@@ -310,7 +348,7 @@ class SecuPress_Log {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $data (array) The data.
+	 * @param (array) $data The data.
 	 */
 	protected function _set_data( $data ) {
 		$this->data = $data;
@@ -344,19 +382,19 @@ class SecuPress_Log {
 			} elseif ( false === $data ) {
 				$this->data[ $key ] = '<em>[false]</em>';
 			} elseif ( '' === $data ) {
-				// If changed, also change it in `SecuPress_Action_Log::_set_option_title()`, `::_set_network_option_title()`, `::_set_option_message()`, and `::_set_network_option_message()`.
+				// If changed, also change it in `SecuPress_Action_Log::_set(_network)_option_title()` and `::_set(_network)_option_message()`.
 				$this->data[ $key ] = '<em>[' . __( 'empty string', 'secupress' ) . ']</em>';
 			} elseif ( is_scalar( $data ) ) {
 				$count = substr_count( $data, "\n" );
 
-				// 50 seems to be a good limit. **Magic Number**
+				// 50 seems to be a good limit.
 				if ( $count || strlen( $data ) > 50 ) {
 					$this->data[ $key ] = '<pre' . ( $count > 4 ? ' class="secupress-code-chunk"' : '' ) . '>' . esc_html( $data ) . '</pre>';
 				} else {
 					$this->data[ $key ] = '<code>' . esc_html( $data ) . '</code>';
 				}
 			} else {
-				$data  = print_r( $data, true );
+				$data  = call_user_func( 'print_r', $data, true );
 				$count = substr_count( $data, "\n" );
 				$this->data[ $key ] = '<pre' . ( $count > 4 ? ' class="secupress-code-chunk"' : '' ) . '>' . esc_html( $data ) . '</pre>';
 			}
@@ -366,7 +404,7 @@ class SecuPress_Log {
 	}
 
 
-	// Title =======================================================================================
+	// Title =======================================================================================.
 
 	/**
 	 * Set the Log title.
@@ -395,7 +433,7 @@ class SecuPress_Log {
 	}
 
 
-	// Message =====================================================================================
+	// Message =====================================================================================.
 
 	/**
 	 * Set the Log message.
@@ -413,7 +451,7 @@ class SecuPress_Log {
 	}
 
 
-	// Criticity ===================================================================================
+	// Criticity ===================================================================================.
 
 	/**
 	 * Set the Log criticity.
@@ -425,7 +463,7 @@ class SecuPress_Log {
 	}
 
 
-	// Tools =======================================================================================
+	// Tools =======================================================================================.
 
 	/**
 	 * Convert a Post object into an array that can be used to instanciate a Log.
@@ -467,7 +505,7 @@ class SecuPress_Log {
 	 *
 	 * @since 1.0
 	 *
-	 * @param (string) A Log type.
+	 * @param (string) $type A Log type.
 	 *
 	 * @return (array) An array containing the type an (maybe) the sub-type.
 	 */

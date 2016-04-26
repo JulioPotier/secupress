@@ -57,15 +57,11 @@ function secupress_no_x_powered_by_activation() {
  * On module deactivation, maybe remove rewrite rules from the `.htaccess`/`web.config` file.
  *
  * @since 1.0
- *
- * @param (array) $args Some parameters.
  */
 add_action( 'secupress_deactivate_plugin_' . basename( __FILE__, '.php' ), 'secupress_no_x_powered_by_deactivate' );
 
-function secupress_no_x_powered_by_deactivate( $args = array() ) {
-	if ( empty( $args['no-tests'] ) ) {
-		secupress_remove_module_rules_or_notice( 'no_x_powered_by', __( 'No X-Powered-By', 'secupress' ) );
-	}
+function secupress_no_x_powered_by_deactivate() {
+	secupress_remove_module_rules_or_notice( 'no_x_powered_by', __( 'No X-Powered-By', 'secupress' ) );
 }
 
 

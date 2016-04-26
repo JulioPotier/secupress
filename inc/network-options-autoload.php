@@ -1,7 +1,7 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
-/*
+/**
  * Autoload network options and put them in cache.
  *
  * @since 1.0
@@ -26,12 +26,12 @@ function secupress_load_network_options( $option_names, $prefix = '' ) {
 		$cache_prefix   = "$network_id:";
 		$notoptions_key = "$network_id:notoptions";
 		$cache_group    = 'site-options';
-		$results        = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key as name, meta_value as value FROM $wpdb->sitemeta WHERE meta_key IN ( $options ) AND site_id = %d", $network_id ), OBJECT_K );
+		$results        = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key as name, meta_value as value FROM $wpdb->sitemeta WHERE meta_key IN ( $options ) AND site_id = %d", $network_id ), OBJECT_K ); // WPCS: unprepared SQL ok.
 	} else {
 		$cache_prefix   = '';
 		$notoptions_key = 'notoptions';
 		$cache_group    = 'options';
-		$results        = $wpdb->get_results( "SELECT option_name as name, option_value as value FROM $wpdb->options WHERE option_name IN ( $options )", OBJECT_K );
+		$results        = $wpdb->get_results( "SELECT option_name as name, option_value as value FROM $wpdb->options WHERE option_name IN ( $options )", OBJECT_K ); // WPCS: unprepared SQL ok.
 	}
 
 	foreach ( $option_names as $option_name ) {
@@ -60,7 +60,7 @@ function secupress_load_network_options( $option_names, $prefix = '' ) {
 }
 
 
-/*
+/**
  * Get some of our network options for autoload.
  * Transients are not listed if an external object cache is used.
  *
@@ -101,18 +101,18 @@ function secupress_get_global_network_option_names_for_autoload() {
 }
 
 
-// Autoload main options and transients directly.
-
+/**
+ * Autoload main options and transients directly.
+ */
 secupress_load_network_options( secupress_get_global_network_option_names_for_autoload() );
 
 
-/*
+add_action( 'secupress_plugins_loaded', 'secupress_load_plugins_network_options', 0 );
+/**
  * Autoload some options/transients after submodules are included.
  *
  * @since 1.0
  */
-add_action( 'secupress_plugins_loaded', 'secupress_load_plugins_network_options', 0 );
-
 function secupress_load_plugins_network_options() {
 	if ( secupress_wp_installing() ) {
 		return;
@@ -125,11 +125,11 @@ function secupress_load_plugins_network_options() {
 
 	if ( $modules ) {
 		foreach ( $modules as $module => $plugins ) {
-			$option_names["secupress_{$module}_settings"] = 1;
+			$option_names[ "secupress_{$module}_settings" ] = 1;
 		}
 	}
 
-	$option_names['secupress_users-login_settings'] = 1; // It is used for the "Ban IP" duration, even if the submodule is not activated. //// Normal ? Voir secupress_check_ban_ips().
+	$option_names['secupress_users-login_settings'] = 1; // It is used for the "Ban IP" duration, even if the submodule is not activated. See `secupress_check_ban_ips()`.
 	$option_names = array_keys( $option_names );
 
 	/**
@@ -146,7 +146,8 @@ function secupress_load_plugins_network_options() {
 }
 
 
-/*
+add_action( 'auth_cookie_valid', 'secupress_load_user_network_options', 0, 2 );
+/**
  * Autoload some options/transients used for logged in users.
  *
  * @since 1.0
@@ -154,8 +155,6 @@ function secupress_load_plugins_network_options() {
  * @param (array)  $cookie_elements An array of data for the authentication cookie.
  * @param (object) $user            WP_User object.
  */
-add_action( 'auth_cookie_valid', 'secupress_load_user_network_options', 0, 2 );
-
 function secupress_load_user_network_options( $cookie_elements, $user ) {
 	static $done     = array();
 	$current_user_id = (int) $user->ID;
@@ -176,7 +175,6 @@ function secupress_load_user_network_options( $cookie_elements, $user ) {
 	// Transients.
 	if ( ! wp_using_ext_object_cache() && $user_can ) {
 		$option_names = array(
-			'_site_transient_' . $current_user_id . '_donotdeactivatesecupress',
 			'_site_transient_secupress_module_activation_' . $current_user_id,
 			'_site_transient_secupress_module_deactivation_' . $current_user_id,
 			'_transient_secupress-notices-' . $current_user_id,

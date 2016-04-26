@@ -24,10 +24,13 @@ function __secupress_alerts_settings_callback( $settings ) {
 	}
 	$settings['sanitized'] = 1;
 
-	// Alerts Manager
-	__secupress_alerts_manager_settings_callback( $modulenow, $settings );
+	// Types of Notification.
+	__secupress_types_of_notification_settings_callback( $modulenow, $settings );
 
-	// Uptime monitoring
+	// Event Alerts.
+	__secupress_event_alerts_settings_callback( $modulenow, $settings, $activate );
+
+	// Uptime monitoring.
 	__secupress_uptime_monitoring_settings_callback( $modulenow, $settings, $activate );
 
 	return $settings;
@@ -35,47 +38,65 @@ function __secupress_alerts_settings_callback( $settings ) {
 
 
 /**
- * Alerts Manager Callback.
+ * Types of Notification Callback.
  *
  * @since 1.0
  *
  * @param (string) $modulenow Current module.
  * @param (array)  $settings  The module settings, passed by reference.
  */
-function __secupress_alerts_manager_settings_callback( $modulenow, &$settings ) {
-	// Activate/deactivate.
-	if ( empty( $settings['alerts_type'] ) || ! is_array( $settings['alerts_type'] ) ) {
-		$settings['alerts_type'] = array();
-	} else {
-		$types = array_flip( secupress_alerts_labels( secupress_is_pro() ) );
-
-		$settings['alerts_type'] = array_intersect( $settings['alerts_type'], $types );
+function __secupress_types_of_notification_settings_callback( $modulenow, &$settings ) {
+	// API check: the free API only needs an email address.
+	if ( ! secupress_get_consumer_email() ) {
+		$settings = array( 'sanitized' => 1 );
+		return;
 	}
 
-	secupress_manage_submodule( $modulenow, 'alerts', ! empty( $settings['alerts_type'] ) );
+	// Types.
+	if ( empty( $settings['notification-types_types'] ) || ! is_array( $settings['notification-types_types'] ) ) {
+		unset( $settings['notification-types_types'] );
+		$types = array();
+	} else {
+		$types = array_flip( secupress_alert_types_labels( secupress_is_pro() ) );
+		$settings['notification-types_types'] = array_intersect( $settings['notification-types_types'], $types );
+		$types = array_flip( $settings['notification-types_types'] );
+	}
 
-	// Email
-	if ( ! empty( $settings['alerts_email'] ) ) {
-		$settings['alerts_email'] = explode( ',', $settings['alerts_email'] );
-		$settings['alerts_email'] = array_map( 'trim', $settings['alerts_email'] );
-		$settings['alerts_email'] = array_map( 'is_email', $settings['alerts_email'] );
-		$settings['alerts_email'] = array_filter( $settings['alerts_email'] );
+	// Types credentials.
 
-		if ( $settings['alerts_email'] ) {
-			if ( ! secupress_is_pro() ) {
-				$settings['alerts_email'] = reset( $settings['alerts_email'] );
-			} else {
-				$settings['alerts_email'] = implode( ', ', $settings['alerts_email'] );
-			}
-		} else {
-			unset( $settings['alerts_email'] );
+	// Emails.
+	$all_emails = array();
+
+	if ( ! empty( $settings['notification-types_emails'] ) ) {
+		$settings['notification-types_emails'] = explode( "\n", $settings['notification-types_emails'] );
+		$settings['notification-types_emails'] = array_map( 'trim', $settings['notification-types_emails'] );
+		$settings['notification-types_emails'] = array_map( 'is_email', $settings['notification-types_emails'] );
+		$settings['notification-types_emails'] = array_filter( $settings['notification-types_emails'] );
+		$settings['notification-types_emails'] = array_flip( array_flip( $settings['notification-types_emails'] ) );
+		natcasesort( $settings['notification-types_emails'] );
+		$all_emails = $settings['notification-types_emails'];
+		$settings['notification-types_emails'] = implode( "\n", $settings['notification-types_emails'] );
+	}
+
+	if ( empty( $settings['notification-types_emails'] ) ) {
+		unset( $settings['notification-types_emails'] );
+	}
+
+	// We ask at least 2 email addresses.
+	if ( isset( $types['email'] ) && count( $all_emails ) < 2 ) {
+		$key = array_search( 'email', $settings['notification-types_types'] );
+
+		if ( false !== $key ) {
+			unset( $settings['notification-types_types'][ $key ] );
+			$settings['notification-types_types'] = array_values( $settings['notification-types_types'] );
+
+			$message = __( 'Notifications by email require at least two addresses.', 'secupress' );
+			add_settings_error( 'general', 'notifications-email-min-number-addresses', $message, 'error' );
 		}
-	} else {
-		unset( $settings['alerts_email'] );
 	}
 
-	// Other types
-	$types = array( 'alerts_sms_number', 'alerts_push', 'alerts_slack', 'alerts_twitter' );
+	// Other types.
+	$types = array( 'notification-types_sms_number', 'notification-types_push', 'notification-types_slack', 'notification-types_twitter' );
 
 	foreach ( $types as $type ) {
 		if ( ! empty( $settings[ $type ] ) ) {
@@ -84,9 +105,28 @@ function __secupress_alerts_manager_settings_callback( $modulenow, &$settings ) 
 			unset( $settings[ $type ] );
 		}
 	}
+}
 
-	// Frequency
-	$settings['alerts_frequency'] = secupress_minmax_range( $settings['alerts_frequency'], 5, 60 );
+
+/**
+ * Event Alerts Callback.
+ *
+ * @since 1.0
+ *
+ * @param (string)     $modulenow Current module.
+ * @param (array)      $settings  The module settings, passed by reference.
+ * @param (bool|array) $activate  Used to (de)activate plugins.
+ */
+function __secupress_event_alerts_settings_callback( $modulenow, &$settings, $activate ) {
+	// Activate/deactivate.
+	secupress_manage_submodule( $modulenow, 'alerts', ! empty( $activate['alerts_activated'] ) && ! empty( $settings['notification-types_types'] ) );
+
+	// Frequency.
+	if ( empty( $settings['alerts_frequency'] ) || ! is_numeric( $settings['alerts_frequency'] ) ) {
+		$settings['alerts_frequency'] = 15;
+	} else {
+		$settings['alerts_frequency'] = secupress_minmax_range( $settings['alerts_frequency'], 5, 60 );
+	}
 }
 
 
@@ -100,49 +140,6 @@ function __secupress_alerts_manager_settings_callback( $modulenow, &$settings ) 
  * @param (bool|array) $activate  Used to (de)activate plugins.
  */
 function __secupress_uptime_monitoring_settings_callback( $modulenow, &$settings, $activate ) {
-	// (De)Activation.
-	if ( false !== $activate ) {
-		secupress_manage_submodule( $modulenow, 'uptime-monitoring', ! empty( $activate['monitoring_activated'] ) );
-	}
-
-	// Settings.
-	if ( empty( $settings['uptime-monitoring-token'] ) ) {
-		$old_settings = get_site_option( "secupress_{$modulenow}_settings" );
-
-		if ( ! empty( $old_settings['uptime-monitoring-token'] ) ) {
-			$settings['uptime-monitoring-token'] = $old_settings['uptime-monitoring-token'];
-		}
-	} else {
-		$settings['uptime-monitoring-token'] = sanitize_text_field( $settings['uptime-monitoring-token'] );
-	}
-}
-
-
-/*------------------------------------------------------------------------------------------------*/
-/* TOOLS ======================================================================================== */
-/*------------------------------------------------------------------------------------------------*/
-
-/*
- * Get available alert types.
- *
- * @since 1.0
- *
- * @param (bool) $all Set to `true` to return all free and pro types. Will return only free types otherwise.
- *
- * @return (array) Return an array with identifiers as keys and field labels as values.
- */
-function secupress_alerts_labels( $all = false ) {
-	if ( ! $all ) {
-		return array(
-			'email' => __( 'By Email', 'secupress' ),
-		);
-	}
-
-	return array(
-		'email'   => __( 'By Email', 'secupress' ),
-		'sms'     => __( 'By SMS', 'secupress' ),
-		'push'    => __( 'By push notification', 'secupress' ),
-		'slack'   => __( 'With Slack', 'secupress' ),
-		'twitter' => __( 'With Twitter', 'secupress' ),
-	);
+	// Activate/deactivate.
+	secupress_manage_submodule( $modulenow, 'uptime-monitoring', ! empty( $activate['monitoring_activated'] ) && ! empty( $settings['notification-types_types'] ) );
 }

@@ -5,13 +5,12 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 /* ACTIVATE ===================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
+register_activation_hook( SECUPRESS_FILE, 'secupress_activation' );
 /**
  * Tell WP what to do when the plugin is activated
  *
  * @since 1.1.0
  */
-register_activation_hook( SECUPRESS_FILE, 'secupress_activation' );
-
 function secupress_activation() {
 	// Last constants.
 	define( 'SECUPRESS_PLUGIN_NAME', 'SecuPress' );
@@ -35,13 +34,12 @@ function secupress_activation() {
 }
 
 
+add_action( 'secupress.plugins.activation', 'secupress_maybe_write_rules_on_activation', 10000 );
 /**
  * Maybe add rules in `.htaccess` or `web.config` file on SecuPress activation.
  *
  * @since 1.0
  */
-add_action( 'secupress.plugins.activation', 'secupress_maybe_write_rules_on_activation', 10000 );
-
 function secupress_maybe_write_rules_on_activation() {
 	global $is_apache, $is_iis7, $is_nginx;
 
@@ -233,13 +231,12 @@ function secupress_maybe_write_rules_on_activation() {
 /* DEACTIVATE =================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
+register_deactivation_hook( SECUPRESS_FILE, 'secupress_deactivation' );
 /**
  * Tell WP what to do when the plugin is deactivated.
  *
  * @since 1.0
  */
-register_deactivation_hook( SECUPRESS_FILE, 'secupress_deactivation' );
-
 function secupress_deactivation() {
 	// Pause the licence.
 	wp_remote_get( SECUPRESS_WEB_MAIN . 'pause-licence.php' );
@@ -265,19 +262,18 @@ function secupress_deactivation() {
 }
 
 
+add_action( 'secupress_deactivation', 'secupress_maybe_remove_rules_on_deactivation', 10000 );
 /**
  * Maybe remove rules from `.htaccess` or `web.config` file on SecuPress deactivation.
  *
  * @since 1.0
  */
-add_action( 'secupress_deactivation', 'secupress_maybe_remove_rules_on_deactivation', 10000 );
-
 function secupress_maybe_remove_rules_on_deactivation() {
 	global $is_apache, $is_iis7, $is_nginx;
 
 	if ( ! $is_apache && ! $is_iis7 ) {
 		if ( $is_nginx ) {
-			// Since we can't edit the file, no other way but to kill the page :s
+			// Since we can't edit the file, no other way but to kill the page :s.
 			$message  = sprintf( __( '%s: ', 'secupress' ), SECUPRESS_PLUGIN_NAME );
 			$message .= sprintf(
 					/* translators: 1 and 2 are small parts of code, 3 is a file name. */
@@ -303,7 +299,7 @@ function secupress_maybe_remove_rules_on_deactivation() {
 		}
 
 		if ( ! is_writable( $file_path ) ) {
-			// If the file is not writable, no other way but to kill the page :/
+			// If the file is not writable, no other way but to kill the page :/.
 			$message  = sprintf( __( '%s: ', 'secupress' ), SECUPRESS_PLUGIN_NAME );
 			$message .= sprintf(
 				/* translators: 1 and 2 are small parts of code, 3 is a file name. */
@@ -345,7 +341,7 @@ function secupress_maybe_remove_rules_on_deactivation() {
 	$doc->preserveWhiteSpace = false;
 
 	if ( false === $doc->load( $file_path ) ) {
-		// If the file is not writable, no other way but to kill the page :/
+		// If the file is not writable, no other way but to kill the page :/.
 		$message  = sprintf( __( '%s: ', 'secupress' ), SECUPRESS_PLUGIN_NAME );
 		$message .= sprintf(
 			/* translators: 1 is a small part of code, 2 is a file name. */
@@ -437,4 +433,3 @@ function secupress_create_deactivation_notice_muplugin( $plugin_id, $message ) {
 
 	$wp_filesystem->put_contents( $filename, $contents );
 }
-

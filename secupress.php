@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: WordPress Security by SecuPress
+ * Plugin Name: WordPress Security by SecuPress (Free)
  * Plugin URI: http://secupress.me
  * Description: WordPress Security by SecuPress, the best and simpler way to protect your websites.
  * Author: SecuPress, WP Media
  * Version: 1.0-beta2
- * Author URI: http://secupress.me
+ * Author URI: http://wp-media.me
  * Network: true
  * License: GPLv2
  * License URI: http://secupress.me/gpl.txt
@@ -36,7 +36,7 @@ define( 'SECUPRESS_FULL_FILETREE'         , 'secupress_full_filetree' );
 define( 'SECUPRESS_FIX_DISTS'             , 'secupress_fix_dists' );
 define( 'SECUPRESS_BAN_IP'                , 'secupress_ban_ip' );
 define( 'SECUPRESS_WEB_MAIN'              , 'http://secupress.me/' );
-define( 'SECUPRESS_WEB_DEMO'              , home_url( '/' ) ); ////
+define( 'SECUPRESS_WEB_DEMO'              , home_url( '/' ) ); // ////.
 define( 'SECUPRESS_BOT_URL'               , 'http://bot.secupress.me' );
 define( 'SECUPRESS_WEB_VALID'             , 'http://support.secupress.me/' );
 define( 'SECUPRESS_FILE'                  , __FILE__ );
@@ -61,7 +61,7 @@ define( 'SECUPRESS_PHP_MIN'               , '5.3' );
 define( 'SECUPRESS_WP_MIN'                , '3.7' );
 
 if ( ! defined( 'SECUPRESS_LASTVERSION' ) ) {
-	define( 'SECUPRESS_LASTVERSION', '0' ); ////
+	define( 'SECUPRESS_LASTVERSION', '0' );
 }
 
 
@@ -75,22 +75,21 @@ if ( ! defined( 'SECUPRESS_LASTVERSION' ) ) {
 require( SECUPRESS_ADMIN_PATH . 'activation.php' );
 
 
+add_action( 'plugins_loaded', 'secupress_init', 0 );
 /**
- * Tell WP what to do when plugin is loaded
+ * Tell WP what to do when the plugin is loaded.
  *
  * @since 1.0
  */
-add_action( 'plugins_loaded', 'secupress_init', 0 );
-
 function secupress_init() {
 	global $wp_version;
 
-	// Nothing to do if autosave
+	// Nothing to do if autosave.
 	if ( defined( 'DOING_AUTOSAVE' ) ) {
 		return;
 	}
 
-	// Load translations
+	// Load translations.
 	secupress_load_plugin_textdomain_translations();
 
 	if ( version_compare( phpversion(), SECUPRESS_PHP_MIN ) < 0 ) {
@@ -104,17 +103,17 @@ function secupress_init() {
 		wp_die( sprintf( __( '<b>SecuPress</b> requires WordPress %s minimum, your website is actually running version %s.', 'secupress' ), '<code>' . SECUPRESS_WP_MIN . '</code>', '<code>' . $wp_version . '</code>' ) );
 	}
 
-	// Call defines, classes and functions
+	// Call defines, classes and functions.
 	require( SECUPRESS_FUNCTIONS_PATH . 'compat.php' );
 	require( SECUPRESS_FUNCTIONS_PATH . 'formatting.php' );
 	require( SECUPRESS_FUNCTIONS_PATH . 'options.php' );
 	require( SECUPRESS_INC_PATH       . 'network-options-autoload.php' );
 
-	// Last constants
+	// Last constants.
 	define( 'SECUPRESS_PLUGIN_NAME', secupress_get_option( 'wl_plugin_name', 'SecuPress' ) );
 	define( 'SECUPRESS_PLUGIN_SLUG', sanitize_title( SECUPRESS_PLUGIN_NAME ) );
 
-	// Call defines, classes and functions
+	// Call defines, classes and functions.
 	require( SECUPRESS_FUNCTIONS_PATH . 'files.php' );
 	require( SECUPRESS_FUNCTIONS_PATH . 'admin.php' );
 	require( SECUPRESS_FUNCTIONS_PATH . 'plugins.php' );
@@ -157,13 +156,12 @@ function secupress_init() {
 }
 
 
+add_action( 'secupress_loaded', 'secupress_load_plugins' );
 /**
  * Load modules.
  *
  * @since 1.0
  */
-add_action( 'secupress_loaded', 'secupress_load_plugins' );
-
 function secupress_load_plugins() {
 	$modules = secupress_get_modules();
 
@@ -218,13 +216,12 @@ function secupress_load_plugins() {
 }
 
 
+add_action( 'secupress_loaded', 'secupress_been_first' );
 /**
  * Make SecuPress the first plugin loaded.
  *
  * @since 1.0
  */
-add_action( 'secupress_loaded', 'secupress_been_first' );
-
 function secupress_been_first() {
 	if ( ! is_admin() ) {
 		return;
@@ -269,13 +266,12 @@ function secupress_load_plugin_textdomain_translations() {
 }
 
 
+add_action( 'init', 'secupress_load_default_textdomain_translations' );
 /**
  * Translations for the default textdomain must be loaded on init, not before.
  *
  * @since 1.0
  */
-add_action( 'init', 'secupress_load_default_textdomain_translations' );
-
 function secupress_load_default_textdomain_translations() {
 	if ( ! defined( 'DOING_AUTOSAVE' ) ) {
 		load_plugin_textdomain( 'default', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );

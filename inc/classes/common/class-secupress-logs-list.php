@@ -1,44 +1,59 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
-
 /**
  * General Logs list class.
  *
  * @package SecuPress
  * @since 1.0
  */
-
 class SecuPress_Logs_List extends SecuPress_Singleton {
 
 	const VERSION = '1.0';
 	/**
-	 * @var (object) The reference to the *Singleton* instance of this class.
+	 * The reference to the *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
+
 	/**
-	 * @var (object) Logs instance.
+	 * Logs instance.
+	 *
+	 * @var (object)
 	 */
 	private $logs_instance;
+
 	/**
-	 * @var (string) Current Log type.
+	 * Current Log type.
+	 *
+	 * @var (string)
 	 */
 	private $log_type;
+
 	/**
-	 * @var (string) Current Post type.
+	 * Current Post type.
+	 *
+	 * @var (string)
 	 */
 	private $post_type;
+
 	/**
-	 * @var (string) Log class name.
+	 * Log class name.
+	 *
+	 * @var (string)
 	 */
 	private $log_classname;
+
 	/**
-	 * @var (int) ID of the Log currently being displayed.
+	 * ID of the Log currently being displayed.
+	 *
+	 * @var (int)
 	 */
 	private $current_log_id = 0;
 
 
-	// Init ========================================================================================
+	// Init ========================================================================================.
 
 	/**
 	 * Set the values.
@@ -64,7 +79,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 	}
 
 
-	// Private methods =============================================================================
+	// Private methods =============================================================================.
 
 	/**
 	 * Prepare the list.
@@ -100,7 +115,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 
 			if ( ! $this->current_log_id ) {
 				$sendback = $this->_paged_page_url();
-				wp_redirect( $sendback );
+				wp_redirect( esc_url_raw( $sendback ) );
 				exit();
 			}
 		}
@@ -187,13 +202,13 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 
 			echo "<$title_tag class=\"nav-tab-wrapper\">";
 
-				foreach ( $log_types as $log_type => $atts ) {
-					$current_url = $i ? add_query_arg( 'tab', $log_type, $page_url ) : $page_url;
-					$label       = get_post_type_object( $atts['post_type'] )->label;
+			foreach ( $log_types as $log_type => $atts ) {
+				$current_url = $i ? add_query_arg( 'tab', $log_type, $page_url ) : $page_url;
+				$label       = get_post_type_object( $atts['post_type'] )->label;
 
-					echo ( $i ? '<span class="screen-reader-text">, </span>' : '' ) . '<a class="nav-tab' . ( $log_type === $this->log_type ? ' nav-tab-active' : '' ) . '" href="' . esc_url( $current_url ) . '">' . $label . '</a>';
-					++$i;
-				}
+				echo ( $i ? '<span class="screen-reader-text">, </span>' : '' ) . '<a class="nav-tab' . ( $log_type === $this->log_type ? ' nav-tab-active' : '' ) . '" href="' . esc_url( $current_url ) . '">' . $label . '</a>';
+				++$i;
+			}
 
 			echo "</$title_tag>\n";
 		}
@@ -293,7 +308,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 	}
 
 
-	// Tools =======================================================================================
+	// Tools =======================================================================================.
 
 	/**
 	 * The page URL.

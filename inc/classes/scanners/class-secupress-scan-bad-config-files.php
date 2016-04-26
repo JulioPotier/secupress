@@ -8,18 +8,30 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @subpackage SecuPress_Scan
  * @since 1.0
  */
-
-class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPress_Scan {
+class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
 	const VERSION = '1.0';
 
 	/**
-	 * @var Singleton The reference to *Singleton* instance of this class
+	 * The reference to *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
-	public    static $prio = 'high';
+
+	/**
+	 * Priority.
+	 *
+	 * @var (string)
+	 */
+	public    static $prio    = 'high';
 
 
+	/**
+	 * Init.
+	 *
+	 * @since 1.0
+	 */
 	protected static function init() {
 		self::$type     = 'WordPress';
 		self::$title    = __( 'Check if your installation contains old or backed up <code>wp-config.php</code> files like <code>wp-config.bak</code>, <code>wp-config.old</code> etc.', 'secupress' );
@@ -28,15 +40,24 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 	}
 
 
+	/**
+	 * Get messages.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int) $message_id A message ID.
+	 *
+	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
+	 */
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
-			// good
+			// "good"
 			0   => __( 'You don\'t have old <code>wp-config</code> files.', 'secupress' ),
 			1   => _n_noop( 'The file was successfully suffixed with %s.', 'All files were successfully suffixed with %s.', 'secupress' ),
-			// warning
+			// "warning"
 			100 => _n_noop( '%1$d file was successfully suffixed with %2$s.', '%1$d files were successfully suffixed with %2$s.', 'secupress' ),
 			101 => _n_noop( 'Sorry, this file could not be renamed: %s', 'Sorry, those files could not be renamed: %s', 'secupress' ),
-			// bad
+			// "bad"
 			200 => _n_noop( 'Your installation should not contain this old or backed up config file: %s.', 'Your installation should not contain these old or backed up config files: %s.', 'secupress' ),
 			201 => _n_noop( 'Sorry, the file could not be renamed.', 'Sorry, the files could not be renamed.', 'secupress' ),
 		);
@@ -49,16 +70,23 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 	}
 
 
+	/**
+	 * Scan for flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The scan results.
+	 */
 	public function scan() {
 
 		$files = static::get_files();
 
 		if ( $files ) {
-			// bad
+			// "bad"
 			$files = self::wrap_in_tag( $files );
 			$this->add_message( 200, array( count( $files ), $files ) );
 		} else {
-			// good
+			// "good"
 			$this->add_message( 0 );
 		}
 
@@ -66,12 +94,19 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 	}
 
 
+	/**
+	 * Try to fix the flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The fix results.
+	 */
 	public function fix() {
 		$files = static::get_files();
 
 		// Should not happen.
 		if ( ! $files ) {
-			// good
+			// "good"
 			$this->add_fix_message( 0 );
 			return parent::fix();
 		}
@@ -95,10 +130,10 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 		$count_renamed = count( $renamed );
 
 		if ( $count_renamed === $count_all ) {
-			// good: all files were renamed.
+			// "good": all files were renamed.
 			$this->add_fix_message( 1, array( $count_all, '<code>' . $suffix . '</code>' ) );
 		} elseif ( $count_renamed ) {
-			// warning: some files could not be renamed.
+			// "warning": some files could not be renamed.
 			$not_renamed = array_diff( $files, $renamed );
 			$not_renamed = static::wrap_in_tag( $not_renamed );
 
@@ -106,7 +141,7 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 			$this->add_fix_message( 101, array( count( $not_renamed ), $not_renamed ) );
 		}
 		else {
-			// bad: no files could not be renamed.
+			// "bad": no files could not be renamed.
 			$this->add_fix_message( 201, array( $count_all ) );
 		}
 
@@ -114,11 +149,18 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements iSecuPre
 	}
 
 
+	/**
+	 * Get config files.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) An array of file names.
+	 */
 	protected static function get_files() {
 		$files = glob( ABSPATH . '*wp-config*.*' );
 		$files = array_map( 'basename', $files );
 
-		foreach( $files as $k => $file ) {
+		foreach ( $files as $k => $file ) {
 			if ( 'php' === pathinfo( $file, PATHINFO_EXTENSION ) ) {
 				unset( $files[ $k ] );
 			}

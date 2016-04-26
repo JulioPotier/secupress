@@ -65,24 +65,12 @@ jQuery( document ).ready( function( $ ) {
 		});
 	}
 
-	// Format Time ago for Latest Scans
-	if ( jQuery.timeago ) {
-		jQuery.timeago.settings.strings = jQuery.extend( { numbers: [] }, SecuPressi18nTimeago );
-		$( '.timeago' ).timeago();
-	}
 
-	function secupressPrependDataLi( percent, now ) {
-		$( '#secupress-latest').find( 'ul' ).prepend( '<li class="hidden" data-percent="' + percent + '">' + now + '</li>' ).find( 'li.hidden' ).slideDown( 250 );
-		if ( jQuery.timeago ) {
-			$( '.timeago:first' ).timeago();
-		}
-	}
-
-	function secupressUpdateScore( refresh ) {
+	function secupressUpdateScore( refreshDate ) {
 		var total, status_good, status_warning, status_bad, status_notscannedyet, percent, letter,
-			d, the_date, dashicon, $score_results_ul, replacement, last_percent, now;
+			$scoreResultsUl;
 
-		if ( ! secupressChartEl || ! jQuery.timeago ) {
+		if ( ! secupressChartEl ) {
 			return;
 		}
 
@@ -120,35 +108,16 @@ jQuery( document ).ready( function( $ ) {
 
 		$( '.secupress-score' ).find( '.letter' ).html( letter ).removeClass( 'l∅ lA lB lC lD lE lF' ).addClass( 'l' + letter );
 
-		if ( refresh ) {
-			d                = new Date();
-			the_date         = d.getFullYear() + "-" + ( "0" + ( d.getMonth() + 01 ) ).slice( -2 ) + "-" + ( "0" + d.getDate() ).slice( -2 ) + " " + ( "0" + d.getHours() ).slice( -2 ) + ":" + ( "0" + d.getMinutes() ).slice( -2 );
-			dashicon         = '<span class="dashicons mini dashicons-arrow-?-alt2"></span>';
-			$score_results_ul= $( '#secupress-latest').find( 'ul' );
-			replacement      = 'right';
-			last_percent     = $score_results_ul.find( 'li:first' ).data( 'percent' );
+		if ( refreshDate ) {
+			$scoreResultsUl = $( '#secupress-latest').find( 'ul' );
 
-			if ( last_percent < percent ) {
-				replacement = 'up';
-			} else if ( last_percent > percent ) {
-				replacement = 'down';
-			}
-
-			dashicon = dashicon.replace( '?', replacement );
-			now = '<strong>' + dashicon + '<span class="letter l' + letter + '">' + letter + '</span> (' + percent + ' %)</strong> <span class="timeago" title="' + the_date + '">' + the_date + '</span>';
-
-			if ( $score_results_ul.find('.secupress-empty') ) {
-				$score_results_ul.find('.secupress-empty').slideUp( 250, function() {
+			if ( $scoreResultsUl.find( 'li' ).length === 5 ) {
+				$scoreResultsUl.find( 'li:last' ).slideUp( 250, function() {
 					$( this ).remove();
-				});
-			}
-			if ( $score_results_ul.find( 'li' ).length === 5 ) {
-				$score_results_ul.find( 'li:last' ).slideUp( 250, function() {
-					$( this ).remove();
-					secupressPrependDataLi( percent, now );
+					secupressPrependDataLi( refreshDate );
 				} );
 			} else {
-				secupressPrependDataLi( percent, now );
+				secupressPrependDataLi( refreshDate );
 			}
 		}
 
@@ -256,87 +225,6 @@ jQuery( document ).ready( function( $ ) {
 			}
 			return false;
 		} );
-	} )(window, document, $);
-
-
-	// !"Select all" -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	(function( w, d, $, undefined ) {
-
-		var checks, first, last, checked, sliced, lastClicked = {};
-
-		// Check all checkboxes.
-		$( "tbody" ).children().children( ".secupress-check-column" ).find( ":checkbox" ).on( "click", function( e ) {
-			var prio;
-
-			if ( "undefined" === e.shiftKey ) {
-				return true;
-			}
-
-			prio = this.className.replace( /^.*secupress-checkbox-([^\s]+)(?:\s.*|$)/g, "$1" );
-
-			if ( e.shiftKey ) {
-				if ( ! lastClicked[ prio ] ) {
-					return true;
-				}
-				checks  = $( lastClicked[ prio ] ).closest( ".secupress-table-prio-all" ).find( ":checkbox" ).filter( ":visible:enabled" );
-				first   = checks.index( lastClicked[ prio ] );
-				last    = checks.index( this );
-				checked = $( this ).prop( "checked" );
-
-				if ( 0 < first && 0 < last && first !== last ) {
-					sliced = ( last > first ) ? checks.slice( first, last ) : checks.slice( last, first );
-					sliced.prop( "checked", function() {
-						if ( $( this ).closest( "tr" ).is( ":visible" ) ) {
-							return checked;
-						}
-
-						return false;
-					} );
-				}
-			}
-
-			lastClicked[ prio ] = this;
-
-			// toggle "check all" checkboxes
-			var unchecked = $( this ).closest( "tbody" ).find( ":checkbox" ).filter( ":visible:enabled" ).not( ":checked" );
-			$( this ).closest( "table" ).children( "thead, tfoot" ).find( ":checkbox" ).prop( "checked", function() {
-				return ( 0 === unchecked.length );
-			} );
-
-			return true;
-		} );
-
-		$( "thead, tfoot" ).find( ".secupress-check-column :checkbox" ).on( "click.wp-toggle-checkboxes", function( e ) {
-			var $this          = $(this),
-				$table         = $this.closest( "table" ),
-				controlChecked = $this.prop( "checked" ),
-				toggle         = e.shiftKey || $this.data( "wp-toggle" );
-
-			$table.children( "tbody" ).filter( ":visible" )
-				.children().children( ".secupress-check-column" ).find( ":checkbox" )
-				.prop( "checked", function() {
-					if ( $( this ).is( ":hidden,:disabled" ) ) {
-						return false;
-					}
-
-					if ( toggle ) {
-						return ! $( this ).prop( "checked" );
-					}
-
-					return controlChecked ? true : false;
-				} );
-
-			$table.children( "thead, tfoot" ).filter( ":visible" )
-				.children().children( ".secupress-check-column" ).find( ":checkbox" )
-				.prop( "checked", function() {
-					if ( toggle ) {
-						return false;
-					}
-
-					return controlChecked ? true : false;
-				} );
-		} );
-
 	} )(window, document, $);
 
 
@@ -740,15 +628,11 @@ jQuery( document ).ready( function( $ ) {
 			}
 		}
 
-
-		function secupressFixFirstQueued( isBulk ) {												console.log( '##secupressFixFirstQueued##' );
+		function secupressFixFirstQueued( isBulk ) {
 			var bulk = isBulk ? 'bulk' : '',
-				elem = secupressScans.delayedFixes.shift();									console.log( elem );
-					console.log( secupressScans.delayedFixes );
-					console.log( '##end##' );
+				elem = secupressScans.delayedFixes.shift();
 			$( elem ).trigger( bulk + 'fix.secupress' );
 		}
-
 
 		function secupressFilterNonDelayedButtons( $buttons ) {
 			// If we're already performing a fix, do nothing.
@@ -758,30 +642,24 @@ jQuery( document ).ready( function( $ ) {
 			// Some fixes may need to be queued and delayed.
 			$buttons.filter( '.delayed-fix' ).each( function() {
 				secupressScans.delayedFixes.push( this );
-			} );																			console.log( '##secupressFilterNonDelayedButtons##' );
-				console.log( secupressScans.delayedFixes );
-				console.log( '##end##' );
+			} );
 			return $buttons.not( '.delayed-fix' );
 		}
 
 
 		function secupressLaunchSeparatedBulkFix( $buttons ) {
-			if ( $buttons.length < 2 ) {													console.log( 'not a bulk:' );
-				console.log( $buttons );
+			if ( $buttons.length < 2 ) {
 				// Not a bulk.
 				$buttons.trigger( 'fix.secupress' );
 				return;
 			}
-				console.log(1);
 
 			$buttons = secupressFilterNonDelayedButtons( $buttons );
 
 			if ( $buttons.length ) {
-				console.log(2);
 				// We still have "normal" fixes.
 				$buttons.trigger( 'bulkfix.secupress' );
 			} else {
-				console.log(3);
 				// OK, launch directly the fix of the first item in queue.
 				secupressFixFirstQueued( true );
 			}
@@ -829,7 +707,7 @@ jQuery( document ).ready( function( $ ) {
 					var params = $( '#form_manual_fix' ).serializeArray(),
 						$row   = $( '#' + test );
 
-					$.post( ajaxurl, params )
+					$.post( ajaxurl, params, null, "json" )
 					.done( function( r ) {
 						// Display fix result.
 						if ( secupressDisplayFixResult( r, test, true ) ) {
@@ -895,9 +773,35 @@ jQuery( document ).ready( function( $ ) {
 			* Available extras:
 			* extra.isBulk: tell if it's a bulk scan.
 			*/
+			var $button = $( ".button-secupress-scan" ),
+				params;
 
-			// Update the donut only when all scans are done.
-			secupressUpdateScore( true );
+			// If it's a One-click Scan, keep track of the date.
+			if ( $button.attr( "disabled" ) ) {
+				params = {
+					"action":   "secupress-update-oneclick-scan-date",
+					"_wpnonce": $button.data( "nonce" )
+				};
+
+				$.getJSON( ajaxurl, params )
+				.done( function( r ) {
+					if ( $.isPlainObject( r ) && r.success && r.data ) {
+						// Update the donut only when all scans are done.
+						secupressUpdateScore( r.data );
+					} else {
+						secupressUpdateScore();
+					}
+				} )
+				.fail( function() {
+					secupressUpdateScore();
+				} )
+				.always( function() {
+					$button.removeAttr( "disabled aria-disabled" );
+				} );
+			} else {
+				// Update the donut only when all scans are done.
+				secupressUpdateScore();
+			}
 		} );
 
 
@@ -961,7 +865,7 @@ jQuery( document ).ready( function( $ ) {
 			}
 
 			// Update the donut only when all fixes are done.
-			secupressUpdateScore( true );
+			secupressUpdateScore();
 		} );
 
 
@@ -1057,6 +961,7 @@ jQuery( document ).ready( function( $ ) {
 
 			if ( $this.hasClass( 'button-secupress-scan' ) ) {
 				// It's the "One Click Scan" button.
+				$this.attr( { 'disabled': 'disabled', 'aria-disabled': true } );
 				$( '.secupress-scanit' ).trigger( 'bulkscan.secupress' );
 				return;
 			}
@@ -1096,41 +1001,30 @@ jQuery( document ).ready( function( $ ) {
 		$( '.secupress-item-all.autoscan .secupress-scanit' ).trigger( 'bulkscan.secupress' );
 
 
-		// Bulk.
-		// TODO: NO MORE BULK, REMOVE?
-		$( '#doaction-high, #doaction-medium, #doaction-low' ).on( 'click', function( e ) {
-			var $this    = $( this ),
-				prio     = $this.attr( 'id' ).replace( 'doaction-', '' ),
-				action   = $this.siblings( "select" ).val(),
-				$rows    = $this.parents( ".secupress-table-prio-all" ).find( "tbody .secupress-check-column :checked" ).parents( ".secupress-item-all" ),
-				$buttons = $rows.find( ".secupress-" + action ),
-				bulk;
+		// One Click Scan auto.
+		function secupressFirstOneClickScan() {
+			var parts;
 
-			if ( action === "-1" || ! $buttons.length ) {
+			if ( ! $.isEmptyObject( secupressScans.doingScan ) || ! $.isEmptyObject( secupressScans.doingFix ) || secupressScans.delayedFixes.length || ! $.isEmptyObject( secupressScans.manualFix ) ) {
 				return;
 			}
 
-			$this.siblings( "select" ).val( "-1" );
-
-			switch ( action ) {
-				case 'scanit':
-					// Trigger scans.
-					bulk = $buttons.length < 2 ? "" : "bulk";
-					$buttons.trigger( bulk + "scan.secupress" );
-					break;
-				case 'fixit':
-					// Uncheck rows that are not fixable.
-					$rows.each( function() {
-						var $row = $( this );
-						if ( $row.hasClass( "not-fixable" ) ) {
-							// TODO: REMOVE ?
-							// secupressUncheckTest( $row );
-						}
-					} );
-					// Trigger fixes.
-					secupressLaunchSeparatedBulkFix( $buttons );
-					break;
+			if ( $( '#secupress-latest').find( 'ul' ).find('li').length ) {
+				return;
 			}
-		} );
+
+			parts = w.location.href.split( "&" );
+			parts.shift();
+
+			$.each( parts, function( i, v ) {
+				if ( 'oneclick-scan=1' === v ) {
+					$( '.button-secupress-scan' ).trigger( 'scan.secupress' );
+					return;
+				}
+			} );
+		}
+
+		secupressFirstOneClickScan();
+
 	} )(window, document, $);
 } );

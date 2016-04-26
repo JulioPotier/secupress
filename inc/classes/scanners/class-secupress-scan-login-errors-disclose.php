@@ -8,18 +8,30 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @subpackage SecuPress_Scan
  * @since 1.0
  */
-
-class SecuPress_Scan_Login_Errors_Disclose extends SecuPress_Scan implements iSecuPress_Scan {
+class SecuPress_Scan_Login_Errors_Disclose extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
 	const VERSION = '1.0';
 
 	/**
-	 * @var Singleton The reference to *Singleton* instance of this class
+	 * The reference to *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
-	public    static $prio = 'low';
+
+	/**
+	 * Priority.
+	 *
+	 * @var (string)
+	 */
+	public    static $prio    = 'low';
 
 
+	/**
+	 * Init.
+	 *
+	 * @since 1.0
+	 */
 	protected static function init() {
 		self::$type     = 'WordPress';
 		self::$title    = __( 'Check if your WordPress site discloses some login errors.', 'secupress' );
@@ -28,12 +40,21 @@ class SecuPress_Scan_Login_Errors_Disclose extends SecuPress_Scan implements iSe
 	}
 
 
+	/**
+	 * Get messages.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int) $message_id A message ID.
+	 *
+	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
+	 */
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
-			// good
+			// "good"
 			0   => __( 'You are currently not displaying <strong>login errors</strong>.', 'secupress' ),
 			1   => __( 'Protection activated', 'secupress' ),
-			// bad
+			// "bad"
 			200 => __( '<strong>Login errors</strong> should not be displayed.', 'secupress' ),
 		);
 
@@ -45,6 +66,13 @@ class SecuPress_Scan_Login_Errors_Disclose extends SecuPress_Scan implements iSe
 	}
 
 
+	/**
+	 * Scan for flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The scan results.
+	 */
 	public function scan() {
 		$messages = static::get_login_messages( false );
 		$messages = '	' . implode( "<br />\n	", $messages ) . "<br />\n";
@@ -54,10 +82,10 @@ class SecuPress_Scan_Login_Errors_Disclose extends SecuPress_Scan implements iSe
 		$pattern = '@\s(' . implode( '|', $pattern ) . ')<br />\n@';
 
 		if ( preg_match( $pattern, $messages ) ) {
-			// bad
+			// "bad"
 			$this->add_message( 200 );
 		} else {
-			// good
+			// "good"
 			$this->add_message( 0 );
 		}
 
@@ -65,6 +93,13 @@ class SecuPress_Scan_Login_Errors_Disclose extends SecuPress_Scan implements iSe
 	}
 
 
+	/**
+	 * Try to fix the flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The fix results.
+	 */
 	public function fix() {
 		$messages = static::get_login_messages( false );
 		$messages = '	' . implode( "<br />\n	", $messages ) . "<br />\n";
@@ -77,10 +112,10 @@ class SecuPress_Scan_Login_Errors_Disclose extends SecuPress_Scan implements iSe
 
 			secupress_activate_submodule( 'discloses', 'login-errors-disclose' );
 
-			// good
+			// "good"
 			$this->add_fix_message( 1 );
 		} else {
-			// good
+			// "good"
 			$this->add_fix_message( 0 );
 		}
 
@@ -88,6 +123,15 @@ class SecuPress_Scan_Login_Errors_Disclose extends SecuPress_Scan implements iSe
 	}
 
 
+	/**
+	 * Get login error messages that we don't want to be displayed.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (bool) $for_regex If false, raw messages will be returned. If true, the returned messages will be ready to be used as regex patterns.
+	 *
+	 * @return (array) An array of messages.
+	 */
 	protected static function get_login_messages( $for_regex = true ) {
 		$messages = array(
 			'invalid_email'      => __( '<strong>ERROR</strong>: There is no user registered with that email address.' ),

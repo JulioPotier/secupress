@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die('Cheatin\' uh?');
+defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
 /**
  * Plugins Update scan class.
@@ -8,19 +8,37 @@ defined( 'ABSPATH' ) or die('Cheatin\' uh?');
  * @subpackage SecuPress_Scan
  * @since 1.0
  */
-
-class SecuPress_Scan_Plugins_Update extends SecuPress_Scan implements iSecuPress_Scan {
+class SecuPress_Scan_Plugins_Update extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
 	const VERSION = '1.0';
 
 	/**
-	 * @var Singleton The reference to *Singleton* instance of this class
+	 * The reference to *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
+
+	/**
+	 * Priority.
+	 *
+	 * @var (string)
+	 */
 	public    static $prio        = 'high';
-	public    static $delayed_fix = true;
+
+	/**
+	 * Tells if the fix must occur after all other scans and fixes, while no other scan/fix is running.
+	 *
+	 * @var (bool)
+	 */
+	public static    $delayed_fix = true;
 
 
+	/**
+	 * Init.
+	 *
+	 * @since 1.0
+	 */
 	protected static function init() {
 		self::$type     = 'WordPress';
 		self::$title    = __( 'Check if your plugins are up to date.', 'secupress' );
@@ -29,15 +47,24 @@ class SecuPress_Scan_Plugins_Update extends SecuPress_Scan implements iSecuPress
 	}
 
 
+	/**
+	 * Get messages.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int) $message_id A message ID.
+	 *
+	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
+	 */
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
-			// good
+			// "good"
 			0   => __( 'Your plugins are up to date.', 'secupress' ),
-			// warning
+			// "warning"
 			100 => _n_noop( '<strong>%d symlinked plugin</strong> is not up to date, and I cannot update it automatically.', '<strong>%d symlinked plugins</strong> are not up to date, and I cannot update them automatically.', 'secupress' ),
-			// bad
+			// "bad"
 			200 => _n_noop( '<strong>%1$d plugin</strong> is not up to date: %2$s.', '<strong>%1$d plugins</strong> are not up to date: %2$s.', 'secupress' ),
-			// cantfix
+			// "cantfix"
 			300 => __( 'Some plugins could not be updated correctly.', 'secupress' ),
 			301 => _n_noop( '<strong>%d symlinked plugin</strong> is not up to date, and I cannot update it automatically.', '<strong>%d symlinked plugins</strong> are not up to date, and I cannot update them automatically.', 'secupress' ),
 		);
@@ -50,6 +77,13 @@ class SecuPress_Scan_Plugins_Update extends SecuPress_Scan implements iSecuPress
 	}
 
 
+	/**
+	 * Scan for flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The scan results.
+	 */
 	public function scan() {
 		ob_start();
 
@@ -69,24 +103,31 @@ class SecuPress_Scan_Plugins_Update extends SecuPress_Scan implements iSecuPress
 		ob_flush();
 
 		if ( $count = count( $plugins ) ) {
-			// bad
+			// "bad"
 			$this->add_message( 200, array( $count, $count, self::wrap_in_tag( $plugins ) ) );
 		}
 
 		if ( $count = count( $symlinked_plugins ) ) {
-			// warning
+			// "warning"
 			$this->add_message( 100, array( $count, $count ) );
 		}
 
-		// good
+		// "good"
 		$this->maybe_set_status( 0 );
 
 		return parent::scan();
 	}
 
 
+	/**
+	 * Try to fix the flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The fix results.
+	 */
 	public function fix() {
-		// Plugins
+		// Plugins.
 		$plugins = get_site_transient( 'update_plugins' );
 		$plugins = ! empty( $plugins->response ) && is_array( $plugins->response ) ? array_keys( $plugins->response ) : array();
 
@@ -99,7 +140,7 @@ class SecuPress_Scan_Plugins_Update extends SecuPress_Scan implements iSecuPress
 			ob_start();
 			@set_time_limit( 0 );
 
-			// remove the WP upgrade process for translation since it will output data, use our own based on core but using a silent upgrade.
+			// Remove the WP upgrade process for translation since it will output data, use our own based on core but using a silent upgrade.
 			remove_action( 'upgrader_process_complete', array( 'Language_Pack_Upgrader', 'async_upgrade' ), 20 );
 			add_action( 'upgrader_process_complete', 'secupress_async_upgrades', 20 );
 
@@ -121,17 +162,17 @@ class SecuPress_Scan_Plugins_Update extends SecuPress_Scan implements iSecuPress
 		$plugins = ! empty( $plugins->response ) && is_array( $plugins->response ) ? array_keys( $plugins->response ) : array();
 
 		if ( ! $plugins ) {
-			// good
+			// "good"
 			$this->add_fix_message( 0 );
 		} else {
 			$symlinked_plugins = array_filter( $plugins, 'secupress_is_plugin_symlinked' );
 			$plugins           = array_diff( $plugins, $symlinked_plugins );
 
 			if ( $count = count( $symlinked_plugins ) ) {
-				// cantfix
+				// "cantfix"
 				$this->add_fix_message( 301, array( $count, $count ) );
 			} else {
-				// cantfix
+				// "cantfix"
 				$this->add_fix_message( 300 );
 			}
 		}

@@ -45,15 +45,11 @@ function secupress_move_login_activate() {
  * On module deactivation, remove rewrite rules from the `.htaccess`/`web.config` file.
  *
  * @since 1.0
- *
- * @param (array) $args Some parameters.
  */
 add_action( 'secupress_deactivate_plugin_move-login', 'secupress_move_login_deactivate' );
 
-function secupress_move_login_deactivate( $args = array() ) {
-	if ( empty( $args['no-tests'] ) ) {
-		secupress_remove_module_rules_or_notice( 'move_login', __( 'Move Login', 'secupress' ) );;
-	}
+function secupress_move_login_deactivate() {
+	secupress_remove_module_rules_or_notice( 'move_login', __( 'Move Login', 'secupress' ) );;
 }
 
 
@@ -74,7 +70,7 @@ function secupress_move_login_plugin_activate( $rules ) {
 	// The plugin needs the request uri.
 	if ( empty( $GLOBALS['HTTP_SERVER_VARS']['REQUEST_URI'] ) && empty( $_SERVER['REQUEST_URI'] ) ) {
 		// Deactivate the plugin.
-		secupress_deactivate_submodule( 'users-login', 'move-login', array( 'no-tests' => 1 ) );
+		secupress_deactivate_submodule_silently( 'users-login', 'move-login' );
 		return $rules;
 	}
 

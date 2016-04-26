@@ -8,18 +8,30 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @subpackage SecuPress_Scan
  * @since 1.0
  */
-
-class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress_Scan {
+class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
 	const VERSION = '1.0';
 
 	/**
-	 * @var Singleton The reference to *Singleton* instance of this class
+	 * The reference to *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
-	public    static $prio = 'medium';
+
+	/**
+	 * Priority.
+	 *
+	 * @var (string)
+	 */
+	public    static $prio    = 'medium';
 
 
+	/**
+	 * Init.
+	 *
+	 * @since 1.0
+	 */
 	protected static function init() {
 		global $is_apache, $is_nginx, $is_iis7;
 
@@ -45,18 +57,27 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 	}
 
 
+	/**
+	 * Get messages.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int) $message_id A message ID.
+	 *
+	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
+	 */
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
-			// good
+			// "good"
 			0   => __( 'Your site does not reveal sensitive informations.', 'secupress' ),
 			1   => __( 'Your %s file has been successfully edited.', 'secupress' ),
-			// warning
+			// "warning"
 			/* translators: %s is a URL, or a list of URLs. */
 			100 => __( 'Unable to determine status of %s.', 'secupress' ),
-			// bad
+			// "bad"
 			/* translators: %s is a URL, or a list of URLs. */
 			200 => _n_noop( '%s should not be accessible by anyone.', '%s should not be accessible by anyone.', 'secupress' ),
-			// cantfix
+			// "cantfix"
 			/* translators: 1 is a file name, 2 is some code */
 			300 => sprintf( __( 'Your server runs a nginx system, the sensitive information disclosure cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
 			301 => __( 'Your server runs a non recognized system. The sensitive information disclosure cannot be fixed automatically.', 'secupress' ),
@@ -74,6 +95,13 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 	}
 
 
+	/**
+	 * Scan for flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The scan results.
+	 */
 	public function scan() {
 		// Avoid plugin's hooks.
 		remove_all_filters( 'site_url' );
@@ -98,18 +126,17 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 			if ( ! is_wp_error( $response ) ) {
 
 				if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
-					// bad
+					// "bad"
 					$bads[] = "<code>$url</code>";
 				}
-
 			} else {
-				// warning
+				// "warning"
 				$warnings[] = "<code>$url</code>";
 			}
 		}
 
 		if ( $bads ) {
-			// bad
+			// "bad"
 			$this->add_message( 200, array( count( $bads ), $bads ) );
 
 			if ( ! self::$fixable ) {
@@ -118,17 +145,24 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 		}
 
 		if ( $warnings ) {
-			// warning
+			// "warning"
 			$this->add_message( 100, array( $warnings ) );
 		}
 
-		// good
+		// "good"
 		$this->maybe_set_status( 0 );
 
 		return parent::scan();
 	}
 
 
+	/**
+	 * Try to fix the flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The fix results.
+	 */
 	public function fix() {
 		global $is_apache, $is_nginx, $is_iis7;
 
@@ -140,13 +174,18 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 			$this->_fix_nginx();
 		}
 
-		// good
+		// "good"
 		$this->maybe_set_fix_status( 0 );
 
 		return parent::fix();
 	}
 
 
+	/**
+	 * Fix for Apache system.
+	 *
+	 * @since 1.0
+	 */
 	protected function _fix_apache() {
 		global $wp_settings_errors;
 
@@ -156,17 +195,22 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
 
 		if ( $last_error && 'general' === $last_error['setting'] && 'apache_manual_edit' === $last_error['code'] ) {
-			// cantfix
+			// "cantfix"
 			$this->add_fix_message( 302, array( '<code>.htaccess</code>', static::_get_rules_from_error( $last_error ) ) );
 			array_pop( $wp_settings_errors );
 			return;
 		}
 
-		// good
+		// "good"
 		$this->add_fix_message( 1, array( '<code>.htaccess</code>' ) );
 	}
 
 
+	/**
+	 * Fix for IIS7 system.
+	 *
+	 * @since 1.0
+	 */
 	protected function _fix_iis7() {
 		global $wp_settings_errors;
 
@@ -176,17 +220,22 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 		$last_error = end( $wp_settings_errors );
 
 		if ( $last_error && 'general' === $last_error['setting'] && 'iis7_manual_edit' === $last_error['code'] ) {
-			// cantfix
+			// "cantfix"
 			$this->add_fix_message( 303, array( '<code>web.config</code>', '/configuration/system.webServer/rewrite/rules', static::_get_rules_from_error( $last_error ) ) );
 			array_pop( $wp_settings_errors );
 			return;
 		}
 
-		// good
+		// "good"
 		$this->add_fix_message( 1, array( '<code>web.config</code>' ) );
 	}
 
 
+	/**
+	 * Fix for nginx system.
+	 *
+	 * @since 1.0
+	 */
 	protected function _fix_nginx() {
 		global $wp_settings_errors;
 
@@ -201,7 +250,7 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements iSecuPress
 			array_pop( $wp_settings_errors );
 		}
 
-		// cantfix
+		// "cantfix"
 		$this->add_fix_message( 300, array( $rules ) );
 	}
 }

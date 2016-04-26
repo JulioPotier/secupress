@@ -1,30 +1,45 @@
 <?php
+defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
 if ( ! class_exists( 'WP_Async_Request' ) ) {
+	/**
+	 * Async request class.
+	 *
+	 * @package SecuPress
+	 * @since 1.0
+	 */
 	abstract class WP_Async_Request {
 
 		/**
-		 * @var string
+		 * Prefix used to build the global process identifier.
+		 *
+		 * @var (string)
 		 */
 		protected $prefix = 'wp';
 
 		/**
-		 * @var string
+		 * Suffix used to build the global process identifier.
+		 *
+		 * @var (string)
 		 */
 		protected $action = 'async_request';
 
 		/**
-		 * @var string
+		 * Global process identifier.
+		 *
+		 * @var (string)
 		 */
 		protected $identifier;
 
 		/**
-		 * @var array
+		 * Data used during the request.
+		 *
+		 * @var (array)
 		 */
 		protected $data = array();
 
 		/**
-		 * Initiate new async request
+		 * Initiate new async request.
 		 */
 		public function __construct() {
 			$this->identifier = $this->prefix . '_' . $this->action;
@@ -34,9 +49,9 @@ if ( ! class_exists( 'WP_Async_Request' ) ) {
 		}
 
 		/**
-		 * Set data used during the request
+		 * Set data used during the request.
 		 *
-		 * @param array $data
+		 * @param (array) $data The data.
 		 *
 		 * @return $this
 		 */
@@ -47,9 +62,9 @@ if ( ! class_exists( 'WP_Async_Request' ) ) {
 		}
 
 		/**
-		 * Dispatch the async request
+		 * Dispatch the async request.
 		 *
-		 * @return array|WP_Error
+		 * @return (array|WP_Error)
 		 */
 		public function dispatch() {
 			$url  = add_query_arg( $this->get_query_args(), $this->get_query_url() );
@@ -58,9 +73,9 @@ if ( ! class_exists( 'WP_Async_Request' ) ) {
 		}
 
 		/**
-		 * Get query args
+		 * Get query args.
 		 *
-		 * @return array
+		 * @return (array)
 		 */
 		protected function get_query_args() {
 			if ( property_exists( $this, 'query_args' ) ) {
@@ -74,9 +89,9 @@ if ( ! class_exists( 'WP_Async_Request' ) ) {
 		}
 
 		/**
-		 * Get query URL
+		 * Get query URL.
 		 *
-		 * @return string
+		 * @return (string)
 		 */
 		protected function get_query_url() {
 			if ( property_exists( $this, 'query_url' ) ) {
@@ -87,9 +102,9 @@ if ( ! class_exists( 'WP_Async_Request' ) ) {
 		}
 
 		/**
-		 * Get post args
+		 * Get post args.
 		 *
-		 * @return array
+		 * @return (array)
 		 */
 		protected function get_post_args() {
 			if ( property_exists( $this, 'post_args' ) ) {
@@ -106,12 +121,12 @@ if ( ! class_exists( 'WP_Async_Request' ) ) {
 		}
 
 		/**
-		 * Maybe handle
+		 * Maybe handle.
 		 *
 		 * Check for correct nonce and pass to handler.
 		 */
 		public function maybe_handle() {
-			check_ajax_referer( $this->identifier, 'nonce' );
+			secupress_check_admin_referer( $this->identifier, 'nonce' );
 
 			$this->handle();
 
@@ -119,12 +134,11 @@ if ( ! class_exists( 'WP_Async_Request' ) ) {
 		}
 
 		/**
-		 * Handle
+		 * Handle.
 		 *
 		 * Override this method to perform any actions required
 		 * during the async request.
 		 */
 		abstract protected function handle();
-
 	}
 }

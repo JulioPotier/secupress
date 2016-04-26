@@ -1,7 +1,4 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
-
-
 /**
  * List Table API: SecuPress_Logs_List_Table class
  *
@@ -9,49 +6,64 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
  * @since 1.0
  */
 
+defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
+
 /**
  * Core class used to implement displaying Logs in a list table.
  *
  * @since 1.0
- *
  * @see WP_List_Table
  */
 class SecuPress_Logs_List_Table extends WP_List_Table {
 
 	const VERSION = '1.0';
 	/**
-	 * @var (object) Current Log.
+	 * Current Log.
+	 *
+	 * @var (object)
 	 */
 	protected $log = false;
+
 	/**
-	 * @var (string) Logs class name.
+	 * Logs class name.
+	 *
+	 * @var (string)
 	 */
 	protected $logs_classname;
+
 	/**
-	 * @var (string) Log class name.
+	 * Log class name.
+	 *
+	 * @var (string)
 	 */
 	protected $log_classname;
+
 	/**
-	 * @var (array) All available Log types.
+	 * All available Log types.
+	 *
+	 * @var (array)
 	 */
 	protected $log_types;
+
 	/**
-	 * @var (string) Current Log type.
+	 * Current Log type.
+	 *
+	 * @var (string)
 	 */
 	protected $log_type;
+
 	/**
-	 * @var (string) Default Log type.
+	 * Default Log type.
+	 *
+	 * @var (string)
 	 */
 	protected $default_log_type;
 
-
-	// Instance ====================================================================================
 
 	/**
 	 * Constructor.
 	 *
 	 * @since 1.0
-	 *
 	 * @see WP_List_Table::__construct() for more information on default arguments.
 	 *
 	 * @param (array) $args An associative array of arguments.
@@ -112,7 +124,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 		$per_page = $this->get_items_per_page( 'edit_' . $post_type . '_per_page' );
 
 		/** This filter is documented in wp-admin/includes/post.php */
- 		$per_page = apply_filters( 'edit_posts_per_page', $per_page, $post_type );
+		$per_page = apply_filters( 'edit_posts_per_page', $per_page, $post_type );
 
 		$avail_post_stati = get_available_post_statuses( $post_type );
 
@@ -124,7 +136,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 		} else {
 			$post_counts = (array) wp_count_posts( $post_type );
 
-			if ( ! empty( $_REQUEST['critic'] ) && in_array( $_REQUEST['critic'], $avail_post_stati ) ) {
+			if ( ! empty( $_REQUEST['critic'] ) && in_array( $_REQUEST['critic'], $avail_post_stati, true ) ) {
 				$total_items = $post_counts[ $_REQUEST['critic'] ];
 			} else {
 				$total_items = array_sum( $post_counts );
@@ -133,7 +145,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 
 		$this->set_pagination_args( array(
 			'total_items' => $total_items,
-			'per_page'    => $per_page
+			'per_page'    => $per_page,
 		) );
 	}
 
@@ -147,7 +159,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 		global $avail_post_stati;
 
 		// Prepare the query args.
-		$args = array( 'post_type' => $this->screen->post_type, );
+		$args = array( 'post_type' => $this->screen->post_type );
 		/**
 		 * Filter the default query args used to display the logs.
 		 *
@@ -158,7 +170,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 		$args = apply_filters( '_secupress.logs.logs_query_args', $args );
 
 		// Criticity - Post Status.
-		if ( ! empty( $_GET['critic'] ) && in_array( $_GET['critic'], $avail_post_stati ) ) {
+		if ( ! empty( $_GET['critic'] ) && in_array( $_GET['critic'], $avail_post_stati, true ) ) {
 			$args['post_status'] = $_GET['critic'];
 		}
 
@@ -176,7 +188,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 			}
 		}
 
-		// Order
+		// Order.
 		$args['order'] = ! empty( $args['order'] ) ? $args['order'] : 'ASC';
 		$args['order'] = ! empty( $_GET['order'] ) ? $_GET['order'] : $args['order'];
 
@@ -187,7 +199,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 			$args['posts_per_page'] = 20;
 		}
 
-		// Metas
+		// Metas.
 		$filter_request = false;
 
 		if ( ! empty( $_GET['user_ip'] ) ) {
@@ -326,18 +338,10 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 
 		$class_html = '';
 		if ( ! empty( $class ) ) {
-			 $class_html = sprintf(
-				' class="%s"',
-				esc_attr( $class )
-			);
+			 $class_html = sprintf( ' class="%s"', esc_attr( $class ) );
 		}
 
-		return sprintf(
-			'<a href="%s"%s>%s</a>',
-			esc_url( $url ),
-			$class_html,
-			$label
-		);
+		return sprintf( '<a href="%s"%s>%s</a>', esc_url( $url ), $class_html, $label );
 	}
 
 
@@ -378,7 +382,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 			$class       = '';
 			$status_name = $status->name;
 
-			if ( ! in_array( $status_name, $avail_post_stati ) || empty( $num_posts->$status_name ) ) {
+			if ( ! in_array( $status_name, $avail_post_stati, true ) || empty( $num_posts->$status_name ) ) {
 				continue;
 			}
 
@@ -480,7 +484,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 		?>
 		<div class="tablenav <?php echo esc_attr( $which ); ?>">
 
-			<?php if ( 'top' === $which && $this->has_items() ): ?>
+			<?php if ( 'top' === $which && $this->has_items() ) : ?>
 			<div class="alignleft actions bulkactions">
 				<?php $this->bulk_actions( $which ); ?>
 			</div>
@@ -547,8 +551,8 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 	 */
 	protected function get_sortable_columns() {
 		return array(
-			'title'    => 'title',
-			'date'     => array( 'date', true )
+			'title' => 'title',
+			'date'  => array( 'date', true ),
 		);
 	}
 
@@ -642,7 +646,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 		$view_href      = add_query_arg( 'log', $post->ID, $this->_paged_page_url() );
 		$title          = $this->log->get_title();
 
-		echo '<a class="secupress-view-log" href="' . esc_url( $view_href ) . '" title="' . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), strip_tags( $title ) ) ) . '">'; // WP i18n
+		echo '<a class="secupress-view-log" href="' . esc_url( $view_href ) . '" title="' . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), strip_tags( $title ) ) ) . '">'; // WP i18n.
 			echo $title;
 		echo "</a>\n";
 
@@ -766,6 +770,8 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 	 * The page URL.
 	 *
 	 * @since 1.0
+	 *
+	 * @param (string) $log_type Type of Log.
 	 *
 	 * @return (string)
 	 */

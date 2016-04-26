@@ -9,7 +9,10 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * Callback to filter, sanitize and de/activate submodules
  *
  * @since 1.0
- * @return array $settings
+ *
+ * @param (array) $settings The module settings.
+ *
+ * @return (array) The sanitized and validated settings.
  */
 function __secupress_antispam_settings_callback( $settings ) {
 	$modulenow = 'antispam';
@@ -43,15 +46,16 @@ function __secupress_antispam_settings_callback( $settings ) {
 /* NOTICES ====================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
+add_filter( 'secupress.plugins.packed-plugins', 'secupress_remove_comment_feature_add_packed_plugin' );
 /**
  * Display a notice if the standalone version of Remove Comment Feature is used.
  *
  * @since 1.0
  *
  * @param (array) $plugins A list of plugin paths, relative to the plugins folder.
+ *
+ * @return (array)
  */
-add_filter( 'secupress.plugins.packed-plugins', 'secupress_remove_comment_feature_add_packed_plugin' );
-
 function secupress_remove_comment_feature_add_packed_plugin( $plugins ) {
 	$plugins['remove-comment-feature'] = 'no-comment/no-comment.php';
 	return $plugins;
@@ -62,15 +66,14 @@ function secupress_remove_comment_feature_add_packed_plugin( $plugins ) {
 /* INSTALL/RESET ================================================================================ */
 /*------------------------------------------------------------------------------------------------*/
 
-/*
+add_action( 'wp_secupress_first_install', '__secupress_install_antispam_module' );
+/**
  * Create default option on install and reset.
  *
  * @since 1.0
  *
  * @param (string) $module The module(s) that will be reset to default. `all` means "all modules".
  */
-add_action( 'wp_secupress_first_install', '__secupress_install_antispam_module' );
-
 function __secupress_install_antispam_module( $module ) {
 	// First install or reset.
 	if ( 'all' === $module && 'antispam' === $module ) {

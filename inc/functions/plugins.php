@@ -2,11 +2,11 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /**
- * Return true is secupress pro is installed
+ * Return true if secupress pro is installed
  *
  * @since 1.0
- * @source wp-admin/includes/plugin.php
- * @return bool
+ *
+ * @return (bool)
  */
 function secupress_is_pro() {
 	return defined( 'SECUPRESS_PRO_VERSION' );
@@ -18,9 +18,9 @@ function secupress_is_pro() {
  *
  * @since 1.0
  *
- * @param (string) The feature to test. Basically it can be:
- *                 - A field "name" when the whole field is pro: the result of `$this->get_field_name( $field_name )`.
- *                 - A field "name + value" when only one (or some) of the values is pro: the result of `$this->get_field_name( $field_name ) . "|" . $value`.
+ * @param (string) $feature The feature to test. Basically it can be:
+ *                          - A field "name" when the whole field is pro: the result of `$this->get_field_name( $field_name )`.
+ *                          - A field "name + value" when only one (or some) of the values is pro: the result of `$this->get_field_name( $field_name ) . "|" . $value`.
  *
  * @return (bool) True if the feature is in the white-list.
  */
@@ -53,12 +53,10 @@ function secupress_feature_is_pro( $feature ) {
 		'schedules_scans'                        => 1,
 		'schedules_filemon'                      => 1,
 		// Field values.
-		'alerts_type|sms'                        => 1,
-		'alerts_type|push'                       => 1,
-		'alerts_type|rss'                        => 1,
-		'alerts_type|slack'                      => 1,
-		'alerts_type|skype'                      => 1,
-		'alerts_type|twitter'                    => 1,
+		'notification-types_types|sms'           => 1,
+		'notification-types_types|push'          => 1,
+		'notification-types_types|slack'         => 1,
+		'notification-types_types|twitter'       => 1,
 		'login-protection_type|nonlogintimeslot' => 1,
 		'backups-storage_location|ftp'           => 1,
 		'backups-storage_location|amazons3'      => 1,
@@ -71,12 +69,13 @@ function secupress_feature_is_pro( $feature ) {
 
 
 /**
- * Check whether the plugin is active by checking the active_plugins list.
+ * Check whether a plugin is active.
  *
  * @since 1.0
  *
- * @source wp-admin/includes/plugin.php
- * @return bool
+ * @param (string) $plugin A plugin path, relative to the plugins folder.
+ *
+ * @return (bool)
  */
 function secupress_is_plugin_active( $plugin ) {
 	$plugins = (array) get_option( 'active_plugins', array() );
@@ -86,12 +85,13 @@ function secupress_is_plugin_active( $plugin ) {
 
 
 /**
- * Check whether the plugin is active for the entire network.
+ * Check whether a plugin is active for the entire network.
  *
  * @since 1.0
  *
- * @source wp-admin/includes/plugin.php
- * @return bool
+ * @param (string) $plugin A plugin path, relative to the plugins folder.
+ *
+ * @return (bool)
  */
 function secupress_is_plugin_active_for_network( $plugin ) {
 	if ( ! is_multisite() ) {
@@ -104,13 +104,23 @@ function secupress_is_plugin_active_for_network( $plugin ) {
 }
 
 
-function secupress_is_submodule_active( $module, $plugin ) {
-	$plugin         = sanitize_key( $plugin );
-	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
+/**
+ * Check whether a sub-module is active.
+ *
+ * @since 1.0
+ *
+ * @param (string) $module    A module.
+ * @param (string) $submodule A sub-module.
+ *
+ * @return (bool)
+ */
+function secupress_is_submodule_active( $module, $submodule ) {
+	$submodule         = sanitize_key( $submodule );
+	$active_submodules = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
 
-	if ( isset( $active_plugins[ $module ] ) ) {
-		$active_plugins[ $module ] = array_flip( $active_plugins[ $module ] );
-		return isset( $active_plugins[ $module ][ $plugin ] );
+	if ( isset( $active_submodules[ $module ] ) ) {
+		$active_submodules[ $module ] = array_flip( $active_submodules[ $module ] );
+		return isset( $active_submodules[ $module ][ $submodule ] );
 	}
 
 	return false;
@@ -118,9 +128,15 @@ function secupress_is_submodule_active( $module, $plugin ) {
 
 
 /**
- * Tell if a user is affected by its role for the asked module
+ * Tell if a user is affected by its role for the asked module.
  *
- * @return (-1)/(bool) -1 = every role is affected, true = the user's role is affected, false = the user's role isn't affected.
+ * @since 1.0
+ *
+ * @param (string) $module    A module.
+ * @param (string) $submodule A sub-module.
+ * @param (object) $user      A WP_User object.
+ *
+ * @return (int|bool) -1 = all roles are affected, true = the user's role is affected, false = the user's role isn't affected.
  */
 function secupress_is_affected_role( $module, $submodule, $user ) {
 	$roles = secupress_get_module_option( $submodule . '_affected_role', array(), $module );
@@ -134,11 +150,46 @@ function secupress_is_affected_role( $module, $submodule, $user ) {
 
 
 /**
- * Validate a range
+ * Register the correct setting with the correct callback for the module.
+ *
+ * @param (string) $module      A module. Used to build the option group and maybe the option name.
+ * @param (string) $option_name An option name.
  *
  * @since 1.0
- * @return false/integer
- **/
+ */
+function secupress_register_setting( $module, $option_name = false ) {
+	$option_group      = "secupress_{$module}_settings";
+	$option_name       = $option_name ? $option_name : "secupress_{$module}_settings";
+	$sanitize_callback = str_replace( '-', '_', $module );
+	$sanitize_callback = "__secupress_{$sanitize_callback}_settings_callback";
+
+	if ( ! is_multisite() ) {
+		register_setting( $option_group, $option_name, $sanitize_callback );
+		return;
+	}
+
+	$whitelist = secupress_cache_data( 'new_whitelist_network_options' );
+	$whitelist = is_array( $whitelist ) ? $whitelist : array();
+	$whitelist[ $option_group ]   = isset( $whitelist[ $option_group ] ) ? $whitelist[ $option_group ] : array();
+	$whitelist[ $option_group ][] = $option_name;
+	secupress_cache_data( 'new_whitelist_network_options', $whitelist );
+
+	add_filter( "sanitize_option_{$option_name}", $sanitize_callback );
+}
+
+
+/**
+ * Validate a range.
+ *
+ * @since 1.0
+ *
+ * @param (int)   $value   The value to test.
+ * @param (int)   $min     Minimum value.
+ * @param (int)   $max     Maximum value.
+ * @param (mixed) $default What to return if outside of the range. Default: false.
+ *
+ * @return (mixed) The value on success. `$default` on failure.
+ */
 function secupress_validate_range( $value, $min, $max, $default = false ) {
 	$test = filter_var( $value, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => $min, 'max_range' => $max ) ) );
 	if ( false === $test ) {
@@ -199,33 +250,6 @@ function secupress_sanitize_list( $list, $separator = ', ' ) {
 
 
 /**
- * Register the correct setting with the correct callback for the module
- *
- * @since 1.0
- * @return void
- **/
-function secupress_register_setting( $module, $option_name = false ) {
-	$option_group      = "secupress_{$module}_settings";
-	$option_name       = $option_name ? $option_name : "secupress_{$module}_settings";
-	$sanitize_callback = str_replace( '-', '_', $module );
-	$sanitize_callback = "__secupress_{$sanitize_callback}_settings_callback";
-
-	if ( ! is_multisite() ) {
-		register_setting( $option_group, $option_name, $sanitize_callback );
-		return;
-	}
-
-	$whitelist = secupress_cache_data( 'new_whitelist_network_options' );
-	$whitelist = is_array( $whitelist ) ? $whitelist : array();
-	$whitelist[ $option_group ] = isset( $whitelist[ $option_group ] ) ? $whitelist[ $option_group ] : array();
-	$whitelist[ $option_group ][] = $option_name;
-	secupress_cache_data( 'new_whitelist_network_options', $whitelist );
-
-	add_filter( "sanitize_option_{$option_name}", $sanitize_callback );
-}
-
-
-/**
  * Return the current URL.
  *
  * @since 1.0
@@ -233,7 +257,7 @@ function secupress_register_setting( $module, $option_name = false ) {
  * @param (string) $mode What to return: raw (all), base (before '?'), uri (before '?', without the domain).
  *
  * @return (string)
- **/
+ */
 function secupress_get_current_url( $mode = 'base' ) {
 	$mode = (string) $mode;
 	$port = (int) $_SERVER['SERVER_PORT'];

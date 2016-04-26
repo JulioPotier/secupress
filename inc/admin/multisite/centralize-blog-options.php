@@ -5,16 +5,18 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /* ACTIVE PLUGINS AND THEMES ==================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-/*
+add_action( 'add_option_active_plugins',    'secupress_update_active_plugins_centralized_blog_option', 20, 2 );
+add_action( 'update_option_active_plugins', 'secupress_update_active_plugins_centralized_blog_option', 20, 2 );
+/**
  * Use a site option to store the active plugins of each site.
  * Each time a blog option is added or modified, we store the new value in our network option.
  *
  * @since 1.0
+ *
+ * @param (mixed) $do_not_use The old option value or the name of the option (depending on the hook).
+ * @param (mixed) $value      The value of the option.
  */
-add_action( 'add_option_active_plugins',    'secupress_update_active_plugins_centralized_blog_option', 20, 2 );
-add_action( 'update_option_active_plugins', 'secupress_update_active_plugins_centralized_blog_option', 20, 2 );
-
-function secupress_update_active_plugins_centralized_blog_option( $do_not_use = false, $value ) {
+function secupress_update_active_plugins_centralized_blog_option( $do_not_use, $value ) {
 	$site_id = get_current_blog_id();
 	$plugins = get_site_option( 'secupress_active_plugins' );
 
@@ -30,16 +32,18 @@ function secupress_update_active_plugins_centralized_blog_option( $do_not_use = 
 }
 
 
-/*
+add_action( 'add_option_stylesheet',    'secupress_update_active_themes_centralized_blog_option', 20, 2 );
+add_action( 'update_option_stylesheet', 'secupress_update_active_themes_centralized_blog_option', 20, 2 );
+/**
  * Use a site option to store the active themes of each site.
  * Each time a blog option is added or modified, we store the new value in our network option.
  *
  * @since 1.0
+ *
+ * @param (mixed) $do_not_use The old option value or the name of the option (depending on the hook).
+ * @param (mixed) $value      The value of the option.
  */
-add_action( 'add_option_stylesheet',    'secupress_update_active_themes_centralized_blog_option', 20, 2 );
-add_action( 'update_option_stylesheet', 'secupress_update_active_themes_centralized_blog_option', 20, 2 );
-
-function secupress_update_active_themes_centralized_blog_option( $do_not_use = false, $value ) {
+function secupress_update_active_themes_centralized_blog_option( $do_not_use, $value ) {
 	$site_id = get_current_blog_id();
 	$themes  = get_site_option( 'secupress_active_themes' );
 
@@ -53,16 +57,18 @@ function secupress_update_active_themes_centralized_blog_option( $do_not_use = f
 }
 
 
-/*
+add_action( 'add_option_default_role',    'secupress_update_default_role_centralized_blog_option', 20, 2 );
+add_action( 'update_option_default_role', 'secupress_update_default_role_centralized_blog_option', 20, 2 );
+/**
  * Use a site option to store the default user role of each site.
  * Each time a blog option is added or modified, we store the new value in our network option.
  *
  * @since 1.0
+ *
+ * @param (mixed) $do_not_use The old option value or the name of the option (depending on the hook).
+ * @param (mixed) $value      The value of the option.
  */
-add_action( 'add_option_default_role',    'secupress_update_default_role_centralized_blog_option', 20, 2 );
-add_action( 'update_option_default_role', 'secupress_update_default_role_centralized_blog_option', 20, 2 );
-
-function secupress_update_default_role_centralized_blog_option( $do_not_use = false, $value ) {
+function secupress_update_default_role_centralized_blog_option( $do_not_use, $value ) {
 	$site_id = get_current_blog_id();
 	$roles   = get_site_option( 'secupress_default_role' );
 
@@ -76,17 +82,18 @@ function secupress_update_default_role_centralized_blog_option( $do_not_use = fa
 }
 
 
-/*
+add_action( 'delete_blog', 'secupress_delete_blog_from_centralized_blog_options', 20 );
+/**
  * When a blog is deleted, remove the corresponding row from the site options.
  *
  * @since 1.0
+ *
+ * @param (int) $blog_id The blog ID.
  */
-add_action( 'delete_blog', 'secupress_delete_blog_from_centralized_blog_options', 20 );
-
 function secupress_delete_blog_from_centralized_blog_options( $blog_id ) {
 	$blog_id = (int) $blog_id;
 
-	// Plugins
+	// Plugins.
 	$plugins = get_site_option( 'secupress_active_plugins' );
 
 	if ( is_array( $plugins ) && isset( $plugins[ $blog_id ] ) ) {
@@ -94,7 +101,7 @@ function secupress_delete_blog_from_centralized_blog_options( $blog_id ) {
 		update_site_option( 'secupress_active_plugins', $plugins );
 	}
 
-	// Themes
+	// Themes.
 	$themes = get_site_option( 'secupress_active_themes' );
 
 	if ( is_array( $themes ) && isset( $themes[ $blog_id ] ) ) {
@@ -102,7 +109,7 @@ function secupress_delete_blog_from_centralized_blog_options( $blog_id ) {
 		update_site_option( 'secupress_active_themes', $themes );
 	}
 
-	// Default user role
+	// Default user role.
 	$themes = get_site_option( 'secupress_default_role' );
 
 	if ( is_array( $themes ) && isset( $themes[ $blog_id ] ) ) {
@@ -116,7 +123,105 @@ function secupress_delete_blog_from_centralized_blog_options( $blog_id ) {
 /* FILL IN THE FIRST VALUES ===================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-/*
+add_action( 'load-toplevel_page_secupress_scanners', 'secupress_add_centralized_blog_options' );
+/**
+ * When the user reaches the scans page, display a message if our options need more results.
+ *
+ * @since 1.0
+ */
+function secupress_add_centralized_blog_options() {
+	if ( ! secupress_fill_centralized_blog_options() ) {
+		return;
+	}
+
+	$href = urlencode( esc_url_raw( secupress_get_current_url( 'raw' ) ) );
+	$href = admin_url( 'admin-post.php?action=secupress-centralize-blog-options&_wp_http_referer=' . $href );
+	$href = wp_nonce_url( $href, 'secupress-centralize-blog-options' );
+
+	$message = sprintf(
+		/* translators: %s is a "click here" link. */
+		__( 'Your network is quite big. Before doing anything, some data must be set. Please %s.', 'secupress' ),
+		'<a href="' . esc_url( $href ) . '" class="secupress-centralize-blog-options">' . __( 'click here', 'secupress' ) . '</a>'
+	);
+	secupress_add_notice( $message, 'error', false );
+}
+
+
+add_action( 'wp_ajax_secupress-centralize-blog-options', 'secupress_add_centralized_blog_options_admin_ajax_callback' );
+/**
+ * Add more results when the user clicks the link.
+ * This is used when JS is enabled in the user's browser.
+ *
+ * @since 1.0
+ */
+function secupress_add_centralized_blog_options_admin_ajax_callback() {
+	global $wpdb;
+
+	secupress_check_admin_referer( 'secupress-centralize-blog-options' );
+	secupress_check_user_capability();
+
+	if ( ! ( $count = secupress_fill_centralized_blog_options() ) ) {
+		wp_send_json_success( false );
+	}
+
+	$total   = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT( blog_id ) FROM $wpdb->blogs WHERE site_id = %d", $wpdb->siteid ) );
+	$percent = ceil( $count * 100 / max( $total, 1 ) );
+	wp_send_json_success( $percent );
+}
+
+
+add_action( 'admin_post_secupress-centralize-blog-options', 'secupress_add_centralized_blog_options_admin_post_callback' );
+/**
+ * Add more results when the user clicks the link.
+ * This is used when JS is disabled in the user's browser: we display a small window with auto-refresh.
+ *
+ * @since 1.0
+ */
+function secupress_add_centralized_blog_options_admin_post_callback() {
+	global $wpdb;
+
+	secupress_check_admin_referer( 'secupress-centralize-blog-options' );
+	secupress_check_user_capability();
+
+	if ( ! ( $count = secupress_fill_centralized_blog_options() ) ) {
+		wp_safe_redirect( esc_url_raw( wp_get_referer() ) );
+		die();
+	}
+
+	$total   = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT( blog_id ) FROM $wpdb->blogs WHERE site_id = %d", $wpdb->siteid ) );
+	$percent = ceil( $count * 100 / max( $total, 1 ) );
+	$href    = urlencode( esc_url_raw( wp_get_referer() ) );
+	$href    = admin_url( 'admin-post.php?action=secupress-centralize-blog-options&_wp_http_referer=' . $href );
+	$href    = wp_nonce_url( $href, 'secupress-centralize-blog-options' );
+
+	ob_start();
+	?>
+	<div class="wrap">
+		<p><?php
+		printf(
+			/* translators: %s is a "click here" link. */
+			__( 'If this page does not refresh automatically in 2 seconds, please %s.', 'secupress' ),
+			/* For `wp_get_referer()` see the param `_wp_http_referer` in `secupress_add_centralized_blog_options()`. */
+			'<a href="' . esc_url( $href ) . '" class="secupress-centralize-blog-options">' . __( 'click here', 'secupress' ) . '</a>'
+		);
+		?></p>
+		<div class="progress-wrap"><div style="width:<?php echo $percent; ?>%" class="progress"><?php echo $percent; ?>%</div></div>
+	</div>
+	<?php
+	$title   = __( 'Setting new data...', 'secupress' );
+	$content = ob_get_contents();
+	$args    = array( 'head' => '<meta http-equiv="refresh" content="1" />' );
+	ob_clean();
+
+	secupress_action_page( $title, $content, $args );
+}
+
+
+/*------------------------------------------------------------------------------------------------*/
+/* TOOLS ======================================================================================== */
+/*------------------------------------------------------------------------------------------------*/
+
+/**
  * First complete filling.
  * If the network has more than 250 sites, the options will be filled piece by piece.
  *
@@ -151,7 +256,7 @@ function secupress_fill_centralized_blog_options() {
 	$step    = absint( $step );
 	$limit   = $offset * $step . ', ' . $step;
 
-	$blogs   = $wpdb->get_col( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs WHERE site_id = %d LIMIT $limit", $wpdb->siteid ) );
+	$blogs   = $wpdb->get_col( $wpdb->prepare( "SELECT blog_id FROM $wpdb->blogs WHERE site_id = %d LIMIT $limit", $wpdb->siteid ) ); // WPCS: unprepared SQL ok.
 
 	// Nothing? Bail out.
 	if ( ! $blogs ) {
@@ -165,19 +270,19 @@ function secupress_fill_centralized_blog_options() {
 	foreach ( $blogs as $blog_id ) {
 		$blog_id      = (int) $blog_id;
 		$table_prefix = $wpdb->get_blog_prefix( $blog_id );
-		$blog_actives = $wpdb->get_results( "SELECT option_name, option_value FROM {$table_prefix}options WHERE option_name = 'active_plugins' OR option_name = 'stylesheet' OR option_name = 'default_role'", OBJECT_K );
+		$blog_actives = $wpdb->get_results( "SELECT option_name, option_value FROM {$table_prefix}options WHERE option_name = 'active_plugins' OR option_name = 'stylesheet' OR option_name = 'default_role'", OBJECT_K ); // WPCS: unprepared SQL ok.
 
-		// Plugins
+		// Plugins.
 		$plugins[ $blog_id ] = ! empty( $blog_actives['active_plugins']->option_value ) ? unserialize( $blog_actives['active_plugins']->option_value ) : array();
 
 		if ( $plugins[ $blog_id ] && is_array( $plugins[ $blog_id ] ) ) {
 			$plugins[ $blog_id ] = array_fill_keys( $plugins[ $blog_id ], 1 );
 		}
 
-		// Themes
+		// Themes.
 		$themes[ $blog_id ] = ! empty( $blog_actives['stylesheet']->option_value ) ? $blog_actives['stylesheet']->option_value : '';
 
-		// Default user role
+		// Default user role.
 		$roles[ $blog_id ] = ! empty( $blog_actives['default_role']->option_value ) ? $blog_actives['default_role']->option_value : '';
 	}
 
@@ -199,101 +304,4 @@ function secupress_fill_centralized_blog_options() {
 	update_site_option( 'secupress_active_themes', $themes );
 	update_site_option( 'secupress_default_role', $roles );
 	return false;
-}
-
-
-/*
- * When the user reaches the scans page, display a message if our options need more results.
- *
- * @since 1.0
- */
-add_action( 'load-secupress_page_secupress_scanners', 'secupress_add_centralized_blog_options' );
-
-function secupress_add_centralized_blog_options() {
-	if ( ! secupress_fill_centralized_blog_options() ) {
-		return;
-	}
-
-	$href = urlencode( esc_url_raw( secupress_get_current_url( 'raw' ) ) );
-	$href = admin_url( 'admin-post.php?action=secupress-centralize-blog-options&_wp_http_referer=' . $href );
-	$href = wp_nonce_url( $href, 'secupress-centralize-blog-options' );
-
-	$message = sprintf(
-		/* translators: %s is a "click here" link. */
-		__( 'Your network is quite big. Before doing anything, some data must be set. Please %s.', 'secupress' ),
-		'<a href="' . esc_url( $href ) . '" class="secupress-centralize-blog-options">' . __( 'click here', 'secupress' ) . '</a>'
-	);
-	secupress_add_notice( $message, 'error', false );
-}
-
-
-/*
- * Add more results when the user clicks the link.
- * This is used when JS is enabled in the user's browser.
- *
- * @since 1.0
- */
-add_action( 'wp_ajax_secupress-centralize-blog-options', 'secupress_add_centralized_blog_options_admin_ajax_callback' );
-
-function secupress_add_centralized_blog_options_admin_ajax_callback() {
-	global $wpdb;
-
-	secupress_check_admin_referer( 'secupress-centralize-blog-options' );
-	secupress_check_user_capability();
-
-	if ( ! ( $count = secupress_fill_centralized_blog_options() ) ) {
-		wp_send_json_success( false );
-	}
-
-	$total   = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT( blog_id ) FROM $wpdb->blogs WHERE site_id = %d", $wpdb->siteid ) );
-	$percent = ceil( $count * 100 / max( $total, 1 ) );
-	wp_send_json_success( $percent );
-}
-
-
-/*
- * Add more results when the user clicks the link.
- * This is used when JS is disabled in the user's browser: we display a small window with auto-refresh.
- *
- * @since 1.0
- */
-add_action( 'admin_post_secupress-centralize-blog-options', 'secupress_add_centralized_blog_options_admin_post_callback' );
-
-function secupress_add_centralized_blog_options_admin_post_callback() {
-	global $wpdb;
-
-	secupress_check_admin_referer( 'secupress-centralize-blog-options' );
-	secupress_check_user_capability();
-
-	if ( ! ( $count = secupress_fill_centralized_blog_options() ) ) {
-		wp_safe_redirect( wp_get_referer() );
-		die();
-	}
-
-	$total   = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT( blog_id ) FROM $wpdb->blogs WHERE site_id = %d", $wpdb->siteid ) );
-	$percent = ceil( $count * 100 / max( $total, 1 ) );
-	$href    = urlencode( esc_url_raw( wp_get_referer() ) );
-	$href    = admin_url( 'admin-post.php?action=secupress-centralize-blog-options&_wp_http_referer=' . $href );
-	$href    = wp_nonce_url( $href, 'secupress-centralize-blog-options' );
-
-	ob_start();
-	?>
-	<div class="wrap">
-		<p><?php
-		printf(
-			/* translators: %s is a "click here" link. */
-			__( 'If this page does not refresh automatically in 2 seconds, please %s.', 'secupress' ),
-			/* For `wp_get_referer()` see the param `_wp_http_referer` in `secupress_add_centralized_blog_options()`. */
-			'<a href="' . esc_url( $href ) . '" class="secupress-centralize-blog-options">' . __( 'click here', 'secupress' ) . '</a>'
-		);
-		?></p>
-		<div class="progress-wrap"><div style="width:<?php echo $percent; ?>%" class="progress"><?php echo $percent; ?>%</div></div>
-	</div>
-	<?php
-	$title   = __( 'Setting new data...', 'secupress' );
-	$content = ob_get_contents();
-	$args    = array( 'head' => '<meta http-equiv="refresh" content="1" />' );
-	ob_clean();
-
-	secupress_action_page( $title, $content, $args );
 }

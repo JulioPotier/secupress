@@ -27,7 +27,7 @@ $this->add_field( array(
 		),
 		array(
 			'type'        => 'warning',
-			'description' => sprintf( __( 'This is NOT an anti login bruteforce, if you want this kind of module, just activate the <a href="%s#logincontrol">Login Attempts Blocker</a>.', 'secupress' ), secupress_admin_url( 'modules', 'users-login' ) ),
+			'description' => sprintf( __( 'This is NOT an anti login bruteforce, if you want this kind of module, just activate the <a href="%s#row-login-protection_type">Login Attempts Blocker</a>.', 'secupress' ), esc_url( secupress_admin_url( 'modules', 'users-login' ) ) ),
 		),
 	),
 ) );

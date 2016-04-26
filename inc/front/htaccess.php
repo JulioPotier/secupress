@@ -9,6 +9,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @param (string) $marker        Marker suffix after "SecuPress ".
  * @param (string) $rules         Rules to write in the file. An empty value will remove the previous marker rules.
  * @param (string) $relative_path If the file is not in the site root folder.
+ *
  * @return (bool) true on success, false on failure.
  */
 function secupress_write_htaccess( $marker, $rules = false, $relative_path = '' ) {
@@ -34,8 +35,9 @@ function secupress_write_htaccess( $marker, $rules = false, $relative_path = '' 
  *
  * @since 1.0
  *
- * @param string $function This suffix can be added
- * @return string $marker Rules that will be printed
+ * @param string $function This suffix can be added.
+ *
+ * @return string $marker Rules that will be printed.
  */
 function secupress_get_htaccess_marker( $function ) {
 	$_function = 'secupress_get_htaccess_' . $function;
@@ -44,15 +46,15 @@ function secupress_get_htaccess_marker( $function ) {
 		return false;
 	}
 
-	// Recreate this marker
+	// Recreate this marker.
 	$marker = call_user_func( $_function );
 
 	/**
-	 * Filter rules added by SecuPress in .htaccess
+	 * Filter rules added by SecuPress in .htaccess.
 	 *
 	 * @since 1.0
 	 *
-	 * @param string $marker The content of all rules
+	 * @param string $marker The content of all rules.
 	*/
 	$marker = apply_filters( 'secupress_htaccess_marker_' . $function, $marker );
 
@@ -60,18 +62,25 @@ function secupress_get_htaccess_marker( $function ) {
 }
 
 
+/**
+ * Get contents to put in the `.htaccess` file to ban IPs.
+ *
+ * @since 1.0
+ *
+ * @return (string)
+ */
 function secupress_get_htaccess_ban_ip() {
 	$ban_ips = get_site_option( SECUPRESS_BAN_IP );
 
-	if ( is_array( $ban_ips ) && count( $ban_ips ) ) {
-		$content = 'Order Deny,Allow' . PHP_EOL;
-
-		foreach ( $ban_ips as $IP => $time ) {
-			$content .= 'Deny from ' . $IP . PHP_EOL;
-		}
-
-		return $content;
+	if ( ! $ban_ips || ! is_array( $ban_ips ) ) {
+		return '';
 	}
 
-	return '';
+	$content = 'Order Deny,Allow' . PHP_EOL;
+
+	foreach ( $ban_ips as $ip => $time ) {
+		$content .= 'Deny from ' . $ip . PHP_EOL;
+	}
+
+	return $content;
 }

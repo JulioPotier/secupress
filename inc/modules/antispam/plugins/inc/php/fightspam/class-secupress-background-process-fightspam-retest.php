@@ -8,23 +8,28 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
  * @package SecuPress
  * @since 1.0
  */
-
 class SecuPress_Background_Process_Fightspam_Retest extends WP_Background_Process {
 
 	const VERSION = '1.0';
 
 	/**
-	 * @var string
+	 * Prefix used to build the global process identifier.
+	 *
+	 * @var (string)
 	 */
 	protected $prefix = 'secupress';
 
 	/**
-	 * @var string
+	 * Suffix used to build the global process identifier.
+	 *
+	 * @var (string)
 	 */
 	protected $action = 'fightspam_retest';
 
 	/**
-	 * @var The reference to the instance of this class.
+	 * The reference to *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
 
@@ -34,7 +39,7 @@ class SecuPress_Background_Process_Fightspam_Retest extends WP_Background_Proces
 	 *
 	 * @since 1.0
 	 *
-	 * @return Singleton The *Singleton* instance.
+	 * @return (object) The *Singleton* instance.
 	 */
 	final public static function get_instance() {
 		if ( ! isset( static::$_instance ) ) {
@@ -48,13 +53,13 @@ class SecuPress_Background_Process_Fightspam_Retest extends WP_Background_Proces
 	/**
 	 * Task: test again a comment for spam.
 	 *
-	 * @param (int) $comment_ID A comment ID.
+	 * @param (int) $comment_id A comment ID.
 	 *
 	 * @return (bool) false to remove the item from the queue.
 	 */
-	protected function task( $comment_ID ) {
-		$comment_ID  = (int) $comment_ID;
-		$commentdata = get_comment( $comment_ID, ARRAY_A );
+	protected function task( $comment_id ) {
+		$comment_id  = (int) $comment_id;
+		$commentdata = get_comment( $comment_id, ARRAY_A );
 
 		if ( ! $commentdata ) {
 			// Remove from queue.
@@ -67,22 +72,22 @@ class SecuPress_Background_Process_Fightspam_Retest extends WP_Background_Proces
 			// Not an error: update status.
 			if ( 'spam' === $comment_approved ) {
 
-				wp_spam_comment( $comment_ID );
-				static::_handle_child_comments( $comment_ID );
+				wp_spam_comment( $comment_id );
+				static::_handle_child_comments( $comment_id );
 
 			} elseif ( 'trash' === $comment_approved ) {
 
-				wp_trash_comment( $comment_ID );
-				static::_handle_child_comments( $comment_ID );
+				wp_trash_comment( $comment_id );
+				static::_handle_child_comments( $comment_id );
 
 			} elseif ( 'approve' === $comment_approved || '1' === $comment_approved || 1 === $comment_approved ) {
 
-				wp_set_comment_status( $comment_ID, 'approve' );
+				wp_set_comment_status( $comment_id, 'approve' );
 
 			}
 		} else {
 			// Schedule a new test.
-			secupress_fightspam_schedule_retest( $comment_ID );
+			secupress_fightspam_schedule_retest( $comment_id );
 		}
 
 		// Remove from queue.
@@ -94,26 +99,26 @@ class SecuPress_Background_Process_Fightspam_Retest extends WP_Background_Proces
 	 * Send child comments to trash recursively.
 	 * We'll trash only comments with status 'hold' (`comment_status=0`) and 'approve' (`comment_status=1`).
 	 *
-	 * @param (int) $comment_ID A comment ID.
+	 * @param (int) $comment_id A comment ID.
 	 */
-	protected static function _handle_child_comments( $comment_ID ) {
+	protected static function _handle_child_comments( $comment_id ) {
 		global $wpdb;
 
-		if ( ! $comment_ID ) {
+		if ( ! $comment_id ) {
 			return;
 		}
 
 		$all = array();
 
 		// Get this comment's child comments.
-		$ids = $wpdb->get_col( $wpdb->prepare( "SELECT comment_ID from $wpdb->comments WHERE comment_parent = %d", $comment_ID ) );
+		$ids = $wpdb->get_col( $wpdb->prepare( "SELECT comment_ID from $wpdb->comments WHERE comment_parent = %d", $comment_id ) );
 
 		// As long as we find some, dig deeper.
 		while ( $ids ) {
 			$ids = array_map( 'absint', $ids );
 			$all = array_merge( $all, $ids );
 			$ids = implode( ',', $ids );
-			$ids = $wpdb->get_col( "SELECT comment_ID from $wpdb->comments WHERE comment_parent IN ( $ids )" );
+			$ids = $wpdb->get_col( "SELECT comment_ID from $wpdb->comments WHERE comment_parent IN ( $ids )" ); // WPCS: unprepared SQL ok.
 		}
 
 		// If we have some, trash'em.

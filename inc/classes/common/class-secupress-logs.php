@@ -1,52 +1,74 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
-
 /**
  * General Logs class.
  *
  * @package SecuPress
  * @since 1.0
  */
-
 class SecuPress_Logs extends SecuPress_Singleton {
 
 	const VERSION = '1.0';
+
 	/**
-	 * @var (object) The reference to the *Singleton* instance of this class: must be extended.
+	 * The reference to the *Singleton* instance of this class: must be extended.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
+
 	/**
-	 * @var (string) The Log type: must be extended.
+	 * The Log type: must be extended.
+	 *
+	 * @var (string)
 	 */
 	protected $log_type = '';
+
 	/**
-	 * @var (int) The Log type priority (order in the tabs): can be extended.
+	 * The Log type priority (order in the tabs): can be extended.
+	 *
+	 * @var (int)
 	 */
 	protected $log_type_priority = 10;
+
 	/**
-	 * @var (array) List of available criticities for this Log type: can be extended.
+	 * List of available criticities for this Log type: can be extended.
+	 *
+	 * @var (array)
 	 */
 	protected $criticities = array( 'normal' );
+
 	/**
-	 * @var (array) The Post Type labels: can be extended.
+	 * The Post Type labels: can be extended.
+	 *
+	 * @var (array)
 	 */
 	protected $post_type_labels = array();
+
 	/**
-	 * @var (string) The Post Type.
+	 * The Post Type.
+	 *
+	 * @var (string)
 	 */
 	private $post_type = '';
+
 	/**
-	 * @var (string) The name of the transient that will store the delayed Logs.
+	 * The name of the transient that will store the delayed Logs.
+	 *
+	 * @var (string)
 	 */
 	private $delayed_logs_transient_name = '';
+
 	/**
-	 * @var (array) List of all criticities for all Log types.
+	 * List of all criticities for all Log types.
+	 *
+	 * @var (array)
 	 */
 	private static $all_criticities = array();
 
 
-	// Public methods ==============================================================================
+	// Public methods ==============================================================================.
 
 	/**
 	 * Get the Log type.
@@ -94,8 +116,8 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 *
 	 * @since 1.0
 	 *
-	 * @see https://developer.wordpress.org/reference/functions/get_posts/
-	 * @see https://codex.wordpress.org/Class_Reference/WP_Query#Parameters
+	 * @see https://developer.wordpress.org/reference/functions/get_posts/.
+	 * @see https://codex.wordpress.org/Class_Reference/WP_Query#Parameters.
 	 *
 	 * @param (array) $args Arguments meant for `WP_Query`.
 	 *
@@ -144,8 +166,8 @@ class SecuPress_Logs extends SecuPress_Singleton {
 				/*
 				 * Bugfix for meta queries with `NOT EXISTS`.
 				 *
-				 * @see http://codex.wordpress.org/Class_Reference/WP_Query#Custom_Field_Parameters
-				 * @see https://core.trac.wordpress.org/ticket/23268
+				 * @see http://codex.wordpress.org/Class_Reference/WP_Query#Custom_Field_Parameters.
+				 * @see https://core.trac.wordpress.org/ticket/23268.
 				 */
 				$meta['value'] = 'foo';
 			}
@@ -189,8 +211,6 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * Delete some Logs.
 	 *
 	 * @since 1.0
-	 *
-	 * @param (array) $post_ids An array of post IDs to delete. Omit this parameter to delete all Logs.
 	 *
 	 * @return (int) Number of deleted Logs.
 	 */
@@ -370,7 +390,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	}
 
 
-	// Private methods =============================================================================
+	// Private methods =============================================================================.
 
 	/**
 	 * Launch main hooks.
@@ -503,15 +523,15 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @since 1.0
 	 *
 	 * @param (string) $slug          The post slug.
-	 * @param (int)    $post_ID       Post ID.
+	 * @param (int)    $post_id       Post ID.
 	 * @param (string) $post_status   The post status.
 	 * @param (string) $post_type     Post type.
-	 * @param (int)    $post_parent   Post parent ID
+	 * @param (int)    $post_parent   Post parent ID.
 	 * @param (string) $original_slug The original post slug.
 	 *
 	 * @return (string) The slug.
 	 */
-	public function _allow_log_name_duplicates( $slug, $post_ID, $post_status, $post_type, $post_parent, $original_slug ) {
+	public function _allow_log_name_duplicates( $slug, $post_id, $post_status, $post_type, $post_parent, $original_slug ) {
 		if ( $this->get_post_type() !== $post_type ) {
 			return $slug;
 		}
@@ -529,7 +549,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 *
 	 * @since 1.0
 	 *
-	 * @param (array) Array of arrays with Log type as key and current class name + post type as values.
+	 * @param (array) $types Array of arrays with Log type as key and current class name + post type as values.
 	 *
 	 * @return (array)
 	 */
@@ -737,10 +757,10 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			if ( ! empty( $new_log['order'] ) ) {
 				if ( ! is_int( $new_log['order'] ) ) {
 					// It's a microtime.
-					$new_log['order'] = explode( ' ', $new_log['order'] );  // array( '0.03746700', '1452528510' )
-					$new_log['order'] = reset( $new_log['order'] );         // '0.03746700'
-					$new_log['order'] = explode( '.', $new_log['order'] );  // array( '0', '03746700' )
-					$new_log['order'] = end( $new_log['order'] );           // '03746700'
+					$new_log['order'] = explode( ' ', $new_log['order'] );  // Ex: array( '0.03746700', '1452528510' ).
+					$new_log['order'] = reset( $new_log['order'] );         // Ex: '0.03746700'.
+					$new_log['order'] = explode( '.', $new_log['order'] );  // Ex: array( '0', '03746700' ).
+					$new_log['order'] = end( $new_log['order'] );           // Ex: '03746700'.
 					$new_log['order'] = (int) str_pad( $new_log['order'], 8, '0', STR_PAD_RIGHT ); // We make sure we have '03746700', not '037467'.
 				}
 
@@ -897,7 +917,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	}
 
 
-	// Admin post / Admin ajax =====================================================================
+	// Admin post / Admin ajax =====================================================================.
 
 	/**
 	 * Admin post callback that allows to download the Logs of a certain type as a .txt file.
@@ -905,8 +925,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	public function _post_download_logs_ajax_post_cb() {
-		check_admin_referer( 'secupress-download-' . $this->log_type . '-logs' );
-
+		secupress_check_admin_referer( 'secupress-download-' . $this->log_type . '-logs' );
 		secupress_check_user_capability();
 
 		if ( ini_get( 'zlib.output_compression' ) ) {
@@ -950,8 +969,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	public function _ajax_clear_logs_ajax_post_cb() {
-		check_ajax_referer( 'secupress-clear-' . $this->log_type . '-logs' );
-
+		secupress_check_admin_referer( 'secupress-clear-' . $this->log_type . '-logs' );
 		secupress_check_user_capability();
 
 		$this->delete_logs();
@@ -966,8 +984,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	public function _post_clear_logs_ajax_post_cb() {
-		check_admin_referer( 'secupress-clear-' . $this->log_type . '-logs' );
-
+		secupress_check_admin_referer( 'secupress-clear-' . $this->log_type . '-logs' );
 		secupress_check_user_capability();
 
 		$this->delete_logs();
@@ -976,7 +993,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		set_transient( 'settings_errors', get_settings_errors(), 30 );
 
 		$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
-		wp_redirect( $goback );
+		wp_redirect( esc_url_raw( $goback ) );
 		die();
 	}
 
@@ -987,8 +1004,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	public function _ajax_bulk_delete_logs_ajax_post_cb() {
-		check_ajax_referer( 'secupress-bulk-' . $this->log_type . '-log' );
-
+		secupress_check_admin_referer( 'secupress-bulk-' . $this->log_type . '-log' );
 		secupress_check_user_capability();
 
 		if ( empty( $_GET['post'] ) || ! is_array( $_GET['post'] ) ) {
@@ -1007,8 +1023,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	public function _post_bulk_delete_logs_ajax_post_cb() {
-		check_admin_referer( 'secupress-bulk-' . $this->log_type . '-logs' );
-
+		secupress_check_admin_referer( 'secupress-bulk-' . $this->log_type . '-logs' );
 		secupress_check_user_capability();
 
 		if ( empty( $_GET['post'] ) || ! is_array( $_GET['post'] ) ) {
@@ -1021,7 +1036,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		set_transient( 'settings_errors', get_settings_errors(), 30 );
 
 		$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
-		wp_redirect( $goback );
+		wp_redirect( esc_url_raw( $goback ) );
 		die();
 	}
 
@@ -1032,8 +1047,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	public function _ajax_bulk_delete_logs_by_user_id_ajax_post_cb() {
-		check_ajax_referer( 'secupress-delete-' . $this->log_type . '-logs-by-user_id' );
-
+		secupress_check_admin_referer( 'secupress-delete-' . $this->log_type . '-logs-by-user_id' );
 		secupress_check_user_capability();
 
 		if ( ! isset( $_GET['id'] ) ) {
@@ -1053,8 +1067,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	public function _post_bulk_delete_logs_by_user_id_ajax_post_cb() {
-		check_admin_referer( 'secupress-delete-' . $this->log_type . '-logs-by-user_id' );
-
+		secupress_check_admin_referer( 'secupress-delete-' . $this->log_type . '-logs-by-user_id' );
 		secupress_check_user_capability();
 
 		if ( ! isset( $_GET['id'] ) ) {
@@ -1068,7 +1081,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		set_transient( 'settings_errors', get_settings_errors(), 30 );
 
 		$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
-		wp_redirect( $goback );
+		wp_redirect( esc_url_raw( $goback ) );
 		die();
 	}
 
@@ -1079,8 +1092,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	public function _ajax_bulk_delete_logs_by_ip_ajax_post_cb() {
-		check_ajax_referer( 'secupress-delete-' . $this->log_type . '-logs-by-ip' );
-
+		secupress_check_admin_referer( 'secupress-delete-' . $this->log_type . '-logs-by-ip' );
 		secupress_check_user_capability();
 
 		if ( empty( $_GET['ip'] ) ) {
@@ -1106,8 +1118,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	public function _post_bulk_delete_logs_by_ip_ajax_post_cb() {
-		check_admin_referer( 'secupress-delete-' . $this->log_type . '-logs-by-ip' );
-
+		secupress_check_admin_referer( 'secupress-delete-' . $this->log_type . '-logs-by-ip' );
 		secupress_check_user_capability();
 
 		if ( empty( $_GET['ip'] ) ) {
@@ -1127,7 +1138,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		set_transient( 'settings_errors', get_settings_errors(), 30 );
 
 		$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
-		wp_redirect( $goback );
+		wp_redirect( esc_url_raw( $goback ) );
 		die();
 	}
 
@@ -1138,8 +1149,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	public function _ajax_delete_log_ajax_post_cb() {
-		check_ajax_referer( 'secupress-delete-' . $this->log_type . '-log' );
-
+		secupress_check_admin_referer( 'secupress-delete-' . $this->log_type . '-log' );
 		secupress_check_user_capability();
 
 		if ( empty( $_GET['log'] ) ) {
@@ -1160,8 +1170,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	public function _post_delete_log_ajax_post_cb() {
-		check_admin_referer( 'secupress-delete-' . $this->log_type . '-log' );
-
+		secupress_check_admin_referer( 'secupress-delete-' . $this->log_type . '-log' );
 		secupress_check_user_capability();
 
 		if ( empty( $_GET['log'] ) ) {
@@ -1176,12 +1185,12 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		set_transient( 'settings_errors', get_settings_errors(), 30 );
 
 		$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
-		wp_redirect( $goback );
+		wp_redirect( esc_url_raw( $goback ) );
 		die();
 	}
 
 
-	// Various =====================================================================================
+	// Various =====================================================================================.
 
 	/**
 	 * Add the transient we use to store the delayed logs to be autoloaded on multisite.
@@ -1198,7 +1207,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	}
 
 
-	// Tools =======================================================================================
+	// Tools =======================================================================================.
 
 	/**
 	 * Create a Post Type name based on a Log type.
@@ -1323,7 +1332,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		}
 
 		$super_admins = implode( "','", esc_sql( $super_admins ) );
-		$user_ids     = $wpdb->get_col( "SELECT ID FROM $wpdb->users WHERE user_login IN ('$super_admins') ORDER BY ID ASC" );
+		$user_ids     = $wpdb->get_col( "SELECT ID FROM $wpdb->users WHERE user_login IN ('$super_admins') ORDER BY ID ASC" ); // WPCS: unprepared SQL ok.
 
 		if ( ! $user_ids ) {
 			return 0;
@@ -1348,7 +1357,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 *
 	 * @since 1.0
 	 *
-	 * @param (object) `SecuPress_Log` object.
+	 * @param (object) $log `SecuPress_Log` object.
 	 *
 	 * @return (string) The header content.
 	 */
@@ -1395,5 +1404,4 @@ class SecuPress_Logs extends SecuPress_Singleton {
 
 		return 'SecuPress_Logs_List';
 	}
-
 }

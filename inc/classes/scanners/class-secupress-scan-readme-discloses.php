@@ -2,24 +2,36 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /**
- * readme.txt disclose scan class.
+ * `readme.txt` disclose scan class.
  *
  * @package SecuPress
  * @subpackage SecuPress_Scan
  * @since 1.0
  */
-
-class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements iSecuPress_Scan {
+class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
 	const VERSION = '1.0';
 
 	/**
-	 * @var Singleton The reference to *Singleton* instance of this class
+	 * The reference to *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
-	public    static $prio = 'medium';
+
+	/**
+	 * Priority.
+	 *
+	 * @var (string)
+	 */
+	public    static $prio    = 'medium';
 
 
+	/**
+	 * Init.
+	 *
+	 * @since 1.0
+	 */
 	protected static function init() {
 		global $is_apache, $is_nginx, $is_iis7;
 
@@ -46,20 +58,29 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements iSecuPre
 	}
 
 
+	/**
+	 * Get messages.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int) $message_id A message ID.
+	 *
+	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
+	 */
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
-			// good
+			// "good"
 			/* translators: %s is a file name */
 			0   => sprintf( __( 'The %s files are protected.', 'secupress' ), '<code>readme.txt</code>' ),
 			/* translators: 1 and 2 are file names */
 			1   => sprintf( __( 'The rules forbidding access to your %1$s files have been successfully added to your %2$s file.', 'secupress' ), '<code>readme.txt</code>', '%s' ),
-			// warning
+			// "warning"
 			/* translators: %s is a file name */
 			100 => sprintf( __( 'Unable to determine status of the %s files.', 'secupress' ), '<code>readme.txt</code>' ),
-			// bad
+			// "bad"
 			/* translators: %s is a file name */
 			200 => sprintf( __( 'The %s files should not be accessible to anyone.', 'secupress' ), '<code>readme.txt</code>' ),
-			// cantfix
+			// "cantfix"
 			/* translators: 1 and 2 are a file names, 3 is some code */
 			300 => sprintf( __( 'Your server runs a nginx system, the %1$s files cannot be protected automatically but you can do it yourself by adding the following code into your %2$s file: %3$s', 'secupress' ), '<code>readme.txt</code>', '<code>nginx.conf</code>', '%s' ),
 			/* translators: %s is a file name */
@@ -78,15 +99,22 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements iSecuPre
 	}
 
 
+	/**
+	 * Scan for flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The scan results.
+	 */
 	public function scan() {
 		$protected = static::_are_files_protected();
 
 		if ( is_null( $protected ) ) {
-			// warning
+			// "warning"
 			$this->add_message( 100 );
 
 		} elseif ( ! $protected ) {
-			// bad
+			// "bad"
 			$this->add_message( 200 );
 
 			if ( ! self::$fixable ) {
@@ -94,26 +122,33 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements iSecuPre
 			}
 		}
 
-		// good
+		// "good"
 		$this->maybe_set_status( 0 );
 
 		return parent::scan();
 	}
 
 
+	/**
+	 * Try to fix the flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The fix results.
+	 */
 	public function fix() {
 		global $is_apache, $is_nginx, $is_iis7;
 
 		$protected = static::_are_files_protected();
 
 		if ( is_null( $protected ) ) {
-			// warning
+			// "warning"
 			$this->add_fix_message( 100 );
 			return parent::fix();
 		}
 
 		if ( $protected ) {
-			// good
+			// "good"
 			$this->add_fix_message( 0 );
 			return parent::fix();
 		}
@@ -126,13 +161,18 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements iSecuPre
 			$this->_fix_nginx();
 		}
 
-		// good
+		// "good"
 		$this->maybe_set_fix_status( 0 );
 
 		return parent::fix();
 	}
 
 
+	/**
+	 * Fix for Apache system.
+	 *
+	 * @since 1.0
+	 */
 	protected function _fix_apache() {
 		global $wp_settings_errors;
 
@@ -142,17 +182,22 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements iSecuPre
 		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
 
 		if ( $last_error && 'general' === $last_error['setting'] && 'apache_manual_edit' === $last_error['code'] ) {
-			// cantfix
+			// "cantfix"
 			$this->add_fix_message( 302, array( '<code>.htaccess</code>', static::_get_rules_from_error( $last_error ) ) );
 			array_pop( $wp_settings_errors );
 			return;
 		}
 
-		// good
+		// "good"
 		$this->add_fix_message( 1, array( '<code>.htaccess</code>' ) );
 	}
 
 
+	/**
+	 * Fix for IIS7 system.
+	 *
+	 * @since 1.0
+	 */
 	protected function _fix_iis7() {
 		global $wp_settings_errors;
 
@@ -162,17 +207,22 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements iSecuPre
 		$last_error = end( $wp_settings_errors );
 
 		if ( $last_error && 'general' === $last_error['setting'] && 'iis7_manual_edit' === $last_error['code'] ) {
-			// cantfix
+			// "cantfix"
 			$this->add_fix_message( 303, array( '<code>web.config</code>', '/configuration/system.webServer/rewrite/rules', static::_get_rules_from_error( $last_error ) ) );
 			array_pop( $wp_settings_errors );
 			return;
 		}
 
-		// good
+		// "good"
 		$this->add_fix_message( 1, array( '<code>web.config</code>' ) );
 	}
 
 
+	/**
+	 * Fix for nginx system.
+	 *
+	 * @since 1.0
+	 */
 	protected function _fix_nginx() {
 		global $wp_settings_errors;
 
@@ -187,11 +237,18 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements iSecuPre
 			array_pop( $wp_settings_errors );
 		}
 
-		// cantfix
+		// "cantfix"
 		$this->add_fix_message( 300, array( $rules ) );
 	}
 
 
+	/**
+	 * Tells if the readme files are accessible.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (bool)
+	 */
 	protected static function _are_files_protected() {
 		// Get all readme/changelog files.
 		$plugins = rtrim( secupress_get_plugins_path(), '\\/' );
@@ -201,7 +258,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements iSecuPre
 
 		// No file? Good, nothing to protect.
 		if ( ! $files ) {
-			// good.
+			// "good".
 			return true;
 		}
 
@@ -219,13 +276,13 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements iSecuPre
 		$response = wp_remote_get( site_url( $file ), array( 'redirection' => 0 ) );
 
 		if ( is_wp_error( $response ) ) {
-			// warning.
+			// "warning".
 			return null;
 		} elseif ( 200 === wp_remote_retrieve_response_code( $response ) ) {
-			// bad.
+			// "bad".
 			return false;
 		}
-		// good.
+		// "good".
 		return true;
 	}
 }

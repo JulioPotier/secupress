@@ -8,19 +8,19 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
  * @package SecuPress
  * @since 1.0
  */
-
 class SecuPress_File_Monitoring extends SecuPress_Singleton {
-
 
 	const VERSION = '1.0';
 
 	/**
-	 * @var Singleton The reference to *Singleton* instance of this class.
+	 * Singleton The reference to *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
 
 
-	// Public methods ==============================================================================
+	// Public methods ==============================================================================.
 
 	/**
 	 * Add tasks to queue and dispatch.
@@ -41,7 +41,7 @@ class SecuPress_File_Monitoring extends SecuPress_Singleton {
 				$secupress_background_process_file_monitoring->push_to_queue( 'get_wp_hashes' );
 			}
 
-			if ( isset( $wp_local_package ) && isset( $wp_core_files_hashes['locale'] ) && $wp_core_files_hashes['locale'] != $wp_local_package &&
+			if ( isset( $wp_local_package ) && isset( $wp_core_files_hashes['locale'] ) && $wp_core_files_hashes['locale'] !== $wp_local_package &&
 				( false === ( $fix_dists = get_option( SECUPRESS_FIX_DISTS ) ) || ! isset( $fix_dists[ $wp_version ] ) )
 			) {
 				$secupress_background_process_file_monitoring->push_to_queue( 'fix_dists' );
@@ -56,8 +56,13 @@ class SecuPress_File_Monitoring extends SecuPress_Singleton {
 
 	}
 
-	// Private methods =============================================================================
+	// Private methods =============================================================================.
 
+	/**
+	 * Class init.
+	 *
+	 * @since 1.0
+	 */
 	protected function _init() {
 		add_action( 'init', array( $this, 'process_handler' ) );
 	}

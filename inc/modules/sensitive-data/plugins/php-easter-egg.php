@@ -53,15 +53,11 @@ function secupress_php_disclosure_activation() {
  * On module deactivation, maybe remove rewrite rules from the `.htaccess`/`web.config` file.
  *
  * @since 1.0
- *
- * @param (array) $args Some parameters.
  */
 add_action( 'secupress_deactivate_plugin_' . basename( __FILE__, '.php' ), 'secupress_php_disclosure_deactivate' );
 
-function secupress_php_disclosure_deactivate( $args = array() ) {
-	if ( empty( $args['no-tests'] ) ) {
-		secupress_remove_module_rules_or_notice( 'php_disclosure', __( 'PHP Disclosure', 'secupress' ) );
-	}
+function secupress_php_disclosure_deactivate() {
+	secupress_remove_module_rules_or_notice( 'php_disclosure', __( 'PHP Disclosure', 'secupress' ) );
 }
 
 

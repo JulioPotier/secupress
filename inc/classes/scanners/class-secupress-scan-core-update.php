@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die('Cheatin\' uh?');
+defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
 /**
  * Core Update scan class.
@@ -8,19 +8,37 @@ defined( 'ABSPATH' ) or die('Cheatin\' uh?');
  * @subpackage SecuPress_Scan
  * @since 1.0
  */
-
-class SecuPress_Scan_Core_Update extends SecuPress_Scan implements iSecuPress_Scan {
+class SecuPress_Scan_Core_Update extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
 	const VERSION = '1.0';
 
 	/**
-	 * @var Singleton The reference to *Singleton* instance of this class
+	 * The reference to *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
+
+	/**
+	 * Priority.
+	 *
+	 * @var (string)
+	 */
 	public    static $prio        = 'high';
+
+	/**
+	 * Tells if the fix must occur after all other scans and fixes, while no other scan/fix is running.
+	 *
+	 * @var (bool)
+	 */
 	public    static $delayed_fix = true;
 
 
+	/**
+	 * Init.
+	 *
+	 * @since 1.0
+	 */
 	protected static function init() {
 		self::$type     = 'WordPress';
 		self::$title    = __( 'Check if your WordPress core is up to date.', 'secupress' );
@@ -29,17 +47,26 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements iSecuPress_Sc
 	}
 
 
+	/**
+	 * Get messages.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int) $message_id A message ID.
+	 *
+	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
+	 */
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
-			// good
+			// "good"
 			0   => __( 'WordPress core is up to date.', 'secupress' ),
 			1   => __( 'WordPress has been updated to version <strong>%s</strong>.', 'secupress' ),
-			2   => '%s', // already translated
-			// bad
+			2   => '%s', // Already translated.
+			// "bad".
 			200 => __( 'WordPress core is <strong>not up to date</strong>.', 'secupress' ),
-			// cantfix
-			300 => '%s', // already translated
-			301 => __( 'You have the latest version of WordPress.' ), // wp i18n
+			// "cantfix"
+			300 => '%s', // Already translated.
+			301 => __( 'You have the latest version of WordPress.' ), // WP i18n.
 		);
 
 		if ( isset( $message_id ) ) {
@@ -50,6 +77,13 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements iSecuPress_Sc
 	}
 
 
+	/**
+	 * Scan for flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The scan results.
+	 */
 	public function scan() {
 		ob_start();
 
@@ -64,17 +98,24 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements iSecuPress_Sc
 		ob_flush();
 
 		if ( $core_update ) {
-			// bad
+			// "bad"
 			$this->add_message( 200 );
 		}
 
-		// good
+		// "good"
 		$this->maybe_set_status( 0 );
 
 		return parent::scan();
 	}
 
 
+	/**
+	 * Try to fix the flaw(s).
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The fix results.
+	 */
 	public function fix() {
 
 		ob_start();
@@ -99,14 +140,14 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements iSecuPress_Sc
 
 				if ( WP_Filesystem( $credentials, ABSPATH, $allow_relaxed_file_ownership ) ) {
 
-					// remove the WP upgrade process for translation since it will output data, use our own based on core but using a silent upgrade
+					// Remove the WP upgrade process for translation since it will output data, use our own based on core but using a silent upgrade.
 					remove_action( 'upgrader_process_complete', array( 'Language_Pack_Upgrader', 'async_upgrade' ), 20 );
 					add_action( 'upgrader_process_complete', 'secupress_async_upgrades', 20 );
 
-					$skin = new Automatic_Upgrader_Skin( compact( 'nonce', 'url' ) );
+					$skin     = new Automatic_Upgrader_Skin( compact( 'nonce', 'url' ) );
 					$upgrader = new Core_Upgrader( $skin );
 					$result   = $upgrader->upgrade( $update, array(
-						'allow_relaxed_file_ownership' => $allow_relaxed_file_ownership
+						'allow_relaxed_file_ownership' => $allow_relaxed_file_ownership,
 					) );
 				}
 			}
@@ -115,7 +156,7 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements iSecuPress_Sc
 		ob_end_clean();
 		if ( is_string( $result ) ) {
 			$this->add_fix_message( 1, array( $result ) );
-		} elseif( false === $result ) {
+		} elseif ( false === $result ) {
 			$this->add_fix_message( 301 );
 		} else {
 			$errors = reset( $result->errors );

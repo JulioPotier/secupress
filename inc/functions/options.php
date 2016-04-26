@@ -2,101 +2,104 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /**
- * A wrapper to easily get SecuPress option
+ * A wrapper to easily get a SecuPress option.
  *
  * @since 1.0
  *
- * @param string $option  The option name
- * @param bool   $default (default: false) The default value of option
- * @return mixed The option value
+ * @param (string) $option  The option name.
+ * @param (mixed)  $default The default value of option. Default: false.
+ *
+ * @return (mixed) The option value.
  */
 function secupress_get_option( $option, $default = false ) {
+	$pre = null;
 	/**
-	 * Pre-filter any SecuPress option before read
+	 * Pre-filter any SecuPress option before read.
 	 *
 	 * @since 1.0
 	 *
-	 * @param variant $default The default value
-	*/
-	$value = apply_filters( 'pre_secupress_get_option_' . $option, null, $default );
+	 * @param (mixed) $pre     Null.
+	 * @param (mixed) $default The default value.
+	 */
+	$value = apply_filters( 'pre_secupress_get_option_' . $option, $pre, $default );
 
 	if ( null !== $value ) {
 		return $value;
 	}
 
 	$options = get_site_option( SECUPRESS_SETTINGS_SLUG );
-	$value   = isset( $options[ $option ] ) && $options[ $option ] !== false ? $options[ $option ] : $default;
+	$value   = is_array( $options ) && isset( $options[ $option ] ) && false !== $options[ $option ] ? $options[ $option ] : $default;
 	/**
 	 * Filter any SecuPress option after read
 	 *
 	 * @since 1.0
 	 *
-	 * @param variant $default The default value
-	*/
+	 * @param (mixed) $value   The option value.
+	 * @param (mixed) $default The default value.
+	 */
 	return apply_filters( 'secupress_get_option_' . $option, $value, $default );
 }
 
 
 /**
- * A wrapper to easily get SecuPress module option
+ * A wrapper to easily get a SecuPress module option.
  *
  * @since 1.0
  *
- * @param string $option  The option name
- * @param bool   $default (default: null) The default value of option.
- * @param string $module  The module slug (see array keys from modules.php) default is the current module.
- * @return mixed The option value
+ * @param (string) $option  The option name.
+ * @param (mixed)  $default The default value of option. Default: null.
+ * @param (string) $module  The module slug (see array keys from `modules.php`). Default is the current module.
+ *
+ * @return (mixed) The option value.
  */
 function secupress_get_module_option( $option, $default = null, $module = false ) {
-
 	if ( ! $module ) {
-		if ( ! class_exists( 'SecuPress_Settings' ) ) {
-			secupress_require_class( 'settings' );
-		}
-		if ( ! class_exists( 'SecuPress_Settings_Modules' ) ) {
-			secupress_require_class( 'settings', 'modules' );
-		}
-
-		$module = SecuPress_Settings_Modules::get_instance()->get_current_module();
+		$module = secupress_get_current_module();
 	}
 
+	$pre = null;
 	/**
-	 * Pre-filter any SecuPress option before read
+	 * Pre-filter any SecuPress option before read.
 	 *
 	 * @since 1.0
 	 *
-	 * @param variant $default The default value
-	*/
-	$value = apply_filters( 'pre_secupress_get_module_option_' . $option, null, $default, $module );
+	 * @param (mixed)  $pre     Null.
+	 * @param (mixed)  $default The default value.
+	 * @param (string) $module  The module.
+	 */
+	$value = apply_filters( 'pre_secupress_get_module_option_' . $option, $pre, $default, $module );
 
 	if ( null !== $value ) {
 		return $value;
 	}
 
 	$options = get_site_option( "secupress_{$module}_settings" );
-	$value   = isset( $options[ $option ] ) && $options[ $option ] !== false ? $options[ $option ] : $default;
+	$value   = is_array( $options ) && isset( $options[ $option ] ) && false !== $options[ $option ] ? $options[ $option ] : $default;
 	/**
-	 * Filter any SecuPress option after read
+	 * Filter any SecuPress option after read.
 	 *
 	 * @since 1.0
 	 *
-	 * @param variant $default The default value
+	 * @param (mixed)  $value   The option value.
+	 * @param (mixed)  $default The default value.
+	 * @param (string) $module  The module.
 	*/
 	return apply_filters( 'secupress_get_module_option_' . $option, $value, $default, $module );
 }
 
 
+/**
+ * Update a SecuPress module option.
+ *
+ * @since 1.0
+ *
+ * @param (string) $option  The option name.
+ * @param (mixed)  $value   The new value.
+ * @param (string) $module  The module slug (see array keys from `modules.php`). Default is the current module.
+ */
 function secupress_update_module_option( $option, $value, $module = false ) {
-
 	if ( ! $module ) {
-		if ( ! class_exists( 'SecuPress_Settings' ) ) {
-			secupress_require_class( 'settings' );
-		}
-		if ( ! class_exists( 'SecuPress_Settings_Modules' ) ) {
-			secupress_require_class( 'settings', 'modules' );
-		}
-
-		$module = SecuPress_Settings_Modules::get_instance()->get_current_module();
+		$module = secupress_get_current_module();
 	}
 
 	$options = get_site_option( "secupress_{$module}_settings" );
@@ -107,20 +110,21 @@ function secupress_update_module_option( $option, $value, $module = false ) {
 }
 
 
+/**
+ * Update a SecuPress module options.
+ *
+ * @since 1.0
+ *
+ * @param (array)  $values The new values. Keys not provided are not removed, previous values are kept.
+ * @param (string) $module The module slug (see array keys from `modules.php`). Default is the current module.
+ */
 function secupress_update_module_options( $values, $module = false ) {
 	if ( ! $values || ! is_array( $values ) ) {
 		return null;
 	}
 
 	if ( ! $module ) {
-		if ( ! class_exists( 'SecuPress_Settings' ) ) {
-			secupress_require_class( 'settings' );
-		}
-		if ( ! class_exists( 'SecuPress_Settings_Modules' ) ) {
-			secupress_require_class( 'settings', 'modules' );
-		}
-
-		$module = SecuPress_Settings_Modules::get_instance()->get_current_module();
+		$module = secupress_get_current_module();
 	}
 
 	$options = get_site_option( "secupress_{$module}_settings" );
@@ -131,6 +135,33 @@ function secupress_update_module_options( $values, $module = false ) {
 }
 
 
+/**
+ * Get the current module.
+ *
+ * @since 1.0
+ *
+ * @return (string).
+ */
+function secupress_get_current_module() {
+	if ( ! class_exists( 'SecuPress_Settings' ) ) {
+		secupress_require_class( 'settings' );
+	}
+	if ( ! class_exists( 'SecuPress_Settings_Modules' ) ) {
+		secupress_require_class( 'settings', 'modules' );
+	}
+
+	return SecuPress_Settings_Modules::get_instance()->get_current_module();
+}
+
+
+/**
+ * Get scanners scan results.
+ * Those results are stored in transients first. Then those transient values are merged in a global option.
+ *
+ * @since 1.0
+ *
+ * @return (array)
+ */
 function secupress_get_scanners() {
 	static $tests;
 
@@ -183,6 +214,14 @@ function secupress_get_scanners() {
 }
 
 
+/**
+ * Get scanners fix results.
+ * Those results are stored in transients first. Then those transient values are merged in a global option.
+ *
+ * @since 1.0
+ *
+ * @return (array)
+ */
 function secupress_get_scanner_fixes() {
 	static $tests;
 
@@ -288,7 +327,7 @@ function secupress_delete_site_transient( $transient ) {
  */
 function secupress_get_site_transient( $transient ) {
 
- 	/**
+	/**
 	 * Filter the value of an existing site transient.
 	 *
 	 * The dynamic portion of the hook name, `$transient`, refers to the transient name.
@@ -603,29 +642,52 @@ function secupress_set_transient( $transient, $value ) {
  * Return all tests to scan
  *
  * @since 1.0
- * @return array Tests to scan
- **/
+ *
+ * @return (array) Tests to scan.
+ */
 function secupress_get_tests() {
 	$tests = array(
 		'high' => array(
-			'Core_Update',      'Plugins_Update',    'Themes_Update',
-			'Auto_Update',      'Bad_Old_Plugins',   'Bad_Old_Files',
-			'Bad_Config_Files', 'Directory_Listing', /*'PHP_INI',*/
-			'Admin_User',       'Easy_Login',        'Subscription',
-			'WP_Config',        'Salt_Keys',         'Passwords_Strength',
-			'Chmods',           'Common_Flaws',      'Bad_User_Agent',
-			'SQLi',             'Anti_Scanner',      'Anti_Front_Bruteforce',
+			'Core_Update',
+			'Plugins_Update',
+			'Themes_Update',
+			'Auto_Update',
+			'Bad_Old_Plugins',
+			'Bad_Old_Files',
+			'Bad_Config_Files',
+			'Bad_Vuln_Plugins',
+			'Admin_User',
+			'Easy_Login',
+			'Subscription',
+			'WP_Config',
+			'Salt_Keys',
+			'Passwords_Strength',
+			'Chmods',
+			'Common_Flaws',
+			'Bad_User_Agent',
+			'SQLi',
+			'Anti_Scanner',
+			'Anti_Front_Bruteforce',
+			'Directory_Listing',
 		),
 		'medium' => array(
-			'Inactive_Plugins_Themes', 'Non_Login_Time_Slot', 'Bad_Usernames',
-			'Bad_Request_Methods',     'PhpVersion',     /*'Too_Many_Admins',*/
-			'Block_HTTP_1_0',          'Discloses',      'Block_Long_URL',
-			'Readme_Discloses',        'Bad_Url_Access', 'Uptime_Monitor',
+			'Inactive_Plugins_Themes',
+			'Non_Login_Time_Slot',
+			'Bad_Usernames',
+			'Bad_Request_Methods',
+			'PhpVersion',
+			'Block_HTTP_1_0',
+			'Discloses',
+			'Block_Long_URL',
+			'Readme_Discloses',
+			'Bad_Url_Access',
+			'Uptime_Monitor',
 		),
 		'low' => array(
-			'Login_Errors_Disclose', 'PHP_Disclosure', /*'Admin_As_Author',*/
+			'Login_Errors_Disclose',
+			'PHP_Disclosure',
 			'DirectoryIndex',
-		)
+		),
 	);
 
 	if ( class_exists( 'SitePress' ) ) {
@@ -640,7 +702,7 @@ function secupress_get_tests() {
 }
 
 
-/*
+/**
  * Get tests that can't be fixes from the network admin.
  *
  * @since 1.0
@@ -651,53 +713,51 @@ function secupress_get_tests_for_ms_scanner_fixes() {
 	return array(
 		'Bad_Old_Plugins',
 		'Subscription',
-//		'Too_Many_Admins',
-//		'Admin_As_Author',
 	);
 }
 
 
 /**
- * Determine if the key is valid
+ * Determine if the key is valid.
+ * The function do the live check and update the option.
  *
- * @since 1.0 The function do the live check and update the option
+ * @since 1.0
+ *
+ * @param (string) $type ////.
+ *
+ * @return (bool)
  */
-function secupress_check_key( $type = 'transient_1', $data = null ) {
-	// Recheck the license
+function secupress_check_key( $type = 'transient_1' ) {
+	// Recheck the license.
 	$return = secupress_valid_key();
 
 	if ( ! secupress_valid_key()
-		|| ( 'transient_1' == $type && ! get_transient( 'secupress_check_licence_1' ) )
-		|| ( 'transient_30' == $type && ! get_transient( 'secupress_check_licence_30' ) )
-		|| 'live' == $type ) {
+		|| ( 'transient_1' === $type && ! get_transient( 'secupress_check_licence_1' ) )
+		|| ( 'transient_30' === $type && ! get_transient( 'secupress_check_licence_30' ) )
+		|| 'live' === $type ) {
 
-		$response = wp_remote_get( SECUPRESS_WEB_VALID, array( 'timeout' => 30 ) );
-
-		$json = ! is_wp_error( $response ) ? json_decode( $response['body'] ) : false;
+		$response          = wp_remote_get( SECUPRESS_WEB_VALID, array( 'timeout' => 30 ) );
+		$json              = ! is_wp_error( $response ) ? json_decode( $response['body'] ) : false;
 		$secupress_options = array();
 
 		if ( $json ) {
-
 			$secupress_options['consumer_key']   = $json->data->consumer_key;
 			$secupress_options['consumer_email'] = $json->data->consumer_email;
 
 			if ( $json->success ) {
-
 				$secupress_options['secret_key'] = $json->data->secret_key;
 				if ( ! secupress_get_option( 'license' ) ) {
 					$secupress_options['license'] = '1';
 				}
 
-				if ( 'live' != $type ) {
-					if ( 'transient_1' == $type ) {
+				if ( 'live' !== $type ) {
+					if ( 'transient_1' === $type ) {
 						set_transient( 'secupress_check_licence_1', true, DAY_IN_SECONDS );
-					} elseif ( 'transient_30' == $type ) {
+					} elseif ( 'transient_30' === $type ) {
 						set_transient( 'secupress_check_licence_30', true, DAY_IN_SECONDS * 30 );
 					}
 				}
-
 			} else {
-
 				$messages = array(
 					'BAD_LICENSE' => __( 'Your license is not valid.', 'secupress' ),
 					'BAD_NUMBER'  => __( 'You cannot add more websites. Upgrade your account.', 'secupress' ),
@@ -707,12 +767,10 @@ function secupress_check_key( $type = 'transient_1', $data = null ) {
 				$secupress_options['secret_key'] = '';
 
 				add_settings_error( 'general', 'settings_updated', $messages[ $json->data->reason ], 'error' );
-
 			}
 
 			set_transient( SECUPRESS_SETTINGS_SLUG, $secupress_options );
 			$return = (array) $secupress_options;
-
 		}
 	}
 
@@ -721,13 +779,32 @@ function secupress_check_key( $type = 'transient_1', $data = null ) {
 
 
 /**
- * Determine if the key is valid
+ * Determine if the key is valid.
  *
  * @since 1.0
+ *
+ * @return (bool)
  */
 function secupress_valid_key() {
-	return 8 == strlen( secupress_get_option( 'consumer_key' ) ) && secupress_get_option( 'secret_key' ) === hash( 'crc32', secupress_get_option( 'consumer_email' ) );
+	return 8 === strlen( secupress_get_option( 'consumer_key' ) ) && secupress_get_option( 'secret_key' ) === hash( 'crc32', secupress_get_option( 'consumer_email' ) );
 }
 
 
+/**
+ * Tell if the consumer email is valid.
+ *
+ * @since 1.0
+ *
+ * @return (string|bool) The email if valid. False otherwise.
+ */
+function secupress_get_consumer_email() {
+	return is_email( secupress_get_option( 'consumer_email' ) );
+}
+
+
+/**
+ * ////
+ *
+ * @since 1.0
+ */
 function secupress_need_api_key() {}
