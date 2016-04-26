@@ -12,13 +12,12 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 /* INIT ========================================================================================= */
 /*------------------------------------------------------------------------------------------------*/
 
+add_action( 'init', 'secupress_nocomment_init', PHP_INT_MAX );
 /**
  * Remove comments support and launch filters.
  *
  * @since 1.0
  */
-add_action( 'init', 'secupress_nocomment_init', PHP_INT_MAX );
-
 function secupress_nocomment_init() {
 	// Get post types that support comments.
 	$post_types_raw = secupress_nocomment_get_post_types_supporting_comments();

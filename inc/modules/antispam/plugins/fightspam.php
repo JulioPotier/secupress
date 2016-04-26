@@ -14,6 +14,7 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 /* ANTI-USURPATION ============================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
+add_filter( 'preprocess_comment', 'secupress_fightspam_dont_use_my_identity_to_comment' );
 /**
  * Prevent logged out users to use registered users identity to comment.
  *
@@ -23,8 +24,6 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
  *
  * @return (array) $commentdata Comment data.
  */
-add_filter( 'preprocess_comment', 'secupress_fightspam_dont_use_my_identity_to_comment' );
-
 function secupress_fightspam_dont_use_my_identity_to_comment( $commentdata ) {
 	global $wpdb;
 
@@ -106,6 +105,7 @@ function secupress_fightspam_die_message_content_filter( $message ) {
 /* FIGHT SPAM =================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
+add_action( 'check_comment_flood', 'secupress_fightspam_force_check_comment' );
 /**
  * Force deactivation of "manual comment moderation" option.
  * Force deactivation of "approve comments by previously-approved authors" option.
@@ -114,8 +114,6 @@ function secupress_fightspam_die_message_content_filter( $message ) {
  *
  * @since 1.0
  */
-add_action( 'check_comment_flood', 'secupress_fightspam_force_check_comment' );
-
 function secupress_fightspam_force_check_comment() {
 	if ( get_option( 'comment_moderation' ) ) {
 		// Do not use `__return_false`, it won't work.
@@ -126,6 +124,7 @@ function secupress_fightspam_force_check_comment() {
 }
 
 
+add_filter( 'pre_comment_approved', 'secupress_fightspam_remove_comment_moderation_filter', 0 );
 /**
  * Replace status 0 (pending) returned by `check_comment()` by our own status (`trash` or `spam`).
  * Remove our filter that forces deactivation of "manual comment moderation" option.
@@ -137,8 +136,6 @@ function secupress_fightspam_force_check_comment() {
  *
  * @return (bool|string) 1, 0, 'spam', or 'trash'.
  */
-add_filter( 'pre_comment_approved', 'secupress_fightspam_remove_comment_moderation_filter', 0 );
-
 function secupress_fightspam_remove_comment_moderation_filter( $approved ) {
 	// Remove our filters.
 	remove_filter( 'pre_option_comment_moderation', '__return_zero', 1 );
@@ -154,6 +151,7 @@ function secupress_fightspam_remove_comment_moderation_filter( $approved ) {
 }
 
 
+add_filter( 'pre_comment_approved', 'secupress_fightspam_author_as_spam_check', 9, 2 );
 /**
  * Mark a comment as spam, depending on its author IP, username, email, and URL.
  *
@@ -164,8 +162,6 @@ function secupress_fightspam_remove_comment_moderation_filter( $approved ) {
  *
  * @return (bool|string) 1, 0, 'spam', or 'trash'.
  */
-add_filter( 'pre_comment_approved', 'secupress_fightspam_author_as_spam_check', 9, 2 );
-
 function secupress_fightspam_author_as_spam_check( $approved, $commentdata ) {
 	if ( 'trash' === $approved || 'spam' === $approved || ! secupress_fightspam_needs_spam_check( $commentdata ) ) {
 		return $approved;
@@ -217,6 +213,7 @@ function secupress_fightspam_author_as_spam_check( $approved, $commentdata ) {
 }
 
 
+add_filter( 'pre_comment_approved', 'secupress_fightspam_shortcode_as_spam_check', 9, 2 );
 /**
  * Mark comments with shortcodes or BBcodes as spam.
  *
@@ -227,8 +224,6 @@ function secupress_fightspam_author_as_spam_check( $approved, $commentdata ) {
  *
  * @return (bool|string) 1, 0, 'spam', or 'trash'.
  */
-add_filter( 'pre_comment_approved', 'secupress_fightspam_shortcode_as_spam_check', 9, 2 );
-
 function secupress_fightspam_shortcode_as_spam_check( $approved, $commentdata ) {
 	if ( 'trash' === $approved || 'spam' === $approved || ! secupress_fightspam_needs_spam_check( $commentdata ) ) {
 		return $approved;
@@ -248,6 +243,7 @@ function secupress_fightspam_shortcode_as_spam_check( $approved, $commentdata ) 
 }
 
 
+add_filter( 'pre_comment_approved', 'secupress_fightspam_blacklist_as_spam_check', 9, 2 );
 /**
  * Mark comments as spam, depending on a blacklist.
  * The blacklist from WordPress is disabled in `secupress_fightspam_force_check_comment()`. We run the test here (with maybe our improved list).
@@ -259,8 +255,6 @@ function secupress_fightspam_shortcode_as_spam_check( $approved, $commentdata ) 
  *
  * @return (bool|string) 1, 0, 'spam', or 'trash'.
  */
-add_filter( 'pre_comment_approved', 'secupress_fightspam_blacklist_as_spam_check', 9, 2 );
-
 function secupress_fightspam_blacklist_as_spam_check( $approved, $commentdata ) {
 	if ( 'trash' === $approved || 'spam' === $approved || ! secupress_fightspam_needs_spam_check( $commentdata ) ) {
 		return $approved;
@@ -310,13 +304,12 @@ function __secupress_fightspam_better_blacklist_comment( $value ) {
 }
 
 
+add_action( 'secupress_plugins_loaded', 'secupress_fightspam_maybe_disable_trackbaks' );
 /**
  * Disable pingbacks/trackbacks.
  *
  * @since 1.0
  */
-add_action( 'secupress_plugins_loaded', 'secupress_fightspam_maybe_disable_trackbaks' );
-
 function secupress_fightspam_maybe_disable_trackbaks() {
 	if ( ! secupress_get_module_option( 'antispam_forbid-pings-trackbacks', 0, 'antispam' ) ) {
 		return;
@@ -330,23 +323,60 @@ function secupress_fightspam_maybe_disable_trackbaks() {
 }
 
 
+/**
+ * Remove the `pingback.ping` and `pingback.extensions.getPingbacks` xmlrpc methods.
+ *
+ * @since 1.0
+ *
+ * @param (array) $methods Methods.
+ *
+ * @return (array)
+ */
 function secupress_fightspam_block_xmlrpc_pingbacks( $methods ) {
 	unset( $methods['pingback.ping'], $methods['pingback.extensions.getPingbacks'] );
 	return $methods;
 }
 
 
+/**
+ * Remove the `X-Pingback` header.
+ *
+ * @since 1.0
+ *
+ * @param (array) $headers Headers set by WordPress.
+ *
+ * @return (array)
+ */
 function secupress_fightspam_remove_x_pingback_header( $headers ) {
 	unset( $headers['X-Pingback'] );
 	return $headers;
 }
 
 
+/**
+ * Remove pingbacks from comments.
+ *
+ * @since 1.0
+ *
+ * @param (array) $comments Comments.
+ *
+ * @return (array)
+ */
 function secupress_fightspam_remove_pingbacks_from_comments( $comments ) {
 	return array_filter( $comments, '__secupress_fightspam_filter_real_comments' );
 }
 
 
+/**
+ * Remove pingbacks from the comments count.
+ *
+ * @since 1.0
+ *
+ * @param (int) $count   Comments count.
+ * @param (int) $post_id Post ID.
+ *
+ * @return (int)
+ */
 function secupress_fightspam_comment_count_without_pingbacks( $count, $post_id ) {
 	$comments = get_approved_comments( $post_id );
 	$comments = array_filter( $comments, '__secupress_fightspam_filter_real_comments' );
@@ -354,11 +384,25 @@ function secupress_fightspam_comment_count_without_pingbacks( $count, $post_id )
 }
 
 
+/**
+ * Used as callback for `array_filter()` to remove pingbacks from an array of comments.
+ *
+ * @since 1.0
+ *
+ * @param (array) $comment A comment.
+ *
+ * @return (array)
+ */
 function __secupress_fightspam_filter_real_comments( $comment ) {
 	return ! $comment->comment_type;
 }
 
 
+/**
+ * Print some CSS to hide the pingback checkbox in the Post edition window.
+ *
+ * @since 1.0
+ */
 function secupress_fightspam_no_pingstatus_css() {
 	echo '<style type="text/css">label[for="ping_status"]{display: none;}</style>';
 }
@@ -368,6 +412,7 @@ function secupress_fightspam_no_pingstatus_css() {
 /* HANDLING ERRORS ============================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
+add_action( 'comment_post', 'secupress_fightspam_maybe_schedule_retest', 10, 2 );
 /**
  * Fires immediately after a comment is inserted into the database.
  * If a comment is not approved (`$comment_approved` value is 0), that means the service we rely on was unavailable at the moment.
@@ -375,17 +420,15 @@ function secupress_fightspam_no_pingstatus_css() {
  *
  * @since 1.0
  *
- * @param (int)        $comment_ID       The comment ID.
+ * @param (int)        $comment_id       The comment ID.
  * @param (int|string) $comment_approved 1 if the comment is approved, 0 if not, 'spam' if spam, 'trash' if sent directly to trash.
  */
-add_action( 'comment_post', 'secupress_fightspam_maybe_schedule_retest', 10, 2 );
-
-function secupress_fightspam_maybe_schedule_retest( $comment_ID, $comment_approved ) {
+function secupress_fightspam_maybe_schedule_retest( $comment_id, $comment_approved ) {
 	if ( 0 !== (int) $comment_approved ) {
 		return;
 	}
 
-	secupress_fightspam_schedule_retest( $comment_ID );
+	secupress_fightspam_schedule_retest( $comment_id );
 }
 
 
@@ -394,25 +437,24 @@ function secupress_fightspam_maybe_schedule_retest( $comment_ID, $comment_approv
  *
  * @since 1.0
  *
- * @param (int) $comment_ID The comment ID.
+ * @param (int) $comment_id The comment ID.
  */
-function secupress_fightspam_schedule_retest( $comment_ID ) {
+function secupress_fightspam_schedule_retest( $comment_id ) {
 	$tests = secupress_get_transient( 'secupress_fightspam_retests' );
 	$tests = is_array( $tests ) ? $tests : array();
 
-	$tests[ $comment_ID ] = time();
+	$tests[ $comment_id ] = time();
 
 	secupress_set_transient( 'secupress_fightspam_retests', $tests );
 }
 
 
+add_action( 'secupress_plugins_loaded', 'secupress_fightspam_async_retests_init' );
 /**
  * Initiate async retests class.
  *
  * @since 1.0
  */
-add_action( 'secupress_plugins_loaded', 'secupress_fightspam_async_retests_init' );
-
 function secupress_fightspam_async_retests_init() {
 	secupress_require_class_async();
 
@@ -449,11 +491,11 @@ function secupress_fightspam_maybe_do_retests() {
 	$time    = time() - absint( $time * MINUTE_IN_SECONDS );
 	$retests = array();
 
-	foreach ( $tests as $comment_ID => $comment_time ) {
+	foreach ( $tests as $comment_id => $comment_time ) {
 		if ( $comment_time <= $time ) {
 			// Delay is passed.
-			$retests[] = $comment_ID;
-			unset( $tests[ $comment_ID ] );
+			$retests[] = $comment_id;
+			unset( $tests[ $comment_id ] );
 		}
 	}
 
@@ -498,6 +540,8 @@ function secupress_fightspam_get_spam_status_setting() {
  * Shorthand to get the spam status setting and trigger an action hook before that.
  *
  * @since 1.0
+ *
+ * @param (string) $context Some context.
  *
  * @return (string) 'spam' or 'trash'.
  */
@@ -591,7 +635,7 @@ function secupress_fightspam_get_spam_status( $value ) {
 		$is_url = true;
 	}
 
-	$key = md5( $value ); // md5 to avoid keeping readable data in DB (IP & email).
+	$key = md5( $value ); // MD5 to avoid keeping readable data in DB (IP & email).
 
 	if ( false !== $value && isset( $spam_cache[ $key ] ) && time() < $spam_cache[ $key ]['timestamp'] ) {
 		return $spam_cache[ $key ]['status'];
