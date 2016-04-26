@@ -154,18 +154,26 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	public function print_page() {
+		$is_welcome = 'welcome' !== $this->get_current_module() ? false : true;
 		?>
 		<div class="wrap">
+
 			<?php secupress_admin_heading( __( 'Modules', 'secupress' ) ); ?>
 			<?php settings_errors(); ?>
 
 			<div class="secupress-wrapper">
 
+				<?php
+				// don't print sidebar if we are in Welcome page
+				// modules are included in the content of the page
+				if ( ! $is_welcome ) {
+				?>
 				<h2 class="nav-tab-wrapper hide-if-no-js">
 					<?php $this->print_tabs(); ?>
 				</h2>
+				<?php } ?>
 
-				<div id="tab_content">
+				<div class="secupress-tab-content secupress-tab-content-<?php echo $this->get_current_module(); ?>" id="secupress-tab-content">
 					<?php $this->print_current_module(); ?>
 				</div>
 
@@ -229,11 +237,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	protected function print_current_module() {
 		// No module.
 		if ( 'welcome' === $this->get_current_module() ) {
-			?>
-			<div class="secublock">
-				<?php $this->load_module_settings(); ?>
-			</div>
-			<?php
+			$this->load_module_settings();
 			return;
 		}
 		?>

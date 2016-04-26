@@ -1,3 +1,25 @@
+@charset "UTF-8";
+
+/**
+ * ==== TABLE OF COLORS ===
+ *
+ * Yellow		: #F1C40F;
+ * YellowDark	: #F7AB13;
+ * Red			: #F2295E;
+ * RedDark		: #CB234F;
+ * Green		: #2BCDC1;
+ * GreenDark	: #26B3A9;
+ * Dark			: #222831;
+ * GrayLight	: #F2F2F6;
+ * GrayMidLight	: #ECF0F1;
+ * GrayMedium	: #5A626F;
+ * GrayDark		: #393E46;
+ * 
+ */
+
+/**
+ * === Main navigation between modules 
+ */
 h2.nav-tab-wrapper {
 	float: left;
 	padding: 0;
@@ -34,13 +56,70 @@ h2 .nav-tab .dashicons {
 	margin-right: 6px;
 }
 
-#tab_content {
+
+/**
+ * === Main content of a module
+ */
+
+.secupress-tab-content {
 	margin-left: 212px;
-	width: 650px;
+	width: 800px;
+	max-width: 100%;
 	position: relative;
 }
+.secupress-tab-content-welcome {
+	margin-left: 0;
+	width: 1020px;
+}
 
-#tab_content > .secublock {
+/* Dashboard */
+.secupress-modules-dashboard {
+	-webkit-box-align: initial;
+	-webkit-align-items: initial;
+	-ms-flex-align: initial;
+	-ms-grid-row-align: initial;
+	align-items: initial;
+	background: #ECF0F1;
+}
+.secupress-module-box {
+	position: relative;
+	-webkit-flex-basis: 33%;
+	-ms-flex-preferred-size: 33%;
+	flex-basis: 33%;
+	padding: 5px 20px;
+	margin: 0.5px;
+	background: #FFF;
+	overflow: hidden;
+}
+.secupress-mb-title {
+	margin-bottom: 10px;
+	font-size: 20px;
+	font-weight: 600;
+}
+.secupress-mb-description {
+	margin-bottom: 1.5em;
+}
+.secupress-mb-action {
+	margin-top: auto;
+}
+.secupress-module-box i {
+	position: absolute;
+	bottom: -20px; right: 20px;
+}
+.secupress-module-box i:before,
+.secupress-module-box i {
+	width: 100px; height: 100px;
+	font-size: 100px;
+	color: #F2F2F2;
+}
+/* buttons */
+.secupress-module-box .secupress-button-primary {
+	box-shadow: 0 6px 12px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05), 0 3px 4px rgba(0,0,0,.05);
+}
+
+/* EXISTING */
+
+.secupress-tab-content > .secublock {
 	margin-bottom: 20px;
 }
 

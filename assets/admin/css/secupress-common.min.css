@@ -16,6 +16,11 @@
  * 
  */
 
+[class^="secupress-"],
+[class*=" secupress-"] {
+	box-sizing: border-box;
+}
+
 /**
  * Secupress Text Colors
  */
@@ -861,6 +866,8 @@
 }
 
 .secupress-wrapper {
+	max-width: 100%;
+	width: 1240px;
 	padding-top: 20px;
 }
 
