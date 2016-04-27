@@ -73,7 +73,7 @@ function secupress_require_class_async() {
  *
  * @return (array) Tests to scan.
  */
-function secupress_get_tests() {
+function secupress_get_scanners() {
 	$tests = array(
 		'high' => array(
 			'Core_Update',
@@ -155,8 +155,8 @@ function secupress_get_tests_for_ms_scanner_fixes() {
  * @return (string|array) The desired counter info if `$type` is provided and the info exists. An array of all counters otherwise.
  */
 function secupress_get_scanner_counts( $type = '' ) {
-	$tests_by_status = secupress_get_tests();
-	$scanners        = secupress_get_scanners();
+	$tests_by_status = secupress_get_scanners();
+	$scanners        = secupress_get_scan_results();
 	$empty_statuses  = array( 'good' => 0, 'warning' => 0, 'bad' => 0 );
 	$scanners_count  = ! empty( $scanners ) ? array_count_values( wp_list_pluck( $scanners, 'status' ) ) : array();
 	$counts          = array_merge( $empty_statuses, $scanners_count );

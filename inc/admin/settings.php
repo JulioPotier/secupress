@@ -170,7 +170,7 @@ function secupress_create_menus() {
 
 	// Add a counter of scans with bad result.
 	$count = 0;
-	$scans = secupress_get_scanners();
+	$scans = secupress_get_scan_results();
 
 	if ( $scans ) {
 		foreach ( $scans as $scan ) {
@@ -391,9 +391,9 @@ function secupress_scanners_template() {
 	$autoscans       = SecuPress_Scan::get_and_delete_autoscans();
 
 	if ( ! $is_subsite ) {
-		$secupress_tests = secupress_get_tests();
-		$scanners        = secupress_get_scanners();
-		$fixes           = secupress_get_scanner_fixes();
+		$secupress_tests = secupress_get_scanners();
+		$scanners        = secupress_get_scan_results();
+		$fixes           = secupress_get_fix_results();
 
 		// Store the scans in 3 variables. They will be used to order the scans by status: 'bad', 'warning', 'notscannedyet', 'good'.
 		$bad_scans     = array();

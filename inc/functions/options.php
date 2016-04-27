@@ -120,12 +120,12 @@ function secupress_get_module_option( $option, $default = null, $module = false 
  *
  * @return (array)
  */
-function secupress_get_scanners() {
+function secupress_get_scan_results() {
 	static $tests;
 
 	if ( ! isset( $tests ) ) {
 		$tests = array();
-		$tmps  = secupress_get_tests();
+		$tmps  = secupress_get_scanners();
 
 		foreach ( $tmps as $tmp ) {
 			$tests = array_merge( $tests, array_map( 'strtolower', $tmp ) );
@@ -161,7 +161,7 @@ function secupress_get_scanners() {
 		update_site_option( SECUPRESS_SCAN_SLUG, $options );
 
 		// Also update the fixes.
-		$fixes = secupress_get_scanner_fixes();
+		$fixes = secupress_get_fix_results();
 		if ( $to_remove ) {
 			$fixes = array_diff_key( $fixes, $to_remove );
 		}
@@ -180,12 +180,12 @@ function secupress_get_scanners() {
  *
  * @return (array)
  */
-function secupress_get_scanner_fixes() {
+function secupress_get_fix_results() {
 	static $tests;
 
 	if ( ! isset( $tests ) ) {
 		$tests = array();
-		$tmps  = secupress_get_tests();
+		$tmps  = secupress_get_scanners();
 
 		foreach ( $tmps as $tmp ) {
 			$tests = array_merge( $tests, array_map( 'strtolower', $tmp ) );
