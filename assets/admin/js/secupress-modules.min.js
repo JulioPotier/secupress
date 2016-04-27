@@ -464,7 +464,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 			if ( $.isPlainObject( r ) && r.success ) {
 				swal.close();
 
-				$button.closest( ".db-backup-row" ).css( "backgroundColor", SecuPress.deletedRowColor ).hide( "normal", function() {
+				$button.closest( ".secupress-large-row" ).css( "backgroundColor", SecuPress.deletedRowColor ).hide( "normal", function() {
 					$( this ).remove();
 
 					secupressUpdateAvailableBackupCounter( r );
