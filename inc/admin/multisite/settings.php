@@ -66,8 +66,8 @@ function secupress_update_network_option_on_submit() {
 			$option = trim( $option );
 			$value  = null;
 
-			if ( isset( $_POST[ $option ] ) ) { // WPCS: CSRF ok.
-				$value = $_POST[ $option ]; // WPCS: CSRF ok.
+			if ( isset( $_POST[ $option ] ) ) {
+				$value = $_POST[ $option ];
 				if ( ! is_array( $value ) ) {
 					$value = trim( $value );
 				}

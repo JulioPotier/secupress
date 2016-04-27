@@ -338,13 +338,13 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 		 * @param (string) Capability or user role.
 		 * @param (string) The notice Identifier.
 		 */
-		$capability = apply_filters( 'secupress_ajax_dismiss_notice_capability', secupress_get_capability(), $_POST['notice_id'] ); // WPCS: CSRF ok.
+		$capability = apply_filters( 'secupress_ajax_dismiss_notice_capability', secupress_get_capability(), $_POST['notice_id'] );
 
 		if ( ! current_user_can( $capability ) ) {
 			wp_die( -1 );
 		}
 
-		if ( self::dismiss( $_POST['notice_id'] ) ) { // WPCS: CSRF ok.
+		if ( self::dismiss( $_POST['notice_id'] ) ) {
 			wp_die( 1 );
 		}
 		wp_die( -1 );
@@ -373,13 +373,13 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 		 *
 		 * @return (string) Capability or user role.
 		 */
-		$capability = apply_filters( 'secupress_ajax_dismiss_notice_capability', secupress_get_capability(), $_GET['notice_id'] ); // WPCS: CSRF ok.
+		$capability = apply_filters( 'secupress_ajax_dismiss_notice_capability', secupress_get_capability(), $_GET['notice_id'] );
 
 		if ( ! current_user_can( $capability ) ) {
 			secupress_admin_die();
 		}
 
-		if ( self::dismiss( $_GET['notice_id'] ) ) { // WPCS: CSRF ok.
+		if ( self::dismiss( $_GET['notice_id'] ) ) {
 			wp_safe_redirect( esc_url_raw( wp_get_referer() ) );
 			die();
 		}

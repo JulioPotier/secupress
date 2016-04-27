@@ -36,4 +36,10 @@
 	<rule ref="WordPress.Arrays.ArrayDeclaration.ValueNoNewline">
 		<exclude-pattern>*/secupress-free/inc/modules/users-login/tools.php</exclude-pattern>
 	</rule>
+
+	<rule ref="WordPress.CSRF.NonceVerification">
+		<properties>
+			<property name="customNonceVerificationFunctions" value="secupress_check_admin_referer" type="array"/>
+		</properties>
+	</rule>
 </ruleset>

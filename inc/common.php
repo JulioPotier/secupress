@@ -18,7 +18,7 @@ function secupress_check_ban_ips() {
 		// The link to be unlocked?
 		if ( ! empty( $_GET['action'] ) && 'secupress_self-unban-ip' === $_GET['action'] ) { // WPCS: CSRF ok.
 			$ip     = secupress_get_ip();
-			$result = ! empty( $_GET['_wpnonce'] ) ? wp_verify_nonce( $_GET['_wpnonce'], 'secupress_self-unban-ip-' . $ip ) : false; // WPCS: CSRF ok.
+			$result = ! empty( $_GET['_wpnonce'] ) ? wp_verify_nonce( $_GET['_wpnonce'], 'secupress_self-unban-ip-' . $ip ) : false;
 
 			if ( $result ) {
 				// You're good to go.
@@ -99,8 +99,8 @@ function secupress_check_ban_ips_maybe_send_unban_email( $ip ) {
 	}
 	// Check nonce and referer.
 	$siteurl = strtolower( set_url_scheme( site_url() ) );
-	$referer = strtolower( wp_unslash( $_POST['_wp_http_referer'] ) ); // WPCS: CSRF ok.
-	$result  = ! empty( $_POST['_wpnonce'] ) ? wp_verify_nonce( $_POST['_wpnonce'], 'secupress-unban-ip-' . $ip ) : false; // WPCS: CSRF ok.
+	$result  = ! empty( $_POST['_wpnonce'] ) ? wp_verify_nonce( $_POST['_wpnonce'], 'secupress-unban-ip-' . $ip ) : false;
+	$referer = strtolower( wp_unslash( $_POST['_wp_http_referer'] ) );
 
 	if ( strpos( $referer, 'http' ) !== 0 ) {
 		$port    = (int) $_SERVER['SERVER_PORT'];

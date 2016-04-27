@@ -11,12 +11,12 @@ add_action( 'admin_post_secupress_delete_scanned_files', '__secupress_delete_sca
 function __secupress_delete_scanned_files_ajax_post_cb() {
 	global $wp_version;
 
-	if ( ! isset( $_POST['files'] ) ) { // WPCS: CSRF ok.
-		secupress_admin_die();
-	}
-
 	secupress_check_user_capability();
 	secupress_check_admin_referer( 'secupress_delete_scanned_files' );
+
+	if ( ! isset( $_POST['files'] ) ) {
+		secupress_admin_die();
+	}
 
 	$diff_from_root_core  = array();
 	$full_filetree        = get_option( SECUPRESS_FULL_FILETREE );
@@ -45,7 +45,7 @@ function __secupress_delete_scanned_files_ajax_post_cb() {
 		secupress_admin_die();
 	}
 
-	$files = array_intersect( $_POST['files'], $diff_from_root_core ); // WPCS: CSRF ok.
+	$files = array_intersect( $_POST['files'], $diff_from_root_core );
 
 	foreach ( $files as $file ) {
 		if ( unlink( ABSPATH . $file ) ) {
@@ -110,11 +110,11 @@ function __secupress_recover_diff_files_ajax_post_cb() {
 	$full_filetree        = get_option( SECUPRESS_FULL_FILETREE, false );
 	$wp_core_files_hashes = get_option( SECUPRESS_WP_CORE_FILES_HASHES, false );
 
-	if ( ! $full_filetree || ! $wp_core_files_hashes || empty( $_POST['files'] ) ) { // WPCS: CSRF ok.
+	if ( ! $full_filetree || ! $wp_core_files_hashes || empty( $_POST['files'] ) ) {
 		secupress_admin_die();
 	}
 
-	foreach ( $_POST['files'] as $file ) { // WPCS: CSRF ok.
+	foreach ( $_POST['files'] as $file ) {
 		if ( ! file_exists( ABSPATH . $file ) && isset( $wp_core_files_hashes[ $file ] ) ) {
 			continue;
 		}
@@ -150,14 +150,14 @@ function __secupress_recover_missing_files_ajax_post_cb() {
 	$full_filetree        = get_option( SECUPRESS_FULL_FILETREE, false );
 	$wp_core_files_hashes = get_option( SECUPRESS_WP_CORE_FILES_HASHES, false );
 
-	if ( ! $full_filetree || ! $wp_core_files_hashes || empty( $_POST['files'] ) ) { // WPCS: CSRF ok.
+	if ( ! $full_filetree || ! $wp_core_files_hashes || empty( $_POST['files'] ) ) {
 		secupress_admin_die();
 	}
 
 	$wp_core_files_hashes = array_flip( array_filter( array_flip( $wp_core_files_hashes[ $wp_version ]['checksums'] ), 'secupress_filter_no_content' ) );
 	$missing_from_root_core = array_diff_key( $wp_core_files_hashes, $full_filetree[ $wp_version ] );
 
-	foreach ( $_POST['files'] as $file ) { // WPCS: CSRF ok.
+	foreach ( $_POST['files'] as $file ) {
 		if ( file_exists( ABSPATH . $file ) && ! isset( $missing_from_root_core[ $file ] ) ) {
 			continue;
 		}
@@ -201,11 +201,11 @@ function __secupress_old_files_ajax_post_cb() {
 		}
 	}
 
-	if ( ! $wp_old_files || empty( $_POST['files'] ) ) { // WPCS: CSRF ok.
+	if ( ! $wp_old_files || empty( $_POST['files'] ) ) {
 		secupress_admin_die();
 	}
 
-	foreach ( $_POST['files'] as $file ) { // WPCS: CSRF ok.
+	foreach ( $_POST['files'] as $file ) {
 		if ( ! file_exists( ABSPATH . $file ) || ! isset( $wp_old_files[ $file ] ) ) {
 			continue;
 		}
