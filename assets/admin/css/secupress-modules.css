@@ -12,6 +12,7 @@
  * Dark			: #222831;
  * GrayLight	: #F2F2F6;
  * GrayMidLight	: #ECF0F1;
+ * GrayMidLight2: #B6B7BB;
  * GrayMedium	: #5A626F;
  * GrayDark		: #393E46;
  * 
@@ -73,6 +74,23 @@ h2 .nav-tab .dashicons {
 }
 
 /* Dashboard */
+.secupress-dashboard-header {
+	padding: 35px 15px 45px;
+	color: #B6B7BB;
+}
+.secupress-dashboard-header i {
+	position: relative;
+	font-size: 170px;
+	color: #5A626F;
+}
+.secupress-dashboard-header i:before {
+	position: absolute;
+	top: 60%;
+	left: -85px;
+}
+.secupress-dashboard-header .secupress-text-medium {
+	margin-bottom: -.35em;
+}
 .secupress-modules-dashboard {
 	-webkit-box-align: initial;
 	-webkit-align-items: initial;

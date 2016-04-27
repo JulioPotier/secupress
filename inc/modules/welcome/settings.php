@@ -2,7 +2,15 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 ?>
 
-	<h2><?php esc_html_e( 'Welcome in your modules dashboard.', 'secupress' ); ?></h2>
+	<div class="secupress-section-dark secupress-dashboard-header secupress-flex">
+		<div class="secupress-col-1-3 secupress-text-center">
+			<i class="icon-secupress" aria-hidden="true"></i>
+		</div>
+		<div class="secupress-col-2-3">
+			<p class="secupress-text-medium"><?php esc_html_e( 'Securize your website deeper thanks to our modules', 'secupress' ); ?></p>
+			<p><?php esc_html_e( 'Anti-Malware, Firewall, or Anti-Spam: add features, schedule scans and  save your datas.', 'secupress' ); ?></p>
+		</div>
+	</div>
 	
 	<div class="secupress-modules-dashboard secupress-bordered secupress-flex secupress-wrap">
 		<?php

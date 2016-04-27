@@ -183,6 +183,18 @@
 	position: relative;
 	padding: 0 15px;
 }
+.secupress-col-3-4 {
+	width: 75%;
+	-webkit-flex-basis: 75%;
+	-ms-flex-preferred-size: 75%;
+	flex-basis: 75%;
+}
+.secupress-col-2-3 {
+	width: 66.666%;
+	-webkit-flex-basis: 66.666%;
+	-ms-flex-preferred-size: 66.666%;
+	flex-basis: 66.666%;
+}
 .secupress-col-1-2 {
 	width: 50%;
 	-webkit-flex-basis: 50%;
