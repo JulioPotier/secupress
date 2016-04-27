@@ -69,8 +69,7 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements SecuPress_Scan
 			100 => __( 'Unable to create a user to test the login authentication system.', 'secupress' ),
 			// "bad"
 			200 => __( 'Your login system is <strong>not strong enough</strong>, you need a <strong>double authentication system</strong>.', 'secupress' ),
-			201 => __( 'The registration page is <strong>not protected</strong> from bots.', 'secupress' ),
-			202 => sprintf( __( 'Our module <a href="%s">%s</a> could fix this.', 'secupress' ), esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#row-double-auth_type', __( 'PasswordLess', 'secupress' ) ),
+			201 => sprintf( __( 'Our module <a href="%s">%s</a> could fix this.', 'secupress' ), esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#row-double-auth_type', __( 'PasswordLess', 'secupress' ) ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -97,6 +96,7 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements SecuPress_Scan
 			'user_email' => 'secupress_no_mail_EL@fakemail.' . time(),
 			'role'       => 'secupress_no_role_' . time(),
 		) );
+
 		if ( ! is_wp_error( $temp_id ) ) {
 
 			$check = wp_authenticate( $temp_login, $temp_pass );
@@ -106,7 +106,7 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements SecuPress_Scan
 			if ( is_a( $check, 'WP_User' ) ) {
 				// "bad"
 				$this->add_message( 200 );
-				$this->add_pre_fix_message( 202 );
+				$this->add_pre_fix_message( 201 );
 			}
 		} else {
 			// "warning"
@@ -128,9 +128,13 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements SecuPress_Scan
 	 * @return (array) The fix results.
 	 */
 	public function fix() {
-
 		if ( secupress_is_pro() && function_exists( 'secupress_pro_fix_easy_login' ) ) {
-			secupress_pro_fix_easy_login();
+			secupress_pro_fix_easy_login( $this );
+			// "good"
+			$this->add_fix_message( 1 );
+		} else {
+			// "bad"
+			$this->add_fix_message( 201 );
 		}
 
 		return parent::fix();

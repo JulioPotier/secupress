@@ -42,10 +42,10 @@ class SecuPress_Scan_Anti_Front_Bruteforce extends SecuPress_Scan implements Sec
 	protected static function init() {
 		self::$type     = 'WordPress';
 		self::$title    = __( 'Check if your website can be attacked by multiple and quick requests (DDoS like).', 'secupress' );
-		self::$more     = __( 'Noone needs to load more than 10 page per seconds on your front-end, back-end or login page. You should block the requests\' owner.', 'secupress' );
+		self::$more     = __( 'Nobody needs to load more than 10 pages per second on your front-end, back-end or login page. You should block the requests\' owner.', 'secupress' );
 		self::$more_fix = sprintf(
 			__( 'This will activate the <strong>%1$s</strong> from the module %2$s.', 'secupress' ),
-			__( '', 'secupress' ),
+			__( 'Anti Front Bruteforce', 'secupress' ),
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bruteforce_activated">' . __( 'Firewall', 'secupress' ) . '</a>'
 		);
 	}
@@ -88,7 +88,6 @@ class SecuPress_Scan_Anti_Front_Bruteforce extends SecuPress_Scan implements Sec
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-
 		if ( ! secupress_is_submodule_active( 'firewall', 'antibruteforcemanagement' ) ) {
 			// "bad"
 			$this->add_message( 200 );
@@ -111,9 +110,13 @@ class SecuPress_Scan_Anti_Front_Bruteforce extends SecuPress_Scan implements Sec
 	 * @return (array) The fix results.
 	 */
 	public function fix() {
-
 		if ( secupress_is_pro() && function_exists( 'secupress_pro_fix_anti_front_bruteforce' ) ) {
-			secupress_pro_fix_anti_front_bruteforce();
+			secupress_pro_fix_anti_front_bruteforce( $this );
+			// "good"
+			$this->add_fix_message( 1 );
+		} else {
+			// "bad"
+			$this->add_fix_message( 201 );
 		}
 
 		return parent::fix();
