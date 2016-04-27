@@ -146,13 +146,13 @@ function secupress_protect_readmes_nginx_rules() {
 	$marker  = 'readme_discloses';
 	$pattern = '(readme|changelog)\.(txt|md|html)$';
 	$base    = secupress_get_rewrite_bases();
-	$base    = rtrim( $bases['home_from'], '/' );
+	$base    = rtrim( $base['home_from'], '/' );
 
 	// - http://nginx.org/en/docs/http/ngx_http_core_module.html#location
 	$rules  = "
 server {
 	# BEGIN SecuPress $marker
-	location ~* ^$base(/|/.+/)$pattern {
+	location ~* $base(/|/.+/)$pattern {
 		return 404;
 	}
 	# END SecuPress
