@@ -2,7 +2,7 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /*------------------------------------------------------------------------------------------------*/
-/* CSS, JS, FAVICON ============================================================================= */
+/* CSS, JS ====================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
 add_action( 'admin_enqueue_scripts', '__secupress_add_settings_scripts' );
@@ -126,21 +126,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		) );
 	}
 
-	// Add the favicon.
-	add_action( 'admin_head', 'secupress_favicon' );
 }
-
-
-/**
- * Add a site icon to each of our settings pages.
- *
- * @since 1.0
- */
-function secupress_favicon() {
-	$version = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '?ver=' . time() : '';
-	echo '<link id="favicon" rel="shortcut icon" type="image/png" href="' . SECUPRESS_ADMIN_IMAGES_URL . 'black-shield-16.png' . $version . '" />';
-}
-
 
 /*------------------------------------------------------------------------------------------------*/
 /* PLUGINS LIST ================================================================================= */
