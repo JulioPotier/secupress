@@ -883,24 +883,12 @@
 	padding-top: 20px;
 }
 
-.secublock {
-	background-color: #FFF;
-	padding: 1px 10px 10px 15px;
-	border: 1px solid #ccc;
-	margin-bottom: 5px;
-	border-radius: 4px;
-}
-.secublock +.secublock {
-	margin-top: 54px;
-}
-
 p.description {
 	font-weight: 400;
 }
 
 p.submit {
 	margin-top: 0;
-	text-align: right;
 }
 
 textarea {

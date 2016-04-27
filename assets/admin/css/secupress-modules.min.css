@@ -21,62 +21,158 @@
 /**
  * === Main navigation between modules 
  */
-h2.nav-tab-wrapper {
-	float: left;
+.secupress-modules-sidebar {
+	-webkit-flex-basis: 240px;
+	-ms-flex-preferred-size: 240px;
+	flex-basis: 240px;
+	-webkit-flex-shrink: 0;
+	-ms-flex-negative: 0;
+	flex-shrink: 0;
+	-webkit-box-flex: 0;
+	-webkit-flex-grow: 0;
+	-ms-flex-positive: 0;
+	flex-grow: 0;
+	width: 240px;
 	padding: 0;
 	border: none;
+	border-radius: 3px;
+	background: #222831;
+	color: #F2F2F6;
+	margin-right: -2px;
+}
+
+.secupress-sidebar-header .secupress-flex {
+	padding: 15px 15px 10px;
+}
+.secupress-sh-logo {
+	width: 90px;
+	-webkit-flex-basis: 90px;
+	-ms-flex-preferred-size: 90px;
+	flex-basis: 90px;
+	-webkit-flex-shrink: 0;
+	-ms-flex-negative: 0;
+	flex-shrink: 0;
+}
+.secupress-sh-logo img {
+	margin-right: 20px;
+}
+.secupress-sh-name {
+	font-weight: bold;	
+}
+.secupress-sh-name p {
 	margin: 0;
 }
+.secupress-sh-title {
+	font-size: 16px;
+	color: #FFF;
+}
+.secupress-sh-subtitle {
+	font-size: 12px;
+	color: #B6B7BB;
+}
 
-h2 .nav-tab {
+.secupress-sh-version {
+	padding: 4px 15px 5px;
+	background: #26B3A9;
+	font-size: 11px;
+	font-weight: bold;
+	letter-spacing: 0.01em;
+	text-transform: uppercase;
+}
+.secupress-sh-version.version-pro {
+	background: #F7AB13;
+}
+
+.secupress-modules-list-links {
+	margin: 0; padding: 0;
+	list-style: none;	
+}
+.secupress-modules-list-links li {
 	display: block;
+	margin: 0;
+	padding: 0;
+}
+.secupress-modules-list-links a {
 	position: relative;
-	z-index: 10;
-	width: 170px;
-	padding: 7px 10px 10px;
-	border: 1px solid #CCC;
-	margin: 0 0 -1px;
-	font-weight: 700;
-	font-size: 15px;
-	line-height: 24px;
-	float: none;
+	display: block;
+	padding: 14px 55px 13px 15px;
+	color: #2BCDC1;
+	overflow: hidden;
+	text-decoration: none;
+	transition: all .275s;
 }
-h2 .nav-tab:first-child {
-	border-radius: 4px 4px 0 0;
+.secupress-modules-list-links li + li a {
+	border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
-h2 .nav-tab:last-child {
-	border-radius: 0 0 4px 4px;
+.secupress-modules-list-links li:last-child a {
+	border-bottom: 1px solid rgba(255, 255, 255, 0.2);	
 }
-h2 .nav-tab:focus,
-h2 .nav-tab-active {
-	z-index: 15;
+.secupress-modules-list-links a span {
+	display: block;
 }
-
-h2 .nav-tab .dashicons {
-	vertical-align: middle;
-	margin-right: 6px;
+.secupress-modules-list-links .secupress-tab-name {
+	font-size: 14px;
+}
+.secupress-modules-list-links .secupress-tab-summary {
+	color: #FFF;
+	font-size: 11px;
 }
 
+.secupress-modules-list-links i {
+	position: absolute;
+	right: 40px; top: 24px;
+}
+.secupress-modules-list-links i,
+.secupress-modules-list-links i:before {
+	font-size: 50px;
+	color: rgba(255, 255, 255, 0.15);
+}
+
+.secupress-modules-sidebar a.active {
+	background: rgba(255, 255, 255, 0.15);
+}
+.secupress-modules-sidebar a:hover,
+.secupress-modules-sidebar a:focus {
+	background: rgba(255, 255, 255, 0.075);
+}
 
 /**
  * === Main content of a module
  */
 
 .secupress-tab-content {
-	margin-left: 212px;
 	width: 800px;
-	max-width: 100%;
 	position: relative;
+	background: #FFF;
+	border-radius: 0 3px 3px 0;
+	border: 1px solid #CCC;
 }
 .secupress-tab-content-welcome {
-	margin-left: 0;
 	width: 1020px;
+	border-radius: 0;
+	border: 0 none;
 }
 
-/* Dashboard */
+.secupress-tab-content-header {
+	padding: 15px 175px 15px 20px;
+	background: #F2F2F6;
+	color: #5A626F; /*#393E46*/
+}
+.secupress-tc-title {
+	margin-top: .5em;
+	font-size: 24px;
+	color: #393E46;
+}
+
+.secupress-module-options-block {
+	padding: 15px 20px;
+}
+
+/* Dashboard (Welcome Page) */
 .secupress-dashboard-header {
 	padding: 35px 15px 45px;
 	color: #B6B7BB;
+	border-radius: 3px 3px 0 0;
 }
 .secupress-dashboard-header i {
 	position: relative;
@@ -89,6 +185,7 @@ h2 .nav-tab .dashicons {
 	left: -85px;
 }
 .secupress-dashboard-header .secupress-text-medium {
+	color: #FFF;
 	margin-bottom: -.35em;
 }
 .secupress-modules-dashboard {
@@ -98,6 +195,7 @@ h2 .nav-tab .dashicons {
 	-ms-grid-row-align: initial;
 	align-items: initial;
 	background: #ECF0F1;
+	border-radius: 0 0 3px 3px;
 }
 .secupress-module-box {
 	position: relative;
@@ -108,6 +206,9 @@ h2 .nav-tab .dashicons {
 	margin: 0.5px;
 	background: #FFF;
 	overflow: hidden;
+}
+.secupress-module-box-services {
+	background: transparent;
 }
 .secupress-mb-title {
 	margin-bottom: 10px;
@@ -128,7 +229,7 @@ h2 .nav-tab .dashicons {
 .secupress-module-box i {
 	width: 100px; height: 100px;
 	font-size: 100px;
-	color: #F2F2F2;
+	color: rgba(0,0,0,.075);
 }
 /* buttons */
 .secupress-module-box [class^="secupress-button"] {
@@ -140,17 +241,13 @@ h2 .nav-tab .dashicons {
 	box-shadow: 0 6px 12px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05), 0 3px 4px rgba(0,0,0,.05);
 }
 
+
+
+
+
+
+
 /* EXISTING */
-
-.secupress-tab-content > .secublock {
-	margin-bottom: 20px;
-}
-
-.secublock h3 {
-	border-bottom: 1px solid #CCC;
-	padding-bottom: 3px;
-	overflow: hidden;
-}
 
 .form-table {
 	clear: none;
@@ -158,11 +255,6 @@ h2 .nav-tab .dashicons {
 
 .toggle-password {
 	opacity: .7;
-}
-
-.nav-tab-wrapper a.active-module {
-	border-left: 3px solid #88BA0E;
-	width: 151px;
 }
 
 label {

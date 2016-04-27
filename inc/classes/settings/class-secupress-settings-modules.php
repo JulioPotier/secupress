@@ -161,22 +161,29 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			<?php secupress_admin_heading( __( 'Modules', 'secupress' ) ); ?>
 			<?php settings_errors(); ?>
 
-			<div class="secupress-wrapper">
+			<div class="secupress-wrapper<?php echo ( $is_welcome ? '' : ' secupress-flex secupress-flex-top' ) ?>">
 
 				<?php
 				// don't print sidebar if we are in Welcome page
 				// modules are included in the content of the page
 				if ( ! $is_welcome ) {
-					$type = true ? 'free' : 'pro';
-					$version_free = sprintf ( esc_html__( 'Free version %s', 'secupress' ), 'v' . SECUPRESS_VERSION );
-					$version_pro = sprintf ( esc_html__( 'Pro version %s', 'secupress' ), 'v' . SECUPRESS_VERSION );
+					$type			= true ? 'free' : 'pro';
+					$suffix			= $type === 'free' ? '' : '-pro';
+					$version_free	= sprintf ( esc_html__( 'Free version %s', 'secupress' ), 'v' . SECUPRESS_VERSION );
+					$version_pro	= sprintf ( esc_html__( 'Pro version %s', 'secupress' ), 'v' . SECUPRESS_VERSION );
 				?>
 				<div class="secupress-modules-sidebar hide-if-no-js">
 					<div class="secupress-sidebar-header">
-						<div class="secupress-sh-logo">
-							<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo2x.svg 2x" alt="">
+						<div class="secupress-flex">
+							<div class="secupress-sh-logo">
+								<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo<?php echo $suffix; ?>.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo<?php echo $suffix; ?>2x.svg 2x" alt="">
+							</div>
+							<div class="secupress-sh-name">
+								<p class="secupress-sh-title">SecuPress</p>
+								<p class="secupress-sh-subtitle"><?php esc_html_e( 'the best security for WordPress', 'secupress' ); ?></p>
+							</div>
 						</div>
-						<div class="secupress-sh-version">
+						<div class="secupress-sh-version version-<?php echo $type; ?>">
 							<?php echo ${'version_' . $type}; ?>
 						</div>
 					</div>
@@ -205,12 +212,14 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 */
 	protected function print_tabs() {
 		foreach ( static::get_modules() as $key => $module ) {
-			$class = $this->get_current_module() === $key  ? ' nav-tab-active'    : '';
+			$class = $this->get_current_module() === $key  ? ' active'    : '';
 			$icon  = isset( $module['dashicon'] )          ?  $module['dashicon'] : 'admin-generic';
 			?>
 			<li>
-				<a href="<?php echo esc_url( secupress_admin_url( 'modules', $key ) ); ?>" class="nav-tab<?php echo $class; ?> active_module module-<?php echo sanitize_key( $key ); ?>">
-					<span class="dashicons dashicons-<?php echo $icon; ?>" aria-hidden="true"></span> <?php echo $module['title']; ?>
+				<a href="<?php echo esc_url( secupress_admin_url( 'modules', $key ) ); ?>" class="<?php echo $class; ?> module-<?php echo sanitize_key( $key ); ?>">
+					<span class="secupress-tab-name"><?php echo $module['title']; ?></span>
+					<span class="secupress-tab-summary"><?php echo $module['summaries']['small']; ?></span>
+					<i class="dashicons dashicons-<?php echo $icon; ?>" aria-hidden="true"></i>
 				</a>
 			</li>
 			<?php
@@ -258,7 +267,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		}
 		?>
 
-		<div class="secublock">
+		<div class="secupress-tab-content-header">
 			<?php
 			$this->print_module_title();
 			$this->print_module_description();
@@ -267,7 +276,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 
 		<?php $this->print_open_form_tag(); ?>
 
-		<div id="block-advanced_options" data-module="<?php echo $this->get_current_module(); ?>">
+		<div class="secupress-module-options-block" id="block-advanced_options" data-module="<?php echo $this->get_current_module(); ?>">
 			<?php
 			$this->load_module_settings();
 			$this->print_module_reset_box();
@@ -316,8 +325,8 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 *
 	 * @return (object) The class instance.
 	 */
-	protected function print_module_title( $tag = 'h3' ) {
-		echo "<$tag>" . $this->get_module_title() . "</$tag>\n";
+	protected function print_module_title( $tag = 'h2' ) {
+		echo '<' . $tag . ' class="secupress-tc-title">' . $this->get_module_title() . "</$tag>\n";
 		return $this;
 	}
 
