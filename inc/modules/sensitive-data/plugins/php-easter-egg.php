@@ -145,7 +145,7 @@ server {
 	# BEGIN SecuPress $marker
 	location / {
 		if ( \$query_string ~* \"\=PHP[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\" ) {
-			return 403;
+			deny all;
 		}
 	}
 	# END SecuPress
