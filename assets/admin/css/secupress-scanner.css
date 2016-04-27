@@ -138,13 +138,16 @@
 	font-size: 13px;
 }
 
-.scanning .secupress-fix-status-actions,
+.scanning .secupress-fix-status-actions {
+	visibility: hidden;
+	speak: none;
+}
 .status-good .secupress-fix-status-actions,
 .status-warning .secupress-fix-status-actions,
 .status-notscannedyet .secupress-fix-status-actions {
 	display: none;
 	visibility: hidden;
-	speak: none;
+	speak: none
 }
 
 .secupress-reports-list {
@@ -198,21 +201,6 @@
 }
 
 /* Scanning & Fixing animations */
-
-[id="secupress-tests"] .secupress-item-all.scanning:before {
-	opacity: 1;
-	animation: scanning 2s infinite linear;
-}
-@keyframes scanning {
-	0%, 100% {
-		top: 0;
-		bottom: 70%;
-	}
-	50% {
-		top: 70%;
-		bottom: 0;
-	}
-}
 
 .secupress-item-all.scanning .icon-refresh {
 	animation: rotation 2s infinite linear;
@@ -374,27 +362,20 @@
 	top: 0; bottom: 0; left: 0;
 	width: 10px;
 	background: #5a626f;
-	border-radius: 3px 2px 2px 3px;
+	box-shadow: 0 3px 0 #5a626f;
+	border-radius: 3px 0 0 3px;
 }
 .secupress-item-all.status-bad:after {
 	background: #F2295E;
+	box-shadow: 0 3px 0 #F2295E;
 }
 .secupress-item-all.status-good:after {
 	background: #2BCDC1;
+	box-shadow: 0 3px 0 #2BCDC1;
 }
 .secupress-item-all.status-warning:after {
 	background: #F1C40F;
-}
-/* Pseudo element used for scanning animation */
-[id="secupress-tests"] .secupress-item-all:before {
-	content: "";
-	position: absolute;
-	z-index: 1;
-	top: 0; bottom: 70%; left: 0;
-	width: 10px;
-	opacity: 0;
-	background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.7), rgba(255,255,255,0) );
-	transition: opacity: .275s;
+	box-shadow: 0 3px 0 #F1C40F;
 }
 
 .secupress-item-header {
@@ -459,7 +440,10 @@
 	padding: 10px 15px;
 }
 .secupress-fix-result-actions {
-	padding: 1px 15px 8px;
+	padding: 8px 15px;
+}
+.secupress-fix-result + .secupress-fix-result-actions {
+	padding-top: 0;
 }
 
 .secupress-fix-result-actions p {
