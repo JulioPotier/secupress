@@ -9,21 +9,52 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @return (bool) True if the folder is writable and the `.htaccess` file exists.
  */
 function secupress_pre_backup() {
-	$backup_dir    = secupress_get_hashed_folder_name( 'backup', WP_CONTENT_DIR . '/backups/' );
-	$htaccess_file = dirname( $backup_dir ) . '/.htaccess';
-	$fs_chmod_dir  = defined( 'FS_CHMOD_DIR' ) ? FS_CHMOD_DIR : 0755;
+	global $is_apache, $is_nginx, $is_iis7;
+
+	$backups_dir  = WP_CONTENT_DIR . '/backups/';
+	$backup_dir   = secupress_get_hashed_folder_name( 'backup', $backups_dir );
+	$fs_chmod_dir = defined( 'FS_CHMOD_DIR' ) ? FS_CHMOD_DIR : 0755;
 
 	if ( ! is_dir( $backup_dir ) ) {
 		mkdir( $backup_dir, $fs_chmod_dir, true );
 	}
 
-	if ( ! file_exists( $htaccess_file ) ) {
-		$htaccess_file_content  = "Order allow,deny\n";
-		$htaccess_file_content .= 'Deny from all';
-		file_put_contents( $htaccess_file, $htaccess_file_content );
+	if ( $is_apache ) {
+		$file          = '.htaccess';
+		$file_content  = "Order allow,deny\n";
+		$file_content .= 'Deny from all';
+	} elseif ( $is_iis7 ) {
+		// - https://www.iis.net/configreference/system.webserver/security/authorization
+		// - https://technet.microsoft.com/en-us/library/cc772441%28v=ws.10%29.aspx
+		$file          = 'web.config';
+		$file_content  = '<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <system.webServer>
+    <security>
+      <authorization>
+        <remove users="*" roles="" verbs="" />
+        <add accessType="Deny" users="*" roles="" verbs="" />
+      </authorization>
+    </security>
+  </system.webServer>
+</configuration>';
+	} elseif ( $is_nginx ) {
+		return is_writable( $backup_dir );
 	}
 
-	return is_writable( $backup_dir ) && file_exists( $htaccess_file );
+	if ( ! $file ) {
+		return false;
+	}
+
+	$file = $backups_dir . $file;
+
+	if ( file_exists( $file ) ) {
+		return is_writable( $backup_dir );
+	}
+
+	file_put_contents( $file, $file_content );
+
+	return is_writable( $backup_dir ) && file_exists( $file );
 }
 
 
