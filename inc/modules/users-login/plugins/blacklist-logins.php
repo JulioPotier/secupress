@@ -22,6 +22,9 @@ add_action( 'auth_redirect', 'secupress_auth_redirect_blacklist_logins' );
  * @param (int) $user_id The user ID.
  */
 function secupress_auth_redirect_blacklist_logins( $user_id ) {
+	if ( ! is_admin() || defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		return;
+	}
 
 	$user = get_userdata( $user_id );
 	$list = secupress_get_blacklisted_usernames();

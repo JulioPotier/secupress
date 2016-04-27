@@ -2,128 +2,34 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /**
- * Create a URL to easily access to our pages.
+ * First half of escaping for LIKE special characters % and _ before preparing for MySQL.
+ *
+ * Use this only before wpdb::prepare() or esc_sql().  Reversing the order is very bad for security.
+ *
+ * Example Prepared Statement:
+ *  $wild = '%';
+ *  $find = 'only 43% of planets';
+ *  $like = $wild . $wpdb->esc_like( $find ) . $wild;
+ *  $sql  = $wpdb->prepare( "SELECT * FROM $wpdb->posts WHERE post_content LIKE %s", $like );
+ *
+ * Example Escape Chain:
+ *  $sql  = esc_sql( $wpdb->esc_like( $input ) );
  *
  * @since 1.0
+ * @since WP 4.0.0
  *
- * @param (string) $page   The last word of the secupress page slug.
- * @param (string) $module The required module.
- *
- * @return (string) The URL.
+ * @param (string) $text The raw text to be escaped. The input typed by the user should have no extra or deleted slashes.
+
+ * @return (string) Text in the form of a LIKE phrase. The output is not SQL safe. Call $wpdb::prepare() or real_escape next.
  */
-function secupress_admin_url( $page, $module = '' ) {
-	$module = $module ? '&module=' . $module : '';
-	$page   = str_replace( '&', '_', $page );
-	$url    = 'admin.php?page=secupress_' . $page . $module;
+function secupress_esc_like( $text ) {
+	global $wpdb;
 
-	return is_multisite() ? network_admin_url( $url ) : admin_url( $url );
-}
-
-
-/**
- * Get the user capability required to work with the plugin.
- *
- * @since 1.0
- *
- * @param (bool) $force_mono Set to true to get the capability for monosite, whatever we're on multisite or not.
- *
- * @return (string) The capability.
- */
-function secupress_get_capability( $force_mono = false ) {
-	if ( $force_mono ) {
-		return 'administrator';
-	}
-	return is_multisite() ? 'manage_network_options' : 'administrator';
-}
-
-
-if ( ! function_exists( 'in_array_deep' ) ) :
-	/**
-	 * Like in_array but for nested arrays.
-	 *
-	 * @since 1.0
-	 *
-	 * @param (mixed) $needle   The value to find.
-	 * @param (array) $haystack The array to search.
-	 *
-	 * @return (bool)
-	 */
-	function in_array_deep( $needle, $haystack ) {
-		if ( $haystack ) {
-			foreach ( $haystack as $item ) {
-				if ( $item === $needle || ( is_array( $item ) && in_array_deep( $needle, $item ) ) ) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-endif;
-
-
-/**
- * Return the path to a class.
- *
- * @since 1.0
- *
- * @param (string) $prefix          Only one possible value so far: "scan".
- * @param (string) $class_name_part The classes name is built as follow: "SecuPress_{$prefix}_{$class_name_part}".
- *
- * @return (string) Path of the class.
- */
-function secupress_class_path( $prefix, $class_name_part = '' ) {
-	$folders = array(
-		'scan'      => 'scanners',
-		'singleton' => 'common',
-		'logs'      => 'common',
-		'log'       => 'common',
-	);
-
-	$prefix = strtolower( str_replace( '_', '-', $prefix ) );
-	$folder = isset( $folders[ $prefix ] ) ? $folders[ $prefix ] : $prefix;
-
-	$class_name_part = strtolower( str_replace( '_', '-', $class_name_part ) );
-	$class_name_part = $class_name_part ? '-' . $class_name_part : '';
-
-	return SECUPRESS_CLASSES_PATH . $folder . '/class-secupress-' . $prefix . $class_name_part . '.php';
-}
-
-
-/**
- * Require a class.
- *
- * @since 1.0
- *
- * @param (string) $prefix          Only one possible value so far: "scan".
- * @param (string) $class_name_part The classes name is built as follow: "SecuPress_{$prefix}_{$class_name_part}".
- */
-function secupress_require_class( $prefix, $class_name_part = '' ) {
-	$path = secupress_class_path( $prefix, $class_name_part );
-
-	if ( $path ) {
-		require_once( $path );
-	}
-}
-
-
-/**
- * Is current WordPress version older than X.X.X?
- *
- * @since 1.0
- *
- * @param (string) $version The version to test.
- *
- * @return (bool) Result of the `version_compare()`.
- */
-function secupress_wp_version_is( $version ) {
-	global $wp_version;
-	static $is = array();
-
-	if ( isset( $is[ $version ] ) ) {
-		return $is[ $version ];
+	if ( method_exists( $wpdb, 'esc_like' ) ) {
+		return $wpdb->esc_like( $text );
 	}
 
-	return ( $is[ $version ] = version_compare( $wp_version, $version ) >= 0 );
+	return addcslashes( $text, '_%\\' );
 }
 
 
@@ -162,238 +68,6 @@ function secupress_prepare_email_for_like_search( $email ) {
 	$email    = str_split( $email );
 	$email    = implode( '%', $email );
 	return $email . '%' . $provider;
-}
-
-
-/**
- * Get the email address used when the plugin send a message.
- *
- * @since 1.0
- *
- * @param (bool) $from_header True to return the "from" header.
- *
- * @return (string)
- */
-function secupress_get_email( $from_header = false ) {
-	$sitename = strtolower( $_SERVER['SERVER_NAME'] );
-
-	if ( substr( $sitename, 0, 4 ) === 'www.' ) {
-		$sitename = substr( $sitename, 4 );
-	}
-
-	$email = 'noreply@' . $sitename;
-
-	return $from_header ? 'from: ' . SECUPRESS_PLUGIN_NAME . ' <' . $email . '>' : $email;
-}
-
-
-/**
- * Tell if an IP address is valid.
- *
- * @since 1.0
- *
- * @param (string) $ip An IP address.
- *
- * @return (string|bool) The IP address if valid. False otherwise.
- */
-function secupress_ip_is_valid( $ip ) {
-	if ( ! $ip || ! is_string( $ip ) ) {
-		return false;
-	}
-
-	$ip = trim( $ip );
-	return filter_var( $ip, FILTER_VALIDATE_IP );
-}
-
-
-/**
- * Tell if an IP address is whitelisted.
- *
- * @since 1.0
- *
- * @param (string) $ip An IP address. If not provided, the current IP by default.
- *
- * @return (bool).
- */
-function secupress_ip_is_whitelisted( $ip = null ) {
-	$ip = $ip ? $ip : secupress_get_ip();
-
-	if ( ! $ip = secupress_ip_is_valid( $ip ) ) {
-		return false;
-	}
-
-	// Some hardcoded IPs that are always whitelisted.
-	$whitelist = array(
-		$_SERVER['SERVER_ADDR'] => 1,
-		'::1'                   => 1,
-		'37.187.85.82'          => 1, // WPRocketbot.
-		'37.187.58.236'         => 1, // WPRocketbot.
-		'167.114.234.234'       => 1, // WPRocketbot.
-	);
-
-	if ( isset( $whitelist[ $ip ] ) ) {
-		return true;
-	}
-
-	// The IPs from the settings page.
-	$whitelist = secupress_get_module_option( 'banned-ips_whitelist', '', 'logs' );
-	$whitelist = explode( "\n", $whitelist );
-	$whitelist = array_flip( $whitelist );
-
-	/**
-	 * Filter the whitelist.
-	 *
-	 * @since 1.0
-	 *
-	 * @param (array)  $whitelist The whitelist. IPs are the array keys.
-	 * @param (string) $ip        The IP address.
-	 */
-	$whitelist = apply_filters( 'secupress.ips_whitelist', $whitelist, $ip );
-
-	return isset( $whitelist[ $ip ] );
-}
-
-
-/**
- * Get the main blog ID.
- *
- * @since 1.0
- *
- * @return (int)
- */
-function secupress_get_main_blog_id() {
-	static $blog_id;
-
-	if ( ! isset( $blog_id ) ) {
-		if ( ! is_multisite() ) {
-			$blog_id = 1;
-		}
-		elseif ( ! empty( $GLOBALS['current_site']->blog_id ) ) {
-			$blog_id = absint( $GLOBALS['current_site']->blog_id );
-		}
-		elseif ( defined( 'BLOG_ID_CURRENT_SITE' ) ) {
-			$blog_id = absint( BLOG_ID_CURRENT_SITE );
-		}
-		$blog_id = ! empty( $blog_id ) ? $blog_id : 1;
-	}
-
-	return $blog_id;
-}
-
-
-/**
- * Tell if users can register, whatever we're in a Multisite or not.
- *
- * @since 1.0
- *
- * @return (bool)
- */
-function secupress_users_can_register() {
-	if ( ! is_multisite() ) {
-		return (bool) get_option( 'users_can_register' );
-	}
-
-	$registration = get_site_option( 'registration' );
-
-	return 'user' === $registration || 'all' === $registration;
-}
-
-
-/**
- * Store, get or delete static data.
- * Getter:   no need to provide a second parameter.
- * Setter:   provide a second parameter for the value.
- * Deletter: provide null as second parameter to remove the previous value.
- *
- * @since 1.0
- *
- * @param (string) $key An identifier key.
- *
- * @return (mixed) The stored data or null.
- */
-function secupress_cache_data( $key ) {
-	static $datas = array();
-
-	$func_get_args = func_get_args();
-
-	if ( array_key_exists( 1, $func_get_args ) ) {
-		if ( null === $func_get_args[1] ) {
-			unset( $datas[ $key ] );
-		} else {
-			$datas[ $key ] = $func_get_args[1];
-		}
-	}
-
-	return isset( $datas[ $key ] ) ? $datas[ $key ] : null;
-}
-
-
-/**
- * Check whether WordPress is in "installation" mode.
- *
- * @since 1.0
- *
- * @return (bool) true if WP is installing, otherwise false.
- */
-function secupress_wp_installing() {
-	return function_exists( 'wp_installing' ) ? wp_installing() : defined( 'WP_INSTALLING' ) && WP_INSTALLING;
-}
-
-
-/**
- * Returns a i18n message used with a packed plugin activation checkbox to tell the user that the standalone plugin will be deactivated.
- *
- * @since 1.0
- *
- * @param (string) $plugin_basename The standalone plugin basename.
- *
- * @return (string|null) Return null if the plugin is not activated.
- */
-function secupress_get_deactivate_plugin_string( $plugin_basename ) {
-	if ( ! is_plugin_active( $plugin_basename ) ) {
-		return null;
-	}
-
-	$plugin_basename = path_join( WP_PLUGIN_DIR, $plugin_basename );
-	$plugin = get_plugin_data( $plugin_basename, false, false );
-
-	return sprintf( __( 'This will also deactivate the plugin %s.', 'secupress' ), '<b>' . $plugin['Name'] . '</b>' );
-}
-
-
-/**
- * Returns a i18n message to act like a CTA on pro version.
- *
- * @since 1.0
- *
- * @param (string) $format You can use it to embed the message in a HTML tag, usage of "%s" is mandatory.
- *
- * @return (string)
- */
-function secupress_get_pro_version_string( $format = '' ) {
-	$message = sprintf( __( 'Available in <a href="%s">Pro Version</a>.', 'secupress' ), '#' ); // //// #.
-	if ( $format ) {
-		$message = sprintf( $format, $message );
-	}
-	return $message;
-}
-
-
-/**
- * Returns a i18n message to act like a CTA to get an API key.
- *
- * @since 1.0
- *
- * @param (string) $format You can use it to embed the message in a HTML tag, usage of "%s" is mandatory.
- *
- * @return (string)
- */
-function secupress_get_valid_key_string( $format = '' ) {
-	$message = sprintf( __( 'Requires a <a href="%s">Free API Key</a>.', 'secupress' ), '#' ); // //// # + wording.
-	if ( $format ) {
-		$message = sprintf( $format, $message );
-	}
-	return $message;
 }
 
 
@@ -437,15 +111,92 @@ function secupress_generate_hash( $context, $start = 2, $length = 6 ) {
 
 
 /**
- * Used in `array_filter()`: return true if the given path is not in the `wp-content` folder.
+ * Generate a random key.
  *
  * @since 1.0
  *
- * @param (string) $item A file path.
+ * @param (int) $length Length of the key.
  *
- * @return (bool)
+ * @return (string)
  */
-function secupress_filter_no_content( $item ) {
-	$item = str_replace( '\\', '/', $item );
-	return strpos( "/$item/", '/wp-content/' ) === false;
+function secupress_generate_key( $length = 16 ) {
+	$chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+
+	$key = '';
+	for ( $i = 0; $i < $length; $i++ ) {
+		$key .= $chars[ wp_rand( 0, 31 ) ];
+	}
+
+	return $key;
+}
+
+
+/**
+ * Validate a range.
+ *
+ * @since 1.0
+ *
+ * @param (int)   $value   The value to test.
+ * @param (int)   $min     Minimum value.
+ * @param (int)   $max     Maximum value.
+ * @param (mixed) $default What to return if outside of the range. Default: false.
+ *
+ * @return (mixed) The value on success. `$default` on failure.
+ */
+function secupress_validate_range( $value, $min, $max, $default = false ) {
+	$test = filter_var( $value, FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => $min, 'max_range' => $max ) ) );
+	if ( false === $test ) {
+		return $default;
+	}
+	return $value;
+}
+
+
+/**
+ * Limit a number to a high and low value.
+ * A bit like `secupress_validate_range()` but:
+ * - cast the value as integer.
+ * - return the min/max value instead of false/default.
+ *
+ * @since 1.0
+ *
+ * @param (numeric) $value The value to limit.
+ * @param (int)     $min   The minimum value.
+ * @param (int)     $max   The maximum value.
+ *
+ * @return (int)
+ */
+function secupress_minmax_range( $value, $min, $max ) {
+	$value = (int) $value;
+	$value = max( $min, $value );
+	$value = min( $value, $max );
+	return $value;
+}
+
+
+/**
+ * Sanitize a `$separator` separated list by removing doubled-separators.
+ *
+ * @since 1.0
+ *
+ * @param (string) $list      The list.
+ * @param (string) $separator The separator.
+ *
+ * @return (string) The list.
+ */
+function secupress_sanitize_list( $list, $separator = ', ' ) {
+	if ( empty( $list ) ) {
+		return '';
+	}
+
+	$trimed_sep = trim( $separator );
+	$double_sep = $trimed_sep . $trimed_sep;
+	$list = preg_replace( '/\s*' . $trimed_sep . '\s*/', $trimed_sep, $list );
+	$list = trim( $list, $trimed_sep . ' ' );
+
+	while ( false !== strpos( $list, $double_sep ) ) {
+		$list = str_replace( $double_sep, $trimed_sep, $list );
+	}
+
+	return str_replace( $trimed_sep, $separator, $list );
 }

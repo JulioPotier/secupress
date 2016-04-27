@@ -572,7 +572,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					?>
 				<?php
 				echo $label_close;
-				echo $has_disabled ? secupress_get_pro_version_string( '<span class="description">(*) %s</span>' ) : '';
+				echo $has_disabled ? static::get_pro_version_string( '<span class="description">(*) %s</span>' ) : '';
 				break;
 
 			case 'checkbox' :
@@ -599,7 +599,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 						<input type="checkbox" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>[]" value="<?php echo $val; ?>"<?php checked( isset( $value[ $val ] ) ); ?><?php echo $disabled; ?><?php echo $attributes; ?>>
 						<?php echo $title; ?>
 					</label>
-					<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? secupress_get_pro_version_string( '<span class="description">%s</span>' ) : ''; ?>
+					<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? static::get_pro_version_string( '<span class="description">%s</span>' ) : ''; ?>
 					<br/>
 					<?php
 				}
@@ -615,7 +615,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 						<input type="radio" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>" value="<?php echo $val; ?>"<?php checked( $value, $val ); ?><?php echo $disabled; ?><?php echo $attributes; ?>>
 						<?php echo $title; ?>
 					</label>
-					<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? secupress_get_pro_version_string( '<span class="description">%s</span>' ) : ''; ?>
+					<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? static::get_pro_version_string( '<span class="description">%s</span>' ) : ''; ?>
 					<br/>
 					<?php
 				}
@@ -1387,7 +1387,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					if ( static::is_pro_feature( $field['args']['name'] ) ) {
 						// If it's a pro feature, add a warning.
 						$format = $field['args']['description'] ? '<br>%s' : '';
-						$field['args']['description'] .= secupress_get_pro_version_string( $format );
+						$field['args']['description'] .= static::get_pro_version_string( $format );
 					}
 					if ( $field['args']['description'] ) {
 						echo '<p class="description">' . $field['args']['description'] . '</p>';
@@ -1487,6 +1487,24 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 */
 	protected static function is_pro_feature( $value ) {
 		return secupress_feature_is_pro( $value ) && ! secupress_is_pro();
+	}
+
+
+	/**
+	 * Returns a i18n message to act like a CTA on pro version.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $format You can use it to embed the message in a HTML tag, usage of "%s" is mandatory.
+	 *
+	 * @return (string)
+	 */
+	protected static function get_pro_version_string( $format = '' ) {
+		$message = sprintf( __( 'Available in <a href="%s">Pro Version</a>.', 'secupress' ), '#' ); // //// #.
+		if ( $format ) {
+			$message = sprintf( $format, $message );
+		}
+		return $message;
 	}
 
 

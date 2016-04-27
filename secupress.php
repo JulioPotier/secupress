@@ -44,9 +44,7 @@ define( 'SECUPRESS_PLUGIN_FILE'           , 'secupress/secupress.php' );
 define( 'SECUPRESS_PATH'                  , realpath( plugin_dir_path( SECUPRESS_FILE ) ) . '/' );
 define( 'SECUPRESS_INC_PATH'              , realpath( SECUPRESS_PATH . 'inc/' ) . '/' );
 define( 'SECUPRESS_MODULES_PATH'          , realpath( SECUPRESS_INC_PATH . 'modules/' ) . '/' );
-define( 'SECUPRESS_FRONT_PATH'            , realpath( SECUPRESS_INC_PATH . 'front/' ) . '/' );
 define( 'SECUPRESS_ADMIN_PATH'            , realpath( SECUPRESS_INC_PATH . 'admin/' ) . '/' );
-define( 'SECUPRESS_FUNCTIONS_PATH'        , realpath( SECUPRESS_INC_PATH . 'functions/' ) . '/' );
 define( 'SECUPRESS_CLASSES_PATH'          , realpath( SECUPRESS_INC_PATH . 'classes/' ) . '/' );
 define( 'SECUPRESS_ADMIN_SETTINGS_MODULES', SECUPRESS_ADMIN_PATH . 'modules/' );
 define( 'SECUPRESS_PLUGIN_URL'            , plugin_dir_url( SECUPRESS_FILE ) );
@@ -72,7 +70,9 @@ if ( ! defined( 'SECUPRESS_LASTVERSION' ) ) {
 /**
  * All the stuff for the plugin activation and deactivation.
  */
-require( SECUPRESS_ADMIN_PATH . 'activation.php' );
+if ( is_admin() ) {
+	require( SECUPRESS_ADMIN_PATH . 'activation.php' );
+}
 
 
 add_action( 'plugins_loaded', 'secupress_init', 0 );
@@ -82,7 +82,7 @@ add_action( 'plugins_loaded', 'secupress_init', 0 );
  * @since 1.0
  */
 function secupress_init() {
-	global $wp_version;
+	global $wp_version, $is_iis7;
 
 	// Nothing to do if autosave.
 	if ( defined( 'DOING_AUTOSAVE' ) ) {
@@ -92,59 +92,76 @@ function secupress_init() {
 	// Load translations.
 	secupress_load_plugin_textdomain_translations();
 
+	// Check php version.
 	if ( version_compare( phpversion(), SECUPRESS_PHP_MIN ) < 0 ) {
-		require( ABSPATH . 'wp-admin/includes/plugin.php' );
+		require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 		deactivate_plugins( plugin_basename( SECUPRESS_FILE ) );
-		wp_die( sprintf( __( '<b>SecuPress</b> requires PHP %s minimum, your website is actually running version %s.', 'secupress' ), '<code>' . SECUPRESS_PHP_MIN . '</code>', '<code>' . phpversion() . '</code>' ) );
-	}
-	if ( version_compare( $wp_version, SECUPRESS_WP_MIN ) < 0 ) {
-		require( ABSPATH . 'wp-admin/includes/plugin.php' );
-		deactivate_plugins( plugin_basename( SECUPRESS_FILE ) );
-		wp_die( sprintf( __( '<b>SecuPress</b> requires WordPress %s minimum, your website is actually running version %s.', 'secupress' ), '<code>' . SECUPRESS_WP_MIN . '</code>', '<code>' . $wp_version . '</code>' ) );
+		wp_die( sprintf( __( '<strong>SecuPress</strong> requires PHP %s minimum, your website is actually running version %s.', 'secupress' ), '<code>' . SECUPRESS_PHP_MIN . '</code>', '<code>' . phpversion() . '</code>' ) );
 	}
 
-	// Call defines, classes and functions.
-	require( SECUPRESS_FUNCTIONS_PATH . 'compat.php' );
-	require( SECUPRESS_FUNCTIONS_PATH . 'formatting.php' );
-	require( SECUPRESS_FUNCTIONS_PATH . 'options.php' );
-	require( SECUPRESS_INC_PATH       . 'network-options-autoload.php' );
+	// Check WordPress version.
+	if ( version_compare( $wp_version, SECUPRESS_WP_MIN ) < 0 ) {
+		require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+		deactivate_plugins( plugin_basename( SECUPRESS_FILE ) );
+		wp_die( sprintf( __( '<strong>SecuPress</strong> requires WordPress %s minimum, your website is actually running version %s.', 'secupress' ), '<code>' . SECUPRESS_WP_MIN . '</code>', '<code>' . $wp_version . '</code>' ) );
+	}
+
+	// Functions.
+	require( SECUPRESS_INC_PATH . 'functions/compat.php' );
+	require( SECUPRESS_INC_PATH . 'functions/common.php' );
+	require( SECUPRESS_INC_PATH . 'functions/formatting.php' );
+	require( SECUPRESS_INC_PATH . 'functions/options.php' );
+	require( SECUPRESS_INC_PATH . 'functions/modules.php' );
+	require( SECUPRESS_INC_PATH . 'functions/ip.php' );
+	require( SECUPRESS_INC_PATH . 'functions/files.php' );
+	require( SECUPRESS_INC_PATH . 'functions/htaccess.php' );
+	if ( $is_iis7 ) {
+		require( SECUPRESS_INC_PATH . 'functions/iis7.php' );
+	}
+
+	// Hooks.
+	require( SECUPRESS_INC_PATH . 'network-options-autoload.php' );
+	require( SECUPRESS_INC_PATH . 'common.php' );
+	require( SECUPRESS_INC_PATH . 'admin-bar.php' );
+	require( SECUPRESS_INC_PATH . 'cron.php' );
 
 	// Last constants.
 	define( 'SECUPRESS_PLUGIN_NAME', secupress_get_option( 'wl_plugin_name', 'SecuPress' ) );
 	define( 'SECUPRESS_PLUGIN_SLUG', sanitize_title( SECUPRESS_PLUGIN_NAME ) );
 
-	// Call defines, classes and functions.
-	require( SECUPRESS_FUNCTIONS_PATH . 'files.php' );
-	require( SECUPRESS_FUNCTIONS_PATH . 'admin.php' );
-	require( SECUPRESS_FUNCTIONS_PATH . 'plugins.php' );
-	require( SECUPRESS_FUNCTIONS_PATH . 'db.php' );
-	require( SECUPRESS_FRONT_PATH     . 'htaccess.php' );
-	require( SECUPRESS_FRONT_PATH     . 'common.php' );
-	require( SECUPRESS_INC_PATH       . 'admin-bar.php' );
-	require( SECUPRESS_INC_PATH       . 'cron.php' );
-	require( SECUPRESS_MODULES_PATH   . 'modules.php' );
-
+	// The Singleton class.
 	secupress_require_class( 'Singleton' );
 
 	if ( is_admin() ) {
-
 		if ( is_multisite() ) {
+			// Hooks and functions for multisite.
 			require( SECUPRESS_ADMIN_PATH . 'multisite/centralize-blog-options.php' );
 			require( SECUPRESS_ADMIN_PATH . 'multisite/options.php' );
 			require( SECUPRESS_ADMIN_PATH . 'multisite/settings.php' );
 		}
 
+		// The notices class.
 		secupress_require_class( 'Admin', 'Notices' );
 		SecuPress_Admin_Notices::get_instance();
 
-		require( SECUPRESS_FUNCTIONS_PATH . 'modules.php' );
-		require( SECUPRESS_FUNCTIONS_PATH . 'backup.php' );
-		require( SECUPRESS_ADMIN_PATH . 'options.php' );
-		require( SECUPRESS_ADMIN_PATH . 'notices.php' );
-		require( SECUPRESS_ADMIN_PATH . 'admin.php' );
-		require( SECUPRESS_ADMIN_PATH . 'profiles.php' );
-		require( SECUPRESS_ADMIN_PATH . 'upgrader.php' );
+		// Functions.
+		require( SECUPRESS_ADMIN_PATH . 'functions/admin.php' );
+		require( SECUPRESS_ADMIN_PATH . 'functions/options.php' );
+		require( SECUPRESS_ADMIN_PATH . 'functions/settings.php' );
+		require( SECUPRESS_ADMIN_PATH . 'functions/ajax-post.php' );
+		require( SECUPRESS_ADMIN_PATH . 'functions/scan-fix.php' );
+		require( SECUPRESS_ADMIN_PATH . 'functions/modules.php' );
+		require( SECUPRESS_ADMIN_PATH . 'functions/notices.php' );
+		require( SECUPRESS_ADMIN_PATH . 'functions/db.php' );
+		require( SECUPRESS_ADMIN_PATH . 'functions/backup.php' );
 
+		// Hooks.
+		require( SECUPRESS_ADMIN_PATH . 'options.php' );
+		require( SECUPRESS_ADMIN_PATH . 'settings.php' );
+		require( SECUPRESS_ADMIN_PATH . 'ajax-post-callbacks.php' );
+		require( SECUPRESS_ADMIN_PATH . 'notices.php' );
+		require( SECUPRESS_ADMIN_PATH . 'user-profile.php' );
+		require( SECUPRESS_ADMIN_PATH . 'upgrader.php' );
 	}
 
 	/**
