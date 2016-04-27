@@ -100,7 +100,6 @@ function secupress_get_scanners() {
 		),
 		'medium' => array(
 			'Inactive_Plugins_Themes',
-			'Non_Login_Time_Slot',
 			'Bad_Usernames',
 			'Bad_Request_Methods',
 			'PhpVersion',
@@ -117,6 +116,10 @@ function secupress_get_scanners() {
 			'DirectoryIndex',
 		),
 	);
+
+	if ( ! secupress_users_can_register() ) {
+		$tests['medium'][] = 'Non_Login_Time_Slot';
+	}
 
 	if ( class_exists( 'SitePress' ) ) {
 		$tests['medium'][] = 'Wpml_Discloses';
