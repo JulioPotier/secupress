@@ -21,14 +21,14 @@
 /**
  * === Main navigation between modules 
  */
-h2.nav-tab-wrapper {
+.secupress-modules-sidebar {
 	float: left;
 	padding: 0;
 	border: none;
 	margin: 0;
 }
 
-h2 .nav-tab {
+.secupress-modules-sidebar .nav-tab {
 	display: block;
 	position: relative;
 	z-index: 10;
@@ -41,20 +41,25 @@ h2 .nav-tab {
 	line-height: 24px;
 	float: none;
 }
-h2 .nav-tab:first-child {
+.secupress-modules-sidebar .nav-tab:first-child {
 	border-radius: 4px 4px 0 0;
 }
-h2 .nav-tab:last-child {
+.secupress-modules-sidebar .nav-tab:last-child {
 	border-radius: 0 0 4px 4px;
 }
-h2 .nav-tab:focus,
-h2 .nav-tab-active {
+.secupress-modules-sidebar .nav-tab:focus,
+.secupress-modules-sidebar .nav-tab-active {
 	z-index: 15;
 }
 
-h2 .nav-tab .dashicons {
+.secupress-modules-sidebar .nav-tab .dashicons {
 	vertical-align: middle;
 	margin-right: 6px;
+}
+
+.secupress-modules-sidebar a.active-module {
+	border-left: 3px solid #88BA0E;
+	width: 151px;
 }
 
 
@@ -158,11 +163,6 @@ h2 .nav-tab .dashicons {
 
 .toggle-password {
 	opacity: .7;
-}
-
-.nav-tab-wrapper a.active-module {
-	border-left: 3px solid #88BA0E;
-	width: 151px;
 }
 
 label {

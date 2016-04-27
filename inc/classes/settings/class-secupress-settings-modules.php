@@ -167,10 +167,24 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 				// don't print sidebar if we are in Welcome page
 				// modules are included in the content of the page
 				if ( ! $is_welcome ) {
+					$type = true ? 'free' : 'pro';
+					$version_free = sprintf ( esc_html__( 'Free version %s', 'secupress' ), 'v' . SECUPRESS_VERSION );
+					$version_pro = sprintf ( esc_html__( 'Pro version %s', 'secupress' ), 'v' . SECUPRESS_VERSION );
 				?>
-				<h2 class="nav-tab-wrapper hide-if-no-js">
-					<?php $this->print_tabs(); ?>
-				</h2>
+				<div class="secupress-modules-sidebar hide-if-no-js">
+					<div class="secupress-sidebar-header">
+						<div class="secupress-sh-logo">
+							<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo2x.svg 2x" alt="">
+						</div>
+						<div class="secupress-sh-version">
+							<?php echo ${'version_' . $type}; ?>
+						</div>
+					</div>
+
+					<ul id="secupress-modules-navigation" class="secupress-modules-list-links">
+						<?php $this->print_tabs(); ?>
+					</ul>
+				</div>
 				<?php } ?>
 
 				<div class="secupress-tab-content secupress-tab-content-<?php echo $this->get_current_module(); ?>" id="secupress-tab-content">
@@ -194,9 +208,11 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			$class = $this->get_current_module() === $key  ? ' nav-tab-active'    : '';
 			$icon  = isset( $module['dashicon'] )          ?  $module['dashicon'] : 'admin-generic';
 			?>
-			<a href="<?php echo esc_url( secupress_admin_url( 'modules', $key ) ); ?>" class="nav-tab<?php echo $class; ?> active_module module-<?php echo sanitize_key( $key ); ?>">
-				<span class="dashicons dashicons-<?php echo $icon; ?>" aria-hidden="true"></span> <?php echo $module['title']; ?>
-			</a>
+			<li>
+				<a href="<?php echo esc_url( secupress_admin_url( 'modules', $key ) ); ?>" class="nav-tab<?php echo $class; ?> active_module module-<?php echo sanitize_key( $key ); ?>">
+					<span class="dashicons dashicons-<?php echo $icon; ?>" aria-hidden="true"></span> <?php echo $module['title']; ?>
+				</a>
+			</li>
 			<?php
 		}
 	}
