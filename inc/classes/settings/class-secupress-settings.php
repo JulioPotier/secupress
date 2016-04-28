@@ -730,8 +730,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				break;
 
 			default :
-				if ( secupress_is_pro() && function_exists( 'secupress_pro_' . $args['type'] . '_field', $args, $this ) ) {
-					call_user_func( 'secupress_pro_' . $args['type'] . '_field' );
+				if ( secupress_is_pro() && function_exists( 'secupress_pro_' . $args['type'] . '_field' ) ) {
+					call_user_func( 'secupress_pro_' . $args['type'] . '_field', $args, $this );
 				} elseif ( method_exists( $this, $args['type'] ) ) {
 					call_user_func( array( $this, $args['type'] ), $args );
 				} else {
