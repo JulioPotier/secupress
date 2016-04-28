@@ -273,7 +273,7 @@ function secupress_add_module_notice( $module, $submodule, $action ) {
 	 * @param (string) $module    The module.
 	 * @param (string) $submodule The sub-module slug.
 	 */
-	do_action( 'secupress.modules.module_notice_' . $action, $module, $submodule );
+	do_action( 'secupress.modules.notice_' . $action, $module, $submodule );
 }
 
 

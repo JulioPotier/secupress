@@ -156,9 +156,9 @@ function secupress_create_subsite_menu() {
 }
 
 
-add_filter( 'secupress_ajax_dismiss_notice_capability', 'secupress_ajax_dismiss_multisite_notice_capability', 10, 2 );
+add_filter( 'secupress.notices.dismiss_capability', 'secupress_dismiss_multisite_notice_capability', 10, 2 );
 /**
- * Our "security issues" notice must be shown to the site's Administrators: change the capability for the ajax callback.
+ * Our "security issues" notice must be shown to the site's Administrators: change the capability for the callback.
  *
  * @since 1.0
  *
@@ -167,7 +167,7 @@ add_filter( 'secupress_ajax_dismiss_notice_capability', 'secupress_ajax_dismiss_
  *
  * @return (string) Capability or user role.
  */
-function secupress_ajax_dismiss_multisite_notice_capability( $capacity, $notice_id ) {
+function secupress_dismiss_multisite_notice_capability( $capacity, $notice_id ) {
 	return 'subsite-security-issues' === $notice_id ? secupress_get_capability( true ) : $capacity;
 }
 

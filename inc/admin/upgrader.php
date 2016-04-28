@@ -44,7 +44,7 @@ function secupress_upgrader() {
 	}
 
 	// If any upgrade has been done, we flush and update version.
-	if ( did_action( 'secupress.first_install' ) || did_action( 'wp_secupress_upgrade' ) ) {
+	if ( did_action( 'secupress.first_install' ) || did_action( 'secupress.upgrade' ) ) {
 
 		$options = get_site_option( SECUPRESS_SETTINGS_SLUG ); // Do not use secupress_get_option() here.
 		$options['version'] = SECUPRESS_VERSION;

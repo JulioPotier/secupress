@@ -692,7 +692,7 @@ function secupress_fightspam_get_spam_status( $value ) {
 			 *
 			 * @param (string) $value Username, IP, email, or URL.
 			 */
-			do_action( 'secupress.plugin.fightspam.blacklisted', $value );
+			do_action( 'secupress.plugin.fightspam.comment_blacklisted', $value );
 		}
 
 		// Cache the status for 30 days.
