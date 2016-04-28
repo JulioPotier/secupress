@@ -161,7 +161,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 
 			<div class="secupress-wrapper">
 
-				<h2 class="nav-tab-wrapper hide-if-no-js">
+				<h2 class="nav-tab-wrapper">
 					<?php $this->print_tabs(); ?>
 				</h2>
 
