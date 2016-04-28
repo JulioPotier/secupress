@@ -380,15 +380,8 @@ function secupress_async_upgrades() {
 	foreach ( $language_updates as $key => $language_update ) {
 		$update = ! empty( $language_update->autoupdate );
 
-		/**
-		 * Filter whether to asynchronously update translation for core, a plugin, or a theme.
-		 *
-		 * @since 1.0
-		 * @since WP 4.0.0
-		 *
-		 * @param (bool)   $update          Whether to update.
-		 * @param (object) $language_update The update offer.
-		 */
+
+		/** This filter is documented in wp-admin/includes/class-wp-upgrader.php */
 		$update = apply_filters( 'async_update_translation', $update, $language_update );
 
 		if ( ! $update ) {

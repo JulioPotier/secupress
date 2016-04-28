@@ -485,7 +485,7 @@ function secupress_fightspam_maybe_do_retests() {
 	 *
 	 * @since 1.0
 	 *
-	 * @param (int) $period Time in minutes between each retest.
+	 * @param (int) $time Time in minutes between each retest.
 	 */
 	$time    = apply_filters( 'secupress.plugin.fightspam.minutes_between_retests', 1 );
 	$time    = time() - absint( $time * MINUTE_IN_SECONDS );

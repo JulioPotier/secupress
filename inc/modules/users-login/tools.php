@@ -46,7 +46,7 @@ function secupress_get_blacklisted_usernames() {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $list (array) List of usernames.
+	 * @param (array) $list List of usernames.
 	 */
 	$list = apply_filters( 'secupress.plugin.blacklist_logins_list', $list );
 

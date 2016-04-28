@@ -51,8 +51,8 @@ function secupress_add_packed_plugins_notice() {
 	 *
 	 * @since 1.0
 	 *
-	 * @param (array) A list of plugin paths, relative to the plugins folder. The "file name" of the packed plugin is used as key.
-	 *                Example: array( 'move-login' => 'sf-move-login/sf-move-login.php' )
+	 * @param (array) $plugins A list of plugin paths, relative to the plugins folder. The "file name" of the packed plugin is used as key.
+	 *                         Example: array( 'move-login' => 'sf-move-login/sf-move-login.php' )
 	 */
 	$plugins = apply_filters( 'secupress.plugins.packed-plugins', array() );
 	$plugins = array_filter( $plugins, 'is_plugin_active' );

@@ -45,6 +45,13 @@ function secupress_move_login_get_default_slugs() {
 		'postpass'     => 1,
 	);
 
+	/*
+	 * Add additional slugs.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (array) $new_slugs An array with slugs as keys.
+	 */
 	$new_slugs = apply_filters( 'sfml_additional_slugs', array() );
 
 	if ( $new_slugs && is_array( $new_slugs ) ) {

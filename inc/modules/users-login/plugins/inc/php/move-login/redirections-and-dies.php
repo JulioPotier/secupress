@@ -45,10 +45,10 @@ function secupress_move_login_maybe_deny_login_page() {
 	 *
 	 * @since 1.0
 	 *
-	 * @param (array)          An array of action => URIs (WP directory + slugs).
-	 * @param (string) $uri    The current URI.
-	 * @param (string) $subdir WP directory.
-	 * @param (array)  $slugs  URIs already in use.
+	 * @param (array)  $new_slugs An array of action => URIs (WP directory + slugs).
+	 * @param (string) $uri       The current URI.
+	 * @param (string) $subdir    WP directory.
+	 * @param (array)  $slugs     URIs already in use.
 	 */
 	$new_slugs = apply_filters( 'sfml_slugs_not_to_kill', array(), $uri, $subdir, $slugs );
 	$slugs     = is_array( $new_slugs ) && ! empty( $new_slugs ) ? array_merge( $new_slugs, $slugs ) : $slugs;
@@ -86,7 +86,7 @@ function secupress_move_login_deny_login_access() {
 			 *
 			 * @since 1.0
 			 *
-			 * @param (string) An URL that leads to a 404 response.
+			 * @param (string) $redirect An URL that leads to a 404 response.
 			 */
 			$redirect = apply_filters( 'sfml_404_error_page', home_url( '404' ) );
 			wp_redirect( esc_url_raw( user_trailingslashit( $redirect ) ) );
@@ -122,13 +122,7 @@ function secupress_move_login_maybe_deny_admin_redirect() {
 	if ( is_user_admin() ) {
 		$scheme = 'logged_in';
 	} else {
-		/**
-		 * Filter the authentication redirect scheme.
-		 *
-		 * @since 1.0
-		 *
-		 * @param string $scheme Authentication redirect scheme. Default empty.
-		 */
+		/** This filter is documented in wp-includes/pluggable.php */
 		$scheme = apply_filters( 'auth_redirect_scheme', '' );
 	}
 

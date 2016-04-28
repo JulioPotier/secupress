@@ -550,7 +550,7 @@ function secupress_is_site_ssl() {
 	 *
 	 * @since 1.0
 	 *
-	 * @param (bool) $is_site_ssl
+	 * @param (bool) $is_site_ssl True if the site frontend is served over SSL.
 	 */
 	$is_site_ssl = apply_filters( 'secupress.front.is_site_ssl', $is_site_ssl );
 

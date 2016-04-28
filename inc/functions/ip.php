@@ -28,12 +28,26 @@ function secupress_get_ip() {
 			$ip = end( $ip );
 
 			if ( false !== secupress_ip_is_valid( $ip ) ) {
-				return apply_filters( 'secupress_get_ip', $ip );
+				/*
+				 * Filter the valid IP address.
+				 *
+				 * @since 1.0
+				 *
+				 * @param (string) $ip The IP address.
+				 */
+				return apply_filters( 'secupress.ip.get_ip', $ip );
 			}
 		}
 	}
 
-	return apply_filters( 'secupress_default_ip', '0.0.0.0' );
+	/*
+	 * Filter the default IP address.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $ip The IP address.
+	 */
+	return apply_filters( 'secupress.ip.default_ip', '0.0.0.0' );
 }
 
 
@@ -91,14 +105,14 @@ function secupress_ip_is_whitelisted( $ip = null ) {
 	$whitelist = array_flip( $whitelist );
 
 	/**
-	 * Filter the whitelist.
+	 * Filter the IPs whitelist.
 	 *
 	 * @since 1.0
 	 *
 	 * @param (array)  $whitelist The whitelist. IPs are the array keys.
 	 * @param (string) $ip        The IP address.
 	 */
-	$whitelist = apply_filters( 'secupress.ips_whitelist', $whitelist, $ip );
+	$whitelist = apply_filters( 'secupress.ip.ips_whitelist', $whitelist, $ip );
 
 	return isset( $whitelist[ $ip ] );
 }

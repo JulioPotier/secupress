@@ -28,6 +28,13 @@ function secupress_nocomment_init() {
 	 */
 	secupress_cache_data( 'nocomment_post_types', $post_types_raw );
 
+	/*
+	 * Filter the post types which comments support will be removed from.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (array) $post_types_raw List of Post types. An array like `array( "post" => "post", "attachment" => "attachment" )`.
+	 */
 	$post_types = (array) apply_filters( 'no_comments_post_type_supports', $post_types_raw );
 	$post_types = array_filter( $post_types );
 

@@ -53,6 +53,13 @@ function secupress_update_network_option_on_submit() {
 	secupress_check_admin_referer( $option_group . '-options' );
 	secupress_check_user_capability();
 
+	/*
+	 * Add network options to whitelist.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (array) $whitelist_options Network option names, grouped by option groups. By default an empty array.
+	 */
 	$whitelist_options = apply_filters( 'secupress_whitelist_network_options', array() );
 
 	if ( ! isset( $whitelist_options[ $option_group ] ) ) {
