@@ -805,25 +805,33 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			}
 
 			$class = ! empty( $helper['class'] ) ? ' ' . trim( $helper['class'] ) : '';
+			$name  = $args['name'];
+			$type  = $helper['type'];
 
-			switch ( $helper['type'] ) {
+			switch ( $type ) {
 				case 'description' :
-
 					$description = '<p class="description desc' . $depends . $class . '">' . $helper['description'] . '</p>';
-					echo apply_filters( 'secupress_help', $description, $args['name'], 'description' );
 					break;
-
 				case 'help' :
-
 					$description = '<p class="description help' . $depends . $class . '">' . $helper['description'] . '</p>';
-					echo apply_filters( 'secupress_help', $description, $args['name'], 'help' );
 					break;
-
 				case 'warning' :
-
 					$description = '<p class="description warning' . $depends . $class . '"><strong>' . __( 'Warning: ', 'secupress' ) . '</strong>' . $helper['description'] . '</p>';
-					echo apply_filters( 'secupress_help', $description, $args['name'], 'warning' );
+					break;
+				default :
+					continue;
 			}
+
+			/**
+			 * Filter the helper description.
+			 *
+			 * @since 1.0
+			 *
+			 * @param (string) $description The description.
+			 * @param (string) $name        The field name argument.
+			 * @param (string) $type        The helper type.
+			 */
+			echo apply_filters( 'secupress.settings.help', $description, $name, $type );
 		}
 	}
 
@@ -836,16 +844,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	protected function import_upload_form() {
-		/**
-		 * Filter the maximum allowed upload size for import files.
-		 *
-		 * @since 1.0
-		 * @since WP 2.3.0
-		 *
-		 * @see wp_max_upload_size()
-		 *
-		 * @param int $max_upload_size Allowed upload size. Default 1 MB.
-		 */
+		/** This filter is documented in wp-admin/includes/template.php */
 		$bytes      = apply_filters( 'import_upload_size_limit', wp_max_upload_size() );
 		$size       = size_format( $bytes );
 		$upload_dir = wp_upload_dir();
@@ -859,10 +858,16 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			</div><?php
 			return;
 		}
+
+		$name        = 'upload';
+		$type        = 'help';
+		$description = __( 'Choose a file from your computer:', 'secupress' ) . ' (' . sprintf( __( 'Maximum size: %s', 'secupress' ), $size ) . ')';
+		/** This filter is documented in inc/classes/settings/class-secupress-settings.php */
+		$description = apply_filters( 'secupress.settings.help', $description, $name, $type );
 		?>
 		<p>
 			<input type="file" id="upload" name="import" size="25"<?php echo $disabled; ?>/><br/>
-			<label for="upload"><?php echo apply_filters( 'secupress_help', __( 'Choose a file from your computer:', 'secupress' ) . ' (' . sprintf( __( 'Maximum size: %s', 'secupress' ), $size ) . ')', 'upload', 'help' ); ?></label>
+			<label for="upload"><?php echo $description; ?></label>
 			<input type="hidden" name="max_file_size" value="<?php echo $bytes; ?>" />
 		</p>
 		<?php

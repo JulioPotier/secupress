@@ -96,10 +96,12 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements SecuPress_Sca
 			$constants += 2;
 		}
 
+		/** This filter is documented wp-admin/includes/class-wp-upgrader.php */
 		if ( true === apply_filters( 'automatic_updater_disabled', false ) ) {
 			$filters += 1;
 		}
 
+		/** This filter is documented wp-admin/includes/class-wp-upgrader.php */
 		if ( false === apply_filters( 'allow_minor_auto_core_updates', true ) ) {
 			$filters += 2;
 		}

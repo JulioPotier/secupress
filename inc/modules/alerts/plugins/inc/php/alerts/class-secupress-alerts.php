@@ -141,8 +141,6 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 			'wp_login'                => array( 'test_cb' => array( __CLASS__, '_wp_login_test' ), 'nbr_args' => 2 ),
 		);
 
-		$hooks = apply_filters( 'secupress.alerts.hooks', $hooks );
-
 		foreach ( $hooks as $hook => $atts ) {
 			// Fill the blanks.
 			$this->hooks[ $hook ] = array_merge( array(
@@ -159,14 +157,14 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 		 *
 		 * @since 1.0
 		 *
-		 * @param (array) An array of arrays with hooks as keys and the values as follow:
-		 *                - $immediately (bool)         Tells if the notification should be triggered immediately. Default is `true`.
-		 *                - $callback    (string|array) Callback that will put new alerts in queue (or not). Default is `$this->_option_cb()` for options and `$this->_action_cb()` for other hooks.
-		 *                - $priority    (int)          Used to specify the order in which the callbacks associated with a particular action are executed. Default is `1000`.
-		 *                - $nbr_args    (int)          The number of arguments the callback accepts. Default is `2` for options and `1` for other hooks.
-		 *                - $test_value  (mixed)        Used only for options. Value used to test the option new value against. If the test fails, the alert is not triggered. Default is null (means "any value"). See `$this->_option_test()`.
-		 *                - $test_cb     (string|array) Used ony for non option hooks. Callback used to tell if the alert should be triggered. Default is `__return_true`.
-		 *                - $pre_process (string|array) Callback to pre-process the data returned by the hook: the aim is to prepare the data to be ready for being displayed in a message. Facultative.
+		 * @param (array) $this->hooks An array of arrays with hooks as keys and the values as follow:
+		 *                             - $immediately (bool)         Tells if the notification should be triggered immediately. Default is `true`.
+		 *                             - $callback    (string|array) Callback that will put new alerts in queue (or not). Default is `$this->_option_cb()` for options and `$this->_action_cb()` for other hooks.
+		 *                             - $priority    (int)          Used to specify the order in which the callbacks associated with a particular action are executed. Default is `1000`.
+		 *                             - $nbr_args    (int)          The number of arguments the callback accepts. Default is `2` for options and `1` for other hooks.
+		 *                             - $test_value  (mixed)        Used only for options. Value used to test the option new value against. If the test fails, the alert is not triggered. Default is null (means "any value"). See `$this->_option_test()`.
+		 *                             - $test_cb     (string|array) Used ony for non option hooks. Callback used to tell if the alert should be triggered. Default is `__return_true`.
+		 *                             - $pre_process (string|array) Callback to pre-process the data returned by the hook: the aim is to prepare the data to be ready for being displayed in a message. Facultative.
 		 */
 		$this->hooks = apply_filters( 'secupress.alerts.hooks', $this->hooks );
 
@@ -616,7 +614,7 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 		 *
 		 * @since 1.0
 		 *
-		 * @param (array) An array of messages with hooks as keys.
+		 * @param (array) $messages An array of messages with hooks as keys.
 		 */
 		$messages = apply_filters( 'secupress.alerts.messages', $messages );
 

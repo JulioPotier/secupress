@@ -76,6 +76,7 @@ class SecuPress_Scan_Login_Errors_Disclose extends SecuPress_Scan implements Sec
 	public function scan() {
 		$messages = secupress_login_errors_disclose_get_messages( false );
 		$messages = '	' . implode( "<br />\n	", $messages ) . "<br />\n";
+		/** This filter is documented in wp-login.php */
 		$messages = apply_filters( 'login_errors', $messages );
 
 		$pattern = secupress_login_errors_disclose_get_messages();
@@ -103,6 +104,7 @@ class SecuPress_Scan_Login_Errors_Disclose extends SecuPress_Scan implements Sec
 	public function fix() {
 		$messages = secupress_login_errors_disclose_get_messages( false );
 		$messages = '	' . implode( "<br />\n	", $messages ) . "<br />\n";
+		/** This filter is documented in wp-login.php */
 		$messages = apply_filters( 'login_errors', $messages );
 
 		$pattern = secupress_login_errors_disclose_get_messages();

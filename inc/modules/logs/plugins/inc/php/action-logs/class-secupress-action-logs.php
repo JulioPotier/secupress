@@ -11,7 +11,6 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 
 	const VERSION = '1.0';
 
-
 	/**
 	 * The reference to the *Singleton* instance of this class.
 	 *
@@ -156,7 +155,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 		 *
 		 * @since 1.0
 		 *
-		 * @param (array) The option names.
+		 * @param (array) $this->options The option names.
 		 */
 		$this->options = apply_filters( 'secupress.logs.action-logs.options', $this->options );
 		if ( ! secupress_is_pro() ) {
@@ -174,7 +173,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 			 *
 			 * @since 1.0
 			 *
-			 * @param (array) The option names.
+			 * @param (array) $this->network_options The option names.
 			 */
 			$this->network_options = apply_filters( 'secupress.logs.action-logs.network_options', $this->network_options );
 			if ( ! secupress_is_pro() ) {
@@ -192,7 +191,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 		 *
 		 * @since 1.0
 		 *
-		 * @param (array) The filter names.
+		 * @param (array) $this->filters The filter names.
 		 */
 		$this->filters = apply_filters( 'secupress.logs.action-logs.filters', $this->filters );
 		if ( ! secupress_is_pro() ) {
@@ -210,7 +209,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 		 *
 		 * @since 1.0
 		 *
-		 * @param (array) The action names.
+		 * @param (array) $this->actions The action names.
 		 */
 		$this->actions = apply_filters( 'secupress.logs.action-logs.actions', $this->actions );
 		if ( ! secupress_is_pro() ) {

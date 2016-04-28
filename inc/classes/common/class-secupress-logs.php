@@ -271,8 +271,8 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		 *
 		 * @since 1.0
 		 *
-		 * @param (int)    The limit.
-		 * @param (string) The Log type.
+		 * @param (int)    $limit          The limit. Default is 1000.
+		 * @param (string) $this->log_type The Log type.
 		 */
 		$limit = apply_filters( 'secupress.logs.logs_limit', 1000, $this->log_type );
 
