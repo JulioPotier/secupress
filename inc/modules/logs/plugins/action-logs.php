@@ -28,7 +28,7 @@ if ( ! did_action( 'secupress.plugins.loaded' ) ) {
 /* ACTIVATION / DEACTIVATION ==================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-add_action( 'secupress_deactivate_plugin_action-logs', 'secupress_deactivate_plugin_action_logs' );
+add_action( 'secupress.deactivate_plugin_action-logs', 'secupress_deactivate_plugin_action_logs' );
 add_action( 'secupress.deactivation',                  'secupress_deactivate_plugin_action_logs' );
 /**
  * Delete logs on deactivation.

@@ -172,7 +172,7 @@ function secupress_ajax_dismiss_multisite_notice_capability( $capacity, $notice_
 }
 
 
-add_action( 'secupress_empty_results_for_ms_scanner_fixes', 'secupress_remove_subsite_security_issues_notice_meta' );
+add_action( 'secupress.multisite.empty_results_for_ms_scanner_fixes', 'secupress_remove_subsite_security_issues_notice_meta' );
 /**
  * When all the site's fixes are done, remove the "dismissed notice" value from the users meta.
  * That way, the notice can be shown again later if needed (more fixes to do).
