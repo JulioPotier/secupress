@@ -14,6 +14,7 @@ add_action( 'admin_init', 'secupress_upgrader' );
 function secupress_upgrader() {
 	// Grab some infos.
 	$actual_version = secupress_get_option( 'version' );
+
 	// You can hook the upgrader to trigger any action when WP SecuPress is upgraded.
 	// First install.
 	if ( ! $actual_version ) {
@@ -25,6 +26,7 @@ function secupress_upgrader() {
 	elseif ( SECUPRESS_VERSION !== $actual_version ) {
 		do_action( 'wp_secupress_upgrade', SECUPRESS_VERSION, $actual_version );
 	}
+
 	// If any upgrade has been done, we flush and update version.
 	if ( did_action( 'wp_secupress_first_install' ) || did_action( 'wp_secupress_upgrade' ) ) {
 
@@ -40,8 +42,8 @@ function secupress_upgrader() {
 	} elseif ( empty( $_POST ) && secupress_valid_key() ) { // WPCS: CSRF ok.
 		secupress_check_key( 'transient_30' );
 	}
-	/** This filter is documented in inc/admin-bar.php */
-	if ( ! secupress_valid_key() && current_user_can( apply_filters( 'secupress_capacity', 'manage_options' ) ) && ( ! isset( $_GET['page'] ) || 'secupress' !== $_GET['page'] ) ) {
+
+	if ( ! secupress_valid_key() && current_user_can( secupress_get_capability() ) && ( ! isset( $_GET['page'] ) || 'secupress' !== $_GET['page'] ) ) {
 		add_action( 'admin_notices', 'secupress_need_api_key' );
 	}
 }
