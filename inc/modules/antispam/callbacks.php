@@ -27,6 +27,7 @@ function __secupress_antispam_settings_callback( $settings ) {
 	// (De)Activation.
 	if ( false !== $activate ) {
 		$activate = isset( $activate['antispam_antispam'] ) && is_array( $activate['antispam_antispam'] ) ? array_flip( $activate['antispam_antispam'] ) : array();
+		$activate = array_slice( $activate, 0, 1, true ); // Only one choice.
 
 		secupress_manage_submodule( $modulenow, 'fightspam', isset( $activate['fightspam'] ) );
 		secupress_manage_submodule( $modulenow, 'remove-comment-feature', isset( $activate['remove-comment-feature'] ) );

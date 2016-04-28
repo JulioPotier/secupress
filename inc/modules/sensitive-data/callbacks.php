@@ -102,12 +102,9 @@ function __secupress_wp_endpoints_settings_callback( $modulenow, &$settings, $ac
 			'block-multi',
 		);
 		$settings['wp-endpoints_xmlrpc'] = array_intersect( $xmlrpc, $settings['wp-endpoints_xmlrpc'] );
+		$settings['wp-endpoints_xmlrpc'] = array_slice( $settings['wp-endpoints_xmlrpc'], 0, 1 ); // Only one choice.
 	} else {
 		unset( $settings['wp-endpoints_xmlrpc'] );
-	}
-
-	if ( false === $activate ) {
-		return;
 	}
 
 	// (De)Activation.
