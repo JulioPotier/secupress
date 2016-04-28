@@ -9,7 +9,7 @@ Version: 1.0
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 
-add_action( 'secupress_plugins_loaded', 'secupress_xmlrpc_disable_rpc' );
+add_action( 'secupress.plugins.loaded', 'secupress_xmlrpc_disable_rpc' );
 /**
  * Disable XML-RPC by launching and removing hooks.
  *

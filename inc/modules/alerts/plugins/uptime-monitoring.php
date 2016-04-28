@@ -20,8 +20,8 @@ define( 'SECUPRESS_UPTIME_MONITOR_UA',  'SecuPress' );
  *
  * @since 1.0
  */
-add_action( 'secupress_activate_plugin_uptime-monitoring', 'secupress_uptime_monitoring_start' );
-add_action( 'secupress.plugins.activation',                'secupress_uptime_monitoring_start' );
+add_action( 'secupress.modules.activate_submodule_' . basename( __FILE__, '.php' ), 'secupress_uptime_monitoring_start' );
+add_action( 'secupress.plugins.activation',                                         'secupress_uptime_monitoring_start' );
 
 
 /**
@@ -29,8 +29,8 @@ add_action( 'secupress.plugins.activation',                'secupress_uptime_mon
  *
  * @since 1.0
  */
-add_action( 'secupress_deactivate_plugin_uptime-monitoring', 'secupress_uptime_monitoring_stop' );
-add_action( 'secupress_deactivation',                        'secupress_uptime_monitoring_stop' );
+add_action( 'secupress.modules.deactivate_submodule_' . basename( __FILE__, '.php' ), 'secupress_uptime_monitoring_stop' );
+add_action( 'secupress.deactivation',                                                 'secupress_uptime_monitoring_stop' );
 
 
 /*------------------------------------------------------------------------------------------------*/

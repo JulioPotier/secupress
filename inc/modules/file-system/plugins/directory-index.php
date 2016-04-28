@@ -12,7 +12,7 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 /* ACTIVATION / DEACTIVATION ==================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-add_action( 'secupress_activate_plugin_' . basename( __FILE__, '.php' ), 'secupress_directory_index_activation' );
+add_action( 'secupress.modules.activate_submodule_' . basename( __FILE__, '.php' ), 'secupress_directory_index_activation' );
 /**
  * On module activation, maybe write the rules.
  *
@@ -49,7 +49,7 @@ function secupress_directory_index_activation() {
 }
 
 
-add_action( 'secupress_deactivate_plugin_' . basename( __FILE__, '.php' ), 'secupress_directory_index_deactivate' );
+add_action( 'secupress.modules.deactivate_submodule_' . basename( __FILE__, '.php' ), 'secupress_directory_index_deactivate' );
 /**
  * On module deactivation, maybe remove rewrite rules from the `.htaccess`/`web.config` file.
  *

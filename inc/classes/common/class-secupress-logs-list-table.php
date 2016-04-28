@@ -690,7 +690,6 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 	 * @param (string) $column_name The current column name.
 	 */
 	public function column_default( $post, $column_name ) {
-
 		/** This filter is documented in wp-admin/includes/class-wp-posts-list-table.php */
 		do_action( 'manage_posts_custom_column', $column_name, $post->ID );
 

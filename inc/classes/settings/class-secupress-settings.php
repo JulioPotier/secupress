@@ -261,7 +261,14 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$actions .= '<button type="button" id="affected-role-' . $i . '" class="hide-if-no-js no-button button-actions-title">' . __( 'Roles', 'secupress' ) . ' <span class="dashicons dashicons-arrow-right" aria-hidden="true"></span></button>';
 		}
 
-		do_action( 'before_section_' . $this->sectionnow, (bool) $args['with_save_button'] );
+		/**
+		 * Fires before a section.
+		 *
+		 * @since 1.0
+		 *
+		 * @param (bool) $with_save_button True if a "Save All Changes" button will be printed.
+		 */
+		do_action( 'secupress.settings.before_section_' . $this->sectionnow, (bool) $args['with_save_button'] );
 
 		add_settings_section(
 			$section_id,
@@ -324,7 +331,15 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		if ( $with_save_button ) {
 			static::submit_button( 'primary small', $this->sectionnow . '_submit' );
 		}
-		do_action( 'after_section_' . $this->sectionnow, $with_save_button );
+
+		/**
+		 * Fires after a section.
+		 *
+		 * @since 1.0
+		 *
+		 * @param (bool) $with_save_button True if a "Save All Changes" button will be printed.
+		 */
+		do_action( 'secupress.settings.after_section_' . $this->sectionnow, $with_save_button );
 
 		return $this;
 	}
@@ -1246,11 +1261,11 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			<?php
 		} else {
 			/**
-			 * Fires when SecuPress Pro load this module.
+			 * Fires when SecuPress Pro loads this field.
 			 *
 			 * @since 1.0
 			 */
-	 		do_action( 'secupress.modules.file_scanner.pro' );
+	 		do_action( 'secupress.settings.field.file_scanner' );
 		}
 	}
 
@@ -1324,7 +1339,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		 *
 		 * @since 1.0
 		 */
-		do_action( 'after_module_' . $this->modulenow . '|' . $this->pluginnow );
+		do_action( 'secupress.settings.after_field_' . $this->modulenow . '|' . $this->pluginnow );
 
 		return $this;
 	}

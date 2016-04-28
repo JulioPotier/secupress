@@ -332,7 +332,7 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 
 		$notice_id = $_POST['notice_id'];
 
-		/*
+		/**
 		 * Filter the capability needed to dismiss the notice.
 		 *
 		 * @since 1.0
@@ -367,7 +367,7 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 
 		$notice_id = $_GET['notice_id'];
 
-		/*
+		/**
 		 * Filter the capability needed to dismiss the notice.
 		 *
 		 * @since 1.0

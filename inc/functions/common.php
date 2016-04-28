@@ -295,7 +295,25 @@ function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 	$ip   = secupress_get_ip();
 	$args = wp_parse_args( $args, array( 'code' => 403, 'content' => '' ) );
 
+	/**
+	 * Fires before a user is blocked by a certain module.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $ip   The IP address.
+	 * @param (array)  $args Contains the "code" (def. 403) and a "content" (def. empty), this content will replace the default message.
+	 */
 	do_action( 'secupress.block.' . $module, $ip, $args );
+
+	/**
+	 * Fires before a user is blocked.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $module The module.
+	 * @param (string) $ip     The IP address.
+	 * @param (array)  $args   Contains the "code" (def. 403) and a "content" (def. empty), this content will replace the default message.
+	 */
 	do_action( 'secupress.block', $module, $ip, $args );
 
 	$module = ucwords( str_replace( '-', ' ', $module ) );

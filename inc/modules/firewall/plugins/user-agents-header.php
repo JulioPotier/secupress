@@ -8,7 +8,7 @@ Version: 1.0
 */
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
-add_action( 'secupress_plugins_loaded', 'secupress_block_bad_user_agents', 0 );
+add_action( 'secupress.plugins.loaded', 'secupress_block_bad_user_agents', 0 );
 /**
  * Filter the user agent to block it or not
  *

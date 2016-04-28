@@ -12,7 +12,7 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 /* INCLUDE AND INITIATE ========================================================================= */
 /*------------------------------------------------------------------------------------------------*/
 
-if ( ! did_action( 'secupress_plugins_loaded' ) ) {
+if ( ! did_action( 'secupress.plugins.loaded' ) ) {
 
 	if ( ! class_exists( 'SecuPress_Logs' ) ) {
 		secupress_require_class( 'Logs' );
@@ -29,7 +29,7 @@ if ( ! did_action( 'secupress_plugins_loaded' ) ) {
 /*------------------------------------------------------------------------------------------------*/
 
 add_action( 'secupress_deactivate_plugin_action-logs', 'secupress_deactivate_plugin_action_logs' );
-add_action( 'secupress_deactivation',                  'secupress_deactivate_plugin_action_logs' );
+add_action( 'secupress.deactivation',                  'secupress_deactivate_plugin_action_logs' );
 /**
  * Delete logs on deactivation.
  *

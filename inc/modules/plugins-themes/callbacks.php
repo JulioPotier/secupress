@@ -113,7 +113,7 @@ function __secupress_uploads_settings_callback( $modulenow, $activate ) {
 /* INSTALL/RESET ================================================================================ */
 /*------------------------------------------------------------------------------------------------*/
 
-add_action( 'wp_secupress_first_install', 'secupress_plugins_themes_module_activation' );
+add_action( 'secupress.first_install', 'secupress_plugins_themes_module_activation' );
 /**
  * On SecuPress first install, auto-activate "Detect Bad Plugins/Themes" submodules.
  *

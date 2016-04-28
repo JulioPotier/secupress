@@ -1,11 +1,12 @@
 <?php
-/*
-Module Name: Move Login
-Description: Change your login URL.
-Main Module: users_login
-Author: SecuPress
-Version: 1.0
-*/
+/**
+ * Module Name: Move Login
+ * Description: Change your login URL.
+ * Main Module: users_login
+ * Author: SecuPress
+ * Version: 1.0
+ */
+
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 /*------------------------------------------------------------------------------------------------*/
@@ -45,7 +46,7 @@ function secupress_move_login_get_default_slugs() {
 		'postpass'     => 1,
 	);
 
-	/*
+	/**
 	 * Add additional slugs.
 	 *
 	 * @since 1.0

@@ -13,7 +13,7 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 /* INCLUDE AND INITIATE ========================================================================= */
 /*------------------------------------------------------------------------------------------------*/
 
-if ( ! did_action( 'secupress_plugins_loaded' ) ) {
+if ( ! did_action( 'secupress.plugins.loaded' ) ) {
 
 	require_once( SECUPRESS_MODULES_PATH . 'alerts/plugins/inc/php/alerts/class-secupress-alerts.php' );
 

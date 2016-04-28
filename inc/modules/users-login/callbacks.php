@@ -293,7 +293,7 @@ function secupress_move_login_add_packed_plugin( $plugins ) {
 /* INSTALL/RESET ================================================================================ */
 /*------------------------------------------------------------------------------------------------*/
 
-add_action( 'wp_secupress_first_install', '__secupress_install_users_login_module' );
+add_action( 'secupress.first_install', '__secupress_install_users_login_module' );
 /**
  * Create default option on install and reset.
  *

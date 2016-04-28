@@ -4,8 +4,8 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 global $is_nginx;
 
 // Add the form manually since i just need it for this block.
-add_action( 'before_section_backups-storage', array( $this, 'print_open_form_tag' ) );
-add_action( 'after_section_backups-storage', array( $this, 'print_close_form_tag' ) );
+add_action( 'secupress.settings.before_section_backups-storage', array( $this, 'print_open_form_tag' ) );
+add_action( 'secupress.settings.after_section_backups-storage', array( $this, 'print_close_form_tag' ) );
 
 $this->set_current_section( 'backups-storage' );
 $this->add_section( __( 'Backups Storage', 'secupress' ), array( 'with_save_button' => true ) );

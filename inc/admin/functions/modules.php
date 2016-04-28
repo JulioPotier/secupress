@@ -39,9 +39,21 @@ function secupress_activate_submodule( $module, $submodule, $incompatible_submod
 
 		secupress_add_module_notice( $module, $submodule_slug, 'activation' );
 
-		do_action( 'secupress_activate_plugin_' . $submodule_slug );
+		/**
+		 * Fires once a sub-module is activated.
+		 *
+		 * @since 1.0
+		 */
+		do_action( 'secupress.modules.activate_submodule_' . $submodule_slug );
 
-		do_action( 'secupress_activate_plugin', $submodule_slug );
+		/**
+		 * Fires once any sub-module is activated.
+		 *
+		 * @since 1.0
+		 *
+		 * @param (string) $submodule_slug The submodule slug.
+		 */
+		do_action( 'secupress.modules.activate_submodule', $submodule_slug );
 
 		return true;
 	}
@@ -91,9 +103,24 @@ function secupress_deactivate_submodule( $module, $submodules, $args = array() )
 
 		secupress_add_module_notice( $module, $submodule_slug, 'deactivation' );
 
-		do_action( 'secupress_deactivate_plugin_' . $submodule_slug, $args );
+		/**
+		 * Fires once a sub-module is deactivated.
+		 *
+		 * @since 1.0
+		 *
+		 * @param (array) $args Some arguments.
+		 */
+		do_action( 'secupress.modules.deactivate_submodule_' . $submodule_slug, $args );
 
-		do_action( 'secupress_deactivate_plugin', $submodule_slug, $args );
+		/**
+		 * Fires once any sub-module is deactivated.
+		 *
+		 * @since 1.0
+		 *
+		 * @param (string) $submodule_slug The submodule slug.
+		 * @param (array)  $args           Some arguments.
+		 */
+		do_action( 'secupress.modules.deactivate_submodule', $submodule_slug, $args );
 	}
 }
 
@@ -237,7 +264,16 @@ function secupress_add_module_notice( $module, $submodule, $action ) {
 
 	secupress_set_site_transient( $transient_name, $transient_value );
 
-	do_action( 'module_notice_' . $action, $module, $submodule );
+	/**
+	 * Fires once a sub-module (de)activation notice is created.
+	 * The dynamic part of this hook name is "activation" or "deactivation".
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $module    The module.
+	 * @param (string) $submodule The sub-module slug.
+	 */
+	do_action( 'secupress.modules.module_notice_' . $action, $module, $submodule );
 }
 
 

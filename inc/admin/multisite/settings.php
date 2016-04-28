@@ -53,7 +53,7 @@ function secupress_update_network_option_on_submit() {
 	secupress_check_admin_referer( $option_group . '-options' );
 	secupress_check_user_capability();
 
-	/*
+	/**
 	 * Add network options to whitelist.
 	 *
 	 * @since 1.0

@@ -48,7 +48,7 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 			'settings-manager',
 		);
 
-		/*
+		/**
 		 * Filter the modules of the global settings.
 		 *
 		 * @since 1.0

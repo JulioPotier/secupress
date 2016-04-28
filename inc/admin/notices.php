@@ -106,7 +106,7 @@ function secupress_reset_packed_plugins_notice_on_plugins_activation( $plugin ) 
 }
 
 
-add_action( 'secupress_activate_plugin', 'secupress_deactivate_standalone_plugin_on_packed_plugin_activation' );
+add_action( 'secupress.modules.activate_submodule', 'secupress_deactivate_standalone_plugin_on_packed_plugin_activation' );
 /**
  * When a plugin packed in SecuPress is activated, deactivate the standalone version.
  *

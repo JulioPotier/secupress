@@ -19,16 +19,32 @@ function secupress_upgrader() {
 	// First install.
 	if ( ! $actual_version ) {
 		if ( ! secupress_maybe_migrate_mono_to_multi() ) {
-			do_action( 'wp_secupress_first_install', 'all' );
+			/**
+			 * Fires on the plugin first install.
+			 *
+			 * @since 1.0
+			 *
+			 * @param (string) $module The module to reset. "all" means all modules at once.
+			 */
+			do_action( 'secupress.first_install', 'all' );
 		}
 	}
 	// Already installed but got updated.
 	elseif ( SECUPRESS_VERSION !== $actual_version ) {
-		do_action( 'wp_secupress_upgrade', SECUPRESS_VERSION, $actual_version );
+		$new_version = SECUPRESS_VERSION;
+		/**
+		 * Fires when SecuPress is upgraded.
+		 *
+		 * @since 1.0
+		 *
+		 * @param (string) $new_version    The version being upgraded to.
+		 * @param (string) $actual_version The previous version.
+		 */
+		do_action( 'secupress.upgrade', $new_version, $actual_version );
 	}
 
 	// If any upgrade has been done, we flush and update version.
-	if ( did_action( 'wp_secupress_first_install' ) || did_action( 'wp_secupress_upgrade' ) ) {
+	if ( did_action( 'secupress.first_install' ) || did_action( 'wp_secupress_upgrade' ) ) {
 
 		$options = get_site_option( SECUPRESS_SETTINGS_SLUG ); // Do not use secupress_get_option() here.
 		$options['version'] = SECUPRESS_VERSION;

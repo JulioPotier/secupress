@@ -578,7 +578,7 @@ function secupress_downgrade_author_administrator() {
 }
 
 
-add_action( 'secupress_loaded', '__secupress_process_file_monitoring_tasks' );
+add_action( 'secupress.loaded', '__secupress_process_file_monitoring_tasks' );
 /**
  * Launch file monitoring in background.
  *

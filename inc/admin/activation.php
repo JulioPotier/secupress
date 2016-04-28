@@ -24,7 +24,7 @@ function secupress_activation() {
 	 *
 	 * @since 1.0
 	 */
-	do_action( 'secupress_activation' );
+	do_action( 'secupress.activation' );
 
 	/**
 	 * As this activation hook appends before our plugins are loaded (and the page is reloaded right after that),
@@ -258,11 +258,11 @@ function secupress_deactivation() {
 	 *
 	 * @param (array) An empty array to mimic the `$args` parameter from `secupress_deactivate_submodule()`.
 	 */
-	do_action( 'secupress_deactivation', array() );
+	do_action( 'secupress.deactivation', array() );
 }
 
 
-add_action( 'secupress_deactivation', 'secupress_maybe_remove_rules_on_deactivation', 10000 );
+add_action( 'secupress.deactivation', 'secupress_maybe_remove_rules_on_deactivation', 10000 );
 /**
  * Maybe remove rules from `.htaccess` or `web.config` file on SecuPress deactivation.
  *

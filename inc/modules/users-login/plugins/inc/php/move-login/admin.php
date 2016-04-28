@@ -5,7 +5,7 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 /* ACTIVATION / DEACTIVATION ==================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-add_action( 'secupress_activate_plugin_move-login', 'secupress_move_login_activate' );
+add_action( 'secupress.modules.activate_submodule_move-login', 'secupress_move_login_activate' );
 /**
  * On module activation, test if the server has what we need.
  * If not, deactivate. If yes, write the rules.
@@ -40,7 +40,7 @@ function secupress_move_login_activate() {
 }
 
 
-add_action( 'secupress_deactivate_plugin_move-login', 'secupress_move_login_deactivate' );
+add_action( 'secupress.modules.deactivate_submodule_move-login', 'secupress_move_login_deactivate' );
 /**
  * On module deactivation, remove rewrite rules from the `.htaccess`/`web.config` file.
  *

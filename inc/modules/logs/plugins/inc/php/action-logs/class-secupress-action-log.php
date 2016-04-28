@@ -82,9 +82,9 @@ class SecuPress_Action_Log extends SecuPress_Log {
 		 *
 		 * @since 1.0
 		 *
-		 * @param (string) $type   The Log type.
-		 * @param (string) $target An identifier (option name, action name, filter name).
-		 * @param (array)  $data   The data.
+		 * @param (string) $this->type   The Log type.
+		 * @param (string) $this->target An identifier (option name, action name, filter name).
+		 * @param (array)  $this->data   The data.
 		 */
 		do_action( 'secupress.logs.action-log.after_pre-process', $this->type, $this->target, $this->data );
 	}

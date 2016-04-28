@@ -12,7 +12,7 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 /* ACTIVATION / DEACTIVATION ==================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-add_action( 'secupress_activate_plugin_' . basename( __FILE__, '.php' ), 'secupress_bad_url_access_activation' );
+add_action( 'secupress.modules.activate_submodule_' . basename( __FILE__, '.php' ), 'secupress_bad_url_access_activation' );
 /**
  * On module activation, maybe write the rules.
  *
@@ -48,7 +48,7 @@ function secupress_bad_url_access_activation() {
 }
 
 
-add_action( 'secupress_deactivate_plugin_' . basename( __FILE__, '.php' ), 'secupress_bad_url_access_deactivate' );
+add_action( 'secupress.modules.deactivate_submodule_' . basename( __FILE__, '.php' ), 'secupress_bad_url_access_deactivate' );
 /**
  * On module deactivation, maybe remove rewrite rules from the `.htaccess`/`web.config` file.
  *
@@ -97,7 +97,7 @@ function secupress_bad_url_access_plugin_activate( $rules ) {
  * @return (string)
  */
 function secupress_bad_url_access_apache_rules() {
-	/*
+	/**
 	 * ^php\.ini$
 	 *
 	 * ^wp-admin/admin-functions\.php$

@@ -67,7 +67,7 @@ function secupress_remove_comment_feature_add_packed_plugin( $plugins ) {
 /* INSTALL/RESET ================================================================================ */
 /*------------------------------------------------------------------------------------------------*/
 
-add_action( 'wp_secupress_first_install', '__secupress_install_antispam_module' );
+add_action( 'secupress.first_install', '__secupress_install_antispam_module' );
 /**
  * Create default option on install and reset.
  *

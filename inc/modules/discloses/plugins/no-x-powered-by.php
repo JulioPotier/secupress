@@ -12,7 +12,7 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 /* ACTIVATION / DEACTIVATION ==================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-add_action( 'secupress_activate_plugin_' . basename( __FILE__, '.php' ), 'secupress_no_x_powered_by_activation' );
+add_action( 'secupress.modules.activate_submodule_' . basename( __FILE__, '.php' ), 'secupress_no_x_powered_by_activation' );
 /**
  * On module activation, maybe write the rules.
  *
@@ -52,7 +52,7 @@ function secupress_no_x_powered_by_activation() {
 }
 
 
-add_action( 'secupress_deactivate_plugin_' . basename( __FILE__, '.php' ), 'secupress_no_x_powered_by_deactivate' );
+add_action( 'secupress.modules.deactivate_submodule_' . basename( __FILE__, '.php' ), 'secupress_no_x_powered_by_deactivate' );
 /**
  * On module deactivation, maybe remove rewrite rules from the `.htaccess`/`web.config` file.
  *

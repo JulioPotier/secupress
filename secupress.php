@@ -169,11 +169,11 @@ function secupress_init() {
 	 *
 	 * @since 1.0
 	 */
-	do_action( 'secupress_loaded' );
+	do_action( 'secupress.loaded' );
 }
 
 
-add_action( 'secupress_loaded', 'secupress_load_plugins' );
+add_action( 'secupress.loaded', 'secupress_load_plugins' );
 /**
  * Load modules.
  *
@@ -229,11 +229,11 @@ function secupress_load_plugins() {
 	 *
 	 * @since 1.0
 	 */
-	do_action( 'secupress_plugins_loaded' );
+	do_action( 'secupress.plugins.loaded' );
 }
 
 
-add_action( 'secupress_loaded', 'secupress_been_first' );
+add_action( 'secupress.loaded', 'secupress_been_first' );
 /**
  * Make SecuPress the first plugin loaded.
  *

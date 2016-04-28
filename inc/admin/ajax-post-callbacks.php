@@ -352,7 +352,8 @@ function __secupress_admin_post_reset_settings() {
 	secupress_check_admin_referer( 'secupress_reset_' . $_GET['module'] );
 	secupress_check_user_capability();
 
-	do_action( 'wp_secupress_first_install', $_GET['module'] );
+	/** This action is documented in inc/admin/upgrader.php */
+	do_action( 'secupress.first_install', $_GET['module'] );
 
 	wp_safe_redirect( esc_url_raw( secupress_admin_url( 'modules', $_GET['module'] ) ) );
 	die();

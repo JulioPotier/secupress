@@ -49,7 +49,7 @@ function secupress_rrmdir( $dir, $dirs_to_preserve = array() ) {
 	 * @param (string) $dir              File/Directory to delete.
 	 * @param (array)  $dirs_to_preserve Directories that should not be deleted.
 	 */
-	do_action( 'before_secupress_rrmdir', $dir, $dirs_to_preserve );
+	do_action( 'secupress.before_rrmdir', $dir, $dirs_to_preserve );
 
 	if ( ! is_dir( $dir ) ) {
 		@unlink( $dir );
@@ -85,7 +85,7 @@ function secupress_rrmdir( $dir, $dirs_to_preserve = array() ) {
 	 * @param (string) $dir              File/Directory to delete.
 	 * @param (array)  $dirs_to_preserve Dirs that should not be deleted.
 	 */
-	do_action( 'after_secupress_rrmdir', $dir, $dirs_to_preserve );
+	do_action( 'secupress.after_rrmdir', $dir, $dirs_to_preserve );
 }
 
 
@@ -379,7 +379,6 @@ function secupress_async_upgrades() {
 
 	foreach ( $language_updates as $key => $language_update ) {
 		$update = ! empty( $language_update->autoupdate );
-
 
 		/** This filter is documented in wp-admin/includes/class-wp-upgrader.php */
 		$update = apply_filters( 'async_update_translation', $update, $language_update );

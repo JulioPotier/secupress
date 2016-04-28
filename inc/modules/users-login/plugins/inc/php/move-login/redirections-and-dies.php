@@ -40,7 +40,7 @@ function secupress_move_login_maybe_deny_login_page() {
 			$slugs[ $action ] = $subdir . $slug;
 		}
 	}
-	/*
+	/**
 	 * If you want to display the login form somewhere outside wp-login.php, add your URIs here.
 	 *
 	 * @since 1.0
@@ -69,7 +69,7 @@ function secupress_move_login_maybe_deny_login_page() {
  * @since 1.0
  */
 function secupress_move_login_deny_login_access() {
-	/*
+	/**
 	 * If you want to trigger a custom action (redirect, message, die...), add it here.
 	 * Don't forget to exit/die.
 	 *
@@ -81,7 +81,7 @@ function secupress_move_login_deny_login_access() {
 
 	switch ( $do ) {
 		case 'redir_404':
-			/*
+			/**
 			 * Filter the 404 page URL.
 			 *
 			 * @since 1.0
@@ -167,7 +167,7 @@ function secupress_move_login_maybe_deny_signup_redirect( $url ) {
  * @since 1.0
  */
 function secupress_move_login_deny_login_redirect() {
-	/*
+	/**
 	 * If you want to trigger a custom action (redirect, message, die...), add it here.
 	 * Don't forget to exit/die.
 	 *

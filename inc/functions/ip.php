@@ -28,7 +28,7 @@ function secupress_get_ip() {
 			$ip = end( $ip );
 
 			if ( false !== secupress_ip_is_valid( $ip ) ) {
-				/*
+				/**
 				 * Filter the valid IP address.
 				 *
 				 * @since 1.0
@@ -40,7 +40,7 @@ function secupress_get_ip() {
 		}
 	}
 
-	/*
+	/**
 	 * Filter the default IP address.
 	 *
 	 * @since 1.0
