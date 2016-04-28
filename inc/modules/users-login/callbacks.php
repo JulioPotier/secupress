@@ -348,7 +348,7 @@ function secupress_move_login_slug_labels() {
 	 *
 	 * @since 1.0
 	 *
-	 * @param (array) An array with the action names as keys and field labels as values.
+	 * @param (array) $new_slugs An array with the action names as keys and field labels as values. An empty array by default.
 	*/
 	$new_slugs = apply_filters( 'sfml_additional_slugs', array() );
 

@@ -45,17 +45,25 @@ function __secupress_do_backup_db() {
 	$wp_tables      = secupress_get_wp_tables();
 	$other_tables   = secupress_get_non_wp_tables();
 	$backup_storage = secupress_get_module_option( 'backups-storage_location', 'local', 'backups' );
-	$backup_file    = '';
+	$backup_file    = false;
 
 	if ( 'local' === $backup_storage ) {
-		$backup_file  = secupress_get_hashed_folder_name( 'backup', WP_CONTENT_DIR . '/backups/' ) . secupress_get_db_backup_filename();
+		$backup_file = secupress_get_hashed_folder_name( 'backup', WP_CONTENT_DIR . '/backups/' ) . secupress_get_db_backup_filename();
 
-		if ( secupress_pre_backup() ) {
+		if ( $backup_file && secupress_pre_backup() ) {
 			file_put_contents( $backup_file, secupress_get_db_tables_content( array_merge( $wp_tables, $other_tables ) ) );
 			$backup_file = secupress_zip_backup_file( $backup_file );
 		}
 	} elseif ( secupress_is_pro() ) {
-		$backup_file = apply_filters( 'secupress.do_backup.file', $backup_file, $backup_storage );
+		/**
+		 * Filter the path of the backup file.
+		 *
+		 * @since 1.0
+		 *
+		 * @param (string) $backup_file    The zip file path. False by default.
+		 * @param (string) $backup_storage The type of storage.
+		 */
+		$backup_file = apply_filters( 'secupress.do_backup_db.file', $backup_file, $backup_storage );
 	}
 
 	if ( ! $backup_file ) {

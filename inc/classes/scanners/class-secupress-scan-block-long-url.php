@@ -24,7 +24,14 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements SecuPress_
 	 *
 	 * @var (string)
 	 */
-	public    static $prio    = 'medium';
+	public    static $prio = 'medium';
+
+	/**
+	 * Maximum uri length.
+	 *
+	 * @var (int)
+	 */
+	public    static $length;
 
 
 	/**
@@ -34,8 +41,10 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements SecuPress_
 	 */
 	protected static function init() {
 		self::$type     = 'WordPress';
-		self::$title    = sprintf( __( 'Check if long URL can reach your website (more than %s chars).', 'secupress' ), number_format_i18n( apply_filters( 'secupress.plugin.len.bad-url-length', 300 ) ) );
-		self::$more     = sprintf( __( 'A usual URL has no more than %s characters, but attackers often need to test very long strings when they try to hack something.', 'secupress' ), number_format_i18n( apply_filters( 'secupress.plugin.len.bad-url-length', 300 ) ) );
+		/** This filter is documented in inc/modules/firewall/plugins/bad-url-length.php */
+		self::$length   = apply_filters( 'secupress.plugin.bad-url-length.len', 300 );
+		self::$title    = sprintf( __( 'Check if long URL can reach your website (more than %s chars).', 'secupress' ), number_format_i18n( self::$length ) );
+		self::$more     = sprintf( __( 'A usual URL has no more than %s characters, but attackers often need to test very long strings when they try to hack something.', 'secupress' ), number_format_i18n( self::$length ) );
 		self::$more_fix = sprintf(
 			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
 			'<em>' . __( 'Block Long URLs', 'secupress' ) . '</em>',
@@ -80,9 +89,7 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements SecuPress_
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-
-		$test_len = apply_filters( 'secupress.plugin.len.bad-url-length', 300 );
-		$response = wp_remote_get( user_trailingslashit( home_url() ) . '?' . time() . '=' . wp_generate_password( $test_len, false ), array( 'redirection' => 0 ) );
+		$response = wp_remote_get( user_trailingslashit( home_url() ) . '?' . time() . '=' . wp_generate_password( self::$length, false ), array( 'redirection' => 0 ) );
 
 		if ( ! is_wp_error( $response ) ) {
 
@@ -110,7 +117,6 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements SecuPress_
 	 * @return (array) The fix results.
 	 */
 	public function fix() {
-
 		// Activate.
 		secupress_activate_submodule( 'firewall', 'bad-url-length' );
 

@@ -36,9 +36,17 @@ function __secupress_delete_scanned_files_ajax_post_cb() {
 			$wp_core_files_hashes[ $wp_content_dir . '/advanced-cache.php' ] = '/advanced-cache.php'; // Add this since it's not in the zip but depends from WordPress Cache.
 		}
 
+		$wp_core_files_hashes = array_keys( $wp_core_files_hashes );
+		/**
+		 * Filter the list of WordPress core file paths.
+		 *
+		 * @since 1.0
+		 *
+		 * @param (array) $wp_core_files_hashes The list of WordPress core file paths.
+		 */
 		$wp_core_files_hashes = apply_filters( 'secupress.wp_core_files_hashes', $wp_core_files_hashes );
-		$full_filetree        = $full_filetree[ $wp_version ];
-		$diff_from_root_core  = array_flip( array_diff( $full_filetree, array_flip( $wp_core_files_hashes ) ) );
+		$diff_from_root_core  = array_diff( $full_filetree[ $wp_version ], $wp_core_files_hashes );
+		$diff_from_root_core  = array_flip( $diff_from_root_core );
 	}
 
 	if ( ! $diff_from_root_core ) {
