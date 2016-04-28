@@ -180,6 +180,7 @@ add_action( 'secupress.loaded', 'secupress_load_plugins' );
  * @since 1.0
  */
 function secupress_load_plugins() {
+	// All modules.
 	$modules = secupress_get_modules();
 
 	if ( $modules ) {
@@ -198,6 +199,10 @@ function secupress_load_plugins() {
 		}
 	}
 
+	// OK, this one is a bit lonely.
+	require_once( SECUPRESS_MODULES_PATH . 'discloses/tools.php' );
+
+	// Active sub-modules.
 	$modules = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
 
 	if ( $modules ) {
