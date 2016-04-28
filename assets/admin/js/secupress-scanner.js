@@ -974,29 +974,9 @@ jQuery( document ).ready( function( $ ) {
 
 
 		// One Click Scan auto.
-		function secupressFirstOneClickScan() {
-			var parts;
-
-			if ( ! $.isEmptyObject( secupressScans.doingScan ) || ! $.isEmptyObject( secupressScans.doingFix ) || secupressScans.delayedFixes.length || ! $.isEmptyObject( secupressScans.manualFix ) ) {
-				return;
-			}
-
-			if ( $( ".score_results li" ).length ) {
-				return;
-			}
-
-			parts = w.location.href.split( "&" );
-			parts.shift();
-
-			$.each( parts, function( i, v ) {
-				if ( "oneclick-scan=1" === v ) {
-					$( ".button-secupress-scan" ).trigger( "scan.secupress" );
-					return;
-				}
-			} );
+		if ( w.SecuPressi18nScanner.firstOneClickScan && $.isEmptyObject( secupressScans.doingScan ) && $.isEmptyObject( secupressScans.doingFix ) && ! secupressScans.delayedFixes.length && $.isEmptyObject( secupressScans.manualFix ) ) {
+			$( ".button-secupress-scan" ).trigger( "scan.secupress" );
 		}
-
-		secupressFirstOneClickScan();
 
 	} )(window, document, $);
 } );

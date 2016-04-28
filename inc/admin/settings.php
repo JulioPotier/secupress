@@ -112,7 +112,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		wp_enqueue_script( 'secupress-scanner-js',  SECUPRESS_ADMIN_JS_URL . 'secupress-scanner' . $suffix . '.js', $depts, $version, true );
 		wp_enqueue_script( 'wpmedia-js-sweetalert', SECUPRESS_ADMIN_JS_URL . 'sweetalert' . $suffix . '.js', array(), '1.1.0', true );
 
-		wp_localize_script( 'secupress-scanner-js', 'SecuPressi18nScanner', array(
+		$localize = array(
 			'fixed'           => __( 'Fixed', 'secupress' ),
 			'fixedPartial'    => __( 'Partially fixed', 'secupress' ),
 			'notFixed'        => __( 'Not Fixed', 'secupress' ),
@@ -123,10 +123,20 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'spinnerUrl'      => admin_url( 'images/wpspin_light-2x.gif' ),
 			'scanDetails'     => __( 'Scan Details', 'secupress' ),
 			'fixDetails'      => __( 'Fix Details', 'secupress' ),
-		) );
-	}
+		);
 
+		if ( ! empty( $_GET['oneclick-scan'] ) && ! empty( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'first_oneclick-scan' ) && current_user_can( secupress_get_capability() ) ) {
+			$times = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
+
+			if ( ! $times ) {
+				$localize['firstOneClickScan'] = 1;
+			}
+		}
+
+		wp_localize_script( 'secupress-scanner-js', 'SecuPressi18nScanner', $localize );
+	}
 }
+
 
 /*------------------------------------------------------------------------------------------------*/
 /* PLUGINS LIST ================================================================================= */

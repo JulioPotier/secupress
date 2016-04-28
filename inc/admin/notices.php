@@ -265,7 +265,7 @@ function secupress_warning_no_oneclick_scan_yet() {
 	printf(
 		/* Translators: %s is "One Click Scan". */
 		__( 'Why not run your first %s now?', 'secupress' ), // ////.
-		'<a href="' . esc_url( secupress_admin_url( 'scanners' ) ) . '&oneclick-scan=1">' . __( 'One Click Scan', 'secupress' ) . '</a>'
+		'<a href="' . esc_url( wp_nonce_url( secupress_admin_url( 'scanners' ), 'first_oneclick-scan' ) ) . '&oneclick-scan=1">' . __( 'One Click Scan', 'secupress' ) . '</a>'
 	);
 	echo "</div>\n";
 }
