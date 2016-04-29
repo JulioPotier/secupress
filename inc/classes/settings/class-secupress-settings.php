@@ -452,7 +452,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		$attributes = '';
 		$args['attributes']['class'] = ! empty( $args['attributes']['class'] ) ? (array) $args['attributes']['class'] : array();
 
-		if ( 'radioboxes' === $args['type'] || 'checkboxes' === $args['type'] || 'checkbox' === $args['type'] ) {
+		if ( 'radioboxes' === $args['type'] || 'checkboxes' === $args['type'] || 'checkbox' === $args['type'] || 'roles' === $args['type'] ) {
 			$args['attributes']['class'][] = 'secupress-checkbox';
 		}
 
@@ -658,11 +658,12 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 				foreach ( $roles as $val => $title ) {
 					?>
-					<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
-						<input type="checkbox" name="<?php echo $name_attribute; ?>[]" value="<?php echo $val; ?>"<?php checked( ! isset( $value[ $val ] ) ); ?><?php echo $attributes; ?>>
-						<?php echo $title; ?>
-					</label>
-					<br/>
+					<p class="secupress-checkbox-roles-line">
+						<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
+							<input type="checkbox" name="<?php echo $name_attribute; ?>[]" value="<?php echo $val; ?>"<?php checked( ! isset( $value[ $val ] ) ); ?><?php echo $attributes; ?>>
+							<?php echo '<span class="label-text">' . $title . '</span>'; ?>
+						</label>
+					</p>
 					<?php
 				}
 				break;
@@ -1398,33 +1399,43 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			unset( $field['args']['row_id'], $field['args']['row_class'], $field['args']['depends'] );
 			?>
 			<div<?php echo $id . $class; ?>>
-				<?php
-				// Row title.
-				if ( $field['title'] ) {
-					$id = explode( '|', $field['id'] );
-					$id = end( $id );
-					if ( ! empty( $field['args']['label_for'] ) ) {
-						echo '<h4 id="row-' . sanitize_html_class( $id ) . '" class="screen-reader-text">' . $field['title'] . '</h4>';
-						echo '<label for="' . esc_attr( $field['args']['label_for'] ) . '" class="secupress-setting-row-title">' . $field['title'] . '</label>';
-					} else {
-						echo '<h4 id="row-' . sanitize_html_class( $id ) . '" class="secupress-setting-row-title">' . $field['title'] . '</h4>';
-					}
-				}
-				// Row description.
-				if ( $is_pro ) {
-					// If it's a pro feature, add a warning.
-					$format = $field['args']['description'] ? '<br>%s' : '';
-					$field['args']['description'] .= secupress_get_pro_version_string( $format );
-				}
-				if ( $field['args']['description'] ) {
-					echo '<p class="description">' . $field['args']['description'] . '</p>';
-				}
-				unset( $field['args']['description'] );
-				
-				call_user_func( $field['callback'], $field['args'] );
-			?>
-
-			</div><!-- .-->
+				<div class="secupress-flex">
+					<div class="secupress-setting-content-col">
+					<?php
+						// Row title.
+						if ( $field['title'] ) {
+							$id = explode( '|', $field['id'] );
+							$id = end( $id );
+							if ( ! empty( $field['args']['label_for'] ) ) {
+								echo '<h4 id="row-' . sanitize_html_class( $id ) . '" class="screen-reader-text">' . $field['title'] . '</h4>';
+								echo '<label for="' . esc_attr( $field['args']['label_for'] ) . '" class="secupress-setting-row-title">' . $field['title'] . '</label>';
+							} else {
+								echo '<h4 id="row-' . sanitize_html_class( $id ) . '" class="secupress-setting-row-title">' . $field['title'] . '</h4>';
+							}
+						}
+						// Row description.
+						/*if ( $is_pro ) {
+							// If it's a pro feature, add a warning.
+							$format = $field['args']['description'] ? '<br>%s' : '';
+							$field['args']['description'] .= secupress_get_pro_version_string( $format );
+						}*/
+						if ( $field['args']['description'] ) {
+							echo '<p class="description">' . $field['args']['description'] . '</p>';
+						}
+						unset( $field['args']['description'] );
+						
+						call_user_func( $field['callback'], $field['args'] );
+					?>
+					</div>
+					<div class="secupress-get-pro-col">
+					<?php
+						if ( $is_pro ) {
+							echo '<p class="secupress-get-pro">' . secupress_get_pro_version_string() . '</p>';
+						}
+					?>
+					</div><!-- .secupress-get-pro-col -->
+				</div><!-- .secupress-flex -->
+			</div>
 			<?php
 		}
 	}

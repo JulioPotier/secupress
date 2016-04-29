@@ -325,6 +325,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 
 				$input.on( "click", function() {
 					var id = $( this ).attr( "id" );
+					$( this ).toggleClass( 'open' );
 					$( ".depends-" + id ).toggle( 250 );
 				} );
 
