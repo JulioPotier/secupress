@@ -53,6 +53,8 @@ function __secupress_do_backup_db() {
 		if ( $backup_file && secupress_pre_backup() ) {
 			file_put_contents( $backup_file, secupress_get_db_tables_content( array_merge( $wp_tables, $other_tables ) ) );
 			$backup_file = secupress_zip_backup_file( $backup_file );
+		} else {
+			secupress_admin_die();
 		}
 	} elseif ( secupress_is_pro() ) {
 		/**

@@ -20,24 +20,9 @@ function secupress_pre_backup() {
 	}
 
 	if ( $is_apache ) {
-		$file          = '.htaccess';
-		$file_content  = "Order allow,deny\n";
-		$file_content .= 'Deny from all';
+		$file = '.htaccess';
 	} elseif ( $is_iis7 ) {
-		// - https://www.iis.net/configreference/system.webserver/security/authorization
-		// - https://technet.microsoft.com/en-us/library/cc772441%28v=ws.10%29.aspx
-		$file          = 'web.config';
-		$file_content  = '<?xml version="1.0" encoding="utf-8" ?>
-<configuration>
-  <system.webServer>
-    <security>
-      <authorization>
-        <remove users="*" roles="" verbs="" />
-        <add accessType="Deny" users="*" roles="" verbs="" />
-      </authorization>
-    </security>
-  </system.webServer>
-</configuration>';
+		$file = 'web.config';
 	} elseif ( $is_nginx ) {
 		return is_writable( $backup_dir );
 	}
@@ -52,9 +37,57 @@ function secupress_pre_backup() {
 		return is_writable( $backup_dir );
 	}
 
-	file_put_contents( $file, $file_content );
+	file_put_contents( $file, secupress_backup_get_protection_content() );
 
 	return is_writable( $backup_dir ) && file_exists( $file );
+}
+
+
+/**
+ * Get rules to be added to a `.htaccess`/`nginx.conf`/`web.config` file to protect the backups folder.
+ *
+ * @since 1.0
+ *
+ * @return (string) The rules to insert.
+ */
+function secupress_backup_get_protection_content() {
+	global $is_apache, $is_nginx, $is_iis7;
+
+	$file_content = '';
+
+	if ( $is_apache ) {
+		// Apache.
+		$file_content = "Order allow,deny\nDeny from all";
+	} elseif ( $is_iis7 ) {
+		// IIS7.
+		// - https://www.iis.net/configreference/system.webserver/security/authorization
+		// - https://technet.microsoft.com/en-us/library/cc772441%28v=ws.10%29.aspx
+		$file_content = '<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <system.webServer>
+    <security>
+      <authorization>
+        <remove users="*" roles="" verbs="" />
+        <add accessType="Deny" users="*" roles="" verbs="" />
+      </authorization>
+    </security>
+  </system.webServer>
+</configuration>';
+	} elseif ( $is_nginx ) {
+		// Nginx.
+		$backup_dir   = secupress_get_hashed_folder_name( 'backup', WP_CONTENT_DIR . '/backups/' );
+		$backup_dir   = str_replace( rtrim( wp_normalize_path( ABSPATH ), '/' ), '', wp_normalize_path( $backup_dir ) );
+		$path         = secupress_get_rewrite_bases();
+		$path         = $path['home_from'] . rtrim( dirname( $backup_dir ), '/' );
+		$file_content = "
+server {
+	location ~* $path {
+		deny all;
+	}
+}";
+	}
+
+	return $file_content;
 }
 
 
