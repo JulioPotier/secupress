@@ -397,8 +397,11 @@
  */
 
 .secupress-button.secupress-button,
-[class^="secupress-button-"][class^="secupress-button-"] {
+.secupress-button-primary.secupress-button-primary,
+.secupress-button-secondary.secupress-button-secondary,
+.secupress-button-tertiary.secupress-button-tertiary {
 	display: inline-block;
+	height: auto; /* Yeah 'cause WP blocked it */
 	margin: .1em 0;
 	padding: 7px 20px 8px;
 	border: 0;
@@ -418,8 +421,12 @@
 }
 .secupress-button.secupress-button:hover,
 .secupress-button.secupress-button:focus,
-[class^="secupress-button-"][class^="secupress-button-"]:hover,
-[class^="secupress-button-"][class^="secupress-button-"]:focus {
+.secupress-button-primary.secupress-button-primary:hover,
+.secupress-button-primary.secupress-button-primary:focus,
+.secupress-button-secondary.secupress-button-secondary:hover,
+.secupress-button-secondary.secupress-button-secondary:focus,
+.secupress-button-tertiary.secupress-button-tertiary:hover,
+.secupress-button-tertiary.secupress-button-tertiary:focus {
 	color: #FFF;
 	background: #393E46;
 }
@@ -576,24 +583,38 @@
 }
 
 /**
- * Checkboxes
+ * Checkboxes & Radioboxes
  */
 
 .secupress-checkbox.secupress-checkbox:not(:checked),
-.secupress-checkbox.secupress-checkbox:checked {
+.secupress-checkbox.secupress-checkbox:checked,
+.secupress-radio.secupress-radio:not(:checked),
+.secupress-radio.secupress-radio:checked {
 	position: absolute;
 	opacity: 0.01;
 	margin: 3px 0 0 3px;
 }
 .secupress-checkbox:not(:checked) + label,
-.secupress-checkbox:checked + label {
+.secupress-checkbox:checked + label,
+.secupress-checkbox:not(:checked) + .label-text,
+.secupress-checkbox:checked + .label-text,
+.secupress-radio:not(:checked) + label,
+.secupress-radio:checked + label,
+.secupress-radio:not(:checked) + .label-text,
+.secupress-radio:checked + .label-text {
 	position: relative;
 	display: inline-block;
 	padding-left: 32px;
 	margin: .3em 0;
 }
 .secupress-checkbox:not(:checked) + label:before,
-.secupress-checkbox:checked + label:before {
+.secupress-checkbox:checked + label:before,
+.secupress-checkbox:not(:checked) + .label-text:before,
+.secupress-checkbox:checked + .label-text:before,
+.secupress-radio:not(:checked) + label:before,
+.secupress-radio:checked + label:before,
+.secupress-radio:not(:checked) + .label-text:before,
+.secupress-radio:checked + .label-text:before {
 	content: "";
 	position: absolute;
 	left: 0; top: -1px;
@@ -605,7 +626,13 @@
 	transition: all .275s;
 }
 .secupress-checkbox:not(:checked) + label:after,
-.secupress-checkbox:checked + label:after {
+.secupress-checkbox:checked + label:after,
+.secupress-checkbox:not(:checked) + .label-text:after,
+.secupress-checkbox:checked + .label-text:after,
+.secupress-radio:not(:checked) + label:after,
+.secupress-radio:checked + label:after,
+.secupress-radio:not(:checked) + .label-text:after,
+.secupress-radio:checked + .label-text:after {
 	content: "\f00c";
 	position: absolute;
 	left: 5px; top: 0;
@@ -613,34 +640,90 @@
 	font-size: 14px;
 	transition: all .275s;
 }
-.secupress-checkbox:not(:checked) + label:after {
+.secupress-checkbox:not(:checked) + label:after,
+.secupress-checkbox:not(:checked) + .label-text:after,
+.secupress-radio:not(:checked) + label:after,
+.secupress-radio:not(:checked) + .label-text:after {
 	transform: scale(0);
 }
-.secupress-checkbox:checked + label:after {
+.secupress-checkbox:checked + label:after,
+.secupress-checkbox:checked + .label-text:after,
+.secupress-radio:checked + label:after,
+.secupress-radio:checked + .label-text:after {
 	transform: scale(1);
 }
 .secupress-section-light .secupress-checkbox:not(:checked) + label:before,
-.secupress-section-light .secupress-checkbox:checked + label:before {
+.secupress-section-light .secupress-checkbox:checked + label:before,
+.secupress-section-light .secupress-checkbox:not(:checked) + .label-text:before,
+.secupress-section-light .secupress-checkbox:checked + .label-text:before,
+.secupress-section-light .secupress-radio:not(:checked) + label:before,
+.secupress-section-light .secupress-radio:checked + label:before,
+.secupress-section-light .secupress-radio:not(:checked) + .label-text:before,
+.secupress-section-light .secupress-radio:checked + .label-text:before {
 	background: #FFF;
 }
 .secupress-section-dark .secupress-checkbox:not(:checked) + label:before,
-.secupress-section-dark .secupress-checkbox:checked + label:before {
+.secupress-section-dark .secupress-checkbox:checked + label:before,
+.secupress-section-dark .secupress-checkbox:not(:checked) + .label-text:before,
+.secupress-section-dark .secupress-checkbox:checked + .label-text:before,
+.secupress-section-dark .secupress-radio:not(:checked) + label:before,
+.secupress-section-dark .secupress-radio:checked + label:before,
+.secupress-section-dark .secupress-radio:not(:checked) + .label-text:before,
+.secupress-section-dark .secupress-radio:checked + .label-text:before {
 	background: #222831;
 }
 
 /* Disabled */
 .secupress-checkbox:disabled:not(:checked) + label:after,
-.secupress-checkbox:disabled:checked + label:after {
+.secupress-checkbox:disabled:checked + label:after,
+.secupress-checkbox:disabled:not(:checked) + .label-text:after,
+.secupress-checkbox:disabled:checked + .label-text:after,
+.secupress-radio:disabled:not(:checked) + label:after,
+.secupress-radio:disabled:checked + label:after,
+.secupress-radio:disabled:not(:checked) + .label-text:after,
+.secupress-radio:disabled:checked + .label-text:after {
 	opacity: .5;
 }
 .secupress-checkbox:disabled:not(:checked) + label:before,
-.secupress-checkbox:disabled:checked + label:before {
+.secupress-checkbox:disabled:checked + label:before,
+.secupress-checkbox:disabled:not(:checked) + .label-text:before,
+.secupress-checkbox:disabled:checked + .label-text:before,
+.secupress-radio:disabled:not(:checked) + label:before,
+.secupress-radio:disabled:checked + label:before,
+.secupress-radio:disabled:not(:checked) + .label-text:before,
+.secupress-radio:disabled:checked + .label-text:before {
 	border-color: #888;
 	background: #ddd;
 }
 .secupress-section-dark .secupress-checkbox:disabled:not(:checked) + label:after,
-.secupress-section-dark .secupress-checkbox:disabled:checked + label:after {
+.secupress-section-dark .secupress-checkbox:disabled:checked + label:after,
+.secupress-section-dark .secupress-checkbox:disabled:not(:checked) + .label-text:after,
+.secupress-section-dark .secupress-checkbox:disabled:checked + .label-text:after,
+.secupress-section-dark .secupress-radio:disabled:not(:checked) + label:after,
+.secupress-section-dark .secupress-radio:disabled:checked + label:after,
+.secupress-section-dark .secupress-radio:disabled:not(:checked) + .label-text:after,
+.secupress-section-dark .secupress-radio:disabled:checked + .label-text:after {
 	color: rgba(0,0,0,.5);
+}
+
+/* Specific for radios */
+.secupress-radio:not(:checked) + label:before,
+.secupress-radio:checked + label:before,
+.secupress-radio:not(:checked) + .label-text:before,
+.secupress-radio:checked + .label-text:before {
+	border-radius: 100%;
+}
+.secupress-radio:not(:checked) + label:after,
+.secupress-radio:checked + label:after,
+.secupress-radio:not(:checked) + .label-text:after,
+.secupress-radio:checked + .label-text:after {
+	/* The check mark */
+	content: "";
+	width: 12px; height: 12px;
+	top: 3.5px; left: 6px;
+	background: #2BCDC1;
+	border-radius: 100%;
+	box-shadow: 0 1px 0 #26B3A9; 
 }
 
 /**

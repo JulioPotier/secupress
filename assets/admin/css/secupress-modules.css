@@ -154,7 +154,7 @@
 }
 
 .secupress-tab-content-header {
-	padding: 15px 175px 15px 20px;
+	padding: 15px 175px 25px 20px;
 	background: #F2F2F6;
 	color: #5A626F; /*#393E46*/
 }
@@ -166,6 +166,112 @@
 
 .secupress-module-options-block {
 	padding: 15px 20px;
+}
+
+/* Module Settings */
+.secupress-settings-section + .secupress-settings-section {
+	margin-top: 50px;
+}
+.secupress-settings-section-header {
+	padding-bottom: 15px;
+	border-bottom: 2px solid #2BCDC1;
+}
+.secupress-settings-section-title {
+	font-size: 20px;
+	margin-bottom: 0;
+}
+.secupress-settings-section-description {
+	padding: 15px 40px 5px 0;
+	color: #5A626F;
+}
+.secupress-setting-row {
+	padding: 20px;
+	border-bottom: 1px solid #EEE;
+}
+.secupress-setting-row.secupress-pro-row a {
+	color: #f7ab13;
+}
+.secupress-setting-row.secupress-pro-row p {
+	color: #aaa;
+}
+.secupress-setting-row-title {
+	margin: 10px 0;
+	font-size: 18px;
+	font-weight: bold;
+	color: #2BCDC1;
+}
+.secupress-pro-row .secupress-setting-row-title {
+	color: #F7AB13;
+}
+.secupress-setting-row-title + .description {
+	margin-bottom: 1em;
+}
+
+.description.desc {
+	margin-top: -.4em;
+	padding-left: 32px;
+}
+
+/* Radio & Checkbox lines */
+.secupress-radio-line,
+.secupress-checkbox-line {
+	margin: 0.25em 0;
+}
+
+.secupress-setting-row .secupress-checkbox:not(:checked) + label:before,
+.secupress-setting-row .secupress-checkbox:checked + label:before,
+.secupress-setting-row .secupress-checkbox:not(:checked) + .label-text:before,
+.secupress-setting-row .secupress-checkbox:checked + .label-text:before,
+.secupress-setting-row .secupress-radio:not(:checked) + label:before,
+.secupress-setting-row .secupress-radio:checked + label:before,
+.secupress-setting-row .secupress-radio:not(:checked) + .label-text:before,
+.secupress-setting-row .secupress-radio:checked + .label-text:before {
+	top: -2px;
+	border-color: #26B3A9;
+	background: #FFF;
+}
+.secupress-setting-row .secupress-checkbox:not(:checked) + label:after,
+.secupress-setting-row .secupress-checkbox:checked + label:after,
+.secupress-setting-row .secupress-checkbox:not(:checked) + .label-text:after,
+.secupress-setting-row .secupress-checkbox:checked + .label-text:after {
+	top: -1px;
+	color: #26B3A9;
+}
+.secupress-setting-row .secupress-checkbox:not(:checked):disabled + label:before,
+.secupress-setting-row .secupress-checkbox:checked:disabled + label:before,
+.secupress-setting-row .secupress-checkbox:not(:checked):disabled + .label-text:before,
+.secupress-setting-row .secupress-checkbox:checked:disabled + .label-text:before,
+.secupress-setting-row .secupress-radio:not(:checked):disabled + label:before,
+.secupress-setting-row .secupress-radio:checked:disabled + label:before,
+.secupress-setting-row .secupress-radio:not(:checked):disabled + .label-text:before,
+.secupress-setting-row .secupress-radio:checked:disabled + .label-text:before {
+	border-color: #bbb;
+}
+
+/* An item inside a fieldset (type: checkboxes or radioboxes) */
+.secupress-fieldset-item {
+	margin: 0.5em 0;
+}
+.secupress-fieldset-item + .description {
+	margin-top: 1.5em;
+	padding-left: 0;
+}
+
+/* Get pro version elements */
+span.secupress-get-pro-version {
+	display: inline-block;
+	vertical-align: middle;
+	margin-left: 10px;
+	color: #000;
+	font-weight: bold;
+}
+.secupress-get-pro-version a {
+	color: #F7AB13;
+}
+
+/* form elements */
+.secupress-form-table label.disabled {
+	color: #aaa;
 }
 
 /* Dashboard (Welcome Page) */
@@ -231,6 +337,7 @@
 	font-size: 100px;
 	color: rgba(0,0,0,.075);
 }
+
 /* buttons */
 .secupress-module-box [class^="secupress-button"] {
 	font-size: 1em;
@@ -248,10 +355,6 @@
 
 
 /* EXISTING */
-
-.form-table {
-	clear: none;
-}
 
 .toggle-password {
 	opacity: .7;
@@ -288,10 +391,6 @@ label {
 
 .description.warning strong {
 	color: red;
-}
-
-.form-table label.disabled {
-	color: #ddd;
 }
 
 .secupress-logs li {
