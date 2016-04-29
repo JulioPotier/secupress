@@ -166,7 +166,7 @@ function secupress_move_login_set_path( $path ) {
 			$action = 'resetpass';
 		}
 
-		if ( ! isset( $slugs[ $action ], $other[ $action ] ) && false === has_filter( 'login_form_' . $action ) ) {
+		if ( ! isset( $slugs[ $action ] ) && ! isset( $other[ $action ] ) && false === has_filter( 'login_form_' . $action ) ) {
 			$action = 'login';
 		}
 	}
