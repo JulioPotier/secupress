@@ -207,7 +207,7 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 		$hook = current_filter();
 		$args = func_get_args();
 
-		if ( call_user_func( $this->hooks[ $hook ]['test_cb'], $args ) ) {
+		if ( call_user_func_array( $this->hooks[ $hook ]['test_cb'], $args ) ) {
 			$this->_queue_alert( $args );
 		}
 
