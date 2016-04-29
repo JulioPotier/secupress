@@ -1,6 +1,19 @@
+// Global vars =====================================================================================
+var SecuPress = {
+	confirmSwalDefaults: {
+		confirmButtonText: window.SecuPressi18nScanner.confirmText,
+		cancelButtonText:  window.SecuPressi18nScanner.cancelText,
+		type:              "warning",
+		showCancelButton:  true,
+		closeOnConfirm:    false,
+		allowOutsideClick: true
+	}
+};
+
+
 jQuery( document ).ready( function( $ ) {
 
-	// !Chart and score --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// !Chart and score ============================================================================
 	var secupressChart,
 		secupressChartEl = document.getElementById( "status_chart" ),
 		secupressChartData;
@@ -120,13 +133,13 @@ jQuery( document ).ready( function( $ ) {
 	secupressUpdateScore();
 
 
-	// !Big network: set some data ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// !Big network: set some data =================================================================
 	(function( w, d, $, undefined ) {
 		function secupressSetBigData( href, $button, $spinner, $percent ) {
 			$.getJSON( href )
 			.done( function( r ) {
 				if ( ! r.success ) {
-					$spinner.replaceWith( '<span class="secupress-error-notif">' + SecuPressi18nScanner.error + "</span>" );
+					$spinner.replaceWith( '<span class="secupress-error-notif">' + w.SecuPressi18nScanner.error + "</span>" );
 					$percent.remove();
 					return;
 				}
@@ -147,7 +160,7 @@ jQuery( document ).ready( function( $ ) {
 				} );
 			} )
 			.fail( function() {
-				$spinner.replaceWith( '<span class="secupress-error-notif">' + SecuPressi18nScanner.error + "</span>" );
+				$spinner.replaceWith( '<span class="secupress-error-notif">' + w.SecuPressi18nScanner.error + "</span>" );
 				$percent.remove();
 			} );
 		}
@@ -156,7 +169,7 @@ jQuery( document ).ready( function( $ ) {
 		$( ".secupress-centralize-blog-options" ).on( "click", function( e ) {
 			var $this    = $( this ),
 				href     = $this.attr( "href" ).replace( "admin-post.php", "admin-ajax.php" ),
-				$spinner = $( '<img src="' + SecuPressi18nScanner.spinnerUrl + '" alt="" class="secupress-spinner" />' ),
+				$spinner = $( '<img src="' + w.SecuPressi18nScanner.spinnerUrl + '" alt="" class="secupress-spinner" />' ),
 				$percent = $( '<span class="secupress-ajax-percent">0%</span>' );
 
 			if ( $this.hasClass( "running" ) ) {
@@ -171,7 +184,7 @@ jQuery( document ).ready( function( $ ) {
 	} )(window, document, $);
 
 
-	// !Filter rows ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// !Filter rows ================================================================================
 	(function( w, d, $, undefined ) {
 		$( "body" ).on( "click filter.secupress", ".square-filter button", function( e ) {
 			var $this    = $( this ),
@@ -203,7 +216,7 @@ jQuery( document ).ready( function( $ ) {
 	} )(window, document, $);
 
 
-	// !Scans and fixes --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// !Scans and fixes ============================================================================
 	(function( w, d, $, undefined ) {
 		var secupressScans = {
 			// Scans.
@@ -279,7 +292,7 @@ jQuery( document ).ready( function( $ ) {
 
 		// Replace a scan status with an error icon + message.
 		function secupressDisplayScanError( $row ) {
-			var status = '<span class="dashicons dashicons-no secupress-dashicon" aria-hidden="true"></span> ' + SecuPressi18nScanner.error;
+			var status = '<span class="dashicons dashicons-no secupress-dashicon" aria-hidden="true"></span> ' + w.SecuPressi18nScanner.error;
 
 			// Add the icon + text.
 			secupressAddScanStatusText( $row, status );
@@ -308,7 +321,7 @@ jQuery( document ).ready( function( $ ) {
 
 		// Replace a fix status with an error icon + message.
 		function secupressDisplayFixError( $row, warn ) {
-			var statusText = '<span class="dashicons dashicons-no secupress-dashicon" aria-hidden="true"></span> ' + SecuPressi18nScanner.error;
+			var statusText = '<span class="dashicons dashicons-no secupress-dashicon" aria-hidden="true"></span> ' + w.SecuPressi18nScanner.error;
 
 			// Add the icon + text.
 			secupressAddFixStatusText( $row, statusText );
@@ -330,8 +343,9 @@ jQuery( document ).ready( function( $ ) {
 		// Error popup.
 		function secupressErrorWarn() {
 			swal( {
-				title: SecuPressi18nScanner.error,
-				type: "error",
+				title:             w.SecuPressi18nScanner.error,
+				confirmButtonText: w.SecuPressi18nScanner.confirmText,
+				type:              "error",
 				allowOutsideClick: true
 			} );
 		}
@@ -455,7 +469,7 @@ jQuery( document ).ready( function( $ ) {
 			$row.addClass( "scanning" ).removeClass( "status-error" );
 
 			// Add the spinner.
-			secupressAddScanStatusText( $row, '<img src="' + SecuPressi18nScanner.spinnerUrl + '" alt="" />' );
+			secupressAddScanStatusText( $row, '<img src="' + w.SecuPressi18nScanner.spinnerUrl + '" alt="" />' );
 
 			// Ajax call
 			$.getJSON( href.replace( "admin-post.php", "admin-ajax.php" ) )
@@ -539,7 +553,7 @@ jQuery( document ).ready( function( $ ) {
 			$row.addClass( "fixing" ).removeClass( "status-error" );
 
 			// Add the spinner.
-			secupressAddFixStatusText( $row, '<img src="' + SecuPressi18nScanner.spinnerUrl + '" alt="" />' );
+			secupressAddFixStatusText( $row, '<img src="' + w.SecuPressi18nScanner.spinnerUrl + '" alt="" />' );
 
 			// Ajax call
 			$.getJSON( href.replace( "admin-post.php", "admin-ajax.php" ) )
@@ -670,48 +684,50 @@ jQuery( document ).ready( function( $ ) {
 
 			content += "</form>";
 
-			swal( {
-					title:               data.form_title,
-					text:                content,
-					html:                true,
-					type:                swalType,
-					showLoaderOnConfirm: true,
-					closeOnConfirm:      false,
-					allowOutsideClick:   true,
-					showCancelButton:    true,
-					confirmButtonText:   SecuPressi18nScanner.fixit
-				},
-				function() {
-					var params = $( "#form_manual_fix" ).serializeArray(),
-						$row   = $( "#" + test );
+			swal( $.extend( {}, SecuPress.confirmSwalDefaults, {
+				title:             data.form_title,
+				html:              content,
+				type:              swalType,
+				confirmButtonText: w.SecuPressi18nScanner.fixit
+			} ) ).then( function ( isConfirm ) {
+				var params, $row;
 
-					$.post( ajaxurl, params, null, "json" )
-					.done( function( r ) {
-						// Display fix result.
-						if ( secupressDisplayFixResult( r, test, true ) ) {
+				if ( ! isConfirm ) {
+					return;
+				}
 
-							// If we need a manual fix, store the info and re-run.
-							if ( secupressManualFixNeeded( r.data ) ) {
-								secupressScans.manualFix[ test ] = r.data;
-								secupressManualFixit( test );
-							}
-							// The fix is successfull.
-							else {
-								// Trigger an event.
-								$( "body" ).trigger( "manualFixDone.secupress", [ {
-									test: test,
-									data: r.data
-								} ] );
-							}
+				swal.enableLoading();
 
+				params = $( "#form_manual_fix" ).serializeArray();
+				$row   = $( "#" + test );
+
+				$.post( ajaxurl, params, null, "json" )
+				.done( function( r ) {
+					// Display fix result.
+					if ( secupressDisplayFixResult( r, test, true ) ) {
+						// If we need a manual fix, store the info and re-run.
+						if ( secupressManualFixNeeded( r.data ) ) {
+							secupressScans.manualFix[ test ] = r.data;
+							secupressManualFixit( test );
 						}
-					} )
-					.fail( function() {
+						// The fix is successfull.
+						else {
+							// Trigger an event.
+							$( "body" ).trigger( "manualFixDone.secupress", [ {
+								test: test,
+								data: r.data
+							} ] );
+						}
+					} else {
 						// Error
 						secupressDisplayFixError( $row, true );
-					} );
-				}
-			);
+					}
+				} )
+				.fail( function() {
+					// Error
+					secupressDisplayFixError( $row, true );
+				} );
+			} );
 		}
 
 
@@ -820,7 +836,7 @@ jQuery( document ).ready( function( $ ) {
 				$rows = $rows.substr( 1 );
 				$rows = $( $rows ).children( ".secupress-scan-result" );
 				$rows.children( ".manual-fix-message" ).remove();
-				$rows.append( '<div class="manual-fix-message">' + SecuPressi18nScanner.manualFixMsg + "</div>" );
+				$rows.append( '<div class="manual-fix-message">' + w.SecuPressi18nScanner.manualFixMsg + "</div>" );
 
 				if ( ! extra.isBulk ) {
 					// If it's not a bulk, display the form.
@@ -829,9 +845,10 @@ jQuery( document ).ready( function( $ ) {
 				} else {
 					// Bulk: warn the user that some manual fixes need to be done.
 					swal( {
-						title: manualFixLen === 1 ? SecuPressi18nScanner.oneManualFix : SecuPressi18nScanner.someManualFixes,
-						type: "warning",
-						allowOutsideClick: true
+						title:             manualFixLen === 1 ? w.SecuPressi18nScanner.oneManualFix : w.SecuPressi18nScanner.someManualFixes,
+						type:              "warning",
+						allowOutsideClick: true,
+						confirmButtonText: w.SecuPressi18nScanner.confirmText
 					} );
 				}
 
@@ -850,27 +867,27 @@ jQuery( document ).ready( function( $ ) {
 			* extra.test:      test name.
 			* extra.data:      data returned by the ajax call.
 			*/
-			var title = SecuPressi18nScanner.notFixed,
-				type  = 'error';
+			var title = w.SecuPressi18nScanner.notFixed,
+				type  = "error";
 
 			// Go for a new scan.
 			$( "#" + extra.test ).find( ".secupress-scanit" ).trigger( "scan.secupress" );
 
 			// Success! (or not)
 			if ( extra.data.class === "warning" ) {
-				title = SecuPressi18nScanner.fixedPartial;
+				title = w.SecuPressi18nScanner.fixedPartial;
 				type  = "warning";
 			} else if ( extra.data.class === "good" ) {
-				title = SecuPressi18nScanner.fixed;
+				title = w.SecuPressi18nScanner.fixed;
 				type  = "success";
 			}
 
 			swal( {
-				title: title,
-				text:  extra.data.message.replace( /(<ul>|<li>|<\/li><\/ul>)/g, "" ).replace( /<\/li>/g, "<br/><br/>" ),
-				type:  type,
+				title:             title,
+				html:              extra.data.message.replace( /(<ul>|<li>|<\/li><\/ul>)/g, "" ).replace( /<\/li>/g, "<br/><br/>" ),
+				type:              type,
 				allowOutsideClick: true,
-				html:  true
+				confirmButtonText: w.SecuPressi18nScanner.confirmText
 			} );
 		} );
 
@@ -893,10 +910,11 @@ jQuery( document ).ready( function( $ ) {
 		$( "body" ).on( "click", ".secupress-details", function( e ) {
 			var test = $( this ).attr( "data-test" );
 			swal( {
-				title: SecuPressi18nScanner.scanDetails,
-				text:  $( "#details-" + test + " .details-content" ).html(),
-				type:  'info',
-				allowOutsideClick: true,
+				title:             w.SecuPressi18nScanner.scanDetails,
+				confirmButtonText: w.SecuPressi18nScanner.confirmText,
+				html:              $( "#details-" + test + " .details-content" ),
+				type:              "info",
+				allowOutsideClick: true
 			} );
 		} );
 
@@ -904,23 +922,17 @@ jQuery( document ).ready( function( $ ) {
 		// Show fix details.
 		$( "body" ).on( "click", ".secupress-details-fix", function( e ) {
 			var test = $( this ).attr( "data-test" );
-			swal( {
-				text:                $( "#details-fix-" + test + " .details-content" ).html(),
-				title:               SecuPressi18nScanner.fixDetails,
-				confirmButtonText:   SecuPressi18nScanner.fixit,
-				type:                'info',
-				closeOnConfirm:      true,
-				showLoaderOnConfirm: true,
-				allowOutsideClick:   true,
-				showCancelButton:    true,
-				html:                true,
-			},
-				function( isConfirm ) {
-					if ( isConfirm ) {
-						$( "#" + test + " .secupress-fixit" ).trigger( "click" );
-					}
+			swal( $.extend( {}, SecuPress.confirmSwalDefaults, {
+				title:             w.SecuPressi18nScanner.fixDetails,
+				confirmButtonText: w.SecuPressi18nScanner.fixit,
+				html:              $( "#details-fix-" + test + " .details-content" ),
+				type:              "info",
+				closeOnConfirm:    true
+			} ) ).then( function ( isConfirm ) {
+				if ( isConfirm ) {
+					$( "#" + test + " .secupress-fixit" ).trigger( "click" );
 				}
-			);
+			} );
 		} );
 
 
