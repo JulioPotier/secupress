@@ -131,6 +131,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			if ( ! $times ) {
 				$localize['firstOneClickScan'] = 1;
 			}
+			$_SERVER['REQUEST_URI'] = remove_query_arg( array( '_wpnonce', 'oneclick-scan' ) );
 		}
 
 		wp_localize_script( 'secupress-scanner-js', 'SecuPressi18nScanner', $localize );
