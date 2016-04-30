@@ -328,6 +328,7 @@ function __secupress_scanners() {
 				<?php _e( 'One Click Fix', 'secupress' ); ?>
 			</button>
 
+			<div class="secupress-progressbar hidden" style="width:500px;padding:2px;border:1px solid;"><div style="background:#2BCDC1;display:inline-block;width:0px">&nbsp;</div><span style="position:absolute;left:8px;">0 %</span></div>
 
 			<div class="square-filter priorities hide-if-no-js">
 				<button type="button" class="active" data-type="all"><?php _ex( 'All Priorities', 'priority', 'secupress' ); ?></button><?php

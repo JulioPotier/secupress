@@ -3,7 +3,8 @@ jQuery( document ).ready( function( $ ) {
 	// !Chart and score --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	var secupressChart,
 		secupressChartEl = document.getElementById( "status_chart" ),
-		secupressChartData;
+		secupressChartData,
+		secupressOneClickScanProgress = 0;
 
 	if ( secupressChartEl && window.Chart ) {
 		secupressChartData = [
@@ -214,6 +215,26 @@ jQuery( document ).ready( function( $ ) {
 			// Manual fixes.
 			manualFix:    {}
 		};
+
+		// Runs the Progressbar, 10 sec min.
+		function secupressRunProgressBar() {
+			$( ".secupress-progressbar" ).show();
+			var secupressProgressTimer = setInterval( 
+				function() {
+					secupressOneClickScanProgress++;
+					if ( ! $.isEmptyObject( secupressScans.doingScan ) && secupressOneClickScanProgress > 90 && secupressOneClickScanProgress < 100 ) {
+						secupressOneClickScanProgress = 90;
+						return;
+					}
+					secupressOneClickScanProgress = secupressOneClickScanProgress > 100 ? 100 : secupressOneClickScanProgress;
+					$( ".secupress-progressbar" ).find( "div" ).css( "width", secupressOneClickScanProgress * 5 ).parent().find( "span" ).text( secupressOneClickScanProgress + " %" ); //// *5 = 100 * 5 = 500 (px in my test)
+					if ( secupressOneClickScanProgress >= 100 ) {
+						$( ".secupress-progressbar" ).hide( "slow" );
+						secupressOneClickScanProgress = 0;
+						clearInterval( secupressProgressTimer );
+					}
+	 			}, 100 );
+		}
 
 
 		// Update counters of bad results.
@@ -935,6 +956,7 @@ jQuery( document ).ready( function( $ ) {
 				// It's the "One Click Scan" button.
 				$this.attr( { "disabled": "disabled", "aria-disabled": "true" } );
 				$( ".secupress-scanit" ).trigger( "bulkscan.secupress" );
+				secupressRunProgressBar();
 				return;
 			}
 
