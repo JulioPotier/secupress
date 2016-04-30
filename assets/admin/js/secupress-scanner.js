@@ -218,10 +218,19 @@ jQuery( document ).ready( function( $ ) {
 
 		// Runs the Progressbar, 10 sec min.
 		function secupressRunProgressBar() {
-			$( ".secupress-progressbar" ).show();
+			$( ".secupress-progressbar, .secupress-caroupoivre" ).show();
 			var secupressProgressTimer = setInterval( 
 				function() {
 					secupressOneClickScanProgress++;
+					if ( secupressOneClickScanProgress >= 65 ) {
+						$( ".secupress-caroupoivre #slide2" ).hide();
+						$( ".secupress-caroupoivre #slide3" ).show();
+					} else if ( secupressOneClickScanProgress >= 35 ) {
+						$( ".secupress-caroupoivre #slide1" ).hide();
+						$( ".secupress-caroupoivre #slide2" ).show();
+					} else if ( secupressOneClickScanProgress >= 0 ) {
+						$( ".secupress-caroupoivre #slide1" ).show();
+					}
 					if ( ! $.isEmptyObject( secupressScans.doingScan ) && secupressOneClickScanProgress > 90 && secupressOneClickScanProgress < 100 ) {
 						secupressOneClickScanProgress = 90;
 						return;
@@ -229,7 +238,7 @@ jQuery( document ).ready( function( $ ) {
 					secupressOneClickScanProgress = secupressOneClickScanProgress > 100 ? 100 : secupressOneClickScanProgress;
 					$( ".secupress-progressbar" ).find( "div" ).css( "width", secupressOneClickScanProgress * 5 ).parent().find( "span" ).text( secupressOneClickScanProgress + " %" ); //// *5 = 100 * 5 = 500 (px in my test)
 					if ( secupressOneClickScanProgress >= 100 ) {
-						$( ".secupress-progressbar" ).hide( "slow" );
+						$( ".secupress-progressbar, .secupress-caroupoivre, .secupress-caroupoivre #slide3" ).hide( "slow" );
 						secupressOneClickScanProgress = 0;
 						clearInterval( secupressProgressTimer );
 					}
