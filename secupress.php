@@ -284,6 +284,12 @@ function secupress_load_plugin_textdomain_translations() {
 	if ( ! $done ) {
 		$done = true;
 		load_plugin_textdomain( 'secupress', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+		/**
+		 * Fires right after the plugin text domain is loaded.
+		 *
+		 * @since 1.0
+		 */
+		do_action( 'secupress.plugin_textdomain_loaded' );
 	}
 }
 
