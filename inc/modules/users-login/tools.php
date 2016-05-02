@@ -77,6 +77,8 @@ function secupress_in_timeslot() {
 
 	// Server hour.
 	$utc    = new DateTimeZone( 'UTC' );
+	$new_tz = ini_get( 'date.timezone' );
+	$new_tz = $new_tz ? new DateTimeZone( $new_tz ) : $utc;
 	$new_tz = new DateTimeZone( ini_get( 'date.timezone' ) );
 	$date   = new DateTime( '', $utc );
 	$date->setTimezone( $new_tz );

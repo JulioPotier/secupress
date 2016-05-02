@@ -65,7 +65,8 @@ $this->add_field( array(
 $field_name = $this->get_field_name( 'nonlogintimeslot' );
 // Server hour.
 $utc          = new DateTimeZone( 'UTC' );
-$new_tz       = new DateTimeZone( ini_get( 'date.timezone' ) );
+$new_tz       = ini_get( 'date.timezone' );
+$new_tz       = $new_tz ? new DateTimeZone( $new_tz ) : $utc;
 $date         = new DateTime( '', $utc );
 $date->setTimezone( $new_tz );
 $server_hour  = $date->format( 'H \h i \m\i\n' );
