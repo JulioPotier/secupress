@@ -508,9 +508,7 @@ function secupress_add_module_rules_or_notice_and_deactivate( $args ) {
 			"<pre>$rules</pre>"
 		);
 		add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
-
-		secupress_deactivate_submodule_silently( $module, $submodule );
-		return false;
+		return true;
 	}
 
 	// Server not supported.
