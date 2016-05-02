@@ -235,7 +235,7 @@ jQuery( document ).ready( function( $ ) {
 						secupressOneClickScanProgress = 90;
 						return;
 					}
-					secupressOneClickScanProgress = secupressOneClickScanProgress > 100 ? 100 : secupressOneClickScanProgress;
+					secupressOneClickScanProgress = Math.max( secupressOneClickScanProgress, 100 );
 					$( ".secupress-progressbar" ).find( "div" ).css( "width", secupressOneClickScanProgress * 5 ).parent().find( "span" ).text( secupressOneClickScanProgress + " %" ); //// *5 = 100 * 5 = 500 (px in my test)
 					if ( secupressOneClickScanProgress >= 100 ) {
 						$( ".secupress-progressbar, .secupress-caroupoivre, .secupress-caroupoivre #slide3" ).hide( "slow" );
