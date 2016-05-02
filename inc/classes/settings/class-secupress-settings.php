@@ -528,6 +528,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			case 'number' :
 			case 'email' :
 			case 'tel' :
+			case 'url' :
 			case 'text' :
 
 				echo $label_open; ?>

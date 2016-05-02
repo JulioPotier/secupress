@@ -221,11 +221,22 @@ function __secupress_global_settings() {
 	if ( ! class_exists( 'SecuPress_Settings' ) ) {
 		secupress_require_class( 'settings' );
 	}
-	if ( ! class_exists( 'SecuPress_Settings_Global' ) ) {
+
+	$class_name = 'SecuPress_Settings_Global';
+
+	if ( ! class_exists( $class_name ) ) {
 		secupress_require_class( 'settings', 'global' );
 	}
 
-	SecuPress_Settings_Global::get_instance()->print_page();
+	if ( function_exists( 'secupress_pro_class_path' ) ) {
+		$class_name = 'SecuPress_Pro_Settings_Global';
+
+		if ( ! class_exists( $class_name ) ) {
+			secupress_pro_require_class( 'settings', 'global' );
+		}
+	}
+
+	$class_name::get_instance()->print_page();
 }
 
 

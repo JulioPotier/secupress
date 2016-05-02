@@ -40,7 +40,7 @@ define( 'SECUPRESS_WEB_DEMO'              , home_url( '/' ) ); // ////.
 define( 'SECUPRESS_BOT_URL'               , 'http://bot.secupress.me' );
 define( 'SECUPRESS_WEB_VALID'             , 'http://support.secupress.me/' );
 define( 'SECUPRESS_FILE'                  , __FILE__ );
-define( 'SECUPRESS_PLUGIN_FILE'           , 'secupress/secupress.php' );
+define( 'SECUPRESS_PLUGIN_FILE'           , 'secupress-free/secupress.php' );
 define( 'SECUPRESS_PATH'                  , realpath( plugin_dir_path( SECUPRESS_FILE ) ) . '/' );
 define( 'SECUPRESS_INC_PATH'              , realpath( SECUPRESS_PATH . 'inc/' ) . '/' );
 define( 'SECUPRESS_MODULES_PATH'          , realpath( SECUPRESS_INC_PATH . 'modules/' ) . '/' );

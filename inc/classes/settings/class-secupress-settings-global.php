@@ -85,7 +85,7 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 	 *
 	 * @return (object) The class instance.
 	 */
-	final protected function load_module_settings( $module ) {
+	protected function load_module_settings( $module ) {
 		$module_file = SECUPRESS_ADMIN_SETTINGS_MODULES . $module . '.php';
 
 		return $this->require_settings_file( $module_file, $module );
