@@ -330,21 +330,23 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 
 		secupress_check_admin_referer( 'secupress-notices' );
 
-		/*
+		$notice_id = $_POST['notice_id'];
+
+		/**
 		 * Filter the capability needed to dismiss the notice.
 		 *
 		 * @since 1.0
 		 *
-		 * @param (string) Capability or user role.
-		 * @param (string) The notice Identifier.
+		 * @param (string) $capability Capability or user role.
+		 * @param (string) $notice_id  The notice Identifier.
 		 */
-		$capability = apply_filters( 'secupress_ajax_dismiss_notice_capability', secupress_get_capability(), $_POST['notice_id'] ); // WPCS: CSRF ok.
+		$capability = apply_filters( 'secupress.notices.dismiss_capability', secupress_get_capability(), $notice_id );
 
 		if ( ! current_user_can( $capability ) ) {
 			wp_die( -1 );
 		}
 
-		if ( self::dismiss( $_POST['notice_id'] ) ) { // WPCS: CSRF ok.
+		if ( self::dismiss( $notice_id ) ) {
 			wp_die( 1 );
 		}
 		wp_die( -1 );
@@ -363,23 +365,23 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 
 		secupress_check_admin_referer( 'secupress-notices' );
 
-		/*
+		$notice_id = $_GET['notice_id'];
+
+		/**
 		 * Filter the capability needed to dismiss the notice.
 		 *
 		 * @since 1.0
 		 *
-		 * @param (string) Capability or user role.
-		 * @param (string) The notice Identifier.
-		 *
-		 * @return (string) Capability or user role.
+		 * @param (string) $capability Capability or user role.
+		 * @param (string) $notice_id  The notice Identifier.
 		 */
-		$capability = apply_filters( 'secupress_ajax_dismiss_notice_capability', secupress_get_capability(), $_GET['notice_id'] ); // WPCS: CSRF ok.
+		$capability = apply_filters( 'secupress.notices.dismiss_capability', secupress_get_capability(), $notice_id );
 
 		if ( ! current_user_can( $capability ) ) {
 			secupress_admin_die();
 		}
 
-		if ( self::dismiss( $_GET['notice_id'] ) ) { // WPCS: CSRF ok.
+		if ( self::dismiss( $notice_id ) ) {
 			wp_safe_redirect( esc_url_raw( wp_get_referer() ) );
 			die();
 		}

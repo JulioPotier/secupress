@@ -12,25 +12,24 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 /* ACTIVATION / DEACTIVATION ==================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
+add_action( 'secupress.modules.activate_submodule_' . basename( __FILE__, '.php' ), 'secupress_no_x_powered_by_activation' );
 /**
  * On module activation, maybe write the rules.
  *
  * @since 1.0
  */
-add_action( 'secupress_activate_plugin_' . basename( __FILE__, '.php' ), 'secupress_no_x_powered_by_activation' );
-
 function secupress_no_x_powered_by_activation() {
 	global $is_apache, $is_nginx, $is_iis7;
 
-	// Apache
+	// Apache.
 	if ( $is_apache ) {
 		$rules = secupress_no_x_powered_by_apache_rules();
 	}
-	// IIS7
+	// IIS7.
 	elseif ( $is_iis7 ) {
 		$rules = secupress_no_x_powered_by_iis7_rules();
 	}
-	// Nginx
+	// Nginx.
 	elseif ( $is_nginx ) {
 		$rules = secupress_no_x_powered_by_nginx_rules();
 	}
@@ -53,18 +52,18 @@ function secupress_no_x_powered_by_activation() {
 }
 
 
+add_action( 'secupress.modules.deactivate_submodule_' . basename( __FILE__, '.php' ), 'secupress_no_x_powered_by_deactivate' );
 /**
  * On module deactivation, maybe remove rewrite rules from the `.htaccess`/`web.config` file.
  *
  * @since 1.0
  */
-add_action( 'secupress_deactivate_plugin_' . basename( __FILE__, '.php' ), 'secupress_no_x_powered_by_deactivate' );
-
 function secupress_no_x_powered_by_deactivate() {
 	secupress_remove_module_rules_or_notice( 'no_x_powered_by', __( 'No X-Powered-By', 'secupress' ) );
 }
 
 
+add_filter( 'secupress.plugins.activation.write_rules', 'secupress_no_x_powered_by_plugin_activate', 10, 2 );
 /**
  * On SecuPress activation, add the rules to the list of the rules to write.
  *
@@ -74,8 +73,6 @@ function secupress_no_x_powered_by_deactivate() {
  *
  * @return (array) Rules to write.
  */
-add_filter( 'secupress.plugins.activation.write_rules', 'secupress_no_x_powered_by_plugin_activate', 10, 2 );
-
 function secupress_no_x_powered_by_plugin_activate( $rules ) {
 	global $is_apache, $is_nginx, $is_iis7;
 	$marker = 'no_x_powered_by';
@@ -128,8 +125,8 @@ function secupress_no_x_powered_by_iis7_rules() {
 	$marker = 'no_x_powered_by';
 	$spaces = str_repeat( ' ', 8 );
 
-	// https://www.iis.net/configreference/system.webserver/httpprotocol/customheaders
-	// https://stackoverflow.com/questions/1178831/remove-server-response-header-iis7
+	// - https://www.iis.net/configreference/system.webserver/httpprotocol/customheaders
+	// - https://stackoverflow.com/questions/1178831/remove-server-response-header-iis7
 	$rules  = "<remove name=\"X-AspNet-Version\" id=\"SecuPress $marker 1\"/>\n";
 	$rules .= "$spaces<remove name=\"X-AspNetMvc-Version\" id=\"SecuPress $marker 2\"/>\n";
 	$rules .= "$spaces<remove name=\"X-Powered-By\" id=\"SecuPress $marker 3\"/>";
@@ -148,7 +145,7 @@ function secupress_no_x_powered_by_iis7_rules() {
 function secupress_no_x_powered_by_nginx_rules() {
 	$marker = 'no_x_powered_by';
 
-	// http://nginx.org/en/docs/http/ngx_http_core_module.html#server_tokens
+	// - http://nginx.org/en/docs/http/ngx_http_core_module.html#server_tokens
 	$rules  = "
 http {
 	# BEGIN SecuPress $marker

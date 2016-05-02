@@ -56,7 +56,7 @@ function secupress_get_htaccess_marker( $function ) {
 	 *
 	 * @param string $marker The content of all rules.
 	*/
-	$marker = apply_filters( 'secupress_htaccess_marker_' . $function, $marker );
+	$marker = apply_filters( 'secupress.htaccess.marker_' . $function, $marker );
 
 	return $marker;
 }

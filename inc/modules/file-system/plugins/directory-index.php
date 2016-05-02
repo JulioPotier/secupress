@@ -12,25 +12,24 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 /* ACTIVATION / DEACTIVATION ==================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
+add_action( 'secupress.modules.activate_submodule_' . basename( __FILE__, '.php' ), 'secupress_directory_index_activation' );
 /**
  * On module activation, maybe write the rules.
  *
  * @since 1.0
  */
-add_action( 'secupress_activate_plugin_' . basename( __FILE__, '.php' ), 'secupress_directory_index_activation' );
-
 function secupress_directory_index_activation() {
 	global $is_apache, $is_nginx, $is_iis7;
 
-	// Apache
+	// Apache.
 	if ( $is_apache ) {
 		$rules = secupress_directory_index_apache_rules();
 	}
-	// IIS7
+	// IIS7.
 	elseif ( $is_iis7 ) {
 		$rules = secupress_directory_index_iis7_rules();
 	}
-	// Nginx
+	// Nginx.
 	elseif ( $is_nginx ) {
 		$rules = secupress_directory_index_nginx_rules();
 	}
@@ -50,18 +49,18 @@ function secupress_directory_index_activation() {
 }
 
 
+add_action( 'secupress.modules.deactivate_submodule_' . basename( __FILE__, '.php' ), 'secupress_directory_index_deactivate' );
 /**
  * On module deactivation, maybe remove rewrite rules from the `.htaccess`/`web.config` file.
  *
  * @since 1.0
  */
-add_action( 'secupress_deactivate_plugin_' . basename( __FILE__, '.php' ), 'secupress_directory_index_deactivate' );
-
 function secupress_directory_index_deactivate() {
 	secupress_remove_module_rules_or_notice( 'directory_index', __( 'Directory Index', 'secupress' ) );
 }
 
 
+add_filter( 'secupress.plugins.activation.write_rules', 'secupress_directory_index_plugin_activate', 10, 2 );
 /**
  * On SecuPress activation, add the rules to the list of the rules to write.
  *
@@ -71,8 +70,6 @@ function secupress_directory_index_deactivate() {
  *
  * @return (array) Rules to write.
  */
-add_filter( 'secupress.plugins.activation.write_rules', 'secupress_directory_index_plugin_activate', 10, 2 );
-
 function secupress_directory_index_plugin_activate( $rules ) {
 	global $is_apache, $is_nginx, $is_iis7;
 	$marker = 'directory_index';
@@ -103,7 +100,7 @@ function secupress_directory_index_plugin_activate( $rules ) {
 function secupress_directory_index_apache_rules() {
 	$rules  = "<ifModule mod_dir.c>\n";
 	$rules .= "    DirectoryIndex index.php index.html index.htm index.cgi index.pl index.xhtml\n";
-	$rules .= "</IfModule>";
+	$rules .= '</IfModule>';
 
 	return $rules;
 }
@@ -124,7 +121,7 @@ function secupress_directory_index_iis7_rules() {
 	$rules .= "        <remove value=\"index.php\" />\n";
 	$rules .= "        <add value=\"index.php\" />\n";
 	$rules .= "      </files>\n";
-	$rules .= "    </defaultDocument>";
+	$rules .= '    </defaultDocument>';
 
 	return $rules;
 }

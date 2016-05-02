@@ -46,12 +46,6 @@ function __secupress_alerts_settings_callback( $settings ) {
  * @param (array)  $settings  The module settings, passed by reference.
  */
 function __secupress_types_of_notification_settings_callback( $modulenow, &$settings ) {
-	// API check: the free API only needs an email address.
-	if ( ! secupress_get_consumer_email() ) {
-		$settings = array( 'sanitized' => 1 );
-		return;
-	}
-
 	// Types.
 	if ( empty( $settings['notification-types_types'] ) || ! is_array( $settings['notification-types_types'] ) ) {
 		unset( $settings['notification-types_types'] );
@@ -140,6 +134,9 @@ function __secupress_event_alerts_settings_callback( $modulenow, &$settings, $ac
  * @param (bool|array) $activate  Used to (de)activate plugins.
  */
 function __secupress_uptime_monitoring_settings_callback( $modulenow, &$settings, $activate ) {
-	// Activate/deactivate.
-	secupress_manage_submodule( $modulenow, 'uptime-monitoring', ! empty( $activate['monitoring_activated'] ) && ! empty( $settings['notification-types_types'] ) );
+	// API check: the free API only needs an email address.
+	if ( secupress_get_consumer_email() ) {
+		// Activate/deactivate.
+		secupress_manage_submodule( $modulenow, 'uptime-monitoring', ! empty( $activate['monitoring_activated'] ) && ! empty( $settings['notification-types_types'] ) );
+	}
 }

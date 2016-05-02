@@ -12,25 +12,24 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 /* ACTIVATION / DEACTIVATION ==================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
+add_action( 'secupress.modules.activate_submodule_' . basename( __FILE__, '.php' ), 'secupress_php_disclosure_activation' );
 /**
  * On module activation, maybe write the rules.
  *
  * @since 1.0
  */
-add_action( 'secupress_activate_plugin_' . basename( __FILE__, '.php' ), 'secupress_php_disclosure_activation' );
-
 function secupress_php_disclosure_activation() {
 	global $is_apache, $is_nginx, $is_iis7;
 
-	// Apache
+	// Apache.
 	if ( $is_apache ) {
 		$rules = secupress_php_disclosure_apache_rules();
 	}
-	// IIS7
+	// IIS7.
 	elseif ( $is_iis7 ) {
 		$rules = secupress_php_disclosure_iis7_rules();
 	}
-	// Nginx
+	// Nginx.
 	elseif ( $is_nginx ) {
 		$rules = secupress_php_disclosure_nginx_rules();
 	}
@@ -49,18 +48,18 @@ function secupress_php_disclosure_activation() {
 }
 
 
+add_action( 'secupress.modules.deactivate_submodule_' . basename( __FILE__, '.php' ), 'secupress_php_disclosure_deactivate' );
 /**
  * On module deactivation, maybe remove rewrite rules from the `.htaccess`/`web.config` file.
  *
  * @since 1.0
  */
-add_action( 'secupress_deactivate_plugin_' . basename( __FILE__, '.php' ), 'secupress_php_disclosure_deactivate' );
-
 function secupress_php_disclosure_deactivate() {
 	secupress_remove_module_rules_or_notice( 'php_disclosure', __( 'PHP Disclosure', 'secupress' ) );
 }
 
 
+add_filter( 'secupress.plugins.activation.write_rules', 'secupress_php_disclosure_plugin_activate', 10, 2 );
 /**
  * On SecuPress activation, add the rules to the list of the rules to write.
  *
@@ -70,8 +69,6 @@ function secupress_php_disclosure_deactivate() {
  *
  * @return (array) Rules to write.
  */
-add_filter( 'secupress.plugins.activation.write_rules', 'secupress_php_disclosure_plugin_activate', 10, 2 );
-
 function secupress_php_disclosure_plugin_activate( $rules ) {
 	global $is_apache, $is_nginx, $is_iis7;
 	$marker = 'php_disclosure';
@@ -104,7 +101,7 @@ function secupress_php_disclosure_apache_rules() {
 	$rules .= "    RewriteEngine on\n";
 	$rules .= "    RewriteCond %{QUERY_STRING} \=PHP[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12} [NC]\n";
 	$rules .= "    RewriteRule .* - [F]\n";
-	$rules .= "</IfModule>";
+	$rules .= '</IfModule>';
 
 	return $rules;
 }
@@ -148,7 +145,7 @@ server {
 	# BEGIN SecuPress $marker
 	location / {
 		if ( \$query_string ~* \"\=PHP[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\" ) {
-			return 403;
+			deny all;
 		}
 	}
 	# END SecuPress

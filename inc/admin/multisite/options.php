@@ -3,7 +3,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /**
  * Get scans et fixes results of subsites, organized by test and site ID.
- * It's a kind of `secupress_get_scanners()` + `secupress_get_scanner_fixes()` in one function, and for subsites.
+ * It's a kind of `secupress_get_scan_results()` + `secupress_get_fix_results()` in one function, and for subsites.
  * The "scans et fixes of subsites" are related to the fixes that can't be done from the network admin if we are in a multisite installation.
  *
  * @since 1.0

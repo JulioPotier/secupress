@@ -12,25 +12,24 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 /* ACTIVATION / DEACTIVATION ==================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
+add_action( 'secupress.modules.activate_submodule_' . basename( __FILE__, '.php' ), 'secupress_bad_url_access_activation' );
 /**
  * On module activation, maybe write the rules.
  *
  * @since 1.0
  */
-add_action( 'secupress_activate_plugin_' . basename( __FILE__, '.php' ), 'secupress_bad_url_access_activation' );
-
 function secupress_bad_url_access_activation() {
 	global $is_apache, $is_nginx, $is_iis7;
 
-	// Apache
+	// Apache.
 	if ( $is_apache ) {
 		$rules = secupress_bad_url_access_apache_rules();
 	}
-	// IIS7
+	// IIS7.
 	elseif ( $is_iis7 ) {
 		$rules = secupress_bad_url_access_iis7_rules();
 	}
-	// Nginx
+	// Nginx.
 	elseif ( $is_nginx ) {
 		$rules = secupress_bad_url_access_nginx_rules();
 	}
@@ -49,18 +48,18 @@ function secupress_bad_url_access_activation() {
 }
 
 
+add_action( 'secupress.modules.deactivate_submodule_' . basename( __FILE__, '.php' ), 'secupress_bad_url_access_deactivate' );
 /**
  * On module deactivation, maybe remove rewrite rules from the `.htaccess`/`web.config` file.
  *
  * @since 1.0
  */
-add_action( 'secupress_deactivate_plugin_' . basename( __FILE__, '.php' ), 'secupress_bad_url_access_deactivate' );
-
 function secupress_bad_url_access_deactivate() {
 	secupress_remove_module_rules_or_notice( 'bad_url_access', __( 'Bad URL Access', 'secupress' ) );
 }
 
 
+add_filter( 'secupress.plugins.activation.write_rules', 'secupress_bad_url_access_plugin_activate', 10, 2 );
 /**
  * On SecuPress activation, add the rules to the list of the rules to write.
  *
@@ -70,8 +69,6 @@ function secupress_bad_url_access_deactivate() {
  *
  * @return (array) Rules to write.
  */
-add_filter( 'secupress.plugins.activation.write_rules', 'secupress_bad_url_access_plugin_activate', 10, 2 );
-
 function secupress_bad_url_access_plugin_activate( $rules ) {
 	global $is_apache, $is_nginx, $is_iis7;
 	$marker = 'bad_url_access';
@@ -100,7 +97,7 @@ function secupress_bad_url_access_plugin_activate( $rules ) {
  * @return (string)
  */
 function secupress_bad_url_access_apache_rules() {
-	/*
+	/**
 	 * ^php\.ini$
 	 *
 	 * ^wp-admin/admin-functions\.php$
@@ -121,7 +118,7 @@ function secupress_bad_url_access_apache_rules() {
 	$bases  = secupress_get_rewrite_bases();
 	$base   = $bases['base'];
 	$match  = '^(' . $bases['home_from'] . 'php\.ini|' . $bases['site_from'] . WPINC . '/.+\.php|' . $bases['site_from'] . 'wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$';
-	// Trigger a 404 error, because forbidding access to a file is nice, but making it also invisible is more fun :)
+	// Trigger a 404 error, because forbidding access to a file is nice, but making it also invisible is more fun :).
 	$rules  = "<IfModule mod_rewrite.c>\n";
 	$rules .= "    RewriteEngine On\n";
 	$rules .= "    RewriteBase $base\n";

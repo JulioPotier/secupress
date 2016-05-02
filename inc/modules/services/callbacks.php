@@ -24,7 +24,7 @@ function __secupress_services_settings_callback( $settings ) {
 
 	$settings = array( 'sanitized' => 1 );
 
-	//// Send support request here
+	// //// Send support request here.
 
 	return $settings;
 }

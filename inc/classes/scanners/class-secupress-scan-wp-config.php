@@ -111,6 +111,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 			}
 
 			// NOBLOGREDIRECT.
+			/** This filter is documented in wp-includes/ms-functions.php */
 			if ( is_multisite() && is_subdomain_install() && ! has_action( 'ms_site_not_found' ) && ( ! defined( 'NOBLOGREDIRECT' ) || ! NOBLOGREDIRECT || ! apply_filters( 'blog_redirect_404', NOBLOGREDIRECT ) ) ) {
 				// "bad"
 				$this->add_message( 202, array( '<code>NOBLOGREDIRECT</code>' ) );

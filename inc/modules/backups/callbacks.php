@@ -39,43 +39,45 @@ add_action( 'admin_post_secupress_backup_db', '__secupress_do_backup_db' );
  * @since 1.0
  */
 function __secupress_do_backup_db() {
-	if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress_backup_db' ) ) {
-		secupress_admin_die();
-	}
-
 	secupress_check_user_capability();
+	secupress_check_admin_referer( 'secupress_backup_db' );
 
 	$wp_tables      = secupress_get_wp_tables();
 	$other_tables   = secupress_get_non_wp_tables();
 	$backup_storage = secupress_get_module_option( 'backups-storage_location', 'local', 'backups' );
-	$backup_file    = '';
+	$backup_file    = false;
 
 	if ( 'local' === $backup_storage ) {
-		$backup_file  = secupress_get_hashed_folder_name( 'backup', WP_CONTENT_DIR . '/backups/' ) . secupress_get_db_backup_filename();
+		$backup_file = secupress_get_hashed_folder_name( 'backup', WP_CONTENT_DIR . '/backups/' ) . secupress_get_db_backup_filename();
 
-		if ( secupress_pre_backup() ) {
+		if ( $backup_file && secupress_pre_backup() ) {
 			file_put_contents( $backup_file, secupress_get_db_tables_content( array_merge( $wp_tables, $other_tables ) ) );
 			$backup_file = secupress_zip_backup_file( $backup_file );
+		} else {
+			secupress_admin_die();
 		}
 	} elseif ( secupress_is_pro() ) {
-		$backup_file = apply_filters( 'secupress.do_backup.file', $backup_file, $backup_storage );
+		/**
+		 * Filter the path of the backup file.
+		 *
+		 * @since 1.0
+		 *
+		 * @param (string) $backup_file    The zip file path. False by default.
+		 * @param (string) $backup_storage The type of storage.
+		 */
+		$backup_file = apply_filters( 'secupress.do_backup_db.file', $backup_file, $backup_storage );
 	}
 
 	if ( ! $backup_file ) {
 		secupress_admin_die();
 	}
 
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		$backup_files = secupress_get_backup_file_list();
+	$backup_files = secupress_get_backup_file_list();
 
-		wp_send_json_success( array(
-			'elemRow'   => secupress_print_backup_file_formated( $backup_file, false ),
-			'countText' => sprintf( _n( '%s available Backup', '%s available Backups', count( $backup_files ), 'secupress' ), number_format_i18n( count( $backup_files ) ) ),
-		) );
-	}
-
-	wp_redirect( esc_url_raw( wp_get_referer() ) );
-	die();
+	secupress_admin_send_response_or_redirect( array(
+		'elemRow'   => secupress_print_backup_file_formated( $backup_file, false ),
+		'countText' => sprintf( _n( '%s available Backup', '%s available Backups', count( $backup_files ), 'secupress' ), number_format_i18n( count( $backup_files ) ) ),
+	) );
 }
 
 
@@ -87,11 +89,12 @@ add_action( 'admin_post_secupress_download_backup', '__secupress_download_backup
  * @since 1.0
  */
 function __secupress_download_backup_ajax_post_cb() {
-	if ( ! isset( $_GET['_wpnonce'], $_GET['file'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress_download_backup-' . $_GET['file'] ) ) {
+	if ( ! isset( $_GET['file'] ) ) {
 		secupress_admin_die();
 	}
 
 	secupress_check_user_capability();
+	secupress_check_admin_referer( 'secupress_download_backup-' . $_GET['file'] );
 
 	$file = glob( secupress_get_hashed_folder_name( 'backup', WP_CONTENT_DIR . '/backups/' ) . '*' . $_GET['file'] . '*.{zip,sql}', GLOB_BRACE );
 
@@ -128,11 +131,12 @@ add_action( 'admin_post_secupress_delete_backup', '__secupress_delete_backup_aja
  * @since 1.0
  */
 function __secupress_delete_backup_ajax_post_cb() {
-	if ( ! isset( $_GET['_wpnonce'] ) || ! isset( $_GET['file'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress_delete_backup-' . $_GET['file'] ) ) {
+	if ( ! isset( $_GET['file'] ) ) {
 		secupress_admin_die();
 	}
 
 	secupress_check_user_capability();
+	secupress_check_admin_referer( 'secupress_delete_backup-' . $_GET['file'] );
 
 	$files = glob( secupress_get_hashed_folder_name( 'backup', WP_CONTENT_DIR . '/backups/' ) . '*' . $_GET['file'] . '*.{zip,sql}', GLOB_BRACE );
 
@@ -142,16 +146,11 @@ function __secupress_delete_backup_ajax_post_cb() {
 
 	@array_map( 'unlink', $files );
 
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		$backup_files = secupress_get_backup_file_list();
+	$backup_files = secupress_get_backup_file_list();
 
-		wp_send_json_success( array(
-			'countText' => sprintf( _n( '%s available Backup', '%s available Backups', count( $backup_files ), 'secupress' ), number_format_i18n( count( $backup_files ) ) ),
-		) );
-	}
-
-	wp_redirect( esc_url_raw( wp_get_referer() ) );
-	die();
+	secupress_admin_send_response_or_redirect( array(
+		'countText' => sprintf( _n( '%s available Backup', '%s available Backups', count( $backup_files ), 'secupress' ), number_format_i18n( count( $backup_files ) ) ),
+	) );
 }
 
 
@@ -163,11 +162,8 @@ add_action( 'admin_post_secupress_delete_backups', '__secupress_delete_backups_a
  * @since 1.0
  */
 function __secupress_delete_backups_ajax_post_cb() {
-	if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'secupress_delete_backups' ) ) {
-		secupress_admin_die();
-	}
-
 	secupress_check_user_capability();
+	secupress_check_admin_referer( 'secupress_delete_backups' );
 
 	$files = glob( secupress_get_hashed_folder_name( 'backup', WP_CONTENT_DIR . '/backups/' ) . '*.{zip,sql}', GLOB_BRACE );
 

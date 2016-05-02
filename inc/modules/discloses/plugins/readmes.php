@@ -12,25 +12,24 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 /* ACTIVATION / DEACTIVATION ==================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
+add_action( 'secupress.modules.activate_submodule_' . basename( __FILE__, '.php' ), 'secupress_protect_readmes_activation' );
 /**
  * On module activation, maybe write the rules.
  *
  * @since 1.0
  */
-add_action( 'secupress_activate_plugin_' . basename( __FILE__, '.php' ), 'secupress_protect_readmes_activation' );
-
 function secupress_protect_readmes_activation() {
 	global $is_apache, $is_nginx, $is_iis7;
 
-	// Apache
+	// Apache.
 	if ( $is_apache ) {
 		$rules = secupress_protect_readmes_apache_rules();
 	}
-	// IIS7
+	// IIS7.
 	elseif ( $is_iis7 ) {
 		$rules = secupress_protect_readmes_iis7_rules();
 	}
-	// Nginx
+	// Nginx.
 	elseif ( $is_nginx ) {
 		$rules = secupress_protect_readmes_nginx_rules();
 	}
@@ -49,18 +48,18 @@ function secupress_protect_readmes_activation() {
 }
 
 
+add_action( 'secupress.modules.deactivate_submodule_' . basename( __FILE__, '.php' ), 'secupress_protect_readmes_deactivate' );
 /**
  * On module deactivation, maybe remove rewrite rules from the `.htaccess`/`web.config` file.
  *
  * @since 1.0
  */
-add_action( 'secupress_deactivate_plugin_' . basename( __FILE__, '.php' ), 'secupress_protect_readmes_deactivate' );
-
 function secupress_protect_readmes_deactivate() {
 	secupress_remove_module_rules_or_notice( 'readme_discloses', __( 'Protect readme\'s', 'secupress' ) );
 }
 
 
+add_filter( 'secupress.plugins.activation.write_rules', 'secupress_protect_readmes_plugin_activate', 10, 2 );
 /**
  * On SecuPress activation, add the rules to the list of the rules to write.
  *
@@ -70,8 +69,6 @@ function secupress_protect_readmes_deactivate() {
  *
  * @return (array) Rules to write.
  */
-add_filter( 'secupress.plugins.activation.write_rules', 'secupress_protect_readmes_plugin_activate', 10, 2 );
-
 function secupress_protect_readmes_plugin_activate( $rules ) {
 	global $is_apache, $is_nginx, $is_iis7;
 	$marker = 'readme_discloses';
@@ -149,13 +146,13 @@ function secupress_protect_readmes_nginx_rules() {
 	$marker  = 'readme_discloses';
 	$pattern = '(readme|changelog)\.(txt|md|html)$';
 	$base    = secupress_get_rewrite_bases();
-	$base    = rtrim( $bases['home_from'], '/' );
+	$base    = rtrim( $base['home_from'], '/' );
 
-	// http://nginx.org/en/docs/http/ngx_http_core_module.html#location
+	// - http://nginx.org/en/docs/http/ngx_http_core_module.html#location
 	$rules  = "
 server {
 	# BEGIN SecuPress $marker
-	location ~* ^$base(/|/.+/)$pattern {
+	location ~* $base(/|/.+/)$pattern {
 		return 404;
 	}
 	# END SecuPress

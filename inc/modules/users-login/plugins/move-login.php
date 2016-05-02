@@ -1,11 +1,12 @@
 <?php
-/*
-Module Name: Move Login
-Description: Change your login URL.
-Main Module: users_login
-Author: SecuPress
-Version: 1.0
-*/
+/**
+ * Module Name: Move Login
+ * Description: Change your login URL.
+ * Main Module: users_login
+ * Author: SecuPress
+ * Version: 1.0
+ */
+
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 /*------------------------------------------------------------------------------------------------*/
@@ -16,7 +17,7 @@ if ( is_admin() ) {
 	include( SECUPRESS_MODULES_PATH . 'users-login/plugins/inc/php/move-login/admin.php' );
 }
 
-// !EMERGENCY BYPASS
+// EMERGENCY BYPASS!
 if ( ! defined( 'SFML_ALLOW_LOGIN_ACCESS' ) || ! SFML_ALLOW_LOGIN_ACCESS ) {
 	include( SECUPRESS_MODULES_PATH . 'users-login/plugins/inc/php/move-login/url-filters.php' );
 	include( SECUPRESS_MODULES_PATH . 'users-login/plugins/inc/php/move-login/redirections-and-dies.php' );
@@ -27,6 +28,13 @@ if ( ! defined( 'SFML_ALLOW_LOGIN_ACCESS' ) || ! SFML_ALLOW_LOGIN_ACCESS ) {
 /* TOOLS ======================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
+/**
+ * Get default slugs.
+ *
+ * @since 1.0
+ *
+ * @return (array)
+ */
 function secupress_move_login_get_default_slugs() {
 	$slugs = array(
 		'login'        => 1,
@@ -38,6 +46,13 @@ function secupress_move_login_get_default_slugs() {
 		'postpass'     => 1,
 	);
 
+	/**
+	 * Add additional slugs.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (array) $new_slugs An array with slugs as keys.
+	 */
 	$new_slugs = apply_filters( 'sfml_additional_slugs', array() );
 
 	if ( $new_slugs && is_array( $new_slugs ) ) {
@@ -50,7 +65,13 @@ function secupress_move_login_get_default_slugs() {
 	return $slugs;
 }
 
-
+/**
+ * Get the slugs the user has set.
+ *
+ * @since 1.0
+ *
+ * @return (array)
+ */
 function secupress_move_login_get_slugs() {
 	$slugs = secupress_move_login_get_default_slugs();
 

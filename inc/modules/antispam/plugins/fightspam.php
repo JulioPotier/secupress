@@ -304,7 +304,7 @@ function __secupress_fightspam_better_blacklist_comment( $value ) {
 }
 
 
-add_action( 'secupress_plugins_loaded', 'secupress_fightspam_maybe_disable_trackbaks' );
+add_action( 'secupress.plugins.loaded', 'secupress_fightspam_maybe_disable_trackbaks' );
 /**
  * Disable pingbacks/trackbacks.
  *
@@ -449,7 +449,7 @@ function secupress_fightspam_schedule_retest( $comment_id ) {
 }
 
 
-add_action( 'secupress_plugins_loaded', 'secupress_fightspam_async_retests_init' );
+add_action( 'secupress.plugins.loaded', 'secupress_fightspam_async_retests_init' );
 /**
  * Initiate async retests class.
  *
@@ -485,7 +485,7 @@ function secupress_fightspam_maybe_do_retests() {
 	 *
 	 * @since 1.0
 	 *
-	 * @param (int) $period Time in minutes between each retest.
+	 * @param (int) $time Time in minutes between each retest.
 	 */
 	$time    = apply_filters( 'secupress.plugin.fightspam.minutes_between_retests', 1 );
 	$time    = time() - absint( $time * MINUTE_IN_SECONDS );
@@ -556,7 +556,7 @@ function secupress_fightspam_return_spam_status_setting( $context ) {
 	 * @param (string) $context  Some context.
 	 * @param (string) $approved The spam status set by the user in the plugin settings.
 	 */
-	do_action( 'secupress.fightspam.block', $context, $approved );
+	do_action( 'secupress.plugin.fightspam.spam_status', $context, $approved );
 
 	return $approved;
 }
@@ -692,7 +692,7 @@ function secupress_fightspam_get_spam_status( $value ) {
 			 *
 			 * @param (string) $value Username, IP, email, or URL.
 			 */
-			do_action( 'secupress.commentspam.blacklisted', $value );
+			do_action( 'secupress.plugin.fightspam.comment_blacklisted', $value );
 		}
 
 		// Cache the status for 30 days.

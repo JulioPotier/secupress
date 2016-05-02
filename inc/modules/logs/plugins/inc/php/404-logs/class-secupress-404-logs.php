@@ -1,28 +1,32 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
-
 /**
  * 404s Logs class.
  *
  * @package SecuPress
  * @since 1.0
  */
-
 class SecuPress_404_Logs extends SecuPress_Logs {
 
 	const VERSION = '1.0';
+
 	/**
-	 * @var (object) The reference to the *Singleton* instance of this class.
+	 * The reference to *Singleton* instance of this class.
+	 *
+	 * @var (object)
 	 */
 	protected static $_instance;
+
 	/**
-	 * @var (string) The Log type.
+	 * The Log type.
+	 *
+	 * @var (string)
 	 */
 	protected $log_type = 'err404';
 
 
-	// Private methods =============================================================================
+	// Private methods =============================================================================.
 
 	/**
 	 * Launch main hooks.
@@ -89,7 +93,7 @@ class SecuPress_404_Logs extends SecuPress_Logs {
 			'target' => esc_html( secupress_get_current_url( 'uri' ) ),
 			'data'   => array(
 				'get'  => $_GET,
-				'post' => $_POST,
+				'post' => $_POST, // WPCS: CSRF ok.
 			),
 		) );
 
@@ -97,7 +101,7 @@ class SecuPress_404_Logs extends SecuPress_Logs {
 	}
 
 
-	// Tools =======================================================================================
+	// Tools =======================================================================================.
 
 	/**
 	 * Include the files containing the classes `Secupress_Log` and `SecuPress_404_Log` if not already done.
@@ -116,5 +120,4 @@ class SecuPress_404_Logs extends SecuPress_Logs {
 
 		return 'SecuPress_404_Log';
 	}
-
 }

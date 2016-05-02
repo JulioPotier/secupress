@@ -110,6 +110,7 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 		// What about style tag src?
 		$style_url = home_url( '/fake.css?ver=' . WC_VERSION );
 
+		/** This filter is documented in wp-includes/class.wp-styles.php */
 		if ( apply_filters( 'style_loader_src', $style_url, 'secupress' ) === $style_url ) {
 			// "bad"
 			$discloses[] = 'CSS';
@@ -118,6 +119,7 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 		// What about script tag src?
 		$script_url = home_url( '/fake.js?ver=' . WC_VERSION );
 
+		/** This filter is documented in wp-includes/class.wp-scripts.php */
 		if ( apply_filters( 'script_loader_src', $script_url, 'secupress' ) === $script_url ) {
 			// "bad"
 			$discloses[] = 'JS';
@@ -170,6 +172,7 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 		// What about style tag src?
 		$style_url = home_url( '/fake.css?ver=' . WC_VERSION );
 
+		/** This filter is documented in wp-includes/class.wp-styles.php */
 		if ( apply_filters( 'style_loader_src', $style_url, 'secupress' ) === $style_url ) {
 			// "good"
 			secupress_activate_submodule( 'discloses', 'woocommerce-version-css' );
@@ -179,6 +182,7 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 		// What about script tag src?
 		$script_url = home_url( '/fake.js?ver=' . WC_VERSION );
 
+		/** This filter is documented in wp-includes/class.wp-scripts.php */
 		if ( apply_filters( 'script_loader_src', $script_url, 'secupress' ) === $script_url ) {
 			// "good"
 			secupress_activate_submodule( 'discloses', 'woocommerce-version-js' );

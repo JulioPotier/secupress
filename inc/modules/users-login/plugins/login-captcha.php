@@ -9,8 +9,12 @@ Version: 1.0
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 add_action( 'login_form', 'secupress_add_captcha_on_login_form' );
-
-function secupress_add_captcha_on_login_form( $echo = false ) {
+/**
+ * Print the captcha in the login form.
+ *
+ * @since 1.0
+ */
+function secupress_add_captcha_on_login_form() {
 	?>
 	<div>
 		<div id="areyouhuman">
@@ -27,7 +31,11 @@ function secupress_add_captcha_on_login_form( $echo = false ) {
 
 
 add_action( 'login_head', 'secupress_login_captcha_scripts' );
-
+/**
+ * Enqueue captcha styles and scripts.
+ *
+ * @since 1.0
+ */
 function secupress_login_captcha_scripts() {
 	if ( isset( $_GET['action'] ) && 'login' !== $_GET['action'] ) {
 		return;
@@ -51,9 +59,13 @@ function secupress_login_captcha_scripts() {
 
 add_action( 'wp_ajax_captcha_check',        'secupress_captcha_check' );
 add_action( 'wp_ajax_nopriv_captcha_check', 'secupress_captcha_check' );
-
+/**
+ * Check the captcha.
+ *
+ * @since 1.0
+ */
 function secupress_captcha_check() {
-	if ( ! empty( $_POST['captcha_key'] ) || ! isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) || 'XMLHttpRequest' !== $_SERVER['HTTP_X_REQUESTED_WITH'] ) { // a "real" ajax request
+	if ( ! empty( $_POST['captcha_key'] ) || ! isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) || 'XMLHttpRequest' !== $_SERVER['HTTP_X_REQUESTED_WITH'] ) { // WPCS: CSRF ok. A "real" ajax request.
 		status_header( 400 );
 		wp_send_json_error();
 	}
@@ -81,21 +93,31 @@ function secupress_captcha_check() {
 
 
 add_action( 'authenticate', 'secupress_manage_captcha', 20, 2 );
-
+/**
+ * Display a message when the user disabled JavaScript on his/her browser.
+ *
+ * @since 1.0
+ *
+ * @param (null|object) $raw_user WP_User if the user is authenticated.
+ *                                WP_Error or null otherwise.
+ * @param (string)      $username Username or email address.
+ *
+ * @return (null|object)
+ */
 function secupress_manage_captcha( $raw_user, $username ) {
 	if ( defined( 'XMLRPC_REQUEST' ) || defined( 'APP_REQUEST' ) ) {
 		return $raw_user;
 	}
 
-	if ( is_wp_error( $raw_user ) || ! isset( $_POST['log'], $_POST['pwd'] ) ) {
+	if ( is_wp_error( $raw_user ) || ! isset( $_POST['log'], $_POST['pwd'] ) ) { // WPCS: CSRF ok.
 		return $raw_user;
 	}
 
-	if ( ! isset( $_POST['sp_name'] ) || '' !== $_POST['sp_name'] ) {
+	if ( ! isset( $_POST['sp_name'] ) || '' !== $_POST['sp_name'] ) { // WPCS: CSRF ok.
 		return new WP_Error( 'authentication_failed', __( '<strong>ERROR</strong>: The Human verification is incorrect.', 'secupress' ) );
 	}
 
-	$captcha_key  = isset( $_POST['captcha_key'] ) ? $_POST['captcha_key'] : null;
+	$captcha_key  = isset( $_POST['captcha_key'] ) ? $_POST['captcha_key'] : null; // WPCS: CSRF ok.
 	$captcha_keys = get_site_option( 'secupress_captcha_keys', array() );
 
 	if ( ! isset( $captcha_keys[ $captcha_key ] ) ||
@@ -119,7 +141,15 @@ function secupress_manage_captcha( $raw_user, $username ) {
 
 
 add_filter( 'login_message', 'secupress_login_form_nojs_error' );
-
+/**
+ * Display a message when the user disabled JavaScript on his/her browser.
+ *
+ * @since 1.0
+ *
+ * @param (string) $message Messages.
+ *
+ * @return (string)
+ */
 function secupress_login_form_nojs_error( $message ) {
 	if ( ! isset( $_GET['action'] ) || 'login' === $_GET['action'] ) {
 		$message .= '<noscript><p class="message">' . __( 'You need to enable JavaScript to send this form correctly.', 'secupress' ) . '</p></noscript>';
@@ -128,6 +158,7 @@ function secupress_login_form_nojs_error( $message ) {
 }
 
 
+add_filter( '_secupress.options.load_plugins_network_options', 'secupress_captcha_autoload_options' );
 /**
  * Add the option(s) we use in this plugin to be autoloaded on multisite.
  *
@@ -137,8 +168,6 @@ function secupress_login_form_nojs_error( $message ) {
  *
  * @return (array)
  */
-add_filter( '_secupress.options.load_plugins_network_options', 'secupress_captcha_autoload_options' );
-
 function secupress_captcha_autoload_options( $option_names ) {
 	$option_names[] = 'secupress_captcha_keys';
 	return $option_names;

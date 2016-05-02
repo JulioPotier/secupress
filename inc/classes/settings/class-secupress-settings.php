@@ -261,7 +261,14 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$actions .= '<button type="button" id="affected-role-' . $i . '" class="hide-if-no-js no-button button-actions-title">' . __( 'Roles', 'secupress' ) . ' <span class="dashicons dashicons-arrow-right" aria-hidden="true"></span></button>';
 		}
 
-		do_action( 'before_section_' . $this->sectionnow, (bool) $args['with_save_button'] );
+		/**
+		 * Fires before a section.
+		 *
+		 * @since 1.0
+		 *
+		 * @param (bool) $with_save_button True if a "Save All Changes" button will be printed.
+		 */
+		do_action( 'secupress.settings.before_section_' . $this->sectionnow, (bool) $args['with_save_button'] );
 
 		add_settings_section(
 			$section_id,
@@ -328,7 +335,15 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		if ( $with_save_button ) {
 			static::submit_button( 'secupress-button-primary', $this->sectionnow . '_submit' );
 		}
-		do_action( 'after_section_' . $this->sectionnow, $with_save_button );
+
+		/**
+		 * Fires after a section.
+		 *
+		 * @since 1.0
+		 *
+		 * @param (bool) $with_save_button True if a "Save All Changes" button will be printed.
+		 */
+		do_action( 'secupress.settings.after_section_' . $this->sectionnow, $with_save_button );
 
 		echo '</div><!-- #secupress-settings-' . $html_id . ' -->';
 
@@ -595,7 +610,9 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					?>
 				<?php
 				echo $label_close;
-				echo $has_disabled ? secupress_get_pro_version_string( '<span class="description secupress-get-pro-version">(*) %s</span>' ) : '';
+
+				echo $has_disabled ? static::get_pro_version_string( '<span class="description">(*) %s</span>' ) : '';
+
 				break;
 
 			case 'checkbox' :
@@ -620,13 +637,12 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					$args['label_for'] = $args['name'] . '_' . $val;
 					$disabled          = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' disabled="disabled"' : '';
 					?>
-					
 					<p class="secupress-fieldset-item secupress-fieldset-item-<?php echo $args['type']; ?>">
 						<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
 							<input type="checkbox" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>[]" value="<?php echo $val; ?>"<?php checked( isset( $value[ $val ] ) ); ?><?php echo $disabled; ?><?php echo $attributes; ?>>
 							<?php echo '<span class="label-text">' . $title . '</span>'; ?>
 						</label>
-					<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? secupress_get_pro_version_string( '<span class="description secupress-get-pro-version">%s</span>' ) : ''; ?>
+					<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? static::get_pro_version_string( '<span class="description secupress-get-pro-version">%s</span>' ) : ''; ?>
 					</p>
 					<?php
 				}
@@ -643,7 +659,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 							<input type="radio" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>" value="<?php echo $val; ?>"<?php checked( $value, $val ); ?><?php echo $disabled; ?><?php echo $attributes; ?>>
 							<?php echo '<span class="label-text">' . $title . '</span>'; ?>
 						</label>
-						<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? secupress_get_pro_version_string( '<span class="description secupress-get-pro-version">%s</span>' ) : ''; ?>
+						<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? static::get_pro_version_string( '<span class="description secupress-get-pro-version">%s</span>' ) : ''; ?>
 					</p>
 					<?php
 				}
@@ -759,8 +775,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				break;
 
 			default :
-				if ( secupress_is_pro() && function_exists( 'secupress_pro_' . $args['type'] . '_field', $args, $this ) ) {
-					call_user_func( 'secupress_pro_' . $args['type'] . '_field' );
+				if ( secupress_is_pro() && function_exists( 'secupress_pro_' . $args['type'] . '_field' ) ) {
+					call_user_func( 'secupress_pro_' . $args['type'] . '_field', $args, $this );
 				} elseif ( method_exists( $this, $args['type'] ) ) {
 					call_user_func( array( $this, $args['type'] ), $args );
 				} else {
@@ -834,25 +850,33 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			}
 
 			$class = ! empty( $helper['class'] ) ? ' ' . trim( $helper['class'] ) : '';
+			$name  = $args['name'];
+			$type  = $helper['type'];
 
-			switch ( $helper['type'] ) {
+			switch ( $type ) {
 				case 'description' :
-
 					$description = '<p class="description desc' . $depends . $class . '">' . $helper['description'] . '</p>';
-					echo apply_filters( 'secupress_help', $description, $args['name'], 'description' );
 					break;
-
 				case 'help' :
-
 					$description = '<p class="description help' . $depends . $class . '">' . $helper['description'] . '</p>';
-					echo apply_filters( 'secupress_help', $description, $args['name'], 'help' );
 					break;
-
 				case 'warning' :
-
 					$description = '<p class="description warning' . $depends . $class . '"><strong>' . __( 'Warning: ', 'secupress' ) . '</strong>' . $helper['description'] . '</p>';
-					echo apply_filters( 'secupress_help', $description, $args['name'], 'warning' );
+					break;
+				default :
+					continue;
 			}
+
+			/**
+			 * Filter the helper description.
+			 *
+			 * @since 1.0
+			 *
+			 * @param (string) $description The description.
+			 * @param (string) $name        The field name argument.
+			 * @param (string) $type        The helper type.
+			 */
+			echo apply_filters( 'secupress.settings.help', $description, $name, $type );
 		}
 	}
 
@@ -865,16 +889,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	protected function import_upload_form() {
-		/**
-		 * Filter the maximum allowed upload size for import files.
-		 *
-		 * @since 1.0
-		 * @since WP 2.3.0
-		 *
-		 * @see wp_max_upload_size()
-		 *
-		 * @param int $max_upload_size Allowed upload size. Default 1 MB.
-		 */
+		/** This filter is documented in wp-admin/includes/template.php */
 		$bytes      = apply_filters( 'import_upload_size_limit', wp_max_upload_size() );
 		$size       = size_format( $bytes );
 		$upload_dir = wp_upload_dir();
@@ -888,10 +903,16 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			</div><?php
 			return;
 		}
+
+		$name        = 'upload';
+		$type        = 'help';
+		$description = __( 'Choose a file from your computer:', 'secupress' ) . ' (' . sprintf( __( 'Maximum size: %s', 'secupress' ), $size ) . ')';
+		/** This filter is documented in inc/classes/settings/class-secupress-settings.php */
+		$description = apply_filters( 'secupress.settings.help', $description, $name, $type );
 		?>
 		<p>
 			<input type="file" id="upload" name="import" size="25"<?php echo $disabled; ?>/><br/>
-			<label for="upload"><?php echo apply_filters( 'secupress_help', __( 'Choose a file from your computer:', 'secupress' ) . ' (' . sprintf( __( 'Maximum size: %s', 'secupress' ), $size ) . ')', 'upload', 'help' ); ?></label>
+			<label for="upload"><?php echo $description; ?></label>
 			<input type="hidden" name="max_file_size" value="<?php echo $bytes; ?>" />
 		</p>
 		<?php
@@ -1270,11 +1291,11 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			<?php
 		} else {
 			/**
-			 * Fires when SecuPress Pro load this module.
+			 * Fires when SecuPress Pro loads this field.
 			 *
 			 * @since 1.0
 			 */
-	 		do_action( 'secupress.modules.file_scanner.pro' );
+	 		do_action( 'secupress.settings.field.file_scanner' );
 		}
 	}
 
@@ -1348,7 +1369,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		 *
 		 * @since 1.0
 		 */
-		do_action( 'after_module_' . $this->modulenow . '|' . $this->pluginnow );
+		do_action( 'secupress.settings.after_field_' . $this->modulenow . '|' . $this->pluginnow );
 
 		return $this;
 	}
@@ -1413,12 +1434,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 								echo '<h4 id="row-' . sanitize_html_class( $id ) . '" class="secupress-setting-row-title">' . $field['title'] . '</h4>';
 							}
 						}
-						// Row description.
-						/*if ( $is_pro ) {
-							// If it's a pro feature, add a warning.
-							$format = $field['args']['description'] ? '<br>%s' : '';
-							$field['args']['description'] .= secupress_get_pro_version_string( $format );
-						}*/
+
 						if ( $field['args']['description'] ) {
 							echo '<p class="description">' . $field['args']['description'] . '</p>';
 						}
@@ -1430,7 +1446,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					<div class="secupress-get-pro-col">
 					<?php
 						if ( $is_pro ) {
-							echo '<p class="secupress-get-pro">' . secupress_get_pro_version_string() . '</p>';
+							echo '<p class="secupress-get-pro">' . static::get_pro_version_string() . '</p>';
 						}
 					?>
 					</div><!-- .secupress-get-pro-col -->
@@ -1522,6 +1538,24 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 */
 	protected static function is_pro_feature( $value ) {
 		return secupress_feature_is_pro( $value ) && ! secupress_is_pro();
+	}
+
+
+	/**
+	 * Returns a i18n message to act like a CTA on pro version.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $format You can use it to embed the message in a HTML tag, usage of "%s" is mandatory.
+	 *
+	 * @return (string)
+	 */
+	protected static function get_pro_version_string( $format = '' ) {
+		$message = sprintf( __( 'Available in <a href="%s">Pro Version</a>.', 'secupress' ), '#' ); // //// #.
+		if ( $format ) {
+			$message = sprintf( $format, $message );
+		}
+		return $message;
 	}
 
 

@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
  * @since 1.0
  *
  * @return (array|bool) The plugins removed from the repository: dirname as array keys and plugin path as values. Return false if the file is not readable.
- **/
+ */
 function secupress_get_removed_plugins() {
 	static $removed_plugins;
 
@@ -37,13 +37,14 @@ function secupress_get_removed_plugins() {
 	return $removed_plugins;
 }
 
+
 /**
  * Get the plugins not update since 2 years from repo from our local file.
  *
  * @since 1.0
  *
  * @return (array|bool) The plugins from the repository not updated for 2 years: dirname as array keys and plugin path as values. Return false if the file is not readable.
- **/
+ */
 function secupress_get_notupdated_plugins() {
 	static $notupdated_plugins;
 
@@ -73,12 +74,14 @@ function secupress_get_notupdated_plugins() {
 	return $notupdated_plugins;
 }
 
+
 /**
- * Get the plugins vulnerable from an option, from our option, set by secupress_refresh_vulnerable_plugins()
+ * Get the plugins vulnerable from an option, from our option, set by `secupress_refresh_vulnerable_plugins()`.
  *
- * @return array The vulnerables plugins
  * @since 1.0
- **/
+ *
+ * @return (array) The vulnerables plugins.
+ */
 function secupress_get_vulnerable_plugins() {
 	static $vulnerable_plugins;
 
@@ -102,21 +105,23 @@ function secupress_get_vulnerable_plugins() {
 	return array();
 }
 
+
 /**
  * Get the vulnerable plugins from an option
  *
  * @since 1.0
- **/
-function secupress_refresh_vulnerable_plugins() { //// GO PRO
-	$plugins  = get_plugins();
+ */
+function secupress_refresh_vulnerable_plugins() {
+	$plugins  = get_plugins(); // //// GO PRO.
 	$plugins  = wp_list_pluck( $plugins, 'Version' );
-	$args     = array( 'body' => array( 'items' => $plugins, 'type' => 'plugin' ), 'headers' => array( 'X-Secupress' => SECUPRESS_VERSION ) ); //// use client licence here
+	$args     = array( 'body' => array( 'items' => $plugins, 'type' => 'plugin' ), 'headers' => array( 'X-Secupress' => SECUPRESS_VERSION ) ); // //// Use client licence here.
 
-	$response = wp_remote_post( SECUPRESS_WEB_DEMO . '/wpvulndb.php', $args ); //// url temp
+	$response = wp_remote_post( SECUPRESS_WEB_DEMO . '/wpvulndb.php', $args ); // //// Url temp.
 	if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 		update_site_option( 'secupress_bad_plugins', wp_remote_retrieve_body( $response ) );
 	}
 }
+
 
 /**
  * Get the plugins whitelist from our local file.
@@ -124,7 +129,7 @@ function secupress_refresh_vulnerable_plugins() { //// GO PRO
  * @since 1.0
  *
  * @return (array|bool) The plugins whitelist, with dirname as keys. Return false if the file is not readable.
- **/
+ */
 function secupress_get_plugins_whitelist() {
 	static $whitelist;
 
@@ -145,31 +150,34 @@ function secupress_get_plugins_whitelist() {
 	return $whitelist;
 }
 
+
 /* THEMES */
 
 /**
- * Get the vulnerable themes from an option
+ * Get the vulnerable themes from an option.
  *
  * @since 1.0
- **/
-function secupress_refresh_vulnerable_themes() { //// GO PRO
-	$themes = wp_get_themes();
+ */
+function secupress_refresh_vulnerable_themes() {
+	$themes = wp_get_themes(); // //// GO PRO.
 	$themes = wp_list_pluck( $themes, 'Version' );
 
-	$args   = array( 'body' => array( 'items' => $themes, 'type' => 'theme' ), 'headers' => array( 'X-Secupress' => SECUPRESS_VERSION ) ); //// use client licence here
+	$args   = array( 'body' => array( 'items' => $themes, 'type' => 'theme' ), 'headers' => array( 'X-Secupress' => SECUPRESS_VERSION ) ); // //// Use client licence here.
 
-	$response = wp_remote_post( SECUPRESS_WEB_DEMO . '/wpvulndb.php', $args ); //// url temp
+	$response = wp_remote_post( SECUPRESS_WEB_DEMO . '/wpvulndb.php', $args ); // //// Url temp.
 	if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 		update_site_option( 'secupress_bad_themes', wp_remote_retrieve_body( $response ) );
 	}
 }
 
+
 /**
- * Get the vulnerable themes from an option, from our option, set by secupress_refresh_vulnerable_themes()
+ * Get the vulnerable themes from an option, from our option, set by `secupress_refresh_vulnerable_themes()`.
  *
- * @return array The vulnerables themes
  * @since 1.0
- **/
+ *
+ * @return (array) The vulnerables themes.
+ */
 function secupress_get_vulnerable_themes() {
 	static $vulnerable_themes;
 

@@ -5,6 +5,7 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 /* FILTER URLS ================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
+add_filter( 'site_url', 'secupress_move_login_site_url', 10, 4 );
 /**
  * Filter the site URL.
  *
@@ -18,13 +19,11 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
  *
  * @return (string) The site URL.
  */
-add_filter( 'site_url', 'secupress_move_login_site_url', 10, 4 );
-
 function secupress_move_login_site_url( $url, $path, $scheme, $blog_id = null ) {
 	if ( ! empty( $path ) && is_string( $path ) && false === strpos( $path, '..' ) && 0 === strpos( ltrim( $path, '/' ), 'wp-login.php' ) ) {
 		$blog_id = (int) $blog_id;
 
-		// Base url
+		// Base url.
 		if ( empty( $blog_id ) || get_current_blog_id() === $blog_id || ! is_multisite() ) {
 			$url = get_option( 'siteurl' );
 		}
@@ -40,6 +39,7 @@ function secupress_move_login_site_url( $url, $path, $scheme, $blog_id = null ) 
 }
 
 
+add_filter( 'network_site_url', 'secupress_move_login_network_site_url', 10, 3 );
 /**
  * Filter the network site URL: don't use `network_site_url()` for the login URL ffs!
  *
@@ -53,8 +53,6 @@ function secupress_move_login_site_url( $url, $path, $scheme, $blog_id = null ) 
  *
  * @return (string) The network site URL.
  */
-add_filter( 'network_site_url', 'secupress_move_login_network_site_url', 10, 3 );
-
 function secupress_move_login_network_site_url( $url, $path, $scheme ) {
 	if ( ! empty( $path ) && is_string( $path ) && false === strpos( $path, '..' ) && 0 === strpos( ltrim( $path, '/' ), 'wp-login.php' ) ) {
 		return site_url( $path, $scheme );
@@ -64,6 +62,7 @@ function secupress_move_login_network_site_url( $url, $path, $scheme ) {
 }
 
 
+add_filter( 'logout_url', 'secupress_move_login_logout_url', 1 );
 /**
  * Filter the logout URL: `wp_logout_url()` add the action param after using `site_url()`.
  *
@@ -73,13 +72,12 @@ function secupress_move_login_network_site_url( $url, $path, $scheme ) {
  *
  * @return (string) The Log Out URL.
  */
-add_filter( 'logout_url', 'secupress_move_login_logout_url', 1 );
-
 function secupress_move_login_logout_url( $logout_url ) {
 	return secupress_move_login_login_to_action( $logout_url, 'logout' );
 }
 
 
+add_filter( 'lostpassword_url', 'secupress_move_login_lostpassword_url', 1 );
 /**
  * Filter the Lost Password URL: `wp_lostpassword_url()` add the action param after using `network_site_url()`.
  *
@@ -89,13 +87,12 @@ function secupress_move_login_logout_url( $logout_url ) {
  *
  * @return (string) The lost password page URL.
  */
-add_filter( 'lostpassword_url', 'secupress_move_login_lostpassword_url', 1 );
-
 function secupress_move_login_lostpassword_url( $lostpassword_url ) {
 	return secupress_move_login_login_to_action( $lostpassword_url, 'lostpassword' );
 }
 
 
+add_filter( 'wp_redirect', 'secupress_move_login_redirect', 10 );
 /**
  * Filter the redirect location: some redirections are hard-coded.
  *
@@ -105,8 +102,6 @@ function secupress_move_login_lostpassword_url( $lostpassword_url ) {
  *
  * @return (string) The path to redirect to.
  */
-add_filter( 'wp_redirect', 'secupress_move_login_redirect', 10 );
-
 function secupress_move_login_redirect( $location ) {
 	if ( site_url( reset( ( explode( '?', $location ) ) ) ) === site_url( 'wp-login.php' ) ) {
 		return secupress_move_login_site_url( $location, $location, 'login', get_current_blog_id() );
@@ -116,6 +111,7 @@ function secupress_move_login_redirect( $location ) {
 }
 
 
+add_filter( 'update_welcome_email', 'secupress_move_login_update_welcome_email', 10, 2 );
 /**
  * Multisite: filter the content of the welcome email after site activation.
  *
@@ -126,8 +122,6 @@ function secupress_move_login_redirect( $location ) {
  *
  * @return (string) Message body of the email.
  */
-add_filter( 'update_welcome_email', 'secupress_move_login_update_welcome_email', 10, 2 );
-
 function secupress_move_login_update_welcome_email( $welcome_email, $blog_id ) {
 	if ( false === strpos( $welcome_email, 'wp-login.php' ) ) {
 		return $welcome_email;
@@ -172,7 +166,7 @@ function secupress_move_login_set_path( $path ) {
 			$action = 'resetpass';
 		}
 
-		if ( ! isset( $slugs[ $action ], $other[ $action ] ) && false === has_filter( 'login_form_' . $action ) ) {
+		if ( ! isset( $slugs[ $action ] ) && ! isset( $other[ $action ] ) && false === has_filter( 'login_form_' . $action ) ) {
 			$action = 'login';
 		}
 	}
@@ -186,7 +180,7 @@ function secupress_move_login_set_path( $path ) {
 		$path = remove_query_arg( 'action', $path );
 	}
 	else {
-		// In case of a custom action
+		// In case of a custom action.
 		$path = str_replace( 'wp-login.php', $slugs['login'], $path );
 		$path = add_query_arg( 'action', $action, $path );
 	}

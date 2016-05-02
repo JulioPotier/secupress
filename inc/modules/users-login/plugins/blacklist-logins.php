@@ -12,15 +12,19 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 /* EXISTING USERS WITH A BLACKLISTED USERNAME MUST CHANGE IT. =================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-/*
+add_action( 'auth_redirect', 'secupress_auth_redirect_blacklist_logins' );
+/**
  * As soon as we are sure a user is connected, and before any redirection, check if the user login is not blacklisted.
  * If he is, he can't access the administration area and is asked to change it.
  *
  * @since 1.0
+ *
+ * @param (int) $user_id The user ID.
  */
-add_action( 'auth_redirect', 'secupress_auth_redirect_blacklist_logins' );
-
 function secupress_auth_redirect_blacklist_logins( $user_id ) {
+	if ( ! is_admin() || defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		return;
+	}
 
 	$user = get_userdata( $user_id );
 	$list = secupress_get_blacklisted_usernames();
@@ -64,7 +68,7 @@ function secupress_auth_redirect_blacklist_logins( $user_id ) {
 
 					// Kill session.
 					wp_clear_auth_cookie();
-					if ( function_exists( 'wp_destroy_current_session' ) ) { // WP 4.0 min
+					if ( function_exists( 'wp_destroy_current_session' ) ) { // WP 4.0 min.
 						wp_destroy_current_session();
 					}
 
@@ -109,7 +113,8 @@ function secupress_auth_redirect_blacklist_logins( $user_id ) {
 }
 
 
-/*
+add_filter( 'wp_login_errors', 'secupress_blacklist_logins_display_login_message', 10, 2 );
+/**
  * Display a message on the login form after the new login creation.
  *
  * @since 1.0
@@ -119,8 +124,6 @@ function secupress_auth_redirect_blacklist_logins( $user_id ) {
  *
  * @return (object) WP Error object.
  */
-add_filter( 'wp_login_errors', 'secupress_blacklist_logins_display_login_message', 10, 2 );
-
 function secupress_blacklist_logins_display_login_message( $errors, $redirect_to ) {
 	if ( empty( $_GET['secupress-relog'] ) ) {
 		return $errors;
@@ -140,7 +143,7 @@ function secupress_blacklist_logins_display_login_message( $errors, $redirect_to
 /* UTILITIES ==================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-/*
+/**
  * Change a user login.
  *
  * @since 1.0
@@ -153,7 +156,7 @@ function secupress_blacklist_logins_display_login_message( $errors, $redirect_to
 function secupress_blacklist_logins_change_user_login( $user_id, $user_login ) {
 	global $wpdb;
 
-	// user_login must be between 1 and 60 characters.
+	// `user_login` must be between 1 and 60 characters.
 	if ( empty( $user_login ) ) {
 		return new WP_Error( 'empty_user_login', __( 'Cannot create a user with an empty login name.' ) );
 	} elseif ( mb_strlen( $user_login ) > 60 ) {
@@ -175,7 +178,7 @@ function secupress_blacklist_logins_change_user_login( $user_id, $user_login ) {
 }
 
 
-/*
+/**
  * Send an email notification to a user with his/her login.
  *
  * @since 1.0
@@ -189,14 +192,14 @@ function secupress_blacklist_logins_new_user_notification( $user ) {
 	// we want to reverse this for the plain text arena of emails.
 	$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
 
-	$message  = sprintf( __( 'Username: %s' ), $user->user_login ) . "\r\n\r\n"; // WP i18n
+	$message  = sprintf( __( 'Username: %s' ), $user->user_login ) . "\r\n\r\n"; // WP i18n.
 	$message .= wp_login_url() . "\r\n";
 
 	wp_mail( $user->user_email, sprintf( __( '[%s] Your username info', 'secupress' ), $blogname ), $message );
 }
 
 
-/*
+/**
  * Tell if a username is blacklisted.
  *
  * @since 1.0
@@ -212,7 +215,7 @@ function secupress_is_username_blacklisted( $username ) {
 }
 
 
-/*
+/**
  * Logins blacklist: return the list of allowed characters for the usernames.
  *
  * @since 1.0
@@ -222,7 +225,7 @@ function secupress_is_username_blacklisted( $username ) {
  * @return (string)
  */
 function secupress_blacklist_logins_allowed_characters( $wrap = false ) {
-	$allowed = is_multisite() ? array( 'a-z', '0-9', ) : array( 'A-Z', 'a-z', '0-9', '(space)', '_', '.', '-', '@', );
+	$allowed = is_multisite() ? array( 'a-z', '0-9' ) : array( 'A-Z', 'a-z', '0-9', '(space)', '_', '.', '-', '@' );
 	if ( $wrap ) {
 		foreach ( $allowed as $i => $char ) {
 			$allowed[ $i ] = '<code>' . $char . '</code>';
@@ -259,7 +262,7 @@ else :
 endif;
 
 
-/*
+/**
  * Filter the blacklisted user names.
  * This filter is used in `wp_insert_user()`, `edit_user()` and `wpmu_validate_user_signup()`.
  *
@@ -274,7 +277,7 @@ function secupress_blacklist_logins_illegal_user_logins( $usernames ) {
 }
 
 
-/*
+/**
  * In `edit_user()`, detect forbidden logins.
  *
  * @since 1.0
@@ -293,7 +296,7 @@ function secupress_blacklist_logins_user_profile_update_errors( $errors, $update
 }
 
 
-/*
+/**
  * In `wpmu_validate_user_signup()`, detect forbidden logins.
  *
  * @since 1.0
@@ -310,7 +313,7 @@ function secupress_blacklist_logins_wpmu_validate_user_signup( $result ) {
 }
 
 
-/*
+/**
  * In `wp_insert_user()`, detect forbidden logins.
  * If the username is in the blacklist, an empty username will be returned, triggering a `empty_user_login` error later.
  *
@@ -330,7 +333,7 @@ function secupress_blacklist_logins_pre_user_login( $sanitized_user_login ) {
 }
 
 
-/*
+/**
  * After a blacklisted username is detected, filter the `empty_user_login` error message.
  *
  * @since 1.0
@@ -351,7 +354,7 @@ function secupress_blacklist_logins_gettext_filter( $translations, $text, $domai
 }
 
 
-/*
+/**
  * In `register_new_user()`, detect forbidden logins.
  *
  * @since 1.0

@@ -9,8 +9,12 @@ Version: 1.0
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 
-add_action( 'secupress_plugins_loaded', 'secupress_restapi_disable_api' );
-
+add_action( 'secupress.plugins.loaded', 'secupress_restapi_disable_api' );
+/**
+ * Disable the REST API by launching and removing hooks.
+ *
+ * @since 1.0
+ */
 function secupress_restapi_disable_api() {
 	remove_action( 'init',          'rest_api_init' );
 	remove_action( 'parse_request', 'rest_api_loaded' );

@@ -250,7 +250,7 @@ function secupress_fill_centralized_blog_options() {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $step (int) Default is 250.
+	 * @param (int) $step Default is 250.
 	 */
 	$step    = apply_filters( 'secupress.multisite.fill_centralized_blog_options_step', 250 );
 	$step    = absint( $step );

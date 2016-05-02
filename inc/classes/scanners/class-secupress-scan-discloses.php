@@ -162,6 +162,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 		// Style tag src.
 		$style_url = home_url( '/fake.css?ver=' . $wp_version );
 
+		/** This filter is documented in wp-includes/class.wp-styles.php */
 		if ( apply_filters( 'style_loader_src', $style_url, 'secupress' ) === $style_url ) {
 			// "bad"
 			$wp_discloses[] = 'CSS';
@@ -170,6 +171,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 		// Script tag src.
 		$script_url = home_url( '/fake.js?ver=' . $wp_version );
 
+		/** This filter is documented in wp-includes/class.wp-scripts.php */
 		if ( apply_filters( 'script_loader_src', $script_url, 'secupress' ) === $script_url ) {
 			// "bad"
 			$wp_discloses[] = 'JS';
@@ -253,6 +255,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 		// Style tag src.
 		$style_url = home_url( '/fake.css?ver=' . $wp_version );
 
+		/** This filter is documented in wp-includes/class.wp-styles.php */
 		if ( apply_filters( 'style_loader_src', $style_url, 'secupress' ) === $style_url ) {
 			// "good"
 			secupress_activate_submodule( 'discloses', 'wp-version-css' );
@@ -262,6 +265,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 		// Script tag src.
 		$script_url = home_url( '/fake.js?ver=' . $wp_version );
 
+		/** This filter is documented in wp-includes/class.wp-scripts.php */
 		if ( apply_filters( 'script_loader_src', $script_url, 'secupress' ) === $script_url ) {
 			// "good"
 			secupress_activate_submodule( 'discloses', 'wp-version-js' );

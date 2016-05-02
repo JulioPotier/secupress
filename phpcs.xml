@@ -3,24 +3,12 @@
 	<description>Security plugin for WordPress by WP Media.</description>
 
 	<arg name="extensions" value="php"/>
-	<arg value="s"/>
+	<!--<arg value="s"/>-->
 
-	<file>secupress.php</file>
-	<file>uninstall.php</file>
-
-	<file>inc/admin</file>
-	<file>inc/front</file>
-	<file>inc/functions</file>
-	<file>inc/classes</file>
-	<file>inc/modules/alerts</file>
-	<file>inc/modules/antispam</file>
-	<file>inc/modules/backups</file>
-
-	<file>inc/admin-bar.php</file>
-	<file>inc/cron.php</file>
-	<file>inc/network-options-autoload.php</file>
+	<file>.</file>
 
 	<exclude-pattern>*.js</exclude-pattern>
+	<exclude-pattern>*/secupress-free/inc/modules/users-login/plugins/inc/php/base32.php</exclude-pattern>
 
 	<rule ref="WordPress">
 		<exclude name="Generic.PHP.NoSilencedErrors.Discouraged"/>
@@ -38,5 +26,20 @@
 		<exclude name="WordPress.VIP"/>
 		<exclude name="WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet"/>
 		<exclude name="WordPress.XSS.EscapeOutput"/>
+	</rule>
+
+	<rule ref="Generic.Strings.UnnecessaryStringConcat.Found">
+		<exclude-pattern>*/secupress-free/inc/modules/firewall/callbacks.php</exclude-pattern>
+		<exclude-pattern>*/secupress-free/inc/modules/users-login/tools.php</exclude-pattern>
+	</rule>
+
+	<rule ref="WordPress.Arrays.ArrayDeclaration.ValueNoNewline">
+		<exclude-pattern>*/secupress-free/inc/modules/users-login/tools.php</exclude-pattern>
+	</rule>
+
+	<rule ref="WordPress.CSRF.NonceVerification">
+		<properties>
+			<property name="customNonceVerificationFunctions" value="secupress_check_admin_referer" type="array"/>
+		</properties>
 	</rule>
 </ruleset>

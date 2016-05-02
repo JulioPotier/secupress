@@ -1,8 +1,7 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
-
-/*
+/**
  * Get the blacklisted usernames.
  *
  * @since 1.0
@@ -47,7 +46,7 @@ function secupress_get_blacklisted_usernames() {
 	 *
 	 * @since 1.0
 	 *
-	 * @param $list (array) List of usernames.
+	 * @param (array) $list List of usernames.
 	 */
 	$list = apply_filters( 'secupress.plugin.blacklist_logins_list', $list );
 
@@ -59,4 +58,38 @@ function secupress_get_blacklisted_usernames() {
 	}
 
 	return $list;
+}
+
+
+/**
+ * Related to the non login timeslot submodule, tell if we're in the timeslot.
+ *
+ * @since 1.0
+ *
+ * @return (bool)
+ */
+function secupress_in_timeslot() {
+	$timings = secupress_get_module_option( 'login-protection_nonlogintimeslot', false, 'users-login' );
+
+	if ( ! $timings || ! is_array( $timings ) ) {
+		return false;
+	}
+
+	// Server hour.
+	$utc    = new DateTimeZone( 'UTC' );
+	$new_tz = new DateTimeZone( ini_get( 'date.timezone' ) );
+	$date   = new DateTime( '', $utc );
+	$date->setTimezone( $new_tz );
+	$server_hour  = strtotime( $date->format( 'Y-m-d H:i:s' ) );
+	// From.
+	$setting_from = strtotime( date( sprintf( 'Y-m-d %s:%s:00', str_pad( $timings['from_hour'], 2, '0', STR_PAD_LEFT ), str_pad( $timings['from_minute'], 2, '0', STR_PAD_LEFT ) ) ) );
+	// To.
+	$setting_to   = strtotime( date( sprintf( 'Y-m-d %s:%s:00', str_pad( $timings['to_hour'], 2, '0', STR_PAD_LEFT ), str_pad( $timings['to_minute'], 2, '0', STR_PAD_LEFT ) ) ) );
+
+	if ( ( $setting_from < $setting_to ) && ( $server_hour > $setting_from && $server_hour < $setting_to ) ||
+		 ( $setting_from > $setting_to ) && ( $server_hour > $setting_from || $server_hour < $setting_to ) ) {
+		return true;
+	}
+
+	return false;
 }

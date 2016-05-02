@@ -26,8 +26,8 @@ $this->add_field( array(
 	'value'             => $is_plugin_active,
 	'label_screen'      => __( 'Which anti-spam do you need', 'secupress' ),
 	'options'           => array(
-		'fightspam'              => __( 'I <strong>need</strong> this to help my website fighting comment spam', 'secupress' ),
-		'remove-comment-feature' => __( 'I <strong>do not need</strong> comments on my website, remove all the comment features.', 'secupress' ),
+		'fightspam'              => __( 'I <strong>need comments</strong> on my website, help me fighting comment spam.', 'secupress' ),
+		'remove-comment-feature' => __( 'I <strong>do not need comments</strong> on my website, remove all the comment features.', 'secupress' ),
 	),
 	'helpers' => array(
 		array(

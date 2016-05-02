@@ -29,13 +29,13 @@ function __secupress_sensitive_data_settings_callback( $settings ) {
 	 * The `$settings` parameter is passed by reference.
 	 */
 
-	// Pages Protection
+	// Pages Protection.
 	__secupress_pages_protection_settings_callback( $modulenow, $activate );
 
-	// Content Protection
+	// Content Protection.
 	__secupress_content_protection_settings_callback( $modulenow, $activate );
 
-	// WordPress Endpoints
+	// WordPress Endpoints.
 	__secupress_wp_endpoints_settings_callback( $modulenow, $settings, $activate );
 
 	return $settings;
@@ -57,7 +57,7 @@ function __secupress_pages_protection_settings_callback( $modulenow, $activate )
 
 	// (De)Activation.
 	if ( secupress_is_pro() ) {
-		secupress_manage_submodule( $modulenow, 'page-protect',    ! empty( $activate['page-protect_profile'] ) || ! empty( $activate['page-protect_settings'] ) );
+		secupress_manage_submodule( $modulenow, 'page-protect', ! empty( $activate['page-protect_profile'] ) || ! empty( $activate['page-protect_settings'] ) );
 		secupress_manage_submodule( $modulenow, 'profile-protect', ! empty( $activate['page-protect_profile'] ) );
 		secupress_manage_submodule( $modulenow, 'options-protect', ! empty( $activate['page-protect_settings'] ) );
 	} else {
@@ -80,7 +80,7 @@ function __secupress_content_protection_settings_callback( $modulenow, $activate
 	}
 
 	// (De)Activation.
-	secupress_manage_submodule( $modulenow, 'hotlink',   ! empty( $activate['content-protect_hotlink'] ) && secupress_is_pro() );
+	secupress_manage_submodule( $modulenow, 'hotlink', ! empty( $activate['content-protect_hotlink'] ) && secupress_is_pro() );
 	secupress_manage_submodule( $modulenow, 'blackhole', ! empty( $activate['content-protect_blackhole'] ) && secupress_blackhole_is_robots_txt_enabled() );
 }
 
@@ -102,16 +102,13 @@ function __secupress_wp_endpoints_settings_callback( $modulenow, &$settings, $ac
 			'block-multi',
 		);
 		$settings['wp-endpoints_xmlrpc'] = array_intersect( $xmlrpc, $settings['wp-endpoints_xmlrpc'] );
+		$settings['wp-endpoints_xmlrpc'] = array_slice( $settings['wp-endpoints_xmlrpc'], 0, 1 ); // Only one choice.
 	} else {
 		unset( $settings['wp-endpoints_xmlrpc'] );
 	}
 
-	if ( false === $activate ) {
-		return;
-	}
-
 	// (De)Activation.
-	secupress_manage_submodule( $modulenow, 'xmlrpc',  ! empty( $settings['wp-endpoints_xmlrpc'] ) ); // `$settings`, not `$activate`.
+	secupress_manage_submodule( $modulenow, 'xmlrpc', ! empty( $settings['wp-endpoints_xmlrpc'] ) ); // `$settings`, not `$activate`.
 	secupress_manage_submodule( $modulenow, 'restapi', ! empty( $activate['wp-endpoints_restapi'] ) );
 }
 
@@ -120,7 +117,7 @@ function __secupress_wp_endpoints_settings_callback( $modulenow, &$settings, $ac
 /* TOOLS ======================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-/*
+/**
  * Tell if a `robots.txt` file is in use.
  * WordPress does not create a rewrite rule for the `robots.txt` file if it is installed in a folder.
  * If a constant `SECUPRESS_FORCE_ROBOTS_TXT` is defined to `true`, the field will be available.

@@ -163,7 +163,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			);
 
 			if ( ! secupress_wp_version_is( '3.9' ) ) {
-				/*
+				/**
 				 * Bugfix for meta queries with `NOT EXISTS`.
 				 *
 				 * @see http://codex.wordpress.org/Class_Reference/WP_Query#Custom_Field_Parameters.
@@ -265,14 +265,14 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @return (int)
 	 */
 	public function get_logs_limit() {
-		/*
+		/**
 		 * Limit the number of Logs stored in the database.
 		 * By default 1000, is restricted between 50 and 2000.
 		 *
 		 * @since 1.0
 		 *
-		 * @param (int)    The limit.
-		 * @param (string) The Log type.
+		 * @param (int)    $limit          The limit. Default is 1000.
+		 * @param (string) $this->log_type The Log type.
 		 */
 		$limit = apply_filters( 'secupress.logs.logs_limit', 1000, $this->log_type );
 

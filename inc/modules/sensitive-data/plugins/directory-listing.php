@@ -12,25 +12,24 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 /* ACTIVATION / DEACTIVATION ==================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
+add_action( 'secupress.modules.activate_submodule_' . basename( __FILE__, '.php' ), 'secupress_directory_listing_activation' );
 /**
  * On module activation, maybe write the rules.
  *
  * @since 1.0
  */
-add_action( 'secupress_activate_plugin_' . basename( __FILE__, '.php' ), 'secupress_directory_listing_activation' );
-
 function secupress_directory_listing_activation() {
 	global $is_apache, $is_nginx, $is_iis7;
 
-	// Apache
+	// Apache.
 	if ( $is_apache ) {
 		$rules = secupress_directory_listing_apache_rules();
 	}
-	// IIS7
+	// IIS7.
 	elseif ( $is_iis7 ) {
 		$rules = secupress_directory_listing_iis7_rules();
 	}
-	// Nginx
+	// Nginx.
 	elseif ( $is_nginx ) {
 		$rules = secupress_directory_listing_nginx_rules();
 	}
@@ -58,6 +57,7 @@ function secupress_directory_listing_activation() {
 }
 
 
+add_filter( 'secupress.plugins.activation.htaccess_content_before_write_rules', 'secupress_directory_listing_activation_remove_rule' );
 /**
  * Filter the `.htaccess` file content before add new rules on activation: maybe remove previous `Options +Indexes`.
  * This filter will run on Apache, before `secupress_directory_listing_activation()`.
@@ -66,26 +66,24 @@ function secupress_directory_listing_activation() {
  *
  * @param (string) $file_content The file content.
  */
-add_filter( 'secupress.plugins.activation.htaccess_content_before_write_rules', 'secupress_directory_listing_activation_remove_rule' );
-
 function secupress_directory_listing_activation_remove_rule( $file_content ) {
 	// Maybe remove `Options +Indexes`.
 	return preg_replace( "/Options\s+\+Indexes\s*(?:\n|$)/", '', $file_content );
 }
 
 
+add_action( 'secupress.modules.deactivate_submodule_' . basename( __FILE__, '.php' ), 'secupress_directory_listing_deactivate' );
 /**
  * On module deactivation, maybe remove rewrite rules from the `.htaccess`/`web.config` file.
  *
  * @since 1.0
  */
-add_action( 'secupress_deactivate_plugin_' . basename( __FILE__, '.php' ), 'secupress_directory_listing_deactivate' );
-
 function secupress_directory_listing_deactivate() {
 	secupress_remove_module_rules_or_notice( 'directory_listing', __( 'Directory Listing', 'secupress' ) );
 }
 
 
+add_filter( 'secupress.plugins.activation.write_rules', 'secupress_directory_listing_plugin_activate', 10, 2 );
 /**
  * On SecuPress activation, add the rules to the list of the rules to write.
  *
@@ -95,8 +93,6 @@ function secupress_directory_listing_deactivate() {
  *
  * @return (array) Rules to write.
  */
-add_filter( 'secupress.plugins.activation.write_rules', 'secupress_directory_listing_plugin_activate', 10, 2 );
-
 function secupress_directory_listing_plugin_activate( $rules ) {
 	global $is_apache, $is_nginx, $is_iis7;
 	$marker = 'directory_listing';

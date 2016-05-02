@@ -5,7 +5,10 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * Callback to filter, sanitize and de/activate submodules
  *
  * @since 1.0
- * @return array $settings
+ *
+ * @param (array) $settings The module settings.
+ *
+ * @return (array) The sanitized and validated settings.
  */
 function __secupress_logs_settings_callback( $settings ) {
 	$modulenow = 'logs';
@@ -41,13 +44,12 @@ function __secupress_logs_settings_callback( $settings ) {
 }
 
 
+add_action( 'admin_post_secupress_activate_action_logs', '__secupress_activate_action_logs' );
 /**
  * Activate or deactivate "action" Logs.
  *
  * @since 1.0
- **/
-add_action( 'admin_post_secupress_activate_action_logs', '__secupress_activate_action_logs' );
-
+ */
 function __secupress_activate_action_logs() {
 	// Make all security tests.
 	secupress_check_admin_referer( 'secupress_activate_action_logs' );
@@ -63,13 +65,12 @@ function __secupress_activate_action_logs() {
 }
 
 
+add_action( 'admin_post_secupress_activate_404_logs', '__secupress_activate_404_logs' );
 /**
  * Activate or deactivate "404" Logs.
  *
  * @since 1.0
- **/
-add_action( 'admin_post_secupress_activate_404_logs', '__secupress_activate_404_logs' );
-
+ */
 function __secupress_activate_404_logs() {
 	// Make all security tests.
 	secupress_check_admin_referer( 'secupress_activate_404_logs' );

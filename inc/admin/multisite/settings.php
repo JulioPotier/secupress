@@ -53,6 +53,13 @@ function secupress_update_network_option_on_submit() {
 	secupress_check_admin_referer( $option_group . '-options' );
 	secupress_check_user_capability();
 
+	/**
+	 * Add network options to whitelist.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (array) $whitelist_options Network option names, grouped by option groups. By default an empty array.
+	 */
 	$whitelist_options = apply_filters( 'secupress_whitelist_network_options', array() );
 
 	if ( ! isset( $whitelist_options[ $option_group ] ) ) {
@@ -66,8 +73,8 @@ function secupress_update_network_option_on_submit() {
 			$option = trim( $option );
 			$value  = null;
 
-			if ( isset( $_POST[ $option ] ) ) { // WPCS: CSRF ok.
-				$value = $_POST[ $option ]; // WPCS: CSRF ok.
+			if ( isset( $_POST[ $option ] ) ) {
+				$value = $_POST[ $option ];
 				if ( ! is_array( $value ) ) {
 					$value = trim( $value );
 				}
@@ -149,9 +156,9 @@ function secupress_create_subsite_menu() {
 }
 
 
-add_filter( 'secupress_ajax_dismiss_notice_capability', 'secupress_ajax_dismiss_multisite_notice_capability', 10, 2 );
+add_filter( 'secupress.notices.dismiss_capability', 'secupress_dismiss_multisite_notice_capability', 10, 2 );
 /**
- * Our "security issues" notice must be shown to the site's Administrators: change the capability for the ajax callback.
+ * Our "security issues" notice must be shown to the site's Administrators: change the capability for the callback.
  *
  * @since 1.0
  *
@@ -160,12 +167,12 @@ add_filter( 'secupress_ajax_dismiss_notice_capability', 'secupress_ajax_dismiss_
  *
  * @return (string) Capability or user role.
  */
-function secupress_ajax_dismiss_multisite_notice_capability( $capacity, $notice_id ) {
+function secupress_dismiss_multisite_notice_capability( $capacity, $notice_id ) {
 	return 'subsite-security-issues' === $notice_id ? secupress_get_capability( true ) : $capacity;
 }
 
 
-add_action( 'secupress_empty_results_for_ms_scanner_fixes', 'secupress_remove_subsite_security_issues_notice_meta' );
+add_action( 'secupress.multisite.empty_results_for_ms_scanner_fixes', 'secupress_remove_subsite_security_issues_notice_meta' );
 /**
  * When all the site's fixes are done, remove the "dismissed notice" value from the users meta.
  * That way, the notice can be shown again later if needed (more fixes to do).

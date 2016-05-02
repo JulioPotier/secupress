@@ -2,486 +2,200 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /**
- * Activate a sub-module.
+ * Get modules title, icon, description and other informations.
  *
  * @since 1.0
  *
- * @param (string) $module                  The module.
- * @param (string) $submodule               The sub-module.
- * @param (array)  $incompatible_submodules An array of sub-modules to deactivate.
- *
- * @return (bool) True on success. False on failure.
+ * @return (array) All informations related to the modules.
  */
-function secupress_activate_submodule( $module, $submodule, $incompatible_submodules = array() ) {
-	$submodule_slug = sanitize_key( $submodule );
-	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
-	$active_plugins = is_array( $active_plugins ) ? $active_plugins : array();
-	$file_path      = SECUPRESS_MODULES_PATH . $module . '/plugins/' . $submodule_slug . '.php';
-
-	if ( ! file_exists( $file_path ) ) {
-		return false;
-	}
-
-	if ( ! in_array_deep( $submodule_slug, $active_plugins ) ) {
-		if ( ! empty( $incompatible_submodules ) ) {
-			secupress_deactivate_submodule( $module, $incompatible_submodules );
-
-			$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
-			$active_plugins = is_array( $active_plugins ) ? $active_plugins : array();
-		}
-
-		$active_plugins[ $module ]   = isset( $active_plugins[ $module ] ) ? $active_plugins[ $module ] : array();
-		$active_plugins[ $module ][] = $submodule_slug;
-
-		update_site_option( SECUPRESS_ACTIVE_SUBMODULES, $active_plugins );
-
-		require_once( $file_path );
-
-		secupress_add_module_notice( $module, $submodule_slug, 'activation' );
-
-		do_action( 'secupress_activate_plugin_' . $submodule_slug );
-
-		do_action( 'secupress_activate_plugin', $submodule_slug );
-
-		return true;
-	}
-
-	return false;
-}
-
-
-/**
- * Deactivate a sub-module.
- *
- * @since 1.0
- *
- * @param (string)       $module     The module.
- * @param (string|array) $submodules The sub-module. Can be an array, deactivate multiple sub-modules.
- * @param (array)        $args       An array of arguments to pass to the hooks.
- */
-function secupress_deactivate_submodule( $module, $submodules, $args = array() ) {
-	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
-
-	if ( ! $active_plugins ) {
-		return;
-	}
-
-	$submodules = (array) $submodules;
-
-	foreach ( $submodules as $submodule ) {
-		$submodule_slug = sanitize_key( $submodule );
-
-		if ( ! isset( $active_plugins[ $module ] ) || ! in_array_deep( $submodule_slug, $active_plugins ) ) {
-			continue;
-		}
-
-		$key = array_search( $submodule_slug, $active_plugins[ $module ] );
-
-		if ( false === $key ) {
-			continue;
-		}
-
-		unset( $active_plugins[ $module ][ $key ] );
-
-		if ( ! $active_plugins[ $module ] ) {
-			unset( $active_plugins[ $module ] );
-		}
-
-		update_site_option( SECUPRESS_ACTIVE_SUBMODULES, $active_plugins );
-
-		secupress_add_module_notice( $module, $submodule_slug, 'deactivation' );
-
-		do_action( 'secupress_deactivate_plugin_' . $submodule_slug, $args );
-
-		do_action( 'secupress_deactivate_plugin', $submodule_slug, $args );
-	}
-}
-
-
-/**
- * Activate a sub-module silently. This will remove a previous activation notice and trigger no activation hook.
- *
- * @since 1.0
- *
- * @param (string) $module    The module.
- * @param (string) $submodule The sub-module.
- */
-function secupress_activate_submodule_silently( $module, $submodule ) {
-	// Remove deactivation notice.
-	secupress_remove_module_notice( $module, $submodule, 'deactivation' );
-
-	// Activate the submodule.
-	$submodule_slug = sanitize_key( $submodule );
-	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
-	$active_plugins = is_array( $active_plugins ) ? $active_plugins : array();
-	$file_path      = SECUPRESS_MODULES_PATH . $module . '/plugins/' . $submodule_slug . '.php';
-
-	if ( ! file_exists( $file_path ) || in_array_deep( $submodule_slug, $active_plugins ) ) {
-		return;
-	}
-
-	$active_plugins[ $module ]   = isset( $active_plugins[ $module ] ) ? $active_plugins[ $module ] : array();
-	$active_plugins[ $module ][] = $submodule_slug;
-
-	update_site_option( SECUPRESS_ACTIVE_SUBMODULES, $active_plugins );
-}
-
-
-/**
- * Deactivate a sub-module silently. This will remove all previous activation noticel and trigger no deactivation hook.
- *
- * @since 1.0
- *
- * @param (string)       $module     The module.
- * @param (string|array) $submodules The sub-module. Can be an array, deactivate multiple sub-modules.
- * @param (array)        $args       An array of arguments to pass to the hooks.
- */
-function secupress_deactivate_submodule_silently( $module, $submodules, $args = array() ) {
-	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
-
-	if ( ! $active_plugins ) {
-		return;
-	}
-
-	$submodules = (array) $submodules;
-
-	foreach ( $submodules as $submodule ) {
-		// Remove activation notice.
-		secupress_remove_module_notice( $module, $submodule, 'activation' );
-
-		// Deactivate the submodule.
-		$submodule_slug = sanitize_key( $submodule );
-
-		if ( ! isset( $active_plugins[ $module ] ) || ! in_array_deep( $submodule_slug, $active_plugins ) ) {
-			continue;
-		}
-
-		$key = array_search( $submodule_slug, $active_plugins[ $module ] );
-
-		if ( false === $key ) {
-			continue;
-		}
-
-		unset( $active_plugins[ $module ][ $key ] );
-
-		if ( ! $active_plugins[ $module ] ) {
-			unset( $active_plugins[ $module ] );
-		}
-	}
-
-	update_site_option( SECUPRESS_ACTIVE_SUBMODULES, $active_plugins );
-}
-
-
-/**
- * Depending on the value of `$activate`, will activate or deactivate a sub-module.
- *
- * @since 1.0
- *
- * @param (string) $module    The module.
- * @param (string) $submodule The sub-module.
- * @param (bool)   $activate  True to activate, false to deactivate.
- */
-function secupress_manage_submodule( $module, $submodule, $activate ) {
-	if ( $activate ) {
-		secupress_activate_submodule( $module, $submodule );
-	} else {
-		secupress_deactivate_submodule( $module, $submodule );
-	}
-}
-
-
-/**
- * This is used when submitting a module form.
- * If we submitted the given module form, it will return an array containing the values of sub-modules to activate.
- *
- * @since 1.0
- *
- * @param (string) $module The module.
- *
- * @return (array|bool) False if we're not submitting the module form. An array like `array( 'submodule1' => 1, 'submodule2' => 1 )` otherwise.
- */
-function secupress_get_submodule_activations( $module ) {
-	static $done = array();
-
-	if ( isset( $done[ $module ] ) ) {
-		return false;
-	}
-
-	$done[ $module ] = true;
-
-	if ( isset( $_POST['option_page'] ) && 'secupress_' . $module . '_settings' === $_POST['option_page'] ) { // WPCS: CSRF ok.
-		return isset( $_POST['secupress-plugin-activation'] ) && is_array( $_POST['secupress-plugin-activation'] ) ? $_POST['secupress-plugin-activation'] : array(); // WPCS: CSRF ok.
-	}
-
-	return false;
-}
-
-
-/**
- * Add a sub-module (de)activation notice.
- *
- * @since 1.0
- *
- * @param (string) $module    The module.
- * @param (string) $submodule The sub-module.
- * @param (string) $action    "activation" or "deactivation".
- */
-function secupress_add_module_notice( $module, $submodule, $action ) {
-	$submodule_name    = secupress_get_module_data( $module, $submodule );
-	$submodule_name    = $submodule_name['Name'];
-	$transient_name    = 'secupress_module_' . $action . '_' . get_current_user_id();
-	$transient_value   = secupress_get_site_transient( $transient_name );
-	$transient_value   = is_array( $transient_value ) ? $transient_value : array();
-	$transient_value[] = $submodule_name;
-
-	secupress_set_site_transient( $transient_name, $transient_value );
-
-	do_action( 'module_notice_' . $action, $module, $submodule );
-}
-
-
-/**
- * Remove a sub-module (de)activation notice.
- *
- * @since 1.0
- *
- * @param (string) $module    The module.
- * @param (string) $submodule The sub-module.
- * @param (string) $action    "activation" or "deactivation".
- */
-function secupress_remove_module_notice( $module, $submodule, $action ) {
-	$submodule_name  = secupress_get_module_data( $module, $submodule );
-	$submodule_name  = $submodule_name['Name'];
-	$transient_name  = 'secupress_module_' . $action . '_' . get_current_user_id();
-	$transient_value = secupress_get_site_transient( $transient_name );
-
-	if ( ! $transient_value || ! is_array( $transient_value ) ) {
-		return;
-	}
-
-	$transient_value = array_flip( $transient_value );
-
-	if ( ! isset( $transient_value[ $submodule_name ] ) ) {
-		return;
-	}
-
-	unset( $transient_value[ $submodule_name ] );
-
-	if ( $transient_value ) {
-		$transient_value = array_flip( $transient_value );
-		secupress_set_site_transient( $transient_name, $transient_value );
-	} else {
-		secupress_delete_site_transient( $transient_name );
-	}
-}
-
-
-/**
- * Get a sub-module data (name, parent module, version, description, author).
- *
- * @since 1.0
- *
- * @param (string) $module    The module.
- * @param (string) $submodule The sub-module.
- *
- * @return (array)
- */
-function secupress_get_module_data( $module, $submodule ) {
-	$default_headers = array(
-		'Name'        => 'Module Name',
-		'Module'      => 'Main Module',
-		'Version'     => 'Version',
-		'Description' => 'Description',
-		'Author'      => 'Author',
+function secupress_get_modules() {
+	$modules = array(
+		'users-login'     => array(
+			'title'       => esc_html__( 'Users &amp; Login', 'secupress' ),
+			'dashicon'    => 'admin-users',
+			'summaries'   => array(
+				'small' => __( 'Protect your users', 'secupress' ),
+				'normal'=> __( 'You will find here the best and easy ways to be sure that users\' datas will be protected, and their account not compromised.', 'secupress' )
+			),
+			'description' => array(
+				__( 'Your users &ndash; and every account on your website &ndash; want to be sure that their data will be protected, and their account not compromised. This is why you have to take care of them and protect them.', 'secupress' ),
+				__( 'You will find here the best and easy ways to do this.', 'secupress' ),
+			),
+		),
+		'plugins-themes'  => array(
+			'title'       => esc_html__( 'Plugins &amp; Themes', 'secupress' ),
+			'dashicon'    => 'admin-plugins',
+			'summaries'   => array(
+				'small' => __( 'Check your plugins &amp; themes', 'secupress' ),
+				'normal'=> __( 'Installation, activation, deactivation, upgrade and deletion of themes and plugins can be disallowed when you don\'t need it.', 'secupress' )
+			),
+			'description' => array(
+				__( 'When your website is online, there is no reason to let someone play with your plugins. Installation, activation, deactivation, upgrade and deletion can be disallowed when you don\'t need it.', 'secupress' ),
+				__( 'Do not hesitate to check all, and then, when you need, come back here to deactivate only what you need.', 'secupress' ),
+			),
+		),
+		'wordpress-core'  => array(
+			'title'       => esc_html__( 'WordPress Core', 'secupress' ),
+			'dashicon'    => 'wordpress-alt',
+			'summaries'   => array(
+				'small' => __( 'Core Tweaking', 'secupress' ),
+				'normal'=> __( 'WordPress can be tweak by so many ways. But are you using the right ones. We will help', 'secupress' )
+			),
+			'description' => array(
+				__( 'WordPress can be tweak by so many ways. But are you using the right ones. We will help', 'secupress' ),
+			),
+		),
+		'sensitive-data'  => array(
+			'title'       => esc_html__( 'Sensitive Data', 'secupress' ),
+			'dashicon'    => 'lock',
+			'summaries'   => array(
+				'small' => __( 'Keep your data safe', 'secupress' ),
+				'normal'=> __( 'Some pages can contains sensitive data. It\'s a good practice to lock these pages.', 'secupress' )
+			),
+			'description' => array(
+				__( 'Some pages can contains sensitive data. It\'s a good practice to lock these pages.', 'secupress' ),
+				__( 'Do not hesitate to lock as much as you can to improve the security of your website.', 'secupress' ),
+			),
+		),
+		'file-system'     => array(
+			'title'       => esc_html__( 'Malware Scan', 'secupress' ),
+			'dashicon'    => 'search',
+			'summaries'   => array(
+				'small' => __( 'Permissions &amp; Antivirus', 'secupress' ),
+				'normal'=> __( 'Check file permissions, run monitoring and antivirus on your installation to verify files integrity.', 'secupress' )
+			),
+			'with_form'   => false,
+			'description' => array(
+				__( 'Check the file permissions <em>(chmod)</em> at a glance and run a file monitoring on your installation', 'secupress' ),
+				__( 'Also, an antivus scanner can be performed on your installation, this may take time but it\'s more efficient.', 'secupress' ),
+			),
+			'with_reset_box' => false,
+		),
+		'firewall'     => array(
+			'title'       => esc_html__( 'Firewall', 'secupress' ),
+			'dashicon'    => 'shield',
+			'summaries'   => array(
+				'small' => __( 'Block bad requests', 'secupress' ),
+				'normal'=> __( 'Malicious requests are badly common. This will checks all incoming requests and quietly blocks all of these containing bad stuff.', 'secupress' )
+			),
+			'description' => array(
+				__( 'Malicious requests are badly common. This will checks all incoming requests and quietly blocks all of these containing bad stuff.', 'secupress' ),
+			),
+		),
+		'backups'         => array(
+			'title'       => esc_html__( 'Backups', 'secupress' ),
+			'dashicon'    => 'media-archive',
+			'summaries'   => array(
+				'small' => __( 'Never loose anything', 'secupress' ),
+				'normal'=> __( 'Backuping your database daily and you files weekly can reduce the risks to lose your content because of an attack.', 'secupress' )
+			),
+			'with_form'   => false,
+			'description' => array(
+				__( 'Backuping your database daily and you files weekly can reduce the risks to lose your content because of an attack.', 'secupress' ),
+				sprintf( __( 'Don\'t forget to <a href="%s">schedule backups</a> as soon as possible.', 'secupress' ), esc_url( secupress_admin_url( 'modules', 'schedules' ) ) ),
+			),
+			'with_reset_box' => false,
+		),
+		'antispam'        => array(
+			'title'       => esc_html__( 'Anti Spam', 'secupress' ),
+			'dashicon'    => 'email-alt',
+			'summaries'   => array(
+				'small' => __( 'Get rid of junk', 'secupress' ),
+				'normal'=> __( 'Traffic done by bot represents about 60% of the internet. Spams are done by these bots. Don\'t let them do that!', 'secupress' )
+			),
+			'description' => array(
+				__( 'Comments are great for your website, but bot traffic represent about 60 % of the internet. Spams are done by these bots, and they just want to add their content in your website. Don\'t let them do that!', 'secupress' ),
+				sprintf( __( 'Do not forget to visit the <a href="%s">Settings &rsaquo; Discussion</a> area to add words to the blacklist and other usual settings regarding comments.', 'secupress' ), esc_url( admin_url( 'options-discussion.php' ) ) ),
+				__( 'By default, we block identity usurpation, so if someone tries to comment using your email/name, the comment will be blocked.', 'secupress' ),
+				__( 'Also by default, we block bad IPs, author name, email and website url known as spammer.', 'secupress' ),
+			),
+		),
+		'logs'            => array(
+			'title'       => esc_html__( 'Logs', 'secupress' ),
+			'dashicon'    => 'list-view',
+			'summaries'   => array(
+				'small' => __( 'Enter the matrix', 'secupress' ),
+				'normal'=> __( 'Logs are very usefull, it acts like a history of what happened on your website, filtered and at any time. You can also read and delete banned IPs from our modules here.', 'secupress' )
+			),
+			'with_form'   => false,
+			'description' => array(
+				__( 'Logs are very usefull, it acts like a history of what happened on your website, filtered and at any time. You can also read and delete banned IPs from our modules here.', 'secupress' ),
+			),
+		),
+		'alerts'          => array(
+			'title'       => esc_html__( 'Alerts', 'secupress' ),
+			'dashicon'    => 'megaphone',
+			'summaries'   => array(
+				'small' => __( 'Get alerted by events', 'secupress' ),
+				'normal'=> __( 'Being alerted of some important events might help to react quickly in case of possible attack vector.', 'secupress' )
+			),
+			'description' => array(
+				__( 'Being alerted of some important events might help to react quickly in case of possible attack vector.', 'secupress' ),
+			),
+		),
+		'schedules'       => array(
+			'title'       => esc_html__( 'Schedules', 'secupress' ),
+			'dashicon'    => 'calendar-alt',
+			'summaries'   => array(
+				'small' => __( 'Automate your scans', 'secupress' ),
+				'normal'=> __( 'Scheduling recurrent tasks can be very useful to gain time and stay safe. At least each week a backup should be done, same for a full scan of vulnerabilities and file changes.', 'secupress' )
+			),
+			'description' => array(
+				__( 'Scheduling recurrent tasks can be very useful to gain time and stay safe. At least each week a backup should be done, same for a full scan of vulnerabilities and file changes.', 'secupress' ),
+			),
+			'with_reset_box' => false,
+		),
+		'services'        => array(
+			'title'       => esc_html__( 'Services', 'secupress' ),
+			'dashicon'    => 'heart',
+			'summaries'   => array(
+				'small' => __( 'Pro configuration', 'secupress' ),
+				'normal'=> __( 'The page contains our services designed to help you with the plugin.', 'secupress' )
+			),
+			'description' => array(
+				__( 'The page contains our services designed to help you with the plugin.', 'secupress' ),
+			),
+			'with_reset_box' => false,
+		),
 	);
 
-	$file = SECUPRESS_MODULES_PATH . $module . '/plugins/' . $submodule . '.php';
-
-	if ( file_exists( $file ) ) {
-		return get_file_data( $file, $default_headers, 'module' );
+	if ( ! secupress_is_pro() ) {
+		$modules['pro'] = array(
+			'title'       => esc_html__( 'Get PRO!', 'secupress' ),
+			'dashicon'    => 'star-filled',
+			'summaries'   => array(
+				'small' => __( 'Advanced options', 'secupress' ),
+				'normal'=> __( 'Discover all the features only available in the PRO version.', 'secupress' )
+			),
+			'description' => array(
+				__( 'Discover all the features only available in the PRO version.', 'secupress' ),
+			),
+			'with_reset_box' => false,
+		);
 	}
 
-	return array();
+	return $modules;
 }
 
 
 /**
- * Remove (rewrite) rules from the `.htaccess`/`web.config` file.
- * An error notice is displayed on nginx systems or if the file is not writable.
- * This is usually used on the module deactivation.
+ * Check whether a sub-module is active.
  *
  * @since 1.0
  *
- * @param (string) $marker      Marker used in "BEGIN SecuPress ***".
- * @param (string) $module_name The module name.
+ * @param (string) $module    A module.
+ * @param (string) $submodule A sub-module.
  *
- * @return (bool) True if the file has been edited.
+ * @return (bool)
  */
-function secupress_remove_module_rules_or_notice( $marker, $module_name ) {
-	global $is_apache, $is_nginx, $is_iis7;
+function secupress_is_submodule_active( $module, $submodule ) {
+	$submodule         = sanitize_key( $submodule );
+	$active_submodules = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
 
-	// Apache.
-	if ( $is_apache && ! secupress_write_htaccess( $marker ) ) {
-		$message  = sprintf( __( '%s: ', 'secupress' ), $module_name );
-		$message .= sprintf(
-			/* translators: 1 is a file name, 2 and 3 are small parts of code. */
-			__( 'Your %1$s file is not writable, you have to edit it manually. Please remove the rules between %2$s and %3$s from the %1$s file.', 'secupress' ),
-			'<code>.htaccess</code>',
-			"<code># BEGIN SecuPress $marker</code>",
-			'<code># END SecuPress</code>'
-		);
-		add_settings_error( 'general', 'apache_manual_edit', $message, 'error' );
-		return false;
+	if ( isset( $active_submodules[ $module ] ) ) {
+		$active_submodules[ $module ] = array_flip( $active_submodules[ $module ] );
+		return isset( $active_submodules[ $module ][ $submodule ] );
 	}
 
-	// IIS7.
-	if ( $is_iis7 && ! secupress_insert_iis7_nodes( $marker ) ) {
-		$message  = sprintf( __( '%s: ', 'secupress' ), $module_name );
-		$message .= sprintf(
-			/* translators: 1 is a file name, 2 is a small part of code. */
-			__( 'Your %1$s file is not writable, you have to edit it manually. Please remove the rules with %2$s from the %1$s file.', 'secupress' ),
-			'<code>web.config</code>',
-			"<code>SecuPress $marker</code>"
-		);
-		add_settings_error( 'general', 'iis7_manual_edit', $message, 'error' );
-		return false;
-	}
-
-	// Nginx.
-	if ( $is_nginx ) {
-		$message  = sprintf( __( '%s: ', 'secupress' ), $module_name );
-		$message .= sprintf(
-			/* translators: 1 is a file name, 2 and 3 are small parts of code. */
-			__( 'Your server uses a <i>Nginx</i> system, you have to edit the configuration file manually. Please remove the rules between %2$s and %3$s from the %1$s file.', 'secupress' ),
-			'<code>nginx.conf</code>',
-			"<code># BEGIN SecuPress $marker</code>",
-			'<code># END SecuPress</code>'
-		);
-		add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
-		return false;
-	}
-
-	return true;
-}
-
-
-/**
- * Add (rewrite) rules to the `.htaccess`/`web.config` file.
- * An error notice is displayed on nginx or not supported systems, or if the file is not writable. It will also deactivate the submodule silently if there is an error.
- * This is usually used on the module activation.
- *
- * @since 1.0
- *
- * @param (array) $args An array of arguments.
- *
- * @return (bool) True if the file has been edited.
- */
-function secupress_add_module_rules_or_notice_and_deactivate( $args ) {
-	global $is_apache, $is_nginx, $is_iis7;
-
-	$args = array_merge( array(
-		'rules'     => '',
-		'marker'    => '',
-		'iis_args'  => array(),
-		'module'    => '',
-		'submodule' => '',
-		'title'     => '', // Submodule name.
-	), $args );
-
-	$rules     = $args['rules'];
-	$marker    = $args['marker'];
-	$iis_args  = $args['iis_args'];
-	$module    = $args['module'];
-	$submodule = $args['submodule'];
-	$title     = $args['title'];
-
-	// Apache.
-	if ( $is_apache ) {
-		// Write in `.htaccess` file.
-		if ( ! secupress_write_htaccess( $marker, $rules ) ) {
-			// File not writable.
-			$rules    = esc_html( $rules );
-			$message  = sprintf( __( '%s: ', 'secupress' ), $title );
-			$message .= sprintf(
-				/* translators: 1 is a file name, 2 is some code */
-				__( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ),
-				'<code>.htaccess</code>',
-				"<pre># BEGIN SecuPress $marker\n$rules# END SecuPress</pre>"
-			);
-			add_settings_error( 'general', 'apache_manual_edit', $message, 'error' );
-
-			secupress_deactivate_submodule_silently( $module, $submodule );
-			return false;
-		}
-
-		return true;
-	}
-
-	// IIS7.
-	if ( $is_iis7 ) {
-		$iis_args['nodes_string'] = $rules;
-
-		// Write in `web.config` file.
-		if ( ! secupress_insert_iis7_nodes( $marker, $iis_args ) ) {
-			// File not writable.
-			$path     = ! empty( $iis_args['path'] ) ? $iis_args['path'] : '';
-			$path_end = ! $path && strpos( ltrim( $rules ), '<rule ' ) === 0 ? '/rewrite/rules' : '';
-			$path     = '/configuration/system.webServer' . ( $path ? '/' . trim( $path, '/' ) : '' ) . $path_end;
-			$spaces   = explode( '/', trim( $path, '/' ) );
-			$spaces   = count( $spaces ) - 1;
-			$spaces   = str_repeat( ' ', $spaces * 2 );
-			$rules    = esc_html( $rules );
-			$message  = sprintf( __( '%s: ', 'secupress' ), $title );
-
-			if ( ! empty( $iis_args['node_types'] ) ) {
-				$message .= sprintf(
-					/* translators: 1 is a file name, 2 is a tag name, 3 is a folder path (kind of), 4 is some code */
-					__( 'Your %1$s file is not writable. Please remove any previous %2$s tag and add the following lines inside the tags hierarchy %3$s (create it if does not exist): %4$s', 'secupress' ),
-					'<code>web.config</code>',
-					'<code>' . $iis_args['node_types'] . '</code>',
-					$path,
-					"<pre>{$spaces}{$rules}</pre>"
-				);
-			} else {
-				$message .= sprintf(
-					/* translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
-					__( 'Your %1$s file is not writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ),
-					'<code>web.config</code>',
-					$path,
-					"<pre>{$spaces}{$rules}</pre>"
-				);
-			}
-			add_settings_error( 'general', 'iis7_manual_edit', $message, 'error' );
-
-			secupress_deactivate_submodule_silently( $module, $submodule );
-			return false;
-		}
-
-		return true;
-	}
-
-	// Nginx.
-	if ( $is_nginx ) {
-		// We can't edit the file, so we'll tell the user how to do.
-		$message  = sprintf( __( '%s: ', 'secupress' ), $title );
-		$message .= sprintf(
-			/* translators: 1 is a file name, 2 is some code */
-			__( 'Your server uses a <i>Nginx</i> system, you have to edit the configuration file manually. Please add the following code into your %1$s file: %2$s', 'secupress' ),
-			'<code>nginx.conf</code>',
-			"<pre>$rules</pre>"
-		);
-		add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
-
-		secupress_deactivate_submodule_silently( $module, $submodule );
-		return false;
-	}
-
-	// Server not supported.
-	$message  = sprintf( __( '%s: ', 'secupress' ), $title );
-	$message .= __( 'It seems your server does not use <i>Apache</i>, <i>Nginx</i>, nor <i>IIS7</i>. This module won\'t work.', 'secupress' );
-	add_settings_error( 'general', 'unknown_os', $message, 'error' );
-
-	secupress_deactivate_submodule_silently( $module, $submodule );
 	return false;
 }

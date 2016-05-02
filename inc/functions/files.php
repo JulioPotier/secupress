@@ -49,7 +49,7 @@ function secupress_rrmdir( $dir, $dirs_to_preserve = array() ) {
 	 * @param (string) $dir              File/Directory to delete.
 	 * @param (array)  $dirs_to_preserve Directories that should not be deleted.
 	 */
-	do_action( 'before_secupress_rrmdir', $dir, $dirs_to_preserve );
+	do_action( 'secupress.before_rrmdir', $dir, $dirs_to_preserve );
 
 	if ( ! is_dir( $dir ) ) {
 		@unlink( $dir );
@@ -85,7 +85,7 @@ function secupress_rrmdir( $dir, $dirs_to_preserve = array() ) {
 	 * @param (string) $dir              File/Directory to delete.
 	 * @param (array)  $dirs_to_preserve Dirs that should not be deleted.
 	 */
-	do_action( 'after_secupress_rrmdir', $dir, $dirs_to_preserve );
+	do_action( 'secupress.after_rrmdir', $dir, $dirs_to_preserve );
 }
 
 
@@ -166,6 +166,29 @@ function secupress_root_file_is_writable( $file ) {
 	}
 
 	return wp_is_writable( $home_path . $file ) || ! file_exists( $home_path . $file ) && wp_is_writable( $home_path );
+}
+
+
+/**
+ * Try to find the correct `wp-config.php` file, support one level up in filetree.
+ *
+ * @since 1.0
+ *
+ * @return string|bool The path of `wp-config.php` file or false.
+ */
+function secupress_find_wpconfig_path() {
+	$config_file     = ABSPATH . 'wp-config.php';
+	$config_file_alt = dirname( ABSPATH ) . '/wp-config.php';
+
+	if ( file_exists( $config_file ) ) {
+		return $config_file;
+	}
+	if ( @file_exists( $config_file_alt ) && ! file_exists( dirname( ABSPATH ) . '/wp-settings.php' ) ) {
+		return $config_file_alt;
+	}
+
+	// No writable file found.
+	return false;
 }
 
 
@@ -335,29 +358,6 @@ function secupress_replace_content( $file, $old_content, $new_content ) {
 
 
 /**
- * Try to find the correct `wp-config.php` file, support one level up in filetree.
- *
- * @since 1.0
- *
- * @return string|bool The path of `wp-config.php` file or false.
- */
-function secupress_find_wpconfig_path() {
-	$config_file     = ABSPATH . 'wp-config.php';
-	$config_file_alt = dirname( ABSPATH ) . '/wp-config.php';
-
-	if ( file_exists( $config_file ) ) {
-		return $config_file;
-	}
-	if ( @file_exists( $config_file_alt ) && ! file_exists( dirname( ABSPATH ) . '/wp-settings.php' ) ) {
-		return $config_file_alt;
-	}
-
-	// No writable file found.
-	return false;
-}
-
-
-/**
  * From WP Core `async_upgrade()` but using `Automatic_Upgrader_Skin` instead of `Language_Pack_Upgrader_Skin` to have a silent upgrade.
  *
  * @since 1.0
@@ -380,15 +380,7 @@ function secupress_async_upgrades() {
 	foreach ( $language_updates as $key => $language_update ) {
 		$update = ! empty( $language_update->autoupdate );
 
-		/**
-		 * Filter whether to asynchronously update translation for core, a plugin, or a theme.
-		 *
-		 * @since 1.0
-		 * @since WP 4.0.0
-		 *
-		 * @param (bool)   $update          Whether to update.
-		 * @param (object) $language_update The update offer.
-		 */
+		/** This filter is documented in wp-admin/includes/class-wp-upgrader.php */
 		$update = apply_filters( 'async_update_translation', $update, $language_update );
 
 		if ( ! $update ) {
@@ -404,6 +396,21 @@ function secupress_async_upgrades() {
 
 	$lp_upgrader = new Language_Pack_Upgrader( $skin );
 	$lp_upgrader->bulk_upgrade( $language_updates );
+}
+
+
+/**
+ * Used in `array_filter()`: return true if the given path is not in the `wp-content` folder.
+ *
+ * @since 1.0
+ *
+ * @param (string) $item A file path.
+ *
+ * @return (bool)
+ */
+function secupress_filter_no_content( $item ) {
+	$item = str_replace( '\\', '/', $item );
+	return strpos( "/$item/", '/wp-content/' ) === false;
 }
 
 
@@ -437,119 +444,18 @@ function secupress_create_mu_plugin( $filename_part, $contents ) {
 
 
 /**
- * Insert content at the beginning of web.config file.
- * Can also be sused to remove content.
+ * Format a path with no heading slash and a trailing slash.
+ * If the path is empty, it returns an empty string, not a lonely slash.
+ * Example: foo/bar/
  *
  * @since 1.0
  *
- * @param (string) $marker An additional suffix string to add to the "SecuPress" marker.
- * @param (array)  $args   An array containing the following arguments:
- *                         (array|string) $nodes_string Content to insert in the file.
- *                         (array|string) $node_types   Node types: used to removed old nodes. Optional.
- *                         (string)       $path         Path where nodes should be created, relative to `/configuration/system.webServer`.
+ * @param (string) $slug A path.
  *
- * @return (bool) true on success.
+ * @return (string) The path with no heading slash and a trailing slash.
  */
-function secupress_insert_iis7_nodes( $marker, $args ) {
-	static $web_config_file;
-
-	$args = wp_parse_args( $args, array(
-		'nodes_string' => '',
-		'node_types'   => false,
-		'path'         => '',
-		'attribute'    => 'name',
-	) );
-
-	$nodes_string = $args['nodes_string'];
-	$node_types   = $args['node_types'];
-	$path         = $args['path'];
-	$attribute    = $args['attribute'];
-
-	if ( ! $marker || ! class_exists( 'DOMDocument' ) ) {
-		return false;
-	}
-
-	if ( ! isset( $web_config_file ) ) {
-		$web_config_file = secupress_get_home_path() . 'web.config';
-	}
-
-	// New content.
-	$marker       = strpos( $marker, 'SecuPress' ) === 0 ? $marker : 'SecuPress ' . $marker;
-	$nodes_string = is_array( $nodes_string ) ? implode( "\n", $nodes_string ) : $nodes_string;
-	$nodes_string = trim( $nodes_string, "\r\n\t " );
-
-	if ( ! secupress_root_file_is_writable( 'web.config' ) || ! $nodes_string ) {
-		return false;
-	}
-
-	// If configuration file does not exist then we create one.
-	if ( ! file_exists( $web_config_file ) ) {
-		$fp = fopen( $web_config_file, 'w' );
-		fwrite( $fp, '<configuration/>' );
-		fclose( $fp );
-	}
-
-	$doc = new DOMDocument();
-	$doc->preserveWhiteSpace = false;
-
-	if ( false === $doc->load( $web_config_file ) ) {
-		return false;
-	}
-
-	$path_end = ! $path && strpos( ltrim( $nodes_string ), '<rule ' ) === 0 ? '/rewrite/rules/rule' : '';
-	$path     = '/configuration/system.webServer' . ( $path ? '/' . trim( $path, '/' ) : '' ) . $path_end;
-
-	$xpath = new DOMXPath( $doc );
-
-	// Remove possible nodes not created by us.
-	if ( $node_types ) {
-		$node_types = (array) $node_types;
-
-		foreach ( $node_types as $node_type ) {
-			$old_nodes = $xpath->query( $path . '/' . $node_type );
-
-			if ( $old_nodes->length > 0 ) {
-				foreach ( $old_nodes as $old_node ) {
-					$old_node->parentNode->removeChild( $old_node );
-				}
-			}
-		}
-	}
-
-	// Remove old nodes created by us.
-	$old_nodes = $xpath->query( "$path/*[starts-with(@$attribute,'$marker')]" );
-
-	if ( $old_nodes->length > 0 ) {
-		foreach ( $old_nodes as $old_node ) {
-			$old_node->parentNode->removeChild( $old_node );
-		}
-	}
-
-	// No new nodes? Stop here.
-	if ( ! $nodes_string ) {
-		$doc->formatOutput = true;
-		saveDomDocument( $doc, $web_config_file );
-		return true;
-	}
-
-	// Indentation.
-	$spaces = explode( '/', trim( $path, '/' ) );
-	$spaces = count( $spaces ) - 1;
-	$spaces = str_repeat( ' ', $spaces * 2 );
-
-	// Create fragment.
-	$fragment = $doc->createDocumentFragment();
-	$fragment->appendXML( "\n$spaces  $nodes_string\n$spaces" );
-
-	// Maybe create child nodes and then, prepend new nodes.
-	__secupress_get_iis7_node( $doc, $xpath, $path, $fragment );
-
-	// Save and finish.
-	$doc->encoding     = 'UTF-8';
-	$doc->formatOutput = true;
-	saveDomDocument( $doc, $web_config_file );
-
-	return true;
+function secupress_trailingslash_only( $slug ) {
+	return ltrim( trim( $slug, '/' ) . '/', '/' );
 }
 
 
@@ -580,65 +486,6 @@ function secupress_get_home_path() {
 
 
 /**
- * Get a DOMNode node.
- * If it does not exist it is created recursively.
- *
- * @since 1.0
- *
- * @param (object) $doc   DOMDocument element.
- * @param (object) $xpath DOMXPath element.
- * @param (string) $path  Path to the desired node.
- * @param (object) $child DOMNode to be prepended.
- *
- * @return (object) The DOMNode node.
- */
-function __secupress_get_iis7_node( $doc, $xpath, $path, $child ) {
-	$nodelist = $xpath->query( $path );
-
-	if ( $nodelist->length > 0 ) {
-		return secupress_prepend_iis7_node( $nodelist->item( 0 ), $child );
-	}
-
-	$path = explode( '/', $path );
-	$node = array_pop( $path );
-	$path = implode( '/', $path );
-
-	$final_node = $doc->createElement( $node );
-
-	if ( $child ) {
-		$final_node->appendChild( $child );
-	}
-
-	return __secupress_get_iis7_node( $doc, $xpath, $path, $final_node );
-}
-
-
-/**
- * A shorthand to prepend a DOMNode node.
- *
- * @since 1.0
- *
- * @param (object) $container_node DOMNode that will contain the new node.
- * @param (object) $new_node       DOMNode to be prepended.
- *
- * @return (object) DOMNode containing the new node.
- */
-function secupress_prepend_iis7_node( $container_node, $new_node ) {
-	if ( ! $new_node ) {
-		return $container_node;
-	}
-
-	if ( $container_node->hasChildNodes() ) {
-		$container_node->insertBefore( $new_node, $container_node->firstChild );
-	} else {
-		$container_node->appendChild( $new_node );
-	}
-
-	return $container_node;
-}
-
-
-/**
  * Is WP a MultiSite and a subfolder install?
  *
  * @since 1.0
@@ -662,22 +509,6 @@ function secupress_is_subfolder_install() {
 	}
 
 	return $subfolder_install;
-}
-
-
-/**
- * Format a path with no heading slash and a trailing slash.
- * If the path is empty, it returns an empty string, not a lonely slash.
- * Example: foo/bar/
- *
- * @since 1.0
- *
- * @param (string) $slug A path.
- *
- * @return (string) The path with no heading slash and a trailing slash.
- */
-function secupress_trailingslash_only( $slug ) {
-	return ltrim( trim( $slug, '/' ) . '/', '/' );
 }
 
 

@@ -47,7 +47,15 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 			'api-key',
 			'settings-manager',
 		);
-		$setting_modules = apply_filters( 'secupress_global_settings_modules', $setting_modules );
+
+		/**
+		 * Filter the modules of the global settings.
+		 *
+		 * @since 1.0
+		 *
+		 * @param (array) $setting_modules The modules.
+		 */
+		$setting_modules = apply_filters( 'secupress.global_settings.modules', $setting_modules );
 		?>
 		<div class="wrap">
 			<?php secupress_admin_heading( __( 'Settings' ) ); ?>

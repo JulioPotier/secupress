@@ -1,24 +1,22 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
+add_action( 'wp_ajax_secupress_delete_scanned_files',    '__secupress_delete_scanned_files_ajax_post_cb' );
+add_action( 'admin_post_secupress_delete_scanned_files', '__secupress_delete_scanned_files_ajax_post_cb' );
 /**
  * Will handle the deletion for non core WordPress files
  *
- * @return void
  * @since 1.0
- **/
-add_action( 'wp_ajax_secupress_delete_scanned_files',    '__secupress_delete_scanned_files_ajax_post_cb' );
-add_action( 'admin_post_secupress_delete_scanned_files', '__secupress_delete_scanned_files_ajax_post_cb' );
-
+ */
 function __secupress_delete_scanned_files_ajax_post_cb() {
 	global $wp_version;
+
+	secupress_check_user_capability();
+	secupress_check_admin_referer( 'secupress_delete_scanned_files' );
 
 	if ( ! isset( $_POST['files'] ) ) {
 		secupress_admin_die();
 	}
-
-	secupress_check_user_capability();
-	secupress_check_admin_referer( 'secupress_delete_scanned_files' );
 
 	$diff_from_root_core  = array();
 	$full_filetree        = get_option( SECUPRESS_FULL_FILETREE );
@@ -28,19 +26,27 @@ function __secupress_delete_scanned_files_ajax_post_cb() {
 		$orig_self_filetree   = $full_filetree;
 		$wp_content_dir       = str_replace( realpath( ABSPATH ) . DIRECTORY_SEPARATOR, '/' , WP_CONTENT_DIR );
 		$wp_core_files_hashes = $wp_core_files_hashes[ $wp_version ]['checksums'];
-		$wp_core_files_hashes[ 'wp-config.php' ] = 'wp-config.php'; // add this since it's not in the zip but depends from WordPress
+		$wp_core_files_hashes['wp-config.php'] = 'wp-config.php'; // Add this since it's not in the zip but depends from WordPress.
 
 		if ( is_multisite() ) {
-			$wp_core_files_hashes[ $wp_content_dir . '/sunrise.php' ] = '/sunrise.php'; // add this since it's not in the zip but depends from WordPress MS
+			$wp_core_files_hashes[ $wp_content_dir . '/sunrise.php' ] = '/sunrise.php'; // Add this since it's not in the zip but depends from WordPress MS.
 		}
 
 		if ( defined( 'WP_CACHE' ) && WP_CACHE ) {
-			$wp_core_files_hashes[ $wp_content_dir . '/advanced-cache.php' ] = '/advanced-cache.php'; // add this since it's not in the zip but depends from WordPress Cache
+			$wp_core_files_hashes[ $wp_content_dir . '/advanced-cache.php' ] = '/advanced-cache.php'; // Add this since it's not in the zip but depends from WordPress Cache.
 		}
 
+		$wp_core_files_hashes = array_keys( $wp_core_files_hashes );
+		/**
+		 * Filter the list of WordPress core file paths.
+		 *
+		 * @since 1.0
+		 *
+		 * @param (array) $wp_core_files_hashes The list of WordPress core file paths.
+		 */
 		$wp_core_files_hashes = apply_filters( 'secupress.wp_core_files_hashes', $wp_core_files_hashes );
-		$full_filetree        = $full_filetree[ $wp_version ];
-		$diff_from_root_core  = array_flip( array_diff( $full_filetree, array_flip( $wp_core_files_hashes ) ) );
+		$diff_from_root_core  = array_diff( $full_filetree[ $wp_version ], $wp_core_files_hashes );
+		$diff_from_root_core  = array_flip( $diff_from_root_core );
 	}
 
 	if ( ! $diff_from_root_core ) {
@@ -61,15 +67,13 @@ function __secupress_delete_scanned_files_ajax_post_cb() {
 }
 
 
+add_action( 'wp_ajax_secupress_diff_file',    '__secupress_diff_file_ajax_post_cb' );
+add_action( 'admin_post_secupress_diff_file', '__secupress_diff_file_ajax_post_cb' );
 /**
  * Will display the differences between 2 files from WP Core, using WP core classes
  *
- * @return void
  * @since 1.0
- **/
-add_action( 'wp_ajax_secupress_diff_file',    '__secupress_diff_file_ajax_post_cb' );
-add_action( 'admin_post_secupress_diff_file', '__secupress_diff_file_ajax_post_cb' );
-
+ */
 function __secupress_diff_file_ajax_post_cb() {
 	global $wp_version;
 
@@ -83,9 +87,9 @@ function __secupress_diff_file_ajax_post_cb() {
 	secupress_check_admin_referer( 'secupress_diff_file-' . $file );
 
 	$content  = '';
-	$response = wp_remote_get( esc_url( "https://core.svn.wordpress.org/tags/$wp_version/$file")  );
+	$response = wp_remote_get( esc_url( "https://core.svn.wordpress.org/tags/$wp_version/$file" ) );
 
-	if ( ! is_wp_error( $response ) && 200 == wp_remote_retrieve_response_code( $response ) ) {
+	if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 		$text    = secupress_text_diff( wp_remote_retrieve_body( $response ), file_get_contents( ABSPATH . $file ), array( 'title' => $file ) );
 		$content = $text ? $text : $content;
 	}
@@ -98,17 +102,15 @@ function __secupress_diff_file_ajax_post_cb() {
 }
 
 
+add_action( 'wp_ajax_secupress_recover_diff_files',    '__secupress_recover_diff_files_ajax_post_cb' );
+add_action( 'admin_post_secupress_recover_diff_files', '__secupress_recover_diff_files_ajax_post_cb' );
 /**
  * Will download WP Core files that are different from the original
  *
- * @return void
  * @since 1.0
- **/
-add_action( 'wp_ajax_secupress_recover_diff_files',    '__secupress_recover_diff_files_ajax_post_cb' );
-add_action( 'admin_post_secupress_recover_diff_files', '__secupress_recover_diff_files_ajax_post_cb' );
-
-function __secupress_recover_diff_files_ajax_post_cb() { //// async
-	global $wp_version;
+ */
+function __secupress_recover_diff_files_ajax_post_cb() {
+	global $wp_version; // //// Async.
 
 	secupress_check_user_capability();
 	secupress_check_admin_referer( 'secupress_recover_diff_files' );
@@ -140,24 +142,21 @@ function __secupress_recover_diff_files_ajax_post_cb() { //// async
 }
 
 
+add_action( 'wp_ajax_secupress_recover_missing_files',    '__secupress_recover_missing_files_ajax_post_cb' );
+add_action( 'admin_post_secupress_recover_missing_files', '__secupress_recover_missing_files_ajax_post_cb' );
 /**
  * Will download missing files from WP Core
  *
- * @return void
  * @since 1.0
- **/
-add_action( 'wp_ajax_secupress_recover_missing_files',    '__secupress_recover_missing_files_ajax_post_cb' );
-add_action( 'admin_post_secupress_recover_missing_files', '__secupress_recover_missing_files_ajax_post_cb' );
-
-function __secupress_recover_missing_files_ajax_post_cb() { //// async
-	global $wp_version;
+ */
+function __secupress_recover_missing_files_ajax_post_cb() {
+	global $wp_version; // //// Async.
 
 	secupress_check_user_capability();
 	secupress_check_admin_referer( 'secupress_recover_missing_files' );
 
 	$full_filetree        = get_option( SECUPRESS_FULL_FILETREE, false );
 	$wp_core_files_hashes = get_option( SECUPRESS_WP_CORE_FILES_HASHES, false );
-
 
 	if ( ! $full_filetree || ! $wp_core_files_hashes || empty( $_POST['files'] ) ) {
 		secupress_admin_die();
@@ -186,15 +185,13 @@ function __secupress_recover_missing_files_ajax_post_cb() { //// async
 }
 
 
+add_action( 'wp_ajax_secupress_old_files',    '__secupress_old_files_ajax_post_cb' );
+add_action( 'admin_post_secupress_old_files', '__secupress_old_files_ajax_post_cb' );
 /**
  * Will delete old WP core files still present in this installation
  *
- * @return void
  * @since 1.0
- **/
-add_action( 'wp_ajax_secupress_old_files',    '__secupress_old_files_ajax_post_cb' );
-add_action( 'admin_post_secupress_old_files', '__secupress_old_files_ajax_post_cb' );
-
+ */
 function __secupress_old_files_ajax_post_cb() {
 	global $wp_version, $_old_files;
 
