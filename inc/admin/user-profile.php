@@ -13,7 +13,7 @@ add_filter( 'user_contactmethods', '__secupress_add_user_contactmethods', 0, 2 )
  * @return (array)
  */
 function __secupress_add_user_contactmethods( $methods, $user ) {
-	if ( (int) $user->ID === (int) $GLOBALS['current_user']->ID ) {
+	if ( isset( $user->ID ) && $user->ID === $GLOBALS['current_user']->ID ) {
 		$methods['backup_email'] = __( '<span id="secupress_backup_email">Backup E-mail</span><p class="description">For security reasons, you may need to retrieve some private informations on an alternate email address.</p>', 'secupress' );
 	}
 	return $methods;
