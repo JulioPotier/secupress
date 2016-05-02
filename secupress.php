@@ -208,9 +208,9 @@ function secupress_load_plugins() {
 	if ( $modules ) {
 		foreach ( $modules as $module => $plugins ) {
 			foreach ( $plugins as $plugin ) {
-				$file = SECUPRESS_MODULES_PATH . sanitize_key( $module ) . '/plugins/' . sanitize_key( $plugin ) . '.php';
-				if ( file_exists( $file ) ) {
-					require_once( $file );
+				$file_path = secupress_get_submodule_file_path( $module, $plugin );
+				if ( $file_path ) {
+					require_once( $file_path );
 				}
 			}
 		}
