@@ -469,6 +469,27 @@ function __secupress_scanners() {
 
 				</div><!-- .secupress-tabs-contents -->
 
+				<div class="secupress-caroupoivre hidden">
+					<div id="slide1" class="hidden">
+						<h3><?php _e( 'Sécurisez votre site WordPress simplement', 'secupress' ); ?></h3>
+						<p><?php _e( 'En un écran, visualisez les points de sécurité Bons ou Mauvais et utilisez le bouton <strong>One Click Fix</strong> pour les corriger rapidement.', 'secupress' ); ?></p>
+					</div>
+					<div id="slide2" class="hidden">
+						<h3><?php _e( 'Une gamme de modules à votre service', 'secupress' ); ?></h3>
+						<p><?php _e( 'Allez plus loin dans la sécurisation de votre site avec nos modules et activez les fonctionnalités complémentaires.', 'secupress' ); ?></p>
+					</div>
+					<?php if ( ! secupress_is_pro() ) { // Trad fr + wording ////. ?>
+					<div id="slide3" class="hidden">
+						<h3><?php _e( 'Passez à la version pro', 'secupress' ); ?></h3>
+						<p><?php _e( 'Support premium, accès à tous les modules, lorem ipsum.', 'secupress' ); ?></p>
+					</div>
+					<?php } else { ?>
+						<div id="slide3" class="hidden"><h3><?php _e( 'Programmez vos analyses de sécurité', 'secupress' ); ?></h3><p><?php _e( 'L\'analyse des points reste à jour, sans vous connectez au back office avec le scan automatique.', 'secupress' ); ?></p></div>
+					<?php } ?>
+				</div>
+
+				<div class="secupress-progressbar hidden" style="width:500px;padding:2px;border:1px solid;"><div style="background:#2BCDC1;display:inline-block;width:0px">&nbsp;</div><span style="position:absolute;left:8px;">0 %</span></div>
+
 				<ul id="secupress-type-filters" class="secupress-big-tabs secupress-tabs secupress-flex secupress-text-start hide-if-no-js" role="tabpanel">
 				<?php
 					$tabs = array(
@@ -492,7 +513,6 @@ function __secupress_scanners() {
 					}
 				?>
 				</ul>
-
 			</div><!-- .secupress-section-dark -->
 
 			<div class="secupress-section-gray secupress-bordered-lat">

@@ -35,13 +35,6 @@ function secupress_admin_bar( $wp_admin_bar ) {
 		),
 	) );
 
-	// Placeholder to display the plugin name. ////.
-	$wp_admin_bar->add_menu( array(
-		'parent' => 'secupress',
-		'id' 	 => 'secupress-dashboard',
-		'title'  => SECUPRESS_PLUGIN_NAME,
-	) );
-
 	// Scanners.
 	$wp_admin_bar->add_menu( array(
 		'parent' => 'secupress',
