@@ -59,9 +59,11 @@ function secupress_backup_get_protection_content() {
 		// Apache.
 		$file_content = "Order allow,deny\nDeny from all";
 	} elseif ( $is_iis7 ) {
-		// IIS7.
-		// - https://www.iis.net/configreference/system.webserver/security/authorization
-		// - https://technet.microsoft.com/en-us/library/cc772441%28v=ws.10%29.aspx
+		/*
+		 * IIS7.
+		 * https://www.iis.net/configreference/system.webserver/security/authorization
+		 * https://technet.microsoft.com/en-us/library/cc772441%28v=ws.10%29.aspx
+		 */
 		$file_content = '<?xml version="1.0" encoding="utf-8" ?>
 <configuration>
   <system.webServer>
