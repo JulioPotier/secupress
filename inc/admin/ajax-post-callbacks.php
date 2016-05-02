@@ -362,7 +362,7 @@ function __secupress_admin_post_reset_settings() {
 
 add_filter( 'http_request_args', '__secupress_add_own_ua', 10, 3 );
 /**
- * Force our user agent header when we hit our urls //// X-Secupress header.
+ * Force our user agent header when we hit our urls
  *
  * @since 1.0
  *
@@ -372,8 +372,8 @@ add_filter( 'http_request_args', '__secupress_add_own_ua', 10, 3 );
  * @return (array)
  */
 function __secupress_add_own_ua( $r, $url ) {
-	if ( false !== strpos( $url, 'secupress.fr' ) ) {
-		$r['user-agent'] = secupress_user_agent( $r['user-agent'] );
+	if ( false !== strpos( $url, 'secupress.me' ) ) {
+		$r['headers']['x-secupress'] = secupress_user_agent( $r['user-agent'] );
 	}
 
 	return $r;
