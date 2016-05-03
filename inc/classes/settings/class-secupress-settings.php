@@ -1209,6 +1209,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		<?php
 	}
 
+
 	/**
 	 * Displays the old backups
 	 *

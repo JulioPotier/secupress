@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 		<?php
 		$modules = $this->get_modules();
 		foreach ( $modules as $slug => $mod ) {
-		?>
+			?>
 			<div class="secupress-module-box secupress-flex-col secupress-module-box-<?php echo sanitize_key( $slug ); ?>">
 				<p class="secupress-mb-title"><?php echo $mod['title'] ?></p>
 				<p class="secupress-mb-description"><?php echo $mod['summaries']['normal']; ?></p>
@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 				</p>
 				<i class="dashicons dashicons-<?php echo $mod['dashicon']; ?>" aria-hidden="true"></i>
 			</div>
-		<?php
+			<?php
 		} // End foreach $modules.
 		?>
 	</div>
