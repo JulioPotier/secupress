@@ -55,7 +55,6 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 		}
 	}
 
-
 	/**
 	 * Get messages.
 	 *
@@ -132,13 +131,18 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 		}
 
 		// Bots.
+		$token      = wp_generate_password();
+		set_transient( 'secupress_scan_subscription_token', $token );
 		$user_login = 'secupress_' . time();
 		$response   = wp_remote_post( wp_registration_url(), array(
 			'body' => array(
-				'user_login' => $user_login,
-				'user_email' => 'secupress_no_mail_SS@fakemail.' . time(),
+				'user_login'      => $user_login,
+				'user_email'      => 'secupress_no_mail_SS@fakemail.' . time(),
+				'secupress_token' => $token,
 			),
 		) );
+
+		delete_transient( 'secupress_scan_subscription_token' );
 
 		if ( ! is_wp_error( $response ) ) {
 
