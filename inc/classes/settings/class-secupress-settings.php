@@ -322,14 +322,18 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	protected function do_sections() {
 
 		$section_id = $this->get_section_id();
+		$html_id 	= explode( '|', $section_id );
+		$html_id	= sanitize_html_class( implode( '--', $html_id ) );
 
+		echo '<div class="secupress-settings-section" id="secupress-settings-' . $html_id . '">';
 		echo '<div class="secublock">';
 			$this->do_settings_sections();
-		echo '</div>';
+		echo '</div><!-- .secublock -->';
+		
 
 		$with_save_button = ! empty( $this->section_save_buttons[ $section_id ] );
 		if ( $with_save_button ) {
-			static::submit_button( 'primary small', $this->sectionnow . '_submit' );
+			static::submit_button( 'secupress-button-primary', $this->sectionnow . '_submit' );
 		}
 
 		/**
@@ -340,6 +344,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		 * @param (bool) $with_save_button True if a "Save All Changes" button will be printed.
 		 */
 		do_action( 'secupress.settings.after_section_' . $this->sectionnow, $with_save_button );
+
+		echo '</div><!-- #secupress-settings-' . $html_id . ' -->';
 
 		return $this;
 	}
@@ -360,23 +366,32 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		}
 
 		foreach ( (array) $wp_settings_sections[ $section_id ] as $section ) {
+			
+			$header_open_tag = false;
+
 			if ( $section['title'] ) {
+				echo '<div class="secupress-settings-section-header">';
+				$header_open_tag = true;
 				$id = explode( '|', $section['id'] );
 				$id = end( $id );
-				echo '<h3 id="module-' . sanitize_html_class( $id ) . '">' . $section['title'] . '</h3>' . "\n";
+				echo '<h3 class="secupress-settings-section-title" id="module-' . sanitize_html_class( $id ) . '">' . $section['title'] . '</h3>' . "\n";
 			}
 
 			if ( $section['callback'] ) {
+				echo ( $header_open_tag ? '' : '<div class="secupress-settings-section-header">' );
+				$header_open_tag = true;
 				call_user_func( $section['callback'], $section );
 			}
+
+			echo ( $header_open_tag ? '</div><!-- .secupress-settings-section-header -->' : '' );
 
 			if ( ! isset( $wp_settings_fields ) || ! isset( $wp_settings_fields[ $section_id ] ) || ! isset( $wp_settings_fields[ $section_id ][ $section['id'] ] ) ) {
 				continue;
 			}
 
-			echo '<table class="form-table">';
+			echo '<div class="secupress-form-table">';
 				static::do_settings_fields( $section_id, $section['id'] );
-			echo '</table>';
+			echo '</div>';
 		}
 	}
 
@@ -401,7 +416,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 *                - (string) $label             A label to display on top of the field. Also used as field label for the 'checkbox' type.
 	 *                - (string) $label_before      A label to display before the field.
 	 *                - (string) $label_after       A label to display after the field.
-	 *                - (bool)   $disabled          True to disable the field. Pro fields are autotically disabled on the free version.
+	 *                - (bool)   $disabled          True to disable the field. Pro fields are automatically disabled on the free version.
 	 *                - (array)  $attributes        An array of html attributes to add to the field (like min and max for a 'number' type).
 	 *                - (array)  $helpers           An array containing the helpers. See `self::helpers()`.
 	 */
@@ -451,6 +466,14 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		// HTML attributes.
 		$attributes = '';
 		$args['attributes']['class'] = ! empty( $args['attributes']['class'] ) ? (array) $args['attributes']['class'] : array();
+
+		if ( 'radioboxes' === $args['type'] || 'checkboxes' === $args['type'] || 'checkbox' === $args['type'] || 'roles' === $args['type'] ) {
+			$args['attributes']['class'][] = 'secupress-checkbox';
+		}
+
+		if ( 'radios' === $args['type'] ) {
+			$args['attributes']['class'][] = 'secupress-radio';
+		}
 
 		if ( 'number' === $args['type'] ) {
 			$args['attributes']['class'][] = 'small-text';
@@ -588,18 +611,22 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					?>
 				<?php
 				echo $label_close;
+
 				echo $has_disabled ? static::get_pro_version_string( '<span class="description">(*) %s</span>' ) : '';
+
 				break;
 
 			case 'checkbox' :
 
+				echo '<p class="secupress-checkbox-line">';
 				echo $label_open; ?>
 					<?php
 					echo $args['label_before'];
-					echo '<input type="checkbox" id="' . $args['label_for'] . '" name="' . $name_attribute . '" value="1"' . checked( $value, 1, false ) . $attributes . '/>';
-					echo $args['label'];
+					echo '<input type="checkbox" id="' . $args['label_for'] . '" name="' . $name_attribute . '" value="1"' . checked( $value, 1, false ) . $attributes . ' class="secupress-checkbox" />';
+					echo '<span class="label-text">' . $args['label'] . '</span>';
 					?>
 				<?php echo $label_close;
+				echo '</p>';
 				break;
 
 			case 'checkboxes' :
@@ -611,12 +638,13 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					$args['label_for'] = $args['name'] . '_' . $val;
 					$disabled          = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' disabled="disabled"' : '';
 					?>
-					<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
-						<input type="checkbox" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>[]" value="<?php echo $val; ?>"<?php checked( isset( $value[ $val ] ) ); ?><?php echo $disabled; ?><?php echo $attributes; ?>>
-						<?php echo $title; ?>
-					</label>
-					<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? static::get_pro_version_string( '<span class="description">%s</span>' ) : ''; ?>
-					<br/>
+					<p class="secupress-fieldset-item secupress-fieldset-item-<?php echo $args['type']; ?>">
+						<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
+							<input type="checkbox" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>[]" value="<?php echo $val; ?>"<?php checked( isset( $value[ $val ] ) ); ?><?php echo $disabled; ?><?php echo $attributes; ?>>
+							<?php echo '<span class="label-text">' . $title . '</span>'; ?>
+						</label>
+					<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? static::get_pro_version_string( '<span class="description secupress-get-pro-version">%s</span>' ) : ''; ?>
+					</p>
 					<?php
 				}
 				break;
@@ -627,12 +655,13 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					$args['label_for'] = $args['name'] . '_' . $val;
 					$disabled          = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' disabled="disabled"' : '';
 					?>
-					<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
-						<input type="radio" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>" value="<?php echo $val; ?>"<?php checked( $value, $val ); ?><?php echo $disabled; ?><?php echo $attributes; ?>>
-						<?php echo $title; ?>
-					</label>
-					<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? static::get_pro_version_string( '<span class="description">%s</span>' ) : ''; ?>
-					<br/>
+					<p class="secupress-radio-line">
+						<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
+							<input type="radio" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>" value="<?php echo $val; ?>"<?php checked( $value, $val ); ?><?php echo $disabled; ?><?php echo $attributes; ?>>
+							<?php echo '<span class="label-text">' . $title . '</span>'; ?>
+						</label>
+						<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? static::get_pro_version_string( '<span class="description secupress-get-pro-version">%s</span>' ) : ''; ?>
+					</p>
 					<?php
 				}
 				break;
@@ -646,11 +675,12 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 				foreach ( $roles as $val => $title ) {
 					?>
-					<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
-						<input type="checkbox" name="<?php echo $name_attribute; ?>[]" value="<?php echo $val; ?>"<?php checked( ! isset( $value[ $val ] ) ); ?><?php echo $attributes; ?>>
-						<?php echo $title; ?>
-					</label>
-					<br/>
+					<p class="secupress-checkbox-roles-line">
+						<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
+							<input type="checkbox" name="<?php echo $name_attribute; ?>[]" value="<?php echo $val; ?>"<?php checked( ! isset( $value[ $val ] ) ); ?><?php echo $attributes; ?>>
+							<?php echo '<span class="label-text">' . $title . '</span>'; ?>
+						</label>
+					</p>
 					<?php
 				}
 				break;
@@ -1365,8 +1395,9 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		}
 
 		foreach ( (array) $wp_settings_fields[ $page ][ $section ] as $field ) {
-			$id    = '';
-			$class = '';
+			$is_pro = static::is_pro_feature( $field['args']['name'] );
+			$class  = 'secupress-setting-row ' . ( $is_pro ? 'secupress-pro-row ' : '');
+			$id     = '';
 
 			// Row ID.
 			if ( ! empty( $field['args']['row_id'] ) ) {
@@ -1375,7 +1406,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 			// Row class.
 			if ( ! empty( $field['args']['row_class'] ) ) {
-				$class = $field['args']['row_class'];
+				$class .= $field['args']['row_class'];
 			}
 
 			if ( ! empty( $field['args']['depends'] ) ) {
@@ -1389,39 +1420,39 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 			unset( $field['args']['row_id'], $field['args']['row_class'], $field['args']['depends'] );
 			?>
-			<tr<?php echo $id . $class; ?>>
-
-				<th scope="row">
+			<div<?php echo $id . $class; ?>>
+				<div class="secupress-flex">
+					<div class="secupress-setting-content-col">
 					<?php
-					// Row title.
-					if ( $field['title'] ) {
-						$id = explode( '|', $field['id'] );
-						$id = end( $id );
-						if ( ! empty( $field['args']['label_for'] ) ) {
-							echo '<h4 id="row-' . sanitize_html_class( $id ) . '" class="screen-reader-text">' . $field['title'] . '</h4>';
-							echo '<label for="' . esc_attr( $field['args']['label_for'] ) . '">' . $field['title'] . '</label>';
-						} else {
-							echo '<h4 id="row-' . sanitize_html_class( $id ) . '">' . $field['title'] . '</h4>';
+						// Row title.
+						if ( $field['title'] ) {
+							$id = explode( '|', $field['id'] );
+							$id = end( $id );
+							if ( ! empty( $field['args']['label_for'] ) ) {
+								echo '<h4 id="row-' . sanitize_html_class( $id ) . '" class="screen-reader-text">' . $field['title'] . '</h4>';
+								echo '<label for="' . esc_attr( $field['args']['label_for'] ) . '" class="secupress-setting-row-title">' . $field['title'] . '</label>';
+							} else {
+								echo '<h4 id="row-' . sanitize_html_class( $id ) . '" class="secupress-setting-row-title">' . $field['title'] . '</h4>';
+							}
 						}
-					}
-					// Row description.
-					if ( static::is_pro_feature( $field['args']['name'] ) ) {
-						// If it's a pro feature, add a warning.
-						$format = $field['args']['description'] ? '<br>%s' : '';
-						$field['args']['description'] .= static::get_pro_version_string( $format );
-					}
-					if ( $field['args']['description'] ) {
-						echo '<p class="description">' . $field['args']['description'] . '</p>';
-					}
-					unset( $field['args']['description'] );
+
+						if ( $field['args']['description'] ) {
+							echo '<p class="description">' . $field['args']['description'] . '</p>';
+						}
+						unset( $field['args']['description'] );
+						
+						call_user_func( $field['callback'], $field['args'] );
 					?>
-				</th>
-
-				<td>
-					<?php call_user_func( $field['callback'], $field['args'] ); ?>
-				</td>
-
-			</tr>
+					</div>
+					<div class="secupress-get-pro-col">
+					<?php
+						if ( $is_pro ) {
+							echo '<p class="secupress-get-pro">' . static::get_pro_version_string() . '</p>';
+						}
+					?>
+					</div><!-- .secupress-get-pro-col -->
+				</div><!-- .secupress-flex -->
+			</div>
 			<?php
 		}
 	}
@@ -1452,9 +1483,9 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		$key = $this->modulenow . '|' . $this->sectionnow;
 
 		if ( ! empty( $this->section_descriptions[ $key ] ) ) {
-			echo '<div class="secupress-section-description"><em>';
+			echo '<div class="secupress-settings-section-description">';
 				echo $this->section_descriptions[ $key ];
-			echo '</em></div>';
+			echo '</div>';
 		}
 
 		return $this;
@@ -1474,7 +1505,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 *
 	 * @return (string) Submit button HTML.
 	 */
-	protected static function submit_button( $type = 'primary large', $name = 'main_submit', $wrap = true, $other_attributes = null, $echo = true ) {
+	protected static function submit_button( $type = 'secupress-button-primary secupress-button-large', $name = 'main_submit', $wrap = true, $other_attributes = null, $echo = true ) {
 		if ( true === $wrap ) {
 			$wrap = '<p class="submit">';
 		} elseif ( $wrap ) {

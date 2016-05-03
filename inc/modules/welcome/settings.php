@@ -2,8 +2,32 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 ?>
 
-	<h2><?php esc_html_e( 'Welcome in your modules dashboard.', 'secupress' ); ?></h2>
-	<p><b><?php printf( __( 'We actually propose you %d security modules.', 'secupress' ), count( $this->get_modules() ) ); ?></b></p>
-	<p><?php _e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fermentum, mi eu rhoncus mattis, nisi mi tincidunt massa, sed iaculis dolor leo sed quam. Proin sed tempor sem. Donec et rhoncus sapien. Vestibulum aliquet aliquet porttitor. Nullam nec tortor aliquam felis egestas lobortis. Donec ullamcorper magna eget nisl venenatis finibus. Donec scelerisque faucibus bibendum. Vestibulum tempus tellus ac iaculis condimentum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nulla vulputate tincidunt auctor. Ut sed pharetra turpis. Donec in sodales sem, sed tempor libero. Sed sed viverra ligula. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce vitae eleifend mauris.', 'secupress' ); ?></p>
-	<p><?php _e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fermentum, mi eu rhoncus mattis, nisi mi tincidunt massa, sed iaculis dolor leo sed quam. Proin sed tempor sem. Donec et rhoncus sapien. Vestibulum aliquet aliquet porttitor. Nullam nec tortor aliquam felis egestas lobortis. Donec ullamcorper magna eget nisl venenatis finibus. Donec scelerisque faucibus bibendum. Vestibulum tempus tellus ac iaculis condimentum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nulla vulputate tincidunt auctor. Ut sed pharetra turpis. Donec in sodales sem, sed tempor libero. Sed sed viverra ligula. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce vitae eleifend mauris.', 'secupress' ); ?></p>
-	<p><i>—<?php _e( 'The SecuPress Team', 'secupress' ); ?>.</i></p>
+	<div class="secupress-section-dark secupress-dashboard-header secupress-flex">
+		<div class="secupress-col-1-3 secupress-text-center">
+			<i class="icon-secupress" aria-hidden="true"></i>
+		</div>
+		<div class="secupress-col-2-3">
+			<p class="secupress-text-medium"><?php esc_html_e( 'Securize your website deeper thanks to our modules', 'secupress' ); ?></p>
+			<p><?php esc_html_e( 'Anti-Malware, Firewall, or Anti-Spam: add features, schedule scans and  save your datas.', 'secupress' ); ?></p>
+		</div>
+	</div>
+	
+	<div class="secupress-modules-dashboard secupress-bordered secupress-flex secupress-wrap">
+		<?php
+			$modules = $this->get_modules();
+			foreach ( $modules as $slug => $mod ) {
+		?>
+			<div class="secupress-module-box secupress-flex-col secupress-module-box-<?php echo sanitize_key( $slug ); ?>">
+				<p class="secupress-mb-title"><?php echo $mod['title'] ?></p>
+				<p class="secupress-mb-description"><?php echo $mod['summaries']['normal']; ?></p>
+				<p class="secupress-mb-action">
+					<a href="<?php echo esc_url( secupress_admin_url( 'modules', $slug ) ); ?>" class="secupress-button-primary">
+						<?php esc_html_e( 'View options', 'secupress' ); ?>
+					</a>
+				</p>
+				<i class="dashicons dashicons-<?php echo $mod['dashicon']; ?>" aria-hidden="true"></i>
+			</div>
+		<?php
+			} // end foreach $modules
+		?>
+	</div>
