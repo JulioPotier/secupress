@@ -4,14 +4,13 @@ var SecuPress = {
 	deletedRowColor:     "#FF9966",
 	addedRowColor:       "#CCEEBB",
 	confirmSwalDefaults: {
-		title:               window.l10nmodules.confirmTitle,
-		cancelButtonText:    window.l10nmodules.confirmCancel,
-		type:                "warning",
-		showCancelButton:    true,
-		confirmButtonColor:  "#DD6B55",
-		showLoaderOnConfirm: true,
-		closeOnConfirm:      false,
-		allowOutsideClick:   true
+		title:             window.l10nmodules.confirmTitle,
+		confirmButtonText: window.l10nmodules.confirmText,
+		cancelButtonText:  window.l10nmodules.cancelText,
+		type:              "warning",
+		showCancelButton:  true,
+		closeOnConfirm:    false,
+		allowOutsideClick: true
 	}
 };
 
@@ -196,8 +195,8 @@ function secupressDisplayAjaxError( $button, text, ajaxID ) {
 
 	swal( {
 		title:             window.l10nmodules.error,
-		text:              text,
-		html:              true,
+		confirmButtonText: window.l10nmodules.confirmText,
+		html:              text,
 		type:              "error",
 		allowOutsideClick: true
 	} );
@@ -222,11 +221,11 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 
 	swal( {
 		title:             window.l10nmodules.done,
-		text:              text,
-		html:              true,
+		confirmButtonText: window.l10nmodules.confirmText,
+		html:              text,
 		type:              "success",
-		timer:             4000,
-		allowOutsideClick: true
+		allowOutsideClick: true,
+		timer:             4000
 	} );
 
 	ajaxID = undefined !== ajaxID ? ajaxID : "global";
@@ -518,15 +517,16 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		}
 
 		if ( "function" === typeof w.swal ) {
-			swal(
-				$.extend( {}, SecuPress.confirmSwalDefaults, {
-					text:              w.l10nmodules.confirmDeleteBackups,
-					confirmButtonText: w.l10nmodules.yesDeleteAll,
-				} ),
-				function () {
+			swal( $.extend( {}, SecuPress.confirmSwalDefaults, {
+				text:              w.l10nmodules.confirmDeleteBackups,
+				confirmButtonText: w.l10nmodules.yesDeleteAll,
+				type:              "question"
+			} ) ).then( function ( isConfirm ) {
+				if ( isConfirm ) {
+					swal.enableLoading();
 					secupressDeleteAllBackups( $this, href );
 				}
-			);
+			} );
 		} else if ( w.confirm( w.l10nmodules.confirmTitle + "\n" + w.l10nmodules.confirmDeleteBackups ) ) {
 			secupressDeleteAllBackups( $this, href );
 		}
@@ -544,15 +544,16 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		}
 
 		if ( "function" === typeof w.swal ) {
-			swal(
-				$.extend( {}, SecuPress.confirmSwalDefaults, {
-					text:              w.l10nmodules.confirmDeleteBackup,
-					confirmButtonText: w.l10nmodules.yesDeleteOne
-				} ),
-				function () {
+			swal( $.extend( {}, SecuPress.confirmSwalDefaults, {
+				text:              w.l10nmodules.confirmDeleteBackup,
+				confirmButtonText: w.l10nmodules.yesDeleteOne,
+				type:              "question"
+			} ) ).then( function ( isConfirm ) {
+				if ( isConfirm ) {
+					swal.enableLoading();
 					secupressDeleteOneBackup( $this, href );
 				}
-			);
+			} );
 		} else if ( w.confirm( w.l10nmodules.confirmTitle + "\n" + w.l10nmodules.confirmDeleteBackup ) ) {
 			secupressDeleteOneBackup( $this, href );
 		}
@@ -684,18 +685,17 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 
 	// Swal that displays the form to ban an IP address.
 	function secupressBanIPswal( $button, href ) {
-		swal(
-			$.extend( {}, SecuPress.confirmSwalDefaults, {
-				title:             $banForm.find( '[for="secupress-ban-ip"]' ).text(),
-				confirmButtonText: $button.data( "original-i18n" ),
-				text:              $banForm.get( 0 ).outerHTML,
-				html:              true,
-				type:              "info"
-			} ),
-			function () {
+		swal( $.extend( {}, SecuPress.confirmSwalDefaults, {
+			title:             $banForm.find( '[for="secupress-ban-ip"]' ).text(),
+			confirmButtonText: $button.data( "original-i18n" ),
+			html:              $banForm,
+			type:              "info"
+		} ) ).then( function ( isConfirm ) {
+			if ( isConfirm ) {
+				swal.enableLoading();
 				secupressBanIP( $button, href );
 			}
-		);
+		} );
 	}
 
 	// Perform an ajax call to ban an IP address.

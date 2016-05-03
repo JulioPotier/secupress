@@ -199,3 +199,28 @@ function secupress_is_submodule_active( $module, $submodule ) {
 
 	return false;
 }
+
+
+/**
+ * Get a sub-module file path.
+ *
+ * @since 1.0
+ *
+ * @param (string) $module    The module.
+ * @param (string) $submodule The sub-module.
+ *
+ * @return (string|bool) The file path on success. False on failure.
+ */
+function secupress_get_submodule_file_path( $module, $submodule ) {
+	$file_path = sanitize_key( $module ) . '/plugins/' . sanitize_key( $submodule ) . '.php';
+
+	if ( defined( 'SECUPRESS_PRO_MODULES_PATH' ) && file_exists( SECUPRESS_PRO_MODULES_PATH . $file_path ) ) {
+		return SECUPRESS_PRO_MODULES_PATH . $file_path;
+	}
+
+	if ( file_exists( SECUPRESS_MODULES_PATH . $file_path ) ) {
+		return SECUPRESS_MODULES_PATH . $file_path;
+	}
+
+	return false;
+}

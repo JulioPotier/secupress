@@ -49,10 +49,10 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	elseif ( SECUPRESS_PLUGIN_SLUG . '_page_secupress_modules' === $hook_suffix ) {
 		// CSS.
 		wp_enqueue_style( 'secupress-modules-css',  SECUPRESS_ADMIN_CSS_URL . 'secupress-modules' . $suffix . '.css', array( 'secupress-common-css' ), $version );
-		wp_enqueue_style( 'wpmedia-css-sweetalert', SECUPRESS_ADMIN_CSS_URL . 'sweetalert' . $suffix . '.css', array(), '1.1.0' );
+		wp_enqueue_style( 'wpmedia-css-sweetalert', SECUPRESS_ADMIN_CSS_URL . 'sweetalert2' . $suffix . '.css', array(), '1.3.4' );
 
 		// JS.
-		wp_enqueue_script( 'wpmedia-js-sweetalert', SECUPRESS_ADMIN_JS_URL . 'sweetalert' . $suffix . '.js', array(), '1.1.0', true );
+		wp_enqueue_script( 'wpmedia-js-sweetalert', SECUPRESS_ADMIN_JS_URL . 'sweetalert2' . $suffix . '.js', array(), '1.3.4', true );
 		wp_enqueue_script( 'secupress-modules-js',  SECUPRESS_ADMIN_JS_URL . 'secupress-modules' . $suffix . '.js', array( 'wpmedia-js-sweetalert' ), $version, true );
 
 		wp_localize_script( 'secupress-modules-js', 'l10nmodules', array(
@@ -60,7 +60,8 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'selectOneRoleMinimum' => __( 'Select 1 role minimum', 'secupress' ),
 			// Generic.
 			'confirmTitle'         => __( 'Are you sure?', 'secupress' ),
-			'confirmCancel'        => _x( 'No, cancel', 'verb', 'secupress' ),
+			'confirmText'          => __( 'OK', 'secupress' ),
+			'cancelText'           => __( 'Cancel' ),
 			'error'                => __( 'Error', 'secupress' ),
 			'unknownError'         => __( 'Unknown error.', 'secupress' ),
 			'delete'               => __( 'Delete', 'secupress' ),
@@ -94,7 +95,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	elseif ( 'toplevel_page_secupress_scanners' === $hook_suffix ) {
 		// CSS.
 		wp_enqueue_style( 'secupress-scanner-css',  SECUPRESS_ADMIN_CSS_URL . 'secupress-scanner' . $suffix . '.css', array( 'secupress-common-css' ), $version );
-		wp_enqueue_style( 'wpmedia-css-sweetalert', SECUPRESS_ADMIN_CSS_URL . 'sweetalert' . $suffix . '.css', array(), '1.1.0' );
+		wp_enqueue_style( 'wpmedia-css-sweetalert', SECUPRESS_ADMIN_CSS_URL . 'sweetalert2' . $suffix . '.css', array(), '1.3.4' );
 
 		// JS.
 		$depts = array();
@@ -113,14 +114,16 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		}
 
 		wp_enqueue_script( 'secupress-scanner-js',  SECUPRESS_ADMIN_JS_URL . 'secupress-scanner' . $suffix . '.js', $depts, $version, true );
-		wp_enqueue_script( 'wpmedia-js-sweetalert', SECUPRESS_ADMIN_JS_URL . 'sweetalert' . $suffix . '.js', array(), '1.1.0', true );
+		wp_enqueue_script( 'wpmedia-js-sweetalert', SECUPRESS_ADMIN_JS_URL . 'sweetalert2' . $suffix . '.js', array(), '1.3.4', true );
 
 		$localize = array(
+			'confirmText'     => __( 'OK', 'secupress' ),
+			'cancelText'      => __( 'Cancel' ),
+			'error'           => __( 'Error', 'secupress' ),
 			'fixed'           => __( 'Fixed', 'secupress' ),
 			'fixedPartial'    => __( 'Partially fixed', 'secupress' ),
 			'notFixed'        => __( 'Not Fixed', 'secupress' ),
 			'fixit'           => __( 'Fix it!', 'secupress' ),
-			'error'           => __( 'Error', 'secupress' ),
 			'oneManualFix'    => __( 'One fix requires your intervention.', 'secupress' ),
 			'someManualFixes' => __( 'Some fixes require your intervention.', 'secupress' ),
 			'spinnerUrl'      => admin_url( 'images/wpspin_light-2x.gif' ),
@@ -224,11 +227,22 @@ function __secupress_global_settings() {
 	if ( ! class_exists( 'SecuPress_Settings' ) ) {
 		secupress_require_class( 'settings' );
 	}
-	if ( ! class_exists( 'SecuPress_Settings_Global' ) ) {
+
+	$class_name = 'SecuPress_Settings_Global';
+
+	if ( ! class_exists( $class_name ) ) {
 		secupress_require_class( 'settings', 'global' );
 	}
 
-	SecuPress_Settings_Global::get_instance()->print_page();
+	if ( function_exists( 'secupress_pro_class_path' ) ) {
+		$class_name = 'SecuPress_Pro_Settings_Global';
+
+		if ( ! class_exists( $class_name ) ) {
+			secupress_pro_require_class( 'settings', 'global' );
+		}
+	}
+
+	$class_name::get_instance()->print_page();
 }
 
 

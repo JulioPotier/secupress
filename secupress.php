@@ -40,7 +40,7 @@ define( 'SECUPRESS_WEB_DEMO'              , home_url( '/' ) ); // ////.
 define( 'SECUPRESS_BOT_URL'               , 'http://bot.secupress.me' );
 define( 'SECUPRESS_WEB_VALID'             , 'http://support.secupress.me/' );
 define( 'SECUPRESS_FILE'                  , __FILE__ );
-define( 'SECUPRESS_PLUGIN_FILE'           , 'secupress/secupress.php' );
+define( 'SECUPRESS_PLUGIN_FILE'           , 'secupress-free/secupress.php' );
 define( 'SECUPRESS_PATH'                  , realpath( plugin_dir_path( SECUPRESS_FILE ) ) . '/' );
 define( 'SECUPRESS_INC_PATH'              , realpath( SECUPRESS_PATH . 'inc/' ) . '/' );
 define( 'SECUPRESS_MODULES_PATH'          , realpath( SECUPRESS_INC_PATH . 'modules/' ) . '/' );
@@ -208,9 +208,9 @@ function secupress_load_plugins() {
 	if ( $modules ) {
 		foreach ( $modules as $module => $plugins ) {
 			foreach ( $plugins as $plugin ) {
-				$file = SECUPRESS_MODULES_PATH . sanitize_key( $module ) . '/plugins/' . sanitize_key( $plugin ) . '.php';
-				if ( file_exists( $file ) ) {
-					require_once( $file );
+				$file_path = secupress_get_submodule_file_path( $module, $plugin );
+				if ( $file_path ) {
+					require_once( $file_path );
 				}
 			}
 		}

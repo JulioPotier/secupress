@@ -13,52 +13,53 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @return (bool) True on success. False on failure.
  */
 function secupress_activate_submodule( $module, $submodule, $incompatible_submodules = array() ) {
-	$submodule_slug = sanitize_key( $submodule );
-	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
-	$active_plugins = is_array( $active_plugins ) ? $active_plugins : array();
-	$file_path      = SECUPRESS_MODULES_PATH . $module . '/plugins/' . $submodule_slug . '.php';
+	$file_path = secupress_get_submodule_file_path( $module, $submodule );
 
-	if ( ! file_exists( $file_path ) ) {
+	if ( ! $file_path ) {
 		return false;
 	}
 
-	if ( ! secupress_in_array_deep( $submodule_slug, $active_plugins ) ) {
-		if ( ! empty( $incompatible_submodules ) ) {
-			secupress_deactivate_submodule( $module, $incompatible_submodules );
+	$submodule_slug = sanitize_key( $submodule );
+	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
+	$active_plugins = is_array( $active_plugins ) ? $active_plugins : array();
 
-			$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
-			$active_plugins = is_array( $active_plugins ) ? $active_plugins : array();
-		}
-
-		$active_plugins[ $module ]   = isset( $active_plugins[ $module ] ) ? $active_plugins[ $module ] : array();
-		$active_plugins[ $module ][] = $submodule_slug;
-
-		update_site_option( SECUPRESS_ACTIVE_SUBMODULES, $active_plugins );
-
-		require_once( $file_path );
-
-		secupress_add_module_notice( $module, $submodule_slug, 'activation' );
-
-		/**
-		 * Fires once a sub-module is activated.
-		 *
-		 * @since 1.0
-		 */
-		do_action( 'secupress.modules.activate_submodule_' . $submodule_slug );
-
-		/**
-		 * Fires once any sub-module is activated.
-		 *
-		 * @since 1.0
-		 *
-		 * @param (string) $submodule_slug The submodule slug.
-		 */
-		do_action( 'secupress.modules.activate_submodule', $submodule_slug );
-
-		return true;
+	if ( secupress_in_array_deep( $submodule_slug, $active_plugins ) ) {
+		return false;
 	}
 
-	return false;
+	if ( ! empty( $incompatible_submodules ) ) {
+		secupress_deactivate_submodule( $module, $incompatible_submodules );
+
+		$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
+		$active_plugins = is_array( $active_plugins ) ? $active_plugins : array();
+	}
+
+	$active_plugins[ $module ]   = isset( $active_plugins[ $module ] ) ? $active_plugins[ $module ] : array();
+	$active_plugins[ $module ][] = $submodule_slug;
+
+	update_site_option( SECUPRESS_ACTIVE_SUBMODULES, $active_plugins );
+
+	require_once( $file_path );
+
+	secupress_add_module_notice( $module, $submodule_slug, 'activation' );
+
+	/**
+	 * Fires once a sub-module is activated.
+	 *
+	 * @since 1.0
+	 */
+	do_action( 'secupress.modules.activate_submodule_' . $submodule_slug );
+
+	/**
+	 * Fires once any sub-module is activated.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $submodule_slug The submodule slug.
+	 */
+	do_action( 'secupress.modules.activate_submodule', $submodule_slug );
+
+	return true;
 }
 
 
@@ -134,23 +135,30 @@ function secupress_deactivate_submodule( $module, $submodules, $args = array() )
  * @param (string) $submodule The sub-module.
  */
 function secupress_activate_submodule_silently( $module, $submodule ) {
-	// Remove deactivation notice.
-	secupress_remove_module_notice( $module, $submodule, 'deactivation' );
+	$file_path = secupress_get_submodule_file_path( $module, $submodule );
 
-	// Activate the submodule.
-	$submodule_slug = sanitize_key( $submodule );
-	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
-	$active_plugins = is_array( $active_plugins ) ? $active_plugins : array();
-	$file_path      = SECUPRESS_MODULES_PATH . $module . '/plugins/' . $submodule_slug . '.php';
-
-	if ( ! file_exists( $file_path ) || secupress_in_array_deep( $submodule_slug, $active_plugins ) ) {
+	if ( ! $file_path ) {
 		return;
 	}
 
+	// Remove deactivation notice.
+	secupress_remove_module_notice( $module, $submodule, 'deactivation' );
+
+	$submodule_slug = sanitize_key( $submodule );
+	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
+	$active_plugins = is_array( $active_plugins ) ? $active_plugins : array();
+
+	if ( secupress_in_array_deep( $submodule_slug, $active_plugins ) ) {
+		return;
+	}
+
+	// Activate the submodule.
 	$active_plugins[ $module ]   = isset( $active_plugins[ $module ] ) ? $active_plugins[ $module ] : array();
 	$active_plugins[ $module ][] = $submodule_slug;
 
 	update_site_option( SECUPRESS_ACTIVE_SUBMODULES, $active_plugins );
+
+	require_once( $file_path );
 }
 
 
@@ -332,10 +340,10 @@ function secupress_get_module_data( $module, $submodule ) {
 		'Author'      => 'Author',
 	);
 
-	$file = SECUPRESS_MODULES_PATH . $module . '/plugins/' . $submodule . '.php';
+	$file_path = secupress_get_submodule_file_path( $module, $submodule );
 
-	if ( file_exists( $file ) ) {
-		return get_file_data( $file, $default_headers, 'module' );
+	if ( $file_path ) {
+		return get_file_data( $file_path, $default_headers, 'module' );
 	}
 
 	return array();
@@ -508,9 +516,7 @@ function secupress_add_module_rules_or_notice_and_deactivate( $args ) {
 			"<pre>$rules</pre>"
 		);
 		add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
-
-		secupress_deactivate_submodule_silently( $module, $submodule );
-		return false;
+		return true;
 	}
 
 	// Server not supported.

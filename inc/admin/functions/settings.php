@@ -13,8 +13,12 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 function secupress_register_setting( $module, $option_name = false ) {
 	$option_group      = "secupress_{$module}_settings";
 	$option_name       = $option_name ? $option_name : "secupress_{$module}_settings";
-	$sanitize_callback = str_replace( '-', '_', $module );
-	$sanitize_callback = "__secupress_{$sanitize_callback}_settings_callback";
+	$sanitize_module   = str_replace( '-', '_', $module );
+	$sanitize_callback = "__secupress_pro_{$sanitize_module}_settings_callback";
+
+	if ( ! secupress_is_pro() || ! function_exists( $sanitize_callback ) ) {
+		$sanitize_callback = "__secupress_{$sanitize_module}_settings_callback";
+	}
 
 	if ( ! is_multisite() ) {
 		register_setting( $option_group, $option_name, $sanitize_callback );

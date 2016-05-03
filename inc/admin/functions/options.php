@@ -13,15 +13,15 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @return (string)
  */
 function secupress_is_white_label() {
-	$names   = array( 'wl_plugin_name', 'wl_plugin_URI', 'wl_description', 'wl_author', 'wl_author_URI' );
-	$options = '';
+	$names = array( 'wl_plugin_name', 'wl_plugin_URI', 'wl_description', 'wl_author', 'wl_author_URI' );
 
 	foreach ( $names as $value ) {
-		$options .= ! is_array( secupress_get_option( $value ) ) ? secupress_get_option( $value ) : reset( ( secupress_get_option( $value ) ) );
+		if ( false !== secupress_get_option( $value ) ) {
+			return true;
+		}
 	}
 
-	return false; // ////.
-	return 'a509cac94e0cd8238b250074fe802b90' !== md5( $options ); // ////.
+	return false;
 }
 
 
