@@ -176,7 +176,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 					<div class="secupress-sidebar-header">
 						<div class="secupress-flex">
 							<div class="secupress-sh-logo">
-								<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo<?php echo $suffix; ?>.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo<?php echo $suffix; ?>2x.svg 2x" alt="">
+								<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo<?php echo $suffix; ?>.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo<?php echo $suffix; ?>2x.svg 1x, <?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo<?php echo $suffix; ?>2x.svg 2x" alt="">
 							</div>
 							<div class="secupress-sh-name">
 								<p class="secupress-sh-title">SecuPress</p>

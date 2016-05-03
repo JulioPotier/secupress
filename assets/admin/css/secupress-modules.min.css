@@ -44,7 +44,8 @@
 .secupress-sidebar-header .secupress-flex {
 	padding: 15px 15px 10px;
 }
-.secupress-sh-logo {
+.secupress-sh-logo,
+.secupress-sh-logo img {
 	width: 90px;
 	-webkit-flex-basis: 90px;
 	-ms-flex-preferred-size: 90px;
@@ -168,74 +169,6 @@
 	padding: 15px 20px;
 }
 
-/* Module Settings */
-.secupress-settings-section + .secupress-settings-section {
-	margin-top: 50px;
-}
-.secupress-settings-section-header {
-	padding-bottom: 15px;
-	border-bottom: 2px solid #2BCDC1;
-}
-.secupress-settings-section-title {
-	font-size: 20px;
-	margin-bottom: 0;
-}
-.secupress-settings-section-title .button-actions-title.open .dashicons {
-	transform: rotate(90deg);
-}
-.secupress-settings-section-description {
-	padding: 15px 40px 5px 0;
-	color: #5A626F;
-}
-.secublock + .submit {
-	margin: 1em 0 3em;
-}
-.secublock + .submit input {
-	font-size: 0.95em;
-	letter-spacing: 0.1em;
-	box-shadow: ;
-}
-.secupress-setting-row {
-	padding: 20px;
-	border-bottom: 1px solid #EEE;
-}
-.secupress-form-table > .secupress-setting-row:last-child {
-	border-bottom: 0;
-}
-.secupress-setting-row.secupress-pro-row a {
-	color: #f7ab13;
-}
-.secupress-setting-row.secupress-pro-row p {
-	color: #aaa;
-}
-.secupress-setting-row-title {
-	margin: 10px 0;
-	font-size: 18px;
-	font-weight: bold;
-	color: #2BCDC1;
-}
-label.secupress-setting-row-title {
-	display: block;
-}
-.secupress-pro-row .secupress-setting-row-title {
-	color: #F7AB13;
-}
-.secupress-setting-row-title + .description {
-	margin-bottom: 1em;
-}
-
-.description.desc {
-	margin-top: -.4em;
-	padding-left: 32px;
-}
-.fieldtype-roles .description.desc {
-	padding-left: 0;
-	margin-top: 1.5em;
-}
-.secupress-setting-row em {
-	padding-left: 5px;
-}
-
 /* Radio & Checkbox lines */
 .secupress-radio-line,
 .secupress-checkbox-line,
@@ -346,10 +279,12 @@ span.secupress-get-pro-version {
 	position: relative;
 	font-size: 170px;
 	color: #5A626F;
+	display: inline-block;
+	vertical-align: top;
 }
 .secupress-dashboard-header i:before {
 	position: absolute;
-	top: 60%;
+	top: -33px;
 	left: -85px;
 }
 .secupress-dashboard-header .secupress-text-medium {

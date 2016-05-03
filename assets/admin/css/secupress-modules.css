@@ -44,7 +44,8 @@
 .secupress-sidebar-header .secupress-flex {
 	padding: 15px 15px 10px;
 }
-.secupress-sh-logo {
+.secupress-sh-logo,
+.secupress-sh-logo img {
 	width: 90px;
 	-webkit-flex-basis: 90px;
 	-ms-flex-preferred-size: 90px;
@@ -278,10 +279,12 @@ span.secupress-get-pro-version {
 	position: relative;
 	font-size: 170px;
 	color: #5A626F;
+	display: inline-block;
+	vertical-align: top;
 }
 .secupress-dashboard-header i:before {
 	position: absolute;
-	top: 60%;
+	top: -33px;
 	left: -85px;
 }
 .secupress-dashboard-header .secupress-text-medium {
