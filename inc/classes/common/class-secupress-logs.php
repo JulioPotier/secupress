@@ -932,7 +932,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			ini_set( 'zlib.output_compression', 'Off' );
 		}
 
-		$filename = SECUPRESS_PLUGIN_SLUG . '-' . $this->log_type . '-logs.txt';
+		$filename = 'secupress-' . $this->log_type . '-logs.txt';
 		$logs     = $this->get_logs();
 
 		set_time_limit( 0 );
