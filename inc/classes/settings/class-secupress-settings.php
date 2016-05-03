@@ -322,14 +322,13 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	protected function do_sections() {
 
 		$section_id = $this->get_section_id();
-		$html_id 	= explode( '|', $section_id );
-		$html_id	= sanitize_html_class( implode( '--', $html_id ) );
+		$html_id    = explode( '|', $section_id );
+		$html_id    = sanitize_html_class( implode( '--', $html_id ) );
 
 		echo '<div class="secupress-settings-section" id="secupress-settings-' . $html_id . '">';
 		echo '<div class="secublock">';
 			$this->do_settings_sections();
 		echo '</div><!-- .secublock -->';
-		
 
 		$with_save_button = ! empty( $this->section_save_buttons[ $section_id ] );
 		if ( $with_save_button ) {
@@ -366,7 +365,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		}
 
 		foreach ( (array) $wp_settings_sections[ $section_id ] as $section ) {
-			
+
 			$header_open_tag = false;
 
 			if ( $section['title'] ) {
@@ -1424,31 +1423,31 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				<div class="secupress-flex">
 					<div class="secupress-setting-content-col">
 					<?php
-						// Row title.
-						if ( $field['title'] ) {
-							$id = explode( '|', $field['id'] );
-							$id = end( $id );
-							if ( ! empty( $field['args']['label_for'] ) ) {
-								echo '<h4 id="row-' . sanitize_html_class( $id ) . '" class="screen-reader-text">' . $field['title'] . '</h4>';
-								echo '<label for="' . esc_attr( $field['args']['label_for'] ) . '" class="secupress-setting-row-title">' . $field['title'] . '</label>';
-							} else {
-								echo '<h4 id="row-' . sanitize_html_class( $id ) . '" class="secupress-setting-row-title">' . $field['title'] . '</h4>';
-							}
+					// Row title.
+					if ( $field['title'] ) {
+						$id = explode( '|', $field['id'] );
+						$id = end( $id );
+						if ( ! empty( $field['args']['label_for'] ) ) {
+							echo '<h4 id="row-' . sanitize_html_class( $id ) . '" class="screen-reader-text">' . $field['title'] . '</h4>';
+							echo '<label for="' . esc_attr( $field['args']['label_for'] ) . '" class="secupress-setting-row-title">' . $field['title'] . '</label>';
+						} else {
+							echo '<h4 id="row-' . sanitize_html_class( $id ) . '" class="secupress-setting-row-title">' . $field['title'] . '</h4>';
 						}
+					}
 
-						if ( $field['args']['description'] ) {
-							echo '<p class="description">' . $field['args']['description'] . '</p>';
-						}
-						unset( $field['args']['description'] );
-						
-						call_user_func( $field['callback'], $field['args'] );
+					if ( $field['args']['description'] ) {
+						echo '<p class="description">' . $field['args']['description'] . '</p>';
+					}
+					unset( $field['args']['description'] );
+
+					call_user_func( $field['callback'], $field['args'] );
 					?>
 					</div>
 					<div class="secupress-get-pro-col">
 					<?php
-						if ( $is_pro ) {
-							echo '<p class="secupress-get-pro">' . static::get_pro_version_string() . '</p>';
-						}
+					if ( $is_pro ) {
+						echo '<p class="secupress-get-pro">' . static::get_pro_version_string() . '</p>';
+					}
 					?>
 					</div><!-- .secupress-get-pro-col -->
 				</div><!-- .secupress-flex -->

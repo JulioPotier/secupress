@@ -164,35 +164,38 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			<div class="secupress-wrapper<?php echo ( $is_welcome ? '' : ' secupress-flex secupress-flex-top' ) ?>">
 
 				<?php
-				// don't print sidebar if we are in Welcome page
-				// modules are included in the content of the page
+				/**
+				 * Don't print sidebar if we are in Welcome page.
+				 * Modules are included in the content of the page.
+				 */
 				if ( ! $is_welcome ) {
-					$type			= true ? 'free' : 'pro';
-					$suffix			= $type === 'free' ? '' : '-pro';
-					$version_free	= sprintf ( esc_html__( 'Free version %s', 'secupress' ), 'v' . SECUPRESS_VERSION );
-					$version_pro	= sprintf ( esc_html__( 'Pro version %s', 'secupress' ), 'v' . SECUPRESS_VERSION );
-				?>
-				<div class="secupress-modules-sidebar hide-if-no-js">
-					<div class="secupress-sidebar-header">
-						<div class="secupress-flex">
-							<div class="secupress-sh-logo">
-								<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo<?php echo $suffix; ?>.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo<?php echo $suffix; ?>2x.svg 2x" alt="">
+					$type         = true ? 'free' : 'pro';
+					$suffix       = 'free' === $type ? '' : '-pro';
+					$version_free = sprintf( esc_html__( 'Free version %s', 'secupress' ), 'v' . SECUPRESS_VERSION );
+					$version_pro  = sprintf( esc_html__( 'Pro version %s', 'secupress' ), 'v' . SECUPRESS_VERSION ); // ////.
+					?>
+					<div class="secupress-modules-sidebar hide-if-no-js">
+						<div class="secupress-sidebar-header">
+							<div class="secupress-flex">
+								<div class="secupress-sh-logo">
+									<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo<?php echo $suffix; ?>.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo<?php echo $suffix; ?>2x.svg 2x" alt="">
+								</div>
+								<div class="secupress-sh-name">
+									<p class="secupress-sh-title">SecuPress</p>
+									<p class="secupress-sh-subtitle"><?php esc_html_e( 'the best security for WordPress', 'secupress' ); ?></p>
+								</div>
 							</div>
-							<div class="secupress-sh-name">
-								<p class="secupress-sh-title">SecuPress</p>
-								<p class="secupress-sh-subtitle"><?php esc_html_e( 'the best security for WordPress', 'secupress' ); ?></p>
+							<div class="secupress-sh-version version-<?php echo $type; ?>">
+								<?php echo ${'version_' . $type}; ?>
 							</div>
 						</div>
-						<div class="secupress-sh-version version-<?php echo $type; ?>">
-							<?php echo ${'version_' . $type}; ?>
-						</div>
-					</div>
 
-					<ul id="secupress-modules-navigation" class="secupress-modules-list-links">
-						<?php $this->print_tabs(); ?>
-					</ul>
-				</div>
-				<?php } ?>
+						<ul id="secupress-modules-navigation" class="secupress-modules-list-links">
+							<?php $this->print_tabs(); ?>
+						</ul>
+					</div>
+					<?php
+				} ?>
 
 				<div class="secupress-tab-content secupress-tab-content-<?php echo $this->get_current_module(); ?>" id="secupress-tab-content">
 					<?php $this->print_current_module(); ?>

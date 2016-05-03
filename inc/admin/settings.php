@@ -34,8 +34,8 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		return;
 	}
 
-	// WordPress Common JS
-	wp_enqueue_script( 'secupress-common-js', SECUPRESS_ADMIN_JS_URL . 'secupress-common' . $suffix . '.js', array('jquery'), $version, true );
+	// WordPress Common JS.
+	wp_enqueue_script( 'secupress-common-js', SECUPRESS_ADMIN_JS_URL . 'secupress-common' . $suffix . '.js', array( 'jquery' ), $version, true );
 
 	// SecuPress Common CSS.
 	wp_enqueue_style( 'secupress-common-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-common' . $suffix . '.css', array(), $version );
@@ -461,7 +461,7 @@ function __secupress_scanners() {
 
 					<div id="secupress-latest" class="secupress-tab-content">
 						<p class="secupress-text-big">
-							<?php esc_html_e( 'Latest Scans', 'secupress' ) ; ?>
+							<?php esc_html_e( 'Latest Scans', 'secupress' ); ?>
 						</p>
 						<ul class="secupress-reports-list">
 						<?php if ( (bool) $reports ) { ?>
@@ -785,7 +785,7 @@ function secupress_scanners_template() {
 										<i class="icon-secupress-simple" aria-hidden="true"></i>
 									</button>
 									<?php
-								} else { // Really not fixable by the plugin
+								} else { // Really not fixable by the plugin.
 									echo '<em>';
 									esc_html_e( 'Cannot be fixed automatically.', 'secupress' );
 									echo '</em>';
@@ -832,7 +832,7 @@ function secupress_scanners_template() {
 							</div>
 						</div>
 						<?php } ?>
-						<?php // TODO: Make it appears dynamically ?>
+						<?php // TODO: Make it appears dynamically ////. ?>
 						<div class="secupress-fix-result-actions secupress-bg-gray">
 								<p>
 									<a href="#" class="secupress-button secupress-button-mini">
@@ -854,7 +854,7 @@ function secupress_scanners_template() {
 								</p>
 						</div>
 
-						<?php // hidden items used for Sweet Alerts  ?>
+						<?php // Hidden items used for Sweet Alerts. ?>
 						<div id="details-<?php echo $class_name_part; ?>" class="details hide-if-js">
 							<?php _e( 'Scan Details: ', 'secupress' ); ?>
 							<span class="details-content"><?php echo wp_kses( $current_test::$more, $allowed_tags ); ?></span>
