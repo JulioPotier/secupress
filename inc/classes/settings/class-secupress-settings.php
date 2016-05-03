@@ -1419,10 +1419,10 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 		foreach ( (array) $wp_settings_fields[ $page ][ $section ] as $field ) {
 			$id       = '';
-			$field_id = isset( $field['id'] ) ? explode( '|', $field['id'] ) : array('');
+			$field_id = isset( $field['id'] ) ? explode( '|', $field['id'] ) : array( '' );
 			$field_id = end( $field_id );
 			$is_pro   = static::is_pro_feature( $field['args']['name'] );
-			$class    = 'secupress-setting-row ' . ( $is_pro ? 'secupress-pro-row ' : '') . 'secupress-setting-row_' . sanitize_html_class( $field_id ) . ' ';
+			$class    = 'secupress-setting-row ' . ( $is_pro ? 'secupress-pro-row ' : '' ) . 'secupress-setting-row_' . sanitize_html_class( $field_id ) . ' ';
 
 			// Row ID.
 			if ( ! empty( $field['args']['row_id'] ) ) {
