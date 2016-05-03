@@ -915,8 +915,18 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			<label for="upload"><?php echo $description; ?></label>
 			<input type="hidden" name="max_file_size" value="<?php echo $bytes; ?>" />
 		</p>
+
+		<p class="submit">
+			<button type="submit"<?php echo $disabled; ?> class="secupress-button secupress-button-mini" id="import">
+				<span class="icon">
+					<i class="icon-upload" aria-hidden="true"></i>
+				</span>
+				<span class="text">
+					<?php esc_html_e( 'Upload file and import settings', 'secupress' ); ?>
+				</span>
+			</button>
+		</p>
 		<?php
-		submit_button( __( 'Upload file and import settings', 'secupress' ), 'secupress-button secupress-button-import', 'import', true, $disabled );
 	}
 
 
@@ -1408,9 +1418,11 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		}
 
 		foreach ( (array) $wp_settings_fields[ $page ][ $section ] as $field ) {
-			$is_pro = static::is_pro_feature( $field['args']['name'] );
-			$class  = 'secupress-setting-row ' . ( $is_pro ? 'secupress-pro-row ' : '');
-			$id     = '';
+			$id       = '';
+			$field_id = isset( $field['id'] ) ? explode( '|', $field['id'] ) : array('');
+			$field_id = end( $field_id );
+			$is_pro   = static::is_pro_feature( $field['args']['name'] );
+			$class    = 'secupress-setting-row ' . ( $is_pro ? 'secupress-pro-row ' : '') . 'secupress-setting-row_' . sanitize_html_class( $field_id ) . ' ';
 
 			// Row ID.
 			if ( ! empty( $field['args']['row_id'] ) ) {
@@ -1439,13 +1451,12 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					<?php
 						// Row title.
 						if ( $field['title'] ) {
-							$id = explode( '|', $field['id'] );
-							$id = end( $id );
+							
 							if ( ! empty( $field['args']['label_for'] ) ) {
-								echo '<h4 id="row-' . sanitize_html_class( $id ) . '" class="screen-reader-text">' . $field['title'] . '</h4>';
+								echo '<h4 id="row-' . sanitize_html_class( $field_id ) . '" class="screen-reader-text">' . $field['title'] . '</h4>';
 								echo '<label for="' . esc_attr( $field['args']['label_for'] ) . '" class="secupress-setting-row-title">' . $field['title'] . '</label>';
 							} else {
-								echo '<h4 id="row-' . sanitize_html_class( $id ) . '" class="secupress-setting-row-title">' . $field['title'] . '</h4>';
+								echo '<h4 id="row-' . sanitize_html_class( $field_id ) . '" class="secupress-setting-row-title">' . $field['title'] . '</h4>';
 							}
 						}
 

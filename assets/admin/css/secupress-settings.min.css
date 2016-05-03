@@ -1,1 +1,22 @@
 @charset "UTF-8";
+
+@media (min-width: 640px) {
+	[id="secupress-settings-module_global--import_export"] .secupress-form-table,
+	[id="secupress-settings-module_global--secupress_display_apikey_options"] .secupress-form-table {
+		display: table;
+	}
+	[id="secupress-settings-module_global--import_export"] .secupress-form-table > .secupress-setting-row,
+	[id="secupress-settings-module_global--secupress_display_apikey_options"] .secupress-form-table > .secupress-setting-row {
+		display: table-cell;
+		vertical-align: top;
+		border-bottom: 0;
+	}
+	[id$="--import_export"] .secupress-setting-row_settings-manager_export_settings,
+	[id$="--secupress_display_apikey_options"] .secupress-setting-row_consumer_email {
+		padding-right: 45px;
+	}
+	[id$="--import_export"] .secupress-setting-row_settings-manager_import_settings,
+	[id$="--secupress_display_apikey_options"] .secupress-setting-row_consumer_key {
+		padding-left: 45px;
+	}
+}
