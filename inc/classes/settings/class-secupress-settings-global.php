@@ -60,14 +60,25 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 		<div class="wrap">
 			<?php secupress_admin_heading( __( 'Settings' ) ); ?>
 			<?php settings_errors(); ?>
+			<div class="secupress-section-dark secupress-flex">
+				<p class="secupress-header-logo">
+					<img alt="" srcset="http://localhost/wordpress/wp-content/plugins/secupress-free/assets/admin/images/logo2x.svg 2x" src="http://localhost/wordpress/wp-content/plugins/secupress-free/assets/admin/images/logo.png">
+				</p>
+				<h2 class="secupress-header-with-logo secupress-text-medium">
+					<?php esc_html_e( 'SecuPress Settings', 'secupress' ); ?>
+				</h2>
+			</div>
+			<div class="secupress-section-light">
 
-			<form action="<?php echo $this->get_form_action(); ?>" method="post" id="secupress_settings" class="secupress-wrapper">
+				<form action="<?php echo $this->get_form_action(); ?>" method="post" id="secupress_settings">
 
-				<?php array_map( array( $this, 'load_module_settings' ), $setting_modules ); ?>
+					<?php array_map( array( $this, 'load_module_settings' ), $setting_modules ); ?>
 
-				<?php settings_fields( 'secupress_global_settings' ); ?>
+					<?php settings_fields( 'secupress_global_settings' ); ?>
 
-			</form>
+				</form>
+
+			</div>
 
 		</div>
 		<?php

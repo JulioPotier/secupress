@@ -916,7 +916,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			<input type="hidden" name="max_file_size" value="<?php echo $bytes; ?>" />
 		</p>
 		<?php
-		submit_button( __( 'Upload file and import settings', 'secupress' ), 'button', 'import', true, $disabled );
+		submit_button( __( 'Upload file and import settings', 'secupress' ), 'secupress-button secupress-button-import', 'import', true, $disabled );
 	}
 
 
@@ -928,11 +928,25 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	protected function export_form() {
 		if ( secupress_is_pro() ) {
 			?>
-			<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_export' ), 'secupress_export' ) ); ?>" id="export" class="button button-secondary secupressicon"><?php _e( 'Download settings', 'secupress' ); ?></a>
+			<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_export' ), 'secupress_export' ) ); ?>" id="export" class="secupress-button secupress-button-mini secupressicon">
+				<span class="icon">
+					<i class="icon-download" aria-hidden="true"></i>
+				</span>
+				<span class="text">
+					<?php _e( 'Download settings', 'secupress' ); ?>
+				</span>
+			</a>
 			<?php
 		} else {
 			?>
-			<button class="button button-secondary" disabled="disabled"><?php _e( 'Download settings', 'secupress' ); ?></button>
+			<button class="secupress-button secupress-button-mini" disabled="disabled">
+				<span class="icon">
+					<i class="icon-download" aria-hidden="true"></i>
+				</span>
+				<span class="text">
+					<?php _e( 'Download settings', 'secupress' ); ?>
+				</span>
+			</button>
 			<?php
 		}
 	}
