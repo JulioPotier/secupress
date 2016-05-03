@@ -29,7 +29,10 @@ function secupress_action_page( $title, $content, $args = array() ) {
 		<?php echo ! empty( $args['head'] ) ? $args['head'] : ''; ?>
 	</head>
 	<body>
-		<?php echo $content; ?>
+		<div class="secupress-action-page-content">
+			<img class="logo" src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL ?>logo2x.svg 2x" alt="SecuPress" width="159" height="155">
+			<?php echo $content; ?>
+		</div>
 	</body>
 </html><?php
 	die();

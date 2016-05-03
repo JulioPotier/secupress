@@ -1,11 +1,16 @@
 @charset "UTF-8";
 
 html, body {
-	width: 100%;
+	height: 100%;
 	margin: 0;
 	font: 1em/1.5 Arial, Helvetica, sans-serif;
-	color: #313131;
-	background: #F1F1F1;
+	color: #393E46;
+	background: #F2F2F6;
+}
+body {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
 }
 .wrap {
 	max-width: 400px;
@@ -20,17 +25,27 @@ h1 {
 	margin: 0 0 1em;
 	font-size: 2em;
 	line-height: 1.1;
+	color: #26B3A9;
 }
 p {
 	margin: 0 0 1.5em;
 }
 a {
-	color: #205081;
+	color: #26B3A9;
 }
 a:active,
 a:hover,
 a:focus {
-	color: #2d75bd;
+	color: #2BCDC1;
+}
+img {
+	max-width: 100%;
+	height: auto;
+}
+.logo {
+	display: block;
+	margin: 1em auto;
+	width: 100px;
 }
 label {
 	display: inline-block;
@@ -53,35 +68,37 @@ label {
 [type="submit"] {
 	position: relative;
 	display: inline-block;
-	line-height: 1.2;
-	padding: .65em 1.8em;
+	line-height: 1.3;
+	padding: .65em 2em;
 	border: none;
 	margin: 0 0 .5em 0;
-	background: #205081;
+	background: #26B3A9;
 	-webkit-appearance: none;
 	   -moz-appearance: none;
 	        appearance: none;
 	box-shadow: none;
-	border-radius: .214em;
+	font-size: .75em;
+	letter-spacing: 0.1em;
+	font-weight: bold;
 	color: #fff;
-	font-size: .875em;
 	font-family: inherit;
 	text-align: center;
 	text-transform: uppercase;
 	text-decoration: none;
 	vertical-align: middle;
 	cursor: pointer;
+	border-radius: .214em;
 	-webkit-transition: all .3s ease;
 	        transition: all .3s ease;
 }
 [type="submit"]:focus,
 [type="submit"]:hover {
-	background-color: #2d75bd;
+	background-color: #393E46;
 }
 .error {
 	padding: .5em 1em;
-	border: solid 2px #ff8383;
-	background: #ffb1b1;
+	background: #CB234F;
+	color: #FFF;
 	border-radius: .2em;
 }
 .progress-wrap {
@@ -92,7 +109,7 @@ label {
 .progress {
 	height: 1.5em;
 	line-height: 1.5em;
-	background: #88BA0E;
+	background: #26B3A9;
 	color: #fff;
 	font-size: 2em;
 	font-weight: 700;
