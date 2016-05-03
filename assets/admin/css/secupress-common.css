@@ -20,6 +20,11 @@
 [class*=" secupress-"] {
 	box-sizing: border-box;
 }
+[class^="secupress-"] a,
+[class*=" secupress-"] a {
+	color: #26B3A9;
+	font-weight: bold;
+}
 
 /**
  * Secupress Text Colors

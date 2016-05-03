@@ -99,6 +99,7 @@
 	padding: 14px 55px 13px 15px;
 	color: #2BCDC1;
 	overflow: hidden;
+	font-weight: normal;
 	text-decoration: none;
 	transition: all .275s;
 }

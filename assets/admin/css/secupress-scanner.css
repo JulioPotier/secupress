@@ -43,6 +43,11 @@
 	visibility: hidden;
 }
 
+a.secupress-open-moreinfo,
+a.secupress-close-moreinfo {
+	font-weight: normal;
+}
+
 #secupress-more-info.secupress-open .secupress-blob-icon {
 	transition-delay: 0.3s;
 }
