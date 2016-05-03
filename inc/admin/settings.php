@@ -183,7 +183,7 @@ add_action( ( is_multisite() ? 'network_' : '' ) . 'admin_menu', 'secupress_crea
  * @since 1.0
  */
 function secupress_create_menus() {
-	global $menu;
+	global $admin_page_hooks;
 
 	// Add a counter of scans with bad result.
 	$count = 0;
@@ -201,16 +201,15 @@ function secupress_create_menus() {
 	$cap   = secupress_get_capability();
 
 	// Main menu item.
-	add_menu_page( SECUPRESS_PLUGIN_NAME, SECUPRESS_PLUGIN_NAME, $cap, 'secupress_scanners', '__secupress_scanners', 'dashicons-shield-alt' );
+	add_menu_page( SECUPRESS_PLUGIN_NAME, SECUPRESS_PLUGIN_NAME . $count, $cap, 'secupress_scanners', '__secupress_scanners', 'dashicons-shield-alt' );
 
 	// Sub-menus.
 	add_submenu_page( 'secupress_scanners', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ) . $count, $cap, 'secupress_scanners', '__secupress_scanners' );
 	add_submenu_page( 'secupress_scanners', __( 'Modules', 'secupress' ),  __( 'Modules', 'secupress' ),           $cap, 'secupress_modules',  '__secupress_modules' );
 	add_submenu_page( 'secupress_scanners', __( 'Settings' ),              __( 'Settings' ),                       $cap, 'secupress_settings', '__secupress_global_settings' );
 
-	end( $menu );
-	$key = key( $menu );
-	$menu[ $key ][0] .= $count;
+	// Fix `add_menu_page()` nonsense.
+	$admin_page_hooks['secupress_scanners'] = 'secupress';
 }
 
 
@@ -302,7 +301,7 @@ function __secupress_scanners() {
 	<div class="wrap">
 		<?php secupress_admin_heading( __( 'Scanners', 'secupress' ) ); ?>
 
-		<div class="secupress-wrapper">			
+		<div class="secupress-wrapper">
 			<div class="secupress-section-dark">
 				<div class="secupress-heading secupress-flex secupress-flex-spaced secupress-wrap">
 					<p class="secupress-text-medium"><?php esc_html_e( 'Welcome to SecuPress the best way to secure your website!', 'secupress' ); ?></p>
@@ -384,7 +383,7 @@ function __secupress_scanners() {
 						</a>
 					</li>
 				</ul>
-				
+
 				<div id="sp-tab-scans" class="secupress-tabs-contents">
 					<div id="secupress-scan" class="secupress-tab-content">
 						<div class="secupress-flex secupress-row">
@@ -654,15 +653,15 @@ function secupress_scanners_template() {
 			$i = 0;
 			?>
 			<div class="secupress-table-prio-all<?php echo ( $is_subsite ? '' : ' secupress-table-prio-' . $prio_key ); ?>">
-				
-				<?php	
+
+				<?php
 				if ( ! $is_subsite ) {
 					$prio_data = SecuPress_Scan::get_priorities( $prio_key );
 				?>
 				<div class="secupress-prio-title prio-<?php echo $prio_key; ?>">
 					<?php echo '<' . $heading_tag . ' class="secupress-prio-h" title="' . $prio_data['description'] . '">' . $prio_data['title'] . '</' . $heading_tag . '>'; ?>
 				</div>
-				
+
 				<?php
 				}
 
@@ -739,7 +738,7 @@ function secupress_scanners_template() {
 					}
 					?>
 					<div id="<?php echo $class_name_part; ?>" class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> type-all status-all<?php echo $css_class; ?>">
-						
+
 						<div class="secupress-flex secupress-flex-top secupress-flex-spaced">
 							<div class="secupress-item-header">
 								<p class="secupress-item-title"><?php echo $class_name::$title; ?></p>
@@ -815,7 +814,7 @@ function secupress_scanners_template() {
 								</p>
 							</div>
 						</div>
-						
+
 						<?php if ( ! empty( $fix_message ) ) { ?>
 						<div class="secupress-flex secupress-flex-spaced secupress-fix-result secupress-bg-gray">
 							<div class="secupress-fix-result-message">
@@ -854,20 +853,20 @@ function secupress_scanners_template() {
 									</a>
 								</p>
 						</div>
-						
+
 						<?php // hidden items used for Sweet Alerts  ?>
 						<div id="details-<?php echo $class_name_part; ?>" class="details hide-if-js">
 							<?php _e( 'Scan Details: ', 'secupress' ); ?>
 							<span class="details-content"><?php echo wp_kses( $current_test::$more, $allowed_tags ); ?></span>
 						</div>
 						<div id="details-fix-<?php echo $class_name_part; ?>" class="details hide-if-js">
-							
+
 							<?php _e( 'Fix Details: ', 'secupress' ); ?>
 							<span class="details-content"><?php echo wp_kses( $current_test::$more_fix, $allowed_tags ); ?></span>
 						</div>
 
 					</div><!-- </tr> -->
-					
+
 					<?php
 					if ( $class_name_part === $fix_actions[0] ) {
 						$fix_actions = explode( ',', $fix_actions[1] );
