@@ -594,6 +594,11 @@ function __secupress_process_file_monitoring_tasks() {
 	SecuPress_File_Monitoring::get_instance();
 }
 
+/**
+ * Avoid sending emails when we do a "subscription test scan"
+ *
+ * @since 1.0
+ **/
 add_action( 'secupress.loaded', '__secupress_check_token_wp_registration_url' );
 function __secupress_check_token_wp_registration_url() {
 	if ( ! empty( $_POST['secupress_token'] ) && false !== ( $token = get_transient( 'secupress_scan_subscription_token' ) ) && $token === $_POST['secupress_token'] ) {
