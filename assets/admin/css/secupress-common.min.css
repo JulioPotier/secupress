@@ -13,7 +13,7 @@
  * GrayLight	: #F2F2F6;
  * GrayMedium	: #5A626F;
  * GrayDark		: #393E46;
- * 
+ *
  */
 
 [class^="secupress-"],
@@ -168,7 +168,7 @@
 .secupress-wrap {
 	-webkit-flex-wrap: wrap;
 	-ms-flex-wrap: wrap;
-	flex-wrap: wrap;	
+	flex-wrap: wrap;
 }
 .secupress-flex-col {
 	display: -webkit-box;
@@ -735,7 +735,7 @@
 	top: 3.5px; left: 6px;
 	background: #2BCDC1;
 	border-radius: 100%;
-	box-shadow: 0 1px 0 #26B3A9; 
+	box-shadow: 0 1px 0 #26B3A9;
 }
 
 /**
@@ -889,25 +889,25 @@
 	color: #393E46;
 }
 .secupress-section-dark .secupress-big-tab-notscannedyet .secupress-current:after {
-	color: #393E46;	
+	color: #393E46;
 }
 .secupress-big-tab-bad a:after,
 .secupress-big-tab-bad a.secupress-current:before {
-	background: #F2295E; 
+	background: #F2295E;
 }
 .secupress-big-tab-bad .secupress-tab-subtitle {
 	color: #F2295E;
 }
 .secupress-big-tab-warning a:after,
 .secupress-big-tab-warning a.secupress-current:before {
-	background: #F1C40F; 
+	background: #F1C40F;
 }
 .secupress-big-tab-warning .secupress-tab-subtitle {
 	color: #F1C40F;
 }
 .secupress-big-tab-good a:after,
 .secupress-big-tab-good a.secupress-current:before {
-	background: #2BCDC1; 
+	background: #2BCDC1;
 }
 .secupress-big-tab-good .secupress-tab-subtitle {
 	color: #2BCDC1;
@@ -1262,4 +1262,8 @@ table.fixed .column-date {
 }
 .secupress-logs-list a code {
 	color: #555;
+}
+[class^="secupress-"] .hidden,
+[class*=" secupress-"] .hidden {
+	display: none;
 }
