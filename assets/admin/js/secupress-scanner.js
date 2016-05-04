@@ -241,59 +241,6 @@ jQuery( document ).ready( function( $ ) {
 		} );
 	} )(window, document, $);
 
-	// !Ask for support button (free) ------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	(function( w, d, $, undefined ) {
-		$( '.secupress-ask-support-free' ).on( 'click', function( e ) {
-			e.preventDefault();
-
-			swal( {
-				title:              w.SecuPressi18nScanner.supportTitle,
-				confirmButtonText:  w.SecuPressi18nScanner.supportButton,
-				showCancelButton:   true,
-				html:               w.SecuPressi18nScanner.supportContentFree,
-				confirmButtonColor: '#F1C40F',
-				type:               "question",
-				allowOutsideClick:  true
-			} ).then(function(isConfirm) {
-			  if (isConfirm === true) {
-			    swal( {
-		    		title: 'Pro Version needed',
-					type:  "error",
-					showCancelButton: true,
-					confirmButtonText: 'Get Pro now!',
-					confirmButtonColor: '#F1C40F',
-					reverseButtons: true,
-			    } );
-			  };
-		} )
-		} );
-	} )(window, document, $);
-
-	// !Ask for support button (pro) --------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	(function( w, d, $, undefined ) {
-		$( '.secupress-ask-support-pro' ).on( 'click', function( e ) {
-			e.preventDefault();
-
-			swal( {
-				title:              w.SecuPressi18nScanner.supportTitle,
-				confirmButtonText:  w.SecuPressi18nScanner.supportButton,
-				showCancelButton:   true,
-				html:               w.SecuPressi18nScanner.supportContentPro,
-				type:               "question",
-				allowOutsideClick:  true,
-				preConfirm: function() {
-					return new Promise(function(resolve) { //// really need a promise?
-						swal.enableLoading();
-					});
-				},
-			} ).then(function(isConfirm) {
-			  if (isConfirm === true) {
-			    //// send content to support
-			  };
-		} )
-			
-		} );
-	} )(window, document, $);
 
 	// !Scans and fixes ============================================================================
 	(function( w, d, $, undefined ) {
@@ -310,7 +257,7 @@ jQuery( document ).ready( function( $ ) {
 		// Runs the Progressbar, 10 sec min.
 		function secupressRunProgressBar() {
 			$( ".secupress-progressbar, .secupress-caroupoivre" ).show();
-			var secupressProgressTimer = setInterval( 
+			var secupressProgressTimer = setInterval(
 				function() {
 					secupressOneClickScanProgress++;
 					if ( secupressOneClickScanProgress >= 65 ) {
@@ -837,8 +784,8 @@ jQuery( document ).ready( function( $ ) {
 
 
 		// What to do when a scan ends.
-		$( 'body' ).on( 'scanDone.secupress', function( e, extra ) {
-			console.log('scanDone.secupress:', extra.test);
+		$( "body" ).on( "scanDone.secupress", function( e, extra ) {
+			console.log("scanDone.secupress:", extra.test);
 			/*
 			* Available extras:
 			* extra.test:   test name.
@@ -846,7 +793,7 @@ jQuery( document ).ready( function( $ ) {
 			* extra.isBulk: tell if it's a bulk scan.
 			* extra.data:   data returned by the ajax call.
 			*/
-			var $row = $( '#' + extra.test );
+			var $row = $( "#" + extra.test );
 
 			// If we have delayed fixes, launch the first in queue now.
 			if ( secupressScans.delayedFixes.length ) {
@@ -854,14 +801,19 @@ jQuery( document ).ready( function( $ ) {
 			}
 
 			// If we have a good result, empty the fix cell.
-			if ( extra.data.class === 'good' ) {
-				secupressSetStatusClass( $row.children( '.secupress-fix-result' ), 'cantfix' );
-				secupressAddFixStatusText( $row, '' );
-				secupressAddFixResult( $row, '' );
+			if ( "good" === extra.data.class ) {
+				secupressSetStatusClass( $row.children( ".secupress-fix-result" ), "cantfix" );
+				secupressAddFixStatusText( $row, "" );
+				secupressAddFixResult( $row, "" );
 			}
-			if ( '' !== extra.data.fix_msg ) {
+
+			// Add the fix result.
+			if ( "" !== extra.data.fix_msg ) {
 				secupressAddFixResult( $row, extra.data.fix_msg );
 			}
+
+			// Change the scan button text.
+			$row.find( ".secupress-scanit .text" ).text( w.SecuPressi18nScanner.reScan );
 		} );
 
 

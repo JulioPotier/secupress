@@ -127,6 +127,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'oneManualFix'       => __( 'One fix requires your intervention.', 'secupress' ),
 			'someManualFixes'    => __( 'Some fixes require your intervention.', 'secupress' ),
 			'spinnerUrl'         => admin_url( 'images/wpspin_light-2x.gif' ),
+			'reScan'             => _x( 'Re-Scan', 'verb', 'secupress' ),
 			'scanDetails'        => __( 'Scan Details', 'secupress' ),
 			'fixDetails'         => __( 'Fix Details', 'secupress' ),
 			'supportTitle'       => __( 'Ask for Support', 'secupress' ),
@@ -717,7 +718,10 @@ function secupress_scanners_template() {
 					}
 
 					// Scan.
-					$status_text  = ! empty( $scanners[ $option_name ]['status'] ) ? secupress_status( $scanners[ $option_name ]['status'] )    : secupress_status( 'notscannedyet' );
+					$scanners[ $option_name ]           = isset( $scanners[ $option_name ] )             ? $scanners[ $option_name ]           : array();
+					$scanners[ $option_name ]['status'] = ! empty( $scanners[ $option_name ]['status'] ) ? $scanners[ $option_name ]['status'] : 'notscannedyet';
+
+					$status_text  = secupress_status( $scanners[ $option_name ]['status'] );
 					$status_class = ! empty( $scanners[ $option_name ]['status'] ) ? sanitize_html_class( $scanners[ $option_name ]['status'] ) : 'notscannedyet';
 					$scan_nonce   = 'secupress_scanner_' . $class_name_part . ( $is_subsite ? '-' . $site_id : '' );
 					$scan_nonce   = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $class_name_part . '&_wp_http_referer=' . $referer . ( $is_subsite ? '&for-current-site=1&site=' . $site_id : '' ) ), $scan_nonce );
@@ -814,7 +818,7 @@ function secupress_scanners_template() {
 											<i class="icon-refresh" aria-hidden="true"></i>
 										</span>
 										<span class="text">
-											<?php _ex( 'Re-Scan', 'scan a test', 'secupress' ); ?>
+											<?php echo 'notscannedyet' === $scanners[ $option_name ]['status'] ? _x( 'Scan', 'verb', 'secupress' ) : _x( 'Re-Scan', 'verb', 'secupress' ); ?>
 										</span>
 									</a>
 								</p>
@@ -850,7 +854,7 @@ function secupress_scanners_template() {
 										</span>
 									</a>
 									<?php
-									$support_href   = secupress_is_pro() ? 'http://secupress.me/support/?item=' . $option_name : 'https://wordpress.org/support/plugin/secupress-free#postform'; //// correct slug on repo?
+									$support_href   = secupress_is_pro() ? 'http://secupress.me/support/?item=' . $option_name : 'https://wordpress.org/support/plugin/secupress-free#postform'; // Correct slug on repo? ////
 									$support_suffix = secupress_is_pro() ? 'pro' : 'free';
 									?>
 									<a href="<?php echo $support_href; ?>" class="secupress-button secupress-button-mini secupress-ask-support secupress-ask-support-<?php echo $support_suffix; ?>">
