@@ -663,16 +663,16 @@ class SecuPress_Logs extends SecuPress_Singleton {
 
 		// Create the menu item.
 		add_submenu_page(
-			'secupress_scanners',
+			SECUPRESS_PLUGIN_SLUG . '_scanners',
 			_x( 'Logs', 'post type general name', 'secupress' ),
 			_x( 'Logs', 'post type general name', 'secupress' ),
 			secupress_get_capability(),
-			'secupress_logs',
+			SECUPRESS_PLUGIN_SLUG . '_logs',
 			array( $this, '_page' )
 		);
 
 		// Initiate the page.
-		add_action( 'load-secupress_page_secupress_logs', array( $this, '_logs_list_load' ) );
+		add_action( 'load-secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_logs', array( $this, '_logs_list_load' ) );
 	}
 
 

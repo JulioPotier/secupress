@@ -168,16 +168,18 @@ function secupress_get_scanner_counts( $type = '' ) {
 	$counts['total']         = count( $tests_by_status['high'] ) + count( $tests_by_status['medium'] ) + count( $tests_by_status['low'] );
 	$percent                 = floor( $counts['good'] * 100 / $counts['total'] );
 
-	if ( $percent >= 90 ) {
+	if ( $percent >= 99 ) {
 		$counts['grade'] = 'A';
-	} elseif ( $percent >= 80 ) {
+	} elseif ( $percent >= 90 ) {
 		$counts['grade'] = 'B';
-	} elseif ( $percent >= 70 ) {
+	} elseif ( $percent >= 80 ) {
 		$counts['grade'] = 'C';
-	} elseif ( $percent >= 60 ) {
+	} elseif ( $percent >= 70 ) {
 		$counts['grade'] = 'D';
-	} elseif ( $percent >= 50 ) {
+	} elseif ( $percent >= 60 ) {
 		$counts['grade'] = 'E';
+	} elseif ( $percent == 0 ) {
+		$counts['grade'] = '0';
 	} else {
 		$counts['grade'] = 'F';
 	}
@@ -189,7 +191,23 @@ function secupress_get_scanner_counts( $type = '' ) {
 	return $counts;
 }
 
-
+/**
+ * Echo a sentense to help or congrat the user based on the scanner grade
+ *
+ * @since 1.0
+ **/
+function secupress_congratulations_score_text() {
+	$grade = secupress_get_scanner_counts( 'grade' );
+	switch( $grade ) {
+		case 'A': _e( 'Congratulations! 🎉', 'secupress' ); break;
+		case 'B': _e( 'Almost perfect!', 'secupress' ); break;
+		case 'C': _e( 'Not bad, but try to fix more.', 'secupress' ); break;
+		case 'D': _e( 'Well, it\'s not good yet.', 'secupress' ); break;
+		case 'E': _e( 'Not good at all, fix more things.', 'secupress' ); break;
+		case 'F': _e( 'Still very bad, start to fix things!', 'secupress' ); break;
+		case '0': echo '(ᕗ‶⇀︹↼)ᕗノ彡┻━┻'; break; // Easter egg if you got 0% (how is this possible oO)
+	}
+}
 /*------------------------------------------------------------------------------------------------*/
 /* PLUGINS ====================================================================================== */
 /*------------------------------------------------------------------------------------------------*/

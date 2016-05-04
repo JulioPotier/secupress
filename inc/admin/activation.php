@@ -14,6 +14,7 @@ register_activation_hook( SECUPRESS_FILE, 'secupress_activation' );
 function secupress_activation() {
 	// Last constants.
 	define( 'SECUPRESS_PLUGIN_NAME', 'SecuPress' );
+	define( 'SECUPRESS_PLUGIN_SLUG', 'secupress' );
 
 	// Make sure our texts are translated.
 	secupress_load_plugin_textdomain_translations();

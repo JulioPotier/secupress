@@ -24,10 +24,10 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	wp_enqueue_script( 'secupress-wordpress-js', SECUPRESS_ADMIN_JS_URL . 'secupress-wordpress' . $suffix . '.js', array(), $version, true );
 
 	$pages = array(
-		'toplevel_page_secupress_scanners'  => 1,
-		'secupress_page_secupress_modules'  => 1,
-		'secupress_page_secupress_settings' => 1,
-		'secupress_page_secupress_logs'     => 1,
+		'toplevel_page_' . SECUPRESS_PLUGIN_SLUG . '_scanners'  => 1,
+		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules'  => 1,
+		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' => 1,
+		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_logs'     => 1,
 	);
 
 	if ( ! isset( $pages[ $hook_suffix ] ) ) {
@@ -41,12 +41,12 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	wp_enqueue_style( 'secupress-common-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-common' . $suffix . '.css', array(), $version );
 
 	// Global settings page.
-	if ( 'secupress_page_secupress_settings' === $hook_suffix ) {
+	if ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' === $hook_suffix ) {
 		// CSS.
 		wp_enqueue_style( 'secupress-settings-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-settings' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 	}
 	// Modules page.
-	elseif ( 'secupress_page_secupress_modules' === $hook_suffix ) {
+	elseif ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' === $hook_suffix ) {
 		// CSS.
 		wp_enqueue_style( 'secupress-modules-css',  SECUPRESS_ADMIN_CSS_URL . 'secupress-modules' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 		wp_enqueue_style( 'wpmedia-css-sweetalert', SECUPRESS_ADMIN_CSS_URL . 'sweetalert2' . $suffix . '.css', array(), '1.3.4' );
@@ -92,7 +92,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 
 	}
 	// Scanners page.
-	elseif ( 'toplevel_page_secupress_scanners' === $hook_suffix ) {
+	elseif ( 'toplevel_page_' . SECUPRESS_PLUGIN_SLUG . '_scanners' === $hook_suffix ) {
 		// CSS.
 		wp_enqueue_style( 'secupress-scanner-css',  SECUPRESS_ADMIN_CSS_URL . 'secupress-scanner' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 		wp_enqueue_style( 'wpmedia-css-sweetalert', SECUPRESS_ADMIN_CSS_URL . 'sweetalert2' . $suffix . '.css', array(), '1.3.4' );
@@ -127,11 +127,12 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'oneManualFix'       => __( 'One fix requires your intervention.', 'secupress' ),
 			'someManualFixes'    => __( 'Some fixes require your intervention.', 'secupress' ),
 			'spinnerUrl'         => admin_url( 'images/wpspin_light-2x.gif' ),
+			'reScan'             => _x( 'Re-Scan', 'verb', 'secupress' ),
 			'scanDetails'        => __( 'Scan Details', 'secupress' ),
 			'fixDetails'         => __( 'Fix Details', 'secupress' ),
 			'supportTitle'       => __( 'Ask for Support', 'secupress' ),
 			'supportButton'      => __( 'Open a ticket', 'secupress' ),
-			'supportContentFree' => __( '<p>Using the free version you have to post a new thread in the free wordpress.org forums.</p><p><a href="https://wordpress.org/support/plugin/secupress-free#postform" target="_blank" class="secupress-button-mini"><span class="icon"><i class="icon-wordpress" aria-hidden="true"></i></span><span class="text">Open the forum</span></a></p><p>When using the Pro version, you can open a ticket directly from this popin: </p><br><p style="text-align:left">Summary: <input class="large-text" type="text" name="summary"></p><p style="text-align:left">Description: <textarea name="description" disabled="disabled">Please provide the specific url(s) where we can see each issue. e.g. the request doesn\'t work on this page: example.com/this-page</textarea></p>', 'secupress' ),
+			'supportContentFree' => __( '<p>Using the free version you have to post a new thread in the free wordpress.org forums.</p><p><a href="https://wordpress.org/support/plugin/secupress-free#postform" target="_blank" class="secupress-button secupress-button-mini"><span class="icon"><i class="icon-wordpress" aria-hidden="true"></i></span><span class="text">Open the forum</span></a></p><p>When using the Pro version, you can open a ticket directly from this popin: </p><br><p style="text-align:left">Summary: <input class="large-text" type="text" name="summary"></p><p style="text-align:left">Description: <textarea name="description" disabled="disabled">Please provide the specific url(s) where we can see each issue. e.g. the request doesn\'t work on this page: example.com/this-page</textarea></p>', 'secupress' ),
 			'supportContentPro'  => '<input type="hidden" id="secupress_support_item" name="secupress_support_item" value=""><p style="text-align:left">Summary: <input class="large-text" type="text" name="summary"></p><p style="text-align:left">Description: <textarea name="description" disabled="disabled">Please provide the specific url(s) where we can see each issue. e.g. the request doesn\'t work on this page: example.com/this-page</textarea></p>',
 		);
 
@@ -205,12 +206,12 @@ function secupress_create_menus() {
 	$cap   = secupress_get_capability();
 
 	// Main menu item.
-	add_menu_page( SECUPRESS_PLUGIN_NAME, 'secupress', $cap, 'secupress_scanners', '__secupress_scanners', 'dashicons-shield-alt' );
+	add_menu_page( SECUPRESS_PLUGIN_NAME, 'secupress', $cap, SECUPRESS_PLUGIN_SLUG . '_scanners', '__secupress_scanners', 'dashicons-shield-alt' );
 
 	// Sub-menus.
-	add_submenu_page( 'secupress_scanners', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ) . $count, $cap, 'secupress_scanners', '__secupress_scanners' );
-	add_submenu_page( 'secupress_scanners', __( 'Modules', 'secupress' ),  __( 'Modules', 'secupress' ),           $cap, 'secupress_modules',  '__secupress_modules' );
-	add_submenu_page( 'secupress_scanners', __( 'Settings' ),              __( 'Settings' ),                       $cap, 'secupress_settings', '__secupress_global_settings' );
+	add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ) . $count, $cap, SECUPRESS_PLUGIN_SLUG . '_scanners', '__secupress_scanners' );
+	add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Modules', 'secupress' ),  __( 'Modules', 'secupress' ),           $cap, SECUPRESS_PLUGIN_SLUG . '_modules',  '__secupress_modules' );
+	add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Settings' ),              __( 'Settings' ),                       $cap, SECUPRESS_PLUGIN_SLUG . '_settings', '__secupress_global_settings' );
 
 	// Fix `add_menu_page()` nonsense.
 	end( $menu );
@@ -420,7 +421,7 @@ function __secupress_scanners() {
 									</li>
 									<li class="status-notscannedyet" data-status="notscannedyet">
 										<span class="secupress-carret"></span>
-										<?php esc_html_e( 'Not scanned yet', 'secupress' ); ?>
+										<?php esc_html_e( 'New Scan', 'secupress' ); ?>
 										<span class="secupress-count-notscannedyet"></span>
 									</li>
 								</ul><!-- .secupress-chart-legend -->
@@ -428,9 +429,9 @@ function __secupress_scanners() {
 
 							<div class="secupress-scan-infos">
 								<p class="secupress-text-big secupress-m0">
-									<?php esc_html_e( 'Congratulations', 'secupress' ); ?>
+									<?php secupress_congratulations_score_text(); ?>
 								</p>
-								<p class="secupress-score secupress-m0"><?php printf( esc_html__( 'Your note is %s — %s scanned items are good.', 'secupress' ), '<span class="letter">∅</span>', '<span class="percent"></span>' ); ?></p>
+								<p class="secupress-score secupress-m0"><?php printf( esc_html__( 'Your note is %s — %s scanned items are good.', 'secupress' ), '<span class="letter">' . secupress_get_scanner_counts( 'grade' ) . '</span>', '<span class="good">' . secupress_get_scanner_counts( 'good' ) . '</span>' ); ?></p>
 
 								<p class="secupress-actions-line">
 									<button class="secupress-button button-secupress-scan" type="button">
@@ -717,7 +718,10 @@ function secupress_scanners_template() {
 					}
 
 					// Scan.
-					$status_text  = ! empty( $scanners[ $option_name ]['status'] ) ? secupress_status( $scanners[ $option_name ]['status'] )    : secupress_status( 'notscannedyet' );
+					$scanners[ $option_name ]           = isset( $scanners[ $option_name ] )             ? $scanners[ $option_name ]           : array();
+					$scanners[ $option_name ]['status'] = ! empty( $scanners[ $option_name ]['status'] ) ? $scanners[ $option_name ]['status'] : 'notscannedyet';
+
+					$status_text  = secupress_status( $scanners[ $option_name ]['status'] );
 					$status_class = ! empty( $scanners[ $option_name ]['status'] ) ? sanitize_html_class( $scanners[ $option_name ]['status'] ) : 'notscannedyet';
 					$scan_nonce   = 'secupress_scanner_' . $class_name_part . ( $is_subsite ? '-' . $site_id : '' );
 					$scan_nonce   = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $class_name_part . '&_wp_http_referer=' . $referer . ( $is_subsite ? '&for-current-site=1&site=' . $site_id : '' ) ), $scan_nonce );
@@ -814,7 +818,7 @@ function secupress_scanners_template() {
 											<i class="icon-refresh" aria-hidden="true"></i>
 										</span>
 										<span class="text">
-											<?php _ex( 'Re-Scan', 'scan a test', 'secupress' ); ?>
+											<?php echo 'notscannedyet' === $scanners[ $option_name ]['status'] ? _x( 'Scan', 'verb', 'secupress' ) : _x( 'Re-Scan', 'verb', 'secupress' ); ?>
 										</span>
 									</a>
 								</p>
@@ -850,7 +854,7 @@ function secupress_scanners_template() {
 										</span>
 									</a>
 									<?php
-									$support_href   = secupress_is_pro() ? 'http://secupress.me/support/?item=' . $option_name : 'https://wordpress.org/support/plugin/secupress-free#postform'; //// correct slug on repo?
+									$support_href   = secupress_is_pro() ? 'http://secupress.me/support/?item=' . $option_name : 'https://wordpress.org/support/plugin/secupress-free#postform'; // Correct slug on repo? ////
 									$support_suffix = secupress_is_pro() ? 'pro' : 'free';
 									?>
 									<a href="<?php echo $support_href; ?>" class="secupress-button secupress-button-mini secupress-ask-support secupress-ask-support-<?php echo $support_suffix; ?>">
@@ -933,7 +937,7 @@ function secupress_status( $status ) {
 		case 'cantfix':
 			return '&#160;';
 		default:
-			return wp_sprintf( $template, __( 'Not scanned yet', 'secupress' ) );
+			return wp_sprintf( $template, __( 'New Scan', 'secupress' ) );
 	endswitch;
 }
 

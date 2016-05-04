@@ -1309,8 +1309,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	protected function file_scanner() {
 		if ( ! secupress_is_pro() ) {
 			?>
-			<button class="button button-secondary disabled" type="button">
-				<?php _e( 'Search for malicious files', 'secupress' ); ?>
+			<button class="secupress-button disabled" type="button">
+				<?php esc_html_e( 'Search for malicious files', 'secupress' ); ?>
 			</button>
 			<?php
 		} else {
