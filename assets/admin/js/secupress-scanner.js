@@ -859,6 +859,7 @@ jQuery( document ).ready( function( $ ) {
 			// Add the fix result.
 			if ( "" !== extra.data.fix_msg ) {
 				secupressAddFixResult( $row, extra.data.fix_msg );
+				$row.find('.secupress-fix-result-retryfix').show();
 			}
 
 			// Change the scan button text.

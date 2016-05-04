@@ -819,12 +819,13 @@ function secupress_scanners_template() {
 							</div>
 						</div>
 
-						<?php if ( ! empty( $fix_message ) ) { ?>
 						<div class="secupress-flex secupress-flex-spaced secupress-fix-result secupress-bg-gray">
 							<div class="secupress-fix-result-message">
 								<?php echo $fix_message; ?>
 							</div>
-							<div class="secupress-fix-result-retryfix">
+							<?php
+							if ( true === $current_test::$fixable || 'notscannedyet' !== $scanners[ $option_name ]['status'] || ( 'pro' !== $current_test::$fixable || secupress_is_pro() ) ) { ?>
+							<div class="secupress-fix-result-retryfix hidden">
 								<a href="<?php echo esc_url( $fix_nonce_url ); ?>" class="secupress-button secupress-button-primary secupress-button-mini">
 									<span class="icon">
 										<i class="icon-shield"></i>
@@ -834,8 +835,8 @@ function secupress_scanners_template() {
 									</span>
 								</a>
 							</div>
+							<?php } ?>
 						</div>
-						<?php } ?>
 						<?php // TODO: Make it appears dynamically ////. ?>
 						<div class="secupress-fix-result-actions secupress-bg-gray">
 								<p>
