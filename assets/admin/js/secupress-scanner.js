@@ -481,7 +481,7 @@ jQuery( document ).ready( function( $ ) {
 			}
 
 			// The data is incomplete.
-			if ( ! r.data.status || ! r.data.class || ! r.data.message ) {
+			if ( ! r.data.class || ! r.data.message ) {
 				return secupressDisplayFixError( $row, warn );
 			}
 
@@ -572,9 +572,6 @@ jQuery( document ).ready( function( $ ) {
 			secupressScans.doingScan[ test ] = 1;
 			$row.addClass( "scanning" ).removeClass( "status-error" );
 
-			// Add the spinner.
-			secupressAddScanStatusText( $row, '<img src="' + w.SecuPressi18nScanner.spinnerUrl + '" alt="" />' );
-
 			// Ajax call
 			$.getJSON( href.replace( "admin-post.php", "admin-ajax.php" ) )
 			.done( function( r ) {
@@ -656,9 +653,6 @@ jQuery( document ).ready( function( $ ) {
 			secupressScans.doingFix[ test ] = 1;
 			$row.addClass( 'fixing' ).removeClass( 'status-error' );
 
-			// Add the spinner.
-			secupressAddFixStatusText( $row, '<img src="' + w.SecuPressi18nScanner.spinnerUrl + '" alt="" />' );
-
 			// Ajax call
 			$.getJSON( href.replace( 'admin-post.php', 'admin-ajax.php' ) )
 			.done( function( r ) {
@@ -688,7 +682,7 @@ jQuery( document ).ready( function( $ ) {
 			.fail( function() {
 				delete secupressScans.doingFix[ test ];
 
-				// Error
+				// Error.
 				secupressDisplayFixError( $row, ! isBulk );
 			} )
 			.always( function() {
@@ -821,12 +815,12 @@ jQuery( document ).ready( function( $ ) {
 							} ] );
 						}
 					} else {
-						// Error
+						// Error.
 						secupressDisplayFixError( $row, true );
 					}
 				} )
 				.fail( function() {
-					// Error
+					// Error.
 					secupressDisplayFixError( $row, true );
 				} );
 			} );
