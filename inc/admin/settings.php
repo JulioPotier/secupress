@@ -721,8 +721,8 @@ function secupress_scanners_template() {
 					// Fix.
 					$fix_status_text  = ! empty( $fixes[ $option_name ]['status'] ) && 'good' !== $fixes[ $option_name ]['status'] ? secupress_status( $fixes[ $option_name ]['status'] ) : '';
 					$fix_css_class    = ! empty( $fixes[ $option_name ]['status'] ) ? ' status-' . sanitize_html_class( $fixes[ $option_name ]['status'] ) : ' status-cantfix';
-					$fix_nonce        = 'secupress_fixit_' . $class_name_part . ( $is_subsite ? '-' . $site_id : '' );
-					$fix_nonce        = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $class_name_part . '&_wp_http_referer=' . $referer . ( $is_subsite ? '&for-current-site=1&site=' . $site_id : '' ) ), $fix_nonce );
+					$fix_action       = 'secupress_fixit_' . $class_name_part . ( $is_subsite ? '-' . $site_id : '' );
+					$fix_nonce_url       = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $class_name_part . '&_wp_http_referer=' . $referer . ( $is_subsite ? '&for-current-site=1&site=' . $site_id : '' ) ), $fix_action );
 
 					if ( ! empty( $fixes[ $option_name ]['msgs'] ) && 'good' !== $status_class ) {
 						$fix_message = secupress_format_message( $fixes[ $option_name ]['msgs'], $class_name_part );
@@ -755,7 +755,7 @@ function secupress_scanners_template() {
 								<?php
 								if ( true === $current_test::$fixable || 'pro' === $current_test::$fixable && secupress_is_pro() ) {
 								?>
-									<a class="secupress-button-primary secupress-button-mini secupress-fixit<?php echo $current_test::$delayed_fix ? ' delayed-fix' : '' ?>" href="<?php echo esc_url( $fix_nonce ); ?>">
+									<a class="secupress-button-primary secupress-button-mini secupress-fixit<?php echo $current_test::$delayed_fix ? ' delayed-fix' : '' ?>" href="<?php echo esc_url( $fix_nonce_url ); ?>">
 										<span class="icon">
 											<i class="icon-shield" aria-hidden="true"></i>
 										</span>
@@ -814,7 +814,7 @@ function secupress_scanners_template() {
 								<?php echo $fix_message; ?>
 							</div>
 							<div class="secupress-fix-result-retryfix">
-								<a href="<?php echo esc_url( $fix_nonce ); ?>" class="secupress-button secupress-button-primary secupress-button-mini">
+								<a href="<?php echo esc_url( $fix_nonce_url ); ?>" class="secupress-button secupress-button-primary secupress-button-mini">
 									<span class="icon">
 										<i class="icon-shield"></i>
 									</span>
