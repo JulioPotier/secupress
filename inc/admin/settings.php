@@ -814,7 +814,7 @@ function secupress_scanners_template() {
 											<i class="icon-refresh" aria-hidden="true"></i>
 										</span>
 										<span class="text">
-											<?php _ex( 'Scan', 'scan a test', 'secupress' ); ?>
+											<?php _ex( 'Re-Scan', 'scan a test', 'secupress' ); ?>
 										</span>
 									</a>
 								</p>
