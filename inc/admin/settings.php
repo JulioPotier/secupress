@@ -317,7 +317,7 @@ function __secupress_scanners() {
 								<i class="icon-info" aria-hidden="true"></i>
 							</span>
 							<span class="text">
-								<?php esc_html_e( 'How does it work?', 'secupress' ); ?>
+								<?php esc_html_e( 'How?', 'secupress' ); ?>
 							</span>
 						</a>
 					</p>
@@ -732,7 +732,7 @@ function secupress_scanners_template() {
 					}
 
 					// Fix.
-					$fix_status_text  = ! empty( $fixes[ $option_name ]['status'] ) && 'good' !== $fixes[ $option_name ]['status'] ? secupress_status( $fixes[ $option_name ]['status'] ) : '&#160;';
+					$fix_status_text  = ! empty( $fixes[ $option_name ]['status'] ) && 'good' !== $fixes[ $option_name ]['status'] ? secupress_status( $fixes[ $option_name ]['status'] ) : '';
 					$fix_css_class    = ! empty( $fixes[ $option_name ]['status'] ) ? ' status-' . sanitize_html_class( $fixes[ $option_name ]['status'] ) : ' status-cantfix';
 					$fix_nonce        = 'secupress_fixit_' . $class_name_part . ( $is_subsite ? '-' . $site_id : '' );
 					$fix_nonce        = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $class_name_part . '&_wp_http_referer=' . $referer . ( $is_subsite ? '&for-current-site=1&site=' . $site_id : '' ) ), $fix_nonce );
@@ -814,7 +814,7 @@ function secupress_scanners_template() {
 											<i class="icon-refresh" aria-hidden="true"></i>
 										</span>
 										<span class="text">
-											<?php _ex( 'Re-Scan', 'scan a test', 'secupress' ); ?>
+											<?php _ex( 'Scan', 'scan a test', 'secupress' ); ?>
 										</span>
 									</a>
 								</p>
