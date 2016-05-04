@@ -99,15 +99,15 @@ jQuery( document ).ready( function( $ ) {
 		$( '.secupress-score' ).find( '.percent' ).text( percent + '%' );
 
 		if ( total != status_notscannedyet ) {
-			if ( percent >= 90 ) {
+			if ( percent >= 99 ) {
 				letter = 'A';
-			} else if ( percent >= 80 ) {
+			} else if ( percent >= 90 ) {
 				letter = 'B';
-			} else if ( percent >= 70 ) {
+			} else if ( percent >= 80 ) {
 				letter = 'C';
-			} else if ( percent >= 60 ) {
+			} else if ( percent >= 70 ) {
 				letter = 'D';
-			} else if ( percent >= 50 ) {
+			} else if ( percent >= 60 ) {
 				letter = 'E';
 			} else if ( percent == 0 ) {
 				letter = '0';

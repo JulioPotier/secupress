@@ -168,16 +168,18 @@ function secupress_get_scanner_counts( $type = '' ) {
 	$counts['total']         = count( $tests_by_status['high'] ) + count( $tests_by_status['medium'] ) + count( $tests_by_status['low'] );
 	$percent                 = floor( $counts['good'] * 100 / $counts['total'] );
 
-	if ( $percent >= 90 ) {
+	if ( $percent >= 99 ) {
 		$counts['grade'] = 'A';
-	} elseif ( $percent >= 80 ) {
+	} elseif ( $percent >= 90 ) {
 		$counts['grade'] = 'B';
-	} elseif ( $percent >= 70 ) {
+	} elseif ( $percent >= 80 ) {
 		$counts['grade'] = 'C';
-	} elseif ( $percent >= 60 ) {
+	} elseif ( $percent >= 70 ) {
 		$counts['grade'] = 'D';
-	} elseif ( $percent >= 50 ) {
+	} elseif ( $percent >= 60 ) {
 		$counts['grade'] = 'E';
+	} elseif ( $percent == 0 ) {
+		$counts['grade'] = '0';
 	} else {
 		$counts['grade'] = 'F';
 	}
