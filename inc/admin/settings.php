@@ -117,18 +117,22 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		wp_enqueue_script( 'wpmedia-js-sweetalert', SECUPRESS_ADMIN_JS_URL . 'sweetalert2' . $suffix . '.js', array(), '1.3.4', true );
 
 		$localize = array(
-			'confirmText'     => __( 'OK', 'secupress' ),
-			'cancelText'      => __( 'Cancel' ),
-			'error'           => __( 'Error', 'secupress' ),
-			'fixed'           => __( 'Fixed', 'secupress' ),
-			'fixedPartial'    => __( 'Partially fixed', 'secupress' ),
-			'notFixed'        => __( 'Not Fixed', 'secupress' ),
-			'fixit'           => __( 'Fix it!', 'secupress' ),
-			'oneManualFix'    => __( 'One fix requires your intervention.', 'secupress' ),
-			'someManualFixes' => __( 'Some fixes require your intervention.', 'secupress' ),
-			'spinnerUrl'      => admin_url( 'images/wpspin_light-2x.gif' ),
-			'scanDetails'     => __( 'Scan Details', 'secupress' ),
-			'fixDetails'      => __( 'Fix Details', 'secupress' ),
+			'confirmText'        => __( 'OK', 'secupress' ),
+			'cancelText'         => __( 'Cancel' ),
+			'error'              => __( 'Error', 'secupress' ),
+			'fixed'              => __( 'Fixed', 'secupress' ),
+			'fixedPartial'       => __( 'Partially fixed', 'secupress' ),
+			'notFixed'           => __( 'Not Fixed', 'secupress' ),
+			'fixit'              => __( 'Fix it!', 'secupress' ),
+			'oneManualFix'       => __( 'One fix requires your intervention.', 'secupress' ),
+			'someManualFixes'    => __( 'Some fixes require your intervention.', 'secupress' ),
+			'spinnerUrl'         => admin_url( 'images/wpspin_light-2x.gif' ),
+			'scanDetails'        => __( 'Scan Details', 'secupress' ),
+			'fixDetails'         => __( 'Fix Details', 'secupress' ),
+			'supportTitle'       => __( 'Ask for Support', 'secupress' ),
+			'supportButton'      => __( 'Open a ticket', 'secupress' ),
+			'supportContentFree' => __( '<p>Using the free version you have to post a new thread in the free wordpress.org forums.</p><p><a href="https://wordpress.org/support/plugin/secupress-free#postform" target="_blank" class="secupress-button-mini"><span class="icon"><i class="icon-wordpress" aria-hidden="true"></i></span><span class="text">Open the forum</span></a></p><p>When using the Pro version, you can open a ticket directly from this popin: </p><br><p style="text-align:left">Summary: <input class="large-text" type="text" name="summary"></p><p style="text-align:left">Description: <textarea name="description" disabled="disabled">Please provide the specific url(s) where we can see each issue. e.g. the request doesn\'t work on this page: example.com/this-page</textarea></p>', 'secupress' ),
+			'supportContentPro'  => '<input type="hidden" id="secupress_support_item" name="secupress_support_item" value=""><p style="text-align:left">Summary: <input class="large-text" type="text" name="summary"></p><p style="text-align:left">Description: <textarea name="description" disabled="disabled">Please provide the specific url(s) where we can see each issue. e.g. the request doesn\'t work on this page: example.com/this-page</textarea></p>',
 		);
 
 		if ( ! empty( $_GET['oneclick-scan'] ) && ! empty( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'first_oneclick-scan' ) && current_user_can( secupress_get_capability() ) ) {
@@ -845,7 +849,11 @@ function secupress_scanners_template() {
 											<?php esc_html_e( 'Read the documentation', 'secupress' ); ?>
 										</span>
 									</a>
-									<a href="#" class="secupress-button secupress-button-mini secupress-ask-support">
+									<?php
+									$support_href   = secupress_is_pro() ? 'http://secupress.me/support/?item=' . $option_name : 'https://wordpress.org/support/plugin/secupress-free#postform'; //// correct slug on repo?
+									$support_suffix = secupress_is_pro() ? 'pro' : 'free';
+									?>
+									<a href="<?php echo $support_href; ?>" class="secupress-button secupress-button-mini secupress-ask-support secupress-ask-support-<?php echo $support_suffix; ?>">
 										<span class="icon">
 											<i class="icon-ask"></i>
 										</span>
