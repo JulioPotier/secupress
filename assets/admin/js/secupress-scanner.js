@@ -22,32 +22,32 @@ jQuery( document ).ready( function( $ ) {
 	if ( secupressChartEl && window.Chart ) {
 		secupressChartData = [
 			{
-				value		: SecuPressi18nChart.good.value,
-				color		: '#26B3A9',
-				highlight	: '#2BCDC1',
-				label		: SecuPressi18nChart.good.text,
-				status		: 'good',
+				value:     SecuPressi18nChart.good.value,
+				color:     "#26B3A9",
+				highlight: "#2BCDC1",
+				label:     SecuPressi18nChart.good.text,
+				status:    "good",
 			},
 			{
-				value		: SecuPressi18nChart.bad.value,
-				color		: '#CB234F',
-				highlight	: '#F2295E',
-				label		: SecuPressi18nChart.bad.text,
-				status		: 'bad',
+				value:     SecuPressi18nChart.bad.value,
+				color:     "#CB234F",
+				highlight: "#F2295E",
+				label:     SecuPressi18nChart.bad.text,
+				status:    "bad",
 			},
 			{
-				value		: SecuPressi18nChart.warning.value,
-				color		: '#F7AB13',
-				highlight	: '#F1C40F',
-				label		: SecuPressi18nChart.warning.text,
-				status		: 'warning',
+				value:     SecuPressi18nChart.warning.value,
+				color:     "#F7AB13",
+				highlight: "#F1C40F",
+				label:     SecuPressi18nChart.warning.text,
+				status:    "warning",
 			},
 			{
-				value		: SecuPressi18nChart.notscannedyet.value,
-				color		: '#5A626F',
-				highlight	: '#888888',
-				label		: SecuPressi18nChart.notscannedyet.text,
-				status		: 'notscannedyet',
+				value:     SecuPressi18nChart.notscannedyet.value,
+				color:     "#5A626F",
+				highlight: "#888888",
+				label:     SecuPressi18nChart.notscannedyet.text,
+				status:    "notscannedyet",
 			},
 		];
 
@@ -79,81 +79,65 @@ jQuery( document ).ready( function( $ ) {
 	}
 
 
-	function secupressUpdateScore( refreshDate ) {
-		var total, status_good, status_warning, status_bad, status_notscannedyet, percent, letter,
-			$scoreResultsUl;
-
+	function secupressUpdateScore( data ) {
 		if ( ! secupressChartEl ) {
 			return;
 		}
 
-		total                = $( '.status-all' ).length;
-		status_good          = $( '.secupress-table-prio-all .secupress-item-all.status-good' ).length;
-		status_warning       = $( '.secupress-table-prio-all .secupress-item-all.status-warning' ).length;
-		status_bad           = $( '.secupress-table-prio-all .secupress-item-all.status-bad' ).length;
-		status_notscannedyet = $( '.secupress-table-prio-all .secupress-item-all.status-notscannedyet' ).length;
-		percent              = Math.floor( status_good * 100 / total );
-		letter               = '\u2205';
+		// All various texts.
+		$( ".secupress-chart-container .letter" ).replaceWith( data.letter );
+		$( ".secupress-score-text" ).text( data.text );
+		$( ".secupress-scan-infos .secupress-score" ).html( data.subtext );
+		$( ".secupress-score .percent" ).text( data.percent + "%" );
+		$( "#wp-admin-bar-secupress" ).find( ".letter" ).text( data.grade );
+		$( "#toplevel_page_" + window.SecuPressi18nScanner.pluginSlug + "_scanners" ).find( ".update-count" ).text( data.bad ).parent().attr( "class", function( i, val ) {
+			return val.replace( /count-\d+/, "count-" + data.bad );
+		} );
 
-		$( '.secupress-score' ).find( '.percent' ).text( percent + '%' );
-
-		if ( total != status_notscannedyet ) {
-			if ( percent >= 99 ) {
-				letter = 'A';
-			} else if ( percent >= 90 ) {
-				letter = 'B';
-			} else if ( percent >= 80 ) {
-				letter = 'C';
-			} else if ( percent >= 70 ) {
-				letter = 'D';
-			} else if ( percent >= 60 ) {
-				letter = 'E';
-			} else if ( percent == 0 ) {
-				letter = '0';
-			} else {
-				letter = 'F';
-			}
-		}
-
-		if ( 'A' === letter ) {
-			$( '#tweeterA' ).slideDown();
-		} else {
-			$( '#tweeterA' ).slideUp();
-		}
-
-		$( '.secupress-score' ).find( '.letter' ).html( letter ).removeClass( 'l\u2205 lA lB lC lD lE lF' ).addClass( 'l' + letter );
-
-		if ( refreshDate ) {
-			$scoreResultsUl = $( '#secupress-latest').find( 'ul' );
-
-			if ( $scoreResultsUl.find( 'li' ).length === 5 ) {
-				$scoreResultsUl.find( 'li:last' ).slideUp( 250, function() {
-					$( this ).remove();
-					secupressPrependDataLi( refreshDate );
-				} );
-			} else {
-				secupressPrependDataLi( refreshDate );
-			}
-		}
-
-		secupressChart.segments[0].value = status_good;
-		secupressChart.segments[1].value = status_bad;
-		secupressChart.segments[2].value = status_warning;
-		secupressChart.segments[3].value = status_notscannedyet;
+		// Chart.
+		secupressChart.segments[0].value = data.good;
+		secupressChart.segments[1].value = data.bad;
+		secupressChart.segments[2].value = data.warning;
+		secupressChart.segments[3].value = data.notscannedyet;
 		secupressChart.update();
 
-		// legend counters
-		$('.secupress-count-good').text( status_good );
-		$('.secupress-count-bad').text( status_bad );
-		$('.secupress-count-warning').text( status_warning );
-		if ( ! status_notscannedyet ) {
-			$('.secupress-big-tab-notscannedyet').hide();
-			$('.secupress-chart-legend .status-notscannedyet').hide();
+		// Tabs subtitles.
+		$( "#secupress-type-filters" ).find( "a" ).each( function() {
+			var $this = $( this ),
+				type  = $this.data( "type" );
+			$this.children( ".secupress-tab-subtitle" ).text( data[ type + "-text" ] );
+		} );
+
+		// Show/Hide the "New" tab.
+		if ( ! data.notscannedyet ) {
+			$( ".secupress-big-tab-notscannedyet, .secupress-chart-legend .status-notscannedyet" ).remove();
+		} else {
+			$( ".secupress-count-notscannedyet" ).text( data.notscannedyet );
 		}
-		$('.secupress-count-notscannedyet').text( status_notscannedyet );
+
+		// Twitter.
+		if ( "A" === data.grade ) {
+			$( "#tweeterA" ).slideDown();
+		} else {
+			$( "#tweeterA" ).slideUp();
+		}
 	}
 
-	secupressUpdateScore();
+
+	function secupressUpdateDate( data ) {
+		var $scoreResultsUl = $( "#secupress-latest" ).find( "ul" );
+
+		$scoreResultsUl.children( ".secupress-empty" ).remove();
+
+		if ( $scoreResultsUl.children( "li" ).length === 5 ) {
+			$scoreResultsUl.children( "li:last" ).slideUp( 250, function() {
+				$( this ).remove();
+				$scoreResultsUl.prepend( data ).find( "li.hidden" ).slideDown( 250 );
+			} );
+		} else {
+			$scoreResultsUl.prepend( data ).find( "li.hidden" ).slideDown( 250 );
+		}
+	}
 
 
 	// !Big network: set some data =================================================================
@@ -264,18 +248,18 @@ jQuery( document ).ready( function( $ ) {
 				confirmButtonColor: '#F1C40F',
 				type:               "question",
 				allowOutsideClick:  true
-			} ).then(function(isConfirm) {
-			  if (isConfirm === true) {
-			    swal( {
-		    		title: 'Pro Version needed',
-					type:  "error",
-					showCancelButton: true,
-					confirmButtonText: 'Get Pro now!',
-					confirmButtonColor: '#F1C40F',
-					reverseButtons: true,
-			    } );
-			  };
-		} )
+			} ).then( function( isConfirm ) {
+				if ( true === isConfirm ) {
+					swal( {
+						title: 'Pro Version needed',
+						type:  "error",
+						showCancelButton: true,
+						confirmButtonText: 'Get Pro now!',
+						confirmButtonColor: '#F1C40F',
+						reverseButtons: true,
+					} );
+				}
+			} );
 		} );
 	} )(window, document, $);
 
@@ -291,8 +275,8 @@ jQuery( document ).ready( function( $ ) {
 				html:               w.SecuPressi18nScanner.supportContentPro,
 				type:               "question",
 				allowOutsideClick:  true,
-			} ).then(function(isConfirm) {
-				if (isConfirm === true) {
+			} ).then( function( isConfirm ) {
+				if ( true === isConfirm ) {
 					swal.enableLoading();
 					$.post( ajaxurl, {}, null, "json" )
 					.done( function( r ) {
@@ -303,9 +287,8 @@ jQuery( document ).ready( function( $ ) {
 						// Error
 						console.log('fail');
 					} );
-				  };
-			} )
-
+				}
+			} );
 		} );
 	} )(window, document, $);
 
@@ -431,13 +414,13 @@ jQuery( document ).ready( function( $ ) {
 
 		// Fix icon + status text.
 		function secupressAddFixStatusText( $row, statusText ) {
-			$row.find( '.secupress-fix-status-text' ).html( statusText );
+			$row.find( ".secupress-fix-status-text" ).html( statusText );
 		}
 
 
 		// Add a fix result.
 		function secupressAddFixResult( $row, message ) {
-			$row.find( '.secupress-fix-result-message' ).html( message );
+			$row.find( ".secupress-fix-result-message" ).html( message );
 		}
 
 
@@ -452,7 +435,7 @@ jQuery( document ).ready( function( $ ) {
 			secupressAddFixResult( $row, "" );
 
 			// Add a "status-error" class to the td.
-			$row.find( '.secupress-fix-result' ).addClass( 'status-error' );
+			$row.find( ".secupress-fix-result" ).addClass( "status-error" );
 
 			if ( warn ) {
 				secupressErrorWarn();
@@ -587,29 +570,29 @@ jQuery( document ).ready( function( $ ) {
 
 			// Show our scan is running.
 			secupressScans.doingScan[ test ] = 1;
-			$row.addClass( 'scanning' ).removeClass( 'status-error' );
+			$row.addClass( "scanning" ).removeClass( "status-error" );
 
 			// Add the spinner.
 			secupressAddScanStatusText( $row, '<img src="' + w.SecuPressi18nScanner.spinnerUrl + '" alt="" />' );
 
 			// Ajax call
-			$.getJSON( href.replace( 'admin-post.php', 'admin-ajax.php' ) )
+			$.getJSON( href.replace( "admin-post.php", "admin-ajax.php" ) )
 			.done( function( r ) {
 				// Display scan result.
 				if ( secupressDisplayScanResult( r, test ) ) {
 					delete secupressScans.doingScan[ test ];
 
 					// If it's an auto-scan and the result is good, remove the fix status.
-					if ( $row.hasClass( 'autoscan' ) ) {
-						$row.removeClass( 'autoscan' );
+					if ( $row.hasClass( "autoscan" ) ) {
+						$row.removeClass( "autoscan" );
 
-						if ( r.data.class === 'good' ) {
-							$row.find( '.secupress-fix-result' ).html('');
+						if ( "good" === r.data.class ) {
+							$row.find( ".secupress-fix-result" ).html( "" );
 						}
 					}
 
 					// Trigger an event.
-					$( 'body' ).trigger( 'scanDone.secupress', [ {
+					$( "body" ).trigger( "scanDone.secupress", [ {
 						test:   test,
 						href:   href,
 						isBulk: isBulk,
@@ -628,7 +611,7 @@ jQuery( document ).ready( function( $ ) {
 			} )
 			.always( function() {
 				// Show our scan is completed.
-				$row.removeClass( 'scanning' );
+				$row.removeClass( "scanning" );
 
 				secupressScanEnd( isBulk );
 			} );
@@ -851,8 +834,7 @@ jQuery( document ).ready( function( $ ) {
 
 
 		// What to do when a scan ends.
-		$( "body" ).on( "scanDone.secupress", function( e, extra ) {
-			console.log("scanDone.secupress:", extra.test);
+		$( "body" ).on( "scanDone.secupress", function( e, extra ) {								console.log( "scanDone.secupress:", extra.test );
 			/*
 			* Available extras:
 			* extra.test:   test name.
@@ -881,12 +863,14 @@ jQuery( document ).ready( function( $ ) {
 
 			// Change the scan button text.
 			$row.find( ".secupress-scanit .text" ).text( w.SecuPressi18nScanner.reScan );
+
+			// Update counters.
+			secupressUpdateScore( extra.data.counts );
 		} );
 
 
 		// What to do after ALL scans end.
-		$( 'body' ).on( 'allScanDone.secupress', function( e, extra ) {
-			console.log( 'allScanDone.secupress:', extra.isBulk );
+		$( "body" ).on( "allScanDone.secupress", function( e, extra ) {								console.log( "allScanDone.secupress:", extra );
 			/*
 			* Available extras:
 			* extra.isBulk: tell if it's a bulk scan.
@@ -904,21 +888,12 @@ jQuery( document ).ready( function( $ ) {
 				$.getJSON( ajaxurl, params )
 				.done( function( r ) {
 					if ( $.isPlainObject( r ) && r.success && r.data ) {
-						// Update the donut only when all scans are done.
-						secupressUpdateScore( r.data );
-					} else {
-						secupressUpdateScore();
+						secupressUpdateDate( r.data );
 					}
-				} )
-				.fail( function() {
-					secupressUpdateScore();
 				} )
 				.always( function() {
 					$button.removeAttr( "disabled aria-disabled" );
 				} );
-			} else {
-				// Update the donut only when all scans are done.
-				secupressUpdateScore();
 			}
 		} );
 
@@ -982,9 +957,6 @@ jQuery( document ).ready( function( $ ) {
 
 				secupressScans.manualFix = {};
 			}
-
-			// Update the donut only when all fixes are done.
-			secupressUpdateScore();
 		} );
 
 

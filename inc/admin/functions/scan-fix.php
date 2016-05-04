@@ -45,7 +45,12 @@ function secupress_scanit( $test_name, $format_response = false, $for_current_si
 			'class'   => sanitize_key( $response['status'] ),
 			'message' => isset( $response['msgs'] ) ? secupress_format_message( $response['msgs'], $test_name ) : '',
 			'fix_msg' => isset( $response['fix_msg'] ) ? secupress_format_message( $response['fix_msg'], $test_name ) : '',
+			'counts'  => secupress_get_scanner_counts(),
 		);
+
+		foreach ( array( 'notscannedyet', 'good', 'warning', 'bad' ) as $status ) {
+			$response['counts'][ $status . '-text' ] = sprintf( _n( '%d issue', '%d issues', $response['counts'][ $status ], 'secupress' ), $response['counts'][ $status ] );
+		}
 	}
 
 	return $response;

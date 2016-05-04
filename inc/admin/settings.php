@@ -117,6 +117,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		wp_enqueue_script( 'wpmedia-js-sweetalert', SECUPRESS_ADMIN_JS_URL . 'sweetalert2' . $suffix . '.js', array(), '1.3.4', true );
 
 		$localize = array(
+			'pluginSlug'         => SECUPRESS_PLUGIN_SLUG,
 			'confirmText'        => __( 'OK', 'secupress' ),
 			'cancelText'         => __( 'Cancel' ),
 			'error'              => __( 'Error', 'secupress' ),
@@ -191,18 +192,7 @@ function secupress_create_menus() {
 	global $menu;
 
 	// Add a counter of scans with bad result.
-	$count = 0;
-	$scans = secupress_get_scan_results();
-
-	if ( $scans ) {
-		foreach ( $scans as $scan ) {
-			if ( 'bad' === $scan['status'] ) {
-				++$count;
-			}
-		}
-	}
-
-	$count = sprintf( ' <span class="update-plugins count-%1$d"><span class="update-count">%1$d</span></span>', $count );
+	$count = sprintf( ' <span class="update-plugins count-%1$d"><span class="update-count">%1$d</span></span>', secupress_get_scanner_counts( 'bad' ) );
 	$cap   = secupress_get_capability();
 
 	// Main menu item.
@@ -275,6 +265,7 @@ function __secupress_modules() {
  * @since 1.0
  */
 function __secupress_scanners() {
+	$counts  = secupress_get_scanner_counts();
 	$times   = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
 	$reports = array();
 	$last_pc = -1;
@@ -304,7 +295,7 @@ function __secupress_scanners() {
 
 		$reports = array_reverse( $reports );
 	}
-?>
+	?>
 	<div class="wrap">
 		<?php secupress_admin_heading( __( 'Scanners', 'secupress' ) ); ?>
 
@@ -398,9 +389,7 @@ function __secupress_scanners() {
 
 								<div class="secupress-chart-container">
 									<canvas class="secupress-chartjs" id="status_chart" width="197" height="197"></canvas>
-									<div class="secupress-score">
-										<span class="letter">∅</span>
-									</div>
+									<div class="secupress-score"><?php echo $counts['letter']; ?></div>
 								</div>
 
 								<ul class="secupress-chart-legend">
@@ -419,22 +408,24 @@ function __secupress_scanners() {
 										<?php esc_html_e( 'Warning', 'secupress' ); ?>
 										<span class="secupress-count-warning"></span>
 									</li>
+									<?php if ( $counts['notscannedyet'] ) : ?>
 									<li class="status-notscannedyet" data-status="notscannedyet">
 										<span class="secupress-carret"></span>
 										<?php esc_html_e( 'New Scan', 'secupress' ); ?>
 										<span class="secupress-count-notscannedyet"></span>
 									</li>
+									<?php endif; ?>
 								</ul><!-- .secupress-chart-legend -->
 							</div><!-- .secupress-chart.secupress-flex -->
 
 							<div class="secupress-scan-infos">
-								<p class="secupress-text-big secupress-m0">
-									<?php secupress_congratulations_score_text(); ?>
+								<p class="secupress-score-text secupress-text-big secupress-m0">
+									<?php echo $counts['text']; ?>
 								</p>
-								<p class="secupress-score secupress-m0"><?php printf( esc_html__( 'Your note is %s — %s scanned items are good.', 'secupress' ), '<span class="letter">' . secupress_get_scanner_counts( 'grade' ) . '</span>', '<span class="good">' . secupress_get_scanner_counts( 'good' ) . '</span>' ); ?></p>
+								<p class="secupress-score secupress-score-subtext secupress-m0"><?php echo $counts['subtext']; ?></p>
 
 								<p class="secupress-actions-line">
-									<button class="secupress-button button-secupress-scan" type="button">
+									<button class="secupress-button button-secupress-scan" type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ); ?>">
 										<span class="icon">
 											<i class="icon-radar" aria-hidden="true"></i>
 										</span>
@@ -471,13 +462,13 @@ function __secupress_scanners() {
 							<?php esc_html_e( 'Latest Scans', 'secupress' ); ?>
 						</p>
 						<ul class="secupress-reports-list">
-						<?php if ( (bool) $reports ) { ?>
-							<?php foreach ( $reports as $report ) { ?>
-							<li><?php echo $report; ?></li>
-							<?php } ?>
-						<?php } else { ?>
-							<li class="secupress-empty"><em><?php esc_html_e( 'You have no other reports for now.', 'secupress' ); ?></em></li>
-						<?php } ?>
+							<?php
+							if ( (bool) $reports ) {
+								echo implode( "\n", $reports );
+							} else {
+								echo '<li class="secupress-empty"><em>' . __( 'You have no other reports for now.', 'secupress' ) . "</em></li>\n";
+							}
+							?>
 						</ul>
 					</div><!-- .secupress-tab-content -->
 
@@ -498,40 +489,34 @@ function __secupress_scanners() {
 						<h3><?php _e( 'Une gamme de modules à votre service', 'secupress' ); ?></h3>
 						<p><?php _e( 'Allez plus loin dans la sécurisation de votre site avec nos modules et activez les fonctionnalités complémentaires.', 'secupress' ); ?></p>
 					</div>
-					<?php if ( ! secupress_is_pro() ) { // Trad fr + wording ////. ?>
-					<div id="slide3" class="hidden">
-						<h3><?php _e( 'Passez à la version pro', 'secupress' ); ?></h3>
-						<p><?php _e( 'Support premium, accès à tous les modules, lorem ipsum.', 'secupress' ); ?></p>
-					</div>
-					<?php } else { ?>
+					<?php if ( ! secupress_is_pro() ) : // Trad fr + wording ////. ?>
+						<div id="slide3" class="hidden">
+							<h3><?php _e( 'Passez à la version pro', 'secupress' ); ?></h3>
+							<p><?php _e( 'Support premium, accès à tous les modules, lorem ipsum.', 'secupress' ); ?></p>
+						</div>
+					<?php else : ?>
 						<div id="slide3" class="hidden"><h3><?php _e( 'Programmez vos analyses de sécurité', 'secupress' ); ?></h3><p><?php _e( 'L\'analyse des points reste à jour, sans vous connectez au back office avec le scan automatique.', 'secupress' ); ?></p></div>
-					<?php } ?>
+					<?php endif; ?>
 				</div>
 
 				<div class="secupress-progressbar hidden" style="width:500px;padding:2px;border:1px solid;"><div style="background:#2BCDC1;display:inline-block;width:0px">&nbsp;</div><span style="position:absolute;left:8px;">0 %</span></div>
 
 				<ul id="secupress-type-filters" class="secupress-big-tabs secupress-tabs secupress-flex secupress-text-start hide-if-no-js" role="tabpanel">
-				<?php
-					$tabs = array(
-						'notscannedyet'	=> esc_html__( 'New', 'secupress' ),
-						'bad'			=> esc_html__( 'Bad', 'secupress' ),
-						'warning'		=> esc_html__( 'Warning', 'secupress' ),
-						'good'			=> esc_html__( 'Good', 'secupress' ),
-					);
-					$current = 'bad';
-					foreach ( $tabs as $slug => $name ) {
-				?>
-					<li class="secupress-big-tab-<?php echo $slug; ?>">
-						<a href="#tab-<?php echo $slug; ?>" aria-control="tab-<?php echo $slug; ?>" role="tab"<?php echo ( $slug === $current ? ' class="secupress-current"' : '' ); ?> data-type="<?php echo $slug; ?>">
-							<span class="secupress-tab-title"><?php echo $name; ?></span>
-							<span class="secupress-tab-subtitle">
-								<?php printf( esc_html__( '%s issues', 'secupress' ), '<span class="secupress-count-' . $slug . ' secupress-count"></span>' );  ?>
-							</span>
-						</a>
-					</li>
-				<?php
-					}
-				?>
+					<?php
+					$tabs = $counts['notscannedyet'] ? array( 'notscannedyet' => esc_html__( 'New', 'secupress' ) ) : array();
+					$tabs = array_merge( $tabs, array(
+						'bad'     => esc_html__( 'Bad', 'secupress' ),
+						'warning' => esc_html__( 'Warning', 'secupress' ),
+						'good'    => esc_html__( 'Good', 'secupress' ),
+					) );
+					foreach ( $tabs as $slug => $name ) : ?>
+						<li class="secupress-big-tab-<?php echo $slug; ?>">
+							<a href="#tab-<?php echo $slug; ?>" aria-control="tab-<?php echo $slug; ?>" role="tab"<?php echo 'bad' === $slug ? ' class="secupress-current"' : ''; ?> data-type="<?php echo $slug; ?>">
+								<span class="secupress-tab-title"><?php echo $name; ?></span>
+								<span class="secupress-tab-subtitle"><?php printf( _n( '%d issue', '%d issues', $counts[ $slug ], 'secupress' ), $counts[ $slug ] ); ?></span>
+							</a>
+						</li>
+					<?php endforeach; ?>
 				</ul>
 			</div><!-- .secupress-section-dark -->
 
@@ -564,9 +549,7 @@ function __secupress_scanners() {
 				<?php secupress_scanners_template(); ?>
 			</div>
 
-			<?php
-				wp_nonce_field( 'secupress_score', 'secupress_score', false );
-			?>
+			<?php wp_nonce_field( 'secupress_score', 'secupress_score', false ); ?>
 		</div>
 	</div><!-- .wrap -->
 	<?php
@@ -854,7 +837,7 @@ function secupress_scanners_template() {
 										</span>
 									</a>
 									<?php
-									$support_href   = secupress_is_pro() ? 'http://secupress.me/support/?item=' . $option_name : 'https://wordpress.org/support/plugin/secupress-free#postform'; // Correct slug on repo? ////
+									$support_href   = secupress_is_pro() ? 'http://secupress.me/support/?item=' . $option_name : 'https://wordpress.org/support/plugin/secupress-free#postform'; // Correct slug on repo? ////.
 									$support_suffix = secupress_is_pro() ? 'pro' : 'free';
 									?>
 									<a href="<?php echo $support_href; ?>" class="secupress-button secupress-button-mini secupress-ask-support secupress-ask-support-<?php echo $support_suffix; ?>">

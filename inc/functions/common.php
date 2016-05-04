@@ -159,30 +159,61 @@ function secupress_get_tests_for_ms_scanner_fixes() {
  */
 function secupress_get_scanner_counts( $type = '' ) {
 	$tests_by_status = secupress_get_scanners();
+	$all_tests       = array_merge( $tests_by_status['high'], $tests_by_status['medium'], $tests_by_status['low'] );
+	$all_tests       = array_flip( array_map( 'strtolower', $all_tests ) );
 	$scanners        = secupress_get_scan_results();
+	$scanners        = array_intersect_key( $scanners, $all_tests );
 	$empty_statuses  = array( 'good' => 0, 'warning' => 0, 'bad' => 0 );
-	$scanners_count  = ! empty( $scanners ) ? array_count_values( wp_list_pluck( $scanners, 'status' ) ) : array();
+	$scanners_count  = $scanners ? array_count_values( wp_list_pluck( $scanners, 'status' ) ) : array();
 	$counts          = array_merge( $empty_statuses, $scanners_count );
 
 	$counts['notscannedyet'] = count( $tests_by_status['high'] ) + count( $tests_by_status['medium'] ) + count( $tests_by_status['low'] ) - array_sum( $counts );
 	$counts['total']         = count( $tests_by_status['high'] ) + count( $tests_by_status['medium'] ) + count( $tests_by_status['low'] );
-	$percent                 = floor( $counts['good'] * 100 / $counts['total'] );
+	$counts['percent']       = floor( $counts['good'] * 100 / $counts['total'] );
 
-	if ( $percent >= 99 ) {
+	if ( $counts['percent'] >= 99 ) {
 		$counts['grade'] = 'A';
-	} elseif ( $percent >= 90 ) {
+	} elseif ( $counts['percent'] >= 90 ) {
 		$counts['grade'] = 'B';
-	} elseif ( $percent >= 80 ) {
+	} elseif ( $counts['percent'] >= 80 ) {
 		$counts['grade'] = 'C';
-	} elseif ( $percent >= 70 ) {
+	} elseif ( $counts['percent'] >= 70 ) {
 		$counts['grade'] = 'D';
-	} elseif ( $percent >= 60 ) {
+	} elseif ( $counts['percent'] >= 60 ) {
 		$counts['grade'] = 'E';
-	} elseif ( $percent == 0 ) {
-		$counts['grade'] = '0';
+	} elseif ( 0 === $counts['percent'] ) {
+		$counts['grade'] = '∅';
 	} else {
 		$counts['grade'] = 'F';
 	}
+
+	$counts['letter'] = '<span class="letter l' . $counts['grade'] . '">' . $counts['grade'] . '</span>';
+
+	switch ( $counts['grade'] ) {
+		case 'A':
+			$counts['text'] = __( 'Congratulations! 🎉', 'secupress' );
+			break;
+		case 'B':
+			$counts['text'] = __( 'Almost perfect!', 'secupress' );
+			break;
+		case 'C':
+			$counts['text'] = __( 'Not bad, but try to fix more.', 'secupress' );
+			break;
+		case 'D':
+			$counts['text'] = __( 'Well, it\'s not good yet.', 'secupress' );
+			break;
+		case 'E':
+			$counts['text'] = __( 'Not good at all, fix more things.', 'secupress' );
+			break;
+		case 'F':
+			$counts['text'] = __( 'Still very bad, start to fix things!', 'secupress' );
+			break;
+		case '∅':
+			$counts['text'] = '(ᕗ‶⇀︹↼)ᕗノ彡┻━┻'; // Easter egg if you got 0% (how is this possible oO).
+			break;
+	}
+
+	$counts['subtext'] = sprintf( _n( 'Your note is %s — %d scanned item is good.', 'Your note is %s — %d scanned items are good.', $counts['good'], 'secupress' ), $counts['letter'], $counts['good'] );
 
 	if ( isset( $counts[ $type ] ) ) {
 		return $counts[ $type ];
@@ -191,23 +222,7 @@ function secupress_get_scanner_counts( $type = '' ) {
 	return $counts;
 }
 
-/**
- * Echo a sentense to help or congrat the user based on the scanner grade
- *
- * @since 1.0
- **/
-function secupress_congratulations_score_text() {
-	$grade = secupress_get_scanner_counts( 'grade' );
-	switch( $grade ) {
-		case 'A': _e( 'Congratulations! 🎉', 'secupress' ); break;
-		case 'B': _e( 'Almost perfect!', 'secupress' ); break;
-		case 'C': _e( 'Not bad, but try to fix more.', 'secupress' ); break;
-		case 'D': _e( 'Well, it\'s not good yet.', 'secupress' ); break;
-		case 'E': _e( 'Not good at all, fix more things.', 'secupress' ); break;
-		case 'F': _e( 'Still very bad, start to fix things!', 'secupress' ); break;
-		case '0': echo '(ᕗ‶⇀︹↼)ᕗノ彡┻━┻'; break; // Easter egg if you got 0% (how is this possible oO)
-	}
-}
+
 /*------------------------------------------------------------------------------------------------*/
 /* PLUGINS ====================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
