@@ -155,6 +155,18 @@ a.secupress-close-moreinfo {
 	speak: none
 }
 
+/* right cols with Status text and actions */
+.secupress-fix-status-actions {
+	padding-top: 4px;
+}
+.secupress-fix-status-text:not(:empty) {
+	padding: 5px 0;
+}
+/* Fix it button + How? action */
+a + .secupress-row-actions {
+	margin-top: 5px;
+}
+
 .secupress-reports-list {
 	margin-bottom: 3em;
 	font-size: 1.1em;

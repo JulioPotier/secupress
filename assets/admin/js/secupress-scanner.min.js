@@ -1037,30 +1037,30 @@ jQuery( document ).ready( function( $ ) {
 
 
 		// Show test details.
-		$( "body" ).on( "click", ".secupress-details", function( e ) {
-			var test = $( this ).attr( "data-test" );
+		$( 'body' ).on( 'click', '.secupress-details', function( e ) {
+			var test = $( this ).attr( 'data-test' );
 			swal( {
 				title:             w.SecuPressi18nScanner.scanDetails,
 				confirmButtonText: w.SecuPressi18nScanner.confirmText,
-				html:              $( "#details-" + test + " .details-content" ),
-				type:              "info",
+				html:              $( '#details-' + test ).find( '.details-content' ).html(),
+				type:              'info',
 				allowOutsideClick: true
 			} );
 		} );
 
 
 		// Show fix details.
-		$( "body" ).on( "click", ".secupress-details-fix", function( e ) {
-			var test = $( this ).attr( "data-test" );
+		$( 'body' ).on( 'click', '.secupress-details-fix', function( e ) {
+			var test = $( this ).attr( 'data-test' );
 			swal( $.extend( {}, SecuPress.confirmSwalDefaults, {
 				title:             w.SecuPressi18nScanner.fixDetails,
 				confirmButtonText: w.SecuPressi18nScanner.fixit,
-				html:              $( "#details-fix-" + test + " .details-content" ),
-				type:              "info",
+				html:              $( '#details-fix-' + test ).find( '.details-content' ).html(),
+				type:              'info',
 				closeOnConfirm:    true
 			} ) ).then( function ( isConfirm ) {
 				if ( isConfirm ) {
-					$( "#" + test + " .secupress-fixit" ).trigger( "click" );
+					$( '#' + test ).find( '.secupress-fixit' ).trigger( 'click' );
 				}
 			} );
 		} );
