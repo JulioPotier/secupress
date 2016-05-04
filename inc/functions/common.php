@@ -191,7 +191,23 @@ function secupress_get_scanner_counts( $type = '' ) {
 	return $counts;
 }
 
-
+/**
+ * Echo a sentense to help or congrat the user based on the scanner grade
+ *
+ * @since 1.0
+ **/
+function secupress_congratulations_score_text() {
+	$grade = secupress_get_scanner_counts( 'grade' );
+	switch( $grade ) {
+		case 'A': _e( 'Congratulations! 🎉', 'secupress' ); break;
+		case 'B': _e( 'Almost perfect!', 'secupress' ); break;
+		case 'C': _e( 'Not bad, but try to fix more.', 'secupress' ); break;
+		case 'D': _e( 'Well, it\'s not good yet.', 'secupress' ); break;
+		case 'E': _e( 'Not good at all, fix more things.', 'secupress' ); break;
+		case 'F': _e( 'Still very bad, start to fix things!', 'secupress' ); break;
+		case '0': echo '(ᕗ‶⇀︹↼)ᕗノ彡┻━┻'; break; // Easter egg if you got 0% (how is this possible oO)
+	}
+}
 /*------------------------------------------------------------------------------------------------*/
 /* PLUGINS ====================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
@@ -356,7 +372,7 @@ function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 function secupress_admin_url( $page, $module = '' ) {
 	$module = $module ? '&module=' . $module : '';
 	$page   = str_replace( '&', '_', $page );
-	$url    = 'admin.php?page=' . SECUPRESS_PLUGIN_SLUG . '_' . $page . $module;
+	$url    = 'admin.php?page=secupress_' . $page . $module;
 
 	return is_multisite() ? network_admin_url( $url ) : admin_url( $url );
 }
