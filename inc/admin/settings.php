@@ -317,7 +317,7 @@ function __secupress_scanners() {
 								<i class="icon-info" aria-hidden="true"></i>
 							</span>
 							<span class="text">
-								<?php esc_html_e( 'How?', 'secupress' ); ?>
+								<?php esc_html_e( 'How does it work?', 'secupress' ); ?>
 							</span>
 						</a>
 					</p>
@@ -779,7 +779,7 @@ function secupress_scanners_template() {
 									<div class="secupress-row-actions">
 										<span class="hide-if-no-js">
 											<button type="button" class="secupress-details-fix link-like" data-test="<?php echo $class_name_part; ?>" title="<?php esc_attr_e( 'Get fix details', 'secupress' ); ?>">
-													<?php _e( 'How does it work?', 'secupress' ); ?>
+													<?php _e( 'How?', 'secupress' ); ?>
 											</button>
 										</span>
 									</div>
