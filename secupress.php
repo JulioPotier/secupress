@@ -127,6 +127,7 @@ function secupress_init() {
 
 	// Last constants.
 	define( 'SECUPRESS_PLUGIN_NAME', secupress_get_option( 'wl_plugin_name', 'SecuPress' ) );
+	define( 'SECUPRESS_PLUGIN_SLUG', sanitize_title( SECUPRESS_PLUGIN_NAME ) );
 
 	// The Singleton class.
 	secupress_require_class( 'Singleton' );

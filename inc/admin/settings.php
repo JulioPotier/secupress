@@ -24,10 +24,10 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	wp_enqueue_script( 'secupress-wordpress-js', SECUPRESS_ADMIN_JS_URL . 'secupress-wordpress' . $suffix . '.js', array(), $version, true );
 
 	$pages = array(
-		'toplevel_page_secupress_scanners'  => 1,
-		'secupress_page_secupress_modules'  => 1,
-		'secupress_page_secupress_settings' => 1,
-		'secupress_page_secupress_logs'     => 1,
+		'toplevel_page_' . SECUPRESS_PLUGIN_SLUG . '_scanners'  => 1,
+		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules'  => 1,
+		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' => 1,
+		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_logs'     => 1,
 	);
 
 	if ( ! isset( $pages[ $hook_suffix ] ) ) {
@@ -41,12 +41,12 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	wp_enqueue_style( 'secupress-common-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-common' . $suffix . '.css', array(), $version );
 
 	// Global settings page.
-	if ( 'secupress_page_secupress_settings' === $hook_suffix ) {
+	if ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' === $hook_suffix ) {
 		// CSS.
 		wp_enqueue_style( 'secupress-settings-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-settings' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 	}
 	// Modules page.
-	elseif ( 'secupress_page_secupress_modules' === $hook_suffix ) {
+	elseif ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' === $hook_suffix ) {
 		// CSS.
 		wp_enqueue_style( 'secupress-modules-css',  SECUPRESS_ADMIN_CSS_URL . 'secupress-modules' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 		wp_enqueue_style( 'wpmedia-css-sweetalert', SECUPRESS_ADMIN_CSS_URL . 'sweetalert2' . $suffix . '.css', array(), '1.3.4' );
@@ -92,7 +92,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 
 	}
 	// Scanners page.
-	elseif ( 'toplevel_page_secupress_scanners' === $hook_suffix ) {
+	elseif ( 'toplevel_page_' . SECUPRESS_PLUGIN_SLUG . '_scanners' === $hook_suffix ) {
 		// CSS.
 		wp_enqueue_style( 'secupress-scanner-css',  SECUPRESS_ADMIN_CSS_URL . 'secupress-scanner' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 		wp_enqueue_style( 'wpmedia-css-sweetalert', SECUPRESS_ADMIN_CSS_URL . 'sweetalert2' . $suffix . '.css', array(), '1.3.4' );
@@ -205,12 +205,12 @@ function secupress_create_menus() {
 	$cap   = secupress_get_capability();
 
 	// Main menu item.
-	add_menu_page( SECUPRESS_PLUGIN_NAME, 'secupress', $cap, 'secupress_scanners', '__secupress_scanners', 'dashicons-shield-alt' );
+	add_menu_page( SECUPRESS_PLUGIN_NAME, 'secupress', $cap, SECUPRESS_PLUGIN_SLUG . '_scanners', '__secupress_scanners', 'dashicons-shield-alt' );
 
 	// Sub-menus.
-	add_submenu_page( 'secupress_scanners', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ) . $count, $cap, 'secupress_scanners', '__secupress_scanners' );
-	add_submenu_page( 'secupress_scanners', __( 'Modules', 'secupress' ),  __( 'Modules', 'secupress' ),           $cap, 'secupress_modules',  '__secupress_modules' );
-	add_submenu_page( 'secupress_scanners', __( 'Settings' ),              __( 'Settings' ),                       $cap, 'secupress_settings', '__secupress_global_settings' );
+	add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ) . $count, $cap, SECUPRESS_PLUGIN_SLUG . '_scanners', '__secupress_scanners' );
+	add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Modules', 'secupress' ),  __( 'Modules', 'secupress' ),           $cap, SECUPRESS_PLUGIN_SLUG . '_modules',  '__secupress_modules' );
+	add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Settings' ),              __( 'Settings' ),                       $cap, SECUPRESS_PLUGIN_SLUG . '_settings', '__secupress_global_settings' );
 
 	// Fix `add_menu_page()` nonsense.
 	end( $menu );
