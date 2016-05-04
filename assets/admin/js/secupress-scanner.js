@@ -109,6 +109,8 @@ jQuery( document ).ready( function( $ ) {
 				letter = 'D';
 			} else if ( percent >= 50 ) {
 				letter = 'E';
+			} else if ( percent == 0 ) {
+				letter = '0';
 			} else {
 				letter = 'F';
 			}
@@ -145,6 +147,10 @@ jQuery( document ).ready( function( $ ) {
 		$('.secupress-count-good').text( status_good );
 		$('.secupress-count-bad').text( status_bad );
 		$('.secupress-count-warning').text( status_warning );
+		if ( ! status_notscannedyet ) {
+			$('.secupress-big-tab-notscannedyet').hide();
+			$('.secupress-chart-legend .status-notscannedyet').hide();
+		}
 		$('.secupress-count-notscannedyet').text( status_notscannedyet );
 	}
 
@@ -222,6 +228,11 @@ jQuery( document ).ready( function( $ ) {
 
 		// pre-show Bad
 		$( '#secupress-type-filters' ).find('.secupress-big-tab-bad').find('a').trigger('click');
+		// pre-show New
+		if ( $( '.secupress-table-prio-all .secupress-item-all.status-notscannedyet' ).length ) {
+			$( '#secupress-type-filters' ).find('.secupress-big-tab-notscannedyet').find('a').trigger('click');
+		}
+
 	} )(window, document, $);
 
 
@@ -281,17 +292,21 @@ jQuery( document ).ready( function( $ ) {
 				html:               w.SecuPressi18nScanner.supportContentPro,
 				type:               "question",
 				allowOutsideClick:  true,
-				preConfirm: function() {
-					return new Promise(function(resolve) { //// really need a promise?
-						swal.enableLoading();
-					});
-				},
 			} ).then(function(isConfirm) {
-			  if (isConfirm === true) {
-			    //// send content to support
-			  };
-		} )
-			
+				if (isConfirm === true) {
+					swal.enableLoading();
+					$.post( ajaxurl, {}, null, "json" )
+					.done( function( r ) {
+						// Display fix re
+						console.log('done');
+					} )
+					.fail( function() {
+						// Error
+						console.log('fail');
+					} );
+				  };
+			} )
+
 		} );
 	} )(window, document, $);
 
@@ -310,7 +325,7 @@ jQuery( document ).ready( function( $ ) {
 		// Runs the Progressbar, 10 sec min.
 		function secupressRunProgressBar() {
 			$( ".secupress-progressbar, .secupress-caroupoivre" ).show();
-			var secupressProgressTimer = setInterval( 
+			var secupressProgressTimer = setInterval(
 				function() {
 					secupressOneClickScanProgress++;
 					if ( secupressOneClickScanProgress >= 65 ) {
