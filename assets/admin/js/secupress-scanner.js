@@ -241,6 +241,59 @@ jQuery( document ).ready( function( $ ) {
 		} );
 	} )(window, document, $);
 
+	// !Ask for support button (free) ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	(function( w, d, $, undefined ) {
+		$( '.secupress-ask-support-free' ).on( 'click', function( e ) {
+			e.preventDefault();
+
+			swal( {
+				title:              w.SecuPressi18nScanner.supportTitle,
+				confirmButtonText:  w.SecuPressi18nScanner.supportButton,
+				showCancelButton:   true,
+				html:               w.SecuPressi18nScanner.supportContentFree,
+				confirmButtonColor: '#F1C40F',
+				type:               "question",
+				allowOutsideClick:  true
+			} ).then(function(isConfirm) {
+			  if (isConfirm === true) {
+			    swal( {
+		    		title: 'Pro Version needed',
+					type:  "error",
+					showCancelButton: true,
+					confirmButtonText: 'Get Pro now!',
+					confirmButtonColor: '#F1C40F',
+					reverseButtons: true,
+			    } );
+			  };
+		} )
+		} );
+	} )(window, document, $);
+
+	// !Ask for support button (pro) --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	(function( w, d, $, undefined ) {
+		$( '.secupress-ask-support-pro' ).on( 'click', function( e ) {
+			e.preventDefault();
+
+			swal( {
+				title:              w.SecuPressi18nScanner.supportTitle,
+				confirmButtonText:  w.SecuPressi18nScanner.supportButton,
+				showCancelButton:   true,
+				html:               w.SecuPressi18nScanner.supportContentPro,
+				type:               "question",
+				allowOutsideClick:  true,
+				preConfirm: function() {
+					return new Promise(function(resolve) { //// really need a promise?
+						swal.enableLoading();
+					});
+				},
+			} ).then(function(isConfirm) {
+			  if (isConfirm === true) {
+			    //// send content to support
+			  };
+		} )
+			
+		} );
+	} )(window, document, $);
 
 	// !Scans and fixes ============================================================================
 	(function( w, d, $, undefined ) {
