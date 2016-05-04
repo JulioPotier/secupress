@@ -356,7 +356,7 @@ function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 function secupress_admin_url( $page, $module = '' ) {
 	$module = $module ? '&module=' . $module : '';
 	$page   = str_replace( '&', '_', $page );
-	$url    = 'admin.php?page=secupress_' . $page . $module;
+	$url    = 'admin.php?page=' . SECUPRESS_PLUGIN_SLUG . '_' . $page . $module;
 
 	return is_multisite() ? network_admin_url( $url ) : admin_url( $url );
 }

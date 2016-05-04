@@ -52,20 +52,19 @@ jQuery( document ).ready( function( $ ) {
 		];
 
 		secupressChart = new Chart( secupressChartEl.getContext( "2d" ) ).Doughnut( secupressChartData, {
-			animationEasing			: 'easeInOutQuart',
-			tooltipEvents			: [],
-			showTooltips			: true,
-			segmentShowStroke		: false,
-			percentageInnerCutout	: 90,
-			tooltipEvents			: ['mousemove'], // active "hover" effect…
-			customTooltips			: function( tooltip ) { //… but remove tooltips
+			animationEasing:       'easeInOutQuart',
+			showTooltips:          true,
+			segmentShowStroke:     false,
+			percentageInnerCutout: 90,
+			tooltipEvents:         ['mousemove'], // active "hover" effect...
+			customTooltips:        function( tooltip ) { //... but remove tooltips.
 				if ( ! tooltip ) {
 					return;
 				}
 			}
 		} );
 
-		// Trigger a filter action on Chart Segment click
+		// Trigger a filter action on Chart Segment click.
 		secupressChartEl.onclick = function( e ) {
 			var activePoints = secupressChart.getSegmentsAtEvent( e );
 			if ( activePoints[0] ) {
@@ -73,7 +72,7 @@ jQuery( document ).ready( function( $ ) {
 			}
 		};
 
-		// Trigger a filter action on Legend item click
+		// Trigger a filter action on Legend item click.
 		$('.secupress-chart-legend').find('li').on('click.secupress', function() {
 			$( '#secupress-type-filters').find('.secupress-big-tab-' + $(this).data('status') ).find('a').trigger( 'click.secupress' );
 		});
@@ -94,7 +93,7 @@ jQuery( document ).ready( function( $ ) {
 		status_bad           = $( '.secupress-table-prio-all .secupress-item-all.status-bad' ).length;
 		status_notscannedyet = $( '.secupress-table-prio-all .secupress-item-all.status-notscannedyet' ).length;
 		percent              = Math.floor( status_good * 100 / total );
-		letter               = '∅';
+		letter               = '\u2205';
 
 		$( '.secupress-score' ).find( '.percent' ).text( percent + '%' );
 
@@ -122,7 +121,7 @@ jQuery( document ).ready( function( $ ) {
 			$( '#tweeterA' ).slideUp();
 		}
 
-		$( '.secupress-score' ).find( '.letter' ).html( letter ).removeClass( 'l∅ lA lB lC lD lE lF' ).addClass( 'l' + letter );
+		$( '.secupress-score' ).find( '.letter' ).html( letter ).removeClass( 'l\u2205 lA lB lC lD lE lF' ).addClass( 'l' + letter );
 
 		if ( refreshDate ) {
 			$scoreResultsUl = $( '#secupress-latest').find( 'ul' );
@@ -348,7 +347,7 @@ jQuery( document ).ready( function( $ ) {
 						secupressOneClickScanProgress = 0;
 						clearInterval( secupressProgressTimer );
 					}
-	 			}, 100 );
+				}, 100 );
 		}
 
 
@@ -852,8 +851,8 @@ jQuery( document ).ready( function( $ ) {
 
 
 		// What to do when a scan ends.
-		$( 'body' ).on( 'scanDone.secupress', function( e, extra ) {
-			console.log('scanDone.secupress:', extra.test);
+		$( "body" ).on( "scanDone.secupress", function( e, extra ) {
+			console.log("scanDone.secupress:", extra.test);
 			/*
 			* Available extras:
 			* extra.test:   test name.
@@ -861,7 +860,7 @@ jQuery( document ).ready( function( $ ) {
 			* extra.isBulk: tell if it's a bulk scan.
 			* extra.data:   data returned by the ajax call.
 			*/
-			var $row = $( '#' + extra.test );
+			var $row = $( "#" + extra.test );
 
 			// If we have delayed fixes, launch the first in queue now.
 			if ( secupressScans.delayedFixes.length ) {
@@ -869,14 +868,19 @@ jQuery( document ).ready( function( $ ) {
 			}
 
 			// If we have a good result, empty the fix cell.
-			if ( extra.data.class === 'good' ) {
-				secupressSetStatusClass( $row.children( '.secupress-fix-result' ), 'cantfix' );
-				secupressAddFixStatusText( $row, '' );
-				secupressAddFixResult( $row, '' );
+			if ( "good" === extra.data.class ) {
+				secupressSetStatusClass( $row.children( ".secupress-fix-result" ), "cantfix" );
+				secupressAddFixStatusText( $row, "" );
+				secupressAddFixResult( $row, "" );
 			}
-			if ( '' !== extra.data.fix_msg ) {
+
+			// Add the fix result.
+			if ( "" !== extra.data.fix_msg ) {
 				secupressAddFixResult( $row, extra.data.fix_msg );
 			}
+
+			// Change the scan button text.
+			$row.find( ".secupress-scanit .text" ).text( w.SecuPressi18nScanner.reScan );
 		} );
 
 
@@ -987,7 +991,7 @@ jQuery( document ).ready( function( $ ) {
 		// What to do after a manual fix.
 		$( 'body' ).on( 'manualFixDone.secupress', function( e, extra ) {
 			console.log('manualFixDone.secupress: ', extra.test );
-		   /*
+			/*
 			* Available extras:
 			* extra.test:      test name.
 			* extra.data:      data returned by the ajax call.
