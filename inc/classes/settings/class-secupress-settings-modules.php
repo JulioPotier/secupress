@@ -185,9 +185,6 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 									<p class="secupress-sh-subtitle"><?php esc_html_e( 'the best security for WordPress', 'secupress' ); ?></p>
 								</div>
 							</div>
-							<div class="secupress-sh-version version-<?php echo $type; ?>">
-								<?php echo ${'version_' . $type}; ?>
-							</div>
 						</div>
 
 						<ul id="secupress-modules-navigation" class="secupress-modules-list-links">

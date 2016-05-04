@@ -972,8 +972,10 @@
 	border-bottom: 2px solid #2BCDC1;
 }
 .secupress-settings-section-title {
-	font-size: 20px;
+	font-size: 18px;
 	margin-bottom: 0;
+	font-weight: 600px;
+	color: #393E46;
 }
 .secupress-settings-section-title .button-actions-title.open .dashicons {
 	transform: rotate(90deg);
@@ -988,6 +990,13 @@
 	flex-grow: 0;
 	padding-right: 15px;
 	margin-bottom: -5px;
+}
+.secupress-header-logo img {
+	width: 78px;
+}
+.secupress-header-with-logo {
+	font-size: 23px;
+	font-weight: 600;
 }
 .secupress-settings-section-description {
 	padding: 15px 40px 5px 0;
@@ -1033,6 +1042,7 @@ label.secupress-setting-row-title {
 .description.desc {
 	margin-top: -.4em;
 	padding-left: 32px;
+	color: #5A626F;
 }
 .fieldtype-roles .description.desc {
 	padding-left: 0;
