@@ -104,14 +104,14 @@ function __secupress_manual_fixit_action_callback() {
 
 // Date of the last One-click scan.
 
-add_action( 'wp_ajax_secupress-update-oneclick-scan-date', '__secupress_update_oneclick_scan_date' );
+add_action( 'wp_ajax_secupress-update-oneclick-scan-date', '__secupress_update_oneclick_scan_date_ajax_cb' );
 /**
  * Used to update the date of the last One-click scan.
  * Prints a JSON containing the HTML of the new line to insert in the page.
  *
  * @since 1.0
  */
-function __secupress_update_oneclick_scan_date() {
+function __secupress_update_oneclick_scan_date_ajax_cb() {
 	secupress_check_user_capability();
 	secupress_check_admin_referer( 'secupress-update-oneclick-scan-date' );
 
