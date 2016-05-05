@@ -135,12 +135,14 @@ function secupress_get_scan_results() {
 		if ( ! wp_using_ext_object_cache() ) {
 			secupress_load_network_options( $tests, '_site_transient_secupress_scan_' );
 		}
+
+		$tests = array_flip( $tests );
 	}
 
 	$transients = array();
 	$to_remove  = array();
 
-	foreach ( $tests as $test_name ) {
+	foreach ( $tests as $test_name => $i ) {
 		$transient = secupress_get_site_transient( 'secupress_scan_' . $test_name );
 
 		if ( $transient && is_array( $transient ) ) {
@@ -155,7 +157,7 @@ function secupress_get_scan_results() {
 
 	$options = get_site_option( SECUPRESS_SCAN_SLUG, array() );
 	$options = is_array( $options ) ? $options : array();
-	$options = array_intersect_key( $options, array_flip( $tests ) );
+	$options = array_intersect_key( $options, $tests );
 
 	if ( $transients ) {
 		$options = array_merge( $options, $transients );
@@ -196,11 +198,13 @@ function secupress_get_fix_results() {
 		if ( ! wp_using_ext_object_cache() ) {
 			secupress_load_network_options( $tests, '_site_transient_secupress_fix_' );
 		}
+
+		$tests = array_flip( $tests );
 	}
 
 	$transients = array();
 
-	foreach ( $tests as $test_name ) {
+	foreach ( $tests as $test_name => $i ) {
 		$transient = secupress_get_site_transient( 'secupress_fix_' . $test_name );
 
 		if ( $transient && is_array( $transient ) ) {
@@ -211,7 +215,7 @@ function secupress_get_fix_results() {
 
 	$options = get_site_option( SECUPRESS_FIX_SLUG, array() );
 	$options = is_array( $options ) ? $options : array();
-	$options = array_intersect_key( $options, array_flip( $tests ) );
+	$options = array_intersect_key( $options, $tests );
 
 	if ( $transients ) {
 		$options = array_merge( $options, $transients );
