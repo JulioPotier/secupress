@@ -57,11 +57,7 @@ jQuery( document ).ready( function( $ ) {
 			segmentShowStroke:     false,
 			percentageInnerCutout: 90,
 			tooltipEvents:         ['mousemove'], // active "hover" effect...
-			customTooltips:        function( tooltip ) { //... but remove tooltips.
-				if ( ! tooltip ) {
-					return;
-				}
-			}
+			customTooltips:        function() {} //... but remove tooltips.
 		} );
 
 		// Trigger a filter action on Chart Segment click.
