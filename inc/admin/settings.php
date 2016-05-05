@@ -109,9 +109,10 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		wp_enqueue_style( 'secupress-scanner-css',  SECUPRESS_ADMIN_CSS_URL . 'secupress-scanner' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 
 		// JS.
-		$depts = array( 'secupress-common-js' );
+		$depts   = array( 'secupress-common-js' );
+		$is_main = is_network_admin() || ! is_multisite();
 
-		if ( is_network_admin() || ! is_multisite() ) {
+		if ( $is_main ) {
 			$depts[] = 'secupress-chartjs';
 			$counts  = secupress_get_scanner_counts();
 
@@ -147,6 +148,10 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'supportContentFree' => __( '<p>Using the free version you have to post a new thread in the free wordpress.org forums.</p><p><a href="https://wordpress.org/support/plugin/secupress-free#postform" target="_blank" class="secupress-button secupress-button-mini"><span class="icon"><i class="icon-wordpress" aria-hidden="true"></i></span><span class="text">Open the forum</span></a></p><p>When using the Pro version, you can open a ticket directly from this popin: </p><br><p style="text-align:left">Summary: <input class="large-text" type="text" name="summary"></p><p style="text-align:left">Description: <textarea name="description" disabled="disabled">Please provide the specific url(s) where we can see each issue. e.g. the request doesn\'t work on this page: example.com/this-page</textarea></p>', 'secupress' ), // ////.
 			'supportContentPro'  => '<input type="hidden" id="secupress_support_item" name="secupress_support_item" value=""><p style="text-align:left">Summary: <input class="large-text" type="text" name="summary"></p><p style="text-align:left">Description: <textarea name="description" disabled="disabled">Please provide the specific url(s) where we can see each issue. e.g. the request doesn\'t work on this page: example.com/this-page</textarea></p>', // ////.
 		);
+
+		if ( $is_main ) {
+			$localize['i18nNonce'] = wp_create_nonce( 'secupress-get-scan-counters' );
+		}
 
 		if ( ! empty( $_GET['oneclick-scan'] ) && ! empty( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'first_oneclick-scan' ) && current_user_can( secupress_get_capability() ) ) {
 			$times = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );

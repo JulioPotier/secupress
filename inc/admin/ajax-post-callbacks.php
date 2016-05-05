@@ -102,6 +102,28 @@ function __secupress_manual_fixit_ajax_post_cb() {
 }
 
 
+// Get all translated strings for the scans UI.
+
+add_action( 'wp_ajax_secupress-get-scan-counters', '__secupress_get_scan_counters_ajax_cb' );
+/**
+ * Used to get all the needed translated strings and counters needed after each single scan/one-click scan.
+ *
+ * @since 1.0
+ */
+function __secupress_get_scan_counters_ajax_cb() {
+	secupress_check_user_capability();
+	secupress_check_admin_referer( 'secupress-get-scan-counters' );
+
+	$counts = secupress_get_scanner_counts();
+
+	foreach ( array( 'notscannedyet', 'good', 'warning', 'bad' ) as $status ) {
+		$counts[ $status . '-text' ] = sprintf( _n( '%d issue', '%d issues', $counts[ $status ], 'secupress' ), $counts[ $status ] );
+	}
+
+	wp_send_json_success( $counts );
+}
+
+
 // Date of the last One-click scan.
 
 add_action( 'wp_ajax_secupress-update-oneclick-scan-date', '__secupress_update_oneclick_scan_date_ajax_cb' );
