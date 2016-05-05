@@ -338,13 +338,13 @@ function __secupress_clear_ips_ajax_post_cb() {
 }
 
 
-add_action( 'admin_post_secupress_reset_settings', '__secupress_admin_post_reset_settings' );
+add_action( 'admin_post_secupress_reset_settings', '__secupress_admin_post_reset_settings_post_cb' );
 /**
  * Reset SecuPress settings or module settings.
  *
  * @since 1.0
  */
-function __secupress_admin_post_reset_settings() {
+function __secupress_admin_post_reset_settings_post_cb() {
 	if ( empty( $_GET['module'] ) ) {
 		secupress_admin_die();
 	}
