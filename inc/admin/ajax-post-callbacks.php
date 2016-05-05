@@ -7,15 +7,15 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 // Scan callback.
 
-add_action( 'admin_post_secupress_scanner', '__secupress_scanit_action_callback' );
-add_action( 'wp_ajax_secupress_scanner',    '__secupress_scanit_action_callback' );
+add_action( 'admin_post_secupress_scanner', '__secupress_scanit_ajax_post_cb' );
+add_action( 'wp_ajax_secupress_scanner',    '__secupress_scanit_ajax_post_cb' );
 /**
  * Used to scan a test in scanner page.
  * Prints a JSON or redirects the user.
  *
  * @since 1.0
  */
-function __secupress_scanit_action_callback() {
+function __secupress_scanit_ajax_post_cb() {
 	if ( empty( $_GET['test'] ) ) { // WPCS: CSRF ok.
 		secupress_admin_die();
 	}
@@ -36,15 +36,15 @@ function __secupress_scanit_action_callback() {
 
 // Fix callback.
 
-add_action( 'admin_post_secupress_fixit', '__secupress_fixit_action_callback' );
-add_action( 'wp_ajax_secupress_fixit',    '__secupress_fixit_action_callback' );
+add_action( 'admin_post_secupress_fixit', '__secupress_fixit_ajax_post_cb' );
+add_action( 'wp_ajax_secupress_fixit',    '__secupress_fixit_ajax_post_cb' );
 /**
  * Used to automatically fix a test in scanner page.
  * Prints a JSON or redirects the user.
  *
  * @since 1.0
  */
-function __secupress_fixit_action_callback() {
+function __secupress_fixit_ajax_post_cb() {
 	if ( empty( $_GET['test'] ) ) { // WPCS: CSRF ok.
 		secupress_admin_die();
 	}
@@ -70,15 +70,15 @@ function __secupress_fixit_action_callback() {
 
 // Manual fix callback.
 
-add_action( 'admin_post_secupress_manual_fixit', '__secupress_manual_fixit_action_callback' );
-add_action( 'wp_ajax_secupress_manual_fixit',    '__secupress_manual_fixit_action_callback' );
+add_action( 'admin_post_secupress_manual_fixit', '__secupress_manual_fixit_ajax_post_cb' );
+add_action( 'wp_ajax_secupress_manual_fixit',    '__secupress_manual_fixit_ajax_post_cb' );
 /**
  * Used to manually fix a test in scanner page.
  * Prints a JSON or redirects the user.
  *
  * @since 1.0
  */
-function __secupress_manual_fixit_action_callback() {
+function __secupress_manual_fixit_ajax_post_cb() {
 	if ( empty( $_POST['test'] ) ) { // WPCS: CSRF ok.
 		secupress_admin_die();
 	}
@@ -357,65 +357,6 @@ function __secupress_admin_post_reset_settings_post_cb() {
 
 	wp_safe_redirect( esc_url_raw( secupress_admin_url( 'modules', $_GET['module'] ) ) );
 	die();
-}
-
-
-add_filter( 'http_request_args', '__secupress_add_own_ua', 10, 3 );
-/**
- * Force our user agent header when we hit our urls
- *
- * @since 1.0
- *
- * @param (array)  $r   The request parameters.
- * @param (string) $url The request URL.
- *
- * @return (array)
- */
-function __secupress_add_own_ua( $r, $url ) {
-	if ( false !== strpos( $url, 'secupress.me' ) ) {
-		$r['headers']['x-secupress'] = secupress_user_agent( $r['user-agent'] );
-	}
-
-	return $r;
-}
-
-
-add_filter( 'registration_errors', '__secupress_registration_test_errors', PHP_INT_MAX, 2 );
-/**
- * This is used in the Subscription scan to test user registrations from the login page.
- *
- * @since 1.0
- * @see `register_new_user()`
- *
- * @param (object) $errors               A WP_Error object containing any errors encountered during registration.
- * @param (string) $sanitized_user_login User's username after it has been sanitized.
- *
- * @return (object) The WP_Error object with a new error if the user name is blacklisted.
- */
-function __secupress_registration_test_errors( $errors, $sanitized_user_login ) {
-	if ( ! $errors->get_error_code() && false !== strpos( $sanitized_user_login, 'secupress' ) ) {
-		set_transient( 'secupress_registration_test', 'failed', HOUR_IN_SECONDS );
-		$errors->add( 'secupress_registration_test', 'secupress_registration_test_failed' );
-	}
-
-	return $errors;
-}
-
-
-add_action( 'admin_init', 'secupress_register_all_settings' );
-/**
- * Register all modules settings.
- *
- * @since 1.0
- */
-function secupress_register_all_settings() {
-	$modules = secupress_get_modules();
-
-	if ( $modules ) {
-		foreach ( $modules as $key => $module_data ) {
-			secupress_register_setting( $key );
-		}
-	}
 }
 
 
