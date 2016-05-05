@@ -705,6 +705,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					</label>
 					<button type="button" class="hide-if-no-js expand_country"><img src="data:image/gif;base64,R0lGODlhEAAQAMQAAAAAAM/Iu3iYtcK4qPX18bDC09/b0ubm5v///9jTye3t59LMv8a+ruXh2tzYz/j4+PDw7NbRxuTh2f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAUUABMALAAAAAAQABAAAAVI4CSOZGmeaKqubFkIcCwUp4DcOCLUOHA/O5PgQQQ8II1gSUAAOJ0GJUkAgSgAB4lDOhJoE4DIIsAVCRaMgVpdnrxkMFprjgoBADs=" alt="+" title="<?php esc_attr__( 'Expand', 'secupress' ); ?>" /></button>
 					<fieldset class="hide-if-js">
+						<legend class="screen-reader-text"><span><?php echo $title; ?></span></legend>
 						<?php
 						foreach ( $countries as $code => $title ) {
 							$args['label_for'] = $args['name'] . '_' . $code;
@@ -1211,14 +1212,18 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		?>
 		<form action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_backup_db' ), 'secupress_backup_db' ) ); ?>" id="form-do-db-backup" method="post">
 			<fieldset class="secupress-boxed-group">
-				<b><?php _e( 'Unknown tables', 'secupress' ); ?></b><br>
+				<legend class="screen-reader-text"><span><?php esc_html_e( 'DataBase Tables', 'secupress' ); ?></span></legend>
+
+				<b><?php _e( 'Unknown tables', 'secupress' ); ?></b>
+				<br>
 				<?php
 				foreach ( $other_tables as $table ) {
 					echo '<label><input checked="checked" name="other_tables[]" type="checkbox" class="secupress-checkbox secupress-checkbox-mini"> <span class="label-text">' . $table . '</span></label><br>';
 				}
 				?>
 				<hr>
-				<b><?php _e( 'WordPress tables (mandatory)', 'secupress' ); ?></b><br>
+				<b><?php _e( 'WordPress tables (mandatory)', 'secupress' ); ?></b>
+				<br>
 				<?php
 				foreach ( $wp_tables as $table ) {
 					echo '<label><input disabled="disabled" checked="checked" type="checkbox" class="secupress-checkbox secupress-checkbox-mini"> <span class="label-text">' . $table . '</span></label><br>';
@@ -1257,6 +1262,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			<strong id="secupress-available-backups"><?php printf( _n( '%s available Backup', '%s available Backups', count( $backup_files ), 'secupress' ), number_format_i18n( count( $backup_files ) ) ); ?></strong>
 
 			<fieldset class="secupress-boxed-group">
+				<legend class="screen-reader-text"><span><?php esc_html_e( 'Backups', 'secupress' ); ?></span></legend>
 				<?php array_map( 'secupress_print_backup_file_formated', array_reverse( $backup_files ) ); ?>
 			</fieldset>
 			
@@ -1289,7 +1295,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		<form action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_backup_files' ), 'secupress_backup_files' ) ); ?>" id="form-do-files-backup" method="post">
 
 			<fieldset>
-				<p><strong><?php _e( 'Do not backup the following folders', 'secupress' ); ?></strong></p>
+				<legend><strong><?php _e( 'Do not backup the following folders', 'secupress' ); ?></strong></legend>
+				<br>
 				<textarea name="ignored_directories"<?php disabled( ! secupress_is_pro() ); ?>><?php echo $ignored_directories; ?></textarea>
 				<p class="description">
 					<?php _e( 'One folder per line.', 'secupress' ); ?>
