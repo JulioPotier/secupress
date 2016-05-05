@@ -514,7 +514,13 @@ function __secupress_scanners() {
 
 				<ul id="secupress-type-filters" class="secupress-big-tabs secupress-tabs secupress-flex secupress-text-start hide-if-no-js" role="tabpanel">
 					<?php
-					$tabs = $counts['notscannedyet'] ? array( 'notscannedyet' => esc_html__( 'New', 'secupress' ) ) : array();
+					if ( $counts['notscannedyet'] ) {
+						$tabs        = array( 'notscannedyet' => esc_html__( 'New', 'secupress' ) );
+						$default_tab = 'notscannedyet';
+					} else {
+						$tabs        = array();
+						$default_tab = 'bad';
+					}
 					$tabs = array_merge( $tabs, array(
 						'bad'     => esc_html__( 'Bad', 'secupress' ),
 						'warning' => esc_html__( 'Warning', 'secupress' ),
@@ -522,7 +528,7 @@ function __secupress_scanners() {
 					) );
 					foreach ( $tabs as $slug => $name ) : ?>
 						<li class="secupress-big-tab-<?php echo $slug; ?>">
-							<a href="#tab-<?php echo $slug; ?>" aria-control="tab-<?php echo $slug; ?>" role="tab"<?php echo 'bad' === $slug ? ' class="secupress-current"' : ''; ?> data-type="<?php echo $slug; ?>">
+							<a href="#tab-<?php echo $slug; ?>" aria-control="tab-<?php echo $slug; ?>" role="tab"<?php echo $default_tab === $slug ? ' class="secupress-current"' : ''; ?> data-type="<?php echo $slug; ?>">
 								<span class="secupress-tab-title"><?php echo $name; ?></span>
 								<span class="secupress-tab-subtitle"><?php printf( _n( '%d issue', '%d issues', $counts[ $slug ], 'secupress' ), $counts[ $slug ] ); ?></span>
 							</a>

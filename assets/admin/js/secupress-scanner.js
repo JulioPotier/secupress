@@ -193,29 +193,20 @@ jQuery( document ).ready( function( $ ) {
 
 	// !Filter rows ================================================================================
 	(function( w, d, $, undefined ) {
-		$( '#secupress-type-filters' ).find('a').on( 'click.secupress', function( e ) {
-			var $this		= $( this ),
-				priority	= $this.data( 'type' ),
-				current		= 'active';
+		$( "#secupress-type-filters" ).find( "a" ).on( "click.secupress", function( e ) {
+			var $this    = $( this ),
+				priority = $this.data( "type" ),
+				current  = "active";
 
 			if ( $this.hasClass( current ) ) {
 				return false;
 			}
 
-			$this.closest('ul').find('a').removeClass( current );
+			$this.closest( "ul" ).find( "a" ).removeClass( current );
 			$this.addClass( current );
 
-			$( '.status-all' ).addClass( 'hidden' ).attr( 'aria-hidden', true );
-			$( '.status-' + priority ).removeClass( 'hidden' ).attr( 'aria-hidden', false );
-		} );
-
-		// pre-show Bad
-		$( '#secupress-type-filters' ).find('.secupress-big-tab-bad').find('a').trigger('click');
-		// pre-show New
-		if ( $( '.secupress-table-prio-all .secupress-item-all.status-notscannedyet' ).length ) {
-			$( '#secupress-type-filters' ).find('.secupress-big-tab-notscannedyet').find('a').trigger('click');
-		}
-
+			$( ".status-all" ).addClass( "hidden" ).attr( "aria-hidden", true ).filter( ".status-" + priority ).removeClass( "hidden" ).attr( "aria-hidden", false );
+		} ).filter( ".secupress-current" ).trigger( "click.secupress" );
 	} )(window, document, $);
 
 
