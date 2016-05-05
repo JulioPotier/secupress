@@ -67,10 +67,18 @@ function secupressDisableAjaxButton( $button, speak, ajaxID ) {
 			if ( undefined !== value && value ) {
 				$button.val( text );
 			} else {
-				$button.text( text );
+				if ( $button.find('.text').length ) {
+					$button.find('.text').text( text );	
+				} else {
+					$button.text( text );
+				}
 			}
 		} else {
-			$button.text( text );
+			if ( $button.find('.text').length ) {
+				$button.find('.text').text( text );	
+			} else {
+				$button.text( text );
+			}
 		}
 
 		if ( undefined === speak || ! speak ) {
@@ -115,13 +123,21 @@ function secupressEnableAjaxButton( $button, speak, ajaxID ) {
 		if ( undefined !== text && text ) {
 			if ( isButton ) {
 				value = $button.val();
-				if ( undefined !== value && value ) {
+				if ( undefined !== value && value ) { 
 					$button.val( text );
+				} else {
+					if ( $button.find('.text').length ) {
+						$button.find('.text').text( text );
+					} else {
+						$button.text( text );
+					}
+				}
+			} else {
+				if ( $button.find('.text').length ) {
+					$button.find('.text').text( text );
 				} else {
 					$button.text( text );
 				}
-			} else {
-				$button.text( text );
 			}
 		}
 
@@ -486,7 +502,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 
 	// Do a DB backup.
 	function secupressDoDbBackup( $button, href ) {
-		secupressDisableAjaxButton( $button, w.l10nmodules.backupingText, "backup" );
+		secupressDisableAjaxButton( $button, w.l10nmodules.backupingText, 'backup' );
 
 		$.post( href )
 		.done( function( r ) {
@@ -560,16 +576,16 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	} );
 
 	// Ajax call that do a Backup.
-	$( "#submit-backup-db" ).on( "click", function( e ) {
+	$( '#submit-backup-db' ).on( 'click', function( e ) {
 		var $this = $( this ),
-			href  = secupressPreAjaxCall( $this.closest( "form" ).attr( "action" ), e );
+			href  = secupressPreAjaxCall( $this.closest( 'form' ).attr( 'action' ), e );
 
 		if ( ! href ) {
 			return false;
 		}
 
 		secupressDoDbBackup( $this, href );
-	} ).removeAttr( "disabled aria-disabled" );
+	} ).removeAttr( 'disabled aria-disabled' );
 
 } )(jQuery, document, window);
 

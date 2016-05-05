@@ -469,6 +469,10 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		if ( 'radioboxes' === $args['type'] || 'checkboxes' === $args['type'] || 'checkbox' === $args['type'] || 'roles' === $args['type'] ) {
 			$args['attributes']['class'][] = 'secupress-checkbox';
 		}
+		if ( 'countries' === $args['type'] ) {
+			$args['attributes']['class'][] = 'secupress-checkbox';
+			$args['attributes']['class'][] = 'secupress-checkbox-mini';
+		}
 
 		if ( 'radios' === $args['type'] ) {
 			$args['attributes']['class'][] = 'secupress-radio';
@@ -697,20 +701,19 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					?>
 					<label class="continent<?php echo $disabled_class; ?>">
 						<input type="checkbox" value="continent-<?php echo $code_country; ?>"<?php checked( $checked ); ?><?php echo $attributes; ?>>
-						<?php echo $title; ?>
+						<?php echo '<span class="label-text">' . $title . '</span>'; ?>
 					</label>
 					<button type="button" class="hide-if-no-js expand_country"><img src="data:image/gif;base64,R0lGODlhEAAQAMQAAAAAAM/Iu3iYtcK4qPX18bDC09/b0ubm5v///9jTye3t59LMv8a+ruXh2tzYz/j4+PDw7NbRxuTh2f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAUUABMALAAAAAAQABAAAAVI4CSOZGmeaKqubFkIcCwUp4DcOCLUOHA/O5PgQQQ8II1gSUAAOJ0GJUkAgSgAB4lDOhJoE4DIIsAVCRaMgVpdnrxkMFprjgoBADs=" alt="+" title="<?php esc_attr__( 'Expand', 'secupress' ); ?>" /></button>
 					<fieldset class="hide-if-js">
-						<br />
 						<?php
 						foreach ( $countries as $code => $title ) {
 							$args['label_for'] = $args['name'] . '_' . $code;
 							?>
 							<div>
-								&mdash;
+								<span class="secupress-tree-dash"></span>
 								<label<?php echo $disabled_attr; ?>>
 									<input type="checkbox" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>[]" value="<?php echo $code; ?>"<?php checked( isset( $value[ $code ] ) ); ?> data-code-country="<?php echo $code_country; ?>"<?php echo $attributes; ?>>
-									<?php echo $title; ?>
+									<?php echo '<span class="label-text">' . $title . '</span>'; ?>
 								</label>
 							</div>
 							<?php
@@ -808,10 +811,10 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$id     = ! empty( $args['id'] )    ? ' id="' . $args['id'] . '"' : '';
 
 			if ( ! empty( $args['url'] ) ) {
-				echo '<a' . $id . ' class="secupressicon secupressicon-'. $class . ( ! empty( $args['disabled'] ) ? ' disabled' : '' ) . '" href="' . esc_url( $args['url'] ) . '">' . $args['label'] . '</a>';
+				echo '<a' . $id . ' class="secupress-button secupress-button-primary secupressicon-'. $class . ( ! empty( $args['disabled'] ) ? ' disabled' : '' ) . '" href="' . esc_url( $args['url'] ) . '">' . $args['label'] . '</a>';
 			}
 			else {
-				echo '<button' . $id . ' class="secupressicon secupressicon-' . $class . '"' . ( ! empty( $args['disabled'] ) ? ' disabled="disabled"' : '' ) . ' type="button">' . $args['label'] . '</button>';
+				echo '<button' . $id . ' class="secupress-button secupress-button-primary secupressicon-' . $class . '"' . ( ! empty( $args['disabled'] ) ? ' disabled="disabled"' : '' ) . ' type="button">' . $args['label'] . '</button>';
 			}
 		}
 
@@ -970,7 +973,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	protected function scheduled_backups() {
 		// //// Tempo.
 		echo '<p><em>No scheduled backups yet, create one?</em></p>';
-		echo '<a href="' . esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_clear_alerts' ), 'secupress_clear_alerts' ) ) . '" class="button button-secondary">' . __( 'Clear Alerts', 'secupress' ) . '</a>';
+		echo '<a href="' . esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_clear_alerts' ), 'secupress_clear_alerts' ) ) . '" class="secupress-button">' . __( 'Clear Alerts', 'secupress' ) . '</a>';
 	}
 
 
@@ -994,7 +997,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		echo '<form id="form-ban-ip" class="hide-if-js" action="' . esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress-ban-ip' . $referer_arg ), 'secupress-ban-ip' ) ) . '" method="post">';
 			echo '<label for="secupress-ban-ip" class="screen-reader-text">' . __( 'Specify an IP to ban.', 'secupress' ) . '</label><br/>';
 			echo '<input type="text" id="secupress-ban-ip" name="ip" value=""/> ';
-			echo '<button type="submit" class="button button-primary">' . __( 'Ban IP', 'secupress' ) . '</button>';
+			echo '<button type="submit" class="secupress-button secupress-button-mini">' . __( 'Ban IP', 'secupress' ) . '</button>';
 		echo "</form>\n";
 
 		// Search.
@@ -1058,10 +1061,10 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		echo '<p id="secupress-banned-ips-actions">';
 			// Display a button to unban all IPs.
 			$clear_href = wp_nonce_url( admin_url( 'admin-post.php?action=secupress-clear-ips' . $referer_arg ), 'secupress-clear-ips' );
-			echo '<a class="button button-secondary' . ( $ban_ips || $is_search ? '' : ' hidden' ) . '" id="secupress-clear-ips-button" href="' . esc_url( $clear_href ) . '" data-loading-i18n="' . esc_attr__( 'Clearing...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Clear all IPs', 'secupress' ) . '">' . __( 'Clear all IPs', 'secupress' ) . "</a>\n";
+			echo '<a class="secupress-button secupress-button-secondary' . ( $ban_ips || $is_search ? '' : ' hidden' ) . '" id="secupress-clear-ips-button" href="' . esc_url( $clear_href ) . '" data-loading-i18n="' . esc_attr__( 'Clearing...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Clear all IPs', 'secupress' ) . '">' . __( 'Clear all IPs', 'secupress' ) . "</a>\n";
 			echo '<span class="spinner secupress-inline-spinner' . ( $ban_ips || $is_search ? ' hide-if-no-js' : ' hidden' ) . '"></span>';
 			// For JS: ban a IP.
-			echo '<button type="button" class="button button-primary hide-if-no-js" id="secupress-ban-ip-button" data-loading-i18n="' . esc_attr__( 'Banishing...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Ban new IP', 'secupress' ) . '">' . __( 'Ban new IP', 'secupress' ) . "</button>\n";
+			echo '<button type="button" class="secupress-button secupress-button-primary hide-if-no-js" id="secupress-ban-ip-button" data-loading-i18n="' . esc_attr__( 'Banishing...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Ban new IP', 'secupress' ) . '">' . __( 'Ban new IP', 'secupress' ) . "</button>\n";
 			echo '<span class="spinner secupress-inline-spinner hide-if-no-js"></span>';
 		echo "</p>\n";
 	}
@@ -1112,7 +1115,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 			echo '<p class="description">' . __( 'One IP address per line.', 'secupress' ) . "</p>\n";
 
-			submit_button( __( 'Save whitelist', 'secupress' ), 'primary', 'submit', true, $disabled );
+			echo '<p class="submit"><button type="submit" class="secupress-button secupress-button-primary"' . $disabled . '> ' . __( 'Save whitelist', 'secupress' ) . '</button></p>';
 
 		$this->print_close_form_tag();
 	}
@@ -1140,19 +1143,21 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		}
 		?>
 		<form action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_activate_action_logs' ), 'secupress_activate_action_logs' ) ); ?>" id="form-activate-action-logs" method="post">
-			<?php echo $label_open; ?>
+			<p><?php echo $label_open; ?>
 				<?php
 				echo $args['label_before'];
-				echo ' <input type="checkbox" id="' . $args['label_for'] . '" name="' . $name_attribute . '" value="1"' . checked( $value, 1, false ) .  $disabled . '/> ';
-				echo $args['label'];
+				echo ' <input type="checkbox" id="' . $args['label_for'] . '" name="' . $name_attribute . '" value="1"' . checked( $value, 1, false ) .  $disabled . ' class="secupress-checkbox" /> ';
+				echo '<span class="label-text">' . $args['label'] . '</span>';
 				?>
-			<?php echo $label_close;
+			<?php echo $label_close; ?>
+			</p>
+			<?php
 
 			echo '<p class="description desc">';
 				_e( 'We will not log post action like creation or update but rather password and profile update, email changes, new administrator user, admin has logged in...', 'secupress' );
 			echo "</p>\n";
 
-			submit_button( __( 'Submit' ) );
+			echo '<p class="submit"><button type="submit" class="secupress-button secupress-button-primary">' . esc_html__( 'Submit' ) . '</button></p>';
 			?>
 		</form>
 		<?php
@@ -1181,15 +1186,15 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		}
 		?>
 		<form action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_activate_404_logs' ), 'secupress_activate_404_logs' ) ); ?>" id="form-activate-404-logs" method="post">
-			<?php echo $label_open; ?>
+			<p><?php echo $label_open; ?>
 				<?php
 				echo $args['label_before'];
-				echo ' <input type="checkbox" id="' . $args['label_for'] . '" name="' . $name_attribute . '" value="1"' . checked( $value, 1, false ) .  $disabled . '/> ';
-				echo $args['label'];
+				echo ' <input type="checkbox" id="' . $args['label_for'] . '" name="' . $name_attribute . '" value="1"' . checked( $value, 1, false ) .  $disabled . 'class="secupress-checkbox" /> ';
+				echo '<span class="label-text">' . $args['label'] . '</span>';
 				?>
 			<?php echo $label_close; ?>
-
-			<?php submit_button( __( 'Submit' ) ); ?>
+			</p>
+			<?php echo '<p class="submit"><button type="submit" class="secupress-button secupress-button-primary">' . esc_html__( 'Submit' ) . '</button></p>'; ?>
 		</form>
 		<?php
 	}
@@ -1209,24 +1214,26 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				<b><?php _e( 'Unknown tables', 'secupress' ); ?></b><br>
 				<?php
 				foreach ( $other_tables as $table ) {
-					echo '<label><input checked="checked" name="other_tables[]" type="checkbox"> ' . $table . '</label><br>';
+					echo '<label><input checked="checked" name="other_tables[]" type="checkbox" class="secupress-checkbox secupress-checkbox-mini"> <span class="label-text">' . $table . '</span></label><br>';
 				}
 				?>
 				<hr>
 				<b><?php _e( 'WordPress tables (mandatory)', 'secupress' ); ?></b><br>
 				<?php
 				foreach ( $wp_tables as $table ) {
-					echo '<label><input disabled="disabled" checked="checked" type="checkbox"> ' . $table . '</label><br>';
+					echo '<label><input disabled="disabled" checked="checked" type="checkbox" class="secupress-checkbox secupress-checkbox-mini"> <span class="label-text">' . $table . '</span></label><br>';
 				}
 				?>
 			</fieldset>
 			<p class="submit">
-				<?php
-				submit_button( __( 'Backup my Database', 'secupress' ), 'secondary alignright', 'submit-backup-db', false, array(
-					'data-original-i18n' => __( 'Backup my Database', 'secupress' ),
-					'data-loading-i18n'  => __( 'Backuping &hellip;', 'secupress' ),
-				) );
-				?>
+				<button class="secupress-button secupress-button-primary alignright" type="submit" data-original-i18n="<?php echo esc_attr( __( 'Backup my Database', 'secupress' ) ); ?>" data-loading-i18n="<?php echo esc_attr( __( 'Backuping &hellip;', 'secupress' ) ); ?>" id="submit-backup-db">
+					<span class="icon">
+						<i class="icon-download"></i>
+					</span>
+					<span class="text">
+						<?php esc_html_e( 'Backup my Database', 'secupress' ); ?>
+					</span>
+				</button>
 				<span class="spinner secupress-inline-spinner"></span>
 			</p>
 		</form>
@@ -1252,8 +1259,17 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			<fieldset class="secupress-boxed-group">
 				<?php array_map( 'secupress_print_backup_file_formated', array_reverse( $backup_files ) ); ?>
 			</fieldset>
-
-			<?php submit_button( __( 'Delete all Database Backups', 'secupress' ), 'secondary alignright', 'submit-delete-db-backups' ); ?>
+			
+			<p class="submit">
+				<button class="secupress-button secupress-button-secondary alignright" type="submit" id="submit-delete-db-backups">
+					<span class="icon">
+						<i class="icon-cross"></i>
+					</span>
+					<span class="text">
+						<?php esc_html_e( 'Delete all Database Backups', 'secupress' ); ?>
+					</span>
+				</button>
+			</p>
 
 		</form>
 		<?php
@@ -1281,18 +1297,17 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			</fieldset>
 
 			<p class="submit">
-				<?php
-				$args = array(
-					'data-original-i18n' => __( 'Backup my Files', 'secupress' ),
-					'data-loading-i18n'  => __( 'Backuping &hellip;', 'secupress' ),
-				);
-
-				if ( ! secupress_is_pro() ) {
-					$args['disabled'] = 'disabled';
-				}
-
-				submit_button( __( 'Backup my Files', 'secupress' ), 'secondary alignright', 'submit-backup-files', false, $args );
-				?>
+			<?php
+				$disabled = ! secupress_is_pro() ? ' disabled="disabled"' : '';
+			?>
+				<button class="secupress-button secupress-button-primary alignright" type="submit" data-original-i18n="<?php echo esc_attr( __( 'Backup my Files', 'secupress' ) ); ?>" data-loading-i18n="<?php echo esc_attr( __( 'Backuping &hellip;', 'secupress' ) ); ?>" id="submit-backup-files"<?php echo $disabled; ?>>
+					<span class="icon">
+						<i class="icon-download"></i>
+					</span>
+					<span class="text">
+						<?php esc_html_e( 'Backup my Files', 'secupress' ); ?>
+					</span>
+				</button>
 				<span class="spinner secupress-inline-spinner"></span>
 			</p>
 

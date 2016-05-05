@@ -204,6 +204,17 @@ p.secupress-sh-subtitle {
 	padding-left: 0;
 }
 
+/* Tree of checkboxes */
+.secupress-tree-dash:before {
+	content: "";
+	display: inline-block;
+	vertical-align: middle;
+	width: 20px;
+	margin-right: 4px;
+	height: 1px;
+	background: #aaa;
+}
+
 /* Get pro version elements */
 span.secupress-get-pro-version {
 	display: inline-block;
