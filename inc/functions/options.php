@@ -155,6 +155,7 @@ function secupress_get_scan_results() {
 
 	$options = get_site_option( SECUPRESS_SCAN_SLUG, array() );
 	$options = is_array( $options ) ? $options : array();
+	$options = array_intersect_key( $options, array_flip( $tests ) );
 
 	if ( $transients ) {
 		$options = array_merge( $options, $transients );
@@ -210,6 +211,7 @@ function secupress_get_fix_results() {
 
 	$options = get_site_option( SECUPRESS_FIX_SLUG, array() );
 	$options = is_array( $options ) ? $options : array();
+	$options = array_intersect_key( $options, array_flip( $tests ) );
 
 	if ( $transients ) {
 		$options = array_merge( $options, $transients );

@@ -159,16 +159,14 @@ function secupress_get_tests_for_ms_scanner_fixes() {
  */
 function secupress_get_scanner_counts( $type = '' ) {
 	$tests_by_status = secupress_get_scanners();
-	$all_tests       = array_merge( $tests_by_status['high'], $tests_by_status['medium'], $tests_by_status['low'] );
-	$all_tests       = array_flip( array_map( 'strtolower', $all_tests ) );
 	$scanners        = secupress_get_scan_results();
-	$scanners        = array_intersect_key( $scanners, $all_tests );
 	$empty_statuses  = array( 'good' => 0, 'warning' => 0, 'bad' => 0 );
 	$scanners_count  = $scanners ? array_count_values( wp_list_pluck( $scanners, 'status' ) ) : array();
 	$counts          = array_merge( $empty_statuses, $scanners_count );
+	$total           = array_sum( array_map( 'count', $tests_by_status ) );
 
-	$counts['notscannedyet'] = count( $tests_by_status['high'] ) + count( $tests_by_status['medium'] ) + count( $tests_by_status['low'] ) - array_sum( $counts );
-	$counts['total']         = count( $tests_by_status['high'] ) + count( $tests_by_status['medium'] ) + count( $tests_by_status['low'] );
+	$counts['notscannedyet'] = $total - array_sum( $counts );
+	$counts['total']         = $total;
 	$counts['percent']       = floor( $counts['good'] * 100 / $counts['total'] );
 
 	if ( $counts['percent'] >= 99 ) {
