@@ -81,7 +81,7 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Inter
 	 */
 	public function scan() {
 
-		$response = wp_remote_get( user_trailingslashit( home_url() ) . '?' . time() . '=UNION+SELECT+FOO', array( 'redirection' => 0 ) );
+		$response = wp_remote_get( add_query_arg( time(), 'UNION+SELECT+FOO', user_trailingslashit( home_url() ) ), array( 'redirection' => 0 ) );
 
 		if ( ! is_wp_error( $response ) ) {
 

@@ -88,7 +88,7 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 		$discloses = array();
 
 		// Get home page contents.
-		$response     = wp_remote_get( user_trailingslashit( home_url() ), array( 'redirection' => 0 ) );
+		$response     = wp_remote_get( add_query_arg( time(), time(), user_trailingslashit( home_url() ) ), array( 'redirection' => 0 ) );
 		$has_response = ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response );
 
 		// Generator meta tag.
@@ -148,7 +148,7 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 	public function fix() {
 
 		// Get home page contents.
-		$response     = wp_remote_get( user_trailingslashit( home_url() ), array( 'redirection' => 0 ) );
+		$response     = wp_remote_get( add_query_arg( time(), time(), user_trailingslashit( home_url() ) ), array( 'redirection' => 0 ) );
 		$has_response = ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response );
 
 		// Generator meta tag.
