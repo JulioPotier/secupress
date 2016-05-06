@@ -43,11 +43,11 @@
 
 @font-face {
 	font-family: 'secupress';
-	src:url('../fonts/secupress.eot?8gy4qc');
-	src:url('../fonts/secupress.eot?8gy4qc#iefix') format('embedded-opentype'),
-		url('../fonts/secupress.ttf?8gy4qc') format('truetype'),
-		url('../fonts/secupress.woff?8gy4qc') format('woff'),
-		url('../fonts/secupress.svg?8gy4qc#secupress') format('svg');
+	src:url('../fonts/secupress.eot?im6m');
+	src:url('../fonts/secupress.eot?im6m#iefix') format('embedded-opentype'),
+		url('../fonts/secupress.ttf?im6m') format('truetype'),
+		url('../fonts/secupress.woff?im6m') format('woff'),
+		url('../fonts/secupress.svg?im6m#secupress') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -68,6 +68,19 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.icon-antispam:before { content: "\e908"; }
+.icon-backups:before { content: "\e909"; }
+.icon-core:before { content: "\e90a"; }
+.icon-file-system:before { content: "\e90b"; }
+.icon-firewall:before { content: "\e90c"; }
+.icon-information:before { content: "\e90d"; }
+.icon-logs:before { content: "\e90e"; }
+.icon-schedule:before { content: "\e90f"; }
+.icon-sensitive-data:before { content: "\e910"; }
+.icon-services:before { content: "\e911"; }
+.icon-themes-plugins:before { content: "\e912"; }
+.icon-user-login:before { content: "\e913"; }
+.icon-secupress-simple:before { content: "\e907"; }
 .icon-pad-check:before { content: "\e905"; }
 .icon-pad-list:before { content: "\e906"; }
 .icon-question-circle:before { content: "\e904"; }
