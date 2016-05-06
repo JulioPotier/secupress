@@ -48,6 +48,9 @@ function secupress_upgrader() {
 
 		$options = get_site_option( SECUPRESS_SETTINGS_SLUG ); // Do not use secupress_get_option() here.
 		$options['version'] = SECUPRESS_VERSION;
+		if ( did_action( 'secupress.first_install' ) ) {
+			$options['secupress_hash_key'] = secupress_generate( 64 );
+		}
 
 		$keys = secupress_check_key( 'live' );
 		if ( is_array( $keys ) ) {

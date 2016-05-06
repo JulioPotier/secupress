@@ -82,7 +82,7 @@ function secupress_prepare_email_for_like_search( $email ) {
  * @return (string)
  */
 function secupress_get_hashed_folder_name( $context, $path = '/' ) {
-	return $path . 'secupress-' . substr( wp_hash( $context, 'nonce' ), 10, 8 ) . '/';
+	return $path . 'secupress-' . secupress_generate_hash( 'folder_name', 8, 8 ) . '/';
 }
 
 
@@ -103,7 +103,7 @@ function secupress_generate_hash( $context, $start = 2, $length = 6 ) {
 	$key = "$context|$start|$length";
 
 	if ( ! isset( $hash[ $key ] ) ) {
-		$hash[ $key ] = substr( md5( wp_salt( $context, 'nonce' ) ), $start, $length );
+		$hash[ $key ] = substr( md5( secupress_get_option( 'secupress_hash_key' ) ), $start, $length );
 	}
 
 	return $hash[ $key ];
