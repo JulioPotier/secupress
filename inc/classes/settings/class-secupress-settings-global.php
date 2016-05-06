@@ -57,7 +57,7 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 		 */
 		$setting_modules = apply_filters( 'secupress.global_settings.modules', $setting_modules );
 		?>
-		<div class="wrap">
+		<div class="wrap secupress-setting-wrapper">
 			<?php secupress_admin_heading( __( 'Settings' ) ); ?>
 			<?php settings_errors(); ?>
 			<div class="secupress-section-dark secupress-flex">

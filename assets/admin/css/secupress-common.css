@@ -963,6 +963,10 @@
 /**
  * Commons settings styles
  */
+.secupress-setting-wrapper {
+	max-width: 100%;
+	width: 1020px;
+}
 /* Module Settings */
 .secupress-settings-section + .secupress-settings-section {
 	margin-top: 50px;
