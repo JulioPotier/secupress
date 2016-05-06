@@ -241,7 +241,6 @@ jQuery( document ).ready( function( $ ) {
 			var $this		= $( this ),
 				priority	= $this.attr( 'name' );
 
-			console.log(priority);
 			if ( $this.is(':checked') ) {
 				$('.secupress-table-prio-' + priority ).spFadeIn();
 			} else {
@@ -297,11 +296,9 @@ jQuery( document ).ready( function( $ ) {
 					$.post( ajaxurl, {}, null, "json" )
 					.done( function( r ) {
 						// Display fix re
-						console.log('done');
 					} )
 					.fail( function() {
 						// Error
-						console.log('fail');
 					} );
 				  };
 			} )
@@ -852,7 +849,6 @@ jQuery( document ).ready( function( $ ) {
 
 		// What to do when a scan ends.
 		$( "body" ).on( "scanDone.secupress", function( e, extra ) {
-			console.log("scanDone.secupress:", extra.test);
 			/*
 			* Available extras:
 			* extra.test:   test name.
@@ -886,7 +882,6 @@ jQuery( document ).ready( function( $ ) {
 
 		// What to do after ALL scans end.
 		$( 'body' ).on( 'allScanDone.secupress', function( e, extra ) {
-			console.log( 'allScanDone.secupress:', extra.isBulk );
 			/*
 			* Available extras:
 			* extra.isBulk: tell if it's a bulk scan.
@@ -925,7 +920,6 @@ jQuery( document ).ready( function( $ ) {
 
 		// What to do when a fix ends.
 		$( 'body' ).on( 'fixDone.secupress', function( e, extra ) {
-			console.log('fixDone.secupress:', extra.test);
 			/*
 			* Available extras:
 			* extra.test:      test name.
@@ -942,7 +936,6 @@ jQuery( document ).ready( function( $ ) {
 
 		// What to do after ALL fixes end.
 		$( 'body' ).on( 'allFixDone.secupress', function( e, extra ) {
-			console.log( 'allFixDone.secupress:', extra.isBulk );
 			/*
 			* Available extras:
 			* extra.isBulk: tell if it's a bulk fix.
@@ -990,7 +983,6 @@ jQuery( document ).ready( function( $ ) {
 
 		// What to do after a manual fix.
 		$( 'body' ).on( 'manualFixDone.secupress', function( e, extra ) {
-			console.log('manualFixDone.secupress: ', extra.test );
 			/*
 			* Available extras:
 			* extra.test:      test name.
@@ -1023,7 +1015,6 @@ jQuery( document ).ready( function( $ ) {
 
 		// What to do when a status changes.
 		$( 'body' ).on( 'testStatusChange.secupress', function( e, extra ) {
-			console.log('testStatusChange.secupress: ', extra.test );
 			/*
 			* Available extras:
 			* extra.test:      test name.
