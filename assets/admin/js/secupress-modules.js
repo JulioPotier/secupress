@@ -10,7 +10,8 @@ var SecuPress = {
 		type:              "warning",
 		showCancelButton:  true,
 		closeOnConfirm:    false,
-		allowOutsideClick: true
+		allowOutsideClick: true,
+		customClass: 'secupress-swal'
 	}
 };
 
@@ -214,7 +215,8 @@ function secupressDisplayAjaxError( $button, text, ajaxID ) {
 		confirmButtonText: window.l10nmodules.confirmText,
 		html:              text,
 		type:              "error",
-		allowOutsideClick: true
+		allowOutsideClick: true,
+		customClass:       'secupress-swal'
 	} );
 
 	ajaxID = undefined !== ajaxID ? ajaxID : "global";
@@ -241,7 +243,8 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		html:              text,
 		type:              "success",
 		allowOutsideClick: true,
-		timer:             4000
+		timer:             4000,
+		customClass:       'secupress-swal'
 	} );
 
 	ajaxID = undefined !== ajaxID ? ajaxID : "global";

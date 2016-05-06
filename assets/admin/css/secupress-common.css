@@ -1274,3 +1274,45 @@ table.fixed .column-date {
 [class*=" secupress-"] .hidden {
 	display: none;
 }
+
+/**
+ * === Sweet Alert (swal) some overwrite
+ */
+.sweet-overlay.sweet-overlay,
+.sweet-alert.sweet-alert {
+	z-index: 99999
+}
+.secupress-swal.sweet-alert {
+	border-radius: 3px;
+}
+.secupress-swal.sweet-alert .sweet-icon {
+	margin: 12px auto;
+}
+.secupress-swal.sweet-alert h2 {
+	margin-bottom: .75em;
+	font-size: 23px;
+	line-height: 1.7;
+	font-weight: 600;
+	color: #26B3A9;
+}
+.secupress-swal.sweet-alert .sweet-confirm,
+.secupress-swal.sweet-alert .sweet-cancel {
+	font-size: 14px;
+	text-transform: uppercase;
+	letter-spacing: 0.01em;
+	border-radius: 3px;
+}
+.secupress-swal.sweet-alert .sweet-confirm {
+	background: #2BCDC1!important;
+}
+.secupress-swal.sweet-alert .sweet-confirm:hover,
+.secupress-swal.sweet-alert .sweet-confirm:focus {
+	background: #26B3A9!important;
+}
+.secupress-swal.sweet-alert .sweet-cancel {
+	background: #5a626f!important;	
+}
+.secupress-swal.sweet-alert .sweet-cancel:hover,
+.secupress-swal.sweet-alert .sweet-cancel:hover {
+	background: #393e46!important;
+}

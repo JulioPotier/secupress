@@ -3,10 +3,11 @@ var SecuPress = {
 	confirmSwalDefaults: {
 		confirmButtonText: window.SecuPressi18nScanner.confirmText,
 		cancelButtonText:  window.SecuPressi18nScanner.cancelText,
-		type:              "warning",
+		type:              'warning',
 		showCancelButton:  true,
 		closeOnConfirm:    false,
-		allowOutsideClick: true
+		allowOutsideClick: true,
+		customClass: 'secupress-swal'
 	}
 };
 
@@ -219,7 +220,8 @@ jQuery( document ).ready( function( $ ) {
 				html:               w.SecuPressi18nScanner.supportContentFree,
 				confirmButtonColor: '#F1C40F',
 				type:               "question",
-				allowOutsideClick:  true
+				allowOutsideClick:  true,
+				customClass: 'secupress-swal'
 			} ).then( function( isConfirm ) {
 				if ( true === isConfirm ) {
 					swal( {
@@ -229,6 +231,7 @@ jQuery( document ).ready( function( $ ) {
 						confirmButtonText: 'Get Pro now!',
 						confirmButtonColor: '#F1C40F',
 						reverseButtons: true,
+						customClass: 'secupress-swal'
 					} );
 				}
 			} );
@@ -248,6 +251,7 @@ jQuery( document ).ready( function( $ ) {
 				html:               w.SecuPressi18nScanner.supportContentPro,
 				type:               "question",
 				allowOutsideClick:  true,
+				customClass: 'secupress-swal'
 			} ).then( function( isConfirm ) {
 				if ( true === isConfirm ) {
 					swal.enableLoading();
@@ -414,7 +418,8 @@ jQuery( document ).ready( function( $ ) {
 				title:             w.SecuPressi18nScanner.error,
 				confirmButtonText: w.SecuPressi18nScanner.confirmText,
 				type:              "error",
-				allowOutsideClick: true
+				allowOutsideClick: true,
+				customClass: 'secupress-swal'
 			} );
 		}
 
@@ -926,10 +931,11 @@ jQuery( document ).ready( function( $ ) {
 				} else {
 					// Bulk: warn the user that some manual fixes need to be done.
 					swal( {
-						title:             manualFixLen === 1 ? w.SecuPressi18nScanner.oneManualFix : w.SecuPressi18nScanner.someManualFixes,
-						type:              "warning",
+						title: manualFixLen === 1 ? w.SecuPressi18nScanner.oneManualFix : w.SecuPressi18nScanner.someManualFixes,
+						type: 'warning',
 						allowOutsideClick: true,
-						confirmButtonText: w.SecuPressi18nScanner.confirmText
+						confirmButtonText: w.SecuPressi18nScanner.confirmText,
+						customClass: 'secupress-swal'
 					} );
 				}
 
@@ -961,11 +967,12 @@ jQuery( document ).ready( function( $ ) {
 			}
 
 			swal( {
-				title:             title,
-				html:              extra.data.message.replace( /(<ul>|<li>|<\/li><\/ul>)/g, "" ).replace( /<\/li>/g, "<br/><br/>" ),
-				type:              type,
+				title: title,
+				html: extra.data.message.replace( /(<ul>|<li>|<\/li><\/ul>)/g, "" ).replace( /<\/li>/g, "<br/><br/>" ),
+				type: type,
 				allowOutsideClick: true,
-				confirmButtonText: w.SecuPressi18nScanner.confirmText
+				confirmButtonText: w.SecuPressi18nScanner.confirmText,
+				customClass: 'secupress-swal'
 			} );
 		} );
 
@@ -973,26 +980,28 @@ jQuery( document ).ready( function( $ ) {
 		$( "body" ).on( "click", ".secupress-details", function( e ) {
 			var test = $( this ).data( "test" );
 			swal( {
-				title:             w.SecuPressi18nScanner.scanDetails,
+				title: w.SecuPressi18nScanner.scanDetails,
 				confirmButtonText: w.SecuPressi18nScanner.confirmText,
-				html:              $( "#details-" + test ).find( ".details-content" ).html(),
-				type:              "info",
-				allowOutsideClick: true
+				html: $( "#details-" + test ).find( ".details-content" ).html(),
+				type: "info",
+				allowOutsideClick: true,
+				customClass: 'secupress-swal'
 			} );
 		} );
 
 		// Show fix details.
-		$( "body" ).on( "click", ".secupress-details-fix", function( e ) {
+		$( 'body' ).on( 'click', '.secupress-details-fix', function( e ) {
 			var test = $( this ).data( "test" );
 			swal( $.extend( {}, SecuPress.confirmSwalDefaults, {
-				title:             w.SecuPressi18nScanner.fixDetails,
+				title: w.SecuPressi18nScanner.fixDetails,
 				confirmButtonText: w.SecuPressi18nScanner.fixit,
-				html:              $( "#details-fix-" + test ).find( ".details-content" ).html(),
-				type:              "info",
-				closeOnConfirm:    true
+				html: $( '#details-fix-' + test ).find( '.details-content' ).html(),
+				type: 'info',
+				closeOnConfirm: true,
+				customClass: 'secupress-swal'
 			} ) ).then( function ( isConfirm ) {
 				if ( isConfirm ) {
-					$( "#" + test ).find( ".secupress-fixit" ).trigger( "click" );
+					$( '#' + test ).find( '.secupress-fixit' ).trigger( 'click' );
 				}
 			} );
 		} );
