@@ -38,14 +38,13 @@ if ( $is_plugin_active && function_exists( 'secupress_hotlink_get_apache_rules' 
 		/* translators: 1 is a file name, 2 is a tag name */
 		$message = sprintf( __( 'You need to add the following code into your %1$s file, inside the %2$s block:', 'secupress' ), '<code>nginx.conf</code>', '<code>server</code>' );
 		$rules   = secupress_hotlink_get_nginx_rules();
-		$rules   = "# BEGIN SecuPress move_login\n$rules\n# END SecuPress";
 	}
 	// Apache.
 	elseif ( $is_apache && ! secupress_root_file_is_writable( '.htaccess' ) ) {
 		/* translators: %s is a file name */
 		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code inside:', 'secupress' ), '<code>.htaccess</code>' );
 		$rules   = secupress_hotlink_get_apache_rules();
-		$rules   = "# BEGIN SecuPress move_login\n$rules\n# END SecuPress";
+		$rules   = "# BEGIN SecuPress hotlink\n$rules\n# END SecuPress";
 	}
 	// IIS7.
 	elseif ( $is_iis7 && ! secupress_root_file_is_writable( 'web.config' ) ) {

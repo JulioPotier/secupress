@@ -885,8 +885,6 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 			secupress_set_site_transient( SECUPRESS_SCAN_FIX_SITES_SLUG . '_' . $name, $this->fix_sites );
 		}
 
-		$this->result_fix['attempted_fixes'] = array_key_exists( 'attempted_fixes', $this->result_fix ) ? ++$this->result_fix['attempted_fixes'] : 1;
-
 		secupress_set_site_transient( 'secupress_fix_' . $name, $this->result_fix );
 
 		return $this->result_fix;

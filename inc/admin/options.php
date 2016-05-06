@@ -70,6 +70,27 @@ function __secupress_global_settings_callback( $value ) {
 
 
 /*------------------------------------------------------------------------------------------------*/
+/* MODULES OPTIONS ============================================================================== */
+/*------------------------------------------------------------------------------------------------*/
+
+add_action( 'admin_init', 'secupress_register_all_settings' );
+/**
+ * Register all modules settings.
+ *
+ * @since 1.0
+ */
+function secupress_register_all_settings() {
+	$modules = secupress_get_modules();
+
+	if ( $modules ) {
+		foreach ( $modules as $key => $module_data ) {
+			secupress_register_setting( $key );
+		}
+	}
+}
+
+
+/*------------------------------------------------------------------------------------------------*/
 /* TRACK CHANGES IN CONSUMER EMAIL ============================================================== */
 /*------------------------------------------------------------------------------------------------*/
 

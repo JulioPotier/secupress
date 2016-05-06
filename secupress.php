@@ -158,6 +158,7 @@ function secupress_init() {
 		// Hooks.
 		require( SECUPRESS_ADMIN_PATH . 'options.php' );
 		require( SECUPRESS_ADMIN_PATH . 'settings.php' );
+		require( SECUPRESS_ADMIN_PATH . 'admin.php' );
 		require( SECUPRESS_ADMIN_PATH . 'ajax-post-callbacks.php' );
 		require( SECUPRESS_ADMIN_PATH . 'notices.php' );
 		require( SECUPRESS_ADMIN_PATH . 'user-profile.php' );

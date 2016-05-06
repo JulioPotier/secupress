@@ -355,20 +355,21 @@ function secupress_move_login_write_iis7_rules( $rules = array() ) {
  * @return (string) The rewrite rules, ready to be insterted into the `nginx.conf` file.
  */
 function secupress_move_login_get_nginx_rules( $rules = array() ) {
-	$out = array();
+	$out = '';
 
 	if ( $rules ) {
-		$bases = secupress_get_rewrite_bases();
-		$out   = array(
-			'location ' . $bases['base'] . ' {',
-		);
+		$marker = 'move_login';
+		$bases  = secupress_get_rewrite_bases();
+		$out    = 'location ' . $bases['base'] . " {\n";
+		$out   .= "    # BEGIN SecuPress $marker\n";
 
 		foreach ( $rules as $slug => $rule ) {
-			$out[] = '    rewrite ^' . $bases['site_from'] . $slug . '/?$ /' . $bases['site_to'] . $rule . ' break;';
+			$out .= '    rewrite ^' . $bases['site_from'] . $slug . '/?$ /' . $bases['site_to'] . $rule . " break;\n";
 		}
 
-		$out[] = '}';
+		$out .= "    # END SecuPress\n";
+		$out .= '}';
 	}
 
-	return implode( "\n", $out );
+	return $out;
 }

@@ -606,3 +606,25 @@ function __secupress_check_token_wp_registration_url() {
 		add_action( 'wp_mail', '__return_false' );
 	}
 }
+
+
+add_filter( 'registration_errors', '__secupress_registration_test_errors', PHP_INT_MAX, 2 );
+/**
+ * This is used in the Subscription scan to test user registrations from the login page.
+ *
+ * @since 1.0
+ * @see `register_new_user()`
+ *
+ * @param (object) $errors               A WP_Error object containing any errors encountered during registration.
+ * @param (string) $sanitized_user_login User's username after it has been sanitized.
+ *
+ * @return (object) The WP_Error object with a new error if the user name is blacklisted.
+ */
+function __secupress_registration_test_errors( $errors, $sanitized_user_login ) {
+	if ( ! $errors->get_error_code() && false !== strpos( $sanitized_user_login, 'secupress' ) ) {
+		set_transient( 'secupress_registration_test', 'failed', HOUR_IN_SECONDS );
+		$errors->add( 'secupress_registration_test', 'secupress_registration_test_failed' );
+	}
+
+	return $errors;
+}

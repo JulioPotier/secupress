@@ -7,15 +7,15 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 // Scan callback.
 
-add_action( 'admin_post_secupress_scanner', '__secupress_scanit_action_callback' );
-add_action( 'wp_ajax_secupress_scanner',    '__secupress_scanit_action_callback' );
+add_action( 'admin_post_secupress_scanner', '__secupress_scanit_ajax_post_cb' );
+add_action( 'wp_ajax_secupress_scanner',    '__secupress_scanit_ajax_post_cb' );
 /**
  * Used to scan a test in scanner page.
  * Prints a JSON or redirects the user.
  *
  * @since 1.0
  */
-function __secupress_scanit_action_callback() {
+function __secupress_scanit_ajax_post_cb() {
 	if ( empty( $_GET['test'] ) ) { // WPCS: CSRF ok.
 		secupress_admin_die();
 	}
@@ -36,15 +36,15 @@ function __secupress_scanit_action_callback() {
 
 // Fix callback.
 
-add_action( 'admin_post_secupress_fixit', '__secupress_fixit_action_callback' );
-add_action( 'wp_ajax_secupress_fixit',    '__secupress_fixit_action_callback' );
+add_action( 'admin_post_secupress_fixit', '__secupress_fixit_ajax_post_cb' );
+add_action( 'wp_ajax_secupress_fixit',    '__secupress_fixit_ajax_post_cb' );
 /**
  * Used to automatically fix a test in scanner page.
  * Prints a JSON or redirects the user.
  *
  * @since 1.0
  */
-function __secupress_fixit_action_callback() {
+function __secupress_fixit_ajax_post_cb() {
 	if ( empty( $_GET['test'] ) ) { // WPCS: CSRF ok.
 		secupress_admin_die();
 	}
@@ -70,15 +70,15 @@ function __secupress_fixit_action_callback() {
 
 // Manual fix callback.
 
-add_action( 'admin_post_secupress_manual_fixit', '__secupress_manual_fixit_action_callback' );
-add_action( 'wp_ajax_secupress_manual_fixit',    '__secupress_manual_fixit_action_callback' );
+add_action( 'admin_post_secupress_manual_fixit', '__secupress_manual_fixit_ajax_post_cb' );
+add_action( 'wp_ajax_secupress_manual_fixit',    '__secupress_manual_fixit_ajax_post_cb' );
 /**
  * Used to manually fix a test in scanner page.
  * Prints a JSON or redirects the user.
  *
  * @since 1.0
  */
-function __secupress_manual_fixit_action_callback() {
+function __secupress_manual_fixit_ajax_post_cb() {
 	if ( empty( $_POST['test'] ) ) { // WPCS: CSRF ok.
 		secupress_admin_die();
 	}
@@ -102,16 +102,38 @@ function __secupress_manual_fixit_action_callback() {
 }
 
 
+// Get all translated strings for the scans UI.
+
+add_action( 'wp_ajax_secupress-get-scan-counters', '__secupress_get_scan_counters_ajax_cb' );
+/**
+ * Used to get all the needed translated strings and counters needed after each single scan/one-click scan.
+ *
+ * @since 1.0
+ */
+function __secupress_get_scan_counters_ajax_cb() {
+	secupress_check_user_capability();
+	secupress_check_admin_referer( 'secupress-get-scan-counters' );
+
+	$counts = secupress_get_scanner_counts();
+
+	foreach ( array( 'notscannedyet', 'good', 'warning', 'bad' ) as $status ) {
+		$counts[ $status . '-text' ] = sprintf( _n( '%d issue', '%d issues', $counts[ $status ], 'secupress' ), $counts[ $status ] );
+	}
+
+	wp_send_json_success( $counts );
+}
+
+
 // Date of the last One-click scan.
 
-add_action( 'wp_ajax_secupress-update-oneclick-scan-date', '__secupress_update_oneclick_scan_date' );
+add_action( 'wp_ajax_secupress-update-oneclick-scan-date', '__secupress_update_oneclick_scan_date_ajax_cb' );
 /**
  * Used to update the date of the last One-click scan.
  * Prints a JSON containing the HTML of the new line to insert in the page.
  *
  * @since 1.0
  */
-function __secupress_update_oneclick_scan_date() {
+function __secupress_update_oneclick_scan_date_ajax_cb() {
 	secupress_check_user_capability();
 	secupress_check_admin_referer( 'secupress-update-oneclick-scan-date' );
 
@@ -338,13 +360,13 @@ function __secupress_clear_ips_ajax_post_cb() {
 }
 
 
-add_action( 'admin_post_secupress_reset_settings', '__secupress_admin_post_reset_settings' );
+add_action( 'admin_post_secupress_reset_settings', '__secupress_admin_post_reset_settings_post_cb' );
 /**
  * Reset SecuPress settings or module settings.
  *
  * @since 1.0
  */
-function __secupress_admin_post_reset_settings() {
+function __secupress_admin_post_reset_settings_post_cb() {
 	if ( empty( $_GET['module'] ) ) {
 		secupress_admin_die();
 	}
@@ -357,65 +379,6 @@ function __secupress_admin_post_reset_settings() {
 
 	wp_safe_redirect( esc_url_raw( secupress_admin_url( 'modules', $_GET['module'] ) ) );
 	die();
-}
-
-
-add_filter( 'http_request_args', '__secupress_add_own_ua', 10, 3 );
-/**
- * Force our user agent header when we hit our urls
- *
- * @since 1.0
- *
- * @param (array)  $r   The request parameters.
- * @param (string) $url The request URL.
- *
- * @return (array)
- */
-function __secupress_add_own_ua( $r, $url ) {
-	if ( false !== strpos( $url, 'secupress.me' ) ) {
-		$r['headers']['x-secupress'] = secupress_user_agent( $r['user-agent'] );
-	}
-
-	return $r;
-}
-
-
-add_filter( 'registration_errors', '__secupress_registration_test_errors', PHP_INT_MAX, 2 );
-/**
- * This is used in the Subscription scan to test user registrations from the login page.
- *
- * @since 1.0
- * @see `register_new_user()`
- *
- * @param (object) $errors               A WP_Error object containing any errors encountered during registration.
- * @param (string) $sanitized_user_login User's username after it has been sanitized.
- *
- * @return (object) The WP_Error object with a new error if the user name is blacklisted.
- */
-function __secupress_registration_test_errors( $errors, $sanitized_user_login ) {
-	if ( ! $errors->get_error_code() && false !== strpos( $sanitized_user_login, 'secupress' ) ) {
-		set_transient( 'secupress_registration_test', 'failed', HOUR_IN_SECONDS );
-		$errors->add( 'secupress_registration_test', 'secupress_registration_test_failed' );
-	}
-
-	return $errors;
-}
-
-
-add_action( 'admin_init', 'secupress_register_all_settings' );
-/**
- * Register all modules settings.
- *
- * @since 1.0
- */
-function secupress_register_all_settings() {
-	$modules = secupress_get_modules();
-
-	if ( $modules ) {
-		foreach ( $modules as $key => $module_data ) {
-			secupress_register_setting( $key );
-		}
-	}
 }
 
 

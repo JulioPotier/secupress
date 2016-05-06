@@ -138,14 +138,15 @@ function secupress_text_diff( $left_string, $right_string, $args = array() ) {
 	return $r;
 }
 
+
 add_filter( 'admin_page_access_denied', '__secupress_is_jarvis', 9 );
 /**
- * Easter egg when you visit a "secupress" page with a typo i it, or just don't have access (not under white label)
+ * Easter egg when you visit a "secupress" page with a typo i it, or just don't have access (not under white label).
  *
  * @since 1.0
  */
 function __secupress_is_jarvis() {
-	if ( isset( $_GET['page'] ) && strpos( $_GET['page'], 'secupress' ) !== false ) { // do not use SECUPRESS_PLUGIN_SLUG, we don't want that in white label
-		wp_die( '[J.A.R.V.I.S.] You are not authorized to access this area.<br>[Christine Everhart] Jesus ...<br>[Pepper Potts] That\'s Jarvis, he runs the house.', 403 );
+	if ( isset( $_GET['page'] ) && strpos( $_GET['page'], 'secupress' ) !== false ) { // Do not use SECUPRESS_PLUGIN_SLUG, we don't want that in white label.
+		wp_die( '[J.A.R.V.I.S.] You are not authorized to access this area.<br/>[Christine Everhart] Jesus ...<br/>[Pepper Potts] That\'s Jarvis, he runs the house.', 403 );
 	}
 }

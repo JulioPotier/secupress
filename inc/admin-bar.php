@@ -18,11 +18,8 @@ function secupress_admin_bar( $wp_admin_bar ) {
 	$counts = secupress_get_scanner_counts();
 
 	if ( $counts['good'] || $counts['bad'] ) {
-		// Translators: 1 is plugin name, 2 is a number for the percentage. Keep the double "%%".
-		$count = sprintf( __( '%1$s: %2$d%% of the scanners are OK', 'secupress' ), SECUPRESS_PLUGIN_NAME, $counts['good'] * 100 / $counts['total'] );
-		$grade = esc_attr( sprintf( __( 'Grade %s', 'secupress' ), $counts['grade'] ) );
+		$grade = sprintf( __( 'Grade %s', 'secupress' ), '<span class="letter">' . $counts['grade'] . '</span>' );
 	} else {
-		$count = '';
 		$grade = '';
 	}
 
@@ -30,9 +27,6 @@ function secupress_admin_bar( $wp_admin_bar ) {
 	$wp_admin_bar->add_menu( array(
 		'id'    => 'secupress',
 		'title' => '<span class="ab-icon dashicons-shield-alt"></span><span class="screen-reader-text">' . SECUPRESS_PLUGIN_NAME . ' </span>' . $grade,
-		'meta'  => array(
-			'title' => $count,
-		),
 	) );
 
 	// Scanners.

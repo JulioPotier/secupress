@@ -92,7 +92,7 @@ function secupress_fixit( $test_name, $format_response = false, $for_current_sit
 			'status'  => secupress_status( $response['status'] ),
 			'message' => isset( $response['msgs'] ) ? secupress_format_message( $response['msgs'], $test_name ) : '',
 		) );
-		unset( $response['msgs'], $response['attempted_fixes'] );
+		unset( $response['msgs'] );
 	}
 
 	return $response;
@@ -139,7 +139,7 @@ function secupress_manual_fixit( $test_name, $format_response = false, $for_curr
 			'status'  => secupress_status( $response['status'] ),
 			'message' => isset( $response['msgs'] ) ? secupress_format_message( $response['msgs'], $test_name ) : '',
 		) );
-		unset( $response['msgs'], $response['attempted_fixes'] );
+		unset( $response['msgs'] );
 	}
 
 	return $response;

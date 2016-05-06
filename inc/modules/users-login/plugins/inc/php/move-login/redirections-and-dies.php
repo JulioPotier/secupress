@@ -15,6 +15,24 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 remove_action( 'template_redirect', 'wp_redirect_admin_locations', 1000 );
 
 
+add_filter( 'rewrite_rules_array', 'secupress_move_login_remove_rewrite_rules' );
+/**
+ * Filter the full set of generated rewrite rules.
+ *
+ * @since 1.0
+ *
+ * @param (array) $rules The compiled array of rewrite rules.
+ *
+ * @return (array)
+ */
+function secupress_move_login_remove_rewrite_rules( $rules ) {
+	if ( ! is_multisite() ) {
+		unset( $rules['.*wp-register.php$'] );
+	}
+	return $rules;
+}
+
+
 /*------------------------------------------------------------------------------------------------*/
 /* DENY ACCESS TO THE LOGIN FORM ================================================================ */
 /*------------------------------------------------------------------------------------------------*/
