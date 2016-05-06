@@ -89,7 +89,7 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements SecuPress_
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-		$response = wp_remote_get( user_trailingslashit( home_url() ) . '?' . time() . '=' . wp_generate_password( self::$length, false ), array( 'redirection' => 0 ) );
+		$response = wp_remote_get( add_query_arg( time(), wp_generate_password( self::$length, false ), user_trailingslashit( home_url() ) ), array( 'redirection' => 0 ) );
 
 		if ( ! is_wp_error( $response ) ) {
 

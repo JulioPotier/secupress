@@ -130,7 +130,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 		$is_bad       = false;
 
 		// Get home page contents. ==========================.
-		$response     = wp_remote_get( user_trailingslashit( home_url() ), array( 'redirection' => 0 ) );
+		$response     = wp_remote_get( add_query_arg( time(), time(), user_trailingslashit( home_url() ) ), array( 'redirection' => 0 ) );
 		$has_response = ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response );
 
 		if ( $has_response ) {
@@ -224,7 +224,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 		$php_version = phpversion();
 
 		// Get home page contents. ==========================.
-		$response     = wp_remote_get( user_trailingslashit( home_url() ), array( 'redirection' => 0 ) );
+		$response     = wp_remote_get( add_query_arg( time(), time(), user_trailingslashit( home_url() ) ), array( 'redirection' => 0 ) );
 		$has_response = ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response );
 
 		if ( $has_response ) {
