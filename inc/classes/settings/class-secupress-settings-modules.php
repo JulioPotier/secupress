@@ -213,13 +213,13 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	protected function print_tabs() {
 		foreach ( static::get_modules() as $key => $module ) {
 			$class = $this->get_current_module() === $key  ? ' active'    : '';
-			$icon  = isset( $module['dashicon'] )          ?  $module['dashicon'] : 'admin-generic';
+			$icon  = isset( $module['icon'] ) ?  $module['icon'] : 'secupress-simple';
 			?>
 			<li>
 				<a href="<?php echo esc_url( secupress_admin_url( 'modules', $key ) ); ?>" class="<?php echo $class; ?> module-<?php echo sanitize_key( $key ); ?>">
 					<span class="secupress-tab-name"><?php echo $module['title']; ?></span>
 					<span class="secupress-tab-summary"><?php echo $module['summaries']['small']; ?></span>
-					<i class="dashicons dashicons-<?php echo $icon; ?>" aria-hidden="true"></i>
+					<i class="icon-<?php echo $icon; ?>" aria-hidden="true"></i>
 				</a>
 			</li>
 			<?php

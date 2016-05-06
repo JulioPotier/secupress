@@ -2,11 +2,19 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 ?>
 
-	<div class="secupress-section-dark secupress-dashboard-header secupress-flex">
-		<div class="secupress-col-1-3 secupress-text-center">
-			<i class="icon-secupress" aria-hidden="true"></i>
+	<div class="secupress-section-dark secupress-settings-header secupress-flex">
+		<div class="secupress-col-1-3 secupress-col-logo secupress-text-center">
+			<div class="secupress-logo-block secupress-flex">
+				<div class="secupress-lb-logo">
+					<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo2x.svg 1x, <?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo2x.svg 2x" alt="" width="131">
+				</div>
+				<div class="secupress-lb-name">
+					<p class="secupress-lb-title">SecuPress</p>
+					<p class="secupress-lb-subtitle"><?php esc_html_e( 'the best security for WordPress', 'secupress' ); ?></p>
+				</div>
+			</div>
 		</div>
-		<div class="secupress-col-2-3">
+		<div class="secupress-col-2-3 secupress-col-text">
 			<p class="secupress-text-medium"><?php esc_html_e( 'Securize your website deeper thanks to our modules', 'secupress' ); ?></p>
 			<p><?php esc_html_e( 'Anti-Malware, Firewall, or Anti-Spam: add features, schedule scans and  save your datas.', 'secupress' ); ?></p>
 		</div>
@@ -25,7 +33,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 						<?php esc_html_e( 'View options', 'secupress' ); ?>
 					</a>
 				</p>
-				<i class="dashicons dashicons-<?php echo $mod['dashicon']; ?>" aria-hidden="true"></i>
+				<i class="icon-<?php echo $mod['icon']; ?>" aria-hidden="true"></i>
 			</div>
 			<?php
 		} // End foreach $modules.

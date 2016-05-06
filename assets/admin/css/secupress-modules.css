@@ -109,12 +109,34 @@ p.secupress-sh-subtitle {
 
 .secupress-modules-list-links i {
 	position: absolute;
-	right: 40px; top: 24px;
+	right: 20px; top: 24px;
 }
 .secupress-modules-list-links i,
 .secupress-modules-list-links i:before {
-	font-size: 50px;
+	font-size: 40px;
 	color: rgba(255, 255, 255, 0.15);
+}
+
+.secupress-modules-list-links .icon-sensitive-data,
+.secupress-modules-list-links .icon-logs,
+.secupress-modules-list-links .icon-schedule {
+	right: 25px;
+}
+.secupress-modules-list-links .icon-information {
+	right: 32px;
+}
+.secupress-modules-list-links .icon-file-system:before,
+.secupress-modules-list-links .icon-antispam:before {
+	font-size: 34px;
+}
+.secupress-modules-list-links .icon-services:before {
+	font-size: 42px;
+}
+.secupress-modules-list-links .icon-secupress-simple {
+	right: 22px;
+}
+.secupress-modules-list-links .icon-secupress-simple:before {
+	font-size: 45px;
 }
 
 .secupress-modules-sidebar a.active {
@@ -270,26 +292,6 @@ span.secupress-get-pro-version {
 }
 
 /* Dashboard (Welcome Page) */
-.secupress-dashboard-header {
-	padding: 35px 15px 45px;
-	border-radius: 3px 3px 0 0;
-}
-.secupress-dashboard-header i {
-	position: relative;
-	font-size: 170px;
-	color: #5A626F;
-	display: inline-block;
-	vertical-align: top;
-}
-.secupress-dashboard-header i:before {
-	position: absolute;
-	top: -46px;
-	left: -85px;
-}
-.secupress-dashboard-header .secupress-text-medium {
-	color: #FFF;
-	margin-bottom: -.35em;
-}
 .secupress-modules-dashboard {
 	-webkit-box-align: initial;
 	-webkit-align-items: initial;
@@ -320,26 +322,78 @@ span.secupress-get-pro-version {
 .secupress-mb-description {
 	font-size: 13px;
 	color: #5A626F;
-	margin-bottom: 1.5em;
+	margin-bottom: 1.75em;
 }
 .secupress-mb-action {
-	margin-top: auto;
-	margin-bottom: 1.5em;
+	margin: auto 0 1.75em 0;
+}
+.secupress-module-box p {
+	position: relative;
+	z-index: 2;
 }
 .secupress-module-box i {
 	position: absolute;
-	bottom: -20px; right: 20px;
+	bottom: -10px; right: 20px;
+	font-size: 90px;
+	color: #ECF0F1;
+	z-index: 1;
 }
-.secupress-module-box i:before,
-.secupress-module-box i {
-	width: 100px; height: 100px;
-	font-size: 100px;
-	color: rgba(0,0,0,.075);
+
+/* Icon exception */
+.secupress-module-box i.icon-user-login {
+	font-size: 105px;
+	bottom: -16px;
+}
+.secupress-module-box i.icon-themes-plugins {
+	font-size: 95px;
+	bottom: -16px;
+}
+.secupress-module-box i.icon-core {
+	font-size: 85px;
+}
+.secupress-module-box i.icon-sensitive-data {
+	bottom: -5px;
+	right: 35px;
+}
+.secupress-module-box i.icon-file-system {
+	font-size: 75px;
+	bottom: 0;
+}
+.secupress-module-box i.icon-firewall {
+	bottom: -8px;
+}
+.secupress-module-box i.icon-backups {
+	bottom: -5px;
+}
+.secupress-module-box i.icon-antispam {
+	font-size: 78px;
+	bottom: 10px;
+}
+.secupress-module-box i.icon-logs {
+	font-size: 80px;
+	right: 35px;
+	bottom: 0;
+}
+.secupress-module-box i.icon-information {
+	right: 35px;
+	bottom: 0;
+}
+.secupress-module-box i.icon-schedule {
+	right: 35px;
+	bottom: 5px;
+}
+.secupress-module-box-services i {
+	font-size: 95px;
+	right: 25px;
+	bottom: 0;
+	color: #5A626F;	
+	opacity: 0.15;
 }
 
 /* buttons */
 .secupress-module-box [class^="secupress-button"] {
-	font-size: 1em;
+	font-weight: bold;
+	font-size: 0.875em;
 	padding: 6px 25px;
 	letter-spacing: 0.075em;
 }

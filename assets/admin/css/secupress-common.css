@@ -980,7 +980,58 @@
 	max-width: 100%;
 	width: 1020px;
 }
-/* Module Settings */
+.secupress-settings-header {
+	padding: 20px 15px 20px;
+	border-radius: 3px 3px 0 0;
+}
+.secupress-logo-block p {
+	margin: 0;
+	font-weight: bold;
+}
+.secupress-lb-name {
+	padding: 0 20px;
+	text-align: left;
+}
+.secupress-header-mini .secupress-lb-name {
+	padding: 0 30px 0 5px;
+}
+.secupress-lb-title {
+	font-size: 26px;
+}
+.secupress-header-mini .secupress-lb-title {
+	font-size: 18px;
+}
+.secupress-lb-subtitle {
+	font-size: 15px;
+}
+.secupress-header-mini .secupress-lb-subtitle {
+	font-size: 12px;
+}
+.secupress-settings-header .secupress-text-medium {
+	color: #FFF;
+	margin: .5em 0 -.35em ;
+}
+.secupress-header-mini .secupress-lb-logo {
+	-webkit-flex-basis: 78px;
+	-ms-flex-preferred-size: 78px;
+	flex-basis: 78px;
+	-webkit-box-flex: 0;
+	-webkit-flex-grow: 0;
+	-ms-flex-positive: 0;
+	flex-grow: 0;
+	padding-right: 15px;
+	margin-bottom: -5px;
+}
+.secupress-header-mini .secupress-lb-logo img {
+	width: 78px;
+}
+.secupress-header-mini .secupress-col-logo {
+	-webkit-flex-basis: 190px;
+	-ms-flex-preferred-size: 190px;
+	flex-basis: 190px;
+}
+
+/* Module & Settings */
 .secupress-settings-section + .secupress-settings-section {
 	margin-top: 50px;
 }
@@ -996,24 +1047,6 @@
 }
 .secupress-settings-section-title .button-actions-title.open .dashicons {
 	transform: rotate(90deg);
-}
-.secupress-header-logo {
-	-webkit-flex-basis: 78px;
-	-ms-flex-preferred-size: 78px;
-	flex-basis: 78px;
-	-webkit-box-flex: 0;
-	-webkit-flex-grow: 0;
-	-ms-flex-positive: 0;
-	flex-grow: 0;
-	padding-right: 15px;
-	margin-bottom: -5px;
-}
-.secupress-header-logo img {
-	width: 78px;
-}
-.secupress-header-with-logo {
-	font-size: 23px;
-	font-weight: 600;
 }
 .secupress-settings-section-description {
 	padding: 15px 40px 5px 0;

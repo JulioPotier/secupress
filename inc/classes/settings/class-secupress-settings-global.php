@@ -60,13 +60,22 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 		<div class="wrap secupress-setting-wrapper">
 			<?php secupress_admin_heading( __( 'Settings' ) ); ?>
 			<?php settings_errors(); ?>
-			<div class="secupress-section-dark secupress-flex">
-				<p class="secupress-header-logo">
-					<img alt="" srcset="http://localhost/wordpress/wp-content/plugins/secupress-free/assets/admin/images/logo2x.svg 2x" src="http://localhost/wordpress/wp-content/plugins/secupress-free/assets/admin/images/logo.png">
-				</p>
-				<h2 class="secupress-header-with-logo secupress-text-medium">
-					<?php esc_html_e( 'SecuPress Settings', 'secupress' ); ?>
-				</h2>
+			<div class="secupress-section-dark secupress-settings-header secupress-header-mini secupress-flex">
+				<div class="secupress-col-1-3 secupress-col-logo secupress-text-center">
+					<div class="secupress-logo-block secupress-flex">
+						<div class="secupress-lb-logo">
+							<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo2x.svg 1x, <?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo2x.svg 2x" alt="" width="131">
+						</div>
+						<div class="secupress-lb-name">
+							<p class="secupress-lb-title">SecuPress</p>
+							<p class="secupress-lb-subtitle"><?php esc_html_e( 'the best security for WordPress', 'secupress' ); ?></p>
+						</div>
+					</div>
+				</div>
+				<div class="secupress-col-2-3 secupress-col-text">
+					<p class="secupress-text-medium"><?php esc_html_e( 'Settings', 'secupress' ); ?></p>
+					<p><?php esc_html_e( 'Overall plugin settings and fine tuning', 'secupress' ); ?></p>
+				</div>
 			</div>
 			<div class="secupress-section-light">
 
