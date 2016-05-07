@@ -404,6 +404,15 @@ jQuery( document ).ready( function( $ ) {
 		}
 
 
+		// Error popup.
+		function secupressErrorWarn() {
+			swal( $.extend( {}, SecuPress.swalDefaults, {
+				title: SecuPressi18nScanner.error,
+				type:  "error"
+			} ) );
+		}
+
+
 		// Replace a fix status with an error icon + message.
 		function secupressDisplayFixError( $row, warn ) {
 			var statusText = '<span class="dashicons dashicons-no secupress-dashicon" aria-hidden="true"></span> ' + SecuPressi18nScanner.error;
@@ -422,15 +431,6 @@ jQuery( document ).ready( function( $ ) {
 			}
 
 			return false;
-		}
-
-
-		// Error popup.
-		function secupressErrorWarn() {
-			swal( $.extend( {}, SecuPress.swalDefaults, {
-				title: SecuPressi18nScanner.error,
-				type:  "error"
-			} ) );
 		}
 
 		// Tell if the returned data (from a scan) has required infos.
@@ -547,6 +547,13 @@ jQuery( document ).ready( function( $ ) {
 		}
 
 
+		function secupressScanEnd( isBulk ) {
+			if ( secupressScansIsIdle() ) {
+				$( "body" ).trigger( "allScanDone.secupress", [ { isBulk: isBulk } ] );
+			}
+		}
+
+
 		// Perform a scan: spinner + row class + ajax call + display result.
 		function secupressScanit( test, $row, href, isBulk ) {
 			if ( ! test ) {
@@ -607,9 +614,15 @@ jQuery( document ).ready( function( $ ) {
 		}
 
 
-		function secupressScanEnd( isBulk ) {
-			if ( secupressScansIsIdle() ) {
-				$( "body" ).trigger( "allScanDone.secupress", [ { isBulk: isBulk } ] );
+		function secupressFixEnd( isBulk ) {
+			if ( $.isEmptyObject( secupressScans.doingFix ) && ! secupressScans.delayedFixes.length ) {
+				// No fixes are running and no delayed fixes left in queue. This is the last fix!
+				if ( isBulk ) {
+					// Enable fix buttons again, only when all fixes are done.
+					$( ".secupress-fixit" ).removeClass( "disabled" );
+				}
+				// Finally, trigger an event.
+				$( "body" ).trigger( "allFixDone.secupress", [ { isBulk: isBulk } ] );
 			}
 		}
 
@@ -690,19 +703,6 @@ jQuery( document ).ready( function( $ ) {
 		}
 
 
-		function secupressFixEnd( isBulk ) {
-			if ( $.isEmptyObject( secupressScans.doingFix ) && ! secupressScans.delayedFixes.length ) {
-				// No fixes are running and no delayed fixes left in queue. This is the last fix!
-				if ( isBulk ) {
-					// Enable fix buttons again, only when all fixes are done.
-					$( ".secupress-fixit" ).removeClass( "disabled" );
-				}
-				// Finally, trigger an event.
-				$( "body" ).trigger( "allFixDone.secupress", [ { isBulk: isBulk } ] );
-			}
-		}
-
-
 		function secupressFixFirstQueued( isBulk ) {
 			var bulk = isBulk ? "bulk" : "",
 				elem = secupressScans.delayedFixes.shift();
@@ -762,7 +762,9 @@ jQuery( document ).ready( function( $ ) {
 			content += '<form method="post" id="form_manual_fix" class="secupress-swal-form show-input" action="' + ajaxurl + '">';
 
 				for ( index in data.form_contents ) {
-					content += data.form_contents[ index ];
+					if ( data.form_contents.hasOwnProperty( index ) ) {
+						content += data.form_contents[ index ];
+					}
 				}
 				content += data.form_fields;
 

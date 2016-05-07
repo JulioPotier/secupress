@@ -192,7 +192,7 @@ function secupressDisplayAjaxError( $button, text, ajaxID ) {
 		text = SecuPressi18nModules.unknownError;
 	}
 
-	swal( $.extend( {}, SecuPress.swalDefaults, {
+	swal( jQuery.extend( {}, SecuPress.swalDefaults, {
 		title: SecuPressi18nModules.error,
 		html:  text,
 		type:  "error"
@@ -216,7 +216,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		text = null;
 	}
 
-	swal( $.extend( {}, SecuPress.swalDefaults, {
+	swal( jQuery.extend( {}, SecuPress.swalDefaults, {
 		title: SecuPressi18nModules.done,
 		html:  text,
 		type:  "success",
@@ -518,7 +518,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 					secupressDeleteAllBackups( $this, href );
 				}
 			} );
-		} else if ( confirm( SecuPressi18nModules.confirmTitle + "\n" + SecuPressi18nModules.confirmDeleteBackups ) ) {
+		} else if ( w.confirm( SecuPressi18nModules.confirmTitle + "\n" + SecuPressi18nModules.confirmDeleteBackups ) ) {
 			secupressDeleteAllBackups( $this, href );
 		}
 	} ).removeAttr( "disabled aria-disabled" );
@@ -544,7 +544,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 					secupressDeleteOneBackup( $this, href );
 				}
 			} );
-		} else if ( confirm( SecuPressi18nModules.confirmTitle + "\n" + SecuPressi18nModules.confirmDeleteBackup ) ) {
+		} else if ( w.confirm( SecuPressi18nModules.confirmTitle + "\n" + SecuPressi18nModules.confirmDeleteBackup ) ) {
 			secupressDeleteOneBackup( $this, href );
 		}
 	} );
@@ -612,6 +612,28 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		return;
 	}
 
+	// Empty the list, display a message in a placeholder (a row in the list), and maybe hide the search form and the "Clear all IPs" button.
+	function secupressBannedIPsEmptyList( message, resetSearch ) {
+		var $form;
+
+		if ( undefined === message || ! message ) {
+			message = SecuPressi18nModules.noBannedIPs;
+		}
+		// Remove all rows from the list and display the placeholder.
+		$row.find( "#secupress-banned-ips-list" ).html( '<li id="no-ips">' + message + "</li>" );
+
+		if ( undefined !== resetSearch && ! resetSearch ) {
+			return;
+		}
+		// Hide the "Clear all IPs" button and spinner.
+		$row.find( "#secupress-clear-ips-button" ).next().addBack().addClass( "hidden" );
+		// Hide and reset the search form.
+		$form = $row.find( "#form-search-ip" ).addClass( "hidden" );
+		// Reset the form.
+		$form.find( "#reset-banned-ips-list" ).next().addBack().addClass( "hidden" );
+		$form.find( "#secupress-search-banned-ip" ).val( "" );
+	}
+
 	// Fill in the list.
 	function secupressBannedIPsFillList( data, replace ) {
 		var $list    = $row.find( "#secupress-banned-ips-list" ),
@@ -647,43 +669,6 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 
 		// Insert the rows.
 		$list.append( out );
-	}
-
-	// Empty the list, display a message in a placeholder (a row in the list), and maybe hide the search form and the "Clear all IPs" button.
-	function secupressBannedIPsEmptyList( message, resetSearch ) {
-		var $form;
-
-		if ( undefined === message || ! message ) {
-			message = SecuPressi18nModules.noBannedIPs;
-		}
-		// Remove all rows from the list and display the placeholder.
-		$row.find( "#secupress-banned-ips-list" ).html( '<li id="no-ips">' + message + "</li>" );
-
-		if ( undefined !== resetSearch && ! resetSearch ) {
-			return;
-		}
-		// Hide the "Clear all IPs" button and spinner.
-		$row.find( "#secupress-clear-ips-button" ).next().addBack().addClass( "hidden" );
-		// Hide and reset the search form.
-		$form = $row.find( "#form-search-ip" ).addClass( "hidden" );
-		// Reset the form.
-		$form.find( "#reset-banned-ips-list" ).next().addBack().addClass( "hidden" );
-		$form.find( "#secupress-search-banned-ip" ).val( "" );
-	}
-
-	// Swal that displays the form to ban an IP address.
-	function secupressBanIPswal( $button, href ) {
-		swal( $.extend( {}, SecuPress.swalDefaults, SecuPress.swalConfirmDefaults, {
-			title:             $banForm.find( '[for="secupress-ban-ip"]' ).text(),
-			confirmButtonText: $button.data( "original-i18n" ),
-			html:              $banForm,
-			type:              "info"
-		} ) ).then( function ( isConfirm ) {
-			if ( isConfirm ) {
-				swal.enableLoading();
-				secupressBanIP( $button, href );
-			}
-		} );
 	}
 
 	// Perform an ajax call to ban an IP address.
@@ -728,6 +713,21 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		} )
 		.fail( function() {
 			secupressDisplayAjaxError( $button, null, "ban-ip" );
+		} );
+	}
+
+	// Swal that displays the form to ban an IP address.
+	function secupressBanIPswal( $button, href ) { // jshint ignore:line
+		swal( $.extend( {}, SecuPress.swalDefaults, SecuPress.swalConfirmDefaults, {
+			title:             $banForm.find( '[for="secupress-ban-ip"]' ).text(),
+			confirmButtonText: $button.data( "original-i18n" ),
+			html:              $banForm,
+			type:              "info"
+		} ) ).then( function ( isConfirm ) {
+			if ( isConfirm ) {
+				swal.enableLoading();
+				secupressBanIP( $button, href );
+			}
 		} );
 	}
 
