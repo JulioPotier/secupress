@@ -539,7 +539,7 @@ function secupress_downgrade_author_administrator() {
 	$user = get_user_by( 'id', $old_user_id );
 
 	if ( ! $user ) {
-		continue;
+		return;
 	}
 
 	secupress_require_class( 'scan' );
