@@ -1,43 +1,25 @@
+/* globals jQuery: false, ajaxurl: false, wp: false, SecuPressi18nModules: false, secupressIsSpaceOrEnterKey: false, swal: false */
 // Global vars =====================================================================================
 var SecuPress = {
 	doingAjax:           {},
 	deletedRowColor:     "#FF9966",
 	addedRowColor:       "#CCEEBB",
-	confirmSwalDefaults: {
-		title:             window.l10nmodules.confirmTitle,
-		confirmButtonText: window.l10nmodules.confirmText,
-		cancelButtonText:  window.l10nmodules.cancelText,
+	swalDefaults:        {
+		title:             SecuPressi18nModules.confirmTitle,
+		confirmButtonText: SecuPressi18nModules.confirmText,
+		cancelButtonText:  SecuPressi18nModules.cancelText,
 		type:              "warning",
-		showCancelButton:  true,
-		closeOnConfirm:    false,
 		allowOutsideClick: true,
-		customClass: 'secupress-swal'
+		customClass:       "wpmedia-swal secupress-swal"
+	},
+	swalConfirmDefaults: {
+		showCancelButton:  true,
+		closeOnConfirm:    false
 	}
 };
 
 
 // Tools ===========================================================================================
-// Shorthand to tell if a modifier key is pressed.
-function secupressHasModifierKey( e ) {
-	return e.altKey || e.ctrlKey || e.metaKey || e.shiftKey;
-}
-// Shorthand to tell if the pressed key is Space or Enter.
-function secupressIsSpaceOrEnterKey( e ) {
-	return ( e.which === 13 || e.which === 32 ) && ! secupressHasModifierKey( e );
-}
-// Shorthand to tell if the pressed key is Space.
-function secupressIsSpaceKey( e ) {
-	return e.which === 32 && ! secupressHasModifierKey( e );
-}
-// Shorthand to tell if the pressed key is Enter.
-function secupressIsEnterKey( e ) {
-	return e.which === 13 && ! secupressHasModifierKey( e );
-}
-// Shorthand to tell if the pressed key is Escape.
-function secupressIsEscapeKey( e ) {
-	return e.which === 27 && ! secupressHasModifierKey( e );
-}
-
 /**
  * Disable a button that calls an ajax action.
  * - Add a "working" class, so that the spinner can be displayed.
@@ -60,7 +42,7 @@ function secupressDisableAjaxButton( $button, speak, ajaxID ) {
 
 	ajaxID = undefined !== ajaxID ? ajaxID : "global";
 	SecuPress.doingAjax[ ajaxID ] = true;
-	isButton = "button" === isButton || "input" === isButton;
+	isButton = isButton === "button" || isButton === "input";
 
 	if ( undefined !== text && text ) {
 		if ( isButton ) {
@@ -69,14 +51,14 @@ function secupressDisableAjaxButton( $button, speak, ajaxID ) {
 				$button.val( text );
 			} else {
 				if ( $button.find('.text').length ) {
-					$button.find('.text').text( text );	
+					$button.find('.text').text( text );
 				} else {
 					$button.text( text );
 				}
 			}
 		} else {
 			if ( $button.find('.text').length ) {
-				$button.find('.text').text( text );	
+				$button.find('.text').text( text );
 			} else {
 				$button.text( text );
 			}
@@ -124,7 +106,7 @@ function secupressEnableAjaxButton( $button, speak, ajaxID ) {
 		if ( undefined !== text && text ) {
 			if ( isButton ) {
 				value = $button.val();
-				if ( undefined !== value && value ) { 
+				if ( undefined !== value && value ) {
 					$button.val( text );
 				} else {
 					if ( $button.find('.text').length ) {
@@ -173,6 +155,8 @@ function secupressEnableAjaxButton( $button, speak, ajaxID ) {
  * @return (bool|string) False on failure, the ajax URL on success.
  */
 function secupressPreAjaxCall( href, e, ajaxID ) {
+	e.preventDefault();
+
 	if ( undefined === href || ! href ) {
 		return false;
 	}
@@ -191,8 +175,6 @@ function secupressPreAjaxCall( href, e, ajaxID ) {
 		return false;
 	}
 
-	e.preventDefault();
-
 	return href.replace( "admin-post.php", "admin-ajax.php" );
 }
 
@@ -207,17 +189,14 @@ function secupressPreAjaxCall( href, e, ajaxID ) {
  */
 function secupressDisplayAjaxError( $button, text, ajaxID ) {
 	if ( undefined === text ) {
-		text = window.l10nmodules.unknownError;
+		text = SecuPressi18nModules.unknownError;
 	}
 
-	swal( {
-		title:             window.l10nmodules.error,
-		confirmButtonText: window.l10nmodules.confirmText,
-		html:              text,
-		type:              "error",
-		allowOutsideClick: true,
-		customClass:       'secupress-swal'
-	} );
+	swal( $.extend( {}, SecuPress.swalDefaults, {
+		title: SecuPressi18nModules.error,
+		html:  text,
+		type:  "error"
+	} ) );
 
 	ajaxID = undefined !== ajaxID ? ajaxID : "global";
 	secupressEnableAjaxButton( $button, text, ajaxID );
@@ -237,15 +216,12 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		text = null;
 	}
 
-	swal( {
-		title:             window.l10nmodules.done,
-		confirmButtonText: window.l10nmodules.confirmText,
-		html:              text,
-		type:              "success",
-		allowOutsideClick: true,
-		timer:             4000,
-		customClass:       'secupress-swal'
-	} );
+	swal( $.extend( {}, SecuPress.swalDefaults, {
+		title: SecuPressi18nModules.done,
+		html:  text,
+		type:  "success",
+		timer: 4000
+	} ) );
 
 	ajaxID = undefined !== ajaxID ? ajaxID : "global";
 	secupressEnableAjaxButton( $button, text, ajaxID );
@@ -256,12 +232,12 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 (function($, d, w, undefined) {
 
 	if ( "function" === typeof document.createElement( "input" ).checkValidity ) {
-		$( ".affected-role-row :checkbox" ).on( "click", function() {
+		$( ".affected-role-row :checkbox" ).on( "click.secupress", function() {
 			this.setCustomValidity( '' );
 
 			if ( 0 === $( '[name="' + this.name + '"]:checked' ).length ) {
-				this.setCustomValidity( w.l10nmodules.selectOneRoleMinimum );
-				$( "#secupress-module-form-settings [type='submit']" ).first().trigger( "click" );
+				this.setCustomValidity( SecuPressi18nModules.selectOneRoleMinimum );
+				$( "#secupress-module-form-settings [type='submit']" ).first().trigger( "click.secupress" );
 			}
 		} );
 	} else {
@@ -274,7 +250,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 // Radioboxes: 1 checked at most. ==================================================================
 (function($, d, w, undefined) {
 
-	$( ".radiobox" ).on( "click", function() {
+	$( ".radiobox" ).on( "click.secupress", function() {
 		$( '[name="' + this.name + '"]:checked' ).not( this ).removeAttr( "checked" ).trigger( "change" );
 	} );
 
@@ -341,7 +317,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 			// Buttons
 			if ( "button" === inputTagName ) {
 
-				$input.on( "click", function() {
+				$input.on( "click.secupress", function() {
 					var id = $( this ).attr( "id" );
 					$( this ).toggleClass( 'open' );
 					$( ".depends-" + id ).toggle( 250 );
@@ -435,10 +411,6 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 // Backups =========================================================================================
 (function($, d, w, undefined) {
 
-	if ( ! w.l10nmodules ) {
-		return;
-	}
-
 	function secupressUpdateAvailableBackupCounter( r ) {
 		$( "#secupress-available-backups" ).text( r.data.countText );
 	}
@@ -455,7 +427,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 
 	// Delete all backups.
 	function secupressDeleteAllBackups( $button, href ) {
-		secupressDisableAjaxButton( $button, w.l10nmodules.deletingAllText, "backup" );
+		secupressDisableAjaxButton( $button, SecuPressi18nModules.deletingAllText, "backup" );
 
 		$.getJSON( href )
 		.done( function( r ) {
@@ -464,9 +436,9 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 				$button.closest( "form" ).find( "fieldset" ).text( "" );
 
 				secupressUpdateBackupVisibility();
-				secupressEnableAjaxButton( $button, w.l10nmodules.deletedAllText, "backup" );
+				secupressEnableAjaxButton( $button, SecuPressi18nModules.deletedAllText, "backup" );
 			} else {
-				secupressDisplayAjaxError( $button, w.l10nmodules.deleteAllImpossible, "backup" );
+				secupressDisplayAjaxError( $button, SecuPressi18nModules.deleteAllImpossible, "backup" );
 			}
 		} )
 		.fail( function() {
@@ -476,7 +448,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 
 	// Delete a backup.
 	function secupressDeleteOneBackup( $button, href ) {
-		secupressDisableAjaxButton( $button, w.l10nmodules.deletingOneText, "backup" );
+		secupressDisableAjaxButton( $button, SecuPressi18nModules.deletingOneText, "backup" );
 
 		$.getJSON( href )
 		.done( function( r ) {
@@ -492,10 +464,10 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 				} );
 
 				if ( wp.a11y && wp.a11y.speak ) {
-					wp.a11y.speak( w.l10nmodules.deletedOneText );
+					wp.a11y.speak( SecuPressi18nModules.deletedOneText );
 				}
 			} else {
-				secupressDisplayAjaxError( $button, w.l10nmodules.deleteOneImpossible, "backup" );
+				secupressDisplayAjaxError( $button, SecuPressi18nModules.deleteOneImpossible, "backup" );
 			}
 		} )
 		.fail( function() {
@@ -505,7 +477,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 
 	// Do a DB backup.
 	function secupressDoDbBackup( $button, href ) {
-		secupressDisableAjaxButton( $button, w.l10nmodules.backupingText, 'backup' );
+		secupressDisableAjaxButton( $button, SecuPressi18nModules.backupingText, 'backup' );
 
 		$.post( href )
 		.done( function( r ) {
@@ -516,9 +488,9 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 
 				secupressUpdateAvailableBackupCounter( r );
 				secupressUpdateBackupVisibility();
-				secupressEnableAjaxButton( $button, w.l10nmodules.backupedText, "backup" );
+				secupressEnableAjaxButton( $button, SecuPressi18nModules.backupedText, "backup" );
 			} else {
-				secupressDisplayAjaxError( $button, w.l10nmodules.backupImpossible, "backup" );
+				secupressDisplayAjaxError( $button, SecuPressi18nModules.backupImpossible, "backup" );
 			}
 		} )
 		.fail( function() {
@@ -527,18 +499,18 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	}
 
 	// Ajax call that delete all backups.
-	$( "#submit-delete-db-backups" ).on( "click keyup", function( e ) {
+	$( "#submit-delete-db-backups" ).on( "click.secupress", function( e ) {
 		var $this = $( this ),
 			href  = secupressPreAjaxCall( $this.closest( "form" ).attr( "action" ), e );
 
 		if ( ! href ) {
-			return false;
+			return;
 		}
 
 		if ( "function" === typeof w.swal ) {
-			swal( $.extend( {}, SecuPress.confirmSwalDefaults, {
-				text:              w.l10nmodules.confirmDeleteBackups,
-				confirmButtonText: w.l10nmodules.yesDeleteAll,
+			swal( $.extend( {}, SecuPress.swalDefaults, SecuPress.swalConfirmDefaults, {
+				text:              SecuPressi18nModules.confirmDeleteBackups,
+				confirmButtonText: SecuPressi18nModules.yesDeleteAll,
 				type:              "question"
 			} ) ).then( function ( isConfirm ) {
 				if ( isConfirm ) {
@@ -546,26 +518,25 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 					secupressDeleteAllBackups( $this, href );
 				}
 			} );
-		} else if ( w.confirm( w.l10nmodules.confirmTitle + "\n" + w.l10nmodules.confirmDeleteBackups ) ) {
+		} else if ( confirm( SecuPressi18nModules.confirmTitle + "\n" + SecuPressi18nModules.confirmDeleteBackups ) ) {
 			secupressDeleteAllBackups( $this, href );
 		}
-
 	} ).removeAttr( "disabled aria-disabled" );
 
 
 	// Ajax call that delete one Backup.
-	$( "body" ).on( "click keyup", ".a-delete-backup", function( e ) {
+	$( "body" ).on( "click.secupress keyup", ".a-delete-backup", function( e ) {
 		var $this = $( this ),
 			href  = secupressPreAjaxCall( $this.attr( "href" ), e );
 
 		if ( ! href ) {
-			return false;
+			return;
 		}
 
 		if ( "function" === typeof w.swal ) {
-			swal( $.extend( {}, SecuPress.confirmSwalDefaults, {
-				text:              w.l10nmodules.confirmDeleteBackup,
-				confirmButtonText: w.l10nmodules.yesDeleteOne,
+			swal( $.extend( {}, SecuPress.swalDefaults, SecuPress.swalConfirmDefaults, {
+				text:              SecuPressi18nModules.confirmDeleteBackup,
+				confirmButtonText: SecuPressi18nModules.yesDeleteOne,
 				type:              "question"
 			} ) ).then( function ( isConfirm ) {
 				if ( isConfirm ) {
@@ -573,21 +544,19 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 					secupressDeleteOneBackup( $this, href );
 				}
 			} );
-		} else if ( w.confirm( w.l10nmodules.confirmTitle + "\n" + w.l10nmodules.confirmDeleteBackup ) ) {
+		} else if ( confirm( SecuPressi18nModules.confirmTitle + "\n" + SecuPressi18nModules.confirmDeleteBackup ) ) {
 			secupressDeleteOneBackup( $this, href );
 		}
 	} );
 
 	// Ajax call that do a Backup.
-	$( '#submit-backup-db' ).on( 'click', function( e ) {
+	$( "#submit-backup-db" ).on( "click.secupress", function( e ) {
 		var $this = $( this ),
-			href  = secupressPreAjaxCall( $this.closest( 'form' ).attr( 'action' ), e );
+			href  = secupressPreAjaxCall( $this.closest( "form" ).attr( "action" ), e );
 
-		if ( ! href ) {
-			return false;
+		if ( href ) {
+			secupressDoDbBackup( $this, href );
 		}
-
-		secupressDoDbBackup( $this, href );
 	} ).removeAttr( 'disabled aria-disabled' );
 
 } )(jQuery, document, window);
@@ -602,21 +571,21 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 
 		if ( checked_boxes === all_boxes ) {
 			$( "[value='continent-" + code + "']" ).prop( { "checked": true, "indeterminate": false } ).css( "-webkit-appearance", "none" );
-		} else if ( checked_boxes === 0 ) {
+		} else if ( 0 === checked_boxes ) {
 			$( "[value='continent-" + code + "']" ).prop( { "checked": false, "indeterminate": false } ).css( "-webkit-appearance", "none" );
 		} else {
 			$( "[value='continent-" + code + "']" ).prop( { "checked": false, "indeterminate": true } ).css( "-webkit-appearance", "checkbox" );
 		}
 	}
 
-	$( ".continent input" ).on( "click", function( e ) {
+	$( ".continent input" ).on( "click.secupress", function( e ) {
 		var $this = $( this ),
 			val   = $this.css( "-webkit-appearance", "none" ).val().replace( "continent-", "" );
 
 		$( ".depends-geoip-system_type_blacklist.depends-geoip-system_type_whitelist [data-code-country='" + val + "']" ).prop( "checked", $this.is( ":checked" ) );
 	} );
 
-	$( "[data-code-country]" ).on( "click", function( e ) {
+	$( "[data-code-country]" ).on( "click.secupress", function( e ) {
 		var code = $( this ).data( "code-country" );
 		secupress_set_indeterminate_state( code );
 	} );
@@ -626,7 +595,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		secupress_set_indeterminate_state( code );
 	} );
 
-	$( ".expand_country" ).on( "click", function( e ) {
+	$( ".expand_country" ).on( "click.secupress", function( e ) {
 		$( this ).next( "fieldset" ).toggleClass( "hide-if-js" );
 	} );
 
@@ -646,7 +615,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	// Fill in the list.
 	function secupressBannedIPsFillList( data, replace ) {
 		var $list    = $row.find( "#secupress-banned-ips-list" ),
-			template = '<li class="secupress-large-row"><strong>%ip%</strong> <em>(%time%)</em><span><a class="a-unban-ip" href="%unban_url%">' + w.l10nmodules.delete + '</a> <span class="spinner secupress-inline-spinner"></span></span></li>',
+			template = '<li class="secupress-large-row"><strong>%ip%</strong> <em>(%time%)</em><span><a class="a-unban-ip" href="%unban_url%">' + SecuPressi18nModules.delete + '</a> <span class="spinner secupress-inline-spinner"></span></span></li>',
 			isSearch = ! $( "#reset-banned-ips-list" ).hasClass( "hidden" ),
 			out      = "";
 
@@ -663,7 +632,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 				if ( typeof replace === "string" ) {
 					secupressBannedIPsEmptyList( replace );
 				} else if ( isSearch ) {
-					secupressBannedIPsEmptyList( w.l10nmodules.IPnotFound, false );
+					secupressBannedIPsEmptyList( SecuPressi18nModules.IPnotFound, false );
 				} else {
 					secupressBannedIPsEmptyList();
 				}
@@ -685,7 +654,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		var $form;
 
 		if ( undefined === message || ! message ) {
-			message = w.l10nmodules.noBannedIPs;
+			message = SecuPressi18nModules.noBannedIPs;
 		}
 		// Remove all rows from the list and display the placeholder.
 		$row.find( "#secupress-banned-ips-list" ).html( '<li id="no-ips">' + message + "</li>" );
@@ -704,7 +673,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 
 	// Swal that displays the form to ban an IP address.
 	function secupressBanIPswal( $button, href ) {
-		swal( $.extend( {}, SecuPress.confirmSwalDefaults, {
+		swal( $.extend( {}, SecuPress.swalDefaults, SecuPress.swalConfirmDefaults, {
 			title:             $banForm.find( '[for="secupress-ban-ip"]' ).text(),
 			confirmButtonText: $button.data( "original-i18n" ),
 			html:              $banForm,
@@ -733,7 +702,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 			var message;
 
 			if ( ! $.isPlainObject( r ) || ! r.data || ! $.isPlainObject( r.data ) ) {
-				secupressDisplayAjaxError( $button, w.l10nmodules.error, "ban-ip" );
+				secupressDisplayAjaxError( $button, SecuPressi18nModules.error, "ban-ip" );
 				return;
 			}
 
@@ -791,12 +760,12 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		$row.load( href + " #banned-ips-row > th, #banned-ips-row > td", params, function() {
 			$row.find( "#form-ban-ip" ).remove();
 			$row.find( "#secupress-search-banned-ip" ).focus();
-			secupressEnableAjaxButton( $row.find( "#secupress-search-banned-ip" ), w.l10nmodules.searchResults, "ban-ip" );
+			secupressEnableAjaxButton( $row.find( "#secupress-search-banned-ip" ), SecuPressi18nModules.searchResults, "ban-ip" );
 		} );
 	} );
 
 	// Reset search.
-	$row.on( "click keyup", "#reset-banned-ips-list", function( e ) {
+	$row.on( "click.secupress keyup", "#reset-banned-ips-list", function( e ) {
 		var $this = $( this ),
 			href  = secupressPreAjaxCall( d.location.href, e, "ban-ip" );
 
@@ -809,12 +778,12 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		$row.load( href + " #banned-ips-row > th, #banned-ips-row > td", function() {
 			$row.find( "#form-ban-ip" ).remove();
 			$row.find( "#secupress-search-banned-ip" ).focus();
-			secupressEnableAjaxButton( $this, w.l10nmodules.searchReset, "ban-ip" );
+			secupressEnableAjaxButton( $this, SecuPressi18nModules.searchReset, "ban-ip" );
 		} );
 	} );
 
 	// Ban an IP address.
-	$row.on( "click keyup", "#secupress-ban-ip-button", function( e ) {
+	$row.on( "click.secupress keyup", "#secupress-ban-ip-button", function( e ) {
 		var $this = $( this ),
 			href  = secupressPreAjaxCall( banUrl, e, "ban-ip" );
 
@@ -824,7 +793,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	} );
 
 	// Unban an IP address.
-	$row.on( "click keyup", ".a-unban-ip", function( e ) {
+	$row.on( "click.secupress keyup", ".a-unban-ip", function( e ) {
 		var $this = $( this ),
 			href  = secupressPreAjaxCall( $this.attr( "href" ), e, "ban-ip" );
 
@@ -839,7 +808,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 			var $list, $li, message;
 
 			if ( ! $.isPlainObject( r ) || ! r.data || ! $.isPlainObject( r.data ) ) {
-				secupressDisplayAjaxError( $this, w.l10nmodules.error, "ban-ip" );
+				secupressDisplayAjaxError( $this, SecuPressi18nModules.error, "ban-ip" );
 				return;
 			}
 
@@ -861,7 +830,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 					secupressBannedIPsEmptyList();
 				} else {
 					// It's a search.
-					secupressBannedIPsEmptyList( w.l10nmodules.IPremoved, false );
+					secupressBannedIPsEmptyList( SecuPressi18nModules.IPremoved, false );
 				}
 			}
 
@@ -873,7 +842,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	} );
 
 	// Unban all IP addresses.
-	$row.on( "click keyup", "#secupress-clear-ips-button", function( e ) {
+	$row.on( "click.secupress keyup", "#secupress-clear-ips-button", function( e ) {
 		var $this = $( this ),
 			href  = secupressPreAjaxCall( $this.attr( "href" ), e, "ban-ip" );
 
@@ -889,7 +858,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 				message;
 
 			if ( ! $.isPlainObject( r ) || ! r.data || ! $.isPlainObject( r.data ) ) {
-				secupressDisplayAjaxError( $this, w.l10nmodules.error, "ban-ip" );
+				secupressDisplayAjaxError( $this, SecuPressi18nModules.error, "ban-ip" );
 				return;
 			}
 

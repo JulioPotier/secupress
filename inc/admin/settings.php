@@ -67,7 +67,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		// JS.
 		wp_enqueue_script( 'secupress-modules-js',  SECUPRESS_ADMIN_JS_URL . 'secupress-modules' . $suffix . '.js', array( 'secupress-common-js' ), $version, true );
 
-		wp_localize_script( 'secupress-modules-js', 'l10nmodules', array(
+		wp_localize_script( 'secupress-modules-js', 'SecuPressi18nModules', array(
 			// Roles.
 			'selectOneRoleMinimum' => __( 'Select 1 role minimum', 'secupress' ),
 			// Generic.
