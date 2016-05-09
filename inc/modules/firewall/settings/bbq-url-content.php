@@ -30,6 +30,7 @@ $this->add_field( array(
 	'depends'      => $main_field_name,
 	'label_for'    => $this->get_field_name( 'bad-contents-list' ),
 	'type'         => 'textarea',
+	'label'        => __( 'List of bad keywords in request to block', 'secupress' ),
 	'helpers'      => array(
 		array(
 			'type'        => 'description',

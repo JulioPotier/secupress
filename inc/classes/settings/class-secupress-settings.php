@@ -576,9 +576,9 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 				echo $label_open; ?>
 					<?php
-					echo $args['label'] ? $args['label'] . '<br/>' : '';
+					echo $args['label'] ? '<span class="secupress-bold">' . $args['label'] . '</span><br/>' : '';
 					echo $args['label_before'];
-					echo '<textarea id="' . $args['label_for'] . '" name="' . $name_attribute . '"' . $attributes . '>' . $value . '</textarea>';
+					echo '<div class="secupress-textarea-container"><textarea id="' . $args['label_for'] . '" name="' . $name_attribute . '"' . $attributes . '>' . $value . '</textarea></div>';
 					echo $args['label_after'];
 					?>
 				<?php

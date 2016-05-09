@@ -879,3 +879,130 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	} );
 
 } )(jQuery, document, window);
+
+// Auto Expand Textarea ============================================================================
+(function($) {
+
+	var SPautoSized = {},
+		browsers = {},
+		// Expendable items
+		$expendables = $('.secupress-setting-row_bbq-headers_user-agents-list, .secupress-setting-row_bbq-url-content_bad-contents-list');
+
+	browsers.msie = /msie/.test( navigator.userAgent.toLowerCase() );
+	browsers.opera = /opera/.test( navigator.userAgent.toLowerCase() );
+
+	var hCheck = ! ( browsers.msie || browsers.opera );
+
+	// function to resize textarea
+	SPautoSized.resize = function( e, init ) {
+		// e = event or element?
+		e = e.target || e;
+
+		// content length and box width
+		var vlen   = e.value.length,
+			ewidth = e.offsetWidth;
+
+		if ( vlen != e.valLength || ewidth != e.boxWidth ) {
+			if ( hCheck && ( vlen < e.valLength || ewidth != e.boxWidth ) ) {
+				e.style.height = '0px';
+			}
+			var h          = Math.max( e.expandMin, Math.min( e.scrollHeight, e.expandMax ) ),
+				$textarea  = $( e ),
+				$container = $textarea.closest('.secupress-textarea-container');
+
+			e.style.overflow = 'hidden';
+			e.style.height = h + 'px';
+
+			e.valLength = vlen;
+			e.boxWidth = ewidth;
+
+			// resize the container
+			SPautoSized.textareaParentHeight( $container, $textarea );
+
+			// add (+) button				
+			if ( e.scrollHeight > $container.height() ) {
+				SPautoSized.handleExpendButton( $container, true ); // create
+			} else {
+				SPautoSized.handleExpendButton( $container, false ); // remove
+			}
+		}
+
+		return true;
+	};
+	
+	// function to resize textarea parent
+	SPautoSized.textareaParentHeight = function($container, $textarea) {
+		$container.css(
+			'height',
+			$textarea.outerHeight() + $container.outerHeight() - $container.height()
+		);
+		return true;
+	}
+
+	// function to create (+) button
+	SPautoSized.handleExpendButton = function( $container, create ) {
+		// if creation needed, check if exists, or create it
+		if ( ! $container.next('.secupress-expand-trigger').length && create ) {
+			$container.after('<span class="secupress-expand-trigger"><i class="dashicons dashicons-plus" aria-hidden="true"></i></span>').attr('spellcheck', false);
+		} else if ( $container.next('.secupress-expand-trigger').length && create === false ) {
+			$container.next('.secupress-expand-trigger').remove();
+		}
+	};
+
+	// jQuery definition
+	$.fn.AutoSized = function(minHeight, maxHeight) {
+
+		this.each(function(){
+			// is a textarea?
+			if ( this.nodeName.toLowerCase() != 'textarea' ) {
+				return;
+			}
+
+			// height restriction
+			this.expandMin = minHeight || 0;
+			this.expandMax = maxHeight || 99999;
+
+			// initial resize
+			SPautoSized.resize( this, this.Initialized );
+
+			// resize on write
+			if ( ! this.Initialized ) {
+				this.Initialized = true;
+				$(this).css({
+					'padding-top'    : '0',
+					'padding-bottom' : '0'
+				});
+				$(this).on('keyup.secupress focus.secupress', SPautoSized.resize );
+			}
+
+		});
+
+		return this;
+	};
+
+	// change class on parent textarea on focus/blur
+	$expendables.find('textarea').AutoSized()
+		.on('focus.secupress', function(){
+			$(this).parent().addClass('textarea-focused');
+		})
+		.on('blur.secupress', function(){
+			$(this).parent().removeClass('textarea-focused');
+		});
+
+	// on click on (+) button
+	$expendables.on('click.secupress', '.secupress-expand-trigger', function(){
+		var $_this     = $(this),
+			$container = $_this.prev( '.secupress-textarea-container' ),
+			$textarea  = $container.find( 'textarea' );
+
+		if ( $_this.hasClass( 'open' ) ) {
+			$container.css( 'height', '200px' );
+			$_this.removeClass( 'open' );
+		} else {
+			SPautoSized.textareaParentHeight( $container, $textarea );
+			$_this.addClass( 'open' );
+		}
+		return false;
+	});
+
+})(jQuery);

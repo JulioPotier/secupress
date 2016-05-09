@@ -416,6 +416,85 @@ span.secupress-get-pro-version {
 	box-shadow: 0 6px 12px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05), 0 3px 4px rgba(0,0,0,.05);
 }
 
+/* 
+	Module User Agent List
+	&
+	Expandable textareas
+*/
+.secupress-expand-trigger {
+	position: absolute;
+	left: 50%;
+	bottom: 0;
+	margin: 0 0 -14px -14px;
+	height: 28px; width: 28px;
+	padding-top: 5px;
+	background: #FFF;
+	border: 1px solid #eee;
+	text-align: center;
+	box-shadow: 0 1px 4px rgba(0,0,0,.1);
+	border-radius: 100%;
+	transition: all .275s;
+}
+.secupress-expand-trigger i:before {
+	color: #26B3A9;
+}
+.secupress-expand-trigger.open {
+	background: #ECF0F1;
+	transform: rotate(45deg);
+}
+.secupress-setting-row_bbq-headers_user-agents-list .secupress-get-pro-col,
+.secupress-setting-row_bbq-url-content_bad-contents-list .secupress-get-pro-col {
+	-webkit-flex-basis: 0;
+	-ms-flex-preferred-size: 0;
+	flex-basis: 0;
+
+}
+.secupress-setting-row_bbq-headers_user-agents-list .secupress-textarea-container,
+.secupress-setting-row_bbq-url-content_bad-contents-list .secupress-textarea-container {
+	width: 100%;
+	height: 200px;
+	margin: .75em auto;
+	padding: 10px;
+	background: #ECF0F1;
+	border: 1px solid #ECF0F1;
+	overflow: hidden;
+	transition: all .275s;
+}
+.secupress-textarea-container.textarea-focused {
+	background: #FFF;
+	border-color: #eee;
+}
+.secupress-setting-row_bbq-headers_user-agents-list label,
+.secupress-setting-row_bbq-url-content_bad-contents-list label {
+	position: relative;
+	display: block;
+}
+.secupress-setting-row_bbq-headers_user-agents-list textarea,
+.secupress-setting-row_bbq-url-content_bad-contents-list textarea {
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+	border: 0;
+	font-size: 1em;
+	line-height: 1.7;
+	background: #ECF0F1;
+	color: #5A626F;
+	font-family: Consolas, Monaco, "Andale Mono", monospace;
+	box-shadow: none;
+	transition: all .275s;
+	resize: none;
+}
+.secupress-setting-row_bbq-headers_user-agents-list textarea:focus,
+.secupress-setting-row_bbq-url-content_bad-contents-list textarea:focus {
+	background: #FFF;
+}
+
+.secupress-setting-row_bbq-headers_user-agents-list .description.desc,
+.secupress-setting-row_bbq-url-content_bad-contents-list .description.desc {
+	padding-left: 0;
+	margin-top: 1.5em;
+}
 
 /* EXISTING */
 
