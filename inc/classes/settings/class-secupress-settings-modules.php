@@ -112,6 +112,28 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		return array();
 	}
 
+	/**
+	 * Get a module icon.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $module The desired module.
+	 *
+	 * @return (string)
+	 *
+	 * @author Geoffrey
+	*/
+	final public function get_module_icon( $module = false ) {
+		$modules = static::get_modules();
+		$module  = $module ? $module : $this->modulenow;
+
+		if ( ! empty( $modules[ $module ]['icon'] ) ) {
+			return $modules[ $module ]['icon'];
+		}
+
+		return '';
+	}
+
 
 	/**
 	 * Tells if the reset box should be displayed for a specific module.
@@ -271,6 +293,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			<?php
 			$this->print_module_title();
 			$this->print_module_description();
+			$this->print_module_icon();
 			?>
 		</div>
 
@@ -341,6 +364,22 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	protected function print_module_description() {
 		if ( $this->get_module_descriptions() ) {
 			echo '<p>' . implode( "</p>\n<p>", $this->get_module_descriptions() ) . "</p>\n";
+		}
+		return $this;
+	}
+
+	/**
+	 * Print the module icon.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (object) The class instance.
+	 *
+	 * @author Geoffrey
+	 */
+	protected function print_module_icon() {
+		if ( $this->get_module_icon() ) {
+			echo '<i class="icon-' . $this->get_module_icon() . '" aria-hidden="true"></i>' . "\n";
 		}
 		return $this;
 	}

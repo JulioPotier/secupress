@@ -165,9 +165,23 @@ p.secupress-sh-subtitle {
 }
 
 .secupress-tab-content-header {
+	position: relative;
 	padding: 15px 175px 25px 20px;
 	background: #F2F2F6;
 	color: #5A626F; /*#393E46*/
+}
+.secupress-tab-content-header p {
+	position: relative;
+	z-index: 2;
+}
+.secupress-tab-content-header i {
+	position: absolute;
+	z-index: 1;
+	right: 45px;
+	top: 50%;
+	margin-top: -40px;
+	font-size: 80px;
+	color: #DFE3E8;
 }
 .secupress-tc-title {
 	margin-top: .5em;
