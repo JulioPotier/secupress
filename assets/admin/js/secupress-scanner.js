@@ -1,13 +1,17 @@
+/* globals jQuery: false, ajaxurl: false, SecuPressi18nScanner: false, SecuPressi18nChart: false, secupressIsSpaceOrEnterKey: false, Chart: false, swal: false */
 // Global vars =====================================================================================
 var SecuPress = {
-	confirmSwalDefaults: {
-		confirmButtonText: window.SecuPressi18nScanner.confirmText,
-		cancelButtonText:  window.SecuPressi18nScanner.cancelText,
-		type:              'warning',
-		showCancelButton:  true,
-		closeOnConfirm:    false,
+	supportButtonColor:  "#F1C40F",
+	swalDefaults:        {
+		confirmButtonText: SecuPressi18nScanner.confirmText,
+		cancelButtonText:  SecuPressi18nScanner.cancelText,
+		type:              "warning",
 		allowOutsideClick: true,
-		customClass: 'secupress-swal'
+		customClass:       "wpmedia-swal secupress-swal"
+	},
+	swalConfirmDefaults: {
+		showCancelButton:  true,
+		closeOnConfirm:    false
 	}
 };
 
@@ -16,7 +20,7 @@ jQuery( document ).ready( function( $ ) {
 
 	// !Chart and score ============================================================================
 	var secupressChart,
-		secupressChartEl = document.getElementById( 'status_chart' ),
+		secupressChartEl = document.getElementById( "status_chart" ),
 		secupressChartData,
 		secupressOneClickScanProgress = 0;
 
@@ -53,11 +57,11 @@ jQuery( document ).ready( function( $ ) {
 		];
 
 		secupressChart = new Chart( secupressChartEl.getContext( "2d" ) ).Doughnut( secupressChartData, {
-			animationEasing:       'easeInOutQuart',
+			animationEasing:       "easeInOutQuart",
 			showTooltips:          true,
 			segmentShowStroke:     false,
 			percentageInnerCutout: 90,
-			tooltipEvents:         ['mousemove'], // active "hover" effect...
+			tooltipEvents:         ["mousemove"], // active "hover" effect...
 			customTooltips:        function() {} //... but remove tooltips.
 		} );
 
@@ -65,14 +69,14 @@ jQuery( document ).ready( function( $ ) {
 		secupressChartEl.onclick = function( e ) {
 			var activePoints = secupressChart.getSegmentsAtEvent( e );
 			if ( activePoints[0] ) {
-				$( '#secupress-type-filters').find('.secupress-big-tab-' + activePoints[0].status ).find('a').trigger( 'click.secupress' );
+				$( "#secupress-type-filters" ).find( ".secupress-big-tab-" + activePoints[0].status ).find( "a" ).trigger( "click.secupress" );
 			}
 		};
 
 		// Trigger a filter action on Legend item click.
-		$('.secupress-chart-legend').find('li').on('click.secupress', function() {
-			$( '#secupress-type-filters').find('.secupress-big-tab-' + $(this).data('status') ).find('a').trigger( 'click.secupress' );
-		});
+		$( ".secupress-chart-legend" ).find( "li" ).on( "click.secupress", function() {
+			$( "#secupress-type-filters" ).find( ".secupress-big-tab-" + $( this ).data( "status" ) ).find( "a" ).trigger( "click.secupress" );
+		} );
 	}
 
 
@@ -88,7 +92,7 @@ jQuery( document ).ready( function( $ ) {
 		$( ".secupress-scan-infos .secupress-score" ).html( data.subtext );
 		$( ".secupress-score .percent" ).text( data.percent + "%" );
 		$( "#wp-admin-bar-secupress" ).find( ".letter" ).text( data.grade );
-		$( "#toplevel_page_" + window.SecuPressi18nScanner.pluginSlug + "_scanners" ).find( ".update-count" ).text( data.bad ).parent().attr( "class", function( i, val ) {
+		$( "#toplevel_page_" + SecuPressi18nScanner.pluginSlug + "_scanners" ).find( ".update-count" ).text( data.bad ).parent().attr( "class", function( i, val ) {
 			return val.replace( /count-\d+/, "count-" + data.bad );
 		} );
 
@@ -128,43 +132,43 @@ jQuery( document ).ready( function( $ ) {
 			$.getJSON( href )
 			.done( function( r ) {
 				if ( ! r.success ) {
-					$spinner.replaceWith( '<span class="secupress-error-notif">' + w.SecuPressi18nScanner.error + "</span>" );
+					$spinner.replaceWith( '<span class="secupress-error-notif">' + SecuPressi18nScanner.error + "</span>" );
 					$percent.remove();
 					return;
 				}
 				if ( r.data ) {
-					$percent.text( r.data + '%' );
+					$percent.text( r.data + "%" );
 
-					if ( r.data !== 100 ) {
+					if ( 100 !== r.data ) {
 						// We need more data.
 						secupressSetBigData( href, $button, $spinner, $percent );
 						return;
 					}
 				}
 				// Finish.
-				$button.closest( '.secupress-notice' ).fadeTo( 100 , 0, function() {
+				$button.closest( ".secupress-notice" ).fadeTo( 100 , 0, function() {
 					$( this ).slideUp( 100, function() {
 						$( this ).remove();
 					} );
 				} );
 			} )
 			.fail( function() {
-				$spinner.replaceWith( '<span class="secupress-error-notif">' + w.SecuPressi18nScanner.error + "</span>" );
+				$spinner.replaceWith( '<span class="secupress-error-notif">' + SecuPressi18nScanner.error + "</span>" );
 				$percent.remove();
 			} );
 		}
 
 
-		$( '.secupress-centralize-blog-options' ).on( 'click', function( e ) {
+		$( ".secupress-centralize-blog-options" ).on( "click.secupress", function( e ) {
 			var $this    = $( this ),
 				href     = $this.attr( "href" ).replace( "admin-post.php", "admin-ajax.php" ),
-				$spinner = $( '<img src="' + w.SecuPressi18nScanner.spinnerUrl + '" alt="" class="secupress-spinner" />' ),
+				$spinner = $( '<img src="' + SecuPressi18nScanner.spinnerUrl + '" alt="" class="secupress-spinner" />' ),
 				$percent = $( '<span class="secupress-ajax-percent">0%</span>' );
 
-			if ( $this.hasClass( 'running' ) ) {
+			if ( $this.hasClass( "running" ) ) {
 				return false;
 			}
-			$this.addClass( 'running' ).parent().append( $spinner ).append( $percent ).find( '.secupress-error-notif' ).remove();
+			$this.addClass( "running" ).parent().append( $spinner ).append( $percent ).find( ".secupress-error-notif" ).remove();
 
 			e.preventDefault();
 
@@ -175,14 +179,20 @@ jQuery( document ).ready( function( $ ) {
 
 	// !Filter rows (Status bad/good/etc) ==========================================================
 	(function( w, d, $, undefined ) {
-		$( "#secupress-type-filters" ).find( "a" ).on( "click.secupress", function( e ) {
-			var $this    = $( this ),
-				priority = $this.data( "type" ),
-				current  = "active";
+		$( "#secupress-type-filters" ).find( "a" ).on( "click.secupress keyup", function( e ) {
+			var $this, priority, current = "active";
+
+			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
+				return false;
+			}
+
+			$this = $( this );
 
 			if ( $this.hasClass( current ) ) {
 				return false;
 			}
+
+			priority = $this.data( "type" );
 
 			$this.closest( "ul" ).find( "a" ).removeClass( current );
 			$this.addClass( current );
@@ -194,14 +204,14 @@ jQuery( document ).ready( function( $ ) {
 
 	// !Filter Rows (Priority) ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	(function( w, d, $, undefined ) {
-		$( '#secupress-priority-filters' ).find('input').on( 'change.secupress', function( e ) {
-			var $this		= $( this ),
-				priority	= $this.attr( 'name' );
+		$( "#secupress-priority-filters" ).find( "input" ).on( "change.secupress", function( e ) {
+			var $this    = $( this ),
+				priority = $this.attr( "name" );
 
-			if ( $this.is(':checked') ) {
-				$('.secupress-table-prio-' + priority ).spFadeIn();
+			if ( $this.is( ":checked" ) ) {
+				$( ".secupress-table-prio-" + priority ).spFadeIn();
 			} else {
-				$('.secupress-table-prio-' + priority ).spHide();
+				$( ".secupress-table-prio-" + priority ).spHide();
 			}
 			return false;
 		} );
@@ -210,29 +220,29 @@ jQuery( document ).ready( function( $ ) {
 
 	// !Ask for support button (free) ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	(function( w, d, $, undefined ) {
-		$( '.secupress-ask-support-free' ).on( 'click', function( e ) {
+		$( ".secupress-ask-support-free" ).on( "click.secupress keyup", function( e ) {
+			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
+				return false;
+			}
+
 			e.preventDefault();
 
-			swal( {
-				title:              w.SecuPressi18nScanner.supportTitle,
-				confirmButtonText:  w.SecuPressi18nScanner.supportButton,
-				showCancelButton:   true,
-				html:               w.SecuPressi18nScanner.supportContentFree,
-				confirmButtonColor: '#F1C40F',
-				type:               "question",
-				allowOutsideClick:  true,
-				customClass: 'secupress-swal'
-			} ).then( function( isConfirm ) {
+			swal( $.extend( {}, SecuPress.swalDefaults, SecuPress.swalConfirmDefaults, {
+				title:              SecuPressi18nScanner.supportTitle,
+				confirmButtonText:  SecuPressi18nScanner.supportButton,
+				html:               SecuPressi18nScanner.supportContentFree,
+				confirmButtonColor: SecuPress.supportButtonColor,
+				type:               "question"
+			} ) ).then( function( isConfirm ) {
 				if ( true === isConfirm ) {
-					swal( {
-						title: 'Pro Version needed',
-						type:  "error",
-						showCancelButton: true,
-						confirmButtonText: 'Get Pro now!',
-						confirmButtonColor: '#F1C40F',
-						reverseButtons: true,
-						customClass: 'secupress-swal'
-					} );
+					swal( $.extend( {}, SecuPress.swalDefaults, {
+						title:              "Pro Version needed", //// TODO: localize.
+						type:               "error",
+						showCancelButton:   true,
+						confirmButtonText:  "Get Pro now!", //// TODO: localize.
+						confirmButtonColor: SecuPress.supportButtonColor,
+						reverseButtons:     true
+					} ) );
 				}
 			} );
 		} );
@@ -241,20 +251,23 @@ jQuery( document ).ready( function( $ ) {
 
 	// !Ask for support button (pro) --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	(function( w, d, $, undefined ) {
-		$( '.secupress-ask-support-pro' ).on( 'click', function( e ) {
+		$( ".secupress-ask-support-pro" ).on( "click.secupress keyup", function( e ) {
+			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
+				return false;
+			}
+
 			e.preventDefault();
 
-			swal( {
-				title:              w.SecuPressi18nScanner.supportTitle,
-				confirmButtonText:  w.SecuPressi18nScanner.supportButton,
-				showCancelButton:   true,
-				html:               w.SecuPressi18nScanner.supportContentPro,
-				type:               "question",
-				allowOutsideClick:  true,
-				customClass: 'secupress-swal'
-			} ).then( function( isConfirm ) {
+			swal( $.extend( {}, SecuPress.swalDefaults, SecuPress.swalConfirmDefaults, {
+				title:              SecuPressi18nScanner.supportTitle,
+				confirmButtonText:  SecuPressi18nScanner.supportButton,
+				html:               SecuPressi18nScanner.supportContentPro,
+				confirmButtonColor: SecuPress.supportButtonColor,
+				type:               "question"
+			} ) ).then( function( isConfirm ) {
 				if ( true === isConfirm ) {
 					swal.enableLoading();
+
 					$.post( ajaxurl, {}, null, "json" )
 					.done( function( r ) {
 						// Display fix re
@@ -331,7 +344,7 @@ jQuery( document ).ready( function( $ ) {
 		function secupressGetCurrentStatus( $el ) {
 			var classes, status = false;
 
-			classes = $el.attr( 'class' ).replace( /(\s|^)(status-error|status-all)(\s|$)/g, " " ).replace( /^\s+|\s+$/g, "" ).replace( /\s+/, " " ).split( " " );
+			classes = $el.attr( "class" ).replace( /(\s|^)(status-error|status-all)(\s|$)/g, " " ).replace( /^\s+|\s+$/g, "" ).replace( /\s+/, " " ).split( " " );
 
 			$.each( classes, function( i, cl ) {
 				if ( 0 === cl.indexOf( "status-" ) ) {
@@ -346,25 +359,25 @@ jQuery( document ).ready( function( $ ) {
 
 		// Set the scan/fix status class.
 		function secupressSetStatusClass( $el, status ) {
-			$el.removeClass( 'status-error status-good status-bad status-warning status-notscannedyet status-cantfix' ).addClass( 'status-' + status );
+			$el.removeClass( "status-error status-good status-bad status-warning status-notscannedyet status-cantfix" ).addClass( "status-" + status );
 		}
 
 
 		// Scan icon + status text.
 		function secupressAddScanStatusText( $row, statusText ) {
-			$row.find( '.secupress-status-text' ).html( statusText );
+			$row.find( ".secupress-status-text" ).html( statusText );
 		}
 
 
 		// Add a scan result.
 		function secupressAddScanResult( $row, message ) {
-			$row.find( '.secupress-scan-message' ).html( message );
+			$row.find( ".secupress-scan-message" ).html( message );
 		}
 
 
 		// Replace a scan status with an error icon + message.
 		function secupressDisplayScanError( $row ) {
-			var status = '<span class="dashicons dashicons-no secupress-dashicon" aria-hidden="true"></span> ' + w.SecuPressi18nScanner.error;
+			var status = '<span class="dashicons dashicons-no secupress-dashicon" aria-hidden="true"></span> ' + SecuPressi18nScanner.error;
 
 			// Add the icon + text.
 			secupressAddScanStatusText( $row, status );
@@ -373,7 +386,7 @@ jQuery( document ).ready( function( $ ) {
 			secupressAddScanResult( $row, "" );
 
 			// Add a "status-error" class to the row.
-			$row.addClass( 'status-error' );
+			$row.addClass( "status-error" );
 
 			return false;
 		}
@@ -391,9 +404,18 @@ jQuery( document ).ready( function( $ ) {
 		}
 
 
+		// Error popup.
+		function secupressErrorWarn() {
+			swal( $.extend( {}, SecuPress.swalDefaults, {
+				title: SecuPressi18nScanner.error,
+				type:  "error"
+			} ) );
+		}
+
+
 		// Replace a fix status with an error icon + message.
 		function secupressDisplayFixError( $row, warn ) {
-			var statusText = '<span class="dashicons dashicons-no secupress-dashicon" aria-hidden="true"></span> ' + w.SecuPressi18nScanner.error;
+			var statusText = '<span class="dashicons dashicons-no secupress-dashicon" aria-hidden="true"></span> ' + SecuPressi18nScanner.error;
 
 			// Add the icon + text.
 			secupressAddFixStatusText( $row, statusText );
@@ -409,18 +431,6 @@ jQuery( document ).ready( function( $ ) {
 			}
 
 			return false;
-		}
-
-
-		// Error popup.
-		function secupressErrorWarn() {
-			swal( {
-				title:             w.SecuPressi18nScanner.error,
-				confirmButtonText: w.SecuPressi18nScanner.confirmText,
-				type:              "error",
-				allowOutsideClick: true,
-				customClass: 'secupress-swal'
-			} );
 		}
 
 		// Tell if the returned data (from a scan) has required infos.
@@ -441,7 +451,7 @@ jQuery( document ).ready( function( $ ) {
 
 		// Tell if the returned data (from fix) has required infos.
 		function secupressFixResponseHasRequiredData( r, $row, warn ) {
-			warn = typeof warn === "undefined" ? false : warn;
+			warn = undefined === warn ? false : warn;
 
 			// Fail, or there's a problem with the returned data.
 			if ( ! r.success || ! $.isPlainObject( r.data ) ) {
@@ -459,7 +469,7 @@ jQuery( document ).ready( function( $ ) {
 
 		// Deal with scan infos.
 		function secupressDisplayScanResult( r, test ) {
-			var $row = $( '#' + test ),
+			var $row = $( "#" + test ),
 				oldStatus;
 
 			// Fail, or there's a problem with the returned data.
@@ -485,10 +495,10 @@ jQuery( document ).ready( function( $ ) {
 
 		// Deal with fix infos.
 		function secupressDisplayFixResult( r, test, warn ) {
-			var $row = $( '#' + test ),
-				$fix  = $row.find( '.secupress-fix-result' );
+			var $row = $( "#" + test ),
+				$fix  = $row.find( ".secupress-fix-result" );
 
-			warn = typeof warn === 'undefined' ? false : warn;
+			warn = undefined === warn ? false : warn;
 
 			// Fail, or there's a problem with the returned data.
 			if ( ! secupressFixResponseHasRequiredData( r, $row, warn ) ) {
@@ -533,6 +543,13 @@ jQuery( document ).ready( function( $ ) {
 				} );
 			} else {
 				$scoreResultsUl.prepend( data ).find( "li.hidden" ).slideDown( 250 );
+			}
+		}
+
+
+		function secupressScanEnd( isBulk ) {
+			if ( secupressScansIsIdle() ) {
+				$( "body" ).trigger( "allScanDone.secupress", [ { isBulk: isBulk } ] );
 			}
 		}
 
@@ -597,9 +614,15 @@ jQuery( document ).ready( function( $ ) {
 		}
 
 
-		function secupressScanEnd( isBulk ) {
-			if ( secupressScansIsIdle() ) {
-				$( 'body' ).trigger( 'allScanDone.secupress', [ { isBulk: isBulk } ] );
+		function secupressFixEnd( isBulk ) {
+			if ( $.isEmptyObject( secupressScans.doingFix ) && ! secupressScans.delayedFixes.length ) {
+				// No fixes are running and no delayed fixes left in queue. This is the last fix!
+				if ( isBulk ) {
+					// Enable fix buttons again, only when all fixes are done.
+					$( ".secupress-fixit" ).removeClass( "disabled" );
+				}
+				// Finally, trigger an event.
+				$( "body" ).trigger( "allFixDone.secupress", [ { isBulk: isBulk } ] );
 			}
 		}
 
@@ -629,14 +652,14 @@ jQuery( document ).ready( function( $ ) {
 				return secupressFixEnd( isBulk );
 			}
 
-			$( '.secupress-fixit' ).addClass( 'disabled' );
+			$( ".secupress-fixit" ).addClass( "disabled" );
 
 			// Show our fix is running.
 			secupressScans.doingFix[ test ] = 1;
-			$row.addClass( 'fixing' ).removeClass( 'status-error' );
+			$row.addClass( "fixing" ).removeClass( "status-error" );
 
 			// Ajax call
-			$.getJSON( href.replace( 'admin-post.php', 'admin-ajax.php' ) )
+			$.getJSON( href.replace( "admin-post.php", "admin-ajax.php" ) )
 			.done( function( r ) {
 				// Display fix result.
 				if ( secupressDisplayFixResult( r, test, ! isBulk ) ) {
@@ -649,7 +672,7 @@ jQuery( document ).ready( function( $ ) {
 					}
 
 					// Trigger an event.
-					$( 'body' ).trigger( 'fixDone.secupress', [ {
+					$( "body" ).trigger( "fixDone.secupress", [ {
 						test:      test,
 						href:      href,
 						isBulk:    isBulk,
@@ -668,28 +691,15 @@ jQuery( document ).ready( function( $ ) {
 			} )
 			.always( function() {
 				// Show our fix is completed.
-				$row.removeClass( 'fixing' );
+				$row.removeClass( "fixing" );
 
 				// Enable fix buttons again.
 				if ( ! isBulk ) {
-					$( '.secupress-fixit' ).removeClass( 'disabled' );
+					$( ".secupress-fixit" ).removeClass( "disabled" );
 				}
 
 				secupressFixEnd( isBulk );
 			} );
-		}
-
-
-		function secupressFixEnd( isBulk ) {
-			if ( $.isEmptyObject( secupressScans.doingFix ) && ! secupressScans.delayedFixes.length ) {
-				// No fixes are running and no delayed fixes left in queue. This is the last fix!
-				if ( isBulk ) {
-					// Enable fix buttons again, only when all fixes are done.
-					$( '.secupress-fixit' ).removeClass( 'disabled' );
-				}
-				// Finally, trigger an event.
-				$( 'body' ).trigger( 'allFixDone.secupress', [ { isBulk: isBulk } ] );
-			}
 		}
 
 
@@ -706,17 +716,17 @@ jQuery( document ).ready( function( $ ) {
 				return $buttons;
 			}
 			// Some fixes may need to be queued and delayed.
-			$buttons.filter( '.delayed-fix' ).each( function() {
+			$buttons.filter( ".delayed-fix" ).each( function() {
 				secupressScans.delayedFixes.push( this );
 			} );
-			return $buttons.not( '.delayed-fix' );
+			return $buttons.not( ".delayed-fix" );
 		}
 
 
 		function secupressLaunchSeparatedBulkFix( $buttons ) {
 			if ( $buttons.length < 2 ) {
 				// Not a bulk.
-				$buttons.trigger( 'fix.secupress' );
+				$buttons.trigger( "fix.secupress" );
 				return;
 			}
 
@@ -724,7 +734,7 @@ jQuery( document ).ready( function( $ ) {
 
 			if ( $buttons.length ) {
 				// We still have "normal" fixes.
-				$buttons.trigger( 'bulkfix.secupress' );
+				$buttons.trigger( "bulkfix.secupress" );
 			} else {
 				// OK, launch directly the fix of the first item in queue.
 				secupressFixFirstQueued( true );
@@ -734,35 +744,37 @@ jQuery( document ).ready( function( $ ) {
 
 		// Perform a manual fix: display the form in a popup and launch an ajax call on submit.
 		function secupressManualFixit( test ) {
-			var content  = '',
-				swalType = 'info',
+			var content  = "",
+				swalType = "info",
 				index, data;
 
 			data = secupressScans.manualFix[ test ];
 			delete secupressScans.manualFix[ test ];
 
-			data.message = data.message.replace( /(<ul>|<li>|<\/li><\/ul>)/g, '' ).replace( /<\/li>/g, '<br/>' );
+			data.message = data.message.replace( /(<ul>|<li>|<\/li><\/ul>)/g, '' ).replace( /<\/li>/g, "<br/>" );
 
 			// If the status is "bad" or "warning", `data.message` contains an error message.
-			if ( data.class === 'bad' || data.class === 'warning' ) {
-				content += '<div class="sa-error-container show"><div class="icon">!</div><p>' + data.message + '</p></div>';
-				swalType = data.class === 'bad' ? 'error' : 'warning';
+			if ( "bad" === data.class || "warning" === data.class ) {
+				content += '<div class="sa-error-container show"><div class="icon">!</div><p>' + data.message + "</p></div>";
+				swalType = "bad" === data.class ? "error" : "warning";
 			}
 
 			content += '<form method="post" id="form_manual_fix" class="secupress-swal-form show-input" action="' + ajaxurl + '">';
 
 				for ( index in data.form_contents ) {
-					content += data.form_contents[ index ];
+					if ( data.form_contents.hasOwnProperty( index ) ) {
+						content += data.form_contents[ index ];
+					}
 				}
 				content += data.form_fields;
 
-			content += '</form>';
+			content += "</form>";
 
-			swal( $.extend( {}, SecuPress.confirmSwalDefaults, {
+			swal( $.extend( {}, SecuPress.swalDefaults, SecuPress.swalConfirmDefaults, {
 				title:             data.form_title,
 				html:              content,
 				type:              swalType,
-				confirmButtonText: w.SecuPressi18nScanner.fixit
+				confirmButtonText: SecuPressi18nScanner.fixit
 			} ) ).then( function ( isConfirm ) {
 				var params, $row;
 
@@ -806,7 +818,7 @@ jQuery( document ).ready( function( $ ) {
 
 
 		// What to do when a scan ends.
-		$( 'body' ).on( 'scanDone.secupress', function( e, extra ) {
+		$( "body" ).on( "scanDone.secupress", function( e, extra ) {
 			/*
 			* Available extras:
 			* extra.test:   test name.
@@ -814,7 +826,7 @@ jQuery( document ).ready( function( $ ) {
 			* extra.isBulk: tell if it's a bulk scan.
 			* extra.data:   data returned by the ajax call.
 			*/
-			var $row = $( '#' + extra.test );
+			var $row = $( "#" + extra.test );
 
 			// If we have delayed fixes, launch the first in queue now.
 			if ( secupressScans.delayedFixes.length ) {
@@ -835,12 +847,12 @@ jQuery( document ).ready( function( $ ) {
 			}
 
 			// Change the scan button text.
-			$row.find( ".secupress-scanit .text" ).text( w.SecuPressi18nScanner.reScan );
+			$row.find( ".secupress-scanit .text" ).text( SecuPressi18nScanner.reScan );
 		} );
 
 
 		// What to do after ALL scans end.
-		$( 'body' ).on( 'allScanDone.secupress', function( e, extra ) {
+		$( "body" ).on( "allScanDone.secupress", function( e, extra ) {
 			/*
 			* Available extras:
 			* extra.isBulk: tell if it's a bulk scan.
@@ -849,10 +861,10 @@ jQuery( document ).ready( function( $ ) {
 				params;
 
 			// Update counters.
-			if ( w.SecuPressi18nScanner.i18nNonce ) {
+			if ( SecuPressi18nScanner.i18nNonce ) {
 				params = {
 					"action":   "secupress-get-scan-counters",
-					"_wpnonce": w.SecuPressi18nScanner.i18nNonce
+					"_wpnonce": SecuPressi18nScanner.i18nNonce
 				};
 
 				$.getJSON( ajaxurl, params )
@@ -884,7 +896,7 @@ jQuery( document ).ready( function( $ ) {
 
 
 		// What to do when a fix ends.
-		$( 'body' ).on( 'fixDone.secupress', function( e, extra ) {
+		$( "body" ).on( "fixDone.secupress", function( e, extra ) {
 			/*
 			* Available extras:
 			* extra.test:      test name.
@@ -893,7 +905,7 @@ jQuery( document ).ready( function( $ ) {
 			* extra.manualFix: tell if the fix needs a manual fix.
 			* extra.data:      data returned by the ajax call.
 			*/
-			var bulk = extra.isBulk ? 'bulk' : '';
+			var bulk = extra.isBulk ? "bulk" : "";
 
 			// Go for a new scan.
 			$( "#" + extra.test ).find( ".secupress-scanit" ).trigger( bulk + "scan.secupress" );
@@ -901,7 +913,7 @@ jQuery( document ).ready( function( $ ) {
 
 
 		// What to do after ALL fixes end.
-		$( 'body' ).on( 'allFixDone.secupress', function( e, extra ) {
+		$( "body" ).on( "allFixDone.secupress", function( e, extra ) {
 			/*
 			* Available extras:
 			* extra.isBulk: tell if it's a bulk fix.
@@ -923,20 +935,16 @@ jQuery( document ).ready( function( $ ) {
 				$rows = $rows.substr( 1 );
 				$rows = $( $rows ).children( ".secupress-scan-result" );
 				$rows.children( ".manual-fix-message" ).remove();
-				$rows.append( '<div class="manual-fix-message">' + w.SecuPressi18nScanner.manualFixMsg + "</div>" );
+				$rows.append( '<div class="manual-fix-message">' + SecuPressi18nScanner.manualFixMsg + "</div>" );
 
 				if ( ! extra.isBulk ) {
 					// If it's not a bulk, display the form.
 					secupressManualFixit( oneTest );
 				} else {
 					// Bulk: warn the user that some manual fixes need to be done.
-					swal( {
-						title: manualFixLen === 1 ? w.SecuPressi18nScanner.oneManualFix : w.SecuPressi18nScanner.someManualFixes,
-						type: 'warning',
-						allowOutsideClick: true,
-						confirmButtonText: w.SecuPressi18nScanner.confirmText,
-						customClass: 'secupress-swal'
-					} );
+					swal( $.extend( {}, SecuPress.swalDefaults, {
+						title: 1 === manualFixLen ? SecuPressi18nScanner.oneManualFix : SecuPressi18nScanner.someManualFixes,
+					} ) );
 				}
 
 				secupressScans.manualFix = {};
@@ -945,70 +953,66 @@ jQuery( document ).ready( function( $ ) {
 
 
 		// What to do after a manual fix.
-		$( 'body' ).on( 'manualFixDone.secupress', function( e, extra ) {
+		$( "body" ).on( "manualFixDone.secupress", function( e, extra ) {
 			/*
 			* Available extras:
 			* extra.test:      test name.
 			* extra.data:      data returned by the ajax call.
 			*/
-			var title = w.SecuPressi18nScanner.notFixed,
+			var title = SecuPressi18nScanner.notFixed,
 				type  = "error";
 
 			// Go for a new scan.
 			$( "#" + extra.test ).find( ".secupress-scanit" ).trigger( "scan.secupress" );
 
 			// Success! (or not)
-			if ( extra.data.class === "warning" ) {
-				title = w.SecuPressi18nScanner.fixedPartial;
+			if ( "warning" === extra.data.class ) {
+				title = SecuPressi18nScanner.fixedPartial;
 				type  = "warning";
-			} else if ( extra.data.class === "good" ) {
-				title = w.SecuPressi18nScanner.fixed;
+			} else if ( "good" === extra.data.class ) {
+				title = SecuPressi18nScanner.fixed;
 				type  = "success";
 			}
 
-			swal( {
+			swal( $.extend( {}, SecuPress.swalDefaults, {
 				title: title,
-				html: extra.data.message.replace( /(<ul>|<li>|<\/li><\/ul>)/g, "" ).replace( /<\/li>/g, "<br/><br/>" ),
-				type: type,
-				allowOutsideClick: true,
-				confirmButtonText: w.SecuPressi18nScanner.confirmText,
-				customClass: 'secupress-swal'
-			} );
+				html:  extra.data.message.replace( /(<ul>|<li>|<\/li><\/ul>)/g, "" ).replace( /<\/li>/g, "<br/><br/>" ),
+				type:  type
+			} ) );
 		} );
+
 
 		// Show test details.
-		$( "body" ).on( "click", ".secupress-details", function( e ) {
+		$( "body" ).on( "click.secupress", ".secupress-details", function( e ) {
 			var test = $( this ).data( "test" );
-			swal( {
-				title: w.SecuPressi18nScanner.scanDetails,
-				confirmButtonText: w.SecuPressi18nScanner.confirmText,
-				html: $( "#details-" + test ).find( ".details-content" ).html(),
-				type: "info",
-				allowOutsideClick: true,
-				customClass: 'secupress-swal'
-			} );
+
+			swal( $.extend( {}, SecuPress.swalDefaults, {
+				title: SecuPressi18nScanner.scanDetails,
+				html:  $( "#details-" + test ).find( ".details-content" ).html(),
+				type:  "info"
+			} ) );
 		} );
 
+
 		// Show fix details.
-		$( 'body' ).on( 'click', '.secupress-details-fix', function( e ) {
+		$( "body" ).on( "click.secupress", ".secupress-details-fix", function( e ) {
 			var test = $( this ).data( "test" );
-			swal( $.extend( {}, SecuPress.confirmSwalDefaults, {
-				title: w.SecuPressi18nScanner.fixDetails,
-				confirmButtonText: w.SecuPressi18nScanner.fixit,
-				html: $( '#details-fix-' + test ).find( '.details-content' ).html(),
-				type: 'info',
-				closeOnConfirm: true,
-				customClass: 'secupress-swal'
+
+			swal( $.extend( {}, SecuPress.swalDefaults, SecuPress.swalConfirmDefaults, {
+				title:             SecuPressi18nScanner.fixDetails,
+				confirmButtonText: SecuPressi18nScanner.fixit,
+				html:              $( "#details-fix-" + test ).find( ".details-content" ).html(),
+				type:              "info"
 			} ) ).then( function ( isConfirm ) {
 				if ( isConfirm ) {
-					$( '#' + test ).find( '.secupress-fixit' ).trigger( 'click' );
+					$( "#" + test ).find( ".secupress-fixit" ).trigger( "click.secupress" );
 				}
 			} );
 		} );
 
 
 		// Perform a scan on click.
-		$( "body" ).on( "click scan.secupress bulkscan.secupress", ".button-secupress-scan, .secupress-scanit", function( e ) {
+		$( "body" ).on( "click.secupress scan.secupress bulkscan.secupress", ".button-secupress-scan, .secupress-scanit", function( e ) {
 			var $this = $( this ),
 				href, test, $row, isBulk;
 
@@ -1032,7 +1036,7 @@ jQuery( document ).ready( function( $ ) {
 
 
 		// Perform a fix on click.
-		$( "body" ).on( "click fix.secupress bulkfix.secupress", ".button-secupress-fix, .secupress-fixit", function( e ) {
+		$( "body" ).on( "click.secupress fix.secupress bulkfix.secupress", ".button-secupress-fix, .secupress-fixit", function( e ) {
 			var $this = $( this ),
 				href, test, $row, isBulk;
 
@@ -1058,7 +1062,7 @@ jQuery( document ).ready( function( $ ) {
 
 
 		// One Click Scan auto.
-		if ( w.SecuPressi18nScanner.firstOneClickScan && secupressScansIsIdle() ) {
+		if ( SecuPressi18nScanner.firstOneClickScan && secupressScansIsIdle() ) {
 			$( ".button-secupress-scan" ).trigger( "scan.secupress" );
 		}
 	} )(window, document, $);

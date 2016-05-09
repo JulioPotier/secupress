@@ -1,3 +1,4 @@
+/* globals jQuery: false, ajaxurl: false, SecuPressi18nNotices: false */
 (function($, d, w, undefined) {
 
 	// Make our notices dismissible.

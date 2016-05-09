@@ -1,6 +1,31 @@
 (function($, d, w, undefined) {
 
 	/**
+	 * Basic tools
+	 */
+	// Shorthand to tell if a modifier key is pressed.
+	function secupressHasModifierKey( e ) {
+		return e.altKey || e.ctrlKey || e.metaKey || e.shiftKey;
+	}
+	// Shorthand to tell if the pressed key is Space or Enter.
+	function secupressIsSpaceOrEnterKey( e ) {
+		return ( e.which === 13 || e.which === 32 ) && ! secupressHasModifierKey( e );
+	}
+	// Shorthand to tell if the pressed key is Space.
+	function secupressIsSpaceKey( e ) {
+		return e.which === 32 && ! secupressHasModifierKey( e );
+	}
+	// Shorthand to tell if the pressed key is Enter.
+	function secupressIsEnterKey( e ) {
+		return e.which === 13 && ! secupressHasModifierKey( e );
+	}
+	// Shorthand to tell if the pressed key is Escape.
+	function secupressIsEscapeKey( e ) {
+		return e.which === 27 && ! secupressHasModifierKey( e );
+	}
+
+
+	/**
 	 * Basic plugins
 	 */
 	$.fn.spHide = function() {
@@ -27,7 +52,7 @@
 		}).attr( 'aria-hidden', true );
 	};
 	$.fn.spAnimate = function( effect ) {
-		var effect = effect || 'fadein';
+		effect = effect || 'fadein';
 
 		switch ( effect ) {
 			case 'fadein' :
@@ -44,19 +69,19 @@
 				break;
 		}
 		return this;
-	}
+	};
+
 
 	/**
 	 * Tabs
 	 * @author : Geoffrey
 	 */
-	
-	$('.secupress-tabs').each( function(){
+	$('.secupress-tabs').each( function() {
 
-		var $tabs		= $(this),
-			$content 	= $tabs.data('content') ? $( $tabs.data('content') ) : $tabs.next(),
-			$tab_content= $content.find('.secupress-tab-content'),
-			$current 	= $tabs.find('.secupress-current').lenght ? $tabs.find('.secupress-current') : $tabs.find('a:first'),
+		var $tabs        = $(this),
+			$content     = $tabs.data('content') ? $( $tabs.data('content') ) : $tabs.next(),
+			$tab_content = $content.find('.secupress-tab-content'),
+			$current     = $tabs.find('.secupress-current').lenght ? $tabs.find('.secupress-current') : $tabs.find('a:first'),
 
 			set_current = function( $item ) {
 				$item.closest('.secupress-tabs').find('a').removeClass('secupress-current').attr('aria-selected', false);
@@ -65,7 +90,7 @@
 			change_tab = function( $item ) {
 				$tab_content.spHide();
 				$( '#' + $item.attr('aria-control') ).spFadeIn();
-			}
+			};
 
 		$tab_content.hide();
 
@@ -84,30 +109,29 @@
 	 * Triggering (slidedown, fadein, etc.)
 	 * @author: Geoffrey
 	 */
-	
-	$('[data-trigger]').each(function(){
+	$('[data-trigger]').each( function() {
 
 		// init
-		var $_this	= $(this),
-			target	= $_this.data('target'),
-			$target	= $( '#' + target ),
-			effect	= $_this.data('trigger');
+		var $_this  = $(this),
+			target  = $_this.data('target'),
+			$target = $( '#' + target ),
+			effect  = $_this.data('trigger');
 
 		$target.spHide();
 
 		// click
 		$_this.on( 'click.secupress', function(){
-			
+
 			$target.spAnimate( effect );
 
-			if ( effect == 'slideup' || effect == 'fadeout') {
-				$( '[data-target="' + target + '"]').filter('.secupress-activated').removeClass('secupress-activated')
+			if ( effect === 'slideup' || effect === 'fadeout') {
+				$( '[data-target="' + target + '"]').filter('.secupress-activated').removeClass('secupress-activated');
 			} else {
 				$(this).addClass('secupress-activated');
 			}
 			return false;
 		} );
 
-	});
+	} );
 
 } )(jQuery, document, window);
