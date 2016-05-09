@@ -1058,14 +1058,28 @@
 .secublock + .submit input {
 	font-size: 0.95em;
 	letter-spacing: 0.1em;
-	box-shadow: ;
+	box-shadow: 0 6px 12px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05), 0 3px 4px rgba(0,0,0,.05);
 }
 .secupress-setting-row {
 	padding: 20px;
-	border-bottom: 1px solid #EEE;
+}
+.secupress-setting-row + .secupress-setting-row {
+	margin-top: 20px;
+	border-top: 1px solid #EEE;
 }
 .secupress-form-table > .secupress-setting-row:last-child {
 	border-bottom: 0;
+}
+/* row with dependance */
+.secupress-setting-row[class*=" depends-"] {
+	padding: 5px 20px 5px 18px;
+	margin: 20px 0 20px 50px;
+	border-top: 0;
+	border-left: 2px solid #2BCDC1;
+	background: #FFF;
+}
+.secupress-setting-row[class*=" depends-"] .secupress-setting-row-title {
+	margin-top: 0;
 }
 .secupress-setting-row.secupress-pro-row a {
 	color: #f7ab13;
@@ -1078,7 +1092,7 @@
 }
 .secupress-setting-row-title {
 	margin: 10px 0;
-	font-size: 18px;
+	font-size: 16px;
 	font-weight: bold;
 	color: #2BCDC1;
 }
@@ -1119,7 +1133,7 @@ label.secupress-setting-row-title {
 
 .secupress-wrapper {
 	max-width: 100%;
-	width: 1240px;
+	width: 1125px; /* 1240 */
 	padding-top: 20px;
 }
 
