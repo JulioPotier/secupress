@@ -1231,7 +1231,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				?>
 			</fieldset>
 			<p class="submit">
-				<button class="secupress-button secupress-button-primary alignright" type="submit" data-original-i18n="<?php echo esc_attr( __( 'Backup my Database', 'secupress' ) ); ?>" data-loading-i18n="<?php echo esc_attr( __( 'Backuping &hellip;', 'secupress' ) ); ?>" id="submit-backup-db">
+				<button class="secupress-button secupress-button-primary alignright" type="submit" data-original-i18n="<?php esc_attr_e( 'Backup my Database', 'secupress' ); ?>" data-loading-i18n="<?php esc_attr_e( 'Backuping&hellip;', 'secupress' ); ?>" id="submit-backup-db">
 					<span class="icon">
 						<i class="icon-download"></i>
 					</span>
