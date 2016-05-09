@@ -103,7 +103,7 @@ function secupress_generate_hash( $context, $start = 2, $length = 6 ) {
 	$key = "$context|$start|$length";
 
 	if ( ! isset( $hash[ $key ] ) ) {
-		$hash[ $key ] = substr( md5( secupress_get_option( 'secupress_hash_key' ) ), $start, $length );
+		$hash[ $key ] = substr( md5( secupress_get_option( 'hash_key' ) ), $start, $length );
 	}
 
 	return $hash[ $key ];
