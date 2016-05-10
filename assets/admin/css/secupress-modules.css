@@ -445,7 +445,8 @@ span.secupress-get-pro-version {
 .secupress-setting-row_bbq-headers_user-agents-list .secupress-get-pro-col,
 .secupress-setting-row_bbq-url-content_bad-contents-list .secupress-get-pro-col,
 .secupress-setting-row_backups-storage_location .secupress-get-pro-col,
-.secupress-setting-row_notification-types_types .secupress-get-pro-col {
+.secupress-setting-row_notification-types_types .secupress-get-pro-col,
+[id="secupress-settings-module_services--"] .secupress-get-pro-col {
 	-webkit-flex-basis: 0;
 	-ms-flex-preferred-size: 0;
 	flex-basis: 0;
@@ -621,6 +622,65 @@ span.secupress-get-pro-version {
 .fieldname-backups-storage_location .description,
 .fieldname-notification-types_types .description {
 	margin-top: 1.5em;
+}
+
+/* Services */
+[id="secupress-settings-module_services--"] .secupress-form-table {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+}
+[id="secupress-settings-module_services--"] .secupress-setting-row {
+	-webkit-flex-basis: 50%;
+	-ms-flex-preferred-size: 50%;
+	flex-basis: 50%;
+	-webkit-box-flex: 0;
+	-webkit-flex-grow: 0;
+	-ms-flex-positive: 0;
+	flex-grow: 0;
+	-webkit-flex-shrink: 1;
+	-ms-flex-negative: 1;
+	flex-shrink: 1;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-webkit-flex-direction: column;
+	-ms-flex-direction: column;
+	flex-direction: column;
+	margin: 25px 15px;
+	border-top: 0;
+	background: #222831 url("../images/bg-logo-sp.png") 50% 50% no-repeat;
+	text-align: center;
+}
+[id="secupress-settings-module_services--"] .secupress-setting-row:first-child {
+	margin-left: 0;
+}
+[id="secupress-settings-module_services--"] .secupress-setting-row:last-child {
+	margin-right: 0;
+}
+[id="secupress-settings-module_services--"] .secupress-setting-content-col {
+	padding-right: 0;
+}
+[id="secupress-settings-module_services--"] .description {
+	margin: 1.5em auto 2em;
+	color: #FFF;
+}
+[id="secupress-settings-module_services--"] .secupress-button.secupress-button-primary {
+	width: 100%;
+	padding: 7px 15px;
+	margin-top: auto;
+	background: #5A626F;
+	font-size: 11px;
+	letter-spacing: 0.1em;
+}
+[id="secupress-settings-module_services--"] .secupress-button.secupress-button-primary:hover,
+[id="secupress-settings-module_services--"] .secupress-button.secupress-button-primary:focus {
+	background: #f2f2f6;
+	color: #5A626F;
 }
 
 
