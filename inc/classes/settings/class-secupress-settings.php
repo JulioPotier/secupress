@@ -641,8 +641,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					$args['label_for'] = $args['name'] . '_' . $val;
 					$disabled          = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' disabled="disabled"' : '';
 					?>
-					<p class="secupress-fieldset-item secupress-fieldset-item-<?php echo $args['type']; ?>">
-						<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
+					<p class="secupress-fieldset-item secupress-fieldset-item-<?php echo $args['type']; ?><?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? ' secupress-pro-option' : ''; ?>">
+						<label<?php echo $disabled ? ' class="disabled"' : ''; ?> for="<?php echo esc_attr( $args['label_for'] ); ?>">
 							<input type="checkbox" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>[]" value="<?php echo $val; ?>"<?php checked( isset( $value[ $val ] ) ); ?><?php echo $disabled; ?><?php echo $attributes; ?>>
 							<?php echo '<span class="label-text">' . $title . '</span>'; ?>
 						</label>
@@ -658,8 +658,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					$args['label_for'] = $args['name'] . '_' . $val;
 					$disabled          = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' disabled="disabled"' : '';
 					?>
-					<p class="secupress-radio-line">
-						<label<?php echo $disabled ? ' class="disabled"' : ''; ?>>
+					<p class="secupress-radio-line<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? ' secupress-pro-option' : ''; ?>">
+						<label<?php echo $disabled ? ' class="disabled"' : ''; ?> for="<?php echo esc_attr( $args['label_for'] ); ?>">
 							<input type="radio" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>" value="<?php echo $val; ?>"<?php checked( $value, $val ); ?><?php echo $disabled; ?><?php echo $attributes; ?>>
 							<?php echo '<span class="label-text">' . $title . '</span>'; ?>
 						</label>
