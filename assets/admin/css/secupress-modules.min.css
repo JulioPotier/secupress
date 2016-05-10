@@ -532,7 +532,7 @@ label {
 }
 
 .description.warning strong {
-	color: red;
+	color: #CB234F;
 }
 
 .secupress-logs li {
