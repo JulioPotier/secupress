@@ -50,7 +50,6 @@ function __secupress_plugins_settings_callback( $modulenow, $activate ) {
 	}
 
 	// (De)Activation.
-	secupress_manage_submodule( $modulenow, 'plugin-update', ! empty( $activate['plugins_update'] ) );
 	secupress_manage_submodule( $modulenow, 'plugin-installation', ! empty( $activate['plugins_installation'] ) );
 	secupress_manage_submodule( $modulenow, 'detect-bad-plugins', ! empty( $activate['plugins_detect_bad_plugins'] ) );
 
@@ -79,7 +78,6 @@ function __secupress_themes_settings_callback( $modulenow, $activate ) {
 	}
 
 	// (De)Activation.
-	secupress_manage_submodule( $modulenow, 'theme-update', ! empty( $activate['themes_update'] ) );
 	secupress_manage_submodule( $modulenow, 'theme-installation', ! empty( $activate['themes_installation'] ) );
 	secupress_manage_submodule( $modulenow, 'detect-bad-themes', ! empty( $activate['themes_detect_bad_themes'] ) );
 

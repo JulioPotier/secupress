@@ -10,22 +10,6 @@ $this->add_section( __( 'Themes Page', 'secupress' ) );
 $plugin = $this->get_current_plugin();
 
 $this->add_field( array(
-	'title'             => __( 'Theme update', 'secupress' ),
-	'label_for'         => $this->get_field_name( 'update' ),
-	'plugin_activation' => true,
-	'type'              => 'checkbox',
-	'value'             => (int) secupress_is_submodule_active( 'plugins-themes', 'theme-update' ),
-	'label'             => __( 'Yes, disable updates for themes', 'secupress' ),
-	'helpers'           => array(
-		array(
-			'type'        => 'description',
-			'description' => __( 'You will still be notified when an update is available.', 'secupress' ),
-		),
-	),
-) );
-
-
-$this->add_field( array(
 	'title'             => __( 'Theme installation', 'secupress' ),
 	'label_for'         => $this->get_field_name( 'installation' ),
 	'plugin_activation' => true,
