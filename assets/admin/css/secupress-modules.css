@@ -492,8 +492,8 @@ span.secupress-get-pro-version {
 	background: #FFF;
 }
 
-.secupress-setting-row_bbq-headers_user-agents-list .description.desc,
-.secupress-setting-row_bbq-url-content_bad-contents-list .description.desc {
+.secupress-textarea-container + .description.desc,
+.secupress-textarea-container + .description.desc {
 	padding-left: 0;
 	margin-top: 1.5em;
 }
