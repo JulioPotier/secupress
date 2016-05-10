@@ -775,7 +775,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 			case 'submit' :
 
-				submit_button( $args['label'], 'button-secondary', $args['name'], false );
+				echo '<button type="submit" class="secupress-button" id="' . esc_attr( $args['name'] ) . '">' . $args['label'] . '</button>';
 				break;
 
 			default :
