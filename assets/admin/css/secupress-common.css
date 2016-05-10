@@ -731,6 +731,54 @@
 	color: rgba(0,0,0,.5);
 }
 
+/* Checkboxes mini */
+.secupress-checkbox-mini:not(:checked) + label:before,
+.secupress-checkbox-mini:checked + label:before,
+.secupress-checkbox-mini:not(:checked) + .label-text:before,
+.secupress-checkbox-mini:checked + .label-text:before {
+	width: 16px;
+	height: 16px;
+}
+.secupress-checkbox-mini:not(:checked) + label,
+.secupress-checkbox-mini:checked + label,
+.secupress-checkbox-mini:not(:checked) + .label-text,
+.secupress-checkbox-mini:checked + .label-text {
+	margin: 0.15em 0;
+	padding-left: 28px;
+}
+.secupress-checkbox-mini:not(:checked) + label:after,
+.secupress-checkbox-mini:checked + label:after,
+.secupress-checkbox-mini:not(:checked) + .label-text:after,
+.secupress-checkbox-mini:checked + .label-text:after {
+	left: 4px;
+	font-size: 12px;
+}
+.secupress-setting-row .secupress-checkbox-mini.secupress-checkbox-mini:not(:checked) + label:after,
+.secupress-setting-row .secupress-checkbox-mini.secupress-checkbox-mini:checked + label:after,
+.secupress-setting-row .secupress-checkbox-mini.secupress-checkbox-mini:not(:checked) + .label-text:after,
+.secupress-setting-row .secupress-checkbox-mini.secupress-checkbox-mini:checked + .label-text:after {
+	top: 0;
+}
+.secupress-setting-row .secupress-checkbox-mini.secupress-checkbox-mini:not(:checked) + label:before,
+.secupress-setting-row .secupress-checkbox-mini.secupress-checkbox-mini:checked + label:before,
+.secupress-setting-row .secupress-checkbox-mini.secupress-checkbox-mini:not(:checked) + .label-text:before,
+.secupress-setting-row .secupress-checkbox-mini.secupress-checkbox-mini:checked + .label-text:before {
+	top: 0;
+}
+
+/* Indeterminate styles */
+.secupress-checkbox.secupress-checkbox:indeterminate + label:after,
+.secupress-checkbox.secupress-checkbox:indeterminate + .label-text:after {
+	content: "";
+	width: 12px;
+	height: 3px;
+	background: #26b3a9;
+	border-radius: 3px;
+	top: 8px!important;
+	-webkit-transform: scale(1);
+	transform: scale(1);
+}
+
 /* Specific for radios */
 .secupress-radio:not(:checked) + label:before,
 .secupress-radio:checked + label:before,
