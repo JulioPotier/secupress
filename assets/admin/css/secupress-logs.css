@@ -85,7 +85,7 @@
 	border-radius: 3px;
 }
 
-.secupress-logs-list .spinner {
+[class^="secupress-"] .spinner {
 	margin: 0;
 	width: 0; height: 0;
 	border: 2px solid #FFF;
@@ -95,7 +95,7 @@
 	background-position: -1px -1px;
 	transition: opacity 1s;
 }
-.secupress-logs-list .working + .spinner {
+[class^="secupress-"] .working + .spinner {
 	width: 22px; height: 22px;
 	margin: 5px 10px 0 4px;
 	opacity: 0.8;
@@ -199,18 +199,54 @@
 .secupress-empty-log-content + .secupress-logs-list {
 	width: 100%;
 }
+
+/*
+	=== Log details
+ */
 .secupress-log-content {
 	float: right;
 	width: 45%;
+	border-right: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
 	overflow: hidden;
+	background: #ECF0F1;
 }
-.secupress-log-content.secupress-empty-log-content {
-	width: 0;
+.secupress-log-content > div {
+	padding: 15px 20px;
 }
-.secupress-empty-log-content p {
-	text-align: center;
-	font-size: 2em;
+.secupress-log-content .secupress-log-content-header {
+	position: relative;
+	padding-top: 25px;
+}
+.secupress-log-content-header .close {
+	position: absolute;
+	top: 2px; right: 5px;
+	font-size: 1.2em;
+}
+.secupress-log-content-header .secupress-flex + .secupress-flex {
+	border-top: 1px solid #2BCDC1;
+}
+.secupress-log-content-header .secupress-flex:first-child {
+	padding-bottom: 15px;
+}
+.secupress-log-content-header .secupress-delete-logs-by-user_id {
+	margin-left: 10px;
+}
+.secupress-log-content-header a {
+	text-decoration: none;
+	color: #FFF;
+}
+.secupress-log-title {
+	padding-right: 15px;
+	font-size: 20px;
 }
 .secupress-log-content .close {
 	float: right;
+}
+.secupress-log-content.secupress-empty-log-content {
+	width: 0;
+	height: 0;
+}
+.secupress-log-delete-actions {
+	text-align: right;
 }

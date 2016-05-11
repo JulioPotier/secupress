@@ -402,6 +402,10 @@
 	background: #F2F2F6;
 	color: #393E46;
 }
+.secupress-section-primary {
+	background: #26B3A9;
+	color: #FFF;
+}
 
 /* Border in sections */
 .secupress-bordered {
