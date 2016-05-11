@@ -174,7 +174,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 					$version_free = sprintf( esc_html__( 'Free version %s', 'secupress' ), 'v' . SECUPRESS_VERSION );
 					$version_pro  = sprintf( esc_html__( 'Pro version %s', 'secupress' ), 'v' . SECUPRESS_VERSION ); // ////.
 					?>
-					<div class="secupress-modules-sidebar hide-if-no-js">
+					<div class="secupress-modules-sidebar">
 						<div class="secupress-sidebar-header">
 							<div class="secupress-flex">
 								<div class="secupress-sh-logo">
