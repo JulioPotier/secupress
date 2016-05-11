@@ -190,7 +190,7 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 		secupress_activate_submodule( 'sensitive-data', 'php-easter-egg' );
 
 		// Got error?
-		$last_error = end( $wp_settings_errors );
+		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
 
 		if ( $last_error && 'general' === $last_error['setting'] && 'iis7_manual_edit' === $last_error['code'] ) {
 			// "cantfix"

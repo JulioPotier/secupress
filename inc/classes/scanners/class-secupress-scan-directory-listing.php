@@ -190,7 +190,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 		secupress_activate_submodule( 'sensitive-data', 'directory-listing' );
 
 		// Got error?
-		$last_error = end( $wp_settings_errors );
+		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
 
 		if ( $last_error && 'general' === $last_error['setting'] && 'iis7_manual_edit' === $last_error['code'] ) {
 			// "cantfix"

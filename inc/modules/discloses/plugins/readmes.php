@@ -97,16 +97,14 @@ function secupress_protect_readmes_plugin_activate( $rules ) {
  * @return (string)
  */
 function secupress_protect_readmes_apache_rules() {
-	$pattern = '(README|CHANGELOG|readme|changelog)\.(TXT|MD|HTML|txt|md|html)$';
+	$bases   = secupress_get_rewrite_bases();
+	$base    = $bases['base'];
+	$pattern = '(/|^)(readme|changelog)\.(txt|md|html)$';
 
 	$rules  = "<IfModule mod_rewrite.c>\n";
 	$rules .= "    RewriteEngine On\n";
-	$rules .= "    RewriteRule (/|^)$pattern [R=404,L]\n"; // NC flag, why you no work?
-	$rules .= "</IfModule>\n";
-	$rules .= "<IfModule !mod_rewrite.c>\n";
-	$rules .= "    <FilesMatch \"^$pattern\">\n";
-	$rules .= "        deny from all\n";
-	$rules .= "    </FilesMatch>\n";
+	$rules .= "    RewriteBase $base\n";
+	$rules .= "    RewriteRule $pattern - [R=404,L,NC]\n";
 	$rules .= "</IfModule>\n";
 
 	return $rules;
@@ -121,13 +119,13 @@ function secupress_protect_readmes_apache_rules() {
  * @return (string)
  */
 function secupress_protect_readmes_iis7_rules() {
-	$marker = 'readme_discloses';
-	$spaces = str_repeat( ' ', 8 );
-	$bases  = secupress_get_rewrite_bases();
-	$match  = '^' . $bases['home_from'] . '(.*/)?(readme|changelog)\.(txt|md|html)$';
+	$marker  = 'readme_discloses';
+	$spaces  = str_repeat( ' ', 8 );
+	$bases   = secupress_get_rewrite_bases();
+	$pattern = '^' . $bases['home_from'] . '(.*/)?(readme|changelog)\.(txt|md|html)$';
 
 	$rules  = "<rule name=\"SecuPress $marker\" stopProcessing=\"true\">\n";
-	$rules .= "$spaces  <match url=\"$match\"/ ignoreCase=\"true\">\n";
+	$rules .= "$spaces  <match url=\"$pattern\"/ ignoreCase=\"true\">\n";
 	$rules .= "$spaces  <action type=\"CustomResponse\" statusCode=\"404\"/>\n";
 	$rules .= "$spaces</rule>";
 
@@ -144,15 +142,15 @@ function secupress_protect_readmes_iis7_rules() {
  */
 function secupress_protect_readmes_nginx_rules() {
 	$marker  = 'readme_discloses';
-	$pattern = '(readme|changelog)\.(txt|md|html)$';
-	$base    = secupress_get_rewrite_bases();
-	$base    = rtrim( $base['home_from'], '/' );
+	$bases   = secupress_get_rewrite_bases();
+	$base    = rtrim( $bases['home_from'], '/' );
+	$pattern = "^{$base}(/|/.+/)(readme|changelog)\.(txt|md|html)$";
 
 	// - http://nginx.org/en/docs/http/ngx_http_core_module.html#location
 	$rules  = "
 server {
 	# BEGIN SecuPress $marker
-	location ~* $base(/|/.+/)$pattern {
+	location ~* $pattern {
 		return 404;
 	}
 	# END SecuPress
