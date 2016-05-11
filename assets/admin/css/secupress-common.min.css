@@ -43,11 +43,11 @@
 
 @font-face {
 	font-family: 'secupress';
-	src:url('../fonts/secupress.eot?im6m');
-	src:url('../fonts/secupress.eot?im6m#iefix') format('embedded-opentype'),
-		url('../fonts/secupress.ttf?im6m') format('truetype'),
-		url('../fonts/secupress.woff?im6m') format('woff'),
-		url('../fonts/secupress.svg?im6m#secupress') format('svg');
+	src:url('../fonts/secupress.eot?3y7yrc');
+	src:url('../fonts/secupress.eot?3y7yrc#iefix') format('embedded-opentype'),
+		url('../fonts/secupress.ttf?3y7yrc') format('truetype'),
+		url('../fonts/secupress.woff?3y7yrc') format('woff'),
+		url('../fonts/secupress.svg?3y7yrc#secupress') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -67,7 +67,12 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
-
+.icon-squared-cross:before { content: "\e914"; }
+.icon-bell:before { content: "\e915"; }
+.icon-folder:before { content: "\e916"; }
+.icon-mail2:before { content: "\e917"; }
+.icon-smartphone:before { content: "\e918"; }
+.icon-upcloud:before { content: "\e919"; }
 .icon-antispam:before { content: "\e908"; }
 .icon-backups:before { content: "\e909"; }
 .icon-core:before { content: "\e90a"; }
