@@ -109,6 +109,7 @@ function secupress_get_scanners() {
 			'Readme_Discloses',
 			'Bad_Url_Access',
 			'Uptime_Monitor',
+			'Bad_File_Extensions',
 		),
 		'low' => array(
 			'Login_Errors_Disclose',

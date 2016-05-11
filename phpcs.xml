@@ -35,6 +35,7 @@
 
 	<rule ref="WordPress.Arrays.ArrayDeclaration.ValueNoNewline">
 		<exclude-pattern>*/secupress-free/inc/modules/users-login/tools.php</exclude-pattern>
+		<exclude-pattern>*/secupress-free/inc/modules/file-system/tools.php</exclude-pattern>
 	</rule>
 
 	<rule ref="WordPress.CSRF.NonceVerification">
