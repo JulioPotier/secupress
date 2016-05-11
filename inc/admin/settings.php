@@ -378,20 +378,20 @@ function __secupress_scanners() {
 				</div>
 
 				<ul class="secupress-flex secupress-tabs secupress-light-tabs" role="tablist" data-content="#sp-tab-scans">
-					<li>
-						<a href="#secupress-scan" role="tab" aria-selected="true" aria-control="secupress-scan" class="secupress-current">
+					<li role="presentation">
+						<a id="secupress-l-scan" href="#secupress-scan" role="tab" aria-selected="true" aria-controls="secupress-scan" class="secupress-current">
 							<i class="icon-radar" aria-hidden="true"></i>
 							<?php esc_html_e( 'Scan Security Points', 'secupress' ); ?>
 						</a>
 					</li>
-					<li>
-						<a href="#secupress-latest" role="tab" aria-selected="false" aria-control="secupress-latest">
+					<li role="presentation">
+						<a id="secupress-l-latest" href="#secupress-latest" role="tab" aria-selected="false" aria-controls="secupress-latest">
 							<i class="icon-back" aria-hidden="true"></i>
 							<?php esc_html_e( 'Latest Scans', 'secupress' ); ?>
 						</a>
 					</li>
-					<li>
-						<a href="#secupress-schedule" role="tab" aria-selected="false" aria-control="secupress-schedule">
+					<li role="presentation">
+						<a id="secupress-l-schedule" href="#secupress-schedule" role="tab" aria-selected="false" aria-controls="secupress-schedule">
 							<i class="icon-calendar" aria-hidden="true"></i>
 							<?php esc_html_e( 'Schedule Scans', 'secupress' ); ?>
 						</a>
@@ -399,7 +399,7 @@ function __secupress_scanners() {
 				</ul>
 
 				<div id="sp-tab-scans" class="secupress-tabs-contents">
-					<div id="secupress-scan" class="secupress-tab-content">
+					<div id="secupress-scan" class="secupress-tab-content" role="tabpanel" aria-labelledby="secupress-l-scan">
 						<div class="secupress-flex secupress-row">
 							<div class="secupress-flex secupress-chart">
 
@@ -473,7 +473,7 @@ function __secupress_scanners() {
 						</div><!-- .secupress-flex -->
 					</div><!-- .secupress-tab-content -->
 
-					<div id="secupress-latest" class="secupress-tab-content">
+					<div id="secupress-latest" class="secupress-tab-content" role="tabpanel" aria-labelledby="secupress-l-latest">
 						<p class="secupress-text-big">
 							<?php esc_html_e( 'Latest Scans', 'secupress' ); ?>
 						</p>
@@ -488,7 +488,7 @@ function __secupress_scanners() {
 						</ul>
 					</div><!-- .secupress-tab-content -->
 
-					<div id="secupress-schedule" class="secupress-tab-content">
+					<div id="secupress-schedule" class="secupress-tab-content" role="tabpanel" aria-labelledby="secupress-l-schedule">
 						<p class="secupress-text-big">
 							<?php esc_html_e( 'Schedule Scans', 'secupress' ); ?>
 						</p>
@@ -517,7 +517,7 @@ function __secupress_scanners() {
 
 				<div class="secupress-progressbar hidden" style="width:500px;padding:2px;border:1px solid;"><div style="background:#2BCDC1;display:inline-block;width:0px">&nbsp;</div><span style="position:absolute;left:8px;">0 %</span></div>
 
-				<ul id="secupress-type-filters" class="secupress-big-tabs secupress-tabs secupress-flex secupress-text-start hide-if-no-js" role="tabpanel">
+				<ul id="secupress-type-filters" class="secupress-big-tabs secupress-tabs secupress-flex secupress-text-start hide-if-no-js" role="tablist">
 					<?php
 					if ( $counts['notscannedyet'] ) {
 						$tabs        = array( 'notscannedyet' => esc_html__( 'New', 'secupress' ) );
@@ -532,8 +532,8 @@ function __secupress_scanners() {
 						'good'    => esc_html__( 'Good', 'secupress' ),
 					) );
 					foreach ( $tabs as $slug => $name ) : ?>
-						<li class="secupress-big-tab-<?php echo $slug; ?>">
-							<a href="#tab-<?php echo $slug; ?>" aria-control="tab-<?php echo $slug; ?>" role="tab"<?php echo $default_tab === $slug ? ' class="secupress-current"' : ''; ?> data-type="<?php echo $slug; ?>">
+						<li class="secupress-big-tab-<?php echo $slug; ?>" role="presentation">
+							<a href="#tab-<?php echo $slug; ?>" aria-controls="tab-<?php echo $slug; ?>" role="tab"<?php echo $default_tab === $slug ? ' class="secupress-current"' : ''; ?> data-type="<?php echo $slug; ?>">
 								<span class="secupress-tab-title"><?php echo $name; ?></span>
 								<span class="secupress-tab-subtitle"><?php printf( _n( '%d issue', '%d issues', $counts[ $slug ], 'secupress' ), $counts[ $slug ] ); ?></span>
 							</a>
