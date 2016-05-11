@@ -233,11 +233,9 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	final public function print_open_form_tag() {
-		if ( $this->get_with_form() ) {
-			?>
-			<form id="secupress-module-form-settings" method="post" action="<?php echo $this->get_form_action(); ?>">
-			<?php
-		}
+		?>
+		<form id="secupress-module-form-settings" method="post" action="<?php echo $this->get_form_action(); ?>">
+		<?php
 	}
 
 
@@ -247,10 +245,8 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	final public function print_close_form_tag() {
-		if ( $this->get_with_form() ) {
-			settings_fields( 'secupress_' . $this->get_current_module() . '_settings' );
-			echo '</form>';
-		}
+		settings_fields( 'secupress_' . $this->get_current_module() . '_settings' );
+		echo '</form>';
 	}
 
 
@@ -274,7 +270,11 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			?>
 		</div>
 
-		<?php $this->print_open_form_tag(); ?>
+		<?php
+		if ( $this->get_with_form() ) {
+			$this->print_open_form_tag();
+		}
+		?>
 
 		<div class="secupress-module-options-block" id="block-advanced_options" data-module="<?php echo $this->get_current_module(); ?>">
 			<?php
@@ -284,7 +284,9 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		</div>
 
 		<?php
-		$this->print_close_form_tag();
+		if ( $this->get_with_form() ) {
+			$this->print_close_form_tag();
+		}
 	}
 
 
