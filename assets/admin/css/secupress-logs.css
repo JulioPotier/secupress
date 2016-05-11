@@ -1,0 +1,216 @@
+@charset "UTF-8";
+
+/**
+ * ==== TABLE OF COLORS ===
+ *
+ * Yellow		: #F1C40F;
+ * YellowDark	: #F7AB13;
+ * Red			: #F2295E;
+ * RedDark		: #CB234F;
+ * Green		: #2BCDC1;
+ * GreenDark	: #26B3A9;
+ * Dark			: #222831;
+ * GrayLight	: #F2F2F6;
+ * GrayMedium	: #5A626F;
+ * GrayDark		: #393E46;
+ *
+ */
+
+
+/* Header hacking mode */
+.secupress-logs-list [id="posts-filter"] {
+	background: #393E46;
+}
+.secupress-logs-list .subsubsub {
+	margin: 15px 0 12px 15px;
+	font-size: 11px;
+	color: #5A626F;
+}
+.secupress-logs-list .subsubsub a .count {
+	color: #FFF;
+	font-size: 12px;
+}
+.secupress-logs-list .subsubsub .all a {
+	color: rgba(255,255,255,.5);
+}
+.secupress-logs-list .subsubsub .low a {
+	color: #FFF;
+}
+.secupress-logs-list .subsubsub .normal a {
+	color: #2BCDC1;
+}
+.secupress-logs-list .subsubsub .high a {
+	color: #F2295E;
+}
+.secupress-logs-list .bulkactions {
+	float: right;
+}
+.secupress-logs-list .tablenav .tablenav-pages {
+	clear: right;
+	margin: 1px 15px 0 0;
+	font-size: 11px;
+	text-align: right;
+	color: #FFF;
+	font-weight: 600;
+}
+.secupress-logs-list .tablenav.top .tablenav-pages {
+	margin-top: -6.1em;
+}
+.secupress-logs-list .tablenav .tablenav-pages a,
+.secupress-logs-list .tablenav-pages-navspan {
+	padding: 3px 5px;
+	border: 0;
+	font-size: 30px;
+	line-height: 0.3;
+	vertical-align: middle;
+	background: transparent;
+}
+.secupress-logs-list .displaying-num {
+	margin: 0 15px 0 0;
+	color: #2BCDC1;
+	vertical-align: -1px;
+}
+.secupress-quick-actions .secupress-button {
+	padding: 6px 18px 7px;
+}
+.secupress-logs-list .secupress-quick-actions {
+	padding:0 0 15px 15px;
+}
+.secupress-logs-list .tablenav-pages .current-page {
+	padding: 3px 0;
+	font-size: 12px;
+	background: #5A626F;
+	color: #FFF;
+	border: 0;
+	border-radius: 3px;
+}
+
+.secupress-logs-list .spinner {
+	margin: 0;
+	width: 0; height: 0;
+	border: 2px solid #FFF;
+	border-radius: 50%;
+	opacity: 0;
+	background-color: #FFF;
+	background-position: -1px -1px;
+	transition: opacity 1s;
+}
+.secupress-logs-list .working + .spinner {
+	width: 22px; height: 22px;
+	margin: 5px 10px 0 4px;
+	opacity: 0.8;
+}
+
+.secupress-logs-list .bulkactions select {
+	padding: 4px 4px 4px 5px;
+	border: 1px solid rgba(236, 240, 241, .3);
+	font-size: 12px;
+	font-weight: 600;
+	color: #FFF;
+	background: #393e46;
+	border-radius: 2px;
+}
+.secupress-logs-list .bulkactions option {
+	padding: 4px 4px 4px 5px;
+}
+.secupress-logs-list .bulkactions .button {
+	padding-left: 20px;
+	padding-right: 20px;
+	border: 0;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	font-size: 11px;
+	font-weight: 600;
+	color: #FFF;
+	background: #5A626F;
+	box-shadow: none;
+}
+.secupress-logs-list .bulkactions .button:hover,
+.secupress-logs-list .bulkactions .button:focus {
+	background: #FFF;
+	color: #5A626F;
+}
+
+/* Cols details */
+.secupress-logs-list .manage-column,
+.secupress-logs-list .manage-column a {
+	color: #5A626F;
+	font-weight: 600;
+}
+.secupress-logs-list .striped > tbody > *:nth-child(2n+1) {
+	background: #FFF;
+}
+.secupress-logs-list tr + tr td,
+.secupress-logs-list tr + tr th {
+	border-top: 1px solid #ECF0F1;
+}
+.secupress-logs-list tbody td,
+.secupress-logs-list tbody th {
+	vertical-align: middle;
+}
+
+/* Checkbox col */
+.secupress-logs-list .check-column .secupress-checkbox-mini + .label-text:after {
+	left: 10px;
+}
+.secupress-logs-list .check-column .secupress-checkbox-mini + .label-text:before {
+	left: 6px;
+}
+
+/* Title col */
+.secupress-logs-list .page-title a {
+	font-weight: 600;
+	color: #222831;
+}
+.secupress-logs-list .page-title code {
+	display: block;
+	width: 100%;
+	margin-top: 0.25em;
+	font-weight: normal;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	background: #ECF0F1;
+	color: #5A626F;
+}
+.secupress-logs-list .row-actions {
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height .275s ease .25s;
+}
+.secupress-logs-list .row-actions.visible,
+.secupress-logs-list tr:hover .row-actions {
+	max-height: 2em;
+}
+
+/* Date col */
+.secupress-logs-list td.column-date b {
+	display: block;
+}
+
+/* Log detail column  & 2 cols layout */
+.secupress-logs-list-wrapper {
+	overflow: hidden;
+}
+.secupress-logs-list {
+	float: left;
+	width: 55%;
+}
+.secupress-empty-log-content + .secupress-logs-list {
+	width: 100%;
+}
+.secupress-log-content {
+	float: right;
+	width: 45%;
+	overflow: hidden;
+}
+.secupress-log-content.secupress-empty-log-content {
+	width: 0;
+}
+.secupress-empty-log-content p {
+	text-align: center;
+	font-size: 2em;
+}
+.secupress-log-content .close {
+	float: right;
+}

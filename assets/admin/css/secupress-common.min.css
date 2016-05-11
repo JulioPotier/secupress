@@ -92,7 +92,6 @@
 .icon-radar:before { content: "\e900"; }
 .icon-info:before { content: "\e901"; }
 .icon-ask:before { content: "\e902"; }
-.icon-secupress-simple:before { content: "\e907"; }
 .icon-secupress:before { content: "\e903"; }
 .icon-star:before { content: "\f005"; }
 .icon-star-empty:before { content: "\f006"; }
@@ -117,6 +116,28 @@
 .icon-plugin:before { content: "\f1e6"; }
 .icon-calendar-add:before { content: "\f271"; }
 .icon-calendar-remove:before { content: "\f272"; }
+.icon-heart:before { content: "\f004"; }
+.icon-cog:before { content: "\f013"; }
+.icon-gear:before { content: "\f013"; }
+.icon-times-circle:before { content: "\f057"; }
+.icon-heart-o:before { content: "\f08a"; }
+.icon-twitter:before { content: "\f099"; }
+.icon-angle-double-left:before { content: "\f100"; }
+.icon-angle-double-right:before { content: "\f101"; }
+.icon-angle-left:before { content: "\f104"; }
+.icon-angle-right:before { content: "\f105"; }
+.icon-angle-up:before { content: "\f106"; }
+.icon-angle-down:before { content: "\f107"; }
+.icon-terminal:before { content: "\f120"; }
+.icon-code:before { content: "\f121"; }
+.icon-star-half-empty:before { content: "\f123"; }
+.icon-star-half-full:before { content: "\f123"; }
+.icon-star-half-o:before { content: "\f123"; }
+.icon-minus-square-o:before { content: "\f147"; }
+.icon-dropbox:before { content: "\f16b"; }
+.icon-plus-square-o:before { content: "\f196"; }
+.icon-slack:before { content: "\f198"; }
+.icon-trash:before { content: "\f1f8"; }
 
 .icon-radar:before {
 	font-size: 1.3em;
@@ -1348,40 +1369,17 @@ pre code, pre samp, pre kbd {
 	visibility: visible;
 }
 /***/
-.secupress-logs-list-wrapper {
-	padding-left: 1000px;
-}
-.secupress-logs-list {
-	float: left;
-	width: 980px;
-	margin-left: -1000px;
-}
-.secupress-log-content {
-	float: right;
-	width: 100%;
-	min-height: 100px;
-}
-.secupress-empty-log-content p {
-	text-align: center;
-	font-size: 2em;
-}
-.secupress-log-content .close {
-	float: right;
-}
 table.fixed .column-critic {
 	width: 8em;
 }
 table.fixed .column-date {
-	width: 16em;
+	width: 11em;
 }
 .striped tr.current-log {
 	background: #e4e4e4;
 }
 .column-title .secupress-inline-spinner {
 	float: right;
-}
-.secupress-logs-list a code {
-	color: #555;
 }
 [class^="secupress-"] .hidden,
 [class*=" secupress-"] .hidden {

@@ -164,6 +164,10 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 
 		wp_localize_script( 'secupress-scanner-js', 'SecuPressi18nScanner', $localize );
 	}
+	// Logs page
+	elseif ( 'secupress_page_secupress_logs' === $hook_suffix ) {
+		wp_enqueue_style( 'secupress-logs-css',  SECUPRESS_ADMIN_CSS_URL . 'secupress-logs' . $suffix . '.css', array( 'secupress-common-css' ), $version );
+	}
 }
 
 

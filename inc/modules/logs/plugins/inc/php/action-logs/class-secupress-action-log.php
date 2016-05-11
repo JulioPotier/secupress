@@ -638,7 +638,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 			'wpmu_new_blog'           => __( 'Blog %1$s created with %2$s as Administrator.', 'secupress' ),
 			'delete_blog'             => __( 'Blog %s deleted.', 'secupress' ),
 			'phpmailer_init'          => __( 'E-mail sent from %1$s to %2$s.', 'secupress' ),
-			'http_api_debug'          => __( 'External request to %s.', 'secupress' ),
+			'http_api_debug'          => __( 'External request to %s', 'secupress' ),
 		);
 
 		$this->title = isset( $titles[ $this->target ] ) ? $titles[ $this->target ] : '';

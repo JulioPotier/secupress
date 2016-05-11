@@ -612,7 +612,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		$criticities = array(
 			'high'   => array(
 				'label'       => __( 'High', 'secupress' ),
-				'label_count' => _n_noop( 'High criticity <span class="count">(%s)</span>', 'High criticity <span class="count">(%s)</span>', 'secupress' ),
+				'label_count' => _n_noop( 'High <span class="count">(%s)</span>', 'High <span class="count">(%s)</span>', 'secupress' ),
 				'public'      => false,
 				'internal'    => true,
 				'protected'   => true,
@@ -620,7 +620,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			),
 			'normal' => array(
 				'label'       => __( 'Normal', 'secupress' ),
-				'label_count' => _n_noop( 'Normal criticity <span class="count">(%s)</span>', 'Normal criticity <span class="count">(%s)</span>', 'secupress' ),
+				'label_count' => _n_noop( 'Normal <span class="count">(%s)</span>', 'Normal <span class="count">(%s)</span>', 'secupress' ),
 				'public'      => false,
 				'internal'    => true,
 				'protected'   => true,
@@ -628,7 +628,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			),
 			'low'    => array(
 				'label'       => __( 'Low', 'secupress' ),
-				'label_count' => _n_noop( 'Low criticity <span class="count">(%s)</span>', 'Low criticity <span class="count">(%s)</span>', 'secupress' ),
+				'label_count' => _n_noop( 'Low <span class="count">(%s)</span>', 'Low <span class="count">(%s)</span>', 'secupress' ),
 				'public'      => false,
 				'internal'    => true,
 				'protected'   => true,
