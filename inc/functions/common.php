@@ -667,7 +667,7 @@ function secupress_feature_is_pro( $feature ) {
 		'plugins_detect_bad_plugins'             => 1,
 		'themes_activation'                      => 1,
 		'themes_deletion'                        => 1,
-		'plugins_detect_bad_themes'              => 1,
+		'themes_detect_bad_themes'               => 1,
 		'uploads_uploads'                        => 1,
 		'page-protect_profile'                   => 1,
 		'page-protect_settings'                  => 1,
