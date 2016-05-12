@@ -696,18 +696,19 @@ function secupress_feature_is_pro( $feature ) {
 	return isset( $features[ $feature ] );
 }
 
+
 /**
  * This will be used with the filter hook 'nonce_user_logged_out' to create nonces for disconnected users.
  *
- * @param $uid integer A userID
- *
- * @return $uid integer
  * @since 1.0
- **/
+ *
+ * @param (int) $uid A userID.
+ *
+ * @return (int)
+ */
 function secupress_modify_userid_for_nonces( $uid ) {
 	if ( $uid ) {
 		return $uid;
 	}
-	$uid = isset( $_GET['userid'] ) ? (int) $_GET['userid'] : 0;
-	return $uid;
+	return isset( $_GET['userid'] ) ? (int) $_GET['userid'] : 0;
 }
