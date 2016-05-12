@@ -24,8 +24,8 @@ $this->add_field( array(
 
 
 $this->add_field( array(
-	'title'             => sprintf( __( 'Protect %s settings page', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
-	'description'       => __( 'We recommend to protect the settings page once your settings are done.', 'secupress' ),
+	'title'             => sprintf( __( 'Protect %s pages', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
+	'description'       => __( 'We recommend to protect those pages once your settings are done.', 'secupress' ),
 	'label_for'         => $this->get_field_name( 'settings' ),
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
