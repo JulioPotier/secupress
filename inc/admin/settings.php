@@ -971,3 +971,15 @@ function secupress_sidebox( $args ) {
 		echo'<div class="inside">' . $args['content'] . '</div>';
 	echo "</div>\n";
 }
+
+/**
+ * Add SecuPress version number next to WP version in footer
+ * 
+ * @since  1.0
+ *
+ * @author Geoffrey
+ */
+add_filter( 'update_footer', '_secupress_print_version_number_in_footer', 12, 1);
+function _secupress_print_version_number_in_footer ( $footer ) {
+	echo $footer . ( defined( 'SECUPRESS_VERSION' ) ? ' | <b>SecuPress v.' . SECUPRESS_VERSION . '</b>' : '' );
+}
