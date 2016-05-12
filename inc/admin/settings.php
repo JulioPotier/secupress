@@ -2,7 +2,7 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /*------------------------------------------------------------------------------------------------*/
-/* CSS, JS ====================================================================================== */
+/* CSS, JS, FOOTER ============================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
 add_action( 'admin_enqueue_scripts', '__secupress_add_settings_scripts' );
@@ -168,6 +168,22 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	elseif ( 'secupress_page_secupress_logs' === $hook_suffix ) {
 		wp_enqueue_style( 'secupress-logs-css',  SECUPRESS_ADMIN_CSS_URL . 'secupress-logs' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 	}
+
+	// SecuPress version in footer.
+	add_filter( 'update_footer', '__secupress_print_version_number_in_footer', 12, 1 );
+}
+
+
+/**
+ * Add SecuPress version number next to WP version in footer.
+ *
+ * @since 1.0
+ * @author Geoffrey
+ *
+ * @param (string) $footer Text to print in footer.
+ */
+function __secupress_print_version_number_in_footer( $footer ) {
+	echo ( $footer ? "$footer | " : '' ) . '<b>' . SECUPRESS_PLUGIN_NAME . ' v.' . SECUPRESS_VERSION . '</b>';
 }
 
 
@@ -970,16 +986,4 @@ function secupress_sidebox( $args ) {
 		echo '<h3 class="hndle"><span><b>' . $args['title'] . '</b></span></h3>';
 		echo'<div class="inside">' . $args['content'] . '</div>';
 	echo "</div>\n";
-}
-
-/**
- * Add SecuPress version number next to WP version in footer
- * 
- * @since  1.0
- *
- * @author Geoffrey
- */
-add_filter( 'update_footer', '_secupress_print_version_number_in_footer', 12, 1);
-function _secupress_print_version_number_in_footer ( $footer ) {
-	echo $footer . ( defined( 'SECUPRESS_VERSION' ) ? ' | <b>SecuPress v.' . SECUPRESS_VERSION . '</b>' : '' );
 }
