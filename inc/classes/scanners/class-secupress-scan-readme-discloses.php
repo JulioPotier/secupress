@@ -24,7 +24,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 	 *
 	 * @var (string)
 	 */
-	public    static $prio    = 'medium';
+	public    static $prio = 'medium';
 
 
 	/**
@@ -204,7 +204,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 		secupress_activate_submodule( 'discloses', 'readmes' );
 
 		// Got error?
-		$last_error = end( $wp_settings_errors );
+		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
 
 		if ( $last_error && 'general' === $last_error['setting'] && 'iis7_manual_edit' === $last_error['code'] ) {
 			// "cantfix"

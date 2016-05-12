@@ -109,6 +109,7 @@ function secupress_get_scanners() {
 			'Readme_Discloses',
 			'Bad_Url_Access',
 			'Uptime_Monitor',
+			'Bad_File_Extensions',
 		),
 		'low' => array(
 			'Login_Errors_Disclose',
@@ -693,4 +694,21 @@ function secupress_feature_is_pro( $feature ) {
 	);
 
 	return isset( $features[ $feature ] );
+}
+
+
+/**
+ * This will be used with the filter hook 'nonce_user_logged_out' to create nonces for disconnected users.
+ *
+ * @since 1.0
+ *
+ * @param (int) $uid A userID.
+ *
+ * @return (int)
+ */
+function secupress_modify_userid_for_nonces( $uid ) {
+	if ( $uid ) {
+		return $uid;
+	}
+	return isset( $_GET['userid'] ) ? (int) $_GET['userid'] : 0;
 }

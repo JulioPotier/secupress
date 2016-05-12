@@ -196,7 +196,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 					$version_free = sprintf( esc_html__( 'Free version %s', 'secupress' ), 'v' . SECUPRESS_VERSION );
 					$version_pro  = sprintf( esc_html__( 'Pro version %s', 'secupress' ), 'v' . SECUPRESS_VERSION ); // ////.
 					?>
-					<div class="secupress-modules-sidebar hide-if-no-js">
+					<div class="secupress-modules-sidebar">
 						<div class="secupress-sidebar-header">
 							<div class="secupress-flex">
 								<div class="secupress-sh-logo">
@@ -255,11 +255,9 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	final public function print_open_form_tag() {
-		if ( $this->get_with_form() ) {
-			?>
-			<form id="secupress-module-form-settings" method="post" action="<?php echo $this->get_form_action(); ?>">
-			<?php
-		}
+		?>
+		<form id="secupress-module-form-settings" method="post" action="<?php echo $this->get_form_action(); ?>">
+		<?php
 	}
 
 
@@ -269,10 +267,8 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	final public function print_close_form_tag() {
-		if ( $this->get_with_form() ) {
-			settings_fields( 'secupress_' . $this->get_current_module() . '_settings' );
-			echo '</form>';
-		}
+		settings_fields( 'secupress_' . $this->get_current_module() . '_settings' );
+		echo '</form>';
 	}
 
 
@@ -297,7 +293,11 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			?>
 		</div>
 
-		<?php $this->print_open_form_tag(); ?>
+		<?php
+		if ( $this->get_with_form() ) {
+			$this->print_open_form_tag();
+		}
+		?>
 
 		<div class="secupress-module-options-block" id="block-advanced_options" data-module="<?php echo $this->get_current_module(); ?>">
 			<?php
@@ -307,7 +307,9 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		</div>
 
 		<?php
-		$this->print_close_form_tag();
+		if ( $this->get_with_form() ) {
+			$this->print_close_form_tag();
+		}
 	}
 
 

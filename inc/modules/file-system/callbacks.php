@@ -1,6 +1,10 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
+/*------------------------------------------------------------------------------------------------*/
+/* MALWARE SCANNER ============================================================================== */
+/*------------------------------------------------------------------------------------------------*/
+
 add_action( 'wp_ajax_secupress_delete_scanned_files',    '__secupress_delete_scanned_files_ajax_post_cb' );
 add_action( 'admin_post_secupress_delete_scanned_files', '__secupress_delete_scanned_files_ajax_post_cb' );
 /**
@@ -225,4 +229,34 @@ function __secupress_old_files_ajax_post_cb() {
 	update_option( SECUPRESS_FULL_FILETREE, $full_filetree );
 
 	secupress_admin_send_response_or_redirect( 1 );
+}
+
+
+/*------------------------------------------------------------------------------------------------*/
+/* ON MODULE SETTINGS SAVE ====================================================================== */
+/*------------------------------------------------------------------------------------------------*/
+
+/**
+ * Callback to filter, sanitize.
+ *
+ * @since 1.0
+ *
+ * @param (array) $settings The module settings.
+ *
+ * @return (array) The sanitized and validated settings.
+ */
+function __secupress_file_system_settings_callback( $settings ) {
+	$modulenow = 'file-system';
+	$settings  = $settings ? $settings : array();
+	$activate  = secupress_get_submodule_activations( $modulenow );
+
+	if ( isset( $settings['sanitized'] ) ) {
+		return $settings;
+	}
+	$settings['sanitized'] = 1;
+
+	// Activate/deactivate.
+	secupress_manage_submodule( $modulenow, 'bad-file-extensions', ! empty( $activate['bad-file-extensions_activated'] ) );
+
+	return $settings;
 }

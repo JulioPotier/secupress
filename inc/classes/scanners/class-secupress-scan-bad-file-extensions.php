@@ -2,13 +2,13 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /**
- * PHP Disclosure scan class.
+ * Bad File Extensions scan class.
  *
  * @package SecuPress
  * @subpackage SecuPress_Scan
  * @since 1.0
  */
-class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_Scan_Interface {
+class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
 	const VERSION = '1.0';
 
@@ -24,7 +24,28 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 	 *
 	 * @var (string)
 	 */
-	public    static $prio    = 'low';
+	public    static $prio = 'medium';
+
+	/**
+	 * Tells if a scanner is fixable by SecuPress. The value "pro" means it's fixable only with the version PRO.
+	 *
+	 * @var (bool|string)
+	 */
+	public    static $fixable = 'pro';
+
+	/**
+	 * The test file path.
+	 *
+	 * @var (bool|string)
+	 */
+	protected $file_path = false;
+
+	/**
+	 * The test file URL.
+	 *
+	 * @var (bool|string)
+	 */
+	protected $file_url = false;
 
 
 	/**
@@ -36,8 +57,8 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 		global $is_apache, $is_nginx, $is_iis7;
 
 		self::$type  = 'WordPress';
-		self::$title = __( 'Check if your WordPress site discloses the PHP modules <em>(know as PHP Easter Egg)</em>.', 'secupress' );
-		self::$more  = __( 'PHP contains a flaw that may lead to an unauthorized information disclosure. The issue is triggered when a remote attacker makes certain HTTP requests with crafted arguments, which will disclose PHP version and another sensitive information resulting in a loss of confidentiality.', 'secupress' );
+		self::$title = __( 'Check if some files that use bad extensions are reachable in the uploads folder.', 'secupress' );
+		self::$more  = __( 'The uploads folder should contain only files like images, pdf, or zip archives. Some other files should not be placed inside this folder, or at least, should not be reachable by their URL.', 'secupress' );
 
 		if ( $is_apache ) {
 			$config_file = '.htaccess';
@@ -69,16 +90,18 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// "good"
-			0   => __( 'Your site does not reveal the PHP modules.', 'secupress' ),
-			1   => __( 'Your %s file has been successfully edited.', 'secupress' ),
+			0   => __( 'Files that use bad extensions are protected.', 'secupress' ),
+			/* translators: 1 is a file name */
+			1   => sprintf( __( 'The rules forbidding access to files that use bad extensions have been successfully added to your %s file.', 'secupress' ), '%s' ),
 			// "warning"
-			100 => sprintf( __( 'Unable to determine status of %s.', 'secupress' ), '<code>' . user_trailingslashit( home_url() ) . '?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000</code>' ),
+			100 => __( 'Unable to determine status of the test file.', 'secupress' ),
 			// "bad"
-			200 => sprintf( __( '%s should not be accessible to anyone.', 'secupress' ), '<code>' . user_trailingslashit( home_url() ) . '?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000</code>' ),
+			200 => __( 'Could not create a test file in the uploads folder.', 'secupress' ),
+			201 => __( 'Files that use bad extensions are reachable in the uploads folder.', 'secupress' ),
 			// "cantfix"
-			/* translators: 1 is a file name, 2 is some code */
-			300 => sprintf( __( 'Your server runs a nginx system, the sensitive information disclosure cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
-			301 => __( 'Your server runs a non recognized system. The sensitive information disclosure cannot be fixed automatically.', 'secupress' ),
+			/* translators: 1 is a file names, 2 is some code */
+			300 => sprintf( __( 'Your server runs a nginx system, the files that use bad extensions cannot be protected automatically but you can do it yourself by adding the following code into your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
+			301 => __( 'Your server runs a non recognized system. The files that use bad extensions cannot be protected automatically.', 'secupress' ),
 			/* translators: 1 is a file name, 2 is some code */
 			302 => __( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ),
 			/* translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
@@ -101,26 +124,28 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-		// - http://osvdb.org/12184
-		$response = wp_remote_get( user_trailingslashit( home_url() ) . '?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000', array( 'redirection' => 0 ) );
+		// Create the temporary file.
+		$this->_create_file();
 
-		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
-
-			$response_body = wp_remote_retrieve_body( $response );
-
-			if ( strpos( $response_body, '<h1>PHP Credits</h1>' ) > 0 && strpos( $response_body, '<title>phpinfo()</title>' ) > 0 ) {
-				// "bad"
-				$this->add_message( 200 );
-
-				if ( ! self::$fixable ) {
-					$this->add_pre_fix_message( 301 );
-				}
-			}
-		} elseif ( is_wp_error( $response ) ) {
-			// If it's not an error, then no disclose.
-			// "warning".
-			$this->add_message( 100 );
+		if ( ! $this->file_url ) {
+			// "bad"
+			$this->add_message( 200 );
+			return parent::scan();
 		}
+
+		$response = wp_remote_get( $this->file_url, array( 'redirection' => 0 ) );
+
+		if ( is_wp_error( $response ) ) {
+			// "warning"
+			$this->add_message( 100 );
+
+		} elseif ( 200 === wp_remote_retrieve_response_code( $response ) ) {
+			// "bad"
+			$this->add_message( 201 );
+		}
+
+		// Delete the temporary file.
+		$this->_delete_file();
 
 		// "good"
 		$this->maybe_set_status( 0 );
@@ -145,10 +170,9 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 			$this->_fix_iis7();
 		} elseif ( $is_nginx ) {
 			$this->_fix_nginx();
+		} else {
+			$this->add_fix_message( 301 );
 		}
-
-		// "good"
-		$this->maybe_set_fix_status( 0 );
 
 		return parent::fix();
 	}
@@ -162,7 +186,7 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 	protected function _fix_apache() {
 		global $wp_settings_errors;
 
-		secupress_activate_submodule( 'sensitive-data', 'php-easter-egg' );
+		secupress_activate_submodule( 'file-system', 'bad-file-extensions' );
 
 		// Got error?
 		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
@@ -187,7 +211,7 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 	protected function _fix_iis7() {
 		global $wp_settings_errors;
 
-		secupress_activate_submodule( 'sensitive-data', 'php-easter-egg' );
+		secupress_activate_submodule( 'file-system', 'bad-file-extensions' );
 
 		// Got error?
 		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
@@ -212,7 +236,7 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 	protected function _fix_nginx() {
 		global $wp_settings_errors;
 
-		secupress_activate_submodule( 'sensitive-data', 'php-easter-egg' );
+		secupress_activate_submodule( 'file-system', 'bad-file-extensions' );
 
 		// Get the error.
 		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
@@ -225,5 +249,55 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 
 		// "cantfix"
 		$this->add_fix_message( 300, array( $rules ) );
+	}
+
+
+	/**
+	 * Create a test file in the uploads folder. Also set the test file path and URL.
+	 *
+	 * @since 1.0
+	 */
+	protected function _create_file() {
+		$wp_filesystem = secupress_get_filesystem();
+		$uploads       = wp_upload_dir( null, false );
+		$basedir       = wp_normalize_path( $uploads['basedir'] );
+		$extensions    = secupress_bad_file_extensions_get_forbidden_extensions();
+
+		// Get the file name.
+		$file_ext  = mt_rand( 0, count( $extensions ) - 1 );
+		$file_ext  = $extensions[ $file_ext ];
+		$file_name = 'secupress-' . secupress_generate_hash( 'file_name', 2, 6 ) . '.' . $file_ext;
+		$file_path = $basedir . '/' . $file_name;
+
+		// Create the file.
+		if ( file_exists( $file_path ) ) {
+			$wp_filesystem->delete( $file_path );
+		}
+		if ( ! file_exists( $basedir ) ) {
+			$wp_filesystem->mkdir( $basedir, FS_CHMOD_DIR );
+		}
+		if ( file_exists( $file_path ) || ! file_exists( $basedir ) ) {
+			return;
+		}
+
+		$created = $wp_filesystem->put_contents( $file_path, 'Temporary file', FS_CHMOD_FILE );
+
+		if ( $created ) {
+			$this->file_path = $file_path;
+			$this->file_url  = trailingslashit( $uploads['baseurl'] ) . $file_name;
+		}
+	}
+
+
+	/**
+	 * Tells if the readme files are accessible. Also falsy the test file path and URL.
+	 *
+	 * @since 1.0
+	 */
+	protected function _delete_file() {
+		secupress_get_filesystem()->delete( $this->file_path );
+
+		$this->file_path = false;
+		$this->file_url  = false;
 	}
 }

@@ -496,7 +496,10 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 		$from = secupress_get_email( true );
 
 		// Subject.
-		$subject = _n( 'New important event on your site', 'New important events on your site', $count, 'secupress' );
+		// The blogname option is escaped with esc_html on the way into the database in sanitize_option
+		// we want to reverse this for the plain text arena of emails.
+		$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
+		$subject  = sprintf( _n( '[%s] New important event on your site', '[%s] New important events on your site', $count, 'secupress' ), $blogname );
 
 		// Message.
 		$messages = array();

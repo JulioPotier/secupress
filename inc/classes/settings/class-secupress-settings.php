@@ -463,6 +463,9 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		}
 
 		// HTML attributes.
+		$args['label_for'] = $args['label_for'] ? $args['label_for'] : $args['name'];
+		$args['label_for'] = esc_attr( $args['label_for'] );
+
 		$attributes = '';
 		$args['attributes']['class'] = ! empty( $args['attributes']['class'] ) ? (array) $args['attributes']['class'] : array();
 
@@ -1265,7 +1268,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				<legend class="screen-reader-text"><span><?php esc_html_e( 'Backups', 'secupress' ); ?></span></legend>
 				<?php array_map( 'secupress_print_backup_file_formated', array_reverse( $backup_files ) ); ?>
 			</fieldset>
-			
+
 			<p class="submit">
 				<button class="secupress-button secupress-button-secondary alignright" type="submit" id="submit-delete-db-backups">
 					<span class="icon">
