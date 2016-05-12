@@ -1379,9 +1379,6 @@ table.fixed .column-critic {
 table.fixed .column-date {
 	width: 11em;
 }
-.striped tr.current-log {
-	background: #e4e4e4;
-}
 .column-title .secupress-inline-spinner {
 	float: right;
 }

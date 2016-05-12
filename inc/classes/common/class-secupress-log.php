@@ -274,7 +274,7 @@ class SecuPress_Log {
 
 		if ( $this->user_id ) {
 			/* Translators: 1: IP address, 2: user ID, 3: user login, 4: separator. */
-			return sprintf( __( 'IP: %1$s %4$s ID: %2$s %4$s Login: %3$s', 'secupress' ), $user_ip, $user_id, $user_login, '|' );
+			return sprintf( __( '<span class="ip"><b>IP:</b> %1$s</span> <span class="id"><b>ID:</b> %2$s</span> <span class="login"><b>Login:</b> %3$s</span>', 'secupress' ), $user_ip, $user_id, $user_login );
 		}
 
 		/* translators: 1: IP address */

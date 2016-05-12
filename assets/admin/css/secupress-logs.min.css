@@ -148,6 +148,9 @@
 .secupress-logs-list tbody th {
 	vertical-align: middle;
 }
+.secupress-logs-list .striped tr.current-log {
+	background: #ecf0f1;
+}
 
 /* Checkbox col */
 .secupress-logs-list .check-column .secupress-checkbox-mini + .label-text:after {
@@ -172,6 +175,10 @@
 	text-overflow: ellipsis;
 	background: #ECF0F1;
 	color: #5A626F;
+}
+.current-log .page-title code {
+	background: #222831;
+	color: #FFF;
 }
 .secupress-logs-list .row-actions {
 	max-height: 0;
@@ -229,6 +236,20 @@
 .secupress-log-content-header .secupress-flex:first-child {
 	padding-bottom: 15px;
 }
+.secupress-log-content-header .secupress-flex + .secupress-flex {
+	padding-top: 15px;
+}
+.secupress-log-content-header code,
+.secupress-log-content-message pre {
+	background: #222831;
+	color: #FFF;
+}
+.secupress-log-user .login {
+	margin-left: 10px;
+}
+.secupress-log-user .ip {
+	display: block;
+}
 .secupress-log-content-header .secupress-delete-logs-by-user_id {
 	margin-left: 10px;
 }
@@ -240,13 +261,11 @@
 	padding-right: 15px;
 	font-size: 20px;
 }
-.secupress-log-content .close {
-	float: right;
-}
 .secupress-log-content.secupress-empty-log-content {
 	width: 0;
 	height: 0;
 }
-.secupress-log-delete-actions {
+.secupress-log-delete-actions,
+.secupress-ip-handler {
 	text-align: right;
 }
