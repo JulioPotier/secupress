@@ -269,3 +269,17 @@
 .secupress-ip-handler {
 	text-align: right;
 }
+
+/* Syntax highlight */
+/* keywords */
+.secupress-code-color-007700 {
+	color: #F2295E;
+}
+/* Values: number */
+.secupress-code-color-0000BB {
+	color: #2BD4CC;
+}
+/* Value: string */
+.secupress-code-color-DD0000 {
+	color: #F39C12;
+}
