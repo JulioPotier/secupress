@@ -205,6 +205,11 @@ class SecuPress_Log {
 	 */
 	public function get_message() {
 		$this->_set_message();
+
+		if ( preg_match( "/^<pre>(.+\n.+)<\/pre>$/", $this->message, $matches ) ) {
+			$data[ $key ] = '<code>' . substr( $matches[1], 0, 50 ) . '&hellip;</code>';
+		}
+
 		return $this->message;
 	}
 
@@ -384,19 +389,30 @@ class SecuPress_Log {
 			} elseif ( '' === $data ) {
 				// If changed, also change it in `SecuPress_Action_Log::_set(_network)_option_title()` and `::_set(_network)_option_message()`.
 				$this->data[ $key ] = '<em>[' . __( 'empty string', 'secupress' ) . ']</em>';
-			} elseif ( is_scalar( $data ) ) {
-				$count = substr_count( $data, "\n" );
+			} else {
+				if ( ! is_scalar( $data ) ) {
+					$data = call_user_func( 'var_export', $data, true );
+				}
 
-				// 50 seems to be a good limit.
-				if ( $count || strlen( $data ) > 50 ) {
-					$this->data[ $key ] = '<pre' . ( $count > 4 ? ' class="secupress-code-chunk"' : '' ) . '>' . esc_html( $data ) . '</pre>';
+				if ( substr_count( $data, "\n" ) ) {
+					// Add some (uggly) colors.
+					$data = highlight_string( "<?php\n$data", true );
+					// Remove wrappers.
+					$data = preg_replace( '@^<code>\s*<span style="color: *#000000">\s*(.*)\s*</span>\s*</code>$@', '$1', $data );
+					// Remove the first `<?php`.
+					if ( preg_match( '@^(<span .+>)&lt;\?php<br \/>(</span>)?@', $data, $matches ) ) {
+						$replacement = ! empty( $matches[2] ) ? '' : '$1';
+						$data        = preg_replace( '@^(<span .+>)&lt;\?php<br \/>(</span>)?@', $replacement, $data );
+					}
+					// Replace the `style` attributes by `class` attributes.
+					$data = preg_replace( '@<span style="color: #([0-9A-F]+)">@', '<span class="secupress-code-color secupress-code-color-$1">', $data );
+					$this->data[ $key ] = "<pre><code>$data</code></pre>";
+				} elseif ( strlen( $data ) > 50 ) {
+					// 50 seems to be a good limit between short and long code.
+					$this->data[ $key ] = '<pre><code>' . esc_html( $data ) . '</code></pre>';
 				} else {
 					$this->data[ $key ] = '<code>' . esc_html( $data ) . '</code>';
 				}
-			} else {
-				$data  = call_user_func( 'print_r', $data, true );
-				$count = substr_count( $data, "\n" );
-				$this->data[ $key ] = '<pre' . ( $count > 4 ? ' class="secupress-code-chunk"' : '' ) . '>' . esc_html( $data ) . '</pre>';
 			}
 		}
 
@@ -423,8 +439,8 @@ class SecuPress_Log {
 
 		// Replace the `<pre>` blocks with `<code>` inline blocks and shorten them.
 		foreach ( $data as $key => $value ) {
-			if ( preg_match( '/^<pre>(.*)<\/pre>$/', $value, $matches ) ) {
-				$data[ $key ] = '<code>' . substr( $matches[1], 0, 50 ) . '&hellip;</code>';
+			if ( preg_match( '/^<pre>(?:<code>)?(.+)(?:<\/code>)?<\/pre>$/', $value, $matches ) ) {
+				$data[ $key ] = '<code>' . substr( strip_tags( $matches[1] ), 0, 50 ) . '&hellip;</code>';
 			}
 		}
 
