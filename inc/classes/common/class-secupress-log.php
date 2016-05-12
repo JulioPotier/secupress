@@ -439,8 +439,10 @@ class SecuPress_Log {
 
 		// Replace the `<pre>` blocks with `<code>` inline blocks and shorten them.
 		foreach ( $data as $key => $value ) {
-			if ( preg_match( '/^<pre>(?:<code>)?(.+)(?:<\/code>)?<\/pre>$/', $value, $matches ) ) {
-				$data[ $key ] = '<code>' . substr( strip_tags( $matches[1] ), 0, 50 ) . '&hellip;</code>';
+			if ( preg_match( '/^<pre>(?:<code>)?(.*)(?:<\/code>)?<\/pre>$/', $value, $matches ) ) {
+				$matches[1]   = explode( "\n", $matches[1] );
+				$matches[1]   = reset( $matches[1] );
+				$data[ $key ] = '<code>' . strip_tags( $matches[1] ) . '</code>';
 			}
 		}
 
