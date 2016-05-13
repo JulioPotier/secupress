@@ -6,7 +6,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 		<div class="secupress-col-1-3 secupress-col-logo secupress-text-center">
 			<div class="secupress-logo-block secupress-flex">
 				<div class="secupress-lb-logo">
-					<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo2x.svg 1x, <?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo2x.svg 2x" alt="" width="131">
+					<?php echo secupress_get_logo( array( 'width' => 131 ) ); ?>
 				</div>
 				<div class="secupress-lb-name">
 					<p class="secupress-lb-title"><?php echo SECUPRESS_PLUGIN_NAME; ?></p>

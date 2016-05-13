@@ -30,7 +30,7 @@ function secupress_action_page( $title, $content, $args = array() ) {
 	</head>
 	<body>
 		<div class="secupress-action-page-content">
-			<img class="logo" src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL ?>logo2x.svg 2x" alt="SecuPress" width="159" height="155">
+			<?php echo secupress_get_logo( array( 'alt' => SECUPRESS_PLUGIN_NAME, 'width' => 159, 'height' => 155 ) ); ?>
 			<?php echo $content; ?>
 		</div>
 	</body>
