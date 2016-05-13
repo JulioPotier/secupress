@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 					<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo2x.svg 1x, <?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo2x.svg 2x" alt="" width="131">
 				</div>
 				<div class="secupress-lb-name">
-					<p class="secupress-lb-title">SecuPress</p>
+					<p class="secupress-lb-title"><?php echo SECUPRESS_PLUGIN_NAME; ?></p>
 					<p class="secupress-lb-subtitle"><?php esc_html_e( 'the best security for WordPress', 'secupress' ); ?></p>
 				</div>
 			</div>

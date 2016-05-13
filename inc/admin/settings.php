@@ -318,7 +318,10 @@ function __secupress_scanners() {
 		<div class="secupress-wrapper">
 			<div class="secupress-section-dark">
 				<div class="secupress-heading secupress-flex secupress-flex-spaced secupress-wrap">
-					<p class="secupress-text-medium"><?php esc_html_e( 'Welcome to SecuPress the best way to secure your website!', 'secupress' ); ?></p>
+					<p class="secupress-text-medium"><?php
+						/* translators: %s is the plugin name */
+						printf( esc_html__( 'Welcome to %s the best way to secure your website!', 'secupress' ), SECUPRESS_PLUGIN_NAME );
+					?></p>
 					<p class="secupress-text-end hide-if-no-js">
 						<a href="#secupress-more-info" class="secupress-link-icon secupress-open-moreinfo" data-trigger="slidedown" data-target="secupress-more-info">
 							<span class="icon">
@@ -461,9 +464,15 @@ function __secupress_scanners() {
 								</p>
 
 								<div id="tweeterA" class="hidden">
-										<i><?php esc_html_e( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ); ?></i>
+										<i><?php
+											/* translators: %s is the plugin name */
+											printf( esc_html__( 'Wow! My website just got an A security grade using %s, what about yours?', 'secupress' ), SECUPRESS_PLUGIN_NAME );
+										?></i>
 
-										<a class="button button-small" href="https://twitter.com/intent/tweet?via=secupress&amp;url=<?php echo urlencode( esc_url_raw( 'http://secupress.fr&text=' . __( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ) ) ); ?>">
+										<a class="button button-small" href="https://twitter.com/intent/tweet?via=secupress&amp;url=<?php
+											/* translators: %s is the plugin name */
+											echo urlencode( esc_url_raw( 'http://secupress.fr&text=' . sprintf( __( 'Wow! My website just got an A security grade using %s, what about yours?', 'secupress' ), SECUPRESS_PLUGIN_NAME ) ) );
+										?>">
 											<span class="icon"><span class="dashicons dashicons-twitter"></span></span>
 											<span class="text"><?php esc_html_e( 'Tweet that', 'secupress' ); ?></span>
 										</a>
