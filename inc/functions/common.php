@@ -419,7 +419,7 @@ function secupress_get_capability( $force_mono = false ) {
  * @return (string) The HTML tag.
  */
 function secupress_get_logo( $atts = array() ) {
-	$base_url = SECUPRESS_ADMIN_IMAGES_URL . 'logo' . ( secupress_is_pro() ? '' : '-pro' );
+	$base_url = SECUPRESS_ADMIN_IMAGES_URL . 'logo' . ( secupress_is_pro() ? '-pro' : '' );
 
 	$atts = array_merge( array(
 		'src'    => "{$base_url}.png",
