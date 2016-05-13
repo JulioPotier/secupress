@@ -301,10 +301,10 @@ function __secupress_scanners() {
 			$last_pc = $time['percent'];
 
 			$reports[] = sprintf(
-				'<li data-percent="%1$d"><span class="dashicons mini dashicons-arrow-%2$s-alt2" aria-hidden="true"></span><strong>%3$s (%1$d %%)</strong> <span class="timeago">%4$s</span></li>',
+				'<li data-percent="%1$d"><span class="dashicons mini dashicons-arrow-%2$s-alt2" aria-hidden="true"></span><strong>%3$s</strong> &mdash; <span class="timeago">%4$s</span></li>',
 				$time['percent'],
 				$icon,
-				$time['grade'],
+				sprintf( __( 'Grade %s', 'secupress' ), $time['grade'] ),
 				sprintf( __( '%s ago' ), human_time_diff( $time['time'] ) )
 			);
 		}
@@ -318,7 +318,7 @@ function __secupress_scanners() {
 		<div class="secupress-wrapper">
 			<div class="secupress-section-dark">
 				<div class="secupress-heading secupress-flex secupress-flex-spaced secupress-wrap">
-					<p class="secupress-text-medium"><?php esc_html_e( 'Welcome to SecuPress the best way to secure your website!', 'secupress' ); ?></p>
+					<p class="secupress-text-medium"><?php esc_html_e( 'SecuPress Security Scanners', 'secupress' ); ?></p>
 					<p class="secupress-text-end hide-if-no-js">
 						<a href="#secupress-more-info" class="secupress-link-icon secupress-open-moreinfo" data-trigger="slidedown" data-target="secupress-more-info">
 							<span class="icon">
