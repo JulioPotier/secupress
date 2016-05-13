@@ -54,6 +54,18 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	// WordPress Common JS.
 	wp_enqueue_script( 'secupress-common-js', SECUPRESS_ADMIN_JS_URL . 'secupress-common' . $suffix . '.js', array( 'secupress-wordpress-js' ), $version, true );
 
+	wp_localize_script( 'secupress-common-js', 'SecuPressi18nCommon', array(
+		'confirmText'  => esc_html__( 'OK', 'secupress' ),
+		'cancelText'   => __( 'Cancel' ),
+		'authswal'     => array(
+			'title'  => esc_html__( 'Authentication', 'secupress' ),
+			'email'  => esc_html__( 'Enter your email', 'secupress' ),
+			'apikey' => esc_html__( 'Enter your API Key', 'secupress' ),
+			'where'  => esc_html__( 'Where can I find my API Key?', 'secupress' ),
+			'save'   => esc_html__( 'Save and continue to first scan', 'secupress' )
+		)
+	) );
+
 	// Settings page.
 	if ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' === $hook_suffix ) {
 		// CSS.
@@ -317,69 +329,13 @@ function __secupress_scanners() {
 	}
 	?>
 	<div class="wrap">
+	<?php if ( $times ) : ?>
 		<?php secupress_admin_heading( __( 'Scanners', 'secupress' ) ); ?>
 
 		<div class="secupress-wrapper">
 			<div class="secupress-section-dark">
-				<div class="secupress-heading secupress-flex secupress-flex-spaced secupress-wrap">
-					<p class="secupress-text-medium"><?php esc_html_e( 'Welcome to SecuPress the best way to secure your website!', 'secupress' ); ?></p>
-					<p class="secupress-text-end hide-if-no-js">
-						<a href="#secupress-more-info" class="secupress-link-icon secupress-open-moreinfo" data-trigger="slidedown" data-target="secupress-more-info">
-							<span class="icon">
-								<i class="icon-info" aria-hidden="true"></i>
-							</span>
-							<span class="text">
-								<?php esc_html_e( 'How does it work?', 'secupress' ); ?>
-							</span>
-						</a>
-					</p>
-
-					<div id="secupress-more-info" class="secupress-full-wide secupress-counter">
-						<div class="secupress-flex secupress-flex-top">
-							<div class="secupress-col-1-3">
-								<div class="secupress-blob secupress-counter-put">
-									<div class="secupress-blob-icon">
-										<i class="icon-radar" aria-hidden="true"></i>
-									</div>
-									<div class="secupress-blob-content">
-										<p><?php esc_html_e( 'Start a checking of all security points with the One Click Scan button.', 'secupress' ); ?></p>
-									</div>
-								</div>
-							</div>
-							<div class="secupress-col-1-3">
-								<div class="secupress-blob secupress-counter-put">
-									<div class="secupress-blob-icon">
-										<i class="icon-pad-list" aria-hidden="true"></i>
-									</div>
-									<div class="secupress-blob-content">
-										<p><?php esc_html_e( 'Take a look at validated points and points you have to fix.', 'secupress' ); ?></p>
-									</div>
-								</div>
-							</div>
-							<div class="secupress-col-1-3">
-								<div class="secupress-blob secupress-counter-put">
-									<div class="secupress-blob-icon">
-										<i class="icon-pad-check" aria-hidden="true"></i>
-									</div>
-									<div class="secupress-blob-content">
-										<p><?php esc_html_e( 'Fix all points automatically with the One Click Fix button or do it manually if you are a warrior.', 'secupress' ); ?></p>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<p class="secupress-text-end secupress-m0">
-							<a href="#secupress-more-info" class="secupress-link-icon secupress-icon-right secupress-close-moreinfo" data-trigger="slideup" data-target="secupress-more-info">
-								<span class="icon">
-									<i class="icon-cross" aria-hidden="true"></i>
-								</span>
-								<span class="text">
-									<?php esc_html_e( 'I\'ve got it!', 'secupress' ); ?>
-								</span>
-							</a>
-						</p>
-					</div>
-				</div>
+				
+				<?php secupress_print_scanner_header() ?>
 
 				<ul class="secupress-flex secupress-tabs secupress-light-tabs" role="tablist" data-content="#sp-tab-scans">
 					<li role="presentation">
@@ -499,27 +455,8 @@ function __secupress_scanners() {
 					</div><!-- .secupress-tab-content -->
 
 				</div><!-- .secupress-tabs-contents -->
-
-				<div class="secupress-caroupoivre hidden">
-					<div id="slide1" class="hidden">
-						<h3><?php _e( 'Sécurisez votre site WordPress simplement', 'secupress' ); ?></h3>
-						<p><?php _e( 'En un écran, visualisez les points de sécurité Bons ou Mauvais et utilisez le bouton <strong>One Click Fix</strong> pour les corriger rapidement.', 'secupress' ); ?></p>
-					</div>
-					<div id="slide2" class="hidden">
-						<h3><?php _e( 'Une gamme de modules à votre service', 'secupress' ); ?></h3>
-						<p><?php _e( 'Allez plus loin dans la sécurisation de votre site avec nos modules et activez les fonctionnalités complémentaires.', 'secupress' ); ?></p>
-					</div>
-					<?php if ( ! secupress_is_pro() ) : // Trad fr + wording ////. ?>
-						<div id="slide3" class="hidden">
-							<h3><?php _e( 'Passez à la version pro', 'secupress' ); ?></h3>
-							<p><?php _e( 'Support premium, accès à tous les modules, lorem ipsum.', 'secupress' ); ?></p>
-						</div>
-					<?php else : ?>
-						<div id="slide3" class="hidden"><h3><?php _e( 'Programmez vos analyses de sécurité', 'secupress' ); ?></h3><p><?php _e( 'L\'analyse des points reste à jour, sans vous connectez au back office avec le scan automatique.', 'secupress' ); ?></p></div>
-					<?php endif; ?>
-				</div>
-
-				<div class="secupress-progressbar hidden" style="width:500px;padding:2px;border:1px solid;"><div style="background:#2BCDC1;display:inline-block;width:0px">&nbsp;</div><span style="position:absolute;left:8px;">0 %</span></div>
+				
+				<?php secupress_print_caroupoivre(); ?>
 
 				<ul id="secupress-type-filters" class="secupress-big-tabs secupress-tabs secupress-flex secupress-text-start hide-if-no-js" role="tablist">
 					<?php
@@ -577,6 +514,60 @@ function __secupress_scanners() {
 
 			<?php wp_nonce_field( 'secupress_score', 'secupress_score', false ); ?>
 		</div>
+
+	<?php else:	?>
+		<div class="secupress-wrapper secupress-no-first-oneclickscan-yet">
+			
+			<div class="secupress-section-dark secupress-settings-header secupress-flex">
+				<div class="secupress-col-1-4 secupress-col-logo secupress-text-center">
+					<div class="secupress-logo-block">
+						<div class="secupress-lb-logo">
+							<img width="170" alt="" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo2x.svg 1x, <?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo2x.svg 2x" src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo.png">
+						</div>
+					</div>
+				</div>
+				<div class="secupress-col-2-4 secupress-col-text">
+					<p class="secupress-text-medium">Le plugin SecuPress est activé,  occupons-nous de la sécurité de votre site</p>
+					<p>Lancez maintenant la vérification des points de sécurité</p>
+				</div>
+				<div class="secupress-col-1-4 secupress-col-cta">
+					<button class="secupress-button secupress-button-primary button-secupress-scan" type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ); ?>">
+						<span class="icon">
+							<i class="icon-radar" aria-hidden="true"></i>
+						</span>
+						<span class="text">
+							<?php esc_html_e( 'Scan my website', 'secupress' ); ?>
+						</span>
+					</button>
+				</div>
+			</div><!-- .secupress-section-dark -->
+			<?php if ( ! secupress_get_consumer_email() ) { ?>
+			<div class="secupress-section-gray-dark secupress-flex">
+				<div class="secupress-col-1-4 secupress-col-logo"></div>
+				<div class="secupress-col-2-4 secupress-col-text">
+					<p class="secupress-text-medium">Allez plus loin et avoir plus fonctionnalités ?</p>
+					<p>L'API Key vous permettra de sécuriser plus en profondeur votre site web en activant de nouvelles fonctionnalités.</p>
+				</div>
+				<div class="secupress-col-1-4 secupress-col-cta">
+					<a href="<?php echo esc_url( secupress_admin_url( 'settings' ) ); ?>" class="secupress-button secupress-button-primary button-secupress-get-api-key">
+						<span class="icon">
+							<i class="icon-key" aria-hidden="true"></i>
+						</span>
+						<span class="text">
+							<?php _e( 'Add API Key', 'secupress' ); ?>
+						</span>
+					</a>
+				</div>
+			</div><!-- .secupress-section-medium -->
+			<?php } ?>
+			
+			<div class="secupress-section-dark secupress-section-first-scan-todo hide-if-js" data-redirect="<?php echo esc_url( secupress_admin_url( 'scanners' ) ) ?>">
+				<?php secupress_print_scanner_header() ?>
+				<?php secupress_print_caroupoivre(); ?>
+			</div>
+
+		</div><!-- .secupress-wrapper -->
+	<?php endif; ?>
 	</div><!-- .wrap -->
 	<?php
 }

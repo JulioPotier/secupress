@@ -392,6 +392,11 @@
 	background: #222831;
 	color: #FFF;
 }
+.secupress-section-gray-dark,
+.secupress-bg-gray-dark {
+	background: #393E46;
+	color: #FFF;
+}
 .secupress-section-light,
 .secupress-bg-light {
 	background: #FFF;
@@ -830,6 +835,118 @@
 }
 
 /**
+ * === Other Form items
+ */
+[class^="secupress-"] input[type="text"],
+[class^="secupress-"] input[type="email"],
+[class^="secupress-"] input[type="password"],
+[class^="secupress-"] input[type="number"],
+[class^="secupress-"] input[type="tel"] {
+	border: 2px solid #ECF0F1;
+	font-size: 13px;
+	padding: 7px 10px;
+}
+
+/* Sweet alert childrens */
+.secupress-swal-form .secupress-block-label label {
+	display: block;
+	margin: 1em 0 0.5em;
+	color: #5A626F;
+	font-weight: bold;
+	font-size: 13px;
+}
+.secupress-swal-form .secupress-block-label {
+	text-align: left;
+}
+.secupress-swal-form i {
+	color: #26B3A9;
+	margin-right: 5px;
+}
+.secupress-block-label input {
+	width: 100%;
+}
+.secupress-swal-form {
+	width: 400px;
+	max-width: 100%;
+	margin: 0 auto;
+	text-align: left;
+}
+.secupress-swal-form h4 + .description {
+	display: block;
+	margin: -.33em 0 1em;
+	font-size: 1em;
+}
+.secupress-boxed-group,
+.secupress-scrollable {
+	max-height: 370px;
+	overflow-y: auto;
+}
+.secupress-boxed-group,
+.secupress-group {
+	margin-top: 1em;
+}
+.secupress-boxed-group {
+	max-height: 20em;
+	padding: 0 0 .2em .5em;
+	border: solid 1px #dfdfdf;
+}
+.secupress-swal-form .secupress-boxed-group {
+	max-height: 8.5em;
+}
+.secupress-boxed-group > legend,
+.secupress-group > legend {
+	margin-bottom: .5em;
+}
+.secupress-boxed-group > fieldset,
+.secupress-group > fieldset {
+	margin-left: .875em;
+}
+.secupress-boxed-group > li,
+.secupress-group > li {
+	margin: .6em .5em .4em 0;
+}
+.secupress-boxed-group > li + li,
+.secupress-group > li + li {
+	margin-top: .4em;
+}
+.secupress-boxed-group > .secupress-large-row,
+.secupress-group > .secupress-large-row {
+	margin: 4px .5em 0 0;
+}
+.secupress-boxed-group > .secupress-large-row + .secupress-large-row,
+.secupress-group > .secupress-large-row + .secupress-large-row {
+	padding-top: 4px;
+	border-top: 1px solid #ccc;
+}
+.secupress-swal-form .show-input ul {
+	margin-top: 0;
+}
+.secupress-swal-form label .more-info {
+	font-size: 13px;
+	font-style: italic;
+}
+
+/* Swal alternative styles */
+.secupress-swal-dark-header .sweet-icon {
+	display: none!important;
+}
+.secupress-swal-dark-header.secupress-swal-dark-header.secupress-swal h2 {
+	margin: -20px -20px 20px;
+	padding: 5px 55px 5px 20px;
+	text-align: left;
+	color: #FFF;
+	background: #222831;
+}
+.secupress-where-info.secupress-where-info {
+	margin-top: .5em;
+	text-align: left;
+}
+.secupress-where-info a {
+	vertical-align: 3px;
+	font-size: 11px;
+}
+
+/**
  * === Tabs
  */
 
@@ -1061,6 +1178,10 @@
 .secupress-settings-header {
 	padding: 20px 15px 20px;
 	border-radius: 3px 3px 0 0;
+}
+.secupress-flex .secupress-col-cta {
+	min-width: 280px;
+	text-align: right;
 }
 .secupress-logo-block p {
 	margin: 0;
@@ -1298,66 +1419,6 @@ pre code, pre samp, pre kbd {
 	border: none;
 	border-radius: 0;
 	background: none;
-}
-/**/
-.secupress-swal-form {
-	max-width: 400px;
-	margin: 0 auto;
-	text-align: left;
-}
-.secupress-swal-form h4 + .description {
-	display: block;
-	margin: -.33em 0 1em;
-	font-size: 1em;
-}
-.secupress-boxed-group,
-.secupress-scrollable {
-	max-height: 370px;
-	overflow-y: auto;
-}
-.secupress-boxed-group,
-.secupress-group {
-	margin-top: 1em;
-}
-.secupress-boxed-group {
-	max-height: 20em;
-	padding: 0 0 .2em .5em;
-	border: solid 1px #dfdfdf;
-}
-.secupress-swal-form .secupress-boxed-group {
-	max-height: 8.5em;
-}
-.secupress-boxed-group > legend,
-.secupress-group > legend {
-	margin-bottom: .5em;
-}
-.secupress-boxed-group > fieldset,
-.secupress-group > fieldset {
-	margin-left: .875em;
-}
-.secupress-boxed-group > li,
-.secupress-group > li {
-	margin: .6em .5em .4em 0;
-}
-.secupress-boxed-group > li + li,
-.secupress-group > li + li {
-	margin-top: .4em;
-}
-.secupress-boxed-group > .secupress-large-row,
-.secupress-group > .secupress-large-row {
-	margin: 4px .5em 0 0;
-}
-.secupress-boxed-group > .secupress-large-row + .secupress-large-row,
-.secupress-group > .secupress-large-row + .secupress-large-row {
-	padding-top: 4px;
-	border-top: 1px solid #ccc;
-}
-.secupress-swal-form .show-input ul {
-	margin-top: 0;
-}
-.secupress-swal-form label .more-info {
-	font-size: 13px;
-	font-style: italic;
 }
 /***/
 .secupress-inline-spinner {

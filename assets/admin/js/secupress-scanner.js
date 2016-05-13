@@ -293,33 +293,87 @@ jQuery( document ).ready( function( $ ) {
 			manualFix:    {}
 		};
 
+		// Complete the slideshow
+		function secupressAddCaroupoivrePagination() {
+			$sp_poivre = $('.secupress-caroupoivre');
+
+			$sp_poivre.each(function(){
+				if ( $(this).next('.secupress-caroupoivre-pagination').length === 0 ) {
+					var $this      = $(this),
+						nb_slides  = $this.find('.secupress-slide').length,
+						pagination =  '<div class="secupress-caroupoivre-pagination">';
+
+					for ( i = 0; i < nb_slides; i++ ) {
+						pagination += '<span class="secupress-dot"></span>';
+					}
+
+					pagination += '</div>';
+					$this.after( pagination );
+				}
+			});
+		}
+		secupressAddCaroupoivrePagination();
+
 		// Runs the Progressbar, 10 sec min.
-		function secupressRunProgressBar() {
-			$( ".secupress-progressbar, .secupress-caroupoivre" ).show();
+		function secupressRunProgressBar( $button ) {
+			var $sp_scanning = $( '.secupress-one-click-scanning' ),
+				$sp_poivre   = $( '.secupress-caroupoivre' ),
+				$pagination  = $( '.secupress-caroupoivre-pagination' ).find( '.secupress-dot' ),
+				is_first     = $button.closest( '.secupress-no-first-oneclickscan-yet' ).length;
+			
+			// if first of the first one click scan
+			if ( is_first ) {
+				// hide notices & show progress + slides
+				var $toscan = $( '.secupress-section-first-scan-todo' );
+				$toscan.allPrev().fadeOut( 200, function(){
+					$sp_scanning.show();
+					$toscan.fadeIn( 200 );
+				} );
+			}
+			else {
+				$( '.secupress-one-click-scanning' ).show();
+			}
+
 			var secupressProgressTimer = setInterval( function() {
 				secupressOneClickScanProgress++;
 
 				if ( secupressOneClickScanProgress >= 65 ) {
-					$( ".secupress-caroupoivre #slide2" ).hide();
-					$( ".secupress-caroupoivre #slide3" ).show();
+					$sp_poivre.find( '#slide2' ).hide();
+					$sp_poivre.find( '#slide3' ).fadeIn(275);
+					$pagination.removeClass('current').eq(2).addClass('current');
 				} else if ( secupressOneClickScanProgress >= 35 ) {
-					$( ".secupress-caroupoivre #slide1" ).hide();
-					$( ".secupress-caroupoivre #slide2" ).show();
+					$sp_poivre.find( '#slide1' ).hide();
+					$sp_poivre.find( '#slide2' ).fadeIn(275);
+					$pagination.removeClass('current').eq(1).addClass('current');
 				} else if ( secupressOneClickScanProgress >= 0 ) {
-					$( ".secupress-caroupoivre #slide1" ).show();
+					$sp_poivre.find( '#slide1' ).fadeIn(275);
+					$pagination.removeClass('current').eq(0).addClass('current');
 				}
 
+				// we are between 9 & 10s but SP still doing scan, stay at 90%
+				// Windows counting style!
 				if ( ! $.isEmptyObject( secupressScans.doingScan ) && secupressOneClickScanProgress > 90 && secupressOneClickScanProgress < 100 ) {
 					secupressOneClickScanProgress = 90;
 					return;
 				}
 
+
 				secupressOneClickScanProgress = Math.min( secupressOneClickScanProgress, 100 );
 
-				$( ".secupress-progressbar" ).find( "div" ).css( "width", secupressOneClickScanProgress * 5 ).parent().find( "span" ).text( secupressOneClickScanProgress + " %" ); //// *5 = 100 * 5 = 500 (px in my test)
+				$( '.secupress-progressbar' )
+					.find( '.secupress-progressbar-val' ).css( 'width', secupressOneClickScanProgress + '%' )
+					.find( '.secupress-progress-val-txt' ).text( secupressOneClickScanProgress + ' %' );
 
 				if ( secupressOneClickScanProgress >= 100 ) {
-					$( ".secupress-progressbar, .secupress-caroupoivre, .secupress-caroupoivre #slide3" ).hide( "slow" );
+					if ( is_first ) {
+						window.location.href = $('.secupress-section-first-scan-todo').data('redirect');
+					}
+					else {
+						// hide() slideshow
+						
+						// fadeIn stats
+						//$.fadeIn();
+					}
 					secupressOneClickScanProgress = 0;
 					clearInterval( secupressProgressTimer );
 				}
@@ -1022,7 +1076,7 @@ jQuery( document ).ready( function( $ ) {
 				// It's the "One Click Scan" button.
 				$this.attr( { "disabled": "disabled", "aria-disabled": true } );
 				$( ".secupress-scanit" ).trigger( "bulkscan.secupress" );
-				secupressRunProgressBar();
+				secupressRunProgressBar( $this );
 				return;
 			}
 
