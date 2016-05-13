@@ -113,6 +113,14 @@ jQuery( document ).ready( function( $ ) {
 		// Show/Hide the "New" tab.
 		if ( ! data.notscannedyet ) {
 			$( ".secupress-big-tab-notscannedyet, .secupress-chart-legend .status-notscannedyet" ).remove();
+
+			if ( data.bad ) {
+				$( ".secupress-big-tab-bad a" ).trigger("click");
+			} else if ( data.warning ) {
+				$( ".secupress-big-tab-warning a" ).trigger("click");
+			} else if ( data.good ) {
+				$( ".secupress-big-tab-good a" ).trigger("click");
+			}
 		} else {
 			$( ".secupress-count-notscannedyet" ).text( data.notscannedyet );
 		}
