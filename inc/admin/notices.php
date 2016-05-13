@@ -13,7 +13,11 @@ function secupress_plugins_to_deactivate() {
 	}
 
 	$plugins = array(
-		'wordfence/wordfence.php'
+		'wordfence/wordfence.php',
+		'better-wp-security/better-wp-security.php',
+		'all-in-one-wp-security-and-firewall/wp-security.php',
+		'bulletproof-security/bulletproof-security.php',
+		'sucuri-scanner/sucuri.php',
 	);
 
 	$plugins_to_deactivate = array_filter( $plugins, 'is_plugin_active' );
@@ -23,7 +27,7 @@ function secupress_plugins_to_deactivate() {
 	}
 
 	$message  = '<p>' . sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
-	$message .= __( 'The following plugins are not compatible with this plugin and may cause unexpected results:', 'secupress' );
+	$message .= __( 'The following plugins are not recommanded with this plugin and may cause unexpected results:', 'secupress' );
 	$message .= '</p><ul>';
 	foreach ( $plugins_to_deactivate as $plugin ) {
 		$plugin_data = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin );
