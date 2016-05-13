@@ -181,7 +181,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 									<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo<?php echo $suffix; ?>.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo<?php echo $suffix; ?>2x.svg 1x, <?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo<?php echo $suffix; ?>2x.svg 2x" alt="">
 								</div>
 								<div class="secupress-sh-name">
-									<p class="secupress-sh-title">SecuPress</p>
+									<p class="secupress-sh-title"><?php echo SECUPRESS_PLUGIN_NAME; ?></p>
 									<p class="secupress-sh-subtitle"><?php esc_html_e( 'the best security for WordPress', 'secupress' ); ?></p>
 								</div>
 							</div>
