@@ -99,12 +99,17 @@ $this->add_field( array(
 	'label_for'         => $this->get_field_name( 'only-one-connexion' ),
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
+	'disabled'          => version_compare( $GLOBALS['wp_version'], '4.0' ) < 0,
 	'value'             => (int) secupress_is_submodule_active( 'users-login', 'only-one-connexion' ),
 	'label'             => __( 'Yes, do not allow double connexions', 'secupress' ),
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
 			'description' => __( 'You will be able to force the disconnection of anyone or everyone when using the <b>Sessions Control</b> module below.', 'secupress' ),
+		),
+		array(
+			'type'        => 'warning',
+			'description' => __( 'This module requiert WordPress 4.0 minimum, please update now!', 'secupress' ),
 		),
 	),
 ) );
