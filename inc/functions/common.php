@@ -168,22 +168,32 @@ function secupress_get_scanner_counts( $type = '' ) {
 
 	$counts['notscannedyet'] = $total - array_sum( $counts );
 	$counts['total']         = $total;
-	$counts['percent']       = floor( $counts['good'] * 100 / $counts['total'] );
+	$counts['percent']       = (int) floor( $counts['good'] * 100 / $counts['total'] );
 
-	if ( $counts['percent'] >= 99 ) {
+	if ( 100 === $counts['percent'] ) {
 		$counts['grade'] = 'A';
-	} elseif ( $counts['percent'] >= 90 ) {
+	} elseif ( $counts['percent'] >= 80 ) { // 20 less
 		$counts['grade'] = 'B';
-	} elseif ( $counts['percent'] >= 80 ) {
+	} elseif ( $counts['percent'] >= 65 ) { // 15 less
 		$counts['grade'] = 'C';
-	} elseif ( $counts['percent'] >= 70 ) {
+	} elseif ( $counts['percent'] >= 52 ) { // 13 less
 		$counts['grade'] = 'D';
-	} elseif ( $counts['percent'] >= 60 ) {
+	} elseif ( $counts['percent'] >= 42 ) { // 10 less
 		$counts['grade'] = 'E';
-	} elseif ( 0 === $counts['percent'] ) {
+	} elseif ( $counts['percent'] >= 34 ) { // 8 less
+		$counts['grade'] = 'F';
+	} elseif ( $counts['percent'] >= 28 ) { // 6 less
+		$counts['grade'] = 'G';
+	} elseif ( $counts['percent'] >= 22 ) { // 6 less
+		$counts['grade'] = 'H';
+	} elseif ( $counts['percent'] >= 16 ) { // 6 less
+		$counts['grade'] = 'I';
+	} elseif ( $counts['percent'] >= 10 ) { // 6 less
+		$counts['grade'] = 'J';
+	} elseif ( 0 === $counts['percent'] ) { // (ᕗ‶⇀︹↼)ᕗノ彡┻━┻
 		$counts['grade'] = '∅';
 	} else {
-		$counts['grade'] = 'F';
+		$counts['grade'] = 'K'; // < 10 %
 	}
 
 	$counts['letter'] = '<span class="letter l' . $counts['grade'] . '">' . $counts['grade'] . '</span>';
@@ -202,10 +212,25 @@ function secupress_get_scanner_counts( $type = '' ) {
 			$counts['text'] = __( 'Well, it\'s not good yet.', 'secupress' );
 			break;
 		case 'E':
-			$counts['text'] = __( 'Not good at all, fix more things.', 'secupress' );
+			$counts['text'] = __( 'Better than nothing, but still not good.', 'secupress' );
 			break;
 		case 'F':
+			$counts['text'] = __( 'Not good at all, fix more things.', 'secupress' );
+			break;
+		case 'G':
+			$counts['text'] = __( 'Bad, do not hesitate to fix!', 'secupress' );
+			break;
+		case 'H':
 			$counts['text'] = __( 'Still very bad, start to fix things!', 'secupress' );
+			break;
+		case 'I':
+			$counts['text'] = __( 'Very bad. You should move on.', 'secupress' );
+			break;
+		case 'J':
+			$counts['text'] = __( 'Very very bad, please fix something!', 'secupress' );
+			break;
+		case 'K':
+			$counts['text'] = __( 'Very very, really very bad.', 'secupress' );
 			break;
 		case '∅':
 			$counts['text'] = '(ᕗ‶⇀︹↼)ᕗノ彡┻━┻'; // Easter egg if you got 0% (how is this possible oO).
