@@ -6,13 +6,13 @@ $this->add_section( __( 'WordPress Endpoints', 'secupress' ) );
 
 
 $this->add_field( array(
-	'title'        => __( 'XMLRPC', 'secupress' ),
-	'description'  => __( 'If you don\'t use the XMLRPC, you can disable it and avoid to be targeted if a vulnerability is discovered.', 'secupress' ),
+	'title'        => __( 'XML-RPC', 'secupress' ),
+	'description'  => __( 'If you don\'t use the XML-RPC, you can disable it and avoid to be targeted if a vulnerability is discovered.', 'secupress' ),
 	'name'         => $this->get_field_name( 'xmlrpc' ),
 	'type'         => 'radioboxes',
 	'value'        => ( secupress_is_submodule_active( 'sensitive-data', 'xmlrpc' ) ? null : array() ),
 	'options'      => array(
-		'block-all'   => __( '<strong>Disable all</strong> the features for XMLRPC', 'secupress' ),
+		'block-all'   => __( '<strong>Disable all</strong> the features for XML-RPC', 'secupress' ),
 		'block-multi' => __( '<strong>Only disable</strong> the multiple authentication attempts', 'secupress' ),
 	),
 ) );

@@ -410,6 +410,34 @@ function secupress_get_capability( $force_mono = false ) {
 
 
 /**
+ * Get SecuPress logo.
+ *
+ * @since 1.0
+ *
+ * @param (array) $atts An array of HTML attributes.
+ *
+ * @return (string) The HTML tag.
+ */
+function secupress_get_logo( $atts = array() ) {
+	$base_url = SECUPRESS_ADMIN_IMAGES_URL . 'logo' . ( secupress_is_pro() ? '-pro' : '' );
+
+	$atts = array_merge( array(
+		'src'    => "{$base_url}.png",
+		'srcset' => "{$base_url}2x.svg 1x, {$base_url}2x.svg 2x",
+		'alt'    => '',
+	), $atts );
+
+	$attributes = '';
+
+	foreach ( $atts as $att => $value ) {
+		$attributes .= " {$att}=\"{$value}\"";
+	}
+
+	return "<img{$attributes}/>";
+}
+
+
+/**
  * Tell if users can register, whatever we're in a Multisite or not.
  *
  * @since 1.0
@@ -667,7 +695,7 @@ function secupress_feature_is_pro( $feature ) {
 		'plugins_detect_bad_plugins'             => 1,
 		'themes_activation'                      => 1,
 		'themes_deletion'                        => 1,
-		'plugins_detect_bad_themes'              => 1,
+		'themes_detect_bad_themes'               => 1,
 		'uploads_uploads'                        => 1,
 		'page-protect_profile'                   => 1,
 		'page-protect_settings'                  => 1,
@@ -723,7 +751,10 @@ function secupress_modify_userid_for_nonces( $uid ) {
 function secupress_print_scanner_header() {
 ?>
 <div class="secupress-heading secupress-flex secupress-flex-spaced secupress-wrap">
-	<p class="secupress-text-medium"><?php esc_html_e( 'Welcome to SecuPress the best way to secure your website!', 'secupress' ); ?></p>
+	<p class="secupress-text-medium"><?php 
+		/* translators: %s is the plugin name */
+		printf( esc_html__( 'Welcome to %s the best way to secure your website!', 'secupress' ), SECUPRESS_PLUGIN_NAME );
+	?></p>
 	<p class="secupress-text-end hide-if-no-js">
 		<a href="#secupress-more-info" class="secupress-link-icon secupress-open-moreinfo" data-trigger="slidedown" data-target="secupress-more-info">
 			<span class="icon">

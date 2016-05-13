@@ -126,7 +126,7 @@ function secupress_init() {
 	require( SECUPRESS_INC_PATH . 'cron.php' );
 
 	// Last constants.
-	define( 'SECUPRESS_PLUGIN_NAME', secupress_get_option( 'wl_plugin_name', 'SecuPress' ) );
+	define( 'SECUPRESS_PLUGIN_NAME', esc_html( secupress_get_option( 'wl_plugin_name', 'SecuPress' ) ) );
 	define( 'SECUPRESS_PLUGIN_SLUG', sanitize_title( SECUPRESS_PLUGIN_NAME ) );
 
 	// The Singleton class.

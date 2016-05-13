@@ -6,6 +6,7 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 	<head>
 		<meta charset="<?php echo esc_attr( strtolower( get_bloginfo( 'charset' ) ) ); ?>" />
 		<title><?php esc_html_e( 'STOP', 'secupress' ); ?></title>
+		<meta content="noindex,nofollow" name="robots" />
 		<meta content="initial-scale=1.0" name="viewport" />
 	</head>
 	<body>

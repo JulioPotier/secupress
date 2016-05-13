@@ -191,19 +191,16 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 				 * Modules are included in the content of the page.
 				 */
 				if ( ! $is_welcome ) {
-					$type         = true ? 'free' : 'pro';
-					$suffix       = 'free' === $type ? '' : '-pro';
-					$version_free = sprintf( esc_html__( 'Free version %s', 'secupress' ), 'v' . SECUPRESS_VERSION );
-					$version_pro  = sprintf( esc_html__( 'Pro version %s', 'secupress' ), 'v' . SECUPRESS_VERSION ); // ////.
+					$suffix = secupress_is_pro() ? '' : '-pro';
 					?>
 					<div class="secupress-modules-sidebar">
 						<div class="secupress-sidebar-header">
 							<div class="secupress-flex">
 								<div class="secupress-sh-logo">
-									<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo<?php echo $suffix; ?>.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo<?php echo $suffix; ?>2x.svg 1x, <?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo<?php echo $suffix; ?>2x.svg 2x" alt="">
+									<?php echo secupress_get_logo(); ?>
 								</div>
 								<div class="secupress-sh-name">
-									<p class="secupress-sh-title">SecuPress</p>
+									<p class="secupress-sh-title"><?php echo SECUPRESS_PLUGIN_NAME; ?></p>
 									<p class="secupress-sh-subtitle"><?php esc_html_e( 'the best security for WordPress', 'secupress' ); ?></p>
 								</div>
 							</div>

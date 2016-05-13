@@ -180,6 +180,21 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	elseif ( 'secupress_page_secupress_logs' === $hook_suffix ) {
 		wp_enqueue_style( 'secupress-logs-css',  SECUPRESS_ADMIN_CSS_URL . 'secupress-logs' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 	}
+
+	// SecuPress version in footer.
+	add_filter( 'update_footer', '__secupress_print_version_number_in_footer', 12, 1 );
+}
+
+/**
+ * Add SecuPress version number next to WP version in footer
+ * 
+ * @since  1.0
+ * @author Geoffrey
+ *
+ * @param (string) $footer Text to print in footer.
+ */
+function __secupress_print_version_number_in_footer ( $footer ) {
+	echo ( $footer ? "$footer | " : '' ) . '<b>' . SECUPRESS_PLUGIN_NAME . ' v.' . SECUPRESS_VERSION . '</b>';
 }
 
 
@@ -334,7 +349,7 @@ function __secupress_scanners() {
 
 		<div class="secupress-wrapper">
 			<div class="secupress-section-dark">
-				
+
 				<?php secupress_print_scanner_header() ?>
 
 				<ul class="secupress-flex secupress-tabs secupress-light-tabs" role="tablist" data-content="#sp-tab-scans">
@@ -421,9 +436,15 @@ function __secupress_scanners() {
 								</p>
 
 								<div id="tweeterA" class="hidden">
-										<i><?php esc_html_e( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ); ?></i>
+										<i><?php
+											/* translators: %s is the plugin name */
+											printf( esc_html__( 'Wow! My website just got an A security grade using %s, what about yours?', 'secupress' ), SECUPRESS_PLUGIN_NAME );
+										?></i>
 
-										<a class="button button-small" href="https://twitter.com/intent/tweet?via=secupress&amp;url=<?php echo urlencode( esc_url_raw( 'http://secupress.fr&text=' . __( 'Wow! My website just got an A security grade using SecuPress, what about yours?', 'secupress' ) ) ); ?>">
+										<a class="button button-small" href="https://twitter.com/intent/tweet?via=secupress&amp;url=<?php
+											/* translators: %s is the plugin name */
+											echo urlencode( esc_url_raw( 'http://secupress.fr&text=' . sprintf( __( 'Wow! My website just got an A security grade using %s, what about yours?', 'secupress' ), SECUPRESS_PLUGIN_NAME ) ) );
+										?>">
 											<span class="icon"><span class="dashicons dashicons-twitter"></span></span>
 											<span class="text"><?php esc_html_e( 'Tweet that', 'secupress' ); ?></span>
 										</a>
@@ -961,16 +982,4 @@ function secupress_sidebox( $args ) {
 		echo '<h3 class="hndle"><span><b>' . $args['title'] . '</b></span></h3>';
 		echo'<div class="inside">' . $args['content'] . '</div>';
 	echo "</div>\n";
-}
-
-/**
- * Add SecuPress version number next to WP version in footer
- * 
- * @since  1.0
- *
- * @author Geoffrey
- */
-add_filter( 'update_footer', '_secupress_print_version_number_in_footer', 12, 1);
-function _secupress_print_version_number_in_footer ( $footer ) {
-	echo $footer . ( defined( 'SECUPRESS_VERSION' ) ? ' | <b>SecuPress v.' . SECUPRESS_VERSION . '</b>' : '' );
 }

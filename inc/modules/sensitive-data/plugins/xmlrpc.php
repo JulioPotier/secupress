@@ -20,19 +20,19 @@ function secupress_xmlrpc_disable_rpc() {
 	$options   = array_flip( $options );
 	$is_xmlrpc = defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST;
 
-	// Disable the whole XMLRPC feature.
+	// Disable the whole XML-RPC feature.
 	if ( isset( $options['block-all'] ) ) {
 
 		// Well, why not killing everything here?
 		if ( $is_xmlrpc ) {
 			secupress_die(
 				__( 'XML-RPC services are disabled on this site.' ), // WP i18n.
-				__( 'XMLRPC is disabled', 'secupress' ),
+				__( 'XML-RPC is disabled', 'secupress' ),
 				array( 'response' => 403 )
 			);
 		}
 
-		// Disable XMLRPC, just for decorum.
+		// Disable XML-RPC, just for decorum.
 		add_filter( 'xmlrpc_enabled', '__return_false' );
 
 		// Remove RSD link from the page header.
@@ -127,7 +127,7 @@ function secupress_xmlrpc_block_multiauth_attempts( $user, $username, $password 
 
 	secupress_die(
 		__( 'XML-RPC services are disabled on this site.' ), // WP i18n.
-		__( 'XMLRPC is disabled', 'secupress' ),
+		__( 'XML-RPC is disabled', 'secupress' ),
 		array( 'response' => 403 )
 	);
 }
