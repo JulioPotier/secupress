@@ -2,7 +2,7 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /*------------------------------------------------------------------------------------------------*/
-/* CSS, JS ====================================================================================== */
+/* CSS, JS, FOOTER ============================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
 add_action( 'admin_enqueue_scripts', '__secupress_add_settings_scripts' );
@@ -185,6 +185,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	add_filter( 'update_footer', '__secupress_print_version_number_in_footer', 12, 1 );
 }
 
+
 /**
  * Add SecuPress version number next to WP version in footer
  * 
@@ -193,7 +194,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
  *
  * @param (string) $footer Text to print in footer.
  */
-function __secupress_print_version_number_in_footer ( $footer ) {
+function __secupress_print_version_number_in_footer( $footer ) {
 	echo ( $footer ? "$footer | " : '' ) . '<b>' . SECUPRESS_PLUGIN_NAME . ' v.' . SECUPRESS_VERSION . '</b>';
 }
 
