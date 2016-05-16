@@ -300,7 +300,7 @@ jQuery( document ).ready( function( $ ) {
 			$sp_poivre.each(function(){
 				if ( $(this).next('.secupress-caroupoivre-pagination').length === 0 ) {
 					var $this      = $(this),
-						nb_slides  = $this.find('.secupress-slide').length,
+						nb_slides  = $this.find('.secupress-slide[id]').length,
 						pagination =  '<div class="secupress-caroupoivre-pagination">';
 
 					for ( i = 0; i < nb_slides; i++ ) {
@@ -323,30 +323,32 @@ jQuery( document ).ready( function( $ ) {
 			
 			// if first of the first one click scan
 			if ( is_first ) {
-				// hide notices & show progress + slides
-				var $toscan = $( '.secupress-section-first-scan-todo' );
-				$toscan.allPrev().fadeOut( 200, function(){
-					$sp_scanning.show();
-					$toscan.fadeIn( 200 );
+				// information about first scan & show progress + slides
+				$( '.secupress-before-caroupoivre' ).fadeOut( 200, function(){
+					$sp_scanning.fadeIn( 200 );
 				} );
 			}
 			else {
-				$( '.secupress-one-click-scanning' ).show();
+				// TODO: not the first scan
+				// hide things and show caroupoivre
+				$sp_scanning.show();
 			}
+
+			$sp_poivre.find('.secupress-slide').hide();
+			$random_slide = $('.secupress-slide-' + Math.floor((Math.random() * 2) + 1) ).html();
+			$sp_poivre.find('#secupress-slide1').html( $random_slide );
 
 			var secupressProgressTimer = setInterval( function() {
 				secupressOneClickScanProgress++;
 
-				if ( secupressOneClickScanProgress >= 65 ) {
-					$sp_poivre.find( '#slide2' ).hide();
-					$sp_poivre.find( '#slide3' ).fadeIn(275);
-					$pagination.removeClass('current').eq(2).addClass('current');
-				} else if ( secupressOneClickScanProgress >= 35 ) {
-					$sp_poivre.find( '#slide1' ).hide();
-					$sp_poivre.find( '#slide2' ).fadeIn(275);
-					$pagination.removeClass('current').eq(1).addClass('current');
+				if ( secupressOneClickScanProgress >= 55 ) {
+					if ( ! $sp_poivre.find( '#secupress-slide2' ).is(":visible") ) {
+						$sp_poivre.find( '#secupress-slide1' ).hide();
+						$sp_poivre.find( '#secupress-slide2' ).fadeIn( 275 );
+						$pagination.removeClass('current').eq(1).addClass('current');
+					}
 				} else if ( secupressOneClickScanProgress >= 0 ) {
-					$sp_poivre.find( '#slide1' ).fadeIn(275);
+					$sp_poivre.find( '#secupress-slide1' ).fadeIn( 275 );
 					$pagination.removeClass('current').eq(0).addClass('current');
 				}
 
@@ -369,6 +371,7 @@ jQuery( document ).ready( function( $ ) {
 						window.location.href = $('.secupress-section-first-scan-todo').data('redirect');
 					}
 					else {
+						// TODO
 						// hide() slideshow
 						
 						// fadeIn stats

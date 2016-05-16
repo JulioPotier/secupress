@@ -826,25 +826,29 @@ function secupress_print_caroupoivre() {
 ?>
 <div class="secupress-one-click-scanning hidden">
 	<div class="secupress-caroupoivre">
-		<div id="secupress-slide1" class="secupress-slide">
-			<h3 class="slide-title"><?php _e( 'Sécurisez votre site WordPress simplement', 'secupress' ); ?></h3>
-			<p class="slide-text"><?php _e( 'En un écran, visualisez les points de sécurité Bons ou Mauvais et utilisez le bouton <strong>One Click Fix</strong> pour les corriger rapidement.', 'secupress' ); ?></p>
-		</div>
-		<div id="secupress-slide2" class="secupress-slide">
-			<h3 class="slide-title"><?php _e( 'Une gamme de modules à votre service', 'secupress' ); ?></h3>
-			<p><?php _e( 'Allez plus loin dans la sécurisation de votre site avec nos modules et activez les fonctionnalités complémentaires.', 'secupress' ); ?></p>
-		</div>
+		<div id="secupress-slide1" class="secupress-slide"></div>
+
 		<?php if ( ! secupress_is_pro() ) : // Trad fr + wording ////. ?>
-		<div id="secupress-slide3" class="secupress-slide">
+		<div id="secupress-slide2" class="secupress-slide secupress-slide-pro">
 			<h3 class="slide-title"><?php _e( 'Passez à la version pro', 'secupress' ); ?></h3>
 			<p class="slide-text"><?php _e( 'Support premium, accès à tous les modules, lorem ipsum.', 'secupress' ); ?></p>
 		</div>
 		<?php else : ?>
-		<div id="secupress-slide3" class="secupress-slide">
+		<div id="secupress-slide2" class="secupress-slide secupress-slide-pro">
 			<h3 class="slide-title"><?php _e( 'Programmez vos analyses de sécurité', 'secupress' ); ?></h3>
 			<p class="slide-text"><?php _e( 'L\'analyse des points reste à jour, sans vous connectez au back office avec le scan automatique.', 'secupress' ); ?></p>
 		</div>
 		<?php endif; ?>
+		
+		<!-- Available slides, random picked in JS -->
+		<div class="secupress-slide secupress-slide-1">
+			<h3 class="slide-title"><?php _e( 'Une gamme de modules à votre service', 'secupress' ); ?></h3>
+			<p><?php _e( 'Allez plus loin dans la sécurisation de votre site avec nos modules et activez les fonctionnalités complémentaires.', 'secupress' ); ?></p>
+		</div>
+		<div class="secupress-slide secupress-slide-2">
+			<h3 class="slide-title"><?php _e( 'Sécurisez votre site WordPress simplement', 'secupress' ); ?></h3>
+			<p class="slide-text"><?php _e( 'En un écran, visualisez les points de sécurité Bons ou Mauvais et utilisez le bouton <strong>One Click Fix</strong> pour les corriger rapidement.', 'secupress' ); ?></p>
+		</div>
 	</div><!-- .secupress-caroupoivre -->
 
 	<div class="secupress-progressbar">
