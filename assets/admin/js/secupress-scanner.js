@@ -1009,11 +1009,13 @@ jQuery( document ).ready( function( $ ) {
 			swal( $.extend( {}, SecuPress.swalDefaults, SecuPress.swalConfirmDefaults, {
 				title:             SecuPressi18nScanner.fixDetails,
 				confirmButtonText: SecuPressi18nScanner.fixit,
+				reverseButtons:    true,
 				html:              $( "#details-fix-" + test ).find( ".details-content" ).html(),
 				type:              "info"
 			} ) ).then( function ( isConfirm ) {
 				if ( isConfirm ) {
 					$( "#" + test ).find( ".secupress-fixit" ).trigger( "click.secupress" );
+					swal.close();
 				}
 			} );
 		} );
