@@ -1249,7 +1249,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	}
 
 	/**
-	 * Displays the old backups
+	 * Displays the old backups.
 	 *
 	 * @since 1.0
 	 */
@@ -1286,31 +1286,28 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 
 	/**
-	 * Displays the files backups and the CTA to launch one
+	 * Displays the files backups and the button to launch one.
 	 *
 	 * @since 1.0
 	 */
 	protected function backup_files() {
-		// //// Create an option so save when we launch a backup, see pro version.
-		$ignored_directories  = str_replace( ABSPATH, '', WP_CONTENT_DIR . '/cache/' ) . "\n";
-		$ignored_directories .= str_replace( ABSPATH, '', WP_CONTENT_DIR . '/backups/' );
+		$disabled            = disabled( ! secupress_is_pro(), true, false );
+		$ignored_directories = get_site_option( 'secupress_file-backups_settings' );
+		$ignored_directories = ! empty( $ignored_directories['ignored_directories'] ) ? $ignored_directories['ignored_directories'] : '';
 		?>
 		<form action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_backup_files' ), 'secupress_backup_files' ) ); ?>" id="form-do-files-backup" method="post">
 
 			<fieldset>
-				<legend><strong><?php _e( 'Do not backup the following folders', 'secupress' ); ?></strong></legend>
+				<legend><strong><?php _e( 'Do not backup the following folders:', 'secupress' ); ?></strong></legend>
 				<br>
-				<textarea name="ignored_directories"<?php disabled( ! secupress_is_pro() ); ?>><?php echo $ignored_directories; ?></textarea>
+				<textarea name="ignored_directories" cols="50" rows="5"<?php echo $disabled; ?>><?php echo esc_textarea( $ignored_directories ); ?></textarea>
 				<p class="description">
 					<?php _e( 'One folder per line.', 'secupress' ); ?>
 				</p>
 			</fieldset>
 
 			<p class="submit">
-			<?php
-				$disabled = ! secupress_is_pro() ? ' disabled="disabled"' : '';
-			?>
-				<button class="secupress-button secupress-button-primary alignright" type="submit" data-original-i18n="<?php echo esc_attr( __( 'Backup my Files', 'secupress' ) ); ?>" data-loading-i18n="<?php echo esc_attr( __( 'Backuping &hellip;', 'secupress' ) ); ?>" id="submit-backup-files"<?php echo $disabled; ?>>
+				<button class="secupress-button secupress-button-primary alignright" type="submit" data-original-i18n="<?php esc_attr_e( 'Backup my Files', 'secupress' ); ?>" data-loading-i18n="<?php esc_attr_e( 'Backuping &hellip;', 'secupress' ); ?>" id="submit-backup-files"<?php echo $disabled; ?>>
 					<span class="icon">
 						<i class="icon-download"></i>
 					</span>
