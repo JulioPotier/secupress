@@ -253,6 +253,7 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 		self::$done_css = true;
 
 		wp_enqueue_style( 'secupress-notices', SECUPRESS_ADMIN_CSS_URL . 'secupress-notices' . self::$suffix . '.css', array(), self::$version );
+		wp_enqueue_style( 'secupress-common-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-common' . self::$suffix . '.css', array(), self::$version );
 	}
 
 
