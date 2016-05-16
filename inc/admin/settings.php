@@ -539,52 +539,24 @@ function __secupress_scanners() {
 
 	<?php else:	?>
 		<div class="secupress-wrapper secupress-no-first-oneclickscan-yet">
-			
-			<div class="secupress-section-dark secupress-settings-header secupress-flex">
-				<div class="secupress-col-1-4 secupress-col-logo secupress-text-center">
-					<div class="secupress-logo-block">
-						<div class="secupress-lb-logo">
-							<img width="170" alt="" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo2x.svg 1x, <?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo2x.svg 2x" src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo.png">
-						</div>
-					</div>
-				</div>
-				<div class="secupress-col-2-4 secupress-col-text">
-					<p class="secupress-text-medium">Le plugin SecuPress est activé,  occupons-nous de la sécurité de votre site</p>
-					<p>Lancez maintenant la vérification des points de sécurité</p>
-				</div>
-				<div class="secupress-col-1-4 secupress-col-cta">
-					<button class="secupress-button secupress-button-primary button-secupress-scan" type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ); ?>">
-						<span class="icon">
-							<i class="icon-radar" aria-hidden="true"></i>
-						</span>
-						<span class="text">
-							<?php esc_html_e( 'Scan my website', 'secupress' ); ?>
-						</span>
-					</button>
-				</div>
-			</div><!-- .secupress-section-dark -->
-			<?php if ( ! secupress_get_consumer_email() ) { ?>
-			<div class="secupress-section-gray-dark secupress-flex">
-				<div class="secupress-col-1-4 secupress-col-logo"></div>
-				<div class="secupress-col-2-4 secupress-col-text">
-					<p class="secupress-text-medium">Allez plus loin et avoir plus fonctionnalités ?</p>
-					<p>L'API Key vous permettra de sécuriser plus en profondeur votre site web en activant de nouvelles fonctionnalités.</p>
-				</div>
-				<div class="secupress-col-1-4 secupress-col-cta">
-					<a href="<?php echo esc_url( secupress_admin_url( 'settings' ) ); ?>" class="secupress-button secupress-button-primary button-secupress-get-api-key">
-						<span class="icon">
-							<i class="icon-key" aria-hidden="true"></i>
-						</span>
-						<span class="text">
-							<?php _e( 'Add API Key', 'secupress' ); ?>
-						</span>
-					</a>
-				</div>
-			</div><!-- .secupress-section-medium -->
-			<?php } ?>
-			
-			<div class="secupress-section-dark secupress-section-first-scan-todo hide-if-js" data-redirect="<?php echo esc_url( secupress_admin_url( 'scanners' ) ) ?>">
+			<div class="secupress-section-dark secupress-section-first-scan-todo" data-redirect="<?php echo esc_url( secupress_admin_url( 'scanners' ) ) ?>">
 				<?php secupress_print_scanner_header() ?>
+				<div class="secupress-before-caroupoivre">
+					<h3><?php esc_html_e( 'To begin, start your first scan', 'secupress' ); ?></h3>
+					<p><?php esc_html_e( 'It\'s easy, just click on the button below.', 'secupress' ); ?></p>
+
+					<p class="secupress-start-one-click-scan">
+						<a class="button-secupress-scan secupress-button secupress-button-primary" href="<?php echo esc_url( wp_nonce_url( secupress_admin_url( 'scanners' ), 'first_oneclick-scan' ) ) . '&oneclick-scan=1'; ?>">
+							<span class="icon">
+								<i class="icon-radar" aria-hidden="true"></i>
+							</span>
+							<span class="text">
+								<?php esc_html_e( 'One Click Scan', 'secupress' ); ?>
+							</span>
+						</a>
+					</p>
+				</div>
+
 				<?php secupress_print_caroupoivre(); ?>
 			</div>
 

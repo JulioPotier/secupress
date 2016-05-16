@@ -1,5 +1,45 @@
 @charset "UTF-8";
 
+.secupress-notice.secupress-flex {
+	padding: 10px 20px;
+	clear: both;
+	margin-right: 20px;
+}
+.secupress-notice.mini {
+	padding: 5px 20px;
+}
+[id="screen-meta-links"] + .secupress-notice.secupress-flex {
+	margin-top: 35px;
+}
+.secupress-notice .secupress-col-logo {
+	-webkit-flex-basis: 15%;
+	-ms-flex-preferred-size: 15%;
+	flex-basis: 15%;
+}
+.secupress-notice .secupress-col-icon {
+	-webkit-flex-basis: 5%;
+	-ms-flex-preferred-size: 5%;
+	flex-basis: 5%;
+	font-size: 30px;
+	text-align: center;
+	color: #5A626F;
+	color: rgba(255,255,255,.25);
+}
+.secupress-notice .secupress-text-medium + p {
+	margin-top: -10px;
+	margin-bottom: 25px;
+}
+.secupress-notice.mini p {
+	margin: .5em 0;
+}
+.secupress-notice.mini  .secupress-text-medium + p {
+	margin-top: -5px;
+	margin-bottom: 15px;
+}
+.secupress-lb-logo {
+	line-height: 0;
+}
+
 .wp-core-ui .notice.secupress-is-dismissible {
 	position: relative;
 	padding-right: 38px;
@@ -7,7 +47,6 @@
 .secupress-notice a.notice-dismiss {
 	text-decoration: none;
 }
-
 .secupress-compat-notice .notice-dismiss {
 	position: absolute;
 	top: 0;
@@ -21,7 +60,6 @@
 }
 .secupress-compat-notice .notice-dismiss:focus {
 	outline: none;
-	-webkit-box-shadow: 0 0 0 1px #5b9dd9, 0 0 2px 1px rgba(30, 140, 190, .8);
 	box-shadow: 0 0 0 1px #5b9dd9, 0 0 2px 1px rgba(30, 140, 190, .8);
 }
 .ie8 .secupress-compat-notice .notice-dismiss:focus {
