@@ -416,12 +416,12 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	}
 
 	function secupressUpdateBackupVisibility() {
-		if ( 0 === $( "#form-delete-db-backups" ).find( ".secupress-large-row" ).length ) {
-			$( "#form-delete-db-backups" ).hide();
-			$( "#secupress-no-db-backups" ).show();
+		if ( 0 === $( "#form-delete-backups" ).find( ".secupress-large-row" ).length ) {
+			$( "#form-delete-backups" ).hide();
+			$( "#secupress-no-backups" ).show();
 		} else {
-			$( "#secupress-no-db-backups" ).hide();
-			$( "#form-delete-db-backups" ).show();
+			$( "#secupress-no-backups" ).hide();
+			$( "#form-delete-backups" ).show();
 		}
 	}
 
@@ -431,9 +431,13 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 
 		$.getJSON( href )
 		.done( function( r ) {
+			var $fieldset, $legend;
+
 			if ( $.isPlainObject( r ) && r.success ) {
 				swal.close();
-				$button.closest( "form" ).find( "fieldset" ).text( "" );
+				$fieldset = $button.closest( "form" ).find( "fieldset" );
+				$legend   = $fieldset.children( "legend" );
+				$fieldset.text( "" ).prepend( $legend );
 
 				secupressUpdateBackupVisibility();
 				secupressEnableAjaxButton( $button, SecuPressi18nModules.deletedAllText, "backup" );
@@ -446,7 +450,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		} );
 	}
 
-	// Delete a backup.
+	// Delete one backup.
 	function secupressDeleteOneBackup( $button, href ) {
 		secupressDisableAjaxButton( $button, SecuPressi18nModules.deletingOneText, "backup" );
 
@@ -482,7 +486,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		$.post( href )
 		.done( function( r ) {
 			if ( $.isPlainObject( r ) && r.success ) {
-				$( r.data.elemRow ).addClass( "hidden" ).css( "backgroundColor", SecuPress.addedRowColor ).prependTo( "#form-delete-db-backups fieldset" ).show( "normal", function() {
+				$( r.data.elemRow ).addClass( "hidden" ).css( "backgroundColor", SecuPress.addedRowColor ).insertAfter( "#form-delete-backups legend" ).show( "normal", function() {
 					$( this ).css( "backgroundColor", "" );
 				} );
 
@@ -498,8 +502,32 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		} );
 	}
 
+	// Do a files backup.
+	function secupressDoFilesBackup( $button, href ) {
+		secupressDisableAjaxButton( $button, SecuPressi18nModules.backupingText, 'backup' );
+
+		$.post( href, $button.closest( "form" ).serializeArray() )
+		.done( function( r ) {
+			if ( $.isPlainObject( r ) && r.success ) {
+				$( r.data.elemRow ).addClass( "hidden" ).css( "backgroundColor", SecuPress.addedRowColor ).insertAfter( "#form-delete-backups legend" ).show( "normal", function() {
+					$( this ).css( "backgroundColor", "" );
+				} );
+
+				secupressUpdateAvailableBackupCounter( r );
+				secupressUpdateBackupVisibility();
+				$( "#ignored_directories" ).val( r.data.ignoredFiles );
+				secupressEnableAjaxButton( $button, SecuPressi18nModules.backupedText, "backup" );
+			} else {
+				secupressDisplayAjaxError( $button, SecuPressi18nModules.backupImpossible, "backup" );
+			}
+		} )
+		.fail( function() {
+			secupressDisplayAjaxError( $button, null, "backup" );
+		} );
+	}
+
 	// Ajax call that delete all backups.
-	$( "#submit-delete-db-backups" ).on( "click.secupress", function( e ) {
+	$( "#submit-delete-backups" ).on( "click.secupress", function( e ) {
 		var $this = $( this ),
 			href  = secupressPreAjaxCall( $this.closest( "form" ).attr( "action" ), e );
 
@@ -549,13 +577,23 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		}
 	} );
 
-	// Ajax call that do a Backup.
+	// Ajax call that does a DB Backup.
 	$( "#submit-backup-db" ).on( "click.secupress", function( e ) {
 		var $this = $( this ),
 			href  = secupressPreAjaxCall( $this.closest( "form" ).attr( "action" ), e );
 
 		if ( href ) {
 			secupressDoDbBackup( $this, href );
+		}
+	} ).removeAttr( 'disabled aria-disabled' );
+
+	// Ajax call that does a files Backup.
+	$( "#submit-backup-files" ).on( "click.secupress", function( e ) {
+		var $this = $( this ),
+			href  = secupressPreAjaxCall( $this.closest( "form" ).attr( "action" ), e );
+
+		if ( href ) {
+			secupressDoFilesBackup( $this, href );
 		}
 	} ).removeAttr( 'disabled aria-disabled' );
 

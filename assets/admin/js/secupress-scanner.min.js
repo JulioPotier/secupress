@@ -113,6 +113,14 @@ jQuery( document ).ready( function( $ ) {
 		// Show/Hide the "New" tab.
 		if ( ! data.notscannedyet ) {
 			$( ".secupress-big-tab-notscannedyet, .secupress-chart-legend .status-notscannedyet" ).remove();
+
+			if ( data.bad ) {
+				$( ".secupress-big-tab-bad a" ).trigger("click");
+			} else if ( data.warning ) {
+				$( ".secupress-big-tab-warning a" ).trigger("click");
+			} else if ( data.good ) {
+				$( ".secupress-big-tab-good a" ).trigger("click");
+			}
 		} else {
 			$( ".secupress-count-notscannedyet" ).text( data.notscannedyet );
 		}
@@ -918,7 +926,7 @@ jQuery( document ).ready( function( $ ) {
 			* Available extras:
 			* extra.isBulk: tell if it's a bulk scan.
 			*/
-			var $button = $( ".button-secupress-scan" ),
+			var $button = $( '.button-secupress-scan' ).last(),
 				params;
 
 			// Update counters.
@@ -1062,11 +1070,13 @@ jQuery( document ).ready( function( $ ) {
 			swal( $.extend( {}, SecuPress.swalDefaults, SecuPress.swalConfirmDefaults, {
 				title:             SecuPressi18nScanner.fixDetails,
 				confirmButtonText: SecuPressi18nScanner.fixit,
+				reverseButtons:    true,
 				html:              $( "#details-fix-" + test ).find( ".details-content" ).html(),
 				type:              "info"
 			} ) ).then( function ( isConfirm ) {
 				if ( isConfirm ) {
 					$( "#" + test ).find( ".secupress-fixit" ).trigger( "click.secupress" );
+					swal.close();
 				}
 			} );
 		} );

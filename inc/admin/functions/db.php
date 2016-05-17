@@ -148,7 +148,7 @@ function secupress_get_wp_tables() {
  *
  * @since 1.0
  *
- * @return (array) An array of DB tables.
+ * @return (string) A filename.
  */
 function secupress_get_db_backup_filename() {
 	global $wpdb;

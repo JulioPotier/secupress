@@ -261,15 +261,6 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$actions .= '<button type="button" id="affected-role-' . $i . '" class="hide-if-no-js no-button button-actions-title">' . __( 'Roles', 'secupress' ) . ' <span class="dashicons dashicons-arrow-right" aria-hidden="true"></span></button>';
 		}
 
-		/**
-		 * Fires before a section.
-		 *
-		 * @since 1.0
-		 *
-		 * @param (bool) $with_save_button True if a "Save All Changes" button will be printed.
-		 */
-		do_action( 'secupress.settings.before_section_' . $this->sectionnow, (bool) $args['with_save_button'] );
-
 		add_settings_section(
 			$section_id,
 			$title . $actions,
@@ -327,6 +318,16 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		$with_save_button = ! empty( $this->section_save_buttons[ $section_id ] );
 
 		echo '<div class="secupress-settings-section" id="secupress-settings-' . $html_id . '">';
+
+		/**
+		 * Fires before a section.
+		 *
+		 * @since 1.0
+		 *
+		 * @param (bool) $with_save_button True if a "Save All Changes" button will be printed.
+		 */
+		do_action( 'secupress.settings.before_section_' . $this->sectionnow, $with_save_button );
+
 		echo '<div class="secublock">';
 			$this->do_settings_sections();
 		echo '</div><!-- .secublock -->';
@@ -1205,6 +1206,41 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 
 	/**
+	 * Displays the old backups.
+	 *
+	 * @since 1.0
+	 */
+	protected function backup_history() {
+		$backup_files = secupress_get_backup_file_list();
+		?>
+		<p id="secupress-no-backups"<?php echo $backup_files ? ' class="hidden"' : ''; ?>><em><?php _e( 'No Backups found yet, do one?', 'secupress' ); ?></em></p>
+
+		<form id="form-delete-backups"<?php echo ! $backup_files ? ' class="hidden"' : ''; ?> action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_delete_backups' ), 'secupress_delete_backups' ) ); ?>" method="post">
+
+			<strong id="secupress-available-backups"><?php printf( _n( '%s available Backup', '%s available Backups', count( $backup_files ), 'secupress' ), number_format_i18n( count( $backup_files ) ) ); ?></strong>
+
+			<fieldset class="secupress-boxed-group">
+				<legend class="screen-reader-text"><span><?php esc_html_e( 'Backups', 'secupress' ); ?></span></legend>
+				<?php array_map( 'secupress_print_backup_file_formated', array_reverse( $backup_files ) ); ?>
+			</fieldset>
+
+			<p class="submit">
+				<button class="secupress-button secupress-button-secondary alignright" type="submit" id="submit-delete-backups">
+					<span class="icon">
+						<i class="icon-cross"></i>
+					</span>
+					<span class="text">
+						<?php esc_html_e( 'Delete all Backups', 'secupress' ); ?>
+					</span>
+				</button>
+			</p>
+
+		</form>
+		<?php
+	}
+
+
+	/**
 	 * Displays the tables to launch a backup
 	 *
 	 * @since 1.0
@@ -1214,6 +1250,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		$other_tables = secupress_get_non_wp_tables();
 		?>
 		<form action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_backup_db' ), 'secupress_backup_db' ) ); ?>" id="form-do-db-backup" method="post">
+
 			<fieldset class="secupress-boxed-group">
 				<legend class="screen-reader-text"><span><?php esc_html_e( 'DataBase Tables', 'secupress' ); ?></span></legend>
 
@@ -1233,6 +1270,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				}
 				?>
 			</fieldset>
+
 			<p class="submit">
 				<button class="secupress-button secupress-button-primary alignright" type="submit" data-original-i18n="<?php esc_attr_e( 'Backup my Database', 'secupress' ); ?>" data-loading-i18n="<?php esc_attr_e( 'Backuping&hellip;', 'secupress' ); ?>" id="submit-backup-db">
 					<span class="icon">
@@ -1244,41 +1282,6 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				</button>
 				<span class="spinner secupress-inline-spinner"></span>
 			</p>
-		</form>
-		<?php
-	}
-
-	/**
-	 * Displays the old backups
-	 *
-	 * @since 1.0
-	 */
-	protected function backup_history() {
-		$backup_files = secupress_get_backup_file_list();
-		$wp_tables    = secupress_get_wp_tables();
-		$other_tables = secupress_get_non_wp_tables();
-		?>
-		<p id="secupress-no-db-backups"<?php echo $backup_files ? ' class="hidden"' : ''; ?>><em><?php _e( 'No Backups found yet, do one?', 'secupress' ); ?></em></p>
-
-		<form id="form-delete-db-backups"<?php echo ! $backup_files ? ' class="hidden"' : ''; ?> action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_delete_backups' ), 'secupress_delete_backups' ) ); ?>" method="post">
-
-			<strong id="secupress-available-backups"><?php printf( _n( '%s available Backup', '%s available Backups', count( $backup_files ), 'secupress' ), number_format_i18n( count( $backup_files ) ) ); ?></strong>
-
-			<fieldset class="secupress-boxed-group">
-				<legend class="screen-reader-text"><span><?php esc_html_e( 'Backups', 'secupress' ); ?></span></legend>
-				<?php array_map( 'secupress_print_backup_file_formated', array_reverse( $backup_files ) ); ?>
-			</fieldset>
-
-			<p class="submit">
-				<button class="secupress-button secupress-button-secondary alignright" type="submit" id="submit-delete-db-backups">
-					<span class="icon">
-						<i class="icon-cross"></i>
-					</span>
-					<span class="text">
-						<?php esc_html_e( 'Delete all Database Backups', 'secupress' ); ?>
-					</span>
-				</button>
-			</p>
 
 		</form>
 		<?php
@@ -1286,31 +1289,28 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 
 	/**
-	 * Displays the files backups and the CTA to launch one
+	 * Displays the files backups and the button to launch one.
 	 *
 	 * @since 1.0
 	 */
 	protected function backup_files() {
-		// //// Create an option so save when we launch a backup, see pro version.
-		$ignored_directories  = str_replace( ABSPATH, '', WP_CONTENT_DIR . '/cache/' ) . "\n";
-		$ignored_directories .= str_replace( ABSPATH, '', WP_CONTENT_DIR . '/backups/' );
+		$disabled            = disabled( ! secupress_is_pro(), true, false );
+		$ignored_directories = get_site_option( 'secupress_file-backups_settings' );
+		$ignored_directories = ! empty( $ignored_directories['ignored_directories'] ) ? $ignored_directories['ignored_directories'] : '';
 		?>
 		<form action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_backup_files' ), 'secupress_backup_files' ) ); ?>" id="form-do-files-backup" method="post">
 
 			<fieldset>
-				<legend><strong><?php _e( 'Do not backup the following folders', 'secupress' ); ?></strong></legend>
+				<legend><strong><label for="ignored_directories"><?php _e( 'Do not backup the following files and folders:', 'secupress' ); ?></label></strong></legend>
 				<br>
-				<textarea name="ignored_directories"<?php disabled( ! secupress_is_pro() ); ?>><?php echo $ignored_directories; ?></textarea>
+				<textarea id="ignored_directories" name="ignored_directories" cols="50" rows="5"<?php echo $disabled; ?>><?php echo esc_textarea( $ignored_directories ); ?></textarea>
 				<p class="description">
-					<?php _e( 'One folder per line.', 'secupress' ); ?>
+					<?php _e( 'One file or folder per line.', 'secupress' ); ?>
 				</p>
 			</fieldset>
 
 			<p class="submit">
-			<?php
-				$disabled = ! secupress_is_pro() ? ' disabled="disabled"' : '';
-			?>
-				<button class="secupress-button secupress-button-primary alignright" type="submit" data-original-i18n="<?php echo esc_attr( __( 'Backup my Files', 'secupress' ) ); ?>" data-loading-i18n="<?php echo esc_attr( __( 'Backuping &hellip;', 'secupress' ) ); ?>" id="submit-backup-files"<?php echo $disabled; ?>>
+				<button class="secupress-button secupress-button-primary alignright" type="submit" data-original-i18n="<?php esc_attr_e( 'Backup my Files', 'secupress' ); ?>" data-loading-i18n="<?php esc_attr_e( 'Backuping&hellip;', 'secupress' ); ?>" id="submit-backup-files"<?php echo $disabled; ?>>
 					<span class="icon">
 						<i class="icon-download"></i>
 					</span>

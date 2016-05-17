@@ -333,10 +333,10 @@ function __secupress_scanners() {
 			$last_pc = $time['percent'];
 
 			$reports[] = sprintf(
-				'<li data-percent="%1$d"><span class="dashicons mini dashicons-arrow-%2$s-alt2" aria-hidden="true"></span><strong>%3$s (%1$d %%)</strong> <span class="timeago">%4$s</span></li>',
+				'<li data-percent="%1$d"><span class="dashicons mini dashicons-arrow-%2$s-alt2" aria-hidden="true"></span><strong>%3$s</strong> &mdash; <span class="timeago">%4$s</span></li>',
 				$time['percent'],
 				$icon,
-				$time['grade'],
+				sprintf( __( 'Grade %s', 'secupress' ), $time['grade'] ),
 				sprintf( __( '%s ago' ), human_time_diff( $time['time'] ) )
 			);
 		}
@@ -349,7 +349,6 @@ function __secupress_scanners() {
 		<?php secupress_admin_heading( __( 'Scanners', 'secupress' ) ); ?>
 		<div class="secupress-wrapper">
 			<div class="secupress-section-dark secupress-scanners-header<?php echo $times ? '' : ' secupress-not-scanned-yet'; ?>">
-
 				<?php secupress_print_scanner_header(); ?>
 
 				<ul class="secupress-flex secupress-tabs secupress-light-tabs" role="tablist" data-content="#sp-tab-scans">
@@ -551,33 +550,6 @@ function __secupress_scanners() {
 
 			<?php wp_nonce_field( 'secupress_score', 'secupress_score', false ); ?>
 		</div>
-
-	<?php
-	/* else:
-		<div class="secupress-wrapper secupress-no-first-oneclickscan-yet">
-			<div class="secupress-section-dark secupress-section-first-scan-todo" data-redirect="<?php echo esc_url( secupress_admin_url( 'scanners' ) ) ?>">
-				<?php secupress_print_scanner_header() ?>
-				<div class="secupress-before-caroupoivre">
-					<h3><?php esc_html_e( 'To begin, start your first scan', 'secupress' ); ?></h3>
-					<p><?php esc_html_e( 'It\'s easy, just click on the button below.', 'secupress' ); ?></p>
-
-					<p class="secupress-start-one-click-scan">
-						<a class="button-secupress-scan secupress-button secupress-button-primary" href="<?php echo esc_url( wp_nonce_url( secupress_admin_url( 'scanners' ), 'first_oneclick-scan' ) ) . '&oneclick-scan=1'; ?>">
-							<span class="icon">
-								<i class="icon-radar" aria-hidden="true"></i>
-							</span>
-							<span class="text">
-								<?php esc_html_e( 'One Click Scan', 'secupress' ); ?>
-							</span>
-						</a>
-					</p>
-				</div>
-
-				<?php secupress_print_caroupoivre(); ?>
-			</div>
-
-		</div><!-- .secupress-wrapper -->
-	endif;*/ ?>
 	</div><!-- .wrap -->
 	<?php
 }

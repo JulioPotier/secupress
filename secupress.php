@@ -187,13 +187,25 @@ function secupress_load_plugins() {
 	if ( $modules ) {
 		foreach ( $modules as $key => $module ) {
 			$file = SECUPRESS_MODULES_PATH . sanitize_key( $key ) . '/tools.php';
+
 			if ( file_exists( $file ) ) {
 				require_once( $file );
 			}
+
 			if ( ! is_admin() ) {
 				continue;
 			}
+
+			if ( defined( 'SECUPRESS_PRO_MODULES_PATH' ) ) {
+				$file = SECUPRESS_PRO_MODULES_PATH . sanitize_key( $key ) . '/callbacks.php';
+
+				if ( file_exists( $file ) ) {
+					require_once( $file );
+				}
+			}
+
 			$file = SECUPRESS_MODULES_PATH . sanitize_key( $key ) . '/callbacks.php';
+
 			if ( file_exists( $file ) ) {
 				require_once( $file );
 			}
