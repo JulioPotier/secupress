@@ -927,6 +927,9 @@
 }
 
 /* Swal alternative styles */
+body[class*=" secupress"] .sweet-overlay {
+	background: rgba(34, 40, 49, .7);
+}
 .secupress-swal-dark-header .sweet-icon {
 	display: none!important;
 }
