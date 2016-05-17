@@ -95,7 +95,7 @@
 		var $tabs        = $(this),
 			$content     = $tabs.data('content') ? $( $tabs.data('content') ) : $tabs.next(),
 			$tab_content = $content.find('.secupress-tab-content'),
-			$current     = $tabs.find('.secupress-current').lenght ? $tabs.find('.secupress-current') : $tabs.find('a:first'),
+			$current     = $tabs.find('.secupress-current').length ? $tabs.find('.secupress-current') : $tabs.find('a:first'),
 
 			set_current = function( $item ) {
 				$item.closest('.secupress-tabs').find('a').removeClass('secupress-current').attr('aria-selected', false);
@@ -103,7 +103,7 @@
 			},
 			change_tab = function( $item ) {
 				$tab_content.spHide();
-				$( '#' + $item.attr('aria-control') ).spFadeIn();
+				$( '#' + $item.attr('aria-controls') ).spFadeIn();
 			};
 
 		$tab_content.hide();

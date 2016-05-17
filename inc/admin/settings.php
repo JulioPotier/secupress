@@ -350,7 +350,7 @@ function __secupress_scanners() {
 		<div class="secupress-wrapper">
 			<div class="secupress-section-dark secupress-scanners-header<?php echo $times ? '' : ' secupress-not-scanned-yet'; ?>">
 
-				<?php secupress_print_scanner_header() ?>
+				<?php secupress_print_scanner_header(); ?>
 
 				<ul class="secupress-flex secupress-tabs secupress-light-tabs" role="tablist" data-content="#sp-tab-scans">
 					<li role="presentation">
