@@ -1203,12 +1203,6 @@ body[class*=" secupress"] .sweet-overlay {
 .secupress-header-mini .secupress-lb-title {
 	font-size: 18px;
 }
-.secupress-lb-subtitle {
-	font-size: 15px;
-}
-.secupress-header-mini .secupress-lb-subtitle {
-	font-size: 12px;
-}
 .secupress-settings-header .secupress-text-medium {
 	color: #FFF;
 	margin: .5em 0 -.35em ;

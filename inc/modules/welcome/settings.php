@@ -10,7 +10,6 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 				</div>
 				<div class="secupress-lb-name">
 					<p class="secupress-lb-title"><?php echo SECUPRESS_PLUGIN_NAME; ?></p>
-					<p class="secupress-lb-subtitle"><?php esc_html_e( 'the best security for WordPress', 'secupress' ); ?></p>
 				</div>
 			</div>
 		</div>
