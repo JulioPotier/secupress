@@ -3,10 +3,14 @@
 .secupress-notice.secupress-flex {
 	padding: 10px 20px;
 	clear: both;
+	margin-top: 10px;
 	margin-right: 20px;
 }
 .secupress-notice.mini {
 	padding: 5px 20px;
+}
+[id="screen-meta"] + .secupress-notice.secupress-flex {
+	margin-top: 20px;
 }
 [id="screen-meta-links"] + .secupress-notice.secupress-flex {
 	margin-top: 35px;
