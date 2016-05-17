@@ -79,6 +79,8 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		// JS.
 		wp_enqueue_script( 'secupress-modules-js',  SECUPRESS_ADMIN_JS_URL . 'secupress-modules' . $suffix . '.js', array( 'secupress-common-js' ), $version, true );
 
+		$alreadyScanned = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) ) ? 1 : 0;
+
 		wp_localize_script( 'secupress-modules-js', 'SecuPressi18nModules', array(
 			// Roles.
 			'selectOneRoleMinimum' => __( 'Select 1 role minimum', 'secupress' ),
@@ -110,8 +112,13 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'noBannedIPs'          => __( 'No Banned IPs anymore.', 'secupress' ),
 			'IPnotFound'           => __( 'IP not found.', 'secupress' ),
 			'IPremoved'            => __( 'IP removed.', 'secupress' ),
-			'searchResults'        => __( 'See search result below.', 'adjective', 'secupress' ),
+			'searchResults'        => _x( 'See search result below.', 'adjective', 'secupress' ),
 			'searchReset'          => _x( 'Search reset.', 'adjective', 'secupress' ),
+			// First scan.
+			'alreadyScanned'       => $alreadyScanned,
+			'firstScanText'        => __( 'Before setting modules, launch your first scan.', 'secupress' ),
+			'firstScanButton'      => __( 'One Click Scan', 'secupress' ),
+			'firstScanURL'         => esc_url( wp_nonce_url( secupress_admin_url( 'scanners' ), 'first_oneclick-scan' ) ) . '&oneclick-scan=1',
 		) );
 
 	}

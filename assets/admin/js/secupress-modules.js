@@ -18,6 +18,37 @@ var SecuPress = {
 	}
 };
 
+/**
+ * Show Swal message if no scan done yet
+ */
+if ( SecuPressi18nModules.alreadyScanned == 0 ) {
+	var modal_content = '<p>'
+							+ SecuPressi18nModules.firstScanText
+					  + '</p>'
+					  + '<p>'
+					  		+ '<a class="secupress-button secupress-button-primary button-secupress-scan" href="' + SecuPressi18nModules.firstScanURL + '">'
+					  			+ '<span class="icon">'
+									+ '<i class="icon-radar" aria-hidden="true"></i>'
+								+ '</span>'
+								+ '<span class="text">'
+					  				+ SecuPressi18nModules.firstScanButton
+					  			+ '</span>'
+					  		+ '</a>'
+					  + '</p>';
+
+	swal( jQuery.extend( {}, SecuPress.swalDefaults, {
+		title: '',
+		html: modal_content,
+		type:  null,
+		showConfirmButton: false,
+		showCloseButton: false,
+		showCancelButton: false,
+		imageUrl: 'https://unsplash.it/400/200',
+		imageWidth: 400,
+		imageHeight: 200,
+	} ) );
+}
+
 
 // Tools ===========================================================================================
 /**
