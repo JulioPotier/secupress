@@ -112,17 +112,17 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		return array();
 	}
 
+
 	/**
 	 * Get a module icon.
 	 *
 	 * @since 1.0
+	 * @author Geoffrey
 	 *
 	 * @param (string) $module The desired module.
 	 *
 	 * @return (string)
-	 *
-	 * @author Geoffrey
-	*/
+	 */
 	final public function get_module_icon( $module = false ) {
 		$modules = static::get_modules();
 		$module  = $module ? $module : $this->modulenow;
@@ -367,14 +367,14 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		return $this;
 	}
 
+
 	/**
 	 * Print the module icon.
 	 *
 	 * @since 1.0
+	 * @author Geoffrey
 	 *
 	 * @return (object) The class instance.
-	 *
-	 * @author Geoffrey
 	 */
 	protected function print_module_icon() {
 		if ( $this->get_module_icon() ) {

@@ -55,15 +55,15 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	wp_enqueue_script( 'secupress-common-js', SECUPRESS_ADMIN_JS_URL . 'secupress-common' . $suffix . '.js', array( 'secupress-wordpress-js' ), $version, true );
 
 	wp_localize_script( 'secupress-common-js', 'SecuPressi18nCommon', array(
-		'confirmText'  => esc_html__( 'OK', 'secupress' ),
+		'confirmText'  => __( 'OK', 'secupress' ),
 		'cancelText'   => __( 'Cancel' ),
 		'authswal'     => array(
-			'title'  => esc_html__( 'Authentication', 'secupress' ),
-			'email'  => esc_html__( 'Enter your email', 'secupress' ),
-			'apikey' => esc_html__( 'Enter your API Key', 'secupress' ),
-			'where'  => esc_html__( 'Where can I find my API Key?', 'secupress' ),
-			'save'   => esc_html__( 'Save and continue to first scan', 'secupress' )
-		)
+			'title'  => __( 'Authentication', 'secupress' ),
+			'email'  => __( 'Enter your email', 'secupress' ),
+			'apikey' => __( 'Enter your API Key', 'secupress' ),
+			'where'  => __( 'Where can I find my API Key?', 'secupress' ),
+			'save'   => __( 'Save and continue to first scan', 'secupress' ),
+		),
 	) );
 
 	// Settings page.
@@ -176,8 +176,9 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 
 		wp_localize_script( 'secupress-scanner-js', 'SecuPressi18nScanner', $localize );
 	}
-	// Logs page
+	// Logs page.
 	elseif ( 'secupress_page_secupress_logs' === $hook_suffix ) {
+		// CSS.
 		wp_enqueue_style( 'secupress-logs-css',  SECUPRESS_ADMIN_CSS_URL . 'secupress-logs' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 	}
 
@@ -188,14 +189,16 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 
 /**
  * Add SecuPress version number next to WP version in footer
- * 
+ *
  * @since  1.0
  * @author Geoffrey
  *
  * @param (string) $footer Text to print in footer.
+ *
+ * @return (string)
  */
 function __secupress_print_version_number_in_footer( $footer ) {
-	echo ( $footer ? "$footer | " : '' ) . '<b>' . SECUPRESS_PLUGIN_NAME . ' v.' . SECUPRESS_VERSION . '</b>';
+	return ( $footer ? "$footer | " : '' ) . '<b>' . SECUPRESS_PLUGIN_NAME . ' v.' . SECUPRESS_VERSION . '</b>';
 }
 
 
@@ -345,7 +348,7 @@ function __secupress_scanners() {
 	}
 	?>
 	<div class="wrap">
-	
+
 		<?php secupress_admin_heading( __( 'Scanners', 'secupress' ) ); ?>
 		<div class="secupress-wrapper">
 			<div class="secupress-section-dark secupress-scanners-header<?php echo $times ? '' : ' secupress-not-scanned-yet'; ?>">
@@ -491,7 +494,7 @@ function __secupress_scanners() {
 						</button>
 					</p>
 				</div>
-				
+
 				<?php secupress_print_caroupoivre(); ?>
 
 				<ul id="secupress-type-filters" class="secupress-big-tabs secupress-tabs secupress-flex secupress-text-start hide-if-no-js" role="tablist">
@@ -876,7 +879,7 @@ function secupress_scanners_template() {
 									<h3><?php echo _n( 'This action requires your attention', 'These actions require your attention', count( $fix_actions ), 'secupress' ); ?></h3>
 									<?php
 									echo implode( '', $fix_actions );
-									submit_button( __( 'Fix it!', 'secupress' ) );
+									submit_button( __( 'Fix it!', 'secupress' ) ); // ////.
 									$current_test->for_current_site( $is_subsite )->get_fix_action_fields( array_keys( $fix_actions ) );
 									?>
 								</form>

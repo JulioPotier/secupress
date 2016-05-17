@@ -263,12 +263,12 @@ function secupress_warning_no_oneclick_scan_yet() {
 	if ( $times ) {
 		return;
 	}
-?>
+	?>
 	<div class="secupress-section-dark secupress-notice secupress-flex">
 		<div class="secupress-col-1-4 secupress-col-logo secupress-text-center">
 			<div class="secupress-logo-block">
 				<div class="secupress-lb-logo">
-					<?php echo secupress_get_logo( array( 'width'=>'126' ) ); ?>
+					<?php echo secupress_get_logo( array( 'width' => '126' ) ); ?>
 				</div>
 			</div>
 		</div>
@@ -287,8 +287,9 @@ function secupress_warning_no_oneclick_scan_yet() {
 			</a>
 		</div>
 	</div><!-- .secupress-section-dark -->
-<?php
+	<?php
 }
+
 
 add_action( 'all_admin_notices', 'secupress_warning_no_api_key', 50 );
 /**
@@ -307,7 +308,7 @@ function secupress_warning_no_api_key() {
 	if ( secupress_get_consumer_email() ) {
 		return;
 	}
-?>
+	?>
 	<div class="secupress-section-gray-dark secupress-notice mini secupress-flex">
 		<div class="secupress-col-1-4 secupress-col-icon">
 			<i class="icon-secupress-simple" aria-hidden="true"></i>
@@ -327,7 +328,7 @@ function secupress_warning_no_api_key() {
 			</a>
 		</div>
 	</div><!-- .secupress-section-medium -->
-<?php
+	<?php
 }
 
 

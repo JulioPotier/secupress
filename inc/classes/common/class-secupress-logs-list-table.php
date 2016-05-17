@@ -424,10 +424,9 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 	 * Display "Delete All" and "Downlad All" buttons.
 	 *
 	 * @since 1.0
+	 * @author Greg (Geoffrey)
 	 *
 	 * @param (string) $which The position: "top" or "bottom".
-	 *
-	 * @author Greg (Geoffrey)
 	 */
 	protected function extra_tablenav( $which ) {
 		?>
@@ -438,31 +437,31 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 
 				// "Downlad All" button.
 				$href = $logs_classname::get_instance()->download_logs_url( $this->_paged_page_url() );
-			?>
-			<a id="download_all" class="secupress-button secupress-button-primary secupress-button-mini apply secupress-download-logs" href="<?php echo esc_url( $href ); ?>">
-				<span class="icon">
-					<i class="icon-download" aria-hidden="true"></i>
-				</span>
-				<span class="text">
-					<?php esc_html_e( 'Download All', 'secupress' ); ?>
-				</span>
-			</a>
-			<span class="spinner secupress-inline-spinner"></span>
+				?>
+				<a id="download_all" class="secupress-button secupress-button-primary secupress-button-mini apply secupress-download-logs" href="<?php echo esc_url( $href ); ?>">
+					<span class="icon">
+						<i class="icon-download" aria-hidden="true"></i>
+					</span>
+					<span class="text">
+						<?php esc_html_e( 'Download All', 'secupress' ); ?>
+					</span>
+				</a>
+				<span class="spinner secupress-inline-spinner"></span>
 
-			<?php
+				<?php
 				// "Delete All" button.
 				$href = $logs_classname::get_instance()->delete_logs_url( $this->_paged_page_url() );
-			?>
-			<a id="delete_all" class="secupress-button secupress-button-secondary secupress-button-mini apply secupress-clear-logs" href="<?php echo esc_url( $href ); ?>">
-				<span class="icon">
-					<i class="icon-trash" aria-hidden="true"></i>
-				</span>
-				<span class="text">
-					<?php esc_html_e( 'Delete All', 'secupress' ); ?>
-				</span>
-			</a>
-			<span class="spinner secupress-inline-spinner"></span>
-			<?php
+				?>
+				<a id="delete_all" class="secupress-button secupress-button-secondary secupress-button-mini apply secupress-clear-logs" href="<?php echo esc_url( $href ); ?>">
+					<span class="icon">
+						<i class="icon-trash" aria-hidden="true"></i>
+					</span>
+					<span class="text">
+						<?php esc_html_e( 'Delete All', 'secupress' ); ?>
+					</span>
+				</a>
+				<span class="spinner secupress-inline-spinner"></span>
+				<?php
 			}
 			?>
 		</div>
@@ -629,9 +628,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 		?>
 		<label for="cb-select-<?php the_ID(); ?>">
 			<span class="screen-reader-text">
-		<?php
-			printf( __( 'Select &#8220;%s&#8221;', 'secupress' ), strip_tags( $this->log->get_title() ) );
-		?>
+				<?php printf( __( 'Select &#8220;%s&#8221;', 'secupress' ), strip_tags( $this->log->get_title() ) ); ?>
 			</span>
 			<input id="cb-select-<?php the_ID(); ?>" type="checkbox" name="post[]" value="<?php the_ID(); ?>" class="secupress-checkbox secupress-checkbox-mini" />
 			<span class="label-text"></span>
