@@ -345,11 +345,10 @@ function __secupress_scanners() {
 	}
 	?>
 	<div class="wrap">
-	<?php if ( $times ) : ?>
+	
 		<?php secupress_admin_heading( __( 'Scanners', 'secupress' ) ); ?>
-
 		<div class="secupress-wrapper">
-			<div class="secupress-section-dark">
+			<div class="secupress-section-dark secupress-scanners-header<?php echo $times ? '' : ' secupress-not-scanned-yet'; ?>">
 
 				<?php secupress_print_scanner_header() ?>
 
@@ -477,6 +476,22 @@ function __secupress_scanners() {
 					</div><!-- .secupress-tab-content -->
 
 				</div><!-- .secupress-tabs-contents -->
+
+				<div class="secupress-before-caroupoivre">
+					<h3><?php esc_html_e( 'To begin, start your first scan', 'secupress' ); ?></h3>
+					<p><?php esc_html_e( 'It\'s easy, just click on the button below.', 'secupress' ); ?></p>
+
+					<p class="secupress-start-one-click-scan">
+						<button class="secupress-button secupress-button-primary button-secupress-scan" type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ); ?>">
+							<span class="icon">
+								<i class="icon-radar" aria-hidden="true"></i>
+							</span>
+							<span class="text">
+								<?php esc_html_e( 'One Click Scan', 'secupress' ); ?>
+							</span>
+						</button>
+					</p>
+				</div>
 				
 				<?php secupress_print_caroupoivre(); ?>
 
@@ -505,7 +520,7 @@ function __secupress_scanners() {
 				</ul>
 			</div><!-- .secupress-section-dark -->
 
-			<div class="secupress-section-gray secupress-bordered-lat">
+			<div class="secupress-section-gray secupress-scanners-filters secupress-bordered-lat">
 				<div class="secupress-flex-spaced secupress-wrap">
 					<div>
 						<p class="secupress-text-basup secupress-bold secupress-m0"><?php esc_html_e( 'List of analyzed security points', 'secupress' ); ?></p>
@@ -530,14 +545,15 @@ function __secupress_scanners() {
 					</div>
 				</div>
 			</div>
-			<div class="secupress-section-light secupress-bordered-lat secupress-lined-b secupress-pt1p">
+			<div class="secupress-section-light secupress-scanners-list secupress-bordered-lat secupress-lined-b secupress-pt1p">
 				<?php secupress_scanners_template(); ?>
 			</div>
 
 			<?php wp_nonce_field( 'secupress_score', 'secupress_score', false ); ?>
 		</div>
 
-	<?php else:	?>
+	<?php
+	/* else:
 		<div class="secupress-wrapper secupress-no-first-oneclickscan-yet">
 			<div class="secupress-section-dark secupress-section-first-scan-todo" data-redirect="<?php echo esc_url( secupress_admin_url( 'scanners' ) ) ?>">
 				<?php secupress_print_scanner_header() ?>
@@ -561,7 +577,7 @@ function __secupress_scanners() {
 			</div>
 
 		</div><!-- .secupress-wrapper -->
-	<?php endif; ?>
+	endif;*/ ?>
 	</div><!-- .wrap -->
 	<?php
 }

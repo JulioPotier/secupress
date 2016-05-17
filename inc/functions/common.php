@@ -824,7 +824,7 @@ function secupress_print_scanner_header() {
  */
 function secupress_print_caroupoivre() {
 ?>
-<div class="secupress-one-click-scanning hidden">
+<div class="secupress-one-click-scanning-slideshow hidden">
 	<div class="secupress-caroupoivre">
 		<div id="secupress-slide1" class="secupress-slide"></div>
 
@@ -856,6 +856,6 @@ function secupress_print_caroupoivre() {
 			<span class="secupress-progress-val-txt">0 %</span>
 		</div>
 	</div>
-</div><!-- .secupress-one-click-scanning -->
+</div><!-- .secupress-one-click-scanning-slideshow -->
 <?php
 }

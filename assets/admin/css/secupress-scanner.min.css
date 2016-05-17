@@ -19,6 +19,17 @@
 /**
  * First One Click Scan not done yet
  */
+/* Hide some items */
+.secupress-scanners-header.secupress-not-scanned-yet .secupress-tabs,
+.secupress-scanners-header.secupress-not-scanned-yet .secupress-tabs-contents,
+.secupress-scanners-header.secupress-not-scanned-yet + .secupress-scanners-filters,
+.secupress-scanners-header.secupress-not-scanned-yet ~ .secupress-scanners-list,
+.secupress-scanners-header .secupress-before-caroupoivre {
+	display: none;
+}
+.secupress-scanners-header.secupress-not-scanned-yet .secupress-before-caroupoivre {
+	display: block;
+}
 .secupress-no-first-oneclickscan-yet .secupress-logo-block {
 	position: relative;
 	top: 55px;
@@ -33,7 +44,7 @@
 .secupress-no-first-oneclickscan-yet .secupress-settings-header + .secupress-section-gray-dark .secupress-text-medium {
 	margin-bottom: 0;
 }
-.secupress-no-first-oneclickscan-yet .secupress-one-click-scanning,
+.secupress-no-first-oneclickscan-yet .secupress-one-click-scanning-slideshow,
 .secupress-before-caroupoivre {
 	border-top: 1px solid #5A626F;
 }

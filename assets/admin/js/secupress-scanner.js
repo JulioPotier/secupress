@@ -316,10 +316,10 @@ jQuery( document ).ready( function( $ ) {
 
 		// Runs the Progressbar, 10 sec min.
 		function secupressRunProgressBar( $button ) {
-			var $sp_scanning = $( '.secupress-one-click-scanning' ),
+			var $sp_scanning = $( '.secupress-one-click-scanning-slideshow' ),
 				$sp_poivre   = $( '.secupress-caroupoivre' ),
 				$pagination  = $( '.secupress-caroupoivre-pagination' ).find( '.secupress-dot' ),
-				is_first     = $button.closest( '.secupress-no-first-oneclickscan-yet' ).length;
+				is_first     = $button.closest( '.secupress-not-scanned-yet' ).length;
 			
 			// if first of the first one click scan
 			if ( is_first ) {
@@ -329,9 +329,8 @@ jQuery( document ).ready( function( $ ) {
 				} );
 			}
 			else {
-				// TODO: not the first scan
-				// hide things and show caroupoivre
-				$sp_scanning.show();
+				$('.secupress-tabs-contents').hide();
+				$sp_scanning.fadeIn( 200 );
 			}
 
 			$sp_poivre.find('.secupress-slide').hide();
@@ -367,18 +366,23 @@ jQuery( document ).ready( function( $ ) {
 					.find( '.secupress-progress-val-txt' ).text( secupressOneClickScanProgress + ' %' );
 
 				if ( secupressOneClickScanProgress >= 100 ) {
-					if ( is_first ) {
-						window.location.href = $('.secupress-section-first-scan-todo').data('redirect');
-					}
-					else {
-						// TODO
-						// hide() slideshow
-						
-						// fadeIn stats
-						//$.fadeIn();
-					}
+					
 					secupressOneClickScanProgress = 0;
 					clearInterval( secupressProgressTimer );
+
+					// makes slideshow desappear
+					$sp_scanning.fadeOut( 200, function(){
+
+						// show other element (list of scans, tabs, tabs contents)
+						$('.secupress-scanners-header.secupress-not-scanned-yet').removeClass('secupress-not-scanned-yet');
+
+						// explicitly show tabs content in case of other One Click Scans
+						$('.secupress-tabs-contents').show();
+
+						// Click on first tab to show results, just in case…
+						$('#secupress-l-scan').trigger('click.secupress');
+					} );
+
 				}
 			}, 100 );
 		}
