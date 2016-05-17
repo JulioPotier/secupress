@@ -145,14 +145,29 @@ function secupress_get_backup_file_list() {
  */
 function secupress_print_backup_file_formated( $file, $echo = true ) {
 
-	list( $_date, $_type, $_prefix, $file_uniqid ) = explode( '.', basename( $file ) );
+	list( $_date, $_type, $_prefix, $file_uniqid ) = explode( '.', esc_html( basename( $file ) ) );
 
-	$_date        = date_i18n( __( 'M jS Y', 'secupress' ) . ' ' . __( 'G:i', 'secupress' ), strtotime( substr_replace( $_date, ':', 13, 1 ) ), true );
+	$_date   = strtotime( substr_replace( $_date, ':', 13, 1 ) ) + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS );
+	$_date   = date_i18n( __( 'M jS Y', 'secupress' ) . ' ' . __( 'G:i', 'secupress' ), $_date, true );
+	$_prefix = str_replace( array( '@', '#' ), array( '.', '/' ), $_prefix );
+
+	switch ( $_type ) :
+		case 'database' :
+			$_type = __( 'Database', 'secupress' );
+		break;
+
+		case 'files' :
+			$_type = __( 'Files', 'secupress' );
+		break;
+
+		default :
+			$_type = ucwords( $_type );
+	endswitch;
 
 	$download_url = esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_download_backup&file=' . $file_uniqid ), 'secupress_download_backup-' . $file_uniqid ) );
 	$delete_url   = esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_delete_backup&file=' . $file_uniqid ), 'secupress_delete_backup-' . $file_uniqid ) );
 
-	$file_format  = sprintf( '<p class="secupress-large-row">%s <strong>%s</strong> <em>(%s)</em>', ucwords( $_type ), $_prefix, $_date );
+	$file_format  = sprintf( '<p class="secupress-large-row">%s <strong>%s</strong> <em>(%s)</em>', $_type, $_prefix, $_date );
 	$file_format .= sprintf( '<span><a href="%s">%s</a> | <a href="%s" class="a-delete-backup" data-file-uniqid="%s">%s</a></span></p>', $download_url, _x( 'Download', 'verb', 'secupress' ), $delete_url, $file_uniqid, __( 'Delete', 'secupress' ) );
 
 	if ( ! $echo ) {
