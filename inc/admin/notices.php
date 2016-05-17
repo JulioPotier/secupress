@@ -254,7 +254,7 @@ function secupress_warning_no_oneclick_scan_yet() {
 	$screen_id = get_current_screen();
 	$screen_id = $screen_id && ! empty( $screen_id->id ) ? $screen_id->id : false;
 
-	if ( 'toplevel_page_secupress_scanners' === $screen_id || ! current_user_can( secupress_get_capability() ) ) {
+	if ( 'toplevel_page_' . SECUPRESS_PLUGIN_SLUG . '_scanners' === $screen_id || 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' === $screen_id || ! current_user_can( secupress_get_capability() ) ) {
 		return;
 	}
 
@@ -308,13 +308,13 @@ function secupress_warning_no_api_key() {
 	if ( secupress_get_consumer_email() ) {
 		return;
 	}
-	
+
 	if (
-		'secupress_page_secupress_modules' === $screen_id
+		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' === $screen_id
 		||
-		'secupress_page_secupress_settings' === $screen_id
+		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' === $screen_id
 		||
-		'secupress_page_secupress_logs' === $screen_id
+		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_logs' === $screen_id
 	) {
 ?>
 	<div class="secupress-section-gray-dark secupress-notice mini secupress-flex">
