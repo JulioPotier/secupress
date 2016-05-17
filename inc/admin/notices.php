@@ -295,25 +295,34 @@ add_action( 'all_admin_notices', 'secupress_warning_no_api_key', 50 );
  * This warning is displayed if consumer email is unknown
  *
  * @since 1.0
+ * @author Geoffrey
  */
 function secupress_warning_no_api_key() {
 	$screen_id = get_current_screen();
 	$screen_id = $screen_id && ! empty( $screen_id->id ) ? $screen_id->id : false;
 
-	if ( 'toplevel_page_secupress_scanners' === $screen_id || ! current_user_can( secupress_get_capability() ) || 'plugins' === $screen_id ) {
+	if ( ! current_user_can( secupress_get_capability() ) || 'plugins' === $screen_id ) {
 		return;
 	}
 
 	if ( secupress_get_consumer_email() ) {
 		return;
 	}
+	
+	if (
+		'secupress_page_secupress_modules' === $screen_id
+		||
+		'secupress_page_secupress_settings' === $screen_id
+		||
+		'secupress_page_secupress_logs' === $screen_id
+	) {
 ?>
 	<div class="secupress-section-gray-dark secupress-notice mini secupress-flex">
 		<div class="secupress-col-1-4 secupress-col-icon">
 			<i class="icon-secupress-simple" aria-hidden="true"></i>
 		</div>
 		<div class="secupress-col-2-4 secupress-col-text">
-			<p class="secupress-text-medium">Allez plus loin et avoir plus fonctionnalités ?</p>
+			<p class="secupress-text-medium">Allez plus loin et avoir plus de fonctionnalités ?</p>
 			<p>L'API Key vous permettra de sécuriser plus en profondeur votre site web en activant de nouvelles fonctionnalités.</p>
 		</div>
 		<div class="secupress-col-1-4 secupress-col-cta">
@@ -328,6 +337,7 @@ function secupress_warning_no_api_key() {
 		</div>
 	</div><!-- .secupress-section-medium -->
 <?php
+	} // right screen
 }
 
 
