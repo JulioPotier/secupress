@@ -673,6 +673,55 @@ function secupress_admin_heading( $title = '' ) {
 	printf( '<%1$s class="secupress-page-title screen-reader-text">%2$s <sup>%3$s</sup> %4$s</%1$s>', $heading_tag, SECUPRESS_PLUGIN_NAME, SECUPRESS_VERSION, $title );
 }
 
+/**
+ * Print the dark header of settings pages
+ *
+ * @since 1.0
+ * @author Geoffrey
+ * 
+ * @param (array) $titles The title and subtitle
+ */
+function secupress_settings_heading( $titles = array() ) {
+	extract( $titles );
+?>
+	<div class="secupress-section-dark secupress-settings-header secupress-header-mini secupress-flex">
+		<div class="secupress-col-1-3 secupress-col-logo secupress-text-center">
+			<div class="secupress-logo-block secupress-flex">
+				<div class="secupress-lb-logo">
+					<?php echo secupress_get_logo( array( 'width' => 131 ) ); ?>
+				</div>
+				<div class="secupress-lb-name">
+					<p class="secupress-lb-title"><?php echo SECUPRESS_PLUGIN_NAME; ?></p>
+				</div>
+			</div>
+		</div>
+		<div class="secupress-col-1-3 secupress-col-text">
+			<p class="secupress-text-medium"><?php echo $title; ?></p>
+			<?php if ( isset( $subtitle ) ) { ?>
+			<p><?php echo $subtitle; ?></p>
+			<?php } ?>
+		</div>
+		<div class="secupress-col-1-3 secupress-col-rateus secupress-text-end">
+			<p class="secupress-rateus">
+				<strong><?php _e('You like this plugin?') ?></strong>
+				<br>
+				<?php printf( __( 'Please take a few seconds to rate us on %sWordPress.org%s', 'secupress' ), '<a href="' . SECUPRESS_RATE_URL . '">', '</a>' ); ?>
+			</p>
+			<p class="secupress-rateus-link">
+				<a href="<?php echo SECUPRESS_RATE_URL; ?>">
+					<i class="icon-star" aria-hidden="true"></i>
+					<i class="icon-star" aria-hidden="true"></i>
+					<i class="icon-star" aria-hidden="true"></i>
+					<i class="icon-star" aria-hidden="true"></i>
+					<i class="icon-star" aria-hidden="true"></i>
+					<span class="screen-reader-text"><?php echo _x( 'Give us a five stars', 'hidden text', 'secupress' ); ?></span>
+				</a>
+			</p>
+		</div>
+	</div>
+<?php
+}
+
 
 /**
  * Print the scanners page content.

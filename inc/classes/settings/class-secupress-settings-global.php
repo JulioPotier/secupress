@@ -60,22 +60,13 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 		<div class="wrap secupress-setting-wrapper">
 			<?php secupress_admin_heading( __( 'Settings' ) ); ?>
 			<?php settings_errors(); ?>
-			<div class="secupress-section-dark secupress-settings-header secupress-header-mini secupress-flex">
-				<div class="secupress-col-1-3 secupress-col-logo secupress-text-center">
-					<div class="secupress-logo-block secupress-flex">
-						<div class="secupress-lb-logo">
-							<?php echo secupress_get_logo( array( 'width' => 131 ) ); ?>
-						</div>
-						<div class="secupress-lb-name">
-							<p class="secupress-lb-title"><?php echo SECUPRESS_PLUGIN_NAME; ?></p>
-						</div>
-					</div>
-				</div>
-				<div class="secupress-col-2-3 secupress-col-text">
-					<p class="secupress-text-medium"><?php esc_html_e( 'Settings', 'secupress' ); ?></p>
-					<p><?php esc_html_e( 'Overall plugin settings and fine tuning', 'secupress' ); ?></p>
-				</div>
-			</div>
+			<?php
+				$titles = array(
+					'title'    => esc_html__( 'Settings', 'secupress' ),
+					'subtitle' => esc_html__( 'Overall plugin settings and fine tuning', 'secupress' )
+				);
+				secupress_settings_heading( $titles );
+			?>
 			<div class="secupress-section-light">
 
 				<form action="<?php echo $this->get_form_action(); ?>" method="post" id="secupress_settings">
