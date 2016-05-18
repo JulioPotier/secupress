@@ -314,8 +314,8 @@ function secupress_warning_no_api_key() {
 			<i class="icon-secupress-simple" aria-hidden="true"></i>
 		</div>
 		<div class="secupress-col-2-4 secupress-col-text">
-			<p class="secupress-text-medium">Allez plus loin et avoir plus fonctionnalités ?</p>
-			<p>L'API Key vous permettra de sécuriser plus en profondeur votre site web en activant de nouvelles fonctionnalités.</p>
+			<p class="secupress-text-medium"><?php esc_html_e( 'Go further to get more security features!', 'secupress' ); ?></p>
+			<p><?php esc_html_e( 'The API Key will allow you to secure more deeply your website by activating new modules.', 'secupress' ); ?></p>
 		</div>
 		<div class="secupress-col-1-4 secupress-col-cta">
 			<a href="<?php echo esc_url( secupress_admin_url( 'settings' ) ); ?>" class="secupress-button secupress-button-primary button-secupress-get-api-key">
