@@ -431,6 +431,17 @@
 .secupress-heading {
 	padding: 1px 0 20px;
 }
+.secupress-section-mini {
+	padding: 5px 20px;
+}
+.secupress-section-mini .secupress-col-icon {
+    color: rgba(255, 255, 255, 0.25);
+    -webkit-flex-basis: 5%;
+	-ms-flex-preferred-size: 5%;
+    flex-basis: 5%;
+    font-size: 30px;
+    text-align: center;
+}
 
 /**
  * === Animations / Transitions
@@ -540,11 +551,11 @@
 	background: #CB234F;
 }
 .secupress-button-tertiary.secupress-button-tertiary {
-	background: #F1C40F;
+	background: #F7AB13;
 }
 .secupress-button-tertiary.secupress-button-tertiary:hover,
 .secupress-button-tertiary.secupress-button-tertiary:focus {
-	background: #F7AB13;
+	background: #F1C40F;
 }
 
 /* Buttons sizes */
@@ -1185,6 +1196,16 @@ body[class*=" secupress"] .sweet-overlay {
 .secupress-flex .secupress-col-cta {
 	min-width: 280px;
 	text-align: right;
+}
+.secupress-col-rateus p {
+	margin: 0;
+}
+.secupress-col-rateus .secupress-rateus-link {
+	margin-top: .5em;
+	font-size: 1.2em;
+}
+.secupress-rateus-link a {
+	text-decoration: none;
 }
 .secupress-logo-block p {
 	margin: 0;
