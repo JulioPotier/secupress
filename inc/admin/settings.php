@@ -136,7 +136,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'fixed'              => __( 'Fixed', 'secupress' ),
 			'fixedPartial'       => __( 'Partially fixed', 'secupress' ),
 			'notFixed'           => __( 'Not Fixed', 'secupress' ),
-			'fixit'              => __( 'Fix it!', 'secupress' ),
+			'fixit'              => __( 'Fix it', 'secupress' ),
 			'oneManualFix'       => __( 'One fix requires your intervention.', 'secupress' ),
 			'someManualFixes'    => __( 'Some fixes require your intervention.', 'secupress' ),
 			'spinnerUrl'         => admin_url( 'images/wpspin_light-2x.gif' ),
@@ -905,7 +905,7 @@ function secupress_scanners_template() {
 									<h3><?php echo _n( 'This action requires your attention', 'These actions require your attention', count( $fix_actions ), 'secupress' ); ?></h3>
 									<?php
 									echo implode( '', $fix_actions );
-									submit_button( __( 'Fix it!', 'secupress' ) );
+									submit_button( __( 'Fix it', 'secupress' ) );
 									$current_test->for_current_site( $is_subsite )->get_fix_action_fields( array_keys( $fix_actions ) );
 									?>
 								</form>
