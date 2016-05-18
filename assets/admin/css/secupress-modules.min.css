@@ -474,8 +474,11 @@ span.secupress-get-pro-version {
 	flex-basis: 0;
 
 }
-.secupress-setting-row_bbq-headers_user-agents-list .secupress-textarea-container,
-.secupress-setting-row_bbq-url-content_bad-contents-list .secupress-textarea-container {
+label.secupress-textarea-label {
+	position: relative;
+	display: block;
+}
+.secupress-textarea-container {
 	width: 100%;
 	height: 200px;
 	margin: .75em auto;
@@ -489,13 +492,7 @@ span.secupress-get-pro-version {
 	background: #FFF;
 	border-color: #eee;
 }
-.secupress-setting-row_bbq-headers_user-agents-list label,
-.secupress-setting-row_bbq-url-content_bad-contents-list label {
-	position: relative;
-	display: block;
-}
-.secupress-setting-row_bbq-headers_user-agents-list textarea,
-.secupress-setting-row_bbq-url-content_bad-contents-list textarea {
+.secupress-textarea-container textarea {
 	width: 100%;
 	height: 100%;
 	padding: 0;
@@ -510,12 +507,10 @@ span.secupress-get-pro-version {
 	transition: all .275s;
 	resize: none;
 }
-.secupress-setting-row_bbq-headers_user-agents-list textarea:focus,
-.secupress-setting-row_bbq-url-content_bad-contents-list textarea:focus {
+.secupress-textarea-container textarea:focus {
 	background: #FFF;
 }
 
-.secupress-textarea-container + .description.desc,
 .secupress-textarea-container + .description.desc {
 	padding-left: 0;
 	margin-top: 1.5em;

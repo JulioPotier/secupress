@@ -956,7 +956,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	var SPautoSized = {},
 		browsers = {},
 		// Expendable items
-		$expendables = $('.secupress-setting-row_bbq-headers_user-agents-list, .secupress-setting-row_bbq-url-content_bad-contents-list');
+		$expendables = $('.secupress-textarea-container');
 
 	browsers.msie = /msie/.test( navigator.userAgent.toLowerCase() );
 	browsers.opera = /opera/.test( navigator.userAgent.toLowerCase() );
@@ -1060,7 +1060,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		});
 
 	// on click on (+) button
-	$expendables.on('click.secupress', '.secupress-expand-trigger', function(){
+	$expendables.closest('label').on('click.secupress', '.secupress-expand-trigger', function(){
 		var $_this     = $(this),
 			$container = $_this.prev( '.secupress-textarea-container' ),
 			$textarea  = $container.find( 'textarea' );
