@@ -96,7 +96,6 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'OCSnotDone'           => __( 'Before activating some modules,<br>please run your first scan!', 'secupress' ),
 			'OCSbutton'            => __( 'ONE CLICK SCAN', 'secupress' ),
 			'OCSdone'              => $times,
-			'OCSurl'               => esc_url( wp_nonce_url( secupress_admin_url( 'scanners' ), 'first_oneclick-scan' ) ) . '&oneclick-scan=1',
 			'OCSradar'             => SECUPRESS_ADMIN_IMAGES_URL . 'swal2-radar.png',
 			// Backups.
 			'confirmDeleteBackups' => __( 'You are about to delete all your backups.', 'secupress' ),
