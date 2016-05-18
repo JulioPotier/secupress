@@ -254,7 +254,7 @@ function secupress_warning_no_oneclick_scan_yet() {
 	$screen_id = get_current_screen();
 	$screen_id = $screen_id && ! empty( $screen_id->id ) ? $screen_id->id : false;
 
-	if ( 'toplevel_page_secupress_scanners' === $screen_id || ! current_user_can( secupress_get_capability() ) ) {
+	if ( 'toplevel_page_secupress_scanners' === $screen_id || 'secupress_page_secupress_modules' === $screen_id || ! current_user_can( secupress_get_capability() ) ) {
 		return;
 	}
 
@@ -305,7 +305,10 @@ function secupress_warning_no_api_key() {
 		return;
 	}
 
-	if ( secupress_get_consumer_email() ) {
+	$times = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
+
+	// Don't display the API key banner yet, wait the first OCS.
+	if ( secupress_get_consumer_email() || ! $times ) {
 		return;
 	}
 	?>
