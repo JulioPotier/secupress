@@ -22,7 +22,7 @@ var SecuPress = {
  * Show Swal message if no scan done yet
  */
 if ( SecuPressi18nModules.alreadyScanned == 0 ) {
-	var modal_content = '<p>'
+	var modal_content = '<p class="secupress-text-medium secupress-mt1 secupress-mb1">'
 							+ SecuPressi18nModules.firstScanText
 					  + '</p>'
 					  + '<p>'
@@ -37,15 +37,15 @@ if ( SecuPressi18nModules.alreadyScanned == 0 ) {
 					  + '</p>';
 
 	swal( jQuery.extend( {}, SecuPress.swalDefaults, {
-		title: '',
+		title: null,
 		html: modal_content,
 		type:  null,
 		showConfirmButton: false,
 		showCloseButton: false,
 		showCancelButton: false,
-		imageUrl: 'https://unsplash.it/400/200',
-		imageWidth: 400,
-		imageHeight: 200,
+		imageUrl: SecuPressi18nModules.firstScanImage,
+		imageWidth: 113,
+		imageHeight: 113,
 	} ) );
 }
 

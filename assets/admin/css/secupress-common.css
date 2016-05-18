@@ -271,20 +271,20 @@
 }
 
 /* Font sizes */
-.secupress-text-big {
+.secupress-text-big.secupress-text-big {
 	font-size: 36px;
 	color: inherit;
 	font-weight: normal;
 }
-.secupress-text-medium {
+.secupress-text-medium.secupress-text-medium {
 	font-size: 21px;
 	color: inherit;
 	font-weight: normal;
 }
-.secupress-text-basup {
+.secupress-text-basup.secupress-text-basup {
 	font-size: 16px;
 }
-.secupress-text-mini {
+.secupress-text-mini.secupress-text-mini {
 	font-size: 10px;
 	color: inherit;
 	font-weight: normal;

@@ -119,6 +119,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'firstScanText'        => __( 'Before setting modules, launch your first scan.', 'secupress' ),
 			'firstScanButton'      => __( 'One Click Scan', 'secupress' ),
 			'firstScanURL'         => esc_url( wp_nonce_url( secupress_admin_url( 'scanners' ), 'first_oneclick-scan' ) ) . '&oneclick-scan=1',
+			'firstScanImage'       => SECUPRESS_ADMIN_IMAGES_URL . 'icon-radar.png',
 		) );
 
 	}
