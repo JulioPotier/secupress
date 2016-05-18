@@ -305,7 +305,7 @@ function __secupress_install_users_login_module( $module ) {
 	// First install.
 	if ( 'all' === $module ) {
 		// Activate "Ask for old password" submodule.
-		secupress_activate_submodule( 'users-login', 'ask-old-password' );
+		secupress_activate_submodule_silently( 'users-login', 'ask-old-password' );
 	}
 
 	// First install or reset.

@@ -121,7 +121,7 @@ add_action( 'secupress.first_install', 'secupress_plugins_themes_module_activati
  */
 function secupress_plugins_themes_module_activation( $module ) {
 	if ( 'all' === $module ) {
-		secupress_activate_submodule( 'plugins-themes', 'detect-bad-plugins' );
-		secupress_activate_submodule( 'plugins-themes', 'detect-bad-themes' );
+		secupress_activate_submodule_silently( 'plugins-themes', 'detect-bad-plugins' );
+		secupress_activate_submodule_silently( 'plugins-themes', 'detect-bad-themes' );
 	}
 }
