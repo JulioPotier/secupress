@@ -79,6 +79,8 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		// JS.
 		wp_enqueue_script( 'secupress-modules-js',  SECUPRESS_ADMIN_JS_URL . 'secupress-modules' . $suffix . '.js', array( 'secupress-common-js' ), $version, true );
 
+		$times = (int) array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
+
 		wp_localize_script( 'secupress-modules-js', 'SecuPressi18nModules', array(
 			// Roles.
 			'selectOneRoleMinimum' => __( 'Select 1 role minimum', 'secupress' ),
@@ -90,6 +92,11 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'unknownError'         => __( 'Unknown error.', 'secupress' ),
 			'delete'               => __( 'Delete', 'secupress' ),
 			'done'                 => __( 'Done!', 'secupress' ),
+			// Home
+			'OCSnotDone'           => __( 'Before activating some modules,<br>please run your first scan!', 'secupress' ),
+			'OCSbutton'            => __( 'ONE CLICK SCAN', 'secupress' ),
+			'OCSdone'              => $times,
+			'OCSradar'             => SECUPRESS_ADMIN_IMAGES_URL . 'swal2-radar.png',
 			// Backups.
 			'confirmDeleteBackups' => __( 'You are about to delete all your backups.', 'secupress' ),
 			'yesDeleteAll'         => __( 'Yes, delete all backups', 'secupress' ),
