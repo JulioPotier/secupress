@@ -25,7 +25,7 @@ if ( SecuPressi18nModules.alreadyScanned == 0 ) {
 	var modal_content = '<p class="secupress-text-medium secupress-mt1 secupress-mb1">'
 							+ SecuPressi18nModules.firstScanText
 					  + '</p>'
-					  + '<p>'
+					  + '<p class="secupress-mt1 secupress-mb1">'
 					  		+ '<a class="secupress-button secupress-button-primary button-secupress-scan" href="' + SecuPressi18nModules.firstScanURL + '">'
 					  			+ '<span class="icon">'
 									+ '<i class="icon-radar" aria-hidden="true"></i>'
@@ -40,8 +40,9 @@ if ( SecuPressi18nModules.alreadyScanned == 0 ) {
 		title: null,
 		html: modal_content,
 		type:  null,
+		width: 400,
 		showConfirmButton: false,
-		showCloseButton: false,
+		showCloseButton: true,
 		showCancelButton: false,
 		imageUrl: SecuPressi18nModules.firstScanImage,
 		imageWidth: 113,

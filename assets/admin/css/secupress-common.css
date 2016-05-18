@@ -928,7 +928,7 @@
 
 /* Swal alternative styles */
 body[class*=" secupress"] .sweet-overlay {
-	background: rgba(34, 40, 49, .7);
+	background: rgba(34, 40, 49, .8);
 }
 .secupress-swal-dark-header .sweet-icon {
 	display: none!important;
@@ -1485,4 +1485,8 @@ table.fixed .column-date {
 .secupress-swal.sweet-alert .sweet-cancel:hover,
 .secupress-swal.sweet-alert .sweet-cancel:hover {
 	background: #393e46!important;
+}
+.secupress-swal .secupress-button {
+	letter-spacing: 0.1em;
+	box-shadow: 0 6px 12px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05), 0 3px 4px rgba(0,0,0,.05);
 }
