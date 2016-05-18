@@ -957,7 +957,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 			// resize the container
 			SPautoSized.textareaParentHeight( $container, $textarea );
 
-			// add (+) button
+			// add (+) button				
 			if ( e.scrollHeight > $container.height() ) {
 				SPautoSized.handleExpendButton( $container, true ); // create
 			} else {
@@ -967,7 +967,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 
 		return true;
 	};
-
+	
 	// function to resize textarea parent
 	SPautoSized.textareaParentHeight = function($container, $textarea) {
 		$container.css(
@@ -1042,25 +1042,5 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		}
 		return false;
 	});
-
-})(jQuery);
-
-// Home ============================================================================
-(function($) {
-
-	if ( 'secupress_page_secupress_modules' != pagenow ) {
-		return false;
-	}
-
-	if ( "0" == SecuPressi18nModules.OCSdone ) {
-		swal( {
-			title: '',
-			text: '<strong>' + SecuPressi18nModules.OCSnotDone + '</strong>',
-			confirmButtonColor: '#2BCDC1',
-			confirmButtonText: '<i class="icon-radar" aria-hidden="true"></i> ' + SecuPressi18nModules.OCSbutton,
-			confirmButtonClass: 'secupress-button',
-			imageUrl: SecuPressi18nModules.OCSradar,
-		} );
-	}
 
 })(jQuery);
