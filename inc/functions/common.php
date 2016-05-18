@@ -88,6 +88,7 @@ function secupress_get_scanners() {
 			'Easy_Login',
 			'Subscription',
 			'WP_Config',
+			'DB_Prefix',
 			'Salt_Keys',
 			'Passwords_Strength',
 			'Chmods',
