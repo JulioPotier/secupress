@@ -52,7 +52,7 @@ if ( secupress_is_pro() ) :
 
 	// SMS.
 	$this->add_field( array(
-		'title'        => __( 'By SMS', 'secupress' ),
+		'title'        => __( 'SMS', 'secupress' ),
 		'depends'      => $activated_field_name . '_sms',
 		'label_for'    => $this->get_field_name( 'sms_number' ),
 		'type'         => 'tel',
@@ -62,7 +62,7 @@ if ( secupress_is_pro() ) :
 
 	// Push.
 	$this->add_field( array(
-		'title'        => __( 'By push notification', 'secupress' ),
+		'title'        => __( 'Push notification', 'secupress' ),
 		'depends'      => $activated_field_name . '_push',
 		'label_for'    => $this->get_field_name( 'push' ),
 		'type'         => 'text',
@@ -72,7 +72,7 @@ if ( secupress_is_pro() ) :
 
 	// Slack.
 	$this->add_field( array(
-		'title'        => __( 'With Slack', 'secupress' ),
+		'title'        => __( 'Slack', 'secupress' ),
 		'depends'      => $activated_field_name . '_slack',
 		'label_for'    => $this->get_field_name( 'slack' ),
 		'type'         => 'text',
@@ -82,7 +82,7 @@ if ( secupress_is_pro() ) :
 
 	// Twitter.
 	$this->add_field( array(
-		'title'        => __( 'With Twitter', 'secupress' ),
+		'title'        => __( 'Twitter', 'secupress' ),
 		'depends'      => $activated_field_name . '_twitter',
 		'label_for'    => $this->get_field_name( 'twitter' ),
 		'type'         => 'text',

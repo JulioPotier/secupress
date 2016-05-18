@@ -248,42 +248,62 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 		add_filter( 'post_class', array( $this, '_add_current_log_class' ), 10, 3 );
 		?>
 		<div class="secupress-log-content" data-logid="<?php echo $this->current_log_id; ?>">
-			<p class="log-header">
+			<div class="secupress-log-content-header secupress-section-primary">
+				<div class="secupress-flex">
+					<p class="secupress-log-title">
+						<?php esc_html_e( 'Log Details', 'secupress' ); ?>
+					</p>
+					<p class="secupress-log-delete-actions">
+						<a class="secupress-action-links secupress-delete-log" href="<?php echo esc_url( $delete_url ); ?>">
+							<i class="icon-trash" aria-hidden="true"></i>
+							<?php _e( 'Delete log', 'secupress' ); ?>
+						</a>
+						<span class="spinner secupress-inline-spinner"></span>
 
-				<a class="secupress-delete-log" href="<?php echo esc_url( $delete_url ); ?>"><?php _e( 'Delete this Log', 'secupress' ); ?></a>
-				<span class="spinner secupress-inline-spinner"></span>
+						<a class="secupress-action-links secupress-delete-logs-by-user_id" href="<?php echo esc_url( $delete_by_user_id_url ); ?>">
+							<i class="icon-trash" aria-hidden="true"></i>
+							<?php echo $user_raw->user_id ? __( 'Delete logs for this user', 'secupress' ) : __( 'Delete logs without user ID', 'secupress' ); ?>
+						</a>
+						<span class="spinner secupress-inline-spinner"></span>
+					</p>
+				</div>
+				<div class="secupress-flex">
+					<p class="secupress-log-user">
+						<?php
+						$referer = add_query_arg( 'log', $this->current_log_id, $paged_page_url );
+						$filters = array(
+							'user_ip'    => add_query_arg( 'user_ip', '%s', $page_url ),
+							'user_id'    => add_query_arg( 'user_id', '%d', $page_url ),
+							'user_login' => add_query_arg( 'user_login', '%s', $page_url ),
+						);
+						echo $log->get_user( false, $referer, $filters );
+						?>
+					</p>
+					<p class="secupress-ip-handler">
+						<?php if ( ! secupress_ip_is_whitelisted( $user_raw->user_ip ) && secupress_get_ip() !== $user_raw->user_ip ) { ?>
+							<a class="secupress-action-links secupress-ban-ip" href="<?php echo esc_url( $ban_ip_url ); ?>">
+								<i class="icon-times-circle" aria-hidden="true"></i>
+								<?php esc_html_e( 'Ban this IP', 'secupress' ); ?>
+							</a>
+							<span class="spinner secupress-inline-spinner"></span>
+						<?php } ?>
 
-				<a class="secupress-delete-logs-by-user_id" href="<?php echo esc_url( $delete_by_user_id_url ); ?>"><?php echo $user_raw->user_id ? sprintf( __( 'Delete Logs with the User ID %s', 'secupress' ), '<strong>' . $user_raw->user_id . '</strong>' ) : __( 'Delete Logs without User ID', 'secupress' ); ?></a>
-				<span class="spinner secupress-inline-spinner"></span>
-
-				<a class="secupress-delete-logs-by-ip" href="<?php echo esc_url( $delete_by_ip_url ); ?>"><?php printf( __( 'Delete Logs with the IP %s', 'secupress' ), '<code>' . $user_raw->user_ip . '</code>' ); ?></a>
-				<span class="spinner secupress-inline-spinner"></span>
-
-				<?php if ( ! secupress_ip_is_whitelisted( $user_raw->user_ip ) && secupress_get_ip() !== $user_raw->user_ip ) : ?>
-					<a class="secupress-ban-ip" href="<?php echo esc_url( $ban_ip_url ); ?>"><?php printf( __( 'Ban the IP %s', 'secupress' ), '<code>' . $user_raw->user_ip . '</code>' ); ?></a>
-					<span class="spinner secupress-inline-spinner"></span>
-				<?php endif; ?>
-
-				<a class="close" href="<?php echo esc_url( $paged_page_url ); ?>"><?php _e( 'Close' ); ?></a>
-
-			</p>
-
-			<p class="log-user">
-				<?php
-				$referer = add_query_arg( 'log', $this->current_log_id, $paged_page_url );
-				$filters = array(
-					'user_ip'    => add_query_arg( 'user_ip', '%s', $page_url ),
-					'user_id'    => add_query_arg( 'user_id', '%d', $page_url ),
-					'user_login' => add_query_arg( 'user_login', '%s', $page_url ),
-				);
-				echo $log->get_user( false, $referer, $filters );
-				?>
-			</p>
-
-			<p class="log-message">
+						<a class="secupress-action-links secupress-delete-logs-by-ip" href="<?php echo esc_url( $delete_by_ip_url ); ?>">
+							<i class="icon-trash" aria-hidden="true"></i>
+							<?php esc_html_e( 'Delete logs with this IP', 'secupress' ); ?>
+						</a>
+						<span class="spinner secupress-inline-spinner"></span>
+					</p>
+				</div>
+				<a class="close" href="<?php echo esc_url( $paged_page_url ); ?>">
+					<i class="icon-squared-cross" aria-hidden="true"></i>
+					<span class="screen-reader-text"><?php _e( 'Close' ); ?></span>
+				</a>
+			</div>
+			<div class="secupress-log-content-message">
 				<?php echo $log->get_message(); ?>
-			</p>
-		</div>
+			</div>
+		</div><!-- .secupress-log-content -->
 		<?php
 		return true;
 	}

@@ -43,11 +43,11 @@
 
 @font-face {
 	font-family: 'secupress';
-	src:url('../fonts/secupress.eot?im6m');
-	src:url('../fonts/secupress.eot?im6m#iefix') format('embedded-opentype'),
-		url('../fonts/secupress.ttf?im6m') format('truetype'),
-		url('../fonts/secupress.woff?im6m') format('woff'),
-		url('../fonts/secupress.svg?im6m#secupress') format('svg');
+	src:url('../fonts/secupress.eot?3y7yrc');
+	src:url('../fonts/secupress.eot?3y7yrc#iefix') format('embedded-opentype'),
+		url('../fonts/secupress.ttf?3y7yrc') format('truetype'),
+		url('../fonts/secupress.woff?3y7yrc') format('woff'),
+		url('../fonts/secupress.svg?3y7yrc#secupress') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -67,7 +67,12 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
-
+.icon-squared-cross:before { content: "\e914"; }
+.icon-bell:before { content: "\e915"; }
+.icon-folder:before { content: "\e916"; }
+.icon-mail2:before { content: "\e917"; }
+.icon-smartphone:before { content: "\e918"; }
+.icon-upcloud:before { content: "\e919"; }
 .icon-antispam:before { content: "\e908"; }
 .icon-backups:before { content: "\e909"; }
 .icon-core:before { content: "\e90a"; }
@@ -87,7 +92,6 @@
 .icon-radar:before { content: "\e900"; }
 .icon-info:before { content: "\e901"; }
 .icon-ask:before { content: "\e902"; }
-.icon-secupress-simple:before { content: "\e907"; }
 .icon-secupress:before { content: "\e903"; }
 .icon-star:before { content: "\f005"; }
 .icon-star-empty:before { content: "\f006"; }
@@ -112,6 +116,28 @@
 .icon-plugin:before { content: "\f1e6"; }
 .icon-calendar-add:before { content: "\f271"; }
 .icon-calendar-remove:before { content: "\f272"; }
+.icon-heart:before { content: "\f004"; }
+.icon-cog:before { content: "\f013"; }
+.icon-gear:before { content: "\f013"; }
+.icon-times-circle:before { content: "\f057"; }
+.icon-heart-o:before { content: "\f08a"; }
+.icon-twitter:before { content: "\f099"; }
+.icon-angle-double-left:before { content: "\f100"; }
+.icon-angle-double-right:before { content: "\f101"; }
+.icon-angle-left:before { content: "\f104"; }
+.icon-angle-right:before { content: "\f105"; }
+.icon-angle-up:before { content: "\f106"; }
+.icon-angle-down:before { content: "\f107"; }
+.icon-terminal:before { content: "\f120"; }
+.icon-code:before { content: "\f121"; }
+.icon-star-half-empty:before { content: "\f123"; }
+.icon-star-half-full:before { content: "\f123"; }
+.icon-star-half-o:before { content: "\f123"; }
+.icon-minus-square-o:before { content: "\f147"; }
+.icon-dropbox:before { content: "\f16b"; }
+.icon-plus-square-o:before { content: "\f196"; }
+.icon-slack:before { content: "\f198"; }
+.icon-trash:before { content: "\f1f8"; }
 
 .icon-radar:before {
 	font-size: 1.3em;
@@ -366,6 +392,11 @@
 	background: #222831;
 	color: #FFF;
 }
+.secupress-section-gray-dark,
+.secupress-bg-gray-dark {
+	background: #393E46;
+	color: #FFF;
+}
 .secupress-section-light,
 .secupress-bg-light {
 	background: #FFF;
@@ -375,6 +406,10 @@
 .secupress-bg-gray {
 	background: #F2F2F6;
 	color: #393E46;
+}
+.secupress-section-primary {
+	background: #26B3A9;
+	color: #FFF;
 }
 
 /* Border in sections */
@@ -731,6 +766,54 @@
 	color: rgba(0,0,0,.5);
 }
 
+/* Checkboxes mini */
+.secupress-checkbox-mini:not(:checked) + label:before,
+.secupress-checkbox-mini:checked + label:before,
+.secupress-checkbox-mini:not(:checked) + .label-text:before,
+.secupress-checkbox-mini:checked + .label-text:before {
+	width: 16px;
+	height: 16px;
+}
+.secupress-checkbox-mini:not(:checked) + label,
+.secupress-checkbox-mini:checked + label,
+.secupress-checkbox-mini:not(:checked) + .label-text,
+.secupress-checkbox-mini:checked + .label-text {
+	margin: 0.15em 0;
+	padding-left: 28px;
+}
+.secupress-checkbox-mini:not(:checked) + label:after,
+.secupress-checkbox-mini:checked + label:after,
+.secupress-checkbox-mini:not(:checked) + .label-text:after,
+.secupress-checkbox-mini:checked + .label-text:after {
+	left: 4px;
+	font-size: 12px;
+}
+.secupress-setting-row .secupress-checkbox-mini.secupress-checkbox-mini:not(:checked) + label:after,
+.secupress-setting-row .secupress-checkbox-mini.secupress-checkbox-mini:checked + label:after,
+.secupress-setting-row .secupress-checkbox-mini.secupress-checkbox-mini:not(:checked) + .label-text:after,
+.secupress-setting-row .secupress-checkbox-mini.secupress-checkbox-mini:checked + .label-text:after {
+	top: 0;
+}
+.secupress-setting-row .secupress-checkbox-mini.secupress-checkbox-mini:not(:checked) + label:before,
+.secupress-setting-row .secupress-checkbox-mini.secupress-checkbox-mini:checked + label:before,
+.secupress-setting-row .secupress-checkbox-mini.secupress-checkbox-mini:not(:checked) + .label-text:before,
+.secupress-setting-row .secupress-checkbox-mini.secupress-checkbox-mini:checked + .label-text:before {
+	top: 0;
+}
+
+/* Indeterminate styles */
+.secupress-checkbox.secupress-checkbox:indeterminate + label:after,
+.secupress-checkbox.secupress-checkbox:indeterminate + .label-text:after {
+	content: "";
+	width: 12px;
+	height: 3px;
+	background: #26b3a9;
+	border-radius: 3px;
+	top: 8px!important;
+	-webkit-transform: scale(1);
+	transform: scale(1);
+}
+
 /* Specific for radios */
 .secupress-radio:not(:checked) + label:before,
 .secupress-radio:checked + label:before,
@@ -749,6 +832,121 @@
 	background: #2BCDC1;
 	border-radius: 100%;
 	box-shadow: 0 1px 0 #26B3A9;
+}
+
+/**
+ * === Other Form items
+ */
+[class^="secupress-"] input[type="text"],
+[class^="secupress-"] input[type="email"],
+[class^="secupress-"] input[type="password"],
+[class^="secupress-"] input[type="number"],
+[class^="secupress-"] input[type="tel"] {
+	border: 2px solid #ECF0F1;
+	font-size: 13px;
+	padding: 7px 10px;
+}
+
+/* Sweet alert childrens */
+.secupress-swal-form .secupress-block-label label {
+	display: block;
+	margin: 1em 0 0.5em;
+	color: #5A626F;
+	font-weight: bold;
+	font-size: 13px;
+}
+.secupress-swal-form .secupress-block-label {
+	text-align: left;
+}
+.secupress-swal-form i {
+	color: #26B3A9;
+	margin-right: 5px;
+}
+.secupress-block-label input {
+	width: 100%;
+}
+.secupress-swal-form {
+	width: 400px;
+	max-width: 100%;
+	margin: 0 auto;
+	text-align: left;
+}
+.secupress-swal-form h4 + .description {
+	display: block;
+	margin: -.33em 0 1em;
+	font-size: 1em;
+}
+.secupress-boxed-group,
+.secupress-scrollable {
+	max-height: 370px;
+	overflow-y: auto;
+}
+.secupress-boxed-group,
+.secupress-group {
+	margin-top: 1em;
+}
+.secupress-boxed-group {
+	max-height: 20em;
+	padding: 0 0 .2em .5em;
+	border: solid 1px #dfdfdf;
+}
+.secupress-swal-form .secupress-boxed-group {
+	max-height: 8.5em;
+}
+.secupress-boxed-group > legend,
+.secupress-group > legend {
+	margin-bottom: .5em;
+}
+.secupress-boxed-group > fieldset,
+.secupress-group > fieldset {
+	margin-left: .875em;
+}
+.secupress-boxed-group > li,
+.secupress-group > li {
+	margin: .6em .5em .4em 0;
+}
+.secupress-boxed-group > li + li,
+.secupress-group > li + li {
+	margin-top: .4em;
+}
+.secupress-boxed-group > .secupress-large-row,
+.secupress-group > .secupress-large-row {
+	margin: 4px .5em 0 0;
+}
+.secupress-boxed-group > .secupress-large-row + .secupress-large-row,
+.secupress-group > .secupress-large-row + .secupress-large-row {
+	padding-top: 4px;
+	border-top: 1px solid #ccc;
+}
+.secupress-swal-form .show-input ul {
+	margin-top: 0;
+}
+.secupress-swal-form label .more-info {
+	font-size: 13px;
+	font-style: italic;
+}
+
+/* Swal alternative styles */
+body[class*=" secupress"] .sweet-overlay {
+	background: rgba(34, 40, 49, .7);
+}
+.secupress-swal-dark-header .sweet-icon {
+	display: none!important;
+}
+.secupress-swal-dark-header.secupress-swal-dark-header.secupress-swal h2 {
+	margin: -20px -20px 20px;
+	padding: 5px 55px 5px 20px;
+	text-align: left;
+	color: #FFF;
+	background: #222831;
+}
+.secupress-where-info.secupress-where-info {
+	margin-top: .5em;
+	text-align: left;
+}
+.secupress-where-info a {
+	vertical-align: 3px;
+	font-size: 11px;
 }
 
 /**
@@ -984,6 +1182,10 @@
 	padding: 20px 15px 20px;
 	border-radius: 3px 3px 0 0;
 }
+.secupress-flex .secupress-col-cta {
+	min-width: 280px;
+	text-align: right;
+}
 .secupress-logo-block p {
 	margin: 0;
 	font-weight: bold;
@@ -1058,14 +1260,28 @@
 .secublock + .submit input {
 	font-size: 0.95em;
 	letter-spacing: 0.1em;
-	box-shadow: ;
+	box-shadow: 0 6px 12px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05), 0 3px 4px rgba(0,0,0,.05);
 }
 .secupress-setting-row {
 	padding: 20px;
-	border-bottom: 1px solid #EEE;
+}
+.secupress-setting-row + .secupress-setting-row {
+	margin-top: 20px;
+	border-top: 1px solid #EEE;
 }
 .secupress-form-table > .secupress-setting-row:last-child {
 	border-bottom: 0;
+}
+/* row with dependance */
+.secupress-setting-row[class*=" depends-"] {
+	padding: 5px 20px 5px 18px;
+	margin: 20px 0 20px 50px;
+	border-top: 0;
+	border-left: 2px solid #2BCDC1;
+	background: #FFF;
+}
+.secupress-setting-row[class*=" depends-"] .secupress-setting-row-title {
+	margin-top: 0;
 }
 .secupress-setting-row.secupress-pro-row a {
 	color: #f7ab13;
@@ -1078,7 +1294,7 @@
 }
 .secupress-setting-row-title {
 	margin: 10px 0;
-	font-size: 18px;
+	font-size: 16px;
 	font-weight: bold;
 	color: #2BCDC1;
 }
@@ -1119,7 +1335,7 @@ label.secupress-setting-row-title {
 
 .secupress-wrapper {
 	max-width: 100%;
-	width: 1240px;
+	width: 1125px; /* 1240 */
 	padding-top: 20px;
 }
 
@@ -1207,66 +1423,6 @@ pre code, pre samp, pre kbd {
 	border-radius: 0;
 	background: none;
 }
-/**/
-.secupress-swal-form {
-	max-width: 400px;
-	margin: 0 auto;
-	text-align: left;
-}
-.secupress-swal-form h4 + .description {
-	display: block;
-	margin: -.33em 0 1em;
-	font-size: 1em;
-}
-.secupress-boxed-group,
-.secupress-scrollable {
-	max-height: 370px;
-	overflow-y: auto;
-}
-.secupress-boxed-group,
-.secupress-group {
-	margin-top: 1em;
-}
-.secupress-boxed-group {
-	max-height: 20em;
-	padding: 0 0 .2em .5em;
-	border: solid 1px #dfdfdf;
-}
-.secupress-swal-form .secupress-boxed-group {
-	max-height: 8.5em;
-}
-.secupress-boxed-group > legend,
-.secupress-group > legend {
-	margin-bottom: .5em;
-}
-.secupress-boxed-group > fieldset,
-.secupress-group > fieldset {
-	margin-left: .875em;
-}
-.secupress-boxed-group > li,
-.secupress-group > li {
-	margin: .6em .5em .4em 0;
-}
-.secupress-boxed-group > li + li,
-.secupress-group > li + li {
-	margin-top: .4em;
-}
-.secupress-boxed-group > .secupress-large-row,
-.secupress-group > .secupress-large-row {
-	margin: 4px .5em 0 0;
-}
-.secupress-boxed-group > .secupress-large-row + .secupress-large-row,
-.secupress-group > .secupress-large-row + .secupress-large-row {
-	padding-top: 4px;
-	border-top: 1px solid #ccc;
-}
-.secupress-swal-form .show-input ul {
-	margin-top: 0;
-}
-.secupress-swal-form label .more-info {
-	font-size: 13px;
-	font-style: italic;
-}
 /***/
 .secupress-inline-spinner {
 	display: inline-block;
@@ -1281,40 +1437,14 @@ pre code, pre samp, pre kbd {
 	visibility: visible;
 }
 /***/
-.secupress-logs-list-wrapper {
-	padding-left: 1000px;
-}
-.secupress-logs-list {
-	float: left;
-	width: 980px;
-	margin-left: -1000px;
-}
-.secupress-log-content {
-	float: right;
-	width: 100%;
-	min-height: 100px;
-}
-.secupress-empty-log-content p {
-	text-align: center;
-	font-size: 2em;
-}
-.secupress-log-content .close {
-	float: right;
-}
 table.fixed .column-critic {
 	width: 8em;
 }
 table.fixed .column-date {
-	width: 16em;
-}
-.striped tr.current-log {
-	background: #e4e4e4;
+	width: 11em;
 }
 .column-title .secupress-inline-spinner {
 	float: right;
-}
-.secupress-logs-list a code {
-	color: #555;
 }
 [class^="secupress-"] .hidden,
 [class*=" secupress-"] .hidden {

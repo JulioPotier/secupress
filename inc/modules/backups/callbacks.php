@@ -98,9 +98,7 @@ function __secupress_download_backup_ajax_post_cb() {
 
 	$file = glob( secupress_get_hashed_folder_name( 'backup', WP_CONTENT_DIR . '/backups/' ) . '*' . $_GET['file'] . '*.{zip,sql}', GLOB_BRACE );
 
-	if ( $file ) {
-		$file = reset( $file );
-	} else {
+	if ( ! $file ) {
 		secupress_admin_die();
 	}
 
@@ -108,17 +106,35 @@ function __secupress_download_backup_ajax_post_cb() {
 		ini_set( 'zlib.output_compression', 'Off' );
 	}
 
-	header( 'Pragma: public' );
+	ob_start();
+
+	$file = reset( $file );
+	$size = filesize( $file );
+
+	header( $_SERVER['SERVER_PROTOCOL'] . ' 200 OK' );
 	header( 'Expires: 0' );
+	header( 'Pragma: public' );
 	header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
-	header( 'Last-Modified: ' . gmdate( 'D, d M Y H:i:s', filemtime( $file ) ) . ' GMT' );
 	header( 'Cache-Control: private', false );
-	header( 'Content-Type: application/force-download' );
-	header( 'Content-Disposition: attachment; filename="' . basename( $file ) . '"' );
-	header( 'Content-Transfer-Encoding: binary' );
-	header( 'Content-Length: ' . filesize( $file ) );
+	header( 'Content-Type: application/octet-stream' );
+	header( 'Content-Disposition: attachment; filename="' . basename( str_replace( array( '@', '#' ), '-', $file ) ) . '"' );
+	header( 'Last-Modified: ' . gmdate( 'D, d M Y H:i:s', filemtime( $file ) ) . ' GMT' );
+	header( 'Content-Length: ' . $size );
 	header( 'Connection: close' );
-	readfile( $file );
+	ob_end_clean();
+
+	if ( $size < 64 * 1024 ) {
+		readfile( $file );
+	} else {
+		set_time_limit( 0 );
+		$fp = fopen( $file, 'rb' );
+
+		while ( ! feof( $fp ) ) {
+			echo fread( $fp, 64 * 1024 );
+			flush();
+		}
+		fclose( $fp );
+	}
 	die();
 }
 

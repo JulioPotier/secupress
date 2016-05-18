@@ -22,7 +22,7 @@ if ( ( $is_apache || $is_iis7 ) && ! secupress_pre_backup() ) {
 	$rules = secupress_backup_get_protection_content();
 	/** Translators: 1 is a file name, 2 is a folder name, 3 is some code. */
 	$warning = sprintf( __( 'Please create a %1$s file inside the folder %2$s (create the folder if does not exist), then add the following rules to it: %3$s', 'secupress' ), "<code>$file</code>", "<code>$backups_dir</code>", "<pre>$rules</pre>" );
-}elseif ( $is_nginx ) {
+} elseif ( $is_nginx ) {
 	$rules = secupress_backup_get_protection_content();
 	/** Translators: 1 is a file name, 2 is some code. */
 	$warning = sprintf( __( 'Please, add the following rules to your %1$s file: %2$s.', 'secupress' ), '<code>nginx.conf</code>', "<pre>$rules</pre>" );

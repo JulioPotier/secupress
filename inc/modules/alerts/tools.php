@@ -13,16 +13,16 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 function secupress_alert_types_labels( $all = false ) {
 	if ( ! $all ) {
 		return array(
-			'email' => __( 'By Email', 'secupress' ),
+			'email' => __( 'Email', 'secupress' ),
 		);
 	}
 
 	return array(
-		'email'   => __( 'By Email', 'secupress' ),
-		'sms'     => __( 'By SMS', 'secupress' ),
-		'push'    => __( 'By push notification', 'secupress' ),
-		'slack'   => __( 'With Slack', 'secupress' ),
-		'twitter' => __( 'With Twitter', 'secupress' ),
+		'email'   => __( 'Email', 'secupress' ),
+		'sms'     => __( 'SMS', 'secupress' ),
+		'push'    => __( 'Push notification', 'secupress' ),
+		'slack'   => __( 'Slack', 'secupress' ),
+		'twitter' => __( 'Twitter', 'secupress' ),
 	);
 }
 

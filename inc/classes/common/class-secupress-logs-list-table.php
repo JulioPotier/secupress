@@ -424,25 +424,44 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 	 * Display "Delete All" and "Downlad All" buttons.
 	 *
 	 * @since 1.0
+	 * @author Greg (Geoffrey)
 	 *
 	 * @param (string) $which The position: "top" or "bottom".
 	 */
 	protected function extra_tablenav( $which ) {
 		?>
-		<div class="alignleft actions">
+		<div class="secupress-quick-actions alignleft actions">
 			<?php
 			if ( 'top' === $which && $this->has_items() ) {
 				$logs_classname = $this->logs_classname;
 
-				// "Delete All" button.
-				$href = $logs_classname::get_instance()->delete_logs_url( $this->_paged_page_url() );
-
-				echo '<a id="delete_all" class="button apply secupress-clear-logs" href="' . esc_url( $href ) . '">' . __( 'Delete All', 'secupress' ) . '</a> <span class="spinner secupress-inline-spinner"></span>';
-
 				// "Downlad All" button.
 				$href = $logs_classname::get_instance()->download_logs_url( $this->_paged_page_url() );
+				?>
+				<a id="download_all" class="secupress-button secupress-button-primary secupress-button-mini apply secupress-download-logs" href="<?php echo esc_url( $href ); ?>">
+					<span class="icon">
+						<i class="icon-download" aria-hidden="true"></i>
+					</span>
+					<span class="text">
+						<?php esc_html_e( 'Download All', 'secupress' ); ?>
+					</span>
+				</a>
+				<span class="spinner secupress-inline-spinner"></span>
 
-				echo '<a id="download_all" class="button apply secupress-download-logs" href="' . esc_url( $href ) . '">' . __( 'Download All', 'secupress' ) . '</a> <span class="spinner secupress-inline-spinner"></span>';
+				<?php
+				// "Delete All" button.
+				$href = $logs_classname::get_instance()->delete_logs_url( $this->_paged_page_url() );
+				?>
+				<a id="delete_all" class="secupress-button secupress-button-secondary secupress-button-mini apply secupress-clear-logs" href="<?php echo esc_url( $href ); ?>">
+					<span class="icon">
+						<i class="icon-trash" aria-hidden="true"></i>
+					</span>
+					<span class="text">
+						<?php esc_html_e( 'Delete All', 'secupress' ); ?>
+					</span>
+				</a>
+				<span class="spinner secupress-inline-spinner"></span>
+				<?php
 			}
 			?>
 		</div>
@@ -607,10 +626,13 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 	 */
 	public function column_cb( $post ) {
 		?>
-		<label class="screen-reader-text" for="cb-select-<?php the_ID(); ?>"><?php
-			printf( __( 'Select &#8220;%s&#8221;', 'secupress' ), strip_tags( $this->log->get_title() ) );
-		?></label>
-		<input id="cb-select-<?php the_ID(); ?>" type="checkbox" name="post[]" value="<?php the_ID(); ?>" />
+		<label for="cb-select-<?php the_ID(); ?>">
+			<span class="screen-reader-text">
+				<?php printf( __( 'Select &#8220;%s&#8221;', 'secupress' ), strip_tags( $this->log->get_title() ) ); ?>
+			</span>
+			<input id="cb-select-<?php the_ID(); ?>" type="checkbox" name="post[]" value="<?php the_ID(); ?>" class="secupress-checkbox secupress-checkbox-mini" />
+			<span class="label-text"></span>
+		</label>
 		<?php
 	}
 
@@ -664,7 +686,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 	 * @param (object) $post The current WP_Post object.
 	 */
 	public function column_critic( $post ) {
-		echo $this->log->get_criticity( 'icon' ) . ' <span aria-hidden="true">' . $this->log->get_criticity() . '</span>';
+		echo $this->log->get_criticity( 'icon' ) . ' <span class="secupress-log-crit-text">' . $this->log->get_criticity() . '</span>';
 	}
 
 
@@ -677,7 +699,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 	 */
 	public function column_date( $post ) {
 		/** This filter is documented in wp-admin/includes/class-wp-posts-list-table.php */
-		echo apply_filters( 'post_date_column_time', $this->log->get_time(), $post, 'date', 'list' );
+		echo apply_filters( 'post_date_column_time', $this->log->get_time( __( '\<\b\>Y/m/d\<\/\b\> g:i:s a', 'secupress' ) ), $post, 'date', 'list' );
 	}
 
 

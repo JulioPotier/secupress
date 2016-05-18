@@ -1,4 +1,18 @@
 (function($, d, w, undefined) {
+	var SecuPress = {
+		supportButtonColor:  "#F1C40F",
+		swalDefaults:        {
+			confirmButtonText: SecuPressi18nCommon.confirmText,
+			cancelButtonText:  SecuPressi18nCommon.cancelText,
+			type:              "warning",
+			allowOutsideClick: true,
+			customClass:       "wpmedia-swal secupress-swal"
+		},
+		swalConfirmDefaults: {
+			showCancelButton:  true,
+			closeOnConfirm:    false
+		}
+	};
 
 	/**
 	 * Basic tools
@@ -81,7 +95,7 @@
 		var $tabs        = $(this),
 			$content     = $tabs.data('content') ? $( $tabs.data('content') ) : $tabs.next(),
 			$tab_content = $content.find('.secupress-tab-content'),
-			$current     = $tabs.find('.secupress-current').lenght ? $tabs.find('.secupress-current') : $tabs.find('a:first'),
+			$current     = $tabs.find('.secupress-current').length ? $tabs.find('.secupress-current') : $tabs.find('a:first'),
 
 			set_current = function( $item ) {
 				$item.closest('.secupress-tabs').find('a').removeClass('secupress-current').attr('aria-selected', false);
@@ -89,7 +103,7 @@
 			},
 			change_tab = function( $item ) {
 				$tab_content.spHide();
-				$( '#' + $item.attr('aria-control') ).spFadeIn();
+				$( '#' + $item.attr('aria-controls') ).spFadeIn();
 			};
 
 		$tab_content.hide();
@@ -132,6 +146,47 @@
 			return false;
 		} );
 
+	} );
+
+	/**
+	 * Open swal for API Key notice about it
+	 * @author: Geoffrey
+	 * @description That button could be any/everywhere!
+	 */
+	$('.button-secupress-get-api-key').on( 'click.secupress', function(){
+		var $this = $(this),
+			texts = SecuPressi18nCommon.authswal,
+			customForm =  '<div class="secupress-swal-form"><form action="#" method="post">'
+							+ '<p class="secupress-block-label">'
+								+ '<label for="swal-user-email">'
+									+ '<i class="icon-mail" aria-hidden="true"></i>'
+									+ texts.email
+								+ '</label>'
+								+ '<input type="email" name="user-email" id="swal-user-email">'
+							+ '</p>'
+							+ '<p class="secupress-block-label">'
+								+ '<label for="swal-user-api">'
+									+ '<i class="icon-key" aria-hidden="true"></i>'
+									+ texts.apikey
+								+ '</label>'
+								+ '<input type="text" name="user-api" id="swal-user-api">'
+							+ '</p>'
+							+ '<p class="secupress-where-info">'
+								+ '<i class="icon-question-circle" aria-hidden="true"></i>'
+								+ '<a target="_blank" href="#">' + texts.where + '</a>'
+							+ '</p>'
+						+ '</form></div>';
+
+		swal( jQuery.extend( {}, SecuPress.swalDefaults, {
+			title: texts.title,
+			html:  customForm,
+			type:  'info',
+			confirmButtonText: texts.save,
+			customClass: 'wpmedia-swal secupress-swal secupress-swal-dark-header',
+			width: 400
+		} ) );
+
+		return false;
 	} );
 
 } )(jQuery, document, window);

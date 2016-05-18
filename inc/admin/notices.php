@@ -263,15 +263,72 @@ function secupress_warning_no_oneclick_scan_yet() {
 	if ( $times ) {
 		return;
 	}
+	?>
+	<div class="secupress-section-dark secupress-notice secupress-flex">
+		<div class="secupress-col-1-4 secupress-col-logo secupress-text-center">
+			<div class="secupress-logo-block">
+				<div class="secupress-lb-logo">
+					<?php echo secupress_get_logo( array( 'width' => '126' ) ); ?>
+				</div>
+			</div>
+		</div>
+		<div class="secupress-col-2-4 secupress-col-text">
+			<p class="secupress-text-medium"><?php printf( __( '%s is activated, let\'s improve the security of your website!', 'secupress' ), SECUPRESS_PLUGIN_NAME ); ?></p>
+			<p><?php esc_html_e( 'Scan every security points for the first time in your website, right now.', 'secupress' ); ?></p>
+		</div>
+		<div class="secupress-col-1-4 secupress-col-cta">
+			<a class="secupress-button secupress-button-primary button-secupress-scan" href="<?php echo esc_url( wp_nonce_url( secupress_admin_url( 'scanners' ), 'first_oneclick-scan' ) ) . '&oneclick-scan=1'; ?>">
+				<span class="icon">
+					<i class="icon-radar" aria-hidden="true"></i>
+				</span>
+				<span class="text">
+					<?php esc_html_e( 'Scan my website', 'secupress' ); ?>
+				</span>
+			</a>
+		</div>
+	</div><!-- .secupress-section-dark -->
+	<?php
+}
 
-	echo '<div class="secupress-no-oneclick-scan-yet-notice hide-if-no-js">';
-	printf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
-	printf(
-		/* Translators: %s is "One Click Scan". */
-		__( 'Why not run your first %s now?', 'secupress' ), // ////.
-		'<a href="' . esc_url( wp_nonce_url( secupress_admin_url( 'scanners' ), 'first_oneclick-scan' ) ) . '&oneclick-scan=1">' . __( 'One Click Scan', 'secupress' ) . '</a>'
-	);
-	echo "</div>\n";
+
+add_action( 'all_admin_notices', 'secupress_warning_no_api_key', 50 );
+/**
+ * This warning is displayed if consumer email is unknown
+ *
+ * @since 1.0
+ */
+function secupress_warning_no_api_key() {
+	$screen_id = get_current_screen();
+	$screen_id = $screen_id && ! empty( $screen_id->id ) ? $screen_id->id : false;
+
+	if ( 'toplevel_page_secupress_scanners' === $screen_id || ! current_user_can( secupress_get_capability() ) || 'plugins' === $screen_id ) {
+		return;
+	}
+
+	if ( secupress_get_consumer_email() ) {
+		return;
+	}
+	?>
+	<div class="secupress-section-gray-dark secupress-notice mini secupress-flex">
+		<div class="secupress-col-1-4 secupress-col-icon">
+			<i class="icon-secupress-simple" aria-hidden="true"></i>
+		</div>
+		<div class="secupress-col-2-4 secupress-col-text">
+			<p class="secupress-text-medium">Allez plus loin et avoir plus fonctionnalités ?</p>
+			<p>L'API Key vous permettra de sécuriser plus en profondeur votre site web en activant de nouvelles fonctionnalités.</p>
+		</div>
+		<div class="secupress-col-1-4 secupress-col-cta">
+			<a href="<?php echo esc_url( secupress_admin_url( 'settings' ) ); ?>" class="secupress-button secupress-button-primary button-secupress-get-api-key">
+				<span class="icon">
+					<i class="icon-key" aria-hidden="true"></i>
+				</span>
+				<span class="text">
+					<?php _e( 'Add API Key', 'secupress' ); ?>
+				</span>
+			</a>
+		</div>
+	</div><!-- .secupress-section-medium -->
+	<?php
 }
 
 

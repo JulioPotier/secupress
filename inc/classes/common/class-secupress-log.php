@@ -240,17 +240,17 @@ class SecuPress_Log {
 
 		// Filter Logs by IP.
 		if ( ! empty( $filters['user_ip'] ) ) {
-			$user_ip = '<a title="' . esc_attr( sprintf( __( 'Filter Logs with the IP address %s', 'secupress' ), $this->user_ip ) ) . '" href="' . esc_url( sprintf( $filters['user_ip'], urlencode( $this->user_ip ) ) ) . '">' . $user_ip . '</a>';
+			$user_ip = '<a title="' . esc_attr( sprintf( __( 'Filter Logs with the IP address %s', 'secupress' ), $this->user_ip ) ) . '" href="' . esc_url( sprintf( $filters['user_ip'], urlencode( $this->user_ip ) ) ) . '" class="secupress-action-filter-ip">' . $user_ip . '</a>';
 		}
 
 		// Filter Logs by id.
 		if ( $user_id && ! empty( $filters['user_id'] ) ) {
-			$user_id = '<a title="' . esc_attr( sprintf( __( 'Filter Logs with the user ID %d', 'secupress' ), $user_id ) ) . '" href="' . esc_url( sprintf( $filters['user_id'], $user_id ) ) . '">' . $user_id . '</a>';
+			$user_id = '<a title="' . esc_attr( sprintf( __( 'Filter Logs with the user ID %d', 'secupress' ), $user_id ) ) . '" href="' . esc_url( sprintf( $filters['user_id'], $user_id ) ) . '" class="secupress-action-filter-id">' . $user_id . '</a>';
 		}
 
 		// Filter Logs by login.
 		if ( $user_login && ! empty( $filters['user_login'] ) ) {
-			$user_login = '<a title="' . esc_attr( sprintf( __( 'Filter Logs with the user login "%s"', 'secupress' ), $user_login ) ) . '" href="' . esc_url( sprintf( $filters['user_login'], urlencode( $user_login ) ) ) . '">' . $user_login . '</a>';
+			$user_login = '<a title="' . esc_attr( sprintf( __( 'Filter Logs with the user login "%s"', 'secupress' ), $user_login ) ) . '" href="' . esc_url( sprintf( $filters['user_login'], urlencode( $user_login ) ) ) . '" class="secupress-action-filter-login">' . $user_login . '</a>';
 		}
 
 		// If the user exists and is not the current user.
@@ -262,14 +262,14 @@ class SecuPress_Log {
 			}
 			// Add a link to the user's profile page.
 			elseif ( $referer ) {
-				$suffix = __( 'Profile' ); // WP i18n.
+				$suffix = esc_html__( 'Profile' ); // WP i18n.
 			}
 			else {
 				$suffix = '';
 			}
 
 			if ( $referer ) {
-				$suffix = '<a class="user-profile-link" href="' . esc_url( admin_url( 'user-edit.php?user_id=' . $this->user_id . '&wp_http_referer=' . urlencode( esc_url_raw( $referer ) ) ) ) . '">' . $suffix . '</a>';
+				$suffix = '<a class="user-profile-link" href="' . esc_url( admin_url( 'user-edit.php?user_id=' . $this->user_id . '&amp;wp_http_referer=' . urlencode( esc_url_raw( $referer ) ) ) ) . '">' . $suffix . '</a>';
 			}
 
 			if ( $suffix ) {
@@ -278,12 +278,20 @@ class SecuPress_Log {
 		}
 
 		if ( $this->user_id ) {
-			/* Translators: 1: IP address, 2: user ID, 3: user login, 4: separator. */
-			return sprintf( __( 'IP: %1$s %4$s ID: %2$s %4$s Login: %3$s', 'secupress' ), $user_ip, $user_id, $user_login, '|' );
+			$out   = '';
+			$infos = array(
+				'ip'    => __( 'IP', 'secupress' ),
+				'id'    => __( 'ID', 'secupress' ),
+				'login' => __( 'Login', 'secupress' ),
+			);
+			foreach ( $infos as $class => $label ) {
+				$var  = 'user_' . $class;
+				$out .= sprintf( '<span class="%s"><b>%s</b> %s</span> ', $class, sprintf( __( '%s:', 'secupress' ), $label ), $$var );
+			}
+			return $out;
 		}
 
-		/* translators: 1: IP address */
-		return sprintf( __( 'IP: %s', 'secupress' ), $user_ip );
+		return sprintf( '<span class="%s"><b>%s</b> %s</span> ', 'ip', sprintf( __( '%s:', 'secupress' ), __( 'IP', 'secupress' ) ), $user_ip );
 	}
 
 
@@ -437,7 +445,7 @@ class SecuPress_Log {
 
 		$data = $this->data;
 
-		// Replace the `<pre>` blocks with `<code>` inline blocks and shorten them.
+		// Replace the `<pre>` blocks with `<code>` inline blocks.
 		foreach ( $data as $key => $value ) {
 			if ( preg_match( '/^<pre>(?:<code>)?(.*)(?:<\/code>)?<\/pre>$/', $value, $matches ) ) {
 				$matches[1]   = explode( "\n", $matches[1] );

@@ -165,14 +165,28 @@ p.secupress-sh-subtitle {
 }
 
 .secupress-tab-content-header {
+	position: relative;
 	padding: 15px 175px 25px 20px;
 	background: #F2F2F6;
 	color: #5A626F; /*#393E46*/
 }
+.secupress-tab-content-header p {
+	position: relative;
+	z-index: 2;
+}
+.secupress-tab-content-header i {
+	position: absolute;
+	z-index: 1;
+	right: 45px;
+	top: 50%;
+	margin-top: -40px;
+	font-size: 80px;
+	color: #DFE3E8;
+}
 .secupress-tc-title {
 	margin-top: .5em;
 	font-size: 23px;
-	font-size: 600;
+	font-weight: 600;
 	color: #393E46;
 }
 
@@ -402,6 +416,273 @@ span.secupress-get-pro-version {
 	box-shadow: 0 6px 12px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05), 0 3px 4px rgba(0,0,0,.05);
 }
 
+/* 
+	Module User Agent List
+	&
+	Expandable textareas
+*/
+.secupress-expand-trigger {
+	position: absolute;
+	left: 50%;
+	bottom: 0;
+	margin: 0 0 -14px -14px;
+	height: 28px; width: 28px;
+	padding-top: 5px;
+	background: #FFF;
+	border: 1px solid #eee;
+	text-align: center;
+	box-shadow: 0 1px 4px rgba(0,0,0,.1);
+	border-radius: 100%;
+	transition: all .275s;
+}
+.secupress-expand-trigger i:before {
+	color: #26B3A9;
+}
+.secupress-expand-trigger.open {
+	background: #ECF0F1;
+	transform: rotate(45deg);
+}
+.secupress-setting-row_bbq-headers_user-agents-list .secupress-get-pro-col,
+.secupress-setting-row_bbq-url-content_bad-contents-list .secupress-get-pro-col,
+.secupress-setting-row_backups-storage_location .secupress-get-pro-col,
+.secupress-setting-row_notification-types_types .secupress-get-pro-col,
+[id="secupress-settings-module_services--"] .secupress-get-pro-col {
+	-webkit-flex-basis: 0;
+	-ms-flex-preferred-size: 0;
+	flex-basis: 0;
+
+}
+.secupress-setting-row_bbq-headers_user-agents-list .secupress-textarea-container,
+.secupress-setting-row_bbq-url-content_bad-contents-list .secupress-textarea-container {
+	width: 100%;
+	height: 200px;
+	margin: .75em auto;
+	padding: 10px;
+	background: #ECF0F1;
+	border: 1px solid #ECF0F1;
+	overflow: hidden;
+	transition: all .275s;
+}
+.secupress-textarea-container.textarea-focused {
+	background: #FFF;
+	border-color: #eee;
+}
+.secupress-setting-row_bbq-headers_user-agents-list label,
+.secupress-setting-row_bbq-url-content_bad-contents-list label {
+	position: relative;
+	display: block;
+}
+.secupress-setting-row_bbq-headers_user-agents-list textarea,
+.secupress-setting-row_bbq-url-content_bad-contents-list textarea {
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+	border: 0;
+	font-size: 1em;
+	line-height: 1.7;
+	background: #ECF0F1;
+	color: #5A626F;
+	font-family: Consolas, Monaco, "Andale Mono", monospace;
+	box-shadow: none;
+	transition: all .275s;
+	resize: none;
+}
+.secupress-setting-row_bbq-headers_user-agents-list textarea:focus,
+.secupress-setting-row_bbq-url-content_bad-contents-list textarea:focus {
+	background: #FFF;
+}
+
+.secupress-textarea-container + .description.desc,
+.secupress-textarea-container + .description.desc {
+	padding-left: 0;
+	margin-top: 1.5em;
+}
+
+/*
+	Big Radio (Imaged radios)
+	Modules: Backup, Alerts
+ */
+@media (min-width: 1125px) {
+	.fieldname-backups-storage_location .secupress-radio-line,
+	.fieldname-notification-types_types .secupress-fieldset-item-checkboxes {
+		float: left;
+		width: 20%;
+		margin-bottom: 2em;
+	}
+	.fieldname-backups-storage_location .secupress-radio-line label:before,
+	.fieldname-notification-types_types .secupress-fieldset-item-checkboxes label:before {
+		content: "";
+		display: block;
+		height: 117px;
+		margin: 0 15px 10px 0;
+		border: 1px solid #ddd;
+		background: #FFF none 50% 50% no-repeat;
+		border-radiu: 3px;
+	}
+	/* backups */
+	.secupress-radio-line label[for="backups-storage_location_local"]:before {
+		background-image: url("../images/backup-local.png");
+	}
+	.secupress-radio-line label[for="backups-storage_location_ftp"]:before {
+		background-image: url("../images/backup-ftp.png");
+	}
+	.secupress-radio-line label[for="backups-storage_location_amazons3"]:before {
+		background-image: url("../images/backup-amazon.png");
+	}
+	.secupress-radio-line label[for="backups-storage_location_dropbox"]:before {
+		background-image: url("../images/backup-dropbox.png");
+	}
+	.secupress-radio-line label[for="backups-storage_location_rackspace"]:before {
+		background-image: url("../images/backup-rackspace-cloud.png");
+	}
+	/* Alerts */
+	.secupress-fieldset-item-checkboxes label[for="notification-types_types_email"]:before {
+		background-image: url("../images/alert-email.png");
+	}
+	.secupress-fieldset-item-checkboxes label[for="notification-types_types_sms"]:before {
+		background-image: url("../images/alert-sms.png");
+	}
+	.secupress-fieldset-item-checkboxes label[for="notification-types_types_push"]:before {
+		background-image: url("../images/alert-push.png");
+	}
+	.secupress-fieldset-item-checkboxes label[for="notification-types_types_slack"]:before {
+		background-image: url("../images/alert-slack.png");
+	}
+	.secupress-fieldset-item-checkboxes label[for="notification-types_types_twitter"]:before {
+		background-image: url("../images/alert-twitter.png");
+	}
+	.fieldname-backups-storage_location .secupress-radio-line label,
+	.fieldname-backups-storage_location .secupress-get-pro-version,
+	.fieldname-notification-types_types .secupress-fieldset-item-checkboxes label,
+	.fieldname-notification-types_types .secupress-get-pro-version {
+		position: relative;
+		display: block;
+		margin-left: 0;
+	}
+	/* Hide SecuPress pro messages */
+	.fieldname-backups-storage_location .secupress-get-pro-version,
+	.fieldname-notification-types_types .secupress-get-pro-version {
+		margin-top: .75em;
+		visibility: hidden;
+	}
+	.fieldname-backups-storage_location .secupress-get-pro-version:after,
+	.fieldname-notification-types_types .secupress-get-pro-version:after {
+		position: absolute;
+		top: 0; left: 0; right: 0;
+		content: "";
+		height: 3px;
+		width: 100%;
+		background: #ECF0F1;
+		visibility: visible;
+	}
+	/* But display the first one */
+	.fieldname-backups-storage_location .secupress-radio-line:not(.secupress-pro-option) + .secupress-pro-option .secupress-get-pro-version,
+	.fieldname-notification-types_types .secupress-fieldset-item-checkboxes:not(.secupress-pro-option) + .secupress-pro-option .secupress-get-pro-version {
+		visibility: visible;
+		padding-left: 48px;
+		padding-top: 1.75em;
+	}
+	.fieldname-backups-storage_location .secupress-radio-line:not(.secupress-pro-option) + .secupress-pro-option .secupress-get-pro-version:before,
+	.fieldname-notification-types_types .secupress-fieldset-item-checkboxes:not(.secupress-pro-option) + .secupress-pro-option .secupress-get-pro-version:before {
+		position: absolute;
+		top: 25px; left: 1px;
+		content: "\e907";
+		font-family: "secupress";
+		font-size: 35px;
+		line-height: 35px;
+		font-style: normal;
+	}
+	.fieldname-backups-storage_location .secupress-radio-line:not(.secupress-pro-option) + .secupress-pro-option + .secupress-pro-option .secupress-get-pro-version:before,
+	.fieldname-notification-types_types .secupress-fieldset-item-checkboxes:not(.secupress-pro-option) + .secupress-pro-option + .secupress-pro-option .secupress-get-pro-version:before {
+		position: absolute;
+		left: -100px;
+		content: "";
+		border-top: 14px solid #ECF0F1;
+		border-left: 14px solid transparent;
+		border-right: 14px solid transparent;
+		visibility: visible;
+	}
+	.fieldname-backups-storage_location .secupress-get-pro-version a:before,
+	.fieldname-notification-types_types .secupress-get-pro-version a:before {
+		content: "";
+		display: block;
+	}
+	/* Pro options */
+	.fieldname-backups-storage_location .secupress-pro-option label:before,
+	.fieldname-notification-types_types .secupress-pro-option label:before {
+		opacity: 0.3;
+	}
+
+	.fieldname-backups-storage_location .description,
+	.fieldname-notification-types_types .description {
+		clear: both;
+	}
+}
+.fieldname-backups-storage_location .description,
+.fieldname-notification-types_types .description {
+	margin-top: 1.5em;
+}
+
+/* Services */
+[id="secupress-settings-module_services--"] .secupress-form-table {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+}
+[id="secupress-settings-module_services--"] .secupress-setting-row {
+	-webkit-flex-basis: 50%;
+	-ms-flex-preferred-size: 50%;
+	flex-basis: 50%;
+	-webkit-box-flex: 0;
+	-webkit-flex-grow: 0;
+	-ms-flex-positive: 0;
+	flex-grow: 0;
+	-webkit-flex-shrink: 1;
+	-ms-flex-negative: 1;
+	flex-shrink: 1;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-webkit-flex-direction: column;
+	-ms-flex-direction: column;
+	flex-direction: column;
+	margin: 25px 15px;
+	border-top: 0;
+	background: #222831 url("../images/bg-logo-sp.png") 50% 50% no-repeat;
+	text-align: center;
+}
+[id="secupress-settings-module_services--"] .secupress-setting-row:first-child {
+	margin-left: 0;
+}
+[id="secupress-settings-module_services--"] .secupress-setting-row:last-child {
+	margin-right: 0;
+}
+[id="secupress-settings-module_services--"] .secupress-setting-content-col {
+	padding-right: 0;
+}
+[id="secupress-settings-module_services--"] .description {
+	margin: 1.5em auto 2em;
+	color: #FFF;
+}
+[id="secupress-settings-module_services--"] .secupress-button.secupress-button-primary {
+	width: 100%;
+	padding: 7px 15px;
+	margin-top: auto;
+	background: #5A626F;
+	font-size: 11px;
+	letter-spacing: 0.1em;
+}
+[id="secupress-settings-module_services--"] .secupress-button.secupress-button-primary:hover,
+[id="secupress-settings-module_services--"] .secupress-button.secupress-button-primary:focus {
+	background: #f2f2f6;
+	color: #5A626F;
+}
+
 
 /* EXISTING */
 
@@ -439,7 +720,7 @@ label {
 }
 
 .description.warning strong {
-	color: red;
+	color: #CB234F;
 }
 
 .secupress-logs li {
@@ -529,6 +810,7 @@ label {
 .fieldtype-time-slot .small-text {
 	text-align: right;
 }
+
 /* Backups */
 .secupress-large-row > span {
 	display: inline-block;
@@ -549,6 +831,7 @@ label {
 .secupress-actions-li:focus span {
 	display: inline;
 }
+
 /* Countries */
 .expand_country{
 	border: none;
