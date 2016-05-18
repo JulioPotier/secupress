@@ -9,6 +9,8 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @return (array) All informations related to the modules.
  */
 function secupress_get_modules() {
+	$should_be_pro = ! secupress_is_pro()  ? true : false;
+
 	$modules = array(
 		'users-login'     => array(
 			'title'       => esc_html__( 'Users &amp; Login', 'secupress' ),
@@ -21,6 +23,7 @@ function secupress_get_modules() {
 				__( 'Your users &ndash; and every account on your website &ndash; want to be sure that their data will be protected, and their account not compromised. This is why you have to take care of them and protect them.', 'secupress' ),
 				__( 'You will find here the best and easy ways to do this.', 'secupress' ),
 			),
+			'mark_as_pro' => false
 		),
 		'plugins-themes'  => array(
 			'title'       => esc_html__( 'Plugins &amp; Themes', 'secupress' ),
@@ -33,6 +36,7 @@ function secupress_get_modules() {
 				__( 'When your website is online, there is no reason to let someone play with your plugins. Installation, activation, deactivation, upgrade and deletion can be disallowed when you don\'t need it.', 'secupress' ),
 				__( 'Do not hesitate to check all, and then, when you need, come back here to deactivate only what you need.', 'secupress' ),
 			),
+			'mark_as_pro' => false
 		),
 		'wordpress-core'  => array(
 			'title'       => esc_html__( 'WordPress Core', 'secupress' ),
@@ -44,6 +48,7 @@ function secupress_get_modules() {
 			'description' => array(
 				__( 'WordPress can be tweak by so many ways. But are you using the right ones. We will help', 'secupress' ),
 			),
+			'mark_as_pro' => false
 		),
 		'sensitive-data'  => array(
 			'title'       => esc_html__( 'Sensitive Data', 'secupress' ),
@@ -56,6 +61,7 @@ function secupress_get_modules() {
 				__( 'Some pages can contains sensitive data. It\'s a good practice to lock these pages.', 'secupress' ),
 				__( 'Do not hesitate to lock as much as you can to improve the security of your website.', 'secupress' ),
 			),
+			'mark_as_pro' => false
 		),
 		'file-system'     => array(
 			'title'       => esc_html__( 'Malware Scan', 'secupress' ),
@@ -70,6 +76,7 @@ function secupress_get_modules() {
 				__( 'Also, an antivus scanner can be performed on your installation, this may take time but it\'s more efficient.', 'secupress' ),
 			),
 			'with_reset_box' => false,
+			'mark_as_pro' => false
 		),
 		'firewall'     => array(
 			'title'       => esc_html__( 'Firewall', 'secupress' ),
@@ -81,6 +88,7 @@ function secupress_get_modules() {
 			'description' => array(
 				__( 'Malicious requests are badly common. This will checks all incoming requests and quietly blocks all of these containing bad stuff.', 'secupress' ),
 			),
+			'mark_as_pro' => $should_be_pro
 		),
 		'backups'         => array(
 			'title'       => esc_html__( 'Backups', 'secupress' ),
@@ -95,6 +103,7 @@ function secupress_get_modules() {
 				sprintf( __( 'Don\'t forget to <a href="%s">schedule backups</a> as soon as possible.', 'secupress' ), esc_url( secupress_admin_url( 'modules', 'schedules' ) ) ),
 			),
 			'with_reset_box' => false,
+			'mark_as_pro' => false
 		),
 		'antispam'        => array(
 			'title'       => esc_html__( 'Anti Spam', 'secupress' ),
@@ -109,6 +118,7 @@ function secupress_get_modules() {
 				__( 'By default, we block identity usurpation, so if someone tries to comment using your email/name, the comment will be blocked.', 'secupress' ),
 				__( 'Also by default, we block bad IPs, author name, email and website url known as spammer.', 'secupress' ),
 			),
+			'mark_as_pro' => false
 		),
 		'logs'            => array(
 			'title'       => esc_html__( 'Logs', 'secupress' ),
@@ -121,6 +131,7 @@ function secupress_get_modules() {
 			'description' => array(
 				__( 'Logs are very usefull, it acts like a history of what happened on your website, filtered and at any time. You can also read and delete banned IPs from our modules here.', 'secupress' ),
 			),
+			'mark_as_pro' => $should_be_pro
 		),
 		'alerts'          => array(
 			'title'       => esc_html__( 'Alerts', 'secupress' ),
@@ -132,6 +143,7 @@ function secupress_get_modules() {
 			'description' => array(
 				__( 'Being alerted of some important events might help to react quickly in case of possible attack vector.', 'secupress' ),
 			),
+			'mark_as_pro' => $should_be_pro
 		),
 		'schedules'       => array(
 			'title'       => esc_html__( 'Schedules', 'secupress' ),
@@ -144,6 +156,7 @@ function secupress_get_modules() {
 				__( 'Scheduling recurrent tasks can be very useful to gain time and stay safe. At least each week a backup should be done, same for a full scan of vulnerabilities and file changes.', 'secupress' ),
 			),
 			'with_reset_box' => false,
+			'mark_as_pro' => $should_be_pro
 		),
 		'services'        => array(
 			'title'       => esc_html__( 'Services', 'secupress' ),
@@ -156,6 +169,7 @@ function secupress_get_modules() {
 				__( 'The page contains our services designed to help you with the plugin.', 'secupress' ),
 			),
 			'with_reset_box' => false,
+			'mark_as_pro' => false
 		),
 	);
 
@@ -171,6 +185,7 @@ function secupress_get_modules() {
 				__( 'Discover all the features only available in the PRO version.', 'secupress' ),
 			),
 			'with_reset_box' => false,
+			'mark_as_pro' => $should_be_pro
 		);
 	}
 

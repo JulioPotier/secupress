@@ -201,7 +201,6 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 								</div>
 								<div class="secupress-sh-name">
 									<p class="secupress-sh-title"><?php echo SECUPRESS_PLUGIN_NAME; ?></p>
-									<p class="secupress-sh-subtitle"><?php esc_html_e( 'the best security for WordPress', 'secupress' ); ?></p>
 								</div>
 							</div>
 						</div>
@@ -231,8 +230,10 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 */
 	protected function print_tabs() {
 		foreach ( static::get_modules() as $key => $module ) {
-			$class = $this->get_current_module() === $key  ? ' active'    : '';
-			$icon  = isset( $module['icon'] ) ?  $module['icon'] : 'secupress-simple';
+			$icon   = isset( $module['icon'] ) ?  $module['icon'] : 'secupress-simple';
+			$is_pro = isset( $module['mark_as_pro'] ) && $module['mark_as_pro'] === true ? true : false; 
+			$class  = $this->get_current_module() === $key  ? 'active' : '';
+			$class .= $is_pro ? ' secupress-pro-module' : ''; 
 			?>
 			<li>
 				<a href="<?php echo esc_url( secupress_admin_url( 'modules', $key ) ); ?>" class="<?php echo $class; ?> module-<?php echo sanitize_key( $key ); ?>">

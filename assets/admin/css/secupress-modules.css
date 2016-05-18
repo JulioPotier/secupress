@@ -85,11 +85,11 @@ p.secupress-sh-subtitle {
 .secupress-modules-list-links a {
 	position: relative;
 	display: block;
-	padding: 14px 55px 13px 15px;
+	padding: 16px 55px 15px 15px;
 	border-top: 1px solid rgba(255, 255, 255, 0.15);
 	color: #2BCDC1;
 	overflow: hidden;
-	font-weight: normal;
+	font-weight: 600;
 	text-decoration: none;
 	transition: all .275s;
 }
@@ -101,6 +101,9 @@ p.secupress-sh-subtitle {
 }
 .secupress-modules-list-links .secupress-tab-name {
 	font-size: 14px;
+}
+.secupress-modules-list-links .secupress-pro-module .secupress-tab-name {
+	color: #F1C40F;
 }
 .secupress-modules-list-links .secupress-tab-summary {
 	color: #FFF;
@@ -115,6 +118,14 @@ p.secupress-sh-subtitle {
 .secupress-modules-list-links i:before {
 	font-size: 40px;
 	color: rgba(255, 255, 255, 0.15);
+}
+.secupress-modules-list-links .active i,
+.secupress-modules-list-links .active i:before {
+	color: #2BCDC1;
+}
+.secupress-modules-list-links .active.secupress-pro-module i,
+.secupress-modules-list-links .active.secupress-pro-module i:before {
+	color: #F1C40F;
 }
 
 .secupress-modules-list-links .icon-sensitive-data,
@@ -145,6 +156,17 @@ p.secupress-sh-subtitle {
 .secupress-modules-sidebar a:hover,
 .secupress-modules-sidebar a:focus {
 	background: rgba(255, 255, 255, 0.075);
+}
+
+/* Get pro link */
+.secupress-modules-sidebar .module-pro {
+	background: #F39C12;
+	color: #FFF;
+}
+.secupress-modules-sidebar .module-pro i,
+.secupress-modules-sidebar .module-pro i:before,
+.secupress-modules-sidebar .module-pro .secupress-tab-name {
+	color: #FFF;
 }
 
 /**
