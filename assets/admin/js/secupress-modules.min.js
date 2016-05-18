@@ -1060,6 +1060,8 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 			confirmButtonText: '<i class="icon-radar" aria-hidden="true"></i> ' + SecuPressi18nModules.OCSbutton,
 			confirmButtonClass: 'secupress-button',
 			imageUrl: SecuPressi18nModules.OCSradar,
+		} ).then( function() {
+			window.location.href = SecuPressi18nModules.OCSurl;
 		} );
 	}
 
