@@ -43,11 +43,11 @@
 
 @font-face {
 	font-family: 'secupress';
-	src:url('../fonts/secupress.eot?3y7yrc');
-	src:url('../fonts/secupress.eot?3y7yrc#iefix') format('embedded-opentype'),
-		url('../fonts/secupress.ttf?3y7yrc') format('truetype'),
-		url('../fonts/secupress.woff?3y7yrc') format('woff'),
-		url('../fonts/secupress.svg?3y7yrc#secupress') format('svg');
+	src:url('../fonts/secupress.eot?gpzpps');
+	src:url('../fonts/secupress.eot?gpzpps#iefix') format('embedded-opentype'),
+		url('../fonts/secupress.ttf?gpzpps') format('truetype'),
+		url('../fonts/secupress.woff?gpzpps') format('woff'),
+		url('../fonts/secupress.svg?gpzpps#secupress') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -68,6 +68,9 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 .icon-squared-cross:before { content: "\e914"; }
+.icon-clock:before { content: "\e91a"; }
+.icon-ip-trash:before { content: "\e91b"; }
+.icon-user-trash:before { content: "\e91c"; }
 .icon-bell:before { content: "\e915"; }
 .icon-folder:before { content: "\e916"; }
 .icon-mail2:before { content: "\e917"; }
@@ -119,6 +122,7 @@
 .icon-heart:before { content: "\f004"; }
 .icon-cog:before { content: "\f013"; }
 .icon-gear:before { content: "\f013"; }
+.icon-clock-o:before { content: "\f017"; }
 .icon-times-circle:before { content: "\f057"; }
 .icon-heart-o:before { content: "\f08a"; }
 .icon-twitter:before { content: "\f099"; }
@@ -155,6 +159,14 @@
 }
 
 /* Inline-block */
+.secupress-ib {
+	display: inline-block;
+}
+.secupress-ib.secupress-flex {
+	display: -webkit-inline-box;
+	display: -ms-inline-flexbox;
+	display: inline-flex;
+}
 .secupress-childs-ib > * {
 	display: inline-block;
 	vertical-align: middle;

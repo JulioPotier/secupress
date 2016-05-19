@@ -27,6 +27,7 @@
 .secupress-scanners-header .secupress-before-caroupoivre {
 	display: none;
 }
+
 .secupress-scanners-header.secupress-not-scanned-yet .secupress-before-caroupoivre {
 	display: block;
 }
@@ -255,6 +256,11 @@ a.secupress-close-moreinfo {
 	font-size: 110px;
 	color: rgba(255,255,255,.07);
 }
+.secupress-latest-chart .secupress-chart-container:after {
+	font-size: 80px;
+	line-height: 80px;
+	margin: -37px 0 0 -41px;
+}
 
 .secupress-row-actions {
 	font-size: 13px;
@@ -272,6 +278,51 @@ a.secupress-close-moreinfo {
 	speak: none
 }
 
+.secupress-tabs-contents > div {
+	min-height: 302px;
+	padding: 15px 35px;
+}
+.secupress-tab-content[id="secupress-schedule"] .secupress-text-medium + p {
+	width: 600px;
+	max-width: 100%;
+	margin: 1em auto;
+}
+.secupress-tab-content[id="secupress-schedule"] .secupress-text-medium {
+	position: relative;
+	margin-top: 1.75em;
+}
+.secupress-tab-content[id="secupress-schedule"] .secupress-text-medium:before {
+	position: absolute;
+	left: 50%; top: -55px;
+	margin-left: -37px;
+	content: '\e91a';
+	font-family: 'secupress';
+	color: rgba(255,255,255,.15);
+	font-size: 75px;
+}
+.secupress-cta-detail {
+	margin-top: -1em;
+	font-size: 11px;
+	font-weight: bold;
+	color: #5A626F;
+}
+.secupress-schedules-infos .secupress-ib {
+	margin: 1.5em 1em 0.75em;
+	font-weight: 600;
+}
+.secupress-schedules-infos.is-pro .secupress-ib {
+	margin-bottom: 1em;
+}
+.secupress-schedules-infos .next-one {
+	color: #F39C12;
+}
+.secupress-schedules-infos.is-pro .next-one {
+	color: #26B3A9;
+}
+.secupress-schedules-infos i {
+	font-size: 1.2em;
+	margin-right: 5px;
+}
 /* right cols with Status text and actions */
 .secupress-fix-status-actions {
 	padding-top: 4px;
@@ -285,12 +336,34 @@ a + .secupress-row-actions {
 }
 
 .secupress-reports-list {
-	margin-bottom: 3em;
+	margin: 1.1em 0 2.85em;
 	font-size: 1.1em;
+	text-align: right;
 }
-.secupress-reports-list .timeago {
-	color: rgba(255, 255, 255, 0.6);
-	font-size: 0.875em;
+.secupress-reports-list li > * {
+	display: inline-block;
+	vertical-align: middle;
+}
+.secupress-reports-list li {
+	padding: 5px 0;
+}
+.secupress-reports-list li + li {
+	border-top: 1px solid #5A626F;
+}
+.secupress-reports-list .secupress-latest-list-date {
+	margin: 0 1em;
+	color: #5A626F;
+}
+.secupress-reports-list .secupress-latest-list-grade {
+	width: 22px;
+	height: 22px;
+	margin: 0 1em;
+	line-height: 18px;
+	text-align: center;
+	border-radius: 50%;
+	border: 2px solid #5A626F;
+	color: #5A626F;
+	font-weight: bold;
 }
 
 #table-secupress-tests ul {
@@ -402,22 +475,22 @@ a + .secupress-row-actions {
 	flex-basis: 430px;
 	width: 430px;
 	max-width: 100%;
-	padding-left: 35px;
 }
-.secupress-chart .secupress-score .letter {
+.secupress-chart .secupress-score .letter,
+.secupress-latest-chart .secupress-score .letter {
 	position: absolute;
 	font-size: 82px;
 	top: 50%; left: 50%;
 	margin: -12px 0 0 -26px;
 	font-family: Arial, Helvetica, sans-serif;
 }
-.secupress-scan-infos .letter,
-.secupress-reports-list .letter {
+.secupress-latest-chart .secupress-score .letter {
+	font-size: 52px;
+	margin: -11px 0 0 -15px;
+}
+.secupress-scan-infos .letter {
 	font-weight: bold;
 	font-size: 1.2em;
-}
-.secupress-reports-list .letter {
-	vertical-align: -1px;
 }
 .secupress-chart .secupress-score .l∅ {
 	font-size: 64px;
@@ -428,26 +501,44 @@ a + .secupress-row-actions {
 .dashicons-arrow-up-alt2 {
 	color: #2BCDC1;
 }
+.secupress-latest-list-grade.lA {
+	border-color: #2BCDC1;
+}
 .secupress-score .lB,
 .secupress-reports-list .lB {
 	color: #F1C40F;
+}
+.secupress-latest-list-grade.lB {
+	border-color: #F1C40F;
 }
 .secupress-score .lC,
 .secupress-reports-list .lC,
 .dashicons-arrow-down-alt2 {
 	color: #F7AB13;
 }
+.secupress-latest-list-grade.lC {
+	border-color: #F7AB13;
+}
 .secupress-score .lD,
 .secupress-reports-list .lD {
 	color: #F2295E;
+}
+.secupress-latest-list-grade.lD {
+	border-color: #F2295E;
 }
 .secupress-score .lE,
 .secupress-reports-list .lE {
 	color: #CB234F;
 }
+.secupress-latest-list-grade.lE {
+	border-color: #CB234F;
+}
 .secupress-score .lF,
 .secupress-reports-list .lF {
 	color: #c32222;
+}
+.secupress-latest-list-grade.lF {
+	border-color: #c32222;
 }
 
 .mini {
