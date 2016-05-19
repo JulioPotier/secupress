@@ -27,7 +27,7 @@ $this->add_field( array(
 		),
 		array(
 			'type'        => 'warning',
-			'description' => secupress_get_consumer_email() ? '' : sprintf( __( 'A free account is needed to enable these features. Get one <a href="%s">on the settings page</a>.', 'secupress' ), esc_url( secupress_admin_url( 'settings' ) ) ),
+			'description' => secupress_get_consumer_email() ? '' : sprintf( __( 'You need a free API Key to use this feature. <a href="%s" class="secupress-button secupress-button-primary secupress-button-mini secupress-end button-secupress-get-api-key"><span class="icon"><i class="icon-key" aria-hidden="true"></i></span><span class="text">Get a free key</span></a>', 'secupress' ), esc_url( secupress_admin_url( 'settings' ) ) ),
 		),
 		array(
 			'type'        => 'warning',

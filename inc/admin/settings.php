@@ -62,7 +62,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'email'  => esc_html__( 'Enter your email', 'secupress' ),
 			'apikey' => esc_html__( 'Enter your API Key', 'secupress' ),
 			'where'  => esc_html__( 'Where can I find my API Key?', 'secupress' ),
-			'save'   => esc_html__( 'Save and continue to first scan', 'secupress' )
+			'save'   => esc_html__( 'Save', 'secupress' )
 		)
 	) );
 

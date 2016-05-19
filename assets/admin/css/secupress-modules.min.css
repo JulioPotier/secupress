@@ -468,6 +468,7 @@ span.secupress-get-pro-version {
 .secupress-setting-row_bbq-url-content_bad-contents-list .secupress-get-pro-col,
 .secupress-setting-row_backups-storage_location .secupress-get-pro-col,
 .secupress-setting-row_notification-types_types .secupress-get-pro-col,
+.secupress-setting-row_monitoring_activated .secupress-get-pro-col,
 [id="secupress-settings-module_services--"] .secupress-get-pro-col {
 	-webkit-flex-basis: 0;
 	-ms-flex-preferred-size: 0;
@@ -639,6 +640,44 @@ label.secupress-textarea-label {
 .fieldname-backups-storage_location .description,
 .fieldname-notification-types_types .description {
 	margin-top: 1.5em;
+}
+
+/* Module Alert > Uptime Monitoring */
+[id="secupress-settings-module_alerts--uptime-monitoring"] .secupress-setting-row {
+	margin: 2em 1em;
+	border: 1px solid #ECF0F1;
+	padding: 3px 0 0 0;
+}
+[id="secupress-settings-module_alerts--uptime-monitoring"] .description.warning strong {
+	display: none;
+}
+[id="secupress-settings-module_alerts--uptime-monitoring"] .description.warning {
+	position: relative;
+	background: #ECF0F1 url('../images/icon-key-white.png') left 30px bottom -12px no-repeat;
+	margin: 1em 0 0 0;
+	padding: 15px 20px;
+	font-size: 16px;
+	color: #222831;
+	font-style: normal;
+	font-weight: 600;
+	overflow: hidden;
+}
+[id="secupress-settings-module_alerts--uptime-monitoring"] .secupress-setting-content-col {
+	padding-right: 0;
+}
+[id="secupress-settings-module_alerts--uptime-monitoring"] .secupress-setting-content-col p,
+[id="secupress-settings-module_alerts--uptime-monitoring"] .secupress-setting-content-col label {
+	margin: 10px 20px;
+}
+[id="secupress-settings-module_alerts--uptime-monitoring"] label.secupress-checkbox-label {
+	margin-left: 0;
+}
+[id="secupress-settings-module_alerts--uptime-monitoring"] .secupress-button {
+	margin: -4px 0;
+	padding: 6px 15px 8px;
+}
+[id="secupress-settings-module_alerts--uptime-monitoring"] .secupress-button .icon {
+	margin-right: 5px;
 }
 
 /* Services */
