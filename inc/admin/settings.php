@@ -1019,9 +1019,21 @@ function secupress_scanners_template() {
 									</button>
 									<?php
 								} else { // Really not fixable by the plugin.
-									echo '<em>';
-									esc_html_e( 'Cannot be fixed automatically.', 'secupress' );
-									echo '</em>';
+								?>
+									<em class="secupress-gray">
+									<?php esc_html_e( 'Cannot be fixed automatically.', 'secupress' ); ?>
+									</em>
+									<span class="hide-if-no-js">
+										<button type="button" class="secupress-details-fix secupress-button secupress-button-mini secupress-button-primary secupress-button-ghost" data-test="<?php echo $class_name_part; ?>" title="<?php esc_attr_e( 'Get fix details', 'secupress' ); ?>">
+											<span class="icon">
+												<i class="icon-shield" aria-hidden="true"></i>
+											</span>
+											<span class="text">
+												<?php _e( 'How to fix?', 'secupress' ); ?>
+											</span>
+										</button>
+									</span>
+								<?php
 								}
 								?>
 								</div><!-- .secupress-fix-status-actions -->
