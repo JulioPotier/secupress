@@ -122,7 +122,7 @@ add_action( 'user_profile_update_errors', 'secupress_oldpassword_check_old_passw
  * @param (object) $user   WP_User object, passed by reference.
  */
 function secupress_oldpassword_check_old_password( $errors, $update, &$user ) {
-	if ( empty( $user->user_pass ) ) {
+	if ( empty( $user->user_pass ) || ! isset( $user->ID ) ) {
 		return;
 	}
 
