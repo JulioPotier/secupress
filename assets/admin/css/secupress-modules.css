@@ -453,26 +453,38 @@ span.secupress-get-pro-version {
 	&
 	Expandable textareas
 */
-.secupress-expand-trigger {
+.secupress-expand-trigger-container {
 	position: absolute;
-	left: 50%;
-	bottom: 0;
+	left: 0; right: 0; bottom: 0;
 	margin: 0 0 -14px -14px;
-	height: 28px; width: 28px;
-	padding-top: 5px;
-	background: #FFF;
-	border: 1px solid #eee;
 	text-align: center;
-	box-shadow: 0 1px 4px rgba(0,0,0,.1);
-	border-radius: 100%;
+}
+.secupress-expand-trigger {
+	display: inline-block;
+	padding: 5px 10px 6px;
+	font-size: 11px;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	color: #FFF;
+	background: #5A626F;
+	border-radius: 3px;
+}
+.secupress-expand-txt {
+	display: inline-block;
+	vertical-align: middle;
+	overflow: hidden;
+	max-width: 0;
+	white-space: nowrap;
 	transition: all .275s;
 }
-.secupress-expand-trigger i:before {
-	color: #26B3A9;
+.secupress-expand-trigger:hover .secupress-expand-txt,
+.secupress-expand-trigger:focus .secupress-expand-txt {
+	max-width: 12em;
+	margin-right: 5px;
 }
-.secupress-expand-trigger.open {
-	background: #ECF0F1;
-	transform: rotate(45deg);
+.secupress-expand-trigger i:before {
+	font-size: 1.5em;
+	vertical-align: -3px; 
 }
 .secupress-setting-row_bbq-headers_user-agents-list .secupress-get-pro-col,
 .secupress-setting-row_bbq-url-content_bad-contents-list .secupress-get-pro-col,

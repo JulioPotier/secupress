@@ -990,9 +990,10 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 			SPautoSized.textareaParentHeight( $container, $textarea );
 
 			// add (+) button				
-			if ( e.scrollHeight > $container.height() ) {
+			if ( e.scrollHeight > $container.height() && $container.next() ) {
 				SPautoSized.handleExpendButton( $container, true ); // create
-			} else {
+			}
+			else if ( e.scrollHeight <= $container.height() && $container.next('.secupress-expand-trigger-container').find('.open').length === 0 ) {
 				SPautoSized.handleExpendButton( $container, false ); // remove
 			}
 		}
@@ -1012,10 +1013,10 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	// function to create (+) button
 	SPautoSized.handleExpendButton = function( $container, create ) {
 		// if creation needed, check if exists, or create it
-		if ( ! $container.next('.secupress-expand-trigger').length && create ) {
-			$container.after('<span class="secupress-expand-trigger"><i class="dashicons dashicons-plus" aria-hidden="true"></i></span>').attr('spellcheck', false);
-		} else if ( $container.next('.secupress-expand-trigger').length && create === false ) {
-			$container.next('.secupress-expand-trigger').remove();
+		if ( ! $container.next('.secupress-expand-trigger-container').length && create ) {
+			$container.after('<p class="secupress-expand-trigger-container"><span class="secupress-expand-trigger" tabindex="0"><span class="secupress-expand-txt">' + SecuPressi18nModules.expandTextOpen + '</span><i class="icon-angle-down" aria-hidden="true"></i></span>').attr('spellcheck', false);
+		} else if ( $container.next('.secupress-expand-trigger-container').length && create === false ) {
+			$container.next('.secupress-expand-trigger-container').remove();
 		}
 	};
 
@@ -1050,6 +1051,14 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		return this;
 	};
 
+	// Move to end
+	$.fn.focusToEnd = function() {
+		return this.each(function() {
+			var v = $(this).val();
+			$(this).focus().val('').val(v);
+		});
+	};
+
 	// change class on parent textarea on focus/blur
 	$expendables.find('textarea').AutoSized()
 		.on('focus.secupress', function(){
@@ -1062,15 +1071,20 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	// on click on (+) button
 	$expendables.closest('label').on('click.secupress', '.secupress-expand-trigger', function(){
 		var $_this     = $(this),
-			$container = $_this.prev( '.secupress-textarea-container' ),
+			$container = $_this.closest('.secupress-expand-trigger-container').prev( '.secupress-textarea-container' ),
 			$textarea  = $container.find( 'textarea' );
 
 		if ( $_this.hasClass( 'open' ) ) {
 			$container.css( 'height', '200px' );
 			$_this.removeClass( 'open' );
+			$_this.find('.secupress-expand-txt').text( SecuPressi18nModules.expandTextOpen );
+			$_this.find('i').removeClass('icon-angle-up').addClass('icon-angle-down');
 		} else {
 			SPautoSized.textareaParentHeight( $container, $textarea );
+			$textarea.focusToEnd();
 			$_this.addClass( 'open' );
+			$_this.find('.secupress-expand-txt').text( SecuPressi18nModules.expandTextClose );
+			$_this.find('i').removeClass('icon-angle-down').addClass('icon-angle-up');
 		}
 		return false;
 	});
