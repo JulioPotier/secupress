@@ -24,7 +24,7 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 	 *
 	 * @var (string)
 	 */
-	public    static $prio    = 'high';
+	public    static $prio = 'high';
 
 
 	/**
@@ -35,8 +35,8 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 	protected static function init() {
 		self::$type     = 'WordPress';
 		self::$title    = __( 'Check if your database prefix is correct.', 'secupress' );
-		self::$more     = __( 'Avoid the usage of <code>wp_</code> or <code>wordpress_</code> as DB prefix to improve your security.', 'secupress' );
-		self::$more_fix = __( 'We will rename all your database tables names, then update your configuration with a new and more secure one.', 'secupress' );
+		self::$more     = __( 'Avoid the usage of <code>wp_</code> or <code>wordpress_</code> as database prefix to improve your security.', 'secupress' );
+		self::$more_fix = __( 'We will rename all your database table names, then update your configuration with a new and more secure one.', 'secupress' );
 	}
 
 
@@ -56,10 +56,10 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 			// "bad"
 			200 => __( 'The database prefix should not be %s. Choose something else than <code>wp_</code> or <code>wordpress_</code>, they are too easy to guess.', 'secupress' ),
 			// "cantfix"
-			301 => __( 'The DataBase user can not alter tables and so i can not change the DB prefix.', 'secupress' ),
-			302 => __( 'I can not write into wp-config.php so i can not change the DB prefix.', 'secupress' ),
-			303 => __( 'The DataBase user seems to have to correct rights, but i still could not change the DB prefix.', 'secupress' ),
-			304 => __( 'I found too many DB tables, so i can not choose alone which ones to rename, help me!', 'secupress' ),
+			301 => __( 'The database user can not alter tables and so I cannot change the database prefix.', 'secupress' ),
+			302 => __( 'I cannot write into <code>wp-config.php</code> so I cannot change the database prefix.', 'secupress' ),
+			303 => __( 'The database user seems to have to correct rights, but I still could not change the database prefix.', 'secupress' ),
+			304 => __( 'I found too many database tables, so I cannot choose alone which ones to rename, help me!', 'secupress' ), // Trinity! Help me!
 		);
 
 		if ( isset( $message_id ) ) {
@@ -79,6 +79,7 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 	 */
 	public function scan() {
 		global $wpdb;
+
 		if ( get_transient( 'select-db-tables-to-rename' ) ) {
 			$this->add_message( 100 );
 		} else {
@@ -105,7 +106,6 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 	 * @return (array) The fix results.
 	 */
 	public function fix() {
-
 		global $wpdb, $current_user;
 
 		$wpconfig_filename = secupress_find_wpconfig_path();
@@ -121,10 +121,8 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 
 				if ( is_writable( $wpconfig_filename ) && preg_match( '/\$table_prefix.*=.*(\'' . $old_prefix . '\'|"' . $old_prefix . '");.*/', file_get_contents( $wpconfig_filename ) ) ) {
 
-					$wp_tables = secupress_get_wp_tables();
+					$good_tables = secupress_get_non_wp_tables();
 
-					$good_tables     = secupress_get_non_wp_tables();
-					$count_wp_tables = count( $wp_tables );
 					if ( $good_tables ) {
 						$this->add_fix_message( 304 );
 						$this->add_fix_action( 'select-db-tables-to-rename' );
@@ -153,10 +151,12 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 	 * @return (array) The fix results.
 	 */
 	public function manual_fix() {
+		global $wpdb;
+
 		if ( ! empty( $_POST ) && ! $this->has_fix_action_part( 'select-db-tables-to-rename' ) ) { // WPCS: CSRF ok.
 			return parent::manual_fix();
 		}
-		global $wpdb;
+
 		$old_prefix   = $wpdb->prefix;
 		$new_prefix   = secupress_create_unique_db_prefix();
 		$query_tables = array();
@@ -213,6 +213,7 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 
 		return parent::manual_fix();
 	}
+
 
 	/**
 	 * Get an array containing ALL the forms that would fix the scan if it requires user action.
