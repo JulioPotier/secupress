@@ -879,7 +879,7 @@ function secupress_scanners_template() {
 									<h3><?php echo _n( 'This action requires your attention', 'These actions require your attention', count( $fix_actions ), 'secupress' ); ?></h3>
 									<?php
 									echo implode( '', $fix_actions );
-									submit_button( __( 'Fix it', 'secupress' ) );
+									echo '<p class="submit"><button type="submit" name="submit" class="secupress-button secupress-button-primary">' . __( 'Fix it', 'secupress' ) . "</button></p>\n";
 									$current_test->for_current_site( $is_subsite )->get_fix_action_fields( array_keys( $fix_actions ) );
 									?>
 								</form>
