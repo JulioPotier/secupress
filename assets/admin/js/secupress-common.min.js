@@ -1,14 +1,14 @@
 (function($, d, w, undefined) {
 	var SecuPress = {
 		supportButtonColor:  "#F1C40F",
-		swalDefaults:        {
+		swal2Defaults:        {
 			confirmButtonText: SecuPressi18nCommon.confirmText,
 			cancelButtonText:  SecuPressi18nCommon.cancelText,
 			type:              "warning",
 			allowOutsideClick: true,
-			customClass:       "wpmedia-swal secupress-swal"
+			customClass:       "wpmedia-swal2 secupress-swal2"
 		},
-		swalConfirmDefaults: {
+		swal2ConfirmDefaults: {
 			showCancelButton:  true,
 			closeOnConfirm:    false
 		}
@@ -177,7 +177,7 @@
 							+ '</p>'
 						+ '</form></div>';
 
-		swal( jQuery.extend( {}, SecuPress.swalDefaults, {
+		swal2( jQuery.extend( {}, SecuPress.swal2Defaults, {
 			title: texts.title,
 			html:  customForm,
 			type:  'info',
@@ -188,5 +188,6 @@
 
 		return false;
 	} );
+
 
 } )(jQuery, document, window);

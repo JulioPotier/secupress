@@ -1,25 +1,25 @@
-/* globals jQuery: false, ajaxurl: false, wp: false, SecuPressi18nModules: false, secupressIsSpaceOrEnterKey: false, swal: false */
+/* globals jQuery: false, ajaxurl: false, wp: false, SecuPressi18nModules: false, secupressIsSpaceOrEnterKey: false, swal2: false */
 // Global vars =====================================================================================
 var SecuPress = {
 	doingAjax:           {},
 	deletedRowColor:     "#FF9966",
 	addedRowColor:       "#CCEEBB",
-	swalDefaults:        {
+	swal2Defaults:        {
 		title:             SecuPressi18nModules.confirmTitle,
 		confirmButtonText: SecuPressi18nModules.confirmText,
 		cancelButtonText:  SecuPressi18nModules.cancelText,
 		type:              "warning",
 		allowOutsideClick: true,
-		customClass:       "wpmedia-swal secupress-swal"
+		customClass:       "wpmedia-swal2 secupress-swal2"
 	},
-	swalConfirmDefaults: {
+	swal2ConfirmDefaults: {
 		showCancelButton:  true,
 		closeOnConfirm:    false
 	}
 };
 
 /**
- * Show Swal message if no scan done yet
+ * Show swal2 message if no scan done yet
  */
 if ( SecuPressi18nModules.alreadyScanned == 0 ) {
 	var modal_content = '<p class="secupress-text-medium secupress-mt1 secupress-mb1">'
@@ -36,7 +36,7 @@ if ( SecuPressi18nModules.alreadyScanned == 0 ) {
 					  		+ '</a>'
 					  + '</p>';
 
-	swal( jQuery.extend( {}, SecuPress.swalDefaults, {
+	swal2( jQuery.extend( {}, SecuPress.swal2Defaults, {
 		title: null,
 		html: modal_content,
 		type:  null,
@@ -216,7 +216,7 @@ function secupressPreAjaxCall( href, e, ajaxID ) {
  * @since 1.0
  *
  * @param (object) $button jQuery object of the button.
- * @param (string) text    Text for swal + `wp.a11y.speak`.
+ * @param (string) text    Text for swal2 + `wp.a11y.speak`.
  * @param (string) ajaxID  An identifier used for `SecuPress.doingAjax`. Default: "global".
  */
 function secupressDisplayAjaxError( $button, text, ajaxID ) {
@@ -224,7 +224,7 @@ function secupressDisplayAjaxError( $button, text, ajaxID ) {
 		text = SecuPressi18nModules.unknownError;
 	}
 
-	swal( jQuery.extend( {}, SecuPress.swalDefaults, {
+	swal2( jQuery.extend( {}, SecuPress.swal2Defaults, {
 		title: SecuPressi18nModules.error,
 		html:  text,
 		type:  "error"
@@ -240,7 +240,7 @@ function secupressDisplayAjaxError( $button, text, ajaxID ) {
  * @since 1.0
  *
  * @param (object) $button jQuery object of the button.
- * @param (string) text    Text for swal + `wp.a11y.speak`.
+ * @param (string) text    Text for swal2 + `wp.a11y.speak`.
  * @param (string) ajaxID  An identifier used for `SecuPress.doingAjax`. Default: "global".
  */
 function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
@@ -248,7 +248,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		text = null;
 	}
 
-	swal( jQuery.extend( {}, SecuPress.swalDefaults, {
+	swal2( jQuery.extend( {}, SecuPress.swal2Defaults, {
 		title: SecuPressi18nModules.done,
 		html:  text,
 		type:  "success",
@@ -466,7 +466,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 			var $fieldset, $legend;
 
 			if ( $.isPlainObject( r ) && r.success ) {
-				swal.close();
+				swal2.close();
 				$fieldset = $button.closest( "form" ).find( "fieldset" );
 				$legend   = $fieldset.children( "legend" );
 				$fieldset.text( "" ).prepend( $legend );
@@ -489,7 +489,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		$.getJSON( href )
 		.done( function( r ) {
 			if ( $.isPlainObject( r ) && r.success ) {
-				swal.close();
+				swal2.close();
 
 				$button.closest( ".secupress-large-row" ).css( "backgroundColor", SecuPress.deletedRowColor ).hide( "normal", function() {
 					$( this ).remove();
@@ -567,14 +567,14 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 			return;
 		}
 
-		if ( "function" === typeof w.swal ) {
-			swal( $.extend( {}, SecuPress.swalDefaults, SecuPress.swalConfirmDefaults, {
+		if ( "function" === typeof w.swal2 ) {
+			swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
 				text:              SecuPressi18nModules.confirmDeleteBackups,
 				confirmButtonText: SecuPressi18nModules.yesDeleteAll,
 				type:              "question"
 			} ) ).then( function ( isConfirm ) {
 				if ( isConfirm ) {
-					swal.enableLoading();
+					swal2.enableLoading();
 					secupressDeleteAllBackups( $this, href );
 				}
 			} );
@@ -593,14 +593,14 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 			return;
 		}
 
-		if ( "function" === typeof w.swal ) {
-			swal( $.extend( {}, SecuPress.swalDefaults, SecuPress.swalConfirmDefaults, {
+		if ( "function" === typeof w.swal2 ) {
+			swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
 				text:              SecuPressi18nModules.confirmDeleteBackup,
 				confirmButtonText: SecuPressi18nModules.yesDeleteOne,
 				type:              "question"
 			} ) ).then( function ( isConfirm ) {
 				if ( isConfirm ) {
-					swal.enableLoading();
+					swal2.enableLoading();
 					secupressDeleteOneBackup( $this, href );
 				}
 			} );
@@ -746,7 +746,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		var params = { "ip": $( "#secupress-ban-ip" ).val() };
 
 		if ( ! params.ip ) {
-			secupressBanIPswal( $button, href );
+			secupressBanIPswal2( $button, href );
 			return;
 		}
 
@@ -786,16 +786,16 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		} );
 	}
 
-	// Swal that displays the form to ban an IP address.
-	function secupressBanIPswal( $button, href ) { // jshint ignore:line
-		swal( $.extend( {}, SecuPress.swalDefaults, SecuPress.swalConfirmDefaults, {
+	// swal2 that displays the form to ban an IP address.
+	function secupressBanIPswal2( $button, href ) { // jshint ignore:line
+		swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
 			title:             $banForm.find( '[for="secupress-ban-ip"]' ).text(),
 			confirmButtonText: $button.data( "original-i18n" ),
 			html:              $banForm,
 			type:              "info"
 		} ) ).then( function ( isConfirm ) {
 			if ( isConfirm ) {
-				swal.enableLoading();
+				swal2.enableLoading();
 				secupressBanIP( $button, href );
 			}
 		} );
@@ -858,7 +858,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 			href  = secupressPreAjaxCall( banUrl, e, "ban-ip" );
 
 		if ( href ) {
-			secupressBanIPswal( $this, href );
+			secupressBanIPswal2( $this, href );
 		}
 	} );
 

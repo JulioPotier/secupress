@@ -22,11 +22,11 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	// Sweet Alert.
 	if ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' === $hook_suffix || 'toplevel_page_' . SECUPRESS_PLUGIN_SLUG . '_scanners' === $hook_suffix ) {
 		// CSS.
-		$css_depts = array( 'wpmedia-css-sweetalert' );
-		wp_enqueue_style( 'wpmedia-css-sweetalert', SECUPRESS_ADMIN_CSS_URL . 'sweetalert2' . $suffix . '.css', array(), '1.3.4' );
+		$css_depts = array( 'wpmedia-css-sweetalert2' );
+		wp_enqueue_style( 'wpmedia-css-sweetalert2', SECUPRESS_ADMIN_CSS_URL . 'sweetalert2' . $suffix . '.css', array(), '1.3.4' );
 		// JS.
-		$js_depts  = array( 'jquery', 'wpmedia-js-sweetalert' );
-		wp_enqueue_script( 'wpmedia-js-sweetalert', SECUPRESS_ADMIN_JS_URL . 'sweetalert2' . $suffix . '.js', array(), '1.3.4', true );
+		$js_depts  = array( 'jquery', 'wpmedia-js-sweetalert2' );
+		wp_enqueue_script( 'wpmedia-js-sweetalert2', SECUPRESS_ADMIN_JS_URL . 'sweetalert2' . $suffix . '.js', array(), '1.3.4', true );
 	}
 
 	// WordPress Common CSS.

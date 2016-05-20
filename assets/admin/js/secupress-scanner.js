@@ -1,15 +1,15 @@
-/* globals jQuery: false, ajaxurl: false, SecuPressi18nScanner: false, SecuPressi18nChart: false, secupressIsSpaceOrEnterKey: false, Chart: false, swal: false */
+/* globals jQuery: false, ajaxurl: false, SecuPressi18nScanner: false, SecuPressi18nChart: false, secupressIsSpaceOrEnterKey: false, Chart: false, swal2: false */
 // Global vars =====================================================================================
 var SecuPress = {
 	supportButtonColor:  "#F1C40F",
-	swalDefaults:        {
+	swal2Defaults:        {
 		confirmButtonText: SecuPressi18nScanner.confirmText,
 		cancelButtonText:  SecuPressi18nScanner.cancelText,
 		type:              "warning",
 		allowOutsideClick: true,
-		customClass:       "wpmedia-swal secupress-swal"
+		customClass:       "wpmedia-swal2 secupress-swal2"
 	},
-	swalConfirmDefaults: {
+	swal2ConfirmDefaults: {
 		showCancelButton:  true,
 		closeOnConfirm:    false
 	}
@@ -252,7 +252,7 @@ jQuery( document ).ready( function( $ ) {
 
 			e.preventDefault();
 
-			swal( $.extend( {}, SecuPress.swalDefaults, SecuPress.swalConfirmDefaults, {
+			swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
 				title:              SecuPressi18nScanner.supportTitle,
 				confirmButtonText:  SecuPressi18nScanner.supportButton,
 				html:               SecuPressi18nScanner.supportContentFree,
@@ -260,7 +260,7 @@ jQuery( document ).ready( function( $ ) {
 				type:               "question"
 			} ) ).then( function( isConfirm ) {
 				if ( true === isConfirm ) {
-					swal( $.extend( {}, SecuPress.swalDefaults, {
+					swal2( $.extend( {}, SecuPress.swal2Defaults, {
 						title:              "Pro Version needed", //// TODO: localize.
 						type:               "error",
 						showCancelButton:   true,
@@ -283,7 +283,7 @@ jQuery( document ).ready( function( $ ) {
 
 			e.preventDefault();
 
-			swal( $.extend( {}, SecuPress.swalDefaults, SecuPress.swalConfirmDefaults, {
+			swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
 				title:              SecuPressi18nScanner.supportTitle,
 				confirmButtonText:  SecuPressi18nScanner.supportButton,
 				html:               SecuPressi18nScanner.supportContentPro,
@@ -291,7 +291,7 @@ jQuery( document ).ready( function( $ ) {
 				type:               "question"
 			} ) ).then( function( isConfirm ) {
 				if ( true === isConfirm ) {
-					swal.enableLoading();
+					swal2.enableLoading();
 
 					$.post( ajaxurl, {}, null, "json" )
 					.done( function( r ) {
@@ -496,7 +496,7 @@ jQuery( document ).ready( function( $ ) {
 
 		// Error popup.
 		function secupressErrorWarn() {
-			swal( $.extend( {}, SecuPress.swalDefaults, {
+			swal2( $.extend( {}, SecuPress.swal2Defaults, {
 				title: SecuPressi18nScanner.error,
 				type:  "error"
 			} ) );
@@ -835,7 +835,7 @@ jQuery( document ).ready( function( $ ) {
 		// Perform a manual fix: display the form in a popup and launch an ajax call on submit.
 		function secupressManualFixit( test ) {
 			var content  = "",
-				swalType = "info",
+				swal2Type = "info",
 				index, data;
 
 			data = secupressScans.manualFix[ test ];
@@ -846,10 +846,10 @@ jQuery( document ).ready( function( $ ) {
 			// If the status is "bad" or "warning", `data.message` contains an error message.
 			if ( "bad" === data.class || "warning" === data.class ) {
 				content += '<div class="sa-error-container show"><div class="icon">!</div><p>' + data.message + "</p></div>";
-				swalType = "bad" === data.class ? "error" : "warning";
+				swal2Type = "bad" === data.class ? "error" : "warning";
 			}
 
-			content += '<form method="post" id="form_manual_fix" class="secupress-swal-form show-input" action="' + ajaxurl + '">';
+			content += '<form method="post" id="form_manual_fix" class="secupress-swal2-form show-input" action="' + ajaxurl + '">';
 
 				for ( index in data.form_contents ) {
 					if ( data.form_contents.hasOwnProperty( index ) ) {
@@ -860,10 +860,10 @@ jQuery( document ).ready( function( $ ) {
 
 			content += "</form>";
 
-			swal( $.extend( {}, SecuPress.swalDefaults, SecuPress.swalConfirmDefaults, {
+			swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
 				title:             data.form_title,
 				html:              content,
-				type:              swalType,
+				type:              swal2Type,
 				confirmButtonText: SecuPressi18nScanner.fixit
 			} ) ).then( function ( isConfirm ) {
 				var params, $row;
@@ -872,7 +872,7 @@ jQuery( document ).ready( function( $ ) {
 					return;
 				}
 
-				swal.enableLoading();
+				swal2.enableLoading();
 
 				params = $( "#form_manual_fix" ).serializeArray();
 				$row   = $( "#" + test );
@@ -1032,7 +1032,7 @@ jQuery( document ).ready( function( $ ) {
 					secupressManualFixit( oneTest );
 				} else {
 					// Bulk: warn the user that some manual fixes need to be done.
-					swal( $.extend( {}, SecuPress.swalDefaults, {
+					swal2( $.extend( {}, SecuPress.swal2Defaults, {
 						title: 1 === manualFixLen ? SecuPressi18nScanner.oneManualFix : SecuPressi18nScanner.someManualFixes,
 					} ) );
 				}
@@ -1064,7 +1064,7 @@ jQuery( document ).ready( function( $ ) {
 				type  = "success";
 			}
 
-			swal( $.extend( {}, SecuPress.swalDefaults, {
+			swal2( $.extend( {}, SecuPress.swal2Defaults, {
 				title: title,
 				html:  extra.data.message.replace( /(<ul>|<li>|<\/li><\/ul>)/g, "" ).replace( /<\/li>/g, "<br/><br/>" ),
 				type:  type
@@ -1076,7 +1076,7 @@ jQuery( document ).ready( function( $ ) {
 		$( "body" ).on( "click.secupress", ".secupress-details", function( e ) {
 			var test = $( this ).data( "test" );
 
-			swal( $.extend( {}, SecuPress.swalDefaults, {
+			swal2( $.extend( {}, SecuPress.swal2Defaults, {
 				title: SecuPressi18nScanner.scanDetails,
 				html:  $( "#details-" + test ).find( ".details-content" ).html(),
 				type:  "info"
@@ -1088,7 +1088,7 @@ jQuery( document ).ready( function( $ ) {
 		$( "body" ).on( "click.secupress", ".secupress-details-fix", function( e ) {
 			var test = $( this ).data( "test" );
 
-			swal( $.extend( {}, SecuPress.swalDefaults, SecuPress.swalConfirmDefaults, {
+			swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
 				title:             SecuPressi18nScanner.fixDetails,
 				confirmButtonText: SecuPressi18nScanner.fixit,
 				reverseButtons:    true,
@@ -1097,7 +1097,7 @@ jQuery( document ).ready( function( $ ) {
 			} ) ).then( function ( isConfirm ) {
 				if ( isConfirm ) {
 					$( "#" + test ).find( ".secupress-fixit" ).trigger( "click.secupress" );
-					swal.close();
+					swal2.close();
 				}
 			} );
 		} );
