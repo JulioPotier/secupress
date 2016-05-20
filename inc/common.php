@@ -349,6 +349,9 @@ function secupress_add_cookiehash_muplugin() {
 	$contents .= 'define( \'COOKIEHASH\', md5( __FILE__ . \'' . wp_generate_password( 64 ) . '\' ) );';
 
 	if ( ! secupress_create_mu_plugin( 'COOKIEHASH_' . uniqid(), $contents ) ) {
+		// MU Plugin creation failed.
+		secupress_set_site_transient( 'secupress-cookiehash-muplugin-failed', 1 );
+		secupress_fixit( 'WP_Config' );
 		return;
 	}
 
@@ -358,10 +361,15 @@ function secupress_add_cookiehash_muplugin() {
 		wp_destroy_current_session();
 	}
 
+	// MU Plugin creation succeeded.
+	secupress_set_site_transient( 'secupress-cookiehash-muplugin-succeeded', 1 );
+	secupress_fixit( 'WP_Config' );
+
+	// Auto-login.
 	$token = md5( time() );
 	secupress_set_site_transient( 'secupress_auto_login_' . $token, array( $data['username'], 'WP_Config' ) );
 
-	wp_safe_redirect( esc_url_raw( add_query_arg( 'secupress_auto_login_token', $token, secupress_get_current_url( 'raw' ) ) ) );
+	wp_safe_redirect( esc_url_raw( add_query_arg( 'secupress_auto_login_token', $token ) ) );
 	die();
 }
 

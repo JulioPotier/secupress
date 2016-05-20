@@ -53,7 +53,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 		$messages = array(
 			// "good"
 			0   => __( 'Your <code>wp-config.php</code> file is correct.', 'secupress' ),
-			2   => __( 'A must use plugin has been added in order to change the default value for <code>COOKIEHASH</code>.', 'secupress' ),
+			1   => __( 'A must use plugin has been added in order to change the default value for <code>COOKIEHASH</code>.', 'secupress' ),
 			// "warning"
 			100 => __( 'This fix is <strong>pending</strong>, please reload the page to apply it now.', 'secupress' ),
 			// "bad"
@@ -65,7 +65,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 			206 => __( '%1$s should be set on %2$s or less.', 'secupress' ),
 			// "cantfix"
 			300 => __( 'Some constants could not be set correctly: %s.', 'secupress' ),
-			305 => __( 'I can not create a must use plugin in <code>%s</code>, but i need it to change the default value for <code>COOKIEHASH</code>.', 'secupress' ),
+			301 => __( 'I can not create a must use plugin in <code>%s</code>, but i need it to change the default value for <code>COOKIEHASH</code>.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -84,7 +84,6 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-
 		// COOKIEHASH.
 		$check = defined( 'COOKIEHASH' ) && COOKIEHASH === md5( get_site_option( 'siteurl' ) );
 
@@ -191,8 +190,19 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 	 * @return (array) The fix results.
 	 */
 	public function fix() {
-
 		global $current_user;
+
+		if ( secupress_delete_site_transient( 'secupress-cookiehash-muplugin-failed' ) ) {
+			// MU Plugin creation failed.
+			$this->add_fix_message( 301 );
+			return parent::fix();
+		}
+
+		if ( secupress_delete_site_transient( 'secupress-cookiehash-muplugin-succeeded' ) ) {
+			// MU Plugin creation succeeded.
+			$this->add_fix_message( 1 );
+			return parent::fix();
+		}
 
 		$wpconfig_filename = secupress_find_wpconfig_path();
 
@@ -286,5 +296,4 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 
 		return parent::fix();
 	}
-
 }
