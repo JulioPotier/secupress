@@ -1,3 +1,4 @@
+/* globals jQuery: false, SecuPressi18nCommon: false, swal: false */
 (function($, d, w, undefined) {
 	var SecuPress = {
 		supportButtonColor:  "#F1C40F",
@@ -177,7 +178,7 @@
 							+ '</p>'
 						+ '</form></div>';
 
-		swal( jQuery.extend( {}, SecuPress.swalDefaults, {
+		swal( $.extend( {}, SecuPress.swalDefaults, {
 			title: texts.title,
 			html:  customForm,
 			type:  'info',
