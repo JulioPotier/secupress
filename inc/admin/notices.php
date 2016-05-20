@@ -302,11 +302,11 @@ function secupress_warning_no_api_key() {
 	$screen_id = $screen_id && ! empty( $screen_id->id ) ? $screen_id->id : false;
 
 	$allowed_screen_ids = array(
-								'toplevel_page_secupress_scanners' => 1,
-								'secupress_page_secupress_modules' => 1,
-								'secupress_page_secupress_settings' => 1,
-								'secupress_page_secupress_logs' => 1
-							); //// Add Get Pro page later
+		'toplevel_page_' . SECUPRESS_PLUGIN_SLUG . '_scanners'  => 1,
+		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules'  => 1,
+		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' => 1,
+		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_logs'     => 1,
+	); // //// Add Get Pro page later.
 
 	if ( ! isset( $allowed_screen_ids[ $screen_id ] ) || ! current_user_can( secupress_get_capability() ) ) {
 		return;
