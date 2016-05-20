@@ -599,9 +599,9 @@ function secupress_scanners_template() {
 		'br'     => array(),
 	);
 	// Actions the user needs to perform for a fix.
-	$fix_actions     = SecuPress_Scan::get_and_delete_fix_actions();
+	$fix_actions = SecuPress_Scan::get_and_delete_fix_actions();
 	// Auto-scans: scans that will be executed on page load.
-	$autoscans       = SecuPress_Scan::get_and_delete_autoscans();
+	$autoscans   = SecuPress_Scan::get_and_delete_autoscans();
 
 	if ( ! $is_subsite ) {
 		$secupress_tests = secupress_get_scanners();
@@ -693,7 +693,7 @@ function secupress_scanners_template() {
 					++$i;
 					$class_name   = 'SecuPress_Scan_' . $class_name_part;
 					$current_test = $class_name::get_instance();
-					$referer      = urlencode( esc_url_raw( self_admin_url( 'admin.php?page=secupress_scanners' . ( $is_subsite ? '' : '#' . $class_name_part ) ) ) );
+					$referer      = urlencode( esc_url_raw( self_admin_url( 'admin.php?page=' . SECUPRESS_PLUGIN_SLUG . '_scanners' . ( $is_subsite ? '' : '#' . $class_name_part ) ) ) );
 					$css_class    = ' type-' . sanitize_key( $class_name::$type );
 
 					if ( $is_subsite ) {
