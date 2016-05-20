@@ -281,7 +281,8 @@ span.secupress-get-pro-version {
 	color: #000;
 	font-weight: bold;
 }
-.secupress-get-pro-version a {
+.secupress-get-pro-version a,
+.secupress-cta-pro a {
 	color: #F7AB13;
 }
 .secupress-setting-content-col {
@@ -303,7 +304,21 @@ span.secupress-get-pro-version {
 	-ms-flex-negative: 0;
 	flex-shrink: 0;
 }
-.secupress-get-pro-col p.secupress-get-pro:before {
+.secupress-get-pro-col p.secupress-get-pro,
+.secupress-cta-pro {
+	position: relative;
+	padding-left: 55px;
+	font-weight: bold;
+	color: #000;
+}
+.secupress-cta-pro {
+	display: inline-block;
+	margin-left: 7px;
+	padding-left: 52px;
+	vertical-align: middle;
+}
+.secupress-get-pro-col p.secupress-get-pro:before,
+.secupress-cta-pro:before {
 	position: absolute;
 	top: 2px; left: 5px;
 	content: "\e907";
@@ -311,13 +326,8 @@ span.secupress-get-pro-version {
 	font-size: 35px;
 	line-height: 35px;
 }
-.secupress-get-pro-col p.secupress-get-pro {
-	position: relative;
-	padding-left: 55px;
-	font-weight: bold;
-	color: #000;
-}
-.secupress-get-pro-col .secupress-get-pro a:before {
+.secupress-get-pro-col .secupress-get-pro a:before,
+.secupress-cta-pro a:before {
 	content: "";
 	display: block;
 }
