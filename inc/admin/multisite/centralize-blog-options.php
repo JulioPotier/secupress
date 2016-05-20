@@ -123,7 +123,7 @@ function secupress_delete_blog_from_centralized_blog_options( $blog_id ) {
 /* FILL IN THE FIRST VALUES ===================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-add_action( 'load-toplevel_page_secupress_scanners', 'secupress_add_centralized_blog_options' );
+add_action( 'load-toplevel_page_' . SECUPRESS_PLUGIN_SLUG . '_scanners', 'secupress_add_centralized_blog_options' );
 /**
  * When the user reaches the scans page, display a message if our options need more results.
  *
