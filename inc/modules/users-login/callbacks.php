@@ -63,7 +63,7 @@ function __secupress_users_login_settings_callback( $settings ) {
 function __secupress_double_auth_settings_callback( $modulenow, &$settings, $activate ) {
 	// (De)Activation.
 	if ( ! empty( $activate['double-auth_type'] ) ) {
-		secupress_manage_submodule( $modulenow, 'passwordless', '_passwordless' === $activate['double-auth_type'] && secupress_is_pro() );
+		secupress_manage_submodule( $modulenow, 'passwordless', '1' === $activate['double-auth_type'] && secupress_is_pro() );
 	} elseif ( false !== $activate ) {
 		secupress_deactivate_submodule( $modulenow, array( 'passwordless' ) );
 	}

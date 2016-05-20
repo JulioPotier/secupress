@@ -752,6 +752,22 @@ function secupress_feature_is_pro( $feature ) {
 
 
 /**
+ * Tell if a user is affected by its role for the asked module
+ *
+ * @return (-1)/(bool) -1 = every role is affected, true = the user's role is affected, false = the user's role isn't affected.
+ */
+function secupress_is_affected_role( $module, $submodule, $user ) {
+	$roles = secupress_get_module_option( $submodule . '_affected_role', array(), $module );
+
+	if ( ! $roles ) {
+		return -1;
+	}
+
+	return is_a( $user, 'WP_User' ) && user_can( $user, 'exist' ) && ! count( (array) array_intersect( $roles, $user->roles ) );
+}
+
+
+/**
  * This will be used with the filter hook 'nonce_user_logged_out' to create nonces for disconnected users.
  *
  * @since 1.0
@@ -777,7 +793,7 @@ function secupress_modify_userid_for_nonces( $uid ) {
 function secupress_print_scanner_header() {
 ?>
 <div class="secupress-heading secupress-flex secupress-flex-spaced secupress-wrap">
-	<p class="secupress-text-medium"><?php 
+	<p class="secupress-text-medium"><?php
 		/* translators: %s is the plugin name */
 		printf( esc_html__( 'Welcome to %s the best way to secure your website!', 'secupress' ), SECUPRESS_PLUGIN_NAME );
 	?></p>
@@ -865,7 +881,7 @@ function secupress_print_caroupoivre() {
 			<p class="slide-text"><?php _e( 'L\'analyse des points reste à jour, sans vous connectez au back office avec le scan automatique.', 'secupress' ); ?></p>
 		</div>
 		<?php endif; ?>
-		
+
 		<!-- Available slides, random picked in JS -->
 		<div class="secupress-slide secupress-slide-1">
 			<h3 class="slide-title"><?php _e( 'Une gamme de modules à votre service', 'secupress' ); ?></h3>
@@ -884,4 +900,16 @@ function secupress_print_caroupoivre() {
 	</div>
 </div><!-- .secupress-one-click-scanning-slideshow -->
 <?php
+}
+
+/**
+ * Tell if the param $user is a real user from your installation
+ *
+ * @param variant $user The object to be tested to be a valid user
+ * @since 1.0
+ * @return boolean
+ * @author Julio Potier
+ **/
+function secupress_is_user( $user ) {
+	return is_a( $user, 'WP_User' ) && user_can( $user, 'exist' );
 }
