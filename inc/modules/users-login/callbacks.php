@@ -122,7 +122,7 @@ function __secupress_login_protection_settings_callback( $modulenow, &$settings,
 
 	// (De)Activation.
 	if ( false !== $activate ) {
-		secupress_manage_submodule( $modulenow, 'only-one-connexion', ! empty( $activate['login-protection_only-one-connexion'] ) && secupress_is_pro() );
+		secupress_manage_submodule( $modulenow, 'only-one-connection', ! empty( $activate['login-protection_only-one-connection'] ) && secupress_is_pro() );
 		secupress_manage_submodule( $modulenow, 'sessions-control', ! empty( $activate['login-protection_sessions_control'] ) && secupress_is_pro() );
 	}
 }

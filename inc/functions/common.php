@@ -710,7 +710,7 @@ function secupress_is_pro() {
 function secupress_feature_is_pro( $feature ) {
 	$features = array(
 		// Field names.
-		'login-protection_only-one-connexion'    => 1,
+		'login-protection_only-one-connection'   => 1,
 		'login-protection_sessions_control'      => 1,
 		'double-auth_type'                       => 1,
 		'password-policy_password_expiration'    => 1,
