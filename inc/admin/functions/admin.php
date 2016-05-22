@@ -143,6 +143,7 @@ add_filter( 'admin_page_access_denied', '__secupress_is_jarvis', 9 );
 /**
  * Easter egg when you visit a "secupress" page with a typo in it, or just don't have access (not under white label).
  *
+ * @author Tony Stark
  * @since 1.0
  */
 function __secupress_is_jarvis() {
