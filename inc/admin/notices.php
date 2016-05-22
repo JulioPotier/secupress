@@ -226,19 +226,19 @@ function secupress_warning_module_activity() {
 }
 
 
-add_action( 'admin_init', 'secupress_warning_no_backup_email' );
+add_action( 'admin_init', 'secupress_warning_no_recovery_email' );
 /**
- * This warning is displayed when the backup email is not set.
+ * This warning is displayed when the recovery email is not set.
  *
  * @since 1.0
  */
-function secupress_warning_no_backup_email() {
-	if ( get_user_meta( get_current_user_id(), 'backup_email', true ) ) {
+function secupress_warning_no_recovery_email() {
+	if ( get_user_meta( get_current_user_id(), 'recovery_email', true ) ) {
 		return;
 	}
 
 	$message  = sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
-	$message .= sprintf( __( 'Your <a href="%s">Backup E-mail</a> isn\'t yet set. Please do it.', 'secupress' ), get_edit_profile_url( get_current_user_id() ) . '#secupress_backup_email' );
+	$message .= sprintf( __( 'Your <a href="%s">Recovery E-mail</a> isn\'t yet set. Please do it.', 'secupress' ), get_edit_profile_url( get_current_user_id() ) . '#secupress_backup_email' );
 
 	secupress_add_notice( $message, 'error', false );
 }
