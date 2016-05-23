@@ -506,13 +506,21 @@ function __secupress_scanners() {
 						$tabs        = array();
 						$default_tab = 'bad';
 					}
+
+					if ( ! is_multisite() || is_network_admin() ) {
+						$tabs['hasaction'] = esc_html__( 'Action needed', 'secupress' );
+					}
+
 					$tabs = array_merge( $tabs, array(
 						'bad'     => esc_html__( 'Bad', 'secupress' ),
 						'warning' => esc_html__( 'Warning', 'secupress' ),
 						'good'    => esc_html__( 'Good', 'secupress' ),
 					) );
-					foreach ( $tabs as $slug => $name ) : ?>
-						<li class="secupress-big-tab-<?php echo $slug; ?>" role="presentation">
+
+					foreach ( $tabs as $slug => $name ) :
+						$is_hidden = 'hasaction' === $slug && ! $counts[ $slug ];
+						?>
+						<li class="secupress-big-tab-<?php echo $slug; ?><?php echo $is_hidden ? ' hidden' : ''; ?>"<?php echo $is_hidden ? ' aria-hidden="true"' : ''; ?> role="presentation">
 							<a href="#tab-<?php echo $slug; ?>" aria-controls="tab-<?php echo $slug; ?>" role="tab"<?php echo $default_tab === $slug ? ' class="secupress-current"' : ''; ?> data-type="<?php echo $slug; ?>">
 								<span class="secupress-tab-title"><?php echo $name; ?></span>
 								<span class="secupress-tab-subtitle"><?php printf( _n( '%d issue', '%d issues', $counts[ $slug ], 'secupress' ), $counts[ $slug ] ); ?></span>
@@ -713,6 +721,7 @@ function secupress_scanners_template() {
 					$css_class   .= ' status-' . $status_class;
 					$css_class   .= isset( $autoscans[ $class_name_part ] ) ? ' autoscan' : '';
 					$css_class   .= false === $current_test::$fixable || 'pro' === $current_test::$fixable && ! secupress_is_pro() ? ' not-fixable' : '';
+					$css_class   .= ! empty( $fixes[ $option_name ]['has_action'] ) ? ' status-hasaction' : '';
 
 					if ( ! empty( $scanners[ $option_name ]['msgs'] ) ) {
 						$scan_message = secupress_format_message( $scanners[ $option_name ]['msgs'], $class_name_part );

@@ -1103,10 +1103,13 @@ body[class*=" secupress"] .sweet-overlay {
 	color: #393E46;
 }
 .secupress-big-tab-bad a:after,
-.secupress-big-tab-bad a.secupress-current:before {
+.secupress-big-tab-bad a.secupress-current:before,
+.secupress-big-tab-hasaction a:after,
+.secupress-big-tab-hasaction a.secupress-current:before {
 	background: #F2295E;
 }
-.secupress-big-tab-bad .secupress-tab-subtitle {
+.secupress-big-tab-bad .secupress-tab-subtitle,
+.secupress-big-tab-hasaction .secupress-tab-subtitle {
 	color: #F2295E;
 }
 .secupress-big-tab-warning a:after,
@@ -1486,7 +1489,7 @@ table.fixed .column-date {
 	background: #26B3A9!important;
 }
 .secupress-swal.sweet-alert .sweet-cancel {
-	background: #5a626f!important;	
+	background: #5a626f!important;
 }
 .secupress-swal.sweet-alert .sweet-cancel:hover,
 .secupress-swal.sweet-alert .sweet-cancel:hover {

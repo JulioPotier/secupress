@@ -162,6 +162,7 @@ function secupress_get_tests_for_ms_scanner_fixes() {
 function secupress_get_scanner_counts( $type = '' ) {
 	$tests_by_status = secupress_get_scanners();
 	$scanners        = secupress_get_scan_results();
+	$fixes           = secupress_get_fix_results();
 	$empty_statuses  = array( 'good' => 0, 'warning' => 0, 'bad' => 0 );
 	$scanners_count  = $scanners ? array_count_values( wp_list_pluck( $scanners, 'status' ) ) : array();
 	$counts          = array_merge( $empty_statuses, $scanners_count );
@@ -170,6 +171,15 @@ function secupress_get_scanner_counts( $type = '' ) {
 	$counts['notscannedyet'] = $total - array_sum( $counts );
 	$counts['total']         = $total;
 	$counts['percent']       = (int) floor( $counts['good'] * 100 / $counts['total'] );
+	$counts['hasaction']     = 0;
+
+	if ( $fixes ) {
+		foreach ( $fixes as $test_name => $fix ) {
+			if ( ! empty( $fix['has_action'] ) ) {
+				++$counts['hasaction'];
+			}
+		}
+	}
 
 	if ( 100 === $counts['percent'] ) {
 		$counts['grade'] = 'A';

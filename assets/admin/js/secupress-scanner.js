@@ -69,18 +69,31 @@ jQuery( document ).ready( function( $ ) {
 		secupressChartEl.onclick = function( e ) {
 			var activePoints = secupressChart.getSegmentsAtEvent( e );
 			if ( activePoints[0] ) {
-				$( "#secupress-type-filters" ).find( ".secupress-big-tab-" + activePoints[0].status ).find( "a" ).trigger( "click.secupress" );
+				$( "#secupress-type-filters" ).children( ".secupress-big-tab-" + activePoints[0].status ).find( "a" ).trigger( "click.secupress" );
 			}
 		};
 
 		// Trigger a filter action on Legend item click.
 		$( ".secupress-chart-legend" ).find( "li" ).on( "click.secupress", function() {
-			$( "#secupress-type-filters" ).find( ".secupress-big-tab-" + $( this ).data( "status" ) ).find( "a" ).trigger( "click.secupress" );
+			$( "#secupress-type-filters" ).children( ".secupress-big-tab-" + $( this ).data( "status" ) ).find( "a" ).trigger( "click.secupress" );
 		} );
 	}
 
 
+	function secupressSelectFallbackBigTab( data, $filters ) {
+		if ( data.bad ) {
+			$filters.find( ".secupress-big-tab-bad a" ).trigger( "click.secupress" );
+		} else if ( data.warning ) {
+			$filters.find( ".secupress-big-tab-warning a" ).trigger( "click.secupress" );
+		} else if ( data.good ) {
+			$filters.find( ".secupress-big-tab-good a" ).trigger( "click.secupress" );
+		}
+	}
+
+
 	function secupressUpdateScore( data ) {
+		var $filters = $( "#secupress-type-filters" );
+
 		// Only if we're not in a sub-site.
 		if ( ! secupressChartEl ) {
 			return;
@@ -104,7 +117,7 @@ jQuery( document ).ready( function( $ ) {
 		secupressChart.update();
 
 		// Tabs subtitles.
-		$( "#secupress-type-filters" ).find( "a" ).each( function() {
+		$filters.find( "a" ).each( function() {
 			var $this = $( this ),
 				type  = $this.data( "type" );
 			$this.children( ".secupress-tab-subtitle" ).text( data[ type + "-text" ] );
@@ -112,17 +125,24 @@ jQuery( document ).ready( function( $ ) {
 
 		// Show/Hide the "New" tab.
 		if ( ! data.notscannedyet ) {
-			$( ".secupress-big-tab-notscannedyet, .secupress-chart-legend .status-notscannedyet" ).remove();
-
-			if ( data.bad ) {
-				$( ".secupress-big-tab-bad a" ).trigger("click");
-			} else if ( data.warning ) {
-				$( ".secupress-big-tab-warning a" ).trigger("click");
-			} else if ( data.good ) {
-				$( ".secupress-big-tab-good a" ).trigger("click");
+			if ( $filters.children( ".secupress-big-tab-notscannedyet" ).children( "a" ).hasClass( "secupress-current" ) ) {
+				secupressSelectFallbackBigTab( data, $filters );
 			}
+
+			$filters.children( ".secupress-big-tab-notscannedyet" ).add( ".secupress-chart-legend .status-notscannedyet" ).remove();
 		} else {
 			$( ".secupress-count-notscannedyet" ).text( data.notscannedyet );
+		}
+
+		// Show/Hide the "Action needed" tab.
+		if ( data.hasaction ) {
+			$filters.children( ".secupress-big-tab-hasaction" ).removeClass( "hidden" ).removeAttr( "aria-hidden" ).children( "a" ).trigger( "click.secupress" );
+		} else {
+			if ( $filters.children( ".secupress-big-tab-hasaction" ).children( "a" ).hasClass( "secupress-current" ) ) {
+				secupressSelectFallbackBigTab( data, $filters );
+			}
+
+			$filters.children( ".secupress-big-tab-hasaction" ).addClass( "hidden" ).attr( "aria-hidden", true );
 		}
 
 		// Twitter.
@@ -301,71 +321,75 @@ jQuery( document ).ready( function( $ ) {
 			manualFix:    {}
 		};
 
+
 		// Complete the slideshow
 		function secupressAddCaroupoivrePagination() {
-			$sp_poivre = $('.secupress-caroupoivre');
+			$( '.secupress-caroupoivre' ).each( function() {
+				var $this = $(this),
+					i, nb_slides, pagination;
 
-			$sp_poivre.each(function(){
-				if ( $(this).next('.secupress-caroupoivre-pagination').length === 0 ) {
-					var $this      = $(this),
-						nb_slides  = $this.find('.secupress-slide[id]').length,
-						pagination =  '<div class="secupress-caroupoivre-pagination">';
-
-					for ( i = 0; i < nb_slides; i++ ) {
-						pagination += '<span class="secupress-dot"></span>';
-					}
-
-					pagination += '</div>';
-					$this.after( pagination );
+				if ( $this.next( '.secupress-caroupoivre-pagination' ).length !== 0 ) {
+					return true;
 				}
-			});
+
+				nb_slides  = $this.find( '.secupress-slide[id]' ).length;
+				pagination =  '<div class="secupress-caroupoivre-pagination">';
+
+				for ( i = 0; i < nb_slides; i++ ) {
+					pagination += '<span class="secupress-dot"></span>';
+				}
+
+				pagination += '</div>';
+				$this.after( pagination );
+			} );
 		}
+
 		secupressAddCaroupoivrePagination();
+
 
 		// Runs the Progressbar, 10 sec min.
 		function secupressRunProgressBar( $button ) {
 			var $sp_scanning = $( '.secupress-one-click-scanning-slideshow' ),
 				$sp_poivre   = $( '.secupress-caroupoivre' ),
 				$pagination  = $( '.secupress-caroupoivre-pagination' ).find( '.secupress-dot' ),
-				is_first     = $button.closest( '.secupress-not-scanned-yet' ).length;
-			
-			// if first of the first one click scan
+				is_first     = $button.closest( '.secupress-not-scanned-yet' ).length,
+				$random_slide, secupressProgressTimer;
+
+			// If first of the first one click scan.
 			if ( is_first ) {
-				// information about first scan & show progress + slides
-				$( '.secupress-before-caroupoivre' ).fadeOut( 200, function(){
+				// Information about first scan & show progress + slides.
+				$( '.secupress-before-caroupoivre' ).fadeOut( 200, function() {
 					$sp_scanning.fadeIn( 200 );
 				} );
-			}
-			else {
-				$('.secupress-tabs-contents').hide();
+			} else {
+				$( '.secupress-tabs-contents' ).hide();
 				$sp_scanning.fadeIn( 200 );
 			}
 
-			$sp_poivre.find('.secupress-slide').hide();
-			$random_slide = $('.secupress-slide-' + Math.floor((Math.random() * 2) + 1) ).html();
-			$sp_poivre.find('#secupress-slide1').html( $random_slide );
+			$sp_poivre.find( '.secupress-slide' ).hide();
+			$random_slide = $( '.secupress-slide-' + Math.floor( ( Math.random() * 2 ) + 1 ) ).html();
+			$sp_poivre.find( '#secupress-slide1' ).html( $random_slide );
 
-			var secupressProgressTimer = setInterval( function() {
+			secupressProgressTimer = setInterval( function() {
 				secupressOneClickScanProgress++;
 
 				if ( secupressOneClickScanProgress >= 55 ) {
-					if ( ! $sp_poivre.find( '#secupress-slide2' ).is(":visible") ) {
+					if ( ! $sp_poivre.find( '#secupress-slide2' ).is( ":visible" ) ) {
 						$sp_poivre.find( '#secupress-slide1' ).hide();
 						$sp_poivre.find( '#secupress-slide2' ).fadeIn( 275 );
-						$pagination.removeClass('current').eq(1).addClass('current');
+						$pagination.removeClass( 'current' ).eq( 1 ).addClass( 'current' );
 					}
 				} else if ( secupressOneClickScanProgress >= 0 ) {
 					$sp_poivre.find( '#secupress-slide1' ).fadeIn( 275 );
-					$pagination.removeClass('current').eq(0).addClass('current');
+					$pagination.removeClass( 'current' ).eq( 0 ).addClass( 'current' );
 				}
 
-				// we are between 9 & 10s but SP still doing scan, stay at 90%
+				// We are between 9 & 10s but SP still doing scan, stay at 90%.
 				// Windows counting style!
 				if ( ! $.isEmptyObject( secupressScans.doingScan ) && secupressOneClickScanProgress > 90 && secupressOneClickScanProgress < 100 ) {
 					secupressOneClickScanProgress = 90;
 					return;
 				}
-
 
 				secupressOneClickScanProgress = Math.min( secupressOneClickScanProgress, 100 );
 
@@ -374,23 +398,22 @@ jQuery( document ).ready( function( $ ) {
 					.find( '.secupress-progress-val-txt' ).text( secupressOneClickScanProgress + ' %' );
 
 				if ( secupressOneClickScanProgress >= 100 ) {
-					
+
 					secupressOneClickScanProgress = 0;
 					clearInterval( secupressProgressTimer );
 
 					// makes slideshow desappear
-					$sp_scanning.fadeOut( 200, function(){
+					$sp_scanning.fadeOut( 200, function() {
 
-						// show other element (list of scans, tabs, tabs contents)
-						$('.secupress-scanners-header.secupress-not-scanned-yet').removeClass('secupress-not-scanned-yet');
+						// Show other element (list of scans, tabs, tabs contents).
+						$( '.secupress-scanners-header.secupress-not-scanned-yet' ).removeClass( 'secupress-not-scanned-yet' );
 
-						// explicitly show tabs content in case of other One Click Scans
-						$('.secupress-tabs-contents').show();
+						// Explicitly show tabs content in case of other One Click Scans.
+						$( '.secupress-tabs-contents' ).show();
 
 						// Click on first tab to show results, just in case…
-						$('#secupress-l-scan').trigger('click.secupress');
+						$( '#secupress-l-scan' ).trigger( 'click.secupress' );
 					} );
-
 				}
 			}, 100 );
 		}
@@ -413,7 +436,7 @@ jQuery( document ).ready( function( $ ) {
 		function secupressGetCurrentStatus( $el ) {
 			var classes, status = false;
 
-			classes = $el.attr( "class" ).replace( /(\s|^)(status-error|status-all)(\s|$)/g, " " ).replace( /^\s+|\s+$/g, "" ).replace( /\s+/, " " ).split( " " );
+			classes = $el.attr( "class" ).replace( /(\s|^)(status-error|status-all|status-hasaction)(\s|$)/g, " " ).replace( /^\s+|\s+$/g, "" ).replace( /\s+/, " " ).split( " " );
 
 			$.each( classes, function( i, cl ) {
 				if ( 0 === cl.indexOf( "status-" ) ) {
@@ -562,6 +585,12 @@ jQuery( document ).ready( function( $ ) {
 		}
 
 
+		// Tell if we need a manual fix.
+		function secupressManualFixNeeded( data ) {
+			return data.form_contents && data.form_fields || data.manualFix;
+		}
+
+
 		// Deal with fix infos.
 		function secupressDisplayFixResult( r, test, warn ) {
 			var $row = $( "#" + test ),
@@ -577,6 +606,13 @@ jQuery( document ).ready( function( $ ) {
 			// Add the new status as a class.
 			secupressSetStatusClass( $fix, r.data.class );
 
+			// Add a specific class to the row if the fix needs the user intervention.
+			if ( secupressManualFixNeeded( r.data ) ) {
+				$row.addClass( "status-hasaction" );
+			} else {
+				$row.removeClass( "status-hasaction" );
+			}
+
 			// Add status.
 			secupressAddFixStatusText( $row, r.data.status );
 
@@ -584,12 +620,6 @@ jQuery( document ).ready( function( $ ) {
 			secupressAddFixResult( $row, r.data.message );
 
 			return true;
-		}
-
-
-		// Tell if we need a manual fix.
-		function secupressManualFixNeeded( data ) {
-			return data.form_contents && data.form_fields || data.manualFix;
 		}
 
 
@@ -958,7 +988,7 @@ jQuery( document ).ready( function( $ ) {
 					}
 				} )
 				.always( function() {
-					$button.removeAttr( "disabled aria-disabled" );
+					$( '.button-secupress-scan' ).removeAttr( "disabled aria-disabled" ).removeClass( "disabled" );
 				} );
 			}
 		} );
