@@ -539,7 +539,8 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 			swal( $.extend( {}, SecuPress.swalDefaults, SecuPress.swalConfirmDefaults, {
 				text:              SecuPressi18nModules.confirmDeleteBackups,
 				confirmButtonText: SecuPressi18nModules.yesDeleteAll,
-				type:              "question"
+				type:              "question",
+				reverseButtons:    true
 			} ) ).then( function ( isConfirm ) {
 				if ( isConfirm ) {
 					swal.enableLoading();
@@ -565,7 +566,8 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 			swal( $.extend( {}, SecuPress.swalDefaults, SecuPress.swalConfirmDefaults, {
 				text:              SecuPressi18nModules.confirmDeleteBackup,
 				confirmButtonText: SecuPressi18nModules.yesDeleteOne,
-				type:              "question"
+				type:              "question",
+				reverseButtons:    true
 			} ) ).then( function ( isConfirm ) {
 				if ( isConfirm ) {
 					swal.enableLoading();
@@ -957,7 +959,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 			// resize the container
 			SPautoSized.textareaParentHeight( $container, $textarea );
 
-			// add (+) button				
+			// add (+) button
 			if ( e.scrollHeight > $container.height() ) {
 				SPautoSized.handleExpendButton( $container, true ); // create
 			} else {
@@ -967,7 +969,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 
 		return true;
 	};
-	
+
 	// function to resize textarea parent
 	SPautoSized.textareaParentHeight = function($container, $textarea) {
 		$container.css(
