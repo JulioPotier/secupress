@@ -138,11 +138,13 @@ function __secupress_login_protection_settings_callback( $modulenow, &$settings,
  * @param (array|bool) $activate  An array containing the fields related to the sub-module being activated. False if not on this module page.
  */
 function __secupress_password_policy_settings_callback( $modulenow, &$settings, $activate ) {
-	// Settings.
+	// Settings + (De)Activation.
 	if ( secupress_is_pro() ) {
 		$settings['password-policy_password_expiration'] = ! empty( $settings['password-policy_password_expiration'] ) ? absint( $settings['password-policy_password_expiration'] ) : 0;
+		secupress_manage_submodule( $modulenow, 'password-expiration', $settings['password-policy_password_expiration'] > 0 ); // `$settings`, not `$activate`.
 	} else {
-		$settings['password-policy_password_expiration'] = 0;
+		unset( $settings['password-policy_password_expiration'] );
+		secupress_deactivate_submodule( $modulenow, array( 'password-expiration' ) );
 	}
 
 	// Affected roles.
@@ -151,13 +153,7 @@ function __secupress_password_policy_settings_callback( $modulenow, &$settings, 
 	// (De)Activation.
 	if ( false !== $activate ) {
 		secupress_manage_submodule( $modulenow, 'ask-old-password', ! empty( $activate['password-policy_ask-old-password'] ) );
-
-		if ( secupress_is_pro() ) {
-			secupress_manage_submodule( $modulenow, 'password-expiration', $settings['password-policy_password_expiration'] > 0 ); // `$settings`, not `$activate`.
-			secupress_manage_submodule( $modulenow, 'strong-passwords', ! empty( $activate['password-policy_strong_passwords'] ) );
-		} else {
-			secupress_deactivate_submodule( $modulenow, array( 'password-expiration', 'strong-passwords' ) );
-		}
+		secupress_manage_submodule( $modulenow, 'strong-passwords', ! empty( $activate['password-policy_strong_passwords'] ) && secupress_is_pro() );
 	}
 }
 
