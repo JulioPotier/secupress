@@ -28,4 +28,4 @@ if ( is_multisite() ) {
 }
 
 // User metas.
-$wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE '%dismissed_secupress_notices'" );
+$wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE 'secupress_%' OR meta_key LIKE '%_secupress_%'" );
