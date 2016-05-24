@@ -27,7 +27,7 @@ function secupress_plugins_to_deactivate() {
 	}
 
 	$message  = '<p>' . sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
-	$message .= __( 'The following plugins are not recommanded with this plugin and may cause unexpected results:', 'secupress' );
+	$message .= __( 'The following plugins are not recommended with this plugin and may cause unexpected results:', 'secupress' );
 	$message .= '</p><ul>';
 	foreach ( $plugins_to_deactivate as $plugin ) {
 		$plugin_data = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin );
