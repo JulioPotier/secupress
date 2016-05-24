@@ -142,7 +142,7 @@ function secupress_check_ban_ips_maybe_send_unban_email( $ip ) {
 
 	if ( ! $user ) {
 		// Try with the recovery email.
-		$user = (int) $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'recovery_email' AND meta_value = %s LIMIT 1", $email ) );
+		$user = (int) $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'secupress_recovery_email' AND meta_value = %s LIMIT 1", $email ) );
 		$user = $user ? get_userdata( $user ) : 0;
 	}
 
@@ -166,7 +166,7 @@ function secupress_check_ban_ips_maybe_send_unban_email( $ip ) {
 		'content-type: text/html',
 	);
 
-	$bcc = get_user_meta( $user->ID, 'recovery_email', true );
+	$bcc = get_user_meta( $user->ID, 'secupress_recovery_email', true );
 
 	if ( $bcc && $bcc = is_email( $bcc ) ) {
 		$headers[] = 'bcc: ' . $bcc;
