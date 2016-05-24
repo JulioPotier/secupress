@@ -773,7 +773,7 @@ function secupress_is_affected_role( $module, $submodule, $user ) {
 		return -1;
 	}
 
-	return secupress_is_user( $user ) && ! array_intersect( $roles, $user->roles ) );
+	return secupress_is_user( $user ) && ! array_intersect( $roles, $user->roles );
 }
 
 
