@@ -173,22 +173,6 @@ function secupress_get_modules() {
 		),
 	);
 
-	if ( ! secupress_is_pro() ) {
-		$modules['pro'] = array(
-			'title'       => esc_html__( 'Get PRO!', 'secupress' ),
-			'icon'    => 'secupress-simple',
-			'summaries'   => array(
-				'small'  => __( 'Advanced options', 'secupress' ),
-				'normal' => __( 'Discover all the features only available in the PRO version.', 'secupress' ),
-			),
-			'description' => array(
-				__( 'Discover all the features only available in the PRO version.', 'secupress' ),
-			),
-			'with_reset_box' => false,
-			'mark_as_pro' => $should_be_pro
-		);
-	}
-
 	return $modules;
 }
 
