@@ -184,7 +184,7 @@ function secupressIsEscapeKey( e ) {
 			html:  customForm,
 			type:  'info',
 			confirmButtonText: texts.save,
-			customClass: 'wpmedia-swal secupress-swal secupress-swal-dark-header',
+			customClass: 'wpmedia-swal2 secupress-swal2 secupress-swal-dark-header',
 			width: 400
 		} ) );
 
