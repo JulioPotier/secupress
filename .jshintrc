@@ -18,6 +18,7 @@
 		"jQuery":                     false,
 		"ajaxurl":                    false,
 		"wp":                         false,
+		"SecuPressi18nCommon":        false,
 		"SecuPressi18nScanner":       false,
 		"SecuPressi18nChart":         false,
 		"SecuPressi18nNotices":       false,

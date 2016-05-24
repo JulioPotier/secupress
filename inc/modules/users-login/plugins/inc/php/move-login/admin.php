@@ -166,7 +166,7 @@ function secupress_move_login_write_rules() {
 			$message .= sprintf(
 				/* translators: 1 is a link "the dedicated section", 2 is a file name. */
 				__( 'It seems your %2$s file is not writable. You have to edit the file manually. Please see the rewrite rules provided %1$s and copy/paste it into the %2$s file.', 'secupress' ),
-				'<a href="' . esc_url( secupress_admin_url( 'secupress_scanners', 'users-login' ) ) . '#move-login_rules">' . __( 'the dedicated section', 'secupress' ) . '</a>',
+				'<a href="' . esc_url( secupress_admin_url( 'scanners', 'users-login' ) ) . '#move-login_rules">' . __( 'the dedicated section', 'secupress' ) . '</a>',
 				'<code>.htaccess</code>'
 			);
 			add_settings_error( 'general', 'apache_manual_edit', $message, 'error' );
@@ -182,7 +182,7 @@ function secupress_move_login_write_rules() {
 			$message .= sprintf(
 				/* translators: 1 is a link "the dedicated section", 2 is a file name. */
 				__( 'It seems your %2$s file is not writable. You have to edit the file manually. Please see the rewrite rules provided %1$s and copy/paste it into the %2$s file.', 'secupress' ),
-				'<a href="' . esc_url( secupress_admin_url( 'secupress_scanners', 'users-login' ) ) . '#move-login_rules">' . __( 'the dedicated section', 'secupress' ) . '</a>',
+				'<a href="' . esc_url( secupress_admin_url( 'scanners', 'users-login' ) ) . '#move-login_rules">' . __( 'the dedicated section', 'secupress' ) . '</a>',
 				'<code>web.config</code>'
 			);
 			add_settings_error( 'general', 'iis7_manual_edit', $message, 'error' );
@@ -196,7 +196,7 @@ function secupress_move_login_write_rules() {
 		$message .= sprintf(
 			/* translators: 1 is a link "the dedicated section", 2 is a file name. */
 			__( 'It seems your server uses a <i>Nginx</i> system. You have to edit the configuration file manually. Please see the rewrite rules provided %1$s and copy/paste it into the %2$s file.', 'secupress' ),
-			'<a href="' . esc_url( secupress_admin_url( 'secupress_scanners', 'users-login' ) ) . '#move-login_rules">' . __( 'the dedicated section', 'secupress' ) . '</a>',
+			'<a href="' . esc_url( secupress_admin_url( 'scanners', 'users-login' ) ) . '#move-login_rules">' . __( 'the dedicated section', 'secupress' ) . '</a>',
 			'<code>nginx.conf</code>'
 		);
 		add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );

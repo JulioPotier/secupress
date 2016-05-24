@@ -114,7 +114,7 @@ function __secupress_download_backup_ajax_post_cb() {
 	header( $_SERVER['SERVER_PROTOCOL'] . ' 200 OK' );
 	header( 'Expires: 0' );
 	header( 'Pragma: public' );
-	header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0');
+	header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
 	header( 'Cache-Control: private', false );
 	header( 'Content-Type: application/octet-stream' );
 	header( 'Content-Disposition: attachment; filename="' . basename( str_replace( array( '@', '#' ), '-', $file ) ) . '"' );

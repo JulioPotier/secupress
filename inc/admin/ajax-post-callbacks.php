@@ -116,7 +116,7 @@ function __secupress_get_scan_counters_ajax_cb() {
 
 	$counts = secupress_get_scanner_counts();
 
-	foreach ( array( 'notscannedyet', 'good', 'warning', 'bad' ) as $status ) {
+	foreach ( array( 'notscannedyet', 'hasaction', 'good', 'warning', 'bad' ) as $status ) {
 		$counts[ $status . '-text' ] = sprintf( _n( '%d issue', '%d issues', $counts[ $status ], 'secupress' ), $counts[ $status ] );
 	}
 

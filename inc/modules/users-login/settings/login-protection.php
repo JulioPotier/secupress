@@ -94,14 +94,14 @@ $this->add_field( array(
 
 $is_wp_4 = version_compare( $GLOBALS['wp_version'], '4.0' ) >= 0;
 $this->add_field( array(
-	'title'             => __( 'Avoid Double Connexions', 'secupress' ),
-	'description'       => __( 'Once logged in, nobody can log in on your account at the same time as you. You have to disconnect first to allow another connexion.', 'secupress' ),
-	'label_for'         => $this->get_field_name( 'only-one-connexion' ),
+	'title'             => __( 'Avoid Double Connections', 'secupress' ),
+	'description'       => __( 'Once logged in, nobody can log in on your account at the same time as you. You have to disconnect first to allow another connection.', 'secupress' ),
+	'label_for'         => $this->get_field_name( 'only-one-connection' ),
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
 	'disabled'          => ! $is_wp_4,
-	'value'             => (int) secupress_is_submodule_active( 'users-login', 'only-one-connexion' ),
-	'label'             => __( 'Yes, do not allow double connexions', 'secupress' ),
+	'value'             => (int) secupress_is_submodule_active( 'users-login', 'only-one-connection' ),
+	'label'             => __( 'Yes, do not allow double connections', 'secupress' ),
 	'helpers'           => array(
 		array(
 			'type'        => 'description',

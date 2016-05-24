@@ -278,12 +278,20 @@ class SecuPress_Log {
 		}
 
 		if ( $this->user_id ) {
-			/* Translators: 1: IP address, 2: user ID, 3: user login, 4: separator. */
-			return sprintf( __( '<span class="ip"><b>IP:</b> %1$s</span> <span class="id"><b>ID:</b> %2$s</span> <span class="login"><b>Login:</b> %3$s</span>', 'secupress' ), $user_ip, $user_id, $user_login );
+			$out   = '';
+			$infos = array(
+				'ip'    => __( 'IP', 'secupress' ),
+				'id'    => __( 'ID', 'secupress' ),
+				'login' => __( 'Login', 'secupress' ),
+			);
+			foreach ( $infos as $class => $label ) {
+				$var  = 'user_' . $class;
+				$out .= sprintf( '<span class="%s"><b>%s</b> %s</span> ', $class, sprintf( __( '%s:', 'secupress' ), $label ), $$var );
+			}
+			return $out;
 		}
 
-		/* translators: 1: IP address */
-		return sprintf( __( 'IP: %s', 'secupress' ), $user_ip );
+		return sprintf( '<span class="%s"><b>%s</b> %s</span> ', 'ip', sprintf( __( '%s:', 'secupress' ), __( 'IP', 'secupress' ) ), $user_ip );
 	}
 
 
@@ -437,7 +445,7 @@ class SecuPress_Log {
 
 		$data = $this->data;
 
-		// Replace the `<pre>` blocks with `<code>` inline blocks
+		// Replace the `<pre>` blocks with `<code>` inline blocks.
 		foreach ( $data as $key => $value ) {
 			if ( preg_match( '/^<pre>(?:<code>)?(.*)(?:<\/code>)?<\/pre>$/', $value, $matches ) ) {
 				$matches[1]   = explode( "\n", $matches[1] );

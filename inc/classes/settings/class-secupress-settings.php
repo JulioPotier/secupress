@@ -333,7 +333,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		echo '</div><!-- .secublock -->';
 
 		if ( $with_save_button ) {
-			static::submit_button( 'secupress-button-primary', $this->sectionnow . '_submit' );
+			static::submit_button( 'primary', $this->sectionnow . '_submit' );
 		}
 
 		/**
@@ -1554,14 +1554,46 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 *
 	 * @return (string) Submit button HTML.
 	 */
-	protected static function submit_button( $type = 'secupress-button-primary secupress-button-large', $name = 'main_submit', $wrap = true, $other_attributes = null, $echo = true ) {
+	protected static function submit_button( $type = 'primary large', $name = 'main_submit', $wrap = true, $other_attributes = null, $echo = true ) {
 		if ( true === $wrap ) {
 			$wrap = '<p class="submit">';
 		} elseif ( $wrap ) {
 			$wrap = '<p class="submit ' . sanitize_html_class( $wrap ) . '">';
 		}
 
-		$button = get_submit_button( __( 'Save All Changes', 'secupress' ), $type, $name, false, $other_attributes );
+		if ( ! is_array( $type ) ) {
+			$type = explode( ' ', $type );
+		}
+
+		$button_shorthand = array( 'primary' => 1, 'secondary' => 1, 'tertiary' => 1, 'small' => 1, 'large' => 1, 'delete' => 1 );
+		$classes          = array( 'secupress-button' );
+
+		foreach ( $type as $t ) {
+			$classes[] = isset( $button_shorthand[ $t ] ) ? 'secupress-button-' . $t : $t;
+		}
+		$class = implode( ' ', array_unique( $classes ) );
+
+		// Default the id attribute to $name unless an id was specifically provided in $other_attributes.
+		$id = $name;
+		if ( is_array( $other_attributes ) && isset( $other_attributes['id'] ) ) {
+			$id = $other_attributes['id'];
+			unset( $other_attributes['id'] );
+		}
+
+		$attributes = '';
+		if ( is_array( $other_attributes ) ) {
+			foreach ( $other_attributes as $attribute => $value ) {
+				$attributes .= ' ' . $attribute . '="' . esc_attr( $value ) . '"';
+			}
+		} elseif ( ! empty( $other_attributes ) ) { // Attributes provided as a string.
+			$attributes = $other_attributes;
+		}
+
+		// Don't output empty name and id attributes.
+		$name_attr = $name ? ' name="' . esc_attr( $name ) . '"' : '';
+		$id_attr   = $id   ? ' id="' . esc_attr( $id ) . '"'     : '';
+
+		$button = '<button type="submit"' . $name_attr . $id_attr . ' class="' . esc_attr( $class ) . '"' . $attributes . '/>' . __( 'Save All Changes', 'secupress' ) . '</button>';
 
 		if ( $wrap ) {
 			$button = $wrap . $button . '</p>';

@@ -142,12 +142,12 @@ function secupress_create_subsite_menu() {
 	}
 
 	// Menu item.
-	add_menu_page( SECUPRESS_PLUGIN_NAME, SECUPRESS_PLUGIN_NAME, $cap, 'secupress_scanners', '__secupress_subsite_scanners', 'dashicons-shield-alt' );
+	add_menu_page( SECUPRESS_PLUGIN_NAME, 'secupress', $cap, SECUPRESS_PLUGIN_SLUG . '_scanners', '__secupress_subsite_scanners', 'dashicons-shield-alt' );
 
 	// Display a notice for Administrators.
-	if ( 'admin.php' !== $pagenow || empty( $_GET['page'] ) || 'secupress_scanners' !== $_GET['page'] ) {
+	if ( 'admin.php' !== $pagenow || empty( $_GET['page'] ) || SECUPRESS_PLUGIN_SLUG . '_scanners' !== $_GET['page'] ) {
 		/* translators: 1 is an URL, 2 is the plugin name */
-		$message = sprintf( __( 'Some security issues must be fixed, please visit <a href="%1$s">%2$s\'s page</a>.', 'secupress' ), esc_url( admin_url( 'admin.php?page=secupress_scanners' ) ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
+		$message = sprintf( __( 'Some security issues must be fixed, please visit <a href="%1$s">%2$s\'s page</a>.', 'secupress' ), esc_url( admin_url( 'admin.php?page=' . SECUPRESS_PLUGIN_SLUG . '_scanners' ) ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
 		secupress_add_notice( $message, null, 'subsite-security-issues' );
 	} else {
 		// The user is on the plugin page: make sure to not display the notice.
@@ -237,7 +237,7 @@ add_action( 'admin_page_access_denied', 'secupress_settings_page_access_denied_m
  */
 function secupress_settings_page_access_denied_message() {
 	global $pagenow;
-	if ( is_network_admin() || is_user_admin() || 'admin.php' !== $pagenow || empty( $_GET['page'] ) || 'secupress_scanners' !== $_GET['page'] ) {
+	if ( is_network_admin() || is_user_admin() || 'admin.php' !== $pagenow || empty( $_GET['page'] ) || SECUPRESS_PLUGIN_SLUG . '_scanners' !== $_GET['page'] ) {
 		return;
 	}
 	if ( ! current_user_can( secupress_get_capability( true ) ) ) {

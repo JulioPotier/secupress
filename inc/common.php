@@ -141,8 +141,8 @@ function secupress_check_ban_ips_maybe_send_unban_email( $ip ) {
 	$user = get_user_by( 'email', $email );
 
 	if ( ! $user ) {
-		// Try with the backup email.
-		$user = (int) $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'backup_email' AND meta_value = %s LIMIT 1", $email ) );
+		// Try with the recovery email.
+		$user = (int) $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'secupress_recovery_email' AND meta_value = %s LIMIT 1", $email ) );
 		$user = $user ? get_userdata( $user ) : 0;
 	}
 
@@ -166,7 +166,7 @@ function secupress_check_ban_ips_maybe_send_unban_email( $ip ) {
 		'content-type: text/html',
 	);
 
-	$bcc = get_user_meta( $user->ID, 'backup_email', true );
+	$bcc = get_user_meta( $user->ID, 'secupress_recovery_email', true );
 
 	if ( $bcc && $bcc = is_email( $bcc ) ) {
 		$headers[] = 'bcc: ' . $bcc;
@@ -349,6 +349,9 @@ function secupress_add_cookiehash_muplugin() {
 	$contents .= 'define( \'COOKIEHASH\', md5( __FILE__ . \'' . wp_generate_password( 64 ) . '\' ) );';
 
 	if ( ! secupress_create_mu_plugin( 'COOKIEHASH_' . uniqid(), $contents ) ) {
+		// MU Plugin creation failed.
+		secupress_set_site_transient( 'secupress-cookiehash-muplugin-failed', 1 );
+		secupress_fixit( 'WP_Config' );
 		return;
 	}
 
@@ -358,10 +361,15 @@ function secupress_add_cookiehash_muplugin() {
 		wp_destroy_current_session();
 	}
 
+	// MU Plugin creation succeeded.
+	secupress_set_site_transient( 'secupress-cookiehash-muplugin-succeeded', 1 );
+	secupress_fixit( 'WP_Config' );
+
+	// Auto-login.
 	$token = md5( time() );
 	secupress_set_site_transient( 'secupress_auto_login_' . $token, array( $data['username'], 'WP_Config' ) );
 
-	wp_safe_redirect( esc_url_raw( add_query_arg( 'secupress_auto_login_token', $token, secupress_get_current_url( 'raw' ) ) ) );
+	wp_safe_redirect( esc_url_raw( add_query_arg( 'secupress_auto_login_token', $token ) ) );
 	die();
 }
 

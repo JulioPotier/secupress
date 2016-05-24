@@ -226,19 +226,19 @@ function secupress_warning_module_activity() {
 }
 
 
-add_action( 'admin_init', 'secupress_warning_no_backup_email' );
+add_action( 'admin_init', 'secupress_warning_no_recovery_email' );
 /**
- * This warning is displayed when the backup email is not set.
+ * This warning is displayed when the recovery email is not set.
  *
  * @since 1.0
  */
-function secupress_warning_no_backup_email() {
-	if ( get_user_meta( get_current_user_id(), 'backup_email', true ) ) {
+function secupress_warning_no_recovery_email() {
+	if ( get_user_meta( get_current_user_id(), 'recovery_email', true ) ) {
 		return;
 	}
 
 	$message  = sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
-	$message .= sprintf( __( 'Your <a href="%s">Backup E-mail</a> isn\'t yet set. Please do it.', 'secupress' ), get_edit_profile_url( get_current_user_id() ) . '#secupress_backup_email' );
+	$message .= sprintf( __( 'Your <a href="%s">Recovery E-mail</a> isn\'t yet set. Please do it.', 'secupress' ), get_edit_profile_url( get_current_user_id() ) . '#secupress_backup_email' );
 
 	secupress_add_notice( $message, 'error', false );
 }
@@ -254,7 +254,7 @@ function secupress_warning_no_oneclick_scan_yet() {
 	$screen_id = get_current_screen();
 	$screen_id = $screen_id && ! empty( $screen_id->id ) ? $screen_id->id : false;
 
-	if ( 'toplevel_page_' . SECUPRESS_PLUGIN_SLUG . '_scanners' === $screen_id || 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' === $screen_id || ! current_user_can( secupress_get_capability() ) ) {
+	if ( ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' !== $screen_id && 'plugins' !== $screen_id ) || ! current_user_can( secupress_get_capability() ) ) {
 		return;
 	}
 
@@ -263,12 +263,12 @@ function secupress_warning_no_oneclick_scan_yet() {
 	if ( $times ) {
 		return;
 	}
-?>
+	?>
 	<div class="secupress-section-dark secupress-notice secupress-flex">
 		<div class="secupress-col-1-4 secupress-col-logo secupress-text-center">
 			<div class="secupress-logo-block">
 				<div class="secupress-lb-logo">
-					<?php echo secupress_get_logo( array( 'width'=>'126' ) ); ?>
+					<?php echo secupress_get_logo( array( 'width' => '126' ) ); ?>
 				</div>
 			</div>
 		</div>
@@ -291,8 +291,9 @@ function secupress_warning_no_oneclick_scan_yet() {
 			</a>
 		</div>
 	</div><!-- .secupress-section-dark -->
-<?php
+	<?php
 }
+
 
 add_action( 'all_admin_notices', 'secupress_warning_no_api_key', 50 );
 /**
@@ -305,29 +306,31 @@ function secupress_warning_no_api_key() {
 	$screen_id = get_current_screen();
 	$screen_id = $screen_id && ! empty( $screen_id->id ) ? $screen_id->id : false;
 
-	if ( ! current_user_can( secupress_get_capability() ) || 'plugins' === $screen_id ) {
+	$allowed_screen_ids = array(
+		'toplevel_page_' . SECUPRESS_PLUGIN_SLUG . '_scanners'  => 1,
+		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules'  => 1,
+		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' => 1,
+		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_logs'     => 1,
+	); // //// Add Get Pro page later.
+
+	if ( ! isset( $allowed_screen_ids[ $screen_id ] ) || ! current_user_can( secupress_get_capability() ) ) {
 		return;
 	}
 
-	if ( secupress_get_consumer_email() ) {
+	$times = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
+
+	// Don't display the API key banner yet, wait the first OCS.
+	if ( secupress_get_consumer_email() || ! $times ) {
 		return;
 	}
-
-	if (
-		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' === $screen_id
-		||
-		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' === $screen_id
-		||
-		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_logs' === $screen_id
-	) {
-?>
+	?>
 	<div class="secupress-section-gray-dark secupress-notice mini secupress-flex">
 		<div class="secupress-col-1-4 secupress-col-icon">
 			<i class="icon-secupress-simple" aria-hidden="true"></i>
 		</div>
 		<div class="secupress-col-2-4 secupress-col-text">
-			<p class="secupress-text-medium">Allez plus loin et avoir plus de fonctionnalités ?</p>
-			<p>L'API Key vous permettra de sécuriser plus en profondeur votre site web en activant de nouvelles fonctionnalités.</p>
+			<p class="secupress-text-medium"><?php esc_html_e( 'Go further to get more security features!', 'secupress' ); ?></p>
+			<p><?php esc_html_e( 'The API Key will allow you to secure more deeply your website by activating new modules.', 'secupress' ); ?></p>
 		</div>
 		<div class="secupress-col-1-4 secupress-col-cta">
 			<a href="<?php echo esc_url( secupress_admin_url( 'settings' ) ); ?>" class="secupress-button secupress-button-primary button-secupress-get-api-key">
@@ -344,8 +347,7 @@ function secupress_warning_no_api_key() {
 			</a>
 		</div>
 	</div><!-- .secupress-section-medium -->
-<?php
-	} // right screen
+	<?php
 }
 
 

@@ -162,7 +162,7 @@ function secupress_uptime_monitoring_start() {
 	);
 
 	// Error?
-	$new_tokens = secupress_uptime_monitoring_connexion_succeeded( $response );
+	$new_tokens = secupress_uptime_monitoring_connection_succeeded( $response );
 
 	if ( ! $new_tokens ) {
 		return;
@@ -217,7 +217,7 @@ function secupress_uptime_monitoring_stop() {
 	);
 
 	// Error?
-	secupress_uptime_monitoring_connexion_succeeded( $response, 'stop' );
+	secupress_uptime_monitoring_connection_succeeded( $response, 'stop' );
 }
 
 
@@ -226,7 +226,7 @@ function secupress_uptime_monitoring_stop() {
 /*------------------------------------------------------------------------------------------------*/
 
 /**
- * Handle monitoring connexion failure.
+ * Handle monitoring connection failure.
  * If the request fails, or if the distant server doesn't return an HTTP code 200, or if an error status is returned: an error is triggered.
  * In that case, the submodule will also be re-activated or re-deactivated, depending of the previous status.
  *
@@ -237,7 +237,7 @@ function secupress_uptime_monitoring_stop() {
  *
  * @return (string|bool) The token on success. False if an error occured.
  */
-function secupress_uptime_monitoring_connexion_succeeded( $response, $type = 'start' ) {
+function secupress_uptime_monitoring_connection_succeeded( $response, $type = 'start' ) {
 
 	// Error during the request itself.
 	if ( is_wp_error( $response ) ) {

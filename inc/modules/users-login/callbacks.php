@@ -63,7 +63,7 @@ function __secupress_users_login_settings_callback( $settings ) {
 function __secupress_double_auth_settings_callback( $modulenow, &$settings, $activate ) {
 	// (De)Activation.
 	if ( ! empty( $activate['double-auth_type'] ) ) {
-		secupress_manage_submodule( $modulenow, 'passwordless', '_passwordless' === $activate['double-auth_type'] && secupress_is_pro() );
+		secupress_manage_submodule( $modulenow, 'passwordless', '1' === $activate['double-auth_type'] && secupress_is_pro() );
 	} elseif ( false !== $activate ) {
 		secupress_deactivate_submodule( $modulenow, array( 'passwordless' ) );
 	}
@@ -122,7 +122,7 @@ function __secupress_login_protection_settings_callback( $modulenow, &$settings,
 
 	// (De)Activation.
 	if ( false !== $activate ) {
-		secupress_manage_submodule( $modulenow, 'only-one-connexion', ! empty( $activate['login-protection_only-one-connexion'] ) && secupress_is_pro() );
+		secupress_manage_submodule( $modulenow, 'only-one-connection', ! empty( $activate['login-protection_only-one-connection'] ) && secupress_is_pro() );
 		secupress_manage_submodule( $modulenow, 'sessions-control', ! empty( $activate['login-protection_sessions_control'] ) && secupress_is_pro() );
 	}
 }
@@ -305,7 +305,7 @@ function __secupress_install_users_login_module( $module ) {
 	// First install.
 	if ( 'all' === $module ) {
 		// Activate "Ask for old password" submodule.
-		secupress_activate_submodule( 'users-login', 'ask-old-password' );
+		secupress_activate_submodule_silently( 'users-login', 'ask-old-password' );
 	}
 
 	// First install or reset.

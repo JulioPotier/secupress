@@ -284,7 +284,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 						echo $log->get_user( false, $referer, $filters );
 						?>
 					</p>
-					<p class="secupress-ip-handler">					
+					<p class="secupress-ip-handler">
 						<?php if ( ! secupress_ip_is_whitelisted( $user_raw->user_ip ) && secupress_get_ip() !== $user_raw->user_ip ) { ?>
 							<a class="secupress-action-links secupress-ban-ip" href="<?php echo esc_url( $ban_ip_url ); ?>">
 								<i class="icon-times-circle" aria-hidden="true"></i>

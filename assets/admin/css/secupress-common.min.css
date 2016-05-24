@@ -1140,10 +1140,13 @@ body[class*="secupress"] .sweet-overlay {
 	color: #393E46;
 }
 .secupress-big-tab-bad a:after,
-.secupress-big-tab-bad a.secupress-current:before {
+.secupress-big-tab-bad a.secupress-current:before,
+.secupress-big-tab-hasaction a:after,
+.secupress-big-tab-hasaction a.secupress-current:before {
 	background: #F2295E;
 }
-.secupress-big-tab-bad .secupress-tab-subtitle {
+.secupress-big-tab-bad .secupress-tab-subtitle,
+.secupress-big-tab-hasaction .secupress-tab-subtitle {
 	color: #F2295E;
 }
 .secupress-big-tab-warning a:after,
@@ -1537,3 +1540,4 @@ table.fixed .column-date {
 	letter-spacing: 0.1em;
 	box-shadow: 0 6px 12px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05), 0 3px 4px rgba(0,0,0,.05);
 }
+

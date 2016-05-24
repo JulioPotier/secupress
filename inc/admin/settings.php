@@ -55,15 +55,15 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	wp_enqueue_script( 'secupress-common-js', SECUPRESS_ADMIN_JS_URL . 'secupress-common' . $suffix . '.js', array( 'secupress-wordpress-js' ), $version, true );
 
 	wp_localize_script( 'secupress-common-js', 'SecuPressi18nCommon', array(
-		'confirmText'  => esc_html__( 'OK', 'secupress' ),
+		'confirmText'  => __( 'OK', 'secupress' ),
 		'cancelText'   => __( 'Cancel' ),
 		'authswal'     => array(
-			'title'  => esc_html__( 'Authentication', 'secupress' ),
-			'email'  => esc_html__( 'Enter your email', 'secupress' ),
-			'apikey' => esc_html__( 'Enter your API Key', 'secupress' ),
-			'where'  => esc_html__( 'Where can I find my API Key?', 'secupress' ),
-			'save'   => esc_html__( 'Save', 'secupress' )
-		)
+			'title'  => __( 'Authentication', 'secupress' ),
+			'email'  => __( 'Enter your email', 'secupress' ),
+			'apikey' => __( 'Enter your API Key', 'secupress' ),
+			'where'  => __( 'Where can I find my API Key?', 'secupress' ),
+			'save'   => __( 'Save and continue to first scan', 'secupress' ),
+		),
 	) );
 
 	// Settings page.
@@ -159,7 +159,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'fixed'              => __( 'Fixed', 'secupress' ),
 			'fixedPartial'       => __( 'Partially fixed', 'secupress' ),
 			'notFixed'           => __( 'Not Fixed', 'secupress' ),
-			'fixit'              => __( 'Fix it!', 'secupress' ),
+			'fixit'              => __( 'Fix it', 'secupress' ),
 			'oneManualFix'       => __( 'One fix requires your intervention.', 'secupress' ),
 			'someManualFixes'    => __( 'Some fixes require your intervention.', 'secupress' ),
 			'spinnerUrl'         => admin_url( 'images/wpspin_light-2x.gif' ),
@@ -187,8 +187,9 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 
 		wp_localize_script( 'secupress-scanner-js', 'SecuPressi18nScanner', $localize );
 	}
-	// Logs page
-	elseif ( 'secupress_page_secupress_logs' === $hook_suffix ) {
+	// Logs page.
+	elseif ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_logs' === $hook_suffix ) {
+		// CSS.
 		wp_enqueue_style( 'secupress-logs-css',  SECUPRESS_ADMIN_CSS_URL . 'secupress-logs' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 	}
 
@@ -199,14 +200,16 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 
 /**
  * Add SecuPress version number next to WP version in footer
- * 
+ *
  * @since  1.0
  * @author Geoffrey
  *
  * @param (string) $footer Text to print in footer.
+ *
+ * @return (string)
  */
 function __secupress_print_version_number_in_footer( $footer ) {
-	echo ( $footer ? "$footer | " : '' ) . '<b>' . SECUPRESS_PLUGIN_NAME . ' v.' . SECUPRESS_VERSION . '</b>';
+	return ( $footer ? "$footer | " : '' ) . '<b>' . SECUPRESS_PLUGIN_NAME . ' v.' . SECUPRESS_VERSION . '</b>';
 }
 
 
@@ -362,7 +365,7 @@ function __secupress_scanners() {
 	}
 	?>
 	<div class="wrap">
-	
+
 		<?php secupress_admin_heading( __( 'Scanners', 'secupress' ) ); ?>
 		<div class="secupress-wrapper">
 			<div class="secupress-section-dark secupress-scanners-header<?php echo $times ? '' : ' secupress-not-scanned-yet'; ?>">
@@ -654,7 +657,6 @@ function __secupress_scanners() {
 						</button>
 					</p>
 				</div>
-				
 				<div class="secupress-one-click-scanning-slideshow hidden">
 					<div class="secupress-caroupoivre">
 						<div id="secupress-slide1" class="secupress-slide"></div>
@@ -698,13 +700,21 @@ function __secupress_scanners() {
 						$tabs        = array();
 						$default_tab = 'bad';
 					}
+
+					if ( ! is_multisite() || is_network_admin() ) {
+						$tabs['hasaction'] = esc_html__( 'Action needed', 'secupress' );
+					}
+
 					$tabs = array_merge( $tabs, array(
 						'bad'     => esc_html__( 'Bad', 'secupress' ),
 						'warning' => esc_html__( 'Warning', 'secupress' ),
 						'good'    => esc_html__( 'Good', 'secupress' ),
 					) );
-					foreach ( $tabs as $slug => $name ) : ?>
-						<li class="secupress-big-tab-<?php echo $slug; ?>" role="presentation">
+
+					foreach ( $tabs as $slug => $name ) :
+						$is_hidden = 'hasaction' === $slug && ! $counts[ $slug ];
+						?>
+						<li class="secupress-big-tab-<?php echo $slug; ?><?php echo $is_hidden ? ' hidden' : ''; ?>"<?php echo $is_hidden ? ' aria-hidden="true"' : ''; ?> role="presentation">
 							<a href="#tab-<?php echo $slug; ?>" aria-controls="tab-<?php echo $slug; ?>" role="tab"<?php echo $default_tab === $slug ? ' class="secupress-current"' : ''; ?> data-type="<?php echo $slug; ?>">
 								<span class="secupress-tab-title"><?php echo $name; ?></span>
 								<span class="secupress-tab-subtitle"><?php printf( _n( '%d issue', '%d issues', $counts[ $slug ], 'secupress' ), $counts[ $slug ] ); ?></span>
@@ -840,9 +850,9 @@ function secupress_scanners_template() {
 		'br'     => array(),
 	);
 	// Actions the user needs to perform for a fix.
-	$fix_actions     = SecuPress_Scan::get_and_delete_fix_actions();
+	$fix_actions = SecuPress_Scan::get_and_delete_fix_actions();
 	// Auto-scans: scans that will be executed on page load.
-	$autoscans       = SecuPress_Scan::get_and_delete_autoscans();
+	$autoscans   = SecuPress_Scan::get_and_delete_autoscans();
 
 	if ( ! $is_subsite ) {
 		$secupress_tests = secupress_get_scanners();
@@ -934,7 +944,7 @@ function secupress_scanners_template() {
 					++$i;
 					$class_name   = 'SecuPress_Scan_' . $class_name_part;
 					$current_test = $class_name::get_instance();
-					$referer      = urlencode( esc_url_raw( self_admin_url( 'admin.php?page=secupress_scanners' . ( $is_subsite ? '' : '#' . $class_name_part ) ) ) );
+					$referer      = urlencode( esc_url_raw( self_admin_url( 'admin.php?page=' . SECUPRESS_PLUGIN_SLUG . '_scanners' . ( $is_subsite ? '' : '#' . $class_name_part ) ) ) );
 					$css_class    = ' type-' . sanitize_key( $class_name::$type );
 
 					if ( $is_subsite ) {
@@ -954,6 +964,7 @@ function secupress_scanners_template() {
 					$css_class   .= ' status-' . $status_class;
 					$css_class   .= isset( $autoscans[ $class_name_part ] ) ? ' autoscan' : '';
 					$css_class   .= false === $current_test::$fixable || 'pro' === $current_test::$fixable && ! secupress_is_pro() ? ' not-fixable' : '';
+					$css_class   .= ! empty( $fixes[ $option_name ]['has_action'] ) ? ' status-hasaction' : '';
 
 					if ( ! empty( $scanners[ $option_name ]['msgs'] ) ) {
 						$scan_message = secupress_format_message( $scanners[ $option_name ]['msgs'], $class_name_part );
@@ -1132,7 +1143,7 @@ function secupress_scanners_template() {
 									<h3><?php echo _n( 'This action requires your attention', 'These actions require your attention', count( $fix_actions ), 'secupress' ); ?></h3>
 									<?php
 									echo implode( '', $fix_actions );
-									submit_button( __( 'Fix it!', 'secupress' ) );
+									echo '<p class="submit"><button type="submit" name="submit" class="secupress-button secupress-button-primary">' . __( 'Fix it', 'secupress' ) . "</button></p>\n";
 									$current_test->for_current_site( $is_subsite )->get_fix_action_fields( array_keys( $fix_actions ) );
 									?>
 								</form>

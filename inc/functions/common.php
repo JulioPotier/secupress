@@ -88,6 +88,7 @@ function secupress_get_scanners() {
 			'Easy_Login',
 			'Subscription',
 			'WP_Config',
+			'DB_Prefix',
 			'Salt_Keys',
 			'Passwords_Strength',
 			'Chmods',
@@ -161,6 +162,7 @@ function secupress_get_tests_for_ms_scanner_fixes() {
 function secupress_get_scanner_counts( $type = '' ) {
 	$tests_by_status = secupress_get_scanners();
 	$scanners        = secupress_get_scan_results();
+	$fixes           = secupress_get_fix_results();
 	$empty_statuses  = array( 'good' => 0, 'warning' => 0, 'bad' => 0 );
 	$scanners_count  = $scanners ? array_count_values( wp_list_pluck( $scanners, 'status' ) ) : array();
 	$counts          = array_merge( $empty_statuses, $scanners_count );
@@ -169,6 +171,15 @@ function secupress_get_scanner_counts( $type = '' ) {
 	$counts['notscannedyet'] = $total - array_sum( $counts );
 	$counts['total']         = $total;
 	$counts['percent']       = (int) floor( $counts['good'] * 100 / $counts['total'] );
+	$counts['hasaction']     = 0;
+
+	if ( $fixes ) {
+		foreach ( $fixes as $test_name => $fix ) {
+			if ( ! empty( $fix['has_action'] ) ) {
+				++$counts['hasaction'];
+			}
+		}
+	}
 
 	if ( 100 === $counts['percent'] ) {
 		$counts['grade'] = 'A';
@@ -709,7 +720,7 @@ function secupress_is_pro() {
 function secupress_feature_is_pro( $feature ) {
 	$features = array(
 		// Field names.
-		'login-protection_only-one-connexion'    => 1,
+		'login-protection_only-one-connection'   => 1,
 		'login-protection_sessions_control'      => 1,
 		'double-auth_type'                       => 1,
 		'password-policy_password_expiration'    => 1,
@@ -751,6 +762,22 @@ function secupress_feature_is_pro( $feature ) {
 
 
 /**
+ * Tell if a user is affected by its role for the asked module
+ *
+ * @return (-1)/(bool) -1 = every role is affected, true = the user's role is affected, false = the user's role isn't affected.
+ */
+function secupress_is_affected_role( $module, $submodule, $user ) {
+	$roles = secupress_get_module_option( $submodule . '_affected_role', array(), $module );
+
+	if ( ! $roles ) {
+		return -1;
+	}
+
+	return secupress_is_user( $user ) && ! array_intersect( $roles, $user->roles );
+}
+
+
+/**
  * This will be used with the filter hook 'nonce_user_logged_out' to create nonces for disconnected users.
  *
  * @since 1.0
@@ -764,4 +791,16 @@ function secupress_modify_userid_for_nonces( $uid ) {
 		return $uid;
 	}
 	return isset( $_GET['userid'] ) ? (int) $_GET['userid'] : 0;
+}
+
+/**
+ * Tell if the param $user is a real user from your installation
+ *
+ * @param variant $user The object to be tested to be a valid user
+ * @since 1.0
+ * @return boolean
+ * @author Julio Potier
+ **/
+function secupress_is_user( $user ) {
+	return is_a( $user, 'WP_User' ) && user_can( $user, 'exist' );
 }
