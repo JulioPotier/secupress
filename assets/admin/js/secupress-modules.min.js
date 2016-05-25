@@ -1,22 +1,54 @@
-/* globals jQuery: false, ajaxurl: false, wp: false, SecuPressi18nModules: false, secupressIsSpaceOrEnterKey: false, swal: false */
+/* globals jQuery: false, ajaxurl: false, wp: false, SecuPressi18nModules: false, secupressIsSpaceOrEnterKey: false, swal2: false */
 // Global vars =====================================================================================
 var SecuPress = {
 	doingAjax:           {},
 	deletedRowColor:     "#FF9966",
 	addedRowColor:       "#CCEEBB",
-	swalDefaults:        {
+	swal2Defaults:        {
 		title:             SecuPressi18nModules.confirmTitle,
 		confirmButtonText: SecuPressi18nModules.confirmText,
 		cancelButtonText:  SecuPressi18nModules.cancelText,
 		type:              "warning",
 		allowOutsideClick: true,
-		customClass:       "wpmedia-swal secupress-swal"
+		customClass:       "wpmedia-swal2 secupress-swal2"
 	},
-	swalConfirmDefaults: {
+	swal2ConfirmDefaults: {
 		showCancelButton:  true,
 		closeOnConfirm:    false
 	}
 };
+
+/**
+ * Show swal2 message if no scan done yet
+ */
+if ( SecuPressi18nModules.alreadyScanned == 0 ) {
+	var modal_content = '<p class="secupress-text-medium secupress-mt1 secupress-mb1">'
+							+ SecuPressi18nModules.firstScanText
+					  + '</p>'
+					  + '<p class="secupress-mt1 secupress-mb1">'
+					  		+ '<a class="secupress-button secupress-button-primary button-secupress-scan" href="' + SecuPressi18nModules.firstScanURL + '">'
+					  			+ '<span class="icon">'
+									+ '<i class="icon-radar" aria-hidden="true"></i>'
+								+ '</span>'
+								+ '<span class="text">'
+					  				+ SecuPressi18nModules.firstScanButton
+					  			+ '</span>'
+					  		+ '</a>'
+					  + '</p>';
+
+	swal2( jQuery.extend( {}, SecuPress.swal2Defaults, {
+		title: null,
+		html: modal_content,
+		type:  null,
+		width: 400,
+		showConfirmButton: false,
+		showCloseButton: true,
+		showCancelButton: false,
+		imageUrl: SecuPressi18nModules.firstScanImage,
+		imageWidth: 113,
+		imageHeight: 113,
+	} ) );
+}
 
 
 // Tools ===========================================================================================
@@ -184,7 +216,7 @@ function secupressPreAjaxCall( href, e, ajaxID ) {
  * @since 1.0
  *
  * @param (object) $button jQuery object of the button.
- * @param (string) text    Text for swal + `wp.a11y.speak`.
+ * @param (string) text    Text for swal2 + `wp.a11y.speak`.
  * @param (string) ajaxID  An identifier used for `SecuPress.doingAjax`. Default: "global".
  */
 function secupressDisplayAjaxError( $button, text, ajaxID ) {
@@ -192,7 +224,7 @@ function secupressDisplayAjaxError( $button, text, ajaxID ) {
 		text = SecuPressi18nModules.unknownError;
 	}
 
-	swal( jQuery.extend( {}, SecuPress.swalDefaults, {
+	swal2( jQuery.extend( {}, SecuPress.swal2Defaults, {
 		title: SecuPressi18nModules.error,
 		html:  text,
 		type:  "error"
@@ -208,7 +240,7 @@ function secupressDisplayAjaxError( $button, text, ajaxID ) {
  * @since 1.0
  *
  * @param (object) $button jQuery object of the button.
- * @param (string) text    Text for swal + `wp.a11y.speak`.
+ * @param (string) text    Text for swal2 + `wp.a11y.speak`.
  * @param (string) ajaxID  An identifier used for `SecuPress.doingAjax`. Default: "global".
  */
 function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
@@ -216,7 +248,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		text = null;
 	}
 
-	swal( jQuery.extend( {}, SecuPress.swalDefaults, {
+	swal2( jQuery.extend( {}, SecuPress.swal2Defaults, {
 		title: SecuPressi18nModules.done,
 		html:  text,
 		type:  "success",
@@ -434,7 +466,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 			var $fieldset, $legend;
 
 			if ( $.isPlainObject( r ) && r.success ) {
-				swal.close();
+				swal2.close();
 				$fieldset = $button.closest( "form" ).find( "fieldset" );
 				$legend   = $fieldset.children( "legend" );
 				$fieldset.text( "" ).prepend( $legend );
@@ -457,7 +489,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		$.getJSON( href )
 		.done( function( r ) {
 			if ( $.isPlainObject( r ) && r.success ) {
-				swal.close();
+				swal2.close();
 
 				$button.closest( ".secupress-large-row" ).css( "backgroundColor", SecuPress.deletedRowColor ).hide( "normal", function() {
 					$( this ).remove();
@@ -535,15 +567,15 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 			return;
 		}
 
-		if ( "function" === typeof w.swal ) {
-			swal( $.extend( {}, SecuPress.swalDefaults, SecuPress.swalConfirmDefaults, {
+		if ( "function" === typeof w.swal2 ) {
+			swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
 				text:              SecuPressi18nModules.confirmDeleteBackups,
 				confirmButtonText: SecuPressi18nModules.yesDeleteAll,
 				type:              "question",
 				reverseButtons:    true
 			} ) ).then( function ( isConfirm ) {
 				if ( isConfirm ) {
-					swal.enableLoading();
+					swal2.enableLoading();
 					secupressDeleteAllBackups( $this, href );
 				}
 			} );
@@ -562,15 +594,15 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 			return;
 		}
 
-		if ( "function" === typeof w.swal ) {
-			swal( $.extend( {}, SecuPress.swalDefaults, SecuPress.swalConfirmDefaults, {
+		if ( "function" === typeof w.swal2 ) {
+			swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
 				text:              SecuPressi18nModules.confirmDeleteBackup,
 				confirmButtonText: SecuPressi18nModules.yesDeleteOne,
 				type:              "question",
 				reverseButtons:    true
 			} ) ).then( function ( isConfirm ) {
 				if ( isConfirm ) {
-					swal.enableLoading();
+					swal2.enableLoading();
 					secupressDeleteOneBackup( $this, href );
 				}
 			} );
@@ -716,7 +748,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		var params = { "ip": $( "#secupress-ban-ip" ).val() };
 
 		if ( ! params.ip ) {
-			secupressBanIPswal( $button, href );
+			secupressBanIPswal2( $button, href );
 			return;
 		}
 
@@ -756,16 +788,16 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		} );
 	}
 
-	// Swal that displays the form to ban an IP address.
-	function secupressBanIPswal( $button, href ) { // jshint ignore:line
-		swal( $.extend( {}, SecuPress.swalDefaults, SecuPress.swalConfirmDefaults, {
+	// swal2 that displays the form to ban an IP address.
+	function secupressBanIPswal2( $button, href ) { // jshint ignore:line
+		swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
 			title:             $banForm.find( '[for="secupress-ban-ip"]' ).text(),
 			confirmButtonText: $button.data( "original-i18n" ),
 			html:              $banForm,
 			type:              "info"
 		} ) ).then( function ( isConfirm ) {
 			if ( isConfirm ) {
-				swal.enableLoading();
+				swal2.enableLoading();
 				secupressBanIP( $button, href );
 			}
 		} );
@@ -828,7 +860,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 			href  = secupressPreAjaxCall( banUrl, e, "ban-ip" );
 
 		if ( href ) {
-			secupressBanIPswal( $this, href );
+			secupressBanIPswal2( $this, href );
 		}
 	} );
 
@@ -926,7 +958,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	var SPautoSized = {},
 		browsers = {},
 		// Expendable items
-		$expendables = $('.secupress-setting-row_bbq-headers_user-agents-list, .secupress-setting-row_bbq-url-content_bad-contents-list');
+		$expendables = $('.secupress-textarea-container');
 
 	browsers.msie = /msie/.test( navigator.userAgent.toLowerCase() );
 	browsers.opera = /opera/.test( navigator.userAgent.toLowerCase() );
@@ -959,10 +991,11 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 			// resize the container
 			SPautoSized.textareaParentHeight( $container, $textarea );
 
-			// add (+) button
-			if ( e.scrollHeight > $container.height() ) {
+			// add (+) button				
+			if ( e.scrollHeight > $container.height() && $container.next() ) {
 				SPautoSized.handleExpendButton( $container, true ); // create
-			} else {
+			}
+			else if ( e.scrollHeight <= $container.height() && $container.next('.secupress-expand-trigger-container').find('.open').length === 0 ) {
 				SPautoSized.handleExpendButton( $container, false ); // remove
 			}
 		}
@@ -982,10 +1015,10 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	// function to create (+) button
 	SPautoSized.handleExpendButton = function( $container, create ) {
 		// if creation needed, check if exists, or create it
-		if ( ! $container.next('.secupress-expand-trigger').length && create ) {
-			$container.after('<span class="secupress-expand-trigger"><i class="dashicons dashicons-plus" aria-hidden="true"></i></span>').attr('spellcheck', false);
-		} else if ( $container.next('.secupress-expand-trigger').length && create === false ) {
-			$container.next('.secupress-expand-trigger').remove();
+		if ( ! $container.next('.secupress-expand-trigger-container').length && create ) {
+			$container.after('<p class="secupress-expand-trigger-container"><span class="secupress-expand-trigger" tabindex="0"><span class="secupress-expand-txt">' + SecuPressi18nModules.expandTextOpen + '</span><i class="icon-angle-down" aria-hidden="true"></i></span>').attr('spellcheck', false);
+		} else if ( $container.next('.secupress-expand-trigger-container').length && create === false ) {
+			$container.next('.secupress-expand-trigger-container').remove();
 		}
 	};
 
@@ -1020,6 +1053,14 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		return this;
 	};
 
+	// Move to end
+	$.fn.focusToEnd = function() {
+		return this.each(function() {
+			var v = $(this).val();
+			$(this).focus().val('').val(v);
+		});
+	};
+
 	// change class on parent textarea on focus/blur
 	$expendables.find('textarea').AutoSized()
 		.on('focus.secupress', function(){
@@ -1030,17 +1071,22 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		});
 
 	// on click on (+) button
-	$expendables.on('click.secupress', '.secupress-expand-trigger', function(){
+	$expendables.closest('label').on('click.secupress', '.secupress-expand-trigger', function(){
 		var $_this     = $(this),
-			$container = $_this.prev( '.secupress-textarea-container' ),
+			$container = $_this.closest('.secupress-expand-trigger-container').prev( '.secupress-textarea-container' ),
 			$textarea  = $container.find( 'textarea' );
 
 		if ( $_this.hasClass( 'open' ) ) {
 			$container.css( 'height', '200px' );
 			$_this.removeClass( 'open' );
+			$_this.find('.secupress-expand-txt').text( SecuPressi18nModules.expandTextOpen );
+			$_this.find('i').removeClass('icon-angle-up').addClass('icon-angle-down');
 		} else {
 			SPautoSized.textareaParentHeight( $container, $textarea );
+			$textarea.focusToEnd();
 			$_this.addClass( 'open' );
+			$_this.find('.secupress-expand-txt').text( SecuPressi18nModules.expandTextClose );
+			$_this.find('i').removeClass('icon-angle-down').addClass('icon-angle-up');
 		}
 		return false;
 	});

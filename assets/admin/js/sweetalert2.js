@@ -4,7 +4,7 @@
 (function(window, document) {
   'use strict';
 
-  window.swalClasses = {
+  window.swal2Classes = {
     container: 'sweet-container',
     modal: 'sweet-alert',
     overlay: 'sweet-overlay',
@@ -60,11 +60,11 @@
    * Manipulate DOM
    */
   var getModal = function() {
-    return document.querySelector('.' + window.swalClasses.modal);
+    return document.querySelector('.' + window.swal2Classes.modal);
   };
 
   var getOverlay = function() {
-    return document.querySelector('.' + window.swalClasses.overlay);
+    return document.querySelector('.' + window.swal2Classes.overlay);
   };
 
   var hasClass = function(elem, className) {
@@ -262,7 +262,7 @@
     cssNode.id = mediaqueryId;
     cssNode.innerHTML =
       '@media screen and (max-width: ' + params.width + 'px) {' +
-        '.' + window.swalClasses.modal + ' {' +
+        '.' + window.swal2Classes.modal + ' {' +
           'max-width: 100%;' +
           'left: 0 !important;' +
           'margin-left: 0 !important;' +
@@ -271,11 +271,11 @@
     head.appendChild(cssNode);
 
     var $title = modal.querySelector('h2');
-    var $content = modal.querySelector('.' + window.swalClasses.content);
-    var $confirmBtn = modal.querySelector('button.' + window.swalClasses.confirm);
-    var $cancelBtn = modal.querySelector('button.' + window.swalClasses.cancel);
-    var $spacer = modal.querySelector('.' + window.swalClasses.spacer);
-    var $closeButton = modal.querySelector('.' + window.swalClasses.close);
+    var $content = modal.querySelector('.' + window.swal2Classes.content);
+    var $confirmBtn = modal.querySelector('button.' + window.swal2Classes.confirm);
+    var $cancelBtn = modal.querySelector('button.' + window.swal2Classes.cancel);
+    var $spacer = modal.querySelector('.' + window.swal2Classes.spacer);
+    var $closeButton = modal.querySelector('.' + window.swal2Classes.close);
 
     // Title
     $title.innerHTML = params.title.split('\n').join('<br>');
@@ -307,16 +307,16 @@
     }
 
     // Custom Class
-    modal.className = window.swalClasses.modal;
+    modal.className = window.swal2Classes.modal;
     if (params.customClass) {
       addClass(modal, params.customClass);
     }
 
     // Icon
-    hide(modal.querySelectorAll('.' + window.swalClasses.icon));
+    hide(modal.querySelectorAll('.' + window.swal2Classes.icon));
     if (params.type) {
       var validType = false;
-      for (var iconType in window.swalClasses.iconTypes) {
+      for (var iconType in window.swal2Classes.iconTypes) {
         if (params.type === iconType) {
           validType = true;
           break;
@@ -326,7 +326,7 @@
         window.console.error('Unknown alert type: ' + params.type);
         return false;
       }
-      var $icon = modal.querySelector('.' + window.swalClasses.icon + '.' + window.swalClasses.iconTypes[params.type]);
+      var $icon = modal.querySelector('.' + window.swal2Classes.icon + '.' + window.swal2Classes.iconTypes[params.type]);
       show($icon);
 
       // Animate icon
@@ -350,7 +350,7 @@
     }
 
     // Custom image
-    var $customImage = modal.querySelector('.' + window.swalClasses.image);
+    var $customImage = modal.querySelector('.' + window.swal2Classes.image);
     if (params.imageUrl) {
       $customImage.setAttribute('src', params.imageUrl);
       show($customImage);
@@ -402,9 +402,9 @@
     }
 
     // Add buttons custom classes
-    $confirmBtn.className = window.swalClasses.confirm;
+    $confirmBtn.className = window.swal2Classes.confirm;
     addClass($confirmBtn, params.confirmButtonClass);
-    $cancelBtn.className = window.swalClasses.cancel;
+    $cancelBtn.className = window.swal2Classes.cancel;
     addClass($cancelBtn, params.cancelButtonClass);
 
     // Buttons styling
@@ -520,7 +520,7 @@
       // Close on timer
       if (params.timer) {
         modal.timeout = setTimeout(function() {
-          window.swal.closeModal();
+          window.swal2.closeModal();
           resolve(undefined);
         }, params.timer);
       }
@@ -529,8 +529,8 @@
       var onButtonEvent = function(event) {
         var e = event || window.event;
         var target = e.target || e.srcElement;
-        var targetedConfirm = hasClass(target, window.swalClasses.confirm);
-        var targetedCancel  = hasClass(target, window.swalClasses.cancel);
+        var targetedConfirm = hasClass(target, window.swal2Classes.confirm);
+        var targetedCancel  = hasClass(target, window.swal2Classes.cancel);
         var modalIsVisible  = hasClass(modal, 'visible');
 
         switch (e.type) {
@@ -569,7 +569,7 @@
             if (targetedConfirm && modalIsVisible) {
 
               if (params.closeOnConfirm) {
-                window.swal.closeModal();
+                window.swal2.closeModal();
               }
 
               resolve(true);
@@ -578,13 +578,13 @@
             } else if (targetedCancel && modalIsVisible) {
 
               if (params.closeOnCancel) {
-                window.swal.closeModal();
+                window.swal2.closeModal();
               }
 
               resolve(false);
 
             } else {
-              window.swal.closeModal();
+              window.swal2.closeModal();
             }
 
             break;
@@ -607,15 +607,15 @@
         var e = event || window.event;
         var target = e.target || e.srcElement;
 
-        if (hasClass(target, window.swalClasses.close) || (target === getOverlay() && params.allowOutsideClick)) {
-          window.swal.closeModal();
+        if (hasClass(target, window.swal2Classes.close) || (target === getOverlay() && params.allowOutsideClick)) {
+          window.swal2.closeModal();
           resolve(undefined);
         }
       };
 
       // Keyboard interactions
-      var $confirmButton = modal.querySelector('button.' + window.swalClasses.confirm);
-      var $cancelButton = modal.querySelector('button.' + window.swalClasses.cancel);
+      var $confirmButton = modal.querySelector('button.' + window.swal2Classes.confirm);
+      var $cancelButton = modal.querySelector('button.' + window.swal2Classes.cancel);
       var $modalElements = [$confirmButton, $cancelButton].concat(Array.prototype.slice.call(
         modal.querySelectorAll('button:not([class^=sweet-]), input:not([type=hidden]), textarea, select')
       ));
@@ -696,7 +696,7 @@
               fireClick($confirmButton, e);
             }
           } else if (keyCode === 27 && params.allowEscapeKey === true) {
-            window.swal.closeModal();
+            window.swal2.closeModal();
             resolve(undefined);
           }
         }
@@ -711,30 +711,30 @@
         $confirmButton.style.borderRightColor = params.confirmButtonColor;
       }
 
-      window.swal.enableLoading = function() {
+      window.swal2.enableLoading = function() {
         addClass($confirmButton, 'loading');
         addClass(modal, 'loading');
         $cancelButton.disabled = true;
       };
 
-      window.swal.disableLoading = function() {
+      window.swal2.disableLoading = function() {
         removeClass($confirmButton, 'loading');
         removeClass(modal, 'loading');
         $cancelButton.disabled = false;
       };
 
-      window.swal.enableButtons = function() {
+      window.swal2.enableButtons = function() {
         $confirmButton.disabled = false;
         $cancelButton.disabled = false;
       };
 
-      window.swal.disableButtons = function() {
+      window.swal2.disableButtons = function() {
         $confirmButton.disabled = true;
         $cancelButton.disabled = true;
       };
 
-      window.swal.enableButtons();
-      window.swal.disableLoading();
+      window.swal2.enableButtons();
+      window.swal2.disableLoading();
 
       window.onfocus = function() {
         // When the user has focused away and focused back from the whole window.
@@ -753,13 +753,13 @@
   /*
    * Global sweetAlert function
    */
-  window.sweetAlert = window.swal = function() {
+  window.sweetAlert = window.swal2 = function() {
     // Copy arguments to the local args variable
     var args = arguments;
     var modal = getModal();
 
     if (modal === null) {
-      window.swal.init();
+      window.swal2.init();
       modal = getModal();
     }
 
@@ -773,7 +773,7 @@
   /*
    * Global function to close sweetAlert
    */
-  window.sweetAlert.close = window.swal.close = window.sweetAlert.closeModal = window.swal.closeModal = function() {
+  window.sweetAlert.close = window.swal2.close = window.sweetAlert.closeModal = window.swal2.closeModal = function() {
     var modal = getModal();
     _hide(getOverlay());
     _hide(modal);
@@ -783,16 +783,16 @@
 
     // Reset icon animations
 
-    var $successIcon = modal.querySelector('.' + window.swalClasses.icon + '.' + window.swalClasses.iconTypes.success);
+    var $successIcon = modal.querySelector('.' + window.swal2Classes.icon + '.' + window.swal2Classes.iconTypes.success);
     removeClass($successIcon, 'animate');
     removeClass($successIcon.querySelector('.tip'), 'animate-success-tip');
     removeClass($successIcon.querySelector('.long'), 'animate-success-long');
 
-    var $errorIcon = modal.querySelector('.' + window.swalClasses.icon + '.' + window.swalClasses.iconTypes.error);
+    var $errorIcon = modal.querySelector('.' + window.swal2Classes.icon + '.' + window.swal2Classes.iconTypes.error);
     removeClass($errorIcon, 'animate-error-icon');
     removeClass($errorIcon.querySelector('.x-mark'), 'animate-x-mark');
 
-    var $warningIcon = modal.querySelector('.' + window.swalClasses.icon + '.' + window.swalClasses.iconTypes.warning);
+    var $warningIcon = modal.querySelector('.' + window.swal2Classes.icon + '.' + window.swal2Classes.iconTypes.warning);
     removeClass($warningIcon, 'pulse-warning');
 
     resetPrevState();
@@ -801,52 +801,52 @@
   /*
    * Global function to click 'Confirm' button
    */
-  window.sweetAlert.clickConfirm = window.swal.clickConfirm = function() {
+  window.sweetAlert.clickConfirm = window.swal2.clickConfirm = function() {
     var modal = getModal();
-    var $confirmButton = modal.querySelector('button.' + window.swalClasses.confirm);
+    var $confirmButton = modal.querySelector('button.' + window.swal2Classes.confirm);
     $confirmButton.click();
   };
 
   /*
    * Global function to click 'Cancel' button
    */
-  window.sweetAlert.clickCancel = window.swal.clickCancel = function() {
+  window.sweetAlert.clickCancel = window.swal2.clickCancel = function() {
     var modal = getModal();
-    var $cancelButton = modal.querySelector('button.' + window.swalClasses.cancel);
+    var $cancelButton = modal.querySelector('button.' + window.swal2Classes.cancel);
     $cancelButton.click();
   };
 
   /*
    * Add modal + overlay to DOM
    */
-  window.swal.init = function() {
-    if (document.getElementsByClassName(window.swalClasses.container).length) {
+  window.swal2.init = function() {
+    if (document.getElementsByClassName(window.swal2Classes.container).length) {
       return;
     }
 
     var sweetHTML =
-      '<div class="' + window.swalClasses.overlay + '" tabIndex="-1"></div>' +
-      '<div class="' + window.swalClasses.modal + '" style="display: none" tabIndex="-1">' +
-        '<div class="' + window.swalClasses.icon + ' ' + window.swalClasses.iconTypes.error + '">' +
+      '<div class="' + window.swal2Classes.overlay + '" tabIndex="-1"></div>' +
+      '<div class="' + window.swal2Classes.modal + '" style="display: none" tabIndex="-1">' +
+        '<div class="' + window.swal2Classes.icon + ' ' + window.swal2Classes.iconTypes.error + '">' +
           '<span class="x-mark"><span class="line left"></span><span class="line right"></span></span>' +
         '</div>' +
-        '<div class="' + window.swalClasses.icon + ' ' + window.swalClasses.iconTypes.question + '">?</div>' +
-        '<div class="' + window.swalClasses.icon + ' ' + window.swalClasses.iconTypes.warning + '">!</div>' +
-        '<div class="' + window.swalClasses.icon + ' ' + window.swalClasses.iconTypes.info + '">i</div>' +
-        '<div class="' + window.swalClasses.icon + ' ' + window.swalClasses.iconTypes.success + '">' +
+        '<div class="' + window.swal2Classes.icon + ' ' + window.swal2Classes.iconTypes.question + '">?</div>' +
+        '<div class="' + window.swal2Classes.icon + ' ' + window.swal2Classes.iconTypes.warning + '">!</div>' +
+        '<div class="' + window.swal2Classes.icon + ' ' + window.swal2Classes.iconTypes.info + '">i</div>' +
+        '<div class="' + window.swal2Classes.icon + ' ' + window.swal2Classes.iconTypes.success + '">' +
           '<span class="line tip"></span> <span class="line long"></span>' +
           '<div class="placeholder"></div> <div class="fix"></div>' +
         '</div>' +
-        '<img class="' + window.swalClasses.image + '">' +
+        '<img class="' + window.swal2Classes.image + '">' +
         '<h2>Title</h2>' +
-        '<div class="' + window.swalClasses.content + '">Text</div>' +
-        '<hr class="' + window.swalClasses.spacer + '">' +
-        '<button class="' + window.swalClasses.confirm + '">OK</button>' +
-        '<button class="' + window.swalClasses.cancel + '">Cancel</button>' +
-        '<span class="' + window.swalClasses.close + '">&times;</span>' +
+        '<div class="' + window.swal2Classes.content + '">Text</div>' +
+        '<hr class="' + window.swal2Classes.spacer + '">' +
+        '<button class="' + window.swal2Classes.confirm + '">OK</button>' +
+        '<button class="' + window.swal2Classes.cancel + '">Cancel</button>' +
+        '<span class="' + window.swal2Classes.close + '">&times;</span>' +
       '</div>';
     var sweetWrap = document.createElement('div');
-    sweetWrap.className = window.swalClasses.container;
+    sweetWrap.className = window.swal2Classes.container;
 
     sweetWrap.innerHTML = sweetHTML;
 
@@ -857,7 +857,7 @@
    * Set default params for each popup
    * @param {Object} userParams
    */
-  window.swal.setDefaults = function(userParams) {
+  window.swal2.setDefaults = function(userParams) {
     if (!userParams) {
       throw new Error('userParams is required');
     }
@@ -873,18 +873,18 @@
    */
   (function() {
     if (document.readyState === 'complete' || document.readyState === 'interactive' && document.body) {
-      window.swal.init();
+      window.swal2.init();
     } else {
       if (document.addEventListener) {
         document.addEventListener('DOMContentLoaded', function onDomContentLoaded() {
           document.removeEventListener('DOMContentLoaded', onDomContentLoaded, false);
-          window.swal.init();
+          window.swal2.init();
         }, false);
       } else if (document.attachEvent) {
         document.attachEvent('onreadystatechange', function onReadyStateChange() {
           if (document.readyState === 'complete') {
             document.detachEvent('onreadystatechange', onReadyStateChange);
-            window.swal.init();
+            window.swal2.init();
           }
         });
       }

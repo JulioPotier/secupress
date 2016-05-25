@@ -549,7 +549,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		$label_open  = '';
 		$label_close = '';
 		if ( '' !== $args['label_before'] || '' !== $args['label'] || '' !== $args['label_after'] ) {
-			$label_open  = '<label' . ( $disabled ? ' class="disabled"' : '' ) . '>';
+			$label_open  = '<label class="secupress-' . esc_attr( $args['type'] )  . '-label' . ( $disabled ? ' disabled' : '' ) . '">';
 			$label_close = '</label>';
 		}
 
@@ -1633,7 +1633,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * @return (string)
 	 */
 	protected static function get_pro_version_string( $format = '' ) {
-		$message = sprintf( __( 'Available in <a href="%s">Pro Version</a>.', 'secupress' ), '#' ); // //// #.
+		$message = sprintf( __( 'Available in <a href="%s">Pro Version</a>.', 'secupress' ), esc_url( secupress_admin_url( 'get_pro' ) ) ); // //// #.
 		if ( $format ) {
 			$message = sprintf( $format, $message );
 		}

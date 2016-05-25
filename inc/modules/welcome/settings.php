@@ -10,7 +10,6 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 				</div>
 				<div class="secupress-lb-name">
 					<p class="secupress-lb-title"><?php echo SECUPRESS_PLUGIN_NAME; ?></p>
-					<p class="secupress-lb-subtitle"><?php esc_html_e( 'the best security for WordPress', 'secupress' ); ?></p>
 				</div>
 			</div>
 		</div>
@@ -19,10 +18,25 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 			<p><?php esc_html_e( 'Anti-Malware, Firewall, or Anti-Spam: add features, schedule scans and  save your datas.', 'secupress' ); ?></p>
 		</div>
 	</div>
-
+	<?php if ( ! secupress_is_pro() ) { ?>
+	<div class="secupress-section-gray-dark secupress-section-mini secupress-flex">
+		<div class="secupress-col-1-4 secupress-col-icon">
+			<i class="icon-secupress-simple" aria-hidden="true"></i>
+		</div>
+		<div class="secupress-col-2-4 secupress-col-text">
+			<p class="secupress-text-basup"><?php printf( __( 'Get %s Pro and Unlock all the features and modules like: Schedules, Alerts, Firewall, Logs…', 'secupress' ), SECUPRESS_PLUGIN_NAME ); ?></p>
+		</div>
+		<div class="secupress-col-1-4 secupress-col-cta">
+			<a href="<?php echo esc_url( secupress_admin_url( 'settings' ) ); ?>" class="secupress-button secupress-button-tertiary button-secupress-get-api-key">
+				<?php _e( 'Get Pro', 'secupress' ); ?>
+			</a>
+		</div>
+	</div><!-- .secupress-section-medium -->
+	<?php }	?>
 	<div class="secupress-modules-dashboard secupress-bordered secupress-flex secupress-wrap">
 		<?php
 		$modules = $this->get_modules();
+		$pro_msg = '<span class="secupress-cta-pro">' . SecuPress_Settings::get_pro_version_string() . '</span>';
 		foreach ( $modules as $slug => $mod ) {
 			?>
 			<div class="secupress-module-box secupress-flex-col secupress-module-box-<?php echo sanitize_key( $slug ); ?>">
@@ -32,6 +46,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 					<a href="<?php echo esc_url( secupress_admin_url( 'modules', $slug ) ); ?>" class="secupress-button-primary">
 						<?php esc_html_e( 'View options', 'secupress' ); ?>
 					</a>
+					<?php echo ( isset( $mod['mark_as_pro'] ) && $mod['mark_as_pro'] === true ? $pro_msg : '' ); ?>
 				</p>
 				<i class="icon-<?php echo $mod['icon']; ?>" aria-hidden="true"></i>
 			</div>

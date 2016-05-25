@@ -625,7 +625,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 */
 	protected function _set_action_title() {
 		$titles = array(
-			'secupress.block'         => str_replace( '%PLUGIN-NAME%', '<b>' . SECUPRESS_PLUGIN_NAME . '</b>', __( '%PLUGIN-NAME% prevented a request at %1$s.', 'secupress' ) ),
+			'secupress.block'         => str_replace( '%PLUGIN-NAME%', '<b>' . SECUPRESS_PLUGIN_NAME . '</b>', __( '%PLUGIN-NAME% prevented a request at %1$s', 'secupress' ) ),
 			'secupress.ban.ip_banned' => __( 'IP banned: %s.', 'secupress' ),
 			'switch_theme'            => __( 'Theme activated: %s.', 'secupress' ),
 			'wp_login'                => __( 'Administrator %s logged in.', 'secupress' ),

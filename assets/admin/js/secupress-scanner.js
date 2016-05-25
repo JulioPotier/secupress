@@ -1,15 +1,15 @@
-/* globals jQuery: false, ajaxurl: false, SecuPressi18nScanner: false, SecuPressi18nChart: false, secupressIsSpaceOrEnterKey: false, Chart: false, swal: false */
+/* globals jQuery: false, ajaxurl: false, SecuPressi18nScanner: false, SecuPressi18nChart: false, secupressIsSpaceOrEnterKey: false, Chart: false, swal2: false */
 // Global vars =====================================================================================
 var SecuPress = {
 	supportButtonColor:  "#F1C40F",
-	swalDefaults:        {
+	swal2Defaults:        {
 		confirmButtonText: SecuPressi18nScanner.confirmText,
 		cancelButtonText:  SecuPressi18nScanner.cancelText,
 		type:              "warning",
 		allowOutsideClick: true,
-		customClass:       "wpmedia-swal secupress-swal"
+		customClass:       "wpmedia-swal2 secupress-swal2"
 	},
-	swalConfirmDefaults: {
+	swal2ConfirmDefaults: {
 		showCancelButton:  true,
 		closeOnConfirm:    false
 	}
@@ -19,66 +19,75 @@ var SecuPress = {
 jQuery( document ).ready( function( $ ) {
 
 	// !Chart and score ============================================================================
-	var secupressChart,
+	var secupressChart = [],
 		secupressChartEl = document.getElementById( "status_chart" ),
 		secupressChartData,
 		secupressOneClickScanProgress = 0;
 
-	if ( secupressChartEl && window.Chart ) {
-		secupressChartData = [
-			{
-				value:     SecuPressi18nChart.good.value,
-				color:     "#26B3A9",
-				highlight: "#2BCDC1",
-				label:     SecuPressi18nChart.good.text,
-				status:    "good",
-			},
-			{
-				value:     SecuPressi18nChart.bad.value,
-				color:     "#CB234F",
-				highlight: "#F2295E",
-				label:     SecuPressi18nChart.bad.text,
-				status:    "bad",
-			},
-			{
-				value:     SecuPressi18nChart.warning.value,
-				color:     "#F7AB13",
-				highlight: "#F1C40F",
-				label:     SecuPressi18nChart.warning.text,
-				status:    "warning",
-			},
-			{
-				value:     SecuPressi18nChart.notscannedyet.value,
-				color:     "#5A626F",
-				highlight: "#888888",
-				label:     SecuPressi18nChart.notscannedyet.text,
-				status:    "notscannedyet",
-			},
-		];
+	function secupressDrawMeAChart( chartEl ) {
+		if ( chartEl && window.Chart ) {
+			var elID = $( chartEl ).attr( 'id' );
 
-		secupressChart = new Chart( secupressChartEl.getContext( "2d" ) ).Doughnut( secupressChartData, {
-			animationEasing:       "easeInOutQuart",
-			showTooltips:          true,
-			segmentShowStroke:     false,
-			percentageInnerCutout: 90,
-			tooltipEvents:         ["mousemove"], // active "hover" effect...
-			customTooltips:        function() {} //... but remove tooltips.
-		} );
+			secupressChartData = [
+				{
+					value:     SecuPressi18nChart.good.value,
+					color:     "#26B3A9",
+					highlight: "#2BCDC1",
+					label:     SecuPressi18nChart.good.text,
+					status:    "good",
+				},
+				{
+					value:     SecuPressi18nChart.bad.value,
+					color:     "#CB234F",
+					highlight: "#F2295E",
+					label:     SecuPressi18nChart.bad.text,
+					status:    "bad",
+				},
+				{
+					value:     SecuPressi18nChart.warning.value,
+					color:     "#F7AB13",
+					highlight: "#F1C40F",
+					label:     SecuPressi18nChart.warning.text,
+					status:    "warning",
+				},
+				{
+					value:     SecuPressi18nChart.notscannedyet.value,
+					color:     "#5A626F",
+					highlight: "#888888",
+					label:     SecuPressi18nChart.notscannedyet.text,
+					status:    "notscannedyet",
+				},
+			];
 
-		// Trigger a filter action on Chart Segment click.
-		secupressChartEl.onclick = function( e ) {
-			var activePoints = secupressChart.getSegmentsAtEvent( e );
-			if ( activePoints[0] ) {
-				$( "#secupress-type-filters" ).children( ".secupress-big-tab-" + activePoints[0].status ).find( "a" ).trigger( "click.secupress" );
-			}
-		};
+			secupressChart[ elID ] = new Chart( chartEl.getContext( "2d" ) ).Doughnut( secupressChartData, {
+				animationEasing:       "easeInOutQuart",
+				showTooltips:          true,
+				segmentShowStroke:     false,
+				percentageInnerCutout: 90,
+				tooltipEvents:         ["mousemove"], // active "hover" effect...
+				customTooltips:        function() {} //... but remove tooltips.
+			} );
 
-		// Trigger a filter action on Legend item click.
-		$( ".secupress-chart-legend" ).find( "li" ).on( "click.secupress", function() {
-			$( "#secupress-type-filters" ).children( ".secupress-big-tab-" + $( this ).data( "status" ) ).find( "a" ).trigger( "click.secupress" );
-		} );
+			// Trigger a filter action on Chart Segment click.
+			chartEl.onclick = function( e ) {
+				var activePoints = secupressChart[ elID ].getSegmentsAtEvent( e );
+				if ( activePoints[0] ) {
+					$( "#secupress-type-filters" ).find( ".secupress-big-tab-" + activePoints[0].status ).find( "a" ).trigger( "click.secupress" );
+				}
+			};
+
+			// Trigger a filter action on Legend item click.
+			$( ".secupress-chart-legend" ).find( "li" ).on( "click.secupress", function() {
+				$( "#secupress-type-filters" ).find( ".secupress-big-tab-" + $( this ).data( "status" ) ).find( "a" ).trigger( "click.secupress" );
+			} );
+		}
 	}
 
+	// if it's not the first scan, draw the chart
+	// else we will draw it later, to avoid Chart.js error during drawing
+	if ( ! $('.secupress-scanners-header').hasClass('secupress-not-scanned-yet') ) {
+		secupressDrawMeAChart( secupressChartEl );
+	}
 
 	function secupressSelectFallbackBigTab( data, $filters ) {
 		if ( data.bad ) {
@@ -91,14 +100,15 @@ jQuery( document ).ready( function( $ ) {
 	}
 
 
-	function secupressUpdateScore( data ) {
+	function secupressUpdateScore( data, chartEl ) {
 		var $filters = $( "#secupress-type-filters" );
 
 		// Only if we're not in a sub-site.
-		if ( ! secupressChartEl ) {
+		if ( ! chartEl ) {
 			return;
 		}
-
+		var elID = $( chartEl ).attr( 'id' );
+	
 		// All various texts.
 		$( ".secupress-chart-container .letter" ).replaceWith( data.letter );
 		$( ".secupress-score-text" ).text( data.text );
@@ -110,11 +120,11 @@ jQuery( document ).ready( function( $ ) {
 		} );
 
 		// Chart.
-		secupressChart.segments[0].value = data.good;
-		secupressChart.segments[1].value = data.bad;
-		secupressChart.segments[2].value = data.warning;
-		secupressChart.segments[3].value = data.notscannedyet;
-		secupressChart.update();
+		secupressChart[ elID ].segments[0].value = data.good;
+		secupressChart[ elID ].segments[1].value = data.bad;
+		secupressChart[ elID ].segments[2].value = data.warning;
+		secupressChart[ elID ].segments[3].value = data.notscannedyet;
+		secupressChart[ elID ].update();
 
 		// Tabs subtitles.
 		$filters.find( "a" ).each( function() {
@@ -204,6 +214,12 @@ jQuery( document ).ready( function( $ ) {
 		} );
 	} )( window, document, $ );
 
+	// !Draw Mini Chart in Latest scans tab ========================================================
+	(function( w, d, $, undefined) {
+		$('#secupress-l-latest').on('click.secupress', function(){
+			secupressDrawMeAChart( d.getElementById('status_chart_mini') );
+		});
+	})(window, document, jQuery);
 
 	// !Filter rows (Status bad/good/etc) ==========================================================
 	(function( w, d, $, undefined ) {
@@ -255,7 +271,7 @@ jQuery( document ).ready( function( $ ) {
 
 			e.preventDefault();
 
-			swal( $.extend( {}, SecuPress.swalDefaults, SecuPress.swalConfirmDefaults, {
+			swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
 				title:              SecuPressi18nScanner.supportTitle,
 				confirmButtonText:  SecuPressi18nScanner.supportButton,
 				html:               SecuPressi18nScanner.supportContentFree,
@@ -263,7 +279,7 @@ jQuery( document ).ready( function( $ ) {
 				type:               "question"
 			} ) ).then( function( isConfirm ) {
 				if ( true === isConfirm ) {
-					swal( $.extend( {}, SecuPress.swalDefaults, {
+					swal2( $.extend( {}, SecuPress.swal2Defaults, {
 						title:              "Pro Version needed", //// TODO: localize.
 						type:               "error",
 						showCancelButton:   true,
@@ -286,7 +302,7 @@ jQuery( document ).ready( function( $ ) {
 
 			e.preventDefault();
 
-			swal( $.extend( {}, SecuPress.swalDefaults, SecuPress.swalConfirmDefaults, {
+			swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
 				title:              SecuPressi18nScanner.supportTitle,
 				confirmButtonText:  SecuPressi18nScanner.supportButton,
 				html:               SecuPressi18nScanner.supportContentPro,
@@ -294,7 +310,7 @@ jQuery( document ).ready( function( $ ) {
 				type:               "question"
 			} ) ).then( function( isConfirm ) {
 				if ( true === isConfirm ) {
-					swal.enableLoading();
+					swal2.enableLoading();
 
 					$.post( ajaxurl, {}, null, "json" )
 					.done( function( r ) {
@@ -412,7 +428,11 @@ jQuery( document ).ready( function( $ ) {
 						$( '.secupress-tabs-contents' ).show();
 
 						// Click on first tab to show results, just in case…
-						$( '#secupress-l-scan' ).trigger( 'click.secupress' );
+						$('#secupress-l-scan').trigger('click.secupress');
+						// draw the chart
+						if ( is_first ) {
+							secupressDrawMeAChart( secupressChartEl );
+						}
 					} );
 				}
 			}, 100 );
@@ -498,7 +518,7 @@ jQuery( document ).ready( function( $ ) {
 
 		// Error popup.
 		function secupressErrorWarn() {
-			swal( $.extend( {}, SecuPress.swalDefaults, {
+			swal2( $.extend( {}, SecuPress.swal2Defaults, {
 				title: SecuPressi18nScanner.error,
 				type:  "error"
 			} ) );
@@ -844,7 +864,7 @@ jQuery( document ).ready( function( $ ) {
 		// Perform a manual fix: display the form in a popup and launch an ajax call on submit.
 		function secupressManualFixit( test ) {
 			var content  = "",
-				swalType = "info",
+				swal2Type = "info",
 				index, data;
 
 			data = secupressScans.manualFix[ test ];
@@ -855,10 +875,10 @@ jQuery( document ).ready( function( $ ) {
 			// If the status is "bad" or "warning", `data.message` contains an error message.
 			if ( "bad" === data.class || "warning" === data.class ) {
 				content += '<div class="sa-error-container show"><div class="icon">!</div><p>' + data.message + "</p></div>";
-				swalType = "bad" === data.class ? "error" : "warning";
+				swal2Type = "bad" === data.class ? "error" : "warning";
 			}
 
-			content += '<form method="post" id="form_manual_fix" class="secupress-swal-form show-input" action="' + ajaxurl + '">';
+			content += '<form method="post" id="form_manual_fix" class="secupress-swal2-form show-input" action="' + ajaxurl + '">';
 
 				for ( index in data.form_contents ) {
 					if ( data.form_contents.hasOwnProperty( index ) ) {
@@ -869,10 +889,10 @@ jQuery( document ).ready( function( $ ) {
 
 			content += "</form>";
 
-			swal( $.extend( {}, SecuPress.swalDefaults, SecuPress.swalConfirmDefaults, {
+			swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
 				title:             data.form_title,
 				html:              content,
-				type:              swalType,
+				type:              swal2Type,
 				confirmButtonText: SecuPressi18nScanner.fixit
 			} ) ).then( function ( isConfirm ) {
 				var params, $row;
@@ -881,7 +901,7 @@ jQuery( document ).ready( function( $ ) {
 					return;
 				}
 
-				swal.enableLoading();
+				swal2.enableLoading();
 
 				params = $( "#form_manual_fix" ).serializeArray();
 				$row   = $( "#" + test );
@@ -1041,7 +1061,7 @@ jQuery( document ).ready( function( $ ) {
 					secupressManualFixit( oneTest );
 				} else {
 					// Bulk: warn the user that some manual fixes need to be done.
-					swal( $.extend( {}, SecuPress.swalDefaults, {
+					swal2( $.extend( {}, SecuPress.swal2Defaults, {
 						title: 1 === manualFixLen ? SecuPressi18nScanner.oneManualFix : SecuPressi18nScanner.someManualFixes,
 					} ) );
 				}
@@ -1073,7 +1093,7 @@ jQuery( document ).ready( function( $ ) {
 				type  = "success";
 			}
 
-			swal( $.extend( {}, SecuPress.swalDefaults, {
+			swal2( $.extend( {}, SecuPress.swal2Defaults, {
 				title: title,
 				html:  extra.data.message.replace( /(<ul>|<li>|<\/li><\/ul>)/g, "" ).replace( /<\/li>/g, "<br/><br/>" ),
 				type:  type
@@ -1085,7 +1105,7 @@ jQuery( document ).ready( function( $ ) {
 		$( "body" ).on( "click.secupress", ".secupress-details", function( e ) {
 			var test = $( this ).data( "test" );
 
-			swal( $.extend( {}, SecuPress.swalDefaults, {
+			swal2( $.extend( {}, SecuPress.swal2Defaults, {
 				title: SecuPressi18nScanner.scanDetails,
 				html:  $( "#details-" + test ).find( ".details-content" ).html(),
 				type:  "info"
@@ -1097,7 +1117,7 @@ jQuery( document ).ready( function( $ ) {
 		$( "body" ).on( "click.secupress", ".secupress-details-fix", function( e ) {
 			var test = $( this ).data( "test" );
 
-			swal( $.extend( {}, SecuPress.swalDefaults, SecuPress.swalConfirmDefaults, {
+			swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
 				title:             SecuPressi18nScanner.fixDetails,
 				confirmButtonText: SecuPressi18nScanner.fixit,
 				reverseButtons:    true,
@@ -1106,7 +1126,7 @@ jQuery( document ).ready( function( $ ) {
 			} ) ).then( function ( isConfirm ) {
 				if ( isConfirm ) {
 					$( "#" + test ).find( ".secupress-fixit" ).trigger( "click.secupress" );
-					swal.close();
+					swal2.close();
 				}
 			} );
 		} );

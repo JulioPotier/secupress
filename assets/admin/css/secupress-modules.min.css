@@ -85,11 +85,11 @@ p.secupress-sh-subtitle {
 .secupress-modules-list-links a {
 	position: relative;
 	display: block;
-	padding: 14px 55px 13px 15px;
+	padding: 16px 55px 15px 15px;
 	border-top: 1px solid rgba(255, 255, 255, 0.15);
 	color: #2BCDC1;
 	overflow: hidden;
-	font-weight: normal;
+	font-weight: 600;
 	text-decoration: none;
 	transition: all .275s;
 }
@@ -101,6 +101,9 @@ p.secupress-sh-subtitle {
 }
 .secupress-modules-list-links .secupress-tab-name {
 	font-size: 14px;
+}
+.secupress-modules-list-links .secupress-pro-module .secupress-tab-name {
+	color: #F1C40F;
 }
 .secupress-modules-list-links .secupress-tab-summary {
 	color: #FFF;
@@ -115,6 +118,14 @@ p.secupress-sh-subtitle {
 .secupress-modules-list-links i:before {
 	font-size: 40px;
 	color: rgba(255, 255, 255, 0.15);
+}
+.secupress-modules-list-links .active i,
+.secupress-modules-list-links .active i:before {
+	color: #2BCDC1;
+}
+.secupress-modules-list-links .active.secupress-pro-module i,
+.secupress-modules-list-links .active.secupress-pro-module i:before {
+	color: #F1C40F;
 }
 
 .secupress-modules-list-links .icon-sensitive-data,
@@ -145,6 +156,17 @@ p.secupress-sh-subtitle {
 .secupress-modules-sidebar a:hover,
 .secupress-modules-sidebar a:focus {
 	background: rgba(255, 255, 255, 0.075);
+}
+
+/* Get pro link */
+.secupress-modules-sidebar .module-pro {
+	background: #F39C12;
+	color: #FFF;
+}
+.secupress-modules-sidebar .module-pro i,
+.secupress-modules-sidebar .module-pro i:before,
+.secupress-modules-sidebar .module-pro .secupress-tab-name {
+	color: #FFF;
 }
 
 /**
@@ -259,7 +281,8 @@ span.secupress-get-pro-version {
 	color: #000;
 	font-weight: bold;
 }
-.secupress-get-pro-version a {
+.secupress-get-pro-version a,
+.secupress-cta-pro a {
 	color: #F7AB13;
 }
 .secupress-setting-content-col {
@@ -281,7 +304,21 @@ span.secupress-get-pro-version {
 	-ms-flex-negative: 0;
 	flex-shrink: 0;
 }
-.secupress-get-pro-col p.secupress-get-pro:before {
+.secupress-get-pro-col p.secupress-get-pro,
+.secupress-cta-pro {
+	position: relative;
+	padding-left: 55px;
+	font-weight: bold;
+	color: #000;
+}
+.secupress-cta-pro {
+	display: inline-block;
+	margin-left: 7px;
+	padding-left: 52px;
+	vertical-align: middle;
+}
+.secupress-get-pro-col p.secupress-get-pro:before,
+.secupress-cta-pro:before {
 	position: absolute;
 	top: 2px; left: 5px;
 	content: "\e907";
@@ -289,13 +326,8 @@ span.secupress-get-pro-version {
 	font-size: 35px;
 	line-height: 35px;
 }
-.secupress-get-pro-col p.secupress-get-pro {
-	position: relative;
-	padding-left: 55px;
-	font-weight: bold;
-	color: #000;
-}
-.secupress-get-pro-col .secupress-get-pro a:before {
+.secupress-get-pro-col .secupress-get-pro a:before,
+.secupress-cta-pro a:before {
 	content: "";
 	display: block;
 }
@@ -421,39 +453,55 @@ span.secupress-get-pro-version {
 	&
 	Expandable textareas
 */
-.secupress-expand-trigger {
+.secupress-expand-trigger-container {
 	position: absolute;
-	left: 50%;
-	bottom: 0;
+	left: 0; right: 0; bottom: 0;
 	margin: 0 0 -14px -14px;
-	height: 28px; width: 28px;
-	padding-top: 5px;
-	background: #FFF;
-	border: 1px solid #eee;
 	text-align: center;
-	box-shadow: 0 1px 4px rgba(0,0,0,.1);
-	border-radius: 100%;
+}
+.secupress-expand-trigger {
+	display: inline-block;
+	padding: 5px 10px 6px;
+	font-size: 11px;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	color: #FFF;
+	background: #5A626F;
+	border-radius: 3px;
+}
+.secupress-expand-txt {
+	display: inline-block;
+	vertical-align: middle;
+	overflow: hidden;
+	max-width: 0;
+	white-space: nowrap;
 	transition: all .275s;
 }
-.secupress-expand-trigger i:before {
-	color: #26B3A9;
+.secupress-expand-trigger:hover .secupress-expand-txt,
+.secupress-expand-trigger:focus .secupress-expand-txt {
+	max-width: 12em;
+	margin-right: 5px;
 }
-.secupress-expand-trigger.open {
-	background: #ECF0F1;
-	transform: rotate(45deg);
+.secupress-expand-trigger i:before {
+	font-size: 1.5em;
+	vertical-align: -3px; 
 }
 .secupress-setting-row_bbq-headers_user-agents-list .secupress-get-pro-col,
 .secupress-setting-row_bbq-url-content_bad-contents-list .secupress-get-pro-col,
 .secupress-setting-row_backups-storage_location .secupress-get-pro-col,
 .secupress-setting-row_notification-types_types .secupress-get-pro-col,
+.secupress-setting-row_monitoring_activated .secupress-get-pro-col,
 [id="secupress-settings-module_services--"] .secupress-get-pro-col {
 	-webkit-flex-basis: 0;
 	-ms-flex-preferred-size: 0;
 	flex-basis: 0;
 
 }
-.secupress-setting-row_bbq-headers_user-agents-list .secupress-textarea-container,
-.secupress-setting-row_bbq-url-content_bad-contents-list .secupress-textarea-container {
+label.secupress-textarea-label {
+	position: relative;
+	display: block;
+}
+.secupress-textarea-container {
 	width: 100%;
 	height: 200px;
 	margin: .75em auto;
@@ -467,13 +515,7 @@ span.secupress-get-pro-version {
 	background: #FFF;
 	border-color: #eee;
 }
-.secupress-setting-row_bbq-headers_user-agents-list label,
-.secupress-setting-row_bbq-url-content_bad-contents-list label {
-	position: relative;
-	display: block;
-}
-.secupress-setting-row_bbq-headers_user-agents-list textarea,
-.secupress-setting-row_bbq-url-content_bad-contents-list textarea {
+.secupress-textarea-container textarea {
 	width: 100%;
 	height: 100%;
 	padding: 0;
@@ -488,12 +530,10 @@ span.secupress-get-pro-version {
 	transition: all .275s;
 	resize: none;
 }
-.secupress-setting-row_bbq-headers_user-agents-list textarea:focus,
-.secupress-setting-row_bbq-url-content_bad-contents-list textarea:focus {
+.secupress-textarea-container textarea:focus {
 	background: #FFF;
 }
 
-.secupress-textarea-container + .description.desc,
 .secupress-textarea-container + .description.desc {
 	padding-left: 0;
 	margin-top: 1.5em;
@@ -622,6 +662,44 @@ span.secupress-get-pro-version {
 .fieldname-backups-storage_location .description,
 .fieldname-notification-types_types .description {
 	margin-top: 1.5em;
+}
+
+/* Module Alert > Uptime Monitoring */
+[id="secupress-settings-module_alerts--uptime-monitoring"] .secupress-setting-row {
+	margin: 2em 1em;
+	border: 1px solid #ECF0F1;
+	padding: 3px 0 0 0;
+}
+[id="secupress-settings-module_alerts--uptime-monitoring"] .description.warning strong {
+	display: none;
+}
+[id="secupress-settings-module_alerts--uptime-monitoring"] .description.warning {
+	position: relative;
+	background: #ECF0F1 url('../images/icon-key-white.png') left 30px bottom -12px no-repeat;
+	margin: 1em 0 0 0;
+	padding: 15px 20px;
+	font-size: 16px;
+	color: #222831;
+	font-style: normal;
+	font-weight: 600;
+	overflow: hidden;
+}
+[id="secupress-settings-module_alerts--uptime-monitoring"] .secupress-setting-content-col {
+	padding-right: 0;
+}
+[id="secupress-settings-module_alerts--uptime-monitoring"] .secupress-setting-content-col p,
+[id="secupress-settings-module_alerts--uptime-monitoring"] .secupress-setting-content-col label {
+	margin: 10px 20px;
+}
+[id="secupress-settings-module_alerts--uptime-monitoring"] label.secupress-checkbox-label {
+	margin-left: 0;
+}
+[id="secupress-settings-module_alerts--uptime-monitoring"] .secupress-button {
+	margin: -4px 0;
+	padding: 6px 15px 8px;
+}
+[id="secupress-settings-module_alerts--uptime-monitoring"] .secupress-button .icon {
+	margin-right: 5px;
 }
 
 /* Services */

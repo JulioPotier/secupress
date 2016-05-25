@@ -285,6 +285,10 @@ function secupress_warning_no_oneclick_scan_yet() {
 					<?php esc_html_e( 'Scan my website', 'secupress' ); ?>
 				</span>
 			</a>
+			<a class="secupress-close-notice" href="#julio-is-everywhere">
+				<i class="icon-squared-cross" aria-hidden="true"></i>
+				<span class="screen-reader-text"><?php esc_html_e( 'Close' ); ?></span>
+			</a>
 		</div>
 	</div><!-- .secupress-section-dark -->
 	<?php
@@ -296,6 +300,7 @@ add_action( 'all_admin_notices', 'secupress_warning_no_api_key', 50 );
  * This warning is displayed if consumer email is unknown
  *
  * @since 1.0
+ * @author Geoffrey
  */
 function secupress_warning_no_api_key() {
 	$screen_id = get_current_screen();
@@ -335,6 +340,10 @@ function secupress_warning_no_api_key() {
 				<span class="text">
 					<?php _e( 'Add API Key', 'secupress' ); ?>
 				</span>
+			</a>
+			<a class="secupress-close-notice" href="#julio-is-everywhere">
+				<i class="icon-squared-cross" aria-hidden="true"></i>
+				<span class="screen-reader-text"><?php esc_html_e( 'Close' ); ?></span>
 			</a>
 		</div>
 	</div><!-- .secupress-section-medium -->

@@ -149,9 +149,14 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 		<div class="wrap">
 			<?php
 			// The page title.
-			$this->_screen_title_or_tabs();
+			secupress_admin_heading( __( 'Logs', 'secupress' ) );
+			$titles = array(
+				'title'    => esc_html__( 'Logs', 'secupress' ),
+				'subtitle' => esc_html__( 'Enter the matrix', 'secupress' )
+			);
+			secupress_settings_heading( $titles );
 			?>
-
+			
 			<div class="secupress-logs-list-wrapper">
 				<?php
 				// Messages.
