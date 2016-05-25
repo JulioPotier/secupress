@@ -352,7 +352,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 	 *
 	 * @return (array)
 	 */
-	protected function get_views() {
+	public function get_views() {
 		global $avail_post_stati;
 
 		$post_type       = $this->screen->post_type;
