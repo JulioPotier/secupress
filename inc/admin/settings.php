@@ -14,6 +14,8 @@ add_action( 'admin_enqueue_scripts', '__secupress_add_settings_scripts' );
  * @param (string) $hook_suffix The current admin page.
  */
 function __secupress_add_settings_scripts( $hook_suffix ) {
+	global $wp_version;
+
 	$suffix    = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 	$version   = $suffix ? SECUPRESS_VERSION : time();
 	$css_depts = array();
@@ -191,6 +193,13 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	elseif ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_logs' === $hook_suffix ) {
 		// CSS.
 		wp_enqueue_style( 'secupress-logs-css',  SECUPRESS_ADMIN_CSS_URL . 'secupress-logs' . $suffix . '.css', array( 'secupress-common-css' ), $version );
+	}
+
+
+	// Old WordPress Versions
+	// WordPress 3.7 & 3.8
+	if ( version_compare( $wp_version, '3.7', '>=' ) && version_compare( $wp_version, '3.9', '<' ) ) {
+		wp_enqueue_style( 'secupress-wordpress-3-7',  SECUPRESS_ADMIN_CSS_URL . 'secupress-wordpress-3.7' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 	}
 
 	// SecuPress version in footer.

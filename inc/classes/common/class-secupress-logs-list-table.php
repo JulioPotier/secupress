@@ -352,7 +352,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 	 *
 	 * @return (array)
 	 */
-	protected function get_views() {
+	public function get_views() {
 		global $avail_post_stati;
 
 		$post_type       = $this->screen->post_type;
@@ -413,7 +413,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 	 *
 	 * @return (array)
 	 */
-	protected function get_bulk_actions() {
+	public function get_bulk_actions() {
 		return array(
 			'secupress_bulk_delete-' . $this->log_type . '-logs' => __( 'Delete Permanently' ),
 		);
@@ -428,7 +428,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 	 *
 	 * @param (string) $which The position: "top" or "bottom".
 	 */
-	protected function extra_tablenav( $which ) {
+	public function extra_tablenav( $which ) {
 		?>
 		<div class="secupress-quick-actions alignleft actions">
 			<?php
@@ -478,7 +478,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 	 *
 	 * @param (string) $which The position: "top" or "bottom".
 	 */
-	protected function display_tablenav( $which ) {
+	public function display_tablenav( $which ) {
 		if ( 'top' === $which ) {
 			wp_nonce_field( 'secupress-bulk-' . $this->log_type . '-logs', '_wpnonce', false );
 
@@ -525,7 +525,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 	 *
 	 * @return (array)
 	 */
-	protected function get_table_classes() {
+	public function get_table_classes() {
 		return array( 'widefat', 'fixed', 'striped', 'posts' );
 	}
 
@@ -568,7 +568,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 	 *
 	 * @return (array)
 	 */
-	protected function get_sortable_columns() {
+	public function get_sortable_columns() {
 		return array(
 			'title' => 'title',
 			'date'  => array( 'date', true ),

@@ -67,7 +67,7 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 				);
 				secupress_settings_heading( $titles );
 			?>
-			<div class="secupress-section-light">
+			<div class="secupress-section-light secupress-bordered">
 
 				<form action="<?php echo $this->get_form_action(); ?>" method="post" id="secupress_settings">
 
