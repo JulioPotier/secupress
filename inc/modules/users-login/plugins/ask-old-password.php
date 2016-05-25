@@ -8,7 +8,24 @@ Version: 1.0
 */
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
-add_filter( 'show_password_fields', 'secupress_oldpassword_prepare_field', PHP_INT_MAX );
+
+add_action( 'admin_init', 'secupress_oldpassword_init' );
+/**
+ * Plugin init.
+ *
+ * @since 1.0
+ * @author Greg
+ */
+function secupress_oldpassword_init() {
+	if ( ! secupress_is_affected_role( 'users-login', 'password-policy', wp_get_current_user() ) ) {
+		return;
+	}
+
+	add_filter( 'show_password_fields',       'secupress_oldpassword_prepare_field', PHP_INT_MAX );
+	add_action( 'user_profile_update_errors', 'secupress_oldpassword_check_old_password', 10, 3 );
+}
+
+
 /**
  * Start the process that will add the password field.
  * Basically it does a `ob_start()` and launches the hooks that will `ob_get_clean()`.
@@ -110,7 +127,6 @@ function secupress_oldpassword_add_field() {
 }
 
 
-add_action( 'user_profile_update_errors', 'secupress_oldpassword_check_old_password', 10, 3 );
 /**
  * When a user submits a new password, check the old one is provided and correct.
  * If not, trigger an error.

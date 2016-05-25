@@ -39,16 +39,16 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 
 	wp_localize_script( 'secupress-wordpress-js', 'SecuPressi18n', array( 'isPro' => (int) secupress_is_pro() ) );
 
-	$pages = array(
-		'toplevel_page_' . SECUPRESS_PLUGIN_SLUG . '_scanners'  => 1,
-		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules'  => 1,
-		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' => 1,
-		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_logs'     => 1,
-	);
+	// $pages = array(
+	// 	'toplevel_page_' . SECUPRESS_PLUGIN_SLUG . '_scanners'  => 1,
+	// 	'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules'  => 1,
+	// 	'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' => 1,
+	// 	'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_logs'     => 1,
+	// );
 
-	if ( ! isset( $pages[ $hook_suffix ] ) ) {
-		return;
-	}
+	// if ( ! isset( $pages[ $hook_suffix ] ) ) {
+	// 	return;
+	// }
 
 	// SecuPress Common CSS.
 	wp_enqueue_style( 'secupress-common-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-common' . $suffix . '.css', array( 'secupress-wordpress-css' ), $version );
@@ -378,9 +378,9 @@ function __secupress_scanners() {
 		<?php secupress_admin_heading( __( 'Scanners', 'secupress' ) ); ?>
 		<div class="secupress-wrapper">
 			<div class="secupress-section-dark secupress-scanners-header<?php echo $times ? '' : ' secupress-not-scanned-yet'; ?>">
-				
+
 				<div class="secupress-heading secupress-flex secupress-flex-spaced secupress-wrap">
-					<p class="secupress-text-medium"><?php 
+					<p class="secupress-text-medium"><?php
 						/* translators: %s is the plugin name */
 						printf( esc_html__( 'Welcome to %s the best way to secure your website!', 'secupress' ), SECUPRESS_PLUGIN_NAME );
 					?></p>
@@ -613,7 +613,7 @@ function __secupress_scanners() {
 
 						if ( secupress_is_pro() ) {
 						?>
-						<div class="secupress-schedules-infos is-pro">						
+						<div class="secupress-schedules-infos is-pro">
 							<p class="secupress-flex secupress-ib">
 								<i class="icon-clock-o" aria-hidden="true"></i>
 								<span><?php printf( __( 'Last automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress'), $last_schedule ) ); ?></span>
@@ -626,7 +626,7 @@ function __secupress_scanners() {
 							<p class="secupress-cta">
 								<a href="#" class="secupress-button secupress-button-primary"><?php esc_html_e( 'Schedule your next analysis', 'secupress' ); ?></a>
 							</p>
-							
+
 						<?php } else { ?>
 						<div class="secupress-schedules-infos">
 							<p class="secupress-flex secupress-ib">
@@ -681,7 +681,7 @@ function __secupress_scanners() {
 							<p class="slide-text"><?php _e( 'L\'analyse des points reste à jour, sans vous connectez au back office avec le scan automatique.', 'secupress' ); ?></p>
 						</div>
 						<?php endif; ?>
-						
+
 						<!-- Available slides, random picked in JS -->
 						<div class="secupress-slide secupress-slide-1">
 							<h3 class="slide-title"><?php _e( 'Une gamme de modules à votre service', 'secupress' ); ?></h3>
@@ -790,7 +790,7 @@ function secupress_admin_heading( $title = '' ) {
  *
  * @since 1.0
  * @author Geoffrey
- * 
+ *
  * @param (array) $titles The title and subtitle
  */
 function secupress_settings_heading( $titles = array() ) {

@@ -27,7 +27,7 @@ function secupress_plugins_to_deactivate() {
 	}
 
 	$message  = '<p>' . sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
-	$message .= __( 'The following plugins are not recommanded with this plugin and may cause unexpected results:', 'secupress' );
+	$message .= __( 'The following plugins are not recommended with this plugin and may cause unexpected results:', 'secupress' );
 	$message .= '</p><ul>';
 	foreach ( $plugins_to_deactivate as $plugin ) {
 		$plugin_data = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin );
@@ -254,11 +254,12 @@ function secupress_warning_no_oneclick_scan_yet() {
 	$screen_id = get_current_screen();
 	$screen_id = $screen_id && ! empty( $screen_id->id ) ? $screen_id->id : false;
 
-	if ( ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' !== $screen_id && 'plugins' !== $screen_id ) || ! current_user_can( secupress_get_capability() ) ) {
+	if ( secupress_notice_is_dismissed( 'oneclick-scan' ) || ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' !== $screen_id && 'plugins' !== $screen_id ) || ! current_user_can( secupress_get_capability() ) ) {
 		return;
 	}
 
-	$times = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
+	$times   = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
+	$referer = urlencode( esc_url_raw( secupress_get_current_url( 'raw' ) ) );
 
 	if ( $times ) {
 		return;
@@ -285,7 +286,7 @@ function secupress_warning_no_oneclick_scan_yet() {
 					<?php esc_html_e( 'Scan my website', 'secupress' ); ?>
 				</span>
 			</a>
-			<a class="secupress-close-notice" href="#julio-is-everywhere">
+			<a class="secupress-close-notice" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_dismiss-notice&notice_id=oneclick-scan&_wp_http_referer=' . $referer ), 'secupress-notices' ); ?>">
 				<i class="icon-squared-cross" aria-hidden="true"></i>
 				<span class="screen-reader-text"><?php esc_html_e( 'Close' ); ?></span>
 			</a>
@@ -314,7 +315,7 @@ function secupress_warning_no_api_key() {
 		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_logs'     => 1,
 	); // //// Add Get Pro page later.
 
-	if ( ! isset( $allowed_screen_ids[ $screen_id ] ) || ! current_user_can( secupress_get_capability() ) ) {
+	if ( secupress_notice_is_dismissed( 'get-api-key' ) || ! isset( $allowed_screen_ids[ $screen_id ] ) || ! current_user_can( secupress_get_capability() ) ) {
 		return;
 	}
 
@@ -342,7 +343,7 @@ function secupress_warning_no_api_key() {
 					<?php _e( 'Add API Key', 'secupress' ); ?>
 				</span>
 			</a>
-			<a class="secupress-close-notice" href="#julio-is-everywhere">
+			<a class="secupress-close-notice" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_dismiss-notice&notice_id=get-api-key&_wp_http_referer=' . $referer ), 'secupress-notices' ); ?>">
 				<i class="icon-squared-cross" aria-hidden="true"></i>
 				<span class="screen-reader-text"><?php esc_html_e( 'Close' ); ?></span>
 			</a>
