@@ -258,7 +258,8 @@ function secupress_warning_no_oneclick_scan_yet() {
 		return;
 	}
 
-	$times = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
+	$times   = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
+	$referer = urlencode( esc_url_raw( secupress_get_current_url( 'raw' ) ) );
 
 	if ( $times ) {
 		return;
