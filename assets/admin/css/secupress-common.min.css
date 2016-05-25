@@ -836,10 +836,6 @@ body[class*="secupress"] .sweet-overlay {
 	padding: 20px 15px 20px;
 	border-radius: 3px 3px 0 0;
 }
-.secupress-flex .secupress-col-cta {
-	min-width: 280px;
-	text-align: right;
-}
 .secupress-col-rateus p {
 	margin: 0;
 }
@@ -849,10 +845,6 @@ body[class*="secupress"] .sweet-overlay {
 }
 .secupress-rateus-link a {
 	text-decoration: none;
-}
-.secupress-logo-block p {
-	margin: 0;
-	font-weight: bold;
 }
 .secupress-lb-name {
 	padding: 0 20px;

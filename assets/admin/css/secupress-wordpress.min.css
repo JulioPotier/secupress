@@ -239,7 +239,10 @@
 	-ms-flex-preferred-size: 25%;
 	flex-basis: 25%;
 }
-
+.secupress-flex .secupress-col-cta {
+	min-width: 280px;
+	text-align: right;
+}
 
 /* Sections Colors */
 
@@ -268,9 +271,6 @@
 	color: #FFF;
 }
 
-/**
- * === Buttons
- */
 /**
  * === Buttons
  */
@@ -413,9 +413,10 @@
 	margin-top: -15px;
 }
 
-/**
- * === Notices
- */
+.secupress-logo-block p {
+	margin: 0;
+	font-weight: bold;
+}
 
 /**
  * === Bad Theme
