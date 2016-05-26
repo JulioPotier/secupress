@@ -461,6 +461,9 @@ a + .secupress-row-actions {
 	-webkit-flex-grow: 1;
 	-ms-flex-positive: 1;
 	flex-grow: 1;
+	-webkit-flex-shrink: 1;
+	-ms-flex-negative: 1;
+	flex-shrink: 1;
 }
 .secupress-chart {
 	-webkit-box-flex: 0;
