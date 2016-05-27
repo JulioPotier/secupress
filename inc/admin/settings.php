@@ -373,7 +373,7 @@ function __secupress_scanners() {
 				<div class="secupress-heading secupress-flex secupress-flex-spaced secupress-wrap">
 					<p class="secupress-text-medium"><?php
 						/* translators: %s is the plugin name */
-						printf( esc_html__( 'Welcome to %s the best way to secure your website!', 'secupress' ), SECUPRESS_PLUGIN_NAME );
+						printf( esc_html__( '%s Security Scanners', 'secupress' ), SECUPRESS_PLUGIN_NAME );
 					?></p>
 					<p class="secupress-text-end hide-if-no-js">
 						<a href="#secupress-more-info" class="secupress-link-icon secupress-open-moreinfo" data-trigger="slidedown" data-target="secupress-more-info">
