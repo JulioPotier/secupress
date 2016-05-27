@@ -1083,9 +1083,7 @@ function secupress_scanners_template() {
 						</div>
 
 						<div class="secupress-flex secupress-flex-spaced secupress-fix-result secupress-bg-gray">
-							<div class="secupress-fix-result-message">
-								<?php echo $fix_message; ?>
-							</div>
+							<div class="secupress-fix-result-message"><?php echo $fix_message; ?></div>
 							<?php
 							if ( true === $current_test::$fixable || 'notscannedyet' !== $scanners[ $option_name ]['status'] || ( 'pro' !== $current_test::$fixable || secupress_is_pro() ) ) { ?>
 							<div class="secupress-fix-result-retryfix hidden">
