@@ -108,7 +108,7 @@ jQuery( document ).ready( function( $ ) {
 			return;
 		}
 		var elID = $( chartEl ).attr( 'id' );
-	
+
 		// All various texts.
 		$( ".secupress-chart-container .letter" ).replaceWith( data.letter );
 		$( ".secupress-score-text" ).text( data.text );
@@ -1166,6 +1166,7 @@ jQuery( document ).ready( function( $ ) {
 			// It's the "One Click Fix" button.
 			if ( $this.hasClass( "button-secupress-fix" ) ) {
 				secupressLaunchSeparatedBulkFix( $( ".secupress-fixit" ) );
+				secupressRunProgressBar( $this );
 				return;
 			}
 
