@@ -461,9 +461,9 @@ a + .secupress-row-actions {
 	-webkit-flex-grow: 1;
 	-ms-flex-positive: 1;
 	flex-grow: 1;
-	-webkit-flex-shrink: 0;
-	-ms-flex-negative: 0;
-	flex-shrink: 0;
+	-webkit-flex-shrink: 1;
+	-ms-flex-negative: 1;
+	flex-shrink: 1;
 }
 .secupress-chart {
 	-webkit-box-flex: 0;
@@ -661,14 +661,16 @@ a + .secupress-row-actions {
 	color: #393e46;
 }
 
-.secupress-fix-result-message {
-	padding: 10px 15px;
+.secupress-fix-result-message:not(:empty) {
+	padding: 10px 15px 2px;
 }
 .secupress-fix-result-actions {
 	padding: 8px 15px;
 }
-.secupress-fix-result + .secupress-fix-result-actions {
-	padding-top: 0;
+
+/* If status is good */
+.secupress-item-all.status-good .secupress-fix-result-actions {
+	display: none;
 }
 
 .secupress-fix-result-actions p {

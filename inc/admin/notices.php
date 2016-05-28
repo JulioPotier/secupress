@@ -293,6 +293,7 @@ function secupress_warning_no_oneclick_scan_yet() {
 		</div>
 	</div><!-- .secupress-section-dark -->
 	<?php
+	secupress_enqueue_notices_styles();
 }
 
 
@@ -349,6 +350,7 @@ function secupress_warning_no_api_key() {
 		</div>
 	</div><!-- .secupress-section-medium -->
 	<?php
+	secupress_enqueue_notices_styles();
 }
 
 
@@ -370,4 +372,18 @@ function secupress_display_transient_notices() {
 	}
 
 	delete_transient( 'secupress-notices-' . get_current_user_id() );
+}
+
+/**
+ * Enqueue styles for not generic SP notices (OCS, Key API)
+ *
+ * @author Geoffrey
+ *
+ * @since 1.0
+ */
+function secupress_enqueue_notices_styles() {
+	$suffix    = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+	$version   = $suffix ? SECUPRESS_VERSION : time();
+
+	wp_enqueue_style( 'secupress-notices', SECUPRESS_ADMIN_CSS_URL . 'secupress-notices' . $suffix . '.css', array(), $version );
 }

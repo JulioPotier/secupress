@@ -244,6 +244,19 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			</li>
 			<?php
 		}
+
+		// prints last tab "Get Pro" is current user is not a pro one
+		if ( ! secupress_is_pro() ) {
+		?>
+		<li>
+			<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ); ?>" class="module-pro">
+				<span class="secupress-tab-name"><?php esc_html_e( 'Get Pro', 'secupress' ); ?></span>
+				<span class="secupress-tab-summary"><?php printf( __( 'Buy %s Pro', 'secupress' ), SECUPRESS_PLUGIN_NAME ); ?></span>
+				<i class="icon-secupress-simple" aria-hidden="true"></i>
+			</a>
+		</li>
+		<?php
+		}
 	}
 
 

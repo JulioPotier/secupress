@@ -14,6 +14,7 @@ add_action( 'admin_enqueue_scripts', '__secupress_add_settings_scripts' );
  * @param (string) $hook_suffix The current admin page.
  */
 function __secupress_add_settings_scripts( $hook_suffix ) {
+
 	$suffix    = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 	$version   = $suffix ? SECUPRESS_VERSION : time();
 	$css_depts = array();
@@ -191,6 +192,13 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	elseif ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_logs' === $hook_suffix ) {
 		// CSS.
 		wp_enqueue_style( 'secupress-logs-css',  SECUPRESS_ADMIN_CSS_URL . 'secupress-logs' . $suffix . '.css', array( 'secupress-common-css' ), $version );
+	}
+
+
+	// Old WordPress Versions
+	// WordPress 3.9
+	if ( ! secupress_wp_version_is( '3.9' ) ) {
+		wp_enqueue_style( 'secupress-wordpress-3-7',  SECUPRESS_ADMIN_CSS_URL . 'secupress-wordpress-3.7' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 	}
 
 	// SecuPress version in footer.
@@ -1075,9 +1083,7 @@ function secupress_scanners_template() {
 						</div>
 
 						<div class="secupress-flex secupress-flex-spaced secupress-fix-result secupress-bg-gray">
-							<div class="secupress-fix-result-message">
-								<?php echo $fix_message; ?>
-							</div>
+							<div class="secupress-fix-result-message"><?php echo $fix_message; ?></div>
 							<?php
 							if ( true === $current_test::$fixable || 'notscannedyet' !== $scanners[ $option_name ]['status'] || ( 'pro' !== $current_test::$fixable || secupress_is_pro() ) ) { ?>
 							<div class="secupress-fix-result-retryfix hidden">
