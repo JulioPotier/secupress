@@ -38,16 +38,18 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 
 	wp_localize_script( 'secupress-wordpress-js', 'SecuPressi18n', array( 'isPro' => (int) secupress_is_pro() ) );
 
-	// $pages = array(
-	// 	'toplevel_page_' . SECUPRESS_PLUGIN_SLUG . '_scanners'  => 1,
-	// 	'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules'  => 1,
-	// 	'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' => 1,
-	// 	'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_logs'     => 1,
-	// );
+	/*
+	$pages = array( ////
+		'toplevel_page_' . SECUPRESS_PLUGIN_SLUG . '_scanners'  => 1,
+		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules'  => 1,
+		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' => 1,
+		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_logs'     => 1,
+	);
 
-	// if ( ! isset( $pages[ $hook_suffix ] ) ) {
-	// 	return;
-	// }
+	if ( ! isset( $pages[ $hook_suffix ] ) ) {
+		return;
+	}
+	*/
 
 	// SecuPress Common CSS.
 	wp_enqueue_style( 'secupress-common-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-common' . $suffix . '.css', array( 'secupress-wordpress-css' ), $version );
@@ -80,7 +82,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		// JS.
 		wp_enqueue_script( 'secupress-modules-js',  SECUPRESS_ADMIN_JS_URL . 'secupress-modules' . $suffix . '.js', array( 'secupress-common-js' ), $version, true );
 
-		$alreadyScanned = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) ) ? 1 : 0;
+		$already_scanned = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) ) ? 1 : 0;
 
 		wp_localize_script( 'secupress-modules-js', 'SecuPressi18nModules', array(
 			// Roles.
@@ -116,12 +118,12 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'searchResults'        => _x( 'See search result below.', 'adjective', 'secupress' ),
 			'searchReset'          => _x( 'Search reset.', 'adjective', 'secupress' ),
 			// First scan.
-			'alreadyScanned'       => $alreadyScanned,
+			'alreadyScanned'       => $already_scanned,
 			'firstScanText'        => __( 'Before setting modules,<br>launch your first scan.', 'secupress' ),
 			'firstScanButton'      => __( 'One Click Scan', 'secupress' ),
 			'firstScanURL'         => esc_url( wp_nonce_url( secupress_admin_url( 'scanners' ), 'first_oneclick-scan' ) ) . '&oneclick-scan=1',
 			'firstScanImage'       => SECUPRESS_ADMIN_IMAGES_URL . 'icon-radar.png',
-			// Expand Textareas
+			// Expand Textareas.
 			'expandTextOpen'       => __( 'Show More', 'secupress' ),
 			'expandTextClose'      => __( 'Close' ),
 		) );
@@ -194,9 +196,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		wp_enqueue_style( 'secupress-logs-css',  SECUPRESS_ADMIN_CSS_URL . 'secupress-logs' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 	}
 
-
-	// Old WordPress Versions
-	// WordPress 3.9
+	// Old WordPress Versions: before WordPress 3.9.
 	if ( ! secupress_wp_version_is( '3.9' ) ) {
 		wp_enqueue_style( 'secupress-wordpress-3-7',  SECUPRESS_ADMIN_CSS_URL . 'secupress-wordpress-3.7' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 	}
@@ -603,10 +603,10 @@ function __secupress_scanners() {
 						<p class="secupress-text-medium">
 							<?php esc_html_e( 'Schedule your security analysis', 'secupress' ); ?>
 						</p>
-						<p><?php _e('The analysis of security points is keeping updated. No need to connect to your back office with our automatic scan.', 'secupress' ); ?></p>
+						<p><?php _e( 'The analysis of security points is keeping updated. No need to connect to your back office with our automatic scan.', 'secupress' ); ?></p>
 
 						<?php
-						/////
+						// /////
 						$last_schedule = '1463654935';
 						$next_schedule = '1464654935';
 
@@ -615,11 +615,11 @@ function __secupress_scanners() {
 						<div class="secupress-schedules-infos is-pro">
 							<p class="secupress-flex secupress-ib">
 								<i class="icon-clock-o" aria-hidden="true"></i>
-								<span><?php printf( __( 'Last automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress'), $last_schedule ) ); ?></span>
+								<span><?php printf( __( 'Last automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $last_schedule ) ); ?></span>
 							</p>
 							<p class="secupress-flex secupress-ib next-one">
 								<i class="icon-clock-o" aria-hidden="true"></i>
-								<span><?php printf( __( 'Next automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress'), $next_schedule ) ); ?></span>
+								<span><?php printf( __( 'Next automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $next_schedule ) ); ?></span>
 							</p>
 
 							<p class="secupress-cta">
@@ -630,11 +630,11 @@ function __secupress_scanners() {
 						<div class="secupress-schedules-infos">
 							<p class="secupress-flex secupress-ib">
 								<i class="icon-clock-o" aria-hidden="true"></i>
-								<span><?php printf( __( 'Last automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress'), $last_schedule ) ); ?></span>
+								<span><?php printf( __( 'Last automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $last_schedule ) ); ?></span>
 							</p>
 							<p class="secupress-flex secupress-ib next-one">
 								<i class="icon-clock-o" aria-hidden="true"></i>
-								<span><?php printf( __( 'Next automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress'), $next_schedule ) ); ?></span>
+								<span><?php printf( __( 'Next automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $next_schedule ) ); ?></span>
 							</p>
 
 							<p class="secupress-cta">
@@ -790,11 +790,11 @@ function secupress_admin_heading( $title = '' ) {
  * @since 1.0
  * @author Geoffrey
  *
- * @param (array) $titles The title and subtitle
+ * @param (array) $titles The title and subtitle.
  */
 function secupress_settings_heading( $titles = array() ) {
 	extract( $titles );
-?>
+	?>
 	<div class="secupress-section-dark secupress-settings-header secupress-header-mini secupress-flex">
 		<div class="secupress-col-1-3 secupress-col-logo secupress-text-center">
 			<div class="secupress-logo-block secupress-flex">
@@ -814,7 +814,7 @@ function secupress_settings_heading( $titles = array() ) {
 		</div>
 		<div class="secupress-col-1-3 secupress-col-rateus secupress-text-end">
 			<p class="secupress-rateus">
-				<strong><?php _e('You like this plugin?') ?></strong>
+				<strong><?php _e( 'You like this plugin?' ) ?></strong>
 				<br>
 				<?php printf( __( 'Please take a few seconds to rate us on %sWordPress.org%s', 'secupress' ), '<a href="' . SECUPRESS_RATE_URL . '">', '</a>' ); ?>
 			</p>
@@ -830,7 +830,7 @@ function secupress_settings_heading( $titles = array() ) {
 			</p>
 		</div>
 	</div>
-<?php
+	<?php
 }
 
 

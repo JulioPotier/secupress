@@ -762,9 +762,15 @@ function secupress_feature_is_pro( $feature ) {
 
 
 /**
- * Tell if a user is affected by its role for the asked module
+ * Tell if a user is affected by its role for the asked module.
  *
- * @return (-1)/(bool) -1 = every role is affected, true = the user's role is affected, false = the user's role isn't affected.
+ * @since 1.0
+ *
+ * @param (string) $module    A module.
+ * @param (string) $submodule A sub-module.
+ * @param (object) $user      A WP_User object.
+ *
+ * @return (-1|bool) -1 = every role is affected, true = the user's role is affected, false = the user's role isn't affected.
  */
 function secupress_is_affected_role( $module, $submodule, $user ) {
 	$roles = secupress_get_module_option( $submodule . '_affected_role', array(), $module );
@@ -794,13 +800,15 @@ function secupress_modify_userid_for_nonces( $uid ) {
 }
 
 /**
- * Tell if the param $user is a real user from your installation
+ * Tell if the param $user is a real user from your installation.
  *
- * @param variant $user The object to be tested to be a valid user
  * @since 1.0
- * @return boolean
  * @author Julio Potier
- **/
+ *
+ * @param variant $user The object to be tested to be a valid user.
+ *
+ * @return (bool)
+ */
 function secupress_is_user( $user ) {
 	return is_a( $user, 'WP_User' ) && user_can( $user, 'exist' );
 }

@@ -46,7 +46,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 					<a href="<?php echo esc_url( secupress_admin_url( 'modules', $slug ) ); ?>" class="secupress-button-primary">
 						<?php esc_html_e( 'View options', 'secupress' ); ?>
 					</a>
-					<?php echo ( isset( $mod['mark_as_pro'] ) && $mod['mark_as_pro'] === true ? $pro_msg : '' ); ?>
+					<?php echo ( isset( $mod['mark_as_pro'] ) && true === $mod['mark_as_pro'] ? $pro_msg : '' ); ?>
 				</p>
 				<i class="icon-<?php echo $mod['icon']; ?>" aria-hidden="true"></i>
 			</div>

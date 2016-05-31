@@ -230,10 +230,9 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 */
 	protected function print_tabs() {
 		foreach ( static::get_modules() as $key => $module ) {
-			$icon   = isset( $module['icon'] ) ?  $module['icon'] : 'secupress-simple';
-			$is_pro = isset( $module['mark_as_pro'] ) && $module['mark_as_pro'] === true ? true : false; 
-			$class  = $this->get_current_module() === $key  ? 'active' : '';
-			$class .= $is_pro ? ' secupress-pro-module' : ''; 
+			$icon   = isset( $module['icon'] ) ? $module['icon'] : 'secupress-simple';
+			$class  = $this->get_current_module() === $key ? 'active' : '';
+			$class .= ! empty( $module['mark_as_pro'] ) ? ' secupress-pro-module' : '';
 			?>
 			<li>
 				<a href="<?php echo esc_url( secupress_admin_url( 'modules', $key ) ); ?>" class="<?php echo $class; ?> module-<?php echo sanitize_key( $key ); ?>">
@@ -245,17 +244,17 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			<?php
 		}
 
-		// prints last tab "Get Pro" is current user is not a pro one
+		// Prints last tab "Get Pro" is current user is not a pro one.
 		if ( ! secupress_is_pro() ) {
-		?>
-		<li>
-			<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ); ?>" class="module-pro">
-				<span class="secupress-tab-name"><?php esc_html_e( 'Get Pro', 'secupress' ); ?></span>
-				<span class="secupress-tab-summary"><?php printf( __( 'Buy %s Pro', 'secupress' ), SECUPRESS_PLUGIN_NAME ); ?></span>
-				<i class="icon-secupress-simple" aria-hidden="true"></i>
-			</a>
-		</li>
-		<?php
+			?>
+			<li>
+				<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ); ?>" class="module-pro">
+					<span class="secupress-tab-name"><?php esc_html_e( 'Get Pro', 'secupress' ); ?></span>
+					<span class="secupress-tab-summary"><?php printf( __( 'Buy %s Pro', 'secupress' ), SECUPRESS_PLUGIN_NAME ); ?></span>
+					<i class="icon-secupress-simple" aria-hidden="true"></i>
+				</a>
+			</li>
+			<?php
 		}
 	}
 

@@ -152,11 +152,11 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 			secupress_admin_heading( __( 'Logs', 'secupress' ) );
 			$titles = array(
 				'title'    => esc_html__( 'Logs', 'secupress' ),
-				'subtitle' => esc_html__( 'Enter the matrix', 'secupress' )
+				'subtitle' => esc_html__( 'Enter the matrix', 'secupress' ),
 			);
 			secupress_settings_heading( $titles );
 			?>
-			
+
 			<div class="secupress-logs-list-wrapper">
 				<?php
 				// Messages.
