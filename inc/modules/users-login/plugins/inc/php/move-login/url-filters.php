@@ -103,7 +103,10 @@ add_filter( 'wp_redirect', 'secupress_move_login_redirect', 10 );
  * @return (string) The path to redirect to.
  */
 function secupress_move_login_redirect( $location ) {
-	if ( site_url( reset( ( explode( '?', $location ) ) ) ) === site_url( 'wp-login.php' ) ) {
+	$location_base = explode( '?', $location );
+	$location_base = reset( $location_base );
+
+	if ( site_url( $location_base ) === site_url( 'wp-login.php' ) ) {
 		return secupress_move_login_site_url( $location, $location, 'login', get_current_blog_id() );
 	}
 
