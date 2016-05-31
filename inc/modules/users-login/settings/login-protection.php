@@ -122,7 +122,7 @@ $this->add_field( array(
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
 	'value'             => (int) secupress_is_submodule_active( 'users-login', 'sessions-control' ),
-	'label'             => __( 'Yes, i want to use the Sessions Control Module', 'secupress' ),
+	'label'             => __( 'Yes, I want to be able to control user sessions', 'secupress' ),
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
