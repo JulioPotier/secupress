@@ -92,14 +92,14 @@ $this->add_field( array(
 	),
 ) );
 
-$is_wp_4 = version_compare( $GLOBALS['wp_version'], '4.0' ) >= 0;
+
 $this->add_field( array(
 	'title'             => __( 'Avoid Double Connections', 'secupress' ),
 	'description'       => __( 'Once logged in, nobody can log in on your account at the same time as you. You have to disconnect first to allow another connection.', 'secupress' ),
 	'label_for'         => $this->get_field_name( 'only-one-connection' ),
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
-	'disabled'          => ! $is_wp_4,
+	'disabled'          => ! secupress_wp_version_is( '4.0' ),
 	'value'             => (int) secupress_is_submodule_active( 'users-login', 'only-one-connection' ),
 	'label'             => __( 'Yes, do not allow double connections', 'secupress' ),
 	'helpers'           => array(
@@ -109,7 +109,7 @@ $this->add_field( array(
 		),
 		array(
 			'type'        => 'warning',
-			'description' => $is_wp_4 ? '' : __( 'This module requiert WordPress 4.0 minimum, please update now!', 'secupress' ),
+			'description' => secupress_wp_version_is( '4.0' ) ? '' : __( 'This module requiert WordPress 4.0 minimum, please update now!', 'secupress' ),
 		),
 	),
 ) );
@@ -121,12 +121,17 @@ $this->add_field( array(
 	'label_for'         => $this->get_field_name( 'sessions_control' ),
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
+	'disabled'          => ! secupress_wp_version_is( '4.0' ) ? true : null,
 	'value'             => (int) secupress_is_submodule_active( 'users-login', 'sessions-control' ),
 	'label'             => __( 'Yes, I want to be able to control user sessions', 'secupress' ),
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
 			'description' => sprintf( __( 'You will find action links on every user\'s row in the <a href="%s">users listing administration page</a>.', 'secupress' ), esc_url( admin_url( 'users.php' ) ) ),
+		),
+		array(
+			'type'        => 'warning',
+			'description' => secupress_wp_version_is( '4.0' ) ? '' : __( 'This module requiert WordPress 4.0 minimum, please update now!', 'secupress' ),
 		),
 	),
 ) );
