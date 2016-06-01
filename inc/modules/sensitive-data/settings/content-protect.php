@@ -20,7 +20,7 @@ $this->add_field( array(
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
-			'description' => $robots_enabled ? false : __( 'This feature is not available for sites not installed at the domain root.', 'secupress' ),
+			'description' => $robots_enabled ? false : __( 'This feature is available only for sites installed at the domain root.', 'secupress' ),
 		),
 	),
 ) );
