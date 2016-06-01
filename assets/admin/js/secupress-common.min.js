@@ -1,29 +1,4 @@
 /* globals jQuery: false, SecuPressi18nCommon: false, swal: false */
-
-/**
- * Basic tools
- */
-// Shorthand to tell if a modifier key is pressed.
-function secupressHasModifierKey( e ) {
-	return e.altKey || e.ctrlKey || e.metaKey || e.shiftKey;
-}
-// Shorthand to tell if the pressed key is Space or Enter.
-function secupressIsSpaceOrEnterKey( e ) {
-	return ( e.which === 13 || e.which === 32 ) && ! secupressHasModifierKey( e );
-}
-// Shorthand to tell if the pressed key is Space.
-function secupressIsSpaceKey( e ) {
-	return e.which === 32 && ! secupressHasModifierKey( e );
-}
-// Shorthand to tell if the pressed key is Enter.
-function secupressIsEnterKey( e ) {
-	return e.which === 13 && ! secupressHasModifierKey( e );
-}
-// Shorthand to tell if the pressed key is Escape.
-function secupressIsEscapeKey( e ) {
-	return e.which === 27 && ! secupressHasModifierKey( e );
-}
-
 (function($, d, w, undefined) {
 	var SecuPress = {
 		supportButtonColor:  "#F1C40F",
