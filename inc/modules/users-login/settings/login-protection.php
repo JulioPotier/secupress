@@ -76,7 +76,7 @@ $this->add_field( array(
 	'depends'      => $main_field_name . '_nonlogintimeslot',
 	'label_for'    => $field_name . '_from_hour',
 	'name'         => $field_name,
-	'type'         => 'time-slot',
+	'type'         => 'non_login_time_slot',
 	'label'        => __( 'Everyday:', 'secupress' ),
 	'fieldset'     => 'yes',
 	'label_screen' => __( 'Choose your time slot', 'secupress' ),

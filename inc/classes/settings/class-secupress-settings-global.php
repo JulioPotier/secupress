@@ -84,6 +84,87 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 	}
 
 
+	// Specific fields =============================================================================.
+
+	/**
+	 * Outputs the form used by the importers to accept the data to be imported.
+	 *
+	 * @since 1.0
+	 */
+	protected function import_upload_form() {
+		/** This filter is documented in wp-admin/includes/template.php */
+		$bytes      = apply_filters( 'import_upload_size_limit', wp_max_upload_size() );
+		$size       = size_format( $bytes );
+		$upload_dir = wp_upload_dir();
+		$disabled   = secupress_is_pro() ? '' : ' disabled="disabled"';
+
+		if ( ! empty( $upload_dir['error'] ) ) {
+			?>
+			<div class="error">
+				<p><?php _e( 'Before you can upload your import file, you will need to fix the following error:', 'secupress' ); ?></p>
+				<p><strong><?php echo $upload_dir['error']; ?></strong></p>
+			</div><?php
+			return;
+		}
+
+		$name        = 'upload';
+		$type        = 'help';
+		$description = __( 'Choose a file from your computer:', 'secupress' ) . ' (' . sprintf( __( 'Maximum size: %s', 'secupress' ), $size ) . ')';
+		/** This filter is documented in inc/classes/settings/class-secupress-settings.php */
+		$description = apply_filters( 'secupress.settings.help', $description, $name, $type );
+		?>
+		<p>
+			<input type="file" id="upload" name="import" size="25"<?php echo $disabled; ?>/><br/>
+			<label for="upload"><?php echo $description; ?></label>
+			<input type="hidden" name="max_file_size" value="<?php echo $bytes; ?>" />
+		</p>
+
+		<p class="submit">
+			<button type="submit"<?php echo $disabled; ?> class="secupress-button secupress-button-mini" id="import">
+				<span class="icon">
+					<i class="icon-upload" aria-hidden="true"></i>
+				</span>
+				<span class="text">
+					<?php esc_html_e( 'Upload file and import settings', 'secupress' ); ?>
+				</span>
+			</button>
+		</p>
+		<?php
+	}
+
+
+	/**
+	 * Outputs the export button.
+	 *
+	 * @since 1.0
+	 */
+	protected function export_form() {
+		if ( secupress_is_pro() ) {
+			?>
+			<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_export' ), 'secupress_export' ) ); ?>" id="export" class="secupress-button secupress-button-mini secupressicon">
+				<span class="icon">
+					<i class="icon-download" aria-hidden="true"></i>
+				</span>
+				<span class="text">
+					<?php _e( 'Download settings', 'secupress' ); ?>
+				</span>
+			</a>
+			<?php
+		} else {
+			?>
+			<button class="secupress-button secupress-button-mini" disabled="disabled">
+				<span class="icon">
+					<i class="icon-download" aria-hidden="true"></i>
+				</span>
+				<span class="text">
+					<?php _e( 'Download settings', 'secupress' ); ?>
+				</span>
+			</button>
+			<?php
+		}
+	}
+
+
 	// Includes ====================================================================================.
 
 	/**
