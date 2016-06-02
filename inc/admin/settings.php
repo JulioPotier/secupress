@@ -605,46 +605,42 @@ function __secupress_scanners() {
 						</p>
 						<p><?php _e( 'The analysis of security points is keeping updated. No need to connect to your back office with our automatic scan.', 'secupress' ); ?></p>
 
-						<?php
-						// /////
-						$last_schedule = '1463654935';
-						$next_schedule = '1464654935';
+						<?php if ( secupress_is_pro() ) :
+							// /////
+							$last_schedule = '1463654935';
+							$next_schedule = '1464654935';
+							?>
+							<div class="secupress-schedules-infos is-pro">
+								<p class="secupress-flex secupress-ib">
+									<i class="icon-clock-o" aria-hidden="true"></i>
+									<span><?php printf( __( 'Last automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $last_schedule ) ); ?></span>
+								</p>
+								<p class="secupress-flex secupress-ib next-one">
+									<i class="icon-clock-o" aria-hidden="true"></i>
+									<span><?php printf( __( 'Next automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $next_schedule ) ); ?></span>
+								</p>
 
-						if ( secupress_is_pro() ) {
-						?>
-						<div class="secupress-schedules-infos is-pro">
-							<p class="secupress-flex secupress-ib">
-								<i class="icon-clock-o" aria-hidden="true"></i>
-								<span><?php printf( __( 'Last automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $last_schedule ) ); ?></span>
-							</p>
-							<p class="secupress-flex secupress-ib next-one">
-								<i class="icon-clock-o" aria-hidden="true"></i>
-								<span><?php printf( __( 'Next automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $next_schedule ) ); ?></span>
-							</p>
+								<p class="secupress-cta">
+									<a href="<?php echo esc_url( secupress_admin_url( 'modules', 'schedules' ) ); ?>#module-scanners" class="secupress-button secupress-button-primary"><?php esc_html_e( 'Schedule your next analysis', 'secupress' ); ?></a>
+								</p>
+							</div><!-- .secupress-schedules-infos -->
+						<?php else : ?>
+							<div class="secupress-schedules-infos">
+								<p class="secupress-flex secupress-ib">
+									<i class="icon-clock-o" aria-hidden="true"></i>
+									<span><?php printf( __( 'Last automatic scan: %s', 'secupress' ), '&mdash;' ); ?></span>
+								</p>
+								<p class="secupress-flex secupress-ib next-one">
+									<i class="icon-clock-o" aria-hidden="true"></i>
+									<span><?php printf( __( 'Next automatic scan: %s', 'secupress' ), '&mdash;' ); ?></span>
+								</p>
 
-							<p class="secupress-cta">
-								<a href="#" class="secupress-button secupress-button-primary"><?php esc_html_e( 'Schedule your next analysis', 'secupress' ); ?></a>
-							</p>
-
-						<?php } else { ?>
-						<div class="secupress-schedules-infos">
-							<p class="secupress-flex secupress-ib">
-								<i class="icon-clock-o" aria-hidden="true"></i>
-								<span><?php printf( __( 'Last automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $last_schedule ) ); ?></span>
-							</p>
-							<p class="secupress-flex secupress-ib next-one">
-								<i class="icon-clock-o" aria-hidden="true"></i>
-								<span><?php printf( __( 'Next automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $next_schedule ) ); ?></span>
-							</p>
-
-							<p class="secupress-cta">
-								<a href="#" class="secupress-button secupress-button-tertiary"><?php esc_html_e( 'Schedule your next analysis', 'secupress' ); ?></a>
-							</p>
-							<p class="secupress-cta-detail"><?php _e( 'Available with pro version', 'secupress' ); ?></p>
-
-						<?php } ?>
-
-						</div><!-- .secupress-schedules-infos -->
+								<p class="secupress-cta">
+									<a href="<?php echo esc_url( secupress_admin_url( 'modules', 'schedules' ) ); ?>#module-scanners" class="secupress-button secupress-button-tertiary"><?php esc_html_e( 'Schedule your next analysis', 'secupress' ); ?></a>
+								</p>
+								<p class="secupress-cta-detail"><?php _e( 'Available with pro version', 'secupress' ); ?></p>
+							</div><!-- .secupress-schedules-infos -->
+						<?php endif; ?>
 
 					</div><!-- .secupress-tab-content -->
 
