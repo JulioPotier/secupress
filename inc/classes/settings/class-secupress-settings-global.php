@@ -104,6 +104,7 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 				<p><?php _e( 'Before you can upload your import file, you will need to fix the following error:', 'secupress' ); ?></p>
 				<p><strong><?php echo $upload_dir['error']; ?></strong></p>
 			</div><?php
+			echo secupress_is_pro() ? '' : static::get_pro_version_string( '<p class="description secupress-get-pro-version">%s</p>' );
 			return;
 		}
 
@@ -130,6 +131,7 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 			</button>
 		</p>
 		<?php
+		echo secupress_is_pro() ? '' : static::get_pro_version_string( '<p class="description secupress-get-pro-version">%s</p>' );
 	}
 
 
@@ -142,8 +144,8 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 		if ( secupress_is_pro() ) {
 			?>
 			<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_export' ), 'secupress_export' ) ); ?>" id="export" class="secupress-button secupress-button-mini secupressicon">
-				<span class="icon">
-					<i class="icon-download" aria-hidden="true"></i>
+				<span class="icon" aria-hidden="true">
+					<i class="icon-download"></i>
 				</span>
 				<span class="text">
 					<?php _e( 'Download settings', 'secupress' ); ?>
@@ -153,14 +155,15 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 		} else {
 			?>
 			<button class="secupress-button secupress-button-mini" disabled="disabled">
-				<span class="icon">
-					<i class="icon-download" aria-hidden="true"></i>
+				<span class="icon" aria-hidden="true">
+					<i class="icon-download"></i>
 				</span>
 				<span class="text">
 					<?php _e( 'Download settings', 'secupress' ); ?>
 				</span>
 			</button>
 			<?php
+			echo static::get_pro_version_string( '<p class="description secupress-get-pro-version">%s</p>' );
 		}
 	}
 
