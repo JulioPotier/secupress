@@ -1070,8 +1070,7 @@ function secupress_scanners_template() {
 						</div>
 
 						<?php if ( $is_fixable ) :
-							$support_href   = secupress_is_pro() ? 'http://secupress.me/support/?item=' . $option_name : 'https://wordpress.org/support/plugin/secupress-free#postform'; // Correct slug on repo? ////.
-							$support_suffix = secupress_is_pro() ? 'pro' : 'free';
+							$support_href = secupress_is_pro() ? 'http://secupress.me/support/?item=' . $option_name : 'https://wordpress.org/support/plugin/secupress-free#postform'; // Correct slug on repo? ////.
 							?>
 							<div class="secupress-fix-result-actions secupress-bg-gray">
 								<div class="secupress-flex secupress-flex-spaced secupress-fix-result">
@@ -1100,8 +1099,9 @@ function secupress_scanners_template() {
 									}
 									?>
 								</div>
+
 								<p>
-									<a href="#" class="secupress-button secupress-button-mini">
+									<a href="<?php echo $class_name::DOC_URL; ?>" class="secupress-button secupress-button-mini">
 										<span class="icon" aria-hidden="true">
 											<i class="icon-file-text"></i>
 										</span>
@@ -1109,7 +1109,7 @@ function secupress_scanners_template() {
 											<?php esc_html_e( 'Read the documentation', 'secupress' ); ?>
 										</span>
 									</a>
-									<a href="<?php echo $support_href; ?>" class="secupress-button secupress-button-mini secupress-ask-support secupress-ask-support-<?php echo $support_suffix; ?>">
+									<a href="<?php echo $support_href; ?>" class="secupress-button secupress-button-mini secupress-ask-support secupress-ask-support-<?php echo secupress_is_pro() ? 'pro' : 'free'; ?>">
 										<span class="icon" aria-hidden="true">
 											<i class="icon-ask"></i>
 										</span>
