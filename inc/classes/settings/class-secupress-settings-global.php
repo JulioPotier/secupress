@@ -153,7 +153,7 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 					</span>
 				</a>
 			<?php else : ?>
-				<button class="secupress-button secupress-button-mini" disabled="disabled">
+				<button type="button" class="secupress-button secupress-button-mini" disabled="disabled">
 					<span class="icon" aria-hidden="true">
 						<i class="icon-download"></i>
 					</span>
