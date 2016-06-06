@@ -18,7 +18,14 @@ function secupress_upgrader() {
 	// You can hook the upgrader to trigger any action when WP SecuPress is upgraded.
 	// First install.
 	if ( ! $actual_version ) {
-		if ( ! secupress_maybe_migrate_mono_to_multi() ) {
+		/**
+		 * Allow to prevent plugin first install hooks to fire.
+		 *
+		 * @since 1.0
+		 *
+		 * @param (bool) $prevent True to prevent triggering first install hooks. False otherwise.
+		 */
+		if ( ! apply_filters( 'secupress.prevent_first_install', false ) ) {
 			/**
 			 * Fires on the plugin first install.
 			 *
@@ -65,47 +72,4 @@ function secupress_upgrader() {
 	if ( ! secupress_valid_key() && current_user_can( secupress_get_capability() ) && ( ! isset( $_GET['page'] ) || 'secupress' !== $_GET['page'] ) ) {
 		add_action( 'admin_notices', 'secupress_need_api_key' );
 	}
-}
-
-
-/**
- * When switching a monosite installation to multisite, migrate options to the sitemeta table.
- *
- * @since 1.0
- *
- * @return (bool) True if some options have been imported.
- */
-function secupress_maybe_migrate_mono_to_multi() {
-	if ( ! is_multisite() ) {
-		return false;
-	}
-
-	$modules    = secupress_get_modules();
-	$has_values = false;
-
-	foreach ( $modules as $module => $atts ) {
-		$value = get_option( "secupress_{$module}_settings" );
-
-		if ( false !== $value ) {
-			add_site_option( "secupress_{$module}_settings" );
-			$has_values = true;
-		}
-
-		delete_option( "secupress_{$module}_settings" );
-	}
-
-	$options = array( SECUPRESS_SETTINGS_SLUG, SECUPRESS_SCAN_SLUG, SECUPRESS_FIX_SLUG, SECUPRESS_SCAN_TIMES, SECUPRESS_BAN_IP, 'secupress_captcha_keys' );
-
-	foreach ( $options as $option ) {
-		$value = get_option( $option );
-
-		if ( false !== $value ) {
-			add_site_option( $option );
-			$has_values = true;
-		}
-
-		delete_option( $option );
-	}
-
-	return $has_values;
 }
