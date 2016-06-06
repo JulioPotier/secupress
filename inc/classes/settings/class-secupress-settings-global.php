@@ -141,30 +141,30 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	protected function export_form() {
-		if ( secupress_is_pro() ) {
-			?>
-			<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_export' ), 'secupress_export' ) ); ?>" id="export" class="secupress-button secupress-button-mini secupressicon">
-				<span class="icon" aria-hidden="true">
-					<i class="icon-download"></i>
-				</span>
-				<span class="text">
-					<?php _e( 'Download settings', 'secupress' ); ?>
-				</span>
-			</a>
-			<?php
-		} else {
-			?>
-			<button class="secupress-button secupress-button-mini" disabled="disabled">
-				<span class="icon" aria-hidden="true">
-					<i class="icon-download"></i>
-				</span>
-				<span class="text">
-					<?php _e( 'Download settings', 'secupress' ); ?>
-				</span>
-			</button>
-			<?php
-			echo static::get_pro_version_string( '<p class="description secupress-get-pro-version">%s</p>' );
-		}
+		?>
+		<p class="submit">
+			<?php if ( secupress_is_pro() ) : ?>
+				<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_export' ), 'secupress_export' ) ); ?>" id="export" class="secupress-button secupress-button-mini secupressicon">
+					<span class="icon" aria-hidden="true">
+						<i class="icon-download"></i>
+					</span>
+					<span class="text">
+						<?php _e( 'Download settings', 'secupress' ); ?>
+					</span>
+				</a>
+			<?php else : ?>
+				<button class="secupress-button secupress-button-mini" disabled="disabled">
+					<span class="icon" aria-hidden="true">
+						<i class="icon-download"></i>
+					</span>
+					<span class="text">
+						<?php _e( 'Download settings', 'secupress' ); ?>
+					</span>
+				</button>
+			<?php endif; ?>
+		</p>
+		<?php
+		echo secupress_is_pro() ? '' : static::get_pro_version_string( '<p class="description secupress-get-pro-version">%s</p>' );
 	}
 
 
