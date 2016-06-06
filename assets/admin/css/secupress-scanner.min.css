@@ -272,7 +272,12 @@ a.secupress-close-moreinfo {
 }
 .status-good .secupress-fix-status-actions,
 .status-warning .secupress-fix-status-actions,
-.status-notscannedyet .secupress-fix-status-actions {
+.status-notscannedyet .secupress-fix-status-actions,
+.has-fix-status .secupress-fix-status-actions,
+.status-good .secupress-fix-result-retryfix,
+.status-warning .secupress-fix-result-retryfix,
+.status-notscannedyet .secupress-fix-result-retryfix,
+.no-fix-status .secupress-fix-result-retryfix {
 	display: none;
 	visibility: hidden;
 	speak: none

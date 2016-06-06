@@ -624,7 +624,7 @@ jQuery( document ).ready( function( $ ) {
 			}
 
 			// Add the new status as a class.
-			secupressSetStatusClass( $fix, r.data.class );
+			//secupressSetStatusClass( $fix, r.data.class );
 
 			// Add a specific class to the row if the fix needs the user intervention.
 			if ( secupressManualFixNeeded( r.data ) ) {
@@ -945,7 +945,8 @@ jQuery( document ).ready( function( $ ) {
 			* extra.isBulk: tell if it's a bulk scan.
 			* extra.data:   data returned by the ajax call.
 			*/
-			var $row = $( "#" + extra.test );
+			var $row = $( "#" + extra.test ),
+				$fixitWrap, $refixitWrap;
 
 			// If we have delayed fixes, launch the first in queue now.
 			if ( secupressScans.delayedFixes.length ) {
@@ -954,7 +955,7 @@ jQuery( document ).ready( function( $ ) {
 
 			// If we have a good result, empty the fix cell.
 			if ( "good" === extra.data.class ) {
-				secupressSetStatusClass( $row.children( ".secupress-fix-result" ), "cantfix" );
+				//secupressSetStatusClass( $row.children( ".secupress-fix-result" ), "cantfix" );
 				secupressAddFixStatusText( $row, "" );
 				secupressAddFixResult( $row, "" );
 			}
@@ -962,7 +963,6 @@ jQuery( document ).ready( function( $ ) {
 			// Add the fix result.
 			if ( "" !== extra.data.fix_msg ) {
 				secupressAddFixResult( $row, extra.data.fix_msg );
-				$row.find( ".secupress-fix-result-retryfix" ).show();
 			}
 
 			// Change the scan button text.
@@ -1024,10 +1024,18 @@ jQuery( document ).ready( function( $ ) {
 			* extra.manualFix: tell if the fix needs a manual fix.
 			* extra.data:      data returned by the ajax call.
 			*/
-			var bulk = extra.isBulk ? "bulk" : "";
+			var $row = $( "#" + extra.test ),
+				bulk = extra.isBulk ? "bulk" : "";
 
 			// Go for a new scan.
-			$( "#" + extra.test ).find( ".secupress-scanit" ).trigger( bulk + "scan.secupress" );
+			$row.find( ".secupress-scanit" ).trigger( bulk + "scan.secupress" );
+
+			// Display the "Fix it" or "Retry to fix" button.
+			if ( extra.data.class && ! extra.manualFix ) {
+				$row.addClass( "has-fix-status" ).removeClass( "no-fix-status" );
+			} else {
+				$row.addClass( "no-fix-status" ).removeClass( "has-fix-status" );
+			}
 		} );
 
 
@@ -1078,11 +1086,19 @@ jQuery( document ).ready( function( $ ) {
 			* extra.test:      test name.
 			* extra.data:      data returned by the ajax call.
 			*/
-			var title = SecuPressi18nScanner.notFixed,
+			var $row  = $( "#" + extra.test ),
+				title = SecuPressi18nScanner.notFixed,
 				type  = "error";
 
 			// Go for a new scan.
 			$( "#" + extra.test ).find( ".secupress-scanit" ).trigger( "scan.secupress" );
+
+			// Display the "Fix it" or "Retry to fix" button.
+			if ( extra.data.class ) {
+				$row.addClass( "has-fix-status" ).removeClass( "no-fix-status" );
+			} else {
+				$row.addClass( "no-fix-status" ).removeClass( "has-fix-status" );
+			}
 
 			// Success! (or not)
 			if ( "warning" === extra.data.class ) {
@@ -1132,21 +1148,17 @@ jQuery( document ).ready( function( $ ) {
 		} );
 
 
-		// Perform a scan on click.
-		$( "body" ).on( "click.secupress scan.secupress bulkscan.secupress", ".button-secupress-scan, .secupress-scanit", function( e ) {
-			var $this = $( this ),
-				href, test, $row, isBulk;
+		// Perform a scan on click ("Scan" button).
+		$( "body" ).on( "click.secupress scan.secupress bulkscan.secupress keyup", ".secupress-scanit", function( e ) {
+			var $this, href, test, $row, isBulk;
+
+			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
+				return false;
+			}
 
 			e.preventDefault();
 
-			if ( $this.hasClass( "button-secupress-scan" ) ) {
-				// It's the "One Click Scan" button.
-				$this.attr( { "disabled": "disabled", "aria-disabled": true } );
-				$( ".secupress-scanit" ).trigger( "bulkscan.secupress" );
-				secupressRunProgressBar( $this );
-				return;
-			}
-
+			$this  = $( this );
 			href   = $this.attr( "href" );
 			test   = secupressGetTestFromUrl( href );
 			$row   = $this.closest( ".secupress-item-" + test );
@@ -1156,20 +1168,34 @@ jQuery( document ).ready( function( $ ) {
 		} );
 
 
-		// Perform a fix on click.
-		$( "body" ).on( "click.secupress fix.secupress bulkfix.secupress", ".button-secupress-fix, .secupress-fixit", function( e ) {
-			var $this = $( this ),
-				href, test, $row, isBulk;
+		// Perform a scan on click ("One click scan" button).
+		$( "body" ).on( "click.secupress bulkscan.secupress keyup", ".button-secupress-scan", function( e ) {
+			var $this;
+
+			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
+				return false;
+			}
 
 			e.preventDefault();
 
-			// It's the "One Click Fix" button.
-			if ( $this.hasClass( "button-secupress-fix" ) ) {
-				secupressLaunchSeparatedBulkFix( $( ".secupress-fixit" ) );
-				secupressRunProgressBar( $this );
-				return;
+			$this = $( this );
+			$this.attr( { "disabled": "disabled", "aria-disabled": true } );
+			$( ".secupress-scanit" ).trigger( "bulkscan.secupress" );
+			secupressRunProgressBar( $this );
+		} );
+
+
+		// Perform a fix on click ("Fix it" button).
+		$( "body" ).on( "click.secupress fix.secupress bulkfix.secupress keyup", ".secupress-fixit", function( e ) {
+			var $this, href, test, $row, isBulk;
+
+			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
+				return false;
 			}
 
+			e.preventDefault();
+
+			$this  = $( this );
 			href   = $this.attr( "href" );
 			test   = secupressGetTestFromUrl( href );
 			$row   = $this.closest( ".secupress-item-" + test );
@@ -1179,13 +1205,38 @@ jQuery( document ).ready( function( $ ) {
 		} );
 
 
+		// Perform a fix on click ("Retry to fix" button).
+		$( "body" ).on( "click.secupress keyup", ".secupress-retry-fixit", function( e ) {
+			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
+				return false;
+			}
+
+			e.preventDefault();
+
+			$( this ).closest( ".secupress-item-all" ).find( ".secupress-fixit" ).trigger( "fix.secupress" );
+		} );
+
+
+		// Perform all fixes on click ("One click fix" button).
+		$( "body" ).on( "click.secupress bulkfix.secupress keyup", ".button-secupress-fix", function( e ) {
+			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
+				return false;
+			}
+
+			e.preventDefault();
+
+			secupressLaunchSeparatedBulkFix( $( ".secupress-fixit" ) );
+			secupressRunProgressBar( $( this ) );
+		} );
+
+
 		// Autoscans.
 		$( ".secupress-item-all.autoscan .secupress-scanit" ).trigger( "bulkscan.secupress" );
 
 
 		// One Click Scan auto.
 		if ( SecuPressi18nScanner.firstOneClickScan && secupressScansIsIdle() ) {
-			$( ".button-secupress-scan" ).trigger( "scan.secupress" );
+			$( ".button-secupress-scan" ).trigger( "bulkscan.secupress" );
 		}
 	} )(window, document, $);
 } );

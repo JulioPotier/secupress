@@ -36,6 +36,14 @@ function secupress_scanit( $test_name, $format_response = false, $for_current_si
 		/**
 		 * $response is an array that MUST contain "status" and MUST contain "msgs".
 		 */
+		// If the scan is good, remove fix result.
+		if ( 'good' === $response['status'] ) {
+			secupress_delete_site_transient( 'secupress_fix_' . $test_name );
+			$options = get_site_option( SECUPRESS_FIX_SLUG, array() );
+			$options = is_array( $options ) ? $options : array();
+			unset( $options[ $test_name ] );
+			update_site_option( SECUPRESS_FIX_SLUG, $options );
+		}
 		ob_end_clean();
 	}
 
@@ -43,7 +51,7 @@ function secupress_scanit( $test_name, $format_response = false, $for_current_si
 		$response = array(
 			'status'  => secupress_status( $response['status'] ),
 			'class'   => sanitize_key( $response['status'] ),
-			'message' => isset( $response['msgs'] ) ? secupress_format_message( $response['msgs'], $test_name ) : '',
+			'message' => isset( $response['msgs'] )    ? secupress_format_message( $response['msgs'], $test_name )    : '',
 			'fix_msg' => isset( $response['fix_msg'] ) ? secupress_format_message( $response['fix_msg'], $test_name ) : '',
 		);
 	}
