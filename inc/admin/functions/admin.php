@@ -59,6 +59,42 @@ function secupress_user_agent( $user_agent ) {
 
 
 /**
+ * Used for the "last 5 scans", formate each row.
+ *
+ * @since 1.0
+ *
+ * @param (array) $item         An item array containing "percent", "time" and "grade".
+ * @param (int)   $last_percent Percentage of the previous item. -1 for the first one.
+ *
+ * @return (string)
+ */
+function secupress_formate_latest_scans_list_item( $item, $last_percent = -1 ) {
+	$icon = 'right';
+
+	if ( $last_percent > -1 ) {
+		if ( $last_percent < $item['percent'] ) {
+			$icon = 'up';
+		} elseif ( $last_percent > $item['percent'] ) {
+			$icon = 'down';
+		}
+	}
+
+	return sprintf(
+		'<li>
+			<span class="secupress-latest-list-time timeago">%3$s</span>
+			<span class="secupress-latest-list-date">%4$s</span>
+			<strong class="secupress-latest-list-grade letter l%2$s">%2$s</strong>
+			<i class="dashicons mini dashicons-arrow-%1$s-alt2" aria-hidden="true"></i>
+		</li>',
+		$icon,
+		$item['grade'],
+		sprintf( __( '%s ago' ), human_time_diff( $item['time'] ) ),
+		date_i18n( _x( 'M dS, Y \a\t h:ia', 'Latest scans', 'secupress' ), $item['time'] )
+	);
+}
+
+
+/**
  * Return a <table> containing 2 strings displayed with the Diff_Renderer from WP Core.
  *
  * @since 1.0

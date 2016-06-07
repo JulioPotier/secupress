@@ -137,46 +137,30 @@ function __secupress_update_oneclick_scan_date_ajax_cb() {
 	secupress_check_user_capability();
 	secupress_check_admin_referer( 'secupress-update-oneclick-scan-date' );
 
-	$last_pc = -1;
-	$counts  = secupress_get_scanner_counts();
-	$time    = array(
-		'percent' => $counts['good'] * 100 / $counts['total'],
+	$items  = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
+	// Build the new item.
+	$counts = secupress_get_scanner_counts();
+	$item   = array(
+		'percent' => round( $counts['good'] * 100 / $counts['total'] ),
 		'grade'   => $counts['grade'],
 		'time'    => time(),
 	);
 
-	$times = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
-
-	if ( $times ) {
-		$last_pc = end( $times );
-		$last_pc = $last_pc['percent'];
+	// Get the previous percentage.
+	if ( $items ) {
+		$last_percent = end( $items );
+		$last_percent = $last_percent['percent'];
+	} else {
+		$last_percent = -1;
 	}
 
-	array_push( $times, $time );
-	// Limit to 5 results.
-	$times = array_slice( $times, -5, 5 );
+	// Add the new item and limit to 5 results.
+	array_push( $items, $item );
+	$items = array_slice( $items, -5, 5 );
+	update_site_option( SECUPRESS_SCAN_TIMES, $items );
 
-	update_site_option( SECUPRESS_SCAN_TIMES, $times );
-
-	$icon = 'right';
-
-	if ( $last_pc > -1 ) {
-		if ( $last_pc < $time['percent'] ) {
-			$icon = 'up';
-		} elseif ( $last_pc > $time['percent'] ) {
-			$icon = 'down';
-		}
-	}
-
-	$out = sprintf(
-		'<li class="hidden" data-percent="%1$d"><span class="dashicons mini dashicons-arrow-%2$s-alt2" aria-hidden="true"></span><strong>%3$s (%1$d %%)</strong> <span class="timeago">%4$s</span></li>',
-		round( $time['percent'] ),
-		$icon,
-		$time['grade'],
-		sprintf( __( '%s ago' ), human_time_diff( $time['time'] ) )
-	);
-
-	wp_send_json_success( $out );
+	// Send the formated new item.
+	wp_send_json_success( secupress_formate_latest_scans_list_item( $item, $last_percent ) );
 }
 
 

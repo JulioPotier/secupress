@@ -178,9 +178,9 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		}
 
 		if ( ! empty( $_GET['oneclick-scan'] ) && ! empty( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'first_oneclick-scan' ) && current_user_can( secupress_get_capability() ) ) {
-			$times = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
+			$items = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
 
-			if ( ! $times ) {
+			if ( ! $items ) {
 				$localize['firstOneClickScan'] = 1;
 			}
 			$_SERVER['REQUEST_URI'] = remove_query_arg( array( '_wpnonce', 'oneclick-scan' ) );
@@ -334,37 +334,15 @@ function __secupress_modules() {
  */
 function __secupress_scanners() {
 	$counts  = secupress_get_scanner_counts();
-	$times   = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
+	$items   = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
 	$reports = array();
-	$last_pc = -1;
 
-	if ( $times ) {
-		foreach ( $times as $time ) {
-			$icon = 'right';
+	if ( $items ) {
+		$last_percent = -1;
 
-			if ( $last_pc > -1 ) {
-				if ( $last_pc < $time['percent'] ) {
-					$icon = 'up';
-				} elseif ( $last_pc > $time['percent'] ) {
-					$icon = 'down';
-				}
-			}
-
-			$last_pc = $time['percent'];
-
-			$reports[] = sprintf(
-				'<li data-percent="%1$d">
-					<span class="secupress-latest-list-time timeago">%4$s</span>
-					<span class="secupress-latest-list-date">%5$s</span>
-					<strong class="secupress-latest-list-grade letter l%3$s">%3$s</strong>
-					<i class="dashicons mini dashicons-arrow-%2$s-alt2" aria-hidden="true"></i>
-				</li>',
-				$time['percent'],
-				$icon,
-				$time['grade'],
-				sprintf( __( '%s ago' ), human_time_diff( $time['time'] ) ),
-				date_i18n( _x( 'M dS, Y \a\t h:ia', 'Latest scans', 'secupress' ), $time['time'] )
-			);
+		foreach ( $items as $item ) {
+			$reports[]    = secupress_formate_latest_scans_list_item( $item, $last_percent );
+			$last_percent = $item['percent'];
 		}
 
 		$reports = array_reverse( $reports );
@@ -374,7 +352,7 @@ function __secupress_scanners() {
 
 		<?php secupress_admin_heading( __( 'Scanners', 'secupress' ) ); ?>
 		<div class="secupress-wrapper">
-			<div class="secupress-section-dark secupress-scanners-header<?php echo $times ? '' : ' secupress-not-scanned-yet'; ?>">
+			<div class="secupress-section-dark secupress-scanners-header<?php echo $reports ? '' : ' secupress-not-scanned-yet'; ?>">
 
 				<div class="secupress-heading secupress-flex secupress-flex-spaced secupress-wrap">
 					<p class="secupress-text-medium"><?php

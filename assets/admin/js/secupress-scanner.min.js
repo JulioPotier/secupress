@@ -146,6 +146,7 @@ jQuery( document ).ready( function( $ ) {
 		} );
 	}
 
+
 	function secupressSelectFallbackBigTab( data, $filters ) {
 		if ( data.bad ) {
 			$filters.find( ".secupress-big-tab-bad a" ).trigger( "click.secupress" );
@@ -157,7 +158,74 @@ jQuery( document ).ready( function( $ ) {
 	}
 
 
-	function secupressUpdateScore( data, chartEl ) {
+	/**
+	 * Disable one or more buttons.
+	 * - Add a "aria-disabled" attribute.
+	 * - If it's a link: add a "disabled" attribute. If it's a button or input: add a "disabled" attribute.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (object) $buttons jQuery object of one or more buttons.
+	 */
+	function secupressDisableButtons( $buttons ) {
+		$buttons.each( function() {
+			var $button  = $( this ),
+				nodeName = this.nodeName.toLowerCase();
+
+			if ( "button" === nodeName || "input" === nodeName ) {
+				$button.attr( { "disabled": "disabled", "aria-disabled": "true" } );
+			} else {
+				$button.addClass( "disabled" ).attr( "aria-disabled", "true" );
+			}
+		} );
+	}
+
+
+	/**
+	 * Enable one or more buttons.
+	 * - Remove the "aria-disabled" attribute.
+	 * - If it's a link: remove the "disabled" attribute. If it's a button or input: remove the "disabled" attribute.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (object) $buttons jQuery object of one or more buttons.
+	 */
+	function secupressEnableButtons( $buttons ) {
+		$buttons.each( function() {
+			var $button  = $( this ),
+				nodeName = this.nodeName.toLowerCase();
+
+			if ( "button" === nodeName || "input" === nodeName ) {
+				$button.removeAttr( "disabled aria-disabled" );
+			} else {
+				$button.removeClass( "disabled" ).removeAttr( "aria-disabled" );
+			}
+		} );
+	}
+
+
+	/**
+	 * Tell if a button is disabled.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (object) $button jQuery object of the button.
+	 *
+	 * @return (bool)
+	 */
+	function secupressIsButtonDisabled( $button ) {
+		var nodeName = $button.get( 0 ).nodeName.toLowerCase();
+
+		if ( "button" === nodeName || "input" === nodeName ) {
+			return $button.prop( "disabled" );
+		}
+
+		$button.hasClass( "disabled" );
+	}
+
+
+	// Print counters in the page.
+	function secupressPrintScore( data, chartEl ) {
 		var $filters, elID;
 
 		// Only if we're not in a sub-site.
@@ -172,7 +240,6 @@ jQuery( document ).ready( function( $ ) {
 		$( ".secupress-chart-container .letter" ).replaceWith( data.letter );
 		$( ".secupress-score-text" ).text( data.text );
 		$( ".secupress-scan-infos .secupress-score" ).html( data.subtext );
-		$( ".secupress-score .percent" ).text( data.percent + "%" );
 		$( "#wp-admin-bar-secupress" ).find( ".letter" ).text( data.grade );
 		$( "#toplevel_page_" + SecuPressi18nScanner.pluginSlug + "_scanners" ).find( ".update-count" ).text( data.bad ).parent().attr( "class", function( i, val ) {
 			return val.replace( /count-\d+/, "count-" + data.bad );
@@ -186,12 +253,16 @@ jQuery( document ).ready( function( $ ) {
 			SecuPressi18nChart.notscannedyet.value = data.notscannedyet;
 		}
 
-		if ( secupressChart[ elID ] ) {
+		if ( typeof secupressChart[ elID ] !== 'undefined' ) {
 			// The chart is initiated.
 			secupressChart[ elID ].segments[0].value = data.good;
 			secupressChart[ elID ].segments[1].value = data.bad;
 			secupressChart[ elID ].segments[2].value = data.warning;
-			secupressChart[ elID ].segments[3].value = data.notscannedyet;
+
+			if ( typeof secupressChart[ elID ].segments[3] !== 'undefined' ) {
+				secupressChart[ elID ].segments[3].value = data.notscannedyet;
+			}
+
 			secupressChart[ elID ].update();
 		}
 
@@ -230,6 +301,27 @@ jQuery( document ).ready( function( $ ) {
 		} else {
 			$( "#tweeterA" ).slideUp();
 		}
+	}
+
+	// Get counters and print them in the page.
+	function secupressPrintScoreFromAjax( chartEl ) {
+		var params;
+
+		if ( ! SecuPressi18nScanner.i18nNonce ) {
+			return;
+		}
+
+		params = {
+			"action":   "secupress-get-scan-counters",
+			"_wpnonce": SecuPressi18nScanner.i18nNonce
+		};
+
+		$.getJSON( ajaxurl, params )
+		.done( function( r ) {
+			if ( $.isPlainObject( r ) && r.success && r.data ) {
+				secupressPrintScore( r.data, chartEl );
+			}
+		} );
 	}
 
 
@@ -682,7 +774,7 @@ jQuery( document ).ready( function( $ ) {
 
 		// Update the date of the last One Click Scan.
 		function secupressUpdateDate( data ) {
-			var $scoreResultsUl = $( "#secupress-latest" ).find( "ul" );
+			var $scoreResultsUl = $( "#secupress-latest" ).find( ".secupress-reports-list" );
 
 			$scoreResultsUl.children( ".secupress-empty" ).remove();
 
@@ -1010,23 +1102,8 @@ jQuery( document ).ready( function( $ ) {
 			var $button = $( '.button-secupress-scan' ).last(),
 				params;
 
-			// Update counters.
-			if ( SecuPressi18nScanner.i18nNonce ) {
-				params = {
-					"action":   "secupress-get-scan-counters",
-					"_wpnonce": SecuPressi18nScanner.i18nNonce
-				};
-
-				$.getJSON( ajaxurl, params )
-				.done( function( r ) {
-					if ( $.isPlainObject( r ) && r.success && r.data ) {
-						secupressUpdateScore( r.data, secupressChartEl );
-					}
-				} );
-			}
-
 			// If it's a One-click Scan, keep track of the date.
-			if ( $button.attr( "disabled" ) ) {
+			if ( secupressIsButtonDisabled( $button ) ) {
 				params = {
 					"action":   "secupress-update-oneclick-scan-date",
 					"_wpnonce": $button.data( "nonce" )
@@ -1039,8 +1116,13 @@ jQuery( document ).ready( function( $ ) {
 					}
 				} )
 				.always( function() {
-					$( '.button-secupress-scan' ).removeAttr( "disabled aria-disabled" ).removeClass( "disabled" );
+					secupressEnableButtons( $( '.button-secupress-scan' ) );
+					// Get counters and print them in the page.
+					secupressPrintScoreFromAjax( secupressChartEl );
 				} );
+			} else {
+				// Get counters and print them in the page.
+				secupressPrintScoreFromAjax( secupressChartEl );
 			}
 		} );
 
@@ -1219,10 +1301,15 @@ jQuery( document ).ready( function( $ ) {
 				return false;
 			}
 
+			$this = $( this );
+
+			if ( secupressIsButtonDisabled( $this ) ) {
+				return;
+			}
+
 			e.preventDefault();
 
-			$this = $( this );
-			$this.attr( { "disabled": "disabled", "aria-disabled": true } );
+			secupressDisableButtons( $( '.button-secupress-scan' ) );;
 			$( ".secupress-scanit" ).trigger( "bulkscan.secupress" );
 			secupressRunProgressBar( $this );
 		} );
@@ -1279,7 +1366,7 @@ jQuery( document ).ready( function( $ ) {
 
 		// One Click Scan auto.
 		if ( SecuPressi18nScanner.firstOneClickScan && secupressScansIsIdle() ) {
-			$( ".button-secupress-scan" ).trigger( "bulkscan.secupress" );
+			$( ".button-secupress-scan" ).last().trigger( "bulkscan.secupress" );
 		}
 	} )( window, document, $ );
 } );
