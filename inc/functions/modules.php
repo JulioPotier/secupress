@@ -17,7 +17,7 @@ function secupress_get_modules() {
 			'icon'        => 'user-login',
 			'summaries'   => array(
 				'small'  => __( 'Protect your users', 'secupress' ),
-				'normal' => __( 'You will find here the best and easy ways to be sure that users\' datas will be protected, and their account not compromised.', 'secupress' ),
+				'normal' => __( 'You will find here the best and easy ways to be sure that users\' data will be protected, and their account not compromised.', 'secupress' ),
 			),
 			'description' => array(
 				__( 'Your users &ndash; and every account on your website &ndash; want to be sure that their data will be protected, and their account not compromised. This is why you have to take care of them and protect them.', 'secupress' ),
@@ -30,7 +30,7 @@ function secupress_get_modules() {
 			'icon'        => 'themes-plugins',
 			'summaries'   => array(
 				'small'  => __( 'Check your plugins &amp; themes', 'secupress' ),
-				'normal' => __( 'Installation, activation, deactivation, upgrade and deletion of themes and plugins can be disallowed when you don\'t need it.', 'secupress' ),
+				'normal' => __( 'Installation, activation, deactivation and deletion of themes and plugins can be disallowed when you don\'t need it.', 'secupress' ),
 			),
 			'description' => array(
 				__( 'When your website is online, there is no reason to let someone play with your plugins. Installation, activation, deactivation, upgrade and deletion can be disallowed when you don\'t need it.', 'secupress' ),
@@ -46,7 +46,7 @@ function secupress_get_modules() {
 				'normal' => __( 'WordPress can be tweak by so many ways. But are you using the right ones. We will help', 'secupress' ),
 			),
 			'description' => array(
-				__( 'WordPress can be tweak by so many ways. But are you using the right ones. We will help', 'secupress' ),
+				__( 'WordPress can be tweak by so many ways. But are you using the right ones.', 'secupress' ),
 			),
 			'mark_as_pro' => false,
 		),

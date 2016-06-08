@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 		</div>
 		<div class="secupress-col-2-3 secupress-col-text">
 			<p class="secupress-text-medium"><?php esc_html_e( 'Securize your website deeper thanks to our modules', 'secupress' ); ?></p>
-			<p><?php esc_html_e( 'Anti-Malware, Firewall, or Anti-Spam: add features, schedule scans and  save your datas.', 'secupress' ); ?></p>
+			<p><?php esc_html_e( 'Anti-Malware, Firewall, or Anti-Spam: add features, schedule scans and save your data.', 'secupress' ); ?></p>
 		</div>
 	</div>
 	<?php if ( ! secupress_is_pro() ) { ?>

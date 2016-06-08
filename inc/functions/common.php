@@ -558,19 +558,19 @@ function secupress_get_current_url( $mode = 'base' ) {
  * @return (mixed) The stored data or null.
  */
 function secupress_cache_data( $key ) {
-	static $datas = array();
+	static $data = array();
 
 	$func_get_args = func_get_args();
 
 	if ( array_key_exists( 1, $func_get_args ) ) {
 		if ( null === $func_get_args[1] ) {
-			unset( $datas[ $key ] );
+			unset( $data[ $key ] );
 		} else {
-			$datas[ $key ] = $func_get_args[1];
+			$data[ $key ] = $func_get_args[1];
 		}
 	}
 
-	return isset( $datas[ $key ] ) ? $datas[ $key ] : null;
+	return isset( $data[ $key ] ) ? $data[ $key ] : null;
 }
 
 
