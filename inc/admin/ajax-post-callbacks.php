@@ -16,13 +16,13 @@ add_action( 'wp_ajax_secupress_scanner',    '__secupress_scanit_ajax_post_cb' );
  * @since 1.0
  */
 function __secupress_scanit_ajax_post_cb() {
-	if ( empty( $_GET['test'] ) ) { // WPCS: CSRF ok.
+	if ( empty( $_GET['test'] ) ) {
 		secupress_admin_die();
 	}
 
-	$test_name        = esc_attr( $_GET['test'] ); // WPCS: CSRF ok.
-	$for_current_site = ! empty( $_GET['for-current-site'] ); // WPCS: CSRF ok.
-	$site_id          = $for_current_site && ! empty( $_GET['site'] ) ? '-' . absint( $_GET['site'] ) : ''; // WPCS: CSRF ok.
+	$test_name        = esc_attr( $_GET['test'] );
+	$for_current_site = ! empty( $_GET['for-current-site'] );
+	$site_id          = $for_current_site && ! empty( $_GET['site'] ) ? '-' . absint( $_GET['site'] ) : '';
 
 	secupress_check_user_capability( $for_current_site );
 	secupress_check_admin_referer( 'secupress_scanner_' . $test_name . $site_id );
@@ -45,13 +45,13 @@ add_action( 'wp_ajax_secupress_fixit',    '__secupress_fixit_ajax_post_cb' );
  * @since 1.0
  */
 function __secupress_fixit_ajax_post_cb() {
-	if ( empty( $_GET['test'] ) ) { // WPCS: CSRF ok.
+	if ( empty( $_GET['test'] ) ) {
 		secupress_admin_die();
 	}
 
-	$test_name        = esc_attr( $_GET['test'] ); // WPCS: CSRF ok.
-	$for_current_site = ! empty( $_GET['for-current-site'] ); // WPCS: CSRF ok.
-	$site_id          = $for_current_site && ! empty( $_GET['site'] ) ? '-' . absint( $_GET['site'] ) : ''; // WPCS: CSRF ok.
+	$test_name        = esc_attr( $_GET['test'] );
+	$for_current_site = ! empty( $_GET['for-current-site'] );
+	$site_id          = $for_current_site && ! empty( $_GET['site'] ) ? '-' . absint( $_GET['site'] ) : '';
 
 	secupress_check_user_capability( $for_current_site );
 	secupress_check_admin_referer( 'secupress_fixit_' . $test_name . $site_id );

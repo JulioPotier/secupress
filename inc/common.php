@@ -16,7 +16,7 @@ function secupress_check_ban_ips() {
 	// If we got banned ips.
 	if ( $ban_ips && is_array( $ban_ips ) ) {
 		// The link to be unlocked?
-		if ( ! empty( $_GET['action'] ) && 'secupress_self-unban-ip' === $_GET['action'] ) { // WPCS: CSRF ok.
+		if ( ! empty( $_GET['action'] ) && 'secupress_self-unban-ip' === $_GET['action'] ) {
 			$ip     = secupress_get_ip();
 			$result = ! empty( $_GET['_wpnonce'] ) ? wp_verify_nonce( $_GET['_wpnonce'], 'secupress_self-unban-ip-' . $ip ) : false;
 

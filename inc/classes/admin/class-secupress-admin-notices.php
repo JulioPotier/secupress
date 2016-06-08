@@ -359,7 +359,7 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	public static function _admin_dismiss() {
-		if ( empty( $_GET['notice_id'] ) ) { // WPCS: CSRF ok.
+		if ( empty( $_GET['notice_id'] ) ) {
 			secupress_admin_die();
 		}
 
