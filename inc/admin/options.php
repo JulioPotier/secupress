@@ -34,23 +34,42 @@ function __secupress_global_settings_callback( $value ) {
 	// License validation.
 	$value['consumer_email'] = ! empty( $value['consumer_email'] ) ? is_email( $value['consumer_email'] )          : '';
 	$value['consumer_key']   = ! empty( $value['consumer_key'] )   ? sanitize_text_field( $value['consumer_key'] ) : '';
+	$value['api_key']        = ! empty( $value['api_key'] )        ? sanitize_text_field( $value['api_key'] )      : '';
 
-	if ( $value['consumer_email'] && $value['consumer_key'] ) {
-		$response = wp_remote_post( SECUPRESS_WEB_DEMO . 'valid_key.php',
+	if ( $value['consumer_email'] ) {
+		$response = wp_remote_post( SECUPRESS_WEB_DEMO . 'key-api/1.0/',
 			array(
 				'timeout' => 10,
 				'body'    => array(
 					'data' => array(
-						'user_email' => $value['consumer_email'],
-						'user_key'   => $value['consumer_key'],
-						'action'     => 'create_free_licence',
+						'sp_action'   => 'get_api_key',
+						'user_email'  => $value['consumer_email'],
+						'user_key'    => $value['consumer_key'],
+						'plugin_name' => ! empty( $value['wl_plugin_name'] ) ? $value['wl_plugin_name'] : SECUPRESS_PLUGIN_NAME,
 					),
 				),
 			)
 		);
 
 		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
-			$value['consumer_key'] = sanitize_text_field( wp_remote_retrieve_body( $response ) );
+			$body = wp_remote_retrieve_body( $response );
+			$body = @json_decode( $body );
+
+			if ( ! is_object( $body ) ) {
+				// Error ////.
+			} elseif ( empty( $body->success ) ) {
+				// Error ////.
+			} elseif ( empty( $body->data ) || ! is_object( $body->data ) || empty( $body->data->api_key ) ) {
+				// Error ////.
+			} else {
+				$value['api_key'] = sanitize_text_field( $body->data->api_key );
+
+				if ( ! empty( $body->data->secupress_key ) ) {
+					$value['consumer_key'] = sanitize_text_field( $body->data->secupress_key );
+				}
+			}
+		} else {
+			// Error ////.
 		}
 	}
 

@@ -1,7 +1,7 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
-add_filter( 'http_request_args', '__secupress_add_own_ua', 10, 3 );
+add_filter( 'http_request_args', '__secupress_add_own_ua', 10, 2 );
 /**
  * Force our user agent header when we hit our urls
  *
