@@ -49,7 +49,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 *
 	 * @var (string)
 	 */
-	const DOC_URL = 'http://doc.secupress.me/';
+	const DOC_URL = 'http://docs.secupress.me/';
 
 	/**
 	 * Filled when fixes need manual actions.
