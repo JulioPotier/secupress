@@ -9,6 +9,7 @@
 
 	<exclude-pattern>*.js</exclude-pattern>
 	<exclude-pattern>*/secupress-free/inc/modules/users-login/plugins/inc/php/base32.php</exclude-pattern>
+	<exclude-pattern>*/secupress-free/inc/admin/functions/wp-updates-plugin.php</exclude-pattern>
 
 	<rule ref="WordPress">
 		<exclude name="Generic.PHP.NoSilencedErrors.Discouraged"/>

@@ -157,10 +157,10 @@ function secupress_init() {
 		require( SECUPRESS_ADMIN_PATH . 'functions/db.php' );
 		require( SECUPRESS_ADMIN_PATH . 'functions/backup.php' );
 
-		// Temporary Updates when not on repo yet
+		// Temporary Updates when not on repo yet.
 		require( SECUPRESS_ADMIN_PATH . 'functions/wp-updates-plugin.php' );
 		new WPUpdatesPluginUpdater_spfree( 'http://wp-updates.com/api/2/plugin', plugin_basename( __FILE__ ) );
-		
+
 		// Hooks.
 		require( SECUPRESS_ADMIN_PATH . 'options.php' );
 		require( SECUPRESS_ADMIN_PATH . 'settings.php' );
