@@ -1259,7 +1259,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			'post_status'    => $this->criticities,
 			'posts_per_page' => -1,
 			'orderby'        => 'date menu_order',
-			'order'          => 'ASC',
+			'order'          => 'DESC',
 		), $args );
 	}
 
