@@ -907,6 +907,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			'fields'         => 'ids',
 			'offset'         => $this->get_logs_limit(),
 			'posts_per_page' => 100000, // If -1, 'offset' won't work. Any large number does the trick.
+			'order'          => 'DESC',
 		) );
 
 		if ( $logs ) {
