@@ -988,6 +988,10 @@ label.secupress-setting-row-title {
 	width: 1125px; /* 1240 */
 	padding-top: 20px;
 }
+.toplevel_page_secupress_scanners .secupress-notice {
+	width: 1125px;
+	max-width: 100%;
+}
 
 p.description {
 	font-weight: 400;

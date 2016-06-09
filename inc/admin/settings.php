@@ -370,7 +370,7 @@ function __secupress_scanners() {
 						</a>
 					</p>
 
-					<div id="secupress-more-info" class="secupress-full-wide secupress-counter">
+					<div id="secupress-more-info" class="secupress-full-wide secupress-counter hide-if-js">
 						<div class="secupress-flex secupress-flex-top">
 							<div class="secupress-col-1-3">
 								<div class="secupress-blob secupress-counter-put">
