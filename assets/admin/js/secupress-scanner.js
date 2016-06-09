@@ -623,6 +623,7 @@ jQuery( document ).ready( function( $ ) {
 
 		// Add a scan result.
 		function secupressAddScanResult( $row, message ) {
+			message = message ? SecuPressi18nScanner.scanResultLabel + message : '';
 			$row.find( ".secupress-scan-message" ).html( message );
 		}
 
@@ -652,6 +653,7 @@ jQuery( document ).ready( function( $ ) {
 
 		// Add a fix result.
 		function secupressAddFixResult( $row, message ) {
+			message = message ? SecuPressi18nScanner.fixResultLabel + message : '';
 			$row.find( ".secupress-fix-result-message" ).html( message );
 		}
 
