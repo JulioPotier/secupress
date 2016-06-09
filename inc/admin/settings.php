@@ -490,7 +490,7 @@ function __secupress_scanners() {
 										</span>
 									</button>
 
-									<button class="secupress-button-primary button-secupress-fix" type="button">
+									<button class="secupress-button secupress-button-primary button-secupress-fix" type="button">
 										<span class="icon" aria-hidden="true">
 											<i class="icon-shield"></i>
 										</span>

@@ -443,6 +443,9 @@ a + .secupress-row-actions {
 		transform: rotateY(360deg);
 	}
 }
+[id="secupress-scan"] .secupress-actions-line .secupress-button {
+	letter-spacing: 1px;
+}
 
 .secupress-scan-result ul,
 .secupress-fix-result ul {
