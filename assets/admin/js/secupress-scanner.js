@@ -286,7 +286,11 @@ jQuery( document ).ready( function( $ ) {
 
 		// Show/Hide the "Action needed" tab.
 		if ( data.hasaction ) {
-			$filters.children( ".secupress-big-tab-hasaction" ).removeClass( "hidden" ).removeAttr( "aria-hidden" ).children( "a" ).trigger( "click.secupress" );
+			$filters.children( ".secupress-big-tab-hasaction" ).removeClass( "hidden" ).removeAttr( "aria-hidden" );
+			// Switch to this tab only if it's a bulk action.
+			if ( data.isBulk ) {
+				$filters.find( ".secupress-big-tab-hasaction a" ).trigger( "click.secupress" );
+			}
 		} else {
 			if ( $filters.children( ".secupress-big-tab-hasaction" ).children( "a" ).hasClass( "secupress-current" ) ) {
 				secupressSelectFallbackBigTab( data, $filters );
@@ -304,7 +308,7 @@ jQuery( document ).ready( function( $ ) {
 	}
 
 	// Get counters and print them in the page.
-	function secupressPrintScoreFromAjax( chartEl ) {
+	function secupressPrintScoreFromAjax( chartEl, isBulk ) {
 		var params;
 
 		if ( ! SecuPressi18nScanner.i18nNonce ) {
@@ -319,6 +323,7 @@ jQuery( document ).ready( function( $ ) {
 		$.getJSON( ajaxurl, params )
 		.done( function( r ) {
 			if ( $.isPlainObject( r ) && r.success && r.data ) {
+				r.data.isBulk = isBulk;
 				secupressPrintScore( r.data, chartEl );
 			}
 		} );
@@ -1118,11 +1123,11 @@ jQuery( document ).ready( function( $ ) {
 				.always( function() {
 					secupressEnableButtons( $( '.button-secupress-scan' ) );
 					// Get counters and print them in the page.
-					secupressPrintScoreFromAjax( secupressChartEl );
+					secupressPrintScoreFromAjax( secupressChartEl, extra.isBulk );
 				} );
 			} else {
 				// Get counters and print them in the page.
-				secupressPrintScoreFromAjax( secupressChartEl );
+				secupressPrintScoreFromAjax( secupressChartEl, extra.isBulk );
 			}
 		} );
 
@@ -1309,7 +1314,7 @@ jQuery( document ).ready( function( $ ) {
 
 			e.preventDefault();
 
-			secupressDisableButtons( $( '.button-secupress-scan' ) );;
+			secupressDisableButtons( $( '.button-secupress-scan' ) );
 			$( ".secupress-scanit" ).trigger( "bulkscan.secupress" );
 			secupressRunProgressBar( $this );
 		} );
