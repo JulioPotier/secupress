@@ -411,6 +411,12 @@ a + .secupress-row-actions {
 .secupress-result-list {
 	margin: 0;
 }
+.secupress-item-all .secupress-button-mini.secupress-button-mini .icon {
+	margin: 0 2px 0 -3px;
+}
+.secupress-item-all .secupress-button-mini.secupress-button-mini .icon-shield {
+	vertical-align: -1.25px;
+}
 
 /* Scanning & Fixing animations */
 
