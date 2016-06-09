@@ -326,9 +326,13 @@ function secupress_warning_no_api_key() {
 		return;
 	}
 	?>
-	<div class="secupress-section-gray-dark secupress-notice mini secupress-flex">
-		<div class="secupress-col-1-4 secupress-col-icon">
-			<i class="icon-secupress-simple" aria-hidden="true"></i>
+	<div class="secupress-section-dark secupress-notice mini secupress-flex">
+		<div class="secupress-col-1-4 secupress-col-logo mini">
+			<div class="secupress-logo-block">
+				<div class="secupress-lb-logo">
+					<?php echo secupress_get_logo( array( 'width' => '46' ) ); ?>
+				</div>
+			</div>
 		</div>
 		<div class="secupress-col-2-4 secupress-col-text">
 			<p class="secupress-text-medium"><?php esc_html_e( 'Go further to get more security features!', 'secupress' ); ?></p>
