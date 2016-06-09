@@ -580,7 +580,7 @@ a + .secupress-row-actions {
 [id="secupress-tests"] .secupress-item-all {
 	position: relative;
 	padding-left: 10px;
-	margin: 1.5em 0;
+	margin: 2em 0;
 	border: 1px solid #ECF0F1;
 	background: #FFF;
 	border-radius: 3px;
@@ -613,6 +613,7 @@ a + .secupress-row-actions {
 }
 .secupress-item-title {
 	font-size: 16px;
+	font-weight: 600;
 	margin: 5px 0 0 0;
 }
 
@@ -673,6 +674,9 @@ a + .secupress-row-actions {
 }
 .secupress-fix-result-actions {
 	padding: 8px 15px;
+}
+.secupress-fix-result-actions .secupress-button {
+	text-transform: none;
 }
 
 /* If status is good */
