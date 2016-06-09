@@ -519,7 +519,7 @@ function __secupress_scanners() {
 						</div><!-- .secupress-flex -->
 					</div><!-- .secupress-tab-content -->
 
-					<div id="secupress-latest" class="secupress-tab-content" role="tabpanel" aria-labelledby="secupress-l-latest">
+					<div id="secupress-latest" class="secupress-tab-content hide-if-js" role="tabpanel" aria-labelledby="secupress-l-latest">
 						<div class="secupress-flex secupress-flex-top">
 							<div class="secupress-latest-chart">
 								<p class="secupress-text-medium">
@@ -575,7 +575,7 @@ function __secupress_scanners() {
 						</div><!-- .secupress-flex -->
 					</div><!-- .secupress-tab-content -->
 
-					<div id="secupress-schedule" class="secupress-tab-content secupress-text-center" role="tabpanel" aria-labelledby="secupress-l-schedule">
+					<div id="secupress-schedule" class="secupress-tab-content secupress-text-center hide-if-js" role="tabpanel" aria-labelledby="secupress-l-schedule">
 						<p class="secupress-text-medium">
 							<?php esc_html_e( 'Schedule your security analysis', 'secupress' ); ?>
 						</p>
