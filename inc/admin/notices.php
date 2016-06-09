@@ -269,7 +269,7 @@ function secupress_warning_no_oneclick_scan_yet() {
 		<div class="secupress-col-1-4 secupress-col-logo secupress-text-center">
 			<div class="secupress-logo-block">
 				<div class="secupress-lb-logo">
-					<?php echo secupress_get_logo( array( 'width' => '126' ) ); ?>
+					<?php echo secupress_get_logo( array( 'width' => '84' ) ); ?>
 				</div>
 			</div>
 		</div>
