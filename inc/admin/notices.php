@@ -320,6 +320,7 @@ function secupress_warning_no_api_key() {
 	}
 
 	$times = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
+	$referer = urlencode( esc_url_raw( secupress_get_current_url( 'raw' ) ) );
 
 	// Don't display the API key banner yet, wait the first OCS.
 	if ( secupress_get_consumer_email() || ! $times ) {
