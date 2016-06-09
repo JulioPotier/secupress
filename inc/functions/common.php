@@ -558,19 +558,19 @@ function secupress_get_current_url( $mode = 'base' ) {
  * @return (mixed) The stored data or null.
  */
 function secupress_cache_data( $key ) {
-	static $datas = array();
+	static $data = array();
 
 	$func_get_args = func_get_args();
 
 	if ( array_key_exists( 1, $func_get_args ) ) {
 		if ( null === $func_get_args[1] ) {
-			unset( $datas[ $key ] );
+			unset( $data[ $key ] );
 		} else {
-			$datas[ $key ] = $func_get_args[1];
+			$data[ $key ] = $func_get_args[1];
 		}
 	}
 
-	return isset( $datas[ $key ] ) ? $datas[ $key ] : null;
+	return isset( $data[ $key ] ) ? $data[ $key ] : null;
 }
 
 
@@ -742,9 +742,18 @@ function secupress_feature_is_pro( $feature ) {
 		'import-export_import_settings'          => 1,
 		'geoip-system_type'                      => 1,
 		'bruteforce_activated'                   => 1,
-		'schedules_backups'                      => 1,
-		'schedules_scans'                        => 1,
-		'schedules_filemon'                      => 1,
+		'schedules-backups_type'                 => 1,
+		'schedules-backups_periodicity'          => 1,
+		'schedules-backups_email'                => 1,
+		'schedules-backups_scheduled'            => 1,
+		'schedules-scan_type'                    => 1,
+		'schedules-scan_periodicity'             => 1,
+		'schedules-scan_email'                   => 1,
+		'schedules-scan_scheduled'               => 1,
+		'schedules-file-monitoring_type'         => 1,
+		'schedules-file-monitoring_periodicity'  => 1,
+		'schedules-file-monitoring_email'        => 1,
+		'schedules-file-monitoring_scheduled'    => 1,
 		// Field values.
 		'notification-types_types|sms'           => 1,
 		'notification-types_types|push'          => 1,
@@ -762,9 +771,15 @@ function secupress_feature_is_pro( $feature ) {
 
 
 /**
- * Tell if a user is affected by its role for the asked module
+ * Tell if a user is affected by its role for the asked module.
  *
- * @return (-1)/(bool) -1 = every role is affected, true = the user's role is affected, false = the user's role isn't affected.
+ * @since 1.0
+ *
+ * @param (string) $module    A module.
+ * @param (string) $submodule A sub-module.
+ * @param (object) $user      A WP_User object.
+ *
+ * @return (-1|bool) -1 = every role is affected, true = the user's role is affected, false = the user's role isn't affected.
  */
 function secupress_is_affected_role( $module, $submodule, $user ) {
 	$roles = secupress_get_module_option( $submodule . '_affected_role', array(), $module );
@@ -794,13 +809,15 @@ function secupress_modify_userid_for_nonces( $uid ) {
 }
 
 /**
- * Tell if the param $user is a real user from your installation
+ * Tell if the param $user is a real user from your installation.
  *
- * @param variant $user The object to be tested to be a valid user
  * @since 1.0
- * @return boolean
  * @author Julio Potier
- **/
+ *
+ * @param variant $user The object to be tested to be a valid user.
+ *
+ * @return (bool)
+ */
 function secupress_is_user( $user ) {
 	return is_a( $user, 'WP_User' ) && user_can( $user, 'exist' );
 }

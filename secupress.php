@@ -38,7 +38,7 @@ define( 'SECUPRESS_BAN_IP'                , 'secupress_ban_ip' );
 define( 'SECUPRESS_RATE_URL'              , 'https://wordpress.org/support/view/plugin-reviews/secupress?filter=5#topic' );
 define( 'SECUPRESS_REPO_URL'              , 'https://wordpress.org/plugins/secupress/' );
 define( 'SECUPRESS_WEB_MAIN'              , 'http://secupress.me/' );
-define( 'SECUPRESS_WEB_DEMO'              , home_url( '/' ) ); // ////.
+define( 'SECUPRESS_WEB_DEMO'              , 'http://dave.secupress.me/' ); // ////.
 define( 'SECUPRESS_BOT_URL'               , 'http://bot.secupress.me' );
 define( 'SECUPRESS_WEB_VALID'             , 'http://support.secupress.me/' );
 define( 'SECUPRESS_FILE'                  , __FILE__ );
@@ -156,6 +156,10 @@ function secupress_init() {
 		require( SECUPRESS_ADMIN_PATH . 'functions/notices.php' );
 		require( SECUPRESS_ADMIN_PATH . 'functions/db.php' );
 		require( SECUPRESS_ADMIN_PATH . 'functions/backup.php' );
+
+		// Temporary Updates when not on repo yet.
+		require( SECUPRESS_ADMIN_PATH . 'functions/wp-updates-plugin.php' );
+		new WPUpdatesPluginUpdater_spfree( 'http://wp-updates.com/api/2/plugin', plugin_basename( __FILE__ ) );
 
 		// Hooks.
 		require( SECUPRESS_ADMIN_PATH . 'options.php' );

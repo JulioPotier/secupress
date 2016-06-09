@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 		</div>
 		<div class="secupress-col-2-3 secupress-col-text">
 			<p class="secupress-text-medium"><?php esc_html_e( 'Securize your website deeper thanks to our modules', 'secupress' ); ?></p>
-			<p><?php esc_html_e( 'Anti-Malware, Firewall, or Anti-Spam: add features, schedule scans and  save your datas.', 'secupress' ); ?></p>
+			<p><?php esc_html_e( 'Anti-Malware, Firewall, or Anti-Spam: add features, schedule scans and save your data.', 'secupress' ); ?></p>
 		</div>
 	</div>
 	<?php if ( ! secupress_is_pro() ) { ?>
@@ -46,7 +46,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 					<a href="<?php echo esc_url( secupress_admin_url( 'modules', $slug ) ); ?>" class="secupress-button-primary">
 						<?php esc_html_e( 'View options', 'secupress' ); ?>
 					</a>
-					<?php echo ( isset( $mod['mark_as_pro'] ) && $mod['mark_as_pro'] === true ? $pro_msg : '' ); ?>
+					<?php echo ( isset( $mod['mark_as_pro'] ) && true === $mod['mark_as_pro'] ? $pro_msg : '' ); ?>
 				</p>
 				<i class="icon-<?php echo $mod['icon']; ?>" aria-hidden="true"></i>
 			</div>

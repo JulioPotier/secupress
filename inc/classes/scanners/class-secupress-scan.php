@@ -45,6 +45,13 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	const VERSION = '1.0';
 
 	/**
+	 * Generic documentation URL. Sub-classes must overwrite it.
+	 *
+	 * @var (string)
+	 */
+	const DOC_URL = 'http://docs.secupress.me/';
+
+	/**
 	 * Filled when fixes need manual actions.
 	 *
 	 * @var (array)

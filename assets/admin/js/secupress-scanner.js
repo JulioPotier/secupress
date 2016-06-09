@@ -17,77 +17,135 @@ var SecuPress = {
 
 
 jQuery( document ).ready( function( $ ) {
-
-	// !Chart and score ============================================================================
 	var secupressChart = [],
 		secupressChartEl = document.getElementById( "status_chart" ),
-		secupressChartData,
 		secupressOneClickScanProgress = 0;
 
-	function secupressDrawMeAChart( chartEl ) {
-		if ( chartEl && window.Chart ) {
-			var elID = $( chartEl ).attr( 'id' );
 
-			secupressChartData = [
-				{
-					value:     SecuPressi18nChart.good.value,
-					color:     "#26B3A9",
-					highlight: "#2BCDC1",
-					label:     SecuPressi18nChart.good.text,
-					status:    "good",
-				},
-				{
-					value:     SecuPressi18nChart.bad.value,
-					color:     "#CB234F",
-					highlight: "#F2295E",
-					label:     SecuPressi18nChart.bad.text,
-					status:    "bad",
-				},
-				{
-					value:     SecuPressi18nChart.warning.value,
-					color:     "#F7AB13",
-					highlight: "#F1C40F",
-					label:     SecuPressi18nChart.warning.text,
-					status:    "warning",
-				},
-				{
-					value:     SecuPressi18nChart.notscannedyet.value,
-					color:     "#5A626F",
-					highlight: "#888888",
-					label:     SecuPressi18nChart.notscannedyet.text,
-					status:    "notscannedyet",
-				},
-			];
-
-			secupressChart[ elID ] = new Chart( chartEl.getContext( "2d" ) ).Doughnut( secupressChartData, {
-				animationEasing:       "easeInOutQuart",
-				showTooltips:          true,
-				segmentShowStroke:     false,
-				percentageInnerCutout: 90,
-				tooltipEvents:         ["mousemove"], // active "hover" effect...
-				customTooltips:        function() {} //... but remove tooltips.
-			} );
-
-			// Trigger a filter action on Chart Segment click.
-			chartEl.onclick = function( e ) {
-				var activePoints = secupressChart[ elID ].getSegmentsAtEvent( e );
-				if ( activePoints[0] ) {
-					$( "#secupress-type-filters" ).find( ".secupress-big-tab-" + activePoints[0].status ).find( "a" ).trigger( "click.secupress" );
+	// !Big network: set some data. ================================================================
+	( function( w, d, $, undefined ) {
+		function secupressSetBigData( href, $button, $spinner, $percent ) {
+			$.getJSON( href )
+			.done( function( r ) {
+				if ( ! r.success ) {
+					$spinner.replaceWith( '<span class="secupress-error-notif">' + SecuPressi18nScanner.error + "</span>" );
+					$percent.remove();
+					return;
 				}
-			};
+				if ( r.data ) {
+					$percent.text( r.data + "%" );
 
-			// Trigger a filter action on Legend item click.
-			$( ".secupress-chart-legend" ).find( "li" ).on( "click.secupress", function() {
-				$( "#secupress-type-filters" ).find( ".secupress-big-tab-" + $( this ).data( "status" ) ).find( "a" ).trigger( "click.secupress" );
+					if ( 100 !== r.data ) {
+						// We need more data.
+						secupressSetBigData( href, $button, $spinner, $percent );
+						return;
+					}
+				}
+				// Finish.
+				$button.closest( ".secupress-notice" ).fadeTo( 100 , 0, function() {
+					$( this ).slideUp( 100, function() {
+						$( this ).remove();
+					} );
+				} );
+			} )
+			.fail( function() {
+				$spinner.replaceWith( '<span class="secupress-error-notif">' + SecuPressi18nScanner.error + "</span>" );
+				$percent.remove();
 			} );
 		}
+
+
+		$( ".secupress-centralize-blog-options" ).on( "click.secupress keyup", function( e ) {
+			var $this, href, $spinner, $percent;
+
+			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
+				return false;
+			}
+
+			$this    = $( this );
+			href     = $this.attr( "href" ).replace( "admin-post.php", "admin-ajax.php" );
+			$spinner = $( '<img src="' + SecuPressi18nScanner.spinnerUrl + '" alt="" class="secupress-spinner" />' );
+			$percent = $( '<span class="secupress-ajax-percent">0%</span>' );
+
+			if ( $this.hasClass( "running" ) ) {
+				return false;
+			}
+
+			$this.addClass( "running" ).parent().append( $spinner ).append( $percent ).find( ".secupress-error-notif" ).remove();
+
+			e.preventDefault();
+
+			secupressSetBigData( href, $this, $spinner, $percent );
+		} );
+	} )( window, document, $ );
+
+
+	// !Chart and score ============================================================================
+	function secupressDrawMeAChart( chartEl ) {
+		var elID, chartData;
+
+		if ( ! chartEl || ! window.Chart ) {
+			return;
+		}
+
+		elID      = chartEl.id;
+		chartData = [
+			{
+				value:     SecuPressi18nChart.good.value,
+				color:     "#26B3A9",
+				highlight: "#2BCDC1",
+				label:     SecuPressi18nChart.good.text,
+				status:    "good",
+			},
+			{
+				value:     SecuPressi18nChart.bad.value,
+				color:     "#CB234F",
+				highlight: "#F2295E",
+				label:     SecuPressi18nChart.bad.text,
+				status:    "bad",
+			},
+			{
+				value:     SecuPressi18nChart.warning.value,
+				color:     "#F7AB13",
+				highlight: "#F1C40F",
+				label:     SecuPressi18nChart.warning.text,
+				status:    "warning",
+			}
+		];
+
+		if ( SecuPressi18nChart.notscannedyet.value ) {
+			chartData.push( {
+				value:     SecuPressi18nChart.notscannedyet.value,
+				color:     "#5A626F",
+				highlight: "#888888",
+				label:     SecuPressi18nChart.notscannedyet.text,
+				status:    "notscannedyet",
+			} );
+		}
+
+		secupressChart[ elID ] = new Chart( chartEl.getContext( "2d" ) ).Doughnut( chartData, {
+			animationEasing:       "easeInOutQuart",
+			showTooltips:          true,
+			segmentShowStroke:     false,
+			percentageInnerCutout: 90,
+			tooltipEvents:         ["mousemove"], // active "hover" effect...
+			customTooltips:        function() {} //... but remove tooltips.
+		} );
+
+		// Trigger a filter action on Chart Segment click.
+		chartEl.onclick = function( e ) {
+			var activePoints = secupressChart[ elID ].getSegmentsAtEvent( e );
+			if ( activePoints[0] ) {
+				$( "#secupress-type-filters" ).find( ".secupress-big-tab-" + activePoints[0].status ).find( "a" ).trigger( "click.secupress" );
+			}
+		};
+
+		// Trigger a filter action on Legend item click.
+		$( ".secupress-chart-legend" ).find( "li" ).on( "click.secupress", function() {
+			$( "#secupress-type-filters" ).find( ".secupress-big-tab-" + $( this ).data( "status" ) ).find( "a" ).trigger( "click.secupress" );
+		} );
 	}
 
-	// if it's not the first scan, draw the chart
-	// else we will draw it later, to avoid Chart.js error during drawing
-	if ( ! $('.secupress-scanners-header').hasClass('secupress-not-scanned-yet') ) {
-		secupressDrawMeAChart( secupressChartEl );
-	}
 
 	function secupressSelectFallbackBigTab( data, $filters ) {
 		if ( data.bad ) {
@@ -100,31 +158,113 @@ jQuery( document ).ready( function( $ ) {
 	}
 
 
-	function secupressUpdateScore( data, chartEl ) {
-		var $filters = $( "#secupress-type-filters" );
+	/**
+	 * Disable one or more buttons.
+	 * - Add a "aria-disabled" attribute.
+	 * - If it's a link: add a "disabled" attribute. If it's a button or input: add a "disabled" attribute.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (object) $buttons jQuery object of one or more buttons.
+	 */
+	function secupressDisableButtons( $buttons ) {
+		$buttons.each( function() {
+			var $button  = $( this ),
+				nodeName = this.nodeName.toLowerCase();
+
+			if ( "button" === nodeName || "input" === nodeName ) {
+				$button.attr( { "disabled": "disabled", "aria-disabled": "true" } );
+			} else {
+				$button.addClass( "disabled" ).attr( "aria-disabled", "true" );
+			}
+		} );
+	}
+
+
+	/**
+	 * Enable one or more buttons.
+	 * - Remove the "aria-disabled" attribute.
+	 * - If it's a link: remove the "disabled" attribute. If it's a button or input: remove the "disabled" attribute.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (object) $buttons jQuery object of one or more buttons.
+	 */
+	function secupressEnableButtons( $buttons ) {
+		$buttons.each( function() {
+			var $button  = $( this ),
+				nodeName = this.nodeName.toLowerCase();
+
+			if ( "button" === nodeName || "input" === nodeName ) {
+				$button.removeAttr( "disabled aria-disabled" );
+			} else {
+				$button.removeClass( "disabled" ).removeAttr( "aria-disabled" );
+			}
+		} );
+	}
+
+
+	/**
+	 * Tell if a button is disabled.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (object) $button jQuery object of the button.
+	 *
+	 * @return (bool)
+	 */
+	function secupressIsButtonDisabled( $button ) {
+		var nodeName = $button.get( 0 ).nodeName.toLowerCase();
+
+		if ( "button" === nodeName || "input" === nodeName ) {
+			return $button.prop( "disabled" );
+		}
+
+		$button.hasClass( "disabled" );
+	}
+
+
+	// Print counters in the page.
+	function secupressPrintScore( data, chartEl ) {
+		var $filters, elID;
 
 		// Only if we're not in a sub-site.
 		if ( ! chartEl ) {
 			return;
 		}
-		var elID = $( chartEl ).attr( 'id' );
+
+		$filters = $( "#secupress-type-filters" );
+		elID     = chartEl.id;
 
 		// All various texts.
 		$( ".secupress-chart-container .letter" ).replaceWith( data.letter );
 		$( ".secupress-score-text" ).text( data.text );
 		$( ".secupress-scan-infos .secupress-score" ).html( data.subtext );
-		$( ".secupress-score .percent" ).text( data.percent + "%" );
 		$( "#wp-admin-bar-secupress" ).find( ".letter" ).text( data.grade );
 		$( "#toplevel_page_" + SecuPressi18nScanner.pluginSlug + "_scanners" ).find( ".update-count" ).text( data.bad ).parent().attr( "class", function( i, val ) {
 			return val.replace( /count-\d+/, "count-" + data.bad );
 		} );
 
 		// Chart.
-		secupressChart[ elID ].segments[0].value = data.good;
-		secupressChart[ elID ].segments[1].value = data.bad;
-		secupressChart[ elID ].segments[2].value = data.warning;
-		secupressChart[ elID ].segments[3].value = data.notscannedyet;
-		secupressChart[ elID ].update();
+		if ( SecuPressi18nChart ) {
+			SecuPressi18nChart.good.value          = data.good;
+			SecuPressi18nChart.bad.value           = data.bad;
+			SecuPressi18nChart.warning.value       = data.warning;
+			SecuPressi18nChart.notscannedyet.value = data.notscannedyet;
+		}
+
+		if ( typeof secupressChart[ elID ] !== 'undefined' ) {
+			// The chart is initiated.
+			secupressChart[ elID ].segments[0].value = data.good;
+			secupressChart[ elID ].segments[1].value = data.bad;
+			secupressChart[ elID ].segments[2].value = data.warning;
+
+			if ( typeof secupressChart[ elID ].segments[3] !== 'undefined' ) {
+				secupressChart[ elID ].segments[3].value = data.notscannedyet;
+			}
+
+			secupressChart[ elID ].update();
+		}
 
 		// Tabs subtitles.
 		$filters.find( "a" ).each( function() {
@@ -163,66 +303,49 @@ jQuery( document ).ready( function( $ ) {
 		}
 	}
 
+	// Get counters and print them in the page.
+	function secupressPrintScoreFromAjax( chartEl ) {
+		var params;
 
-	// !Big network: set some data =================================================================
-	(function( w, d, $, undefined ) {
-		function secupressSetBigData( href, $button, $spinner, $percent ) {
-			$.getJSON( href )
-			.done( function( r ) {
-				if ( ! r.success ) {
-					$spinner.replaceWith( '<span class="secupress-error-notif">' + SecuPressi18nScanner.error + "</span>" );
-					$percent.remove();
-					return;
-				}
-				if ( r.data ) {
-					$percent.text( r.data + "%" );
-
-					if ( 100 !== r.data ) {
-						// We need more data.
-						secupressSetBigData( href, $button, $spinner, $percent );
-						return;
-					}
-				}
-				// Finish.
-				$button.closest( ".secupress-notice" ).fadeTo( 100 , 0, function() {
-					$( this ).slideUp( 100, function() {
-						$( this ).remove();
-					} );
-				} );
-			} )
-			.fail( function() {
-				$spinner.replaceWith( '<span class="secupress-error-notif">' + SecuPressi18nScanner.error + "</span>" );
-				$percent.remove();
-			} );
+		if ( ! SecuPressi18nScanner.i18nNonce ) {
+			return;
 		}
 
+		params = {
+			"action":   "secupress-get-scan-counters",
+			"_wpnonce": SecuPressi18nScanner.i18nNonce
+		};
 
-		$( ".secupress-centralize-blog-options" ).on( "click.secupress", function( e ) {
-			var $this    = $( this ),
-				href     = $this.attr( "href" ).replace( "admin-post.php", "admin-ajax.php" ),
-				$spinner = $( '<img src="' + SecuPressi18nScanner.spinnerUrl + '" alt="" class="secupress-spinner" />' ),
-				$percent = $( '<span class="secupress-ajax-percent">0%</span>' );
+		$.getJSON( ajaxurl, params )
+		.done( function( r ) {
+			if ( $.isPlainObject( r ) && r.success && r.data ) {
+				secupressPrintScore( r.data, chartEl );
+			}
+		} );
+	}
 
-			if ( $this.hasClass( "running" ) ) {
+
+	// If it's not the first scan, draw the chart.
+	// Else we will draw it later, to avoid Chart.js error during drawing.
+	if ( secupressChartEl && ! $( '.secupress-scanners-header' ).hasClass( 'secupress-not-scanned-yet' ) ) {
+		secupressDrawMeAChart( secupressChartEl );
+	}
+
+
+	// Draw Mini Chart in Latest scans tab.
+	( function( w, d, $, undefined ) {
+		$( '#secupress-l-latest' ).on( 'click.secupress keyup', function( e ) {
+			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
 				return false;
 			}
-			$this.addClass( "running" ).parent().append( $spinner ).append( $percent ).find( ".secupress-error-notif" ).remove();
-
-			e.preventDefault();
-
-			secupressSetBigData( href, $this, $spinner, $percent );
+			secupressDrawMeAChart( d.getElementById( 'status_chart_mini' ) );
 		} );
 	} )( window, document, $ );
 
-	// !Draw Mini Chart in Latest scans tab ========================================================
-	(function( w, d, $, undefined) {
-		$('#secupress-l-latest').on('click.secupress', function(){
-			secupressDrawMeAChart( d.getElementById('status_chart_mini') );
-		});
-	})(window, document, jQuery);
 
-	// !Filter rows (Status bad/good/etc) ==========================================================
-	(function( w, d, $, undefined ) {
+	// !Other UI. ==================================================================================
+	// Filter rows (Status bad/good/etc).
+	( function( w, d, $, undefined ) {
 		$( "#secupress-type-filters" ).find( "a" ).on( "click.secupress keyup", function( e ) {
 			var $this, priority, current = "active";
 
@@ -243,11 +366,11 @@ jQuery( document ).ready( function( $ ) {
 
 			$( ".status-all" ).addClass( "hidden" ).attr( "aria-hidden", true ).filter( ".status-" + priority ).removeClass( "hidden" ).attr( "aria-hidden", false );
 		} ).filter( ".secupress-current" ).trigger( "click.secupress" );
-	} )(window, document, $);
+	} )( window, document, $ );
 
 
-	// !Filter Rows (Priority) ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	(function( w, d, $, undefined ) {
+	// Filter Rows (Priority).
+	( function( w, d, $, undefined ) {
 		$( "#secupress-priority-filters" ).find( "input" ).on( "change.secupress", function( e ) {
 			var $this    = $( this ),
 				priority = $this.attr( "name" );
@@ -259,11 +382,11 @@ jQuery( document ).ready( function( $ ) {
 			}
 			return false;
 		} );
-	} )(window, document, $);
+	} )( window, document, $ );
 
 
-	// !Ask for support button (free) ------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	(function( w, d, $, undefined ) {
+	// Ask for support button (free).
+	( function( w, d, $, undefined ) {
 		$( ".secupress-ask-support-free" ).on( "click.secupress keyup", function( e ) {
 			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
 				return false;
@@ -290,11 +413,11 @@ jQuery( document ).ready( function( $ ) {
 				}
 			} );
 		} );
-	} )(window, document, $);
+	} )( window, document, $ );
 
 
-	// !Ask for support button (pro) --------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	(function( w, d, $, undefined ) {
+	// Ask for support button (pro).
+	( function( w, d, $, undefined ) {
 		$( ".secupress-ask-support-pro" ).on( "click.secupress keyup", function( e ) {
 			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
 				return false;
@@ -322,11 +445,11 @@ jQuery( document ).ready( function( $ ) {
 				}
 			} );
 		} );
-	} )(window, document, $);
+	} )( window, document, $ );
 
 
 	// !Scans and fixes ============================================================================
-	(function( w, d, $, undefined ) {
+	( function( w, d, $, undefined ) {
 		var secupressScans = {
 			// Scans.
 			doingScan:    {},
@@ -368,11 +491,11 @@ jQuery( document ).ready( function( $ ) {
 			var $sp_scanning = $( '.secupress-one-click-scanning-slideshow' ),
 				$sp_poivre   = $( '.secupress-caroupoivre' ),
 				$pagination  = $( '.secupress-caroupoivre-pagination' ).find( '.secupress-dot' ),
-				is_first     = $button.closest( '.secupress-not-scanned-yet' ).length,
+				isFirst      = $button.closest( '.secupress-not-scanned-yet' ).length,
 				$random_slide, secupressProgressTimer;
 
 			// If first of the first one click scan.
-			if ( is_first ) {
+			if ( isFirst ) {
 				// Information about first scan & show progress + slides.
 				$( '.secupress-before-caroupoivre' ).fadeOut( 200, function() {
 					$sp_scanning.fadeIn( 200 );
@@ -428,9 +551,9 @@ jQuery( document ).ready( function( $ ) {
 						$( '.secupress-tabs-contents' ).show();
 
 						// Click on first tab to show results, just in case…
-						$('#secupress-l-scan').trigger('click.secupress');
+						$( '#secupress-l-scan' ).trigger( 'click.secupress' );
 						// draw the chart
-						if ( is_first ) {
+						if ( isFirst ) {
 							secupressDrawMeAChart( secupressChartEl );
 						}
 					} );
@@ -624,7 +747,7 @@ jQuery( document ).ready( function( $ ) {
 			}
 
 			// Add the new status as a class.
-			secupressSetStatusClass( $fix, r.data.class );
+			//secupressSetStatusClass( $fix, r.data.class );
 
 			// Add a specific class to the row if the fix needs the user intervention.
 			if ( secupressManualFixNeeded( r.data ) ) {
@@ -651,7 +774,7 @@ jQuery( document ).ready( function( $ ) {
 
 		// Update the date of the last One Click Scan.
 		function secupressUpdateDate( data ) {
-			var $scoreResultsUl = $( "#secupress-latest" ).find( "ul" );
+			var $scoreResultsUl = $( "#secupress-latest" ).find( ".secupress-reports-list" );
 
 			$scoreResultsUl.children( ".secupress-empty" ).remove();
 
@@ -945,7 +1068,8 @@ jQuery( document ).ready( function( $ ) {
 			* extra.isBulk: tell if it's a bulk scan.
 			* extra.data:   data returned by the ajax call.
 			*/
-			var $row = $( "#" + extra.test );
+			var $row = $( "#" + extra.test ),
+				$fixitWrap, $refixitWrap;
 
 			// If we have delayed fixes, launch the first in queue now.
 			if ( secupressScans.delayedFixes.length ) {
@@ -954,7 +1078,7 @@ jQuery( document ).ready( function( $ ) {
 
 			// If we have a good result, empty the fix cell.
 			if ( "good" === extra.data.class ) {
-				secupressSetStatusClass( $row.children( ".secupress-fix-result" ), "cantfix" );
+				//secupressSetStatusClass( $row.children( ".secupress-fix-result" ), "cantfix" );
 				secupressAddFixStatusText( $row, "" );
 				secupressAddFixResult( $row, "" );
 			}
@@ -962,7 +1086,6 @@ jQuery( document ).ready( function( $ ) {
 			// Add the fix result.
 			if ( "" !== extra.data.fix_msg ) {
 				secupressAddFixResult( $row, extra.data.fix_msg );
-				$row.find( ".secupress-fix-result-retryfix" ).show();
 			}
 
 			// Change the scan button text.
@@ -979,23 +1102,8 @@ jQuery( document ).ready( function( $ ) {
 			var $button = $( '.button-secupress-scan' ).last(),
 				params;
 
-			// Update counters.
-			if ( SecuPressi18nScanner.i18nNonce ) {
-				params = {
-					"action":   "secupress-get-scan-counters",
-					"_wpnonce": SecuPressi18nScanner.i18nNonce
-				};
-
-				$.getJSON( ajaxurl, params )
-				.done( function( r ) {
-					if ( $.isPlainObject( r ) && r.success && r.data ) {
-						secupressUpdateScore( r.data );
-					}
-				} );
-			}
-
 			// If it's a One-click Scan, keep track of the date.
-			if ( $button.attr( "disabled" ) ) {
+			if ( secupressIsButtonDisabled( $button ) ) {
 				params = {
 					"action":   "secupress-update-oneclick-scan-date",
 					"_wpnonce": $button.data( "nonce" )
@@ -1008,8 +1116,13 @@ jQuery( document ).ready( function( $ ) {
 					}
 				} )
 				.always( function() {
-					$( '.button-secupress-scan' ).removeAttr( "disabled aria-disabled" ).removeClass( "disabled" );
+					secupressEnableButtons( $( '.button-secupress-scan' ) );
+					// Get counters and print them in the page.
+					secupressPrintScoreFromAjax( secupressChartEl );
 				} );
+			} else {
+				// Get counters and print them in the page.
+				secupressPrintScoreFromAjax( secupressChartEl );
 			}
 		} );
 
@@ -1024,10 +1137,18 @@ jQuery( document ).ready( function( $ ) {
 			* extra.manualFix: tell if the fix needs a manual fix.
 			* extra.data:      data returned by the ajax call.
 			*/
-			var bulk = extra.isBulk ? "bulk" : "";
+			var $row = $( "#" + extra.test ),
+				bulk = extra.isBulk ? "bulk" : "";
 
 			// Go for a new scan.
-			$( "#" + extra.test ).find( ".secupress-scanit" ).trigger( bulk + "scan.secupress" );
+			$row.find( ".secupress-scanit" ).trigger( bulk + "scan.secupress" );
+
+			// Display the "Fix it" or "Retry to fix" button.
+			if ( extra.data.class && ! extra.manualFix ) {
+				$row.addClass( "has-fix-status" ).removeClass( "no-fix-status" );
+			} else {
+				$row.addClass( "no-fix-status" ).removeClass( "has-fix-status" );
+			}
 		} );
 
 
@@ -1078,11 +1199,19 @@ jQuery( document ).ready( function( $ ) {
 			* extra.test:      test name.
 			* extra.data:      data returned by the ajax call.
 			*/
-			var title = SecuPressi18nScanner.notFixed,
+			var $row  = $( "#" + extra.test ),
+				title = SecuPressi18nScanner.notFixed,
 				type  = "error";
 
 			// Go for a new scan.
 			$( "#" + extra.test ).find( ".secupress-scanit" ).trigger( "scan.secupress" );
+
+			// Display the "Fix it" or "Retry to fix" button.
+			if ( extra.data.class ) {
+				$row.addClass( "has-fix-status" ).removeClass( "no-fix-status" );
+			} else {
+				$row.addClass( "no-fix-status" ).removeClass( "has-fix-status" );
+			}
 
 			// Success! (or not)
 			if ( "warning" === extra.data.class ) {
@@ -1102,8 +1231,14 @@ jQuery( document ).ready( function( $ ) {
 
 
 		// Show test details.
-		$( "body" ).on( "click.secupress", ".secupress-details", function( e ) {
-			var test = $( this ).data( "test" );
+		$( "body" ).on( "click.secupress keyup", ".secupress-details", function( e ) {
+			var test;
+
+			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
+				return false;
+			}
+
+			test = $( this ).data( "test" );
 
 			swal2( $.extend( {}, SecuPress.swal2Defaults, {
 				title: SecuPressi18nScanner.scanDetails,
@@ -1114,8 +1249,14 @@ jQuery( document ).ready( function( $ ) {
 
 
 		// Show fix details.
-		$( "body" ).on( "click.secupress", ".secupress-details-fix", function( e ) {
-			var test = $( this ).data( "test" );
+		$( "body" ).on( "click.secupress keyup", ".secupress-details-fix", function( e ) {
+			var test;
+
+			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
+				return false;
+			}
+
+			test = $( this ).data( "test" );
 
 			swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
 				title:             SecuPressi18nScanner.fixDetails,
@@ -1132,21 +1273,17 @@ jQuery( document ).ready( function( $ ) {
 		} );
 
 
-		// Perform a scan on click.
-		$( "body" ).on( "click.secupress scan.secupress bulkscan.secupress", ".button-secupress-scan, .secupress-scanit", function( e ) {
-			var $this = $( this ),
-				href, test, $row, isBulk;
+		// Perform a scan on click ("Scan" button).
+		$( "body" ).on( "click.secupress scan.secupress bulkscan.secupress keyup", ".secupress-scanit", function( e ) {
+			var $this, href, test, $row, isBulk;
+
+			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
+				return false;
+			}
 
 			e.preventDefault();
 
-			if ( $this.hasClass( "button-secupress-scan" ) ) {
-				// It's the "One Click Scan" button.
-				$this.attr( { "disabled": "disabled", "aria-disabled": true } );
-				$( ".secupress-scanit" ).trigger( "bulkscan.secupress" );
-				secupressRunProgressBar( $this );
-				return;
-			}
-
+			$this  = $( this );
 			href   = $this.attr( "href" );
 			test   = secupressGetTestFromUrl( href );
 			$row   = $this.closest( ".secupress-item-" + test );
@@ -1156,20 +1293,39 @@ jQuery( document ).ready( function( $ ) {
 		} );
 
 
-		// Perform a fix on click.
-		$( "body" ).on( "click.secupress fix.secupress bulkfix.secupress", ".button-secupress-fix, .secupress-fixit", function( e ) {
-			var $this = $( this ),
-				href, test, $row, isBulk;
+		// Perform a scan on click ("One click scan" button).
+		$( "body" ).on( "click.secupress bulkscan.secupress keyup", ".button-secupress-scan", function( e ) {
+			var $this;
 
-			e.preventDefault();
+			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
+				return false;
+			}
 
-			// It's the "One Click Fix" button.
-			if ( $this.hasClass( "button-secupress-fix" ) ) {
-				secupressLaunchSeparatedBulkFix( $( ".secupress-fixit" ) );
-				secupressRunProgressBar( $this );
+			$this = $( this );
+
+			if ( secupressIsButtonDisabled( $this ) ) {
 				return;
 			}
 
+			e.preventDefault();
+
+			secupressDisableButtons( $( '.button-secupress-scan' ) );;
+			$( ".secupress-scanit" ).trigger( "bulkscan.secupress" );
+			secupressRunProgressBar( $this );
+		} );
+
+
+		// Perform a fix on click ("Fix it" button).
+		$( "body" ).on( "click.secupress fix.secupress bulkfix.secupress keyup", ".secupress-fixit", function( e ) {
+			var $this, href, test, $row, isBulk;
+
+			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
+				return false;
+			}
+
+			e.preventDefault();
+
+			$this  = $( this );
 			href   = $this.attr( "href" );
 			test   = secupressGetTestFromUrl( href );
 			$row   = $this.closest( ".secupress-item-" + test );
@@ -1179,13 +1335,38 @@ jQuery( document ).ready( function( $ ) {
 		} );
 
 
+		// Perform a fix on click ("Retry to fix" button).
+		$( "body" ).on( "click.secupress keyup", ".secupress-retry-fixit", function( e ) {
+			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
+				return false;
+			}
+
+			e.preventDefault();
+
+			$( this ).closest( ".secupress-item-all" ).find( ".secupress-fixit" ).trigger( "fix.secupress" );
+		} );
+
+
+		// Perform all fixes on click ("One click fix" button).
+		$( "body" ).on( "click.secupress bulkfix.secupress keyup", ".button-secupress-fix", function( e ) {
+			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
+				return false;
+			}
+
+			e.preventDefault();
+
+			secupressLaunchSeparatedBulkFix( $( ".secupress-fixit" ) );
+			secupressRunProgressBar( $( this ) );
+		} );
+
+
 		// Autoscans.
 		$( ".secupress-item-all.autoscan .secupress-scanit" ).trigger( "bulkscan.secupress" );
 
 
 		// One Click Scan auto.
 		if ( SecuPressi18nScanner.firstOneClickScan && secupressScansIsIdle() ) {
-			$( ".button-secupress-scan" ).trigger( "scan.secupress" );
+			$( ".button-secupress-scan" ).last().trigger( "bulkscan.secupress" );
 		}
-	} )(window, document, $);
+	} )( window, document, $ );
 } );

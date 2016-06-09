@@ -49,12 +49,47 @@ function secupress_action_page( $title, $content, $args = array() ) {
  * @return (string)
  */
 function secupress_user_agent( $user_agent ) {
-	// ////.
-	$bonus  = ! secupress_is_white_label()        ? '' : '*';
-	$bonus .= ! secupress_get_option( 'do_beta' ) ? '' : '+';
+	$bonus  = secupress_is_white_label()        ? '*' : '';
+	$bonus .= secupress_get_option( 'do_beta' ) ? '+' : '';
 	$new_ua = sprintf( '%s;SecuPress|%s%s|%s|;', $user_agent, SECUPRESS_VERSION, $bonus, esc_url( home_url() ) );
 
 	return $new_ua;
+}
+
+
+/**
+ * Used for the "last 5 scans", formate each row.
+ *
+ * @since 1.0
+ *
+ * @param (array) $item         An item array containing "percent", "time" and "grade".
+ * @param (int)   $last_percent Percentage of the previous item. -1 for the first one.
+ *
+ * @return (string)
+ */
+function secupress_formate_latest_scans_list_item( $item, $last_percent = -1 ) {
+	$icon = 'right';
+
+	if ( $last_percent > -1 ) {
+		if ( $last_percent < $item['percent'] ) {
+			$icon = 'up';
+		} elseif ( $last_percent > $item['percent'] ) {
+			$icon = 'down';
+		}
+	}
+
+	return sprintf(
+		'<li>
+			<span class="secupress-latest-list-time timeago">%3$s</span>
+			<span class="secupress-latest-list-date">%4$s</span>
+			<strong class="secupress-latest-list-grade letter l%2$s">%2$s</strong>
+			<i class="dashicons mini dashicons-arrow-%1$s-alt2" aria-hidden="true"></i>
+		</li>',
+		$icon,
+		$item['grade'],
+		sprintf( __( '%s ago' ), human_time_diff( $item['time'] ) ),
+		date_i18n( _x( 'M dS, Y \a\t h:ia', 'Latest scans', 'secupress' ), $item['time'] )
+	);
 }
 
 
@@ -136,18 +171,4 @@ function secupress_text_diff( $left_string, $right_string, $args = array() ) {
 	$r .= "</table>\n";
 
 	return $r;
-}
-
-
-add_filter( 'admin_page_access_denied', '__secupress_is_jarvis', 9 );
-/**
- * Easter egg when you visit a "secupress" page with a typo in it, or just don't have access (not under white label).
- *
- * @author Tony Stark
- * @since 1.0
- */
-function __secupress_is_jarvis() {
-	if ( ! secupress_is_white_label() && isset( $_GET['page'] ) && strpos( $_GET['page'], 'secupress' ) !== false ) { // Do not use SECUPRESS_PLUGIN_SLUG, we don't want that in white label.
-		wp_die( '[J.A.R.V.I.S.] You are not authorized to access this area.<br/>[Christine Everhart] Jesus ...<br/>[Pepper Potts] That\'s Jarvis, he runs the house.', 403 );
-	}
 }

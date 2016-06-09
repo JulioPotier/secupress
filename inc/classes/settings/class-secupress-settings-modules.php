@@ -230,10 +230,9 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 */
 	protected function print_tabs() {
 		foreach ( static::get_modules() as $key => $module ) {
-			$icon   = isset( $module['icon'] ) ?  $module['icon'] : 'secupress-simple';
-			$is_pro = isset( $module['mark_as_pro'] ) && $module['mark_as_pro'] === true ? true : false; 
-			$class  = $this->get_current_module() === $key  ? 'active' : '';
-			$class .= $is_pro ? ' secupress-pro-module' : ''; 
+			$icon   = isset( $module['icon'] ) ? $module['icon'] : 'secupress-simple';
+			$class  = $this->get_current_module() === $key ? 'active' : '';
+			$class .= ! empty( $module['mark_as_pro'] ) ? ' secupress-pro-module' : '';
 			?>
 			<li>
 				<a href="<?php echo esc_url( secupress_admin_url( 'modules', $key ) ); ?>" class="<?php echo $class; ?> module-<?php echo sanitize_key( $key ); ?>">
@@ -245,17 +244,17 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			<?php
 		}
 
-		// prints last tab "Get Pro" is current user is not a pro one
+		// Prints last tab "Get Pro" is current user is not a pro one.
 		if ( ! secupress_is_pro() ) {
-		?>
-		<li>
-			<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ); ?>" class="module-pro">
-				<span class="secupress-tab-name"><?php esc_html_e( 'Get Pro', 'secupress' ); ?></span>
-				<span class="secupress-tab-summary"><?php printf( __( 'Buy %s Pro', 'secupress' ), SECUPRESS_PLUGIN_NAME ); ?></span>
-				<i class="icon-secupress-simple" aria-hidden="true"></i>
-			</a>
-		</li>
-		<?php
+			?>
+			<li>
+				<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ); ?>" class="module-pro">
+					<span class="secupress-tab-name"><?php esc_html_e( 'Get Pro', 'secupress' ); ?></span>
+					<span class="secupress-tab-summary"><?php printf( __( 'Buy %s Pro', 'secupress' ), SECUPRESS_PLUGIN_NAME ); ?></span>
+					<i class="icon-secupress-simple" aria-hidden="true"></i>
+				</a>
+			</li>
+			<?php
 		}
 	}
 
@@ -395,6 +394,540 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			echo '<i class="icon-' . $this->get_module_icon() . '" aria-hidden="true"></i>' . "\n";
 		}
 		return $this;
+	}
+
+
+	// Specific fields =============================================================================.
+
+	/**
+	 * Non login time slot field.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (array) $args An array of parameters. See `::field()`.
+	 */
+	protected function countries( $args ) {
+		$name_attribute = 'secupress_' . $this->modulenow . '_settings[' . $args['name'] . ']';
+
+		// Value.
+		if ( isset( $args['value'] ) ) {
+			$value = $args['value'];
+		} else {
+			$value = secupress_get_module_option( $args['name'] );
+		}
+
+		if ( is_null( $value ) ) {
+			$value = $args['default'];
+		}
+		$value = array_flip( (array) array_filter( $value ) );
+
+		// Attributes.
+		$attributes = '';
+		if ( ! empty( $args['attributes'] ) ) {
+			foreach ( $args['attributes'] as $attribute => $attribute_value ) {
+				$attributes .= ' ' . $attribute . '="' . esc_attr( $attribute_value ) . '"';
+			}
+		}
+		$disabled_class = ! empty( $args['attributes']['disabled'] ) ? ' disabled' : '';
+		$disabled_attr  = $disabled_class ? ' class="disabled"' : '';
+		$_countries     = array( 'AF' => array( 0 => 'Africa', 'AO' => 'Angola', 'BF' => 'Burkina Faso', 'BI' => 'Burundi', 'BJ' => 'Benin', 'BW' => 'Botswana', 'CD' => 'Congo, The Democratic Republic of the', 'CF' => 'Central African Republic', 'CG' => 'Congo', 'CI' => 'Cote D\'Ivoire', 'CM' => 'Cameroon', 'CV' => 'Cape Verde', 'DJ' => 'Djibouti', 'DZ' => 'Algeria', 'EG' => 'Egypt', 'EH' => 'Western Sahara', 'ER' => 'Eritrea', 'ET' => 'Ethiopia', 'GA' => 'Gabon', 'GH' => 'Ghana', 'GM' => 'Gambia', 'GN' => 'Guinea', 'GQ' => 'Equatorial Guinea', 'GW' => 'Guinea-Bissau', 'KE' => 'Kenya', 'KM' => 'Comoros', 'LR' => 'Liberia', 'LS' => 'Lesotho', 'LY' => 'Libya', 'MA' => 'Morocco', 'MG' => 'Madagascar', 'ML' => 'Mali', 'MR' => 'Mauritania', 'MU' => 'Mauritius', 'MW' => 'Malawi', 'MZ' => 'Mozambique', 'NA' => 'Namibia', 'NE' => 'Niger', 'NG' => 'Nigeria', 'RE' => 'Reunion', 'RW' => 'Rwanda', 'SC' => 'Seychelles', 'SD' => 'Sudan', 'SH' => 'Saint Helena', 'SL' => 'Sierra Leone', 'SN' => 'Senegal', 'SO' => 'Somalia', 'ST' => 'Sao Tome and Principe', 'SZ' => 'Swaziland', 'TD' => 'Chad', 'TG' => 'Togo', 'TN' => 'Tunisia', 'TZ' => 'Tanzania, United Republic of', 'UG' => 'Uganda', 'YT' => 'Mayotte', 'ZA' => 'South Africa', 'ZM' => 'Zambia', 'ZW' => 'Zimbabwe', 'SS' => 'South Sudan' ), 'AN' => array( 0 => 'Antarctica', 'AQ' => 'Antarctica', 'BV' => 'Bouvet Island', 'GS' => 'South Georgia and the South Sandwich Islands', 'HM' => 'Heard Island and McDonald Islands', 'TF' => 'French Southern Territories' ), 'AS' => array( 0 => 'Asia', 'AP' => 'Asia/Pacific Region', 'AE' => 'United Arab Emirates', 'AF' => 'Afghanistan', 'AM' => 'Armenia', 'AZ' => 'Azerbaijan', 'BD' => 'Bangladesh', 'BH' => 'Bahrain', 'BN' => 'Brunei Darussalam', 'BT' => 'Bhutan', 'CC' => 'Cocos (Keeling) Islands', 'CN' => 'China', 'CX' => 'Christmas Island', 'CY' => 'Cyprus', 'GE' => 'Georgia', 'HK' => 'Hong Kong', 'ID' => 'Indonesia', 'IL' => 'Israel', 'IN' => 'India', 'IO' => 'British Indian Ocean Territory', 'IQ' => 'Iraq', 'IR' => 'Iran, Islamic Republic of', 'JO' => 'Jordan', 'JP' => 'Japan', 'KG' => 'Kyrgyzstan', 'KH' => 'Cambodia', 'KP' => 'Korea, Democratic People\'s Republic of', 'KR' => 'Korea, Republic of', 'KW' => 'Kuwait', 'KZ' => 'Kazakhstan', 'LA' => 'Lao People\'s Democratic Republic', 'LB' => 'Lebanon', 'LK' => 'Sri Lanka', 'MM' => 'Myanmar', 'MN' => 'Mongolia', 'MO' => 'Macau', 'MV' => 'Maldives', 'MY' => 'Malaysia', 'NP' => 'Nepal', 'OM' => 'Oman', 'PH' => 'Philippines', 'PK' => 'Pakistan', 'PS' => 'Palestinian Territory', 'QA' => 'Qatar', 'SA' => 'Saudi Arabia', 'SG' => 'Singapore', 'SY' => 'Syrian Arab Republic', 'TH' => 'Thailand', 'TJ' => 'Tajikistan', 'TM' => 'Turkmenistan', 'TL' => 'Timor-Leste', 'TW' => 'Taiwan', 'UZ' => 'Uzbekistan', 'VN' => 'Vietnam', 'YE' => 'Yemen' ), 'EU' => array( 0 => 'Europe', 'AD' => 'Andorra', 'AL' => 'Albania', 'AT' => 'Austria', 'BA' => 'Bosnia and Herzegovina', 'BE' => 'Belgium', 'BG' => 'Bulgaria', 'BY' => 'Belarus', 'CH' => 'Switzerland', 'CZ' => 'Czech Republic', 'DE' => 'Germany', 'DK' => 'Denmark', 'EE' => 'Estonia', 'ES' => 'Spain', 'FI' => 'Finland', 'FO' => 'Faroe Islands', 'FR' => 'France', 'GB' => 'United Kingdom', 'GI' => 'Gibraltar', 'GR' => 'Greece', 'HR' => 'Croatia', 'HU' => 'Hungary', 'IE' => 'Ireland', 'IS' => 'Iceland', 'IT' => 'Italy', 'LI' => 'Liechtenstein', 'LT' => 'Lithuania', 'LU' => 'Luxembourg', 'LV' => 'Latvia', 'MC' => 'Monaco', 'MD' => 'Moldova, Republic of', 'MK' => 'Macedonia', 'MT' => 'Malta', 'NL' => 'Netherlands', 'NO' => 'Norway', 'PL' => 'Poland', 'PT' => 'Portugal', 'RO' => 'Romania', 'RU' => 'Russian Federation', 'SE' => 'Sweden', 'SI' => 'Slovenia', 'SJ' => 'Svalbard and Jan Mayen', 'SK' => 'Slovakia', 'SM' => 'San Marino', 'TR' => 'Turkey', 'UA' => 'Ukraine', 'VA' => 'Holy See (Vatican City State)', 'RS' => 'Serbia', 'ME' => 'Montenegro', 'AX' => 'Aland Islands', 'GG' => 'Guernsey', 'IM' => 'Isle of Man', 'JE' => 'Jersey' ), 'OC' => array( 0 => 'Oceania', 'AS' => 'American Samoa', 'AU' => 'Australia', 'CK' => 'Cook Islands', 'FJ' => 'Fiji', 'FM' => 'Micronesia, Federated States of', 'GU' => 'Guam', 'KI' => 'Kiribati', 'MH' => 'Marshall Islands', 'MP' => 'Northern Mariana Islands', 'NC' => 'New Caledonia', 'NF' => 'Norfolk Island', 'NR' => 'Nauru', 'NU' => 'Niue', 'NZ' => 'New Zealand', 'PF' => 'French Polynesia', 'PG' => 'Papua New Guinea', 'PN' => 'Pitcairn Islands', 'PW' => 'Palau', 'SB' => 'Solomon Islands', 'TK' => 'Tokelau', 'TO' => 'Tonga', 'TV' => 'Tuvalu', 'UM' => 'United States Minor Outlying Islands', 'VU' => 'Vanuatu', 'WF' => 'Wallis and Futuna', 'WS' => 'Samoa' ), 'NA' => array( 0 => 'North America', 'AG' => 'Antigua and Barbuda', 'AI' => 'Anguilla', 'CW' => 'Curacao', 'AW' => 'Aruba', 'BB' => 'Barbados', 'BM' => 'Bermuda', 'BS' => 'Bahamas', 'BZ' => 'Belize', 'CA' => 'Canada', 'CR' => 'Costa Rica', 'CU' => 'Cuba', 'DM' => 'Dominica', 'DO' => 'Dominican Republic', 'SX' => 'Sint Maarten (Dutch part)', 'GD' => 'Grenada', 'GL' => 'Greenland', 'GP' => 'Guadeloupe', 'GT' => 'Guatemala', 'HN' => 'Honduras', 'HT' => 'Haiti', 'JM' => 'Jamaica', 'KN' => 'Saint Kitts and Nevis', 'KY' => 'Cayman Islands', 'LC' => 'Saint Lucia', 'MQ' => 'Martinique', 'MS' => 'Montserrat', 'MX' => 'Mexico', 'NI' => 'Nicaragua', 'PA' => 'Panama', 'PM' => 'Saint Pierre and Miquelon', 'PR' => 'Puerto Rico', 'SV' => 'El Salvador', 'TC' => 'Turks and Caicos Islands', 'TT' => 'Trinidad and Tobago', 'US' => 'United States', 'VC' => 'Saint Vincent and the Grenadines', 'VG' => 'Virgin Islands, British', 'VI' => 'Virgin Islands, U.S.', 'BL' => 'Saint Barthelemy', 'MF' => 'Saint Martin', 'BQ' => 'Bonaire, Saint Eustatius and Saba' ), 'SA' => array( 0 => 'South America', 'AR' => 'Argentina', 'BO' => 'Bolivia', 'BR' => 'Brazil', 'CL' => 'Chile', 'CO' => 'Colombia', 'EC' => 'Ecuador', 'FK' => 'Falkland Islands (Malvinas)', 'GF' => 'French Guiana', 'GY' => 'Guyana', 'PE' => 'Peru', 'PY' => 'Paraguay', 'SR' => 'Suriname', 'UY' => 'Uruguay', 'VE' => 'Venezuela' ) );
+
+		foreach ( $_countries as $code_country => $countries ) {
+			$title   = array_shift( $countries );
+			$checked = array_intersect_key( $value, $countries );
+			$checked = ! empty( $checked );
+			?>
+			<label class="continent<?php echo $disabled_class; ?>">
+				<input type="checkbox" value="continent-<?php echo $code_country; ?>"<?php checked( $checked ); ?><?php echo $attributes; ?>>
+				<?php echo '<span class="label-text">' . $title . '</span>'; ?>
+			</label>
+			<button type="button" class="hide-if-no-js expand_country"><img src="data:image/gif;base64,R0lGODlhEAAQAMQAAAAAAM/Iu3iYtcK4qPX18bDC09/b0ubm5v///9jTye3t59LMv8a+ruXh2tzYz/j4+PDw7NbRxuTh2f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAUUABMALAAAAAAQABAAAAVI4CSOZGmeaKqubFkIcCwUp4DcOCLUOHA/O5PgQQQ8II1gSUAAOJ0GJUkAgSgAB4lDOhJoE4DIIsAVCRaMgVpdnrxkMFprjgoBADs=" alt="+" title="<?php esc_attr__( 'Expand', 'secupress' ); ?>" /></button>
+			<fieldset class="hide-if-js">
+				<legend class="screen-reader-text"><span><?php echo $title; ?></span></legend>
+				<?php
+				foreach ( $countries as $code => $title ) {
+					$args['label_for'] = $args['name'] . '_' . $code;
+					?>
+					<div>
+						<span class="secupress-tree-dash"></span>
+						<label<?php echo $disabled_attr; ?>>
+							<input type="checkbox" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>[]" value="<?php echo $code; ?>"<?php checked( isset( $value[ $code ] ) ); ?> data-code-country="<?php echo $code_country; ?>"<?php echo $attributes; ?>>
+							<?php echo '<span class="label-text">' . $title . '</span>'; ?>
+						</label>
+					</div>
+					<?php
+				}
+				?>
+			</fieldset>
+			<br/>
+			<?php
+		}
+	}
+
+
+	/**
+	 * Non login time slot field.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (array) $args An array of parameters. See `::field()`.
+	 */
+	protected function non_login_time_slot( $args ) {
+		$name_attribute = 'secupress_' . $this->modulenow . '_settings[' . $args['name'] . ']';
+
+		// Value.
+		if ( isset( $args['value'] ) ) {
+			$value = $args['value'];
+		} else {
+			$value = secupress_get_module_option( $args['name'] );
+		}
+
+		if ( is_null( $value ) ) {
+			$value = $args['default'];
+		}
+
+		$from_hour   = isset( $value['from_hour'] )   ? (int) $value['from_hour']   : 0;
+		$from_minute = isset( $value['from_minute'] ) ? (int) $value['from_minute'] : 0;
+		$to_hour     = isset( $value['to_hour'] )     ? (int) $value['to_hour']     : 0;
+		$to_minute   = isset( $value['to_minute'] )   ? (int) $value['to_minute']   : 0;
+
+		// Attributes.
+		$attributes = ' type="text" class="small-text" size="2" maxlength="2" autocomplete="off"';
+		if ( ! empty( $args['attributes'] ) ) {
+			foreach ( $args['attributes'] as $attribute => $attribute_value ) {
+				$attributes .= ' ' . $attribute . '="' . esc_attr( $attribute_value ) . '"';
+			}
+		}
+
+		echo $args['label'] ? '<p id="' . $args['name'] . '-time-slot-label">' . $args['label'] . '</p>' : '';
+		?>
+		<fieldset aria-labelledby="<?php echo $args['name']; ?>-time-slot-label">
+			<legend class="screen-reader-text"><?php _e( 'Start hour and minute', 'secupress' ); ?></legend>
+			<label>
+				<span class="label-before" aria-hidden="true"><?php _ex( 'From', 'starting hour + minute', 'secupress' ); ?></span>
+				<span class="screen-reader-text"><?php _e( 'Hour' ); ?></span>
+				<input id="<?php echo $args['name']; ?>_from_hour" name="<?php echo $name_attribute; ?>[from_hour]" value="<?php echo str_pad( $from_hour, 2, 0, STR_PAD_LEFT ); ?>" pattern="0?[0-9]|1[0-9]|2[0-3]"<?php echo $attributes; ?>>
+				<span aria-hidden="true"><?php _ex( 'h', 'hour', 'secupress' ); ?></span>
+			</label>
+			<label>
+				<span class="screen-reader-text"><?php _e( 'Minute' ); ?></span>
+				<input id="<?php echo $args['name']; ?>_from_minute" name="<?php echo $name_attribute; ?>[from_minute]" value="<?php echo str_pad( $from_minute, 2, 0, STR_PAD_LEFT ); ?>" pattern="0?[0-9]|[1-5][0-9]"<?php echo $attributes; ?>>
+				<span aria-hidden="true"><?php _ex( 'min', 'minute', 'secupress' ); ?></span>
+			</label>
+		</fieldset>
+
+		<fieldset aria-labelledby="<?php echo $args['name']; ?>-time-slot-label">
+			<legend class="screen-reader-text"><?php _e( 'End hour and minute', 'secupress' ); ?></legend>
+			<label>
+				<span class="label-before" aria-hidden="true"><?php _ex( 'To', 'ending hour + minute', 'secupress' ) ?></span>
+				<span class="screen-reader-text"><?php _e( 'Hour' ); ?></span>
+				<input id="<?php echo $args['name']; ?>_to_hour" name="<?php echo $name_attribute; ?>[to_hour]" value="<?php echo str_pad( $to_hour, 2, 0, STR_PAD_LEFT ); ?>" pattern="0?[0-9]|1[0-9]|2[0-3]"<?php echo $attributes; ?>>
+				<span aria-hidden="true"><?php _ex( 'h', 'hour', 'secupress' ); ?></span>
+			</label>
+			<label>
+				<span class="screen-reader-text"><?php _e( 'Minute' ); ?></span>
+				<input id="<?php echo $args['name']; ?>_to_minute" name="<?php echo $name_attribute; ?>[to_minute]" value="<?php echo str_pad( $to_minute, 2, 0, STR_PAD_LEFT ); ?>" pattern="0?[0-9]|[1-5][0-9]"<?php echo $attributes; ?>>
+				<span aria-hidden="true"><?php _ex( 'min', 'minute', 'secupress' ); ?></span>
+			</label>
+		</fieldset>
+		<?php
+	}
+
+
+	/**
+	 * Displays the scheduled backups.
+	 *
+	 * @since 1.0
+	 */
+	protected function scheduled_backups() {
+		_e( 'None so far.', 'secupress' );
+	}
+
+
+	/**
+	 * Displays the scheduled scan.
+	 *
+	 * @since 1.0
+	 */
+	protected function scheduled_scan() {
+		_e( 'None so far.', 'secupress' );
+	}
+
+
+	/**
+	 * Displays the scheduled file monitoring.
+	 *
+	 * @since 1.0
+	 */
+	protected function scheduled_monitoring() {
+		_e( 'None so far.', 'secupress' );
+	}
+
+
+	/**
+	 * Displays the banned IPs and add actions to delete them or add new ones.
+	 *
+	 * @since 1.0
+	 */
+	protected function banned_ips() {
+		$ban_ips            = get_site_option( SECUPRESS_BAN_IP );
+		$ban_ips            = is_array( $ban_ips ) ? $ban_ips : array();
+		$offset             = get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;
+		$in_ten_years       = time() + YEAR_IN_SECONDS * 10;
+		$page_url           = secupress_admin_url( 'modules', 'logs' );
+		$referer_arg        = '&_wp_http_referer=' . urlencode( esc_url_raw( $page_url ) );
+		$is_search          = false;
+		$search_val         = '';
+		$empty_list_message = __( 'No Banned IPs yet.', 'secupress' );
+
+		// Ban form.
+		echo '<form id="form-ban-ip" class="hide-if-js" action="' . esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress-ban-ip' . $referer_arg ), 'secupress-ban-ip' ) ) . '" method="post">';
+			echo '<label for="secupress-ban-ip" class="screen-reader-text">' . __( 'Specify an IP to ban.', 'secupress' ) . '</label><br/>';
+			echo '<input type="text" id="secupress-ban-ip" name="ip" value=""/> ';
+			echo '<button type="submit" class="secupress-button secupress-button-mini">' . __( 'Ban IP', 'secupress' ) . '</button>';
+		echo "</form>\n";
+
+		// Search.
+		if ( $ban_ips && ! empty( $_POST['secupress-search-banned-ip'] ) ) { // WPCS: CSRF ok.
+			$search    = urldecode( trim( $_POST['secupress-search-banned-ip'] ) ); // WPCS: CSRF ok.
+			$is_search = true;
+
+			if ( secupress_ip_is_valid( $search ) ) {
+				$search_val = esc_attr( $search );
+
+				if ( isset( $ban_ips[ $search ] ) ) {
+					$ban_ips = array(
+						$search => $ban_ips[ $search ],
+					);
+				} else {
+					$ban_ips            = array();
+					$empty_list_message = __( 'IP not found.', 'secupress' );
+				}
+			} else {
+				$ban_ips            = array();
+				$empty_list_message = __( 'Not a valid IP.', 'secupress' );
+			}
+		}
+
+		// Search form.
+		echo '<form id="form-search-ip"' . ( $ban_ips || $is_search ? '' : ' class="hidden"' ) . ' method="post">';
+			echo '<label for="secupress-search-banned-ip" class="screen-reader-text">' . __( 'Search IP', 'secupress' ) . '</label><br/>';
+			echo '<input type="search" id="secupress-search-banned-ip" name="secupress-search-banned-ip" value="' . $search_val . '"/> ';
+			echo '<button type="submit" class="button button-primary" data-loading-i18n="' . esc_attr__( 'Searching...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Search IP', 'secupress' ) . '">' . __( 'Search IP', 'secupress' ) . '</button> ';
+			echo '<span class="spinner secupress-inline-spinner hide-if-no-js"></span>';
+			echo '<a class="button button-secondary' . ( $search_val ? '' : ' hidden' ) . '" id="reset-banned-ips-list" href="' . esc_url( $page_url ) . '" data-loading-i18n="' . esc_attr__( 'Reseting...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Reset', 'secupress' ) . '">' . __( 'Reset', 'secupress' ) . '</a> ';
+			echo '<span class="spinner secupress-inline-spinner' . ( $search_val ? ' hide-if-no-js' : ' hidden' ) . '"></span>';
+		echo "</form>\n";
+
+		// Slice the list a bit: limit to 100 last results.
+		if ( count( $ban_ips ) > 100 ) {
+			$ban_ips = array_slice( $ban_ips, -100 );
+			/* translators: %d is 100 */
+			echo '<p>' . sprintf( __( 'Last %d banned IPs:', 'secupress' ), 100 ) . "</p>\n";
+		}
+
+		// Display the list.
+		echo '<ul id="secupress-banned-ips-list" class="secupress-boxed-group">';
+		if ( $ban_ips ) {
+			foreach ( $ban_ips as $ip => $time ) {
+				echo '<li class="secupress-large-row">';
+					$format = __( 'M jS Y', 'secupress' ) . ' ' . __( 'G:i', 'secupress' );
+					$time   = $time > $in_ten_years ? __( 'Forever', 'secupress' ) : date_i18n( $format, $time + $offset );
+					$href   = wp_nonce_url( admin_url( 'admin-post.php?action=secupress-unban-ip&ip=' . esc_attr( $ip ) . $referer_arg ), 'secupress-unban-ip_' . $ip );
+
+					printf( '<strong>%s</strong> <em>(%s)</em>', esc_html( $ip ), $time );
+					printf( '<span><a class="a-unban-ip" href="%s">%s</a> <span class="spinner secupress-inline-spinner hide-if-no-js"></span></span>', esc_url( $href ), __( 'Delete', 'secupress' ) );
+				echo "</li>\n";
+			}
+		} else {
+			echo '<li id="no-ips">' . $empty_list_message . '</li>';
+		}
+		echo "</ul>\n";
+
+		// Actions.
+		echo '<p id="secupress-banned-ips-actions">';
+			// Display a button to unban all IPs.
+			$clear_href = wp_nonce_url( admin_url( 'admin-post.php?action=secupress-clear-ips' . $referer_arg ), 'secupress-clear-ips' );
+			echo '<a class="secupress-button secupress-button-secondary' . ( $ban_ips || $is_search ? '' : ' hidden' ) . '" id="secupress-clear-ips-button" href="' . esc_url( $clear_href ) . '" data-loading-i18n="' . esc_attr__( 'Clearing...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Clear all IPs', 'secupress' ) . '">' . __( 'Clear all IPs', 'secupress' ) . "</a>\n";
+			echo '<span class="spinner secupress-inline-spinner' . ( $ban_ips || $is_search ? ' hide-if-no-js' : ' hidden' ) . '"></span>';
+			// For JS: ban a IP.
+			echo '<button type="button" class="secupress-button secupress-button-primary hide-if-no-js" id="secupress-ban-ip-button" data-loading-i18n="' . esc_attr__( 'Banishing...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Ban new IP', 'secupress' ) . '">' . __( 'Ban new IP', 'secupress' ) . "</button>\n";
+			echo '<span class="spinner secupress-inline-spinner hide-if-no-js"></span>';
+		echo "</p>\n";
+	}
+
+
+	/**
+	 * Displays the textarea that lists the IP addresses not to ban.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (array) $args An array of parameters. See `::field()`.
+	 */
+	protected function ips_whitelist( $args ) {
+		$name_attribute = 'secupress_' . $this->modulenow . '_settings[' . $args['name'] . ']';
+		$disabled       = ! empty( $args['disabled'] ) || static::is_pro_feature( $args['name'] );
+		$disabled       = $disabled ? ' disabled="disabled"' : '';
+		$attributes     = $disabled;
+		$attributes    .= empty( $args['attributes']['cols'] ) ? ' cols="50"' : '';
+		$attributes    .= empty( $args['attributes']['rows'] ) ? ' rows="5"'  : '';
+		$whitelist      = secupress_get_module_option( $args['name'] );
+
+		if ( $whitelist ) {
+			$whitelist = explode( "\n", $whitelist );
+			$whitelist = array_map( 'secupress_ip_is_valid', $whitelist );
+			$whitelist = array_filter( $whitelist );
+			natsort( $whitelist );
+			$whitelist = implode( "\n", $whitelist );
+		} else {
+			$whitelist = '';
+		}
+
+		// Labels.
+		$label_open  = '';
+		$label_close = '';
+		if ( '' !== $args['label_before'] || '' !== $args['label'] || '' !== $args['label_after'] ) {
+			$label_open  = '<label' . ( $disabled ? ' class="disabled"' : '' ) . '>';
+			$label_close = '</label>';
+		}
+
+		$this->print_open_form_tag();
+
+			echo $label_open;
+				echo $args['label'] ? $args['label'] . '<br/>' : '';
+				echo $args['label_before'];
+				echo '<textarea id="' . $args['label_for'] . '" name="' . $name_attribute . '"' . $attributes . '>' . esc_textarea( $whitelist ) . "</textarea>\n";
+				echo $args['label_after'];
+			echo $label_close;
+
+			echo '<p class="description">' . __( 'One IP address per line.', 'secupress' ) . "</p>\n";
+
+			echo '<p class="submit"><button type="submit" class="secupress-button secupress-button-primary"' . $disabled . '> ' . __( 'Save whitelist', 'secupress' ) . '</button></p>';
+
+		$this->print_close_form_tag();
+	}
+
+
+	/**
+	 * Displays the checkbox to activate the "action" Logs.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (array) $args An array of parameters. See `::field()`.
+	 */
+	protected function activate_action_logs( $args ) {
+		$name_attribute = 'secupress-plugin-activation[' . $args['name'] . ']';
+		$disabled       = ! empty( $args['disabled'] ) || static::is_pro_feature( $args['name'] );
+		$disabled       = $disabled ? ' disabled="disabled"' : '';
+		$value          = (int) secupress_is_submodule_active( 'logs', 'action-logs' );
+
+		// Labels.
+		$label_open  = '';
+		$label_close = '';
+		if ( '' !== $args['label_before'] || '' !== $args['label'] || '' !== $args['label_after'] ) {
+			$label_open  = '<label' . ( $disabled ? ' class="disabled"' : '' ) . '>';
+			$label_close = '</label>';
+		}
+		?>
+		<form action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_activate_action_logs' ), 'secupress_activate_action_logs' ) ); ?>" id="form-activate-action-logs" method="post">
+			<p><?php echo $label_open; ?>
+				<?php
+				echo $args['label_before'];
+				echo ' <input type="checkbox" id="' . $args['label_for'] . '" name="' . $name_attribute . '" value="1"' . checked( $value, 1, false ) .  $disabled . ' class="secupress-checkbox" /> ';
+				echo '<span class="label-text">' . $args['label'] . '</span>';
+				?>
+			<?php echo $label_close; ?>
+			</p>
+			<?php
+
+			echo '<p class="description desc">';
+				_e( 'We will not log post action like creation or update but rather password and profile update, email changes, new administrator user, admin has logged in...', 'secupress' );
+			echo "</p>\n";
+
+			echo '<p class="submit"><button type="submit" class="secupress-button secupress-button-primary">' . esc_html__( 'Submit' ) . '</button></p>';
+			?>
+		</form>
+		<?php
+	}
+
+
+	/**
+	 * Displays the checkbox to activate the "404" Logs.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (array) $args An array of parameters. See `::field()`.
+	 */
+	protected function activate_404_logs( $args ) {
+		$name_attribute = 'secupress-plugin-activation[' . $args['name'] . ']';
+		$disabled       = ! empty( $args['disabled'] ) || static::is_pro_feature( $args['name'] );
+		$disabled       = $disabled ? ' disabled="disabled"' : '';
+		$value          = (int) secupress_is_submodule_active( 'logs', '404-logs' );
+
+		// Labels.
+		$label_open  = '';
+		$label_close = '';
+		if ( '' !== $args['label_before'] || '' !== $args['label'] || '' !== $args['label_after'] ) {
+			$label_open  = '<label' . ( $disabled ? ' class="disabled"' : '' ) . '>';
+			$label_close = '</label>';
+		}
+		?>
+		<form action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_activate_404_logs' ), 'secupress_activate_404_logs' ) ); ?>" id="form-activate-404-logs" method="post">
+			<p><?php echo $label_open; ?>
+				<?php
+				echo $args['label_before'];
+				echo ' <input type="checkbox" id="' . $args['label_for'] . '" name="' . $name_attribute . '" value="1"' . checked( $value, 1, false ) .  $disabled . 'class="secupress-checkbox" /> ';
+				echo '<span class="label-text">' . $args['label'] . '</span>';
+				?>
+			<?php echo $label_close; ?>
+			</p>
+			<?php echo '<p class="submit"><button type="submit" class="secupress-button secupress-button-primary">' . esc_html__( 'Submit' ) . '</button></p>'; ?>
+		</form>
+		<?php
+	}
+
+
+	/**
+	 * Displays the old backups.
+	 *
+	 * @since 1.0
+	 */
+	protected function backup_history() {
+		$backup_files = secupress_get_backup_file_list();
+		?>
+		<p id="secupress-no-backups"<?php echo $backup_files ? ' class="hidden"' : ''; ?>><em><?php _e( 'No Backups found yet, do one?', 'secupress' ); ?></em></p>
+
+		<form id="form-delete-backups"<?php echo ! $backup_files ? ' class="hidden"' : ''; ?> action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_delete_backups' ), 'secupress_delete_backups' ) ); ?>" method="post">
+
+			<strong id="secupress-available-backups"><?php printf( _n( '%s available Backup', '%s available Backups', count( $backup_files ), 'secupress' ), number_format_i18n( count( $backup_files ) ) ); ?></strong>
+
+			<fieldset class="secupress-boxed-group">
+				<legend class="screen-reader-text"><span><?php esc_html_e( 'Backups', 'secupress' ); ?></span></legend>
+				<?php array_map( 'secupress_print_backup_file_formated', array_reverse( $backup_files ) ); ?>
+			</fieldset>
+
+			<p class="submit">
+				<button class="secupress-button secupress-button-secondary alignright" type="submit" id="submit-delete-backups">
+					<span class="icon">
+						<i class="icon-cross"></i>
+					</span>
+					<span class="text">
+						<?php esc_html_e( 'Delete all Backups', 'secupress' ); ?>
+					</span>
+				</button>
+			</p>
+
+		</form>
+		<?php
+	}
+
+
+	/**
+	 * Displays the tables to launch a backup
+	 *
+	 * @since 1.0
+	 */
+	protected function backup_db() {
+		$wp_tables    = secupress_get_wp_tables();
+		$other_tables = secupress_get_non_wp_tables();
+		?>
+		<form action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_backup_db' ), 'secupress_backup_db' ) ); ?>" id="form-do-db-backup" method="post">
+
+			<fieldset class="secupress-boxed-group">
+				<legend class="screen-reader-text"><span><?php esc_html_e( 'DataBase Tables', 'secupress' ); ?></span></legend>
+
+				<b><?php _e( 'Unknown tables', 'secupress' ); ?></b>
+				<br>
+				<?php
+				foreach ( $other_tables as $table ) {
+					echo '<label><input checked="checked" name="other_tables[]" type="checkbox" class="secupress-checkbox secupress-checkbox-mini"> <span class="label-text">' . $table . '</span></label><br>';
+				}
+				?>
+				<hr>
+				<b><?php _e( 'WordPress tables (mandatory)', 'secupress' ); ?></b>
+				<br>
+				<?php
+				foreach ( $wp_tables as $table ) {
+					echo '<label><input disabled="disabled" checked="checked" type="checkbox" class="secupress-checkbox secupress-checkbox-mini"> <span class="label-text">' . $table . '</span></label><br>';
+				}
+				?>
+			</fieldset>
+
+			<p class="submit">
+				<button class="secupress-button secupress-button-primary alignright" type="submit" data-original-i18n="<?php esc_attr_e( 'Backup my Database', 'secupress' ); ?>" data-loading-i18n="<?php esc_attr_e( 'Backuping&hellip;', 'secupress' ); ?>" id="submit-backup-db">
+					<span class="icon">
+						<i class="icon-download"></i>
+					</span>
+					<span class="text">
+						<?php esc_html_e( 'Backup my Database', 'secupress' ); ?>
+					</span>
+				</button>
+				<span class="spinner secupress-inline-spinner"></span>
+			</p>
+
+		</form>
+		<?php
+	}
+
+
+	/**
+	 * Displays the files backups and the button to launch one.
+	 *
+	 * @since 1.0
+	 */
+	protected function backup_files() {
+		$disabled            = disabled( ! secupress_is_pro(), true, false );
+		$ignored_directories = get_site_option( 'secupress_file-backups_settings' );
+		$ignored_directories = ! empty( $ignored_directories['ignored_directories'] ) ? $ignored_directories['ignored_directories'] : '';
+		?>
+		<form action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_backup_files' ), 'secupress_backup_files' ) ); ?>" id="form-do-files-backup" method="post">
+
+			<fieldset>
+				<legend><strong><label for="ignored_directories"><?php _e( 'Do not backup the following files and folders:', 'secupress' ); ?></label></strong></legend>
+				<br>
+				<textarea id="ignored_directories" name="ignored_directories" cols="50" rows="5"<?php echo $disabled; ?>><?php echo esc_textarea( $ignored_directories ); ?></textarea>
+				<p class="description">
+					<?php _e( 'One file or folder per line.', 'secupress' ); ?>
+				</p>
+			</fieldset>
+
+			<p class="submit">
+				<button class="secupress-button secupress-button-primary alignright" type="submit" data-original-i18n="<?php esc_attr_e( 'Backup my Files', 'secupress' ); ?>" data-loading-i18n="<?php esc_attr_e( 'Backuping&hellip;', 'secupress' ); ?>" id="submit-backup-files"<?php echo $disabled; ?>>
+					<span class="icon">
+						<i class="icon-download"></i>
+					</span>
+					<span class="text">
+						<?php esc_html_e( 'Backup my Files', 'secupress' ); ?>
+					</span>
+				</button>
+				<span class="spinner secupress-inline-spinner"></span>
+			</p>
+
+		</form>
+		<?php
+	}
+
+
+	/**
+	 * Scan the installation and search for modified/malicious files
+	 *
+	 * @since 1.0
+	 */
+	protected function file_scanner() {
+		if ( ! secupress_is_pro() ) {
+			?>
+			<button class="secupress-button disabled" type="button">
+				<?php esc_html_e( 'Search for malicious files', 'secupress' ); ?>
+			</button>
+			<?php
+		} else {
+			/**
+			 * Fires when SecuPress Pro loads this field.
+			 *
+			 * @since 1.0
+			 */
+	 		do_action( 'secupress.settings.field.file_scanner' );
+		}
 	}
 
 

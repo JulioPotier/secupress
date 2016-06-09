@@ -139,35 +139,38 @@ function secupress_get_scan_results() {
 		$tests = array_flip( $tests );
 	}
 
-	$transients = array();
-	$to_remove  = array();
+	$options      = get_site_option( SECUPRESS_SCAN_SLUG, array() );
+	$options      = is_array( $options ) ? $options : array();
+	$options      = array_intersect_key( $options, $tests );
+	$update_scans = false;
+	$to_remove    = array();
 
 	foreach ( $tests as $test_name => $i ) {
 		$transient = secupress_get_site_transient( 'secupress_scan_' . $test_name );
 
+		// Update scans.
 		if ( $transient && is_array( $transient ) ) {
 			secupress_delete_site_transient( 'secupress_scan_' . $test_name );
-			$transients[ $test_name ] = $transient;
-			// In the same time, when a scan is good, remove the related fix.
-			if ( 'good' === $transient['status'] ) {
-				$to_remove[ $test_name ] = 1;
-			}
+			$options[ $test_name ] = $transient;
+			$update_scans = true;
+		}
+
+		// In the same time, when a scan is good, remove the related fix.
+		if ( ! empty( $options[ $test_name ] ) && 'good' === $options[ $test_name ]['status'] ) {
+			$to_remove[ $test_name ] = 1;
 		}
 	}
 
-	$options = get_site_option( SECUPRESS_SCAN_SLUG, array() );
-	$options = is_array( $options ) ? $options : array();
-	$options = array_intersect_key( $options, $tests );
-
-	if ( $transients ) {
-		$options = array_merge( $options, $transients );
+	// Update scans.
+	if ( $update_scans ) {
 		update_site_option( SECUPRESS_SCAN_SLUG, $options );
+	}
 
-		// Also update the fixes.
+	// Update the fixes.
+	if ( $to_remove ) {
 		$fixes = secupress_get_fix_results();
-		if ( $to_remove ) {
-			$fixes = array_diff_key( $fixes, $to_remove );
-		}
+		$fixes = array_diff_key( $fixes, $to_remove );
+
 		update_site_option( SECUPRESS_FIX_SLUG, $fixes );
 	}
 

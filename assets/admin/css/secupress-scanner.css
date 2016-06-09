@@ -272,7 +272,12 @@ a.secupress-close-moreinfo {
 }
 .status-good .secupress-fix-status-actions,
 .status-warning .secupress-fix-status-actions,
-.status-notscannedyet .secupress-fix-status-actions {
+.status-notscannedyet .secupress-fix-status-actions,
+.has-fix-status .secupress-fix-status-actions,
+.status-good .secupress-fix-result-retryfix,
+.status-warning .secupress-fix-result-retryfix,
+.status-notscannedyet .secupress-fix-result-retryfix,
+.no-fix-status .secupress-fix-result-retryfix {
 	display: none;
 	visibility: hidden;
 	speak: none
@@ -642,9 +647,11 @@ a + .secupress-row-actions {
 	-ms-flex-preferred-size: 270px;
 	flex-basis: 270px;
 }
-
 .secupress-item-actions-fix {
 	padding-top: 10px;
+}
+.secupress-fix-result-retryfix {
+	padding-right: 0;
 }
 
 /* Scan result and actions */
@@ -662,7 +669,7 @@ a + .secupress-row-actions {
 }
 
 .secupress-fix-result-message:not(:empty) {
-	padding: 10px 15px 2px;
+	padding: 0 15px 10px 0;
 }
 .secupress-fix-result-actions {
 	padding: 8px 15px;

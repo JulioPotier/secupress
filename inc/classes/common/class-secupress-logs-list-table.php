@@ -189,7 +189,9 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 		}
 
 		// Order.
-		$args['order'] = ! empty( $args['order'] ) ? $args['order'] : 'ASC';
+		if ( empty( $args['order'] ) ) {
+			$args['order'] = 'date menu_order' === $args['orderby'] ? 'DESC' : 'ASC';
+		}
 		$args['order'] = ! empty( $_GET['order'] ) ? $_GET['order'] : $args['order'];
 
 		// Posts per page.

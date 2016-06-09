@@ -38,16 +38,16 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 
 	wp_localize_script( 'secupress-wordpress-js', 'SecuPressi18n', array( 'isPro' => (int) secupress_is_pro() ) );
 
-	// $pages = array(
-	// 	'toplevel_page_' . SECUPRESS_PLUGIN_SLUG . '_scanners'  => 1,
-	// 	'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules'  => 1,
-	// 	'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' => 1,
-	// 	'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_logs'     => 1,
-	// );
+	$pages = array(
+		'toplevel_page_' . SECUPRESS_PLUGIN_SLUG . '_scanners'  => 1,
+		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules'  => 1,
+		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' => 1,
+		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_logs'     => 1,
+	);
 
-	// if ( ! isset( $pages[ $hook_suffix ] ) ) {
-	// 	return;
-	// }
+	if ( ! isset( $pages[ $hook_suffix ] ) ) {
+		return;
+	}
 
 	// SecuPress Common CSS.
 	wp_enqueue_style( 'secupress-common-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-common' . $suffix . '.css', array( 'secupress-wordpress-css' ), $version );
@@ -80,7 +80,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		// JS.
 		wp_enqueue_script( 'secupress-modules-js',  SECUPRESS_ADMIN_JS_URL . 'secupress-modules' . $suffix . '.js', array( 'secupress-common-js' ), $version, true );
 
-		$alreadyScanned = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) ) ? 1 : 0;
+		$already_scanned = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) ) ? 1 : 0;
 
 		wp_localize_script( 'secupress-modules-js', 'SecuPressi18nModules', array(
 			// Roles.
@@ -116,12 +116,12 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'searchResults'        => _x( 'See search result below.', 'adjective', 'secupress' ),
 			'searchReset'          => _x( 'Search reset.', 'adjective', 'secupress' ),
 			// First scan.
-			'alreadyScanned'       => $alreadyScanned,
+			'alreadyScanned'       => $already_scanned,
 			'firstScanText'        => __( 'Before setting modules,<br>launch your first scan.', 'secupress' ),
 			'firstScanButton'      => __( 'One Click Scan', 'secupress' ),
 			'firstScanURL'         => esc_url( wp_nonce_url( secupress_admin_url( 'scanners' ), 'first_oneclick-scan' ) ) . '&oneclick-scan=1',
 			'firstScanImage'       => SECUPRESS_ADMIN_IMAGES_URL . 'icon-radar.png',
-			// Expand Textareas
+			// Expand Textareas.
 			'expandTextOpen'       => __( 'Show More', 'secupress' ),
 			'expandTextClose'      => __( 'Close' ),
 		) );
@@ -169,7 +169,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'fixDetails'         => __( 'Fix Details', 'secupress' ),
 			'supportTitle'       => __( 'Ask for Support', 'secupress' ),
 			'supportButton'      => __( 'Open a ticket', 'secupress' ),
-			'supportContentFree' => __( '<p>Using the free version you have to post a new thread in the free wordpress.org forums.</p><p><a href="https://wordpress.org/support/plugin/secupress-free#postform" target="_blank" class="secupress-button secupress-button-mini"><span class="icon"><i class="icon-wordpress" aria-hidden="true"></i></span><span class="text">Open the forum</span></a></p><p>When using the Pro version, you can open a ticket directly from this popin: </p><br><p style="text-align:left">Summary: <input class="large-text" type="text" name="summary"></p><p style="text-align:left">Description: <textarea name="description" disabled="disabled">Please provide the specific url(s) where we can see each issue. e.g. the request doesn\'t work on this page: example.com/this-page</textarea></p>', 'secupress' ), // ////.
+			'supportContentFree' => __( '<p>Using the free version you have to post a new thread in the free wordpress.org forums.</p><p><a href="https://wordpress.org/support/plugin/secupress-free#postform" target="_blank" class="secupress-button secupress-button-mini"><span class="icon" aria-hidden="true"><i class="icon-wordpress"></i></span><span class="text">Open the forum</span></a></p><p>When using the Pro version, you can open a ticket directly from this popin: </p><br><p style="text-align:left">Summary: <input class="large-text" type="text" name="summary"></p><p style="text-align:left">Description: <textarea name="description" disabled="disabled">Please provide the specific url(s) where we can see each issue. e.g. the request doesn\'t work on this page: example.com/this-page</textarea></p>', 'secupress' ), // ////.
 			'supportContentPro'  => '<input type="hidden" id="secupress_support_item" name="secupress_support_item" value=""><p style="text-align:left">Summary: <input class="large-text" type="text" name="summary"></p><p style="text-align:left">Description: <textarea name="description" disabled="disabled">Please provide the specific url(s) where we can see each issue. e.g. the request doesn\'t work on this page: example.com/this-page</textarea></p>', // ////.
 		);
 
@@ -178,9 +178,9 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		}
 
 		if ( ! empty( $_GET['oneclick-scan'] ) && ! empty( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'first_oneclick-scan' ) && current_user_can( secupress_get_capability() ) ) {
-			$times = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
+			$items = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
 
-			if ( ! $times ) {
+			if ( ! $items ) {
 				$localize['firstOneClickScan'] = 1;
 			}
 			$_SERVER['REQUEST_URI'] = remove_query_arg( array( '_wpnonce', 'oneclick-scan' ) );
@@ -194,9 +194,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		wp_enqueue_style( 'secupress-logs-css',  SECUPRESS_ADMIN_CSS_URL . 'secupress-logs' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 	}
 
-
-	// Old WordPress Versions
-	// WordPress 3.9
+	// Old WordPress Versions: before WordPress 3.9.
 	if ( ! secupress_wp_version_is( '3.9' ) ) {
 		wp_enqueue_style( 'secupress-wordpress-3-7',  SECUPRESS_ADMIN_CSS_URL . 'secupress-wordpress-3.7' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 	}
@@ -336,37 +334,15 @@ function __secupress_modules() {
  */
 function __secupress_scanners() {
 	$counts  = secupress_get_scanner_counts();
-	$times   = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
+	$items   = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
 	$reports = array();
-	$last_pc = -1;
 
-	if ( $times ) {
-		foreach ( $times as $time ) {
-			$icon = 'right';
+	if ( $items ) {
+		$last_percent = -1;
 
-			if ( $last_pc > -1 ) {
-				if ( $last_pc < $time['percent'] ) {
-					$icon = 'up';
-				} elseif ( $last_pc > $time['percent'] ) {
-					$icon = 'down';
-				}
-			}
-
-			$last_pc = $time['percent'];
-
-			$reports[] = sprintf(
-				'<li data-percent="%1$d">
-					<span class="secupress-latest-list-time timeago">%4$s</span>
-					<span class="secupress-latest-list-date">%5$s</span>
-					<strong class="secupress-latest-list-grade letter l%3$s">%3$s</strong>
-					<i class="dashicons mini dashicons-arrow-%2$s-alt2" aria-hidden="true"></i>
-				</li>',
-				$time['percent'],
-				$icon,
-				$time['grade'],
-				sprintf( __( '%s ago' ), human_time_diff( $time['time'] ) ),
-				date_i18n( _x( 'M dS, Y \a\t h:ia', 'Latest scans', 'secupress' ), $time['time'] )
-			);
+		foreach ( $items as $item ) {
+			$reports[]    = secupress_formate_latest_scans_list_item( $item, $last_percent );
+			$last_percent = $item['percent'];
 		}
 
 		$reports = array_reverse( $reports );
@@ -376,7 +352,7 @@ function __secupress_scanners() {
 
 		<?php secupress_admin_heading( __( 'Scanners', 'secupress' ) ); ?>
 		<div class="secupress-wrapper">
-			<div class="secupress-section-dark secupress-scanners-header<?php echo $times ? '' : ' secupress-not-scanned-yet'; ?>">
+			<div class="secupress-section-dark secupress-scanners-header<?php echo $reports ? '' : ' secupress-not-scanned-yet'; ?>">
 
 				<div class="secupress-heading secupress-flex secupress-flex-spaced secupress-wrap">
 					<p class="secupress-text-medium"><?php
@@ -385,8 +361,8 @@ function __secupress_scanners() {
 					?></p>
 					<p class="secupress-text-end hide-if-no-js">
 						<a href="#secupress-more-info" class="secupress-link-icon secupress-open-moreinfo" data-trigger="slidedown" data-target="secupress-more-info">
-							<span class="icon">
-								<i class="icon-info" aria-hidden="true"></i>
+							<span class="icon" aria-hidden="true">
+								<i class="icon-info"></i>
 							</span>
 							<span class="text">
 								<?php esc_html_e( 'How does it work?', 'secupress' ); ?>
@@ -398,8 +374,8 @@ function __secupress_scanners() {
 						<div class="secupress-flex secupress-flex-top">
 							<div class="secupress-col-1-3">
 								<div class="secupress-blob secupress-counter-put">
-									<div class="secupress-blob-icon">
-										<i class="icon-radar" aria-hidden="true"></i>
+									<div class="secupress-blob-icon" aria-hidden="true">
+										<i class="icon-radar"></i>
 									</div>
 									<div class="secupress-blob-content">
 										<p><?php esc_html_e( 'Start a checking of all security points with the One Click Scan button.', 'secupress' ); ?></p>
@@ -408,8 +384,8 @@ function __secupress_scanners() {
 							</div>
 							<div class="secupress-col-1-3">
 								<div class="secupress-blob secupress-counter-put">
-									<div class="secupress-blob-icon">
-										<i class="icon-pad-list" aria-hidden="true"></i>
+									<div class="secupress-blob-icon" aria-hidden="true">
+										<i class="icon-pad-list"></i>
 									</div>
 									<div class="secupress-blob-content">
 										<p><?php esc_html_e( 'Take a look at validated points and points you have to fix.', 'secupress' ); ?></p>
@@ -418,8 +394,8 @@ function __secupress_scanners() {
 							</div>
 							<div class="secupress-col-1-3">
 								<div class="secupress-blob secupress-counter-put">
-									<div class="secupress-blob-icon">
-										<i class="icon-pad-check" aria-hidden="true"></i>
+									<div class="secupress-blob-icon" aria-hidden="true">
+										<i class="icon-pad-check"></i>
 									</div>
 									<div class="secupress-blob-content">
 										<p><?php esc_html_e( 'Fix all points automatically with the One Click Fix button or do it manually if you are a warrior.', 'secupress' ); ?></p>
@@ -430,8 +406,8 @@ function __secupress_scanners() {
 
 						<p class="secupress-text-end secupress-m0">
 							<a href="#secupress-more-info" class="secupress-link-icon secupress-icon-right secupress-close-moreinfo" data-trigger="slideup" data-target="secupress-more-info">
-								<span class="icon">
-									<i class="icon-cross" aria-hidden="true"></i>
+								<span class="icon" aria-hidden="true">
+									<i class="icon-cross"></i>
 								</span>
 								<span class="text">
 									<?php esc_html_e( 'I\'ve got it!', 'secupress' ); ?>
@@ -506,8 +482,8 @@ function __secupress_scanners() {
 
 								<p class="secupress-actions-line">
 									<button class="secupress-button button-secupress-scan" type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ); ?>">
-										<span class="icon">
-											<i class="icon-radar" aria-hidden="true"></i>
+										<span class="icon" aria-hidden="true">
+											<i class="icon-radar"></i>
 										</span>
 										<span class="text">
 											<?php _e( 'One Click Scan', 'secupress' ); ?>
@@ -515,8 +491,8 @@ function __secupress_scanners() {
 									</button>
 
 									<button class="secupress-button-primary button-secupress-fix" type="button">
-										<span class="icon">
-											<i class="icon-shield" aria-hidden="true"></i>
+										<span class="icon" aria-hidden="true">
+											<i class="icon-shield"></i>
 										</span>
 										<span class="text">
 											<?php _e( 'One Click Fix', 'secupress' ); ?>
@@ -534,7 +510,7 @@ function __secupress_scanners() {
 											/* translators: %s is the plugin name */
 											echo urlencode( esc_url_raw( 'http://secupress.fr&text=' . sprintf( __( 'Wow! My website just got an A security grade using %s, what about yours?', 'secupress' ), SECUPRESS_PLUGIN_NAME ) ) );
 										?>">
-											<span class="icon"><span class="dashicons dashicons-twitter"></span></span>
+											<span class="icon" aria-hidden="true"><span class="dashicons dashicons-twitter"></span></span>
 											<span class="text"><?php esc_html_e( 'Tweet that', 'secupress' ); ?></span>
 										</a>
 								</div>
@@ -603,48 +579,44 @@ function __secupress_scanners() {
 						<p class="secupress-text-medium">
 							<?php esc_html_e( 'Schedule your security analysis', 'secupress' ); ?>
 						</p>
-						<p><?php _e('The analysis of security points is keeping updated. No need to connect to your back office with our automatic scan.', 'secupress' ); ?></p>
+						<p><?php _e( 'The analysis of security points is keeping updated. No need to connect to your back office with our automatic scan.', 'secupress' ); ?></p>
 
-						<?php
-						/////
-						$last_schedule = '1463654935';
-						$next_schedule = '1464654935';
+						<?php if ( secupress_is_pro() ) :
+							// /////
+							$last_schedule = '1463654935';
+							$next_schedule = '1464654935';
+							?>
+							<div class="secupress-schedules-infos is-pro">
+								<p class="secupress-flex secupress-ib">
+									<i class="icon-clock-o" aria-hidden="true"></i>
+									<span><?php printf( __( 'Last automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $last_schedule ) ); ?></span>
+								</p>
+								<p class="secupress-flex secupress-ib next-one">
+									<i class="icon-clock-o" aria-hidden="true"></i>
+									<span><?php printf( __( 'Next automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $next_schedule ) ); ?></span>
+								</p>
 
-						if ( secupress_is_pro() ) {
-						?>
-						<div class="secupress-schedules-infos is-pro">
-							<p class="secupress-flex secupress-ib">
-								<i class="icon-clock-o" aria-hidden="true"></i>
-								<span><?php printf( __( 'Last automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress'), $last_schedule ) ); ?></span>
-							</p>
-							<p class="secupress-flex secupress-ib next-one">
-								<i class="icon-clock-o" aria-hidden="true"></i>
-								<span><?php printf( __( 'Next automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress'), $next_schedule ) ); ?></span>
-							</p>
+								<p class="secupress-cta">
+									<a href="<?php echo esc_url( secupress_admin_url( 'modules', 'schedules' ) ); ?>#module-scanners" class="secupress-button secupress-button-primary"><?php esc_html_e( 'Schedule your next analysis', 'secupress' ); ?></a>
+								</p>
+							</div><!-- .secupress-schedules-infos -->
+						<?php else : ?>
+							<div class="secupress-schedules-infos">
+								<p class="secupress-flex secupress-ib">
+									<i class="icon-clock-o" aria-hidden="true"></i>
+									<span><?php printf( __( 'Last automatic scan: %s', 'secupress' ), '&mdash;' ); ?></span>
+								</p>
+								<p class="secupress-flex secupress-ib next-one">
+									<i class="icon-clock-o" aria-hidden="true"></i>
+									<span><?php printf( __( 'Next automatic scan: %s', 'secupress' ), '&mdash;' ); ?></span>
+								</p>
 
-							<p class="secupress-cta">
-								<a href="#" class="secupress-button secupress-button-primary"><?php esc_html_e( 'Schedule your next analysis', 'secupress' ); ?></a>
-							</p>
-
-						<?php } else { ?>
-						<div class="secupress-schedules-infos">
-							<p class="secupress-flex secupress-ib">
-								<i class="icon-clock-o" aria-hidden="true"></i>
-								<span><?php printf( __( 'Last automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress'), $last_schedule ) ); ?></span>
-							</p>
-							<p class="secupress-flex secupress-ib next-one">
-								<i class="icon-clock-o" aria-hidden="true"></i>
-								<span><?php printf( __( 'Next automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress'), $next_schedule ) ); ?></span>
-							</p>
-
-							<p class="secupress-cta">
-								<a href="#" class="secupress-button secupress-button-tertiary"><?php esc_html_e( 'Schedule your next analysis', 'secupress' ); ?></a>
-							</p>
-							<p class="secupress-cta-detail"><?php _e( 'Available with pro version', 'secupress' ); ?></p>
-
-						<?php } ?>
-
-						</div><!-- .secupress-schedules-infos -->
+								<p class="secupress-cta">
+									<a href="<?php echo esc_url( secupress_admin_url( 'modules', 'schedules' ) ); ?>#module-scanners" class="secupress-button secupress-button-tertiary"><?php esc_html_e( 'Schedule your next analysis', 'secupress' ); ?></a>
+								</p>
+								<p class="secupress-cta-detail"><?php _e( 'Available with pro version', 'secupress' ); ?></p>
+							</div><!-- .secupress-schedules-infos -->
+						<?php endif; ?>
 
 					</div><!-- .secupress-tab-content -->
 
@@ -656,8 +628,8 @@ function __secupress_scanners() {
 
 					<p class="secupress-start-one-click-scan">
 						<button class="secupress-button secupress-button-primary button-secupress-scan" type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ); ?>">
-							<span class="icon">
-								<i class="icon-radar" aria-hidden="true"></i>
+							<span class="icon" aria-hidden="true">
+								<i class="icon-radar"></i>
 							</span>
 							<span class="text">
 								<?php esc_html_e( 'One Click Scan', 'secupress' ); ?>
@@ -790,11 +762,11 @@ function secupress_admin_heading( $title = '' ) {
  * @since 1.0
  * @author Geoffrey
  *
- * @param (array) $titles The title and subtitle
+ * @param (array) $titles The title and subtitle.
  */
 function secupress_settings_heading( $titles = array() ) {
 	extract( $titles );
-?>
+	?>
 	<div class="secupress-section-dark secupress-settings-header secupress-header-mini secupress-flex">
 		<div class="secupress-col-1-3 secupress-col-logo secupress-text-center">
 			<div class="secupress-logo-block secupress-flex">
@@ -814,7 +786,7 @@ function secupress_settings_heading( $titles = array() ) {
 		</div>
 		<div class="secupress-col-1-3 secupress-col-rateus secupress-text-end">
 			<p class="secupress-rateus">
-				<strong><?php _e('You like this plugin?') ?></strong>
+				<strong><?php _e( 'You like this plugin?' ) ?></strong>
 				<br>
 				<?php printf( __( 'Please take a few seconds to rate us on %sWordPress.org%s', 'secupress' ), '<a href="' . SECUPRESS_RATE_URL . '">', '</a>' ); ?>
 			</p>
@@ -830,7 +802,7 @@ function secupress_settings_heading( $titles = array() ) {
 			</p>
 		</div>
 	</div>
-<?php
+	<?php
 }
 
 
@@ -953,55 +925,47 @@ function secupress_scanners_template() {
 					$class_name   = 'SecuPress_Scan_' . $class_name_part;
 					$current_test = $class_name::get_instance();
 					$referer      = urlencode( esc_url_raw( self_admin_url( 'admin.php?page=' . SECUPRESS_PLUGIN_SLUG . '_scanners' . ( $is_subsite ? '' : '#' . $class_name_part ) ) ) );
-					$css_class    = ' type-' . sanitize_key( $class_name::$type );
-
-					if ( $is_subsite ) {
-						$css_class .= 0 === $i % 2 ? '' : ' alternate';
-					} else {
-						$css_class .= 0 === $i % 2 ? ' alternate-2' : ' alternate-1';
-					}
+					$is_fixable   = true === $current_test::$fixable || 'pro' === $current_test::$fixable && secupress_is_pro();
 
 					// Scan.
-					$scanners[ $option_name ]           = isset( $scanners[ $option_name ] )             ? $scanners[ $option_name ]           : array();
-					$scanners[ $option_name ]['status'] = ! empty( $scanners[ $option_name ]['status'] ) ? $scanners[ $option_name ]['status'] : 'notscannedyet';
-
-					$status_text  = secupress_status( $scanners[ $option_name ]['status'] );
-					$status_class = ! empty( $scanners[ $option_name ]['status'] ) ? sanitize_html_class( $scanners[ $option_name ]['status'] ) : 'notscannedyet';
-					$scan_nonce   = 'secupress_scanner_' . $class_name_part . ( $is_subsite ? '-' . $site_id : '' );
-					$scan_nonce   = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $class_name_part . '&_wp_http_referer=' . $referer . ( $is_subsite ? '&for-current-site=1&site=' . $site_id : '' ) ), $scan_nonce );
-					$css_class   .= ' status-' . $status_class;
-					$css_class   .= isset( $autoscans[ $class_name_part ] ) ? ' autoscan' : '';
-					$css_class   .= false === $current_test::$fixable || 'pro' === $current_test::$fixable && ! secupress_is_pro() ? ' not-fixable' : '';
-					$css_class   .= ! empty( $fixes[ $option_name ]['has_action'] ) ? ' status-hasaction' : '';
-
-					if ( ! empty( $scanners[ $option_name ]['msgs'] ) ) {
-						$scan_message = secupress_format_message( $scanners[ $option_name ]['msgs'], $class_name_part );
-					} else {
-						$scan_message = '&#175;';
-					}
+					$scanner        = isset( $scanners[ $option_name ] ) ? $scanners[ $option_name ] : array();
+					$scan_status    = ! empty( $scanner['status'] ) ? $scanner['status'] : 'notscannedyet';
+					$scan_nonce_url = 'secupress_scanner_' . $class_name_part . ( $is_subsite ? '-' . $site_id : '' );
+					$scan_nonce_url = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $class_name_part . '&_wp_http_referer=' . $referer . ( $is_subsite ? '&for-current-site=1&site=' . $site_id : '' ) ), $scan_nonce_url );
+					$scan_message   = ! empty( $scanner['msgs'] ) ? secupress_format_message( $scanner['msgs'], $class_name_part ) : '&#175;';
 
 					// Fix.
-					$fix_status_text  = ! empty( $fixes[ $option_name ]['status'] ) && 'good' !== $fixes[ $option_name ]['status'] ? secupress_status( $fixes[ $option_name ]['status'] ) : '';
-					$fix_css_class    = ! empty( $fixes[ $option_name ]['status'] ) ? ' status-' . sanitize_html_class( $fixes[ $option_name ]['status'] ) : ' status-cantfix';
-					$fix_action       = 'secupress_fixit_' . $class_name_part . ( $is_subsite ? '-' . $site_id : '' );
-					$fix_nonce_url    = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $class_name_part . '&_wp_http_referer=' . $referer . ( $is_subsite ? '&for-current-site=1&site=' . $site_id : '' ) ), $fix_action );
+					$fix             = ! empty( $fixes[ $option_name ] ) ? $fixes[ $option_name ] : array();
+					$fix_status_text = ! empty( $fix['status'] ) && 'good' !== $fix['status'] ? secupress_status( $fix['status'] ) : '';
+					$fix_nonce_url   = 'secupress_fixit_' . $class_name_part . ( $is_subsite ? '-' . $site_id : '' );
+					$fix_nonce_url   = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $class_name_part . '&_wp_http_referer=' . $referer . ( $is_subsite ? '&for-current-site=1&site=' . $site_id : '' ) ), $fix_nonce_url );
+					$fix_message     = ! empty( $fix['msgs'] ) && 'good' !== $scan_status ? secupress_format_message( $fix['msgs'], $class_name_part ) : '';
 
-					if ( ! empty( $fixes[ $option_name ]['msgs'] ) && 'good' !== $status_class ) {
-						$fix_message = secupress_format_message( $fixes[ $option_name ]['msgs'], $class_name_part );
+					// Row css class.
+					$row_css_class  = ' type-' . sanitize_key( $class_name::$type );
+					$row_css_class .= ' status-' . sanitize_html_class( $scan_status );
+					$row_css_class .= isset( $autoscans[ $class_name_part ] ) ? ' autoscan' : '';
+					$row_css_class .= $is_fixable ? ' fixable' : ' not-fixable';
+					$row_css_class .= ! empty( $fix['has_action'] ) ? ' status-hasaction' : '';
+					$row_css_class .= ! empty( $fix['status'] ) && empty( $fix['has_action'] ) ? ' has-fix-status' : ' no-fix-status';
+
+					if ( $is_subsite ) {
+						$row_css_class .= 0 === $i % 2 ? '' : ' alternate';
 					} else {
-						$fix_message = '';
+						$row_css_class .= 0 === $i % 2 ? ' alternate-2' : ' alternate-1';
 					}
 					?>
-					<div id="<?php echo $class_name_part; ?>" class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> type-all status-all<?php echo $css_class; ?>">
+					<div id="<?php echo $class_name_part; ?>" class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> type-all status-all<?php echo $row_css_class; ?>">
 
 						<div class="secupress-flex secupress-flex-top secupress-flex-spaced">
 							<div class="secupress-item-header">
 								<p class="secupress-item-title"><?php echo $class_name::$title; ?></p>
+
 								<div class="secupress-row-actions">
 									<span class="hide-if-no-js">
 										<button type="button" class="secupress-details link-like" data-test="<?php echo $class_name_part; ?>" title="<?php esc_attr_e( 'Get details', 'secupress' ); ?>">
-											<span class="icon">
-												<i class="icon-info-disk" aria-hidden="true"></i>
+											<span class="icon" aria-hidden="true">
+												<i class="icon-info-disk"></i>
 											</span>
 											<span class="text">
 												<?php _e( 'Learn more', 'secupress' ); ?>
@@ -1010,54 +974,54 @@ function secupress_scanners_template() {
 									</span>
 								</div>
 							</div><!-- .secupress-item-header -->
+
 							<div class="secupress-item-actions-fix">
 								<div class="secupress-fix-status-text"><?php echo $fix_status_text; ?></div>
 
 								<div class="secupress-fix-status-actions">
-								<?php
-								if ( true === $current_test::$fixable || 'pro' === $current_test::$fixable && secupress_is_pro() ) {
-									?>
-									<a class="secupress-button-primary secupress-button-mini secupress-fixit<?php echo $current_test::$delayed_fix ? ' delayed-fix' : '' ?>" href="<?php echo esc_url( $fix_nonce_url ); ?>">
-										<span class="icon">
-											<i class="icon-shield" aria-hidden="true"></i>
-										</span>
-										<span class="text">
-											<?php _e( 'Fix it', 'secupress' ); ?>
-										</span>
-									</a>
-									<div class="secupress-row-actions">
-										<span class="hide-if-no-js">
-											<button type="button" class="secupress-details-fix link-like" data-test="<?php echo $class_name_part; ?>" title="<?php esc_attr_e( 'Get fix details', 'secupress' ); ?>">
-													<?php _e( 'How?', 'secupress' ); ?>
+									<?php
+									if ( $is_fixable ) {
+										// It can be fixed.
+										?>
+										<a class="secupress-button-primary secupress-button-mini secupress-fixit<?php echo $current_test::$delayed_fix ? ' delayed-fix' : ''; ?>" href="<?php echo esc_url( $fix_nonce_url ); ?>">
+											<span class="icon" aria-hidden="true">
+												<i class="icon-shield"></i>
+											</span>
+											<span class="text">
+												<?php _e( 'Fix it', 'secupress' ); ?>
+											</span>
+										</a>
+										<div class="secupress-row-actions">
+											<button type="button" class="secupress-details-fix link-like hide-if-no-js" data-test="<?php echo $class_name_part; ?>" title="<?php esc_attr_e( 'Get fix details', 'secupress' ); ?>">
+												<?php _e( 'How?', 'secupress' ); ?>
 											</button>
-										</span>
-									</div>
-									<?php
-								} elseif ( 'pro' === $current_test::$fixable ) { // //// #.
-									?>
-									<button type="button" class="secupress-button-primary secupress-button-mini secupress-go-pro">
-										<?php esc_html_e( 'Fix it with Pro', 'secupress' ); ?>
-										<i class="icon-secupress-simple" aria-hidden="true"></i>
-									</button>
-									<?php
-								} else { // Really not fixable by the plugin.
-								?>
-									<em class="secupress-gray">
-									<?php esc_html_e( 'Cannot be fixed automatically.', 'secupress' ); ?>
-									</em>
-									<span class="hide-if-no-js">
-										<button type="button" class="secupress-details-fix secupress-button secupress-button-mini secupress-button-primary secupress-button-ghost" data-test="<?php echo $class_name_part; ?>" title="<?php esc_attr_e( 'Get fix details', 'secupress' ); ?>">
-											<span class="icon">
-												<i class="icon-shield" aria-hidden="true"></i>
+										</div>
+										<?php
+									} elseif ( 'pro' === $current_test::$fixable ) { // //// #.
+										// It is fixable with the pro version but the free version is used.
+										?>
+										<button type="button" class="secupress-button-primary secupress-button-mini secupress-go-pro">
+											<?php esc_html_e( 'Fix it with Pro', 'secupress' ); ?>
+											<i class="icon-secupress-simple" aria-hidden="true"></i>
+										</button>
+										<?php
+									} else {
+										// Really not fixable by the plugin, the user must di it manually.
+										?>
+										<em class="secupress-gray">
+											<?php esc_html_e( 'Cannot be fixed automatically.', 'secupress' ); ?>
+										</em>
+										<button type="button" class="secupress-details-fix secupress-button secupress-button-mini secupress-button-primary secupress-button-ghost hide-if-no-js" data-test="<?php echo $class_name_part; ?>" title="<?php esc_attr_e( 'Get fix details', 'secupress' ); ?>">
+											<span class="icon" aria-hidden="true">
+												<i class="icon-shield"></i>
 											</span>
 											<span class="text">
 												<?php _e( 'How to fix?', 'secupress' ); ?>
 											</span>
 										</button>
-									</span>
-								<?php
-								}
-								?>
+										<?php
+									}
+									?>
 								</div><!-- .secupress-fix-status-actions -->
 							</div>
 						</div><!-- .secupress-flex -->
@@ -1068,53 +1032,63 @@ function secupress_scanners_template() {
 									<?php echo $scan_message; ?>
 								</div>
 							</div>
+
 							<div class="secupress-scan-actions">
 								<p>
-									<a class="secupress-button secupress-button-mini secupress-scanit" href="<?php echo esc_url( $scan_nonce ); ?>">
-										<span class="icon">
-											<i class="icon-refresh" aria-hidden="true"></i>
+									<a class="secupress-button secupress-button-mini secupress-scanit" href="<?php echo esc_url( $scan_nonce_url ); ?>">
+										<span class="icon" aria-hidden="true">
+											<i class="icon-refresh"></i>
 										</span>
 										<span class="text">
-											<?php echo 'notscannedyet' === $scanners[ $option_name ]['status'] ? _x( 'Scan', 'verb', 'secupress' ) : _x( 'Re-Scan', 'verb', 'secupress' ); ?>
+											<?php echo 'notscannedyet' === $scan_status ? _x( 'Scan', 'verb', 'secupress' ) : _x( 'Re-Scan', 'verb', 'secupress' ); ?>
 										</span>
 									</a>
 								</p>
 							</div>
 						</div>
 
-						<div class="secupress-flex secupress-flex-spaced secupress-fix-result secupress-bg-gray">
-							<div class="secupress-fix-result-message"><?php echo $fix_message; ?></div>
-							<?php
-							if ( true === $current_test::$fixable || 'notscannedyet' !== $scanners[ $option_name ]['status'] || ( 'pro' !== $current_test::$fixable || secupress_is_pro() ) ) { ?>
-							<div class="secupress-fix-result-retryfix hidden">
-								<a href="<?php echo esc_url( $fix_nonce_url ); ?>" class="secupress-button secupress-button-primary secupress-button-mini">
-									<span class="icon">
-										<i class="icon-shield"></i>
-									</span>
-									<span class="text">
-										<?php esc_html_e( 'Retry to fix', 'secupress' ); ?>
-									</span>
-								</a>
-							</div>
-							<?php } ?>
-						</div>
-						<?php // TODO: Make it appears dynamically ////. ?>
-						<div class="secupress-fix-result-actions secupress-bg-gray">
+						<?php if ( $is_fixable ) :
+							$support_href = secupress_is_pro() ? 'http://secupress.me/support/?item=' . $option_name : 'https://wordpress.org/support/plugin/secupress-free#postform'; // Correct slug on repo? ////.
+							?>
+							<div class="secupress-fix-result-actions secupress-bg-gray">
+								<div class="secupress-flex secupress-flex-spaced secupress-fix-result">
+									<div class="secupress-fix-result-message"><?php echo $fix_message; ?></div>
+
+									<?php
+									if ( $is_fixable ) {
+										// We didn't display the "Fix it" button earlier, we display this one instead.
+										?>
+										<div class="secupress-fix-result-retryfix">
+											<a href="<?php echo esc_url( $fix_nonce_url ); ?>" class="secupress-button secupress-button-primary secupress-button-mini secupress-retry-fixit">
+												<span class="icon" aria-hidden="true">
+													<i class="icon-shield"></i>
+												</span>
+												<span class="text">
+													<?php esc_html_e( 'Retry to fix', 'secupress' ); ?>
+												</span>
+											</a>
+											<div class="secupress-row-actions">
+												<button type="button" class="secupress-details-fix link-like hide-if-no-js" data-test="<?php echo $class_name_part; ?>" title="<?php esc_attr_e( 'Get fix details', 'secupress' ); ?>">
+													<?php _e( 'How?', 'secupress' ); ?>
+												</button>
+											</div>
+										</div>
+										<?php
+									}
+									?>
+								</div>
+
 								<p>
-									<a href="#" class="secupress-button secupress-button-mini">
-										<span class="icon">
+									<a href="<?php echo $class_name::DOC_URL; ?>" class="secupress-button secupress-button-mini">
+										<span class="icon" aria-hidden="true">
 											<i class="icon-file-text"></i>
 										</span>
 										<span class="text">
 											<?php esc_html_e( 'Read the documentation', 'secupress' ); ?>
 										</span>
 									</a>
-									<?php
-									$support_href   = secupress_is_pro() ? 'http://secupress.me/support/?item=' . $option_name : 'https://wordpress.org/support/plugin/secupress-free#postform'; // Correct slug on repo? ////.
-									$support_suffix = secupress_is_pro() ? 'pro' : 'free';
-									?>
-									<a href="<?php echo $support_href; ?>" class="secupress-button secupress-button-mini secupress-ask-support secupress-ask-support-<?php echo $support_suffix; ?>">
-										<span class="icon">
+									<a href="<?php echo $support_href; ?>" class="secupress-button secupress-button-mini secupress-ask-support secupress-ask-support-<?php echo secupress_is_pro() ? 'pro' : 'free'; ?>">
+										<span class="icon" aria-hidden="true">
 											<i class="icon-ask"></i>
 										</span>
 										<span class="text">
@@ -1122,20 +1096,21 @@ function secupress_scanners_template() {
 										</span>
 									</a>
 								</p>
-						</div>
+							</div>
+						<?php endif; ?>
 
 						<?php // Hidden items used for Sweet Alerts. ?>
 						<div id="details-<?php echo $class_name_part; ?>" class="details hide-if-js">
 							<?php _e( 'Scan Details: ', 'secupress' ); ?>
 							<span class="details-content"><?php echo wp_kses( $current_test::$more, $allowed_tags ); ?></span>
 						</div>
-						<div id="details-fix-<?php echo $class_name_part; ?>" class="details hide-if-js">
 
+						<div id="details-fix-<?php echo $class_name_part; ?>" class="details hide-if-js">
 							<?php _e( 'Fix Details: ', 'secupress' ); ?>
 							<span class="details-content"><?php echo wp_kses( $current_test::$more_fix, $allowed_tags ); ?></span>
 						</div>
 
-					</div><!-- </tr> -->
+					</div><!-- .secupress-item-all -->
 
 					<?php
 					if ( $class_name_part === $fix_actions[0] ) {
