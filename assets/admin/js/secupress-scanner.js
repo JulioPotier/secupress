@@ -17,9 +17,17 @@ var SecuPress = {
 
 
 jQuery( document ).ready( function( $ ) {
-	var secupressChart = [],
-		secupressChartEl = document.getElementById( "status_chart" ),
+	var secupressChart = {},
+		secupressChartEls = [],
 		secupressOneClickScanProgress = 0;
+
+	if ( document.getElementById( 'status_chart' ) ) {
+		secupressChartEls.push( document.getElementById( 'status_chart' ) );
+	}
+
+	if ( document.getElementById( 'status_chart_mini' ) ) {
+		secupressChartEls.push( document.getElementById( 'status_chart_mini' ) );
+	}
 
 
 	// !Big network: set some data. ================================================================
@@ -81,69 +89,90 @@ jQuery( document ).ready( function( $ ) {
 
 
 	// !Chart and score ============================================================================
-	function secupressDrawMeAChart( chartEl ) {
-		var elID, chartData;
+	function secupressDrawCharts() {
+		var chartData;
 
-		if ( ! chartEl || ! window.Chart ) {
+		if ( ! secupressChartEls || ! window.Chart || ! SecuPressi18nChart ) {
 			return;
 		}
 
-		elID      = chartEl.id;
-		chartData = [
-			{
-				value:     SecuPressi18nChart.good.value,
-				color:     "#26B3A9",
-				highlight: "#2BCDC1",
-				label:     SecuPressi18nChart.good.text,
-				status:    "good",
-			},
-			{
-				value:     SecuPressi18nChart.bad.value,
-				color:     "#CB234F",
-				highlight: "#F2295E",
-				label:     SecuPressi18nChart.bad.text,
-				status:    "bad",
-			},
-			{
-				value:     SecuPressi18nChart.warning.value,
-				color:     "#F7AB13",
-				highlight: "#F1C40F",
-				label:     SecuPressi18nChart.warning.text,
-				status:    "warning",
-			}
-		];
+		if ( $.isEmptyObject( secupressChart ) ) {
+			// The charts are not created yet.
+			chartData = [
+				{
+					value:     SecuPressi18nChart.good.value,
+					color:     "#26B3A9",
+					highlight: "#2BCDC1",
+					label:     SecuPressi18nChart.good.text,
+					status:    "good",
+				},
+				{
+					value:     SecuPressi18nChart.bad.value,
+					color:     "#CB234F",
+					highlight: "#F2295E",
+					label:     SecuPressi18nChart.bad.text,
+					status:    "bad",
+				},
+				{
+					value:     SecuPressi18nChart.warning.value,
+					color:     "#F7AB13",
+					highlight: "#F1C40F",
+					label:     SecuPressi18nChart.warning.text,
+					status:    "warning",
+				}
+			];
 
-		if ( SecuPressi18nChart.notscannedyet.value ) {
-			chartData.push( {
-				value:     SecuPressi18nChart.notscannedyet.value,
-				color:     "#5A626F",
-				highlight: "#888888",
-				label:     SecuPressi18nChart.notscannedyet.text,
-				status:    "notscannedyet",
+			if ( SecuPressi18nChart.notscannedyet.value ) {
+				chartData.push( {
+					value:     SecuPressi18nChart.notscannedyet.value,
+					color:     "#5A626F",
+					highlight: "#888888",
+					label:     SecuPressi18nChart.notscannedyet.text,
+					status:    "notscannedyet",
+				} );
+			}
+
+			$.each( secupressChartEls, function( i, chartEl ) {
+				var elID = chartEl.id;
+
+				secupressChart[ elID ] = new Chart( chartEl.getContext( "2d" ) ).Doughnut( chartData, {
+					animationEasing:       "easeInOutQuart",
+					showTooltips:          true,
+					segmentShowStroke:     false,
+					percentageInnerCutout: 90,
+					tooltipEvents:         ["mousemove"], // active "hover" effect...
+					customTooltips:        function() {} //... but remove tooltips.
+				} );
+
+				// Trigger a filter action on Chart Segment click.
+				chartEl.onclick = function( e ) {
+					var activePoints = secupressChart[ elID ].getSegmentsAtEvent( e );
+					if ( activePoints[0] ) {
+						$( "#secupress-type-filters" ).find( ".secupress-big-tab-" + activePoints[0].status ).find( "a" ).trigger( "click.secupress" );
+					}
+				};
+			} );
+		} else {
+			// Update existing charts.
+			$.each( secupressChartEls, function( i, chartEl ) {
+				var elID = chartEl.id;
+
+				secupressChart[ elID ].segments[0].value = SecuPressi18nChart.good.value;
+				secupressChart[ elID ].segments[1].value = SecuPressi18nChart.bad.value;
+				secupressChart[ elID ].segments[2].value = SecuPressi18nChart.warning.value;
+
+				if ( typeof secupressChart[ elID ].segments[3] !== 'undefined' ) {
+					secupressChart[ elID ].segments[3].value = SecuPressi18nChart.notscannedyet.value;
+				}
+
+				secupressChart[ elID ].update();
 			} );
 		}
 
-		secupressChart[ elID ] = new Chart( chartEl.getContext( "2d" ) ).Doughnut( chartData, {
-			animationEasing:       "easeInOutQuart",
-			showTooltips:          true,
-			segmentShowStroke:     false,
-			percentageInnerCutout: 90,
-			tooltipEvents:         ["mousemove"], // active "hover" effect...
-			customTooltips:        function() {} //... but remove tooltips.
-		} );
-
-		// Trigger a filter action on Chart Segment click.
-		chartEl.onclick = function( e ) {
-			var activePoints = secupressChart[ elID ].getSegmentsAtEvent( e );
-			if ( activePoints[0] ) {
-				$( "#secupress-type-filters" ).find( ".secupress-big-tab-" + activePoints[0].status ).find( "a" ).trigger( "click.secupress" );
-			}
-		};
-
-		// Trigger a filter action on Legend item click.
-		$( ".secupress-chart-legend" ).find( "li" ).on( "click.secupress", function() {
-			$( "#secupress-type-filters" ).find( ".secupress-big-tab-" + $( this ).data( "status" ) ).find( "a" ).trigger( "click.secupress" );
-		} );
+		if ( ! SecuPressi18nChart.notscannedyet.value ) {
+			// Remove the legend for "Not scanned yet".
+			$( ".secupress-chart-legend .status-notscannedyet" ).remove();
+		}
 	}
 
 
@@ -225,16 +254,12 @@ jQuery( document ).ready( function( $ ) {
 
 
 	// Print counters in the page.
-	function secupressPrintScore( data, chartEl ) {
-		var $filters, elID;
+	function secupressPrintScore( data ) {
+		var $filters;
 
-		// Only if we're not in a sub-site.
-		if ( ! chartEl ) {
+		if ( ! secupressChartEls || ! window.Chart ) {
 			return;
 		}
-
-		$filters = $( "#secupress-type-filters" );
-		elID     = chartEl.id;
 
 		// All various texts.
 		$( ".secupress-chart-container .letter" ).replaceWith( data.letter );
@@ -245,28 +270,19 @@ jQuery( document ).ready( function( $ ) {
 			return val.replace( /count-\d+/, "count-" + data.bad );
 		} );
 
-		// Chart.
+		// Charts.
 		if ( SecuPressi18nChart ) {
 			SecuPressi18nChart.good.value          = data.good;
 			SecuPressi18nChart.bad.value           = data.bad;
 			SecuPressi18nChart.warning.value       = data.warning;
 			SecuPressi18nChart.notscannedyet.value = data.notscannedyet;
-		}
 
-		if ( typeof secupressChart[ elID ] !== 'undefined' ) {
-			// The chart is initiated.
-			secupressChart[ elID ].segments[0].value = data.good;
-			secupressChart[ elID ].segments[1].value = data.bad;
-			secupressChart[ elID ].segments[2].value = data.warning;
-
-			if ( typeof secupressChart[ elID ].segments[3] !== 'undefined' ) {
-				secupressChart[ elID ].segments[3].value = data.notscannedyet;
-			}
-
-			secupressChart[ elID ].update();
+			secupressDrawCharts();
 		}
 
 		// Tabs subtitles.
+		$filters = $( "#secupress-type-filters" );
+
 		$filters.find( "a" ).each( function() {
 			var $this = $( this ),
 				type  = $this.data( "type" );
@@ -279,7 +295,7 @@ jQuery( document ).ready( function( $ ) {
 				secupressSelectFallbackBigTab( data, $filters );
 			}
 
-			$filters.children( ".secupress-big-tab-notscannedyet" ).add( ".secupress-chart-legend .status-notscannedyet" ).remove();
+			$filters.children( ".secupress-big-tab-notscannedyet" ).remove();
 		} else {
 			$( ".secupress-count-notscannedyet" ).text( data.notscannedyet );
 		}
@@ -308,7 +324,7 @@ jQuery( document ).ready( function( $ ) {
 	}
 
 	// Get counters and print them in the page.
-	function secupressPrintScoreFromAjax( chartEl, isBulk ) {
+	function secupressPrintScoreFromAjax( isBulk ) {
 		var params;
 
 		if ( ! SecuPressi18nScanner.i18nNonce ) {
@@ -324,28 +340,23 @@ jQuery( document ).ready( function( $ ) {
 		.done( function( r ) {
 			if ( $.isPlainObject( r ) && r.success && r.data ) {
 				r.data.isBulk = isBulk;
-				secupressPrintScore( r.data, chartEl );
+				secupressPrintScore( r.data );
 			}
 		} );
 	}
 
 
-	// If it's not the first scan, draw the chart.
-	// Else we will draw it later, to avoid Chart.js error during drawing.
-	if ( secupressChartEl && ! $( '.secupress-scanners-header' ).hasClass( 'secupress-not-scanned-yet' ) ) {
-		secupressDrawMeAChart( secupressChartEl );
-	}
+	// If it's not the first scan, draw the charts.
+	if ( secupressChartEls && window.Chart ) {
+		if ( ! $( '.secupress-scanners-header' ).hasClass( 'secupress-not-scanned-yet' ) ) {
+			secupressDrawCharts();
+		}
 
-
-	// Draw Mini Chart in Latest scans tab.
-	( function( w, d, $, undefined ) {
-		$( '#secupress-l-latest' ).on( 'click.secupress keyup', function( e ) {
-			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
-				return false;
-			}
-			secupressDrawMeAChart( d.getElementById( 'status_chart_mini' ) );
+		// Trigger a filter action on Legend item click.
+		$( ".secupress-chart-legend" ).find( "li" ).on( "click.secupress", function() {
+			$( "#secupress-type-filters" ).find( ".secupress-big-tab-" + $( this ).data( "status" ) ).find( "a" ).trigger( "click.secupress" );
 		} );
-	} )( window, document, $ );
+	}
 
 
 	// !Other UI. ==================================================================================
@@ -557,9 +568,10 @@ jQuery( document ).ready( function( $ ) {
 
 						// Click on first tab to show results, just in case…
 						$( '#secupress-l-scan' ).trigger( 'click.secupress' );
+
 						// draw the chart
 						if ( isFirst ) {
-							secupressDrawMeAChart( secupressChartEl );
+							secupressDrawCharts();
 						}
 					} );
 				}
@@ -1123,11 +1135,11 @@ jQuery( document ).ready( function( $ ) {
 				.always( function() {
 					secupressEnableButtons( $( '.button-secupress-scan' ) );
 					// Get counters and print them in the page.
-					secupressPrintScoreFromAjax( secupressChartEl, extra.isBulk );
+					secupressPrintScoreFromAjax( extra.isBulk );
 				} );
 			} else {
 				// Get counters and print them in the page.
-				secupressPrintScoreFromAjax( secupressChartEl, extra.isBulk );
+				secupressPrintScoreFromAjax( extra.isBulk );
 			}
 		} );
 
