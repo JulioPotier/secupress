@@ -854,7 +854,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			</fieldset>
 
 			<p class="submit">
-				<button class="secupress-button secupress-button-primary alignright" type="submit" data-original-i18n="<?php esc_attr_e( 'Backup my Database', 'secupress' ); ?>" data-loading-i18n="<?php esc_attr_e( 'Backuping&hellip;', 'secupress' ); ?>" id="submit-backup-db">
+				<button class="secupress-button" type="submit" data-original-i18n="<?php esc_attr_e( 'Backup my Database', 'secupress' ); ?>" data-loading-i18n="<?php esc_attr_e( 'Backuping&hellip;', 'secupress' ); ?>" id="submit-backup-db">
 					<span class="icon">
 						<i class="icon-download"></i>
 					</span>
@@ -892,7 +892,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			</fieldset>
 
 			<p class="submit">
-				<button class="secupress-button secupress-button-primary alignright" type="submit" data-original-i18n="<?php esc_attr_e( 'Backup my Files', 'secupress' ); ?>" data-loading-i18n="<?php esc_attr_e( 'Backuping&hellip;', 'secupress' ); ?>" id="submit-backup-files"<?php echo $disabled; ?>>
+				<button class="secupress-button" type="submit" data-original-i18n="<?php esc_attr_e( 'Backup my Files', 'secupress' ); ?>" data-loading-i18n="<?php esc_attr_e( 'Backuping&hellip;', 'secupress' ); ?>" id="submit-backup-files"<?php echo $disabled; ?>>
 					<span class="icon">
 						<i class="icon-download"></i>
 					</span>
