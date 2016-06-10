@@ -907,7 +907,9 @@ body[class*="secupress"] .sweet-overlay {
 .secublock + .submit {
 	margin: 1em 0 3em;
 }
-.secublock + .submit input {
+.secublock + .submit input,
+.secupress-settings-section .submit button,
+.secupress-mb-action.secupress-mb-action [class^="secupress-button"] {
 	font-size: 0.95em;
 	letter-spacing: 0.1em;
 	box-shadow: 0 6px 12px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05), 0 3px 4px rgba(0,0,0,.05);
@@ -946,7 +948,7 @@ body[class*="secupress"] .sweet-overlay {
 	margin: 10px 0;
 	font-size: 16px;
 	font-weight: bold;
-	color: #2BCDC1;
+	color: #26B3A9;
 }
 label.secupress-setting-row-title {
 	display: block;
@@ -988,7 +990,11 @@ label.secupress-setting-row-title {
 	width: 1125px; /* 1240 */
 	padding-top: 20px;
 }
-.toplevel_page_secupress_scanners .secupress-notice {
+.toplevel_page_secupress_scanners .secupress-notice,
+.toplevel_page_secupress_scanners .notice,
+.secupress_page_secupress_modules .secupress-notice,
+.secupress_page_secupress_modules .notice {
+	box-sizing: border-box; /* 'cause WordPress don't do it by default. */
 	width: 1125px;
 	max-width: 100%;
 }
