@@ -89,7 +89,7 @@ p.secupress-sh-subtitle {
 	border-top: 1px solid rgba(255, 255, 255, 0.15);
 	color: #2BCDC1;
 	overflow: hidden;
-	font-weight: 600;
+	font-weight: 500;
 	text-decoration: none;
 	transition: all .275s;
 }
@@ -100,7 +100,7 @@ p.secupress-sh-subtitle {
 	display: block;
 }
 .secupress-modules-list-links .secupress-tab-name {
-	font-size: 14px;
+	font-size: 13px;
 }
 .secupress-modules-list-links .secupress-pro-module .secupress-tab-name {
 	color: #F1C40F;
@@ -181,7 +181,7 @@ p.secupress-sh-subtitle {
 	border: 1px solid #CCC;
 }
 .secupress-tab-content-welcome {
-	width: 1020px;
+	width: 100%;
 	border-radius: 0;
 	border: 0 none;
 }
@@ -221,6 +221,11 @@ p.secupress-sh-subtitle {
 .secupress-checkbox-line,
 .secupress-checkbox-roles-line {
 	margin: 0.25em 0;
+}
+
+/* Removes border-top if Affected role row is present (even if invisible) */
+[class*="depends-affected-role-"] + .secupress-setting-row {
+	border-top: 0;
 }
 
 .secupress-setting-row .secupress-checkbox:not(:checked) + label:before,
@@ -273,18 +278,6 @@ p.secupress-sh-subtitle {
 	background: #aaa;
 }
 
-/* Get pro version elements */
-span.secupress-get-pro-version {
-	display: inline-block;
-	vertical-align: middle;
-	margin-left: 10px;
-	color: #000;
-	font-weight: bold;
-}
-.secupress-get-pro-version a,
-.secupress-cta-pro a {
-	color: #F7AB13;
-}
 .secupress-setting-content-col {
 	padding-right: 20px;
 	-webkit-box-flex: 1;
@@ -303,33 +296,6 @@ span.secupress-get-pro-version {
 	-webkit-flex-shrink: 0;
 	-ms-flex-negative: 0;
 	flex-shrink: 0;
-}
-.secupress-get-pro-col p.secupress-get-pro,
-.secupress-cta-pro {
-	position: relative;
-	padding-left: 55px;
-	font-weight: bold;
-	color: #000;
-}
-.secupress-cta-pro {
-	display: inline-block;
-	margin-left: 7px;
-	padding-left: 52px;
-	vertical-align: middle;
-}
-.secupress-get-pro-col p.secupress-get-pro:before,
-.secupress-cta-pro:before {
-	position: absolute;
-	top: 2px; left: 5px;
-	content: "\e907";
-	font-family: "secupress";
-	font-size: 35px;
-	line-height: 35px;
-}
-.secupress-get-pro-col .secupress-get-pro a:before,
-.secupress-cta-pro a:before {
-	content: "";
-	display: block;
 }
 
 /* form elements */
@@ -437,14 +403,15 @@ span.secupress-get-pro-version {
 }
 
 /* buttons */
-.secupress-module-box [class^="secupress-button"] {
+.secupress-module-options-block [class^="secupress-button"] {
 	font-weight: bold;
 	font-size: 0.875em;
 	padding: 6px 25px;
 	letter-spacing: 0.075em;
 }
-.secupress-module-box .secupress-button-primary,
-.secublock + .submit input {
+.secupress-module-options-block .secupress-button-primary,
+.secublock + .submit input,
+.secublock + .submit button {
 	box-shadow: 0 6px 12px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05), 0 3px 4px rgba(0,0,0,.05);
 }
 
