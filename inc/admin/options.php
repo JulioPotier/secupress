@@ -51,16 +51,30 @@ function __secupress_global_settings_callback( $value ) {
 			)
 		);
 
-		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
+		if ( is_wp_error( $response ) ) {
+
+			add_settings_error( 'secupress_global', 'request_error', __( 'Something is preventing the request to be sent.', 'secupress' ) );
+
+		} elseif ( 200 !== wp_remote_retrieve_response_code( $response ) ) {
+
+			add_settings_error( 'secupress_global', 'server_error', __( 'Our server is not reachable at the moment, please try again later.', 'secupress' ) );
+
+		} else {
 			$body = wp_remote_retrieve_body( $response );
 			$body = @json_decode( $body );
 
 			if ( ! is_object( $body ) ) {
-				// Error ////.
+
+				add_settings_error( 'secupress_global', 'server_bad_response', __( 'Our server returned an unexpected response and might be in error, please try again later or contact our support team.', 'secupress' ) );
+
 			} elseif ( empty( $body->success ) ) {
-				// Error ////.
+
+				add_settings_error( 'secupress_global', 'response_error', __( 'Our server returned an error, please try again later or contact our support team.', 'secupress' ) );
+
 			} elseif ( empty( $body->data ) || ! is_object( $body->data ) || empty( $body->data->api_key ) ) {
-				// Error ////.
+
+				add_settings_error( 'secupress_global', 'server_bad_response', __( 'Our server returned an unexpected response and might be in error, please try again later or contact our support team.', 'secupress' ) );
+
 			} else {
 				$value['api_key'] = sanitize_text_field( $body->data->api_key );
 
@@ -68,8 +82,6 @@ function __secupress_global_settings_callback( $value ) {
 					$value['consumer_key'] = sanitize_text_field( $body->data->secupress_key );
 				}
 			}
-		} else {
-			// Error ////.
 		}
 	}
 
