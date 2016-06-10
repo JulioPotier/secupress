@@ -44,6 +44,21 @@ module.exports = function( grunt ) {
 				]
 			}
 		},
+		"cssmin": {
+			"options": {
+				"shorthandCompacting": false,
+				"roundingPrecision": -1
+			},
+			"target": {
+				"files": [{
+					"expand": true,
+					"cwd": "assets/admin/css",
+					"src": ["*.css", "!*.min.css"],
+					"dest": "assets/admin/css",
+					"ext": ".min.css"
+				}]
+			}
+		},
 		"devUpdate": {
 			"check": {
 				"options": {
@@ -62,9 +77,11 @@ module.exports = function( grunt ) {
 
 	grunt.loadNpmTasks( "grunt-contrib-jshint" );
 	grunt.loadNpmTasks( "grunt-contrib-uglify" );
+	grunt.loadNpmTasks( "grunt-contrib-cssmin" );
 	grunt.loadNpmTasks( "grunt-newer" );
 	grunt.loadNpmTasks( "grunt-dev-update" );
 
 	grunt.registerTask( "jsh", [ "jshint" ] );
 	grunt.registerTask( "minify", [ "newer:jshint", "newer:uglify" ] );
+	grunt.registerTask( "css", [ "cssmin" ] );
 };
