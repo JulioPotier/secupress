@@ -743,6 +743,20 @@ fieldset.secupress-boxed-group > b {
 	color: #5A626F;
 }
 
+/* Module support email */
+[id="secupress-settings-module_services--support"] .secupress-setting-row[class*="depends"] {
+	border-left: 0;
+	margin: 0 0 0 40px;
+	padding: 12px 20px;
+	box-shadow: 0 2px 3px rgba(0,0,0,.15);
+}
+[id="secupress-settings-module_services--support"] .secupress-setting-row.secupress-setting-row_support_summary {
+	padding-top: 20px;
+	border-top: 1px solid #F2F2F2;
+}
+[id="secupress-settings-module_services--support"] .secupress-setting-row.secupress-setting-row_support_submit {
+	padding-bottom: 20px;
+}
 
 /* EXISTING */
 
