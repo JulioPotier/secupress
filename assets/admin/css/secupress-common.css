@@ -474,10 +474,9 @@
 	/* The check mark */
 	content: "";
 	width: 12px; height: 12px;
-	top: 3.5px; left: 6px;
+	top: 4px; left: 6px;
 	background: #2BCDC1;
 	border-radius: 100%;
-	box-shadow: 0 1px 0 #26B3A9;
 }
 
 /**
