@@ -200,7 +200,16 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 									<?php echo secupress_get_logo(); ?>
 								</div>
 								<div class="secupress-sh-name">
-									<p class="secupress-sh-title"><?php echo SECUPRESS_PLUGIN_NAME; ?></p>
+									<p class="secupress-sh-title">
+										<?php 
+											if ( SECUPRESS_PLUGIN_NAME === 'SecuPress' ) {
+												echo '<img src="' . SECUPRESS_ADMIN_IMAGES_URL . 'secupress-word.png" srcset="' . SECUPRESS_ADMIN_IMAGES_URL . 'secupress-word.svg 1x, ' . SECUPRESS_ADMIN_IMAGES_URL . 'secupress-word.svg 2x" alt="SecuPress" width="81" height="19">';
+											}
+											else {
+												echo SECUPRESS_PLUGIN_NAME;
+											}
+										?>
+									</p>
 								</div>
 							</div>
 						</div>
@@ -854,7 +863,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			</fieldset>
 
 			<p class="submit">
-				<button class="secupress-button secupress-button-primary alignright" type="submit" data-original-i18n="<?php esc_attr_e( 'Backup my Database', 'secupress' ); ?>" data-loading-i18n="<?php esc_attr_e( 'Backuping&hellip;', 'secupress' ); ?>" id="submit-backup-db">
+				<button class="secupress-button" type="submit" data-original-i18n="<?php esc_attr_e( 'Backup my Database', 'secupress' ); ?>" data-loading-i18n="<?php esc_attr_e( 'Backuping&hellip;', 'secupress' ); ?>" id="submit-backup-db">
 					<span class="icon">
 						<i class="icon-download"></i>
 					</span>
@@ -892,7 +901,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			</fieldset>
 
 			<p class="submit">
-				<button class="secupress-button secupress-button-primary alignright" type="submit" data-original-i18n="<?php esc_attr_e( 'Backup my Files', 'secupress' ); ?>" data-loading-i18n="<?php esc_attr_e( 'Backuping&hellip;', 'secupress' ); ?>" id="submit-backup-files"<?php echo $disabled; ?>>
+				<button class="secupress-button" type="submit" data-original-i18n="<?php esc_attr_e( 'Backup my Files', 'secupress' ); ?>" data-loading-i18n="<?php esc_attr_e( 'Backuping&hellip;', 'secupress' ); ?>" id="submit-backup-files"<?php echo $disabled; ?>>
 					<span class="icon">
 						<i class="icon-download"></i>
 					</span>

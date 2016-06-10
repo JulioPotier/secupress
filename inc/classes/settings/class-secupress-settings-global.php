@@ -121,7 +121,7 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 		</p>
 
 		<p class="submit">
-			<button type="submit"<?php echo $disabled; ?> class="secupress-button secupress-button-mini" id="import">
+			<button type="submit"<?php echo $disabled; ?> class="secupress-button" id="import">
 				<span class="icon">
 					<i class="icon-upload" aria-hidden="true"></i>
 				</span>
@@ -144,7 +144,7 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 		?>
 		<p class="submit">
 			<?php if ( secupress_is_pro() ) : ?>
-				<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_export' ), 'secupress_export' ) ); ?>" id="export" class="secupress-button secupress-button-mini secupressicon">
+				<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_export' ), 'secupress_export' ) ); ?>" id="export" class="secupress-button">
 					<span class="icon" aria-hidden="true">
 						<i class="icon-download"></i>
 					</span>
@@ -153,7 +153,7 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 					</span>
 				</a>
 			<?php else : ?>
-				<button type="button" class="secupress-button secupress-button-mini" disabled="disabled">
+				<button type="button" class="secupress-button" disabled="disabled">
 					<span class="icon" aria-hidden="true">
 						<i class="icon-download"></i>
 					</span>

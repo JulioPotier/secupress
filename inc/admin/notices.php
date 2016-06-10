@@ -269,7 +269,7 @@ function secupress_warning_no_oneclick_scan_yet() {
 		<div class="secupress-col-1-4 secupress-col-logo secupress-text-center">
 			<div class="secupress-logo-block">
 				<div class="secupress-lb-logo">
-					<?php echo secupress_get_logo( array( 'width' => '126' ) ); ?>
+					<?php echo secupress_get_logo( array( 'width' => '84' ) ); ?>
 				</div>
 			</div>
 		</div>
@@ -320,15 +320,20 @@ function secupress_warning_no_api_key() {
 	}
 
 	$times = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
+	$referer = urlencode( esc_url_raw( secupress_get_current_url( 'raw' ) ) );
 
 	// Don't display the API key banner yet, wait the first OCS.
 	if ( secupress_get_consumer_email() || ! $times ) {
 		return;
 	}
 	?>
-	<div class="secupress-section-gray-dark secupress-notice mini secupress-flex">
-		<div class="secupress-col-1-4 secupress-col-icon">
-			<i class="icon-secupress-simple" aria-hidden="true"></i>
+	<div class="secupress-section-dark secupress-notice mini secupress-flex">
+		<div class="secupress-col-1-4 secupress-col-logo mini">
+			<div class="secupress-logo-block">
+				<div class="secupress-lb-logo">
+					<?php echo secupress_get_logo( array( 'width' => '46' ) ); ?>
+				</div>
+			</div>
 		</div>
 		<div class="secupress-col-2-4 secupress-col-text">
 			<p class="secupress-text-medium"><?php esc_html_e( 'Go further to get more security features!', 'secupress' ); ?></p>

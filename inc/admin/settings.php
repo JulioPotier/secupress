@@ -372,7 +372,7 @@ function __secupress_scanners() {
 						</a>
 					</p>
 
-					<div id="secupress-more-info" class="secupress-full-wide secupress-counter">
+					<div id="secupress-more-info" class="secupress-full-wide secupress-counter hide-if-js">
 						<div class="secupress-flex secupress-flex-top">
 							<div class="secupress-col-1-3">
 								<div class="secupress-blob secupress-counter-put">
@@ -492,7 +492,7 @@ function __secupress_scanners() {
 										</span>
 									</button>
 
-									<button class="secupress-button-primary button-secupress-fix" type="button">
+									<button class="secupress-button secupress-button-primary button-secupress-fix" type="button">
 										<span class="icon" aria-hidden="true">
 											<i class="icon-shield"></i>
 										</span>
@@ -521,7 +521,7 @@ function __secupress_scanners() {
 						</div><!-- .secupress-flex -->
 					</div><!-- .secupress-tab-content -->
 
-					<div id="secupress-latest" class="secupress-tab-content" role="tabpanel" aria-labelledby="secupress-l-latest">
+					<div id="secupress-latest" class="secupress-tab-content hide-if-js" role="tabpanel" aria-labelledby="secupress-l-latest">
 						<div class="secupress-flex secupress-flex-top">
 							<div class="secupress-latest-chart">
 								<p class="secupress-text-medium">
@@ -577,7 +577,7 @@ function __secupress_scanners() {
 						</div><!-- .secupress-flex -->
 					</div><!-- .secupress-tab-content -->
 
-					<div id="secupress-schedule" class="secupress-tab-content secupress-text-center" role="tabpanel" aria-labelledby="secupress-l-schedule">
+					<div id="secupress-schedule" class="secupress-tab-content secupress-text-center hide-if-js" role="tabpanel" aria-labelledby="secupress-l-schedule">
 						<p class="secupress-text-medium">
 							<?php esc_html_e( 'Schedule your security analysis', 'secupress' ); ?>
 						</p>

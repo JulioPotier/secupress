@@ -411,6 +411,12 @@ a + .secupress-row-actions {
 .secupress-result-list {
 	margin: 0;
 }
+.secupress-item-all .secupress-button-mini.secupress-button-mini .icon {
+	margin: 0 2px 0 -3px;
+}
+.secupress-item-all .secupress-button-mini.secupress-button-mini .icon-shield {
+	vertical-align: -1.25px;
+}
 
 /* Scanning & Fixing animations */
 
@@ -436,6 +442,9 @@ a + .secupress-row-actions {
 	100% {
 		transform: rotateY(360deg);
 	}
+}
+[id="secupress-scan"] .secupress-actions-line .secupress-button {
+	letter-spacing: 1px;
 }
 
 .secupress-scan-result ul,
@@ -580,7 +589,7 @@ a + .secupress-row-actions {
 [id="secupress-tests"] .secupress-item-all {
 	position: relative;
 	padding-left: 10px;
-	margin: 1.5em 0;
+	margin: 2em 0;
 	border: 1px solid #ECF0F1;
 	background: #FFF;
 	border-radius: 3px;
@@ -613,6 +622,7 @@ a + .secupress-row-actions {
 }
 .secupress-item-title {
 	font-size: 16px;
+	font-weight: 600;
 	margin: 5px 0 0 0;
 }
 
@@ -673,6 +683,9 @@ a + .secupress-row-actions {
 }
 .secupress-fix-result-actions {
 	padding: 8px 15px;
+}
+.secupress-fix-result-actions .secupress-button {
+	text-transform: none;
 }
 
 /* If status is good */

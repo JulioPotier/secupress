@@ -578,11 +578,20 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				$attributes .= empty( $args['attributes']['cols'] ) ? ' cols="50"' : '';
 				$attributes .= empty( $args['attributes']['rows'] ) ? ' rows="5"'  : '';
 
+				// don't add expandable feature for these exceptions
+				$exceptions = array(
+					'support_description'
+				);
+				$is_exception = in_array( $args['name'], $exceptions );
+
+				$args['label_before'] .= $is_exception ? '' : '<div class="secupress-textarea-container">';
+				$args['label_after'] .= $is_exception ? '' : '</div>';
+
 				echo $label_open; ?>
 					<?php
 					echo $args['label'] ? '<span class="secupress-bold">' . $args['label'] . '</span><br/>' : '';
 					echo $args['label_before'];
-					echo '<div class="secupress-textarea-container"><textarea id="' . $args['label_for'] . '" name="' . $name_attribute . '"' . $attributes . '>' . $value . '</textarea></div>';
+					echo '<textarea id="' . $args['label_for'] . '" name="' . $name_attribute . '"' . $attributes . ' spellcheck="false">' . $value . '</textarea>';
 					echo $args['label_after'];
 					?>
 				<?php
