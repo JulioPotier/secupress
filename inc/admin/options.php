@@ -37,19 +37,14 @@ function __secupress_global_settings_callback( $value ) {
 	$value['api_key']        = ! empty( $value['api_key'] )        ? sanitize_text_field( $value['api_key'] )      : '';
 
 	if ( $value['consumer_email'] ) {
-		$response = wp_remote_post( SECUPRESS_WEB_DEMO . 'key-api/1.0/',
-			array(
-				'timeout' => 10,
-				'body'    => array(
-					'data' => array(
-						'sp_action'   => 'get_api_key',
-						'user_email'  => $value['consumer_email'],
-						'user_key'    => $value['consumer_key'],
-						'plugin_name' => ! empty( $value['wl_plugin_name'] ) ? $value['wl_plugin_name'] : SECUPRESS_PLUGIN_NAME,
-					),
-				),
-			)
-		);
+		$url = SECUPRESS_WEB_DEMO . 'key-api/1.0/?' . http_build_query( array(
+			'sp_action'   => 'get_api_key',
+			'user_email'  => $value['consumer_email'],
+			'user_key'    => $value['consumer_key'],
+			'plugin_name' => ! empty( $value['wl_plugin_name'] ) ? $value['wl_plugin_name'] : SECUPRESS_PLUGIN_NAME,
+		) );
+
+		$response = wp_remote_get( $url, array( 'timeout' => 10 ) );
 
 		if ( is_wp_error( $response ) ) {
 
