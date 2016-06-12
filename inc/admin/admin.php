@@ -14,7 +14,7 @@ add_filter( 'http_request_args', '__secupress_add_own_ua', 10, 2 );
  */
 function __secupress_add_own_ua( $r, $url ) {
 	if ( false !== strpos( $url, 'secupress.me' ) ) {
-		$r['headers']['x-secupress'] = secupress_user_agent( $r['user-agent'] );
+		$r['headers']['X-SECUPRESS'] = secupress_user_agent( $r['user-agent'] );
 	}
 
 	return $r;
