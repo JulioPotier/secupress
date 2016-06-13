@@ -44,10 +44,14 @@ module.exports = function( grunt ) {
 				]
 			}
 		},
-		"cssmin": {
+		"postcss": {
 			"options": {
-				"shorthandCompacting": false,
-				"roundingPrecision": -1
+				"processors": [
+					require('autoprefixer')({
+						"browsers": 'last 3 versions'
+					}), // add vendor prefixes
+					require('cssnano')() // minify the result
+				]
 			},
 			"target": {
 				"files": [{
@@ -77,11 +81,11 @@ module.exports = function( grunt ) {
 
 	grunt.loadNpmTasks( "grunt-contrib-jshint" );
 	grunt.loadNpmTasks( "grunt-contrib-uglify" );
-	grunt.loadNpmTasks( "grunt-contrib-cssmin" );
+	grunt.loadNpmTasks( "grunt-postcss" );
 	grunt.loadNpmTasks( "grunt-newer" );
 	grunt.loadNpmTasks( "grunt-dev-update" );
 
 	grunt.registerTask( "jsh", [ "jshint" ] );
-	grunt.registerTask( "minify", [ "newer:jshint", "newer:uglify" ] );
-	grunt.registerTask( "css", [ "cssmin" ] );
+	grunt.registerTask( "css", [ "postcss" ] );
+	grunt.registerTask( "minify", [ "newer:jshint", "newer:uglify", "newer:postcss" ] );
 };

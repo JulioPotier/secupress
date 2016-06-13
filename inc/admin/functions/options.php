@@ -94,7 +94,7 @@ function secupress_check_key( $type = 'transient_1' ) {
  * @return (bool)
  */
 function secupress_valid_key() {
-	return 8 === strlen( secupress_get_option( 'consumer_key' ) ) && secupress_get_option( 'secret_key' ) === hash( 'crc32', secupress_get_consumer_email() );
+	return 8 === strlen( secupress_get_option( 'consumer_key' ) ) && secupress_get_option( 'secret_key' ) === hash( 'crc32', secupress_get_consumer_email() ); // Secret_key? ////.
 }
 
 

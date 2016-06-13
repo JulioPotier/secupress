@@ -70,6 +70,6 @@ function secupress_upgrader() {
 	}
 
 	if ( ! secupress_valid_key() && current_user_can( secupress_get_capability() ) && ( ! isset( $_GET['page'] ) || 'secupress' !== $_GET['page'] ) ) {
-		add_action( 'admin_notices', 'secupress_need_api_key' );
+		add_action( 'admin_notices', 'secupress_need_api_key' ); // ////.
 	}
 }

@@ -167,6 +167,8 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'reScan'             => _x( 'Re-Scan', 'verb', 'secupress' ),
 			'scanDetails'        => __( 'Scan Details', 'secupress' ),
 			'fixDetails'         => __( 'Fix Details', 'secupress' ),
+			'scanResultLabel'    => '<span class="secupress-scan-result-label">' . _x( 'Scan result: ', 'noun', 'secupress' ) . '</span> ',
+			'fixResultLabel'     => '<span class="secupress-fix-result-label">' . _x( 'Fix result: ', 'noun', 'secupress' ) . '</span> ',
 			'supportTitle'       => __( 'Ask for Support', 'secupress' ),
 			'supportButton'      => __( 'Open a ticket', 'secupress' ),
 			'supportContentFree' => __( '<p>Using the free version you have to post a new thread in the free wordpress.org forums.</p><p><a href="https://wordpress.org/support/plugin/secupress-free#postform" target="_blank" class="secupress-button secupress-button-mini"><span class="icon" aria-hidden="true"><i class="icon-wordpress"></i></span><span class="text">Open the forum</span></a></p><p>When using the Pro version, you can open a ticket directly from this popin: </p><br><p style="text-align:left">Summary: <input class="large-text" type="text" name="summary"></p><p style="text-align:left">Description: <textarea name="description" disabled="disabled">Please provide the specific url(s) where we can see each issue. e.g. the request doesn\'t work on this page: example.com/this-page</textarea></p>', 'secupress' ), // ////.
@@ -932,14 +934,22 @@ function secupress_scanners_template() {
 					$scan_status    = ! empty( $scanner['status'] ) ? $scanner['status'] : 'notscannedyet';
 					$scan_nonce_url = 'secupress_scanner_' . $class_name_part . ( $is_subsite ? '-' . $site_id : '' );
 					$scan_nonce_url = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $class_name_part . '&_wp_http_referer=' . $referer . ( $is_subsite ? '&for-current-site=1&site=' . $site_id : '' ) ), $scan_nonce_url );
-					$scan_message   = ! empty( $scanner['msgs'] ) ? secupress_format_message( $scanner['msgs'], $class_name_part ) : '&#175;';
+					$scan_message   = '&#175;';
+
+					if ( ! empty( $scanner['msgs'] ) ) {
+						$scan_message = '<span class="secupress-scan-result-label">' . _x( 'Scan result: ', 'noun', 'secupress' ) . '</span> ' . secupress_format_message( $scanner['msgs'], $class_name_part );
+					}
 
 					// Fix.
 					$fix             = ! empty( $fixes[ $option_name ] ) ? $fixes[ $option_name ] : array();
 					$fix_status_text = ! empty( $fix['status'] ) && 'good' !== $fix['status'] ? secupress_status( $fix['status'] ) : '';
 					$fix_nonce_url   = 'secupress_fixit_' . $class_name_part . ( $is_subsite ? '-' . $site_id : '' );
 					$fix_nonce_url   = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $class_name_part . '&_wp_http_referer=' . $referer . ( $is_subsite ? '&for-current-site=1&site=' . $site_id : '' ) ), $fix_nonce_url );
-					$fix_message     = ! empty( $fix['msgs'] ) && 'good' !== $scan_status ? secupress_format_message( $fix['msgs'], $class_name_part ) : '';
+					$fix_message     = '';
+
+					if ( ! empty( $fix['msgs'] ) && 'good' !== $scan_status ) {
+						$scan_message = '<span class="secupress-fix-result-label">' . _x( 'Fix result: ', 'noun', 'secupress' ) . '</span> ' . secupress_format_message( $fix['msgs'], $class_name_part );
+					}
 
 					// Row css class.
 					$row_css_class  = ' type-' . sanitize_key( $class_name::$type );

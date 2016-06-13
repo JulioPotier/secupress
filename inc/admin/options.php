@@ -31,45 +31,67 @@ function __secupress_global_settings_callback( $value ) {
 	}
 	$value['sanitized'] = 1;
 
-	// License validation.
+	// API and license validation.
 	$value['consumer_email'] = ! empty( $value['consumer_email'] ) ? is_email( $value['consumer_email'] )          : '';
-	$value['consumer_key']   = ! empty( $value['consumer_key'] )   ? sanitize_text_field( $value['consumer_key'] ) : '';
-	$value['api_key']        = ! empty( $value['api_key'] )        ? sanitize_text_field( $value['api_key'] )      : '';
+	$value['consumer_key']   = ! empty( $value['consumer_key'] )   ? sanitize_text_field( $value['consumer_key'] ) : '';	// Pro key, the site key.
+	$value['api_key']        = ! empty( $value['api_key'] )        ? sanitize_text_field( $value['api_key'] )      : '';	// Free API key, the user key.
 
 	if ( $value['consumer_email'] ) {
-		$response = wp_remote_post( SECUPRESS_WEB_DEMO . 'key-api/1.0/',
-			array(
-				'timeout' => 10,
-				'body'    => array(
-					'data' => array(
-						'sp_action'   => 'get_api_key',
-						'user_email'  => $value['consumer_email'],
-						'user_key'    => $value['consumer_key'],
-						'plugin_name' => ! empty( $value['wl_plugin_name'] ) ? $value['wl_plugin_name'] : SECUPRESS_PLUGIN_NAME,
-					),
-				),
-			)
-		);
+		// Call home.
+		$url = SECUPRESS_WEB_DEMO . 'key-api/1.0/?' . http_build_query( array(
+			'sp_action'   => 'update_subscription',
+			'user_email'  => $value['consumer_email'],
+			'user_key'    => $value['api_key'],
+			'site_key'    => $value['consumer_key'],
+			'plugin_name' => ! empty( $value['wl_plugin_name'] ) && secupress_is_pro() ? $value['wl_plugin_name'] : 'SecuPress',
+		) );
 
-		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
+		$response = wp_remote_get( $url, array( 'timeout' => 10 ) );
+
+		if ( is_wp_error( $response ) ) {
+
+			// The request couldn't be sent.
+			add_settings_error( 'secupress_global', 'request_error', __( 'Something is preventing the request to be sent.', 'secupress' ) );
+
+		} elseif ( 200 !== wp_remote_retrieve_response_code( $response ) ) {
+
+			// The server couldn't be reached. Maybe a server error or something.
+			add_settings_error( 'secupress_global', 'server_error', __( 'Our server is not reachable at the moment, please try again later.', 'secupress' ) );
+
+		} else {
 			$body = wp_remote_retrieve_body( $response );
 			$body = @json_decode( $body );
 
 			if ( ! is_object( $body ) ) {
-				// Error ////.
-			} elseif ( empty( $body->success ) ) {
-				// Error ////.
-			} elseif ( empty( $body->data ) || ! is_object( $body->data ) || empty( $body->data->api_key ) ) {
-				// Error ////.
-			} else {
-				$value['api_key'] = sanitize_text_field( $body->data->api_key );
 
-				if ( ! empty( $body->data->secupress_key ) ) {
-					$value['consumer_key'] = sanitize_text_field( $body->data->secupress_key );
+				// The response is not a json.
+				add_settings_error( 'secupress_global', 'server_bad_response', __( 'Our server returned an unexpected response and might be in error, please try again later or contact our support team.', 'secupress' ) );
+
+			} elseif ( empty( $body->success ) ) {
+
+				// The response is an error.
+				if ( 'invalid_api_credential' === $body->data->code ) {
+					add_settings_error( 'secupress_global', 'response_error', __( 'There is a problem with your free API key, please contact our support team to reset it.', 'secupress' ) );
+				} else {
+					add_settings_error( 'secupress_global', 'response_error', __( 'Our server returned an error, please try again later or contact our support team.', 'secupress' ) );
+				}
+
+			} elseif ( empty( $body->data ) || ! is_object( $body->data ) || empty( $body->data->user_key ) ) {
+
+				// What? A success with no API key?
+				add_settings_error( 'secupress_global', 'server_bad_response', __( 'Our server returned an unexpected response and might be in error, please try again later or contact our support team.', 'secupress' ) );
+
+			} else {
+				// The API key.
+				$value['api_key'] = sanitize_text_field( $body->data->user_key );
+
+				if ( ! empty( $body->data->site_key ) ) {
+					// It's a pro customer.
+					$value['consumer_key'] = sanitize_text_field( $body->data->site_key );
+				} else {
+					$value['consumer_key'] = '';
 				}
 			}
-		} else {
-			// Error ////.
 		}
 	}
 
