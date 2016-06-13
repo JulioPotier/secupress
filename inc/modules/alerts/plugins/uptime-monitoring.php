@@ -67,7 +67,7 @@ add_action( 'delete_site_option_secupress_alerts_settings', 'secupress_uptime_mo
  * @param (mixed)  $oldvalue Old value of the network option.
  */
 function secupress_uptime_monitoring_update_alerts_settings( $option, $newvalue, $oldvalue = false ) {
-	if ( ! secupress_get_consumer_email() || ! secupress_is_submodule_active( 'alerts', 'uptime-monitoring' ) ) {
+	if ( ! secupress_get_consumer_key() || ! secupress_is_submodule_active( 'alerts', 'uptime-monitoring' ) ) {
 		return;
 	}
 

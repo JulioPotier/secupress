@@ -6,8 +6,6 @@ $this->set_current_section( 'uptime-monitoring' );
 $this->add_section( __( 'Uptime Monitoring', 'secupress' ) );
 
 
-$has_consumer_email = secupress_get_consumer_email();
-
 $this->add_field( array(
 	'title'             => __( 'Monitor my website', 'secupress' ),
 	'description'       => sprintf(
@@ -19,15 +17,15 @@ $this->add_field( array(
 	'type'              => 'checkbox',
 	'value'             => (int) secupress_is_submodule_active( 'alerts', 'uptime-monitoring' ),
 	'label'             => __( 'Yes, monitor the uptime of my website and alert me if needed', 'secupress' ),
-	'disabled'          => ! $has_consumer_email,
+	'disabled'          => ! secupress_get_consumer_key(),
 	'helpers'           => array(
 		array(
 			'type'        => 'help',
-			'description' => secupress_is_pro() ? '' : __( 'Pro version will check the uptime each <strong>5</strong> minutes instead of 60.', 'secupress' ),
+			'description' => secupress_is_pro() ? '' : sprintf( __( 'Pro version will check the uptime each %1$s minutes instead of %2$s.', 'secupress' ), '<strong>5</strong>', 60 ),
 		),
 		array(
 			'type'        => 'warning',
-			'description' => secupress_get_consumer_email() ? '' : sprintf( __( 'You need a free API Key to use this feature. <a href="%s" class="secupress-button secupress-button-primary secupress-button-mini secupress-end button-secupress-get-api-key"><span class="icon"><i class="icon-key" aria-hidden="true"></i></span><span class="text">Get a free key</span></a>', 'secupress' ), esc_url( secupress_admin_url( 'settings' ) ) ),
+			'description' => secupress_get_consumer_key() ? '' : sprintf( __( 'You need a free API Key to use this feature. <a href="%s" class="secupress-button secupress-button-primary secupress-button-mini secupress-end button-secupress-get-api-key"><span class="icon"><i class="icon-key" aria-hidden="true"></i></span><span class="text">Get a free key</span></a>', 'secupress' ), esc_url( secupress_admin_url( 'settings' ) ) ),
 		),
 		array(
 			'type'        => 'warning',

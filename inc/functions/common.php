@@ -695,14 +695,38 @@ function secupress_in_array_deep( $needle, $haystack ) {
 
 
 /**
- * Return true if secupress pro is installed
+ * Tell if the consumer email is valid.
+ *
+ * @since 1.0
+ *
+ * @return (string|bool) The email if it is valid. False otherwise.
+ */
+function secupress_get_consumer_email() {
+	return is_email( secupress_get_option( 'consumer_email' ) );
+}
+
+
+/**
+ * Get the consumer key (if the consumer email is ok).
+ *
+ * @since 1.0
+ *
+ * @return (string)
+ */
+function secupress_get_consumer_key() {
+	return secupress_get_consumer_email() ? secupress_get_option( 'consumer_key' ) : '';
+}
+
+
+/**
+ * Return true if secupress pro is installed and the license is ok.
  *
  * @since 1.0
  *
  * @return (bool)
  */
 function secupress_is_pro() {
-	return defined( 'SECUPRESS_PRO_VERSION' );
+	return defined( 'SECUPRESS_PRO_VERSION' ) && secupress_get_consumer_key() && (int) secupress_get_option( 'site_is_pro' );
 }
 
 

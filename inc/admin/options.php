@@ -33,16 +33,14 @@ function __secupress_global_settings_callback( $value ) {
 
 	// API and license validation.
 	$value['consumer_email'] = ! empty( $value['consumer_email'] ) ? is_email( $value['consumer_email'] )          : '';
-	$value['consumer_key']   = ! empty( $value['consumer_key'] )   ? sanitize_text_field( $value['consumer_key'] ) : '';	// Pro key, the site key.
-	$value['api_key']        = ! empty( $value['api_key'] )        ? sanitize_text_field( $value['api_key'] )      : '';	// Free API key, the user key.
+	$value['consumer_key']   = ! empty( $value['consumer_key'] )   ? sanitize_text_field( $value['consumer_key'] ) : '';	// Free API key, the user key.
 
 	if ( $value['consumer_email'] ) {
 		// Call home.
 		$url = SECUPRESS_WEB_DEMO . 'key-api/1.0/?' . http_build_query( array(
 			'sp_action'   => 'update_subscription',
 			'user_email'  => $value['consumer_email'],
-			'user_key'    => $value['api_key'],
-			'site_key'    => $value['consumer_key'],
+			'user_key'    => $value['consumer_key'],
 			'plugin_name' => ! empty( $value['wl_plugin_name'] ) && secupress_is_pro() ? $value['wl_plugin_name'] : 'SecuPress',
 		) );
 
@@ -51,7 +49,7 @@ function __secupress_global_settings_callback( $value ) {
 		if ( is_wp_error( $response ) ) {
 
 			// The request couldn't be sent.
-			add_settings_error( 'secupress_global', 'request_error', __( 'Something is preventing the request to be sent.', 'secupress' ) );
+			add_settings_error( 'secupress_global', 'request_error', __( 'Something on your website is preventing the request to be sent.', 'secupress' ) );
 
 		} elseif ( 200 !== wp_remote_retrieve_response_code( $response ) ) {
 
@@ -71,28 +69,21 @@ function __secupress_global_settings_callback( $value ) {
 
 				// The response is an error.
 				if ( 'invalid_api_credential' === $body->data->code ) {
-					add_settings_error( 'secupress_global', 'response_error', __( 'There is a problem with your free API key, please contact our support team to reset it.', 'secupress' ) );
+					add_settings_error( 'secupress_global', 'response_error', __( 'There is a problem with your API key, please contact our support team to reset it.', 'secupress' ) );
+					$value['consumer_key'] = '';
+					$value['site_is_pro']  = 0;
 				} else {
 					add_settings_error( 'secupress_global', 'response_error', __( 'Our server returned an error, please try again later or contact our support team.', 'secupress' ) );
 				}
 
-			} elseif ( empty( $body->data ) || ! is_object( $body->data ) || empty( $body->data->user_key ) ) {
-
-				// What? A success with no API key?
-				add_settings_error( 'secupress_global', 'server_bad_response', __( 'Our server returned an unexpected response and might be in error, please try again later or contact our support team.', 'secupress' ) );
-
 			} else {
 				// The API key.
-				$value['api_key'] = sanitize_text_field( $body->data->user_key );
-
-				if ( ! empty( $body->data->site_key ) ) {
-					// It's a pro customer.
-					$value['consumer_key'] = sanitize_text_field( $body->data->site_key );
-				} else {
-					$value['consumer_key'] = '';
-				}
+				$value['consumer_key'] = sanitize_text_field( $body->data->user_key );
+				$value['site_is_pro']  = (int) ! empty( $body->data->site_is_pro );
 			}
 		}
+	} else {
+		unset( $value['site_is_pro'] );
 	}
 
 	// Uptime monitor.
