@@ -5,7 +5,7 @@
  * Description: Protect your WordPress with SecuPress, analyse and ensure the safety of your website daily.
  * Author: WP Media
  * Author URI: http://wp-media.me
- * Version: 1.0-beta2
+ * Version: 1.0-RC1
  * Network: true
  * License: GPLv2
  * License URI: http://secupress.me/gpl.txt
