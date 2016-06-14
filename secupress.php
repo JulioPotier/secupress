@@ -3,9 +3,9 @@
  * Plugin Name: SecuPress — WordPress Security
  * Plugin URI: http://secupress.me
  * Description: Protect your WordPress with SecuPress, analyse and ensure the safety of your website daily.
- * Author: SecuPress, WP Media
- * Version: 1.0-beta2
+ * Author: WP Media
  * Author URI: http://wp-media.me
+ * Version: 1.0-beta2
  * Network: true
  * License: GPLv2
  * License URI: http://secupress.me/gpl.txt
