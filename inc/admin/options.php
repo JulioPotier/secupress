@@ -98,7 +98,7 @@ function __secupress_global_settings_update_api_subscription( $new_values, $old_
 		'user_key'    => $new_values['consumer_key'],
 		'plugin_name' => ! empty( $new_values['wl_plugin_name'] ) ? $new_values['wl_plugin_name'] : '',
 		'prev_email'  => $api_old_values['consumer_email'] && $api_old_values['consumer_email'] !== $new_values['consumer_email'] ? $api_old_values['consumer_email'] : '',
-		'prev_key'    => $api_old_values['consumer_key']   && $api_old_values['consumer_key']   !== $new_values['consumer_key']   ? $api_old_values['consumer_key']   : '',
+		'prev_key'    => $api_old_values['consumer_key']   && $api_old_values['consumer_key'] !== $new_values['consumer_key']     ? $api_old_values['consumer_key']   : '',
 	) );
 
 	$response = wp_remote_get( $url, array( 'timeout' => 10 ) );
