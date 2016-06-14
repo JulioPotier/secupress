@@ -30,9 +30,6 @@ function __secupress_alerts_settings_callback( $settings ) {
 	// Event Alerts.
 	__secupress_event_alerts_settings_callback( $modulenow, $settings, $activate );
 
-	// Uptime monitoring.
-	__secupress_uptime_monitoring_settings_callback( $modulenow, $settings, $activate );
-
 	return $settings;
 }
 
@@ -120,25 +117,5 @@ function __secupress_event_alerts_settings_callback( $modulenow, &$settings, $ac
 		$settings['alerts_frequency'] = 15;
 	} else {
 		$settings['alerts_frequency'] = secupress_minmax_range( $settings['alerts_frequency'], 5, 60 );
-	}
-}
-
-
-/**
- * Uptime Monitor Callback.
- *
- * @since 1.0
- *
- * @param (string)     $modulenow Current module.
- * @param (array)      $settings  The module settings, passed by reference.
- * @param (bool|array) $activate  Used to (de)activate plugins.
- */
-function __secupress_uptime_monitoring_settings_callback( $modulenow, &$settings, $activate ) {
-	// API check.
-	if ( secupress_get_consumer_key() ) {
-		// Activate/deactivate.
-		secupress_manage_submodule( $modulenow, 'uptime-monitoring', ! empty( $activate['monitoring_activated'] ) && ! empty( $settings['notification-types_types'] ) );
-	} else {
-		secupress_deactivate_submodule( $modulenow, 'uptime-monitoring' );
 	}
 }
