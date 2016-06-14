@@ -130,6 +130,8 @@
 	 * @author: Geoffrey
 	 * @description That button could be any/everywhere!
 	 */
+////
+/*
 	$('.button-secupress-get-api-key').on( 'click.secupress', function(){
 		var $this = $(this),
 			texts = SecuPressi18nCommon.authswal,
@@ -165,6 +167,6 @@
 
 		return false;
 	} );
-
+*/
 
 } )(jQuery, document, window);

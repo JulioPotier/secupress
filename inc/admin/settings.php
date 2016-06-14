@@ -238,7 +238,7 @@ add_filter( 'plugin_action_links_' . plugin_basename( SECUPRESS_FILE ), '__secup
  */
 function __secupress_settings_action_links( $actions ) {
 	if ( ! secupress_is_white_label() ) {
-		array_unshift( $actions, sprintf( '<a href="%s">%s</a>', 'http://secupress.me/support/', __( 'Support', 'secupress' ) ) );
+		//// array_unshift( $actions, sprintf( '<a href="%s">%s</a>', 'http://secupress.me/support/', __( 'Support', 'secupress' ) ) );
 
 		array_unshift( $actions, sprintf( '<a href="%s">%s</a>', 'http://docs.secupress.me', __( 'Docs', 'secupress' ) ) );
 	}
@@ -788,12 +788,12 @@ function secupress_settings_heading( $titles = array() ) {
 			<?php } ?>
 		</div>
 		<div class="secupress-col-1-3 secupress-col-rateus secupress-text-end">
-			<p class="secupress-rateus">
+			<p class="secupress-rateus hidden">
 				<strong><?php _e( 'You like this plugin?' ) ?></strong>
 				<br>
 				<?php printf( __( 'Please take a few seconds to rate us on %sWordPress.org%s', 'secupress' ), '<a href="' . SECUPRESS_RATE_URL . '">', '</a>' ); ?>
 			</p>
-			<p class="secupress-rateus-link">
+			<p class="secupress-rateus-link hidden">
 				<a href="<?php echo SECUPRESS_RATE_URL; ?>">
 					<i class="icon-star" aria-hidden="true"></i>
 					<i class="icon-star" aria-hidden="true"></i>

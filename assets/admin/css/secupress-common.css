@@ -827,7 +827,8 @@ body[class*="secupress"] .sweet-overlay {
 /**
  * Commons settings styles
  */
-.secupress-setting-wrapper {
+.secupress-setting-wrapper,
+.secupress_page_secupress_settings .secupress-notice {
 	max-width: 100%;
 	width: 1020px;
 }

@@ -14,7 +14,7 @@ $description = implode( "<br/>\n", array(
 
 $this->set_current_section( 'secupress_display_apikey_options' );
 $this->set_section_description( $description );
-$this->add_section( __( 'License validation', 'secupress' ) );
+$this->add_section( __( 'License Validation', 'secupress' ) );
 
 
 $this->add_field( array(
@@ -35,11 +35,11 @@ $this->add_field( array(
 
 
 $this->add_field( array(
-	'title'        => __( 'Pro API Key', 'secupress' ),
+	'title'        => __( 'API Key', 'secupress' ),
 	'label_for'    => 'consumer_key',
 	'type'         => 'text',
 	'attributes'   => array(
-		'autocomplete' => 'off',
+	'autocomplete' => 'off',
 	),
 	'helpers'      => array(
 		array(
