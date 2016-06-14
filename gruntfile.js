@@ -47,20 +47,20 @@ module.exports = function( grunt ) {
 		"postcss": {
 			"options": {
 				"processors": [
-					require('autoprefixer')({
+					require( 'autoprefixer' )( {
 						"browsers": 'last 3 versions'
-					}), // add vendor prefixes
-					require('cssnano')() // minify the result
+					} ), // add vendor prefixes
+					require( 'cssnano' )() // minify the result
 				]
 			},
 			"target": {
-				"files": [{
+				"files": [ {
 					"expand": true,
-					"cwd": "assets/admin/css",
-					"src": ["*.css", "!*.min.css"],
-					"dest": "assets/admin/css",
-					"ext": ".min.css"
-				}]
+					"cwd":    "assets/admin/css",
+					"src":    [ "*.css", "!*.min.css" ],
+					"dest":   "assets/admin/css",
+					"ext":    ".min.css"
+				} ]
 			}
 		},
 		"devUpdate": {
@@ -88,4 +88,5 @@ module.exports = function( grunt ) {
 	grunt.registerTask( "jsh", [ "jshint" ] );
 	grunt.registerTask( "css", [ "postcss" ] );
 	grunt.registerTask( "minify", [ "newer:jshint", "newer:uglify", "newer:postcss" ] );
+	grunt.registerTask( "minify-force", [ "jshint", "uglify", "postcss" ] );
 };
