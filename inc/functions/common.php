@@ -699,9 +699,10 @@ function secupress_in_array_deep( $needle, $haystack ) {
  * @since 1.0
  * @author Grégory Viguier
  *
- * @param variant $user The object to be tested to be a valid user.
+ * @param (array) $values  The array we're interested in.
+ * @param (array) $default The array we use as boudaries.
  *
- * @return (bool)
+ * @return (array)
  */
 function secupress_array_merge_intersect( $values, $default ) {
 	$values = array_merge( $default, $values );
