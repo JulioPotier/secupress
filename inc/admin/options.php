@@ -92,7 +92,7 @@ function __secupress_global_settings_update_api_subscription( $new_values, $old_
 	$api_old_values = secupress_array_merge_intersect( $old_values, $def_values );
 
 	// Call home.
-	$url = SECUPRESS_WEB_DEMO . 'key-api/1.0/?' . http_build_query( array(
+	$url = SECUPRESS_WEB_MAIN . 'key-api/1.0/?' . http_build_query( array(
 		'sp_action'   => 'update_subscription',
 		'user_email'  => $new_values['consumer_email'],
 		'user_key'    => $new_values['consumer_key'],
@@ -154,7 +154,7 @@ function __secupress_global_settings_remove_api_subscription( $new_values, $old_
 	$new_values['consumer_key']   = $api_old_values['consumer_key'];
 
 	// Call home.
-	$url = SECUPRESS_WEB_DEMO . 'key-api/1.0/?' . http_build_query( array(
+	$url = SECUPRESS_WEB_MAIN . 'key-api/1.0/?' . http_build_query( array(
 		'sp_action'   => 'remove_subscription',
 		'user_email'  => $new_values['consumer_email'],
 		'user_key'    => $new_values['consumer_key'],
