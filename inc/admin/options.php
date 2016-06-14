@@ -37,7 +37,7 @@ function __secupress_global_settings_callback( $value ) {
 
 	if ( $value['consumer_email'] ) {
 		// Call home.
-		$url = SECUPRESS_WEB_DEMO . 'key-api/1.0/?' . http_build_query( array(
+		$url = SECUPRESS_WEB_MAIN . 'key-api/1.0/?' . http_build_query( array(
 			'sp_action'   => 'update_subscription',
 			'user_email'  => $value['consumer_email'],
 			'user_key'    => $value['consumer_key'],
