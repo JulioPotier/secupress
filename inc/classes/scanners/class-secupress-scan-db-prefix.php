@@ -192,7 +192,7 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 		if ( reset( $wpdb->get_col( "SHOW TABLES LIKE '{$new_prefix}options'" ) ) !== $new_prefix . 'options' ) { // WPCS: unprepared SQL ok.
 			$this->add_fix_message( 303 );
 		} else {
-			secupress_replace_content( secupress_find_wpconfig_path(), '/\$table_prefix.*=.*(\'' . $old_prefix . '\'|"' . $old_prefix . '");.*/', '$table_prefix  = \'' . $new_prefix . '\'; // Modified by SecuPress' . "\n" . '/*Commented by SecuPress*/ // $0' );
+			secupress_replace_content( secupress_find_wpconfig_path(), '#\$table_prefix.*=.*(\'' . $old_prefix . '\'|"' . $old_prefix . '");.*#', '$table_prefix  = \'' . $new_prefix . '\'; // Modified by SecuPress' . "\n" . '/*Commented by SecuPress*/ // $0' );
 			$old_prefix_len  = strlen( $old_prefix );
 			$old_prefix_len1 = $old_prefix_len + 1;
 			$wpdb->update( $new_prefix . 'options', array( 'option_name' => $new_prefix . 'user_roles' ), array( 'option_name' => $old_prefix . 'user_roles' ) );
