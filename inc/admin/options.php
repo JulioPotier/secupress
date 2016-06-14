@@ -31,10 +31,15 @@ function __secupress_global_settings_callback( $value ) {
 	}
 	$value['sanitized'] = 1;
 
+	// Previous values.
+	$old_value = get_site_option( SECUPRESS_SETTINGS_SLUG );
+	$old_value = is_array( $old_value ) ? $old_value : array();
+
 	// API and license validation.
 	$value['consumer_email'] = ! empty( $value['consumer_email'] ) ? is_email( $value['consumer_email'] )          : '';
 	$value['consumer_key']   = ! empty( $value['consumer_key'] )   ? sanitize_text_field( $value['consumer_key'] ) : '';	// Free API key, the user key.
 
+	// We have a valid email address: add the site.
 	if ( $value['consumer_email'] ) {
 		// Call home.
 		$url = SECUPRESS_WEB_MAIN . 'key-api/1.0/?' . http_build_query( array(
@@ -69,30 +74,78 @@ function __secupress_global_settings_callback( $value ) {
 
 				// The response is an error.
 				if ( 'invalid_api_credential' === $body->data->code ) {
+
 					add_settings_error( 'secupress_global', 'response_error', __( 'There is a problem with your API key, please contact our support team to reset it.', 'secupress' ) );
-					$value['consumer_key'] = '';
-					$value['site_is_pro']  = 0;
+					unset( $value['consumer_key'], $value['site_is_pro'] );
+
 				} else {
 					add_settings_error( 'secupress_global', 'response_error', __( 'Our server returned an error, please try again later or contact our support team.', 'secupress' ) );
 				}
 
 			} else {
-				// The API key.
+				// Success.
 				$value['consumer_key'] = sanitize_text_field( $body->data->user_key );
 				$value['site_is_pro']  = (int) ! empty( $body->data->site_is_pro );
 			}
 		}
-	} else {
-		unset( $value['site_is_pro'] );
+	}
+	// No valid email: remove the site.
+	else {
+		// Make sure everything's fine before deleting values.
+		$value['consumer_email'] = $old_value['consumer_email'];
+		$value['consumer_key']   = $old_value['consumer_key'];
+
+		// Call home.
+		$url = SECUPRESS_WEB_MAIN . 'key-api/1.0/?' . http_build_query( array(
+			'sp_action'   => 'remove_subscription',
+			'user_email'  => $value['consumer_email'],
+			'user_key'    => $value['consumer_key'],
+		) );
+
+		$response = wp_remote_get( $url, array( 'timeout' => 10 ) );
+
+		if ( is_wp_error( $response ) ) {
+
+			// The request couldn't be sent.
+			add_settings_error( 'secupress_global', 'request_error', __( 'Something on your website is preventing the request to be sent.', 'secupress' ) );
+
+		} elseif ( 200 !== wp_remote_retrieve_response_code( $response ) ) {
+
+			// The server couldn't be reached. Maybe a server error or something.
+			add_settings_error( 'secupress_global', 'server_error', __( 'Our server is not reachable at the moment, please try again later.', 'secupress' ) );
+
+		} else {
+			$body = wp_remote_retrieve_body( $response );
+			$body = @json_decode( $body );
+
+			if ( ! is_object( $body ) ) {
+
+				// The response is not a json.
+				add_settings_error( 'secupress_global', 'server_bad_response', __( 'Our server returned an unexpected response and might be in error, please try again later or contact our support team.', 'secupress' ) );
+
+			} elseif ( empty( $body->success ) ) {
+
+				// The response is an error.
+				if ( 'invalid_api_credential' === $body->data->code ) {
+
+					add_settings_error( 'secupress_global', 'response_error', __( 'There is a problem with your API key, please contact our support team to reset it.', 'secupress' ) );
+					unset( $value['consumer_key'], $value['site_is_pro'] );
+
+				} else {
+					add_settings_error( 'secupress_global', 'response_error', __( 'Our server returned an error, please try again later or contact our support team.', 'secupress' ) );
+				}
+
+			} else {
+				// Success.
+				unset( $value['consumer_email'], $value['consumer_key'], $value['site_is_pro'] );
+			}
+		}
 	}
 
 	// Uptime monitor.
-	$account_token = secupress_get_option( 'uptime_monitoring_account_key' );
-	$site_token    = secupress_get_option( 'uptime_monitoring_site_key' );
-
-	if ( $account_token && $site_token ) {
-		$value['uptime_monitoring_account_key'] = $account_token;
-		$value['uptime_monitoring_site_key']    = $site_token;
+	if ( ! empty( $old_value['uptime_monitoring_account_key'] ) && ! empty( $old_value['uptime_monitoring_site_key'] ) ) {
+		$value['uptime_monitoring_account_key'] = $old_value['uptime_monitoring_account_key'];
+		$value['uptime_monitoring_site_key']    = $old_value['uptime_monitoring_site_key'];
 	} else {
 		unset( $value['uptime_monitoring_account_key'], $value['uptime_monitoring_site_key'] );
 	}
