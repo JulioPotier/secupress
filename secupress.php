@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: WordPress Security by SecuPress (Free)
+ * Plugin Name: SecuPress — WordPress Security
  * Plugin URI: http://secupress.me
- * Description: WordPress Security by SecuPress, the best and simpler way to protect your websites.
+ * Description: Protect your WordPress with SecuPress, analyse and ensure the safety of your website daily.
  * Author: SecuPress, WP Media
  * Version: 1.0-beta2
  * Author URI: http://wp-media.me
@@ -13,7 +13,7 @@
  * Text Domain: secupress
  * Domain Path: /languages/
  *
- * Copyright 2012-2015 SecuPress
+ * Copyright 2012-2016 SecuPress
  */
 
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
