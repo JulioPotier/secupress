@@ -694,6 +694,22 @@ function secupress_in_array_deep( $needle, $haystack ) {
 
 
 /**
+ * `array_intersect_key()` + `array_merge()`.
+ *
+ * @since 1.0
+ * @author Grégory Viguier
+ *
+ * @param variant $user The object to be tested to be a valid user.
+ *
+ * @return (bool)
+ */
+function secupress_array_merge_intersect( $values, $default ) {
+	$values = array_merge( $default, $values );
+	return array_intersect_key( $values, $default );
+}
+
+
+/**
  * Tell if the consumer email is valid.
  *
  * @since 1.0
@@ -831,13 +847,14 @@ function secupress_modify_userid_for_nonces( $uid ) {
 	return isset( $_GET['userid'] ) ? (int) $_GET['userid'] : 0;
 }
 
+
 /**
  * Tell if the param $user is a real user from your installation.
  *
  * @since 1.0
  * @author Julio Potier
  *
- * @param variant $user The object to be tested to be a valid user.
+ * @param (mixed) $user The object to be tested to be a valid user.
  *
  * @return (bool)
  */
