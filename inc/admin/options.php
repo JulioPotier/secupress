@@ -121,12 +121,12 @@ function __secupress_global_settings_update_api_subscription( $new_values, $old_
 			 * @param (array) $api_old_values The old values.
 			 */
 			do_action( 'secupress.api.data_changed', $api_new_values, $api_old_values );
-		} else {
-			$new_values['consumer_email'] = $api_old_values['consumer_email'];
+		}
+	} else {
+		$new_values['consumer_email'] = $api_old_values['consumer_email'];
 
-			if ( ! empty( $new_values['consumer_key'] ) ) {
-				$new_values['consumer_key'] = $api_old_values['consumer_key'];
-			}
+		if ( ! empty( $new_values['consumer_key'] ) ) {
+			$new_values['consumer_key'] = $api_old_values['consumer_key'];
 		}
 	}
 
