@@ -166,7 +166,7 @@ function __secupress_global_settings_remove_api_subscription( $new_values, $old_
 		// Success!
 		unset( $new_values['consumer_email'], $new_values['consumer_key'], $new_values['site_is_pro'] );
 
-		$api_new_values = $def_values;
+		$api_new_values = secupress_array_merge_intersect( $old_values, $def_values );
 		/** This action is documented in inc/admin/options.php */
 		do_action( 'secupress.api.data_changed', $api_new_values, $api_old_values );
 	}
