@@ -95,7 +95,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 	public function scan() {
 		if ( ! static::_are_centralized_blog_options_filled() ) {
 			// "warning"
-			$this->add_message( 101 );
+			$this->add_message( 106 );
 			return parent::scan();
 		}
 
