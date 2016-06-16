@@ -254,7 +254,11 @@ function secupress_warning_no_oneclick_scan_yet() {
 	$screen_id = get_current_screen();
 	$screen_id = $screen_id && ! empty( $screen_id->id ) ? $screen_id->id : false;
 
-	if ( secupress_notice_is_dismissed( 'oneclick-scan' ) || ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' !== $screen_id && 'plugins' !== $screen_id ) || ! current_user_can( secupress_get_capability() ) ) {
+	if ( secupress_notice_is_dismissed( 'oneclick-scan' ) || ! current_user_can( secupress_get_capability() ) ) {
+		return;
+	}
+
+	if ( ! ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' === $screen_id || ( 'plugins' === $screen_id && ! is_multisite() ) || 'plugins-network' === $screen_id ) ) {
 		return;
 	}
 
