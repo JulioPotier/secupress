@@ -118,7 +118,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			// First scan.
 			'alreadyScanned'       => $already_scanned,
 			'firstScanText'        => __( 'Before setting modules,<br>launch your first scan.', 'secupress' ),
-			'firstScanButton'      => __( 'One Click Scan', 'secupress' ),
+			'firstScanButton'      => __( 'Scan my website', 'secupress' ),
 			'firstScanURL'         => esc_url( wp_nonce_url( secupress_admin_url( 'scanners' ), 'first_oneclick-scan' ) ) . '&oneclick-scan=1',
 			'firstScanImage'       => SECUPRESS_ADMIN_IMAGES_URL . 'icon-radar.png',
 			// Expand Textareas.
@@ -363,7 +363,7 @@ function __secupress_scanners() {
 						printf( esc_html__( '%s Security Scanners', 'secupress' ), SECUPRESS_PLUGIN_NAME );
 					?></p>
 					<p class="secupress-text-end hide-if-no-js">
-						<a href="#secupress-more-info" class="secupress-link-icon secupress-open-moreinfo" data-trigger="slidedown" data-target="secupress-more-info">
+						<a href="#secupress-more-info" class="secupress-link-icon secupress-open-moreinfo<?php echo $reports ? '' : ' secupress-activated dont-trigger-hide'; ?>" data-trigger="slidedown" data-target="secupress-more-info">
 							<span class="icon" aria-hidden="true">
 								<i class="icon-info"></i>
 							</span>
@@ -373,7 +373,7 @@ function __secupress_scanners() {
 						</a>
 					</p>
 
-					<div id="secupress-more-info" class="secupress-full-wide secupress-counter hide-if-js">
+					<div id="secupress-more-info" class="secupress-full-wide secupress-counter<?php echo $reports ? ' hide-if-js' : ' secupress-open'; ?>">
 						<div class="secupress-flex secupress-flex-top">
 							<div class="secupress-col-1-3">
 								<div class="secupress-blob secupress-counter-put">
@@ -408,7 +408,7 @@ function __secupress_scanners() {
 						</div>
 
 						<p class="secupress-text-end secupress-m0">
-							<a href="#secupress-more-info" class="secupress-link-icon secupress-icon-right secupress-close-moreinfo" data-trigger="slideup" data-target="secupress-more-info">
+							<a href="#secupress-more-info" class="secupress-link-icon secupress-icon-right secupress-close-moreinfo<?php echo $reports ? '' : ' dont-trigger-hide'; ?>" data-trigger="slideup" data-target="secupress-more-info">
 								<span class="icon" aria-hidden="true">
 									<i class="icon-cross"></i>
 								</span>
@@ -777,7 +777,9 @@ function secupress_settings_heading( $titles = array() ) {
 					<?php echo secupress_get_logo( array( 'width' => 131 ) ); ?>
 				</div>
 				<div class="secupress-lb-name">
-					<p class="secupress-lb-title"><?php echo SECUPRESS_PLUGIN_NAME; ?></p>
+					<p class="secupress-lb-title">
+					<?php echo secupress_get_logo_word( array('with'=> 100, 'height' => 24 ) ); ?>
+					</p>
 				</div>
 			</div>
 		</div>

@@ -471,6 +471,38 @@ function secupress_get_logo( $atts = array() ) {
 	return "<img{$attributes}/>";
 }
 
+/**
+ * Get SecuPress logo word.
+ *
+ * @since 1.0
+ *
+ * @param (array) $atts An array of HTML attributes.
+ *
+ * @return (string) The HTML tag.
+ */
+function secupress_get_logo_word( $atts = array() ) {
+
+	if ( SECUPRESS_PLUGIN_NAME !== 'SecuPress' ) {
+		return SECUPRESS_PLUGIN_NAME;
+	}
+
+	$base_url = SECUPRESS_ADMIN_IMAGES_URL . 'secupress-word';
+
+	$atts = array_merge( array(
+		'src'    => "{$base_url}.png",
+		'srcset' => "{$base_url}.svg 1x, {$base_url}.svg 2x",
+		'alt'    => 'SecuPress',
+	), $atts );
+
+	$attributes = '';
+
+	foreach ( $atts as $att => $value ) {
+		$attributes .= " {$att}=\"{$value}\"";
+	}
+
+	return "<img{$attributes}/>";
+}
+
 
 /**
  * Tell if users can register, whatever we're in a Multisite or not.

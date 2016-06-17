@@ -87,6 +87,7 @@ module.exports = function( grunt ) {
 
 	grunt.registerTask( "jsh", [ "jshint" ] );
 	grunt.registerTask( "css", [ "postcss" ] );
+	grunt.registerTask( "js", [ "newer:jshint", "newer:uglify" ] );
 	grunt.registerTask( "minify", [ "newer:jshint", "newer:uglify", "newer:postcss" ] );
 	grunt.registerTask( "minify-force", [ "jshint", "uglify", "postcss" ] );
 };
