@@ -104,11 +104,14 @@
 
 		// init
 		var $_this  = $(this),
+			hide 	= $(this).hasClass('dont-trigger-hide'),
 			target  = $_this.data('target'),
 			$target = $( '#' + target ),
 			effect  = $_this.data('trigger');
-
-		$target.spHide();
+		
+		if ( ! hide ) {
+			$target.spHide();
+		}
 
 		// click
 		$_this.on( 'click.secupress', function(){
