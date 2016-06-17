@@ -199,7 +199,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 
 	// Old WordPress Versions: before WordPress 3.9.
 	if ( ! secupress_wp_version_is( '3.9' ) ) {
-		wp_enqueue_style( 'secupress-wordpress-3-7',  SECUPRESS_ADMIN_CSS_URL . 'secupress-wordpress-3.7' . $suffix . '.css', array( 'secupress-common-css' ), $version );
+		wp_enqueue_style( 'secupress-wordpress-3-7',  SECUPRESS_ADMIN_CSS_URL . 'secupress-wordpress-3-7' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 	}
 
 	// SecuPress version in footer.
