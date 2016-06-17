@@ -254,7 +254,11 @@ function secupress_warning_no_oneclick_scan_yet() {
 	$screen_id = get_current_screen();
 	$screen_id = $screen_id && ! empty( $screen_id->id ) ? $screen_id->id : false;
 
-	if ( secupress_notice_is_dismissed( 'oneclick-scan' ) || ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' !== $screen_id && 'plugins' !== $screen_id ) || ! current_user_can( secupress_get_capability() ) ) {
+	if ( ! ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' === $screen_id || ( 'plugins' === $screen_id && ! is_multisite() ) || 'plugins-network' === $screen_id ) ) {
+		return;
+	}
+
+	if ( secupress_notice_is_dismissed( 'oneclick-scan' ) || ! current_user_can( secupress_get_capability() ) ) {
 		return;
 	}
 
@@ -299,7 +303,7 @@ function secupress_warning_no_oneclick_scan_yet() {
 
 add_action( 'all_admin_notices', 'secupress_warning_no_api_key', 50 );
 /**
- * This warning is displayed if consumer email is unknown
+ * This warning is displayed if consumer email and key are unknown.
  *
  * @since 1.0
  * @author Geoffrey
@@ -320,12 +324,13 @@ function secupress_warning_no_api_key() {
 	}
 
 	$times = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
-	$referer = urlencode( esc_url_raw( secupress_get_current_url( 'raw' ) ) );
 
 	// Don't display the API key banner yet, wait the first OCS.
-	if ( secupress_get_consumer_email() || ! $times ) {
+	if ( secupress_get_consumer_key() || ! $times ) {
 		return;
 	}
+
+	$referer = urlencode( esc_url_raw( secupress_get_current_url( 'raw' ) ) );
 	?>
 	<div class="secupress-section-dark secupress-notice mini secupress-flex">
 		<div class="secupress-col-1-4 secupress-col-logo mini">

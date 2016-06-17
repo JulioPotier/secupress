@@ -105,24 +105,6 @@ function secupress_get_vulnerable_plugins() {
 	return array();
 }
 
-
-/**
- * Get the vulnerable plugins from an option
- *
- * @since 1.0
- */
-function secupress_refresh_vulnerable_plugins() {
-	$plugins  = get_plugins(); // //// GO PRO.
-	$plugins  = wp_list_pluck( $plugins, 'Version' );
-	$args     = array( 'body' => array( 'items' => $plugins, 'type' => 'plugin' ), 'headers' => array( 'X-Secupress' => SECUPRESS_VERSION ) ); // //// Use client licence here.
-
-	$response = wp_remote_post( SECUPRESS_WEB_DEMO . '/wpvulndb.php', $args ); // //// Url temp.
-	if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
-		update_site_option( 'secupress_bad_plugins', wp_remote_retrieve_body( $response ) );
-	}
-}
-
-
 /**
  * Get the plugins whitelist from our local file.
  *
@@ -152,24 +134,6 @@ function secupress_get_plugins_whitelist() {
 
 
 /* THEMES */
-
-/**
- * Get the vulnerable themes from an option.
- *
- * @since 1.0
- */
-function secupress_refresh_vulnerable_themes() {
-	$themes = wp_get_themes(); // //// GO PRO.
-	$themes = wp_list_pluck( $themes, 'Version' );
-
-	$args   = array( 'body' => array( 'items' => $themes, 'type' => 'theme' ), 'headers' => array( 'X-Secupress' => SECUPRESS_VERSION ) ); // //// Use client licence here.
-
-	$response = wp_remote_post( SECUPRESS_WEB_DEMO . '/wpvulndb.php', $args ); // //// Url temp.
-	if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
-		update_site_option( 'secupress_bad_themes', wp_remote_retrieve_body( $response ) );
-	}
-}
-
 
 /**
  * Get the vulnerable themes from an option, from our option, set by `secupress_refresh_vulnerable_themes()`.

@@ -62,6 +62,8 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 			103 => __( 'No themes selected.', 'secupress' ),
 			104 => __( 'All selected themes have been deleted (but some are still there).', 'secupress' ),
 			105 => _n_noop( 'Sorry, the following theme could not be deleted: %s.', 'Sorry, the following themes could not be deleted: %s.', 'secupress' ),
+			/* translators: %s is the plugin name. */
+			106 => sprintf( __( 'You have a big network, %s must work on some data before being able to perform this scan.', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ),
 			// "bad"
 			200 => _n_noop( '<strong>%1$d deactivated plugin</strong>, if you don\'t need it, delete it: %2$s.', '<strong>%1$d deactivated plugins</strong>, if you don\'t need them, delete them: %2$s.', 'secupress' ),
 			201 => _n_noop( '<strong>%1$d deactivated theme</strong>, if you don\'t need it, delete it: %2$s.', '<strong>%1$d deactivated themes</strong>, if you don\'t need them, delete them: %2$s.', 'secupress' ),
@@ -91,6 +93,12 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
+		if ( ! static::_are_centralized_blog_options_filled() ) {
+			// "warning"
+			$this->add_message( 106 );
+			return parent::scan();
+		}
+
 		$lists = static::get_inactive_plugins_and_themes();
 		$glue  = sprintf( __( '%s, %s' ), '', '' ); // WP i18n.
 

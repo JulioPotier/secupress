@@ -201,13 +201,13 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 								</div>
 								<div class="secupress-sh-name">
 									<p class="secupress-sh-title">
-										<?php 
-											if ( SECUPRESS_PLUGIN_NAME === 'SecuPress' ) {
-												echo '<img src="' . SECUPRESS_ADMIN_IMAGES_URL . 'secupress-word.png" srcset="' . SECUPRESS_ADMIN_IMAGES_URL . 'secupress-word.svg 1x, ' . SECUPRESS_ADMIN_IMAGES_URL . 'secupress-word.svg 2x" alt="SecuPress" width="81" height="19">';
-											}
-											else {
-												echo SECUPRESS_PLUGIN_NAME;
-											}
+										<?php
+										if ( SECUPRESS_PLUGIN_NAME === 'SecuPress' ) {
+											echo '<img src="' . SECUPRESS_ADMIN_IMAGES_URL . 'secupress-word.png" srcset="' . SECUPRESS_ADMIN_IMAGES_URL . 'secupress-word.svg 1x, ' . SECUPRESS_ADMIN_IMAGES_URL . 'secupress-word.svg 2x" alt="SecuPress" width="81" height="19">';
+										}
+										else {
+											echo SECUPRESS_PLUGIN_NAME;
+										}
 										?>
 									</p>
 								</div>
@@ -622,9 +622,9 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		echo '<form id="form-search-ip"' . ( $ban_ips || $is_search ? '' : ' class="hidden"' ) . ' method="post">';
 			echo '<label for="secupress-search-banned-ip" class="screen-reader-text">' . __( 'Search IP', 'secupress' ) . '</label><br/>';
 			echo '<input type="search" id="secupress-search-banned-ip" name="secupress-search-banned-ip" value="' . $search_val . '"/> ';
-			echo '<button type="submit" class="button button-primary" data-loading-i18n="' . esc_attr__( 'Searching...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Search IP', 'secupress' ) . '">' . __( 'Search IP', 'secupress' ) . '</button> ';
+			echo '<button type="submit" class="secupress-button secupress-button-primary" data-loading-i18n="' . esc_attr__( 'Searching...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Search IP', 'secupress' ) . '">' . __( 'Search IP', 'secupress' ) . '</button> ';
 			echo '<span class="spinner secupress-inline-spinner hide-if-no-js"></span>';
-			echo '<a class="button button-secondary' . ( $search_val ? '' : ' hidden' ) . '" id="reset-banned-ips-list" href="' . esc_url( $page_url ) . '" data-loading-i18n="' . esc_attr__( 'Reseting...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Reset', 'secupress' ) . '">' . __( 'Reset', 'secupress' ) . '</a> ';
+			echo '<a class="secupress-button secupress-button-secondary' . ( $search_val ? '' : ' hidden' ) . '" id="reset-banned-ips-list" href="' . esc_url( $page_url ) . '" data-loading-i18n="' . esc_attr__( 'Reseting...', 'secupress' ) . '" data-original-i18n="' . esc_attr__( 'Reset', 'secupress' ) . '">' . __( 'Reset', 'secupress' ) . '</a> ';
 			echo '<span class="spinner secupress-inline-spinner' . ( $search_val ? ' hide-if-no-js' : ' hidden' ) . '"></span>';
 		echo "</form>\n";
 

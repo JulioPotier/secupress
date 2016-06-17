@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: WordPress Security by SecuPress (Free)
+ * Plugin Name: SecuPress — WordPress Security
  * Plugin URI: http://secupress.me
- * Description: WordPress Security by SecuPress, the best and simpler way to protect your websites.
- * Author: SecuPress, WP Media
- * Version: 1.0-beta2
+ * Description: Protect your WordPress with SecuPress, analyse and ensure the safety of your website daily.
+ * Author: WP Media
  * Author URI: http://wp-media.me
+ * Version: 1.0-RC1
  * Network: true
  * License: GPLv2
  * License URI: http://secupress.me/gpl.txt
@@ -13,7 +13,7 @@
  * Text Domain: secupress
  * Domain Path: /languages/
  *
- * Copyright 2012-2015 SecuPress
+ * Copyright 2012-2016 SecuPress
  */
 
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /* DEFINES ====================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-define( 'SECUPRESS_VERSION'               , '1.0-beta2' );
+define( 'SECUPRESS_VERSION'               , '1.0-RC1' );
 define( 'SECUPRESS_PRIVATE_KEY'           , false );
 define( 'SECUPRESS_ACTIVE_SUBMODULES'     , 'secupress_active_submodules' );
 define( 'SECUPRESS_SETTINGS_SLUG'         , 'secupress_settings' );
@@ -38,7 +38,6 @@ define( 'SECUPRESS_BAN_IP'                , 'secupress_ban_ip' );
 define( 'SECUPRESS_RATE_URL'              , 'https://wordpress.org/support/view/plugin-reviews/secupress?filter=5#topic' );
 define( 'SECUPRESS_REPO_URL'              , 'https://wordpress.org/plugins/secupress/' );
 define( 'SECUPRESS_WEB_MAIN'              , 'http://secupress.me/' );
-define( 'SECUPRESS_WEB_DEMO'              , 'http://dave.secupress.me/' ); // ////.
 define( 'SECUPRESS_BOT_URL'               , 'http://bot.secupress.me' );
 define( 'SECUPRESS_WEB_VALID'             , 'http://support.secupress.me/' );
 define( 'SECUPRESS_FILE'                  , __FILE__ );

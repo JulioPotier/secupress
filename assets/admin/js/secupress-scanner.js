@@ -412,12 +412,15 @@ jQuery( document ).ready( function( $ ) {
 
 			swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
 				title:              SecuPressi18nScanner.supportTitle,
-				confirmButtonText:  SecuPressi18nScanner.supportButton,
+				//// confirmButtonText:  SecuPressi18nScanner.supportButton,
 				html:               SecuPressi18nScanner.supportContentFree,
 				confirmButtonColor: SecuPress.supportButtonColor,
-				type:               "question"
+				showCancelButton:   false, ////
+				type:               "question",
 			} ) ).then( function( isConfirm ) {
 				if ( true === isConfirm ) {
+					swal2.close(); ////
+					return; ////
 					swal2( $.extend( {}, SecuPress.swal2Defaults, {
 						title:              "Pro Version needed", //// TODO: localize.
 						type:               "error",

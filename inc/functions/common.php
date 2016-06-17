@@ -109,7 +109,6 @@ function secupress_get_scanners() {
 			'Block_Long_URL',
 			'Readme_Discloses',
 			'Bad_Url_Access',
-			'Uptime_Monitor',
 			'Bad_File_Extensions',
 		),
 		'low' => array(
@@ -695,14 +694,55 @@ function secupress_in_array_deep( $needle, $haystack ) {
 
 
 /**
- * Return true if secupress pro is installed
+ * `array_intersect_key()` + `array_merge()`.
+ *
+ * @since 1.0
+ * @author Grégory Viguier
+ *
+ * @param (array) $values  The array we're interested in.
+ * @param (array) $default The array we use as boudaries.
+ *
+ * @return (array)
+ */
+function secupress_array_merge_intersect( $values, $default ) {
+	$values = array_merge( $default, $values );
+	return array_intersect_key( $values, $default );
+}
+
+
+/**
+ * Tell if the consumer email is valid.
+ *
+ * @since 1.0
+ *
+ * @return (string|bool) The email if it is valid. False otherwise.
+ */
+function secupress_get_consumer_email() {
+	return is_email( secupress_get_option( 'consumer_email' ) );
+}
+
+
+/**
+ * Get the consumer key (if the consumer email is ok).
+ *
+ * @since 1.0
+ *
+ * @return (string)
+ */
+function secupress_get_consumer_key() {
+	return secupress_get_consumer_email() ? secupress_get_option( 'consumer_key' ) : '';
+}
+
+
+/**
+ * Return true if secupress pro is installed and the license is ok.
  *
  * @since 1.0
  *
  * @return (bool)
  */
 function secupress_is_pro() {
-	return defined( 'SECUPRESS_PRO_VERSION' );
+	return defined( 'SECUPRESS_PRO_VERSION' ) && secupress_get_consumer_key() && (int) secupress_get_option( 'site_is_pro' );
 }
 
 
@@ -808,13 +848,14 @@ function secupress_modify_userid_for_nonces( $uid ) {
 	return isset( $_GET['userid'] ) ? (int) $_GET['userid'] : 0;
 }
 
+
 /**
  * Tell if the param $user is a real user from your installation.
  *
  * @since 1.0
  * @author Julio Potier
  *
- * @param variant $user The object to be tested to be a valid user.
+ * @param (mixed) $user The object to be tested to be a valid user.
  *
  * @return (bool)
  */

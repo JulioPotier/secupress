@@ -246,7 +246,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 				case 1:
 					if ( ! $check ) {
 						if ( defined( $constant ) ) {
-							$replaced = secupress_replace_content( $wpconfig_filename, "/define\(.*('$constant'|\"$constant\").*,/", '/*Commented by SecuPress*/ // $0' );
+							$replaced = secupress_replace_content( $wpconfig_filename, "#define\(.*('$constant'|\"$constant\"),(.*)#", '/*Commented by SecuPress*/ /* $0 */' );
 						}
 
 						if ( ! defined( $constant ) || $replaced ) {
@@ -259,7 +259,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 				case false:
 					if ( $check ) {
 						if ( defined( $constant ) ) {
-							$replaced = secupress_replace_content( $wpconfig_filename, "/define\(.*('$constant'|\"$constant\").*,/", '/*Commented by SecuPress*/ // $0' );
+							$replaced = secupress_replace_content( $wpconfig_filename, "#define\(.*('$constant'|\"$constant\"),(.*)#", '/*Commented by SecuPress*/ /* $0 */' );
 						}
 
 						if ( ! defined( $constant ) || $replaced || 'WP_DEBUG_DISPLAY' === $constant ) {
