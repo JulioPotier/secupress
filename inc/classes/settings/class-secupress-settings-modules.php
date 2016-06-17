@@ -201,14 +201,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 								</div>
 								<div class="secupress-sh-name">
 									<p class="secupress-sh-title">
-										<?php
-										if ( SECUPRESS_PLUGIN_NAME === 'SecuPress' ) {
-											echo '<img src="' . SECUPRESS_ADMIN_IMAGES_URL . 'secupress-word.png" srcset="' . SECUPRESS_ADMIN_IMAGES_URL . 'secupress-word.svg 1x, ' . SECUPRESS_ADMIN_IMAGES_URL . 'secupress-word.svg 2x" alt="SecuPress" width="81" height="19">';
-										}
-										else {
-											echo SECUPRESS_PLUGIN_NAME;
-										}
-										?>
+										<?php echo secupress_get_logo_word( array('with'=> 81, 'height' => 19 ) ); ?>
 									</p>
 								</div>
 							</div>

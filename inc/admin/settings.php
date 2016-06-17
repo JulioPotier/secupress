@@ -777,7 +777,9 @@ function secupress_settings_heading( $titles = array() ) {
 					<?php echo secupress_get_logo( array( 'width' => 131 ) ); ?>
 				</div>
 				<div class="secupress-lb-name">
-					<p class="secupress-lb-title"><?php echo SECUPRESS_PLUGIN_NAME; ?></p>
+					<p class="secupress-lb-title">
+					<?php echo secupress_get_logo_word( array('with'=> 100, 'height' => 24 ) ); ?>
+					</p>
 				</div>
 			</div>
 		</div>
