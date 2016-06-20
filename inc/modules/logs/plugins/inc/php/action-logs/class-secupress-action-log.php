@@ -243,8 +243,9 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *                 - (array)  $server The `$_SERVER` superglobal.
 	 */
 	protected function _pre_process_action_secupress_block( $module, $ip ) {
-		$url = wp_make_link_relative( secupress_get_current_url() );
-		return array( 'url' => $url, 'ip' => $ip, 'module' => $module, 'server' => $_SERVER );
+		$url    = wp_make_link_relative( secupress_get_current_url() );
+		$posted = ! empty( $_POST ) ? $_POST : _x( 'None', 'data', 'secupress' ); // WPCS: CSRF ok.
+		return array( 'url' => $url, 'ip' => $ip, 'module' => $module, 'server' => $_SERVER, '_post' => $posted );
 	}
 
 
@@ -776,7 +777,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 */
 	protected function _set_action_message() {
 		$messages = array(
-			'secupress.block'         => str_replace( '%PLUGIN-NAME%', '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>', __( '%PLUGIN-NAME% prevented a request at %1$s from the IP %2$s. Block ID: %3$s. The server configuration at the moment: %4$s', 'secupress' ) ),
+			'secupress.block'         => str_replace( '%PLUGIN-NAME%', '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>', __( '%PLUGIN-NAME% prevented a request at %1$s from the IP %2$s. Block ID: %3$s. The server configuration at the moment: %4$s Data posted: %5$s', 'secupress' ) ),
 			'secupress.ban.ip_banned' => __( 'IP banned: %s.', 'secupress' ),
 			'switch_theme'            => __( 'Theme activated: %s.', 'secupress' ),
 			'wp_login'                => __( 'Administrator %s logged in.', 'secupress' ),
