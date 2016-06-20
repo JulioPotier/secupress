@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 				</div>
 				<div class="secupress-lb-name">
 					<p class="secupress-lb-title">
-					<?php echo secupress_get_logo_word( array('with'=> 110, 'height' => 26 ) ); ?>
+					<?php echo secupress_get_logo_word( array( 'with' => 110, 'height' => 26 ) ); ?>
 					</p>
 				</div>
 			</div>
