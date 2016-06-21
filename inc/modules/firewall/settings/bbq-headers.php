@@ -34,7 +34,7 @@ $this->add_field( array(
 	'helpers'      => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'Add or remove User-Agents you want to be blocked.', 'secupress' ),
+			'description' => __( 'Add or remove User-Agents you want to be blocked. User-Agents are separated by commas.', 'secupress' ),
 		),
 	),
 ) );

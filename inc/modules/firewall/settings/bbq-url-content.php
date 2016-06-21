@@ -3,7 +3,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 
 $this->set_current_section( 'bbq_url_contents' );
-$this->add_section( __( 'Bad Contents', 'secupress' ) );
+$this->add_section( __( 'Bad URLs', 'secupress' ) );
 
 
 $main_field_name = $this->get_field_name( 'bad-contents' );
@@ -34,7 +34,7 @@ $this->add_field( array(
 	'helpers'      => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'Add or remove keywords you want to be blocked.', 'secupress' ),
+			'description' => __( 'Add or remove keywords you want to be blocked. Keywords are separated by commas.', 'secupress' ),
 		),
 	),
 ) );

@@ -200,3 +200,33 @@ function secupress_sanitize_list( $list, $separator = ', ' ) {
 
 	return str_replace( $trimed_sep, $separator, $list );
 }
+
+
+/**
+ * Apply `array_unique()` and `natcasesort()` on a list.
+ *
+ * @since 1.0
+ *
+ * @param (string|array) $list      The list.
+ * @param (string|bool)  $separator The separator. If not false, the function will explode and implode the list.
+ *
+ * @return (string|array) The list.
+ */
+function secupress_unique_sorted_list( $list, $separator = false ) {
+	if ( array() === $list || '' === $list ) {
+		return $list;
+	}
+
+	if ( false !== $separator ) {
+		$list = explode( $separator, $list );
+	}
+
+	$list = array_flip( array_flip( $list ) );
+	natcasesort( $list );
+
+	if ( false !== $separator ) {
+		$list = implode( $separator, $list );
+	}
+
+	return $list;
+}
