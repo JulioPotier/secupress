@@ -38,7 +38,7 @@ function __secupress_firewall_settings_callback( $settings ) {
 	// Anti Bruteforce Managment.
 	__secupress_bruteforce_settings_callback( $modulenow, $settings, $activate );
 
-	// Country Managment.
+	// Country Management.
 	__secupress_geoip_settings_callback( $modulenow, $settings, $activate );
 
 	return $settings;
@@ -126,7 +126,7 @@ function __secupress_bruteforce_settings_callback( $modulenow, &$settings, $acti
 
 
 /**
- * Country Managment plugin.
+ * Country Management plugin.
  *
  * @since 1.0
  *
