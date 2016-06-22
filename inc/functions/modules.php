@@ -94,7 +94,7 @@ function secupress_get_modules() {
 			'title'       => esc_html__( 'Backups', 'secupress' ),
 			'icon'        => 'backups',
 			'summaries'   => array(
-				'small'  => __( 'Never loose anything', 'secupress' ),
+				'small'  => __( 'Never lose anything', 'secupress' ),
 				'normal' => __( 'Backuping your database daily and you files weekly can reduce the risks to lose your content because of an attack.', 'secupress' ),
 			),
 			'with_form'   => false,
