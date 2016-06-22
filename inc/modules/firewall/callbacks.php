@@ -35,7 +35,7 @@ function __secupress_firewall_settings_callback( $settings ) {
 	// Bad contents.
 	__secupress_bad_contents_settings_callback( $modulenow, $settings, $activate );
 
-	// Anti Bruteforce Managment.
+	// Anti Bruteforce Management.
 	__secupress_bruteforce_settings_callback( $modulenow, $settings, $activate );
 
 	// Country Management.
@@ -105,7 +105,7 @@ function __secupress_bad_contents_settings_callback( $modulenow, &$settings, $ac
 
 
 /**
- * Anti Bruteforce Managment plugin.
+ * Anti Bruteforce Management plugin.
  *
  * @since 1.0
  *
