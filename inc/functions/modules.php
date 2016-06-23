@@ -13,7 +13,7 @@ function secupress_get_modules() {
 
 	$modules = array(
 		'users-login'     => array(
-			'title'       => esc_html__( 'Users &amp; Login', 'secupress' ),
+			'title'       => __( 'Users &amp; Login', 'secupress' ),
 			'icon'        => 'user-login',
 			'summaries'   => array(
 				'small'  => __( 'Protect your users', 'secupress' ),
@@ -26,7 +26,7 @@ function secupress_get_modules() {
 			'mark_as_pro' => false,
 		),
 		'plugins-themes'  => array(
-			'title'       => esc_html__( 'Plugins &amp; Themes', 'secupress' ),
+			'title'       => __( 'Plugins &amp; Themes', 'secupress' ),
 			'icon'        => 'themes-plugins',
 			'summaries'   => array(
 				'small'  => __( 'Check your plugins &amp; themes', 'secupress' ),
@@ -39,7 +39,7 @@ function secupress_get_modules() {
 			'mark_as_pro' => false,
 		),
 		'wordpress-core'  => array(
-			'title'       => esc_html__( 'WordPress Core', 'secupress' ),
+			'title'       => __( 'WordPress Core', 'secupress' ),
 			'icon'        => 'core',
 			'summaries'   => array(
 				'small'  => __( 'Core Tweaking', 'secupress' ),
@@ -51,7 +51,7 @@ function secupress_get_modules() {
 			'mark_as_pro' => false,
 		),
 		'sensitive-data'  => array(
-			'title'       => esc_html__( 'Sensitive Data', 'secupress' ),
+			'title'       => __( 'Sensitive Data', 'secupress' ),
 			'icon'        => 'sensitive-data',
 			'summaries'   => array(
 				'small'  => __( 'Keep your data safe', 'secupress' ),
@@ -64,7 +64,7 @@ function secupress_get_modules() {
 			'mark_as_pro' => false,
 		),
 		'file-system'     => array(
-			'title'       => esc_html__( 'Malware Scan', 'secupress' ),
+			'title'       => __( 'Malware Scan', 'secupress' ),
 			'icon'        => 'file-system',
 			'summaries'   => array(
 				'small'  => __( 'Permissions &amp; Antivirus', 'secupress' ),
@@ -79,7 +79,7 @@ function secupress_get_modules() {
 			'mark_as_pro'    => false,
 		),
 		'firewall'     => array(
-			'title'       => esc_html__( 'Firewall', 'secupress' ),
+			'title'       => __( 'Firewall', 'secupress' ),
 			'icon'        => 'firewall',
 			'summaries'   => array(
 				'small'  => __( 'Block bad requests', 'secupress' ),
@@ -91,7 +91,7 @@ function secupress_get_modules() {
 			'mark_as_pro' => $should_be_pro,
 		),
 		'backups'         => array(
-			'title'       => esc_html__( 'Backups', 'secupress' ),
+			'title'       => __( 'Backups', 'secupress' ),
 			'icon'        => 'backups',
 			'summaries'   => array(
 				'small'  => __( 'Never lose anything', 'secupress' ),
@@ -106,7 +106,7 @@ function secupress_get_modules() {
 			'mark_as_pro'    => false,
 		),
 		'antispam'        => array(
-			'title'       => esc_html__( 'Anti Spam', 'secupress' ),
+			'title'       => __( 'Anti Spam', 'secupress' ),
 			'icon'        => 'antispam',
 			'summaries'   => array(
 				'small'  => __( 'Get rid of junk', 'secupress' ),
@@ -121,7 +121,7 @@ function secupress_get_modules() {
 			'mark_as_pro' => false,
 		),
 		'logs'            => array(
-			'title'       => esc_html__( 'Logs', 'secupress' ),
+			'title'       => _x( 'Logs', 'post type general name', 'secupress' ),
 			'icon'        => 'logs',
 			'summaries'   => array(
 				'small'  => __( 'Enter the matrix', 'secupress' ),
@@ -134,7 +134,7 @@ function secupress_get_modules() {
 			'mark_as_pro' => $should_be_pro,
 		),
 		'alerts'          => array(
-			'title'       => esc_html__( 'Alerts', 'secupress' ),
+			'title'       => __( 'Alerts', 'secupress' ),
 			'icon'        => 'information',
 			'summaries'   => array(
 				'small'  => __( 'Get alerted by events', 'secupress' ),
@@ -146,7 +146,7 @@ function secupress_get_modules() {
 			'mark_as_pro' => $should_be_pro,
 		),
 		'schedules'       => array(
-			'title'       => esc_html__( 'Schedules', 'secupress' ),
+			'title'       => __( 'Schedules', 'secupress' ),
 			'icon'        => 'schedule',
 			'summaries'   => array(
 				'small'  => __( 'Automate your scans', 'secupress' ),
@@ -159,7 +159,7 @@ function secupress_get_modules() {
 			'mark_as_pro'    => $should_be_pro,
 		),
 		'services'        => array(
-			'title'       => esc_html__( 'Services', 'secupress' ),
+			'title'       => __( 'Services', 'secupress' ),
 			'icon'        => 'services',
 			'summaries'   => array(
 				'small'  => __( 'Pro configuration', 'secupress' ),
