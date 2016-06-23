@@ -149,12 +149,14 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 		<div class="wrap">
 			<?php
 			// The page title.
-			secupress_admin_heading( __( 'Logs', 'secupress' ) );
-			$titles = array(
-				'title'    => esc_html__( 'Logs', 'secupress' ),
-				'subtitle' => esc_html__( 'Enter the matrix', 'secupress' ),
-			);
-			secupress_settings_heading( $titles );
+			$log_types = SecuPress_Logs::_get_log_types();
+			$title     = get_post_type_object( $log_types[ $this->log_type ]['post_type'] )->label;
+
+			secupress_admin_heading( $title );
+			secupress_settings_heading( array(
+				'title'    => $title,
+				'subtitle' => __( 'Enter the matrix', 'secupress' ),
+			) );
 			?>
 
 			<div class="secupress-logs-list-wrapper">
@@ -196,27 +198,29 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 		// No tabs, somebody messed it up. Fallback.
 		if ( ! $log_types || ! is_array( $log_types ) ) {
 			echo "<$title_tag>$title</$title_tag>\n";
+			return;
 		}
+
 		// Only 1 tab, no need to go further.
-		elseif ( 1 === count( $log_types ) ) {
+		if ( 1 === count( $log_types ) ) {
 			echo "<$title_tag>" . get_post_type_object( $log_types[ $this->log_type ]['post_type'] )->label . "</$title_tag>\n";
+			return;
 		}
-		else {
-			$i        = 0;
-			$page_url = secupress_admin_url( 'logs' );
 
-			echo "<$title_tag class=\"nav-tab-wrapper\">";
+		$i        = 0;
+		$page_url = secupress_admin_url( 'logs' );
 
-			foreach ( $log_types as $log_type => $atts ) {
-				$current_url = $i ? add_query_arg( 'tab', $log_type, $page_url ) : $page_url;
-				$label       = get_post_type_object( $atts['post_type'] )->label;
+		echo "<$title_tag class=\"nav-tab-wrapper\">";
 
-				echo ( $i ? '<span class="screen-reader-text">, </span>' : '' ) . '<a class="nav-tab' . ( $log_type === $this->log_type ? ' nav-tab-active' : '' ) . '" href="' . esc_url( $current_url ) . '">' . $label . '</a>';
-				++$i;
-			}
+		foreach ( $log_types as $log_type => $atts ) {
+			$current_url = $i ? add_query_arg( 'tab', $log_type, $page_url ) : $page_url;
+			$label       = get_post_type_object( $atts['post_type'] )->label;
 
-			echo "</$title_tag>\n";
+			echo ( $i ? '<span class="screen-reader-text">, </span>' : '' ) . '<a class="nav-tab' . ( $log_type === $this->log_type ? ' nav-tab-active' : '' ) . '" href="' . esc_url( $current_url ) . '">' . $label . '</a>';
+			++$i;
 		}
+
+		echo "</$title_tag>\n";
 	}
 
 
