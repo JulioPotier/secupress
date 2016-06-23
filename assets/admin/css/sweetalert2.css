@@ -1,3 +1,14 @@
+.wpmedia-swal2 .sweet-content input {
+	display: inline-block;
+}
+.wpmedia-swal2 .sweet-content [type="radio"],
+.wpmedia-swal2 .sweet-content [type="checkbox"] {
+	width: 16px;
+	height: 16px;
+	border: 1px solid #b4b9be;
+	margin: -4px 4px -1px 0;
+	font-size: 14px;
+}
 .sweet-overlay {
   background-color: rgba(0, 0, 0, 0.4);
   position: fixed;
