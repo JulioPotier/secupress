@@ -33,7 +33,7 @@ $this->add_field( array(
 
 // E-mails.
 $this->add_field( array(
-	'title'        => __( 'Choose the address(es) to notify', 'secupress' ),
+	'title'        => __( 'Choose the addresses to notify', 'secupress' ),
 	'description'  => __( 'A least <strong>two distinct addresses</strong> must be chosen.', 'secupress' ),
 	'depends'      => $activated_field_name . '_email',
 	'name'         => $this->get_field_name( 'emails' ),
