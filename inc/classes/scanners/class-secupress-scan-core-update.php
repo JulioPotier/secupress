@@ -43,7 +43,7 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements SecuPress_Sca
 		self::$type     = 'WordPress';
 		self::$title    = __( 'Check if your WordPress core is up to date.', 'secupress' );
 		self::$more     = __( 'It\'s very important to maintain your WordPress installation up to date. If you can not update for any reason, contact your hosting provider as soon as possible.', 'secupress' );
-		self::$more_fix = __( 'This will update your WordPress installation right now.', 'secupress' );
+		self::$more_fix = __( 'This will update your WordPress installation right away.', 'secupress' );
 	}
 
 
@@ -156,9 +156,13 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements SecuPress_Sca
 		ob_end_clean();
 
 		if ( is_string( $result ) ) {
+
 			$this->add_fix_message( 1, array( $result ) );
+
 		} elseif ( false === $result ) {
+
 			$this->add_fix_message( 301 );
+
 		} else {
 			$errors = reset( $result->errors );
 			$code   = isset( $errors['up_to_date'] ) ? 2 : 300;
