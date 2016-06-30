@@ -10,7 +10,17 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
  */
 class SecuPress_Scan_Core_Update extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
+	/** Constants. ============================================================================== */
+
+	/**
+	 * Class version.
+	 *
+	 * @var (string)
+	 */
 	const VERSION = '1.0';
+
+
+	/** Properties. ============================================================================= */
 
 	/**
 	 * The reference to the *Singleton* instance of this class.
@@ -33,6 +43,8 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements SecuPress_Sca
 	 */
 	public    static $delayed_fix = true;
 
+
+	/** Public methods. ========================================================================= */
 
 	/**
 	 * Init.
@@ -77,6 +89,8 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements SecuPress_Sca
 	}
 
 
+	/** Scan. =================================================================================== */
+
 	/**
 	 * Scan for flaw(s).
 	 *
@@ -109,6 +123,8 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements SecuPress_Sca
 	}
 
 
+	/** Fix. ==================================================================================== */
+
 	/**
 	 * Try to fix the flaw(s).
 	 *
@@ -117,7 +133,6 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements SecuPress_Sca
 	 * @return (array) The fix results.
 	 */
 	public function fix() {
-
 		ob_start();
 		@set_time_limit( 0 );
 
