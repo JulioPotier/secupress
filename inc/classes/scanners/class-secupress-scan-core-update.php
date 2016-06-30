@@ -13,7 +13,7 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements SecuPress_Sca
 	const VERSION = '1.0';
 
 	/**
-	 * The reference to *Singleton* instance of this class.
+	 * The reference to the *Singleton* instance of this class.
 	 *
 	 * @var (object)
 	 */
@@ -24,7 +24,7 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements SecuPress_Sca
 	 *
 	 * @var (string)
 	 */
-	public    static $prio        = 'high';
+	public    static $prio = 'high';
 
 	/**
 	 * Tells if the fix must occur after all other scans and fixes, while no other scan/fix is running.
@@ -132,7 +132,7 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements SecuPress_Sca
 			$url       = 'update-core.php?action=do-core-upgrade';
 			$nonce     = 'upgrade-core';
 			$url_nonce = wp_nonce_url( $url, $nonce );
-			$update = find_core_update( $version, $locale );
+			$update    = find_core_update( $version, $locale );
 
 			if ( $update ) {
 				$allow_relaxed_file_ownership = isset( $update->new_files ) && ! $update->new_files;
@@ -154,14 +154,15 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements SecuPress_Sca
 		}
 
 		ob_end_clean();
+
 		if ( is_string( $result ) ) {
 			$this->add_fix_message( 1, array( $result ) );
 		} elseif ( false === $result ) {
 			$this->add_fix_message( 301 );
 		} else {
 			$errors = reset( $result->errors );
-			$code = isset( $errors['up_to_date'] ) ? 2 : 300;
-			$this->add_fix_message( 300, array( reset( $errors ) ) );
+			$code   = isset( $errors['up_to_date'] ) ? 2 : 300;
+			$this->add_fix_message( $code, array( reset( $errors ) ) );
 		}
 
 		return parent::fix();
