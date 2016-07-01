@@ -707,31 +707,11 @@ function __secupress_scanners() {
 				</ul>
 			</div><!-- .secupress-section-dark -->
 
-			<div class="secupress-section-gray secupress-scanners-filters secupress-bordered-lat">
-				<div class="secupress-flex-spaced secupress-wrap">
-					<div>
-						<p class="secupress-text-basup secupress-bold secupress-m0"><?php esc_html_e( 'List of analyzed security points', 'secupress' ); ?></p>
-						<p class="secupress-m0 secupress-gray"><?php esc_html_e( 'These issues should be fixed right now!', 'secupress' ); ?></p>
-					</div>
-					<div id="secupress-priority-filters" class="hide-if-no-js">
-						<p class="secupress-childs-ib secupress-ib-spaced secupress-gray-medium">
-							<span class="secupress-gray"><?php esc_html_e( 'Filter by priority', 'secupress' ); ?></span>
-							<span>
-								<input id="filter-high" type="checkbox" class="secupress-checkbox" name="high" checked="checked">
-								<label for="filter-high"><?php esc_html_e( 'High', 'secupress' ); ?></label>
-							</span>
-							<span>
-								<input id="filter-medium" type="checkbox" class="secupress-checkbox" name="medium" checked="checked">
-								<label for="filter-medium"><?php esc_html_e( 'Medium', 'secupress' ); ?></label>
-							</span>
-							<span>
-								<input id="filter-low" type="checkbox" class="secupress-checkbox" name="low" checked="checked">
-								<label for="filter-low"><?php esc_html_e( 'Low', 'secupress' ); ?></label>
-							</span>
-						</p>
-					</div>
-				</div>
-			</div>
+			<?php ////
+			secupress_require_class( 'settings' );
+			secupress_require_class( 'settings', 'modules' );
+			$modules = SecuPress_Settings_Modules::get_modules();
+			?>
 			<div class="secupress-section-light secupress-scanners-list secupress-bordered-lat secupress-lined-b secupress-pt1p">
 				<?php secupress_scanners_template(); ?>
 			</div>
@@ -875,17 +855,20 @@ function secupress_scanners_template() {
 	?>
 	<div id="secupress-tests">
 		<?php
-		foreach ( $secupress_tests as $prio_key => $class_name_parts ) {
+		foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			$i = 0;
 			?>
-			<div class="secupress-table-prio-all<?php echo ( $is_subsite ? '' : ' secupress-table-prio-' . $prio_key ); ?>">
+			<div class="secupress-table-prio-all<?php echo ( $is_subsite ? '' : ' secupress-table-prio-' . $module_name ); ?>">
 
 				<?php
 				if ( ! $is_subsite ) {
-					$prio_data = SecuPress_Scan::get_priorities( $prio_key );
+					$title   = SecuPress_Settings_Modules::get_module_title( $module_name );
+					$summary = SecuPress_Settings_Modules::get_module_summary( $module_name, 'small' );
 				?>
-				<div class="secupress-prio-title prio-<?php echo $prio_key; ?>">
-					<?php echo '<' . $heading_tag . ' class="secupress-prio-h" title="' . $prio_data['description'] . '">' . $prio_data['title'] . '</' . $heading_tag . '>'; ?>
+				<div class="secupress-prio-title prio-<?php echo $module_name; ?>">
+					<?php echo '<' . $heading_tag . ' class="secupress-prio-h" title="' . esc_attr( $summary ) . '">' . $title . ' — ' . $summary . '</' . $heading_tag . '>'; ?>
+					<span class="toggle icon-toggle alignright">v^</span>
+					<span class="alignright"><a href="<?php echo secupress_admin_url( 'modules', $module_name ); ?>"><?php esc_html_e( 'Go to module\'s settings page', 'secupress' ); ?></a></span>
 				</div>
 
 				<?php
@@ -921,7 +904,6 @@ function secupress_scanners_template() {
 						secupress_require_class( 'scan', $class_name_part );
 					}
 				}
-
 				// Print the rows.
 				foreach ( $class_name_parts as $option_name => $class_name_part ) {
 					++$i;
