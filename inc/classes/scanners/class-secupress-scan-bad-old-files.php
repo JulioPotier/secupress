@@ -152,6 +152,7 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements SecuPress_S
 
 		if ( $count = count( $not_deleted ) ) {
 			// "bad"
+			$this->slice_and_dice( $not_deleted, 10 );
 			$this->add_fix_message( 201, array( $count, $count, $not_deleted ) );
 		} else {
 			// "good"
