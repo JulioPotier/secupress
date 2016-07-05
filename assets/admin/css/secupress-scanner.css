@@ -54,6 +54,91 @@
 }
 
 /**
+ * Scanners breadcrumbs steps
+ */
+.secupress-scanner-steps li {
+	padding: 0;
+}
+.secupress-scanner-steps li:before {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-shrink: 0;
+	width: 32px;
+	height: 32px;
+	border: 2px solid #5A626F;
+	font-size: 16px;
+	font-weight: bold;
+	color: #5A626F;
+	border-radius: 50%;
+}
+.secupress-scanner-steps .secupress-past:before,
+.secupress-scanner-steps .secupress-current:before {
+	border-color: #F1C40F;
+	color: #F1C40F;
+}
+.secupress-step-name {
+	display: none;
+	flex-shrink: 0;
+	padding: 0 12px;
+	font-weight: 600;
+	color: #F1C40F;
+}
+li.secupress-current .secupress-step-name {
+	display: block;
+}
+.secupress-scanner-steps ol {
+	margin: 1em 45px;
+	padding-right: 18px;
+}
+.secupress-scanner-steps li:after {
+	content: "";
+	height: 2px;
+	flex-grow: 1;
+	flex-basis: 100%;
+	background: #5A626F;
+}
+.secupress-scanner-steps li.secupress-past:after {
+	background: #F1C40F;
+}
+
+/* The third step */
+.secupress-scanner-steps .secupress-step-name.alt {
+	display: none;
+	order: 2;
+}
+.secupress-scanner-steps .secupress-past .secupress-step-name.alt {
+	display: block;
+}
+
+/* The fourth step */
+.secupress-scanner-steps li:nth-last-child(1) {
+	flex-basis: auto;
+	width: auto;
+}
+.secupress-scanner-steps li:nth-last-child(1):after {
+	display: none;
+}
+li.secupress-current:nth-last-child(1) .secupress-step-name {
+	position: absolute;
+	width: 1px; height: 1px;
+	clip: rect(1px, 1px, 1px, 1px);
+	overflow: hidden;
+}
+/* Arrow below current step */
+.secupress-scanner-steps .secupress-current .secupress-step-name {
+	position: relative;
+}
+.secupress-scanner-steps .secupress-current .secupress-step-name:after {
+	content: "";
+	position: absolute;
+	bottom: -50px; left: -44px;
+	border-bottom: 22px solid #F2F2F6;
+	border-left: 27px solid transparent;
+	border-right: 27px solid transparent;
+}
+
+/**
  * First One Click Scan not done yet
  */
 /* Hide some items */

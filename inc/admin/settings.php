@@ -665,6 +665,24 @@ function __secupress_scanners() {
 					</div>
 				</div><!-- .secupress-one-click-scanning-slideshow -->
 
+				<div class="secupress-scanner-steps">
+					<ol class="secupress-flex secupress-counter">
+						<li class="secupress-col-1-3 secupress-counter-put secupress-flex secupress-past">
+							<span class="secupress-step-name">Rapport de scan</span>
+						</li>
+						<li class="secupress-col-1-3 secupress-counter-put secupress-flex secupress-past">
+							<span class="secupress-step-name">Auto correction</span>
+						</li>
+						<li class="secupress-col-1-3 secupress-counter-put secupress-flex secupress-current">
+							<span class="secupress-step-name">Correction manuelle</span>
+							<span class="secupress-step-name alt" aria-hidden="true">Rapport final</span>
+						</li>
+						<li class="secupress-col-1-3 secupress-counter-put secupress-flex">
+							<span class="secupress-step-name">Rapport final</span>
+						</li>
+					</ol>
+				</div>
+
 			</div><!-- .secupress-section-dark -->
 
 			<div class="secupress-section-gray secupress-bordered">

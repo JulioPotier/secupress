@@ -669,7 +669,10 @@ body[class*="secupress"] .sweet-overlay {
 .secupress-counter [class^="secupress-col-"] {
 	counter-increment: sp;
 }
-.secupress-counter .secupress-counter-put:after {
+.secupress-counter .secupress-counter-put:before {
+	content: counters(sp, 'decimal');
+}
+.secupress-counter .secupress-counter-put-after:after {
 	content: counters(sp, 'decimal');
 }
 
