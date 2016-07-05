@@ -10,10 +10,20 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
-	const VERSION = '1.0';
+	/** Constants. ============================================================================== */
 
 	/**
-	 * The reference to *Singleton* instance of this class.
+	 * Class version.
+	 *
+	 * @var (string)
+	 */
+	const VERSION = '1.0';
+
+
+	/** Properties. ============================================================================= */
+
+	/**
+	 * The reference to the *Singleton* instance of this class.
 	 *
 	 * @var (object)
 	 */
@@ -24,8 +34,10 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 	 *
 	 * @var (string)
 	 */
-	public    static $prio    = 'low';
+	public    static $prio = 'low';
 
+
+	/** Public methods. ========================================================================= */
 
 	/**
 	 * Init.
@@ -37,7 +49,7 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if <em>.php</em> files are loaded in priority instead of <em>.html</em> or <em>.htm</em> etc.', 'secupress' );
-		self::$more  = sprintf( __( 'If your website is victim of a defacement using the addition of a file like %1$s, this file could be loaded first instead of the one from WordPress. This is why we have to load %2$s first..', 'secupress' ), '<code>index.htm</code>', '<code>index.php</code>' );
+		self::$more  = sprintf( __( 'If your website is victim of a defacement using the addition of a file like %1$s, this file could be loaded first instead of the one from WordPress. This is why we have to load %2$s first.', 'secupress' ), '<code>index.htm</code>', '<code>index.php</code>' );
 
 		if ( $is_apache ) {
 			$config_file = '.htaccess';
@@ -93,6 +105,8 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 	}
 
 
+	/** Scan. =================================================================================== */
+
 	/**
 	 * Scan for flaw(s).
 	 *
@@ -126,6 +140,8 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 		return parent::scan();
 	}
 
+
+	/** Fix. ==================================================================================== */
 
 	/**
 	 * Try to fix the flaw(s).

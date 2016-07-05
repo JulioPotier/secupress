@@ -10,10 +10,20 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
-	const VERSION = '1.0';
+	/** Constants. ============================================================================== */
 
 	/**
-	 * The reference to *Singleton* instance of this class.
+	 * Class version.
+	 *
+	 * @var (string)
+	 */
+	const VERSION = '1.0';
+
+
+	/** Properties. ============================================================================= */
+
+	/**
+	 * The reference to the *Singleton* instance of this class.
 	 *
 	 * @var (object)
 	 */
@@ -24,8 +34,10 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 	 *
 	 * @var (string)
 	 */
-	public    static $prio    = 'high';
+	public    static $prio = 'high';
 
+
+	/** Public methods. ========================================================================= */
 
 	/**
 	 * Init.
@@ -75,8 +87,8 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 			204 => _n_noop( '<strong>&middot; Hardcoded:</strong> %s.',     '<strong>&middot; Hardcoded:</strong> %s.',     'secupress' ),
 			205 => _n_noop( '<strong>&middot; From DB:</strong> %s.',       '<strong>&middot; From DB:</strong> %s.',       'secupress' ),
 			// "cantfix"
-			300 => __( 'I can not write into wp-config.php so i can not change the salt keys.', 'secupress' ),
-			301 => __( 'The fix has been applied but there is still keys that i can\'t modify.', 'secupress' ),
+			300 => __( 'I cannot write into <code>wp-config.php</code> so I cannot change the salt keys.', 'secupress' ),
+			301 => __( 'The fix has been applied but there are still keys that I cannot modify.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -86,6 +98,8 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 		return $messages;
 	}
 
+
+	/** Scan. =================================================================================== */
 
 	/**
 	 * Scan for flaw(s).
@@ -115,7 +129,6 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 		}
 
 		foreach ( $keys as $key ) {
-
 			// Check constant.
 			$constant = defined( $key ) ? constant( $key ) : null;
 
@@ -162,6 +175,8 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 	}
 
 
+	/** Fix. ==================================================================================== */
+
 	/**
 	 * Try to fix the flaw(s).
 	 *
@@ -192,6 +207,8 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 		return parent::fix();
 	}
 
+
+	/** Tools. ================================================================================== */
 
 	/**
 	 * Remove comments from a content.
