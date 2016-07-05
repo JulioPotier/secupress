@@ -354,14 +354,26 @@ function __secupress_scanners() {
 	<div class="wrap">
 
 		<?php secupress_admin_heading( __( 'Scanners', 'secupress' ) ); ?>
+
 		<div class="secupress-wrapper">
 			<div class="secupress-section-dark secupress-scanners-header<?php echo $reports ? '' : ' secupress-not-scanned-yet'; ?>">
 
 				<div class="secupress-heading secupress-flex secupress-flex-spaced secupress-wrap">
-					<p class="secupress-text-medium"><?php
-						/* translators: %s is the plugin name */
-						printf( esc_html__( '%s Security Scanners', 'secupress' ), SECUPRESS_PLUGIN_NAME );
-					?></p>
+					<div class="secupress-logo-block secupress-flex">
+						<div class="secupress-lb-logo">
+							<?php echo secupress_get_logo( array( 'width' => 59 ) ); ?>
+						</div>
+						<div class="secupress-lb-name">
+							<p class="secupress-lb-title">
+							<?php echo secupress_get_logo_word( array( 'with' => 93, 'height' => 20 ) ); ?>
+							</p>
+						</div>
+					</div>
+					<p class="secupress-last-scan-result">
+						<i class="icon-secupress-simple" aria-hidden="true"></i>
+						<span class="secupress-upper"><?php _e( 'Result of the scan', 'secupress' ); ?></span>
+						<span class="secupress-primary">20.06.2016 • 13h37</span>
+					</p>
 					<p class="secupress-text-end hide-if-no-js">
 						<a href="#secupress-more-info" class="secupress-link-icon secupress-open-moreinfo<?php echo $reports ? '' : ' secupress-activated dont-trigger-hide'; ?>" data-trigger="slidedown" data-target="secupress-more-info">
 							<span class="icon" aria-hidden="true">

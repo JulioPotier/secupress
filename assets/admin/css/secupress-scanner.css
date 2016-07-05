@@ -17,6 +17,43 @@
  */
 
 /**
+ * Scanners header
+ */
+.secupress-scanners-header .secupress-logo-block {
+	flex-grow: 0;
+}
+.secupress-scanners-header .secupress-heading {
+	border-bottom: 1px solid #393E46;
+}
+.secupress-last-scan-result {
+	position: relative;
+	padding-left: 50px;
+}
+.secupress-last-scan-result i {
+	position: absolute;
+	left: 0; top: 0;
+	font-size: 35px;
+	color: #26B3A9;
+}
+@media (min-width: 820px) {
+	.secupress-last-scan-result {
+		padding-left: 150px;
+	}
+	.secupress-last-scan-result i {
+		left: 100px;
+	}
+}
+.secupress-last-scan-result .secupress-upper {
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+}
+.secupress-last-scan-result .secupress-primary {
+	display: block;
+	color: #26B3A9;
+}
+
+/**
  * First One Click Scan not done yet
  */
 /* Hide some items */
@@ -163,7 +200,14 @@
 
 a.secupress-open-moreinfo,
 a.secupress-close-moreinfo {
-	font-weight: normal;
+	font-size: 11px;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	font-weight: 600;
+}
+.secupress-close-moreinfo .text,
+.secupress-open-moreinfo .text {
+	text-decoration: none;
 }
 
 #secupress-more-info.secupress-open .secupress-blob-icon {
