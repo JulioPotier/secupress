@@ -385,10 +385,10 @@ function __secupress_scanners() {
 						</a>
 					</p>
 
-					<div id="secupress-more-info" class="secupress-full-wide secupress-counter<?php echo $reports ? ' hide-if-js' : ' secupress-open'; ?>">
+					<div id="secupress-more-info" class="secupress-full-wide<?php echo $reports ? ' hide-if-js' : ' secupress-open'; ?>">
 						<div class="secupress-flex secupress-flex-top">
 							<div class="secupress-col-1-3">
-								<div class="secupress-blob secupress-counter-put">
+								<div class="secupress-blob">
 									<div class="secupress-blob-icon" aria-hidden="true">
 										<i class="icon-radar"></i>
 									</div>
@@ -398,7 +398,7 @@ function __secupress_scanners() {
 								</div>
 							</div>
 							<div class="secupress-col-1-3">
-								<div class="secupress-blob secupress-counter-put">
+								<div class="secupress-blob">
 									<div class="secupress-blob-icon" aria-hidden="true">
 										<i class="icon-pad-list"></i>
 									</div>
@@ -408,7 +408,7 @@ function __secupress_scanners() {
 								</div>
 							</div>
 							<div class="secupress-col-1-3">
-								<div class="secupress-blob secupress-counter-put">
+								<div class="secupress-blob">
 									<div class="secupress-blob-icon" aria-hidden="true">
 										<i class="icon-pad-check"></i>
 									</div>
@@ -431,27 +431,6 @@ function __secupress_scanners() {
 						</p>
 					</div>
 				</div>
-
-				<ul class="secupress-flex secupress-tabs secupress-light-tabs" role="tablist" data-content="#sp-tab-scans">
-					<li role="presentation">
-						<a id="secupress-l-scan" href="#secupress-scan" role="tab" aria-selected="true" aria-controls="secupress-scan" class="secupress-current">
-							<i class="icon-radar" aria-hidden="true"></i>
-							<?php esc_html_e( 'Scan Security Points', 'secupress' ); ?>
-						</a>
-					</li>
-					<li role="presentation">
-						<a id="secupress-l-latest" href="#secupress-latest" role="tab" aria-selected="false" aria-controls="secupress-latest">
-							<i class="icon-back" aria-hidden="true"></i>
-							<?php esc_html_e( 'Latest Scans', 'secupress' ); ?>
-						</a>
-					</li>
-					<li role="presentation">
-						<a id="secupress-l-schedule" href="#secupress-schedule" role="tab" aria-selected="false" aria-controls="secupress-schedule">
-							<i class="icon-calendar" aria-hidden="true"></i>
-							<?php esc_html_e( 'Schedule Scans', 'secupress' ); ?>
-						</a>
-					</li>
-				</ul>
 
 				<div id="sp-tab-scans" class="secupress-tabs-contents">
 					<div id="secupress-scan" class="secupress-tab-content" role="tabpanel" aria-labelledby="secupress-l-scan">
@@ -686,65 +665,9 @@ function __secupress_scanners() {
 					</div>
 				</div><!-- .secupress-one-click-scanning-slideshow -->
 
-				<ul id="secupress-type-filters" class="secupress-big-tabs secupress-tabs secupress-flex secupress-text-start hide-if-no-js" role="tablist">
-					<?php
-					if ( $counts['notscannedyet'] ) {
-						$tabs        = array( 'notscannedyet' => esc_html__( 'New', 'secupress' ) );
-						$default_tab = 'notscannedyet';
-					} else {
-						$tabs        = array();
-						$default_tab = 'bad';
-					}
-
-					if ( ! is_multisite() || is_network_admin() ) {
-						$tabs['hasaction'] = esc_html__( 'Action needed', 'secupress' );
-					}
-
-					$tabs = array_merge( $tabs, array(
-						'bad'     => esc_html__( 'Bad', 'secupress' ),
-						'warning' => esc_html__( 'Warning', 'secupress' ),
-						'good'    => esc_html__( 'Good', 'secupress' ),
-					) );
-
-					foreach ( $tabs as $slug => $name ) :
-						$is_hidden = 'hasaction' === $slug && ! $counts[ $slug ];
-						?>
-						<li class="secupress-big-tab-<?php echo $slug; ?><?php echo $is_hidden ? ' hidden' : ''; ?>"<?php echo $is_hidden ? ' aria-hidden="true"' : ''; ?> role="presentation">
-							<a href="#tab-<?php echo $slug; ?>" aria-controls="tab-<?php echo $slug; ?>" role="tab"<?php echo $default_tab === $slug ? ' class="secupress-current"' : ''; ?> data-type="<?php echo $slug; ?>">
-								<span class="secupress-tab-title"><?php echo $name; ?></span>
-								<span class="secupress-tab-subtitle"><?php printf( _n( '%d issue', '%d issues', $counts[ $slug ], 'secupress' ), $counts[ $slug ] ); ?></span>
-							</a>
-						</li>
-					<?php endforeach; ?>
-				</ul>
 			</div><!-- .secupress-section-dark -->
 
-			<div class="secupress-section-gray secupress-scanners-filters secupress-bordered-lat">
-				<div class="secupress-flex-spaced secupress-wrap">
-					<div>
-						<p class="secupress-text-basup secupress-bold secupress-m0"><?php esc_html_e( 'List of analyzed security points', 'secupress' ); ?></p>
-						<p class="secupress-m0 secupress-gray"><?php esc_html_e( 'These issues should be fixed right now!', 'secupress' ); ?></p>
-					</div>
-					<div id="secupress-priority-filters" class="hide-if-no-js">
-						<p class="secupress-childs-ib secupress-ib-spaced secupress-gray-medium">
-							<span class="secupress-gray"><?php esc_html_e( 'Filter by priority', 'secupress' ); ?></span>
-							<span>
-								<input id="filter-high" type="checkbox" class="secupress-checkbox" name="high" checked="checked">
-								<label for="filter-high"><?php esc_html_e( 'High', 'secupress' ); ?></label>
-							</span>
-							<span>
-								<input id="filter-medium" type="checkbox" class="secupress-checkbox" name="medium" checked="checked">
-								<label for="filter-medium"><?php esc_html_e( 'Medium', 'secupress' ); ?></label>
-							</span>
-							<span>
-								<input id="filter-low" type="checkbox" class="secupress-checkbox" name="low" checked="checked">
-								<label for="filter-low"><?php esc_html_e( 'Low', 'secupress' ); ?></label>
-							</span>
-						</p>
-					</div>
-				</div>
-			</div>
-			<div class="secupress-section-light secupress-scanners-list secupress-bordered-lat secupress-lined-b secupress-pt1p">
+			<div class="secupress-section-gray secupress-bordered">
 				<?php secupress_scanners_template(); ?>
 			</div>
 

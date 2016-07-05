@@ -57,11 +57,10 @@
  * First One Click Scan not done yet
  */
 /* Hide some items */
-.secupress-scanners-header.secupress-not-scanned-yet .secupress-tabs,
-.secupress-scanners-header.secupress-not-scanned-yet .secupress-tabs-contents,
 .secupress-scanners-header.secupress-not-scanned-yet + .secupress-scanners-filters,
 .secupress-scanners-header.secupress-not-scanned-yet ~ .secupress-scanners-list,
-.secupress-scanners-header .secupress-before-caroupoivre {
+.secupress-scanners-header .secupress-before-caroupoivre,
+.secupress-scanners-header.secupress-not-scanned-yet .secupress-last-scan-result {
 	display: none;
 }
 
