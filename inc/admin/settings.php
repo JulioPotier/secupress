@@ -448,7 +448,7 @@ function __secupress_scanners() {
 
 				<div class="secupress-scan-header-main secupress-flex">
 					<div id="sp-tab-scans" class="secupress-tabs-contents">
-						<div id="secupress-scan" class="secupress-tab-content" role="tabpanel" aria-labelledby="secupress-l-scan">
+						<div id="secupress-scan" class="secupress-tab-content hide-if-js" role="tabpanel" aria-labelledby="secupress-l-scan">
 							<div class="secupress-flex secupress-row secupress-chart">
 							
 								<div class="secupress-chart-container">
@@ -509,61 +509,22 @@ function __secupress_scanners() {
 							</div><!-- .secupress-chart.secupress-flex -->
 						</div><!-- .secupress-tab-content -->
 
-						<div id="secupress-latest" class="secupress-tab-content hide-if-js" role="tabpanel" aria-labelledby="secupress-l-latest">
-							<div class="secupress-flex secupress-flex-top">
-								<div class="secupress-latest-chart">
-									<p class="secupress-text-medium">
-										<?php esc_html_e( 'Latest Scans', 'secupress' ); ?>
-									</p>
-									<div class="secupress-flex">
-										<div class="secupress-chart-container">
-											<canvas class="secupress-chartjs" id="status_chart_mini" width="127" height="127"></canvas>
-											<div class="secupress-score"><?php echo $counts['letter']; ?></div>
-										</div>
-										<ul class="secupress-chart-legend">
-											<li class="status-good" data-status="good">
-												<span class="secupress-carret"></span>
-												<?php esc_html_e( 'Good', 'secupress' ); ?>
-												<span class="secupress-count-good"></span>
-											</li>
-											<li class="status-bad" data-status="bad">
-												<span class="secupress-carret"></span>
-												<?php esc_html_e( 'Bad', 'secupress' ); ?>
-												<span class="secupress-count-bad"></span>
-											</li>
-											<li class="status-warning" data-status="warning">
-												<span class="secupress-carret"></span>
-												<?php esc_html_e( 'Warning', 'secupress' ); ?>
-												<span class="secupress-count-warning"></span>
-											</li>
-											<?php if ( $counts['notscannedyet'] ) : ?>
-											<li class="status-notscannedyet" data-status="notscannedyet">
-												<span class="secupress-carret"></span>
-												<?php esc_html_e( 'New Scan', 'secupress' ); ?>
-												<span class="secupress-count-notscannedyet"></span>
-											</li>
-											<?php endif; ?>
-										</ul><!-- .secupress-chart-legend -->
-									</div>
-								</div>
-								<div class="secupress-latest-title">
-									<p class="secupress-text-medium">
-										<?php _e( 'Your last 5<br>one click scans', 'secupress' ); ?>
-									</p>
-								</div>
-								<div class="secupress-latest-list">
-									<ul class="secupress-reports-list">
-										<?php
-										if ( (bool) $reports ) {
-											echo implode( "\n", $reports );
-										} else {
-											echo '<li class="secupress-empty"><em>' . __( 'You have no other reports for now.', 'secupress' ) . "</em></li>\n";
-										}
-										?>
-									</ul>
-								</div>
-							</div><!-- .secupress-flex -->
+						<div id="secupress-latest" class="secupress-tab-content" role="tabpanel" aria-labelledby="secupress-l-latest">
+							
+							<div class="secupress-latest-list">
+								<ul class="secupress-reports-list">
+									<?php
+									if ( (bool) $reports ) {
+										echo implode( "\n", $reports );
+									} else {
+										echo '<li class="secupress-empty"><em>' . __( 'You have no other reports for now.', 'secupress' ) . "</em></li>\n";
+									}
+									?>
+								</ul>
+							</div><!-- .secupress-latest-list -->
+						
 						</div><!-- .secupress-tab-content -->
+
 
 						<div id="secupress-schedule" class="secupress-tab-content secupress-text-center hide-if-js" role="tabpanel" aria-labelledby="secupress-l-schedule">
 							<p class="secupress-text-medium">

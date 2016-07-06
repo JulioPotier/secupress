@@ -441,11 +441,6 @@ a.secupress-close-moreinfo {
 	font-size: 110px;
 	color: rgba(255,255,255,.07);
 }
-.secupress-latest-chart .secupress-chart-container:after {
-	font-size: 80px;
-	line-height: 80px;
-	margin: -37px 0 0 -41px;
-}
 
 .scanning .secupress-fix-status-actions {
 	visibility: hidden;
@@ -524,28 +519,42 @@ a + .secupress-row-actions {
 }
 
 .secupress-reports-list {
+	display: flex;
+	flex-direction: column;
 	margin: 1.1em 0 2.85em;
 	font-size: 1.1em;
-	text-align: right;
 }
 .secupress-reports-list li > * {
-	display: inline-block;
+	flex-basis: 27%;
 	vertical-align: middle;
 }
 .secupress-reports-list li {
-	padding: 5px 0;
+	display: flex;
+	align-items: center;
+	padding: 6px 0 3px;
 }
 .secupress-reports-list li + li {
 	border-top: 1px solid #5A626F;
 }
 .secupress-reports-list .secupress-latest-list-date {
+	flex-basis: 38%;
 	margin: 0 1em;
 	color: #5A626F;
+}
+.secupress-reports-list i:before {
+	font-size: 2em;
+}
+.secupress-reports-list .dashicons-arrow-right-alt2 {
+	color: #5A626F;
+}
+.secupress-reports-list .secupress-latest-list-grade,
+.secupress-reports-list i {
+	flex: 0 0 auto;	
 }
 .secupress-reports-list .secupress-latest-list-grade {
 	width: 22px;
 	height: 22px;
-	margin: 0 1em;
+	margin: 0 2em;
 	line-height: 18px;
 	text-align: center;
 	border-radius: 50%;
