@@ -680,10 +680,7 @@ body[class*="secupress"] .sweet-overlay {
  * === Blobs
  */
 .secupress-blob {
-	width: 290px;
-	min-width: 90%;
-	max-width: 100%;
-	margin: 2em auto 1.5em;
+	margin: 2em 20px 1.5em;
 	text-align: center;
 }
 .secupress-blob.secupress-counter-put {
@@ -705,7 +702,13 @@ body[class*="secupress"] .sweet-overlay {
 }
 .secupress-blob-icon [class^="icon-"]:before {
 	color: #2BCDC1;
-	font-size: 80px;
+	font-size: 65px;
+}
+.secupress-blob-title {
+	margin: 0.9em 0 1.1em;
+	font-size: 16px;
+	font-weight: 600;
+	color: #2BCDC1;
 }
 
 /**

@@ -387,33 +387,47 @@ function __secupress_scanners() {
 
 					<div id="secupress-more-info" class="secupress-full-wide<?php echo $reports ? ' hide-if-js' : ' secupress-open'; ?>">
 						<div class="secupress-flex secupress-flex-top">
-							<div class="secupress-col-1-3">
+							<div class="secupress-col-1-4">
 								<div class="secupress-blob">
 									<div class="secupress-blob-icon" aria-hidden="true">
 										<i class="icon-radar"></i>
 									</div>
+									<p class="secupress-blob-title"><?php esc_html_e('Security Report', 'secupress'); ?></p>
 									<div class="secupress-blob-content">
 										<p><?php esc_html_e( 'Start a checking of all security points with the One Click Scan button.', 'secupress' ); ?></p>
 									</div>
 								</div>
 							</div>
-							<div class="secupress-col-1-3">
+							<div class="secupress-col-1-4">
 								<div class="secupress-blob">
 									<div class="secupress-blob-icon" aria-hidden="true">
-										<i class="icon-pad-list"></i>
+										<i class="icon-autofix"></i>
 									</div>
+									<p class="secupress-blob-title"><?php esc_html_e( 'Auto-Fix', 'secupress' ) ?></p>
 									<div class="secupress-blob-content">
-										<p><?php esc_html_e( 'Take a look at validated points and points you have to fix.', 'secupress' ); ?></p>
+										<p><?php esc_html_e( 'Start to fix issues by selecting the ones you want to be automagically fixed.', 'secupress' ); ?></p>
 									</div>
 								</div>
 							</div>
-							<div class="secupress-col-1-3">
+							<div class="secupress-col-1-4">
+								<div class="secupress-blob">
+									<div class="secupress-blob-icon" aria-hidden="true">
+										<i class="icon-manuals"></i>
+									</div>
+									<p class="secupress-blob-title"><?php esc_html_e( 'Manual Operations', 'secupress' ) ?></p>
+									<div class="secupress-blob-content">
+										<p><?php esc_html_e( 'Go further and take a look at points you have to fix thanks to specific operation.', 'secupress' ); ?></p>
+									</div>
+								</div>
+							</div>
+							<div class="secupress-col-1-4">
 								<div class="secupress-blob">
 									<div class="secupress-blob-icon" aria-hidden="true">
 										<i class="icon-pad-check"></i>
 									</div>
+									<p class="secupress-blob-title"><?php _e('Resolutions Report', 'secupress'); ?></p>
 									<div class="secupress-blob-content">
-										<p><?php esc_html_e( 'Fix all points automatically with the One Click Fix button or do it manually if you are a warrior.', 'secupress' ); ?></p>
+										<p><?php esc_html_e( 'Get a report about the security of your website after those operations.', 'secupress' ); ?></p>
 									</div>
 								</div>
 							</div>
