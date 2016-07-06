@@ -10,10 +10,20 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
-	const VERSION = '1.0';
+	/** Constants. ============================================================================== */
 
 	/**
-	 * The reference to *Singleton* instance of this class.
+	 * Class version.
+	 *
+	 * @var (string)
+	 */
+	const VERSION = '1.0';
+
+
+	/** Properties. ============================================================================= */
+
+	/**
+	 * The reference to the *Singleton* instance of this class.
 	 *
 	 * @var (object)
 	 */
@@ -24,8 +34,10 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 	 *
 	 * @var (string)
 	 */
-	public    static $prio    = 'medium';
+	public    static $prio = 'medium';
 
+
+	/** Public methods. ========================================================================= */
 
 	/**
 	 * Init.
@@ -85,6 +97,8 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 	}
 
 
+	/** Scan. =================================================================================== */
+
 	/**
 	 * Scan for flaw(s).
 	 *
@@ -126,6 +140,8 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 		return parent::scan();
 	}
 
+
+	/** Fix. ==================================================================================== */
 
 	/**
 	 * Try to fix the flaw(s).
@@ -210,7 +226,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 	protected function manual_fix_plugins( $wp_filesystem, $inactive ) {
 		// Get the list of plugins to uninstall.
 		$selected_plugins = ! empty( $_POST['secupress-fix-delete-inactive-plugins'] ) && is_array( $_POST['secupress-fix-delete-inactive-plugins'] ) ? array_filter( array_map( 'esc_attr', $_POST['secupress-fix-delete-inactive-plugins'] ) ) : array(); // WPCS: CSRF ok.
-		$selected_plugins = $selected_plugins ? array_fill_keys( $selected_plugins, 1 ) : array();
+		$selected_plugins = $selected_plugins ? array_fill_keys( $selected_plugins, 1 )                        : array();
 		$selected_plugins = $selected_plugins ? array_intersect_key( $inactive['plugins'], $selected_plugins ) : array();
 
 		if ( ! $selected_plugins ) {
@@ -455,6 +471,8 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 		return $forms;
 	}
 
+
+	/** Tools. ================================================================================== */
 
 	/**
 	 * Get the inactive plugins and themes.

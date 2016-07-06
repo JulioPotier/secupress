@@ -10,10 +10,20 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
-	const VERSION = '1.0';
+	/** Constants. ============================================================================== */
 
 	/**
-	 * The reference to *Singleton* instance of this class.
+	 * Class version.
+	 *
+	 * @var (string)
+	 */
+	const VERSION = '1.0';
+
+
+	/** Properties. ============================================================================= */
+
+	/**
+	 * The reference to the *Singleton* instance of this class.
 	 *
 	 * @var (object)
 	 */
@@ -24,14 +34,21 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 	 *
 	 * @var (string)
 	 */
-	public    static $prio         = 'medium';
+	public    static $prio = 'medium';
+
+	/**
+	 * Current php version.
+	 *
+	 * @var (string)
+	 */
+	public    static $php_version;
 
 	/**
 	 * Minimum php version.
 	 *
 	 * @var (string)
 	 */
-	public    static $php_ver_min  = '5.5.30';
+	public    static $php_ver_min = '5.5.30';
 
 	/**
 	 * Maximum php version.
@@ -45,7 +62,10 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 	 *
 	 * @var (bool|string)
 	 */
-	public    static $fixable      = false;
+	public    static $fixable = false;
+
+
+	/** Public methods. ========================================================================= */
 
 	/**
 	 * Init.
@@ -71,6 +91,8 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 		if ( $php_vers ) {
 			list( self::$php_ver_best, self::$php_ver_min ) = $php_vers;
 		}
+
+		self::$php_version = phpversion();
 	}
 
 
@@ -86,12 +108,12 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// "good"
-			0   => sprintf( __( 'You are using <strong>PHP v%s</strong>.', 'secupress' ), phpversion() ),
-			1   => sprintf( __( 'You are using <strong>PHP v%s</strong>, perfect!', 'secupress' ), phpversion() ),
+			0   => sprintf( __( 'You are using <strong>PHP v%s</strong>.', 'secupress' ), self::$php_version ),
+			1   => sprintf( __( 'You are using <strong>PHP v%s</strong>, perfect!', 'secupress' ), self::$php_version ),
 			// "warning"
 			100 => __( 'Unable to determine version of PHP.', 'secupress' ),
 			// "bad"
-			200   => sprintf( __( 'You are using <strong>PHP v%1$s</strong>, but the latest supported version is <strong>PHP v%2$s</strong>, and the best is <strong>PHP v%3$s</strong>.', 'secupress' ), phpversion(), self::$php_ver_min, self::$php_ver_best ),
+			200   => sprintf( __( 'You are using <strong>PHP v%1$s</strong>, but the latest supported version is <strong>PHP v%2$s</strong>, and the best is <strong>PHP v%3$s</strong>.', 'secupress' ), self::$php_version, self::$php_ver_min, self::$php_ver_best ),
 			// "cantfix"
 			300 => __( 'This cannot be automatically fixed. You have to contact you host provider to ask him to <strong>upgrade you version of PHP</strong>.', 'secupress' ),
 		);
@@ -104,6 +126,8 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 	}
 
 
+	/** Scan. =================================================================================== */
+
 	/**
 	 * Scan for flaw(s).
 	 *
@@ -112,14 +136,13 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-
-		if ( version_compare( phpversion(), self::$php_ver_min ) < 0 ) {
+		if ( version_compare( self::$php_version, self::$php_ver_min ) < 0 ) {
 			$this->add_message( 200 );
 			$this->add_pre_fix_message( 300 );
 		}
 
 		// "good"
-		if ( phpversion() === self::$php_ver_best ) {
+		if ( self::$php_version === self::$php_ver_best ) {
 			$this->add_message( 1 );
 		} else {
 			$this->maybe_set_status( 0 );
@@ -128,6 +151,8 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 		return parent::scan();
 	}
 
+
+	/** Fix. ==================================================================================== */
 
 	/**
 	 * Try to fix the flaw(s).
