@@ -347,6 +347,7 @@ a.secupress-close-moreinfo {
 }
 
 .secupress-tabs-controls {
+	flex-shrink: 0;
 	padding-left: 20px;
 }
 .secupress-tabs-controls li {
@@ -461,6 +462,7 @@ a.secupress-close-moreinfo {
 
 .secupress-tabs-contents {
 	flex-basis: 66%;
+	flex-grow: 0;
 }
 .secupress-tabs-contents > div {
 	padding: 15px 35px 0 0;
@@ -468,20 +470,12 @@ a.secupress-close-moreinfo {
 .secupress-tab-content[id="secupress-schedule"] .secupress-text-medium + p {
 	width: 600px;
 	max-width: 100%;
-	margin: 1em auto;
+	margin: 0 auto 1em;
 }
 .secupress-tab-content[id="secupress-schedule"] .secupress-text-medium {
 	position: relative;
 	margin-top: 1.75em;
-}
-.secupress-tab-content[id="secupress-schedule"] .secupress-text-medium:before {
-	position: absolute;
-	left: 50%; top: -55px;
-	margin-left: -37px;
-	content: '\e91a';
-	font-family: 'secupress';
-	color: rgba(255,255,255,.15);
-	font-size: 75px;
+	margin-bottom: 0.5em;
 }
 .secupress-cta-detail {
 	margin-top: -1em;
@@ -489,22 +483,27 @@ a.secupress-close-moreinfo {
 	font-weight: bold;
 	color: #5A626F;
 }
-.secupress-schedules-infos .secupress-ib {
-	margin: 1.5em 1em 0.75em;
-	font-weight: 600;
+
+.secupress-schedules-infos .secupress-schedule-last-one {
+	margin: 2em 0 0.5em;
 }
-.secupress-schedules-infos.is-pro .secupress-ib {
-	margin-bottom: 1em;
+.secupress-schedules-infos .secupress-schedule-next-one {
+	margin: 0.5em 0 2em;
 }
-.secupress-schedules-infos .next-one {
+
+.secupress-schedules-infos .secupress-schedule-next-one {
 	color: #F39C12;
 }
-.secupress-schedules-infos.is-pro .next-one {
+.secupress-schedules-infos.is-pro .secupress-schedule-next-one {
 	color: #26B3A9;
 }
 .secupress-schedules-infos i {
 	font-size: 1.2em;
+	vertical-align: -2px;
 	margin-right: 5px;
+}
+.secupress-schedules-infos .secupress-button {
+	letter-spacing: 0.125em;
 }
 /* right cols with Status text and actions */
 .secupress-fix-status-actions {

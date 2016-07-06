@@ -509,7 +509,7 @@ function __secupress_scanners() {
 							</div><!-- .secupress-chart.secupress-flex -->
 						</div><!-- .secupress-tab-content -->
 
-						<div id="secupress-latest" class="secupress-tab-content" role="tabpanel" aria-labelledby="secupress-l-latest">
+						<div id="secupress-latest" class="secupress-tab-content hide-if-js" role="tabpanel" aria-labelledby="secupress-l-latest">
 							
 							<div class="secupress-latest-list">
 								<ul class="secupress-reports-list">
@@ -526,7 +526,7 @@ function __secupress_scanners() {
 						</div><!-- .secupress-tab-content -->
 
 
-						<div id="secupress-schedule" class="secupress-tab-content secupress-text-center hide-if-js" role="tabpanel" aria-labelledby="secupress-l-schedule">
+						<div id="secupress-schedule" class="secupress-tab-content" role="tabpanel" aria-labelledby="secupress-l-schedule">
 							<p class="secupress-text-medium">
 								<?php esc_html_e( 'Schedule your security analysis', 'secupress' ); ?>
 							</p>
@@ -538,11 +538,11 @@ function __secupress_scanners() {
 								$next_schedule = '1464654935';
 								?>
 								<div class="secupress-schedules-infos is-pro">
-									<p class="secupress-flex secupress-ib">
+									<p class="secupress-schedule-last-one">
 										<i class="icon-clock-o" aria-hidden="true"></i>
 										<span><?php printf( __( 'Last automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $last_schedule ) ); ?></span>
 									</p>
-									<p class="secupress-flex secupress-ib next-one">
+									<p class="secupress-schedule-next-one">
 										<i class="icon-clock-o" aria-hidden="true"></i>
 										<span><?php printf( __( 'Next automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $next_schedule ) ); ?></span>
 									</p>
@@ -553,11 +553,11 @@ function __secupress_scanners() {
 								</div><!-- .secupress-schedules-infos -->
 							<?php else : ?>
 								<div class="secupress-schedules-infos">
-									<p class="secupress-flex secupress-ib">
+									<p class="secupress-schedule-last-one">
 										<i class="icon-clock-o" aria-hidden="true"></i>
 										<span><?php printf( __( 'Last automatic scan: %s', 'secupress' ), '&mdash;' ); ?></span>
 									</p>
-									<p class="secupress-flex secupress-ib next-one">
+									<p class="secupress-schedule-next-one">
 										<i class="icon-clock-o" aria-hidden="true"></i>
 										<span><?php printf( __( 'Next automatic scan: %s', 'secupress' ), '&mdash;' ); ?></span>
 									</p>
