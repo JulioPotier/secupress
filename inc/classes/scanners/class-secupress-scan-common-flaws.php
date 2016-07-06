@@ -10,10 +10,20 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
-	const VERSION = '1.0';
+	/** Constants. ============================================================================== */
 
 	/**
-	 * The reference to *Singleton* instance of this class.
+	 * Class version.
+	 *
+	 * @var (string)
+	 */
+	const VERSION = '1.0';
+
+
+	/** Properties. ============================================================================= */
+
+	/**
+	 * The reference to the *Singleton* instance of this class.
 	 *
 	 * @var (object)
 	 */
@@ -24,8 +34,10 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements SecuPress_Sc
 	 *
 	 * @var (string)
 	 */
-	public    static $prio    = 'high';
+	public    static $prio = 'high';
 
+
+	/** Public methods. ========================================================================= */
 
 	/**
 	 * Init.
@@ -77,6 +89,8 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements SecuPress_Sc
 	}
 
 
+	/** Scan. =================================================================================== */
+
 	/**
 	 * Scan for flaw(s).
 	 *
@@ -87,7 +101,12 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements SecuPress_Sc
 	public function scan() {
 		$nbr_tests = 0;
 
-		// Shellshock - http://plugins.svn.wordpress.org/shellshock-check/trunk/shellshock-check.php.
+		/**
+		 * Shellshock.
+		 *
+		 * @see http://plugins.svn.wordpress.org/shellshock-check/trunk/shellshock-check.php
+		 * @see https://www.shellshock.fr/
+		 */
 		if ( 'WIN' !== strtoupper( substr( PHP_OS, 0, 3 ) ) ) {
 			++$nbr_tests;
 
@@ -127,7 +146,9 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements SecuPress_Sc
 			}
 		}
 
-		// `wp-config.php` access.
+		/**
+		 * `wp-config.php` access.
+		 */
 		++$nbr_tests;
 		$response = wp_remote_get( add_query_arg( time(), 'wp-config.php', user_trailingslashit( home_url() ) ), array( 'redirection' => 0 ) );
 
@@ -148,6 +169,8 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements SecuPress_Sc
 		return parent::scan();
 	}
 
+
+	/** Fix. ==================================================================================== */
 
 	/**
 	 * Try to fix the flaw(s).
