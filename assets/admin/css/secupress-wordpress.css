@@ -328,6 +328,18 @@
 	vertical-align: -0.16em;
 }
 
+
+/* Rounded icon */
+i.rounded {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 32px;
+	height: 32px;
+	border: 2px solid #ACB0B7;
+	border-radius: 50%;
+}
+
 /* SecuPress menu icon */
 #toplevel_page_secupress_scanners .wp-menu-image.dashicons-shield-alt:before {
 	font-family: 'secupress';

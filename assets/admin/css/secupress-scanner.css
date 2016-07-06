@@ -26,15 +26,23 @@
 	position: relative;
 	border-bottom: 1px solid #393E46;
 }
-.secupress-last-scan-result {
+.secupress-label-with-icon {
 	position: relative;
+	display: block;
 	padding-left: 50px;
+	font-weight: 500;
+	text-decoration: none;
 }
-.secupress-last-scan-result i {
+.secupress-label-with-icon i {
 	position: absolute;
-	left: 0; top: 0;
+	left: 0; top: 1px;
 	font-size: 35px;
 	color: #26B3A9;
+}
+.secupress-label-with-icon i.rounded {
+	font-size: 16px;
+	border-color: #F39C12;
+	color: #F39C12;
 }
 @media (min-width: 820px) {
 	.secupress-last-scan-result {
@@ -44,14 +52,19 @@
 		left: 100px;
 	}
 }
-.secupress-last-scan-result .secupress-upper {
-	font-weight: 600;
+.secupress-label-with-icon .secupress-upper {
+	display: block;
 	text-transform: uppercase;
-	letter-spacing: 0.1em;
+	letter-spacing: 0.125em;
+	color: #FFF;
 }
-.secupress-last-scan-result .secupress-primary {
+.secupress-label-with-icon .secupress-primary {
 	display: block;
 	color: #26B3A9;
+}
+.secupress-label-with-icon .secupress-description {
+	display: block;
+	color: #ACB0B7;
 }
 
 /**
@@ -253,7 +266,9 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 	color: #2BCDC1;
 }
 
-/* More infos links */
+/**
+ * More infos links
+ */
 a.secupress-open-moreinfo,
 a.secupress-close-moreinfo {
 	font-size: 11px;
@@ -287,7 +302,9 @@ a.secupress-close-moreinfo {
 	visibility: hidden;
 }
 
-/* Blobs in More Info pannel */
+/**
+ * Blobs in More Info pannel 
+ */
 [id="secupress-more-info"] {
 	position: absolute;
 	top: 100%;
@@ -322,6 +339,39 @@ a.secupress-close-moreinfo {
 	transition-delay: 1s;
 }
 
+/**
+ * Scan header main contents
+ */
+.secupress-scan-header-main {
+	padding: 0 114px;
+}
+
+.secupress-tabs-controls {
+	padding-left: 20px;
+}
+.secupress-tabs-controls li {
+	margin: 2em 0;
+}
+.secupress-tabs-controls-list a {
+	display: block;
+	text-decoration: none;
+	border-radius: 3px;
+}
+.secupress-tabs-controls-list a:hover {
+	box-shadow: 0 0 1px 9px #222831, 0 0 1px 10px rgba(255,255,255,.2);
+}
+.secupress-tabs-controls .secupress-button-primary {
+	background: #26B3A9;
+}
+.secupress-tabs-controls .secupress-button-primary:hover,
+.secupress-tabs-controls .secupress-button-primary:focus {
+	background: #2bcdc1;
+}
+
+.secupress-tabs-controls-list .secupress-label-with-icon {
+	padding-left: 54px;
+}
+
 
 /* Little pieces of colors for chart legend or item status */
 .secupress-chart-legend {
@@ -335,9 +385,7 @@ a.secupress-close-moreinfo {
 	-webkit-flex-grow: 0;
 	-ms-flex-positive: 0;
 	flex-grow: 0;
-}
-.secupress-chart-container + .secupress-chart-legend {
-	margin-left: 30px;
+	margin-right: 30px;
 }
 .secupress-chart-legend li {
 	margin: 0;
@@ -387,8 +435,8 @@ a.secupress-close-moreinfo {
 	content: "\e903";
 	position: absolute;
 	top: 50%; left: 50%;
-	line-height: 110px;
-	margin: -50px 0 0 -57px;
+	line-height: 105px;
+	margin: -50px 0 0 -54px;
 	font-family: "secupress";
 	font-size: 110px;
 	color: rgba(255,255,255,.07);
@@ -397,10 +445,6 @@ a.secupress-close-moreinfo {
 	font-size: 80px;
 	line-height: 80px;
 	margin: -37px 0 0 -41px;
-}
-
-.secupress-row-actions {
-	font-size: 13px;
 }
 
 .scanning .secupress-fix-status-actions {
@@ -420,9 +464,11 @@ a.secupress-close-moreinfo {
 	speak: none
 }
 
+.secupress-tabs-contents {
+	flex-basis: 66%;
+}
 .secupress-tabs-contents > div {
-	min-height: 302px;
-	padding: 15px 35px;
+	padding: 15px 35px 0 0;
 }
 .secupress-tab-content[id="secupress-schedule"] .secupress-text-medium + p {
 	width: 600px;
@@ -604,40 +650,19 @@ a + .secupress-row-actions {
 	margin-bottom: 0;
 	text-align: left;
 }
-
-.secupress-chart,
-.secupress-scan-infos {
-	float: left;
-	-webkit-box-flex: 1;
-	-webkit-flex-grow: 1;
-	-ms-flex-positive: 1;
-	flex-grow: 1;
-	-webkit-flex-shrink: 1;
-	-ms-flex-negative: 1;
-	flex-shrink: 1;
-}
-.secupress-chart {
-	-webkit-box-flex: 0;
-	-webkit-flex-grow: 0;
-	-ms-flex-positive: 0;
-	flex-grow: 0;
-	-webkit-flex-basis: 430px;
-	-ms-flex-preferred-size: 430px;
-	flex-basis: 430px;
-	width: 430px;
-	max-width: 100%;
-}
-.secupress-chart .secupress-score .letter,
-.secupress-latest-chart .secupress-score .letter {
+.secupress-chart-container .secupress-score .letter {
 	position: absolute;
 	font-size: 82px;
 	top: 50%; left: 50%;
-	margin: -12px 0 0 -26px;
+	margin: -10px 0 0 -26px;
 	font-family: Arial, Helvetica, sans-serif;
 }
-.secupress-latest-chart .secupress-score .letter {
-	font-size: 52px;
-	margin: -11px 0 0 -15px;
+.secupress-scan-infos .secupress-score-text {
+	margin-bottom: 0.1em;
+	line-height: 1.25;
+}
+.secupress-scan-infos .secupress-score-subtext {
+	margin: .75em 0 1em;
 }
 .secupress-scan-infos .letter {
 	font-weight: bold;
