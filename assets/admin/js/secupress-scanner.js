@@ -168,11 +168,6 @@ jQuery( document ).ready( function( $ ) {
 				secupressChart[ elID ].update();
 			} );
 		}
-
-		if ( ! SecuPressi18nChart.notscannedyet.value ) {
-			// Remove the legend for "Not scanned yet".
-			$( ".secupress-chart-legend .status-notscannedyet" ).remove();
-		}
 	}
 
 
@@ -351,11 +346,6 @@ jQuery( document ).ready( function( $ ) {
 		if ( ! $( '.secupress-scanners-header' ).hasClass( 'secupress-not-scanned-yet' ) ) {
 			secupressDrawCharts();
 		}
-
-		// Trigger a filter action on Legend item click.
-		$( ".secupress-chart-legend" ).find( "li" ).on( "click.secupress", function() {
-			$( "#secupress-type-filters" ).find( ".secupress-big-tab-" + $( this ).data( "status" ) ).find( "a" ).trigger( "click.secupress" );
-		} );
 	}
 
 
