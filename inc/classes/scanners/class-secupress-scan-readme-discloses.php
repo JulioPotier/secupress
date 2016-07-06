@@ -10,10 +10,20 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
-	const VERSION = '1.0';
+	/** Constants. ============================================================================== */
 
 	/**
-	 * The reference to *Singleton* instance of this class.
+	 * Class version.
+	 *
+	 * @var (string)
+	 */
+	const VERSION = '1.0';
+
+
+	/** Properties. ============================================================================= */
+
+	/**
+	 * The reference to the *Singleton* instance of this class.
 	 *
 	 * @var (object)
 	 */
@@ -26,6 +36,8 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 	 */
 	public    static $prio = 'medium';
 
+
+	/** Public methods. ========================================================================= */
 
 	/**
 	 * Init.
@@ -99,6 +111,8 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 	}
 
 
+	/** Scan. =================================================================================== */
+
 	/**
 	 * Scan for flaw(s).
 	 *
@@ -128,6 +142,8 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 		return parent::scan();
 	}
 
+
+	/** Fix. ==================================================================================== */
 
 	/**
 	 * Try to fix the flaw(s).
@@ -241,6 +257,8 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 		$this->add_fix_message( 300, array( $rules ) );
 	}
 
+
+	/** Tools. ================================================================================== */
 
 	/**
 	 * Tells if the readme files are accessible.
