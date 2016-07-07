@@ -10,10 +10,20 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
-	const VERSION = '1.0';
+	/** Constants. ============================================================================== */
 
 	/**
-	 * The reference to *Singleton* instance of this class.
+	 * Class version.
+	 *
+	 * @var (string)
+	 */
+	const VERSION = '1.0';
+
+
+	/** Properties. ============================================================================= */
+
+	/**
+	 * The reference to the *Singleton* instance of this class.
 	 *
 	 * @var (object)
 	 */
@@ -27,15 +37,17 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 	public    static $prio = 'high';
 
 
+	/** Public methods. ========================================================================= */
+
 	/**
 	 * Init.
 	 *
 	 * @since 1.0
 	 */
 	protected static function init() {
-		self::$type     = 'WordPress';
-		self::$title    = __( 'Check if the <em>admin</em> account is correctly protected.', 'secupress' );
-		self::$more     = __( 'It is important to protect the famous <em>admin</em> account to avoid simple brute-force attacks on it. This account is most of the time the first one created when you install WordPress, and it is well known by attackers.', 'secupress' );
+		self::$type  = 'WordPress';
+		self::$title = __( 'Check if the <em>admin</em> account is correctly protected.', 'secupress' );
+		self::$more  = __( 'It is important to protect the famous <em>admin</em> account to avoid simple brute-force attacks on it. This account is most of the time the first one created when you install WordPress, and it is well known by attackers.', 'secupress' );
 
 		$current_user = wp_get_current_user();
 
@@ -84,6 +96,8 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 	}
 
 
+	/** Scan. =================================================================================== */
+
 	/**
 	 * Scan for flaw(s).
 	 *
@@ -118,6 +132,8 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 		return parent::scan();
 	}
 
+
+	/** Fix. ==================================================================================== */
 
 	/**
 	 * Try to fix the flaw(s).
@@ -248,6 +264,8 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 		return array( 'rename-admin-username' => $form );
 	}
 
+
+	/** Tools. ================================================================================== */
 
 	/**
 	 * Tell if a user has a role, capabilities, or is network admin.
