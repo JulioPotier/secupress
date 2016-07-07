@@ -319,19 +319,29 @@ jQuery( document ).ready( function( $ ) {
 	} )( window, document, $ );
 
 
-	// Filter Rows (Priority).
+	// Header tabs specificities
 	( function( w, d, $, undefined ) {
-		$( "#secupress-priority-filters" ).find( "input" ).on( "change.secupress", function( e ) {
-			var $this    = $( this ),
-				priority = $this.attr( "name" );
 
-			if ( $this.is( ":checked" ) ) {
-				$( ".secupress-table-prio-" + priority ).spFadeIn();
-			} else {
-				$( ".secupress-table-prio-" + priority ).spHide();
-			}
-			return false;
+		var $tabs      = $( '.secupress-scan-header-main' ).find( '.secupress-tabs-controls-list' ).find( 'a:not([href="#secupress-scan"])' ),
+			$init_tab  = $( '.secupress-scan-header-main' ).find( '[href="#secupress-scan"]' ),
+			$scan_head = $( '.secupress-scanners-header' );
+			$head_item = $( '.secupress-heading' ).find( '.secupress-last-scan-result' ),
+			sel_class  = 'secupress-tab-selected';
+
+		// on click on init tab, remove other hidden trigger click 
+		$init_tab.on( 'click.secupress', function() {
+			$scan_head.removeClass( sel_class );
+			$head_item.off( 'click.secupress' );
 		} );
+
+		// on click on an other tab
+		$tabs.on( 'click.secupress', function() {
+			$scan_head.addClass( sel_class );
+			$head_item.on( 'click.secupress', function() {
+				$init_tab.trigger( 'click.secupress' );
+			} );
+		} );
+
 	} )( window, document, $ );
 
 
