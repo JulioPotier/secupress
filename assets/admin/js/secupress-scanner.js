@@ -140,17 +140,8 @@ jQuery( document ).ready( function( $ ) {
 					showTooltips:          true,
 					segmentShowStroke:     false,
 					percentageInnerCutout: 90,
-					tooltipEvents:         ["mousemove"], // active "hover" effect...
-					customTooltips:        function() {} //... but remove tooltips.
+					tooltipEvents:         [] // remove tooltips
 				} );
-
-				// Trigger a filter action on Chart Segment click.
-				chartEl.onclick = function( e ) {
-					var activePoints = secupressChart[ elID ].getSegmentsAtEvent( e );
-					if ( activePoints[0] ) {
-						$( "#secupress-type-filters" ).find( ".secupress-big-tab-" + activePoints[0].status ).find( "a" ).trigger( "click.secupress" );
-					}
-				};
 			} );
 		} else {
 			// Update existing charts.
@@ -169,18 +160,6 @@ jQuery( document ).ready( function( $ ) {
 			} );
 		}
 	}
-
-
-	function secupressSelectFallbackBigTab( data, $filters ) {
-		if ( data.bad ) {
-			$filters.find( ".secupress-big-tab-bad a" ).trigger( "click.secupress" );
-		} else if ( data.warning ) {
-			$filters.find( ".secupress-big-tab-warning a" ).trigger( "click.secupress" );
-		} else if ( data.good ) {
-			$filters.find( ".secupress-big-tab-good a" ).trigger( "click.secupress" );
-		}
-	}
-
 
 	/**
 	 * Disable one or more buttons.
@@ -273,41 +252,6 @@ jQuery( document ).ready( function( $ ) {
 			SecuPressi18nChart.notscannedyet.value = data.notscannedyet;
 
 			secupressDrawCharts();
-		}
-
-		// Tabs subtitles.
-		$filters = $( "#secupress-type-filters" );
-
-		$filters.find( "a" ).each( function() {
-			var $this = $( this ),
-				type  = $this.data( "type" );
-			$this.children( ".secupress-tab-subtitle" ).text( data[ type + "-text" ] );
-		} );
-
-		// Show/Hide the "New" tab.
-		if ( ! data.notscannedyet ) {
-			if ( $filters.children( ".secupress-big-tab-notscannedyet" ).children( "a" ).hasClass( "secupress-current" ) ) {
-				secupressSelectFallbackBigTab( data, $filters );
-			}
-
-			$filters.children( ".secupress-big-tab-notscannedyet" ).remove();
-		} else {
-			$( ".secupress-count-notscannedyet" ).text( data.notscannedyet );
-		}
-
-		// Show/Hide the "Action needed" tab.
-		if ( data.hasaction ) {
-			$filters.children( ".secupress-big-tab-hasaction" ).removeClass( "hidden" ).removeAttr( "aria-hidden" );
-			// Switch to this tab only if it's a bulk action.
-			if ( data.isBulk ) {
-				$filters.find( ".secupress-big-tab-hasaction a" ).trigger( "click.secupress" );
-			}
-		} else {
-			if ( $filters.children( ".secupress-big-tab-hasaction" ).children( "a" ).hasClass( "secupress-current" ) ) {
-				secupressSelectFallbackBigTab( data, $filters );
-			}
-
-			$filters.children( ".secupress-big-tab-hasaction" ).addClass( "hidden" ).attr( "aria-hidden", true );
 		}
 
 		// Twitter.
