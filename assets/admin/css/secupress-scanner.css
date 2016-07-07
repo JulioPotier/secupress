@@ -19,12 +19,22 @@
 /**
  * Scanners header
  */
+.secupress-scanners-header {
+	padding: 17px 25px 25px;
+}
 .secupress-scanners-header .secupress-logo-block {
 	flex-grow: 0;
 }
 .secupress-scanners-header .secupress-heading {
 	position: relative;
+	padding: 3px 5px 18px;
 	border-bottom: 1px solid #393E46;
+}
+.secupress-scanners-header .secupress-lb-name {
+	padding-left: 12px;
+}
+.secupress-scanners-header .secupress-lb-name {
+
 }
 .secupress-label-with-icon {
 	position: relative;
@@ -46,10 +56,10 @@
 }
 @media (min-width: 820px) {
 	.secupress-last-scan-result {
-		padding-left: 150px;
+		padding-left: 166px;
 	}
 	.secupress-last-scan-result i {
-		left: 100px;
+		left: 110px;
 	}
 }
 .secupress-label-with-icon .secupress-upper {
@@ -67,14 +77,14 @@
 	color: #ACB0B7;
 }
 .secupress-tab-selected .secupress-last-scan-result {
-	opacity: 0.5;
+	opacity: 0.4;
 }
 
 /**
  * Scanners breadcrumbs steps
  */
 .secupress-scanner-steps ol {
-	margin: 3em 114px 1em;
+	margin: 1.7em 85px 1em;
 }
 .secupress-scanner-steps li {
 	padding: 0;
@@ -277,7 +287,7 @@ a.secupress-close-moreinfo {
 	font-size: 11px;
 	letter-spacing: 0.125em;
 	text-transform: uppercase;
-	font-weight: 600;
+	font-weight: 500;
 }
 .secupress-close-moreinfo .text,
 .secupress-open-moreinfo .text {
@@ -287,6 +297,7 @@ a.secupress-close-moreinfo {
 	vertical-align: -1.5px;
 }
 .secupress-close-moreinfo {
+	margin-right: 25px;
 	transform: translateY(-15px);
 	opacity: 0;
 	visibility: hidden;
@@ -311,7 +322,7 @@ a.secupress-close-moreinfo {
 [id="secupress-more-info"] {
 	position: absolute;
 	top: 100%;
-	left: 0; right: 0;
+	left: -25px; right: -25px;
 	z-index: 2;
 	margin-top: 1px; /* lets the top border appears */
 }
@@ -346,20 +357,25 @@ a.secupress-close-moreinfo {
  * Scan header main contents
  */
 .secupress-scan-header-main {
-	padding: 0 114px;
+	padding: 0 80px;
 }
 
 .secupress-tabs-controls {
 	flex-shrink: 0;
 	padding-left: 20px;
+	padding-top: 18px;
 }
-.secupress-tabs-controls li {
-	margin: 2em 0;
+.secupress-tabs-controls li + li {
+	margin: 2.5em 0 0 0;
+}
+.secupress-rescan-actions {
+	margin-top: 2.5em;
 }
 .secupress-tabs-controls-list {
 	margin: 0;
 }
 .secupress-tabs-controls-list a {
+	position: relative;
 	display: block;
 	text-decoration: none;
 	border-radius: 3px;
@@ -379,14 +395,41 @@ a.secupress-close-moreinfo {
 	padding-left: 54px;
 }
 
+.secupress-tab-selected .secupress-tabs-contents {
+	position: relative;
+}
+.secupress-tab-selected .secupress-tabs-contents:after {
+	content: "";
+	position: absolute;
+	right: 15px;
+	top: 25px;
+	bottom: 25px;
+	width: 1px;
+	background: #393e46;
+}
 .secupress-tab-selected .secupress-tabs-controls {
-	padding-top: 8px;
+	padding-top: 0;
 }
 .secupress-tab-selected .secupress-tabs-controls-list a {
-	opacity: .5;
+	opacity: .4;
 }
 .secupress-tab-selected .secupress-tabs-controls-list .secupress-current {
 	opacity: 1;
+}
+.secupress-tab-selected .secupress-tabs-controls-list .secupress-current:after,
+.secupress-tab-selected .secupress-tabs-controls-list .secupress-current:before {
+	content: "";
+	position: absolute;
+	left: -36px;
+	top: 50%;
+	margin-top: -14px;
+	border-top: 15px solid transparent;
+	border-bottom: 15px solid transparent;
+	border-left: 15px solid #393e46;
+}
+.secupress-tab-selected .secupress-tabs-controls-list .secupress-current:after {
+	left: -37.5px;
+	border-left-color: #222831;
 }
 .secupress-tab-selected .secupress-tabs-controls-list li.hidden {
 	display: block;
@@ -485,10 +528,10 @@ a.secupress-close-moreinfo {
 .secupress-tabs-contents {
 	flex-basis: 70%;
 	flex-grow: 0;
-	min-height: 280px;
+	min-height: 265px;
 }
 .secupress-tabs-contents > div {
-	padding: 15px 35px 0 0;
+	padding: 0 35px 0 0;
 }
 .secupress-tab-content[id="secupress-schedule"] .secupress-text-medium {
 	position: relative;

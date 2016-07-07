@@ -365,12 +365,12 @@ function __secupress_scanners() {
 						</div>
 						<div class="secupress-lb-name">
 							<p class="secupress-lb-title">
-							<?php echo secupress_get_logo_word( array( 'with' => 93, 'height' => 20 ) ); ?>
+							<?php echo secupress_get_logo_word( array( 'with' => 98, 'height' => 23 ) ); ?>
 							</p>
 						</div>
 					</div>
 					<p class="secupress-label-with-icon secupress-last-scan-result">
-						<i class="icon-secupress-simple" aria-hidden="true"></i>
+						<i class="icon-secupress" aria-hidden="true"></i>
 						<span class="secupress-upper"><?php _e( 'Result of the scan', 'secupress' ); ?></span>
 						<span class="secupress-primary">20.06.2016 • 13h37</span>
 					</p>
@@ -385,7 +385,7 @@ function __secupress_scanners() {
 						</a>
 					</p>
 
-					<div id="secupress-more-info" class="secupress-full-wide<?php echo $reports ? ' hide-if-js' : ' secupress-open'; ?>">
+					<div id="secupress-more-info" class="<?php echo $reports ? ' hide-if-js' : ' secupress-open'; ?>">
 						<div class="secupress-flex secupress-flex-top">
 							<div class="secupress-col-1-4">
 								<div class="secupress-blob">
@@ -595,7 +595,7 @@ function __secupress_scanners() {
 							<li role="presentation" class="hidden">
 								<a href="#secupress-scan" role="tab" aria-selected="false" aria-controls="secupress-scan" class="secupress-current">
 									<span class="secupress-label-with-icon">
-										<i class="icon-secupress-simple" aria-hidden="true"></i>
+										<i class="icon-secupress" aria-hidden="true"></i>
 										<span class="secupress-upper"><?php esc_html_e( 'Result of the scan', 'secupress' ); ?></span>
 										<span class="secupress-primary">20.06.2016 • 13h37</span>
 									</span>

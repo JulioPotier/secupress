@@ -139,7 +139,7 @@ jQuery( document ).ready( function( $ ) {
 					animationEasing:       "easeInOutQuart",
 					showTooltips:          true,
 					segmentShowStroke:     false,
-					percentageInnerCutout: 90,
+					percentageInnerCutout: 93,
 					tooltipEvents:         [] // remove tooltips
 				} );
 			} );

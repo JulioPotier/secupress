@@ -815,7 +815,7 @@ label.secupress-setting-row-title {
 
 .secupress-wrapper {
 	max-width: 100%;
-	width: 1125px; /* 1240 */
+	width: 1078px; /* 1240 */
 	padding-top: 20px;
 }
 .toplevel_page_secupress_scanners .secupress-notice,
@@ -823,7 +823,7 @@ label.secupress-setting-row-title {
 .secupress_page_secupress_modules .secupress-notice,
 .secupress_page_secupress_modules .notice {
 	box-sizing: border-box; /* 'cause WordPress don't do it by default. */
-	width: 1125px;
+	width: 1078px;
 	max-width: 100%;
 }
 
