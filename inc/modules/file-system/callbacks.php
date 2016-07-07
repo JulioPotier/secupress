@@ -256,7 +256,11 @@ function __secupress_file_system_settings_callback( $settings ) {
 	$settings['sanitized'] = 1;
 
 	// Activate/deactivate.
-	secupress_manage_submodule( $modulenow, 'bad-file-extensions', ! empty( $activate['bad-file-extensions_activated'] ) );
+	if ( secupress_is_pro() ) {
+		secupress_manage_submodule( $modulenow, 'bad-file-extensions', ! empty( $activate['bad-file-extensions_activated'] ) );
+	} else {
+		secupress_deactivate_submodule( $modulenow, array( 'bad-file-extensions' ) );
+	}
 
 	return $settings;
 }

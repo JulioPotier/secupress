@@ -76,7 +76,7 @@ function secupress_get_modules() {
 				__( 'Also, an antivus scanner can be performed on your installation, this may take time but it\'s more efficient.', 'secupress' ),
 			),
 			'with_reset_box' => false,
-			'mark_as_pro'    => false,
+			'mark_as_pro'    => true,
 		),
 		'firewall'     => array(
 			'title'       => __( 'Firewall', 'secupress' ),
