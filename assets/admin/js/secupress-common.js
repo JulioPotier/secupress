@@ -65,6 +65,7 @@
 
 	/**
 	 * Tabs
+	 * @description : handle basic tabs sytem
 	 * @author : Geoffrey
 	 */
 	$('.secupress-tabs').each( function() {
@@ -98,6 +99,7 @@
 
 	/**
 	 * Triggering (slidedown, fadein, etc.)
+	 * @description: Triggers basic effect/action/animation 
 	 * @author: Geoffrey
 	 */
 	$('[data-trigger]').each( function() {
