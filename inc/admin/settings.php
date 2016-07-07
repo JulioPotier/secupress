@@ -447,9 +447,9 @@ function __secupress_scanners() {
 				</div>
 
 				<div class="secupress-scan-header-main secupress-flex">
-					<div id="sp-tab-scans" class="secupress-tabs-contents">
-						<div id="secupress-scan" class="secupress-tab-content hide-if-js" role="tabpanel" aria-labelledby="secupress-l-scan">
-							<div class="secupress-flex secupress-row secupress-chart">
+					<div id="sp-tab-scans" class="secupress-tabs-contents secupress-flex">
+						<div id="secupress-scan" class="secupress-tab-content" role="tabpanel" aria-labelledby="secupress-l-scan">
+							<div class="secupress-flex secupress-chart">
 							
 								<div class="secupress-chart-container">
 									<canvas class="secupress-chartjs" id="status_chart" width="180" height="180"></canvas>
@@ -526,7 +526,7 @@ function __secupress_scanners() {
 						</div><!-- .secupress-tab-content -->
 
 
-						<div id="secupress-schedule" class="secupress-tab-content" role="tabpanel" aria-labelledby="secupress-l-schedule">
+						<div id="secupress-schedule" class="secupress-tab-content hide-if-js" role="tabpanel" aria-labelledby="secupress-l-schedule">
 							<p class="secupress-text-medium">
 								<?php esc_html_e( 'Schedule your security analysis', 'secupress' ); ?>
 							</p>
@@ -573,18 +573,18 @@ function __secupress_scanners() {
 					</div><!-- .secupress-tabs-contents -->
 
 					<div class="secupress-tabs-controls">
-						<ul class="secupress-tabs-controls-list" role="tablist" data-content="#sp-tab-scans">
+						<ul class="secupress-tabs secupress-tabs-controls-list" role="tablist" data-content="#sp-tab-scans">
 							<li role="presentation">
-								<a href="#secupress-latest" role="tab" aria-selected="true" aria-controls="secupress-latest">
+								<a href="#secupress-latest" role="tab" aria-selected="false" aria-controls="secupress-latest">
 									<span class="secupress-label-with-icon">
 										<i class="icon-back rounded" aria-hidden="true"></i>
-										<span class="secupress-upper"><?php esc_html_e( 'Result of the scan', 'secupress' ); ?></span>
+										<span class="secupress-upper"><?php esc_html_e( 'Latest scans', 'secupress' ); ?></span>
 										<span class="secupress-description"><?php esc_html_e( 'View your previous scans', 'secupress' ); ?></span>
 									</span>
 								</a>
 							</li>
 							<li role="presentation">
-								<a href="#secupress-schedule" role="tab" aria-selected="true" aria-controls="secupress-schedule">
+								<a href="#secupress-schedule" role="tab" aria-selected="false" aria-controls="secupress-schedule">
 									<span class="secupress-label-with-icon">
 										<i class="icon-calendar rounded" aria-hidden="true"></i>
 										<span class="secupress-upper"><?php esc_html_e( 'Schedule Scans', 'secupress' ); ?></span>
@@ -593,7 +593,7 @@ function __secupress_scanners() {
 								</a>
 							</li>
 							<li role="presentation" class="hidden">
-								<a href="#secupress-scan" role="tab" aria-selected="true" aria-controls="secupress-scan">
+								<a href="#secupress-scan" role="tab" aria-selected="false" aria-controls="secupress-scan" class="secupress-current">
 									<span class="secupress-label-with-icon">
 										<i class="icon-secupress-simple" aria-hidden="true"></i>
 										<span class="secupress-upper"><?php esc_html_e( 'Result of the scan', 'secupress' ); ?></span>
