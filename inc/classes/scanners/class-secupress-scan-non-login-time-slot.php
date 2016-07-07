@@ -10,10 +10,20 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 class SecuPress_Scan_Non_Login_Time_Slot extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
-	const VERSION = '1.0';
+	/** Constants. ============================================================================== */
 
 	/**
-	 * The reference to *Singleton* instance of this class.
+	 * Class version.
+	 *
+	 * @var (string)
+	 */
+	const VERSION = '1.0';
+
+
+	/** Properties. ============================================================================= */
+
+	/**
+	 * The reference to the *Singleton* instance of this class.
 	 *
 	 * @var (object)
 	 */
@@ -24,7 +34,7 @@ class SecuPress_Scan_Non_Login_Time_Slot extends SecuPress_Scan implements SecuP
 	 *
 	 * @var (string)
 	 */
-	public    static $prio    = 'medium';
+	public    static $prio = 'medium';
 
 	/**
 	 * Tells if a scanner is fixable by SecuPress. The value "pro" means it's fixable only with the version PRO.
@@ -33,6 +43,8 @@ class SecuPress_Scan_Non_Login_Time_Slot extends SecuPress_Scan implements SecuP
 	 */
 	public    static $fixable = 'pro';
 
+
+	/** Public methods. ========================================================================= */
 
 	/**
 	 * Init.
@@ -91,6 +103,8 @@ class SecuPress_Scan_Non_Login_Time_Slot extends SecuPress_Scan implements SecuP
 	}
 
 
+	/** Scan. =================================================================================== */
+
 	/**
 	 * Scan for flaw(s).
 	 *
@@ -111,6 +125,8 @@ class SecuPress_Scan_Non_Login_Time_Slot extends SecuPress_Scan implements SecuP
 		return parent::scan();
 	}
 
+
+	/** Fix. ==================================================================================== */
 
 	/**
 	 * Try to fix the flaw(s).

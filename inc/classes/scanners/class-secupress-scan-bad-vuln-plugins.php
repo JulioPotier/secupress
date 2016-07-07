@@ -10,10 +10,20 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
-	const VERSION = '1.0';
+	/** Constants. ============================================================================== */
 
 	/**
-	 * The reference to *Singleton* instance of this class.
+	 * Class version.
+	 *
+	 * @var (string)
+	 */
+	const VERSION = '1.0';
+
+
+	/** Properties. ============================================================================= */
+
+	/**
+	 * The reference to the *Singleton* instance of this class.
 	 *
 	 * @var (object)
 	 */
@@ -24,7 +34,7 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 	 *
 	 * @var (string)
 	 */
-	public    static $prio    = 'high';
+	public    static $prio = 'high';
 
 	/**
 	 * Tells if a scanner is fixable by SecuPress. The value "pro" means it's fixable only with the version PRO.
@@ -33,6 +43,8 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 	 */
 	public    static $fixable = 'pro';
 
+
+	/** Public methods. ========================================================================= */
 
 	/**
 	 * Init.
@@ -110,6 +122,8 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 	}
 
 
+	/** Scan. =================================================================================== */
+
 	/**
 	 * Scan for flaw(s).
 	 *
@@ -155,6 +169,8 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 	}
 
 
+	/** Fix. ==================================================================================== */
+
 	/**
 	 * Try to fix the flaw(s).
 	 *
@@ -175,6 +191,8 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 		return parent::fix();
 	}
 
+
+	/** Tools. ================================================================================== */
 
 	/**
 	 * Get an array of installed plugins that are vulnerable.
