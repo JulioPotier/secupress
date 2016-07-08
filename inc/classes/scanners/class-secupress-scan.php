@@ -146,7 +146,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	public static $delayed_fix = false;
 
 
-	// Init ========================================================================================.
+	/** Init. =================================================================================== */
 
 	/**
 	 * Init: this method is required by the class `SecuPress_Singleton`.
@@ -169,7 +169,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	}
 
 
-	// Multisite specifics =========================================================================.
+	/** Multisite specifics. ==================================================================== */
 
 	/**
 	 * Get `$for_current_site`.
@@ -210,7 +210,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	}
 
 
-	// Messages for scans and fixes ================================================================.
+	/** Messages for scans and fixes. =========================================================== */
 
 	/**
 	 * Get messages.
@@ -224,7 +224,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	}
 
 
-	// Status and messages for scans ===============================================================.
+	/** Status and messages for scans. ========================================================== */
 
 	/**
 	 * Maybe set current scan status, only if it isn't set yet.
@@ -327,7 +327,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	}
 
 
-	// Status and messages for fixes ===============================================================.
+	/** Status and messages for fixes. ========================================================== */
 
 	/**
 	 * Maybe set current fix status, only if it isn't set yet.
@@ -457,7 +457,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	}
 
 
-	// Messages for subsites =======================================================================.
+	/** Messages for subsites. ================================================================== */
 
 	/**
 	 * On multisite, some fixes can't be performed from the network admin.
@@ -657,7 +657,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	}
 
 
-	// Scan and fix ================================================================================.
+	/** Scan and fix. =========================================================================== */
 
 	/**
 	 * Scan for flaw(s).
@@ -827,7 +827,8 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 		echo $output;
 	}
 
-	// Options =====================================================================================.
+
+	/** Options. ================================================================================ */
 
 	/**
 	 * Set options: scan results.
@@ -900,7 +901,8 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 		return $this->result_fix;
 	}
 
-	// Other transients ============================================================================.
+
+	/** Other transients. ======================================================================= */
 
 	/**
 	 * Fixes that require user action: set fix actions.
@@ -994,7 +996,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	}
 
 
-	// Tools =======================================================================================.
+	/** Tools. ================================================================================== */
 
 	/**
 	 * Prioritie(s): get an array containing title and description of the given priority.

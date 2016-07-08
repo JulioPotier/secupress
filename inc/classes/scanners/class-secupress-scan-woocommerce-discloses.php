@@ -10,10 +10,20 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
-	const VERSION = '1.0';
+	/** Constants. ============================================================================== */
 
 	/**
-	 * The reference to *Singleton* instance of this class.
+	 * Class version.
+	 *
+	 * @var (string)
+	 */
+	const VERSION = '1.0';
+
+
+	/** Properties. ============================================================================= */
+
+	/**
+	 * The reference to the *Singleton* instance of this class.
 	 *
 	 * @var (object)
 	 */
@@ -24,8 +34,10 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 	 *
 	 * @var (string)
 	 */
-	public    static $prio    = 'medium';
+	public    static $prio = 'medium';
 
+
+	/** Public methods. ========================================================================= */
 
 	/**
 	 * Init.
@@ -76,6 +88,8 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 	}
 
 
+	/** Scan. =================================================================================== */
+
 	/**
 	 * Scan for flaw(s).
 	 *
@@ -84,7 +98,6 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-
 		$discloses = array();
 
 		// Get home page contents.
@@ -138,6 +151,8 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 	}
 
 
+	/** Fix. ==================================================================================== */
+
 	/**
 	 * Try to fix the flaw(s).
 	 *
@@ -146,7 +161,6 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 	 * @return (array) The fix results.
 	 */
 	public function fix() {
-
 		// Get home page contents.
 		$response     = wp_remote_get( add_query_arg( time(), time(), user_trailingslashit( home_url() ) ), array( 'redirection' => 0 ) );
 		$has_response = ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response );
