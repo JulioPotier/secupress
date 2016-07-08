@@ -94,7 +94,6 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Inter
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-
 		$response = wp_remote_get( add_query_arg( time(), 'UNION+SELECT+FOO', user_trailingslashit( home_url() ) ), array( 'redirection' => 0 ) );
 
 		if ( ! is_wp_error( $response ) ) {
@@ -125,7 +124,6 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Inter
 	 * @return (array) The fix results.
 	 */
 	public function fix() {
-
 		// Activate.
 		secupress_activate_submodule( 'firewall', 'bad-url-contents' );
 
