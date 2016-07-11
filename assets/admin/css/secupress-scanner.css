@@ -518,6 +518,7 @@ a.secupress-close-moreinfo {
 	-ms-flex-positive: 0;
 	flex-grow: 0;
 	margin-right: 30px;
+	line-height: 1;
 }
 .secupress-chart-legend li {
 	margin: 0;
@@ -789,7 +790,7 @@ a + .secupress-row-actions {
 	position: absolute;
 	font-size: 82px;
 	top: 50%; left: 50%;
-	margin: -10px 0 0 -26px;
+	margin: -.5em 0 0 -.33em;;
 	font-family: Arial, Helvetica, sans-serif;
 }
 .secupress-scan-infos .secupress-score-text {
@@ -805,7 +806,7 @@ a + .secupress-row-actions {
 }
 .secupress-chart .secupress-score .l∅ {
 	font-size: 64px;
-	margin: -6px 0 0 -28px;
+	margin: -0.45em 0 0 -0.44em;
 }
 .secupress-score .lA,
 .secupress-reports-list .lA,
