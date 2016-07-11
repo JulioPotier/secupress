@@ -248,9 +248,19 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 .secupress-scanned-items {
 	display: block;
 	margin-top: 10px;
+	max-height: 0;
 	font-size: 13px;
 	font-weight: 700;
 	color: #2BCDC1;
+	overflow: hidden;
+	visibility: hidden;
+	opacity: 0;
+	transition: all .275s;
+}
+.secupress-scanning .secupress-scanned-items {
+	max-height: 2em;
+	opacity: 1;
+	visibility: visible;
 }
 .secupress-second-title,
 .secupress-scanning .secupress-init-title {

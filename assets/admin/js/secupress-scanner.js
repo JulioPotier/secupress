@@ -454,8 +454,17 @@ jQuery( document ).ready( function( $ ) {
 			doingFix:     {},
 			delayedFixes: [],
 			// Manual fixes.
-			manualFix:    {}
+			manualFix:    {},
+			total:        0
 		};
+
+		// Set the total of available scans…
+		function secupressSetScansTotal() {
+			var total = $( '#secupress-tests' ).find( '.secupress-item-all' ).length;
+			secupressScans.total = total;
+		}
+		// …at first page load (at least)
+		secupressSetScansTotal();
 
 		// Runs the Progressbar, 10 sec min.
 		function secupressRunProgressBar( $button ) {
@@ -467,6 +476,7 @@ jQuery( document ).ready( function( $ ) {
 				secupressProgressTimer;
 
 			$sp_1st_scan.addClass( 'secupress-scanning' );
+			$( '.secupress-scanned-total' ).text( secupressScans.total );
 
 			secupressProgressTimer = setInterval( function() {
 				secupressOneClickScanProgress++;
@@ -480,8 +490,12 @@ jQuery( document ).ready( function( $ ) {
 
 				secupressOneClickScanProgress = Math.min( secupressOneClickScanProgress, 100 );
 
+				// Progress bar update
 				$bar_val.css( 'width', secupressOneClickScanProgress + '%' );
 				$text_val.text( secupressOneClickScanProgress + ' %' );
+
+				// Number N / T points update
+				$( '.secupress-scanned-current' ).text( secupressScans.total - Object.keys( secupressScans.doingScan ).length );
 
 				if ( secupressOneClickScanProgress >= 100 ) {
 
