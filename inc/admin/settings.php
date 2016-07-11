@@ -361,7 +361,7 @@ function __secupress_scanners() {
 		<div class="secupress-wrapper">
 			<div class="secupress-section-dark secupress-scanners-header<?php echo $reports ? '' : ' secupress-not-scanned-yet'; ?>">
 
-				<div class="secupress-heading secupress-flex secupress-flex-spaced secupress-wrap">
+				<div class="secupress-heading secupress-flex secupress-wrap">
 					<div class="secupress-logo-block secupress-flex">
 						<div class="secupress-lb-logo">
 							<?php echo secupress_get_logo( array( 'width' => 59 ) ); ?>
@@ -688,7 +688,178 @@ function __secupress_scanners() {
 
 			</div><!-- .secupress-section-dark -->
 
+			<?php
+			/**
+			 * 
+			 *
+			 * FIRST STEP MAIN CONTENT
+			 *
+			 *
+			 */
+			?>
 			<div class="secupress-scanner-main-content secupress-section-gray secupress-bordered">
+
+				<div class="secupress-step-content-container">
+
+					<div class="secupress-step-content-header secupress-flex secupress-flex-spaced">
+						
+						<p class="secupress-step-title">Liste des points de sécurité analysés</p>
+						<p>
+							<a href="?scan-step=2" class="secupress-button secupress-button-tertiary shadow">
+								<span class="icon">
+									<i class="icon-wrench" aria-hidden="true"></i>
+								</span>
+								<span class="text">Next step</span>
+							</a>
+						</p>
+					</div>
+
+					<div id="secupress-tests-v2" class="secupress-tests">
+
+						<div class="secupress-scans-group secupress-group-[_GROUP_SLUG_]">
+							<div class="secupress-sg-header secupress-flex secupress-flex-spaced">
+								
+								<div class="secupress-sgh-name">
+									<i class="icon-user-login" aria-hidden="true"></i>
+									<p class="secupress-sgh-title">User &amp; Login</p>
+									<p class="secupress-sgh-description">Protect you users</p>
+								</div>
+
+								<div class="secupress-sgh-actions secupress-flex">
+									<a href="#[_SECUPRESS_MODULE_LINK_]" target="_blank" class="secupress-link-icon secupress-vcenter">
+										<span class="icon"><i class="icon-cog" aria-hidden="true"></i></span>
+										<span class="text">Go to module settings</span>
+									</a>
+									<button class="secupress-vnormal hide-if-no-js dont-trigger-hide trigger-hide-first" type="button" data-trigger="slidetoggle" data-target="secupress-group-content-[_GROUP_SLUG_]">
+										<i class="icon-angle-up" aria-hidden="true"></i>
+										<span class="screen-reader-text">Show/hide panel</span>
+									</button>
+								</div>
+
+							</div><!-- .secupress-sg-header -->
+
+							<div id="secupress-group-content-[_GROUP_SLUG_]" class="secupress-sg-content">
+
+								<div class="secupress-item-all secupress-item-[_ITEM_SLUG_] type-all status-all type-wordpress status-good not-fixable no-fix-status" id="[_ITEM_SLUG_]">
+									<div class="secupress-flex">
+										
+										<p class="secupress-item-status">
+											<span class="secupress-label">Good</span>
+										</p>
+
+										<p class="secupress-item-title">Check if your login page is protected by double authentication or something like that (may be a custom script).</p>
+
+										<p class="secupress-row-actions">
+											<!--
+												Things changed:
+												* data-trigger added
+												* data-target instead of data-test
+												* data-target === .secupress-item-details' ID
+											-->
+											<button data-trigger="slidetoggle" data-target="details-[_ITEM_SLUG_]" class="secupress-details link-like hide-if-no-js" type="button">
+												<span aria-hidden="true" class="icon">
+													<i class="icon-info-disk"></i>
+												</span>
+												<span class="text">Learn more</span>
+											</button>
+										</p>
+									</div>
+
+									<div class="secupress-item-details hide-if-js" id="details-[_ITEM_SLUG_]">
+										<div class="secupress-flex">
+											<span class="secupress-details-icon">
+												<i class="icon-i" aria-hidden="true"></i>
+											</span>
+											<p class="details-content">The login vector is often use in web attacks, every hour, your website is targeted by random bots whom try to log in your site. Adding another layer of login can improve the security.</p>
+											<span class="secupress-placeholder"></span>
+										</div>
+									</div>
+
+								</div><!-- .secupress-item-all -->
+
+								<div class="secupress-item-all secupress-item-Easy_Login type-all status-all type-wordpress status-warning not-fixable no-fix-status alternate-1" id="Easy_Login">
+									
+									<div class="secupress-flex">
+										
+										<p class="secupress-item-status">
+											<span class="secupress-label">Warning</span>
+										</p>
+
+										<p class="secupress-item-title">Check if your login page is protected by double authentication or something like that (may be a custom script).</p>
+
+										<p class="secupress-row-actions">
+											<!--
+												Things changed:
+												* data-trigger added
+												* data-target instead of data-test
+												* data-target === .secupress-item-details' ID
+											-->
+											<button data-trigger="slidetoggle" data-target="details-Easy_Login" class="secupress-details link-like hide-if-no-js" type="button">
+												<span aria-hidden="true" class="icon">
+													<i class="icon-info-disk"></i>
+												</span>
+												<span class="text">Learn more</span>
+											</button>
+										</p>
+									</div><!-- .secupress-flex -->
+
+									<div class="secupress-item-details hide-if-js" id="details-Easy_Login">
+										<div class="secupress-flex">
+											<span class="secupress-details-icon">
+												<i class="icon-i" aria-hidden="true"></i>
+											</span>
+											<p class="details-content">The login vector is often use in web attacks, every hour, your website is targeted by random bots whom try to log in your site. Adding another layer of login can improve the security.</p>
+											<span class="secupress-placeholder"></span>
+										</div>
+									</div>
+
+								</div><!-- .secupress-item-all -->
+
+								<div class="secupress-item-all secupress-item-Easy_Login type-all status-all type-wordpress status-bad not-fixable no-fix-status alternate-1" id="Easy_Login">
+									
+									<div class="secupress-flex">
+										
+										<p class="secupress-item-status">
+											<span class="secupress-label">Bad</span>
+										</p>
+
+										<p class="secupress-item-title">Check if your login page is protected by double authentication or something like that (may be a custom script).</p>
+
+										<p class="secupress-row-actions">
+											<!--
+												Things changed:
+												* data-trigger added
+												* data-target instead of data-test
+												* data-target === .secupress-item-details' ID
+											-->
+											<button data-trigger="slidetoggle" data-target="details-Easy_Login" class="secupress-details link-like hide-if-no-js" type="button">
+												<span aria-hidden="true" class="icon">
+													<i class="icon-info-disk"></i>
+												</span>
+												<span class="text">Learn more</span>
+											</button>
+										</p>
+									</div><!-- .secupress-flex -->
+
+									<div class="secupress-item-details hide-if-js" id="details-Easy_Login">
+										<div class="secupress-flex">
+											<span class="secupress-details-icon">
+												<i class="icon-i" aria-hidden="true"></i>
+											</span>
+											<p class="details-content">The login vector is often use in web attacks, every hour, your website is targeted by random bots whom try to log in your site. Adding another layer of login can improve the security.</p>
+											<span class="secupress-placeholder"></span>
+										</div>
+									</div>
+
+								</div><!-- .secupress-item-all -->
+
+							</div><!-- .secupress-sg-content -->
+						</div><!-- .secupress-scans-group -->
+
+					</div><!-- .secupress-tests -->
+
+				</div><!-- .secupress-step-content-container-->
+
 				<?php secupress_scanners_template(); ?>
 			</div>
 

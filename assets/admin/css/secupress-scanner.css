@@ -340,17 +340,6 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 /**
  * More infos links
  */
-a.secupress-open-moreinfo,
-a.secupress-close-moreinfo {
-	font-size: 11px;
-	letter-spacing: 0.125em;
-	text-transform: uppercase;
-	font-weight: 500;
-}
-.secupress-close-moreinfo .text,
-.secupress-open-moreinfo .text {
-	text-decoration: none;
-}
 .secupress-not-scanned-yet .secupress-close-moreinfo {
 	display: none;
 }
@@ -882,46 +871,143 @@ a + .secupress-row-actions {
 }
 
 /**
- * === Sanned Items
+ * Steps contents
  */
-[id="secupress-tests"] .secupress-item-all {
-	position: relative;
-	padding-left: 10px;
-	margin: 2em 0;
-	border: 1px solid #ECF0F1;
-	background: #FFF;
-	border-radius: 3px;
-	box-shadow: 0 2px 0 #ECF0F1;
+.secupress-step-content-container {
+	width: 910px;
+	max-width: 100%;
+	padding: 25px;
+	margin: 0 auto;
 }
-[id="secupress-tests"] .secupress-item-all:after {
-	content: "";
-	position: absolute;
-	top: 0; bottom: 0; left: 0;
-	width: 10px;
-	background: #5a626f;
-	box-shadow: 0 3px 0 #5a626f;
-	border-radius: 3px 0 0 3px;
-}
-.secupress-item-all.status-bad:after {
-	background: #F2295E;
-	box-shadow: 0 3px 0 #F2295E;
-}
-.secupress-item-all.status-good:after {
-	background: #2BCDC1;
-	box-shadow: 0 3px 0 #2BCDC1;
-}
-.secupress-item-all.status-warning:after {
-	background: #F1C40F;
-	box-shadow: 0 3px 0 #F1C40F;
+.secupress-step-title {
+	font-size: 16px;
+	font-weight: 500;
+	color: #5A626F;
 }
 
-.secupress-item-header {
-	padding: 5px 25px 5px 15px;
+.secupress-scans-group {
+	margin: 2.5em 0;
+	background: #FFF;
+	box-shadow: 0 10px 15px rgba(34, 40, 49, .2);
+}
+.secupress-sg-header {
+	padding: 0 0 0 20px;
+	background: #222831;
+	color: #FFF;
+}
+.secupress-sg-header.secupress-flex {
+	align-items: initial;
+}
+.secupress-sgh-name {
+	position: relative;
+	font-weight: 500;
+	padding: 13px 0;
+}
+.secupress-sgh-name p {
+	margin: 0;
+	line-height: 1.4;
+}
+.secupress-sgh-name i {
+	position: absolute;
+	right: -55px;
+	bottom: -10px;
+	font-size: 48px;
+	color: rgba(236, 240, 241, 0.2);
+}
+.secupress-sgh-title {
+	font-size: 16px;
+	color: #2BCDC1;
+}
+.secupress-sgh-actions button {
+	margin-left: 20px;
+	padding: 0 26px;
+	border: 0;
+	color: #F39C12;
+	background: #393E46;
+}
+.secupress-sgh-actions button i:before {
+	font-size: 22px;
+}
+.secupress-sgh-actions .text {
+	color: #FFF;
+}
+
+/**
+ * === Scanned Items
+ */
+.secupress-tests .secupress-item-all {
+	position: relative;
+}
+.secupress-item-all .secupress-flex {
+	padding: 20px 25px;
+}
+.secupress-tests .secupress-item-all + .secupress-item-all {
+	border-top: 1px solid #F2F2F6;
+}
+.secupress-item-status,
+.secupress-details-icon {
+	flex-basis: 110px;
+	flex-shrink: 0;
+	padding-right: 15px;
+}
+.secupress-row-actions,
+.secupress-item-all .secupress-placeholder {
+	flex-basis: 200px;
+	flex-shrink: 0;
+	text-align: right;
 }
 .secupress-item-title {
-	font-size: 16px;
-	font-weight: 600;
-	margin: 5px 0 0 0;
+	font-size: 13px;
+	color: #5A626F;
+}
+
+.secupress-item-all .secupress-label {
+	text-transform: uppercase;
+}
+.status-new .secupress-label {
+	border-color: #F1C40F;
+	color: #F1C40F;
+}
+.status-bad .secupress-label {
+	border-color: #CB234F;
+	color: #CB234F;
+}
+.status-warning .secupress-label {
+	border-color: #F19B12;
+	color: #F19B12;
+}
+.status-good .secupress-label {
+	border-color: #2BCDC1;
+	color: #2BCDC1;
+}
+.secupress-item-details {
+	position: relative;
+	background: #ECF0F1;
+	color: #5A626F;
+}
+.secupress-item-details:before {
+	content: "";
+	position: absolute;
+	right: 50px; top: 0;
+	border-bottom: 12px solid #ECF0F1;
+	border-left: 12px solid transparent;
+	border-right: 12px solid transparent;
+}
+.secupress-item-details.secupress-open:before {
+	top: -11px;
+}
+.secupress-details-icon .icon-i {
+	font-size: 2.7em;
+	line-height: 1;
+}
+.secupress-details-icon {
+	text-align: center;
+}
+.secupress-details-icon .icon-i:before {
+	border-width: 2px;
+	border-color: #ADB1B7;
+	color: #ADB1B7;
+	font-weight: 500;
 }
 
 /* Row under item title */
