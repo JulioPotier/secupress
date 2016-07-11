@@ -607,18 +607,18 @@ function __secupress_scanners() {
 					 */
 					?>
 					<ol class="secupress-flex secupress-counter">
-						<li class="secupress-col-1-3 secupress-counter-put secupress-flex secupress-current">
-							<span class="secupress-step-name"><?php esc_html_e('Security Report', 'secupress'); ?></span>
+						<li class="secupress-col-1-3 secupress-counter-put secupress-flex secupress-current" aria-labelledby="sp-step-1-l" aria-describedby="sp-step-1-d">
+							<span class="secupress-step-name" id="sp-step-1-l" ><?php esc_html_e('Security Report', 'secupress'); ?></span>
 						</li>
-						<li class="secupress-col-1-3 secupress-counter-put secupress-flex">
-							<span class="secupress-step-name"><?php esc_html_e( 'Auto-Fix', 'secupress' ) ?></span>
+						<li class="secupress-col-1-3 secupress-counter-put secupress-flex" aria-labelledby="sp-step-1-l" aria-describedby="sp-step-1-d">
+							<span class="secupress-step-name" id="sp-step-2-l"><?php esc_html_e( 'Auto-Fix', 'secupress' ) ?></span>
 						</li>
-						<li class="secupress-col-1-3 secupress-counter-put secupress-flex">
-							<span class="secupress-step-name"><?php esc_html_e( 'Manual Operations', 'secupress' ) ?></span>
+						<li class="secupress-col-1-3 secupress-counter-put secupress-flex" aria-labelledby="sp-step-1-l" aria-describedby="sp-step-1-d">
+							<span class="secupress-step-name" id="sp-step-3-l"><?php esc_html_e( 'Manual Operations', 'secupress' ) ?></span>
 							<span class="secupress-step-name alt" aria-hidden="true"><?php _e('Resolutions Report', 'secupress'); ?></span>
 						</li>
-						<li class="secupress-col-1-3 secupress-counter-put secupress-flex">
-							<span class="secupress-step-name"><?php _e('Resolutions Report', 'secupress'); ?></span>
+						<li class="secupress-col-1-3 secupress-counter-put secupress-flex" aria-labelledby="sp-step-1-l" aria-describedby="sp-step-1-d">
+							<span class="secupress-step-name" id="sp-step-4-l"><?php _e('Resolutions Report', 'secupress'); ?></span>
 						</li>
 					</ol>
 
@@ -630,7 +630,7 @@ function __secupress_scanners() {
 										<i class="icon-radar"></i>
 									</div>
 									<p class="secupress-blob-title"><?php esc_html_e('Security Report', 'secupress'); ?></p>
-									<div class="secupress-blob-content">
+									<div class="secupress-blob-content" id="sp-step-1-d">
 										<p><?php esc_html_e( 'Start a checking of all security points with the One Click Scan button.', 'secupress' ); ?></p>
 									</div>
 								</div>
@@ -641,7 +641,7 @@ function __secupress_scanners() {
 										<i class="icon-autofix"></i>
 									</div>
 									<p class="secupress-blob-title"><?php esc_html_e( 'Auto-Fix', 'secupress' ) ?></p>
-									<div class="secupress-blob-content">
+									<div class="secupress-blob-content" id="sp-step-2-d">
 										<p><?php esc_html_e( 'Start to fix issues by selecting the ones you want to be automagically fixed.', 'secupress' ); ?></p>
 									</div>
 								</div>
@@ -652,7 +652,7 @@ function __secupress_scanners() {
 										<i class="icon-manuals"></i>
 									</div>
 									<p class="secupress-blob-title"><?php esc_html_e( 'Manual Operations', 'secupress' ) ?></p>
-									<div class="secupress-blob-content">
+									<div class="secupress-blob-content" id="sp-step-3-d">
 										<p><?php esc_html_e( 'Go further and take a look at points you have to fix thanks to specific operation.', 'secupress' ); ?></p>
 									</div>
 								</div>
@@ -663,7 +663,7 @@ function __secupress_scanners() {
 										<i class="icon-pad-check"></i>
 									</div>
 									<p class="secupress-blob-title"><?php _e('Resolutions Report', 'secupress'); ?></p>
-									<div class="secupress-blob-content">
+									<div class="secupress-blob-content" id="sp-step-4-d">
 										<p><?php esc_html_e( 'Get a report about the security of your website after those operations.', 'secupress' ); ?></p>
 									</div>
 								</div>
