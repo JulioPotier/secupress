@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @param (string) $submodule               The sub-module.
  * @param (array)  $incompatible_submodules An array of sub-modules to deactivate.
  *
- * @return (bool) True on success. False on failure.
+ * @return (bool) True on success. False on failure or if the submodule was already active.
  */
 function secupress_activate_submodule( $module, $submodule, $incompatible_submodules = array() ) {
 	$file_path = secupress_get_submodule_file_path( $module, $submodule );
@@ -22,44 +22,47 @@ function secupress_activate_submodule( $module, $submodule, $incompatible_submod
 	$submodule_slug = sanitize_key( $submodule );
 	$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
 	$active_plugins = is_array( $active_plugins ) ? $active_plugins : array();
+	$is_active      = secupress_in_array_deep( $submodule_slug, $active_plugins );
 
-	if ( secupress_in_array_deep( $submodule_slug, $active_plugins ) ) {
-		return false;
+	if ( ! $is_active ) {
+		// Activate the sub-module.
+		if ( ! empty( $incompatible_submodules ) ) {
+			secupress_deactivate_submodule( $module, $incompatible_submodules );
+
+			$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
+			$active_plugins = is_array( $active_plugins ) ? $active_plugins : array();
+		}
+
+		$active_plugins[ $module ]   = isset( $active_plugins[ $module ] ) ? $active_plugins[ $module ] : array();
+		$active_plugins[ $module ][] = $submodule_slug;
+
+		update_site_option( SECUPRESS_ACTIVE_SUBMODULES, $active_plugins );
+
+		require_once( $file_path );
+
+		secupress_add_module_notice( $module, $submodule_slug, 'activation' );
 	}
 
-	if ( ! empty( $incompatible_submodules ) ) {
-		secupress_deactivate_submodule( $module, $incompatible_submodules );
-
-		$active_plugins = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
-		$active_plugins = is_array( $active_plugins ) ? $active_plugins : array();
-	}
-
-	$active_plugins[ $module ]   = isset( $active_plugins[ $module ] ) ? $active_plugins[ $module ] : array();
-	$active_plugins[ $module ][] = $submodule_slug;
-
-	update_site_option( SECUPRESS_ACTIVE_SUBMODULES, $active_plugins );
-
-	require_once( $file_path );
-
-	secupress_add_module_notice( $module, $submodule_slug, 'activation' );
-
 	/**
-	 * Fires once a sub-module is activated.
-	 *
-	 * @since 1.0
-	 */
-	do_action( 'secupress.modules.activate_submodule_' . $submodule_slug );
-
-	/**
-	 * Fires once any sub-module is activated.
+	 * Fires once a sub-module is activated, even if it was already active.
 	 *
 	 * @since 1.0
 	 *
-	 * @param (string) $submodule_slug The submodule slug.
+	 * @param (bool) $is_active True if the sub-module was already active.
 	 */
-	do_action( 'secupress.modules.activate_submodule', $submodule_slug );
+	do_action( 'secupress.modules.activate_submodule_' . $submodule_slug, $is_active );
 
-	return true;
+	/**
+	 * Fires once any sub-module is activated, even if it was already active.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $submodule_slug The sub-module slug.
+	 * @param (bool)   $is_active True if the sub-module was already active.
+	 */
+	do_action( 'secupress.modules.activate_submodule', $submodule_slug, $is_active );
+
+	return ! $is_active;
 }
 
 
@@ -83,45 +86,45 @@ function secupress_deactivate_submodule( $module, $submodules, $args = array() )
 
 	foreach ( $submodules as $submodule ) {
 		$submodule_slug = sanitize_key( $submodule );
+		$is_inactive    = empty( $active_plugins[ $module ] ) || ! secupress_in_array_deep( $submodule_slug, $active_plugins );
 
-		if ( ! isset( $active_plugins[ $module ] ) || ! secupress_in_array_deep( $submodule_slug, $active_plugins ) ) {
-			continue;
+		if ( ! $is_inactive ) {
+			// Deactivate the sub-module.
+			$key = array_search( $submodule_slug, $active_plugins[ $module ] );
+
+			if ( false !== $key ) {
+				unset( $active_plugins[ $module ][ $key ] );
+			}
+
+			if ( ! $active_plugins[ $module ] ) {
+				unset( $active_plugins[ $module ] );
+			}
+
+			update_site_option( SECUPRESS_ACTIVE_SUBMODULES, $active_plugins );
+
+			secupress_add_module_notice( $module, $submodule_slug, 'deactivation' );
 		}
-
-		$key = array_search( $submodule_slug, $active_plugins[ $module ] );
-
-		if ( false === $key ) {
-			continue;
-		}
-
-		unset( $active_plugins[ $module ][ $key ] );
-
-		if ( ! $active_plugins[ $module ] ) {
-			unset( $active_plugins[ $module ] );
-		}
-
-		update_site_option( SECUPRESS_ACTIVE_SUBMODULES, $active_plugins );
-
-		secupress_add_module_notice( $module, $submodule_slug, 'deactivation' );
 
 		/**
 		 * Fires once a sub-module is deactivated.
 		 *
 		 * @since 1.0
 		 *
-		 * @param (array) $args Some arguments.
+		 * @param (array) $args        Some arguments.
+		 * @param (bool)  $is_inactive True if the sub-module was already inactive.
 		 */
-		do_action( 'secupress.modules.deactivate_submodule_' . $submodule_slug, $args );
+		do_action( 'secupress.modules.deactivate_submodule_' . $submodule_slug, $args, $is_inactive );
 
 		/**
 		 * Fires once any sub-module is deactivated.
 		 *
 		 * @since 1.0
 		 *
-		 * @param (string) $submodule_slug The submodule slug.
+		 * @param (string) $submodule_slug The sub-module slug.
 		 * @param (array)  $args           Some arguments.
+		 * @param (bool)   $is_inactive    True if the sub-module was already inactive.
 		 */
-		do_action( 'secupress.modules.deactivate_submodule', $submodule_slug, $args );
+		do_action( 'secupress.modules.deactivate_submodule', $submodule_slug, $args, $is_inactive );
 	}
 }
 
