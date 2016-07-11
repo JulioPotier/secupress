@@ -817,6 +817,7 @@ label.secupress-setting-row-title {
 	max-width: 100%;
 	width: 1078px; /* 1240 */
 	padding-top: 20px;
+	overflow: hidden;
 }
 .toplevel_page_secupress_scanners .secupress-notice,
 .toplevel_page_secupress_scanners .notice,

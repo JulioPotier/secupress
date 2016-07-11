@@ -369,6 +369,12 @@ function __secupress_scanners() {
 							</p>
 						</div>
 					</div>
+					<?php if ( ! $reports ) { ?>
+					<div class="secupress-col-text">
+						<p class="secupress-text-medium"><?php esc_html_e( 'First scan', 'secupress' ); ?></p>
+						<p><?php  esc_html_e( 'Here’s how it’s going to work', 'secupress' ); ?></p>
+					</div>
+					<?php } ?>
 					<p class="secupress-label-with-icon secupress-last-scan-result">
 						<i class="icon-secupress" aria-hidden="true"></i>
 						<span class="secupress-upper"><?php _e( 'Result of the scan', 'secupress' ); ?></span>
@@ -384,66 +390,6 @@ function __secupress_scanners() {
 							</span>
 						</a>
 					</p>
-
-					<div id="secupress-more-info" class="<?php echo $reports ? ' hide-if-js' : ' secupress-open'; ?>">
-						<div class="secupress-flex secupress-flex-top">
-							<div class="secupress-col-1-4">
-								<div class="secupress-blob">
-									<div class="secupress-blob-icon" aria-hidden="true">
-										<i class="icon-radar"></i>
-									</div>
-									<p class="secupress-blob-title"><?php esc_html_e('Security Report', 'secupress'); ?></p>
-									<div class="secupress-blob-content">
-										<p><?php esc_html_e( 'Start a checking of all security points with the One Click Scan button.', 'secupress' ); ?></p>
-									</div>
-								</div>
-							</div>
-							<div class="secupress-col-1-4">
-								<div class="secupress-blob">
-									<div class="secupress-blob-icon" aria-hidden="true">
-										<i class="icon-autofix"></i>
-									</div>
-									<p class="secupress-blob-title"><?php esc_html_e( 'Auto-Fix', 'secupress' ) ?></p>
-									<div class="secupress-blob-content">
-										<p><?php esc_html_e( 'Start to fix issues by selecting the ones you want to be automagically fixed.', 'secupress' ); ?></p>
-									</div>
-								</div>
-							</div>
-							<div class="secupress-col-1-4">
-								<div class="secupress-blob">
-									<div class="secupress-blob-icon" aria-hidden="true">
-										<i class="icon-manuals"></i>
-									</div>
-									<p class="secupress-blob-title"><?php esc_html_e( 'Manual Operations', 'secupress' ) ?></p>
-									<div class="secupress-blob-content">
-										<p><?php esc_html_e( 'Go further and take a look at points you have to fix thanks to specific operation.', 'secupress' ); ?></p>
-									</div>
-								</div>
-							</div>
-							<div class="secupress-col-1-4">
-								<div class="secupress-blob">
-									<div class="secupress-blob-icon" aria-hidden="true">
-										<i class="icon-pad-check"></i>
-									</div>
-									<p class="secupress-blob-title"><?php _e('Resolutions Report', 'secupress'); ?></p>
-									<div class="secupress-blob-content">
-										<p><?php esc_html_e( 'Get a report about the security of your website after those operations.', 'secupress' ); ?></p>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<p class="secupress-text-end secupress-m0">
-							<a href="#secupress-more-info" class="secupress-link-icon secupress-icon-right secupress-close-moreinfo<?php echo $reports ? '' : ' dont-trigger-hide'; ?>" data-trigger="slideup" data-target="secupress-more-info">
-								<span class="icon" aria-hidden="true">
-									<i class="icon-cross"></i>
-								</span>
-								<span class="text">
-									<?php esc_html_e( 'I\'ve got it!', 'secupress' ); ?>
-								</span>
-							</a>
-						</p>
-					</div>
 				</div>
 
 				<div class="secupress-scan-header-main secupress-flex">
@@ -616,9 +562,22 @@ function __secupress_scanners() {
 					</div>
 				</div><!-- .secupress-scan-header-main -->
 
-				<div class="secupress-before-caroupoivre">
-					<h3><?php esc_html_e( 'To begin, start your first scan', 'secupress' ); ?></h3>
-					<p><?php esc_html_e( 'It\'s easy, just click on the button below.', 'secupress' ); ?></p>
+				<?php if ( ! $reports ) { ?>
+				<div class="secupress-introduce-first-scan secupress-text-center">
+					<h3>
+						<i class="icon-secupress" aria-hidden="true"></i><br>
+						<span class="secupress-init-title"><?php esc_html_e( 'Click to launch first scan', 'secupress' ); ?></span>
+						<span aria-hidden="true" class="secupress-second-title"><?php esc_html_e( 'Currently scanning', 'secupress' ); ?></span>
+						<span class="secupress-scanned-items">
+							<?php
+							printf(
+								__( '%1$s&nbsp;/&nbsp;%2$s points' , 'secupress' ),
+								'<span class="secupress-scanned-current">0</span>',
+								'<span class="secupress-scanned-total">1</span>'
+							);
+							?>
+						</span>
+					</h3>
 
 					<p class="secupress-start-one-click-scan">
 						<button class="secupress-button secupress-button-primary button-secupress-scan" type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ); ?>">
@@ -626,54 +585,35 @@ function __secupress_scanners() {
 								<i class="icon-radar"></i>
 							</span>
 							<span class="text">
-								<?php esc_html_e( 'One Click Scan', 'secupress' ); ?>
+								<?php esc_html_e( 'Scan my website', 'secupress' ); ?>
 							</span>
+							
+							<span class="secupress-progressbar-val">
+								<span class="secupress-progress-val-txt">0 %</span>
+							</span>
+							
 						</button>
 					</p>
 				</div>
-				<div class="secupress-one-click-scanning-slideshow hidden">
-					<div class="secupress-caroupoivre">
-						<div id="secupress-slide1" class="secupress-slide"></div>
-
-						<?php if ( ! secupress_is_pro() ) : // Trad fr + wording ////. ?>
-						<div id="secupress-slide2" class="secupress-slide secupress-slide-pro">
-							<h3 class="slide-title"><?php _e( 'Passez à la version pro', 'secupress' ); ?></h3>
-							<p class="slide-text"><?php _e( 'Support premium, accès à tous les modules, lorem ipsum.', 'secupress' ); ?></p>
-						</div>
-						<?php else : ?>
-						<div id="secupress-slide2" class="secupress-slide secupress-slide-pro">
-							<h3 class="slide-title"><?php _e( 'Programmez vos analyses de sécurité', 'secupress' ); ?></h3>
-							<p class="slide-text"><?php _e( 'L\'analyse des points reste à jour, sans vous connectez au back office avec le scan automatique.', 'secupress' ); ?></p>
-						</div>
-						<?php endif; ?>
-
-						<!-- Available slides, random picked in JS -->
-						<div class="secupress-slide secupress-slide-1">
-							<h3 class="slide-title"><?php _e( 'Une gamme de modules à votre service', 'secupress' ); ?></h3>
-							<p><?php _e( 'Allez plus loin dans la sécurisation de votre site avec nos modules et activez les fonctionnalités complémentaires.', 'secupress' ); ?></p>
-						</div>
-						<div class="secupress-slide secupress-slide-2">
-							<h3 class="slide-title"><?php _e( 'Sécurisez votre site WordPress simplement', 'secupress' ); ?></h3>
-							<p class="slide-text"><?php _e( 'En un écran, visualisez les points de sécurité Bons ou Mauvais et utilisez le bouton <strong>One Click Fix</strong> pour les corriger rapidement.', 'secupress' ); ?></p>
-						</div>
-					</div><!-- .secupress-caroupoivre -->
-
-					<div class="secupress-progressbar">
-						<div class="secupress-progressbar-val">
-							<span class="secupress-progress-val-txt">0 %</span>
-						</div>
-					</div>
-				</div><!-- .secupress-one-click-scanning-slideshow -->
+				<?php } ?>
 
 				<div class="secupress-scanner-steps">
+					<?php
+					/**
+					 * SecuPress Steps work this way:
+					 * - current step with li.secupress-current
+					 * - passed step(s) with li.secupress-past
+					 * - that's all
+					 */
+					?>
 					<ol class="secupress-flex secupress-counter">
-						<li class="secupress-col-1-3 secupress-counter-put secupress-flex secupress-past">
+						<li class="secupress-col-1-3 secupress-counter-put secupress-flex secupress-current">
 							<span class="secupress-step-name"><?php esc_html_e('Security Report', 'secupress'); ?></span>
 						</li>
-						<li class="secupress-col-1-3 secupress-counter-put secupress-flex secupress-past">
+						<li class="secupress-col-1-3 secupress-counter-put secupress-flex">
 							<span class="secupress-step-name"><?php esc_html_e( 'Auto-Fix', 'secupress' ) ?></span>
 						</li>
-						<li class="secupress-col-1-3 secupress-counter-put secupress-flex secupress-current">
+						<li class="secupress-col-1-3 secupress-counter-put secupress-flex">
 							<span class="secupress-step-name"><?php esc_html_e( 'Manual Operations', 'secupress' ) ?></span>
 							<span class="secupress-step-name alt" aria-hidden="true"><?php _e('Resolutions Report', 'secupress'); ?></span>
 						</li>
@@ -681,11 +621,71 @@ function __secupress_scanners() {
 							<span class="secupress-step-name"><?php _e('Resolutions Report', 'secupress'); ?></span>
 						</li>
 					</ol>
-				</div>
+
+					<div id="secupress-more-info" class="<?php echo $reports ? ' hide-if-js' : ' secupress-open'; ?>">
+						<div class="secupress-flex secupress-flex-top">
+							<div class="secupress-col-1-4">
+								<div class="secupress-blob">
+									<div class="secupress-blob-icon" aria-hidden="true">
+										<i class="icon-radar"></i>
+									</div>
+									<p class="secupress-blob-title"><?php esc_html_e('Security Report', 'secupress'); ?></p>
+									<div class="secupress-blob-content">
+										<p><?php esc_html_e( 'Start a checking of all security points with the One Click Scan button.', 'secupress' ); ?></p>
+									</div>
+								</div>
+							</div>
+							<div class="secupress-col-1-4">
+								<div class="secupress-blob">
+									<div class="secupress-blob-icon" aria-hidden="true">
+										<i class="icon-autofix"></i>
+									</div>
+									<p class="secupress-blob-title"><?php esc_html_e( 'Auto-Fix', 'secupress' ) ?></p>
+									<div class="secupress-blob-content">
+										<p><?php esc_html_e( 'Start to fix issues by selecting the ones you want to be automagically fixed.', 'secupress' ); ?></p>
+									</div>
+								</div>
+							</div>
+							<div class="secupress-col-1-4">
+								<div class="secupress-blob">
+									<div class="secupress-blob-icon" aria-hidden="true">
+										<i class="icon-manuals"></i>
+									</div>
+									<p class="secupress-blob-title"><?php esc_html_e( 'Manual Operations', 'secupress' ) ?></p>
+									<div class="secupress-blob-content">
+										<p><?php esc_html_e( 'Go further and take a look at points you have to fix thanks to specific operation.', 'secupress' ); ?></p>
+									</div>
+								</div>
+							</div>
+							<div class="secupress-col-1-4">
+								<div class="secupress-blob">
+									<div class="secupress-blob-icon" aria-hidden="true">
+										<i class="icon-pad-check"></i>
+									</div>
+									<p class="secupress-blob-title"><?php _e('Resolutions Report', 'secupress'); ?></p>
+									<div class="secupress-blob-content">
+										<p><?php esc_html_e( 'Get a report about the security of your website after those operations.', 'secupress' ); ?></p>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<p class="secupress-text-end secupress-m0">
+							<a href="#secupress-more-info" class="secupress-link-icon secupress-icon-right secupress-close-moreinfo<?php echo $reports ? '' : ' dont-trigger-hide'; ?>" data-trigger="slideup" data-target="secupress-more-info">
+								<span class="icon" aria-hidden="true">
+									<i class="icon-cross"></i>
+								</span>
+								<span class="text">
+									<?php esc_html_e( 'I\'ve got it!', 'secupress' ); ?>
+								</span>
+							</a>
+						</p>
+					</div><!-- #secupress-more-info -->
+				</div><!-- .secupress-scanner-steps -->
 
 			</div><!-- .secupress-section-dark -->
 
-			<div class="secupress-section-gray secupress-bordered">
+			<div class="secupress-scanner-main-content secupress-section-gray secupress-bordered">
 				<?php secupress_scanners_template(); ?>
 			</div>
 
