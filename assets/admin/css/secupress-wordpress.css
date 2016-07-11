@@ -328,6 +328,21 @@
 	vertical-align: -0.16em;
 }
 
+/* Sepcific icon (i) */
+.icon-i:before {
+	content: "i";
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.45em;
+	height: 1.45em;
+	border: 1px solid #000;
+	font-family: "Open Sans",Helvetica,Arial,sans-serif;
+	font-size: 0.85em;
+	font-weight: 500;
+	font-style: italic;
+	border-radius: 50%;
+}
 
 /* Rounded icon */
 i.rounded {
@@ -560,11 +575,11 @@ i.rounded {
 	background: #CB234F;
 }
 .secupress-button-tertiary.secupress-button-tertiary {
-	background: #F7AB13;
+	background: #F19B12;
 }
 .secupress-button-tertiary.secupress-button-tertiary:hover,
 .secupress-button-tertiary.secupress-button-tertiary:focus {
-	background: #F1C40F;
+	background: #F7AB13;
 }
 
 /* Buttons sizes */
