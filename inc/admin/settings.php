@@ -674,37 +674,6 @@ function __secupress_scanners() {
 					</div>
 				</div><!-- .secupress-one-click-scanning-slideshow -->
 
-				<ul id="secupress-type-filters" class="secupress-big-tabs secupress-tabs secupress-flex secupress-text-start hide-if-no-js" role="tablist">
-					<?php
-					if ( $counts['notscannedyet'] ) {
-						$tabs        = array( 'notscannedyet' => esc_html__( 'New', 'secupress' ) );
-						$default_tab = 'notscannedyet';
-					} else {
-						$tabs        = array();
-						$default_tab = 'bad';
-					}
-
-					if ( ! is_multisite() || is_network_admin() ) {
-						$tabs['hasaction'] = esc_html__( 'Action needed', 'secupress' );
-					}
-
-					$tabs = array_merge( $tabs, array(
-						'bad'     => esc_html__( 'Bad', 'secupress' ),
-						'warning' => esc_html__( 'Warning', 'secupress' ),
-						'good'    => esc_html__( 'Good', 'secupress' ),
-					) );
-
-					foreach ( $tabs as $slug => $name ) :
-						$is_hidden = 'hasaction' === $slug && ! $counts[ $slug ];
-						?>
-						<li class="secupress-big-tab-<?php echo $slug; ?><?php echo $is_hidden ? ' hidden' : ''; ?>"<?php echo $is_hidden ? ' aria-hidden="true"' : ''; ?> role="presentation">
-							<a href="#tab-<?php echo $slug; ?>" aria-controls="tab-<?php echo $slug; ?>" role="tab"<?php echo $default_tab === $slug ? ' class="secupress-current"' : ''; ?> data-type="<?php echo $slug; ?>">
-								<span class="secupress-tab-title"><?php echo $name; ?></span>
-								<span class="secupress-tab-subtitle"><?php printf( _n( '%d issue', '%d issues', $counts[ $slug ], 'secupress' ), $counts[ $slug ] ); ?></span>
-							</a>
-						</li>
-					<?php endforeach; ?>
-				</ul>
 			</div><!-- .secupress-section-dark -->
 
 			<?php ////
@@ -890,8 +859,9 @@ function secupress_scanners_template() {
 					$this_prio_bad_scans     = array_intersect_key( $class_name_parts, $bad_scans );
 					$this_prio_warning_scans = array_intersect_key( $class_name_parts, $warning_scans );
 					$this_prio_good_scans    = array_intersect_key( $class_name_parts, $good_scans );
-					$class_name_parts        = array_diff_key( $class_name_parts, $this_prio_bad_scans, $this_prio_warning_scans, $this_prio_good_scans );
-					$class_name_parts        = array_merge( $this_prio_bad_scans, $this_prio_warning_scans, $class_name_parts, $this_prio_good_scans );
+					$this_new_scans          = array_diff_key( $class_name_parts, $this_prio_bad_scans, $this_prio_warning_scans, $this_prio_good_scans );
+					// $class_name_parts        = array_merge( $this_prio_bad_scans, $this_prio_warning_scans, $class_name_parts, $this_prio_good_scans );
+					$class_name_parts        = array_merge( $this_prio_good_scans, $this_prio_warning_scans, $this_prio_bad_scans );
 					unset( $this_prio_bad_scans, $this_prio_warning_scans, $this_prio_good_scans );
 				} else {
 					foreach ( $class_name_parts as $option_name => $class_name_part ) {

@@ -144,13 +144,6 @@ jQuery( document ).ready( function( $ ) {
 					customTooltips:        function() {} //... but remove tooltips.
 				} );
 
-				// Trigger a filter action on Chart Segment click.
-				chartEl.onclick = function( e ) {
-					var activePoints = secupressChart[ elID ].getSegmentsAtEvent( e );
-					if ( activePoints[0] ) {
-						$( "#secupress-type-filters" ).find( ".secupress-big-tab-" + activePoints[0].status ).find( "a" ).trigger( "click.secupress" );
-					}
-				};
 			} );
 		} else {
 			// Update existing charts.
@@ -360,46 +353,6 @@ jQuery( document ).ready( function( $ ) {
 
 
 	// !Other UI. ==================================================================================
-	// Filter rows (Status bad/good/etc).
-	( function( w, d, $, undefined ) {
-		$( "#secupress-type-filters" ).find( "a" ).on( "click.secupress keyup", function( e ) {
-			var $this, priority, current = "active";
-
-			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
-				return false;
-			}
-
-			$this = $( this );
-
-			if ( $this.hasClass( current ) ) {
-				return false;
-			}
-
-			priority = $this.data( "type" );
-
-			$this.closest( "ul" ).find( "a" ).removeClass( current );
-			$this.addClass( current );
-
-			$( ".status-all" ).addClass( "hidden" ).attr( "aria-hidden", true ).filter( ".status-" + priority ).removeClass( "hidden" ).attr( "aria-hidden", false );
-		} ).filter( ".secupress-current" ).trigger( "click.secupress" );
-	} )( window, document, $ );
-
-
-	// Filter Rows (Priority).
-	( function( w, d, $, undefined ) {
-		$( "#secupress-priority-filters" ).find( "input" ).on( "change.secupress", function( e ) {
-			var $this    = $( this ),
-				priority = $this.attr( "name" );
-
-			if ( $this.is( ":checked" ) ) {
-				$( ".secupress-table-prio-" + priority ).spFadeIn();
-			} else {
-				$( ".secupress-table-prio-" + priority ).spHide();
-			}
-			return false;
-		} );
-	} )( window, document, $ );
-
 
 	// Ask for support button (free).
 	( function( w, d, $, undefined ) {
