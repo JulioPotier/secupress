@@ -29,6 +29,35 @@ jQuery( document ).ready( function( $ ) {
 		secupressChartEls.push( document.getElementById( 'status_chart_mini' ) );
 	}
 
+	// !Get scan button fixed width at first load
+	( function( w, d, $, undefined ) {
+		
+		var $button = $( '.secupress-start-one-click-scan' ).find( '.button-secupress-scan' ),
+			$text   = $button.find('.secupress-progress-val-txt');
+			$val    = $button.find('.secupress-progressbar-val');
+
+		$button.css( 'width', $button.outerWidth() + 5 );
+
+		
+		// animation testing
+		
+		/*var temp = setInterval(function(){
+			$button.attr( 'aria-disabled', 'true' );
+			$('.secupress-introduce-first-scan').addClass('secupress-scanning');
+			clearInterval( temp );
+		}, 1000);
+		var count = 0;
+		var temp2 = setInterval(function(){
+			count++;
+			$text.text( count + ' %' );
+			$val.css( 'width', count + '%' );
+			if ( count >= 100 ) {
+				clearInterval( temp2 );
+			}
+		}, 175);*/
+
+	} )( window, document, jQuery );
+
 
 	// !Big network: set some data. ================================================================
 	( function( w, d, $, undefined ) {
@@ -158,6 +187,11 @@ jQuery( document ).ready( function( $ ) {
 
 				secupressChart[ elID ].update();
 			} );
+		}
+
+		if ( ! SecuPressi18nChart.notscannedyet.value ) {
+			// Remove the legend for "Not scanned yet".
+			$( ".secupress-chart-legend .status-notscannedyet" ).remove();
 		}
 	}
 
@@ -451,40 +485,17 @@ jQuery( document ).ready( function( $ ) {
 
 		// Runs the Progressbar, 10 sec min.
 		function secupressRunProgressBar( $button ) {
-			var $sp_scanning = $( '.secupress-one-click-scanning-slideshow' ),
-				$sp_poivre   = $( '.secupress-caroupoivre' ),
-				$pagination  = $( '.secupress-caroupoivre-pagination' ).find( '.secupress-dot' ),
-				isFirst      = $button.closest( '.secupress-not-scanned-yet' ).length,
-				$random_slide, secupressProgressTimer;
 
-			// If first of the first one click scan.
-			if ( isFirst ) {
-				// Information about first scan & show progress + slides.
-				$( '.secupress-before-caroupoivre' ).fadeOut( 200, function() {
-					$sp_scanning.fadeIn( 200 );
-				} );
-			} else {
-				$( '.secupress-tabs-contents' ).hide();
-				$sp_scanning.fadeIn( 200 );
-			}
+			var $sp_1st_scan = $( '.secupress-introduce-first-scan' ),
+				isFirstScan  = $button.closest( '.secupress-not-scanned-yet' ).length,
+				$bar_val     = $button.find( '.secupress-progressbar-val' ),
+				$text_val    = $bar_val.find( '.secupress-progress-val-txt' ),
+				secupressProgressTimer;
 
-			$sp_poivre.find( '.secupress-slide' ).hide();
-			$random_slide = $( '.secupress-slide-' + Math.floor( ( Math.random() * 2 ) + 1 ) ).html();
-			$sp_poivre.find( '#secupress-slide1' ).html( $random_slide );
+			$sp_1st_scan.addClass( 'secupress-scanning' );
 
 			secupressProgressTimer = setInterval( function() {
 				secupressOneClickScanProgress++;
-
-				if ( secupressOneClickScanProgress >= 55 ) {
-					if ( ! $sp_poivre.find( '#secupress-slide2' ).is( ":visible" ) ) {
-						$sp_poivre.find( '#secupress-slide1' ).hide();
-						$sp_poivre.find( '#secupress-slide2' ).fadeIn( 275 );
-						$pagination.removeClass( 'current' ).eq( 1 ).addClass( 'current' );
-					}
-				} else if ( secupressOneClickScanProgress >= 0 ) {
-					$sp_poivre.find( '#secupress-slide1' ).fadeIn( 275 );
-					$pagination.removeClass( 'current' ).eq( 0 ).addClass( 'current' );
-				}
 
 				// We are between 9 & 10s but SP still doing scan, stay at 90%.
 				// Windows counting style!
@@ -495,34 +506,34 @@ jQuery( document ).ready( function( $ ) {
 
 				secupressOneClickScanProgress = Math.min( secupressOneClickScanProgress, 100 );
 
-				$( '.secupress-progressbar' )
-					.find( '.secupress-progressbar-val' ).css( 'width', secupressOneClickScanProgress + '%' )
-					.find( '.secupress-progress-val-txt' ).text( secupressOneClickScanProgress + ' %' );
+				$bar_val.css( 'width', secupressOneClickScanProgress + '%' );
+				$text_val.text( secupressOneClickScanProgress + ' %' );
 
 				if ( secupressOneClickScanProgress >= 100 ) {
 
 					secupressOneClickScanProgress = 0;
 					clearInterval( secupressProgressTimer );
 
-					// makes slideshow desappear
-					$sp_scanning.fadeOut( 200, function() {
+					// makes first scan part disappear
+					$sp_1st_scan.slideUp( 200, function() {
 
+						// hide 4 steps help
+						$( '.secupress-open-moreinfo' ).removeClass( 'secupress-activated' );
+						$( '#secupress-more-info' ).removeClass( 'secupress-open' ).hide();
+
+						// TODO : check if note is attributed before showing this content
 						// Show other element (list of scans, tabs, tabs contents).
-						$( '.secupress-scanners-header.secupress-not-scanned-yet' ).removeClass( 'secupress-not-scanned-yet' );
-
-						// Explicitly show tabs content in case of other One Click Scans.
-						$( '.secupress-tabs-contents' ).show();
-
-						// Click on first tab to show results, just in case…
-						$( '#secupress-l-scan' ).trigger( 'click.secupress' );
+						$( '.secupress-scan-header-main' ).css('display', 'flex').hide().slideDown( 200, function() {
+							$( '.secupress-scanners-header.secupress-not-scanned-yet' ).removeClass( 'secupress-not-scanned-yet' );
+						} );
 
 						// draw the chart
-						if ( isFirst ) {
+						if ( isFirstScan ) {
 							secupressDrawCharts();
 						}
 					} );
 				}
-			}, 100 );
+			}, 175 );
 		}
 
 
