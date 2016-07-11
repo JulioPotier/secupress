@@ -18,8 +18,7 @@ var SecuPress = {
 
 jQuery( document ).ready( function( $ ) {
 	var secupressChart = {},
-		secupressChartEls = [],
-		secupressOneClickScanProgress = 0;
+		secupressChartEls = [];
 
 	if ( document.getElementById( 'status_chart' ) ) {
 		secupressChartEls.push( document.getElementById( 'status_chart' ) );
@@ -27,6 +26,13 @@ jQuery( document ).ready( function( $ ) {
 
 	if ( document.getElementById( 'status_chart_mini' ) ) {
 		secupressChartEls.push( document.getElementById( 'status_chart_mini' ) );
+	}
+
+	// a11y function
+	function secupressCouldSay( say ) {
+		if ( wp.a11y && wp.a11y.speak && undefined !== say && say ) {
+			wp.a11y.speak( say );
+		}
 	}
 
 	// !Get scan button fixed width at first load
@@ -473,33 +479,30 @@ jQuery( document ).ready( function( $ ) {
 				isFirstScan  = $button.closest( '.secupress-not-scanned-yet' ).length,
 				$bar_val     = $button.find( '.secupress-progressbar-val' ),
 				$text_val    = $bar_val.find( '.secupress-progress-val-txt' ),
+				init_percent = 2,
 				secupressProgressTimer;
 
 			$sp_1st_scan.addClass( 'secupress-scanning' );
 			$( '.secupress-scanned-total' ).text( secupressScans.total );
 
 			secupressProgressTimer = setInterval( function() {
-				secupressOneClickScanProgress++;
 
-				// We are between 9 & 10s but SP still doing scan, stay at 90%.
-				// Windows counting style!
-				if ( ! $.isEmptyObject( secupressScans.doingScan ) && secupressOneClickScanProgress > 90 && secupressOneClickScanProgress < 100 ) {
-					secupressOneClickScanProgress = 90;
-					return;
-				}
+				var n_doing = Object.keys( secupressScans.doingScan ).length,
+					n_done  = secupressScans.total - n_doing,
+					percent = Math.max( n_done / secupressScans.total * 100, init_percent );
 
-				secupressOneClickScanProgress = Math.min( secupressOneClickScanProgress, 100 );
+				percent = Math.round( Math.min( percent, 100 ) );
 
 				// Progress bar update
-				$bar_val.css( 'width', secupressOneClickScanProgress + '%' );
-				$text_val.text( secupressOneClickScanProgress + ' %' );
+				$bar_val.css( 'width', percent + '%' );
+				$text_val.text( percent + ' %' );
 
 				// Number N / T points update
-				$( '.secupress-scanned-current' ).text( secupressScans.total - Object.keys( secupressScans.doingScan ).length );
+				$( '.secupress-scanned-current' ).text( n_done );
 
-				if ( secupressOneClickScanProgress >= 100 ) {
+				if ( percent >= 100 ) {
 
-					secupressOneClickScanProgress = 0;
+					secupressCouldSay( SecuPressi18nScanner.a11y.scanEnded );
 					clearInterval( secupressProgressTimer );
 
 					// makes first scan part disappear
@@ -509,7 +512,7 @@ jQuery( document ).ready( function( $ ) {
 						$( '.secupress-open-moreinfo' ).removeClass( 'secupress-activated' );
 						$( '#secupress-more-info' ).removeClass( 'secupress-open' ).hide();
 
-						// TODO : check if note is attributed before showing this content
+						//// TODO : check if note is attributed before showing this content
 						// Show other element (list of scans, tabs, tabs contents).
 						$( '.secupress-scan-header-main' ).css('display', 'flex').hide().slideDown( 200, function() {
 							$( '.secupress-scanners-header.secupress-not-scanned-yet' ).removeClass( 'secupress-not-scanned-yet' );
@@ -521,7 +524,7 @@ jQuery( document ).ready( function( $ ) {
 						}
 					} );
 				}
-			}, 175 );
+			}, 500 );
 		}
 
 
