@@ -35,9 +35,9 @@ function secupress_write_htaccess( $marker, $rules = false, $relative_path = '' 
  *
  * @since 1.0
  *
- * @param string $function This suffix can be added.
+ * @param (string) $function This suffix can be added.
  *
- * @return string $marker Rules that will be printed.
+ * @return (string) $marker Rules that will be printed.
  */
 function secupress_get_htaccess_marker( $function ) {
 	$_function = 'secupress_get_htaccess_' . $function;
