@@ -33,7 +33,7 @@ jQuery( document ).ready( function( $ ) {
 	( function( w, d, $, undefined ) {
 		
 		var $button = $( '.secupress-start-one-click-scan' ).find( '.button-secupress-scan' ),
-			$text   = $button.find('.secupress-progress-val-txt');
+			$text   = $button.find('.secupress-progress-val-txt'),
 			$val    = $button.find('.secupress-progressbar-val');
 
 		$button.css( 'width', $button.outerWidth() + 5 );
