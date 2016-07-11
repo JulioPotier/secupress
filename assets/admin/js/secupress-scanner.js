@@ -457,32 +457,6 @@ jQuery( document ).ready( function( $ ) {
 			manualFix:    {}
 		};
 
-
-		// Complete the slideshow
-		function secupressAddCaroupoivrePagination() {
-			$( '.secupress-caroupoivre' ).each( function() {
-				var $this = $(this),
-					i, nb_slides, pagination;
-
-				if ( $this.next( '.secupress-caroupoivre-pagination' ).length !== 0 ) {
-					return true;
-				}
-
-				nb_slides  = $this.find( '.secupress-slide[id]' ).length;
-				pagination =  '<div class="secupress-caroupoivre-pagination">';
-
-				for ( i = 0; i < nb_slides; i++ ) {
-					pagination += '<span class="secupress-dot"></span>';
-				}
-
-				pagination += '</div>';
-				$this.after( pagination );
-			} );
-		}
-
-		secupressAddCaroupoivrePagination();
-
-
 		// Runs the Progressbar, 10 sec min.
 		function secupressRunProgressBar( $button ) {
 
