@@ -412,7 +412,7 @@ function secupress_remove_module_rules_or_notice( $marker, $module_name ) {
 
 /**
  * Add (rewrite) rules to the `.htaccess`/`web.config` file.
- * An error notice is displayed on nginx or not supported systems, or if the file is not writable. It will also deactivate the submodule silently if there is an error.
+ * An error notice is displayed on nginx or not supported systems, or if the file is not writable.
  * This is usually used on the module activation.
  *
  * @since 1.0
@@ -421,24 +421,20 @@ function secupress_remove_module_rules_or_notice( $marker, $module_name ) {
  *
  * @return (bool) True if the file has been edited.
  */
-function secupress_add_module_rules_or_notice_and_deactivate( $args ) {
+function secupress_add_module_rules_or_notice( $args ) {
 	global $is_apache, $is_nginx, $is_iis7;
 
 	$args = array_merge( array(
-		'rules'     => '',
-		'marker'    => '',
-		'iis_args'  => array(),
-		'module'    => '',
-		'submodule' => '',
-		'title'     => '', // Submodule name.
+		'rules'    => '',
+		'marker'   => '',
+		'iis_args' => array(),
+		'title'    => '', // Submodule name.
 	), $args );
 
-	$rules     = $args['rules'];
-	$marker    = $args['marker'];
-	$iis_args  = $args['iis_args'];
-	$module    = $args['module'];
-	$submodule = $args['submodule'];
-	$title     = $args['title'];
+	$rules    = $args['rules'];
+	$marker   = $args['marker'];
+	$iis_args = $args['iis_args'];
+	$title    = $args['title'];
 
 	// Apache.
 	if ( $is_apache ) {
@@ -454,8 +450,6 @@ function secupress_add_module_rules_or_notice_and_deactivate( $args ) {
 				"<pre># BEGIN SecuPress $marker\n$rules# END SecuPress</pre>"
 			);
 			add_settings_error( 'general', 'apache_manual_edit', $message, 'error' );
-
-			secupress_deactivate_submodule_silently( $module, $submodule );
 			return false;
 		}
 
@@ -497,8 +491,6 @@ function secupress_add_module_rules_or_notice_and_deactivate( $args ) {
 				);
 			}
 			add_settings_error( 'general', 'iis7_manual_edit', $message, 'error' );
-
-			secupress_deactivate_submodule_silently( $module, $submodule );
 			return false;
 		}
 
@@ -516,15 +508,13 @@ function secupress_add_module_rules_or_notice_and_deactivate( $args ) {
 			"<pre>$rules</pre>"
 		);
 		add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
-		return true;
+		return false;
 	}
 
 	// Server not supported.
 	$message  = sprintf( __( '%s: ', 'secupress' ), $title );
 	$message .= __( 'It seems your server does not use <i>Apache</i>, <i>Nginx</i>, nor <i>IIS7</i>. This module won\'t work.', 'secupress' );
 	add_settings_error( 'general', 'unknown_os', $message, 'error' );
-
-	secupress_deactivate_submodule_silently( $module, $submodule );
 	return false;
 }
 

@@ -38,12 +38,10 @@ function secupress_protect_readmes_activation() {
 		$rules = '';
 	}
 
-	secupress_add_module_rules_or_notice_and_deactivate( array(
-		'rules'     => $rules,
-		'marker'    => 'readme_discloses',
-		'module'    => 'discloses',
-		'submodule' => basename( __FILE__, '.php' ),
-		'title'     => __( 'Protect readme\'s', 'secupress' ),
+	secupress_add_module_rules_or_notice( array(
+		'rules'  => $rules,
+		'marker' => 'readme_discloses',
+		'title'  => __( 'Protect readme\'s', 'secupress' ),
 	) );
 }
 
