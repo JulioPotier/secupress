@@ -728,6 +728,18 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	}
 
 	/**
+	 * Return false, overwrite it if needed
+	 *
+	 * @since 1.0
+	 *
+	 * @return (bool)
+	 */
+	public function need_manual_fix() {
+		return false;
+	}
+
+
+	/**
 	 * Try to fix the flaw(s) after requiring user action.
 	 *
 	 * @since 1.0

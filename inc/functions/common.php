@@ -868,3 +868,24 @@ function secupress_modify_userid_for_nonces( $uid ) {
 function secupress_is_user( $user ) {
 	return is_a( $user, 'WP_User' ) && user_can( $user, 'exist' );
 }
+
+
+/**
+ * Will return the current scanner step number
+ *
+ * @since 1.0
+ * @author Julio Potier
+ *
+ * @return (integer)
+ */
+function secupress_get_scanner_pagination() {
+
+	if ( ! isset( $_GET['step'] ) || ! is_numeric( $_GET['step'] ) || absint( $_GET['step'] ) < 0 ) {
+		$step = 1;
+	} else {
+		$step = (int) $_GET['step'];
+	}
+
+	return $step;
+
+}
