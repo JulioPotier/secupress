@@ -672,6 +672,10 @@ span.secupress-get-pro-version {
 	padding-left: 52px;
 	vertical-align: middle;
 }
+.secupress-get-pro-version:before {
+	content: "\e907";
+	font-family: "secupress";
+}
 .secupress-get-pro-col p.secupress-get-pro:before,
 .secupress-cta-pro:before,
 .secupress-setting-content-col .secupress-get-pro-version:before {

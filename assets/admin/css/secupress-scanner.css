@@ -895,6 +895,9 @@ a + .secupress-row-actions {
 	background: #222831;
 	color: #FFF;
 }
+.secupress-group-new .secupress-sg-header {
+	background: #26B3A9;
+}
 .secupress-sg-header.secupress-flex {
 	align-items: initial;
 }
@@ -914,9 +917,16 @@ a + .secupress-row-actions {
 	font-size: 48px;
 	color: rgba(236, 240, 241, 0.2);
 }
+.secupress-group-new .secupress-sgh-name i {
+	bottom: -2px;
+	color: rgba(255, 255, 255, 0.2);
+}
 .secupress-sgh-title {
 	font-size: 16px;
 	color: #2BCDC1;
+}
+.secupress-group-new .secupress-sgh-title {
+	color: #FFF;
 }
 .secupress-sgh-actions button {
 	margin-left: 20px;
@@ -925,11 +935,23 @@ a + .secupress-row-actions {
 	color: #F39C12;
 	background: #393E46;
 }
+.secupress-group-new .secupress-sgh-actions button {
+	color: #FFF;
+	background: #2BCDC1;
+}
 .secupress-sgh-actions button i:before {
 	font-size: 22px;
 }
 .secupress-sgh-actions .text {
 	color: #FFF;
+}
+.secupress-group-new .secupress-sg-content {
+	border: 1px solid #2BCDC1;
+	border-top: 0;
+}
+.secupress-step-content-footer .secupress-get-pro-version {
+	display: block;
+	margin: 4px 0 0 4px;
 }
 
 /**
