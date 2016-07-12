@@ -10,10 +10,20 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
  */
 class SecuPress_Scan_Core_Update extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
-	const VERSION = '1.0';
+	/** Constants. ============================================================================== */
 
 	/**
-	 * The reference to *Singleton* instance of this class.
+	 * Class version.
+	 *
+	 * @var (string)
+	 */
+	const VERSION = '1.0';
+
+
+	/** Properties. ============================================================================= */
+
+	/**
+	 * The reference to the *Singleton* instance of this class.
 	 *
 	 * @var (object)
 	 */
@@ -24,7 +34,7 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements SecuPress_Sca
 	 *
 	 * @var (string)
 	 */
-	public    static $prio        = 'high';
+	public    static $prio = 'high';
 
 	/**
 	 * Tells if the fix must occur after all other scans and fixes, while no other scan/fix is running.
@@ -33,6 +43,8 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements SecuPress_Sca
 	 */
 	public    static $delayed_fix = true;
 
+
+	/** Public methods. ========================================================================= */
 
 	/**
 	 * Init.
@@ -43,7 +55,7 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements SecuPress_Sca
 		self::$type     = 'WordPress';
 		self::$title    = __( 'Check if your WordPress core is up to date.', 'secupress' );
 		self::$more     = __( 'It\'s very important to maintain your WordPress installation up to date. If you can not update for any reason, contact your hosting provider as soon as possible.', 'secupress' );
-		self::$more_fix = __( 'This will update your WordPress installation right now.', 'secupress' );
+		self::$more_fix = __( 'This will update your WordPress installation right away.', 'secupress' );
 	}
 
 
@@ -77,6 +89,8 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements SecuPress_Sca
 	}
 
 
+	/** Scan. =================================================================================== */
+
 	/**
 	 * Scan for flaw(s).
 	 *
@@ -109,6 +123,8 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements SecuPress_Sca
 	}
 
 
+	/** Fix. ==================================================================================== */
+
 	/**
 	 * Try to fix the flaw(s).
 	 *
@@ -117,7 +133,6 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements SecuPress_Sca
 	 * @return (array) The fix results.
 	 */
 	public function fix() {
-
 		ob_start();
 		@set_time_limit( 0 );
 
@@ -132,7 +147,7 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements SecuPress_Sca
 			$url       = 'update-core.php?action=do-core-upgrade';
 			$nonce     = 'upgrade-core';
 			$url_nonce = wp_nonce_url( $url, $nonce );
-			$update = find_core_update( $version, $locale );
+			$update    = find_core_update( $version, $locale );
 
 			if ( $update ) {
 				$allow_relaxed_file_ownership = isset( $update->new_files ) && ! $update->new_files;
@@ -154,14 +169,19 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements SecuPress_Sca
 		}
 
 		ob_end_clean();
+
 		if ( is_string( $result ) ) {
+
 			$this->add_fix_message( 1, array( $result ) );
+
 		} elseif ( false === $result ) {
+
 			$this->add_fix_message( 301 );
+
 		} else {
 			$errors = reset( $result->errors );
-			$code = isset( $errors['up_to_date'] ) ? 2 : 300;
-			$this->add_fix_message( 300, array( reset( $errors ) ) );
+			$code   = isset( $errors['up_to_date'] ) ? 2 : 300;
+			$this->add_fix_message( $code, array( reset( $errors ) ) );
 		}
 
 		return parent::fix();

@@ -83,12 +83,12 @@ $this->add_field( array(
 
 
 $this->add_field( array(
-	'title'        => __( 'Improve the Blacklist Comments from WordPress', 'secupress' ),
+	'title'        => __( 'Improve the WordPress\' comments blacklist', 'secupress' ),
 	'description'  => __( 'You can improve the list of bad words that will change some comment into a detected spam.', 'secupress' ),
 	'depends'      => $main_field_name,
 	'label_for'    => $this->get_field_name( 'better-blacklist-comment' ),
 	'type'         => 'checkbox',
-	'label'        => __( 'Yes, i want to use a better blacklist comments to detect spams', 'secupress' ),
+	'label'        => __( 'Yes, i want to use a better comments blacklist to detect spams', 'secupress' ),
 	'disabled'     => ! is_readable( SECUPRESS_INC_PATH . 'data/spam-blacklist.data' ),
 	'helpers' => array(
 		array(

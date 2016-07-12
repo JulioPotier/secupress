@@ -471,6 +471,9 @@ class SecuPress_Log {
 		 * First, `$this->message` must be set by the method extending this one.
 		 */
 		if ( $this->_escape_data() ) {
+			// Make sure to have enough data to print, some messages could have been changed and need new (missing) information.
+			$this->data[] = '';
+			$this->data[] = '';
 			// Add the data to the message.
 			$this->message = vsprintf( $this->message, $this->data );
 		}

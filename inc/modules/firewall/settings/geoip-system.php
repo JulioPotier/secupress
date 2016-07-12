@@ -3,7 +3,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 
 $this->set_current_section( 'geoip-system' );
-$this->add_section( __( 'Country Managment', 'secupress' ) );
+$this->add_section( __( 'Country Management', 'secupress' ) );
 
 
 $main_field_name = $this->get_field_name( 'type' );
@@ -19,8 +19,8 @@ if ( secupress_is_submodule_active( 'firewall', 'geoip-system' ) ) {
 }
 
 $this->add_field( array(
-	'title'        => __( 'Use the GeoIP Managment', 'secupress' ),
-	'description'  => __( 'Country Managment is an effective way to stop attacks of any types and stop malicious activities that originates from a specific region of the world.', 'secupress' ),
+	'title'        => __( 'Use the GeoIP Management', 'secupress' ),
+	'description'  => __( 'Country Management is an effective way to stop attacks of any types and stop malicious activities that originates from a specific region of the world.', 'secupress' ),
 	'name'         => $main_field_name,
 	'type'         => 'radios',
 	'value'        => $geoip_value,

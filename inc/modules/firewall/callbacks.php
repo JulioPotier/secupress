@@ -35,10 +35,10 @@ function __secupress_firewall_settings_callback( $settings ) {
 	// Bad contents.
 	__secupress_bad_contents_settings_callback( $modulenow, $settings, $activate );
 
-	// Anti Bruteforce Managment.
+	// Anti Bruteforce Management.
 	__secupress_bruteforce_settings_callback( $modulenow, $settings, $activate );
 
-	// Country Managment.
+	// Country Management.
 	__secupress_geoip_settings_callback( $modulenow, $settings, $activate );
 
 	return $settings;
@@ -65,6 +65,7 @@ function __secupress_bad_headers_settings_callback( $modulenow, &$settings, $act
 	if ( ! empty( $settings['bbq-headers_user-agents-list'] ) ) {
 		$settings['bbq-headers_user-agents-list'] = sanitize_text_field( $settings['bbq-headers_user-agents-list'] );
 		$settings['bbq-headers_user-agents-list'] = secupress_sanitize_list( $settings['bbq-headers_user-agents-list'] );
+		$settings['bbq-headers_user-agents-list'] = secupress_unique_sorted_list( $settings['bbq-headers_user-agents-list'], ', ' );
 	}
 
 	if ( empty( $settings['bbq-headers_user-agents-list'] ) ) {
@@ -94,6 +95,7 @@ function __secupress_bad_contents_settings_callback( $modulenow, &$settings, $ac
 	if ( ! empty( $settings['bbq-url-content_bad-contents-list'] ) ) {
 		// Do not sanitize the value or the sky will fall.
 		$settings['bbq-url-content_bad-contents-list'] = secupress_sanitize_list( $settings['bbq-url-content_bad-contents-list'] );
+		$settings['bbq-url-content_bad-contents-list'] = secupress_unique_sorted_list( $settings['bbq-url-content_bad-contents-list'], ', ' );
 	}
 
 	if ( empty( $settings['bbq-url-content_bad-contents-list'] ) ) {
@@ -103,7 +105,7 @@ function __secupress_bad_contents_settings_callback( $modulenow, &$settings, $ac
 
 
 /**
- * Anti Bruteforce Managment plugin.
+ * Anti Bruteforce Management plugin.
  *
  * @since 1.0
  *
@@ -119,12 +121,12 @@ function __secupress_bruteforce_settings_callback( $modulenow, &$settings, $acti
 
 	// Settings.
 	$settings['bruteforce_request_number'] = ! empty( $settings['bruteforce_request_number'] ) ? (int) secupress_validate_range( $settings['bruteforce_request_number'], 3, 1000, 9 ) : 9;
-	$settings['bruteforce_time_ban'] = ! empty( $settings['bruteforce_time_ban'] ) ? (int) secupress_validate_range( $settings['bruteforce_time_ban'], 1, 60, 5 ) : 5;
+	$settings['bruteforce_time_ban']       = ! empty( $settings['bruteforce_time_ban'] )       ? (int) secupress_validate_range( $settings['bruteforce_time_ban'], 1, 60, 5 )         : 5;
 }
 
 
 /**
- * Country Managment plugin.
+ * Country Management plugin.
  *
  * @since 1.0
  *

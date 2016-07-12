@@ -10,10 +10,20 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
-	const VERSION = '1.0';
+	/** Constants. ============================================================================== */
 
 	/**
-	 * The reference to *Singleton* instance of this class.
+	 * Class version.
+	 *
+	 * @var (string)
+	 */
+	const VERSION = '1.0';
+
+
+	/** Properties. ============================================================================= */
+
+	/**
+	 * The reference to the *Singleton* instance of this class.
 	 *
 	 * @var (object)
 	 */
@@ -24,8 +34,10 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 	 *
 	 * @var (string)
 	 */
-	public    static $prio    = 'high';
+	public    static $prio = 'high';
 
+
+	/** Public methods. ========================================================================= */
 
 	/**
 	 * Init.
@@ -73,6 +85,8 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 			104 => __( 'No plugins selected for deactivation.', 'secupress' ),
 			105 => _n_noop( 'Selected plugin has been deactivated (but some are still there).', 'All selected plugins have been deactivated (but some are still there).', 'secupress' ),
 			106 => _n_noop( 'Sorry, the following plugin could not be deactivated: %s.', 'Sorry, the following plugins could not be deactivated: %s.', 'secupress' ),
+			/* translators: %s is the plugin name. */
+			107 => sprintf( __( 'You have a big network, %s must work on some data before being able to perform this scan.', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ),
 			// "bad"
 			/* translators: 1 is a number, 2 is a plugin name (or a list of plugin names). */
 			200 => _n_noop( '<strong>%1$d plugin</strong> is no longer in the WordPress directory: %2$s.', '<strong>%1$d plugins</strong> are no longer in the WordPress directory: %2$s.', 'secupress' ),
@@ -102,6 +116,8 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 	}
 
 
+	/** Scan. =================================================================================== */
+
 	/**
 	 * Scan for flaw(s).
 	 *
@@ -110,6 +126,12 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
+		if ( ! static::_are_centralized_blog_options_filled() ) {
+			// "warning"
+			$this->add_message( 107 );
+			return parent::scan();
+		}
+
 		// Multisite, for the current site.
 		if ( $this->is_for_current_site() ) {
 			// Plugins no longer in directory or not updated in over 2 years.
@@ -157,6 +179,8 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 	}
 
 
+	/** Fix. ==================================================================================== */
+
 	/**
 	 * Try to fix the flaw(s).
 	 *
@@ -187,6 +211,8 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 		return parent::fix();
 	}
 
+
+	/** Manual fix. ============================================================================= */
 
 	/**
 	 * Try to fix the flaw(s) after requiring user action.
@@ -523,9 +549,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 	}
 
 
-	/*--------------------------------------------------------------------------------------------*/
-	/* TOOLS ==================================================================================== */
-	/*--------------------------------------------------------------------------------------------*/
+	/** Tools. ================================================================================== */
 
 	/**
 	 * Get all plugins to delete.

@@ -10,10 +10,20 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
  */
 class SecuPress_Scan_Themes_Update extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
-	const VERSION = '1.0';
+	/** Constants. ============================================================================== */
 
 	/**
-	 * The reference to *Singleton* instance of this class.
+	 * Class version.
+	 *
+	 * @var (string)
+	 */
+	const VERSION = '1.0';
+
+
+	/** Properties. ============================================================================= */
+
+	/**
+	 * The reference to the *Singleton* instance of this class.
 	 *
 	 * @var (object)
 	 */
@@ -24,7 +34,7 @@ class SecuPress_Scan_Themes_Update extends SecuPress_Scan implements SecuPress_S
 	 *
 	 * @var (string)
 	 */
-	public    static $prio        = 'high';
+	public    static $prio = 'high';
 
 	/**
 	 * Tells if the fix must occur after all other scans and fixes, while no other scan/fix is running.
@@ -33,6 +43,8 @@ class SecuPress_Scan_Themes_Update extends SecuPress_Scan implements SecuPress_S
 	 */
 	public    static $delayed_fix = true;
 
+
+	/** Public methods. ========================================================================= */
 
 	/**
 	 * Init.
@@ -77,6 +89,8 @@ class SecuPress_Scan_Themes_Update extends SecuPress_Scan implements SecuPress_S
 	}
 
 
+	/** Scan. =================================================================================== */
+
 	/**
 	 * Scan for flaw(s).
 	 *
@@ -118,6 +132,8 @@ class SecuPress_Scan_Themes_Update extends SecuPress_Scan implements SecuPress_S
 		return parent::scan();
 	}
 
+
+	/** Fix. ==================================================================================== */
 
 	/**
 	 * Try to fix the flaw(s).

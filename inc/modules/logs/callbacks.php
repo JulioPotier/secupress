@@ -56,7 +56,7 @@ function __secupress_activate_action_logs() {
 	secupress_check_user_capability();
 
 	// (De)Activate.
-	$activate = ! empty( $_POST['secupress-plugin-activation']['action-logs_activated'] );
+	$activate = ! empty( $_POST['secupress-plugin-activation']['logs_action-logs-activated'] );
 	secupress_manage_submodule( 'logs', 'action-logs', $activate );
 
 	// Redirect.
@@ -77,7 +77,7 @@ function __secupress_activate_404_logs() {
 	secupress_check_user_capability();
 
 	// (De)Activate.
-	$activate = ! empty( $_POST['secupress-plugin-activation']['404-logs_activated'] );
+	$activate = ! empty( $_POST['secupress-plugin-activation']['logs_404-logs-activated'] );
 	secupress_manage_submodule( 'logs', '404-logs', $activate );
 
 	// Redirect.

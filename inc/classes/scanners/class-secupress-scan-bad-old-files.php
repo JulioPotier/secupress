@@ -10,10 +10,20 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
-	const VERSION = '1.0';
+	/** Constants. ============================================================================== */
 
 	/**
-	 * The reference to *Singleton* instance of this class.
+	 * Class version.
+	 *
+	 * @var (string)
+	 */
+	const VERSION = '1.0';
+
+
+	/** Properties. ============================================================================= */
+
+	/**
+	 * The reference to the *Singleton* instance of this class.
 	 *
 	 * @var (object)
 	 */
@@ -24,8 +34,10 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements SecuPress_S
 	 *
 	 * @var (string)
 	 */
-	public    static $prio    = 'high';
+	public    static $prio = 'high';
 
+
+	/** Public methods. ========================================================================= */
 
 	/**
 	 * Init.
@@ -68,6 +80,8 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements SecuPress_S
 	}
 
 
+	/** Scan. =================================================================================== */
+
 	/**
 	 * Scan for flaw(s).
 	 *
@@ -108,6 +122,8 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements SecuPress_S
 	}
 
 
+	/** Fix. ==================================================================================== */
+
 	/**
 	 * Try to fix the flaw(s).
 	 *
@@ -127,6 +143,7 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements SecuPress_S
 			$this->add_fix_message( 0 );
 			return parent::fix();
 		}
+
 		foreach ( $_old_files as $file ) {
 			if ( @file_exists( ABSPATH . $file ) && ( ! is_writable( ABSPATH . $file ) || ! @unlink( ABSPATH . $file ) ) ) {
 				$not_deleted[] = sprintf( '<code>%s</code>', $file );
@@ -135,6 +152,7 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements SecuPress_S
 
 		if ( $count = count( $not_deleted ) ) {
 			// "bad"
+			$this->slice_and_dice( $not_deleted, 10 );
 			$this->add_fix_message( 201, array( $count, $count, $not_deleted ) );
 		} else {
 			// "good"

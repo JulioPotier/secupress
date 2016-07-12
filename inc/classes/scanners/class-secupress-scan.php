@@ -1160,4 +1160,23 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 
 		return $rules;
 	}
+
+
+	/**
+	 * Multisite: tell if the "centralized blog options" are fully filled.
+	 *
+	 * @since 1.0
+	 * @author Grégory Viguier
+	 *
+	 * @return (bool) True if our network options contain all blog options, or if it's not a multisite. False otherwise.
+	 */
+	final protected static function _are_centralized_blog_options_filled() {
+		if ( ! is_multisite() ) {
+			return true;
+		}
+
+		$plugins = get_site_option( 'secupress_active_plugins' );
+
+		return is_array( $plugins ) && empty( $plugins['offset'] );
+	}
 }

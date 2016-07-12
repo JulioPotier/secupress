@@ -18,8 +18,7 @@ var SecuPress = {
 
 jQuery( document ).ready( function( $ ) {
 	var secupressChart = {},
-		secupressChartEls = [],
-		secupressOneClickScanProgress = 0;
+		secupressChartEls = [];
 
 	if ( document.getElementById( 'status_chart' ) ) {
 		secupressChartEls.push( document.getElementById( 'status_chart' ) );
@@ -28,6 +27,42 @@ jQuery( document ).ready( function( $ ) {
 	if ( document.getElementById( 'status_chart_mini' ) ) {
 		secupressChartEls.push( document.getElementById( 'status_chart_mini' ) );
 	}
+
+	// a11y function
+	function secupressCouldSay( say ) {
+		if ( wp.a11y && wp.a11y.speak && undefined !== say && say ) {
+			wp.a11y.speak( say );
+		}
+	}
+
+	// !Get scan button fixed width at first load
+	( function( w, d, $, undefined ) {
+
+		var $button = $( '.secupress-start-one-click-scan' ).find( '.button-secupress-scan' ),
+			$text   = $button.find('.secupress-progress-val-txt'),
+			$val    = $button.find('.secupress-progressbar-val');
+
+		$button.css( 'width', $button.outerWidth() + 5 );
+
+
+		// animation testing
+
+		/*var temp = setInterval(function(){
+			$button.attr( 'aria-disabled', 'true' );
+			$('.secupress-introduce-first-scan').addClass('secupress-scanning');
+			clearInterval( temp );
+		}, 1000);
+		var count = 0;
+		var temp2 = setInterval(function(){
+			count++;
+			$text.text( count + ' %' );
+			$val.css( 'width', count + '%' );
+			if ( count >= 100 ) {
+				clearInterval( temp2 );
+			}
+		}, 175);*/
+
+	} )( window, document, jQuery );
 
 
 	// !Big network: set some data. ================================================================
@@ -139,9 +174,8 @@ jQuery( document ).ready( function( $ ) {
 					animationEasing:       "easeInOutQuart",
 					showTooltips:          true,
 					segmentShowStroke:     false,
-					percentageInnerCutout: 90,
-					tooltipEvents:         ["mousemove"], // active "hover" effect...
-					customTooltips:        function() {} //... but remove tooltips.
+					percentageInnerCutout: 93,
+					tooltipEvents:         [] // remove tooltips
 				} );
 
 			} );
@@ -167,18 +201,6 @@ jQuery( document ).ready( function( $ ) {
 			$( ".secupress-chart-legend .status-notscannedyet" ).remove();
 		}
 	}
-
-
-	function secupressSelectFallbackBigTab( data, $filters ) {
-		if ( data.bad ) {
-			$filters.find( ".secupress-big-tab-bad a" ).trigger( "click.secupress" );
-		} else if ( data.warning ) {
-			$filters.find( ".secupress-big-tab-warning a" ).trigger( "click.secupress" );
-		} else if ( data.good ) {
-			$filters.find( ".secupress-big-tab-good a" ).trigger( "click.secupress" );
-		}
-	}
-
 
 	/**
 	 * Disable one or more buttons.
@@ -273,41 +295,6 @@ jQuery( document ).ready( function( $ ) {
 			secupressDrawCharts();
 		}
 
-		// Tabs subtitles.
-		$filters = $( "#secupress-type-filters" );
-
-		$filters.find( "a" ).each( function() {
-			var $this = $( this ),
-				type  = $this.data( "type" );
-			$this.children( ".secupress-tab-subtitle" ).text( data[ type + "-text" ] );
-		} );
-
-		// Show/Hide the "New" tab.
-		if ( ! data.notscannedyet ) {
-			if ( $filters.children( ".secupress-big-tab-notscannedyet" ).children( "a" ).hasClass( "secupress-current" ) ) {
-				secupressSelectFallbackBigTab( data, $filters );
-			}
-
-			$filters.children( ".secupress-big-tab-notscannedyet" ).remove();
-		} else {
-			$( ".secupress-count-notscannedyet" ).text( data.notscannedyet );
-		}
-
-		// Show/Hide the "Action needed" tab.
-		if ( data.hasaction ) {
-			$filters.children( ".secupress-big-tab-hasaction" ).removeClass( "hidden" ).removeAttr( "aria-hidden" );
-			// Switch to this tab only if it's a bulk action.
-			if ( data.isBulk ) {
-				$filters.find( ".secupress-big-tab-hasaction a" ).trigger( "click.secupress" );
-			}
-		} else {
-			if ( $filters.children( ".secupress-big-tab-hasaction" ).children( "a" ).hasClass( "secupress-current" ) ) {
-				secupressSelectFallbackBigTab( data, $filters );
-			}
-
-			$filters.children( ".secupress-big-tab-hasaction" ).addClass( "hidden" ).attr( "aria-hidden", true );
-		}
-
 		// Twitter.
 		if ( "A" === data.grade ) {
 			$( "#tweeterA" ).slideDown();
@@ -344,11 +331,6 @@ jQuery( document ).ready( function( $ ) {
 		if ( ! $( '.secupress-scanners-header' ).hasClass( 'secupress-not-scanned-yet' ) ) {
 			secupressDrawCharts();
 		}
-
-		// Trigger a filter action on Legend item click.
-		$( ".secupress-chart-legend" ).find( "li" ).on( "click.secupress", function() {
-			$( "#secupress-type-filters" ).find( ".secupress-big-tab-" + $( this ).data( "status" ) ).find( "a" ).trigger( "click.secupress" );
-		} );
 	}
 
 
@@ -429,109 +411,71 @@ jQuery( document ).ready( function( $ ) {
 			doingFix:     {},
 			delayedFixes: [],
 			// Manual fixes.
-			manualFix:    {}
+			manualFix:    {},
+			total:        0
 		};
 
-
-		// Complete the slideshow
-		function secupressAddCaroupoivrePagination() {
-			$( '.secupress-caroupoivre' ).each( function() {
-				var $this = $(this),
-					i, nb_slides, pagination;
-
-				if ( $this.next( '.secupress-caroupoivre-pagination' ).length !== 0 ) {
-					return true;
-				}
-
-				nb_slides  = $this.find( '.secupress-slide[id]' ).length;
-				pagination =  '<div class="secupress-caroupoivre-pagination">';
-
-				for ( i = 0; i < nb_slides; i++ ) {
-					pagination += '<span class="secupress-dot"></span>';
-				}
-
-				pagination += '</div>';
-				$this.after( pagination );
-			} );
+		// Set the total of available scans…
+		function secupressSetScansTotal() {
+			var total = $( '#secupress-tests' ).find( '.secupress-item-all' ).length;
+			secupressScans.total = total;
 		}
-
-		secupressAddCaroupoivrePagination();
-
+		// …at first page load (at least)
+		secupressSetScansTotal();
 
 		// Runs the Progressbar, 10 sec min.
 		function secupressRunProgressBar( $button ) {
-			var $sp_scanning = $( '.secupress-one-click-scanning-slideshow' ),
-				$sp_poivre   = $( '.secupress-caroupoivre' ),
-				$pagination  = $( '.secupress-caroupoivre-pagination' ).find( '.secupress-dot' ),
-				isFirst      = $button.closest( '.secupress-not-scanned-yet' ).length,
-				$random_slide, secupressProgressTimer;
 
-			// If first of the first one click scan.
-			if ( isFirst ) {
-				// Information about first scan & show progress + slides.
-				$( '.secupress-before-caroupoivre' ).fadeOut( 200, function() {
-					$sp_scanning.fadeIn( 200 );
-				} );
-			} else {
-				$( '.secupress-tabs-contents' ).hide();
-				$sp_scanning.fadeIn( 200 );
-			}
+			var $sp_1st_scan = $( '.secupress-introduce-first-scan' ),
+				isFirstScan  = $button.closest( '.secupress-not-scanned-yet' ).length,
+				$bar_val     = $button.find( '.secupress-progressbar-val' ),
+				$text_val    = $bar_val.find( '.secupress-progress-val-txt' ),
+				init_percent = 2,
+				secupressProgressTimer;
 
-			$sp_poivre.find( '.secupress-slide' ).hide();
-			$random_slide = $( '.secupress-slide-' + Math.floor( ( Math.random() * 2 ) + 1 ) ).html();
-			$sp_poivre.find( '#secupress-slide1' ).html( $random_slide );
+			$sp_1st_scan.addClass( 'secupress-scanning' );
+			$( '.secupress-scanned-total' ).text( secupressScans.total );
 
 			secupressProgressTimer = setInterval( function() {
-				secupressOneClickScanProgress++;
 
-				if ( secupressOneClickScanProgress >= 55 ) {
-					if ( ! $sp_poivre.find( '#secupress-slide2' ).is( ":visible" ) ) {
-						$sp_poivre.find( '#secupress-slide1' ).hide();
-						$sp_poivre.find( '#secupress-slide2' ).fadeIn( 275 );
-						$pagination.removeClass( 'current' ).eq( 1 ).addClass( 'current' );
-					}
-				} else if ( secupressOneClickScanProgress >= 0 ) {
-					$sp_poivre.find( '#secupress-slide1' ).fadeIn( 275 );
-					$pagination.removeClass( 'current' ).eq( 0 ).addClass( 'current' );
-				}
+				var n_doing = Object.keys( secupressScans.doingScan ).length,
+					n_done  = secupressScans.total - n_doing,
+					percent = Math.max( n_done / secupressScans.total * 100, init_percent );
 
-				// We are between 9 & 10s but SP still doing scan, stay at 90%.
-				// Windows counting style!
-				if ( ! $.isEmptyObject( secupressScans.doingScan ) && secupressOneClickScanProgress > 90 && secupressOneClickScanProgress < 100 ) {
-					secupressOneClickScanProgress = 90;
-					return;
-				}
+				percent = Math.round( Math.min( percent, 100 ) );
 
-				secupressOneClickScanProgress = Math.min( secupressOneClickScanProgress, 100 );
+				// Progress bar update
+				$bar_val.css( 'width', percent + '%' );
+				$text_val.text( percent + ' %' );
 
-				$( '.secupress-progressbar' )
-					.find( '.secupress-progressbar-val' ).css( 'width', secupressOneClickScanProgress + '%' )
-					.find( '.secupress-progress-val-txt' ).text( secupressOneClickScanProgress + ' %' );
+				// Number N / T points update
+				$( '.secupress-scanned-current' ).text( n_done );
 
-				if ( secupressOneClickScanProgress >= 100 ) {
+				if ( percent >= 100 ) {
 
-					secupressOneClickScanProgress = 0;
+					secupressCouldSay( SecuPressi18nScanner.a11y.scanEnded );
 					clearInterval( secupressProgressTimer );
 
-					// makes slideshow desappear
-					$sp_scanning.fadeOut( 200, function() {
+					// makes first scan part disappear
+					$sp_1st_scan.slideUp( 200, function() {
 
+						// hide 4 steps help
+						$( '.secupress-open-moreinfo' ).removeClass( 'secupress-activated' );
+						$( '#secupress-more-info' ).removeClass( 'secupress-open' ).hide();
+
+						//// TODO : check if note is attributed before showing this content
 						// Show other element (list of scans, tabs, tabs contents).
-						$( '.secupress-scanners-header.secupress-not-scanned-yet' ).removeClass( 'secupress-not-scanned-yet' );
-
-						// Explicitly show tabs content in case of other One Click Scans.
-						$( '.secupress-tabs-contents' ).show();
-
-						// Click on first tab to show results, just in case…
-						$( '#secupress-l-scan' ).trigger( 'click.secupress' );
+						$( '.secupress-scan-header-main' ).css('display', 'flex').hide().slideDown( 200, function() {
+							$( '.secupress-scanners-header.secupress-not-scanned-yet' ).removeClass( 'secupress-not-scanned-yet' );
+						} );
 
 						// draw the chart
-						if ( isFirst ) {
+						if ( isFirstScan ) {
 							secupressDrawCharts();
 						}
 					} );
 				}
-			}, 100 );
+			}, 500 );
 		}
 
 

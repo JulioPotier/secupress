@@ -65,6 +65,7 @@
 
 	/**
 	 * Tabs
+	 * @description : handle basic tabs sytem
 	 * @author : Geoffrey
 	 */
 	$('.secupress-tabs').each( function() {
@@ -98,28 +99,47 @@
 
 	/**
 	 * Triggering (slidedown, fadein, etc.)
+	 * @description: Triggers basic effect/action/animation 
 	 * @author: Geoffrey
 	 */
 	$('[data-trigger]').each( function() {
 
 		// init
 		var $_this  = $(this),
+			hide 	= $(this).hasClass('dont-trigger-hide'),
 			target  = $_this.data('target'),
-			$target = $( '#' + target ),
-			effect  = $_this.data('trigger');
-
-		$target.spHide();
+			$target = $( '#' + target );
+		
+		if ( ! hide ) {
+			$target.spHide();
+		}
 
 		// click
 		$_this.on( 'click.secupress', function(){
+			
+			var $_this  = $( this ),
+				effect  = $_this.data( 'trigger' ),
+				to_hide = $_this.hasClass( 'trigger-hide-first' ),
+				active  = 'secupress-activated';
 
+			if ( effect === 'slidetoggle' && ! to_hide ) {
+				effect = $_this.hasClass( active ) ? 'slideup' : 'slidedown';
+			} else if ( effect === 'fadetoggle' && ! to_hide ) {
+				effect = $_this.hasClass( active ) ? 'fadeout' : 'fadein';
+			} else if ( effect === 'slidetoggle' && to_hide ) {
+				effect = $_this.hasClass( active ) ? 'slidedown' : 'slideup';
+			} else if ( effect === 'fadetoggle' && to_hide ) {
+				effect = $_this.hasClass( active ) ? 'fadein' : 'fadeout';
+			}
+			
 			$target.spAnimate( effect );
 
-			if ( effect === 'slideup' || effect === 'fadeout') {
-				$( '[data-target="' + target + '"]').filter('.secupress-activated').removeClass('secupress-activated');
+			if ( ( effect === 'slideup' && ! to_hide ) || ( effect === 'fadeout' && ! to_hide ) ||  ( effect === 'slidedown' && to_hide ) || ( effect === 'fadein' && to_hide ) ) {
+				$( '[data-target="' + target + '"]' ).filter( '.' + active ).removeClass( active );
 			} else {
-				$(this).addClass('secupress-activated');
+				$(this).addClass( active );
 			}
+
 			return false;
 		} );
 

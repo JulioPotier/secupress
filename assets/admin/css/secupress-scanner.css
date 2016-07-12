@@ -17,137 +17,342 @@
  */
 
 /**
- * First One Click Scan not done yet
+ * Scanners header
  */
-/* Hide some items */
-.secupress-scanners-header.secupress-not-scanned-yet .secupress-tabs,
-.secupress-scanners-header.secupress-not-scanned-yet .secupress-tabs-contents,
-.secupress-scanners-header.secupress-not-scanned-yet + .secupress-scanners-filters,
-.secupress-scanners-header.secupress-not-scanned-yet ~ .secupress-scanners-list,
-.secupress-scanners-header .secupress-before-caroupoivre {
+.secupress-scanners-header {
+	padding: 17px 25px 25px;
+}
+.secupress-scanners-header .secupress-logo-block {
+	flex-grow: 0;
+}
+.secupress-scanners-header .secupress-heading {
+	position: relative;
+	padding: 3px 5px 18px;
+	border-bottom: 1px solid #393E46;
+}
+.secupress-scanners-header .secupress-lb-name {
+	padding-left: 12px;
+}
+.secupress-scanners-header .secupress-col-text p {
+	margin: 0;
+}
+.secupress-scanners-header .secupress-col-text {
+	display: none;
+}
+.secupress-scanners-header.secupress-not-scanned-yet .secupress-col-text {
+	display: block;
+}
+.secupress-label-with-icon {
+	position: relative;
+	display: block;
+	padding-left: 50px;
+	font-weight: 500;
+	text-decoration: none;
+}
+.secupress-label-with-icon i {
+	position: absolute;
+	left: 0; top: 1px;
+	font-size: 35px;
+	color: #26B3A9;
+}
+.secupress-label-with-icon i.rounded {
+	font-size: 16px;
+	border-color: #F39C12;
+	color: #F39C12;
+}
+@media (min-width: 820px) {
+	.secupress-last-scan-result {
+		padding-left: 166px;
+	}
+	.secupress-last-scan-result i {
+		left: 110px;
+	}
+}
+.secupress-label-with-icon .secupress-upper {
+	display: block;
+	text-transform: uppercase;
+	letter-spacing: 0.125em;
+	color: #FFF;
+}
+.secupress-label-with-icon .secupress-primary {
+	display: block;
+	color: #26B3A9;
+}
+.secupress-label-with-icon .secupress-description {
+	display: block;
+	color: #ACB0B7;
+}
+.secupress-tab-selected .secupress-last-scan-result {
+	opacity: 0.4;
+}
+
+.secupress-scanners-header .secupress-button {
+	letter-spacing: 0.125em;
+}
+
+/**
+ * Scanners breadcrumbs steps
+ */
+.secupress-scanner-steps {
+	position: relative;
+}
+.secupress-scanner-steps ol {
+	margin: 1.7em 85px 1em;
+}
+.secupress-scanner-steps li {
+	padding: 0;
+}
+.secupress-scanner-steps li:before {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-shrink: 0;
+	width: 32px;
+	height: 32px;
+	border: 2px solid #5A626F;
+	font-size: 16px;
+	font-weight: bold;
+	color: #5A626F;
+	border-radius: 50%;
+}
+.secupress-scanner-steps .secupress-past:before,
+.secupress-scanner-steps .secupress-current:before {
+	border-color: #F1C40F;
+	color: #F1C40F;
+}
+.secupress-step-name {
+	display: none;
+	flex-shrink: 0;
+	padding: 0 12px;
+	font-weight: 600;
+	color: #F1C40F;
+}
+li.secupress-current .secupress-step-name {
+	display: block;
+}
+.secupress-not-scanned-yet .secupress-current .secupress-step-name {
+	display: none;
+}
+.secupress-scanner-steps li:after {
+	content: "";
+	height: 2px;
+	flex-grow: 1;
+	flex-basis: 100%;
+	background: #5A626F;
+}
+.secupress-scanner-steps li.secupress-past:after {
+	background: #F1C40F;
+}
+
+/* The third step */
+.secupress-scanner-steps .secupress-step-name.alt {
+	display: none;
+	order: 2;
+}
+.secupress-scanner-steps .secupress-past .secupress-step-name.alt {
+	display: block;
+}
+
+/* The fourth step */
+.secupress-scanner-steps li:nth-last-child(1) {
+	flex-basis: auto;
+	width: auto;
+}
+.secupress-scanner-steps li:nth-last-child(1):after {
+	display: none;
+}
+li.secupress-current:nth-last-child(1) .secupress-step-name {
+	position: absolute;
+	width: 1px; height: 1px;
+	clip: rect(1px, 1px, 1px, 1px);
+	overflow: hidden;
+}
+/* Arrow below current step */
+.secupress-scanner-steps .secupress-current .secupress-step-name {
+	position: relative;
+}
+.secupress-scanner-steps .secupress-current .secupress-step-name:after {
+	content: "";
+	position: absolute;
+	bottom: -50px; left: -44px;
+	border-bottom: 22px solid #F2F2F6;
+	border-left: 27px solid transparent;
+	border-right: 27px solid transparent;
+}
+.secupress-not-scanned-yet .secupress-scanner-steps .secupress-step-name:after {
 	display: none;
 }
 
-.secupress-scanners-header.secupress-not-scanned-yet .secupress-before-caroupoivre {
-	display: block;
+/**
+ * First One Click Scan not done yet
+ */
+/* Hide some items */
+.secupress-scanners-header.secupress-not-scanned-yet .secupress-scan-header-main,
+.secupress-scanners-header.secupress-not-scanned-yet ~ .secupress-scanner-main-content ,
+.secupress-scanners-header.secupress-not-scanned-yet .secupress-last-scan-result {
+	display: none;
 }
 .secupress-no-first-oneclickscan-yet .secupress-logo-block {
 	position: relative;
 	top: 55px;
 	z-index: 2;
 }
-.secupress-no-first-oneclickscan-yet .secupress-settings-header {
-	padding: 0 15px;
-}
-.secupress-no-first-oneclickscan-yet .secupress-settings-header + .secupress-section-gray-dark {
-	padding: 0 15px 15px;
-}
-.secupress-no-first-oneclickscan-yet .secupress-settings-header + .secupress-section-gray-dark .secupress-text-medium {
-	margin-bottom: 0;
-}
-.secupress-no-first-oneclickscan-yet .secupress-one-click-scanning-slideshow,
-.secupress-before-caroupoivre {
-	border-top: 1px solid #5A626F;
-}
-.secupress-caroupoivre,
-.secupress-before-caroupoivre {
+.secupress-introduce-first-scan {
 	position: relative;
-	text-align: center;
+	padding: 16px 10px;
 }
-.secupress-caroupoivre:before,
-.secupress-before-caroupoivre:before {
-	position: absolute;
-	left: 50%; top: 50%;
-	margin: 0 0 0 -59px;
-	content: "\e903";
-	font-family: 'secupress';
-	color: #5A626F;
-	font-size: 118px;
+.secupress-introduce-first-scan .icon-secupress:before {
+	display: inline-block;
+	margin-bottom: .25em;
+	font-size: 65px;
 }
-.secupress-before-caroupoivre:before {
-	margin-top: -40px;
-}
-.secupress-slide,
-.secupress-before-caroupoivre {
-	position: relative;
-	padding: 16px 10px 30px;
-}
-.secupress-slide p {
-	max-width: 400px;
-	margin: 1em auto;
-}
-.secupress-section-dark .secupress-caroupoivre .slide-title,
-.secupress-before-caroupoivre h3 {
-	margin-bottom: 0.1em;
+.secupress-introduce-first-scan h3 {
+	margin: .75em 0;
 	font-size: 23px;
+	font-weight: 500;
 	color: #FFF;
 }
-.secupress-before-caroupoivre h3,
-.secupress-before-caroupoivre p {
+.secupress-introduce-first-scan h3,
+.secupress-introduce-first-scan p {
 	position: relative;
 	z-index: 1;
 }
-.secupress-before-caroupoivre h3 {
-	padding-top: 45px;
+.secupress-introduce-first-scan p.secupress-start-one-click-scan {
+	margin-top: 35px;
 }
-.secupress-before-caroupoivre p.secupress-start-one-click-scan {
-	margin-top: 65px;
-}
-.secupress-caroupoivre-pagination {
-	margin-top: -1em;
-	text-align: center;
-}
-.secupress-caroupoivre-pagination span {
-	display: inline-block;
-	margin: 1em;
-	width: 8px; height: 8px;
-	background: #5a626f;
-	transition: background .275s;
-	border-radius: 50%;
-}
-.secupress-dot.current {
-	background: #FFF;
-}
-.secupress-progressbar {
+
+/**
+ * Button to progressbar
+ */
+.secupress-start-one-click-scan .secupress-button {
 	position: relative;
-	width: 650px;
+	transition: all .275s;
 	max-width: 100%;
-	height: 16px;
-	margin: 2em auto;
-	border: 2px solid #2BCDC1;
-	border-radius: 2px;
+	max-height: 40px;
 }
+.secupress-scanning .secupress-start-one-click-scan .secupress-button {
+	width: 610px!important;
+	max-width: 100%;
+	max-height: 8px;
+	padding: 0;
+	background: #393E46;
+	border-radius: 8px;
+}
+.secupress-scanning .secupress-start-one-click-scan .secupress-button .text,
+.secupress-scanning .secupress-start-one-click-scan .secupress-button .icon {
+	opacity: 0;
+	visibility: hidden;
+}
+
+/* Title progression */
+.secupress-scanned-items {
+	display: block;
+	margin-top: 10px;
+	max-height: 0;
+	font-size: 13px;
+	font-weight: 700;
+	color: #2BCDC1;
+	overflow: hidden;
+	visibility: hidden;
+	opacity: 0;
+	transition: all .275s;
+}
+.secupress-scanning .secupress-scanned-items {
+	max-height: 2em;
+	opacity: 1;
+	visibility: visible;
+}
+.secupress-second-title,
+.secupress-scanning .secupress-init-title {
+	display: none;
+}
+.secupress-scanning .secupress-second-title,
+.secupress-init-title {
+	display: block;
+}
+
+/* Progress bar values */
 .secupress-progressbar-val {
 	position: absolute;
-	left: 0; top: 0; bottom: 0;
+	top: 0;
+	bottom: 0;
+	left: 0;
 	width: 0;
-	background: #2BCDC1;
-	transition: width .1s;
+	margin-left: -4px;
+	background: #2BCDC1 linear-gradient(to right, #2BCDC1, #F1C40F) 0 0 no-repeat;
+	transition: width .175s linear;
+	visibility: hidden;
+	opacity: 0;
+	border-radius: 8px;
+}
+.secupress-progressbar-val:after {
+	content: "";
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: 8px;
+	margin-right: -1px;
+	background: #F1C40F;
+	border-radius: 50%;
+	box-shadow: 0 0 4px #f1c40f, 0 0 14px #f1c40f, 0 0 10px #f1c40f;
+	animation: loadingHalo 2s infinite;
+	opacity: 1;
+	z-index: 2;
+}
+@keyframes loadingHalo {
+	50% {
+		opacity: 0;
+	}
+}
+.secupress-scanning .secupress-start-one-click-scan .secupress-button {
+	opacity: 1;
+}
+.secupress-scanning .secupress-button .secupress-progressbar-val {
+	visibility: visible;
+	opacity: 1;
 }
 .secupress-progress-val-txt {
 	position: absolute;
-	bottom: 110%;
-	white-space: nowrap;
+	top: 100%;
 	right: -20px;
-	color: #2BCDC1;
+	margin-top: 14px;
+	padding: 0 6px;
+	white-space: nowrap;
+	font-size: 11px;
+	font-weight: bold;
+	color: #FFF;
+	background: #F39C12;
+	border-radius: 2px;
+	letter-spacing: 0;
+}
+.secupress-progress-val-txt:before {
+	content: "";
+	position: absolute;
+	bottom: 100%;
+	left: 50%;
+	margin: 0 0 0 -4px;
+	border-bottom: 4px solid #F39C12;
+	border-left: 4px solid transparent;
+	border-right: 4px solid transparent;
 }
 
-
-/* Blob styles in more info hidden section */
-#secupress-more-info .secupress-blob-icon,
-#secupress-more-info .secupress-blob:after {
-	transition: all .275s;
+/**
+ * More infos links
+ */
+.secupress-not-scanned-yet .secupress-close-moreinfo {
+	display: none;
 }
-.secupress-close-moreinfo,
-#secupress-more-info .secupress-blob-icon,
-#secupress-more-info .secupress-blob:after {
+.secupress-close-moreinfo .icon-cross:before {
+	vertical-align: -1.5px;
+}
+.secupress-close-moreinfo {
+	margin-right: 25px;
 	transform: translateY(-15px);
 	opacity: 0;
 	visibility: hidden;
 }
-.secupress-open .secupress-close-moreinfo,
-#secupress-more-info.secupress-open .secupress-blob-icon,
-#secupress-more-info.secupress-open .secupress-blob:after {
+.secupress-open .secupress-close-moreinfo {
 	transform: translateY(0);
 	opacity: 1;
 	visibility: visible;
@@ -161,28 +366,131 @@
 	visibility: hidden;
 }
 
-a.secupress-open-moreinfo,
-a.secupress-close-moreinfo {
-	font-weight: normal;
+/**
+ * Blobs in More Info pannel 
+ */
+.secupress-not-scanned-yet [id="secupress-more-info"] {
+	position: static;
+	margin: 0 -33px;
+}
+[id="secupress-more-info"] {
+	position: absolute;
+	bottom: 100%;
+	left: -25px; right: -25px;
+	z-index: 2;
+	padding-bottom: 18px;
+	margin-top: 1px; /* lets the top border appears */
+}
+.secupress-section-dark [id="secupress-more-info"] {
+	background: #222831;
+}
+[id="secupress-more-info"] .secupress-blob {
+	transform: scale(1.1);
+	transition: all .275s;
+	opacity: 0;
+	visibility: hidden;
+}
+[id="secupress-more-info"].secupress-open .secupress-blob {
+	transform: scale(1);
+	opacity: 1;
+	visibility: visible;
+}
+[id="secupress-more-info"].secupress-open .secupress-blob {
+	transition-delay: 0.25s;
+}
+[id="secupress-more-info"].secupress-open .secupress-col-1-4:nth-child(2) .secupress-blob {
+	transition-delay: 0.5s;
+}
+[id="secupress-more-info"].secupress-open .secupress-col-1-4:nth-child(3) .secupress-blob {
+	transition-delay: 0.75s;
+}
+[id="secupress-more-info"].secupress-open .secupress-col-1-4:nth-child(4) .secupress-blob {
+	transition-delay: 1s;
 }
 
-#secupress-more-info.secupress-open .secupress-blob-icon {
-	transition-delay: 0.3s;
+/**
+ * Scan header main contents
+ */
+.secupress-scan-header-main {
+	padding: 0 80px;
 }
-#secupress-more-info.secupress-open .secupress-blob:after {
-	transition-delay: 0.4s;
+
+.secupress-tabs-controls {
+	flex-shrink: 0;
+	padding-left: 20px;
+	padding-top: 18px;
 }
-#secupress-more-info.secupress-open .secupress-col-1-3:nth-child(2) .secupress-blob-icon {
-	transition-delay: 0.6s;
+.secupress-tabs-controls li + li {
+	margin: 2.5em 0 0 0;
 }
-#secupress-more-info.secupress-open .secupress-col-1-3:nth-child(2) .secupress-blob:after {
-	transition-delay: 0.7s;
+.secupress-rescan-actions {
+	margin-top: 2.5em;
 }
-#secupress-more-info.secupress-open .secupress-col-1-3:nth-child(3) .secupress-blob-icon {
-	transition-delay: 0.9s;
+.secupress-tabs-controls-list {
+	margin: 0;
 }
-#secupress-more-info.secupress-open .secupress-col-1-3:nth-child(3) .secupress-blob:after {
-	transition-delay: 1s;
+.secupress-tabs-controls-list a {
+	position: relative;
+	display: block;
+	text-decoration: none;
+	border-radius: 3px;
+}
+.secupress-tabs-controls-list a:hover {
+	box-shadow: 0 0 1px 9px #222831, 0 0 1px 10px rgba(255,255,255,.2);
+}
+.secupress-tabs-controls .secupress-button-primary {
+	letter-spacing: 0.1em;
+	background: #26B3A9;
+}
+.secupress-tabs-controls .secupress-button-primary:hover,
+.secupress-tabs-controls .secupress-button-primary:focus {
+	background: #2bcdc1;
+}
+.secupress-tabs-controls-list .secupress-label-with-icon {
+	padding-left: 54px;
+}
+
+.secupress-tab-selected .secupress-tabs-contents {
+	position: relative;
+}
+.secupress-tab-selected .secupress-tabs-contents:after {
+	content: "";
+	position: absolute;
+	right: 15px;
+	top: 25px;
+	bottom: 25px;
+	width: 1px;
+	background: #393e46;
+}
+.secupress-tab-selected .secupress-tabs-controls {
+	padding-top: 0;
+}
+.secupress-tab-selected .secupress-tabs-controls-list a {
+	opacity: .4;
+}
+.secupress-tab-selected .secupress-tabs-controls-list .secupress-current {
+	opacity: 1;
+}
+.secupress-tab-selected .secupress-tabs-controls-list .secupress-current:after,
+.secupress-tab-selected .secupress-tabs-controls-list .secupress-current:before {
+	content: "";
+	position: absolute;
+	left: -36px;
+	top: 50%;
+	margin-top: -14px;
+	border-top: 15px solid transparent;
+	border-bottom: 15px solid transparent;
+	border-left: 15px solid #393e46;
+}
+.secupress-tab-selected .secupress-tabs-controls-list .secupress-current:after {
+	left: -37.5px;
+	border-left-color: #222831;
+}
+.secupress-tab-selected .secupress-tabs-controls-list li.hidden {
+	display: block;
+}
+.secupress-tab-selected .secupress-rescan-actions {
+	display: none;
 }
 
 
@@ -198,9 +506,8 @@ a.secupress-close-moreinfo {
 	-webkit-flex-grow: 0;
 	-ms-flex-positive: 0;
 	flex-grow: 0;
-}
-.secupress-chart-container + .secupress-chart-legend {
-	margin-left: 30px;
+	margin-right: 30px;
+	line-height: 1;
 }
 .secupress-chart-legend li {
 	margin: 0;
@@ -250,20 +557,11 @@ a.secupress-close-moreinfo {
 	content: "\e903";
 	position: absolute;
 	top: 50%; left: 50%;
-	line-height: 110px;
-	margin: -50px 0 0 -57px;
+	line-height: 105px;
+	margin: -50px 0 0 -54px;
 	font-family: "secupress";
 	font-size: 110px;
 	color: rgba(255,255,255,.07);
-}
-.secupress-latest-chart .secupress-chart-container:after {
-	font-size: 80px;
-	line-height: 80px;
-	margin: -37px 0 0 -41px;
-}
-
-.secupress-row-actions {
-	font-size: 13px;
 }
 
 .scanning .secupress-fix-status-actions {
@@ -283,27 +581,18 @@ a.secupress-close-moreinfo {
 	speak: none
 }
 
-.secupress-tabs-contents > div {
-	min-height: 302px;
-	padding: 15px 35px;
+.secupress-tabs-contents {
+	flex-basis: 70%;
+	flex-grow: 0;
+	min-height: 265px;
 }
-.secupress-tab-content[id="secupress-schedule"] .secupress-text-medium + p {
-	width: 600px;
-	max-width: 100%;
-	margin: 1em auto;
+.secupress-tabs-contents > div {
+	padding: 0 35px 0 0;
 }
 .secupress-tab-content[id="secupress-schedule"] .secupress-text-medium {
 	position: relative;
-	margin-top: 1.75em;
-}
-.secupress-tab-content[id="secupress-schedule"] .secupress-text-medium:before {
-	position: absolute;
-	left: 50%; top: -55px;
-	margin-left: -37px;
-	content: '\e91a';
-	font-family: 'secupress';
-	color: rgba(255,255,255,.15);
-	font-size: 75px;
+	margin-top: 0.75em;
+	margin-bottom: 0.5em;
 }
 .secupress-cta-detail {
 	margin-top: -1em;
@@ -311,22 +600,27 @@ a.secupress-close-moreinfo {
 	font-weight: bold;
 	color: #5A626F;
 }
-.secupress-schedules-infos .secupress-ib {
-	margin: 1.5em 1em 0.75em;
-	font-weight: 600;
+
+.secupress-schedules-infos .secupress-schedule-last-one {
+	margin: 2em 0 0.5em;
 }
-.secupress-schedules-infos.is-pro .secupress-ib {
-	margin-bottom: 1em;
+.secupress-schedules-infos .secupress-schedule-next-one {
+	margin: 0.5em 0 2em;
 }
-.secupress-schedules-infos .next-one {
+
+.secupress-schedules-infos .secupress-schedule-next-one {
 	color: #F39C12;
 }
-.secupress-schedules-infos.is-pro .next-one {
+.secupress-schedules-infos.is-pro .secupress-schedule-next-one {
 	color: #26B3A9;
 }
 .secupress-schedules-infos i {
 	font-size: 1.2em;
+	vertical-align: -2px;
 	margin-right: 5px;
+}
+.secupress-schedules-infos .secupress-button {
+	letter-spacing: 0.125em;
 }
 /* right cols with Status text and actions */
 .secupress-fix-status-actions {
@@ -341,28 +635,42 @@ a + .secupress-row-actions {
 }
 
 .secupress-reports-list {
+	display: flex;
+	flex-direction: column;
 	margin: 1.1em 0 2.85em;
 	font-size: 1.1em;
-	text-align: right;
 }
 .secupress-reports-list li > * {
-	display: inline-block;
+	flex-basis: 27%;
 	vertical-align: middle;
 }
 .secupress-reports-list li {
-	padding: 5px 0;
+	display: flex;
+	align-items: center;
+	padding: 6px 0 3px;
 }
 .secupress-reports-list li + li {
 	border-top: 1px solid #5A626F;
 }
 .secupress-reports-list .secupress-latest-list-date {
+	flex-basis: 38%;
 	margin: 0 1em;
 	color: #5A626F;
+}
+.secupress-reports-list i:before {
+	font-size: 2em;
+}
+.secupress-reports-list .dashicons-arrow-right-alt2 {
+	color: #5A626F;
+}
+.secupress-reports-list .secupress-latest-list-grade,
+.secupress-reports-list i {
+	flex: 0 0 auto;	
 }
 .secupress-reports-list .secupress-latest-list-grade {
 	width: 22px;
 	height: 22px;
-	margin: 0 1em;
+	margin: 0 2em;
 	line-height: 18px;
 	text-align: center;
 	border-radius: 50%;
@@ -467,40 +775,19 @@ a + .secupress-row-actions {
 	margin-bottom: 0;
 	text-align: left;
 }
-
-.secupress-chart,
-.secupress-scan-infos {
-	float: left;
-	-webkit-box-flex: 1;
-	-webkit-flex-grow: 1;
-	-ms-flex-positive: 1;
-	flex-grow: 1;
-	-webkit-flex-shrink: 1;
-	-ms-flex-negative: 1;
-	flex-shrink: 1;
-}
-.secupress-chart {
-	-webkit-box-flex: 0;
-	-webkit-flex-grow: 0;
-	-ms-flex-positive: 0;
-	flex-grow: 0;
-	-webkit-flex-basis: 430px;
-	-ms-flex-preferred-size: 430px;
-	flex-basis: 430px;
-	width: 430px;
-	max-width: 100%;
-}
-.secupress-chart .secupress-score .letter,
-.secupress-latest-chart .secupress-score .letter {
+.secupress-chart-container .secupress-score .letter {
 	position: absolute;
 	font-size: 82px;
 	top: 50%; left: 50%;
-	margin: -12px 0 0 -26px;
+	margin: -.5em 0 0 -.33em;;
 	font-family: Arial, Helvetica, sans-serif;
 }
-.secupress-latest-chart .secupress-score .letter {
-	font-size: 52px;
-	margin: -11px 0 0 -15px;
+.secupress-scan-infos .secupress-score-text {
+	margin-bottom: 0.1em;
+	line-height: 1.25;
+}
+.secupress-scan-infos .secupress-score-subtext {
+	margin: .75em 0 1em;
 }
 .secupress-scan-infos .letter {
 	font-weight: bold;
@@ -508,7 +795,7 @@ a + .secupress-row-actions {
 }
 .secupress-chart .secupress-score .l∅ {
 	font-size: 64px;
-	margin: -6px 0 0 -28px;
+	margin: -0.45em 0 0 -0.44em;
 }
 .secupress-score .lA,
 .secupress-reports-list .lA,
@@ -584,46 +871,165 @@ a + .secupress-row-actions {
 }
 
 /**
- * === Sanned Items
+ * Steps contents
  */
-[id="secupress-tests"] .secupress-item-all {
-	position: relative;
-	padding-left: 10px;
-	margin: 2em 0;
-	border: 1px solid #ECF0F1;
-	background: #FFF;
-	border-radius: 3px;
-	box-shadow: 0 2px 0 #ECF0F1;
+.secupress-step-content-container {
+	width: 910px;
+	max-width: 100%;
+	padding: 25px;
+	margin: 0 auto;
 }
-[id="secupress-tests"] .secupress-item-all:after {
-	content: "";
-	position: absolute;
-	top: 0; bottom: 0; left: 0;
-	width: 10px;
-	background: #5a626f;
-	box-shadow: 0 3px 0 #5a626f;
-	border-radius: 3px 0 0 3px;
-}
-.secupress-item-all.status-bad:after {
-	background: #F2295E;
-	box-shadow: 0 3px 0 #F2295E;
-}
-.secupress-item-all.status-good:after {
-	background: #2BCDC1;
-	box-shadow: 0 3px 0 #2BCDC1;
-}
-.secupress-item-all.status-warning:after {
-	background: #F1C40F;
-	box-shadow: 0 3px 0 #F1C40F;
+.secupress-step-title {
+	font-size: 16px;
+	font-weight: 500;
+	color: #5A626F;
 }
 
-.secupress-item-header {
-	padding: 5px 25px 5px 15px;
+.secupress-scans-group {
+	margin: 2.5em 0;
+	background: #FFF;
+	box-shadow: 0 10px 15px rgba(34, 40, 49, .2);
+}
+.secupress-sg-header {
+	padding: 0 0 0 20px;
+	background: #222831;
+	color: #FFF;
+}
+.secupress-group-new .secupress-sg-header {
+	background: #26B3A9;
+}
+.secupress-sg-header.secupress-flex {
+	align-items: initial;
+}
+.secupress-sgh-name {
+	position: relative;
+	font-weight: 500;
+	padding: 13px 0;
+}
+.secupress-sgh-name p {
+	margin: 0;
+	line-height: 1.4;
+}
+.secupress-sgh-name i {
+	position: absolute;
+	right: -55px;
+	bottom: -10px;
+	font-size: 48px;
+	color: rgba(236, 240, 241, 0.2);
+}
+.secupress-group-new .secupress-sgh-name i {
+	bottom: -2px;
+	color: rgba(255, 255, 255, 0.2);
+}
+.secupress-sgh-title {
+	font-size: 16px;
+	color: #2BCDC1;
+}
+.secupress-group-new .secupress-sgh-title {
+	color: #FFF;
+}
+.secupress-sgh-actions button {
+	margin-left: 20px;
+	padding: 0 26px;
+	border: 0;
+	color: #F39C12;
+	background: #393E46;
+}
+.secupress-group-new .secupress-sgh-actions button {
+	color: #FFF;
+	background: #2BCDC1;
+}
+.secupress-sgh-actions button i:before {
+	font-size: 22px;
+}
+.secupress-sgh-actions .text {
+	color: #FFF;
+}
+.secupress-group-new .secupress-sg-content {
+	border: 1px solid #2BCDC1;
+	border-top: 0;
+}
+.secupress-step-content-footer .secupress-get-pro-version {
+	display: block;
+	margin: 4px 0 0 4px;
+}
+
+/**
+ * === Scanned Items
+ */
+.secupress-tests .secupress-item-all {
+	position: relative;
+}
+.secupress-item-all .secupress-flex {
+	padding: 20px 25px;
+}
+.secupress-tests .secupress-item-all + .secupress-item-all {
+	border-top: 1px solid #F2F2F6;
+}
+.secupress-item-status,
+.secupress-details-icon {
+	flex-basis: 110px;
+	flex-shrink: 0;
+	padding-right: 15px;
+}
+.secupress-row-actions,
+.secupress-item-all .secupress-placeholder {
+	flex-basis: 200px;
+	flex-shrink: 0;
+	text-align: right;
 }
 .secupress-item-title {
-	font-size: 16px;
-	font-weight: 600;
-	margin: 5px 0 0 0;
+	font-size: 13px;
+	color: #5A626F;
+}
+
+.secupress-item-all .secupress-label {
+	text-transform: uppercase;
+}
+.status-new .secupress-label {
+	border-color: #F1C40F;
+	color: #F1C40F;
+}
+.status-bad .secupress-label {
+	border-color: #CB234F;
+	color: #CB234F;
+}
+.status-warning .secupress-label {
+	border-color: #F19B12;
+	color: #F19B12;
+}
+.status-good .secupress-label {
+	border-color: #2BCDC1;
+	color: #2BCDC1;
+}
+.secupress-item-details {
+	position: relative;
+	background: #ECF0F1;
+	color: #5A626F;
+}
+.secupress-item-details:before {
+	content: "";
+	position: absolute;
+	right: 50px; top: 0;
+	border-bottom: 12px solid #ECF0F1;
+	border-left: 12px solid transparent;
+	border-right: 12px solid transparent;
+}
+.secupress-item-details.secupress-open:before {
+	top: -11px;
+}
+.secupress-details-icon .icon-i {
+	font-size: 2.7em;
+	line-height: 1;
+}
+.secupress-details-icon {
+	text-align: center;
+}
+.secupress-details-icon .icon-i:before {
+	border-width: 2px;
+	border-color: #ADB1B7;
+	color: #ADB1B7;
+	font-weight: 500;
 }
 
 /* Row under item title */
