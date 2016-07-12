@@ -706,6 +706,17 @@ function __secupress_scanners() {
 								</div><!-- .secupress-blob -->
 							</div><!-- .secupress-col-1-4 -->
 						</div><!-- .secupress-flex -->
+
+						<p class="secupress-text-end secupress-m0">
+							<a href="#secupress-more-info" class="secupress-link-icon secupress-icon-right secupress-close-moreinfo<?php echo $reports ? '' : ' dont-trigger-hide'; ?>" data-trigger="slideup" data-target="secupress-more-info">
+								<span class="icon" aria-hidden="true">
+									<i class="icon-cross"></i>
+								</span>
+								<span class="text">
+									<?php esc_html_e( 'I\'ve got it!', 'secupress' ); ?>
+								</span>
+							</a>
+						</p>
 					</div><!-- #secupress-more-info -->
 				</div><!-- .secupress-scanner-steps -->
 					
