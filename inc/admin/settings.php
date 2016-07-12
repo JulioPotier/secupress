@@ -650,6 +650,9 @@ function __secupress_scanners() {
 						?>
 						<li class="secupress-col-1-3 secupress-counter-put secupress-flex<?php echo $step['state']; ?>" aria-labelledby="sp-step-<?php echo $i; ?>-l" aria-describedby="sp-step-<?php echo $i; ?>-d">
 							<span class="secupress-step-name" id="sp-step-<?php echo $i; ?>-l"><?php echo $step['title']; ?></span>
+							<?php if ( $i === 3 ) { ?>
+							<span class="secupress-step-name alt" aria-hidden="true"><?php echo $steps[4]['title']; ?></span>
+							<?php } ?>
 						</li>
 						<?php
 						}
