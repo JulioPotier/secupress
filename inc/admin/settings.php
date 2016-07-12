@@ -393,7 +393,7 @@ function __secupress_scanners() {
 							</span>
 						</a>
 					</p>
-				</div>
+				</div><!-- .secupress-heading -->
 
 				<?php if ( 1 === secupress_get_scanner_pagination() || 4 === secupress_get_scanner_pagination() ) { ?>
 				<div class="secupress-scan-header-main secupress-flex">
@@ -599,7 +599,7 @@ function __secupress_scanners() {
 
 						</button>
 					</p>
-				</div>
+				</div><!-- .secupress-introduce-first-scan -->
 				<?php } ?>
 
 				<div class="secupress-scanner-steps">
@@ -649,7 +649,7 @@ function __secupress_scanners() {
 						foreach ( $steps as $i => $step ) {
 						?>
 						<li class="secupress-col-1-3 secupress-counter-put secupress-flex<?php echo $step['state']; ?>" aria-labelledby="sp-step-<?php echo $i; ?>-l" aria-describedby="sp-step-<?php echo $i; ?>-d">
-							<span class="secupress-step-name" id="sp-step-<?php echo $i; ?>-l" ><?php echo $step['title']; ?></span>
+							<span class="secupress-step-name" id="sp-step-<?php echo $i; ?>-l"><?php echo $step['title']; ?></span>
 						</li>
 						<?php
 						}
@@ -668,7 +668,7 @@ function __secupress_scanners() {
 										<p><?php esc_html_e( 'Start a checking of all security points with the One Click Scan button.', 'secupress' ); ?></p>
 									</div>
 								</div>
-							</div>
+							</div><!-- .secupress-col-1-4 -->
 							<div class="secupress-col-1-4">
 								<div class="secupress-blob">
 									<div class="secupress-blob-icon" aria-hidden="true">
@@ -679,7 +679,7 @@ function __secupress_scanners() {
 										<p><?php esc_html_e( 'Start to fix issues by selecting the ones you want to be automagically fixed.', 'secupress' ); ?></p>
 									</div>
 								</div>
-							</div>
+							</div><!-- .secupress-col-1-4 -->
 							<div class="secupress-col-1-4">
 								<div class="secupress-blob">
 									<div class="secupress-blob-icon" aria-hidden="true">
@@ -690,7 +690,7 @@ function __secupress_scanners() {
 										<p><?php esc_html_e( 'Go further and take a look at points you have to fix thanks to specific operation.', 'secupress' ); ?></p>
 									</div>
 								</div>
-							</div>
+							</div><!-- .secupress-col-1-4 -->
 							<div class="secupress-col-1-4">
 								<div class="secupress-blob">
 									<div class="secupress-blob-icon" aria-hidden="true">
@@ -700,41 +700,19 @@ function __secupress_scanners() {
 									<div class="secupress-blob-content" id="sp-step-4-d">
 										<p><?php esc_html_e( 'Get a report about the security of your website after those operations.', 'secupress' ); ?></p>
 									</div>
-								</div>
-							</div>
-						</div>
-
-			</div><!-- .secupress-section-dark -->
-
-			<?php ////
-			secupress_require_class( 'settings' );
-			secupress_require_class( 'settings', 'modules' );
-			$modules = SecuPress_Settings_Modules::get_modules();
-			?>
-			<div class="secupress-section-light secupress-scanners-list secupress-bordered-lat secupress-lined-b secupress-pt1p">
-						<p class="secupress-text-end secupress-m0">
-							<a href="#secupress-more-info" class="secupress-link-icon secupress-icon-right secupress-close-moreinfo<?php echo $reports ? '' : ' dont-trigger-hide'; ?>" data-trigger="slideup" data-target="secupress-more-info">
-								<span class="icon" aria-hidden="true">
-									<i class="icon-cross"></i>
-								</span>
-								<span class="text">
-									<?php esc_html_e( 'I\'ve got it!', 'secupress' ); ?>
-								</span>
-							</a>
-						</p>
+								</div><!-- .secupress-blob -->
+							</div><!-- .secupress-col-1-4 -->
+						</div><!-- .secupress-flex -->
 					</div><!-- #secupress-more-info -->
 				</div><!-- .secupress-scanner-steps -->
-
+					
 			</div><!-- .secupress-section-dark -->
 
 			<?php
-			/**
-			 *
-			 *
-			 * FIRST STEP MAIN CONTENT
-			 *
-			 *
-			 */
+			////
+			secupress_require_class( 'settings' );
+			secupress_require_class( 'settings', 'modules' );
+			$modules = SecuPress_Settings_Modules::get_modules();
 			?>
 			<div class="secupress-scanner-main-content secupress-section-gray secupress-bordered">
 
