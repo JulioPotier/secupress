@@ -719,27 +719,22 @@ function __secupress_scanners() {
 						</p>
 					</div><!-- #secupress-more-info -->
 				</div><!-- .secupress-scanner-steps -->
-					
+
 			</div><!-- .secupress-section-dark -->
 
 			<?php
 			////
 			secupress_require_class( 'settings' );
 			secupress_require_class( 'settings', 'modules' );
-			$modules = SecuPress_Settings_Modules::get_modules();
+			$modules         = SecuPress_Settings_Modules::get_modules();
 			?>
+					echo 'ok';
 			<div class="secupress-scanner-main-content secupress-section-gray secupress-bordered">
+				echo 'okokokokok';
 
 				<div class="secupress-step-content-container">
 				<?php
-				$step = secupress_get_scanner_pagination();
-				switch( $step ) {
-					case 4 : require( SECUPRESS_INC_PATH . 'admin/scanner-step-4.php' ); break;
-					case 3 : require( SECUPRESS_INC_PATH . 'admin/scanner-step-3.php' ); break;
-					case 2 : require( SECUPRESS_INC_PATH . 'admin/scanner-step-2.php' ); break;
-					case 1 :
-					default: require( SECUPRESS_INC_PATH . 'admin/scanner-step-1.php' ); break;
-				}
+					secupress_scanners_template();
 				?>
 				</div><!-- .secupress-step-content-container-->
 
@@ -883,20 +878,16 @@ function secupress_scanners_template() {
 			}
 		}
 	}
-	?>
-	<div id="secupress-tests">
-		<?php
-		$step = secupress_get_scanner_pagination();
-		switch( $step ) {
-			case 4 : require( SECUPRESS_INC_PATH . 'admin/scanner-step-4.php' ); break;
-			case 3 : require( SECUPRESS_INC_PATH . 'admin/scanner-step-3.php' ); break;
-			case 2 : require( SECUPRESS_INC_PATH . 'admin/scanner-step-2.php' ); break;
-			case 1 :
-			default: require( SECUPRESS_INC_PATH . 'admin/scanner-step-1.php' ); break;
-		}
-		?>
-	</div><!-- #secupress-tests -->
-	<?php
+
+	$step = secupress_get_scanner_pagination();
+
+	switch( $step ) {
+		case 4 : require( SECUPRESS_INC_PATH . 'admin/scanner-step-4.php' ); break;
+		case 3 : require( SECUPRESS_INC_PATH . 'admin/scanner-step-3.php' ); break;
+		case 2 : require( SECUPRESS_INC_PATH . 'admin/scanner-step-2.php' ); break;
+		case 1 :
+		default: require( SECUPRESS_INC_PATH . 'admin/scanner-step-1.php' ); break;
+	}
 }
 
 

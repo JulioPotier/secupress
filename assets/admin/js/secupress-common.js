@@ -99,7 +99,7 @@
 
 	/**
 	 * Triggering (slidedown, fadein, etc.)
-	 * @description: Triggers basic effect/action/animation 
+	 * @description: Triggers basic effect/action/animation
 	 * @author: Geoffrey
 	 */
 	$('[data-trigger]').each( function() {
@@ -109,14 +109,14 @@
 			hide 	= $(this).hasClass('dont-trigger-hide'),
 			target  = $_this.data('target'),
 			$target = $( '#' + target );
-		
+
 		if ( ! hide ) {
 			$target.spHide();
 		}
 
 		// click
 		$_this.on( 'click.secupress', function(){
-			
+
 			var $_this  = $( this ),
 				effect  = $_this.data( 'trigger' ),
 				to_hide = $_this.hasClass( 'trigger-hide-first' ),
@@ -131,7 +131,7 @@
 			} else if ( effect === 'fadetoggle' && to_hide ) {
 				effect = $_this.hasClass( active ) ? 'fadein' : 'fadeout';
 			}
-			
+
 			$target.spAnimate( effect );
 
 			if ( ( effect === 'slideup' && ! to_hide ) || ( effect === 'fadeout' && ! to_hide ) ||  ( effect === 'slidedown' && to_hide ) || ( effect === 'fadein' && to_hide ) ) {
