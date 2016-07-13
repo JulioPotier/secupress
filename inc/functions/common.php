@@ -428,19 +428,28 @@ function secupress_admin_url( $page, $module = '' ) {
 
 
 /**
- * Get the user capability required to work with the plugin.
+ * Get the user capability/role required to work with the plugin.
  *
  * @since 1.0
  *
- * @param (bool) $force_mono Set to true to get the capability for monosite, whatever we're on multisite or not.
+ * @param (bool) $force_mono Set to true to get the role for monosite, whatever we're on multisite or not.
  *
  * @return (string) The capability.
  */
 function secupress_get_capability( $force_mono = false ) {
-	if ( $force_mono ) {
-		return 'administrator';
+	if ( ! $force_mono && is_multisite() ) {
+		return 'manage_network_options';
 	}
-	return is_multisite() ? 'manage_network_options' : 'administrator';
+
+	$role = 'administrator';
+	/**
+	 * Filter the user role that gives access to SecuPress features.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $role The user role. It can't be a user capability.
+	 */
+	return apply_filters( 'secupress.user_role', $role );
 }
 
 
