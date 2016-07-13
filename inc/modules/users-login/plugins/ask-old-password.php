@@ -14,7 +14,7 @@ add_action( 'admin_init', 'secupress_oldpassword_init' );
  * Plugin init.
  *
  * @since 1.0
- * @author Greg
+ * @author Grégory Viguier
  */
 function secupress_oldpassword_init() {
 	if ( ! secupress_is_affected_role( 'users-login', 'password-policy', wp_get_current_user() ) ) {

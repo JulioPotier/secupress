@@ -21,6 +21,11 @@ function secupress_register_setting( $module, $option_name = false ) {
 	}
 
 	if ( ! is_multisite() ) {
+		if ( is_admin() ) {
+			// Filter the capability required when using the Settings API.
+			add_filter( "option_page_capability_$option_group", 'secupress_setting_capability_filter' );
+		}
+		// Register the setting.
 		register_setting( $option_group, $option_name, $sanitize_callback );
 		return;
 	}
@@ -32,4 +37,15 @@ function secupress_register_setting( $module, $option_name = false ) {
 	secupress_cache_data( 'new_whitelist_network_options', $whitelist );
 
 	add_filter( "sanitize_option_{$option_name}", $sanitize_callback );
+}
+
+
+/**
+ * Used to filter the capability required when using the Settings API.
+ *
+ * @since 1.0
+ * @author Grégory Viguier
+ */
+function secupress_setting_capability_filter() {
+	return secupress_get_capability();
 }
