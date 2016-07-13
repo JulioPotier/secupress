@@ -35,9 +35,14 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 	</p>
 </div>
 
-<div id="secupress-tests-v2" class="secupress-tests">
+<div id="secupress-tests" class="secupress-tests">
 
-	<?php if ( $is_there_something_new ) { ?>
+	<?php
+	if ( $is_there_something_new ) {
+		//// TODO: a
+		//// * function to list new modules
+		//// * an invisible button to launch scans at One Click Scan (first or not)
+	?>
 	<div class="secupress-scans-group secupress-group-new">
 		<div class="secupress-sg-header secupress-flex secupress-flex-spaced">
 

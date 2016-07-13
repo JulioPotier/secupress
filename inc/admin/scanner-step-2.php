@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 	</p>
 </div>
 
-<div id="secupress-tests-v2" class="secupress-tests">
+<div id="secupress-tests" class="secupress-tests">
 
 	<div class="secupress-scans-group secupress-group-[_GROUP_SLUG_]">
 		<div class="secupress-sg-header secupress-flex secupress-flex-spaced">
@@ -35,9 +35,10 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 			<div class="secupress-sgh-actions secupress-flex">
 				<a href="#[_SECUPRESS_MODULE_LINK_]" target="_blank" class="secupress-link-icon secupress-vcenter">
-					<span class="text">Toogle Group Check</span>
+					<label for="secupress-toggle-check" class="text">Toogle Group Check</label>
 				</a>
-				<input type="checkbox"> <?php //// geof la checkbox est pas beeeeeelle ?>
+				<input type="checkbox" class="secupress-checkbox" id="secupress-toggle-check">
+				<span class="label-text"></span>
 			</div>
 
 		</div><!-- .secupress-sg-header -->
