@@ -5,13 +5,15 @@ $scanned_items          = get_option( SECUPRESS_SCAN_SLUG );
 $scanned_items          = is_array( $scanned_items ) ? array_flip( array_keys( $scanned_items ) ) : array();
 $secupress_tests_keys   = array_flip( array_map( 'strtolower', call_user_func_array( 'array_merge', $secupress_tests ) ) );
 $new_scans              = array_diff_key( $secupress_tests_keys, $scanned_items );
-$is_there_something_new	= false !== reset( $new_scans );
+$is_there_something_new = false !== reset( $new_scans );
+$modules                = secupress_get_modules();
+
 //// new items not working yet.
 foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 	$i = 0;
 
-	$module_title     = SecuPress_Settings_Modules::get_module_title( $module_name );
-	$module_summary   = SecuPress_Settings_Modules::get_module_summary( $module_name, 'small' );
+	$module_title     = ! empty( $modules[ $module_name ]['title'] )              ? $modules[ $module_name ]['title']              : '';
+	$module_summary   = ! empty( $modules[ $module_name ]['summaries']['small'] ) ? $modules[ $module_name ]['summaries']['small'] : '';
 	$class_name_parts = array_combine( array_map( 'strtolower', $class_name_parts ), $class_name_parts );
 	$this_new_scans   = array_diff_key( $class_name_parts, $new_scans );
 
@@ -248,19 +250,27 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		$row_css_class .= ! empty( $fix['has_action'] ) ? ' status-hasaction' : '';
 		$row_css_class .= ! empty( $fix['status'] ) && empty( $fix['has_action'] ) ? ' has-fix-status' : ' no-fix-status';
 
-	?>
+		?>
 		<div id="secupress-group-content-<?php echo $module_name; ?>" class="secupress-sg-content">
 
 			<div class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> type-all status-all <?php echo $row_css_class; ?>" id="<?php echo $class_name_part; ?>">
 				<div class="secupress-flex">
 
 					<p class="secupress-item-status">
-						<span class="secupress-label"><?php echo $scan_status; ?></span>
+						<span class="secupress-label"><?php echo secupress_status( $scan_status ); ?></span>
 					</p>
 
 					<p class="secupress-item-title"><?php echo $scan_message; ?></p>
 
 					<p class="secupress-row-actions">
+						<a class="secupress-button secupress-button-mini secupress-scanit hide-if-js" href="<?php echo esc_url( $scan_nonce_url ); ?>">
+							<span class="icon" aria-hidden="true">
+								<i class="icon-refresh"></i>
+							</span>
+							<span class="text">
+								<?php echo 'notscannedyet' === $scan_status ? _x( 'Scan', 'verb', 'secupress' ) : _x( 'Re-Scan', 'verb', 'secupress' ); ?>
+							</span>
+						</a><br class="hide-if-js"/>
 						<!--
 							Things changed:
 							* data-trigger added

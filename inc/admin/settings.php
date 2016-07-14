@@ -167,8 +167,6 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'reScan'             => _x( 'Re-Scan', 'verb', 'secupress' ),
 			'scanDetails'        => __( 'Scan Details', 'secupress' ),
 			'fixDetails'         => __( 'Fix Details', 'secupress' ),
-			'scanResultLabel'    => '<span class="secupress-scan-result-label">' . _x( 'Scan result: ', 'noun', 'secupress' ) . '</span> ',
-			'fixResultLabel'     => '<span class="secupress-fix-result-label">' . _x( 'Fix result: ', 'noun', 'secupress' ) . '</span> ',
 			'supportTitle'       => __( 'Ask for Support', 'secupress' ),
 			'supportButton'      => __( 'Open a ticket', 'secupress' ),
 			'supportContentFree' => __( '<p>During the test phase, the support is done by sending a manual email on <b>contact@secupress.me</b>. Thank you!</p>', 'secupress' ), // ////.
@@ -899,19 +897,17 @@ function secupress_scanners_template() {
  * @return (string) Formatted status.
  */
 function secupress_status( $status ) {
-	$template = '<span class="dashicons dashicons-shield-alt secupress-dashicon" aria-hidden="true"></span> %s';
-
 	switch ( $status ) :
 		case 'bad':
-			return wp_sprintf( $template, __( 'Bad', 'secupress' ) );
+			return __( 'Bad', 'secupress' );
 		case 'good':
-			return wp_sprintf( $template, __( 'Good', 'secupress' ) );
+			return __( 'Good', 'secupress' );
 		case 'warning':
-			return wp_sprintf( $template, __( 'Warning', 'secupress' ) );
+			return __( 'Warning', 'secupress' );
 		case 'cantfix':
 			return '';
 		default:
-			return wp_sprintf( $template, __( 'New Scan', 'secupress' ) );
+			return __( 'New Scan', 'secupress' );
 	endswitch;
 }
 
