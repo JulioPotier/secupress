@@ -728,9 +728,7 @@ function __secupress_scanners() {
 			secupress_require_class( 'settings', 'modules' );
 			$modules         = SecuPress_Settings_Modules::get_modules();
 			?>
-					echo 'ok';
 			<div class="secupress-scanner-main-content secupress-section-gray secupress-bordered">
-				echo 'okokokokok';
 
 				<div class="secupress-step-content-container">
 				<?php

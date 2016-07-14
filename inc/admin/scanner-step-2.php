@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 	</p>
 </div>
 
-<div id="secupress-tests-v2" class="secupress-tests">
+<div id="secupress-tests" class="secupress-tests">
 
 	<div class="secupress-scans-group secupress-group-[_GROUP_SLUG_]">
 		<div class="secupress-sg-header secupress-flex secupress-flex-spaced">
