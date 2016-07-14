@@ -72,7 +72,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			<div class="secupress-sgh-actions secupress-flex">
 				<label class="text hide-if-no-js" for="secupress-toggle-check-<?php echo $module_name; ?>">
 					<span class="label-before-text"><?php _e( 'Toggle group check', 'secupress' ); ?></span>
-					<input type="checkbox" id="secupress-toggle-check<?php echo $module_name; ?>" class="secupress-checkbox secupress-toggle-check" checked="checked"/>
+					<input type="checkbox" id="secupress-toggle-check-<?php echo $module_name; ?>" class="secupress-checkbox secupress-toggle-check" checked="checked"/>
 					<span class="label-text"></span>
 				</label>
 			</div>
