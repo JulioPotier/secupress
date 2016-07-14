@@ -79,8 +79,8 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 	<?php
 	}
 
-	if ( $is_there_something_new && $this_new_scans ) {
-		$is_there_something_new = 0; // this will prevent to show up during the next foreach iteration
+		$is_there_something_new = 0; // this will prevent to show up during the next foreach iteration //// put this under the if
+	if ( false /*$is_there_something_new*/ ) {
 	?>
 	<div class="secupress-scans-group secupress-group-new">
 		<div class="secupress-sg-header secupress-flex secupress-flex-spaced">
