@@ -5,13 +5,15 @@ $scanned_items          = get_option( SECUPRESS_SCAN_SLUG );
 $scanned_items          = is_array( $scanned_items ) ? array_flip( array_keys( $scanned_items ) ) : array();
 $secupress_tests_keys   = array_flip( array_map( 'strtolower', call_user_func_array( 'array_merge', $secupress_tests ) ) );
 $new_scans              = array_diff_key( $secupress_tests_keys, $scanned_items );
-$is_there_something_new	= false !== reset( $new_scans );
+$is_there_something_new = false !== reset( $new_scans );
+$modules                = secupress_get_modules();
+
 //// new items not working yet.
 foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 	$i = 0;
 
-	$module_title     = SecuPress_Settings_Modules::get_module_title( $module_name );
-	$module_summary   = SecuPress_Settings_Modules::get_module_summary( $module_name, 'small' );
+	$module_title     = ! empty( $modules[ $module_name ]['title'] )              ? $modules[ $module_name ]['title']              : '';
+	$module_summary   = ! empty( $modules[ $module_name ]['summaries']['small'] ) ? $modules[ $module_name ]['summaries']['small'] : '';
 	$class_name_parts = array_combine( array_map( 'strtolower', $class_name_parts ), $class_name_parts );
 	$this_new_scans   = array_diff_key( $class_name_parts, $new_scans );
 
