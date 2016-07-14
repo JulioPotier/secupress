@@ -356,14 +356,14 @@ jQuery( document ).ready( function( $ ) {
 				if ( true === isConfirm ) {
 					swal2.close(); ////
 					return; ////
-					swal2( $.extend( {}, SecuPress.swal2Defaults, {
+					/*swal2( $.extend( {}, SecuPress.swal2Defaults, {
 						title:              "Pro Version needed", //// TODO: localize.
 						type:               "error",
 						showCancelButton:   true,
 						confirmButtonText:  "Get Pro now!", //// TODO: localize.
 						confirmButtonColor: SecuPress.supportButtonColor,
 						reverseButtons:     true
-					} ) );
+					} ) );*/
 				}
 			} );
 		} );
@@ -515,25 +515,22 @@ jQuery( document ).ready( function( $ ) {
 		}
 
 
-		// Scan icon + status text.
-		function secupressAddScanStatusText( $row, statusText ) {
-			$row.find( ".secupress-status-text" ).html( statusText );
+		// Scan status label.
+		function secupressAddScanStatusLabel( $row, statusText ) {
+			$row.find( ".secupress-item-status .secupress-label" ).text( statusText );
 		}
 
 
 		// Add a scan result.
 		function secupressAddScanResult( $row, message ) {
-			message = message ? SecuPressi18nScanner.scanResultLabel + message : '';
-			$row.find( ".secupress-scan-message" ).html( message );
+			$row.find( ".secupress-item-title" ).html( message );
 		}
 
 
 		// Replace a scan status with an error icon + message.
 		function secupressDisplayScanError( $row ) {
-			var status = '<span class="dashicons dashicons-no secupress-dashicon" aria-hidden="true"></span> ' + SecuPressi18nScanner.error;
-
-			// Add the icon + text.
-			secupressAddScanStatusText( $row, status );
+			// Add the status label.
+			secupressAddScanStatusLabel( $row, SecuPressi18nScanner.error );
 
 			// Empty the scan results.
 			secupressAddScanResult( $row, "" );
@@ -553,7 +550,6 @@ jQuery( document ).ready( function( $ ) {
 
 		// Add a fix result.
 		function secupressAddFixResult( $row, message ) {
-			message = message ? SecuPressi18nScanner.fixResultLabel + message : '';
 			$row.find( ".secupress-fix-result-message" ).html( message );
 		}
 
@@ -637,8 +633,8 @@ jQuery( document ).ready( function( $ ) {
 			// Add the new status as a class.
 			secupressSetStatusClass( $row, r.data.class );
 
-			// Add status.
-			secupressAddScanStatusText( $row, r.data.status );
+			// Add status label.
+			secupressAddScanStatusLabel( $row, r.data.status );
 
 			// Add scan results.
 			secupressAddScanResult( $row, r.data.message );
@@ -912,7 +908,7 @@ jQuery( document ).ready( function( $ ) {
 			data = secupressScans.manualFix[ test ];
 			delete secupressScans.manualFix[ test ];
 
-			data.message = data.message.replace( /(<ul>|<li>|<\/li><\/ul>)/g, '' ).replace( /<\/li>/g, "<br/>" );
+			data.message = data.message.replace( /<br\/>/g, '<br/><br />' );
 
 			// If the status is "bad" or "warning", `data.message` contains an error message.
 			if ( "bad" === data.class || "warning" === data.class ) {
@@ -1143,7 +1139,7 @@ jQuery( document ).ready( function( $ ) {
 
 			swal2( $.extend( {}, SecuPress.swal2Defaults, {
 				title: title,
-				html:  extra.data.message.replace( /(<ul>|<li>|<\/li><\/ul>)/g, "" ).replace( /<\/li>/g, "<br/><br/>" ),
+				html:  extra.data.message.replace( /<br\/>/g, '<br/><br />' ),
 				type:  type
 			} ) );
 		} );
