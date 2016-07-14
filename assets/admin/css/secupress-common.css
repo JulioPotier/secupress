@@ -494,6 +494,11 @@
 	border-radius: 100%;
 }
 
+/* Labels before checkboxes or radio */
+.label-before-text {
+	display: inline-block;
+}
+
 /**
  * === Other Form items
  */

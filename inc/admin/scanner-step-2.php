@@ -8,9 +8,9 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 	$page_title = __( 'Checked items will be automatically fixed', 'secupress' );
 
 	$main_button = //// geof: couleur et icone
-	'<button class="secupress-button secupress-button-primary button-secupress-scan shadow" type="button" data-nonce="' . esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ) . '">
+	'<button class="secupress-button secupress-button-tertiary button-secupress-fix shadow" type="button" data-nonce="' . esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ) . '">
 		<span class="icon" aria-hidden="true">
-			<i class="icon-radar"></i>
+			<i class="icon-check"></i>
 		</span>
 		<span class="text">' . esc_html__( 'Fix all checked issues', 'secupress' ) . '</span>
 	</button>';
@@ -34,11 +34,11 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 			</div>
 
 			<div class="secupress-sgh-actions secupress-flex">
-				<a href="#[_SECUPRESS_MODULE_LINK_]" target="_blank" class="secupress-link-icon secupress-vcenter">
-					<label for="secupress-toggle-check" class="text">Toogle Group Check</label>
-				</a>
-				<input type="checkbox" class="secupress-checkbox" id="secupress-toggle-check">
-				<span class="label-text"></span>
+				<label for="secupress-toggle-check" class="text">
+					<span class="label-before-text">Toogle Group Check</span>
+					<input type="checkbox" class="secupress-checkbox" id="secupress-toggle-check">
+					<span class="label-text"></span>
+				</label>
 			</div>
 
 		</div><!-- .secupress-sg-header -->
@@ -157,14 +157,13 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 				</div>
 
 			</div><!-- .secupress-item-all -->
-
 		</div><!-- .secupress-sg-content -->
 	</div><!-- .secupress-scans-group -->
-
 </div><!-- .secupress-tests -->
 
 <div class="secupress-step-content-footer secupress-flex secupress-flex-top secupress-flex-spaced">
+	<span><?php //flex col placeholder ?></span>
 	<p>
-		<?php echo $main_button; //// geof le bouton est à gaaaaaauche ?>
+		<?php echo $main_button; ?>
 	</p>
 </div>

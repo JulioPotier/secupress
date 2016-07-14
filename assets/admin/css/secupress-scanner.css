@@ -945,6 +945,32 @@ a + .secupress-row-actions {
 .secupress-sgh-actions .text {
 	color: #FFF;
 }
+.secupress-sgh-actions .label-before-text {
+	margin-right: 5px;
+	font-size: 11px;
+	letter-spacing: 0.125em;
+	text-transform: uppercase;
+}
+.secupress-scans-group .secupress-sgh-actions .label-text {
+	margin-right: 15px;
+}
+.secupress-sgh-actions .secupress-checkbox:not(:checked) + .label-text:before,
+.secupress-sgh-actions .secupress-checkbox:checked + .label-text:before {
+	top: -13px;
+	background: #222831;
+}
+.secupress-sgh-actions .secupress-checkbox:not(:checked) + .label-text:after,
+.secupress-sgh-actions .secupress-checkbox:checked + .label-text:after {
+	top: -11px;
+}
+.secupress-scans-group .secupress-checkbox:not(:checked) + .label-text:before,
+.secupress-scans-group .secupress-checkbox:checked + .label-text:before {
+	border-color: #2BCDC1;
+}
+.secupress-scans-group .secupress-checkbox:not(:checked) + .label-text:after,
+.secupress-scans-group .secupress-checkbox:checked + .label-text:after {
+	color: #2BCDC1;
+}
 .secupress-group-new .secupress-sg-content {
 	border: 1px solid #2BCDC1;
 	border-top: 0;
