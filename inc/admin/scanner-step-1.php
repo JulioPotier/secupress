@@ -250,7 +250,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		$row_css_class .= ! empty( $fix['has_action'] ) ? ' status-hasaction' : '';
 		$row_css_class .= ! empty( $fix['status'] ) && empty( $fix['has_action'] ) ? ' has-fix-status' : ' no-fix-status';
 
-	?>
+		?>
 		<div id="secupress-group-content-<?php echo $module_name; ?>" class="secupress-sg-content">
 
 			<div class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> type-all status-all <?php echo $row_css_class; ?>" id="<?php echo $class_name_part; ?>">
@@ -263,6 +263,14 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 					<p class="secupress-item-title"><?php echo $scan_message; ?></p>
 
 					<p class="secupress-row-actions">
+						<a class="secupress-button secupress-button-mini secupress-scanit hide-if-js" href="<?php echo esc_url( $scan_nonce_url ); ?>">
+							<span class="icon" aria-hidden="true">
+								<i class="icon-refresh"></i>
+							</span>
+							<span class="text">
+								<?php echo 'notscannedyet' === $scan_status ? _x( 'Scan', 'verb', 'secupress' ) : _x( 'Re-Scan', 'verb', 'secupress' ); ?>
+							</span>
+						</a><br class="hide-if-js"/>
 						<!--
 							Things changed:
 							* data-trigger added
