@@ -155,6 +155,16 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 		return parent::fix();
 	}
 
+	/**
+	 * Return true if a manual fix is needed here
+	 *
+	 * @since 1.0
+	 *
+	 * @return (book)
+	 */
+	public function need_manual_fix() {
+		return true;
+	}
 
 	/**
 	 * Try to fix the flaw(s) after requiring user action.
