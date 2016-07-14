@@ -727,8 +727,9 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 		return $result;
 	}
 
+
 	/**
-	 * Return false, overwrite it if needed
+	 * Return false, overwrite it if needed.
 	 *
 	 * @since 1.0
 	 *

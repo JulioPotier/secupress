@@ -20,11 +20,13 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 	</p>
 </div>
 <?php
+$modules = secupress_get_modules();
+
 foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 	$i = 0;
 
-	$module_title     = SecuPress_Settings_Modules::get_module_title( $module_name );
-	$module_summary   = SecuPress_Settings_Modules::get_module_summary( $module_name, 'small' );
+	$module_title     = ! empty( $modules[ $module_name ]['title'] )              ? $modules[ $module_name ]['title']              : '';
+	$module_summary   = ! empty( $modules[ $module_name ]['summaries']['small'] ) ? $modules[ $module_name ]['summaries']['small'] : '';
 	$class_name_parts = array_combine( array_map( 'strtolower', $class_name_parts ), $class_name_parts );
 
 	if ( ! $is_subsite ) {
@@ -83,7 +85,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		$class_name   = 'SecuPress_Scan_' . $class_name_part;
 		$current_test = $class_name::get_instance();
 		$referer      = urlencode( esc_url_raw( self_admin_url( 'admin.php?page=' . SECUPRESS_PLUGIN_SLUG . '_scanners' . ( $is_subsite ? '' : '#' . $class_name_part ) ) ) );
-		$is_fixable   = ! $current_test::need_manual_fix() && ( true === $current_test::$fixable || 'pro' === $current_test::$fixable && secupress_is_pro() );
+		$is_fixable   = ! $current_test->need_manual_fix() && ( true === $current_test::$fixable || 'pro' === $current_test::$fixable && secupress_is_pro() );
 
 		if ( ! $is_fixable ) { // step 2 = only show auto fixable items
 			continue;
