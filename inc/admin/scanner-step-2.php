@@ -60,7 +60,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 	<div class="secupress-scans-group secupress-group-<?php echo $module_name; ?>">
 	<?php
 	if ( ! $is_subsite ) {
-	?>
+		?>
 		<div class="secupress-sg-header secupress-flex secupress-flex-spaced">
 
 			<div class="secupress-sgh-name">
@@ -70,24 +70,24 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			</div>
 
 			<div class="secupress-sgh-actions secupress-flex">
-				<a href="<?php echo secupress_admin_url( 'modules' ) . '&module=' . $module_name; ?>" target="_blank" class="secupress-link-icon secupress-vcenter">
-					<span class="icon"><i class="icon-cog" aria-hidden="true"></i></span>
-					<span class="text"><?php _e( 'Toggle group check', 'secupress' ); ?></span>
-					<input type="checkbox" checked="checked"><?php //// geof checkbox a skinner merci ?>
-				</a>
+				<label class="text hide-if-no-js" for="secupress-toggle-check-<?php echo $module_name; ?>">
+					<span class="label-before-text"><?php _e( 'Toggle group check', 'secupress' ); ?></span>
+					<input type="checkbox" id="secupress-toggle-check<?php echo $module_name; ?>" class="secupress-checkbox secupress-toggle-check" checked="checked"/>
+					<span class="label-text"></span>
+				</label>
 			</div>
 
 		</div><!-- .secupress-sg-header -->
-	<?php
+		<?php
 	}
 
 	foreach ( $class_name_parts as $option_name => $class_name_part ) {
 		$class_name   = 'SecuPress_Scan_' . $class_name_part;
 		$current_test = $class_name::get_instance();
 		$referer      = urlencode( esc_url_raw( self_admin_url( 'admin.php?page=' . SECUPRESS_PLUGIN_SLUG . '_scanners' . ( $is_subsite ? '' : '#' . $class_name_part ) ) ) );
-		$is_fixable   = ! $current_test->need_manual_fix() && ( true === $current_test::$fixable || 'pro' === $current_test::$fixable && secupress_is_pro() );
+		$is_fixable   = true === $current_test::$fixable || 'pro' === $current_test::$fixable && secupress_is_pro();
 
-		if ( ! $is_fixable ) { // step 2 = only show auto fixable items
+		if ( false === $current_test::$fixable || $current_test->need_manual_fix() ) { // Step 2 = only auto fixable items and pro items.
 			continue;
 		}
 
@@ -120,9 +120,9 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		$row_css_class .= $is_fixable ? ' fixable' : ' not-fixable';
 		$row_css_class .= ! empty( $fix['has_action'] ) ? ' status-hasaction' : '';
 		$row_css_class .= ! empty( $fix['status'] ) && empty( $fix['has_action'] ) ? ' has-fix-status' : ' no-fix-status';
+		$row_css_class .= ! secupress_is_pro() && 'pro' === $current_test::$fixable ? ' fixable-in-pro' : '';
 		++$i;
-
-	?>
+		?>
 		<div id="secupress-group-content-<?php echo $module_name; ?>" class="secupress-sg-content">
 
 			<div class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> type-all status-all <?php echo $row_css_class; ?>" id="<?php echo $class_name_part; ?>">
@@ -135,15 +135,32 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 					<p class="secupress-item-title"><?php echo wp_kses( $current_test::$more_fix, $allowed_tags ); ?></p>
 
 					<p class="secupress-row-actions">
-						<!--
-							Things changed:
-							* data-trigger added
-							* data-target instead of data-test
-							* data-target === .secupress-item-details' ID
-						-->
-						<button data-trigger="slidetoggle" data-target="details-<?php echo $class_name_part; ?>" class="secupress-details link-like hide-if-no-js" type="button">
-							<span class="text"><input type="checkbox" checked="checked"><?php //// geof ici aussi :p ?></span>
-						</button>
+						<?php
+						if ( $is_fixable ) {
+							// It can be fixed.
+							?>
+							<input type="checkbox" id="secupress-item-<?php echo $class_name_part; ?>" class="secupress-checkbox secupress-group-check hide-if-no-js" checked="checked"/>
+							<label for="secupress-item-<?php echo $class_name_part; ?>" class="label-text hide-if-no-js">
+								<span class="screen-reader-text"><?php _e( 'Auto-fix this item', 'secupress' ); ?></span>
+							</label>
+							<a class="secupress-button-primary secupress-button-mini hide-if-js secupress-fixit<?php echo $current_test::$delayed_fix ? ' delayed-fix' : ''; ?>" href="<?php echo esc_url( $fix_nonce_url ); ?>">
+								<span class="icon" aria-hidden="true">
+									<i class="icon-shield"></i>
+								</span>
+								<span class="text">
+									<?php _e( 'Fix it', 'secupress' ); ?>
+								</span>
+							</a>
+							<?php
+						} elseif ( 'pro' === $current_test::$fixable ) {
+							// It is fixable with the pro version but the free version is used.
+							?>
+							<span class="secupress-get-pro-version">
+								<?php printf( __( 'Available in <a href="%s">Pro Version</a>', 'secupress' ), esc_url( secupress_admin_url( 'get_pro' ) ) ); ?>
+							</span>
+							<?php
+						}
+						?>
 					</p>
 				</div>
 
