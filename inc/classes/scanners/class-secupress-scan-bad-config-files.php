@@ -19,13 +19,6 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements SecuPres
 	 */
 	protected static $_instance;
 
-	/**
-	 * Priority.
-	 *
-	 * @var (string)
-	 */
-	public    static $prio    = 'high';
-
 
 	/**
 	 * Init.

@@ -20,11 +20,11 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 	protected static $_instance;
 
 	/**
-	 * Priority.
+	 * Current php version.
 	 *
 	 * @var (string)
 	 */
-	public    static $prio         = 'medium';
+	public    static $php_version;
 
 	/**
 	 * Minimum php version.

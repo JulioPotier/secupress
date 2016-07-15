@@ -20,13 +20,6 @@ class SecuPress_Scan_Anti_Front_Bruteforce extends SecuPress_Scan implements Sec
 	protected static $_instance;
 
 	/**
-	 * Priority.
-	 *
-	 * @var (string)
-	 */
-	public    static $prio    = 'high';
-
-	/**
 	 * Tells if a scanner is fixable by SecuPress. The value "pro" means it's fixable only with the version PRO.
 	 *
 	 * @var (bool|string)

@@ -20,13 +20,6 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements SecuPress_
 	protected static $_instance;
 
 	/**
-	 * Priority.
-	 *
-	 * @var (string)
-	 */
-	public    static $prio = 'medium';
-
-	/**
 	 * Maximum uri length.
 	 *
 	 * @var (int)

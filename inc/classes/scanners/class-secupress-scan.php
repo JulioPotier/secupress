@@ -111,13 +111,6 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	protected $delayed_fix = false;
 
 	/**
-	 * Priority.
-	 *
-	 * @var (string)
-	 */
-	public static $prio        = '';
-
-	/**
 	 * Scanner type.
 	 *
 	 * @var (string)

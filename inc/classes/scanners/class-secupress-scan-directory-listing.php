@@ -19,13 +19,6 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 	 */
 	protected static $_instance;
 
-	/**
-	 * Priority.
-	 *
-	 * @var (string)
-	 */
-	public    static $prio    = 'high';
-
 
 	/**
 	 * Init.

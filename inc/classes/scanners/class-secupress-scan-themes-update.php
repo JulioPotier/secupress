@@ -30,13 +30,6 @@ class SecuPress_Scan_Themes_Update extends SecuPress_Scan implements SecuPress_S
 	protected static $_instance;
 
 	/**
-	 * Priority.
-	 *
-	 * @var (string)
-	 */
-	public    static $prio = 'high';
-
-	/**
 	 * Tells if the fix must occur after all other scans and fixes, while no other scan/fix is running.
 	 *
 	 * @var (bool)

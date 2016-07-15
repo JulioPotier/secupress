@@ -20,13 +20,6 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan implements SecuPr
 	protected static $_instance;
 
 	/**
-	 * Priority.
-	 *
-	 * @var (string)
-	 */
-	public    static $prio    = 'high';
-
-	/**
 	 * Tells if a scanner is fixable by SecuPress. The value "pro" means it's fixable only with the version PRO.
 	 *
 	 * @var (bool|string)
