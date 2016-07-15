@@ -104,6 +104,13 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	protected $fixable = true;
 
 	/**
+	 * Tells if the fix must occur after all other scans and fixes, while no other scan/fix is running.
+	 *
+	 * @var (bool)
+	 */
+	protected $delayed_fix = false;
+
+	/**
 	 * Priority.
 	 *
 	 * @var (string)
@@ -137,13 +144,6 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 * @var (string)
 	 */
 	public $more_fix = '';
-
-	/**
-	 * Tells if the fix must occur after all other scans and fixes, while no other scan/fix is running.
-	 *
-	 * @var (bool)
-	 */
-	public static $delayed_fix = false;
 
 
 	// Init ========================================================================================.
@@ -221,6 +221,18 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 */
 	public function is_fixable() {
 		return $this->fixable;
+	}
+
+
+	/**
+	 * Tells if the fix must occur after all other scans and fixes, while no other scan/fix is running.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (bool)
+	 */
+	public function is_delayed_fix() {
+		return $this->delayed_fix;
 	}
 
 

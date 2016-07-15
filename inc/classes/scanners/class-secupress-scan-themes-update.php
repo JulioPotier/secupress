@@ -41,7 +41,7 @@ class SecuPress_Scan_Themes_Update extends SecuPress_Scan implements SecuPress_S
 	 *
 	 * @var (bool)
 	 */
-	public    static $delayed_fix = true;
+	protected $delayed_fix = true;
 
 
 	/** Public methods. ========================================================================= */

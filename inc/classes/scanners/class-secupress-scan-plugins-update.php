@@ -41,7 +41,7 @@ class SecuPress_Scan_Plugins_Update extends SecuPress_Scan implements SecuPress_
 	 *
 	 * @var (bool)
 	 */
-	public    static $delayed_fix = true;
+	protected $delayed_fix = true;
 
 
 	/** Public methods. ========================================================================= */
