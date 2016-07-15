@@ -47,7 +47,7 @@ class SecuPress_Scan_Login_Errors_Disclose extends SecuPress_Scan implements Sec
 	protected function init() {
 		self::$type     = 'WordPress';
 		$this->title    = __( 'Check if your WordPress site discloses some login errors.', 'secupress' );
-		self::$more     = __( 'Error messages displayed on the login page are a useful information for an attacker: they should not be displayed, or at least, should be less specific.', 'secupress' );
+		$this->more     = __( 'Error messages displayed on the login page are a useful information for an attacker: they should not be displayed, or at least, should be less specific.', 'secupress' );
 		$this->more_fix = __( 'This will hide errors on login page to avoid being read by attackers.', 'secupress' );
 	}
 

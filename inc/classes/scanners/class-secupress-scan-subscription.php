@@ -37,7 +37,7 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 		$this->title = __( 'Check if the subscription settings are set correctly.', 'secupress' );
 
 		if ( ! is_multisite() || is_network_admin() ) {
-			self::$more     = __( 'If user registrations are open, the default user role should be Subscriber. Moreover, your registration page should be protected from bots.', 'secupress' );
+			$this->more     = __( 'If user registrations are open, the default user role should be Subscriber. Moreover, your registration page should be protected from bots.', 'secupress' );
 			$this->more_fix = sprintf(
 				__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
 				'<em>' . __( 'Use a Captcha for everyone', 'secupress' ) . '</em>',
@@ -50,7 +50,7 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 				$this->more_fix .= '<br/>' . __( 'This will also set the default user\'s role to Subscriber.', 'secupress' );
 			}
 		} else {
-			self::$more     = __( 'If user registrations are open, the default user role should be Subscriber.', 'secupress' );
+			$this->more     = __( 'If user registrations are open, the default user role should be Subscriber.', 'secupress' );
 			$this->more_fix = __( 'This will set the default user\'s role to Subscriber.', 'secupress' );
 		}
 	}

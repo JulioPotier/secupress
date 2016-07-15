@@ -35,7 +35,7 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 	protected function init() {
 		self::$type     = 'WordPress';
 		$this->title    = __( 'Check if the <em>admin</em> account is correctly protected.', 'secupress' );
-		self::$more     = __( 'It is important to protect the famous <em>admin</em> account to avoid simple brute-force attacks on it. This account is most of the time the first one created when you install WordPress, and it is well known by attackers.', 'secupress' );
+		$this->more     = __( 'It is important to protect the famous <em>admin</em> account to avoid simple brute-force attacks on it. This account is most of the time the first one created when you install WordPress, and it is well known by attackers.', 'secupress' );
 
 		$current_user = wp_get_current_user();
 

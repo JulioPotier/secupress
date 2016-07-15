@@ -42,7 +42,7 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 	protected function init() {
 		self::$type     = 'WordPress';
 		$this->title    = __( 'Check if you are using plugins known to be vulnerable.', 'secupress' );
-		self::$more     = __( 'Never use a plugin known as vulnerable, you should update or remove it as soon as possible!', 'secupress' );
+		$this->more     = __( 'Never use a plugin known as vulnerable, you should update or remove it as soon as possible!', 'secupress' );
 
 		if ( is_network_admin() ) {
 			$this->more_fix = __( 'This will ask you to select and delete these plugins. If some of them are activated on some of your websites, a new page similar to this one will be created in each related site, where administrators will be asked to select and deactivate these plugins.', 'secupress' );

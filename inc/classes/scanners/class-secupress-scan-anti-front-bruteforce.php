@@ -42,7 +42,7 @@ class SecuPress_Scan_Anti_Front_Bruteforce extends SecuPress_Scan implements Sec
 	protected function init() {
 		self::$type     = 'WordPress';
 		$this->title    = __( 'Check if your website can be attacked by multiple and quick requests (DDoS like).', 'secupress' );
-		self::$more     = __( 'Nobody needs to load more than 10 pages per second on your front-end, back-end or login page. You should block the requests\' owner.', 'secupress' );
+		$this->more     = __( 'Nobody needs to load more than 10 pages per second on your front-end, back-end or login page. You should block the requests\' owner.', 'secupress' );
 		$this->more_fix = sprintf(
 			__( 'This will activate the <strong>%1$s</strong> from the module %2$s.', 'secupress' ),
 			__( 'Anti Front Bruteforce', 'secupress' ),

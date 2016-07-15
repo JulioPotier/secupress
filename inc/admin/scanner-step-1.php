@@ -173,7 +173,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 						<span class="secupress-details-icon">
 							<i class="icon-i" aria-hidden="true"></i>
 						</span>
-						<p class="details-content"><?php echo wp_kses( $current_test::$more, $allowed_tags ); ?></p>
+						<p class="details-content"><?php echo wp_kses( $current_test->more, $allowed_tags ); ?></p>
 						<span class="secupress-placeholder"></span>
 					</div>
 				</div>
@@ -291,7 +291,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 						<span class="secupress-details-icon">
 							<i class="icon-i" aria-hidden="true"></i>
 						</span>
-						<p class="details-content"><?php echo wp_kses( $current_test::$more, $allowed_tags ); ?></p>
+						<p class="details-content"><?php echo wp_kses( $current_test->more, $allowed_tags ); ?></p>
 						<span class="secupress-placeholder"></span>
 					</div>
 				</div>

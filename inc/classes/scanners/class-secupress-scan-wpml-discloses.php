@@ -36,7 +36,7 @@ class SecuPress_Scan_Wpml_Discloses extends SecuPress_Scan implements SecuPress_
 		self::$type  = __( 'Plugins' );
 		/* translators: %s is a plugin name */
 		$this->title = sprintf( __( 'Check if the %s plugin discloses its version.', 'secupress' ), 'WPML' );
-		self::$more  = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of informations. His goal is to find outdated versions of your server softwares or WordPress components. Don\'t let them easily find these informations.', 'secupress' );
+		$this->more  = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of informations. His goal is to find outdated versions of your server softwares or WordPress components. Don\'t let them easily find these informations.', 'secupress' );
 		/* translators: %s is a plugin name */
 		$this->more_fix = sprintf( __( 'This will hide the %s version to avoid being read by attackers.', 'secupress' ), 'WooCommerce' );
 	}

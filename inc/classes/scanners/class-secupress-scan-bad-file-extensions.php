@@ -58,7 +58,7 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 
 		self::$type  = 'WordPress';
 		$this->title = __( 'Check if some files that use bad extensions are reachable in the uploads folder.', 'secupress' );
-		self::$more  = __( 'The uploads folder should contain only files like images, pdf, or zip archives. Some other files should not be placed inside this folder, or at least, should not be reachable by their URL.', 'secupress' );
+		$this->more  = __( 'The uploads folder should contain only files like images, pdf, or zip archives. Some other files should not be placed inside this folder, or at least, should not be reachable by their URL.', 'secupress' );
 
 		if ( $is_apache ) {
 			$config_file = '.htaccess';

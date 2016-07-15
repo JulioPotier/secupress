@@ -136,7 +136,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 *
 	 * @var (string)
 	 */
-	public static $more        = '';
+	public $more = '';
 
 	/**
 	 * Fix description.

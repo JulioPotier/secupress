@@ -44,10 +44,10 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan implements SecuPr
 
 		if ( defined( 'FTP_PASS' ) ) {
 			$this->title = __( 'Test the strength of WordPress database and FTP passwords.', 'secupress' );
-			self::$more  = __( 'The passwords of the database and FTP have to be strong to avoid a possible brute-force attack.', 'secupress' );
+			$this->more  = __( 'The passwords of the database and FTP have to be strong to avoid a possible brute-force attack.', 'secupress' );
 		} else {
 			$this->title = __( 'Test the strength of WordPress database password.', 'secupress' );
-			self::$more  = __( 'The password of the database has to be strong to avoid a possible brute-force attack.', 'secupress' );
+			$this->more  = __( 'The password of the database has to be strong to avoid a possible brute-force attack.', 'secupress' );
 		}
 		$this->more_fix  = static::get_messages( 300 );
 	}

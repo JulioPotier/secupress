@@ -42,7 +42,7 @@ class SecuPress_Scan_Non_Login_Time_Slot extends SecuPress_Scan implements SecuP
 	protected function init() {
 		self::$type     = 'WordPress';
 		$this->title    = __( 'Check if your back-end is accessible 24h/24.', 'secupress' );
-		self::$more     = __( 'You don\'t necessarily need to let your back-end open like 24 hours a day, you should close it during your sleeping time.', 'secupress' );
+		$this->more     = __( 'You don\'t necessarily need to let your back-end open like 24 hours a day, you should close it during your sleeping time.', 'secupress' );
 		$this->more_fix = sprintf(
 			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
 			'<em>' . __( 'Non Login Time Slot', 'secupress' ) . '</em>',
