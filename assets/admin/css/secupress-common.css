@@ -303,6 +303,14 @@
 	color: #2BCDC1;
 }
 
+/* Some alternative texts in button */
+button.secupress-activated .secupress-toggle-button {
+	display: none;
+}
+button.secupress-activated .secupress-toggle-button.hidden {
+	display: block;
+}
+
 /**
  * Checkboxes & Radioboxes
  */
