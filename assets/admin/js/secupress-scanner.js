@@ -123,6 +123,89 @@ jQuery( document ).ready( function( $ ) {
 	} )( window, document, $ );
 
 
+	// !"Select all" -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	(function( w, d, $, undefined ) {
+
+		var lastClicked = {};
+
+		// Check all checkboxes.
+		$( '.secupress-sg-content .secupress-group-check' ).on( 'click', function( e ) {
+			var group, unchecked, checks, first, last, checked, sliced, $this;
+
+			if ( 'undefined' === e.shiftKey ) {
+				return true;
+			}
+
+			group = this.id.replace( /^\s+|\s+$/g, '' ).replace( 'secupress-group-content-', '' );
+			$this = $( this );
+
+			if ( e.shiftKey ) {
+				if ( ! lastClicked[ group ] ) {
+					return true;
+				}
+				checks  = $( lastClicked[ group ] ).closest( '.secupress-sg-content' ).find( '.secupress-group-check' ).filter( ':visible:enabled' );
+				first   = checks.index( lastClicked[ group ] );
+				last    = checks.index( this );
+				checked = $this.prop( 'checked' );
+
+				if ( 0 < first && 0 < last && first !== last ) {
+					sliced = ( last > first ) ? checks.slice( first, last ) : checks.slice( last, first );
+					sliced.prop( 'checked', function() {
+						if ( $this.closest( '.secupress-item-all' ).is( ':visible' ) ) {
+							return checked;
+						}
+
+						return false;
+					} );
+				}
+			}
+
+			lastClicked[ group ] = this;
+
+			// Toggle "check all" checkboxes.
+			unchecked = $this.closest( '.secupress-sg-content' ).find( '.secupress-group-check' ).filter( ':visible:enabled' ).not( ':checked' );
+
+			$this.closest( '.secupress-scans-group' ).find( '.secupress-toggle-check' ).prop( 'checked', function() {
+				return ( 0 === unchecked.length );
+			} );
+
+			return true;
+		} );
+
+		$( '.secupress-toggle-check' ).on( 'click.wp-toggle-checkboxes', function( e ) {
+			var $this          = $( this ),
+				$wrap          = $this.closest( '.secupress-scans-group' ),
+				controlChecked = $this.prop( 'checked' ),
+				toggle         = e.shiftKey || $this.data( 'wp-toggle' );
+
+			$wrap.children( '.secupress-sg-header' ).find( '.secupress-toggle-check' )
+				.prop( 'checked', function() {
+					var $this = $( this );
+
+					if ( $this.is( ':hidden,:disabled' ) ) {
+						return false;
+					}
+
+					if ( toggle ) {
+						return ! $this.prop( 'checked' );
+					}
+
+					return controlChecked ? true : false;
+				} );
+
+			$wrap.children( '.secupress-sg-content' ).find( '.secupress-group-check' )
+				.prop( 'checked', function() {
+					if ( toggle ) {
+						return false;
+					}
+
+					return controlChecked ? true : false;
+				} );
+		} );
+
+	} )(window, document, $);
+
+
 	// !Chart and score ============================================================================
 	function secupressDrawCharts() {
 		var chartData;
