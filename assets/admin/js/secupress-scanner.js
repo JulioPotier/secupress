@@ -37,16 +37,16 @@ jQuery( document ).ready( function( $ ) {
 
 	// !Get scan button fixed width at first load
 	( function( w, d, $, undefined ) {
-		
+
 		var $button = $( '.secupress-start-one-click-scan' ).find( '.button-secupress-scan' ),
 			$text   = $button.find('.secupress-progress-val-txt'),
 			$val    = $button.find('.secupress-progressbar-val');
 
 		$button.css( 'width', $button.outerWidth() + 5 );
 
-		
+
 		// animation testing
-		
+
 		/*var temp = setInterval(function(){
 			$button.attr( 'aria-disabled', 'true' );
 			$('.secupress-introduce-first-scan').addClass('secupress-scanning');
@@ -177,6 +177,7 @@ jQuery( document ).ready( function( $ ) {
 					percentageInnerCutout: 93,
 					tooltipEvents:         [] // remove tooltips
 				} );
+
 			} );
 		} else {
 			// Update existing charts.
@@ -334,30 +335,6 @@ jQuery( document ).ready( function( $ ) {
 
 
 	// !Other UI. ==================================================================================
-	// Filter rows (Status bad/good/etc).
-	( function( w, d, $, undefined ) {
-		$( "#secupress-type-filters" ).find( "a" ).on( "click.secupress keyup", function( e ) {
-			var $this, priority, current = "active";
-
-			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
-				return false;
-			}
-
-			$this = $( this );
-
-			if ( $this.hasClass( current ) ) {
-				return false;
-			}
-
-			priority = $this.data( "type" );
-
-			$this.closest( "ul" ).find( "a" ).removeClass( current );
-			$this.addClass( current );
-
-			$( ".status-all" ).addClass( "hidden" ).attr( "aria-hidden", true ).filter( ".status-" + priority ).removeClass( "hidden" ).attr( "aria-hidden", false );
-		} ).filter( ".secupress-current" ).trigger( "click.secupress" );
-	} )( window, document, $ );
-
 
 	// Header tabs specificities
 	( function( w, d, $, undefined ) {
@@ -383,7 +360,6 @@ jQuery( document ).ready( function( $ ) {
 		} );
 
 	} )( window, document, $ );
-
 
 	// Ask for support button (free).
 	( function( w, d, $, undefined ) {

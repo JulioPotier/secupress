@@ -494,6 +494,11 @@
 	border-radius: 100%;
 }
 
+/* Labels before checkboxes or radio */
+.label-before-text {
+	display: inline-block;
+}
+
 /**
  * === Other Form items
  */
@@ -642,6 +647,24 @@ body[class*="secupress"] .sweet-overlay {
 	font-size: 11px;
 	font-weight: bold;
 	border-radius: 3px;
+}
+
+[class^="secupress-dot-"] {
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	background: #FFF;
+	vertical-align: middle;
+	border-radius: 50%;
+}
+.secupress-dot-bad {
+	background: #cb234f;
+}
+.secupress-dot-good {
+	background: #2bcdc1;
+}
+.secupress-dot-warning {
+	background: #f19b12;
 }
 
 /**

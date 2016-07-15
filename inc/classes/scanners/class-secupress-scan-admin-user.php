@@ -120,6 +120,29 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 
 
 	/**
+	 * Return true if a manual fix is needed here
+	 *
+	 * @since 1.0
+	 *
+	 * @return (book)
+	 */
+	public function need_manual_fix() {
+
+		$username = 'admin';
+		$user_id  = username_exists( $username );
+
+		// The "admin" account exists and has a role or capabilities.
+		if ( static::user_has_capas( $user_id ) ) {
+
+			// It's not you
+			return $user_id === get_current_user_id();
+		}
+
+		return false;
+
+	}
+
+	/**
 	 * Try to fix the flaw(s).
 	 *
 	 * @since 1.0

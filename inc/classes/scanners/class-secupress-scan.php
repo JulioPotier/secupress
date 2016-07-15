@@ -728,6 +728,18 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	}
 
 	/**
+	 * Return false, overwrite it if needed
+	 *
+	 * @since 1.0
+	 *
+	 * @return (bool)
+	 */
+	public function need_manual_fix() {
+		return false;
+	}
+
+
+	/**
 	 * Try to fix the flaw(s) after requiring user action.
 	 *
 	 * @since 1.0
@@ -995,39 +1007,6 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 
 
 	// Tools =======================================================================================.
-
-	/**
-	 * Prioritie(s): get an array containing title and description of the given priority.
-	 *
-	 * @since 1.0
-	 *
-	 * @param (string) $level A priority.
-	 *
-	 * @return (array) An array containing title and description. If `$level` is not provided, will return an array containing all Priorities.
-	 */
-	final public static function get_priorities( $level = null ) {
-		$priorities = array(
-			'high' => array(
-				'title'       => __( 'High Priority', 'secupress' ),
-				'description' => __( 'These tests should be fixed now.', 'secupress' ),
-			),
-			'medium' => array(
-				'title'       => __( 'Medium Priority', 'secupress' ),
-				'description' => __( 'These tests should be fixed when you can if no conflict are found', 'secupress' ),
-			),
-			'low' => array(
-				'title'       => __( 'Low Priority', 'secupress' ),
-				'description' => __( 'These tests should be fixed to improve your security, but not mandatory.', 'secupress' ),
-			),
-		);
-
-		if ( isset( $level ) ) {
-			return isset( $priorities[ $level ] ) ? $priorities[ $level ] : array( 'title' => __( 'Unkown Priority', 'secupress' ), 'description' => '' );
-		}
-
-		return $priorities;
-	}
-
 
 	/**
 	 * Given an array of items, wrap them in a HTML tag.

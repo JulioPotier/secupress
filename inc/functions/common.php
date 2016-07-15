@@ -75,59 +75,65 @@ function secupress_require_class_async() {
  */
 function secupress_get_scanners() {
 	$tests = array(
-		'high' => array(
-			'Core_Update',
-			'Plugins_Update',
-			'Themes_Update',
-			'Auto_Update',
-			'Bad_Old_Plugins',
-			'Bad_Old_Files',
-			'Bad_Config_Files',
-			'Bad_Vuln_Plugins',
+		'users-login' => array(
 			'Admin_User',
 			'Easy_Login',
 			'Subscription',
+			'Passwords_Strength',
+			'Bad_Usernames',
+			'Login_Errors_Disclose',
+		),
+		'plugins-themes' => array(
+			'Plugins_Update',
+			'Themes_Update',
+			'Bad_Old_Plugins',
+			'Bad_Vuln_Plugins',
+			'Inactive_Plugins_Themes',
+		),
+		'wordpress-core' => array(
+			'Core_Update',
+			'Auto_Update',
+			'Bad_Old_Files',
+			'Bad_Config_Files',
 			'WP_Config',
 			'DB_Prefix',
 			'Salt_Keys',
-			'Passwords_Strength',
+		),
+		'sensitive-data' => array(
+			'Discloses',
+			'Readme_Discloses',
+			'PHP_Disclosure',
+		),
+		'file-system' => array(
 			'Chmods',
+			'Directory_Listing',
+			'Bad_File_Extensions',
+			'DirectoryIndex',
+		),
+		'firewall' => array(
 			'Common_Flaws',
 			'Bad_User_Agent',
 			'SQLi',
 			'Anti_Scanner',
 			'Anti_Front_Bruteforce',
-			'Directory_Listing',
-		),
-		'medium' => array(
-			'Inactive_Plugins_Themes',
-			'Bad_Usernames',
 			'Bad_Request_Methods',
-			'PhpVersion',
 			'Block_HTTP_1_0',
-			'Discloses',
 			'Block_Long_URL',
-			'Readme_Discloses',
 			'Bad_Url_Access',
-			'Bad_File_Extensions',
-		),
-		'low' => array(
-			'Login_Errors_Disclose',
-			'PHP_Disclosure',
-			'DirectoryIndex',
+			'PhpVersion',
 		),
 	);
 
 	if ( ! secupress_users_can_register() ) {
-		$tests['medium'][] = 'Non_Login_Time_Slot';
+		$tests['users-login'][] = 'Non_Login_Time_Slot';
 	}
 
 	if ( class_exists( 'SitePress' ) ) {
-		$tests['medium'][] = 'Wpml_Discloses';
+		$tests['sensitive-data'][] = 'Wpml_Discloses';
 	}
 
 	if ( class_exists( 'WooCommerce' ) ) {
-		$tests['medium'][] = 'Woocommerce_Discloses';
+		$tests['sensitive-data'][] = 'Woocommerce_Discloses';
 	}
 
 	return $tests;
@@ -893,4 +899,25 @@ function secupress_modify_userid_for_nonces( $uid ) {
  */
 function secupress_is_user( $user ) {
 	return is_a( $user, 'WP_User' ) && user_can( $user, 'exist' );
+}
+
+
+/**
+ * Will return the current scanner step number
+ *
+ * @since 1.0
+ * @author Julio Potier (Geoffrey)
+ *
+ * @return (integer) returns 1 if first scan never done
+ */
+function secupress_get_scanner_pagination() {
+	$scans = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
+
+	if ( ! isset( $_GET['step'] ) || ! is_numeric( $_GET['step'] ) || absint( $_GET['step'] ) < 0 || empty( $scans ) ) {
+		$step = 1;
+	} else {
+		$step = (int) $_GET['step'];
+	}
+
+	return $step;
 }

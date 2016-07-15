@@ -114,6 +114,28 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 
 
 	/**
+	 * Get a module summary.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $module The desired module.
+	 * @param (string) $size The desired size: small|normal.
+	 *
+	 * @return (string)
+	*/
+	final public function get_module_summary( $module = false, $size = 'normal' ) {
+		$modules = static::get_modules();
+		$module  = $module ? $module : $this->modulenow;
+
+		if ( ! empty( $modules[ $module ]['summaries'][ $size ] ) ) {
+			return $modules[ $module ]['summaries'][ $size ];
+		}
+
+		return '';
+	}
+
+
+	/**
 	 * Get a module icon.
 	 *
 	 * @since 1.0
