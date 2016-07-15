@@ -164,8 +164,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 	 * @return (bool)
 	 */
 	public function need_manual_fix() {
-		$lists = static::get_inactive_plugins_and_themes();
-		return ! empty( $lists['plugins'] ) && ! empty( $lists['themes'] );
+		return true;
 	}
 
 
