@@ -11,6 +11,12 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 			<i class="icon-wrench" aria-hidden="true"></i>
 		</span>
 		<span class="text">' . __( 'Fix all checked issues', 'secupress') . '</span>
+	</a>
+	<a href="' . esc_url( secupress_admin_url( 'scanners' ) ) . '&amp;step=3" class="secupress-button shadow light hidden">
+		<span class="icon">
+			<i class="icon-cross" aria-hidden="true"></i>
+		</span>
+		<span class="text">' . __( 'Ignore this step', 'secupress') . '</span>
 	</a>';
 	?>
 
@@ -162,7 +168,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 								} else {
 									// It can be fixed.
 									?>
-									<input type="checkbox" id="secupress-item-<?php echo $class_name_part; ?>" class="secupress-checkbox secupress-group-check hide-if-no-js" checked="checked"/>
+									<input type="checkbox" id="secupress-item-<?php echo $class_name_part; ?>" class="secupress-checkbox secupress-row-check hide-if-no-js" checked="checked"/>
 									<label for="secupress-item-<?php echo $class_name_part; ?>" class="label-text hide-if-no-js">
 										<span class="screen-reader-text"><?php _e( 'Auto-fix this item', 'secupress' ); ?></span>
 									</label>

@@ -126,10 +126,28 @@ jQuery( document ).ready( function( $ ) {
 	// !"Select all" -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	(function( w, d, $, undefined ) {
 
-		var lastClicked = {};
+		var lastClicked = {},
+			jqPropHookChecked = $.propHooks.checked;
+
+		// Force `.prop()` to trigger a `change` event.
+		$.propHooks.checked = {
+			set: function( elem, value, name ) {
+				var ret;
+
+				if ( undefined === jqPropHookChecked ) {
+					ret = ( elem[ name ] = value );
+				} else {
+					ret = jqPropHookChecked( elem, value, name );
+				}
+
+				$( elem ).trigger( 'change.secupress' );
+
+				return ret;
+			}
+		};
 
 		// Check all checkboxes.
-		$( '.secupress-sg-content .secupress-group-check' ).on( 'click', function( e ) {
+		$( '.secupress-sg-content .secupress-row-check' ).on( 'click', function( e ) {
 			var group, unchecked, checks, first, last, checked, sliced, $this;
 
 			if ( 'undefined' === e.shiftKey ) {
@@ -143,7 +161,7 @@ jQuery( document ).ready( function( $ ) {
 				if ( ! lastClicked[ group ] ) {
 					return true;
 				}
-				checks  = $( lastClicked[ group ] ).closest( '.secupress-sg-content' ).find( '.secupress-group-check' ).filter( ':visible:enabled' );
+				checks  = $( lastClicked[ group ] ).closest( '.secupress-sg-content' ).find( '.secupress-row-check' ).filter( ':visible:enabled' );
 				first   = checks.index( lastClicked[ group ] );
 				last    = checks.index( this );
 				checked = $this.prop( 'checked' );
@@ -163,14 +181,43 @@ jQuery( document ).ready( function( $ ) {
 			lastClicked[ group ] = this;
 
 			// Toggle "check all" checkboxes.
-			unchecked = $this.closest( '.secupress-scans-group' ).find( '.secupress-group-check' ).filter( ':visible:enabled' ).not( ':checked' );
+			unchecked = $this.closest( '.secupress-scans-group' ).find( '.secupress-row-check' ).filter( ':visible:enabled' ).not( ':checked' );
 
 			$this.closest( '.secupress-scans-group' ).find( '.secupress-toggle-check' ).prop( 'checked', function() {
 				return ( 0 === unchecked.length );
 			} );
 
 			return true;
-		} );
+		} )
+		// If nothing is checked, change the "Fix all checked issues" button into "Ignore this step".
+		.on( 'change.secupress', function( e ) {
+			var $this = $( this ),
+				$buttons, $checks;
+
+			if ( ! $this.is( ':visible:enabled' ) ) {
+				return;
+			}
+
+			$buttons = $( '.secupress-button-autofix' );
+
+			// "Ignore this step" => "Fix all checked issues".
+			if ( $this.is( ':checked' ) ) {
+				// At least one checkbox is checked (this one): display the "Fix all" button.
+				if ( $buttons.first().hasClass( 'hidden' ) ) {
+					$buttons.next().addClass( 'hidden' );
+					$buttons.removeClass( 'hidden' );
+				}
+				return;
+			}
+
+			// "Fix all checked issues" => "Ignore this step".
+			$checks = $( '.secupress-sg-content .secupress-row-check' ).filter( ':visible:enabled:checked' );
+			// No checkboxes are checked: display the "Ignore" button.
+			if ( ! $checks.length && ! $buttons.first().hasClass( 'hidden' ) ) {
+				$buttons.addClass( 'hidden' );
+				$buttons.next().removeClass( 'hidden' );
+			}
+		} ).first().trigger( 'change.secupress' );
 
 		$( '.secupress-toggle-check' ).on( 'click.wp-toggle-checkboxes', function( e ) {
 			var $this          = $( this ),
@@ -193,7 +240,7 @@ jQuery( document ).ready( function( $ ) {
 					return controlChecked ? true : false;
 				} );
 
-			$wrap.children( '.secupress-sg-content' ).find( '.secupress-group-check' )
+			$wrap.children( '.secupress-sg-content' ).find( '.secupress-row-check' )
 				.prop( 'checked', function() {
 					if ( toggle ) {
 						return false;
@@ -964,7 +1011,7 @@ jQuery( document ).ready( function( $ ) {
 
 
 		function secupressLaunchSeparatedBulkFix() {
-			var $buttons = $( '.secupress-sg-content .secupress-group-check' ).filter( ':checked' ).siblings( '.secupress-fixit' );
+			var $buttons = $( '.secupress-sg-content .secupress-row-check' ).filter( ':checked' ).siblings( '.secupress-fixit' );
 
 			if ( $buttons.length < 2 ) {
 				// Not a bulk.
