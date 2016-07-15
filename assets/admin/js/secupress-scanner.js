@@ -1058,6 +1058,28 @@ jQuery( document ).ready( function( $ ) {
 			} );
 		}
 
+		// Hide/show each issue bloc
+		$( "body" ).on( "click.secupress keyup", ".secupress-button-ignoreit", function( e ) {
+			var $parent = $( '.' + $( this ).attr( "data-parent" ) );
+			var $next   = $parent.next();
+
+			$parent.hide();
+
+			// If there is a next bloc
+			if ( $next.length ) {
+				// Don't go on step4
+				e.preventDefault();
+				// Get the current advanced text and incrment it
+				var item = $( ".step3-advanced-text" ).text();
+				item = parseInt( item ) + 1;
+
+				// Display the next bloc and the new advanced text
+				$next.show();
+				$( ".step3-advanced-text" ).text( item );
+			}
+
+		} );
+
 
 		// What to do when a scan ends.
 		$( "body" ).on( "scanDone.secupress", function( e, extra ) {

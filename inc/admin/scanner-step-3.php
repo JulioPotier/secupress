@@ -1,33 +1,10 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
-$modules                = secupress_get_modules();
-?>
-<div class="secupress-step-content-header secupress-flex secupress-flex-spaced">
+$modules = secupress_get_modules();
 
-	<?php
-	$page_title  = sprintf( __( 'These %d actions require your attention', 'secupress' ), 12/*//// dyn */ );
-	$main_button =
-	'<a href="' . secupress_admin_url( 'scanners' ) . '&step=4" class="secupress-button secupress-button-tertiary secupress-button-autofix shadow">
-		<span class="hide-if-no-js">
-			<span class="text">1</span>////
-			<span class="text">12</span>
-		</span>
-		<span class="icon">
-			<i class="icon-cross" aria-hidden="true"></i>
-		</span>
-		<span class="text">' . esc_html__( 'Ignore this step', 'secupress') . '</span>
-	</a>';
-	?>
-
-	<p class="secupress-step-title"><?php echo $page_title; ?></p>
-	<p>
-		<?php echo $main_button; ?>
-	</p>
-</div>
-<?php
+$i = 0;
 foreach ( $secupress_tests as $module_name => $class_name_parts ) {
-	$i = 0;
 
 	$module_title     = ! empty( $modules[ $module_name ]['title'] )              ? $modules[ $module_name ]['title']              : '';
 	$module_summary   = ! empty( $modules[ $module_name ]['summaries']['small'] ) ? $modules[ $module_name ]['summaries']['small'] : '';
@@ -60,10 +37,35 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		}
 	}
 
-	?>
-	<div id="secupress-tests" class="secupress-tests">
-	<div class="secupress-scans-group secupress-group-<?php echo $module_name; ?>">
-	<?php
+	if ( 0 === $i ) {
+		$nb_actions = count( $bad_scans ) + count( $warning_scans );
+		?>
+		<div class="secupress-step-content-header secupress-flex secupress-flex-spaced">
+
+			<?php
+			$page_title  = sprintf( __( 'These %d actions require your attention', 'secupress' ), $nb_actions );
+			$main_button =
+			'<a href="' . secupress_admin_url( 'scanners' ) . '&step=4" class="secupress-button secupress-button-tertiary secupress-button-autofix shadow">
+				<span class="hide-if-no-js">
+					<span class="text step3-advanced-text">1</span>
+					<span class="text">' . $nb_actions . '</span>
+				</span>
+				<span class="icon">
+					<i class="icon-cross" aria-hidden="true"></i>
+				</span>
+				<span class="text">' . esc_html__( 'Ignore this step', 'secupress') . '</span>
+			</a>';
+			?>
+
+			<p class="secupress-step-title"><?php echo $page_title; ?></p>
+			<p>
+				<?php echo $main_button; ?>
+			</p>
+		</div>
+
+		<div id="secupress-tests" class="secupress-tests">
+		<?php
+	}
 
 	foreach ( $class_name_parts as $option_name => $class_name_part ) {
 		$class_name   = 'SecuPress_Scan_' . $class_name_part;
@@ -101,7 +103,9 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		$row_css_class .= ! empty( $fix['has_action'] ) ? ' status-hasaction' : '';
 		$row_css_class .= ! empty( $fix['status'] ) && empty( $fix['has_action'] ) ? ' has-fix-status' : ' no-fix-status';
 		++$i;
-
+	?>
+	<div class="secupress-scans-group secupress-group-<?php echo $module_name; ?> secupress-group-item-<?php echo $class_name_part; echo $i === 1 ? '' : ' hide-if-js';?>">
+	<?php
 		if ( ! $is_subsite ) {
 		?>
 		<div class="secupress-sg-header secupress-flex secupress-flex-spaced">
@@ -112,7 +116,6 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 				<p class="secupress-sgh-description"><?php echo $module_summary; ?></p>
 			</div>
 
-
 		</div><!-- .secupress-sg-header -->
 		<!-- //// geof iic ce bandeau est donc plus clair avec une dot "orange" -->
 		<div class="secupress-sg-header secupress-flex secupress-flex-spaced">
@@ -120,7 +123,6 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			<div class="secupress-sgh-name">
 				<p class="secupress-sgh-title">&middot; <?php echo $current_test::$title; ?></p>
 			</div>
-
 
 		</div><!-- .secupress-sg-header -->
 		<?php } ?>
@@ -145,35 +147,35 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 							<span class="text">Read the documentation</span>
 						</a>
 						<?php if ( 'pro' !== $current_test::$fixable || secupress_is_pro() ) { ?>
-						<a href="#" class="secupress-button secupress-button-tertiary secupress-button-autofix shadow">
+						<a href="#" class="secupress-button secupress-button-tertiary secupress-button-support shadow">
 							<span class="icon">
 								<i class="icon-cross" aria-hidden="true"></i>
 							</span>
 							<span class="text"><?php _e( 'Ask for support', 'secupress' ); ?></span>
 						</a>
 						<?php } ?>
-						<a href="#" class="secupress-button secupress-button-tertiary secupress-button-autofix hide-is-no-js shadow">
+						<a href="<?php echo esc_url( secupress_admin_url( 'scanners' ) ); ?>&step=4" class="secupress-button secupress-button-tertiary secupress-button-ignoreit hide-is-no-js shadow" data-parent="secupress-group-item-<?php echo $class_name_part; ?>">
 							<span class="icon">
 								<i class="icon-cross" aria-hidden="true"></i>
 							</span>
 							<span class="text"><?php _e( 'Ignore it', 'secupress' ); ?></span>
 						</a>
 						<?php if ( $is_fixable && $current_test::need_manual_fix() ) { ?>
-						<a href="#" class="secupress-button secupress-button-tertiary secupress-button-autofix shadow">
+						<a href="#" class="secupress-button secupress-button-tertiary secupress-button-fixit shadow">
 							<span class="icon">
 								<i class="icon-cross" aria-hidden="true"></i>
 							</span>
 							<span class="text"><?php _e( 'Fix it', 'secupress' ); ?></span>
 						</a>
 						<?php } elseif ( $is_fixable && ! $current_test::need_manual_fix() ) { ?>
-						<a href="#" class="secupress-button secupress-button-tertiary secupress-button-autofix shadow">
+						<a href="#" class="secupress-button secupress-button-tertiary secupress-button-fixit shadow">
 							<span class="icon">
 								<i class="icon-cross" aria-hidden="true"></i>
 							</span>
 							<span class="text"><?php _e( 'Retry to fix', 'secupress' ); ?></span>
 						</a>
 						<?php } elseif ( 'pro' === $current_test::$fixable && ! secupress_is_pro() ) { ?>
-						<a href="#" class="secupress-button secupress-button-tertiary secupress-button-autofix shadow">
+						<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ); ?>" class="secupress-button secupress-button-tertiary secupress-button-getpro shadow">
 							<span class="icon">
 								<i class="icon-cross" aria-hidden="true"></i>
 							</span>
@@ -197,10 +199,12 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			</div><!-- .secupress-item-all -->
 
 		</div><!-- .secupress-sg-content -->
+	</div><!-- .secupress-scans-group -->
 		<?php
 	}
+	?>
+	<?php
 }
 ?>
-	</div><!-- .secupress-scans-group -->
 
 </div><!-- .secupress-tests -->
