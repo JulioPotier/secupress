@@ -31,7 +31,7 @@ class SecuPress_Scan_Anti_Front_Bruteforce extends SecuPress_Scan implements Sec
 	 *
 	 * @var (bool|string)
 	 */
-	public    static $fixable = 'pro';
+	protected $fixable = 'pro';
 
 
 	/**

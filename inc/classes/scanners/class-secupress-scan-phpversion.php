@@ -45,7 +45,7 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 	 *
 	 * @var (bool|string)
 	 */
-	public    static $fixable      = false;
+	protected $fixable = false;
 
 	/**
 	 * Init.

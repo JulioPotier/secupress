@@ -49,13 +49,13 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 				$current_test = $class_name::get_instance();
 
 				// Step 2 = only auto fixable items and pro items.
-				if ( false === $current_test::$fixable || $current_test->need_manual_fix() ) {
+				if ( false === $current_test->is_fixable() || $current_test->need_manual_fix() ) {
 					unset( $class_name_parts[ $option_name ] );
 					continue;
 				}
 
 				$section_has_items = true;
-				if ( ! $section_has_fixable_items && ( true === $current_test::$fixable || 'pro' === $current_test::$fixable && secupress_is_pro() ) ) {
+				if ( ! $section_has_fixable_items && ( true === $current_test->is_fixable() || 'pro' === $current_test->is_fixable() && secupress_is_pro() ) ) {
 					$section_has_fixable_items = true;
 				}
 			}
@@ -106,7 +106,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 				$class_name   = 'SecuPress_Scan_' . $class_name_part;
 				$current_test = $class_name::get_instance();
 				$referer      = urlencode( esc_url_raw( self_admin_url( 'admin.php?page=' . SECUPRESS_PLUGIN_SLUG . '_scanners' . ( $is_subsite ? '' : '#' . $class_name_part ) ) ) );
-				$needs_pro    = 'pro' === $current_test::$fixable && ! secupress_is_pro();
+				$needs_pro    = 'pro' === $current_test->is_fixable() && ! secupress_is_pro();
 
 				// Scan.
 				$scanner        = isset( $scanners[ $option_name ] ) ? $scanners[ $option_name ] : array();

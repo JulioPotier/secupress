@@ -110,7 +110,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			$class_name   = 'SecuPress_Scan_' . $class_name_part;
 			$current_test = $class_name::get_instance();
 			$referer      = urlencode( esc_url_raw( self_admin_url( 'admin.php?page=' . SECUPRESS_PLUGIN_SLUG . '_scanners' . ( $is_subsite ? '' : '#' . $class_name_part ) ) ) );
-			$is_fixable   = true === $current_test::$fixable || 'pro' === $current_test::$fixable && secupress_is_pro();
+			$is_fixable   = true === $current_test->is_fixable() || 'pro' === $current_test->is_fixable() && secupress_is_pro();
 
 			// Scan.
 			$scanner        = isset( $scanners[ $option_name ] ) ? $scanners[ $option_name ] : array();
@@ -218,7 +218,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		$class_name   = 'SecuPress_Scan_' . $class_name_part;
 		$current_test = $class_name::get_instance();
 		$referer      = urlencode( esc_url_raw( self_admin_url( 'admin.php?page=' . SECUPRESS_PLUGIN_SLUG . '_scanners' . ( $is_subsite ? '' : '#' . $class_name_part ) ) ) );
-		$is_fixable   = true === $current_test::$fixable || 'pro' === $current_test::$fixable && secupress_is_pro();
+		$is_fixable   = true === $current_test->is_fixable() || 'pro' === $current_test->is_fixable() && secupress_is_pro();
 
 		// Scan.
 		$scanner        = isset( $scanners[ $option_name ] ) ? $scanners[ $option_name ] : array();

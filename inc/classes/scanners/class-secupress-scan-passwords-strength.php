@@ -31,7 +31,7 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan implements SecuPr
 	 *
 	 * @var (bool|string)
 	 */
-	public    static $fixable = false;
+	protected $fixable = false;
 
 
 	/**

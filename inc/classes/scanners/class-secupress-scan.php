@@ -97,6 +97,13 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	protected     $for_current_site = false;
 
 	/**
+	 * Tells if a scanner is fixable by SecuPress. The value "pro" means it's fixable only with the version PRO.
+	 *
+	 * @var (bool|string)
+	 */
+	protected $fixable = true;
+
+	/**
 	 * Priority.
 	 *
 	 * @var (string)
@@ -130,13 +137,6 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 * @var (string)
 	 */
 	public $more_fix = '';
-
-	/**
-	 * Tells if a scanner is fixable by SecuPress. The value "pro" means it's fixable only with the version PRO.
-	 *
-	 * @var (bool|string)
-	 */
-	public static $fixable     = true;
 
 	/**
 	 * Tells if the fix must occur after all other scans and fixes, while no other scan/fix is running.
@@ -207,6 +207,20 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	final public function for_current_site( $for_current_site = null ) {
 		$this->for_current_site = (bool) $for_current_site;
 		return $this;
+	}
+
+
+	// Getters =====================================================================================.
+
+	/**
+	 * Tells if a scanner is fixable by SecuPress. The value "pro" means it's fixable only with the version PRO.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (bool|string)
+	 */
+	public function is_fixable() {
+		return $this->fixable;
 	}
 
 
