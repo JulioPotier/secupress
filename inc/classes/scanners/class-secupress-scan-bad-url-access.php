@@ -36,7 +36,7 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 		global $is_apache, $is_nginx, $is_iis7;
 
 		self::$type  = 'WordPress';
-		self::$title = __( 'Check if your WordPress site discloses sensitive informations.', 'secupress' );
+		$this->title = __( 'Check if your WordPress site discloses sensitive informations.', 'secupress' );
 		self::$more  = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of information. His goal is to find outdated versions of your server softwares or WordPress component. Don\'t let him easily find these informations.', 'secupress' );
 
 		if ( $is_apache ) {

@@ -34,7 +34,7 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 	 */
 	protected function init() {
 		self::$type  = 'WordPress';
-		self::$title = __( 'Check if the subscription settings are set correctly.', 'secupress' );
+		$this->title = __( 'Check if the subscription settings are set correctly.', 'secupress' );
 
 		if ( ! is_multisite() || is_network_admin() ) {
 			self::$more     = __( 'If user registrations are open, the default user role should be Subscriber. Moreover, your registration page should be protected from bots.', 'secupress' );

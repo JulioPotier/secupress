@@ -36,7 +36,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 		global $is_apache, $is_nginx, $is_iis7;
 
 		self::$type     = 'WordPress';
-		self::$title    = __( 'Check if your WordPress site discloses files in directory (known as Directory Listing).', 'secupress' );
+		$this->title    = __( 'Check if your WordPress site discloses files in directory (known as Directory Listing).', 'secupress' );
 		self::$more     = __( 'Without the appropriate protection, anybody could browse your site files. While browsing some of your files might not be a security risk, most of them are sensitive.', 'secupress' );
 
 		if ( $is_apache ) {

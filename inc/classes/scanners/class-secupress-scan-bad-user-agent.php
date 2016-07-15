@@ -34,7 +34,7 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan implements SecuPress_
 	 */
 	protected function init() {
 		self::$type     = 'WordPress';
-		self::$title    = __( 'Check if bad User Agents can visit your website.', 'secupress' );
+		$this->title    = __( 'Check if bad User Agents can visit your website.', 'secupress' );
 		self::$more     = __( 'Bad User-Agents are bots that provide no value to the website. It includes scrapers, spambots, email harvesters and more bots that you don\'t want on your site. In any cases, those bots that are crawling with a malicious purpose, have no desire to follow any <code>robots.txt</code> or meta tag.', 'secupress' );
 		$this->more_fix = sprintf(
 			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),

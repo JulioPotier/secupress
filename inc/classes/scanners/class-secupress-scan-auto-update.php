@@ -46,7 +46,7 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements SecuPress_Sca
 	 */
 	protected function init() {
 		self::$type     = 'WordPress';
-		self::$title    = __( 'Check if your WordPress core can perform auto-updates for minor versions.', 'secupress' );
+		$this->title    = __( 'Check if your WordPress core can perform auto-updates for minor versions.', 'secupress' );
 		self::$more     = __( 'When a minor update is released, WordPress can install it automatically. By doing so you are always up to date when a security flaw is discovered in the WordPress Core.', 'secupress' );
 		$this->more_fix = sprintf(
 			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),

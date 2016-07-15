@@ -150,7 +150,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 						<span class="secupress-label"><?php _ex( 'New', 'scan status', 'secupress' ); ?></span>
 					</p>
 
-					<p class="secupress-item-title"><?php echo $class_name::$title; ?></p>
+					<p class="secupress-item-title"><?php echo $class_name->title; ?></p>
 
 					<p class="secupress-row-actions">
 						<!--

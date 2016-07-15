@@ -34,7 +34,7 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements SecuPress_Sc
 	 */
 	protected function init() {
 		self::$type  = 'PHP';
-		self::$title = __( 'Check if your website can easily be the target of common flaws.', 'secupress' );
+		$this->title = __( 'Check if your website can easily be the target of common flaws.', 'secupress' );
 		self::$more  = __( 'Every year, new flaws are discovered. You have to be sure that your website cannot be a target.', 'secupress' );
 		$this->more_fix = sprintf(
 			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
