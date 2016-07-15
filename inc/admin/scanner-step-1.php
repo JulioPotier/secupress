@@ -75,15 +75,18 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		<p>
 			<?php echo $main_button; ?>
 		</p>
-	</div>
-
-	<div id="secupress-tests" class="secupress-tests">
+	</div><!-- .secupress-step-content-header -->
 	<?php
 	}
+	?>
 
-		$is_there_something_new = 0; // this will prevent to show up during the next foreach iteration //// put this under the if
+	<div id="secupress-tests" class="secupress-tests">
+
+	<?php
+	$is_there_something_new = 0; // this will prevent to show up during the next foreach iteration //// put this under the if
 	if ( false /*$is_there_something_new*/ ) {
 	?>
+
 	<div class="secupress-scans-group secupress-group-new">
 		<div class="secupress-sg-header secupress-flex secupress-flex-spaced">
 
@@ -179,14 +182,18 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 				</div>
 
 			</div><!-- .secupress-item-all -->
+
 		<?php } ?>
+
 		</div><!-- .secupress-sg-content -->
 	</div><!-- .secupress-scans-group -->
+
 	<?php
 	} // is something new in that version
-
 	?>
+
 	<div class="secupress-scans-group secupress-group-<?php echo $module_name; ?>">
+
 	<?php
 	if ( ! $is_subsite ) {
 	?>
@@ -210,6 +217,8 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			</div>
 
 		</div><!-- .secupress-sg-header -->
+
+		<div id="secupress-group-content-<?php echo $module_name; ?>" class="secupress-sg-content">
 	<?php
 	}
 
@@ -251,9 +260,9 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		$row_css_class .= ! empty( $fix['status'] ) && empty( $fix['has_action'] ) ? ' has-fix-status' : ' no-fix-status';
 
 		?>
-		<div id="secupress-group-content-<?php echo $module_name; ?>" class="secupress-sg-content">
 
 			<div class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> type-all status-all <?php echo $row_css_class; ?>" id="<?php echo $class_name_part; ?>">
+				
 				<div class="secupress-flex">
 
 					<p class="secupress-item-status">
@@ -270,13 +279,17 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 							<span class="text">
 								<?php echo 'notscannedyet' === $scan_status ? _x( 'Scan', 'verb', 'secupress' ) : _x( 'Re-Scan', 'verb', 'secupress' ); ?>
 							</span>
-						</a><br class="hide-if-js"/>
-						<!--
+						</a><br class="hide-if-js">
+						
+						<?php
+						/*
 							Things changed:
 							* data-trigger added
 							* data-target instead of data-test
 							* data-target === .secupress-item-details' ID
-						-->
+						 */
+						?>
+
 						<button data-trigger="slidetoggle" data-target="details-<?php echo $class_name_part; ?>" class="secupress-details link-like hide-if-no-js" type="button">
 							<span aria-hidden="true" class="icon">
 								<i class="icon-info-disk"></i>
@@ -284,7 +297,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 							<span class="text"><?php _e( 'Learn more', 'secupress' ); ?></span>
 						</button>
 					</p>
-				</div>
+				</div><!-- .secupress-flex -->
 
 				<div class="secupress-item-details hide-if-js" id="details-<?php echo $class_name_part; ?>">
 					<div class="secupress-flex">
@@ -294,16 +307,19 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 						<p class="details-content"><?php echo wp_kses( $current_test::$more, $allowed_tags ); ?></p>
 						<span class="secupress-placeholder"></span>
 					</div>
-				</div>
-
+				</div><!-- .secupress-item-details -->
 			</div><!-- .secupress-item-all -->
 
-		</div><!-- .secupress-sg-content -->
 		<?php
 	}
+	?>
+
+		</div><!-- .secupress-sg-content -->
+	</div><!-- .secupress-scans-group -->
+
+	<?php
 }
 ?>
-	</div><!-- .secupress-scans-group -->
 
 </div><!-- .secupress-tests -->
 
