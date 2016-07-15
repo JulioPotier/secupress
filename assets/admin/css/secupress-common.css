@@ -649,6 +649,24 @@ body[class*="secupress"] .sweet-overlay {
 	border-radius: 3px;
 }
 
+[class^="secupress-dot-"] {
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	background: #FFF;
+	vertical-align: middle;
+	border-radius: 50%;
+}
+.secupress-dot-bad {
+	background: #cb234f;
+}
+.secupress-dot-good {
+	background: #2bcdc1;
+}
+.secupress-dot-warning {
+	background: #f19b12;
+}
+
 /**
  * === Blobs
  */

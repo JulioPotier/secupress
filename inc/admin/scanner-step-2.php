@@ -48,75 +48,47 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 			<div class="secupress-item-all secupress-item-[_ITEM_SLUG_] type-all status-all type-wordpress status-good not-fixable no-fix-status" id="[_ITEM_SLUG_]">
 				<div class="secupress-flex">
 
-					<p class="secupress-item-status">
-						<span class="secupress-label">Good</span>
+					<p class="secupress-item-status secupress-status-mini">
+						<span class="secupress-dot-bad"></span>
 					</p>
 
 					<p class="secupress-item-title">Check if your login page is protected by double authentication or something like that (may be a custom script).</p>
 
 					<p class="secupress-row-actions">
-						<!--
-							Things changed:
-							* data-trigger added
-							* data-target instead of data-test
-							* data-target === .secupress-item-details' ID
-						-->
-						<button data-trigger="slidetoggle" data-target="details-[_ITEM_SLUG_]" class="secupress-details link-like hide-if-no-js" type="button">
-							<span aria-hidden="true" class="icon">
-								<i class="icon-info-disk"></i>
-							</span>
-							<span class="text">Learn more</span>
-						</button>
+						<input type="checkbox" name="" id="secupress-item-[_ITEM_SLUG_]" class="secupress-checkbox">
+						<label for="secupress-item-[_ITEM_SLUG_]" class="label-text">
+							<span class="screen-reader-text"><?php esc_html_e( 'Auto-fix this item', 'secupress' ); ?></span>
+						</label>
 					</p>
-				</div>
-
-				<div class="secupress-item-details hide-if-js" id="details-[_ITEM_SLUG_]">
-					<div class="secupress-flex">
-						<span class="secupress-details-icon">
-							<i class="icon-i" aria-hidden="true"></i>
-						</span>
-						<p class="details-content">The login vector is often use in web attacks, every hour, your website is targeted by random bots whom try to log in your site. Adding another layer of login can improve the security.</p>
-						<span class="secupress-placeholder"></span>
-					</div>
 				</div>
 
 			</div><!-- .secupress-item-all -->
 
-			<div class="secupress-item-all secupress-item-Easy_Login type-all status-all type-wordpress status-warning not-fixable no-fix-status alternate-1" id="Easy_Login">
+			<!--
+
+			Difference with others:
+
+			* secupress-only-pro in that parent div
+			* .secupress-row-actions element is filled with "is_pro" text instead of checkbox
+
+			-->
+			<div class="secupress-item-all secupress-item-Easy_Login secupress-only-pro type-all status-all type-wordpress status-warning not-fixable no-fix-status alternate-1" id="Easy_Login">
 
 				<div class="secupress-flex">
 
-					<p class="secupress-item-status">
-						<span class="secupress-label">Warning</span>
+					<p class="secupress-item-status secupress-status-mini">
+						<span class="secupress-dot-bad"></span>
 					</p>
 
 					<p class="secupress-item-title">Check if your login page is protected by double authentication or something like that (may be a custom script).</p>
 
 					<p class="secupress-row-actions">
-						<!--
-							Things changed:
-							* data-trigger added
-							* data-target instead of data-test
-							* data-target === .secupress-item-details' ID
-						-->
-						<button data-trigger="slidetoggle" data-target="details-Easy_Login" class="secupress-details link-like hide-if-no-js" type="button">
-							<span aria-hidden="true" class="icon">
-								<i class="icon-info-disk"></i>
-							</span>
-							<span class="text">Learn more</span>
-						</button>
+						<input type="checkbox" name="" id="secupress-item-[_ITEM_SLUG_]" class="secupress-checkbox">
+						<label for="secupress-item-[_ITEM_SLUG_]" class="label-text">
+							<span class="screen-reader-text"><?php esc_html_e( 'Auto-fix this item', 'secupress' ); ?></span>
+						</label>
 					</p>
 				</div><!-- .secupress-flex -->
-
-				<div class="secupress-item-details hide-if-js" id="details-Easy_Login">
-					<div class="secupress-flex">
-						<span class="secupress-details-icon">
-							<i class="icon-i" aria-hidden="true"></i>
-						</span>
-						<p class="details-content">The login vector is often use in web attacks, every hour, your website is targeted by random bots whom try to log in your site. Adding another layer of login can improve the security.</p>
-						<span class="secupress-placeholder"></span>
-					</div>
-				</div>
 
 			</div><!-- .secupress-item-all -->
 
@@ -124,37 +96,19 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 				<div class="secupress-flex">
 
-					<p class="secupress-item-status">
-						<span class="secupress-label">Bad</span>
+					<p class="secupress-item-status secupress-status-mini">
+						<span class="secupress-dot-bad"></span>
 					</p>
 
 					<p class="secupress-item-title">Check if your login page is protected by double authentication or something like that (may be a custom script).</p>
 
 					<p class="secupress-row-actions">
-						<!--
-							Things changed:
-							* data-trigger added
-							* data-target instead of data-test
-							* data-target === .secupress-item-details' ID
-						-->
-						<button data-trigger="slidetoggle" data-target="details-Easy_Login" class="secupress-details link-like hide-if-no-js" type="button">
-							<span aria-hidden="true" class="icon">
-								<i class="icon-info-disk"></i>
-							</span>
-							<span class="text">Learn more</span>
-						</button>
+						<input type="checkbox" name="" id="secupress-item-[_ITEM_SLUG_]" class="secupress-checkbox">
+						<label for="secupress-item-[_ITEM_SLUG_]" class="label-text">
+							<span class="screen-reader-text"><?php esc_html_e( 'Auto-fix this item', 'secupress' ); ?></span>
+						</label>
 					</p>
 				</div><!-- .secupress-flex -->
-
-				<div class="secupress-item-details hide-if-js" id="details-Easy_Login">
-					<div class="secupress-flex">
-						<span class="secupress-details-icon">
-							<i class="icon-i" aria-hidden="true"></i>
-						</span>
-						<p class="details-content">The login vector is often use in web attacks, every hour, your website is targeted by random bots whom try to log in your site. Adding another layer of login can improve the security.</p>
-						<span class="secupress-placeholder"></span>
-					</div>
-				</div>
 
 			</div><!-- .secupress-item-all -->
 		</div><!-- .secupress-sg-content -->

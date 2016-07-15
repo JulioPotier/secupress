@@ -951,20 +951,34 @@ a + .secupress-row-actions {
 	letter-spacing: 0.125em;
 	text-transform: uppercase;
 }
+
+/* Header checkboxes */
 .secupress-scans-group .secupress-sgh-actions .label-text {
 	margin-right: 15px;
 }
 .secupress-sgh-actions .secupress-checkbox:not(:checked) + .label-text:before,
 .secupress-sgh-actions .secupress-checkbox:checked + .label-text:before {
-	top: -13px;
 	background: #222831;
 }
 .secupress-sgh-actions .secupress-checkbox:not(:checked) + .label-text:after,
 .secupress-sgh-actions .secupress-checkbox:checked + .label-text:after {
 	top: -11px;
 }
+/* In-item checkboxes */
+.secupress-item-all .secupress-checkbox:not(:checked) + .label-text:before,
+.secupress-item-all .secupress-checkbox:checked + .label-text:before {
+	left: 10px;
+	background: #FFF;
+}
+.secupress-item-all .secupress-checkbox:not(:checked) + .label-text:after,
+.secupress-item-all .secupress-checkbox:checked + .label-text:after {
+	top: -12px;
+	left: 15px;
+}
+/* All checkboxes */
 .secupress-scans-group .secupress-checkbox:not(:checked) + .label-text:before,
 .secupress-scans-group .secupress-checkbox:checked + .label-text:before {
+	top: -13px;
 	border-color: #2BCDC1;
 }
 .secupress-scans-group .secupress-checkbox:not(:checked) + .label-text:after,
@@ -992,11 +1006,25 @@ a + .secupress-row-actions {
 .secupress-tests .secupress-item-all + .secupress-item-all {
 	border-top: 1px solid #F2F2F6;
 }
+.secupress-item-all.secupress-only-pro:before {
+	content: "";
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background:#fff linear-gradient(-45deg, #fff, #fff 10px, #000 10px, #000 11px, #fff 11px) repeat scroll 0 0;
+	background-size: 15px auto;
+	opacity: 0.5;
+}
 .secupress-item-status,
 .secupress-details-icon {
 	flex-basis: 110px;
 	flex-shrink: 0;
 	padding-right: 15px;
+}
+.secupress-item-status.secupress-status-mini {
+	flex-basis: 44px;
 }
 .secupress-row-actions,
 .secupress-item-all .secupress-placeholder {
