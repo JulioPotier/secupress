@@ -135,8 +135,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			}
 
 			// Row css class.
-			$row_css_class  = ' type-' . sanitize_key( $class_name::$type );
-			$row_css_class .= ' status-' . sanitize_html_class( $scan_status );
+			$row_css_class  = ' status-' . sanitize_html_class( $scan_status );
 			$row_css_class .= isset( $autoscans[ $class_name_part ] ) ? ' autoscan' : '';
 			$row_css_class .= $is_fixable ? ' fixable' : ' not-fixable';
 			$row_css_class .= ! empty( $fix['has_action'] ) ? ' status-hasaction' : '';
@@ -243,8 +242,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		}
 
 		// Row css class.
-		$row_css_class  = ' type-' . sanitize_key( $class_name::$type );
-		$row_css_class .= ' status-' . sanitize_html_class( $scan_status );
+		$row_css_class  = ' status-' . sanitize_html_class( $scan_status );
 		$row_css_class .= isset( $autoscans[ $class_name_part ] ) ? ' autoscan' : '';
 		$row_css_class .= $is_fixable ? ' fixable' : ' not-fixable';
 		$row_css_class .= ! empty( $fix['has_action'] ) ? ' status-hasaction' : '';

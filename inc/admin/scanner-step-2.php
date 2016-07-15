@@ -131,8 +131,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 				}
 
 				// Row css class.
-				$row_css_class  = ' type-' . sanitize_key( $class_name::$type );
-				$row_css_class .= ' status-' . sanitize_html_class( $scan_status );
+				$row_css_class  = ' status-' . sanitize_html_class( $scan_status );
 				$row_css_class .= isset( $autoscans[ $class_name_part ] ) ? ' autoscan' : '';
 				$row_css_class .= ! empty( $fix['has_action'] ) ? ' status-hasaction' : '';
 				$row_css_class .= ! empty( $fix['status'] ) && empty( $fix['has_action'] ) ? ' has-fix-status' : ' no-fix-status';
