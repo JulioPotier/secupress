@@ -31,7 +31,7 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 	 *
 	 * @var (bool|string)
 	 */
-	public    static $fixable = 'pro';
+	protected $fixable = 'pro';
 
 	/**
 	 * The test file path.
@@ -53,27 +53,27 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 	 *
 	 * @since 1.0
 	 */
-	protected static function init() {
+	protected function init() {
 		global $is_apache, $is_nginx, $is_iis7;
 
 		self::$type  = 'WordPress';
-		self::$title = __( 'Check if some files that use bad extensions are reachable in the uploads folder.', 'secupress' );
-		self::$more  = __( 'The uploads folder should contain only files like images, pdf, or zip archives. Some other files should not be placed inside this folder, or at least, should not be reachable by their URL.', 'secupress' );
+		$this->title = __( 'Check if some files that use bad extensions are reachable in the uploads folder.', 'secupress' );
+		$this->more  = __( 'The uploads folder should contain only files like images, pdf, or zip archives. Some other files should not be placed inside this folder, or at least, should not be reachable by their URL.', 'secupress' );
 
 		if ( $is_apache ) {
 			$config_file = '.htaccess';
 		} elseif ( $is_iis7 ) {
 			$config_file = 'web.config';
 		} elseif ( ! $is_nginx ) {
-			self::$fixable = false;
+			$this->fixable = false;
 		}
 
 		if ( $is_nginx ) {
-			self::$more_fix = sprintf( __( 'Since your %s file cannot be edited automatically, this will give you the rules to add into it manually, to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>nginx.conf</code>' );
-		} elseif ( self::$fixable ) {
-			self::$more_fix = sprintf( __( 'This will add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), "<code>$config_file</code>" );
+			$this->more_fix = sprintf( __( 'Since your %s file cannot be edited automatically, this will give you the rules to add into it manually, to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>nginx.conf</code>' );
+		} elseif ( $this->fixable ) {
+			$this->more_fix = sprintf( __( 'This will add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), "<code>$config_file</code>" );
 		} else {
-			self::$more_fix = static::get_messages( 301 );
+			$this->more_fix = static::get_messages( 301 );
 		}
 	}
 

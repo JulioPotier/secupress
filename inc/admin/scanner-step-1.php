@@ -110,7 +110,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			$class_name   = 'SecuPress_Scan_' . $class_name_part;
 			$current_test = $class_name::get_instance();
 			$referer      = urlencode( esc_url_raw( self_admin_url( 'admin.php?page=' . SECUPRESS_PLUGIN_SLUG . '_scanners' . ( $is_subsite ? '' : '#' . $class_name_part ) ) ) );
-			$is_fixable   = true === $current_test::$fixable || 'pro' === $current_test::$fixable && secupress_is_pro();
+			$is_fixable   = true === $current_test->is_fixable() || 'pro' === $current_test->is_fixable() && secupress_is_pro();
 
 			// Scan.
 			$scanner        = isset( $scanners[ $option_name ] ) ? $scanners[ $option_name ] : array();
@@ -135,8 +135,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			}
 
 			// Row css class.
-			$row_css_class  = ' type-' . sanitize_key( $class_name::$type );
-			$row_css_class .= ' status-' . sanitize_html_class( $scan_status );
+			$row_css_class  = ' status-' . sanitize_html_class( $scan_status );
 			$row_css_class .= isset( $autoscans[ $class_name_part ] ) ? ' autoscan' : '';
 			$row_css_class .= $is_fixable ? ' fixable' : ' not-fixable';
 			$row_css_class .= ! empty( $fix['has_action'] ) ? ' status-hasaction' : '';
@@ -150,7 +149,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 						<span class="secupress-label"><?php _ex( 'New', 'scan status', 'secupress' ); ?></span>
 					</p>
 
-					<p class="secupress-item-title"><?php echo $class_name::$title; ?></p>
+					<p class="secupress-item-title"><?php echo $class_name->title; ?></p>
 
 					<p class="secupress-row-actions">
 						<!--
@@ -173,7 +172,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 						<span class="secupress-details-icon">
 							<i class="icon-i" aria-hidden="true"></i>
 						</span>
-						<p class="details-content"><?php echo wp_kses( $current_test::$more, $allowed_tags ); ?></p>
+						<p class="details-content"><?php echo wp_kses( $current_test->more, $allowed_tags ); ?></p>
 						<span class="secupress-placeholder"></span>
 					</div>
 				</div>
@@ -218,7 +217,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		$class_name   = 'SecuPress_Scan_' . $class_name_part;
 		$current_test = $class_name::get_instance();
 		$referer      = urlencode( esc_url_raw( self_admin_url( 'admin.php?page=' . SECUPRESS_PLUGIN_SLUG . '_scanners' . ( $is_subsite ? '' : '#' . $class_name_part ) ) ) );
-		$is_fixable   = true === $current_test::$fixable || 'pro' === $current_test::$fixable && secupress_is_pro();
+		$is_fixable   = true === $current_test->is_fixable() || 'pro' === $current_test->is_fixable() && secupress_is_pro();
 
 		// Scan.
 		$scanner        = isset( $scanners[ $option_name ] ) ? $scanners[ $option_name ] : array();
@@ -243,8 +242,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		}
 
 		// Row css class.
-		$row_css_class  = ' type-' . sanitize_key( $class_name::$type );
-		$row_css_class .= ' status-' . sanitize_html_class( $scan_status );
+		$row_css_class  = ' status-' . sanitize_html_class( $scan_status );
 		$row_css_class .= isset( $autoscans[ $class_name_part ] ) ? ' autoscan' : '';
 		$row_css_class .= $is_fixable ? ' fixable' : ' not-fixable';
 		$row_css_class .= ! empty( $fix['has_action'] ) ? ' status-hasaction' : '';
@@ -291,7 +289,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 						<span class="secupress-details-icon">
 							<i class="icon-i" aria-hidden="true"></i>
 						</span>
-						<p class="details-content"><?php echo wp_kses( $current_test::$more, $allowed_tags ); ?></p>
+						<p class="details-content"><?php echo wp_kses( $current_test->more, $allowed_tags ); ?></p>
 						<span class="secupress-placeholder"></span>
 					</div>
 				</div>

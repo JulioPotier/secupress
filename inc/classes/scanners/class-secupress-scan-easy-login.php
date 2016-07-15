@@ -31,7 +31,7 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements SecuPress_Scan
 	 *
 	 * @var (bool|string)
 	 */
-	public    static $fixable = 'pro';
+	protected $fixable = 'pro';
 
 
 	/**
@@ -39,11 +39,11 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements SecuPress_Scan
 	 *
 	 * @since 1.0
 	 */
-	protected static function init() {
+	protected function init() {
 		self::$type     = 'WordPress';
-		self::$title    = __( 'Check if your login page is protected by double authentication or something like that (may be a custom script).', 'secupress' );
-		self::$more     = __( 'The login vector is often use in web attacks, every hour, your website is targeted by random bots whom try to log in your site. Adding another layer of login can improve the security.', 'secupress' );
-		self::$more_fix = sprintf(
+		$this->title    = __( 'Check if your login page is protected by double authentication or something like that (may be a custom script).', 'secupress' );
+		$this->more     = __( 'The login vector is often use in web attacks, every hour, your website is targeted by random bots whom try to log in your site. Adding another layer of login can improve the security.', 'secupress' );
+		$this->more_fix = sprintf(
 			__( 'This will activate the <strong>%1$s</strong> from the module %2$s.', 'secupress' ),
 			__( 'PasswordLess Double Authentication', 'secupress' ),
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#row-double-auth_type">' . __( 'Users & Login', 'secupress' ) . '</a>'

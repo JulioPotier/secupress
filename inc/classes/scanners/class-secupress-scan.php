@@ -97,6 +97,20 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	protected     $for_current_site = false;
 
 	/**
+	 * Tells if a scanner is fixable by SecuPress. The value "pro" means it's fixable only with the version PRO.
+	 *
+	 * @var (bool|string)
+	 */
+	protected $fixable = true;
+
+	/**
+	 * Tells if the fix must occur after all other scans and fixes, while no other scan/fix is running.
+	 *
+	 * @var (bool)
+	 */
+	protected $delayed_fix = false;
+
+	/**
 	 * Priority.
 	 *
 	 * @var (string)
@@ -115,35 +129,21 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 *
 	 * @var (string)
 	 */
-	public static $title       = '';
+	public $title = '';
 
 	/**
 	 * Scan description.
 	 *
 	 * @var (string)
 	 */
-	public static $more        = '';
+	public $more = '';
 
 	/**
 	 * Fix description.
 	 *
 	 * @var (string)
 	 */
-	public static $more_fix    = '';
-
-	/**
-	 * Tells if a scanner is fixable by SecuPress. The value "pro" means it's fixable only with the version PRO.
-	 *
-	 * @var (bool|string)
-	 */
-	public static $fixable     = true;
-
-	/**
-	 * Tells if the fix must occur after all other scans and fixes, while no other scan/fix is running.
-	 *
-	 * @var (bool)
-	 */
-	public static $delayed_fix = false;
+	public $more_fix = '';
 
 
 	// Init ========================================================================================.
@@ -155,7 +155,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 */
 	protected function _init() {
 		$this->class_name_part = substr( get_called_class(), 15 ); // 15 is 'SecuPress_Scan_' length.
-		static::init();
+		$this->init();
 	}
 
 
@@ -164,8 +164,8 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 *
 	 * @since 1.0
 	 */
-	protected static function init() {
-		die( 'Method SecuPress_Scan::init() must be over-ridden in a sub-class.' );
+	protected function init() {
+		die( 'Method SecuPress_Scan->init() must be over-ridden in a sub-class.' );
 	}
 
 
@@ -207,6 +207,32 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	final public function for_current_site( $for_current_site = null ) {
 		$this->for_current_site = (bool) $for_current_site;
 		return $this;
+	}
+
+
+	// Getters =====================================================================================.
+
+	/**
+	 * Tells if a scanner is fixable by SecuPress. The value "pro" means it's fixable only with the version PRO.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (bool|string)
+	 */
+	public function is_fixable() {
+		return $this->fixable;
+	}
+
+
+	/**
+	 * Tells if the fix must occur after all other scans and fixes, while no other scan/fix is running.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (bool)
+	 */
+	public function is_delayed_fix() {
+		return $this->delayed_fix;
 	}
 
 

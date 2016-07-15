@@ -55,13 +55,13 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 				$current_test = $class_name::get_instance();
 
 				// Step 2 = only auto fixable items and pro items.
-				if ( false === $current_test::$fixable || $current_test->need_manual_fix() ) {
+				if ( false === $current_test->is_fixable() || $current_test->need_manual_fix() ) {
 					unset( $class_name_parts[ $option_name ] );
 					continue;
 				}
 
 				$section_has_items = true;
-				if ( ! $section_has_fixable_items && ( true === $current_test::$fixable || 'pro' === $current_test::$fixable && secupress_is_pro() ) ) {
+				if ( ! $section_has_fixable_items && ( true === $current_test->is_fixable() || 'pro' === $current_test->is_fixable() && secupress_is_pro() ) ) {
 					$section_has_fixable_items = true;
 				}
 			}
@@ -112,7 +112,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 				$class_name   = 'SecuPress_Scan_' . $class_name_part;
 				$current_test = $class_name::get_instance();
 				$referer      = urlencode( esc_url_raw( self_admin_url( 'admin.php?page=' . SECUPRESS_PLUGIN_SLUG . '_scanners' . ( $is_subsite ? '' : '#' . $class_name_part ) ) ) );
-				$needs_pro    = 'pro' === $current_test::$fixable && ! secupress_is_pro();
+				$needs_pro    = 'pro' === $current_test->is_fixable() && ! secupress_is_pro();
 
 				// Scan.
 				$scanner        = isset( $scanners[ $option_name ] ) ? $scanners[ $option_name ] : array();
@@ -137,8 +137,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 				}
 
 				// Row css class.
-				$row_css_class  = ' type-' . sanitize_key( $class_name::$type );
-				$row_css_class .= ' status-' . sanitize_html_class( $scan_status );
+				$row_css_class  = ' status-' . sanitize_html_class( $scan_status );
 				$row_css_class .= isset( $autoscans[ $class_name_part ] ) ? ' autoscan' : '';
 				$row_css_class .= ! empty( $fix['has_action'] ) ? ' status-hasaction' : '';
 				$row_css_class .= ! empty( $fix['status'] ) && empty( $fix['has_action'] ) ? ' has-fix-status' : ' no-fix-status';
@@ -154,7 +153,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 								<span class="secupress-label">////PUCE ROUGE</span>
 							</p>
 
-							<p class="secupress-item-title"><?php echo wp_kses( $current_test::$more_fix, $allowed_tags ); ?></p>
+							<p class="secupress-item-title"><?php echo wp_kses( $current_test->more_fix, $allowed_tags ); ?></p>
 
 							<p class="secupress-row-actions">
 								<?php
@@ -172,7 +171,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 									<label for="secupress-item-<?php echo $class_name_part; ?>" class="label-text hide-if-no-js">
 										<span class="screen-reader-text"><?php _e( 'Auto-fix this item', 'secupress' ); ?></span>
 									</label>
-									<a class="secupress-button-primary secupress-button-mini hide-if-js secupress-fixit<?php echo $current_test::$delayed_fix ? ' delayed-fix' : ''; ?>" href="<?php echo esc_url( $fix_nonce_url ); ?>">
+									<a class="secupress-button-primary secupress-button-mini hide-if-js secupress-fixit<?php echo $current_test->is_delayed_fix() ? ' delayed-fix' : ''; ?>" href="<?php echo esc_url( $fix_nonce_url ); ?>">
 										<span class="icon" aria-hidden="true">
 											<i class="icon-shield"></i>
 										</span>
