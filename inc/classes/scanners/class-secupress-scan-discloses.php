@@ -28,9 +28,8 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 	protected function init() {
 		global $is_apache, $is_nginx, $is_iis7;
 
-		self::$type     = 'WordPress';
-		$this->title    = __( 'Check if your WordPress site discloses its version.', 'secupress' );
-		$this->more     = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of informations. His goal is to find outdated versions of your server softwares or WordPress components. Don\'t let them easily find these informations.', 'secupress' );
+		$this->title = __( 'Check if your WordPress site discloses its version.', 'secupress' );
+		$this->more  = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of informations. His goal is to find outdated versions of your server softwares or WordPress components. Don\'t let them easily find these informations.', 'secupress' );
 
 		if ( $is_apache ) {
 			$config_file = '.htaccess';

@@ -26,7 +26,6 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements SecuP
 	 * @since 1.0
 	 */
 	protected function init() {
-		self::$type     = 'WordPress';
 		$this->title    = __( 'Check if bad request methods can reach your website.', 'secupress' );
 		$this->more     = __( 'There are malicious scripts and bots out there, hammering your site with bad HTTP GET requests. Let\'s check if your website can handle that.', 'secupress' );
 		$this->more_fix = sprintf(

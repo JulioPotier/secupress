@@ -56,28 +56,28 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 *
 	 * @var (array)
 	 */
-	private       $fix_actions = array();
+	private $fix_actions = array();
 
 	/**
 	 * The part of the class that extends this one, like SecuPress_Scan_{$class_name_part}.
 	 *
 	 * @var (string)
 	 */
-	protected     $class_name_part;
+	protected $class_name_part;
 
 	/**
 	 * Contains scan results.
 	 *
 	 * @var (array)
 	 */
-	protected     $result     = array();
+	protected $result = array();
 
 	/**
 	 * Contains fix results.
 	 *
 	 * @var (array)
 	 */
-	protected     $result_fix = array();
+	protected $result_fix = array();
 
 	/**
 	 * On multisite, some fixes can't be performed from the network admin.
@@ -85,7 +85,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 *
 	 * @var (array)
 	 */
-	protected     $fix_sites;
+	protected $fix_sites;
 
 	/**
 	 * On multisite, if `$for_current_site` is true, then the scan/fix/etc are performed for the current site, not wetwork-widely.
@@ -94,7 +94,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 *
 	 * @var (bool)
 	 */
-	protected     $for_current_site = false;
+	protected $for_current_site = false;
 
 	/**
 	 * Tells if a scanner is fixable by SecuPress. The value "pro" means it's fixable only with the version PRO.
@@ -109,13 +109,6 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 * @var (bool)
 	 */
 	protected $delayed_fix = false;
-
-	/**
-	 * Scanner type.
-	 *
-	 * @var (string)
-	 */
-	public static $type        = '';
 
 	/**
 	 * Scanner title.

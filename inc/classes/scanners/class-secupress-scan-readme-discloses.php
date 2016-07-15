@@ -28,7 +28,6 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 	protected function init() {
 		global $is_apache, $is_nginx, $is_iis7;
 
-		self::$type  = __( 'Plugins and Themes', 'secupress' );
 		/* translators: %s is a file name */
 		$this->title = sprintf( __( 'Check if the %s files from your plugins and themes are protected.', 'secupress' ), '<code>readme.txt</code>' );
 		$this->more  = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of informations. His goal is to find outdated versions of your server softwares or WordPress components. Don\'t let them easily find these informations.', 'secupress' );

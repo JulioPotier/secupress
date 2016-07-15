@@ -33,7 +33,6 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements SecuPress_
 	 * @since 1.0
 	 */
 	protected function init() {
-		self::$type     = 'WordPress';
 		/** This filter is documented in inc/modules/firewall/plugins/bad-url-length.php */
 		self::$length   = apply_filters( 'secupress.plugin.bad-url-length.len', 300 );
 		$this->title    = sprintf( __( 'Check if long URL can reach your website (more than %s chars).', 'secupress' ), number_format_i18n( self::$length ) );

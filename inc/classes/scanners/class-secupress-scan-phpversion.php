@@ -53,7 +53,6 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 	 * @since 1.0
 	 */
 	protected function init() {
-		self::$type     = __( 'File System', 'secupress' );
 		$this->title    = __( 'Check if your installation is using a supported version of PHP.', 'secupress' );
 		$this->more     = __( 'Every year old PHP version are not supported anymore, even for security patches so it\'s important to stay updated.', 'secupress' );
 		$this->more_fix = static::get_messages( 300 );

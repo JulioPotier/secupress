@@ -33,7 +33,6 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements SecuPress_Scan
 	 * @since 1.0
 	 */
 	protected function init() {
-		self::$type     = 'WordPress';
 		$this->title    = __( 'Check if your login page is protected by double authentication or something like that (may be a custom script).', 'secupress' );
 		$this->more     = __( 'The login vector is often use in web attacks, every hour, your website is targeted by random bots whom try to log in your site. Adding another layer of login can improve the security.', 'secupress' );
 		$this->more_fix = sprintf(

@@ -26,7 +26,6 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 	 * @since 1.0
 	 */
 	protected function init() {
-		self::$type     = 'WordPress';
 		$this->title    = __( 'Check your <code>wp-config.php</code> file, especially the PHP constants.', 'secupress' );
 		$this->more     = __( 'You can use the <code>wp-config.php</code> file to improve the security of your website. Learn about the best practice with this test.', 'secupress' );
 		$this->more_fix = __( 'This will set some PHP constants in your <code>wp-config.php</code> file to improve the security of your website.', 'secupress' );
