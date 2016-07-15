@@ -32,26 +32,26 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 	 *
 	 * @since 1.0
 	 */
-	protected static function init() {
+	protected function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if the subscription settings are set correctly.', 'secupress' );
 
 		if ( ! is_multisite() || is_network_admin() ) {
 			self::$more     = __( 'If user registrations are open, the default user role should be Subscriber. Moreover, your registration page should be protected from bots.', 'secupress' );
-			self::$more_fix = sprintf(
+			$this->more_fix = sprintf(
 				__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
 				'<em>' . __( 'Use a Captcha for everyone', 'secupress' ) . '</em>',
 				'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#row-captcha_activate">' . __( 'Users & Login', 'secupress' ) . '</a>'
 			);
 
 			if ( is_network_admin() ) {
-				self::$more_fix .= '<br/>' . __( 'If the default user role is not Subscriber in some of your websites, a new page similar to this one will be created in each related site, where administrators will be asked to set the default user role to Subscriber.', 'secupress' );
+				$this->more_fix .= '<br/>' . __( 'If the default user role is not Subscriber in some of your websites, a new page similar to this one will be created in each related site, where administrators will be asked to set the default user role to Subscriber.', 'secupress' );
 			} else {
-				self::$more_fix .= '<br/>' . __( 'This will also set the default user\'s role to Subscriber.', 'secupress' );
+				$this->more_fix .= '<br/>' . __( 'This will also set the default user\'s role to Subscriber.', 'secupress' );
 			}
 		} else {
 			self::$more     = __( 'If user registrations are open, the default user role should be Subscriber.', 'secupress' );
-			self::$more_fix = __( 'This will set the default user\'s role to Subscriber.', 'secupress' );
+			$this->more_fix = __( 'This will set the default user\'s role to Subscriber.', 'secupress' );
 		}
 	}
 

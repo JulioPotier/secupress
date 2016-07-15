@@ -148,7 +148,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 								<span class="secupress-label">////PUCE ROUGE</span>
 							</p>
 
-							<p class="secupress-item-title"><?php echo wp_kses( $current_test::$more_fix, $allowed_tags ); ?></p>
+							<p class="secupress-item-title"><?php echo wp_kses( $current_test->more_fix, $allowed_tags ); ?></p>
 
 							<p class="secupress-row-actions">
 								<?php

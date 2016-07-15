@@ -32,7 +32,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 	 *
 	 * @since 1.0
 	 */
-	protected static function init() {
+	protected function init() {
 		global $is_apache, $is_nginx, $is_iis7;
 
 		self::$type     = 'WordPress';
@@ -48,11 +48,11 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 		}
 
 		if ( $is_nginx ) {
-			self::$more_fix = sprintf( __( 'Since your %s file cannot be edited automatically, this will give you the rules to add into it manually, to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>nginx.conf</code>' );
+			$this->more_fix = sprintf( __( 'Since your %s file cannot be edited automatically, this will give you the rules to add into it manually, to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>nginx.conf</code>' );
 		} elseif ( self::$fixable ) {
-			self::$more_fix = sprintf( __( 'This will add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), "<code>$config_file</code>" );
+			$this->more_fix = sprintf( __( 'This will add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), "<code>$config_file</code>" );
 		} else {
-			self::$more_fix = static::get_messages( 301 );
+			$this->more_fix = static::get_messages( 301 );
 		}
 	}
 

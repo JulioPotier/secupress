@@ -32,11 +32,11 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Inter
 	 *
 	 * @since 1.0
 	 */
-	protected static function init() {
+	protected function init() {
 		self::$type  = 'WordPress';
 		self::$title = __( 'Check if basic SQL Injections are blocked or not.', 'secupress' );
 		self::$more  = __( 'SQL injection is a way to read, modify, delete any content of your database, this is a powerful vulnerability, don\'t let anyone play with that.', 'secupress' );
-		self::$more_fix = sprintf(
+		$this->more_fix = sprintf(
 			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
 			'<em>' . __( 'Block Bad Contents', 'secupress' ) . '</em>',
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-url-content_bad-contents">' . __( 'Firewall', 'secupress' ) . '</a>'

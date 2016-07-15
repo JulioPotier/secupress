@@ -129,7 +129,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 *
 	 * @var (string)
 	 */
-	public static $more_fix    = '';
+	public $more_fix = '';
 
 	/**
 	 * Tells if a scanner is fixable by SecuPress. The value "pro" means it's fixable only with the version PRO.
@@ -155,7 +155,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 */
 	protected function _init() {
 		$this->class_name_part = substr( get_called_class(), 15 ); // 15 is 'SecuPress_Scan_' length.
-		static::init();
+		$this->init();
 	}
 
 
@@ -164,8 +164,8 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 *
 	 * @since 1.0
 	 */
-	protected static function init() {
-		die( 'Method SecuPress_Scan::init() must be over-ridden in a sub-class.' );
+	protected function init() {
+		die( 'Method SecuPress_Scan->init() must be over-ridden in a sub-class.' );
 	}
 
 
