@@ -801,6 +801,7 @@ body[class*="secupress"] .sweet-overlay {
 	box-shadow: 0 6px 12px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05), 0 3px 4px rgba(0,0,0,.05);
 }
 .secupress-button.shadow {
+	font-size: 13px;
 	font-weight: 500;
 	letter-spacing: 0.125em;
 	box-shadow: 0 6px 12px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05), 0 3px 4px rgba(0,0,0,.05);

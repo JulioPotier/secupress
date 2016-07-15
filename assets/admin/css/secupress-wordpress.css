@@ -354,6 +354,9 @@ i.rounded {
 	border: 2px solid #ACB0B7;
 	border-radius: 50%;
 }
+i.bold {
+	font-weight: bold;
+}
 
 /* SecuPress menu icon */
 #toplevel_page_secupress_scanners .wp-menu-image.dashicons-shield-alt:before {
@@ -558,6 +561,10 @@ i.rounded {
 	opacity: 0.5;
 	cursor: not-allowed;
 }
+/* Not important */
+.secupress-button.secupress-button.light {
+	background: #ADB1B7;
+}
 
 /* Button Colors */
 .secupress-button-primary.secupress-button-primary {
@@ -659,7 +666,8 @@ span.secupress-get-pro-version {
 }
 .secupress-get-pro-col p.secupress-get-pro,
 .secupress-cta-pro,
-.secupress-setting-content-col .secupress-get-pro-version {
+.secupress-setting-content-col .secupress-get-pro-version,
+.secupress-mf-header .secupress-get-pro-version {
 	position: relative;
 	padding-left: 55px;
 	font-weight: bold;
@@ -678,7 +686,8 @@ span.secupress-get-pro-version {
 }
 .secupress-get-pro-col p.secupress-get-pro:before,
 .secupress-cta-pro:before,
-.secupress-setting-content-col .secupress-get-pro-version:before {
+.secupress-setting-content-col .secupress-get-pro-version:before,
+.secupress-mf-header .secupress-get-pro-version:before {
 	position: absolute;
 	top: 2px; left: 5px;
 	content: "\e907";
@@ -688,7 +697,8 @@ span.secupress-get-pro-version {
 }
 .secupress-get-pro-col .secupress-get-pro a:before,
 .secupress-cta-pro a:before,
-.secupress-setting-content-col .secupress-get-pro-version a:before {
+.secupress-setting-content-col .secupress-get-pro-version a:before,
+.secupress-mf-header .secupress-get-pro-version a:before {
 	content: "";
 	display: block;
 }

@@ -43,13 +43,14 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		<div class="secupress-step-content-header secupress-flex secupress-flex-spaced">
 
 			<?php
-			$page_title  = sprintf( __( 'These %d actions require your attention', 'secupress' ), $nb_actions );
-			$main_button =
-			'<a href="' . secupress_admin_url( 'scanners' ) . '&step=4" class="secupress-button secupress-button-tertiary secupress-button-autofix shadow">
-				<span class="hide-if-no-js">
-					<span class="text step3-advanced-text">1</span>
-					<span class="text">' . $nb_actions . '</span>
+			$page_title    = sprintf( __( 'These %d actions require your attention', 'secupress' ), $nb_actions );
+			$steps_counter = '<span class="secupress-step-by-step secupress-flex hide-if-no-js">
+				<span class="text step3-advanced-text">
+					' . sprintf( __( '%s of %d', 'secupress' ), '1</span><span class="text">', $nb_actions ) . '
 				</span>
+			</span>';
+			$main_button   =
+			'<a href="' . secupress_admin_url( 'scanners' ) . '&step=4" class="secupress-button secupress-button-autofix shadow light">
 				<span class="icon">
 					<i class="icon-cross" aria-hidden="true"></i>
 				</span>
@@ -58,7 +59,8 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			?>
 
 			<p class="secupress-step-title"><?php echo $page_title; ?></p>
-			<p>
+			<p class="secupress-flex">
+				<?php echo $steps_counter; ?>
 				<?php echo $main_button; ?>
 			</p>
 		</div>
@@ -104,102 +106,116 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		$row_css_class .= ! empty( $fix['status'] ) && empty( $fix['has_action'] ) ? ' has-fix-status' : ' no-fix-status';
 		++$i;
 	?>
-	<div class="secupress-scans-group secupress-group-<?php echo $module_name; ?> secupress-group-item-<?php echo $class_name_part; echo $i === 1 ? '' : ' hide-if-js';?>">
+	<div class="secupress-manual-fix secupress-manual-fix-<?php echo $module_name; ?> secupress-group-item-<?php echo $class_name_part; echo $i === 1 ? '' : ' hide-if-js';?>">
 	<?php
 		if ( ! $is_subsite ) {
+			$is_only_pro = 'pro' === $current_test::$fixable && ! secupress_is_pro();
 		?>
-		<div class="secupress-sg-header secupress-flex secupress-flex-spaced">
+		<div class="secupress-mf-header secupress-flex-spaced<?php echo $is_only_pro ? ' secupress-is-only-pro' : '' ?>">
 
-			<div class="secupress-sgh-name">
-				<i class="icon-user-login" aria-hidden="true"></i>
-				<p class="secupress-sgh-title"><?php echo $module_title; ?></p>
-				<p class="secupress-sgh-description"><?php echo $module_summary; ?></p>
+			<div class="secupress-mfh-name secupress-flex">
+				<span class="secupress-header-dot">
+					<span class="secupress-dot-warning"></span>
+				</span>
+				<p class="secupress-mfh-title"><?php echo $current_test::$title; ?></p>
+				
+				<?php  if ( $is_only_pro ) { ?>
+
+				<div class="secupress-mfh-pro">
+					<p class="secupress-get-pro-version">
+						<?php printf( __( 'Available in <a href="%s">Pro Version</a>', 'secupress' ), esc_url( secupress_admin_url( 'get_pro' ) ) ); ?>
+					</p>
+				</div>
+
+				<?php } else { ?>
+
+					<i class="icon-user-login" aria-hidden="true"></i>
+
+				<?php } ?>
+
 			</div>
 
-		</div><!-- .secupress-sg-header -->
-		<!-- //// geof iic ce bandeau est donc plus clair avec une dot "orange" -->
-		<div class="secupress-sg-header secupress-flex secupress-flex-spaced">
-
-			<div class="secupress-sgh-name">
-				<p class="secupress-sgh-title">&middot; <?php echo $current_test::$title; ?></p>
-			</div>
-
-		</div><!-- .secupress-sg-header -->
+		</div><!-- .secupress-mf-header -->
+		
 		<?php } ?>
-		<div id="secupress-group-content-<?php echo $module_name; ?>" class="secupress-sg-content">
+		<div id="secupress-mf-content-<?php echo $module_name; ?>" class="secupress-mf-content secupress-item-<?php echo $class_name_part; ?> type-all status-all <?php echo $row_css_class; ?>">
+			<div class="secupress-item-content">
+				<p class="secupress-ic-title">
+					<?php _e( 'How to Fix this issue', 'secupress' ); ?>
+				</p>
+				<p class="secupress-ic-desc">
+					<?php echo wp_kses( $current_test::$more_fix, $allowed_tags ); ?>
+				</p>
 
-			<div class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> type-all status-all <?php echo $row_css_class; ?>" id="<?php echo $class_name_part; ?>">
-				<div class="secupress-flex">
+				<div class="secupress-ic-fix-actions">
+				<?php
+					$fix_actions = $current_test->get_required_fix_action_template_parts( $fix_actions );
+					var_dump( $fix_actions ); //// toujours 0 :/
+				?>
+				</div>
 
-					<p class="secupress-item-title"><?php _e( '<b>How to Fix</b>', 'secupress' ); ?><br><?php echo wp_kses( $current_test::$more_fix, $allowed_tags ); ?></p>
-					<p class="secupress-item-title"><?php _e( '<b>More Details</b>', 'secupress' ); ?><br><?php echo wp_kses( $current_test::$more, $allowed_tags ); ?></p>
-
-					<?php
-						$fix_actions = $current_test->get_required_fix_action_template_parts( $fix_actions );
-						var_dump( $fix_actions ); //// toujours 0 :/
-					?>
-
-					<p class="secupress-row-actions">
+				<div class="secupress-row-actions secupress-flex secupress-flex-spaced secupress-mt2">
+					<p class="secupress-action-doc">
 						<a href="#" class="secupress-button secupress-button-tertiary secupress-button-autofix shadow">
 							<span class="icon">
 								<i class="icon-cross" aria-hidden="true"></i>
 							</span>
 							<span class="text">Read the documentation</span>
 						</a>
-						<?php if ( 'pro' !== $current_test::$fixable || secupress_is_pro() ) { ?>
+					<?php if ( 'pro' !== $current_test::$fixable || secupress_is_pro() ) { ?>
 						<a href="#" class="secupress-button secupress-button-tertiary secupress-button-support shadow">
 							<span class="icon">
 								<i class="icon-cross" aria-hidden="true"></i>
 							</span>
 							<span class="text"><?php _e( 'Ask for support', 'secupress' ); ?></span>
 						</a>
-						<?php } ?>
-						<a href="<?php echo esc_url( secupress_admin_url( 'scanners' ) ); ?>&step=4" class="secupress-button secupress-button-tertiary secupress-button-ignoreit hide-is-no-js shadow" data-parent="secupress-group-item-<?php echo $class_name_part; ?>">
+					<?php } ?>
+					</p>
+					<p class="secupress-actions">
+						<a href="<?php echo esc_url( secupress_admin_url( 'scanners' ) ); ?>&step=4" class="secupress-button secupress-button-ignoreit hide-is-no-js shadow light" data-parent="secupress-group-item-<?php echo $class_name_part; ?>">
 							<span class="icon">
 								<i class="icon-cross" aria-hidden="true"></i>
 							</span>
 							<span class="text"><?php _e( 'Ignore it', 'secupress' ); ?></span>
 						</a>
-						<?php if ( $is_fixable && $current_test::need_manual_fix() ) { ?>
-						<a href="#" class="secupress-button secupress-button-tertiary secupress-button-fixit shadow">
+					<?php if ( $is_fixable && $current_test::need_manual_fix() ) { ?>
+						<a href="#" class="secupress-button secupress-button-primary secupress-button-fixit shadow">
 							<span class="icon">
-								<i class="icon-cross" aria-hidden="true"></i>
+								<i class="icon-check" aria-hidden="true"></i>
 							</span>
 							<span class="text"><?php _e( 'Fix it', 'secupress' ); ?></span>
 						</a>
-						<?php } elseif ( $is_fixable && ! $current_test::need_manual_fix() ) { ?>
-						<a href="#" class="secupress-button secupress-button-tertiary secupress-button-fixit shadow">
+					<?php } elseif ( $is_fixable && ! $current_test::need_manual_fix() ) { ?>
+						<a href="#" class="secupress-button secupress-button-primary secupress-button-fixit shadow">
 							<span class="icon">
-								<i class="icon-cross" aria-hidden="true"></i>
+								<i class="icon-check" aria-hidden="true"></i>
 							</span>
 							<span class="text"><?php _e( 'Retry to fix', 'secupress' ); ?></span>
 						</a>
-						<?php } elseif ( 'pro' === $current_test::$fixable && ! secupress_is_pro() ) { ?>
+					<?php } elseif ( 'pro' === $current_test::$fixable && ! secupress_is_pro() ) { ?>
 						<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ); ?>" class="secupress-button secupress-button-tertiary secupress-button-getpro shadow">
 							<span class="icon">
-								<i class="icon-cross" aria-hidden="true"></i>
+								<i class="icon-secupress-simple bold" aria-hidden="true"></i>
 							</span>
 							<span class="text"><?php _e( 'Get PRO', 'secupress' ); ?></span>
 						</a>
-						<?php } ?>
+					<?php } ?>
 					</p>
-
-					<div class="secupress-item-details" id="details-<?php echo $class_name_part; ?>">
-						<div class="secupress-flex">
-							<span class="secupress-details-icon">
-								<i class="icon-i" aria-hidden="true"></i>
-							</span>
-							<p class="details-content"><?php echo wp_kses( $current_test::$more, $allowed_tags ); ?></p>
-							<span class="secupress-placeholder"></span>
-						</div>
-					</div>
-
 				</div>
+			</div><!-- .secupress-item-content -->
 
-			</div><!-- .secupress-item-all -->
+			<div class="secupress-item-details" id="details-<?php echo $class_name_part; ?>">
+				<div class="secupress-flex">
+					<span class="secupress-details-icon">
+						<i class="icon-i" aria-hidden="true"></i>
+					</span>
+					<p class="details-content"><?php echo wp_kses( $current_test::$more, $allowed_tags ); ?></p>
+					<span class="secupress-placeholder"></span>
+				</div>
+			</div>
 
-		</div><!-- .secupress-sg-content -->
-	</div><!-- .secupress-scans-group -->
+		</div><!-- .secupress-mf-content -->
+	</div><!-- .secupress-manual-fix -->
 		<?php
 	}
 	?>
