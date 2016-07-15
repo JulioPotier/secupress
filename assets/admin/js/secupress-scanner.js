@@ -963,10 +963,12 @@ jQuery( document ).ready( function( $ ) {
 		}
 
 
-		function secupressLaunchSeparatedBulkFix( $buttons ) {
+		function secupressLaunchSeparatedBulkFix() {
+			var $buttons = $( '.secupress-sg-content .secupress-group-check' ).filter( ':checked' ).siblings( '.secupress-fixit' );
+
 			if ( $buttons.length < 2 ) {
 				// Not a bulk.
-				$buttons.trigger( "fix.secupress" );
+				$buttons.trigger( 'fix.secupress' );
 				return;
 			}
 
@@ -974,7 +976,7 @@ jQuery( document ).ready( function( $ ) {
 
 			if ( $buttons.length ) {
 				// We still have "normal" fixes.
-				$buttons.trigger( "bulkfix.secupress" );
+				$buttons.trigger( 'bulkfix.secupress' );
 			} else {
 				// OK, launch directly the fix of the first item in queue.
 				secupressFixFirstQueued( true );
@@ -1346,14 +1348,14 @@ jQuery( document ).ready( function( $ ) {
 
 
 		// Perform all fixes on click ("One click fix" button).
-		$( "body" ).on( "click.secupress bulkfix.secupress keyup", ".button-secupress-fix", function( e ) {
-			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
+		$( 'body' ).on( 'click.secupress bulkfix.secupress keyup', '.secupress-button-autofix', function( e ) {
+			if ( 'keyup' === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
 				return false;
 			}
 
 			e.preventDefault();
 
-			secupressLaunchSeparatedBulkFix( $( ".secupress-fixit" ) );
+			secupressLaunchSeparatedBulkFix();
 			secupressRunProgressBar( $( this ) );
 		} );
 
