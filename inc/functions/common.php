@@ -906,18 +906,18 @@ function secupress_is_user( $user ) {
  * Will return the current scanner step number
  *
  * @since 1.0
- * @author Julio Potier
+ * @author Julio Potier (Geoffrey)
  *
- * @return (integer)
+ * @return (integer) returns 1 if first scan never done
  */
 function secupress_get_scanner_pagination() {
+	$scans = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
 
-	if ( ! isset( $_GET['step'] ) || ! is_numeric( $_GET['step'] ) || absint( $_GET['step'] ) < 0 ) {
+	if ( ! isset( $_GET['step'] ) || ! is_numeric( $_GET['step'] ) || absint( $_GET['step'] ) < 0 || empty( $scans ) ) {
 		$step = 1;
 	} else {
 		$step = (int) $_GET['step'];
 	}
 
 	return $step;
-
 }

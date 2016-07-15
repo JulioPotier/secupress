@@ -4,14 +4,15 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 <div class="secupress-step-content-header secupress-flex secupress-flex-spaced">
 
 	<?php
-	$page_title  = __( 'Checked items will be automatically fixed', 'secupress' );
-	$main_button = //// geof c'est un button qui trigger les fix, au clic ça repli les items comme le toggle du step 1, et les progress bar arrivent. need JS here CELA NE MENE PAS AU STEP 3, c'est la fin des fix qui donne le step 3, les boutons disparaissent, le titre change et le "toggle check" disparait aussi
-	'<a href="' . esc_url( secupress_admin_url( 'scanners' ) ) . '&amp;step=3" class="secupress-button secupress-button-tertiary secupress-button-autofix shadow">
-		<span class="icon">
-			<i class="icon-wrench" aria-hidden="true"></i>
+	$page_title = __( 'Checked items will be automatically fixed', 'secupress' );
+
+	$main_button = //// geof: couleur et icone
+	'<button class="secupress-button secupress-button-tertiary button-secupress-fix shadow" type="button" data-nonce="' . esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ) . '">
+		<span class="icon" aria-hidden="true">
+			<i class="icon-check"></i>
 		</span>
 		<span class="text">' . __( 'Fix all checked issues', 'secupress') . '</span>
-	</a>';
+	</button>';
 	?>
 
 	<p class="secupress-step-title"><?php echo $page_title; ?></p>
@@ -144,8 +145,8 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 					<div class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> type-all status-all <?php echo $row_css_class; ?>" id="<?php echo $class_name_part; ?>">
 						<div class="secupress-flex">
 
-							<p class="secupress-item-status">
-								<span class="secupress-label">////PUCE ROUGE</span>
+							<p class="secupress-item-status secupress-status-mini">
+								<span class="secupress-dot-bad"></span>
 							</p>
 
 							<p class="secupress-item-title"><?php echo wp_kses( $current_test::$more_fix, $allowed_tags ); ?></p>
@@ -193,6 +194,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 </div><!-- .secupress-tests -->
 
 <div class="secupress-step-content-footer secupress-flex secupress-flex-top secupress-flex-spaced">
+	<span><?php //flex col placeholder ?></span>
 	<p>
 		<?php echo $main_button; ?>
 	</p>

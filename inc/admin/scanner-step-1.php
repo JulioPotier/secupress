@@ -262,7 +262,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		?>
 
 			<div class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> type-all status-all <?php echo $row_css_class; ?>" id="<?php echo $class_name_part; ?>">
-				
+
 				<div class="secupress-flex">
 
 					<p class="secupress-item-status">
@@ -280,7 +280,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 								<?php echo 'notscannedyet' === $scan_status ? _x( 'Scan', 'verb', 'secupress' ) : _x( 'Re-Scan', 'verb', 'secupress' ); ?>
 							</span>
 						</a><br class="hide-if-js">
-						
+
 						<?php
 						/*
 							Things changed:
