@@ -139,7 +139,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 				$row_css_class .= $needs_pro ? ' secupress-only-pro not-fixable' : ' fixable';
 				++$i;
 				?>
-				<div id="secupress-group-content-<?php echo $module_name; ?>" class="secupress-sg-content">
+				<div id="secupress-group-content-<?php echo $class_name_part; ?>" class="secupress-sg-content">
 
 					<div class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> type-all status-all <?php echo $row_css_class; ?>" id="<?php echo $class_name_part; ?>">
 						<div class="secupress-flex">
