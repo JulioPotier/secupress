@@ -163,7 +163,7 @@ jQuery( document ).ready( function( $ ) {
 			lastClicked[ group ] = this;
 
 			// Toggle "check all" checkboxes.
-			unchecked = $this.closest( '.secupress-sg-content' ).find( '.secupress-group-check' ).filter( ':visible:enabled' ).not( ':checked' );
+			unchecked = $this.closest( '.secupress-scans-group' ).find( '.secupress-group-check' ).filter( ':visible:enabled' ).not( ':checked' );
 
 			$this.closest( '.secupress-scans-group' ).find( '.secupress-toggle-check' ).prop( 'checked', function() {
 				return ( 0 === unchecked.length );
