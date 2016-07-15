@@ -83,10 +83,9 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 					<p class="secupress-item-title">Check if your login page is protected by double authentication or something like that (may be a custom script).</p>
 
 					<p class="secupress-row-actions">
-						<input type="checkbox" name="" id="secupress-item-[_ITEM_SLUG_]" class="secupress-checkbox">
-						<label for="secupress-item-[_ITEM_SLUG_]" class="label-text">
-							<span class="screen-reader-text"><?php esc_html_e( 'Auto-fix this item', 'secupress' ); ?></span>
-						</label>
+						<span class="secupress-get-pro-version">
+							<?php printf( __( 'Available in <a href="%s">Pro Version</a>', 'secupress' ), esc_url( secupress_admin_url( 'get_pro' ) ) ); ?>
+						</span>
 					</p>
 				</div><!-- .secupress-flex -->
 

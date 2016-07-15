@@ -1013,9 +1013,9 @@ a + .secupress-row-actions {
 	right: 0;
 	bottom: 0;
 	left: 0;
-	background:#fff linear-gradient(-45deg, #fff, #fff 10px, #000 10px, #000 11px, #fff 11px) repeat scroll 0 0;
-	background-size: 15px auto;
-	opacity: 0.5;
+	background: #FFF repeating-linear-gradient(-45deg, #fff, #fff 10px, #EEE 10px, #EEE 11px) repeat scroll 0 0;
+	opacity: 0.6;
+	z-index: 2;
 }
 .secupress-item-status,
 .secupress-details-icon {
@@ -1032,7 +1032,11 @@ a + .secupress-row-actions {
 	flex-shrink: 0;
 	text-align: right;
 }
+.secupress-only-pro .secupress-row-actions {
+	z-index: 3;
+}
 .secupress-item-title {
+	flex-basis: 100%; /* for too small titles */
 	font-size: 13px;
 	color: #5A626F;
 }
