@@ -1100,7 +1100,18 @@ a + .secupress-row-actions {
 	margin-top: 20px;
 	padding-top: 20px;
 }
-
+.secupress-mf-content .secupress-actions {
+	margin: 0 -20px;
+}
+.secupress-mf-content .secupress-action-doc {
+	margin: 0 -10px;
+}
+.secupress-mf-content .secupress-actions .secupress-button {
+	margin: 5px 20px;
+}
+.secupress-mf-content .secupress-action-doc .secupress-button {
+	margin: 5px 10px;	
+}
 .secupress-item-all .secupress-label {
 	text-transform: uppercase;
 }

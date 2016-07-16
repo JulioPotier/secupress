@@ -554,6 +554,15 @@ i.bold {
 	margin-top: -10px;
 	background: rgba(255,255,255,.3);
 }
+.secupress-button-getpro .icon {
+	padding-right: 0;
+}
+.secupress-button-getpro .icon i {
+	font-size: 20px;
+}
+.secupress-button-getpro .icon:after {
+	display: none;
+}
 
 /* Disabled */
 [class*="secupress-button"].disabled,
@@ -564,6 +573,10 @@ i.bold {
 /* Not important */
 .secupress-button.secupress-button.light {
 	background: #ADB1B7;
+}
+.secupress-button.secupress-button.light:hover,
+.secupress-button.secupress-button.light:focus {
+	background: #393E46;
 }
 
 /* Button Colors */

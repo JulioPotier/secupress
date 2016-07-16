@@ -156,16 +156,16 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 
 				<div class="secupress-row-actions secupress-flex secupress-flex-spaced secupress-mt2">
 					<p class="secupress-action-doc">
-						<a href="#" class="secupress-button secupress-button-tertiary secupress-button-autofix shadow">
+						<a href="#" class="secupress-button secupress-button-mini shadow">
 							<span class="icon">
-								<i class="icon-cross" aria-hidden="true"></i>
+								<i class="icon-file-text" aria-hidden="true"></i>
 							</span>
 							<span class="text">Read the documentation</span>
 						</a>
 					<?php if ( 'pro' !== $current_test::$fixable || secupress_is_pro() ) { ?>
-						<a href="#" class="secupress-button secupress-button-tertiary secupress-button-support shadow">
+						<a href="#" class="secupress-button secupress-button-mini secupress-button-support light shadow">
 							<span class="icon">
-								<i class="icon-cross" aria-hidden="true"></i>
+								<i class="icon-ask" aria-hidden="true"></i>
 							</span>
 							<span class="text"><?php _e( 'Ask for support', 'secupress' ); ?></span>
 						</a>
