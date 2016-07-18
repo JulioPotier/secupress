@@ -966,19 +966,28 @@ a + .secupress-row-actions {
 
 /* Alternative styles in finish report */
 .secupress-is-finish-report {
-	padding-bottom: 2.5em;
+	background: #FFF;
+	box-shadow: 0 10px 15px rgba(34, 40, 49, 0.2);
 }
 .secupress-is-finish-report .secupress-sg-header {
 	background: #393e46;
 }
 .secupress-is-finish-report .secupress-scans-group {
 	margin: 0;
+	box-shadow: none;
 }
 .secupress-is-finish-report .secupress-sgh-actions button i:before {
 	font-size: 32px;
 	font-weight: bold;
 	color: #FFF;
 }
+.secupress-is-finish-report .secupress-step-content-footer {
+	border-top: 1px solid #f2f2f6;
+	padding: 20px;
+}
+
+
+
 .secupress-summary-header .secupress-col-logo {
 	flex-basis: 110px;
 	flex-grow: 0;

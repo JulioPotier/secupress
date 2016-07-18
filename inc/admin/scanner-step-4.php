@@ -208,38 +208,37 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 	<?php
 }
 ?>
+		<div class="secupress-step-content-footer secupress-flex secupress-flex-top secupress-flex-spaced">
+			<?php
+				$export_pdf_btn = '<span class="icon">
+						<i class="icon-file-pdf-o" aria-hidden="true"></i>
+					</span>
+					<span class="text">
+						' . esc_html__( 'Export as PDF', 'secupress' ) . '
+					</span>';
+			?>
+			<p>
+			<?php
+				if ( !secupress_is_pro() ) {
+			?>
+				<button type="button" title="<?php esc_attr__( 'Export this report as PDF file.', 'secupress' ); ?>" class="secupress-button shadow">
+					<?php echo $export_pdf_btn; ?>
+				</button>
+			<?php
+				} else {
+			?>
+				<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ) ?>" type="button" title="<?php echo $get_pdf_title; ?>" target="_blank" class="secupress-button disabled shadow">
+					<?php echo $export_pdf_btn; ?>
+				</a>
+				<br>
+				<span class="secupress-get-pro-version">
+					<?php printf( __( 'Available in <a href="%s">Pro Version</a>', 'secupress' ), esc_url( secupress_admin_url( 'get_pro' ) ) ); ?>
+				</span>
+			<?php
+				}
+			?>
+			</p>
+		</div><!-- .secupress-step-content-footer -->
 	</div><!-- .secupress-summaries -->
 
 </div><!-- .secupress-tests -->
-
-<div class="secupress-step-content-footer secupress-flex secupress-flex-top secupress-flex-spaced">
-		<?php
-			$export_pdf_btn = '<span class="icon">
-					<i class="icon-file-pdf-o" aria-hidden="true"></i>
-				</span>
-				<span class="text">
-					' . esc_html__( 'Export as PDF', 'secupress' ) . '
-				</span>';
-		?>
-		<p>
-		<?php
-			if ( !secupress_is_pro() ) {
-		?>
-			<button type="button" title="<?php esc_attr__( 'Export this report as PDF file.', 'secupress' ); ?>" class="secupress-button shadow">
-				<?php echo $export_pdf_btn; ?>
-			</button>
-		<?php
-			} else {
-		?>
-			<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ) ?>" type="button" title="<?php echo $get_pdf_title; ?>" target="_blank" class="secupress-button disabled shadow">
-				<?php echo $export_pdf_btn; ?>
-			</a>
-			<br>
-			<span class="secupress-get-pro-version">
-				<?php printf( __( 'Available in <a href="%s">Pro Version</a>', 'secupress' ), esc_url( secupress_admin_url( 'get_pro' ) ) ); ?>
-			</span>
-		<?php
-			}
-		?>
-		</p>
-	</div>
