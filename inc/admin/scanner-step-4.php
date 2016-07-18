@@ -241,4 +241,37 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		</div><!-- .secupress-step-content-footer -->
 	</div><!-- .secupress-summaries -->
 
+	<div class="secupress-go-farther">
+		<div class="secupress-flex">
+			<div class="secupress-col">
+				<p class="secupress-farther-title"><?php _e( 'Want to go farther?', 'secupress' ); ?></p>
+				<p class="secupress-farther-desc"><?php _e( 'Rendezvous on the modules pages to discover our features and improve your security even more.', 'secupress' ); ?></p>
+			</div>
+			<div class="secupress-col secupress-col-action">
+				<a href="#secupress-latest" class="secupress-rich-link secupress-current">
+					<span class="secupress-label-with-icon">
+						<i aria-hidden="true" class="icon-cogs rounded"></i>
+						<span class="secupress-upper"><?php printf( esc_html__( '%s modules', 'secupress' ), SECUPRESS_PLUGIN_NAME ); ?></span>
+						<span class="secupress-description"><?php _e( 'Fine tuning for your WordPress', 'secupress' ); ?></span>
+					</span>
+				</a>
+			</div>
+		</div>
+		<div class="secupress-flex">
+			<div class="secupress-col">
+				<p class="secupress-farther-title"><?php _e( 'Schedule your next scans', 'secupress' ); ?></p>
+				<p class="secupress-farther-desc"><?php _e( 'Keep up the good security by scheduling your next scans. No more need to do it manually each week…', 'secupress' ); ?></p>
+			</div>
+			<div class="secupress-col secupress-col-action">
+				<a href="#secupress-latest" class="secupress-rich-link secupress-current">
+					<span class="secupress-label-with-icon">
+						<i aria-hidden="true" class="icon-calendar rounded"></i>
+						<span class="secupress-upper"><?php esc_html_e( 'Schedule Scans', 'secupress' ); ?></span>
+						<span class="secupress-description"><?php _e( 'Program recurring scans', 'secupress' ); ?></span>
+					</span>
+				</a>
+			</div>
+		</div>
+	</div>
+
 </div><!-- .secupress-tests -->

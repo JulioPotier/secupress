@@ -70,8 +70,12 @@
 }
 .secupress-label-with-icon .secupress-upper {
 	display: block;
+	font-weight: 500;
 	text-transform: uppercase;
 	letter-spacing: 0.125em;
+	color: #393E46;
+}
+.secupress-section-dark .secupress-label-with-icon .secupress-upper {
 	color: #FFF;
 }
 .secupress-label-with-icon .secupress-primary {
@@ -181,6 +185,42 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 }
 .secupress-not-scanned-yet .secupress-scanner-steps .secupress-step-name:after {
 	display: none;
+}
+
+/* Step 4 "static contents" */
+.secupress-go-farther {
+	border-top: 5px solid #F2F2F6;
+	padding: 20px 25px;
+}
+.secupress-summaries[aria-hidden="true"] + .secupress-go-farther {
+	border-top: 0;
+}
+.secupress-go-farther .secupress-flex {
+	padding: 25px 0;
+}
+.secupress-go-farther .secupress-col:first-child {
+	padding-left: 0;
+}
+.secupress-go-farther .secupress-col:last-child {
+	padding-right: 0;
+}
+.secupress-go-farther .secupress-col-action {
+	flex-basis: 295px;
+	flex-shrink: 0;
+	text-align: right;
+}
+.secupress-go-farther .secupress-flex + .secupress-flex {
+	border-top: 1px solid #f2f2f6;
+}
+.secupress-farther-title {
+	margin-bottom: 0;
+	font-weight: 600;
+	font-size: 16px;
+	color: #26B3A9;
+}
+.secupress-go-farther .secupress-farther-desc {
+	margin-bottom: 0.5em;
+	color: #5A626F;
 }
 
 /**
@@ -429,13 +469,16 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 .secupress-tabs-controls-list {
 	margin: 0;
 }
-.secupress-tabs-controls-list a {
+.secupress-tabs-controls-list a,
+.secupress-rich-link {
 	position: relative;
 	display: block;
 	text-decoration: none;
 	border-radius: 3px;
+	text-align: left;
 }
-.secupress-tabs-controls-list a:hover {
+.secupress-tabs-controls-list a:hover,
+.secupress-rich-link:hover {
 	box-shadow: 0 0 1px 9px #222831, 0 0 1px 10px rgba(255,255,255,.2);
 }
 .secupress-tabs-controls .secupress-button-primary {
@@ -446,7 +489,8 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 .secupress-tabs-controls .secupress-button-primary:focus {
 	background: #2bcdc1;
 }
-.secupress-tabs-controls-list .secupress-label-with-icon {
+.secupress-tabs-controls-list .secupress-label-with-icon,
+.secupress-rich-link .secupress-label-with-icon {
 	padding-left: 54px;
 }
 
