@@ -311,6 +311,23 @@
 	color: #2BCDC1;
 }
 
+/* Actions on buttons */
+.secupress-activated .visible-when-activated {
+	display: block;
+	visibility: visible;
+}
+.secupress-activated .hidden-when-activated,
+.visible-when-activated {
+	display: none;
+	visibility: hidden;	
+}
+.icon-angle-down {
+	transition: transform 0.275s;
+}
+.secupress-activated .icon-angle-down {
+	transform: rotate(180deg);
+}
+
 /**
  * Checkboxes & Radioboxes
  */
