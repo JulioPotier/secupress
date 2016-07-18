@@ -980,13 +980,6 @@ jQuery( document ).ready( function( $ ) {
 
 		function secupressLaunchSeparatedBulkFix() {
 			var $buttons = $( '.secupress-sg-content .secupress-row-check' ).filter( ':checked' ).siblings( '.secupress-fixit' );
-
-			if ( $buttons.length < 2 ) {
-				// Not a bulk.
-				$buttons.trigger( 'fix.secupress' );
-				return;
-			}
-
 			$buttons = secupressFilterNonDelayedButtons( $buttons );
 
 			if ( $buttons.length ) {
@@ -1074,6 +1067,10 @@ jQuery( document ).ready( function( $ ) {
 		}
 
 
+		/** Events. ============================================================================= */
+
+		/** End of scan. ------------------------------------------------------------------------ */
+
 		// What to do when a scan ends.
 		$( "body" ).on( "scanDone.secupress", function( e, extra ) {
 			/*
@@ -1139,8 +1136,15 @@ jQuery( document ).ready( function( $ ) {
 				// Get counters and print them in the page.
 				secupressPrintScoreFromAjax( extra.isBulk );
 			}
+
+			// Step 2: when all fixes are done (and the folowing scans), go to step 3.
+			if ( w.location.href.match( /(\?|&)step=2($|&)/ ) ) {
+				w.location = w.location.href.replace( /(\?|&)step=2($|&)/, '$1step=3$2' );
+			}
 		} );
 
+
+		/** End of fix. ------------------------------------------------------------------------- */
 
 		// What to do when a fix ends.
 		$( 'body' ).on( 'fixDone.secupress', function( e, extra ) {
@@ -1173,17 +1177,6 @@ jQuery( document ).ready( function( $ ) {
 			* Available extras:
 			* extra.isBulk: tell if it's a bulk fix.
 			*/
-
-			// When all fixes are done, go to step 3 or 4.
-			if ( extra.isBulk ) {
-				if ( ! $.isEmptyObject( secupressScans.manualFix ) ) {
-					// Manual fixes are needed, go to step 3.
-					window.location = window.location.href.replace( '&step=2', '&step=3' );
-				} else {
-					// No manual fixes are needed, go to step 4.
-					window.location = window.location.href.replace( '&step=2', '&step=4' );
-				}
-			}
 		} );
 
 
@@ -1225,48 +1218,7 @@ jQuery( document ).ready( function( $ ) {
 		} );
 
 
-		// Show test details.
-		$( "body" ).on( "click.secupress keyup", ".secupress-details", function( e ) {
-			var test;
-
-			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
-				return false;
-			}
-
-			test = $( this ).data( "test" );
-
-			swal2( $.extend( {}, SecuPress.swal2Defaults, {
-				title: SecuPressi18nScanner.scanDetails,
-				html:  $( "#details-" + test ).find( ".details-content" ).html(),
-				type:  "info"
-			} ) );
-		} );
-
-
-		// Show fix details.
-		$( "body" ).on( "click.secupress keyup", ".secupress-details-fix", function( e ) {
-			var test;
-
-			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
-				return false;
-			}
-
-			test = $( this ).data( "test" );
-
-			swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
-				title:             SecuPressi18nScanner.fixDetails,
-				confirmButtonText: SecuPressi18nScanner.fixit,
-				reverseButtons:    true,
-				html:              $( "#details-fix-" + test ).find( ".details-content" ).html(),
-				type:              "info"
-			} ) ).then( function ( isConfirm ) {
-				if ( isConfirm ) {
-					$( "#" + test ).find( ".secupress-fixit" ).trigger( "click.secupress" );
-					swal2.close();
-				}
-			} );
-		} );
-
+		/** Scan. ------------------------------------------------------------------------------- */
 
 		// Perform a scan on click ("Scan" button).
 		$( "body" ).on( "click.secupress scan.secupress bulkscan.secupress keyup", ".secupress-scanit", function( e ) {
@@ -1310,6 +1262,8 @@ jQuery( document ).ready( function( $ ) {
 		} );
 
 
+		/** Fix. -------------------------------------------------------------------------------- */
+
 		// Perform a fix on click ("Fix it" button).
 		$( "body" ).on( "click.secupress fix.secupress bulkfix.secupress keyup", ".secupress-fixit", function( e ) {
 			var $this, href, test, $row, isBulk;
@@ -1352,6 +1306,26 @@ jQuery( document ).ready( function( $ ) {
 
 			secupressLaunchSeparatedBulkFix();
 			secupressRunProgressBar( $( this ) );
+		} );
+
+
+		/** Various. ---------------------------------------------------------------------------- */
+
+		// Show test details.
+		$( "body" ).on( "click.secupress keyup", ".secupress-details", function( e ) {
+			var test;
+
+			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
+				return false;
+			}
+
+			test = $( this ).data( "test" );
+
+			swal2( $.extend( {}, SecuPress.swal2Defaults, {
+				title: SecuPressi18nScanner.scanDetails,
+				html:  $( "#details-" + test ).find( ".details-content" ).html(),
+				type:  "info"
+			} ) );
 		} );
 
 
