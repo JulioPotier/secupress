@@ -13,9 +13,9 @@ $modules                = secupress_get_modules();
 				</div>
 				<div class="secupress-col-summary-text">
 					<p class="secupress-text-medium secupress-mb0"><?php printf( __( 'Congratulations! You fixed %1$d of %2$d.', 'secupress' ), 25, 30 ); ?></p>
-					<p class="secupress-mt0"><?php printf( __( 'Your grade went from %1$s to %2$s. You fixed:', 'secupress' ), 'D', 'B' ); ?></p>
+					<p><?php printf( __( 'Your grade went from %1$s to %2$s. You fixed:', 'secupress' ), 'D', 'B' ); ?></p>
 
-					<div class="secupress-flex secupress-flex-spaced secupress-pb2">
+					<div class="secupress-flex secupress-flex-spaced">
 						<div>
 							<ul class="secupress-chart-legend">
 								<li class="status-bad">
@@ -31,12 +31,17 @@ $modules                = secupress_get_modules();
 							</ul>
 						</div>
 						<p>
-							<button class="secupress-button secupress-button-ghost secupress-button-mini hide-is-no-js dont-trigger-hide trigger-hide-first" type="button" data-target="secupress-summaries" data-trigger="slidetoggle">
+							<button class="secupress-button secupress-button-ghost secupress-button-mini hide-is-no-js" type="button" data-target="secupress-summaries" data-trigger="slidetoggle" title="<?php esc_attr_e('Show/hide the details of scanned items in your report', 'secupress' ); ?>">
 								<span class="icon">
-									<i class="icon-angle-up" aria-hidden="true"></i>
+									<i class="icon-angle-down" aria-hidden="true"></i>
 								</span>
-								<span class="text">
-									<?php esc_html_e( 'Hide the list items', 'secupress' ); ?>
+								<span class="text" aria-hidden="true">
+									<span class="hidden-when-activated">
+										<?php esc_html_e( 'Show the list items', 'secupress' ); ?>
+									</span>
+									<span class="visible-when-activated">
+										<?php esc_html_e( 'Hide the list items', 'secupress' ); ?>
+									</span>
 								</span>
 							</button>
 						</p>
@@ -45,7 +50,7 @@ $modules                = secupress_get_modules();
 			</div>
 		</div><!-- .secupress-summary-header -->
 
-		<div id="secupress-summaries" class="secupress-summaries">
+		<div id="secupress-summaries" class="secupress-summaries hide-if-js">
 
 <?php
 //// new items not working yet.
@@ -148,6 +153,28 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			$row_css_class .= ! empty( $fix['has_action'] ) ? ' status-hasaction' : '';
 			$row_css_class .= ! empty( $fix['status'] ) && empty( $fix['has_action'] ) ? ' has-fix-status' : ' no-fix-status';
 
+			switch( $scan_status ) {
+				
+				case 'bad' :
+					$icon_slug = 'cross-o';
+					$scan_status_word = esc_html__( 'Not Fixed', 'secupress' );
+					break;
+
+				case 'warning' :
+					$icon_slug = 'exclamation-o';
+					$scan_status_word = esc_html__( 'Error', 'secupress' );
+					break;
+
+				case 'pending' :
+					$icon_slug = 'clock-o-2';
+					$scan_status_word = esc_html__( 'Pending', 'secupress' );
+					break;
+
+				default :
+					$icon_slug = 'check';
+					$scan_status_word = esc_html__( 'Fixed', 'secupress' );
+			}
+
 			?>
 
 				<div class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> type-all status-all <?php echo $row_css_class; ?>" id="<?php echo $class_name_part; ?>">
@@ -161,41 +188,11 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 						<p class="secupress-item-title"><?php echo $scan_message; ?></p>
 
 						<p class="secupress-row-actions">
-							<a class="secupress-button secupress-button-mini secupress-scanit hide-if-js" href="<?php echo esc_url( $scan_nonce_url ); ?>">
-								<span class="icon" aria-hidden="true">
-									<i class="icon-refresh"></i>
-								</span>
-								<span class="text">
-									<?php echo 'notscannedyet' === $scan_status ? _x( 'Scan', 'verb', 'secupress' ) : _x( 'Re-Scan', 'verb', 'secupress' ); ?>
-								</span>
-							</a><br class="hide-if-js">
-
-							<?php
-							/*
-								Things changed:
-								* data-trigger added
-								* data-target instead of data-test
-								* data-target === .secupress-item-details' ID
-							 */
-							?>
-
-							<button data-trigger="slidetoggle" data-target="details-<?php echo $class_name_part; ?>" class="secupress-details link-like hide-if-no-js" type="button">
-								<p class="secupress-item-status secupress-status-mini">
-									<span class="secupress-mark-<?php echo $scan_status; ?>"><?php echo $fix_status_text; ?></span>
-								</p>
-							</button>
+							<span class="secupress-status secupress-status-<?php echo sanitize_html_class( $scan_status ); ?>">
+								<i class="icon-<?php echo $icon_slug; ?>" aria-hidden="true"></i>
+								<?php echo $scan_status_word; ?></span>
 						</p>
 					</div><!-- .secupress-flex -->
-
-					<div class="secupress-item-details hide-if-js" id="details-<?php echo $class_name_part; ?>">
-						<div class="secupress-flex">
-							<span class="secupress-details-icon">
-								<i class="icon-i" aria-hidden="true"></i>
-							</span>
-							<p class="details-content"><?php echo wp_kses( $current_test::$more, $allowed_tags ); ?></p>
-							<span class="secupress-placeholder"></span>
-						</div>
-					</div><!-- .secupress-item-details -->
 				</div><!-- .secupress-item-all -->
 
 			<?php
