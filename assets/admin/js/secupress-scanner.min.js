@@ -1,7 +1,7 @@
 /* globals jQuery: false, ajaxurl: false, SecuPressi18nScanner: false, SecuPressi18nChart: false, secupressIsSpaceOrEnterKey: false, Chart: false, swal2: false */
 // Global vars =====================================================================================
 var SecuPress = {
-	supportButtonColor:  "#F1C40F",
+	supportButtonColor:   "#F1C40F",
 	swal2Defaults:        {
 		confirmButtonText: SecuPressi18nScanner.confirmText,
 		cancelButtonText:  SecuPressi18nScanner.cancelText,
@@ -10,8 +10,8 @@ var SecuPress = {
 		customClass:       "wpmedia-swal2 secupress-swal2"
 	},
 	swal2ConfirmDefaults: {
-		showCancelButton:  true,
-		closeOnConfirm:    false
+		showCancelButton: true,
+		closeOnConfirm:   false
 	}
 };
 
@@ -148,46 +148,13 @@ jQuery( document ).ready( function( $ ) {
 
 		// Check all checkboxes.
 		$( '.secupress-sg-content .secupress-row-check' ).on( 'click', function( e ) {
-			var group, unchecked, checks, first, last, checked, sliced, $this;
-
-			if ( 'undefined' === e.shiftKey ) {
-				return true;
-			}
-
-			group = this.id.replace( /^\s+|\s+$/g, '' ).replace( 'secupress-group-content-', '' );
-			$this = $( this );
-
-			if ( e.shiftKey ) {
-				if ( ! lastClicked[ group ] ) {
-					return true;
-				}
-				checks  = $( lastClicked[ group ] ).closest( '.secupress-sg-content' ).find( '.secupress-row-check' ).filter( ':visible:enabled' );
-				first   = checks.index( lastClicked[ group ] );
-				last    = checks.index( this );
-				checked = $this.prop( 'checked' );
-
-				if ( 0 < first && 0 < last && first !== last ) {
-					sliced = ( last > first ) ? checks.slice( first, last ) : checks.slice( last, first );
-					sliced.prop( 'checked', function() {
-						if ( $this.closest( '.secupress-item-all' ).is( ':visible' ) ) {
-							return checked;
-						}
-
-						return false;
-					} );
-				}
-			}
-
-			lastClicked[ group ] = this;
+			var $this     = $( this ),
+				unchecked = $this.closest( '.secupress-scans-group' ).find( '.secupress-row-check' ).filter( ':visible:enabled' ).not( ':checked' );
 
 			// Toggle "check all" checkboxes.
-			unchecked = $this.closest( '.secupress-scans-group' ).find( '.secupress-row-check' ).filter( ':visible:enabled' ).not( ':checked' );
-
 			$this.closest( '.secupress-scans-group' ).find( '.secupress-toggle-check' ).prop( 'checked', function() {
 				return ( 0 === unchecked.length );
 			} );
-
-			return true;
 		} )
 		// If nothing is checked, change the "Fix all checked issues" button into "Ignore this step".
 		.on( 'change.secupress', function( e ) {
@@ -217,9 +184,10 @@ jQuery( document ).ready( function( $ ) {
 				$buttons.addClass( 'hidden' );
 				$buttons.next().removeClass( 'hidden' );
 			}
-		} ).first().trigger( 'change.secupress' );
+		} )
+		.first().trigger( 'change.secupress' );
 
-		$( '.secupress-toggle-check' ).on( 'click.wp-toggle-checkboxes', function( e ) {
+		$( '.secupress-sg-header .secupress-toggle-check' ).on( 'click.wp-toggle-checkboxes', function( e ) {
 			var $this          = $( this ),
 				$wrap          = $this.closest( '.secupress-scans-group' ),
 				controlChecked = $this.prop( 'checked' ),
@@ -1033,8 +1001,8 @@ jQuery( document ).ready( function( $ ) {
 
 		// Perform a manual fix: display the form in a popup and launch an ajax call on submit.
 		function secupressManualFixit( test ) {
-			var content  = "",
-				swal2Type = "info",
+			var content   = '',
+				swal2Type = 'info',
 				index, data;
 
 			data = secupressScans.manualFix[ test ];
@@ -1150,7 +1118,7 @@ jQuery( document ).ready( function( $ ) {
 				params;
 
 			// If it's a One-click Scan, keep track of the date.
-			if ( secupressIsButtonDisabled( $button ) ) {
+			if ( $button.length && secupressIsButtonDisabled( $button ) ) {
 				params = {
 					"action":   "secupress-update-oneclick-scan-date",
 					"_wpnonce": $button.data( "nonce" )
@@ -1175,7 +1143,7 @@ jQuery( document ).ready( function( $ ) {
 
 
 		// What to do when a fix ends.
-		$( "body" ).on( "fixDone.secupress", function( e, extra ) {
+		$( 'body' ).on( 'fixDone.secupress', function( e, extra ) {
 			/*
 			* Available extras:
 			* extra.test:      test name.
@@ -1184,57 +1152,37 @@ jQuery( document ).ready( function( $ ) {
 			* extra.manualFix: tell if the fix needs a manual fix.
 			* extra.data:      data returned by the ajax call.
 			*/
-			var $row = $( "#" + extra.test ),
-				bulk = extra.isBulk ? "bulk" : "";
+			var $row = $( '#' + extra.test ),
+				href = $row.data( 'scan-url' );
 
 			// Go for a new scan.
-			$row.find( ".secupress-scanit" ).trigger( bulk + "scan.secupress" );
+			secupressScanit( extra.test, $row, href, extra.isBulk );
 
 			// Display the "Fix it" or "Retry to fix" button.
 			if ( extra.data.class && ! extra.manualFix ) {
-				$row.addClass( "has-fix-status" ).removeClass( "no-fix-status" );
+				$row.addClass( 'has-fix-status' ).removeClass( 'no-fix-status' );
 			} else {
-				$row.addClass( "no-fix-status" ).removeClass( "has-fix-status" );
+				$row.addClass( 'no-fix-status' ).removeClass( 'has-fix-status' );
 			}
 		} );
 
 
 		// What to do after ALL fixes end.
-		$( "body" ).on( "allFixDone.secupress", function( e, extra ) {
+		$( 'body' ).on( 'allFixDone.secupress', function( e, extra ) {
 			/*
 			* Available extras:
 			* extra.isBulk: tell if it's a bulk fix.
 			*/
-			var $rows        = '',
-				manualFixLen = 0,
-				oneTest;
 
-			// If some manual fixes need to be done.
-			if ( ! $.isEmptyObject( secupressScans.manualFix ) ) {
-				// Add a message in each row.
-				$.each( secupressScans.manualFix, function( test, data ) {
-					if ( secupressScans.manualFix.hasOwnProperty( test ) ) {
-						oneTest = test;
-						++manualFixLen;
-						$rows += ",." + test;
-					}
-				} );
-				$rows = $rows.substr( 1 );
-				$rows = $( $rows ).children( ".secupress-scan-result" );
-				$rows.children( ".manual-fix-message" ).remove();
-				$rows.append( '<div class="manual-fix-message">' + SecuPressi18nScanner.manualFixMsg + "</div>" );
-
-				if ( ! extra.isBulk ) {
-					// If it's not a bulk, display the form.
-					secupressManualFixit( oneTest );
+			// When all fixes are done, go to step 3 or 4.
+			if ( extra.isBulk ) {
+				if ( ! $.isEmptyObject( secupressScans.manualFix ) ) {
+					// Manual fixes are needed, go to step 3.
+					window.location = window.location.href.replace( '&step=2', '&step=3' );
 				} else {
-					// Bulk: warn the user that some manual fixes need to be done.
-					swal2( $.extend( {}, SecuPress.swal2Defaults, {
-						title: 1 === manualFixLen ? SecuPressi18nScanner.oneManualFix : SecuPressi18nScanner.someManualFixes,
-					} ) );
+					// No manual fixes are needed, go to step 4.
+					window.location = window.location.href.replace( '&step=2', '&step=4' );
 				}
-
-				secupressScans.manualFix = {};
 			}
 		} );
 
