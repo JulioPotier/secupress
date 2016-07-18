@@ -59,6 +59,7 @@
 	font-size: 16px;
 	border-color: #F39C12;
 	color: #F39C12;
+	transition: background .275s, color .275s;
 }
 @media (min-width: 820px) {
 	.secupress-last-scan-result {
@@ -74,6 +75,7 @@
 	text-transform: uppercase;
 	letter-spacing: 0.125em;
 	color: #393E46;
+	transition: color .275s;
 }
 .secupress-section-dark .secupress-label-with-icon .secupress-upper {
 	color: #FFF;
@@ -477,9 +479,24 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 	border-radius: 3px;
 	text-align: left;
 }
-.secupress-tabs-controls-list a:hover,
-.secupress-rich-link:hover {
-	box-shadow: 0 0 1px 9px #222831, 0 0 1px 10px rgba(255,255,255,.2);
+.secupress-tabs-controls-list a:hover .secupress-upper,
+.secupress-tabs-controls-list a:focus .secupress-upper,
+.secupress-rich-link:hover .secupress-upper,
+.secupress-rich-link:focus .secupress-upper {
+	color: #F39C12;
+}
+.secupress-tabs-controls-list a:hover i.rounded,
+.secupress-tabs-controls-list a:focus i.rounded,
+.secupress-rich-link:hover i.rounded,
+.secupress-rich-link:focus i.rounded {
+	background: #F39C12;
+	color: #FFF;
+}
+.secupress-section-dark .secupress-tabs-controls-list a:hover i.rounded,
+.secupress-section-dark .secupress-tabs-controls-list a:focus i.rounded,
+.secupress-section-dark .secupress-rich-link:hover i.rounded,
+.secupress-section-dark .secupress-rich-link:focus i.rounded {
+	color: #222831;
 }
 .secupress-tabs-controls .secupress-button-primary {
 	letter-spacing: 0.1em;
