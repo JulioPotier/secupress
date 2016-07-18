@@ -895,9 +895,6 @@ a + .secupress-row-actions {
 	background: #222831;
 	color: #FFF;
 }
-.secupress-group-new .secupress-sg-header {
-	background: #26B3A9;
-}
 .secupress-sg-header.secupress-flex {
 	align-items: initial;
 }
@@ -917,16 +914,9 @@ a + .secupress-row-actions {
 	font-size: 48px;
 	color: rgba(236, 240, 241, 0.2);
 }
-.secupress-group-new .secupress-sgh-name i {
-	bottom: -2px;
-	color: rgba(255, 255, 255, 0.2);
-}
 .secupress-sgh-title {
 	font-size: 16px;
 	color: #2BCDC1;
-}
-.secupress-group-new .secupress-sgh-title {
-	color: #FFF;
 }
 .secupress-sgh-actions button {
 	margin-left: 20px;
@@ -935,12 +925,18 @@ a + .secupress-row-actions {
 	color: #F39C12;
 	background: #393E46;
 }
-.secupress-group-new .secupress-sgh-actions button {
-	color: #FFF;
-	background: #2BCDC1;
+.secupress-sgh-actions button:hover,
+.secupress-sgh-actions button:focus {
+	background: rgba(0, 0, 0, .35);
 }
 .secupress-sgh-actions button i:before {
+	display: inline-block;
 	font-size: 22px;
+	transition: transform .275s;
+	transform-origin: 10.5px 18px 0;
+}
+.secupress-sgh-actions .secupress-activated i:before {
+	transform: rotate(180deg);
 }
 .secupress-sgh-actions .text {
 	color: #FFF;
@@ -950,6 +946,53 @@ a + .secupress-row-actions {
 	font-size: 11px;
 	letter-spacing: 0.125em;
 	text-transform: uppercase;
+}
+
+/* New group section */
+.secupress-group-new .secupress-sg-header {
+	background: #26B3A9;
+}
+.secupress-group-new .secupress-sgh-name i {
+	bottom: -2px;
+	color: rgba(255, 255, 255, 0.2);
+}
+.secupress-group-new .secupress-sgh-title {
+	color: #FFF;
+}
+.secupress-group-new .secupress-sgh-actions button {
+	color: #FFF;
+	background: #2BCDC1;
+}
+
+/* Alternative styles in finish report */
+.secupress-is-finish-report {
+	padding-bottom: 2.5em;
+}
+.secupress-is-finish-report .secupress-sg-header {
+	background: #393e46;
+}
+.secupress-is-finish-report .secupress-scans-group {
+	margin: 0;
+}
+.secupress-is-finish-report .secupress-sgh-actions button i:before {
+	font-size: 32px;
+	font-weight: bold;
+	color: #FFF;
+}
+.secupress-summary-header .secupress-col-logo {
+	flex-basis: 110px;
+	flex-grow: 0;
+	padding: 10px 20px;
+}
+.secupress-summary-header .secupress-text-medium {
+	font-size: 24px;
+}
+.secupress-summary-header .secupress-chart-legend {
+	margin: 10px -10px;
+}
+.secupress-summary-header .secupress-chart-legend li {
+	display: inline-block;
+	margin: 0 10px;
 }
 
 /* Header checkboxes */

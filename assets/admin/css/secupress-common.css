@@ -147,11 +147,17 @@
 .secupress-m0.secupress-m0 {
 	margin: 0;
 }
+.secupress-mt0.secupress-mt0 {
+	margin-top: 0;
+}
 .secupress-mt1.secupress-mt1 {
 	margin-top: 1em;
 }
 .secupress-mt2.secupress-mt2 {
 	margin-top: 2em;
+}
+.secupress-mb0.secupress-mb0 {
+	margin-bottom: 0;
 }
 .secupress-mb1.secupress-mb1 {
 	margin-bottom: 1em;
@@ -247,6 +253,8 @@
 /* Ghost button */
 .secupress-button-ghost.secupress-button-ghost {
 	background: transparent;
+	border: 2px solid #ADB1B7;
+	color: #ADB1B7;
 }
 .secupress-button-ghost.secupress-button-primary {
 	border: 2px solid #26B3A9;

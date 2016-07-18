@@ -586,7 +586,7 @@ i.rounded {
 .secupress-button-mini.secupress-button-mini {
 	font-size: 11px;
 	padding: 2px 10px 3px;
-	letter-spacing: 0.05em;
+	letter-spacing: 0.125em;
 }
 .secupress-button-mini.secupress-button-mini .icon i:before,
 .secupress-button-mini.secupress-button-mini .icon i {
