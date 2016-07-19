@@ -434,6 +434,31 @@ jQuery( document ).ready( function( $ ) {
 
 	// !Other UI. ==================================================================================
 
+	// Header tabs specificities
+	( function( w, d, $, undefined ) {
+
+		var $tabs      = $( '.secupress-scan-header-main' ).find( '.secupress-tabs-controls-list' ).find( 'a:not([href="#secupress-scan"])' ),
+			$init_tab  = $( '.secupress-scan-header-main' ).find( '[href="#secupress-scan"]' ),
+			$scan_head = $( '.secupress-scanners-header' );
+			$head_item = $( '.secupress-heading' ).find( '.secupress-last-scan-result' ),
+			sel_class  = 'secupress-tab-selected';
+
+		// on click on init tab, remove other hidden trigger click
+		$init_tab.on( 'click.secupress', function() {
+			$scan_head.removeClass( sel_class );
+			$head_item.off( 'click.secupress' );
+		} );
+
+		// on click on an other tab
+		$tabs.on( 'click.secupress', function() {
+			$scan_head.addClass( sel_class );
+			$head_item.on( 'click.secupress', function() {
+				$init_tab.trigger( 'click.secupress' );
+			} );
+		} );
+
+	} )( window, document, $ );
+
 	// Ask for support button (free).
 	( function( w, d, $, undefined ) {
 		$( ".secupress-ask-support-free" ).on( "click.secupress keyup", function( e ) {
@@ -1065,6 +1090,34 @@ jQuery( document ).ready( function( $ ) {
 				} );
 			} );
 		}
+
+		// Hide/show each issue bloc
+		$( 'body' ).on( 'click.secupress keyup', '.secupress-button-ignoreit', function( e ) {
+			var $parent, $next, item;
+
+			if ( 'keyup' === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
+				return false;
+			}
+
+			$parent = $( '.' + $( this ).attr( 'data-parent' ) );
+			$next   = $parent.next();
+
+			// If there is no next bloc.
+			if ( ! $next.length ) {
+				return;
+			}
+
+			// Don't go on step4.
+			e.preventDefault();
+			// Hide!
+			$parent.hide();
+			// Display the next bloc and the new advanced text.
+			$next.show();
+			// Get the current advanced text and incrment it.
+			item = $( '.step3-advanced-text' ).first().text();
+			item = Number( item ) + 1;
+			$( '.step3-advanced-text' ).text( item );
+		} );
 
 
 		/** Events. ============================================================================= */
