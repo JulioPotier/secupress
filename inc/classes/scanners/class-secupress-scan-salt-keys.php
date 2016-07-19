@@ -10,15 +10,27 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
-	const VERSION = '1.0';
+	/** Constants. ============================================================================== */
 
 	/**
-	 * The reference to *Singleton* instance of this class.
+	 * Class version.
+	 *
+	 * @var (string)
+	 */
+	const VERSION = '1.0';
+
+
+	/** Properties. ============================================================================= */
+
+	/**
+	 * The reference to the *Singleton* instance of this class.
 	 *
 	 * @var (object)
 	 */
 	protected static $_instance;
 
+
+	/** Init and messages. ====================================================================== */
 
 	/**
 	 * Init.
@@ -29,18 +41,6 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 		$this->title    = __( 'Check if the security keys are correctly set.', 'secupress' );
 		$this->more     = __( 'WordPress provides 8 security keys, each key has its own purpose. These keys must be set with long random strings: don\'t keep the default value, don\'t store them in the database, don\'t hardcode them.', 'secupress' );
 		$this->more_fix = __( 'This will create a <a href="https://codex.wordpress.org/Must_Use_Plugins">must-use plugin</a> to replace your actual keys stored in <code>wp-config.php</code> or in your database to keep them safer.', 'secupress' );
-	}
-
-
-	/**
-	 * Get salt keys.
-	 *
-	 * @since 1.0
-	 *
-	 * @return (array)
-	 */
-	protected static function get_keys() {
-		return array( 'AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'NONCE_KEY', 'AUTH_SALT', 'SECURE_AUTH_SALT', 'LOGGED_IN_SALT', 'NONCE_SALT' );
 	}
 
 
@@ -78,6 +78,8 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 		return $messages;
 	}
 
+
+	/** Scan. =================================================================================== */
 
 	/**
 	 * Scan for flaw(s).
@@ -154,6 +156,8 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 	}
 
 
+	/** Fix. ==================================================================================== */
+
 	/**
 	 * Try to fix the flaw(s).
 	 *
@@ -182,6 +186,20 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 		}
 
 		return parent::fix();
+	}
+
+
+	/** Tools. ================================================================================== */
+
+	/**
+	 * Get salt keys.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array)
+	 */
+	protected static function get_keys() {
+		return array( 'AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'NONCE_KEY', 'AUTH_SALT', 'SECURE_AUTH_SALT', 'LOGGED_IN_SALT', 'NONCE_SALT' );
 	}
 
 

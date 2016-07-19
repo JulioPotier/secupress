@@ -10,15 +10,27 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
-	const VERSION = '1.0';
+	/** Constants. ============================================================================== */
 
 	/**
-	 * The reference to *Singleton* instance of this class.
+	 * Class version.
+	 *
+	 * @var (string)
+	 */
+	const VERSION = '1.0';
+
+
+	/** Properties. ============================================================================= */
+
+	/**
+	 * The reference to the *Singleton* instance of this class.
 	 *
 	 * @var (object)
 	 */
 	protected static $_instance;
 
+
+	/** Init and messages. ====================================================================== */
 
 	/**
 	 * Init.
@@ -64,6 +76,8 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements SecuP
 	}
 
 
+	/** Scan. =================================================================================== */
+
 	/**
 	 * Scan for flaw(s).
 	 *
@@ -72,7 +86,6 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements SecuP
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-
 		$basic_methods = array( 'TRACK', 'OPTIONS', 'CONNECT', 'SECUPRESS_TEST_' . time() );
 		$rest_methods  = array( 'PUT', 'PATCH', 'DELETE' );
 		$methods       = ! secupress_is_submodule_active( 'sensitive-data', 'restapi' ) ? array_merge( $basic_methods, $rest_methods ) : $basic_methods;
@@ -112,6 +125,8 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements SecuP
 	}
 
 
+	/** Fix. ==================================================================================== */
+
 	/**
 	 * Try to fix the flaw(s).
 	 *
@@ -120,7 +135,6 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements SecuP
 	 * @return (array) The fix results.
 	 */
 	public function fix() {
-
 		// Activate.
 		secupress_activate_submodule( 'firewall', 'request-methods-header' );
 

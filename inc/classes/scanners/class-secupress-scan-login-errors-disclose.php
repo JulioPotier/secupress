@@ -30,7 +30,7 @@ class SecuPress_Scan_Login_Errors_Disclose extends SecuPress_Scan implements Sec
 	protected static $_instance;
 
 
-	/** Public methods. ========================================================================= */
+	/** Init and messages. ====================================================================== */
 
 	/**
 	 * Init.

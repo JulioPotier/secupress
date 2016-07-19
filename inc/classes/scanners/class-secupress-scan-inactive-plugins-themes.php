@@ -10,15 +10,27 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
-	const VERSION = '1.0';
+	/** Constants. ============================================================================== */
 
 	/**
-	 * The reference to *Singleton* instance of this class.
+	 * Class version.
+	 *
+	 * @var (string)
+	 */
+	const VERSION = '1.0';
+
+
+	/** Properties. ============================================================================= */
+
+	/**
+	 * The reference to the *Singleton* instance of this class.
 	 *
 	 * @var (object)
 	 */
 	protected static $_instance;
 
+
+	/** Init and messages. ====================================================================== */
 
 	/**
 	 * Init.
@@ -77,6 +89,8 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 	}
 
 
+	/** Scan. =================================================================================== */
+
 	/**
 	 * Scan for flaw(s).
 	 *
@@ -118,6 +132,8 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 		return parent::scan();
 	}
 
+
+	/** Fix. ==================================================================================== */
 
 	/**
 	 * Try to fix the flaw(s).
@@ -459,6 +475,8 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 		return $forms;
 	}
 
+
+	/** Tools. ================================================================================== */
 
 	/**
 	 * Get the inactive plugins and themes.

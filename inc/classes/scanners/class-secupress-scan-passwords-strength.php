@@ -10,10 +10,20 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
  */
 class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
-	const VERSION = '1.0';
+	/** Constants. ============================================================================== */
 
 	/**
-	 * The reference to *Singleton* instance of this class.
+	 * Class version.
+	 *
+	 * @var (string)
+	 */
+	const VERSION = '1.0';
+
+
+	/** Properties. ============================================================================= */
+
+	/**
+	 * The reference to the *Singleton* instance of this class.
 	 *
 	 * @var (object)
 	 */
@@ -26,6 +36,8 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan implements SecuPr
 	 */
 	protected $fixable = false;
 
+
+	/** Init and messages. ====================================================================== */
 
 	/**
 	 * Init.
@@ -75,6 +87,8 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan implements SecuPr
 		return $messages;
 	}
 
+
+	/** Scan. =================================================================================== */
 
 	/**
 	 * Scan for flaw(s).
@@ -140,6 +154,8 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan implements SecuPr
 		return parent::scan();
 	}
 
+
+	/** Tools. ================================================================================== */
 
 	/**
 	 * Test if a password is in our dictionary.

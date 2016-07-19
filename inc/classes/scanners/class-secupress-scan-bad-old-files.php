@@ -30,7 +30,7 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements SecuPress_S
 	protected static $_instance;
 
 
-	/** Public methods. ========================================================================= */
+	/** Init and messages. ====================================================================== */
 
 	/**
 	 * Init.

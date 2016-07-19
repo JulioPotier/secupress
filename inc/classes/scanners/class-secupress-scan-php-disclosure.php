@@ -30,7 +30,7 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 	protected static $_instance;
 
 
-	/** Public methods. ========================================================================= */
+	/** Init and messages. ====================================================================== */
 
 	/**
 	 * Init.

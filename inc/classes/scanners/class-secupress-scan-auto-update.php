@@ -30,7 +30,7 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements SecuPress_Sca
 	protected static $_instance;
 
 
-	/** Public methods. ========================================================================= */
+	/** Init and messages. ====================================================================== */
 
 	/**
 	 * Init.

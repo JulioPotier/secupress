@@ -10,10 +10,20 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
-	const VERSION = '1.0';
+	/** Constants. ============================================================================== */
 
 	/**
-	 * The reference to *Singleton* instance of this class.
+	 * Class version.
+	 *
+	 * @var (string)
+	 */
+	const VERSION = '1.0';
+
+
+	/** Properties. ============================================================================= */
+
+	/**
+	 * The reference to the *Singleton* instance of this class.
 	 *
 	 * @var (object)
 	 */
@@ -26,6 +36,8 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 	 */
 	protected $fixable = 'pro';
 
+
+	/** Init and messages. ====================================================================== */
 
 	/**
 	 * Init.
@@ -102,6 +114,8 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 	}
 
 
+	/** Scan. =================================================================================== */
+
 	/**
 	 * Scan for flaw(s).
 	 *
@@ -147,6 +161,8 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 	}
 
 
+	/** Fix. ==================================================================================== */
+
 	/**
 	 * Try to fix the flaw(s).
 	 *
@@ -167,6 +183,8 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 		return parent::fix();
 	}
 
+
+	/** Tools. ================================================================================== */
 
 	/**
 	 * Get an array of installed plugins that are vulnerable.

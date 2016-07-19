@@ -10,10 +10,20 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
-	const VERSION = '1.0';
+	/** Constants. ============================================================================== */
 
 	/**
-	 * The reference to *Singleton* instance of this class.
+	 * Class version.
+	 *
+	 * @var (string)
+	 */
+	const VERSION = '1.0';
+
+
+	/** Properties. ============================================================================= */
+
+	/**
+	 * The reference to the *Singleton* instance of this class.
 	 *
 	 * @var (object)
 	 */
@@ -40,6 +50,8 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 	 */
 	protected $file_url = false;
 
+
+	/** Init and messages. ====================================================================== */
 
 	/**
 	 * Init.
@@ -108,6 +120,8 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 	}
 
 
+	/** Scan. =================================================================================== */
+
 	/**
 	 * Scan for flaw(s).
 	 *
@@ -145,6 +159,8 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 		return parent::scan();
 	}
 
+
+	/** Fix. ==================================================================================== */
 
 	/**
 	 * Try to fix the flaw(s).
@@ -243,6 +259,8 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 		$this->add_fix_message( 300, array( $rules ) );
 	}
 
+
+	/** Tools. ================================================================================== */
 
 	/**
 	 * Create a test file in the uploads folder. Also set the test file path and URL.

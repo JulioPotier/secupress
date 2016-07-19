@@ -10,15 +10,27 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
-	const VERSION = '1.0';
+	/** Constants. ============================================================================== */
 
 	/**
-	 * The reference to *Singleton* instance of this class.
+	 * Class version.
+	 *
+	 * @var (string)
+	 */
+	const VERSION = '1.0';
+
+
+	/** Properties. ============================================================================= */
+
+	/**
+	 * The reference to the *Singleton* instance of this class.
 	 *
 	 * @var (object)
 	 */
 	protected static $_instance;
 
+
+	/** Init and messages. ====================================================================== */
 
 	/**
 	 * Init.
@@ -64,6 +76,8 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Inter
 	}
 
 
+	/** Scan. =================================================================================== */
+
 	/**
 	 * Scan for flaw(s).
 	 *
@@ -72,7 +86,6 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Inter
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-
 		$response = wp_remote_get( add_query_arg( time(), 'UNION+SELECT+FOO', user_trailingslashit( home_url() ) ), array( 'redirection' => 0 ) );
 
 		if ( ! is_wp_error( $response ) ) {
@@ -93,6 +106,8 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Inter
 	}
 
 
+	/** Fix. ==================================================================================== */
+
 	/**
 	 * Try to fix the flaw(s).
 	 *
@@ -101,7 +116,6 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Inter
 	 * @return (array) The fix results.
 	 */
 	public function fix() {
-
 		// Activate.
 		secupress_activate_submodule( 'firewall', 'bad-url-contents' );
 

@@ -10,15 +10,27 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
-	const VERSION = '1.0';
+	/** Constants. ============================================================================== */
 
 	/**
-	 * The reference to *Singleton* instance of this class.
+	 * Class version.
+	 *
+	 * @var (string)
+	 */
+	const VERSION = '1.0';
+
+
+	/** Properties. ============================================================================= */
+
+	/**
+	 * The reference to the *Singleton* instance of this class.
 	 *
 	 * @var (object)
 	 */
 	protected static $_instance;
 
+
+	/** Init and messages. ====================================================================== */
 
 	/**
 	 * Init.
@@ -76,6 +88,8 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 	}
 
 
+	/** Scan. =================================================================================== */
+
 	/**
 	 * Scan for flaw(s).
 	 *
@@ -111,26 +125,7 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 	}
 
 
-	/**
-	 * Return true if a manual fix is needed here.
-	 *
-	 * @since 1.0
-	 *
-	 * @return (bool)
-	 */
-	public function need_manual_fix() {
-		$username = 'admin';
-		$user_id  = username_exists( $username );
-
-		// The "admin" account exists and has a role or capabilities.
-		if ( static::user_has_capas( $user_id ) ) {
-			// It's you!
-			return $user_id === get_current_user_id();
-		}
-
-		return false;
-	}
-
+	/** Fix. ==================================================================================== */
 
 	/**
 	 * Try to fix the flaw(s).
@@ -204,6 +199,27 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 
 
 	/**
+	 * Return true if a manual fix is needed here.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (bool)
+	 */
+	public function need_manual_fix() {
+		$username = 'admin';
+		$user_id  = username_exists( $username );
+
+		// The "admin" account exists and has a role or capabilities.
+		if ( static::user_has_capas( $user_id ) ) {
+			// It's you!
+			return $user_id === get_current_user_id();
+		}
+
+		return false;
+	}
+
+
+	/**
 	 * Try to fix the flaw(s) after requiring user action.
 	 *
 	 * @since 1.0
@@ -261,6 +277,8 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 		return array( 'rename-admin-username' => $form );
 	}
 
+
+	/** Tools. ================================================================================== */
 
 	/**
 	 * Tell if a user has a role, capabilities, or is network admin.
