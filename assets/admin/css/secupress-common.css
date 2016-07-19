@@ -147,11 +147,17 @@
 .secupress-m0.secupress-m0 {
 	margin: 0;
 }
+.secupress-mt0.secupress-mt0 {
+	margin-top: 0;
+}
 .secupress-mt1.secupress-mt1 {
 	margin-top: 1em;
 }
 .secupress-mt2.secupress-mt2 {
 	margin-top: 2em;
+}
+.secupress-mb0.secupress-mb0 {
+	margin-bottom: 0;
 }
 .secupress-mb1.secupress-mb1 {
 	margin-bottom: 1em;
@@ -162,6 +168,9 @@
 
 .secupress-p0.secupress-p0 {
 	padding: 0;
+}
+.secupress-p1.secupress-p1 {
+	padding: 1em;
 }
 .secupress-pt0.secupress-pt0 {
 	padding-top: 0;
@@ -233,9 +242,6 @@
     text-align: center;
 }
 
-[class^="secupress-"] button {
-	cursor: pointer;
-}
 /* Buttons container */
 .secupress-actions-line {
 	margin: 30px -10px 20px;
@@ -247,6 +253,8 @@
 /* Ghost button */
 .secupress-button-ghost.secupress-button-ghost {
 	background: transparent;
+	border: 2px solid #ADB1B7;
+	color: #ADB1B7;
 }
 .secupress-button-ghost.secupress-button-primary {
 	border: 2px solid #26B3A9;
@@ -301,6 +309,26 @@
 .secupress-section-dark .secupress-link-icon .text:hover,
 .secupress-section-dark .secupress-link-icon .text:focus {
 	color: #2BCDC1;
+}
+
+/* Actions on buttons */
+[class^="secupress-"] button {
+	cursor: pointer;
+}
+.secupress-activated .visible-when-activated {
+	display: block;
+	visibility: visible;
+}
+.secupress-activated .hidden-when-activated,
+.visible-when-activated {
+	display: none;
+	visibility: hidden;	
+}
+.icon-angle-down {
+	transition: transform 0.275s;
+}
+.secupress-activated .icon-angle-down {
+	transform: rotate(180deg);
 }
 
 /* Some alternative texts in button */
@@ -710,6 +738,18 @@ body[class*="secupress"] .sweet-overlay {
 	color: #2BCDC1;
 }
 
+/* Horizontal blobs */
+.secupress-landscape-blob {
+	padding: 20px;
+}
+.secupress-landscape-blob .secupress-blob-desc {
+	color: #5a626f;
+}
+.secupress-landscape-blob i:before {
+	font-size: 55px;
+	color: rgba(90, 98, 111, 0.5);
+}
+
 /**
  * Commons settings styles
  */
@@ -1052,4 +1092,3 @@ table.fixed .column-date {
 	letter-spacing: 0.1em;
 	box-shadow: 0 6px 12px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05), 0 3px 4px rgba(0,0,0,.05);
 }
-

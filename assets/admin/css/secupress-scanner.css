@@ -59,6 +59,7 @@
 	font-size: 16px;
 	border-color: #F39C12;
 	color: #F39C12;
+	transition: background .275s, color .275s;
 }
 @media (min-width: 820px) {
 	.secupress-last-scan-result {
@@ -70,8 +71,13 @@
 }
 .secupress-label-with-icon .secupress-upper {
 	display: block;
+	font-weight: 500;
 	text-transform: uppercase;
 	letter-spacing: 0.125em;
+	color: #393E46;
+	transition: color .275s;
+}
+.secupress-section-dark .secupress-label-with-icon .secupress-upper {
 	color: #FFF;
 }
 .secupress-label-with-icon .secupress-primary {
@@ -181,6 +187,42 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 }
 .secupress-not-scanned-yet .secupress-scanner-steps .secupress-step-name:after {
 	display: none;
+}
+
+/* Step 4 "static contents" */
+.secupress-go-farther {
+	border-top: 5px solid #F2F2F6;
+	padding: 0 25px;
+}
+.secupress-summaries[aria-hidden="true"] + .secupress-go-farther {
+	border-top: 0;
+}
+.secupress-go-farther .secupress-flex {
+	padding: 25px 0;
+}
+.secupress-go-farther .secupress-col:first-child {
+	padding-left: 0;
+}
+.secupress-go-farther .secupress-col:last-child {
+	padding-right: 0;
+}
+.secupress-go-farther .secupress-col-action {
+	flex-basis: 295px;
+	flex-shrink: 0;
+	text-align: right;
+}
+.secupress-go-farther .secupress-flex + .secupress-flex {
+	border-top: 1px solid #f2f2f6;
+}
+.secupress-farther-title {
+	margin-bottom: 0;
+	font-weight: 600;
+	font-size: 16px;
+	color: #26B3A9;
+}
+.secupress-go-farther .secupress-farther-desc {
+	margin: .55em 0 .5em;
+	color: #5A626F;
 }
 
 /**
@@ -432,14 +474,32 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 .secupress-tabs-controls-list {
 	margin: 0;
 }
-.secupress-tabs-controls-list a {
+.secupress-tabs-controls-list a,
+.secupress-rich-link {
 	position: relative;
 	display: block;
 	text-decoration: none;
 	border-radius: 3px;
+	text-align: left;
 }
-.secupress-tabs-controls-list a:hover {
-	box-shadow: 0 0 1px 9px #222831, 0 0 1px 10px rgba(255,255,255,.2);
+.secupress-tabs-controls-list a:hover .secupress-upper,
+.secupress-tabs-controls-list a:focus .secupress-upper,
+.secupress-rich-link:hover .secupress-upper,
+.secupress-rich-link:focus .secupress-upper {
+	color: #F39C12;
+}
+.secupress-tabs-controls-list a:hover i.rounded,
+.secupress-tabs-controls-list a:focus i.rounded,
+.secupress-rich-link:hover i.rounded,
+.secupress-rich-link:focus i.rounded {
+	background: #F39C12;
+	color: #FFF;
+}
+.secupress-section-dark .secupress-tabs-controls-list a:hover i.rounded,
+.secupress-section-dark .secupress-tabs-controls-list a:focus i.rounded,
+.secupress-section-dark .secupress-rich-link:hover i.rounded,
+.secupress-section-dark .secupress-rich-link:focus i.rounded {
+	color: #222831;
 }
 .secupress-tabs-controls .secupress-button-primary {
 	letter-spacing: 0.1em;
@@ -449,7 +509,8 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 .secupress-tabs-controls .secupress-button-primary:focus {
 	background: #2bcdc1;
 }
-.secupress-tabs-controls-list .secupress-label-with-icon {
+.secupress-tabs-controls-list .secupress-label-with-icon,
+.secupress-rich-link .secupress-label-with-icon {
 	padding-left: 54px;
 }
 
@@ -876,6 +937,9 @@ a + .secupress-row-actions {
 /**
  * Steps contents
  */
+.secupress-scanner-main-content {
+	padding-bottom: 50px;
+}
 .secupress-step-content-container {
 	width: 910px;
 	max-width: 100%;
@@ -889,6 +953,19 @@ a + .secupress-row-actions {
 }
 
 .secupress-scans-group,
+.secupress-box-shadow {
+	background: #FFF;
+	box-shadow: 0 10px 15px rgba(34, 40, 49, .2);
+}
+
+.secupress-scans-group {
+	margin: 2.5em 0;
+}
+.secupress-sg-header {
+	padding: 0 0 0 25px;
+	background: #222831;
+	color: #FFF;
+}
 .secupress-manual-fix {
 	margin: 2.5em 0;
 	background: #FFF;
@@ -943,7 +1020,7 @@ a + .secupress-row-actions {
 .secupress-sgh-name i,
 .secupress-mfh-name i {
 	position: absolute;
-	right: -55px;
+	right: -65px;
 	bottom: -10px;
 	font-size: 48px;
 	color: rgba(236, 240, 241, 0.2);
@@ -960,6 +1037,7 @@ a + .secupress-row-actions {
 	font-size: 16px;
 	color: #2BCDC1;
 }
+
 .secupress-mfh-title {
 	font-size: 16px;
 	color: #FFF;
@@ -967,6 +1045,7 @@ a + .secupress-row-actions {
 .secupress-group-new .secupress-sgh-title {
 	color: #FFF;
 }
+
 .secupress-sgh-actions button {
 	margin-left: 20px;
 	padding: 0 26px;
@@ -974,12 +1053,18 @@ a + .secupress-row-actions {
 	color: #F39C12;
 	background: #393E46;
 }
-.secupress-group-new .secupress-sgh-actions button {
-	color: #FFF;
-	background: #2BCDC1;
+.secupress-sgh-actions button:hover,
+.secupress-sgh-actions button:focus {
+	background: rgba(0, 0, 0, .35);
 }
 .secupress-sgh-actions button i:before {
+	display: inline-block;
 	font-size: 22px;
+	transition: transform .275s;
+	transform-origin: 10.5px 18px 0;
+}
+.secupress-sgh-actions .secupress-activated i:before {
+	transform: rotate(180deg);
 }
 .secupress-sgh-actions .text {
 	color: #FFF;
@@ -989,6 +1074,86 @@ a + .secupress-row-actions {
 	font-size: 11px;
 	letter-spacing: 0.125em;
 	text-transform: uppercase;
+}
+
+/* New group section */
+.secupress-group-new .secupress-sg-header {
+	background: #26B3A9;
+}
+.secupress-group-new .secupress-sgh-name i {
+	bottom: -2px;
+	color: rgba(255, 255, 255, 0.2);
+}
+.secupress-group-new .secupress-sgh-title {
+	color: #FFF;
+}
+.secupress-group-new .secupress-sgh-actions button {
+	color: #FFF;
+	background: #2BCDC1;
+}
+
+/* Alternative styles in finish report */
+.secupress-is-finish-report {
+	margin-top: 25px;
+}
+.secupress-is-finish-report .secupress-sg-header {
+	background: #393e46;
+}
+.secupress-is-finish-report .secupress-scans-group {
+	margin: 0;
+	box-shadow: none;
+}
+.secupress-is-finish-report .secupress-sgh-actions button i:before {
+	font-size: 32px;
+	font-weight: bold;
+	color: #FFF;
+}
+.secupress-is-finish-report .secupress-step-content-footer {
+	border-top: 1px solid #f2f2f6;
+	padding: 20px;
+}
+
+
+.secupress-pro-summary {
+	margin-top: 4em;
+}
+.secupress-summary-header .secupress-col-logo {
+	flex-basis: 110px;
+	flex-grow: 0;
+	padding: 25px 5px 25px 25px;
+}
+.secupress-summary-header .secupress-text-medium {
+	font-size: 24px;
+	margin-top: 0;
+}
+.secupress-summary-header .secupress-text-medium + p {
+	margin: 5px 0;
+}
+.secupress-summary-header .secupress-chart-legend {
+	margin: 10px -10px;
+}
+.secupress-summary-header .secupress-chart-legend li {
+	display: inline-block;
+	margin: 0 10px;
+}
+.secupress-summary-header .secupress-button-mini {
+	padding: 4px 12px 5px;
+}
+@media (min-width: 750px) {
+	.secupress-summary-header .secupress-button-mini {
+		margin-right: 55px;
+	}
+}
+.secupress-col-summary-text {
+	padding-top: 17px;
+	padding-bottom: 17px;
+}
+.secupress-pro-summary .secupress-blob-title {
+	margin-bottom: 0;
+	color: #F19B12;
+}
+.secupress-pro-summary .secupress-blob-desc {
+	margin-top: 0.5em;
 }
 
 /* Header checkboxes */
@@ -1130,6 +1295,27 @@ a + .secupress-row-actions {
 .status-good .secupress-label {
 	border-color: #2BCDC1;
 	color: #2BCDC1;
+}
+.secupress-status {
+	text-transform: uppercase;
+	letter-spacing: 0.125em;
+	font-weight: bold;
+	color: #ADB1B7;
+}
+.secupress-status i {
+	margin-right: 3px;
+	font-weight: normal;
+	font-size: 16px;
+	vertical-align: -2px;
+}
+.secupress-status-good {
+	color: #2BCDC1;
+}
+.secupress-status-bad {
+	color: #CB234F;
+}
+.secupress-status-warning {
+	color: #F19B12;
 }
 .secupress-item-details {
 	position: relative;
