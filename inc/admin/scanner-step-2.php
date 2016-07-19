@@ -112,7 +112,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 					$row_css_class .= ! empty( $fix['status'] ) && empty( $fix['has_action'] ) ? ' has-fix-status' : ' no-fix-status';
 					$row_css_class .= $needs_pro ? ' secupress-only-pro not-fixable' : '';
 					?>
-					<div class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> type-all status-all <?php echo $row_css_class; ?>" id="<?php echo $class_name_part; ?>" data-scan-url="<?php echo esc_url( $scan_nonce_url ); ?>">
+					<div class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> status-all <?php echo $row_css_class; ?>" id="<?php echo $class_name_part; ?>" data-scan-url="<?php echo esc_url( $scan_nonce_url ); ?>">
 						<div class="secupress-flex">
 
 							<p class="secupress-item-status secupress-status-mini">
