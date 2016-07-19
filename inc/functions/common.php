@@ -456,11 +456,13 @@ function secupress_get_capability( $force_mono = false ) {
  * @since 1.0
  *
  * @param (array) $atts An array of HTML attributes.
+ * @param (bool) $is_pro True is pro logo requested
  *
  * @return (string) The HTML tag.
  */
-function secupress_get_logo( $atts = array() ) {
-	$base_url = SECUPRESS_ADMIN_IMAGES_URL . 'logo' . ( secupress_is_pro() ? '-pro' : '' );
+function secupress_get_logo( $atts = array(), $is_pro = false ) {
+	$pro = ( secupress_is_pro() || $is_pro ? '-pro' : '' );
+	$base_url = SECUPRESS_ADMIN_IMAGES_URL . 'logo' . $pro;
 
 	$atts = array_merge( array(
 		'src'    => "{$base_url}.png",
