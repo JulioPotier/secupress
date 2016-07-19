@@ -34,7 +34,7 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements SecuPress_
 	 *
 	 * @var (int)
 	 */
-	public    static $length;
+	public $length;
 
 
 	/** Init and messages. ====================================================================== */
@@ -46,9 +46,9 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements SecuPress_
 	 */
 	protected function init() {
 		/** This filter is documented in inc/modules/firewall/plugins/bad-url-length.php */
-		self::$length   = apply_filters( 'secupress.plugin.bad-url-length.len', 300 );
-		$this->title    = sprintf( __( 'Check if long URL can reach your website (more than %s chars).', 'secupress' ), number_format_i18n( self::$length ) );
-		$this->more     = sprintf( __( 'A usual URL has no more than %s characters, but attackers often need to test very long strings when they try to hack something.', 'secupress' ), number_format_i18n( self::$length ) );
+		$this->length   = apply_filters( 'secupress.plugin.bad-url-length.len', 300 );
+		$this->title    = sprintf( __( 'Check if long URL can reach your website (more than %s chars).', 'secupress' ), number_format_i18n( $this->length ) );
+		$this->more     = sprintf( __( 'A usual URL has no more than %s characters, but attackers often need to test very long strings when they try to hack something.', 'secupress' ), number_format_i18n( $this->length ) );
 		$this->more_fix = sprintf(
 			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
 			'<em>' . __( 'Block Long URLs', 'secupress' ) . '</em>',
@@ -95,7 +95,7 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements SecuPress_
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-		$response = wp_remote_get( add_query_arg( time(), wp_generate_password( self::$length, false ), user_trailingslashit( home_url() ) ), array( 'redirection' => 0 ) );
+		$response = wp_remote_get( add_query_arg( time(), wp_generate_password( $this->length, false ), user_trailingslashit( home_url() ) ), array( 'redirection' => 0 ) );
 
 		if ( ! is_wp_error( $response ) ) {
 
