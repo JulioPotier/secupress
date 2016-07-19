@@ -366,6 +366,9 @@ i.rounded {
 	border: 2px solid #ACB0B7;
 	border-radius: 50%;
 }
+i.bold {
+	font-weight: bold;
+}
 
 /* SecuPress menu icon */
 #toplevel_page_secupress_scanners .wp-menu-image.dashicons-shield-alt:before {
@@ -563,12 +566,29 @@ i.rounded {
 	margin-top: -10px;
 	background: rgba(255,255,255,.3);
 }
+.secupress-button-getpro .icon {
+	padding-right: 0;
+}
+.secupress-button-getpro .icon i {
+	font-size: 20px;
+}
+.secupress-button-getpro .icon:after {
+	display: none;
+}
 
 /* Disabled */
 [class*="secupress-button"].disabled,
 [class*="secupress-button"]:disabled {
 	opacity: 0.5;
 	cursor: not-allowed;
+}
+/* Not important */
+.secupress-button.secupress-button.light {
+	background: #ADB1B7;
+}
+.secupress-button.secupress-button.light:hover,
+.secupress-button.secupress-button.light:focus {
+	background: #393E46;
 }
 
 /* Button Colors */
@@ -671,7 +691,8 @@ span.secupress-get-pro-version {
 }
 .secupress-get-pro-col p.secupress-get-pro,
 .secupress-cta-pro,
-.secupress-setting-content-col .secupress-get-pro-version {
+.secupress-setting-content-col .secupress-get-pro-version,
+.secupress-mf-header .secupress-get-pro-version {
 	position: relative;
 	padding-left: 55px;
 	font-weight: bold;
@@ -690,7 +711,8 @@ span.secupress-get-pro-version {
 }
 .secupress-get-pro-col p.secupress-get-pro:before,
 .secupress-cta-pro:before,
-.secupress-setting-content-col .secupress-get-pro-version:before {
+.secupress-setting-content-col .secupress-get-pro-version:before,
+.secupress-mf-header .secupress-get-pro-version:before {
 	position: absolute;
 	top: 2px; left: 5px;
 	content: "\e907";
@@ -700,7 +722,8 @@ span.secupress-get-pro-version {
 }
 .secupress-get-pro-col .secupress-get-pro a:before,
 .secupress-cta-pro a:before,
-.secupress-setting-content-col .secupress-get-pro-version a:before {
+.secupress-setting-content-col .secupress-get-pro-version a:before,
+.secupress-mf-header .secupress-get-pro-version a:before {
 	content: "";
 	display: block;
 }

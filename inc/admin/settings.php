@@ -640,9 +640,10 @@ function __secupress_scanners() {
 							$steps[4]['state'] = ' secupress-current';
 						break;
 					}
+					$current_step_class = 'secupress-is-step-' . $step;
 					unset( $step );
 					?>
-					<ol class="secupress-flex secupress-counter">
+					<ol class="secupress-flex secupress-counter <?php echo esc_attr( $current_step_class ); ?>">
 						<?php
 						foreach ( $steps as $i => $step ) {
 						?>
