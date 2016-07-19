@@ -369,9 +369,12 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 /**
  * Blobs in More Info pannel 
  */
-.secupress-not-scanned-yet [id="secupress-more-info"] {
-	position: static;
+.secupress-not-scanned-yet [id="secupress-more-info"],
+.secupress-is-step-2 + [id="secupress-more-info"],
+.secupress-is-step-3 + [id="secupress-more-info"] {
+	position: relative;
 	margin: 0 -33px;
+	left: 0;
 }
 [id="secupress-more-info"] {
 	position: absolute;
@@ -885,21 +888,48 @@ a + .secupress-row-actions {
 	color: #5A626F;
 }
 
-.secupress-scans-group {
+.secupress-scans-group,
+.secupress-manual-fix {
 	margin: 2.5em 0;
 	background: #FFF;
 	box-shadow: 0 10px 15px rgba(34, 40, 49, .2);
 }
-.secupress-sg-header {
+.secupress-sg-header,
+.secupress-mf-header {
 	padding: 0 0 0 20px;
 	background: #222831;
+	color: #FFF;
+}
+.secupress-mf-header {
+	padding: 15px 75px 15px 25px;
+}
+.secupress-is-only-pro.secupress-mf-header {
+	padding-right: 20px;
+}
+.secupress-mfh-pro {
+	flex-basis: 200px;
+	padding-left: 25px;
+	text-align: right;
+}
+.secupress-mf-header .secupress-get-pro-version {
+	display: inline-block;
+	text-align: left;
+	font-weight: 500;
 	color: #FFF;
 }
 .secupress-group-new .secupress-sg-header {
 	background: #26B3A9;
 }
-.secupress-sg-header.secupress-flex {
+.secupress-sg-header.secupress-flex,
+.secupress-mf-header.secupress-flex {
 	align-items: initial;
+}
+.secupress-header-dot {
+	line-height: 0;
+	padding: 0 20px 0 0;
+}
+.secupress-mf-header {
+	position: relative;
 }
 .secupress-sgh-name {
 	position: relative;
@@ -910,12 +940,17 @@ a + .secupress-row-actions {
 	margin: 0;
 	line-height: 1.4;
 }
-.secupress-sgh-name i {
+.secupress-sgh-name i,
+.secupress-mfh-name i {
 	position: absolute;
 	right: -55px;
 	bottom: -10px;
 	font-size: 48px;
 	color: rgba(236, 240, 241, 0.2);
+}
+.secupress-mfh-name i {
+	right: -55px;
+	bottom: 0;
 }
 .secupress-group-new .secupress-sgh-name i {
 	bottom: -2px;
@@ -924,6 +959,10 @@ a + .secupress-row-actions {
 .secupress-sgh-title {
 	font-size: 16px;
 	color: #2BCDC1;
+}
+.secupress-mfh-title {
+	font-size: 16px;
+	color: #FFF;
 }
 .secupress-group-new .secupress-sgh-title {
 	color: #FFF;
@@ -1040,7 +1079,39 @@ a + .secupress-row-actions {
 	font-size: 13px;
 	color: #5A626F;
 }
-
+.secupress-mf-content {
+	color: #5A626F;
+}
+.secupress-mf-content .secupress-item-content {
+	padding: 20px 25px;
+}
+.secupress-ic-title {
+	margin: 0;
+	font-size: 16px;
+	font-weight: bold;
+	color: #393E46;
+}
+.secupress-ic-desc {
+	margin-top: 10px;
+	margin-bottom: 25px;
+}
+.secupress-ic-fix-actions {
+	border-top: 1px solid #F2F2F6;
+	margin-top: 20px;
+	padding-top: 20px;
+}
+.secupress-mf-content .secupress-actions {
+	margin: 0 -20px;
+}
+.secupress-mf-content .secupress-action-doc {
+	margin: 0 -10px;
+}
+.secupress-mf-content .secupress-actions .secupress-button {
+	margin: 5px 20px;
+}
+.secupress-mf-content .secupress-action-doc .secupress-button {
+	margin: 5px 10px;	
+}
 .secupress-item-all .secupress-label {
 	text-transform: uppercase;
 }
@@ -1064,6 +1135,12 @@ a + .secupress-row-actions {
 	position: relative;
 	background: #ECF0F1;
 	color: #5A626F;
+}
+.secupress-mf-content .secupress-item-details {
+	padding: 25px 25px 25px 0;
+}
+.secupress-mf-content .secupress-details-icon {
+	padding-right: 0;
 }
 .secupress-item-details:before {
 	content: "";
@@ -1099,7 +1176,8 @@ a + .secupress-row-actions {
 	letter-spacing: 0.05em;
 	text-transform: lowercase;
 }
-.secupress-row-actions .link-like > * {
+.secupress-row-actions .link-like .icon,
+.secupress-row-actions .link-like .text {
 	display: inline-block;
 	vertical-align: middle;
 }
@@ -1109,6 +1187,31 @@ a + .secupress-row-actions {
 .secupress-row-actions .link-like .icon i {
 	font-size: 1.2em;
 	margin-right: 2px;
+}
+.secupress-toggle-button.hidden {
+	color: #333;
+}
+
+/* Step 3 particulars */
+.secupress-step-by-step {
+	padding-right: 15px;
+	margin-right: 15px;
+	font-size: 13px;
+	font-weight: bold;
+	color: #FFF;
+	background: #393E46;
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.05), 0 3px 4px rgba(0, 0, 0, 0.05);
+	border-radius: 2px;
+	overflow: hidden;
+}
+.secupress-step-by-step .step3-advanced-text {
+	min-width: 1.3em;
+	padding: 7px 10px;
+	margin-right: 8px;
+	font-size: 14px;
+	text-align: center;
+	background: #F19B12;
+	border-radius: 0 2px 2px 0;
 }
 
 /* Col with Fix-it button */
