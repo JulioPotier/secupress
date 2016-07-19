@@ -121,7 +121,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			$class_name   = 'SecuPress_Scan_' . $class_name_part;
 			$current_test = $class_name::get_instance();
 			$referer      = urlencode( esc_url_raw( self_admin_url( 'admin.php?page=' . SECUPRESS_PLUGIN_SLUG . '_scanners' . ( $is_subsite ? '' : '#' . $class_name_part ) ) ) );
-			$is_fixable   = true === $current_test::$fixable || 'pro' === $current_test::$fixable && secupress_is_pro();
+			$is_fixable   = true === $current_test->is_fixable() || 'pro' === $current_test->is_fixable() && secupress_is_pro();
 
 			// Scan.
 			$scanner        = isset( $scanners[ $option_name ] ) ? $scanners[ $option_name ] : array();
@@ -155,7 +155,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 
 			//// to-check: are all status here?
 			switch( $scan_status ) {
-				
+
 				case 'bad' :
 					$icon_slug = 'cross-o';
 					$scan_status_word = esc_html__( 'Not Fixed', 'secupress' );
@@ -287,7 +287,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			<div class="secupress-col-summary-text secupress-flex secupress-flex-spaced">
 				<p class="secupress-text-medium secupress-mb0"><?php _e( 'Perform a better grade<br> and unlock these awesome features', 'secupress' ); ?></p>
 
-				
+
 				<p class="secupress-p1">
 					<?php //// add the right link ?>
 					<a href="#" class="secupress-button secupress-button-tertiary secupress-button-getpro">
@@ -295,7 +295,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 							<i class="icon-secupress-simple" aria-hidden="true"></i>
 						</span>
 						<span class="text">
-							<?php esc_html_e( 'Get Pro', 'secupress' ); ?>	
+							<?php esc_html_e( 'Get Pro', 'secupress' ); ?>
 						</span>
 					</a>
 				</p>

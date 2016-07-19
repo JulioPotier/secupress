@@ -16,7 +16,7 @@ $modules     = secupress_get_modules();
 			</span>
 		</span>';
 	$main_button   =
-		'<a href="' . esc_url( secupress_admin_url( 'scanners' ) ) . '&step=4" class="secupress-button secupress-button-autofix shadow light">
+		'<a href="' . esc_url( secupress_admin_url( 'scanners' ) ) . '&step=4" class="secupress-button shadow light">
 			<span class="icon">
 				<i class="icon-cross" aria-hidden="true"></i>
 			</span>
@@ -57,8 +57,8 @@ $modules     = secupress_get_modules();
 			$class_name   = 'SecuPress_Scan_' . $class_name_part;
 			$current_test = $class_name::get_instance();
 			$referer      = urlencode( esc_url_raw( self_admin_url( 'admin.php?page=' . SECUPRESS_PLUGIN_SLUG . '_scanners&step=3#' . $class_name_part ) ) );
-			$is_fixable   = true === $current_test::$fixable || 'pro' === $current_test::$fixable && secupress_is_pro();
-			$is_only_pro  = 'pro' === $current_test::$fixable && ! secupress_is_pro();
+			$is_fixable   = true === $current_test->is_fixable() || 'pro' === $current_test->is_fixable() && secupress_is_pro();
+			$is_only_pro  = 'pro' === $current_test->is_fixable() && ! secupress_is_pro();
 			$module_icon  = ! empty( $modules[ $module_name ]['icon'] ) ? $modules[ $module_name ]['icon'] : '';
 
 			// Scan.
@@ -84,7 +84,7 @@ $modules     = secupress_get_modules();
 						<span class="secupress-header-dot">
 							<span class="secupress-dot-warning"></span>
 						</span>
-						<p class="secupress-mfh-title"><?php echo $current_test::$title; ?></p>
+						<p class="secupress-mfh-title"><?php echo $current_test->title; ?></p>
 
 						<?php if ( $is_only_pro ) { ?>
 
@@ -112,7 +112,7 @@ $modules     = secupress_get_modules();
 						</p>
 
 						<p class="secupress-ic-desc">
-							<?php echo wp_kses( $current_test::$more_fix, $allowed_tags ); ?>
+							<?php echo wp_kses( $current_test->more_fix, $allowed_tags ); ?>
 						</p>
 
 						<div class="secupress-ic-fix-actions">
@@ -178,7 +178,7 @@ $modules     = secupress_get_modules();
 							<span class="secupress-details-icon">
 								<i class="icon-i" aria-hidden="true"></i>
 							</span>
-							<p class="details-content"><?php echo wp_kses( $current_test::$more, $allowed_tags ); ?></p>
+							<p class="details-content"><?php echo wp_kses( $current_test->more, $allowed_tags ); ?></p>
 							<span class="secupress-placeholder"></span>
 						</div>
 					</div>
