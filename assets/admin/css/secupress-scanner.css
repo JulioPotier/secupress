@@ -59,6 +59,7 @@
 	font-size: 16px;
 	border-color: #F39C12;
 	color: #F39C12;
+	transition: background .275s, color .275s;
 }
 @media (min-width: 820px) {
 	.secupress-last-scan-result {
@@ -70,8 +71,13 @@
 }
 .secupress-label-with-icon .secupress-upper {
 	display: block;
+	font-weight: 500;
 	text-transform: uppercase;
 	letter-spacing: 0.125em;
+	color: #393E46;
+	transition: color .275s;
+}
+.secupress-section-dark .secupress-label-with-icon .secupress-upper {
 	color: #FFF;
 }
 .secupress-label-with-icon .secupress-primary {
@@ -181,6 +187,42 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 }
 .secupress-not-scanned-yet .secupress-scanner-steps .secupress-step-name:after {
 	display: none;
+}
+
+/* Step 4 "static contents" */
+.secupress-go-farther {
+	border-top: 5px solid #F2F2F6;
+	padding: 0 25px;
+}
+.secupress-summaries[aria-hidden="true"] + .secupress-go-farther {
+	border-top: 0;
+}
+.secupress-go-farther .secupress-flex {
+	padding: 25px 0;
+}
+.secupress-go-farther .secupress-col:first-child {
+	padding-left: 0;
+}
+.secupress-go-farther .secupress-col:last-child {
+	padding-right: 0;
+}
+.secupress-go-farther .secupress-col-action {
+	flex-basis: 295px;
+	flex-shrink: 0;
+	text-align: right;
+}
+.secupress-go-farther .secupress-flex + .secupress-flex {
+	border-top: 1px solid #f2f2f6;
+}
+.secupress-farther-title {
+	margin-bottom: 0;
+	font-weight: 600;
+	font-size: 16px;
+	color: #26B3A9;
+}
+.secupress-go-farther .secupress-farther-desc {
+	margin: .55em 0 .5em;
+	color: #5A626F;
 }
 
 /**
@@ -369,9 +411,12 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 /**
  * Blobs in More Info pannel 
  */
-.secupress-not-scanned-yet [id="secupress-more-info"] {
-	position: static;
+.secupress-not-scanned-yet [id="secupress-more-info"],
+.secupress-is-step-2 + [id="secupress-more-info"],
+.secupress-is-step-3 + [id="secupress-more-info"] {
+	position: relative;
 	margin: 0 -33px;
+	left: 0;
 }
 [id="secupress-more-info"] {
 	position: absolute;
@@ -429,14 +474,32 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 .secupress-tabs-controls-list {
 	margin: 0;
 }
-.secupress-tabs-controls-list a {
+.secupress-tabs-controls-list a,
+.secupress-rich-link {
 	position: relative;
 	display: block;
 	text-decoration: none;
 	border-radius: 3px;
+	text-align: left;
 }
-.secupress-tabs-controls-list a:hover {
-	box-shadow: 0 0 1px 9px #222831, 0 0 1px 10px rgba(255,255,255,.2);
+.secupress-tabs-controls-list a:hover .secupress-upper,
+.secupress-tabs-controls-list a:focus .secupress-upper,
+.secupress-rich-link:hover .secupress-upper,
+.secupress-rich-link:focus .secupress-upper {
+	color: #F39C12;
+}
+.secupress-tabs-controls-list a:hover i.rounded,
+.secupress-tabs-controls-list a:focus i.rounded,
+.secupress-rich-link:hover i.rounded,
+.secupress-rich-link:focus i.rounded {
+	background: #F39C12;
+	color: #FFF;
+}
+.secupress-section-dark .secupress-tabs-controls-list a:hover i.rounded,
+.secupress-section-dark .secupress-tabs-controls-list a:focus i.rounded,
+.secupress-section-dark .secupress-rich-link:hover i.rounded,
+.secupress-section-dark .secupress-rich-link:focus i.rounded {
+	color: #222831;
 }
 .secupress-tabs-controls .secupress-button-primary {
 	letter-spacing: 0.1em;
@@ -446,7 +509,8 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 .secupress-tabs-controls .secupress-button-primary:focus {
 	background: #2bcdc1;
 }
-.secupress-tabs-controls-list .secupress-label-with-icon {
+.secupress-tabs-controls-list .secupress-label-with-icon,
+.secupress-rich-link .secupress-label-with-icon {
 	padding-left: 54px;
 }
 
@@ -873,6 +937,9 @@ a + .secupress-row-actions {
 /**
  * Steps contents
  */
+.secupress-scanner-main-content {
+	padding-bottom: 50px;
+}
 .secupress-step-content-container {
 	width: 910px;
 	max-width: 100%;
@@ -885,21 +952,61 @@ a + .secupress-row-actions {
 	color: #5A626F;
 }
 
+.secupress-scans-group,
+.secupress-box-shadow {
+	background: #FFF;
+	box-shadow: 0 10px 15px rgba(34, 40, 49, .2);
+}
+
 .secupress-scans-group {
+	margin: 2.5em 0;
+}
+.secupress-sg-header {
+	padding: 0 0 0 25px;
+	background: #222831;
+	color: #FFF;
+}
+.secupress-manual-fix {
 	margin: 2.5em 0;
 	background: #FFF;
 	box-shadow: 0 10px 15px rgba(34, 40, 49, .2);
 }
-.secupress-sg-header {
+.secupress-sg-header,
+.secupress-mf-header {
 	padding: 0 0 0 20px;
 	background: #222831;
+	color: #FFF;
+}
+.secupress-mf-header {
+	padding: 15px 75px 15px 25px;
+}
+.secupress-is-only-pro.secupress-mf-header {
+	padding-right: 20px;
+}
+.secupress-mfh-pro {
+	flex-basis: 200px;
+	padding-left: 25px;
+	text-align: right;
+}
+.secupress-mf-header .secupress-get-pro-version {
+	display: inline-block;
+	text-align: left;
+	font-weight: 500;
 	color: #FFF;
 }
 .secupress-group-new .secupress-sg-header {
 	background: #26B3A9;
 }
-.secupress-sg-header.secupress-flex {
+.secupress-sg-header.secupress-flex,
+.secupress-mf-header.secupress-flex {
 	align-items: initial;
+}
+.secupress-header-dot {
+	line-height: 0;
+	padding: 0 20px 0 0;
+}
+.secupress-mf-header {
+	position: relative;
 }
 .secupress-sgh-name {
 	position: relative;
@@ -910,12 +1017,17 @@ a + .secupress-row-actions {
 	margin: 0;
 	line-height: 1.4;
 }
-.secupress-sgh-name i {
+.secupress-sgh-name i,
+.secupress-mfh-name i {
 	position: absolute;
-	right: -55px;
+	right: -65px;
 	bottom: -10px;
 	font-size: 48px;
 	color: rgba(236, 240, 241, 0.2);
+}
+.secupress-mfh-name i {
+	right: -55px;
+	bottom: 0;
 }
 .secupress-group-new .secupress-sgh-name i {
 	bottom: -2px;
@@ -925,9 +1037,15 @@ a + .secupress-row-actions {
 	font-size: 16px;
 	color: #2BCDC1;
 }
+
+.secupress-mfh-title {
+	font-size: 16px;
+	color: #FFF;
+}
 .secupress-group-new .secupress-sgh-title {
 	color: #FFF;
 }
+
 .secupress-sgh-actions button {
 	margin-left: 20px;
 	padding: 0 26px;
@@ -935,15 +1053,141 @@ a + .secupress-row-actions {
 	color: #F39C12;
 	background: #393E46;
 }
+.secupress-sgh-actions button:hover,
+.secupress-sgh-actions button:focus {
+	background: rgba(0, 0, 0, .35);
+}
+.secupress-sgh-actions button i:before {
+	display: inline-block;
+	font-size: 22px;
+	transition: transform .275s;
+	transform-origin: 10.5px 18px 0;
+}
+.secupress-sgh-actions .secupress-activated i:before {
+	transform: rotate(180deg);
+}
+.secupress-sgh-actions .text {
+	color: #FFF;
+}
+.secupress-sgh-actions .label-before-text {
+	margin-right: 5px;
+	font-size: 11px;
+	letter-spacing: 0.125em;
+	text-transform: uppercase;
+}
+
+/* New group section */
+.secupress-group-new .secupress-sg-header {
+	background: #26B3A9;
+}
+.secupress-group-new .secupress-sgh-name i {
+	bottom: -2px;
+	color: rgba(255, 255, 255, 0.2);
+}
+.secupress-group-new .secupress-sgh-title {
+	color: #FFF;
+}
 .secupress-group-new .secupress-sgh-actions button {
 	color: #FFF;
 	background: #2BCDC1;
 }
-.secupress-sgh-actions button i:before {
-	font-size: 22px;
+
+/* Alternative styles in finish report */
+.secupress-is-finish-report {
+	margin-top: 25px;
 }
-.secupress-sgh-actions .text {
+.secupress-is-finish-report .secupress-sg-header {
+	background: #393e46;
+}
+.secupress-is-finish-report .secupress-scans-group {
+	margin: 0;
+	box-shadow: none;
+}
+.secupress-is-finish-report .secupress-sgh-actions button i:before {
+	font-size: 32px;
+	font-weight: bold;
 	color: #FFF;
+}
+.secupress-is-finish-report .secupress-step-content-footer {
+	border-top: 1px solid #f2f2f6;
+	padding: 20px;
+}
+
+
+.secupress-pro-summary {
+	margin-top: 4em;
+}
+.secupress-summary-header .secupress-col-logo {
+	flex-basis: 110px;
+	flex-grow: 0;
+	padding: 25px 5px 25px 25px;
+}
+.secupress-summary-header .secupress-text-medium {
+	font-size: 24px;
+	margin-top: 0;
+}
+.secupress-summary-header .secupress-text-medium + p {
+	margin: 5px 0;
+}
+.secupress-summary-header .secupress-chart-legend {
+	margin: 10px -10px;
+}
+.secupress-summary-header .secupress-chart-legend li {
+	display: inline-block;
+	margin: 0 10px;
+}
+.secupress-summary-header .secupress-button-mini {
+	padding: 4px 12px 5px;
+}
+@media (min-width: 750px) {
+	.secupress-summary-header .secupress-button-mini {
+		margin-right: 55px;
+	}
+}
+.secupress-col-summary-text {
+	padding-top: 17px;
+	padding-bottom: 17px;
+}
+.secupress-pro-summary .secupress-blob-title {
+	margin-bottom: 0;
+	color: #F19B12;
+}
+.secupress-pro-summary .secupress-blob-desc {
+	margin-top: 0.5em;
+}
+
+/* Header checkboxes */
+.secupress-scans-group .secupress-sgh-actions .label-text {
+	margin-right: 15px;
+}
+.secupress-sgh-actions .secupress-checkbox:not(:checked) + .label-text:before,
+.secupress-sgh-actions .secupress-checkbox:checked + .label-text:before {
+	background: #222831;
+}
+.secupress-sgh-actions .secupress-checkbox:not(:checked) + .label-text:after,
+.secupress-sgh-actions .secupress-checkbox:checked + .label-text:after {
+	top: -11px;
+}
+/* In-item checkboxes */
+.secupress-item-all .secupress-checkbox:not(:checked) + .label-text:before,
+.secupress-item-all .secupress-checkbox:checked + .label-text:before {
+	left: 10px;
+	background: #FFF;
+}
+.secupress-item-all .secupress-checkbox:not(:checked) + .label-text:after,
+.secupress-item-all .secupress-checkbox:checked + .label-text:after {
+	top: -12px;
+	left: 15px;
+}
+/* All checkboxes */
+.secupress-scans-group .secupress-checkbox:not(:checked) + .label-text:before,
+.secupress-scans-group .secupress-checkbox:checked + .label-text:before {
+	top: -13px;
+	border-color: #2BCDC1;
+}
+.secupress-scans-group .secupress-checkbox:not(:checked) + .label-text:after,
+.secupress-scans-group .secupress-checkbox:checked + .label-text:after {
+	color: #2BCDC1;
 }
 .secupress-group-new .secupress-sg-content {
 	border: 1px solid #2BCDC1;
@@ -966,11 +1210,25 @@ a + .secupress-row-actions {
 .secupress-tests .secupress-item-all + .secupress-item-all {
 	border-top: 1px solid #F2F2F6;
 }
+.secupress-item-all.secupress-only-pro:before {
+	content: "";
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background: #FFF repeating-linear-gradient(-45deg, #fff, #fff 10px, #EEE 10px, #EEE 11px) repeat scroll 0 0;
+	opacity: 0.6;
+	z-index: 2;
+}
 .secupress-item-status,
 .secupress-details-icon {
 	flex-basis: 110px;
 	flex-shrink: 0;
 	padding-right: 15px;
+}
+.secupress-item-status.secupress-status-mini {
+	flex-basis: 44px;
 }
 .secupress-row-actions,
 .secupress-item-all .secupress-placeholder {
@@ -978,11 +1236,47 @@ a + .secupress-row-actions {
 	flex-shrink: 0;
 	text-align: right;
 }
+.secupress-only-pro .secupress-row-actions {
+	z-index: 3;
+}
 .secupress-item-title {
+	flex-basis: 100%; /* for too small titles */
 	font-size: 13px;
 	color: #5A626F;
 }
-
+.secupress-mf-content {
+	color: #5A626F;
+}
+.secupress-mf-content .secupress-item-content {
+	padding: 20px 25px;
+}
+.secupress-ic-title {
+	margin: 0;
+	font-size: 16px;
+	font-weight: bold;
+	color: #393E46;
+}
+.secupress-ic-desc {
+	margin-top: 10px;
+	margin-bottom: 25px;
+}
+.secupress-ic-fix-actions {
+	border-top: 1px solid #F2F2F6;
+	margin-top: 20px;
+	padding-top: 20px;
+}
+.secupress-mf-content .secupress-actions {
+	margin: 0 -20px;
+}
+.secupress-mf-content .secupress-action-doc {
+	margin: 0 -10px;
+}
+.secupress-mf-content .secupress-actions .secupress-button {
+	margin: 5px 20px;
+}
+.secupress-mf-content .secupress-action-doc .secupress-button {
+	margin: 5px 10px;	
+}
 .secupress-item-all .secupress-label {
 	text-transform: uppercase;
 }
@@ -1002,10 +1296,37 @@ a + .secupress-row-actions {
 	border-color: #2BCDC1;
 	color: #2BCDC1;
 }
+.secupress-status {
+	text-transform: uppercase;
+	letter-spacing: 0.125em;
+	font-weight: bold;
+	color: #ADB1B7;
+}
+.secupress-status i {
+	margin-right: 3px;
+	font-weight: normal;
+	font-size: 16px;
+	vertical-align: -2px;
+}
+.secupress-status-good {
+	color: #2BCDC1;
+}
+.secupress-status-bad {
+	color: #CB234F;
+}
+.secupress-status-warning {
+	color: #F19B12;
+}
 .secupress-item-details {
 	position: relative;
 	background: #ECF0F1;
 	color: #5A626F;
+}
+.secupress-mf-content .secupress-item-details {
+	padding: 25px 25px 25px 0;
+}
+.secupress-mf-content .secupress-details-icon {
+	padding-right: 0;
 }
 .secupress-item-details:before {
 	content: "";
@@ -1041,7 +1362,8 @@ a + .secupress-row-actions {
 	letter-spacing: 0.05em;
 	text-transform: lowercase;
 }
-.secupress-row-actions .link-like > * {
+.secupress-row-actions .link-like .icon,
+.secupress-row-actions .link-like .text {
 	display: inline-block;
 	vertical-align: middle;
 }
@@ -1051,6 +1373,31 @@ a + .secupress-row-actions {
 .secupress-row-actions .link-like .icon i {
 	font-size: 1.2em;
 	margin-right: 2px;
+}
+.secupress-toggle-button.hidden {
+	color: #333;
+}
+
+/* Step 3 particulars */
+.secupress-step-by-step {
+	padding-right: 15px;
+	margin-right: 15px;
+	font-size: 13px;
+	font-weight: bold;
+	color: #FFF;
+	background: #393E46;
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.05), 0 3px 4px rgba(0, 0, 0, 0.05);
+	border-radius: 2px;
+	overflow: hidden;
+}
+.secupress-step-by-step .step3-advanced-text {
+	min-width: 1.3em;
+	padding: 7px 10px;
+	margin-right: 8px;
+	font-size: 14px;
+	text-align: center;
+	background: #F19B12;
+	border-radius: 0 2px 2px 0;
 }
 
 /* Col with Fix-it button */

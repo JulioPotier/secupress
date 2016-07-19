@@ -32,17 +32,17 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 	 *
 	 * @since 1.0
 	 */
-	protected static function init() {
+	protected function init() {
 		self::$type     = 'WordPress';
-		self::$title    = __( 'Check if the <em>admin</em> account is correctly protected.', 'secupress' );
-		self::$more     = __( 'It is important to protect the famous <em>admin</em> account to avoid simple brute-force attacks on it. This account is most of the time the first one created when you install WordPress, and it is well known by attackers.', 'secupress' );
+		$this->title    = __( 'Check if the <em>admin</em> account is correctly protected.', 'secupress' );
+		$this->more     = __( 'It is important to protect the famous <em>admin</em> account to avoid simple brute-force attacks on it. This account is most of the time the first one created when you install WordPress, and it is well known by attackers.', 'secupress' );
 
 		$current_user = wp_get_current_user();
 
 		if ( 'admin' === $current_user->user_login ) {
-			self::$more_fix = __( 'You will be asked for a new username and your account will be renamed.', 'secupress' );
+			$this->more_fix = __( 'You will be asked for a new username and your account will be renamed.', 'secupress' );
 		} else {
-			self::$more_fix = __( 'This will remove all roles and capabilities from the <em>admin</em> account if it exists. If it does not exist and user subscriptions are open, the account will be created with no role nor capabilities.', 'secupress' );
+			$this->more_fix = __( 'This will remove all roles and capabilities from the <em>admin</em> account if it exists. If it does not exist and user subscriptions are open, the account will be created with no role nor capabilities.', 'secupress' );
 		}
 	}
 
@@ -120,27 +120,25 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 
 
 	/**
-	 * Return true if a manual fix is needed here
+	 * Return true if a manual fix is needed here.
 	 *
 	 * @since 1.0
 	 *
-	 * @return (book)
+	 * @return (bool)
 	 */
 	public function need_manual_fix() {
-
 		$username = 'admin';
 		$user_id  = username_exists( $username );
 
 		// The "admin" account exists and has a role or capabilities.
 		if ( static::user_has_capas( $user_id ) ) {
-
-			// It's not you
+			// It's you!
 			return $user_id === get_current_user_id();
 		}
 
 		return false;
-
 	}
+
 
 	/**
 	 * Try to fix the flaw(s).

@@ -32,36 +32,36 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 	 *
 	 * @since 1.0
 	 */
-	protected static function init() {
+	protected function init() {
 		global $is_apache, $is_nginx, $is_iis7;
 
 		self::$type     = 'WordPress';
-		self::$title    = __( 'Check if your WordPress site discloses its version.', 'secupress' );
-		self::$more     = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of informations. His goal is to find outdated versions of your server softwares or WordPress components. Don\'t let them easily find these informations.', 'secupress' );
+		$this->title    = __( 'Check if your WordPress site discloses its version.', 'secupress' );
+		$this->more     = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of informations. His goal is to find outdated versions of your server softwares or WordPress components. Don\'t let them easily find these informations.', 'secupress' );
 
 		if ( $is_apache ) {
 			$config_file = '.htaccess';
 		} elseif ( $is_iis7 ) {
 			$config_file = 'web.config';
 		} elseif ( ! $is_nginx ) {
-			self::$fixable = false;
+			$this->fixable = false;
 		}
 
-		if ( self::$fixable ) {
-			self::$more_fix  = __( 'Depending of the scan results, one (or all) of the following will be applied:', 'secupress' ) . '<br/>';
+		if ( $this->fixable ) {
+			$this->more_fix  = __( 'Depending of the scan results, one (or all) of the following will be applied:', 'secupress' ) . '<br/>';
 		} else {
-			self::$more_fix = static::get_messages( 301 );
+			$this->more_fix = static::get_messages( 301 );
 		}
 
 		if ( $is_nginx ) {
-			self::$more_fix .= sprintf( __( 'Since your %s file cannot be edited automatically, this will give you the rules to add into it manually, to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>nginx.conf</code>' ) . '<br/>';
-		} elseif ( self::$fixable ) {
-			self::$more_fix .= sprintf( __( 'This will add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), "<code>$config_file</code>" ) . '<br/>';
+			$this->more_fix .= sprintf( __( 'Since your %s file cannot be edited automatically, this will give you the rules to add into it manually, to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>nginx.conf</code>' ) . '<br/>';
+		} elseif ( $this->fixable ) {
+			$this->more_fix .= sprintf( __( 'This will add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), "<code>$config_file</code>" ) . '<br/>';
 		}
 
-		if ( self::$fixable ) {
-			self::$more_fix .= __( 'The meta tag containing the WordPress version may be removed.', 'secupress' ) . '<br/>';
-			self::$more_fix .= __( 'The WordPress version may be removed from the styles and scripts URL.', 'secupress' ) . '<br/>';
+		if ( $this->fixable ) {
+			$this->more_fix .= __( 'The meta tag containing the WordPress version may be removed.', 'secupress' ) . '<br/>';
+			$this->more_fix .= __( 'The WordPress version may be removed from the styles and scripts URL.', 'secupress' ) . '<br/>';
 		}
 	}
 
@@ -198,7 +198,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 			$this->add_message( 101 );
 		}
 
-		if ( $is_bad && ! self::$fixable ) {
+		if ( $is_bad && ! $this->fixable ) {
 			$this->add_pre_fix_message( 301 );
 		}
 

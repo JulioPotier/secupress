@@ -640,9 +640,10 @@ function __secupress_scanners() {
 							$steps[4]['state'] = ' secupress-current';
 						break;
 					}
+					$current_step_class = 'secupress-is-step-' . $step;
 					unset( $step );
 					?>
-					<ol class="secupress-flex secupress-counter">
+					<ol class="secupress-flex secupress-counter <?php echo esc_attr( $current_step_class ); ?>">
 						<?php
 						foreach ( $steps as $i => $step ) {
 						?>
@@ -834,8 +835,6 @@ function secupress_scanners_template() {
 		'p'      => array(),
 		'br'     => array(),
 	);
-	// Actions the user needs to perform for a fix.
-	$fix_actions = SecuPress_Scan::get_and_delete_fix_actions();
 	// Auto-scans: scans that will be executed on page load.
 	$autoscans   = SecuPress_Scan::get_and_delete_autoscans();
 
@@ -899,15 +898,14 @@ function secupress_scanners_template() {
 function secupress_status( $status ) {
 	switch ( $status ) :
 		case 'bad':
-			return __( 'Bad', 'secupress' );
+			return __( 'Not Fixed', 'secupress' );
 		case 'good':
-			return __( 'Good', 'secupress' );
+			return __( 'Fixed', 'secupress' );
 		case 'warning':
 			return __( 'Warning', 'secupress' );
 		case 'cantfix':
-			return '';
 		default:
-			return __( 'New Scan', 'secupress' );
+			return __( 'Error', 'secupress' );
 	endswitch;
 }
 

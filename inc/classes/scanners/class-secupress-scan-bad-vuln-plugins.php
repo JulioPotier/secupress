@@ -31,7 +31,7 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 	 *
 	 * @var (bool|string)
 	 */
-	public    static $fixable = 'pro';
+	protected $fixable = 'pro';
 
 
 	/**
@@ -39,17 +39,17 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 	 *
 	 * @since 1.0
 	 */
-	protected static function init() {
+	protected function init() {
 		self::$type     = 'WordPress';
-		self::$title    = __( 'Check if you are using plugins known to be vulnerable.', 'secupress' );
-		self::$more     = __( 'Never use a plugin known as vulnerable, you should update or remove it as soon as possible!', 'secupress' );
+		$this->title    = __( 'Check if you are using plugins known to be vulnerable.', 'secupress' );
+		$this->more     = __( 'Never use a plugin known as vulnerable, you should update or remove it as soon as possible!', 'secupress' );
 
 		if ( is_network_admin() ) {
-			self::$more_fix = __( 'This will ask you to select and delete these plugins. If some of them are activated on some of your websites, a new page similar to this one will be created in each related site, where administrators will be asked to select and deactivate these plugins.', 'secupress' );
+			$this->more_fix = __( 'This will ask you to select and delete these plugins. If some of them are activated on some of your websites, a new page similar to this one will be created in each related site, where administrators will be asked to select and deactivate these plugins.', 'secupress' );
 		} elseif ( ! is_multisite() ) {
-			self::$more_fix = __( 'This will ask you to delete these plugins.', 'secupress' );
+			$this->more_fix = __( 'This will ask you to delete these plugins.', 'secupress' );
 		} else {
-			self::$more_fix = __( 'This will ask you to deactivate these plugins.', 'secupress' );
+			$this->more_fix = __( 'This will ask you to deactivate these plugins.', 'secupress' );
 		}
 	}
 

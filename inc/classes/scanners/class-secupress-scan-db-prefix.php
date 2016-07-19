@@ -32,11 +32,11 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 	 *
 	 * @since 1.0
 	 */
-	protected static function init() {
+	protected function init() {
 		self::$type     = 'WordPress';
-		self::$title    = __( 'Check if your database prefix is correct.', 'secupress' );
-		self::$more     = __( 'Avoid the usage of <code>wp_</code> or <code>wordpress_</code> as database prefix to improve your security.', 'secupress' );
-		self::$more_fix = __( 'We will rename all your database table names, then update your configuration with a new and more secure one.', 'secupress' );
+		$this->title    = __( 'Check if your database prefix is correct.', 'secupress' );
+		$this->more     = __( 'Avoid the usage of <code>wp_</code> or <code>wordpress_</code> as database prefix to improve your security.', 'secupress' );
+		$this->more_fix = __( 'We will rename all your database table names, then update your configuration with a new and more secure one.', 'secupress' );
 	}
 
 

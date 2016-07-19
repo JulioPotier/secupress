@@ -41,7 +41,7 @@ class SecuPress_Scan_Themes_Update extends SecuPress_Scan implements SecuPress_S
 	 *
 	 * @var (bool)
 	 */
-	public    static $delayed_fix = true;
+	protected $delayed_fix = true;
 
 
 	/** Public methods. ========================================================================= */
@@ -51,11 +51,11 @@ class SecuPress_Scan_Themes_Update extends SecuPress_Scan implements SecuPress_S
 	 *
 	 * @since 1.0
 	 */
-	protected static function init() {
+	protected function init() {
 		self::$type     = 'WordPress';
-		self::$title    = __( 'Check if your themes are up to date.', 'secupress' );
-		self::$more     = __( 'It is very important to maintain your WordPress installation up to date. If you can not update because of a theme, contact its author and submit your issue.', 'secupress' );
-		self::$more_fix = __( 'This will update all your themes that are not up to date.', 'secupress' );
+		$this->title    = __( 'Check if your themes are up to date.', 'secupress' );
+		$this->more     = __( 'It is very important to maintain your WordPress installation up to date. If you can not update because of a theme, contact its author and submit your issue.', 'secupress' );
+		$this->more_fix = __( 'This will update all your themes that are not up to date.', 'secupress' );
 	}
 
 

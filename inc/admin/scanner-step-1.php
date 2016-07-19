@@ -125,7 +125,7 @@ $modules                = secupress_get_modules();
 					$scan_status    = ! empty( $scanner['status'] ) ? $scanner['status'] : 'notscannedyet';
 					$scan_nonce_url = 'secupress_scanner_' . $class_name_part . ( $is_subsite ? '-' . $site_id : '' );
 					$scan_nonce_url = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $class_name_part . '&_wp_http_referer=' . $referer . ( $is_subsite ? '&for-current-site=1&site=' . $site_id : '' ) ), $scan_nonce_url );
-					$scan_message   = $current_test::$title;
+					$scan_message   = $current_test->title;
 
 					if ( ! empty( $scanner['msgs'] ) ) {
 						$scan_message = secupress_format_message( $scanner['msgs'], $class_name_part );
@@ -177,7 +177,7 @@ $modules                = secupress_get_modules();
 								<span class="secupress-details-icon">
 									<i class="icon-i" aria-hidden="true"></i>
 								</span>
-								<p class="details-content"><?php echo wp_kses( $current_test::$more, $allowed_tags ); ?></p>
+								<p class="details-content"><?php echo wp_kses( $current_test->more, $allowed_tags ); ?></p>
 								<span class="secupress-placeholder"></span>
 							</div>
 						</div><!-- .secupress-item-details -->

@@ -44,27 +44,27 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 	 *
 	 * @since 1.0
 	 */
-	protected static function init() {
+	protected function init() {
 		global $is_apache, $is_nginx, $is_iis7;
 
 		self::$type  = 'WordPress';
-		self::$title = __( 'Check if your WordPress site discloses the PHP modules <em>(know as PHP Easter Egg)</em>.', 'secupress' );
-		self::$more  = __( 'PHP contains a flaw that may lead to an unauthorized information disclosure. The issue is triggered when a remote attacker makes certain HTTP requests with crafted arguments, which will disclose PHP version and another sensitive information resulting in a loss of confidentiality.', 'secupress' );
+		$this->title = __( 'Check if your WordPress site discloses the PHP modules <em>(know as PHP Easter Egg)</em>.', 'secupress' );
+		$this->more  = __( 'PHP contains a flaw that may lead to an unauthorized information disclosure. The issue is triggered when a remote attacker makes certain HTTP requests with crafted arguments, which will disclose PHP version and another sensitive information resulting in a loss of confidentiality.', 'secupress' );
 
 		if ( $is_apache ) {
 			$config_file = '.htaccess';
 		} elseif ( $is_iis7 ) {
 			$config_file = 'web.config';
 		} elseif ( ! $is_nginx ) {
-			self::$fixable = false;
+			$this->fixable = false;
 		}
 
 		if ( $is_nginx ) {
-			self::$more_fix = sprintf( __( 'Since your %s file cannot be edited automatically, this will give you the rules to add into it manually, to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>nginx.conf</code>' );
-		} elseif ( self::$fixable ) {
-			self::$more_fix = sprintf( __( 'This will add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), "<code>$config_file</code>" );
+			$this->more_fix = sprintf( __( 'Since your %s file cannot be edited automatically, this will give you the rules to add into it manually, to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>nginx.conf</code>' );
+		} elseif ( $this->fixable ) {
+			$this->more_fix = sprintf( __( 'This will add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), "<code>$config_file</code>" );
 		} else {
-			self::$more_fix = static::get_messages( 301 );
+			$this->more_fix = static::get_messages( 301 );
 		}
 	}
 
@@ -126,7 +126,7 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 				// "bad"
 				$this->add_message( 200 );
 
-				if ( ! self::$fixable ) {
+				if ( ! $this->fixable ) {
 					$this->add_pre_fix_message( 301 );
 				}
 			}
