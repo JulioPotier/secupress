@@ -169,6 +169,9 @@
 .secupress-p0.secupress-p0 {
 	padding: 0;
 }
+.secupress-p1.secupress-p1 {
+	padding: 1em;
+}
 .secupress-pt0.secupress-pt0 {
 	padding-top: 0;
 }
@@ -239,9 +242,6 @@
     text-align: center;
 }
 
-[class^="secupress-"] button {
-	cursor: pointer;
-}
 /* Buttons container */
 .secupress-actions-line {
 	margin: 30px -10px 20px;
@@ -312,6 +312,9 @@
 }
 
 /* Actions on buttons */
+[class^="secupress-"] button {
+	cursor: pointer;
+}
 .secupress-activated .visible-when-activated {
 	display: block;
 	visibility: visible;
@@ -725,6 +728,18 @@ body[class*="secupress"] .sweet-overlay {
 	font-size: 16px;
 	font-weight: 600;
 	color: #2BCDC1;
+}
+
+/* Horizontal blobs */
+.secupress-landscape-blob {
+	padding: 20px;
+}
+.secupress-landscape-blob .secupress-blob-desc {
+	color: #5a626f;
+}
+.secupress-landscape-blob i:before {
+	font-size: 55px;
+	color: rgba(90, 98, 111, 0.5);
 }
 
 /**

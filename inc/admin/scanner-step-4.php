@@ -4,7 +4,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 $modules                = secupress_get_modules();
 ?>
 
-	<div id="secupress-tests" class="secupress-tests secupress-is-finish-report">
+	<div id="secupress-tests" class="secupress-tests secupress-is-finish-report secupress-box-shadow">
 
 		<div class="secupress-summary-header secupress-section-dark">
 			<div class="secupress-flex">
@@ -216,7 +216,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			?>
 			<p>
 			<?php
-				if ( !secupress_is_pro() ) {
+				if ( ! secupress_is_pro() ) {
 			?>
 				<button type="button" title="<?php esc_attr__( 'Export this report as PDF file.', 'secupress' ); ?>" class="secupress-button shadow">
 					<?php echo $export_pdf_btn; ?>
@@ -257,7 +257,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		<div class="secupress-flex">
 			<div class="secupress-col">
 				<p class="secupress-farther-title"><?php _e( 'Schedule your next scans', 'secupress' ); ?></p>
-				<p class="secupress-farther-desc"><?php _e( 'Keep up the good security by scheduling your next scans. No more need to do it manually each week…', 'secupress' ); ?></p>
+				<p class="secupress-farther-desc"><?php _e( 'Keep up the good security by scheduling your next scans. No need to do it manually each week anymore…', 'secupress' ); ?></p>
 			</div>
 			<div class="secupress-col secupress-col-action">
 				<a href="#secupress-latest" class="secupress-rich-link secupress-current">
@@ -269,6 +269,73 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 				</a>
 			</div>
 		</div>
-	</div>
+	</div><!-- .secupress-go-farther -->
 
 </div><!-- .secupress-tests -->
+
+
+<?php if ( ! secupress_is_pro() ) { ?>
+<div class="secupress-pro-summary secupress-box-shadow">
+	<div class="secupress-summary-header secupress-section-dark">
+		<div class="secupress-flex">
+			<div class="secupress-col-logo">
+				<?php echo secupress_get_logo( array( 'width' => 81 ), true ); ?>
+			</div>
+			<div class="secupress-col-summary-text secupress-flex secupress-flex-spaced">
+				<p class="secupress-text-medium secupress-mb0"><?php _e( 'Perform a better grade<br> and unlock these awesome features', 'secupress' ); ?></p>
+
+				
+				<p class="secupress-p1">
+					<a href="#" class="secupress-button secupress-button-tertiary secupress-button-get-pro">
+						<span class="icon">
+							<i class="icon-secupress-simple" aria-hidden="true"></i>
+						</span>
+						<span class="text">
+							<?php esc_html_e( 'Get Pro', 'secupress' ); ?>	
+						</span>
+					</a>
+				</p>
+			</div>
+		</div>
+	</div><!-- .secupress-summary-header -->
+
+	<div class="secupress-flex secupress-wrap secupress-pt1 secupress-pb1">
+		<div class="secupress-col-1-2 secupress-flex secupress-landscape-blob">
+			<div class="secupress-col">
+				<i class="icon-schedule" aria-hidden="true"></i>
+			</div>
+			<div class="secupress-col">
+				<p class="secupress-blob-title"><?php esc_html_e( 'Schedule', 'secupress' ); ?></p>
+				<p class="secupress-blob-desc"><?php _e( 'Keep up the good security by scheduling your next scans. No need to do it manually each week anymore…', 'secupress' ); ?></p>
+			</div>
+		</div>
+		<div class="secupress-col-1-2 secupress-flex secupress-landscape-blob">
+			<div class="secupress-col">
+				<i class="icon-information" aria-hidden="true"></i>
+			</div>
+			<div class="secupress-col">
+				<p class="secupress-blob-title"><?php esc_html_e( 'Alerts', 'secupress' ); ?></p>
+				<p class="secupress-blob-desc"><?php _e( 'Receive an alert by e-mail, SMS, or even Slack each time we think it’s necessary for your security.', 'secupress' ); ?></p>
+			</div>
+		</div>
+		<div class="secupress-col-1-2 secupress-flex secupress-landscape-blob">
+			<div class="secupress-col">
+				<i class="icon-firewall" aria-hidden="true"></i>
+			</div>
+			<div class="secupress-col">
+				<p class="secupress-blob-title"><?php esc_html_e( 'Firewall', 'secupress' ); ?></p>
+				<p class="secupress-blob-desc"><?php _e( 'Be pro-active and lock IPs or requests you think that could be bad for you. We already lock some by default.', 'secupress' ); ?></p>
+			</div>
+		</div>
+		<div class="secupress-col-1-2 secupress-flex secupress-landscape-blob">
+			<div class="secupress-col">
+				<i class="icon-logs" aria-hidden="true"></i>
+			</div>
+			<div class="secupress-col">
+				<p class="secupress-blob-title"><?php esc_html_e( 'Logs', 'secupress' ); ?></p>
+				<p class="secupress-blob-desc"><?php _e( 'Enter the matrix and take a look at the requests done on your website.', 'secupress' ); ?></p>
+			</div>
+		</div>
+	</div>
+</div><!-- .secupress-pro-summary -->
+<?php } ?>

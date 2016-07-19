@@ -949,10 +949,14 @@ a + .secupress-row-actions {
 	color: #5A626F;
 }
 
-.secupress-scans-group {
-	margin: 2.5em 0;
+.secupress-scans-group,
+.secupress-box-shadow {
 	background: #FFF;
 	box-shadow: 0 10px 15px rgba(34, 40, 49, .2);
+}
+
+.secupress-scans-group {
+	margin: 2.5em 0;
 }
 .secupress-sg-header {
 	padding: 0 0 0 25px;
@@ -1031,8 +1035,6 @@ a + .secupress-row-actions {
 /* Alternative styles in finish report */
 .secupress-is-finish-report {
 	margin-top: 25px;
-	background: #FFF;
-	box-shadow: 0 10px 15px rgba(34, 40, 49, 0.2);
 }
 .secupress-is-finish-report .secupress-sg-header {
 	background: #393e46;
@@ -1052,14 +1054,17 @@ a + .secupress-row-actions {
 }
 
 
-
+.secupress-pro-summary {
+	margin-top: 4em;
+}
 .secupress-summary-header .secupress-col-logo {
 	flex-basis: 110px;
 	flex-grow: 0;
-	padding: 10px 5px 10px 25px;
+	padding: 25px 5px 25px 25px;
 }
 .secupress-summary-header .secupress-text-medium {
 	font-size: 24px;
+	margin-top: 0;
 }
 .secupress-summary-header .secupress-text-medium + p {
 	margin: 5px 0;
@@ -1080,7 +1085,15 @@ a + .secupress-row-actions {
 	}
 }
 .secupress-col-summary-text {
-	padding-bottom: 15px;
+	padding-top: 17px;
+	padding-bottom: 17px;
+}
+.secupress-pro-summary .secupress-blob-title {
+	margin-bottom: 0;
+	color: #F19B12;
+}
+.secupress-pro-summary .secupress-blob-desc {
+	margin-top: 0.5em;
 }
 
 /* Header checkboxes */
