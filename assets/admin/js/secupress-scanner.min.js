@@ -1084,25 +1084,31 @@ jQuery( document ).ready( function( $ ) {
 		}
 
 		// Hide/show each issue bloc
-		$( "body" ).on( "click.secupress keyup", ".secupress-button-ignoreit", function( e ) {
-			var $parent = $( '.' + $( this ).attr( "data-parent" ) );
-			var $next   = $parent.next();
+		$( 'body' ).on( 'click.secupress keyup', '.secupress-button-ignoreit', function( e ) {
+			var $parent, $next, item;
 
-			$parent.hide();
-
-			// If there is a next bloc
-			if ( $next.length ) {
-				// Don't go on step4
-				e.preventDefault();
-				// Get the current advanced text and incrment it
-				var item = $( ".step3-advanced-text" ).text();
-				item = parseInt( item ) + 1;
-
-				// Display the next bloc and the new advanced text
-				$next.show();
-				$( ".step3-advanced-text" ).text( item );
+			if ( 'keyup' === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
+				return false;
 			}
 
+			$parent = $( '.' + $( this ).attr( 'data-parent' ) );
+			$next   = $parent.next();
+
+			// If there is no next bloc.
+			if ( ! $next.length ) {
+				return;
+			}
+
+			// Don't go on step4.
+			e.preventDefault();
+			// Hide!
+			$parent.hide();
+			// Display the next bloc and the new advanced text.
+			$next.show();
+			// Get the current advanced text and incrment it.
+			item = $( '.step3-advanced-text' ).first().text();
+			item = Number( item ) + 1;
+			$( '.step3-advanced-text' ).text( item );
 		} );
 
 
