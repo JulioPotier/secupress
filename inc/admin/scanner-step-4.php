@@ -153,6 +153,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			$row_css_class .= ! empty( $fix['has_action'] ) ? ' status-hasaction' : '';
 			$row_css_class .= ! empty( $fix['status'] ) && empty( $fix['has_action'] ) ? ' has-fix-status' : ' no-fix-status';
 
+			//// to-check: are all status here?
 			switch( $scan_status ) {
 				
 				case 'bad' :
@@ -245,7 +246,8 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 				<p class="secupress-farther-desc"><?php _e( 'Rendezvous on the modules pages to discover our features and improve your security even more.', 'secupress' ); ?></p>
 			</div>
 			<div class="secupress-col secupress-col-action">
-				<a href="#secupress-latest" class="secupress-rich-link secupress-current">
+				<?php //// add the right link ?>
+				<a href="#" class="secupress-rich-link secupress-current">
 					<span class="secupress-label-with-icon">
 						<i aria-hidden="true" class="icon-cogs rounded"></i>
 						<span class="secupress-upper"><?php printf( esc_html__( '%s modules', 'secupress' ), SECUPRESS_PLUGIN_NAME ); ?></span>
@@ -260,7 +262,8 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 				<p class="secupress-farther-desc"><?php _e( 'Keep up the good security by scheduling your next scans. No need to do it manually each week anymore…', 'secupress' ); ?></p>
 			</div>
 			<div class="secupress-col secupress-col-action">
-				<a href="#secupress-latest" class="secupress-rich-link secupress-current">
+				<?php //// add the right link ?>
+				<a href="#" class="secupress-rich-link secupress-current">
 					<span class="secupress-label-with-icon">
 						<i aria-hidden="true" class="icon-calendar rounded"></i>
 						<span class="secupress-upper"><?php esc_html_e( 'Schedule Scans', 'secupress' ); ?></span>
@@ -286,6 +289,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 
 				
 				<p class="secupress-p1">
+					<?php //// add the right link ?>
 					<a href="#" class="secupress-button secupress-button-tertiary secupress-button-getpro">
 						<span class="icon">
 							<i class="icon-secupress-simple" aria-hidden="true"></i>
