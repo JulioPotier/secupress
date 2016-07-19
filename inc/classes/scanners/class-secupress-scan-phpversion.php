@@ -24,21 +24,21 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 	 *
 	 * @var (string)
 	 */
-	public $php_version;
+	public static $php_version;
 
 	/**
 	 * Minimum php version.
 	 *
 	 * @var (string)
 	 */
-	public $php_ver_min = '5.5.30';
+	public static $php_ver_min = '5.5.30';
 
 	/**
 	 * Maximum php version.
 	 *
 	 * @var (string)
 	 */
-	public $php_ver_best = '5.6.15';
+	public static $php_ver_best = '5.6.15';
 
 	/**
 	 * Tells if a scanner is fixable by SecuPress. The value "pro" means it's fixable only with the version PRO.
@@ -68,10 +68,10 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 		}
 
 		if ( $php_vers ) {
-			list( $this->php_ver_best, $this->php_ver_min ) = $php_vers;
+			list( static::$php_ver_best, static::$php_ver_min ) = $php_vers;
 		}
 
-		$this->php_version = phpversion();
+		static::$php_version = phpversion();
 	}
 
 
@@ -87,12 +87,12 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// "good"
-			0   => sprintf( __( 'You are using <strong>PHP v%s</strong>.', 'secupress' ), $this->php_version ),
-			1   => sprintf( __( 'You are using <strong>PHP v%s</strong>, perfect!', 'secupress' ), $this->php_version ),
+			0   => sprintf( __( 'You are using <strong>PHP v%s</strong>.', 'secupress' ), static::$php_version ),
+			1   => sprintf( __( 'You are using <strong>PHP v%s</strong>, perfect!', 'secupress' ), static::$php_version ),
 			// "warning"
 			100 => __( 'Unable to determine version of PHP.', 'secupress' ),
 			// "bad"
-			200   => sprintf( __( 'You are using <strong>PHP v%1$s</strong>, but the latest supported version is <strong>PHP v%2$s</strong>, and the best is <strong>PHP v%3$s</strong>.', 'secupress' ), $this->php_version, $this->php_ver_min, $this->php_ver_best ),
+			200   => sprintf( __( 'You are using <strong>PHP v%1$s</strong>, but the latest supported version is <strong>PHP v%2$s</strong>, and the best is <strong>PHP v%3$s</strong>.', 'secupress' ), static::$php_version, static::$php_ver_min, static::$php_ver_best ),
 			// "cantfix"
 			300 => __( 'This cannot be automatically fixed. You have to contact you host provider to ask him to <strong>upgrade you version of PHP</strong>.', 'secupress' ),
 		);
@@ -113,13 +113,13 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-		if ( version_compare( $this->php_version, $this->php_ver_min ) < 0 ) {
+		if ( version_compare( static::$php_version, static::$php_ver_min ) < 0 ) {
 			$this->add_message( 200 );
 			$this->add_pre_fix_message( 300 );
 		}
 
 		// "good"
-		if ( $this->php_version === $this->php_ver_best ) {
+		if ( static::$php_version === static::$php_ver_best ) {
 			$this->add_message( 1 );
 		} else {
 			$this->maybe_set_status( 0 );
