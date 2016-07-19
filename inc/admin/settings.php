@@ -835,8 +835,6 @@ function secupress_scanners_template() {
 		'p'      => array(),
 		'br'     => array(),
 	);
-	// Actions the user needs to perform for a fix.
-	$fix_actions = SecuPress_Scan::get_and_delete_fix_actions();
 	// Auto-scans: scans that will be executed on page load.
 	$autoscans   = SecuPress_Scan::get_and_delete_autoscans();
 
