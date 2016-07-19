@@ -286,7 +286,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 
 				
 				<p class="secupress-p1">
-					<a href="#" class="secupress-button secupress-button-tertiary secupress-button-get-pro">
+					<a href="#" class="secupress-button secupress-button-tertiary secupress-button-getpro">
 						<span class="icon">
 							<i class="icon-secupress-simple" aria-hidden="true"></i>
 						</span>
