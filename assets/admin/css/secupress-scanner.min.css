@@ -1060,6 +1060,7 @@ a + .secupress-row-actions {
 .secupress-sgh-actions button i:before {
 	display: inline-block;
 	font-size: 22px;
+	transform-origin: 50% 61% 0;
 	transition: transform .275s;
 }
 .secupress-sgh-actions .secupress-activated i:before {
