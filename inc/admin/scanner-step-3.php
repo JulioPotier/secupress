@@ -1,8 +1,8 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
-// Keep only scans with "bad" and "warning" status.
-$fix_actions = array_merge( $bad_scans, $warning_scans );	// `array( $class_name_part_lower => $status )`, will become `array( $class_name_part_lower => array( $fix_action, $fix_action ) )`.
+// Keep only scans with "bad" status.
+$fix_actions = $bad_scans;	// `array( $class_name_part_lower => $status )`, will become `array( $class_name_part_lower => array( $fix_action, $fix_action ) )`.
 
 // Keep only scans that need a manual fix + require the scan files + get the "fix actions".
 foreach ( $secupress_tests as $module_name => $class_name_parts ) {
@@ -10,14 +10,17 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 	$class_name_parts = array_combine( array_map( 'strtolower', $class_name_parts ), $class_name_parts );
 	$class_name_parts = array_intersect_key( $class_name_parts, $fix_actions );
 
-	// Only those with "bad" or "warning" status.
+	// Only those with "bad" status.
 	if ( ! $class_name_parts ) {
+		unset( $secupress_tests[ $module_name ] );
 		continue;
 	}
 
+	$secupress_tests[ $module_name ] = $class_name_parts;
+
 	foreach ( $class_name_parts as $class_name_part_lower => $class_name_part ) {
 		if ( ! file_exists( secupress_class_path( 'scan', $class_name_part ) ) ) {
-			unset( $fix_actions[ $class_name_part_lower ] );
+			unset( $secupress_tests[ $module_name ][ $class_name_part_lower ], $fix_actions[ $class_name_part_lower ] );
 			continue;
 		}
 
@@ -26,18 +29,17 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		$current_test     = $class_name::get_instance();
 		$this_fix_actions = $current_test->need_manual_fix();
 
-		// Only those that need a manual fix, and those that need the Pro Version.
-		if ( 'pro' === $current_test->is_fixable() && ! secupress_is_pro() ) {
-			// It needs the Pro Version.
-			$fix_actions[ $class_name_part_lower ] = false;
-		} elseif ( $this_fix_actions ) {
+		// Only those that need a manual fix.
+		if ( $this_fix_actions ) {
 			// Store the "fix actions".
 			$fix_actions[ $class_name_part_lower ] = $this_fix_actions;
 		} else {
-			unset( $fix_actions[ $class_name_part_lower ] );
+			unset( $secupress_tests[ $module_name ][ $class_name_part_lower ], $fix_actions[ $class_name_part_lower ] );
 		}
 	}
 }
+
+$secupress_tests = array_filter( $secupress_tests );
 
 // Move along, move along...
 if ( ! $fix_actions ) {
@@ -88,21 +90,13 @@ if ( ! $fix_actions ) {
 	$modules      = secupress_get_modules();
 	$hidden_class = '';
 
-	foreach ( $secupress_tests as $module_name => $class_name_parts ) {
-
-		$class_name_parts = array_combine( array_map( 'strtolower', $class_name_parts ), $class_name_parts );
-		$class_name_parts = array_intersect_key( $class_name_parts, $fix_actions );
-
-		if ( ! $class_name_parts ) {
-			continue;
-		}
+	foreach ( $secupress_tests as $module_name => $class_name_parts ) :
 
 		foreach ( $class_name_parts as $class_name_part_lower => $class_name_part ) :
 			$class_name   = 'SecuPress_Scan_' . $class_name_part;
 			$current_test = $class_name::get_instance();
 			$referer      = urlencode( esc_url_raw( self_admin_url( 'admin.php?page=' . SECUPRESS_PLUGIN_SLUG . '_scanners&step=3#' . $class_name_part ) ) );
 			$is_fixable   = true === $current_test->is_fixable() || 'pro' === $current_test->is_fixable() && secupress_is_pro();
-			$is_only_pro  = 'pro' === $current_test->is_fixable() && ! secupress_is_pro();
 			$module_icon  = ! empty( $modules[ $module_name ]['icon'] ) ? $modules[ $module_name ]['icon'] : '';
 
 			// Scan.
@@ -116,7 +110,7 @@ if ( ! $fix_actions ) {
 			?>
 			<div class="secupress-manual-fix secupress-manual-fix-<?php echo $module_name; ?> secupress-group-item-<?php echo $class_name_part; ?><?php echo $hidden_class; ?>">
 
-				<div class="secupress-mf-header secupress-flex-spaced<?php echo $is_only_pro ? ' secupress-is-only-pro' : '' ?>">
+				<div class="secupress-mf-header secupress-flex-spaced<?php echo $is_fixable ? '' : ' secupress-is-only-pro' ?>">
 
 					<div class="secupress-mfh-name secupress-flex">
 						<span class="secupress-header-dot">
@@ -124,17 +118,17 @@ if ( ! $fix_actions ) {
 						</span>
 						<p class="secupress-mfh-title"><?php echo $current_test->title; ?></p>
 
-						<?php if ( $is_only_pro ) { ?>
+						<?php if ( $is_fixable ) { ?>
+
+							<i class="icon-<?php echo $module_icon; ?>" aria-hidden="true"></i>
+
+						<?php } else { ?>
 
 							<div class="secupress-mfh-pro">
 								<p class="secupress-get-pro-version">
 									<?php printf( __( 'Available in <a href="%s">Pro Version</a>', 'secupress' ), esc_url( secupress_admin_url( 'get_pro' ) ) ); ?>
 								</p>
 							</div>
-
-						<?php } else { ?>
-
-							<i class="icon-<?php echo $module_icon; ?>" aria-hidden="true"></i>
 
 						<?php } ?>
 					</div>
@@ -157,7 +151,7 @@ if ( ! $fix_actions ) {
 							<?php echo wp_kses( $current_test->more_fix, $allowed_tags ); ?>
 						</p>
 
-						<?php if ( $fix_actions[ $class_name_part_lower ] ) : ?>
+						<?php if ( $is_fixable ) : ?>
 							<div class="secupress-ic-fix-actions">
 								<?php
 								$fix_actions[ $class_name_part_lower ] = $current_test->get_required_fix_action_template_parts( $fix_actions[ $class_name_part_lower ] );
@@ -201,7 +195,7 @@ if ( ! $fix_actions ) {
 										</span>
 										<span class="text"><?php _e( 'Fix it', 'secupress' ); ?></span>
 									</button>
-								<?php } elseif ( $is_only_pro ) { ?>
+								<?php } else { ?>
 									<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ); ?>" class="secupress-button secupress-button-tertiary secupress-button-getpro shadow">
 										<span class="icon">
 											<i class="icon-secupress-simple bold" aria-hidden="true"></i>
@@ -233,6 +227,7 @@ if ( ! $fix_actions ) {
 			<?php
 			$hidden_class = ' hide-if-js';
 		endforeach;
-	}
+
+	endforeach;
 	?>
 </div><!-- .secupress-tests -->
