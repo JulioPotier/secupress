@@ -172,6 +172,12 @@
 .secupress-p1.secupress-p1 {
 	padding: 1em;
 }
+.secupress-p2.secupress-p2 {
+	padding: 2em;
+}
+.secupress-p3.secupress-p3 {
+	padding: 3em;
+}
 .secupress-pt0.secupress-pt0 {
 	padding-top: 0;
 }
@@ -629,6 +635,20 @@ button.secupress-activated .secupress-toggle-button.hidden {
 .secupress-swal-form label .more-info {
 	font-size: 13px;
 	font-style: italic;
+}
+
+/* Big spinner */
+.hidden .secupress-big-spinner {
+	animation-play-state: paused;
+}
+.secupress-big-spinner {
+	display: inline-block;
+	animation: 3s linear 0s infinite loading;
+}
+@keyframes loading {
+	100% {
+		transform: rotate(1turn);
+	}
 }
 
 /* Swal alternative styles */
