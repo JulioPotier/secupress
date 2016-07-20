@@ -68,13 +68,13 @@ function secupress_user_agent( $user_agent ) {
  * @return (string)
  */
 function secupress_formate_latest_scans_list_item( $item, $last_percent = -1 ) {
-	$icon = 'right';
+	$icon = 'minus';
 
 	if ( $last_percent > -1 ) {
 		if ( $last_percent < $item['percent'] ) {
-			$icon = 'up';
+			$icon = 'grade-up';
 		} elseif ( $last_percent > $item['percent'] ) {
-			$icon = 'down';
+			$icon = 'grade-down';
 		}
 	}
 
@@ -83,7 +83,7 @@ function secupress_formate_latest_scans_list_item( $item, $last_percent = -1 ) {
 			<span class="secupress-latest-list-time timeago">%3$s</span>
 			<span class="secupress-latest-list-date">%4$s</span>
 			<strong class="secupress-latest-list-grade letter l%2$s">%2$s</strong>
-			<i class="dashicons mini dashicons-arrow-%1$s-alt2" aria-hidden="true"></i>
+			<i class="mini icon-%1$s" aria-hidden="true"></i>
 		</li>',
 		$icon,
 		$item['grade'],

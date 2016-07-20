@@ -714,7 +714,7 @@ a + .secupress-row-actions {
 	padding: 6px 0 3px;
 }
 .secupress-reports-list li + li {
-	border-top: 1px solid #5A626F;
+	border-top: 1px solid #393e46;
 }
 .secupress-reports-list .secupress-latest-list-date {
 	flex-basis: 38%;
@@ -722,7 +722,10 @@ a + .secupress-row-actions {
 	color: #5A626F;
 }
 .secupress-reports-list i:before {
-	font-size: 2em;
+	font-size: 1.15em;
+}
+.secupress-reports-list .icon-minus:before {
+	font-size: 1.45em;
 }
 .secupress-reports-list .dashicons-arrow-right-alt2 {
 	color: #5A626F;
