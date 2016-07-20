@@ -1061,7 +1061,6 @@ a + .secupress-row-actions {
 	display: inline-block;
 	font-size: 22px;
 	transition: transform .275s;
-	transform-origin: 10.5px 18px 0;
 }
 .secupress-sgh-actions .secupress-activated i:before {
 	transform: rotate(180deg);
@@ -1107,6 +1106,7 @@ a + .secupress-row-actions {
 	font-size: 32px;
 	font-weight: bold;
 	color: #FFF;
+	transform-origin: 10.5px 18px 0;
 }
 .secupress-is-finish-report .secupress-step-content-footer {
 	border-top: 1px solid #f2f2f6;
