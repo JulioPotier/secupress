@@ -55,11 +55,11 @@
  */
 @font-face {
 	font-family: 'secupress';
-	src:url('../fonts/secupress.eot?47qn93');
-	src:url('../fonts/secupress.eot?47qn93#iefix') format('embedded-opentype'),
-		url('../fonts/secupress.ttf?47qn93') format('truetype'),
-		url('../fonts/secupress.woff?47qn93') format('woff'),
-		url('../fonts/secupress.svg?47qn93#secupress') format('svg');
+	src:url('../fonts/secupress.eot?h3d28w');
+	src:url('../fonts/secupress.eot?h3d28w#iefix') format('embedded-opentype'),
+		url('../fonts/secupress.ttf?h3d28w') format('truetype'),
+		url('../fonts/secupress.woff?h3d28w') format('woff'),
+		url('../fonts/secupress.svg?h3d28w#secupress') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -81,6 +81,12 @@
 
 .icon-squared-cross:before {
 	content: "\e914";
+}
+.icon-grade-down:before {
+	content: "\e923";
+}
+.icon-grade-up:before {
+	content: "\e924";
 }
 .icon-cross-o:before {
 	content: "\e921";
@@ -268,6 +274,9 @@
 .icon-times-circle:before {
 	content: "\f057";
 }
+.icon-minus:before {
+	content: "\f068";
+}
 .icon-cogs:before {
 	content: "\f085";
 }
@@ -368,6 +377,17 @@ i.rounded {
 }
 i.bold {
 	font-weight: bold;
+}
+
+/* Icon colors */
+.icon-grade-up:before {
+	color: #2BCDC1;
+}
+.icon-grade-down:before {
+	color: #CB234F;
+}
+.icon-minus:before {
+	color: #F39C12;
 }
 
 /* SecuPress menu icon */
