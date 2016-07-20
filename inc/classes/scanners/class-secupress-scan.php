@@ -751,11 +751,11 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 
 
 	/**
-	 * Return false, overwrite it if needed.
+	 * Return an array of actions if a manual fix is needed here. False otherwise.
 	 *
 	 * @since 1.0
 	 *
-	 * @return (bool)
+	 * @return (bool|array)
 	 */
 	public function need_manual_fix() {
 		return false;
@@ -854,7 +854,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 		$output .= '<input type="hidden" name="test" value="' . $this->class_name_part . '" />' . "\n";
 		$output .= '<input type="hidden" name="test-parts" value="' . implode( ',', $fix_actions ) . '" />' . "\n";
 		$output .= '<input type="hidden" name="_wpnonce" value="' . wp_create_nonce( $nonce ) . '" />' . "\n";
-		$output .= '<input type="hidden" name="_wp_http_referer" value="'. esc_attr( wp_unslash( $_SERVER['REQUEST_URI'] ) ) . '#' . $this->class_name_part . '" />' . "\n";
+		$output .= '<input type="hidden" name="_wp_http_referer" value="'. esc_attr( wp_unslash( $_SERVER['REQUEST_URI'] ) ) . '" />' . "\n";
 
 		if ( ! $echo ) {
 			return $output;

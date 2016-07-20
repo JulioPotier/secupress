@@ -114,20 +114,18 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 	 * @return (array) The fix results.
 	 */
 	public function fix() {
-		global $wpdb, $current_user;
-
-		$wpconfig_filename = secupress_find_wpconfig_path();
+		global $wpdb;
 
 		// Check db prefix.
 		$check = 'wp_' === $wpdb->prefix || 'wordpress_' === $wpdb->prefix;
 
 		if ( $check ) {
 
-			$old_prefix = $wpdb->prefix;
-
 			if ( secupress_db_access_granted() ) {
 
-				if ( is_writable( $wpconfig_filename ) && preg_match( '/\$table_prefix.*=.*(\'' . $old_prefix . '\'|"' . $old_prefix . '");.*/', file_get_contents( $wpconfig_filename ) ) ) {
+				$wpconfig_filename = secupress_find_wpconfig_path();
+
+				if ( is_writable( $wpconfig_filename ) && preg_match( '/\$table_prefix.*=.*(\'' . $wpdb->prefix . '\'|"' . $wpdb->prefix . '");.*/', file_get_contents( $wpconfig_filename ) ) ) {
 
 					$good_tables = secupress_get_non_wp_tables();
 
@@ -148,6 +146,37 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 		$this->maybe_set_fix_status( 0 );
 
 		return parent::fix();
+	}
+
+
+	/**
+	 * Return an array of actions if a manual fix is needed here. False otherwise.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (bool|array)
+	 */
+	public function need_manual_fix() {
+		global $wpdb;
+
+		// Check db prefix.
+		$check = 'wp_' === $wpdb->prefix || 'wordpress_' === $wpdb->prefix;
+
+		if ( $check && secupress_db_access_granted() ) {
+
+			$wpconfig_filename = secupress_find_wpconfig_path();
+
+			if ( is_writable( $wpconfig_filename ) && preg_match( '/\$table_prefix.*=.*(\'' . $wpdb->prefix . '\'|"' . $wpdb->prefix . '");.*/', file_get_contents( $wpconfig_filename ) ) ) {
+
+				$good_tables = secupress_get_non_wp_tables();
+
+				if ( $good_tables ) {
+					return array( 'select-db-tables-to-rename' => 'select-db-tables-to-rename' );
+				}
+			}
+		}
+
+		return false;
 	}
 
 
