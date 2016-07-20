@@ -164,10 +164,18 @@ $modules                = secupress_get_modules();
 								 */
 								?>
 								<button data-trigger="slidetoggle" data-target="details-<?php echo $class_name_part; ?>" class="secupress-details link-like hide-if-no-js" type="button">
-									<span aria-hidden="true" class="icon">
-										<i class="icon-info-disk"></i>
+									<span class="secupress-toggle-button">
+										<span aria-hidden="true" class="icon">
+											<i class="icon-info-disk"></i>
+										</span>
+										<span class="text"><?php esc_html_e( 'Learn more', 'secupress'); ?></span>
 									</span>
-									<span class="text"><?php _e( 'Learn more', 'secupress' ); ?></span>
+									<span class="secupress-toggle-button hidden" aria-hidden="true">
+										<span aria-hidden="true" class="icon">
+											<i class="icon-cross"></i>
+										</span>
+										<span class="text"><?php esc_html_e( 'Close' ); ?></span>
+		 							</span>
 								</button>
 							</p>
 						</div><!-- .secupress-flex -->
