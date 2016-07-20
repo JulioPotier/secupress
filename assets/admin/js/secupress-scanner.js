@@ -546,7 +546,7 @@ jQuery( document ).ready( function( $ ) {
 		// …at first page load (at least)
 		secupressSetScansTotal();
 
-		// Runs the Progressbar, 10 sec min.
+		// Runs the Progressbar
 		function secupressRunProgressBar( $button ) {
 
 			var $sp_1st_scan = $( '.secupress-introduce-first-scan' ),
@@ -599,6 +599,19 @@ jQuery( document ).ready( function( $ ) {
 					} );
 				}
 			}, 500 );
+		}
+
+		// hide step content and run big spinner
+		function secupressRunSpinner() {
+			var $to_hide = $( '.secupress-step-content-header, #secupress-tests, .secupress-step-content-footer' ),
+				$to_show = $( '#secupress-spinner' );
+
+			// show/hide items
+			$to_hide.spHide();
+			$to_show.spFadeIn().removeClass( 'hidden' );
+
+			// a11y
+			secupressCouldSay( SecuPressi18nScanner.a11y.bulkFixStart );
 		}
 
 
@@ -1358,7 +1371,7 @@ jQuery( document ).ready( function( $ ) {
 			e.preventDefault();
 
 			secupressLaunchSeparatedBulkFix();
-			secupressRunProgressBar( $( this ) );
+			secupressRunSpinner();
 		} );
 
 
