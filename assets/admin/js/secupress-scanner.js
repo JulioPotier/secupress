@@ -35,35 +35,6 @@ jQuery( document ).ready( function( $ ) {
 		}
 	}
 
-	// !Get scan button fixed width at first load
-	( function( w, d, $, undefined ) {
-
-		var $button = $( '.secupress-start-one-click-scan' ).find( '.button-secupress-scan' ),
-			$text   = $button.find('.secupress-progress-val-txt'),
-			$val    = $button.find('.secupress-progressbar-val');
-
-		$button.css( 'width', $button.outerWidth() + 5 );
-
-
-		// animation testing
-
-		/*var temp = setInterval(function(){
-			$button.attr( 'aria-disabled', 'true' );
-			$('.secupress-introduce-first-scan').addClass('secupress-scanning');
-			clearInterval( temp );
-		}, 1000);
-		var count = 0;
-		var temp2 = setInterval(function(){
-			count++;
-			$text.text( count + ' %' );
-			$val.css( 'width', count + '%' );
-			if ( count >= 100 ) {
-				clearInterval( temp2 );
-			}
-		}, 175);*/
-
-	} )( window, document, jQuery );
-
 
 	// !Big network: set some data. ================================================================
 	( function( w, d, $, undefined ) {
@@ -526,6 +497,16 @@ jQuery( document ).ready( function( $ ) {
 
 
 	// !Scans and fixes ============================================================================
+
+	// !Get scan button fixed width at first load: this is needed for the progress bar animation.
+	( function( w, d, $, undefined ) {
+
+		var $button = $( '.secupress-start-one-click-scan .button-secupress-scan' );
+		$button.css( 'width', $button.outerWidth() + 5 );
+
+	} )( window, document, jQuery );
+
+
 	( function( w, d, $, undefined ) {
 		var secupressScans = {
 			// Scans.
