@@ -580,7 +580,7 @@ jQuery( document ).ready( function( $ ) {
 
 						} );
 					} else {
-						console.log('Not first, but just ended…')
+						$main_header.removeClass( 'secupress-scanning' );
 					}
 				}
 			}, 500 );
