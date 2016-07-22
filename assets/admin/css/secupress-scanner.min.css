@@ -243,12 +243,14 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 	position: relative;
 	padding: 16px 10px;
 }
-.secupress-introduce-first-scan .icon-secupress:before {
+.secupress-introduce-first-scan .icon-secupress:before,
+.secupress-rescan-progress-infos .icon-secupress:before {
 	display: inline-block;
 	margin-bottom: .25em;
 	font-size: 65px;
 }
-.secupress-introduce-first-scan h3 {
+.secupress-introduce-first-scan h3,
+.secupress-rescan-progress-infos h3 {
 	margin: .75em 0;
 	font-size: 23px;
 	font-weight: 500;
@@ -266,13 +268,15 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 /**
  * Button to progressbar
  */
-.secupress-start-one-click-scan .secupress-button {
+.secupress-start-one-click-scan .secupress-button,
+.secupress-rescan-actions .secupress-button {
 	position: relative;
 	transition: all .275s;
 	max-width: 100%;
 	max-height: 40px;
 }
-.secupress-scanning .secupress-start-one-click-scan .secupress-button {
+.secupress-scanning .secupress-start-one-click-scan .secupress-button,
+.secupress-scanning .secupress-rescan-actions .secupress-button {
 	width: 610px!important;
 	max-width: 100%;
 	max-height: 8px;
@@ -280,37 +284,16 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 	background: #393E46;
 	border-radius: 8px;
 }
+.secupress-scanning .secupress-rescan-actions .secupress-button {
+	margin-top: 17px;
+	margin-bottom: 17px;
+}
 .secupress-scanning .secupress-start-one-click-scan .secupress-button .text,
-.secupress-scanning .secupress-start-one-click-scan .secupress-button .icon {
+.secupress-scanning .secupress-start-one-click-scan .secupress-button .icon,
+.secupress-scanning .secupress-rescan-actions .secupress-button .text,
+.secupress-scanning .secupress-rescan-actions .secupress-button .icon {
 	opacity: 0;
 	visibility: hidden;
-}
-
-/* Title progression */
-.secupress-scanned-items {
-	display: block;
-	margin-top: 10px;
-	max-height: 0;
-	font-size: 13px;
-	font-weight: 700;
-	color: #2BCDC1;
-	overflow: hidden;
-	visibility: hidden;
-	opacity: 0;
-	transition: all .275s;
-}
-.secupress-scanning .secupress-scanned-items {
-	max-height: 2em;
-	opacity: 1;
-	visibility: visible;
-}
-.secupress-second-title,
-.secupress-scanning .secupress-init-title {
-	display: none;
-}
-.secupress-scanning .secupress-second-title,
-.secupress-init-title {
-	display: block;
 }
 
 /* Progress bar values */
@@ -347,12 +330,14 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 		opacity: 0;
 	}
 }
-.secupress-scanning .secupress-start-one-click-scan .secupress-button {
+.secupress-scanning .secupress-start-one-click-scan .secupress-button,
+.secupress-scanning .secupress-rescan-actions .secupress-button {
 	opacity: 1;
 }
 .secupress-scanning .secupress-button .secupress-progressbar-val {
 	visibility: visible;
 	opacity: 1;
+	z-index: 2;
 }
 .secupress-progress-val-txt {
 	position: absolute;
@@ -377,6 +362,77 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 	border-bottom: 4px solid #F39C12;
 	border-left: 4px solid transparent;
 	border-right: 4px solid transparent;
+}
+
+/* Title progression */
+.secupress-scanned-items {
+	display: block;
+	margin-top: 10px;
+	max-height: 0;
+	font-size: 13px;
+	font-weight: 700;
+	color: #2BCDC1;
+	overflow: hidden;
+	visibility: hidden;
+	opacity: 0;
+	transition: all .275s;
+}
+.secupress-scanning .secupress-scanned-items {
+	max-height: 2em;
+	opacity: 1;
+	visibility: visible;
+}
+.secupress-second-title,
+.secupress-scanning .secupress-init-title {
+	display: none;
+}
+.secupress-scanning .secupress-second-title,
+.secupress-init-title {
+	display: block;
+}
+
+/* Re-scan specific styles */
+.secupress-rescan-progress-infos {
+	opacity: 0;
+	visibility: hidden;
+	max-height: 0;
+	clip: rect(1px, 1px, 1px, 1px);
+	position: absolute;
+	transition: all .275s;
+	transform: translateY(-20px);
+}
+.secupress-scanning .secupress-rescan-progress-infos {
+	position: static;
+	max-height: 20em;
+	opacity: 1;
+	visibility: visible;
+	transform: translateY(0);
+}
+.secupress-tabs-contents,
+.secupress-tabs-controls,
+.secupress-last-scan-result {
+	transition: all .275s;
+}
+.secupress-scanning .secupress-last-scan-result {
+	opacity: .3;
+}
+.secupress-scanning .secupress-tabs-contents {
+	overflow: hidden;
+	flex-basis: 0;
+	white-space: nowrap;
+}
+.secupress-scanning .secupress-tabs-controls {
+	flex-basis: 100%;
+	text-align: center;
+}
+.secupress-scanning .secupress-open-moreinfo {
+	opacity: 0;
+	visibility: hidden;
+}
+.secupress-scanning + .secupress-scanner-main-content .secupress-step-content-container,
+.secupress-scanning .secupress-tabs-controls-list {
+	display: none;
+	visibility: hidden;
 }
 
 /**
