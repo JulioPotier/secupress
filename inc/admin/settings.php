@@ -352,6 +352,16 @@ function __secupress_scanners() {
 
 		$reports = array_reverse( $reports );
 	}
+
+	$currently_scanning_text = '
+		<span aria-hidden="true" class="secupress-second-title">' . esc_html__( 'Currently scanning', 'secupress' ) . '</span>
+		<span class="secupress-scanned-items">
+			' . sprintf(
+				__( '%1$s&nbsp;/&nbsp;%2$s points' , 'secupress' ),
+				'<span class="secupress-scanned-current">0</span>',
+				'<span class="secupress-scanned-total">1</span>'
+			) . '
+		</span>';
 	?>
 	<div class="wrap">
 
@@ -550,6 +560,14 @@ function __secupress_scanners() {
 								</a>
 							</li>
 						</ul>
+						<div class="secupress-rescan-progress-infos">
+							<h3>
+								<i class="icon-secupress" aria-hidden="true"></i><br>
+								
+								<?php echo $currently_scanning_text; ?>
+
+							</h3>
+						</div>
 						<p class="secupress-rescan-actions">
 							<span class="screen-reader-text"><?php esc_html_e( 'Doubts? Try a re-scan.', 'secupress' ); ?></span>
 							<button class="secupress-button secupress-button-primary button-secupress-scan" type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ); ?>">
@@ -559,6 +577,10 @@ function __secupress_scanners() {
 								<span class="text">
 									<?php _e( 'Re-scan website', 'secupress' ); ?>
 								</span>
+
+								<span class="secupress-progressbar-val" style="width:2%;">
+									<span class="secupress-progress-val-txt" aria-hidden="true">2 %</span>
+								</span>
 							</button>
 						</p>
 					</div>
@@ -566,21 +588,16 @@ function __secupress_scanners() {
 
 				<?php
 				}
-				if ( ! $reports ) { ?>
+				if ( ! $reports ) {
+				?>
+
 				<div class="secupress-introduce-first-scan secupress-text-center">
 					<h3>
 						<i class="icon-secupress" aria-hidden="true"></i><br>
 						<span class="secupress-init-title"><?php esc_html_e( 'Click to launch first scan', 'secupress' ); ?></span>
-						<span aria-hidden="true" class="secupress-second-title"><?php esc_html_e( 'Currently scanning', 'secupress' ); ?></span>
-						<span class="secupress-scanned-items">
-							<?php
-							printf(
-								__( '%1$s&nbsp;/&nbsp;%2$s points' , 'secupress' ),
-								'<span class="secupress-scanned-current">0</span>',
-								'<span class="secupress-scanned-total">1</span>'
-							);
-							?>
-						</span>
+
+						<?php echo $currently_scanning_text; ?>
+
 					</h3>
 
 					<p class="secupress-start-one-click-scan">
