@@ -88,8 +88,10 @@ $flag_first_iteration   = true;
 		// 	if ( 1 === $i && isset( $_class_name_parts ) ) {
 		// 		$class_name_parts       = $_class_name_parts;
 		// 	}
-		require( SECUPRESS_INC_PATH . 'admin/scanner-step-1-new.php' );
-		// require( SECUPRESS_INC_PATH . 'admin/scanner-step-1-all.php' );
+		if ( $is_there_something_new && $scanned_items ) {
+			require( SECUPRESS_INC_PATH . 'admin/scanner-step-1-new.php' );
+		}
+		require( SECUPRESS_INC_PATH . 'admin/scanner-step-1-all.php' );
 		// } // Eo for $i
 	} // Eo foreach $secupress_tests
 	?>
