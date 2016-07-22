@@ -95,8 +95,7 @@ $flag_first_iteration   = true;
 		// } // Eo for $i
 	} // Eo foreach $secupress_tests
 	?>
-		</div><!-- .secupress-sg-content -->
-	</div> <!-- .secupress-group-new -->
+
 </div><!-- .secupress-tests -->
 
 <div class="secupress-step-content-footer secupress-flex secupress-flex-top secupress-flex-spaced">

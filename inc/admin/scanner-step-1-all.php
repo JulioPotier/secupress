@@ -4,6 +4,7 @@ if ( ! $is_subsite ) {
 		$module_title   = ! empty( $modules[ $module_name ]['title'] )              ? $modules[ $module_name ]['title']              : '';
 		$module_summary = ! empty( $modules[ $module_name ]['summaries']['small'] ) ? $modules[ $module_name ]['summaries']['small'] : '';
 ?>
+
 <div class="secupress-scans-group secupress-group-<?php echo $module_name; ?>">
 
 		<div class="secupress-sg-header secupress-flex secupress-flex-spaced">
@@ -110,4 +111,4 @@ if ( ! $is_subsite ) {
 		} // end
 		?>
 	</div><!-- .secupress-sg-content -->
-</div><!-- .secupress-group-$module -->
+</div><!-- .secupress-group-<?php echo $module_name; ?> -->

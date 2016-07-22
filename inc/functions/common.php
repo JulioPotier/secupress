@@ -76,7 +76,7 @@ function secupress_require_class_async() {
 function secupress_get_scanners() {
 	$tests = array(
 		'users-login' => array(
-			// 'Admin_User',
+			'Admin_User',
 			'Easy_Login',
 			'Subscription',
 			'Passwords_Strength',
@@ -84,14 +84,14 @@ function secupress_get_scanners() {
 			'Login_Errors_Disclose',
 		),
 		'plugins-themes' => array(
-			// 'Plugins_Update',
+			'Plugins_Update',
 			'Themes_Update',
 			'Bad_Old_Plugins',
 			'Bad_Vuln_Plugins',
 			'Inactive_Plugins_Themes',
 		),
 		'wordpress-core' => array(
-			// 'Core_Update',
+			'Core_Update',
 			'Auto_Update',
 			'Bad_Old_Files',
 			'Bad_Config_Files',
@@ -100,18 +100,18 @@ function secupress_get_scanners() {
 			'Salt_Keys',
 		),
 		'sensitive-data' => array(
-			// 'Discloses',
+			'Discloses',
 			'Readme_Discloses',
 			'PHP_Disclosure',
 		),
 		'file-system' => array(
-			// 'Chmods',
+			'Chmods',
 			'Directory_Listing',
 			'Bad_File_Extensions',
 			'DirectoryIndex',
 		),
 		'firewall' => array(
-			// 'Common_Flaws',
+			'Common_Flaws',
 			'Bad_User_Agent',
 			'SQLi',
 			'Anti_Scanner',
