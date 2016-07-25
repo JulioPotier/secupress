@@ -117,7 +117,8 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'searchReset'          => _x( 'Search reset.', 'adjective', 'secupress' ),
 			// First scan.
 			'alreadyScanned'       => $already_scanned,
-			'firstScanText'        => __( 'Before setting modules,<br>launch your first scan.', 'secupress' ),
+			'firstScanTitle'       => __( 'Before setting modules,<br>launch your first scan.', 'secupress' ),
+			'firstScanText'        => __( 'It’s an automatic process that will help you secure your website.', 'secupress' ),
 			'firstScanButton'      => __( 'Scan my website', 'secupress' ),
 			'firstScanURL'         => esc_url( wp_nonce_url( secupress_admin_url( 'scanners' ), 'first_oneclick-scan' ) ) . '&oneclick-scan=1',
 			'firstScanImage'       => SECUPRESS_ADMIN_IMAGES_URL . 'icon-radar.png',

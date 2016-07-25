@@ -22,11 +22,14 @@ var SecuPress = {
  * Show swal2 message if no scan done yet
  */
 if ( SecuPressi18nModules.alreadyScanned == 0 ) {
-	var modal_content = '<p class="secupress-text-medium secupress-mt1 secupress-mb1">'
-							+ SecuPressi18nModules.firstScanText
+	var modal_content = '<p class="secupress-text-baseup secupress-mt1 secupress-mb1 secupress-primary secupress-bold">'
+							+ SecuPressi18nModules.firstScanTitle
+					  + '</p>'
+					  + '<p class="secupress-text-base secupress-mt2 secupress-mb2">'
+					  		+ SecuPressi18nModules.firstScanText
 					  + '</p>'
 					  + '<p class="secupress-mt1 secupress-mb1">'
-					  		+ '<a class="secupress-button secupress-button-primary button-secupress-scan" href="' + SecuPressi18nModules.firstScanURL + '">'
+					  		+ '<a class="secupress-button secupress-button-primary button-secupress-scan shadow" href="' + SecuPressi18nModules.firstScanURL + '">'
 					  			+ '<span class="icon">'
 									+ '<i class="icon-radar" aria-hidden="true"></i>'
 								+ '</span>'
@@ -34,19 +37,18 @@ if ( SecuPressi18nModules.alreadyScanned == 0 ) {
 					  				+ SecuPressi18nModules.firstScanButton
 					  			+ '</span>'
 					  		+ '</a>'
-					  + '</p>';
+					  + '</p>',
+		modal_title = '<span class="secupress-swal-header-imaged"><img src="' + SecuPressi18nModules.firstScanImage + '" alt="" width="113" height="113"></span>';
 
 	swal2( jQuery.extend( {}, SecuPress.swal2Defaults, {
-		title: null,
+		title: modal_title,
 		html: modal_content,
 		type:  null,
 		width: 400,
 		showConfirmButton: false,
 		showCloseButton: true,
 		showCancelButton: false,
-		imageUrl: SecuPressi18nModules.firstScanImage,
-		imageWidth: 113,
-		imageHeight: 113,
+		customClass: 'wpmedia-swal2 secupress-swal2 secupress-swal-dark-header secupress-text-center'
 	} ) );
 }
 
