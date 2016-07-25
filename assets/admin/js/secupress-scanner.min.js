@@ -531,13 +531,14 @@ jQuery( document ).ready( function( $ ) {
 		function secupressRunProgressBar( $button ) {
 
 			var $sp_1st_scan = $( '.secupress-introduce-first-scan' ),
+				$main_header = $( '.secupress-scanners-header' ),
 				isFirstScan  = $button.closest( '.secupress-not-scanned-yet' ).length,
 				$bar_val     = $button.find( '.secupress-progressbar-val' ),
 				$text_val    = $bar_val.find( '.secupress-progress-val-txt' ),
 				init_percent = 2,
 				secupressProgressTimer;
 
-			$sp_1st_scan.addClass( 'secupress-scanning' );
+			$main_header.addClass( 'secupress-scanning' );
 			$( '.secupress-scanned-total' ).text( secupressScans.total );
 
 			secupressProgressTimer = setInterval( function() {
@@ -561,23 +562,26 @@ jQuery( document ).ready( function( $ ) {
 					clearInterval( secupressProgressTimer );
 
 					// makes first scan part disappear
-					$sp_1st_scan.slideUp( 200, function() {
+					if ( isFirstScan ) {
+						$sp_1st_scan.slideUp( 200, function() {
 
-						// hide 4 steps help
-						$( '.secupress-open-moreinfo' ).removeClass( 'secupress-activated' );
-						$( '#secupress-more-info' ).removeClass( 'secupress-open' ).hide();
+							// hide 4 steps help
+							$( '.secupress-open-moreinfo' ).removeClass( 'secupress-activated' );
+							$( '#secupress-more-info' ).removeClass( 'secupress-open' ).hide();
 
-						//// TODO : check if note is attributed before showing this content
-						// Show other element (list of scans, tabs, tabs contents).
-						$( '.secupress-scan-header-main' ).css('display', 'flex').hide().slideDown( 200, function() {
-							$( '.secupress-scanners-header.secupress-not-scanned-yet' ).removeClass( 'secupress-not-scanned-yet' );
-						} );
+							//// TODO : check if note is attributed before showing this content
+							// Show other element (list of scans, tabs, tabs contents).
+							$( '.secupress-scan-header-main' ).css('display', 'flex').hide().slideDown( 200, function() {
+								$( '.secupress-scanners-header.secupress-not-scanned-yet' ).removeClass( 'secupress-not-scanned-yet' );
+							} );
 
-						// draw the chart
-						if ( isFirstScan ) {
+							// draw the chart
 							secupressDrawCharts();
-						}
-					} );
+
+						} );
+					} else {
+						$main_header.removeClass( 'secupress-scanning' );
+					}
 				}
 			}, 500 );
 		}
