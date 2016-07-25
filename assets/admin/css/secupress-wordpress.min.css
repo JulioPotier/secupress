@@ -413,6 +413,9 @@ i.bold {
 .secupress-text-basup.secupress-text-basup {
 	font-size: 16px;
 }
+.secupress-text-base.secupress-text-base {
+	font-size: 13px;
+}
 .secupress-text-mini.secupress-text-mini {
 	font-size: 10px;
 	color: inherit;
