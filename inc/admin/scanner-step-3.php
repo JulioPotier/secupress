@@ -2,52 +2,46 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 // Keep only scans with "bad" and "warning" status.
-$fix_actions = array_merge( $bad_scans, $warning_scans );	// `array( $class_name_part_lower => $status )`, will become `array( $class_name_part_lower => array( $fix_action, $fix_action ), $class_name_part_lower => false )`.
+$bad_scan_results = array_merge( $bad_scans, $warning_scans );	// `array( $class_name_part_lower => $status )`
+$fix_actions      = array();									// `array( $class_name_part_lower => array( $fix_action, $fix_action ) )`
 
 /**
- * Add scanners where the fix failed.
- * Also, make sure all fixes have a status, we'll need it.
+ * Make sure all fixes have a status, we'll need it.
  */
 foreach ( $fixes as $class_name_part_lower => $fix ) {
-	$failed = false;
+	if ( ! $fix ) {
+		unset( $fixes[ $class_name_part_lower ] );
+		continue;
+	}
 
-	if ( ! empty( $fix['status'] ) ) {
-		// We have the status.
-		$failed = 'good' !== $fix['status'];
-	} elseif ( ! empty( $fix['msgs'] ) ) {
+	if ( empty( $fix['status'] ) && ! empty( $fix['msgs'] ) ) {
 		$fixes[ $class_name_part_lower ]['status'] = 'good';
 
 		// Get the status from the message codes.
 		foreach ( $fix['msgs'] as $code => $msg_atts ) {
 			if ( $code >= 100 ) {
-				$failed = true;
-				$fixes[ $class_name_part_lower ]['status'] = true; // No need to set the real status because we will test against 'good'.
+				$fixes[ $class_name_part_lower ]['status'] = true; // No need to set the real status because we will test against 'good', so we keep it simple.
 				break;
 			}
 		}
-	}
-
-	if ( $failed && empty( $fix_actions[ $class_name_part_lower ] ) ) {
-		// Add this scanner to the list.
-		$fix_actions[ $class_name_part_lower ] = true;
 	}
 }
 
 /**
  * Keep only scanners where:
  * - it needs a manual fix,
- * - or, the scan status is a "warning",
- * - or, the automatic fix failed,
+ * - or, is not fixable by SecuPress (it needs the user to go to the hoster administration interface),
  * - or, is fixable only with the Pro Version (and we use the Free version),
- * - or, is not fixable by SecuPress (it needs the user to go to the hoster administration interface).
+ * - or, an automatic fix has been attempted (but maybe it's an old result),
+ * - or, the scan status is a "warning",
  * Also, require the scan files + get the "fix actions".
  */
 foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 
 	$class_name_parts = array_combine( array_map( 'strtolower', $class_name_parts ), $class_name_parts );
-	$class_name_parts = array_intersect_key( $class_name_parts, $fix_actions );
+	$class_name_parts = array_intersect_key( $class_name_parts, $bad_scan_results );
 
-	// Only those selected.
+	// Only "bad" and "warning" status.
 	if ( ! $class_name_parts ) {
 		unset( $secupress_tests[ $module_name ] );
 		continue;
@@ -57,35 +51,40 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 
 	foreach ( $class_name_parts as $class_name_part_lower => $class_name_part ) {
 		if ( ! file_exists( secupress_class_path( 'scan', $class_name_part ) ) ) {
-			unset( $secupress_tests[ $module_name ][ $class_name_part_lower ], $fix_actions[ $class_name_part_lower ] );
+			unset( $secupress_tests[ $module_name ][ $class_name_part_lower ], $bad_scan_results[ $class_name_part_lower ] );
 			continue;
 		}
 
 		secupress_require_class( 'scan', $class_name_part );
+
 		$class_name       = 'SecuPress_Scan_' . $class_name_part;
 		$current_test     = $class_name::get_instance();
 		$is_fixable       = $current_test->is_fixable();
 		$this_fix_actions = $current_test->need_manual_fix();
-		$this_fix_result  = ! empty( $fixes[ $class_name_part_lower ] ) ? $fixes[ $class_name_part_lower ] : array();
 
 		// Those that need a manual fix.
-		if ( $this_fix_actions ) {
+		if ( is_array( $this_fix_actions ) ) {
 			// Store the "fix actions".
-			$fix_actions[ $class_name_part_lower ] = $this_fix_actions;
-		}
-		// Warning.
-		elseif ( 'bad' !== $fix_actions[ $class_name_part_lower ] ) {
-			$fix_actions[ $class_name_part_lower ] = false;
+			if ( $this_fix_actions ) {
+				$fix_actions[ $class_name_part_lower ] = $this_fix_actions;
+			} else {
+				// Doesn't need to be fixed, the scan is simply not up to date.
+				unset( $secupress_tests[ $module_name ][ $class_name_part_lower ], $bad_scan_results[ $class_name_part_lower ] );
+			}
 		}
 		// Not fixable + Pro.
 		elseif ( false === $is_fixable || 'pro' === $is_fixable && ! secupress_is_pro() ) {
-			$fix_actions[ $class_name_part_lower ] = false;
+			// OK.
 		}
-		// Fix failed.
-		elseif ( ! empty( $this_fix_result['status'] ) && 'good' !== $this_fix_result['status'] ) {
-			$fix_actions[ $class_name_part_lower ] = false;
+		// An automatic fix has been attempted.
+		elseif ( ! empty( $fixes[ $class_name_part_lower ] ) ) {
+			// OK.
+		}
+		// Scan status is a "warning".
+		elseif ( 'warning' === $bad_scan_results[ $class_name_part_lower ] ) {
+			// OK.
 		} else {
-			unset( $secupress_tests[ $module_name ][ $class_name_part_lower ], $fix_actions[ $class_name_part_lower ] );
+			unset( $secupress_tests[ $module_name ][ $class_name_part_lower ], $bad_scan_results[ $class_name_part_lower ] );
 		}
 	}
 }
@@ -93,7 +92,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 $secupress_tests = array_filter( $secupress_tests );
 
 // Move along, move along...
-if ( ! $fix_actions ) {
+if ( ! $secupress_tests ) {
 	?>
 	<div class="secupress-step-content-header secupress-flex secupress-flex-spaced">
 		<p class="secupress-step-title"><?php _e( 'Nothing to do here' ); ?></p>
@@ -113,7 +112,7 @@ if ( ! $fix_actions ) {
 ?>
 <div class="secupress-step-content-header secupress-flex secupress-flex-spaced">
 	<?php
-	$nb_actions    = count( $fix_actions );
+	$nb_actions    = count( $bad_scan_results );
 	$page_title    = sprintf( _n( 'This action require your attention', 'These %d actions require your attention', $nb_actions, 'secupress' ), $nb_actions );
 	$steps_counter =
 		'<span class="secupress-step-by-step secupress-flex hide-if-no-js">
@@ -141,9 +140,9 @@ if ( ! $fix_actions ) {
 	$modules      = secupress_get_modules();
 	$hidden_class = '';
 
-	foreach ( $secupress_tests as $module_name => $class_name_parts ) :
+	foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 
-		foreach ( $class_name_parts as $class_name_part_lower => $class_name_part ) :
+		foreach ( $class_name_parts as $class_name_part_lower => $class_name_part ) {
 			$class_name   = 'SecuPress_Scan_' . $class_name_part;
 			$current_test = $class_name::get_instance();
 			$referer      = urlencode( esc_url_raw( self_admin_url( 'admin.php?page=' . SECUPRESS_PLUGIN_SLUG . '_scanners&step=3#' . $class_name_part ) ) );
@@ -159,14 +158,13 @@ if ( ! $fix_actions ) {
 
 			// State.
 			$needs_pro              = 'pro' === $current_test->is_fixable() && ! secupress_is_pro();
-			$has_actions            = (bool) $fix_actions[ $class_name_part_lower ];
+			$has_actions            = ! empty( $fix_actions[ $class_name_part_lower ] );
 			$is_fixable             = true === $current_test->is_fixable() || 'pro' === $current_test->is_fixable() && secupress_is_pro();
 			$is_fixable_with_action = $is_fixable && $has_actions;
-			$is_scan_warning        = 'warning' === $scan_status;
-			$fix_failed             = $is_fixable && ! $has_actions && ! empty( $fix_result['status'] ) && 'good' !== $fix_result['status'];
 
 			// Row css class.
-			$row_css_class  = ' status-' . sanitize_html_class( $scan_status );
+			$row_css_class  = 'secupress-item-' . $class_name_part;
+			$row_css_class .= ' status-' . sanitize_html_class( $scan_status );
 			$row_css_class .= $is_fixable_with_action ? ' fixable' : ' not-fixable';
 			?>
 			<div class="secupress-manual-fix secupress-manual-fix-<?php echo $module_name; ?> secupress-group-item-<?php echo $class_name_part; ?><?php echo $hidden_class; ?>">
@@ -196,13 +194,13 @@ if ( ! $fix_actions ) {
 
 				</div><!-- .secupress-mf-header -->
 
-				<div id="secupress-mf-content-<?php echo $class_name_part; ?>" class="secupress-mf-content secupress-item-<?php echo $class_name_part; ?> status-all <?php echo $row_css_class; ?>">
+				<div id="secupress-mf-content-<?php echo $class_name_part; ?>" class="secupress-mf-content <?php echo $row_css_class; ?>" data-scan-url="<?php echo esc_url( $scan_nonce_url ); ?>">
 
-					<?php if ( $is_fixable_with_action ) : ?>
+					<?php if ( $is_fixable_with_action ) { ?>
 					<form class="secupress-item-content" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-					<?php else : ?>
+					<?php } else { ?>
 					<div class="secupress-item-content">
-					<?php endif; ?>
+					<?php } ?>
 
 						<p class="secupress-ic-title">
 							<?php _e( 'How to Fix this issue', 'secupress' ); ?>
@@ -210,30 +208,47 @@ if ( ! $fix_actions ) {
 
 						<p class="secupress-ic-desc">
 							<?php
-							if ( $fix_failed && ! empty( $fix['msgs'] ) ) {
-								$message = secupress_format_message( $fix['msgs'], $class_name_part );
+							// Needs Pro, or is not fixable by SecuPress, or can be fixed manually.
+							if ( $needs_pro || ! $is_fixable || $has_actions ) {
+								echo wp_kses( $current_test->more_fix, $allowed_tags );
+							}
+							// Automatic fix failed.
+							elseif ( ! empty( $fixes[ $class_name_part_lower ] ) ) {
+								// The fix has a "good" status, we'll display the scan message instead.
+								if ( 'good' === $fixes[ $class_name_part_lower ]['status'] && ! empty( $scanner['msgs'] ) ) {
+									$message = secupress_format_message( $scanner['msgs'], $class_name_part );
+								}
+								// The fix has no message (shouldn't happen, just to be safe), we'll display the scan message instead.
+								elseif ( empty( $fix_result['msgs'] ) && ! empty( $scanner['msgs'] ) ) {
+									$message = secupress_format_message( $scanner['msgs'], $class_name_part );
+								}
+								// The fix has a message.
+								elseif ( ! empty( $fix_result['msgs'] ) ) {
+									$message = secupress_format_message( $fix_result['msgs'], $class_name_part );
+								}
+								// Fallback, shouldn't happen.
+								else {
+									$message = $current_test->more_fix;
+								}
 								echo wp_kses( $message, $allowed_tags );
-							} elseif ( $is_scan_warning && ! empty( $scanner['msgs'] ) ) {
+							}
+							// Scan status is a "warning".
+							elseif ( 'warning' === $bad_scan_results[ $class_name_part_lower ] && ! empty( $scanner['msgs'] ) ) {
 								$message = secupress_format_message( $scanner['msgs'], $class_name_part );
 								echo wp_kses( $message, $allowed_tags );
-							} else {
+							}
+							// Fallback.
+							else {
 								echo wp_kses( $current_test->more_fix, $allowed_tags );
 							}
 							?>
 						</p>
 
-						<?php if ( $is_fixable_with_action ) : ?>
+						<?php if ( $is_fixable_with_action ) { ?>
 							<div class="secupress-ic-fix-actions">
-								<?php
-								$fix_actions[ $class_name_part_lower ] = $current_test->get_required_fix_action_template_parts( $fix_actions[ $class_name_part_lower ] );
-
-								echo implode( '', $fix_actions[ $class_name_part_lower ] );
-								$current_test->get_fix_action_fields( array_keys( $fix_actions[ $class_name_part_lower ] ) );
-
-								unset( $fix_actions[ $class_name_part_lower ] );
-								?>
+								<?php $current_test->get_required_fix_action_template_parts( $fix_actions[ $class_name_part_lower ] ); ?>
 							</div>
-						<?php endif; ?>
+						<?php } ?>
 
 						<div class="secupress-row-actions secupress-flex secupress-flex-spaced secupress-mt2">
 							<p class="secupress-action-doc">
@@ -264,7 +279,7 @@ if ( ! $fix_actions ) {
 										<span class="icon">
 											<i class="icon-check" aria-hidden="true"></i>
 										</span>
-										<span class="text"><?php _e( 'Fix it', 'secupress' ); ?></span>
+										<span class="text"><?php _e( 'Fix it and continue', 'secupress' ); ?></span>
 									</button>
 								<?php } elseif ( $needs_pro ) { ?>
 									<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ); ?>" class="secupress-button secupress-button-tertiary secupress-button-getpro shadow">
@@ -277,11 +292,11 @@ if ( ! $fix_actions ) {
 							</p>
 						</div>
 
-					<?php if ( $is_fixable_with_action ) : ?>
+					<?php if ( $is_fixable_with_action ) { ?>
 					</form><!-- .secupress-item-content -->
-					<?php else : ?>
+					<?php } else { ?>
 					</div><!-- .secupress-item-content -->
-					<?php endif; ?>
+					<?php } ?>
 
 					<div class="secupress-item-details" id="details-<?php echo $class_name_part; ?>">
 						<div class="secupress-flex">
@@ -297,8 +312,8 @@ if ( ! $fix_actions ) {
 			</div><!-- .secupress-manual-fix -->
 			<?php
 			$hidden_class = ' hide-if-js';
-		endforeach;
+		} // Eo foreach $class_name_parts.
 
-	endforeach;
+	} // Eo foreach $secupress_tests.
 	?>
 </div><!-- .secupress-tests -->

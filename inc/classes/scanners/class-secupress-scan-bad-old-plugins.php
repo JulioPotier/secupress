@@ -181,35 +181,21 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 	 * @return (array) The fix results.
 	 */
 	public function fix() {
-		// Plugins no longer in directory or not updated in over 2 years or Hello Dolly.
-		$bad_plugins = $this->get_installed_plugins_to_remove();
-
-		if ( $bad_plugins['count'] ) {
-			if ( $count = count( $bad_plugins['to_delete'] ) ) {
-				// "cantfix"
-				$this->add_fix_message( 300, array( $count, $count ) );
-				$this->add_fix_action( 'delete-bad-old-plugins' );
-			}
-			if ( $count = count( $bad_plugins['to_deactivate'] ) ) {
-				// "cantfix"
-				$this->add_fix_message( 301, array( $count, $count ) );
-				$this->add_fix_action( 'deactivate-bad-old-plugins' );
-			}
-		} else {
-			// "good"
-			$this->add_fix_message( 1 );
-		}
+		// "good"
+		$this->add_fix_message( 1 );
 
 		return parent::fix();
 	}
 
 
+	/** Manual fix. ============================================================================= */
+
 	/**
-	 * Return an array of actions if a manual fix is needed here. False otherwise.
+	 * Return an array of actions if a manual fix is needed here.
 	 *
 	 * @since 1.0
 	 *
-	 * @return (bool|array)
+	 * @return (array)
 	 */
 	public function need_manual_fix() {
 		$bad_plugins = $this->get_installed_plugins_to_remove();
@@ -224,11 +210,9 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 			}
 		}
 
-		return $actions ? $actions : false;
+		return $actions;
 	}
 
-
-	/** Manual fix. ============================================================================= */
 
 	/**
 	 * Try to fix the flaw(s) after requiring user action.
@@ -241,10 +225,12 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 		$bad_plugins = $this->get_installed_plugins_to_remove();
 
 		if ( $bad_plugins['count'] ) {
+			// DELETE PLUGINS.
 			if ( $this->has_fix_action_part( 'delete-bad-old-plugins' ) ) {
 				$delete = $this->manual_delete( $bad_plugins['to_delete'], (bool) $bad_plugins['to_deactivate'] );
 			}
 
+			// DEACTIVATE PLUGINS.
 			if ( $this->has_fix_action_part( 'deactivate-bad-old-plugins' ) ) {
 				$deactivate = $this->manual_deactivate( $bad_plugins['to_deactivate'], (bool) $bad_plugins['to_delete'] );
 			}
@@ -388,10 +374,15 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 			$this->add_fix_message( 103, array( count( $not_removed ), $not_removed ) );
 		}
 
-		// Force refresh of plugin update information.
-		if ( $deleted_plugins && $current = get_site_transient( 'update_plugins' ) ) {
-			$current->response = array_diff_key( $current->response, $deleted_plugins );
-			set_site_transient( 'update_plugins', $current );
+		// Force refresh of plugin update information and cache.
+		if ( $deleted_plugins ) {
+			if ( $current = get_site_transient( 'update_plugins' ) ) {
+				$current->response  = array_diff_key( $current->response, $deleted_plugins );
+				$current->no_update = array_diff_key( $current->no_update, $deleted_plugins );
+				set_site_transient( 'update_plugins', $current );
+			}
+
+			wp_cache_delete( 'plugins', 'plugins' );
 		}
 	}
 

@@ -62,13 +62,6 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	/** Properties. ============================================================================= */
 
 	/**
-	 * Filled when fixes need manual actions.
-	 *
-	 * @var (array)
-	 */
-	private $fix_actions = array();
-
-	/**
 	 * The part of the class that extends this one, like SecuPress_Scan_{$class_name_part}.
 	 *
 	 * @var (string)
@@ -712,33 +705,6 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	public function fix() {
 		$this->update_fix();
 
-		if ( $this->fix_actions ) {
-			// Ajax.
-			if ( defined( 'DOING_AJAX' ) ) {
-				// Add the fixes that require user action in the returned data.
-				$form = array(
-					'form_contents' => $this->get_required_fix_action_template_parts(),
-					'form_fields'   => $this->get_fix_action_fields( false, false ),
-					'form_title'    => _n( 'This action requires your attention', 'These actions require your attention', count( $this->fix_actions ), 'secupress' ),
-				);
-
-				if ( $this->is_for_current_site() ) {
-					$site_id = get_current_blog_id();
-					$this->set_subsite_defaults( 'fix', $site_id );
-					$this->fix_sites[ $site_id ]['fix'] = array_merge( $this->fix_sites[ $site_id ]['fix'], $form );
-				} else {
-					$this->result_fix = array_merge( $this->result_fix, $form );
-				}
-
-				$this->fix_actions = array();
-			}
-			// No ajax.
-			else {
-				// Set a transient with fixes that require user action.
-				$this->set_fix_actions();
-			}
-		}
-
 		if ( $this->is_for_current_site() ) {
 			$result = $this->get_subsite_result( 'fix' );
 		} else {
@@ -752,6 +718,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 
 	/**
 	 * Return an array of actions if a manual fix is needed here. False otherwise.
+	 * In case a scanner with a manual fix doesn't need to be fixed, return an empty array instead of false: this way, this scanner will never be listed in the automatic fixes (if the scan is not up to date for example).
 	 *
 	 * @since 1.0
 	 *
@@ -770,35 +737,58 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 * @return (array) The fix results.
 	 */
 	public function manual_fix() {
-		// Don't use `$this->` here, we need to call the one from this class.
-		return self::fix();
+		$this->update_fix();
+
+		if ( defined( 'DOING_AJAX' ) ) {
+			$fix_actions = $this->need_manual_fix();
+
+			if ( $fix_actions ) {
+				// Add the fixes that require user action in the returned data.
+				$form = $this->get_required_fix_action_template_parts( $fix_actions, false );
+
+				if ( $this->is_for_current_site() ) {
+					$site_id = get_current_blog_id();
+					$this->set_subsite_defaults( 'fix', $site_id );
+					$this->fix_sites[ $site_id ]['fix']['form_contents'] = $form;
+				} else {
+					$this->result_fix['form_contents'] = $form;
+				}
+			}
+		}
+
+		if ( $this->is_for_current_site() ) {
+			$result = $this->get_subsite_result( 'fix' );
+		} else {
+			$result = $this->result_fix;
+			$this->result_fix = array();
+		}
+
+		return $result;
 	}
 
 
 	/**
-	 * Store IDs related to fixes that require user action.
-	 *
-	 * @since 1.0
-	 *
-	 * @param (string) $fix_id A fix action identifier.
-	 */
-	final protected function add_fix_action( $fix_id ) {
-		$this->fix_actions[ $fix_id ] = $fix_id;
-	}
-
-
-	/**
-	 * Get an array containing ONLY THE REQUIRED forms that would fix the scan if it requires user action.
+	 * Get ONLY THE REQUIRED forms that would fix the scan if it requires user action.
 	 *
 	 * @since 1.0
 	 *
 	 * @param (array) $fix_actions An array of fix actions.
+	 * @param (bool)  $echo        True to print the outpout, False to return it.
 	 *
-	 * @return (array) An array of HTML templates (form contents most of the time).
+	 * @return (string) A string of HTML templates (form contents most of the time).
 	 */
-	final public function get_required_fix_action_template_parts( $fix_actions = false ) {
-		$fix_actions = $fix_actions ? $fix_actions : $this->fix_actions;
-		return array_intersect_key( $this->get_fix_action_template_parts(), $fix_actions );
+	final public function get_required_fix_action_template_parts( $fix_actions, $echo = true ) {
+		$templates = array_intersect_key( $this->get_fix_action_template_parts(), $fix_actions );
+		$templates = implode( '', $templates );
+
+		if ( $templates ) {
+			$templates .= $this->get_fix_action_fields( $fix_actions );
+		}
+
+		if ( ! $echo ) {
+			return $templates;
+		}
+		echo $templates;
 	}
 
 
@@ -835,14 +825,12 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 * @since 1.0
 	 *
 	 * @param (array) $fix_actions An array of fix actions.
-	 * @param (bool)  $echo        True to print the outpout, False to return it.
 	 *
 	 * @return (string)
 	 */
-	final public function get_fix_action_fields( $fix_actions = false, $echo = true ) {
-		$fix_actions = $fix_actions ? $fix_actions : $this->fix_actions;
-		$nonce       = 'secupress_manual_fixit_' . $this->class_name_part;
-		$output      = "\n";
+	final public function get_fix_action_fields( $fix_actions ) {
+		$nonce  = 'secupress_manual_fixit_' . $this->class_name_part;
+		$output = "\n";
 
 		if ( $this->is_for_current_site() ) {
 			$nonce  .= '-' . get_current_blog_id();
@@ -856,10 +844,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 		$output .= '<input type="hidden" name="_wpnonce" value="' . wp_create_nonce( $nonce ) . '" />' . "\n";
 		$output .= '<input type="hidden" name="_wp_http_referer" value="'. esc_attr( wp_unslash( $_SERVER['REQUEST_URI'] ) ) . '" />' . "\n";
 
-		if ( ! $echo ) {
-			return $output;
-		}
-		echo $output;
+		return $output;
 	}
 
 	/** Options. ================================================================================ */
@@ -928,58 +913,12 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 			secupress_set_site_transient( SECUPRESS_SCAN_FIX_SITES_SLUG . '_' . $name, $this->fix_sites );
 		}
 
-		$this->result_fix['has_action'] = ! empty( $this->fix_actions );
-
 		secupress_set_site_transient( 'secupress_fix_' . $name, $this->result_fix );
 
 		return $this->result_fix;
 	}
 
 	/** Other transients. ======================================================================= */
-
-	/**
-	 * Fixes that require user action: set fix actions.
-	 *
-	 * @since 1.0
-	 */
-	final protected function set_fix_actions() {
-		$transient_name = 'secupress_fix_actions-' . get_current_user_id();
-
-		if ( $this->is_for_current_site() ) {
-			secupress_set_transient( $transient_name, $this->class_name_part . '|' . implode( ',', $this->fix_actions ) );
-		} else {
-			secupress_set_site_transient( $transient_name, $this->class_name_part . '|' . implode( ',', $this->fix_actions ) );
-		}
-
-		$this->fix_actions = array();
-	}
-
-
-	/**
-	 * Fixes that require user action: get fix actions and delete the transient used to store them.
-	 *
-	 * @since 1.0
-	 *
-	 * @return (array) Scan results.
-	 */
-	final public static function get_and_delete_fix_actions() {
-		$transient_name = 'secupress_fix_actions-' . get_current_user_id();
-
-		if ( is_multisite() && ! is_network_admin() ) {
-			$transient = secupress_get_transient( $transient_name );
-			if ( false !== $transient ) {
-				secupress_delete_transient( $transient_name );
-			}
-		} else {
-			$transient = secupress_get_site_transient( $transient_name );
-			if ( false !== $transient ) {
-				secupress_delete_site_transient( $transient_name );
-			}
-		}
-
-		return $transient ? explode( '|', $transient ) : array( 0 => false );
-	}
-
 
 	/**
 	 * Auto-scan: schedule an auto-scan that will be executed on page load.

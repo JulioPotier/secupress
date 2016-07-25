@@ -32,7 +32,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		$is_fixable       = $current_test->is_fixable();
 
 		// Remove those that are not fixable automatically.
-		if ( false === $is_fixable || $current_test->need_manual_fix() ) {
+		if ( false === $is_fixable || is_array( $current_test->need_manual_fix() ) ) {
 			unset( $secupress_tests[ $module_name ][ $class_name_part_lower ] );
 		}
 		// Tell if the module has fixable items.
@@ -135,12 +135,11 @@ if ( ! $secupress_tests ) {
 					$fix_nonce_url = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_fixit&test=' . $class_name_part . '&_wp_http_referer=' . $referer ), 'secupress_fixit_' . $class_name_part );
 
 					// Row css class.
-					$row_css_class  = ' status-' . sanitize_html_class( $scan_status );
-					$row_css_class .= ! empty( $fix['has_action'] ) ? ' status-hasaction' : '';
-					$row_css_class .= ! empty( $fix['status'] ) && empty( $fix['has_action'] ) ? ' has-fix-status' : ' no-fix-status';
+					$row_css_class  = 'secupress-item-' . $class_name_part;
+					$row_css_class .= ' status-' . sanitize_html_class( $scan_status );
 					$row_css_class .= $needs_pro ? ' secupress-only-pro not-fixable' : '';
 					?>
-					<div class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> status-all <?php echo $row_css_class; ?>" id="<?php echo $class_name_part; ?>" data-scan-url="<?php echo esc_url( $scan_nonce_url ); ?>">
+					<div class="secupress-item-all <?php echo $row_css_class; ?>" id="<?php echo $class_name_part; ?>" data-scan-url="<?php echo esc_url( $scan_nonce_url ); ?>">
 						<div class="secupress-flex">
 
 							<p class="secupress-item-status secupress-status-mini">

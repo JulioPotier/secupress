@@ -114,47 +114,21 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 	 * @return (array) The fix results.
 	 */
 	public function fix() {
-		global $wpdb;
-
-		// Check db prefix.
-		$check = 'wp_' === $wpdb->prefix || 'wordpress_' === $wpdb->prefix;
-
-		if ( $check ) {
-
-			if ( secupress_db_access_granted() ) {
-
-				$wpconfig_filename = secupress_find_wpconfig_path();
-
-				if ( is_writable( $wpconfig_filename ) && preg_match( '/\$table_prefix.*=.*(\'' . $wpdb->prefix . '\'|"' . $wpdb->prefix . '");.*/', file_get_contents( $wpconfig_filename ) ) ) {
-
-					$good_tables = secupress_get_non_wp_tables();
-
-					if ( $good_tables ) {
-						$this->add_fix_message( 304 );
-						$this->add_fix_action( 'select-db-tables-to-rename' );
-					} else {
-						$this->manual_fix();
-					}
-				} else {
-					$this->add_fix_message( 302 );
-				}
-			} else {
-				$this->add_fix_message( 301 );
-			}
-		}
-
-		$this->maybe_set_fix_status( 0 );
+		// "good"
+		$this->add_fix_message( 0 );
 
 		return parent::fix();
 	}
 
 
+	/** Manual fix. ============================================================================= */
+
 	/**
-	 * Return an array of actions if a manual fix is needed here. False otherwise.
+	 * Return an array of actions if a manual fix is needed here.
 	 *
 	 * @since 1.0
 	 *
-	 * @return (bool|array)
+	 * @return (array)
 	 */
 	public function need_manual_fix() {
 		global $wpdb;
@@ -176,7 +150,7 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 			}
 		}
 
-		return false;
+		return array();
 	}
 
 
