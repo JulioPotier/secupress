@@ -25,6 +25,15 @@
 .secupress-gray-medium.secupress-gray-medium {
 	color: #5A626F;
 }
+.secupress-primary.secupress-primary {
+	color: #26B3A9;
+}
+.secupress-secondary.secupress-secondary {
+	color: #CB234F;
+}
+.secupress-tertiary.secupress-tertiary {
+	color: #F7AB13;
+}
 
 /**
  * === Usual Classes
@@ -653,7 +662,7 @@ button.secupress-activated .secupress-toggle-button.hidden {
 
 /* Swal alternative styles */
 body[class*="secupress"] .sweet-overlay {
-	background: rgba(34, 40, 49, .8);
+	background: rgba(57, 62, 70, .8);
 }
 .secupress-swal-dark-header .sweet-icon,
 .secupress-swal-dark-header .sa-icon {
@@ -665,6 +674,15 @@ body[class*="secupress"] .sweet-overlay {
 	text-align: left;
 	color: #FFF;
 	background: #222831;
+}
+.secupress-swal-dark-header.secupress-text-center.secupress-swal2 h2 {
+	text-align: center;
+	padding: 15px 50px 10px;
+}
+.secupress-swal-header-imaged {
+	display: block;
+	margin: 0;
+	padding: 20px 0;
 }
 .secupress-where-info.secupress-where-info {
 	margin-top: .5em;
@@ -1074,6 +1092,9 @@ table.fixed .column-date {
 .sweet-alert.sweet-alert {
 	z-index: 99999
 }
+.secupress-swal2.secupress-swal2 p {
+	font-weight: 400;
+}
 .secupress-swal2.sweet-alert {
 	border-radius: 3px;
 }
@@ -1111,4 +1132,15 @@ table.fixed .column-date {
 .secupress-swal2 .secupress-button {
 	letter-spacing: 0.1em;
 	box-shadow: 0 6px 12px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05), 0 3px 4px rgba(0,0,0,.05);
+}
+
+.secupress-swal2.secupress-swal-dark-header .sweet-close {
+	font-size: 16px;
+	line-height: 16px;
+	width: 16px;
+	height: 16px;
+	border-radius: 3px;
+	background: #CFCFCF;
+	color: #222831;
+	font-weight: bold;
 }
