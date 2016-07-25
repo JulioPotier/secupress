@@ -8,13 +8,17 @@ $new_scans              = array_diff_key( $secupress_tests_keys, $scanned_items 
 $modules                = secupress_get_modules();
 $is_there_something_new = false !== reset( $new_scans );
 $flag_first_iteration   = true;
+
+// Build the "new scans" array
+foreach ( $new_scans as $key => $new_scan ) {
+	$new_scans[ $key ] = str_replace( ' ', '_', ucwords( str_replace( '_', ' ', $key ) ) );
+}
 ?>
 
 <div id="secupress-tests" class="secupress-tests">
 	<?php
 	foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		$class_name_parts = array_combine( array_map( 'strtolower', $class_name_parts ), $class_name_parts );
-		$this_new_scans   = array_intersect_key( $class_name_parts, $new_scans );
 
 		if ( ! $is_subsite ) {
 			foreach ( $class_name_parts as $option_name => $class_name_part ) {
@@ -30,7 +34,7 @@ $flag_first_iteration   = true;
 			$this_module_good_scans    = array_intersect_key( $class_name_parts, $good_scans );
 			$this_module_bad_scans     = array_intersect_key( $class_name_parts, $bad_scans );
 			$this_module_warning_scans = array_intersect_key( $class_name_parts, $warning_scans );
-			$class_name_parts          = array_merge( $this_new_scans, $this_module_good_scans, $this_module_warning_scans, $this_module_bad_scans );
+			$class_name_parts          = array_merge( $this_module_good_scans, $this_module_warning_scans, $this_module_bad_scans );
 			unset( $this_module_bad_scans, $this_module_warning_scans, $this_module_good_scans );
 		} else {
 			foreach ( $class_name_parts as $option_name => $class_name_part ) {
@@ -42,13 +46,6 @@ $flag_first_iteration   = true;
 
 				secupress_require_class( 'scan', $class_name_part );
 			}
-		}
-
-		$class_name_parts = array_diff_key( $class_name_parts, $new_scans );
-
-		if ( $is_there_something_new ) {
-			$_class_name_parts      = $class_name_parts;
-			$class_name_parts       = $this_new_scans;
 		}
 
 		if ( $flag_first_iteration ) {
@@ -84,15 +81,11 @@ $flag_first_iteration   = true;
 			</div><!-- .secupress-step-content-header -->
 		<?php
 		}
-		// for ($i=0; $i < 2; $i++) {
-		// 	if ( 1 === $i && isset( $_class_name_parts ) ) {
-		// 		$class_name_parts       = $_class_name_parts;
-		// 	}
 		if ( $is_there_something_new && $scanned_items ) {
 			require( SECUPRESS_INC_PATH . 'admin/scanner-step-1-new.php' );
 		}
+		$is_there_something_new = false;
 		require( SECUPRESS_INC_PATH . 'admin/scanner-step-1-all.php' );
-		// } // Eo for $i
 	} // Eo foreach $secupress_tests
 	?>
 

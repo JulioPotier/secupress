@@ -28,13 +28,14 @@ if ( $flag_first_iteration ) {
 	}
 	?>
 
-	<div id="secupress-group-content-new" class="secupress-sg-content">	
-	
-	<!-- CA PETE ICI T'AS VU! -->
+	<div id="secupress-group-content-new" class="secupress-sg-content">
 
 <?php
-	foreach ( $class_name_parts as $option_name => $class_name_part ) {
+	foreach ( $new_scans as $option_name => $class_name_part ) {
 		$class_name   = 'SecuPress_Scan_' . $class_name_part;
+		if ( ! class_exists( $class_name ) && file_exists( secupress_class_path( 'scan', $class_name_part ) ) ) {
+			secupress_require_class( 'scan', $class_name_part );
+		}
 		$current_test = $class_name::get_instance();
 		$referer      = urlencode( esc_url_raw( self_admin_url( 'admin.php?page=' . SECUPRESS_PLUGIN_SLUG . '_scanners' . ( $is_subsite ? '' : '#' . $class_name_part ) ) ) );
 
@@ -114,7 +115,7 @@ if ( $flag_first_iteration ) {
 	} // end foreach $class_name_parts
 
 
-	$flag_first_iteration = false;
+	$flag_first_iteration   = false;
 ?>
 	</div><!-- .secupress-sg-content -->
 </div> <!-- .secupress-group-new -->
