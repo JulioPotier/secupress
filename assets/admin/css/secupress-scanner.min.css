@@ -1242,7 +1242,7 @@ a + .secupress-row-actions {
 /* All checkboxes */
 .secupress-scans-group .secupress-checkbox:not(:checked) + .label-text:before,
 .secupress-scans-group .secupress-checkbox:checked + .label-text:before {
-	top: -13px;
+	top: -14px;
 	border-color: #2BCDC1;
 }
 .secupress-scans-group .secupress-checkbox:not(:checked) + .label-text:after,

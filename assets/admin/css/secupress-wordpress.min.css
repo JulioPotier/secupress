@@ -364,6 +364,9 @@
 	font-style: italic;
 	border-radius: 50%;
 }
+.icon-cross:before {
+	transform: translateY(-1px);
+}
 
 /* Rounded icon */
 i.rounded {
@@ -524,7 +527,7 @@ i.bold {
 .secupress-button-secondary.secupress-button-secondary,
 .secupress-button-tertiary.secupress-button-tertiary {
 	display: inline-block;
-	height: auto; /* Yeah 'cause WP blocked it */
+	height: auto; /* Yeah 'cause WP locked it */
 	margin: .1em 0;
 	padding: 7px 20px 8px;
 	border: 0;
@@ -574,7 +577,8 @@ i.bold {
 }
 .secupress-button .icon i,
 [class^="secupress-button-"] .icon i {
-	display: flex; /* new magic thing to align icon */
+	display: flex; /* new magic thing… */
+	align-items: center; /* …to align icon */
 	font-size: 18px;
 }
 .secupress-button .icon:after,
@@ -583,7 +587,7 @@ i.bold {
 	position: absolute;
 	width: 1px; height: 20px;
 	right: 0; top: 50%;
-	margin-top: -10px;
+	margin-top: -10.5px;
 	background: rgba(255,255,255,.3);
 }
 .secupress-button-getpro .icon {
