@@ -58,6 +58,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	wp_localize_script( 'secupress-common-js', 'SecuPressi18nCommon', array(
 		'confirmText'  => __( 'OK', 'secupress' ),
 		'cancelText'   => __( 'Cancel' ),
+		'closeText'   => __( 'Close' ),
 		'authswal'     => array(
 			'title'  => __( 'Authentication', 'secupress' ),
 			'email'  => __( 'Enter your email', 'secupress' ),
