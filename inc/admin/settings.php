@@ -901,14 +901,15 @@ function secupress_scanners_template() {
 function secupress_status( $status ) {
 	switch ( $status ) :
 		case 'bad':
-			return __( 'Not Fixed', 'secupress' );
+			return __( 'Bad', 'secupress' );
 		case 'good':
-			return __( 'Fixed', 'secupress' );
+			return __( 'Good', 'secupress' );
 		case 'warning':
 			return __( 'Warning', 'secupress' );
 		case 'cantfix':
-		default:
 			return __( 'Error', 'secupress' );
+		default:
+			return __( 'New', 'secupress' );
 	endswitch;
 }
 
