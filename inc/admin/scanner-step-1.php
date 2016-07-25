@@ -132,10 +132,11 @@ $modules                = secupress_get_modules();
 					}
 
 					// Row css class.
-					$row_css_class  = ' status-' . sanitize_html_class( $scan_status );
+					$row_css_class  = 'secupress-item-' . $class_name_part;
+					$row_css_class .= ' status-' . sanitize_html_class( $scan_status );
 					$row_css_class .= isset( $autoscans[ $class_name_part ] ) ? ' autoscan' : '';
 					?>
-					<div class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> status-all <?php echo $row_css_class; ?>" id="<?php echo $class_name_part; ?>">
+					<div class="secupress-item-all <?php echo $row_css_class; ?>" id="<?php echo $class_name_part; ?>">
 
 						<div class="secupress-flex">
 

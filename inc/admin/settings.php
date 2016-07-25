@@ -155,6 +155,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 
 		$localize = array(
 			'pluginSlug'         => SECUPRESS_PLUGIN_SLUG,
+			'step'               => $is_main ? secupress_get_scanner_pagination() : 0,
 			'confirmText'        => __( 'OK', 'secupress' ),
 			'cancelText'         => __( 'Cancel' ),
 			'error'              => __( 'Error', 'secupress' ),
