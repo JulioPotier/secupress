@@ -168,6 +168,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'reScan'             => _x( 'Re-Scan', 'verb', 'secupress' ),
 			'scanDetails'        => __( 'Scan Details', 'secupress' ),
 			'fixDetails'         => __( 'Fix Details', 'secupress' ),
+			'firstScanURL'       => esc_url( wp_nonce_url( secupress_admin_url( 'scanners' ), 'first_oneclick-scan' ) ) . '&oneclick-scan=1',
 			'supportTitle'       => __( 'Ask for Support', 'secupress' ),
 			'supportButton'      => __( 'Open a ticket', 'secupress' ),
 			'supportContentFree' => __( '<p>During the test phase, the support is done by sending a manual email on <b>contact@secupress.me</b>. Thank you!</p>', 'secupress' ), // ////.
@@ -186,9 +187,8 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		if ( ! empty( $_GET['oneclick-scan'] ) && ! empty( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'first_oneclick-scan' ) && current_user_can( secupress_get_capability() ) ) {
 			$items = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
 
-			if ( ! $items ) {
-				$localize['firstOneClickScan'] = 1;
-			}
+			$localize['firstOneClickScan'] = 1;
+
 			$_SERVER['REQUEST_URI'] = remove_query_arg( array( '_wpnonce', 'oneclick-scan' ) );
 		}
 
