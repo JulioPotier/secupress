@@ -340,9 +340,10 @@ function __secupress_modules() {
  * @since 1.0
  */
 function __secupress_scanners() {
-	$counts  = secupress_get_scanner_counts();
-	$items   = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
-	$reports = array();
+	$counts      = secupress_get_scanner_counts();
+	$items       = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
+	$reports     = array();
+	$last_report = '—';
 
 	if ( $items ) {
 		$last_percent = -1;
@@ -352,7 +353,8 @@ function __secupress_scanners() {
 			$last_percent = $item['percent'];
 		}
 
-		$reports = array_reverse( $reports );
+		$reports     = array_reverse( $reports );
+		$last_report = date_i18n( _x( 'M dS, Y \a\t h:ia', 'Latest scans', 'secupress' ), $items[0]['time'] );
 	}
 
 	$currently_scanning_text = '
@@ -392,7 +394,7 @@ function __secupress_scanners() {
 					<p class="secupress-label-with-icon secupress-last-scan-result">
 						<i class="icon-secupress" aria-hidden="true"></i>
 						<span class="secupress-upper"><?php _e( 'Result of the scan', 'secupress' ); ?></span>
-						<span class="secupress-primary">20.06.2016 • 13h37</span>
+						<span class="secupress-primary"><?php echo $last_report; ?></span>
 					</p>
 					<p class="secupress-text-end hide-if-no-js">
 						<a href="#secupress-more-info" class="secupress-link-icon secupress-open-moreinfo<?php echo $reports ? '' : ' secupress-activated dont-trigger-hide'; ?>" data-trigger="slidedown" data-target="secupress-more-info">
@@ -557,7 +559,7 @@ function __secupress_scanners() {
 									<span class="secupress-label-with-icon">
 										<i class="icon-secupress" aria-hidden="true"></i>
 										<span class="secupress-upper"><?php esc_html_e( 'Result of the scan', 'secupress' ); ?></span>
-										<span class="secupress-primary">20.06.2016 • 13h37</span>
+										<span class="secupress-primary"><?php echo $last_report; ?></span>
 									</span>
 								</a>
 							</li>
@@ -918,14 +920,15 @@ function secupress_scanners_template() {
 function secupress_status( $status ) {
 	switch ( $status ) :
 		case 'bad':
-			return __( 'Not Fixed', 'secupress' );
+			return __( 'Bad', 'secupress' );
 		case 'good':
-			return __( 'Fixed', 'secupress' );
+			return __( 'Good', 'secupress' );
 		case 'warning':
 			return __( 'Warning', 'secupress' );
 		case 'cantfix':
-		default:
 			return __( 'Error', 'secupress' );
+		default:
+			return __( 'New', 'secupress' );
 	endswitch;
 }
 
