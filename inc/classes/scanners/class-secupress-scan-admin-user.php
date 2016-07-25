@@ -199,11 +199,11 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 
 
 	/**
-	 * Return true if a manual fix is needed here.
+	 * Return an array of actions if a manual fix is needed here. False otherwise.
 	 *
 	 * @since 1.0
 	 *
-	 * @return (bool)
+	 * @return (bool|array)
 	 */
 	public function need_manual_fix() {
 		$username = 'admin';
@@ -212,7 +212,9 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 		// The "admin" account exists and has a role or capabilities.
 		if ( static::user_has_capas( $user_id ) ) {
 			// It's you!
-			return $user_id === get_current_user_id();
+			if ( $user_id === get_current_user_id() ) {
+				return array( 'rename-admin-username' => 'rename-admin-username' );
+			}
 		}
 
 		return false;

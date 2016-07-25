@@ -165,14 +165,27 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 
 
 	/**
-	 * Return true if a manual fix is needed here.
+	 * Return an array of actions if a manual fix is needed here. False otherwise.
 	 *
 	 * @since 1.0
 	 *
-	 * @return (bool)
+	 * @return (bool|array)
 	 */
 	public function need_manual_fix() {
-		return true;
+		$lists   = static::get_inactive_plugins_and_themes();
+		$actions = array();
+
+		// Inactive plugins.
+		if ( $lists['plugins'] ) {
+			$actions['delete-inactive-plugins'] = 'delete-inactive-plugins';
+		}
+
+		// Inactive themes.
+		if ( $count = count( $lists['themes'] ) ) {
+			$actions['delete-inactive-themes'] = 'delete-inactive-themes';
+		}
+
+		return $actions ? $actions : false;
 	}
 
 

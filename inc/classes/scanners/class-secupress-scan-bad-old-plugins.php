@@ -204,6 +204,30 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 	}
 
 
+	/**
+	 * Return an array of actions if a manual fix is needed here. False otherwise.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (bool|array)
+	 */
+	public function need_manual_fix() {
+		$bad_plugins = $this->get_installed_plugins_to_remove();
+		$actions     = array();
+
+		if ( $bad_plugins['count'] ) {
+			if ( $bad_plugins['to_delete'] ) {
+				$actions['delete-bad-old-plugins'] = 'delete-bad-old-plugins';
+			}
+			if ( $bad_plugins['to_deactivate'] ) {
+				$actions['deactivate-bad-old-plugins'] = 'deactivate-bad-old-plugins';
+			}
+		}
+
+		return $actions ? $actions : false;
+	}
+
+
 	/** Manual fix. ============================================================================= */
 
 	/**
@@ -310,8 +334,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 			// If plugin is in its own directory, recursively delete the directory.
 			if ( strpos( $plugin_file, '/' ) && $this_plugin_dir !== $plugins_dir ) { // base check on if plugin includes directory separator AND that its not the root plugin folder.
 				$deleted = $wp_filesystem->delete( $this_plugin_dir, true );
-			}
-			else {
+			} else {
 				$deleted = $wp_filesystem->delete( $plugins_dir . $plugin_file );
 			}
 
@@ -323,6 +346,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 
 				// Remove language files, silently.
 				$plugin_slug = dirname( $plugin_file );
+
 				if ( '.' !== $plugin_slug && ! empty( $plugin_translations[ $plugin_slug ] ) ) {
 					$translations = $plugin_translations[ $plugin_slug ];
 
