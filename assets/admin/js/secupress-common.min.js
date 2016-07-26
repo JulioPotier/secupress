@@ -1,4 +1,4 @@
-/* globals jQuery: false, wp: false, SecuPressi18nCommon: false, swal: false */
+/* globals jQuery: false, wp: false, SecuPressi18nCommon: false, secupressNotices: true, swal: false */
 
 /**
  * a11y function
