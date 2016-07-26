@@ -146,11 +146,8 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			}
 
 			// Row css class.
-			$row_css_class  = ' status-' . sanitize_html_class( $scan_status );
-			$row_css_class .= isset( $autoscans[ $class_name_part ] ) ? ' autoscan' : '';
-			$row_css_class .= $is_fixable ? ' fixable' : ' not-fixable';
-			$row_css_class .= ! empty( $fix['has_action'] ) ? ' status-hasaction' : '';
-			$row_css_class .= ! empty( $fix['status'] ) && empty( $fix['has_action'] ) ? ' has-fix-status' : ' no-fix-status';
+			$row_css_class  = 'secupress-item-' . $class_name_part;
+			$row_css_class .= ' status-' . sanitize_html_class( $scan_status );
 
 			//// to-check: are all status here?
 			switch( $scan_status ) {
@@ -177,7 +174,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 
 			?>
 
-				<div class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> status-all <?php echo $row_css_class; ?>" id="<?php echo $class_name_part; ?>">
+				<div class="secupress-item-all <?php echo $row_css_class; ?>" id="<?php echo $class_name_part; ?>">
 
 					<div class="secupress-flex">
 
@@ -283,7 +280,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			<div class="secupress-col-logo">
 				<?php echo secupress_get_logo( array( 'width' => 81 ), true ); ?>
 			</div>
-			<div class="secupress-col-summary-text secupress-flex secupress-flex-spaced">
+			<div class="secupress-col-summary-text secupress-flex secupress-flex-spaced secupress-wrap">
 				<p class="secupress-text-medium secupress-mb0"><?php _e( 'Perform a better grade<br> and unlock these awesome features', 'secupress' ); ?></p>
 
 

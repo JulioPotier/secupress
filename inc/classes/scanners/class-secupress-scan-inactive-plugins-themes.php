@@ -143,36 +143,37 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 	 * @return (array) The fix results.
 	 */
 	public function fix() {
-		$lists = static::get_inactive_plugins_and_themes();
-
-		// Inactive plugins.
-		if ( $count = count( $lists['plugins'] ) ) {
-			$this->add_fix_message( 300, array( $count, $count ) );
-			$this->add_fix_action( 'delete-inactive-plugins' );
-		}
-
-		// Inactive themes.
-		if ( $count = count( $lists['themes'] ) ) {
-			$this->add_fix_message( 301, array( $count, $count ) );
-			$this->add_fix_action( 'delete-inactive-themes' );
-		}
-
 		// "good"
-		$this->maybe_set_fix_status( 0 );
+		$this->add_fix_message( 0 );
 
 		return parent::fix();
 	}
 
 
+	/** Manual fix. ============================================================================= */
+
 	/**
-	 * Return true if a manual fix is needed here.
+	 * Return an array of actions if a manual fix is needed here.
 	 *
 	 * @since 1.0
 	 *
-	 * @return (bool)
+	 * @return (array)
 	 */
 	public function need_manual_fix() {
-		return true;
+		$lists   = static::get_inactive_plugins_and_themes();
+		$actions = array();
+
+		// Inactive plugins.
+		if ( $lists['plugins'] ) {
+			$actions['delete-inactive-plugins'] = 'delete-inactive-plugins';
+		}
+
+		// Inactive themes.
+		if ( $count = count( $lists['themes'] ) ) {
+			$actions['delete-inactive-themes'] = 'delete-inactive-themes';
+		}
+
+		return $actions;
 	}
 
 
@@ -324,11 +325,14 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 			$this->add_fix_message( 102, array( count( $not_removed ), $not_removed ) );
 		}
 
-		// Force refresh of plugin update information.
-		if ( $count_deleted && $current = get_site_transient( 'update_plugins' ) ) {
-			$current->response  = array_diff_key( $current->response, $deleted_plugins );
-			$current->no_update = array_diff_key( $current->no_update, $deleted_plugins );
-			set_site_transient( 'update_plugins', $current );
+		// Force refresh of plugin update information and cache.
+		if ( $deleted_plugins ) {
+			if ( $current = get_site_transient( 'update_plugins' ) ) {
+				$current->response  = array_diff_key( $current->response, $deleted_plugins );
+				$current->no_update = array_diff_key( $current->no_update, $deleted_plugins );
+				set_site_transient( 'update_plugins', $current );
+			}
+
 			wp_cache_delete( 'plugins', 'plugins' );
 		}
 	}

@@ -58,6 +58,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	wp_localize_script( 'secupress-common-js', 'SecuPressi18nCommon', array(
 		'confirmText'  => __( 'OK', 'secupress' ),
 		'cancelText'   => __( 'Cancel' ),
+		'closeText'   => __( 'Close' ),
 		'authswal'     => array(
 			'title'  => __( 'Authentication', 'secupress' ),
 			'email'  => __( 'Enter your email', 'secupress' ),
@@ -155,6 +156,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 
 		$localize = array(
 			'pluginSlug'         => SECUPRESS_PLUGIN_SLUG,
+			'step'               => $is_main ? secupress_get_scanner_pagination() : 0,
 			'confirmText'        => __( 'OK', 'secupress' ),
 			'cancelText'         => __( 'Cancel' ),
 			'error'              => __( 'Error', 'secupress' ),
@@ -168,6 +170,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'reScan'             => _x( 'Scan', 'verb', 'secupress' ),
 			'scanDetails'        => __( 'Scan Details', 'secupress' ),
 			'fixDetails'         => __( 'Fix Details', 'secupress' ),
+			'firstScanURL'       => esc_url( wp_nonce_url( secupress_admin_url( 'scanners' ), 'first_oneclick-scan' ) ) . '&oneclick-scan=1',
 			'supportTitle'       => __( 'Ask for Support', 'secupress' ),
 			'supportButton'      => __( 'Open a ticket', 'secupress' ),
 			'supportContentFree' => __( '<p>During the test phase, the support is done by sending a manual email on <b>contact@secupress.me</b>. Thank you!</p>', 'secupress' ), // ////.
@@ -184,11 +187,8 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		}
 
 		if ( ! empty( $_GET['oneclick-scan'] ) && ! empty( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'first_oneclick-scan' ) && current_user_can( secupress_get_capability() ) ) {
-			$items = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
+			$localize['firstOneClickScan'] = 1;
 
-			if ( ! $items ) {
-				$localize['firstOneClickScan'] = 1;
-			}
 			$_SERVER['REQUEST_URI'] = remove_query_arg( array( '_wpnonce', 'oneclick-scan' ) );
 		}
 
@@ -453,12 +453,16 @@ function __secupress_scanners() {
 									</ul><!-- .secupress-chart-legend -->
 
 									<div id="tweeterA" class="hidden">
-										<i><?php
+										<p>
+											<q>
+											<?php
 											/* translators: %s is the plugin name */
 											printf( esc_html__( 'Wow! My website just got an A security grade using %s, what about yours?', 'secupress' ), SECUPRESS_PLUGIN_NAME );
-										?></i>
+											?>
+											</q>
+										</p>
 
-										<a class="button button-small" href="https://twitter.com/intent/tweet?via=secupress&amp;url=<?php
+										<a class="secupress-button secupress-button-mini" href="https://twitter.com/intent/tweet?via=secupress&amp;url=<?php
 											/* translators: %s is the plugin name */
 											echo urlencode( esc_url_raw( 'http://secupress.fr&text=' . sprintf( __( 'Wow! My website just got an A security grade using %s, what about yours?', 'secupress' ), SECUPRESS_PLUGIN_NAME ) ) );
 										?>">
@@ -604,7 +608,7 @@ function __secupress_scanners() {
 					</h3>
 
 					<p class="secupress-start-one-click-scan">
-						<button class="secupress-button secupress-button-primary button-secupress-scan" type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ); ?>">
+						<button class="secupress-button secupress-button-primary secupress-button-scan" type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ); ?>">
 							<span class="icon" aria-hidden="true">
 								<i class="icon-radar"></i>
 							</span>

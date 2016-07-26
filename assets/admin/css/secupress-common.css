@@ -205,6 +205,9 @@
 .secupress-pt2.secupress-pt2 {
 	padding-top: 2em;
 }
+.secupress-pr1.secupress-pr1 {
+	padding-right: 1em;
+}
 
 /**
  * === Main Sections
@@ -249,12 +252,11 @@
 	padding: 5px 20px;
 }
 .secupress-section-mini .secupress-col-icon {
-    color: rgba(255, 255, 255, 0.25);
-    -webkit-flex-basis: 5%;
-	-ms-flex-preferred-size: 5%;
-    flex-basis: 5%;
-    font-size: 30px;
-    text-align: center;
+	flex-basis: 5%;
+	flex-grow: 0;
+	font-size: 30px;
+	text-align: center;
+	color: rgba(255, 255, 255, 0.25);
 }
 
 /* Buttons container */
@@ -739,6 +741,61 @@ body[class*="secupress"] .sweet-overlay {
 }
 .secupress-dot-warning {
 	background: #f19b12;
+}
+
+/**
+ * Response notices
+ * Default: success styles
+ */
+
+.secupress-response-notice {
+	margin: 1em auto;
+	padding: 8px 10px 8px 20px;
+	font-weight: bold;
+	color: #26B3A9;
+	background: #DFF8F6;
+	border-radius: 3px;
+}
+.secupress-response-notice button {
+	color: #26B3A9;
+	font-size: 16px;
+}
+.secupress-response-notice:before {
+	content: "\f00c";
+	width: 30px;
+	font-family: 'secupress';
+	font-size: 18px;
+	font-weight: normal;
+}
+.secupress-response-notice p:first-child {
+	margin-top: 0;
+}
+.secupress-response-notice p:last-child {
+	margin-bottom: 0;
+}
+.secupress-rn-warning {
+	color: #F39C12;
+	background: #FDF6DB;
+}
+.secupress-rn-warning button {
+	color: #F39C12;
+}
+.secupress-rn-warning:before {
+	content: "\e91f";
+}
+.secupress-rn-bad {
+	color: #F2295E;
+	background: #FDDFE7;
+}
+.secupress-rn-bad button {
+	color: #F2295E;
+}
+.secupress-rn-bad:before {
+	content: "\f00d";
+}
+.secupress-rn-actions {
+	flex-basis: 150px;
+	text-align: right;
 }
 
 /**

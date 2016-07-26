@@ -1,19 +1,84 @@
 /* globals jQuery: false, SecuPressi18nCommon: false, swal: false */
 (function($, d, w, undefined) {
 	var SecuPress = {
-		supportButtonColor:  "#F1C40F",
-		swal2Defaults:        {
-			confirmButtonText: SecuPressi18nCommon.confirmText,
-			cancelButtonText:  SecuPressi18nCommon.cancelText,
-			type:              "warning",
-			allowOutsideClick: true,
-			customClass:       "wpmedia-swal2 secupress-swal2"
+			supportButtonColor:  "#F1C40F",
+			swal2Defaults:        {
+				confirmButtonText: SecuPressi18nCommon.confirmText,
+				cancelButtonText:  SecuPressi18nCommon.cancelText,
+				type:              "warning",
+				allowOutsideClick: true,
+				customClass:       "wpmedia-swal2 secupress-swal2"
+			},
+			swal2ConfirmDefaults: {
+				showCancelButton:  true,
+				closeOnConfirm:    false
+			}
 		},
-		swal2ConfirmDefaults: {
-			showCancelButton:  true,
-			closeOnConfirm:    false
-		}
-	};
+
+		/**
+		 * a11y function
+		 */
+		secupressCouldSay = function( say ) {
+			if ( wp.a11y && wp.a11y.speak && undefined !== say && say ) {
+				wp.a11y.speak( say );
+			}
+		},
+
+		/**
+		 * Notices system
+		 */
+		spNotices = {
+			eventAdded: 0,
+			create: function( params ) {
+				
+				var defaults = {
+						type	: 'success', // success, warning, bad
+						message	: 'You should say something'
+					},
+					merged   = $.extend( {}, defaults, params ),
+					html     = '<div class="secupress-response-notice secupress-rn-' + merged.type + ' secupress-flex">'
+									+ '<div class="secupress-rn-message">'
+										+ merged.message
+									+ '</div>'
+									+ '<div class="secupress-rn-actions">'
+										+ '<button type="button" class="secupress-rn-close secupress-virgin">'
+											+ '<i class="icon-squared-cross" aria-hidden="true"></i>'
+											+ '<span class="screen-reader-text">' + SecuPressi18nCommon.closeText + '</span>'
+										+ '</button>'
+									+ '</div>'
+							   '</div>';
+
+				if ( ! spNotices.eventAdded ) {
+
+					spNotices.eventAdded = 1;
+					$( 'body' ).on( 'click.secupress', '.secupress-rn-close', function(){
+						spNotices.remove( $(this) );
+						return false;
+					});
+
+				}
+
+				return html;
+
+			},
+			remove: function( $el ) {
+				$el.closest( '.secupress-response-notice' ).spSlideUp(function(){
+					$(this).remove();
+				});
+			}
+		};
+
+	/**
+	 * Notice tests
+	 */
+	////
+	var message = 'Something to say',
+		good   = spNotices.create( { message: message } );
+		warning= spNotices.create( { type: 'warning', message: message } );
+		bad    = spNotices.create( { type: 'bad', message: message } );
+	
+	$('.secupress-ic-fix-actions').after( good );
+	secupressCouldSay( message );
 
 
 	/**
@@ -22,24 +87,36 @@
 	$.fn.spHide = function() {
 		return this.hide().attr( 'aria-hidden', true ).removeClass('secupress-open');
 	};
-	$.fn.spFadeIn = function() {
+	$.fn.spFadeIn = function( fallback ) {
 		return this.fadeIn(300, function(){
 			$(this).addClass('secupress-open');
+			if ( typeof fallback === 'function' ) {
+				fallback();
+			}
 		}).attr( 'aria-hidden', false );
 	};
-	$.fn.spFadeOut = function() {
+	$.fn.spFadeOut = function( fallback ) {
 		return this.fadeOut(300, function(){
 			$(this).removeClass('secupress-open');
+			if ( typeof fallback === 'function' ) {
+				fallback();
+			}
 		}).attr( 'aria-hidden', true );
 	};
-	$.fn.spSlideDown = function() {
+	$.fn.spSlideDown = function( fallback ) {
 		return this.slideDown(400, function(){
 			$(this).addClass('secupress-open');
+			if ( typeof fallback === 'function' ) {
+				fallback();
+			}
 		}).attr( 'aria-hidden', false );
 	};
-	$.fn.spSlideUp = function() {
+	$.fn.spSlideUp = function( fallback ) {
 		return this.slideUp(400, function(){
 			$(this).removeClass('secupress-open');
+			if ( typeof fallback === 'function' ) {
+				fallback();
+			}
 		}).attr( 'aria-hidden', true );
 	};
 	$.fn.spAnimate = function( effect ) {

@@ -29,7 +29,7 @@ if ( SecuPressi18nModules.alreadyScanned == 0 ) {
 					  		+ SecuPressi18nModules.firstScanText
 					  + '</p>'
 					  + '<p class="secupress-mt1 secupress-mb1">'
-					  		+ '<a class="secupress-button secupress-button-primary button-secupress-scan shadow" href="' + SecuPressi18nModules.firstScanURL + '">'
+					  		+ '<a class="secupress-button secupress-button-primary secupress-button-scan shadow" href="' + SecuPressi18nModules.firstScanURL + '">'
 					  			+ '<span class="icon">'
 									+ '<i class="icon-radar" aria-hidden="true"></i>'
 								+ '</span>'

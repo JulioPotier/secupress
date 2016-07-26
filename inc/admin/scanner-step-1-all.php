@@ -1,12 +1,10 @@
-<?php
-if ( ! $is_subsite ) {
+<div class="secupress-scans-group secupress-group-<?php echo $module_name; ?>">
+	<?php
+	if ( ! $is_subsite ) {
 		$module_icon    = ! empty( $modules[ $module_name ]['icon'] )               ? $modules[ $module_name ]['icon']               : '';
 		$module_title   = ! empty( $modules[ $module_name ]['title'] )              ? $modules[ $module_name ]['title']              : '';
 		$module_summary = ! empty( $modules[ $module_name ]['summaries']['small'] ) ? $modules[ $module_name ]['summaries']['small'] : '';
-?>
-
-<div class="secupress-scans-group secupress-group-<?php echo $module_name; ?>">
-
+		?>
 		<div class="secupress-sg-header secupress-flex secupress-flex-spaced">
 
 			<div class="secupress-sgh-name">
@@ -27,9 +25,10 @@ if ( ! $is_subsite ) {
 			</div>
 
 		</div><!-- .secupress-sg-header -->
-<?php
-}
-?>
+		<?php
+	}
+	?>
+
 	<div id="secupress-group-content-<?php echo $module_name; ?>" class="secupress-sg-content">
 		<?php
 		foreach ( $class_name_parts as $option_name => $class_name_part ) {
@@ -49,10 +48,11 @@ if ( ! $is_subsite ) {
 			}
 
 			// Row css class.
-			$row_css_class  = ' status-' . sanitize_html_class( $scan_status );
+			$row_css_class  = 'secupress-item-' . $class_name_part;
+			$row_css_class .= ' status-' . sanitize_html_class( $scan_status );
 			$row_css_class .= isset( $autoscans[ $class_name_part ] ) ? ' autoscan' : '';
 			?>
-			<div class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> status-all <?php echo $row_css_class; ?>" id="<?php echo $class_name_part; ?>">
+			<div class="secupress-item-all <?php echo $row_css_class; ?>" id="<?php echo $class_name_part; ?>">
 
 				<div class="secupress-flex">
 
@@ -108,7 +108,8 @@ if ( ! $is_subsite ) {
 				</div><!-- .secupress-item-details -->
 			</div><!-- .secupress-item-all -->
 			<?php
-		} // end
+		} // Eo foreach $class_name_parts.
 		?>
 	</div><!-- .secupress-sg-content -->
-</div><!-- .secupress-group-<?php echo $module_name; ?> -->
+</div><!-- .secupress-scans-group -->
+<?php

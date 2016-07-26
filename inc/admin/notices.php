@@ -282,7 +282,7 @@ function secupress_warning_no_oneclick_scan_yet() {
 			<p><?php esc_html_e( 'Scan every security points for the first time in your website, right now.', 'secupress' ); ?></p>
 		</div>
 		<div class="secupress-col-1-4 secupress-col-cta">
-			<a class="secupress-button secupress-button-primary button-secupress-scan" href="<?php echo esc_url( wp_nonce_url( secupress_admin_url( 'scanners' ), 'first_oneclick-scan' ) ) . '&oneclick-scan=1'; ?>">
+			<a class="secupress-button secupress-button-primary secupress-button-scan" href="<?php echo esc_url( wp_nonce_url( secupress_admin_url( 'scanners' ), 'first_oneclick-scan' ) ) . '&oneclick-scan=1'; ?>">
 				<span class="icon">
 					<i class="icon-radar" aria-hidden="true"></i>
 				</span>

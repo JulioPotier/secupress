@@ -77,7 +77,7 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 			206 => __( 'Sorry, the role cannot be removed from the %s account. You should try to remove it manually.', 'secupress' ),
 			207 => __( 'Sorry, the %s account could not be created. You should try to create it manually and then remove its role.', 'secupress' ),
 			// "cantfix"
-			300 => __( 'Oh! The %s account is yours! Please choose a new login for your account.', 'secupress' ),
+			300 => __( 'Oh! The %s account is yours! Please choose a new login for your account on next step.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -167,7 +167,6 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 			else {
 				// This fix requires the user to take action.
 				$this->add_fix_message( 300, array( '<em>' . $username . '</em>' ) );
-				$this->add_fix_action( 'rename-admin-username' );
 			}
 		}
 
@@ -199,11 +198,11 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 
 
 	/**
-	 * Return true if a manual fix is needed here.
+	 * Return an array of actions if a manual fix is needed here.
 	 *
 	 * @since 1.0
 	 *
-	 * @return (bool)
+	 * @return (array)
 	 */
 	public function need_manual_fix() {
 		$username = 'admin';
@@ -212,10 +211,12 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 		// The "admin" account exists and has a role or capabilities.
 		if ( static::user_has_capas( $user_id ) ) {
 			// It's you!
-			return $user_id === get_current_user_id();
+			if ( $user_id === get_current_user_id() ) {
+				return array( 'rename-admin-username' => 'rename-admin-username' );
+			}
 		}
 
-		return false;
+		return array();
 	}
 
 
@@ -236,19 +237,15 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 		if ( 'admin' === $username ) {
 			// "bad"
 			$this->add_fix_message( 202, array( '<em>' . $username . '</em>' ) );
-			$this->add_fix_action( 'rename-admin-username' );
 		} elseif ( ! $username ) {
 			// "bad"
 			$this->add_fix_message( 203 );
-			$this->add_fix_action( 'rename-admin-username' );
 		} elseif ( username_exists( $username ) ) {
 			// "bad"
 			$this->add_fix_message( 204, array( '<em>' . $username . '</em>' ) );
-			$this->add_fix_action( 'rename-admin-username' );
 		} elseif ( sanitize_user( $username, true ) !== $username ) {
 			// "bad"
 			$this->add_fix_message( 205, array( '<em>' . $username . '</em>', '<em>' . sanitize_user( $username, true ) . '</em>' ) );
-			$this->add_fix_action( 'rename-admin-username' );
 		} else {
 			// $username ok, can't rename now or all nonces will be broken and the user disconnected
 			$current_user_id = get_current_user_id();
