@@ -67,7 +67,7 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Inter
 			// "bad"
 			200 => __( 'Your website should block <strong>SQL Injection</strong>.', 'secupress' ),
 		);
-d
+
 		if ( isset( $message_id ) ) {
 			return isset( $messages[ $message_id ] ) ? $messages[ $message_id ] : __( 'Unknown message', 'secupress' );
 		}
