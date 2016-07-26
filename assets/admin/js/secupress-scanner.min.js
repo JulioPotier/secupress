@@ -543,7 +543,6 @@ jQuery( document ).ready( function( $ ) {
 				secupressProgressTimer;
 
 			$main_header.addClass( 'secupress-scanning' );
-
 			$( '.secupress-scanned-total' ).text( secupressScans.total );
 
 			secupressProgressTimer = setInterval( function() {
