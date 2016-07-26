@@ -55,6 +55,9 @@
 	font-size: 35px;
 	color: #26B3A9;
 }
+.secupress-label-with-icon .icon-secupress {
+	top: 2px;
+}
 .secupress-label-with-icon i.rounded {
 	font-size: 16px;
 	border-color: #F39C12;
@@ -1081,7 +1084,7 @@ a + .secupress-row-actions {
 .secupress-mfh-name i {
 	position: absolute;
 	right: -65px;
-	bottom: -10px;
+	bottom: -5px;
 	font-size: 48px;
 	color: rgba(236, 240, 241, 0.2);
 }
@@ -1184,6 +1187,7 @@ a + .secupress-row-actions {
 	padding: 25px 5px 25px 25px;
 }
 .secupress-summary-header .secupress-text-medium {
+	flex-basis: 60%;
 	font-size: 24px;
 	margin-top: 0;
 }

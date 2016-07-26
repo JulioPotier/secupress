@@ -280,7 +280,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			<div class="secupress-col-logo">
 				<?php echo secupress_get_logo( array( 'width' => 81 ), true ); ?>
 			</div>
-			<div class="secupress-col-summary-text secupress-flex secupress-flex-spaced">
+			<div class="secupress-col-summary-text secupress-flex secupress-flex-spaced secupress-wrap">
 				<p class="secupress-text-medium secupress-mb0"><?php _e( 'Perform a better grade<br> and unlock these awesome features', 'secupress' ); ?></p>
 
 

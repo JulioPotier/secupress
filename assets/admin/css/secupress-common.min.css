@@ -205,6 +205,9 @@
 .secupress-pt2.secupress-pt2 {
 	padding-top: 2em;
 }
+.secupress-pr1.secupress-pr1 {
+	padding-right: 1em;
+}
 
 /**
  * === Main Sections
@@ -249,12 +252,11 @@
 	padding: 5px 20px;
 }
 .secupress-section-mini .secupress-col-icon {
-    color: rgba(255, 255, 255, 0.25);
-    -webkit-flex-basis: 5%;
-	-ms-flex-preferred-size: 5%;
-    flex-basis: 5%;
-    font-size: 30px;
-    text-align: center;
+	flex-basis: 5%;
+	flex-grow: 0;
+	font-size: 30px;
+	text-align: center;
+	color: rgba(255, 255, 255, 0.25);
 }
 
 /* Buttons container */
