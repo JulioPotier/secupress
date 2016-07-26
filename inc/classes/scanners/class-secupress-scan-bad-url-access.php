@@ -52,9 +52,9 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 		}
 
 		if ( $is_nginx ) {
-			$this->more_fix = sprintf( __( 'Since your %s file cannot be edited automatically, this will give you the rules to add into it manually, to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>nginx.conf</code>' );
+			$this->more_fix = sprintf( __( 'The %s file cannot be edited automatically, this will give you the rules to add into it manually, to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>nginx.conf</code>' );
 		} elseif ( $this->fixable ) {
-			$this->more_fix = sprintf( __( 'This will add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), "<code>$config_file</code>" );
+			$this->more_fix = sprintf( __( 'Add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), "<code>$config_file</code>" );
 		} else {
 			$this->more_fix = static::get_messages( 301 );
 		}
@@ -74,10 +74,10 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 		$messages = array(
 			// "good"
 			0   => __( 'Your site does not reveal sensitive informations.', 'secupress' ),
-			1   => __( 'Your %s file has been successfully edited.', 'secupress' ),
+			1   => __( 'Rules avoiding sensitive informations disclosure has been added to your %s file.', 'secupress' ),
 			// "warning"
 			/* translators: %s is a URL, or a list of URLs. */
-			100 => __( 'Unable to determine status of %s.', 'secupress' ),
+			100 => __( 'Unable to determine if %s reveal sensitive informations.', 'secupress' ),
 			// "bad"
 			/* translators: %s is a URL, or a list of URLs. */
 			200 => _n_noop( '%s should not be accessible by anyone.', '%s should not be accessible by anyone.', 'secupress' ),
@@ -86,9 +86,9 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 			300 => sprintf( __( 'Your server runs a nginx system, the sensitive information disclosure cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
 			301 => __( 'Your server runs a non recognized system. The sensitive information disclosure cannot be fixed automatically.', 'secupress' ),
 			/* translators: 1 is a file name, 2 is some code */
-			302 => __( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ),
+			302 => __( 'Your %1$s file does not seem to be writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ),
 			/* translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
-			303 => __( 'Your %1$s file is not writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ),
+			303 => __( 'Your %1$s file does not seem writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {

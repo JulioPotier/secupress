@@ -42,7 +42,7 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 		$this->title    = sprintf( __( 'Check if the %s plugin discloses its version.', 'secupress' ), 'WooCommerce' );
 		$this->more     = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of informations. His goal is to find outdated versions of your server softwares or WordPress components. Don\'t let them easily find these informations.', 'secupress' );
 		/* translators: %s is a plugin name */
-		$this->more_fix = sprintf( __( 'This will hide the %s version to avoid being read by attackers.', 'secupress' ), 'WooCommerce' );
+		$this->more_fix = sprintf( __( 'Hide the %s version to avoid being read by attackers.', 'secupress' ), 'WooCommerce' );
 	}
 
 
@@ -66,10 +66,10 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 			/* translators: %s is a plugin name */
 			3   => sprintf( __( 'The %s\'s version should be removed from your scripts URL now.', 'secupress' ), 'WooCommerce' ),
 			// "warning"
-			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
+			100 => sprintf( __( 'Unable to determine if %s is disclosing its version on your homepage.', 'secupress' ), 'WooCommerce' ),
 			// "bad"
 			/* translators: 1 is a plugin name, 2 is some related info */
-			200 => sprintf( __( 'The website displays the <strong>%1$s\'s version</strong> in the homepage source code (%2$s).', 'secupress' ), 'WooCommerce', '%s' ),
+			200 => sprintf( __( 'The %s plugin displays its version in your homepage source code (%2$s).', 'secupress' ), 'WooCommerce', '%s' ),
 		);
 
 		if ( isset( $message_id ) ) {

@@ -41,14 +41,14 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 	 *
 	 * @var (string)
 	 */
-	public static $php_ver_min = '5.5.30';
+	public static $php_ver_min = '5.5.38';
 
 	/**
 	 * Maximum php version.
 	 *
 	 * @var (string)
 	 */
-	public static $php_ver_best = '5.6.15';
+	public static $php_ver_best = '5.6.24';
 
 	/**
 	 * Tells if a scanner is fixable by SecuPress. The value "pro" means it's fixable only with the version PRO.
@@ -107,7 +107,7 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 			// "bad"
 			200   => sprintf( __( 'You are using <strong>PHP v%1$s</strong>, but the latest supported version is <strong>PHP v%2$s</strong>, and the best is <strong>PHP v%3$s</strong>.', 'secupress' ), static::$php_version, static::$php_ver_min, static::$php_ver_best ),
 			// "cantfix"
-			300 => __( 'This cannot be automatically fixed. You have to contact you host provider to ask him to <strong>upgrade you version of PHP</strong>.', 'secupress' ),
+			300 => __( 'Cannot be fixed automatically. You have to contact you host provider to ask him to <strong>upgrade you version of PHP</strong>.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {

@@ -13,13 +13,13 @@ if ( $flag_first_iteration ) {
 			<div class="secupress-sgh-name">
 				<i class="icon-secupress" aria-hidden="true"></i>
 				<p class="secupress-sgh-title"><?php printf( esc_html__( '%sNew Items', 'secupress' ), ( SECUPRESS_PLUGIN_NAME === 'SecuPress' ? SECUPRESS_PLUGIN_NAME . ' ' . SECUPRESS_VERSION . ' ' : '' ) ); ?></p>
-				<p class="secupress-sgh-description"><?php _e( 'These new points have to be scanned now.', 'secupress' ); ?></p>
+				<p class="secupress-sgh-description"><?php _e( 'This new items need to be checked: You will need to rescan your website.', 'secupress' ); ?></p>
 			</div>
 
 			<div class="secupress-sgh-actions secupress-flex">
 				<button class="secupress-vnormal hide-if-no-js dont-trigger-hide trigger-hide-first" type="button" data-trigger="slidetoggle" data-target="secupress-group-content-<?php echo $module_name; ?>">
 					<i class="icon-angle-up" aria-hidden="true"></i>
-					<span class="screen-reader-text"><?php _e( 'Show/hide panel', 'secupress' ); ?></span>
+					<span class="screen-reader-text"><?php _e( 'Show/Hide panel', 'secupress' ); ?></span>
 				</button>
 			</div>
 
@@ -71,7 +71,7 @@ if ( $flag_first_iteration ) {
 							<i class="icon-refresh"></i>
 						</span>
 						<span class="text">
-							<?php echo 'notscannedyet' === $scan_status ? _x( 'Scan', 'verb', 'secupress' ) : _x( 'Re-Scan', 'verb', 'secupress' ); ?>
+							<?php _ex( 'Scan', 'verb', 'secupress' ); ?>
 						</span>
 					</a><br class="hide-if-js">
 

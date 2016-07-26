@@ -47,7 +47,7 @@ class SecuPress_Scan_Plugins_Update extends SecuPress_Scan implements SecuPress_
 	protected function init() {
 		$this->title    = __( 'Check if your plugins are up to date.', 'secupress' );
 		$this->more     = __( 'It is very important to maintain your WordPress installation up to date. If you can not update because of a plugin, contact its author and submit your issue.', 'secupress' );
-		$this->more_fix = __( 'This will update all your plugins that are not up to date.', 'secupress' );
+		$this->more_fix = __( 'Update all your plugins that are not up to date.', 'secupress' );
 	}
 
 
@@ -65,12 +65,12 @@ class SecuPress_Scan_Plugins_Update extends SecuPress_Scan implements SecuPress_
 			// "good"
 			0   => __( 'Your plugins are up to date.', 'secupress' ),
 			// "warning"
-			100 => _n_noop( '<strong>%d symlinked plugin</strong> is not up to date, and I cannot update it automatically.', '<strong>%d symlinked plugins</strong> are not up to date, and I cannot update them automatically.', 'secupress' ),
+			100 => _n_noop( '<strong>%d symlinked plugin</strong> is not up to date, and cannot be updated automatically.', '<strong>%d symlinked plugins</strong> are not up to date, and cannot be updated automatically.', 'secupress' ),
 			// "bad"
 			200 => _n_noop( '<strong>%1$d plugin</strong> is not up to date: %2$s.', '<strong>%1$d plugins</strong> are not up to date: %2$s.', 'secupress' ),
 			// "cantfix"
 			300 => __( 'Some plugins could not be updated correctly.', 'secupress' ),
-			301 => _n_noop( '<strong>%d symlinked plugin</strong> is not up to date, and I cannot update it automatically.', '<strong>%d symlinked plugins</strong> are not up to date, and I cannot update them automatically.', 'secupress' ),
+			301 => _n_noop( '<strong>%d symlinked plugin</strong> is not up to date, and cannot be updated automatically.', '<strong>%d symlinked plugins</strong> are not up to date, and cannot be updated automatically.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {

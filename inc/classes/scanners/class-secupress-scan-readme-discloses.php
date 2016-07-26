@@ -53,9 +53,9 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 		}
 
 		if ( $is_nginx ) {
-			$this->more_fix = sprintf( __( 'Since your %s file cannot be edited automatically, this will give you the rules to add into it manually, to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>nginx.conf</code>' );
+			$this->more_fix = sprintf( __( 'The %s file cannot be edited automatically, this will give you the rules to add into it manually, to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>nginx.conf</code>' );
 		} elseif ( $this->fixable ) {
-			$this->more_fix = sprintf( __( 'This will add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), "<code>$config_file</code>" );
+			$this->more_fix = sprintf( __( 'Ddd rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), "<code>$config_file</code>" );
 		} else {
 			$this->more_fix = static::get_messages( 301 );
 		}
@@ -75,24 +75,24 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 		$messages = array(
 			// "good"
 			/* translators: %s is a file name */
-			0   => sprintf( __( 'The %s files are protected.', 'secupress' ), '<code>readme.txt</code>' ),
+			0   => sprintf( __( 'The %s files are protected from revealing sensitive informations.', 'secupress' ), '<code>readme.txt</code>' ),
 			/* translators: 1 and 2 are file names */
 			1   => sprintf( __( 'The rules forbidding access to your %1$s files have been successfully added to your %2$s file.', 'secupress' ), '<code>readme.txt</code>', '%s' ),
 			// "warning"
 			/* translators: %s is a file name */
-			100 => sprintf( __( 'Unable to determine status of the %s files.', 'secupress' ), '<code>readme.txt</code>' ),
+			100 => sprintf( __( 'Unable to determine status of the %s files that revealing sensitive informations.', 'secupress' ), '<code>readme.txt</code>' ),
 			// "bad"
 			/* translators: %s is a file name */
-			200 => sprintf( __( 'The %s files should not be accessible to anyone.', 'secupress' ), '<code>readme.txt</code>' ),
+			200 => sprintf( __( 'The %s files should not be accessible to anyone because they are revealing sensitive informations.', 'secupress' ), '<code>readme.txt</code>' ),
 			// "cantfix"
 			/* translators: 1 and 2 are a file names, 3 is some code */
 			300 => sprintf( __( 'Your server runs a nginx system, the %1$s files cannot be protected automatically but you can do it yourself by adding the following code into your %2$s file: %3$s', 'secupress' ), '<code>readme.txt</code>', '<code>nginx.conf</code>', '%s' ),
 			/* translators: %s is a file name */
 			301 => sprintf( __( 'Your server runs a non recognized system. The %s files cannot be protected automatically.', 'secupress' ), '<code>readme.txt</code>' ),
 			/* translators: 1 is a file name, 2 is some code */
-			302 => __( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ),
+			302 => __( 'Your %1$s file does not seem to be writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ),
 			/* translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
-			303 => __( 'Your %1$s file is not writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ),
+			303 => __( 'Your %1$s file does not seem to be writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {

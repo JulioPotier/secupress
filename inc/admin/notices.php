@@ -146,7 +146,7 @@ function secupress_warning_wp_config_permissions() {
 	}
 
 	$message  = sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
-	$message .= sprintf( __( 'It seems we don\'t have <a href="%1$s" target="_blank">writing permissions</a> on %2$s file.', 'secupress' ), 'http://codex.wordpress.org/Changing_File_Permissions', '<code>wp-config.php</code>' );
+	$message .= sprintf( __( 'The %1$s file does not seem to be writable, read more about the <a href="%2$s" target="_blank">writing permissions</a>.', 'secupress' ), '<code>wp-config.php</code>', 'http://codex.wordpress.org/Changing_File_Permissions' );
 
 	secupress_add_notice( $message, 'error', 'wpconfig-not-writable' );
 }

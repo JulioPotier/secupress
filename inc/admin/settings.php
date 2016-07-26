@@ -165,7 +165,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'oneManualFix'       => __( 'One fix requires your intervention.', 'secupress' ),
 			'someManualFixes'    => __( 'Some fixes require your intervention.', 'secupress' ),
 			'spinnerUrl'         => admin_url( 'images/wpspin_light-2x.gif' ),
-			'reScan'             => _x( 'Re-Scan', 'verb', 'secupress' ),
+			'reScan'             => _x( 'Scan', 'verb', 'secupress' ),
 			'scanDetails'        => __( 'Scan Details', 'secupress' ),
 			'fixDetails'         => __( 'Fix Details', 'secupress' ),
 			'supportTitle'       => __( 'Ask for Support', 'secupress' ),
@@ -549,7 +549,7 @@ function __secupress_scanners() {
 									<span class="secupress-label-with-icon">
 										<i class="icon-calendar rounded" aria-hidden="true"></i>
 										<span class="secupress-upper"><?php esc_html_e( 'Schedule Scans', 'secupress' ); ?></span>
-										<span class="secupress-description"><?php esc_html_e( 'Program recurring scans', 'secupress' ); ?></span>
+										<span class="secupress-description"><?php esc_html_e( 'Manage your recurring scans', 'secupress' ); ?></span>
 									</span>
 								</a>
 							</li>
@@ -566,19 +566,19 @@ function __secupress_scanners() {
 						<div class="secupress-rescan-progress-infos">
 							<h3>
 								<i class="icon-secupress" aria-hidden="true"></i><br>
-								
+
 								<?php echo $currently_scanning_text; ?>
 
 							</h3>
 						</div>
 						<p class="secupress-rescan-actions">
-							<span class="screen-reader-text"><?php esc_html_e( 'Doubts? Try a re-scan.', 'secupress' ); ?></span>
+							<span class="screen-reader-text"><?php esc_html_e( 'Doubts? Try a new scan.', 'secupress' ); ?></span>
 							<button class="secupress-button secupress-button-primary button-secupress-scan" type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ); ?>">
 								<span class="icon" aria-hidden="true">
 									<i class="icon-radar"></i>
 								</span>
 								<span class="text">
-									<?php _e( 'Re-scan website', 'secupress' ); ?>
+									<?php _e( 'Scan website', 'secupress' ); ?>
 								</span>
 
 								<span class="secupress-progressbar-val" style="width:2%;">
@@ -686,9 +686,9 @@ function __secupress_scanners() {
 									<div class="secupress-blob-icon" aria-hidden="true">
 										<i class="icon-radar"></i>
 									</div>
-									<p class="secupress-blob-title"><?php esc_html_e('Security Report', 'secupress'); ?></p>
+									<p class="secupress-blob-title"><?php esc_html_e( 'Security Report', 'secupress' ); ?></p>
 									<div class="secupress-blob-content" id="sp-step-1-d">
-										<p><?php esc_html_e( 'Start a checking of all security points with the One Click Scan button.', 'secupress' ); ?></p>
+										<p><?php esc_html_e( 'Start to check all security items with the Scan your website button.', 'secupress' ); ?></p>
 									</div>
 								</div>
 							</div><!-- .secupress-col-1-4 -->
@@ -699,7 +699,7 @@ function __secupress_scanners() {
 									</div>
 									<p class="secupress-blob-title"><?php esc_html_e( 'Auto-Fix', 'secupress' ) ?></p>
 									<div class="secupress-blob-content" id="sp-step-2-d">
-										<p><?php esc_html_e( 'Start to fix issues by selecting the ones you want to be automagically fixed.', 'secupress' ); ?></p>
+										<p><?php esc_html_e( 'Launch the auto-fix on selected issues.', 'secupress' ); ?></p>
 									</div>
 								</div>
 							</div><!-- .secupress-col-1-4 -->
@@ -719,9 +719,9 @@ function __secupress_scanners() {
 									<div class="secupress-blob-icon" aria-hidden="true">
 										<i class="icon-pad-check"></i>
 									</div>
-									<p class="secupress-blob-title"><?php _e('Resolutions Report', 'secupress'); ?></p>
+									<p class="secupress-blob-title"><?php esc_html_e( 'Resolutions Report', 'secupress' ); ?></p>
 									<div class="secupress-blob-content" id="sp-step-4-d">
-										<p><?php esc_html_e( 'Get a report about the security of your website after those operations.', 'secupress' ); ?></p>
+										<p><?php esc_html_e( 'Get the new security report about your website.', 'secupress' ); ?></p>
 									</div>
 								</div><!-- .secupress-blob -->
 							</div><!-- .secupress-col-1-4 -->

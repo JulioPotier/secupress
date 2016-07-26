@@ -68,7 +68,7 @@ if ( ! $is_subsite ) {
 								<i class="icon-refresh"></i>
 							</span>
 							<span class="text">
-								<?php echo 'notscannedyet' === $scan_status ? _x( 'Scan', 'verb', 'secupress' ) : _x( 'Re-Scan', 'verb', 'secupress' ); ?>
+								<?php _ex( 'Scan', 'verb', 'secupress' ); ?>
 							</span>
 						</a><br class="hide-if-js">
 

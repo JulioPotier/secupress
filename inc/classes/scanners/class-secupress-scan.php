@@ -1134,19 +1134,19 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 
 		// Create folder.
 		if ( ! $wp_filesystem->mkdir( $folder_path ) ) {
-			return new WP_Error( 'dir_creation_failed', __( 'The sandbox could not be created.', 'secupress' ) );
+			return new WP_Error( 'dir_creation_failed', __( 'The temporary directory could not be created.', 'secupress' ) );
 		}
 
 		// Create `secupress.html` file.
 		if ( ! $wp_filesystem->put_contents( $folder_path . '/secupress.html', 'You are here.', FS_CHMOD_FILE ) ) {
 			$wp_filesystem->delete( $folder_path, true );
-			return new WP_Error( 'file_creation_failed', __( 'The sandbox could not be created.', 'secupress' ) );
+			return new WP_Error( 'file_creation_failed', __( 'The temporary directory could not be created.', 'secupress' ) );
 		}
 
 		// Create `.htaccess` file with our content.
 		if ( ! $wp_filesystem->put_contents( $folder_path . '/.htaccess', $content, FS_CHMOD_FILE ) ) {
 			$wp_filesystem->delete( $folder_path, true );
-			return new WP_Error( 'htaccess_creation_failed', __( 'The sandbox could not be created.', 'secupress' ) );
+			return new WP_Error( 'htaccess_creation_failed', __( 'The temporary directory could not be created.', 'secupress' ) );
 		}
 
 		// Try to reach `secupress.html`.

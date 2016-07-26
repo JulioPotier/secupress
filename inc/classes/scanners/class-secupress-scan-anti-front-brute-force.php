@@ -2,13 +2,13 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /**
- * Anti Front Bruteforce scan class.
+ * Anti Front Brute-Force scan class.
  *
  * @package SecuPress
  * @subpackage SecuPress_Scan
  * @since 1.0
  */
-class SecuPress_Scan_Anti_Front_Bruteforce extends SecuPress_Scan implements SecuPress_Scan_Interface {
+class SecuPress_Scan_Anti_Front_Brute_Force extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
 	/** Constants. ============================================================================== */
 
@@ -49,7 +49,7 @@ class SecuPress_Scan_Anti_Front_Bruteforce extends SecuPress_Scan implements Sec
 		$this->more     = __( 'Nobody needs to load more than 10 pages per second on your front-end, back-end or login page. You should block the requests\' owner.', 'secupress' );
 		$this->more_fix = sprintf(
 			__( 'This will activate the <strong>%1$s</strong> from the module %2$s.', 'secupress' ),
-			__( 'Anti Front Bruteforce', 'secupress' ),
+			__( 'Anti Front Brute-Force', 'secupress' ),
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bruteforce_activated">' . __( 'Firewall', 'secupress' ) . '</a>'
 		);
 	}
@@ -68,12 +68,10 @@ class SecuPress_Scan_Anti_Front_Bruteforce extends SecuPress_Scan implements Sec
 		$messages = array(
 			// "good"
 			0   => __( 'Your website seems to be protected by multiple and quick requests.', 'secupress' ),
-			1   => __( 'The <strong>Anti Front Bruteforce</strong> module has been activated.', 'secupress' ),
-			// "warning"
-			100 => __( 'Unable to determinate status of your homepage.', 'secupress' ),
+			1   => __( 'The <strong>Anti Front Brute-Force</strong> module has been activated.', 'secupress' ),
 			// "bad"
 			200 => __( 'Your website is not protected from multiple and quick requests.', 'secupress' ),
-			201 => sprintf( __( 'Our module <a href="%s">%s</a> could fix this.', 'secupress' ), esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bruteforce_activated', __( 'Anti Front Bruteforce', 'secupress' ) ),
+			201 => sprintf( __( 'Our module <a href="%s">%s</a> could fix this.', 'secupress' ), esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bruteforce_activated', __( 'Anti Front Brute-Force', 'secupress' ) ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -102,7 +100,7 @@ class SecuPress_Scan_Anti_Front_Bruteforce extends SecuPress_Scan implements Sec
 		delete_site_transient( 'secupress_dont_ban_me_on_bruteforce' );
 
 		// "good"
-		$this->maybe_set_status( 200 );
+		$this->maybe_set_status( 0 );
 
 		return parent::scan();
 	}

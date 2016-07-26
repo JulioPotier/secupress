@@ -41,7 +41,7 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements SecuP
 		$this->title    = __( 'Check if bad request methods can reach your website.', 'secupress' );
 		$this->more     = __( 'There are malicious scripts and bots out there, hammering your site with bad HTTP GET requests. Let\'s check if your website can handle that.', 'secupress' );
 		$this->more_fix = sprintf(
-			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
+			__( 'Activate the option %1$s from the module %2$s.', 'secupress' ),
 			'<em>' . __( 'Block Bad Request Methods', 'secupress' ) . '</em>',
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-headers_request-methods-header">' . __( 'Firewall', 'secupress' ) . '</a>'
 		);

@@ -115,7 +115,7 @@ function secupress_get_scanners() {
 			'Bad_User_Agent',
 			'SQLi',
 			'Anti_Scanner',
-			'Anti_Front_Bruteforce',
+			'Anti_Front_Brute_Force',
 			'Bad_Request_Methods',
 			'Block_HTTP_1_0',
 			'Block_Long_URL',

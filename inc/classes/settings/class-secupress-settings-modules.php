@@ -274,7 +274,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			<li>
 				<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ); ?>" class="module-pro">
 					<span class="secupress-tab-name"><?php esc_html_e( 'Get Pro', 'secupress' ); ?></span>
-					<span class="secupress-tab-summary"><?php printf( __( 'Buy %s Pro', 'secupress' ), SECUPRESS_PLUGIN_NAME ); ?></span>
+					<span class="secupress-tab-summary"><?php esc_html_e( 'Choose your licence', 'secupress' ); ?></span>
 					<i class="icon-secupress-simple" aria-hidden="true"></i>
 				</a>
 			</li>

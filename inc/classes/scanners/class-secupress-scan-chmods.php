@@ -40,7 +40,7 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Int
 	protected function init() {
 		$this->title    = __( 'Check if your files and folders have the correct write permissions (chmod).', 'secupress' );
 		$this->more     = __( 'CHMOD is the way to give read/write/execute rights to a file or a folder. The bad guy is known as <code>0777</code> and should be avoided. This test will check some strategic files and folders.', 'secupress' );
-		$this->more_fix = __( 'This will change the files mode to the recommended one for each bad mode.', 'secupress' );
+		$this->more_fix = __( 'Change the files permissions to the recommended one for each bad rule.', 'secupress' );
 	}
 
 
@@ -59,7 +59,7 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Int
 			0   => __( 'All files permissions are good.', 'secupress' ),
 			1   => __( 'All files permissions are fixed.', 'secupress' ),
 			// "warning"
-			100 => __( 'Unable to determine status of %s.', 'secupress' ),
+			100 => __( 'Unable to determine the file permissions of %s.', 'secupress' ),
 			// "bad"
 			200 => _x( 'File permissions for %1$s <strong>should be %2$s</strong>, NOT %3$s!', '1: file path, 2: chmod required, 3: current chmod', 'secupress' ),
 			201 => __( 'Unable to apply new file permissions to %s.', 'secupress' ),

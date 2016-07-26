@@ -40,7 +40,7 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements SecuPres
 	protected function init() {
 		$this->title    = __( 'Check if your installation contains old or backed up <code>wp-config.php</code> files like <code>wp-config.bak</code>, <code>wp-config.old</code> etc.', 'secupress' );
 		$this->more     = __( 'Some attackers will try to find some old and backed up config files to try to steal them. Avoid this kind of attack just by removing them.', 'secupress' );
-		$this->more_fix = __( 'This will rename all these files using a random name and using the <code>.php</code> extension to avoid being downloaded.', 'secupress' );
+		$this->more_fix = __( 'Rename all these files using a random name and using the <code>.php</code> extension to avoid being downloaded.', 'secupress' );
 	}
 
 
@@ -57,13 +57,13 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements SecuPres
 		$messages = array(
 			// "good"
 			0   => __( 'You don\'t have old <code>wp-config</code> files.', 'secupress' ),
-			1   => _n_noop( 'The file was successfully suffixed with %s.', 'All files were successfully suffixed with %s.', 'secupress' ),
+			1   => _n_noop( 'Your old <code>wp-config.php</code> file was successfully suffixed with %s.', 'Your old <code>wp-config.php</code> files were successfully suffixed with %s.', 'secupress' ),
 			// "warning"
-			100 => _n_noop( '%1$d file was successfully suffixed with %2$s.', '%1$d files were successfully suffixed with %2$s.', 'secupress' ),
+			100 => _n_noop( '%1$d old <code>wp-config.php</code> file was successfully suffixed with %2$s.', '%1$d old <code>wp-config.php</code> files were successfully suffixed with %2$s.', 'secupress' ),
 			101 => _n_noop( 'Sorry, this file could not be renamed: %s', 'Sorry, those files could not be renamed: %s', 'secupress' ),
 			// "bad"
-			200 => _n_noop( 'Your installation should not contain this old or backed up config file: %s.', 'Your installation should not contain these old or backed up config files: %s.', 'secupress' ),
-			201 => _n_noop( 'Sorry, the file could not be renamed.', 'Sorry, the files could not be renamed.', 'secupress' ),
+			200 => _n_noop( 'Your installation should not contain this old or backed up <code>wp-config.php</code> file: %s.', 'Your installation should not contain these old or backed up <code>wp-config.php</code> files: %s.', 'secupress' ),
+			201 => _n_noop( 'Sorry, the old <code>wp-config.php</code> file could not be renamed.', 'Sorry, the old <code>wp-config.php</code> files could not be renamed.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {

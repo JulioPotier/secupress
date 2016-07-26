@@ -45,10 +45,10 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements SecuPress_Scan
 	 * @since 1.0
 	 */
 	protected function init() {
-		$this->title    = __( 'Check if your login page is protected by double authentication or something like that (may be a custom script).', 'secupress' );
-		$this->more     = __( 'The login vector is often use in web attacks, every hour, your website is targeted by random bots whom try to log in your site. Adding another layer of login can improve the security.', 'secupress' );
+		$this->title    = __( 'Check if your login page is protected by Double Authentication.', 'secupress' );
+		$this->more     = __( 'The login vector is often use in web attacks, every hour your website is the target of random bots whom try to log in your site. Adding another layer of login can improve the security.', 'secupress' );
 		$this->more_fix = sprintf(
-			__( 'This will activate the <strong>%1$s</strong> from the module %2$s.', 'secupress' ),
+			__( 'Activate the <strong>%1$s</strong> from the module %2$s.', 'secupress' ),
 			__( 'PasswordLess Double Authentication', 'secupress' ),
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#row-double-auth_type">' . __( 'Users & Login', 'secupress' ) . '</a>'
 		);
@@ -67,7 +67,7 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements SecuPress_Scan
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// "good"
-			0   => __( 'The login page seems to be protected by double authentication or a custom script.', 'secupress' ),
+			0   => __( 'The login page seems to be protected by double authentication.', 'secupress' ),
 			1   => __( 'The <strong>PasswordLess Double Authentication</strong> has been activated for every role. Users will receive an email to log-in now.', 'secupress' ),
 			// "warning"
 			100 => __( 'Unable to create a user to test the login authentication system.', 'secupress' ),

@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 			<span class="icon">
 				<i class="icon-wrench" aria-hidden="true"></i>
 			</span>
-			<span class="text">' . __( 'Fix all checked issues', 'secupress') . '</span>
+			<span class="text">' . __( 'Fix it', 'secupress') . '</span>
 		</button>
 		<a href="' . esc_url( secupress_admin_url( 'scanners' ) ) . '&amp;step=3" class="secupress-button shadow light hidden">
 			<span class="icon">
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 		</a>';
 	?>
 
-	<p class="secupress-step-title"><?php _e( 'Checked items will be automatically fixed', 'secupress' ); ?></p>
+	<p class="secupress-step-title"><?php _e( 'Only checked items will be automatically fixed', 'secupress' ); ?></p>
 	<p>
 		<?php echo $main_button; ?>
 	</p>
@@ -177,7 +177,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 		</div>
 	</div>
 	<div class="secupress-spinner-content secupress-text-center secupress-p3">
-		
+
 		<img class="secupress-big-spinner secupress-mb1" src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>spinner-big.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>spinner-big2x.png 2x" alt="<?php esc_attr_e( 'Fixing…', 'secupress' ); ?>" width="128" height="128">
 
 		<p class="secupress-text-basup"><?php _e( 'You’ll be automatically redirected to the next step,<br>please don’t close this window.', 'secupress' ); ?></p>

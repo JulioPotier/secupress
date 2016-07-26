@@ -38,10 +38,10 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements SecuPress_S
 	 * @since 1.0
 	 */
 	protected function init() {
-		$this->title    = __( 'Check if your users username are not blacklisted.', 'secupress' );
+		$this->title    = __( 'Check if your usernames are not blacklisted.', 'secupress' );
 		$this->more     = __( 'Some usernames are known to be used for malicious usage, or created by bots.', 'secupress' );
 		$this->more_fix = sprintf(
-			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
+			__( 'Activate the option %1$s from the module %2$s.', 'secupress' ),
 			'<em>' . __( 'Forbid usernames', 'secupress' ) . '</em>',
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#row-blacklist-logins_activated">' . __( 'Users & Login', 'secupress' ) . '</a>'
 		);
@@ -60,7 +60,7 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements SecuPress_S
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// "good"
-			0   => __( 'All the user names are correct.', 'secupress' ),
+			0   => __( 'All the usernames are correct.', 'secupress' ),
 			1   => __( 'Module activated: the users with a blacklisted username will be asked to change it.', 'secupress' ),
 			// "bad"
 			200 => _n_noop( '<strong>%s user</strong> has a forbidden username: %s', '<strong>%s users</strong> have a forbidden username: %s', 'secupress' ),

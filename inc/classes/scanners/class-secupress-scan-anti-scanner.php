@@ -63,7 +63,7 @@ class SecuPress_Scan_Anti_Scanner extends SecuPress_Scan implements SecuPress_Sc
 			0   => __( 'You are currently blocking <strong>automated scanning</strong>.', 'secupress' ),
 			1   => __( 'Protection activated', 'secupress' ),
 			// "warning"
-			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
+			100 => __( 'Unable to determine if you are blocking <strong>automated scanning</strong>.', 'secupress' ),
 			// "bad"
 			200 => __( 'Your website should block <strong>automated scanning</strong>.', 'secupress' ),
 		);

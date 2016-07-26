@@ -40,7 +40,7 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 	protected function init() {
 		$this->title    = __( 'Check if the security keys are correctly set.', 'secupress' );
 		$this->more     = __( 'WordPress provides 8 security keys, each key has its own purpose. These keys must be set with long random strings: don\'t keep the default value, don\'t store them in the database, don\'t hardcode them.', 'secupress' );
-		$this->more_fix = __( 'This will create a <a href="https://codex.wordpress.org/Must_Use_Plugins">must-use plugin</a> to replace your actual keys stored in <code>wp-config.php</code> or in your database to keep them safer.', 'secupress' );
+		$this->more_fix = __( 'Create a <a href="https://codex.wordpress.org/Must_Use_Plugins">must-use plugin</a> to replace your actual keys stored in <code>wp-config.php</code> or in your database to keep them safer.', 'secupress' );
 	}
 
 
@@ -56,7 +56,7 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// "good"
-			0   => __( 'All keys are properly set.', 'secupress' ),
+			0   => __( 'All security keys are properly set.', 'secupress' ),
 			// "warning"
 			100 => __( 'This fix is <strong>pending</strong>, please reload the page to apply it now.', 'secupress' ),
 			// "bad"
@@ -67,8 +67,8 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 			204 => _n_noop( '<strong>&middot; Hardcoded:</strong> %s.',     '<strong>&middot; Hardcoded:</strong> %s.',     'secupress' ),
 			205 => _n_noop( '<strong>&middot; From DB:</strong> %s.',       '<strong>&middot; From DB:</strong> %s.',       'secupress' ),
 			// "cantfix"
-			300 => __( 'I can not write into wp-config.php so i can not change the salt keys.', 'secupress' ),
-			301 => __( 'The fix has been applied but there is still keys that i can\'t modify.', 'secupress' ),
+			300 => __( 'The <code>wp-config.php</code> file does not seem to be writable so salt keys could not be changed.', 'secupress' ),
+			301 => __( 'The security keys fix has been applied but there is still keys that can\'t be modified.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {

@@ -41,7 +41,7 @@ class SecuPress_Scan_Block_HTTP_1_0 extends SecuPress_Scan implements SecuPress_
 		$this->title    = __( 'Check if POST requests using HTTP 1.0 can reach your website.', 'secupress' );
 		$this->more     = __( 'POST requests is the opposite of GET. Instead of grabbing resources from the server, data is being sent. Using HTTP 1.0, rather than HTTP 1.1, is bad because it does not require a Host header.', 'secupress' );
 		$this->more_fix = sprintf(
-			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
+			__( 'Activate the option %1$s from the module %2$s.', 'secupress' ),
 			'<em>' . __( 'Block Bad Request Methods', 'secupress' ) . '</em>',
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-headers_request-methods-header">' . __( 'Firewall', 'secupress' ) . '</a>'
 		);
@@ -63,7 +63,7 @@ class SecuPress_Scan_Block_HTTP_1_0 extends SecuPress_Scan implements SecuPress_
 			0   => sprintf( __( 'Your website currently blocks <code>%s</code> requests.', 'secupress' ), 'HTTP/1.0 POST' ),
 			1   => __( 'Protection activated', 'secupress' ),
 			// "warning"
-			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
+			100   => sprintf( __( 'Unable to determine if your homepage can block <code>%s</code> requests.', 'secupress' ), 'HTTP/1.0 POST' ),
 			// "bad"
 			200 => sprintf( __( 'Your website should block <code>%s</code> requests.', 'secupress' ), 'HTTP/1.0 POST' ),
 		);

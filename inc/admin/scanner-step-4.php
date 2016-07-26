@@ -266,7 +266,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 					<span class="secupress-label-with-icon">
 						<i aria-hidden="true" class="icon-calendar rounded"></i>
 						<span class="secupress-upper"><?php esc_html_e( 'Schedule Scans', 'secupress' ); ?></span>
-						<span class="secupress-description"><?php _e( 'Program recurring scans', 'secupress' ); ?></span>
+						<span class="secupress-description"><?php esc_html_e( 'Manage your recurring scans', 'secupress' ); ?></span>
 					</span>
 				</a>
 			</div>

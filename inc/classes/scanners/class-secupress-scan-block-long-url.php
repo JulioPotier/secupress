@@ -50,7 +50,7 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements SecuPress_
 		$this->title    = sprintf( __( 'Check if long URL can reach your website (more than %s chars).', 'secupress' ), number_format_i18n( $this->length ) );
 		$this->more     = sprintf( __( 'A usual URL has no more than %s characters, but attackers often need to test very long strings when they try to hack something.', 'secupress' ), number_format_i18n( $this->length ) );
 		$this->more_fix = sprintf(
-			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
+			__( 'Activate the option %1$s from the module %2$s.', 'secupress' ),
 			'<em>' . __( 'Block Long URLs', 'secupress' ) . '</em>',
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-url-content_bad-url-length">' . __( 'Firewall', 'secupress' ) . '</a>'
 		);
@@ -69,10 +69,10 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements SecuPress_
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// "good"
-			0   => __( 'You are currently blocking too long string requests.', 'secupress' ),
+			0   => __( 'You are currently blocking <strong>too long string requests</strong>.', 'secupress' ),
 			1   => __( 'Protection activated', 'secupress' ),
 			// "warning"
-			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
+			100 => __( 'Unable to determine if your website is blocking <strong>too long string requests</strong>.', 'secupress' ),
 			// "bad"
 			200 => __( 'Your website should block <strong>too long string requests</strong>.', 'secupress' ),
 		);

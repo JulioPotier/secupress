@@ -46,7 +46,7 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 		if ( 'admin' === $current_user->user_login ) {
 			$this->more_fix = __( 'You will be asked for a new username and your account will be renamed.', 'secupress' );
 		} else {
-			$this->more_fix = __( 'This will remove all roles and capabilities from the <em>admin</em> account if it exists. If it does not exist and user subscriptions are open, the account will be created with no role nor capabilities.', 'secupress' );
+			$this->more_fix = __( 'Remove all roles and capabilities from the <em>admin</em> account if it exists. If it does not exist and user subscriptions are open, the account will be created with no role nor capabilities.', 'secupress' );
 		}
 	}
 
@@ -74,7 +74,7 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 			203 => __( 'Cannot create a user with an empty login name!' ), // WPi18n.
 			204 => __( 'Sorry, the username %s already exists!', 'secupress' ),
 			205 => __( 'The username %1$s is invalid because it uses illegal characters. Spot the differences: %2$s.', 'secupress' ),
-			206 => __( 'Sorry, I could not remove the role from the %s account. You should try to remove it manually.', 'secupress' ),
+			206 => __( 'Sorry, the role cannot be removed from the %s account. You should try to remove it manually.', 'secupress' ),
 			207 => __( 'Sorry, the %s account could not be created. You should try to create it manually and then remove its role.', 'secupress' ),
 			// "cantfix"
 			300 => __( 'Oh! The %s account is yours! Please choose a new login for your account.', 'secupress' ),

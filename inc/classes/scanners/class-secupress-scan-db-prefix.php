@@ -40,7 +40,7 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 	protected function init() {
 		$this->title    = __( 'Check if your database prefix is correct.', 'secupress' );
 		$this->more     = __( 'Avoid the usage of <code>wp_</code> or <code>wordpress_</code> as database prefix to improve your security.', 'secupress' );
-		$this->more_fix = __( 'We will rename all your database table names, then update your configuration with a new and more secure one.', 'secupress' );
+		$this->more_fix = __( 'Rename all your database table names, then update your configuration with a new and more secure one.', 'secupress' );
 	}
 
 
@@ -60,10 +60,10 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 			// "bad"
 			200 => __( 'The database prefix should not be %s. Choose something else than <code>wp_</code> or <code>wordpress_</code>, they are too easy to guess.', 'secupress' ),
 			// "cantfix"
-			301 => __( 'The database user can not alter tables and so I cannot change the database prefix.', 'secupress' ),
-			302 => __( 'I cannot write into <code>wp-config.php</code> so I cannot change the database prefix.', 'secupress' ),
-			303 => __( 'The database user seems to have to correct rights, but I still could not change the database prefix.', 'secupress' ),
-			304 => __( 'I found too many database tables, so I cannot choose alone which ones to rename, help me!', 'secupress' ), // Trinity! Help me!
+			301 => __( 'The database user can not alter tables and so the database prefix could not be changed.', 'secupress' ),
+			302 => __( 'The <code>wp-config.php</code> file does not seem to be writable, so the database prefix cannot be changed.', 'secupress' ),
+			303 => __( 'The database user seems to have to correct rights, but the database prefix could still not be changed.', 'secupress' ),
+			304 => __( 'Too many database tables found, so which ones to rename?!', 'secupress' ), // Trinity! Help me!
 		);
 
 		if ( isset( $message_id ) ) {

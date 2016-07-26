@@ -53,16 +53,16 @@ foreach ( $new_scans as $key => $new_scan ) {
 			<div class="secupress-step-content-header secupress-flex secupress-flex-spaced">
 				<?php
 				if ( $is_there_something_new && $scanned_items ) {
-					$page_title  = sprintf( __( 'There are new exciting things in %s! You\'ll need to re-scan your website', 'secupress' ), SECUPRESS_PLUGIN_NAME );
+					$page_title  = sprintf( __( 'Update %s: Discover the New Security items to check', 'secupress' ), SECUPRESS_VERSION );
 					$main_button =
 					'<button class="secupress-button secupress-button-primary button-secupress-scan shadow" type="button" data-nonce="' . esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ) . '">
 						<span class="icon" aria-hidden="true">
 							<i class="icon-radar"></i>
 						</span>
-						<span class="text">' . __( 'Re-scan website', 'secupress' ) . '</span>
+						<span class="text">' . __( 'Scan website', 'secupress' ) . '</span>
 					</button>';
 				} else {
-					$page_title  = __( 'List of security points to analyze', 'secupress' );
+					$page_title  = __( 'List of the security items already analyzed', 'secupress' );
 					$main_button =
 					'<a href="' . secupress_admin_url( 'scanners' ) . '&step=2" class="secupress-button secupress-button-tertiary shadow">
 						<span class="icon">
