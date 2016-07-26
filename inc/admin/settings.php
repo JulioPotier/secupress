@@ -577,7 +577,7 @@ function __secupress_scanners() {
 						</div>
 						<p class="secupress-rescan-actions">
 							<span class="screen-reader-text"><?php esc_html_e( 'Doubts? Try a re-scan.', 'secupress' ); ?></span>
-							<button class="secupress-button secupress-button-primary button-secupress-scan" type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ); ?>">
+							<button class="secupress-button secupress-button-primary secupress-button-scan" type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ); ?>">
 								<span class="icon" aria-hidden="true">
 									<i class="icon-radar"></i>
 								</span>
@@ -608,7 +608,7 @@ function __secupress_scanners() {
 					</h3>
 
 					<p class="secupress-start-one-click-scan">
-						<button class="secupress-button secupress-button-primary button-secupress-scan" type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ); ?>">
+						<button class="secupress-button secupress-button-primary secupress-button-scan" type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ); ?>">
 							<span class="icon" aria-hidden="true">
 								<i class="icon-radar"></i>
 							</span>

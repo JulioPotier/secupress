@@ -511,7 +511,7 @@ jQuery( document ).ready( function( $ ) {
 	// Get scan button fixed width at first load: this is needed for the progress bar animation.
 	( function( w, d, $, undefined ) {
 
-		var $button = $( '.secupress-start-one-click-scan .button-secupress-scan' );
+		var $button = $( '.secupress-start-one-click-scan .secupress-button-scan' );
 		$button.css( 'width', $button.outerWidth() + 5 );
 
 	} )( window, document, jQuery );
@@ -954,7 +954,7 @@ jQuery( document ).ready( function( $ ) {
 			* Available extras:
 			* extra.isBulk: tell if it's a bulk scan.
 			*/
-			var $button = $( '.button-secupress-scan' ).last(),
+			var $button = $( '.secupress-button-scan' ).last(),
 				params;
 
 			// If it's a One-click Scan (step 1), keep track of the date.
@@ -971,7 +971,7 @@ jQuery( document ).ready( function( $ ) {
 					}
 				} )
 				.always( function() {
-					secupressEnableButtons( $( '.button-secupress-scan' ) );
+					secupressEnableButtons( $( '.secupress-button-scan' ) );
 					// Get counters and print them in the page.
 					secupressPrintScoreFromAjax( extra.isBulk );
 				} );
@@ -1051,7 +1051,7 @@ jQuery( document ).ready( function( $ ) {
 
 
 		// Perform a scan on click ("One click scan" button).
-		$( 'body' ).on( 'click.secupress bulkscan.secupress keyup', '.button-secupress-scan', function( e ) {
+		$( 'body' ).on( 'click.secupress bulkscan.secupress keyup', '.secupress-button-scan', function( e ) {
 			var $this;
 
 			if ( 'keyup' === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
@@ -1072,7 +1072,7 @@ jQuery( document ).ready( function( $ ) {
 
 			e.preventDefault();
 
-			secupressDisableButtons( $( '.button-secupress-scan' ) );
+			secupressDisableButtons( $( '.secupress-button-scan' ) );
 			$( '.secupress-scanit' ).trigger( 'bulkscan.secupress' );
 			secupressRunProgressBar( $this );
 		} );
@@ -1180,7 +1180,7 @@ jQuery( document ).ready( function( $ ) {
 
 		// One Click Scan auto.
 		if ( SecuPressi18nScanner.firstOneClickScan && secupressScansGlandouillent() ) {
-			$( '.button-secupress-scan' ).last().trigger( 'bulkscan.secupress' );
+			$( '.secupress-button-scan' ).last().trigger( 'bulkscan.secupress' );
 		}
 	} )( window, document, $ );
 } );
