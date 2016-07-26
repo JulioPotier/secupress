@@ -1,4 +1,4 @@
-/* globals jQuery: false, ajaxurl: false, wp: false, SecuPressi18nScanner: false, SecuPressi18nChart: false, secupressIsSpaceOrEnterKey: false, Chart: false, swal2: false */
+/* globals jQuery: false, ajaxurl: false, wp: false, SecuPressi18nScanner: false, SecuPressi18nChart: false, secupressIsSpaceOrEnterKey: false, secupressNotices: false, Chart: false, swal2: false */
 // !Global vars ====================================================================================
 var SecuPress = {
 	supportButtonColor:   "#F1C40F",
@@ -685,7 +685,7 @@ jQuery( document ).ready( function( $ ) {
 			}
 
 			// Add the new status as a class.
-			statusClass = 'status-' + r.data.class,
+			statusClass = 'status-' + r.data.class;
 			rowClasses  = rowClasses.replace( statusClass, '' ).replace( '  ', ' ' );
 			$row.removeClass( rowClasses ).addClass( statusClass );
 
@@ -855,11 +855,18 @@ jQuery( document ).ready( function( $ ) {
 
 		// Display an error and reset the row.
 		function secupressDisplayManualFixError( $row ) {
-			$row = $row.addClass( 'status-error' ).find( '.secupress-actions' );
+			var $notice;
 
-			if ( ! $row.chidren( '.secupress-ajax-response-error' ).length ) {
-				$row.prepend( '<span class="secupress-ajax-response-error">' + SecuPressi18nScanner.error + '</span>' );
+			$row    = $row.addClass( 'status-error' ).find( '.secupress-ic-fix-actions' );
+			$notice = $row.next( '.secupress-response-notice' );
+
+			if ( $notice.length ) {
+				$notice.remove();
 			}
+
+			$notice = secupressNotices.create( { type: 'bad', message: SecuPressi18nScanner.error } );
+			$row.after( $notice );
+			secupressCouldSay( SecuPressi18nScanner.error );
 
 			secupressResetManualFix();
 			return false;
