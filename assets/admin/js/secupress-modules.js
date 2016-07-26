@@ -407,6 +407,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 					if ( $this.is( ":checked" ) ) {
 						$elems.not( ":visible" ).trigger( "secupressbeforeshow" ).show( tempo, function() {
 							$( this ).trigger( "secupressaftershow" );
+							$( document ).trigger( 'secupress:openDependency', [ $( this ) ] );
 						} );
 					}
 					// The checkbox is not checked: close if visible and no other checkboxes that want this row to be open is checked.
@@ -1062,13 +1063,25 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	};
 
 	// change class on parent textarea on focus/blur
-	$expendables.find('textarea').AutoSized()
+	// applied only on visible elements (see below for others)
+	$expendables.filter(':visible').find('textarea').AutoSized()
 		.on('focus.secupress', function(){
 			$(this).parent().addClass('textarea-focused');
 		})
 		.on('blur.secupress', function(){
 			$(this).parent().removeClass('textarea-focused');
 		});
+
+	// same action as previous for textarea depending on other actions to be displayed
+	$( document ).on( 'secupress:openDependency', function( e, $el ){
+		$el.find('textarea').AutoSized()
+			.on('focus.secupress', function(){
+				$(this).parent().addClass('textarea-focused');
+			})
+			.on('blur.secupress', function(){
+				$(this).parent().removeClass('textarea-focused');
+			});
+	} );
 
 	// on click on (+) button
 	$expendables.closest('label').on('click.secupress', '.secupress-expand-trigger', function(){
