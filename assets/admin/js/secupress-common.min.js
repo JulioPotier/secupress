@@ -16,16 +16,6 @@
 		},
 
 		/**
-		 * Utilities
-		 */
-		mergeOptions = function( obj1, obj2 ) {
-		    var obj3 = {};
-		    for (var attrname in obj1) { obj3[ attrname ] = obj1[ attrname ]; }
-		    for (var attrname in obj2) { obj3[ attrname ] = obj2[ attrname ]; }
-		    return obj3;
-		},
-
-		/**
 		 * a11y function
 		 */
 		secupressCouldSay = function( say ) {
@@ -33,6 +23,7 @@
 				wp.a11y.speak( say );
 			}
 		},
+
 		/**
 		 * Notices system
 		 */
@@ -43,7 +34,7 @@
 						type	: 'success', // success, warning, bad
 						message	: 'You should say something'
 					},
-					merged   = mergeOptions( defaults, params ),
+					merged   = $.extend( {}, defaults, params ),
 					html     = '<div class="secupress-response-notice secupress-rn-' + merged.type + ' secupress-flex">'
 									+ '<div class="secupress-rn-message">'
 										+ merged.message
