@@ -455,12 +455,16 @@ function __secupress_scanners() {
 									</ul><!-- .secupress-chart-legend -->
 
 									<div id="tweeterA" class="hidden">
-										<i><?php
+										<p>
+											<q>
+											<?php
 											/* translators: %s is the plugin name */
 											printf( esc_html__( 'Wow! My website just got an A security grade using %s, what about yours?', 'secupress' ), SECUPRESS_PLUGIN_NAME );
-										?></i>
+											?>
+											</q>
+										</p>
 
-										<a class="button button-small" href="https://twitter.com/intent/tweet?via=secupress&amp;url=<?php
+										<a class="secupress-button secupress-button-mini" href="https://twitter.com/intent/tweet?via=secupress&amp;url=<?php
 											/* translators: %s is the plugin name */
 											echo urlencode( esc_url_raw( 'http://secupress.fr&text=' . sprintf( __( 'Wow! My website just got an A security grade using %s, what about yours?', 'secupress' ), SECUPRESS_PLUGIN_NAME ) ) );
 										?>">
