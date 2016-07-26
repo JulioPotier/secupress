@@ -742,6 +742,61 @@ body[class*="secupress"] .sweet-overlay {
 }
 
 /**
+ * Response notices
+ * Default: success styles
+ */
+
+.secupress-response-notice {
+	margin: 1em auto;
+	padding: 8px 10px 8px 20px;
+	font-weight: bold;
+	color: #26B3A9;
+	background: #DFF8F6;
+	border-radius: 3px;
+}
+.secupress-response-notice button {
+	color: #26B3A9;
+	font-size: 16px;
+}
+.secupress-response-notice:before {
+	content: "\f00c";
+	width: 30px;
+	font-family: 'secupress';
+	font-size: 18px;
+	font-weight: normal;
+}
+.secupress-response-notice p:first-child {
+	margin-top: 0;
+}
+.secupress-response-notice p:last-child {
+	margin-bottom: 0;
+}
+.secupress-rn-warning {
+	color: #F39C12;
+	background: #FDF6DB;
+}
+.secupress-rn-warning button {
+	color: #F39C12;
+}
+.secupress-rn-warning:before {
+	content: "\e91f";
+}
+.secupress-rn-bad {
+	color: #F2295E;
+	background: #FDDFE7;
+}
+.secupress-rn-bad button {
+	color: #F2295E;
+}
+.secupress-rn-bad:before {
+	content: "\f00d";
+}
+.secupress-rn-actions {
+	flex-basis: 150px;
+	text-align: right;
+}
+
+/**
  * === Blobs
  */
 .secupress-blob {

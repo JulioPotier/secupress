@@ -524,7 +524,14 @@ i.bold {
 /**
  * === Buttons
  */
-
+button.secupress-virgin {
+	padding: 0;
+	border: 0;
+	background: transparent;
+	height: auto;
+	box-shadow: none;
+	text-shadow: none;
+}
 .secupress-button.secupress-button,
 .secupress-button-primary.secupress-button-primary,
 .secupress-button-secondary.secupress-button-secondary,
