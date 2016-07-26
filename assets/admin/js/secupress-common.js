@@ -1,6 +1,60 @@
-/* globals jQuery: false, SecuPressi18nCommon: false, swal: false */
+/* globals jQuery: false, wp: false, SecuPressi18nCommon: false, secupressNotices: true, swal: false */
+
+/**
+ * a11y function
+ */
+function secupressCouldSay( say ) {
+	if ( wp.a11y && wp.a11y.speak && undefined !== say && say ) {
+		wp.a11y.speak( say );
+	}
+}
+
+
+/**
+ * Notices system
+ */
+var secupressNotices = {
+	eventAdded: 0,
+	create: function( params ) {
+		var defaults = {
+				type:    'success', // success, warning, bad
+				message: 'You should say something'
+			},
+			merged   = jQuery.extend( {}, defaults, params ),
+			html     = '<div class="secupress-response-notice secupress-rn-' + merged.type + ' secupress-flex">'
+							+ '<div class="secupress-rn-message">'
+								+ merged.message
+							+ '</div>'
+							+ '<div class="secupress-rn-actions">'
+								+ '<button type="button" class="secupress-rn-close secupress-virgin">'
+									+ '<i class="icon-squared-cross" aria-hidden="true"></i>'
+									+ '<span class="screen-reader-text">' + SecuPressi18nCommon.closeText + '</span>'
+								+ '</button>'
+							+ '</div>'
+						+ '</div>';
+
+		if ( secupressNotices.eventAdded ) {
+			return html;
+		}
+
+		secupressNotices.eventAdded = 1;
+		jQuery( 'body' ).on( 'click.secupress', '.secupress-rn-close', function() {
+			secupressNotices.remove( jQuery( this ).closest( '.secupress-response-notice' ) );
+			return false;
+		} );
+
+		return html;
+	},
+	remove: function( $el ) {
+		$el.spSlideUp( function() {
+			jQuery( this ).remove();	//// this === window here.
+		} );
+	}
+};
+
+
 (function($, d, w, undefined) {
-	var SecuPress = {
+	/*var SecuPress = {
 			supportButtonColor:  "#F1C40F",
 			swal2Defaults:        {
 				confirmButtonText: SecuPressi18nCommon.confirmText,
@@ -13,72 +67,20 @@
 				showCancelButton:  true,
 				closeOnConfirm:    false
 			}
-		},
-
-		/**
-		 * a11y function
-		 */
-		secupressCouldSay = function( say ) {
-			if ( wp.a11y && wp.a11y.speak && undefined !== say && say ) {
-				wp.a11y.speak( say );
-			}
-		},
-
-		/**
-		 * Notices system
-		 */
-		spNotices = {
-			eventAdded: 0,
-			create: function( params ) {
-				
-				var defaults = {
-						type	: 'success', // success, warning, bad
-						message	: 'You should say something'
-					},
-					merged   = $.extend( {}, defaults, params ),
-					html     = '<div class="secupress-response-notice secupress-rn-' + merged.type + ' secupress-flex">'
-									+ '<div class="secupress-rn-message">'
-										+ merged.message
-									+ '</div>'
-									+ '<div class="secupress-rn-actions">'
-										+ '<button type="button" class="secupress-rn-close secupress-virgin">'
-											+ '<i class="icon-squared-cross" aria-hidden="true"></i>'
-											+ '<span class="screen-reader-text">' + SecuPressi18nCommon.closeText + '</span>'
-										+ '</button>'
-									+ '</div>'
-							   '</div>';
-
-				if ( ! spNotices.eventAdded ) {
-
-					spNotices.eventAdded = 1;
-					$( 'body' ).on( 'click.secupress', '.secupress-rn-close', function(){
-						spNotices.remove( $(this) );
-						return false;
-					});
-
-				}
-
-				return html;
-
-			},
-			remove: function( $el ) {
-				$el.closest( '.secupress-response-notice' ).spSlideUp(function(){
-					$(this).remove();
-				});
-			}
-		};
+		};*/
 
 	/**
 	 * Notice tests
-	 */
-	////
+	 *
+
 	var message = 'Something to say',
-		good   = spNotices.create( { message: message } );
-		warning= spNotices.create( { type: 'warning', message: message } );
-		bad    = spNotices.create( { type: 'bad', message: message } );
-	
-	$('.secupress-ic-fix-actions').after( good );
+		good    = secupressNotices.create( { message: message } );
+		warning = secupressNotices.create( { type: 'warning', message: message } );
+		bad     = secupressNotices.create( { type: 'bad', message: message } );
+
+	$( '.secupress-ic-fix-actions' ).after( good );
 	secupressCouldSay( message );
+	*/
 
 
 	/**
@@ -182,8 +184,8 @@
 	$('[data-trigger]').each( function() {
 
 		// init
-		var $_this  = $(this),
-			hide 	= $(this).hasClass('dont-trigger-hide'),
+		var $_this  = $( this ),
+			hide    = $_this.hasClass('dont-trigger-hide'),
 			target  = $_this.data('target'),
 			$target = $( '#' + target );
 

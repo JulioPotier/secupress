@@ -28,6 +28,7 @@
 		"secupressIsSpaceKey":        false,
 		"secupressIsEnterKey":        false,
 		"secupressIsEscapeKey":       false,
+		"secupressNotices":           false,
 		"Chart":                      false,
 		"swal":                       false
 	}
