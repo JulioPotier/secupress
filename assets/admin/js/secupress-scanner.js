@@ -542,7 +542,7 @@ jQuery( document ).ready( function( $ ) {
 				init_percent = 2,
 				secupressProgressTimer;
 
-			$sp_1st_scan.addClass( 'secupress-scanning' );
+			$main_header.addClass( 'secupress-scanning' );
 
 			$( '.secupress-scanned-total' ).text( secupressScans.total );
 
@@ -565,22 +565,26 @@ jQuery( document ).ready( function( $ ) {
 					clearInterval( secupressProgressTimer );
 
 					// makes first scan part disappear
-					$sp_1st_scan.slideUp( 200, function() {
-						// hide 4 steps help
-						$( '.secupress-open-moreinfo' ).removeClass( 'secupress-activated' );
-						$( '#secupress-more-info' ).removeClass( 'secupress-open' ).hide();
+					if ( isFirstScan ) {
+						$sp_1st_scan.slideUp( 200, function() {
 
-						//// TODO : check if note is attributed before showing this content
-						// Show other element (list of scans, tabs, tabs contents).
-						$( '.secupress-scan-header-main' ).css('display', 'flex').hide().slideDown( 200, function() {
-							$( '.secupress-scanners-header.secupress-not-scanned-yet' ).removeClass( 'secupress-not-scanned-yet' );
-						} );
+							// hide 4 steps help
+							$( '.secupress-open-moreinfo' ).removeClass( 'secupress-activated' );
+							$( '#secupress-more-info' ).removeClass( 'secupress-open' ).hide();
 
-						// draw the chart
-						if ( isFirstScan ) {
+							//// TODO : check if note is attributed before showing this content
+							// Show other element (list of scans, tabs, tabs contents).
+							$( '.secupress-scan-header-main' ).css('display', 'flex').hide().slideDown( 200, function() {
+								$( '.secupress-scanners-header.secupress-not-scanned-yet' ).removeClass( 'secupress-not-scanned-yet' );
+							} );
+
+							// draw the chart
 							secupressDrawCharts();
-						}
-					} );
+
+						} );
+					} else {
+						$main_header.removeClass( 'secupress-scanning' );
+					}
 				}
 			}, 500 );
 		}
