@@ -813,7 +813,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 				$this->_set_network_option_criticity();
 				break;
 			case 'filter':
-				$this->_sget_filter_criticity();
+				$this->_set_filter_criticity();
 				break;
 			case 'action':
 				$this->_set_action_criticity();
