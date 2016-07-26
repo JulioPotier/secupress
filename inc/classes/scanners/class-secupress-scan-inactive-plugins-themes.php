@@ -114,7 +114,6 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 		}
 
 		$lists = static::get_inactive_plugins_and_themes();
-		$glue  = sprintf( __( '%s, %s' ), '', '' ); // WP i18n.
 
 		// Inactive plugins.
 		if ( $count = count( $lists['plugins'] ) ) {
