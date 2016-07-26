@@ -55,7 +55,7 @@ foreach ( $new_scans as $key => $new_scan ) {
 				if ( $is_there_something_new && $scanned_items ) {
 					$page_title  = sprintf( __( 'Update %s: Discover the New Security items to check', 'secupress' ), SECUPRESS_VERSION );
 					$main_button =
-					'<button class="secupress-button secupress-button-primary button-secupress-scan shadow" type="button" data-nonce="' . esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ) . '">
+					'<button class="secupress-button secupress-button-primary secupress-button-scan shadow" type="button" data-nonce="' . esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ) . '">
 						<span class="icon" aria-hidden="true">
 							<i class="icon-radar"></i>
 						</span>
