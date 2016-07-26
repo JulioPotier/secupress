@@ -28,7 +28,8 @@
 		 * Notices system
 		 */
 		spNotices = {
-			create : function( params ) {
+			eventAdded: 0,
+			create: function( params ) {
 				
 				var defaults = {
 						type	: 'success', // success, warning, bad
@@ -47,15 +48,20 @@
 									+ '</div>'
 							   '</div>';
 
-				$( 'body' ).off( 'click.secupress-rn' ).on( 'click.secupress-rn', '.secupress-rn-close', function(){
-					spNotices.remove( $(this) );
-					return false;
-				});
+				if ( ! spNotices.eventAdded ) {
+
+					spNotices.eventAdded = 1;
+					$( 'body' ).on( 'click.secupress', '.secupress-rn-close', function(){
+						spNotices.remove( $(this) );
+						return false;
+					});
+
+				}
 
 				return html;
 
 			},
-			remove : function( $el ) {
+			remove: function( $el ) {
 				$el.closest( '.secupress-response-notice' ).spSlideUp(function(){
 					$(this).remove();
 				});
