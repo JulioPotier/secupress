@@ -61,7 +61,6 @@
 
 					<p class="secupress-item-title"><?php echo $scan_message; ?></p>
 
-<<<<<<< HEAD
 				<p class="secupress-row-actions">
 					<a class="secupress-button secupress-button-mini secupress-scanit hide-if-js" href="<?php echo esc_url( $scan_nonce_url ); ?>">
 						<span class="icon" aria-hidden="true">
@@ -84,55 +83,31 @@
 						<span class="secupress-toggle-button">
 							<span aria-hidden="true" class="icon">
 								<i class="icon-info-disk"></i>
-=======
-					<p class="secupress-row-actions">
-						<a class="secupress-button secupress-button-mini secupress-scanit hide-if-js" href="<?php echo esc_url( $scan_nonce_url ); ?>">
-							<span class="icon" aria-hidden="true">
-								<i class="icon-refresh"></i>
->>>>>>> origin/feature/scan-v2
 							</span>
-							<span class="text">
-								<?php echo 'notscannedyet' === $scan_status ? _x( 'Scan', 'verb', 'secupress' ) : _x( 'Re-Scan', 'verb', 'secupress' ); ?>
-							</span>
-						</a><br class="hide-if-js">
-
-						<?php
-						/**
-						 * Things changed:
-						 * data-trigger added
-						 * data-target instead of data-test
-						 * data-target === .secupress-item-details' ID
-						 */
-						?>
-						<button data-trigger="slidetoggle" data-target="details-<?php echo $class_name_part; ?>" class="secupress-details link-like hide-if-no-js" type="button">
-							<span class="secupress-toggle-button">
-								<span aria-hidden="true" class="icon">
-									<i class="icon-info-disk"></i>
-								</span>
-								<span class="text"><?php esc_html_e( 'Learn more', 'secupress'); ?></span>
-							</span>
-							<span class="secupress-toggle-button hidden" aria-hidden="true">
-								<span aria-hidden="true" class="icon">
-									<i class="icon-cross"></i>
-								</span>
-								<span class="text"><?php esc_html_e( 'Close' ); ?></span>
-							</span>
-						</button>
-					</p>
-				</div><!-- .secupress-flex -->
-
-				<div class="secupress-item-details hide-if-js" id="details-<?php echo $class_name_part; ?>">
-					<div class="secupress-flex">
-						<span class="secupress-details-icon">
-							<i class="icon-i" aria-hidden="true"></i>
+							<span class="text"><?php esc_html_e( 'Learn more', 'secupress'); ?></span>
 						</span>
-						<p class="details-content"><?php echo wp_kses( $current_test->more, $allowed_tags ); ?></p>
-						<span class="secupress-placeholder"></span>
-					</div>
-				</div><!-- .secupress-item-details -->
-			</div><!-- .secupress-item-all -->
+						<span class="secupress-toggle-button hidden" aria-hidden="true">
+							<span aria-hidden="true" class="icon">
+								<i class="icon-cross"></i>
+							</span>
+							<span class="text"><?php esc_html_e( 'Close' ); ?></span>
+						</span>
+					</button>
+				</p>
+			</div><!-- .secupress-flex -->
 
-			<?php
+			<div class="secupress-item-details hide-if-js" id="details-<?php echo $class_name_part; ?>">
+				<div class="secupress-flex">
+					<span class="secupress-details-icon">
+						<i class="icon-i" aria-hidden="true"></i>
+					</span>
+					<p class="details-content"><?php echo wp_kses( $current_test->more, $allowed_tags ); ?></p>
+					<span class="secupress-placeholder"></span>
+				</div>
+			</div><!-- .secupress-item-details -->
+		</div><!-- .secupress-item-all -->
+
+		<?php
 		} // Eo foreach $new_scans.
 
 		$flag_first_iteration   = false;
