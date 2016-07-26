@@ -185,8 +185,6 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		}
 
 		if ( ! empty( $_GET['oneclick-scan'] ) && ! empty( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'first_oneclick-scan' ) && current_user_can( secupress_get_capability() ) ) {
-			$items = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
-
 			$localize['firstOneClickScan'] = 1;
 
 			$_SERVER['REQUEST_URI'] = remove_query_arg( array( '_wpnonce', 'oneclick-scan' ) );
