@@ -47,7 +47,7 @@ var secupressNotices = {
 	},
 	remove: function( $el ) {
 		$el.spSlideUp( function() {
-			jQuery( this ).remove();	//// this === window here.
+			$el.remove();
 		} );
 	}
 };
@@ -78,7 +78,7 @@ var secupressNotices = {
 		warning = secupressNotices.create( { type: 'warning', message: message } );
 		bad     = secupressNotices.create( { type: 'bad', message: message } );
 
-	$( '.secupress-ic-fix-actions' ).after( good );
+	$( '.secupress-row-actions' ).before( good );
 	secupressCouldSay( message );
 	*/
 
