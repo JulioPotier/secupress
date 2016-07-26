@@ -981,6 +981,12 @@ jQuery( document ).ready( function( $ ) {
 					secupressEnableButtons( $( '.secupress-button-scan' ) );
 					// Get counters and print them in the page.
 					secupressPrintScoreFromAjax( extra.isBulk );
+					// Reload the page and (maybe) add `&step=1`.
+					if ( w.location.href.match( /(\?|&)step=1($|&)/ ) ) {
+						w.location = w.location.href;
+					} else {
+						w.location = w.location.href + '&step=1';
+					}
 				} );
 			} else {
 				// Get counters and print them in the page.
