@@ -157,9 +157,10 @@ if ( ! $secupress_tests ) {
 			$fix_result = ! empty( $fixes[ $class_name_part_lower ] ) ? $fixes[ $class_name_part_lower ] : array();
 
 			// State.
-			$needs_pro              = 'pro' === $current_test->is_fixable() && ! secupress_is_pro();
 			$has_actions            = ! empty( $fix_actions[ $class_name_part_lower ] );
+			$needs_pro              = 'pro' === $current_test->is_fixable() && ! secupress_is_pro();
 			$is_fixable             = true === $current_test->is_fixable() || 'pro' === $current_test->is_fixable() && secupress_is_pro();
+			$not_fixable_by_sp      = false === $current_test->is_fixable();
 			$is_fixable_with_action = $is_fixable && $has_actions;
 
 			// Row css class.
@@ -287,6 +288,13 @@ if ( ! $secupress_tests ) {
 											<i class="icon-secupress-simple bold" aria-hidden="true"></i>
 										</span>
 										<span class="text"><?php _e( 'Get PRO', 'secupress' ); ?></span>
+									</a>
+								<?php } elseif ( $not_fixable_by_sp ) { ?>
+									<a href="<?php echo esc_url( $scan_nonce_url ); ?>" class="secupress-button secupress-button-primary secupress-button-manual-scanit shadow">
+										<span class="icon">
+											<i class="icon-check" aria-hidden="true"></i>
+										</span>
+										<span class="text"><?php _e( 'Done', 'secupress' ); ?></span>
 									</a>
 								<?php } ?>
 							</p>

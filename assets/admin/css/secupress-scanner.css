@@ -830,7 +830,8 @@ a + .secupress-row-actions {
 }
 
 .secupress-item-all.fixing .icon-shield,
-.secupress-mf-content.fixing .icon-shield {
+.secupress-mf-content.fixing .icon-shield,
+.secupress-mf-content.scanning .icon-shield {
 	animation: rotateshield 2s infinite linear;
 }
 @keyframes rotateshield {

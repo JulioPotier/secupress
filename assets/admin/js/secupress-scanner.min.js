@@ -861,7 +861,7 @@ jQuery( document ).ready( function( $ ) {
 			$notice = $row.next( '.secupress-response-notice' );
 
 			if ( $notice.length ) {
-				$notice.remove();
+				secupressNotices.remove( $notice );
 			}
 
 			$notice = secupressNotices.create( { type: 'bad', message: SecuPressi18nScanner.error } );
@@ -901,15 +901,21 @@ jQuery( document ).ready( function( $ ) {
 		// Perform a manual fix: launch an ajax call on submit.
 		function secupressManualFixit( test ) {
 			var $row   = $( '#secupress-mf-content-' + test ),
-				params = $row.children( 'form.secupress-item-content' ).serializeArray();
+				params = $row.children( 'form.secupress-item-content' ).serializeArray(),
+				$notice;
 
 			if ( ! params ) {
 				// Error.
 				return secupressDisplayManualFixError( $row );
 			}
 
-			$row.addClass( 'fixing' ).removeClass( 'status-error' ).find( '.secupress-ajax-response-error' ).remove();
-			$row.find( '.secupress-button-manual-fixit .icon-check' ).addClass( 'icon-shield' ).removeClass( 'icon-check' );
+			$notice = $row.removeClass( 'status-error' ).find( '.secupress-response-notice' );
+
+			if ( $notice.length ) {
+				secupressNotices.remove( $notice );
+			}
+
+			$row.addClass( 'fixing' ).find( '.secupress-button-manual-fixit .icon-check' ).addClass( 'icon-shield' ).removeClass( 'icon-check' );
 
 			$.post( ajaxurl, params, null, 'json' )
 			.done( function( r ) {
@@ -928,6 +934,37 @@ jQuery( document ).ready( function( $ ) {
 			.fail( function() {
 				// Error.
 				secupressDisplayManualFixError( $row );
+			} );
+		}
+
+
+		// Perform a scan: this one is used in step 3 when the scanner is not fixable with SecuPress (`$fixable = false;`). It is triggered by the "Done" button.
+		function secupressManualScanit( test, $row, href ) {
+			if ( ! test ) {
+				// Something's wrong here.
+				return;
+			}
+
+			// Show our scan is running.
+			$row.addClass( 'scanning' ).find( '.secupress-button-manual-scanit .icon-check' ).addClass( 'icon-shield' ).removeClass( 'icon-check' );
+
+			// Ajax call
+			$.getJSON( href.replace( 'admin-post.php', 'admin-ajax.php' ) )
+			.done( function( r ) {
+				if ( secupressResponseHasRequiredData( r ) ) {
+					// Trigger an event on success.
+					$( 'body' ).trigger( 'scanDone.secupress', [ {
+						test:   test,
+						href:   href,
+						isBulk: false,
+						data:   r.data
+					} ] );
+				}
+			} )
+			.always( function() {
+				// Show our scan is completed.
+				$row.removeClass( 'scanning' );
+				$( 'body' ).trigger( 'allScanDone.secupress', [ { isBulk: false } ] );
 			} );
 		}
 
@@ -962,7 +999,7 @@ jQuery( document ).ready( function( $ ) {
 			* extra.isBulk: tell if it's a bulk scan.
 			*/
 			var $button = $( '.secupress-button-scan' ).last(),
-				params;
+				$row, params;
 
 			// If it's a One-click Scan (step 1), keep track of the date.
 			if ( $button.length && secupressIsButtonDisabled( $button ) ) {
@@ -997,10 +1034,12 @@ jQuery( document ).ready( function( $ ) {
 			if ( 2 === SecuPressi18nScanner.step ) {
 				w.location = w.location.href.replace( /(\?|&)step=2($|&)/, '$1step=3$2' );
 			}
-			// Step 3: when a manual fix is done (and the folowing scan), go to the next manual fix (or to step 4).
+			// Step 3: when a manual fix is done (and the folowing scan), or a "manual scan", go to the next manual fix (or to step 4).
 			else if ( 3 === SecuPressi18nScanner.step ) {
+				$row = $( '.secupress-manual-fix' ).not( '.hide-if-js' );
+				$row.find( '.secupress-button-manual-scanit' ).find( '.icon-shield' ).addClass( 'icon-check' ).removeClass( 'icon-shield' );
 				secupressResetManualFix();
-				$( '.secupress-manual-fix' ).not( '.hide-if-js' ).find( '.secupress-button-ignoreit' ).first().trigger( 'next.secupress' );
+				$row.find( '.secupress-button-ignoreit' ).first().trigger( 'next.secupress' );
 			}
 		} );
 
@@ -1060,6 +1099,31 @@ jQuery( document ).ready( function( $ ) {
 			$row  = $this.closest( '.secupress-item-' + test );
 
 			secupressScanit( test, $row, href, true );
+		} );
+
+
+		// Perform a scan on event ("Done" button on step 3).
+		$( 'body' ).on( 'click.secupress scan.secupress keyup', '.secupress-button-manual-scanit', function( e ) {
+			var $this, href, test, $row;
+
+			if ( 'keyup' === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
+				return false;
+			}
+
+			$this = $( this );
+
+			if ( secupressIsButtonDisabled( $this ) ) {
+				return;
+			}
+
+			e.preventDefault();
+
+			href = $this.attr( 'href' );
+			test = secupressGetTestFromUrl( href );
+			$row = $( '#secupress-mf-content-' + test );
+
+			secupressDisableButtons( $this );
+			secupressManualScanit( test, $row, href );
 		} );
 
 
