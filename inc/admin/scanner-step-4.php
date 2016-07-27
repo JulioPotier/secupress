@@ -105,10 +105,10 @@ foreach ( $scanned_items as $class_name_part => $details ) {
 								</span>
 								<span class="text" aria-hidden="true">
 									<span class="hidden-when-activated">
-										<?php esc_html_e( 'Show the list items', 'secupress' ); ?>
+										<?php esc_html_e( 'See all fixed issues', 'secupress' ); ?>
 									</span>
 									<span class="visible-when-activated">
-										<?php esc_html_e( 'Hide the list items', 'secupress' ); ?>
+										<?php esc_html_e( 'Hide all fixed issues', 'secupress' ); ?>
 									</span>
 								</span>
 							</button>
@@ -173,7 +173,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 				<div class="secupress-sgh-actions secupress-flex">
 					<button class="secupress-vnormal hide-if-no-js dont-trigger-hide trigger-hide-first" type="button" data-trigger="slidetoggle" data-target="secupress-group-content-<?php echo $module_name; ?>">
 						<i class="icon-angle-up" aria-hidden="true"></i>
-						<span class="screen-reader-text"><?php _e( 'Show/hide panel', 'secupress' ); ?></span>
+						<span class="screen-reader-text"><?php esc_html_e( 'Show/hide panel', 'secupress' ); ?></span>
 					</button>
 				</div>
 
@@ -308,30 +308,30 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 	<div class="secupress-go-farther">
 		<div class="secupress-flex">
 			<div class="secupress-col">
-				<p class="secupress-farther-title"><?php _e( 'Want to go farther?', 'secupress' ); ?></p>
-				<p class="secupress-farther-desc"><?php _e( 'Rendezvous on the modules pages to discover our features and improve your security even more.', 'secupress' ); ?></p>
+				<p class="secupress-farther-title"><?php esc_html_e( 'Want to go farther?', 'secupress' ); ?></p>
+				<p class="secupress-farther-desc"><?php esc_html_e( 'Perfect the security of your website with our dedicated modules.', 'secupress' ); ?></p>
 			</div>
 			<div class="secupress-col secupress-col-action">
 				<a href="<?php echo esc_url( secupress_admin_url( 'modules' ) ); ?>" class="secupress-rich-link secupress-current">
 					<span class="secupress-label-with-icon">
 						<i aria-hidden="true" class="icon-cogs rounded"></i>
 						<span class="secupress-upper"><?php printf( esc_html__( '%s modules', 'secupress' ), SECUPRESS_PLUGIN_NAME ); ?></span>
-						<span class="secupress-description"><?php _e( 'Fine tuning for your WordPress', 'secupress' ); ?></span>
+						<span class="secupress-description"><?php esc_html_e( 'Fine tune your Security', 'secupress' ); ?></span>
 					</span>
 				</a>
 			</div>
 		</div>
 		<div class="secupress-flex">
 			<div class="secupress-col">
-				<p class="secupress-farther-title"><?php _e( 'Schedule your next scans', 'secupress' ); ?></p>
-				<p class="secupress-farther-desc"><?php _e( 'Keep up the good security by scheduling your next scans. No need to do it manually each week anymore…', 'secupress' ); ?></p>
+				<p class="secupress-farther-title"><?php esc_html_e( 'Manage your recurring scans', 'secupress' ); ?></p>
+				<p class="secupress-farther-desc"><?php esc_html_e( 'Let SecuPress scan your website when you are away by using recurent scans', 'secupress' ); ?></p>
 			</div>
 			<div class="secupress-col secupress-col-action">
 				<a href="<?php echo esc_url( secupress_admin_url ( 'modules' ) ); ?>&amp;module=schedules" class="secupress-rich-link secupress-current">
 					<span class="secupress-label-with-icon">
 						<i aria-hidden="true" class="icon-calendar rounded"></i>
 						<span class="secupress-upper"><?php esc_html_e( 'Schedule Scans', 'secupress' ); ?></span>
-						<span class="secupress-description"><?php _e( 'Program recurring scans', 'secupress' ); ?></span>
+						<span class="secupress-description"><?php esc_html_e( 'Program recurring scans', 'secupress' ); ?></span>
 					</span>
 				</a>
 			</div>
@@ -349,7 +349,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 				<?php echo secupress_get_logo( array( 'width' => 81 ), true ); ?>
 			</div>
 			<div class="secupress-col-summary-text secupress-flex secupress-flex-spaced">
-				<p class="secupress-text-medium secupress-mb0"><?php _e( 'Perform a better grade<br> and unlock these awesome features', 'secupress' ); ?></p>
+				<p class="secupress-text-medium secupress-mb0"><?php esc_html_e( 'Get a better score and unlock all features', 'secupress' ); ?></p>
 
 
 				<p class="secupress-p1">
@@ -369,11 +369,11 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 	<div class="secupress-flex secupress-wrap secupress-pt1 secupress-pb1">
 		<div class="secupress-col-1-2 secupress-flex secupress-landscape-blob">
 			<div class="secupress-col">
-				<i class="icon-schedule" aria-hidden="true"></i>
+				<i class="icon-antispam" aria-hidden="true"></i>
 			</div>
 			<div class="secupress-col">
-				<p class="secupress-blob-title"><?php esc_html_e( 'Schedule', 'secupress' ); ?></p>
-				<p class="secupress-blob-desc"><?php _e( 'Keep up the good security by scheduling your next scans. No need to do it manually each week anymore…', 'secupress' ); ?></p>
+				<p class="secupress-blob-title"><?php esc_html_e( 'Anti Spam', 'secupress' ); ?></p>
+				<p class="secupress-blob-desc"><?php esc_html_e( 'Traffic done by bot represents about 60% of the internet. Spams are done by these bots. Don\'t let them do that!', 'secupress' ); ?></p>
 			</div>
 		</div>
 		<div class="secupress-col-1-2 secupress-flex secupress-landscape-blob">
@@ -382,7 +382,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			</div>
 			<div class="secupress-col">
 				<p class="secupress-blob-title"><?php esc_html_e( 'Alerts', 'secupress' ); ?></p>
-				<p class="secupress-blob-desc"><?php _e( 'Receive an alert by e-mail, SMS, or even Slack each time we think it’s necessary for your security.', 'secupress' ); ?></p>
+				<p class="secupress-blob-desc"><?php esc_html_e( 'Be alerted by receiving SMS, mobile notifications, or even by social networks besides alerts email.', 'secupress' ); ?></p>
 			</div>
 		</div>
 		<div class="secupress-col-1-2 secupress-flex secupress-landscape-blob">
@@ -391,7 +391,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			</div>
 			<div class="secupress-col">
 				<p class="secupress-blob-title"><?php esc_html_e( 'Firewall', 'secupress' ); ?></p>
-				<p class="secupress-blob-desc"><?php _e( 'Be pro-active and lock IPs or requests you think that could be bad for you. We already lock some by default.', 'secupress' ); ?></p>
+				<p class="secupress-blob-desc"><?php esc_html_e( 'Other features of the firewall add an additional level of protection from Internet attacks.', 'secupress' ); ?></p>
 			</div>
 		</div>
 		<div class="secupress-col-1-2 secupress-flex secupress-landscape-blob">
@@ -400,7 +400,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			</div>
 			<div class="secupress-col">
 				<p class="secupress-blob-title"><?php esc_html_e( 'Logs', 'secupress' ); ?></p>
-				<p class="secupress-blob-desc"><?php _e( 'Enter the matrix and take a look at the requests done on your website.', 'secupress' ); ?></p>
+				<p class="secupress-blob-desc"><?php esc_html_e( 'All actions considered as dangerous are held in this log available at any time to check what is happening on your site.', 'secupress' ); ?></p>
 			</div>
 		</div>
 	</div>
