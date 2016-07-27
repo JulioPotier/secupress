@@ -440,44 +440,11 @@ jQuery( document ).ready( function( $ ) {
 
 	} )( window, document, $ );
 
-	// Ask for support button (free).
-	( function( w, d, $, undefined ) {
-		$( ".secupress-ask-support-free" ).on( "click.secupress keyup", function( e ) {
-			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
-				return false;
-			}
-
-			e.preventDefault();
-
-			swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
-				title:              SecuPressi18nScanner.supportTitle,
-				//// confirmButtonText:  SecuPressi18nScanner.supportButton,
-				html:               SecuPressi18nScanner.supportContentFree,
-				confirmButtonColor: SecuPress.supportButtonColor,
-				showCancelButton:   false, ////
-				type:               "question",
-			} ) ).then( function( isConfirm ) {
-				if ( true === isConfirm ) {
-					swal2.close(); ////
-					return; ////
-					/*swal2( $.extend( {}, SecuPress.swal2Defaults, {
-						title:              "Pro Version needed", //// TODO: localize.
-						type:               "error",
-						showCancelButton:   true,
-						confirmButtonText:  "Get Pro now!", //// TODO: localize.
-						confirmButtonColor: SecuPress.supportButtonColor,
-						reverseButtons:     true
-					} ) );*/
-				}
-			} );
-		} );
-	} )( window, document, $ );
-
 
 	// Ask for support button (pro).
 	( function( w, d, $, undefined ) {
-		$( ".secupress-ask-support-pro" ).on( "click.secupress keyup", function( e ) {
-			if ( "keyup" === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
+		$( '.secupress-button-support' ).on( 'click.secupress keyup', function( e ) {
+			if ( 'keyup' === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
 				return false;
 			}
 
@@ -488,12 +455,12 @@ jQuery( document ).ready( function( $ ) {
 				confirmButtonText:  SecuPressi18nScanner.supportButton,
 				html:               SecuPressi18nScanner.supportContentPro,
 				confirmButtonColor: SecuPress.supportButtonColor,
-				type:               "question"
+				type:               'question'
 			} ) ).then( function( isConfirm ) {
 				if ( true === isConfirm ) {
 					swal2.enableLoading();
 
-					$.post( ajaxurl, {}, null, "json" )
+					$.post( ajaxurl, {}, null, 'json' )
 					.done( function( r ) {
 						// Display fix re
 					} )
