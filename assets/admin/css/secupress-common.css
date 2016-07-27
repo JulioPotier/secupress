@@ -490,6 +490,7 @@
 	border: 2px solid #ECF0F1;
 	font-size: 13px;
 	padding: 7px 10px;
+	height: auto;
 }
 
 /* Sweet alert childrens */
