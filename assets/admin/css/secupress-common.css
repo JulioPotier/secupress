@@ -837,12 +837,21 @@ body[class*="secupress"] .sweet-overlay {
 .secupress-landscape-blob {
 	padding: 20px;
 }
+.secupress-landscape-blob .secupress-col:first-child {
+	flex-basis: 94px;
+	flex-grow: 0;
+	flex-shrink: 0;
+	text-align: center;
+}
 .secupress-landscape-blob .secupress-blob-desc {
 	color: #5a626f;
 }
 .secupress-landscape-blob i:before {
 	font-size: 55px;
 	color: rgba(90, 98, 111, 0.5);
+}
+.secupress-landscape-blob .icon-antispam:before {
+	font-size: 40px;
 }
 
 /**

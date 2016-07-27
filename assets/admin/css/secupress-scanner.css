@@ -1493,6 +1493,7 @@ ul.secupress-checkbox-group-vertical,
 	padding: 25px 0;
 }
 .secupress-go-farther .secupress-col:first-child {
+	flex-basis: 100%;
 	padding-left: 0;
 }
 .secupress-go-farther .secupress-col:last-child {
