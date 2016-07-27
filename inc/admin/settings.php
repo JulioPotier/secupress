@@ -444,7 +444,7 @@ function __secupress_scanners() {
 										<p class="secupress-score secupress-score-subtext secupress-m0"><?php echo $counts['subtext']; ?></p>
 									</div>
 
-									<ul class="secupress-chart-legend">
+									<ul class="secupress-chart-legend hide-if-no-js">
 										<li class="status-good" data-status="good">
 											<span class="secupress-carret"></span>
 											<?php esc_html_e( 'Good', 'secupress' ); ?>
@@ -493,6 +493,8 @@ function __secupress_scanners() {
 						</div><!-- .secupress-tab-content -->
 
 						<div id="secupress-latest" class="secupress-tab-content hide-if-js" role="tabpanel" aria-labelledby="secupress-l-latest">
+
+							<h3 class="secupress-text-medium hide-if-js"><?php esc_html_e( 'Your last scans', 'secupress' ); ?></h3>
 
 							<div class="secupress-latest-list">
 								<ul class="secupress-reports-list">
@@ -554,7 +556,7 @@ function __secupress_scanners() {
 
 						</div><!-- .secupress-tab-content -->
 					</div><!-- .secupress-tabs-contents -->
-					<div class="secupress-tabs-controls">
+					<div class="secupress-tabs-controls hide-if-no-js">
 						<ul class="secupress-tabs secupress-tabs-controls-list" role="tablist" data-content="#sp-tab-scans">
 							<li role="presentation">
 								<a id="secupress-l-latest" href="#secupress-latest" role="tab" aria-selected="false" aria-controls="secupress-latest">

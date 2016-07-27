@@ -435,7 +435,8 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
  */
 .secupress-not-scanned-yet [id="secupress-more-info"],
 .secupress-is-step-2 + [id="secupress-more-info"],
-.secupress-is-step-3 + [id="secupress-more-info"] {
+.secupress-is-step-3 + [id="secupress-more-info"],
+.no-js [id="secupress-more-info"] {
 	position: relative;
 	margin: 0 -33px;
 	left: 0;
@@ -457,7 +458,8 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 	opacity: 0;
 	visibility: hidden;
 }
-[id="secupress-more-info"].secupress-open .secupress-blob {
+[id="secupress-more-info"].secupress-open .secupress-blob,
+.no-js .secupress-blob {
 	transform: scale(1);
 	opacity: 1;
 	visibility: visible;
@@ -595,6 +597,10 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 	margin-right: 30px;
 	line-height: 1;
 }
+.no-js .secupress-chart-container {
+	width: 125px;
+	height: 170px;
+}
 .secupress-chart-legend li {
 	margin: 0;
 }
@@ -672,8 +678,18 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 	flex-grow: 0;
 	min-height: 265px;
 }
+.no-js .secupress-tabs-contents {
+	flex-basis: 100%;
+	min-height: none;
+	display: block;
+}
 .secupress-tabs-contents > div {
 	padding: 0 35px 0 0;
+}
+.no-js .secupress-tabs-contents > div + div {
+	margin-top: 25px;
+	padding-top: 25px;
+	border-top: 1px solid #393e46;
 }
 .secupress-tab-content[id="secupress-schedule"] .secupress-text-medium {
 	position: relative;
@@ -1235,7 +1251,7 @@ a + .secupress-row-actions {
 .secupress-item-all .secupress-label {
 	text-transform: uppercase;
 }
-.status-new .secupress-label {
+.status-notscannedyet .secupress-label {
 	border-color: #F1C40F;
 	color: #F1C40F;
 }
