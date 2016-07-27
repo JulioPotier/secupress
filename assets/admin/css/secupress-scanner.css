@@ -1234,7 +1234,7 @@ a + .secupress-row-actions {
 .secupress-item-all .secupress-label {
 	text-transform: uppercase;
 }
-.status-new .secupress-label {
+.status-notscannedyet .secupress-label {
 	border-color: #F1C40F;
 	color: #F1C40F;
 }
