@@ -1,10 +1,8 @@
 <div class="secupress-scans-group secupress-group-new">
 	<?php
 	if ( ! $is_subsite ) {
-		$module_icon    = ! empty( $modules[ $module_name ]['icon'] )               ? $modules[ $module_name ]['icon']               : '';
-		$module_title   = ! empty( $modules[ $module_name ]['title'] )              ? $modules[ $module_name ]['title']              : '';
-		$module_summary = ! empty( $modules[ $module_name ]['summaries']['small'] ) ? $modules[ $module_name ]['summaries']['small'] : '';
-		?>
+	?>
+
 		<div class="secupress-sg-header secupress-flex secupress-flex-spaced">
 
 			<div class="secupress-sgh-name">
@@ -14,14 +12,15 @@
 			</div>
 
 			<div class="secupress-sgh-actions secupress-flex">
-				<button class="secupress-vnormal hide-if-no-js dont-trigger-hide trigger-hide-first" type="button" data-trigger="slidetoggle" data-target="secupress-group-content-<?php echo $module_name; ?>">
+				<button class="secupress-vnormal hide-if-no-js dont-trigger-hide trigger-hide-first" type="button" data-trigger="slidetoggle" data-target="secupress-group-content-new">
 					<i class="icon-angle-up" aria-hidden="true"></i>
 					<span class="screen-reader-text"><?php _e( 'Show/Hide panel', 'secupress' ); ?></span>
 				</button>
 			</div>
 
 		</div><!-- .secupress-sg-header -->
-		<?php
+
+	<?php
 	}
 	?>
 
