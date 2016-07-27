@@ -253,7 +253,7 @@ if ( ! $secupress_tests ) {
 
 						<div class="secupress-row-actions secupress-flex secupress-flex-spaced secupress-mt2">
 							<p class="secupress-action-doc">
-								<a href="<?php echo $current_test::DOC_URL; ?>" class="secupress-button secupress-button-mini shadow">
+								<a href="<?php echo $current_test::DOC_URL; ?>" class="secupress-button secupress-button-mini shadow" target="_blank" title="<?php _e( 'Open in a new window', 'secupress' ); ?>">
 									<span class="icon">
 										<i class="icon-file-text" aria-hidden="true"></i>
 									</span>
