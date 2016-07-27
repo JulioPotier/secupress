@@ -407,7 +407,6 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 					if ( $this.is( ":checked" ) ) {
 						$elems.not( ":visible" ).trigger( "secupressbeforeshow" ).show( tempo, function() {
 							$( this ).trigger( "secupressaftershow" );
-							$( document ).trigger( 'secupress:openDependency', [ $( this ) ] );
 						} );
 					}
 					// The checkbox is not checked: close if visible and no other checkboxes that want this row to be open is checked.
@@ -1073,12 +1072,12 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		});
 
 	// same action as previous for textarea depending on other actions to be displayed
-	$( document ).on( 'secupress:openDependency', function( e, $el ){
-		$el.find('textarea').AutoSized()
-			.on('focus.secupress', function(){
+	$( '#wpbody-content' ).find( '.secupress-setting-row' ).on( 'secupressaftershow', function() {
+		$( this ).find( '.secupress-textarea-container' ).find( 'textarea' ).AutoSized()
+			.one('focus.secupress', function(){
 				$(this).parent().addClass('textarea-focused');
 			})
-			.on('blur.secupress', function(){
+			.one('blur.secupress', function(){
 				$(this).parent().removeClass('textarea-focused');
 			});
 	} );
