@@ -538,8 +538,8 @@ jQuery( document ).ready( function( $ ) {
 			var $sp_1st_scan = $( '.secupress-introduce-first-scan' ),
 				$main_header = $( '.secupress-scanners-header' ),
 				isFirstScan  = $button.closest( '.secupress-not-scanned-yet' ).length,
-				$bar_val     = $button.find( '.secupress-progressbar-val' ),
-				$text_val    = $bar_val.find( '.secupress-progress-val-txt' ),
+				$bar_val     = $( '.secupress-progressbar-val' ),
+				$text_val    = $( '.secupress-progress-val-txt' ),
 				init_percent = 2,
 				secupressProgressTimer;
 
