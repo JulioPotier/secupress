@@ -277,7 +277,6 @@ p.secupress-sh-subtitle {
 	height: 1px;
 	background: #aaa;
 }
-
 .secupress-setting-content-col {
 	padding-right: 20px;
 	-webkit-box-flex: 1;
@@ -286,6 +285,10 @@ p.secupress-sh-subtitle {
 	flex-grow: 1;
 }
 .secupress-get-pro-col {
+	display: none;
+}
+.secupress-pro-row .secupress-get-pro-col {
+	display: block;
 	-webkit-flex-basis: 180px;
 	-ms-flex-preferred-size: 180px;
 	flex-basis: 180px;
