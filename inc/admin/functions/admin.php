@@ -172,3 +172,27 @@ function secupress_text_diff( $left_string, $right_string, $args = array() ) {
 
 	return $r;
 }
+
+/**
+ * Keep the old scan report (grade + status) to be compared on step4
+ *
+ * @since 1.0
+ * @author Julio Potier
+ **/
+function secupress_set_old_report() {
+	$grade  = secupress_get_scanner_counts( 'grade' );
+	$report = get_option( SECUPRESS_SCAN_SLUG );
+	update_option( 'secupress_step1_report', array( 'grade' => $grade, 'report' => $report ) );
+}
+
+
+/**
+ * Return the old scan report, see secupress_set_old_report()
+ *
+ * @since 1.0
+ * @return (array|false)
+ * @author Julio Potier
+ **/
+function secupress_get_old_report() {
+	return get_option( 'secupress_step1_report', $grade );
+}

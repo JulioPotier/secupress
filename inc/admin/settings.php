@@ -369,6 +369,10 @@ function __secupress_scanners() {
 		$last_report = date_i18n( _x( 'M dS, Y \a\t h:ia', 'Latest scans', 'secupress' ), $items[0]['time'] );
 	}
 
+	if ( isset( $_GET['step'] ) && 1 == $_GET['step'] ) {
+		secupress_set_old_report();
+	}
+
 	$currently_scanning_text = '
 		<span aria-hidden="true" class="secupress-second-title">' . esc_html__( 'Currently scanning', 'secupress' ) . '</span>
 		<span class="secupress-scanned-items">
