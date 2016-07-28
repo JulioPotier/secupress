@@ -94,19 +94,13 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 	public function scan() {
 		global $wpdb;
 
-		if ( get_transient( 'select-db-tables-to-rename' ) ) {
-			$this->add_message( 100 );
+		if ( 'wp_' === $wpdb->prefix || 'wordpress_' === $wpdb->prefix ) {
+			// "bad"
+			$this->add_message( 200, array( '<code>' . $wpdb->prefix . '</code>' ) );
 		} else {
-			// Check db prefix.
-			$check = 'wp_' === $wpdb->prefix || 'wordpress_' === $wpdb->prefix;
-
-			if ( $check ) {
-				// "bad"
-				$this->add_message( 200, array( '<code>' . $wpdb->prefix . '</code>' ) );
-			}
+			// "good"
+			$this->add_message( 0 );
 		}
-		// "good"
-		$this->maybe_set_status( 0 );
 
 		return parent::scan();
 	}
@@ -129,30 +123,37 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 		// Check db prefix.
 		$check = 'wp_' === $wpdb->prefix || 'wordpress_' === $wpdb->prefix;
 
-		if ( $check ) {
-
-			$old_prefix = $wpdb->prefix;
-
-			if ( secupress_db_access_granted() ) {
-
-				if ( is_writable( $wpconfig_filename ) && preg_match( '/\$table_prefix.*=.*(\'' . $old_prefix . '\'|"' . $old_prefix . '");.*/', file_get_contents( $wpconfig_filename ) ) ) {
-
-					$good_tables = secupress_get_non_wp_tables();
-
-					if ( $good_tables ) {
-						$this->add_fix_message( 304 );
-						$this->add_fix_action( 'select-db-tables-to-rename' );
-					} else {
-						$this->manual_fix();
-					}
-				} else {
-					$this->add_fix_message( 302 );
-				}
-			} else {
-				$this->add_fix_message( 301 );
-			}
+		if ( ! $check ) {
+			// "good"
+			$this->add_fix_message( 0 );
+			return parent::fix();
 		}
 
+		$old_prefix = $wpdb->prefix;
+
+		if ( ! secupress_db_access_granted() ) {
+			// "cantfix"
+			$this->add_fix_message( 301 );
+			return parent::fix();
+		}
+
+		if ( is_writable( $wpconfig_filename ) && preg_match( '/\$table_prefix.*=.*(\'' . $old_prefix . '\'|"' . $old_prefix . '");.*/', file_get_contents( $wpconfig_filename ) ) ) {
+
+			$good_tables = secupress_get_non_wp_tables();
+
+			if ( $good_tables ) {
+				// "cantfix"
+				$this->add_fix_message( 304 );
+				$this->add_fix_action( 'select-db-tables-to-rename' );
+			} else {
+				$this->manual_fix();
+			}
+		} else {
+			// "cantfix"
+			$this->add_fix_message( 302 );
+		}
+
+		// "good"
 		$this->maybe_set_fix_status( 0 );
 
 		return parent::fix();
