@@ -424,6 +424,14 @@ i.bold {
 	color: inherit;
 	font-weight: normal;
 }
+.secupress-section p.secupress-small-caracters {
+	width: 400px;
+	max-width: 100%;
+	margin: 3em auto;
+	text-align: center;
+	font-size: 11px;
+	color: #5A626F;
+}
 
 /**
  * === Flexbox

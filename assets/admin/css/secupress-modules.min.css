@@ -780,6 +780,48 @@ fieldset.secupress-boxed-group > b {
 	font-weight: 500;
 }
 
+/* Switchers */
+.secupress-inline-options button.secupress-button {
+	position: relative;
+	min-width: 115px;
+	letter-spacing: 0.05em;
+	padding: 6px 20px;
+	background: #222831;
+}
+.secupress-inline-options button.secupress-button + button {
+	margin-left: -6px;
+}
+.secupress-should-be-disabled {
+	color: #5A626F!important;
+}
+.secupress-inline-options button.secupress-current {
+	z-index: 1;
+	background: #2BCDC1;
+}
+.secupress-inline-options .secupress-tip {
+	position: absolute;
+	left: 100%;
+	top: 50%;
+	width: 110px;
+	padding: 3px 4px;
+	margin: -1em 0 0 10px;
+	font-size: 11px;
+	letter-spacing: 0;
+	color: #FFF;
+	background: #222831;
+	border-radius: 2px;
+}
+.secupress-inline-options .secupress-tip:after {
+	content: "";
+	position: absolute;
+	left: -5px;
+	top: 50%;
+	margin-top: -6px;
+	border-right: 6px solid #222831;
+	border-top: 6px solid transparent;
+	border-bottom: 6px solid transparent;
+}
+
 /* Pricing blocks */
 .secupress-pricing {
 	padding: 35px 25px;
@@ -877,6 +919,13 @@ fieldset.secupress-boxed-group > b {
 	padding: 6px 35px;
 	font-size: 11px;
 	font-weight: bold;
+}
+
+/* 3 cols with offers */
+.secupress-pro-crossed-offers + .secupress-pro-advantages {
+	margin-top: 2em;
+	padding-top: 3em;
+	border-top: 1px solid #ECF0F1;
 }
 
 /* EXISTING */

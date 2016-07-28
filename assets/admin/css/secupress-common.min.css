@@ -858,6 +858,13 @@ body[class*="secupress"] .sweet-overlay {
 .secupress-landscape-blob .icon-antispam:before {
 	font-size: 40px;
 }
+.secupress-pro-advantages .secupress-blob-title {
+	margin-bottom: 0;
+	color: #F19B12;
+}
+.secupress-pro-advantages .secupress-blob-desc {
+	margin-top: 0.5em;
+}
 
 /**
  * Commons settings styles
