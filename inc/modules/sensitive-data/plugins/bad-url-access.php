@@ -38,12 +38,10 @@ function secupress_bad_url_access_activation() {
 		$rules = '';
 	}
 
-	secupress_add_module_rules_or_notice_and_deactivate( array(
-		'rules'     => $rules,
-		'marker'    => 'bad_url_access',
-		'module'    => 'sensitive-data',
-		'submodule' => basename( __FILE__, '.php' ),
-		'title'     => __( 'Bad URL Access', 'secupress' ),
+	secupress_add_module_rules_or_notice( array(
+		'rules'  => $rules,
+		'marker' => 'bad_url_access',
+		'title'  => __( 'Bad URL Access', 'secupress' ),
 	) );
 }
 

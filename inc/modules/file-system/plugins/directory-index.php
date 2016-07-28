@@ -38,13 +38,11 @@ function secupress_directory_index_activation() {
 		$rules = '';
 	}
 
-	secupress_add_module_rules_or_notice_and_deactivate( array(
-		'rules'     => $rules,
-		'marker'    => 'directory_index',
-		'iis_args'  => array( 'node_types' => 'defaultDocument' ),
-		'module'    => 'file-system',
-		'submodule' => basename( __FILE__, '.php' ),
-		'title'     => __( 'Directory Index', 'secupress' ),
+	secupress_add_module_rules_or_notice( array(
+		'rules'    => $rules,
+		'marker'   => 'directory_index',
+		'iis_args' => array( 'node_types' => 'defaultDocument' ),
+		'title'    => __( 'Directory Index', 'secupress' ),
 	) );
 }
 
