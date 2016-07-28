@@ -146,7 +146,7 @@ function secupress_warning_wp_config_permissions() {
 	}
 
 	$message  = sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
-	$message .= sprintf( __( 'It seems we don\'t have <a href="%1$s" target="_blank">writing permissions</a> on %2$s file.', 'secupress' ), 'http://codex.wordpress.org/Changing_File_Permissions', '<code>wp-config.php</code>' );
+	$message .= sprintf( __( 'The %1$s file does not seem to be writable, read more about the <a href="%2$s" target="_blank">writing permissions</a>.', 'secupress' ), '<code>wp-config.php</code>', 'http://codex.wordpress.org/Changing_File_Permissions' );
 
 	secupress_add_notice( $message, 'error', 'wpconfig-not-writable' );
 }
@@ -282,7 +282,7 @@ function secupress_warning_no_oneclick_scan_yet() {
 			<p><?php esc_html_e( 'Scan every security points for the first time in your website, right now.', 'secupress' ); ?></p>
 		</div>
 		<div class="secupress-col-1-4 secupress-col-cta">
-			<a class="secupress-button secupress-button-primary button-secupress-scan" href="<?php echo esc_url( wp_nonce_url( secupress_admin_url( 'scanners' ), 'first_oneclick-scan' ) ) . '&oneclick-scan=1'; ?>">
+			<a class="secupress-button secupress-button-primary secupress-button-scan" href="<?php echo esc_url( wp_nonce_url( secupress_admin_url( 'scanners' ), 'first_oneclick-scan' ) ) . '&oneclick-scan=1'; ?>">
 				<span class="icon">
 					<i class="icon-radar" aria-hidden="true"></i>
 				</span>

@@ -12,6 +12,9 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 
 	/** Constants. ============================================================================== */
 
+
+	/** Properties. ============================================================================= */
+
 	/**
 	 * Class version.
 	 *
@@ -29,26 +32,18 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 	 */
 	protected static $_instance;
 
-	/**
-	 * Priority.
-	 *
-	 * @var (string)
-	 */
-	public    static $prio = 'high';
 
-
-	/** Public methods. ========================================================================= */
+	/** Init and messages. ====================================================================== */
 
 	/**
 	 * Init.
 	 *
 	 * @since 1.0
 	 */
-	protected static function init() {
-		self::$type     = 'WordPress';
-		self::$title    = __( 'Check your <code>wp-config.php</code> file, especially the PHP constants.', 'secupress' );
-		self::$more     = __( 'You can use the <code>wp-config.php</code> file to improve the security of your website. Learn about the best practice with this test.', 'secupress' );
-		self::$more_fix = __( 'This will set some PHP constants in your <code>wp-config.php</code> file to improve the security of your website.', 'secupress' );
+	protected function init() {
+		$this->title    = __( 'Check your <code>wp-config.php</code> file, especially the PHP constants.', 'secupress' );
+		$this->more     = __( 'You can use the <code>wp-config.php</code> file to improve the security of your website. Learn about the best practice with this test.', 'secupress' );
+		$this->more_fix = __( 'Set some PHP constants in your <code>wp-config.php</code> file to improve the security of your website.', 'secupress' );
 	}
 
 
@@ -69,14 +64,14 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 			// "warning"
 			100 => __( 'This fix is <strong>pending</strong>, please reload the page to apply it now.', 'secupress' ),
 			// "bad"
-			201 => __( '%s should not be set with the default value.', 'secupress' ),
-			202 => __( '%s should be set.', 'secupress' ),
-			203 => __( '%s should not be set.', 'secupress' ),
-			204 => __( '%s should not be empty.', 'secupress' ),
-			205 => __( '%1$s should be set on %2$s.', 'secupress' ),
-			206 => __( '%1$s should be set on %2$s or less.', 'secupress' ),
+			201 => __( 'In your <code>wp-config.pgp</code> file, the PHP constant %s should not be set with the default value.', 'secupress' ),
+			202 => __( 'In your <code>wp-config.pgp</code> file, the PHP constant %s should be set.', 'secupress' ),
+			203 => __( 'In your <code>wp-config.pgp</code> file, the PHP constant %s should not be set.', 'secupress' ),
+			204 => __( 'In your <code>wp-config.pgp</code> file, the PHP constant %s should not be empty.', 'secupress' ),
+			205 => __( 'In your <code>wp-config.pgp</code> file, the PHP constant %1$s should be set on %2$s.', 'secupress' ),
+			206 => __( 'In your <code>wp-config.pgp</code> file, the PHP constant %1$s should be set on %2$s or less.', 'secupress' ),
 			// "cantfix"
-			300 => __( 'Some constants could not be set correctly: %s.', 'secupress' ),
+			300 => __( 'Some PHP constants could not be set correctly: %s.', 'secupress' ),
 			301 => __( 'I can not create a must use plugin in <code>%s</code>, but i need it to change the default value for <code>COOKIEHASH</code>.', 'secupress' ),
 		);
 

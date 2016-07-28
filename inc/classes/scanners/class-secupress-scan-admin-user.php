@@ -12,6 +12,9 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 
 	/** Constants. ============================================================================== */
 
+
+	/** Properties. ============================================================================= */
+
 	/**
 	 * Class version.
 	 *
@@ -29,32 +32,24 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 	 */
 	protected static $_instance;
 
-	/**
-	 * Priority.
-	 *
-	 * @var (string)
-	 */
-	public    static $prio = 'high';
 
-
-	/** Public methods. ========================================================================= */
+	/** Init and messages. ====================================================================== */
 
 	/**
 	 * Init.
 	 *
 	 * @since 1.0
 	 */
-	protected static function init() {
-		self::$type  = 'WordPress';
-		self::$title = __( 'Check if the <em>admin</em> account is correctly protected.', 'secupress' );
-		self::$more  = __( 'It is important to protect the famous <em>admin</em> account to avoid simple brute-force attacks on it. This account is most of the time the first one created when you install WordPress, and it is well known by attackers.', 'secupress' );
-
+	protected function init() {
 		$current_user = wp_get_current_user();
 
+		$this->title = __( 'Check if the <em>admin</em> account is correctly protected.', 'secupress' );
+		$this->more  = __( 'It is important to protect the famous <em>admin</em> account to avoid simple brute-force attacks on it. This account is most of the time the first one created when you install WordPress, and it is well known by attackers.', 'secupress' );
+
 		if ( 'admin' === $current_user->user_login ) {
-			self::$more_fix = __( 'You will be asked for a new username and your account will be renamed.', 'secupress' );
+			$this->more_fix = __( 'You will be asked for a new username and your account will be renamed.', 'secupress' );
 		} else {
-			self::$more_fix = __( 'This will remove all roles and capabilities from the <em>admin</em> account if it exists. If it does not exist and user subscriptions are open, the account will be created with no role nor capabilities.', 'secupress' );
+			$this->more_fix = __( 'Remove all roles and capabilities from the <em>admin</em> account if it exists. If it does not exist and user subscriptions are open, the account will be created with no role nor capabilities.', 'secupress' );
 		}
 	}
 
@@ -82,10 +77,10 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 			203 => __( 'Cannot create a user with an empty login name!' ), // WPi18n.
 			204 => __( 'Sorry, the username %s already exists!', 'secupress' ),
 			205 => __( 'The username %1$s is invalid because it uses illegal characters. Spot the differences: %2$s.', 'secupress' ),
-			206 => __( 'Sorry, I could not remove the role from the %s account. You should try to remove it manually.', 'secupress' ),
+			206 => __( 'Sorry, the role cannot be removed from the %s account. You should try to remove it manually.', 'secupress' ),
 			207 => __( 'Sorry, the %s account could not be created. You should try to create it manually and then remove its role.', 'secupress' ),
 			// "cantfix"
-			300 => __( 'Oh! The %s account is yours! Please choose a new login for your account.', 'secupress' ),
+			300 => __( 'Oh! The %s account is yours! Please choose a new login for your account on next step.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -175,7 +170,6 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 			else {
 				// This fix requires the user to take action.
 				$this->add_fix_message( 300, array( '<em>' . $username . '</em>' ) );
-				$this->add_fix_action( 'rename-admin-username' );
 			}
 		}
 
@@ -207,6 +201,29 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 
 
 	/**
+	 * Return an array of actions if a manual fix is needed here.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array)
+	 */
+	public function need_manual_fix() {
+		$username = 'admin';
+		$user_id  = username_exists( $username );
+
+		// The "admin" account exists and has a role or capabilities.
+		if ( static::user_has_capas( $user_id ) ) {
+			// It's you!
+			if ( $user_id === get_current_user_id() ) {
+				return array( 'rename-admin-username' => 'rename-admin-username' );
+			}
+		}
+
+		return array();
+	}
+
+
+	/**
 	 * Try to fix the flaw(s) after requiring user action.
 	 *
 	 * @since 1.0
@@ -223,19 +240,15 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 		if ( 'admin' === $username ) {
 			// "bad"
 			$this->add_fix_message( 202, array( '<em>' . $username . '</em>' ) );
-			$this->add_fix_action( 'rename-admin-username' );
 		} elseif ( ! $username ) {
 			// "bad"
 			$this->add_fix_message( 203 );
-			$this->add_fix_action( 'rename-admin-username' );
 		} elseif ( username_exists( $username ) ) {
 			// "bad"
 			$this->add_fix_message( 204, array( '<em>' . $username . '</em>' ) );
-			$this->add_fix_action( 'rename-admin-username' );
 		} elseif ( sanitize_user( $username, true ) !== $username ) {
 			// "bad"
 			$this->add_fix_message( 205, array( '<em>' . $username . '</em>', '<em>' . sanitize_user( $username, true ) . '</em>' ) );
-			$this->add_fix_action( 'rename-admin-username' );
 		} else {
 			// $username ok, can't rename now or all nonces will be broken and the user disconnected
 			$current_user_id = get_current_user_id();

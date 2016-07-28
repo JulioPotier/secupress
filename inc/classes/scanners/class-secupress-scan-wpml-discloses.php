@@ -12,6 +12,9 @@ class SecuPress_Scan_Wpml_Discloses extends SecuPress_Scan implements SecuPress_
 
 	/** Constants. ============================================================================== */
 
+
+	/** Properties. ============================================================================= */
+
 	/**
 	 * Class version.
 	 *
@@ -29,28 +32,21 @@ class SecuPress_Scan_Wpml_Discloses extends SecuPress_Scan implements SecuPress_
 	 */
 	protected static $_instance;
 
-	/**
-	 * Priority.
-	 *
-	 * @var (string)
-	 */
-	public    static $prio = 'medium';
-
-
 	/** Public methods. ========================================================================= */
+
+	/** Init and messages. ====================================================================== */
 
 	/**
 	 * Init.
 	 *
 	 * @since 1.0
 	 */
-	protected static function init() {
-		self::$type  = __( 'Plugins' );
+	protected function init() {
 		/* translators: %s is a plugin name */
-		self::$title = sprintf( __( 'Check if the %s plugin discloses its version.', 'secupress' ), 'WPML' );
-		self::$more  = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of informations. His goal is to find outdated versions of your server softwares or WordPress components. Don\'t let them easily find these informations.', 'secupress' );
+		$this->title    = sprintf( __( 'Check if the %s plugin discloses its version.', 'secupress' ), 'WPML' );
+		$this->more     = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of informations. His goal is to find outdated versions of your server softwares or WordPress components. Don\'t let them easily find these informations.', 'secupress' );
 		/* translators: %s is a plugin name */
-		self::$more_fix = sprintf( __( 'This will hide the %s version to avoid being read by attackers.', 'secupress' ), 'WooCommerce' );
+		$this->more_fix = sprintf( __( 'Hide the %s version to avoid being read by attackers.', 'secupress' ), 'WooCommerce' );
 	}
 
 
@@ -77,7 +73,7 @@ class SecuPress_Scan_Wpml_Discloses extends SecuPress_Scan implements SecuPress_
 			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
 			// "bad"
 			/* translators: 1 is a plugin name, 2 is some related info */
-			200 => sprintf( __( 'The website displays the <strong>%1$s\'s version</strong> in the homepage source code (%2$s).', 'secupress' ), 'WPML', '%s' ),
+			200 => sprintf( __( 'The %s plugin displays its version in your homepage source code (%2$s).', 'secupress' ), 'WooCommerce', '%s' ),
 		);
 
 		if ( isset( $message_id ) ) {

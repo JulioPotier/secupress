@@ -3,19 +3,19 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 
 $this->set_current_section( 'brutefoce' );
-$this->add_section( __( 'Anti Bruteforce Management', 'secupress' ) );
+$this->add_section( __( 'Anti Brute-Force Management', 'secupress' ) );
 
 
 $main_field_name = $this->get_field_name( 'activated' );
 
 $this->add_field( array(
-	'title'             => __( 'Use the Anti Bruteforce', 'secupress' ),
+	'title'             => __( 'Use the Anti Brute-Force', 'secupress' ),
 	'description'       => __( 'When a single visitor (IP Address) is hitting hard on your website (10 times per second), we should tell him to go slowly, and if he continues, lock his IP Address.', 'secupress' ),
 	'label_for'         => $main_field_name,
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
 	'value'             => (int) secupress_is_submodule_active( 'firewall', 'bruteforce' ),
-	'label'             => __( 'Yes, I want to use the Anti-Bruteforce on my website', 'secupress' ),
+	'label'             => __( 'Yes, I want to use the Anti-Brute-Force on my website', 'secupress' ),
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
@@ -27,7 +27,7 @@ $this->add_field( array(
 		),
 		array(
 			'type'        => 'warning',
-			'description' => sprintf( __( 'This is NOT an anti login bruteforce, if you want this kind of module, just activate the <a href="%s#row-login-protection_type">Login Attempts Blocker</a>.', 'secupress' ), esc_url( secupress_admin_url( 'modules', 'users-login' ) ) ),
+			'description' => sprintf( __( 'This is NOT an anti login brute-force, if you want this kind of module, just activate the <a href="%s#row-login-protection_type">Login Attempts Blocker</a>.', 'secupress' ), esc_url( secupress_admin_url( 'modules', 'users-login' ) ) ),
 		),
 	),
 ) );
