@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 		<p class="secupress-catchphrase">Améliorez votre sécurité en débloquant<br>toutes les fonctionnalités de SecuPress Pro</p>
 
 		<p class="secupress-inline-options secupress-text-center hide-if-no-js secupress-type-yearly">
-			<button type="button" class="secupress-button secupress-button-primary secupress-inline-option secupress-current" data-type="yearly">
+			<button type="button" class="secupress-button secupress-inline-option secupress-current" data-type="yearly">
 				<?php esc_html_e( 'Yearly', 'secupress' ); ?>
 			</button>
 			<button type="button" class="secupress-button secupress-inline-option secupress-should-be-disabled" data-type="monthly">
@@ -36,16 +36,21 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 			<div class="secupress-col-1-3 secupress-flex">
 				<div class="secupress-price secupress-box-shadow secupress-flex-col">
 					<div class="secupress-price-header">
-						<p class="secupress-price-name">Lite</p>
-						<p class="secupress-amounts">
+						<p class="secupress-price-name"><?php _e( 'Lite', 'secupress' ); ?></p>
+						<p class="secupress-amounts secupress-hide-monthly">
 							<span class="secupress-dollars">$</span>
 							<ins>39</ins>
 							<del>$59</del>
 						</p>
-						<p class="secupress-price-desc">soit 3 mois gratuits</p>
+						<p class="secupress-amounts secupress-hide-yearly">
+							<span class="secupress-dollars">$</span>
+							<span class="price">5<small>.99</small></span>
+						</p>
+						<p class="secupress-price-desc secupress-hide-monthly">soit 3 mois gratuits</p>
 					</div>
 					<div class="secupress-price-details">
-						<p class="secupress-pd-info">Billed per year</p>
+						<p class="secupress-pd-info secupress-hide-monthly">Billed per year</p>
+						<p class="secupress-pd-info secupress-hide-yearly">Billed per month</p>
 						<p class="secupress-pd-benefits">
 							Secure &amp; Protect
 							<strong>1 Website</strong>
@@ -60,16 +65,21 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 			<div class="secupress-col-1-3 secupress-flex">
 				<div class="secupress-price secupress-box-shadow secupress-flex-col">
 					<div class="secupress-price-header">
-						<p class="secupress-price-name">Lite</p>
-						<p class="secupress-amounts">
+						<p class="secupress-price-name"><?php _e( 'Standard', 'secupress' ); ?></p>
+						<p class="secupress-amounts secupress-hide-monthly">
 							<span class="secupress-dollars">$</span>
 							<ins>129</ins>
 							<del>$149</del>
 						</p>
-						<p class="secupress-price-desc">soit 3 mois gratuits</p>
+						<p class="secupress-amounts secupress-hide-yearly">
+							<span class="secupress-dollars">$</span>
+							<span class="price">14<small>.99</small></span>
+						</p>
+						<p class="secupress-price-desc secupress-hide-monthly">soit 3 mois gratuits</p>
 					</div>
 					<div class="secupress-price-details">
-						<p class="secupress-pd-info">Billed per year</p>
+						<p class="secupress-pd-info secupress-hide-monthly">Billed per year</p>
+						<p class="secupress-pd-info secupress-hide-yearly">Billed per month</p>
 						<p class="secupress-pd-benefits">
 							Secure &amp; Protect
 							<strong>3 Websites</strong>
@@ -84,16 +94,21 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 			<div class="secupress-col-1-3 secupress-flex">
 				<div class="secupress-price secupress-box-shadow secupress-flex-col">
 					<div class="secupress-price-header">
-						<p class="secupress-price-name">Lite</p>
-						<p class="secupress-amounts">
+						<p class="secupress-price-name"><?php _e( 'Unlimited', 'secupress' ); ?></p>
+						<p class="secupress-amounts secupress-hide-monthly">
 							<span class="secupress-dollars">$</span>
 							<ins>249</ins>
 							<del>$299</del>
 						</p>
-						<p class="secupress-price-desc">soit 3 mois gratuits</p>
+						<p class="secupress-amounts secupress-hide-yearly">
+							<span class="secupress-dollars">$</span>
+							<span class="price">29<small>.99</small></span>
+						</p>
+						<p class="secupress-price-desc secupress-hide-monthly">soit 3 mois gratuits</p>
 					</div>
 					<div class="secupress-price-details">
-						<p class="secupress-pd-info">Billed per year</p>
+						<p class="secupress-pd-info secupress-hide-monthly">Billed per year</p>
+						<p class="secupress-pd-info secupress-hide-yearly">Billed per month</p>
 						<p class="secupress-pd-benefits">
 							Secure &amp; Protect
 							<strong>Unlimited Website</strong>

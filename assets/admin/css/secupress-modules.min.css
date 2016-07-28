@@ -794,7 +794,9 @@ fieldset.secupress-boxed-group > b {
 .secupress-should-be-disabled {
 	color: #5A626F!important;
 }
-.secupress-inline-options button.secupress-current {
+.secupress-inline-options button.secupress-current,
+.secupress-inline-options button.secupress-current:hover,
+.secupress-inline-options button.secupress-current:focus {
 	z-index: 1;
 	background: #2BCDC1;
 }
@@ -821,6 +823,15 @@ fieldset.secupress-boxed-group > b {
 	border-top: 6px solid transparent;
 	border-bottom: 6px solid transparent;
 }
+.secupress-type-yearly + .secupress-pricing .secupress-hide-yearly {
+	display: none;
+}
+.secupress-type-monthly + .secupress-pricing .secupress-hide-monthly {
+	display: none;
+}
+.secupress-type-monthly + .secupress-pricing .secupress-price-cta .secupress-button {
+	background: #CCCCCC;
+}
 
 /* Pricing blocks */
 .secupress-pricing {
@@ -835,8 +846,9 @@ fieldset.secupress-boxed-group > b {
 }
 .secupress-price-header {
 	position: relative;
-	background: #222831;
+	padding-bottom: 2em;
 	color: #FFF;
+	background: #222831;
 	overflow: hidden;
 }
 .secupress-price-header > * {
@@ -882,6 +894,9 @@ fieldset.secupress-boxed-group > b {
 	line-height: 1;
 	text-decoration: none;
 }
+.secupress-amounts .price small {
+	font-size: 24px;
+}
 .secupress-dollars {
 	margin-right: 5px;
 	font-size: 24px;
@@ -896,7 +911,7 @@ fieldset.secupress-boxed-group > b {
 	font-style: italic;
 }
 .secupress-price-desc {
-	margin: 1.5em auto 2em;
+	margin: 1.5em auto 0;
 }
 .secupress-pd-info {
 	margin: 2em 0;
