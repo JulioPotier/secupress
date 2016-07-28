@@ -579,7 +579,10 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				$attributes .= empty( $args['attributes']['rows'] ) ? ' rows="5"'  : '';
 
 				// Don't add expandable feature for these exceptions.
-				$exceptions   = array( 'support_description' );
+				$exceptions   = array(
+					'support_description',
+					'notification-types_emails',
+				);
 				$is_exception = in_array( $args['name'], $exceptions, true );
 
 				$args['label_before'] .= $is_exception ? '' : '<div class="secupress-textarea-container">';
