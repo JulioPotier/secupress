@@ -229,6 +229,11 @@
 	margin-bottom: 0;
 }
 
+.secupress-box-shadow {
+	background: #FFF;
+	box-shadow: 0 10px 15px rgba(34, 40, 49, .2);
+}
+
 /* Border in sections */
 .secupress-bordered {
 	border: 1px solid #CCC;

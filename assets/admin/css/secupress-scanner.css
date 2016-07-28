@@ -986,8 +986,7 @@ a + .secupress-row-actions {
 	color: #5A626F;
 }
 /* Boxes with shadow in every steps */
-.secupress-scans-group,
-.secupress-box-shadow {
+.secupress-scans-group {
 	background: #FFF;
 	box-shadow: 0 10px 15px rgba(34, 40, 49, .2);
 }
