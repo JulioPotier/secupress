@@ -30,12 +30,14 @@ foreach ( $new_scans as $key => $new_scan ) {
 				secupress_require_class( 'scan', $class_name_part );
 			}
 
-			// For this module, order the scans by status: 'good', 'warning', 'bad', 'new'.
-			$this_module_good_scans    = array_intersect_key( $class_name_parts, $good_scans );
-			$this_module_bad_scans     = array_intersect_key( $class_name_parts, $bad_scans );
-			$this_module_warning_scans = array_intersect_key( $class_name_parts, $warning_scans );
-			$class_name_parts          = array_merge( $this_module_good_scans, $this_module_warning_scans, $this_module_bad_scans );
-			unset( $this_module_bad_scans, $this_module_warning_scans, $this_module_good_scans );
+			if ( $scanned_items ) {
+				// For this module, order the scans by status: 'good', 'warning', 'bad', 'new'.
+				$this_module_good_scans    = array_intersect_key( $class_name_parts, $good_scans );
+				$this_module_bad_scans     = array_intersect_key( $class_name_parts, $bad_scans );
+				$this_module_warning_scans = array_intersect_key( $class_name_parts, $warning_scans );
+				$class_name_parts          = array_merge( $this_module_good_scans, $this_module_warning_scans, $this_module_bad_scans );
+				unset( $this_module_bad_scans, $this_module_warning_scans, $this_module_good_scans );
+			}
 		} else {
 			foreach ( $class_name_parts as $option_name => $class_name_part ) {
 				// Display only scanners where we have a scan result or a fix to be done.
@@ -80,7 +82,6 @@ foreach ( $new_scans as $key => $new_scan ) {
 				</p>
 			</div><!-- .secupress-step-content-header -->
 			<?php
-
 			if ( $is_there_something_new && $scanned_items ) {
 				require( SECUPRESS_INC_PATH . 'admin/scanner-step-1-new.php' );
 			}
