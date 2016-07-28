@@ -421,10 +421,18 @@ p.secupress-sh-subtitle {
 	Expandable textareas
 */
 .secupress-expand-trigger-container {
-	position: absolute;
-	left: 0; right: 0; bottom: 0;
-	margin: 0 0 -14px -14px;
 	text-align: center;
+}
+.secupress-textarea-container + .secupress-expand-trigger-container {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	margin: 0 0 -14px -14px;
+}
+.secupress-boxed-group + .secupress-expand-trigger-container {
+	position: relative;
+	margin-top: -33px;
 }
 .secupress-expand-trigger {
 	display: inline-block;
@@ -472,14 +480,18 @@ label.secupress-textarea-label {
 .secupress-boxed-group {
 	width: 100%;
 	height: 200px;
-	margin: .75em auto;
+	margin: .75em auto 1.5em;
 	padding: 10px;
 	background: #ECF0F1;
 	border: 1px solid #ECF0F1;
 	overflow: hidden;
 	transition: all .275s;
 }
-.secupress-boxed-group {
+.secupress-setting-row .secupress-boxed-group {
+	height: auto;
+	max-height: none;
+}
+.no-js .secupress-boxed-group {
 	overflow: auto;
 }
 .secupress-boxed-group .secupress-checkbox:not(:checked) + .label-text:before,

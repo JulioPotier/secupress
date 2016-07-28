@@ -15,7 +15,8 @@ var SecuPress = {
 	swal2ConfirmDefaults: {
 		showCancelButton:  true,
 		closeOnConfirm:    false
-	}
+	},
+	expandButton: '<p class="secupress-expand-trigger-container"><span class="secupress-expand-trigger" tabindex="0"><span class="secupress-expand-txt">' + SecuPressi18nModules.expandTextOpen + '</span><i class="icon-angle-down" aria-hidden="true"></i></span></p>'
 };
 
 /**
@@ -952,13 +953,13 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 
 } )(jQuery, document, window);
 
-// Auto Expand Textarea ============================================================================
+// Auto Expand Textarea ========================================================================
 (function($) {
 
 	var SPautoSized = {},
 		browsers = {},
-		// Expendable items
-		$expendables = $('.secupress-textarea-container');
+		// Expandable items
+		$expandables = $('.secupress-textarea-container');
 
 	browsers.msie = /msie/.test( navigator.userAgent.toLowerCase() );
 	browsers.opera = /opera/.test( navigator.userAgent.toLowerCase() );
@@ -993,10 +994,10 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 
 			// add (+) button				
 			if ( e.scrollHeight > $container.height() && $container.next() ) {
-				SPautoSized.handleExpendButton( $container, true ); // create
+				SPautoSized.handleExpandButton( $container, true ); // create
 			}
 			else if ( e.scrollHeight <= $container.height() && $container.next('.secupress-expand-trigger-container').find('.open').length === 0 ) {
-				SPautoSized.handleExpendButton( $container, false ); // remove
+				SPautoSized.handleExpandButton( $container, false ); // remove
 			}
 		}
 
@@ -1013,10 +1014,10 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	}
 
 	// function to create (+) button
-	SPautoSized.handleExpendButton = function( $container, create ) {
+	SPautoSized.handleExpandButton = function( $container, create ) {
 		// if creation needed, check if exists, or create it
 		if ( ! $container.next('.secupress-expand-trigger-container').length && create ) {
-			$container.after('<p class="secupress-expand-trigger-container"><span class="secupress-expand-trigger" tabindex="0"><span class="secupress-expand-txt">' + SecuPressi18nModules.expandTextOpen + '</span><i class="icon-angle-down" aria-hidden="true"></i></span>').attr('spellcheck', false);
+			$container.after( SecuPress.expandButton ).attr('spellcheck', false);
 		} else if ( $container.next('.secupress-expand-trigger-container').length && create === false ) {
 			$container.next('.secupress-expand-trigger-container').remove();
 		}
@@ -1063,7 +1064,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 
 	// change class on parent textarea on focus/blur
 	// applied only on visible elements (see below for others)
-	$expendables.filter(':visible').find('textarea').AutoSized()
+	$expandables.filter(':visible').find('textarea').AutoSized()
 		.on('focus.secupress', function(){
 			$(this).parent().addClass('textarea-focused');
 		})
@@ -1083,7 +1084,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	} );
 
 	// on click on (+) button
-	$expendables.closest('label').on('click.secupress', '.secupress-expand-trigger', function(){
+	$expandables.closest('label').on('click.secupress', '.secupress-expand-trigger', function(){
 		var $_this     = $(this),
 			$container = $_this.closest('.secupress-expand-trigger-container').prev( '.secupress-textarea-container' ),
 			$textarea  = $container.find( 'textarea' );
@@ -1093,6 +1094,10 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 			$_this.removeClass( 'open' );
 			$_this.find('.secupress-expand-txt').text( SecuPressi18nModules.expandTextOpen );
 			$_this.find('i').removeClass('icon-angle-up').addClass('icon-angle-down');
+			// scroll to the top of the box on close
+			$('html, body').animate({
+				scrollTop: $container.offset().top - 80 // 80 to be slightly over the box
+			}, 275 );
 		} else {
 			SPautoSized.textareaParentHeight( $container, $textarea );
 			$textarea.focusToEnd();
@@ -1103,4 +1108,38 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		return false;
 	});
 
+})(jQuery);
+
+// Auto Expand Boxed Groups ======================================================================
+(function($) {
+	$( '.secupress-boxed-group' ).each(function(){
+		var $box      = $( this ),
+			maxHeight = 200; 
+
+		$box.data( 'height', $box.outerHeight() )
+			  .css( 'height', maxHeight )
+			  .after( SecuPress.expandButton );
+
+		$box.next( '.secupress-expand-trigger-container' ).on( 'click.secupress', function() {
+
+			var $this = $( this );
+
+			if ( $this.hasClass( 'open' ) ) {
+				$box.css( 'height', maxHeight );
+				$this.removeClass( 'open' );
+				$this.find( '.secupress-expand-txt' ).text( SecuPressi18nModules.expandTextOpen );
+				$this.find( 'i' ).removeClass( 'icon-angle-up' ).addClass( 'icon-angle-down' );
+				// scroll to the top of the box on close
+				$('html, body').animate({
+					scrollTop: $box.offset().top - 80 // 80 to be slightly over the box
+				}, 275 );
+			} else {
+				$box.css( 'height', $box.data( 'height' ) );
+				$this.addClass( 'open' );
+				$this.find( '.secupress-expand-txt' ).text( SecuPressi18nModules.expandTextClose );
+				$this.find( 'i' ).removeClass( 'icon-angle-down' ).addClass( 'icon-angle-up' );
+			}
+			return false;
+		});
+	});
 })(jQuery);
