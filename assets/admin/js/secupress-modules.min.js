@@ -1094,3 +1094,23 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	});
 
 })(jQuery);
+
+// Pricing switching ============================================================================
+(function($) {
+	var $buttons = $( '.secupress-tab-content-get-pro .secupress-inline-options button' );
+
+	$buttons.on( 'click.secupress', function(){
+		$_this  = $(this),
+		current = 'secupress-current';
+
+		if ( $_this.hasClass( current ) ) {
+			return false;
+		}
+
+		$buttons.removeClass( current );
+		$_this.addClass( current );
+
+		$_this.closest( '.secupress-inline-options' ).removeClass( 'secupress-type-yearly secupress-type-monthly' ).addClass( 'secupress-type-' + $_this.data( 'type' ) );
+
+	} );
+})(jQuery);	

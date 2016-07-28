@@ -398,6 +398,9 @@ i.bold {
 	font-family: 'secupress';
 	content: "\e907";
 }
+#adminmenu .wp-submenu a[href$="secupress_get_pro"] {
+	color: #F7AB13;
+}
 
 /* Font sizes */
 .secupress-text-big.secupress-text-big {
@@ -420,6 +423,14 @@ i.bold {
 	font-size: 10px;
 	color: inherit;
 	font-weight: normal;
+}
+.secupress-section p.secupress-small-caracters {
+	width: 400px;
+	max-width: 100%;
+	margin: 3em auto;
+	text-align: center;
+	font-size: 11px;
+	color: #5A626F;
 }
 
 /**

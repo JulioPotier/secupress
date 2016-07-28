@@ -276,10 +276,11 @@ function secupress_create_menus() {
 	add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ) . $count, $cap, SECUPRESS_PLUGIN_SLUG . '_scanners', '__secupress_scanners' );
 	add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Modules', 'secupress' ),  __( 'Modules', 'secupress' ),           $cap, SECUPRESS_PLUGIN_SLUG . '_modules',  '__secupress_modules' );
 	add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Settings' ),              __( 'Settings' ),                       $cap, SECUPRESS_PLUGIN_SLUG . '_settings', '__secupress_global_settings' );
-	if ( ! secupress_is_pro() ) {
+	//// pro page should be a module too… I edit, take a look
+	if ( secupress_is_pro() ) {
 		add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Support', 'secupress' ), __( 'Support' ), $cap, SECUPRESS_PLUGIN_SLUG . '_modules&module=services', '__return_false' );
 	} else {
-		add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Get PRO', 'secupress' ), __( 'Get PRO' ), $cap, SECUPRESS_PLUGIN_SLUG . '_get_pro', '__secupress_get_pro_page' );
+		add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Get PRO', 'secupress' ), __( 'Get PRO' ), $cap, SECUPRESS_PLUGIN_SLUG . '_modules&module=get-pro', '__return_false' );
 	}
 
 	// Fix `add_menu_page()` nonsense.
@@ -335,15 +336,6 @@ function __secupress_modules() {
 	}
 
 	SecuPress_Settings_Modules::get_instance()->print_page();
-}
-
-/**
- * Get Pro page.
- *
- * @since 1.0
- */
-function __secupress_get_pro_page() {
-	echo 'GET PRO SETTINGS PAGE #GEOF';
 }
 
 /**

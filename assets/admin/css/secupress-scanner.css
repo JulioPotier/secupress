@@ -986,8 +986,7 @@ a + .secupress-row-actions {
 	color: #5A626F;
 }
 /* Boxes with shadow in every steps */
-.secupress-scans-group,
-.secupress-box-shadow {
+.secupress-scans-group {
 	background: #FFF;
 	box-shadow: 0 10px 15px rgba(34, 40, 49, .2);
 }
@@ -1553,13 +1552,6 @@ ul.secupress-checkbox-group-vertical,
 .secupress-col-summary-text {
 	padding-top: 17px;
 	padding-bottom: 17px;
-}
-.secupress-pro-summary .secupress-blob-title {
-	margin-bottom: 0;
-	color: #F19B12;
-}
-.secupress-pro-summary .secupress-blob-desc {
-	margin-top: 0.5em;
 }
 
 /* Twitter block in A grade case */
