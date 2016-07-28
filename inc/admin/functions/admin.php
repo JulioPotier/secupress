@@ -196,3 +196,55 @@ function secupress_set_old_report() {
 function secupress_get_old_report() {
 	return get_option( 'secupress_step1_report', $grade );
 }
+
+/**
+ * Print Marketing block with SecuPress pro advantages
+ *
+ * @since 1.0
+ * @return string HTML content is printed
+ * @author Geoffrey Crofte
+ */
+function secupress_print_pro_advantages() {
+?>
+
+	<div class="secupress-flex secupress-wrap secupress-pt1 secupress-pb1 secupress-pro-advantages">
+		<div class="secupress-col-1-2 secupress-flex secupress-landscape-blob">
+			<div class="secupress-col">
+				<i class="icon-antispam" aria-hidden="true"></i>
+			</div>
+			<div class="secupress-col">
+				<p class="secupress-blob-title"><?php esc_html_e( 'Anti Spam', 'secupress' ); ?></p>
+				<p class="secupress-blob-desc"><?php esc_html_e( 'Traffic done by bot represents about 60% of the internet. Spams are done by these bots. Don\'t let them do that!', 'secupress' ); ?></p>
+			</div>
+		</div>
+		<div class="secupress-col-1-2 secupress-flex secupress-landscape-blob">
+			<div class="secupress-col">
+				<i class="icon-information" aria-hidden="true"></i>
+			</div>
+			<div class="secupress-col">
+				<p class="secupress-blob-title"><?php esc_html_e( 'Alerts', 'secupress' ); ?></p>
+				<p class="secupress-blob-desc"><?php esc_html_e( 'Be alerted by receiving SMS, mobile notifications, or even by social networks besides alerts email.', 'secupress' ); ?></p>
+			</div>
+		</div>
+		<div class="secupress-col-1-2 secupress-flex secupress-landscape-blob">
+			<div class="secupress-col">
+				<i class="icon-firewall" aria-hidden="true"></i>
+			</div>
+			<div class="secupress-col">
+				<p class="secupress-blob-title"><?php esc_html_e( 'Firewall', 'secupress' ); ?></p>
+				<p class="secupress-blob-desc"><?php esc_html_e( 'Other features of the firewall add an additional level of protection from Internet attacks.', 'secupress' ); ?></p>
+			</div>
+		</div>
+		<div class="secupress-col-1-2 secupress-flex secupress-landscape-blob">
+			<div class="secupress-col">
+				<i class="icon-logs" aria-hidden="true"></i>
+			</div>
+			<div class="secupress-col">
+				<p class="secupress-blob-title"><?php esc_html_e( 'Logs', 'secupress' ); ?></p>
+				<p class="secupress-blob-desc"><?php esc_html_e( 'All actions considered as dangerous are held in this log available at any time to check what is happening on your site.', 'secupress' ); ?></p>
+			</div>
+		</div>
+	</div>
+
+<?php
+}
