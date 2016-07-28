@@ -167,6 +167,19 @@ function secupress_get_modules() {
 			'with_reset_box' => false,
 			'mark_as_pro'    => false,
 		),
+		'get-pro'        => array(
+			'title'       => __( 'Get Pro', 'secupress' ),
+			'icon'        => 'secupress',
+			'summaries'   => array(
+				'small'  => __( 'Look father with premium', 'secupress' ),
+				'normal' => __( 'Access to more modules and options to make your website a real automatted secure engine.', 'secupress' ),
+			),
+			'description' => array(
+				__( 'Access to more modules and options to make your website a real automatted secure engine.', 'secupress' ),
+			),
+			'with_reset_box' => false,
+			'mark_as_pro'    => false,
+		),
 	);
 
 	return $modules;
