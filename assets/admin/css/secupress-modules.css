@@ -17,7 +17,6 @@
  * GrayDark		: #393E46;
  * 
  */
-
 /**
  * === Main navigation between modules 
  */
@@ -756,6 +755,128 @@ fieldset.secupress-boxed-group > b {
 }
 [id="secupress-settings-module_services--support"] .secupress-setting-row.secupress-setting-row_support_submit {
 	padding-bottom: 20px;
+}
+
+/**
+ * Get Pro "module"
+ */
+.secupress-tab-content-get-pro .secupress-settings-header {
+	margin: -1px 0 0 -1px;
+	border-radius: 0 3px 0 0;
+}
+.secupress-tab-content-get-pro .secupress-settings-header .secupress-col-logo {
+	flex-basis: 130px;
+	flex-grow: 0;
+}
+.secupress-tab-content-get-pro .secupress-settings-header .secupress-text-medium {
+	margin-bottom: .7em;
+	font-size: 23px;
+}
+.secupress-catchphrase {
+	text-align: center;
+	padding: 1em 0;
+	font-size: 18px;
+	color: #5A626F;
+	font-weight: 500;
+}
+
+/* Pricing blocks */
+.secupress-pricing {
+	padding: 35px 25px;
+	margin: 0 -25px;
+	background: #F2F2F6;
+	background: linear-gradient(to bottom, #FFF, #FFF 75px, #F2F2F6 75px, #F2F2F6 392px, #FFF 392px);
+}
+.secupress-price {
+	padding-bottom: 30px;
+	font-weight: 500;
+}
+.secupress-price-header {
+	position: relative;
+	background: #222831;
+	color: #FFF;
+	overflow: hidden;
+}
+.secupress-price-header > * {
+	position: relative;
+}
+.secupress-price-header:before {
+	content: "\e903";
+	position: absolute;
+	right: -10px;
+	bottom: -56px;
+	width: 1em;
+	height: 1em;
+	line-height: 0;
+	font-family: "secupress";
+	font-size: 90px;
+	color: #FFF;
+	opacity: .1;
+}
+.secupress-col-1-3:nth-child(2) .secupress-price-header:before {
+	bottom: -76px;
+	font-size: 135px;
+}
+.secupress-col-1-3:nth-child(3) .secupress-price-header:before {
+	right: -38px;
+	bottom: -136px;
+	font-size: 247px;
+}
+.secupress-price-name {
+	margin: 1.5em auto 1em;
+	text-transform: uppercase;
+	letter-spacing: 0.125em;
+	font-size: 14px;
+	font-weight: bold;
+	color: #ADB1B7;
+}
+.secupress-amounts {
+	color: #F39C12;
+}
+.secupress-amounts .price,
+.secupress-amounts ins {
+	font-size: 64px;
+	font-weight: 200;
+	line-height: 1;
+	text-decoration: none;
+}
+.secupress-dollars {
+	margin-right: 5px;
+	font-size: 24px;
+	line-height: 1;
+	font-weight: 500;
+	vertical-align: 28px;
+}
+.secupress-amounts del {
+	font-weight: 200;
+	font-size: 20px;
+	color: #ADB1B7;
+	font-style: italic;
+}
+.secupress-price-desc {
+	margin: 1.5em auto 2em;
+}
+.secupress-pd-info {
+	margin: 2em 0;
+	font-size: 11px;
+	letter-spacing: 0.125em;
+	text-transform: uppercase;
+	color: #5A626F;
+}
+.secupress-pd-benefits {
+	margin-bottom: 2em;
+	color: #ADB1B7;
+	font-size: 11px;
+}
+.secupress-pd-benefits strong {
+	display: block;
+	font-size: 20px;
+	color: #26B3A9;
+}
+.secupress-price-cta .secupress-button {
+	padding: 6px 35px;
+	font-size: 11px;
+	font-weight: bold;
 }
 
 /* EXISTING */
