@@ -42,9 +42,11 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 		$this->more  = __( 'Avoid to use a plugin that have been removed from the official repository, and avoid using a plugin that have not been maintained for two years at least.', 'secupress' );
 
 		if ( is_network_admin() ) {
-			$this->more_fix = __( 'Select and delete bad old plugins plugins.', 'secupress' );
+			$this->more_fix  = __( 'Select bad old plugins plugins to be deleted.', 'secupress' );
+			$this->more_fix .= '<br/>' . __( 'Will be fixable soon.', 'secupress' ); // RC2 ////.
+			$this->fixable   = false;
 		} elseif ( ! is_multisite() ) {
-			$this->more_fix = __( 'Delete bad old plugins.', 'secupress' );
+			$this->more_fix = __( 'Select and delete bad old plugins plugins.', 'secupress' );
 		} else {
 			$this->more_fix = __( 'Deactivate bad old plugins.', 'secupress' );
 		}
