@@ -13,7 +13,7 @@
 				<p class="secupress-sgh-description"><?php echo $module_summary; ?></p>
 			</div>
 
-			<div class="secupress-sgh-actions secupress-flex">
+			<div class="secupress-sgh-actions secupress-flex secupress-flex-top">
 				<a href="<?php echo secupress_admin_url( 'modules' ) . '&module=' . $module_name; ?>" target="_blank" class="secupress-link-icon secupress-vcenter">
 					<span class="icon"><i class="icon-cog" aria-hidden="true"></i></span>
 					<span class="text"><?php _e( 'Go to module settings', 'secupress' ); ?></span>

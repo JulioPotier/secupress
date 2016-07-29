@@ -170,7 +170,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 					<p class="secupress-sgh-description"><?php echo $module_summary; ?></p>
 				</div>
 
-				<div class="secupress-sgh-actions secupress-flex">
+				<div class="secupress-sgh-actions secupress-flex secupress-flex-top">
 					<button class="secupress-vnormal hide-if-no-js dont-trigger-hide trigger-hide-first" type="button" data-trigger="slidetoggle" data-target="secupress-group-content-<?php echo $module_name; ?>">
 						<i class="icon-angle-up" aria-hidden="true"></i>
 						<span class="screen-reader-text"><?php esc_html_e( 'Show/hide panel', 'secupress' ); ?></span>
