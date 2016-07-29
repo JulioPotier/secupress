@@ -398,7 +398,7 @@ i.bold {
 	font-family: 'secupress';
 	content: "\e907";
 }
-#adminmenu .wp-submenu a[href$="get-pro"] {
+#adminmenu .wp-submenu a[href$="secupress_modules&module=get-pro"] {
 	color: #F7AB13;
 }
 
