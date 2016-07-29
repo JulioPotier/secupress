@@ -276,7 +276,6 @@ p.secupress-sh-subtitle {
 	height: 1px;
 	background: #aaa;
 }
-
 .secupress-setting-content-col {
 	padding-right: 20px;
 	-webkit-box-flex: 1;
@@ -285,6 +284,10 @@ p.secupress-sh-subtitle {
 	flex-grow: 1;
 }
 .secupress-get-pro-col {
+	display: none;
+}
+.secupress-pro-row .secupress-get-pro-col {
+	display: block;
 	-webkit-flex-basis: 180px;
 	-ms-flex-preferred-size: 180px;
 	flex-basis: 180px;
@@ -414,11 +417,38 @@ p.secupress-sh-subtitle {
 	box-shadow: 0 6px 12px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05), 0 3px 4px rgba(0,0,0,.05);
 }
 
-/* 
-	Module User Agent List
-	&
-	Expandable textareas
-*/
+/**
+ * Important options in line (gray bordered)
+ */
+.fieldname-login-protection_type .secupress-fieldset-item-checkboxes {
+	padding: 15px;
+	border: 2px solid #ECF0F1;
+	border-radius: 2px;
+}
+.fieldname-login-protection_type .secupress-pro-option {
+	position: relative;
+}
+.fieldname-login-protection_type .secupress-pro-option .secupress-get-pro-version {
+	position: absolute;
+	top: 0;
+	right: 0; 
+	bottom: 0;
+	padding-right: 30px;
+	padding-top: 9px;
+	padding-left: 65px;
+	background: #ECF0F1;
+}
+.fieldname-login-protection_type .secupress-pro-option .secupress-get-pro-version:before {
+	top: 12px;
+	left: 16px;
+}
+
+/**
+ * Module User Agent List
+ * &
+ * Expandable textareas 
+ */
+
 .secupress-expand-trigger-container {
 	position: absolute;
 	left: 0; right: 0; bottom: 0;

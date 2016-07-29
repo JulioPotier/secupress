@@ -77,7 +77,7 @@ add_action( 'secupress.first_install', '__secupress_install_antispam_module' );
  */
 function __secupress_install_antispam_module( $module ) {
 	// First install or reset.
-	if ( 'all' === $module && 'antispam' === $module ) {
+	if ( 'all' === $module || 'antispam' === $module ) {
 		update_site_option( 'secupress_antispam_settings', array(
 			'antispam_mark-as'                  => 'trash',
 			'antispam_block-shortcodes'         => 1,

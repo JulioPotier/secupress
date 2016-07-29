@@ -183,7 +183,6 @@ function secupress_remove_subsite_security_issues_notice_meta() {
 	global $wpdb;
 	// Get all Administrators that have dismissed our notice.
 	$users = get_users( array(
-		'role'         => secupress_get_capability( true ),
 		'meta_key'     => $wpdb->get_blog_prefix() . SecuPress_Admin_Notices::META_NAME,
 		'meta_value'   => 'subsite-security-issues',
 		'meta_compare' => 'LIKE',

@@ -995,6 +995,9 @@ body[class*="secupress"] .sweet-overlay {
 .secupress-setting-row.secupress-pro-row p {
 	color: #aaa;
 }
+.secupress-setting-row.secupress-pro-row .secupress-get-pro {
+	color: #000;
+}
 .secupress-setting-row-title {
 	margin: 10px 0;
 	font-size: 16px;

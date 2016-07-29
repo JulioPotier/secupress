@@ -426,7 +426,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 	 * Display "Delete All" and "Downlad All" buttons.
 	 *
 	 * @since 1.0
-	 * @author Greg (Geoffrey)
+	 * @author Grégory Viguier (Geoffrey)
 	 *
 	 * @param (string) $which The position: "top" or "bottom".
 	 */

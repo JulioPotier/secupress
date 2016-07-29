@@ -114,7 +114,7 @@ function secupress_directory_index_apache_rules() {
  * @return (string)
  */
 function secupress_directory_index_iis7_rules() {
-	$marker = 'DirectoryIndex';
+	$marker = 'directory_index';
 
 	$rules  = "<defaultDocument name=\"SecuPress $marker\">\n";
 	$rules .= "      <files>\n";
@@ -135,7 +135,7 @@ function secupress_directory_index_iis7_rules() {
  * @return (string)
  */
 function secupress_directory_index_nginx_rules() {
-	$marker = 'DirectoryIndex';
+	$marker = 'directory_index';
 
 	$rules  = "
 server {

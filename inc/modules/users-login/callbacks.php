@@ -306,7 +306,7 @@ function __secupress_install_users_login_module( $module ) {
 	}
 
 	// First install or reset.
-	if ( 'all' === $module && 'users-login' === $module ) {
+	if ( 'all' === $module || 'users-login' === $module ) {
 		// Set default non-login time slot.
 		update_site_option( 'secupress_users-login_settings', array(
 			'login-protection_nonlogintimeslot' => array(
