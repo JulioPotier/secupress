@@ -375,7 +375,6 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 	transform: translateY(0);
 }
 .secupress-tabs-contents,
-.secupress-tabs-controls,
 .secupress-last-scan-result {
 	transition: all .275s;
 }
@@ -487,13 +486,10 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 .secupress-tabs-controls {
 	flex-shrink: 0;
 	padding-left: 20px;
-	padding-top: 18px;
+	padding-top: 21px;
 }
-.secupress-tabs-controls li + li {
-	margin: 2.5em 0 0 0;
-}
-.secupress-rescan-actions {
-	margin-top: 2.5em;
+.secupress-tabs-controls li {
+	margin: 0 0 2.5em 0;
 }
 .secupress-tabs-controls-list {
 	margin: 0;
@@ -551,7 +547,7 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 	background: #393e46;
 }
 .secupress-tab-selected .secupress-tabs-controls {
-	padding-top: 0;
+	padding-top: 35px;
 }
 .secupress-tab-selected .secupress-tabs-controls-list a {
 	opacity: .4;
