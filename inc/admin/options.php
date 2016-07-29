@@ -31,14 +31,6 @@ function __secupress_global_settings_callback( $value ) {
 	}
 	$value['sanitized'] = 1;
 
-	// Default values related to the API.
-	$def_values = array(
-		'consumer_email' => '',
-		'consumer_key'   => '',
-		'wl_plugin_name' => '',
-		'site_is_pro'    => 0,
-	);
-
 	// Previous values.
 	$old_values = get_site_option( SECUPRESS_SETTINGS_SLUG );
 	$old_values = is_array( $old_values ) ? $old_values : array();
@@ -47,21 +39,37 @@ function __secupress_global_settings_callback( $value ) {
 		unset( $old_values['wl_plugin_name'] );
 	}
 
-	// API and license validation.
-	$value['consumer_email'] = ! empty( $value['consumer_email'] ) ? is_email( $value['consumer_email'] )          : '';
-	$value['consumer_key']   = ! empty( $value['consumer_key'] )   ? sanitize_text_field( $value['consumer_key'] ) : '';	// Free API key, the user key.
-
 	if ( ! secupress_is_pro() || ! empty( $value['wl_plugin_name'] ) && 'SecuPress' === $value['wl_plugin_name'] ) {
 		unset( $value['wl_plugin_name'] );
 	}
 
-	// We have a valid email address: add the site.
-	if ( $value['consumer_email'] ) {
-		$value = __secupress_global_settings_update_api_subscription( $value, $old_values, $def_values );
-	}
-	// No valid email: remove the site.
-	else {
+	/**
+	 * API and license validation.
+	 */
+	$value['consumer_email'] = ! empty( $value['consumer_email'] ) ? is_email( $value['consumer_email'] )          : '';
+	$value['consumer_key']   = ! empty( $value['consumer_key'] )   ? sanitize_text_field( $value['consumer_key'] ) : '';
+
+	// Default values related to the API.
+	$def_values = array(
+		'consumer_email' => '',
+		'consumer_key'   => '',
+		'wl_plugin_name' => '',
+		'site_is_pro'    => 0,
+	);
+
+	$has_old_api_values = ! empty( $old_values['consumer_email'] ) && ! empty( $old_values['consumer_key'] );
+
+	// Email removed: remove the site from the user account.
+	if ( ! $value['consumer_email'] && $has_old_api_values ) {
 		$value = __secupress_global_settings_remove_api_subscription( $value, $old_values, $def_values );
+	}
+	// Email is (still) empty, move along.
+	elseif ( ! $value['consumer_email'] ) {
+		unset( $value['consumer_email'], $value['consumer_key'], $value['site_is_pro'] );
+	}
+	// We have a valid email address: add the site.
+	else {
+		$value = __secupress_global_settings_update_api_subscription( $value, $old_values, $def_values );
 	}
 
 	// Uptime monitor.
@@ -73,64 +81,6 @@ function __secupress_global_settings_callback( $value ) {
 	}
 
 	return $value;
-}
-
-
-/**
- * Call our server to update the API subscription.
- *
- * @since 1.0
- *
- * @param (array) $new_values The new settings.
- * @param (array) $old_values The old settings.
- * @param (array) $def_values Default values related to the API.
- *
- * @return (array) $new_values The new settings, some values may have changed.
- */
-function __secupress_global_settings_update_api_subscription( $new_values, $old_values, $def_values ) {
-
-	$api_old_values = secupress_array_merge_intersect( $old_values, $def_values );
-
-	// Call home.
-	$url = SECUPRESS_WEB_MAIN . 'key-api/1.0/?' . http_build_query( array(
-		'sp_action'   => 'update_subscription',
-		'user_email'  => $new_values['consumer_email'],
-		'user_key'    => $new_values['consumer_key'],
-		'plugin_name' => ! empty( $new_values['wl_plugin_name'] ) ? $new_values['wl_plugin_name'] : '',
-		'prev_email'  => $api_old_values['consumer_email'] && $api_old_values['consumer_email'] !== $new_values['consumer_email'] ? $api_old_values['consumer_email'] : '',
-		'prev_key'    => $api_old_values['consumer_key']   && $api_old_values['consumer_key'] !== $new_values['consumer_key']     ? $api_old_values['consumer_key']   : '',
-	) );
-
-	$response = wp_remote_get( $url, array( 'timeout' => 10 ) );
-
-	if ( $body = __secupress_global_settings_api_request_succeeded( $response, $new_values ) ) {
-		// Success!
-		$new_values['consumer_key'] = sanitize_text_field( $body->data->user_key );
-		$new_values['site_is_pro']  = (int) ! empty( $body->data->site_is_pro );
-
-		// Test if something changed.
-		$api_new_values = secupress_array_merge_intersect( $new_values, $def_values );
-
-		if ( $api_old_values !== $api_new_values ) {
-			/**
-			 * Fires when the data related to the API change, after being sent to the server.
-			 *
-			 * @since 1.0
-			 *
-			 * @param (array) $api_new_values The new values.
-			 * @param (array) $api_old_values The old values.
-			 */
-			do_action( 'secupress.api.data_changed', $api_new_values, $api_old_values );
-		}
-	} else {
-		$new_values['consumer_email'] = $api_old_values['consumer_email'];
-
-		if ( ! empty( $new_values['consumer_key'] ) ) {
-			$new_values['consumer_key'] = $api_old_values['consumer_key'];
-		}
-	}
-
-	return $new_values;
 }
 
 
@@ -149,15 +99,10 @@ function __secupress_global_settings_remove_api_subscription( $new_values, $old_
 
 	$api_old_values = secupress_array_merge_intersect( $old_values, $def_values );
 
-	// Make sure everything's fine before deleting values.
-	$new_values['consumer_email'] = $api_old_values['consumer_email'];
-	$new_values['consumer_key']   = $api_old_values['consumer_key'];
-
-	// Call home.
 	$url = SECUPRESS_WEB_MAIN . 'key-api/1.0/?' . http_build_query( array(
-		'sp_action'   => 'remove_subscription',
-		'user_email'  => $new_values['consumer_email'],
-		'user_key'    => $new_values['consumer_key'],
+		'sp_action'  => 'remove_subscription',
+		'user_email' => $api_old_values['consumer_email'],
+		'user_key'   => $api_old_values['consumer_key'],
 	) );
 
 	$response = wp_remote_get( $url, array( 'timeout' => 10 ) );
@@ -166,9 +111,76 @@ function __secupress_global_settings_remove_api_subscription( $new_values, $old_
 		// Success!
 		unset( $new_values['consumer_email'], $new_values['consumer_key'], $new_values['site_is_pro'] );
 
-		$api_new_values = secupress_array_merge_intersect( $old_values, $def_values );
-		/** This action is documented in inc/admin/options.php */
+		$api_new_values = secupress_array_merge_intersect( $new_values, $def_values );
+		/**
+		 * Fires when the data related to the API change, after being sent to the server.
+		 *
+		 * @since 1.0
+		 *
+		 * @param (array) $api_new_values The new values.
+		 * @param (array) $api_old_values The old values.
+		 */
 		do_action( 'secupress.api.data_changed', $api_new_values, $api_old_values );
+	} else {
+		// Keep old values.
+		$new_values['consumer_email'] = $api_old_values['consumer_email'];
+		$new_values['consumer_key']   = $api_old_values['consumer_key'];
+	}
+
+	return $new_values;
+}
+
+
+/**
+ * Call our server to update the API subscription.
+ *
+ * @since 1.0
+ *
+ * @param (array) $new_values The new settings.
+ * @param (array) $old_values The old settings.
+ * @param (array) $def_values Default values related to the API.
+ *
+ * @return (array) $new_values The new settings, some values may have changed.
+ */
+function __secupress_global_settings_update_api_subscription( $new_values, $old_values, $def_values ) {
+
+	$api_old_values = secupress_array_merge_intersect( $old_values, $def_values );
+
+	// One does not simply remove the API key.
+	if ( $api_old_values['consumer_email'] === $new_values['consumer_email'] && $api_old_values['consumer_key'] && ! $new_values['consumer_key'] ) {
+		// If the email does not change, forbid to remove the key.
+		$new_values['consumer_key'] = $api_old_values['consumer_key'];
+	}
+
+	// Update the site in the user account.
+	$url = SECUPRESS_WEB_MAIN . 'key-api/1.0/?' . http_build_query( array(
+		'sp_action'   => 'update_subscription',
+		'user_email'  => $new_values['consumer_email'],
+		'user_key'    => $new_values['consumer_key'],
+		'plugin_name' => ! empty( $new_values['wl_plugin_name'] ) ? $new_values['wl_plugin_name'] : '',
+		// Allow to change the email address (and so, move the site from an account to a new one).
+		'prev_email'  => $api_old_values['consumer_email'] && $api_old_values['consumer_email'] !== $new_values['consumer_email'] ? $api_old_values['consumer_email'] : '',
+		'prev_key'    => $api_old_values['consumer_key'] ? $api_old_values['consumer_key'] : '',
+	) );
+
+	$response = wp_remote_get( $url, array( 'timeout' => 10 ) );
+
+	if ( $body = __secupress_global_settings_api_request_succeeded( $response, $new_values ) ) {
+		// Success!
+		$new_values['consumer_key'] = sanitize_text_field( $body->data->user_key );
+		$new_values['site_is_pro']  = (int) ! empty( $body->data->site_is_pro );
+
+		// Test if something changed.
+		$api_new_values = secupress_array_merge_intersect( $new_values, $def_values );
+
+		if ( $api_old_values !== $api_new_values ) {
+			/** This action is documented in inc/admin/options.php */
+			do_action( 'secupress.api.data_changed', $api_new_values, $api_old_values );
+		}
+	} else {
+		// Keep old values.
+		$new_values['consumer_email'] = $api_old_values['consumer_email'];
+		$new_values['consumer_key']   = $api_old_values['consumer_key'];
 	}
 
 	return $new_values;
@@ -214,6 +226,10 @@ function __secupress_global_settings_api_request_succeeded( $response, &$new_val
 
 			add_settings_error( 'secupress_global', 'response_error', __( 'There is a problem with your API key, please contact our support team to reset it.', 'secupress' ) );
 			unset( $new_values['consumer_key'], $new_values['site_is_pro'] );
+
+		} elseif ( 'invalid_email' === $body->data->code ) {
+
+			add_settings_error( 'secupress_global', 'response_error', __( 'The email address is invalid.', 'secupress' ) );
 
 		} else {
 			add_settings_error( 'secupress_global', 'response_error', __( 'Our server returned an error, please try again later or contact our support team.', 'secupress' ) );

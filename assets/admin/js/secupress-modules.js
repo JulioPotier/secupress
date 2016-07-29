@@ -1064,13 +1064,25 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	};
 
 	// change class on parent textarea on focus/blur
-	$expendables.find('textarea').AutoSized()
+	// applied only on visible elements (see below for others)
+	$expendables.filter(':visible').find('textarea').AutoSized()
 		.on('focus.secupress', function(){
 			$(this).parent().addClass('textarea-focused');
 		})
 		.on('blur.secupress', function(){
 			$(this).parent().removeClass('textarea-focused');
 		});
+
+	// same action as previous for textarea depending on other actions to be displayed
+	$( '#wpbody-content' ).find( '.secupress-setting-row' ).on( 'secupressaftershow', function() {
+		$( this ).find( '.secupress-textarea-container' ).find( 'textarea' ).AutoSized()
+			.one('focus.secupress', function(){
+				$(this).parent().addClass('textarea-focused');
+			})
+			.one('blur.secupress', function(){
+				$(this).parent().removeClass('textarea-focused');
+			});
+	} );
 
 	// on click on (+) button
 	$expendables.closest('label').on('click.secupress', '.secupress-expand-trigger', function(){
