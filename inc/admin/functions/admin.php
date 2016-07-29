@@ -194,7 +194,7 @@ function secupress_set_old_report() {
  * @author Julio Potier
  **/
 function secupress_get_old_report() {
-	return get_option( 'secupress_step1_report', $grade );
+	return get_option( 'secupress_step1_report' );
 }
 
 /**
@@ -205,8 +205,7 @@ function secupress_get_old_report() {
  * @author Geoffrey Crofte
  */
 function secupress_print_pro_advantages() {
-?>
-
+	?>
 	<div class="secupress-flex secupress-wrap secupress-pt1 secupress-pb1 secupress-pro-advantages">
 		<div class="secupress-col-1-2 secupress-flex secupress-landscape-blob">
 			<div class="secupress-col">
@@ -245,6 +244,5 @@ function secupress_print_pro_advantages() {
 			</div>
 		</div>
 	</div>
-
-<?php
+	<?php
 }
