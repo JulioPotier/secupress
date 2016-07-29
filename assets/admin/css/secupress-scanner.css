@@ -1547,11 +1547,7 @@ ul.secupress-checkbox-group-vertical,
 }
 .secupress-summary-header .secupress-button-mini {
 	padding: 4px 12px 5px;
-}
-@media (min-width: 750px) {
-	.secupress-summary-header .secupress-button-mini {
-		margin-right: 55px;
-	}
+	margin-right: 10px;
 }
 .secupress-col-summary-text {
 	padding-top: 17px;
