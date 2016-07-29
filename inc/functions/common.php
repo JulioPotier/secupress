@@ -425,6 +425,11 @@ function secupress_block( $module, $args = array( 'code' => 403 ) ) {
  * @return (string) The URL.
  */
 function secupress_admin_url( $page, $module = '' ) {
+	if ( 'get_pro' === $page ) {
+		$page   = 'modules';
+		$module = 'get-pro';
+	}
+
 	$module = $module ? '&module=' . $module : '';
 	$page   = str_replace( '&', '_', $page );
 	$url    = 'admin.php?page=' . SECUPRESS_PLUGIN_SLUG . '_' . $page . $module;
