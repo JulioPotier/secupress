@@ -97,12 +97,12 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 			// "warning"
 			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
 			/* translators: %s is an URL */
-			101 => sprintf( __( 'Unable to determine status of %s, it is still revealing sensitive informations.', 'secupress' ), '<code>' . home_url( 'readme.html' ) . '</code>' ),
+			101 => sprintf( __( 'Unable to determine status of %s, it is still revealing sensitive informations.', 'secupress' ), '<code>' . esc_url( home_url( 'readme.html' ) ) . '</code>' ),
 			// "bad"
 			200 => __( 'The website displays the <strong>PHP version</strong> in the request headers.', 'secupress' ),
 			201 => __( 'The website displays the <strong>WordPress version</strong> in the homepage source code (%s).', 'secupress' ),
 			/* translators: %s is an URL */
-			202 => sprintf( __( '<code>%s</code> should not be accessible by anyone to avoid revealing sensitive informations.', 'secupress' ), home_url( 'readme.html' ) ),
+			202 => sprintf( __( '<code>%s</code> should not be accessible by anyone to avoid revealing sensitive informations.', 'secupress' ), esc_url( home_url( 'readme.html' ) ) ),
 			// "cantfix"
 			/* translators: 1 is a file name, 2 is some code */
 			300 => sprintf( __( 'Your server runs a nginx system, the sensitive information disclosure cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
