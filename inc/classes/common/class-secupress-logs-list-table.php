@@ -431,8 +431,13 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 	 * @param (string) $which The position: "top" or "bottom".
 	 */
 	public function extra_tablenav( $which ) {
+
+		if ( 'top' === $which ) {
+			$logs_list = SecuPress_Logs_List::get_instance();
+			$logs_list->_screen_title_or_tabs();
+		}
 		?>
-		<div class="secupress-quick-actions alignleft actions">
+		<div class="secupress-quick-actions alignright actions">
 			<?php
 			if ( 'top' === $which && $this->has_items() ) {
 				$logs_classname = $this->logs_classname;

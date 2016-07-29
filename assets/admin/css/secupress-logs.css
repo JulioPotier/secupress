@@ -47,14 +47,14 @@
 }
 .secupress-logs-list .tablenav .tablenav-pages {
 	clear: right;
-	margin: 1px 15px 0 0;
+	margin: -13px 15px 0 0;
 	font-size: 11px;
 	text-align: right;
 	color: #FFF;
 	font-weight: 600;
 }
 .secupress-logs-list .tablenav.top .tablenav-pages {
-	margin-top: -6.1em;
+	margin-top: -10.7em;
 }
 .secupress-logs-list .tablenav .tablenav-pages a,
 .secupress-logs-list .tablenav-pages-navspan {
@@ -74,7 +74,7 @@
 	padding: 6px 18px 7px;
 }
 .secupress-logs-list .secupress-quick-actions {
-	padding:0 0 15px 15px;
+	padding: 9px 8px 7px 5px;
 }
 .secupress-logs-list .tablenav-pages .current-page {
 	padding: 3px 0;
@@ -83,6 +83,63 @@
 	color: #FFF;
 	border: 0;
 	border-radius: 3px;
+}
+.secupress-logs-list .nav-tab-wrapper:after {
+	display: none;
+}
+.secupress-logs-list .nav-tab-wrapper {
+	float: left;
+	border-bottom: 0;
+	position: relative;
+	top: 32px;
+}
+.secupress-logs-list .nav-tab {
+	padding: 8px 15px;
+	border: 0;
+	color: #FFF;
+	background: #5A626F;
+	border-radius: 2px 2px 0 0;
+}
+.secupress-logs-list .nav-tab:hover,
+.secupress-logs-list .nav-tab:focus {
+	background: #222831;
+}
+.secupress-logs-list .nav-tab + .screen-reader-text + .nav-tab {
+	margin-left: 1px;
+}
+.secupress-logs-list .nav-tab.nav-tab-active {
+	color: #5A626F;
+	background: #FFF;
+}
+.secupress-logs-list .wp-list-table {
+	border-top: 0;
+}
+
+@media (min-width: 1150px) {
+	/* When Logs are shown in list with no specific log open */
+	.secupress-empty-log-content + .secupress-logs-list .nav-tab-wrapper {
+		top: 0;
+	}
+	.secupress-empty-log-content + .secupress-logs-list .tablenav.top .tablenav-pages {
+		margin-top: -7.8em;
+	}
+	.secupress-empty-log-content + .secupress-logs-list .secupress-quick-actions {
+		padding: 0 0 15px 15px;
+	}
+}
+@media (max-width: 782px) {
+	.secupress-logs-list .tablenav.top .tablenav-pages {
+		margin-top: -7.9em;
+	}
+	.secupress-logs-list .nav-tab-wrapper {
+		top: 5px;
+	}
+	.secupress-logs-list .tablenav.bottom .displaying-num {
+		position: static;
+	}
+	.secupress-logs-list .tablenav .tablenav-pages {
+		margin-top: -26px;
+	}
 }
 
 [class^="secupress-"] .spinner {
