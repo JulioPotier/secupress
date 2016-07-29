@@ -21,7 +21,7 @@ var SecuPress = {
 /**
  * Show swal2 message if no scan done yet
  */
-if ( SecuPressi18nModules.alreadyScanned == 0 ) {
+if ( SecuPressi18nModules.alreadyScanned === 0 ) {
 	var modal_content = '<p class="secupress-text-baseup secupress-mt1 secupress-mb1 secupress-primary secupress-bold">'
 							+ SecuPressi18nModules.firstScanTitle
 					  + '</p>'
@@ -1012,7 +1012,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 			$textarea.outerHeight() + $container.outerHeight() - $container.height()
 		);
 		return true;
-	}
+	};
 
 	// function to create (+) button
 	SPautoSized.handleExpendButton = function( $container, create ) {
@@ -1112,8 +1112,8 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	var $buttons = $( '.secupress-tab-content-get-pro .secupress-inline-options button' );
 
 	$buttons.on( 'click.secupress', function(){
-		$_this  = $(this),
-		current = 'secupress-current';
+		var $_this  = $(this),
+			current = 'secupress-current';
 
 		if ( $_this.hasClass( current ) ) {
 			return false;
