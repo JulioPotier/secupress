@@ -42,7 +42,7 @@ $this->add_field( array(
 
 $this->add_field( array(
 	'title'             => __( 'Block Long URLs', 'secupress' ),
-	'description'       => __( 'Block any URL containing more than 255 characters.', 'secupress' ),
+	'description'       => sprintf( __( 'Block any URL containing more than %d characters.', 'secupress' ), apply_filters( 'secupress.plugin.bad-url-length.len', 300 ) ),
 	'label_for'         => $this->get_field_name( 'bad-url-length' ),
 	'plugin_activation' => true,
 	'type'              => 'checkbox',

@@ -12,6 +12,9 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan implements SecuPress_
 
 	/** Constants. ============================================================================== */
 
+
+	/** Properties. ============================================================================= */
+
 	/**
 	 * Class version.
 	 *
@@ -29,28 +32,21 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan implements SecuPress_
 	 */
 	protected static $_instance;
 
-	/**
-	 * Priority.
-	 *
-	 * @var (string)
-	 */
-	public    static $prio = 'high';
-
-
 	/** Public methods. ========================================================================= */
+
+	/** Init and messages. ====================================================================== */
 
 	/**
 	 * Init.
 	 *
 	 * @since 1.0
 	 */
-	protected static function init() {
-		self::$type     = 'WordPress';
-		self::$title    = __( 'Check if bad User Agents can visit your website.', 'secupress' );
-		self::$more     = __( 'Bad User-Agents are bots that provide no value to the website. It includes scrapers, spambots, email harvesters and more bots that you don\'t want on your site. In any cases, those bots that are crawling with a malicious purpose, have no desire to follow any <code>robots.txt</code> or meta tag.', 'secupress' );
-		self::$more_fix = sprintf(
-			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
-			'<em>' . __( 'Block Bad User-Agents', 'secupress' ) . '</em>',
+	protected function init() {
+		$this->title    = __( 'Check if Bad User Agents can visit your website.', 'secupress' );
+		$this->more     = __( 'Bad User Agents are bots that provide no value to the website. It includes scrapers, spambots, email harvesters and more bots that you don\'t want on your site. In any cases, those bots that are crawling with a malicious purpose, have no desire to follow any <code>robots.txt</code> or meta tag.', 'secupress' );
+		$this->more_fix = sprintf(
+			__( 'Activate the option %1$s from the module %2$s.', 'secupress' ),
+			'<em>' . __( 'Block Bad User Agents', 'secupress' ) . '</em>',
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-headers_user-agents-header">' . __( 'Firewall', 'secupress' ) . '</a>'
 		);
 	}
@@ -71,9 +67,9 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan implements SecuPress_
 			0   => __( 'You are currently blocking Bad User Agents.', 'secupress' ),
 			1   => __( 'Protection activated', 'secupress' ),
 			// "warning"
-			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
+			100 => __( 'Unable to determine if your homepagenis reachable by Bad User Agents.', 'secupress' ),
 			// "bad"
-			200 => __( 'Your website should block <code>HTTP</code> requests for <strong>bad User Agents</strong>.', 'secupress' ),
+			200 => __( 'Your website should block <code>HTTP</code> requests for <strong>Bad User Agents</strong>.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -94,7 +90,6 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan implements SecuPress_
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-
 		$response = wp_remote_get( add_query_arg( time(), time(), user_trailingslashit( home_url() ) ), array( 'redirection' => 0, 'user-agent' => '<script>' ) );
 
 		if ( ! is_wp_error( $response ) ) {
@@ -125,7 +120,6 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan implements SecuPress_
 	 * @return (array) The fix results.
 	 */
 	public function fix() {
-
 		// Activate.
 		secupress_activate_submodule( 'firewall', 'user-agents-header' );
 

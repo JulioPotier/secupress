@@ -12,6 +12,9 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan implements SecuPr
 
 	/** Constants. ============================================================================== */
 
+
+	/** Properties. ============================================================================= */
+
 	/**
 	 * Class version.
 	 *
@@ -30,19 +33,14 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan implements SecuPr
 	protected static $_instance;
 
 	/**
-	 * Priority.
-	 *
-	 * @var (string)
-	 */
-	public    static $prio = 'high';
-
-	/**
 	 * Tells if a scanner is fixable by SecuPress. The value "pro" means it's fixable only with the version PRO.
 	 *
 	 * @var (bool|string)
 	 */
-	public    static $fixable = false;
+	protected $fixable = false;
 
+
+	/** Init and messages. ====================================================================== */
 
 	/** Public methods. ========================================================================= */
 
@@ -51,17 +49,15 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan implements SecuPr
 	 *
 	 * @since 1.0
 	 */
-	protected static function init() {
-		self::$type      = __( '3rd party', 'secupress' );
-
+	protected function init() {
 		if ( defined( 'FTP_PASS' ) ) {
-			self::$title = __( 'Test the strength of WordPress database and FTP passwords.', 'secupress' );
-			self::$more  = __( 'The passwords of the database and FTP have to be strong to avoid a possible brute-force attack.', 'secupress' );
+			$this->title = __( 'Test the strength of WordPress database and FTP passwords.', 'secupress' );
+			$this->more  = __( 'The passwords of the database and FTP have to be strong to avoid a possible brute-force attack.', 'secupress' );
 		} else {
-			self::$title = __( 'Test the strength of WordPress database password.', 'secupress' );
-			self::$more  = __( 'The password of the database has to be strong to avoid a possible brute-force attack.', 'secupress' );
+			$this->title = __( 'Test the strength of WordPress database password.', 'secupress' );
+			$this->more  = __( 'The password of the database has to be strong to avoid a possible brute-force attack.', 'secupress' );
 		}
-		self::$more_fix  = static::get_messages( 300 );
+		$this->more_fix  = static::get_messages( 300 );
 	}
 
 
@@ -80,14 +76,14 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan implements SecuPr
 			0   => __( 'Database password seems strong enough.', 'secupress' ),
 			1   => __( 'Database and FTP passwords seems strong enough.', 'secupress' ),
 			// "bad"
-			200 => __( '%s is <strong>empty</strong>!', 'secupress' ),
-			201 => __( '%s is known to be <strong>too common</strong>.', 'secupress' ),
-			202 => _n_noop( '%1$s is only <strong>%2$d character length</strong>. That is obviously too short!', '%1$s is only <strong>%2$d characters length</strong>.', 'secupress' ),
-			203 => __( '%s is not <strong>complex</strong> enough.', 'secupress' ),
+			200 => __( '%s is <strong>empty</strong>, this is not secure!', 'secupress' ),
+			201 => __( '%s is known to be <strong>too common</strong>, this is not secure', 'secupress' ),
+			202 => _n_noop( '%1$s is only <strong>%2$d character length</strong>, this is not secure', '%1$s is only <strong>%2$d characters length</strong>, this is not secure', 'secupress' ),
+			203 => __( '%s is not <strong>complex</strong> enough, this is not secure', 'secupress' ),
 			// "cantfix"
-			300 => __( 'I cannot fix this, you have to manually change your DB and/or FTP password in your server administration.', 'secupress' ),
-			301 => __( 'I cannot fix this, you have to manually change your DB password in your server administration.', 'secupress' ),
-			302 => __( 'I cannot fix this, you have to manually change your FTP password in your server administration.', 'secupress' ),
+			300 => __( 'This cannot be fixed automatically, you have to manually change your DB and/or FTP password in your server administration.', 'secupress' ),
+			301 => __( 'This cannot be fixed automatically, you have to manually change your DB password in your server administration.', 'secupress' ),
+			302 => __( 'This cannot be fixed automatically, you have to manually change your FTP password in your server administration.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -113,22 +109,22 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan implements SecuPr
 		// DB_PASSWORD.
 		if ( '' === DB_PASSWORD ) {
 			// "bad"
-			$this->add_message( 200, array( '<code>DB_PASSWORD</code>' ) );
+			$this->add_message( 200, array( __( 'Your Database password', 'secupress' ) ) );
 			$this->add_pre_fix_message( 301 );
 
 		} elseif ( self::dictionary_attack( DB_PASSWORD ) ) {
 			// "bad"
-			$this->add_message( 201, array( '<code>DB_PASSWORD</code>' ) );
+			$this->add_message( 201, array( __( 'Your Database password', 'secupress' ) ) );
 			$this->add_pre_fix_message( 301 );
 
 		} elseif ( ( $len = strlen( DB_PASSWORD ) ) <= 6 ) {
 			// "bad"
-			$this->add_message( 202, array( $len, '<code>DB_PASSWORD</code>', $len ) );
+			$this->add_message( 202, array( $len, __( 'Your Database password', 'secupress' ), $len ) );
 			$this->add_pre_fix_message( 301 );
 
 		} elseif ( count( count_chars( DB_PASSWORD, 1 ) ) < 5 ) {
 			// "bad"
-			$this->add_message( 203, array( '<code>DB_PASSWORD</code>' ) );
+			$this->add_message( 203, array( __( 'Your Database password', 'secupress' ) ) );
 			$this->add_pre_fix_message( 301 );
 
 		}
@@ -137,22 +133,22 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan implements SecuPr
 		if ( $has_ftp ) {
 			if ( '' === FTP_PASS ) {
 					// "bad"
-				$this->add_message( 200, array( '<code>FTP_PASS</code>' ) );
+				$this->add_message( 200, array( __( 'Your FTP password', 'secupress' ) ) );
 				$this->add_pre_fix_message( 302 );
 
 			} elseif ( self::dictionary_attack( FTP_PASS ) ) {
 					// "bad"
-				$this->add_message( 201, array( '<code>FTP_PASS</code>' ) );
+				$this->add_message( 201, array( __( 'Your FTP password', 'secupress' ) ) );
 				$this->add_pre_fix_message( 302 );
 
 			} elseif ( ( $len = strlen( FTP_PASS ) ) <= 6 ) {
 					// "bad"
-				$this->add_message( 202, array( $len, '<code>FTP_PASS</code>', $len ) );
+				$this->add_message( 202, array( $len, __( 'Your FTP password', 'secupress' ), $len ) );
 				$this->add_pre_fix_message( 302 );
 
 			} elseif ( count( count_chars( FTP_PASS, 1 ) ) < 5 ) {
 					// "bad"
-				$this->add_message( 203, array( '<code>FTP_PASS</code>' ) );
+				$this->add_message( 203, array( __( 'Your FTP password', 'secupress' ) ) );
 				$this->add_pre_fix_message( 302 );
 
 			}
@@ -164,6 +160,8 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan implements SecuPr
 		return parent::scan();
 	}
 
+
+	/** Tools. ================================================================================== */
 
 	/**
 	 * Test if a password is in our dictionary.

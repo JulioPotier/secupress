@@ -29,26 +29,18 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements SecuPress_Sca
 	 */
 	protected static $_instance;
 
-	/**
-	 * Priority.
-	 *
-	 * @var (string)
-	 */
-	public    static $prio = 'high';
 
-
-	/** Public methods. ========================================================================= */
+	/** Init and messages. ====================================================================== */
 
 	/**
 	 * Init.
 	 *
 	 * @since 1.0
 	 */
-	protected static function init() {
-		self::$type     = 'WordPress';
-		self::$title    = __( 'Check if your WordPress core can perform auto-updates for minor versions.', 'secupress' );
-		self::$more     = __( 'When a minor update is released, WordPress can install it automatically. By doing so you are always up to date when a security flaw is discovered in the WordPress Core.', 'secupress' );
-		self::$more_fix = sprintf(
+	protected function init() {
+		$this->title    = __( 'Check if your WordPress core can perform auto-updates for minor versions.', 'secupress' );
+		$this->more     = __( 'When a minor update is released, WordPress can install it automatically. By doing so you are always up to date when a security flaw is discovered in the WordPress Core.', 'secupress' );
+		$this->more_fix = sprintf(
 			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
 			'<em>' . __( 'Minor updates', 'secupress' ) . '</em>',
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'wordpress-core' ) ) . '#row-auto-update_minor">' . __( 'WordPress Core', 'secupress' ) . '</a>'
@@ -77,7 +69,7 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements SecuPress_Sca
 			203 => __( '<code>DISALLOW_FILE_MODS</code> and <code>AUTOMATIC_UPDATER_DISABLED</code> should be set on <code>FALSE</code>.', 'secupress' ),
 			204 => __( 'The filter <code>automatic_updater_disabled</code> should not be used or set to return <code>FALSE</code>.', 'secupress' ),
 			205 => __( 'The filter <code>allow_minor_auto_core_updates</code> should not be used or set to return <code>TRUE</code>.', 'secupress' ),
-			206 => __( 'The filters <code>automatic_updater_disabled</code> and <code>allow_minor_auto_core_updates</code> should not be used or set to return respectively  <code>FALSE</code> and <code>TRUE</code>.', 'secupress' ),
+			206 => __( 'The filters <code>automatic_updater_disabled</code> and <code>allow_minor_auto_core_updates</code> should not be used or set to return respectively <code>FALSE</code> and <code>TRUE</code>.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {

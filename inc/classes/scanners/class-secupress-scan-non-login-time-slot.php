@@ -12,6 +12,9 @@ class SecuPress_Scan_Non_Login_Time_Slot extends SecuPress_Scan implements SecuP
 
 	/** Constants. ============================================================================== */
 
+
+	/** Properties. ============================================================================= */
+
 	/**
 	 * Class version.
 	 *
@@ -30,33 +33,25 @@ class SecuPress_Scan_Non_Login_Time_Slot extends SecuPress_Scan implements SecuP
 	protected static $_instance;
 
 	/**
-	 * Priority.
-	 *
-	 * @var (string)
-	 */
-	public    static $prio = 'medium';
-
-	/**
 	 * Tells if a scanner is fixable by SecuPress. The value "pro" means it's fixable only with the version PRO.
 	 *
 	 * @var (bool|string)
 	 */
-	public    static $fixable = 'pro';
+	protected $fixable = 'pro';
 
 
-	/** Public methods. ========================================================================= */
+	/** Init and messages. ====================================================================== */
 
 	/**
 	 * Init.
 	 *
 	 * @since 1.0
 	 */
-	protected static function init() {
-		self::$type     = 'WordPress';
-		self::$title    = __( 'Check if your back-end is accessible 24h/24.', 'secupress' );
-		self::$more     = __( 'You don\'t necessarily need to let your back-end open like 24 hours a day, you should close it during your sleeping time.', 'secupress' );
-		self::$more_fix = sprintf(
-			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
+	protected function init() {
+		$this->title    = __( 'Check if your back-end is accessible 24h/24.', 'secupress' );
+		$this->more     = __( 'You don\'t necessarily need to let your back-end open like 24 hours a day, you should close it during your sleeping time.', 'secupress' );
+		$this->more_fix = sprintf(
+			__( 'Activate the option %1$s from the module %2$s.', 'secupress' ),
 			'<em>' . __( 'Non Login Time Slot', 'secupress' ) . '</em>',
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#row-login-protection_type">' . __( 'Users & Login', 'secupress' ) . '</a>'
 		);
@@ -67,10 +62,10 @@ class SecuPress_Scan_Non_Login_Time_Slot extends SecuPress_Scan implements SecuP
 			$from = date_i18n( __( 'g:i a' ), mktime( $timings['from_hour'], $timings['from_minute'] ) );
 			$to   = date_i18n( __( 'g:i a' ), mktime( $timings['to_hour'], $timings['to_minute'] ) );
 			/* translators: 1 and 2 are hours. */
-			self::$more_fix .= '<br/>' . sprintf( __( 'It will prevent anyone to log in from %1$s to %2$s (this time slot can be changed in the module settings).', 'secupress' ), "<strong>$from</strong>", "<strong>$to</strong>" );
+			$this->more_fix .= '<br/>' . sprintf( __( 'Prevent anyone to log in from %1$s to %2$s <em>(this time slot can be changed in the module settings)</em>.', 'secupress' ), "<strong>$from</strong>", "<strong>$to</strong>" );
 
 			if ( secupress_in_timeslot() ) {
-				self::$more_fix .= '<br/><strong>' . __( 'If you do it right now you will be kicked out!', 'secupress' ) . '</strong>';
+				$this->more_fix .= '<br/><strong>' . __( 'If you do it right now you will be kicked out!', 'secupress' ) . '</strong>';
 			}
 		}
 	}

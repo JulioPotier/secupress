@@ -1,6 +1,7 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
+secupress_require_class( 'scan' );
 
 $this->set_current_section( 'support' );
 $this->add_section( __( 'Support', 'secupress' ), array( 'with_save_button' => false ) );
@@ -11,7 +12,7 @@ $this->add_field( array(
 	'title'             => __( 'Documentation first', 'secupress' ),
 	'type'              => 'checkbox',
 	'name'              => $main_field_name,
-	'label'             => sprintf( __( 'I\'ve read the <a href="%s" target="_blank">documentation</a>, and I agree to allow SecuPress to automatically detect my WordPress version and list of enabled plugins when I submit this form.', 'secupress' ), '#////' ),
+	'label'             => sprintf( __( 'I\'ve read the <a href="%s" target="_blank">documentation</a>, and I agree to allow SecuPress to automatically detect my WordPress version and list of enabled plugins when I submit this form.', 'secupress' ), SecuPress_Scan::DOC_URL ),
 	'label_for'         => $main_field_name,
 ) );
 

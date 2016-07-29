@@ -150,7 +150,7 @@ function secupress_format_message( $msgs, $test_name ) {
 	$classname = 'SecuPress_Scan_' . $test_name;
 	$messages  = $classname::get_instance()->get_messages();
 
-	$output = '<ul>';
+	$output = array();
 
 	foreach ( $msgs as $id => $atts ) {
 
@@ -177,8 +177,8 @@ function secupress_format_message( $msgs, $test_name ) {
 			}
 		}
 
-		$output .= '<li>' . ( ! empty( $atts ) ? vsprintf( $string, $atts ) : $string ) . '</li>';
+		$output[] = ! empty( $atts ) ? vsprintf( $string, $atts ) : $string;
 	}
 
-	return $output . '</ul>';
+	return implode( '<br/>', $output );
 }

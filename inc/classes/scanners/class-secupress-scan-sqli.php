@@ -12,6 +12,9 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Inter
 
 	/** Constants. ============================================================================== */
 
+
+	/** Properties. ============================================================================= */
+
 	/**
 	 * Class version.
 	 *
@@ -29,27 +32,20 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Inter
 	 */
 	protected static $_instance;
 
-	/**
-	 * Priority.
-	 *
-	 * @var (string)
-	 */
-	public    static $prio = 'high';
-
-
 	/** Public methods. ========================================================================= */
+
+	/** Init and messages. ====================================================================== */
 
 	/**
 	 * Init.
 	 *
 	 * @since 1.0
 	 */
-	protected static function init() {
-		self::$type  = 'WordPress';
-		self::$title = __( 'Check if basic SQL Injections are blocked or not.', 'secupress' );
-		self::$more  = __( 'SQL injection is a way to read, modify, delete any content of your database, this is a powerful vulnerability, don\'t let anyone play with that.', 'secupress' );
-		self::$more_fix = sprintf(
-			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
+	protected function init() {
+		$this->title = __( 'Check if basic SQL Injections are blocked or not.', 'secupress' );
+		$this->more  = __( 'SQL injection is a way to read, modify, delete any content of your database, this is a powerful vulnerability, don\'t let anyone play with that.', 'secupress' );
+		$this->more_fix = sprintf(
+			__( 'Activate the option %1$s from the module %2$s.', 'secupress' ),
 			'<em>' . __( 'Block Bad Contents', 'secupress' ) . '</em>',
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-url-content_bad-contents">' . __( 'Firewall', 'secupress' ) . '</a>'
 		);
@@ -71,9 +67,9 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Inter
 			0   => __( 'You are currently blocking simple SQL Injection.', 'secupress' ),
 			1   => __( 'Protection activated', 'secupress' ),
 			// "warning"
-			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
+			100 => __( 'Unable to determine if your homepage is blocking SQL Injection.', 'secupress' ),
 			// "bad"
-			200 => __( 'Your website should block <strong>malicious requests</strong>.', 'secupress' ),
+			200 => __( 'Your website should block <strong>SQL Injection</strong>.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
