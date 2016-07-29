@@ -1045,6 +1045,9 @@ a + .secupress-row-actions {
 	font-weight: 500;
 	padding: 13px 0;
 }
+.secupress-mfh-name {
+	flex-grow: 1;
+}
 .secupress-sgh-name p {
 	margin: 0;
 	line-height: 1.4;
@@ -1071,6 +1074,7 @@ a + .secupress-row-actions {
 }
 
 .secupress-mfh-title {
+	flex-basis: 100%;
 	font-size: 16px;
 	color: #FFF;
 }

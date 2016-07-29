@@ -11,7 +11,7 @@
 				<p class="secupress-sgh-description"><?php _e( 'This new items need to be checked: You will need to rescan your website.', 'secupress' ); ?></p>
 			</div>
 
-			<div class="secupress-sgh-actions secupress-flex">
+			<div class="secupress-sgh-actions secupress-flex secupress-flex-top">
 				<button class="secupress-vnormal hide-if-no-js dont-trigger-hide trigger-hide-first" type="button" data-trigger="slidetoggle" data-target="secupress-group-content-new">
 					<i class="icon-angle-up" aria-hidden="true"></i>
 					<span class="screen-reader-text"><?php _e( 'Show/Hide panel', 'secupress' ); ?></span>
