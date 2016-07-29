@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 			<button type="button" class="secupress-button secupress-inline-option secupress-current" data-type="yearly">
 				<?php esc_html_e( 'Yearly', 'secupress' ); ?>
 			</button>
-			<button type="button" class="secupress-button secupress-inline-option secupress-should-be-disabled" data-type="monthly">
+			<button type="button" class="secupress-button secupress-inline-option" data-type="monthly">
 				<?php esc_html_e( 'Monthly', 'secupress' ); ?>
 				<span class="secupress-tip"><?php esc_html_e( 'Coming soon', 'secupress' ) ?></span>
 			</button>

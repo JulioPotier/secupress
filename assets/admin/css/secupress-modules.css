@@ -817,18 +817,17 @@ fieldset.secupress-boxed-group > b {
 	letter-spacing: 0.05em;
 	padding: 6px 20px;
 	background: #222831;
+	color: #5A626F;
 }
 .secupress-inline-options button.secupress-button + button {
 	margin-left: -6px;
-}
-.secupress-should-be-disabled {
-	color: #5A626F!important;
 }
 .secupress-inline-options button.secupress-current,
 .secupress-inline-options button.secupress-current:hover,
 .secupress-inline-options button.secupress-current:focus {
 	z-index: 1;
 	background: #2BCDC1;
+	color: #FFF;
 }
 .secupress-inline-options .secupress-tip {
 	position: absolute;
