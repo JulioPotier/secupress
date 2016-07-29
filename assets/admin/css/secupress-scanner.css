@@ -833,11 +833,8 @@ a + .secupress-row-actions {
 	animation: rotation 2s infinite linear;
 }
 @keyframes rotation {
-	0% {
-		transform: rotate(0deg);
-	}
 	100% {
-		transform: rotate(360deg);
+		transform: rotate(1turn);
 	}
 }
 
@@ -1385,6 +1382,13 @@ a + .secupress-row-actions {
 }
 .secupress-fix-result-retryfix {
 	padding-right: 0;
+}
+
+a:hover .icon-cog,
+a:focus .icon-cog {
+	display: inline-block;
+	animation: 2s linear 0s infinite rotation;
+	transform-origin: 5.6px 7.0px 0;
 }
 
 /* Scan result and actions */
