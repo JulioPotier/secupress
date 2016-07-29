@@ -88,7 +88,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 			0   => __( 'Your site does not reveal sensitive informations.', 'secupress' ),
 			1   => __( 'The website does not display the <strong>PHP version</strong> in the request headers anymore.', 'secupress' ),
 			/* translators: %s is a file name */
-			2   => sprintf( __( 'The %s file is now protected from revealing sentivite informations.', 'secupress' ), '<code>readme.html</code>' ),
+			2   => sprintf( __( 'The %s file is now protected from revealing sensitive informations.', 'secupress' ), '<code>readme.html</code>' ),
 			/* translators: 1 is a file name */
 			3   => __( 'As the rules against the PHP version disclosure added to your %s file do not seem to work, another plugin has been activated to remove this information in some other way.', 'secupress' ),
 			4   => __( 'The generator meta tag should not be displayed anymore.', 'secupress' ),
@@ -97,7 +97,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 			// "warning"
 			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
 			/* translators: %s is an URL */
-			101 => sprintf( __( 'Unable to determine status of %s, it is still revealing sentivite informations.', 'secupress' ), '<code>' . home_url( 'readme.html' ) . '</code>' ),
+			101 => sprintf( __( 'Unable to determine status of %s, it is still revealing sensitive informations.', 'secupress' ), '<code>' . home_url( 'readme.html' ) . '</code>' ),
 			// "bad"
 			200 => __( 'The website displays the <strong>PHP version</strong> in the request headers.', 'secupress' ),
 			201 => __( 'The website displays the <strong>WordPress version</strong> in the homepage source code (%s).', 'secupress' ),
