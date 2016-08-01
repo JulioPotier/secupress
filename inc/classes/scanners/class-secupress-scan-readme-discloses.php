@@ -12,9 +12,6 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 
 	/** Constants. ============================================================================== */
 
-
-	/** Properties. ============================================================================= */
-
 	/**
 	 * Class version.
 	 *
@@ -34,8 +31,6 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 
 
 	/** Init and messages. ====================================================================== */
-
-	/** Public methods. ========================================================================= */
 
 	/**
 	 * Init.

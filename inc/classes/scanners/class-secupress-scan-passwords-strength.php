@@ -12,9 +12,6 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan implements SecuPr
 
 	/** Constants. ============================================================================== */
 
-
-	/** Properties. ============================================================================= */
-
 	/**
 	 * Class version.
 	 *
@@ -41,8 +38,6 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan implements SecuPr
 
 
 	/** Init and messages. ====================================================================== */
-
-	/** Public methods. ========================================================================= */
 
 	/**
 	 * Init.

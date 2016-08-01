@@ -12,9 +12,6 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 
 	/** Constants. ============================================================================== */
 
-
-	/** Properties. ============================================================================= */
-
 	/**
 	 * Class version.
 	 *
@@ -41,8 +38,6 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 
 
 	/** Init and messages. ====================================================================== */
-
-	/** Public methods. ========================================================================= */
 
 	/**
 	 * Init.

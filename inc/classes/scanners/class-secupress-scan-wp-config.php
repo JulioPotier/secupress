@@ -12,9 +12,6 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 
 	/** Constants. ============================================================================== */
 
-
-	/** Properties. ============================================================================= */
-
 	/**
 	 * Class version.
 	 *

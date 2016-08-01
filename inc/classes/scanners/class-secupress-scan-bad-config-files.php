@@ -12,9 +12,6 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements SecuPres
 
 	/** Constants. ============================================================================== */
 
-
-	/** Properties. ============================================================================= */
-
 	/**
 	 * Class version.
 	 *
@@ -32,7 +29,6 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements SecuPres
 	 */
 	protected static $_instance;
 
-	/** Public methods. ========================================================================= */
 
 	/** Init and messages. ====================================================================== */
 

@@ -12,9 +12,6 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements SecuPress_
 
 	/** Constants. ============================================================================== */
 
-
-	/** Properties. ============================================================================= */
-
 	/**
 	 * Class version.
 	 *

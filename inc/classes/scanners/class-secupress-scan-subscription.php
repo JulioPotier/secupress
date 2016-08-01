@@ -12,9 +12,6 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 
 	/** Constants. ============================================================================== */
 
-
-	/** Properties. ============================================================================= */
-
 	/**
 	 * Class version.
 	 *
@@ -32,7 +29,6 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 	 */
 	protected static $_instance;
 
-	/** Public methods. ========================================================================= */
 
 	/** Init and messages. ====================================================================== */
 

@@ -12,9 +12,6 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 
 	/** Constants. ============================================================================== */
 
-
-	/** Properties. ============================================================================= */
-
 	/**
 	 * Class version.
 	 *

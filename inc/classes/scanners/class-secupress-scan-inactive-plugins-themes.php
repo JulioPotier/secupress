@@ -12,9 +12,6 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 
 	/** Constants. ============================================================================== */
 
-
-	/** Properties. ============================================================================= */
-
 	/**
 	 * Class version.
 	 *

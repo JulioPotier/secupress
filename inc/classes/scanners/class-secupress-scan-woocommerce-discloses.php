@@ -12,9 +12,6 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 
 	/** Constants. ============================================================================== */
 
-
-	/** Properties. ============================================================================= */
-
 	/**
 	 * Class version.
 	 *
@@ -32,7 +29,6 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 	 */
 	protected static $_instance;
 
-	/** Public methods. ========================================================================= */
 
 	/** Init and messages. ====================================================================== */
 

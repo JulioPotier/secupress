@@ -12,9 +12,6 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Inter
 
 	/** Constants. ============================================================================== */
 
-
-	/** Properties. ============================================================================= */
-
 	/**
 	 * Class version.
 	 *
@@ -32,7 +29,6 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Inter
 	 */
 	protected static $_instance;
 
-	/** Public methods. ========================================================================= */
 
 	/** Init and messages. ====================================================================== */
 
