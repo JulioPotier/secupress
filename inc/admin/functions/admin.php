@@ -68,13 +68,13 @@ function secupress_user_agent( $user_agent ) {
  * @return (string)
  */
 function secupress_formate_latest_scans_list_item( $item, $last_percent = -1 ) {
-	$icon = 'right';
+	$icon = 'minus';
 
 	if ( $last_percent > -1 ) {
 		if ( $last_percent < $item['percent'] ) {
-			$icon = 'up';
+			$icon = 'grade-up';
 		} elseif ( $last_percent > $item['percent'] ) {
-			$icon = 'down';
+			$icon = 'grade-down';
 		}
 	}
 
@@ -83,7 +83,7 @@ function secupress_formate_latest_scans_list_item( $item, $last_percent = -1 ) {
 			<span class="secupress-latest-list-time timeago">%3$s</span>
 			<span class="secupress-latest-list-date">%4$s</span>
 			<strong class="secupress-latest-list-grade letter l%2$s">%2$s</strong>
-			<i class="dashicons mini dashicons-arrow-%1$s-alt2" aria-hidden="true"></i>
+			<i class="mini icon-%1$s" aria-hidden="true"></i>
 		</li>',
 		$icon,
 		$item['grade'],
@@ -171,4 +171,78 @@ function secupress_text_diff( $left_string, $right_string, $args = array() ) {
 	$r .= "</table>\n";
 
 	return $r;
+}
+
+/**
+ * Keep the old scan report (grade + status) to be compared on step4
+ *
+ * @since 1.0
+ * @author Julio Potier
+ **/
+function secupress_set_old_report() {
+	$grade  = secupress_get_scanner_counts( 'grade' );
+	$report = get_option( SECUPRESS_SCAN_SLUG );
+	update_option( 'secupress_step1_report', array( 'grade' => $grade, 'report' => $report ) );
+}
+
+
+/**
+ * Return the old scan report, see secupress_set_old_report()
+ *
+ * @since 1.0
+ * @return (array|false)
+ * @author Julio Potier
+ **/
+function secupress_get_old_report() {
+	return get_option( 'secupress_step1_report' );
+}
+
+/**
+ * Print Marketing block with SecuPress pro advantages
+ *
+ * @since 1.0
+ * @return string HTML content is printed
+ * @author Geoffrey Crofte
+ */
+function secupress_print_pro_advantages() {
+	?>
+	<div class="secupress-flex secupress-wrap secupress-pt1 secupress-pb1 secupress-pro-advantages">
+		<div class="secupress-col-1-2 secupress-flex secupress-landscape-blob">
+			<div class="secupress-col">
+				<i class="icon-antispam" aria-hidden="true"></i>
+			</div>
+			<div class="secupress-col">
+				<p class="secupress-blob-title"><?php esc_html_e( 'Anti Spam', 'secupress' ); ?></p>
+				<p class="secupress-blob-desc"><?php esc_html_e( 'Traffic done by bot represents about 60% of the internet. Spams are done by these bots. Don\'t let them do that!', 'secupress' ); ?></p>
+			</div>
+		</div>
+		<div class="secupress-col-1-2 secupress-flex secupress-landscape-blob">
+			<div class="secupress-col">
+				<i class="icon-information" aria-hidden="true"></i>
+			</div>
+			<div class="secupress-col">
+				<p class="secupress-blob-title"><?php esc_html_e( 'Alerts', 'secupress' ); ?></p>
+				<p class="secupress-blob-desc"><?php esc_html_e( 'Be alerted by receiving SMS, mobile notifications, or even by social networks besides alerts email.', 'secupress' ); ?></p>
+			</div>
+		</div>
+		<div class="secupress-col-1-2 secupress-flex secupress-landscape-blob">
+			<div class="secupress-col">
+				<i class="icon-firewall" aria-hidden="true"></i>
+			</div>
+			<div class="secupress-col">
+				<p class="secupress-blob-title"><?php esc_html_e( 'Firewall', 'secupress' ); ?></p>
+				<p class="secupress-blob-desc"><?php esc_html_e( 'Other features of the firewall add an additional level of protection from Internet attacks.', 'secupress' ); ?></p>
+			</div>
+		</div>
+		<div class="secupress-col-1-2 secupress-flex secupress-landscape-blob">
+			<div class="secupress-col">
+				<i class="icon-logs" aria-hidden="true"></i>
+			</div>
+			<div class="secupress-col">
+				<p class="secupress-blob-title"><?php esc_html_e( 'Logs', 'secupress' ); ?></p>
+				<p class="secupress-blob-desc"><?php esc_html_e( 'All actions considered as dangerous are held in this log available at any time to check what is happening on your site.', 'secupress' ); ?></p>
+			</div>
+		</div>
+	</div>
+	<?php
 }

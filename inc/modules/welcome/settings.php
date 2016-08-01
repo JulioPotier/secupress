@@ -10,14 +10,14 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 				</div>
 				<div class="secupress-lb-name">
 					<p class="secupress-lb-title">
-					<?php echo secupress_get_logo_word( array( 'with' => 110, 'height' => 26 ) ); ?>
+					<?php echo secupress_get_logo_word( array( 'width' => 110, 'height' => 26 ) ); ?>
 					</p>
 				</div>
 			</div>
 		</div>
 		<div class="secupress-col-2-3 secupress-col-text">
-			<p class="secupress-text-medium"><?php esc_html_e( 'Securize your website deeper thanks to our modules', 'secupress' ); ?></p>
-			<p><?php esc_html_e( 'Anti-Malware, Firewall, or Anti-Spam: add features, schedule scans and save your data.', 'secupress' ); ?></p>
+			<p class="secupress-text-medium"><?php esc_html_e( 'Secure your website deeper thanks to our dedicated modules', 'secupress' ); ?></p>
+			<p><?php esc_html_e( 'Anti-Malware, Firewall, or Anti-Spam: add features, schedule scans and protect your data.', 'secupress' ); ?></p>
 		</div>
 	</div>
 	<?php if ( ! secupress_is_pro() ) { ?>
@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 			<i class="icon-secupress-simple" aria-hidden="true"></i>
 		</div>
 		<div class="secupress-col-2-4 secupress-col-text">
-			<p class="secupress-text-basup"><?php printf( __( 'Get %s Pro and Unlock all the features and modules like: Schedules, Alerts, Firewall, Logs…', 'secupress' ), SECUPRESS_PLUGIN_NAME ); ?></p>
+			<p class="secupress-text-basup"><?php esc_html_e( 'Get a better score and unlock all features', 'secupress' ); ?></p>
 		</div>
 		<div class="secupress-col-1-4 secupress-col-cta">
 			<a href="<?php echo esc_url( secupress_admin_url( 'settings' ) ); ?>" class="secupress-button secupress-button-tertiary button-secupress-get-api-key">

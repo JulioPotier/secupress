@@ -12,6 +12,9 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements SecuPress_
 
 	/** Constants. ============================================================================== */
 
+
+	/** Properties. ============================================================================= */
+
 	/**
 	 * Class version.
 	 *
@@ -30,35 +33,27 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements SecuPress_
 	protected static $_instance;
 
 	/**
-	 * Priority.
-	 *
-	 * @var (string)
-	 */
-	public    static $prio = 'medium';
-
-	/**
 	 * Maximum uri length.
 	 *
 	 * @var (int)
 	 */
-	public    static $length;
+	public $length;
 
 
-	/** Public methods. ========================================================================= */
+	/** Init and messages. ====================================================================== */
 
 	/**
 	 * Init.
 	 *
 	 * @since 1.0
 	 */
-	protected static function init() {
-		self::$type     = 'WordPress';
+	protected function init() {
 		/** This filter is documented in inc/modules/firewall/plugins/bad-url-length.php */
-		self::$length   = apply_filters( 'secupress.plugin.bad-url-length.len', 300 );
-		self::$title    = sprintf( __( 'Check if long URL can reach your website (more than %s chars).', 'secupress' ), number_format_i18n( self::$length ) );
-		self::$more     = sprintf( __( 'A usual URL has no more than %s characters, but attackers often need to test very long strings when they try to hack something.', 'secupress' ), number_format_i18n( self::$length ) );
-		self::$more_fix = sprintf(
-			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
+		$this->length   = apply_filters( 'secupress.plugin.bad-url-length.len', 300 );
+		$this->title    = sprintf( __( 'Check if long URL can reach your website (more than %s chars).', 'secupress' ), number_format_i18n( $this->length ) );
+		$this->more     = sprintf( __( 'A usual URL has no more than %s characters, but attackers often need to test very long strings when they try to hack something.', 'secupress' ), number_format_i18n( $this->length ) );
+		$this->more_fix = sprintf(
+			__( 'Activate the option %1$s from the module %2$s.', 'secupress' ),
 			'<em>' . __( 'Block Long URLs', 'secupress' ) . '</em>',
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-url-content_bad-url-length">' . __( 'Firewall', 'secupress' ) . '</a>'
 		);
@@ -77,10 +72,10 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements SecuPress_
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// "good"
-			0   => __( 'You are currently blocking too long string requests.', 'secupress' ),
+			0   => __( 'You are currently blocking <strong>too long string requests</strong>.', 'secupress' ),
 			1   => __( 'Protection activated', 'secupress' ),
 			// "warning"
-			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
+			100 => __( 'Unable to determine if your website is blocking <strong>too long string requests</strong>.', 'secupress' ),
 			// "bad"
 			200 => __( 'Your website should block <strong>too long string requests</strong>.', 'secupress' ),
 		);
@@ -103,7 +98,7 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements SecuPress_
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-		$response = wp_remote_get( add_query_arg( time(), wp_generate_password( self::$length, false ), user_trailingslashit( home_url() ) ), array( 'redirection' => 0 ) );
+		$response = wp_remote_get( add_query_arg( time(), wp_generate_password( $this->length, false ), user_trailingslashit( home_url() ) ), array( 'redirection' => 0 ) );
 
 		if ( ! is_wp_error( $response ) ) {
 

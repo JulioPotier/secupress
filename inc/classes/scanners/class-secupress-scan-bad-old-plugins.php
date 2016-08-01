@@ -29,32 +29,26 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 	 */
 	protected static $_instance;
 
-	/**
-	 * Priority.
-	 *
-	 * @var (string)
-	 */
-	public    static $prio = 'high';
 
-
-	/** Public methods. ========================================================================= */
+	/** Init and messages. ====================================================================== */
 
 	/**
 	 * Init.
 	 *
 	 * @since 1.0
 	 */
-	protected static function init() {
-		self::$type     = 'WordPress';
-		self::$title    = __( 'Check if you are using plugins that have been deleted from the official repository or not updated since two years at least.', 'secupress' );
-		self::$more     = __( 'Avoid to use a plugin that have been removed from the official repository, and avoid using a plugin that have not been maintained for two years at least.', 'secupress' );
+	protected function init() {
+		$this->title = __( 'Check if you are using plugins that have been deleted from the official repository or not updated since two years at least.', 'secupress' );
+		$this->more  = __( 'Avoid to use a plugin that have been removed from the official repository, and avoid using a plugin that have not been maintained for two years at least.', 'secupress' );
 
 		if ( is_network_admin() ) {
-			self::$more_fix = __( 'This will ask you to select and delete these plugins. If some of them are activated on some of your websites, a new page similar to this one will be created in each related site, where administrators will be asked to select and deactivate these plugins.', 'secupress' );
+			$this->more_fix  = __( 'Select bad old plugins plugins to be deleted.', 'secupress' );
+			$this->more_fix .= '<br/>' . __( 'Will be fixable soon.', 'secupress' ); // RC2 ////.
+			$this->fixable   = false;
 		} elseif ( ! is_multisite() ) {
-			self::$more_fix = __( 'This will ask you to delete these plugins.', 'secupress' );
+			$this->more_fix = __( 'Select and delete bad old plugins plugins.', 'secupress' );
 		} else {
-			self::$more_fix = __( 'This will ask you to deactivate these plugins.', 'secupress' );
+			$this->more_fix = __( 'Deactivate bad old plugins.', 'secupress' );
 		}
 	}
 
@@ -189,30 +183,38 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 	 * @return (array) The fix results.
 	 */
 	public function fix() {
-		// Plugins no longer in directory or not updated in over 2 years or Hello Dolly.
-		$bad_plugins = $this->get_installed_plugins_to_remove();
-
-		if ( $bad_plugins['count'] ) {
-			if ( $count = count( $bad_plugins['to_delete'] ) ) {
-				// "cantfix"
-				$this->add_fix_message( 300, array( $count, $count ) );
-				$this->add_fix_action( 'delete-bad-old-plugins' );
-			}
-			if ( $count = count( $bad_plugins['to_deactivate'] ) ) {
-				// "cantfix"
-				$this->add_fix_message( 301, array( $count, $count ) );
-				$this->add_fix_action( 'deactivate-bad-old-plugins' );
-			}
-		} else {
-			// "good"
-			$this->add_fix_message( 1 );
-		}
+		// "good"
+		$this->add_fix_message( 1 );
 
 		return parent::fix();
 	}
 
 
 	/** Manual fix. ============================================================================= */
+
+	/**
+	 * Return an array of actions if a manual fix is needed here.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array)
+	 */
+	public function need_manual_fix() {
+		$bad_plugins = $this->get_installed_plugins_to_remove();
+		$actions     = array();
+
+		if ( $bad_plugins['count'] ) {
+			if ( $bad_plugins['to_delete'] ) {
+				$actions['delete-bad-old-plugins'] = 'delete-bad-old-plugins';
+			}
+			if ( $bad_plugins['to_deactivate'] ) {
+				$actions['deactivate-bad-old-plugins'] = 'deactivate-bad-old-plugins';
+			}
+		}
+
+		return $actions;
+	}
+
 
 	/**
 	 * Try to fix the flaw(s) after requiring user action.
@@ -225,10 +227,12 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 		$bad_plugins = $this->get_installed_plugins_to_remove();
 
 		if ( $bad_plugins['count'] ) {
+			// DELETE PLUGINS.
 			if ( $this->has_fix_action_part( 'delete-bad-old-plugins' ) ) {
 				$delete = $this->manual_delete( $bad_plugins['to_delete'], (bool) $bad_plugins['to_deactivate'] );
 			}
 
+			// DEACTIVATE PLUGINS.
 			if ( $this->has_fix_action_part( 'deactivate-bad-old-plugins' ) ) {
 				$deactivate = $this->manual_deactivate( $bad_plugins['to_deactivate'], (bool) $bad_plugins['to_delete'] );
 			}
@@ -318,8 +322,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 			// If plugin is in its own directory, recursively delete the directory.
 			if ( strpos( $plugin_file, '/' ) && $this_plugin_dir !== $plugins_dir ) { // base check on if plugin includes directory separator AND that its not the root plugin folder.
 				$deleted = $wp_filesystem->delete( $this_plugin_dir, true );
-			}
-			else {
+			} else {
 				$deleted = $wp_filesystem->delete( $plugins_dir . $plugin_file );
 			}
 
@@ -331,6 +334,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 
 				// Remove language files, silently.
 				$plugin_slug = dirname( $plugin_file );
+
 				if ( '.' !== $plugin_slug && ! empty( $plugin_translations[ $plugin_slug ] ) ) {
 					$translations = $plugin_translations[ $plugin_slug ];
 
@@ -372,10 +376,15 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 			$this->add_fix_message( 103, array( count( $not_removed ), $not_removed ) );
 		}
 
-		// Force refresh of plugin update information.
-		if ( $deleted_plugins && $current = get_site_transient( 'update_plugins' ) ) {
-			$current->response = array_diff_key( $current->response, $deleted_plugins );
-			set_site_transient( 'update_plugins', $current );
+		// Force refresh of plugin update information and cache.
+		if ( $deleted_plugins ) {
+			if ( $current = get_site_transient( 'update_plugins' ) ) {
+				$current->response  = array_diff_key( $current->response, $deleted_plugins );
+				$current->no_update = array_diff_key( $current->no_update, $deleted_plugins );
+				set_site_transient( 'update_plugins', $current );
+			}
+
+			wp_cache_delete( 'plugins', 'plugins' );
 		}
 	}
 

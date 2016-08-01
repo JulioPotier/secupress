@@ -114,6 +114,28 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 
 
 	/**
+	 * Get a module summary.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $module The desired module.
+	 * @param (string) $size The desired size: small|normal.
+	 *
+	 * @return (string)
+	*/
+	final public function get_module_summary( $module = false, $size = 'normal' ) {
+		$modules = static::get_modules();
+		$module  = $module ? $module : $this->modulenow;
+
+		if ( ! empty( $modules[ $module ]['summaries'][ $size ] ) ) {
+			return $modules[ $module ]['summaries'][ $size ];
+		}
+
+		return '';
+	}
+
+
+	/**
 	 * Get a module icon.
 	 *
 	 * @since 1.0
@@ -201,7 +223,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 								</div>
 								<div class="secupress-sh-name">
 									<p class="secupress-sh-title">
-										<?php echo secupress_get_logo_word( array( 'with' => 81, 'height' => 19 ) ); ?>
+										<?php echo secupress_get_logo_word( array( 'width' => 81, 'height' => 19 ) ); ?>
 									</p>
 								</div>
 							</div>
@@ -235,6 +257,11 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			$icon   = isset( $module['icon'] ) ? $module['icon'] : 'secupress-simple';
 			$class  = $this->get_current_module() === $key ? 'active' : '';
 			$class .= ! empty( $module['mark_as_pro'] ) ? ' secupress-pro-module' : '';
+			
+			// skip Get Pro exception
+			if ( 'get-pro' === $key ) {
+				continue;
+			}
 			?>
 			<li>
 				<a href="<?php echo esc_url( secupress_admin_url( 'modules', $key ) ); ?>" class="<?php echo $class; ?> module-<?php echo sanitize_key( $key ); ?>">
@@ -250,9 +277,9 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		if ( ! secupress_is_pro() ) {
 			?>
 			<li>
-				<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ); ?>" class="module-pro">
+				<a href="<?php echo esc_url( secupress_admin_url( 'modules', 'get-pro' ) ); ?>" class="module-pro">
 					<span class="secupress-tab-name"><?php esc_html_e( 'Get Pro', 'secupress' ); ?></span>
-					<span class="secupress-tab-summary"><?php printf( __( 'Buy %s Pro', 'secupress' ), SECUPRESS_PLUGIN_NAME ); ?></span>
+					<span class="secupress-tab-summary"><?php esc_html_e( 'Choose your licence', 'secupress' ); ?></span>
 					<i class="icon-secupress-simple" aria-hidden="true"></i>
 				</a>
 			</li>
@@ -295,8 +322,12 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			$this->load_module_settings();
 			return;
 		}
+		// Get Pro Page
+		if ( 'get-pro' === $this->get_current_module() ) {
+			$this->load_module_settings();
+			return;
+		}
 		?>
-
 		<div class="secupress-tab-content-header">
 			<?php
 			$this->print_module_title();

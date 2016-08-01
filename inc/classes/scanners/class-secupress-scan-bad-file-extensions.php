@@ -12,6 +12,9 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 
 	/** Constants. ============================================================================== */
 
+
+	/** Properties. ============================================================================= */
+
 	/**
 	 * Class version.
 	 *
@@ -30,18 +33,11 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 	protected static $_instance;
 
 	/**
-	 * Priority.
-	 *
-	 * @var (string)
-	 */
-	public    static $prio = 'medium';
-
-	/**
 	 * Tells if a scanner is fixable by SecuPress. The value "pro" means it's fixable only with the version PRO.
 	 *
 	 * @var (bool|string)
 	 */
-	public    static $fixable = 'pro';
+	protected $fixable = 'pro';
 
 	/**
 	 * The test file path.
@@ -58,34 +54,33 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 	protected $file_url = false;
 
 
-	/** Public methods. ========================================================================= */
+	/** Init and messages. ====================================================================== */
 
 	/**
 	 * Init.
 	 *
 	 * @since 1.0
 	 */
-	protected static function init() {
+	protected function init() {
 		global $is_apache, $is_nginx, $is_iis7;
 
-		self::$type  = 'WordPress';
-		self::$title = __( 'Check if some files that use bad extensions are reachable in the uploads folder.', 'secupress' );
-		self::$more  = __( 'The uploads folder should contain only files like images, pdf, or zip archives. Some other files should not be placed inside this folder, or at least, should not be reachable by their URL.', 'secupress' );
+		$this->title = __( 'Check if some files that use bad extensions are reachable in the uploads folder.', 'secupress' );
+		$this->more  = __( 'The uploads folder should only contain files like images, pdf, or zip archives. Other files should not be reachable by their URL.', 'secupress' );
 
 		if ( $is_apache ) {
 			$config_file = '.htaccess';
 		} elseif ( $is_iis7 ) {
 			$config_file = 'web.config';
 		} elseif ( ! $is_nginx ) {
-			self::$fixable = false;
+			$this->fixable = false;
 		}
 
 		if ( $is_nginx ) {
-			self::$more_fix = sprintf( __( 'Since your %s file cannot be edited automatically, this will give you the rules to add into it manually, to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>nginx.conf</code>' );
-		} elseif ( self::$fixable ) {
-			self::$more_fix = sprintf( __( 'This will add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), "<code>$config_file</code>" );
+			$this->more_fix = sprintf( __( 'Since your <code>%s</code> file cannot be edited automatically, this will give you the rules to add into it manually, to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>nginx.conf</code>' );
+		} elseif ( $this->fixable ) {
+			$this->more_fix = sprintf( __( 'Add rules in your <code>%s</code> file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), "<code>$config_file</code>" );
 		} else {
-			self::$more_fix = static::get_messages( 301 );
+			$this->more_fix = static::get_messages( 301 );
 		}
 	}
 
@@ -106,9 +101,9 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 			/* translators: 1 is a file name */
 			1   => sprintf( __( 'The rules forbidding access to files that use bad extensions have been successfully added to your %s file.', 'secupress' ), '%s' ),
 			// "warning"
-			100 => __( 'Unable to determine status of the test file.', 'secupress' ),
+			100 => __( 'Unable to determine status of the bad extension test file.', 'secupress' ),
 			// "bad"
-			200 => __( 'Could not create a test file in the uploads folder.', 'secupress' ),
+			200 => __( 'Could not create a bad extension test file in the uploads folder.', 'secupress' ),
 			201 => __( 'Files that use bad extensions are reachable in the uploads folder.', 'secupress' ),
 			// "cantfix"
 			/* translators: 1 is a file names, 2 is some code */

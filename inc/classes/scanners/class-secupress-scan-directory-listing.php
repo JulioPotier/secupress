@@ -12,6 +12,9 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 
 	/** Constants. ============================================================================== */
 
+
+	/** Properties. ============================================================================= */
+
 	/**
 	 * Class version.
 	 *
@@ -29,42 +32,35 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 	 */
 	protected static $_instance;
 
-	/**
-	 * Priority.
-	 *
-	 * @var (string)
-	 */
-	public    static $prio = 'high';
-
-
 	/** Public methods. ========================================================================= */
+
+	/** Init and messages. ====================================================================== */
 
 	/**
 	 * Init.
 	 *
 	 * @since 1.0
 	 */
-	protected static function init() {
+	protected function init() {
 		global $is_apache, $is_nginx, $is_iis7;
 
-		self::$type     = 'WordPress';
-		self::$title    = __( 'Check if your WordPress site discloses files in directory (known as Directory Listing).', 'secupress' );
-		self::$more     = __( 'Without the appropriate protection, anybody could browse your site files. While browsing some of your files might not be a security risk, most of them are sensitive.', 'secupress' );
+		$this->title = __( 'Check if your WordPress site discloses files in directory (known as Directory Listing).', 'secupress' );
+		$this->more  = __( 'Without the appropriate protection anybody could browse your site files. While browsing some of your files might not be a security risk, most of them are sensitive.', 'secupress' );
 
 		if ( $is_apache ) {
 			$config_file = '.htaccess';
 		} elseif ( $is_iis7 ) {
 			$config_file = 'web.config';
 		} elseif ( ! $is_nginx ) {
-			self::$fixable = false;
+			$this->fixable = false;
 		}
 
 		if ( $is_nginx ) {
-			self::$more_fix = sprintf( __( 'Since your %s file cannot be edited automatically, this will give you the rules to add into it manually, to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>nginx.conf</code>' );
-		} elseif ( self::$fixable ) {
-			self::$more_fix = sprintf( __( 'This will add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), "<code>$config_file</code>" );
+			$this->more_fix = sprintf( __( 'The %s file cannot be edited automatically, this will give you the rules to add into it manually, to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>nginx.conf</code>' );
+		} elseif ( $this->fixable ) {
+			$this->more_fix = sprintf( __( 'Add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), "<code>$config_file</code>" );
 		} else {
-			self::$more_fix = static::get_messages( 301 );
+			$this->more_fix = static::get_messages( 301 );
 		}
 	}
 
@@ -82,21 +78,21 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 		$messages = array(
 			// "good"
 			0   => __( 'Your site does not reveal the files list.', 'secupress' ),
-			1   => __( 'Your %s file has been successfully edited.', 'secupress' ),
+			1   => __( 'The rules forbidding access to directory listing have been successfully added to your %s file.', 'secupress' ),
 			// "warning"
 			/* translators: %s is an URL */
-			100 => __( 'Unable to determine status of %s.', 'secupress' ),
+			100 => __( 'Unable to determine status of %s to read the directory listing.', 'secupress' ),
 			// "bad"
 			/* translators: %s is an URL */
-			200 => __( '%s (for example) should not be accessible to anyone.', 'secupress' ),
+			200 => __( '%s (for example) should not be accessible to anyone because of directory listing.', 'secupress' ),
 			// "cantfix"
 			/* translators: 1 is a file name, 2 is some code */
 			300 => sprintf( __( 'Your server runs a nginx system, the directory listing disclosure cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
 			301 => __( 'Your server runs a non recognized system. The directory listing disclosure cannot be fixed automatically.', 'secupress' ),
 			/* translators: 1 is a file name, 2 is some code */
-			302 => __( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ),
+			302 => __( 'Your %1$s file does not seem to be writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ),
 			/* translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
-			303 => __( 'Your %1$s file is not writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ),
+			303 => __( 'Your %1$s file does not seem to be writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -127,7 +123,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 				// "bad"
 				$this->add_message( 200, array( '<code>' . $base_url . '</code>' ) );
 
-				if ( ! self::$fixable ) {
+				if ( ! $this->fixable ) {
 					$this->add_pre_fix_message( 301 );
 				}
 			}
