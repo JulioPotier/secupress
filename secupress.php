@@ -1,14 +1,14 @@
 <?php
 /**
  * Plugin Name: SecuPress — WordPress Security
- * Plugin URI: http://secupress.me
+ * Plugin URI: https://secupress.me
  * Description: Protect your WordPress with SecuPress, analyse and ensure the safety of your website daily.
  * Author: WP Media
  * Author URI: http://wp-media.me
  * Version: 1.0-RC2
  * Network: true
  * License: GPLv2
- * License URI: http://secupress.me/gpl.txt
+ * License URI: https://secupress.me/gpl.txt
  *
  * Text Domain: secupress
  * Domain Path: /languages/
@@ -37,7 +37,7 @@ define( 'SECUPRESS_FIX_DISTS'             , 'secupress_fix_dists' );
 define( 'SECUPRESS_BAN_IP'                , 'secupress_ban_ip' );
 define( 'SECUPRESS_RATE_URL'              , 'https://wordpress.org/support/view/plugin-reviews/secupress?filter=5#topic' );
 define( 'SECUPRESS_REPO_URL'              , 'https://wordpress.org/plugins/secupress/' );
-define( 'SECUPRESS_WEB_MAIN'              , 'http://secupress.me/' );
+define( 'SECUPRESS_WEB_MAIN'              , 'https://secupress.me/' );
 define( 'SECUPRESS_BOT_URL'               , 'http://bot.secupress.me' );
 define( 'SECUPRESS_WEB_VALID'             , 'http://support.secupress.me/' );
 define( 'SECUPRESS_FILE'                  , __FILE__ );

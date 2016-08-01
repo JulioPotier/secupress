@@ -67,7 +67,7 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan implements SecuPress_
 			0   => __( 'You are currently blocking Bad User Agents.', 'secupress' ),
 			1   => __( 'Protection activated', 'secupress' ),
 			// "warning"
-			100 => __( 'Unable to determine if your homepagenis reachable by Bad User Agents.', 'secupress' ),
+			100 => __( 'Unable to determine if your homepage is reachable by Bad User Agents.', 'secupress' ),
 			// "bad"
 			200 => __( 'Your website should block <code>HTTP</code> requests for <strong>Bad User Agents</strong>.', 'secupress' ),
 		);

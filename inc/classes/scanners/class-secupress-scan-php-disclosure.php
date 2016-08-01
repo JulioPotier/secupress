@@ -76,7 +76,7 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 			0   => __( 'Your site does not reveal the PHP modules.', 'secupress' ),
 			1   => __( 'The rules forbidding access to the PHP Easter Egg have been successfully added to your %s file  Your %s file has been successfully edited.', 'secupress' ),
 			// "warning"
-			100 => __( 'Unable to determine status if your homepage is disclosing PHP Easter Egg.', 'secupress' ),
+			100 => __( 'Unable to determine if your homepage is disclosing PHP Easter Egg.', 'secupress' ),
 			// "bad"
 			200 => sprintf( __( '%s should not be accessible to anyone.', 'secupress' ), '<code>' . user_trailingslashit( home_url() ) . '?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000</code>' ),
 			// "cantfix"
