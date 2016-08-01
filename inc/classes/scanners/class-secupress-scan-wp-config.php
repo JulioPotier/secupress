@@ -38,9 +38,12 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 	 * @since 1.0
 	 */
 	protected function init() {
-		$this->title    = __( 'Check your <code>wp-config.php</code> file, especially the PHP constants.', 'secupress' );
-		$this->more     = __( 'You can use the <code>wp-config.php</code> file to improve the security of your website. Learn about the best practice with this test.', 'secupress' );
-		$this->more_fix = __( 'Set some PHP constants in your <code>wp-config.php</code> file to improve the security of your website.', 'secupress' );
+		/** Translators: %s is a file name. */
+		$this->title    = sprintf( __( 'Check your %s file, especially the PHP constants.', 'secupress' ), '<code>wp-config.php</code>' );
+		/** Translators: %s is a file name. */
+		$this->more     = sprintf( __( 'You can use the %s file to improve the security of your website. Learn about the best practice with this test.', 'secupress' ), '<code>wp-config.php</code>' );
+		/** Translators: %s is a file name. */
+		$this->more_fix = sprintf( __( 'Set some PHP constants in your %s file to improve the security of your website.', 'secupress' ), '<code>wp-config.php</code>' );
 	}
 
 
@@ -56,20 +59,30 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// "good"
-			0   => __( 'Your <code>wp-config.php</code> file is correct.', 'secupress' ),
-			1   => __( 'A must use plugin has been added in order to change the default value for <code>COOKIEHASH</code>.', 'secupress' ),
+			/** Translators: %s is a file name. */
+			0   => sprintf( __( 'Your %s file is correct.', 'secupress' ), '<code>wp-config.php</code>' ),
+			/** Translators: %s is a constant name. */
+			1   => sprintf( __( 'A Must Use plugin has been added in order to change the default value for %s.', 'secupress' ), '<code>COOKIEHASH</code>' ),
 			// "warning"
 			100 => __( 'This fix is <strong>pending</strong>, please reload the page to apply it now.', 'secupress' ),
 			// "bad"
-			201 => __( 'In your <code>wp-config.pgp</code> file, the PHP constant %s should not be set with the default value.', 'secupress' ),
-			202 => __( 'In your <code>wp-config.pgp</code> file, the PHP constant %s should be set.', 'secupress' ),
-			203 => __( 'In your <code>wp-config.pgp</code> file, the PHP constant %s should not be set.', 'secupress' ),
-			204 => __( 'In your <code>wp-config.pgp</code> file, the PHP constant %s should not be empty.', 'secupress' ),
-			205 => __( 'In your <code>wp-config.pgp</code> file, the PHP constant %1$s should be set on %2$s.', 'secupress' ),
-			206 => __( 'In your <code>wp-config.pgp</code> file, the PHP constant %1$s should be set on %2$s or less.', 'secupress' ),
+			/** Translators: 1 is a file name, 2 is a constant name. */
+			201 => sprintf( __( 'In your %1$s file, the PHP constant %2$s should not be set with the default value.', 'secupress' ), '<code>wp-config.php</code>', '%s' ),
+			/** Translators: 1 is a file name, 2 is a constant name. */
+			202 => sprintf( __( 'In your %1$s file, the PHP constant %2$s should be set.', 'secupress' ), '<code>wp-config.php</code>', '%s' ),
+			/** Translators: 1 is a file name, 2 is a constant name. */
+			203 => sprintf( __( 'In your %1$s file, the PHP constant %2$s should not be set.', 'secupress' ), '<code>wp-config.php</code>', '%s' ),
+			/** Translators: 1 is a file name, 2 is a constant name. */
+			204 => sprintf( __( 'In your %1$s file, the PHP constant %2$s should not be empty.', 'secupress' ), '<code>wp-config.php</code>', '%s' ),
+			/** Translators: 1 is a file name, 2 is a constant name, 3 is a value. */
+			205 => sprintf( __( 'In your %1$s file, the PHP constant %2$s should be set on %3$s.', 'secupress' ), '<code>wp-config.php</code>', '%1$s', '%2$s' ),
+			/** Translators: 1 is a file name, 2 is a constant name, 3 is a value. */
+			206 => sprintf( __( 'In your %1$s file, the PHP constant %2$s should be set on %3$s or less.', 'secupress' ), '<code>wp-config.php</code>', '%1$s', '%2$s' ),
 			// "cantfix"
+			/** Translators: %s is a list of constant names. */
 			300 => __( 'Some PHP constants could not be set correctly: %s.', 'secupress' ),
-			301 => __( 'I can not create a must use plugin in <code>%s</code>, but i need it to change the default value for <code>COOKIEHASH</code>.', 'secupress' ),
+			/** Translators: %s is a constant name. */
+			301 => sprintf( __( 'A Must Use plugin could not be created to change the default value for %s.', 'secupress' ), '<code>COOKIEHASH</code>' ),
 		);
 
 		if ( isset( $message_id ) ) {

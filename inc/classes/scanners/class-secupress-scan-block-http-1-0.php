@@ -60,12 +60,12 @@ class SecuPress_Scan_Block_HTTP_1_0 extends SecuPress_Scan implements SecuPress_
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// "good"
-			0   => sprintf( __( 'Your website currently blocks <code>%s</code> requests.', 'secupress' ), 'HTTP/1.0 POST' ),
+			0   => sprintf( __( 'Your website currently blocks %s requests.', 'secupress' ), '<code>HTTP/1.0 POST</code>' ),
 			1   => __( 'Protection activated', 'secupress' ),
 			// "warning"
-			100   => sprintf( __( 'Unable to determine if your homepage can block <code>%s</code> requests.', 'secupress' ), 'HTTP/1.0 POST' ),
+			100   => sprintf( __( 'Unable to determine if your homepage can block %s requests.', 'secupress' ), '<code>HTTP/1.0 POST</code>' ),
 			// "bad"
-			200 => sprintf( __( 'Your website should block <code>%s</code> requests.', 'secupress' ), 'HTTP/1.0 POST' ),
+			200 => sprintf( __( 'Your website should block %s requests.', 'secupress' ), '<code>HTTP/1.0 POST</code>' ),
 		);
 
 		if ( isset( $message_id ) ) {
