@@ -38,12 +38,10 @@ function secupress_php_disclosure_activation() {
 		$rules = '';
 	}
 
-	secupress_add_module_rules_or_notice_and_deactivate( array(
-		'rules'     => $rules,
-		'marker'    => 'php_disclosure',
-		'module'    => 'sensitive-data',
-		'submodule' => basename( __FILE__, '.php' ),
-		'title'     => __( 'PHP Disclosure', 'secupress' ),
+	secupress_add_module_rules_or_notice( array(
+		'rules'  => $rules,
+		'marker' => 'php_disclosure',
+		'title'  => __( 'PHP Disclosure', 'secupress' ),
 	) );
 }
 

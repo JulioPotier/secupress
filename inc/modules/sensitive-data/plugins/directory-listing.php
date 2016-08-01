@@ -38,13 +38,11 @@ function secupress_directory_listing_activation() {
 		$rules = '';
 	}
 
-	$edited = secupress_add_module_rules_or_notice_and_deactivate( array(
-		'rules'     => $rules,
-		'marker'    => 'directory_listing',
-		'iis_args'  => array( 'node_types' => 'directoryBrowse' ),
-		'module'    => 'sensitive-data',
-		'submodule' => basename( __FILE__, '.php' ),
-		'title'     => __( 'Directory Listing', 'secupress' ),
+	$edited = secupress_add_module_rules_or_notice( array(
+		'rules'    => $rules,
+		'marker'   => 'directory_listing',
+		'iis_args' => array( 'node_types' => 'directoryBrowse' ),
+		'title'    => __( 'Directory Listing', 'secupress' ),
 	) );
 
 	// For Apache: maybe remove previous `Options +Indexes`.

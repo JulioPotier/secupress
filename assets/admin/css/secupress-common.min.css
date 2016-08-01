@@ -344,7 +344,7 @@
 .secupress-activated .hidden-when-activated,
 .visible-when-activated {
 	display: none;
-	visibility: hidden;
+	visibility: hidden;	
 }
 .icon-angle-down {
 	transition: transform 0.275s;
@@ -568,6 +568,7 @@ button.secupress-activated .secupress-toggle-button.hidden {
 	border: 2px solid #ECF0F1;
 	font-size: 13px;
 	padding: 7px 10px;
+	height: auto;
 }
 
 /* Sweet alert childrens */
@@ -1204,7 +1205,7 @@ table.fixed .column-date {
 	background: #26B3A9!important;
 }
 .secupress-swal2.sweet-alert .sweet-cancel {
-	background: #5a626f!important;
+	background: #5a626f!important;	
 }
 .secupress-swal2.sweet-alert .sweet-cancel:hover,
 .secupress-swal2.sweet-alert .sweet-cancel:hover {

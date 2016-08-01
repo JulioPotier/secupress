@@ -38,16 +38,14 @@ function secupress_no_x_powered_by_activation() {
 		$rules = '';
 	}
 
-	secupress_add_module_rules_or_notice_and_deactivate( array(
-		'rules'     => $rules,
-		'marker'    => 'no_x_powered_by',
-		'iis_args'  => array(
+	secupress_add_module_rules_or_notice( array(
+		'rules'    => $rules,
+		'marker'   => 'no_x_powered_by',
+		'iis_args' => array(
 			'path'      => 'httpProtocol/customHeaders',
 			'attribute' => 'id',
 		),
-		'module'    => 'discloses',
-		'submodule' => basename( __FILE__, '.php' ),
-		'title'     => __( 'No X-Powered-By', 'secupress' ),
+		'title'    => __( 'No X-Powered-By', 'secupress' ),
 	) );
 }
 
