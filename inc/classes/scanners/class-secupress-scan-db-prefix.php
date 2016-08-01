@@ -12,9 +12,6 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 
 	/** Constants. ============================================================================== */
 
-
-	/** Properties. ============================================================================= */
-
 	/**
 	 * Class version.
 	 *
@@ -89,19 +86,13 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 	public function scan() {
 		global $wpdb;
 
-		if ( get_transient( 'select-db-tables-to-rename' ) ) {
-			$this->add_message( 100 );
+		if ( 'wp_' === $wpdb->prefix || 'wordpress_' === $wpdb->prefix ) {
+			// "bad"
+			$this->add_message( 200, array( '<code>' . $wpdb->prefix . '</code>' ) );
 		} else {
-			// Check db prefix.
-			$check = 'wp_' === $wpdb->prefix || 'wordpress_' === $wpdb->prefix;
-
-			if ( $check ) {
-				// "bad"
-				$this->add_message( 200, array( '<code>' . $wpdb->prefix . '</code>' ) );
-			}
+			// "good"
+			$this->add_message( 0 );
 		}
-		// "good"
-		$this->maybe_set_status( 0 );
 
 		return parent::scan();
 	}
