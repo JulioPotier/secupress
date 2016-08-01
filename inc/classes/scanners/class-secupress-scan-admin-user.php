@@ -197,6 +197,8 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 	}
 
 
+	/** Manual fix. ============================================================================= */
+
 	/**
 	 * Return an array of actions if a manual fix is needed here.
 	 *
