@@ -29,26 +29,18 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 	 */
 	protected static $_instance;
 
-	/**
-	 * Priority.
-	 *
-	 * @var (string)
-	 */
-	public    static $prio = 'high';
 
-
-	/** Public methods. ========================================================================= */
+	/** Init and messages. ====================================================================== */
 
 	/**
 	 * Init.
 	 *
 	 * @since 1.0
 	 */
-	protected static function init() {
-		self::$type     = 'WordPress';
-		self::$title    = __( 'Check if your database prefix is correct.', 'secupress' );
-		self::$more     = __( 'Avoid the usage of <code>wp_</code> or <code>wordpress_</code> as database prefix to improve your security.', 'secupress' );
-		self::$more_fix = __( 'We will rename all your database table names, then update your configuration with a new and more secure one.', 'secupress' );
+	protected function init() {
+		$this->title    = __( 'Check if your database prefix is correct.', 'secupress' );
+		$this->more     = __( 'Avoid the usage of <code>wp_</code> or <code>wordpress_</code> as database prefix to improve your security.', 'secupress' );
+		$this->more_fix = __( 'Rename all your database table names, then update your configuration with a new and more secure one.', 'secupress' );
 	}
 
 
@@ -68,10 +60,10 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 			// "bad"
 			200 => __( 'The database prefix should not be %s. Choose something else than <code>wp_</code> or <code>wordpress_</code>, they are too easy to guess.', 'secupress' ),
 			// "cantfix"
-			301 => __( 'The database user can not alter tables and so I cannot change the database prefix.', 'secupress' ),
-			302 => __( 'I cannot write into <code>wp-config.php</code> so I cannot change the database prefix.', 'secupress' ),
-			303 => __( 'The database user seems to have to correct rights, but I still could not change the database prefix.', 'secupress' ),
-			304 => __( 'I found too many database tables, so I cannot choose alone which ones to rename, help me!', 'secupress' ), // Trinity! Help me!
+			301 => __( 'The database user can not alter tables and so the database prefix could not be changed.', 'secupress' ),
+			302 => __( 'The <code>wp-config.php</code> file does not seem to be writable, so the database prefix cannot be changed.', 'secupress' ),
+			303 => __( 'The database user seems to have to correct rights, but the database prefix could still not be changed.', 'secupress' ),
+			304 => __( 'Too many database tables found, so which ones to rename?!', 'secupress' ), // Trinity! Help me!
 		);
 
 		if ( isset( $message_id ) ) {
@@ -116,47 +108,43 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 	 * @return (array) The fix results.
 	 */
 	public function fix() {
-		global $wpdb, $current_user;
+		// "good"
+		$this->add_fix_message( 0 );
 
-		$wpconfig_filename = secupress_find_wpconfig_path();
+		return parent::fix();
+	}
+
+
+	/** Manual fix. ============================================================================= */
+
+	/**
+	 * Return an array of actions if a manual fix is needed here.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array)
+	 */
+	public function need_manual_fix() {
+		global $wpdb;
 
 		// Check db prefix.
 		$check = 'wp_' === $wpdb->prefix || 'wordpress_' === $wpdb->prefix;
 
-		if ( ! $check ) {
-			// "good"
-			$this->add_fix_message( 0 );
-			return parent::fix();
-		}
+		if ( $check && secupress_db_access_granted() ) {
 
-		$old_prefix = $wpdb->prefix;
+			$wpconfig_filename = secupress_find_wpconfig_path();
 
-		if ( ! secupress_db_access_granted() ) {
-			// "cantfix"
-			$this->add_fix_message( 301 );
-			return parent::fix();
-		}
+			if ( is_writable( $wpconfig_filename ) && preg_match( '/\$table_prefix.*=.*(\'' . $wpdb->prefix . '\'|"' . $wpdb->prefix . '");.*/', file_get_contents( $wpconfig_filename ) ) ) {
 
-		if ( is_writable( $wpconfig_filename ) && preg_match( '/\$table_prefix.*=.*(\'' . $old_prefix . '\'|"' . $old_prefix . '");.*/', file_get_contents( $wpconfig_filename ) ) ) {
+				$good_tables = secupress_get_non_wp_tables();
 
-			$good_tables = secupress_get_non_wp_tables();
-
-			if ( $good_tables ) {
-				// "cantfix"
-				$this->add_fix_message( 304 );
-				$this->add_fix_action( 'select-db-tables-to-rename' );
-			} else {
-				$this->manual_fix();
+				if ( $good_tables ) {
+					return array( 'select-db-tables-to-rename' => 'select-db-tables-to-rename' );
+				}
 			}
-		} else {
-			// "cantfix"
-			$this->add_fix_message( 302 );
 		}
 
-		// "good"
-		$this->maybe_set_fix_status( 0 );
-
-		return parent::fix();
+		return array();
 	}
 
 
