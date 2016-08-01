@@ -2145,6 +2145,7 @@ msgstr ""
 
 #: inc/classes/scanners/class-secupress-scan-bad-url-access.php:55
 #: inc/classes/scanners/class-secupress-scan-directory-listing.php:55
+#: inc/classes/scanners/class-secupress-scan-discloses.php:61
 #: inc/classes/scanners/class-secupress-scan-php-disclosure.php:55
 #: inc/classes/scanners/class-secupress-scan-readme-discloses.php:56
 #, php-format
@@ -2735,14 +2736,6 @@ msgstr ""
 #: inc/classes/scanners/class-secupress-scan-discloses.php:55
 msgid ""
 "Depending of the scan results, one (or all) of the following will be applied:"
-msgstr ""
-
-#: inc/classes/scanners/class-secupress-scan-discloses.php:61
-#, php-format
-msgid ""
-"THe %s file cannot be edited automatically, this will give you the rules to "
-"add into it manually, to avoid attackers to read sensitive informations from "
-"your installation."
 msgstr ""
 
 #: inc/classes/scanners/class-secupress-scan-discloses.php:67
