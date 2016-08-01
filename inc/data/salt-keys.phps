@@ -3,10 +3,10 @@
 Plugin Name: SecuPress Salt Keys
 Description: Good Security Keys for each of your blogs of your network (multisite only), auto-reseting each month.
 Author: SecuPress
-Author URI: http://SecuPress.me
+Author URI: https://secupress.me
 Version: 1.0
 */
-defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' ); 
+defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
 define( 'SECUPRESS_SALT_KEYS_ACTIVE', true );
 global $blog_id;
