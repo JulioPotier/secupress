@@ -860,7 +860,7 @@ function secupress_scanners_template() {
 	$heading_tag  = secupress_wp_version_is( '4.4-alpha' ) ? 'h2' : 'h3';
 	// Allowed tags in "Learn more" contents.
 	$allowed_tags = array(
-		'a'      => array( 'href' => array(),'title' => array(), 'target' => array() ),
+		'a'      => array( 'href' => array(), 'title' => array(), 'target' => array() ),
 		'abbr'   => array( 'title' => array() ),
 		'code'   => array(),
 		'em'     => array(),
@@ -869,6 +869,7 @@ function secupress_scanners_template() {
 		'ol'     => array(),
 		'li'     => array(),
 		'p'      => array(),
+		'pre'    => array( 'class' => array() ),
 		'br'     => array(),
 	);
 	// Auto-scans: scans that will be executed on page load.
