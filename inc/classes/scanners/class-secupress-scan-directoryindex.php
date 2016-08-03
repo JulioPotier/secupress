@@ -2,7 +2,7 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /**
- * DirectoryIndex scan class.
+ * Directory Index scan class.
  *
  * @package SecuPress
  * @subpackage SecuPress_Scan
@@ -40,23 +40,26 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 	protected function init() {
 		global $is_apache, $is_nginx, $is_iis7;
 
-		$this->title = __( 'Check if <em>.php</em> files are loaded in priority instead of <em>.html</em> or <em>.htm</em> etc.', 'secupress' );
+		/** Translators: 1, 2 and 3 are file extensions. */
+		$this->title = sprintf( __( 'Check if %1$s files are loaded in priority instead of %2$s or %3$s etc.', 'secupress' ), '<em>.php</em>', '<em>.html</em>', '<em>.htm</em>' );
+		/** Translators: 1 and 2 are file extensions. */
 		$this->more  = sprintf( __( 'If your website is victim of a defacement using the addition of a file like %1$s, this file could be loaded first instead of the one from WordPress. This is why we have to load %2$s first.', 'secupress' ), '<code>index.htm</code>', '<code>index.php</code>' );
 
-		if ( $is_apache ) {
-			$config_file = '.htaccess';
-		} elseif ( $is_iis7 ) {
-			$config_file = 'web.config';
-		} elseif ( ! $is_nginx ) {
-			$this->fixable = false;
+		if ( ! $is_apache && ! $is_nginx && ! $is_iis7 ) {
+			$this->more_fix = static::get_messages( 301 );
+			$this->fixable  = false;
+			return;
 		}
 
-		if ( $is_nginx ) {
-			$this->more_fix = sprintf( __( 'The %s file cannot be edited automatically, this will give you the rules to add into it manually, to avoid attackers to load <code>.html</code>/<code>.htm</code> files before the <code>.php</code> one.', 'secupress' ), '<code>nginx.conf</code>' );
-		} elseif ( $this->fixable ) {
-			$this->more_fix = sprintf( __( 'Add rules in your %s file to avoid attackers to load <code>.html</code>/<code>.htm</code> files before the <code>.php</code> one.', 'secupress' ), "<code>$config_file</code>" );
+		if ( $is_apache ) {
+			/** Translators: 1 is a file name; 2, 3 and 4 are file extensions. */
+			$this->more_fix = sprintf( __( 'Add rules in your %1$s file to avoid attackers to load %2$s or %3$s files before the %4$s one.', 'secupress' ), '<code>.htaccess</code>', '<code>.html</code>', '<code>.htm</code>', '<code>.php</code>' );
+		} elseif ( $is_iis7 ) {
+			/** Translators: 1 is a file name; 2, 3 and 4 are file extensions. */
+			$this->more_fix = sprintf( __( 'Add rules in your %1$s file to avoid attackers to load %2$s or %3$s files before the %4$s one.', 'secupress' ), '<code>web.config</code>', '<code>.html</code>', '<code>.htm</code>', '<code>.php</code>' );
 		} else {
-			$this->more_fix = static::get_messages( 301 );
+			/** Translators: 1 is a file name; 2, 3 and 4 are file extensions. */
+			$this->more_fix = sprintf( __( 'The %1$s file cannot be edited automatically, you will be given the rules to add into this file manually, to avoid attackers to load %2$s or %3$s files before the %4$s one.', 'secupress' ), '<code>nginx.conf</code>', '<code>.html</code>', '<code>.htm</code>', '<code>.php</code>' );
 		}
 	}
 
@@ -71,22 +74,28 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
 	 */
 	public static function get_messages( $message_id = null ) {
+		global $is_apache;
+		$config_file = $is_apache ? '.htaccess' : 'web.config';
+
 		$messages = array(
 			// "good"
+			/** Translators: %s is a file name. */
 			0   => sprintf( __( '%s is the first file loaded, directory index is good.', 'secupress' ), '<code>index.php</code>' ),
-			1   => __( 'The rules to get the correct dorectory index have been successfully added to your %s fileYour %s file has been successfully edited.', 'secupress' ),
+			/** Translators: %s is a file name. */
+			1   => sprintf( __( 'The rules to get the correct directory index have been successfully added to your %s file.', 'secupress' ), "<code>$config_file</code>" ),
 			// "warning"
 			100 => __( 'Unable to determine status of the directory index.', 'secupress' ),
 			// "bad"
+			/** Translators: 1 and 2 are file names. */
 			200 => sprintf( __( 'Your website should load %1$s first, actually it loads %2$s first.', 'secupress' ), '<code>index.php</code>', '%s' ),
 			// "cantfix"
 			/* translators: 1 is a file name, 2 is some code */
 			300 => sprintf( __( 'Your server runs a nginx system, the directory index cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
 			301 => __( 'Your server runs a non recognized system. The directory index cannot be fixed automatically.', 'secupress' ),
 			/* translators: 1 is a file name, 2 is some code */
-			302 => __( 'Your %1$s file does not seem to be writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ),
-			/* translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
-			303 => __( 'Your %1$s file does not seem to be writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ),
+			302 => sprintf( __( 'Your %1$s file does not seem to be writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ), "<code>$config_file</code>", '%s' ),
+			/* translators: 1 is a file name, 2 is a tag name, 3 is a folder path (kind of), 4 is some code */
+			303 => sprintf( __( 'Your %1$s file does not seem to be writable. Please remove any previous %2$s tag and add the following lines inside the tags hierarchy %3$s (create it if does not exist): %4$s', 'secupress' ), "<code>$config_file</code>", '%1$s', '%2$s', '%3$s' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -174,14 +183,15 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
 
 		if ( $last_error && 'general' === $last_error['setting'] && 'apache_manual_edit' === $last_error['code'] ) {
+			$rules = static::_get_rules_from_error( $last_error );
 			// "cantfix"
-			$this->add_fix_message( 302, array( '<code>.htaccess</code>', static::_get_rules_from_error( $last_error ) ) );
+			$this->add_fix_message( 302, array( $rules ) );
 			array_pop( $wp_settings_errors );
 			return;
 		}
 
 		// "good"
-		$this->add_fix_message( 1, array( '<code>.htaccess</code>' ) );
+		$this->add_fix_message( 1 );
 	}
 
 
@@ -199,14 +209,17 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
 
 		if ( $last_error && 'general' === $last_error['setting'] && 'iis7_manual_edit' === $last_error['code'] ) {
+			$rules     = static::_get_rules_from_error( $last_error );
+			$path      = static::_get_code_tag_from_error( $last_error, 'secupress-iis7-path' );
+			$node_type = static::_get_code_tag_from_error( $last_error, 'secupress-iis7-node-type' );
 			// "cantfix"
-			$this->add_fix_message( 303, array( '<code>web.config</code>', '/configuration/system.webServer', static::_get_rules_from_error( $last_error ) ) );
+			$this->add_fix_message( 303, array( $node_type, $path, $rules ) );
 			array_pop( $wp_settings_errors );
 			return;
 		}
 
 		// "good"
-		$this->add_fix_message( 1, array( '<code>web.config</code>' ) );
+		$this->add_fix_message( 1 );
 	}
 
 
