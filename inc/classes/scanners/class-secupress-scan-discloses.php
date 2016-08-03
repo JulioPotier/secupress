@@ -96,7 +96,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 			200 => __( 'The website displays the <strong>PHP version</strong> in the request headers.', 'secupress' ),
 			201 => __( 'The website displays the <strong>WordPress version</strong> in the homepage source code (%s).', 'secupress' ),
 			/* translators: %s is an URL */
-			202 => sprintf( __( 'The %s file should not be accessible by anyone to avoid revealing your <strong>WordPress version</strong>.', 'secupress' ), '<code>readme.html</code>' ),
+			202 => sprintf( __( 'The %s file should not be accessible by anyone to avoid to reveal your <strong>WordPress version</strong>.', 'secupress' ), '<code>readme.html</code>' ),
 			// "cantfix"
 			/* translators: 1 is a file name, 2 is some code */
 			300 => sprintf( __( 'Your server runs a nginx system, the <strong>WordPress version</strong> and <strong>PHP version</strong> disclosure cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
