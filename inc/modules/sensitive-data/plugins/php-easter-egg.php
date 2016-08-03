@@ -99,7 +99,7 @@ function secupress_php_disclosure_apache_rules() {
 	$rules .= "    RewriteEngine On\n";
 	$rules .= "    RewriteCond %{QUERY_STRING} \=PHP[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12} [NC]\n";
 	$rules .= "    RewriteRule .* - [F]\n";
-	$rules .= '</IfModule>';
+	$rules .= "</IfModule>\n";
 
 	return $rules;
 }

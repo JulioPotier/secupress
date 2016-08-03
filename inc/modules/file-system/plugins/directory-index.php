@@ -98,7 +98,7 @@ function secupress_directory_index_plugin_activate( $rules ) {
 function secupress_directory_index_apache_rules() {
 	$rules  = "<ifModule mod_dir.c>\n";
 	$rules .= "    DirectoryIndex index.php index.html index.htm index.cgi index.pl index.xhtml\n";
-	$rules .= '</IfModule>';
+	$rules .= "</IfModule>\n";
 
 	return $rules;
 }
