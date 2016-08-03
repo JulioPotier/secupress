@@ -45,8 +45,8 @@ function __secupress_global_settings_callback( $value ) {
 
 	/**
 	 * API and license validation.
-	 */
-	$value['consumer_email'] = ! empty( $value['consumer_email'] ) ? is_email( $value['consumer_email'] )          : '';
+	 */////
+	/*$value['consumer_email'] = ! empty( $value['consumer_email'] ) ? is_email( $value['consumer_email'] )          : '';
 	$value['consumer_key']   = ! empty( $value['consumer_key'] )   ? sanitize_text_field( $value['consumer_key'] ) : '';
 
 	// Default values related to the API.
@@ -78,7 +78,7 @@ function __secupress_global_settings_callback( $value ) {
 		$value['uptime_monitoring_site_key']    = $old_values['uptime_monitoring_site_key'];
 	} else {
 		unset( $value['uptime_monitoring_account_key'], $value['uptime_monitoring_site_key'] );
-	}
+	}*/
 
 	return $value;
 }
@@ -94,8 +94,8 @@ function __secupress_global_settings_callback( $value ) {
  * @param (array) $def_values Default values related to the API.
  *
  * @return (array) $new_values The new settings, some values may have changed.
- */
-function __secupress_global_settings_remove_api_subscription( $new_values, $old_values, $def_values ) {
+ */////
+/*function __secupress_global_settings_remove_api_subscription( $new_values, $old_values, $def_values ) {
 
 	$api_old_values = secupress_array_merge_intersect( $old_values, $def_values );
 
@@ -119,7 +119,7 @@ function __secupress_global_settings_remove_api_subscription( $new_values, $old_
 		 *
 		 * @param (array) $api_new_values The new values.
 		 * @param (array) $api_old_values The old values.
-		 */
+		 *//*
 		do_action( 'secupress.api.data_changed', $api_new_values, $api_old_values );
 	} else {
 		// Keep old values.
@@ -128,7 +128,7 @@ function __secupress_global_settings_remove_api_subscription( $new_values, $old_
 	}
 
 	return $new_values;
-}
+}*/
 
 
 /**
@@ -141,8 +141,8 @@ function __secupress_global_settings_remove_api_subscription( $new_values, $old_
  * @param (array) $def_values Default values related to the API.
  *
  * @return (array) $new_values The new settings, some values may have changed.
- */
-function __secupress_global_settings_update_api_subscription( $new_values, $old_values, $def_values ) {
+ */////
+/*function __secupress_global_settings_update_api_subscription( $new_values, $old_values, $def_values ) {
 
 	$api_old_values = secupress_array_merge_intersect( $old_values, $def_values );
 
@@ -174,7 +174,7 @@ function __secupress_global_settings_update_api_subscription( $new_values, $old_
 		$api_new_values = secupress_array_merge_intersect( $new_values, $def_values );
 
 		if ( $api_old_values !== $api_new_values ) {
-			/** This action is documented in inc/admin/options.php */
+			/** This action is documented in inc/admin/options.php *//*
 			do_action( 'secupress.api.data_changed', $api_new_values, $api_old_values );
 		}
 	} else {
@@ -184,7 +184,7 @@ function __secupress_global_settings_update_api_subscription( $new_values, $old_
 	}
 
 	return $new_values;
-}
+}*/
 
 
 /**
@@ -196,8 +196,8 @@ function __secupress_global_settings_update_api_subscription( $new_values, $old_
  * @param (array) $new_values The new settings, passed by reference. Depending on the request result, these values may be changed.
  *
  * @return (mixed) The response body. False otherwise.
- */
-function __secupress_global_settings_api_request_succeeded( $response, &$new_values ) {
+ */////
+/*function __secupress_global_settings_api_request_succeeded( $response, &$new_values ) {
 
 	if ( is_wp_error( $response ) ) {
 		// The request couldn't be sent.
@@ -239,7 +239,7 @@ function __secupress_global_settings_api_request_succeeded( $response, &$new_val
 	}
 
 	return $body;
-}
+}*/
 
 
 /*------------------------------------------------------------------------------------------------*/
@@ -267,7 +267,7 @@ function secupress_register_all_settings() {
 /* TRACK CHANGES IN CONSUMER EMAIL ============================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-add_action( 'add_site_option_' . SECUPRESS_SETTINGS_SLUG,    'secupress_updated_consumer_email_option', 20, 2 );
+/* //// add_action( 'add_site_option_' . SECUPRESS_SETTINGS_SLUG,    'secupress_updated_consumer_email_option', 20, 2 );
 add_action( 'update_site_option_' . SECUPRESS_SETTINGS_SLUG, 'secupress_updated_consumer_email_option', 20, 3 );
 /**
  * If the consumer email address is changed, trigger a custom event.
@@ -277,7 +277,7 @@ add_action( 'update_site_option_' . SECUPRESS_SETTINGS_SLUG, 'secupress_updated_
  * @param (string) $option   Name of the option.
  * @param (mixed)  $newvalue The new value of the option.
  * @param (mixed)  $oldvalue The old value of the option.
- */
+ *//*
 function secupress_updated_consumer_email_option( $option, $newvalue, $oldvalue = false ) {
 	$old_email = isset( $oldvalue['consumer_email'] ) ? is_email( $oldvalue['consumer_email'] ) : false;
 	$new_email = isset( $newvalue['consumer_email'] ) ? is_email( $newvalue['consumer_email'] ) : false;
@@ -293,7 +293,7 @@ function secupress_updated_consumer_email_option( $option, $newvalue, $oldvalue 
 		 * @since 1.0
 		 *
 		 * @param (string) $old_email The old consumer email address.
-		 */
+		 *//*
 		do_action( 'secupress.deleted-consumer_email', $old_email );
 		return;
 	}
@@ -305,7 +305,7 @@ function secupress_updated_consumer_email_option( $option, $newvalue, $oldvalue 
 		 * @since 1.0
 		 *
 		 * @param (string) $new_email The new consumer email address.
-		 */
+		 *//*
 		do_action( 'secupress.added-consumer_email', $new_email );
 		return;
 	}
@@ -318,7 +318,7 @@ function secupress_updated_consumer_email_option( $option, $newvalue, $oldvalue 
 		 *
 		 * @param (string) $new_email The new consumer email address.
 		 * @param (string) $old_email The old consumer email address.
-		 */
+		 *//*
 		do_action( 'secupress.updated-consumer_email', $new_email, $old_email );
 	}
 }
@@ -331,7 +331,7 @@ add_action( 'pre_delete_site_option_' . SECUPRESS_SETTINGS_SLUG, 'secupress_befo
  * This way we can trigger a custom event only if there was a value.
  *
  * @since 1.0
- */
+ *//*
 function secupress_before_delete_consumer_email_option() {
 	$old_email = get_site_option( SECUPRESS_SETTINGS_SLUG );
 	$old_email = isset( $old_email['consumer_email'] ) ? is_email( $old_email['consumer_email'] ) : false;
@@ -344,7 +344,7 @@ add_action( 'delete_site_option_' . SECUPRESS_SETTINGS_SLUG, 'secupress_deleted_
  * If the consumer email address is deleted, trigger a custom event.
  *
  * @since 1.0
- */
+ *//*
 function secupress_deleted_consumer_email_option() {
 	$old_email = secupress_cache_data( 'old_consumer_email' );
 
@@ -355,9 +355,9 @@ function secupress_deleted_consumer_email_option() {
 		 * @since 1.0
 		 *
 		 * @param (string) $old_email The old consumer email address.
-		 */
+		 *//*
 		do_action( 'secupress.deleted-consumer_email', $old_email );
 	}
 
 	secupress_cache_data( 'old_consumer_email', null );
-}
+}*/

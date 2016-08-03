@@ -44,7 +44,7 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 	 */
 	public function print_page() {
 		$setting_modules = array(
-			'api-key',
+		//	'api-key',////.
 			'settings-manager',
 		);
 

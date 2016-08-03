@@ -55,21 +55,23 @@ function secupress_upgrader() {
 
 		$options = get_site_option( SECUPRESS_SETTINGS_SLUG ); // Do not use secupress_get_option() here.
 		$options['version'] = SECUPRESS_VERSION;
+
 		if ( did_action( 'secupress.first_install' ) ) {
 			$options['hash_key'] = secupress_generate_key( 64 );
 		}
 
 		$keys = secupress_check_key( 'live' );
+
 		if ( is_array( $keys ) ) {
 			$options = array_merge( $keys, $options );
 		}
 
 		update_site_option( SECUPRESS_SETTINGS_SLUG, $options );
-	} elseif ( empty( $_POST ) && secupress_valid_key() ) { // WPCS: CSRF ok.
+	}/* elseif ( empty( $_POST ) && secupress_valid_key() ) { // WPCS: CSRF ok.
 		secupress_check_key( 'transient_30' );
 	}
 
 	if ( ! secupress_valid_key() && current_user_can( secupress_get_capability() ) && ( ! isset( $_GET['page'] ) || 'secupress' !== $_GET['page'] ) ) {
 		add_action( 'admin_notices', 'secupress_need_api_key' ); // ////.
-	}
+	}*/
 }
