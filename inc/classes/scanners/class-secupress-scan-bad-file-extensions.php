@@ -107,7 +107,7 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 			200 => __( 'Could not create a bad extension test file in the uploads folder.', 'secupress' ),
 			201 => __( 'Files that use bad extensions are reachable in the uploads folder.', 'secupress' ),
 			// "cantfix"
-			/* translators: 1 is a file names, 2 is some code */
+			/* translators: 1 is a file name, 2 is some code */
 			300 => sprintf( __( 'Your server runs a nginx system, the files that use bad extensions cannot be protected automatically but you can do it yourself by adding the following code into your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
 			301 => __( 'Your server runs a non recognized system. The files that use bad extensions cannot be protected automatically.', 'secupress' ),
 			/* translators: 1 is a file name, 2 is some code */
