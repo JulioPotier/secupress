@@ -72,13 +72,13 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 
 		if ( $is_apache ) {
 			/** Translator: %s is a file name. */
-			$this->more_fix = sprintf( __( 'Add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>.htaccess</code>' );
+			$this->more_fix = sprintf( __( 'Add rules in your %s file to forbid direct access to files that use bad extensions.', 'secupress' ), '<code>.htaccess</code>' );
 		} elseif ( $is_iis7 ) {
 			/** Translator: %s is a file name. */
-			$this->more_fix = sprintf( __( 'Add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>web.config</code>' );
+			$this->more_fix = sprintf( __( 'Add rules in your %s file to forbid direct access to files that use bad extensions.', 'secupress' ), '<code>web.config</code>' );
 		} else {
 			/** Translator: %s is a file name. */
-			$this->more_fix = sprintf( __( 'Since your %s file cannot be edited automatically, this will give you the rules to add into it manually, to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>nginx.conf</code>' );
+			$this->more_fix = sprintf( __( 'The %s file cannot be edited automatically, you will be given the rules to add into this file manually, to forbid direct access to files that use bad extensions.', 'secupress' ), '<code>nginx.conf</code>' );
 		}
 	}
 
