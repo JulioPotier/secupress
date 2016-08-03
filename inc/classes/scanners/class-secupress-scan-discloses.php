@@ -53,13 +53,13 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 
 		if ( $is_apache ) {
 			/** Translator: %s is a file name. */
-			$this->more_fix .= sprintf( __( 'Add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>.htaccess</code>' ) . '<br/>';
+			$this->more_fix .= sprintf( __( 'Add rules in your %s file to avoid attackers to discover your WordPress version and your PHP version.', 'secupress' ), '<code>.htaccess</code>' ) . '<br/>';
 		} elseif ( $is_iis7 ) {
 			/** Translator: %s is a file name. */
-			$this->more_fix .= sprintf( __( 'Add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>web.config</code>' ) . '<br/>';
+			$this->more_fix .= sprintf( __( 'Add rules in your %s file to avoid attackers to discover your WordPress version and your PHP version.', 'secupress' ), '<code>web.config</code>' ) . '<br/>';
 		} else {
 			/** Translator: %s is a file name. */
-			$this->more_fix .= sprintf( __( 'The %s file cannot be edited automatically, you will be given the rules to add into this file manually, to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>nginx.conf</code>' ) . '<br/>';
+			$this->more_fix .= sprintf( __( 'The %s file cannot be edited automatically, you will be given the rules to add into this file manually, to avoid attackers to discover your WordPress version and your PHP version.', 'secupress' ), '<code>nginx.conf</code>' ) . '<br/>';
 		}
 
 		$this->more_fix .= __( 'The meta tag containing the WordPress version may be removed.', 'secupress' ) . '<br/>';
