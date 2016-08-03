@@ -186,18 +186,18 @@ if ( ! $secupress_tests ) {
 
 						<p class="secupress-ic-desc">
 							<?php
-							// Case 1: needs Pro, or can be fixed manually (form).
-							if ( $needs_pro || $has_actions ) {
-								echo wp_kses( $current_test->more_fix, $allowed_tags );
-							}
-							// Case 2: not fixable by SecuPress (example: DB password).
-							elseif ( ! $is_fixable ) {
+							// Case 1: needs Pro, or not fixable by SecuPress (example: DB password).
+							if ( ! $is_fixable ) {
 								if ( ! empty( $scanner['msgs'] ) ) {
 									$message = secupress_format_message( $scanner['msgs'], $class_name_part );
 								} else {
 									$message = $current_test->more_fix;
 								}
 								echo wp_kses( $message, $allowed_tags );
+							}
+							// Case 2: can be fixed manually (form).
+							elseif ( $needs_pro || $has_actions ) {
+								echo wp_kses( $current_test->more_fix, $allowed_tags );
 							}
 							// Automatic fix failed.
 							elseif ( $fix_result ) {
