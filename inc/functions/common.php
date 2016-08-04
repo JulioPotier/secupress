@@ -796,7 +796,7 @@ function secupress_get_consumer_key() {
  * @return (bool)
  */
 function secupress_is_pro() {
-	return defined( 'SECUPRESS_PRO_VERSION' ) && secupress_get_consumer_key() && (int) secupress_get_option( 'site_is_pro' );
+	return defined( 'SECUPRESS_PRO_VERSION' )/* && secupress_get_consumer_key() && (int) secupress_get_option( 'site_is_pro' )////*/;
 }
 
 
