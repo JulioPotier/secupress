@@ -2,8 +2,9 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 // Keep only scans with "bad" status.
-$this_step_scans = $bad_scans;	// `array( $class_name_part_lower => $status )`
-$fixable_modules = array();		// Will tell which modules have fixable items.
+$this_step_scans  = $bad_scans;	// `array( $class_name_part_lower => $status )`
+$fixable_modules  = array();		// Will tell which modules have fixable items.
+$secupress_is_pro = secupress_is_pro();
 
 // Keep only scans that are fixable automatically + require the scan files.
 foreach ( $secupress_tests as $module_name => $class_name_parts ) {
@@ -36,7 +37,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			unset( $secupress_tests[ $module_name ][ $class_name_part_lower ] );
 		}
 		// Tell if the module has fixable items.
-		elseif ( ! $fixable_modules[ $module_name ] && ( true === $is_fixable || 'pro' === $is_fixable && secupress_is_pro() ) ) {
+		elseif ( ! $fixable_modules[ $module_name ] && ( true === $is_fixable || 'pro' === $is_fixable && $secupress_is_pro ) ) {
 			$fixable_modules[ $module_name ] = true;
 		}
 	}
@@ -65,14 +66,15 @@ if ( ! $secupress_tests ) {
 ?>
 <div class="secupress-step-content-header secupress-flex secupress-flex-spaced">
 	<?php
+	$has_fixes   = (bool) array_filter( $fixable_modules );
 	$main_button =
-		'<button class="secupress-button secupress-button-tertiary secupress-button-autofix shadow" type="button">
+		'<button class="secupress-button secupress-button-tertiary secupress-button-autofix shadow' . ( $has_fixes ? '' : ' hidden' ) . '" type="button">
 			<span class="icon">
 				<i class="icon-wrench" aria-hidden="true"></i>
 			</span>
 			<span class="text">' . __( 'Fix it', 'secupress') . '</span>
 		</button>
-		<a href="' . esc_url( secupress_admin_url( 'scanners' ) ) . '&amp;step=3" class="secupress-button shadow light hidden">
+		<a href="' . esc_url( secupress_admin_url( 'scanners' ) ) . '&amp;step=3" class="secupress-button shadow light' . ( $has_fixes ? ' hidden' : '' ) . '">
 			<span class="icon">
 				<i class="icon-cross" aria-hidden="true"></i>
 			</span>
@@ -123,7 +125,7 @@ if ( ! $secupress_tests ) {
 					$class_name   = 'SecuPress_Scan_' . $class_name_part;
 					$current_test = $class_name::get_instance();
 					$referer      = urlencode( esc_url_raw( self_admin_url( 'admin.php?page=' . SECUPRESS_PLUGIN_SLUG . '_scanners&step=2#' . $class_name_part ) ) );
-					$needs_pro    = 'pro' === $current_test->is_fixable() && ! secupress_is_pro();
+					$needs_pro    = 'pro' === $current_test->is_fixable() && ! $secupress_is_pro;
 
 					// Scan.
 					$scanner        = isset( $scanners[ $class_name_part_lower ] ) ? $scanners[ $class_name_part_lower ] : array();
