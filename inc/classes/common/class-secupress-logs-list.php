@@ -99,19 +99,11 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 
 		/**
 		 * Display a Log content.
-		 * If the Log ID is not in the list we display, remove the "log" parameter and redirect.
+		 * If the Log doesn't exist, remove the "log" parameter and redirect.
 		 */
 		if ( ! empty( $_GET['log'] ) ) {
-			$log_id = (int) $_GET['log'];
-
-			if ( ! empty( $wp_query->posts ) ) {
-				foreach ( $wp_query->posts as $post ) {
-					if ( (int) $post->ID === $log_id ) {
-						$this->current_log_id = $log_id;
-						break;
-					}
-				}
-			}
+			$log_classname        = $this->log_classname;
+			$this->current_log_id = $log_classname::log_exists( $_GET['log'], $this->log_type );
 
 			if ( ! $this->current_log_id ) {
 				$sendback = $this->_paged_page_url();
