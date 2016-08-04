@@ -125,7 +125,7 @@ if ( ! $secupress_tests ) {
 					$class_name   = 'SecuPress_Scan_' . $class_name_part;
 					$current_test = $class_name::get_instance();
 					$referer      = urlencode( esc_url_raw( self_admin_url( 'admin.php?page=' . SECUPRESS_PLUGIN_SLUG . '_scanners&step=2#' . $class_name_part ) ) );
-					$needs_pro    = 'pro' === $current_test->is_fixable() && ! secupress_is_pro();
+					$needs_pro    = 'pro' === $current_test->is_fixable() && ! $secupress_is_pro;
 
 					// Scan.
 					$scanner        = isset( $scanners[ $class_name_part_lower ] ) ? $scanners[ $class_name_part_lower ] : array();
