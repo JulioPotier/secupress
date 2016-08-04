@@ -6,28 +6,6 @@ $bad_scan_results = array_merge( $bad_scans, $warning_scans );	// `array( $class
 $fix_actions      = array();									// `array( $class_name_part_lower => array( $fix_action, $fix_action ) )`
 
 /**
- * Make sure all fixes have a status, we'll need it.
- */
-foreach ( $fixes as $class_name_part_lower => $fix ) {
-	if ( ! $fix ) {
-		unset( $fixes[ $class_name_part_lower ] );
-		continue;
-	}
-
-	if ( empty( $fix['status'] ) && ! empty( $fix['msgs'] ) ) {
-		$fixes[ $class_name_part_lower ]['status'] = 'good';
-
-		// Get the status from the message codes.
-		foreach ( $fix['msgs'] as $code => $msg_atts ) {
-			if ( $code >= 100 ) {
-				$fixes[ $class_name_part_lower ]['status'] = true; // No need to set the real status because we will test against 'good', so we keep it simple.
-				break;
-			}
-		}
-	}
-}
-
-/**
  * Keep only scanners where:
  * - it needs a manual fix,
  * - or, is not fixable by SecuPress (it needs the user to go to the hoster administration interface),
@@ -80,10 +58,8 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		elseif ( ! empty( $fixes[ $class_name_part_lower ] ) ) {
 			// OK.
 		}
-		// Scan status is a "warning".
-		elseif ( 'warning' === $bad_scan_results[ $class_name_part_lower ] ) {
-			// OK.
-		} else {
+		// A "bad" scan status means the user didn't try to fix it.
+		elseif ( 'warning' !== $bad_scan_results[ $class_name_part_lower ] ) {
 			unset( $secupress_tests[ $module_name ][ $class_name_part_lower ], $bad_scan_results[ $class_name_part_lower ] );
 		}
 	}
@@ -150,11 +126,12 @@ if ( ! $secupress_tests ) {
 
 			// Scan.
 			$scanner        = isset( $scanners[ $class_name_part_lower ] ) ? $scanners[ $class_name_part_lower ] : array();
-			$scan_status    = ! empty( $scanner['status'] ) ? $scanner['status'] : 'notscannedyet';
+			$scan_status    = $scanner['status'];
 			$scan_nonce_url = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_scanner&test=' . $class_name_part . '&_wp_http_referer=' . $referer ), 'secupress_scanner_' . $class_name_part );
 
 			// Fix.
 			$fix_result = ! empty( $fixes[ $class_name_part_lower ] ) ? $fixes[ $class_name_part_lower ] : array();
+			$fix_status = ! empty( $fix_result['status'] ) ? $fix_result['status'] : true;
 
 			// State.
 			$has_actions            = ! empty( $fix_actions[ $class_name_part_lower ] );
@@ -209,36 +186,44 @@ if ( ! $secupress_tests ) {
 
 						<p class="secupress-ic-desc">
 							<?php
-							// Needs Pro, or is not fixable by SecuPress, or can be fixed manually.
-							if ( $needs_pro || ! $is_fixable || $has_actions ) {
+							// Case 1: needs Pro, or not fixable by SecuPress (example: DB password).
+							if ( ! $is_fixable ) {
+								if ( ! empty( $scanner['msgs'] ) ) {
+									$message = secupress_format_message( $scanner['msgs'], $class_name_part );
+								} else {
+									$message = $current_test->more_fix;
+								}
+								echo wp_kses( $message, $allowed_tags );
+							}
+							// Case 2: can be fixed manually (form).
+							elseif ( $needs_pro || $has_actions ) {
 								echo wp_kses( $current_test->more_fix, $allowed_tags );
 							}
 							// Automatic fix failed.
-							elseif ( ! empty( $fixes[ $class_name_part_lower ] ) ) {
-								// The fix has a "good" status, we'll display the scan message instead.
-								if ( 'good' === $fixes[ $class_name_part_lower ]['status'] && ! empty( $scanner['msgs'] ) ) {
+							elseif ( $fix_result ) {
+								// Case 3: the fix has been applied but the flaw persists (bug?), or the flaw reappeared (example: the user enabled debug in wp-config.php).
+								if ( 'good' === $fix_status && ! empty( $scanner['msgs'] ) ) {
 									$message = secupress_format_message( $scanner['msgs'], $class_name_part );
 								}
-								// The fix has no message (shouldn't happen, just to be safe), we'll display the scan message instead.
-								elseif ( empty( $fix_result['msgs'] ) && ! empty( $scanner['msgs'] ) ) {
-									$message = secupress_format_message( $scanner['msgs'], $class_name_part );
-								}
-								// The fix has a message.
+								// Case 4: the fix couldn't be applied (example: `.htaccess` not writable).
 								elseif ( ! empty( $fix_result['msgs'] ) ) {
 									$message = secupress_format_message( $fix_result['msgs'], $class_name_part );
 								}
-								// Fallback, shouldn't happen.
+								// Fallback 1, shouldn't happen: display the scan message.
+								elseif ( ! empty( $scanner['msgs'] ) ) {
+									$message = secupress_format_message( $scanner['msgs'], $class_name_part );
+								}
+								// Fallback 2, shouldn't happen: display the "more fix" text.
 								else {
 									$message = $current_test->more_fix;
 								}
 								echo wp_kses( $message, $allowed_tags );
 							}
-							// Scan status is a "warning".
-							elseif ( 'warning' === $bad_scan_results[ $class_name_part_lower ] && ! empty( $scanner['msgs'] ) ) {
-								$message = secupress_format_message( $scanner['msgs'], $class_name_part );
-								echo wp_kses( $message, $allowed_tags );
+							// Case 4: the scan status is a "warning", and no fix have been tried yet (example: unable to reach homepage).
+							elseif ( 'warning' === $scan_status && ! empty( $scanner['msgs'] ) ) {
+								echo wp_kses( secupress_format_message( $scanner['msgs'], $class_name_part ), $allowed_tags );
 							}
-							// Fallback.
+							// Fallback 3, shouldn't happen: display the "more fix" text.
 							else {
 								echo wp_kses( $current_test->more_fix, $allowed_tags );
 							}
@@ -289,7 +274,7 @@ if ( ! $secupress_tests ) {
 										</span>
 										<span class="text"><?php _e( 'Get PRO', 'secupress' ); ?></span>
 									</a>
-								<?php } elseif ( $not_fixable_by_sp ) { ?>
+								<?php } elseif ( $not_fixable_by_sp || 'cantfix' === $fix_status ) { ?>
 									<a href="<?php echo esc_url( $scan_nonce_url ); ?>" class="secupress-button secupress-button-primary secupress-button-manual-scanit shadow">
 										<span class="icon">
 											<i class="icon-check" aria-hidden="true"></i>

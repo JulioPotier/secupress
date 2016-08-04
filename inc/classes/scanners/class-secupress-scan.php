@@ -1125,6 +1125,29 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 
 
 	/**
+	 * Extract a `<code/>` content from a message.
+	 *
+	 * @since 1.0
+	 * @author Grégory Viguier
+	 *
+	 * @param (array)  $error An array where `message` is the key of our message.
+	 * @param (string) $class If not empty, the `<code>` tag with this specific html class will be searched.
+	 *
+	 * @return (string) The `<code/>` tag and its content, or an empty string if no `<code/>` tag is found.
+	 */
+	final protected static function _get_code_tag_from_error( $error, $class = '' ) {
+		$class = $class ? ' class="' . $class . '"' : '';
+		$tag   = '';
+
+		if ( preg_match( '@<code' . $class . '>.+</code>@ms', $error['message'], $matches ) ) {
+			$tag = $matches[0];
+		}
+
+		return $tag;
+	}
+
+
+	/**
 	 * Multisite: tell if the "centralized blog options" are fully filled.
 	 *
 	 * @since 1.0

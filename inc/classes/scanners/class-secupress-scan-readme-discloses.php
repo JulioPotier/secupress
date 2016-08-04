@@ -44,20 +44,21 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 		$this->title = sprintf( __( 'Check if the %s files from your plugins and themes are protected.', 'secupress' ), '<code>readme.txt</code>' );
 		$this->more  = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of informations. His goal is to find outdated versions of your server softwares or WordPress components. Don\'t let them easily find these informations.', 'secupress' );
 
-		if ( $is_apache ) {
-			$config_file = '.htaccess';
-		} elseif ( $is_iis7 ) {
-			$config_file = 'web.config';
-		} elseif ( ! $is_nginx ) {
-			$this->fixable = false;
+		if ( ! $is_apache && ! $is_nginx && ! $is_iis7 ) {
+			$this->more_fix = static::get_messages( 301 );
+			$this->fixable  = false;
+			return;
 		}
 
-		if ( $is_nginx ) {
-			$this->more_fix = sprintf( __( 'The %s file cannot be edited automatically, this will give you the rules to add into it manually, to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>nginx.conf</code>' );
-		} elseif ( $this->fixable ) {
-			$this->more_fix = sprintf( __( 'This will add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), "<code>$config_file</code>" );
+		if ( $is_apache ) {
+			/** Translators: 1 and 2 are file names. */
+			$this->more_fix = sprintf( __( 'Add rules in your %1$s file to avoid attackers to read sensitive informations from your %2$s files.', 'secupress' ), '<code>.htaccess</code>', '<code>readme.txt</code>' );
+		} elseif ( $is_iis7 ) {
+			/** Translators: 1 and 2 are file names. */
+			$this->more_fix = sprintf( __( 'Add rules in your %1$s file to avoid attackers to read sensitive informations from your %2$s files.', 'secupress' ), '<code>web.config</code>', '<code>readme.txt</code>' );
 		} else {
-			$this->more_fix = static::get_messages( 301 );
+			/** Translators: 1 and 2 are file names. */
+			$this->more_fix = sprintf( __( 'The %1$s file cannot be edited automatically, you will be given the rules to add into this file manually, to avoid attackers to read sensitive informations from your %2$s files.', 'secupress' ), '<code>nginx.conf</code>', '<code>readme.txt</code>' );
 		}
 	}
 
@@ -72,15 +73,18 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
 	 */
 	public static function get_messages( $message_id = null ) {
+		global $is_apache;
+		$config_file = $is_apache ? '.htaccess' : 'web.config';
+
 		$messages = array(
 			// "good"
 			/* translators: %s is a file name */
 			0   => sprintf( __( 'The %s files are protected from revealing sensitive informations.', 'secupress' ), '<code>readme.txt</code>' ),
 			/* translators: 1 and 2 are file names */
-			1   => sprintf( __( 'The rules forbidding access to your %1$s files have been successfully added to your %2$s file.', 'secupress' ), '<code>readme.txt</code>', '%s' ),
+			1   => sprintf( __( 'The rules forbidding access to your %1$s files have been successfully added to your %2$s file.', 'secupress' ), '<code>readme.txt</code>', "<code>$config_file</code>" ),
 			// "warning"
 			/* translators: %s is a file name */
-			100 => sprintf( __( 'Unable to determine status of the %s files that revealing sensitive informations.', 'secupress' ), '<code>readme.txt</code>' ),
+			100 => sprintf( __( 'Unable to determine status of the %s files that may reveal sensitive informations.', 'secupress' ), '<code>readme.txt</code>' ),
 			// "bad"
 			/* translators: %s is a file name */
 			200 => sprintf( __( 'The %s files should not be accessible to anyone because they are revealing sensitive informations.', 'secupress' ), '<code>readme.txt</code>' ),
@@ -90,9 +94,9 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 			/* translators: %s is a file name */
 			301 => sprintf( __( 'Your server runs a non recognized system. The %s files cannot be protected automatically.', 'secupress' ), '<code>readme.txt</code>' ),
 			/* translators: 1 is a file name, 2 is some code */
-			302 => __( 'Your %1$s file does not seem to be writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ),
+			302 => sprintf( __( 'Your %1$s file does not seem to be writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ), "<code>$config_file</code>", '%s' ),
 			/* translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
-			303 => __( 'Your %1$s file does not seem to be writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ),
+			303 => sprintf( __( 'Your %1$s file does not seem to be writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ), "<code>$config_file</code>", '%1$s', '%2$s' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -190,14 +194,15 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
 
 		if ( $last_error && 'general' === $last_error['setting'] && 'apache_manual_edit' === $last_error['code'] ) {
+			$rules = static::_get_rules_from_error( $last_error );
 			// "cantfix"
-			$this->add_fix_message( 302, array( '<code>.htaccess</code>', static::_get_rules_from_error( $last_error ) ) );
+			$this->add_fix_message( 302, array( $rules ) );
 			array_pop( $wp_settings_errors );
 			return;
 		}
 
 		// "good"
-		$this->add_fix_message( 1, array( '<code>.htaccess</code>' ) );
+		$this->add_fix_message( 1 );
 	}
 
 
@@ -215,14 +220,16 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
 
 		if ( $last_error && 'general' === $last_error['setting'] && 'iis7_manual_edit' === $last_error['code'] ) {
+			$rules = static::_get_rules_from_error( $last_error );
+			$path  = static::_get_code_tag_from_error( $last_error, 'secupress-iis7-path' );
 			// "cantfix"
-			$this->add_fix_message( 303, array( '<code>web.config</code>', '/configuration/system.webServer/rewrite/rules', static::_get_rules_from_error( $last_error ) ) );
+			$this->add_fix_message( 303, array( $path, $rules ) );
 			array_pop( $wp_settings_errors );
 			return;
 		}
 
 		// "good"
-		$this->add_fix_message( 1, array( '<code>web.config</code>' ) );
+		$this->add_fix_message( 1 );
 	}
 
 

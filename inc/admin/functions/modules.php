@@ -373,7 +373,7 @@ function secupress_remove_module_rules_or_notice( $marker, $module_name ) {
 		$message  = sprintf( __( '%s: ', 'secupress' ), $module_name );
 		$message .= sprintf(
 			/* translators: 1 is a file name, 2 and 3 are small parts of code. */
-			__( 'Your %1$s file is not writable, you have to edit it manually. Please remove the rules between %2$s and %3$s from the %1$s file.', 'secupress' ),
+			__( 'Your %1$s file does not seem to be writable, you have to edit it manually. Please remove the rules between %2$s and %3$s from the %1$s file.', 'secupress' ),
 			'<code>.htaccess</code>',
 			"<code># BEGIN SecuPress $marker</code>",
 			'<code># END SecuPress</code>'
@@ -387,7 +387,7 @@ function secupress_remove_module_rules_or_notice( $marker, $module_name ) {
 		$message  = sprintf( __( '%s: ', 'secupress' ), $module_name );
 		$message .= sprintf(
 			/* translators: 1 is a file name, 2 is a small part of code. */
-			__( 'Your %1$s file is not writable, you have to edit it manually. Please remove the rules with %2$s from the %1$s file.', 'secupress' ),
+			__( 'Your %1$s file does not seem to be writable, you have to edit it manually. Please remove the rules with %2$s from the %1$s file.', 'secupress' ),
 			'<code>web.config</code>',
 			"<code>SecuPress $marker</code>"
 		);
@@ -448,7 +448,7 @@ function secupress_add_module_rules_or_notice( $args ) {
 			$message  = sprintf( __( '%s: ', 'secupress' ), $title );
 			$message .= sprintf(
 				/* translators: 1 is a file name, 2 is some code */
-				__( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ),
+				__( 'Your %1$s file does not seem to be writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ),
 				'<code>.htaccess</code>',
 				"<pre># BEGIN SecuPress $marker\n$rules# END SecuPress</pre>"
 			);
@@ -478,18 +478,18 @@ function secupress_add_module_rules_or_notice( $args ) {
 			if ( ! empty( $iis_args['node_types'] ) ) {
 				$message .= sprintf(
 					/* translators: 1 is a file name, 2 is a tag name, 3 is a folder path (kind of), 4 is some code */
-					__( 'Your %1$s file is not writable. Please remove any previous %2$s tag and add the following lines inside the tags hierarchy %3$s (create it if does not exist): %4$s', 'secupress' ),
+					__( 'Your %1$s file does not seem to be writable. Please remove any previous %2$s tag and add the following lines inside the tags hierarchy %3$s (create it if does not exist): %4$s', 'secupress' ),
 					'<code>web.config</code>',
-					'<code>' . $iis_args['node_types'] . '</code>',
-					$path,
+					'<code class="secupress-iis7-node-type">' . $iis_args['node_types'] . '</code>',
+					'<code class="secupress-iis7-path">' . $path . '</code>',
 					"<pre>{$spaces}{$rules}</pre>"
 				);
 			} else {
 				$message .= sprintf(
 					/* translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
-					__( 'Your %1$s file is not writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ),
+					__( 'Your %1$s file does not seem to be writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ),
 					'<code>web.config</code>',
-					$path,
+					'<code class="secupress-iis7-path">' . $path . '</code>',
 					"<pre>{$spaces}{$rules}</pre>"
 				);
 			}

@@ -40,23 +40,24 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 	protected function init() {
 		global $is_apache, $is_nginx, $is_iis7;
 
-		$this->title = __( 'Check if your WordPress site discloses sensitive informations.', 'secupress' );
-		$this->more  = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of information. His goal is to find outdated versions of your server softwares or WordPress component. Don\'t let him easily find these informations.', 'secupress' );
+		$this->title = __( 'Check if some of your WordPress files disclose your site\'s internal path.', 'secupress' );
+		$this->more  = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of informations. His goal is to find something useful that will help him penetrate your site. Don\'t let him easily find these informations.', 'secupress' );
 
-		if ( $is_apache ) {
-			$config_file = '.htaccess';
-		} elseif ( $is_iis7 ) {
-			$config_file = 'web.config';
-		} elseif ( ! $is_nginx ) {
-			$this->fixable = false;
+		if ( ! $is_apache && ! $is_nginx && ! $is_iis7 ) {
+			$this->more_fix = static::get_messages( 301 );
+			$this->fixable  = false;
+			return;
 		}
 
-		if ( $is_nginx ) {
-			$this->more_fix = sprintf( __( 'The %s file cannot be edited automatically, this will give you the rules to add into it manually, to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>nginx.conf</code>' );
-		} elseif ( $this->fixable ) {
-			$this->more_fix = sprintf( __( 'Add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), "<code>$config_file</code>" );
+		if ( $is_apache ) {
+			/** Translator: %s is a file name. */
+			$this->more_fix = sprintf( __( 'Add rules in your %s file to forbid direct access to WordPress files that disclose your site\'s internal path.', 'secupress' ), '<code>.htaccess</code>' );
+		} elseif ( $is_iis7 ) {
+			/** Translator: %s is a file name. */
+			$this->more_fix = sprintf( __( 'Add rules in your %s file to forbid direct access to WordPress files that disclose your site\'s internal path.', 'secupress' ), '<code>web.config</code>' );
 		} else {
-			$this->more_fix = static::get_messages( 301 );
+			/** Translator: %s is a file name. */
+			$this->more_fix = sprintf( __( 'The %s file cannot be edited automatically, you will be given the rules to add into this file manually, to forbid direct access to WordPress files that disclose your site\'s internal path.', 'secupress' ), '<code>nginx.conf</code>' );
 		}
 	}
 
@@ -71,24 +72,28 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
 	 */
 	public static function get_messages( $message_id = null ) {
+		global $is_apache;
+		$config_file = $is_apache ? '.htaccess' : 'web.config';
+
 		$messages = array(
 			// "good"
-			0   => __( 'Your site does not reveal sensitive informations.', 'secupress' ),
-			1   => __( 'Rules avoiding sensitive informations disclosure has been added to your %s file.', 'secupress' ),
+			0   => __( 'Your site does not reveal your site\'s internal path.', 'secupress' ),
+			/* translators: %s is a file name. */
+			1   => sprintf( __( 'Rules avoiding your site\'s internal path disclosure have been added to your %s file.', 'secupress' ), "<code>$config_file</code>" ),
 			// "warning"
 			/* translators: %s is a URL, or a list of URLs. */
-			100 => __( 'Unable to determine if %s reveal sensitive informations.', 'secupress' ),
+			100 => _n_noop( 'Unable to determine if %s reveals your site\'s internal path.', 'Unable to determine if %s reveal your site\'s internal path.', 'secupress' ),
 			// "bad"
 			/* translators: %s is a URL, or a list of URLs. */
 			200 => _n_noop( '%s should not be accessible by anyone.', '%s should not be accessible by anyone.', 'secupress' ),
 			// "cantfix"
 			/* translators: 1 is a file name, 2 is some code */
-			300 => sprintf( __( 'Your server runs a nginx system, the sensitive information disclosure cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
-			301 => __( 'Your server runs a non recognized system. The sensitive information disclosure cannot be fixed automatically.', 'secupress' ),
+			300 => sprintf( __( 'Your server runs a nginx system, the files that disclose your site\'s internal path cannot be protected automatically but you can do it yourself by adding the following code into your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
+			301 => __( 'Your server runs a non recognized system. The files that disclose your site\'s internal path cannot be protected automatically.', 'secupress' ),
 			/* translators: 1 is a file name, 2 is some code */
-			302 => __( 'Your %1$s file does not seem to be writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ),
+			302 => sprintf( __( 'Your %1$s file does not seem to be writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ), "<code>$config_file</code>", '%s' ),
 			/* translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
-			303 => __( 'Your %1$s file does not seem writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ),
+			303 => sprintf( __( 'Your %1$s file does not seem to be writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ), "<code>$config_file</code>", '%1$s', '%2$s' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -152,7 +157,7 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 
 		if ( $warnings ) {
 			// "warning"
-			$this->add_message( 100, array( $warnings ) );
+			$this->add_message( 100, array( count( $warnings ), $warnings ) );
 		}
 
 		// "good"
@@ -203,14 +208,15 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
 
 		if ( $last_error && 'general' === $last_error['setting'] && 'apache_manual_edit' === $last_error['code'] ) {
+			$rules = static::_get_rules_from_error( $last_error );
 			// "cantfix"
-			$this->add_fix_message( 302, array( '<code>.htaccess</code>', static::_get_rules_from_error( $last_error ) ) );
+			$this->add_fix_message( 302, array( $rules ) );
 			array_pop( $wp_settings_errors );
 			return;
 		}
 
 		// "good"
-		$this->add_fix_message( 1, array( '<code>.htaccess</code>' ) );
+		$this->add_fix_message( 1 );
 	}
 
 
@@ -228,14 +234,16 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
 
 		if ( $last_error && 'general' === $last_error['setting'] && 'iis7_manual_edit' === $last_error['code'] ) {
+			$rules = static::_get_rules_from_error( $last_error );
+			$path  = static::_get_code_tag_from_error( $last_error, 'secupress-iis7-path' );
 			// "cantfix"
-			$this->add_fix_message( 303, array( '<code>web.config</code>', '/configuration/system.webServer/rewrite/rules', static::_get_rules_from_error( $last_error ) ) );
+			$this->add_fix_message( 303, array( $path, $rules ) );
 			array_pop( $wp_settings_errors );
 			return;
 		}
 
 		// "good"
-		$this->add_fix_message( 1, array( '<code>web.config</code>' ) );
+		$this->add_fix_message( 1 );
 	}
 
 

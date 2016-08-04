@@ -43,30 +43,27 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 		$this->title = __( 'Check if your WordPress site discloses its version.', 'secupress' );
 		$this->more  = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of informations. His goal is to find outdated versions of your server softwares or WordPress components. Don\'t let them easily find these informations.', 'secupress' );
 
-		if ( $is_apache ) {
-			$config_file = '.htaccess';
-		} elseif ( $is_iis7 ) {
-			$config_file = 'web.config';
-		} elseif ( ! $is_nginx ) {
-			$this->fixable = false;
-		}
-
-		if ( $this->fixable ) {
-			$this->more_fix  = __( 'Depending of the scan results, one (or all) of the following will be applied:', 'secupress' ) . '<br/>';
-		} else {
+		if ( ! $is_apache && ! $is_nginx && ! $is_iis7 ) {
 			$this->more_fix = static::get_messages( 301 );
+			$this->fixable  = false;
+			return;
 		}
 
-		if ( $is_nginx ) {
-			$this->more_fix .= sprintf( __( 'The %s file cannot be edited automatically, this will give you the rules to add into it manually, to avoid attackers to read sensitive informations from your installation.', 'secupress' ), '<code>nginx.conf</code>' ) . '<br/>';
-		} elseif ( $this->fixable ) {
-			$this->more_fix .= sprintf( __( 'Add rules in your %s file to avoid attackers to read sensitive informations from your installation.', 'secupress' ), "<code>$config_file</code>" ) . '<br/>';
+		$this->more_fix  = __( 'Depending of the scan results, one (or all) of the following will be applied:', 'secupress' ) . '<br/>';
+
+		if ( $is_apache ) {
+			/** Translator: %s is a file name. */
+			$this->more_fix .= sprintf( __( 'Add rules in your %s file to avoid attackers to discover your WordPress version and your PHP version.', 'secupress' ), '<code>.htaccess</code>' ) . '<br/>';
+		} elseif ( $is_iis7 ) {
+			/** Translator: %s is a file name. */
+			$this->more_fix .= sprintf( __( 'Add rules in your %s file to avoid attackers to discover your WordPress version and your PHP version.', 'secupress' ), '<code>web.config</code>' ) . '<br/>';
+		} else {
+			/** Translator: %s is a file name. */
+			$this->more_fix .= sprintf( __( 'The %s file cannot be edited automatically, you will be given the rules to add into this file manually, to avoid attackers to discover your WordPress version and your PHP version.', 'secupress' ), '<code>nginx.conf</code>' ) . '<br/>';
 		}
 
-		if ( $this->fixable ) {
-			$this->more_fix .= __( 'The meta tag containing the WordPress version may be removed.', 'secupress' ) . '<br/>';
-			$this->more_fix .= __( 'The WordPress version may be removed from the styles and scripts URL.', 'secupress' ) . '<br/>';
-		}
+		$this->more_fix .= __( 'The meta tag containing the WordPress version may be removed.', 'secupress' ) . '<br/>';
+		$this->more_fix .= __( 'The WordPress version may be removed from the styles and scripts URL.', 'secupress' );
 	}
 
 
@@ -82,32 +79,32 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// "good"
-			0   => __( 'Your site does not reveal sensitive informations.', 'secupress' ),
+			0   => __( 'Your site does not reveal your <strong>WordPress version</strong> nor <strong>PHP version</strong>.', 'secupress' ),
 			1   => __( 'The website does not display the <strong>PHP version</strong> in the request headers anymore.', 'secupress' ),
 			/* translators: %s is a file name */
-			2   => sprintf( __( 'The %s file is now protected from revealing sensitive informations.', 'secupress' ), '<code>readme.html</code>' ),
+			2   => sprintf( __( 'The %s file is now protected from revealing your <strong>WordPress version</strong>.', 'secupress' ), '<code>readme.html</code>' ),
 			/* translators: 1 is a file name */
-			3   => __( 'As the rules against the PHP version disclosure added to your %s file do not seem to work, another plugin has been activated to remove this information in some other way.', 'secupress' ),
+			3   => __( 'As the rules against the <strong>PHP version</strong> disclosure added to your %s file do not seem to work, another plugin has been activated to remove this information in some other way.', 'secupress' ),
 			4   => __( 'The generator meta tag should not be displayed anymore.', 'secupress' ),
-			5   => __( 'The WordPress version should now be removed from your styles URL.', 'secupress' ),
-			6   => __( 'The WordPress version should now be removed from your scripts URL.', 'secupress' ),
+			5   => __( 'The <strong>WordPress version</strong> should now be removed from your styles URL.', 'secupress' ),
+			6   => __( 'The <strong>WordPress version</strong> should now be removed from your scripts URL.', 'secupress' ),
 			// "warning"
-			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
+			100 => __( 'Unable to determine status of your homepage, it may still disclose your <strong>WordPress version</strong>.', 'secupress' ),
 			/* translators: %s is an URL */
-			101 => sprintf( __( 'Unable to determine status of %s, it is still revealing sensitive informations.', 'secupress' ), '<code>' . esc_url( home_url( 'readme.html' ) ) . '</code>' ),
+			101 => sprintf( __( 'Unable to determine status of %s, it may still disclose your <strong>WordPress version</strong>.', 'secupress' ), '<code>readme.html</code>' ),
 			// "bad"
 			200 => __( 'The website displays the <strong>PHP version</strong> in the request headers.', 'secupress' ),
 			201 => __( 'The website displays the <strong>WordPress version</strong> in the homepage source code (%s).', 'secupress' ),
 			/* translators: %s is an URL */
-			202 => sprintf( __( '%s should not be accessible by anyone to avoid revealing sensitive informations.', 'secupress' ), '<code>' . esc_url( home_url( 'readme.html' ) ) . '</code>' ),
+			202 => sprintf( __( 'The %s file should not be accessible by anyone to avoid to reveal your <strong>WordPress version</strong>.', 'secupress' ), '<code>readme.html</code>' ),
 			// "cantfix"
 			/* translators: 1 is a file name, 2 is some code */
-			300 => sprintf( __( 'Your server runs a nginx system, the sensitive information disclosure cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
-			301 => __( 'Your server runs a non recognized system. The sensitive information disclosure cannot be fixed automatically.', 'secupress' ),
+			300 => sprintf( __( 'Your server runs a nginx system, the <strong>WordPress version</strong> and <strong>PHP version</strong> disclosure cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
+			301 => __( 'Your server runs a non recognized system. The <strong>WordPress version</strong> and <strong>PHP version</strong> disclosure cannot be fixed automatically.', 'secupress' ),
 			/* translators: 1 is a file name, 2 is some code */
-			302 => __( 'Your %1$s file does not seem to be writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ),
+			302 => sprintf( __( 'Your %1$s file does not seem to be writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ), '<code>.htaccess</code>', '%s' ),
 			/* translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
-			303 => __( 'Your %1$s file does not seem to be writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ),
+			303 => sprintf( __( 'Your %1$s file does not seem to be writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ), '<code>web.config</code>', '%1$s', '%2$s' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -318,6 +315,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 	 */
 	protected function _fix_apache( $todo ) {
 		global $wp_settings_errors;
+		$all_rules = array();
 
 		// PHP version disclosure in header.
 		if ( isset( $todo['php_version'] ) ) {
@@ -327,12 +325,11 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 			$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
 
 			if ( $last_error && 'general' === $last_error['setting'] && 'apache_manual_edit' === $last_error['code'] ) {
-				// "cantfix"
-				$this->add_fix_message( 302, array( '<code>.htaccess</code>', static::_get_rules_from_error( $last_error ) ) );
+				$all_rules[] = static::_get_rules_from_error( $last_error );
 				array_pop( $wp_settings_errors );
 			} else {
 				// Succeed: now test our rule against php version disclosure works.
-				$this->_scan_php_disclosure(); // Fix message 1 or 3 inside.
+				$this->_scan_php_disclosure(); // Fix message 1, 3 or 100 inside.
 			}
 		}
 
@@ -344,13 +341,18 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 			$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
 
 			if ( $last_error && 'general' === $last_error['setting'] && 'apache_manual_edit' === $last_error['code'] ) {
-				// "cantfix"
-				$this->add_fix_message( 302, array( '<code>.htaccess</code>', static::_get_rules_from_error( $last_error ) ) );
+				$all_rules[] = static::_get_rules_from_error( $last_error );
 				array_pop( $wp_settings_errors );
 			} else {
 				// "good"
 				$this->add_fix_message( 2 );
 			}
+		}
+
+		if ( $all_rules ) {
+			$all_rules = implode( "\n", $all_rules );
+			// "cantfix"
+			$this->add_fix_message( 302, array( $all_rules ) );
 		}
 	}
 
@@ -359,8 +361,10 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 	 * Fix for IIS7 system.
 	 *
 	 * @since 1.0
+	 *
+	 * @param (array) $todo Tasks to do.
 	 */
-	protected function _fix_iis7() {
+	protected function _fix_iis7( $todo ) {
 		global $wp_settings_errors;
 
 		// PHP version disclosure in header.
@@ -371,12 +375,14 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 			$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
 
 			if ( $last_error && 'general' === $last_error['setting'] && 'iis7_manual_edit' === $last_error['code'] ) {
+				$rules = static::_get_rules_from_error( $last_error );
+				$path  = static::_get_code_tag_from_error( $last_error, 'secupress-iis7-path' );
 				// "cantfix"
-				$this->add_fix_message( 303, array( '<code>.htaccess</code>', static::_get_rules_from_error( $last_error ) ) );
+				$this->add_fix_message( 303, array( $path, $rules ) );
 				array_pop( $wp_settings_errors );
 			} else {
 				// Succeed: now test our rule against php version disclosure works.
-				$this->_scan_php_disclosure(); // Fix message 1 or 3 inside.
+				$this->_scan_php_disclosure(); // Fix message 1, 3 or 100 inside.
 			}
 		}
 
@@ -388,8 +394,10 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 			$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
 
 			if ( $last_error && 'general' === $last_error['setting'] && 'iis7_manual_edit' === $last_error['code'] ) {
+				$rules = static::_get_rules_from_error( $last_error );
+				$path  = static::_get_code_tag_from_error( $last_error, 'secupress-iis7-path' );
 				// "cantfix"
-				$this->add_fix_message( 303, array( '<code>.htaccess</code>', static::_get_rules_from_error( $last_error ) ) );
+				$this->add_fix_message( 303, array( $path, $rules ) );
 				array_pop( $wp_settings_errors );
 			} else {
 				// "good"
@@ -403,8 +411,10 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 	 * Fix for nginx system.
 	 *
 	 * @since 1.0
+	 *
+	 * @param (array) $todo Tasks to do.
 	 */
-	protected function _fix_nginx() {
+	protected function _fix_nginx( $todo ) {
 		global $wp_settings_errors;
 		$all_rules = array();
 
@@ -441,7 +451,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 		}
 
 		if ( $all_rules ) {
-			$all_rules = implode( ' ', $all_rules );
+			$all_rules = implode( "\n", $all_rules );
 			// "cantfix"
 			$this->add_fix_message( 300, array( $all_rules ) );
 		}
@@ -461,6 +471,8 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 		$response_test = wp_remote_get( user_trailingslashit( home_url() ), array( 'redirection' => 0 ) );
 
 		if ( is_wp_error( $response_test ) || 200 !== wp_remote_retrieve_response_code( $response_test ) ) {
+			// "warning"
+			$this->add_fix_message( 100 );
 			return;
 		}
 
