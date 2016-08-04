@@ -71,8 +71,7 @@ function secupress_get_modules() {
 			'description' => array(
 				__( 'Check file permissions, run monitoring and antivirus on your installation to verify files integrity.', 'secupress' ),
 			),
-			'with_reset_box' => false,
-			'mark_as_pro'    => true,
+			'mark_as_pro' => true,
 		),
 		'firewall'     => array(
 			'title'       => __( 'Firewall', 'secupress' ),
@@ -98,8 +97,7 @@ function secupress_get_modules() {
 				__( 'Reduce the risks to lose your content because of an attack by backuping your database daily and you files weekly.', 'secupress' ),
 				sprintf( __( 'Don\'t forget to <a href="%s">schedule backups</a> as soon as possible.', 'secupress' ), esc_url( secupress_admin_url( 'modules', 'schedules' ) ) ),
 			),
-			'with_reset_box' => false,
-			'mark_as_pro'    => false,
+			'mark_as_pro' => false,
 		),
 		'antispam'        => array(
 			'title'       => __( 'Anti Spam', 'secupress' ),
@@ -151,8 +149,7 @@ function secupress_get_modules() {
 			'description' => array(
 				sprintf( __( 'Let %s scan your website when you are away by using recurent scans', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
 			),
-			'with_reset_box' => false,
-			'mark_as_pro'    => $should_be_pro,
+			'mark_as_pro' => $should_be_pro,
 		),
 		'services'        => array(
 			'title'       => __( 'Services', 'secupress' ),
@@ -164,8 +161,7 @@ function secupress_get_modules() {
 			'description' => array(
 				__( 'Let us configure %s on your site and benefit from our expertise. Get help from our experts. The page contains our services designed to help you with the plugin.', 'secupress' ),
 			),
-			'with_reset_box' => false,
-			'mark_as_pro'    => false,
+			'mark_as_pro' => false,
 		),
 		'get-pro'        => array(
 			'title'       => __( 'Get Pro', 'secupress' ),
@@ -177,8 +173,7 @@ function secupress_get_modules() {
 			'description' => array(
 				__( 'Access to more modules and options to make your website a real automatted secure engine.', 'secupress' ),
 			),
-			'with_reset_box' => false,
-			'mark_as_pro'    => false,
+			'mark_as_pro' => false,
 		),
 	);
 
