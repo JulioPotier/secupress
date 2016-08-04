@@ -340,6 +340,40 @@ class SecuPress_Log {
 	}
 
 
+	/**
+	 * Tell if a log exists.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (int)    $id   A Log ID.
+	 * @param (string) $type A Log type. If specified, the Log type will also be tested.
+	 *
+	 * @return (bool|int) The Log ID on success. False on failure.
+	 */
+	public static function log_exists( $id, $type = false ) {
+		$id = (int) $id;
+
+		if ( $id <= 0 ) {
+			false;
+		}
+
+		$log = get_post( $id );
+
+		if ( ! $log ) {
+			return false;
+		}
+
+		$id = (int) $log->ID;
+
+		if ( ! $type ) {
+			return $id;
+		}
+
+		$type = SecuPress_Logs::build_post_type_name( $type );
+		return $log->post_type === $type ? $id : false;
+	}
+
+
 	// Private methods =============================================================================.
 
 	// Data ========================================================================================.
