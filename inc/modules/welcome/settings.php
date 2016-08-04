@@ -20,25 +20,32 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 			<p><?php esc_html_e( 'Anti-Malware, Firewall, or Anti-Spam: add features, schedule scans and protect your data.', 'secupress' ); ?></p>
 		</div>
 	</div>
+
 	<?php if ( ! secupress_is_pro() ) { ?>
-	<div class="secupress-section-gray-dark secupress-section-mini secupress-flex">
-		<div class="secupress-col-1-4 secupress-col-icon">
-			<i class="icon-secupress-simple" aria-hidden="true"></i>
-		</div>
-		<div class="secupress-col-2-4 secupress-col-text">
-			<p class="secupress-text-basup"><?php esc_html_e( 'Get a better score and unlock all features', 'secupress' ); ?></p>
-		</div>
-		<div class="secupress-col-1-4 secupress-col-cta">
-			<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ); ?>" class="secupress-button secupress-button-tertiary">
-				<?php _e( 'Get Pro', 'secupress' ); ?>
-			</a>
-		</div>
-	</div><!-- .secupress-section-medium -->
-	<?php }	?>
+		<div class="secupress-section-gray-dark secupress-section-mini secupress-flex">
+			<div class="secupress-col-1-4 secupress-col-icon">
+				<i class="icon-secupress-simple" aria-hidden="true"></i>
+			</div>
+			<div class="secupress-col-2-4 secupress-col-text">
+				<p class="secupress-text-basup"><?php esc_html_e( 'Get a better score and unlock all features', 'secupress' ); ?></p>
+			</div>
+			<div class="secupress-col-1-4 secupress-col-cta">
+				<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ); ?>" class="secupress-button secupress-button-tertiary">
+					<?php _e( 'Get Pro', 'secupress' ); ?>
+				</a>
+			</div>
+		</div><!-- .secupress-section-medium -->
+	<?php } ?>
+
 	<div class="secupress-modules-dashboard secupress-bordered secupress-flex secupress-wrap">
 		<?php
 		$modules = $this->get_modules();
 		$pro_msg = '<span class="secupress-cta-pro">' . SecuPress_Settings::get_pro_version_string() . '</span>';
+
+		if ( secupress_is_pro() ) {
+			unset( $modules['get-pro'] );
+		}
+
 		foreach ( $modules as $slug => $mod ) {
 			?>
 			<div class="secupress-module-box secupress-flex-col secupress-module-box-<?php echo sanitize_key( $slug ); ?>">
@@ -48,7 +55,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 					<a href="<?php echo esc_url( secupress_admin_url( 'modules', $slug ) ); ?>" class="secupress-button-primary">
 						<?php esc_html_e( 'View options', 'secupress' ); ?>
 					</a>
-					<?php echo ( isset( $mod['mark_as_pro'] ) && true === $mod['mark_as_pro'] ? $pro_msg : '' ); ?>
+					<?php echo ! empty( $mod['mark_as_pro'] ) ? $pro_msg : ''; ?>
 				</p>
 				<i class="icon-<?php echo $mod['icon']; ?>" aria-hidden="true"></i>
 			</div>

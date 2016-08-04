@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @return (array) All informations related to the modules.
  */
 function secupress_get_modules() {
-	$should_be_pro = ! secupress_is_pro()  ? true : false;
+	$should_be_pro = ! secupress_is_pro();
 
 	$modules = array(
 		'users-login'     => array(
@@ -22,7 +22,6 @@ function secupress_get_modules() {
 			'description' => array(
 				__( 'The best and easy ways to be sure that users\' data will be protected, and their accounts not compromised.', 'secupress' ),
 			),
-			'mark_as_pro' => false,
 		),
 		'plugins-themes'  => array(
 			'title'       => __( 'Plugins &amp; Themes', 'secupress' ),
@@ -34,7 +33,6 @@ function secupress_get_modules() {
 			'description' => array(
 				__( 'Detect themes and plugins known as vulnerables to avoid hackings. Also, manage installation and activation rights on them.', 'secupress' ),
 			),
-			'mark_as_pro' => false,
 		),
 		'wordpress-core'  => array(
 			'title'       => __( 'WordPress Core', 'secupress' ),
@@ -46,7 +44,6 @@ function secupress_get_modules() {
 			'description' => array(
 				__( 'WordPress can be tweaked by so many ways. But are you using the right ones? Let\'s see this!', 'secupress' ),
 			),
-			'mark_as_pro' => false,
 		),
 		'sensitive-data'  => array(
 			'title'       => __( 'Sensitive Data', 'secupress' ),
@@ -58,7 +55,6 @@ function secupress_get_modules() {
 			'description' => array(
 				__( 'Preserve your data and avoid losing your content in case of attack.', 'secupress' ),
 			),
-			'mark_as_pro' => false,
 		),
 		'file-system'     => array(
 			'title'       => __( 'Malware Scan', 'secupress' ),
@@ -71,7 +67,7 @@ function secupress_get_modules() {
 			'description' => array(
 				__( 'Check file permissions, run monitoring and antivirus on your installation to verify files integrity.', 'secupress' ),
 			),
-			'mark_as_pro' => true,
+			'mark_as_pro' => $should_be_pro,
 		),
 		'firewall'     => array(
 			'title'       => __( 'Firewall', 'secupress' ),
@@ -97,7 +93,6 @@ function secupress_get_modules() {
 				__( 'Reduce the risks to lose your content because of an attack by backuping your database daily and you files weekly.', 'secupress' ),
 				sprintf( __( 'Don\'t forget to <a href="%s">schedule backups</a> as soon as possible.', 'secupress' ), esc_url( secupress_admin_url( 'modules', 'schedules' ) ) ),
 			),
-			'mark_as_pro' => false,
 		),
 		'antispam'        => array(
 			'title'       => __( 'Anti Spam', 'secupress' ),
@@ -112,7 +107,6 @@ function secupress_get_modules() {
 				__( 'By default, we block identity usurpation, so if someone tries to comment using your email/name, the comment will be blocked.', 'secupress' ),
 				__( 'Also by default, we block bad IPs, author name, email and website url known as spammer.', 'secupress' ),
 			),
-			'mark_as_pro' => false,
 		),
 		'logs'            => array(
 			'title'       => _x( 'Logs', 'post type general name', 'secupress' ),
@@ -161,7 +155,6 @@ function secupress_get_modules() {
 			'description' => array(
 				__( 'Let us configure %s on your site and benefit from our expertise. Get help from our experts. The page contains our services designed to help you with the plugin.', 'secupress' ),
 			),
-			'mark_as_pro' => false,
 		),
 		'get-pro'        => array(
 			'title'       => __( 'Get Pro', 'secupress' ),
@@ -173,7 +166,6 @@ function secupress_get_modules() {
 			'description' => array(
 				__( 'Access to more modules and options to make your website a real automatted secure engine.', 'secupress' ),
 			),
-			'mark_as_pro' => false,
 		),
 	);
 
