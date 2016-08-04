@@ -33,14 +33,16 @@ function secupress_is_white_label() {
  *
  * @param (string) $type ////.
  *
- * @return (bool)
+ * @return (bool|array)
  */
 function secupress_check_key( $type = 'transient_1' ) {
+	return false;
+	////
 	// Recheck the license.
 	$return = secupress_valid_key();
 
 	if ( ! $return
-		|| ( 'transient_1' === $type && ! get_transient( 'secupress_check_licence_1' ) )
+		|| ( 'transient_1' === $type  && ! get_transient( 'secupress_check_licence_1' ) )
 		|| ( 'transient_30' === $type && ! get_transient( 'secupress_check_licence_30' ) )
 		|| 'live' === $type ) {
 
@@ -93,9 +95,9 @@ function secupress_check_key( $type = 'transient_1' ) {
  *
  * @return (bool)
  */
-function secupress_valid_key() {
+/*function secupress_valid_key() {
 	return 8 === strlen( secupress_get_option( 'consumer_key' ) ) && secupress_get_option( 'secret_key' ) === hash( 'crc32', secupress_get_consumer_email() ); // Secret_key? ////.
-}
+}*/
 
 
 /**
@@ -103,7 +105,7 @@ function secupress_valid_key() {
  *
  * @since 1.0
  */
-function secupress_need_api_key() {}
+/*function secupress_need_api_key() {} ////*/
 
 
 /*------------------------------------------------------------------------------------------------*/

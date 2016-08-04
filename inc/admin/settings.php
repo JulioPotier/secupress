@@ -56,16 +56,16 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	wp_enqueue_script( 'secupress-common-js', SECUPRESS_ADMIN_JS_URL . 'secupress-common' . $suffix . '.js', array( 'secupress-wordpress-js' ), $version, true );
 
 	wp_localize_script( 'secupress-common-js', 'SecuPressi18nCommon', array(
-		'confirmText'  => __( 'OK', 'secupress' ),
-		'cancelText'   => __( 'Cancel' ),
+		'confirmText' => __( 'OK', 'secupress' ),
+		'cancelText'  => __( 'Cancel' ),
 		'closeText'   => __( 'Close' ),
-		'authswal'     => array(
+		/*'authswal'     => array(
 			'title'  => __( 'Authentication', 'secupress' ),
 			'email'  => __( 'Enter your email', 'secupress' ),
 			'apikey' => __( 'Enter your API Key', 'secupress' ),
 			'where'  => __( 'Where can I find my API Key?', 'secupress' ),
 			'save'   => __( 'Save and continue to first scan', 'secupress' ),
-		),
+		),*/
 	) );
 
 	// Settings page.

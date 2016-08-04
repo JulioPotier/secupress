@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 			<p class="secupress-text-basup"><?php esc_html_e( 'Get a better score and unlock all features', 'secupress' ); ?></p>
 		</div>
 		<div class="secupress-col-1-4 secupress-col-cta">
-			<a href="<?php echo esc_url( secupress_admin_url( 'settings' ) ); ?>" class="secupress-button secupress-button-tertiary button-secupress-get-api-key">
+			<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ); ?>" class="secupress-button secupress-button-tertiary">
 				<?php _e( 'Get Pro', 'secupress' ); ?>
 			</a>
 		</div>

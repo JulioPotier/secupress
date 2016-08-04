@@ -301,13 +301,13 @@ function secupress_warning_no_oneclick_scan_yet() {
 }
 
 
-add_action( 'all_admin_notices', 'secupress_warning_no_api_key', 50 );
+/*add_action( 'all_admin_notices', 'secupress_warning_no_api_key', 50 );////.
 /**
  * This warning is displayed if consumer email and key are unknown.
  *
  * @since 1.0
  * @author Geoffrey
- */
+ *//*
 function secupress_warning_no_api_key() {
 	$screen_id = get_current_screen();
 	$screen_id = $screen_id && ! empty( $screen_id->id ) ? $screen_id->id : false;
@@ -361,7 +361,7 @@ function secupress_warning_no_api_key() {
 	</div><!-- .secupress-section-medium -->
 	<?php
 	secupress_enqueue_notices_styles();
-}
+}*/
 
 
 add_action( 'admin_menu', 'secupress_display_transient_notices' );
