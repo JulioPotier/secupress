@@ -53,7 +53,7 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 			);
 
 			if ( is_network_admin() ) {
-				$this->more_fix .= '<br/>' . __( 'If the default user role is not Subscriber in some of your websites, a new page similar to this one will be created in each related site, where administrators will be asked to set the default user role to Subscriber.', 'secupress' );
+				$this->more_fix .= '<br/>' . __( 'If the default user role is not Subscriber in some of your websites, administrators will be asked to set the default user role to Subscriber.', 'secupress' );
 			} else {
 				$this->more_fix .= '<br/>' . __( 'Set the default user\'s role to Subscriber.', 'secupress' );
 			}
@@ -144,7 +144,7 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 
 			if ( 'subscriber' !== $role ) {
 				// "bad"
-				$role = isset( $wp_roles->role_names[ $role ] ) ? translate_user_role( $wp_roles->role_names[ $role ] ) : __( 'None' );
+				$role = isset( $wp_roles->role_names[ $role ] ) ? translate_user_role( $wp_roles->role_names[ $role ] ) : _x( 'None', 'a WP role', 'secupress' );
 				$this->add_message( 200, array( $role ) );
 			}
 		}
@@ -213,7 +213,7 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 			foreach ( $roles as $blog_id => $role ) {
 				if ( 'subscriber' !== $role ) {
 					$is_bad = true;
-					$role   = isset( $wp_roles->role_names[ $role ] ) ? translate_user_role( $wp_roles->role_names[ $role ] ) : __( 'None' );
+					$role   = isset( $wp_roles->role_names[ $role ] ) ? translate_user_role( $wp_roles->role_names[ $role ] ) : _x( 'None', 'a WP role', 'secupress' );
 					$data   = array( $role );
 					// Add a scan message for each sub-site with wrong role.
 					$this->add_subsite_message( 200, $data, 'scan', $blog_id );

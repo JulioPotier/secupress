@@ -81,7 +81,7 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan implements SecuPr
 			202 => _n_noop( '%1$s is only <strong>%2$d character length</strong>, this is not secure', '%1$s is only <strong>%2$d characters length</strong>, this is not secure', 'secupress' ),
 			203 => __( '%s is not <strong>complex</strong> enough, this is not secure', 'secupress' ),
 			// "cantfix"
-			300 => __( 'This cannot be fixed automatically, you have to manually change your database and/or FTP password in your server administration.', 'secupress' ),
+			300 => __( 'This cannot be fixed automatically, you have to manually change your database and FTP password in your server administration.', 'secupress' ),
 			301 => __( 'This cannot be fixed automatically, you have to manually change your database password in your server administration.', 'secupress' ),
 			302 => __( 'This cannot be fixed automatically, you have to manually change your FTP password in your server administration.', 'secupress' ),
 		);

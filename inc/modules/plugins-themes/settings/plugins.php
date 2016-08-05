@@ -19,7 +19,7 @@ $this->add_field( array(
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'This will also disable plugins upload.', 'secupress' ),
+			'description' => __( 'Disable plugins upload.', 'secupress' ),
 		),
 	),
 ) );

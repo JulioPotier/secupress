@@ -70,7 +70,7 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 			204 => _n_noop( '<strong>&middot; Hardcoded:</strong> %s.',     '<strong>&middot; Hardcoded:</strong> %s.',     'secupress' ),
 			205 => _n_noop( '<strong>&middot; From DB:</strong> %s.',       '<strong>&middot; From DB:</strong> %s.',       'secupress' ),
 			// "cantfix"
-			300 => __( 'The <code>wp-config.php</code> file does not seem to be writable so salt keys could not be changed.', 'secupress' ),
+			300 => __( 'The <code>wp-config.php</code> file does not seem to be writable, security keys could not be changed.', 'secupress' ),
 			301 => __( 'The security keys fix has been applied but there is still keys that can\'t be modified.', 'secupress' ),
 		);
 

@@ -77,16 +77,16 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// "good"
-			0   => sprintf( __( '%s is the first file loaded, directory index is good.', 'secupress' ), '<code>index.php</code>' ),
-			1   => __( 'The rules to get the correct dorectory index have been successfully added to your %s fileYour %s file has been successfully edited.', 'secupress' ),
+			0   => sprintf( __( '%s is the first file loaded, the index file order is good.', 'secupress' ), '<code>index.php</code>' ),
+			1   => __( 'The rules to get the correct index file order (known as Directory Index) have been successfully added to your %s file.', 'secupress' ),
 			// "warning"
-			100 => __( 'Unable to determine status of the directory index.', 'secupress' ),
+			100 => __( 'Unable to determine status of the index file order.', 'secupress' ),
 			// "bad"
 			200 => sprintf( __( 'Your website should load %1$s first, actually it loads %2$s first.', 'secupress' ), '<code>index.php</code>', '%s' ),
 			// "cantfix"
 			/* translators: 1 is a file name, 2 is some code */
-			300 => sprintf( __( 'Your server runs a nginx system, the directory index cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
-			301 => __( 'Your server runs a non recognized system. The directory index cannot be fixed automatically.', 'secupress' ),
+			300 => sprintf( __( 'Your server runs a nginx system, the index file order cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
+			301 => __( 'Your server runs a non recognized system. The index file order cannot be fixed automatically.', 'secupress' ),
 			/* translators: 1 is a file name, 2 is some code */
 			302 => __( 'Your %1$s file does not seem to be writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ),
 			/* translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */

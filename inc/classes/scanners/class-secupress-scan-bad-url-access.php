@@ -92,7 +92,7 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 			/* translators: 1 is a file name, 2 is some code */
 			302 => __( 'Your %1$s file does not seem to be writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ),
 			/* translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
-			303 => __( 'Your %1$s file does not seem writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ),
+			303 => __( 'Your %1$s file does not seem to be writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {

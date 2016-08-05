@@ -45,7 +45,7 @@ class SecuPress_Scan_Anti_Scanner extends SecuPress_Scan implements SecuPress_Sc
 		$this->title    = __( 'Check if automated scanner can target your website.', 'secupress' );
 		$this->more     = __( 'Automated scanner requires a triple page reload to be identical regarding contents. By giving them a different content for each request, it will not be possible for it to work properly.', 'secupress' );
 		$this->more_fix = sprintf(
-			__( 'This will activate the option %1$s from the module %2$s.', 'secupress' ),
+			__( 'Activate the option %1$s from the module %2$s.', 'secupress' ),
 			'<em>' . __( 'Block SQLi Scan Attempts', 'secupress' ) . '</em>',
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-url-content_bad-sqli-scan">' . __( 'Firewall', 'secupress' ) . '</a>'
 		);
@@ -65,7 +65,7 @@ class SecuPress_Scan_Anti_Scanner extends SecuPress_Scan implements SecuPress_Sc
 		$messages = array(
 			// "good"
 			0   => __( 'You are currently blocking <strong>automated scanning</strong>.', 'secupress' ),
-			1   => __( 'Protection activated', 'secupress' ),
+			1   => __( 'Protection activated against <strong>automated scanning</strong>', 'secupress' ),
 			// "warning"
 			100 => __( 'Unable to determine if you are blocking <strong>automated scanning</strong>.', 'secupress' ),
 			// "bad"

@@ -565,5 +565,5 @@ function secupress_get_deactivate_plugin_string( $plugin_basename ) {
 	$plugin_basename = path_join( WP_PLUGIN_DIR, $plugin_basename );
 	$plugin = get_plugin_data( $plugin_basename, false, false );
 
-	return sprintf( __( 'This will also deactivate the plugin %s.', 'secupress' ), '<strong>' . $plugin['Name'] . '</strong>' );
+	return sprintf( __( 'Deactivate the plugin %s.', 'secupress' ), '<strong>' . $plugin['Name'] . '</strong>' );
 }

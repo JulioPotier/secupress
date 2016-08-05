@@ -285,13 +285,13 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			<?php
 				if ( secupress_is_pro() ) {
 			?>
-				<button type="button" title="<?php esc_attr__( 'Export this report as PDF file.', 'secupress' ); ?>" class="secupress-button shadow">
+				<button type="button" title="<?php esc_attr_e( 'Export this report as PDF file.', 'secupress' ); ?>" class="secupress-button shadow">
 					<?php echo $export_pdf_btn; ?>
 				</button>
 			<?php
 				} else {
 			?>
-				<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ) ?>" type="button" title="<?php echo $get_pdf_title; ?>" target="_blank" class="secupress-button disabled shadow">
+				<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ) ?>" type="button" title="<?php esc_attr_e( 'Get the Pro Version to export this report as PDF file.', 'secupress' ); ?>" target="_blank" class="secupress-button disabled shadow">
 					<?php echo $export_pdf_btn; ?>
 				</a>
 				<br>
@@ -367,6 +367,6 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 	</div><!-- .secupress-summary-header -->
 
 	<?php secupress_print_pro_advantages(); ?>
-	
+
 </div><!-- .secupress-pro-summary -->
 <?php } ?>

@@ -235,7 +235,7 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 		$blog_ids    = ! is_multisite() ? array( '1' ) : $wpdb->get_col( "SELECT blog_id FROM {$wpdb->blogs}" );
 
 		$form  = '<div class="show-input">';
-		$form .= '<h4>' . __( 'Check tables will be renamed:', 'secupress' ) . '</h4>';
+		$form .= '<h4>' . __( 'Checked tables will be renamed:', 'secupress' ) . '</h4>';
 		$form .= '<p><span style="color:red">' . __( 'Renaming a table is not rollbackable.', 'secupress' ) . '</span></p>';
 		$form .= '<input type="hidden" name="secupress-select-db-tables-to-rename-flag">';
 		$form .= '<fieldset aria-labelledby="select-db-tables-to-rename" class="secupress-boxed-group">';

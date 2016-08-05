@@ -42,7 +42,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 	 */
 	protected function init() {
 		$this->title    = __( 'Check your <code>wp-config.php</code> file, especially the PHP constants.', 'secupress' );
-		$this->more     = __( 'You can use the <code>wp-config.php</code> file to improve the security of your website. Learn about the best practice with this test.', 'secupress' );
+		$this->more     = __( 'You can use the <code>wp-config.php</code> file to improve the security of your website.', 'secupress' );
 		$this->more_fix = __( 'Set some PHP constants in your <code>wp-config.php</code> file to improve the security of your website.', 'secupress' );
 	}
 
@@ -60,19 +60,19 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 		$messages = array(
 			// "good"
 			0   => __( 'Your <code>wp-config.php</code> file is correct.', 'secupress' ),
-			1   => __( 'A must use plugin has been added in order to change the default value for <code>COOKIEHASH</code>.', 'secupress' ),
+			1   => __( 'A <a href="https://codex.wordpress.org/Must_Use_Plugins">must-use plugin</a> has been added in order to change the default value for <code>COOKIEHASH</code>.', 'secupress' ),
 			// "warning"
 			100 => __( 'This fix is <strong>pending</strong>, please reload the page to apply it now.', 'secupress' ),
 			// "bad"
-			201 => __( 'In your <code>wp-config.pgp</code> file, the PHP constant %s should not be set with the default value.', 'secupress' ),
-			202 => __( 'In your <code>wp-config.pgp</code> file, the PHP constant %s should be set.', 'secupress' ),
-			203 => __( 'In your <code>wp-config.pgp</code> file, the PHP constant %s should not be set.', 'secupress' ),
-			204 => __( 'In your <code>wp-config.pgp</code> file, the PHP constant %s should not be empty.', 'secupress' ),
-			205 => __( 'In your <code>wp-config.pgp</code> file, the PHP constant %1$s should be set on %2$s.', 'secupress' ),
-			206 => __( 'In your <code>wp-config.pgp</code> file, the PHP constant %1$s should be set on %2$s or less.', 'secupress' ),
+			201 => __( 'In your <code>wp-config.php</code> file, the PHP constant %s should not be set with the default value.', 'secupress' ),
+			202 => __( 'In your <code>wp-config.php</code> file, the PHP constant %s should be set.', 'secupress' ),
+			203 => __( 'In your <code>wp-config.php</code> file, the PHP constant %s should not be set.', 'secupress' ),
+			204 => __( 'In your <code>wp-config.php</code> file, the PHP constant %s should not be empty.', 'secupress' ),
+			205 => __( 'In your <code>wp-config.php</code> file, the PHP constant %1$s should be set on %2$s.', 'secupress' ),
+			206 => __( 'In your <code>wp-config.php</code> file, the PHP constant %1$s should be set on %2$s or less.', 'secupress' ),
 			// "cantfix"
 			300 => __( 'Some PHP constants could not be set correctly: %s.', 'secupress' ),
-			301 => __( 'I can not create a must use plugin in <code>%s</code>, but i need it to change the default value for <code>COOKIEHASH</code>.', 'secupress' ),
+			301 => __( 'Impossible to create a <a href="https://codex.wordpress.org/Must_Use_Plugins">must-use plugin</a> in <code>%s</code>, but the default value for <code>COOKIEHASH</code> needs to be changed.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {

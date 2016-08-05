@@ -345,7 +345,7 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 			$wp_roles = new WP_Roles();
 		}
 
-		return isset( $wp_roles->role_names[ $role ] ) ? translate_user_role( $wp_roles->role_names[ $role ] ) : __( 'None' );
+		return isset( $wp_roles->role_names[ $role ] ) ? translate_user_role( $wp_roles->role_names[ $role ] ) : _x( 'None', 'a WP role', 'secupress' );
 	}
 
 
