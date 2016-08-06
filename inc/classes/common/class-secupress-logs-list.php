@@ -147,7 +147,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 			secupress_admin_heading( $title );
 			secupress_settings_heading( array(
 				'title'    => $title,
-				'subtitle' => __( 'Enter the matrix', 'secupress' ),
+				'subtitle' => __( 'Watch everything', 'secupress' ),
 			) );
 			?>
 

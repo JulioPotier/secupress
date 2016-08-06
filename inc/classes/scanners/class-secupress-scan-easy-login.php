@@ -68,7 +68,7 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements SecuPress_Scan
 		$messages = array(
 			// "good"
 			0   => __( 'The login page seems to be protected by double authentication.', 'secupress' ),
-			1   => __( 'The <strong>PasswordLess Double Authentication</strong> has been activated for every role. Users will receive an email to log-in now.', 'secupress' ),
+			1   => __( 'The <strong>PasswordLess Double Authentication</strong> module has been activated for every role. Users will receive an email to log-in now.', 'secupress' ),
 			// "warning"
 			100 => __( 'Unable to create a user to test the login authentication system.', 'secupress' ),
 			// "bad"

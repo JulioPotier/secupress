@@ -41,7 +41,7 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 		global $is_apache, $is_nginx, $is_iis7;
 
 		$this->title = __( 'Check if your WordPress site discloses the PHP modules <em>(know as PHP Easter Egg)</em>.', 'secupress' );
-		$this->more  = __( 'PHP contains a flaw that may lead to an unauthorized information disclosure. The issue is triggered when a remote attacker makes certain HTTP requests with crafted arguments, which will disclose PHP version and another sensitive information resulting in a loss of confidentiality.', 'secupress' );
+		$this->more  = __( 'PHP contains a flaw that disclosure sensitive information from installed modules, resulting in a loss of confidentiality.', 'secupress' );
 
 		if ( ! $is_apache && ! $is_nginx && ! $is_iis7 ) {
 			$this->more_fix = static::get_messages( 301 );
@@ -79,7 +79,7 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 			// "good"
 			0   => __( 'Your site does not reveal the PHP modules.', 'secupress' ),
 			/** Translators: %s is a file name. */
-			1   => sprintf( __( 'The rules forbidding access to the PHP Easter Egg have been successfully added to your %s file.', 'secupress' ), "<code>$config_file</code>" ),
+			1   => sprintf( __( 'The rules forbidding access to the <strong>PHP Easter Egg</strong> have been successfully added to your %s file.', 'secupress' ), "<code>$config_file</code>" ),
 			// "warning"
 			100 => __( 'Unable to determine if your homepage is disclosing PHP Easter Egg.', 'secupress' ),
 			// "bad"

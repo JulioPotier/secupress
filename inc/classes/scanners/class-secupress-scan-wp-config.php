@@ -82,7 +82,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 			/** Translators: %s is a list of constant names. */
 			300 => __( 'Some PHP constants could not be set correctly: %s.', 'secupress' ),
 			/** Translators: %s is a constant name. */
-			301 => sprintf( __( 'A Must Use plugin could not be created to change the default value for %s.', 'secupress' ), '<code>COOKIEHASH</code>' ),
+			301 => sprintf( __( 'Impossible to create a <a href="https://codex.wordpress.org/Must_Use_Plugins">must-use plugin</a> but the default value for %s needs to be changed.', 'secupress' ), '<code>COOKIEHASH</code>' ),
 		);
 
 		if ( isset( $message_id ) ) {

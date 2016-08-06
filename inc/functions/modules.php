@@ -86,11 +86,11 @@ function secupress_get_modules() {
 			'icon'        => 'backups',
 			'summaries'   => array(
 				'small'  => __( 'Never lose anything', 'secupress' ),
-				'normal' => __( 'Reduce the risks to lose your content because of an attack by backuping your database daily and you files weekly.', 'secupress' ),
+				'normal' => __( 'Reduce the risks to lose your content because of an attack by backuping your database and your files.', 'secupress' ),
 			),
 			'with_form'   => false,
 			'description' => array(
-				__( 'Reduce the risks to lose your content because of an attack by backuping your database daily and you files weekly.', 'secupress' ),
+				__( 'Reduce the risks to lose your content because of an attack by backuping your database and your files.', 'secupress' ),
 				sprintf( __( 'Don\'t forget to <a href="%s">schedule backups</a> as soon as possible.', 'secupress' ), esc_url( secupress_admin_url( 'modules', 'schedules' ) ) ),
 			),
 		),
@@ -104,8 +104,8 @@ function secupress_get_modules() {
 			'description' => array(
 				__( 'Comments are great for your website, but bot traffic represent about 60 % of the internet. Spams are done by these bots, and they just want to add their content in your website. Don\'t let them do that!', 'secupress' ),
 				sprintf( __( 'Do not forget to visit the <a href="%s">Settings &rsaquo; Discussion</a> area to add words to the blacklist and other usual settings regarding comments.', 'secupress' ), esc_url( admin_url( 'options-discussion.php' ) ) ),
-				__( 'By default, we block identity usurpation, so if someone tries to comment using your email/name, the comment will be blocked.', 'secupress' ),
-				__( 'Also by default, we block bad IPs, author name, email and website url known as spammer.', 'secupress' ),
+				__( 'By default, identity usurpation is blocked, so if someone tries to comment using your email/name, the comment will be blocked.', 'secupress' ),
+				__( 'Also by default, bad IPs are blocked, author name, email and website url known as spammer.', 'secupress' ),
 			),
 		),
 		'logs'            => array(
@@ -160,7 +160,7 @@ function secupress_get_modules() {
 			'title'       => __( 'Get Pro', 'secupress' ),
 			'icon'        => 'secupress',
 			'summaries'   => array(
-				'small'  => __( 'Look father with premium', 'secupress' ),
+				'small'  => __( 'Look farther with the Pro version', 'secupress' ),
 				'normal' => __( 'Access to more modules and options to make your website a real automatted secure engine.', 'secupress' ),
 			),
 			'description' => array(

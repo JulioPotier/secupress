@@ -84,7 +84,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 			/* translators: %s is a file name */
 			2   => sprintf( __( 'The %s file is now protected from revealing your <strong>WordPress version</strong>.', 'secupress' ), '<code>readme.html</code>' ),
 			/* translators: 1 is a file name */
-			3   => __( 'As the rules against the <strong>PHP version</strong> disclosure added to your %s file do not seem to work, another plugin has been activated to remove this information in some other way.', 'secupress' ),
+			3   => __( 'As the rules against the <strong>PHP version</strong> disclosure added to your %s file do not seem to work, another method has been used has been activated to remove this information in some other way.', 'secupress' ),
 			4   => __( 'The generator meta tag should not be displayed anymore.', 'secupress' ),
 			5   => __( 'The <strong>WordPress version</strong> should now be removed from your styles URL.', 'secupress' ),
 			6   => __( 'The <strong>WordPress version</strong> should now be removed from your scripts URL.', 'secupress' ),

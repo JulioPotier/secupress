@@ -80,18 +80,18 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 		$messages = array(
 			// "good"
 			/** Translators: %s is a file name. */
-			0   => sprintf( __( '%s is the first file loaded, directory index is good.', 'secupress' ), '<code>index.php</code>' ),
+			0   => sprintf( __( '%s is the first file loaded, index file order is good.', 'secupress' ), '<code>index.php</code>' ),
 			/** Translators: %s is a file name. */
-			1   => sprintf( __( 'The rules to get the correct directory index have been successfully added to your %s file.', 'secupress' ), "<code>$config_file</code>" ),
+			1   => sprintf( __( 'The rules to get the correct index file order (known as Directory Index) have been successfully added to your %s file.', 'secupress' ), "<code>$config_file</code>" ),
 			// "warning"
-			100 => __( 'Unable to determine status of the directory index.', 'secupress' ),
+			100 => __( 'Unable to determine status of the index file order.', 'secupress' ),
 			// "bad"
 			/** Translators: 1 and 2 are file names. */
 			200 => sprintf( __( 'Your website should load %1$s first, actually it loads %2$s first.', 'secupress' ), '<code>index.php</code>', '%s' ),
 			// "cantfix"
 			/* translators: 1 is a file name, 2 is some code */
-			300 => sprintf( __( 'Your server runs a nginx system, the directory index cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
-			301 => __( 'Your server runs a non recognized system. The directory index cannot be fixed automatically.', 'secupress' ),
+			300 => sprintf( __( 'Your server runs a nginx system, the index file order cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
+			301 => __( 'Your server runs a non recognized system. The index file order cannot be fixed automatically.', 'secupress' ),
 			/* translators: 1 is a file name, 2 is some code */
 			302 => sprintf( __( 'Your %1$s file does not seem to be writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ), "<code>$config_file</code>", '%s' ),
 			/* translators: 1 is a file name, 2 is a tag name, 3 is a folder path (kind of), 4 is some code */

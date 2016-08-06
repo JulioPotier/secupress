@@ -12,7 +12,7 @@ $is_plugin_active = secupress_is_submodule_active( 'users-login', 'move-login' )
 
 $this->add_field( array(
 	'title'             => __( 'Move the login page', 'secupress' ),
-	'description'       => __( 'This will not totally hide the login form from humans, the main goal is to avoid bots to hit this URL.', 'secupress' ),
+	'description'       => __( 'Hide the login form, not totally from humans, the main goal is to avoid bots to hit this URL.', 'secupress' ),
 	'label_for'         => $main_field_name,
 	'plugin_activation' => true,
 	'type'              => 'checkbox',

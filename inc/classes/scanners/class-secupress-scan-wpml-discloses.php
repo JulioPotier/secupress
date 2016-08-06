@@ -66,10 +66,10 @@ class SecuPress_Scan_Wpml_Discloses extends SecuPress_Scan implements SecuPress_
 			/* translators: %s is a plugin name */
 			3   => sprintf( __( 'The %s\'s version should be removed from your scripts URL now.', 'secupress' ), 'WPML' ),
 			// "warning"
-			100 => __( 'Unable to determine status of your homepage.', 'secupress' ),
+			100 => sprintf( __( 'Unable to determine if %s is disclosing its version on your homepage.', 'secupress' ), 'WPML' ),
 			// "bad"
 			/* translators: 1 is a plugin name, 2 is some related info */
-			200 => sprintf( __( 'The %s plugin displays its version in your homepage source code (%2$s).', 'secupress' ), 'WooCommerce', '%s' ),
+			200 => sprintf( __( 'The %1$s plugin displays its version in your homepage source code (%2$s).', 'secupress' ), 'WPML', '%s' ),
 		);
 
 		if ( isset( $message_id ) ) {

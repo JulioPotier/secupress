@@ -51,7 +51,7 @@ $this->add_field( array(
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'Some other request methods can be used to retreive information from your site, avoid them! This will also block malformed HTTP like old <code>POST HTTP/1.0</code> or <code>POST</code> without a referer.', 'secupress' ),
+			'description' => __( 'Some other request methods can be used to retreive information from your site, avoid them! Also block malformed HTTP like old <code>POST HTTP/1.0</code> or <code>POST</code> without a referer.', 'secupress' ),
 		),
 	),
 ) );

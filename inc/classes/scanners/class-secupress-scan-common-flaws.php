@@ -67,7 +67,7 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements SecuPress_Sc
 			101 => sprintf( __( 'Unable to determine status of <strong>Shellshock</strong> flaw (%s).', 'secupress' ), '<em>CVE-2014-6271</em>' ),
 			102 => sprintf( __( 'Unable to determine status of <strong>Shellshock</strong> flaw (%s).', 'secupress' ), '<em>CVE-2014-7169</em>' ),
 			// "bad"
-			200 => __( 'Your website pages should be <strong>different</strong> for each reload.', 'secupress' ),
+			200 => __( 'Your website pages should be <strong>different</strong> for each reload (without cache).', 'secupress' ),
 			201 => sprintf( __( 'The server appears to be vulnerable to <strong>Shellshock</strong> (%s).', 'secupress' ), '<em>CVE-2014-6271</em>' ),
 			202 => sprintf( __( 'The server appears to be vulnerable to <strong>Shellshock</strong> (%s).', 'secupress' ), '<em>CVE-2014-7169</em>' ),
 			203 => __( 'Your website should block <strong>malicious requests</strong>.', 'secupress' ),

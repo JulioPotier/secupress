@@ -91,11 +91,10 @@ if ( ! $secupress_tests ) {
 	$nb_actions    = count( $bad_scan_results );
 	$page_title    = sprintf( _n( 'This action require your attention', 'These %d actions require your attention', $nb_actions, 'secupress' ), $nb_actions );
 	$steps_counter =
-		'<span class="secupress-step-by-step secupress-flex hide-if-no-js">
-			<span class="text step3-advanced-text">
-				' . sprintf( __( '%s of %d', 'secupress' ), '1</span><span class="text">', $nb_actions ) . '
-			</span>
-		</span>';
+		'<span class="secupress-step-by-step secupress-flex hide-if-no-js">' .
+		/** Translators: Params are numbers like "1 of 3" */
+			sprintf( __( '%1$s of %2$s', 'secupress' ), '<span class="text step3-advanced-text">1</span>', '<span class="text">' . $nb_actions . '</span>' )
+		'</span>';
 	$main_button   =
 		'<a href="' . esc_url( secupress_admin_url( 'scanners' ) ) . '&step=4" class="secupress-button shadow light">
 			<span class="icon">

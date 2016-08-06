@@ -473,12 +473,12 @@ function __secupress_scanners() {
 
 										<a class="secupress-button secupress-button-mini" href="https://twitter.com/intent/tweet?via=secupress&amp;url=<?php
 											/* translators: %s is the plugin name */
-											echo urlencode( esc_url_raw( 'http://secupress.fr&text=' . sprintf( __( 'Wow! My website just got an A security grade using %s, what about yours?', 'secupress' ), SECUPRESS_PLUGIN_NAME ) ) );
+											echo urlencode( esc_url_raw( 'http://secupress.me&text=' . sprintf( __( 'Wow! My website just got an A security grade using %s, what about yours?', 'secupress' ), SECUPRESS_PLUGIN_NAME ) ) );
 										?>">
 											<span class="icon" aria-hidden="true"><span class="dashicons dashicons-twitter"></span></span>
 											<span class="text"><?php esc_html_e( 'Tweet that', 'secupress' ); ?></span>
 										</a>
-									</div><!-- .secupress-scan-infos -->
+									</div><!-- #tweeterA -->
 								</div><!-- .secupress-chart-legends-n-note -->
 
 							</div><!-- .secupress-chart.secupress-flex -->
