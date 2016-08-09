@@ -64,11 +64,11 @@ $this->add_field( array(
 	'label_for'         => $main_field_name,
 	'type'              => 'checkbox',
 	'value'             => (int) secupress_is_submodule_active( 'plugins-themes', 'detect-bad-plugins' ),
-	'label'             => __( 'Yes, enable the detection if a plugin I use is known as vulnerable', 'secupress' ),
+	'label'             => __( 'Yes, enable the detection if a plugin is known as vulnerable', 'secupress' ),
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'Based on our Daily Security Monitoring, we will push notices for plugins newly known as vulnerables.', 'secupress' ),
+			'description' => __( 'Based on our Daily Security Monitoring, notices will be displayed for plugins newly known as vulnerables.', 'secupress' ),
 		),
 	),
 ) );

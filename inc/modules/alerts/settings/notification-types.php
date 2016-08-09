@@ -17,7 +17,7 @@ if ( secupress_is_submodule_active( 'logs', 'action-logs' ) ) {
 
 $this->add_field( array(
 	'title'        => __( 'Choose which service should be used', 'secupress' ),
-	'description'  => __( 'A least one type of notification must be chosen here before activating an alert plugin below.', 'secupress' ),
+	'description'  => __( 'A least one type of notification must be chosen here before activating alerts below.', 'secupress' ),
 	'name'         => $activated_field_name,
 	'type'         => 'checkboxes',
 	'label_screen' => __( 'How to alert you?', 'secupress' ),

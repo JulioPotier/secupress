@@ -113,7 +113,7 @@ function secupress_move_login_deny_login_access() {
 			wp_redirect( esc_url_raw( user_trailingslashit( home_url() ) ) );
 			exit;
 		default:
-			wp_die( __( 'No no no, the login form is not here.', 'secupress' ), __( 'Nope :)', 'secupress' ), array( 'response' => 403 ) );
+			wp_die( __( 'The login form is not here.', 'secupress' ), __( 'Lost?', 'secupress' ), array( 'response' => 403 ) );
 	}
 }
 
@@ -200,7 +200,7 @@ function secupress_move_login_deny_login_redirect() {
 			// Ok, let WordPress redirect the user to the login page.
 			return;
 		case 'error':
-			wp_die( __( 'Cheatin&#8217; uh?' ), __( 'Nope :)', 'secupress' ), array( 'response' => 403 ) );
+			wp_die( __( 'Cheatin&#8217; uh?' ), __( 'Lost?', 'secupress' ), array( 'response' => 403 ) );
 		case 'redir_404':
 			/** This filter is documented in inc/modules/users-login/plugins/inc/php/move-login/redirections-and-dies.php */
 			$redirect = apply_filters( 'sfml_404_error_page', home_url( '404' ) );

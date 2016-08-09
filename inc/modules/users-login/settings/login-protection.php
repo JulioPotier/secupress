@@ -23,13 +23,12 @@ $main_field_name = $this->get_field_name( 'type' );
 
 $this->add_field( array(
 	'title'             => __( 'Use an attempt blocker', 'secupress' ),
-	'description'       => __( 'You can temporary ban people who try to mess with the login page. This is recommended to avoid to be victim of a brute-force.', 'secupress' ),
+	'description'       => __( 'You can temporary ban bots who try to mess with the login page to avoid to be victim of a brute-force.', 'secupress' ),
 	'name'              => $main_field_name,
 	'plugin_activation' => true,
 	'type'              => 'checkboxes',
 	'options'           => $values,
 	'value'             => $is_plugin_active,
-	'label_screen'      => __( 'Choose your attempts blocker', 'secupress' ),
 ) );
 
 
@@ -101,7 +100,7 @@ $this->add_field( array(
 	'type'              => 'checkbox',
 	'disabled'          => ! secupress_wp_version_is( '4.0' ),
 	'value'             => (int) secupress_is_submodule_active( 'users-login', 'only-one-connection' ),
-	'label'             => __( 'Yes, do not allow double connections', 'secupress' ),
+	'label'             => __( 'Yes, disallow double connections', 'secupress' ),
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
@@ -123,7 +122,7 @@ $this->add_field( array(
 	'type'              => 'checkbox',
 	'disabled'          => ! secupress_wp_version_is( '4.0' ) ? true : null,
 	'value'             => (int) secupress_is_submodule_active( 'users-login', 'sessions-control' ),
-	'label'             => __( 'Yes, I want to be able to control user sessions', 'secupress' ),
+	'label'             => __( 'Yes, control user sessions', 'secupress' ),
 	'helpers'           => array(
 		array(
 			'type'        => 'description',

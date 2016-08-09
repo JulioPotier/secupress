@@ -68,13 +68,13 @@ function secupress_oldpassword_add_field() {
 	<th scope="row"><label for="pass-old">' . __( 'Current Password', 'secupress' ) . '</label></th>
 	<td>
 		<input name="pass-old" type="password" id="pass-old" class="regular-text" value="" autocomplete="off" />
-		<p class="description">' . __( 'Type your current password.', 'secupress' ) . '</p>
+		<p class="description">' . __( 'Type your current password', 'secupress' ) . '</p>
 		<script type="text/javascript">
 		(function($) {
 			var pass1 = $( ".user-pass1-wrap .wp-pwd" ),
 				field;
 			if ( pass1.length ) {
-				field = "<div class=\"wp-pwd hide-if-js\"><label for=\"pass-old\">' . __( 'Type your current password:', 'secupress' ) . '</label><br/><input name=\"pass-old\" type=\"password\" id=\"pass-old\" class=\"regular-text\" value=\"\" autocomplete=\"off\" /></div>";
+				field = "<div class=\"wp-pwd hide-if-js\"><label for=\"pass-old\">' . sprintf( __( '%s:', 'secupress' ), __( 'Type your current password', 'secupress' ) ) . '</label><br/><input name=\"pass-old\" type=\"password\" id=\"pass-old\" class=\"regular-text\" value=\"\" autocomplete=\"off\" /></div>";
 				$( ".user-pass-old-wrap" ).remove();
 				pass1.last().after( field );
 			}
@@ -87,7 +87,7 @@ function secupress_oldpassword_add_field() {
 	<th scope="row"><label for="pass-old">' . __( 'Current Password', 'secupress' ) . '</label></th>
 	<td>
 		<input name="pass-old" type="password" id="pass-old" class="regular-text" size="16" value="" autocomplete="off" />
-		<p class="description">' . __( 'Type your current password.', 'secupress' ) . '</p>
+		<p class="description">' . __( 'Type your current password', 'secupress' ) . '</p>
 	</td>
 </tr>';
 	} elseif ( secupress_wp_version_is( '3.8' ) ) {
@@ -96,7 +96,7 @@ function secupress_oldpassword_add_field() {
 	<th scope="row"><label for="pass-old">' . __( 'Current Password', 'secupress' ) . '</label></th>
 	<td>
 		<input name="pass-old" type="password" id="pass-old" class="regular-text" size="16" value="" autocomplete="off" /><br />
-		<span class="description">' . __( 'Type your current password.', 'secupress' ) . '</span>
+		<span class="description">' . __( 'Type your current password', 'secupress' ) . '</span>
 	</td>
 </tr>';
 	} else {
@@ -105,7 +105,7 @@ function secupress_oldpassword_add_field() {
 	<th scope="row"><label for="pass-old">' . __( 'Current Password', 'secupress' ) . '</label></th>
 	<td>
 		<input name="pass-old" type="password" id="pass-old" size="16" value="" autocomplete="off" /><br />
-		<span class="description">' . __( 'Type your current password.', 'secupress' ) . '</span>
+		<span class="description">' . __( 'Type your current password', 'secupress' ) . '</span>
 	</td>
 </tr>';
 	}

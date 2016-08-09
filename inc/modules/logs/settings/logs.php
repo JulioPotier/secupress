@@ -16,7 +16,7 @@ $this->add_field( array(
 	'description'       => __( 'What happened on your WordPress website? By activating this module, most sensible actions will be recorded, lightly.', 'secupress' ),
 	'label_for'         => $main_field_name,
 	'type'              => 'activate_action_logs',
-	'label'             => __( 'Yes, i want to log WordPress actions', 'secupress' ),
+	'label'             => __( 'Yes, log WordPress actions', 'secupress' ),
 ) );
 
 if ( class_exists( 'SecuPress_Action_Logs' ) ) :
@@ -74,7 +74,7 @@ $this->add_field( array(
 	'description'       => __( '404 Error pages are common, but it can also be some bots trying to find unsafe content on your website. You may want to know that.', 'secupress' ),
 	'label_for'         => $main_field_name,
 	'type'              => 'activate_404_logs',
-	'label'             => __( 'Yes, i want to log WordPress 404s', 'secupress' ),
+	'label'             => __( 'Yes, log WordPress 404s', 'secupress' ),
 ) );
 
 

@@ -626,7 +626,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 */
 	protected function _set_action_title() {
 		$titles = array(
-			'secupress.block'         => str_replace( '%PLUGIN-NAME%', '<b>' . SECUPRESS_PLUGIN_NAME . '</b>', __( '%PLUGIN-NAME% prevented a request at %1$s', 'secupress' ) ),
+			'secupress.block'         => sprintf( __( '%1$s prevented a request at %2$s', 'secupress' ), '<b>' . SECUPRESS_PLUGIN_NAME . '</b>' ),
 			'secupress.ban.ip_banned' => __( 'IP banned: %s.', 'secupress' ),
 			'switch_theme'            => __( 'Theme activated: %s.', 'secupress' ),
 			'wp_login'                => __( 'Administrator %s logged in.', 'secupress' ),
@@ -699,11 +699,11 @@ class SecuPress_Action_Log extends SecuPress_Log {
 
 			} elseif ( $has_deactivated ) {
 
-				$this->message = __( 'Plugin(s) deactivated: %2$s.', 'secupress' );
+				$this->message = __( 'Plugin(s) deactivated: %s.', 'secupress' );
 
 			} else {
 				// Bug.
-				$this->message = __( 'Raw data: %2$s %3$s', 'secupress' );
+				$this->message = __( 'Raw data: %1$s %2$s', 'secupress' );
 			}
 			return;
 		}
@@ -739,11 +739,11 @@ class SecuPress_Action_Log extends SecuPress_Log {
 
 			} elseif ( $has_deactivated ) {
 
-				$this->message = __( 'Plugin(s) network deactivated: %2$s.', 'secupress' );
+				$this->message = __( 'Plugin(s) network deactivated: %s.', 'secupress' );
 
 			} else {
 				// Bug.
-				$this->message = __( 'Raw data: %2$s %3$s', 'secupress' );
+				$this->message = __( 'Raw data: %1$s %2$s', 'secupress' );
 			}
 			return;
 		}
@@ -777,11 +777,11 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 */
 	protected function _set_action_message() {
 		$messages = array(
-			'secupress.block'         => str_replace( '%PLUGIN-NAME%', '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>', __( '%PLUGIN-NAME% prevented a request at %1$s from the IP %2$s. Block ID: %3$s. The server configuration at the moment: %4$s Data posted: %5$s', 'secupress' ) ),
+			'secupress.block'         => sprintf( __( '%6$s prevented a request at %1$s from the IP %2$s. Block ID: %3$s. The server configuration at the moment: %4$s Data posted: %5$s', 'secupress' ), '<b>' . SECUPRESS_PLUGIN_NAME . '</b>', '%s' ),
 			'secupress.ban.ip_banned' => __( 'IP banned: %s.', 'secupress' ),
 			'switch_theme'            => __( 'Theme activated: %s.', 'secupress' ),
 			'wp_login'                => __( 'Administrator %s logged in.', 'secupress' ),
-			'delete_user'             => __( 'User deleted: %1$s. Post assigned to: %2$s.', 'secupress' ),
+			'delete_user'             => __( 'User deleted: %1$s. Posts assigned to: %2$s.', 'secupress' ),
 			'profile_update'          => __( '%1$s\'s user data changed from: %2$s To: %3$s', 'secupress' ),
 			'user_register'           => __( 'New user %s created.', 'secupress' ),
 			'added_user_meta'         => __( 'User meta %2$s added to %1$s with the value %3$s', 'secupress' ),

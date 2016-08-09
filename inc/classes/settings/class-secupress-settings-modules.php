@@ -257,7 +257,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			$icon   = isset( $module['icon'] ) ? $module['icon'] : 'secupress-simple';
 			$class  = $this->get_current_module() === $key ? 'active' : '';
 			$class .= ! empty( $module['mark_as_pro'] ) ? ' secupress-pro-module' : '';
-			
+
 			// skip Get Pro exception
 			if ( 'get-pro' === $key ) {
 				continue;
@@ -367,7 +367,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		}
 		// //// Todo save settings with history.
 		$this->set_current_section( 'reset' );
-		$this->set_section_description( __( 'If you need to reset this module\'s settings to the default ones, you just have to do it here, we will set the best for your site.', 'secupress' ) );
+		$this->set_section_description( __( 'If you need to reset this module\'s settings to the default ones, you just have to do it here, the best settings for your site will be set.', 'secupress' ) );
 		$this->add_section( __( 'Module settings', 'secupress' ), array( 'with_save_button' => false ) );
 
 		$this->set_current_plugin( 'reset' );
@@ -763,22 +763,19 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		}
 		?>
 		<form action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_activate_action_logs' ), 'secupress_activate_action_logs' ) ); ?>" id="form-activate-action-logs" method="post">
-			<p><?php echo $label_open; ?>
+			<p>
 				<?php
+				echo $label_open;
 				echo $args['label_before'];
 				echo ' <input type="checkbox" id="' . $args['label_for'] . '" name="' . $name_attribute . '" value="1"' . checked( $value, 1, false ) .  $disabled . ' class="secupress-checkbox" /> ';
 				echo '<span class="label-text">' . $args['label'] . '</span>';
+				echo $label_close;
 				?>
-			<?php echo $label_close; ?>
 			</p>
-			<?php
-
-			echo '<p class="description desc">';
-				_e( 'We will not log post action like creation or update but rather password and profile update, email changes, new administrator user, admin has logged in...', 'secupress' );
-			echo "</p>\n";
-
-			echo '<p class="submit"><button type="submit" class="secupress-button secupress-button-primary">' . esc_html__( 'Submit' ) . '</button></p>';
-			?>
+			<p class="description desc">
+				<?php _e( 'Post creation or update will not be logged, but rather password and profile update, email changes, new administrator user, admin has logged in...', 'secupress' ); ?>
+			</p>
+			<p class="submit"><button type="submit" class="secupress-button secupress-button-primary"><?php esc_html_e( 'Submit' ); ?></button></p>
 		</form>
 		<?php
 	}

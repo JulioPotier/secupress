@@ -372,7 +372,7 @@ function secupress_move_login_slug_labels() {
 function secupress_move_login_login_access_labels() {
 	return array(
 		'error'      => __( 'Display an error message', 'secupress' ),
-		'redir_404'  => __( 'Redirect to a "Page not found" error page', 'secupress' ),
+		'redir_404'  => __( 'Redirect to a "Page Not Found" error page', 'secupress' ),
 		'redir_home' => __( 'Redirect to the home page', 'secupress' ),
 	);
 }
@@ -389,7 +389,7 @@ function secupress_move_login_login_redirect_labels() {
 	return array(
 		'redir-login' => __( 'Do nothing, redirect to the new login page', 'secupress' ) . ' <span class="description">(' . __( 'not recommended', 'secupress' ) . ')</span>',
 		'error'       => __( 'Display an error message', 'secupress' ),
-		'redir_404'   => __( 'Redirect to a "Page not found" error page', 'secupress' ),
+		'redir_404'   => __( 'Redirect to a "Page Not Found" error page', 'secupress' ),
 		'redir_home'  => __( 'Redirect to the home page', 'secupress' ),
 	);
 }

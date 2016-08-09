@@ -17,10 +17,4 @@ $this->add_field( array(
 	'type'              => 'checkbox',
 	'value'             => (int) secupress_is_submodule_active( 'plugins-themes', 'uploads' ),
 	'label'             => __( 'Yes, disable uploads for themes and plugins', 'secupress' ),
-	'helpers'           => array(
-		array(
-			'type'        => 'description',
-			'description' => __( 'If you disabled themes AND plugins installation, you don\'t need to activate this option.', 'secupress' ),
-		),
-	),
 ) );

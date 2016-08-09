@@ -10,12 +10,12 @@ $main_field_name = $this->get_field_name( 'activated' );
 
 $this->add_field( array(
 	'title'             => __( 'Use the Anti Brute-Force', 'secupress' ),
-	'description'       => __( 'When a single visitor (IP Address) is hitting hard on your website (10 times per second), we should tell him to go slowly, and if he continues, lock his IP Address.', 'secupress' ),
+	'description'       => __( 'When a single visitor (IP Address) is hitting hard on your website (10 times per second), he should go slowly, and if he continues, lock his IP Address.', 'secupress' ),
 	'label_for'         => $main_field_name,
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
 	'value'             => (int) secupress_is_submodule_active( 'firewall', 'bruteforce' ),
-	'label'             => __( 'Yes, I want to use the Anti-Brute-Force on my website', 'secupress' ),
+	'label'             => __( 'Yes, use the Anti-Brute-Force on my website', 'secupress' ),
 	'helpers'           => array(
 		array(
 			'type'        => 'description',

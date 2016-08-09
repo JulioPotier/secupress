@@ -17,7 +17,6 @@ $this->add_field( array(
 	'type'              => 'checkbox',
 	'label'             => __( 'Yes, use the <strong>PasswordLess</strong> method', 'secupress' ),
 	'value'             => secupress_is_submodule_active( 'users-login', 'passwordless' ),
-	'label_screen'      => __( 'Choose your Double Authentication method', 'secupress' ),
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
