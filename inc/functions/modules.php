@@ -138,10 +138,10 @@ function secupress_get_modules() {
 			'icon'        => 'schedule',
 			'summaries'   => array(
 				'small'  => __( 'Automate all your tasks', 'secupress' ),
-				'normal' => sprintf( __( 'Let %s scan your website when you are away by using recurent scans', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
+				'normal' => sprintf( __( 'Let %s scan your website when you are away by using recurent scans.', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
 			),
 			'description' => array(
-				sprintf( __( 'Let %s scan your website when you are away by using recurent scans', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
+				sprintf( __( 'Let %s scan your website when you are away by using recurent scans.', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
 			),
 			'mark_as_pro' => $should_be_pro,
 		),

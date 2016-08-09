@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2016-08-09 12:56+0200\n"
-"PO-Revision-Date: 2016-08-09 16:03+0200\n"
+"POT-Creation-Date: 2016-08-09 16:13+0200\n"
+"PO-Revision-Date: 2016-08-09 16:15+0200\n"
 "Last-Translator: WP Media <contact@wp-media.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -106,7 +106,7 @@ msgstr ""
 #: inc/modules/users-login/plugins/inc/php/move-login/admin.php:195
 #, php-format
 msgid "%s: "
-msgstr "%s&nbsp;:"
+msgstr "%s&nbsp;: "
 
 #: inc/admin/activation.php:280
 #, php-format
@@ -913,12 +913,13 @@ msgstr "Découvrez toutes les fonctionnalités"
 msgid "Manage your recurring scans"
 msgstr "Planifiez vos scans automatiques"
 
-#: inc/admin/scanner-step-4.php:327
-msgid ""
-"Let SecuPress scan your website when you are away by using recurent scans"
+#: inc/admin/scanner-step-4.php:327 inc/functions/modules.php:141
+#: inc/functions/modules.php:144
+#, php-format
+msgid "Let %s scan your website when you are away by using recurent scans."
 msgstr ""
-"Laissez SecuPress scanner votre site en votre absence en utilisant des scans "
-"récurrents"
+"Laissez %s scanner votre site quand vous n'êtes pas là avec des scanners "
+"récurrents."
 
 #: inc/admin/scanner-step-4.php:333 inc/admin/settings.php:566
 msgid "Schedule Scans"
@@ -4805,7 +4806,7 @@ msgstr "Gardez vos données en sécurité"
 
 #: inc/functions/modules.php:53 inc/functions/modules.php:56
 msgid "Preserve your data and avoid losing your content in case of attack."
-msgstr "Préserve vos données et évite la perte de contenu en cas d'attaque"
+msgstr "Préserve vos données et évite la perte de contenu en cas d'attaque."
 
 #: inc/functions/modules.php:60
 msgid "Malware Scan"
@@ -4926,13 +4927,6 @@ msgstr "Planifications"
 #: inc/functions/modules.php:140
 msgid "Automate all your tasks"
 msgstr "Automatisez toutes vos tâches"
-
-#: inc/functions/modules.php:141 inc/functions/modules.php:144
-#, php-format
-msgid "Let %s scan your website when you are away by using recurent scans"
-msgstr ""
-"Laissez %s scanner votre site quand vous n'êtes pas là avec des scanners "
-"récurrents"
 
 #: inc/functions/modules.php:149 inc/modules/services/settings/services.php:4
 msgid "Services"
@@ -7465,6 +7459,17 @@ msgid ""
 msgstr ""
 "<strong>%1$s<strong> requiert WordPress v%2$s minimum, votre site utilise "
 "actuellement la version %3$s."
+
+#~ msgid ""
+#~ "Let SecuPress scan your website when you are away by using recurent scans"
+#~ msgstr ""
+#~ "Laissez SecuPress scanner votre site en votre absence en utilisant des "
+#~ "scans récurrents"
+
+#~ msgid "Let %s scan your website when you are away by using recurent scans"
+#~ msgstr ""
+#~ "Laissez %s scanner votre site quand vous n'êtes pas là avec des scanners "
+#~ "récurrents."
 
 #~ msgid "Redirections to the login page"
 #~ msgstr "Redirection"
