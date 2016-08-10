@@ -26,7 +26,7 @@ $this->add_field( array(
 	'value'             => $is_plugin_active,
 	'label_screen'      => __( 'Which anti-spam do you need', 'secupress' ),
 	'options'           => array(
-		'fightspam'              => __( 'I <strong>need comments</strong> on my website, help me fighting comment spam.', 'secupress' ),
+		'fightspam'              => __( 'I <strong>need comments</strong> on my website, fight comment spam.', 'secupress' ),
 		'remove-comment-feature' => __( 'I <strong>do not need comments</strong> on my website, remove all the comment features.', 'secupress' ),
 	),
 	'helpers' => array(
@@ -50,7 +50,7 @@ $options = array(
 );
 
 if ( defined( 'EMPTY_TRASH_DAYS' ) && is_numeric( EMPTY_TRASH_DAYS ) && EMPTY_TRASH_DAYS > 0 ) {
-	$options['trash'] = sprintf( __( '<strong>Send to trash</strong> any spam and delete it after %s days', 'secupress' ), EMPTY_TRASH_DAYS );
+	$options['trash'] = sprintf( _n( '<strong>Send to trash</strong> any spam and delete it after %s day', '<strong>Send to trash</strong> any spam and delete it after %s days', EMPTY_TRASH_DAYS, 'secupress' ), EMPTY_TRASH_DAYS );
 }
 
 $this->add_field( array(
@@ -88,7 +88,7 @@ $this->add_field( array(
 	'depends'      => $main_field_name,
 	'label_for'    => $this->get_field_name( 'better-blacklist-comment' ),
 	'type'         => 'checkbox',
-	'label'        => __( 'Yes, i want to use a better comments blacklist to detect spams', 'secupress' ),
+	'label'        => __( 'Yes, use a better comments blacklist to detect spams', 'secupress' ),
 	'disabled'     => ! is_readable( SECUPRESS_INC_PATH . 'data/spam-blacklist.data' ),
 	'helpers' => array(
 		array(
@@ -97,7 +97,7 @@ $this->add_field( array(
 		),
 		array(
 			'type'        => 'warning',
-			'description' => ! is_readable( SECUPRESS_INC_PATH . 'data/spam-blacklist.data' ) ? sprintf( __( 'As long as the following file is not readable, this feature can\'t be used: %s', 'secupress' ), '<code>' . SECUPRESS_INC_PATH . 'data/spam-blacklist.data</code>' ) : null,
+			'description' => ! is_readable( SECUPRESS_INC_PATH . 'data/spam-blacklist.data' ) ? sprintf( __( 'As long as the %s file is not readable, this feature can\'t be used.', 'secupress' ), '<code>' . SECUPRESS_INC_PATH . 'data/spam-blacklist.data</code>' ) : null,
 		),
 	),
 ) );
@@ -113,7 +113,7 @@ $this->add_field( array(
 	'helpers' => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'it will also hide all Pingbacks & Trackbacks from your post comments.', 'secupress' ),
+			'description' => __( 'It will also hide all Pingbacks & Trackbacks from your post comments.', 'secupress' ),
 		),
 	),
 ) );

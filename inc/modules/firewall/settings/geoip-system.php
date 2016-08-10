@@ -27,21 +27,21 @@ $this->add_field( array(
 	'default'      => '-1',
 	'label_screen' => __( 'Whitelist or Blacklist the countries', 'secupress' ),
 	'options'      => array(
-		'-1'        => __( 'I <strong>do not need</strong> to block or allow countries from visiting my website', 'secupress' ),
+		'-1'        => __( '<strong>Do not block (or allow)</strong> countries from visiting my website', 'secupress' ),
 		'blacklist' => __( '<strong>Disallow</strong> the selected countries to visit my website (blacklist)', 'secupress' ),
 		'whitelist' => __( '<strong>Only allow</strong> the selected countries to visit my website (whitelist)', 'secupress' ),
 	),
 	'helpers'      => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'Remember that we detect a visit based on the IP address, so it\'s effective for about 99% of automated attacks.', 'secupress' ),
+			'description' => __( 'Remember that the detection of a visit is based on the IP address, so it\'s effective for almost all automated attacks.', 'secupress' ),
 		),
 	),
 ) );
 
 $this->add_field( array(
 	'title'        => __( 'Which countries?', 'secupress' ),
-	'description'  => __( 'Add or remove countries you want to be manage from your website.', 'secupress' ),
+	'description'  => __( 'Add or remove countries you want to manage for your website.', 'secupress' ),
 	'depends'      => $main_field_name . '_blacklist ' . $main_field_name . '_whitelist',
 	'type'         => 'countries',
 	'name'         => $this->get_field_name( 'countries' ),

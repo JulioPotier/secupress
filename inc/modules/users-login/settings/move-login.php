@@ -57,7 +57,7 @@ $this->add_field( array(
 
 
 $this->add_field( array(
-	'title'        => __( 'Redirections to the login page', 'secupress' ),
+	'title'        => __( 'Redirection to the login page', 'secupress' ),
 	'description'  => __( 'When a not connected user attempts to access the administration area or an URL that redirects to the login page.', 'secupress' ),
 	'depends'      => $main_field_name,
 	'name'         => $this->get_field_name( 'login-redirect' ),
@@ -82,14 +82,14 @@ if ( $is_plugin_active && function_exists( 'secupress_move_login_get_rules' ) ) 
 	// Apache.
 	elseif ( $is_apache && ! secupress_root_file_is_writable( '.htaccess' ) ) {
 		/* translators: %s is a file name */
-		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code inside:', 'secupress' ), '<code>.htaccess</code>' );
+		$message = sprintf( __( 'Your %s file does not seem to be writable, you need to add the following code inside:', 'secupress' ), '<code>.htaccess</code>' );
 		$rules   = secupress_move_login_get_apache_rules( secupress_move_login_get_rules() );
 		$rules   = "# BEGIN SecuPress move_login\n$rules\n# END SecuPress";
 	}
 	// IIS7.
 	elseif ( $is_iis7 && ! secupress_root_file_is_writable( 'web.config' ) ) {
 		/* translators: %s is a file name */
-		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code inside:', 'secupress' ), '<code>web.config</code>' );
+		$message = sprintf( __( 'Your %s file does not seem to be writable, you need to add the following code inside:', 'secupress' ), '<code>web.config</code>' );
 		$rules   = secupress_move_login_get_iis7_rules( secupress_move_login_get_rules() );
 	}
 

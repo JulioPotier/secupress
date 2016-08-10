@@ -324,7 +324,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		<div class="secupress-flex">
 			<div class="secupress-col">
 				<p class="secupress-farther-title"><?php esc_html_e( 'Manage your recurring scans', 'secupress' ); ?></p>
-				<p class="secupress-farther-desc"><?php esc_html_e( 'Let SecuPress scan your website when you are away by using recurent scans', 'secupress' ); ?></p>
+				<p class="secupress-farther-desc"><?php sprintf( esc_html__( 'Let %s scan your website when you are away by using recurent scans.', 'secupress' ), SECUPRESS_PLUGIN_NAME ); ?></p>
 			</div>
 			<div class="secupress-col secupress-col-action">
 				<a href="<?php echo esc_url( secupress_admin_url ( 'modules' ) ); ?>&amp;module=schedules" class="secupress-rich-link secupress-current">

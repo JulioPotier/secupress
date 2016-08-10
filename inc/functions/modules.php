@@ -138,10 +138,10 @@ function secupress_get_modules() {
 			'icon'        => 'schedule',
 			'summaries'   => array(
 				'small'  => __( 'Automate all your tasks', 'secupress' ),
-				'normal' => sprintf( __( 'Let %s scan your website when you are away by using recurent scans', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
+				'normal' => sprintf( __( 'Let %s scan your website when you are away by using recurent scans.', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
 			),
 			'description' => array(
-				sprintf( __( 'Let %s scan your website when you are away by using recurent scans', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
+				sprintf( __( 'Let %s scan your website when you are away by using recurent scans.', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
 			),
 			'mark_as_pro' => $should_be_pro,
 		),
@@ -150,10 +150,10 @@ function secupress_get_modules() {
 			'icon'        => 'services',
 			'summaries'   => array(
 				'small'  => __( 'Post Hack & Pro configuration', 'secupress' ),
-				'normal' => __( 'Let us configure %s on your site and benefit from our expertise. Get help from our experts. The page contains our services designed to help you with the plugin.', 'secupress' ),
+				'normal' => sprintf( __( 'Let us configure %s on your site and benefit from our expertise. Get help from our experts. The page contains our services designed to help you with the plugin.', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
 			),
 			'description' => array(
-				__( 'Let us configure %s on your site and benefit from our expertise. Get help from our experts. The page contains our services designed to help you with the plugin.', 'secupress' ),
+				sprintf( __( 'Let us configure %s on your site and benefit from our expertise. Get help from our experts. The page contains our services designed to help you with the plugin.', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
 			),
 		),
 		'get-pro'        => array(

@@ -24,7 +24,7 @@ $label[] = '';
 
 $this->add_field( array(
 	'title'        => __( 'Choose your alerts frequency', 'secupress' ),
-	'description'  => __( 'It would be a bad idea to alert you everytime something happens, so we\'ll need to group messages.', 'secupress' ),
+	'description'  => __( 'It would be a bad idea to alert you every time something happens, so messages will be grouped.', 'secupress' ),
 	'depends'      => $main_field_name,
 	'name'         => $this->get_field_name( 'frequency' ),
 	'row_class'    => 'row-nopad-top',

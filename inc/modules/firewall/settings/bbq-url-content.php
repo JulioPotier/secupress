@@ -26,7 +26,7 @@ $this->add_field( array(
 
 $this->add_field( array(
 	'title'        => __( 'Bad Contents List', 'secupress' ),
-	'description'  => __( 'We will automatically block any request containing any of these keywords.', 'secupress' ),
+	'description'  => __( 'Block any request containing any of these keywords automatically.', 'secupress' ),
 	'depends'      => $main_field_name,
 	'label_for'    => $this->get_field_name( 'bad-contents-list' ),
 	'type'         => 'textarea',

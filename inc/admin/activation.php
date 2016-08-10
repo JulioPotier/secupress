@@ -303,7 +303,7 @@ function secupress_maybe_remove_rules_on_deactivation() {
 			$message  = sprintf( __( '%s: ', 'secupress' ), SECUPRESS_PLUGIN_NAME );
 			$message .= sprintf(
 				/* translators: 1 and 2 are small parts of code, 3 is a file name. */
-				__( 'It seems your %3$s file is not writable. You have to edit the file manually. Please remove all rules between %1$s and %2$s from the %3$s file.', 'secupress' ),
+				__( 'It seems your %3$s file does not seem to be writable. You have to edit the file manually. Please remove all rules between %1$s and %2$s from the %3$s file.', 'secupress' ),
 				'<code># BEGIN SecuPress</code>',
 				'<code># END SecuPress</code>',
 				'<code>.htaccess</code>'
@@ -345,7 +345,7 @@ function secupress_maybe_remove_rules_on_deactivation() {
 		$message  = sprintf( __( '%s: ', 'secupress' ), SECUPRESS_PLUGIN_NAME );
 		$message .= sprintf(
 			/* translators: 1 is a small part of code, 2 is a file name. */
-			__( 'It seems your %2$s file is not writable. You have to edit the file manually. Please remove all rules with %1$s from the %2$s file.', 'secupress' ),
+			__( 'It seems your %2$s file does not seem to be writable. You have to edit the file manually. Please remove all rules with %1$s from the %2$s file.', 'secupress' ),
 			'<code>SecuPress</code>',
 			'<code>web.config</code>'
 		);

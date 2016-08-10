@@ -42,7 +42,7 @@ $this->add_field( array(
 	'helpers' => array(
 		array(
 			'type'        => 'warning',
-			'description' => ! secupress_is_site_ssl() ? __( 'If your website is not served over SSL, this feature cannot be used.', 'secupress' ) : null,
+			'description' => ! secupress_is_site_ssl() ? __( 'This feature is available only for sites with SSL.', 'secupress' ) : null,
 		),
 	),
 ) );
@@ -62,14 +62,14 @@ if ( $is_plugin_active && function_exists( 'secupress_hotlink_get_apache_rules' 
 	// Apache.
 	elseif ( $is_apache && ! secupress_root_file_is_writable( '.htaccess' ) ) {
 		/* translators: %s is a file name */
-		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code inside:', 'secupress' ), '<code>.htaccess</code>' );
+		$message = sprintf( __( 'Your %s file does not seem to be writable, you need to add the following code inside:', 'secupress' ), '<code>.htaccess</code>' );
 		$rules   = secupress_hotlink_get_apache_rules();
 		$rules   = "# BEGIN SecuPress hotlink\n$rules\n# END SecuPress";
 	}
 	// IIS7.
 	elseif ( $is_iis7 && ! secupress_root_file_is_writable( 'web.config' ) ) {
 		/* translators: %s is a file name */
-		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code inside:', 'secupress' ), '<code>web.config</code>' );
+		$message = sprintf( __( 'Your %s file does not seem to be writable, you need to add the following code inside:', 'secupress' ), '<code>web.config</code>' );
 		$rules   = secupress_hotlink_get_iis7_rules();
 	}
 

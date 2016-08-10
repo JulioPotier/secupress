@@ -84,14 +84,14 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 			/* translators: %s is a file name */
 			2   => sprintf( __( 'The %s file is now protected from revealing your <strong>WordPress version</strong>.', 'secupress' ), '<code>readme.html</code>' ),
 			/* translators: 1 is a file name */
-			3   => __( 'As the rules against the <strong>PHP version</strong> disclosure added to your %s file do not seem to work, another method has been used has been activated to remove this information in some other way.', 'secupress' ),
+			3   => __( 'As the rules against the <strong>PHP version</strong> disclosure added to your %s file do not seem to work, another method has been used to remove this information.', 'secupress' ),
 			4   => __( 'The generator meta tag should not be displayed anymore.', 'secupress' ),
 			5   => __( 'The <strong>WordPress version</strong> should now be removed from your styles URL.', 'secupress' ),
 			6   => __( 'The <strong>WordPress version</strong> should now be removed from your scripts URL.', 'secupress' ),
 			// "warning"
-			100 => __( 'Unable to determine status of your homepage, it may still disclose your <strong>WordPress version</strong>.', 'secupress' ),
+			100 => __( 'Unable to determine if your homepage is still disclosing your <strong>WordPress version</strong>.', 'secupress' ),
 			/* translators: %s is an URL */
-			101 => sprintf( __( 'Unable to determine status of %s, it may still disclose your <strong>WordPress version</strong>.', 'secupress' ), '<code>readme.html</code>' ),
+			101 => sprintf( __( 'Unable to determine is %s is still disclosing your <strong>WordPress version</strong>.', 'secupress' ), '<code>readme.html</code>' ),
 			// "bad"
 			200 => __( 'The website displays the <strong>PHP version</strong> in the request headers.', 'secupress' ),
 			201 => __( 'The website displays the <strong>WordPress version</strong> in the homepage source code (%s).', 'secupress' ),

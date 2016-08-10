@@ -41,7 +41,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 		/** Translators: %s is a file name. */
 		$this->title    = sprintf( __( 'Check your %s file, especially the PHP constants.', 'secupress' ), '<code>wp-config.php</code>' );
 		/** Translators: %s is a file name. */
-		$this->more     = sprintf( __( 'You can use the %s file to improve the security of your website. Learn about the best practice with this test.', 'secupress' ), '<code>wp-config.php</code>' );
+		$this->more     = sprintf( __( 'You can use the %s file to improve the security of your website.', 'secupress' ), '<code>wp-config.php</code>' );
 		/** Translators: %s is a file name. */
 		$this->more_fix = sprintf( __( 'Set some PHP constants in your %s file to improve the security of your website.', 'secupress' ), '<code>wp-config.php</code>' );
 	}
@@ -62,7 +62,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 			/** Translators: %s is a file name. */
 			0   => sprintf( __( 'Your %s file is correct.', 'secupress' ), '<code>wp-config.php</code>' ),
 			/** Translators: %s is a constant name. */
-			1   => sprintf( __( 'A Must Use plugin has been added in order to change the default value for %s.', 'secupress' ), '<code>COOKIEHASH</code>' ),
+			1   => sprintf( __( 'A <a href="https://codex.wordpress.org/Must_Use_Plugins" hreflang="en">must-use plugin</a> has been added in order to change the default value for %s.', 'secupress' ), '<code>COOKIEHASH</code>' ),
 			// "warning"
 			100 => __( 'This fix is <strong>pending</strong>, please reload the page to apply it now.', 'secupress' ),
 			// "bad"
