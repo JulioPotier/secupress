@@ -93,7 +93,7 @@ if ( ! $secupress_tests ) {
 	$steps_counter =
 		'<span class="secupress-step-by-step secupress-flex hide-if-no-js">' .
 		/** Translators: Params are numbers like "1 of 3" */
-			sprintf( __( '%1$s of %2$s', 'secupress' ), '<span class="text step3-advanced-text">1</span>', '<span class="text">' . $nb_actions . '</span>' )
+			sprintf( __( '%1$s of %2$s', 'secupress' ), '<span class="text step3-advanced-text">1</span>', '<span class="text">' . $nb_actions . '</span>' ) .
 		'</span>';
 	$main_button   =
 		'<a href="' . esc_url( secupress_admin_url( 'scanners' ) ) . '&step=4" class="secupress-button shadow light">
