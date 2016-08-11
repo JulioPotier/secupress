@@ -56,6 +56,17 @@ function secupress_get_modules() {
 				__( 'Preserve your data and avoid losing your content in case of attack.', 'secupress' ),
 			),
 		),
+		'firewall'     => array(
+			'title'       => __( 'Firewall', 'secupress' ),
+			'icon'        => 'firewall',
+			'summaries'   => array(
+				'small'  => __( 'Block bad requests', 'secupress' ),
+				'normal' => __( 'Malicious requests are badly common. All incoming requests containing bad stuff will be checked and quietly blocked.', 'secupress' ),
+			),
+			'description' => array(
+				__( 'Malicious requests are badly common. All incoming requests containing bad stuff will be checked and quietly blocked.', 'secupress' ),
+			),
+		),
 		'file-system'     => array(
 			'title'       => __( 'Malware Scan', 'secupress' ),
 			'icon'        => 'file-system',
@@ -66,18 +77,6 @@ function secupress_get_modules() {
 			'with_form'   => false,
 			'description' => array(
 				__( 'Check file permissions, run monitoring and antivirus on your installation to verify files integrity.', 'secupress' ),
-			),
-			'mark_as_pro' => $should_be_pro,
-		),
-		'firewall'     => array(
-			'title'       => __( 'Firewall', 'secupress' ),
-			'icon'        => 'firewall',
-			'summaries'   => array(
-				'small'  => __( 'Block bad requests', 'secupress' ),
-				'normal' => __( 'Malicious requests are badly common. All incoming requests containing bad stuff will be checked and quietly blocked.', 'secupress' ),
-			),
-			'description' => array(
-				__( 'Malicious requests are badly common. All incoming requests containing bad stuff will be checked and quietly blocked.', 'secupress' ),
 			),
 			'mark_as_pro' => $should_be_pro,
 		),
@@ -93,6 +92,7 @@ function secupress_get_modules() {
 				__( 'Reduce the risks to lose your content because of an attack by backuping your database and your files.', 'secupress' ),
 				sprintf( __( 'Don\'t forget to <a href="%s">schedule backups</a> as soon as possible.', 'secupress' ), esc_url( secupress_admin_url( 'modules', 'schedules' ) ) ),
 			),
+			'mark_as_pro' => $should_be_pro,
 		),
 		'antispam'        => array(
 			'title'       => __( 'Anti Spam', 'secupress' ),
@@ -106,18 +106,6 @@ function secupress_get_modules() {
 				sprintf( __( 'Do not forget to visit the <a href="%s">Settings &rsaquo; Discussion</a> area to add words to the blacklist and other usual settings regarding comments.', 'secupress' ), esc_url( admin_url( 'options-discussion.php' ) ) ),
 				__( 'By default, identity usurpation is blocked, so if someone tries to comment using your email/name, the comment will be blocked.', 'secupress' ),
 				__( 'Also by default, bad IPs are blocked, author name, email and website url known as spammer.', 'secupress' ),
-			),
-		),
-		'logs'            => array(
-			'title'       => _x( 'Logs', 'post type general name', 'secupress' ),
-			'icon'        => 'logs',
-			'summaries'   => array(
-				'small'  => __( 'Watch everything', 'secupress' ),
-				'normal' => __( 'Keep an eye on what happened on your website at any time. Also, control banned IPs from our modules here.', 'secupress' ),
-			),
-			'with_form'   => false,
-			'description' => array(
-				__( 'Keep an eye on what happened on your website at any time. Also, control banned IPs from our modules here.', 'secupress' ),
 			),
 			'mark_as_pro' => $should_be_pro,
 		),
@@ -144,6 +132,18 @@ function secupress_get_modules() {
 				sprintf( __( 'Let %s scan your website when you are away by using recurent scans.', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
 			),
 			'mark_as_pro' => $should_be_pro,
+		),
+		'logs'            => array(
+			'title'       => _x( 'Logs', 'post type general name', 'secupress' ),
+			'icon'        => 'logs',
+			'summaries'   => array(
+				'small'  => __( 'Watch everything', 'secupress' ),
+				'normal' => __( 'Keep an eye on what happened on your website at any time. Also, control banned IPs from our modules here.', 'secupress' ),
+			),
+			'with_form'   => false,
+			'description' => array(
+				__( 'Keep an eye on what happened on your website at any time. Also, control banned IPs from our modules here.', 'secupress' ),
+			),
 		),
 		'services'        => array(
 			'title'       => __( 'Services', 'secupress' ),

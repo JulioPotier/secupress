@@ -823,32 +823,18 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	protected function backup_history() {
-		$backup_files = secupress_get_backup_file_list();
+		if ( ! secupress_is_pro() ) {
 		?>
 		<p id="secupress-no-backups"<?php echo $backup_files ? ' class="hidden"' : ''; ?>><em><?php _e( 'No Backups found yet, do one?', 'secupress' ); ?></em></p>
-
-		<form id="form-delete-backups"<?php echo ! $backup_files ? ' class="hidden"' : ''; ?> action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_delete_backups' ), 'secupress_delete_backups' ) ); ?>" method="post">
-
-			<strong id="secupress-available-backups"><?php printf( _n( '%s available Backup', '%s available Backups', count( $backup_files ), 'secupress' ), number_format_i18n( count( $backup_files ) ) ); ?></strong>
-
-			<fieldset class="secupress-boxed-group">
-				<legend class="screen-reader-text"><span><?php esc_html_e( 'Backups', 'secupress' ); ?></span></legend>
-				<?php array_map( 'secupress_print_backup_file_formated', array_reverse( $backup_files ) ); ?>
-			</fieldset>
-
-			<p class="submit">
-				<button class="secupress-button secupress-button-secondary alignright" type="submit" id="submit-delete-backups">
-					<span class="icon">
-						<i class="icon-cross"></i>
-					</span>
-					<span class="text">
-						<?php esc_html_e( 'Delete all Backups', 'secupress' ); ?>
-					</span>
-				</button>
-			</p>
-
-		</form>
 		<?php
+		} else {
+			/**
+			 * Fires when SecuPress Pro loads the method backup_history.
+			 *
+			 * @since 1.0
+			 */
+	 		do_action( 'secupress.settings.field.backup_history' );
+		}
 	}
 
 
@@ -858,45 +844,26 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	protected function backup_db() {
-		$wp_tables    = secupress_get_wp_tables();
-		$other_tables = secupress_get_non_wp_tables();
+		if ( ! secupress_is_pro() ) {
 		?>
-		<form action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_backup_db' ), 'secupress_backup_db' ) ); ?>" id="form-do-db-backup" method="post">
-
-			<fieldset class="secupress-boxed-group">
-				<legend class="screen-reader-text"><span><?php esc_html_e( 'DataBase Tables', 'secupress' ); ?></span></legend>
-
-				<b><?php _e( 'Unknown tables', 'secupress' ); ?></b>
-				<br>
-				<?php
-				foreach ( $other_tables as $table ) {
-					echo '<label><input checked="checked" name="other_tables[]" type="checkbox" class="secupress-checkbox secupress-checkbox-mini"> <span class="label-text">' . $table . '</span></label><br>';
-				}
-				?>
-				<hr>
-				<b><?php _e( 'WordPress tables (mandatory)', 'secupress' ); ?></b>
-				<br>
-				<?php
-				foreach ( $wp_tables as $table ) {
-					echo '<label><input disabled="disabled" checked="checked" type="checkbox" class="secupress-checkbox secupress-checkbox-mini"> <span class="label-text">' . $table . '</span></label><br>';
-				}
-				?>
-			</fieldset>
-
-			<p class="submit">
-				<button class="secupress-button" type="submit" data-original-i18n="<?php esc_attr_e( 'Backup my Database', 'secupress' ); ?>" data-loading-i18n="<?php esc_attr_e( 'Backuping&hellip;', 'secupress' ); ?>" id="submit-backup-db">
-					<span class="icon">
-						<i class="icon-download"></i>
-					</span>
-					<span class="text">
-						<?php esc_html_e( 'Backup my Database', 'secupress' ); ?>
-					</span>
-				</button>
-				<span class="spinner secupress-inline-spinner"></span>
-			</p>
-
-		</form>
+		<p class="submit">
+			<button disabled="disabled" class="secupress-button">
+				<span class="icon">
+					<i class="icon-download"></i>
+				</span>
+				<span class="text">
+					<?php esc_html_e( 'Backup my Database', 'secupress' ); ?>
+				</span>
+			</button>
 		<?php
+		} else {
+			/**
+			 * Fires when SecuPress Pro loads the method backup_db.
+			 *
+			 * @since 1.0
+			 */
+	 		do_action( 'secupress.settings.field.backup_db' );
+		}
 	}
 
 
@@ -906,35 +873,27 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	protected function backup_files() {
-		$disabled            = disabled( ! secupress_is_pro(), true, false );
-		$ignored_directories = get_site_option( 'secupress_file-backups_settings' );
-		$ignored_directories = ! empty( $ignored_directories['ignored_directories'] ) ? $ignored_directories['ignored_directories'] : '';
+		if ( ! secupress_is_pro() ) {
 		?>
-		<form action="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_backup_files' ), 'secupress_backup_files' ) ); ?>" id="form-do-files-backup" method="post">
-
-			<fieldset>
-				<legend><strong><label for="ignored_directories"><?php _e( 'Do not backup the following files and folders:', 'secupress' ); ?></label></strong></legend>
-				<br>
-				<textarea id="ignored_directories" name="ignored_directories" cols="50" rows="5"<?php echo $disabled; ?>><?php echo esc_textarea( $ignored_directories ); ?></textarea>
-				<p class="description">
-					<?php _e( 'One file or folder per line.', 'secupress' ); ?>
-				</p>
-			</fieldset>
-
-			<p class="submit">
-				<button class="secupress-button" type="submit" data-original-i18n="<?php esc_attr_e( 'Backup my Files', 'secupress' ); ?>" data-loading-i18n="<?php esc_attr_e( 'Backuping&hellip;', 'secupress' ); ?>" id="submit-backup-files"<?php echo $disabled; ?>>
-					<span class="icon">
-						<i class="icon-download"></i>
-					</span>
-					<span class="text">
-						<?php esc_html_e( 'Backup my Files', 'secupress' ); ?>
-					</span>
-				</button>
-				<span class="spinner secupress-inline-spinner"></span>
-			</p>
-
-		</form>
+		<p class="submit">
+			<button disabled="disabled" class="secupress-button">
+				<span class="icon">
+					<i class="icon-download"></i>
+				</span>
+				<span class="text">
+					<?php esc_html_e( 'Backup my Files', 'secupress' ); ?>
+				</span>
+			</button>
+		</p>
 		<?php
+		} else {
+			/**
+			 * Fires when SecuPress Pro loads the method backup_files.
+			 *
+			 * @since 1.0
+			 */
+	 		do_action( 'secupress.settings.field.backup_files' );
+		}
 	}
 
 
@@ -952,7 +911,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			<?php
 		} else {
 			/**
-			 * Fires when SecuPress Pro loads this field.
+			 * Fires when SecuPress Pro loads the method file_scanner.
 			 *
 			 * @since 1.0
 			 */

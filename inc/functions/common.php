@@ -833,6 +833,8 @@ function secupress_feature_is_pro( $feature ) {
 		'file-scanner_file-scanner'              => 1,
 		'bad-file-extensions_activated'          => 1,
 		'backup-files_backup-file'               => 1,
+		'backup-db_backup-db'                    => 1,
+		'backup-history_backup-history'          => 1,
 		'import-export_export_settings'          => 1,
 		'import-export_import_settings'          => 1,
 		'geoip-system_type'                      => 1,
@@ -849,21 +851,16 @@ function secupress_feature_is_pro( $feature ) {
 		'schedules-file-monitoring_periodicity'  => 1,
 		'schedules-file-monitoring_email'        => 1,
 		'schedules-file-monitoring_scheduled'    => 1,
+		'notification-types_types'               => 1,
+		'alerts_activated'                       => 1,
+		'antispam_antispam'                      => 1,
+		'backups-storage_location'               => 1,
 		// Field values.
-		'notification-types_types|sms'           => 1,
-		'notification-types_types|push'          => 1,
-		'notification-types_types|slack'         => 1,
-		'notification-types_types|twitter'       => 1,
 		'login-protection_type|nonlogintimeslot' => 1,
-		'backups-storage_location|ftp'           => 1,
-		'backups-storage_location|amazons3'      => 1,
-		'backups-storage_location|dropbox'       => 1,
-		'backups-storage_location|rackspace'     => 1,
 	);
 
 	return isset( $features[ $feature ] );
 }
-
 
 /**
  * Tell if a user is affected by its role for the asked module.

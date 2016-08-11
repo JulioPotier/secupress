@@ -21,7 +21,7 @@ $this->add_field( array(
 	'name'         => $activated_field_name,
 	'type'         => 'checkboxes',
 	'label_screen' => __( 'How to alert you?', 'secupress' ),
-	'options'      => secupress_alert_types_labels( true ),
+	'options'      => secupress_alert_types_labels(),
 	'helpers'      => array(
 		array(
 			'type'        => 'help',
