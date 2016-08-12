@@ -77,7 +77,7 @@ class SecuPress_Alerts extends SecuPress_Singleton {
 			return static::$types;
 		}
 
-		$defaults = array_flip( secupress_alert_types_labels( secupress_is_pro() ) );
+		$defaults = array_flip( secupress_alert_types_labels() );
 
 		static::$types = secupress_get_module_option( 'notification-types_types', array(), 'alerts' );
 		static::$types = array_intersect( static::$types, $defaults );

@@ -6,23 +6,16 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  *
  * @since 1.0
  *
- * @param (bool) $all Set to `true` to return all free and pro types. Will return only free types otherwise.
- *
  * @return (array) Return an array with identifiers as keys and field labels as values.
  */
-function secupress_alert_types_labels( $all = false ) {
-	if ( ! $all ) {
-		return array(
-			'email' => __( 'Email', 'secupress' ),
-		);
-	}
+function secupress_alert_types_labels() {
 
 	return array(
 		'email'   => __( 'Email', 'secupress' ),
-		'sms'     => __( 'SMS', 'secupress' ),
-		'push'    => __( 'Push notification', 'secupress' ),
-		'slack'   => __( 'Slack', 'secupress' ),
-		'twitter' => __( 'Twitter', 'secupress' ),
+		//// 'twitter' => __( 'Twitter', 'secupress' ),
+		//// 'slack'   => __( 'Slack', 'secupress' ),
+		//// 'sms'     => __( 'SMS', 'secupress' ),
+		//// 'push'    => __( 'Push notification', 'secupress' ),
 	);
 }
 

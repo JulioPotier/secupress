@@ -19,7 +19,7 @@ $this->add_field( array(
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'Used on your front-end, back-end and the login form.', 'secupress' ),
+			'description' => __( 'Used on your all WordPress pages.', 'secupress' ),
 		),
 		array(
 			'type'        => 'help',
