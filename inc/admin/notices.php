@@ -1,6 +1,48 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
+add_action( 'current_screen', '_secupress_http_block_external_notice' );
+/**
+ * This notice is displayed when external HTTP requests are blocked via the WP_HTTP_BLOCK_EXTERNAL constant
+ *
+ * @since 1.0
+ * @author Julio Potier
+ */
+function _secupress_http_block_external_notice() {
+	global $current_screen;
+
+	if ( ! current_user_can( secupress_get_capability() ) ) {
+		return;
+	}
+
+	$is_accessible = defined( 'WP_ACCESSIBLE_HOSTS' ) && strpos( WP_ACCESSIBLE_HOSTS, '*.secupress.me' ) !== false;
+
+	// war_dump( $is_accessible );
+	if ( $is_accessible || ! defined( 'WP_HTTP_BLOCK_EXTERNAL' ) || ( isset( $current_screen )
+		&& 'toplevel_page_' . SECUPRESS_PLUGIN_SLUG . '_scanners' !== $current_screen->base
+		&& 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' !== $current_screen->base
+		&& 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' !== $current_screen->base
+		&& 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_logs' !== $current_screen->base )
+		|| SecuPress_Admin_Notices::is_dismissed( 'http-block-external' )
+		) {
+		return;
+	}
+
+	$message = '
+		<div>
+			<p><strong>' . sprintf( __( '%s: The external HTTP requests are blocked!', 'secupress' ), SECUPRESS_PLUGIN_NAME ) . '</strong></p>' .
+			'<p>' . __( 'You defined the <code>WP_HTTP_BLOCK_EXTERNAL</code> constant in the <code>wp-config.php</code> to block all external HTTP requests.', 'secupress' ) . '</p>' .
+			'<p>' .
+			sprintf( __( 'To make %s working well, you have to either remove the PHP constant, or add or merge the following code in your <code>wp-config.php</code> file.', 'secupress' ), SECUPRESS_PLUGIN_NAME ) . '<br/>' .
+			__( 'Click on the field and press Ctrl-A to select all.', 'secupress' ) .
+			'</p>' .
+			'<p><textarea readonly="readonly" class="large-text readonly" rows="1">define( \'WP_ACCESSIBLE_HOSTS\', \'*.secupress.me\' );</textarea></p>' .
+		'</div>';
+
+	secupress_add_notice( $message, 'error', 'http-block-external' );
+}
+
+
 add_action( 'admin_init', 'secupress_plugins_to_deactivate' );
 /**
  * This warning is displayed when some plugins may conflict with SecuPress.
