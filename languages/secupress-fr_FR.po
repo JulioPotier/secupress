@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2016-08-09 16:13+0200\n"
-"PO-Revision-Date: 2016-08-09 16:15+0200\n"
+"POT-Creation-Date: 2016-08-12 18:13+0200\n"
+"PO-Revision-Date: 2016-08-12 18:13+0200\n"
 "Last-Translator: WP Media <contact@wp-media.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -97,8 +97,6 @@ msgstr ""
 #: inc/admin/notices.php:240
 #: inc/modules/logs/plugins/inc/php/404-logs/class-secupress-404-log.php:65
 #: inc/modules/logs/plugins/inc/php/404-logs/class-secupress-404-log.php:66
-#: inc/modules/users-login/callbacks.php:253
-#: inc/modules/users-login/callbacks.php:259
 #: inc/modules/users-login/plugins/inc/php/move-login/admin.php:20
 #: inc/modules/users-login/plugins/inc/php/move-login/admin.php:26
 #: inc/modules/users-login/plugins/inc/php/move-login/admin.php:165
@@ -171,6 +169,8 @@ msgstr "L'adresse IP %s a été bannie."
 
 #: inc/admin/ajax-post-callbacks.php:231
 #: inc/classes/settings/class-secupress-settings-modules.php:668
+#: inc/modules/get-pro/settings.php:56 inc/modules/get-pro/settings.php:85
+#: inc/modules/get-pro/settings.php:114
 msgid "Forever"
 msgstr "Pour toujours"
 
@@ -228,7 +228,7 @@ msgstr ""
 "Le trafic réalisé par les bots représente environ 60% d'Internet. Les spams "
 "sont fait par ces bots. Ne les laissez pas faire ça&nbsp;!"
 
-#: inc/admin/functions/admin.php:224 inc/functions/modules.php:125
+#: inc/admin/functions/admin.php:224 inc/functions/modules.php:113
 msgid "Alerts"
 msgstr "Alertes"
 
@@ -249,7 +249,7 @@ msgstr ""
 #: inc/classes/scanners/class-secupress-scan-block-long-url.php:55
 #: inc/classes/scanners/class-secupress-scan-common-flaws.php:46
 #: inc/classes/scanners/class-secupress-scan-sqli.php:46
-#: inc/functions/modules.php:73
+#: inc/functions/modules.php:60
 msgid "Firewall"
 msgstr "Pare-feu"
 
@@ -913,8 +913,8 @@ msgstr "Découvrez toutes les fonctionnalités"
 msgid "Manage your recurring scans"
 msgstr "Planifiez vos scans automatiques"
 
-#: inc/admin/scanner-step-4.php:327 inc/functions/modules.php:141
-#: inc/functions/modules.php:144
+#: inc/admin/scanner-step-4.php:327 inc/functions/modules.php:129
+#: inc/functions/modules.php:132
 #, php-format
 msgid "Let %s scan your website when you are away by using recurent scans."
 msgstr ""
@@ -1440,7 +1440,7 @@ msgid "View"
 msgstr "Voir"
 
 #: inc/classes/common/class-secupress-logs-list.php:150
-#: inc/functions/modules.php:115
+#: inc/functions/modules.php:140
 msgid "Watch everything"
 msgstr "Surveillez tout"
 
@@ -1478,7 +1478,7 @@ msgstr "Supprimer les journaux avec cette IP"
 #: inc/classes/common/class-secupress-logs.php:493
 #: inc/classes/common/class-secupress-logs.php:667
 #: inc/classes/common/class-secupress-logs.php:668
-#: inc/functions/modules.php:112 inc/modules/logs/settings/logs.php:7
+#: inc/functions/modules.php:137 inc/modules/logs/settings/logs.php:7
 msgctxt "post type general name"
 msgid "Logs"
 msgstr "Journaux"
@@ -2984,12 +2984,10 @@ msgid "Renaming a table is not rollbackable."
 msgstr "Le renommage d'une table n'a pas de retour arrière possible."
 
 #: inc/classes/scanners/class-secupress-scan-db-prefix.php:242
-#: inc/classes/settings/class-secupress-settings-modules.php:869
 msgid "Unknown tables"
 msgstr "Tables inconnues"
 
 #: inc/classes/scanners/class-secupress-scan-db-prefix.php:246
-#: inc/classes/settings/class-secupress-settings-modules.php:877
 msgid "WordPress tables (mandatory)"
 msgstr "Tables de WordPress (obligatoires)"
 
@@ -4488,45 +4486,15 @@ msgstr "Envoyer"
 msgid "No Backups found yet, do one?"
 msgstr "Aucune sauvegarde trouvée, en faire une&nbsp;?"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:832
-#: inc/modules/backups/callbacks.php:79 inc/modules/backups/callbacks.php:168
-#, php-format
-msgid "%s available Backup"
-msgid_plural "%s available Backups"
-msgstr[0] "%s sauvegarde disponible"
-msgstr[1] "%s sauvegardes disponibles."
-
-#: inc/classes/settings/class-secupress-settings-modules.php:835
-#: inc/functions/modules.php:85
-#: inc/modules/schedules/settings/schedules-backups.php:6
-msgid "Backups"
-msgstr "Sauvegardes"
-
-#: inc/classes/settings/class-secupress-settings-modules.php:845
-msgid "Delete all Backups"
-msgstr "Supprimer toutes les sauvegardes"
-
-#: inc/classes/settings/class-secupress-settings-modules.php:867
-msgid "DataBase Tables"
-msgstr "Tables de la base données"
-
-#: inc/classes/settings/class-secupress-settings-modules.php:892
+#: inc/classes/settings/class-secupress-settings-modules.php:855
 msgid "Backup my Database"
 msgstr "Sauvegarder ma base de données"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:916
-msgid "Do not backup the following files and folders:"
-msgstr "Ne pas sauvegarder les fichiers et dossiers suivants&nbsp;"
-
-#: inc/classes/settings/class-secupress-settings-modules.php:920
-msgid "One file or folder per line."
-msgstr "Un fichier ou dossier par ligne."
-
-#: inc/classes/settings/class-secupress-settings-modules.php:930
+#: inc/classes/settings/class-secupress-settings-modules.php:884
 msgid "Backup my Files"
 msgstr "Sauvegarder mes fichiers"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:950
+#: inc/classes/settings/class-secupress-settings-modules.php:909
 msgid "Search for malicious files"
 msgstr "Chercher les fichiers malicieux"
 
@@ -4808,27 +4776,11 @@ msgstr "Gardez vos données en sécurité"
 msgid "Preserve your data and avoid losing your content in case of attack."
 msgstr "Préserve vos données et évite la perte de contenu en cas d'attaque."
 
-#: inc/functions/modules.php:60
-msgid "Malware Scan"
-msgstr "Scanner de virus"
-
 #: inc/functions/modules.php:63
-msgid "Permissions &amp; Antivirus"
-msgstr "Droits &amp; Antivirus"
-
-#: inc/functions/modules.php:64 inc/functions/modules.php:68
-msgid ""
-"Check file permissions, run monitoring and antivirus on your installation to "
-"verify files integrity."
-msgstr ""
-"Vérifie les droits sur les fichiers, lance des surveillance et un antivirus "
-"sur votre installation pour vérifier l'intégrité de vos fichiers."
-
-#: inc/functions/modules.php:76
 msgid "Block bad requests"
 msgstr "Bloque les mauvaises requêtes"
 
-#: inc/functions/modules.php:77 inc/functions/modules.php:80
+#: inc/functions/modules.php:64 inc/functions/modules.php:67
 msgid ""
 "Malicious requests are badly common. All incoming requests containing bad "
 "stuff will be checked and quietly blocked."
@@ -4837,11 +4789,32 @@ msgstr ""
 "entrantes contenant des mauvais choses seront vérifiées et bloquées "
 "silencieusement."
 
-#: inc/functions/modules.php:88
+#: inc/functions/modules.php:71
+msgid "Malware Scan"
+msgstr "Scanner de virus"
+
+#: inc/functions/modules.php:74
+msgid "Permissions &amp; Antivirus"
+msgstr "Droits &amp; Antivirus"
+
+#: inc/functions/modules.php:75 inc/functions/modules.php:79
+msgid ""
+"Check file permissions, run monitoring and antivirus on your installation to "
+"verify files integrity."
+msgstr ""
+"Vérifie les droits sur les fichiers, lance des surveillance et un antivirus "
+"sur votre installation pour vérifier l'intégrité de vos fichiers."
+
+#: inc/functions/modules.php:84
+#: inc/modules/schedules/settings/schedules-backups.php:6
+msgid "Backups"
+msgstr "Sauvegardes"
+
+#: inc/functions/modules.php:87
 msgid "Never lose anything"
 msgstr "Ne perdez plus jamais rien"
 
-#: inc/functions/modules.php:89 inc/functions/modules.php:93
+#: inc/functions/modules.php:88 inc/functions/modules.php:92
 msgid ""
 "Reduce the risks to lose your content because of an attack by backuping your "
 "database and your files."
@@ -4849,7 +4822,7 @@ msgstr ""
 "Réduisez le risque de perdre votre contenu à cause d'une attaque en "
 "sauvegardant votre base de données et vos fichiers."
 
-#: inc/functions/modules.php:94
+#: inc/functions/modules.php:93
 #, php-format
 msgid ""
 "Don't forget to <a href=\"%s\">schedule backups</a> as soon as possible."
@@ -4900,19 +4873,11 @@ msgstr ""
 "Aussi par défaut, les mauvaises adresses IP sont bloquées, les noms "
 "d'auteur, email et sites web connus en tant que spammers."
 
-#: inc/functions/modules.php:116 inc/functions/modules.php:120
-msgid ""
-"Keep an eye on what happened on your website at any time. Also, control "
-"banned IPs from our modules here."
-msgstr ""
-"Gardez un oeil sur ce qui arrive sur votre site tout le temps. Aussi, "
-"contrôlez les adresses IP bannie depuis ce module."
-
-#: inc/functions/modules.php:128
+#: inc/functions/modules.php:116
 msgid "React quickly in case of attack"
 msgstr "Réagissez vite en cas d'attaque"
 
-#: inc/functions/modules.php:129 inc/functions/modules.php:132
+#: inc/functions/modules.php:117 inc/functions/modules.php:120
 msgid ""
 "Being alerted of some important events might help to react quickly in case "
 "of possible attacks."
@@ -4920,13 +4885,21 @@ msgstr ""
 "Être alerté(e) des évènements importants peut aider à réagir rapidement en "
 "cas de possibles attaques."
 
-#: inc/functions/modules.php:137
+#: inc/functions/modules.php:125
 msgid "Schedules"
 msgstr "Planifications"
 
-#: inc/functions/modules.php:140
+#: inc/functions/modules.php:128
 msgid "Automate all your tasks"
 msgstr "Automatisez toutes vos tâches"
+
+#: inc/functions/modules.php:141 inc/functions/modules.php:145
+msgid ""
+"Keep an eye on what happened on your website at any time. Also, control "
+"banned IPs from our modules here."
+msgstr ""
+"Gardez un oeil sur ce qui arrive sur votre site tout le temps. Aussi, "
+"contrôlez les adresses IP bannie depuis ce module."
 
 #: inc/functions/modules.php:149 inc/modules/services/settings/services.php:4
 msgid "Services"
@@ -4958,10 +4931,6 @@ msgid ""
 msgstr ""
 "Accédez à plus de modules et d'options pour faire de votre site web une "
 "machine sécurisée automatiquement."
-
-#: inc/modules/alerts/callbacks.php:84
-msgid "Notifications by email require at least two addresses."
-msgstr "La notification par email nécessite au moins deux adresses."
 
 #: inc/modules/alerts/plugins/inc/php/alerts/class-secupress-alerts.php:502
 #, php-format
@@ -5187,7 +5156,6 @@ msgid "One address per line."
 msgstr "Une adresse par ligne."
 
 #: inc/modules/alerts/settings/notification-types.php:55
-#: inc/modules/alerts/tools.php:22
 msgid "SMS"
 msgstr "SMS"
 
@@ -5196,7 +5164,6 @@ msgid "Phone number:"
 msgstr "Numéro de téléphone@nbsp;:"
 
 #: inc/modules/alerts/settings/notification-types.php:65
-#: inc/modules/alerts/tools.php:23
 msgid "Push notification"
 msgstr "Notification Mobile"
 
@@ -5207,40 +5174,19 @@ msgid "I don't know what I need yet:"
 msgstr "---"
 
 #: inc/modules/alerts/settings/notification-types.php:75
-#: inc/modules/alerts/tools.php:24
 msgid "Slack"
 msgstr "Slack"
 
 #: inc/modules/alerts/settings/notification-types.php:85
-#: inc/modules/alerts/tools.php:25
 msgid "Twitter"
 msgstr "Twitter"
 
-#: inc/modules/alerts/tools.php:16 inc/modules/alerts/tools.php:21
+#: inc/modules/alerts/tools.php:14
 #: inc/modules/schedules/settings/schedules-backups.php:35
 #: inc/modules/schedules/settings/schedules-file-monitoring.php:33
 #: inc/modules/schedules/settings/schedules-scan.php:33
 msgid "Email"
 msgstr "Email"
-
-#: inc/modules/antispam/plugins/fightspam.php:57
-#, php-format
-msgid ""
-"Can't process because this username or email belongs to a registered user. "
-"If it's you, %s."
-msgstr ""
-"Impossible de continue car le nom d'utilisateur et l'adresse email "
-"appartient à un membre du site. Si c'est vous, %s."
-
-#: inc/modules/antispam/plugins/fightspam.php:58
-msgid "please log in"
-msgstr "merci de vous connecter."
-
-#: inc/modules/antispam/plugins/fightspam.php:62
-msgid "You may want to copy your message before logging in:"
-msgstr ""
-"Vous pourriez vouloir une copie de votre message avant de vous "
-"connecter&nbsp;:"
 
 #: inc/modules/antispam/settings/antispam.php:6
 msgid "Anti Spam Rules"
@@ -5391,25 +5337,13 @@ msgid "It will also hide all Pingbacks & Trackbacks from your post comments."
 msgstr ""
 "Cela va aussi cacher tous les Pingbacks & Trackbacks de vos commentaires."
 
-#: inc/modules/backups/callbacks.php:209
+#: inc/modules/backups/callbacks.php:47
 msgid "Local"
 msgstr "Local"
 
-#: inc/modules/backups/callbacks.php:210
-msgid "FTP"
-msgstr "FTP"
-
-#: inc/modules/backups/callbacks.php:211
-msgid "Amazon S3"
-msgstr "Amazon S3"
-
-#: inc/modules/backups/callbacks.php:212
+#: inc/modules/backups/callbacks.php:48
 msgid "Dropbox"
 msgstr "Dropbox"
-
-#: inc/modules/backups/callbacks.php:213
-msgid "Rackspace Cloud"
-msgstr "Rackspace Cloud"
 
 #: inc/modules/backups/settings/backup-db.php:5
 msgid "Database Backups"
@@ -5456,7 +5390,7 @@ msgstr ""
 "Merci d'ajouter les règles suivantes dans votre fichier %1$s&nbsp;: %2$s."
 
 #: inc/modules/backups/settings/backups-storage.php:34
-#: inc/modules/backups/settings/backups-storage.php:40
+#: inc/modules/backups/settings/backups-storage.php:38
 msgid "Storage Location"
 msgstr "Lieu de stockage"
 
@@ -5464,12 +5398,12 @@ msgstr "Lieu de stockage"
 msgid "Where do you want to store you backups?"
 msgstr "Où souhaitez-vous stocker vos sauvegardes&nbsp;?"
 
-#: inc/modules/backups/settings/backups-storage.php:45
+#: inc/modules/backups/settings/backups-storage.php:43
 #, php-format
 msgid "Will be stored in %s. Please, delete them as soon as possible."
 msgstr "Seront stockées dans %s. Merci de les supprimer dès que possible."
 
-#: inc/modules/backups/settings/backups-storage.php:55
+#: inc/modules/backups/settings/backups-storage.php:53
 #, php-format
 msgid ""
 "Your FTP constants present in your %1$s file will be used, so, you have to "
@@ -5743,8 +5677,8 @@ msgid "Yes, use the Anti-Brute-Force on my website"
 msgstr "Oui, utiliser un Anti Brute-Force sur mon site"
 
 #: inc/modules/firewall/settings/bruteforce.php:22
-msgid "Used on your front-end, back-end and the login form."
-msgstr "Utilisé en front-office, back-office et formulaire de connexion."
+msgid "Used on your all WordPress pages."
+msgstr "Utilisé sur toutes les pages WordPress"
 
 #: inc/modules/firewall/settings/bruteforce.php:26
 msgid ""
@@ -5824,33 +5758,109 @@ msgid "Add or remove countries you want to manage for your website."
 msgstr ""
 "Ajouter ou supprimer les pays que vous souhaitez gérer pour votre site."
 
-#: inc/modules/get-pro/settings.php:26
+#: inc/modules/get-pro/settings.php:14
+msgid "Preorder Now Your SecuPress Pro and Get an Exclusive Discount"
+msgstr ""
+"Précommandez dès aujourd'hui votre SecuPress Pro et bénéficiez d'une remise "
+"exclusive"
+
+#: inc/modules/get-pro/settings.php:15
+msgid ""
+"Choose the licence that suits you the best and be part of the first users to "
+"get SecuPress Pro upon its release"
+msgstr ""
+"Choisissez la formule qui vous convient et faites partie des premiers "
+"utilisateurs de SecuPress Pro dès sa sortie"
+
+#: inc/modules/get-pro/settings.php:21
+#, php-format
+msgid "Improve Your Security Unlocking%sAll the Features from SecuPress Pro"
+msgstr ""
+"Améliorez votre sécurité en débloquant%stoutes les fonctionnalités de "
+"SecuPress Pro"
+
+#: inc/modules/get-pro/settings.php:25
 msgid "Yearly"
 msgstr "Annuellement"
 
-#: inc/modules/get-pro/settings.php:29
+#: inc/modules/get-pro/settings.php:28
 msgid "Monthly"
 msgstr "Mensuellement"
 
-#: inc/modules/get-pro/settings.php:30
+#: inc/modules/get-pro/settings.php:29
 msgid "Coming soon"
 msgstr "Bientôt"
 
-#: inc/modules/get-pro/settings.php:39
+#: inc/modules/get-pro/settings.php:38
 msgid "Lite"
 msgstr "Simple"
 
-#: inc/modules/get-pro/settings.php:68
+#: inc/modules/get-pro/settings.php:48 inc/modules/get-pro/settings.php:77
+#: inc/modules/get-pro/settings.php:106
+msgid "3 months for free"
+msgstr "3 mois gratuits"
+
+#: inc/modules/get-pro/settings.php:51 inc/modules/get-pro/settings.php:80
+#: inc/modules/get-pro/settings.php:109
+msgid "Billed per year"
+msgstr "Facturé à l'année"
+
+#: inc/modules/get-pro/settings.php:52 inc/modules/get-pro/settings.php:81
+#: inc/modules/get-pro/settings.php:110
+msgid "Billed per month"
+msgstr "Facturé au mois"
+
+#: inc/modules/get-pro/settings.php:54 inc/modules/get-pro/settings.php:83
+#: inc/modules/get-pro/settings.php:112
+msgid "Secure & Protect"
+msgstr "Sécurise et Protège"
+
+#: inc/modules/get-pro/settings.php:55
+msgid "1 Website"
+msgstr "1 site Web"
+
+#: inc/modules/get-pro/settings.php:60 inc/modules/get-pro/settings.php:89
+#: inc/modules/get-pro/settings.php:118
+msgid "Pre-Order"
+msgstr "Précommander"
+
+#: inc/modules/get-pro/settings.php:67
 msgid "Standard"
 msgstr "Standard"
 
-#: inc/modules/get-pro/settings.php:97
-msgid "Unlimited"
-msgstr "Illimitée"
+#: inc/modules/get-pro/settings.php:84
+msgid "3 Websites"
+msgstr "3 sites Web"
 
-#: inc/modules/get-pro/settings.php:125
-msgid "Included with all plans"
+#: inc/modules/get-pro/settings.php:96
+msgid "Plus"
+msgstr "Plus"
+
+#: inc/modules/get-pro/settings.php:113
+msgid "10 Websites"
+msgstr "10 sites Web"
+
+#: inc/modules/get-pro/settings.php:124
+msgid "Included With All Plans"
 msgstr "Inclus dans tous les plans"
+
+#: inc/modules/get-pro/settings.php:129
+msgid "Unlimited Support and Updates"
+msgstr "Support et mises à jour illimités"
+
+#: inc/modules/get-pro/settings.php:133 inc/modules/get-pro/settings.php:137
+#, php-format
+msgctxt "one line text please"
+msgid "Bonus %s on %s"
+msgstr "%s sur %s"
+
+#: inc/modules/get-pro/settings.php:133
+msgid "100 Mb for free"
+msgstr "100 Mo gratuits"
+
+#: inc/modules/get-pro/settings.php:137
+msgid "20% OFF"
+msgstr "20% de remise"
 
 #: inc/modules/logs/plugins/inc/php/404-logs/class-secupress-404-log.php:50
 #: inc/modules/logs/plugins/inc/php/404-logs/class-secupress-404-log.php:64
@@ -6837,72 +6847,6 @@ msgstr ""
 msgid "Submit the ticket"
 msgstr "Envoyer le ticket"
 
-#: inc/modules/users-login/callbacks.php:253
-#: inc/modules/users-login/callbacks.php:259
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:20
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:26
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:50
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:165
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:181
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:195
-#: inc/modules/users-login/settings/move-login.php:7
-msgid "Move Login"
-msgstr "Déplacer la page de connexion"
-
-#: inc/modules/users-login/callbacks.php:254
-#, php-format
-msgid "The slug %s is forbidden."
-msgid_plural "The slugs %s are forbidden."
-msgstr[0] "L'identifiant %s est interdit."
-msgstr[1] "Les identifiants %s sont interdits."
-
-#: inc/modules/users-login/callbacks.php:260
-msgid "The links can't have the same slugs."
-msgstr "Les liens ne peuvent pas avoir le même identifiants."
-
-#: inc/modules/users-login/callbacks.php:336
-msgid "Log in"
-msgstr "Se connecter"
-
-#: inc/modules/users-login/callbacks.php:337
-msgid "Log out"
-msgstr "Se déconnecter"
-
-#: inc/modules/users-login/callbacks.php:338
-msgid "Register"
-msgstr "S'inscrire"
-
-#: inc/modules/users-login/callbacks.php:339
-msgid "Lost Password"
-msgstr "Mot de passe perdu"
-
-#: inc/modules/users-login/callbacks.php:340
-msgid "Password Reset"
-msgstr "Réinitialiser le mot de passe"
-
-#: inc/modules/users-login/callbacks.php:374
-#: inc/modules/users-login/callbacks.php:391
-msgid "Display an error message"
-msgstr "Afficher un message d'erreur"
-
-#: inc/modules/users-login/callbacks.php:375
-#: inc/modules/users-login/callbacks.php:392
-msgid "Redirect to a \"Page Not Found\" error page"
-msgstr "Rediriger sur une page d'erreur \"Page non trouvée\""
-
-#: inc/modules/users-login/callbacks.php:376
-#: inc/modules/users-login/callbacks.php:393
-msgid "Redirect to the home page"
-msgstr "Rediriger sur la page d'accueil"
-
-#: inc/modules/users-login/callbacks.php:390
-msgid "Do nothing, redirect to the new login page"
-msgstr "Ne rien faire, rediriger sur la nouvelle page de connexion"
-
-#: inc/modules/users-login/callbacks.php:390
-msgid "not recommended"
-msgstr "non recommandé"
-
 #: inc/modules/users-login/plugins/ask-old-password.php:68
 #: inc/modules/users-login/plugins/ask-old-password.php:87
 #: inc/modules/users-login/plugins/ask-old-password.php:96
@@ -6987,6 +6931,16 @@ msgstr "[%s] Votre nom d'utilisateur"
 #: inc/modules/users-login/plugins/blacklist-logins.php:369
 msgid "Sorry, that username is not allowed."
 msgstr "Désolé, ce nom d'utilisateur n'est pas autorisé."
+
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:20
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:26
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:50
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:165
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:181
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:195
+#: inc/modules/users-login/settings/move-login.php:7
+msgid "Move Login"
+msgstr "Déplacer la page de connexion"
 
 #: inc/modules/users-login/plugins/inc/php/move-login/admin.php:21
 msgid ""
@@ -7459,6 +7413,100 @@ msgid ""
 msgstr ""
 "<strong>%1$s<strong> requiert WordPress v%2$s minimum, votre site utilise "
 "actuellement la version %3$s."
+
+#~ msgid "Bonus %s on %s"
+#~ msgstr "%s sur %s"
+
+#~ msgid "%s available Backup"
+#~ msgid_plural "%s available Backups"
+#~ msgstr[0] "%s sauvegarde disponible"
+#~ msgstr[1] "%s sauvegardes disponibles."
+
+#~ msgid "Delete all Backups"
+#~ msgstr "Supprimer toutes les sauvegardes"
+
+#~ msgid "DataBase Tables"
+#~ msgstr "Tables de la base données"
+
+#~ msgid "Do not backup the following files and folders:"
+#~ msgstr "Ne pas sauvegarder les fichiers et dossiers suivants&nbsp;"
+
+#~ msgid "One file or folder per line."
+#~ msgstr "Un fichier ou dossier par ligne."
+
+#~ msgid "Notifications by email require at least two addresses."
+#~ msgstr "La notification par email nécessite au moins deux adresses."
+
+#~ msgid ""
+#~ "Can't process because this username or email belongs to a registered "
+#~ "user. If it's you, %s."
+#~ msgstr ""
+#~ "Impossible de continue car le nom d'utilisateur et l'adresse email "
+#~ "appartient à un membre du site. Si c'est vous, %s."
+
+#~ msgid "please log in"
+#~ msgstr "merci de vous connecter."
+
+#~ msgid "You may want to copy your message before logging in:"
+#~ msgstr ""
+#~ "Vous pourriez vouloir une copie de votre message avant de vous "
+#~ "connecter&nbsp;:"
+
+#~ msgid "FTP"
+#~ msgstr "FTP"
+
+#~ msgid "Amazon S3"
+#~ msgstr "Amazon S3"
+
+#~ msgid "Rackspace Cloud"
+#~ msgstr "Rackspace Cloud"
+
+#~ msgid "Used on your front-end, back-end and the login form."
+#~ msgstr "Utilisé en front-office, back-office et formulaire de connexion."
+
+#~ msgid "Unlimited"
+#~ msgstr "Illimitée"
+
+#~ msgid "Included with all plans"
+#~ msgstr "Inclus dans tous les plans"
+
+#~ msgid "The slug %s is forbidden."
+#~ msgid_plural "The slugs %s are forbidden."
+#~ msgstr[0] "L'identifiant %s est interdit."
+#~ msgstr[1] "Les identifiants %s sont interdits."
+
+#~ msgid "The links can't have the same slugs."
+#~ msgstr "Les liens ne peuvent pas avoir le même identifiants."
+
+#~ msgid "Log in"
+#~ msgstr "Se connecter"
+
+#~ msgid "Log out"
+#~ msgstr "Se déconnecter"
+
+#~ msgid "Register"
+#~ msgstr "S'inscrire"
+
+#~ msgid "Lost Password"
+#~ msgstr "Mot de passe perdu"
+
+#~ msgid "Password Reset"
+#~ msgstr "Réinitialiser le mot de passe"
+
+#~ msgid "Display an error message"
+#~ msgstr "Afficher un message d'erreur"
+
+#~ msgid "Redirect to a \"Page Not Found\" error page"
+#~ msgstr "Rediriger sur une page d'erreur \"Page non trouvée\""
+
+#~ msgid "Redirect to the home page"
+#~ msgstr "Rediriger sur la page d'accueil"
+
+#~ msgid "Do nothing, redirect to the new login page"
+#~ msgstr "Ne rien faire, rediriger sur la nouvelle page de connexion"
+
+#~ msgid "not recommended"
+#~ msgstr "non recommandé"
 
 #~ msgid ""
 #~ "Let SecuPress scan your website when you are away by using recurent scans"
