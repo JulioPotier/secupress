@@ -3,7 +3,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 
 $this->set_current_section( 'daily-reporting' );
-$this->add_section( __( 'Daily Reporting', 'secupress' ) );
+$this->add_section( __( 'Daily Reports', 'secupress' ) );
 
 
 $main_field_name = $this->get_field_name( 'activated' );

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2016-08-15 10:02+0200\n"
-"PO-Revision-Date: 2016-08-15 10:02+0200\n"
+"POT-Creation-Date: 2016-08-15 16:20+0200\n"
+"PO-Revision-Date: 2016-08-15 16:20+0200\n"
 "Last-Translator: WP Media <contact@wp-media.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -97,6 +97,8 @@ msgstr ""
 #: inc/admin/notices.php:282
 #: inc/modules/logs/plugins/inc/php/404-logs/class-secupress-404-log.php:65
 #: inc/modules/logs/plugins/inc/php/404-logs/class-secupress-404-log.php:66
+#: inc/modules/users-login/callbacks.php:253
+#: inc/modules/users-login/callbacks.php:259
 #: inc/modules/users-login/plugins/inc/php/move-login/admin.php:20
 #: inc/modules/users-login/plugins/inc/php/move-login/admin.php:26
 #: inc/modules/users-login/plugins/inc/php/move-login/admin.php:165
@@ -608,13 +610,16 @@ msgstr "Retour sur le Tableau de bord"
 #: inc/admin/notices.php:33
 #, php-format
 msgid "%s: The external HTTP requests are blocked!"
-msgstr ""
+msgstr "%s: Les requêtes HTTP sont bloquées&nbsp;!"
 
 #: inc/admin/notices.php:34
 msgid ""
 "You defined the <code>WP_HTTP_BLOCK_EXTERNAL</code> constant in the <code>wp-"
 "config.php</code> to block all external HTTP requests."
 msgstr ""
+"Vous avez défini la constante <code>WP_HTTP_BLOCK_EXTERNAL</code> dans le "
+"fichier <code>wp-config.php</code> pour bloquer toutes les requêtes HTTP "
+"externes."
 
 #: inc/admin/notices.php:36
 #, php-format
@@ -622,6 +627,9 @@ msgid ""
 "To make %s working well, you have to either remove the PHP constant, or add "
 "or merge the following code in your <code>wp-config.php</code> file."
 msgstr ""
+"Pour faire fonctionner %s de nouveau, vous devez soit supprimer la constante "
+"PHP, soit ajouter ou fusionner le code suivant dans votre fichier <code>wp-"
+"config.php</code>."
 
 #: inc/admin/notices.php:37
 msgid "Click on the field and press Ctrl+A or Cmd+A to select all."
@@ -1402,7 +1410,6 @@ msgid "Unknown"
 msgstr "Inconnu"
 
 #: inc/classes/common/class-secupress-log.php:433
-#: inc/modules/alerts/plugins/inc/php/alerts/class-secupress-alerts.php:375
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:535
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:575
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:686
@@ -3575,6 +3582,7 @@ msgstr "Période de non connexion"
 
 #: inc/classes/scanners/class-secupress-scan-non-login-time-slot.php:59
 #: inc/classes/scanners/class-secupress-scan-non-login-time-slot.php:60
+#: inc/modules/alerts/settings/daily-reporting.php:28
 msgid "g:i a"
 msgstr "G:i"
 
@@ -4155,7 +4163,6 @@ msgstr ""
 
 #: inc/classes/scanners/class-secupress-scan-subscription.php:143
 #: inc/classes/scanners/class-secupress-scan-subscription.php:212
-#: inc/modules/alerts/plugins/inc/php/alerts/class-secupress-alerts.php:348
 msgctxt "a WP role"
 msgid "None"
 msgstr "Aucun"
@@ -4954,165 +4961,50 @@ msgstr ""
 "Accédez à plus de modules et d'options pour faire de votre site web une "
 "machine sécurisée automatiquement."
 
-#: inc/modules/alerts/plugins/inc/php/alerts/class-secupress-alerts.php:502
-#, php-format
-msgid "[%s] New important event on your site"
-msgid_plural "[%s] New important events on your site"
-msgstr[0] "[%s] Nouvel évènement important sur votre site"
-msgstr[1] "[%s] Nouveaux évènements importants sur votre site"
+#: inc/modules/alerts/settings/daily-reporting.php:6
+msgid "Daily Reports"
+msgstr "Rapports journaliers"
 
-#: inc/modules/alerts/plugins/inc/php/alerts/class-secupress-alerts.php:518
-#, php-format
-msgid "%1$s (%2$s occurrence)"
-msgid_plural "%1$s (%2$s occurrences)"
-msgstr[0] "%1$s (%2$s occurrence)"
-msgstr[1] "%1$s (%2$s occurrences)"
+#: inc/modules/alerts/settings/daily-reporting.php:12
+msgid "Send me a summary of important events every day"
+msgstr "M'envoyer un résumé des évènements importants tous les jours"
 
-#: inc/modules/alerts/plugins/inc/php/alerts/class-secupress-alerts.php:527
-msgid "An important event just happened on your site:"
-msgid_plural "Some important events just happened on your site:"
-msgstr[0] "Un évènement important vient d'arriver sur votre site&nbsp;:"
-msgstr[1] "Des évènements importants viennent d'arriver sur votre site&nbsp;:"
-
-#: inc/modules/alerts/plugins/inc/php/alerts/class-secupress-alerts.php:530
-#, php-format
-msgid "An important event happened on your site for the last %d minutes:"
-msgid_plural ""
-"Some important events happened on your site for the last %d minutes:"
-msgstr[0] ""
-"Un évènement important vient d'arriver sur votre site dans les %d dernières "
-"minutes&nbsp;:"
-msgstr[1] ""
-"Des évènements importants viennent d'arriver sur votre site dans les %d "
-"dernières minutes&nbsp;:"
-
-#: inc/modules/alerts/plugins/inc/php/alerts/class-secupress-alerts.php:595
-#, php-format
-msgid "Your site's name has been changed to: %s."
-msgstr "Le nom de votre site a été modifié en&nbsp;: %s."
-
-#: inc/modules/alerts/plugins/inc/php/alerts/class-secupress-alerts.php:596
-#, php-format
-msgid "Your site's description has been changed to: %s."
-msgstr "La description de votre site a été modifiée en&nbsp; %s."
-
-#: inc/modules/alerts/plugins/inc/php/alerts/class-secupress-alerts.php:597
-#, php-format
-msgid "Your site's URL has been changed to: %s."
-msgstr "L'URL de votre site a été modifiée en&nbsp;: %s."
-
-#: inc/modules/alerts/plugins/inc/php/alerts/class-secupress-alerts.php:598
-#, php-format
-msgid "Your site's home URL has been changed to: %s."
-msgstr "L'URL de la page d'accueil de votre site a été modifiée en &nbsp;: %s."
-
-#: inc/modules/alerts/plugins/inc/php/alerts/class-secupress-alerts.php:599
-#, php-format
-msgid "Your admin email address has been changed to: %s."
-msgstr ""
-"L'adresse email de l'administrateur de votre site a été modifiée en&nbsp;: "
-"%s."
-
-#: inc/modules/alerts/plugins/inc/php/alerts/class-secupress-alerts.php:600
-msgid "Users can now register on your site."
-msgstr "Les utilisateurs peuvent maintenant s'inscrire sur votre site."
-
-#: inc/modules/alerts/plugins/inc/php/alerts/class-secupress-alerts.php:601
-#, php-format
-msgid "When users register on your site, their user role is now %s."
-msgstr ""
-"Quand les utilisateurs s'inscrivent sur votre site, leur rôle est "
-"maintenant&nbsp;: %s."
-
-#: inc/modules/alerts/plugins/inc/php/alerts/class-secupress-alerts.php:602
-#, php-format
-msgid "Your network's name has been changed to: %s."
-msgstr "Le nom de votre réseau a été modifié en&nbsp;: %s."
-
-#: inc/modules/alerts/plugins/inc/php/alerts/class-secupress-alerts.php:603
-#, php-format
-msgid "Your network admin email address has been changed to: %s."
-msgstr ""
-"L'adresse email de l'administrateur du réseau a été modifiée en&nbsp;: %s"
-
-#: inc/modules/alerts/plugins/inc/php/alerts/class-secupress-alerts.php:604
-msgid "Users can now register on your network, and maybe create sites."
-msgstr ""
-"Les utilisateurs peuvent maintenant s'enregistrer sur votre réseau, et peut-"
-"être créer des sites."
-
-#: inc/modules/alerts/plugins/inc/php/alerts/class-secupress-alerts.php:605
-msgid "Email notifications have been disabled when users or sites register."
-msgstr ""
-"Les notifications par email ont été désactivées quand un utilisateur ou un "
-"site s'inscrit."
-
-#: inc/modules/alerts/plugins/inc/php/alerts/class-secupress-alerts.php:606
-msgid "Administrators can now add new users to their site."
-msgstr ""
-"Les administrateurs peuvent maintenant ajouter des utilisateurs dans leur "
-"site."
-
-#: inc/modules/alerts/plugins/inc/php/alerts/class-secupress-alerts.php:607
-msgid "The list of banned user names has been emptied."
-msgstr "La liste des noms d'utilisateurs bannis a été vidée."
-
-#: inc/modules/alerts/plugins/inc/php/alerts/class-secupress-alerts.php:608
-msgid "The list of email domains allowed to create sites has been modified."
-msgstr ""
-"La liste des domaines d'adresse email autorisés à créer des site a été "
-"modifiée."
-
-#: inc/modules/alerts/plugins/inc/php/alerts/class-secupress-alerts.php:609
-msgid ""
-"The list of email domains not allowed to create sites has been modified."
-msgstr ""
-"La liste des domaines d'adresse email non autorisés à créer des site a été "
-"modifiée."
-
-#: inc/modules/alerts/plugins/inc/php/alerts/class-secupress-alerts.php:610
-#, php-format
-msgid "The IP address %2$s has been blocked.<br/>Module: %1$s<br/>Data: %3$s"
-msgstr ""
-"L'adresse IP %2$s a été bloquée.<br/>Module&nbsp;: %1$s<br/>Info&nbsp;: %3$s"
-
-#: inc/modules/alerts/plugins/inc/php/alerts/class-secupress-alerts.php:611
-#, php-format
-msgid "The IP address %1$s has been banned."
-msgstr "L'adresse IP %1$s a été bannie."
-
-#: inc/modules/alerts/plugins/inc/php/alerts/class-secupress-alerts.php:612
-#, php-format
-msgid "The user %s just logged in."
-msgstr "L'utilisateur %s vient de se connecter."
-
-#: inc/modules/alerts/plugins/inc/php/alerts/class-secupress-alerts.php:624
-#, php-format
-msgid "Missing message for key %s."
-msgstr "Message manquant pour la clé %s."
-
-#: inc/modules/alerts/settings/alerts.php:6
-msgid "Event Alerts"
-msgstr "Alertes des évènements"
-
-#: inc/modules/alerts/settings/alerts.php:12
-msgid "Alert me for important events"
-msgstr "M'avertir des évènements importants"
-
-#: inc/modules/alerts/settings/alerts.php:17
+#: inc/modules/alerts/settings/daily-reporting.php:17
+#: inc/modules/alerts/settings/event-alerts.php:17
 msgid "Yes, alert me"
 msgstr "Oui, m'avertir"
 
-#: inc/modules/alerts/settings/alerts.php:21
+#: inc/modules/alerts/settings/daily-reporting.php:24
+msgid "midnight"
+msgstr "minuit"
+
+#: inc/modules/alerts/settings/daily-reporting.php:26
+msgid "noon"
+msgstr "midi"
+
+#: inc/modules/alerts/settings/daily-reporting.php:35
+#, php-format
+msgid "A notification will be sent every day at %s."
+msgstr "Une notification vous sera envoyée tous les jours à %s."
+
+#: inc/modules/alerts/settings/event-alerts.php:6
+msgid "Event Alerts"
+msgstr "Alertes des évènements"
+
+#: inc/modules/alerts/settings/event-alerts.php:12
+msgid "Alert me for important events"
+msgstr "M'avertir des évènements importants"
+
+#: inc/modules/alerts/settings/event-alerts.php:21
 #, php-format
 msgid "Every %d minutes."
 msgstr "Toutes les %d minutes"
 
-#: inc/modules/alerts/settings/alerts.php:26
+#: inc/modules/alerts/settings/event-alerts.php:26
 msgid "Choose your alerts frequency"
 msgstr "Choisissez la fréquence des alertes"
 
-#: inc/modules/alerts/settings/alerts.php:27
+#: inc/modules/alerts/settings/event-alerts.php:27
 msgid ""
 "It would be a bad idea to alert you every time something happens, so "
 "messages will be grouped."
@@ -5120,12 +5012,12 @@ msgstr ""
 "Ce serait une mauvaise idée de vous alerter à chaque fois que quelque chose "
 "arrive, les messages seront alors groupés."
 
-#: inc/modules/alerts/settings/alerts.php:42
+#: inc/modules/alerts/settings/event-alerts.php:42
 msgid "You will be notified <strong>only</strong> if something happens."
 msgstr ""
 "Vous ne serez notifié(e) <strong>seulement</strong> si quelque chose arrive."
 
-#: inc/modules/alerts/settings/alerts.php:46
+#: inc/modules/alerts/settings/event-alerts.php:46
 msgid "For some important events, a notification will be sent right away."
 msgstr ""
 "Pour les évènements importants, une notification sera envoyée rapidement."
@@ -6852,6 +6744,72 @@ msgstr ""
 msgid "Submit the ticket"
 msgstr "Envoyer le ticket"
 
+#: inc/modules/users-login/callbacks.php:253
+#: inc/modules/users-login/callbacks.php:259
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:20
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:26
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:50
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:165
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:181
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:195
+#: inc/modules/users-login/settings/move-login.php:7
+msgid "Move Login"
+msgstr "Déplacer la page de connexion"
+
+#: inc/modules/users-login/callbacks.php:254
+#, php-format
+msgid "The slug %s is forbidden."
+msgid_plural "The slugs %s are forbidden."
+msgstr[0] "L'identifiant %s est interdit."
+msgstr[1] "Les identifiants %s sont interdits."
+
+#: inc/modules/users-login/callbacks.php:260
+msgid "The links can't have the same slugs."
+msgstr "Les liens ne peuvent pas avoir le même identifiants."
+
+#: inc/modules/users-login/callbacks.php:336
+msgid "Log in"
+msgstr "Se connecter"
+
+#: inc/modules/users-login/callbacks.php:337
+msgid "Log out"
+msgstr "Se déconnecter"
+
+#: inc/modules/users-login/callbacks.php:338
+msgid "Register"
+msgstr "S'inscrire"
+
+#: inc/modules/users-login/callbacks.php:339
+msgid "Lost Password"
+msgstr "Mot de passe perdu"
+
+#: inc/modules/users-login/callbacks.php:340
+msgid "Password Reset"
+msgstr "Réinitialiser le mot de passe"
+
+#: inc/modules/users-login/callbacks.php:374
+#: inc/modules/users-login/callbacks.php:391
+msgid "Display an error message"
+msgstr "Afficher un message d'erreur"
+
+#: inc/modules/users-login/callbacks.php:375
+#: inc/modules/users-login/callbacks.php:392
+msgid "Redirect to a \"Page Not Found\" error page"
+msgstr "Rediriger sur une page d'erreur \"Page non trouvée\""
+
+#: inc/modules/users-login/callbacks.php:376
+#: inc/modules/users-login/callbacks.php:393
+msgid "Redirect to the home page"
+msgstr "Rediriger sur la page d'accueil"
+
+#: inc/modules/users-login/callbacks.php:390
+msgid "Do nothing, redirect to the new login page"
+msgstr "Ne rien faire, rediriger sur la nouvelle page de connexion"
+
+#: inc/modules/users-login/callbacks.php:390
+msgid "not recommended"
+msgstr "non recommandé"
+
 #: inc/modules/users-login/plugins/ask-old-password.php:68
 #: inc/modules/users-login/plugins/ask-old-password.php:87
 #: inc/modules/users-login/plugins/ask-old-password.php:96
@@ -6936,16 +6894,6 @@ msgstr "[%s] Votre nom d'utilisateur"
 #: inc/modules/users-login/plugins/blacklist-logins.php:369
 msgid "Sorry, that username is not allowed."
 msgstr "Désolé, ce nom d'utilisateur n'est pas autorisé."
-
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:20
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:26
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:50
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:165
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:181
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:195
-#: inc/modules/users-login/settings/move-login.php:7
-msgid "Move Login"
-msgstr "Déplacer la page de connexion"
 
 #: inc/modules/users-login/plugins/inc/php/move-login/admin.php:21
 msgid ""
@@ -7419,6 +7367,112 @@ msgstr ""
 "<strong>%1$s<strong> requiert WordPress v%2$s minimum, votre site utilise "
 "actuellement la version %3$s."
 
+#~ msgid "Daily Reporting"
+#~ msgstr "Rapports journaliers"
+
+#~ msgid "[%s] New important event on your site"
+#~ msgid_plural "[%s] New important events on your site"
+#~ msgstr[0] "[%s] Nouvel évènement important sur votre site"
+#~ msgstr[1] "[%s] Nouveaux évènements importants sur votre site"
+
+#~ msgid "%1$s (%2$s occurrence)"
+#~ msgid_plural "%1$s (%2$s occurrences)"
+#~ msgstr[0] "%1$s (%2$s occurrence)"
+#~ msgstr[1] "%1$s (%2$s occurrences)"
+
+#~ msgid "An important event just happened on your site:"
+#~ msgid_plural "Some important events just happened on your site:"
+#~ msgstr[0] "Un évènement important vient d'arriver sur votre site&nbsp;:"
+#~ msgstr[1] ""
+#~ "Des évènements importants viennent d'arriver sur votre site&nbsp;:"
+
+#~ msgid "An important event happened on your site for the last %d minutes:"
+#~ msgid_plural ""
+#~ "Some important events happened on your site for the last %d minutes:"
+#~ msgstr[0] ""
+#~ "Un évènement important vient d'arriver sur votre site dans les %d "
+#~ "dernières minutes&nbsp;:"
+#~ msgstr[1] ""
+#~ "Des évènements importants viennent d'arriver sur votre site dans les %d "
+#~ "dernières minutes&nbsp;:"
+
+#~ msgid "Your site's name has been changed to: %s."
+#~ msgstr "Le nom de votre site a été modifié en&nbsp;: %s."
+
+#~ msgid "Your site's description has been changed to: %s."
+#~ msgstr "La description de votre site a été modifiée en&nbsp; %s."
+
+#~ msgid "Your site's URL has been changed to: %s."
+#~ msgstr "L'URL de votre site a été modifiée en&nbsp;: %s."
+
+#~ msgid "Your site's home URL has been changed to: %s."
+#~ msgstr ""
+#~ "L'URL de la page d'accueil de votre site a été modifiée en &nbsp;: %s."
+
+#~ msgid "Your admin email address has been changed to: %s."
+#~ msgstr ""
+#~ "L'adresse email de l'administrateur de votre site a été modifiée "
+#~ "en&nbsp;: %s."
+
+#~ msgid "Users can now register on your site."
+#~ msgstr "Les utilisateurs peuvent maintenant s'inscrire sur votre site."
+
+#~ msgid "When users register on your site, their user role is now %s."
+#~ msgstr ""
+#~ "Quand les utilisateurs s'inscrivent sur votre site, leur rôle est "
+#~ "maintenant&nbsp;: %s."
+
+#~ msgid "Your network's name has been changed to: %s."
+#~ msgstr "Le nom de votre réseau a été modifié en&nbsp;: %s."
+
+#~ msgid "Your network admin email address has been changed to: %s."
+#~ msgstr ""
+#~ "L'adresse email de l'administrateur du réseau a été modifiée en&nbsp;: %s"
+
+#~ msgid "Users can now register on your network, and maybe create sites."
+#~ msgstr ""
+#~ "Les utilisateurs peuvent maintenant s'enregistrer sur votre réseau, et "
+#~ "peut-être créer des sites."
+
+#~ msgid "Email notifications have been disabled when users or sites register."
+#~ msgstr ""
+#~ "Les notifications par email ont été désactivées quand un utilisateur ou "
+#~ "un site s'inscrit."
+
+#~ msgid "Administrators can now add new users to their site."
+#~ msgstr ""
+#~ "Les administrateurs peuvent maintenant ajouter des utilisateurs dans leur "
+#~ "site."
+
+#~ msgid "The list of banned user names has been emptied."
+#~ msgstr "La liste des noms d'utilisateurs bannis a été vidée."
+
+#~ msgid "The list of email domains allowed to create sites has been modified."
+#~ msgstr ""
+#~ "La liste des domaines d'adresse email autorisés à créer des site a été "
+#~ "modifiée."
+
+#~ msgid ""
+#~ "The list of email domains not allowed to create sites has been modified."
+#~ msgstr ""
+#~ "La liste des domaines d'adresse email non autorisés à créer des site a "
+#~ "été modifiée."
+
+#~ msgid ""
+#~ "The IP address %2$s has been blocked.<br/>Module: %1$s<br/>Data: %3$s"
+#~ msgstr ""
+#~ "L'adresse IP %2$s a été bloquée.<br/>Module&nbsp;: %1$s<br/>Info&nbsp;: "
+#~ "%3$s"
+
+#~ msgid "The IP address %1$s has been banned."
+#~ msgstr "L'adresse IP %1$s a été bannie."
+
+#~ msgid "The user %s just logged in."
+#~ msgstr "L'utilisateur %s vient de se connecter."
+
+#~ msgid "Missing message for key %s."
+#~ msgstr "Message manquant pour la clé %s."
+
 #~ msgid "Click on the field and press Ctrl-A to select all."
 #~ msgstr "Cliquez dans le champ et faites Ctrl+A pour tout sélectionner."
 
@@ -7503,44 +7557,6 @@ msgstr ""
 
 #~ msgid "Included with all plans"
 #~ msgstr "Inclus dans tous les plans"
-
-#~ msgid "The slug %s is forbidden."
-#~ msgid_plural "The slugs %s are forbidden."
-#~ msgstr[0] "L'identifiant %s est interdit."
-#~ msgstr[1] "Les identifiants %s sont interdits."
-
-#~ msgid "The links can't have the same slugs."
-#~ msgstr "Les liens ne peuvent pas avoir le même identifiants."
-
-#~ msgid "Log in"
-#~ msgstr "Se connecter"
-
-#~ msgid "Log out"
-#~ msgstr "Se déconnecter"
-
-#~ msgid "Register"
-#~ msgstr "S'inscrire"
-
-#~ msgid "Lost Password"
-#~ msgstr "Mot de passe perdu"
-
-#~ msgid "Password Reset"
-#~ msgstr "Réinitialiser le mot de passe"
-
-#~ msgid "Display an error message"
-#~ msgstr "Afficher un message d'erreur"
-
-#~ msgid "Redirect to a \"Page Not Found\" error page"
-#~ msgstr "Rediriger sur une page d'erreur \"Page non trouvée\""
-
-#~ msgid "Redirect to the home page"
-#~ msgstr "Rediriger sur la page d'accueil"
-
-#~ msgid "Do nothing, redirect to the new login page"
-#~ msgstr "Ne rien faire, rediriger sur la nouvelle page de connexion"
-
-#~ msgid "not recommended"
-#~ msgstr "non recommandé"
 
 #~ msgid ""
 #~ "Let SecuPress scan your website when you are away by using recurent scans"
