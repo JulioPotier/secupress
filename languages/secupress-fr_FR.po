@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2016-08-12 18:13+0200\n"
-"PO-Revision-Date: 2016-08-15 09:02+0200\n"
+"POT-Creation-Date: 2016-08-15 10:02+0200\n"
+"PO-Revision-Date: 2016-08-15 10:02+0200\n"
 "Last-Translator: WP Media <contact@wp-media.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -92,9 +92,9 @@ msgstr ""
 #: inc/admin/functions/modules.php:387 inc/admin/functions/modules.php:400
 #: inc/admin/functions/modules.php:448 inc/admin/functions/modules.php:476
 #: inc/admin/functions/modules.php:506 inc/admin/functions/modules.php:518
-#: inc/admin/notices.php:29 inc/admin/notices.php:148 inc/admin/notices.php:186
-#: inc/admin/notices.php:210 inc/admin/notices.php:219
-#: inc/admin/notices.php:240
+#: inc/admin/notices.php:71 inc/admin/notices.php:190 inc/admin/notices.php:228
+#: inc/admin/notices.php:252 inc/admin/notices.php:261
+#: inc/admin/notices.php:282
 #: inc/modules/logs/plugins/inc/php/404-logs/class-secupress-404-log.php:65
 #: inc/modules/logs/plugins/inc/php/404-logs/class-secupress-404-log.php:66
 #: inc/modules/users-login/plugins/inc/php/move-login/admin.php:20
@@ -169,8 +169,7 @@ msgstr "L'adresse IP %s a été bannie."
 
 #: inc/admin/ajax-post-callbacks.php:231
 #: inc/classes/settings/class-secupress-settings-modules.php:668
-#: inc/modules/get-pro/settings.php:56 inc/modules/get-pro/settings.php:85
-#: inc/modules/get-pro/settings.php:114
+#: inc/modules/get-pro/settings.php:84
 msgid "Forever"
 msgstr "Pour toujours"
 
@@ -606,7 +605,30 @@ msgstr "Tableau de bord"
 msgid "Back to the Dashboard"
 msgstr "Retour sur le Tableau de bord"
 
-#: inc/admin/notices.php:30
+#: inc/admin/notices.php:33
+#, php-format
+msgid "%s: The external HTTP requests are blocked!"
+msgstr ""
+
+#: inc/admin/notices.php:34
+msgid ""
+"You defined the <code>WP_HTTP_BLOCK_EXTERNAL</code> constant in the <code>wp-"
+"config.php</code> to block all external HTTP requests."
+msgstr ""
+
+#: inc/admin/notices.php:36
+#, php-format
+msgid ""
+"To make %s working well, you have to either remove the PHP constant, or add "
+"or merge the following code in your <code>wp-config.php</code> file."
+msgstr ""
+
+#: inc/admin/notices.php:37
+msgid "Click on the field and press Ctrl+A or Cmd+A to select all."
+msgstr ""
+"Cliquez dans le champ et faites Ctrl+A ou Commande+A pour tout sélectionner."
+
+#: inc/admin/notices.php:72
 msgid ""
 "The following plugins are not recommended with this plugin and may cause "
 "unexpected results:"
@@ -614,11 +636,11 @@ msgstr ""
 "Les plugins suivants ne sont pas recommandés avec ce plugin et pourraient "
 "causer des résultats inattendus&nbsp;:"
 
-#: inc/admin/notices.php:34 inc/admin/notices.php:77
+#: inc/admin/notices.php:76 inc/admin/notices.php:119
 msgid "Deactivate"
 msgstr "Désactiver"
 
-#: inc/admin/notices.php:71
+#: inc/admin/notices.php:113
 #, php-format
 msgid ""
 "The features of the following plugins are included into %1$s. You can "
@@ -628,7 +650,7 @@ msgstr ""
 "désactiver ces plugins maintenant et activer ces fonctions plus tard dans "
 "%1$s&nbsp;:"
 
-#: inc/admin/notices.php:149
+#: inc/admin/notices.php:191
 #, php-format
 msgid ""
 "The %1$s file does not seem to be writable, read more about the <a href="
@@ -637,7 +659,7 @@ msgstr ""
 "Le fichier %1$s ne semble pas être en écriture, en savoir plus sur <a href="
 "\"%2$s\" target=\"_blank\" hreflang=\"en\">les droit d'écriture (en)</a>."
 
-#: inc/admin/notices.php:187
+#: inc/admin/notices.php:229
 #, php-format
 msgid ""
 "If you had <a href=\"%1$s\" target=\"_blank\">writing permissions</a> on "
@@ -647,43 +669,43 @@ msgstr ""
 "d'écriture</a> sur le fichier %2$s, %3$s pourrait faire plus de choses "
 "automatiquement."
 
-#: inc/admin/notices.php:211
+#: inc/admin/notices.php:253
 msgid "This module has been activated:"
 msgid_plural "These modules have been activated:"
 msgstr[0] "Ce module a été activé&nbsp;:"
 msgstr[1] "Ces modules ont été activés&nbsp;:"
 
-#: inc/admin/notices.php:220
+#: inc/admin/notices.php:262
 msgid "This module has been deactivated:"
 msgid_plural "These modules have been deactivated:"
 msgstr[0] "Ce module a été désactivé&nbsp;:"
 msgstr[1] "Ces modules ont été désactivés&nbsp;:"
 
-#: inc/admin/notices.php:241
+#: inc/admin/notices.php:283
 #, php-format
 msgid "Your <a href=\"%s\">Recovery E-mail</a> isn't yet set. Please do it."
 msgstr ""
 "Votre <a href=\"%s\">Email de récupération</a> n'est pas encore défini. "
 "Merci de le renseigner."
 
-#: inc/admin/notices.php:281
+#: inc/admin/notices.php:323
 #, php-format
 msgid "%s is activated, let's improve the security of your website!"
 msgstr "%s est activé, améliorons la sécurité de votre site&nbsp;!"
 
-#: inc/admin/notices.php:282
+#: inc/admin/notices.php:324
 msgid ""
 "Scan every security points for the first time in your website, right now."
 msgstr ""
 "Scanner tous les points de sécurité pour la première fois dans votre site, "
 "dès maintenant."
 
-#: inc/admin/notices.php:290 inc/admin/settings.php:123
+#: inc/admin/notices.php:332 inc/admin/settings.php:123
 #: inc/admin/settings.php:627
 msgid "Scan my website"
 msgstr "Scanner mon site"
 
-#: inc/admin/notices.php:295 inc/admin/scanner-step-1-all.php:94
+#: inc/admin/notices.php:337 inc/admin/scanner-step-1-all.php:94
 #: inc/admin/scanner-step-1-new.php:92 inc/admin/settings.php:61
 #: inc/admin/settings.php:128
 #: inc/classes/common/class-secupress-logs-list.php:301
@@ -5720,10 +5742,8 @@ msgid "Whitelist or Blacklist the countries"
 msgstr "Mettre en liste blanche ou en liste noire des pays"
 
 #: inc/modules/firewall/settings/geoip-system.php:30
-msgid ""
-"<strong>Do not block (or allow)</strong> countries from visiting my website"
-msgstr ""
-"<strong>Ne pas bloquer (ou autoriser)</strong> les pays de visiter mon site"
+msgid "<strong>Do not block</strong> countries from visiting my website"
+msgstr "<strong>Ne pas bloquer</strong> les pays de visiter mon site"
 
 #: inc/modules/firewall/settings/geoip-system.php:31
 msgid ""
@@ -5738,7 +5758,7 @@ msgid ""
 "<strong>Only allow</strong> the selected countries to visit my website "
 "(whitelist)"
 msgstr ""
-"<strong>Autoriser seulement</Strong> les pays sélectionner de visiter mon "
+"<strong>Autoriser seulement</Strong> les pays sélectionnés de visiter mon "
 "site (liste blanche)"
 
 #: inc/modules/firewall/settings/geoip-system.php:37
@@ -5758,13 +5778,13 @@ msgid "Add or remove countries you want to manage for your website."
 msgstr ""
 "Ajouter ou supprimer les pays que vous souhaitez gérer pour votre site."
 
-#: inc/modules/get-pro/settings.php:14
+#: inc/modules/get-pro/settings.php:25
 msgid "Preorder Now Your SecuPress Pro and Get an Exclusive Discount"
 msgstr ""
 "Précommandez dès aujourd'hui votre SecuPress Pro et bénéficiez d'une remise "
 "exclusive"
 
-#: inc/modules/get-pro/settings.php:15
+#: inc/modules/get-pro/settings.php:26
 msgid ""
 "Choose the licence that suits you the best and be part of the first users to "
 "get SecuPress Pro upon its release"
@@ -5772,93 +5792,78 @@ msgstr ""
 "Choisissez la formule qui vous convient et faites partie des premiers "
 "utilisateurs de SecuPress Pro dès sa sortie"
 
-#: inc/modules/get-pro/settings.php:21
+#: inc/modules/get-pro/settings.php:32
 #, php-format
 msgid "Improve Your Security Unlocking%sAll the Features from SecuPress Pro"
 msgstr ""
 "Améliorez votre sécurité en débloquant%stoutes les fonctionnalités de "
 "SecuPress Pro"
 
-#: inc/modules/get-pro/settings.php:25
+#: inc/modules/get-pro/settings.php:36
 msgid "Yearly"
 msgstr "Annuellement"
 
-#: inc/modules/get-pro/settings.php:28
+#: inc/modules/get-pro/settings.php:39
 msgid "Monthly"
 msgstr "Mensuellement"
 
-#: inc/modules/get-pro/settings.php:29
+#: inc/modules/get-pro/settings.php:40
 msgid "Coming soon"
 msgstr "Bientôt"
 
-#: inc/modules/get-pro/settings.php:38
-msgid "Lite"
-msgstr "Simple"
+#: inc/modules/get-pro/settings.php:76
+#, php-format
+msgid "%d month for free"
+msgid_plural "%d months for free"
+msgstr[0] "%d mois gratuit"
+msgstr[1] "%d mois gratuits"
 
-#: inc/modules/get-pro/settings.php:48 inc/modules/get-pro/settings.php:77
-#: inc/modules/get-pro/settings.php:106
-msgid "3 months for free"
-msgstr "3 mois gratuits"
-
-#: inc/modules/get-pro/settings.php:51 inc/modules/get-pro/settings.php:80
-#: inc/modules/get-pro/settings.php:109
+#: inc/modules/get-pro/settings.php:79
 msgid "Billed per year"
 msgstr "Facturé à l'année"
 
-#: inc/modules/get-pro/settings.php:52 inc/modules/get-pro/settings.php:81
-#: inc/modules/get-pro/settings.php:110
+#: inc/modules/get-pro/settings.php:80
 msgid "Billed per month"
 msgstr "Facturé au mois"
 
-#: inc/modules/get-pro/settings.php:54 inc/modules/get-pro/settings.php:83
-#: inc/modules/get-pro/settings.php:112
+#: inc/modules/get-pro/settings.php:82
 msgid "Secure & Protect"
 msgstr "Sécurise et Protège"
 
-#: inc/modules/get-pro/settings.php:55
-msgid "1 Website"
-msgstr "1 site Web"
+#: inc/modules/get-pro/settings.php:83
+#, php-format
+msgid "%d Website"
+msgid_plural "%d Websites"
+msgstr[0] "%d site"
+msgstr[1] "%d sites"
 
-#: inc/modules/get-pro/settings.php:60 inc/modules/get-pro/settings.php:89
-#: inc/modules/get-pro/settings.php:118
+#: inc/modules/get-pro/settings.php:89
 msgid "Pre-Order"
 msgstr "Précommander"
 
-#: inc/modules/get-pro/settings.php:67
-msgid "Standard"
-msgstr "Standard"
+#: inc/modules/get-pro/settings.php:89
+msgid "Order"
+msgstr "Commander"
 
-#: inc/modules/get-pro/settings.php:84
-msgid "3 Websites"
-msgstr "3 sites Web"
-
-#: inc/modules/get-pro/settings.php:96
-msgid "Plus"
-msgstr "Plus"
-
-#: inc/modules/get-pro/settings.php:113
-msgid "10 Websites"
-msgstr "10 sites Web"
-
-#: inc/modules/get-pro/settings.php:124
+#: inc/modules/get-pro/settings.php:99
 msgid "Included With All Plans"
 msgstr "Inclus dans tous les plans"
 
-#: inc/modules/get-pro/settings.php:129
+#: inc/modules/get-pro/settings.php:104
 msgid "Unlimited Support and Updates"
 msgstr "Support et mises à jour illimités"
 
-#: inc/modules/get-pro/settings.php:133 inc/modules/get-pro/settings.php:137
+#: inc/modules/get-pro/settings.php:108 inc/modules/get-pro/settings.php:112
 #, php-format
 msgctxt "one line text please"
 msgid "Bonus %s on %s"
 msgstr "%s sur %s"
 
-#: inc/modules/get-pro/settings.php:133
+#: inc/modules/get-pro/settings.php:108
 msgid "100 Mb for free"
 msgstr "100 Mo gratuits"
 
-#: inc/modules/get-pro/settings.php:137
+#: inc/modules/get-pro/settings.php:112
 msgid "20% OFF"
 msgstr "20% de remise"
 
@@ -7330,7 +7335,7 @@ msgstr ""
 
 #: inc/modules/welcome/settings.php:56
 msgid "View options"
-msgstr "Voir les options"
+msgstr "Options"
 
 #: inc/modules/wordpress-core/settings/auto-update.php:6
 msgid "WordPress Updates"
@@ -7413,6 +7418,35 @@ msgid ""
 msgstr ""
 "<strong>%1$s<strong> requiert WordPress v%2$s minimum, votre site utilise "
 "actuellement la version %3$s."
+
+#~ msgid "Click on the field and press Ctrl-A to select all."
+#~ msgstr "Cliquez dans le champ et faites Ctrl+A pour tout sélectionner."
+
+#~ msgid ""
+#~ "<strong>Do not block (or allow)</strong> countries from visiting my "
+#~ "website"
+#~ msgstr "<strong>Ne pas bloquer</strong> les pays de visiter mon site"
+
+#~ msgid "Lite"
+#~ msgstr "Simple"
+
+#~ msgid "3 months for free"
+#~ msgstr "3 mois gratuits"
+
+#~ msgid "1 Website"
+#~ msgstr "1 site Web"
+
+#~ msgid "Standard"
+#~ msgstr "Standard"
+
+#~ msgid "3 Websites"
+#~ msgstr "3 sites Web"
+
+#~ msgid "Plus"
+#~ msgstr "Plus"
+
+#~ msgid "10 Websites"
+#~ msgstr "10 sites Web"
 
 #~ msgid "Bonus %s on %s"
 #~ msgstr "%s sur %s"

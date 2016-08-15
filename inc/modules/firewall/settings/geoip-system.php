@@ -27,7 +27,7 @@ $this->add_field( array(
 	'default'      => '-1',
 	'label_screen' => __( 'Whitelist or Blacklist the countries', 'secupress' ),
 	'options'      => array(
-		'-1'        => __( '<strong>Do not block (or allow)</strong> countries from visiting my website', 'secupress' ),
+		'-1'        => __( '<strong>Do not block</strong> countries from visiting my website', 'secupress' ),
 		'blacklist' => __( '<strong>Disallow</strong> the selected countries to visit my website (blacklist)', 'secupress' ),
 		'whitelist' => __( '<strong>Only allow</strong> the selected countries to visit my website (whitelist)', 'secupress' ),
 	),

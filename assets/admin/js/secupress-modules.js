@@ -994,7 +994,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 			// resize the container
 			SPautoSized.textareaParentHeight( $container, $textarea );
 
-			// add (+) button				
+			// add (+) button
 			if ( e.scrollHeight > $container.height() && $container.next() ) {
 				SPautoSized.handleExpandButton( $container, true ); // create
 			}
@@ -1116,7 +1116,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 (function($) {
 	$( '.secupress-boxed-group' ).each(function(){
 		var $box      = $( this ),
-			maxHeight = 200; 
+			maxHeight = 200;
 
 		$box.data( 'height', $box.outerHeight() )
 			  .css( 'height', maxHeight )
@@ -1164,4 +1164,4 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		$_this.closest( '.secupress-inline-options' ).removeClass( 'secupress-type-yearly secupress-type-monthly' ).addClass( 'secupress-type-' + $_this.data( 'type' ) );
 
 	} );
-})(jQuery);	
+})(jQuery);
