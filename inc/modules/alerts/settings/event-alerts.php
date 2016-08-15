@@ -2,7 +2,7 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 
-$this->set_current_section( 'alerts' );
+$this->set_current_section( 'event-alerts' );
 $this->add_section( __( 'Event Alerts', 'secupress' ) );
 
 
@@ -13,7 +13,7 @@ $this->add_field( array(
 	'label_for'         => $main_field_name,
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
-	'value'             => (int) secupress_is_submodule_active( 'alerts', 'alerts' ),
+	'value'             => (int) secupress_is_submodule_active( 'alerts', 'event-alerts' ),
 	'label'             => __( 'Yes, alert me', 'secupress' ),
 ) );
 
