@@ -266,7 +266,12 @@ function secupress_get_submodule_activations( $module ) {
  * @param (string) $action    "activation" or "deactivation".
  */
 function secupress_add_module_notice( $module, $submodule, $action ) {
-	$submodule_name    = secupress_get_module_data( $module, $submodule );
+	$submodule_name = secupress_get_module_data( $module, $submodule );
+
+	if ( empty( $submodule_name['Name'] ) ) {
+		return;
+	}
+
 	$submodule_name    = $submodule_name['Name'];
 	$transient_name    = 'secupress_module_' . $action . '_' . get_current_user_id();
 	$transient_value   = secupress_get_site_transient( $transient_name );
