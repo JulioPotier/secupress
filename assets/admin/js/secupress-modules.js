@@ -16,7 +16,7 @@ var SecuPress = {
 		showCancelButton:  true,
 		closeOnConfirm:    false
 	},
-	expandButton: '<p class="secupress-expand-trigger-container"><span class="secupress-expand-trigger" tabindex="0"><span class="secupress-expand-txt">' + SecuPressi18nModules.expandTextOpen + '</span><i class="icon-angle-down" aria-hidden="true"></i></span></p>'
+	expandButton: '<p class="secupress-expand-trigger-container"><button class="secupress-expand-trigger" type="button"><span class="secupress-expand-txt">' + SecuPressi18nModules.expandTextOpen + '</span><i class="icon-angle-down" aria-hidden="true"></i></button></p>'
 };
 
 /**
@@ -1086,7 +1086,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	} );
 
 	// on click on (+) button
-	$expandables.closest('label').on('click.secupress', '.secupress-expand-trigger', function(){
+	$expandables.closest('label, .secupress-setting-content-col').on('click.secupress', '.secupress-expand-trigger', function(){
 		var $_this     = $(this),
 			$container = $_this.closest('.secupress-expand-trigger-container').prev( '.secupress-textarea-container' ),
 			$textarea  = $container.find( 'textarea' );
@@ -1114,7 +1114,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 
 // Auto Expand Boxed Groups ======================================================================
 (function($) {
-	$( '.secupress-boxed-group' ).each(function(){
+	$( 'fieldset.secupress-boxed-group' ).each(function(){
 		var $box      = $( this ),
 			maxHeight = 200;
 
