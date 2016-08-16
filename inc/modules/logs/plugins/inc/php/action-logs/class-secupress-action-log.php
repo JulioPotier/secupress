@@ -626,7 +626,8 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 */
 	protected function _set_action_title() {
 		$titles = array(
-			'secupress.block'         => sprintf( __( '%1$s prevented a request at %2$s', 'secupress' ), '<b>' . SECUPRESS_PLUGIN_NAME . '</b>' ),
+			/** Translators: 1 is the plugin name, 2 is an URL. */
+			'secupress.block'         => sprintf( __( '%1$s prevented a request at %2$s', 'secupress' ), '<b>' . SECUPRESS_PLUGIN_NAME . '</b>', '%1$s' ),
 			'secupress.ban.ip_banned' => __( 'IP banned: %s.', 'secupress' ),
 			'switch_theme'            => __( 'Theme activated: %s.', 'secupress' ),
 			'wp_login'                => __( 'Administrator %s logged in.', 'secupress' ),
@@ -777,7 +778,8 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 */
 	protected function _set_action_message() {
 		$messages = array(
-			'secupress.block'         => sprintf( __( '%6$s prevented a request at %1$s from the IP %2$s. Block ID: %3$s. The server configuration at the moment: %4$s Data posted: %5$s', 'secupress' ), '<b>' . SECUPRESS_PLUGIN_NAME . '</b>', '%s' ),
+			/** Translators: 1 is the plugin name, 2 is an URL, 3 is an IP address, 4 is an identifier, 5 and 6 are some code. */
+			'secupress.block'         => sprintf( __( '%1$s prevented a request at %2$s from the IP %3$s. Block ID: %4$s. The server configuration at the moment: %5$s Data posted: %6$s', 'secupress' ), '<b>' . SECUPRESS_PLUGIN_NAME . '</b>', '%1$s', '%2$s', '%3$s', '%4$s', '%5$s' ),
 			'secupress.ban.ip_banned' => __( 'IP banned: %s.', 'secupress' ),
 			'switch_theme'            => __( 'Theme activated: %s.', 'secupress' ),
 			'wp_login'                => __( 'Administrator %s logged in.', 'secupress' ),
