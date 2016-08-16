@@ -457,7 +457,10 @@ p.secupress-sh-subtitle {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	margin: 0 0 -14px -14px;
+	margin: 0 0 0 -14px;
+}
+label .secupress-textarea-container + .secupress-expand-trigger-container {
+	margin-bottom: -14px;
 }
 .secupress-boxed-group + .secupress-expand-trigger-container {
 	position: relative;
@@ -466,6 +469,8 @@ p.secupress-sh-subtitle {
 .secupress-expand-trigger {
 	display: inline-block;
 	padding: 5px 10px 6px;
+	height: auto;
+	border: 0;
 	font-size: 11px;
 	text-transform: uppercase;
 	letter-spacing: 0.1em;
@@ -492,7 +497,7 @@ p.secupress-sh-subtitle {
 }
 .secupress-setting-row_bbq-headers_user-agents-list .secupress-get-pro-col,
 .secupress-setting-row_bbq-url-content_bad-contents-list .secupress-get-pro-col,
-.secupress-setting-row_backups-storage_location .secupress-get-pro-col,
+/*.secupress-setting-row_backups-storage_location .secupress-get-pro-col,*/
 /*.secupress-setting-row_notification-types_types .secupress-get-pro-col,*/
 .secupress-setting-row_monitoring_activated .secupress-get-pro-col,
 [id="secupress-settings-module_services--"] .secupress-get-pro-col {

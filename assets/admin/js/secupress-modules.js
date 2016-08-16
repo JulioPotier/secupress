@@ -16,7 +16,7 @@ var SecuPress = {
 		showCancelButton:  true,
 		closeOnConfirm:    false
 	},
-	expandButton: '<p class="secupress-expand-trigger-container"><span class="secupress-expand-trigger" tabindex="0"><span class="secupress-expand-txt">' + SecuPressi18nModules.expandTextOpen + '</span><i class="icon-angle-down" aria-hidden="true"></i></span></p>'
+	expandButton: '<p class="secupress-expand-trigger-container"><button class="secupress-expand-trigger" type="button"><span class="secupress-expand-txt">' + SecuPressi18nModules.expandTextOpen + '</span><i class="icon-angle-down" aria-hidden="true"></i></button></p>'
 };
 
 /**
@@ -1077,16 +1077,16 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	// same action as previous for textarea depending on other actions to be displayed
 	$( '#wpbody-content' ).find( '.secupress-setting-row' ).on( 'secupressaftershow', function() {
 		$( this ).find( '.secupress-textarea-container' ).find( 'textarea' ).AutoSized()
-			.one('focus.secupress', function(){
+			.on('focus.secupress', function(){
 				$(this).parent().addClass('textarea-focused');
 			})
-			.one('blur.secupress', function(){
+			.on('blur.secupress', function(){
 				$(this).parent().removeClass('textarea-focused');
 			});
 	} );
 
 	// on click on (+) button
-	$expandables.closest('label').on('click.secupress', '.secupress-expand-trigger', function(){
+	$expandables.closest('label, .secupress-setting-content-col').on('click.secupress', '.secupress-expand-trigger', function(){
 		var $_this     = $(this),
 			$container = $_this.closest('.secupress-expand-trigger-container').prev( '.secupress-textarea-container' ),
 			$textarea  = $container.find( 'textarea' );
@@ -1114,7 +1114,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 
 // Auto Expand Boxed Groups ======================================================================
 (function($) {
-	$( '.secupress-boxed-group' ).each(function(){
+	$( 'fieldset.secupress-boxed-group' ).each(function(){
 		var $box      = $( this ),
 			maxHeight = 200;
 
