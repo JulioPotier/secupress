@@ -586,10 +586,8 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 	letter-spacing: 0.01em;
 }
 .secupress-chart-container.secupress-chart-container {
-	-webkit-box-flex: 0;
-	-webkit-flex-grow: 0;
-	-ms-flex-positive: 0;
 	flex-grow: 0;
+	flex-shrink: 0;
 	margin-right: 30px;
 	line-height: 1;
 }

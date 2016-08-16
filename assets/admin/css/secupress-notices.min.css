@@ -17,16 +17,11 @@
 	margin-top: 35px;
 }
 .secupress-notice .secupress-col-logo {
-	-webkit-flex-basis: 84px;
-	-ms-flex-preferred-size: 84px;
-	flex-basis: 84px;
-	-webkit-box-flex: 0;
-	-ms-flex-positive: 0;
+	flex-basis: 113px;
 	flex-grow: 0;
+	flex-shrink: 0;
 }
 .secupress-notice .secupress-col-icon {
-	-webkit-flex-basis: 5%;
-	-ms-flex-preferred-size: 5%;
 	flex-basis: 5%;
 	font-size: 30px;
 	text-align: center;
@@ -119,7 +114,7 @@
 	.secupress-compat-notice .notice-dismiss {
 		padding: 13px;
 	}
-
+	
 	.secupress-notice.secupress-flex  {
 		flex-direction: column;
 		justify-content: center;
