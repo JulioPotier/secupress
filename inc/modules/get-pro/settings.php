@@ -11,6 +11,11 @@ if ( false === $plans ) {
 		set_transient( 'secupress_pro_plans', $plans, DAY_IN_SECONDS );
 	}
 }
+
+if ( ! $plans ) {
+	$plans      = json_decode( '[{"names":{"en_US":"Lite","fr_FR":"Simple"},"button":"preorder","price":"5.99","price_new":"54","price_old":"72","free":3,"websites":1,"url":"https:\/\/secupress.me\/checkout\/?edd_action=add_to_cart&download_id=14&edd_options[price_id]=4"},{"names":{"en_US":"Standard","fr_FR":"Standard"},"button":"preorder","price":"14.99","price_new":"134","price_old":"180","free":3,"websites":3,"url":"https:\/\/secupress.me\/checkout\/?edd_action=add_to_cart&download_id=14&edd_options[price_id]=5"},{"names":{"en_US":"Plus","fr_FR":"Plus"},"button":"preorder","price":"29.99","price_new":"269","price_old":"360","free":3,"websites":10,"url":"https:\/\/secupress.me\/checkout\/?edd_action=add_to_cart&download_id=14&edd_options[price_id]=6"}]', true );
+	$impossible = sprintf( '<p style="font-style:italic;text-align:center;">' . __( 'Impossible to get online prices, please check %s to get the last ones.', 'secupress' ), '<a href="https://secupress.me/downloads/secupress/" target="_blank">online prices</a>' ) . '</p>';
+}
 ?>
 
 	<div class="secupress-section-dark secupress-settings-header secupress-flex">
@@ -31,6 +36,12 @@ if ( false === $plans ) {
 
 		<p class="secupress-catchphrase"><?php printf( esc_html__( 'Improve Your Security Unlocking%sAll the Features from SecuPress Pro', 'secupress' ), '<br/>' ); ?></p>
 
+		<?php
+		if ( isset( $impossible ) ) {
+			echo $impossible;
+		}
+		?>
+
 		<p class="secupress-inline-options secupress-text-center hide-if-no-js secupress-type-yearly">
 			<button type="button" class="secupress-button secupress-inline-option secupress-current" data-type="yearly">
 				<?php esc_html_e( 'Yearly', 'secupress' ); ?>
@@ -40,7 +51,6 @@ if ( false === $plans ) {
 				<span class="secupress-tip"><?php esc_html_e( 'Coming soon', 'secupress' ) ?></span>
 			</button>
 		</p>
-
 		<div id="secupress-pricing" class="secupress-pricing secupress-flex secupress-text-center">
 		<?php
 		foreach ( $plans as $plan ) {
@@ -51,7 +61,7 @@ if ( false === $plans ) {
 						<?php
 						if ( isset( $plan['names'][ get_locale() ] ) ) {
 							$plan_name = $plan['names'][ get_locale() ];
-						} else {	
+						} else {
 							$plan_name = $plan['names']['en_US'];
 						}
 						?>
@@ -65,8 +75,8 @@ if ( false === $plans ) {
 							<span class="secupress-dollars">$</span>
 							<?php
 							$price = explode( '.', $plan['price'] );
-							if ( isset( $price[1] ) ) { 
-								$price = $price[0] . '<small>' . $price[1] . '</small>';
+							if ( isset( $price[1] ) ) {
+								$price = $price[0] . '<small>,' . $price[1] . '</small>';
 							} else {
 								$price = $price[0];
 							}
@@ -92,7 +102,7 @@ if ( false === $plans ) {
 					</div>
 				</div>
 			</div>
-		<?php 
+		<?php
 		}
 		?>
 		</div><!-- #secupress-pricing -->
