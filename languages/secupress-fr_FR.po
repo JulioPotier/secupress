@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
 "POT-Creation-Date: 2016-08-15 16:20+0200\n"
-"PO-Revision-Date: 2016-08-16 11:28+0200\n"
+"PO-Revision-Date: 2016-08-16 11:42+0200\n"
 "Last-Translator: WP Media <contact@wp-media.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -2319,10 +2319,10 @@ msgid ""
 msgid_plural ""
 "<strong>%1$d plugins</strong> are no longer in the WordPress directory: %2$s."
 msgstr[0] ""
-"<string>%1$d plugin</strong> n'est plus dans le dépôt de WordPress&nbsp;: "
+"<strong>%1$d plugin</strong> n'est plus dans le dépôt de WordPress&nbsp;: "
 "%2$s."
 msgstr[1] ""
-"<string>%1$d plugin</strong> ne sont plus dans le dépôt de WordPress&nbsp;: "
+"<strong>%1$d plugin</strong> ne sont plus dans le dépôt de WordPress&nbsp;: "
 "%2$s."
 
 #: inc/classes/scanners/class-secupress-scan-bad-old-plugins.php:88
@@ -3606,7 +3606,7 @@ msgstr ""
 
 #: inc/classes/scanners/class-secupress-scan-non-login-time-slot.php:86
 msgid "Your website should be <strong>locked out sometimes</strong>."
-msgstr "Votre site devrait <strong>être verrouillé<strong> de temps en temps."
+msgstr "Votre site devrait <strong>être verrouillé</strong> de temps en temps."
 
 #: inc/classes/scanners/class-secupress-scan-passwords-strength.php:49
 msgid "Test the strength of WordPress database and FTP passwords."
