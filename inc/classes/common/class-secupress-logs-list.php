@@ -224,8 +224,12 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 	 * @return True if a Log is displayed. False otherwize.
 	 */
 	protected function _display_current_log() {
+
+		$log_types      = SecuPress_Logs::_get_log_types();
+		$has_tabs_class = count( $log_types ) > 1 ? ' secupress-has-log-tabs' : ' secupress-has-no-log-tabs';
+
 		if ( ! $this->current_log_id ) {
-			echo '<div class="secupress-log-content secupress-empty-log-content"><p>' . __( 'No Logs selected', 'secupress' ) . "</p></div>\n";
+			echo '<div class="secupress-log-content secupress-empty-log-content' . $has_tabs_class . '"><p>' . __( 'No Logs selected', 'secupress' ) . "</p></div>\n";
 			return false;
 		}
 
@@ -233,7 +237,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 		$log           = new $log_classname( $this->current_log_id );
 
 		if ( ! $log ) {
-			echo '<div class="secupress-log-content secupress-empty-log-content"><p>' . __( 'No Logs selected', 'secupress' ) . "</p></div>\n";
+			echo '<div class="secupress-log-content secupress-empty-log-content' . $has_tabs_class . '"><p>' . __( 'No Logs selected', 'secupress' ) . "</p></div>\n";
 			return false;
 		}
 
@@ -248,7 +252,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 		// Add a class to the current Log row.
 		add_filter( 'post_class', array( $this, '_add_current_log_class' ), 10, 3 );
 		?>
-		<div class="secupress-log-content" data-logid="<?php echo $this->current_log_id; ?>">
+		<div class="secupress-log-content<?php echo $has_tabs_class; ?>" data-logid="<?php echo $this->current_log_id; ?>">
 			<div class="secupress-log-content-header secupress-section-primary">
 				<div class="secupress-flex">
 					<p class="secupress-log-title">
