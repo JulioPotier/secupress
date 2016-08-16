@@ -42,19 +42,12 @@
 .secupress-logs-list .subsubsub .high a {
 	color: #F2295E;
 }
-.secupress-logs-list .bulkactions {
-	float: right;
-}
-.secupress-logs-list .tablenav .tablenav-pages {
-	clear: right;
-	margin: -13px 15px 0 0;
+.secupress-logs-list .tablenav-pages {
+	margin: 0 15px 0 0;
 	font-size: 11px;
 	text-align: right;
 	color: #FFF;
 	font-weight: 600;
-}
-.secupress-logs-list .tablenav.top .tablenav-pages {
-	margin-top: -10.7em;
 }
 .secupress-logs-list .tablenav .tablenav-pages a,
 .secupress-logs-list .tablenav-pages-navspan {
@@ -73,9 +66,6 @@
 .secupress-quick-actions .secupress-button {
 	padding: 6px 18px 7px;
 }
-.secupress-logs-list .secupress-quick-actions {
-	padding: 9px 8px 7px 5px;
-}
 .secupress-logs-list .tablenav-pages .current-page {
 	padding: 3px 0;
 	font-size: 12px;
@@ -88,10 +78,7 @@
 	display: none;
 }
 .secupress-logs-list .nav-tab-wrapper {
-	float: left;
 	border-bottom: 0;
-	position: relative;
-	top: 32px;
 }
 .secupress-logs-list .nav-tab {
 	padding: 8px 15px;
@@ -114,32 +101,46 @@
 .secupress-logs-list .wp-list-table {
 	border-top: 0;
 }
-
-@media (min-width: 1150px) {
-	/* When Logs are shown in list with no specific log open */
-	.secupress-empty-log-content + .secupress-logs-list .nav-tab-wrapper {
-		top: 0;
-	}
-	.secupress-empty-log-content + .secupress-logs-list .tablenav.top .tablenav-pages {
-		margin-top: -7.8em;
-	}
-	.secupress-empty-log-content + .secupress-logs-list .secupress-quick-actions {
-		padding: 0 0 15px 15px;
-	}
+/* Flex all the table nav header */
+.secupress-logs-list .tablenav {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	height: auto;
+	align-items: center;
+	margin-bottom: 0;
 }
-@media (max-width: 782px) {
-	.secupress-logs-list .tablenav.top .tablenav-pages {
-		margin-top: -7.9em;
-	}
-	.secupress-logs-list .nav-tab-wrapper {
-		top: 5px;
-	}
-	.secupress-logs-list .tablenav.bottom .displaying-num {
-		position: static;
-	}
-	.secupress-logs-list .tablenav .tablenav-pages {
-		margin-top: -26px;
-	}
+.secupress-logs-list .tablenav-pages {
+	order: -1;
+	flex-basis: 100%;
+	height: auto;
+	margin-top: -4em;
+}
+.secupress-logs-list .bottom .tablenav-pages {
+	margin-top: .5em;
+}
+.secupress-logs-list .nav-tab-wrapper {
+	order: 1;
+	align-self: flex-end;
+}
+.secupress-logs-list .secupress-quick-actions {
+	order: 1;
+	margin-left: auto;
+	padding: 5px 10px;
+}
+.secupress-logs-list .bulkactions {
+	order: 3;
+	padding: 5px 10px;
+}
+
+.secupress-has-no-log-tabs + .secupress-logs-list .tablenav h1 {
+	display: none;
+}
+.secupress-has-no-log-tabs + .secupress-logs-list .secupress-quick-actions {
+	margin-left: 0;
+}
+.secupress-has-no-log-tabs + .secupress-logs-list .bulkactions {
+	margin-left: auto;
 }
 
 [class^="secupress-"] .spinner {
