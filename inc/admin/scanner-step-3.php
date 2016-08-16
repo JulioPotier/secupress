@@ -162,7 +162,7 @@ if ( ! $secupress_tests ) {
 
 							<div class="secupress-mfh-pro">
 								<p class="secupress-get-pro-version">
-									<?php printf( __( 'Available in <a href="%s">Pro Version</a>', 'secupress' ), esc_url( secupress_admin_url( 'get_pro' ) ) ); ?>
+									<?php printf( __( 'Available in <a href="%s" target="_blank">Pro Version</a>', 'secupress' ), esc_url( secupress_admin_url( 'get_pro' ) ) ); ?>
 								</p>
 							</div>
 

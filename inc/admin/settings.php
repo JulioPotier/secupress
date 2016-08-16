@@ -525,7 +525,7 @@ function __secupress_scanners() {
 									</p>
 
 									<p class="secupress-cta">
-										<a href="<?php echo esc_url( secupress_admin_url( 'modules', 'schedules' ) ); ?>#module-scanners" class="secupress-button secupress-button-primary"><?php esc_html_e( 'Schedule your next analysis', 'secupress' ); ?></a>
+										<a href="<?php echo esc_url( secupress_admin_url( 'modules', 'schedules' ) ); ?>#module-scanners" class="secupress-button secupress-button-primary" target="_blank"><?php esc_html_e( 'Schedule your next analysis', 'secupress' ); ?></a>
 									</p>
 								</div><!-- .secupress-schedules-infos -->
 							<?php else : ?>
@@ -540,7 +540,7 @@ function __secupress_scanners() {
 									</p>
 
 									<p class="secupress-cta">
-										<a href="<?php echo esc_url( secupress_admin_url( 'modules', 'schedules' ) ); ?>#module-scanners" class="secupress-button secupress-button-tertiary"><?php esc_html_e( 'Schedule your next analysis', 'secupress' ); ?></a>
+										<a href="<?php echo esc_url( secupress_admin_url( 'modules', 'schedules' ) ); ?>#module-scanners" class="secupress-button secupress-button-tertiary" target="_blank"><?php esc_html_e( 'Schedule your next analysis', 'secupress' ); ?></a>
 									</p>
 									<p class="secupress-cta-detail"><?php _e( 'Available with pro version', 'secupress' ); ?></p>
 								</div><!-- .secupress-schedules-infos -->
