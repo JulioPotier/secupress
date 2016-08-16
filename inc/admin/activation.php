@@ -238,8 +238,6 @@ register_deactivation_hook( SECUPRESS_FILE, 'secupress_deactivation' );
  * @since 1.0
  */
 function secupress_deactivation() {
-	// Pause the licence.
-	wp_remote_get( SECUPRESS_WEB_MAIN . 'pause-licence.php' );
 
 	// While the plugin is deactivated, some sites may activate or deactivate other plugins, or change their default user role.
 	if ( is_multisite() ) {
