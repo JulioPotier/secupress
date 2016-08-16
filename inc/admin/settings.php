@@ -278,9 +278,9 @@ function secupress_create_menus() {
 	add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Settings' ),              __( 'Settings' ),                       $cap, SECUPRESS_PLUGIN_SLUG . '_settings', '__secupress_global_settings' );
 	//// pro page should be a module too… I edit, take a look
 	if ( secupress_is_pro() ) {
-		add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Support', 'secupress' ), __( 'Support' ), $cap, SECUPRESS_PLUGIN_SLUG . '_modules&module=services', '__return_false' );
+		add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Support', 'secupress' ), __( 'Support', 'secupress' ), $cap, SECUPRESS_PLUGIN_SLUG . '_modules&module=services', '__return_false' );
 	} else {
-		add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Get PRO', 'secupress' ), __( 'Get PRO' ), $cap, SECUPRESS_PLUGIN_SLUG . '_modules&module=get-pro', '__return_false' );
+		add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'PRO Version', 'secupress' ), __( 'PRO Version', 'secupress' ), $cap, SECUPRESS_PLUGIN_SLUG . '_modules&module=get-pro', '__return_false' );
 	}
 
 	// Fix `add_menu_page()` nonsense.

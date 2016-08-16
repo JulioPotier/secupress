@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2016-08-15 16:20+0200\n"
-"PO-Revision-Date: 2016-08-16 11:42+0200\n"
+"POT-Creation-Date: 2016-08-16 12:06+0200\n"
+"PO-Revision-Date: 2016-08-16 12:07+0200\n"
 "Last-Translator: WP Media <contact@wp-media.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -87,11 +87,11 @@ msgstr ""
 "Puisque votre fichier %1$s ne peut pas être édité. Merci d'ajouter ceci dans "
 "votre fichier&nbsp;: %2$s"
 
-#: inc/admin/activation.php:277 inc/admin/activation.php:303
-#: inc/admin/activation.php:345 inc/admin/functions/modules.php:373
-#: inc/admin/functions/modules.php:387 inc/admin/functions/modules.php:400
-#: inc/admin/functions/modules.php:448 inc/admin/functions/modules.php:476
-#: inc/admin/functions/modules.php:506 inc/admin/functions/modules.php:518
+#: inc/admin/activation.php:275 inc/admin/activation.php:301
+#: inc/admin/activation.php:343 inc/admin/functions/modules.php:378
+#: inc/admin/functions/modules.php:392 inc/admin/functions/modules.php:405
+#: inc/admin/functions/modules.php:453 inc/admin/functions/modules.php:481
+#: inc/admin/functions/modules.php:511 inc/admin/functions/modules.php:523
 #: inc/admin/notices.php:71 inc/admin/notices.php:190 inc/admin/notices.php:228
 #: inc/admin/notices.php:252 inc/admin/notices.php:261
 #: inc/admin/notices.php:282
@@ -108,7 +108,7 @@ msgstr ""
 msgid "%s: "
 msgstr "%s&nbsp;: "
 
-#: inc/admin/activation.php:280
+#: inc/admin/activation.php:278
 #, php-format
 msgid ""
 "It seems your server uses a <i>Nginx</i> system. You have to edit the "
@@ -119,7 +119,7 @@ msgstr ""
 "alors éditer votre fichier de configuration manuellement. Merci de supprimer "
 "les règles entre %1$s et %2$s dans le fichier %3$s."
 
-#: inc/admin/activation.php:306
+#: inc/admin/activation.php:304
 #, php-format
 msgid ""
 "It seems your %3$s file does not seem to be writable. You have to edit the "
@@ -130,7 +130,7 @@ msgstr ""
 "manuellement. Merci de supprimer toutes les règles entre %1$s et %2$s du "
 "fichier %3$s."
 
-#: inc/admin/activation.php:348
+#: inc/admin/activation.php:346
 #, php-format
 msgid ""
 "It seems your %2$s file does not seem to be writable. You have to edit the "
@@ -139,7 +139,7 @@ msgstr ""
 "Votre fichier %2$s ne semble pas être en écriture. Vous devrez l'éditer "
 "manuellement. Merci de supprimer toutes les règles avec %1$s du fichier %2$s."
 
-#: inc/admin/activation.php:421
+#: inc/admin/activation.php:419
 msgid "OK, got it!"
 msgstr "Ok j'ai compris&nbsp;!"
 
@@ -171,7 +171,7 @@ msgstr "L'adresse IP %s a été bannie."
 
 #: inc/admin/ajax-post-callbacks.php:231
 #: inc/classes/settings/class-secupress-settings-modules.php:668
-#: inc/modules/get-pro/settings.php:84
+#: inc/modules/get-pro/settings.php:94
 msgid "Forever"
 msgstr "Pour toujours"
 
@@ -346,7 +346,7 @@ msgstr "Télécharger"
 msgid "Delete"
 msgstr "Supprimer"
 
-#: inc/admin/functions/modules.php:376
+#: inc/admin/functions/modules.php:381
 #, php-format
 msgid ""
 "Your %1$s file does not seem to be writable, you have to edit it manually. "
@@ -356,7 +356,7 @@ msgstr ""
 "manuellement. Merci de supprimer les règles entre %2$s et %3$s du fichier "
 "%1$s."
 
-#: inc/admin/functions/modules.php:390
+#: inc/admin/functions/modules.php:395
 #, php-format
 msgid ""
 "Your %1$s file does not seem to be writable, you have to edit it manually. "
@@ -365,7 +365,7 @@ msgstr ""
 "Votre fichier %1$s ne semble pas être en écriture, vous devez l'éditer "
 "manuellement. Merci de supprimer les règles %2$s du fichier %1$s."
 
-#: inc/admin/functions/modules.php:403
+#: inc/admin/functions/modules.php:408
 #, php-format
 msgid ""
 "Your server uses a <i>Nginx</i> system, you have to edit the configuration "
@@ -376,7 +376,7 @@ msgstr ""
 "fichier de configuration manuellement. Merci de supprimer les règles entre "
 "%2$s et %3$s du fichier %1$s."
 
-#: inc/admin/functions/modules.php:451
+#: inc/admin/functions/modules.php:456
 #: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:114
 #: inc/classes/scanners/class-secupress-scan-bad-url-access.php:94
 #: inc/classes/scanners/class-secupress-scan-directory-listing.php:94
@@ -392,7 +392,7 @@ msgstr ""
 "Votre fichier %1$s ne semble pas être en écriture. Merci d'ajouter les ligne "
 "suivantes au début de ce fichier&nbsp;: %2$s"
 
-#: inc/admin/functions/modules.php:481
+#: inc/admin/functions/modules.php:486
 #: inc/classes/scanners/class-secupress-scan-directory-listing.php:96
 #: inc/classes/scanners/class-secupress-scan-directoryindex.php:98
 #, php-format
@@ -405,7 +405,7 @@ msgstr ""
 "les balises %2$s et ajouter les lignes suivantes dans la hiérarchies de "
 "balises %3$s (créez la si elle n'existe pas)&nbsp;: %4$s"
 
-#: inc/admin/functions/modules.php:490
+#: inc/admin/functions/modules.php:495
 #: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:116
 #: inc/classes/scanners/class-secupress-scan-bad-url-access.php:96
 #: inc/classes/scanners/class-secupress-scan-discloses.php:107
@@ -420,7 +420,7 @@ msgstr ""
 "suivantes dans la hiérarchie des balises %2$s (créez la si elle n'existe "
 "pas)&nbsp;: %3$s"
 
-#: inc/admin/functions/modules.php:509
+#: inc/admin/functions/modules.php:514
 #, php-format
 msgid ""
 "Your server uses a <i>Nginx</i> system, you have to edit the configuration "
@@ -430,7 +430,7 @@ msgstr ""
 "fichier de configuration manuellement.  Merci d'ajouter le code suivant dans "
 "votre fichier %1$s&nbsp;: %2$s"
 
-#: inc/admin/functions/modules.php:519
+#: inc/admin/functions/modules.php:524
 msgid ""
 "It seems your server does not use <i>Apache</i>, <i>Nginx</i>, nor <i>IIS7</"
 "i>. This module won't work."
@@ -438,7 +438,7 @@ msgstr ""
 "Il semble que votre serveur n'utilise pas <i>Apache</i>, ni <i>Ngnix</i>, ni "
 "<i>II7</i>. Ce module ne peut pas fonctionner."
 
-#: inc/admin/functions/modules.php:568
+#: inc/admin/functions/modules.php:573
 #, php-format
 msgid "Deactivate the plugin %s."
 msgstr "Désactiver le plugin %s."
@@ -855,7 +855,7 @@ msgstr "Ignorer"
 msgid "Fix it and continue"
 msgstr "Corriger et continuer"
 
-#: inc/admin/scanner-step-3.php:274 inc/admin/settings.php:283
+#: inc/admin/scanner-step-3.php:274
 msgid "Get PRO"
 msgstr "Obtenir la version PRO"
 
@@ -1157,6 +1157,10 @@ msgstr "Docs"
 msgid "Support"
 msgstr "Support"
 
+#: inc/admin/settings.php:283
+msgid "PRO Version"
+msgstr "Version PRO"
+
 #: inc/admin/settings.php:369
 msgid "Currently scanning"
 msgstr "Scanner en cours"
@@ -1412,8 +1416,8 @@ msgstr "Inconnu"
 #: inc/classes/common/class-secupress-log.php:433
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:535
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:575
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:686
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:726
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:687
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:727
 msgid "empty string"
 msgstr "chaine vide"
 
@@ -5670,13 +5674,22 @@ msgid "Add or remove countries you want to manage for your website."
 msgstr ""
 "Ajouter ou supprimer les pays que vous souhaitez gérer pour votre site."
 
-#: inc/modules/get-pro/settings.php:25
+#: inc/modules/get-pro/settings.php:17
+#, php-format
+msgid ""
+"Impossible to get online prices, please check %sonline prices%s to get the "
+"last ones."
+msgstr ""
+"Impossible d'obtenir les prix à distance, merci de vérifier %sen ligne%s "
+"pour obtenir les derniers."
+
+#: inc/modules/get-pro/settings.php:30
 msgid "Preorder Now Your SecuPress Pro and Get an Exclusive Discount"
 msgstr ""
 "Précommandez dès aujourd'hui votre SecuPress Pro et bénéficiez d'une remise "
 "exclusive"
 
-#: inc/modules/get-pro/settings.php:26
+#: inc/modules/get-pro/settings.php:31
 msgid ""
 "Choose the licence that suits you the best and be part of the first users to "
 "get SecuPress Pro upon its release"
@@ -5684,78 +5697,78 @@ msgstr ""
 "Choisissez la formule qui vous convient et faites partie des premiers "
 "utilisateurs de SecuPress Pro dès sa sortie"
 
-#: inc/modules/get-pro/settings.php:32
+#: inc/modules/get-pro/settings.php:37
 #, php-format
 msgid "Improve Your Security Unlocking%sAll the Features from SecuPress Pro"
 msgstr ""
 "Améliorez votre sécurité en débloquant%stoutes les fonctionnalités de "
 "SecuPress Pro"
 
-#: inc/modules/get-pro/settings.php:36
+#: inc/modules/get-pro/settings.php:47
 msgid "Yearly"
 msgstr "Annuellement"
 
-#: inc/modules/get-pro/settings.php:39
+#: inc/modules/get-pro/settings.php:50
 msgid "Monthly"
 msgstr "Mensuellement"
 
-#: inc/modules/get-pro/settings.php:40
+#: inc/modules/get-pro/settings.php:51
 msgid "Coming soon"
 msgstr "Bientôt"
 
-#: inc/modules/get-pro/settings.php:76
+#: inc/modules/get-pro/settings.php:86
 #, php-format
 msgid "%d month for free"
 msgid_plural "%d months for free"
 msgstr[0] "%d mois gratuit"
 msgstr[1] "%d mois gratuits"
 
-#: inc/modules/get-pro/settings.php:79
+#: inc/modules/get-pro/settings.php:89
 msgid "Billed per year"
 msgstr "Facturé à l'année"
 
-#: inc/modules/get-pro/settings.php:80
+#: inc/modules/get-pro/settings.php:90
 msgid "Billed per month"
 msgstr "Facturé au mois"
 
-#: inc/modules/get-pro/settings.php:82
+#: inc/modules/get-pro/settings.php:92
 msgid "Secure & Protect"
 msgstr "Sécurise et Protège"
 
-#: inc/modules/get-pro/settings.php:83
+#: inc/modules/get-pro/settings.php:93
 #, php-format
 msgid "%d Website"
 msgid_plural "%d Websites"
 msgstr[0] "%d site"
 msgstr[1] "%d sites"
 
-#: inc/modules/get-pro/settings.php:89
+#: inc/modules/get-pro/settings.php:99
 msgid "Pre-Order"
 msgstr "Précommander"
 
-#: inc/modules/get-pro/settings.php:89
+#: inc/modules/get-pro/settings.php:99
 msgid "Order"
 msgstr "Commander"
 
-#: inc/modules/get-pro/settings.php:99
+#: inc/modules/get-pro/settings.php:109
 msgid "Included With All Plans"
 msgstr "Inclus dans tous les plans"
 
-#: inc/modules/get-pro/settings.php:104
+#: inc/modules/get-pro/settings.php:114
 msgid "Unlimited Support and Updates"
 msgstr "Support et mises à jour illimités"
 
-#: inc/modules/get-pro/settings.php:108 inc/modules/get-pro/settings.php:112
+#: inc/modules/get-pro/settings.php:118 inc/modules/get-pro/settings.php:122
 #, php-format
 msgctxt "one line text please"
 msgid "Bonus %s on %s"
 msgstr "%s sur %s"
 
-#: inc/modules/get-pro/settings.php:108
+#: inc/modules/get-pro/settings.php:118
 msgid "100 Mb for free"
 msgstr "100 Mo gratuits"
 
-#: inc/modules/get-pro/settings.php:112
+#: inc/modules/get-pro/settings.php:122
 msgid "20% OFF"
 msgstr "20% de remise"
 
@@ -5916,189 +5929,189 @@ msgstr "Options %s mise à jour sur le réseau."
 msgid "New user added (or not)."
 msgstr "Nouvel utilisateur ajouté (ou pas)"
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:629
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:630
 #, php-format
 msgid "%1$s prevented a request at %2$s"
 msgstr "%1$s a empêché une requête depuis %2$s"
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:630
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:781
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:631
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:783
 #, php-format
 msgid "IP banned: %s."
 msgstr "Adresse IP bannie&nbsp;: %s."
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:631
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:782
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:632
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:784
 #, php-format
 msgid "Theme activated: %s."
 msgstr "Thème activé&nbsp;: %s."
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:632
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:783
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:633
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:785
 #, php-format
 msgid "Administrator %s logged in."
 msgstr "L'administrateur %s s'est connecté."
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:633
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:634
 #, php-format
 msgid "User deleted: %s."
 msgstr "Utilisateur supprimé&nbsp;: %s."
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:634
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:635
 #, php-format
 msgid "%s's user data changed."
 msgstr "L'utilisateur %s a changé ses données."
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:635
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:786
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:636
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:788
 #, php-format
 msgid "New user %s created."
 msgstr "Nouvel utilisateur %s créé."
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:636
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:637
 #, php-format
 msgid "User meta %2$s added to %1$s."
 msgstr "La donnée meta %2$s a été ajoutée pour l'utilisateur %1$s. "
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:637
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:638
 #, php-format
 msgid "User meta %2$s updated for %1$s."
 msgstr "La donnée meta %2$s a été mise à jour pour l'utilisateur %1$s. "
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:638
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:789
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:639
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:791
 #, php-format
 msgid "User meta %2$s deleted for %1$s."
 msgstr "La donnée meta %2$s a été supprimée pour l'utilisateur %1$s. "
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:639
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:790
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:640
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:792
 #, php-format
 msgid "Blog %1$s created with %2$s as Administrator."
 msgstr "Le blog %1$s a été créé par %2$s en tant qu'administrateur."
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:640
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:791
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:641
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:793
 #, php-format
 msgid "Blog %s deleted."
 msgstr "Blog %s supprimé."
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:641
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:642
 #, php-format
 msgid "E-mail sent from %1$s to %2$s."
 msgstr "Email envoyé de %1$s à %2$s."
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:642
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:643
 #, php-format
 msgid "External request to %s"
 msgstr "Requête externe vers %s"
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:690
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:698
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:691
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:699
 #, php-format
 msgid "Plugin(s) activated: %s."
 msgstr "Plugin(s) activé(s)&nbsp;: %s."
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:694
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:695
 #, php-format
 msgid "Plugin(s) activated: %1$s. Plugin(s) deactivated: %2$s."
 msgstr "Plugin(s) activé(s)&nbsp;: %1$s. Plugin(s) désactivé(s)&nbsp;: %2$s."
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:702
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:703
 #, php-format
 msgid "Plugin(s) deactivated: %s."
 msgstr "Plugin(s) désactivé(s)&nbsp;: %s."
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:706
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:746
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:707
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:747
 #, php-format
 msgid "Raw data: %1$s %2$s"
 msgstr "Données brutes&nbsp;: %1$s %2$s"
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:712
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:713
 #, php-format
 msgid "Option %1$s created with the following value: %2$s."
 msgstr "L'option %1$s a été créée avec la valeur suivante&nbsp;: %2$s."
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:714
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:715
 #, php-format
 msgid "Option %1$s updated from the value %3$s to %2$s."
 msgstr ""
 "L'option %1$s a été mise à jour de la valeur %2$s à la valeur "
 "suivante&nbsp;: %3$s."
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:730
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:738
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:731
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:739
 #, php-format
 msgid "Plugin(s) network activated: %s."
 msgstr "Plugin(s) activé(s)&nbsp;: %s sur le réseau."
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:734
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:735
 #, php-format
 msgid "Plugin(s) network activated: %1$s. Plugin(s) network deactivated: %2$s."
 msgstr ""
 "Plugin(s) activé(s) sur le réseau&nbsp;: %1$s sur le réseau. Plugin(s) "
 "désactivé(s) sur le réseau&nbsp;: %2$s."
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:742
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:743
 #, php-format
 msgid "Plugin(s) network deactivated: %s."
 msgstr "Plugin(s) désactivé(s) sur le réseau&nbsp;: %s."
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:752
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:753
 #, php-format
 msgid "Network option %1$s created with the following value: %2$s."
 msgstr "L'option %1$s a été créée sur le réseau avec la valeur %2$s."
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:754
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:755
 #, php-format
 msgid "Network option %1$s updated from the value %3$s to %2$s"
 msgstr ""
 "L'option %1$s a été mise à jour sur le réseau depuis la valeur %3$s à la "
 "valeur %2$s."
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:766
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:767
 #, php-format
 msgid "New user added (or not) using the following data: %s"
 msgstr ""
 "Nouvel utilisateur ajouté (ou pas) avec les données suivantes&nbsp;: %s"
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:780
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:782
 #, php-format
 msgid ""
-"%6$s prevented a request at %1$s from the IP %2$s. Block ID: %3$s. The "
-"server configuration at the moment: %4$s Data posted: %5$s"
+"%1$s prevented a request at %2$s from the IP %3$s. Block ID: %4$s. The "
+"server configuration at the moment: %5$s Data posted: %6$s"
 msgstr ""
-"%6$s a empêché une requête de %1$s depuis l'adresse IP %2$s. Block ID&nbsp;: "
-"%3$s. Configuration du serveur&nbsp;: %4$s Données envoyées&nbsp;: %5$s"
+"%1$s a empêché une requête de %2$s depuis l'IP %3$s. Block ID: %4$s. La "
+"configuration du serveur à ce moment: %5$s Données envoyées: %6$s"
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:784
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:786
 #, php-format
 msgid "User deleted: %1$s. Posts assigned to: %2$s."
 msgstr "Utilisateur supprimé&nbsp;: %1$s. Articles assignés à&nbsp;: %2$s."
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:785
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:787
 #, php-format
 msgid "%1$s's user data changed from: %2$s To: %3$s"
 msgstr "Données de l'utilisateur %1$s modifiées de %2$s à %3$s"
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:787
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:789
 #, php-format
 msgid "User meta %2$s added to %1$s with the value %3$s"
 msgstr "Donnée utilisateur %2$s ajoutée à %1$s avec la valeur %3$s"
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:788
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:790
 #, php-format
 msgid ""
 "User meta %2$s updated for %1$s with the value %3$s Previous value was: %3$s"
 msgstr "La donnée meta %2$s de l'utilisateur %1$s mise à jour de %3$s à %2$s"
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:792
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:794
 #, php-format
 msgid "E-mail sent from %1$s to %2$s with the following subject: %3$s"
 msgstr "Email envoyé de %1$s à %2$s avec le sujet %3$s"
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:793
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:795
 #, php-format
 msgid ""
 "External request to: %1$s with the following arguments: %2$s The response "
@@ -6107,7 +6120,7 @@ msgstr ""
 "Requête externe sur %1$s avec les arguments suivants %2$s La réponse était "
 "%3$s"
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:901
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:903
 msgid "Unknown user"
 msgstr "Utilisateur inconnu"
 
@@ -7366,6 +7379,20 @@ msgid ""
 msgstr ""
 "<strong>%1$s</strong> requiert WordPress v%2$s minimum, votre site utilise "
 "actuellement la version %3$s."
+
+#~ msgid ""
+#~ "Impossible to get online prices, please check %s to get the last ones."
+#~ msgstr ""
+#~ "Impossible d'obtenir les prix en ligne, merci de vérifier %s pour obtenir "
+#~ "les derniers."
+
+#~ msgid ""
+#~ "%6$s prevented a request at %1$s from the IP %2$s. Block ID: %3$s. The "
+#~ "server configuration at the moment: %4$s Data posted: %5$s"
+#~ msgstr ""
+#~ "%6$s a empêché une requête de %1$s depuis l'adresse IP %2$s. Block "
+#~ "ID&nbsp;: %3$s. Configuration du serveur&nbsp;: %4$s Données "
+#~ "envoyées&nbsp;: %5$s"
 
 #~ msgid "Daily Reporting"
 #~ msgstr "Rapports journaliers"
