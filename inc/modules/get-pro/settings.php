@@ -4,7 +4,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 $plans = get_transient( 'secupress_pro_plans' );
 
 if ( false === $plans ) {
-	$response = wp_remote_get( SECUPRESS_WEB_MAIN . 'plans.php' );
+	$response = wp_remote_get( SECUPRESS_WEB_MAIN . 'api/plugin/plans.php' );
 	if ( ! is_wp_error( $response ) && wp_remote_retrieve_response_code( $response ) === 200 ) {
 		$plans = wp_remote_retrieve_body( $response );
 		$plans = json_decode( $plans, true );
