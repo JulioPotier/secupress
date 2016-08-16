@@ -123,6 +123,16 @@
 	order: 1;
 	align-self: flex-end;
 }
+@media (max-width: 1800px) {
+	.secupress-has-log-tabs[data-logid] + .secupress-logs-list .nav-tab-wrapper {
+		order: 3;
+	}
+}
+@media (max-width: 1200px) {
+	.secupress-logs-list .nav-tab-wrapper {
+		order: 3;
+	}
+}
 .secupress-logs-list .secupress-quick-actions {
 	order: 1;
 	margin-left: auto;
