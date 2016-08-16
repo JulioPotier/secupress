@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
 "POT-Creation-Date: 2016-08-15 16:20+0200\n"
-"PO-Revision-Date: 2016-08-15 16:20+0200\n"
+"PO-Revision-Date: 2016-08-16 09:23+0200\n"
 "Last-Translator: WP Media <contact@wp-media.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -705,8 +705,8 @@ msgstr "%s est activé, améliorons la sécurité de votre site&nbsp;!"
 msgid ""
 "Scan every security points for the first time in your website, right now."
 msgstr ""
-"Scanner tous les points de sécurité pour la première fois dans votre site, "
-"dès maintenant."
+"Scanner tous les points de sécurité pour la première fois de votre site, dès "
+"maintenant."
 
 #: inc/admin/notices.php:332 inc/admin/settings.php:123
 #: inc/admin/settings.php:627
@@ -3367,7 +3367,7 @@ msgstr ""
 #: inc/classes/scanners/class-secupress-scan-easy-login.php:48
 msgid "Check if your login page is protected by Double Authentication."
 msgstr ""
-"Vérifie si votre page de connexion est protégé par une Double "
+"Vérifie si votre page de connexion est protégée par une Double "
 "Authentification"
 
 #: inc/classes/scanners/class-secupress-scan-easy-login.php:49
@@ -3788,7 +3788,7 @@ msgid ""
 "protected automatically."
 msgstr ""
 "Votre serveur tourne dans un environnement non reconnu. La divulgation des "
-"modules PHP installés ne peuvent être protégés automatiquement."
+"modules PHP installés ne peuvent être protégée automatiquement."
 
 #: inc/classes/scanners/class-secupress-scan-phpversion.php:69
 msgid "Check if your installation is using a supported version of PHP."
