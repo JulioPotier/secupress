@@ -1357,10 +1357,14 @@ a + .secupress-row-actions {
 	border-radius: 2px;
 	overflow: hidden;
 }
+.secupress-step-by-step .text {
+	margin-left: .5em;
+}
 .secupress-step-by-step .step3-advanced-text {
 	min-width: 1.3em;
 	padding: 7px 10px;
 	margin-right: 8px;
+	margin-left: 0;
 	font-size: 14px;
 	text-align: center;
 	background: #F19B12;
