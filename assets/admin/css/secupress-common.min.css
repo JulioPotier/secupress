@@ -769,6 +769,8 @@ body[class*="secupress"] .sweet-overlay {
 .secupress-response-notice:before {
 	content: "\f00c";
 	width: 30px;
+	margin-right: 5px;
+	vertical-align: -2px;
 	font-family: 'secupress';
 	font-size: 18px;
 	font-weight: normal;
