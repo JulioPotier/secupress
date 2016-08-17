@@ -391,3 +391,18 @@ function __secupress_toggle_file_scan_ajax_post_cb() {
 	wp_redirect( esc_url_raw( wp_get_referer() ) );
 	die();
 }
+
+
+add_action( 'wp_ajax_secupress_recovery_email', '__secupress_recovery_email_ajax_post_cb' );
+/**
+ * Set the recovery email via notice, if possible
+ *
+ * @author Julio Potier
+ * @since 1.0
+ */
+function __secupress_recovery_email_ajax_post_cb() {
+
+	__secupress_callback_update_user_contactmethods( get_current_user_id() );
+	$dummy = new StdClass;
+	die( secupress_user_profile_update_errors( $dummy, false, wp_get_current_user() ) );
+}

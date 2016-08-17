@@ -275,14 +275,24 @@ add_action( 'admin_init', 'secupress_warning_no_recovery_email' );
  * @since 1.0
  */
 function secupress_warning_no_recovery_email() {
-	if ( get_user_meta( get_current_user_id(), 'secupress_recovery_email', true ) ) {
+	global $pagenow;
+
+	$scans = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
+
+	if ( ! $scans || 'profile.php' === $pagenow || get_user_meta( get_current_user_id(), 'secupress_recovery_email', true ) ) {
 		return;
 	}
 
-	$message  = sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
-	$message .= sprintf( __( 'Your <a href="%s">Recovery E-mail</a> isn\'t yet set. Please do it.', 'secupress' ), get_edit_profile_url( get_current_user_id() ) . '#secupress_recovery_email' );
+	$form     = '<img src="' . admin_url( 'images/wpspin_light.gif' ) . '" alt="' . __( 'Loading', 'secupress' ) . '" class="hidden" id="secupress_recovery_email_spinner">';
+	$form    .= '<input type="text" name="secupress_recovery_email" id="secupress_recovery_email" placeholder="' . __( 'Email address', 'secupress' ) . '"/> ';
+	$form    .= '<button id="secupress_recovery_email_submit">' . __( 'Submit', 'secupress' ) . '</button> ';
+	$form    .= '<span id="secupress_recovery_email_result"></span> ';
+	$form    .= '<button class="hidden" id="secupress_recovery_email_retry">' . __( 'Retry', 'secupress' ) . '</button>';
 
-	secupress_add_notice( $message, 'error', false );
+	$message  = sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
+	$message .= sprintf( __( 'A <strong>Recovery E-mail</strong> is needed in case of hack, you can set it in your <a href="%1$s">profile</a><span id="secupress_recovery_email_parent" class="hide-if-no-js"> or here: %2$s</span>', 'secupress' ), get_edit_profile_url( get_current_user_id() ) . '#secupress_recovery_email', $form );
+
+	secupress_add_notice( $message, 'error', 'recovery_email' );
 }
 
 
