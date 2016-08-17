@@ -278,7 +278,7 @@ if ( ! $secupress_tests ) {
 										<span class="icon">
 											<i class="icon-check" aria-hidden="true"></i>
 										</span>
-										<span class="text"><?php _e( 'Done', 'secupress' ); ?></span>
+										<span class="text"><?php _e( 'I did the requested work, continue', 'secupress' ); ?></span>
 									</a>
 								<?php } ?>
 							</p>
