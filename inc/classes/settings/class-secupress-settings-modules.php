@@ -825,7 +825,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	protected function backup_history() {
 		if ( ! secupress_is_pro() ) {
 		?>
-		<p id="secupress-no-backups"<?php echo $backup_files ? ' class="hidden"' : ''; ?>><em><?php _e( 'No Backups found yet, do one?', 'secupress' ); ?></em></p>
+		<p id="secupress-no-backups"><em><?php _e( 'No Backups found yet, do one?', 'secupress' ); ?></em></p>
 		<?php
 		} else {
 			/**
