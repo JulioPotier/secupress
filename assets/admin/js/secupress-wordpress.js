@@ -34,6 +34,61 @@ jQuery( document ).ready( function( $ ) {
 			$theme.after( html );
 		} );
 
+		/* Everywhere but profile page: The recovery email notice can modify the profile page for the recovery email value */
+
+		// On dismiss, show a swal to alert about the necessity of the recover email address
+		$( ".secupress-is-dismissible a[href*='notice_id=recovery_email']" ).on( "click", function( e ) {
+			if ( $( "#secupress_recovery_email:visible" ).length ) {
+				swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
+					title:             SecuPressi18nCommon.recoveryEmailNeeded,
+					html:              SecuPressi18nCommon.forYourSecurity,
+					showConfirmButton: false,
+					type:              "warning"
+				} ) );
+			}
+		});
+
+		// Click on retry will play with visibility only
+		$( "#secupress_recovery_email_parent" ).on( "click", "#secupress_recovery_email_retry", function( e ) {
+
+			$( "#secupress_recovery_email_result" ).text( "" );
+			$( "#secupress_recovery_email_retry" ).hide();
+			$( "#secupress_recovery_email_retry" ).hide();
+
+			$( "#secupress_recovery_email_submit" ).show();
+			$( "#secupress_recovery_email" ).show().focus().select();
+
+		});
+
+		// Click on submit or hit "enter" inside the input field
+		$( "#secupress_recovery_email_parent" ).on( "keypress click", "#secupress_recovery_email, #secupress_recovery_email_submit", function( e ) {
+
+			if ( ( "keypress" === e.type && secupressIsEnterKey( e ) ) || ( "click" === e.type && typeof e.toElement.id != "undefined" && "secupress_recovery_email_submit" === e.toElement.id ) ) {
+
+				var $_this = $( "#secupress_recovery_email" );
+				var $_spin = $( "#secupress_recovery_email_spinner" );
+
+				$_this.hide();
+				$_spin.show();
+				$( "#secupress_recovery_email_submit" ).hide();
+
+				$.post( ajaxurl, {secupress_recovery_email: $_this.val(), action:"secupress_recovery_email"} )
+				.always(
+					function( data ) {
+
+						$_spin.hide();
+
+						$( "#secupress_recovery_email_result" ).html( data );
+
+						// 1 char length is the "valid check" emoji, else, show the retry button.
+						if ( 1 < data.length ) {
+							$( "#secupress_recovery_email_retry" ).show().focus();
+						}
+
+					} );
+			}
+		});
+
 	} )(jQuery, document, window);
 
 } );

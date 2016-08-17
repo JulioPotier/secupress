@@ -56,9 +56,11 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	wp_enqueue_script( 'secupress-common-js', SECUPRESS_ADMIN_JS_URL . 'secupress-common' . $suffix . '.js', array( 'secupress-wordpress-js' ), $version, true );
 
 	wp_localize_script( 'secupress-common-js', 'SecuPressi18nCommon', array(
-		'confirmText' => __( 'OK', 'secupress' ),
-		'cancelText'  => __( 'Cancel' ),
-		'closeText'   => __( 'Close' ),
+		'confirmText'         => __( 'OK', 'secupress' ),
+		'cancelText'          => __( 'Cancel' ),
+		'closeText'           => __( 'Close' ),
+		'recoveryEmailNeeded' => __( 'Recovery Email Needed', 'secupress' ),
+		'forYourSecurity'     => sprintf( __( 'For your security you should set a recovery email, %1$s will use it in case of hack as a rescue email address. <a href="%2$s">Do it now!</a>', 'secupress' ), SECUPRESS_PLUGIN_NAME, get_edit_profile_url( get_current_user_id() ) . '#secupress_recovery_email' ),
 		/*'authswal'     => array(
 			'title'  => __( 'Authentication', 'secupress' ),
 			'email'  => __( 'Enter your email', 'secupress' ),
