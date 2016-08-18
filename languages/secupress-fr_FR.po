@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2016-08-17 14:42+0200\n"
-"PO-Revision-Date: 2016-08-18 01:45+0200\n"
+"POT-Creation-Date: 2016-08-18 08:37+0200\n"
+"PO-Revision-Date: 2016-08-18 08:37+0200\n"
 "Last-Translator: WP Media <contact@wp-media.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -92,9 +92,9 @@ msgstr ""
 #: inc/admin/functions/modules.php:392 inc/admin/functions/modules.php:405
 #: inc/admin/functions/modules.php:453 inc/admin/functions/modules.php:481
 #: inc/admin/functions/modules.php:511 inc/admin/functions/modules.php:523
-#: inc/admin/notices.php:71 inc/admin/notices.php:190 inc/admin/notices.php:228
-#: inc/admin/notices.php:252 inc/admin/notices.php:261
-#: inc/admin/notices.php:292
+#: inc/admin/notices.php:71 inc/admin/notices.php:194 inc/admin/notices.php:232
+#: inc/admin/notices.php:256 inc/admin/notices.php:265
+#: inc/admin/notices.php:296
 #: inc/modules/logs/plugins/inc/php/404-logs/class-secupress-404-log.php:65
 #: inc/modules/logs/plugins/inc/php/404-logs/class-secupress-404-log.php:66
 #: inc/modules/users-login/callbacks.php:253
@@ -644,11 +644,11 @@ msgstr ""
 "Les plugins suivants ne sont pas recommandés avec ce plugin et pourraient "
 "causer des résultats inattendus&nbsp;:"
 
-#: inc/admin/notices.php:76 inc/admin/notices.php:119
+#: inc/admin/notices.php:80 inc/admin/notices.php:123
 msgid "Deactivate"
 msgstr "Désactiver"
 
-#: inc/admin/notices.php:113
+#: inc/admin/notices.php:117
 #, php-format
 msgid ""
 "The features of the following plugins are included into %1$s. You can "
@@ -658,7 +658,7 @@ msgstr ""
 "désactiver ces plugins maintenant et activer ces fonctions plus tard dans "
 "%1$s&nbsp;:"
 
-#: inc/admin/notices.php:191
+#: inc/admin/notices.php:195
 #, php-format
 msgid ""
 "The %1$s file does not seem to be writable, read more about the <a href="
@@ -667,7 +667,7 @@ msgstr ""
 "Le fichier %1$s ne semble pas être en écriture, en savoir plus sur <a href="
 "\"%2$s\" target=\"_blank\" hreflang=\"en\">les droit d'écriture (en)</a>."
 
-#: inc/admin/notices.php:229
+#: inc/admin/notices.php:233
 #, php-format
 msgid ""
 "If you had <a href=\"%1$s\" target=\"_blank\">writing permissions</a> on "
@@ -677,38 +677,38 @@ msgstr ""
 "d'écriture</a> sur le fichier %2$s, %3$s pourrait faire plus de choses "
 "automatiquement."
 
-#: inc/admin/notices.php:253
+#: inc/admin/notices.php:257
 msgid "This module has been activated:"
 msgid_plural "These modules have been activated:"
 msgstr[0] "Ce module a été activé&nbsp;:"
 msgstr[1] "Ces modules ont été activés&nbsp;:"
 
-#: inc/admin/notices.php:262
+#: inc/admin/notices.php:266
 msgid "This module has been deactivated:"
 msgid_plural "These modules have been deactivated:"
 msgstr[0] "Ce module a été désactivé&nbsp;:"
 msgstr[1] "Ces modules ont été désactivés&nbsp;:"
 
-#: inc/admin/notices.php:286
+#: inc/admin/notices.php:290
 msgid "Loading"
 msgstr "Chargement"
 
-#: inc/admin/notices.php:287
+#: inc/admin/notices.php:291
 msgid "Email address"
 msgstr "Adresse email"
 
-#: inc/admin/notices.php:288
+#: inc/admin/notices.php:292
 #: inc/classes/settings/class-secupress-settings-modules.php:778
 #: inc/classes/settings/class-secupress-settings-modules.php:814
 #: inc/common.php:224
 msgid "Submit"
 msgstr "Envoyer"
 
-#: inc/admin/notices.php:290
+#: inc/admin/notices.php:294
 msgid "Retry"
 msgstr "Réessayer"
 
-#: inc/admin/notices.php:293
+#: inc/admin/notices.php:297
 #, php-format
 msgid ""
 "A <strong>Recovery E-mail</strong> is needed in case of hack, you can set it "
@@ -721,24 +721,24 @@ msgstr ""
 "a><span id=\"secupress_recovery_email_parent\" class=\"hide-if-no-js\"> ou "
 "ici&nbsp;: %2$s</span>"
 
-#: inc/admin/notices.php:333
+#: inc/admin/notices.php:337
 #, php-format
 msgid "%s is activated, let's improve the security of your website!"
 msgstr "%s est activé, améliorons la sécurité de votre site&nbsp;!"
 
-#: inc/admin/notices.php:334
+#: inc/admin/notices.php:338
 msgid ""
 "Scan every security points for the first time in your website, right now."
 msgstr ""
 "Scanner tous les points de sécurité pour la première fois de votre site, dès "
 "maintenant."
 
-#: inc/admin/notices.php:342 inc/admin/settings.php:125
+#: inc/admin/notices.php:346 inc/admin/settings.php:125
 #: inc/admin/settings.php:629
 msgid "Scan my website"
 msgstr "Scanner mon site"
 
-#: inc/admin/notices.php:347 inc/admin/scanner-step-1-all.php:94
+#: inc/admin/notices.php:351 inc/admin/scanner-step-1-all.php:94
 #: inc/admin/scanner-step-1-new.php:92 inc/admin/settings.php:61
 #: inc/admin/settings.php:130
 #: inc/classes/common/class-secupress-logs-list.php:305
@@ -1180,10 +1180,10 @@ msgstr "Ouvrir un ticket"
 #: inc/admin/settings.php:178
 msgid ""
 "<p>During the test phase, the support is done by sending a manual email on "
-"<b>contact@secupress.me</b>. Thank you!</p>"
+"<b>support@secupress.me</b>. Thank you!</p>"
 msgstr ""
 "<p>Durant la phase de test, le support n'est fait qu'en envoyant un mail "
-"manuel à <b>contact@secupress.me</b>. Merci&nbsp;!</p>"
+"manuel à <b>support@secupress.me</b>. Merci&nbsp;!</p>"
 
 #: inc/admin/settings.php:182
 msgid "Security Scan just finished."
@@ -7406,6 +7406,13 @@ msgid ""
 msgstr ""
 "<strong>%1$s</strong> requiert WordPress v%2$s minimum, votre site utilise "
 "actuellement la version %3$s."
+
+#~ msgid ""
+#~ "<p>During the test phase, the support is done by sending a manual email "
+#~ "on <b>contact@secupress.me</b>. Thank you!</p>"
+#~ msgstr ""
+#~ "<p>Durant la phase de test, le support n'est fait qu'en envoyant un mail "
+#~ "manuel à <b>contact@secupress.me</b>. Merci&nbsp;!</p>"
 
 #~ msgid "Look farther with the Pro version"
 #~ msgstr "Faites en plus avec la version Pro"
