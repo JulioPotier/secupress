@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2016-08-18 08:37+0200\n"
-"PO-Revision-Date: 2016-08-18 08:37+0200\n"
+"POT-Creation-Date: 2016-08-18 11:26+0200\n"
+"PO-Revision-Date: 2016-08-18 11:27+0200\n"
 "Last-Translator: WP Media <contact@wp-media.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -991,7 +991,7 @@ msgstr "Obtenez une meilleure note et débloquez toutes les fonctionnalités"
 
 #: inc/admin/scanner-step-4.php:361
 #: inc/classes/settings/class-secupress-settings-modules.php:281
-#: inc/modules/welcome/settings.php:34
+#: inc/functions/modules.php:160 inc/modules/welcome/settings.php:34
 msgid "Get Pro"
 msgstr "Passer à la version PRO"
 
@@ -4992,6 +4992,18 @@ msgstr ""
 "Obtenez de l'aide de la part de nos experts. Cette page contient nos "
 "services fait pour vous aider avec le plugin."
 
+#: inc/functions/modules.php:163
+msgid "Look farther with the Pro version"
+msgstr "Faites en plus avec la version Pro"
+
+#: inc/functions/modules.php:164 inc/functions/modules.php:167
+msgid ""
+"Access to more modules and options to make your website a real automatted "
+"secure engine."
+msgstr ""
+"Accédez à plus de modules et d'options pour faire de votre site web une "
+"machine sécurisée automatiquement."
+
 #: inc/modules/alerts/settings/daily-reporting.php:6
 msgid "Daily Reports"
 msgstr "Rapports journaliers"
@@ -5745,10 +5757,8 @@ msgstr "Bientôt"
 
 #: inc/modules/get-pro/settings.php:86
 #, php-format
-msgid "%d month for free"
-msgid_plural "%d months for free"
-msgstr[0] "%d mois gratuit"
-msgstr[1] "%d mois gratuits"
+msgid "%d%% OFF"
+msgstr "%d%% offerts"
 
 #: inc/modules/get-pro/settings.php:89
 msgid "Billed per year"
@@ -7407,22 +7417,20 @@ msgstr ""
 "<strong>%1$s</strong> requiert WordPress v%2$s minimum, votre site utilise "
 "actuellement la version %3$s."
 
+#~ msgid "%d %% OFF"
+#~ msgstr "%d %% offerts"
+
+#~ msgid "%d month for free"
+#~ msgid_plural "%d months for free"
+#~ msgstr[0] "%d mois gratuit"
+#~ msgstr[1] "%d mois gratuits"
+
 #~ msgid ""
 #~ "<p>During the test phase, the support is done by sending a manual email "
 #~ "on <b>contact@secupress.me</b>. Thank you!</p>"
 #~ msgstr ""
 #~ "<p>Durant la phase de test, le support n'est fait qu'en envoyant un mail "
 #~ "manuel à <b>contact@secupress.me</b>. Merci&nbsp;!</p>"
-
-#~ msgid "Look farther with the Pro version"
-#~ msgstr "Faites en plus avec la version Pro"
-
-#~ msgid ""
-#~ "Access to more modules and options to make your website a real automatted "
-#~ "secure engine."
-#~ msgstr ""
-#~ "Accédez à plus de modules et d'options pour faire de votre site web une "
-#~ "machine sécurisée automatiquement."
 
 #~ msgid "Available in <a href=\"%s\">Pro Version</a>"
 #~ msgstr "Disponible dans la <a href=\"%s\">Version Pro</a>"
