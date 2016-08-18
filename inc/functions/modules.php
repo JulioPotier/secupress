@@ -156,6 +156,17 @@ function secupress_get_modules() {
 				sprintf( __( 'Let us configure %s on your site and benefit from our expertise. Get help from our experts. The page contains our services designed to help you with the plugin.', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
 			),
 		),
+		'get-pro'        => array(
+			'title'       => __( 'Get Pro', 'secupress' ),
+			'icon'        => 'secupress',
+			'summaries'   => array(
+				'small'  => __( 'Look farther with the Pro version', 'secupress' ),
+				'normal' => __( 'Access to more modules and options to make your website a real automatted secure engine.', 'secupress' ),
+			),
+			'description' => array(
+				__( 'Access to more modules and options to make your website a real automatted secure engine.', 'secupress' ),
+			),
+		),
 	);
 
 	return $modules;
