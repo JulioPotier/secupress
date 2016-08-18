@@ -73,7 +73,11 @@ function secupress_plugins_to_deactivate() {
 	$message .= '</p><ul>';
 	foreach ( $plugins_to_deactivate as $plugin ) {
 		$plugin_data = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin );
-		$message .= '<li>' . $plugin_data['Name'] . '</span> <a href="' . esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=deactivate_plugin&plugin=' . urlencode( $plugin ) ), 'deactivate_plugin' ) ) . '" class="button-secondary alignright">' . __( 'Deactivate' ) . '</a></li>';
+		$context     = isset( $_GET['plugin_status'] ) ? '&amp;plugin_status=' . $_GET['plugin_status'] : '';
+		$page        = isset( $_GET['pages'] ) ? '&amp;paged=' . $_GET['paged'] : '';
+		$search      = isset( $_GET['s'] ) ? '&amp;s=' . $_GET['s'] : '';
+		$url         = wp_nonce_url( 'plugins.php?action=deactivate&amp;plugin=' . $plugin . $context . $page . $search, 'deactivate-plugin_' . $plugin );
+		$message    .= '<li>' . $plugin_data['Name'] . '</span> <a href="' . esc_url( $url ) . '" class="button-secondary alignright">' . __( 'Deactivate' ) . '</a></li>';
 	}
 	$message .= '</ul>';
 
