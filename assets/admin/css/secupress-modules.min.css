@@ -827,6 +827,12 @@ fieldset.secupress-boxed-group > b {
 	color: #5A626F;
 	font-weight: 500;
 }
+.secupress-section .secupress-pricing + .secupress-small-caracters {
+	margin-top: 1em;
+}
+.secupress-pricing ~ .secupress-catchphrase {
+	margin-bottom: 0;
+}
 
 /* Switchers */
 .secupress-inline-options button.secupress-button {

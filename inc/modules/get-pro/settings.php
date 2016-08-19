@@ -106,6 +106,9 @@ if ( ! $plans ) {
 		}
 		?>
 		</div><!-- #secupress-pricing -->
+
+		<p class="secupress-small-caracters"><?php _e( '*&nbsp;50% OFF the first year then 20% OFF the next ones.', 'secupress' ); ?></p>
+
 		<p class="secupress-catchphrase"><?php _e( 'Included With All Plans', 'secupress' ); ?></p>
 
 		<div class="secupress-pro-crossed-offers secupress-flex secupress-text-center secupress-p2">
