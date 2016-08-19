@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2016-08-19 15:46+0200\n"
-"PO-Revision-Date: 2016-08-19 15:46+0200\n"
+"POT-Creation-Date: 2016-08-19 17:23+0200\n"
+"PO-Revision-Date: 2016-08-19 17:24+0200\n"
 "Last-Translator: WP Media <contact@wp-media.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -5787,25 +5787,29 @@ msgstr "Précommander"
 msgid "Order"
 msgstr "Commander"
 
-#: inc/modules/get-pro/settings.php:109
+#: inc/modules/get-pro/settings.php:110
+msgid "*&nbsp;50% OFF the first year then 20% OFF the next ones."
+msgstr "*&nbsp;50% de remise la première année puis 20% les années suivantes."
+
+#: inc/modules/get-pro/settings.php:112
 msgid "Included With All Plans"
 msgstr "Inclus dans tous les plans"
 
-#: inc/modules/get-pro/settings.php:114
+#: inc/modules/get-pro/settings.php:117
 msgid "Unlimited Support and Updates"
 msgstr "Support et mises à jour illimités"
 
-#: inc/modules/get-pro/settings.php:118 inc/modules/get-pro/settings.php:122
+#: inc/modules/get-pro/settings.php:121 inc/modules/get-pro/settings.php:125
 #, php-format
 msgctxt "one line text please"
 msgid "Bonus %s on %s"
 msgstr "%s sur %s"
 
-#: inc/modules/get-pro/settings.php:118
+#: inc/modules/get-pro/settings.php:121
 msgid "100 Mb for free"
 msgstr "100 Mo gratuits"
 
-#: inc/modules/get-pro/settings.php:122
+#: inc/modules/get-pro/settings.php:125
 msgid "20% OFF"
 msgstr "20% de remise"
 
