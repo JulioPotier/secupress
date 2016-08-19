@@ -8,7 +8,7 @@ Version: 1.0
 */
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
-if ( ! defined( 'DOING_CRON' ) ) :
+if ( ! defined( 'DOING_CRON' ) ) {
 
 	// Block Bad request methods.
 	$basic_methods = array( 'GET' => true, 'POST' => true, 'HEAD' => true );
@@ -19,17 +19,6 @@ if ( ! defined( 'DOING_CRON' ) ) :
 		secupress_block( 'RMHM', 405 );
 	}
 
-	// Block Bad protocol method.
-	if ( 'POST' === $_SERVER['REQUEST_METHOD'] && ! isset( $_SERVER['HTTP_HOST'] ) && ( ! isset( $_SERVER['SERVER_PROTOCOL'] ) || 'HTTP/1.0' === $_SERVER['SERVER_PROTOCOL'] ) ) {
-		secupress_block( 'RMHP', 505 );
-	}
-
-endif;
-
-
-// Block Bad post with referer request.
-if ( 'POST' === $_SERVER['REQUEST_METHOD'] && ( ! isset( $_SERVER['HTTP_REFERER'] ) || '' === trim( $_SERVER['HTTP_REFERER'] ) ) && empty( $_POST['secupress_bbrmhr_is_local'] ) ) { // WPCS: CSRF ok.
-	secupress_block( 'RMHR', 400 );
 }
 
 
