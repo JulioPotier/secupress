@@ -86,8 +86,8 @@ if ( ! $plans ) {
 						<p class="secupress-price-desc secupress-hide-monthly"><?php echo esc_html( sprintf( __( '%d%% OFF', 'secupress' ), (int) $plan['free'] ) ); ?> <sup>*</sup></p>
 					</div>
 					<div class="secupress-price-details">
-						<p class="secupress-pd-info secupress-hide-monthly"><?php esc_html_e( 'Billed per year', 'secupress' ); ?></p>
-						<p class="secupress-pd-info secupress-hide-yearly"><?php esc_html_e( 'Billed per month', 'secupress' ); ?></p>
+						<p class="secupress-pd-info secupress-hide-monthly"><?php esc_html_e( 'Billed per year', 'secupress' ); ?> <sup>*</sup></p>
+						<p class="secupress-pd-info secupress-hide-yearly"><?php esc_html_e( 'Billed per month', 'secupress' ); ?> <sup>*</sup></p>
 						<p class="secupress-pd-benefits">
 							<?php esc_html_e( 'Secure & Protect', 'secupress' ); ?>
 							<strong><?php echo esc_html( sprintf( _n( '%d Website', '%d Websites', (int) $plan['websites'], 'secupress' ), (int) $plan['websites'] ) ); ?></strong>
