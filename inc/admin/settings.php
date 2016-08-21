@@ -646,11 +646,12 @@ function __secupress_scanners() {
 					 * - passed step(s) with li.secupress-past
 					 * - that's all
 					 */
-					$steps = array( '1' => array( 'title' => esc_html__( 'Security Report', 'secupress' ) ),
-									'2' => array( 'title' => esc_html__( 'Auto-Fix', 'secupress' ) ),
-									'3' => array( 'title' => esc_html__( 'Manual Operations', 'secupress' ) ),
-									'4' => array( 'title' => esc_html__( 'Resolutions Report', 'secupress' ) ),
-									 );
+					$steps = array(
+						'1' => array( 'title' => esc_html__( 'Security Report', 'secupress' ) ),
+						'2' => array( 'title' => esc_html__( 'Auto-Fix', 'secupress' ) ),
+						'3' => array( 'title' => esc_html__( 'Manual Operations', 'secupress' ) ),
+						'4' => array( 'title' => esc_html__( 'Resolutions Report', 'secupress' ) ),
+					);
 					$step  = secupress_get_scanner_pagination();
 					switch ( $step ) {
 						case 1:
@@ -684,14 +685,14 @@ function __secupress_scanners() {
 					<ol class="secupress-flex secupress-counter <?php echo esc_attr( $current_step_class ); ?>">
 						<?php
 						foreach ( $steps as $i => $step ) {
-						?>
-						<li class="secupress-col-1-3 secupress-counter-put secupress-flex<?php echo $step['state']; ?>" aria-labelledby="sp-step-<?php echo $i; ?>-l" aria-describedby="sp-step-<?php echo $i; ?>-d">
-							<span class="secupress-step-name" id="sp-step-<?php echo $i; ?>-l"><?php echo $step['title']; ?></span>
-							<?php if ( $i === 3 ) { ?>
-							<span class="secupress-step-name alt" aria-hidden="true"><?php echo $steps[4]['title']; ?></span>
-							<?php } ?>
-						</li>
-						<?php
+							?>
+							<li class="secupress-col-1-3 secupress-counter-put secupress-flex<?php echo $step['state']; ?>" aria-labelledby="sp-step-<?php echo $i; ?>-l" aria-describedby="sp-step-<?php echo $i; ?>-d">
+								<span class="secupress-step-name" id="sp-step-<?php echo $i; ?>-l"><?php echo $step['title']; ?></span>
+								<?php if ( $i === 3 ) { ?>
+								<span class="secupress-step-name alt" aria-hidden="true"><?php echo $steps[4]['title']; ?></span>
+								<?php } ?>
+							</li>
+							<?php
 						}
 						?>
 					</ol>

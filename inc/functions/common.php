@@ -928,7 +928,7 @@ function secupress_is_user( $user ) {
 function secupress_get_scanner_pagination() {
 	$scans = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
 
-	if ( ! isset( $_GET['step'] ) || ! is_numeric( $_GET['step'] ) || empty( $scans ) || 0 > $_GET['step'] ) {
+	if ( empty( $_GET['step'] ) || ! is_numeric( $_GET['step'] ) || empty( $scans ) || 0 > $_GET['step'] ) {
 		$step = 1;
 	} else {
 		$step = (int) $_GET['step'];
