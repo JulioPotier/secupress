@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
 "POT-Creation-Date: 2016-08-19 17:23+0200\n"
-"PO-Revision-Date: 2016-08-19 17:24+0200\n"
+"PO-Revision-Date: 2016-08-21 23:05+0200\n"
 "Last-Translator: WP Media <contact@wp-media.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -22,6 +22,14 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Textdomain-Support: yes\n"
 "X-Poedit-SearchPath-0: .\n"
+
+#: secupress.php:3
+msgid "SecuPress — WordPress Security"
+msgstr "SecuPress — Sécurité WordPress"
+
+#: secupress.php:5
+msgid "Protect your WordPress with SecuPress, analyze and ensure the safety of your website daily."
+msgstr "Protège votre site WordPress avec SecuPress, analyse et assure la sécurité de votre site quotidiennement."
 
 #: inc/admin-bar.php:21
 #, php-format
