@@ -359,8 +359,8 @@ function __secupress_scanners() {
 			$last_percent = $item['percent'];
 		}
 
-		$reports     = array_reverse( $reports );
-		$last_report = date_i18n( _x( 'M dS, Y \a\t h:ia', 'Latest scans', 'secupress' ), $items[0]['time'] );
+		$last_report = end( $items );
+		$last_report = date_i18n( _x( 'M dS, Y \a\t h:ia', 'Latest scans', 'secupress' ), $last_report['time'] );
 	}
 
 	if ( isset( $_GET['step'] ) && 1 == $_GET['step'] ) {
