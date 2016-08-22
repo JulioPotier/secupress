@@ -86,6 +86,7 @@ function secupress_get_global_network_option_names_for_autoload() {
 			'_site_transient_secupress-rename-admin-username',
 			'_site_transient_secupress-add-cookiehash-muplugin',
 			'_site_transient_secupress-add-salt-muplugin',
+			'_site_transient_' . SECUPRESS_ACTIVE_SUBMODULES,
 		) );
 
 		if ( is_admin() ) {
