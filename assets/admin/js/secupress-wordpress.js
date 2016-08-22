@@ -92,3 +92,21 @@ jQuery( document ).ready( function( $ ) {
 	} )(jQuery, document, window);
 
 } );
+
+// Docs coming soon ============================================================================
+(function($) {
+
+		var $links = $( 'a[href$="docs.secupress.me/"]' );
+
+		$links.on( 'click.secupress', function(e){
+
+			e.preventDefault();
+			swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
+				title:             SecuPressi18nCommon.comingSoon,
+				showConfirmButton: false,
+				html:              SecuPressi18nCommon.docNotReady,
+				type:              'info'
+			} ) );
+		} );
+
+})(jQuery);

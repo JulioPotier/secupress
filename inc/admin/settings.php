@@ -58,6 +58,8 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	wp_localize_script( 'secupress-common-js', 'SecuPressi18nCommon', array(
 		'confirmText'         => __( 'OK', 'secupress' ),
 		'cancelText'          => __( 'Cancel' ),
+		'comingSoon'          => __( 'Coming Soon', 'secupress' ),
+		'docNotReady'         => __( 'The documentation is actually under construction, thank you for your patience.', 'secupress' ),
 		'closeText'           => __( 'Close' ),
 		'recoveryEmailNeeded' => __( 'Recovery Email Needed', 'secupress' ),
 		'forYourSecurity'     => sprintf( __( 'For your security you should set a recovery email, %1$s will use it in case of hack as a rescue email address. <a href="%2$s">Do it now!</a>', 'secupress' ), SECUPRESS_PLUGIN_NAME, get_edit_profile_url( get_current_user_id() ) . '#secupress_recovery_email' ),
@@ -245,7 +247,7 @@ function __secupress_settings_action_links( $actions ) {
 	if ( ! secupress_is_white_label() ) {
 		// ////array_unshift( $actions, sprintf( '<a href="%s">%s</a>', 'https://secupress.me/support/', __( 'Support', 'secupress' ) ) );
 
-		array_unshift( $actions, sprintf( '<a href="%s">%s</a>', 'http://docs.secupress.me', __( 'Docs', 'secupress' ) ) );
+		// //// array_unshift( $actions, sprintf( '<a href="%s">%s</a>', 'http://docs.secupress.me', __( 'Docs', 'secupress' ) ) );
 	}
 
 	array_unshift( $actions, sprintf( '<a href="%s">%s</a>', esc_url( secupress_admin_url( 'settings' ) ), __( 'Settings' ) ) );
