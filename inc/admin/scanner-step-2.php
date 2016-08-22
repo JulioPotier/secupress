@@ -72,13 +72,13 @@ if ( ! $secupress_tests ) {
 			<span class="icon">
 				<i class="icon-wrench" aria-hidden="true"></i>
 			</span>
-			<span class="text">' . __( 'Fix it', 'secupress') . '</span>
+			<span class="text">' . __( 'Fix it', 'secupress' ) . '</span>
 		</button>
 		<a href="' . esc_url( secupress_admin_url( 'scanners' ) ) . '&amp;step=3" class="secupress-button shadow light' . ( $has_fixes ? ' hidden' : '' ) . '">
 			<span class="icon">
 				<i class="icon-cross" aria-hidden="true"></i>
 			</span>
-			<span class="text">' . __( 'Ignore this step', 'secupress') . '</span>
+			<span class="text">' . __( 'Ignore this step', 'secupress' ) . '</span>
 		</a>';
 	?>
 
@@ -181,9 +181,9 @@ if ( ! $secupress_tests ) {
 
 						</div><!-- .secupress-flex -->
 					</div><!-- .secupress-item-all -->
-				<?php
-			}
-			?>
+					<?php
+				}
+				?>
 			</div><!-- .secupress-sg-content -->
 		</div><!-- .secupress-scans-group -->
 		<?php
@@ -192,7 +192,7 @@ if ( ! $secupress_tests ) {
 </div><!-- .secupress-tests -->
 
 <div class="secupress-step-content-footer secupress-flex secupress-flex-top secupress-flex-spaced">
-	<span><?php //flex col placeholder ?></span>
+	<span><?php // Flex col placeholder. ?></span>
 	<p>
 		<?php echo $main_button; ?>
 	</p>

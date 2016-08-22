@@ -42,7 +42,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 		$modules = $this->get_modules();
 		$pro_msg = '<span class="secupress-cta-pro">' . SecuPress_Settings::get_pro_version_string() . '</span>';
 
-		// Do not display the get pro block, but we still need it for the content
+		// Do not display the get pro block, but we still need it for the content.
 		unset( $modules['get-pro'] );
 
 		foreach ( $modules as $slug => $mod ) {

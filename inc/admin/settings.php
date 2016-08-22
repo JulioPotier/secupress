@@ -186,7 +186,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 			'supportContentPro'  => '<input type="hidden" id="secupress_support_item" name="secupress_support_item" value=""><p style="text-align:left">Summary: <input class="large-text" type="text" name="summary"></p><p style="text-align:left">Description: <textarea name="description" disabled="disabled">Please provide the specific url(s) where we can see each issue. e.g. the request doesn\'t work on this page: example.com/this-page</textarea></p>', // ////.
 			'a11y' => array(
 				'scanEnded'    => __( 'Security Scan just finished.', 'secupress' ),
-				'bulkFixStart' => __( 'Currently Fixing…', 'secupress' ) . ' ' . __( 'Please wait until fixing is complete.', 'secupress' )
+				'bulkFixStart' => __( 'Currently Fixing…', 'secupress' ) . ' ' . __( 'Please wait until fixing is complete.', 'secupress' ),
 			),
 			'comingSoon'       => __( 'Coming Soon', 'secupress' ),
 			'docNotReady'      => __( 'The documentation is actually under construction, thank you for your patience.', 'secupress' ),
@@ -250,11 +250,11 @@ add_filter( 'plugin_action_links_' . plugin_basename( SECUPRESS_FILE ), '__secup
  * @return (array) The array of links + our links.
  */
 function __secupress_settings_action_links( $actions ) {
-	if ( ! secupress_is_white_label() ) {
-		// ////array_unshift( $actions, sprintf( '<a href="%s">%s</a>', 'https://secupress.me/support/', __( 'Support', 'secupress' ) ) );
+	/*if ( ! secupress_is_white_label() ) { ////
+		array_unshift( $actions, sprintf( '<a href="%s">%s</a>', 'https://secupress.me/support/', __( 'Support', 'secupress' ) ) );
 
-		// //// array_unshift( $actions, sprintf( '<a href="%s">%s</a>', 'http://docs.secupress.me', __( 'Docs', 'secupress' ) ) );
-	}
+		array_unshift( $actions, sprintf( '<a href="%s">%s</a>', 'http://docs.secupress.me', __( 'Docs', 'secupress' ) ) );
+	}*/
 
 	array_unshift( $actions, sprintf( '<a href="%s">%s</a>', esc_url( secupress_admin_url( 'settings' ) ), __( 'Settings' ) ) );
 
@@ -286,7 +286,7 @@ function secupress_create_menus() {
 	add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ) . $count, $cap, SECUPRESS_PLUGIN_SLUG . '_scanners', '__secupress_scanners' );
 	add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Modules', 'secupress' ),  __( 'Modules', 'secupress' ),           $cap, SECUPRESS_PLUGIN_SLUG . '_modules',  '__secupress_modules' );
 	add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Settings' ),              __( 'Settings' ),                       $cap, SECUPRESS_PLUGIN_SLUG . '_settings', '__secupress_global_settings' );
-	//// pro page should be a module too… I edit, take a look
+	// Pro page should be a module too… I edit, take a look ////.
 	if ( secupress_is_pro() ) {
 		add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Support', 'secupress' ), __( 'Support', 'secupress' ), $cap, SECUPRESS_PLUGIN_SLUG . '_modules&module=services', '__return_false' );
 	} else {
@@ -371,7 +371,7 @@ function __secupress_scanners() {
 		$last_report = date_i18n( _x( 'M dS, Y \a\t h:ia', 'Latest scans', 'secupress' ), $last_report['time'] );
 	}
 
-	if ( isset( $_GET['step'] ) && 1 == $_GET['step'] ) {
+	if ( isset( $_GET['step'] ) && 1 === (int) $_GET['step'] ) {
 		secupress_set_old_report();
 	}
 
@@ -426,225 +426,226 @@ function __secupress_scanners() {
 					</p>
 				</div><!-- .secupress-heading -->
 
-				<?php if ( 1 === secupress_get_scanner_pagination() || 4 === secupress_get_scanner_pagination() ) { ?>
-				<div class="secupress-scan-header-main secupress-flex">
-					<div id="sp-tab-scans" class="secupress-tabs-contents secupress-flex">
-						<div id="secupress-scan" class="secupress-tab-content" role="tabpanel" aria-labelledby="secupress-l-scan">
-							<div class="secupress-flex secupress-chart">
+				<?php
+				if ( secupress_get_scanner_pagination() === 1 || secupress_get_scanner_pagination() === 4 ) {
+					?>
+					<div class="secupress-scan-header-main secupress-flex">
+						<div id="sp-tab-scans" class="secupress-tabs-contents secupress-flex">
+							<div id="secupress-scan" class="secupress-tab-content" role="tabpanel" aria-labelledby="secupress-l-scan">
+								<div class="secupress-flex secupress-chart">
 
-								<div class="secupress-chart-container">
-									<canvas class="secupress-chartjs" id="status_chart" width="180" height="180"></canvas>
-									<div class="secupress-score"><?php echo $counts['letter']; ?></div>
-								</div>
-
-								<div class="secupress-chart-legends-n-note">
-
-									<div class="secupress-scan-infos">
-										<p class="secupress-score-text secupress-text-big secupress-m0">
-											<?php echo $counts['text']; ?>
-										</p>
-										<p class="secupress-score secupress-score-subtext secupress-m0"><?php echo $counts['subtext']; ?></p>
+									<div class="secupress-chart-container">
+										<canvas class="secupress-chartjs" id="status_chart" width="180" height="180"></canvas>
+										<div class="secupress-score"><?php echo $counts['letter']; ?></div>
 									</div>
 
-									<ul class="secupress-chart-legend hide-if-no-js">
-										<li class="status-good" data-status="good">
-											<span class="secupress-carret"></span>
-											<?php esc_html_e( 'Good', 'secupress' ); ?>
-											<span class="secupress-count-good"></span>
-										</li>
-										<li class="status-bad" data-status="bad">
-											<span class="secupress-carret"></span>
-											<?php esc_html_e( 'Bad', 'secupress' ); ?>
-											<span class="secupress-count-bad"></span>
-										</li>
-										<li class="status-warning" data-status="warning">
-											<span class="secupress-carret"></span>
-											<?php esc_html_e( 'Warning', 'secupress' ); ?>
-											<span class="secupress-count-warning"></span>
-										</li>
-										<?php if ( $counts['notscannedyet'] ) : ?>
-										<li class="status-notscannedyet" data-status="notscannedyet">
-											<span class="secupress-carret"></span>
-											<?php esc_html_e( 'New Scan', 'secupress' ); ?>
-											<span class="secupress-count-notscannedyet"></span>
-										</li>
-										<?php endif; ?>
-									</ul><!-- .secupress-chart-legend -->
+									<div class="secupress-chart-legends-n-note">
 
-									<div id="tweeterA" class="hidden">
-										<p>
-											<q>
-											<?php
-											/** Translators: %s is the plugin name */
-											printf( esc_html__( 'Wow! My website just got an A security grade using %s, what about yours?', 'secupress' ), SECUPRESS_PLUGIN_NAME );
-											?>
-											</q>
+										<div class="secupress-scan-infos">
+											<p class="secupress-score-text secupress-text-big secupress-m0">
+												<?php echo $counts['text']; ?>
+											</p>
+											<p class="secupress-score secupress-score-subtext secupress-m0"><?php echo $counts['subtext']; ?></p>
+										</div>
+
+										<ul class="secupress-chart-legend hide-if-no-js">
+											<li class="status-good" data-status="good">
+												<span class="secupress-carret"></span>
+												<?php esc_html_e( 'Good', 'secupress' ); ?>
+												<span class="secupress-count-good"></span>
+											</li>
+											<li class="status-bad" data-status="bad">
+												<span class="secupress-carret"></span>
+												<?php esc_html_e( 'Bad', 'secupress' ); ?>
+												<span class="secupress-count-bad"></span>
+											</li>
+											<li class="status-warning" data-status="warning">
+												<span class="secupress-carret"></span>
+												<?php esc_html_e( 'Warning', 'secupress' ); ?>
+												<span class="secupress-count-warning"></span>
+											</li>
+											<?php if ( $counts['notscannedyet'] ) : ?>
+											<li class="status-notscannedyet" data-status="notscannedyet">
+												<span class="secupress-carret"></span>
+												<?php esc_html_e( 'New Scan', 'secupress' ); ?>
+												<span class="secupress-count-notscannedyet"></span>
+											</li>
+											<?php endif; ?>
+										</ul><!-- .secupress-chart-legend -->
+
+										<div id="tweeterA" class="hidden">
+											<p>
+												<q>
+												<?php
+												/** Translators: %s is the plugin name */
+												printf( esc_html__( 'Wow! My website just got an A security grade using %s, what about yours?', 'secupress' ), SECUPRESS_PLUGIN_NAME );
+												?>
+												</q>
+											</p>
+
+											<a class="secupress-button secupress-button-mini" href="https://twitter.com/intent/tweet?via=secupress&amp;url=<?php
+												/** Translators: %s is the plugin name */
+												echo urlencode( esc_url_raw( 'http://secupress.me&text=' . sprintf( __( 'Wow! My website just got an A security grade using %s, what about yours?', 'secupress' ), SECUPRESS_PLUGIN_NAME ) ) );
+											?>">
+												<span class="icon" aria-hidden="true"><span class="dashicons dashicons-twitter"></span></span>
+												<span class="text"><?php esc_html_e( 'Tweet that', 'secupress' ); ?></span>
+											</a>
+										</div><!-- #tweeterA -->
+									</div><!-- .secupress-chart-legends-n-note -->
+
+								</div><!-- .secupress-chart.secupress-flex -->
+							</div><!-- .secupress-tab-content -->
+
+							<div id="secupress-latest" class="secupress-tab-content hide-if-js" role="tabpanel" aria-labelledby="secupress-l-latest">
+
+								<h3 class="secupress-text-medium hide-if-js"><?php esc_html_e( 'Your last scans', 'secupress' ); ?></h3>
+
+								<div class="secupress-latest-list">
+									<ul class="secupress-reports-list">
+										<?php
+										if ( (bool) $reports ) {
+											echo implode( "\n", $reports );
+										} else {
+											echo '<li class="secupress-empty"><em>' . __( 'You have no other reports for now.', 'secupress' ) . "</em></li>\n";
+										}
+										?>
+									</ul>
+								</div><!-- .secupress-latest-list -->
+
+							</div><!-- .secupress-tab-content -->
+
+
+							<div id="secupress-schedule" class="secupress-tab-content hide-if-js" role="tabpanel" aria-labelledby="secupress-l-schedule">
+								<p class="secupress-text-medium">
+									<?php esc_html_e( 'Schedule your security analysis', 'secupress' ); ?>
+								</p>
+								<p><?php _e( 'The analysis of security points is keeping updated. No need to connect to your back office with our automatic scan.', 'secupress' ); ?></p>
+
+								<?php if ( secupress_is_pro() ) :
+									// /////.
+									$last_schedule = '1463654935';
+									$next_schedule = '1464654935';
+									?>
+									<div class="secupress-schedules-infos is-pro">
+										<p class="secupress-schedule-last-one">
+											<i class="icon-clock-o" aria-hidden="true"></i>
+											<span><?php printf( __( 'Last automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $last_schedule ) ); ?></span>
+										</p>
+										<p class="secupress-schedule-next-one">
+											<i class="icon-clock-o" aria-hidden="true"></i>
+											<span><?php printf( __( 'Next automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $next_schedule ) ); ?></span>
 										</p>
 
-										<a class="secupress-button secupress-button-mini" href="https://twitter.com/intent/tweet?via=secupress&amp;url=<?php
-											/** Translators: %s is the plugin name */
-											echo urlencode( esc_url_raw( 'http://secupress.me&text=' . sprintf( __( 'Wow! My website just got an A security grade using %s, what about yours?', 'secupress' ), SECUPRESS_PLUGIN_NAME ) ) );
-										?>">
-											<span class="icon" aria-hidden="true"><span class="dashicons dashicons-twitter"></span></span>
-											<span class="text"><?php esc_html_e( 'Tweet that', 'secupress' ); ?></span>
-										</a>
-									</div><!-- #tweeterA -->
-								</div><!-- .secupress-chart-legends-n-note -->
+										<p class="secupress-cta">
+											<a href="<?php echo esc_url( secupress_admin_url( 'modules', 'schedules' ) ); ?>#module-scanners" class="secupress-button secupress-button-primary" target="_blank"><?php esc_html_e( 'Schedule your next analysis', 'secupress' ); ?></a>
+										</p>
+									</div><!-- .secupress-schedules-infos -->
+								<?php else : ?>
+									<div class="secupress-schedules-infos">
+										<p class="secupress-schedule-last-one">
+											<i class="icon-clock-o" aria-hidden="true"></i>
+											<span><?php printf( __( 'Last automatic scan: %s', 'secupress' ), '&mdash;' ); ?></span>
+										</p>
+										<p class="secupress-schedule-next-one">
+											<i class="icon-clock-o" aria-hidden="true"></i>
+											<span><?php printf( __( 'Next automatic scan: %s', 'secupress' ), '&mdash;' ); ?></span>
+										</p>
 
-							</div><!-- .secupress-chart.secupress-flex -->
-						</div><!-- .secupress-tab-content -->
+										<p class="secupress-cta">
+											<a href="<?php echo esc_url( secupress_admin_url( 'modules', 'schedules' ) ); ?>#module-scanners" class="secupress-button secupress-button-tertiary" target="_blank"><?php esc_html_e( 'Schedule your next analysis', 'secupress' ); ?></a>
+										</p>
+										<p class="secupress-cta-detail"><?php _e( 'Available with pro version', 'secupress' ); ?></p>
+									</div><!-- .secupress-schedules-infos -->
+								<?php endif; ?>
 
-						<div id="secupress-latest" class="secupress-tab-content hide-if-js" role="tabpanel" aria-labelledby="secupress-l-latest">
+							</div><!-- .secupress-tab-content -->
+						</div><!-- .secupress-tabs-contents -->
+						<div class="secupress-tabs-controls hide-if-no-js">
+							<ul class="secupress-tabs secupress-tabs-controls-list" role="tablist" data-content="#sp-tab-scans">
+								<li role="presentation">
+									<a id="secupress-l-latest" href="#secupress-latest" role="tab" aria-selected="false" aria-controls="secupress-latest">
+										<span class="secupress-label-with-icon">
+											<i class="icon-back rounded" aria-hidden="true"></i>
+											<span class="secupress-upper"><?php esc_html_e( 'Latest scans', 'secupress' ); ?></span>
+											<span class="secupress-description"><?php esc_html_e( 'View your previous scans', 'secupress' ); ?></span>
+										</span>
+									</a>
+								</li>
+								<li role="presentation">
+									<a id="secupress-l-schedule" href="#secupress-schedule" role="tab" aria-selected="false" aria-controls="secupress-schedule">
+										<span class="secupress-label-with-icon">
+											<i class="icon-calendar rounded" aria-hidden="true"></i>
+											<span class="secupress-upper"><?php esc_html_e( 'Schedule Scans', 'secupress' ); ?></span>
+											<span class="secupress-description"><?php esc_html_e( 'Manage your recurring scans', 'secupress' ); ?></span>
+										</span>
+									</a>
+								</li>
+								<li role="presentation" class="hidden">
+									<a id="secupress-l-scan" href="#secupress-scan" role="tab" aria-selected="false" aria-controls="secupress-scan" class="secupress-current">
+										<span class="secupress-label-with-icon">
+											<i class="icon-secupress" aria-hidden="true"></i>
+											<span class="secupress-upper"><?php esc_html_e( 'Result of the scan', 'secupress' ); ?></span>
+											<span class="secupress-primary"><?php echo $last_report; ?></span>
+										</span>
+									</a>
+								</li>
+							</ul>
+							<div class="secupress-rescan-progress-infos">
+								<h3>
+									<i class="icon-secupress" aria-hidden="true"></i><br>
 
-							<h3 class="secupress-text-medium hide-if-js"><?php esc_html_e( 'Your last scans', 'secupress' ); ?></h3>
+									<?php echo $currently_scanning_text; ?>
+								</h3>
+							</div>
+							<p class="secupress-rescan-actions">
+								<span class="screen-reader-text"><?php esc_html_e( 'Doubts? Try a new scan.', 'secupress' ); ?></span>
+								<button class="secupress-button secupress-button-primary secupress-button-scan" type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ); ?>">
+									<span class="icon" aria-hidden="true">
+										<i class="icon-radar"></i>
+									</span>
+									<span class="text">
+										<?php _e( 'Scan website', 'secupress' ); ?>
+									</span>
 
-							<div class="secupress-latest-list">
-								<ul class="secupress-reports-list">
-									<?php
-									if ( (bool) $reports ) {
-										echo implode( "\n", $reports );
-									} else {
-										echo '<li class="secupress-empty"><em>' . __( 'You have no other reports for now.', 'secupress' ) . "</em></li>\n";
-									}
-									?>
-								</ul>
-							</div><!-- .secupress-latest-list -->
-
-						</div><!-- .secupress-tab-content -->
-
-
-						<div id="secupress-schedule" class="secupress-tab-content hide-if-js" role="tabpanel" aria-labelledby="secupress-l-schedule">
-							<p class="secupress-text-medium">
-								<?php esc_html_e( 'Schedule your security analysis', 'secupress' ); ?>
+									<span class="secupress-progressbar-val" style="width:2%;">
+										<span class="secupress-progress-val-txt" aria-hidden="true">2 %</span>
+									</span>
+								</button>
 							</p>
-							<p><?php _e( 'The analysis of security points is keeping updated. No need to connect to your back office with our automatic scan.', 'secupress' ); ?></p>
-
-							<?php if ( secupress_is_pro() ) :
-								// /////
-								$last_schedule = '1463654935';
-								$next_schedule = '1464654935';
-								?>
-								<div class="secupress-schedules-infos is-pro">
-									<p class="secupress-schedule-last-one">
-										<i class="icon-clock-o" aria-hidden="true"></i>
-										<span><?php printf( __( 'Last automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $last_schedule ) ); ?></span>
-									</p>
-									<p class="secupress-schedule-next-one">
-										<i class="icon-clock-o" aria-hidden="true"></i>
-										<span><?php printf( __( 'Next automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $next_schedule ) ); ?></span>
-									</p>
-
-									<p class="secupress-cta">
-										<a href="<?php echo esc_url( secupress_admin_url( 'modules', 'schedules' ) ); ?>#module-scanners" class="secupress-button secupress-button-primary" target="_blank"><?php esc_html_e( 'Schedule your next analysis', 'secupress' ); ?></a>
-									</p>
-								</div><!-- .secupress-schedules-infos -->
-							<?php else : ?>
-								<div class="secupress-schedules-infos">
-									<p class="secupress-schedule-last-one">
-										<i class="icon-clock-o" aria-hidden="true"></i>
-										<span><?php printf( __( 'Last automatic scan: %s', 'secupress' ), '&mdash;' ); ?></span>
-									</p>
-									<p class="secupress-schedule-next-one">
-										<i class="icon-clock-o" aria-hidden="true"></i>
-										<span><?php printf( __( 'Next automatic scan: %s', 'secupress' ), '&mdash;' ); ?></span>
-									</p>
-
-									<p class="secupress-cta">
-										<a href="<?php echo esc_url( secupress_admin_url( 'modules', 'schedules' ) ); ?>#module-scanners" class="secupress-button secupress-button-tertiary" target="_blank"><?php esc_html_e( 'Schedule your next analysis', 'secupress' ); ?></a>
-									</p>
-									<p class="secupress-cta-detail"><?php _e( 'Available with pro version', 'secupress' ); ?></p>
-								</div><!-- .secupress-schedules-infos -->
-							<?php endif; ?>
-
-						</div><!-- .secupress-tab-content -->
-					</div><!-- .secupress-tabs-contents -->
-					<div class="secupress-tabs-controls hide-if-no-js">
-						<ul class="secupress-tabs secupress-tabs-controls-list" role="tablist" data-content="#sp-tab-scans">
-							<li role="presentation">
-								<a id="secupress-l-latest" href="#secupress-latest" role="tab" aria-selected="false" aria-controls="secupress-latest">
-									<span class="secupress-label-with-icon">
-										<i class="icon-back rounded" aria-hidden="true"></i>
-										<span class="secupress-upper"><?php esc_html_e( 'Latest scans', 'secupress' ); ?></span>
-										<span class="secupress-description"><?php esc_html_e( 'View your previous scans', 'secupress' ); ?></span>
-									</span>
-								</a>
-							</li>
-							<li role="presentation">
-								<a id="secupress-l-schedule" href="#secupress-schedule" role="tab" aria-selected="false" aria-controls="secupress-schedule">
-									<span class="secupress-label-with-icon">
-										<i class="icon-calendar rounded" aria-hidden="true"></i>
-										<span class="secupress-upper"><?php esc_html_e( 'Schedule Scans', 'secupress' ); ?></span>
-										<span class="secupress-description"><?php esc_html_e( 'Manage your recurring scans', 'secupress' ); ?></span>
-									</span>
-								</a>
-							</li>
-							<li role="presentation" class="hidden">
-								<a id="secupress-l-scan" href="#secupress-scan" role="tab" aria-selected="false" aria-controls="secupress-scan" class="secupress-current">
-									<span class="secupress-label-with-icon">
-										<i class="icon-secupress" aria-hidden="true"></i>
-										<span class="secupress-upper"><?php esc_html_e( 'Result of the scan', 'secupress' ); ?></span>
-										<span class="secupress-primary"><?php echo $last_report; ?></span>
-									</span>
-								</a>
-							</li>
-						</ul>
-						<div class="secupress-rescan-progress-infos">
-							<h3>
-								<i class="icon-secupress" aria-hidden="true"></i><br>
-
-								<?php echo $currently_scanning_text; ?>
-
-							</h3>
 						</div>
-						<p class="secupress-rescan-actions">
-							<span class="screen-reader-text"><?php esc_html_e( 'Doubts? Try a new scan.', 'secupress' ); ?></span>
+					</div><!-- .secupress-scan-header-main -->
+					<?php
+				}
+
+				if ( ! $reports ) {
+					?>
+					<div class="secupress-introduce-first-scan secupress-text-center">
+						<h3>
+							<i class="icon-secupress" aria-hidden="true"></i><br>
+							<span class="secupress-init-title"><?php esc_html_e( 'Click to launch first scan', 'secupress' ); ?></span>
+
+							<?php echo $currently_scanning_text; ?>
+						</h3>
+
+						<p class="secupress-start-one-click-scan">
 							<button class="secupress-button secupress-button-primary secupress-button-scan" type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ); ?>">
 								<span class="icon" aria-hidden="true">
 									<i class="icon-radar"></i>
 								</span>
 								<span class="text">
-									<?php _e( 'Scan website', 'secupress' ); ?>
+									<?php esc_html_e( 'Scan my website', 'secupress' ); ?>
 								</span>
 
 								<span class="secupress-progressbar-val" style="width:2%;">
-									<span class="secupress-progress-val-txt" aria-hidden="true">2 %</span>
+									<span class="secupress-progress-val-txt">2 %</span>
 								</span>
+
 							</button>
 						</p>
-					</div>
-				</div><!-- .secupress-scan-header-main -->
-
-				<?php
+					</div><!-- .secupress-introduce-first-scan -->
+					<?php
 				}
-				if ( ! $reports ) {
 				?>
-
-				<div class="secupress-introduce-first-scan secupress-text-center">
-					<h3>
-						<i class="icon-secupress" aria-hidden="true"></i><br>
-						<span class="secupress-init-title"><?php esc_html_e( 'Click to launch first scan', 'secupress' ); ?></span>
-
-						<?php echo $currently_scanning_text; ?>
-
-					</h3>
-
-					<p class="secupress-start-one-click-scan">
-						<button class="secupress-button secupress-button-primary secupress-button-scan" type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ); ?>">
-							<span class="icon" aria-hidden="true">
-								<i class="icon-radar"></i>
-							</span>
-							<span class="text">
-								<?php esc_html_e( 'Scan my website', 'secupress' ); ?>
-							</span>
-
-							<span class="secupress-progressbar-val" style="width:2%;">
-								<span class="secupress-progress-val-txt">2 %</span>
-							</span>
-
-						</button>
-					</p>
-				</div><!-- .secupress-introduce-first-scan -->
-				<?php } ?>
 
 				<div class="secupress-scanner-steps">
 					<?php
@@ -696,8 +697,8 @@ function __secupress_scanners() {
 							?>
 							<li class="secupress-col-1-3 secupress-counter-put secupress-flex<?php echo $step['state']; ?>" aria-labelledby="sp-step-<?php echo $i; ?>-l" aria-describedby="sp-step-<?php echo $i; ?>-d">
 								<span class="secupress-step-name" id="sp-step-<?php echo $i; ?>-l"><?php echo $step['title']; ?></span>
-								<?php if ( $i === 3 ) { ?>
-								<span class="secupress-step-name alt" aria-hidden="true"><?php echo $steps[4]['title']; ?></span>
+								<?php if ( 3 === $i ) { ?>
+									<span class="secupress-step-name alt" aria-hidden="true"><?php echo $steps[4]['title']; ?></span>
 								<?php } ?>
 							</li>
 							<?php
@@ -769,7 +770,7 @@ function __secupress_scanners() {
 			</div><!-- .secupress-section-dark -->
 
 			<?php
-			////
+			// ////.
 			secupress_require_class( 'settings' );
 			secupress_require_class( 'settings', 'modules' );
 			$modules         = SecuPress_Settings_Modules::get_modules();
@@ -924,12 +925,19 @@ function secupress_scanners_template() {
 
 	$step = secupress_get_scanner_pagination();
 
-	switch( $step ) {
-		case 4 : require( SECUPRESS_INC_PATH . 'admin/scanner-step-4.php' ); break;
-		case 3 : require( SECUPRESS_INC_PATH . 'admin/scanner-step-3.php' ); break;
-		case 2 : require( SECUPRESS_INC_PATH . 'admin/scanner-step-2.php' ); break;
+	switch ( $step ) {
+		case 4 :
+			require( SECUPRESS_INC_PATH . 'admin/scanner-step-4.php' );
+			break;
+		case 3 :
+			require( SECUPRESS_INC_PATH . 'admin/scanner-step-3.php' );
+			break;
+		case 2 :
+			require( SECUPRESS_INC_PATH . 'admin/scanner-step-2.php' );
+			break;
 		case 1 :
-		default: require( SECUPRESS_INC_PATH . 'admin/scanner-step-1.php' ); break;
+		default:
+			require( SECUPRESS_INC_PATH . 'admin/scanner-step-1.php' );
 	}
 }
 

@@ -9,8 +9,8 @@ $this->add_field( array(
 	'name'         => $this->get_field_name( 'proconfig' ),
 	'field_type'   => 'field_button',
 	'disabled'     => true,
-	//// 'label'        => __( 'Request a Professional Configuration', 'secupress' ),
-	//// 'url'          => wp_nonce_url( admin_url( 'admin-post.php?action=secupress_get_pro_config' ), 'secupress_get_pro_config' ),
+	// 'label'        => __( 'Request a Professional Configuration', 'secupress' ), ////
+	// 'url'          => wp_nonce_url( admin_url( 'admin-post.php?action=secupress_get_pro_config' ), 'secupress_get_pro_config' ), ////
 	'label'        => __( 'Coming Soon', 'secupress' ),
 ) );
 
@@ -20,7 +20,7 @@ $this->add_field( array(
 	'name'         => $this->get_field_name( 'got-hacked' ),
 	'field_type'   => 'field_button',
 	'disabled'     => true,
-	//// 'label'        => __( 'Request a Website cleansing', 'secupress' ),
-	//// 'url'          => wp_nonce_url( admin_url( 'admin-post.php?action=secupress_get_hacked' ), 'secupress_get_hacked' ),
+	// 'label'        => __( 'Request a Website cleansing', 'secupress' ), ////
+	// 'url'          => wp_nonce_url( admin_url( 'admin-post.php?action=secupress_get_hacked' ), 'secupress_get_hacked' ), ////
 	'label'        => __( 'Coming Soon', 'secupress' ),
 ) );

@@ -178,7 +178,7 @@ function secupress_text_diff( $left_string, $right_string, $args = array() ) {
  *
  * @since 1.0
  * @author Julio Potier
- **/
+ */
 function secupress_set_old_report() {
 	$grade  = secupress_get_scanner_counts( 'grade' );
 	$report = get_option( SECUPRESS_SCAN_SLUG );
@@ -187,21 +187,22 @@ function secupress_set_old_report() {
 
 
 /**
- * Return the old scan report, see secupress_set_old_report()
+ * Return the old scan report.
  *
  * @since 1.0
- * @return (array|false)
  * @author Julio Potier
- **/
+ * @see secupress_set_old_report()
+ *
+ * @return (array|false)
+ */
 function secupress_get_old_report() {
 	return get_option( 'secupress_step1_report' );
 }
 
 /**
- * Print Marketing block with SecuPress pro advantages
+ * Print Marketing block with SecuPress pro advantages.
  *
  * @since 1.0
- * @return string HTML content is printed
  * @author Geoffrey Crofte
  */
 function secupress_print_pro_advantages() {

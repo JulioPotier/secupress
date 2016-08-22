@@ -213,7 +213,7 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 		// The "admin" account exists and has a role or capabilities.
 		if ( static::user_has_capas( $user_id ) ) {
 			// It's you!
-			if ( $user_id === get_current_user_id() ) {
+			if ( get_current_user_id() === $user_id ) {
 				return array( 'rename-admin-username' => 'rename-admin-username' );
 			}
 		}

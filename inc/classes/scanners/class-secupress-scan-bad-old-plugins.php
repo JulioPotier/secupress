@@ -96,7 +96,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 			300 => _n_noop( '<strong>%d</strong> plugin can be <strong>deleted</strong>.', '<strong>%d</strong> plugins can be <strong>deleted</strong>.', 'secupress' ),
 			/** Translators: %d is a number. */
 			301 => _n_noop( '<strong>%d</strong> plugin can be <strong>deactivated</strong>.', '<strong>%d</strong> plugins can be <strong>deactivated</strong>.', 'secupress' ),
-			302 => __( 'Unable to locate WordPress Plugin directory.' ), // WPi18n
+			302 => __( 'Unable to locate WordPress Plugin directory.' ), // WP i18n.
 			/** Translators: %s is the plugin name. */
 			303 => sprintf( __( 'A new %s menu item has been activated in the relevant site\'s administration area to let Administrators know which plugins to deactivate.', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ),
 			304 => __( 'No plugins selected.', 'secupress' ),

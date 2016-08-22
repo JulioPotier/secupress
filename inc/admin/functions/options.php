@@ -37,8 +37,7 @@ function secupress_is_white_label() {
  */
 function secupress_check_key( $type = 'transient_1' ) {
 	return false;
-	////
-	// Recheck the license.
+	// Recheck the license. ////.
 	$return = secupress_valid_key();
 
 	if ( ! $return

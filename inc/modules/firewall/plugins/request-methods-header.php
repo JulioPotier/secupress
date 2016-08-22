@@ -9,7 +9,6 @@ Version: 1.0
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 if ( ! defined( 'DOING_CRON' ) ) {
-
 	// Block Bad request methods.
 	$basic_methods = array( 'GET' => true, 'POST' => true, 'HEAD' => true );
 	$rest_methods  = array( 'PUT' => true, 'PATCH' => true, 'DELETE' => true );
@@ -18,5 +17,4 @@ if ( ! defined( 'DOING_CRON' ) ) {
 	if ( ! isset( $methods[ $_SERVER['REQUEST_METHOD'] ] ) ) {
 		secupress_block( 'RMHM', 405 );
 	}
-
 }

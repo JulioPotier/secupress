@@ -27,16 +27,15 @@ function _secupress_http_block_external_notice() {
 		return;
 	}
 
-	$message = '
-		<div>
-			<p><strong>' . sprintf( __( '%s: The external HTTP requests are blocked!', 'secupress' ), SECUPRESS_PLUGIN_NAME ) . '</strong></p>' .
-			'<p>' . __( 'You defined the <code>WP_HTTP_BLOCK_EXTERNAL</code> constant in the <code>wp-config.php</code> to block all external HTTP requests.', 'secupress' ) . '</p>' .
-			'<p>' .
-			sprintf( __( 'To make %s working well, you have to either remove the PHP constant, or add or merge the following code in your <code>wp-config.php</code> file.', 'secupress' ), SECUPRESS_PLUGIN_NAME ) . '<br/>' .
-			__( 'Click on the field and press Ctrl+A or Cmd+A to select all.', 'secupress' ) .
-			'</p>' .
-			'<p><textarea readonly="readonly" class="large-text readonly" rows="1">define( \'WP_ACCESSIBLE_HOSTS\', \'*.secupress.me\' );</textarea></p>' .
-		'</div>';
+	$message  = '<div>';
+		$message .= '<p><strong>' . sprintf( __( '%s: The external HTTP requests are blocked!', 'secupress' ), SECUPRESS_PLUGIN_NAME ) . '</strong></p>';
+		$message .= '<p>' . __( 'You defined the <code>WP_HTTP_BLOCK_EXTERNAL</code> constant in the <code>wp-config.php</code> to block all external HTTP requests.', 'secupress' ) . '</p>';
+		$message .= '<p>';
+			$message .= sprintf( __( 'To make %s working well, you have to either remove the PHP constant, or add or merge the following code in your <code>wp-config.php</code> file.', 'secupress' ), SECUPRESS_PLUGIN_NAME ) . '<br/>';
+			$message .= __( 'Click on the field and press Ctrl+A or Cmd+A to select all.', 'secupress' );
+		$message .= '</p>';
+		$message .= '<p><textarea readonly="readonly" class="large-text readonly" rows="1">define( \'WP_ACCESSIBLE_HOSTS\', \'*.secupress.me\' );</textarea></p>';
+	$message .= '</div>';
 
 	secupress_add_notice( $message, 'error', 'http-block-external' );
 }
@@ -422,7 +421,8 @@ function secupress_warning_no_api_key() {
 	</div><!-- .secupress-section-medium -->
 	<?php
 	secupress_enqueue_notices_styles();
-}*/
+}
+*/
 
 
 add_action( 'admin_menu', 'secupress_display_transient_notices' );

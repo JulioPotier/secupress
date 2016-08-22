@@ -45,7 +45,7 @@ function __secupress_global_settings_callback( $value ) {
 
 	/**
 	 * API and license validation.
-	 */////
+	 */// ////.
 	/*$value['consumer_email'] = ! empty( $value['consumer_email'] ) ? is_email( $value['consumer_email'] )          : '';
 	$value['consumer_key']   = ! empty( $value['consumer_key'] )   ? sanitize_text_field( $value['consumer_key'] ) : '';
 
@@ -94,7 +94,7 @@ function __secupress_global_settings_callback( $value ) {
  * @param (array) $def_values Default values related to the API.
  *
  * @return (array) $new_values The new settings, some values may have changed.
- */////
+ */// ////.
 /*function __secupress_global_settings_remove_api_subscription( $new_values, $old_values, $def_values ) {
 
 	$api_old_values = secupress_array_merge_intersect( $old_values, $def_values );
@@ -128,7 +128,8 @@ function __secupress_global_settings_callback( $value ) {
 	}
 
 	return $new_values;
-}*/
+}
+*/
 
 
 /**
@@ -141,7 +142,7 @@ function __secupress_global_settings_callback( $value ) {
  * @param (array) $def_values Default values related to the API.
  *
  * @return (array) $new_values The new settings, some values may have changed.
- */////
+ */// ////.
 /*function __secupress_global_settings_update_api_subscription( $new_values, $old_values, $def_values ) {
 
 	$api_old_values = secupress_array_merge_intersect( $old_values, $def_values );
@@ -184,7 +185,8 @@ function __secupress_global_settings_callback( $value ) {
 	}
 
 	return $new_values;
-}*/
+}
+*/
 
 
 /**
@@ -196,7 +198,7 @@ function __secupress_global_settings_callback( $value ) {
  * @param (array) $new_values The new settings, passed by reference. Depending on the request result, these values may be changed.
  *
  * @return (mixed) The response body. False otherwise.
- */////
+ */// ////.
 /*function __secupress_global_settings_api_request_succeeded( $response, &$new_values ) {
 
 	if ( is_wp_error( $response ) ) {
@@ -360,4 +362,5 @@ function secupress_deleted_consumer_email_option() {
 	}
 
 	secupress_cache_data( 'old_consumer_email', null );
-}*/
+}
+*/

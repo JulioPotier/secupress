@@ -28,7 +28,7 @@ function __secupress_services_settings_callback( $settings ) {
 		$message = __( 'During the test phase, the support is done by sending a manual email on <b>contact@secupress.me</b>. Thank you!', 'secupress' ); // ////.
 		if ( ! empty( $_POST['secupress_services_settings']['support_description'] ) ) { // WPCS: CSRF ok.
 			$message .= '</strong><br/>' . __( 'By the way, here is your message:', 'secupress' ) . '</p>';
-			$message .= '<blockquote>' . nl2br( esc_html( wp_unslash( trim( $_POST['secupress_services_settings']['support_description'] ) ) ) ) . '</blockquote>';
+			$message .= '<blockquote>' . nl2br( esc_html( wp_unslash( trim( $_POST['secupress_services_settings']['support_description'] ) ) ) ) . '</blockquote>'; // WPCS: CSRF ok.
 			$message .= '<p>' . __( '(you\'re welcome)', 'secupress' ) . '<strong>';
 		}
 		add_settings_error( 'general', 'free_support', $message );

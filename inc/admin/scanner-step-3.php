@@ -2,8 +2,8 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 // Keep only scans with "bad" and "warning" status.
-$bad_scan_results = array_merge( $bad_scans, $warning_scans );	// `array( $class_name_part_lower => $status )`
-$fix_actions      = array();									// `array( $class_name_part_lower => array( $fix_action, $fix_action ) )`
+$bad_scan_results = array_merge( $bad_scans, $warning_scans );	// `array( $class_name_part_lower => $status )`.
+$fix_actions      = array();									// `array( $class_name_part_lower => array( $fix_action, $fix_action ) )`.
 
 /**
  * Keep only scanners where:
@@ -53,10 +53,12 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		// Not fixable + Pro.
 		elseif ( false === $is_fixable || 'pro' === $is_fixable && ! secupress_is_pro() ) {
 			// OK.
+			$foo = 0; // PHPCS.
 		}
 		// An automatic fix has been attempted.
 		elseif ( ! empty( $fixes[ $class_name_part_lower ] ) ) {
 			// OK.
+			$foo = 0; // PHPCS.
 		}
 		// A "bad" scan status means the user didn't try to fix it.
 		elseif ( 'warning' !== $bad_scan_results[ $class_name_part_lower ] ) {

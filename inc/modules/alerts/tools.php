@@ -12,10 +12,10 @@ function secupress_alert_types_labels() {
 
 	return array(
 		'email'   => __( 'Email', 'secupress' ),
-		//// 'twitter' => __( 'Twitter', 'secupress' ),
-		//// 'slack'   => __( 'Slack', 'secupress' ),
-		//// 'sms'     => __( 'SMS', 'secupress' ),
-		//// 'push'    => __( 'Push notification', 'secupress' ),
+		// 'twitter' => __( 'Twitter', 'secupress' ), ////
+		// 'slack'   => __( 'Slack', 'secupress' ), ////
+		// 'sms'     => __( 'SMS', 'secupress' ), ////
+		// 'push'    => __( 'Push notification', 'secupress' ), ////
 	);
 }
 

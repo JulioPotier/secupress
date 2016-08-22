@@ -77,48 +77,51 @@ function secupress_upgrader() {
 }
 
 
+add_action( 'secupress.upgrade', '__secupress_new_upgrade', 10, 2 );
 /**
- * What to do when SecuPress is updated, depending on versions
+ * What to do when SecuPress is updated, depending on versions.
  *
  * @since 1.0
+ *
+ * @param (string) $secupress_version The version being upgraded to.
+ * @param (string) $actual_version    The previous version.
  */
-add_action( 'secupress.upgrade', '__secupress_new_upgrade', 10, 2 );
 function __secupress_new_upgrade( $secupress_version, $actual_version ) {
 
-	if ( version_compare( $actual_version, '1.0', '<' ) ) {
-		secupress_deactivation();
-
-		// from uninstall
-		global $wpdb;
-
-		// Transients.
-		$transients = $wpdb->get_col( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE '_transient_secupress_%' OR option_name LIKE '_transient_secupress-%'" );
-		array_map( 'delete_transient', $transients );
-
-		// Site transients.
-		$transients = $wpdb->get_col( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE '_site_transient_secupress_%' OR option_name LIKE '_site_transient_secupress-%'" );
-		array_map( 'delete_site_transient', $transients );
-
-		if ( is_multisite() ) {
-			$transients = $wpdb->get_col( "SELECT meta_key FROM $wpdb->sitemeta WHERE meta_key LIKE '_site_transient_secupress_%' OR meta_key LIKE '_site_transient_secupress-%'" );
-			array_map( 'delete_site_transient', $transients );
-		}
-
-		// Options.
-		$options = $wpdb->get_col( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE 'secupress_%'" );
-		array_map( 'delete_option', $options );
-
-		if ( is_multisite() ) {
-			// Site options.
-			$options = $wpdb->get_col( "SELECT meta_key FROM $wpdb->sitemeta WHERE meta_key LIKE 'secupress_%'" );
-			array_map( 'delete_site_option', $options );
-		}
-
-		// User metas.
-		$wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE 'secupress_%' OR meta_key LIKE '%_secupress_%'" );
-
-
-		secupress_activation();
+	if ( version_compare( $actual_version, '1.0', '>=' ) ) {
+		return;
 	}
 
+	secupress_deactivation();
+
+	// From uninstall.php.
+	global $wpdb;
+
+	// Transients.
+	$transients = $wpdb->get_col( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE '_transient_secupress_%' OR option_name LIKE '_transient_secupress-%'" );
+	array_map( 'delete_transient', $transients );
+
+	// Site transients.
+	$transients = $wpdb->get_col( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE '_site_transient_secupress_%' OR option_name LIKE '_site_transient_secupress-%'" );
+	array_map( 'delete_site_transient', $transients );
+
+	if ( is_multisite() ) {
+		$transients = $wpdb->get_col( "SELECT meta_key FROM $wpdb->sitemeta WHERE meta_key LIKE '_site_transient_secupress_%' OR meta_key LIKE '_site_transient_secupress-%'" );
+		array_map( 'delete_site_transient', $transients );
+	}
+
+	// Options.
+	$options = $wpdb->get_col( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE 'secupress_%'" );
+	array_map( 'delete_option', $options );
+
+	if ( is_multisite() ) {
+		// Site options.
+		$options = $wpdb->get_col( "SELECT meta_key FROM $wpdb->sitemeta WHERE meta_key LIKE 'secupress_%'" );
+		array_map( 'delete_site_option', $options );
+	}
+
+	// User metas.
+	$wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE 'secupress_%' OR meta_key LIKE '%_secupress_%'" );
+
+	secupress_activation();
 }

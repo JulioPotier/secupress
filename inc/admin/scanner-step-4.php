@@ -13,7 +13,7 @@ $old_grade        = $old_report['grade'];
 $this_good_scans  = array();
 
 foreach ( $scanned_items as $class_name_part => $details ) {
-	if ( 'good' === $details['status'] && 'good' !== $old_report['report'][ $class_name_part ]['status']) {
+	if ( 'good' === $details['status'] && 'good' !== $old_report['report'][ $class_name_part ]['status'] ) {
 		$this_good_scans[ $class_name_part ] = $details;
 		if ( 'bad' === $old_report['report'][ $class_name_part ]['status'] ) {
 			++$nb_bad_scans;
@@ -37,7 +37,7 @@ foreach ( $scanned_items as $class_name_part => $details ) {
 				<div class="secupress-col-summary-text">
 
 					<?php
-					// Display a "bravo" message only if there is something fixed
+					// Display a "bravo" message only if there is something fixed.
 					if ( $nb_good_scans ) {
 					?>
 						<p class="secupress-text-medium secupress-mb0"><?php printf( esc_html__( 'Bravo! You fixed %1$d of %2$d.', 'secupress' ), $nb_good_scans, count( $scanned_items ) ); ?></p>
@@ -51,14 +51,14 @@ foreach ( $scanned_items as $class_name_part => $details ) {
 
 					<p>
 					<?php
-					// Display a "grade ent from to" message only if it's better
+					// Display a "grade ent from to" message only if it's better.
 					if ( $old_grade === $grade ) {
 						printf( esc_html__( 'Your grade is still %s. ', 'secupress' ), $grade );
 					} else {
 						printf( esc_html__( 'Your grade went from %1$s to %2$s. ', 'secupress' ), $old_grade, $grade );
 					}
 
-					// Display the pre-message to show what has just been fixed
+					// Display the pre-message to show what has just been fixed.
 					if ( $nb_bad_scans || $nb_warning_scans ) {
 						esc_html_e( 'You fixed: ', 'secupress' );
 					}
@@ -69,37 +69,37 @@ foreach ( $scanned_items as $class_name_part => $details ) {
 						<div>
 						<?php
 						if ( $nb_bad_scans || $nb_warning_scans ) {
-						?>
+							?>
 							<ul class="secupress-chart-legend">
-							<?php
-							if ( $nb_bad_scans ) {
-							?>
-								<li class="status-bad">
-									<span class="secupress-carret"></span>
-									<?php printf( esc_html__( '%d Bad', 'secupress' ), $nb_bad_scans ); ?>
-									<span class="secupress-count-bad"></span>
-								</li>
-							<?php
-							}
+								<?php
+								if ( $nb_bad_scans ) {
+									?>
+									<li class="status-bad">
+										<span class="secupress-carret"></span>
+										<?php printf( esc_html__( '%d Bad', 'secupress' ), $nb_bad_scans ); ?>
+										<span class="secupress-count-bad"></span>
+									</li>
+									<?php
+								}
 
-							if ( $nb_warning_scans ) {
-							?>
-								<li class="status-warning">
-									<span class="secupress-carret"></span>
-									<?php printf( esc_html__( '%d Warning', 'secupress' ), $nb_warning_scans ); ?>
-									<span class="secupress-count-warning"></span>
-								</li>
-							<?php
-							}
-							?>
+								if ( $nb_warning_scans ) {
+									?>
+									<li class="status-warning">
+										<span class="secupress-carret"></span>
+										<?php printf( esc_html__( '%d Warning', 'secupress' ), $nb_warning_scans ); ?>
+										<span class="secupress-count-warning"></span>
+									</li>
+									<?php
+								}
+								?>
 							</ul>
-						<?php
+							<?php
 						}
 						?>
 						</div>
 						<?php if ( $nb_bad_scans || $nb_warning_scans ) { ?>
 						<p>
-							<button class="secupress-button secupress-button-ghost secupress-button-mini hide-is-no-js" type="button" data-target="secupress-summaries" data-trigger="slidetoggle" title="<?php esc_attr_e('Show/hide the details of scanned items in your report', 'secupress' ); ?>">
+							<button class="secupress-button secupress-button-ghost secupress-button-mini hide-is-no-js" type="button" data-target="secupress-summaries" data-trigger="slidetoggle" title="<?php esc_attr_e( 'Show/hide the details of scanned items in your report', 'secupress' ); ?>">
 								<span class="icon">
 									<i class="icon-angle-down" aria-hidden="true"></i>
 								</span>
@@ -219,8 +219,8 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			$row_css_class .= ! empty( $fix['has_action'] ) ? ' status-hasaction' : '';
 			$row_css_class .= ! empty( $fix['status'] ) && empty( $fix['has_action'] ) ? ' has-fix-status' : ' no-fix-status';
 
-			//// to-check: are all status here?
-			switch( $scan_status ) {
+			// To-check: are all status here? ////.
+			switch ( $scan_status ) {
 
 				case 'bad' :
 					$icon_slug = 'cross-o';
@@ -274,33 +274,33 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 ?>
 		<div class="secupress-step-content-footer secupress-flex secupress-flex-top secupress-flex-spaced">
 			<?php
-				$export_pdf_btn = '<span class="icon">
-						<i class="icon-file-pdf-o" aria-hidden="true"></i>
-					</span>
-					<span class="text">
-						' . esc_html__( 'Export as PDF', 'secupress' ) . '
-					</span>';
+			$export_pdf_btn = '<span class="icon">
+					<i class="icon-file-pdf-o" aria-hidden="true"></i>
+				</span>
+				<span class="text">
+					' . esc_html__( 'Export as PDF', 'secupress' ) . '
+				</span>';
 			?>
 			<p>
-			<?php
+				<?php
 				if ( secupress_is_pro() ) {
-			?>
-				<button type="button" title="<?php esc_attr_e( 'Export this report as PDF file.', 'secupress' ); ?>" class="secupress-button shadow">
-					<?php echo $export_pdf_btn; ?>
-				</button>
-			<?php
+					?>
+					<button type="button" title="<?php esc_attr_e( 'Export this report as PDF file.', 'secupress' ); ?>" class="secupress-button shadow">
+						<?php echo $export_pdf_btn; ?>
+					</button>
+					<?php
 				} else {
-			?>
-				<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ) ?>" type="button" title="<?php esc_attr_e( 'Get the Pro Version to export this report as PDF file.', 'secupress' ); ?>" target="_blank" class="secupress-button disabled shadow">
-					<?php echo $export_pdf_btn; ?>
-				</a>
-				<br>
-				<span class="secupress-get-pro-version">
-					<?php printf( __( 'Available in <a href="%s" target="_blank">Pro Version</a>', 'secupress' ), esc_url( secupress_admin_url( 'get_pro' ) ) ); ?>
-				</span>
-			<?php
+					?>
+					<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ) ?>" type="button" title="<?php esc_attr_e( 'Get the Pro Version to export this report as PDF file.', 'secupress' ); ?>" target="_blank" class="secupress-button disabled shadow">
+						<?php echo $export_pdf_btn; ?>
+					</a>
+					<br>
+					<span class="secupress-get-pro-version">
+						<?php printf( __( 'Available in <a href="%s" target="_blank">Pro Version</a>', 'secupress' ), esc_url( secupress_admin_url( 'get_pro' ) ) ); ?>
+					</span>
+					<?php
 				}
-			?>
+				?>
 			</p>
 		</div><!-- .secupress-step-content-footer -->
 	</div><!-- .secupress-summaries -->
@@ -331,7 +331,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 				<p class="secupress-farther-desc"><?php sprintf( esc_html__( 'Let %s scan your website when you are away by using recurent scans.', 'secupress' ), SECUPRESS_PLUGIN_NAME ); ?></p>
 			</div>
 			<div class="secupress-col secupress-col-action">
-				<a href="<?php echo esc_url( secupress_admin_url ( 'modules' ) ); ?>&amp;module=schedules" class="secupress-rich-link secupress-current">
+				<a href="<?php echo esc_url( secupress_admin_url( 'modules' ) ); ?>&amp;module=schedules" class="secupress-rich-link secupress-current">
 					<span class="secupress-label-with-icon">
 						<i aria-hidden="true" class="icon-calendar rounded"></i>
 						<span class="secupress-upper"><?php esc_html_e( 'Schedule Scans', 'secupress' ); ?></span>

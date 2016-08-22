@@ -96,7 +96,7 @@ if ( ! $plans ) {
 					</div>
 					<div class="secupress-price-cta">
 						<?php
-						$order_button = 'preorder' == $plan['button'] ? esc_html__( 'Pre-Order', 'secupress' ) : esc_html__( 'Order', 'secupress' );
+						$order_button = 'preorder' === $plan['button'] ? esc_html__( 'Pre-Order', 'secupress' ) : esc_html__( 'Order', 'secupress' );
 						?>
 						<a href="<?php echo esc_url( $plan['url'] ); ?>" class="secupress-button secupress-button-primary shadow" target="_blank"><?php echo $order_button; ?></a>
 					</div>
@@ -113,7 +113,7 @@ if ( ! $plans ) {
 
 		<div class="secupress-pro-crossed-offers secupress-flex secupress-text-center secupress-p2">
 			<div class="secupress-col-1-3">
-				<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>icon-sos.png" width="66" height="66" alt="<?php esc_attr_e( 'Support', 'secupress'); ?>">
+				<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>icon-sos.png" width="66" height="66" alt="<?php esc_attr_e( 'Support', 'secupress' ); ?>">
 				<p><?php esc_html_e( 'Unlimited Support and Updates', 'secupress' ); ?></p>
 			</div>
 			<div class="secupress-col-1-3">

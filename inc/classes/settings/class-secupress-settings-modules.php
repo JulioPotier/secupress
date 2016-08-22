@@ -258,7 +258,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			$class  = $this->get_current_module() === $key ? 'active' : '';
 			$class .= ! empty( $module['mark_as_pro'] ) ? ' secupress-pro-module' : '';
 
-			// skip Get Pro exception
+			// Skip Get Pro exception.
 			if ( 'get-pro' === $key ) {
 				continue;
 			}
@@ -322,7 +322,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			$this->load_module_settings();
 			return;
 		}
-		// Get Pro Page
+		// Get Pro Page.
 		if ( 'get-pro' === $this->get_current_module() ) {
 			$this->load_module_settings();
 			return;
