@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
 "POT-Creation-Date: 2016-08-22 16:36+0200\n"
-"PO-Revision-Date: 2016-08-22 22:21+0200\n"
+"PO-Revision-Date: 2016-08-22 22:33+0200\n"
 "Last-Translator: WP Media <contact@wp-media.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -957,7 +957,7 @@ msgstr "Perfectionnez la sécurité de votre site avec nos modules dédiés."
 #: inc/admin/scanner-step-4.php:318
 #, php-format
 msgid "%s modules"
-msgstr "%s modules"
+msgstr "Modules %s"
 
 #: inc/admin/scanner-step-4.php:319
 msgid "Fine tune your Security"

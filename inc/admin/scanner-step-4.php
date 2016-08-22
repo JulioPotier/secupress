@@ -315,7 +315,11 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 				<a href="<?php echo esc_url( secupress_admin_url( 'modules' ) ); ?>" class="secupress-rich-link secupress-current">
 					<span class="secupress-label-with-icon">
 						<i aria-hidden="true" class="icon-cogs rounded"></i>
-						<span class="secupress-upper"><?php printf( esc_html__( '%s modules', 'secupress' ), SECUPRESS_PLUGIN_NAME ); ?></span>
+						<span class="secupress-upper"><?php printf(
+							/** Translators: %s is the plugin name. */
+							esc_html__( '%s modules', 'secupress' ),
+							SECUPRESS_PLUGIN_NAME
+						); ?></span>
 						<span class="secupress-description"><?php esc_html_e( 'Fine tune your Security', 'secupress' ); ?></span>
 					</span>
 				</a>
