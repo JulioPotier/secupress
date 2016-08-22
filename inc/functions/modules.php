@@ -198,23 +198,21 @@ function secupress_get_active_submodules() {
 	}
 
 	if ( ! $results ) {
+		secupress_set_site_transient( SECUPRESS_ACTIVE_SUBMODULES, array() );
 		return array();
 	}
 
-	$modules           = secupress_get_modules();
 	$active_submodules = array();
 
 	foreach ( $results as $result ) {
-		if ( empty( $modules[ $result->module ] ) ) {
-			continue;
-		}
-
 		if ( ! isset( $active_submodules[ $result->module ] ) ) {
 			$active_submodules[ $result->module ] = array();
 		}
 
 		$active_submodules[ $result->module ][] = sanitize_key( $result->submodule );
 	}
+
+	secupress_set_site_transient( SECUPRESS_ACTIVE_SUBMODULES, $active_submodules );
 
 	return $active_submodules;
 }
@@ -231,10 +229,18 @@ function secupress_get_active_submodules() {
  * @return (bool)
  */
 function secupress_is_submodule_active( $module, $submodule ) {
-	$submodule = sanitize_key( $submodule );
-	$is_active = get_site_option( 'secupress_active_submodule_' . $submodule );
 
-	return $is_active && $module === $is_active;
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+		$submodule = sanitize_key( $submodule );
+		$is_active = get_site_option( 'secupress_active_submodule_' . $submodule );
+
+		return $is_active && $module === $is_active;
+	}
+
+	$submodule         = sanitize_key( $submodule );
+	$active_submodules = secupress_get_active_submodules();
+
+	return ! empty( $active_submodules[ $module ][ $submodule ] );
 }
 
 
