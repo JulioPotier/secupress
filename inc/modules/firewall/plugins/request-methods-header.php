@@ -20,34 +20,3 @@ if ( ! defined( 'DOING_CRON' ) ) {
 	}
 
 }
-
-
-add_filter( 'http_request_args', 'secupress_bbrm_maybe_add_local_argument', 1000 );
-/**
- * Filter the arguments used in an HTTP request.
- * When `wp_remote_post()` is used, no referrer is sent, so 'RMHR' will block these requests.
- * We'll add a custom argument to allow to "self" post.
- *
- * @since 1.0
- *
- * @param (array) $r  An array of HTTP request arguments.
- *
- * @return (array)
- */
-function secupress_bbrm_maybe_add_local_argument( $r ) {
-	if ( empty( $r['method'] ) || 'POST' !== strtoupper( $r['method'] ) ) {
-		return $r;
-	}
-
-	if ( empty( $r['body'] ) ) {
-		$r['body'] = 'secupress_bbrmhr_is_local=1';
-	} elseif ( is_array( $r['body'] ) ) {
-		$r['body']['secupress_bbrmhr_is_local'] = 1;
-	} elseif ( is_object( $r['body'] ) ) {
-		$r['body']->secupress_bbrmhr_is_local = 1;
-	} else {
-		$r['body'] .= '&secupress_bbrmhr_is_local=1';
-	}
-
-	return $r;
-}
