@@ -174,6 +174,53 @@ function secupress_get_modules() {
 
 
 /**
+ * Get a list of all activated sub-module.
+ *
+ * @since 1.0
+ * @author Grégory Viguier
+ *
+ * @return (array) An array of arrays with the modules as keys and lists of sub-modules as values.
+ */
+function secupress_get_active_submodules() {
+	global $wpdb;
+
+	// Try to get the cache.
+	$active_submodules = secupress_get_site_transient( SECUPRESS_ACTIVE_SUBMODULES );
+
+	if ( is_array( $active_submodules ) ) {
+		return $active_submodules;
+	}
+
+	if ( is_multisite() ) {
+		$results = $wpdb->get_results( "SELECT meta_value AS module, REPLACE( meta_key, 'secupress_active_submodule_', '' ) AS submodule FROM $wpdb->sitemeta WHERE meta_key LIKE 'secupress\_active\_submodule\_%' ORDER BY meta_value, meta_key" );
+	} else {
+		$results = $wpdb->get_results( "SELECT option_value AS module, REPLACE( option_name, 'secupress_active_submodule_', '' ) AS submodule FROM $wpdb->options WHERE option_name LIKE 'secupress\_active\_submodule\_%' ORDER BY option_value, option_name" );
+	}
+
+	if ( ! $results ) {
+		return array();
+	}
+
+	$modules           = secupress_get_modules();
+	$active_submodules = array();
+
+	foreach ( $results as $result ) {
+		if ( empty( $modules[ $result->module ] ) ) {
+			continue;
+		}
+
+		if ( ! isset( $active_submodules[ $result->module ] ) ) {
+			$active_submodules[ $result->module ] = array();
+		}
+
+		$active_submodules[ $result->module ][] = sanitize_key( $result->submodule );
+	}
+
+	return $active_submodules;
+}
+
+
+/**
  * Check whether a sub-module is active.
  *
  * @since 1.0
@@ -184,15 +231,10 @@ function secupress_get_modules() {
  * @return (bool)
  */
 function secupress_is_submodule_active( $module, $submodule ) {
-	$submodule         = sanitize_key( $submodule );
-	$active_submodules = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
+	$submodule = sanitize_key( $submodule );
+	$is_active = get_site_option( 'secupress_active_submodule_' . $submodule );
 
-	if ( isset( $active_submodules[ $module ] ) ) {
-		$active_submodules[ $module ] = array_flip( $active_submodules[ $module ] );
-		return isset( $active_submodules[ $module ][ $submodule ] );
-	}
-
-	return false;
+	return $is_active && $module === $is_active;
 }
 
 

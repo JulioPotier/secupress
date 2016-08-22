@@ -221,7 +221,7 @@ function secupress_load_plugins() {
 	require_once( SECUPRESS_MODULES_PATH . 'discloses/tools.php' );
 
 	// Active sub-modules.
-	$modules = get_site_option( SECUPRESS_ACTIVE_SUBMODULES );
+	$modules = secupress_get_active_submodules();
 
 	if ( $modules ) {
 		foreach ( $modules as $module => $plugins ) {
