@@ -655,7 +655,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		// Slice the list a bit: limit to 100 last results.
 		if ( count( $ban_ips ) > 100 ) {
 			$ban_ips = array_slice( $ban_ips, -100 );
-			/* translators: %d is 100 */
+			/** Translators: %d is 100 */
 			echo '<p>' . sprintf( __( 'Last %d banned IPs:', 'secupress' ), 100 ) . "</p>\n";
 		}
 

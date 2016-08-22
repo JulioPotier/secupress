@@ -357,7 +357,7 @@ function secupress_remove_module_rules_or_notice( $marker, $module_name ) {
 	if ( $is_apache && ! secupress_write_htaccess( $marker ) ) {
 		$message  = sprintf( __( '%s: ', 'secupress' ), $module_name );
 		$message .= sprintf(
-			/* translators: 1 is a file name, 2 and 3 are small parts of code. */
+			/** Translators: 1 is a file name, 2 and 3 are small parts of code. */
 			__( 'Your %1$s file does not seem to be writable, you have to edit it manually. Please remove the rules between %2$s and %3$s from the %1$s file.', 'secupress' ),
 			'<code>.htaccess</code>',
 			"<code># BEGIN SecuPress $marker</code>",
@@ -371,7 +371,7 @@ function secupress_remove_module_rules_or_notice( $marker, $module_name ) {
 	if ( $is_iis7 && ! secupress_insert_iis7_nodes( $marker ) ) {
 		$message  = sprintf( __( '%s: ', 'secupress' ), $module_name );
 		$message .= sprintf(
-			/* translators: 1 is a file name, 2 is a small part of code. */
+			/** Translators: 1 is a file name, 2 is a small part of code. */
 			__( 'Your %1$s file does not seem to be writable, you have to edit it manually. Please remove the rules with %2$s from the %1$s file.', 'secupress' ),
 			'<code>web.config</code>',
 			"<code>SecuPress $marker</code>"
@@ -384,7 +384,7 @@ function secupress_remove_module_rules_or_notice( $marker, $module_name ) {
 	if ( $is_nginx ) {
 		$message  = sprintf( __( '%s: ', 'secupress' ), $module_name );
 		$message .= sprintf(
-			/* translators: 1 is a file name, 2 and 3 are small parts of code. */
+			/** Translators: 1 is a file name, 2 and 3 are small parts of code. */
 			__( 'Your server uses a <i>Nginx</i> system, you have to edit the configuration file manually. Please remove the rules between %2$s and %3$s from the %1$s file.', 'secupress' ),
 			'<code>nginx.conf</code>',
 			"<code># BEGIN SecuPress $marker</code>",
@@ -432,7 +432,7 @@ function secupress_add_module_rules_or_notice( $args ) {
 			$rules    = esc_html( $rules );
 			$message  = sprintf( __( '%s: ', 'secupress' ), $title );
 			$message .= sprintf(
-				/* translators: 1 is a file name, 2 is some code */
+				/** Translators: 1 is a file name, 2 is some code */
 				__( 'Your %1$s file does not seem to be writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ),
 				'<code>.htaccess</code>',
 				"<pre># BEGIN SecuPress $marker\n$rules# END SecuPress</pre>"
@@ -462,7 +462,7 @@ function secupress_add_module_rules_or_notice( $args ) {
 
 			if ( ! empty( $iis_args['node_types'] ) ) {
 				$message .= sprintf(
-					/* translators: 1 is a file name, 2 is a tag name, 3 is a folder path (kind of), 4 is some code */
+					/** Translators: 1 is a file name, 2 is a tag name, 3 is a folder path (kind of), 4 is some code */
 					__( 'Your %1$s file does not seem to be writable. Please remove any previous %2$s tag and add the following lines inside the tags hierarchy %3$s (create it if does not exist): %4$s', 'secupress' ),
 					'<code>web.config</code>',
 					'<code class="secupress-iis7-node-type">' . $iis_args['node_types'] . '</code>',
@@ -471,7 +471,7 @@ function secupress_add_module_rules_or_notice( $args ) {
 				);
 			} else {
 				$message .= sprintf(
-					/* translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
+					/** Translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
 					__( 'Your %1$s file does not seem to be writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ),
 					'<code>web.config</code>',
 					'<code class="secupress-iis7-path">' . $path . '</code>',
@@ -490,7 +490,7 @@ function secupress_add_module_rules_or_notice( $args ) {
 		// We can't edit the file, so we'll tell the user how to do.
 		$message  = sprintf( __( '%s: ', 'secupress' ), $title );
 		$message .= sprintf(
-			/* translators: 1 is a file name, 2 is some code */
+			/** Translators: 1 is a file name, 2 is some code */
 			__( 'Your server uses a <i>Nginx</i> system, you have to edit the configuration file manually. Please add the following code into your %1$s file: %2$s', 'secupress' ),
 			'<code>nginx.conf</code>',
 			"<pre>$rules</pre>"

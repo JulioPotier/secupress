@@ -146,7 +146,7 @@ function secupress_create_subsite_menu() {
 
 	// Display a notice for Administrators.
 	if ( 'admin.php' !== $pagenow || empty( $_GET['page'] ) || SECUPRESS_PLUGIN_SLUG . '_scanners' !== $_GET['page'] ) {
-		/* translators: 1 is an URL, 2 is the plugin name */
+		/** Translators: 1 is an URL, 2 is the plugin name. */
 		$message = sprintf( __( 'Some security issues must be fixed, please visit <a href="%1$s">%2$s\'s page</a>.', 'secupress' ), esc_url( admin_url( 'admin.php?page=' . SECUPRESS_PLUGIN_SLUG . '_scanners' ) ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
 		secupress_add_notice( $message, null, 'subsite-security-issues' );
 	} else {
@@ -242,7 +242,7 @@ function secupress_settings_page_access_denied_message() {
 	if ( ! current_user_can( secupress_get_capability( true ) ) ) {
 		return;
 	}
-	/* translators: %s is a link to the dashboard */
+	/** Translators: %s is a link to the dashboard. */
 	$message = __( 'Since there are no other fixes to be done, this page does not exist anymore.<br/>You can go back to the %s.', 'secupress' );
 	$link    = '<a href="' . esc_url( admin_url() ) . '">' . __( 'Dashboard' ) . '</a>';
 	$title   = __( 'Back to the Dashboard', 'secupress' );

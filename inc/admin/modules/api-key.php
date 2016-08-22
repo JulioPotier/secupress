@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 $description = implode( "<br/>\n", array(
 	__( 'Some features need a free account to be created, because they are linked to services provided with our servers.', 'secupress' ),
 	sprintf(
-		/* translators: %s is a "Buy a licence" link */
+		/** Translators: %s is a "Buy a licence" link */
 		__( 'You can %s, or only <strong>enter your email address</strong> below and <strong>save</strong> to get your free account.', 'secupress' ),
 		'<a href="#" target="_blank">' . __( 'buy a license to unlock all the features', 'secupress' ) . '</a>'// ////.
 	),

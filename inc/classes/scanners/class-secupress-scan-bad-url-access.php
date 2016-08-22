@@ -50,13 +50,13 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 		}
 
 		if ( $is_apache ) {
-			/** Translator: %s is a file name. */
+			/** Translators: %s is a file name. */
 			$this->more_fix = sprintf( __( 'Add rules in your %s file to forbid direct access to WordPress files that disclose your site\'s internal path.', 'secupress' ), '<code>.htaccess</code>' );
 		} elseif ( $is_iis7 ) {
-			/** Translator: %s is a file name. */
+			/** Translators: %s is a file name. */
 			$this->more_fix = sprintf( __( 'Add rules in your %s file to forbid direct access to WordPress files that disclose your site\'s internal path.', 'secupress' ), '<code>web.config</code>' );
 		} else {
-			/** Translator: %s is a file name. */
+			/** Translators: %s is a file name. */
 			$this->more_fix = sprintf( __( 'The %s file cannot be edited automatically, you will be given the rules to add into this file manually, to forbid direct access to WordPress files that disclose your site\'s internal path.', 'secupress' ), '<code>nginx.conf</code>' );
 		}
 	}
@@ -78,21 +78,21 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 		$messages = array(
 			// "good"
 			0   => __( 'Your site does not reveal your site\'s internal path.', 'secupress' ),
-			/* translators: %s is a file name. */
+			/** Translators: %s is a file name. */
 			1   => sprintf( __( 'Rules avoiding your site\'s internal path disclosure have been added to your %s file.', 'secupress' ), "<code>$config_file</code>" ),
 			// "warning"
-			/* translators: %s is a URL, or a list of URLs. */
+			/** Translators: %s is a URL, or a list of URLs. */
 			100 => _n_noop( 'Unable to determine if %s reveals your site\'s internal path.', 'Unable to determine if %s reveal your site\'s internal path.', 'secupress' ),
 			// "bad"
-			/* translators: %s is a URL, or a list of URLs. */
+			/** Translators: %s is a URL, or a list of URLs. */
 			200 => _n_noop( '%s should not be accessible by anyone.', '%s should not be accessible by anyone.', 'secupress' ),
 			// "cantfix"
-			/* translators: 1 is a file name, 2 is some code */
+			/** Translators: 1 is a file name, 2 is some code */
 			300 => sprintf( __( 'Your server runs a nginx system, the files that disclose your site\'s internal path cannot be protected automatically but you can do it yourself by adding the following code into your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
 			301 => __( 'Your server runs a non recognized system. The files that disclose your site\'s internal path cannot be protected automatically.', 'secupress' ),
-			/* translators: 1 is a file name, 2 is some code */
+			/** Translators: 1 is a file name, 2 is some code */
 			302 => sprintf( __( 'Your %1$s file does not seem to be writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ), "<code>$config_file</code>", '%s' ),
-			/* translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
+			/** Translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
 			303 => sprintf( __( 'Your %1$s file does not seem to be writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ), "<code>$config_file</code>", '%1$s', '%2$s' ),
 		);
 

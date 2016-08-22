@@ -10,7 +10,7 @@ $this->add_section( __( 'Themes & Plugins Uploads', 'secupress' ) );
 $plugin = $this->get_current_plugin();
 
 $this->add_field( array(
-	/* translators: %s is a file extension */
+	/** Translators: %s is a file extension */
 	'title'             => sprintf( __( 'Disallow %s uploads', 'secupress' ), '<code>.zip</code>' ),
 	'label_for'         => $this->get_field_name( 'activate' ),
 	'plugin_activation' => true,

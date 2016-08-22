@@ -58,7 +58,7 @@ class SecuPress_Scan_Non_Login_Time_Slot extends SecuPress_Scan implements SecuP
 		if ( $timings && is_array( $timings ) ) {
 			$from = date_i18n( __( 'g:i a' ), mktime( $timings['from_hour'], $timings['from_minute'] ) );
 			$to   = date_i18n( __( 'g:i a' ), mktime( $timings['to_hour'], $timings['to_minute'] ) );
-			/* translators: 1 and 2 are hours. */
+			/** Translators: 1 and 2 are hours. */
 			$this->more_fix .= '<br/>' . sprintf( __( 'Prevent anyone to log in from %1$s to %2$s <em>(this time slot can be changed in the module settings)</em>.', 'secupress' ), "<strong>$from</strong>", "<strong>$to</strong>" );
 
 			if ( secupress_in_timeslot() ) {

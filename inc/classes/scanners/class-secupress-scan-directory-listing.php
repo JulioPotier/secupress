@@ -50,13 +50,13 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 		}
 
 		if ( $is_apache ) {
-			/** Translator: %s is a file name. */
+			/** Translators: %s is a file name. */
 			$this->more_fix = sprintf( __( 'Add rules in your %s file to forbid browsing your site\'s files.', 'secupress' ), '<code>.htaccess</code>' );
 		} elseif ( $is_iis7 ) {
-			/** Translator: %s is a file name. */
+			/** Translators: %s is a file name. */
 			$this->more_fix = sprintf( __( 'Add rules in your %s file to forbid browsing your site\'s files.', 'secupress' ), '<code>web.config</code>' );
 		} else {
-			/** Translator: %s is a file name. */
+			/** Translators: %s is a file name. */
 			$this->more_fix = sprintf( __( 'The %s file cannot be edited automatically, you will be given the rules to add into this file manually, to forbid browsing your site\'s files.', 'secupress' ), '<code>nginx.conf</code>' );
 		}
 	}
@@ -78,21 +78,21 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 		$messages = array(
 			// "good"
 			0   => __( 'Your site does not reveal the files list.', 'secupress' ),
-			/* translators: %s is a file name. */
+			/** Translators: %s is a file name. */
 			1   => sprintf( __( 'The rules forbidding access to directory listing have been successfully added to your %s file.', 'secupress' ), "<code>$config_file</code>" ),
 			// "warning"
-			/* translators: %s is an URL */
+			/** Translators: %s is an URL */
 			100 => __( 'Unable to determine status of %s to read the directory listing.', 'secupress' ),
 			// "bad"
-			/* translators: %s is an URL */
+			/** Translators: %s is an URL */
 			200 => __( '%s (for example) should not be accessible to anyone because of directory listing.', 'secupress' ),
 			// "cantfix"
-			/* translators: 1 is a file name, 2 is some code */
+			/** Translators: 1 is a file name, 2 is some code */
 			300 => sprintf( __( 'Your server runs a nginx system, the directory listing disclosure cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
 			301 => __( 'Your server runs a non recognized system. The directory listing disclosure cannot be fixed automatically.', 'secupress' ),
-			/* translators: 1 is a file name, 2 is some code */
+			/** Translators: 1 is a file name, 2 is some code */
 			302 => sprintf( __( 'Your %1$s file does not seem to be writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ), "<code>$config_file</code>", '%s' ),
-			/* translators: 1 is a file name, 2 is a tag name, 3 is a folder path (kind of), 4 is some code */
+			/** Translators: 1 is a file name, 2 is a tag name, 3 is a folder path (kind of), 4 is some code */
 			303 => sprintf( __( 'Your %1$s file does not seem to be writable. Please remove any previous %2$s tag and add the following lines inside the tags hierarchy %3$s (create it if does not exist): %4$s', 'secupress' ), "<code>$config_file</code>", '%1$s', '%2$s', '%3$s' ),
 		);
 

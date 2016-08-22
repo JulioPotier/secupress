@@ -76,14 +76,14 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 			2   => __( 'The user role for new registrations has been set to <strong>Subscriber</strong>.', 'secupress' ),
 			// "warning"
 			100 => __( 'Unable to determine status of your subscribtion settings.', 'secupress' ),
-			/* translators: %s is the plugin name. */
+			/** Translators: %s is the plugin name. */
 			101 => sprintf( __( 'You have a big network, %s must work on some data before being able to perform this scan.', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ),
 			// "bad"
 			200 => __( 'The default role in your installation is <strong>%s</strong> and it should be <strong>Subscriber</strong>, or registrations should be <strong>closed</strong>.', 'secupress' ),
 			201 => __( 'The registration page is <strong>not protected</strong> from bots.', 'secupress' ),
 			202 => _n_noop( 'The default role is not Subscriber in %s of your sites.', 'The default role is not Subscriber in %s of your sites.', 'secupress' ),
 			// "cantfix"
-			/* translators: %s is the plugin name. */
+			/** Translators: %s is the plugin name. */
 			300 => sprintf( __( 'The default role cannot be fixed from here. A new %s menu item has been activated in the relevant site\'s administration area.', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ),
 		);
 

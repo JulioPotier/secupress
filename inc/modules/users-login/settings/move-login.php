@@ -75,20 +75,20 @@ if ( $is_plugin_active && function_exists( 'secupress_move_login_get_rules' ) ) 
 
 	// Nginx.
 	if ( $is_nginx ) {
-		/* translators: 1 is a file name, 2 is a tag name */
+		/** Translators: 1 is a file name, 2 is a tag name. */
 		$message = sprintf( __( 'You need to add the following code into your %1$s file, inside the %2$s block:', 'secupress' ), '<code>nginx.conf</code>', '<code>server</code>' );
 		$rules   = secupress_move_login_get_nginx_rules( secupress_move_login_get_rules() );
 	}
 	// Apache.
 	elseif ( $is_apache && ! secupress_root_file_is_writable( '.htaccess' ) ) {
-		/* translators: %s is a file name */
+		/** Translators: %s is a file name. */
 		$message = sprintf( __( 'Your %s file does not seem to be writable, you need to add the following code inside:', 'secupress' ), '<code>.htaccess</code>' );
 		$rules   = secupress_move_login_get_apache_rules( secupress_move_login_get_rules() );
 		$rules   = "# BEGIN SecuPress move_login\n$rules\n# END SecuPress";
 	}
 	// IIS7.
 	elseif ( $is_iis7 && ! secupress_root_file_is_writable( 'web.config' ) ) {
-		/* translators: %s is a file name */
+		/** Translators: %s is a file name. */
 		$message = sprintf( __( 'Your %s file does not seem to be writable, you need to add the following code inside:', 'secupress' ), '<code>web.config</code>' );
 		$rules   = secupress_move_login_get_iis7_rules( secupress_move_login_get_rules() );
 	}

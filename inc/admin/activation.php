@@ -162,7 +162,7 @@ function secupress_maybe_write_rules_on_activation() {
 			$path     = '/configuration/system.webServer' . ( $path ? '/' . trim( $path, '/' ) : '' ) . $path_end;
 
 			if ( ! $loaded ) {
-				/* translators: %s is a folder path */
+				/** Translators: %s is a folder path */
 				$new_data = sprintf( __( 'In %s:', 'secupress' ), "<code>$path</code>" );
 			}
 
@@ -274,7 +274,7 @@ function secupress_maybe_remove_rules_on_deactivation() {
 			// Since we can't edit the file, no other way but to kill the page :s.
 			$message  = sprintf( __( '%s: ', 'secupress' ), SECUPRESS_PLUGIN_NAME );
 			$message .= sprintf(
-					/* translators: 1 and 2 are small parts of code, 3 is a file name. */
+					/** Translators: 1 and 2 are small parts of code, 3 is a file name. */
 				__( 'It seems your server uses a <i>Nginx</i> system. You have to edit the configuration file manually. Please remove all rules between %1$s and %2$s from the %3$s file.', 'secupress' ),
 				'<code># BEGIN SecuPress move_login</code>',
 				'<code># END SecuPress</code>',
@@ -300,7 +300,7 @@ function secupress_maybe_remove_rules_on_deactivation() {
 			// If the file is not writable, no other way but to kill the page :/.
 			$message  = sprintf( __( '%s: ', 'secupress' ), SECUPRESS_PLUGIN_NAME );
 			$message .= sprintf(
-				/* translators: 1 and 2 are small parts of code, 3 is a file name. */
+				/** Translators: 1 and 2 are small parts of code, 3 is a file name. */
 				__( 'It seems your %3$s file does not seem to be writable. You have to edit the file manually. Please remove all rules between %1$s and %2$s from the %3$s file.', 'secupress' ),
 				'<code># BEGIN SecuPress</code>',
 				'<code># END SecuPress</code>',
@@ -342,7 +342,7 @@ function secupress_maybe_remove_rules_on_deactivation() {
 		// If the file is not writable, no other way but to kill the page :/.
 		$message  = sprintf( __( '%s: ', 'secupress' ), SECUPRESS_PLUGIN_NAME );
 		$message .= sprintf(
-			/* translators: 1 is a small part of code, 2 is a file name. */
+			/** Translators: 1 is a small part of code, 2 is a file name. */
 			__( 'It seems your %2$s file does not seem to be writable. You have to edit the file manually. Please remove all rules with %1$s from the %2$s file.', 'secupress' ),
 			'<code>SecuPress</code>',
 			'<code>web.config</code>'

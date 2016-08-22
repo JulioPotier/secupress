@@ -38,10 +38,10 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 	 * @since 1.0
 	 */
 	protected function init() {
-		/* translators: %s is a plugin name */
+		/** Translators: %s is a plugin name */
 		$this->title    = sprintf( __( 'Check if the %s plugin discloses its version.', 'secupress' ), 'WooCommerce' );
 		$this->more     = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of informations. His goal is to find outdated versions of your server softwares or WordPress components. Don\'t let them easily find these informations.', 'secupress' );
-		/* translators: %s is a plugin name */
+		/** Translators: %s is a plugin name */
 		$this->more_fix = sprintf( __( 'Hide the %s version to avoid being read by attackers.', 'secupress' ), 'WooCommerce' );
 	}
 
@@ -58,17 +58,17 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// "good"
-			/* translators: %s is a plugin name */
+			/** Translators: %s is a plugin name */
 			0   => sprintf( __( 'The %s plugin does not reveal sensitive informations.', 'secupress' ), 'WooCommerce' ),
 			1   => __( 'The generator meta tag should not be displayed anymore.', 'secupress' ),
-			/* translators: %s is a plugin name */
+			/** Translators: %s is a plugin name */
 			2   => sprintf( __( 'The %s\'s version should be removed from your styles URL now.', 'secupress' ), 'WooCommerce' ),
-			/* translators: %s is a plugin name */
+			/** Translators: %s is a plugin name */
 			3   => sprintf( __( 'The %s\'s version should be removed from your scripts URL now.', 'secupress' ), 'WooCommerce' ),
 			// "warning"
 			100 => sprintf( __( 'Unable to determine if %s is disclosing its version on your homepage.', 'secupress' ), 'WooCommerce' ),
 			// "bad"
-			/* translators: 1 is a plugin name, 2 is some related info */
+			/** Translators: 1 is a plugin name, 2 is some related info */
 			200 => sprintf( __( 'The %1$s plugin displays its version in your homepage source code (%2$s).', 'secupress' ), 'WooCommerce', '%s' ),
 		);
 

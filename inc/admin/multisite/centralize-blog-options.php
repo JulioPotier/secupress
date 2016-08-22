@@ -139,7 +139,7 @@ function secupress_add_centralized_blog_options() {
 	$href = wp_nonce_url( $href, 'secupress-centralize-blog-options' );
 
 	$message = sprintf(
-		/* translators: %s is a "click here" link. */
+		/** Translators: %s is a "click here" link. */
 		__( 'Your network is quite big. Before doing anything, some data must be set. Please %s.', 'secupress' ),
 		'<a href="' . esc_url( $href ) . '" class="secupress-centralize-blog-options">' . __( 'click here', 'secupress' ) . '</a>'
 	);
@@ -199,7 +199,7 @@ function secupress_add_centralized_blog_options_admin_post_callback() {
 	<div class="wrap">
 		<p><?php
 		printf(
-			/* translators: %s is a "click here" link. */
+			/** Translators: %s is a "click here" link. */
 			__( 'If this page does not refresh automatically in 2 seconds, please %s.', 'secupress' ),
 			/* For `wp_get_referer()` see the param `_wp_http_referer` in `secupress_add_centralized_blog_options()`. */
 			'<a href="' . esc_url( $href ) . '" class="secupress-centralize-blog-options">' . __( 'click here', 'secupress' ) . '</a>'

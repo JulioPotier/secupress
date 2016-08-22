@@ -12,7 +12,7 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 	<body>
 		<p><?php
 		printf(
-			/* translators: 1 is a file name, 2 is a "click here" link */
+			/** Translators: 1 is a file name, 2 is a "click here" link. */
 			__( 'The aim of this page is to catch robots that don\'t respect the rules set in the %1$s file. <strong>Don\'t %2$s or you will be banned from this site.</strong>', 'secupress' ),
 			'<code>robots.txt</code>',
 			'<a href="' . esc_url( admin_url( 'admin-post.php?action=secupress-ban-me-please' ) ) . '">' . __( 'click this link', 'secupress' ) . '</a>'

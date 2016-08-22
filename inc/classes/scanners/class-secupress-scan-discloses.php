@@ -52,13 +52,13 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 		$this->more_fix  = __( 'Depending of the scan results, one (or all) of the following will be applied:', 'secupress' ) . '<br/>';
 
 		if ( $is_apache ) {
-			/** Translator: %s is a file name. */
+			/** Translators: %s is a file name. */
 			$this->more_fix .= sprintf( __( 'Add rules in your %s file to avoid attackers to discover your WordPress version and your PHP version.', 'secupress' ), '<code>.htaccess</code>' ) . '<br/>';
 		} elseif ( $is_iis7 ) {
-			/** Translator: %s is a file name. */
+			/** Translators: %s is a file name. */
 			$this->more_fix .= sprintf( __( 'Add rules in your %s file to avoid attackers to discover your WordPress version and your PHP version.', 'secupress' ), '<code>web.config</code>' ) . '<br/>';
 		} else {
-			/** Translator: %s is a file name. */
+			/** Translators: %s is a file name. */
 			$this->more_fix .= sprintf( __( 'The %s file cannot be edited automatically, you will be given the rules to add into this file manually, to avoid attackers to discover your WordPress version and your PHP version.', 'secupress' ), '<code>nginx.conf</code>' ) . '<br/>';
 		}
 
@@ -81,29 +81,29 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 			// "good"
 			0   => __( 'Your site does not reveal your <strong>WordPress version</strong> nor <strong>PHP version</strong>.', 'secupress' ),
 			1   => __( 'The website does not display the <strong>PHP version</strong> in the request headers anymore.', 'secupress' ),
-			/* translators: %s is a file name */
+			/** Translators: %s is a file name */
 			2   => sprintf( __( 'The %s file is now protected from revealing your <strong>WordPress version</strong>.', 'secupress' ), '<code>readme.html</code>' ),
-			/* translators: 1 is a file name */
+			/** Translators: 1 is a file name */
 			3   => __( 'As the rules against the <strong>PHP version</strong> disclosure added to your %s file do not seem to work, another method has been used to remove this information.', 'secupress' ),
 			4   => __( 'The generator meta tag should not be displayed anymore.', 'secupress' ),
 			5   => __( 'The <strong>WordPress version</strong> should now be removed from your styles URL.', 'secupress' ),
 			6   => __( 'The <strong>WordPress version</strong> should now be removed from your scripts URL.', 'secupress' ),
 			// "warning"
 			100 => __( 'Unable to determine if your homepage is still disclosing your <strong>WordPress version</strong>.', 'secupress' ),
-			/* translators: %s is an URL */
+			/** Translators: %s is an URL */
 			101 => sprintf( __( 'Unable to determine is %s is still disclosing your <strong>WordPress version</strong>.', 'secupress' ), '<code>readme.html</code>' ),
 			// "bad"
 			200 => __( 'The website displays the <strong>PHP version</strong> in the request headers.', 'secupress' ),
 			201 => __( 'The website displays the <strong>WordPress version</strong> in the homepage source code (%s).', 'secupress' ),
-			/* translators: %s is an URL */
+			/** Translators: %s is an URL */
 			202 => sprintf( __( 'The %s file should not be accessible by anyone to avoid to reveal your <strong>WordPress version</strong>.', 'secupress' ), '<code>readme.html</code>' ),
 			// "cantfix"
-			/* translators: 1 is a file name, 2 is some code */
+			/** Translators: 1 is a file name, 2 is some code */
 			300 => sprintf( __( 'Your server runs a nginx system, the <strong>WordPress version</strong> and <strong>PHP version</strong> disclosure cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
 			301 => __( 'Your server runs a non recognized system. The <strong>WordPress version</strong> and <strong>PHP version</strong> disclosure cannot be fixed automatically.', 'secupress' ),
-			/* translators: 1 is a file name, 2 is some code */
+			/** Translators: 1 is a file name, 2 is some code */
 			302 => sprintf( __( 'Your %1$s file does not seem to be writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ), '<code>.htaccess</code>', '%s' ),
-			/* translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
+			/** Translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
 			303 => sprintf( __( 'Your %1$s file does not seem to be writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ), '<code>web.config</code>', '%1$s', '%2$s' ),
 		);
 

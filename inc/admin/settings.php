@@ -42,7 +42,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 		'confirmText'         => __( 'OK', 'secupress' ),
 		'cancelText'          => __( 'Cancel' ),
 		'forYourSecurity'     => sprintf( __( 'For your security you should set a recovery email, %1$s will use it in case of hack as a rescue email address. <a href="%2$s">Do it now!</a>', 'secupress' ), SECUPRESS_PLUGIN_NAME, get_edit_profile_url( get_current_user_id() ) . '#secupress_recovery_email' ),
-	); 
+	);
 
 	wp_localize_script( 'secupress-wordpress-js', 'SecuPressi18n', $localize_wp );
 
@@ -475,14 +475,14 @@ function __secupress_scanners() {
 										<p>
 											<q>
 											<?php
-											/* translators: %s is the plugin name */
+											/** Translators: %s is the plugin name */
 											printf( esc_html__( 'Wow! My website just got an A security grade using %s, what about yours?', 'secupress' ), SECUPRESS_PLUGIN_NAME );
 											?>
 											</q>
 										</p>
 
 										<a class="secupress-button secupress-button-mini" href="https://twitter.com/intent/tweet?via=secupress&amp;url=<?php
-											/* translators: %s is the plugin name */
+											/** Translators: %s is the plugin name */
 											echo urlencode( esc_url_raw( 'http://secupress.me&text=' . sprintf( __( 'Wow! My website just got an A security grade using %s, what about yours?', 'secupress' ), SECUPRESS_PLUGIN_NAME ) ) );
 										?>">
 											<span class="icon" aria-hidden="true"><span class="dashicons dashicons-twitter"></span></span>

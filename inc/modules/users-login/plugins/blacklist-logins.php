@@ -92,7 +92,7 @@ function secupress_auth_redirect_blacklist_logins( $user_id ) {
 		<h1><?php _e( 'Please change your username', 'secupress' ); ?></h1>
 		<p><?php
 		printf(
-			/* translators: 1 is a user name, 2 is a link "to the site" */
+			/** Translators: 1 is a user name, 2 is a link "to the site" */
 			__( 'Your current username %1$s is blacklisted. You will not be able to reach the administration area until you change your username. Meanwhile, you still have access %2$s.', 'secupress' ),
 			'<strong>' . esc_html( $user->user_login ) . '</strong>',
 			'<a href="' . esc_url( user_trailingslashit( home_url() ) ) . '">' . __( 'to the site', 'secupress' ) . '</a>'

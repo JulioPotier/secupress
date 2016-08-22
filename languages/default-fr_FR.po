@@ -23,7 +23,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 
 #: inc/classes/scanners/class-secupress-scan-admin-as-author.php
-# translators: user role
+# Translators: user role.
 msgctxt "User role"
 msgid "Post Author"
 msgstr "Auteur d&rsquo;article"

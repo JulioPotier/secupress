@@ -17,7 +17,6 @@ function _secupress_http_block_external_notice() {
 
 	$is_accessible = defined( 'WP_ACCESSIBLE_HOSTS' ) && strpos( WP_ACCESSIBLE_HOSTS, '*.secupress.me' ) !== false;
 
-	// war_dump( $is_accessible );
 	if ( $is_accessible || ! defined( 'WP_HTTP_BLOCK_EXTERNAL' ) || ( isset( $current_screen )
 		&& 'toplevel_page_' . SECUPRESS_PLUGIN_SLUG . '_scanners' !== $current_screen->base
 		&& 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' !== $current_screen->base
@@ -113,7 +112,7 @@ function secupress_add_packed_plugins_notice() {
 
 	$message  = '<p>';
 	$message .= sprintf(
-		/* translators: 1 is the plugin name */
+		/** Translators: 1 is the plugin name */
 		__( 'The features of the following plugins are included into %1$s. You can deactivate the plugins now and enable these features later in %1$s:', 'secupress' ),
 		'<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>'
 	);
