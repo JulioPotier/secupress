@@ -12,10 +12,13 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
  */
 function secupress_login_errors_disclose_get_messages( $for_regex = true ) {
 	$messages = array(
-		'invalid_email'      => __( '<strong>ERROR</strong>: There is no user registered with that email address.' ),
-		'invalidcombo'       => __( '<strong>ERROR</strong>: Invalid username or e-mail.' ),
-		'invalid_username'   => sprintf( __( '<strong>ERROR</strong>: Invalid username. <a href="%s">Lost your password?</a>' ), wp_lostpassword_url() ),
-		'incorrect_password' => sprintf( __( '<strong>ERROR</strong>: The password you entered for the username <strong>%1$s</strong> is incorrect. <a href="%2$s">Lost your password?</a>' ), '%ALL%', wp_lostpassword_url() ),
+		'invalid_email'         => __( '<strong>ERROR</strong>: There is no user registered with that email address.' ), // WP i18n.
+		'invalidcombo'          => __( '<strong>ERROR</strong>: Invalid username or e-mail.' ), // WP i18n.
+		'invalidcombo_46'       => __( '<strong>ERROR</strong>: Invalid username or email.' ), // WP i18n.
+		'invalid_username'      => sprintf( __( '<strong>ERROR</strong>: Invalid username. <a href="%s">Lost your password?</a>' ), wp_lostpassword_url() ), // WP i18n.
+		'invalid_username_46'   => __( '<strong>ERROR</strong>: Invalid username.' ) . ' <a href="' . wp_lostpassword_url() . '">' . __( 'Lost your password?' ) . '</a>', // WP i18n.
+		'incorrect_password'    => sprintf( __( '<strong>ERROR</strong>: The password you entered for the username <strong>%1$s</strong> is incorrect. <a href="%2$s">Lost your password?</a>' ), '%ALL%', wp_lostpassword_url() ), // WP i18n.
+		'incorrect_password_46' => sprintf( __( '<strong>ERROR</strong>: The password you entered for the username %s is incorrect.' ), '<strong>' . $username . '</strong>' ) . ' <a href="' . wp_lostpassword_url() . '">' . __( 'Lost your password?' ) . '</a>', // WP i18n.
 	);
 
 	if ( $for_regex ) {
