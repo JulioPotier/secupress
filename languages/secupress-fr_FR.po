@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
 "POT-Creation-Date: 2016-08-22 16:36+0200\n"
-"PO-Revision-Date: 2016-08-22 16:37+0200\n"
+"PO-Revision-Date: 2016-08-22 22:21+0200\n"
 "Last-Translator: WP Media <contact@wp-media.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -6650,7 +6650,7 @@ msgstr ""
 
 #: inc/modules/sensitive-data/settings/wp-endpoints.php:5
 msgid "WordPress Endpoints"
-msgstr "////"
+msgstr "Points d&rsquo;ancrage de WordPress"
 
 #: inc/modules/sensitive-data/settings/wp-endpoints.php:9
 msgid "XML-RPC"
