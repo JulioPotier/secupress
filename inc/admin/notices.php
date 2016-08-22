@@ -287,6 +287,12 @@ function secupress_warning_no_recovery_email() {
 		return;
 	}
 
+	$suffix    = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+	// Enqueue Swal2 CSS.
+	wp_enqueue_style( 'wpmedia-css-sweetalert2', SECUPRESS_ADMIN_CSS_URL . 'sweetalert2' . $suffix . '.css', array(), '1.3.4' );
+	// Enqueue Swal2 JS.
+	wp_enqueue_script( 'wpmedia-js-sweetalert2', SECUPRESS_ADMIN_JS_URL . 'sweetalert2' . $suffix . '.js', array( 'jquery' ), '1.3.4', true );
+
 	$form     = '<img src="' . admin_url( 'images/wpspin_light.gif' ) . '" alt="' . __( 'Loading', 'secupress' ) . '" class="hidden" id="secupress_recovery_email_spinner">';
 	$form    .= '<input type="text" name="secupress_recovery_email" id="secupress_recovery_email" placeholder="' . __( 'Email address', 'secupress' ) . '"/> ';
 	$form    .= '<button id="secupress_recovery_email_submit">' . __( 'Submit', 'secupress' ) . '</button> ';
