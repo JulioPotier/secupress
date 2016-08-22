@@ -1244,4 +1244,23 @@ jQuery( document ).ready( function( $ ) {
 			$( '.secupress-button-scan' ).last().trigger( 'bulkscan.secupress' );
 		}
 	} )( window, document, $ );
+
+
+	// Docs coming soon ============================================================================
+	(function($) {
+
+			var $links = $( 'a[href$="docs.secupress.me/"]' );
+
+			$links.on( 'click.secupress', function(e){
+
+				e.preventDefault();
+				swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
+					title:             SecuPressi18nScanner.comingSoon,
+					showConfirmButton: false,
+					html:              SecuPressi18nScanner.docNotReady,
+					type:              'info'
+				} ) );
+			} );
+
+	})(jQuery);
 } );

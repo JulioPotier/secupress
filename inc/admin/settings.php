@@ -36,7 +36,15 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	// WordPress Common JS.
 	wp_enqueue_script( 'secupress-wordpress-js', SECUPRESS_ADMIN_JS_URL . 'secupress-wordpress' . $suffix . '.js', $js_depts, $version, true );
 
-	wp_localize_script( 'secupress-wordpress-js', 'SecuPressi18n', array( 'isPro' => (int) secupress_is_pro() ) );
+	$localize_wp = array(
+		'isPro'               => (int) secupress_is_pro(),
+		'recoveryEmailNeeded' => __( 'Recovery Email Needed', 'secupress' ),
+		'confirmText'         => __( 'OK', 'secupress' ),
+		'cancelText'          => __( 'Cancel' ),
+		'forYourSecurity'     => sprintf( __( 'For your security you should set a recovery email, %1$s will use it in case of hack as a rescue email address. <a href="%2$s">Do it now!</a>', 'secupress' ), SECUPRESS_PLUGIN_NAME, get_edit_profile_url( get_current_user_id() ) . '#secupress_recovery_email' ),
+	); 
+
+	wp_localize_script( 'secupress-wordpress-js', 'SecuPressi18n', $localize_wp );
 
 	$pages = array(
 		'toplevel_page_' . SECUPRESS_PLUGIN_SLUG . '_scanners'  => 1,
@@ -58,11 +66,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	wp_localize_script( 'secupress-common-js', 'SecuPressi18nCommon', array(
 		'confirmText'         => __( 'OK', 'secupress' ),
 		'cancelText'          => __( 'Cancel' ),
-		'comingSoon'          => __( 'Coming Soon', 'secupress' ),
-		'docNotReady'         => __( 'The documentation is actually under construction, thank you for your patience.', 'secupress' ),
 		'closeText'           => __( 'Close' ),
-		'recoveryEmailNeeded' => __( 'Recovery Email Needed', 'secupress' ),
-		'forYourSecurity'     => sprintf( __( 'For your security you should set a recovery email, %1$s will use it in case of hack as a rescue email address. <a href="%2$s">Do it now!</a>', 'secupress' ), SECUPRESS_PLUGIN_NAME, get_edit_profile_url( get_current_user_id() ) . '#secupress_recovery_email' ),
 		/*'authswal'     => array(
 			'title'  => __( 'Authentication', 'secupress' ),
 			'email'  => __( 'Enter your email', 'secupress' ),
@@ -184,6 +188,8 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 				'scanEnded'    => __( 'Security Scan just finished.', 'secupress' ),
 				'bulkFixStart' => __( 'Currently Fixing…', 'secupress' ) . ' ' . __( 'Please wait until fixing is complete.', 'secupress' )
 			),
+			'comingSoon'       => __( 'Coming Soon', 'secupress' ),
+			'docNotReady'      => __( 'The documentation is actually under construction, thank you for your patience.', 'secupress' ),
 		);
 
 		if ( $is_main ) {
