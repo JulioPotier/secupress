@@ -92,28 +92,3 @@ jQuery( document ).ready( function( $ ) {
 	} )(jQuery, document, window);
 
 } );
-
-
-// Docs in english ============================================================================
-(function($) {
-	if ( ! $( 'body' ).hasClass( 'locale-fr-fr' ) ) {
-
-		var $links = $( 'a[href$="docs.secupress.me/"]' );
-
-		$links.on( 'click.secupress', function(e){
-			var href = $( this ).attr( 'href' );
-			e.preventDefault();
-			swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
-				title:             'Lost in Translation',
-				confirmButtonText: 'Continue in french',
-				html:              'The documentation is actually under translation,<br>only <strong>the french one</strong> is readable now.',
-				type:              "question"
-			} ) ).then(function(result) {
-				if ( result ) {
-					window.location.href = href;
-				}
-			} );
-		} );
-
-	}
-})(jQuery);
