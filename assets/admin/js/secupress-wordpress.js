@@ -1,3 +1,17 @@
+// !Global vars ====================================================================================
+var SecuPress = {
+	swal2Defaults:        {
+		confirmButtonText: SecuPressi18n.confirmText,
+		cancelButtonText:  SecuPressi18n.cancelText,
+		type:              "warning",
+		allowOutsideClick: true,
+		customClass:       "wpmedia-swal2 secupress-swal2"
+	},
+	swal2ConfirmDefaults: {
+		showCancelButton: true,
+		closeOnConfirm:   false
+	}
+};
 /**
  * Basic tools
  */
@@ -40,8 +54,8 @@ jQuery( document ).ready( function( $ ) {
 		$( ".secupress-is-dismissible a[href*='notice_id=recovery_email']" ).on( "click", function( e ) {
 			if ( $( "#secupress_recovery_email:visible" ).length ) {
 				swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
-					title:             SecuPressi18nCommon.recoveryEmailNeeded,
-					html:              SecuPressi18nCommon.forYourSecurity,
+					title:             SecuPressi18n.recoveryEmailNeeded,
+					html:              SecuPressi18n.forYourSecurity,
 					showConfirmButton: false,
 					type:              "warning"
 				} ) );
@@ -92,21 +106,3 @@ jQuery( document ).ready( function( $ ) {
 	} )(jQuery, document, window);
 
 } );
-
-// Docs coming soon ============================================================================
-(function($) {
-
-		var $links = $( 'a[href$="docs.secupress.me/"]' );
-
-		$links.on( 'click.secupress', function(e){
-
-			e.preventDefault();
-			swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
-				title:             SecuPressi18nCommon.comingSoon,
-				showConfirmButton: false,
-				html:              SecuPressi18nCommon.docNotReady,
-				type:              'info'
-			} ) );
-		} );
-
-})(jQuery);
