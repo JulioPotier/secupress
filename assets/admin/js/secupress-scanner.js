@@ -383,10 +383,15 @@ jQuery( document ).ready( function( $ ) {
 	}
 
 	// Get counters and print them in the page.
-	function secupressPrintScoreFromAjax( isBulk ) {
+	function secupressPrintScoreFromAjax( isBulk, isOneClickScan ) {
 		var params;
 
+		if ( typeof isOneClickScan !== "boolean" ) {
+			isOneClickScan = false;
+		}
+
 		if ( ! SecuPressi18nScanner.i18nNonce ) {
+			secupressAllScanDoneCallback( isOneClickScan );
 			return;
 		}
 
@@ -401,7 +406,36 @@ jQuery( document ).ready( function( $ ) {
 				r.data.isBulk = isBulk;
 				secupressPrintScore( r.data );
 			}
+		} )
+		.always( function() {
+			secupressAllScanDoneCallback( isOneClickScan );
 		} );
+	}
+
+	// Some callback that will run after all scans are done and the score has been printed.
+	function secupressAllScanDoneCallback( isOneClickScan ) {
+		var $row;
+
+		// Step 1: if it's a One-click Scan, reload the page and (maybe) add `&step=1` to the URL.
+		if ( 1 === SecuPressi18nScanner.step && isOneClickScan ) {
+			// Reload the page and (maybe) add `&step=1`.
+			if ( window.location.href.match( /(\?|&)step=1($|&)/ ) ) {
+				window.location = window.location.href;
+			} else {
+				window.location = window.location.href.replace( "&step=0", "" ) + "&step=1";
+			}
+		}
+		// Step 2: when all fixes are done (and the folowing scans), go to step 3.
+		else if ( 2 === SecuPressi18nScanner.step ) {
+			window.location = window.location.href.replace( /(\?|&)step=2($|&)/, "$1step=3$2" );
+		}
+		// Step 3: when a manual fix is done (and the folowing scan), or a "manual scan", go to the next manual fix (or to step 4).
+		else if ( 3 === SecuPressi18nScanner.step ) {
+			$row = $( ".secupress-manual-fix" ).not( ".hide-if-js" );
+			$row.find( ".secupress-button-manual-scanit" ).find( ".icon-shield" ).addClass( "icon-check" ).removeClass( "icon-shield" );
+			secupressResetManualFix();
+			$row.find( ".secupress-button-ignoreit" ).first().trigger( "next.secupress" );
+		}
 	}
 
 
@@ -984,30 +1018,13 @@ jQuery( document ).ready( function( $ ) {
 				.always( function() {
 					secupressEnableButtons( $( '.secupress-button-scan' ) );
 					// Get counters and print them in the page.
-					secupressPrintScoreFromAjax( extra.isBulk );
-					// Reload the page and (maybe) add `&step=1`.
-					if ( w.location.href.match( /(\?|&)step=1($|&)/ ) ) {
-						w.location = w.location.href;
-					} else {
-						w.location = w.location.href + '&step=1';
-					}
+					secupressPrintScoreFromAjax( extra.isBulk, true );
 				} );
 			} else {
 				// Get counters and print them in the page.
 				secupressPrintScoreFromAjax( extra.isBulk );
 			}
-
-			// Step 2: when all fixes are done (and the folowing scans), go to step 3.
-			if ( 2 === SecuPressi18nScanner.step ) {
-				w.location = w.location.href.replace( /(\?|&)step=2($|&)/, '$1step=3$2' );
-			}
-			// Step 3: when a manual fix is done (and the folowing scan), or a "manual scan", go to the next manual fix (or to step 4).
-			else if ( 3 === SecuPressi18nScanner.step ) {
-				$row = $( '.secupress-manual-fix' ).not( '.hide-if-js' );
-				$row.find( '.secupress-button-manual-scanit' ).find( '.icon-shield' ).addClass( 'icon-check' ).removeClass( 'icon-shield' );
-				secupressResetManualFix();
-				$row.find( '.secupress-button-ignoreit' ).first().trigger( 'next.secupress' );
-			}
+			// Don't add stuff here, add it into secupressAllScanDoneCallback().
 		} );
 
 
