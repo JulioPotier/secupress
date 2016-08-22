@@ -1016,6 +1016,7 @@ a + .secupress-row-actions {
 	text-align: left;
 	font-weight: 500;
 	color: #FFF;
+	white-space: nowrap;
 }
 .secupress-group-new .secupress-sg-header {
 	background: #26B3A9;
@@ -1186,6 +1187,23 @@ a + .secupress-row-actions {
 	opacity: 0.6;
 	z-index: 2;
 }
+.secupress-item-all .secupress-get-pro-version a:before {
+	content: "";
+	display: block;
+	height: 1px; width: 100%;
+}
+.secupress-item-all .secupress-get-pro-version {
+	position: relative;
+	padding-left: 46px;
+	text-align: left;
+}
+.secupress-item-all .secupress-get-pro-version:before {
+	position: absolute;
+	top: -4px;
+	left: 0;
+	font-size: 34px;
+	font-weight: normal;
+}
 .secupress-item-status,
 .secupress-details-icon {
 	flex-basis: 110px;
@@ -1241,6 +1259,7 @@ a + .secupress-row-actions {
 }
 .secupress-mf-content .secupress-action-doc .secupress-button {
 	margin: 5px 10px;
+	white-space: nowrap;
 }
 .secupress-item-all .secupress-label {
 	text-transform: uppercase;
