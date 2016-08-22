@@ -9,12 +9,12 @@ register_activation_hook( SECUPRESS_FILE, 'secupress_activation' );
 /**
  * Tell WP what to do when the plugin is activated
  *
- * @since 1.1.0
+ * @since 1.0
  */
 function secupress_activation() {
 	// Last constants.
-	define( 'SECUPRESS_PLUGIN_NAME', 'SecuPress' );
-	define( 'SECUPRESS_PLUGIN_SLUG', 'secupress' );
+	defined( 'SECUPRESS_PLUGIN_NAME' ) or define( 'SECUPRESS_PLUGIN_NAME', 'SecuPress' );
+	defined( 'SECUPRESS_PLUGIN_SLUG' ) or define( 'SECUPRESS_PLUGIN_SLUG', 'secupress' );
 
 	// Make sure our texts are translated.
 	secupress_load_plugin_textdomain_translations();
