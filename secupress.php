@@ -8,7 +8,7 @@
  * Version: 1.0
  * Network: true
  * License: GPLv2
- * License URI: https://secupress.me/gpl.txt
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  *
  * Text Domain: secupress
  * Domain Path: /languages/
