@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  *
  * @return (bool) true on success.
  */
-function secupress_insert_iis7_nodes( $marker, $args ) {
+function secupress_insert_iis7_nodes( $marker, $args = array() ) {
 	static $web_config_file;
 
 	$args = wp_parse_args( $args, array(

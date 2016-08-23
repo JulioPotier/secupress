@@ -145,7 +145,7 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 			// If we're in a sub-site, don't list the plugins enabled in the network.
 			$to_keep = array();
 			// Plugins no longer in directory.
-			$bad_plugins = static::get_installed_plugins_vulnerables();
+			$bad_plugins = $this->get_installed_plugins_vulnerables();
 
 			if ( is_numeric( $bad_plugins ) ) {
 				$this->add_message( 206 );
@@ -195,7 +195,7 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 	 *
 	 * @return (array) An array like `array( path => plugin_name, path => plugin_name )`.
 	 */
-	final protected static function get_installed_plugins_vulnerables( $for_fix = false ) {
+	final protected function get_installed_plugins_vulnerables( $for_fix = false ) {
 		static $whitelist_error = false;
 
 		$bad_plugins = secupress_get_vulnerable_plugins();
