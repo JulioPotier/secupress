@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
 "POT-Creation-Date: 2016-08-22 16:36+0200\n"
-"PO-Revision-Date: 2016-08-22 22:33+0200\n"
+"PO-Revision-Date: 2016-08-24 01:20+0200\n"
 "Last-Translator: WP Media <contact@wp-media.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -2172,7 +2172,7 @@ msgstr ""
 #: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:105
 msgid "Unable to determine status of the bad extension test file."
 msgstr ""
-"Impossible de déterminer le status du test des mauvaises extensions de "
+"Impossible de déterminer le statut du test des mauvaises extensions de "
 "fichiers."
 
 #: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:107
@@ -2534,10 +2534,10 @@ msgid "Unable to determine status of your homepage for %s request method."
 msgid_plural ""
 "Unable to determine status of your homepage for %s request methods."
 msgstr[0] ""
-"Impossible de déterminer le status de votre page d'accueil pour le méthode "
+"Impossible de déterminer le statut de votre page d'accueil pour le méthode "
 "de requête %s."
 msgstr[1] ""
-"Impossible de déterminer le status de votre page d'accueil pour les méthodes "
+"Impossible de déterminer le statut de votre page d'accueil pour les méthodes "
 "de requête %s."
 
 #: inc/classes/scanners/class-secupress-scan-bad-request-methods.php:68
@@ -2906,7 +2906,7 @@ msgstr ""
 #, php-format
 msgid "Unable to determine status of <strong>Shellshock</strong> flaw (%s)."
 msgstr ""
-"Impossible de déterminer le status de la faille <strong>Shellshock</strong> "
+"Impossible de déterminer le statut de la faille <strong>Shellshock</strong> "
 "(%s)."
 
 #: inc/classes/scanners/class-secupress-scan-common-flaws.php:70
@@ -3184,7 +3184,7 @@ msgstr ""
 
 #: inc/classes/scanners/class-secupress-scan-directoryindex.php:87
 msgid "Unable to determine status of the index file order."
-msgstr "Impossible de déterminer le status de l'ordre des fichiers d'index."
+msgstr "Impossible de déterminer le statut de l'ordre des fichiers d'index."
 
 #: inc/classes/scanners/class-secupress-scan-directoryindex.php:90
 #, php-format
@@ -3955,7 +3955,7 @@ msgid ""
 "Unable to determine status of the %s files that may reveal sensitive "
 "informations."
 msgstr ""
-"Impossible de déterminer le status des fichiers %s qui pourraient révéler "
+"Impossible de déterminer le statut des fichiers %s qui pourraient révéler "
 "des informations sensibles."
 
 #: inc/classes/scanners/class-secupress-scan-readme-discloses.php:90
@@ -4151,7 +4151,7 @@ msgstr "Le rôle des nouveaux inscrits a été réglé sur <strong>Abonné</stro
 
 #: inc/classes/scanners/class-secupress-scan-subscription.php:78
 msgid "Unable to determine status of your subscribtion settings."
-msgstr "Impossible de déterminer le status du réglage des inscriptions."
+msgstr "Impossible de déterminer le statut du réglage des inscriptions."
 
 #: inc/classes/scanners/class-secupress-scan-subscription.php:82
 #, php-format
@@ -8133,14 +8133,14 @@ msgstr ""
 #~ "Unable to determine status of your homepage, it is still revealing "
 #~ "sensitive informations."
 #~ msgstr ""
-#~ "Impossible de déterminer le status de la page d'accueil, révèle-t-elle "
+#~ "Impossible de déterminer le statut de la page d'accueil, révèle-t-elle "
 #~ "encore des informations sensible ou non."
 
 #~ msgid ""
 #~ "Unable to determine status of %s, it is still revealing sensitive "
 #~ "informations."
 #~ msgstr ""
-#~ "Impossible de déterminer le status de %s, révèle-t-elle encore des "
+#~ "Impossible de déterminer le statut de %s, révèle-t-elle encore des "
 #~ "informations sensible ou non."
 
 #~ msgid ""
@@ -8161,7 +8161,7 @@ msgstr ""
 #~ "Unable to determine status of the %s files that revealing sensitive "
 #~ "informations."
 #~ msgstr ""
-#~ "Impossible de déterminer le status des fichiers %s révélant des "
+#~ "Impossible de déterminer le statut des fichiers %s révélant des "
 #~ "informations sensibles."
 
 #~ msgid ""
