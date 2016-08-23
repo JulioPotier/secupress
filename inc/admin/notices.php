@@ -285,20 +285,22 @@ function secupress_warning_no_recovery_email() {
 		return;
 	}
 
-	$suffix    = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-	// Enqueue Swal2 CSS.
-	wp_enqueue_style( 'wpmedia-css-sweetalert2', SECUPRESS_ADMIN_CSS_URL . 'sweetalert2' . $suffix . '.css', array(), '1.3.4' );
-	// Enqueue Swal2 JS.
-	wp_enqueue_script( 'wpmedia-js-sweetalert2', SECUPRESS_ADMIN_JS_URL . 'sweetalert2' . $suffix . '.js', array( 'jquery' ), '1.3.4', true );
+	$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+	$version = $suffix ? '1.3.4' : time();
 
-	$form     = '<img src="' . admin_url( 'images/wpspin_light.gif' ) . '" alt="' . __( 'Loading', 'secupress' ) . '" class="hidden" id="secupress_recovery_email_spinner">';
-	$form    .= '<input type="text" name="secupress_recovery_email" id="secupress_recovery_email" placeholder="' . __( 'Email address', 'secupress' ) . '"/> ';
-	$form    .= '<button id="secupress_recovery_email_submit">' . __( 'Submit', 'secupress' ) . '</button> ';
-	$form    .= '<span id="secupress_recovery_email_result"></span> ';
-	$form    .= '<button class="hidden" id="secupress_recovery_email_retry">' . __( 'Retry', 'secupress' ) . '</button>';
+	// Enqueue Swal2 CSS.
+	wp_enqueue_style( 'wpmedia-css-sweetalert2', SECUPRESS_ADMIN_CSS_URL . 'sweetalert2' . $suffix . '.css', array(), $version );
+	// Enqueue Swal2 JS.
+	wp_enqueue_script( 'wpmedia-js-sweetalert2', SECUPRESS_ADMIN_JS_URL . 'sweetalert2' . $suffix . '.js', array( 'jquery' ), $version, true );
+
+	$form  = '<img src="' . esc_url( admin_url( 'images/wpspin_light.gif' ) ) . '" alt="' . esc_attr__( 'Loading', 'secupress' ) . '" class="hidden" id="secupress_recovery_email_spinner"/>';
+	$form .= '<input type="text" name="secupress_recovery_email" id="secupress_recovery_email" placeholder="' . esc_attr__( 'Email address', 'secupress' ) . '"/> ';
+	$form .= '<button type="button" class="button" id="secupress_recovery_email_submit">' . __( 'Submit', 'secupress' ) . '</button> ';
+	$form .= '<span id="secupress_recovery_email_result"></span> ';
+	$form .= '<button type="button" class="button hidden" id="secupress_recovery_email_retry">' . __( 'Retry', 'secupress' ) . '</button>';
 
 	$message  = sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
-	$message .= sprintf( __( 'A <strong>Recovery E-mail</strong> is needed in case of hack, you can set it in your <a href="%1$s">profile</a><span id="secupress_recovery_email_parent" class="hide-if-no-js"> or here: %2$s</span>', 'secupress' ), get_edit_profile_url( get_current_user_id() ) . '#secupress_recovery_email', $form );
+	$message .= sprintf( __( 'A <strong>Recovery E-mail</strong> is needed in case of hack, you can set it in your <a href="%1$s">profile</a><span id="secupress_recovery_email_parent" class="hide-if-no-js"> or here: %2$s</span>', 'secupress' ), esc_url( get_edit_profile_url( get_current_user_id() ) ) . '#secupress_recovery_email', $form );
 
 	secupress_add_notice( $message, 'error', 'recovery_email' );
 }
