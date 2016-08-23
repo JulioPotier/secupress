@@ -1,7 +1,7 @@
 {
   "name": "secupress-free",
   "description": "WordPress Security by SecuPress, the best and simpler way to protect your websites.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "homepage": "http://secupress.me",
   "license": "GPL-2.0",
   "private": true,
