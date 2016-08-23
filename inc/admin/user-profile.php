@@ -13,7 +13,7 @@ add_filter( 'user_contactmethods', '__secupress_add_user_contactmethods', 0, 2 )
  * @return (array)
  */
 function __secupress_add_user_contactmethods( $methods, $user ) {
-	if ( isset( $user->ID ) && $user->ID === $GLOBALS['current_user']->ID ) {
+	if ( ! empty( $user->ID ) && $user->ID === get_current_user_id() ) {
 		$methods['secupress_recovery_email'] = __( '<span id="secupress_recovery_email">Recovery E-mail</span><p class="description">For security reasons, you may need to retrieve some private informations on an alternate email address.</p>', 'secupress' );
 	}
 	return $methods;
@@ -61,6 +61,8 @@ add_action( 'user_profile_update_errors', 'secupress_user_profile_update_errors'
  */
 function secupress_user_profile_update_errors( &$errors, $update, &$user ) {
 	global $wpdb;
+
+	secupress_reinit_notice( 'recovery_email', $user->ID );
 
 	if ( empty( $user->secupress_recovery_email ) ) {
 		return;
