@@ -240,7 +240,13 @@ function secupress_is_submodule_active( $module, $submodule ) {
 	$submodule         = sanitize_key( $submodule );
 	$active_submodules = secupress_get_active_submodules();
 
-	return ! empty( $active_submodules[ $module ][ $submodule ] );
+	if ( empty( $active_submodules[ $module ] ) || ! is_array( $active_submodules[ $module ] ) ) {
+		return false;
+	}
+
+	$active_submodules[ $module ] = array_flip( $active_submodules[ $module ] );
+
+	return isset( $active_submodules[ $module ][ $submodule ] );
 }
 
 
