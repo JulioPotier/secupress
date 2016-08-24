@@ -224,6 +224,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 	 * @return True if a Log is displayed. False otherwize.
 	 */
 	protected function _display_current_log() {
+		global $avail_post_stati;
 
 		$log_types      = SecuPress_Logs::_get_log_types();
 		$has_tabs_class = count( $log_types ) > 1 ? ' secupress-has-log-tabs' : ' secupress-has-no-log-tabs';
@@ -248,6 +249,12 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 		$delete_by_ip_url      = $this->logs_instance->delete_logs_by_ip_url( $user_raw->user_ip, $page_url );
 		$delete_by_user_id_url = $this->logs_instance->delete_logs_by_user_id_url( $user_raw->user_id, $page_url );
 		$ban_ip_url            = wp_nonce_url( admin_url( 'admin-post.php?action=secupress-ban-ip&ip=' . urlencode( $user_raw->user_ip ) . '&_wp_http_referer=' . urlencode( esc_url_raw( $paged_page_url ) ) ), 'secupress-ban-ip' );
+
+		if ( ! empty( $_GET['critic'] ) && in_array( $_GET['critic'], $avail_post_stati, true ) ) {
+			$close_href        = add_query_arg( array( 'critic' => $_GET['critic'] ), $paged_page_url );
+		} else {
+			$close_href        = $paged_page_url;
+		}
 
 		// Add a class to the current Log row.
 		add_filter( 'post_class', array( $this, '_add_current_log_class' ), 10, 3 );
@@ -300,7 +307,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 						<span class="spinner secupress-inline-spinner"></span>
 					</p>
 				</div>
-				<a class="close" href="<?php echo esc_url( $paged_page_url ); ?>">
+				<a class="close" href="<?php echo esc_url( $close_href ); ?>">
 					<i class="icon-squared-cross" aria-hidden="true"></i>
 					<span class="screen-reader-text"><?php _e( 'Close' ); ?></span>
 				</a>
