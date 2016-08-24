@@ -933,7 +933,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		$module_file = SECUPRESS_MODULES_PATH . $this->modulenow . '/settings.php';
 
 		if ( file_exists( $module_file ) ) {
-			require( $module_file );
+			require_once( $module_file );
 		}
 
 		return $this;

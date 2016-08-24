@@ -174,7 +174,7 @@ function secupress_root_file_is_writable( $file ) {
  *
  * @since 1.0
  *
- * @return string|bool The path of `wp-config.php` file or false.
+ * @return (string|bool) The path of `wp-config.php` file or false.
  */
 function secupress_find_wpconfig_path() {
 	$config_file     = ABSPATH . 'wp-config.php';

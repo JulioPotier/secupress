@@ -83,13 +83,13 @@ foreach ( $new_scans as $key => $new_scan ) {
 			</div><!-- .secupress-step-content-header -->
 			<?php
 			if ( $is_there_something_new && $scanned_items ) {
-				require( SECUPRESS_INC_PATH . 'admin/scanner-step-1-new.php' );
+				require_once( SECUPRESS_INC_PATH . 'admin/scanner-step-1-new.php' );
 			}
 		}
 
 		$is_there_something_new = false;
 
-		require( SECUPRESS_INC_PATH . 'admin/scanner-step-1-all.php' );
+		require_once( SECUPRESS_INC_PATH . 'admin/scanner-step-1-all.php' );
 
 		$flag_first_iteration = false;
 	} // Eo foreach $secupress_tests.

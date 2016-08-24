@@ -108,7 +108,7 @@ function secupress_text_diff( $left_string, $right_string, $args = array() ) {
 	global $wp_local_package;
 
 	if ( ! class_exists( 'WP_Text_Diff_Renderer_Table' ) ) {
-		require( ABSPATH . WPINC . '/wp-diff.php' );
+		require_once( ABSPATH . WPINC . '/wp-diff.php' );
 	}
 
 	if ( ! class_exists( 'SecuPress_Text_Diff_Renderer_Table' ) ) {

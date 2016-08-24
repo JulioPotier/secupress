@@ -927,17 +927,17 @@ function secupress_scanners_template() {
 
 	switch ( $step ) {
 		case 4 :
-			require( SECUPRESS_INC_PATH . 'admin/scanner-step-4.php' );
+			require_once( SECUPRESS_INC_PATH . 'admin/scanner-step-4.php' );
 			break;
 		case 3 :
-			require( SECUPRESS_INC_PATH . 'admin/scanner-step-3.php' );
+			require_once( SECUPRESS_INC_PATH . 'admin/scanner-step-3.php' );
 			break;
 		case 2 :
-			require( SECUPRESS_INC_PATH . 'admin/scanner-step-2.php' );
+			require_once( SECUPRESS_INC_PATH . 'admin/scanner-step-2.php' );
 			break;
 		case 1 :
 		default:
-			require( SECUPRESS_INC_PATH . 'admin/scanner-step-1.php' );
+			require_once( SECUPRESS_INC_PATH . 'admin/scanner-step-1.php' );
 	}
 }
 

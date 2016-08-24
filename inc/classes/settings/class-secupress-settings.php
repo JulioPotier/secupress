@@ -1128,7 +1128,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		if ( file_exists( $module_file ) ) {
 			$this->set_current_plugin( $module );
 
-			require( $module_file );
+			require_once( $module_file );
 
 			$this->do_sections();
 		}
