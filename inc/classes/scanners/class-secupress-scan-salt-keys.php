@@ -99,7 +99,7 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 		);
 
 		// Get code only from wp-config.php.
-		$wp_config_content = self::remove_comments( file_get_contents( secupress_find_wpconfig_path() ) );
+		$wp_config_content = php_strip_whitespace( secupress_find_wpconfig_path() );
 
 		preg_match_all( '/' . implode( '|', $keys ) . '/', $wp_config_content, $matches );
 
@@ -199,21 +199,5 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 	 */
 	protected static function get_keys() {
 		return array( 'AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'NONCE_KEY', 'AUTH_SALT', 'SECURE_AUTH_SALT', 'LOGGED_IN_SALT', 'NONCE_SALT' );
-	}
-
-
-	/**
-	 * Remove comments from a content.
-	 *
-	 * @since 1.0
-	 *
-	 * @param (string) $string The content.
-	 *
-	 * @return (array) The fix results.
-	 */
-	public static function remove_comments( $string ) {
-		$string = preg_replace( '%(#|(//)).*%', '', $string );
-		$string = preg_replace( '%/\*(?:(?!\*/).)*\*/%s', '', $string );
-		return $string;
 	}
 }
