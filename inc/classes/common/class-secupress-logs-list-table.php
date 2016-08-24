@@ -671,9 +671,15 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 	 * @param (object) $post The current WP_Post object.
 	 */
 	public function column_title( $post ) {
+		global $avail_post_stati;
+
 		$logs_classname = $this->logs_classname;
-		$view_href      = add_query_arg( 'log', $post->ID, $this->_paged_page_url() );
 		$title          = $this->log->get_title();
+		$view_href      = array( 'log' => $post->ID );
+		if ( ! empty( $_GET['critic'] ) && in_array( $_GET['critic'], $avail_post_stati, true ) ) {
+			$view_href['critic'] = $_GET['critic'];
+		}
+		$view_href      = add_query_arg( $view_href, $this->_paged_page_url() );
 
 		echo '<a class="secupress-view-log" href="' . esc_url( $view_href ) . '" title="' . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), strip_tags( $title ) ) ) . '">'; // WP i18n.
 			echo $title;
@@ -774,13 +780,19 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 	 * @return (string) Row actions output for posts.
 	 */
 	protected function handle_row_actions( $post, $column_name, $primary ) {
+		global $avail_post_stati;
+
 		if ( $primary !== $column_name ) {
 			return '';
 		}
 
 		$logs_classname = $this->logs_classname;
 		$delete_href    = $logs_classname::get_instance()->delete_log_url( $post->ID, $this->_page_url() );
-		$view_href      = add_query_arg( 'log', $post->ID, $this->_paged_page_url() );
+		$view_href      = array( 'log' => $post->ID );
+		if ( ! empty( $_GET['critic'] ) && in_array( $_GET['critic'], $avail_post_stati, true ) ) {
+			$view_href['critic'] = $_GET['critic'];
+		}
+		$view_href      = add_query_arg( $view_href, $this->_paged_page_url() );
 
 		$actions = array(
 			'delete' => '<a class="secupress-delete-log submitdelete" href="' . esc_url( $delete_href ) . '" title="' . esc_attr__( 'Delete this item permanently' ) . '">' . __( 'Delete Permanently' ) . '</a> <span class="spinner secupress-inline-spinner"></span>',
