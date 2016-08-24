@@ -347,6 +347,19 @@ jQuery( document ).ready( function( $ ) {
 	}
 
 
+	// Reset the row and the "Fix it" + "Ignore it" buttons (if an error message is displayed, keep it).
+	function secupressResetManualFix() {
+		var $buttons = $( '.secupress-button-manual-fixit' );
+		// Reset the active button icon.
+		$buttons.find( '.icon-shield' ).addClass( 'icon-check' ).removeClass( 'icon-shield' );
+		// Remove the row class.
+		$( '.secupress-mf-content.fixing' ).removeClass( 'fixing' );
+		// Activate all buttons.
+		$buttons = $buttons.add( '.secupress-button-ignoreit' );
+		secupressEnableButtons( $buttons );
+	}
+
+
 	// Print counters in the page.
 	function secupressPrintScore( data ) {
 		var $filters;
@@ -382,6 +395,34 @@ jQuery( document ).ready( function( $ ) {
 		}
 	}
 
+
+	// Some callback that will run after all scans are done and the score has been printed.
+	function secupressAllScanDoneCallback( isOneClickScan ) {
+		var $row;
+
+		// Step 1: if it's a One-click Scan, reload the page and (maybe) add `&step=1` to the URL.
+		if ( 1 === SecuPressi18nScanner.step && isOneClickScan ) {
+			// Reload the page and (maybe) add `&step=1`.
+			if ( window.location.href.match( /(\?|&)step=1($|&)/ ) ) {
+				window.location = window.location.href;
+			} else {
+				window.location = window.location.href.replace( "&step=0", "" ) + "&step=1";
+			}
+		}
+		// Step 2: when all fixes are done (and the folowing scans), go to step 3.
+		else if ( 2 === SecuPressi18nScanner.step ) {
+			window.location = window.location.href.replace( /(\?|&)step=2($|&)/, "$1step=3$2" );
+		}
+		// Step 3: when a manual fix is done (and the folowing scan), or a "manual scan", go to the next manual fix (or to step 4).
+		else if ( 3 === SecuPressi18nScanner.step ) {
+			$row = $( ".secupress-manual-fix" ).not( ".hide-if-js" );
+			$row.find( ".secupress-button-manual-scanit" ).find( ".icon-shield" ).addClass( "icon-check" ).removeClass( "icon-shield" );
+			secupressResetManualFix();
+			$row.find( ".secupress-button-ignoreit" ).first().trigger( "next.secupress" );
+		}
+	}
+
+
 	// Get counters and print them in the page.
 	function secupressPrintScoreFromAjax( isBulk, isOneClickScan ) {
 		var params;
@@ -410,32 +451,6 @@ jQuery( document ).ready( function( $ ) {
 		.always( function() {
 			secupressAllScanDoneCallback( isOneClickScan );
 		} );
-	}
-
-	// Some callback that will run after all scans are done and the score has been printed.
-	function secupressAllScanDoneCallback( isOneClickScan ) {
-		var $row;
-
-		// Step 1: if it's a One-click Scan, reload the page and (maybe) add `&step=1` to the URL.
-		if ( 1 === SecuPressi18nScanner.step && isOneClickScan ) {
-			// Reload the page and (maybe) add `&step=1`.
-			if ( window.location.href.match( /(\?|&)step=1($|&)/ ) ) {
-				window.location = window.location.href;
-			} else {
-				window.location = window.location.href.replace( "&step=0", "" ) + "&step=1";
-			}
-		}
-		// Step 2: when all fixes are done (and the folowing scans), go to step 3.
-		else if ( 2 === SecuPressi18nScanner.step ) {
-			window.location = window.location.href.replace( /(\?|&)step=2($|&)/, "$1step=3$2" );
-		}
-		// Step 3: when a manual fix is done (and the folowing scan), or a "manual scan", go to the next manual fix (or to step 4).
-		else if ( 3 === SecuPressi18nScanner.step ) {
-			$row = $( ".secupress-manual-fix" ).not( ".hide-if-js" );
-			$row.find( ".secupress-button-manual-scanit" ).find( ".icon-shield" ).addClass( "icon-check" ).removeClass( "icon-shield" );
-			secupressResetManualFix();
-			$row.find( ".secupress-button-ignoreit" ).first().trigger( "next.secupress" );
-		}
 	}
 
 
@@ -840,19 +855,6 @@ jQuery( document ).ready( function( $ ) {
 
 
 		// !Manual Fix (step 3). -------------------------------------------------------------------
-
-		// Reset the row and the "Fix it" + "Ignore it" buttons (if an error message is displayed, keep it).
-		function secupressResetManualFix() {
-			var $buttons = $( '.secupress-button-manual-fixit' );
-			// Reset the active button icon.
-			$buttons.find( '.icon-shield' ).addClass( 'icon-check' ).removeClass( 'icon-shield' );
-			// Remove the row class.
-			$( '.secupress-mf-content.fixing' ).removeClass( 'fixing' );
-			// Activate all buttons.
-			$buttons = $buttons.add( '.secupress-button-ignoreit' );
-			secupressEnableButtons( $buttons );
-		}
-
 
 		// Display an error and reset the row.
 		function secupressDisplayManualFixError( $row ) {

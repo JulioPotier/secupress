@@ -20,18 +20,20 @@ var secupressNotices = {
 				type:    'success', // success, warning, bad
 				message: 'You should say something'
 			},
-			merged   = jQuery.extend( {}, defaults, params ),
-			html     = '<div class="secupress-response-notice secupress-rn-' + merged.type + ' secupress-flex">'
-							+ '<div class="secupress-rn-message">'
-								+ merged.message
-							+ '</div>'
-							+ '<div class="secupress-rn-actions">'
-								+ '<button type="button" class="secupress-rn-close secupress-virgin">'
-									+ '<i class="icon-squared-cross" aria-hidden="true"></i>'
-									+ '<span class="screen-reader-text">' + SecuPressi18nCommon.closeText + '</span>'
-								+ '</button>'
-							+ '</div>'
-						+ '</div>';
+			merged = jQuery.extend( {}, defaults, params ),
+			html;
+
+		html  = '<div class="secupress-response-notice secupress-rn-' + merged.type + ' secupress-flex">';
+			html += '<div class="secupress-rn-message">';
+				html += merged.message;
+			html += '</div>';
+			html += '<div class="secupress-rn-actions">';
+				html += '<button type="button" class="secupress-rn-close secupress-virgin">';
+					html += '<i class="icon-squared-cross" aria-hidden="true"></i>';
+					html += '<span class="screen-reader-text">' + SecuPressi18nCommon.closeText + '</span>';
+				html += '</button>';
+			html += '</div>';
+		html += '</div>';
 
 		if ( secupressNotices.eventAdded ) {
 			return html;

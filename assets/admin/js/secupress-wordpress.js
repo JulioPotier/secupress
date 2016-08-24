@@ -1,3 +1,4 @@
+/* globals jQuery: false, ajaxurl: false, SecuPressi18n: false, swal2: false */
 // !Global vars ====================================================================================
 var SecuPress = {
 	swal2Defaults:        {
