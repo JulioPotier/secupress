@@ -68,7 +68,8 @@ function secupress_user_agent( $user_agent ) {
  * @return (string)
  */
 function secupress_formate_latest_scans_list_item( $item, $last_percent = -1 ) {
-	$icon = 'minus';
+	$icon        = 'minus';
+	$time_offset = get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;
 
 	if ( $last_percent > -1 ) {
 		if ( $last_percent < $item['percent'] ) {
@@ -88,7 +89,7 @@ function secupress_formate_latest_scans_list_item( $item, $last_percent = -1 ) {
 		$icon,
 		$item['grade'],
 		sprintf( __( '%s ago' ), human_time_diff( $item['time'] ) ),
-		date_i18n( _x( 'M dS, Y \a\t h:ia', 'Latest scans', 'secupress' ), $item['time'] )
+		date_i18n( _x( 'M dS, Y \a\t h:ia', 'Latest scans', 'secupress' ), $item['time'] + $time_offset )
 	);
 }
 
