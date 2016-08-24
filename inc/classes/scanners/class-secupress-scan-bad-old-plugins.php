@@ -143,7 +143,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 			$to_keep = array();
 
 			// Plugins no longer in directory.
-			$bad_plugins = static::get_installed_plugins_no_longer_in_directory();
+			$bad_plugins = $this->get_installed_plugins_no_longer_in_directory();
 
 			if ( $count = count( $bad_plugins ) ) {
 				// "bad"
@@ -151,7 +151,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 			}
 
 			// Plugins not updated in over 2 years.
-			$bad_plugins = static::get_installed_plugins_over_2_years();
+			$bad_plugins = $this->get_installed_plugins_over_2_years();
 			$bad_plugins = $to_keep ? array_diff_key( $bad_plugins, $to_keep ) : $bad_plugins;
 
 			if ( $count = count( $bad_plugins ) ) {
@@ -571,13 +571,13 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 		$plugins = array();
 
 		// Plugins no longer in directory.
-		$tmp = static::get_installed_plugins_no_longer_in_directory( true );
+		$tmp = $this->get_installed_plugins_no_longer_in_directory( true );
 		if ( $tmp ) {
 			$plugins = $tmp;
 		}
 
 		// Plugins not updated in over 2 years.
-		$tmp = static::get_installed_plugins_over_2_years( true );
+		$tmp = $this->get_installed_plugins_over_2_years( true );
 		if ( $tmp ) {
 			$plugins = array_merge( $plugins, $tmp );
 		}
@@ -601,8 +601,8 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 	 *
 	 * @return (array).
 	 */
-	final protected static function get_installed_plugins_no_longer_in_directory( $for_fix = false ) {
-		return static::get_installed_bad_plugins( 'removed_plugins', $for_fix );
+	final protected function get_installed_plugins_no_longer_in_directory( $for_fix = false ) {
+		return $this->get_installed_bad_plugins( 'removed_plugins', $for_fix );
 	}
 
 
@@ -615,8 +615,8 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 	 *
 	 * @return (array).
 	 */
-	final protected static function get_installed_plugins_over_2_years( $for_fix = false ) {
-		return static::get_installed_bad_plugins( 'notupdated_plugins', $for_fix );
+	final protected function get_installed_plugins_over_2_years( $for_fix = false ) {
+		return $this->get_installed_bad_plugins( 'notupdated_plugins', $for_fix );
 	}
 
 
@@ -630,7 +630,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 	 *
 	 * @return (array) An array like `array( path => plugin_name, path => plugin_name )`.
 	 */
-	final protected static function get_installed_bad_plugins( $plugins_type, $for_fix = false ) {
+	final protected function get_installed_bad_plugins( $plugins_type, $for_fix = false ) {
 		static $whitelist_error = false;
 
 		if ( 'notupdated_plugins' === $plugins_type ) {
