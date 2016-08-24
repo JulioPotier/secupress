@@ -23,23 +23,25 @@ var SecuPress = {
  * Show swal2 message if no scan done yet
  */
 if ( SecuPressi18nModules.alreadyScanned === 0 ) {
-	var modal_content = '<p class="secupress-text-baseup secupress-mt1 secupress-mb1 secupress-primary secupress-bold">'
-							+ SecuPressi18nModules.firstScanTitle
-					  + '</p>'
-					  + '<p class="secupress-text-base secupress-mt2 secupress-mb2">'
-					  		+ SecuPressi18nModules.firstScanText
-					  + '</p>'
-					  + '<p class="secupress-mt1 secupress-mb1">'
-					  		+ '<a class="secupress-button secupress-button-primary secupress-button-scan shadow" href="' + SecuPressi18nModules.firstScanURL + '">'
-					  			+ '<span class="icon">'
-									+ '<i class="icon-radar" aria-hidden="true"></i>'
-								+ '</span>'
-								+ '<span class="text">'
-					  				+ SecuPressi18nModules.firstScanButton
-					  			+ '</span>'
-					  		+ '</a>'
-					  + '</p>',
-		modal_title = '<span class="secupress-swal-header-imaged"><img src="' + SecuPressi18nModules.firstScanImage + '" alt="" width="113" height="113"></span>';
+	var modal_title = '<span class="secupress-swal-header-imaged"><img src="' + SecuPressi18nModules.firstScanImage + '" alt="" width="113" height="113"></span>',
+		modal_content;
+
+	modal_content  = '<p class="secupress-text-baseup secupress-mt1 secupress-mb1 secupress-primary secupress-bold">';
+		modal_content += SecuPressi18nModules.firstScanTitle;
+	modal_content += '</p>';
+	modal_content += '<p class="secupress-text-base secupress-mt2 secupress-mb2">';
+		modal_content += SecuPressi18nModules.firstScanText;
+	modal_content += '</p>';
+	modal_content += '<p class="secupress-mt1 secupress-mb1">';
+		modal_content += '<a class="secupress-button secupress-button-primary secupress-button-scan shadow" href="' + SecuPressi18nModules.firstScanURL + '">';
+			modal_content += '<span class="icon">';
+				modal_content += '<i class="icon-radar" aria-hidden="true"></i>';
+			modal_content += '</span>';
+			modal_content += '<span class="text">';
+				modal_content += SecuPressi18nModules.firstScanButton;
+			modal_content += '</span>';
+		modal_content += '</a>';
+	modal_content += '</p>';
 
 	swal2( jQuery.extend( {}, SecuPress.swal2Defaults, {
 		title: modal_title,
@@ -977,8 +979,8 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		var vlen   = e.value.length,
 			ewidth = e.offsetWidth;
 
-		if ( vlen != e.valLength || ewidth != e.boxWidth ) {
-			if ( hCheck && ( vlen < e.valLength || ewidth != e.boxWidth ) ) {
+		if ( vlen !== e.valLength || ewidth !== e.boxWidth ) {
+			if ( hCheck && ( vlen < e.valLength || ewidth !== e.boxWidth ) ) {
 				e.style.height = '0px';
 			}
 			var h          = Math.max( e.expandMin, Math.min( e.scrollHeight, e.expandMax ) ),
@@ -1030,7 +1032,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 
 		this.each(function(){
 			// is a textarea?
-			if ( this.nodeName.toLowerCase() != 'textarea' ) {
+			if ( this.nodeName.toLowerCase() !== 'textarea' ) {
 				return;
 			}
 
