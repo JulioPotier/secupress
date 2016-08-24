@@ -49,8 +49,7 @@ module.exports = function( grunt ) {
 				"processors": [
 					require( 'autoprefixer' )( {
 						"browsers": 'last 3 versions'
-					} ), // add vendor prefixes
-					require( 'cssnano' )() // minify the result
+					} ) // add vendor prefixes
 				]
 			},
 			"target": {
@@ -58,6 +57,21 @@ module.exports = function( grunt ) {
 					"expand": true,
 					"cwd":    "assets/admin/css",
 					"src":    [ "*.css", "!*.min.css" ],
+					"dest":   "assets/admin/css",
+					"ext":    ".min.css"
+				} ]
+			}
+		},
+		"cssmin": {
+			"options": {
+				"shorthandCompacting": false,
+				"roundingPrecision": -1
+			},
+			"target": {
+				"files": [ {
+					"expand": true,
+					"cwd":    "assets/admin/css",
+					"src":    [ "*.min.css" ],
 					"dest":   "assets/admin/css",
 					"ext":    ".min.css"
 				} ]
@@ -81,13 +95,14 @@ module.exports = function( grunt ) {
 
 	grunt.loadNpmTasks( "grunt-contrib-jshint" );
 	grunt.loadNpmTasks( "grunt-contrib-uglify" );
+	grunt.loadNpmTasks( "grunt-contrib-cssmin" );
 	grunt.loadNpmTasks( "grunt-postcss" );
 	grunt.loadNpmTasks( "grunt-newer" );
 	grunt.loadNpmTasks( "grunt-dev-update" );
 
-	grunt.registerTask( "jsh", [ "jshint" ] );
-	grunt.registerTask( "css", [ "postcss" ] );
+	grunt.registerTask( "css", [ "postcss", "cssmin" ] );
 	grunt.registerTask( "js", [ "newer:jshint", "newer:uglify" ] );
-	grunt.registerTask( "minify", [ "newer:jshint", "newer:uglify", "newer:postcss" ] );
-	grunt.registerTask( "minify-force", [ "jshint", "uglify", "postcss" ] );
+	grunt.registerTask( "jsh", [ "jshint" ] );
+	grunt.registerTask( "minify", [ "newer:jshint", "newer:uglify", "newer:postcss", "newer:cssmin" ] );
+	grunt.registerTask( "minify-force", [ "jshint", "uglify", "postcss", "cssmin" ] );
 };
