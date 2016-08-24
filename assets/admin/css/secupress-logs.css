@@ -22,6 +22,7 @@
 	background: #393E46;
 }
 .secupress-logs-list .subsubsub {
+	position: relative;
 	margin: 15px 0 12px 15px;
 	font-size: 11px;
 	color: #5A626F;
