@@ -89,7 +89,7 @@ foreach ( $new_scans as $key => $new_scan ) {
 
 		$is_there_something_new = false;
 
-		require_once( SECUPRESS_INC_PATH . 'admin/scanner-step-1-all.php' );
+		require( SECUPRESS_INC_PATH . 'admin/scanner-step-1-all.php' );
 
 		$flag_first_iteration = false;
 	} // Eo foreach $secupress_tests.
