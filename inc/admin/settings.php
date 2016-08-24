@@ -358,6 +358,7 @@ function __secupress_scanners() {
 	$items       = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
 	$reports     = array();
 	$last_report = '—';
+	$time_offset = get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;
 
 	if ( $items ) {
 		$last_percent = -1;
@@ -368,7 +369,7 @@ function __secupress_scanners() {
 		}
 
 		$last_report = end( $items );
-		$last_report = date_i18n( _x( 'M dS, Y \a\t h:ia', 'Latest scans', 'secupress' ), $last_report['time'] );
+		$last_report = date_i18n( _x( 'M dS, Y \a\t h:ia', 'Latest scans', 'secupress' ), $last_report['time'] + $time_offset );
 	}
 
 	if ( isset( $_GET['step'] ) && 1 === (int) $_GET['step'] ) {
