@@ -120,7 +120,7 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 
 		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 
-			$response_body = wp_remote_retrieve_body( $response );
+			$response_body = trim( wp_remote_retrieve_body( $response ) );
 
 			if ( 'index.php' !== $response_body ) {
 				// "bad"
