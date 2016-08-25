@@ -415,10 +415,10 @@ function secupress_create_deactivation_notice_muplugin( $plugin_id, $message ) {
 
 	// Add new contents.
 	$args = array(
-		'##PLUGIN_ID##'   => $plugin_id,
-		'##MESSAGE##'     => $message,
-		'##USER_ID##'     => get_current_user_id(),
-		'##BUTTON_TEXT##' => __( 'OK, got it!', 'secupress' ),
+		'{{PLUGIN_ID}}'   => $plugin_id,
+		'{{MESSAGE}}'     => $message,
+		'{{USER_ID}}'     => get_current_user_id(),
+		'{{BUTTON_TEXT}}' => __( 'OK, got it!', 'secupress' ),
 	);
 
 	$contents = str_replace( array_keys( $args ), $args, $contents );
