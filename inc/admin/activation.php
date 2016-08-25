@@ -269,6 +269,7 @@ add_action( 'secupress.deactivation', 'secupress_maybe_remove_rules_on_deactivat
 function secupress_maybe_remove_rules_on_deactivation() {
 	global $is_apache, $is_iis7, $is_nginx;
 
+	require_once( SECUPRESS_INC_PATH . 'functions/compat.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/files.php' );
 
 	if ( ! $is_apache && ! $is_iis7 ) {
