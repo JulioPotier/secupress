@@ -119,8 +119,9 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 		// Inactive themes.
 		if ( $count = count( $lists['themes'] ) ) {
 			// "bad"
-			$lists['themes'] = wp_list_pluck( $lists['themes'], 'Name' ); // Do not translate 'Name'.
-			$lists['themes'] = self::wrap_in_tag( $lists['themes'], 'code' );
+			foreach ( $lists['themes'] as $key => $theme ) {
+				$lists['themes'][ $key ] = '<code>' . $theme->display( 'Name', false, true ) . '</code>';
+			}
 			$this->slice_and_dice( $lists['themes'], 8 );
 			$this->add_message( 201, array( $count, $count, $lists['themes'] ) );
 		}
@@ -168,7 +169,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 		}
 
 		// Inactive themes.
-		if ( $count = count( $lists['themes'] ) ) {
+		if ( $lists['themes'] ) {
 			$actions['delete-inactive-themes'] = 'delete-inactive-themes';
 		}
 
@@ -405,7 +406,13 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 		else {
 			// "cantfix"
 			$not_removed = array_diff_key( $selected_themes, $deleted_themes );
-			$not_removed = wp_list_pluck( $not_removed, 'Name' );
+
+			if ( $not_removed ) {
+				foreach ( $not_removed as $key => $theme ) {
+					$not_removed[ $key ] = $theme->display( 'Name', false, true );
+				}
+			}
+
 			$this->add_fix_message( 105, array( count( $not_removed ), $not_removed ) );
 		}
 
@@ -436,9 +443,9 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 				$form .= '<input type="checkbox" id="secupress-fix-delete-inactive-plugins-' . sanitize_html_class( $plugin_file ) . '" name="secupress-fix-delete-inactive-plugins[]" value="' . esc_attr( $plugin_file ) . '" ' . ( $is_symlinked ? 'disabled="disabled"' : 'checked="checked"' ) . '/> ';
 				$form .= '<label for="secupress-fix-delete-inactive-plugins-' . sanitize_html_class( $plugin_file ) . '">';
 				if ( $is_symlinked ) {
-					$form .= '<del>' . esc_html( $plugin_data['Name'] ) . '</del> <span class="description">(' . __( 'symlinked', 'secupress' ) . ')</span>';
+					$form .= '<del>' . $plugin_data['Name'] . '</del> <span class="description">(' . __( 'symlinked', 'secupress' ) . ')</span>';
 				} else {
-					$form .= esc_html( $plugin_data['Name'] );
+					$form .= $plugin_data['Name'];
 				}
 				$form .= "</label><br/>\n";
 			}
@@ -455,15 +462,28 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 			$form  = '<h4 id="secupress-fix-inactive-themes">' . __( 'Checked themes will be deleted:', 'secupress' ) . '</h4>';
 			$form .= '<fieldset aria-labelledby="secupress-fix-inactive-themes" class="secupress-boxed-group">' . "\n";
 
+			// Add the default themes back.
+			if ( $lists['default_themes'] ) {
+				$lists['themes'] = array_merge( $lists['themes'], $lists['default_themes'] );
+				WP_Theme::sort_by_name( $lists['themes'] );
+			}
+
 			foreach ( $lists['themes'] as $theme_file => $theme_data ) {
-				$is_symlinked = secupress_is_theme_symlinked( $theme_file );
+				$is_symlinked = ! empty( $lists['default_themes'][ $theme_file ] ) ? true : secupress_is_theme_symlinked( $theme_file );
+
 				$form .= '<input type="checkbox" id="secupress-fix-delete-inactive-themes-' . sanitize_html_class( $theme_file ) . '" name="secupress-fix-delete-inactive-themes[]" value="' . esc_attr( $theme_file ) . '" ' . ( $is_symlinked ? 'disabled="disabled"' : 'checked="checked"' ) . '/> ';
 				$form .= '<label for="secupress-fix-delete-inactive-themes-' . sanitize_html_class( $theme_file ) . '">';
-				if ( $is_symlinked ) {
-					$form .= '<del>' . esc_html( $theme_data->Name ) . '</del> <span class="description">(' . __( 'symlinked', 'secupress' ) . ')</span>';
+
+				$theme_name = $theme_data->display( 'Name', false, true );
+
+				if ( ! empty( $lists['default_themes'][ $theme_file ] ) ) {
+					$form .= '<del>' . $theme_name . '</del> <span class="description">(' . __( 'default theme', 'secupress' ) . ')</span>';
+				} elseif ( $is_symlinked ) {
+					$form .= '<del>' . $theme_name . '</del> <span class="description">(' . __( 'symlinked', 'secupress' ) . ')</span>';
 				} else {
-					$form .= esc_html( $theme_data->Name );
+					$form .= $theme_name;
 				}
+
 				$form .= "</label><br/>\n";
 			}
 
@@ -482,11 +502,53 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 	/** Tools. ================================================================================== */
 
 	/**
+	 * Get the default theme and (maybe) its child theme.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) An array of theme slugs.
+	 */
+	protected static function get_default_themes() {
+		static $themes;
+
+		if ( isset( $themes ) ) {
+			return $themes;
+		}
+
+		$themes  = array();
+		$default = wp_get_theme( WP_DEFAULT_THEME );
+
+		if ( ! $default->exists() ) {
+			$default = WP_Theme::get_core_default_theme();
+
+			if ( false === $default ) {
+				return array();
+			}
+		}
+
+		$stylesheet = $default->get_stylesheet();
+		$template   = $default->get_template();
+
+		$themes[ $stylesheet ] = $stylesheet;
+
+		if ( $template !== $stylesheet ) {
+			$default = wp_get_theme( $template );
+
+			if ( $default->exists() ) {
+				$themes[ $template ] = $template;
+			}
+		}
+
+		return $themes;
+	}
+
+
+	/**
 	 * Get the inactive plugins and themes.
 	 *
 	 * @since 1.0
 	 *
-	 * @return (array) Array containing an array of inactive plugins and an array of inactive themes.
+	 * @return (array) Array containing an array of inactive plugins, an array of inactive themes, and an array of default theme(s).
 	 */
 	protected static function get_inactive_plugins_and_themes() {
 		$out = array();
@@ -545,9 +607,20 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 					$active_themes[ $parent_stylesheet ] = $parent_stylesheet;
 				}
 			}
+
+			$out['themes'] = array_diff_key( $out['themes'], $active_themes );
 		}
 
-		$out['themes'] = array_diff_key( $out['themes'], $active_themes );
+		// Don't list the default themes.
+		$default_themes = static::get_default_themes();
+
+		if ( $default_themes ) {
+			// Keep track of those that are inactive.
+			$out['default_themes'] = array_intersect_key( $out['themes'], $default_themes );
+			$out['themes']         = array_diff_key( $out['themes'], $default_themes );
+		} else {
+			$out['default_themes'] = array();
+		}
 
 		return $out;
 	}
