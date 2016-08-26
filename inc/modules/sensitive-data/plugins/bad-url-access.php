@@ -122,7 +122,7 @@ function secupress_bad_url_access_apache_rules() {
 	$rules  = "<IfModule mod_rewrite.c>\n";
 	$rules .= "    RewriteEngine On\n";
 	$rules .= "    RewriteBase $base\n";
-	$rules .= "    RewriteCond %{REQUEST_URI} !^{$site_from}wp-includes/js/tinymce/wp-tinymce\.php$\n";
+	$rules .= "    RewriteCond %{REQUEST_URI} !{$site_from}wp-includes/js/tinymce/wp-tinymce\.php$\n";
 	$rules .= "    RewriteRule $pattern [R=404,L]\n";
 	$rules .= "</IfModule>\n";
 
@@ -147,7 +147,7 @@ function secupress_bad_url_access_iis7_rules() {
 	$rules  = "<rule name=\"SecuPress $marker\" stopProcessing=\"true\">\n";
 	$rules .= "$spaces  <match url=\"$pattern\"/>\n";
 	$rules .= "$spaces  <conditions>\n";
-	$rules .= "$spaces    <add input=\"{REQUEST_URI}\" pattern=\"^{$site_from}wp-includes/js/tinymce/wp-tinymce\.php$\" negate=\"true\"/>\n";
+	$rules .= "$spaces    <add input=\"{REQUEST_URI}\" pattern=\"{$site_from}wp-includes/js/tinymce/wp-tinymce\.php$\" negate=\"true\"/>\n";
 	$rules .= "$spaces  </conditions>\n";
 	$rules .= "$spaces  <action type=\"CustomResponse\" statusCode=\"404\"/>\n";
 	$rules .= "$spaces</rule>";
