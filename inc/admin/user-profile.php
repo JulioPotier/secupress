@@ -65,6 +65,9 @@ function secupress_user_profile_update_errors( &$errors, $update, &$user ) {
 	secupress_reinit_notice( 'recovery_email', $user->ID );
 
 	if ( empty( $user->secupress_recovery_email ) ) {
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			die();
+		}
 		return;
 	}
 
@@ -86,35 +89,34 @@ function secupress_user_profile_update_errors( &$errors, $update, &$user ) {
 	$user_exists                            = $user_exists || in_array( $secupress_recovery_email_no_alias, $user_emails, true ) || in_array( $user_email_no_alias, $user_emails, true );
 
 	if ( ! is_email( $secupress_recovery_email ) ) {
-		$error = __( '<strong>ERROR</strong>: This email is not valid.' );
+		$error = __( '<strong>ERROR</strong>: This email is not valid.' ); // WP i18n.
 	}
 
 	if ( $actual_email === $secupress_recovery_email_no_alias ) {
-		$error = __( '<strong>ERROR</strong>: This email is already yours with an alias.' );
+		$error = __( '<strong>ERROR</strong>: This email is already yours with an alias.' ); // WP i18n.
 	}
 
 	if ( $actual_email === $secupress_recovery_email ) {
-		$error = __( '<strong>ERROR</strong>: This email is already yours.' );
+		$error = __( '<strong>ERROR</strong>: This email is already yours.' ); // WP i18n.
 	}
 
 	if ( $user_exists ) {
-		$error = __( '<strong>ERROR</strong>: This email is already registered.' );
+		$error = __( '<strong>ERROR</strong>: This email is already registered.' ); // WP i18n.
 	}
 
 	if ( ! $error ) {
-		if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) {
-			return;
-		} else {
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			die( '✅' );
 		}
+		return;
 	}
 
 	delete_user_meta( $user->ID, 'secupress_recovery_email_no_alias' );
 	delete_user_meta( $user->ID, 'secupress_recovery_email' );
 
-	if ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) {
-		$errors->add( 'email_error', $error, array( 'form-field' => 'email' ) );
-	} else {
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 		die( $error );
 	}
+
+	$errors->add( 'email_error', $error, array( 'form-field' => 'email' ) );
 }

@@ -461,7 +461,7 @@ function secupress_auto_username_login() {
 
 	add_filter( 'authenticate', '__secupress_give_him_a_user', 1, 2 );
 	$user = wp_signon( array( 'user_login' => $username ) );
-	remove_filter( 'authenticate', '__secupress_give_him_a_user', 1, 2 );
+	remove_filter( 'authenticate', '__secupress_give_him_a_user', 1 );
 
 	if ( is_a( $user, 'WP_User' ) ) {
 		wp_set_current_user( $user->ID, $user->user_login );
@@ -490,99 +490,6 @@ function secupress_auto_username_login() {
  */
 function __secupress_give_him_a_user( $user, $username ) {
 	return get_user_by( 'login', $username );
-}
-
-
-add_action( 'plugins_loaded', 'secupress_downgrade_author_administrator', 70 );
-/**
- * Admin As Author fix: a new Administrator account has been created, now we need to downgrade the old one.
- *
- * @since 1.0
- */
-function secupress_downgrade_author_administrator() {
-	if ( ! is_admin() ) {
-		return;
-	}
-
-	// "{$new_user_id}|{$old_user_id}".
-	$data = secupress_get_site_transient( 'secupress-admin-as-author-administrator' );
-
-	// Nope.
-	if ( ! $data ) {
-		return;
-	}
-
-	if ( ! is_string( $data ) ) {
-		// Dafuk.
-		secupress_delete_site_transient( 'secupress-admin-as-author-administrator' );
-		return;
-	}
-
-	list( $new_user_id, $old_user_id ) = array_map( 'absint', explode( '|', $data ) );
-
-	if ( ! isset( $new_user_id, $old_user_id ) || ! $new_user_id || ! $old_user_id || $new_user_id === $old_user_id ) {
-		// Dafuk.
-		secupress_delete_site_transient( 'secupress-admin-as-author-administrator' );
-		return;
-	}
-
-	if ( ! file_exists( secupress_class_path( 'scan', 'Admin_As_Author' ) ) ) {
-		// Dafuk.
-		secupress_delete_site_transient( 'secupress-admin-as-author-administrator' );
-		return;
-	}
-
-	// These aren't the droids you're looking for.
-	if ( get_current_user_id() !== $new_user_id ) {
-		return;
-	}
-
-	if ( ! user_can( $new_user_id, 'administrator' ) || ! user_can( $old_user_id, 'administrator' ) ) {
-		// Hey! What did you do?!
-		secupress_delete_site_transient( 'secupress-admin-as-author-administrator' );
-		return;
-	}
-
-	// The old account (the one with Posts).
-	$user = get_user_by( 'id', $old_user_id );
-
-	if ( ! $user ) {
-		return;
-	}
-
-	secupress_require_class( 'scan' );
-	secupress_require_class( 'scan', 'Admin_As_Author' );
-
-	$role = SecuPress_Scan_Admin_As_Author::get_new_role();
-
-	/**
-	 * No suitable user role: create one (who the fuck deleted it?!).
-	 */
-	if ( ! $role ) {
-		$role = SecuPress_Scan_Admin_As_Author::create_editor_role();
-
-		if ( ! $role ) {
-			// The user role could not be created.
-			return;
-		}
-
-		$role = $role['name'];
-	}
-
-	// Finally, change the user role.
-	$user->remove_role( 'administrator' );
-	$user->add_role( $role );
-
-	// Not a Super Admin anymore.
-	if ( is_multisite() && is_super_admin() && is_super_admin( $old_user_id ) ) {
-		revoke_super_admin( $old_user_id );
-	}
-
-	// Update scan result.
-	secupress_scanit( 'Admin_As_Author' );
-
-	// Bye bye!
-	secupress_delete_site_transient( 'secupress-admin-as-author-administrator' );
 }
 
 

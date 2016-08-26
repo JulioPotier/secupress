@@ -127,7 +127,8 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 		// Multisite, for the current site.
 		if ( $this->is_for_current_site() ) {
 			// Plugins vulnerables.
-			$bad_plugins = $this->get_installed_plugins_to_remove();
+			/*
+			$bad_plugins = $this->get_installed_plugins_to_remove(); ////
 
 			if ( is_numeric( $bad_plugins ) ) {
 				$this->add_message( 206 );
@@ -138,13 +139,13 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 					// "bad"
 					$this->add_message( 204, array( $count, $bad_plugins ) );
 				}
-			}
+			}*/
 		}
 		// Network admin or not Multisite.
 		else {
 			// If we're in a sub-site, don't list the plugins enabled in the network.
 			$to_keep = array();
-			// Plugins no longer in directory.
+			// Plugins vulnerables.
 			$bad_plugins = $this->get_installed_plugins_vulnerables();
 
 			if ( is_numeric( $bad_plugins ) ) {

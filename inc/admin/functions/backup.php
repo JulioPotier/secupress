@@ -25,9 +25,7 @@ function secupress_pre_backup() {
 		$file = 'web.config';
 	} elseif ( $is_nginx ) {
 		return is_writable( $backup_dir );
-	}
-
-	if ( ! $file ) {
+	} else {
 		return false;
 	}
 

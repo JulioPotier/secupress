@@ -419,7 +419,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 * @return (bool)
 	 */
 	final protected function has_fix_status() {
-		if ( $this->is_for_current_site( 'fix' ) ) {
+		if ( $this->is_for_current_site() ) {
 			return $this->has_subsite_status( 'fix' );
 		}
 

@@ -103,9 +103,11 @@ function secupress_admin_send_message_die( $args ) {
  * A shorthand to test if the current user can perform SecuPress operations. Die otherwise.
  *
  * @since 1.0
+ *
+ * @param (bool) $force_mono Set to true to force the use of the capability/role for monosite.
  */
-function secupress_check_user_capability() {
-	if ( ! current_user_can( secupress_get_capability() ) ) {
+function secupress_check_user_capability( $force_mono = false ) {
+	if ( ! current_user_can( secupress_get_capability( $force_mono ) ) ) {
 		secupress_admin_die();
 	}
 }

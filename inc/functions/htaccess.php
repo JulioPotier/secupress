@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 function secupress_write_htaccess( $marker, $rules = false, $relative_path = '' ) {
 	global $is_apache;
 	if ( ! $is_apache ) {
-		return;
+		return false;
 	}
 
 	$htaccess_path = trailingslashit( secupress_get_home_path() . trim( $relative_path, '/' ) );
