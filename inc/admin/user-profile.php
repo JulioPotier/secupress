@@ -40,11 +40,11 @@ function __secupress_callback_update_user_contactmethods( $user_id ) {
 	}
 
 	$userdata                          = get_userdata( $user_id );
-	$secupress_recovery_email          = strtolower( $_POST['secupress_recovery_email'] ); // WPCS: CSRF ok.
+	$secupress_recovery_email          = strtolower( sanitize_email( $_POST['secupress_recovery_email'] ) ); // WPCS: CSRF ok.
 	$secupress_recovery_email_no_alias = secupress_remove_email_alias( $secupress_recovery_email );
 
-	update_user_meta( $userdata->ID, 'secupress_recovery_email_no_alias', sanitize_text_field( $secupress_recovery_email_no_alias ) );
-	update_user_meta( $userdata->ID, 'secupress_recovery_email', sanitize_text_field( $secupress_recovery_email ) );
+	update_user_meta( $userdata->ID, 'secupress_recovery_email_no_alias', $secupress_recovery_email_no_alias );
+	update_user_meta( $userdata->ID, 'secupress_recovery_email', $secupress_recovery_email );
 }
 
 
