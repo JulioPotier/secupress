@@ -241,7 +241,8 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 		$form .= '<fieldset aria-labelledby="select-db-tables-to-rename" class="secupress-boxed-group">';
 		$form .= '<b>' . __( 'Unknown tables', 'secupress' ) . '</b><br>';
 		foreach ( $good_tables as $table ) {
-			$form .= '<input type="checkbox" name="secupress-select-db-tables-to-rename[]" value="' . $table . '" id="select-db-tables-to-rename-' . $table . '" checked="checked"><label for="select-db-tables-to-rename-' . $table . '">' . $table . '</label><br>';
+			$table_attr = esc_attr( $table );
+			$form      .= '<input type="checkbox" name="secupress-select-db-tables-to-rename[]" value="' . $table_attr . '" id="select-db-tables-to-rename-' . $table_attr . '" checked="checked"><label for="select-db-tables-to-rename-' . $table_attr . '">' . esc_html( $table ) . '</label><br>';
 		}
 		$form .= '<b>' . __( 'WordPress tables (mandatory)', 'secupress' ) . '</b><br>';
 		foreach ( $blog_ids as $blog_id ) {
@@ -249,7 +250,7 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 
 			foreach ( $wp_tables as $table ) {
 				$table = substr_replace( $table, $wpdb->prefix . $blog_id, 0, strlen( $wpdb->prefix ) );
-				$form .= '<input type="checkbox" id="secupress-select-db-tables-to-rename-' . $table . '" checked="checked" disabled="disabled"><label>' . $table . '</label><br>';
+				$form .= '<input type="checkbox" id="secupress-select-db-tables-to-rename-' . esc_attr( $table ) . '" checked="checked" disabled="disabled"><label>' . esc_html( $table ) . '</label><br>';
 			}
 		}
 		$form .= '</fieldset>';

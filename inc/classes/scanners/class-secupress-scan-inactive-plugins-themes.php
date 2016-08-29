@@ -184,19 +184,18 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 	 * @return (array) The fix results.
 	 */
 	public function manual_fix() {
-		$wp_filesystem = secupress_get_filesystem();
-		$inactive      = static::get_inactive_plugins_and_themes();
+		$inactive = static::get_inactive_plugins_and_themes();
 
 		ob_start();
 
 		// PLUGINS.
 		if ( $this->has_fix_action_part( 'delete-inactive-plugins' ) ) {
-			$plugins = $this->manual_fix_plugins( $wp_filesystem, $inactive );
+			$plugins = $this->manual_fix_plugins( $inactive );
 		}
 
 		// THEMES.
 		if ( $this->has_fix_action_part( 'delete-inactive-themes' ) ) {
-			$themes = $this->manual_fix_themes( $wp_filesystem, $inactive );
+			$themes = $this->manual_fix_themes( $inactive );
 		}
 
 		ob_end_clean();
@@ -224,14 +223,13 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 	 *
 	 * @since 1.0
 	 *
-	 * @param (object) $wp_filesystem WP_Filesystem object.
-	 * @param (array)  $inactive      Array containing an array of inactive plugins and an array of inactive themes.
+	 * @param (array) $inactive Array containing an array of inactive plugins and an array of inactive themes. Values must be sanitized before.
 	 */
-	protected function manual_fix_plugins( $wp_filesystem, $inactive ) {
+	protected function manual_fix_plugins( $inactive ) {
 		// Get the list of plugins to uninstall.
-		$selected_plugins = ! empty( $_POST['secupress-fix-delete-inactive-plugins'] ) && is_array( $_POST['secupress-fix-delete-inactive-plugins'] ) ? array_filter( array_map( 'esc_attr', $_POST['secupress-fix-delete-inactive-plugins'] ) ) : array(); // WPCS: CSRF ok.
+		$selected_plugins = ! empty( $_POST['secupress-fix-delete-inactive-plugins'] ) && is_array( $_POST['secupress-fix-delete-inactive-plugins'] ) ? array_filter( $_POST['secupress-fix-delete-inactive-plugins'] ) : array(); // WPCS: CSRF ok.
 		$selected_plugins = $selected_plugins ? array_fill_keys( $selected_plugins, 1 )                        : array();
-		$selected_plugins = $selected_plugins ? array_intersect_key( $inactive['plugins'], $selected_plugins ) : array();
+		$selected_plugins = $selected_plugins ? array_intersect_key( $inactive['plugins'], $selected_plugins ) : array(); // Sanitize submitted values.
 
 		if ( ! $selected_plugins ) {
 			if ( $this->has_fix_action_part( 'delete-inactive-themes' ) ) {
@@ -246,7 +244,8 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 		}
 
 		// Get the base plugin folder.
-		$plugins_dir = $wp_filesystem->wp_plugins_dir();
+		$wp_filesystem = secupress_get_filesystem();
+		$plugins_dir   = $wp_filesystem->wp_plugins_dir();
 
 		if ( empty( $plugins_dir ) ) {
 			// "cantfix": plugins dir not located.
@@ -342,14 +341,13 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 	 *
 	 * @since 1.0
 	 *
-	 * @param (object) $wp_filesystem WP_Filesystem object.
-	 * @param (array)  $inactive      Array containing an array of inactive plugins and an array of inactive themes.
+	 * @param (array) $inactive Array containing an array of inactive plugins and an array of inactive themes. Values must be sanitized before.
 	 */
-	protected function manual_fix_themes( $wp_filesystem, $inactive ) {
+	protected function manual_fix_themes( $inactive ) {
 		// Get the list of themes to uninstall.
-		$selected_themes = ! empty( $_POST['secupress-fix-delete-inactive-themes'] ) && is_array( $_POST['secupress-fix-delete-inactive-themes'] ) ? array_filter( array_map( 'esc_attr', $_POST['secupress-fix-delete-inactive-themes'] ) ) : array(); // WPCS: CSRF ok.
+		$selected_themes = ! empty( $_POST['secupress-fix-delete-inactive-themes'] ) && is_array( $_POST['secupress-fix-delete-inactive-themes'] ) ? array_filter( $_POST['secupress-fix-delete-inactive-themes'] ) : array(); // WPCS: CSRF ok.
 		$selected_themes = $selected_themes ? array_fill_keys( $selected_themes, 1 ) : array();
-		$selected_themes = $selected_themes ? array_intersect_key( $inactive['themes'], $selected_themes ) : array();
+		$selected_themes = $selected_themes ? array_intersect_key( $inactive['themes'], $selected_themes ) : array(); // Sanitize submitted values.
 
 		if ( ! $selected_themes ) {
 			if ( $this->has_fix_action_part( 'delete-inactive-plugins' ) ) {
@@ -364,7 +362,8 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 		}
 
 		// Get the base theme folder.
-		$themes_dir = $wp_filesystem->wp_themes_dir();
+		$wp_filesystem = secupress_get_filesystem();
+		$themes_dir    = $wp_filesystem->wp_themes_dir();
 
 		if ( empty( $themes_dir ) ) {
 			// "cantfix": themes dir not located.
@@ -433,12 +432,14 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 
 			foreach ( $lists['plugins'] as $plugin_file => $plugin_data ) {
 				$is_symlinked = secupress_is_plugin_symlinked( $plugin_file );
+				$plugin_name  = esc_html( strip_tags( $plugin_data['Name'] ) );
+
 				$form .= '<input type="checkbox" id="secupress-fix-delete-inactive-plugins-' . sanitize_html_class( $plugin_file ) . '" name="secupress-fix-delete-inactive-plugins[]" value="' . esc_attr( $plugin_file ) . '" ' . ( $is_symlinked ? 'disabled="disabled"' : 'checked="checked"' ) . '/> ';
 				$form .= '<label for="secupress-fix-delete-inactive-plugins-' . sanitize_html_class( $plugin_file ) . '">';
 				if ( $is_symlinked ) {
-					$form .= '<del>' . esc_html( $plugin_data['Name'] ) . '</del> <span class="description">(' . __( 'symlinked', 'secupress' ) . ')</span>';
+					$form .= '<del>' . $plugin_name . '</del> <span class="description">(' . __( 'symlinked', 'secupress' ) . ')</span>';
 				} else {
-					$form .= esc_html( $plugin_data['Name'] );
+					$form .= $plugin_name;
 				}
 				$form .= "</label><br/>\n";
 			}
@@ -457,12 +458,14 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 
 			foreach ( $lists['themes'] as $theme_file => $theme_data ) {
 				$is_symlinked = secupress_is_theme_symlinked( $theme_file );
+				$plugin_name  = esc_html( strip_tags( $plugin_data['Name'] ) );
+
 				$form .= '<input type="checkbox" id="secupress-fix-delete-inactive-themes-' . sanitize_html_class( $theme_file ) . '" name="secupress-fix-delete-inactive-themes[]" value="' . esc_attr( $theme_file ) . '" ' . ( $is_symlinked ? 'disabled="disabled"' : 'checked="checked"' ) . '/> ';
 				$form .= '<label for="secupress-fix-delete-inactive-themes-' . sanitize_html_class( $theme_file ) . '">';
 				if ( $is_symlinked ) {
-					$form .= '<del>' . esc_html( $theme_data->Name ) . '</del> <span class="description">(' . __( 'symlinked', 'secupress' ) . ')</span>';
+					$form .= '<del>' . $plugin_name . '</del> <span class="description">(' . __( 'symlinked', 'secupress' ) . ')</span>';
 				} else {
-					$form .= esc_html( $theme_data->Name );
+					$form .= $plugin_name;
 				}
 				$form .= "</label><br/>\n";
 			}

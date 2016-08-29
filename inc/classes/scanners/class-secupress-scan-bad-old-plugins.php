@@ -261,7 +261,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 	 *
 	 * @since 1.0
 	 *
-	 * @param (array) $bad_plugins               An array of plugins de delete.
+	 * @param (array) $bad_plugins               An array of plugins to delete. Values must be sanitized before.
 	 * @param (bool)  $has_plugins_to_deactivate True if some other plugins must be deactivated (it changes the message).
 	 */
 	protected function manual_delete( $bad_plugins, $has_plugins_to_deactivate ) {
@@ -273,7 +273,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 		// Get the list of plugins to uninstall.
 		$selected_plugins = ! empty( $_POST['secupress-fix-delete-bad-old-plugins'] ) && is_array( $_POST['secupress-fix-delete-bad-old-plugins'] ) ? array_filter( $_POST['secupress-fix-delete-bad-old-plugins'] ) : array(); // WPCS: CSRF ok.
 		$selected_plugins = $selected_plugins ? array_fill_keys( $selected_plugins, 1 ) : array();
-		$selected_plugins = $selected_plugins ? array_intersect_key( $bad_plugins, $selected_plugins ) : array();
+		$selected_plugins = $selected_plugins ? array_intersect_key( $bad_plugins, $selected_plugins ) : array(); // Sanitize submitted values.
 
 		if ( ! $selected_plugins ) {
 			if ( $this->has_fix_action_part( 'deactivate-bad-old-plugins' ) ) {
@@ -394,7 +394,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 	 *
 	 * @since 1.0
 	 *
-	 * @param (array) $bad_plugins           An array of plugins de deactivate.
+	 * @param (array) $bad_plugins           An array of plugins to deactivate. Values must be sanitized before.
 	 * @param (bool)  $has_plugins_to_delete True if some other plugins must be deleted (it changes the message).
 	 */
 	protected function manual_deactivate( $bad_plugins, $has_plugins_to_delete ) {
@@ -410,7 +410,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 		// Get the list of plugins to deactivate.
 		$selected_plugins = ! empty( $_POST['secupress-fix-deactivate-bad-old-plugins'] ) && is_array( $_POST['secupress-fix-deactivate-bad-old-plugins'] ) ? array_filter( $_POST['secupress-fix-deactivate-bad-old-plugins'] ) : array(); // WPCS: CSRF ok.
 		$selected_plugins = $selected_plugins ? array_fill_keys( $selected_plugins, 1 ) : array();
-		$selected_plugins = $selected_plugins ? array_intersect_key( $bad_plugins, $selected_plugins ) : array();
+		$selected_plugins = $selected_plugins ? array_intersect_key( $bad_plugins, $selected_plugins ) : array(); // Sanitize submitted values.
 
 		if ( ! $selected_plugins ) {
 			if ( $this->is_network_admin() ) {
