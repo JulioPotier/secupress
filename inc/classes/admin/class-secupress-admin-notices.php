@@ -71,11 +71,11 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 				return;
 			}
 			// Add notices script.
-			self::_enqueue_script();
+			self::enqueue_script();
 		}
 
 		// Add notices style.
-		self::_enqueue_style();
+		self::enqueue_style();
 
 		$error_code = 'error' === $error_code ? 'error' : 'updated';
 		$notice_id  = $notice_id ? sanitize_title( $notice_id ) : $notice_id;
@@ -216,9 +216,9 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 		self::$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 		self::$version = self::$suffix ? SECUPRESS_VERSION : time();
 
-		add_action( 'all_admin_notices',                   array( $this, '_print' ), 20 );
-		add_action( 'wp_ajax_secupress_dismiss-notice',    array( __CLASS__, '_ajax_dismiss' ) );
-		add_action( 'admin_post_secupress_dismiss-notice', array( __CLASS__, '_admin_dismiss' ) );
+		add_action( 'all_admin_notices',                   array( $this, 'print_notices' ), 20 );
+		add_action( 'wp_ajax_secupress_dismiss-notice',    array( __CLASS__, 'ajax_dismiss' ) );
+		add_action( 'admin_post_secupress_dismiss-notice', array( __CLASS__, 'admin_dismiss' ) );
 	}
 
 
@@ -227,7 +227,7 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 	 *
 	 * @since 1.0
 	 */
-	protected static function _enqueue_script() {
+	protected static function enqueue_script() {
 		if ( self::$done_js ) {
 			return;
 		}
@@ -246,7 +246,7 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 	 *
 	 * @since 1.0
 	 */
-	protected static function _enqueue_style() {
+	protected static function enqueue_style() {
 		if ( self::$done_css ) {
 			return;
 		}
@@ -265,7 +265,7 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 	 *
 	 * @since 1.0
 	 */
-	public function _print() {
+	public function print_notices() {
 		if ( ! $this->notices ) {
 			return;
 		}
@@ -323,7 +323,7 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 	 *
 	 * @since 1.0
 	 */
-	public static function _ajax_dismiss() {
+	public static function ajax_dismiss() {
 		if ( empty( $_POST['notice_id'] ) ) { // WPCS: CSRF ok.
 			wp_die( -1 );
 		}
@@ -358,7 +358,7 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 	 *
 	 * @since 1.0
 	 */
-	public static function _admin_dismiss() {
+	public static function admin_dismiss() {
 		if ( empty( $_GET['notice_id'] ) ) {
 			secupress_admin_die();
 		}

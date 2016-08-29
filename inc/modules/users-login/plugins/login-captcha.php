@@ -158,7 +158,7 @@ function secupress_login_form_nojs_error( $message ) {
 }
 
 
-add_filter( '_secupress.options.load_plugins_network_options', 'secupress_captcha_autoload_options' );
+add_filter( 'secupress.options.load_plugins_network_options', 'secupress_captcha_autoload_options' );
 /**
  * Add the option(s) we use in this plugin to be autoloaded on multisite.
  *

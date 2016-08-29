@@ -120,7 +120,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-		if ( ! static::_are_centralized_blog_options_filled() ) {
+		if ( ! static::are_centralized_blog_options_filled() ) {
 			// "warning"
 			$this->add_message( 107 );
 			return parent::scan();

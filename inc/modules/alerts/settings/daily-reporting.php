@@ -18,7 +18,7 @@ $args = array(
 );
 
 if ( class_exists( 'SecuPress_Daily_Reporting' ) ) {
-	$time = SecuPress_Daily_Reporting::get_instance()->_cron_time() + get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;
+	$time = SecuPress_Daily_Reporting::get_instance()->cron_time() + get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;
 
 	if ( (int) date( 'G:i', $time ) === 0 ) {
 		$time = __( 'midnight', 'secupress' );

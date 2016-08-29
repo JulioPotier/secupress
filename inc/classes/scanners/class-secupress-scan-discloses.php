@@ -291,11 +291,11 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 
 		if ( $todo ) {
 			if ( $is_apache ) {
-				$this->_fix_apache( $todo );
+				$this->fix_apache( $todo );
 			} elseif ( $is_iis7 ) {
-				$this->_fix_iis7( $todo );
+				$this->fix_iis7( $todo );
 			} elseif ( $is_nginx ) {
-				$this->_fix_nginx( $todo );
+				$this->fix_nginx( $todo );
 			}
 		}
 
@@ -313,7 +313,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 	 *
 	 * @param (array) $todo Tasks to do.
 	 */
-	protected function _fix_apache( $todo ) {
+	protected function fix_apache( $todo ) {
 		global $wp_settings_errors;
 		$all_rules = array();
 
@@ -325,11 +325,11 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 			$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
 
 			if ( $last_error && 'general' === $last_error['setting'] && 'apache_manual_edit' === $last_error['code'] ) {
-				$all_rules[] = static::_get_rules_from_error( $last_error );
+				$all_rules[] = static::get_rules_from_error( $last_error );
 				array_pop( $wp_settings_errors );
 			} else {
 				// Succeed: now test our rule against php version disclosure works.
-				$this->_scan_php_disclosure(); // Fix message 1, 3 or 100 inside.
+				$this->scan_php_disclosure(); // Fix message 1, 3 or 100 inside.
 			}
 		}
 
@@ -341,7 +341,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 			$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
 
 			if ( $last_error && 'general' === $last_error['setting'] && 'apache_manual_edit' === $last_error['code'] ) {
-				$all_rules[] = static::_get_rules_from_error( $last_error );
+				$all_rules[] = static::get_rules_from_error( $last_error );
 				array_pop( $wp_settings_errors );
 			} else {
 				// "good"
@@ -364,7 +364,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 	 *
 	 * @param (array) $todo Tasks to do.
 	 */
-	protected function _fix_iis7( $todo ) {
+	protected function fix_iis7( $todo ) {
 		global $wp_settings_errors;
 
 		// PHP version disclosure in header.
@@ -375,14 +375,14 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 			$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
 
 			if ( $last_error && 'general' === $last_error['setting'] && 'iis7_manual_edit' === $last_error['code'] ) {
-				$rules = static::_get_rules_from_error( $last_error );
-				$path  = static::_get_code_tag_from_error( $last_error, 'secupress-iis7-path' );
+				$rules = static::get_rules_from_error( $last_error );
+				$path  = static::get_code_tag_from_error( $last_error, 'secupress-iis7-path' );
 				// "cantfix"
 				$this->add_fix_message( 303, array( $path, $rules ) );
 				array_pop( $wp_settings_errors );
 			} else {
 				// Succeed: now test our rule against php version disclosure works.
-				$this->_scan_php_disclosure(); // Fix message 1, 3 or 100 inside.
+				$this->scan_php_disclosure(); // Fix message 1, 3 or 100 inside.
 			}
 		}
 
@@ -394,8 +394,8 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 			$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
 
 			if ( $last_error && 'general' === $last_error['setting'] && 'iis7_manual_edit' === $last_error['code'] ) {
-				$rules = static::_get_rules_from_error( $last_error );
-				$path  = static::_get_code_tag_from_error( $last_error, 'secupress-iis7-path' );
+				$rules = static::get_rules_from_error( $last_error );
+				$path  = static::get_code_tag_from_error( $last_error, 'secupress-iis7-path' );
 				// "cantfix"
 				$this->add_fix_message( 303, array( $path, $rules ) );
 				array_pop( $wp_settings_errors );
@@ -414,7 +414,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 	 *
 	 * @param (array) $todo Tasks to do.
 	 */
-	protected function _fix_nginx( $todo ) {
+	protected function fix_nginx( $todo ) {
 		global $wp_settings_errors;
 		$all_rules = array();
 
@@ -427,7 +427,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 			$rules      = '<code>Error</code>';
 
 			if ( $last_error && 'general' === $last_error['setting'] && 'nginx_manual_edit' === $last_error['code'] ) {
-				$rules = static::_get_rules_from_error( $last_error );
+				$rules = static::get_rules_from_error( $last_error );
 				array_pop( $wp_settings_errors );
 			}
 
@@ -443,7 +443,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 			$rules      = '<code>Error</code>';
 
 			if ( $last_error && 'general' === $last_error['setting'] && 'nginx_manual_edit' === $last_error['code'] ) {
-				$rules = static::_get_rules_from_error( $last_error );
+				$rules = static::get_rules_from_error( $last_error );
 				array_pop( $wp_settings_errors );
 			}
 
@@ -465,7 +465,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 	 *
 	 * @since 1.0
 	 */
-	protected function _scan_php_disclosure() {
+	protected function scan_php_disclosure() {
 		global $is_apache;
 
 		$response_test = wp_remote_get( user_trailingslashit( home_url() ), array( 'redirection' => 0 ) );
