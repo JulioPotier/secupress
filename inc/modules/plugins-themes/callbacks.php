@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  *
  * @return (array) The sanitized and validated settings.
  */
-function __secupress_plugins_themes_settings_callback( $settings ) {
+function secupress_plugins_themes_settings_callback( $settings ) {
 	$modulenow = 'plugins-themes';
 	$activate  = secupress_get_submodule_activations( $modulenow );
 
@@ -23,13 +23,13 @@ function __secupress_plugins_themes_settings_callback( $settings ) {
 	 */
 
 	// Plugins Page.
-	__secupress_plugins_settings_callback( $modulenow, $activate );
+	secupress_plugins_settings_callback( $modulenow, $activate );
 
 	// Themes Page.
-	__secupress_themes_settings_callback( $modulenow, $activate );
+	secupress_themes_settings_callback( $modulenow, $activate );
 
 	// Uploads.
-	__secupress_uploads_settings_callback( $modulenow, $activate );
+	secupress_uploads_settings_callback( $modulenow, $activate );
 
 	// There are no settings to save.
 	return array();
@@ -44,7 +44,7 @@ function __secupress_plugins_themes_settings_callback( $settings ) {
  * @param (string)     $modulenow Current module.
  * @param (bool|array) $activate  Used to (de)activate plugins.
  */
-function __secupress_plugins_settings_callback( $modulenow, $activate ) {
+function secupress_plugins_settings_callback( $modulenow, $activate ) {
 	if ( false === $activate ) {
 		return;
 	}
@@ -72,7 +72,7 @@ function __secupress_plugins_settings_callback( $modulenow, $activate ) {
  * @param (string)     $modulenow Current module.
  * @param (bool|array) $activate  Used to (de)activate plugins.
  */
-function __secupress_themes_settings_callback( $modulenow, $activate ) {
+function secupress_themes_settings_callback( $modulenow, $activate ) {
 	if ( false === $activate ) {
 		return;
 	}
@@ -99,7 +99,7 @@ function __secupress_themes_settings_callback( $modulenow, $activate ) {
  * @param (string)     $modulenow Current module.
  * @param (bool|array) $activate  Used to (de)activate plugins.
  */
-function __secupress_uploads_settings_callback( $modulenow, $activate ) {
+function secupress_uploads_settings_callback( $modulenow, $activate ) {
 	if ( false !== $activate ) {
 		// (De)Activation.
 		secupress_manage_submodule( $modulenow, 'uploads', ! empty( $activate['uploads_activate'] ) );

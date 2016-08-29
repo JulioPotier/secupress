@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  *
  * @return (array) The sanitized and validated settings.
  */
-function __secupress_wordpress_core_settings_callback( $settings ) {
+function secupress_wordpress_core_settings_callback( $settings ) {
 	$modulenow = 'wordpress-core';
 	$activate  = secupress_get_submodule_activations( $modulenow );
 

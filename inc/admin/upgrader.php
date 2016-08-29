@@ -77,7 +77,7 @@ function secupress_upgrader() {
 }
 
 
-add_action( 'secupress.upgrade', '__secupress_new_upgrade', 10, 2 );
+add_action( 'secupress.upgrade', 'secupress_new_upgrade', 10, 2 );
 /**
  * What to do when SecuPress is updated, depending on versions.
  *
@@ -86,7 +86,7 @@ add_action( 'secupress.upgrade', '__secupress_new_upgrade', 10, 2 );
  * @param (string) $secupress_version The version being upgraded to.
  * @param (string) $actual_version    The previous version.
  */
-function __secupress_new_upgrade( $secupress_version, $actual_version ) {
+function secupress_new_upgrade( $secupress_version, $actual_version ) {
 
 	if ( version_compare( $actual_version, '1.0', '>=' ) ) {
 		return;

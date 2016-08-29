@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  *
  * @return (array) The sanitized and validated settings.
  */
-function __secupress_firewall_settings_callback( $settings ) {
+function secupress_firewall_settings_callback( $settings ) {
 	$modulenow = 'firewall';
 	$activate  = secupress_get_submodule_activations( $modulenow );
 	$settings  = $settings ? $settings : array();
@@ -30,16 +30,16 @@ function __secupress_firewall_settings_callback( $settings ) {
 	 */
 
 	// Bad headers.
-	__secupress_bad_headers_settings_callback( $modulenow, $settings, $activate );
+	secupress_bad_headers_settings_callback( $modulenow, $settings, $activate );
 
 	// Bad contents.
-	__secupress_bad_contents_settings_callback( $modulenow, $settings, $activate );
+	secupress_bad_contents_settings_callback( $modulenow, $settings, $activate );
 
 	// Anti Bruteforce Management.
-	__secupress_bruteforce_settings_callback( $modulenow, $settings, $activate );
+	secupress_bruteforce_settings_callback( $modulenow, $settings, $activate );
 
 	// Country Management.
-	__secupress_geoip_settings_callback( $modulenow, $settings, $activate );
+	secupress_geoip_settings_callback( $modulenow, $settings, $activate );
 
 	return $settings;
 }
@@ -54,7 +54,7 @@ function __secupress_firewall_settings_callback( $settings ) {
  * @param (array)      $settings  The module settings, passed by reference.
  * @param (bool|array) $activate  Used to (de)activate plugins.
  */
-function __secupress_bad_headers_settings_callback( $modulenow, &$settings, $activate ) {
+function secupress_bad_headers_settings_callback( $modulenow, &$settings, $activate ) {
 	// (De)Activation.
 	if ( false !== $activate ) {
 		secupress_manage_submodule( $modulenow, 'user-agents-header', ! empty( $activate['bbq-headers_user-agents-header'] ) );
@@ -83,7 +83,7 @@ function __secupress_bad_headers_settings_callback( $modulenow, &$settings, $act
  * @param (array)      $settings  The module settings, passed by reference.
  * @param (bool|array) $activate  Used to (de)activate plugins.
  */
-function __secupress_bad_contents_settings_callback( $modulenow, &$settings, $activate ) {
+function secupress_bad_contents_settings_callback( $modulenow, &$settings, $activate ) {
 	// (De)Activation.
 	if ( false !== $activate ) {
 		secupress_manage_submodule( $modulenow, 'bad-url-contents', ! empty( $activate['bbq-url-content_bad-contents'] ) );
@@ -113,7 +113,7 @@ function __secupress_bad_contents_settings_callback( $modulenow, &$settings, $ac
  * @param (array)      $settings  The module settings, passed by reference.
  * @param (bool|array) $activate  Used to (de)activate plugins.
  */
-function __secupress_bruteforce_settings_callback( $modulenow, &$settings, $activate ) {
+function secupress_bruteforce_settings_callback( $modulenow, &$settings, $activate ) {
 	// (De)Activation.
 	if ( false !== $activate ) {
 		secupress_manage_submodule( $modulenow, 'bruteforce', ! empty( $activate['bruteforce_activated'] ) );
@@ -134,7 +134,7 @@ function __secupress_bruteforce_settings_callback( $modulenow, &$settings, $acti
  * @param (array)      $settings  The module settings, passed by reference.
  * @param (bool|array) $activate  Used to (de)activate plugins.
  */
-function __secupress_geoip_settings_callback( $modulenow, &$settings, $activate ) {
+function secupress_geoip_settings_callback( $modulenow, &$settings, $activate ) {
 	// Settings.
 	$geoip_values = array( '-1' => 1, 'blacklist' => 1, 'whitelist' => 1 );
 
@@ -178,7 +178,7 @@ function __secupress_geoip_settings_callback( $modulenow, &$settings, $activate 
 /* INSTALL/RESET ================================================================================ */
 /*------------------------------------------------------------------------------------------------*/
 
-add_action( 'secupress.first_install', '__secupress_install_firewall_module' );
+add_action( 'secupress.first_install', 'secupress_install_firewall_module' );
 /**
  * Create default option on install and reset.
  *
@@ -186,7 +186,7 @@ add_action( 'secupress.first_install', '__secupress_install_firewall_module' );
  *
  * @param (string) $module The module(s) that will be reset to default. `all` means "all modules".
  */
-function __secupress_install_firewall_module( $module ) {
+function secupress_install_firewall_module( $module ) {
 	if ( 'all' === $module || 'firewall' === $module ) {
 		update_site_option( 'secupress_firewall_settings', array(
 			// Bad headers.
@@ -204,7 +204,7 @@ function __secupress_install_firewall_module( $module ) {
 
 // Bad User Agents.
 
-add_filter( 'pre_secupress_get_module_option_bbq-headers_user-agents-list', '__secupress_firewall_pre_bbq_headers_user_agents_list_default_if_empty', PHP_INT_MAX, 3 );
+add_filter( 'pre_secupress_get_module_option_bbq-headers_user-agents-list', 'secupress_firewall_pre_bbq_headers_user_agents_list_default_if_empty', PHP_INT_MAX, 3 );
 /**
  * Filter the option to not return an empty list of forbidden user-agents.
  *
@@ -216,7 +216,7 @@ add_filter( 'pre_secupress_get_module_option_bbq-headers_user-agents-list', '__s
  *
  * @return (string)
  */
-function __secupress_firewall_pre_bbq_headers_user_agents_list_default_if_empty( $value, $default, $module ) {
+function secupress_firewall_pre_bbq_headers_user_agents_list_default_if_empty( $value, $default, $module ) {
 	if ( 'firewall' === $module && isset( $value ) && ! trim( $value ) ) {
 		return secupress_firewall_bbq_headers_user_agents_list_default();
 	}
@@ -224,7 +224,7 @@ function __secupress_firewall_pre_bbq_headers_user_agents_list_default_if_empty(
 }
 
 
-add_filter( 'secupress_get_module_option_bbq-headers_user-agents-list', '__secupress_firewall_bbq_headers_user_agents_list_default_if_empty', PHP_INT_MAX, 3 );
+add_filter( 'secupress_get_module_option_bbq-headers_user-agents-list', 'secupress_firewall_bbq_headers_user_agents_list_default_if_empty', PHP_INT_MAX, 3 );
 /**
  * Filter the option to not return an empty list of forbidden user-agents.
  *
@@ -236,7 +236,7 @@ add_filter( 'secupress_get_module_option_bbq-headers_user-agents-list', '__secup
  *
  * @return (string)
  */
-function __secupress_firewall_bbq_headers_user_agents_list_default_if_empty( $value, $default, $module ) {
+function secupress_firewall_bbq_headers_user_agents_list_default_if_empty( $value, $default, $module ) {
 	if ( 'firewall' === $module && ! trim( $value ) ) {
 		return secupress_firewall_bbq_headers_user_agents_list_default();
 	}
@@ -258,7 +258,7 @@ function secupress_firewall_bbq_headers_user_agents_list_default() {
 
 // Bad URL contents.
 
-add_filter( 'pre_secupress_get_module_option_bbq-url-content_bad-contents-list', '__secupress_firewall_pre_bbq_url_content_bad_contents_list_default_if_empty', PHP_INT_MAX, 3 );
+add_filter( 'pre_secupress_get_module_option_bbq-url-content_bad-contents-list', 'secupress_firewall_pre_bbq_url_content_bad_contents_list_default_if_empty', PHP_INT_MAX, 3 );
 /**
  * Filter the option to not return an empty list of forbidden contents.
  *
@@ -270,7 +270,7 @@ add_filter( 'pre_secupress_get_module_option_bbq-url-content_bad-contents-list',
  *
  * @return (string)
  */
-function __secupress_firewall_pre_bbq_url_content_bad_contents_list_default_if_empty( $value, $default, $module ) {
+function secupress_firewall_pre_bbq_url_content_bad_contents_list_default_if_empty( $value, $default, $module ) {
 	if ( 'firewall' === $module && isset( $value ) && ! trim( $value ) ) {
 		return secupress_firewall_bbq_url_content_bad_contents_list_default();
 	}
@@ -278,7 +278,7 @@ function __secupress_firewall_pre_bbq_url_content_bad_contents_list_default_if_e
 }
 
 
-add_filter( 'secupress_get_module_option_bbq-url-content_bad-contents-list', '__secupress_firewall_bbq_url_content_bad_contents_list_default_if_empty', PHP_INT_MAX, 3 );
+add_filter( 'secupress_get_module_option_bbq-url-content_bad-contents-list', 'secupress_firewall_bbq_url_content_bad_contents_list_default_if_empty', PHP_INT_MAX, 3 );
 /**
  * Filter the option to not return an empty list of forbidden contents.
  *
@@ -290,7 +290,7 @@ add_filter( 'secupress_get_module_option_bbq-url-content_bad-contents-list', '__
  *
  * @return (string)
  */
-function __secupress_firewall_bbq_url_content_bad_contents_list_default_if_empty( $value, $default, $module ) {
+function secupress_firewall_bbq_url_content_bad_contents_list_default_if_empty( $value, $default, $module ) {
 	if ( 'firewall' === $module && ! trim( $value ) ) {
 		return secupress_firewall_bbq_url_content_bad_contents_list_default();
 	}

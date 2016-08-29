@@ -90,7 +90,7 @@ function secupress_get_non_wp_tables() {
 	$test_tables_unique = array_flip( $test_tables_filter );
 	$test_tables_unique = array_keys( $test_tables_unique );
 	$duplicates         = array_count_values( $test_tables_filter );
-	$duplicates         = array_filter( $duplicates, '__secupress_filter_greater_than_1' );
+	$duplicates         = array_filter( $duplicates, 'secupress_filter_greater_than_1' );
 	$duplicates         = array_keys( $duplicates );
 	$dup_tables         = array();
 
@@ -115,7 +115,7 @@ function secupress_get_non_wp_tables() {
  *
  * @return (bool)
  */
-function __secupress_filter_greater_than_1( $value ) {
+function secupress_filter_greater_than_1( $value ) {
 	return 1 < $value;
 }
 

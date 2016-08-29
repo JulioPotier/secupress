@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /* CSS, JS, FOOTER ============================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-add_action( 'admin_enqueue_scripts', '__secupress_add_settings_scripts' );
+add_action( 'admin_enqueue_scripts', 'secupress_add_settings_scripts' );
 /**
  * Add some CSS and JS to our settings pages.
  *
@@ -13,7 +13,7 @@ add_action( 'admin_enqueue_scripts', '__secupress_add_settings_scripts' );
  *
  * @param (string) $hook_suffix The current admin page.
  */
-function __secupress_add_settings_scripts( $hook_suffix ) {
+function secupress_add_settings_scripts( $hook_suffix ) {
 
 	$suffix    = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 	$version   = $suffix ? SECUPRESS_VERSION : time();
@@ -216,7 +216,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
 	}
 
 	// SecuPress version in footer.
-	add_filter( 'update_footer', '__secupress_print_version_number_in_footer', 12, 1 );
+	add_filter( 'update_footer', 'secupress_print_version_number_in_footer', 12, 1 );
 }
 
 
@@ -230,7 +230,7 @@ function __secupress_add_settings_scripts( $hook_suffix ) {
  *
  * @return (string)
  */
-function __secupress_print_version_number_in_footer( $footer ) {
+function secupress_print_version_number_in_footer( $footer ) {
 	return ( $footer ? "$footer | " : '' ) . '<b>' . SECUPRESS_PLUGIN_NAME . ' v.' . SECUPRESS_VERSION . '</b>';
 }
 
@@ -239,7 +239,7 @@ function __secupress_print_version_number_in_footer( $footer ) {
 /* PLUGINS LIST ================================================================================= */
 /*------------------------------------------------------------------------------------------------*/
 
-add_filter( 'plugin_action_links_' . plugin_basename( SECUPRESS_FILE ), '__secupress_settings_action_links' );
+add_filter( 'plugin_action_links_' . plugin_basename( SECUPRESS_FILE ), 'secupress_settings_action_links' );
 /**
  * Add links to the plugin row.
  *
@@ -249,7 +249,7 @@ add_filter( 'plugin_action_links_' . plugin_basename( SECUPRESS_FILE ), '__secup
  *
  * @return (array) The array of links + our links.
  */
-function __secupress_settings_action_links( $actions ) {
+function secupress_settings_action_links( $actions ) {
 	/*if ( ! secupress_is_white_label() ) { ////
 		array_unshift( $actions, sprintf( '<a href="%s">%s</a>', 'https://secupress.me/support/', __( 'Support', 'secupress' ) ) );
 
@@ -280,12 +280,12 @@ function secupress_create_menus() {
 	$cap   = secupress_get_capability();
 
 	// Main menu item.
-	add_menu_page( SECUPRESS_PLUGIN_NAME, 'secupress', $cap, SECUPRESS_PLUGIN_SLUG . '_scanners', '__secupress_scanners', 'dashicons-shield-alt' );
+	add_menu_page( SECUPRESS_PLUGIN_NAME, 'secupress', $cap, SECUPRESS_PLUGIN_SLUG . '_scanners', 'secupress_scanners', 'dashicons-shield-alt' );
 
 	// Sub-menus.
-	add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ) . $count, $cap, SECUPRESS_PLUGIN_SLUG . '_scanners', '__secupress_scanners' );
-	add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Modules', 'secupress' ),  __( 'Modules', 'secupress' ),           $cap, SECUPRESS_PLUGIN_SLUG . '_modules',  '__secupress_modules' );
-	add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Settings' ),              __( 'Settings' ),                       $cap, SECUPRESS_PLUGIN_SLUG . '_settings', '__secupress_global_settings' );
+	add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ) . $count, $cap, SECUPRESS_PLUGIN_SLUG . '_scanners', 'secupress_scanners' );
+	add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Modules', 'secupress' ),  __( 'Modules', 'secupress' ),           $cap, SECUPRESS_PLUGIN_SLUG . '_modules',  'secupress_modules' );
+	add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Settings' ),              __( 'Settings' ),                       $cap, SECUPRESS_PLUGIN_SLUG . '_settings', 'secupress_global_settings' );
 
 	if ( ! secupress_is_white_label() ) {
 		// Pro page should be a module too… I edit, take a look ////.
@@ -312,7 +312,7 @@ function secupress_create_menus() {
  *
  * @since 1.0
  */
-function __secupress_global_settings() {
+function secupress_global_settings() {
 	if ( ! class_exists( 'SecuPress_Settings' ) ) {
 		secupress_require_class( 'settings' );
 	}
@@ -340,7 +340,7 @@ function __secupress_global_settings() {
  *
  * @since 1.0
  */
-function __secupress_modules() {
+function secupress_modules() {
 	if ( ! class_exists( 'SecuPress_Settings' ) ) {
 		secupress_require_class( 'settings' );
 	}
@@ -356,7 +356,7 @@ function __secupress_modules() {
  *
  * @since 1.0
  */
-function __secupress_scanners() {
+function secupress_scanners() {
 	$counts      = secupress_get_scanner_counts();
 	$items       = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
 	$reports     = array();

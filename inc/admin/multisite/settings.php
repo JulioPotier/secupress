@@ -142,7 +142,7 @@ function secupress_create_subsite_menu() {
 	}
 
 	// Menu item.
-	add_menu_page( SECUPRESS_PLUGIN_NAME, 'secupress', $cap, SECUPRESS_PLUGIN_SLUG . '_scanners', '__secupress_subsite_scanners', 'dashicons-shield-alt' );
+	add_menu_page( SECUPRESS_PLUGIN_NAME, 'secupress', $cap, SECUPRESS_PLUGIN_SLUG . '_scanners', 'secupress_subsite_scanners', 'dashicons-shield-alt' );
 
 	// Display a notice for Administrators.
 	if ( 'admin.php' !== $pagenow || empty( $_GET['page'] ) || SECUPRESS_PLUGIN_SLUG . '_scanners' !== $_GET['page'] ) {
@@ -209,7 +209,7 @@ function secupress_remove_subsite_security_issues_notice_meta() {
  *
  * @since 1.0
  */
-function __secupress_subsite_scanners() {
+function secupress_subsite_scanners() {
 	?>
 	<div class="wrap">
 		<?php secupress_admin_heading( __( 'Scanners', 'secupress' ) ); ?>

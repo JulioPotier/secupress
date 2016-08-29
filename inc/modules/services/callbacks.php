@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  *
  * @return (array) The sanitized and validated settings.
  */
-function __secupress_services_settings_callback( $settings ) {
+function secupress_services_settings_callback( $settings ) {
 	$modulenow = 'services';
 	$settings  = $settings ? $settings : array();
 

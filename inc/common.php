@@ -459,9 +459,9 @@ function secupress_auto_username_login() {
 		return;
 	}
 
-	add_filter( 'authenticate', '__secupress_give_him_a_user', 1, 2 );
+	add_filter( 'authenticate', 'secupress_give_him_a_user', 1, 2 );
 	$user = wp_signon( array( 'user_login' => $username ) );
-	remove_filter( 'authenticate', '__secupress_give_him_a_user', 1, 2 );
+	remove_filter( 'authenticate', 'secupress_give_him_a_user', 1, 2 );
 
 	if ( is_a( $user, 'WP_User' ) ) {
 		wp_set_current_user( $user->ID, $user->user_login );
@@ -488,7 +488,7 @@ function secupress_auto_username_login() {
  *
  * @return (object|bool) A WP_User object or false.
  */
-function __secupress_give_him_a_user( $user, $username ) {
+function secupress_give_him_a_user( $user, $username ) {
 	return get_user_by( 'login', $username );
 }
 
@@ -586,13 +586,13 @@ function secupress_downgrade_author_administrator() {
 }
 
 
-add_action( 'secupress.loaded', '__secupress_process_file_monitoring_tasks' );
+add_action( 'secupress.loaded', 'secupress_process_file_monitoring_tasks' );
 /**
  * Launch file monitoring in background.
  *
  * @since 1.0
  */
-function __secupress_process_file_monitoring_tasks() {
+function secupress_process_file_monitoring_tasks() {
 	if ( false === secupress_get_site_transient( 'secupress_toggle_file_scan' ) ) {
 		return;
 	}
@@ -603,20 +603,20 @@ function __secupress_process_file_monitoring_tasks() {
 }
 
 
-add_action( 'secupress.loaded', '__secupress_check_token_wp_registration_url' );
+add_action( 'secupress.loaded', 'secupress_check_token_wp_registration_url' );
 /**
  * Avoid sending emails when we do a "subscription test scan"
  *
  * @since 1.0
  */
-function __secupress_check_token_wp_registration_url() {
+function secupress_check_token_wp_registration_url() {
 	if ( ! empty( $_POST['secupress_token'] ) && false !== ( $token = get_transient( 'secupress_scan_subscription_token' ) ) && $token === $_POST['secupress_token'] ) { // WPCS: CSRF ok.
 		add_action( 'wp_mail', '__return_false' );
 	}
 }
 
 
-add_filter( 'registration_errors', '__secupress_registration_test_errors', PHP_INT_MAX, 2 );
+add_filter( 'registration_errors', 'secupress_registration_test_errors', PHP_INT_MAX, 2 );
 /**
  * This is used in the Subscription scan to test user registrations from the login page.
  *
@@ -628,7 +628,7 @@ add_filter( 'registration_errors', '__secupress_registration_test_errors', PHP_I
  *
  * @return (object) The WP_Error object with a new error if the user name is blacklisted.
  */
-function __secupress_registration_test_errors( $errors, $sanitized_user_login ) {
+function secupress_registration_test_errors( $errors, $sanitized_user_login ) {
 	if ( ! $errors->get_error_code() && false !== strpos( $sanitized_user_login, 'secupress' ) ) {
 		set_transient( 'secupress_registration_test', 'failed', HOUR_IN_SECONDS );
 		$errors->add( 'secupress_registration_test', 'secupress_registration_test_failed' );

@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  *
  * @return (array) The sanitized and validated settings.
  */
-function __secupress_backups_settings_callback( $settings ) {
+function secupress_backups_settings_callback( $settings ) {
 	$locations = secupress_backups_storage_labels();
 	$settings  = $settings ? $settings : array();
 

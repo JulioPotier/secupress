@@ -200,7 +200,7 @@ function secupress_maybe_write_rules_on_activation() {
 				$fragment->appendXML( "\n$spaces  $nodes_string\n$spaces" );
 
 				// Maybe create child nodes and then, prepend new nodes.
-				__secupress_get_iis7_node( $doc, $xpath, $path, $fragment );
+				secupress_get_iis7_node( $doc, $xpath, $path, $fragment );
 			} else {
 				$nodes_string = esc_html( $nodes_string );
 				$new_data    .= '<br/>' . sprintf( __( 'Add the following: %s', 'secupress' ), "<pre>\n$spaces  $nodes_string\n$spaces</pre>" );

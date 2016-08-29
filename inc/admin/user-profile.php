@@ -1,7 +1,7 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
-add_filter( 'user_contactmethods', '__secupress_add_user_contactmethods', 0, 2 );
+add_filter( 'user_contactmethods', 'secupress_add_user_contactmethods', 0, 2 );
 /**
  * Add our recovery email to the list of the users contact methods.
  *
@@ -12,7 +12,7 @@ add_filter( 'user_contactmethods', '__secupress_add_user_contactmethods', 0, 2 )
  *
  * @return (array)
  */
-function __secupress_add_user_contactmethods( $methods, $user ) {
+function secupress_add_user_contactmethods( $methods, $user ) {
 	if ( ! empty( $user->ID ) && $user->ID === get_current_user_id() ) {
 		$methods['secupress_recovery_email'] = __( '<span id="secupress_recovery_email">Recovery E-mail</span><p class="description">For security reasons, you may need to retrieve some private informations on an alternate email address.</p>', 'secupress' );
 	}
@@ -20,7 +20,7 @@ function __secupress_add_user_contactmethods( $methods, $user ) {
 }
 
 
-add_action( 'personal_options_update', '__secupress_callback_update_user_contactmethods' );
+add_action( 'personal_options_update', 'secupress_callback_update_user_contactmethods' );
 /**
  * Update the user's recovery email if correct.
  *
@@ -29,7 +29,7 @@ add_action( 'personal_options_update', '__secupress_callback_update_user_contact
  *
  * @param (int) $user_id The user ID.
  */
-function __secupress_callback_update_user_contactmethods( $user_id ) {
+function secupress_callback_update_user_contactmethods( $user_id ) {
 
 	if ( ! isset( $_POST['secupress_recovery_email'] ) ) { // WPCS: CSRF ok.
 		return;

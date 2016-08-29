@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  *
  * @return (array) The sanitized and validated settings.
  */
-function __secupress_users_login_settings_callback( $settings ) {
+function secupress_users_login_settings_callback( $settings ) {
 	$modulenow = 'users-login';
 	$activate  = secupress_get_submodule_activations( $modulenow );
 	$settings  = $settings ? $settings : array();
@@ -30,22 +30,22 @@ function __secupress_users_login_settings_callback( $settings ) {
 	 */
 
 	// Double authentication.
-	__secupress_double_auth_settings_callback( $modulenow, $settings, $activate );
+	secupress_double_auth_settings_callback( $modulenow, $settings, $activate );
 
 	// Captcha.
-	__secupress_captcha_settings_callback( $modulenow, $activate );
+	secupress_captcha_settings_callback( $modulenow, $activate );
 
 	// Login protection.
-	__secupress_login_protection_settings_callback( $modulenow, $settings, $activate );
+	secupress_login_protection_settings_callback( $modulenow, $settings, $activate );
 
 	// Password Policy.
-	__secupress_password_policy_settings_callback( $modulenow, $settings, $activate );
+	secupress_password_policy_settings_callback( $modulenow, $settings, $activate );
 
 	// Logins blacklist.
-	__secupress_logins_blacklist_settings_callback( $modulenow, $activate );
+	secupress_logins_blacklist_settings_callback( $modulenow, $activate );
 
 	// Move Login.
-	__secupress_move_login_settings_callback( $modulenow, $settings, $activate );
+	secupress_move_login_settings_callback( $modulenow, $settings, $activate );
 
 	return $settings;
 }
@@ -60,7 +60,7 @@ function __secupress_users_login_settings_callback( $settings ) {
  * @param (array)      $settings  The module settings, passed by reference.
  * @param (array|bool) $activate  An array containing the fields related to the sub-module being activated. False if not on this module page.
  */
-function __secupress_double_auth_settings_callback( $modulenow, &$settings, $activate ) {
+function secupress_double_auth_settings_callback( $modulenow, &$settings, $activate ) {
 	// (De)Activation.
 	if ( ! empty( $activate['double-auth_type'] ) ) {
 		secupress_manage_submodule( $modulenow, 'passwordless', '1' === $activate['double-auth_type'] && secupress_is_pro() );
@@ -81,7 +81,7 @@ function __secupress_double_auth_settings_callback( $modulenow, &$settings, $act
  * @param (string)     $modulenow Current module.
  * @param (array|bool) $activate  An array containing the fields related to the sub-module being activated. False if not on this module page.
  */
-function __secupress_captcha_settings_callback( $modulenow, $activate ) {
+function secupress_captcha_settings_callback( $modulenow, $activate ) {
 	// (De)Activation.
 	if ( false !== $activate ) {
 		secupress_manage_submodule( $modulenow, 'login-captcha', ! empty( $activate['captcha_activate'] ) );
@@ -98,7 +98,7 @@ function __secupress_captcha_settings_callback( $modulenow, $activate ) {
  * @param (array)      $settings  The module settings, passed by reference.
  * @param (array|bool) $activate  An array containing the fields related to the sub-module being activated. False if not on this module page.
  */
-function __secupress_login_protection_settings_callback( $modulenow, &$settings, $activate ) {
+function secupress_login_protection_settings_callback( $modulenow, &$settings, $activate ) {
 	// (De)Activation.
 	if ( ! empty( $activate['login-protection_type'] ) ) {
 		$activate['login-protection_type'] = array_flip( $activate['login-protection_type'] );
@@ -138,7 +138,7 @@ function __secupress_login_protection_settings_callback( $modulenow, &$settings,
  * @param (array)      $settings  The module settings, passed by reference.
  * @param (array|bool) $activate  An array containing the fields related to the sub-module being activated. False if not on this module page.
  */
-function __secupress_password_policy_settings_callback( $modulenow, &$settings, $activate ) {
+function secupress_password_policy_settings_callback( $modulenow, &$settings, $activate ) {
 	// Settings + (De)Activation.
 	if ( secupress_is_pro() ) {
 		$settings['password-policy_password_expiration'] = ! empty( $settings['password-policy_password_expiration'] ) ? absint( $settings['password-policy_password_expiration'] ) : 0;
@@ -167,7 +167,7 @@ function __secupress_password_policy_settings_callback( $modulenow, &$settings, 
  * @param (string)     $modulenow Current module.
  * @param (array|bool) $activate  An array containing the fields related to the sub-module being activated. False if not on this module page.
  */
-function __secupress_logins_blacklist_settings_callback( $modulenow, $activate ) {
+function secupress_logins_blacklist_settings_callback( $modulenow, $activate ) {
 	// (De)Activation.
 	if ( false !== $activate ) {
 		secupress_manage_submodule( $modulenow, 'blacklist-logins', ! empty( $activate['blacklist-logins_activated'] ) );
@@ -184,7 +184,7 @@ function __secupress_logins_blacklist_settings_callback( $modulenow, $activate )
  * @param (array)      $settings  The module settings, passed by reference.
  * @param (array|bool) $activate  An array containing the fields related to the sub-module being activated. False if not on this module page.
  */
-function __secupress_move_login_settings_callback( $modulenow, &$settings, $activate ) {
+function secupress_move_login_settings_callback( $modulenow, &$settings, $activate ) {
 	$old_settings = get_site_option( "secupress_{$modulenow}_settings" );
 	// Slugs.
 	$slugs        = secupress_move_login_slug_labels();
@@ -290,7 +290,7 @@ function secupress_move_login_add_packed_plugin( $plugins ) {
 /* INSTALL/RESET ================================================================================ */
 /*------------------------------------------------------------------------------------------------*/
 
-add_action( 'secupress.first_install', '__secupress_install_users_login_module' );
+add_action( 'secupress.first_install', 'secupress_install_users_login_module' );
 /**
  * Create default option on install and reset.
  *
@@ -298,7 +298,7 @@ add_action( 'secupress.first_install', '__secupress_install_users_login_module' 
  *
  * @param (string) $module The module(s) that will be reset to default. `all` means "all modules".
  */
-function __secupress_install_users_login_module( $module ) {
+function secupress_install_users_login_module( $module ) {
 	// First install.
 	if ( 'all' === $module ) {
 		// Activate "Ask for old password" submodule.
