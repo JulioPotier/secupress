@@ -28,10 +28,10 @@ function secupress_get_modules() {
 			'icon'        => 'themes-plugins',
 			'summaries'   => array(
 				'small'  => __( 'Check your plugins &amp; themes', 'secupress' ),
-				'normal' => __( 'Detect themes and plugins known as vulnerables to avoid hackings. Also, manage installation and activation rights on them.', 'secupress' ),
+				'normal' => __( 'Detect themes and plugins known as vulnerable to avoid hackings. Also, manage installation and activation rights on them.', 'secupress' ),
 			),
 			'description' => array(
-				__( 'Detect themes and plugins known as vulnerables to avoid hackings. Also, manage installation and activation rights on them.', 'secupress' ),
+				__( 'Detect themes and plugins known as vulnerable to avoid hackings. Also, manage installation and activation rights on them.', 'secupress' ),
 			),
 		),
 		'wordpress-core'  => array(
@@ -126,10 +126,10 @@ function secupress_get_modules() {
 			'icon'        => 'schedule',
 			'summaries'   => array(
 				'small'  => __( 'Automate all your tasks', 'secupress' ),
-				'normal' => sprintf( __( 'Let %s scan your website when you are away by using recurent scans.', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
+				'normal' => sprintf( __( 'Let %s scan your website when you are away by using recurrent scans.', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
 			),
 			'description' => array(
-				sprintf( __( 'Let %s scan your website when you are away by using recurent scans.', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
+				sprintf( __( 'Let %s scan your website when you are away by using recurrent scans.', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
 			),
 			'mark_as_pro' => $should_be_pro,
 		),
@@ -161,10 +161,10 @@ function secupress_get_modules() {
 			'icon'        => 'secupress',
 			'summaries'   => array(
 				'small'  => __( 'Look farther with the Pro version', 'secupress' ),
-				'normal' => __( 'Access to more modules and options to make your website a real automatted secure engine.', 'secupress' ),
+				'normal' => __( 'Access to more modules and options to make your website a real automated secure engine.', 'secupress' ),
 			),
 			'description' => array(
-				__( 'Access to more modules and options to make your website a real automatted secure engine.', 'secupress' ),
+				__( 'Access to more modules and options to make your website a real automated secure engine.', 'secupress' ),
 			),
 		),
 	);

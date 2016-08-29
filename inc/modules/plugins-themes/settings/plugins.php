@@ -68,7 +68,7 @@ $this->add_field( array(
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'Based on our Daily Security Monitoring, notices will be displayed for plugins newly known as vulnerables.', 'secupress' ),
+			'description' => __( 'Based on our Daily Security Monitoring, notices will be displayed for plugins newly known as vulnerable.', 'secupress' ),
 		),
 	),
 ) );
