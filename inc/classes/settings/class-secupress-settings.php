@@ -639,7 +639,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				echo $label_open; ?>
 					<?php
 					echo $args['label_before'];
-					echo '<input type="checkbox" id="' . $args['label_for'] . '" name="' . $name_attribute . '" value="1"' . checked( $value, 1, false ) . $attributes . ' class="secupress-checkbox" />';
+					echo '<input type="checkbox" id="' . $args['label_for'] . '" name="' . $name_attribute . '" value="1"' . checked( $value, 1, false ) . $attributes . ' />';
 					echo '<span class="label-text">' . $args['label'] . '</span>';
 					?>
 				<?php echo $label_close;
@@ -1063,7 +1063,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		$name_attr = $name ? ' name="' . esc_attr( $name ) . '"' : '';
 		$id_attr   = $id   ? ' id="' . esc_attr( $id ) . '"'     : '';
 
-		$button = '<button type="submit"' . $name_attr . $id_attr . ' class="' . esc_attr( $class ) . '"' . $attributes . '/>' . __( 'Save All Changes', 'secupress' ) . '</button>';
+		$button = '<button type="submit"' . $name_attr . $id_attr . ' class="' . esc_attr( $class ) . '"' . $attributes . '>' . __( 'Save All Changes', 'secupress' ) . '</button>';
 
 		if ( $wrap ) {
 			$button = $wrap . $button . '</p>';
