@@ -403,7 +403,7 @@ add_action( 'wp_ajax_secupress_recovery_email', 'secupress_recovery_email_ajax_p
 function secupress_recovery_email_ajax_post_cb() {
 	secupress_callback_update_user_contactmethods( get_current_user_id() );
 	$user  = wp_get_current_user();
-	$dummy = new StdClass;
-	$dummy = secupress_user_profile_update_errors( $dummy, false, $user );
-	die( $dummy );
+	$dummy = new stdClass();
+
+	secupress_user_profile_update_errors( $dummy, false, $user );
 }

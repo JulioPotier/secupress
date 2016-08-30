@@ -401,7 +401,7 @@ function secupress_create_deactivation_notice_muplugin( $plugin_id, $message ) {
 		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php' );
 		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php' );
 
-		$wp_filesystem = new WP_Filesystem_Direct( new StdClass() );
+		$wp_filesystem = new WP_Filesystem_Direct( new stdClass() );
 	}
 
 	if ( ! defined( 'FS_CHMOD_DIR' ) ) {
