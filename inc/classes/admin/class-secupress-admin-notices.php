@@ -331,6 +331,7 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 		secupress_check_admin_referer( 'secupress-notices' );
 
 		$notice_id = $_POST['notice_id'];
+		$notice_id = $notice_id ? sanitize_title( $notice_id ) : $notice_id;
 
 		/**
 		 * Filter the capability needed to dismiss the notice.
