@@ -1363,13 +1363,34 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @return (string) The header content.
 	 */
 	public function get_log_header_for_file( $log ) {
-		$out = '[' . $log->get_time();
+		$out = '[' . $log->get_time() . ' | ';
 
 		if ( count( $this->criticities ) > 1 ) {
-			$out .= ' | ' . $log->get_criticity();
+			$out .= $log->get_criticity() . ' | ';
 		}
 
-		$out .= ' | ' . $log->get_user() . ']';
+		$user      = $log->get_user( true );
+		$user_data = get_userdata( $user->user_id );
+
+		if ( $user_data && $user_data->data->user_login !== $user->user_login ) {
+			$user->user_login .= ' (' . esc_html( $user_data->data->user_login ) . ')';
+		}
+
+		if ( $user->user_id ) {
+			$infos = array(
+				'user_ip'    => __( 'IP', 'secupress' ),
+				'user_id'    => __( 'ID', 'secupress' ),
+				'user_login' => __( 'Login', 'secupress' ),
+			);
+			foreach ( $infos as $class => $label ) {
+				$infos[ $class ] = sprintf( __( '%s:', 'secupress' ) . ' %s', $label, $user->$class );
+			}
+			$out .= html_entity_decode( implode( ' ', $infos ) );
+		} else {
+			$out .= html_entity_decode( sprintf( __( '%s:', 'secupress' ) . ' %s', __( 'IP', 'secupress' ), $user->user_ip ) );
+		}
+
+		$out .= ']';
 		return $out;
 	}
 
