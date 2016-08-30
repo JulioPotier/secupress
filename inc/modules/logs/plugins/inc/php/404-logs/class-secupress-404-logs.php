@@ -59,8 +59,8 @@ class SecuPress_404_Logs extends SecuPress_Logs {
 		);
 
 		// Log the 404s.
-		add_action( 'wp', array( $this, '_maybe_log_404' ) );
-		add_action( 'admin_page_access_denied', array( $this, '_log_404' ) );
+		add_action( 'wp', array( $this, 'maybe_log_404' ) );
+		add_action( 'admin_page_access_denied', array( $this, 'log_404' ) );
 
 		// Parent hooks.
 		parent::_init();
@@ -72,12 +72,12 @@ class SecuPress_404_Logs extends SecuPress_Logs {
 	 *
 	 * @since 1.0
 	 */
-	public function _maybe_log_404() {
+	public function maybe_log_404() {
 		if ( ! is_404() ) {
 			return;
 		}
 
-		$this->_log_404();
+		$this->log_404();
 	}
 
 
@@ -86,9 +86,9 @@ class SecuPress_404_Logs extends SecuPress_Logs {
 	 *
 	 * @since 1.0
 	 */
-	public function _log_404() {
+	public function log_404() {
 		// Build the Log array.
-		$log = static::_set_log_time_and_user( array(
+		$log = static::set_log_time_and_user( array(
 			'type'   => 'error-404',
 			'target' => esc_html( secupress_get_current_url( 'uri' ) ),
 			'data'   => array(
@@ -97,7 +97,7 @@ class SecuPress_404_Logs extends SecuPress_Logs {
 			),
 		) );
 
-		parent::_save_logs( array( $log ) );
+		parent::save_logs( array( $log ) );
 	}
 
 
@@ -110,9 +110,9 @@ class SecuPress_404_Logs extends SecuPress_Logs {
 	 *
 	 * @return (string) The Log class name.
 	 */
-	public static function _maybe_include_log_class() {
+	public static function maybe_include_log_class() {
 		// The parent class is needed.
-		parent::_maybe_include_log_class();
+		parent::maybe_include_log_class();
 
 		if ( ! class_exists( 'SecuPress_404_Log' ) ) {
 			require_once( dirname( __FILE__ ) . '/class-secupress-404-log.php' );

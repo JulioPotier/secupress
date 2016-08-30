@@ -23,7 +23,7 @@ function secupress_register_global_setting() {
  *
  * @param (array) $value Our global settings.
  */
-function __secupress_global_settings_callback( $value ) {
+function secupress_global_settings_callback( $value ) {
 	$value = $value ? $value : array();
 
 	if ( isset( $value['sanitized'] ) ) {
@@ -61,7 +61,7 @@ function __secupress_global_settings_callback( $value ) {
 
 	// Email removed: remove the site from the user account.
 	if ( ! $value['consumer_email'] && $has_old_api_values ) {
-		$value = __secupress_global_settings_remove_api_subscription( $value, $old_values, $def_values );
+		$value = secupress_global_settings_remove_api_subscription( $value, $old_values, $def_values );
 	}
 	// Email is (still) empty, move along.
 	elseif ( ! $value['consumer_email'] ) {
@@ -69,7 +69,7 @@ function __secupress_global_settings_callback( $value ) {
 	}
 	// We have a valid email address: add the site.
 	else {
-		$value = __secupress_global_settings_update_api_subscription( $value, $old_values, $def_values );
+		$value = secupress_global_settings_update_api_subscription( $value, $old_values, $def_values );
 	}
 
 	// Uptime monitor.
@@ -95,7 +95,7 @@ function __secupress_global_settings_callback( $value ) {
  *
  * @return (array) $new_values The new settings, some values may have changed.
  */// ////.
-/*function __secupress_global_settings_remove_api_subscription( $new_values, $old_values, $def_values ) {
+/*function secupress_global_settings_remove_api_subscription( $new_values, $old_values, $def_values ) {
 
 	$api_old_values = secupress_array_merge_intersect( $old_values, $def_values );
 
@@ -107,7 +107,7 @@ function __secupress_global_settings_callback( $value ) {
 
 	$response = wp_remote_get( $url, array( 'timeout' => 10 ) );
 
-	if ( __secupress_global_settings_api_request_succeeded( $response, $new_values ) ) {
+	if ( secupress_global_settings_api_request_succeeded( $response, $new_values ) ) {
 		// Success!
 		unset( $new_values['consumer_email'], $new_values['consumer_key'], $new_values['site_is_pro'] );
 
@@ -143,7 +143,7 @@ function __secupress_global_settings_callback( $value ) {
  *
  * @return (array) $new_values The new settings, some values may have changed.
  */// ////.
-/*function __secupress_global_settings_update_api_subscription( $new_values, $old_values, $def_values ) {
+/*function secupress_global_settings_update_api_subscription( $new_values, $old_values, $def_values ) {
 
 	$api_old_values = secupress_array_merge_intersect( $old_values, $def_values );
 
@@ -166,7 +166,7 @@ function __secupress_global_settings_callback( $value ) {
 
 	$response = wp_remote_get( $url, array( 'timeout' => 10 ) );
 
-	if ( $body = __secupress_global_settings_api_request_succeeded( $response, $new_values ) ) {
+	if ( $body = secupress_global_settings_api_request_succeeded( $response, $new_values ) ) {
 		// Success!
 		$new_values['consumer_key'] = sanitize_text_field( $body->data->user_key );
 		$new_values['site_is_pro']  = (int) ! empty( $body->data->site_is_pro );
@@ -199,7 +199,7 @@ function __secupress_global_settings_callback( $value ) {
  *
  * @return (mixed) The response body. False otherwise.
  */// ////.
-/*function __secupress_global_settings_api_request_succeeded( $response, &$new_values ) {
+/*function secupress_global_settings_api_request_succeeded( $response, &$new_values ) {
 
 	if ( is_wp_error( $response ) ) {
 		// The request couldn't be sent.

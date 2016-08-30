@@ -7,15 +7,15 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 // Scan callback.
 
-add_action( 'admin_post_secupress_scanner', '__secupress_scanit_ajax_post_cb' );
-add_action( 'wp_ajax_secupress_scanner',    '__secupress_scanit_ajax_post_cb' );
+add_action( 'admin_post_secupress_scanner', 'secupress_scanit_ajax_post_cb' );
+add_action( 'wp_ajax_secupress_scanner',    'secupress_scanit_ajax_post_cb' );
 /**
  * Used to scan a test in scanner page.
  * Prints a JSON or redirects the user.
  *
  * @since 1.0
  */
-function __secupress_scanit_ajax_post_cb() {
+function secupress_scanit_ajax_post_cb() {
 	if ( empty( $_GET['test'] ) ) {
 		secupress_admin_die();
 	}
@@ -36,15 +36,15 @@ function __secupress_scanit_ajax_post_cb() {
 
 // Fix callback.
 
-add_action( 'admin_post_secupress_fixit', '__secupress_fixit_ajax_post_cb' );
-add_action( 'wp_ajax_secupress_fixit',    '__secupress_fixit_ajax_post_cb' );
+add_action( 'admin_post_secupress_fixit', 'secupress_fixit_ajax_post_cb' );
+add_action( 'wp_ajax_secupress_fixit',    'secupress_fixit_ajax_post_cb' );
 /**
  * Used to automatically fix a test in scanner page.
  * Prints a JSON or redirects the user.
  *
  * @since 1.0
  */
-function __secupress_fixit_ajax_post_cb() {
+function secupress_fixit_ajax_post_cb() {
 	if ( empty( $_GET['test'] ) ) {
 		secupress_admin_die();
 	}
@@ -70,15 +70,15 @@ function __secupress_fixit_ajax_post_cb() {
 
 // Manual fix callback.
 
-add_action( 'admin_post_secupress_manual_fixit', '__secupress_manual_fixit_ajax_post_cb' );
-add_action( 'wp_ajax_secupress_manual_fixit',    '__secupress_manual_fixit_ajax_post_cb' );
+add_action( 'admin_post_secupress_manual_fixit', 'secupress_manual_fixit_ajax_post_cb' );
+add_action( 'wp_ajax_secupress_manual_fixit',    'secupress_manual_fixit_ajax_post_cb' );
 /**
  * Used to manually fix a test in scanner page.
  * Prints a JSON or redirects the user.
  *
  * @since 1.0
  */
-function __secupress_manual_fixit_ajax_post_cb() {
+function secupress_manual_fixit_ajax_post_cb() {
 	if ( empty( $_POST['test'] ) ) { // WPCS: CSRF ok.
 		secupress_admin_die();
 	}
@@ -104,13 +104,13 @@ function __secupress_manual_fixit_ajax_post_cb() {
 
 // Get all translated strings for the scans UI.
 
-add_action( 'wp_ajax_secupress-get-scan-counters', '__secupress_get_scan_counters_ajax_cb' );
+add_action( 'wp_ajax_secupress-get-scan-counters', 'secupress_get_scan_counters_ajax_cb' );
 /**
  * Used to get all the needed translated strings and counters needed after each single scan/one-click scan.
  *
  * @since 1.0
  */
-function __secupress_get_scan_counters_ajax_cb() {
+function secupress_get_scan_counters_ajax_cb() {
 	secupress_check_user_capability();
 	secupress_check_admin_referer( 'secupress-get-scan-counters' );
 
@@ -126,14 +126,14 @@ function __secupress_get_scan_counters_ajax_cb() {
 
 // Date of the last One-click scan.
 
-add_action( 'wp_ajax_secupress-update-oneclick-scan-date', '__secupress_update_oneclick_scan_date_ajax_cb' );
+add_action( 'wp_ajax_secupress-update-oneclick-scan-date', 'secupress_update_oneclick_scan_date_ajax_cb' );
 /**
  * Used to update the date of the last One-click scan.
  * Prints a JSON containing the HTML of the new line to insert in the page.
  *
  * @since 1.0
  */
-function __secupress_update_oneclick_scan_date_ajax_cb() {
+function secupress_update_oneclick_scan_date_ajax_cb() {
 	secupress_check_user_capability();
 	secupress_check_admin_referer( 'secupress-update-oneclick-scan-date' );
 
@@ -164,14 +164,14 @@ function __secupress_update_oneclick_scan_date_ajax_cb() {
 }
 
 
-add_action( 'admin_post_secupress-ban-ip', '__secupress_ban_ip_ajax_post_cb' );
-add_action( 'wp_ajax_secupress-ban-ip',    '__secupress_ban_ip_ajax_post_cb' );
+add_action( 'admin_post_secupress-ban-ip', 'secupress_ban_ip_ajax_post_cb' );
+add_action( 'wp_ajax_secupress-ban-ip',    'secupress_ban_ip_ajax_post_cb' );
 /**
  * Ban an IP address.
  *
  * @since 1.0
  */
-function __secupress_ban_ip_ajax_post_cb() {
+function secupress_ban_ip_ajax_post_cb() {
 	// Make all security tests.
 	secupress_check_admin_referer( 'secupress-ban-ip' );
 	secupress_check_user_capability();
@@ -236,14 +236,14 @@ function __secupress_ban_ip_ajax_post_cb() {
 }
 
 
-add_action( 'admin_post_secupress-unban-ip', '__secupress_unban_ip_ajax_post_cb' );
-add_action( 'wp_ajax_secupress-unban-ip',    '__secupress_unban_ip_ajax_post_cb' );
+add_action( 'admin_post_secupress-unban-ip', 'secupress_unban_ip_ajax_post_cb' );
+add_action( 'wp_ajax_secupress-unban-ip',    'secupress_unban_ip_ajax_post_cb' );
 /**
  * Unban an IP address.
  *
  * @since 1.0
  */
-function __secupress_unban_ip_ajax_post_cb() {
+function secupress_unban_ip_ajax_post_cb() {
 	// Make all security tests.
 	if ( empty( $_REQUEST['ip'] ) ) {
 		secupress_admin_send_message_die( array(
@@ -309,14 +309,14 @@ function __secupress_unban_ip_ajax_post_cb() {
 }
 
 
-add_action( 'admin_post_secupress-clear-ips', '__secupress_clear_ips_ajax_post_cb' );
-add_action( 'wp_ajax_secupress-clear-ips',    '__secupress_clear_ips_ajax_post_cb' );
+add_action( 'admin_post_secupress-clear-ips', 'secupress_clear_ips_ajax_post_cb' );
+add_action( 'wp_ajax_secupress-clear-ips',    'secupress_clear_ips_ajax_post_cb' );
 /**
  * Unban all IP addresses.
  *
  * @since 1.0
  */
-function __secupress_clear_ips_ajax_post_cb() {
+function secupress_clear_ips_ajax_post_cb() {
 	// Make all security tests.
 	secupress_check_admin_referer( 'secupress-clear-ips' );
 	secupress_check_user_capability();
@@ -344,13 +344,13 @@ function __secupress_clear_ips_ajax_post_cb() {
 }
 
 
-add_action( 'admin_post_secupress_reset_settings', '__secupress_admin_post_reset_settings_post_cb' );
+add_action( 'admin_post_secupress_reset_settings', 'secupress_admin_post_reset_settings_post_cb' );
 /**
  * Reset SecuPress settings or module settings.
  *
  * @since 1.0
  */
-function __secupress_admin_post_reset_settings_post_cb() {
+function secupress_admin_post_reset_settings_post_cb() {
 	if ( empty( $_GET['module'] ) ) {
 		secupress_admin_die();
 	}
@@ -366,13 +366,13 @@ function __secupress_admin_post_reset_settings_post_cb() {
 }
 
 
-add_action( 'admin_post_secupress_toggle_file_scan', '__secupress_toggle_file_scan_ajax_post_cb' );
+add_action( 'admin_post_secupress_toggle_file_scan', 'secupress_toggle_file_scan_ajax_post_cb' );
 /**
  * Set a transient to be read later to launch an async job.
  *
  * @since 1.0
  */
-function __secupress_toggle_file_scan_ajax_post_cb() {
+function secupress_toggle_file_scan_ajax_post_cb() {
 	if ( empty( $_GET['turn'] ) ) {
 		secupress_admin_die();
 	}
@@ -393,15 +393,15 @@ function __secupress_toggle_file_scan_ajax_post_cb() {
 }
 
 
-add_action( 'wp_ajax_secupress_recovery_email', '__secupress_recovery_email_ajax_post_cb' );
+add_action( 'wp_ajax_secupress_recovery_email', 'secupress_recovery_email_ajax_post_cb' );
 /**
  * Set the recovery email via notice, if possible
  *
  * @author Julio Potier
  * @since 1.0
  */
-function __secupress_recovery_email_ajax_post_cb() {
-	__secupress_callback_update_user_contactmethods( get_current_user_id() );
+function secupress_recovery_email_ajax_post_cb() {
+	secupress_callback_update_user_contactmethods( get_current_user_id() );
 	$user  = wp_get_current_user();
 	$dummy = new StdClass;
 	$dummy = secupress_user_profile_update_errors( $dummy, false, $user );

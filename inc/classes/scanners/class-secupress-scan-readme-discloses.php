@@ -117,7 +117,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-		$protected = static::_are_files_protected();
+		$protected = static::are_files_protected();
 
 		if ( is_null( $protected ) ) {
 			// "warning"
@@ -151,7 +151,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 	public function fix() {
 		global $is_apache, $is_nginx, $is_iis7;
 
-		$protected = static::_are_files_protected();
+		$protected = static::are_files_protected();
 
 		if ( is_null( $protected ) ) {
 			// "warning"
@@ -166,11 +166,11 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 		}
 
 		if ( $is_apache ) {
-			$this->_fix_apache();
+			$this->fix_apache();
 		} elseif ( $is_iis7 ) {
-			$this->_fix_iis7();
+			$this->fix_iis7();
 		} elseif ( $is_nginx ) {
-			$this->_fix_nginx();
+			$this->fix_nginx();
 		}
 
 		// "good"
@@ -185,7 +185,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 	 *
 	 * @since 1.0
 	 */
-	protected function _fix_apache() {
+	protected function fix_apache() {
 		global $wp_settings_errors;
 
 		secupress_activate_submodule( 'discloses', 'readmes' );
@@ -194,7 +194,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
 
 		if ( $last_error && 'general' === $last_error['setting'] && 'apache_manual_edit' === $last_error['code'] ) {
-			$rules = static::_get_rules_from_error( $last_error );
+			$rules = static::get_rules_from_error( $last_error );
 			// "cantfix"
 			$this->add_fix_message( 302, array( $rules ) );
 			array_pop( $wp_settings_errors );
@@ -211,7 +211,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 	 *
 	 * @since 1.0
 	 */
-	protected function _fix_iis7() {
+	protected function fix_iis7() {
 		global $wp_settings_errors;
 
 		secupress_activate_submodule( 'discloses', 'readmes' );
@@ -220,8 +220,8 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
 
 		if ( $last_error && 'general' === $last_error['setting'] && 'iis7_manual_edit' === $last_error['code'] ) {
-			$rules = static::_get_rules_from_error( $last_error );
-			$path  = static::_get_code_tag_from_error( $last_error, 'secupress-iis7-path' );
+			$rules = static::get_rules_from_error( $last_error );
+			$path  = static::get_code_tag_from_error( $last_error, 'secupress-iis7-path' );
 			// "cantfix"
 			$this->add_fix_message( 303, array( $path, $rules ) );
 			array_pop( $wp_settings_errors );
@@ -238,7 +238,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 	 *
 	 * @since 1.0
 	 */
-	protected function _fix_nginx() {
+	protected function fix_nginx() {
 		global $wp_settings_errors;
 
 		secupress_activate_submodule( 'discloses', 'readmes' );
@@ -248,7 +248,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 		$rules      = '<code>Error</code>';
 
 		if ( $last_error && 'general' === $last_error['setting'] && 'nginx_manual_edit' === $last_error['code'] ) {
-			$rules = static::_get_rules_from_error( $last_error );
+			$rules = static::get_rules_from_error( $last_error );
 			array_pop( $wp_settings_errors );
 		}
 
@@ -266,7 +266,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 	 *
 	 * @return (bool)
 	 */
-	protected static function _are_files_protected() {
+	protected static function are_files_protected() {
 		// Get all readme/changelog files.
 		$plugins = rtrim( secupress_get_plugins_path(), '\\/' );
 		$themes  = rtrim( secupress_get_themes_path(), '\\/' );

@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  *
  * @return (array) The sanitized and validated settings.
  */
-function __secupress_logs_settings_callback( $settings ) {
+function secupress_logs_settings_callback( $settings ) {
 	$modulenow = 'logs';
 	$settings  = $settings ? $settings : array();
 
@@ -44,13 +44,13 @@ function __secupress_logs_settings_callback( $settings ) {
 }
 
 
-add_action( 'admin_post_secupress_activate_action_logs', '__secupress_activate_action_logs' );
+add_action( 'admin_post_secupress_activate_action_logs', 'secupress_activate_action_logs' );
 /**
  * Activate or deactivate "action" Logs.
  *
  * @since 1.0
  */
-function __secupress_activate_action_logs() {
+function secupress_activate_action_logs() {
 	// Make all security tests.
 	secupress_check_admin_referer( 'secupress_activate_action_logs' );
 	secupress_check_user_capability();
@@ -65,13 +65,13 @@ function __secupress_activate_action_logs() {
 }
 
 
-add_action( 'admin_post_secupress_activate_404_logs', '__secupress_activate_404_logs' );
+add_action( 'admin_post_secupress_activate_404_logs', 'secupress_activate_404_logs' );
 /**
  * Activate or deactivate "404" Logs.
  *
  * @since 1.0
  */
-function __secupress_activate_404_logs() {
+function secupress_activate_404_logs() {
 	// Make all security tests.
 	secupress_check_admin_referer( 'secupress_activate_404_logs' );
 	secupress_check_user_capability();

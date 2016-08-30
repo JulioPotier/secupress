@@ -43,7 +43,7 @@ function secupress_limitloginattempts( $raw_user, $username ) {
 
 	if ( $user_attempts_left <= 3 ) {
 		add_filter( 'login_message', function( $message ) use ( $user_attempts_left ) {
-			return __secupress_limitloginattempts_error_message( $message, $user_attempts_left );
+			return secupress_limitloginattempts_error_message( $message, $user_attempts_left );
 		} );
 	}
 
@@ -61,6 +61,6 @@ function secupress_limitloginattempts( $raw_user, $username ) {
  *
  * @return (string)
  */
-function __secupress_limitloginattempts_error_message( $message, $user_attempts_left ) {
+function secupress_limitloginattempts_error_message( $message, $user_attempts_left ) {
 	return $message . '<p class="message">' . sprintf( _n( 'Login failed, <strong>%d</strong> attempt left.', 'Login failed, <strong>%d</strong> attempts left.', $user_attempts_left, 'secupress' ), $user_attempts_left ) . '</p><br>';
 }

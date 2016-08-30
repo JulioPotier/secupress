@@ -37,7 +37,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 		/**
 		 * The data needs to be preprocessed before being inserted in the database.
 		 */
-		$this->_pre_process_data();
+		$this->pre_process_data();
 	}
 
 
@@ -51,7 +51,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *
 	 * @since 1.0
 	 */
-	protected function _pre_process_data() {
+	protected function pre_process_data() {
 
 		/**
 		 * This filter allows not to log this Action.
@@ -71,7 +71,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 
 		// Pre-proccess (maybe).
 		$method_name = str_replace( array( '.', '-', '|' ), '_', $this->target );
-		$method_name = '_pre_process_' . $this->type . ( $this->subtype ? '_' . $this->subtype : '' ) . '_' . $method_name;
+		$method_name = 'pre_process_' . $this->type . ( $this->subtype ? '_' . $this->subtype : '' ) . '_' . $method_name;
 
 		if ( method_exists( $this, $method_name ) ) {
 			$this->data = (array) call_user_func_array( array( $this, $method_name ), $this->data );
@@ -101,7 +101,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 * @return (array) An array containing:
 	 *                 - (string) $activated A comma-separated list of newly activated plugins.
 	 */
-	protected function _pre_process_option_add_active_plugins( $option, $value ) {
+	protected function pre_process_option_add_active_plugins( $option, $value ) {
 		if ( empty( $value ) || ! is_array( $value ) ) {
 			return array();
 		}
@@ -131,7 +131,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *                 - (string) $activated   A comma-separated list of newly activated plugins.
 	 *                 - (string) $deactivated A comma-separated list of newly deactivated plugins.
 	 */
-	protected function _pre_process_option_update_active_plugins( $option, $value, $old_value ) {
+	protected function pre_process_option_update_active_plugins( $option, $value, $old_value ) {
 		$old_value   = is_array( $old_value ) ? $old_value : array();
 		$value       = is_array( $value )     ? $value     : array();
 		$activated   = array_diff( $value, $old_value );
@@ -170,7 +170,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 * @return (array) An array containing:
 	 *                 - (string) $activated A comma-separated list of newly activated plugins.
 	 */
-	protected function _pre_process_network_option_add_active_sitewide_plugins( $option, $value ) {
+	protected function pre_process_network_option_add_active_sitewide_plugins( $option, $value ) {
 		if ( empty( $value ) || ! is_array( $value ) ) {
 			return array();
 		}
@@ -200,7 +200,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *                 - (string) $activated   A comma-separated list of newly activated plugins.
 	 *                 - (string) $deactivated A comma-separated list of newly deactivated plugins.
 	 */
-	protected function _pre_process_network_option_update_active_sitewide_plugins( $option, $value, $old_value ) {
+	protected function pre_process_network_option_update_active_sitewide_plugins( $option, $value, $old_value ) {
 		$old_value   = is_array( $old_value ) ? $old_value : array();
 		$value       = is_array( $value )     ? $value     : array();
 		$activated   = array_diff( $value, $old_value );
@@ -242,7 +242,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *                 - (string) $module The "module".
 	 *                 - (array)  $server The `$_SERVER` superglobal.
 	 */
-	protected function _pre_process_action_secupress_block( $module, $ip ) {
+	protected function pre_process_action_secupress_block( $module, $ip ) {
 		$url    = wp_make_link_relative( secupress_get_current_url() );
 		$posted = ! empty( $_POST ) ? $_POST : _x( 'None', 'data', 'secupress' ); // WPCS: CSRF ok.
 		return array( 'url' => $url, 'ip' => $ip, 'module' => $module, 'server' => $_SERVER, '_post' => $posted );
@@ -260,11 +260,11 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 * @return (array) An array containing:
 	 *                 - (string) $user The user name followed by the user ID.
 	 */
-	protected function _pre_process_action_wp_login( $user_login, $user ) {
+	protected function pre_process_action_wp_login( $user_login, $user ) {
 		if ( ! user_can( $user, 'administrator' ) ) {
 			return array();
 		}
-		$user = static::_format_user_login( $user );
+		$user = static::format_user_login( $user );
 		return compact( 'user' );
 	}
 
@@ -281,9 +281,9 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *                 - (string) $user     The user name followed by the user ID.
 	 *                 - (string) $reassign The user to reassign posts and links to: the user name followed by the user ID.
 	 */
-	protected function _pre_process_action_delete_user( $id, $reassign ) {
-		$user     = static::_format_user_login( $id );
-		$reassign = null === $reassign ? static::_format_user_login( $reassign ) : __( 'Nobody', 'secupress' );
+	protected function pre_process_action_delete_user( $id, $reassign ) {
+		$user     = static::format_user_login( $id );
+		$reassign = null === $reassign ? static::format_user_login( $reassign ) : __( 'Nobody', 'secupress' );
 		return compact( 'user', 'reassign' );
 	}
 
@@ -301,8 +301,8 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *                 - (array)  $old  The old data.
 	 *                 - (array)  $new  The new data.
 	 */
-	protected function _pre_process_action_profile_update( $user_id, $old_user_data ) {
-		$user          = static::_format_user_login( $user_id );
+	protected function pre_process_action_profile_update( $user_id, $old_user_data ) {
+		$user          = static::format_user_login( $user_id );
 		$old_user_data = (array) $old_user_data;
 		$user_data     = (array) get_userdata( $user_id )->data;
 		$user_keys     = array_merge( $old_user_data, $user_data );
@@ -333,8 +333,8 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 * @return (array) An array containing:
 	 *                 - (string) $user The user name followed by the user ID.
 	 */
-	protected function _pre_process_action_user_register( $user_id ) {
-		$user = static::_format_user_login( $user_id );
+	protected function pre_process_action_user_register( $user_id ) {
+		$user = static::format_user_login( $user_id );
 		return compact( 'user' );
 	}
 
@@ -355,11 +355,11 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *                 - (string) $meta_key   The meta key.
 	 *                 - (mixed)  $meta_value The meta value.
 	 */
-	protected function _pre_process_action_added_user_meta( $mid, $object_id, $meta_key, $meta_value ) {
+	protected function pre_process_action_added_user_meta( $mid, $object_id, $meta_key, $meta_value ) {
 		if ( 'session_tokens' === $meta_key ) {
 			return array();
 		}
-		$user = static::_format_user_login( $object_id );
+		$user = static::format_user_login( $object_id );
 		return compact( 'user', 'meta_key', 'meta_value' );
 	}
 
@@ -380,11 +380,11 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *                 - (string) $meta_key   The meta key.
 	 *                 - (mixed)  $meta_value The meta value.
 	 */
-	protected function _pre_process_action_updated_user_meta( $meta_id, $object_id, $meta_key, $meta_value ) {
+	protected function pre_process_action_updated_user_meta( $meta_id, $object_id, $meta_key, $meta_value ) {
 		if ( 'session_tokens' === $meta_key ) {
 			return array();
 		}
-		$user = static::_format_user_login( $object_id );
+		$user = static::format_user_login( $object_id );
 		return compact( 'user', 'meta_key', 'meta_value' );
 	}
 
@@ -405,11 +405,11 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *                 - (string) $meta_key   The meta key.
 	 *                 - (mixed)  $meta_value The meta value.
 	 */
-	protected function _pre_process_action_deleted_user_meta( $meta_ids, $object_id, $meta_key, $meta_value ) {
+	protected function pre_process_action_deleted_user_meta( $meta_ids, $object_id, $meta_key, $meta_value ) {
 		if ( 'session_tokens' === $meta_key ) {
 			return array();
 		}
-		$user = $object_id ? static::_format_user_login( $object_id ) : __( 'All Users' ); // WP i18n.
+		$user = $object_id ? static::format_user_login( $object_id ) : __( 'All Users' ); // WP i18n.
 		return compact( 'user', 'meta_key', 'meta_value' );
 	}
 
@@ -426,10 +426,10 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *                 - (string) $blog The blog name followed by the blog ID.
 	 *                 - (string) $user The user name followed by the user ID.
 	 */
-	protected function _pre_process_action_wpmu_new_blog( $blog_id, $user_id ) {
+	protected function pre_process_action_wpmu_new_blog( $blog_id, $user_id ) {
 		switch_to_blog( $blog_id );
 		$blog = get_option( 'blogname' ) . ' (' . $blog_id . ')';
-		$user = static::_format_user_login( $user_id );
+		$user = static::format_user_login( $user_id );
 		restore_current_blog();
 
 		return compact( 'blog', 'user' );
@@ -446,7 +446,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 * @return (array) An array containing:
 	 *                 - (string) $blog The blog name followed by the blog ID.
 	 */
-	protected function _pre_process_action_delete_blog( $blog_id ) {
+	protected function pre_process_action_delete_blog( $blog_id ) {
 		$blog = get_option( 'blogname' ) . ' (' . $blog_id . ')';
 		return compact( 'blog' );
 	}
@@ -464,7 +464,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *                 - (string) $to      The "To" addresses.
 	 *                 - (string) $subject The Subject (no kidding).
 	 */
-	protected function _pre_process_action_phpmailer_init( $phpmailer ) {
+	protected function pre_process_action_phpmailer_init( $phpmailer ) {
 		$from    = $phpmailer->FromName . '[' . $phpmailer->From . ']';
 		$to      = implode( ', ', array_keys( $phpmailer->getAllRecipientAddresses() ) );
 		$subject = $phpmailer->Subject;
@@ -488,7 +488,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *                 - (array)        $args     The request arguments.
 	 *                 - (array|object) $response Array containing 'headers', 'body', 'response', 'cookies', 'filename'. A WP_Error instance upon error.
 	 */
-	protected function _pre_process_action_http_api_debug( $response, $context, $class, $args, $url ) {
+	protected function pre_process_action_http_api_debug( $response, $context, $class, $args, $url ) {
 		if ( 'response' !== $context ) {
 			return array();
 		}
@@ -503,25 +503,25 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *
 	 * @since 1.0
 	 */
-	protected function _set_title() {
+	protected function set_title() {
 		switch ( $this->type ) {
 			case 'option':
-				$this->_set_option_title();
+				$this->set_option_title();
 				break;
 			case 'network_option':
-				$this->_set_network_option_title();
+				$this->set_network_option_title();
 				break;
 			case 'filter':
-				$this->_set_filter_title();
+				$this->set_filter_title();
 				break;
 			case 'action':
-				$this->_set_action_title();
+				$this->set_action_title();
 				break;
 			default:
 				return;
 		}
 
-		parent::_set_title();
+		parent::set_title();
 	}
 
 
@@ -530,7 +530,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *
 	 * @since 1.0
 	 */
-	protected function _set_option_title() {
+	protected function set_option_title() {
 		if ( 'active_plugins' === $this->target ) {
 			$has_deactivated = ! empty( $this->data['deactivated'] ) && '<em>[' . __( 'empty string', 'secupress' ) . ']</em>' !== $this->data['deactivated'];
 
@@ -570,7 +570,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *
 	 * @since 1.0
 	 */
-	protected function _set_network_option_title() {
+	protected function set_network_option_title() {
 		if ( 'active_sitewide_plugins' === $this->target ) {
 			$has_deactivated = ! empty( $this->data['deactivated'] ) && '<em>[' . __( 'empty string', 'secupress' ) . ']</em>' !== $this->data['deactivated'];
 
@@ -610,7 +610,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *
 	 * @since 1.0
 	 */
-	protected function _set_filter_title() {
+	protected function set_filter_title() {
 		$titles = array(
 			'wpmu_validate_user_signup' => __( 'New user added (or not).', 'secupress' ),
 		);
@@ -624,7 +624,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *
 	 * @since 1.0
 	 */
-	protected function _set_action_title() {
+	protected function set_action_title() {
 		$titles = array(
 			/** Translators: 1 is the plugin name, 2 is an URL. */
 			'secupress.block'         => sprintf( __( '%1$s prevented a request at %2$s', 'secupress' ), '<b>' . SECUPRESS_PLUGIN_NAME . '</b>', '%1$s' ),
@@ -654,26 +654,26 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *
 	 * @since 1.0
 	 */
-	protected function _set_message() {
+	protected function set_message() {
 		// Set the raw message.
 		switch ( $this->type ) {
 			case 'option':
-				$this->_set_option_message();
+				$this->set_option_message();
 				break;
 			case 'network_option':
-				$this->_set_network_option_message();
+				$this->set_network_option_message();
 				break;
 			case 'filter':
-				$this->_set_filter_message();
+				$this->set_filter_message();
 				break;
 			case 'action':
-				$this->_set_action_message();
+				$this->set_action_message();
 				break;
 			default:
 				return;
 		}
 
-		parent::_set_message();
+		parent::set_message();
 	}
 
 
@@ -682,7 +682,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *
 	 * @since 1.0
 	 */
-	protected function _set_option_message() {
+	protected function set_option_message() {
 		if ( 'active_plugins' === $this->target ) {
 			$has_deactivated = ! empty( $this->data['deactivated'] ) && '<em>[' . __( 'empty string', 'secupress' ) . ']</em>' !== $this->data['deactivated'];
 
@@ -722,7 +722,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *
 	 * @since 1.0
 	 */
-	protected function _set_network_option_message() {
+	protected function set_network_option_message() {
 		if ( 'active_sitewide_plugins' === $this->target ) {
 			$has_deactivated = ! empty( $this->data['deactivated'] ) && '<em>[' . __( 'empty string', 'secupress' ) . ']</em>' !== $this->data['deactivated'];
 
@@ -762,7 +762,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *
 	 * @since 1.0
 	 */
-	protected function _set_filter_message() {
+	protected function set_filter_message() {
 		$messages = array(
 			'wpmu_validate_user_signup' => __( 'New user added (or not) using the following data: %s', 'secupress' ),
 		);
@@ -776,7 +776,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *
 	 * @since 1.0
 	 */
-	protected function _set_action_message() {
+	protected function set_action_message() {
 		$messages = array(
 			/** Translators: 1 is the plugin name, 2 is an URL, 3 is an IP address, 4 is an identifier, 5 and 6 are some code. */
 			'secupress.block'         => sprintf( __( '%1$s prevented a request at %2$s from the IP %3$s. Block ID: %4$s. The server configuration at the moment: %5$s Data posted: %6$s', 'secupress' ), '<b>' . SECUPRESS_PLUGIN_NAME . '</b>', '%1$s', '%2$s', '%3$s', '%4$s', '%5$s' ),
@@ -806,19 +806,19 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *
 	 * @since 1.0
 	 */
-	protected function _set_criticity() {
+	protected function set_criticity() {
 		switch ( $this->type ) {
 			case 'option':
-				$this->_set_option_criticity();
+				$this->set_option_criticity();
 				break;
 			case 'network_option':
-				$this->_set_network_option_criticity();
+				$this->set_network_option_criticity();
 				break;
 			case 'filter':
-				$this->_set_filter_criticity();
+				$this->set_filter_criticity();
 				break;
 			case 'action':
-				$this->_set_action_criticity();
+				$this->set_action_criticity();
 				break;
 		}
 	}
@@ -829,7 +829,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *
 	 * @since 1.0
 	 */
-	protected function _set_option_criticity() {
+	protected function set_option_criticity() {
 		switch ( $this->target ) {
 			case 'default_role':
 				$this->critic = 'high';
@@ -845,7 +845,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *
 	 * @since 1.0
 	 */
-	protected function _set_network_option_criticity() {
+	protected function set_network_option_criticity() {
 		$this->critic = 'normal';
 	}
 
@@ -855,7 +855,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *
 	 * @since 1.0
 	 */
-	protected function _set_filter_criticity() {
+	protected function set_filter_criticity() {
 		$this->critic = 'normal';
 	}
 
@@ -865,7 +865,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *
 	 * @since 1.0
 	 */
-	protected function _set_action_criticity() {
+	protected function set_action_criticity() {
 		switch ( $this->target ) {
 			case 'secupress.block':
 				$this->critic = 'high';
@@ -887,7 +887,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *
 	 * @return (string) This user login followed by his ID.
 	 */
-	protected static function _format_user_login( $user_id ) {
+	protected static function format_user_login( $user_id ) {
 		if ( $user_id && is_numeric( $user_id ) ) {
 			$user_id = (int) $user_id;
 			$user    = get_userdata( $user_id );

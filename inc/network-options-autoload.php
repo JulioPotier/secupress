@@ -141,7 +141,7 @@ function secupress_load_plugins_network_options() {
 	 *
 	 * @param (array) $option_names An array of network option names.
 	 */
-	$option_names = apply_filters( '_secupress.options.load_plugins_network_options', $option_names );
+	$option_names = apply_filters( 'secupress.options.load_plugins_network_options', $option_names );
 
 	secupress_load_network_options( $option_names );
 }
@@ -201,7 +201,7 @@ function secupress_load_user_network_options( $cookie_elements, $user ) {
 	 * @param (object) $user         WP_User object.
 	 * @param (bool)   $user_can     Tells if the current user has the SecuPress capability.
 	 */
-	$option_names = apply_filters( '_secupress.options.load_user_network_options', $option_names, $user, $user_can );
+	$option_names = apply_filters( 'secupress.options.load_user_network_options', $option_names, $user, $user_can );
 
 	secupress_load_network_options( $option_names );
 }

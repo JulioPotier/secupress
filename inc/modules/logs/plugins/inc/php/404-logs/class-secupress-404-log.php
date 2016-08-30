@@ -46,10 +46,10 @@ class SecuPress_404_Log extends SecuPress_Log {
 	 *
 	 * @since 1.0
 	 */
-	protected function _set_title() {
+	protected function set_title() {
 		$this->title = __( 'Error 404 for %1$s', 'secupress' );
 
-		parent::_set_title();
+		parent::set_title();
 	}
 
 
@@ -60,11 +60,11 @@ class SecuPress_404_Log extends SecuPress_Log {
 	 *
 	 * @since 1.0
 	 */
-	protected function _set_message() {
+	protected function set_message() {
 		$this->message  = __( 'Error 404 for %1$s', 'secupress' ) . '<br/>';
 		$this->message .= sprintf( __( '%s: ', 'secupress' ), '<code>$_GET</code>' ) . '%2$s';
 		$this->message .= sprintf( __( '%s: ', 'secupress' ), '<code>$_POST</code>' ) . '%3$s';
 
-		parent::_set_message();
+		parent::set_message();
 	}
 }

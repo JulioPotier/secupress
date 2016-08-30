@@ -1113,7 +1113,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 *
 	 * @return (string) The `<pre/>` tag and its content, or `<code>Error</code>` if no `<pre/>` tag is found.
 	 */
-	final protected static function _get_rules_from_error( $error ) {
+	final protected static function get_rules_from_error( $error ) {
 		$rules = '<code>Error</code>';
 
 		if ( preg_match( '@<pre>.+</pre>@ms', $error['message'], $matches ) ) {
@@ -1135,7 +1135,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 *
 	 * @return (string) The `<code/>` tag and its content, or an empty string if no `<code/>` tag is found.
 	 */
-	final protected static function _get_code_tag_from_error( $error, $class = '' ) {
+	final protected static function get_code_tag_from_error( $error, $class = '' ) {
 		$class = $class ? ' class="' . $class . '"' : '';
 		$tag   = '';
 
@@ -1155,7 +1155,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 *
 	 * @return (bool) True if our network options contain all blog options, or if it's not a multisite. False otherwise.
 	 */
-	final protected static function _are_centralized_blog_options_filled() {
+	final protected static function are_centralized_blog_options_filled() {
 		if ( ! is_multisite() ) {
 			return true;
 		}

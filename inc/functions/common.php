@@ -933,7 +933,7 @@ function secupress_get_scanner_pagination() {
 	} else {
 		$step = (int) $_GET['step'];
 		if ( $step > 4 ) {
-			__secupress_is_jarvis();
+			secupress_is_jarvis();
 		}
 	}
 

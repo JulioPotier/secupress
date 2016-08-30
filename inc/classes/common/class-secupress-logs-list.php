@@ -61,7 +61,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	protected function _init() {
-		$log_types = SecuPress_Logs::_get_log_types();
+		$log_types = SecuPress_Logs::get_log_types();
 
 		// Get the Log type.
 		$this->log_type      = ! empty( $_GET['tab'] ) ? $_GET['tab'] : '';
@@ -72,7 +72,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 		$this->logs_instance = $logs_classname::get_instance();
 
 		// Get the Log class.
-		$this->log_classname = $logs_classname::_maybe_include_log_class();
+		$this->log_classname = $logs_classname::maybe_include_log_class();
 
 		// Get the Post type.
 		$this->post_type     = $log_types[ $this->log_type ]['post_type'];
@@ -86,7 +86,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 	 *
 	 * @since 1.0
 	 */
-	public function _prepare_list() {
+	public function prepare_list() {
 		global $wp_query, $wp_list_table;
 
 		secupress_require_class( 'Logs', 'List_Table' );
@@ -106,7 +106,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 			$this->current_log_id = $log_classname::log_exists( $_GET['log'], $this->log_type );
 
 			if ( ! $this->current_log_id ) {
-				$sendback = $this->_paged_page_url();
+				$sendback = $this->paged_page_url();
 				wp_redirect( esc_url_raw( $sendback ) );
 				exit();
 			}
@@ -135,13 +135,13 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 	 *
 	 * @since 1.0
 	 */
-	public function _display_list() {
+	public function display_list() {
 		global $wp_list_table;
 		?>
 		<div class="wrap">
 			<?php
 			// The page title.
-			$log_types = SecuPress_Logs::_get_log_types();
+			$log_types = SecuPress_Logs::get_log_types();
 			$title     = get_post_type_object( $log_types[ $this->log_type ]['post_type'] )->label;
 
 			secupress_admin_heading( $title );
@@ -157,7 +157,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 				settings_errors();
 
 				// Maybe display a Log infos.
-				$this->_display_current_log();
+				$this->display_current_log();
 				?>
 
 				<div class="secupress-logs-list">
@@ -181,11 +181,11 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 	 *
 	 * @since 1.0
 	 */
-	public function _screen_title_or_tabs() {
+	public function screen_title_or_tabs() {
 		global $title, $wp_list_table;
 
 		$title_tag = secupress_wp_version_is( '4.3-alpha' ) ? 'h1' : 'h2';
-		$log_types = SecuPress_Logs::_get_log_types();
+		$log_types = SecuPress_Logs::get_log_types();
 
 		// No tabs, somebody messed it up. Fallback.
 		if ( ! $log_types || ! is_array( $log_types ) ) {
@@ -223,10 +223,10 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 	 *
 	 * @return True if a Log is displayed. False otherwize.
 	 */
-	protected function _display_current_log() {
+	protected function display_current_log() {
 		global $avail_post_stati;
 
-		$log_types      = SecuPress_Logs::_get_log_types();
+		$log_types      = SecuPress_Logs::get_log_types();
 		$has_tabs_class = count( $log_types ) > 1 ? ' secupress-has-log-tabs' : ' secupress-has-no-log-tabs';
 
 		if ( ! $this->current_log_id ) {
@@ -242,8 +242,8 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 			return false;
 		}
 
-		$page_url              = $this->_page_url();
-		$paged_page_url        = $this->_paged_page_url();
+		$page_url              = $this->page_url();
+		$paged_page_url        = $this->paged_page_url();
 		$user_raw              = $log->get_user( true );
 		$delete_url            = $this->logs_instance->delete_log_url( $this->current_log_id, $page_url );
 		$delete_by_ip_url      = $this->logs_instance->delete_logs_by_ip_url( $user_raw->user_ip, $page_url );
@@ -257,7 +257,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 		}
 
 		// Add a class to the current Log row.
-		add_filter( 'post_class', array( $this, '_add_current_log_class' ), 10, 3 );
+		add_filter( 'post_class', array( $this, 'add_current_log_class' ), 10, 3 );
 		?>
 		<div class="secupress-log-content<?php echo $has_tabs_class; ?>" data-logid="<?php echo $this->current_log_id; ?>">
 			<div class="secupress-log-content-header secupress-section-primary">
@@ -332,7 +332,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 	 *
 	 * @return (array)
 	 */
-	public function _add_current_log_class( $classes, $class, $post_id ) {
+	public function add_current_log_class( $classes, $class, $post_id ) {
 		if ( $post_id === $this->current_log_id ) {
 			$classes[] = 'current-log';
 		}
@@ -349,9 +349,9 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 	 *
 	 * @return (string)
 	 */
-	protected function _page_url() {
+	protected function page_url() {
 		global $wp_list_table;
-		return $wp_list_table->_page_url();
+		return $wp_list_table->page_url();
 	}
 
 
@@ -362,8 +362,8 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 	 *
 	 * @return (string)
 	 */
-	protected function _paged_page_url() {
+	protected function paged_page_url() {
 		global $wp_list_table;
-		return $wp_list_table->_paged_page_url();
+		return $wp_list_table->paged_page_url();
 	}
 }

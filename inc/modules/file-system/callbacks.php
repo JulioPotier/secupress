@@ -5,14 +5,14 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /* MALWARE SCANNER ============================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-add_action( 'wp_ajax_secupress_delete_scanned_files',    '__secupress_delete_scanned_files_ajax_post_cb' );
-add_action( 'admin_post_secupress_delete_scanned_files', '__secupress_delete_scanned_files_ajax_post_cb' );
+add_action( 'wp_ajax_secupress_delete_scanned_files',    'secupress_delete_scanned_files_ajax_post_cb' );
+add_action( 'admin_post_secupress_delete_scanned_files', 'secupress_delete_scanned_files_ajax_post_cb' );
 /**
  * Will handle the deletion for non core WordPress files
  *
  * @since 1.0
  */
-function __secupress_delete_scanned_files_ajax_post_cb() {
+function secupress_delete_scanned_files_ajax_post_cb() {
 	global $wp_version;
 
 	secupress_check_user_capability();
@@ -71,14 +71,14 @@ function __secupress_delete_scanned_files_ajax_post_cb() {
 }
 
 
-add_action( 'wp_ajax_secupress_diff_file',    '__secupress_diff_file_ajax_post_cb' );
-add_action( 'admin_post_secupress_diff_file', '__secupress_diff_file_ajax_post_cb' );
+add_action( 'wp_ajax_secupress_diff_file',    'secupress_diff_file_ajax_post_cb' );
+add_action( 'admin_post_secupress_diff_file', 'secupress_diff_file_ajax_post_cb' );
 /**
  * Will display the differences between 2 files from WP Core, using WP core classes
  *
  * @since 1.0
  */
-function __secupress_diff_file_ajax_post_cb() {
+function secupress_diff_file_ajax_post_cb() {
 	global $wp_version;
 
 	if ( ! isset( $_GET['file'] ) ) {
@@ -106,14 +106,14 @@ function __secupress_diff_file_ajax_post_cb() {
 }
 
 
-add_action( 'wp_ajax_secupress_recover_diff_files',    '__secupress_recover_diff_files_ajax_post_cb' );
-add_action( 'admin_post_secupress_recover_diff_files', '__secupress_recover_diff_files_ajax_post_cb' );
+add_action( 'wp_ajax_secupress_recover_diff_files',    'secupress_recover_diff_files_ajax_post_cb' );
+add_action( 'admin_post_secupress_recover_diff_files', 'secupress_recover_diff_files_ajax_post_cb' );
 /**
  * Will download WP Core files that are different from the original
  *
  * @since 1.0
  */
-function __secupress_recover_diff_files_ajax_post_cb() {
+function secupress_recover_diff_files_ajax_post_cb() {
 	global $wp_version; // //// Async.
 
 	secupress_check_user_capability();
@@ -146,14 +146,14 @@ function __secupress_recover_diff_files_ajax_post_cb() {
 }
 
 
-add_action( 'wp_ajax_secupress_recover_missing_files',    '__secupress_recover_missing_files_ajax_post_cb' );
-add_action( 'admin_post_secupress_recover_missing_files', '__secupress_recover_missing_files_ajax_post_cb' );
+add_action( 'wp_ajax_secupress_recover_missing_files',    'secupress_recover_missing_files_ajax_post_cb' );
+add_action( 'admin_post_secupress_recover_missing_files', 'secupress_recover_missing_files_ajax_post_cb' );
 /**
  * Will download missing files from WP Core
  *
  * @since 1.0
  */
-function __secupress_recover_missing_files_ajax_post_cb() {
+function secupress_recover_missing_files_ajax_post_cb() {
 	global $wp_version; // //// Async.
 
 	secupress_check_user_capability();
@@ -189,14 +189,14 @@ function __secupress_recover_missing_files_ajax_post_cb() {
 }
 
 
-add_action( 'wp_ajax_secupress_old_files',    '__secupress_old_files_ajax_post_cb' );
-add_action( 'admin_post_secupress_old_files', '__secupress_old_files_ajax_post_cb' );
+add_action( 'wp_ajax_secupress_old_files',    'secupress_old_files_ajax_post_cb' );
+add_action( 'admin_post_secupress_old_files', 'secupress_old_files_ajax_post_cb' );
 /**
  * Will delete old WP core files still present in this installation
  *
  * @since 1.0
  */
-function __secupress_old_files_ajax_post_cb() {
+function secupress_old_files_ajax_post_cb() {
 	global $wp_version, $_old_files;
 
 	secupress_check_user_capability();
@@ -245,7 +245,7 @@ function __secupress_old_files_ajax_post_cb() {
  *
  * @return (array) The sanitized and validated settings.
  */
-function __secupress_file_system_settings_callback( $settings ) {
+function secupress_file_system_settings_callback( $settings ) {
 	$modulenow = 'file-system';
 	$settings  = $settings ? $settings : array();
 	$activate  = secupress_get_submodule_activations( $modulenow );

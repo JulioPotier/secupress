@@ -98,7 +98,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 
 		// Set the infos we need.
 		$post_type              = $this->screen->post_type;
-		$this->log_types        = SecuPress_Logs::_get_log_types();
+		$this->log_types        = SecuPress_Logs::get_log_types();
 		$this->default_log_type = key( $this->log_types );
 
 		// Find the name of the class that handle this type of logs.
@@ -116,7 +116,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 
 		// Get the name of the class that handle this type of log.
 		$logs_classname      = $this->logs_classname;
-		$this->log_classname = $logs_classname::_maybe_include_log_class();
+		$this->log_classname = $logs_classname::maybe_include_log_class();
 
 		// Set some globals.
 		$mode = 'list';
@@ -129,7 +129,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 		$avail_post_stati = get_available_post_statuses( $post_type );
 
 		// Get posts.
-		$this->_query();
+		$this->query();
 
 		if ( $wp_query->found_posts || $this->get_pagenum() === 1 ) {
 			$total_items = $wp_query->found_posts;
@@ -155,7 +155,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 	 *
 	 * @since 1.0
 	 */
-	protected function _query() {
+	protected function query() {
 		global $avail_post_stati;
 
 		// Prepare the query args.
@@ -167,7 +167,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 		 *
 		 * @param (array) $args An array containing at least the post type.
 		 */
-		$args = apply_filters( '_secupress.logs.logs_query_args', $args );
+		$args = apply_filters( 'secupress.logs.logs_query_args', $args );
 
 		// Criticity - Post Status.
 		if ( ! empty( $_GET['critic'] ) && in_array( $_GET['critic'], $avail_post_stati, true ) ) {
@@ -231,7 +231,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 		}
 
 		if ( $filter_request ) {
-			add_action( 'parse_request', array( $this, '_filter_request' ) );
+			add_action( 'parse_request', array( $this, 'filter_request' ) );
 		}
 
 		/** This filter is documented in wp-admin/includes/post.php */
@@ -252,7 +252,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 	 *
 	 * @param (object) $wp `WP` object, passed by reference.
 	 */
-	public function _filter_request( $wp ) {
+	public function filter_request( $wp ) {
 		$wp->query_vars['meta_query'] = isset( $wp->query_vars['meta_query'] ) && is_array( $wp->query_vars['meta_query'] ) ? $wp->query_vars['meta_query'] : array();
 
 		// User IP.
@@ -336,7 +336,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 	 * @return (string) The formatted link string.
 	 */
 	protected function get_edit_link( $args, $label, $class = '' ) {
-		$url = add_query_arg( $args, $this->_page_url() );
+		$url = add_query_arg( $args, $this->page_url() );
 
 		$class_html = '';
 		if ( ! empty( $class ) ) {
@@ -434,7 +434,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 
 		if ( 'top' === $which ) {
 			$logs_list = SecuPress_Logs_List::get_instance();
-			$logs_list->_screen_title_or_tabs();
+			$logs_list->screen_title_or_tabs();
 		}
 		?>
 		<div class="secupress-quick-actions alignright actions">
@@ -443,7 +443,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 				$logs_classname = $this->logs_classname;
 
 				// "Downlad All" button.
-				$href = $logs_classname::get_instance()->download_logs_url( $this->_paged_page_url() );
+				$href = $logs_classname::get_instance()->download_logs_url( $this->paged_page_url() );
 				?>
 				<a id="download_all" class="secupress-button secupress-button-primary secupress-button-mini apply secupress-download-logs" href="<?php echo esc_url( $href ); ?>">
 					<span class="icon">
@@ -457,7 +457,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 
 				<?php
 				// "Delete All" button.
-				$href = $logs_classname::get_instance()->delete_logs_url( $this->_paged_page_url() );
+				$href = $logs_classname::get_instance()->delete_logs_url( $this->paged_page_url() );
 				?>
 				<a id="delete_all" class="secupress-button secupress-button-secondary secupress-button-mini apply secupress-clear-logs" href="<?php echo esc_url( $href ); ?>">
 					<span class="icon">
@@ -490,9 +490,9 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 			wp_nonce_field( 'secupress-bulk-' . $this->log_type . '-logs', '_wpnonce', false );
 
 			// Use a custom referer input, we don't want superfuous paramaters in the URL.
-			echo '<input type="hidden" name="_wp_http_referer" value="'. esc_attr( $this->_paged_page_url() ) . '" />';
+			echo '<input type="hidden" name="_wp_http_referer" value="'. esc_attr( $this->paged_page_url() ) . '" />';
 
-			$args = parse_url( $this->_paged_page_url(), PHP_URL_QUERY );
+			$args = parse_url( $this->paged_page_url(), PHP_URL_QUERY );
 
 			if ( $args ) {
 				// Display all other parameters ("page" is the most important).
@@ -643,6 +643,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 		<?php
 	}
 
+
 	/**
 	 * Handles the title column output.
 	 *
@@ -679,7 +680,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 		if ( ! empty( $_GET['critic'] ) && in_array( $_GET['critic'], $avail_post_stati, true ) ) {
 			$view_href['critic'] = $_GET['critic'];
 		}
-		$view_href      = add_query_arg( $view_href, $this->_paged_page_url() );
+		$view_href      = add_query_arg( $view_href, $this->paged_page_url() );
 
 		echo '<a class="secupress-view-log" href="' . esc_url( $view_href ) . '" title="' . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), strip_tags( $title ) ) ) . '">'; // WP i18n.
 			echo $title;
@@ -787,12 +788,12 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 		}
 
 		$logs_classname = $this->logs_classname;
-		$delete_href    = $logs_classname::get_instance()->delete_log_url( $post->ID, $this->_page_url() );
+		$delete_href    = $logs_classname::get_instance()->delete_log_url( $post->ID, $this->page_url() );
 		$view_href      = array( 'log' => $post->ID );
 		if ( ! empty( $_GET['critic'] ) && in_array( $_GET['critic'], $avail_post_stati, true ) ) {
 			$view_href['critic'] = $_GET['critic'];
 		}
-		$view_href      = add_query_arg( $view_href, $this->_paged_page_url() );
+		$view_href      = add_query_arg( $view_href, $this->paged_page_url() );
 
 		$actions = array(
 			'delete' => '<a class="secupress-delete-log submitdelete" href="' . esc_url( $delete_href ) . '" title="' . esc_attr__( 'Delete this item permanently' ) . '">' . __( 'Delete Permanently' ) . '</a> <span class="spinner secupress-inline-spinner"></span>',
@@ -815,7 +816,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 	 *
 	 * @return (string)
 	 */
-	public function _page_url( $log_type = false ) {
+	public function page_url( $log_type = false ) {
 		$href = secupress_admin_url( 'logs' );
 
 		if ( ! $log_type ) {
@@ -837,8 +838,8 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 	 *
 	 * @return (string)
 	 */
-	public function _paged_page_url() {
-		$page_url = $this->_page_url();
+	public function paged_page_url() {
+		$page_url = $this->page_url();
 		$pagenum  = $this->get_pagenum();
 
 		if ( $pagenum > 1 ) {

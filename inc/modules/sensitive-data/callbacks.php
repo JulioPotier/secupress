@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
  *
  * @return (array) The sanitized and validated settings.
  */
-function __secupress_sensitive_data_settings_callback( $settings ) {
+function secupress_sensitive_data_settings_callback( $settings ) {
 	$modulenow = 'sensitive-data';
 	$activate  = secupress_get_submodule_activations( $modulenow );
 	$settings  = $settings ? $settings : array();
@@ -30,13 +30,13 @@ function __secupress_sensitive_data_settings_callback( $settings ) {
 	 */
 
 	// Pages Protection.
-	__secupress_pages_protection_settings_callback( $modulenow, $activate );
+	secupress_pages_protection_settings_callback( $modulenow, $activate );
 
 	// Content Protection.
-	__secupress_content_protection_settings_callback( $modulenow, $activate );
+	secupress_content_protection_settings_callback( $modulenow, $activate );
 
 	// WordPress Endpoints.
-	__secupress_wp_endpoints_settings_callback( $modulenow, $settings, $activate );
+	secupress_wp_endpoints_settings_callback( $modulenow, $settings, $activate );
 
 	return $settings;
 }
@@ -50,7 +50,7 @@ function __secupress_sensitive_data_settings_callback( $settings ) {
  * @param (string)     $modulenow Current module.
  * @param (bool|array) $activate  Used to (de)activate plugins.
  */
-function __secupress_pages_protection_settings_callback( $modulenow, $activate ) {
+function secupress_pages_protection_settings_callback( $modulenow, $activate ) {
 	if ( false === $activate ) {
 		return;
 	}
@@ -74,7 +74,7 @@ function __secupress_pages_protection_settings_callback( $modulenow, $activate )
  * @param (string)     $modulenow Current module.
  * @param (bool|array) $activate  Used to (de)activate plugins.
  */
-function __secupress_content_protection_settings_callback( $modulenow, $activate ) {
+function secupress_content_protection_settings_callback( $modulenow, $activate ) {
 	if ( false === $activate ) {
 		return;
 	}
@@ -94,7 +94,7 @@ function __secupress_content_protection_settings_callback( $modulenow, $activate
  * @param (array)      $settings  The module settings, passed by reference.
  * @param (bool|array) $activate  Used to (de)activate plugins.
  */
-function __secupress_wp_endpoints_settings_callback( $modulenow, &$settings, $activate ) {
+function secupress_wp_endpoints_settings_callback( $modulenow, &$settings, $activate ) {
 	// Settings.
 	if ( ! empty( $settings['wp-endpoints_xmlrpc'] ) && is_array( $settings['wp-endpoints_xmlrpc'] ) ) {
 		$xmlrpc = array(

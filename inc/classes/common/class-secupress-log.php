@@ -125,7 +125,7 @@ class SecuPress_Log {
 	public function __construct( $args ) {
 		if ( ! is_array( $args ) ) {
 			// If it's a Post, convert it in an adequate array.
-			$args = static::_post_to_args( $args );
+			$args = static::post_to_args( $args );
 		}
 
 		$args = array_merge( array(
@@ -140,7 +140,7 @@ class SecuPress_Log {
 		), $args );
 
 		// Extract the subtype from the type.
-		$args['type'] = static::_split_subtype( $args['type'] );
+		$args['type'] = static::split_subtype( $args['type'] );
 
 		$this->time       = esc_html( $args['time'] );
 		$this->order      = (int) $args['order'];
@@ -156,7 +156,7 @@ class SecuPress_Log {
 			$this->critic = esc_html( $args['critic'] );
 		} else {
 			// Set the criticity, depending on other arguments.
-			$this->_set_criticity();
+			$this->set_criticity();
 		}
 
 		$this->data = (array) $args['data'];
@@ -191,7 +191,7 @@ class SecuPress_Log {
 	 * @return (string) A title containing some related data.
 	 */
 	public function get_title() {
-		$this->_set_title();
+		$this->set_title();
 		return $this->title;
 	}
 
@@ -204,7 +204,7 @@ class SecuPress_Log {
 	 * @return (string) A message containing all related data.
 	 */
 	public function get_message() {
-		$this->_set_message();
+		$this->set_message();
 
 		if ( preg_match( "/^<pre>(.+\n.+)<\/pre>$/", $this->message, $matches ) ) {
 			$data[ $key ] = '<code>' . substr( $matches[1], 0, 50 ) . '&hellip;</code>';
@@ -309,7 +309,7 @@ class SecuPress_Log {
 	 */
 	public function get_criticity( $mode = 'text' ) {
 		if ( ! $this->critic ) {
-			$this->_set_criticity();
+			$this->set_criticity();
 		}
 
 		if ( 'icon' === $mode ) {
@@ -385,7 +385,7 @@ class SecuPress_Log {
 	 *
 	 * @return (array)
 	 */
-	public function _get_data() {
+	public function get_data() {
 		return $this->data;
 	}
 
@@ -397,7 +397,7 @@ class SecuPress_Log {
 	 *
 	 * @param (array) $data The data.
 	 */
-	protected function _set_data( $data ) {
+	protected function set_data( $data ) {
 		$this->data = $data;
 	}
 
@@ -409,7 +409,7 @@ class SecuPress_Log {
 	 *
 	 * @return (bool) True if ready to be displayed. False if not or empty.
 	 */
-	protected function _escape_data() {
+	protected function escape_data() {
 		if ( ! $this->data ) {
 			return false;
 		}
@@ -429,7 +429,7 @@ class SecuPress_Log {
 			} elseif ( false === $data ) {
 				$this->data[ $key ] = '<em>[false]</em>';
 			} elseif ( '' === $data ) {
-				// If changed, also change it in `SecuPress_Action_Log::_set(_network)_option_title()` and `::_set(_network)_option_message()`.
+				// If changed, also change it in `SecuPress_Action_Log::set(_network)_option_title()` and `::set(_network)_option_message()`.
 				$this->data[ $key ] = '<em>[' . __( 'empty string', 'secupress' ) . ']</em>';
 			} else {
 				if ( ! is_scalar( $data ) ) {
@@ -469,11 +469,11 @@ class SecuPress_Log {
 	 *
 	 * @since 1.0
 	 */
-	protected function _set_title() {
+	protected function set_title() {
 		/**
 		 * First, `$this->title` must be set by the method extending this one.
 		 */
-		if ( ! $this->_escape_data() ) {
+		if ( ! $this->escape_data() ) {
 			return;
 		}
 
@@ -500,11 +500,11 @@ class SecuPress_Log {
 	 *
 	 * @since 1.0
 	 */
-	protected function _set_message() {
+	protected function set_message() {
 		/**
 		 * First, `$this->message` must be set by the method extending this one.
 		 */
-		if ( $this->_escape_data() ) {
+		if ( $this->escape_data() ) {
 			// Make sure to have enough data to print, some messages could have been changed and need new (missing) information.
 			$this->data[] = '';
 			$this->data[] = '';
@@ -521,7 +521,7 @@ class SecuPress_Log {
 	 *
 	 * @since 1.0
 	 */
-	protected function _set_criticity() {
+	protected function set_criticity() {
 		$this->critic = 'normal';
 	}
 
@@ -537,7 +537,7 @@ class SecuPress_Log {
 	 *
 	 * @return (array)
 	 */
-	protected static function _post_to_args( $post ) {
+	protected static function post_to_args( $post ) {
 		$post = get_post( $post );
 
 		if ( ! $post || ! is_a( $post, 'WP_Post' ) || ! $post->ID ) {
@@ -572,7 +572,7 @@ class SecuPress_Log {
 	 *
 	 * @return (array) An array containing the type an (maybe) the sub-type.
 	 */
-	protected static function _split_subtype( $type ) {
+	protected static function split_subtype( $type ) {
 		$out = array(
 			'type'    => $type,
 			'subtype' => '',

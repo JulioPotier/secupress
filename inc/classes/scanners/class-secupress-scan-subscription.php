@@ -114,7 +114,7 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 			return parent::scan();
 		}
 
-		if ( ! static::_are_centralized_blog_options_filled() ) {
+		if ( ! static::are_centralized_blog_options_filled() ) {
 			// "warning"
 			$this->add_message( 101 );
 			return parent::scan();

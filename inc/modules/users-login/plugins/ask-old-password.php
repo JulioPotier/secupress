@@ -61,7 +61,7 @@ function secupress_oldpassword_add_field() {
 	$after  = '';
 	$sep    = '<tr class="user-sessions-wrap hide-if-no-js">';
 
-	// Let's start the hellish stuff... >_>.
+	// Let's start the hellish stuff... =_=.
 	if ( secupress_wp_version_is( '4.3' ) ) {
 		$field = '
 <tr class="user-pass-old-wrap hide-if-js">

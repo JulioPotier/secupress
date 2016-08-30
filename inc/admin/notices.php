@@ -1,14 +1,14 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
-add_action( 'current_screen', '_secupress_http_block_external_notice' );
+add_action( 'current_screen', 'secupress_http_block_external_notice' );
 /**
  * This notice is displayed when external HTTP requests are blocked via the WP_HTTP_BLOCK_EXTERNAL constant
  *
  * @since 1.0
  * @author Julio Potier
  */
-function _secupress_http_block_external_notice() {
+function secupress_http_block_external_notice() {
 	global $current_screen;
 
 	if ( ! current_user_can( secupress_get_capability() ) ) {

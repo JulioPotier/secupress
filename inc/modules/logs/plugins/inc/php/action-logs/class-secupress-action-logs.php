@@ -42,7 +42,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	/**
 	 * Options to Log.
 	 *
-	 * @see `_maybe_log_option()` for an explanation about the values.
+	 * @see `maybe_log_option()` for an explanation about the values.
 	 *
 	 * @var (array)
 	 */
@@ -162,8 +162,8 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 			$this->options = array_intersect_key( $this->options, $hooks );
 		}
 
-		add_action( 'added_option',   array( $this, '_maybe_log_added_option' ), 1000, 2 );
-		add_action( 'updated_option', array( $this, '_maybe_log_updated_option' ), 1000, 3 );
+		add_action( 'added_option',   array( $this, 'maybe_log_added_option' ), 1000, 2 );
+		add_action( 'updated_option', array( $this, 'maybe_log_updated_option' ), 1000, 3 );
 
 		// Network options.
 		if ( is_multisite() ) {
@@ -180,8 +180,8 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 				$this->network_options = array_intersect_key( $this->network_options, $hooks );
 			}
 
-			add_action( 'add_site_option',    array( $this, '_maybe_log_added_network_option' ), 1000, 2 );
-			add_action( 'update_site_option', array( $this, '_maybe_log_updated_network_option' ), 1000, 3 );
+			add_action( 'add_site_option',    array( $this, 'maybe_log_added_network_option' ), 1000, 2 );
+			add_action( 'update_site_option', array( $this, 'maybe_log_updated_network_option' ), 1000, 3 );
 		}
 
 		// Filters.
@@ -199,7 +199,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 		}
 
 		foreach ( $this->filters as $tag => $accepted_args ) {
-			add_action( $tag, array( $this, '_log_filter' ), 1000, $accepted_args );
+			add_action( $tag, array( $this, 'log_filter' ), 1000, $accepted_args );
 		}
 
 		// Actions.
@@ -217,7 +217,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 		}
 
 		foreach ( $this->actions as $tag => $accepted_args ) {
-			add_action( $tag, array( $this, '_log_action' ), 1000, $accepted_args );
+			add_action( $tag, array( $this, 'log_action' ), 1000, $accepted_args );
 		}
 
 		// Parent hooks.
@@ -236,12 +236,12 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	 * @param (string) $target The Log code (action name, filter name, option name).
 	 * @param (array)  $data   Some data that may be used to describe what happened.
 	 */
-	protected function _log( $type, $target, $data = null ) {
+	protected function log( $type, $target, $data = null ) {
 		static $done = false;
-		static::_maybe_include_log_class();
+		static::maybe_include_log_class();
 
 		// Build the Log array.
-		$log = static::_set_log_time_and_user( array(
+		$log = static::set_log_time_and_user( array(
 			'type'   => $type,
 			'target' => $target,
 			'data'   => (array) $data,
@@ -250,7 +250,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 		$log_inst = new SecuPress_Action_Log( $log );
 
 		// The data has been preprocessed: add it to the array.
-		$log['data'] = $log_inst->_get_data();
+		$log['data'] = $log_inst->get_data();
 
 		// Possibility not to log this action.
 		if ( ! $log['data'] ) {
@@ -269,7 +269,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 		$done = true;
 
 		// Launch the hook that will save them all in the database.
-		add_action( 'shutdown', array( $this, '_save_current_logs' ) );
+		add_action( 'shutdown', array( $this, 'save_current_logs' ) );
 	}
 
 
@@ -281,8 +281,8 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	 * @param (string) $option The option name.
 	 * @param (mixed)  $value  The option new value.
 	 */
-	public function _maybe_log_added_option( $option, $value ) {
-		$this->_maybe_log_option( $option, array( 'new' => $value ) );
+	public function maybe_log_added_option( $option, $value ) {
+		$this->maybe_log_option( $option, array( 'new' => $value ) );
 	}
 
 
@@ -295,8 +295,8 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	 * @param (mixed)  $old_value The option old value.
 	 * @param (mixed)  $value     The option new value.
 	 */
-	public function _maybe_log_updated_option( $option, $old_value, $value ) {
-		$this->_maybe_log_option( $option, array( 'new' => $value, 'old' => $old_value ) );
+	public function maybe_log_updated_option( $option, $old_value, $value ) {
+		$this->maybe_log_option( $option, array( 'new' => $value, 'old' => $old_value ) );
 	}
 
 
@@ -308,8 +308,8 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	 * @param (string) $option The option name.
 	 * @param (mixed)  $value  The option new value.
 	 */
-	public function _maybe_log_added_network_option( $option, $value ) {
-		$this->_maybe_log_option( $option, array( 'new' => $value ), true );
+	public function maybe_log_added_network_option( $option, $value ) {
+		$this->maybe_log_option( $option, array( 'new' => $value ), true );
 	}
 
 
@@ -322,8 +322,8 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	 * @param (mixed)  $value     The option new value.
 	 * @param (mixed)  $old_value The option old value.
 	 */
-	public function _maybe_log_updated_network_option( $option, $value, $old_value ) {
-		$this->_maybe_log_option( $option, array( 'new' => $value, 'old' => $old_value ), true );
+	public function maybe_log_updated_network_option( $option, $value, $old_value ) {
+		$this->maybe_log_option( $option, array( 'new' => $value, 'old' => $old_value ), true );
 	}
 
 
@@ -336,7 +336,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	 * @param (array)  $values  The option values (the new one and maybe the old one).
 	 * @param (bool)   $network If true, it's a network option.
 	 */
-	protected function _maybe_log_option( $option, $values, $network = false ) {
+	protected function maybe_log_option( $option, $values, $network = false ) {
 		if ( $network ) {
 			$options = $this->network_options;
 			$type    = 'network_option';
@@ -357,12 +357,12 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 
 		// Null => any change will be logged.
 		if ( null === $compare ) {
-			$this->_log( $type, $option, $values );
+			$this->log( $type, $option, $values );
 		}
 		// '1' => only this numeric value will be logged.
 		elseif ( is_int( $compare ) || is_numeric( $compare ) ) {
 			if ( (int) $compare === (int) $values['new'] ) {
-				$this->_log( $type, $option, $values );
+				$this->log( $type, $option, $values );
 			}
 		}
 		// '!xxx' => any value that is not this one will be logged.
@@ -372,17 +372,17 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 			// '!1'
 			if ( is_numeric( $compare ) ) {
 				if ( (int) $compare !== (int) $values['new'] ) {
-					$this->_log( $type, $option, $values );
+					$this->log( $type, $option, $values );
 				}
 			}
 			// '!subscriber'
 			elseif ( $compare !== $values['new'] ) {
-				$this->_log( $type, $option, $values );
+				$this->log( $type, $option, $values );
 			}
 		}
 		// 'xxx' => only this value will be logged.
 		elseif ( $compare === $values['new'] ) {
-			$this->_log( $type, $option, $values );
+			$this->log( $type, $option, $values );
 		}
 	}
 
@@ -395,11 +395,11 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	 *
 	 * @return (mixed) The filter first parameter, we don't wan't to kill everything.
 	 */
-	public function _log_filter() {
+	public function log_filter() {
 		$tag  = current_filter();
 		$args = func_get_args();
 
-		$this->_log( 'filter', $tag, $args );
+		$this->log( 'filter', $tag, $args );
 		return $args[0];
 	}
 
@@ -410,11 +410,11 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	 *
 	 * @since 1.0
 	 */
-	public function _log_action() {
+	public function log_action() {
 		$tag  = current_filter();
 		$args = func_get_args();
 
-		$this->_log( 'action', $tag, $args );
+		$this->log( 'action', $tag, $args );
 	}
 
 
@@ -425,8 +425,8 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	 *
 	 * @since 1.0
 	 */
-	public function _save_current_logs() {
-		parent::_save_logs( $this->logs_queue );
+	public function save_current_logs() {
+		parent::save_logs( $this->logs_queue );
 		$this->logs_queue = array();
 	}
 
@@ -440,9 +440,9 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	 *
 	 * @return (string) The Log class name.
 	 */
-	public static function _maybe_include_log_class() {
+	public static function maybe_include_log_class() {
 		// The parent class is needed.
-		parent::_maybe_include_log_class();
+		parent::maybe_include_log_class();
 
 		if ( ! class_exists( 'SecuPress_Action_Log' ) ) {
 			require_once( dirname( __FILE__ ) . '/class-secupress-action-log.php' );

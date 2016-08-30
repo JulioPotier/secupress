@@ -89,7 +89,7 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements SecuPress_S
 		global $wpdb;
 
 		// Blacklisted names.
-		$names  = static::_get_blacklisted_usernames();
+		$names  = static::get_blacklisted_usernames();
 		$logins = $wpdb->get_col( "SELECT user_login from $wpdb->users WHERE user_login IN ( '$names' )" ); // WPCS: unprepared SQL ok.
 		$ids    = count( $logins );
 
@@ -120,7 +120,7 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements SecuPress_S
 		global $wpdb;
 
 		// Blacklisted names.
-		$names = static::_get_blacklisted_usernames();
+		$names = static::get_blacklisted_usernames();
 		$ids   = $wpdb->get_col( "SELECT ID from $wpdb->users WHERE user_login IN ( '$names' )" ); // WPCS: unprepared SQL ok.
 
 		if ( $ids ) {
@@ -154,7 +154,7 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements SecuPress_S
 	 *
 	 * @return (string) A comma separated list of blacklisted usernames.
 	 */
-	final protected static function _get_blacklisted_usernames() {
+	final protected static function get_blacklisted_usernames() {
 		$list = secupress_get_blacklisted_usernames();
 		return implode( "','", esc_sql( $list ) );
 	}

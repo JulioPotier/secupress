@@ -135,7 +135,7 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 	 */
 	public function scan() {
 		// Create the temporary file.
-		$this->_create_file();
+		$this->create_file();
 
 		if ( ! $this->file_url ) {
 			// "bad"
@@ -155,7 +155,7 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 		}
 
 		// Delete the temporary file.
-		$this->_delete_file();
+		$this->delete_file();
 
 		// "good"
 		$this->maybe_set_status( 0 );
@@ -177,11 +177,11 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 		global $is_apache, $is_nginx, $is_iis7;
 
 		if ( $is_apache ) {
-			$this->_fix_apache();
+			$this->fix_apache();
 		} elseif ( $is_iis7 ) {
-			$this->_fix_iis7();
+			$this->fix_iis7();
 		} elseif ( $is_nginx ) {
-			$this->_fix_nginx();
+			$this->fix_nginx();
 		} else {
 			$this->add_fix_message( 301 );
 		}
@@ -195,7 +195,7 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 	 *
 	 * @since 1.0
 	 */
-	protected function _fix_apache() {
+	protected function fix_apache() {
 		global $wp_settings_errors;
 
 		secupress_activate_submodule( 'file-system', 'bad-file-extensions' );
@@ -204,7 +204,7 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
 
 		if ( $last_error && 'general' === $last_error['setting'] && 'apache_manual_edit' === $last_error['code'] ) {
-			$rules = static::_get_rules_from_error( $last_error );
+			$rules = static::get_rules_from_error( $last_error );
 			// "cantfix"
 			$this->add_fix_message( 302, array( $rules ) );
 			array_pop( $wp_settings_errors );
@@ -221,7 +221,7 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 	 *
 	 * @since 1.0
 	 */
-	protected function _fix_iis7() {
+	protected function fix_iis7() {
 		global $wp_settings_errors;
 
 		secupress_activate_submodule( 'file-system', 'bad-file-extensions' );
@@ -230,8 +230,8 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
 
 		if ( $last_error && 'general' === $last_error['setting'] && 'iis7_manual_edit' === $last_error['code'] ) {
-			$rules = static::_get_rules_from_error( $last_error );
-			$path  = static::_get_code_tag_from_error( $last_error, 'secupress-iis7-path' );
+			$rules = static::get_rules_from_error( $last_error );
+			$path  = static::get_code_tag_from_error( $last_error, 'secupress-iis7-path' );
 			// "cantfix"
 			$this->add_fix_message( 303, array( $path, $rules ) );
 			array_pop( $wp_settings_errors );
@@ -248,7 +248,7 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 	 *
 	 * @since 1.0
 	 */
-	protected function _fix_nginx() {
+	protected function fix_nginx() {
 		global $wp_settings_errors;
 
 		secupress_activate_submodule( 'file-system', 'bad-file-extensions' );
@@ -258,7 +258,7 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 		$rules      = '<code>Error</code>';
 
 		if ( $last_error && 'general' === $last_error['setting'] && 'nginx_manual_edit' === $last_error['code'] ) {
-			$rules = static::_get_rules_from_error( $last_error );
+			$rules = static::get_rules_from_error( $last_error );
 			array_pop( $wp_settings_errors );
 		}
 
@@ -274,7 +274,7 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 	 *
 	 * @since 1.0
 	 */
-	protected function _create_file() {
+	protected function create_file() {
 		$wp_filesystem = secupress_get_filesystem();
 		$uploads       = wp_upload_dir( null, false );
 		$basedir       = wp_normalize_path( $uploads['basedir'] );
@@ -311,7 +311,7 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 	 *
 	 * @since 1.0
 	 */
-	protected function _delete_file() {
+	protected function delete_file() {
 		secupress_get_filesystem()->delete( $this->file_path );
 
 		$this->file_path = false;

@@ -155,11 +155,11 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 		global $is_apache, $is_nginx, $is_iis7;
 
 		if ( $is_apache ) {
-			$this->_fix_apache();
+			$this->fix_apache();
 		} elseif ( $is_iis7 ) {
-			$this->_fix_iis7();
+			$this->fix_iis7();
 		} elseif ( $is_nginx ) {
-			$this->_fix_nginx();
+			$this->fix_nginx();
 		}
 
 		// "good"
@@ -174,7 +174,7 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 	 *
 	 * @since 1.0
 	 */
-	protected function _fix_apache() {
+	protected function fix_apache() {
 		global $wp_settings_errors;
 
 		secupress_activate_submodule( 'file-system', 'directory-index' );
@@ -183,7 +183,7 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
 
 		if ( $last_error && 'general' === $last_error['setting'] && 'apache_manual_edit' === $last_error['code'] ) {
-			$rules = static::_get_rules_from_error( $last_error );
+			$rules = static::get_rules_from_error( $last_error );
 			// "cantfix"
 			$this->add_fix_message( 302, array( $rules ) );
 			array_pop( $wp_settings_errors );
@@ -200,7 +200,7 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 	 *
 	 * @since 1.0
 	 */
-	protected function _fix_iis7() {
+	protected function fix_iis7() {
 		global $wp_settings_errors;
 
 		secupress_activate_submodule( 'file-system', 'directory-index' );
@@ -209,9 +209,9 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
 
 		if ( $last_error && 'general' === $last_error['setting'] && 'iis7_manual_edit' === $last_error['code'] ) {
-			$rules     = static::_get_rules_from_error( $last_error );
-			$path      = static::_get_code_tag_from_error( $last_error, 'secupress-iis7-path' );
-			$node_type = static::_get_code_tag_from_error( $last_error, 'secupress-iis7-node-type' );
+			$rules     = static::get_rules_from_error( $last_error );
+			$path      = static::get_code_tag_from_error( $last_error, 'secupress-iis7-path' );
+			$node_type = static::get_code_tag_from_error( $last_error, 'secupress-iis7-node-type' );
 			// "cantfix"
 			$this->add_fix_message( 303, array( $node_type, $path, $rules ) );
 			array_pop( $wp_settings_errors );
@@ -228,7 +228,7 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 	 *
 	 * @since 1.0
 	 */
-	protected function _fix_nginx() {
+	protected function fix_nginx() {
 		global $wp_settings_errors;
 
 		secupress_activate_submodule( 'file-system', 'directory-index' );
@@ -238,7 +238,7 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 		$rules      = '<code>Error</code>';
 
 		if ( $last_error && 'general' === $last_error['setting'] && 'nginx_manual_edit' === $last_error['code'] ) {
-			$rules = static::_get_rules_from_error( $last_error );
+			$rules = static::get_rules_from_error( $last_error );
 			array_pop( $wp_settings_errors );
 		}
 
