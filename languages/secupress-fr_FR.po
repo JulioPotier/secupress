@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
 "POT-Creation-Date: 2016-08-30 09:04+0200\n"
-"PO-Revision-Date: 2016-08-30 09:05+0200\n"
+"PO-Revision-Date: 2016-08-30 13:09+0200\n"
 "Last-Translator: WP Media <contact@wp-media.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -5900,60 +5900,60 @@ msgstr "Tous les utilisateurs"
 
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:539
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:547
-msgid "Plugin(s) activated."
-msgstr "Plugin(s) activé."
+msgid "Plugin(s) activated"
+msgstr "Plugin(s) activé"
 
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:543
-msgid "Plugin(s) activated and deactivated."
-msgstr "Plugin(s) activé(s) et désactivé(s)."
+msgid "Plugin(s) activated and deactivated"
+msgstr "Plugin(s) activé(s) et désactivé(s)"
 
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:551
-msgid "Plugin(s) deactivated."
-msgstr "Plugin(s) désactivé(s)."
+msgid "Plugin(s) deactivated"
+msgstr "Plugin(s) désactivé(s)"
 
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:555
-msgid "Plugin(s) activated and/or deactivated."
-msgstr "Plugin(s) activé(s) et/ou désactivé(s)."
+msgid "Plugin(s) activated and/or deactivated"
+msgstr "Plugin(s) activé(s) et/ou désactivé(s)"
 
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:561
 #, php-format
-msgid "Option %s created."
-msgstr "Option %s créée."
+msgid "Option %s created"
+msgstr "Option %s créée"
 
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:563
 #, php-format
-msgid "Option %s updated."
-msgstr "Option %s mise à jour."
+msgid "Option %s updated"
+msgstr "Option %s mise à jour"
 
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:579
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:587
-msgid "Plugin(s) network activated."
-msgstr "Plugin(s) activé(s) sur le réseau."
+msgid "Plugin(s) network activated"
+msgstr "Plugin(s) activé(s) sur le réseau"
 
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:583
-msgid "Plugin(s) network activated and network deactivated."
-msgstr "Plugin(s) activé(s) et désactivé(s) sur le réseau."
+msgid "Plugin(s) network activated and network deactivated"
+msgstr "Plugin(s) activé(s) et désactivé(s) sur le réseau"
 
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:591
-msgid "Plugin(s) network deactivated."
-msgstr "Plugin(s) désactivé(s) sur le réseau."
+msgid "Plugin(s) network deactivated"
+msgstr "Plugin(s) désactivé(s) sur le réseau"
 
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:595
-msgid "Plugin(s) network activated and/or network deactivated."
-msgstr "Plugin(s) activé(s) et/ou désactivé(s) sur le réseau."
+msgid "Plugin(s) network activated and/or network deactivated"
+msgstr "Plugin(s) activé(s) et/ou désactivé(s) sur le réseau"
 
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:601
 #, php-format
-msgid "Network option %s created."
-msgstr "Options %s créée sur le réseau."
+msgid "Network option %s created"
+msgstr "Options %s créée sur le réseau"
 
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:603
 #, php-format
-msgid "Network option %s updated."
-msgstr "Options %s mise à jour sur le réseau."
+msgid "Network option %s updated"
+msgstr "Options %s mise à jour sur le réseau"
 
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:615
-msgid "New user added (or not)."
+msgid "New user added (or not)"
 msgstr "Nouvel utilisateur ajouté (ou pas)"
 
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:630
@@ -5964,69 +5964,69 @@ msgstr "%1$s a empêché une requête depuis %2$s"
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:631
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:783
 #, php-format
-msgid "IP banned: %s."
-msgstr "Adresse IP bannie&nbsp;: %s."
+msgid "IP banned: %s"
+msgstr "Adresse IP bannie&nbsp;: %s"
 
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:632
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:784
 #, php-format
-msgid "Theme activated: %s."
-msgstr "Thème activé&nbsp;: %s."
+msgid "Theme activated: %s"
+msgstr "Thème activé&nbsp;: %s"
 
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:633
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:785
 #, php-format
-msgid "Administrator %s logged in."
-msgstr "L'administrateur %s s'est connecté."
+msgid "Administrator %s logged in"
+msgstr "L&rsquo;administrateur %s s&rsquo;est connecté"
 
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:634
 #, php-format
-msgid "User deleted: %s."
-msgstr "Utilisateur supprimé&nbsp;: %s."
+msgid "User deleted: %s"
+msgstr "Utilisateur supprimé&nbsp;: %s"
 
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:635
 #, php-format
-msgid "%s's user data changed."
-msgstr "L'utilisateur %s a changé ses données."
+msgid "%s&rsquo;s user data changed"
+msgstr "L&rsquo;utilisateur %s a changé ses données"
 
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:636
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:788
 #, php-format
-msgid "New user %s created."
-msgstr "Nouvel utilisateur %s créé."
+msgid "New user %s created"
+msgstr "Nouvel utilisateur %s créé"
 
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:637
 #, php-format
-msgid "User meta %2$s added to %1$s."
-msgstr "La donnée meta %2$s a été ajoutée pour l'utilisateur %1$s. "
+msgid "User meta %2$s added to %1$s"
+msgstr "La donnée meta %2$s a été ajoutée pour l&rsquo;utilisateur %1$s"
 
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:638
 #, php-format
-msgid "User meta %2$s updated for %1$s."
-msgstr "La donnée meta %2$s a été mise à jour pour l'utilisateur %1$s. "
+msgid "User meta %2$s updated for %1$s"
+msgstr "La donnée meta %2$s a été mise à jour pour l&rsquo;utilisateur %1$s"
 
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:639
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:791
 #, php-format
-msgid "User meta %2$s deleted for %1$s."
-msgstr "La donnée meta %2$s a été supprimée pour l'utilisateur %1$s. "
+msgid "User meta %2$s deleted for %1$s"
+msgstr "La donnée meta %2$s a été supprimée pour l&rsquo;utilisateur %1$s"
 
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:640
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:792
 #, php-format
-msgid "Blog %1$s created with %2$s as Administrator."
-msgstr "Le blog %1$s a été créé par %2$s en tant qu'administrateur."
+msgid "Blog %1$s created with %2$s as Administrator"
+msgstr "Le blog %1$s a été créé par %2$s en tant qu&rsquo;administrateur"
 
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:641
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:793
 #, php-format
-msgid "Blog %s deleted."
-msgstr "Blog %s supprimé."
+msgid "Blog %s deleted"
+msgstr "Blog %s supprimé"
 
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:642
 #, php-format
-msgid "E-mail sent from %1$s to %2$s."
-msgstr "Email envoyé de %1$s à %2$s."
+msgid "E-mail sent from %1$s to %2$s"
+msgstr "Email envoyé de %1$s à %2$s"
 
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:643
 #, php-format

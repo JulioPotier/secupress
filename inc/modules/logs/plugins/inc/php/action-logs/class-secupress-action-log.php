@@ -536,31 +536,31 @@ class SecuPress_Action_Log extends SecuPress_Log {
 
 			if ( 'add' === $this->subtype ) {
 
-				$this->title = __( 'Plugin(s) activated.', 'secupress' );
+				$this->title = __( 'Plugin(s) activated', 'secupress' );
 
 			} elseif ( ! empty( $this->data['activated'] ) && $has_deactivated ) {
 
-				$this->title = __( 'Plugin(s) activated and deactivated.', 'secupress' );
+				$this->title = __( 'Plugin(s) activated and deactivated', 'secupress' );
 
 			} elseif ( ! empty( $this->data['activated'] ) ) {
 
-				$this->title = __( 'Plugin(s) activated.', 'secupress' );
+				$this->title = __( 'Plugin(s) activated', 'secupress' );
 
 			} elseif ( $has_deactivated ) {
 
-				$this->title = __( 'Plugin(s) deactivated.', 'secupress' );
+				$this->title = __( 'Plugin(s) deactivated', 'secupress' );
 
 			} else {
 				// Bug.
-				$this->title = __( 'Plugin(s) activated and/or deactivated.', 'secupress' );
+				$this->title = __( 'Plugin(s) activated and/or deactivated', 'secupress' );
 			}
 			return;
 		}
 
 		if ( 'add' === $this->subtype ) {
-			$this->title = __( 'Option %s created.', 'secupress' );
+			$this->title = __( 'Option %s created', 'secupress' );
 		} else {
-			$this->title = __( 'Option %s updated.', 'secupress' );
+			$this->title = __( 'Option %s updated', 'secupress' );
 		}
 	}
 
@@ -576,31 +576,31 @@ class SecuPress_Action_Log extends SecuPress_Log {
 
 			if ( 'add' === $this->subtype ) {
 
-				$this->title = __( 'Plugin(s) network activated.', 'secupress' );
+				$this->title = __( 'Plugin(s) network activated', 'secupress' );
 
 			} elseif ( ! empty( $this->data['activated'] ) && $has_deactivated ) {
 
-				$this->title = __( 'Plugin(s) network activated and network deactivated.', 'secupress' );
+				$this->title = __( 'Plugin(s) network activated and network deactivated', 'secupress' );
 
 			} elseif ( ! empty( $this->data['activated'] ) ) {
 
-				$this->title = __( 'Plugin(s) network activated.', 'secupress' );
+				$this->title = __( 'Plugin(s) network activated', 'secupress' );
 
 			} elseif ( $has_deactivated ) {
 
-				$this->title = __( 'Plugin(s) network deactivated.', 'secupress' );
+				$this->title = __( 'Plugin(s) network deactivated', 'secupress' );
 
 			} else {
 				// Bug.
-				$this->title = __( 'Plugin(s) network activated and/or network deactivated.', 'secupress' );
+				$this->title = __( 'Plugin(s) network activated and/or network deactivated', 'secupress' );
 			}
 			return;
 		}
 
 		if ( 'add' === $this->subtype ) {
-			$this->title = __( 'Network option %s created.', 'secupress' );
+			$this->title = __( 'Network option %s created', 'secupress' );
 		} else {
-			$this->title = __( 'Network option %s updated.', 'secupress' );
+			$this->title = __( 'Network option %s updated', 'secupress' );
 		}
 	}
 
@@ -612,7 +612,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 */
 	protected function set_filter_title() {
 		$titles = array(
-			'wpmu_validate_user_signup' => __( 'New user added (or not).', 'secupress' ),
+			'wpmu_validate_user_signup' => __( 'New user added (or not)', 'secupress' ),
 		);
 
 		$this->title = isset( $titles[ $this->target ] ) ? $titles[ $this->target ] : '';
@@ -628,18 +628,18 @@ class SecuPress_Action_Log extends SecuPress_Log {
 		$titles = array(
 			/** Translators: 1 is the plugin name, 2 is an URL. */
 			'secupress.block'         => sprintf( __( '%1$s prevented a request at %2$s', 'secupress' ), '<b>' . SECUPRESS_PLUGIN_NAME . '</b>', '%1$s' ),
-			'secupress.ban.ip_banned' => __( 'IP banned: %s.', 'secupress' ),
-			'switch_theme'            => __( 'Theme activated: %s.', 'secupress' ),
-			'wp_login'                => __( 'Administrator %s logged in.', 'secupress' ),
-			'delete_user'             => __( 'User deleted: %s.', 'secupress' ),
-			'profile_update'          => __( '%s\'s user data changed.', 'secupress' ),
-			'user_register'           => __( 'New user %s created.', 'secupress' ),
-			'added_user_meta'         => __( 'User meta %2$s added to %1$s.', 'secupress' ),
-			'updated_user_meta'       => __( 'User meta %2$s updated for %1$s.', 'secupress' ),
-			'deleted_user_meta'       => __( 'User meta %2$s deleted for %1$s.', 'secupress' ),
-			'wpmu_new_blog'           => __( 'Blog %1$s created with %2$s as Administrator.', 'secupress' ),
-			'delete_blog'             => __( 'Blog %s deleted.', 'secupress' ),
-			'phpmailer_init'          => __( 'E-mail sent from %1$s to %2$s.', 'secupress' ),
+			'secupress.ban.ip_banned' => __( 'IP banned: %s', 'secupress' ),
+			'switch_theme'            => __( 'Theme activated: %s', 'secupress' ),
+			'wp_login'                => __( 'Administrator %s logged in', 'secupress' ),
+			'delete_user'             => __( 'User deleted: %s', 'secupress' ),
+			'profile_update'          => __( '%s\'s user data changed', 'secupress' ),
+			'user_register'           => __( 'New user %s created', 'secupress' ),
+			'added_user_meta'         => __( 'User meta %2$s added to %1$s', 'secupress' ),
+			'updated_user_meta'       => __( 'User meta %2$s updated for %1$s', 'secupress' ),
+			'deleted_user_meta'       => __( 'User meta %2$s deleted for %1$s', 'secupress' ),
+			'wpmu_new_blog'           => __( 'Blog %1$s created with %2$s as Administrator', 'secupress' ),
+			'delete_blog'             => __( 'Blog %s deleted', 'secupress' ),
+			'phpmailer_init'          => __( 'E-mail sent from %1$s to %2$s', 'secupress' ),
 			'http_api_debug'          => __( 'External request to %s', 'secupress' ),
 		);
 
