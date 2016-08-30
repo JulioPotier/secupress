@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
 "POT-Creation-Date: 2016-08-30 09:04+0200\n"
-"PO-Revision-Date: 2016-08-30 13:36+0200\n"
+"PO-Revision-Date: 2016-08-30 15:50+0200\n"
 "Last-Translator: WP Media <contact@wp-media.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -1770,7 +1770,7 @@ msgstr[1] "Désolé, les anciens fichiers <code>wp-config.php</code> n'ont pas p
 
 #: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:64
 msgid "Check if some files that use bad extensions are reachable in the uploads folder."
-msgstr "Vérifie si des fichiers avec de mauvaises extensions sont accessibles dans votre dossier des uploads."
+msgstr "Vérifie si des fichiers avec mauvaise extension sont accessibles dans votre dossier des uploads."
 
 #: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:65
 msgid "The uploads folder should only contain files like images, pdf, or zip archives. Other files should not be reachable by their URL."
@@ -1780,21 +1780,21 @@ msgstr "Le dossier des uploads ne devrait contenir que des fichiers comme des im
 #: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:78
 #, php-format
 msgid "Add rules in your %s file to forbid direct access to files that use bad extensions."
-msgstr "Ajoute les règles dans votre fichier %s pour éviter les accès directs aux fichiers avec une mauvaise extension."
+msgstr "Ajoute les règles dans votre fichier %s pour éviter les accès directs aux fichiers avec mauvaise extension."
 
 #: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:81
 #, php-format
 msgid "The %s file cannot be edited automatically, you will be given the rules to add into this file manually, to forbid direct access to files that use bad extensions."
-msgstr "Le fichier %s ne peut pas être éditer automatiquement, il vous sera fourni les règles à ajouter manuellement dans votre fichier pour interdire l'accès aux fichiers avec de mauvaises extensions."
+msgstr "Le fichier %s ne peut pas être éditer automatiquement, il vous sera fourni les règles à ajouter manuellement dans votre fichier pour interdire l'accès aux fichiers avec mauvaise extension."
 
 #: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:101
 msgid "Files that use bad extensions are protected."
-msgstr "Les fichiers avec de mauvaises extensions sont protégés."
+msgstr "Les fichiers avec mauvaise extension sont protégés."
 
 #: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:103
 #, php-format
 msgid "The rules forbidding access to files that use bad extensions have been successfully added to your %s file."
-msgstr "Les règles interdisant l'accès aux fichiers aux mauvaises extensions ont été ajoutées dans votre fichier %s."
+msgstr "Les règles interdisant l'accès aux fichiers avec mauvaise extension ont été ajoutées dans votre fichier %s."
 
 #: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:105
 msgid "Unable to determine status of the bad extension test file."
@@ -1805,17 +1805,17 @@ msgid "Could not create a bad extension test file in the uploads folder."
 msgstr "Impossible de créer un fichier de test dans le dossier des uploads."
 
 #: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:108
-msgid "Files that use bad extensions are reachable in the uploads folder."
-msgstr "Les fichiers avec de mauvaises extensions sont accessibles dans le dossier des uploads."
+msgid "Whether or not you have files using bad extensions in the uploads folder, those files are reachable directly."
+msgstr "Que vous ayez ou pas des fichiers avec une mauvaise extension dans le dossier des uploads, ces fichiers sont accessibles directement."
 
 #: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:111
 #, php-format
 msgid "Your server runs a nginx system, the files that use bad extensions cannot be protected automatically but you can do it yourself by adding the following code into your %1$s file: %2$s"
-msgstr "Votre serveur utilise le système Ngnix, ces fichiers qui utilisent des mauvaises extensions ne peuvent pas être protégés automatiquement mais vous pouvez le faire vous même en ajoutant le code suivant dans votre fichier %1$s&nbsp;: %2$s"
+msgstr "Votre serveur utilise le système Ngnix, ces fichiers avec mauvaise extension ne peuvent pas être protégés automatiquement mais vous pouvez le faire vous même en ajoutant le code suivant dans votre fichier %1$s&nbsp;: %2$s"
 
 #: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:112
 msgid "Your server runs a non recognized system. The files that use bad extensions cannot be protected automatically."
-msgstr "Votre serveur tourne sur un système non connu. Les fichiers avec de mauvaises extensions ne peuvent être protégés automatiquement."
+msgstr "Votre serveur tourne sur un système non connu. Les fichiers avec mauvaise extension ne peuvent être protégés automatiquement."
 
 #: inc/classes/scanners/class-secupress-scan-bad-old-files.php:41
 msgid "Check if your installation still contains old files from WordPress 2.0 to your current version."
