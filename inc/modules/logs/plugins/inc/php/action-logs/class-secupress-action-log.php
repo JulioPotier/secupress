@@ -532,17 +532,18 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 */
 	protected function set_option_title() {
 		if ( 'active_plugins' === $this->target ) {
+			$has_activated   = ! empty( $this->data['activated'] )   && '<em>[' . __( 'empty string', 'secupress' ) . ']</em>' !== $this->data['activated'];
 			$has_deactivated = ! empty( $this->data['deactivated'] ) && '<em>[' . __( 'empty string', 'secupress' ) . ']</em>' !== $this->data['deactivated'];
 
 			if ( 'add' === $this->subtype ) {
 
 				$this->title = __( 'Plugin(s) activated', 'secupress' );
 
-			} elseif ( ! empty( $this->data['activated'] ) && $has_deactivated ) {
+			} elseif ( $has_activated && $has_deactivated ) {
 
 				$this->title = __( 'Plugin(s) activated and deactivated', 'secupress' );
 
-			} elseif ( ! empty( $this->data['activated'] ) ) {
+			} elseif ( $has_activated ) {
 
 				$this->title = __( 'Plugin(s) activated', 'secupress' );
 
@@ -572,17 +573,18 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 */
 	protected function set_network_option_title() {
 		if ( 'active_sitewide_plugins' === $this->target ) {
+			$has_activated   = ! empty( $this->data['activated'] )   && '<em>[' . __( 'empty string', 'secupress' ) . ']</em>' !== $this->data['activated'];
 			$has_deactivated = ! empty( $this->data['deactivated'] ) && '<em>[' . __( 'empty string', 'secupress' ) . ']</em>' !== $this->data['deactivated'];
 
 			if ( 'add' === $this->subtype ) {
 
 				$this->title = __( 'Plugin(s) network activated', 'secupress' );
 
-			} elseif ( ! empty( $this->data['activated'] ) && $has_deactivated ) {
+			} elseif ( $has_activated && $has_deactivated ) {
 
 				$this->title = __( 'Plugin(s) network activated and network deactivated', 'secupress' );
 
-			} elseif ( ! empty( $this->data['activated'] ) ) {
+			} elseif ( $has_activated ) {
 
 				$this->title = __( 'Plugin(s) network activated', 'secupress' );
 
@@ -684,23 +686,24 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 */
 	protected function set_option_message() {
 		if ( 'active_plugins' === $this->target ) {
+			$has_activated   = ! empty( $this->data['activated'] )   && '<em>[' . __( 'empty string', 'secupress' ) . ']</em>' !== $this->data['activated'];
 			$has_deactivated = ! empty( $this->data['deactivated'] ) && '<em>[' . __( 'empty string', 'secupress' ) . ']</em>' !== $this->data['deactivated'];
 
 			if ( 'add' === $this->subtype ) {
 
 				$this->message = __( 'Plugin(s) activated: %s.', 'secupress' );
 
-			} elseif ( ! empty( $this->data['activated'] ) && $has_deactivated ) {
+			} elseif ( $has_activated && $has_deactivated ) {
 
 				$this->message = __( 'Plugin(s) activated: %1$s. Plugin(s) deactivated: %2$s.', 'secupress' );
 
-			} elseif ( ! empty( $this->data['activated'] ) ) {
+			} elseif ( $has_activated ) {
 
 				$this->message = __( 'Plugin(s) activated: %s.', 'secupress' );
 
 			} elseif ( $has_deactivated ) {
 
-				$this->message = __( 'Plugin(s) deactivated: %s.', 'secupress' );
+				$this->message = __( 'Plugin(s) deactivated: %2$s.', 'secupress' );
 
 			} else {
 				// Bug.
@@ -724,23 +727,24 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 */
 	protected function set_network_option_message() {
 		if ( 'active_sitewide_plugins' === $this->target ) {
+			$has_activated   = ! empty( $this->data['activated'] )   && '<em>[' . __( 'empty string', 'secupress' ) . ']</em>' !== $this->data['activated'];
 			$has_deactivated = ! empty( $this->data['deactivated'] ) && '<em>[' . __( 'empty string', 'secupress' ) . ']</em>' !== $this->data['deactivated'];
 
 			if ( 'add' === $this->subtype ) {
 
 				$this->message = __( 'Plugin(s) network activated: %s.', 'secupress' );
 
-			} elseif ( ! empty( $this->data['activated'] ) && $has_deactivated ) {
+			} elseif ( $has_activated && $has_deactivated ) {
 
 				$this->message = __( 'Plugin(s) network activated: %1$s. Plugin(s) network deactivated: %2$s.', 'secupress' );
 
-			} elseif ( ! empty( $this->data['activated'] ) ) {
+			} elseif ( $has_activated ) {
 
 				$this->message = __( 'Plugin(s) network activated: %s.', 'secupress' );
 
 			} elseif ( $has_deactivated ) {
 
-				$this->message = __( 'Plugin(s) network deactivated: %s.', 'secupress' );
+				$this->message = __( 'Plugin(s) network deactivated: %2$s.', 'secupress' );
 
 			} else {
 				// Bug.
