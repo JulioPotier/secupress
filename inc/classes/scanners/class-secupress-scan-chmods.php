@@ -87,6 +87,8 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Int
 		$files    = static::get_file_perms();
 		$abspath  = realpath( ABSPATH );
 
+		clearstatcache();
+
 		foreach ( $files as $file => $chmod ) {
 			// Current file perm.
 			$current = (int) decoct( fileperms( $file ) & 0777 );
@@ -134,6 +136,8 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Int
 		$files     = static::get_file_perms();
 		$files_tmp = array();
 		$abspath   = realpath( ABSPATH );
+
+		clearstatcache();
 
 		foreach ( $files as $file => $chmod ) {
 			// Current file perm.
