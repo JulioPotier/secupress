@@ -36,11 +36,11 @@ Protect your WordPress with SecuPress, analyze and ensure the safety of your web
 
 = 1.0.1 =
 * 31 aug 2016
-* Improvment: Better sorting for Step 3 items
-* Improvment: Better global wording
-* Improvment: The fix which delete the deactivated theme will now keep the default theme (using the PHP constant WP_DEFAULT_THEME)
-* Improvment: The fix which propose to delete the parent theme will stop that
-* Improvment: No more HTML tags in exported txt log files
+* Improvement: Better sorting for Step 3 items
+* Improvement: Better global wording
+* Improvement: The fix which delete the deactivated theme will now keep the default theme (using the PHP constant WP_DEFAULT_THEME)
+* Improvement: The fix which propose to delete the parent theme will stop that
+* Improvement: No more HTML tags in exported txt log files
 * Fix: Scan result for "Salt Keys" is now correct after the fix (was still bad)
 * Fix: Time of the previous scan in the scanner header is now correct (WordPress settings was missing)
 * Fix: Warning, Parse Error and Fatal Errors PHP are now gone
