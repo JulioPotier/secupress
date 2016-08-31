@@ -413,7 +413,7 @@ function secupress_add_salt_muplugin() {
 	$keys = array( 'AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'NONCE_KEY', 'AUTH_SALT', 'SECURE_AUTH_SALT', 'LOGGED_IN_SALT', 'NONCE_SALT' );
 
 	foreach ( $keys as $constant ) {
-		secupress_replace_content( $wpconfig_filename, '#define\(.*(\'' . $constant . '\'|"' . $constant . '"),(.*)#', '/*Commented by SecuPress*/ /* $0 */' );
+		secupress_replace_content( $wpconfig_filename, '#define\s*\(\s*(\'' . $constant . '\'|"' . $constant . '").*#', '/*Commented by SecuPress*/ // $0' );
 	}
 
 	$alicia_keys = file_get_contents( SECUPRESS_INC_PATH . 'data/salt-keys.phps' );
