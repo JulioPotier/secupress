@@ -61,8 +61,8 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 	protected function init() {
 		global $is_apache, $is_nginx, $is_iis7;
 
-		$this->title = __( 'Check if some files that use bad extensions are reachable in the uploads folder.', 'secupress' );
-		$this->more  = __( 'The uploads folder should only contain files like images, pdf, or zip archives. Other files should not be reachable by their URL.', 'secupress' );
+		$this->title = __( 'Check if some files that use bad extensions are accessible in the uploads folder.', 'secupress' );
+		$this->more  = __( 'The uploads folder should only contain files like images, pdf, or zip archives. Other files should not be accessible by their URL.', 'secupress' );
 
 		if ( ! $is_apache && ! $is_nginx && ! $is_iis7 ) {
 			$this->more_fix = static::get_messages( 301 );
@@ -105,7 +105,7 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 			100 => __( 'Unable to determine status of the bad extension test file.', 'secupress' ),
 			// "bad"
 			200 => __( 'Could not create a bad extension test file in the uploads folder.', 'secupress' ),
-			201 => __( 'Whether or not you have files using bad extensions in the uploads folder, those files are reachable directly.', 'secupress' ),
+			201 => __( 'Whether or not you have files using bad extensions in the uploads folder, those files are accessible directly.', 'secupress' ),
 			// "cantfix"
 			/** Translators: 1 is a file name, 2 is some code */
 			300 => sprintf( __( 'Your server runs a nginx system, the files that use bad extensions cannot be protected automatically but you can do it yourself by adding the following code into your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
