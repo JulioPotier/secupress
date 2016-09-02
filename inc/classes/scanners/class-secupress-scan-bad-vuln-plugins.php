@@ -139,7 +139,8 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 					// "bad"
 					$this->add_message( 204, array( $count, $bad_plugins ) );
 				}
-			}*/
+			}
+			*/
 		}
 		// Network admin or not Multisite.
 		else {
