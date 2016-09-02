@@ -285,13 +285,7 @@ function secupress_warning_no_recovery_email() {
 		return;
 	}
 
-	$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-	$version = $suffix ? '1.3.4' : time();
-
-	// Enqueue Swal2 CSS.
-	wp_enqueue_style( 'wpmedia-css-sweetalert2', SECUPRESS_ADMIN_CSS_URL . 'sweetalert2' . $suffix . '.css', array(), $version );
-	// Enqueue Swal2 JS.
-	wp_enqueue_script( 'wpmedia-js-sweetalert2', SECUPRESS_ADMIN_JS_URL . 'sweetalert2' . $suffix . '.js', array( 'jquery' ), $version, true );
+	secupress_enqueue_sweet_alert();
 
 	$form  = '<img src="' . esc_url( admin_url( 'images/wpspin_light.gif' ) ) . '" alt="' . esc_attr__( 'Loading', 'secupress' ) . '" class="hidden" id="secupress_recovery_email_spinner"/>';
 	$form .= '<input type="text" name="secupress_recovery_email" id="secupress_recovery_email" placeholder="' . esc_attr__( 'Email address', 'secupress' ) . '"/> ';
@@ -445,18 +439,4 @@ function secupress_display_transient_notices() {
 	}
 
 	delete_transient( 'secupress-notices-' . get_current_user_id() );
-}
-
-/**
- * Enqueue styles for not generic SP notices (OCS, Key API)
- *
- * @author Geoffrey
- *
- * @since 1.0
- */
-function secupress_enqueue_notices_styles() {
-	$suffix    = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-	$version   = $suffix ? SECUPRESS_VERSION : time();
-
-	wp_enqueue_style( 'secupress-notices', SECUPRESS_ADMIN_CSS_URL . 'secupress-notices' . $suffix . '.css', array(), $version );
 }
