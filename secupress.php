@@ -299,16 +299,24 @@ function secupress_been_first() {
 function secupress_load_plugin_textdomain_translations() {
 	static $done = false;
 
-	if ( ! $done ) {
-		$done = true;
-		load_plugin_textdomain( 'secupress', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
-		/**
-		 * Fires right after the plugin text domain is loaded.
-		 *
-		 * @since 1.0
-		 */
-		do_action( 'secupress.plugin_textdomain_loaded' );
+	if ( $done ) {
+		return;
 	}
+	$done = true;
+
+	load_plugin_textdomain( 'secupress', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+	/**
+	 * Fires right after the plugin text domain is loaded.
+	 *
+	 * @since 1.0
+	 */
+	do_action( 'secupress.plugin_textdomain_loaded' );
+
+	// Make sure Poedit keeps our plugin headers.
+	/** Translators: Plugin Name of the plugin/theme */
+	__( 'SecuPress — WordPress Security', 'secupress' );
+	/** Translators: Description of the plugin/theme */
+	__( 'Protect your WordPress with SecuPress, analyze and ensure the safety of your website daily.', 'secupress' );
 }
 
 
