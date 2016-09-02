@@ -17,6 +17,9 @@ add_action( 'secupress.modules.activate_submodule_' . basename( __FILE__, '.php'
  * On module activation, maybe write the rules.
  *
  * @since 1.0
+ * @since 1.0.2 Return a boolean.
+ *
+ * @return (bool) True if rules have been successfully written. False otherwise.
  */
 function secupress_bad_url_access_activation() {
 	global $is_apache, $is_nginx, $is_iis7;
@@ -38,7 +41,7 @@ function secupress_bad_url_access_activation() {
 		$rules = '';
 	}
 
-	secupress_add_module_rules_or_notice( array(
+	return secupress_add_module_rules_or_notice( array(
 		'rules'  => $rules,
 		'marker' => 'bad_url_access',
 		'title'  => __( 'Bad URL Access', 'secupress' ),
@@ -80,6 +83,79 @@ function secupress_bad_url_access_plugin_activate( $rules ) {
 	}
 
 	return $rules;
+}
+
+
+add_action( 'secupress.upgrade', 'secupress_bad_url_access_upgrade', 10, 2 );
+/**
+ * Fires when SecuPress is upgraded.
+ *
+ * @since 1.0.2
+ *
+ * @param (string) $new_version    The version being upgraded to.
+ * @param (string) $actual_version The previous version.
+ */
+function secupress_bad_url_access_upgrade( $new_version, $actual_version ) {
+	global $is_apache, $is_nginx, $is_iis7, $wp_settings_errors;
+	$marker = 'bad_url_access';
+
+	if ( ! $is_apache && ! $is_nginx && ! $is_iis7 ) {
+		return;
+	}
+
+	if ( '1.0.2' > $actual_version ) {
+		/**
+		 * 1.0 had a bug preventing TinyMCE to work on some Apache/IIS servers.
+		 * 1.0.1 fixed the bug but the wrong rules remained in the `.htaccess`/`web.config` file.
+		 * 1.0.2 remove the old rules and add the new ones back.
+		 */
+		if ( $is_nginx || secupress_bad_url_access_activation() ) {
+			return;
+		}
+
+		// The file is not writable, replace the error message (brace yourself, it gets uggly).
+		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
+
+		if ( ! $last_error || 'general' !== $last_error['setting'] ) {
+			return;
+		}
+
+		if ( $is_apache && 'apache_manual_edit' === $last_error['code'] ) {
+			array_pop( $wp_settings_errors );
+
+			$rules    = esc_html( secupress_bad_url_access_apache_rules() );
+			$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Bad URL Access', 'secupress' ) );
+			$message .= sprintf(
+				/** Translators: 1 is a file name; 2, 3 and 4 are some code. */
+				__( 'Your %1$s file does not seem to be writable. Please replace previous lines between %2$s and %3$s by the following ones: %4$s', 'secupress' ),
+				'<code>.htaccess</code>',
+				"<code># BEGIN SecuPress $marker</code>",
+				'<code># END SecuPress</code>',
+				"<pre># BEGIN SecuPress $marker\n$rules# END SecuPress</pre>"
+			);
+			add_settings_error( 'general', 'apache_manual_edit', $message, 'error' );
+		}
+
+		if ( $is_iis7 && 'iis7_manual_edit' === $last_error['code'] ) {
+			array_pop( $wp_settings_errors );
+
+			$path     = '/configuration/system.webServer/rewrite/rules';
+			$spaces   = explode( '/', trim( $path, '/' ) );
+			$spaces   = count( $spaces ) - 1;
+			$spaces   = str_repeat( ' ', $spaces * 2 );
+			$rules    = esc_html( secupress_bad_url_access_apache_rules() );
+			$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Bad URL Access', 'secupress' ) );
+			$message .= sprintf(
+				/** Translators: 1 is a file name, 2 is a tag name, 3 is a folder path (kind of), 4 is some code */
+				__( 'Your %1$s file does not seem to be writable. Please replace previous rules with %2$s from the tags hierarchy %3$s by the following ones: %4$s', 'secupress' ),
+				'<code>web.config</code>',
+				'<code>name="SecuPress ' . $marker . '"</code>',
+				'<code class="secupress-iis7-path">' . $path . '</code>',
+				"<pre>{$spaces}{$rules}</pre>"
+			);
+			add_settings_error( 'general', 'iis7_manual_edit', $message, 'error' );
+		}
+	}
 }
 
 

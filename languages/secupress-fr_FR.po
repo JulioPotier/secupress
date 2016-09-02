@@ -1,15 +1,15 @@
-# Copyright (C) 2015 SecuPress
+# Copyright (C) 2015-2016 SecuPress
 # This file is distributed under the same license as the SecuPress package.
 # Translators:
-# wpmedia <contact@wp-media.me>, 2015
+# wpmedia <contact@secupress.me>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2016-08-31 11:27+0200\n"
-"PO-Revision-Date: 2016-08-31 11:29+0200\n"
-"Last-Translator: WP Media <contact@wp-media.me>\n"
-"Language-Team: French (France)\n"
+"POT-Creation-Date: 2016-09-02 13:14+0200\n"
+"PO-Revision-Date: 2016-09-02 13:23+0200\n"
+"Last-Translator: WP Media <contact@secupress.me>\n"
+"Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,6 +22,8 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Textdomain-Support: yes\n"
 "X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: node_modules\n"
+"X-Poedit-SearchPathExcluded-1: assets\n"
 
 #: inc/admin-bar.php:21
 #, php-format
@@ -97,6 +99,8 @@ msgstr ""
 #: inc/admin/notices.php:302
 #: inc/modules/logs/plugins/inc/php/404-logs/class-secupress-404-log.php:65
 #: inc/modules/logs/plugins/inc/php/404-logs/class-secupress-404-log.php:66
+#: inc/modules/sensitive-data/plugins/bad-url-access.php:127
+#: inc/modules/sensitive-data/plugins/bad-url-access.php:147
 #: inc/modules/users-login/callbacks.php:253
 #: inc/modules/users-login/callbacks.php:259
 #: inc/modules/users-login/plugins/inc/php/move-login/admin.php:20
@@ -6517,10 +6521,31 @@ msgstr "Surveillance planifiée"
 msgid "Scheduled scan"
 msgstr "Scanner planifié"
 
-#: inc/modules/sensitive-data/plugins/bad-url-access.php:44
-#: inc/modules/sensitive-data/plugins/bad-url-access.php:56
+#: inc/modules/sensitive-data/plugins/bad-url-access.php:47
+#: inc/modules/sensitive-data/plugins/bad-url-access.php:59
+#: inc/modules/sensitive-data/plugins/bad-url-access.php:127
+#: inc/modules/sensitive-data/plugins/bad-url-access.php:147
 msgid "Bad URL Access"
 msgstr "Accès aux mauvaises URLs"
+
+#: inc/modules/sensitive-data/plugins/bad-url-access.php:130
+#, php-format
+msgid ""
+"Your %1$s file does not seem to be writable. Please replace previous lines "
+"between %2$s and %3$s by the following ones: %4$s"
+msgstr ""
+"Votre fichier %1$s ne semble pas être inscriptible. Merci d'y remplacer les "
+"lignes situées entre %2$s et %3$s par les suivantes&#160;: %4$s"
+
+#: inc/modules/sensitive-data/plugins/bad-url-access.php:150
+#, php-format
+msgid ""
+"Your %1$s file does not seem to be writable. Please replace previous rules "
+"with %2$s from the tags hierarchy %3$s by the following ones: %4$s"
+msgstr ""
+"Votre fichier %1$s ne semble pas être inscriptible. Merci d'y remplacer les "
+"règles avec %2$s dans la hiérarchie des balises %3$s par les "
+"suivantes&nbsp;: %4$s"
 
 #: inc/modules/sensitive-data/plugins/blackhole.php:94
 #, php-format
