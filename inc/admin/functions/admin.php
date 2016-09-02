@@ -40,6 +40,59 @@ function secupress_action_page( $title, $content, $args = array() ) {
 
 
 /**
+ * Enqueue SweetAlert script and style.
+ *
+ * @since 1.0
+ * @author Grégory Viguier
+ */
+function secupress_enqueue_sweet_alert() {
+	static $done = false;
+
+	if ( $done ) {
+		return;
+	}
+	if ( ! did_action( 'admin_enqueue_scripts' ) ) {
+		add_action( 'admin_enqueue_scripts', __FUNCTION__ );
+		return;
+	}
+	$done = true;
+
+	$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+	$version = $suffix ? '1.3.4' : time();
+
+	// Enqueue Swal2 CSS.
+	wp_enqueue_style( 'wpmedia-css-sweetalert2', SECUPRESS_ADMIN_CSS_URL . 'sweetalert2' . $suffix . '.css', array(), $version );
+	// Enqueue Swal2 JS.
+	wp_enqueue_script( 'wpmedia-js-sweetalert2', SECUPRESS_ADMIN_JS_URL . 'sweetalert2' . $suffix . '.js', array( 'jquery' ), $version, true );
+}
+
+
+/**
+ * Enqueue styles for not generic SP notices (OCS, Key API).
+ *
+ * @since 1.0
+ * @author Geoffrey
+ */
+function secupress_enqueue_notices_styles() {
+	static $done = false;
+
+	if ( $done ) {
+		return;
+	}
+	if ( ! did_action( 'admin_enqueue_scripts' ) ) {
+		add_action( 'admin_enqueue_scripts', __FUNCTION__ );
+		return;
+	}
+	$done = true;
+
+	$suffix    = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+	$version   = $suffix ? SECUPRESS_VERSION : time();
+
+	wp_enqueue_style( 'secupress-notices', SECUPRESS_ADMIN_CSS_URL . 'secupress-notices' . $suffix . '.css', array(), $version );
+}
+
+
+/**
  * Add SecuPress informations into USER_AGENT.
  *
  * @since 1.0
