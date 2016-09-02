@@ -3,7 +3,7 @@ Contributors: wp_media, secupress, juliobox, greglone
 Tags: security, spam, backup, schedule, firewall, sensitive data, antivirus, logs, alerts
 Requires at least: 3.7
 Tested up to: 4.6
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,19 +30,31 @@ Protect your WordPress with SecuPress, analyze and ensure the safety of your web
 
 == Changelog ==
 
+= 1.0.2 =
+* 02 sep 2016
+* Fix: The PHP Notice: wp_enqueue_script/wp_enqueue_style called incorrectly is now called correctly and won't disturb you anymore everywhere in your admin area
+* Fix: The Error 500 caused by commented salt keys will not happen again
+* Fix: We removed the "ping" keyword from the bad user-agents since "pingdom" is not so malicious, isn't it?
+* Fix: SecuPress couldn't fix the "admin user" scan with open registration and no admin account.
+* Fix: The TinyMCE editor is not broken anymore, you can use it normally now \o/
+
+
 = 1.0.1 =
 * 31 aug 2016
-* Improvment: Better sorting for Step 3 items
-* Improvment: Better global wording
-* Improvment: The fix which delete the deactivated theme will now keep the default theme (using the PHP constant WP_DEFAULT_THEME)
-* Improvment: The fix which propose to delete the parent theme will stop that
-* Improvment: No more HTML tags in exported txt log files
-* Fix: Scan result for "Salt Keys" is now correct after the fix (was still bad)
-* Fix: Time of the previous scan in the scanner header is now correct (WordPress settings was missing)
-* Fix: Warning, Parse Error and Fatal Errors PHP are now gone
-* Fix: JS Error on secupressResetManualFix is gone
-* Fix: Scan result for "Chmod" is now correct (was still bad)
-* Fix: TinyMCE is not broken anymore \o/
+* Improvement: Better sorting for Step 3 items
+* Improvement: Better global wording
+* Improvement: The fix which delete the deactivated theme will now keep the default theme (using the PHP constant WP_DEFAULT_THEME)
+* Improvement: The fix which propose to delete the parent theme will stop that
+* Improvement: No more HTML tags in exported txt log files
+* Fix: The following JavaScript Error "Uncaught ReferenceError: secupressResetManualFix is not defined in secupress-scanner.min.js" when you visit the scanner page is on vacations, forever.
+* Fix: PHP Warning in class-secupress-scan-bad-vuln-plugins.php, we won't use $this in a static method anymore, promise
+* Fix: Warning in class-secupress-scan-bad-vuln-plugins.php, ok this one s the last
+* Fix: Warning in class-secupress-scan-bad-old-plugins.php my bad, this one.
+* Fix: Warning in class-secupress-scan-bad-old-plugins.php, well, it was the real last one.
+* Fix: Warning in settings.php usage of a protected method is now allowed
+* Fix: Warning in modules.php because we called secupress_insert_iis7_nodes without the second mandatory argument
+* Fix: The following PHP Parse error "syntax error, unexpected 'ai' (T_STRING) in mu-plugins/_secupress_deactivation-notice-nginx_remove_rules.php" won't show up anymore for french users
+* Fix: The PHP Fatal Error on activation or deactivation has been killed, not by Batman because you know.
 
 = 1.0 =
 * 23 aug 2016

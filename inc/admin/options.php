@@ -209,7 +209,7 @@ function secupress_global_settings_callback( $value ) {
 
 	if ( 200 !== wp_remote_retrieve_response_code( $response ) ) {
 		// The server couldn't be reached. Maybe a server error or something.
-		add_settings_error( 'secupress_global', 'server_error', __( 'Our server is not reachable at the moment, please try again later.', 'secupress' ) );
+		add_settings_error( 'secupress_global', 'server_error', __( 'Our server is not accessible at the moment, please try again later.', 'secupress' ) );
 		return false;
 	}
 

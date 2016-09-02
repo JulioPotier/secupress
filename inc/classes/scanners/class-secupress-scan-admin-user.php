@@ -218,6 +218,11 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 			}
 		}
 
+		// Registrations are open: the "admin" account should exist to avoid the creation of this user.
+		if ( ! $user_id && secupress_users_can_register() ) {
+			return false;
+		}
+
 		return array();
 	}
 

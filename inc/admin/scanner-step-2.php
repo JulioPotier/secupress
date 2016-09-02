@@ -3,7 +3,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 // Keep only scans with "bad" status.
 $this_step_scans  = $bad_scans;	// `array( $class_name_part_lower => $status )`
-$fixable_modules  = array();		// Will tell which modules have fixable items.
+$fixable_modules  = array();	// Will tell which modules have fixable items.
 $secupress_is_pro = secupress_is_pro();
 
 // Keep only scans that are fixable automatically + require the scan files.
