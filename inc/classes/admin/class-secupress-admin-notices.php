@@ -227,8 +227,12 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 	 *
 	 * @since 1.0
 	 */
-	protected static function enqueue_script() {
+	public static function enqueue_script() {
 		if ( self::$done_js ) {
+			return;
+		}
+		if ( ! did_action( 'admin_enqueue_scripts' ) ) {
+			add_action( 'admin_enqueue_scripts', __METHOD__ );
 			return;
 		}
 		self::$done_js = true;
@@ -246,8 +250,12 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 	 *
 	 * @since 1.0
 	 */
-	protected static function enqueue_style() {
+	public static function enqueue_style() {
 		if ( self::$done_css ) {
+			return;
+		}
+		if ( ! did_action( 'admin_enqueue_scripts' ) ) {
+			add_action( 'admin_enqueue_scripts', __METHOD__ );
 			return;
 		}
 		self::$done_css = true;
