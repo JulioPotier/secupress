@@ -257,30 +257,12 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			$icon   = isset( $module['icon'] ) ? $module['icon'] : 'secupress-simple';
 			$class  = $this->get_current_module() === $key ? 'active' : '';
 			$class .= ! empty( $module['mark_as_pro'] ) ? ' secupress-pro-module' : '';
-
-			// Skip Get Pro exception.
-			if ( 'get-pro' === $key ) {
-				continue;
-			}
 			?>
 			<li>
 				<a href="<?php echo esc_url( secupress_admin_url( 'modules', $key ) ); ?>" class="<?php echo $class; ?> module-<?php echo sanitize_key( $key ); ?>">
 					<span class="secupress-tab-name"><?php echo $module['title']; ?></span>
 					<span class="secupress-tab-summary"><?php echo $module['summaries']['small']; ?></span>
 					<i class="icon-<?php echo $icon; ?>" aria-hidden="true"></i>
-				</a>
-			</li>
-			<?php
-		}
-
-		// Prints last tab "Get Pro" is current user is not a pro one.
-		if ( ! secupress_is_pro() ) {
-			?>
-			<li>
-				<a href="<?php echo esc_url( secupress_admin_url( 'modules', 'get-pro' ) ); ?>" class="module-pro">
-					<span class="secupress-tab-name"><?php esc_html_e( 'Get Pro', 'secupress' ); ?></span>
-					<span class="secupress-tab-summary"><?php esc_html_e( 'Choose your licence', 'secupress' ); ?></span>
-					<i class="icon-secupress-simple" aria-hidden="true"></i>
 				</a>
 			</li>
 			<?php

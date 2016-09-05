@@ -15,10 +15,10 @@
  * GrayMidLight2: #B6B7BB;
  * GrayMedium	: #5A626F;
  * GrayDark		: #393E46;
- * 
+ *
  */
 /**
- * === Main navigation between modules 
+ * === Main navigation between modules
  */
 .secupress-modules-sidebar {
 	-webkit-flex-basis: 240px;
@@ -58,7 +58,7 @@
 }
 .secupress-sh-name {
 	font-weight: bold;
-	font-size: 18px;	
+	font-size: 18px;
 }
 .secupress-sh-name p {
 	margin: 0;
@@ -74,7 +74,7 @@ p.secupress-sh-subtitle {
 
 .secupress-modules-list-links {
 	margin: 0; padding: 0;
-	list-style: none;	
+	list-style: none;
 }
 .secupress-modules-list-links li {
 	display: block;
@@ -93,7 +93,7 @@ p.secupress-sh-subtitle {
 	transition: all .275s;
 }
 .secupress-modules-list-links li:last-child a {
-	border-bottom: 1px solid rgba(255, 255, 255, 0.15);	
+	border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 .secupress-modules-list-links a span {
 	display: block;
@@ -158,13 +158,13 @@ p.secupress-sh-subtitle {
 }
 
 /* Get pro link */
-.secupress-modules-sidebar .module-pro {
+.secupress-modules-sidebar .module-get-pro {
 	background: #F39C12;
 	color: #FFF;
 }
-.secupress-modules-sidebar .module-pro i,
-.secupress-modules-sidebar .module-pro i:before,
-.secupress-modules-sidebar .module-pro .secupress-tab-name {
+.secupress-modules-sidebar .module-get-pro i,
+.secupress-modules-sidebar .module-get-pro i:before,
+.secupress-modules-sidebar .module-get-pro .secupress-tab-name {
 	color: #FFF;
 }
 
@@ -400,7 +400,7 @@ p.secupress-sh-subtitle {
 	font-size: 95px;
 	right: 25px;
 	bottom: 0;
-	color: #5A626F;	
+	color: #5A626F;
 	opacity: 0.15;
 }
 
@@ -431,7 +431,7 @@ p.secupress-sh-subtitle {
 .fieldname-login-protection_type .secupress-pro-option .secupress-get-pro-version {
 	position: absolute;
 	top: 0;
-	right: 0; 
+	right: 0;
 	bottom: 0;
 	padding-right: 30px;
 	padding-top: 9px;
@@ -446,7 +446,7 @@ p.secupress-sh-subtitle {
 /**
  * Module User Agent List
  * &
- * Expandable textareas 
+ * Expandable textareas
  */
 
 .secupress-expand-trigger-container {
@@ -493,7 +493,7 @@ label .secupress-textarea-container + .secupress-expand-trigger-container {
 }
 .secupress-expand-trigger i:before {
 	font-size: 1.5em;
-	vertical-align: -3px; 
+	vertical-align: -3px;
 }
 .secupress-setting-row_bbq-headers_user-agents-list .secupress-get-pro-col,
 .secupress-setting-row_bbq-url-content_bad-contents-list .secupress-get-pro-col,

@@ -160,17 +160,19 @@ function secupress_get_modules() {
 			),
 		);
 
-		$modules['get-pro'] = array(
-			'title'       => __( 'Get Pro', 'secupress' ),
-			'icon'        => 'secupress-simple',
-			'summaries'   => array(
-				'small'  => __( 'Look farther with the Pro version', 'secupress' ),
-				'normal' => __( 'Access to more modules and options to make your website a real automated secure engine.', 'secupress' ),
-			),
-			'description' => array(
-				__( 'Access to more modules and options to make your website a real automated secure engine.', 'secupress' ),
-			),
-		);
+		if ( $should_be_pro ) {
+			$modules['get-pro'] = array(
+				'title'       => __( 'Get Pro', 'secupress' ),
+				'icon'        => 'secupress-simple',
+				'summaries'   => array(
+					'small'  => __( 'Choose your licence', 'secupress' ),
+					'normal' => __( 'Access to more modules and options to make your website a real automated secure engine.', 'secupress' ),
+				),
+				'description' => array(
+					__( 'Access to more modules and options to make your website a real automated secure engine.', 'secupress' ),
+				),
+			);
+		}
 	}
 
 	return $modules;
