@@ -147,7 +147,7 @@ function secupress_get_modules() {
 		),
 	);
 
-	if ( ! secupress_is_white_label() ) {
+	if ( function_exists( 'secupress_is_white_label' ) && ! secupress_is_white_label() ) {
 		$modules['services'] = array(
 			'title'       => __( 'Services', 'secupress' ),
 			'icon'        => 'services',
