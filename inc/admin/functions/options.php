@@ -10,9 +10,13 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  *
  * @since 1.0
  *
- * @return (string)
+ * @return (bool)
  */
 function secupress_is_white_label() {
+	if ( ! secupress_is_pro() ) {
+		return false;
+	}
+
 	$names = array( 'wl_plugin_name', 'wl_plugin_URI', 'wl_description', 'wl_author', 'wl_author_URI' );
 
 	foreach ( $names as $value ) {
