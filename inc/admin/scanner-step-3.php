@@ -261,22 +261,24 @@ if ( ! $secupress_tests ) {
 					<?php } ?>
 
 					<div class="secupress-row-actions secupress-flex secupress-flex-spaced secupress-mt2">
-						<p class="secupress-action-doc">
-							<a href="<?php echo $current_test::DOC_URL; ?>" class="secupress-button secupress-button-mini shadow" target="_blank" title="<?php _e( 'Open in a new window', 'secupress' ); ?>">
-								<span class="icon">
-									<i class="icon-file-text" aria-hidden="true"></i>
-								</span>
-								<span class="text"><?php _e( 'Read the documentation', 'secupress' ); ?></span>
-							</a>
-							<?php if ( secupress_is_pro() ) { ?>
-								<a href="#" class="secupress-button secupress-button-mini secupress-button-support light shadow"><?php // URL ////. ?>
+						<?php if ( ! secupress_is_white_label() ) { ?>
+							<p class="secupress-action-doc">
+								<a href="<?php echo $current_test::DOC_URL; ?>" class="secupress-button secupress-button-mini shadow" target="_blank" title="<?php _e( 'Open in a new window', 'secupress' ); ?>">
 									<span class="icon">
-										<i class="icon-ask" aria-hidden="true"></i>
+										<i class="icon-file-text" aria-hidden="true"></i>
 									</span>
-									<span class="text"><?php _e( 'Ask for support', 'secupress' ); ?></span>
+									<span class="text"><?php _e( 'Read the documentation', 'secupress' ); ?></span>
 								</a>
-							<?php } ?>
-						</p>
+								<?php if ( secupress_is_pro() ) { ?>
+									<a href="#" class="secupress-button secupress-button-mini secupress-button-support light shadow"><?php // URL ////. ?>
+										<span class="icon">
+											<i class="icon-ask" aria-hidden="true"></i>
+										</span>
+										<span class="text"><?php _e( 'Ask for support', 'secupress' ); ?></span>
+									</a>
+								<?php } ?>
+							</p>
+						<?php } ?>
 						<p class="secupress-actions">
 							<a href="<?php echo esc_url( secupress_admin_url( 'scanners' ) ); ?>&amp;step=4" class="secupress-button secupress-button-ignoreit hide-is-no-js shadow light" data-parent="secupress-group-item-<?php echo $class_name_part; ?>">
 								<span class="icon">
