@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2016-09-06 17:11+0200\n"
-"PO-Revision-Date: 2016-09-06 17:11+0200\n"
+"POT-Creation-Date: 2016-09-06 17:24+0200\n"
+"PO-Revision-Date: 2016-09-06 17:24+0200\n"
 "Last-Translator: WP Media <contact@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -1188,13 +1188,13 @@ msgstr "Demander au support"
 msgid "Open a ticket"
 msgstr "Ouvrir un ticket"
 
-#: inc/admin/settings.php:184
+#: inc/admin/settings.php:184 inc/modules/services/callbacks.php:28
 msgid ""
-"<p>During the test phase, the support is done by sending a manual email on "
-"<b>support@secupress.me</b>. Thank you!</p>"
+"During the test phase, the support is done by sending a manual email on "
+"<b>support@secupress.me</b>. Thank you!"
 msgstr ""
-"<p>Durant la phase de test, le support n'est fait qu'en envoyant un mail "
-"manuel à <b>support@secupress.me</b>. Merci&nbsp;!</p>"
+"Durant la phase de test, le support se fait en envoyant manuellement un "
+"email à <b>support@secupress.me</b>. Merci&nbsp;!"
 
 #: inc/admin/settings.php:188
 msgid "Security Scan just finished."
@@ -6878,14 +6878,6 @@ msgstr ""
 msgid "Yes, disable all the features of REST API"
 msgstr "Oui, désactiver les fonctionnalités de l'API REST"
 
-#: inc/modules/services/callbacks.php:28
-msgid ""
-"During the test phase, the support is done by sending a manual email on "
-"<b>contact@secupress.me</b>. Thank you!"
-msgstr ""
-"Durant la phase de test, le support est fait en envoyant un email manuel sur "
-"<b>contact@secupress.me</b>. Merci&nbsp;!"
-
 #: inc/modules/services/callbacks.php:30
 msgid "By the way, here is your message:"
 msgstr "Au fait, voici votre message&nbsp;:"
@@ -7750,10 +7742,10 @@ msgstr ""
 
 #~ msgid ""
 #~ "<p>During the test phase, the support is done by sending a manual email "
-#~ "on <b>contact@secupress.me</b>. Thank you!</p>"
+#~ "on <b>support@secupress.me</b>. Thank you!</p>"
 #~ msgstr ""
 #~ "<p>Durant la phase de test, le support n'est fait qu'en envoyant un mail "
-#~ "manuel à <b>contact@secupress.me</b>. Merci&nbsp;!</p>"
+#~ "manuel à <b>support@secupress.me</b>. Merci&nbsp;!</p>"
 
 #~ msgid "Available in <a href=\"%s\">Pro Version</a>"
 #~ msgstr "Disponible dans la <a href=\"%s\">Version Pro</a>"
