@@ -21,10 +21,6 @@ function secupress_block_bad_user_agents() {
 		secupress_block( 'UAHE' );
 	}
 
-	if ( strlen( $user_agent ) > 255 ) {
-		secupress_block( 'UAHL' );
-	}
-
 	if ( wp_strip_all_tags( $user_agent, true ) !== $user_agent ) {
 		secupress_block( 'UAHT' );
 	}
