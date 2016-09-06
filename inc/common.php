@@ -404,18 +404,14 @@ function secupress_add_salt_muplugin() {
 
 	secupress_delete_site_transient( 'secupress-add-salt-muplugin' );
 
-	$wpconfig_filename = secupress_find_wpconfig_path();
+	// Make sure we find the `wp-config.php` file.
+	$wpconfig_path = secupress_find_wpconfig_path();
 
-	if ( ! is_writable( $wpconfig_filename ) ) {
+	if ( ! is_writable( $wpconfig_path ) ) {
 		return;
 	}
 
-	$keys = array( 'AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'NONCE_KEY', 'AUTH_SALT', 'SECURE_AUTH_SALT', 'LOGGED_IN_SALT', 'NONCE_SALT' );
-
-	foreach ( $keys as $constant ) {
-		secupress_replace_content( $wpconfig_filename, '#define\s*\(\s*(\'' . $constant . '\'|"' . $constant . '").*#', '/*Commented by SecuPress*/ // $0' );
-	}
-
+	// Create the MU plugin.
 	$alicia_keys = file_get_contents( SECUPRESS_INC_PATH . 'data/salt-keys.phps' );
 	$alicia_keys = str_replace( array( '{{HASH1}}', '{{HASH2}}' ), array( wp_generate_password( 64, true, true ), wp_generate_password( 64, true, true ) ), $alicia_keys );
 
@@ -423,13 +419,42 @@ function secupress_add_salt_muplugin() {
 		return;
 	}
 
+	/**
+	 * Remove old secret keys from the `wp-config.php` file and add a comment.
+	 * We have to make sure the comment is added, only once, only if one or more keys are found, even if some secret keys are missing, and do not create useless empty lines.
+	 */
+	$wp_filesystem    = secupress_get_filesystem();
+	$wpconfig_content = $wp_filesystem->get_contents( $wpconfig_path );
+	$keys             = array( 'AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'NONCE_KEY', 'AUTH_SALT', 'SECURE_AUTH_SALT', 'LOGGED_IN_SALT', 'NONCE_SALT' );
+	$comment_added    = false;
+	$comment          = '/** SecuPress: if you ever want to add secret keys back here, get new ones at https://api.wordpress.org/secret-key/1.1/salt. */';
+	$placeholder      = '/** SecuPress salt placeholder. */';
+
+	foreach ( $keys as $i => $constant ) {
+		$pattern = '@define\s*\(\s*([\'"])' . $constant . '\1.*@';
+
+		if ( preg_match( $pattern, $wpconfig_content, $matches ) ) {
+			$replace          = $comment_added ? $placeholder : $comment;
+			$wpconfig_content = str_replace( $matches[0], $replace, $wpconfig_content );
+			$comment_added    = true;
+		}
+	}
+
+	if ( $comment_added ) {
+		$wpconfig_content = str_replace( $placeholder . "\n", '', $wpconfig_content );
+
+		$wp_filesystem->put_contents( $wpconfig_path, $wpconfig_content, FS_CHMOD_FILE );
+	}
+
+	// Remove old secret keys from the database.
+	foreach ( $keys as $constant ) {
+		delete_site_option( $constant );
+	}
+
+	// Destroy the user session.
 	wp_clear_auth_cookie();
 	if ( function_exists( 'wp_destroy_current_session' ) ) { // WP 4.0 min.
 		wp_destroy_current_session();
-	}
-
-	foreach ( $keys as $constant ) {
-		delete_site_option( $constant );
 	}
 
 	$token = md5( time() );
