@@ -39,80 +39,80 @@ foreach ( $scanned_items as $class_name_part => $details ) {
 					<?php
 					// Display a "bravo" message only if there is something fixed.
 					if ( $nb_good_scans ) {
-					?>
-						<p class="secupress-text-medium secupress-mb0"><?php printf( esc_html__( 'Bravo! You fixed %1$d of %2$d.', 'secupress' ), $nb_good_scans, count( $scanned_items ) ); ?></p>
-					<?php
+						?>
+						<p class="secupress-text-medium secupress-mb0"><?php printf( __( 'Bravo! You fixed %1$d of %2$d.', 'secupress' ), $nb_good_scans, count( $scanned_items ) ); ?></p>
+						<?php
 					} else {
-					?>
-						<p class="secupress-text-medium secupress-mb0"><?php printf( esc_html__( 'Nothing fixed yet, %d left.', 'secupress' ), count( $scanned_items ) ); ?></p>
-					<?php
+						?>
+						<p class="secupress-text-medium secupress-mb0"><?php printf( __( 'Nothing fixed yet, %d left.', 'secupress' ), count( $scanned_items ) ); ?></p>
+						<?php
 					}
 					?>
 
 					<p>
-					<?php
-					// Display a "grade ent from to" message only if it's better.
-					if ( $old_grade === $grade ) {
-						printf( esc_html__( 'Your grade is still %s. ', 'secupress' ), $grade );
-					} else {
-						printf( esc_html__( 'Your grade went from %1$s to %2$s. ', 'secupress' ), $old_grade, $grade );
-					}
+						<?php
+						// Display a "grade ent from to" message only if it's better.
+						if ( $old_grade === $grade ) {
+							printf( __( 'Your grade is still %s. ', 'secupress' ), $grade );
+						} else {
+							printf( __( 'Your grade went from %1$s to %2$s. ', 'secupress' ), $old_grade, $grade );
+						}
 
-					// Display the pre-message to show what has just been fixed.
-					if ( $nb_bad_scans || $nb_warning_scans ) {
-						esc_html_e( 'You fixed: ', 'secupress' );
-					}
-					?>
+						// Display the pre-message to show what has just been fixed.
+						if ( $nb_bad_scans || $nb_warning_scans ) {
+							_e( 'You fixed: ', 'secupress' );
+						}
+						?>
 					</p>
 
 					<div class="secupress-flex secupress-flex-spaced">
 						<div>
-						<?php
-						if ( $nb_bad_scans || $nb_warning_scans ) {
-							?>
-							<ul class="secupress-chart-legend">
-								<?php
-								if ( $nb_bad_scans ) {
-									?>
-									<li class="status-bad">
-										<span class="secupress-carret"></span>
-										<?php printf( esc_html__( '%d Bad', 'secupress' ), $nb_bad_scans ); ?>
-										<span class="secupress-count-bad"></span>
-									</li>
-									<?php
-								}
-
-								if ( $nb_warning_scans ) {
-									?>
-									<li class="status-warning">
-										<span class="secupress-carret"></span>
-										<?php printf( esc_html__( '%d Warning', 'secupress' ), $nb_warning_scans ); ?>
-										<span class="secupress-count-warning"></span>
-									</li>
-									<?php
-								}
-								?>
-							</ul>
 							<?php
-						}
-						?>
+							if ( $nb_bad_scans || $nb_warning_scans ) {
+								?>
+								<ul class="secupress-chart-legend">
+									<?php
+									if ( $nb_bad_scans ) {
+										?>
+										<li class="status-bad">
+											<span class="secupress-carret"></span>
+											<?php printf( __( '%d Bad', 'secupress' ), $nb_bad_scans ); ?>
+											<span class="secupress-count-bad"></span>
+										</li>
+										<?php
+									}
+
+									if ( $nb_warning_scans ) {
+										?>
+										<li class="status-warning">
+											<span class="secupress-carret"></span>
+											<?php printf( __( '%d Warning', 'secupress' ), $nb_warning_scans ); ?>
+											<span class="secupress-count-warning"></span>
+										</li>
+										<?php
+									}
+									?>
+								</ul>
+								<?php
+							}
+							?>
 						</div>
 						<?php if ( $nb_bad_scans || $nb_warning_scans ) { ?>
-						<p>
-							<button class="secupress-button secupress-button-ghost secupress-button-mini hide-is-no-js" type="button" data-target="secupress-summaries" data-trigger="slidetoggle" title="<?php esc_attr_e( 'Show/hide the details of scanned items in your report', 'secupress' ); ?>">
-								<span class="icon">
-									<i class="icon-angle-down" aria-hidden="true"></i>
-								</span>
-								<span class="text" aria-hidden="true">
-									<span class="hidden-when-activated">
-										<?php esc_html_e( 'See all fixed issues', 'secupress' ); ?>
+							<p>
+								<button class="secupress-button secupress-button-ghost secupress-button-mini hide-is-no-js" type="button" data-target="secupress-summaries" data-trigger="slidetoggle" title="<?php esc_attr_e( 'Show/hide the details of scanned items in your report', 'secupress' ); ?>">
+									<span class="icon">
+										<i class="icon-angle-down" aria-hidden="true"></i>
 									</span>
-									<span class="visible-when-activated">
-										<?php esc_html_e( 'Hide all fixed issues', 'secupress' ); ?>
+									<span class="text" aria-hidden="true">
+										<span class="hidden-when-activated">
+											<?php _e( 'See all fixed issues', 'secupress' ); ?>
+										</span>
+										<span class="visible-when-activated">
+											<?php _e( 'Hide all fixed issues', 'secupress' ); ?>
+										</span>
 									</span>
-								</span>
-							</button>
-						</p>
+								</button>
+							</p>
 						<?php } ?>
 					</div>
 				</div>
@@ -152,16 +152,18 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			secupress_require_class( 'scan', $class_name_part );
 		}
 	}
+
 	$class_name_parts = array_intersect_key( $class_name_parts, $this_good_scans );
+
 	if ( ! $class_name_parts ) {
 		continue;
 	}
 	?>
-		<div class="secupress-scans-group secupress-group-<?php echo $module_name; ?>">
+	<div class="secupress-scans-group secupress-group-<?php echo $module_name; ?>">
 
 		<?php
 		if ( ! $is_subsite ) {
-		?>
+			?>
 			<div class="secupress-sg-header secupress-flex secupress-flex-spaced">
 
 				<div class="secupress-sgh-name">
@@ -173,14 +175,14 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 				<div class="secupress-sgh-actions secupress-flex secupress-flex-top">
 					<button class="secupress-vnormal hide-if-no-js dont-trigger-hide trigger-hide-first" type="button" data-trigger="slidetoggle" data-target="secupress-group-content-<?php echo $module_name; ?>">
 						<i class="icon-angle-up" aria-hidden="true"></i>
-						<span class="screen-reader-text"><?php esc_html_e( 'Show/hide panel', 'secupress' ); ?></span>
+						<span class="screen-reader-text"><?php _e( 'Show/hide panel', 'secupress' ); ?></span>
 					</button>
 				</div>
 
 			</div><!-- .secupress-sg-header -->
 
 			<div id="secupress-group-content-<?php echo $module_name; ?>" class="secupress-sg-content">
-		<?php
+			<?php
 		}
 
 		foreach ( $class_name_parts as $option_name => $class_name_part ) {
@@ -221,53 +223,51 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 
 			// To-check: are all status here? ////.
 			switch ( $scan_status ) {
-
 				case 'bad' :
 					$icon_slug = 'cross-o';
-					$scan_status_word = esc_html__( 'Not Fixed', 'secupress' );
+					$scan_status_word = __( 'Not Fixed', 'secupress' );
 					break;
 
 				case 'warning' :
 					$icon_slug = 'exclamation-o';
-					$scan_status_word = esc_html__( 'Error', 'secupress' );
+					$scan_status_word = __( 'Error', 'secupress' );
 					break;
 
 				case 'pending' :
 					$icon_slug = 'clock-o-2';
-					$scan_status_word = esc_html__( 'Pending', 'secupress' );
+					$scan_status_word = __( 'Pending', 'secupress' );
 					break;
 
 				default :
 					$icon_slug = 'check';
-					$scan_status_word = esc_html__( 'Fixed', 'secupress' );
+					$scan_status_word = __( 'Fixed', 'secupress' );
 			}
-
 			?>
 
-				<div class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> status-all <?php echo $row_css_class; ?>" id="<?php echo $class_name_part; ?>">
+			<div class="secupress-item-all secupress-item-<?php echo $class_name_part; ?> status-all <?php echo $row_css_class; ?>" id="<?php echo $class_name_part; ?>">
 
-					<div class="secupress-flex">
+				<div class="secupress-flex">
 
-						<p class="secupress-item-status secupress-status-mini">
-							<span class="secupress-dot-<?php echo $scan_status; ?>"></span>
-						</p>
+					<p class="secupress-item-status secupress-status-mini">
+						<span class="secupress-dot-<?php echo $scan_status; ?>"></span>
+					</p>
 
-						<p class="secupress-item-title"><?php echo $scan_message; ?></p>
+					<p class="secupress-item-title"><?php echo $scan_message; ?></p>
 
-						<p class="secupress-row-actions">
-							<span class="secupress-status secupress-status-<?php echo sanitize_html_class( $scan_status ); ?>">
-								<i class="icon-<?php echo $icon_slug; ?>" aria-hidden="true"></i>
-								<?php echo $scan_status_word; ?></span>
-						</p>
-					</div><!-- .secupress-flex -->
-				</div><!-- .secupress-item-all -->
+					<p class="secupress-row-actions">
+						<span class="secupress-status secupress-status-<?php echo sanitize_html_class( $scan_status ); ?>">
+							<i class="icon-<?php echo $icon_slug; ?>" aria-hidden="true"></i>
+							<?php echo $scan_status_word; ?></span>
+					</p>
+				</div><!-- .secupress-flex -->
+			</div><!-- .secupress-item-all -->
 
 			<?php
 		}
 		?>
 
-			</div><!-- .secupress-sg-content -->
-		</div><!-- .secupress-scans-group -->
+		</div><!-- .secupress-sg-content -->
+	</div><!-- .secupress-scans-group -->
 
 	<?php
 }
@@ -278,7 +278,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 					<i class="icon-file-pdf-o" aria-hidden="true"></i>
 				</span>
 				<span class="text">
-					' . esc_html__( 'Export as PDF', 'secupress' ) . '
+					' . __( 'Export as PDF', 'secupress' ) . '
 				</span>';
 			?>
 			<p>
@@ -308,8 +308,8 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 	<div class="secupress-go-farther">
 		<div class="secupress-flex">
 			<div class="secupress-col">
-				<p class="secupress-farther-title"><?php esc_html_e( 'Want to go farther?', 'secupress' ); ?></p>
-				<p class="secupress-farther-desc"><?php esc_html_e( 'Perfect the security of your website with our dedicated modules.', 'secupress' ); ?></p>
+				<p class="secupress-farther-title"><?php _e( 'Want to go farther?', 'secupress' ); ?></p>
+				<p class="secupress-farther-desc"><?php _e( 'Perfect the security of your website with our dedicated modules.', 'secupress' ); ?></p>
 			</div>
 			<div class="secupress-col secupress-col-action">
 				<a href="<?php echo esc_url( secupress_admin_url( 'modules' ) ); ?>" class="secupress-rich-link secupress-current">
@@ -317,25 +317,25 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 						<i aria-hidden="true" class="icon-cogs rounded"></i>
 						<span class="secupress-upper"><?php printf(
 							/** Translators: %s is the plugin name. */
-							esc_html__( '%s modules', 'secupress' ),
+							__( '%s modules', 'secupress' ),
 							SECUPRESS_PLUGIN_NAME
 						); ?></span>
-						<span class="secupress-description"><?php esc_html_e( 'Fine tune your Security', 'secupress' ); ?></span>
+						<span class="secupress-description"><?php _e( 'Fine tune your Security', 'secupress' ); ?></span>
 					</span>
 				</a>
 			</div>
 		</div>
 		<div class="secupress-flex">
 			<div class="secupress-col">
-				<p class="secupress-farther-title"><?php esc_html_e( 'Manage your recurring scans', 'secupress' ); ?></p>
-				<p class="secupress-farther-desc"><?php sprintf( esc_html__( 'Let %s scan your website when you are away by using recurent scans.', 'secupress' ), SECUPRESS_PLUGIN_NAME ); ?></p>
+				<p class="secupress-farther-title"><?php _e( 'Manage your recurring scans', 'secupress' ); ?></p>
+				<p class="secupress-farther-desc"><?php sprintf( __( 'Let %s scan your website when you are away by using recurent scans.', 'secupress' ), SECUPRESS_PLUGIN_NAME ); ?></p>
 			</div>
 			<div class="secupress-col secupress-col-action">
 				<a href="<?php echo esc_url( secupress_admin_url( 'modules' ) ); ?>&amp;module=schedules" class="secupress-rich-link secupress-current">
 					<span class="secupress-label-with-icon">
 						<i aria-hidden="true" class="icon-calendar rounded"></i>
-						<span class="secupress-upper"><?php esc_html_e( 'Schedule Scans', 'secupress' ); ?></span>
-						<span class="secupress-description"><?php esc_html_e( 'Program recurring scans', 'secupress' ); ?></span>
+						<span class="secupress-upper"><?php _e( 'Schedule Scans', 'secupress' ); ?></span>
+						<span class="secupress-description"><?php _e( 'Program recurring scans', 'secupress' ); ?></span>
 					</span>
 				</a>
 			</div>
@@ -353,7 +353,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 				<?php echo secupress_get_logo( array( 'width' => 81 ), true ); ?>
 			</div>
 			<div class="secupress-col-summary-text secupress-flex secupress-flex-spaced">
-				<p class="secupress-text-medium secupress-mb0"><?php esc_html_e( 'Get a better score and unlock all features', 'secupress' ); ?></p>
+				<p class="secupress-text-medium secupress-mb0"><?php _e( 'Get a better score and unlock all features', 'secupress' ); ?></p>
 
 
 				<p class="secupress-p1">
@@ -362,7 +362,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 							<i class="icon-secupress-simple" aria-hidden="true"></i>
 						</span>
 						<span class="text">
-							<?php esc_html_e( 'Get Pro', 'secupress' ); ?>
+							<?php _e( 'Get Pro', 'secupress' ); ?>
 						</span>
 					</a>
 				</p>

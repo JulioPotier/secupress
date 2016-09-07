@@ -335,7 +335,7 @@ function secupress_warning_no_oneclick_scan_yet() {
 		</div>
 		<div class="secupress-col-2-4 secupress-col-text">
 			<p class="secupress-text-medium"><?php printf( __( '%s is activated, let\'s improve the security of your website!', 'secupress' ), SECUPRESS_PLUGIN_NAME ); ?></p>
-			<p><?php esc_html_e( 'Scan every security points for the first time in your website, right now.', 'secupress' ); ?></p>
+			<p><?php _e( 'Scan every security points for the first time in your website, right now.', 'secupress' ); ?></p>
 		</div>
 		<div class="secupress-col-1-4 secupress-col-cta">
 			<a class="secupress-button secupress-button-primary secupress-button-scan" href="<?php echo esc_url( wp_nonce_url( secupress_admin_url( 'scanners' ), 'first_oneclick-scan' ) ) . '&oneclick-scan=1'; ?>">
@@ -343,12 +343,12 @@ function secupress_warning_no_oneclick_scan_yet() {
 					<i class="icon-radar" aria-hidden="true"></i>
 				</span>
 				<span class="text">
-					<?php esc_html_e( 'Scan my website', 'secupress' ); ?>
+					<?php _e( 'Scan my website', 'secupress' ); ?>
 				</span>
 			</a>
 			<a class="secupress-close-notice" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_dismiss-notice&notice_id=oneclick-scan&_wp_http_referer=' . $referer ), 'secupress-notices' ); ?>">
 				<i class="icon-squared-cross" aria-hidden="true"></i>
-				<span class="screen-reader-text"><?php esc_html_e( 'Close' ); ?></span>
+				<span class="screen-reader-text"><?php _e( 'Close' ); ?></span>
 			</a>
 		</div>
 	</div><!-- .secupress-section-dark -->
@@ -397,8 +397,8 @@ function secupress_warning_no_api_key() {
 			</div>
 		</div>
 		<div class="secupress-col-2-4 secupress-col-text">
-			<p class="secupress-text-medium"><?php esc_html_e( 'Go further to get more security features!', 'secupress' ); ?></p>
-			<p><?php esc_html_e( 'The API Key will allow you to secure more deeply your website by activating new modules.', 'secupress' ); ?></p>
+			<p class="secupress-text-medium"><?php _e( 'Go further to get more security features!', 'secupress' ); ?></p>
+			<p><?php _e( 'The API Key will allow you to secure more deeply your website by activating new modules.', 'secupress' ); ?></p>
 		</div>
 		<div class="secupress-col-1-4 secupress-col-cta">
 			<a href="<?php echo esc_url( secupress_admin_url( 'settings' ) ); ?>" class="secupress-button secupress-button-primary button-secupress-get-api-key">
@@ -411,7 +411,7 @@ function secupress_warning_no_api_key() {
 			</a>
 			<a class="secupress-close-notice" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_dismiss-notice&notice_id=get-api-key&_wp_http_referer=' . $referer ), 'secupress-notices' ); ?>">
 				<i class="icon-squared-cross" aria-hidden="true"></i>
-				<span class="screen-reader-text"><?php esc_html_e( 'Close' ); ?></span>
+				<span class="screen-reader-text"><?php _e( 'Close' ); ?></span>
 			</a>
 		</div>
 	</div><!-- .secupress-section-medium -->

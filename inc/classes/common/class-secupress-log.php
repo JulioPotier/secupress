@@ -262,7 +262,7 @@ class SecuPress_Log {
 			}
 			// Add a link to the user's profile page.
 			elseif ( $referer ) {
-				$suffix = esc_html__( 'Profile' ); // WP i18n.
+				$suffix = __( 'Profile' ); // WP i18n.
 			}
 			else {
 				$suffix = '';

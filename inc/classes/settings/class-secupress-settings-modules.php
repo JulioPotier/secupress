@@ -757,7 +757,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			<p class="description desc">
 				<?php _e( 'Post creation or update will not be logged, but rather password and profile update, email changes, new administrator user, admin has logged in...', 'secupress' ); ?>
 			</p>
-			<p class="submit"><button type="submit" class="secupress-button secupress-button-primary"><?php esc_html_e( 'Submit' ); ?></button></p>
+			<p class="submit"><button type="submit" class="secupress-button secupress-button-primary"><?php _e( 'Submit' ); ?></button></p>
 		</form>
 		<?php
 	}
@@ -793,7 +793,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 				?>
 			<?php echo $label_close; ?>
 			</p>
-			<?php echo '<p class="submit"><button type="submit" class="secupress-button secupress-button-primary">' . esc_html__( 'Submit' ) . '</button></p>'; ?>
+			<?php echo '<p class="submit"><button type="submit" class="secupress-button secupress-button-primary">' . __( 'Submit' ) . '</button></p>'; ?>
 		</form>
 		<?php
 	}
@@ -834,7 +834,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 					<i class="icon-download"></i>
 				</span>
 				<span class="text">
-					<?php esc_html_e( 'Backup my Database', 'secupress' ); ?>
+					<?php _e( 'Backup my Database', 'secupress' ); ?>
 				</span>
 			</button>
 		<?php
@@ -863,7 +863,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 					<i class="icon-download"></i>
 				</span>
 				<span class="text">
-					<?php esc_html_e( 'Backup my Files', 'secupress' ); ?>
+					<?php _e( 'Backup my Files', 'secupress' ); ?>
 				</span>
 			</button>
 		</p>
@@ -888,7 +888,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		if ( ! secupress_is_pro() ) {
 			?>
 			<button class="secupress-button disabled" type="button">
-				<?php esc_html_e( 'Search for malicious files', 'secupress' ); ?>
+				<?php _e( 'Search for malicious files', 'secupress' ); ?>
 			</button>
 			<?php
 		} else {

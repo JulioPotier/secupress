@@ -16,8 +16,8 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 			</div>
 		</div>
 		<div class="secupress-col-2-3 secupress-col-text">
-			<p class="secupress-text-medium"><?php esc_html_e( 'Secure your website deeper thanks to our dedicated modules', 'secupress' ); ?></p>
-			<p><?php esc_html_e( 'Anti-Malware, Firewall, or Anti-Spam: add features, schedule scans and protect your data.', 'secupress' ); ?></p>
+			<p class="secupress-text-medium"><?php _e( 'Secure your website deeper thanks to our dedicated modules', 'secupress' ); ?></p>
+			<p><?php _e( 'Anti-Malware, Firewall, or Anti-Spam: add features, schedule scans and protect your data.', 'secupress' ); ?></p>
 		</div>
 	</div>
 
@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 				<i class="icon-secupress-simple" aria-hidden="true"></i>
 			</div>
 			<div class="secupress-col-2-4 secupress-col-text">
-				<p class="secupress-text-basup"><?php esc_html_e( 'Get a better score and unlock all features', 'secupress' ); ?></p>
+				<p class="secupress-text-basup"><?php _e( 'Get a better score and unlock all features', 'secupress' ); ?></p>
 			</div>
 			<div class="secupress-col-1-4 secupress-col-cta">
 				<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ); ?>" class="secupress-button secupress-button-tertiary">
@@ -52,7 +52,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 				<p class="secupress-mb-description"><?php echo $mod['summaries']['normal']; ?></p>
 				<p class="secupress-mb-action">
 					<a href="<?php echo esc_url( secupress_admin_url( 'modules', $slug ) ); ?>" class="secupress-button-primary">
-						<?php esc_html_e( 'View options', 'secupress' ); ?>
+						<?php _e( 'View options', 'secupress' ); ?>
 					</a>
 					<?php echo ! empty( $mod['mark_as_pro'] ) ? $pro_msg : ''; ?>
 				</p>
