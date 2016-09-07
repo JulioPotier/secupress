@@ -2,7 +2,7 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /**
- * Bad Vulnerables Plugins scan class.
+ * Bad Vulnerable Plugins scan class.
  *
  * @package SecuPress
  * @subpackage SecuPress_Scan
@@ -49,7 +49,9 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 		$this->more  = __( 'Never use a plugin known as vulnerable, you should update or remove it as soon as possible!', 'secupress' );
 
 		if ( is_network_admin() ) {
-			$this->more_fix = __( 'Select and delete vulnerable plugins.', 'secupress' );
+			$this->more_fix  = __( 'Select and delete vulnerable plugins.', 'secupress' );
+			$this->more_fix .= '<br/>' . __( 'Will be fixable soon.', 'secupress' ); // RC2 ////.
+			$this->fixable   = false;
 		} elseif ( ! is_multisite() ) {
 			$this->more_fix = __( 'Delete vulnerable plugins.', 'secupress' );
 		} else {
