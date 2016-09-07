@@ -774,18 +774,12 @@ function secupress_scanners() {
 
 			</div><!-- .secupress-section-dark -->
 
-			<?php
-			// ////.
-			secupress_require_class( 'settings' );
-			secupress_require_class( 'settings', 'modules' );
-			$modules         = SecuPress_Settings_Modules::get_modules();
-			?>
 			<div class="secupress-scanner-main-content secupress-section-gray secupress-bordered">
 
 				<div class="secupress-step-content-container">
-				<?php
+					<?php
 					secupress_scanners_template();
-				?>
+					?>
 				</div><!-- .secupress-step-content-container-->
 
 			</div>
