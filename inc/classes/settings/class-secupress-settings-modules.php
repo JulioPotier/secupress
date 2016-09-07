@@ -213,7 +213,6 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 				 * Modules are included in the content of the page.
 				 */
 				if ( ! $is_welcome ) {
-					$suffix = secupress_is_pro() ? '' : '-pro';
 					?>
 					<div class="secupress-modules-sidebar">
 						<div class="secupress-sidebar-header">
@@ -806,9 +805,9 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 */
 	protected function backup_history() {
 		if ( ! secupress_is_pro() ) {
-		?>
-		<p id="secupress-no-backups"><em><?php _e( 'No Backups found yet, do one?', 'secupress' ); ?></em></p>
-		<?php
+			?>
+			<p id="secupress-no-backups"><em><?php _e( 'No Backups found yet, do one?', 'secupress' ); ?></em></p>
+			<?php
 		} else {
 			/**
 			 * Fires when SecuPress Pro loads the method backup_history.
@@ -827,17 +826,18 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 */
 	protected function backup_db() {
 		if ( ! secupress_is_pro() ) {
-		?>
-		<p class="submit">
-			<button disabled="disabled" class="secupress-button">
-				<span class="icon">
-					<i class="icon-download"></i>
-				</span>
-				<span class="text">
-					<?php _e( 'Backup my Database', 'secupress' ); ?>
-				</span>
-			</button>
-		<?php
+			?>
+			<p class="submit">
+				<button type="button" disabled="disabled" class="secupress-button">
+					<span class="icon">
+						<i class="icon-download"></i>
+					</span>
+					<span class="text">
+						<?php _e( 'Backup my Database', 'secupress' ); ?>
+					</span>
+				</button>
+			</p>
+			<?php
 		} else {
 			/**
 			 * Fires when SecuPress Pro loads the method backup_db.
@@ -856,18 +856,18 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 */
 	protected function backup_files() {
 		if ( ! secupress_is_pro() ) {
-		?>
-		<p class="submit">
-			<button disabled="disabled" class="secupress-button">
-				<span class="icon">
-					<i class="icon-download"></i>
-				</span>
-				<span class="text">
-					<?php _e( 'Backup my Files', 'secupress' ); ?>
-				</span>
-			</button>
-		</p>
-		<?php
+			?>
+			<p class="submit">
+				<button type="button" disabled="disabled" class="secupress-button">
+					<span class="icon">
+						<i class="icon-download"></i>
+					</span>
+					<span class="text">
+						<?php _e( 'Backup my Files', 'secupress' ); ?>
+					</span>
+				</button>
+			</p>
+			<?php
 		} else {
 			/**
 			 * Fires when SecuPress Pro loads the method backup_files.
@@ -887,9 +887,11 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	protected function file_scanner() {
 		if ( ! secupress_is_pro() ) {
 			?>
-			<button class="secupress-button disabled" type="button">
-				<?php _e( 'Search for malicious files', 'secupress' ); ?>
-			</button>
+			<p class="submit">
+				<button type="button" disabled="disabled" class="secupress-button">
+					<?php _e( 'Search for malicious files', 'secupress' ); ?>
+				</button>
+			</p>
 			<?php
 		} else {
 			/**
