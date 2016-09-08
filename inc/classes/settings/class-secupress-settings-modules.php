@@ -445,7 +445,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	protected function scheduled_backups() {
-		_e( 'None so far.', 'secupress' );
+		_ex( 'None so far.', 'scheduled backups', 'secupress' );
 	}
 
 
@@ -455,7 +455,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	protected function scheduled_scan() {
-		_e( 'None so far.', 'secupress' );
+		_ex( 'None so far.', 'scheduled scans', 'secupress' );
 	}
 
 
@@ -465,7 +465,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	protected function scheduled_monitoring() {
-		_e( 'None so far.', 'secupress' );
+		_ex( 'None so far.', 'scheduled file monitoring', 'secupress' );
 	}
 
 
