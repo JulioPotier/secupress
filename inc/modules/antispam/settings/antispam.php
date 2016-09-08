@@ -10,11 +10,13 @@ $field_name       = $this->get_field_name( 'antispam' );
 $main_field_name  = $field_name . '_fightspam';
 $is_plugin_active = array();
 
-if ( secupress_is_submodule_active( 'antispam', 'fightspam' ) ) {
-	$is_plugin_active[] = 'fightspam';
-}
-if ( secupress_is_submodule_active( 'antispam', 'remove-comment-feature' ) ) {
-	$is_plugin_active[] = 'remove-comment-feature';
+if ( secupress_is_pro() ) {
+	if ( secupress_is_submodule_active( 'antispam', 'fightspam' ) ) {
+		$is_plugin_active[] = 'fightspam';
+	}
+	if ( secupress_is_submodule_active( 'antispam', 'remove-comment-feature' ) ) {
+		$is_plugin_active[] = 'remove-comment-feature';
+	}
 }
 
 $this->add_field( array(
@@ -24,6 +26,7 @@ $this->add_field( array(
 	'plugin_activation' => true,
 	'type'              => 'radioboxes',
 	'value'             => $is_plugin_active,
+	'default'           => array(),
 	'label_screen'      => __( 'Which anti-spam do you need', 'secupress' ),
 	'options'           => array(
 		'fightspam'              => __( 'I <strong>need comments</strong> on my website, fight comment spam.', 'secupress' ),
