@@ -30,27 +30,6 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 	protected static $_instance;
 
 	/**
-	 * Current php version.
-	 *
-	 * @var (string)
-	 */
-	public static $php_version;
-
-	/**
-	 * Minimum php version.
-	 *
-	 * @var (string)
-	 */
-	public static $php_ver_min = '5.5.38';
-
-	/**
-	 * Maximum php version.
-	 *
-	 * @var (string)
-	 */
-	public static $php_ver_best = '5.6.24';
-
-	/**
 	 * Tells if a scanner is fixable by SecuPress. The value "pro" means it's fixable only with the version PRO.
 	 *
 	 * @var (bool|string)
@@ -69,22 +48,6 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 		$this->title    = __( 'Check if your installation is using a supported version of PHP.', 'secupress' );
 		$this->more     = __( 'Every year old PHP version are not supported anymore, even for security patches so it\'s important to stay updated.', 'secupress' );
 		$this->more_fix = static::get_messages( 300 );
-
-		if ( false === ( $php_vers = get_site_transient( 'secupress_php_versions' ) ) ) {
-			$response = wp_remote_get( 'http://php.net/releases/index.php?json&version=5&max=2' );
-
-			if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
-				$php_vers = json_decode( wp_remote_retrieve_body( $response ) );
-				$php_vers = array_keys( (array) $php_vers );
-				set_site_transient( 'secupress_php_versions', $php_vers, 7 * DAY_IN_SECONDS );
-			}
-		}
-
-		if ( $php_vers ) {
-			list( static::$php_ver_best, static::$php_ver_min ) = $php_vers;
-		}
-
-		static::$php_version = phpversion();
 	}
 
 
@@ -98,14 +61,15 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
 	 */
 	public static function get_messages( $message_id = null ) {
+		$versions = static::get_php_versions();
 		$messages = array(
 			// "good"
-			0   => sprintf( __( 'You are using <strong>PHP v%s</strong>.', 'secupress' ), static::$php_version ),
-			1   => sprintf( __( 'You are using <strong>PHP v%s</strong>, perfect!', 'secupress' ), static::$php_version ),
+			0   => sprintf( __( 'You are using <strong>PHP v%s</strong>.', 'secupress' ), $versions['current'] ),
+			1   => sprintf( __( 'You are using <strong>PHP v%s</strong>, perfect!', 'secupress' ), $versions['current'] ),
 			// "warning"
 			100 => __( 'Unable to determine version of PHP.', 'secupress' ),
 			// "bad"
-			200   => sprintf( __( 'You are using <strong>PHP v%1$s</strong>, but the latest supported version is <strong>PHP v%2$s</strong>, and the best is <strong>PHP v%3$s</strong>.', 'secupress' ), static::$php_version, static::$php_ver_min, static::$php_ver_best ),
+			200   => sprintf( __( 'You are using <strong>PHP v%1$s</strong>, but the latest supported version is <strong>PHP v%2$s</strong>, and the best is <strong>PHP v%3$s</strong>.', 'secupress' ), $versions['current'], $versions['mini'], $versions['best'] ),
 			// "cantfix"
 			300 => __( 'Cannot be fixed automatically. You have to contact you host provider to ask him to <strong>upgrade you version of PHP</strong>.', 'secupress' ),
 		);
@@ -128,13 +92,15 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-		if ( version_compare( static::$php_version, static::$php_ver_min ) < 0 ) {
+		$versions = static::get_php_versions();
+
+		if ( version_compare( $versions['current'], $versions['mini'] ) < 0 ) {
 			$this->add_message( 200 );
 			$this->add_pre_fix_message( 300 );
 		}
 
 		// "good"
-		if ( static::$php_version === static::$php_ver_best ) {
+		if ( $versions['current'] === $versions['best'] ) {
 			$this->add_message( 1 );
 		} else {
 			$this->maybe_set_status( 0 );
@@ -156,5 +122,46 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 	public function fix() {
 		$this->add_fix_message( 300 );
 		return parent::fix();
+	}
+
+
+	/** Tools. ================================================================================== */
+
+	/**
+	 * Get the 3 php versions we need: current, mini, and best.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (array) The 3 php versions with the following keys: "current", "mini", "best".
+	 */
+	public static function get_php_versions() {
+		static $versions;
+
+		if ( isset( $versions ) ) {
+			return $versions;
+		}
+
+		$versions = array(
+			'current' => phpversion(),
+			'mini'    => '5.5.38',
+			'best'    => '5.6.24',
+		);
+
+		if ( false === ( $php_vers = get_site_transient( 'secupress_php_versions' ) ) ) {
+			$response = wp_remote_get( 'http://php.net/releases/index.php?json&version=5&max=2' );
+
+			if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
+				$php_vers = json_decode( wp_remote_retrieve_body( $response ) );
+				$php_vers = array_keys( (array) $php_vers );
+				set_site_transient( 'secupress_php_versions', $php_vers, 7 * DAY_IN_SECONDS );
+			}
+		}
+
+		if ( $php_vers ) {
+			$versions['mini'] = end( $php_vers );
+			$versions['best'] = reset( $php_vers );
+		}
+
+		return $versions;
 	}
 }
