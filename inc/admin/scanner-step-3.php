@@ -263,7 +263,7 @@ if ( ! $secupress_tests ) {
 					<div class="secupress-row-actions secupress-flex secupress-flex-spaced secupress-mt2">
 						<?php if ( ! secupress_is_white_label() ) { ?>
 							<p class="secupress-action-doc">
-								<a href="<?php echo $current_test::DOC_URL; ?>" class="secupress-button secupress-button-mini shadow" target="_blank" title="<?php _e( 'Open in a new window', 'secupress' ); ?>">
+								<a href="<?php echo esc_url( $current_test::get_docs_url() ); ?>" class="secupress-button secupress-button-mini shadow" target="_blank" title="<?php _e( 'Open in a new window', 'secupress' ); ?>">
 									<span class="icon">
 										<i class="icon-file-text" aria-hidden="true"></i>
 									</span>

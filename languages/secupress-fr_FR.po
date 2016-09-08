@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
 "POT-Creation-Date: 2016-09-08 18:18+0200\n"
-"PO-Revision-Date: 2016-09-08 18:22+0200\n"
+"PO-Revision-Date: 2016-09-08 22:27+0200\n"
 "Last-Translator: WP Media <contact@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -41,7 +41,7 @@ msgstr "Scanners"
 msgid "Modules"
 msgstr "Modules"
 
-#: inc/admin-bar.php:52 inc/admin/settings.php:259 inc/admin/settings.php:288
+#: inc/admin-bar.php:52 inc/admin/settings.php:263 inc/admin/settings.php:292
 #: inc/classes/settings/class-secupress-settings-global.php:61
 #: inc/classes/settings/class-secupress-settings-global.php:65
 msgid "Settings"
@@ -202,7 +202,7 @@ msgstr "Toutes les adresses IP ont été débannies."
 msgid "%s ago"
 msgstr "Il y a %s"
 
-#: inc/admin/functions/admin.php:145 inc/admin/settings.php:374
+#: inc/admin/functions/admin.php:145 inc/admin/settings.php:378
 msgctxt "Latest scans"
 msgid "M dS, Y \\a\\t h:ia"
 msgstr "l j F Y \\à G:i:s"
@@ -796,7 +796,7 @@ msgid "Update %s: Discover the New Security items to check"
 msgstr ""
 "Mise à jour %s&nbsp;: Découvrez les nouveaux points de sécurité à vérifier"
 
-#: inc/admin/scanner-step-1.php:64 inc/admin/settings.php:612
+#: inc/admin/scanner-step-1.php:64 inc/admin/settings.php:616
 msgid "Scan website"
 msgstr "Scanner le site"
 
@@ -1213,45 +1213,55 @@ msgid ""
 msgstr ""
 "La documentation est actuellement en construction, merci pour votre patience."
 
-#: inc/admin/settings.php:292 inc/modules/services/settings/support.php:7
+#: inc/admin/settings.php:255 inc/admin/settings.php:257
+#: inc/admin/settings.php:296 inc/modules/services/settings/support.php:5
 msgid "Support"
 msgstr "Support"
 
-#: inc/admin/settings.php:294
+#: inc/admin/settings.php:260 inc/classes/scanners/class-secupress-scan.php:229
+#: inc/modules/services/settings/support.php:16
+msgid "http://docs.secupress.me/"
+msgstr "http://fr.docs.secupress.me/"
+
+#: inc/admin/settings.php:260
+msgid "Docs"
+msgstr "Docs"
+
+#: inc/admin/settings.php:298
 msgid "PRO Version"
 msgstr "Version PRO"
 
-#: inc/admin/settings.php:382
+#: inc/admin/settings.php:386
 msgid "Currently scanning"
 msgstr "Scanner en cours"
 
-#: inc/admin/settings.php:385
+#: inc/admin/settings.php:389
 #, php-format
 msgid "%1$s&nbsp;/&nbsp;%2$s points"
 msgstr "%1$s&nbsp;/&nbsp;%2$s points"
 
-#: inc/admin/settings.php:411
+#: inc/admin/settings.php:415
 msgid "First scan"
 msgstr "Premier scanner"
 
-#: inc/admin/settings.php:412
+#: inc/admin/settings.php:416
 msgid "Here’s how it’s going to work"
 msgstr "Voici comment cela fonctionne"
 
-#: inc/admin/settings.php:417 inc/admin/settings.php:592
+#: inc/admin/settings.php:421 inc/admin/settings.php:596
 msgid "Result of the scan"
 msgstr "Résultat du scanner"
 
-#: inc/admin/settings.php:426
+#: inc/admin/settings.php:430
 msgid "How does it work?"
 msgstr "Comment ça marche&nbsp;?"
 
-#: inc/admin/settings.php:473
+#: inc/admin/settings.php:477
 msgid "New Scan"
 msgstr "Nouveau scan"
 
 #. Translators: %s is the plugin name
-#: inc/admin/settings.php:485 inc/admin/settings.php:492
+#: inc/admin/settings.php:489 inc/admin/settings.php:496
 #, php-format
 msgid ""
 "Wow! My website just got an A security grade using %s, what about yours?"
@@ -1259,23 +1269,23 @@ msgstr ""
 "Wow&nbsp;! Mon site a reçu le grade de sécurité A en utilisant %s, quel est "
 "le vôtre&nbsp;?"
 
-#: inc/admin/settings.php:495
+#: inc/admin/settings.php:499
 msgid "Tweet that"
 msgstr "Twitter ça"
 
-#: inc/admin/settings.php:506
+#: inc/admin/settings.php:510
 msgid "Your last scans"
 msgstr "Vos derniers scans"
 
-#: inc/admin/settings.php:514
+#: inc/admin/settings.php:518
 msgid "You have no other reports for now."
 msgstr "Vous n'avez pas d'autres rapports pour le moment."
 
-#: inc/admin/settings.php:525
+#: inc/admin/settings.php:529
 msgid "Schedule your security analysis"
 msgstr "Planifiez votre analyse de sécurité"
 
-#: inc/admin/settings.php:527
+#: inc/admin/settings.php:531
 msgid ""
 "The analysis of security points is keeping updated. No need to connect to "
 "your back office with our automatic scan."
@@ -1283,68 +1293,68 @@ msgstr ""
 "L'analyse de sécurité vous informe de ses mises à jour. Plus besoin de se "
 "connecter dans votre back-office avec nos scans automatiques."
 
-#: inc/admin/settings.php:537 inc/admin/settings.php:552
+#: inc/admin/settings.php:541 inc/admin/settings.php:556
 #, php-format
 msgid "Last automatic scan: %s"
 msgstr "Dernier scan automatique&nbsp;: %s"
 
-#: inc/admin/settings.php:537 inc/admin/settings.php:541
+#: inc/admin/settings.php:541 inc/admin/settings.php:545
 msgctxt "Schedule date"
 msgid "Y-m-d \\a\\t h:ia"
 msgstr "d/m/Y \\à G:i"
 
-#: inc/admin/settings.php:541 inc/admin/settings.php:556
+#: inc/admin/settings.php:545 inc/admin/settings.php:560
 #, php-format
 msgid "Next automatic scan: %s"
 msgstr "Prochain scan automatique&nbsp;: %s"
 
-#: inc/admin/settings.php:545 inc/admin/settings.php:560
+#: inc/admin/settings.php:549 inc/admin/settings.php:564
 msgid "Schedule your next analysis"
 msgstr "Planifier votre prochaine analyse"
 
-#: inc/admin/settings.php:562
+#: inc/admin/settings.php:566
 msgid "Available with pro version"
 msgstr "Disponible dans la version PRO"
 
-#: inc/admin/settings.php:574
+#: inc/admin/settings.php:578
 msgid "Latest scans"
 msgstr "Derniers scans"
 
-#: inc/admin/settings.php:575
+#: inc/admin/settings.php:579
 msgid "View your previous scans"
 msgstr "Voir vos scans précédents"
 
-#: inc/admin/settings.php:606
+#: inc/admin/settings.php:610
 msgid "Doubts? Try a new scan."
 msgstr "Un doute&nbsp;? Lancez un nouveau scan"
 
-#: inc/admin/settings.php:630
+#: inc/admin/settings.php:634
 msgid "Click to launch first scan"
 msgstr "Cliquez pour lancer le premier scan"
 
-#: inc/admin/settings.php:664 inc/admin/settings.php:721
+#: inc/admin/settings.php:668 inc/admin/settings.php:725
 msgid "Security Report"
 msgstr "Rapport de sécurité"
 
-#: inc/admin/settings.php:665 inc/admin/settings.php:732
+#: inc/admin/settings.php:669 inc/admin/settings.php:736
 msgid "Auto-Fix"
 msgstr "Correction automatique"
 
-#: inc/admin/settings.php:666 inc/admin/settings.php:743
+#: inc/admin/settings.php:670 inc/admin/settings.php:747
 msgid "Manual Operations"
 msgstr "Opérations manuelles"
 
-#: inc/admin/settings.php:667 inc/admin/settings.php:754
+#: inc/admin/settings.php:671 inc/admin/settings.php:758
 msgid "Resolutions Report"
 msgstr "Rapport de résolutions"
 
-#: inc/admin/settings.php:723
+#: inc/admin/settings.php:727
 msgid "Start to check all security items with the Scan your website button."
 msgstr ""
 "Commencez à vérifier tous les éléments de sécurité avec le bouton Scanner le "
 "site"
 
-#: inc/admin/settings.php:734
+#: inc/admin/settings.php:738
 msgid "Launch the auto-fix on selected issues."
 msgstr "Lancer la correction automatique sur les problèmes sélectionnés"
 
@@ -1356,11 +1366,11 @@ msgstr ""
 "Aller plus loin et jeter un oeil aux points que vous pouvez résoudre grâce à "
 "une opération spécifique."
 
-#: inc/admin/settings.php:756
+#: inc/admin/settings.php:760
 msgid "Get the new security report about your website."
 msgstr "Obtenez le nouveau rapport de sécurité de votre site."
 
-#: inc/admin/settings.php:768
+#: inc/admin/settings.php:772
 msgid "I've got it!"
 msgstr "J'ai compris&nbsp;!"
 
@@ -4499,16 +4509,16 @@ msgstr ""
 "\" hreflang=\"en\">\"must-use plugin\"</a> pourtant la valeur par défaut de "
 "%s a besoin d'être modifiée."
 
-#: inc/classes/scanners/class-secupress-scan.php:1008
+#: inc/classes/scanners/class-secupress-scan.php:1013
 #, php-format
 msgid "%s other"
 msgid_plural "%s others"
 msgstr[0] "%s autre"
 msgstr[1] "%s autres"
 
-#: inc/classes/scanners/class-secupress-scan.php:1076
-#: inc/classes/scanners/class-secupress-scan.php:1082
-#: inc/classes/scanners/class-secupress-scan.php:1088
+#: inc/classes/scanners/class-secupress-scan.php:1081
+#: inc/classes/scanners/class-secupress-scan.php:1087
+#: inc/classes/scanners/class-secupress-scan.php:1093
 msgid "The temporary directory could not be created."
 msgstr "Le dossier temporaire ne peut être créé."
 
@@ -6902,30 +6912,33 @@ msgstr ""
 "Vous pourriez avoir besoin de nettoyer votre site après un piratage, nous "
 "facturons 500$."
 
-#: inc/modules/services/settings/support.php:12
+#: inc/modules/services/settings/support.php:10
 msgid "Documentation first"
 msgstr "La documentation en premier"
 
+#. Translators: %s is "documentation".
 #: inc/modules/services/settings/support.php:15
 #, php-format
 msgid ""
-"I've read the <a href=\"%s\" target=\"_blank\">documentation</a>, and I "
-"agree to allow SecuPress to automatically detect my WordPress version and "
-"list of enabled plugins when I submit this form."
+"I've read the %s, and I agree to allow SecuPress to automatically detect my "
+"WordPress version and list of enabled plugins when I submit this form."
 msgstr ""
-"J'ai lu la <a href=\"%s\" target=\"_blank\">documentation</a>, et j'autorise "
-"SecuPress à détecter automatiquement ma version de WordPress et la liste des "
-"plugins activés quand j'envoie ce formulaire."
+"J'ai lu la %s, et j'autorise SecuPress à détecter automatiquement ma version "
+"de WordPress et la liste des plugins activés quand j'envoie ce formulaire."
 
-#: inc/modules/services/settings/support.php:20
+#: inc/modules/services/settings/support.php:16
+msgid "documentation"
+msgstr "documentation"
+
+#: inc/modules/services/settings/support.php:22
 msgid "Summary"
 msgstr "Résumé"
 
-#: inc/modules/services/settings/support.php:29
+#: inc/modules/services/settings/support.php:31
 msgid "Description"
 msgstr "Description"
 
-#: inc/modules/services/settings/support.php:34
+#: inc/modules/services/settings/support.php:36
 msgid ""
 "Please provide the specific url(s) where we can see each issue. e.g. the "
 "request doesn't work on this page: example.com/this-page"
@@ -6934,7 +6947,7 @@ msgstr ""
 "par exemple la requête ne fonctionne pas sur la page&nbsp;: example.com/this-"
 "page"
 
-#: inc/modules/services/settings/support.php:35
+#: inc/modules/services/settings/support.php:37
 msgid ""
 "Please let us know how we will recognize the issue or can reproduce the "
 "issue. What is supposed to happen, and what is actually happening instead?"
@@ -6942,7 +6955,7 @@ msgstr ""
 "Merci de nous indiquer comment reproduire le problème. Qu'est-ce qui est "
 "supposé arriver, et qu'est-ce qui arrive à la place&nbsp;?"
 
-#: inc/modules/services/settings/support.php:40
+#: inc/modules/services/settings/support.php:42
 msgid "Submit the ticket"
 msgstr "Envoyer le ticket"
 
@@ -7692,9 +7705,6 @@ msgstr ""
 
 #~ msgid "Email address"
 #~ msgstr "Adresse email"
-
-#~ msgid "Docs"
-#~ msgstr "Docs"
 
 #~ msgid "Check if POST requests using HTTP 1.0 can reach your website."
 #~ msgstr ""

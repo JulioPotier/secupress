@@ -250,11 +250,15 @@ add_filter( 'plugin_action_links_' . plugin_basename( SECUPRESS_FILE ), 'secupre
  * @return (array) The array of links + our links.
  */
 function secupress_settings_action_links( $actions ) {
-	/*if ( ! secupress_is_white_label() ) { ////
-		array_unshift( $actions, sprintf( '<a href="%s">%s</a>', 'https://secupress.me/support/', __( 'Support', 'secupress' ) ) );
+	if ( ! secupress_is_white_label() ) {
+		if ( secupress_is_pro() ) {
+			array_unshift( $actions, sprintf( '<a href="%s">%s</a>', esc_url( secupress_admin_url( 'modules', 'services' ) ) . '#module-support', __( 'Support', 'secupress' ) ) );
+		} else {
+			array_unshift( $actions, sprintf( '<a href="%s">%s</a>', 'https://wordpress.org/support/plugin/secupress', __( 'Support', 'secupress' ) ) );
+		}
 
-		array_unshift( $actions, sprintf( '<a href="%s">%s</a>', 'http://docs.secupress.me', __( 'Docs', 'secupress' ) ) );
-	}*/
+		array_unshift( $actions, sprintf( '<a href="%s">%s</a>', esc_url( __( 'http://docs.secupress.me/', 'secupress' ) ), __( 'Docs', 'secupress' ) ) );
+	}
 
 	array_unshift( $actions, sprintf( '<a href="%s">%s</a>', esc_url( secupress_admin_url( 'settings' ) ), __( 'Settings' ) ) );
 
