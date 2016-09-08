@@ -29,6 +29,7 @@ $this->add_field( array(
 	'type'              => 'checkboxes',
 	'options'           => $values,
 	'value'             => $is_plugin_active,
+	'default'           => array(),
 ) );
 
 
