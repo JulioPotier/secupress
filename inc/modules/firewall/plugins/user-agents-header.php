@@ -21,7 +21,7 @@ function secupress_block_bad_user_agents() {
 		secupress_block( 'UAHE' );
 	}
 
-	if ( wp_strip_all_tags( $user_agent, true ) !== $user_agent ) {
+	if ( wp_strip_all_tags( $user_agent ) !== $user_agent ) {
 		secupress_block( 'UAHT' );
 	}
 
