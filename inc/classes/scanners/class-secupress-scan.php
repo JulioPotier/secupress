@@ -51,13 +51,6 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 */
 	const VERSION = '1.0';
 
-	/**
-	 * Generic documentation URL. Sub-classes must overwrite it.
-	 *
-	 * @var (string)
-	 */
-	const DOC_URL = 'http://docs.secupress.me/';
-
 
 	/** Properties. ============================================================================= */
 
@@ -222,6 +215,18 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 */
 	public function is_delayed_fix() {
 		return $this->delayed_fix;
+	}
+
+
+	/**
+	 * Get the documentation URL.
+	 *
+	 * @since 1.0
+	 *
+	 * @return (string)
+	 */
+	public static function get_docs_url() {
+		return __( 'http://docs.secupress.me/', 'secupress' );
 	}
 
 
