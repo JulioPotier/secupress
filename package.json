@@ -1,7 +1,7 @@
 {
   "name": "secupress-free",
   "description": "SecuPress — WordPress Security. Protect your WordPress with SecuPress, analyze and ensure the safety of your website daily.",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "homepage": "https://secupress.me/",
   "license": "GPL-2.0",
   "private": true,
