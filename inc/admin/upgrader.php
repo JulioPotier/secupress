@@ -87,7 +87,7 @@ add_action( 'secupress.upgrade', 'secupress_new_upgrade', 10, 2 );
  * @param (string) $actual_version    The previous version.
  */
 function secupress_new_upgrade( $secupress_version, $actual_version ) {
-
+	// < 1.0
 	if ( version_compare( $actual_version, '1.0', '<' ) ) {
 
 		secupress_deactivation();
@@ -122,5 +122,18 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 		$wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE 'secupress_%' OR meta_key LIKE '%_secupress_%'" );
 
 		secupress_activation();
+	}
+	// < 1.0.3
+	if ( version_compare( $actual_version, '1.0.3', '<' ) ) {
+		// Remove some User Agents that are too generic from the settings.
+		$user_agents_options = get_option( 'secupress_firewall_settings' );
+
+		if ( is_array( $user_agents_options ) && ! empty( $user_agents_options['bbq-headers_user-agents-list'] ) ) {
+			$user_agents_options['bbq-headers_user-agents-list'] = secupress_sanitize_list( $user_agents_options['bbq-headers_user-agents-list'] );
+			$user_agents_options['bbq-headers_user-agents-list'] = explode( ', ', $user_agents_options['bbq-headers_user-agents-list'] );
+			$user_agents_options['bbq-headers_user-agents-list'] = array_diff( $user_agents_options['bbq-headers_user-agents-list'], array( 'attache', 'email', 'Fetch', 'Link', 'Ping', 'Proxy' ) );
+			$user_agents_options['bbq-headers_user-agents-list'] = implode( ', ', $user_agents_options['bbq-headers_user-agents-list'] );
+			update_option( 'secupress_firewall_settings', $user_agents_options );
+		}
 	}
 }
