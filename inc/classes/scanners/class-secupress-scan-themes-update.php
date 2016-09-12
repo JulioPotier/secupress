@@ -46,7 +46,7 @@ class SecuPress_Scan_Themes_Update extends SecuPress_Scan implements SecuPress_S
 	 */
 	protected function init() {
 		$this->title    = __( 'Check if your themes are up to date.', 'secupress' );
-		$this->more     = __( 'It is very important to maintain your WordPress installation up to date. If you can not update because of a theme, contact its author and submit your issue.', 'secupress' );
+		$this->more     = __( 'It is very important to keep your WordPress installation up to date. If you cannot update because of a theme, contact its author and submit your issue.', 'secupress' );
 		$this->more_fix = __( 'Update all your themes that are not up to date.', 'secupress' );
 	}
 

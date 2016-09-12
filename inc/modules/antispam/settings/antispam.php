@@ -109,7 +109,7 @@ $this->add_field( array(
 	'depends'      => $main_field_name,
 	'label_for'    => $this->get_field_name( 'forbid-pings-trackbacks' ),
 	'type'         => 'checkbox',
-	'label'        => __( '<strong>Forbid</strong> the usage of Pingbacks & Trackbacks', 'secupress' ),
+	'label'        => __( '<strong>Forbid</strong> the use of Pingbacks & Trackbacks', 'secupress' ),
 	'helpers' => array(
 		array(
 			'type'        => 'description',

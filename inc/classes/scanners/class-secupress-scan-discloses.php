@@ -40,8 +40,8 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 	protected function init() {
 		global $is_apache, $is_nginx, $is_iis7;
 
-		$this->title = __( 'Check if your WordPress site discloses its version.', 'secupress' );
-		$this->more  = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of informations. His goal is to find outdated versions of your server softwares or WordPress components. Don\'t let them easily find these informations.', 'secupress' );
+		$this->title = __( 'Check if your WordPress lists the its version.', 'secupress' );
+		$this->more  = __( 'When an attacker wants to hack into a WordPress site, (s)he will search for all available informations. The goal is to find outdated versions of your server softwares or WordPress components. Don\'t let them easily find any informations.', 'secupress' );
 
 		if ( ! $is_apache && ! $is_nginx && ! $is_iis7 ) {
 			$this->more_fix = static::get_messages( 301 );
@@ -49,21 +49,21 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 			return;
 		}
 
-		$this->more_fix  = __( 'Depending of the scan results, one (or all) of the following will be applied:', 'secupress' ) . '<br/>';
+		$this->more_fix  = __( 'Depending on the scan results, one (or all) of the following will be applied:', 'secupress' ) . '<br/>';
 
 		if ( $is_apache ) {
 			/** Translators: %s is a file name. */
-			$this->more_fix .= sprintf( __( 'Add rules in your %s file to avoid attackers to discover your WordPress version and your PHP version.', 'secupress' ), '<code>.htaccess</code>' ) . '<br/>';
+			$this->more_fix .= sprintf( __( 'Add rules in your %s file to avoid attackers discovering your WordPress version and PHP versions.', 'secupress' ), '<code>.htaccess</code>' ) . '<br/>';
 		} elseif ( $is_iis7 ) {
 			/** Translators: %s is a file name. */
-			$this->more_fix .= sprintf( __( 'Add rules in your %s file to avoid attackers to discover your WordPress version and your PHP version.', 'secupress' ), '<code>web.config</code>' ) . '<br/>';
+			$this->more_fix .= sprintf( __( 'Add rules in your %s file to avoid attackers discovering your WordPress version and PHP versions.', 'secupress' ), '<code>web.config</code>' ) . '<br/>';
 		} else {
 			/** Translators: %s is a file name. */
-			$this->more_fix .= sprintf( __( 'The %s file cannot be edited automatically, you will be given the rules to add into this file manually, to avoid attackers to discover your WordPress version and your PHP version.', 'secupress' ), '<code>nginx.conf</code>' ) . '<br/>';
+			$this->more_fix .= sprintf( __( 'The %s file cannot be edited automatically, you will be given the rules to add into this file manually, to avoid attackers discovering your WordPress version and PHP versions.', 'secupress' ), '<code>nginx.conf</code>' ) . '<br/>';
 		}
 
 		$this->more_fix .= __( 'The meta tag containing the WordPress version may be removed.', 'secupress' ) . '<br/>';
-		$this->more_fix .= __( 'The WordPress version may be removed from the styles and scripts URL.', 'secupress' );
+		$this->more_fix .= __( 'The WordPress version may be removed from the styles and scripts URLs.', 'secupress' );
 	}
 
 
@@ -79,15 +79,15 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// "good"
-			0   => __( 'Your site does not reveal your <strong>WordPress version</strong> nor <strong>PHP version</strong>.', 'secupress' ),
+			0   => __( 'Your site does not reveal either your <strong>WordPress version</strong> or <strong>PHP version</strong>.', 'secupress' ),
 			1   => __( 'The website does not display the <strong>PHP version</strong> in the request headers anymore.', 'secupress' ),
 			/** Translators: %s is a file name */
 			2   => sprintf( __( 'The %s file is now protected from revealing your <strong>WordPress version</strong>.', 'secupress' ), '<code>readme.html</code>' ),
 			/** Translators: 1 is a file name */
-			3   => __( 'As the rules against the <strong>PHP version</strong> disclosure added to your %s file do not seem to work, another method has been used to remove this information.', 'secupress' ),
+			3   => __( 'Since the rules against the <strong>PHP version</strong> disclosure added to your %s file do not seem to work, another method has been used to remove this information.', 'secupress' ),
 			4   => __( 'The generator meta tag should not be displayed anymore.', 'secupress' ),
-			5   => __( 'The <strong>WordPress version</strong> should now be removed from your styles URL.', 'secupress' ),
-			6   => __( 'The <strong>WordPress version</strong> should now be removed from your scripts URL.', 'secupress' ),
+			5   => __( 'The <strong>WordPress version</strong> should now be removed from your styles URLs.', 'secupress' ),
+			6   => __( 'The <strong>WordPress version</strong> should now be removed from your scripts URLs.', 'secupress' ),
 			// "warning"
 			100 => __( 'Unable to determine if your homepage is still disclosing your <strong>WordPress version</strong>.', 'secupress' ),
 			/** Translators: %s is an URL */
@@ -99,8 +99,8 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 			202 => sprintf( __( 'The %s file should not be accessible by anyone to avoid to reveal your <strong>WordPress version</strong>.', 'secupress' ), '<code>readme.html</code>' ),
 			// "cantfix"
 			/** Translators: 1 is a file name, 2 is some code */
-			300 => sprintf( __( 'Your server runs a nginx system, the <strong>WordPress version</strong> and <strong>PHP version</strong> disclosure cannot be fixed automatically but you can do it yourself by adding the following code into your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
-			301 => __( 'Your server runs a non recognized system. The <strong>WordPress version</strong> and <strong>PHP version</strong> disclosure cannot be fixed automatically.', 'secupress' ),
+			300 => sprintf( __( 'Your server runs <strong>Nginx</strong>, the <strong>WordPress version</strong> and <strong>PHP version</strong> disclosure cannot be fixed automatically but you can do it yourself by adding the following code to your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
+			301 => __( 'Your server runs an unrecognized system. The <strong>WordPress version</strong> and <strong>PHP version</strong> disclosure cannot be fixed automatically.', 'secupress' ),
 			/** Translators: 1 is a file name, 2 is some code */
 			302 => sprintf( __( 'Your %1$s file does not seem to be writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ), '<code>.htaccess</code>', '%s' ),
 			/** Translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */

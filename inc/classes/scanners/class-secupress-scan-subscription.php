@@ -43,7 +43,7 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 		if ( ! is_multisite() || is_network_admin() ) {
 			$this->more     = __( 'If user registrations are open, the default user role should be Subscriber. Moreover, your registration page should be protected from bots.', 'secupress' );
 			$this->more_fix = sprintf(
-				__( 'Activate the option %1$s from the module %2$s.', 'secupress' ),
+				__( 'Activate the option %1$s in the %2$s module..', 'secupress' ),
 				'<em>' . __( 'Use a Captcha for everyone', 'secupress' ) . '</em>',
 				'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#row-captcha_activate">' . __( 'Users & Login', 'secupress' ) . '</a>'
 			);
@@ -75,7 +75,7 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 			1   => __( 'A captcha module has been activated to block bot registration.', 'secupress' ),
 			2   => __( 'The user role for new registrations has been set to <strong>Subscriber</strong>.', 'secupress' ),
 			// "warning"
-			100 => __( 'Unable to determine status of your subscribtion settings.', 'secupress' ),
+			100 => __( 'Unable to determine the status of your subscribtion settings.', 'secupress' ),
 			/** Translators: %s is the plugin name. */
 			101 => sprintf( __( 'You have a big network, %s must work on some data before being able to perform this scan.', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ),
 			// "bad"

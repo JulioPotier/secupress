@@ -240,17 +240,17 @@ class SecuPress_Log {
 
 		// Filter Logs by IP.
 		if ( ! empty( $filters['user_ip'] ) ) {
-			$user_ip = '<a title="' . esc_attr( sprintf( __( 'Filter Logs with the IP address %s', 'secupress' ), $this->user_ip ) ) . '" href="' . esc_url( sprintf( $filters['user_ip'], urlencode( $this->user_ip ) ) ) . '" class="secupress-action-filter-ip">' . $user_ip . '</a>';
+			$user_ip = '<a title="' . esc_attr( sprintf( __( 'Filter logs with the IP address %s', 'secupress' ), $this->user_ip ) ) . '" href="' . esc_url( sprintf( $filters['user_ip'], urlencode( $this->user_ip ) ) ) . '" class="secupress-action-filter-ip">' . $user_ip . '</a>';
 		}
 
 		// Filter Logs by id.
 		if ( $user_id && ! empty( $filters['user_id'] ) ) {
-			$user_id = '<a title="' . esc_attr( sprintf( __( 'Filter Logs with the user ID %d', 'secupress' ), $user_id ) ) . '" href="' . esc_url( sprintf( $filters['user_id'], $user_id ) ) . '" class="secupress-action-filter-id">' . $user_id . '</a>';
+			$user_id = '<a title="' . esc_attr( sprintf( __( 'Filter logs with the user ID %d', 'secupress' ), $user_id ) ) . '" href="' . esc_url( sprintf( $filters['user_id'], $user_id ) ) . '" class="secupress-action-filter-id">' . $user_id . '</a>';
 		}
 
 		// Filter Logs by login.
 		if ( $user_login && ! empty( $filters['user_login'] ) ) {
-			$user_login = '<a title="' . esc_attr( sprintf( __( 'Filter Logs with the user login "%s"', 'secupress' ), $user_login ) ) . '" href="' . esc_url( sprintf( $filters['user_login'], urlencode( $user_login ) ) ) . '" class="secupress-action-filter-login">' . $user_login . '</a>';
+			$user_login = '<a title="' . esc_attr( sprintf( __( 'Filter logs with the user login "%s"', 'secupress' ), $user_login ) ) . '" href="' . esc_url( sprintf( $filters['user_login'], urlencode( $user_login ) ) ) . '" class="secupress-action-filter-login">' . $user_login . '</a>';
 		}
 
 		// If the user exists and is not the current user.

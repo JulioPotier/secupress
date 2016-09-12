@@ -56,7 +56,7 @@ if ( $is_plugin_active && function_exists( 'secupress_hotlink_get_apache_rules' 
 	// Nginx.
 	if ( $is_nginx ) {
 		/** Translators: 1 is a file name, 2 is a tag name. */
-		$message = sprintf( __( 'You need to add the following code into your %1$s file, inside the %2$s block:', 'secupress' ), '<code>nginx.conf</code>', '<code>server</code>' );
+		$message = sprintf( __( 'You need to add the following code to your %1$s file, inside the %2$s block:', 'secupress' ), '<code>nginx.conf</code>', '<code>server</code>' );
 		$rules   = secupress_hotlink_get_nginx_rules();
 	}
 	// Apache.

@@ -38,11 +38,11 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements SecuPress_Sc
 	 * @since 1.0
 	 */
 	protected function init() {
-		$this->title = __( 'Check if your website can easily be the target of common flaws.', 'secupress' );
+		$this->title = __( 'Check if your website is vulnerable to the most common flaws.', 'secupress' );
 		$this->more  = __( 'Every year new flaws are discovered. You have to be sure that your website cannot be a target.', 'secupress' );
 		$this->more_fix = sprintf(
-			__( 'Activate the option %1$s from the module %2$s.', 'secupress' ),
-			'<em>' . __( 'Block Bad Contents', 'secupress' ) . '</em>',
+			__( 'Activate the option %1$s in the %2$s module..', 'secupress' ),
+			'<em>' . __( 'block bad content', 'secupress' ) . '</em>',
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-url-content_bad-contents">' . __( 'Firewall', 'secupress' ) . '</a>'
 		);
 	}
@@ -60,14 +60,14 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements SecuPress_Sc
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// "good"
-			0   => _n_noop( '%d common flaws tested.', '%d common flaws tested.', 'secupress' ),
+			0   => _n_noop( '%d common flaw tested.', '%d common flaws tested.', 'secupress' ),
 			1   => __( 'Protection activated', 'secupress' ),
 			// "warning"
-			100 => __( 'Unable to determine if your homepage can be the target of common flaws.', 'secupress' ),
-			101 => sprintf( __( 'Unable to determine status of <strong>Shellshock</strong> flaw (%s).', 'secupress' ), '<em>CVE-2014-6271</em>' ),
-			102 => sprintf( __( 'Unable to determine status of <strong>Shellshock</strong> flaw (%s).', 'secupress' ), '<em>CVE-2014-7169</em>' ),
+			100 => __( 'Unable to determine if your homepage could be the target of common flaws.', 'secupress' ),
+			101 => sprintf( __( 'Unable to determine the status of the <strong>Shellshock</strong> flaw (%s).', 'secupress' ), '<em>CVE-2014-6271</em>' ),
+			102 => sprintf( __( 'Unable to determine the status of the <strong>Shellshock</strong> flaw (%s).', 'secupress' ), '<em>CVE-2014-7169</em>' ),
 			// "bad"
-			200 => __( 'Your website pages should be <strong>different</strong> for each reload (without cache).', 'secupress' ),
+			200 => __( 'The content of your web pages should be <strong>different</strong> for each reload (without cache).', 'secupress' ),
 			201 => sprintf( __( 'The server appears to be vulnerable to <strong>Shellshock</strong> (%s).', 'secupress' ), '<em>CVE-2014-6271</em>' ),
 			202 => sprintf( __( 'The server appears to be vulnerable to <strong>Shellshock</strong> (%s).', 'secupress' ), '<em>CVE-2014-7169</em>' ),
 			203 => __( 'Your website should block <strong>malicious requests</strong>.', 'secupress' ),

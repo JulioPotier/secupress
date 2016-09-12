@@ -611,7 +611,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		$referer_arg        = '&_wp_http_referer=' . urlencode( esc_url_raw( $page_url ) );
 		$is_search          = false;
 		$search_val         = '';
-		$empty_list_message = __( 'No Banned IPs yet.', 'secupress' );
+		$empty_list_message = __( 'No banned IPs yet.', 'secupress' );
 
 		// Ban form.
 		echo '<form id="form-ban-ip" class="hide-if-js" action="' . esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress-ban-ip' . $referer_arg ), 'secupress-ban-ip' ) ) . '" method="post">';

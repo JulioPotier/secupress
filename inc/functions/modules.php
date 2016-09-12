@@ -137,7 +137,7 @@ function secupress_get_modules() {
 			'title'       => _x( 'Logs', 'post type general name', 'secupress' ),
 			'icon'        => 'logs',
 			'summaries'   => array(
-				'small'  => __( 'Watch everything', 'secupress' ),
+				'small'  => __( 'Monitor everything', 'secupress' ),
 				'normal' => __( 'Keep an eye on what happened on your website at any time. Also, control banned IPs from our modules here.', 'secupress' ),
 			),
 			'with_form'   => false,

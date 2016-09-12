@@ -38,10 +38,10 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements SecuPress_S
 	 * @since 1.0
 	 */
 	protected function init() {
-		$this->title    = __( 'Check if your usernames are not blacklisted.', 'secupress' );
+		$this->title    = __( 'Check if your usernames are blacklisted.', 'secupress' );
 		$this->more     = __( 'Some usernames are known to be used for malicious usage, or created by bots.', 'secupress' );
 		$this->more_fix = sprintf(
-			__( 'Activate the option %1$s from the module %2$s.', 'secupress' ),
+			__( 'Activate the option %1$s in the %2$s module..', 'secupress' ),
 			'<em>' . __( 'Forbid usernames', 'secupress' ) . '</em>',
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#row-blacklist-logins_activated">' . __( 'Users & Login', 'secupress' ) . '</a>'
 		);

@@ -9,7 +9,7 @@ $this->add_section( __( 'Bad URLs', 'secupress' ) );
 $main_field_name = $this->get_field_name( 'bad-contents' );
 
 $this->add_field( array(
-	'title'             => __( 'Block Bad Contents', 'secupress' ),
+	'title'             => __( 'block bad content', 'secupress' ),
 	'label_for'         => $main_field_name,
 	'plugin_activation' => true,
 	'type'              => 'checkbox',

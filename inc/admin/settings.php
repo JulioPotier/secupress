@@ -119,7 +119,7 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 			'backupingText'        => __( 'Backuping&hellip;', 'secupress' ),
 			'backupedText'         => __( 'Backup done', 'secupress' ),
 			// Ban IPs.
-			'noBannedIPs'          => __( 'No Banned IPs anymore.', 'secupress' ),
+			'noBannedIPs'          => __( 'No banned IPs anymore.', 'secupress' ),
 			'IPnotFound'           => __( 'IP not found.', 'secupress' ),
 			'IPremoved'            => __( 'IP removed.', 'secupress' ),
 			'searchResults'        => _x( 'See search result below.', 'adjective', 'secupress' ),
@@ -185,8 +185,8 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 			// 'supportContentFree' => __( '<p>Using the free version you have to post a new thread in the free wordpress.org forums.</p><p><a href="https://wordpress.org/support/plugin/secupress-free#postform" target="_blank" class="secupress-button secupress-button-mini"><span class="icon" aria-hidden="true"><i class="icon-wordpress"></i></span><span class="text">Open the forum</span></a></p><p>When using the Pro version, you can open a ticket directly from this popin: </p><br><p style="text-align:left">Summary: <input class="large-text" type="text" name="summary"></p><p style="text-align:left">Description: <textarea name="description" disabled="disabled">Please provide the specific url(s) where we can see each issue. e.g. the request doesn\'t work on this page: example.com/this-page</textarea></p>', 'secupress' ), // ////.
 			'supportContentPro'  => '<input type="hidden" id="secupress_support_item" name="secupress_support_item" value=""><p style="text-align:left">Summary: <input class="large-text" type="text" name="summary"></p><p style="text-align:left">Description: <textarea name="description" disabled="disabled">Please provide the specific url(s) where we can see each issue. e.g. the request doesn\'t work on this page: example.com/this-page</textarea></p>', // ////.
 			'a11y' => array(
-				'scanEnded'    => __( 'Security Scan just finished.', 'secupress' ),
-				'bulkFixStart' => __( 'Currently Fixing…', 'secupress' ) . ' ' . __( 'Please wait until fixing is complete.', 'secupress' ),
+				'scanEnded'    => __( 'Security scan just finished.', 'secupress' ),
+				'bulkFixStart' => __( 'Currently fixing…', 'secupress' ) . ' ' . __( 'Please wait until fixing is complete.', 'secupress' ),
 			),
 			'comingSoon'       => __( 'Coming Soon', 'secupress' ),
 			'docNotReady'      => __( 'The documentation is actually under construction, thank you for your patience.', 'secupress' ),
@@ -415,7 +415,7 @@ function secupress_scanners() {
 					<?php } ?>
 					<p class="secupress-label-with-icon secupress-last-scan-result">
 						<i class="icon-secupress" aria-hidden="true"></i>
-						<span class="secupress-upper"><?php _e( 'Result of the scan', 'secupress' ); ?></span>
+						<span class="secupress-upper"><?php _e( 'Scan results', 'secupress' ); ?></span>
 						<span class="secupress-primary"><?php echo $last_report; ?></span>
 					</p>
 					<p class="secupress-text-end hide-if-no-js">
@@ -482,17 +482,17 @@ function secupress_scanners() {
 												<q>
 												<?php
 												/** Translators: %s is the plugin name */
-												printf( esc_html__( 'Wow! My website just got an A security grade using %s, what about yours?', 'secupress' ), SECUPRESS_PLUGIN_NAME );
+												printf( esc_html__( 'Wow! My website just got an A grade for security using %s, what about yours?', 'secupress' ), SECUPRESS_PLUGIN_NAME );
 												?>
 												</q>
 											</p>
 
 											<a class="secupress-button secupress-button-mini" href="https://twitter.com/intent/tweet?via=secupress&amp;url=<?php
 												/** Translators: %s is the plugin name */
-												echo urlencode( esc_url_raw( 'http://secupress.me&text=' . sprintf( __( 'Wow! My website just got an A security grade using %s, what about yours?', 'secupress' ), SECUPRESS_PLUGIN_NAME ) ) );
+												echo urlencode( esc_url_raw( 'http://secupress.me&text=' . sprintf( __( 'Wow! My website just got an A grade for security using %s, what about yours?', 'secupress' ), SECUPRESS_PLUGIN_NAME ) ) );
 											?>">
 												<span class="icon" aria-hidden="true"><span class="dashicons dashicons-twitter"></span></span>
-												<span class="text"><?php esc_html_e( 'Tweet that', 'secupress' ); ?></span>
+												<span class="text"><?php esc_html_e( 'Tweet this', 'secupress' ); ?></span>
 											</a>
 										</div><!-- #tweeterA -->
 									</div><!-- .secupress-chart-legends-n-note -->
@@ -523,7 +523,7 @@ function secupress_scanners() {
 								<p class="secupress-text-medium">
 									<?php esc_html_e( 'Schedule your security analysis', 'secupress' ); ?>
 								</p>
-								<p><?php _e( 'The analysis of security points is keeping updated. No need to connect to your back office with our automatic scan.', 'secupress' ); ?></p>
+								<p><?php _e( 'Stay updated on the security of your website. With our automatic scans, there is no need to log in to your WordPress admin to run a scan.', 'secupress' ); ?></p>
 
 								<?php if ( secupress_is_pro() ) :
 									// /////.
@@ -558,7 +558,7 @@ function secupress_scanners() {
 										<p class="secupress-cta">
 											<a href="<?php echo esc_url( secupress_admin_url( 'modules', 'schedules' ) ); ?>#module-scanners" class="secupress-button secupress-button-tertiary" target="_blank"><?php esc_html_e( 'Schedule your next analysis', 'secupress' ); ?></a>
 										</p>
-										<p class="secupress-cta-detail"><?php _e( 'Available with pro version', 'secupress' ); ?></p>
+										<p class="secupress-cta-detail"><?php _e( 'Available in the PRO version', 'secupress' ); ?></p>
 									</div><!-- .secupress-schedules-infos -->
 								<?php endif; ?>
 
@@ -588,7 +588,7 @@ function secupress_scanners() {
 									<a id="secupress-l-scan" href="#secupress-scan" role="tab" aria-selected="false" aria-controls="secupress-scan" class="secupress-current">
 										<span class="secupress-label-with-icon">
 											<i class="icon-secupress" aria-hidden="true"></i>
-											<span class="secupress-upper"><?php esc_html_e( 'Result of the scan', 'secupress' ); ?></span>
+											<span class="secupress-upper"><?php esc_html_e( 'Scan results', 'secupress' ); ?></span>
 											<span class="secupress-primary"><?php echo $last_report; ?></span>
 										</span>
 									</a>
@@ -663,7 +663,7 @@ function secupress_scanners() {
 						'1' => array( 'title' => esc_html__( 'Security Report', 'secupress' ) ),
 						'2' => array( 'title' => esc_html__( 'Auto-Fix', 'secupress' ) ),
 						'3' => array( 'title' => esc_html__( 'Manual Operations', 'secupress' ) ),
-						'4' => array( 'title' => esc_html__( 'Resolutions Report', 'secupress' ) ),
+						'4' => array( 'title' => esc_html__( 'Resolution Report', 'secupress' ) ),
 					);
 					$step  = secupress_get_scanner_pagination();
 					switch ( $step ) {
@@ -741,7 +741,7 @@ function secupress_scanners() {
 									</div>
 									<p class="secupress-blob-title"><?php esc_html_e( 'Manual Operations', 'secupress' ) ?></p>
 									<div class="secupress-blob-content" id="sp-step-3-d">
-										<p><?php esc_html_e( 'Go further and take a look at points you have to fix thanks to specific operation.', 'secupress' ); ?></p>
+										<p><?php esc_html_e( 'Go further and take a look at the items you have to fix with specific operations.', 'secupress' ); ?></p>
 									</div>
 								</div>
 							</div><!-- .secupress-col-1-4 -->
@@ -750,9 +750,9 @@ function secupress_scanners() {
 									<div class="secupress-blob-icon" aria-hidden="true">
 										<i class="icon-pad-check"></i>
 									</div>
-									<p class="secupress-blob-title"><?php esc_html_e( 'Resolutions Report', 'secupress' ); ?></p>
+									<p class="secupress-blob-title"><?php esc_html_e( 'Resolution Report', 'secupress' ); ?></p>
 									<div class="secupress-blob-content" id="sp-step-4-d">
-										<p><?php esc_html_e( 'Get the new security report about your website.', 'secupress' ); ?></p>
+										<p><?php esc_html_e( 'Get the new security report for website.', 'secupress' ); ?></p>
 									</div>
 								</div><!-- .secupress-blob -->
 							</div><!-- .secupress-col-1-4 -->
@@ -844,7 +844,7 @@ function secupress_settings_heading( $titles = array() ) {
 		</div>
 		<div class="secupress-col-1-3 secupress-col-rateus secupress-text-end">
 			<p class="secupress-rateus hidden">
-				<strong><?php _e( 'You like this plugin?' ) ?></strong>
+				<strong><?php _e( 'Do you like this plugin?' ) ?></strong>
 				<br>
 				<?php printf( __( 'Please take a few seconds to rate us on %sWordPress.org%s', 'secupress' ), '<a href="' . SECUPRESS_RATE_URL . '">', '</a>' ); ?>
 			</p>
@@ -855,7 +855,7 @@ function secupress_settings_heading( $titles = array() ) {
 					<i class="icon-star" aria-hidden="true"></i>
 					<i class="icon-star" aria-hidden="true"></i>
 					<i class="icon-star" aria-hidden="true"></i>
-					<span class="screen-reader-text"><?php echo _x( 'Give us a five stars', 'hidden text', 'secupress' ); ?></span>
+					<span class="screen-reader-text"><?php echo _x( 'Give us five stars', 'hidden text', 'secupress' ); ?></span>
 				</a>
 			</p>
 		</div>

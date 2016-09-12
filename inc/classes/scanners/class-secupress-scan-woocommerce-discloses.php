@@ -40,7 +40,7 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 	protected function init() {
 		/** Translators: %s is a plugin name */
 		$this->title    = sprintf( __( 'Check if the %s plugin discloses its version.', 'secupress' ), 'WooCommerce' );
-		$this->more     = __( 'When an attacker wants to hack into a WordPress site, he will search for a maximum of informations. His goal is to find outdated versions of your server softwares or WordPress components. Don\'t let them easily find these informations.', 'secupress' );
+		$this->more     = __( 'When an attacker wants to hack into a WordPress site, (s)he will search for all available informations. The goal is to find outdated versions of your server softwares or WordPress components. Don\'t let them easily find any informations.', 'secupress' );
 		/** Translators: %s is a plugin name */
 		$this->more_fix = sprintf( __( 'Hide the %s version to avoid being read by attackers.', 'secupress' ), 'WooCommerce' );
 	}
@@ -62,9 +62,9 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 			0   => sprintf( __( 'The %s plugin does not reveal sensitive informations.', 'secupress' ), 'WooCommerce' ),
 			1   => __( 'The generator meta tag should not be displayed anymore.', 'secupress' ),
 			/** Translators: %s is a plugin name */
-			2   => sprintf( __( 'The %s\'s version should be removed from your styles URL now.', 'secupress' ), 'WooCommerce' ),
+			2   => sprintf( __( 'The %s\'s version should be removed from your styles URLs now.', 'secupress' ), 'WooCommerce' ),
 			/** Translators: %s is a plugin name */
-			3   => sprintf( __( 'The %s\'s version should be removed from your scripts URL now.', 'secupress' ), 'WooCommerce' ),
+			3   => sprintf( __( 'The %s\'s version should be removed from your scripts URLs now.', 'secupress' ), 'WooCommerce' ),
 			// "warning"
 			100 => sprintf( __( 'Unable to determine if %s is disclosing its version on your homepage.', 'secupress' ), 'WooCommerce' ),
 			// "bad"

@@ -45,11 +45,11 @@ class SecuPress_Scan_Anti_Front_Brute_Force extends SecuPress_Scan implements Se
 	 * @since 1.0
 	 */
 	protected function init() {
-		$this->title    = __( 'Check if your website can be attacked by multiple and quick requests (DDoS like).', 'secupress' );
+		$this->title    = __( 'Check if your website is vulnerable to attacks by multiple and quick requests (DDoS like).', 'secupress' );
 		$this->more     = __( 'Nobody needs to load more than 10 pages per second on your front-end, back-end or login page. You should block the requests\' owner.', 'secupress' );
 		$this->more_fix = sprintf(
 			__( 'Activate the <strong>%1$s</strong> from the module %2$s.', 'secupress' ),
-			__( 'Anti Front Brute-Force', 'secupress' ),
+			__( 'Anti Front-End Brute-Force', 'secupress' ),
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bruteforce_activated">' . __( 'Firewall', 'secupress' ) . '</a>'
 		);
 	}
@@ -68,7 +68,7 @@ class SecuPress_Scan_Anti_Front_Brute_Force extends SecuPress_Scan implements Se
 		$messages = array(
 			// "good"
 			0   => __( 'Your website seems to be protected against multiple and quick requests.', 'secupress' ),
-			1   => __( 'The <strong>Anti Front Brute-Force</strong> module has been activated.', 'secupress' ),
+			1   => __( 'The <strong>Anti Front-End Brute-Force</strong> module has been activated.', 'secupress' ),
 			// "bad"
 			200 => __( 'Your website is not protected from multiple and quick requests.', 'secupress' ),
 			201 => sprintf( __( 'Our module <a href="%s">%s</a> could fix this.', 'secupress' ), esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bruteforce_activated', __( 'Anti Front Brute-Force', 'secupress' ) ),

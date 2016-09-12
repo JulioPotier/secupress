@@ -385,7 +385,7 @@ function secupress_remove_module_rules_or_notice( $marker, $module_name ) {
 		$message  = sprintf( __( '%s: ', 'secupress' ), $module_name );
 		$message .= sprintf(
 			/** Translators: 1 is a file name, 2 and 3 are small parts of code. */
-			__( 'Your server uses a <i>Nginx</i> system, you have to edit the configuration file manually. Please remove the rules between %2$s and %3$s from the %1$s file.', 'secupress' ),
+			__( 'Your server uses <i>Nginx</i>, you have to edit the configuration file manually. Please remove the rules between %2$s and %3$s from the %1$s file.', 'secupress' ),
 			'<code>nginx.conf</code>',
 			"<code># BEGIN SecuPress $marker</code>",
 			'<code># END SecuPress</code>'
@@ -491,7 +491,7 @@ function secupress_add_module_rules_or_notice( $args ) {
 		$message  = sprintf( __( '%s: ', 'secupress' ), $title );
 		$message .= sprintf(
 			/** Translators: 1 is a file name, 2 is some code */
-			__( 'Your server uses a <i>Nginx</i> system, you have to edit the configuration file manually. Please add the following code into your %1$s file: %2$s', 'secupress' ),
+			__( 'Your server uses <i>Nginx</i>, you have to edit the configuration file manually. Please add the following code to your %1$s file: %2$s', 'secupress' ),
 			'<code>nginx.conf</code>',
 			"<pre>$rules</pre>"
 		);

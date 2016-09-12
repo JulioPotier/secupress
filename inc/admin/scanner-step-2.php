@@ -201,7 +201,7 @@ if ( ! $secupress_tests ) {
 <div id="secupress-spinner" class="secupress-scans-group secupress-group-spinner hidden" aria-hidden="true">
 	<div class="secupress-sg-header">
 		<div class="secupress-sgh-name">
-			<p class="secupress-sgh-title"><?php esc_html_e( 'Currently Fixing…', 'secupress' ); ?></p>
+			<p class="secupress-sgh-title"><?php esc_html_e( 'Currently fixing…', 'secupress' ); ?></p>
 			<p class="secupress-sgh-description"><?php esc_html_e( 'Please wait until fixing is complete.', 'secupress' ); ?></p>
 		</div>
 	</div>

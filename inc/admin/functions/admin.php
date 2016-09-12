@@ -277,7 +277,7 @@ function secupress_print_pro_advantages() {
 			</div>
 			<div class="secupress-col">
 				<p class="secupress-blob-title"><?php esc_html_e( 'Alerts', 'secupress' ); ?></p>
-				<p class="secupress-blob-desc"><?php esc_html_e( 'Be alerted by receiving SMS, mobile notifications, or even by social networks besides alerts email.', 'secupress' ); ?></p>
+				<p class="secupress-blob-desc"><?php esc_html_e( 'Get alerts via SMS, mobile notifications, or even by social networks in addition to email.', 'secupress' ); ?></p>
 			</div>
 		</div>
 		<div class="secupress-col-1-2 secupress-flex secupress-landscape-blob">
@@ -295,7 +295,7 @@ function secupress_print_pro_advantages() {
 			</div>
 			<div class="secupress-col">
 				<p class="secupress-blob-title"><?php esc_html_e( 'Logs', 'secupress' ); ?></p>
-				<p class="secupress-blob-desc"><?php esc_html_e( 'All actions considered as dangerous are held in this log available at any time to check what is happening on your site.', 'secupress' ); ?></p>
+				<p class="secupress-blob-desc"><?php esc_html_e( 'All actions considered dangerous are kept in this log available at any time to check what is happening on your site.', 'secupress' ); ?></p>
 			</div>
 		</div>
 	</div>
