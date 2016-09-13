@@ -561,6 +561,7 @@ button.secupress-virgin {
 	text-shadow: none;
 	background: #5A626F;
 	box-shadow: none;
+	white-space: nowrap;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
 	-webkit-appearance: none;
