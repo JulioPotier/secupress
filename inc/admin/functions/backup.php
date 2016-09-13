@@ -13,10 +13,15 @@ function secupress_pre_backup() {
 
 	$backups_dir  = WP_CONTENT_DIR . '/backups/';
 	$backup_dir   = secupress_get_hashed_folder_name( 'backup', $backups_dir );
+	$tmp_dir      = $backups_dir . 'secupress-' . secupress_generate_hash( 'backups-tmp', 8, 8 ) . '-tmp/';
 	$fs_chmod_dir = defined( 'FS_CHMOD_DIR' ) ? FS_CHMOD_DIR : 0755;
 
 	if ( ! is_dir( $backup_dir ) ) {
 		mkdir( $backup_dir, $fs_chmod_dir, true );
+	}
+
+	if ( ! is_dir( $tmp_dir ) ) {
+		mkdir( $tmp_dir, $fs_chmod_dir, true );
 	}
 
 	if ( $is_apache ) {
@@ -24,7 +29,7 @@ function secupress_pre_backup() {
 	} elseif ( $is_iis7 ) {
 		$file = 'web.config';
 	} elseif ( $is_nginx ) {
-		return is_writable( $backup_dir );
+		return is_writable( $backup_dir ) && is_writable( $tmp_dir );
 	} else {
 		return false;
 	}
@@ -32,12 +37,12 @@ function secupress_pre_backup() {
 	$file = $backups_dir . $file;
 
 	if ( file_exists( $file ) ) {
-		return is_writable( $backup_dir );
+		return is_writable( $backup_dir ) && is_writable( $tmp_dir );
 	}
 
 	file_put_contents( $file, secupress_backup_get_protection_content() );
 
-	return is_writable( $backup_dir ) && file_exists( $file );
+	return is_writable( $backup_dir ) && is_writable( $tmp_dir ) && file_exists( $file );
 }
 
 
