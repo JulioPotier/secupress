@@ -34,6 +34,7 @@ $this->add_field( array(
 	'title'        => __( 'Storage Location', 'secupress' ),
 	'description'  => __( 'Where do you want to store you backups?', 'secupress' ),
 	'name'         => $field_name,
+	'default'      => 'local',
 	'type'         => 'radios',
 	'label_screen' => __( 'Storage Location', 'secupress' ),
 	'options'      => secupress_backups_storage_labels(),
