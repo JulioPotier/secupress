@@ -705,6 +705,10 @@ button.secupress-virgin {
 	font-weight: bold;
 }
 
+.secupress-inline-form {
+	display: inline-block;
+}
+
 /**
  * === Bad Theme
  */
