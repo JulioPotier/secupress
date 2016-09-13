@@ -90,6 +90,7 @@ function secupress_ip_is_whitelisted( $ip = null ) {
 	$whitelist = array(
 		$_SERVER['SERVER_ADDR'] => 1,
 		'::1'                   => 1,
+		'127.0.0.1'             => 1,
 		'37.187.85.82'          => 1, // WPRocketbot.
 		'37.187.58.236'         => 1, // WPRocketbot.
 		'167.114.234.234'       => 1, // WPRocketbot.
