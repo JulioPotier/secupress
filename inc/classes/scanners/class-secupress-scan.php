@@ -1094,7 +1094,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 		}
 
 		// Try to reach `secupress.html`.
-		$response = wp_remote_get( site_url( $folder_name . '/secupress.html' ), array( 'redirection' => 0, 'timeout' => 20, 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) );
+		$response = wp_remote_get( site_url( $folder_name . '/secupress.html' ), array( 'redirection' => 0, 'timeout' => 30, 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) );
 
 		// Now we can get rid of the files.
 		$wp_filesystem->delete( $folder_path, true );
