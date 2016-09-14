@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2016-09-08 18:18+0200\n"
-"PO-Revision-Date: 2016-09-08 22:27+0200\n"
+"POT-Creation-Date: 2016-09-14 21:13+0200\n"
+"PO-Revision-Date: 2016-09-14 21:27+0200\n"
 "Last-Translator: WP Media <contact@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -31,12 +31,12 @@ msgid "Grade %s"
 msgstr "Grade %s"
 
 #: inc/admin-bar.php:36 inc/admin/multisite/settings.php:215
-#: inc/admin/settings.php:286 inc/admin/settings.php:393
+#: inc/admin/settings.php:290 inc/admin/settings.php:397
 #: inc/modules/schedules/settings/schedules-scan.php:6
 msgid "Scanners"
 msgstr "Scanners"
 
-#: inc/admin-bar.php:44 inc/admin/settings.php:287
+#: inc/admin-bar.php:44 inc/admin/settings.php:291
 #: inc/classes/settings/class-secupress-settings-modules.php:209
 msgid "Modules"
 msgstr "Modules"
@@ -309,7 +309,7 @@ msgstr ""
 #: inc/classes/scanners/class-secupress-scan-non-login-time-slot.php:91
 #: inc/classes/scanners/class-secupress-scan-passwords-strength.php:85
 #: inc/classes/scanners/class-secupress-scan-php-disclosure.php:99
-#: inc/classes/scanners/class-secupress-scan-phpversion.php:114
+#: inc/classes/scanners/class-secupress-scan-phpversion.php:78
 #: inc/classes/scanners/class-secupress-scan-plugins-update.php:77
 #: inc/classes/scanners/class-secupress-scan-readme-discloses.php:103
 #: inc/classes/scanners/class-secupress-scan-salt-keys.php:75
@@ -321,36 +321,6 @@ msgstr ""
 #: inc/classes/scanners/class-secupress-scan-wpml-discloses.php:76
 msgid "Unknown message"
 msgstr "Message inconnu"
-
-#: inc/admin/functions/backup.php:149
-#: inc/classes/settings/class-secupress-settings-modules.php:539
-msgid "M jS Y"
-msgstr "j M Y"
-
-#: inc/admin/functions/backup.php:149
-#: inc/classes/settings/class-secupress-settings-modules.php:539
-msgid "G:i"
-msgstr "G:i"
-
-#: inc/admin/functions/backup.php:154
-#: inc/modules/schedules/settings/schedules-backups.php:13
-msgid "Database"
-msgstr "Base de données"
-
-#: inc/admin/functions/backup.php:158
-#: inc/modules/schedules/settings/schedules-backups.php:13
-msgid "Files"
-msgstr "Fichiers"
-
-#: inc/admin/functions/backup.php:169
-msgctxt "verb"
-msgid "Download"
-msgstr "Télécharger"
-
-#: inc/admin/functions/backup.php:169 inc/admin/settings.php:103
-#: inc/classes/settings/class-secupress-settings-modules.php:544
-msgid "Delete"
-msgstr "Supprimer"
 
 #. Translators: 1 is a file name, 2 and 3 are small parts of code.
 #: inc/admin/functions/modules.php:361
@@ -745,7 +715,7 @@ msgstr ""
 "maintenant."
 
 #: inc/admin/notices.php:346 inc/admin/settings.php:131
-#: inc/admin/settings.php:641
+#: inc/admin/settings.php:645
 msgid "Scan my website"
 msgstr "Scanner mon site"
 
@@ -816,7 +786,7 @@ msgstr "Exporter en PDF"
 
 #: inc/admin/scanner-step-1.php:121 inc/admin/scanner-step-2.php:159
 #: inc/admin/scanner-step-3.php:190 inc/admin/scanner-step-4.php:277
-#: inc/classes/settings/class-secupress-settings.php:1115
+#: inc/classes/settings/class-secupress-settings.php:1116
 #, php-format
 msgid "Available in <a href=\"%s\" target=\"_blank\">Pro Version</a>"
 msgstr "Disponible dans <a href=\"%s\" target=\"_blank\">la version Pro</a>"
@@ -954,7 +924,7 @@ msgid "Not Fixed"
 msgstr "Non corrigé"
 
 #: inc/admin/scanner-step-4.php:214 inc/admin/settings.php:101
-#: inc/admin/settings.php:170 inc/admin/settings.php:962
+#: inc/admin/settings.php:170 inc/admin/settings.php:966
 msgid "Error"
 msgstr "Erreur"
 
@@ -984,7 +954,7 @@ msgstr "Modules %s"
 msgid "Fine tune your Security"
 msgstr "Découvrez toutes les fonctionnalités"
 
-#: inc/admin/scanner-step-4.php:308 inc/admin/settings.php:584
+#: inc/admin/scanner-step-4.php:308 inc/admin/settings.php:588
 msgid "Manage your recurring scans"
 msgstr "Planifiez vos scans automatiques"
 
@@ -995,7 +965,7 @@ msgstr ""
 "Laissez %s scanner votre site quand vous n'êtes pas là avec des scanners "
 "récurrents."
 
-#: inc/admin/scanner-step-4.php:315 inc/admin/settings.php:583
+#: inc/admin/scanner-step-4.php:315 inc/admin/settings.php:587
 msgid "Schedule Scans"
 msgstr "Planification de scans"
 
@@ -1048,6 +1018,11 @@ msgstr "Êtes-vous sûr(e)&nbsp;?"
 #: inc/admin/settings.php:102
 msgid "Unknown error."
 msgstr "Erreur inconnue."
+
+#: inc/admin/settings.php:103
+#: inc/classes/settings/class-secupress-settings-modules.php:544
+msgid "Delete"
+msgstr "Supprimer"
 
 #: inc/admin/settings.php:104
 msgid "Done!"
@@ -1142,18 +1117,18 @@ msgstr "C'est une procédure automatisée qui vous aide à sécuriser votre site
 msgid "Show More"
 msgstr "Voir plus"
 
-#: inc/admin/settings.php:156 inc/admin/settings.php:457
-#: inc/admin/settings.php:958
+#: inc/admin/settings.php:156 inc/admin/settings.php:461
+#: inc/admin/settings.php:962
 msgid "Good"
 msgstr "Bon"
 
-#: inc/admin/settings.php:157 inc/admin/settings.php:467
-#: inc/admin/settings.php:960
+#: inc/admin/settings.php:157 inc/admin/settings.php:471
+#: inc/admin/settings.php:964
 msgid "Warning"
 msgstr "En attente"
 
-#: inc/admin/settings.php:158 inc/admin/settings.php:462
-#: inc/admin/settings.php:956
+#: inc/admin/settings.php:158 inc/admin/settings.php:466
+#: inc/admin/settings.php:960
 msgid "Bad"
 msgstr "Mauvais"
 
@@ -1358,7 +1333,7 @@ msgstr ""
 msgid "Launch the auto-fix on selected issues."
 msgstr "Lancer la correction automatique sur les problèmes sélectionnés"
 
-#: inc/admin/settings.php:745
+#: inc/admin/settings.php:749
 msgid ""
 "Go further and take a look at points you have to fix thanks to specific "
 "operation."
@@ -1374,22 +1349,22 @@ msgstr "Obtenez le nouveau rapport de sécurité de votre site."
 msgid "I've got it!"
 msgstr "J'ai compris&nbsp;!"
 
-#: inc/admin/settings.php:842
+#: inc/admin/settings.php:846
 msgid "You like this plugin?"
 msgstr "Vous aimez ce plugin&nbsp;?"
 
-#: inc/admin/settings.php:844
+#: inc/admin/settings.php:848
 #, php-format
 msgid "Please take a few seconds to rate us on %sWordPress.org%s"
 msgstr ""
 "Merci de prendre quelques secondes pour nous noter sur %sWordPress.org%s"
 
-#: inc/admin/settings.php:853
+#: inc/admin/settings.php:857
 msgctxt "hidden text"
 msgid "Give us a five stars"
 msgstr "Donnez nous les 5 étoiles"
 
-#: inc/admin/settings.php:964
+#: inc/admin/settings.php:968
 msgid "New"
 msgstr "Nouveau"
 
@@ -1403,21 +1378,21 @@ msgstr ""
 "\"description\">Pour des raisons de sécurité, vous pourriez avoir besoin de "
 "récupérer des informations personelles sur une adresse alternative.</p>"
 
-#: inc/admin/user-profile.php:39 inc/admin/user-profile.php:92
+#: inc/admin/user-profile.php:39 inc/admin/user-profile.php:78
 msgid "<strong>ERROR</strong>: This email is not valid."
 msgstr "<strong>ERREUR</strong>&nbsp;: Adresse email non valide."
 
-#: inc/admin/user-profile.php:96
+#: inc/admin/user-profile.php:83
+msgid "<strong>ERROR</strong>: This email is already yours."
+msgstr "<strong>ERREUR</strong>&nbsp;: Cette adresse email est déjà la vôtre."
+
+#: inc/admin/user-profile.php:88
 msgid "<strong>ERROR</strong>: This email is already yours with an alias."
 msgstr ""
 "<strong>ERREUR</strong>&nbsp;: Cette adresse email est la vôtre avec un "
 "alias."
 
-#: inc/admin/user-profile.php:100
-msgid "<strong>ERROR</strong>: This email is already yours."
-msgstr "<strong>ERREUR</strong>&nbsp;: Cette adresse email est déjà la vôtre."
-
-#: inc/admin/user-profile.php:104
+#: inc/admin/user-profile.php:100 inc/admin/user-profile.php:108
 msgid "<strong>ERROR</strong>: This email is already registered."
 msgstr "<strong>ERREUR</strong>&nbsp;: Adresse email déjà utilisée."
 
@@ -3907,11 +3882,11 @@ msgstr ""
 "Votre serveur tourne dans un environnement non reconnu. La divulgation des "
 "modules PHP installés ne peuvent être protégée automatiquement."
 
-#: inc/classes/scanners/class-secupress-scan-phpversion.php:69
+#: inc/classes/scanners/class-secupress-scan-phpversion.php:48
 msgid "Check if your installation is using a supported version of PHP."
 msgstr "Vérifie si votre installation utilise une version supportée de PHP."
 
-#: inc/classes/scanners/class-secupress-scan-phpversion.php:70
+#: inc/classes/scanners/class-secupress-scan-phpversion.php:49
 msgid ""
 "Every year old PHP version are not supported anymore, even for security "
 "patches so it's important to stay updated."
@@ -3919,21 +3894,21 @@ msgstr ""
 "Tous les ans les anciennes version de PHP ne sont plus supportées, même les "
 "patchs de sécurité donc il est important de rester à jour."
 
-#: inc/classes/scanners/class-secupress-scan-phpversion.php:103
+#: inc/classes/scanners/class-secupress-scan-phpversion.php:67
 #, php-format
 msgid "You are using <strong>PHP v%s</strong>."
 msgstr "Vous utilisez <strong>PHPv%s</strong>."
 
-#: inc/classes/scanners/class-secupress-scan-phpversion.php:104
+#: inc/classes/scanners/class-secupress-scan-phpversion.php:68
 #, php-format
 msgid "You are using <strong>PHP v%s</strong>, perfect!"
 msgstr "Vous utilisez <strong>PHPv%s</strong>, parfait&nbsp;!"
 
-#: inc/classes/scanners/class-secupress-scan-phpversion.php:106
+#: inc/classes/scanners/class-secupress-scan-phpversion.php:70
 msgid "Unable to determine version of PHP."
 msgstr "Impossible de déterminer la version de PHP."
 
-#: inc/classes/scanners/class-secupress-scan-phpversion.php:108
+#: inc/classes/scanners/class-secupress-scan-phpversion.php:72
 #, php-format
 msgid ""
 "You are using <strong>PHP v%1$s</strong>, but the latest supported version "
@@ -3943,7 +3918,7 @@ msgstr ""
 "supportées est <strong>PHP v%2$s</strong>, et le mieux serait <strong>PHP v"
 "%3$s</strong>."
 
-#: inc/classes/scanners/class-secupress-scan-phpversion.php:110
+#: inc/classes/scanners/class-secupress-scan-phpversion.php:74
 msgid ""
 "Cannot be fixed automatically. You have to contact you host provider to ask "
 "him to <strong>upgrade you version of PHP</strong>."
@@ -4620,6 +4595,14 @@ msgstr "Réinitialiser"
 msgid "Last %d banned IPs:"
 msgstr "Dernières %d adresses IP bannies&nbsp;"
 
+#: inc/classes/settings/class-secupress-settings-modules.php:539
+msgid "M jS Y"
+msgstr "j M Y"
+
+#: inc/classes/settings/class-secupress-settings-modules.php:539
+msgid "G:i"
+msgstr "G:i"
+
 #: inc/classes/settings/class-secupress-settings-modules.php:556
 msgid "Clear all IPs"
 msgstr "Vider toutes les adresses IP"
@@ -4678,11 +4661,11 @@ msgstr "Quels rôles doivent être affectés pour ce module&nbsp;?"
 msgid "Future roles will be automatically checked."
 msgstr "Les prochains rôles seront automatiquement cochés."
 
-#: inc/classes/settings/class-secupress-settings.php:811
+#: inc/classes/settings/class-secupress-settings.php:812
 msgid "Warning: "
 msgstr "Attention&nbsp;:"
 
-#: inc/classes/settings/class-secupress-settings.php:1075
+#: inc/classes/settings/class-secupress-settings.php:1076
 msgid "Save All Changes"
 msgstr "Tout sauver"
 
@@ -5390,14 +5373,6 @@ msgid "It will also hide all Pingbacks & Trackbacks from your post comments."
 msgstr ""
 "Cela va aussi cacher tous les Pingbacks & Trackbacks de vos commentaires."
 
-#: inc/modules/backups/callbacks.php:47
-msgid "Local"
-msgstr "Local"
-
-#: inc/modules/backups/callbacks.php:48
-msgid "Dropbox"
-msgstr "Dropbox"
-
 #: inc/modules/backups/settings/backup-db.php:5
 msgid "Database Backups"
 msgstr "Sauvegarde des bases de données"
@@ -5427,44 +5402,68 @@ msgstr "Historique des sauvegardes"
 msgid "Backups Storage"
 msgstr "Stockage des sauvegardes"
 
-#. Translators: 1 is a file name, 2 is a folder name, 3 is some code.
-#: inc/modules/backups/settings/backups-storage.php:24
+#. Translators: %s is a path to a folder.
+#: inc/modules/backups/settings/backups-storage.php:20
+#, php-format
+msgid "backups will be stored in %s. Please, delete them as soon as possible."
+msgstr ""
+"les sauvegardes seront stockées dans %s. Merci de les supprimer dès que "
+"possible."
+
+#. Translators: %s is the path to a folder.
+#: inc/modules/backups/settings/backups-storage.php:30
 #, php-format
 msgid ""
-"Please create a %1$s file inside the folder %2$s (create the folder if does "
-"not exist), then add the following rules to it: %3$s"
+"it seems some folders and a file could not be created. Please make sure to "
+"create a folder %s that contains the following:"
 msgstr ""
-"Merci de créer un fichier %1$s dans le dossier %2$s (créez le dossier s'il "
-"n'existe pas), puis ajoutez les règles suivantes dedans&nbsp;: %3$s"
+"il semblerait que des dossiers et un fichier n&rsquo;aient pu être créés. "
+"Merci de créer un dossier %s contenant ce qui suit&nbsp;:"
 
-#. Translators: 1 is a file name, 2 is some code.
-#: inc/modules/backups/settings/backups-storage.php:28
+#. Translators: 1 and 2 are folder names.
+#: inc/modules/backups/settings/backups-storage.php:37
 #, php-format
-msgid "Please, add the following rules to your %1$s file: %2$s."
-msgstr ""
-"Merci d'ajouter les règles suivantes dans votre fichier %1$s&nbsp;: %2$s."
+msgid "Two folders with the following names: %1$s and %2$s."
+msgstr "Deux dossiers ayant les noms suivants&nbsp;: %1$s et %2$s."
 
-#: inc/modules/backups/settings/backups-storage.php:34
-#: inc/modules/backups/settings/backups-storage.php:38
+#. Translators: %s is a file name.
+#: inc/modules/backups/settings/backups-storage.php:44
+#, php-format
+msgid "A %s file containing the following rules:"
+msgstr "Un fichier %s contenant les règles suivantes&nbsp;:"
+
+#. Translators: 1 is a file name, 2 is the path to a folder, 3 and 4 are folder names.
+#: inc/modules/backups/settings/backups-storage.php:55
+#, php-format
+msgid ""
+"it seems some folders could not be created and/or your %1$s file is not "
+"writable. Please make sure to create a folder %2$s that contains these two "
+"folders: %3$s and %4$s. Then add the following rules in your %1$s file:"
+msgstr ""
+"il semblerait que des dossiers n&rsquo;aient pu être créés et/ou votre "
+"fichier %1$s n'est pas inscriptible. Merci de créer un dossier %2$s "
+"contenant ces deux dossiers&nbsp;: %3$s et %4$s. Ensuite, ajoutez les règles "
+"suivantes dans votre fichier %1$s&nbsp;:"
+
+#. Translators: 1 is the path to a folder, 2 and 3 are folder names, 4 is a file name.
+#: inc/modules/backups/settings/backups-storage.php:67
+#, php-format
+msgid ""
+"please make sure a folder %1$s has been created and it contains these two "
+"folders: %2$s and %3$s. Then add the following rules in your %4$s file:"
+msgstr ""
+"merci de vous assurer qu&rsquo;un dossier %1$s a été créé et qu&rsquo;il "
+"contient ces deux dossiers&nbsp;: %2$s et %3$s. Ensuite, ajoutez les règles "
+"suivantes dans votre fichier %4$s&nbsp;:"
+
+#: inc/modules/backups/settings/backups-storage.php:82
+#: inc/modules/backups/settings/backups-storage.php:87
 msgid "Storage Location"
 msgstr "Lieu de stockage"
 
-#: inc/modules/backups/settings/backups-storage.php:35
+#: inc/modules/backups/settings/backups-storage.php:83
 msgid "Where do you want to store you backups?"
 msgstr "Où souhaitez-vous stocker vos sauvegardes&nbsp;?"
-
-#: inc/modules/backups/settings/backups-storage.php:43
-#, php-format
-msgid "Will be stored in %s. Please, delete them as soon as possible."
-msgstr "Seront stockées dans %s. Merci de les supprimer dès que possible."
-
-#: inc/modules/backups/settings/backups-storage.php:53
-#, php-format
-msgid ""
-"Your FTP constants present in your %1$s file will be used, so, you have to "
-"fill this first.<br/><a href=\"%2$s\" target=\"_blank\">Need help do to it?</"
-"a>"
-msgstr "---%1$s---%2$s---////"
 
 #: inc/modules/discloses/plugins/login-errors-disclose.php:26
 msgid "<strong>ERROR</strong>: Invalid username or incorrect password."
@@ -6583,6 +6582,14 @@ msgstr "Oui, désactiver l'envoi des thèmes et plugins"
 msgid "Backup Type"
 msgstr "Type de sauvegarde"
 
+#: inc/modules/schedules/settings/schedules-backups.php:13
+msgid "Database"
+msgstr "Base de données"
+
+#: inc/modules/schedules/settings/schedules-backups.php:13
+msgid "Files"
+msgstr "Fichiers"
+
 #. Translators: use %d, nothing else.
 #: inc/modules/schedules/settings/schedules-backups.php:18
 #: inc/modules/schedules/settings/schedules-file-monitoring.php:10
@@ -7586,18 +7593,48 @@ msgstr ""
 "actuellement la version %3$s."
 
 #. Translators: Plugin Name of the plugin/theme
-#: secupress.php:321
+#: secupress.php:328
 msgid "SecuPress — WordPress Security"
 msgstr "SecuPress — Sécurité WordPress"
 
 #. Translators: Description of the plugin/theme
-#: secupress.php:323
+#: secupress.php:330
 msgid ""
 "Protect your WordPress with SecuPress, analyze and ensure the safety of your "
 "website daily."
 msgstr ""
 "Protège votre site WordPress avec SecuPress, analyse et assure la sécurité "
 "de votre site quotidiennement."
+
+#~ msgctxt "verb"
+#~ msgid "Download"
+#~ msgstr "Télécharger"
+
+#~ msgid "Local"
+#~ msgstr "Local"
+
+#~ msgid "Dropbox"
+#~ msgstr "Dropbox"
+
+#~ msgid ""
+#~ "Please create a %1$s file inside the folder %2$s (create the folder if "
+#~ "does not exist), then add the following rules to it: %3$s"
+#~ msgstr ""
+#~ "Merci de créer un fichier %1$s dans le dossier %2$s (créez le dossier "
+#~ "s'il n'existe pas), puis ajoutez les règles suivantes dedans&nbsp;: %3$s"
+
+#~ msgid "Please, add the following rules to your %1$s file: %2$s."
+#~ msgstr ""
+#~ "Merci d'ajouter les règles suivantes dans votre fichier %1$s&nbsp;: %2$s."
+
+#~ msgid "Will be stored in %s. Please, delete them as soon as possible."
+#~ msgstr "Seront stockées dans %s. Merci de les supprimer dès que possible."
+
+#~ msgid ""
+#~ "Your FTP constants present in your %1$s file will be used, so, you have "
+#~ "to fill this first.<br/><a href=\"%2$s\" target=\"_blank\">Need help do "
+#~ "to it?</a>"
+#~ msgstr "---%1$s---%2$s---////"
 
 #~ msgid "Start hour and minute"
 #~ msgstr "Heure de début"
