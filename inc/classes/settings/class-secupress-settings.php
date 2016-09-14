@@ -426,7 +426,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			'name'              => '',
 			'label_for'         => '',
 			'plugin_activation' => false,
-			'default'           => '',
+			'default'           => null,
 			'value'             => null,
 			'options'           => array(),
 			'fieldset'          => null,
@@ -452,11 +452,20 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 		// Value.
 		if ( isset( $args['value'] ) ) {
-			$value = $args['value'];
+			if ( $args['plugin_activation'] ) {
+				// For the checkboxes that activate un sub-module, make sure they are not checked if they are disabled.
+				$value = $disabled ? null : $args['value'];
+			} else {
+				$value = $args['value'];
+			}
 		} elseif ( 'global' === $this->modulenow ) {
 			$value = secupress_get_option( $args['name'] );
 		} else {
 			$value = secupress_get_module_option( $args['name'] );
+		}
+
+		if ( is_null( $args['default'] ) ) {
+			$args['default'] = $args['plugin_activation'] ? 0 : '';
 		}
 
 		if ( is_null( $value ) ) {

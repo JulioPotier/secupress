@@ -48,10 +48,5 @@ $this->add_field( array(
 			'description' => $warning,
 			'depends'     => $field_name . '_local',
 		),
-		array(
-			'type'        => 'warning',
-			'description' => sprintf( __( 'Your FTP constants present in your %1$s file will be used, so, you have to fill this first.<br/><a href="%2$s" target="_blank">Need help do to it?</a>', 'secupress' ), '<code>wp-config.php</code>', '#' ), // ////.
-			'depends'     => $field_name . '_ftp',
-		),
 	),
 ) );

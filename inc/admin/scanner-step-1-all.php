@@ -85,13 +85,13 @@
 								<span aria-hidden="true" class="icon">
 									<i class="icon-info-disk"></i>
 								</span>
-								<span class="text"><?php esc_html_e( 'Learn more', 'secupress' ); ?></span>
+								<span class="text"><?php _e( 'Learn more', 'secupress' ); ?></span>
 							</span>
 							<span class="secupress-toggle-button hidden" aria-hidden="true">
 								<span aria-hidden="true" class="icon">
 									<i class="icon-cross"></i>
 								</span>
-								<span class="text"><?php esc_html_e( 'Close' ); ?></span>
+								<span class="text"><?php _e( 'Close' ); ?></span>
 							</span>
 						</button>
 					</p>

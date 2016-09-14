@@ -27,14 +27,14 @@ if ( ! $plans ) {
 			</div>
 		</div>
 		<div class="secupress-col-2-3 secupress-col-text">
-			<p class="secupress-text-medium"><?php esc_html_e( 'Preorder Now Your SecuPress Pro and Get an Exclusive Discount', 'secupress' ); ?></p>
-			<p><?php esc_html_e( 'Choose the licence that suits you the best and be part of the first users to get SecuPress Pro upon its release', 'secupress' ); ?></p>
+			<p class="secupress-text-medium"><?php _e( 'Preorder Now Your SecuPress Pro and Get an Exclusive Discount', 'secupress' ); ?></p>
+			<p><?php _e( 'Choose the licence that suits you the best and be part of the first users to get SecuPress Pro upon its release', 'secupress' ); ?></p>
 		</div>
 	</div>
 
 	<div class="secupress-section">
 
-		<p class="secupress-catchphrase"><?php printf( esc_html__( 'Improve Your Security Unlocking%sAll the Features from SecuPress Pro', 'secupress' ), '<br/>' ); ?></p>
+		<p class="secupress-catchphrase"><?php printf( __( 'Improve Your Security Unlocking%sAll the Features from SecuPress Pro', 'secupress' ), '<br/>' ); ?></p>
 
 		<?php
 		if ( isset( $impossible ) ) {
@@ -44,11 +44,11 @@ if ( ! $plans ) {
 
 		<p class="secupress-inline-options secupress-text-center hide-if-no-js secupress-type-yearly">
 			<button type="button" class="secupress-button secupress-inline-option secupress-current" data-type="yearly">
-				<?php esc_html_e( 'Yearly', 'secupress' ); ?>
+				<?php _e( 'Yearly', 'secupress' ); ?>
 			</button>
 			<button type="button" class="secupress-button secupress-inline-option" data-type="monthly">
-				<?php esc_html_e( 'Monthly', 'secupress' ); ?>
-				<span class="secupress-tip"><?php esc_html_e( 'Coming soon', 'secupress' ) ?></span>
+				<?php _e( 'Monthly', 'secupress' ); ?>
+				<span class="secupress-tip"><?php _e( 'Coming soon', 'secupress' ) ?></span>
 			</button>
 		</p>
 		<div id="secupress-pricing" class="secupress-pricing secupress-flex secupress-text-center">
@@ -86,17 +86,17 @@ if ( ! $plans ) {
 						<p class="secupress-price-desc secupress-hide-monthly"><?php echo esc_html( sprintf( __( '%d%% OFF', 'secupress' ), (int) $plan['free'] ) ); ?> <sup>*</sup></p>
 					</div>
 					<div class="secupress-price-details">
-						<p class="secupress-pd-info secupress-hide-monthly"><?php esc_html_e( 'Billed per year', 'secupress' ); ?> <sup>*</sup></p>
-						<p class="secupress-pd-info secupress-hide-yearly"><?php esc_html_e( 'Billed per month', 'secupress' ); ?> <sup>*</sup></p>
+						<p class="secupress-pd-info secupress-hide-monthly"><?php _e( 'Billed per year', 'secupress' ); ?> <sup>*</sup></p>
+						<p class="secupress-pd-info secupress-hide-yearly"><?php _e( 'Billed per month', 'secupress' ); ?> <sup>*</sup></p>
 						<p class="secupress-pd-benefits">
-							<?php esc_html_e( 'Secure & Protect', 'secupress' ); ?>
+							<?php _e( 'Secure & Protect', 'secupress' ); ?>
 							<strong><?php echo esc_html( sprintf( _n( '%d Website', '%d Websites', (int) $plan['websites'], 'secupress' ), (int) $plan['websites'] ) ); ?></strong>
-							<?php esc_html_e( 'Forever', 'secupress' ); ?>
+							<?php _e( 'Forever', 'secupress' ); ?>
 						</p>
 					</div>
 					<div class="secupress-price-cta">
 						<?php
-						$order_button = 'preorder' === $plan['button'] ? esc_html__( 'Pre-Order', 'secupress' ) : esc_html__( 'Order', 'secupress' );
+						$order_button = 'preorder' === $plan['button'] ? __( 'Pre-Order', 'secupress' ) : __( 'Order', 'secupress' );
 						?>
 						<a href="<?php echo esc_url( $plan['url'] ); ?>" class="secupress-button secupress-button-primary shadow" target="_blank"><?php echo $order_button; ?></a>
 					</div>
@@ -114,7 +114,7 @@ if ( ! $plans ) {
 		<div class="secupress-pro-crossed-offers secupress-flex secupress-text-center secupress-p2">
 			<div class="secupress-col-1-3">
 				<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>icon-sos.png" width="66" height="66" alt="<?php esc_attr_e( 'Support', 'secupress' ); ?>">
-				<p><?php esc_html_e( 'Unlimited Support and Updates', 'secupress' ); ?></p>
+				<p><?php _e( 'Unlimited Support and Updates', 'secupress' ); ?></p>
 			</div>
 			<div class="secupress-col-1-3">
 				<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>icon-imagify.png" width="66" height="66" alt="Imagify">

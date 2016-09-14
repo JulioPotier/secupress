@@ -316,21 +316,23 @@ function secupress_is_plugin_active_for_network( $plugin ) {
  * @param (array)  $args    An array of arguments.
  */
 function secupress_die( $message = '', $title = '', $args = array() ) {
-	$has_p   = strpos( $message, '<p>' ) !== false;
-	$message = ( $has_p ? '' : '<p>' ) . $message . ( $has_p ? '' : '</p>' );
-	$message = '<h1>' . SECUPRESS_PLUGIN_NAME . '</h1>' . $message;
-	$url     = secupress_get_current_url( 'raw' );
+	$has_p       = strpos( $message, '<p>' ) !== false;
+	$message     = ( $has_p ? '' : '<p>' ) . $message . ( $has_p ? '' : '</p>' );
+	$message     = '<h1>' . SECUPRESS_PLUGIN_NAME . '</h1>' . $message;
+	$url         = secupress_get_current_url( 'raw' );
+	$whitelisted = secupress_ip_is_whitelisted();
 
 	/**
 	 * Filter the message.
 	 *
 	 * @since 1.0
 	 *
-	 * @param (string) $message The message displayed.
-	 * @param (string) $url     The current URL.
-	 * @param (array)  $args    Facultative arguments.
+	 * @param (string) $message     The message displayed.
+	 * @param (string) $url         The current URL.
+	 * @param (array)  $args        Facultative arguments.
+	 * @param (bool)   $whitelisted Is the current user IP whitelisted or not.
 	 */
-	$message = apply_filters( 'secupress.die.message', $message, $url, $args );
+	$message = apply_filters( 'secupress.die.message', $message, $url, $args, $whitelisted );
 
 	/**
 	 * Fires right before `wp_die()`.
@@ -340,10 +342,13 @@ function secupress_die( $message = '', $title = '', $args = array() ) {
 	 * @param (string) $message The message displayed.
 	 * @param (string) $url     The current URL.
 	 * @param (array)  $args    Facultative arguments.
+	 * @param (bool)   $whitelisted Is the current user IP whitelisted or not.
 	 */
-	do_action( 'secupress.before.die', $message, $url, $args );
+	do_action( 'secupress.before.die', $message, $url, $args, $whitelisted );
 
-	wp_die( $message, $title, $args );
+	if ( ! $whitelisted ) {
+		wp_die( $message, $title, $args );
+	}
 }
 
 

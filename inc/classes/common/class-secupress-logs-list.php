@@ -263,7 +263,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 			<div class="secupress-log-content-header secupress-section-primary">
 				<div class="secupress-flex">
 					<p class="secupress-log-title">
-						<?php esc_html_e( 'Log Details', 'secupress' ); ?>
+						<?php _e( 'Log Details', 'secupress' ); ?>
 					</p>
 					<p class="secupress-log-delete-actions">
 						<a class="secupress-action-links secupress-delete-log" href="<?php echo esc_url( $delete_url ); ?>">
@@ -295,14 +295,14 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 						<?php if ( ! secupress_ip_is_whitelisted( $user_raw->user_ip ) && secupress_get_ip() !== $user_raw->user_ip ) { ?>
 							<a class="secupress-action-links secupress-ban-ip" href="<?php echo esc_url( $ban_ip_url ); ?>">
 								<i class="icon-times-circle" aria-hidden="true"></i>
-								<?php esc_html_e( 'Ban this IP', 'secupress' ); ?>
+								<?php _e( 'Ban this IP', 'secupress' ); ?>
 							</a>
 							<span class="spinner secupress-inline-spinner"></span>
 						<?php } ?>
 
 						<a class="secupress-action-links secupress-delete-logs-by-ip" href="<?php echo esc_url( $delete_by_ip_url ); ?>">
 							<i class="icon-trash" aria-hidden="true"></i>
-							<?php esc_html_e( 'Delete logs with this IP', 'secupress' ); ?>
+							<?php _e( 'Delete logs with this IP', 'secupress' ); ?>
 						</a>
 						<span class="spinner secupress-inline-spinner"></span>
 					</p>

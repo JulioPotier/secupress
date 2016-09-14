@@ -187,6 +187,10 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		$modules = static::get_modules();
 
 		$this->with_form = ! ( isset( $modules[ $this->modulenow ]['with_form'] ) && false === $modules[ $this->modulenow ]['with_form'] );
+
+		if ( secupress_is_pro() ) {
+			require_once( SECUPRESS_PRO_ADMIN_PATH . 'settings.php' );
+		}
 	}
 
 
@@ -213,7 +217,6 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 				 * Modules are included in the content of the page.
 				 */
 				if ( ! $is_welcome ) {
-					$suffix = secupress_is_pro() ? '' : '-pro';
 					?>
 					<div class="secupress-modules-sidebar">
 						<div class="secupress-sidebar-header">
@@ -257,30 +260,12 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			$icon   = isset( $module['icon'] ) ? $module['icon'] : 'secupress-simple';
 			$class  = $this->get_current_module() === $key ? 'active' : '';
 			$class .= ! empty( $module['mark_as_pro'] ) ? ' secupress-pro-module' : '';
-
-			// Skip Get Pro exception.
-			if ( 'get-pro' === $key ) {
-				continue;
-			}
 			?>
 			<li>
 				<a href="<?php echo esc_url( secupress_admin_url( 'modules', $key ) ); ?>" class="<?php echo $class; ?> module-<?php echo sanitize_key( $key ); ?>">
 					<span class="secupress-tab-name"><?php echo $module['title']; ?></span>
 					<span class="secupress-tab-summary"><?php echo $module['summaries']['small']; ?></span>
 					<i class="icon-<?php echo $icon; ?>" aria-hidden="true"></i>
-				</a>
-			</li>
-			<?php
-		}
-
-		// Prints last tab "Get Pro" is current user is not a pro one.
-		if ( ! secupress_is_pro() ) {
-			?>
-			<li>
-				<a href="<?php echo esc_url( secupress_admin_url( 'modules', 'get-pro' ) ); ?>" class="module-pro">
-					<span class="secupress-tab-name"><?php esc_html_e( 'Get Pro', 'secupress' ); ?></span>
-					<span class="secupress-tab-summary"><?php esc_html_e( 'Choose your licence', 'secupress' ); ?></span>
-					<i class="icon-secupress-simple" aria-hidden="true"></i>
 				</a>
 			</li>
 			<?php
@@ -434,137 +419,24 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 
 	/**
 	 * Non login time slot field.
+	 * The field is hidden in the free version.
 	 *
 	 * @since 1.0
 	 *
 	 * @param (array) $args An array of parameters. See `::field()`.
 	 */
-	protected function countries( $args ) {
-		$name_attribute = 'secupress_' . $this->modulenow . '_settings[' . $args['name'] . ']';
-
-		// Value.
-		if ( isset( $args['value'] ) ) {
-			$value = $args['value'];
-		} else {
-			$value = secupress_get_module_option( $args['name'] );
-		}
-
-		if ( is_null( $value ) ) {
-			$value = $args['default'];
-		}
-		$value = array_flip( (array) array_filter( $value ) );
-
-		// Attributes.
-		$attributes = '';
-		if ( ! empty( $args['attributes'] ) ) {
-			foreach ( $args['attributes'] as $attribute => $attribute_value ) {
-				$attributes .= ' ' . $attribute . '="' . esc_attr( $attribute_value ) . '"';
-			}
-		}
-		$disabled_class = ! empty( $args['attributes']['disabled'] ) ? ' disabled' : '';
-		$disabled_attr  = $disabled_class ? ' class="disabled"' : '';
-		$_countries     = array( 'AF' => array( 0 => 'Africa', 'AO' => 'Angola', 'BF' => 'Burkina Faso', 'BI' => 'Burundi', 'BJ' => 'Benin', 'BW' => 'Botswana', 'CD' => 'Congo, The Democratic Republic of the', 'CF' => 'Central African Republic', 'CG' => 'Congo', 'CI' => 'Cote D\'Ivoire', 'CM' => 'Cameroon', 'CV' => 'Cape Verde', 'DJ' => 'Djibouti', 'DZ' => 'Algeria', 'EG' => 'Egypt', 'EH' => 'Western Sahara', 'ER' => 'Eritrea', 'ET' => 'Ethiopia', 'GA' => 'Gabon', 'GH' => 'Ghana', 'GM' => 'Gambia', 'GN' => 'Guinea', 'GQ' => 'Equatorial Guinea', 'GW' => 'Guinea-Bissau', 'KE' => 'Kenya', 'KM' => 'Comoros', 'LR' => 'Liberia', 'LS' => 'Lesotho', 'LY' => 'Libya', 'MA' => 'Morocco', 'MG' => 'Madagascar', 'ML' => 'Mali', 'MR' => 'Mauritania', 'MU' => 'Mauritius', 'MW' => 'Malawi', 'MZ' => 'Mozambique', 'NA' => 'Namibia', 'NE' => 'Niger', 'NG' => 'Nigeria', 'RE' => 'Reunion', 'RW' => 'Rwanda', 'SC' => 'Seychelles', 'SD' => 'Sudan', 'SH' => 'Saint Helena', 'SL' => 'Sierra Leone', 'SN' => 'Senegal', 'SO' => 'Somalia', 'ST' => 'Sao Tome and Principe', 'SZ' => 'Swaziland', 'TD' => 'Chad', 'TG' => 'Togo', 'TN' => 'Tunisia', 'TZ' => 'Tanzania, United Republic of', 'UG' => 'Uganda', 'YT' => 'Mayotte', 'ZA' => 'South Africa', 'ZM' => 'Zambia', 'ZW' => 'Zimbabwe', 'SS' => 'South Sudan' ), 'AN' => array( 0 => 'Antarctica', 'AQ' => 'Antarctica', 'BV' => 'Bouvet Island', 'GS' => 'South Georgia and the South Sandwich Islands', 'HM' => 'Heard Island and McDonald Islands', 'TF' => 'French Southern Territories' ), 'AS' => array( 0 => 'Asia', 'AP' => 'Asia/Pacific Region', 'AE' => 'United Arab Emirates', 'AF' => 'Afghanistan', 'AM' => 'Armenia', 'AZ' => 'Azerbaijan', 'BD' => 'Bangladesh', 'BH' => 'Bahrain', 'BN' => 'Brunei Darussalam', 'BT' => 'Bhutan', 'CC' => 'Cocos (Keeling) Islands', 'CN' => 'China', 'CX' => 'Christmas Island', 'CY' => 'Cyprus', 'GE' => 'Georgia', 'HK' => 'Hong Kong', 'ID' => 'Indonesia', 'IL' => 'Israel', 'IN' => 'India', 'IO' => 'British Indian Ocean Territory', 'IQ' => 'Iraq', 'IR' => 'Iran, Islamic Republic of', 'JO' => 'Jordan', 'JP' => 'Japan', 'KG' => 'Kyrgyzstan', 'KH' => 'Cambodia', 'KP' => 'Korea, Democratic People\'s Republic of', 'KR' => 'Korea, Republic of', 'KW' => 'Kuwait', 'KZ' => 'Kazakhstan', 'LA' => 'Lao People\'s Democratic Republic', 'LB' => 'Lebanon', 'LK' => 'Sri Lanka', 'MM' => 'Myanmar', 'MN' => 'Mongolia', 'MO' => 'Macau', 'MV' => 'Maldives', 'MY' => 'Malaysia', 'NP' => 'Nepal', 'OM' => 'Oman', 'PH' => 'Philippines', 'PK' => 'Pakistan', 'PS' => 'Palestinian Territory', 'QA' => 'Qatar', 'SA' => 'Saudi Arabia', 'SG' => 'Singapore', 'SY' => 'Syrian Arab Republic', 'TH' => 'Thailand', 'TJ' => 'Tajikistan', 'TM' => 'Turkmenistan', 'TL' => 'Timor-Leste', 'TW' => 'Taiwan', 'UZ' => 'Uzbekistan', 'VN' => 'Vietnam', 'YE' => 'Yemen' ), 'EU' => array( 0 => 'Europe', 'AD' => 'Andorra', 'AL' => 'Albania', 'AT' => 'Austria', 'BA' => 'Bosnia and Herzegovina', 'BE' => 'Belgium', 'BG' => 'Bulgaria', 'BY' => 'Belarus', 'CH' => 'Switzerland', 'CZ' => 'Czech Republic', 'DE' => 'Germany', 'DK' => 'Denmark', 'EE' => 'Estonia', 'ES' => 'Spain', 'FI' => 'Finland', 'FO' => 'Faroe Islands', 'FR' => 'France', 'GB' => 'United Kingdom', 'GI' => 'Gibraltar', 'GR' => 'Greece', 'HR' => 'Croatia', 'HU' => 'Hungary', 'IE' => 'Ireland', 'IS' => 'Iceland', 'IT' => 'Italy', 'LI' => 'Liechtenstein', 'LT' => 'Lithuania', 'LU' => 'Luxembourg', 'LV' => 'Latvia', 'MC' => 'Monaco', 'MD' => 'Moldova, Republic of', 'MK' => 'Macedonia', 'MT' => 'Malta', 'NL' => 'Netherlands', 'NO' => 'Norway', 'PL' => 'Poland', 'PT' => 'Portugal', 'RO' => 'Romania', 'RU' => 'Russian Federation', 'SE' => 'Sweden', 'SI' => 'Slovenia', 'SJ' => 'Svalbard and Jan Mayen', 'SK' => 'Slovakia', 'SM' => 'San Marino', 'TR' => 'Turkey', 'UA' => 'Ukraine', 'VA' => 'Holy See (Vatican City State)', 'RS' => 'Serbia', 'ME' => 'Montenegro', 'AX' => 'Aland Islands', 'GG' => 'Guernsey', 'IM' => 'Isle of Man', 'JE' => 'Jersey' ), 'OC' => array( 0 => 'Oceania', 'AS' => 'American Samoa', 'AU' => 'Australia', 'CK' => 'Cook Islands', 'FJ' => 'Fiji', 'FM' => 'Micronesia, Federated States of', 'GU' => 'Guam', 'KI' => 'Kiribati', 'MH' => 'Marshall Islands', 'MP' => 'Northern Mariana Islands', 'NC' => 'New Caledonia', 'NF' => 'Norfolk Island', 'NR' => 'Nauru', 'NU' => 'Niue', 'NZ' => 'New Zealand', 'PF' => 'French Polynesia', 'PG' => 'Papua New Guinea', 'PN' => 'Pitcairn Islands', 'PW' => 'Palau', 'SB' => 'Solomon Islands', 'TK' => 'Tokelau', 'TO' => 'Tonga', 'TV' => 'Tuvalu', 'UM' => 'United States Minor Outlying Islands', 'VU' => 'Vanuatu', 'WF' => 'Wallis and Futuna', 'WS' => 'Samoa' ), 'NA' => array( 0 => 'North America', 'AG' => 'Antigua and Barbuda', 'AI' => 'Anguilla', 'CW' => 'Curacao', 'AW' => 'Aruba', 'BB' => 'Barbados', 'BM' => 'Bermuda', 'BS' => 'Bahamas', 'BZ' => 'Belize', 'CA' => 'Canada', 'CR' => 'Costa Rica', 'CU' => 'Cuba', 'DM' => 'Dominica', 'DO' => 'Dominican Republic', 'SX' => 'Sint Maarten (Dutch part)', 'GD' => 'Grenada', 'GL' => 'Greenland', 'GP' => 'Guadeloupe', 'GT' => 'Guatemala', 'HN' => 'Honduras', 'HT' => 'Haiti', 'JM' => 'Jamaica', 'KN' => 'Saint Kitts and Nevis', 'KY' => 'Cayman Islands', 'LC' => 'Saint Lucia', 'MQ' => 'Martinique', 'MS' => 'Montserrat', 'MX' => 'Mexico', 'NI' => 'Nicaragua', 'PA' => 'Panama', 'PM' => 'Saint Pierre and Miquelon', 'PR' => 'Puerto Rico', 'SV' => 'El Salvador', 'TC' => 'Turks and Caicos Islands', 'TT' => 'Trinidad and Tobago', 'US' => 'United States', 'VC' => 'Saint Vincent and the Grenadines', 'VG' => 'Virgin Islands, British', 'VI' => 'Virgin Islands, U.S.', 'BL' => 'Saint Barthelemy', 'MF' => 'Saint Martin', 'BQ' => 'Bonaire, Saint Eustatius and Saba' ), 'SA' => array( 0 => 'South America', 'AR' => 'Argentina', 'BO' => 'Bolivia', 'BR' => 'Brazil', 'CL' => 'Chile', 'CO' => 'Colombia', 'EC' => 'Ecuador', 'FK' => 'Falkland Islands (Malvinas)', 'GF' => 'French Guiana', 'GY' => 'Guyana', 'PE' => 'Peru', 'PY' => 'Paraguay', 'SR' => 'Suriname', 'UY' => 'Uruguay', 'VE' => 'Venezuela' ) );
-
-		foreach ( $_countries as $code_country => $countries ) {
-			$title   = array_shift( $countries );
-			$checked = array_intersect_key( $value, $countries );
-			$checked = ! empty( $checked );
-			?>
-			<label class="continent<?php echo $disabled_class; ?>">
-				<input type="checkbox" value="continent-<?php echo $code_country; ?>"<?php checked( $checked ); ?><?php echo $attributes; ?>>
-				<?php echo '<span class="label-text">' . $title . '</span>'; ?>
-			</label>
-			<button type="button" class="hide-if-no-js expand_country"><img src="data:image/gif;base64,R0lGODlhEAAQAMQAAAAAAM/Iu3iYtcK4qPX18bDC09/b0ubm5v///9jTye3t59LMv8a+ruXh2tzYz/j4+PDw7NbRxuTh2f///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAUUABMALAAAAAAQABAAAAVI4CSOZGmeaKqubFkIcCwUp4DcOCLUOHA/O5PgQQQ8II1gSUAAOJ0GJUkAgSgAB4lDOhJoE4DIIsAVCRaMgVpdnrxkMFprjgoBADs=" alt="+" title="<?php esc_attr__( 'Expand', 'secupress' ); ?>" /></button>
-			<fieldset class="hide-if-js">
-				<legend class="screen-reader-text"><span><?php echo $title; ?></span></legend>
-				<?php
-				foreach ( $countries as $code => $title ) {
-					$args['label_for'] = $args['name'] . '_' . $code;
-					?>
-					<div>
-						<span class="secupress-tree-dash"></span>
-						<label<?php echo $disabled_attr; ?>>
-							<input type="checkbox" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>[]" value="<?php echo $code; ?>"<?php checked( isset( $value[ $code ] ) ); ?> data-code-country="<?php echo $code_country; ?>"<?php echo $attributes; ?>>
-							<?php echo '<span class="label-text">' . $title . '</span>'; ?>
-						</label>
-					</div>
-					<?php
-				}
-				?>
-			</fieldset>
-			<br/>
-			<?php
-		}
-	}
+	protected function countries( $args ) {}
 
 
 	/**
 	 * Non login time slot field.
+	 * The field is hidden in the free version.
 	 *
 	 * @since 1.0
 	 *
 	 * @param (array) $args An array of parameters. See `::field()`.
 	 */
-	protected function non_login_time_slot( $args ) {
-		$name_attribute = 'secupress_' . $this->modulenow . '_settings[' . $args['name'] . ']';
-
-		// Value.
-		if ( isset( $args['value'] ) ) {
-			$value = $args['value'];
-		} else {
-			$value = secupress_get_module_option( $args['name'] );
-		}
-
-		if ( is_null( $value ) ) {
-			$value = $args['default'];
-		}
-
-		$from_hour   = isset( $value['from_hour'] )   ? (int) $value['from_hour']   : 0;
-		$from_minute = isset( $value['from_minute'] ) ? (int) $value['from_minute'] : 0;
-		$to_hour     = isset( $value['to_hour'] )     ? (int) $value['to_hour']     : 0;
-		$to_minute   = isset( $value['to_minute'] )   ? (int) $value['to_minute']   : 0;
-
-		// Attributes.
-		$attributes = ' type="text" class="small-text" size="2" maxlength="2" autocomplete="off"';
-		if ( ! empty( $args['attributes'] ) ) {
-			foreach ( $args['attributes'] as $attribute => $attribute_value ) {
-				$attributes .= ' ' . $attribute . '="' . esc_attr( $attribute_value ) . '"';
-			}
-		}
-
-		echo $args['label'] ? '<p id="' . $args['name'] . '-time-slot-label">' . $args['label'] . '</p>' : '';
-		?>
-		<fieldset aria-labelledby="<?php echo $args['name']; ?>-time-slot-label">
-			<legend class="screen-reader-text"><?php _e( 'Start hour and minute', 'secupress' ); ?></legend>
-			<label>
-				<span class="label-before" aria-hidden="true"><?php _ex( 'From', 'starting hour + minute', 'secupress' ); ?></span>
-				<span class="screen-reader-text"><?php _e( 'Hour' ); ?></span>
-				<input id="<?php echo $args['name']; ?>_from_hour" name="<?php echo $name_attribute; ?>[from_hour]" value="<?php echo str_pad( $from_hour, 2, 0, STR_PAD_LEFT ); ?>" pattern="0?[0-9]|1[0-9]|2[0-3]"<?php echo $attributes; ?>>
-				<span aria-hidden="true"><?php _ex( 'h', 'hour', 'secupress' ); ?></span>
-			</label>
-			<label>
-				<span class="screen-reader-text"><?php _e( 'Minute' ); ?></span>
-				<input id="<?php echo $args['name']; ?>_from_minute" name="<?php echo $name_attribute; ?>[from_minute]" value="<?php echo str_pad( $from_minute, 2, 0, STR_PAD_LEFT ); ?>" pattern="0?[0-9]|[1-5][0-9]"<?php echo $attributes; ?>>
-				<span aria-hidden="true"><?php _ex( 'min', 'minute', 'secupress' ); ?></span>
-			</label>
-		</fieldset>
-
-		<fieldset aria-labelledby="<?php echo $args['name']; ?>-time-slot-label">
-			<legend class="screen-reader-text"><?php _e( 'End hour and minute', 'secupress' ); ?></legend>
-			<label>
-				<span class="label-before" aria-hidden="true"><?php _ex( 'To', 'ending hour + minute', 'secupress' ) ?></span>
-				<span class="screen-reader-text"><?php _e( 'Hour' ); ?></span>
-				<input id="<?php echo $args['name']; ?>_to_hour" name="<?php echo $name_attribute; ?>[to_hour]" value="<?php echo str_pad( $to_hour, 2, 0, STR_PAD_LEFT ); ?>" pattern="0?[0-9]|1[0-9]|2[0-3]"<?php echo $attributes; ?>>
-				<span aria-hidden="true"><?php _ex( 'h', 'hour', 'secupress' ); ?></span>
-			</label>
-			<label>
-				<span class="screen-reader-text"><?php _e( 'Minute' ); ?></span>
-				<input id="<?php echo $args['name']; ?>_to_minute" name="<?php echo $name_attribute; ?>[to_minute]" value="<?php echo str_pad( $to_minute, 2, 0, STR_PAD_LEFT ); ?>" pattern="0?[0-9]|[1-5][0-9]"<?php echo $attributes; ?>>
-				<span aria-hidden="true"><?php _ex( 'min', 'minute', 'secupress' ); ?></span>
-			</label>
-		</fieldset>
-		<?php
-	}
+	protected function non_login_time_slot( $args ) {}
 
 
 	/**
@@ -573,7 +445,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	protected function scheduled_backups() {
-		_e( 'None so far.', 'secupress' );
+		_ex( 'None so far.', 'scheduled backups', 'secupress' );
 	}
 
 
@@ -583,7 +455,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	protected function scheduled_scan() {
-		_e( 'None so far.', 'secupress' );
+		_ex( 'None so far.', 'scheduled scans', 'secupress' );
 	}
 
 
@@ -593,7 +465,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	protected function scheduled_monitoring() {
-		_e( 'None so far.', 'secupress' );
+		_ex( 'None so far.', 'scheduled file monitoring', 'secupress' );
 	}
 
 
@@ -775,7 +647,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			<p class="description desc">
 				<?php _e( 'Post creation or update will not be logged, but rather password and profile update, email changes, new administrator user, admin has logged in...', 'secupress' ); ?>
 			</p>
-			<p class="submit"><button type="submit" class="secupress-button secupress-button-primary"><?php esc_html_e( 'Submit' ); ?></button></p>
+			<p class="submit"><button type="submit" class="secupress-button secupress-button-primary"><?php _e( 'Submit' ); ?></button></p>
 		</form>
 		<?php
 	}
@@ -811,7 +683,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 				?>
 			<?php echo $label_close; ?>
 			</p>
-			<?php echo '<p class="submit"><button type="submit" class="secupress-button secupress-button-primary">' . esc_html__( 'Submit' ) . '</button></p>'; ?>
+			<?php echo '<p class="submit"><button type="submit" class="secupress-button secupress-button-primary">' . __( 'Submit' ) . '</button></p>'; ?>
 		</form>
 		<?php
 	}
@@ -823,18 +695,9 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	protected function backup_history() {
-		if ( ! secupress_is_pro() ) {
 		?>
 		<p id="secupress-no-backups"><em><?php _e( 'No Backups found yet, do one?', 'secupress' ); ?></em></p>
 		<?php
-		} else {
-			/**
-			 * Fires when SecuPress Pro loads the method backup_history.
-			 *
-			 * @since 1.0
-			 */
-	 		do_action( 'secupress.settings.field.backup_history' );
-		}
 	}
 
 
@@ -844,26 +707,18 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	protected function backup_db() {
-		if ( ! secupress_is_pro() ) {
 		?>
 		<p class="submit">
-			<button disabled="disabled" class="secupress-button">
+			<button type="button" disabled="disabled" class="secupress-button">
 				<span class="icon">
 					<i class="icon-download"></i>
 				</span>
 				<span class="text">
-					<?php esc_html_e( 'Backup my Database', 'secupress' ); ?>
+					<?php _e( 'Backup my Database', 'secupress' ); ?>
 				</span>
 			</button>
+		</p>
 		<?php
-		} else {
-			/**
-			 * Fires when SecuPress Pro loads the method backup_db.
-			 *
-			 * @since 1.0
-			 */
-	 		do_action( 'secupress.settings.field.backup_db' );
-		}
 	}
 
 
@@ -873,27 +728,18 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	protected function backup_files() {
-		if ( ! secupress_is_pro() ) {
 		?>
 		<p class="submit">
-			<button disabled="disabled" class="secupress-button">
+			<button type="button" disabled="disabled" class="secupress-button">
 				<span class="icon">
 					<i class="icon-download"></i>
 				</span>
 				<span class="text">
-					<?php esc_html_e( 'Backup my Files', 'secupress' ); ?>
+					<?php _e( 'Backup my Files', 'secupress' ); ?>
 				</span>
 			</button>
 		</p>
 		<?php
-		} else {
-			/**
-			 * Fires when SecuPress Pro loads the method backup_files.
-			 *
-			 * @since 1.0
-			 */
-	 		do_action( 'secupress.settings.field.backup_files' );
-		}
 	}
 
 
@@ -903,20 +749,13 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	protected function file_scanner() {
-		if ( ! secupress_is_pro() ) {
-			?>
-			<button class="secupress-button disabled" type="button">
-				<?php esc_html_e( 'Search for malicious files', 'secupress' ); ?>
+		?>
+		<p class="submit">
+			<button type="button" disabled="disabled" class="secupress-button">
+				<?php _e( 'Search for malicious files', 'secupress' ); ?>
 			</button>
-			<?php
-		} else {
-			/**
-			 * Fires when SecuPress Pro loads the method file_scanner.
-			 *
-			 * @since 1.0
-			 */
-	 		do_action( 'secupress.settings.field.file_scanner' );
-		}
+		</p>
+		<?php
 	}
 
 

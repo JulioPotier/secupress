@@ -128,7 +128,7 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements SecuPres
 			$new_file = ABSPATH . $filename . $suffix;
 
 			if ( $wp_filesystem->move( ABSPATH . $filename, $new_file ) ) {
-				$wp_filesystem->chmod( $new_file, octdec( 644 ) );
+				$wp_filesystem->chmod( $new_file, FS_CHMOD_FILE );
 				// Counting the renamed files is safer that counting the not renamed ones.
 				$renamed[] = $filename;
 			}

@@ -101,9 +101,7 @@ function secupress_rrmdir( $dir, $dirs_to_preserve = array() ) {
 function secupress_mkdir( $dir ) {
 	$wp_filesystem = secupress_get_filesystem();
 
-	$chmod = defined( 'FS_CHMOD_DIR' ) ? FS_CHMOD_DIR : ( fileperms( WP_CONTENT_DIR ) & 0777 | 0755 );
-
-	return $wp_filesystem->mkdir( $dir, $chmod );
+	return $wp_filesystem->mkdir( $dir, FS_CHMOD_DIR );
 }
 
 
@@ -324,9 +322,7 @@ function secupress_put_contents( $file, $new_content = '', $args = array() ) {
 		$file_content = $content;
 	}
 
-	$chmod = defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : 0644;
-
-	return $wp_filesystem->put_contents( $file, $file_content, $chmod );
+	return $wp_filesystem->put_contents( $file, $file_content, FS_CHMOD_FILE );
 }
 
 

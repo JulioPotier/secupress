@@ -7,7 +7,7 @@
 
 			<div class="secupress-sgh-name">
 				<i class="icon-secupress" aria-hidden="true"></i>
-				<p class="secupress-sgh-title"><?php printf( esc_html__( '%sNew Items', 'secupress' ), ( SECUPRESS_PLUGIN_NAME === 'SecuPress' ? SECUPRESS_PLUGIN_NAME . ' ' . SECUPRESS_VERSION . ' ' : '' ) ); ?></p>
+				<p class="secupress-sgh-title"><?php printf( __( '%sNew Items', 'secupress' ), ( SECUPRESS_PLUGIN_NAME === 'SecuPress' ? SECUPRESS_PLUGIN_NAME . ' ' . SECUPRESS_VERSION . ' ' : '' ) ); ?></p>
 				<p class="secupress-sgh-description"><?php _e( 'This new items need to be checked: You will need to rescan your website.', 'secupress' ); ?></p>
 			</div>
 
@@ -83,13 +83,13 @@
 							<span aria-hidden="true" class="icon">
 								<i class="icon-info-disk"></i>
 							</span>
-							<span class="text"><?php esc_html_e( 'Learn more', 'secupress' ); ?></span>
+							<span class="text"><?php _e( 'Learn more', 'secupress' ); ?></span>
 						</span>
 						<span class="secupress-toggle-button hidden" aria-hidden="true">
 							<span aria-hidden="true" class="icon">
 								<i class="icon-cross"></i>
 							</span>
-							<span class="text"><?php esc_html_e( 'Close' ); ?></span>
+							<span class="text"><?php _e( 'Close' ); ?></span>
 						</span>
 					</button>
 				</p>

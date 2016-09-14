@@ -62,8 +62,8 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 			<?php settings_errors(); ?>
 			<?php
 				$titles = array(
-					'title'    => esc_html__( 'Settings', 'secupress' ),
-					'subtitle' => esc_html__( 'Overall plugin settings and fine tuning', 'secupress' ),
+					'title'    => __( 'Settings', 'secupress' ),
+					'subtitle' => __( 'Overall plugin settings and fine tuning', 'secupress' ),
 				);
 				secupress_settings_heading( $titles );
 			?>
@@ -126,7 +126,7 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 					<i class="icon-upload" aria-hidden="true"></i>
 				</span>
 				<span class="text">
-					<?php esc_html_e( 'Upload file and import settings', 'secupress' ); ?>
+					<?php _e( 'Upload file and import settings', 'secupress' ); ?>
 				</span>
 			</button>
 		</p>

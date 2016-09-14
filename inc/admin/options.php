@@ -31,7 +31,12 @@ function secupress_global_settings_callback( $value ) {
 	}
 	$value['sanitized'] = 1;
 
-	// Previous values.
+	if ( ! secupress_is_pro() || ! empty( $value['wl_plugin_name'] ) && 'SecuPress' === $value['wl_plugin_name'] ) {
+		unset( $value['wl_plugin_name'] );
+	}
+
+	/*
+	// Previous values. ////.
 	$old_values = get_site_option( SECUPRESS_SETTINGS_SLUG );
 	$old_values = is_array( $old_values ) ? $old_values : array();
 
@@ -39,13 +44,9 @@ function secupress_global_settings_callback( $value ) {
 		unset( $old_values['wl_plugin_name'] );
 	}
 
-	if ( ! secupress_is_pro() || ! empty( $value['wl_plugin_name'] ) && 'SecuPress' === $value['wl_plugin_name'] ) {
-		unset( $value['wl_plugin_name'] );
-	}
-
 	/**
 	 * API and license validation.
-	 */// ////.
+	 */
 	/*$value['consumer_email'] = ! empty( $value['consumer_email'] ) ? is_email( $value['consumer_email'] )          : '';
 	$value['consumer_key']   = ! empty( $value['consumer_key'] )   ? sanitize_text_field( $value['consumer_key'] ) : '';
 

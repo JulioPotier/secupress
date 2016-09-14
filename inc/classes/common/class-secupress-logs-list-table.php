@@ -450,7 +450,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 						<i class="icon-download" aria-hidden="true"></i>
 					</span>
 					<span class="text">
-						<?php esc_html_e( 'Download All', 'secupress' ); ?>
+						<?php _e( 'Download All', 'secupress' ); ?>
 					</span>
 				</a>
 				<span class="spinner secupress-inline-spinner"></span>
@@ -464,7 +464,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 						<i class="icon-trash" aria-hidden="true"></i>
 					</span>
 					<span class="text">
-						<?php esc_html_e( 'Delete All', 'secupress' ); ?>
+						<?php _e( 'Delete All', 'secupress' ); ?>
 					</span>
 				</a>
 				<span class="spinner secupress-inline-spinner"></span>

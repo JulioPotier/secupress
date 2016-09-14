@@ -16,7 +16,7 @@ $this->add_field( array(
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
 	'label'             => __( 'Yes, use the <strong>PasswordLess</strong> method', 'secupress' ),
-	'value'             => secupress_is_submodule_active( 'users-login', 'passwordless' ),
+	'value'             => (int) secupress_is_submodule_active( 'users-login', 'passwordless' ),
 	'helpers'           => array(
 		array(
 			'type'        => 'description',

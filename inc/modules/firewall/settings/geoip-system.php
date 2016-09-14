@@ -9,7 +9,7 @@ $this->add_section( __( 'Country Management', 'secupress' ) );
 $main_field_name = $this->get_field_name( 'type' );
 $geoip_value     = '-1';
 
-if ( secupress_is_submodule_active( 'firewall', 'geoip-system' ) ) {
+if ( secupress_is_pro() && secupress_is_submodule_active( 'firewall', 'geoip-system' ) ) {
 	/**
 	 * Make sure we have valid value if the submodule is active.
 	 * The default value is 'blacklist'.

@@ -5,7 +5,7 @@
  * Description: Protect your WordPress with SecuPress, analyze and ensure the safety of your website daily.
  * Author: WP Media
  * Author URI: http://wp-media.me
- * Version: 1.0.2
+ * Version: 1.0.3
  * Network: true
  * License: GPLv2
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /* DEFINES ====================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-define( 'SECUPRESS_VERSION'               , '1.0.2' );
+define( 'SECUPRESS_VERSION'               , '1.0.3' );
 define( 'SECUPRESS_PRIVATE_KEY'           , false );
 define( 'SECUPRESS_ACTIVE_SUBMODULES'     , 'secupress_active_submodules' );
 define( 'SECUPRESS_SETTINGS_SLUG'         , 'secupress_settings' );
@@ -127,7 +127,11 @@ function secupress_init() {
 	require_once( SECUPRESS_INC_PATH . 'cron.php' );
 
 	// Last constants.
-	define( 'SECUPRESS_PLUGIN_NAME', esc_html( secupress_get_option( 'wl_plugin_name', 'SecuPress' ) ) );
+	if ( secupress_is_pro() ) {
+		define( 'SECUPRESS_PLUGIN_NAME', esc_html( secupress_get_option( 'wl_plugin_name', 'SecuPress' ) ) );
+	} else {
+		define( 'SECUPRESS_PLUGIN_NAME', 'SecuPress' );
+	}
 	define( 'SECUPRESS_PLUGIN_SLUG', sanitize_title( SECUPRESS_PLUGIN_NAME ) );
 
 	// The Singleton class.
@@ -299,16 +303,24 @@ function secupress_been_first() {
 function secupress_load_plugin_textdomain_translations() {
 	static $done = false;
 
-	if ( ! $done ) {
-		$done = true;
-		load_plugin_textdomain( 'secupress', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
-		/**
-		 * Fires right after the plugin text domain is loaded.
-		 *
-		 * @since 1.0
-		 */
-		do_action( 'secupress.plugin_textdomain_loaded' );
+	if ( $done ) {
+		return;
 	}
+	$done = true;
+
+	load_plugin_textdomain( 'secupress', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+	/**
+	 * Fires right after the plugin text domain is loaded.
+	 *
+	 * @since 1.0
+	 */
+	do_action( 'secupress.plugin_textdomain_loaded' );
+
+	// Make sure Poedit keeps our plugin headers.
+	/** Translators: Plugin Name of the plugin/theme */
+	__( 'SecuPress — WordPress Security', 'secupress' );
+	/** Translators: Description of the plugin/theme */
+	__( 'Protect your WordPress with SecuPress, analyze and ensure the safety of your website daily.', 'secupress' );
 }
 
 

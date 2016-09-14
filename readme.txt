@@ -3,7 +3,7 @@ Contributors: wp_media, secupress, juliobox, greglone
 Tags: security, spam, backup, schedule, firewall, sensitive data, antivirus, logs, alerts
 Requires at least: 3.7
 Tested up to: 4.6
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,6 +29,13 @@ Protect your WordPress with SecuPress, analyze and ensure the safety of your web
 (soon)
 
 == Changelog ==
+
+= 1.0.3 =
+* 09 sep 2016
+* Improvement: Commented salt keys (previously fixed) will now be deleted to avoid another error 500 case (in case of, you know)
+* Improvement: Better bad user-agent blacklist, some were too current and blocked legit users.
+* Fix: User-Agent with more than 255 chars won't be blocked anymore, too many false positive cases
+* Fix: The recovery email can now be set even if 2 users got the same email address (don't ask …)
 
 = 1.0.2 =
 * 02 sep 2016
