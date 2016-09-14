@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2016-09-14 21:13+0200\n"
-"PO-Revision-Date: 2016-09-14 21:27+0200\n"
+"POT-Creation-Date: 2016-09-14 21:31+0200\n"
+"PO-Revision-Date: 2016-09-14 21:32+0200\n"
 "Last-Translator: WP Media <contact@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -1069,8 +1069,8 @@ msgid "Backup deleted"
 msgstr "Sauvegarde supprimée"
 
 #: inc/admin/settings.php:118
-msgid "Impossible to backup the database."
-msgstr "Impossible de sauvegarder la base de données."
+msgid "Impossible to backup."
+msgstr "Impossible de sauvegarder."
 
 #: inc/admin/settings.php:119
 msgid "Backuping&hellip;"
@@ -7605,6 +7605,9 @@ msgid ""
 msgstr ""
 "Protège votre site WordPress avec SecuPress, analyse et assure la sécurité "
 "de votre site quotidiennement."
+
+#~ msgid "Impossible to backup the database."
+#~ msgstr "Impossible de sauvegarder la base de données."
 
 #~ msgctxt "verb"
 #~ msgid "Download"
