@@ -90,7 +90,7 @@ class SecuPress_Scan_Anti_Scanner extends SecuPress_Scan implements SecuPress_Sc
 		$hashes = array();
 
 		for ( $i = 0 ; $i < 3 ; ++$i ) {
-			$response = wp_remote_get( add_query_arg( secupress_generate_key( 6 ), secupress_generate_key( 8 ), user_trailingslashit( home_url() ) ), array( 'redirection' => 0, 'timeout' => 30, 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) );
+			$response = wp_remote_get( add_query_arg( secupress_generate_key( 6 ), secupress_generate_key( 8 ), user_trailingslashit( home_url() ) ), array( 'redirection' => 0, 'timeout' => 60, 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) );
 
 			if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 				$hashes[] = md5( wp_remote_retrieve_body( $response ) );
