@@ -124,7 +124,6 @@ function secupress_init() {
 	require_once( SECUPRESS_INC_PATH . 'network-options-autoload.php' );
 	require_once( SECUPRESS_INC_PATH . 'common.php' );
 	require_once( SECUPRESS_INC_PATH . 'admin-bar.php' );
-	require_once( SECUPRESS_INC_PATH . 'cron.php' );
 
 	// Last constants.
 	if ( secupress_is_pro() ) {
