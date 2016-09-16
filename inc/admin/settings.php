@@ -115,7 +115,7 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 			'deletingOneText'      => __( 'Deleting Backup&hellip;', 'secupress' ),
 			'deletedOneText'       => __( 'Backup deleted', 'secupress' ),
 			// Backup actions.
-			'backupImpossible'     => __( 'Impossible to backup the database.', 'secupress' ),
+			'backupImpossible'     => __( 'Impossible to backup.', 'secupress' ),
 			'backupingText'        => __( 'Backuping&hellip;', 'secupress' ),
 			'backupedText'         => __( 'Backup done', 'secupress' ),
 			// Ban IPs.

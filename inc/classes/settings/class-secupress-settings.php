@@ -799,16 +799,17 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$class = ! empty( $helper['class'] ) ? ' ' . trim( $helper['class'] ) : '';
 			$name  = $args['name'];
 			$type  = $helper['type'];
+			$tag   = preg_match( '@</?p[ >]@', $helper['description'] ) ? 'div' : 'p';
 
 			switch ( $type ) {
 				case 'description' :
-					$description = '<p class="description desc' . $depends . $class . '">' . $helper['description'] . '</p>';
+					$description = '<' . $tag . ' class="description desc' . $depends . $class . '">' . $helper['description'] . '</' . $tag . '>';
 					break;
 				case 'help' :
-					$description = '<p class="description help' . $depends . $class . '">' . $helper['description'] . '</p>';
+					$description = '<' . $tag . ' class="description help' . $depends . $class . '">' . $helper['description'] . '</' . $tag . '>';
 					break;
 				case 'warning' :
-					$description = '<p class="description warning' . $depends . $class . '"><strong>' . __( 'Warning: ', 'secupress' ) . '</strong>' . $helper['description'] . '</p>';
+					$description = '<' . $tag . ' class="description warning' . $depends . $class . '">' . ( 'p' === $tag ? '' : '<p>' ) . '<strong>' . __( 'Warning: ', 'secupress' ) . '</strong> ' . $helper['description'] . '</' . $tag . '>'; // Don't forget to close the <p> tag.
 					break;
 				default :
 					continue;

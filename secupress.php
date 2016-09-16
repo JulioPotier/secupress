@@ -157,7 +157,6 @@ function secupress_init() {
 		require_once( SECUPRESS_ADMIN_PATH . 'functions/modules.php' );
 		require_once( SECUPRESS_ADMIN_PATH . 'functions/notices.php' );
 		require_once( SECUPRESS_ADMIN_PATH . 'functions/db.php' );
-		require_once( SECUPRESS_ADMIN_PATH . 'functions/backup.php' );
 
 		// Temporary Updates when not on repo yet.
 		require_once( SECUPRESS_ADMIN_PATH . 'functions/wp-updates-plugin.php' );
@@ -194,6 +193,14 @@ function secupress_load_plugins() {
 
 	if ( $modules ) {
 		foreach ( $modules as $key => $module ) {
+			if ( defined( 'SECUPRESS_PRO_MODULES_PATH' ) ) {
+				$file = SECUPRESS_PRO_MODULES_PATH . sanitize_key( $key ) . '/tools.php';
+
+				if ( file_exists( $file ) ) {
+					require_once( $file );
+				}
+			}
+
 			$file = SECUPRESS_MODULES_PATH . sanitize_key( $key ) . '/tools.php';
 
 			if ( file_exists( $file ) ) {
