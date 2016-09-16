@@ -7,7 +7,7 @@ $this->add_section( __( 'Password Policy', 'secupress' ), array( 'with_roles' =>
 
 
 $this->add_field( array(
-	'title'        => __( 'Passwords Lifetime', 'secupress' ),
+	'title'        => __( 'Password Lifespan', 'secupress' ),
 	'description'  => sprintf( __( 'Recommended: %s days,<br/>0 = never expires', 'secupress' ), '30' ),
 	'label_for'    => $this->get_field_name( 'password_expiration' ),
 	'type'         => 'number',
@@ -23,12 +23,12 @@ $this->add_field( array(
 
 $this->add_field( array(
 	'title'             => __( 'Force Strong Passwords', 'secupress' ),
-	'description'       => __( 'When a user is changing his password, a strong password will be required to continue.', 'secupress' ),
+	'description'       => __( 'When a user is changing their password, a strong password will be required to continue.', 'secupress' ),
 	'label_for'         => $this->get_field_name( 'strong_passwords' ),
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
 	'value'             => (int) secupress_is_submodule_active( 'users-login', 'strong-passwords' ),
-	'label'             => __( 'Yes, force a strong passwords usage', 'secupress' ),
+	'label'             => __( 'Yes, force the use of strong passwords usage', 'secupress' ),
 ) );
 
 

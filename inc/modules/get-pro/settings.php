@@ -27,14 +27,14 @@ if ( ! $plans ) {
 			</div>
 		</div>
 		<div class="secupress-col-2-3 secupress-col-text">
-			<p class="secupress-text-medium"><?php esc_html_e( 'Preorder Now Your SecuPress Pro and Get an Exclusive Discount', 'secupress' ); ?></p>
-			<p><?php esc_html_e( 'Choose the licence that suits you the best and be part of the first users to get SecuPress Pro upon its release', 'secupress' ); ?></p>
+			<p class="secupress-text-medium"><?php esc_html_e( 'Preorder SecuPress Pro Now and Get an Exclusive Discount', 'secupress' ); ?></p>
+			<p><?php esc_html_e( 'Choose the licence that suits you the best and be one of the first users to get SecuPress Pro upon its release', 'secupress' ); ?></p>
 		</div>
 	</div>
 
 	<div class="secupress-section">
 
-		<p class="secupress-catchphrase"><?php printf( esc_html__( 'Improve Your Security Unlocking%sAll the Features from SecuPress Pro', 'secupress' ), '<br/>' ); ?></p>
+		<p class="secupress-catchphrase"><?php printf( esc_html__( 'Improve Your Security by Unlocking%sAll the Features of SecuPress Pro', 'secupress' ), '<br/>' ); ?></p>
 
 		<?php
 		if ( isset( $impossible ) ) {
@@ -118,7 +118,7 @@ if ( ! $plans ) {
 			</div>
 			<div class="secupress-col-1-3">
 				<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>icon-imagify.png" width="66" height="66" alt="Imagify">
-				<p><?php printf( _x( 'Bonus %s on %s', 'one line text please', 'secupress' ), '<strong class="secupress-tertiary">' . __( '100 Mb for free', 'secupress' ) . '</strong>', '<strong>Imagify</strong>' ); ?></p>
+				<p><?php printf( _x( 'Bonus %s on %s', 'one line text please', 'secupress' ), '<strong class="secupress-tertiary">' . __( '100 MB for free', 'secupress' ) . '</strong>', '<strong>Imagify</strong>' ); ?></p>
 			</div>
 			<div class="secupress-col-1-3">
 				<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>icon-wp-rocket.png" width="66" height="66" alt="WP Rocket">

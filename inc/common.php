@@ -28,7 +28,7 @@ function secupress_check_ban_ips() {
 			} elseif ( isset( $ban_ips[ $ip ] ) ) {
 				// Cheating?
 				$title   = '403 ' . get_status_header_desc( 403 );
-				$content = __( 'Your unlock link expired (or you\'re cheating).', 'secupress' );
+				$content = __( 'Your unlock link has expired (or you\'re cheating).', 'secupress' );
 
 				secupress_die( $content, $title, array( 'response' => 403 ) );
 			}
@@ -154,7 +154,7 @@ function secupress_check_ban_ips_maybe_send_unban_email( $ip ) {
 	}
 
 	// Send message.
-	$message  = '<p>' . __( 'A bit clumsy and got yourself locked out? No problem, it happens sometimes. I\'ve got your back! I won\'t tell anybody. Or maybe I will. It could be a great story to tell during a long winter evening.', 'secupress' ) . '</p>';
+	$message  = '<p>' . __( 'Well, this is awkward, you got yourself locked out? No problem, it happens sometimes. I\'ve got your back! I won\'t tell anybody. Or maybe I will. It could be a great story to tell during a long winter evening.', 'secupress' ) . '</p>';
 	$message .= '<p>' . sprintf(
 		/** Translators: %s is a "unlock yourself" link */
 		__( 'Anyway, simply follow this link to %s.', 'secupress' ),

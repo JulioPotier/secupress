@@ -6,7 +6,7 @@ add_action( 'secupress.settings.before_section_bad-file-extensions', array( $thi
 add_action( 'secupress.settings.after_section_bad-file-extensions', array( $this, 'print_close_form_tag' ) );
 
 $this->set_current_section( 'bad-file-extensions' );
-$this->set_section_description( __( 'Many file extensions are known to be used by malwares, or can pose a threat if they are vulnerable. Denying direct access to those files will prevent their use.', 'secupress' ) );
+$this->set_section_description( __( 'Many file extensions are known to be used by malware, or can pose a threat if they are vulnerable. Denying direct access to those files will prevent their use.', 'secupress' ) );
 $this->add_section( __( 'Bad File Extensions', 'secupress' ) );
 
 $this->add_field( array(

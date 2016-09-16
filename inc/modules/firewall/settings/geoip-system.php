@@ -19,16 +19,16 @@ if ( secupress_is_submodule_active( 'firewall', 'geoip-system' ) ) {
 }
 
 $this->add_field( array(
-	'title'        => __( 'Use the GeoIP Management', 'secupress' ),
-	'description'  => __( 'Country Management is an effective way to stop attacks of any types and stop malicious activities that originates from a specific region of the world.', 'secupress' ),
+	'title'        => __( 'Use GeoIP Management', 'secupress' ),
+	'description'  => __( 'Country management is an effective way to stop attacks of any type and stop malicious activities that originate from a specific region of the world.', 'secupress' ),
 	'name'         => $main_field_name,
 	'type'         => 'radios',
 	'value'        => $geoip_value,
 	'default'      => '-1',
-	'label_screen' => __( 'Whitelist or Blacklist the countries', 'secupress' ),
+	'label_screen' => __( 'Whitelist or blacklist the countries', 'secupress' ),
 	'options'      => array(
 		'-1'        => __( '<strong>Do not block</strong> countries from visiting my website', 'secupress' ),
-		'blacklist' => __( '<strong>Disallow</strong> the selected countries to visit my website (blacklist)', 'secupress' ),
+		'blacklist' => __( '<strong>Block</strong> the selected countries from visiting my website (blacklist)', 'secupress' ),
 		'whitelist' => __( '<strong>Only allow</strong> the selected countries to visit my website (whitelist)', 'secupress' ),
 	),
 	'helpers'      => array(

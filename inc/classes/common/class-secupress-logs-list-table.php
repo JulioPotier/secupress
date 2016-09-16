@@ -555,7 +555,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 		$posts_columns['title'] = _x( 'Title', 'column name' );
 
 		if ( count( get_available_post_statuses( $post_type ) ) > 1 ) {
-			$posts_columns['critic'] = __( 'Criticity', 'secupress' );
+			$posts_columns['critic'] = __( 'priority', 'secupress' );
 		}
 
 		$posts_columns['date'] = __( 'Date' );

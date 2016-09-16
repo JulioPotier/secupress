@@ -6,7 +6,7 @@ $this->add_section( __( 'Database Backups', 'secupress' ), array( 'with_save_but
 
 
 $this->add_field( array(
-	'title'        => __( 'Do a Database Backup', 'secupress' ),
+	'title'        => __( 'Run a Database Backup', 'secupress' ),
 	'description'  => __( 'Checked tables will be backed up.', 'secupress' ),
 	'name'         => $this->get_field_name( 'backup-db' ),
 	'type'         => 'backup_db',

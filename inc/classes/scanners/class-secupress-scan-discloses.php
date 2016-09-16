@@ -102,9 +102,9 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 			300 => sprintf( __( 'Your server runs <strong>Nginx</strong>, the <strong>WordPress version</strong> and <strong>PHP version</strong> disclosure cannot be fixed automatically but you can do it yourself by adding the following code to your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
 			301 => __( 'Your server runs an unrecognized system. The <strong>WordPress version</strong> and <strong>PHP version</strong> disclosure cannot be fixed automatically.', 'secupress' ),
 			/** Translators: 1 is a file name, 2 is some code */
-			302 => sprintf( __( 'Your %1$s file does not seem to be writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ), '<code>.htaccess</code>', '%s' ),
+			302 => sprintf( __( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ), '<code>.htaccess</code>', '%s' ),
 			/** Translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
-			303 => sprintf( __( 'Your %1$s file does not seem to be writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ), '<code>web.config</code>', '%1$s', '%2$s' ),
+			303 => sprintf( __( 'Your %1$s file is not writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ), '<code>web.config</code>', '%1$s', '%2$s' ),
 		);
 
 		if ( isset( $message_id ) ) {

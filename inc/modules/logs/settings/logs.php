@@ -12,8 +12,8 @@ $this->add_section( _x( 'Logs', 'post type general name', 'secupress' ), array( 
 $main_field_name = $this->get_field_name( 'action-logs-activated' );
 
 $this->add_field( array(
-	'title'             => __( 'WordPress action Logs', 'secupress' ),
-	'description'       => __( 'What happened on your WordPress website? By activating this module, most sensible actions will be recorded, lightly.', 'secupress' ),
+	'title'             => __( 'WordPress action logs', 'secupress' ),
+	'description'       => __( 'What happened on your WordPress website? By activating this module, most sensitive actions will be logged.', 'secupress' ),
 	'label_for'         => $main_field_name,
 	'type'              => 'activate_action_logs',
 	'label'             => __( 'Yes, log WordPress actions', 'secupress' ),
@@ -70,8 +70,8 @@ endif;
 $main_field_name = $this->get_field_name( '404-logs-activated' );
 
 $this->add_field( array(
-	'title'             => __( '404 Error Pages Logs', 'secupress' ),
-	'description'       => __( '404 Error pages are common, but it can also be some bots trying to find unsafe content on your website. You may want to know that.', 'secupress' ),
+	'title'             => __( '404 Error Pages Log', 'secupress' ),
+	'description'       => __( '404 Error pages are common, but it can also be some bots trying to find insecure content on your website. You may want to know that.', 'secupress' ),
 	'label_for'         => $main_field_name,
 	'type'              => 'activate_404_logs',
 	'label'             => __( 'Yes, log WordPress 404s', 'secupress' ),

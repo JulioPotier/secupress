@@ -5,7 +5,7 @@ $this->add_section( __( 'Services', 'secupress' ), array( 'with_save_button' => 
 
 $this->add_field( array(
 	'title'        => __( 'Professional Configuration', 'secupress' ),
-	'description'  => __( 'You may need help to configure the plugin perfectly, we might do this for you for $200.', 'secupress' ),
+	'description'  => __( 'You may need help to configuring the plugin perfectly, we can do this for you for $200.', 'secupress' ),
 	'name'         => $this->get_field_name( 'proconfig' ),
 	'field_type'   => 'field_button',
 	'disabled'     => true,
@@ -15,8 +15,8 @@ $this->add_field( array(
 ) );
 
 $this->add_field( array(
-	'title'        => __( 'Your website has been hacked?', 'secupress' ),
-	'description'  => __( 'We may help you to recover your website after a cleansing, we charge $500.', 'secupress' ),
+	'title'        => __( 'Has your website been hacked?', 'secupress' ),
+	'description'  => __( 'We can help you to clean up your website after a hack, we charge $500.', 'secupress' ),
 	'name'         => $this->get_field_name( 'got-hacked' ),
 	'field_type'   => 'field_button',
 	'disabled'     => true,

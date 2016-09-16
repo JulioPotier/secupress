@@ -8,7 +8,7 @@ add_action( 'secupress.settings.before_section_backups-storage', array( $this, '
 add_action( 'secupress.settings.after_section_backups-storage', array( $this, 'print_close_form_tag' ) );
 
 $this->set_current_section( 'backups-storage' );
-$this->add_section( __( 'Backups Storage', 'secupress' ), array( 'with_save_button' => true ) );
+$this->add_section( __( 'Backup Storage', 'secupress' ), array( 'with_save_button' => true ) );
 
 $backups_dir = WP_CONTENT_DIR . '/backups/';
 $backup_dir  = secupress_get_hashed_folder_name( 'backup', $backups_dir );
@@ -32,7 +32,7 @@ $field_name = $this->get_field_name( 'location' );
 
 $this->add_field( array(
 	'title'        => __( 'Storage Location', 'secupress' ),
-	'description'  => __( 'Where do you want to store you backups?', 'secupress' ),
+	'description'  => __( 'Where do you want to store your backups?', 'secupress' ),
 	'name'         => $field_name,
 	'type'         => 'radios',
 	'label_screen' => __( 'Storage Location', 'secupress' ),
@@ -40,7 +40,7 @@ $this->add_field( array(
 	'helpers' => array(
 		array(
 			'type'        => 'warning',
-			'description' => sprintf( __( 'Will be stored in %s. Please, delete them as soon as possible.', 'secupress' ), '<code>' . $backup_dir . '</code>' ),
+			'description' => sprintf( __( 'Will be stored in %s. Please delete them as soon as possible.', 'secupress' ), '<code>' . $backup_dir . '</code>' ),
 			'depends'     => $field_name . '_local',
 		),
 		array(
@@ -50,7 +50,7 @@ $this->add_field( array(
 		),
 		array(
 			'type'        => 'warning',
-			'description' => sprintf( __( 'Your FTP constants present in your %1$s file will be used, so, you have to fill this first.<br/><a href="%2$s" target="_blank">Need help do to it?</a>', 'secupress' ), '<code>wp-config.php</code>', '#' ), // ////.
+			'description' => sprintf( __( 'The FTP constants present in your %1$s file will be used, so, you have to enter these first.<br/><a href="%2$s" target="_blank">Need help with it?</a>', 'secupress' ), '<code>wp-config.php</code>', '#' ), // ////.
 			'depends'     => $field_name . '_ftp',
 		),
 	),

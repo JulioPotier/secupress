@@ -1,6 +1,6 @@
 <?php
 /*
-Module Name: Protect readme's.
+Module Name: Protect readme files.
 Description: Deny access to all <code>readme</code> and <code>changelog</code> files.
 Main Module: discloses
 Author: SecuPress
@@ -41,7 +41,7 @@ function secupress_protect_readmes_activation() {
 	secupress_add_module_rules_or_notice( array(
 		'rules'  => $rules,
 		'marker' => 'readme_discloses',
-		'title'  => __( 'Protect readme\'s', 'secupress' ),
+		'title'  => __( 'Protect readme files', 'secupress' ),
 	) );
 }
 
@@ -53,7 +53,7 @@ add_action( 'secupress.modules.deactivate_submodule_' . basename( __FILE__, '.ph
  * @since 1.0
  */
 function secupress_protect_readmes_deactivate() {
-	secupress_remove_module_rules_or_notice( 'readme_discloses', __( 'Protect readme\'s', 'secupress' ) );
+	secupress_remove_module_rules_or_notice( 'readme_discloses', __( 'Protect readme files', 'secupress' ) );
 }
 
 
@@ -88,7 +88,7 @@ function secupress_protect_readmes_plugin_activate( $rules ) {
 /*------------------------------------------------------------------------------------------------*/
 
 /**
- * Protect readme's: get rules for apache.
+ * Protect readme files: get rules for apache.
  *
  * @since 1.0
  *
@@ -110,7 +110,7 @@ function secupress_protect_readmes_apache_rules() {
 
 
 /**
- * Protect readme's: get rules for iis7.
+ * Protect readme files: get rules for iis7.
  *
  * @since 1.0
  *
@@ -132,7 +132,7 @@ function secupress_protect_readmes_iis7_rules() {
 
 
 /**
- * Protect readme's: get rules for nginx.
+ * Protect readme files: get rules for nginx.
  *
  * @since 1.0
  *

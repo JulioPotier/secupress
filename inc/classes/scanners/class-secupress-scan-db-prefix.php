@@ -61,7 +61,7 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 			200 => __( 'The database prefix should not be %s. Choose something else besides <code>wp_</code> or <code>wordpress_</code>, they are too easy to guess.', 'secupress' ),
 			// "cantfix"
 			301 => __( 'The database user cannot alter tables and so the database prefix could not be changed.', 'secupress' ),
-			302 => __( 'The <code>wp-config.php</code> file does not seem to be writable, so the database prefix cannot be changed.', 'secupress' ),
+			302 => __( 'The <code>wp-config.php</code> file is not writable, so the database prefix cannot be changed.', 'secupress' ),
 			303 => __( 'The database user seems to have to correct rights, but the database prefix could still not be changed.', 'secupress' ),
 			304 => __( 'Too many database tables found, so which ones to rename?!', 'secupress' ), // Trinity! Help me!
 		);

@@ -91,9 +91,9 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 			300 => sprintf( __( 'Your server runs <strong>Nginx</strong>, the directory listing disclosure cannot be fixed automatically but you can do it yourself by adding the following code to your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
 			301 => __( 'Your server runs an unrecognized system. The directory listing disclosure cannot be fixed automatically.', 'secupress' ),
 			/** Translators: 1 is a file name, 2 is some code */
-			302 => sprintf( __( 'Your %1$s file does not seem to be writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ), "<code>$config_file</code>", '%s' ),
+			302 => sprintf( __( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ), "<code>$config_file</code>", '%s' ),
 			/** Translators: 1 is a file name, 2 is a tag name, 3 is a folder path (kind of), 4 is some code */
-			303 => sprintf( __( 'Your %1$s file does not seem to be writable. Please remove any previous %2$s tag and add the following lines inside the tags hierarchy %3$s (create it if does not exist): %4$s', 'secupress' ), "<code>$config_file</code>", '%1$s', '%2$s', '%3$s' ),
+			303 => sprintf( __( 'Your %1$s file is not writable. Please remove any previous %2$s tag and add the following lines inside the tags hierarchy %3$s (create it if does not exist): %4$s', 'secupress' ), "<code>$config_file</code>", '%1$s', '%2$s', '%3$s' ),
 		);
 
 		if ( isset( $message_id ) ) {

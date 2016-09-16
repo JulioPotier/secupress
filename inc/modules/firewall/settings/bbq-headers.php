@@ -9,7 +9,7 @@ $this->add_section( __( 'Bad Headers', 'secupress' ) );
 $main_field_name = $this->get_field_name( 'user-agents-header' );
 
 $this->add_field( array(
-	'title'             => __( 'Block Bad User-Agents', 'secupress' ),
+	'title'             => __( 'Block Bad User Agents', 'secupress' ),
 	'label_for'         => $main_field_name,
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
@@ -18,7 +18,7 @@ $this->add_field( array(
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'Bots are commonly using their own headers containing some known bad User-Agent. You can block them to avoid a crawl from their non desired services.', 'secupress' ),
+			'description' => __( 'Bots are commonly use their own headers containing some known bad user agent. You can block them to prevent their unwanted visits.', 'secupress' ),
 		),
 	),
 ) );
@@ -26,15 +26,15 @@ $this->add_field( array(
 
 $this->add_field( array(
 	'title'        => __( 'User-Agents List', 'secupress' ),
-	'description'  => __( 'Block any User-Agent containing any HTML tag in it or containing more than 255 characters automatically.', 'secupress' ),
+	'description'  => __( 'Automatically block any user agent containing any HTML tag in it or containing more than 255 characters automatically.', 'secupress' ),
 	'depends'      => $main_field_name,
 	'label_for'    => $this->get_field_name( 'user-agents-list' ),
 	'type'         => 'textarea',
-	'label'        => __( 'List of User-Agents to block', 'secupress' ),
+	'label'        => __( 'List of User Agents to block', 'secupress' ),
 	'helpers'      => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'Add or remove User-Agents you want to be blocked. User-Agents are separated by commas.', 'secupress' ),
+			'description' => __( 'Add or remove User Agents you want to be blocked. Separate user agents with commas.', 'secupress' ),
 		),
 	),
 ) );
@@ -51,7 +51,7 @@ $this->add_field( array(
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'Some other request methods can be used to retreive information from your site, avoid them!', 'secupress' ),
+			'description' => __( 'Some other request methods can be used to retrieve information from your site, avoid them!', 'secupress' ),
 		),
 	),
 ) );

@@ -59,7 +59,7 @@ class SecuPress_Scan_Wpml_Discloses extends SecuPress_Scan implements SecuPress_
 		$messages = array(
 			// "good"
 			/** Translators: %s is a plugin name. */
-			0   => sprintf( __( 'The %s plugin does not reveal sensitive informations.', 'secupress' ), 'WPML' ),
+			0   => sprintf( __( 'The %s plugin does not reveal sensitive information.', 'secupress' ), 'WPML' ),
 			1   => __( 'The generator meta tag should not be displayed anymore.', 'secupress' ),
 			/** Translators: %s is a plugin name. */
 			2   => sprintf( __( 'The %s\'s version should be removed from your styles URLs now.', 'secupress' ), 'WPML' ),
@@ -69,7 +69,7 @@ class SecuPress_Scan_Wpml_Discloses extends SecuPress_Scan implements SecuPress_
 			100 => sprintf( __( 'Unable to determine if %s is disclosing its version on your homepage.', 'secupress' ), 'WPML' ),
 			// "bad"
 			/** Translators: 1 is a plugin name, 2 is some related info. */
-			200 => sprintf( __( 'The %1$s plugin displays its version in your homepage source code (%2$s).', 'secupress' ), 'WPML', '%s' ),
+			200 => sprintf( __( 'The %1$s plugin displays its version in the source code of your homepage (%2$s).', 'secupress' ), 'WPML', '%s' ),
 		);
 
 		if ( isset( $message_id ) ) {

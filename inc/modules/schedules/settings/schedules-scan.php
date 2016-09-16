@@ -13,7 +13,7 @@ $label_after  = $label_before[1];
 $label_before = $label_before[0];
 
 $this->add_field( array(
-	'title'        => __( 'Periodicity', 'secupress' ),
+	'title'        => __( 'Frequency', 'secupress' ),
 	'label_for'    => $this->get_field_name( 'periodicity' ),
 	'type'         => 'number',
 	'label_before' => $label_before,
@@ -28,8 +28,8 @@ $this->add_field( array(
 
 
 $this->add_field( array(
-	'title'        => __( 'Notify result', 'secupress' ),
-	'description'  => __( 'When finished, a notification will be sent to the following email address (facultative).', 'secupress' ),
+	'title'        => __( 'Notification of result', 'secupress' ),
+	'description'  => __( 'When finished, a notification will be sent to the following email address (optional).', 'secupress' ),
 	'label'        => __( 'Email' ),
 	'label_for'    => $this->get_field_name( 'email' ),
 	'type'         => 'email',

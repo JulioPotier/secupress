@@ -320,7 +320,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 							esc_html__( '%s modules', 'secupress' ),
 							SECUPRESS_PLUGIN_NAME
 						); ?></span>
-						<span class="secupress-description"><?php esc_html_e( 'Fine tune your security', 'secupress' ); ?></span>
+						<span class="secupress-description"><?php esc_html_e( 'Fine-tune your security', 'secupress' ); ?></span>
 					</span>
 				</a>
 			</div>

@@ -1,7 +1,7 @@
 <?php
 /*
 Module Name: Block SQLi Scan Attempts
-Description: Fool SQLi scanner/scripts to always give them a different content on each reload of the same page.
+Description: Fool SQLi scanner/scripts to always give them different content on each reload of the same page.
 Main Module: firewall
 Author: SecuPress
 Version: 1.0

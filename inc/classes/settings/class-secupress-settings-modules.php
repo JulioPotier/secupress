@@ -367,7 +367,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		}
 		// //// Todo save settings with history.
 		$this->set_current_section( 'reset' );
-		$this->set_section_description( __( 'If you need to reset this module\'s settings to the default ones, you just have to do it here, the best settings for your site will be set.', 'secupress' ) );
+		$this->set_section_description( __( 'If you need to reset this module\'s settings to the default, you can do it here, the best settings for your site will be set.', 'secupress' ) );
 		$this->add_section( __( 'Module settings', 'secupress' ), array( 'with_save_button' => false ) );
 
 		$this->set_current_plugin( 'reset' );
@@ -825,7 +825,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	protected function backup_history() {
 		if ( ! secupress_is_pro() ) {
 		?>
-		<p id="secupress-no-backups"><em><?php _e( 'No Backups found yet, do one?', 'secupress' ); ?></em></p>
+		<p id="secupress-no-backups"><em><?php _e( 'No backups found yet, run one now?', 'secupress' ); ?></em></p>
 		<?php
 		} else {
 			/**
@@ -852,7 +852,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 					<i class="icon-download"></i>
 				</span>
 				<span class="text">
-					<?php esc_html_e( 'Backup my Database', 'secupress' ); ?>
+					<?php esc_html_e( 'Backup my database', 'secupress' ); ?>
 				</span>
 			</button>
 		<?php
@@ -881,7 +881,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 					<i class="icon-download"></i>
 				</span>
 				<span class="text">
-					<?php esc_html_e( 'Backup my Files', 'secupress' ); ?>
+					<?php esc_html_e( 'Backup my files', 'secupress' ); ?>
 				</span>
 			</button>
 		</p>

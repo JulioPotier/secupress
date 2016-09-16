@@ -3,7 +3,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 
 $this->set_current_section( 'page_protect' );
-$this->add_section( __( 'Pages Protection', 'secupress' ) );
+$this->add_section( __( 'Page Protection', 'secupress' ) );
 
 
 $this->add_field( array(
@@ -13,11 +13,11 @@ $this->add_field( array(
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
 	'value'             => (int) secupress_is_submodule_active( 'sensitive-data', 'profile-protect' ),
-	'label'             => __( 'Yes, protect the profile pages', 'secupress' ),
+	'label'             => __( 'Yes, protect the profile page', 'secupress' ),
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'By using this protection, nobody can stalk into your profile page when you left your computer.', 'secupress' ),
+			'description' => __( 'By using this protection, nobody can access your profile page when you leave your computer.', 'secupress' ),
 		),
 	),
 ) );
@@ -34,7 +34,7 @@ $this->add_field( array(
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'By using this protection, nobody can stalk into the settings page when you left your computer.', 'secupress' ),
+			'description' => __( 'By using this protection, nobody can access the settings page when you leave your computer.', 'secupress' ),
 		),
 	),
 ) );
