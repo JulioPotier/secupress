@@ -69,7 +69,7 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 			?>
 			<div class="secupress-section-light secupress-bordered">
 
-				<form action="<?php echo $this->get_form_action(); ?>" method="post" id="secupress_settings">
+				<form action="<?php echo $this->get_form_action(); ?>" method="post" id="secupress_settings" enctype="multipart/form-data">
 
 					<?php array_map( array( $this, 'load_module_settings' ), $setting_modules ); ?>
 
