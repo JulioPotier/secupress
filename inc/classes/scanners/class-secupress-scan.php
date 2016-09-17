@@ -452,7 +452,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 
 
 	/**
-	 * Add a pre fix message to inform the user before a fix (usually because the fix can not be done).
+	 * Add a pre fix message to inform the user before a fix (usually because the fix cannot be done).
 	 *
 	 * "good":    the fix performed correctly.
 	 * "warning": partial fix. The fix could not perform entirely: some fix(es) worked and some not.

@@ -114,7 +114,7 @@ if ( ! $secupress_tests ) {
 <div class="secupress-step-content-header secupress-flex secupress-flex-spaced">
 	<?php
 	$nb_actions    = count( $bad_scan_results );
-	$page_title    = sprintf( _n( 'This action require your attention', 'These %d actions require your attention', $nb_actions, 'secupress' ), $nb_actions );
+	$page_title    = sprintf( _n( 'This issue require your attention', 'These %d issues require your attention', $nb_actions, 'secupress' ), $nb_actions );
 	$steps_counter =
 		'<span class="secupress-step-by-step secupress-flex hide-if-no-js">' .
 		/** Translators: Params are numbers like "1 of 3" */
@@ -205,7 +205,7 @@ if ( ! $secupress_tests ) {
 				<?php } ?>
 
 					<p class="secupress-ic-title">
-						<?php _e( 'How to Fix this issue', 'secupress' ); ?>
+						<?php _e( 'How to fix this issue', 'secupress' ); ?>
 					</p>
 
 					<p class="secupress-ic-desc">

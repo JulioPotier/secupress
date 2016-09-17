@@ -41,8 +41,8 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Inter
 		$this->title = __( 'Check if basic SQL Injections are blocked or not.', 'secupress' );
 		$this->more  = __( 'SQL injection is a way to read, modify, delete any content of your database, this is a powerful vulnerability, don\'t let anyone play with that.', 'secupress' );
 		$this->more_fix = sprintf(
-			__( 'Activate the option %1$s from the module %2$s.', 'secupress' ),
-			'<em>' . __( 'Block Bad Contents', 'secupress' ) . '</em>',
+			__( 'Activate the option %1$s in the %2$s module.', 'secupress' ),
+			'<em>' . __( 'block bad content', 'secupress' ) . '</em>',
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-url-content_bad-contents">' . __( 'Firewall', 'secupress' ) . '</a>'
 		);
 	}

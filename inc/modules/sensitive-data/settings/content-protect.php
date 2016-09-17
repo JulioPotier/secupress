@@ -10,7 +10,7 @@ $robots_enabled = secupress_blackhole_is_robots_txt_enabled();
 
 $this->add_field( array(
 	'title'             => __( 'Blackhole', 'secupress' ),
-	'description'       => sprintf( __( 'A blackhole is a forbidden folder, mentioned in the %1$s file as %2$s. If a bot do not respect this rule, its IP address will be banned.', 'secupress' ), '<code>robots.txt</code>', '<em>Disallowed</em>' ),
+	'description'       => sprintf( __( 'A blackhole is a forbidden folder, mentioned in the %1$s file as %2$s. If a bot does not respect this rule, its IP address will be banned.', 'secupress' ), '<code>robots.txt</code>', '<em>Disallowed</em>' ),
 	'label_for'         => $this->get_field_name( 'blackhole' ),
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
@@ -32,12 +32,12 @@ $is_plugin_active = (int) secupress_is_submodule_active( 'sensitive-data', 'hotl
 
 $this->add_field( array(
 	'title'             => __( 'Anti Hotlink', 'secupress' ),
-	'description'       => __( 'A hotlink is when someone embed your medias directly from your website, stealing your bandwidth.', 'secupress' ),
+	'description'       => __( 'A hotlink is when someone embeds your media directly from your website, stealing your bandwidth.', 'secupress' ),
 	'label_for'         => $main_field_name,
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
 	'value'             => $is_plugin_active,
-	'label'             => __( 'Yes, protect my medias from being hotlinked', 'secupress' ),
+	'label'             => __( 'Yes, protect my media from being hotlinked', 'secupress' ),
 	'disabled'          => ! secupress_is_site_ssl(),
 	'helpers' => array(
 		array(
@@ -56,20 +56,20 @@ if ( $is_plugin_active && function_exists( 'secupress_hotlink_get_apache_rules' 
 	// Nginx.
 	if ( $is_nginx ) {
 		/** Translators: 1 is a file name, 2 is a tag name. */
-		$message = sprintf( __( 'You need to add the following code into your %1$s file, inside the %2$s block:', 'secupress' ), '<code>nginx.conf</code>', '<code>server</code>' );
+		$message = sprintf( __( 'You need to add the following code to your %1$s file, inside the %2$s block:', 'secupress' ), '<code>nginx.conf</code>', '<code>server</code>' );
 		$rules   = secupress_hotlink_get_nginx_rules();
 	}
 	// Apache.
 	elseif ( $is_apache && ! secupress_root_file_is_writable( '.htaccess' ) ) {
 		/** Translators: %s is a file name. */
-		$message = sprintf( __( 'Your %s file does not seem to be writable, you need to add the following code inside:', 'secupress' ), '<code>.htaccess</code>' );
+		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>.htaccess</code>' );
 		$rules   = secupress_hotlink_get_apache_rules();
 		$rules   = "# BEGIN SecuPress hotlink\n$rules\n# END SecuPress";
 	}
 	// IIS7.
 	elseif ( $is_iis7 && ! secupress_root_file_is_writable( 'web.config' ) ) {
 		/** Translators: %s is a file name. */
-		$message = sprintf( __( 'Your %s file does not seem to be writable, you need to add the following code inside:', 'secupress' ), '<code>web.config</code>' );
+		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>web.config</code>' );
 		$rules   = secupress_hotlink_get_iis7_rules();
 	}
 

@@ -61,7 +61,7 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 	protected function init() {
 		global $is_apache, $is_nginx, $is_iis7;
 
-		$this->title = __( 'Check if some files that use bad extensions are accessible in the uploads folder.', 'secupress' );
+		$this->title = __( 'Check if there are files using bad extensions are accessible in the uploads folder.', 'secupress' );
 		$this->more  = __( 'The uploads folder should only contain files like images, pdf, or zip archives. Other files should not be accessible by their URL.', 'secupress' );
 
 		if ( ! $is_apache && ! $is_nginx && ! $is_iis7 ) {
@@ -72,10 +72,10 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 
 		if ( $is_apache ) {
 			/** Translators: %s is a file name. */
-			$this->more_fix = sprintf( __( 'Add rules in your %s file to forbid direct access to files that use bad extensions.', 'secupress' ), '<code>.htaccess</code>' );
+			$this->more_fix = sprintf( __( 'Add rules in your %s file to forbid direct access to files that have bad extensions.', 'secupress' ), '<code>.htaccess</code>' );
 		} elseif ( $is_iis7 ) {
 			/** Translators: %s is a file name. */
-			$this->more_fix = sprintf( __( 'Add rules in your %s file to forbid direct access to files that use bad extensions.', 'secupress' ), '<code>web.config</code>' );
+			$this->more_fix = sprintf( __( 'Add rules in your %s file to forbid direct access to files that have bad extensions.', 'secupress' ), '<code>web.config</code>' );
 		} else {
 			/** Translators: %s is a file name. */
 			$this->more_fix = sprintf( __( 'The %s file cannot be edited automatically, you will be given the rules to add into this file manually, to forbid direct access to files that use bad extensions.', 'secupress' ), '<code>nginx.conf</code>' );
@@ -102,18 +102,18 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 			/** Translators: %s is a file name */
 			1   => sprintf( __( 'The rules forbidding access to files that use bad extensions have been successfully added to your %s file.', 'secupress' ), "<code>$config_file</code>" ),
 			// "warning"
-			100 => __( 'Unable to determine status of the bad extension test file.', 'secupress' ),
+			100 => __( 'Unable to determine the status of the bad file extensions test file.', 'secupress' ),
 			// "bad"
 			200 => __( 'Could not create a bad extension test file in the uploads folder.', 'secupress' ),
 			201 => __( 'Whether or not you have files using bad extensions in the uploads folder, those files are accessible directly.', 'secupress' ),
 			// "cantfix"
 			/** Translators: 1 is a file name, 2 is some code */
-			300 => sprintf( __( 'Your server runs a nginx system, the files that use bad extensions cannot be protected automatically but you can do it yourself by adding the following code into your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
-			301 => __( 'Your server runs a non recognized system. The files that use bad extensions cannot be protected automatically.', 'secupress' ),
+			300 => sprintf( __( 'Your server runs <strong>Nginx</strong>, the files that use bad extensions cannot be protected automatically but you can do it yourself by adding the following code to your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
+			301 => __( 'Your server runs an unrecognized system. The files that use bad extensions cannot be protected automatically.', 'secupress' ),
 			/** Translators: 1 is a file name, 2 is some code */
-			302 => sprintf( __( 'Your %1$s file does not seem to be writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ), "<code>$config_file</code>", '%s' ),
+			302 => sprintf( __( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ), "<code>$config_file</code>", '%s' ),
 			/** Translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
-			303 => sprintf( __( 'Your %1$s file does not seem to be writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ), "<code>$config_file</code>", '%1$s', '%2$s' ),
+			303 => sprintf( __( 'Your %1$s file is not writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ), "<code>$config_file</code>", '%1$s', '%2$s' ),
 		);
 
 		if ( isset( $message_id ) ) {

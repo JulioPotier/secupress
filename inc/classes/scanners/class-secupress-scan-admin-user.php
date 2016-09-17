@@ -41,7 +41,7 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 		$current_user = wp_get_current_user();
 
 		$this->title = __( 'Check if the <em>admin</em> account is correctly protected.', 'secupress' );
-		$this->more  = __( 'It is important to protect the famous <em>admin</em> account to avoid simple brute-force attacks on it. This account is most of the time the first one created when you install WordPress, and it is well known by attackers.', 'secupress' );
+		$this->more  = __( 'It is important to protect the famous <em>admin</em> account to prevent simple brute-force attacks on it. This account is usually the first one created when you install WordPress, and it is well known by attackers.', 'secupress' );
 
 		if ( 'admin' === $current_user->user_login ) {
 			$this->more_fix = __( 'You will be asked for a new username and your account will be renamed.', 'secupress' );
@@ -69,7 +69,7 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 			100 => __( 'This fix is <strong>pending</strong>, please reload the page to apply it now.', 'secupress' ),
 			// "bad"
 			200 => __( 'The %s account should have no role at all.', 'secupress' ),
-			201 => __( 'Because the user registration is open, the %s account should exist (with no role) to avoid someone to register it.', 'secupress' ),
+			201 => __( 'Because user registrations are open, the %s account should exist (with no role) to prevent someone from registering it.', 'secupress' ),
 			202 => __( 'Sorry, the username %s is forbidden!', 'secupress' ),
 			203 => __( 'Cannot create a user with an empty login name!' ), // WPi18n.
 			204 => __( 'Sorry, the username %s already exists!', 'secupress' ),
@@ -77,7 +77,7 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 			206 => __( 'Sorry, the role cannot be removed from the %s account. You should try to remove it manually.', 'secupress' ),
 			207 => __( 'Sorry, the %s account could not be created. You should try to create it manually and then remove its role.', 'secupress' ),
 			// "cantfix"
-			300 => __( 'Oh! The %s account is yours! Please choose a new login for your account on next step.', 'secupress' ),
+			300 => __( 'Oh! The %s account is yours! Please choose a new login for your account in the next step.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -274,7 +274,7 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 	 */
 	protected function get_fix_action_template_parts() {
 		$form  = '<h4>' . __( 'Choose a new login for your account:', 'secupress' ) . '</h4>';
-		$form .= '<p><span style="color:red">' . __( 'Your username will be renamed on the next page change.', 'secupress' ) . '</span></p>';
+		$form .= '<p><span style="color:red">' . __( 'Your username will be renamed on the next page load.', 'secupress' ) . '</span></p>';
 		$form .= '<input type="text" id="secupress-fix-rename-admin-username" name="secupress-fix-rename-admin-username" value="admin_' . substr( md5( time() ), 0, 6 ) . '"/>';
 		$form .= '<p>' . sprintf( __( 'Allowed characters: %s.', 'secupress' ), '<code>A-Z, a-z, 0-9, _, ., -, @</code>' ) . '</p>';
 

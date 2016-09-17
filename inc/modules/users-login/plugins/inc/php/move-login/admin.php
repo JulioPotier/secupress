@@ -18,13 +18,13 @@ function secupress_move_login_activate() {
 	// The plugin needs the request uri.
 	if ( empty( $GLOBALS['HTTP_SERVER_VARS']['REQUEST_URI'] ) && empty( $_SERVER['REQUEST_URI'] ) ) {
 		$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
-		$message .= __( 'It seems your server configuration prevent the plugin to work properly. The login page cannot be moved.', 'secupress' );
+		$message .= __( 'It seems your server configuration prevents the plugin from working properly. The login page cannot be moved.', 'secupress' );
 		add_settings_error( 'secupress_users-login_settings', 'no_request_uri', $message, 'error' );
 	}
 	// Server not supported.
 	if ( ! $is_iis7 && ! $is_apache && ! $is_nginx ) {
 		$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
-		$message .= __( 'It seems your server does not use <i>Apache</i>, <i>Nginx</i>, nor <i>IIS7</i>. The login page cannot be moved.', 'secupress' );
+		$message .= __( 'It seems your server does not use <i>Apache</i>, <i>Nginx</i>, or <i>IIS7</i>. The login page cannot be moved.', 'secupress' );
 		add_settings_error( 'secupress_users-login_settings', 'unknown_os', $message, 'error' );
 	}
 
@@ -171,7 +171,7 @@ function secupress_move_login_write_rules() {
 			$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
 			$message .= sprintf(
 				/** Translators: 1 is a link "the dedicated section", 2 is a file name. */
-				__( 'It seems your %2$s file does not seem to be writable. You have to edit the file manually. Please see the rewrite rules provided %1$s and copy/paste it into the %2$s file.', 'secupress' ),
+				__( 'It seems your %2$s file is not writable. You have to edit the file manually. Please see the rewrite rules provided %1$s and copy/paste it into the %2$s file.', 'secupress' ),
 				'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#move-login_rules">' . __( 'the dedicated section', 'secupress' ) . '</a>',
 				'<code>.htaccess</code>'
 			);
@@ -187,7 +187,7 @@ function secupress_move_login_write_rules() {
 			$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
 			$message .= sprintf(
 				/** Translators: 1 is a link "the dedicated section", 2 is a file name. */
-				__( 'It seems your %2$s file does not seem to be writable. You have to edit the file manually. Please see the rewrite rules provided %1$s and copy/paste it into the %2$s file.', 'secupress' ),
+				__( 'It seems your %2$s file is not writable. You have to edit the file manually. Please see the rewrite rules provided %1$s and copy/paste it into the %2$s file.', 'secupress' ),
 				'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#move-login_rules">' . __( 'the dedicated section', 'secupress' ) . '</a>',
 				'<code>web.config</code>'
 			);
@@ -200,10 +200,10 @@ function secupress_move_login_write_rules() {
 	if ( $is_nginx ) {
 		$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
 		$message .= sprintf(
-			/** Translators: 1 is a link "the dedicated section", 2 is a file name. */
-			__( 'It seems your server uses a <i>Nginx</i> system. You have to edit the configuration file manually. Please see the rewrite rules provided %1$s and copy/paste it into the %2$s file.', 'secupress' ),
-			'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#move-login_rules">' . __( 'the dedicated section', 'secupress' ) . '</a>',
-			'<code>nginx.conf</code>'
+			/** Translators: 1 is a file name, 2 is a link "the dedicated section". */
+			__( 'Your server runs <i>Nginx</i>. You have to edit the configuration file manually. Please see the rewrite rules provided %2$s and copy/paste it into the %1$s file.', 'secupress' ),
+			'<code>nginx.conf</code>',
+			'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#move-login_rules">' . __( 'the dedicated section', 'secupress' ) . '</a>'
 		);
 		add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
 	}

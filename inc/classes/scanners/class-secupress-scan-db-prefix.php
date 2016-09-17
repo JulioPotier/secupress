@@ -39,7 +39,7 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 	 */
 	protected function init() {
 		$this->title    = __( 'Check if your database prefix is correct.', 'secupress' );
-		$this->more     = __( 'Avoid the usage of <code>wp_</code> or <code>wordpress_</code> as database prefix to improve your security.', 'secupress' );
+		$this->more     = __( 'Avoid the use of <code>wp_</code> or <code>wordpress_</code> as database prefix to improve your security.', 'secupress' );
 		$this->more_fix = __( 'Rename all your database table names, then update your configuration with a new and more secure one.', 'secupress' );
 	}
 
@@ -58,10 +58,10 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 			// "good"
 			0   => __( 'Your database prefix is correct.', 'secupress' ),
 			// "bad"
-			200 => __( 'The database prefix should not be %s. Choose something else than <code>wp_</code> or <code>wordpress_</code>, they are too easy to guess.', 'secupress' ),
+			200 => __( 'The database prefix should not be %s. Choose something else besides <code>wp_</code> or <code>wordpress_</code>, they are too easy to guess.', 'secupress' ),
 			// "cantfix"
-			301 => __( 'The database user can not alter tables and so the database prefix could not be changed.', 'secupress' ),
-			302 => __( 'The <code>wp-config.php</code> file does not seem to be writable, so the database prefix cannot be changed.', 'secupress' ),
+			301 => __( 'The database user cannot alter tables and so the database prefix could not be changed.', 'secupress' ),
+			302 => __( 'The <code>wp-config.php</code> file is not writable, so the database prefix cannot be changed.', 'secupress' ),
 			303 => __( 'The database user seems to have to correct rights, but the database prefix could still not be changed.', 'secupress' ),
 			304 => __( 'Too many database tables found, so which ones to rename?!', 'secupress' ), // Trinity! Help me!
 		);
@@ -236,7 +236,7 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 
 		$form  = '<div class="show-input">';
 		$form .= '<h4>' . __( 'Checked tables will be renamed:', 'secupress' ) . '</h4>';
-		$form .= '<p><span style="color:red">' . __( 'Renaming a table is not rollbackable.', 'secupress' ) . '</span></p>';
+		$form .= '<p><span style="color:red">' . __( 'Renaming a table is irreversible.', 'secupress' ) . '</span></p>';
 		$form .= '<input type="hidden" name="secupress-select-db-tables-to-rename-flag">';
 		$form .= '<fieldset aria-labelledby="select-db-tables-to-rename" class="secupress-boxed-group">';
 		$form .= '<b>' . __( 'Unknown tables', 'secupress' ) . '</b><br>';

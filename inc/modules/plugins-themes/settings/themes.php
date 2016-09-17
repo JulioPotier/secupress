@@ -3,7 +3,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 
 $this->set_current_section( 'themes_plugins' );
-$this->set_section_description( __( 'By using these protections, you can easily select the proper allowed actions on your themes.', 'secupress' ) );
+$this->set_section_description( __( 'By using these protections, you can easily select the proper allowed actions for your themes.', 'secupress' ) );
 $this->add_section( __( 'Themes Page', 'secupress' ) );
 
 
@@ -19,7 +19,7 @@ $this->add_field( array(
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'Disable themes upload.', 'secupress' ),
+			'description' => __( 'Disable theme upload.', 'secupress' ),
 		),
 	),
 ) );
@@ -41,7 +41,7 @@ $this->add_field( array(
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
 	'value'             => (int) secupress_is_submodule_active( 'plugins-themes', 'theme-deletion' ),
-	'label'             => __( 'Yes, disable delete for theme', 'secupress' ),
+	'label'             => __( 'Yes, disable deletion of themes', 'secupress' ),
 ) );
 
 
@@ -54,11 +54,11 @@ $this->add_field( array(
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
 	'value'             => (int) secupress_is_submodule_active( 'plugins-themes', 'detect-bad-themes' ),
-	'label'             => __( 'Yes, enable the detection if a theme known as vulnerable', 'secupress' ),
+	'label'             => __( 'Yes, enable the detection of themes with known vulnerabilites', 'secupress' ),
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'Based on our Daily Security Monitoring, notices will be displayed for themes newly known as vulnerable.', 'secupress' ),
+			'description' => __( 'Based on our Daily Security Monitoring, notices will be displayed for themes newly detected as vulnerable.', 'secupress' ),
 		),
 	),
 ) );

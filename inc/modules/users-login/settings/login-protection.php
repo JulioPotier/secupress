@@ -23,7 +23,7 @@ $main_field_name = $this->get_field_name( 'type' );
 
 $this->add_field( array(
 	'title'             => __( 'Use an attempt blocker', 'secupress' ),
-	'description'       => __( 'You can temporary ban bots who try to mess with the login page to avoid to be victim of a brute-force.', 'secupress' ),
+	'description'       => __( 'You can temporary ban bots who try to mess with the login page to prevent being the victim of a brute-force attack.', 'secupress' ),
 	'name'              => $main_field_name,
 	'plugin_activation' => true,
 	'type'              => 'checkboxes',
@@ -94,30 +94,30 @@ $this->add_field( array(
 
 
 $this->add_field( array(
-	'title'             => __( 'Avoid Double Connections', 'secupress' ),
-	'description'       => __( 'Once logged in, nobody can log in on your account at the same time as you. You have to disconnect first to allow another connection.', 'secupress' ),
+	'title'             => __( 'Avoid Double Logins', 'secupress' ),
+	'description'       => __( 'Once logged in, nobody can log in using your account at the same time as you. You have to logout first to allow another login.', 'secupress' ),
 	'label_for'         => $this->get_field_name( 'only-one-connection' ),
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
 	'disabled'          => ! secupress_wp_version_is( '4.0' ),
 	'value'             => (int) secupress_is_submodule_active( 'users-login', 'only-one-connection' ),
-	'label'             => __( 'Yes, disallow double connections', 'secupress' ),
+	'label'             => __( 'Yes, disallow double logins', 'secupress' ),
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'You will be able to force the disconnection of anyone or everyone when using the <b>Sessions Control</b> module below.', 'secupress' ),
+			'description' => __( 'You will be able to force the disconnection of anyone or everyone when using the <b>Session Control</b> module below.', 'secupress' ),
 		),
 		array(
 			'type'        => 'warning',
-			'description' => secupress_wp_version_is( '4.0' ) ? '' : __( 'This module requiert WordPress 4.0 minimum, please update now!', 'secupress' ),
+			'description' => secupress_wp_version_is( '4.0' ) ? '' : __( 'This module requires WordPress 4.0 minimum, please update now!', 'secupress' ),
 		),
 	),
 ) );
 
 
 $this->add_field( array(
-	'title'             => __( 'Sessions Control', 'secupress' ),
-	'description'       => __( 'Disconnect any user in one click, or even every logged in user at the same time in one click (but you).', 'secupress' ),
+	'title'             => __( 'Session Control', 'secupress' ),
+	'description'       => __( 'Disconnect any user in one click, or even every logged in user (except you) at the same time in one click.', 'secupress' ),
 	'label_for'         => $this->get_field_name( 'sessions_control' ),
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
@@ -127,11 +127,11 @@ $this->add_field( array(
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
-			'description' => sprintf( __( 'You will find action links on every user\'s row in the <a href="%s">users listing administration page</a>.', 'secupress' ), esc_url( admin_url( 'users.php' ) ) ),
+			'description' => sprintf( __( 'You will find action links on every user\'s row in the <a href="%s">user listing administration page</a>.', 'secupress' ), esc_url( admin_url( 'users.php' ) ) ),
 		),
 		array(
 			'type'        => 'warning',
-			'description' => secupress_wp_version_is( '4.0' ) ? '' : __( 'This module requiert WordPress 4.0 minimum, please update now!', 'secupress' ),
+			'description' => secupress_wp_version_is( '4.0' ) ? '' : __( 'This module requires WordPress 4.0 minimum, please update now!', 'secupress' ),
 		),
 	),
 ) );

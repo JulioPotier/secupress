@@ -221,7 +221,7 @@ function secupress_get_scanner_counts( $type = '' ) {
 			$counts['text'] = __( 'Almost perfect!', 'secupress' );
 			break;
 		case 'C':
-			$counts['text'] = __( 'Not bad, but try to fix more.', 'secupress' );
+			$counts['text'] = __( 'Not bad, but try to fix more items.', 'secupress' );
 			break;
 		case 'D':
 			$counts['text'] = __( 'Well, it\'s not good yet.', 'secupress' );
@@ -230,16 +230,16 @@ function secupress_get_scanner_counts( $type = '' ) {
 			$counts['text'] = __( 'Better than nothing, but still not good.', 'secupress' );
 			break;
 		case 'F':
-			$counts['text'] = __( 'Not good at all, fix more things.', 'secupress' );
+			$counts['text'] = __( 'Not good at all, fix more issues.', 'secupress' );
 			break;
 		case 'G':
-			$counts['text'] = __( 'Bad, do not hesitate to fix!', 'secupress' );
+			$counts['text'] = __( 'Bad, fix issues right away!', 'secupress' );
 			break;
 		case 'H':
-			$counts['text'] = __( 'Still very bad, start to fix things!', 'secupress' );
+			$counts['text'] = __( 'Still very bad, start fixing things!', 'secupress' );
 			break;
 		case 'I':
-			$counts['text'] = __( 'Very bad. You should move on.', 'secupress' );
+			$counts['text'] = __( 'Very bad. You should take some actions.', 'secupress' );
 			break;
 		case 'J':
 			$counts['text'] = __( 'Very very bad, please fix something!', 'secupress' );
@@ -252,7 +252,7 @@ function secupress_get_scanner_counts( $type = '' ) {
 			break;
 	}
 
-	$counts['subtext'] = sprintf( _n( 'Your note is %s — %d scanned item is good.', 'Your note is %s — %d scanned items are good.', $counts['good'], 'secupress' ), $counts['letter'], $counts['good'] );
+	$counts['subtext'] = sprintf( _n( 'Your grade is %s — %d scanned item is good.', 'Your grade is %s — %d scanned items are good.', $counts['good'], 'secupress' ), $counts['letter'], $counts['good'] );
 
 	if ( isset( $counts[ $type ] ) ) {
 		return $counts[ $type ];

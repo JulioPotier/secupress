@@ -7,7 +7,7 @@ $this->add_section( __( 'Settings Manager', 'secupress' ), array( 'with_save_but
 
 $this->add_field( array(
 	'title'        => __( 'Settings Exporter', 'secupress' ),
-	'description'  => __( 'Export your settings so you can import them in another website or act just like a backup', 'secupress' ),
+	'description'  => __( 'Export your settings so you can import them into another website or keep them as backup', 'secupress' ),
 	'name'         => $this->get_field_name( 'export_settings' ),
 	'type'         => 'export_form',
 ) );

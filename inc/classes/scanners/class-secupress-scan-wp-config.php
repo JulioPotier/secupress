@@ -75,9 +75,9 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 			/** Translators: 1 is a file name, 2 is a constant name. */
 			204 => sprintf( __( 'In your %1$s file, the PHP constant %2$s should not be empty.', 'secupress' ), '<code>wp-config.php</code>', '%s' ),
 			/** Translators: 1 is a file name, 2 is a constant name, 3 is a value. */
-			205 => sprintf( __( 'In your %1$s file, the PHP constant %2$s should be set on %3$s.', 'secupress' ), '<code>wp-config.php</code>', '%1$s', '%2$s' ),
+			205 => sprintf( __( 'In your %1$s file, the PHP constant %2$s should be set to %3$s.', 'secupress' ), '<code>wp-config.php</code>', '%1$s', '%2$s' ),
 			/** Translators: 1 is a file name, 2 is a constant name, 3 is a value. */
-			206 => sprintf( __( 'In your %1$s file, the PHP constant %2$s should be set on %3$s or less.', 'secupress' ), '<code>wp-config.php</code>', '%1$s', '%2$s' ),
+			206 => sprintf( __( 'In your %1$s file, the PHP constant %2$s should be set to %3$s or less.', 'secupress' ), '<code>wp-config.php</code>', '%1$s', '%2$s' ),
 			// "cantfix"
 			/** Translators: %s is a list of constant names. */
 			300 => __( 'Some PHP constants could not be set correctly: %s.', 'secupress' ),

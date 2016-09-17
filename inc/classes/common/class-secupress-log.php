@@ -240,17 +240,17 @@ class SecuPress_Log {
 
 		// Filter Logs by IP.
 		if ( ! empty( $filters['user_ip'] ) ) {
-			$user_ip = '<a title="' . esc_attr( sprintf( __( 'Filter Logs with the IP address %s', 'secupress' ), $this->user_ip ) ) . '" href="' . esc_url( sprintf( $filters['user_ip'], urlencode( $this->user_ip ) ) ) . '" class="secupress-action-filter-ip">' . $user_ip . '</a>';
+			$user_ip = '<a title="' . esc_attr( sprintf( __( 'Filter logs with the IP address %s', 'secupress' ), $this->user_ip ) ) . '" href="' . esc_url( sprintf( $filters['user_ip'], urlencode( $this->user_ip ) ) ) . '" class="secupress-action-filter-ip">' . $user_ip . '</a>';
 		}
 
 		// Filter Logs by id.
 		if ( $user_id && ! empty( $filters['user_id'] ) ) {
-			$user_id = '<a title="' . esc_attr( sprintf( __( 'Filter Logs with the user ID %d', 'secupress' ), $user_id ) ) . '" href="' . esc_url( sprintf( $filters['user_id'], $user_id ) ) . '" class="secupress-action-filter-id">' . $user_id . '</a>';
+			$user_id = '<a title="' . esc_attr( sprintf( __( 'Filter logs with the user ID %d', 'secupress' ), $user_id ) ) . '" href="' . esc_url( sprintf( $filters['user_id'], $user_id ) ) . '" class="secupress-action-filter-id">' . $user_id . '</a>';
 		}
 
 		// Filter Logs by login.
 		if ( $user_login && ! empty( $filters['user_login'] ) ) {
-			$user_login = '<a title="' . esc_attr( sprintf( __( 'Filter Logs with the user login "%s"', 'secupress' ), $user_login ) ) . '" href="' . esc_url( sprintf( $filters['user_login'], urlencode( $user_login ) ) ) . '" class="secupress-action-filter-login">' . $user_login . '</a>';
+			$user_login = '<a title="' . esc_attr( sprintf( __( 'Filter logs with the user login "%s"', 'secupress' ), $user_login ) ) . '" href="' . esc_url( sprintf( $filters['user_login'], urlencode( $user_login ) ) ) . '" class="secupress-action-filter-login">' . $user_login . '</a>';
 		}
 
 		// If the user exists and is not the current user.
@@ -315,24 +315,24 @@ class SecuPress_Log {
 		if ( 'icon' === $mode ) {
 			switch ( $this->critic ) {
 				case 'high':
-					return '<span class="secupress-icon dashicons dashicons-shield-alt criticity-high" title="' . esc_attr__( 'High criticity', 'secupress' ) . '"></span>';
+					return '<span class="secupress-icon dashicons dashicons-shield-alt criticity-high" title="' . esc_attr__( 'High priority', 'secupress' ) . '"></span>';
 				case 'normal':
-					return '<span class="secupress-icon dashicons dashicons-shield-alt criticity-normal" title="' . esc_attr__( 'Normal criticity', 'secupress' ) . '"></span>';
+					return '<span class="secupress-icon dashicons dashicons-shield-alt criticity-normal" title="' . esc_attr__( 'Normal priority', 'secupress' ) . '"></span>';
 				case 'low':
-					return '<span class="secupress-icon dashicons dashicons-shield-alt criticity-low" title="' . esc_attr__( 'Low criticity', 'secupress' ) . '"></span>';
+					return '<span class="secupress-icon dashicons dashicons-shield-alt criticity-low" title="' . esc_attr__( 'Low priority', 'secupress' ) . '"></span>';
 				default:
-					return '<span class="secupress-icon dashicons dashicons-shield-alt criticity-unknown" title="' . esc_attr__( 'Unknown criticity', 'secupress' ) . '"></span>';
+					return '<span class="secupress-icon dashicons dashicons-shield-alt criticity-unknown" title="' . esc_attr__( 'Unknown priority', 'secupress' ) . '"></span>';
 			}
 		} elseif ( 'text' === $mode ) {
 			switch ( $this->critic ) {
 				case 'high':
-					return _x( 'High', 'criticity level', 'secupress' );
+					return _x( 'High', 'priority level', 'secupress' );
 				case 'normal':
-					return _x( 'Normal', 'criticity level', 'secupress' );
+					return _x( 'Normal', 'priority level', 'secupress' );
 				case 'low':
-					return _x( 'Low', 'criticity level', 'secupress' );
+					return _x( 'Low', 'priority level', 'secupress' );
 				default:
-					return _x( 'Unknown', 'criticity level', 'secupress' );
+					return _x( 'Unknown', 'priority level', 'secupress' );
 			}
 		}
 

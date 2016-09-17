@@ -20,7 +20,7 @@ function secupress_add_captcha_on_login_form() {
 		<div id="areyouhuman">
 			<label>
 				<span class="checkme" role="checkbox" tabindex="0" aria-checked="false"></span>
-				<i class="checkme"><?php _e( 'Yes, I\'m a Human.', 'secupress' ); ?></i>
+				<i class="checkme"><?php _e( 'Yes, I\'m a human.', 'secupress' ); ?></i>
 			</label>
 		</div>
 		<div id="msg" class="hidden"><?php _e( 'Session expired, please try again.', 'secupress' ); ?></div>
@@ -52,7 +52,7 @@ function secupress_login_captcha_scripts() {
 	wp_enqueue_script( 'secupress-captcha', $url . 'js/captcha' . $min . '.js', array( 'jquery' ), $ver, true );
 	wp_localize_script( 'secupress-captcha', 'spCaptchaL10n', array(
 		'ajaxurl'  => esc_url( admin_url( 'admin-ajax.php' ) ),
-		'hPotText' => __( 'Do not fill this field.', 'secupress' ),
+		'hPotText' => __( 'Do not fill in this field.', 'secupress' ),
 	) );
 }
 
@@ -114,7 +114,7 @@ function secupress_manage_captcha( $raw_user, $username ) {
 	}
 
 	if ( ! isset( $_POST['sp_name'] ) || '' !== $_POST['sp_name'] ) { // WPCS: CSRF ok.
-		return new WP_Error( 'authentication_failed', __( '<strong>ERROR</strong>: The Human verification is incorrect.', 'secupress' ) );
+		return new WP_Error( 'authentication_failed', __( '<strong>ERROR</strong>: The human verification is incorrect.', 'secupress' ) );
 	}
 
 	$captcha_key  = isset( $_POST['captcha_key'] ) ? $_POST['captcha_key'] : null; // WPCS: CSRF ok.

@@ -41,7 +41,7 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements SecuPress_Sca
 		$this->title    = __( 'Check if your WordPress core can perform auto-updates for minor versions.', 'secupress' );
 		$this->more     = __( 'When a minor update is released, WordPress can install it automatically. By doing so you are always up to date when a security flaw is discovered in the WordPress Core.', 'secupress' );
 		$this->more_fix = sprintf(
-			__( 'Activate the option %1$s from the module %2$s.', 'secupress' ),
+			__( 'Activate the option %1$s in the %2$s module.', 'secupress' ),
 			'<em>' . __( 'Minor updates', 'secupress' ) . '</em>',
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'wordpress-core' ) ) . '#row-auto-update_minor">' . __( 'WordPress Core', 'secupress' ) . '</a>'
 		);
@@ -63,10 +63,10 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements SecuPress_Sca
 			0   => __( 'Your installation <strong>can auto-update</strong> itself.', 'secupress' ),
 			1   => __( 'Protection activated', 'secupress' ),
 			// "bad"
-			200 => __( 'Your installation <strong>can not auto-update</strong> itself.', 'secupress' ),
-			201 => __( '<code>DISALLOW_FILE_MODS</code> should be set on <code>FALSE</code>.', 'secupress' ),
-			202 => __( '<code>AUTOMATIC_UPDATER_DISABLED</code> should be set on <code>FALSE</code>.', 'secupress' ),
-			203 => __( '<code>DISALLOW_FILE_MODS</code> and <code>AUTOMATIC_UPDATER_DISABLED</code> should be set on <code>FALSE</code>.', 'secupress' ),
+			200 => __( 'Your installation <strong>cannot auto-update</strong> itself.', 'secupress' ),
+			201 => __( '<code>DISALLOW_FILE_MODS</code> should be set to <code>FALSE</code>.', 'secupress' ),
+			202 => __( '<code>AUTOMATIC_UPDATER_DISABLED</code> should be set to <code>FALSE</code>.', 'secupress' ),
+			203 => __( '<code>DISALLOW_FILE_MODS</code> and <code>AUTOMATIC_UPDATER_DISABLED</code> should be set to <code>FALSE</code>.', 'secupress' ),
 			204 => __( 'The filter <code>automatic_updater_disabled</code> should not be used or set to return <code>FALSE</code>.', 'secupress' ),
 			205 => __( 'The filter <code>allow_minor_auto_core_updates</code> should not be used or set to return <code>TRUE</code>.', 'secupress' ),
 			206 => __( 'The filters <code>automatic_updater_disabled</code> and <code>allow_minor_auto_core_updates</code> should not be used or set to return respectively <code>FALSE</code> and <code>TRUE</code>.', 'secupress' ),

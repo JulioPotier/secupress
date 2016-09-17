@@ -204,24 +204,25 @@ foreach ( $scanned_items as $class_name_part => $details ) {
 
 						// To-check: are all status here? ////.
 						switch ( $scan_status ) {
+
 							case 'bad' :
 								$icon_slug = 'cross-o';
-								$scan_status_word = __( 'Not Fixed', 'secupress' );
+								$scan_status_word = esc_html__( 'Not fixed', 'secupress' );
 								break;
 
 							case 'warning' :
 								$icon_slug = 'exclamation-o';
-								$scan_status_word = __( 'Error', 'secupress' );
+								$scan_status_word = esc_html__( 'Error', 'secupress' );
 								break;
 
 							case 'pending' :
 								$icon_slug = 'clock-o-2';
-								$scan_status_word = __( 'Pending', 'secupress' );
+								$scan_status_word = esc_html__( 'Pending', 'secupress' );
 								break;
 
 							default :
 								$icon_slug = 'check';
-								$scan_status_word = __( 'Fixed', 'secupress' );
+								$scan_status_word = esc_html__( 'Fixed', 'secupress' );
 						}
 						?>
 
@@ -298,22 +299,22 @@ foreach ( $scanned_items as $class_name_part => $details ) {
 							__( '%s modules', 'secupress' ),
 							SECUPRESS_PLUGIN_NAME
 						); ?></span>
-						<span class="secupress-description"><?php _e( 'Fine tune your Security', 'secupress' ); ?></span>
+						<span class="secupress-description"><?php esc_html_e( 'Fine-tune your security', 'secupress' ); ?></span>
 					</span>
 				</a>
 			</div>
 		</div>
 		<div class="secupress-flex">
 			<div class="secupress-col">
-				<p class="secupress-farther-title"><?php _e( 'Manage your recurring scans', 'secupress' ); ?></p>
-				<p class="secupress-farther-desc"><?php sprintf( __( 'Let %s scan your website when you are away by using recurent scans.', 'secupress' ), SECUPRESS_PLUGIN_NAME ); ?></p>
+				<p class="secupress-farther-title"><?php esc_html_e( 'Manage your recurring scans', 'secupress' ); ?></p>
+				<p class="secupress-farther-desc"><?php sprintf( esc_html__( 'Let %s scan your website when you are away by using scheduled scans.', 'secupress' ), SECUPRESS_PLUGIN_NAME ); ?></p>
 			</div>
 			<div class="secupress-col secupress-col-action">
 				<a href="<?php echo esc_url( secupress_admin_url( 'modules' ) ); ?>&amp;module=schedules" class="secupress-rich-link secupress-current">
 					<span class="secupress-label-with-icon">
 						<i aria-hidden="true" class="icon-calendar rounded"></i>
-						<span class="secupress-upper"><?php _e( 'Schedule Scans', 'secupress' ); ?></span>
-						<span class="secupress-description"><?php _e( 'Program recurring scans', 'secupress' ); ?></span>
+						<span class="secupress-upper"><?php esc_html_e( 'Schedule Scans', 'secupress' ); ?></span>
+						<span class="secupress-description"><?php esc_html_e( 'Schedule your recurring scans', 'secupress' ); ?></span>
 					</span>
 				</a>
 			</div>

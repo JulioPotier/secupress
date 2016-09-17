@@ -7,12 +7,12 @@ $this->add_section( __( 'WordPress Endpoints', 'secupress' ) );
 
 $this->add_field( array(
 	'title'        => __( 'XML-RPC', 'secupress' ),
-	'description'  => __( 'If you don\'t use the XML-RPC, you can disable it and avoid to be targeted if a vulnerability is discovered.', 'secupress' ),
+	'description'  => __( 'If you don\'t use XML-RPC, you can disable it and avoid becoming a target if a vulnerability is discovered.', 'secupress' ),
 	'name'         => $this->get_field_name( 'xmlrpc' ),
 	'type'         => 'radioboxes',
 	'value'        => ( secupress_is_submodule_active( 'sensitive-data', 'xmlrpc' ) ? null : array() ),
 	'options'      => array(
-		'block-all'   => __( '<strong>Disable all</strong> the features for XML-RPC', 'secupress' ),
+		'block-all'   => __( '<strong>Disable all</strong> the features of XML-RPC', 'secupress' ),
 		'block-multi' => __( '<strong>Only disable</strong> the multiple authentication attempts', 'secupress' ),
 	),
 ) );
@@ -22,7 +22,7 @@ $requires_wp_44_str = secupress_wp_version_is( '4.4' ) ? '' : '<br/>' . sprintf(
 
 $this->add_field( array(
 	'title'             => __( 'REST API', 'secupress' ),
-	'description'       => __( 'If you don\'t use the REST API, you can disable it and avoid to be targeted if a vulnerability is discovered.', 'secupress' ) . $requires_wp_44_str,
+	'description'       => __( 'If you don\'t use the REST API, you can disable it and avoid being targeted if a vulnerability is discovered.', 'secupress' ) . $requires_wp_44_str,
 	'label_for'         => $this->get_field_name( 'restapi' ),
 	'plugin_activation' => true,
 	'type'              => 'checkbox',

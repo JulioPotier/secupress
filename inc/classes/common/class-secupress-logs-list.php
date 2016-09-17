@@ -147,7 +147,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 			secupress_admin_heading( $title );
 			secupress_settings_heading( array(
 				'title'    => $title,
-				'subtitle' => __( 'Watch everything', 'secupress' ),
+				'subtitle' => __( 'Monitor everything', 'secupress' ),
 			) );
 			?>
 
@@ -230,7 +230,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 		$has_tabs_class = count( $log_types ) > 1 ? ' secupress-has-log-tabs' : ' secupress-has-no-log-tabs';
 
 		if ( ! $this->current_log_id ) {
-			echo '<div class="secupress-log-content secupress-empty-log-content' . $has_tabs_class . '"><p>' . __( 'No Logs selected', 'secupress' ) . "</p></div>\n";
+			echo '<div class="secupress-log-content secupress-empty-log-content' . $has_tabs_class . '"><p>' . __( 'No logs selected', 'secupress' ) . "</p></div>\n";
 			return false;
 		}
 
@@ -238,7 +238,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 		$log           = new $log_classname( $this->current_log_id );
 
 		if ( ! $log ) {
-			echo '<div class="secupress-log-content secupress-empty-log-content' . $has_tabs_class . '"><p>' . __( 'No Logs selected', 'secupress' ) . "</p></div>\n";
+			echo '<div class="secupress-log-content secupress-empty-log-content' . $has_tabs_class . '"><p>' . __( 'No logs selected', 'secupress' ) . "</p></div>\n";
 			return false;
 		}
 

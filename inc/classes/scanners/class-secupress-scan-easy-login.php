@@ -45,7 +45,7 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements SecuPress_Scan
 	 * @since 1.0
 	 */
 	protected function init() {
-		$this->title    = __( 'Check if your login page is protected by Double Authentication.', 'secupress' );
+		$this->title    = __( 'Check if your login page is protected by double authentication.', 'secupress' );
 		$this->more     = __( 'The login vector is often use in web attacks, every hour your website is the target of random bots whom try to log in your site. Adding another layer of login can improve the security.', 'secupress' );
 		$this->more_fix = sprintf(
 			__( 'Activate the <strong>%1$s</strong> from the module %2$s.', 'secupress' ),

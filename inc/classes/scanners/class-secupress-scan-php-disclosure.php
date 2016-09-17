@@ -40,7 +40,7 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 	protected function init() {
 		global $is_apache, $is_nginx, $is_iis7;
 
-		$this->title = __( 'Check if your WordPress site discloses the PHP modules <em>(know as PHP Easter Egg)</em>.', 'secupress' );
+		$this->title = __( 'Check if your WordPress lists the the PHP modules <em>(know as PHP Easter Egg)</em>.', 'secupress' );
 		$this->more  = __( 'PHP contains a flaw that disclosure sensitive information from installed modules, resulting in a loss of confidentiality.', 'secupress' );
 
 		if ( ! $is_apache && ! $is_nginx && ! $is_iis7 ) {
@@ -51,13 +51,13 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 
 		if ( $is_apache ) {
 			/** Translators: %s is a file name. */
-			$this->more_fix = sprintf( __( 'Add rules in your %s file to avoid attackers to read sensitive informations about your PHP modules.', 'secupress' ), '<code>.htaccess</code>' );
+			$this->more_fix = sprintf( __( 'Add rules in your %s file to prevent attackers reading sensitive information about PHP modules.', 'secupress' ), '<code>.htaccess</code>' );
 		} elseif ( $is_iis7 ) {
 			/** Translators: %s is a file name. */
-			$this->more_fix = sprintf( __( 'Add rules in your %s file to avoid attackers to read sensitive informations about your PHP modules.', 'secupress' ), '<code>web.config</code>' );
+			$this->more_fix = sprintf( __( 'Add rules in your %s file to prevent attackers reading sensitive information about PHP modules.', 'secupress' ), '<code>web.config</code>' );
 		} else {
 			/** Translators: %s is a file name. */
-			$this->more_fix = sprintf( __( 'The %s file cannot be edited automatically, you will be given the rules to add into this file manually, to avoid attackers to read sensitive informations about your PHP modules.', 'secupress' ), '<code>nginx.conf</code>' );
+			$this->more_fix = sprintf( __( 'The %s file cannot be edited automatically, you will be given the rules to add into this file manually, to prevent attackers reading sensitive information about PHP modules.', 'secupress' ), '<code>nginx.conf</code>' );
 		}
 	}
 
@@ -87,12 +87,12 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 			200 => sprintf( __( '%s should not be accessible to anyone.', 'secupress' ), '<code>' . esc_url( user_trailingslashit( home_url() ) . '?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000' ) . '</code>' ),
 			// "cantfix"
 			/** Translators: 1 is a file name, 2 is some code */
-			300 => sprintf( __( 'Your server runs a nginx system, PHP modules disclosure cannot be protected automatically but you can do it yourself by adding the following code into your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
-			301 => __( 'Your server runs a non recognized system. PHP modules disclosure cannot be protected automatically.', 'secupress' ),
+			300 => sprintf( __( 'Your server runs <strong>Nginx</strong>, PHP modules disclosure cannot be protected automatically but you can do it yourself by adding the following code to your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
+			301 => __( 'Your server runs an unrecognized system. PHP modules disclosure cannot be protected automatically.', 'secupress' ),
 			/** Translators: 1 is a file name, 2 is some code */
-			302 => sprintf( __( 'Your %1$s file does not seem to be writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ), "<code>$config_file</code>", '%s' ),
+			302 => sprintf( __( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ), "<code>$config_file</code>", '%s' ),
 			/** Translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
-			303 => sprintf( __( 'Your %1$s file does not seem to be writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ), "<code>$config_file</code>", '%1$s', '%2$s' ),
+			303 => sprintf( __( 'Your %1$s file is not writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ), "<code>$config_file</code>", '%1$s', '%2$s' ),
 		);
 
 		if ( isset( $message_id ) ) {

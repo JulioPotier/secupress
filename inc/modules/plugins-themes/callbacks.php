@@ -37,7 +37,7 @@ function secupress_plugins_themes_settings_callback( $settings ) {
 
 
 /**
- * Plugins plugins.
+ * Removed plugins.
  *
  * @since 1.0
  *

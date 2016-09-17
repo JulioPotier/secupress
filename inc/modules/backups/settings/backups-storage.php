@@ -8,7 +8,7 @@ add_action( 'secupress.settings.before_section_backups-storage', array( $this, '
 add_action( 'secupress.settings.after_section_backups-storage', array( $this, 'print_close_form_tag' ) );
 
 $this->set_current_section( 'backups-storage' );
-$this->add_section( __( 'Backups Storage', 'secupress' ), array( 'with_save_button' => true ) );
+$this->add_section( __( 'Backup Storage', 'secupress' ), array( 'with_save_button' => true ) );
 
 $warning_local      = null;
 $warning_cant_write = null;
@@ -33,8 +33,8 @@ if ( secupress_is_pro() ) {
 			$warning_cant_write .= '</p><ul>';
 				$warning_cant_write .= '<li>';
 					$warning_cant_write .= sprintf(
-						/** Translators: 1 and 2 are folder names. */
-						__( 'Two folders with the following names: %1$s and %2$s.', 'secupress' ),
+						/** Translators: %s is a folder name. */
+						__( 'Two folders with the following names: %s and %s.', 'secupress' ),
 						'<code>' . basename( secupress_get_local_backups_path() ) . '</code>',
 						'<code>' . basename( secupress_get_temporary_backups_path() ) . '</code>'
 					);
@@ -80,7 +80,7 @@ $field_name = $this->get_field_name( 'location' );
 
 $this->add_field( array(
 	'title'        => __( 'Storage Location', 'secupress' ),
-	'description'  => __( 'Where do you want to store you backups?', 'secupress' ),
+	'description'  => __( 'Where do you want to store your backups?', 'secupress' ),
 	'name'         => $field_name,
 	'default'      => 'local',
 	'type'         => 'radios',

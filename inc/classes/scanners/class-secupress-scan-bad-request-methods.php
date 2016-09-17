@@ -38,10 +38,10 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements SecuP
 	 * @since 1.0
 	 */
 	protected function init() {
-		$this->title    = __( 'Check if bad request methods can reach your website.', 'secupress' );
+		$this->title    = __( 'Check if bad request methods can access your website.', 'secupress' );
 		$this->more     = __( 'There are malicious scripts and bots out there, hammering your site with bad HTTP GET requests. Let\'s check if your website can handle that.', 'secupress' );
 		$this->more_fix = sprintf(
-			__( 'Activate the option %1$s from the module %2$s.', 'secupress' ),
+			__( 'Activate the option %1$s in the %2$s module.', 'secupress' ),
 			'<em>' . __( 'Block Bad Request Methods', 'secupress' ) . '</em>',
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-headers_request-methods-header">' . __( 'Firewall', 'secupress' ) . '</a>'
 		);
@@ -63,7 +63,7 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements SecuP
 			0   => __( 'You are currently blocking bad request methods.', 'secupress' ),
 			1   => __( 'Protection activated', 'secupress' ),
 			// "warning"
-			100 => _n_noop( 'Unable to determine status of your homepage for %s request method.', 'Unable to determine status of your homepage for %s request methods.', 'secupress' ),
+			100 => _n_noop( 'Unable to determine the status of your homepage for %s request method.', 'Unable to determine the status of your homepage for %s request methods.', 'secupress' ),
 			// "bad"
 			200 => _n_noop( 'Your website should block %s request method.', 'Your website should block %s request methods.', 'secupress' ),
 		);

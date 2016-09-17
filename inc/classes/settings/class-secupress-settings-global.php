@@ -62,8 +62,8 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 			<?php settings_errors(); ?>
 			<?php
 				$titles = array(
-					'title'    => __( 'Settings', 'secupress' ),
-					'subtitle' => __( 'Overall plugin settings and fine tuning', 'secupress' ),
+					'title'    => esc_html__( 'Settings', 'secupress' ),
+					'subtitle' => esc_html__( 'Overall plugin settings and fine-tuning', 'secupress' ),
 				);
 				secupress_settings_heading( $titles );
 			?>

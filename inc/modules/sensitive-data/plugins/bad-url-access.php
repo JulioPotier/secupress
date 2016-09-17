@@ -127,7 +127,7 @@ function secupress_bad_url_access_upgrade( $new_version, $actual_version ) {
 			$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Bad URL Access', 'secupress' ) );
 			$message .= sprintf(
 				/** Translators: 1 is a file name; 2, 3 and 4 are some code. */
-				__( 'Your %1$s file does not seem to be writable. Please replace previous lines between %2$s and %3$s by the following ones: %4$s', 'secupress' ),
+				__( 'Your %1$s file is not writable. Please replace previous lines between %2$s and %3$s by the following ones: %4$s', 'secupress' ),
 				'<code>.htaccess</code>',
 				"<code># BEGIN SecuPress $marker</code>",
 				'<code># END SecuPress</code>',
@@ -147,7 +147,7 @@ function secupress_bad_url_access_upgrade( $new_version, $actual_version ) {
 			$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Bad URL Access', 'secupress' ) );
 			$message .= sprintf(
 				/** Translators: 1 is a file name, 2 is a tag name, 3 is a folder path (kind of), 4 is some code */
-				__( 'Your %1$s file does not seem to be writable. Please replace previous rules with %2$s from the tags hierarchy %3$s by the following ones: %4$s', 'secupress' ),
+				__( 'Your %1$s file is not writable. Please replace previous rules with %2$s from the tags hierarchy %3$s by the following ones: %4$s', 'secupress' ),
 				'<code>web.config</code>',
 				'<code>name="SecuPress ' . $marker . '"</code>',
 				'<code class="secupress-iis7-path">' . $path . '</code>',

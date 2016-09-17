@@ -38,17 +38,17 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 	 * @since 1.0
 	 */
 	protected function init() {
-		$this->title = __( 'Check if you are using plugins that have been deleted from the official repository or not updated since two years at least.', 'secupress' );
-		$this->more  = __( 'Avoid to use a plugin that have been removed from the official repository, and avoid using a plugin that have not been maintained for two years at least.', 'secupress' );
+		$this->title = __( 'Check if you are using plugins that have been deleted from the official repository or have not been updated for at least two years.', 'secupress' );
+		$this->more  = __( 'Do not use a plugin that has been removed from the official repository, and prevent usage of plugins that have not been maintained for two years at least.', 'secupress' );
 
 		if ( is_network_admin() ) {
-			$this->more_fix  = __( 'Select bad old plugins plugins to be deleted.', 'secupress' );
+			$this->more_fix  = __( 'Select removed and old plugins to be deleted.', 'secupress' );
 			$this->more_fix .= '<br/>' . __( 'Will be fixable soon.', 'secupress' ); // RC2 ////.
 			$this->fixable   = false;
 		} elseif ( ! is_multisite() ) {
-			$this->more_fix = __( 'Select and delete bad old plugins plugins.', 'secupress' );
+			$this->more_fix = __( 'Select and delete removed and old plugins.', 'secupress' );
 		} else {
-			$this->more_fix = __( 'Deactivate bad old plugins.', 'secupress' );
+			$this->more_fix = __( 'Deactivate removed and old plugins.', 'secupress' );
 		}
 	}
 
@@ -65,11 +65,11 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// "good"
-			0   => __( 'You don\'t use bad or old plugins.', 'secupress' ),
-			1   => __( 'You don\'t use bad or old plugins anymore.', 'secupress' ),
-			2   => __( 'All bad or old plugins have been deleted.', 'secupress' ),
-			3   => __( 'All deletable bad or old plugins have been deleted.', 'secupress' ),
-			4   => __( 'All bad or old plugins have been deactivated.', 'secupress' ),
+			0   => __( 'You don\'t use removed or old plugins.', 'secupress' ),
+			1   => __( 'You don\'t use removed or old plugins anymore.', 'secupress' ),
+			2   => __( 'All removed or old plugins have been deleted.', 'secupress' ),
+			3   => __( 'All deletable removed or old plugins have been deleted.', 'secupress' ),
+			4   => __( 'All removed or old plugins have been deactivated.', 'secupress' ),
 			// "warning"
 			/** Translators: %s is a file name. */
 			100 => __( 'Error, could not read %s.', 'secupress' ),
@@ -85,7 +85,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 			/** Translators: 1 is a number, 2 is a plugin name (or a list of plugin names). */
 			200 => _n_noop( '<strong>%1$d plugin</strong> is no longer in the WordPress directory: %2$s.', '<strong>%1$d plugins</strong> are no longer in the WordPress directory: %2$s.', 'secupress' ),
 			/** Translators: 1 is a number, 2 is a plugin name (or a list of plugin names). */
-			201 => _n_noop( '<strong>%1$d plugin</strong> has not been updated for 2 years at least: %2$s.', '<strong>%1$d plugins</strong> have not been updated for 2 years at least: %2$s.', 'secupress' ),
+			201 => _n_noop( '<strong>%1$d plugin</strong> has not been updated for at least 2 years: %2$s.', '<strong>%1$d plugins</strong> have not been updated for at least 2 years: %2$s.', 'secupress' ),
 			/** Translators: %s is a plugin name. */
 			202 => __( 'You should delete the plugin %s.', 'secupress' ),
 			203 => _n_noop( 'Sorry, this plugin could not be deleted.', 'Sorry, those plugins could not be deleted.', 'secupress' ),

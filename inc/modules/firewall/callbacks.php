@@ -202,7 +202,7 @@ function secupress_install_firewall_module( $module ) {
 /* MAKE SURE OUR LISTS ARE NOT EMPTY: FILTER OUTPUT ============================================= */
 /*------------------------------------------------------------------------------------------------*/
 
-// Bad User Agents.
+// bad User Agents.
 
 add_filter( 'pre_secupress_get_module_option_bbq-headers_user-agents-list', 'secupress_firewall_pre_bbq_headers_user_agents_list_default_if_empty', PHP_INT_MAX, 3 );
 /**

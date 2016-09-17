@@ -28,10 +28,10 @@ function secupress_http_block_external_notice() {
 	}
 
 	$message  = '<div>';
-		$message .= '<p><strong>' . sprintf( __( '%s: The external HTTP requests are blocked!', 'secupress' ), SECUPRESS_PLUGIN_NAME ) . '</strong></p>';
+		$message .= '<p><strong>' . sprintf( __( '%s: External HTTP requests are blocked!', 'secupress' ), SECUPRESS_PLUGIN_NAME ) . '</strong></p>';
 		$message .= '<p>' . __( 'You defined the <code>WP_HTTP_BLOCK_EXTERNAL</code> constant in the <code>wp-config.php</code> to block all external HTTP requests.', 'secupress' ) . '</p>';
 		$message .= '<p>';
-			$message .= sprintf( __( 'To make %s working well, you have to either remove the PHP constant, or add or merge the following code in your <code>wp-config.php</code> file.', 'secupress' ), SECUPRESS_PLUGIN_NAME ) . '<br/>';
+			$message .= sprintf( __( 'To make %s work well, you have to either remove the PHP constant, or add the following code in your <code>wp-config.php</code> file.', 'secupress' ), SECUPRESS_PLUGIN_NAME ) . '<br/>';
 			$message .= __( 'Click on the field and press Ctrl+A or Cmd+A to select all.', 'secupress' );
 		$message .= '</p>';
 		$message .= '<p><textarea readonly="readonly" class="large-text readonly" rows="1">define( \'WP_ACCESSIBLE_HOSTS\', \'*.secupress.me\' );</textarea></p>';
@@ -112,7 +112,7 @@ function secupress_add_packed_plugins_notice() {
 	$message  = '<p>';
 	$message .= sprintf(
 		/** Translators: 1 is the plugin name */
-		__( 'The features of the following plugins are included into %1$s. You can deactivate the plugins now and enable these features later in %1$s:', 'secupress' ),
+		__( 'The features of the following plugins are included in %1$s. You can deactivate the plugins now and enable these features later in %1$s:', 'secupress' ),
 		'<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>'
 	);
 	$message .= '</p><ul>';
@@ -190,7 +190,7 @@ function secupress_warning_wp_config_permissions() {
 	}
 
 	$message  = sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
-	$message .= sprintf( __( 'The %1$s file does not seem to be writable, read more about the <a href="%2$s" target="_blank">writing permissions</a>.', 'secupress' ), '<code>wp-config.php</code>', 'http://codex.wordpress.org/Changing_File_Permissions' );
+	$message .= sprintf( __( 'The %1$s file is not writable, read more about <a href="%2$s" target="_blank">writing permissions</a>.', 'secupress' ), '<code>wp-config.php</code>', 'http://codex.wordpress.org/Changing_File_Permissions' );
 
 	secupress_add_notice( $message, 'error', 'wpconfig-not-writable' );
 }
@@ -337,7 +337,7 @@ function secupress_warning_no_oneclick_scan_yet() {
 		</div>
 		<div class="secupress-col-2-4 secupress-col-text">
 			<p class="secupress-text-medium"><?php printf( __( '%s is activated, let\'s improve the security of your website!', 'secupress' ), SECUPRESS_PLUGIN_NAME ); ?></p>
-			<p><?php _e( 'Scan every security points for the first time in your website, right now.', 'secupress' ); ?></p>
+			<p><?php esc_html_e( 'Scan your website for security issues, right now.', 'secupress' ); ?></p>
 		</div>
 		<div class="secupress-col-1-4 secupress-col-cta">
 			<a class="secupress-button secupress-button-primary secupress-button-scan" href="<?php echo esc_url( wp_nonce_url( secupress_admin_url( 'scanners' ), 'first_oneclick-scan' ) ) . '&oneclick-scan=1'; ?>">

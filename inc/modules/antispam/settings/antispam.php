@@ -21,7 +21,7 @@ if ( secupress_is_pro() ) {
 
 $this->add_field( array(
 	'title'             => __( 'Anti Spam', 'secupress' ),
-	'description'       => __( 'If you do not activate this anti-spam or remove the comment feature, please, activate another anti-spam plugin for your security!', 'secupress' ),
+	'description'       => __( 'If you do not activate this anti-spam module or remove the comment feature, please, activate another anti-spam plugin for your security!', 'secupress' ),
 	'name'              => $field_name,
 	'plugin_activation' => true,
 	'type'              => 'radioboxes',
@@ -36,7 +36,7 @@ $this->add_field( array(
 		array(
 			'depends'     => $field_name . '_fightspam',
 			'type'        => 'description',
-			'description' => __( 'An anti-usurpation system will also be activated: registered users will be able to comment using their username and email only if they are logged in.', 'secupress' ),
+			'description' => __( 'An anti identity spoof system will also be activated: registered users will be able to comment using their username and email only if they are logged in.', 'secupress' ),
 		),
 		array(
 			'depends'     => $field_name . '_remove-comment-feature',
@@ -58,7 +58,7 @@ if ( defined( 'EMPTY_TRASH_DAYS' ) && is_numeric( EMPTY_TRASH_DAYS ) && EMPTY_TR
 
 $this->add_field( array(
 	'title'        => __( 'Handling Spam', 'secupress' ),
-	'description'  => __( 'Usually WordPress keeps spam in the database, using the deletion setting, you will free some database storage usage.', 'secupress' ),
+	'description'  => __( 'Usually WordPress keeps spam in the database, by using the deletion setting, you will free up some database storage space.', 'secupress' ),
 	'depends'      => $main_field_name,
 	'name'         => $this->get_field_name( 'mark-as' ),
 	'type'         => 'radios',
@@ -86,8 +86,8 @@ $this->add_field( array(
 
 
 $this->add_field( array(
-	'title'        => __( 'Improve the WordPress\' comments blacklist', 'secupress' ),
-	'description'  => __( 'You can improve the list of bad words that will change some comment into a detected spam.', 'secupress' ),
+	'title'        => __( 'Improve the WordPress comments blacklist', 'secupress' ),
+	'description'  => __( 'You can improve the list of bad words that will flag comments as spam.', 'secupress' ),
 	'depends'      => $main_field_name,
 	'label_for'    => $this->get_field_name( 'better-blacklist-comment' ),
 	'type'         => 'checkbox',
@@ -108,7 +108,7 @@ $this->add_field( array(
 
 $this->add_field( array(
 	'title'        => __( 'About Pingbacks & Trackbacks', 'secupress' ),
-	'description'  => __( 'If you do not especially use Pingbacks & Trackbacks, you can disable their usage.', 'secupress' ),
+	'description'  => __( 'If you do not especially use Pingbacks & Trackbacks, you can disable them.', 'secupress' ),
 	'depends'      => $main_field_name,
 	'label_for'    => $this->get_field_name( 'forbid-pings-trackbacks' ),
 	'type'         => 'checkbox',
