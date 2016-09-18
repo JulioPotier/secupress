@@ -229,6 +229,24 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 		return __( 'http://docs.secupress.me/', 'secupress' );
 	}
 
+	/**
+	 * Get the timeout in seconds, filterable
+	 *
+	 * @since 1.0.4
+	 *
+	 * @return (int) Timeout in seconds
+	 */
+	public static function get_timeout() {
+		/**
+		 * Some scan are doing a request on the homepage or some internal files, we need sometimes to raise the timeout
+		 *
+		 * @since 1.0.4
+		 *
+		 * @param (int) Timeout in seconds
+		 */
+		return apply_filters( 'secupress.remote_timeout', 30 );
+	}
+
 
 	/** Messages for scans and fixes. =========================================================== */
 
@@ -1094,7 +1112,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 		}
 
 		// Try to reach `secupress.html`.
-		$response = wp_remote_get( site_url( $folder_name . '/secupress.html' ), array( 'redirection' => 0, 'timeout' => 60, 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) );
+		$response = wp_remote_get( site_url( $folder_name . '/secupress.html' ), array( 'redirection' => 0, $this->get_timeout(), 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) );
 
 		// Now we can get rid of the files.
 		$wp_filesystem->delete( $folder_path, true );

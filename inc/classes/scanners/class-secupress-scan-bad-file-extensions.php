@@ -143,7 +143,7 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 			return parent::scan();
 		}
 
-		$response = wp_remote_get( $this->file_url, array( 'redirection' => 0, 'timeout' => 60, 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) );
+		$response = wp_remote_get( $this->file_url, array( 'redirection' => 0, $this->get_timeout(), 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) );
 
 		if ( is_wp_error( $response ) ) {
 			// "warning"
