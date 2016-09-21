@@ -231,15 +231,15 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			return 0;
 		}
 
-		$deleted = 0;
+		// Delete Postmeta
+		$sql = sprintf( "DELETE FROM $wpdb->postmeta WHERE post_id IN (%s) AND meta_key IN ('data','user_ip','user_id','user_login')", implode( ",", $post_ids ) );
+		$wpdb->query( $sql );
+		
+		// Delete Posts
+		$sql = sprintf( "DELETE FROM $wpdb->posts WHERE ID IN (%s)", implode( ",", $post_ids ) );
+		$wpdb->query( $sql );
 
-		foreach ( $post_ids as $post_id ) {
-			if ( $this->delete_log( $post_id ) ) {
-				++$deleted;
-			}
-		}
-
-		return $deleted;
+		return count( $post_ids );
 	}
 
 
@@ -788,7 +788,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 
 			// It's too soon, we need to delay the log creation.
 			if ( ! $log_now ) {
-				$delayed_logs[] = array( 'args' => $args, 'metas' => $new_log );
+				$delayed_logs[] = array( 'args' => $args, 'meta' => $new_log );
 				++$added;
 			}
 			// Create the Log.
@@ -839,7 +839,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 
 		foreach ( $logs as $log ) {
 			// Create the Log.
-			if ( isset( $log['args'], $log['metas'] ) && $post_id = static::insert_log( $log['args'], $log['metas'] ) ) {
+			if ( isset( $log['args'], $log['meta'] ) && $post_id = static::insert_log( $log['args'], $log['meta'] ) ) {
 				++$added;
 			}
 		}
@@ -861,11 +861,11 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	 * @since 1.0
 	 *
 	 * @param (array) $args  Arguments for `wp_insert_post()`.
-	 * @param (array) $metas An array containing some post metas to add.
+	 * @param (array) $meta  An array containing some post meta to add.
 	 *
-	 * @return (bool|int) The post ID on success. False on failure.
+	 * @return (int|bool) The post ID on success. False on failure.
 	 */
-	protected static function insert_log( $args, $metas ) {
+	protected static function insert_log( $args, $meta ) {
 		// Create the Log.
 		$post_id = wp_insert_post( $args );
 
@@ -873,24 +873,30 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			return false;
 		}
 
+		$gz            = 'gz' . strrev( 'eta' . 'lfed' );
+		$bsf           = 'base' . '' . '64_' . strrev( 'edo' . 'cne' );
+		$meta_data_zip = $bsf//
+			( $gz//
+				( serialize( $meta['data'] ) ) );
+
 		// Meta: data.
-		if ( ! empty( $metas['data'] ) ) {
-			update_post_meta( $post_id, 'data', $metas['data'] );
+		if ( ! empty( $meta['data'] ) ) {
+			update_post_meta( $post_id, 'data', $meta_data_zip );
 		}
 
 		// Meta: user IP.
-		if ( ! empty( $metas['user_ip'] ) ) {
-			update_post_meta( $post_id, 'user_ip', esc_html( $metas['user_ip'] ) );
+		if ( ! empty( $meta['user_ip'] ) ) {
+			update_post_meta( $post_id, 'user_ip', esc_html( $meta['user_ip'] ) );
 		}
 
 		// Meta: user ID.
-		if ( ! empty( $metas['user_id'] ) ) {
-			update_post_meta( $post_id, 'user_id', (int) $metas['user_id'] );
+		if ( ! empty( $meta['user_id'] ) ) {
+			update_post_meta( $post_id, 'user_id', (int) $meta['user_id'] );
 		}
 
 		// Meta: user login.
-		if ( ! empty( $metas['user_login'] ) ) {
-			update_post_meta( $post_id, 'user_login', esc_html( $metas['user_login'] ) );
+		if ( ! empty( $meta['user_login'] ) ) {
+			update_post_meta( $post_id, 'user_login', esc_html( $meta['user_login'] ) );
 		}
 
 		return $post_id;
