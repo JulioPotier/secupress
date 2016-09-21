@@ -31,6 +31,9 @@ Protect your WordPress with SecuPress, analyze and ensure the safety of your web
 == Changelog ==
 
 = 1.0.4 =
+* ???
+* TAKE CARE, ALL YOUR LOGS WILL BE DELETED! THANK YOU
+* Improvement: Logs are now lighter (without a flame) and can be deleted much faster (still not as fast as WP Rocket, but who can)
 
 = 1.0.3 =
 * 14 sep 2016
