@@ -520,7 +520,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	function secupressDoDbBackup( $button, href ) {
 		secupressDisableAjaxButton( $button, SecuPressi18nModules.backupingText, 'backup' );
 
-		$.post( href )
+		$.post( href, $button.closest( "form" ).serializeArray() )
 		.done( function( r ) {
 			if ( $.isPlainObject( r ) && r.success ) {
 				$( r.data.elemRow ).addClass( "hidden" ).css( "backgroundColor", SecuPress.addedRowColor ).insertAfter( "#form-delete-backups legend" ).show( "normal", function() {
