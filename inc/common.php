@@ -611,23 +611,6 @@ function secupress_downgrade_author_administrator() {
 }
 
 
-add_action( 'secupress.loaded', 'secupress_process_file_monitoring_tasks' );
-/**
- * Launch file monitoring in background.
- *
- * @since 1.0
- */
-function secupress_process_file_monitoring_tasks() {
-	if ( false === secupress_get_site_transient( 'secupress_toggle_file_scan' ) ) {
-		return;
-	}
-	secupress_require_class_async();
-	secupress_require_class( 'Admin', 'file-monitoring' );
-
-	SecuPress_File_Monitoring::get_instance();
-}
-
-
 add_action( 'secupress.loaded', 'secupress_check_token_wp_registration_url' );
 /**
  * Avoid sending emails when we do a "subscription test scan"
