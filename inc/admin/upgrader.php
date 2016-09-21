@@ -145,11 +145,11 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 		$post_ids = $wpdb->get_col( "SELECT ID FROM $wpdb->posts WHERE post_type LIKE 'secupress_log_%'" );
 
 		// Delete Postmeta
-		$sql = sprintf( "DELETE FROM $wpdb->postmeta WHERE post_id IN (%s) AND meta_key IN ('data','user_ip','user_id','user_login')", implode( ",", $post_ids ) );
+		$sql = sprintf( "DELETE FROM $wpdb->postmeta WHERE post_id IN (%s)", implode( ",", $post_ids ) );
 		$wpdb->query( $sql );
-		
+
 		// Delete Posts
 		$sql = sprintf( "DELETE FROM $wpdb->posts WHERE ID IN (%s)", implode( ",", $post_ids ) );
-		$wpdb->query( $sql );		
+		$wpdb->query( $sql );
 	}
 }

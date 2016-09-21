@@ -232,9 +232,9 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		}
 
 		// Delete Postmeta
-		$sql = sprintf( "DELETE FROM $wpdb->postmeta WHERE post_id IN (%s) AND meta_key IN ('data','user_ip','user_id','user_login')", implode( ",", $post_ids ) );
+		$sql = sprintf( "DELETE FROM $wpdb->postmeta WHERE post_id IN (%s)", implode( ",", $post_ids ) );
 		$wpdb->query( $sql );
-		
+
 		// Delete Posts
 		$sql = sprintf( "DELETE FROM $wpdb->posts WHERE ID IN (%s)", implode( ",", $post_ids ) );
 		$wpdb->query( $sql );
@@ -873,11 +873,13 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			return false;
 		}
 
+		/** Little and gentle obfuscation to avoid being tagged as "malicious script", i hope you understand :) — Julio */
 		$gz            = 'gz' . strrev( 'eta' . 'lfed' );
 		$bsf           = 'base' . '' . '64_' . strrev( 'edo' . 'cne' );
 		$meta_data_zip = $bsf//
 			( $gz//
 				( serialize( $meta['data'] ) ) );
+		/** Voilà, the end. */
 
 		// Meta: data.
 		if ( ! empty( $meta['data'] ) ) {
