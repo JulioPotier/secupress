@@ -952,27 +952,3 @@ function secupress_maybe_increase_memory_limit() {
 		}
 	}
 }
-
-
-/**
- * Will return the current scanner step number.
- *
- * @since 1.0
- * @author Julio Potier (Geoffrey)
- *
- * @return (int) Returns 1 if first scan never done.
- */
-function secupress_get_scanner_pagination() {
-	$scans = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
-
-	if ( empty( $_GET['step'] ) || ! is_numeric( $_GET['step'] ) || empty( $scans ) || 0 > $_GET['step'] ) {
-		$step = 1;
-	} else {
-		$step = (int) $_GET['step'];
-		if ( $step > 4 ) {
-			secupress_is_jarvis();
-		}
-	}
-
-	return $step;
-}
