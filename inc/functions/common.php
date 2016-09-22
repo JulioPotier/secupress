@@ -980,6 +980,38 @@ function secupress_decompress_data( $data ) {
 
 
 /**
+ * Try to increase the memory limit if possible.
+ *
+ * @since 1.0
+ * @author Grégory Viguier
+ */
+function secupress_maybe_increase_memory_limit() {
+	if ( ! wp_is_ini_value_changeable( 'memory_limit' ) ) {
+		return;
+	}
+
+	$limits = array(
+		'64M'  => 67108864,
+		'128M' => 134217728,
+		'256M' => 268435456,
+	);
+	$current_limit     = @ini_get( 'memory_limit' );
+	$current_limit_int = wp_convert_hr_to_bytes( $current_limit );
+
+	if ( -1 === $current_limit_int || $current_limit_int > $limits['256M'] ) {
+		return;
+	}
+
+	foreach ( $limits as $limit => $bytes ) {
+		if ( $current_limit_int < $bytes ) {
+			@ini_set( 'memory_limit', $limit );
+			return;
+		}
+	}
+}
+
+
+/**
  * Will return the current scanner step number.
  *
  * @since 1.0
