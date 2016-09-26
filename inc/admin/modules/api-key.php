@@ -1,19 +1,8 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
-// ////.
-
-$description = implode( "<br/>\n", array(
-	__( 'Some features need a free account to be created, because they are linked to services provided with our servers.', 'secupress' ),
-	sprintf(
-		/** Translators: %s is a "Buy a licence" link */
-		__( 'You can %s, or only <strong>enter your email address</strong> below and <strong>save</strong> to get your free account.', 'secupress' ),
-		'<a href="#" target="_blank">' . __( 'buy a license to unlock all the features', 'secupress' ) . '</a>'// ////.
-	),
-) );
 
 
 $this->set_current_section( 'secupress_display_apikey_options' );
-$this->set_section_description( $description );
 $this->add_section( __( 'License Validation', 'secupress' ) );
 
 
@@ -28,23 +17,25 @@ $this->add_field( array(
 	'helpers'      => array(
 		array(
 			'type'        => 'help',
-			'description' => __( 'The one you used for your Pro account. Or provide a new one to create a free account.', 'secupress' ),
+			'description' => _x( 'The one you used for your Pro account.', 'e-mail address', 'secupress' ),
 		),
 	),
 ) );
 
 
 $this->add_field( array(
-	'title'        => __( 'API Key', 'secupress' ),
+	'title'        => __( 'License Key', 'secupress' ),
 	'label_for'    => 'consumer_key',
 	'type'         => 'text',
 	'attributes'   => array(
-	'autocomplete' => 'off',
+		'required'      => 'required',
+		'aria-required' => 'true',
+		'autocomplete'  => 'off',
 	),
 	'helpers'      => array(
 		array(
 			'type'        => 'help',
-			'description' => __( 'The API key obtained with your Pro account. Leave empty and save to get a free account.', 'secupress' ),
+			'description' => __( 'The license key obtained with your Pro account.', 'secupress' ),
 		),
 	),
 ) );
