@@ -575,8 +575,8 @@ fieldset.secupress-boxed-group > b {
 	.fieldname-backups-storage_location .secupress-radio-line,
 	.fieldname-notification-types_types .secupress-fieldset-item-checkboxes {
 		float: left;
-		width: 20%;
-		margin-bottom: 2em;
+		width: 140px;
+		margin-bottom: 1em;
 	}
 	.fieldname-backups-storage_location .secupress-radio-line label:before,
 	.fieldname-notification-types_types .secupress-fieldset-item-checkboxes label:before {
