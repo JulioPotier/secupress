@@ -50,7 +50,7 @@ if ( class_exists( 'SecuPress_Action_Logs' ) ) :
 
 		$text = implode( '<br/>', $text );
 	} else {
-		$text = __( 'Nothing happened yet.' );
+		$text = __( 'Nothing happened yet.', 'secupress' );
 	}
 
 	$this->add_field( array(
@@ -88,7 +88,7 @@ if ( class_exists( 'SecuPress_404_Logs' ) ) :
 		$text     = sprintf( _n( '%s error 404.', '%s errors 404.', $logs, 'secupress' ), number_format_i18n( $logs ) );
 		$text     = '<a href="' . esc_url( SecuPress_404_Logs::get_log_type_url( $log_type ) ) . '">' . $text . '</a>';
 	} else {
-		$text = __( 'Nothing happened yet.' );
+		$text = __( 'Nothing happened yet.', 'secupress' );
 	}
 
 	$this->add_field( array(
