@@ -105,8 +105,14 @@ p.secupress-sh-subtitle {
 	color: #F1C40F;
 }
 .secupress-modules-list-links .secupress-tab-summary {
+	position: relative;
+	z-index: 1;
 	color: #FFF;
 	font-size: 11px;
+	text-shadow: 0 0 2px #222;
+}
+.module-get-pro .secupress-tab-summary {
+	text-shadow: none;
 }
 
 .secupress-modules-list-links i {
