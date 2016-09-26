@@ -595,6 +595,23 @@ fieldset.secupress-boxed-group > b {
 		background: #FFF none 50% 50% no-repeat;
 		border-radiu: 3px;
 	}
+	.secupress-radio-line.secupress-radio-line label .label-text {
+		display: block;
+	}
+	/* Coming Soon labels */
+	.secupress-radio-line .secupress-coming-soon-feature {
+		position: absolute;
+		top: -139px; right: 5px;
+		padding: 0 6px;
+		font-size: .875em;
+		letter-spacing: 0.0125em;
+		text-transform: uppercase;
+		font-weight: bold;
+		color: #2BCDC1;
+		border: 2px solid #2BCDC1;
+		background: #FFF;
+		border-radius: 16px;
+	}
 	/* backups */
 	.secupress-radio-line label[for="backups-storage_location_local"]:before {
 		background-image: url("../images/backup-local.png");
