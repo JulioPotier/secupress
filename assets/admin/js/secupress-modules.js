@@ -1167,3 +1167,25 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 
 	} );
 })(jQuery);
+
+// Malware Scan Status ============================================================================
+(function($) {
+	if ( 'undefined' != SecuPressi18nModules && 'on' == SecuPressi18nModules.malwareScanStatus ) {
+
+		$(document).on( 'heartbeat-send', function(e, data) {
+			data['secupress_heartbeat_malware_scan'] = 'malwareScanStatus';
+		} );
+
+		// Listen for the custom event "heartbeat-tick" on $(document).
+		$(document).on( 'heartbeat-tick', function(e, data) {
+
+			// Only proceed if our data is present
+			if ( ! data['malwareScanStatus'] ) {
+				return;
+			}
+
+			window.location.href = SecuPressi18nModules.MalwareScanURI;
+
+		} );
+	}
+})(jQuery);

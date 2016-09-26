@@ -134,6 +134,9 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 			// Expand Textareas.
 			'expandTextOpen'       => __( 'Show More', 'secupress' ),
 			'expandTextClose'      => __( 'Close' ),
+			// Malware Scan
+			'malwareScanStatus'    => false !== ( $time = secupress_get_site_transient( 'secupress_toggle_file_scan' ) ) ? 'on' : 'off',
+			'MalwareScanURI'       => secupress_admin_url( 'modules', 'file-system' ),
 		) );
 
 	}
