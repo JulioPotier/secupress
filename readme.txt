@@ -30,6 +30,9 @@ Protect your WordPress with SecuPress, analyze and ensure the safety of your web
 
 == Changelog ==
 
+= 1.0.5 =
+* ???
+
 = 1.0.4 =
 * 26 sep 2016
 * TAKE CARE, ALL YOUR LOGS WILL BE DELETED! THANK YOU
