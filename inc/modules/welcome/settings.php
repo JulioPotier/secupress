@@ -54,7 +54,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 			?>
 			<div class="secupress-module-box secupress-flex secupress-module-box-get-pro">
 				<div class="secupress-mb-icon">
-					<i class="icon-secupress" aria-hidden="true"></i>
+					<i class="icon-secupress-simple" aria-hidden="true"></i>
 				</div>
 				<div class="secupress-mb-texts">
 					<p class="secupress-mb-title"><?php _e( 'Get Pro and unlock more awesome features!', 'secupress' ); ?></p>

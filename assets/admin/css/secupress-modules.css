@@ -319,9 +319,6 @@ p.secupress-sh-subtitle {
 	max-width: 100%;
 	margin: 2em auto;
 }
-.secupress-module-box + .secupress-module-box {
-	border-top: 1px solid #F2F2F6;
-}
 .secupress-module-box {
 	position: relative;
 	-webkit-flex-basis: 33%;
@@ -332,13 +329,32 @@ p.secupress-sh-subtitle {
 	background: #FFF;
 	overflow: hidden;
 }
+.secupress-module-box + .secupress-module-box {
+	border-top: 1px solid #F2F2F6;
+}
+.secupress-module-box-get-pro + .secupress-module-box {
+	border-top: 0;
+}
+.secupress-module-box-get-pro {
+	border-top: 0;
+	padding: 20px;
+	background: #ECF0F1;
+}
 .secupress-module-box-services {
 	background: transparent;
 }
 .secupress-mb-title {
 	margin: 12px 0 8px;
 	font-size: 23px;
-	font-weight: 600;
+	font-weight: 500;
+}
+.secupress-module-box-get-pro .secupress-mb-description {
+	width: 400px;
+	max-width: 100%;
+}
+.secupress-module-box-get-pro .secupress-mb-title {
+	font-size: 16px;
+	font-weight: 500;
 }
 .secupress-mb-description {
 	font-size: 13px;
@@ -360,6 +376,16 @@ p.secupress-sh-subtitle {
 	font-size: 11px;
 	font-weight: 500;
 }
+.secupress-mb-action a i {
+	color: #FFF;
+}
+.secupress-mb-action a .icon:after {
+	display: none;
+}
+.secupress-mb-action a .icon {
+	padding: 0;
+	margin-left: -4px;
+}
 .secupress-mb-icon {
 	flex-basis: 110px;
 	flex-grow: 0;
@@ -372,6 +398,9 @@ p.secupress-sh-subtitle {
 	display: block;
 	font-size: 50px;
 	color: #2BCDC1;
+}
+.secupress-module-box-get-pro i {
+	color: #5A626F
 }
 .secupress-module-box .icon-themes-plugins {
 	height: 65px;
