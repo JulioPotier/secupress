@@ -31,80 +31,107 @@ function secupress_global_settings_callback( $value ) {
 	}
 	$value['sanitized'] = 1;
 
-	if ( ! secupress_is_pro() || ! empty( $value['wl_plugin_name'] ) && 'SecuPress' === $value['wl_plugin_name'] ) {
+	// Previous values.
+	$old_values = get_site_option( SECUPRESS_SETTINGS_SLUG );
+	$old_values = is_array( $old_values ) ? $old_values : array();
+	unset( $old_values['sanitized'] );
+
+	/**
+	 * White Label.
+	 */
+	if ( ! secupress_is_pro() && ! empty( $value['wl_plugin_name'] ) ) {
+		// Trick the referrer for the redirection.
+		$old_slug = ! empty( $old_values['wl_plugin_name'] ) ? sanitize_title( $old_values['wl_plugin_name'] ) : 'secupress';
+		$old_slug = 'page=' . $old_slug . '_settings';
+		$new_slug = 'page=secupress_settings';
+
+		$_REQUEST['_wp_http_referer'] = str_replace( $old_slug, $new_slug, wp_get_raw_referer() );
+	}
+
+	if ( ! secupress_is_pro() || empty( $value['wl_plugin_name'] ) || 'SecuPress' === $value['wl_plugin_name'] ) {
 		unset( $value['wl_plugin_name'] );
 	}
 
 	/**
 	 * License validation.
 	 */
-	$value['consumer_email'] = ! empty( $value['consumer_email'] ) ? sanitize_email( $value['consumer_email'] )    : '';
-	$value['consumer_key']   = ! empty( $value['consumer_key'] )   ? sanitize_text_field( $value['consumer_key'] ) : '';
+	$has_email = ! empty( $value['consumer_email'] );
+	$has_key   = ! empty( $value['consumer_key'] );
 
-	if ( ! secupress_has_pro() ) {
+	$value['consumer_email'] = $has_email ? sanitize_email( $value['consumer_email'] )    : '';
+	$value['consumer_key']   = $has_key   ? sanitize_text_field( $value['consumer_key'] ) : '';
 
-		// Wut?!
+	// Default values related to the license.
+	$def_values = array(
+		'consumer_email' => '',
+		'consumer_key'   => '',
+		'site_is_pro'    => 0,
+	);
+
+	if ( empty( $old_values['wl_plugin_name'] ) || 'SecuPress' === $old_values['wl_plugin_name'] ) {
+		unset( $old_values['wl_plugin_name'] );
+	}
+
+	if ( ! secupress_has_pro() || ! $has_email || ! $has_key ) {
+
 		unset( $value['consumer_email'], $value['consumer_key'], $value['site_is_pro'] );
 
-	} elseif ( empty( $value['consumer_email'] ) ) {
+	} elseif ( ! $value['consumer_email'] || ! $value['consumer_key'] ) {
 
-		add_settings_error( 'secupress_global', 'response_error', __( 'Please provide a valid email address.', 'secupress' ) );
-		unset( $value['consumer_email'], $value['consumer_key'], $value['site_is_pro'] );
+		if ( ! $value['consumer_email'] ) {
+			add_settings_error( 'secupress_global', 'response_error', __( 'Please provide a valid email address.', 'secupress' ) );
+		}
+		if ( ! $value['consumer_key'] ) {
+			add_settings_error( 'secupress_global', 'response_error', __( 'Please provide your license key.', 'secupress' ) );
+		}
 
-	} elseif ( empty( $value['consumer_key'] ) ) {
-
-		add_settings_error( 'secupress_global', 'response_error', __( 'Please provide your license key.', 'secupress' ) );
 		unset( $value['consumer_email'], $value['consumer_key'], $value['site_is_pro'] );
 
 	} else {
-		// Default values related to the API.
-		$def_values = array(
-			'consumer_email' => '',
-			'consumer_key'   => '',
-			'wl_plugin_name' => '',
-			'site_is_pro'    => 0,
-		);
 
-		// Previous values.
-		$old_values = get_site_option( SECUPRESS_SETTINGS_SLUG );
-		$old_values = is_array( $old_values ) ? $old_values : array();
+		$value = secupress_global_settings_activate_pro_license( $value, $old_values, $def_values );
 
-		if ( empty( $old_values['wl_plugin_name'] ) || 'SecuPress' === $old_values['wl_plugin_name'] ) {
-			unset( $old_values['wl_plugin_name'] );
-		}
-
-		$value = secupress_global_settings_update_api_subscription( $value, $old_values, $def_values );
-
-		if ( empty( $value['site_is_pro'] ) ) {
+		if ( empty( $value['site_is_pro'] ) && ! get_settings_errors( 'secupress_global' ) ) {
 			add_settings_error( 'secupress_global', 'response_error', __( 'Your license key seems invalid.', 'secupress' ) );
 		}
 	}
+
+	/**
+	 * Deal with values that are not set via the settings page's form.
+	 */
+	$pro_values = array_merge( $def_values, array(
+		'wl_plugin_name' => '',
+		'wl_plugin_URI'  => '',
+		'wl_description' => '',
+		'wl_author'      => '',
+		'wl_author_URI'  => '',
+	) );
+	$old_values = array_diff_key( $old_values, $pro_values );
+	$value      = array_merge( $old_values, $value );
 
 	return $value;
 }
 
 
 /**
- * Call our server to update the API subscription.
+ * Call our server to activate the Pro license.
  *
  * @since 1.0
  *
  * @param (array) $new_values The new settings.
  * @param (array) $old_values The old settings.
- * @param (array) $def_values Default values related to the API.
+ * @param (array) $def_values Default values related to the license.
  *
  * @return (array) $new_values The new settings, some values may have changed.
  */
-function secupress_global_settings_update_api_subscription( $new_values, $old_values, $def_values ) {
+function secupress_global_settings_activate_pro_license( $new_values, $old_values, $def_values ) {
 
 	$api_old_values = secupress_array_merge_intersect( $old_values, $def_values );
 
-	// Update the site in the user account.
 	$url = SECUPRESS_WEB_MAIN . 'key-api/1.0/?' . http_build_query( array(
-		'sp_action'   => 'update_subscription',
-		'user_email'  => $new_values['consumer_email'],
-		'user_key'    => $new_values['consumer_key'],
-		'plugin_name' => ! empty( $new_values['wl_plugin_name'] ) ? $new_values['wl_plugin_name'] : '',
+		'sp_action'  => 'activate_pro_license',
+		'user_email' => $new_values['consumer_email'],
+		'user_key'   => $new_values['consumer_key'],
 	) );
 
 	$response = wp_remote_get( $url, array( 'timeout' => 10 ) );
@@ -112,11 +139,23 @@ function secupress_global_settings_update_api_subscription( $new_values, $old_va
 	if ( $body = secupress_global_settings_api_request_succeeded( $response, $new_values ) ) {
 		// Success!
 		$new_values['consumer_key'] = sanitize_text_field( $body->data->user_key );
-		$new_values['site_is_pro']  = (int) ! empty( $body->data->site_is_pro );
+
+		if ( ! empty( $body->data->site_is_pro ) ) {
+			$new_values['site_is_pro'] = 1;
+		} else {
+			unset( $new_values['site_is_pro'] );
+		}
 	} else {
 		// Keep old values.
 		$new_values['consumer_email'] = $api_old_values['consumer_email'];
 		$new_values['consumer_key']   = $api_old_values['consumer_key'];
+
+		if ( $api_old_values['site_is_pro'] ) {
+			// Don't invalid the license because we couldn't reach our server or things like that.
+			$new_values['site_is_pro'] = 1;
+		} else {
+			unset( $new_values['site_is_pro'] );
+		}
 	}
 
 	return $new_values;
@@ -131,7 +170,7 @@ function secupress_global_settings_update_api_subscription( $new_values, $old_va
  * @param (mixed) $response   The request response.
  * @param (array) $new_values The new settings, passed by reference. Depending on the request result, these values may be changed.
  *
- * @return (mixed) The response body. False otherwise.
+ * @return (object|bool) The response body on success. False otherwise.
  */
 function secupress_global_settings_api_request_succeeded( $response, &$new_values ) {
 
