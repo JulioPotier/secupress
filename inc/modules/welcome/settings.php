@@ -37,28 +37,60 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 		</div><!-- .secupress-section-medium -->
 	<?php } ?>
 
-	<div class="secupress-modules-dashboard secupress-bordered secupress-flex secupress-wrap">
+	<div class="secupress-modules-dashboard secupress-bordered secupress-section-gray">
+		<div class="secupress-modules-container secupress-box-shadow">
 		<?php
 		$modules = $this->get_modules();
 		$pro_msg = '<span class="secupress-cta-pro">' . static::get_pro_version_string() . '</span>';
+		$pros_i  = 0;
 
 		// Do not display the get pro block, but we still need it for the content.
 		unset( $modules['get-pro'] );
 
 		foreach ( $modules as $slug => $mod ) {
+			$pros_i = ! empty( $mod['mark_as_pro'] ) ? $pros_i + 1 : $pros_i;
+
+			if ( $pros_i === 1 ) {
 			?>
-			<div class="secupress-module-box secupress-flex-col secupress-module-box-<?php echo sanitize_key( $slug ); ?>">
-				<p class="secupress-mb-title"><?php echo $mod['title'] ?></p>
-				<p class="secupress-mb-description"><?php echo $mod['summaries']['normal']; ?></p>
+			<div class="secupress-module-box secupress-flex secupress-module-box-get-pro">
+				<div class="secupress-mb-icon">
+					<i class="icon-secupress" aria-hidden="true"></i>
+				</div>
+				<div class="secupress-mb-texts">
+					<p class="secupress-mb-title"><?php _e( 'Get Pro and unlock more awesome features!', 'secupress' ); ?></p>
+					<p class="secupress-mb-description"><?php _e( 'Explore the modules and unlock the Pro options, and because we’re nice, you have plenty of free options too!', 'secupress' ); ?></p>
+				</div>
+				<p class="secupress-mb-action">
+					<a href="<?php echo esc_url( secupress_admin_url( 'modules', $slug ) ); ?>" class="secupress-button-tertiary">
+						<span class="icon">
+							<i class="icon-secupress-simple" aria-hidden="true"></i>		
+						</span>
+						<span class="text"><?php _e( 'Get Pro', 'secupress' ); ?></span>
+					</a>
+				</p>
+			</div>
+			<?php
+			} // if first time we get a pro line, display info about pro before
+			?>
+			<div class="secupress-module-box secupress-flex secupress-module-box-<?php echo sanitize_key( $slug ); ?>">
+				<div class="secupress-mb-icon">
+					<i class="icon-<?php echo $mod['icon']; ?>" aria-hidden="true"></i>
+				</div>
+				<div class="secupress-mb-texts">
+					<p class="secupress-mb-title"><?php echo $mod['title'] ?></p>
+					<p class="secupress-mb-description"><?php echo $mod['summaries']['normal']; ?></p>
+				</div>
+				<p class="secupress-mb-available-pro">
+					<?php echo ! empty( $mod['mark_as_pro'] ) ? $pro_msg : ''; ?>
+				</p>
 				<p class="secupress-mb-action">
 					<a href="<?php echo esc_url( secupress_admin_url( 'modules', $slug ) ); ?>" class="secupress-button-primary">
 						<?php _e( 'View options', 'secupress' ); ?>
 					</a>
-					<?php echo ! empty( $mod['mark_as_pro'] ) ? $pro_msg : ''; ?>
 				</p>
-				<i class="icon-<?php echo $mod['icon']; ?>" aria-hidden="true"></i>
 			</div>
 			<?php
 		} // End foreach $modules.
 		?>
-	</div>
+		</div><!-- .secupress-modules-container -->
+	</div><!-- .secupress-modules-dashboard -->
