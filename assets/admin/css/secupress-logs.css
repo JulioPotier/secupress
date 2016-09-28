@@ -16,6 +16,12 @@
  *
  */
 
+.secupress_page_secupress_logs .secupress-settings-header {
+	clear: both;
+}
+.secupress_page_secupress_logs #screen-meta-links .screen-meta-toggle {
+	margin-bottom: 0.5em;
+}
 
 /* Header hacking mode */
 .secupress-logs-list [id="posts-filter"] {
