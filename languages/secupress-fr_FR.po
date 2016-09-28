@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2016-09-26 13:29+0200\n"
-"PO-Revision-Date: 2016-09-26 13:33+0200\n"
+"POT-Creation-Date: 2016-09-28 11:58+0200\n"
+"PO-Revision-Date: 2016-09-28 11:58+0200\n"
 "Last-Translator: WP Media <contact@secupress.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -449,6 +449,15 @@ msgstr "Clé de licence"
 msgid "The license key obtained with your Pro account."
 msgstr "La clé de licence obtenue avec votre compte Pro."
 
+#: inc/admin/modules/api-key.php:61
+msgid "Your License Key is inactive or invalid."
+msgstr "Votre clé de licence est inactive ou non valide."
+
+#: inc/admin/modules/api-key.php:64
+#: inc/classes/settings/class-secupress-settings.php:1076
+msgid "Save All Changes"
+msgstr "Tout sauver"
+
 #: inc/admin/modules/settings-manager.php:5
 msgid "Settings Manager"
 msgstr "Gestion des réglages"
@@ -669,29 +678,29 @@ msgstr "Scanner mon site"
 msgid "Close"
 msgstr "Fermer"
 
-#: inc/admin/options.php:51
+#: inc/admin/options.php:82
 msgid "Please provide a valid email address."
 msgstr "Veuillez entrer une adresse e-mail valide."
 
-#: inc/admin/options.php:56
+#: inc/admin/options.php:85
 msgid "Please provide your license key."
 msgstr "Veuillez entrer votre clé de licence."
 
-#: inc/admin/options.php:79
+#: inc/admin/options.php:95
 msgid "Your license key seems invalid."
 msgstr "Votre clé de licence ne semble pas valide."
 
-#: inc/admin/options.php:140
+#: inc/admin/options.php:179
 msgid "Something on your website is preventing the request to be sent."
 msgstr "Quelque chose sur votre site empêche la requête d'être envoyée."
 
-#: inc/admin/options.php:146
+#: inc/admin/options.php:185
 msgid "Our server is not accessible at the moment, please try again later."
 msgstr ""
 "Notre serveur n&rsquo;est pas accessible pour l&rsquo;instant, merci de "
 "réessayer plus tard."
 
-#: inc/admin/options.php:155
+#: inc/admin/options.php:194
 msgid ""
 "Our server returned an unexpected response and might be in error, please try "
 "again later or contact our support team."
@@ -699,18 +708,18 @@ msgstr ""
 "Notre serveur a retourné une réponse inattendue et peut être en erreur, "
 "merci de réessayer plus tard ou de contacter notre support."
 
-#: inc/admin/options.php:163
+#: inc/admin/options.php:202
 msgid ""
 "There is a problem with your license key, please contact our support team."
 msgstr ""
 "Il y a un problème avec votre clé de licence, merci de contacter notre "
 "support."
 
-#: inc/admin/options.php:168
+#: inc/admin/options.php:207
 msgid "The email address is invalid."
 msgstr "L'adresse e-mail est invalide."
 
-#: inc/admin/options.php:171
+#: inc/admin/options.php:210
 msgid ""
 "Our server returned an error, please try again later or contact our support "
 "team."
@@ -4469,16 +4478,16 @@ msgstr ""
 "\" hreflang=\"en\">\"must-use plugin\"</a> pourtant la valeur par défaut de "
 "%s a besoin d'être modifiée."
 
-#: inc/classes/scanners/class-secupress-scan.php:1013
+#: inc/classes/scanners/class-secupress-scan.php:1031
 #, php-format
 msgid "%s other"
 msgid_plural "%s others"
 msgstr[0] "%s autre"
 msgstr[1] "%s autres"
 
-#: inc/classes/scanners/class-secupress-scan.php:1081
-#: inc/classes/scanners/class-secupress-scan.php:1087
-#: inc/classes/scanners/class-secupress-scan.php:1093
+#: inc/classes/scanners/class-secupress-scan.php:1099
+#: inc/classes/scanners/class-secupress-scan.php:1105
+#: inc/classes/scanners/class-secupress-scan.php:1111
 msgid "The temporary directory could not be created."
 msgstr "Le dossier temporaire ne peut être créé."
 
@@ -4649,10 +4658,6 @@ msgstr "Les prochains rôles seront automatiquement cochés."
 #: inc/classes/settings/class-secupress-settings.php:812
 msgid "Warning: "
 msgstr "Attention&nbsp;:"
-
-#: inc/classes/settings/class-secupress-settings.php:1076
-msgid "Save All Changes"
-msgstr "Tout sauver"
 
 #: inc/common.php:31
 msgid "Your unlock link has expired (or you're cheating)."
