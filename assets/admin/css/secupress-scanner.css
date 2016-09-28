@@ -1421,8 +1421,9 @@ a:focus .icon-cog {
 }
 
 .secupress-item-all code {
-	padding: 0px 3px 0px;
-	background: none;
+	display: inline;
+	padding: 2px 3px;
+	background: #f2f2f6;
 	color: #393e46;
 }
 
