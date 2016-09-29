@@ -891,7 +891,7 @@ a + .secupress-row-actions {
 	font-weight: bold;
 	font-size: 1.2em;
 }
-.secupress-chart .secupress-score .l∅ {
+.secupress-chart-container .secupress-score .l∅ {
 	font-size: 64px;
 	margin: -0.45em 0 0 -0.44em;
 }
@@ -1421,8 +1421,9 @@ a:focus .icon-cog {
 }
 
 .secupress-item-all code {
-	padding: 0px 3px 0px;
-	background: none;
+	display: inline;
+	padding: 2px 3px;
+	background: #f2f2f6;
 	color: #393e46;
 }
 
