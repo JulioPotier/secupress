@@ -5,8 +5,10 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * Get modules title, icon, description and other informations.
  *
  * @since 1.0
+ * @since 1.0.5 Includes information about numbers of free and pro options
  *
  * @return (array) All informations related to the modules.
+ * @author Gregory Viguier (Geoffrey Crofte)
  */
 function secupress_get_modules() {
 	$should_be_pro = ! secupress_is_pro();
@@ -22,6 +24,10 @@ function secupress_get_modules() {
 			'description' => array(
 				__( 'The best and easiest way to make sure that users\' data will be protected, and their accounts not compromised.', 'secupress' ),
 			),
+			'counts' => array(
+				'free_options' => 15,
+				'pro_options'  => 7
+			),
 		),
 		'plugins-themes'  => array(
 			'title'       => __( 'Plugins &amp; Themes', 'secupress' ),
@@ -32,6 +38,10 @@ function secupress_get_modules() {
 			),
 			'description' => array(
 				__( 'Detect themes and plugins known as vulnerable to avoid hackings. Also, manage installation and activation rights on them.', 'secupress' ),
+			),
+			'counts' => array(
+				'free_options' => 12,
+				'pro_options'  => 3
 			),
 		),
 		'wordpress-core'  => array(
@@ -44,6 +54,10 @@ function secupress_get_modules() {
 			'description' => array(
 				__( 'WordPress can be tweaked in so many ways. But are you using the right ones? Let\'s see!', 'secupress' ),
 			),
+			'counts' => array(
+				'free_options' => 10,
+				'pro_options'  => 0
+			),
 		),
 		'sensitive-data'  => array(
 			'title'       => __( 'Sensitive Data', 'secupress' ),
@@ -55,6 +69,10 @@ function secupress_get_modules() {
 			'description' => array(
 				__( 'Preserve your data and avoid losing your content in case of attack.', 'secupress' ),
 			),
+			'counts' => array(
+				'free_options' => 14,
+				'pro_options'  => 8
+			),
 		),
 		'firewall'     => array(
 			'title'       => __( 'Firewall', 'secupress' ),
@@ -65,6 +83,10 @@ function secupress_get_modules() {
 			),
 			'description' => array(
 				__( 'Malicious requests are common, unfortunatly. All malicious incoming requests will be checked and quietly blocked.', 'secupress' ),
+			),
+			'counts' => array(
+				'free_options' => 15,
+				'pro_options'  => 7
 			),
 		),
 		'file-system'     => array(
@@ -79,6 +101,10 @@ function secupress_get_modules() {
 				__( 'Check file permissions, run monitoring and antivirus on your installation to verify file integrity.', 'secupress' ),
 			),
 			'mark_as_pro' => $should_be_pro,
+			'counts' => array(
+				'free_options' => 3,
+				'pro_options'  => 7
+			),
 		),
 		'backups'         => array(
 			'title'       => __( 'Backups', 'secupress' ),
@@ -93,6 +119,10 @@ function secupress_get_modules() {
 				sprintf( __( 'Don\'t forget to <a href="%s">schedule backups</a> as soon as possible.', 'secupress' ), esc_url( secupress_admin_url( 'modules', 'schedules' ) ) ),
 			),
 			'mark_as_pro' => $should_be_pro,
+			'counts' => array(
+				'free_options' => 1,
+				'pro_options'  => 3
+			),
 		),
 		'antispam'        => array(
 			'title'       => __( 'Anti Spam', 'secupress' ),
@@ -108,6 +138,10 @@ function secupress_get_modules() {
 				__( 'Also by default, bad IPs are blocked, as are the author name, email and website url of known as spammer.', 'secupress' ),
 			),
 			'mark_as_pro' => $should_be_pro,
+			'counts' => array(
+				'free_options' => 5,
+				'pro_options'  => 9
+			),
 		),
 		'alerts'          => array(
 			'title'       => __( 'Alerts', 'secupress' ),
@@ -120,6 +154,10 @@ function secupress_get_modules() {
 				__( 'Being alerted of some important events will help you to react quickly in case of possible attacks.', 'secupress' ),
 			),
 			'mark_as_pro' => $should_be_pro,
+			'counts' => array(
+				'free_options' => 5,
+				'pro_options'  => 7
+			),
 		),
 		'schedules'       => array(
 			'title'       => __( 'Schedules', 'secupress' ),
@@ -132,6 +170,10 @@ function secupress_get_modules() {
 				sprintf( __( 'Let %s scan your website when you are away by using recurent scans.', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
 			),
 			'mark_as_pro' => $should_be_pro,
+			'counts' => array(
+				'free_options' => 2,
+				'pro_options'  => 8
+			),
 		),
 		'logs'            => array(
 			'title'       => _x( 'Logs', 'post type general name', 'secupress' ),
@@ -144,7 +186,12 @@ function secupress_get_modules() {
 			'description' => array(
 				__( 'Keep an eye on what happened on your website at any time. Also, control banned IPs from our modules here.', 'secupress' ),
 			),
+			'counts' => array(
+				'free_options' => 2,
+				'pro_options'  => 5
+			),
 		),
+
 	);
 
 	if ( function_exists( 'secupress_is_white_label' ) && ! secupress_is_white_label() ) {
@@ -178,6 +225,26 @@ function secupress_get_modules() {
 	return $modules;
 }
 
+/**
+ * Get the counts of Free & Pro modules, or Free or Pro individually
+ * 
+ * @param  (string) $type Null by default, "free" or "pro" string expected
+ * @return (array|int)    Array of both types of module count, or an individual count
+ *
+ * @since  1.0.5
+ * @author Geoffrey Crofte
+ */
+function secupress_get_options_counts( $type = null ) {
+	$modules = secupress_get_modules();
+	$counts = array( 'free' => 0, 'pro' => 0 );
+	
+	foreach ( $modules as $mod ) {
+		$counts['free'] = ! empty( $mod['counts']['free_options'] ) ? $counts['free'] + $mod['counts']['free_options'] : $counts['free'];
+		$counts['pro']  = ! empty( $mod['counts']['pro_options'] ) ? $counts['pro'] + $mod['counts']['pro_options'] : $counts['pro'];
+	}
+
+	return ! empty( $counts[ $type ] ) ? $counts[ $type ] : $counts;
+}
 
 /**
  * Get a list of all activated sub-module.
