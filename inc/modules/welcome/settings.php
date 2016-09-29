@@ -48,7 +48,10 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 		unset( $modules['get-pro'] );
 
 		foreach ( $modules as $slug => $mod ) {
-			$pros_i = ! empty( $mod['mark_as_pro'] ) ? $pros_i + 1 : $pros_i;
+			$pros_i       = ! empty( $mod['mark_as_pro'] ) ? $pros_i + 1 : $pros_i;
+			$free_options = ! empty( $mod['counts']['free_options'] ) ? $mod['counts']['free_options'] : 0;
+			$av_options   = ! empty( $mod['mark_as_pro'] ) ? _n( '%s free option available', '%s free options available', $free_options,  'secupress' ) : _n( '%s option available', '%s options available', $free_options, 'secupress' );
+			$nb_options   = ! empty( $mod['counts']['free_options'] ) ? '<span class="secupress-mb-title-datas"><i class="icon-info-disk secupress-primary" aria-hidden="true"></i>' . sprintf( $av_options, $mod['counts']['free_options'] ) . '</span>' : '';
 
 			if ( $pros_i === 1 ) {
 			?>
@@ -77,7 +80,10 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 					<i class="icon-<?php echo $mod['icon']; ?>" aria-hidden="true"></i>
 				</div>
 				<div class="secupress-mb-texts">
-					<p class="secupress-mb-title"><?php echo $mod['title'] ?></p>
+					<p class="secupress-mb-title">
+						<span class="secupress-mb-title-text"><?php echo $mod['title'] ?></span>
+						<?php echo $nb_options; ?>
+					</p>
 					<p class="secupress-mb-description"><?php echo $mod['summaries']['normal']; ?></p>
 				</div>
 				<p class="secupress-mb-available-pro">

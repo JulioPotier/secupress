@@ -307,17 +307,12 @@ p.secupress-sh-subtitle {
 
 /* Dashboard (Welcome Page) */
 .secupress-modules-dashboard {
-	-webkit-box-align: initial;
-	-webkit-align-items: initial;
-	-ms-flex-align: initial;
-	-ms-grid-row-align: initial;
-	align-items: initial;
 	border-radius: 0 0 3px 3px;
 }
 .secupress-modules-container {
 	width: 880px;
 	max-width: 100%;
-	margin: 2em auto;
+	margin: 4em auto;
 }
 .secupress-module-box {
 	position: relative;
@@ -348,18 +343,35 @@ p.secupress-sh-subtitle {
 	font-size: 23px;
 	font-weight: 500;
 }
-.secupress-module-box-get-pro .secupress-mb-description {
-	width: 400px;
-	max-width: 100%;
-}
 .secupress-module-box-get-pro .secupress-mb-title {
 	font-size: 16px;
 	font-weight: 500;
+}
+.secupress-mb-title-text,
+.secupress-mb-title-datas {
+	display: inline-block;
+	vertical-align: middle;
+}
+.secupress-mb-title-text {
+	margin-right: 25px;
+}
+.secupress-mb-title-datas {
+	font-size: 13px;
+	color: #5A626F;
+}
+.secupress-mb-title-datas i {
+	vertical-align: -1.5px;
+	margin-right: 4px;
+	font-size: 16px;
 }
 .secupress-mb-description {
 	font-size: 13px;
 	color: #5A626F;
 	margin: .5em 0 16px;
+}
+.secupress-module-box-get-pro .secupress-mb-description {
+	width: 400px;
+	max-width: 100%;
 }
 .secupress-mb-texts {
 	flex-basis: 100%;
@@ -376,9 +388,6 @@ p.secupress-sh-subtitle {
 	font-size: 11px;
 	font-weight: 500;
 }
-.secupress-mb-action a i {
-	color: #FFF;
-}
 .secupress-mb-action a .icon:after {
 	display: none;
 }
@@ -394,7 +403,7 @@ p.secupress-sh-subtitle {
 	padding-right: 20px;
 	text-align: center;
 }
-.secupress-module-box i {
+.secupress-mb-icon i {
 	display: block;
 	font-size: 50px;
 	color: #2BCDC1;
