@@ -39,6 +39,28 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 	<div class="secupress-modules-dashboard secupress-bordered secupress-section-gray">
 		<div class="secupress-modules-container secupress-box-shadow">
+		
+		<?php
+			$option_counts   = secupress_get_options_counts();
+			//// Make theme dynamic
+			$total_options   = 36;
+			$total_activated = 14;
+		?>
+	
+		<div class="secupress-dashboard-header secupress-flex secupress-flex-spaced">
+			<div class="secupress-dh-titles">
+				<p class="secupress-header-title"><?php printf( __( '%s of %s options are activated', 'secupress' ), $total_activated, $total_options ); ?></p>
+				<p><?php _e( 'The Scanner is able to activate some options, feel free to check the module’s options for more.', 'secupress'); ?></p>
+			</div>
+			<div class="secupress-dh-counts secupress-flex">
+				<div class="secupress-dhc-icon"><i class="icon-info-disk" aria-hidden="true"></i></div>
+				<div class="secupress-dhc-texts">
+					<p class="secupress-primary"><?php printf( __('%s Free options available'), $option_counts['free'] ); ?></p>
+					<p class="secupress-tertiary"><?php printf( __('%s Pro options available'), $option_counts['pro'] ); ?></p>
+				</div>
+			</div>
+		</div>
+
 		<?php
 		$modules = $this->get_modules();
 		$pro_msg = '<span class="secupress-cta-pro">' . static::get_pro_version_string() . '</span>';

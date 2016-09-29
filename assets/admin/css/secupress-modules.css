@@ -314,6 +314,32 @@ p.secupress-sh-subtitle {
 	max-width: 100%;
 	margin: 4em auto;
 }
+.secupress-dashboard-header {
+	padding: 0 20px;
+	background: #222831;
+	color: #FFF;
+}
+.secupress-dh-titles p:first-child {
+	margin: 12px 0 0 0;
+}
+.secupress-dh-titles p:last-child {
+	margin: 0 0 15px 0;
+}
+.secupress-header-title {
+	font-weight: 300;
+	color: #2bcdc1;
+	font-size: 20px;
+}
+.secupress-dhc-texts p {
+	margin: 0;
+	line-height: 1.2;
+}
+.secupress-dhc-icon {
+	padding-right: 10px;
+}
+.secupress-dhc-icon i {
+	font-size: 20px;
+}
 .secupress-module-box {
 	position: relative;
 	-webkit-flex-basis: 33%;
@@ -328,12 +354,25 @@ p.secupress-sh-subtitle {
 	border-top: 1px solid #F2F2F6;
 }
 .secupress-module-box-get-pro + .secupress-module-box {
+	padding-top: 15px;
 	border-top: 0;
 }
 .secupress-module-box-get-pro {
+	position: relative;
+	z-index: 2;
+	overflow: visible;
 	border-top: 0;
 	padding: 20px;
 	background: #ECF0F1;
+}
+.secupress-module-box-get-pro:after {
+	content: "";
+	position: absolute;
+	bottom: -18px;
+	left: 48px;
+	border-top: 20px solid #ECF0F1;
+	border-left: 16px solid transparent;
+	border-right: 16px solid transparent;
 }
 .secupress-module-box-services {
 	background: transparent;
@@ -408,37 +447,37 @@ p.secupress-sh-subtitle {
 	font-size: 50px;
 	color: #2BCDC1;
 }
-.secupress-module-box-get-pro i {
+.secupress-module-box-get-pro .secupress-mb-icon i {
 	color: #5A626F
 }
-.secupress-module-box .icon-themes-plugins {
+.secupress-mb-icon .icon-themes-plugins {
 	height: 65px;
 }
-.secupress-module-box .icon-core {
+.secupress-mb-icon .icon-core {
 	height: 62px;
 	font-size: 49px;
 }
-.secupress-module-box .icon-sensitive-data,
-.secupress-module-box .icon-information,
-.secupress-module-box .icon-schedule {
+.secupress-mb-icon .icon-sensitive-data,
+.secupress-mb-icon .icon-information,
+.secupress-mb-icon .icon-schedule {
 	height: 63px;
 }
-.secupress-module-box .icon-firewall,
-.secupress-module-box .icon-logs {
+.secupress-mb-icon .icon-firewall,
+.secupress-mb-icon .icon-logs {
 	height: 58px;
 }
-.secupress-module-box .icon-file-system {
+.secupress-mb-icon .icon-file-system {
 	height: 54px;
 	font-size: 40px;
 }
-.secupress-module-box .icon-services {
+.secupress-mb-icon .icon-services {
 	height: 60px;
 }
-.secupress-module-box .icon-backups {
+.secupress-mb-icon .icon-backups {
 	font-size: 46px;
 	height: 61px;
 }
-.secupress-module-box .icon-antispam {
+.secupress-mb-icon .icon-antispam {
 	font-size: 40px;
 }
 
