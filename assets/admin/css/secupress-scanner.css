@@ -891,7 +891,7 @@ a + .secupress-row-actions {
 	font-weight: bold;
 	font-size: 1.2em;
 }
-.secupress-chart .secupress-score .l∅ {
+.secupress-chart-container .secupress-score .l∅ {
 	font-size: 64px;
 	margin: -0.45em 0 0 -0.44em;
 }
