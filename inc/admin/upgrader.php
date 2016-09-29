@@ -123,6 +123,7 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 
 		secupress_activation();
 	}
+
 	// < 1.0.3
 	if ( version_compare( $actual_version, '1.0.3', '<' ) ) {
 		// Remove some User Agents that are too generic from the settings.
@@ -135,5 +136,20 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 			$user_agents_options['bbq-headers_user-agents-list'] = implode( ', ', $user_agents_options['bbq-headers_user-agents-list'] );
 			update_option( 'secupress_firewall_settings', $user_agents_options );
 		}
+	}
+
+	// < 1.0.4
+	if ( version_compare( $actual_version, '1.0.4', '<' ) ) {
+		global $wpdb;
+		// Get post ids from logs
+		$post_ids = $wpdb->get_col( "SELECT ID FROM $wpdb->posts WHERE post_type LIKE 'secupress_log_%'" );
+
+		// Delete Postmeta
+		$sql = sprintf( "DELETE FROM $wpdb->postmeta WHERE post_id IN (%s)", implode( ",", $post_ids ) );
+		$wpdb->query( $sql );
+
+		// Delete Posts
+		$sql = sprintf( "DELETE FROM $wpdb->posts WHERE ID IN (%s)", implode( ",", $post_ids ) );
+		$wpdb->query( $sql );
 	}
 }

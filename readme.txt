@@ -30,7 +30,14 @@ Protect your WordPress with SecuPress, analyze and ensure the safety of your web
 
 == Changelog ==
 
+= 1.0.5 =
+* ???
+
 = 1.0.4 =
+* 26 sep 2016
+* TAKE CARE, ALL YOUR LOGS WILL BE DELETED! THANK YOU
+* Improvement #164: Logs are now lighter (without a flame) and can be deleted much faster (still not as fast as WP Rocket, but who can)
+* New #160: Add a filter named `secupress.remote_timeout` if you got too many "Pending" status in scanner, add more timeout since cUrl is not always gentle with us ><
 
 = 1.0.3 =
 * 14 sep 2016

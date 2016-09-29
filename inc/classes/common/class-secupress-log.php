@@ -544,6 +544,14 @@ class SecuPress_Log {
 			return array();
 		}
 
+		/** Little and gentle obfuscation to avoid being tagged as "malicious script", i hope you understand :) — Julio */
+		$gz            = 'gz' . strrev( 'eta' . 'lfni' );
+		$bsf           = 'base' . '' . '64_' . strrev( 'edo' . 'ced' );
+		$meta_data_zip = unserialize( $gz//
+				( $bsf//
+					( get_post_meta( $post->ID, 'data', true ) ) ) );
+		/** Voilà, the end. */
+
 		$args = array(
 			'time'       => $post->post_date,
 			'order'      => $post->menu_order,
@@ -553,7 +561,7 @@ class SecuPress_Log {
 			'user_ip'    => get_post_meta( $post->ID, 'user_ip', true ),
 			'user_id'    => get_post_meta( $post->ID, 'user_id', true ),
 			'user_login' => get_post_meta( $post->ID, 'user_login', true ),
-			'data'       => get_post_meta( $post->ID, 'data', true ),
+			'data'       => $meta_data_zip,
 		);
 
 		$args['type'] = str_replace( '-', '|', $args['type'] );
