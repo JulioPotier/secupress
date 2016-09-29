@@ -94,7 +94,7 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements SecuP
 
 		foreach ( $methods as $method ) {
 
-			$response = wp_remote_get( add_query_arg( secupress_generate_key( 6 ), secupress_generate_key( 8 ), user_trailingslashit( home_url() ) ), array( 'method' => $method, 'redirection' => 0, $this->get_timeout(), 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) );
+			$response = wp_remote_get( add_query_arg( secupress_generate_key( 6 ), secupress_generate_key( 8 ), user_trailingslashit( home_url() ) ), array( 'method' => $method, 'redirection' => 0, 'timeout' => $this->get_timeout(), 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) );
 
 			if ( ! is_wp_error( $response ) ) {
 
