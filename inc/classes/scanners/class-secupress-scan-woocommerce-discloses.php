@@ -93,7 +93,7 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 		$discloses = array();
 
 		// Get home page contents.
-		$response     = wp_remote_get( add_query_arg( secupress_generate_key( 6 ), secupress_generate_key( 8 ), user_trailingslashit( home_url() ) ), array( 'redirection' => 0, $this->get_timeout(), 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) );
+		$response     = wp_remote_get( add_query_arg( secupress_generate_key( 6 ), secupress_generate_key( 8 ), user_trailingslashit( home_url() ) ), array( 'redirection' => 0, 'timeout' => static::get_timeout(), 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) );
 		$has_response = ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response );
 
 		// Generator meta tag.
@@ -154,7 +154,7 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 	 */
 	public function fix() {
 		// Get home page contents.
-		$response     = wp_remote_get( add_query_arg( secupress_generate_key( 6 ), secupress_generate_key( 8 ), user_trailingslashit( home_url() ) ), array( 'redirection' => 0, $this->get_timeout(), 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) );
+		$response     = wp_remote_get( add_query_arg( secupress_generate_key( 6 ), secupress_generate_key( 8 ), user_trailingslashit( home_url() ) ), array( 'redirection' => 0, 'timeout' => static::get_timeout(), 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) );
 		$has_response = ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response );
 
 		// Generator meta tag.

@@ -142,7 +142,7 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements SecuPress_Sc
 		 * `wp-config.php` access.
 		 */
 		++$nbr_tests;
-		$response = wp_remote_get( add_query_arg( secupress_generate_key( 6 ), 'wp-config.php', user_trailingslashit( home_url() ) ), array( 'redirection' => 0, $this->get_timeout(), 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) );
+		$response = wp_remote_get( add_query_arg( secupress_generate_key( 6 ), 'wp-config.php', user_trailingslashit( home_url() ) ), array( 'redirection' => 0, 'timeout' => static::get_timeout(), 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) );
 
 		if ( ! is_wp_error( $response ) ) {
 
