@@ -32,7 +32,7 @@ Protect your WordPress with SecuPress, analyze and ensure the safety of your web
 
 = 1.0.5 =
 * Fix #167: Possibly locked at step 1 with a fake "New scan" for readme.txt files, you're not stuck anymore.
-* Fix #166: Various CSS improvement.
+* Fix #166: Various CSS improvements.
 
 = 1.0.4 =
 * 26 sep 2016
