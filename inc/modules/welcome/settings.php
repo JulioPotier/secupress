@@ -39,17 +39,15 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 	<div class="secupress-modules-dashboard secupress-bordered secupress-section-gray">
 		<div class="secupress-modules-container secupress-box-shadow">
-		
+
 		<?php
 			$option_counts   = secupress_get_options_counts();
 			$total_options   = array_sum( $option_counts );
-			//// Make them dynamic (or not?)
-			$total_activated = 14;
 		?>
-	
+
 		<div class="secupress-dashboard-header secupress-flex secupress-flex-spaced">
 			<div class="secupress-dh-titles">
-				<p class="secupress-header-title"><?php printf( __( '%d of %d options are activated', 'secupress' ), $total_activated, $total_options ); ?></p>
+				<p class="secupress-header-title"><?php printf( __( '%d options available', 'secupress' ), $total_options ); ?></p>
 				<p><?php _e( 'The scanner is able to activate some options, feel free to check the module\'s options for more.', 'secupress' ); ?></p>
 			</div>
 			<div class="secupress-dh-counts secupress-flex">
@@ -88,7 +86,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 				<p class="secupress-mb-action">
 					<a href="<?php echo esc_url( secupress_admin_url( 'modules', $slug ) ); ?>" class="secupress-button-tertiary">
 						<span class="icon">
-							<i class="icon-secupress-simple" aria-hidden="true"></i>		
+							<i class="icon-secupress-simple" aria-hidden="true"></i>
 						</span>
 						<span class="text"><?php _e( 'Get Pro', 'secupress' ); ?></span>
 					</a>
