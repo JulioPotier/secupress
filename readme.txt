@@ -2,7 +2,7 @@
 Contributors: wp_media, secupress, juliobox, greglone
 Tags: security, spam, backup, schedule, firewall, sensitive data, antivirus, logs, alerts
 Requires at least: 3.7
-Tested up to: 4.6
+Tested up to: 4.6.1
 Stable tag: 1.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -31,8 +31,11 @@ Protect your WordPress with SecuPress, analyze and ensure the safety of your web
 == Changelog ==
 
 = 1.0.5 =
+* 1 oct 2016
 * Fix #167: Possibly locked at step 1 with a fake "New scan" for readme.txt files, you're not stuck anymore.
 * Fix #166: Various CSS improvements.
+* Fix #171: Scans related to the firewall were always returning a bad status, even if the protections were running.
+* Fix #172: The scan and the protection related to the "Bad request methods" were not accurate.
 
 = 1.0.4 =
 * 26 sep 2016
