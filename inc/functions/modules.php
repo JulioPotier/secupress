@@ -25,8 +25,8 @@ function secupress_get_modules() {
 				__( 'The best and easiest way to make sure that users\' data will be protected, and their accounts not compromised.', 'secupress' ),
 			),
 			'counts' => array(
-				'free_options' => 15,
-				'pro_options'  => 7
+				'free_options' => 18,
+				'pro_options'  => 7,
 			),
 		),
 		'plugins-themes'  => array(
@@ -40,8 +40,8 @@ function secupress_get_modules() {
 				__( 'Detect themes and plugins known as vulnerable to avoid hackings. Also, manage installation and activation rights on them.', 'secupress' ),
 			),
 			'counts' => array(
-				'free_options' => 12,
-				'pro_options'  => 3
+				'free_options' => 3,
+				'pro_options'  => 7,
 			),
 		),
 		'wordpress-core'  => array(
@@ -55,8 +55,8 @@ function secupress_get_modules() {
 				__( 'WordPress can be tweaked in so many ways. But are you using the right ones? Let\'s see!', 'secupress' ),
 			),
 			'counts' => array(
-				'free_options' => 10,
-				'pro_options'  => 0
+				'free_options' => 2,
+				'pro_options'  => 0,
 			),
 		),
 		'sensitive-data'  => array(
@@ -70,8 +70,8 @@ function secupress_get_modules() {
 				__( 'Preserve your data and avoid losing your content in case of attack.', 'secupress' ),
 			),
 			'counts' => array(
-				'free_options' => 14,
-				'pro_options'  => 8
+				'free_options' => 4,
+				'pro_options'  => 3,
 			),
 		),
 		'firewall'     => array(
@@ -85,8 +85,8 @@ function secupress_get_modules() {
 				__( 'Malicious requests are common, unfortunatly. All malicious incoming requests will be checked and quietly blocked.', 'secupress' ),
 			),
 			'counts' => array(
-				'free_options' => 15,
-				'pro_options'  => 7
+				'free_options' => 5,
+				'pro_options'  => 4,
 			),
 		),
 		'file-system'     => array(
@@ -102,8 +102,8 @@ function secupress_get_modules() {
 			),
 			'mark_as_pro' => $should_be_pro,
 			'counts' => array(
-				'free_options' => 3,
-				'pro_options'  => 7
+				'free_options' => 0,
+				'pro_options'  => 5,
 			),
 		),
 		'backups'         => array(
@@ -120,8 +120,8 @@ function secupress_get_modules() {
 			),
 			'mark_as_pro' => $should_be_pro,
 			'counts' => array(
-				'free_options' => 1,
-				'pro_options'  => 3
+				'free_options' => 0,
+				'pro_options'  => 4,
 			),
 		),
 		'antispam'        => array(
@@ -139,8 +139,8 @@ function secupress_get_modules() {
 			),
 			'mark_as_pro' => $should_be_pro,
 			'counts' => array(
-				'free_options' => 5,
-				'pro_options'  => 9
+				'free_options' => 0,
+				'pro_options'  => 7,
 			),
 		),
 		'alerts'          => array(
@@ -155,8 +155,8 @@ function secupress_get_modules() {
 			),
 			'mark_as_pro' => $should_be_pro,
 			'counts' => array(
-				'free_options' => 5,
-				'pro_options'  => 7
+				'free_options' => 0,
+				'pro_options'  => 4,
 			),
 		),
 		'schedules'       => array(
@@ -171,8 +171,8 @@ function secupress_get_modules() {
 			),
 			'mark_as_pro' => $should_be_pro,
 			'counts' => array(
-				'free_options' => 2,
-				'pro_options'  => 8
+				'free_options' => 0,
+				'pro_options'  => 8,
 			),
 		),
 		'logs'            => array(
@@ -188,7 +188,7 @@ function secupress_get_modules() {
 			),
 			'counts' => array(
 				'free_options' => 2,
-				'pro_options'  => 5
+				'pro_options'  => 0,
 			),
 		),
 
@@ -227,7 +227,7 @@ function secupress_get_modules() {
 
 /**
  * Get the counts of Free & Pro modules, or Free or Pro individually
- * 
+ *
  * @param  (string) $type Null by default, "free" or "pro" string expected
  * @return (array|int)    Array of both types of module count, or an individual count
  *
@@ -237,7 +237,7 @@ function secupress_get_modules() {
 function secupress_get_options_counts( $type = null ) {
 	$modules = secupress_get_modules();
 	$counts = array( 'free' => 0, 'pro' => 0 );
-	
+
 	foreach ( $modules as $mod ) {
 		$counts['free'] = ! empty( $mod['counts']['free_options'] ) ? $counts['free'] + $mod['counts']['free_options'] : $counts['free'];
 		$counts['pro']  = ! empty( $mod['counts']['pro_options'] ) ? $counts['pro'] + $mod['counts']['pro_options'] : $counts['pro'];
