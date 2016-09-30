@@ -42,40 +42,40 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 		
 		<?php
 			$option_counts   = secupress_get_options_counts();
-			//// Make theme dynamic
-			$total_options   = 36;
+			$total_options   = array_sum( $option_counts );
+			//// Make them dynamic (or not?)
 			$total_activated = 14;
 		?>
 	
 		<div class="secupress-dashboard-header secupress-flex secupress-flex-spaced">
 			<div class="secupress-dh-titles">
-				<p class="secupress-header-title"><?php printf( __( '%s of %s options are activated', 'secupress' ), $total_activated, $total_options ); ?></p>
-				<p><?php _e( 'The Scanner is able to activate some options, feel free to check the module’s options for more.', 'secupress'); ?></p>
+				<p class="secupress-header-title"><?php printf( __( '%d of %d options are activated', 'secupress' ), $total_activated, $total_options ); ?></p>
+				<p><?php _e( 'The scanner is able to activate some options, feel free to check the module\'s options for more.', 'secupress' ); ?></p>
 			</div>
 			<div class="secupress-dh-counts secupress-flex">
 				<div class="secupress-dhc-icon"><i class="icon-info-disk" aria-hidden="true"></i></div>
 				<div class="secupress-dhc-texts">
-					<p class="secupress-primary"><?php printf( __('%s Free options available'), $option_counts['free'] ); ?></p>
-					<p class="secupress-tertiary"><?php printf( __('%s Pro options available'), $option_counts['pro'] ); ?></p>
+					<p class="secupress-primary"><?php printf( _n( '%d free option available', '%d free options available', $option_counts['free'], 'secupress' ), $option_counts['free'] ); ?></p>
+					<p class="secupress-tertiary"><?php printf( _n( '%d pro option available', '%d pro options available', $option_counts['pro'], 'secupress' ), $option_counts['pro'] ); ?></p>
 				</div>
 			</div>
 		</div>
 
 		<?php
-		$modules = $this->get_modules();
-		$pro_msg = '<span class="secupress-cta-pro">' . static::get_pro_version_string() . '</span>';
-		$pros_i  = 0;
+		$modules   = $this->get_modules();
+		$pro_msg   = '<span class="secupress-cta-pro">' . static::get_pro_version_string() . '</span>';
+		$pro_info = 0;
 
 		// Do not display the get pro block, but we still need it for the content.
 		unset( $modules['get-pro'] );
 
 		foreach ( $modules as $slug => $mod ) {
-			$pros_i       = ! empty( $mod['mark_as_pro'] ) ? $pros_i + 1 : $pros_i;
+			$pro_info     = ! empty( $mod['mark_as_pro'] )            ? $pro_info + 1                  : $pro_info;
 			$free_options = ! empty( $mod['counts']['free_options'] ) ? $mod['counts']['free_options'] : 0;
-			$av_options   = ! empty( $mod['mark_as_pro'] ) ? _n( '%s free option available', '%s free options available', $free_options,  'secupress' ) : _n( '%s option available', '%s options available', $free_options, 'secupress' );
+			$av_options   = ! empty( $mod['mark_as_pro'] )            ? _n( '%d free option available', '%d free options available', $free_options,  'secupress' ) : _n( '%d option available', '%d options available', $free_options, 'secupress' );
 			$nb_options   = ! empty( $mod['counts']['free_options'] ) ? '<span class="secupress-mb-title-datas"><i class="icon-info-disk secupress-primary" aria-hidden="true"></i>' . sprintf( $av_options, $mod['counts']['free_options'] ) . '</span>' : '';
 
-			if ( $pros_i === 1 ) {
+			if ( 1 === $pro_info ) {
 			?>
 			<div class="secupress-module-box secupress-flex secupress-module-box-get-pro">
 				<div class="secupress-mb-icon">
