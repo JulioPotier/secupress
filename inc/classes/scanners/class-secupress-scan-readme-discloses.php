@@ -290,7 +290,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 		$file    = ltrim( str_replace( $abspath, '', $file ), '/' );
 
 		// Get file contents.
-		$response = wp_remote_get( site_url( $file ), array( 'redirection' => 0, $this->get_timeout(), 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) );
+		$response = wp_remote_get( site_url( $file ), array( 'redirection' => 0, 'timeout' => static::get_timeout(), 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) );
 
 		if ( is_wp_error( $response ) ) {
 			// "warning".

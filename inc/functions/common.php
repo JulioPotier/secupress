@@ -793,6 +793,18 @@ function secupress_get_consumer_key() {
 
 
 /**
+ * Return true if secupress pro is installed.
+ *
+ * @since 1.0
+ *
+ * @return (bool)
+ */
+function secupress_has_pro() {
+	return defined( 'SECUPRESS_PRO_VERSION' );
+}
+
+
+/**
  * Return true if secupress pro is installed and the license is ok.
  *
  * @since 1.0
@@ -800,7 +812,7 @@ function secupress_get_consumer_key() {
  * @return (bool)
  */
 function secupress_is_pro() {
-	return defined( 'SECUPRESS_PRO_VERSION' )/* && secupress_get_consumer_key() && (int) secupress_get_option( 'site_is_pro' )////*/;
+	return secupress_has_pro() && secupress_get_consumer_key() && (int) secupress_get_option( 'site_is_pro' );
 }
 
 

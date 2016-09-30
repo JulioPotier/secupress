@@ -116,7 +116,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 	public function scan() {
 		$upload_dir = wp_upload_dir();
 		$base_url   = user_trailingslashit( $upload_dir['baseurl'] );
-		$response   = wp_remote_get( $base_url, array( 'redirection' => 0, $this->get_timeout(), 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) );
+		$response   = wp_remote_get( $base_url, array( 'redirection' => 0, 'timeout' => static::get_timeout(), 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) );
 
 		if ( ! is_wp_error( $response ) ) {
 

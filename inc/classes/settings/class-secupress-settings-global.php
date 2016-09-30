@@ -43,10 +43,13 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	public function print_page() {
-		$setting_modules = array(
-		// 'api-key',////.
-			'settings-manager',
-		);
+		if ( secupress_has_pro() ) {
+			$setting_modules = array( 'api-key' );
+		} else {
+			$setting_modules = array();
+		}
+
+		$setting_modules[] = 'settings-manager';
 
 		/**
 		 * Filter the modules of the global settings.
