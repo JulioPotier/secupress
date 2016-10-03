@@ -86,11 +86,16 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements SecuP
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-		$basic_methods = array( 'TRACK', 'OPTIONS', 'CONNECT', 'SECUPRESS_TEST_' . time() );
-		$rest_methods  = array( 'PUT', 'PATCH', 'DELETE' );
-		$methods       = ! secupress_is_submodule_active( 'sensitive-data', 'restapi' ) ? array_merge( $basic_methods, $rest_methods ) : $basic_methods;
-		$bads          = array();
-		$warnings      = array();
+		// These methods should be blocked.
+		$methods = array( 'TRACK', 'OPTIONS', 'CONNECT', 'SECUPRESS_TEST_' . time() );
+
+		if ( secupress_is_submodule_active( 'sensitive-data', 'restapi' ) ) {
+			// Sub-module activated === REST API disabled === these methods should also be blocked.
+			$methods = array_merge( $methods, array( 'PUT', 'PATCH', 'DELETE' ) );
+		}
+
+		$bads     = array();
+		$warnings = array();
 
 		foreach ( $methods as $method ) {
 

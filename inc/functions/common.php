@@ -316,37 +316,40 @@ function secupress_is_plugin_active_for_network( $plugin ) {
  * @param (array)  $args    An array of arguments.
  */
 function secupress_die( $message = '', $title = '', $args = array() ) {
-	$has_p       = strpos( $message, '<p>' ) !== false;
-	$message     = ( $has_p ? '' : '<p>' ) . $message . ( $has_p ? '' : '</p>' );
-	$message     = '<h1>' . SECUPRESS_PLUGIN_NAME . '</h1>' . $message;
-	$url         = secupress_get_current_url( 'raw' );
-	$whitelisted = secupress_ip_is_whitelisted();
+	$has_p           = strpos( $message, '<p>' ) !== false;
+	$message         = ( $has_p ? '' : '<p>' ) . $message . ( $has_p ? '' : '</p>' );
+	$message         = '<h1>' . SECUPRESS_PLUGIN_NAME . '</h1>' . $message;
+	$url             = secupress_get_current_url( 'raw' );
+	$whitelisted     = secupress_ip_is_whitelisted();
+	$is_scan_request = secupress_is_scan_request(); // Used to bypass the whitelist for scans.
 
 	/**
 	 * Filter the message.
 	 *
 	 * @since 1.0
 	 *
-	 * @param (string) $message     The message displayed.
-	 * @param (string) $url         The current URL.
-	 * @param (array)  $args        Facultative arguments.
-	 * @param (bool)   $whitelisted Is the current user IP whitelisted or not.
+	 * @param (string) $message         The message displayed.
+	 * @param (string) $url             The current URL.
+	 * @param (array)  $args            Facultative arguments.
+	 * @param (bool)   $whitelisted     Is the current user IP whitelisted or not.
+	 * @param (bool)   $is_scan_request Tell if the request comes from one of our scans.
 	 */
-	$message = apply_filters( 'secupress.die.message', $message, $url, $args, $whitelisted );
+	$message = apply_filters( 'secupress.die.message', $message, $url, $args, $whitelisted, $is_scan_request );
 
 	/**
 	 * Fires right before `wp_die()`.
 	 *
 	 * @since 1.0
 	 *
-	 * @param (string) $message The message displayed.
-	 * @param (string) $url     The current URL.
-	 * @param (array)  $args    Facultative arguments.
+	 * @param (string) $message         The message displayed.
+	 * @param (string) $url             The current URL.
+	 * @param (array)  $args            Facultative arguments.
 	 * @param (bool)   $whitelisted Is the current user IP whitelisted or not.
+	 * @param (bool)   $is_scan_request Tell if the request comes from one of our scans.
 	 */
-	do_action( 'secupress.before.die', $message, $url, $args, $whitelisted );
+	do_action( 'secupress.before.die', $message, $url, $args, $whitelisted, $is_scan_request );
 
-	if ( ! $whitelisted ) {
+	if ( ! $whitelisted || $is_scan_request ) {
 		wp_die( $message, $title, $args );
 	}
 }
@@ -411,6 +414,20 @@ function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 	$content .= sprintf( __( 'Block ID: %s', 'secupress' ), $module ) . '</p>';
 
 	secupress_die( $content, $title, array( 'response' => $args['code'] ) );
+}
+
+
+/**
+ * Tell if the request comes from one of our scans by detecting a specific header.
+ * Careful, this header can be forged, the result is not trustful.
+ *
+ * @since 1.0
+ * @author Grégory Viguier
+ *
+ * @return (bool) True if the request comes from a scan. False otherwize.
+ */
+function secupress_is_scan_request() {
+	return ! empty( $_SERVER['HTTP_X_SECUPRESS_ORIGIN'] );
 }
 
 

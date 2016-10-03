@@ -406,7 +406,7 @@ function secupress_scanners() {
 						</div>
 						<div class="secupress-lb-name">
 							<p class="secupress-lb-title">
-							<?php echo secupress_get_logo_word( array( 'with' => 98, 'height' => 23 ) ); ?>
+							<?php echo secupress_get_logo_word( array( 'width' => 98, 'height' => 23 ) ); ?>
 							</p>
 						</div>
 					</div>

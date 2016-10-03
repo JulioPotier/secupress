@@ -87,13 +87,14 @@ add_action( 'secupress.upgrade', 'secupress_new_upgrade', 10, 2 );
  * @param (string) $actual_version    The previous version.
  */
 function secupress_new_upgrade( $secupress_version, $actual_version ) {
+	global $wpdb;
+
 	// < 1.0
 	if ( version_compare( $actual_version, '1.0', '<' ) ) {
 
 		secupress_deactivation();
 
 		// From uninstall.php.
-		global $wpdb;
 
 		// Transients.
 		$transients = $wpdb->get_col( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE '_transient_secupress_%' OR option_name LIKE '_transient_secupress-%'" );
@@ -140,15 +141,14 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 
 	// < 1.0.4
 	if ( version_compare( $actual_version, '1.0.4', '<' ) ) {
-		global $wpdb;
-		// Get post ids from logs
+		// Get post ids from logs.
 		$post_ids = $wpdb->get_col( "SELECT ID FROM $wpdb->posts WHERE post_type LIKE 'secupress_log_%'" );
 
-		// Delete Postmeta
+		// Delete Postmeta.
 		$sql = sprintf( "DELETE FROM $wpdb->postmeta WHERE post_id IN (%s)", implode( ",", $post_ids ) );
 		$wpdb->query( $sql );
 
-		// Delete Posts
+		// Delete Posts.
 		$sql = sprintf( "DELETE FROM $wpdb->posts WHERE ID IN (%s)", implode( ",", $post_ids ) );
 		$wpdb->query( $sql );
 	}

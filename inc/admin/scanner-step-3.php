@@ -113,7 +113,7 @@ if ( ! $secupress_tests ) {
 ?>
 <div class="secupress-step-content-header secupress-flex secupress-flex-spaced">
 	<?php
-	$nb_actions    = count( $bad_scan_results );
+	$nb_actions    = count( $secupress_tests );
 	$page_title    = sprintf( _n( 'This issue require your attention', 'These %d issues require your attention', $nb_actions, 'secupress' ), $nb_actions );
 	$steps_counter =
 		'<span class="secupress-step-by-step secupress-flex hide-if-no-js">' .
