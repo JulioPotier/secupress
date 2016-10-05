@@ -396,21 +396,6 @@ function secupress_async_upgrades() {
 
 
 /**
- * Used in `array_filter()`: return true if the given path is not in the `wp-content` folder.
- *
- * @since 1.0
- *
- * @param (string) $item A file path.
- *
- * @return (bool)
- */
-function secupress_filter_no_content( $item ) {
-	$item = str_replace( '\\', '/', $item );
-	return strpos( "/$item/", '/wp-content/' ) === false;
-}
-
-
-/**
  * Create a MU-PLUGIN.
  *
  * @since 1.0
