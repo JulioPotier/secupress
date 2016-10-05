@@ -135,7 +135,7 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 			'expandTextOpen'       => __( 'Show More', 'secupress' ),
 			'expandTextClose'      => __( 'Close' ),
 			// Malware Scan
-			'malwareScanStatus'    => false !== ( $time = secupress_get_site_transient( 'secupress_toggle_file_scan' ) ) ? 'on' : 'off',
+			'malwareScanStatus'    => function_exists( 'secupress_file_monitoring_get_instance' ) && secupress_file_monitoring_get_instance()->is_monitoring_running() ? 'on' : 'off',
 			'MalwareScanURI'       => secupress_admin_url( 'modules', 'file-system' ),
 		) );
 
