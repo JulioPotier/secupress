@@ -873,14 +873,6 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			return false;
 		}
 
-		/** Little and gentle obfuscation to avoid being tagged as "malicious script", i hope you understand :) — Julio */
-		$gz            = 'gz' . strrev( 'eta' . 'lfed' );
-		$bsf           = 'base' . '' . '64_' . strrev( 'edo' . 'cne' );
-		$meta_data_zip = $bsf//
-			( $gz//
-				( serialize( $meta['data'] ) ) );
-		/** Voilà, the end. */
-
 		// Meta: data.
 		if ( ! empty( $meta['data'] ) ) {
 			update_post_meta( $post_id, 'data', secupress_compress_data( $meta['data'] ) );

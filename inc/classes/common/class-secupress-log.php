@@ -544,14 +544,6 @@ class SecuPress_Log {
 			return array();
 		}
 
-		/** Little and gentle obfuscation to avoid being tagged as "malicious script", i hope you understand :) — Julio */
-		$gz            = 'gz' . strrev( 'eta' . 'lfni' );
-		$bsf           = 'base' . '' . '64_' . strrev( 'edo' . 'ced' );
-		$meta_data_zip = unserialize( $gz//
-				( $bsf//
-					( get_post_meta( $post->ID, 'data', true ) ) ) );
-		/** Voilà, the end. */
-
 		$args = array(
 			'time'       => $post->post_date,
 			'order'      => $post->menu_order,
