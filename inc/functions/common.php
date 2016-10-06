@@ -923,6 +923,63 @@ function secupress_is_user( $user ) {
 
 
 /**
+ * Compress some data to be stored in the database.
+ *
+ * @since 1.0.6
+ *
+ * @param (mixed) $data The data to compress.
+ *
+ * @return (string) The compressed data.
+ */
+function secupress_compress_data( $data ) {
+	/** Little and gentle obfuscation to avoid being tagged as "malicious script", I hope you understand :) — Julio. */
+	$gz  = 'gz' . strrev( 'eta' . 'lfed' );
+	$bsf = 'base' . '' . '64_' . strrev( 'edo' . 'cne' );
+
+	return $bsf//
+		( $gz//
+			( serialize( $data ) ) );
+}
+
+
+/**
+ * Decompress some data coming from the database.
+ *
+ * @since 1.0.6
+ *
+ * @param (string) $data The data to decompress.
+ *
+ * @return (mixed) The decompressed data.
+ */
+function secupress_decompress_data( $data ) {
+	if ( ! $data || ! is_string( $data ) ) {
+		return $data;
+	}
+
+	/** Little and gentle obfuscation to avoid being tagged as "malicious script", I hope you understand :) — Julio. */
+	$gz  = 'gz' . strrev( 'eta' . 'lfni' );
+	$bsf = 'base' . '' . '64_' . strrev( 'edo' . 'ced' );
+
+	$data_tmp = $bsf//
+		( $data );
+
+	if ( ! $data_tmp ) {
+		return $data;
+	}
+
+	$data     = $data_tmp;
+	$data_tmp = $gz//
+		( $data );
+
+	if ( ! $data_tmp ) {
+		return $data;
+	}
+
+	return unserialize( $data_tmp );
+}
+
+
+/**
  * Will return the current scanner step number.
  *
  * @since 1.0

@@ -553,7 +553,7 @@ class SecuPress_Log {
 			'user_ip'    => get_post_meta( $post->ID, 'user_ip', true ),
 			'user_id'    => get_post_meta( $post->ID, 'user_id', true ),
 			'user_login' => get_post_meta( $post->ID, 'user_login', true ),
-			'data'       => get_post_meta( $post->ID, 'data', true ),
+			'data'       => secupress_decompress_data( get_post_meta( $post->ID, 'data', true ) ),
 		);
 
 		$args['type'] = str_replace( '-', '|', $args['type'] );
