@@ -26,6 +26,9 @@ $this->add_field( array(
 	'type'         => 'number',
 	'label_before' => $label_before,
 	'label_after'  => $label_after,
+	'attributes'   => array(
+		'min' => 0,
+	),
 ) );
 
 
