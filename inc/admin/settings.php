@@ -89,7 +89,12 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 		// JS.
 		wp_enqueue_script( 'secupress-modules-js',  SECUPRESS_ADMIN_JS_URL . 'secupress-modules' . $suffix . '.js', array( 'secupress-common-js' ), $version, true );
 
-		$already_scanned = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) ) ? 1 : 0;
+		$already_scanned         = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) ) ? 1 : 0;
+		$file_monitoring_running = 'off';
+
+		if ( ! empty( $_GET['module'] ) && 'file-system' === $_GET['module'] && function_exists( 'secupress_file_monitoring_get_instance' ) ) {
+			$file_monitoring_running = secupress_file_monitoring_get_instance()->is_monitoring_running() ? 'on' : 'off';
+		}
 
 		wp_localize_script( 'secupress-modules-js', 'SecuPressi18nModules', array(
 			// Roles.
@@ -135,7 +140,7 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 			'expandTextOpen'       => __( 'Show More', 'secupress' ),
 			'expandTextClose'      => __( 'Close' ),
 			// Malware Scan
-			'malwareScanStatus'    => function_exists( 'secupress_file_monitoring_get_instance' ) && secupress_file_monitoring_get_instance()->is_monitoring_running() ? 'on' : 'off',
+			'malwareScanStatus'    => $file_monitoring_running,
 			'MalwareScanURI'       => secupress_admin_url( 'modules', 'file-system' ),
 		) );
 
