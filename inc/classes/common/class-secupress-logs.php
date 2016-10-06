@@ -874,8 +874,8 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		}
 
 		// Meta: data.
-		if ( ! empty( $meta['data'] ) ) {
-			update_post_meta( $post_id, 'data', secupress_compress_data( $meta['data'] ) );
+		if ( ! empty( $metas['data'] ) ) {
+			update_post_meta( $post_id, 'data', secupress_compress_data( $metas['data'] ) );
 		}
 
 		// Meta: user IP.
