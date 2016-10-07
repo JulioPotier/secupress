@@ -128,14 +128,10 @@ class SecuPress_Scan_Non_Login_Time_Slot extends SecuPress_Scan implements SecuP
 	 * @return (array) The fix results.
 	 */
 	public function fix() {
-		if ( secupress_is_pro() && function_exists( 'secupress_pro_fix_non_login_time_slot' ) ) {
-			secupress_pro_fix_non_login_time_slot( $this );
-			// "good"
-			$this->add_fix_message( 1 );
-		} else {
-			// "bad"
-			$this->add_fix_message( 201 );
-		}
+		secupress_activate_submodule( 'users-login', 'nonlogintimeslot' );
+
+		// "good"
+		$this->add_fix_message( 1 );
 
 		return parent::fix();
 	}

@@ -136,14 +136,10 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements SecuPress_Scan
 	 * @return (array) The fix results.
 	 */
 	public function fix() {
-		if ( secupress_is_pro() && function_exists( 'secupress_pro_fix_easy_login' ) ) {
-			secupress_pro_fix_easy_login( $this );
-			// "good"
-			$this->add_fix_message( 1 );
-		} else {
-			// "bad"
-			$this->add_fix_message( 201 );
-		}
+		secupress_activate_submodule( 'users-login', 'passwordless' );
+
+		// "good"
+		$this->add_fix_message( 1 );
 
 		return parent::fix();
 	}
