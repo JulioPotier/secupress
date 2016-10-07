@@ -509,6 +509,7 @@ function secupress_add_module_rules_or_notice( $args ) {
 
 /**
  * Invert the roles values in settings.
+ * Note: the "*_affected_role" options are misnamed, they should be called "*_excluded_roles", because we store roles that won't be affected.
  *
  * @since 1.0
  *
@@ -527,35 +528,33 @@ function secupress_manage_affected_roles( &$settings, $module, $plugin ) {
 	}
 
 	if ( empty( $settings[ $plugin . '_affected_role' ]['witness'] ) ) {
-		// Use old values.
+		// Use old values, `$settings` does not come from our module page.
 		$old_settings = get_site_option( "secupress_{$module}_settings" );
 
 		if ( empty( $old_settings[ $plugin . '_affected_role' ] ) || ! is_array( $old_settings[ $plugin . '_affected_role' ] ) ) {
-			// OK, in this case we'll force all roles, probably the old value doesn't exist.
-			$settings[ $plugin . '_affected_role' ] = $roles;
+			// All roles.
+			unset( $settings[ $plugin . '_affected_role' ] );
 		} else {
+			// Old roles that still exist.
 			$settings[ $plugin . '_affected_role' ] = array_intersect( $roles, $old_settings[ $plugin . '_affected_role' ] );
-
-			if ( empty( $settings[ $plugin . '_affected_role' ] ) ) {
-				// We won't allow to have no roles set.
-				$settings[ $plugin . '_affected_role' ] = $roles;
-			}
 		}
-		return;
+	} else {
+		// Reverse submited values to store the excluded roles.
+		if ( empty( $settings[ $plugin . '_affected_role' ] ) || ! is_array( $settings[ $plugin . '_affected_role' ] ) ) {
+			// We won't allow to have no roles set, so we take them all.
+			unset( $settings[ $plugin . '_affected_role' ] );
+		} else {
+			// Roles that are not selected.
+			$settings[ $plugin . '_affected_role' ] = array_diff( $roles, $settings[ $plugin . '_affected_role' ] );
+		}
 	}
 
-	// Reverse submited values.
+	// Useless, just to be sure.
 	unset( $settings[ $plugin . '_affected_role' ]['witness'] );
 
-	if ( empty( $settings[ $plugin . '_affected_role' ] ) || ! is_array( $settings[ $plugin . '_affected_role' ] ) ) {
-		$settings[ $plugin . '_affected_role' ] = $roles;
-	} else {
-		$settings[ $plugin . '_affected_role' ] = array_diff( $roles, $settings[ $plugin . '_affected_role' ] );
-
-		if ( empty( $settings[ $plugin . '_affected_role' ] ) ) {
-			// We won't allow to have no roles set.
-			$settings[ $plugin . '_affected_role' ] = $roles;
-		}
+	if ( $roles === $settings[ $plugin . '_affected_role' ] || empty( $settings[ $plugin . '_affected_role' ] ) ) {
+		// We won't allow to have no roles set, so we take them all.
+		unset( $settings[ $plugin . '_affected_role' ] );
 	}
 }
 
