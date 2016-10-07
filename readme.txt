@@ -31,11 +31,12 @@ Protect your WordPress with SecuPress, analyze and ensure the safety of your web
 == Changelog ==
 
 = 1.0.5 =
-* 1 oct 2016
+* 07 oct 2016
 * Fix #167: Possibly locked at step 1 with a fake "New scan" for readme.txt files, you're not stuck anymore.
 * Fix #166: Various CSS improvements.
 * Fix #171: Scans related to the firewall were always returning a bad status, even if the protections were running.
 * Fix #172: The scan and the protection related to the "Bad request methods" were not accurate.
+* Fix #176: A SQL warning occured if you didn't had logs to delete from 1.0.4, a new IF condition has been added to prevent that.
 
 = 1.0.4 =
 * 26 sep 2016
