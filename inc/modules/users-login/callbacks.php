@@ -69,7 +69,7 @@ function secupress_double_auth_settings_callback( $modulenow, &$settings, $activ
 	}
 
 	// Affected roles.
-	secupress_manage_affected_roles( $settings, 'double-auth' );
+	secupress_manage_affected_roles( $settings, $modulenow, 'double-auth' );
 }
 
 
@@ -149,7 +149,7 @@ function secupress_password_policy_settings_callback( $modulenow, &$settings, $a
 	}
 
 	// Affected roles.
-	secupress_manage_affected_roles( $settings, 'password-policy' );
+	secupress_manage_affected_roles( $settings, $modulenow, 'password-policy' );
 
 	// (De)Activation.
 	if ( false !== $activate ) {

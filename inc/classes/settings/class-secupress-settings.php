@@ -709,6 +709,9 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					</p>
 					<?php
 				}
+				?>
+				<input type="hidden" name="<?php echo $name_attribute; ?>[witness]" value="1" />
+				<?php
 				break;
 
 			case 'html' :
