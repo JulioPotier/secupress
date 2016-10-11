@@ -36,6 +36,23 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements SecuPress_Scan
 	 */
 	protected $fixable = 'pro';
 
+	/**
+	 * Used in `::scan()` and `::maybe_finish_scan()` to keep track of the scan progress.
+	 * 0: scan didn't run.
+	 * 1: scan ran but interrupted by a `die()`.
+	 * 2: scan ran successfully.
+	 *
+	 * @var (int)
+	 */
+	protected $scan_ran = 0;
+
+	/**
+	 * Used to store our fake user ID.
+	 *
+	 * @var (int)
+	 */
+	protected $fake_user_id = 0;
+
 
 	/** Init and messages. ====================================================================== */
 
@@ -96,24 +113,32 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements SecuPress_Scan
 	public function scan() {
 		$temp_login = uniqid( 'secupress' );
 		$temp_pass  = wp_generate_password( 64 );
-		$temp_id    = wp_insert_user( array(
+
+		$this->fake_user_id = wp_insert_user( array(
 			'user_login' => $temp_login,
 			'user_pass'  => $temp_pass,
 			'user_email' => 'secupress_no_mail_EL@fakemail.' . time(),
 			'role'       => 'secupress_no_role_' . time(),
 		) );
 
-		if ( ! is_wp_error( $temp_id ) ) {
+		if ( ! is_wp_error( $this->fake_user_id ) ) {
+			$this->scan_ran = 1;
 
+			add_action( 'shutdown', array( $this, 'maybe_finish_scan' ) );
+
+			$_POST['log'] = $temp_login;
+			$_POST['pwd'] = $temp_pass;
 			$check = wp_authenticate( $temp_login, $temp_pass );
 
-			wp_delete_user( $temp_id );
+			wp_delete_user( $this->fake_user_id );
 
 			if ( is_a( $check, 'WP_User' ) ) {
 				// "bad"
 				$this->add_message( 200 );
 				$this->add_pre_fix_message( 201 );
 			}
+
+			$this->scan_ran = 2;
 		} else {
 			// "warning"
 			$this->add_message( 100 );
@@ -121,6 +146,29 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements SecuPress_Scan
 
 		// "good"
 		$this->maybe_set_status( 0 );
+
+		return parent::scan();
+	}
+
+
+	public function maybe_finish_scan() {
+		if ( 2 === $this->scan_ran ) {
+			$this->scan_ran = 0;
+		}
+
+		if ( ! $this->scan_ran ) {
+			return;
+		}
+
+		$this->scan_ran = 0;
+
+		wp_delete_user( $this->fake_user_id );
+
+		// "bad"
+		$this->add_message( 200 );
+		$this->add_pre_fix_message( 201 );
+
+		$this->fake_user_id = 0;
 
 		return parent::scan();
 	}
