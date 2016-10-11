@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
 "POT-Creation-Date: 2016-09-30 12:22+0200\n"
-"PO-Revision-Date: 2016-09-30 22:17+0200\n"
+"PO-Revision-Date: 2016-10-11 23:35+0200\n"
 "Last-Translator: WP Media <contact@secupress.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -607,7 +607,7 @@ msgid ""
 "The %1$s file is not writable, read more about <a href=\"%2$s\" target="
 "\"_blank\">writing permissions</a>."
 msgstr ""
-"Le fichier %1$s n'est pas en écriture, plus d\"infos sur les droits en "
+"Le fichier %1$s n'est pas en écriture, plus d'infos sur les droits en "
 "écriture (en) <a href=\"%2$s\" target=\"_blank\"></a>."
 
 #: inc/admin/notices.php:231
@@ -3815,9 +3815,7 @@ msgid ""
 "about PHP modules."
 msgstr ""
 "Ajoute les règles dans votre fichier %s pour éviter que les attaquants ne "
-"\"\n"
-"#~ \"puissent lire des informations sensibles à propos des modules PHP \"\n"
-"#~ \"installés."
+"puissent lire des informations sensibles à propos des modules PHP installés."
 
 #. Translators: %s is a file name.
 #: inc/classes/scanners/class-secupress-scan-php-disclosure.php:60
@@ -4701,7 +4699,7 @@ msgstr ""
 #: inc/common.php:160
 #, php-format
 msgid "Anyway, simply follow this link to %s."
-msgstr "Bref, suit simplement ce lien pour te %s."
+msgstr "Bref, suivez simplement ce lien pour vous %s."
 
 #: inc/common.php:161
 msgid "unlock yourself"
@@ -5031,8 +5029,8 @@ msgstr "Automatisez toutes vos tâches"
 #, php-format
 msgid "Let %s scan your website when you are away by using recurent scans."
 msgstr ""
-"Laissez %s scanner votre site quand vous n'êtes pas là avec des scanners \"\n"
-"\"récurrents."
+"Laissez %s scanner votre site quand vous n'êtes pas là avec des scanners "
+"récurrents."
 
 #: inc/functions/modules.php:141 inc/functions/modules.php:145
 msgid ""
