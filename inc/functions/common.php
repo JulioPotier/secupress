@@ -488,16 +488,17 @@ function secupress_get_capability( $force_mono = false ) {
 /**
  * Get SecuPress logo.
  *
+ * @since 1.0.6 Remove the yellow Pro logo (Julio Potier)
  * @since 1.0
  *
  * @param (array) $atts An array of HTML attributes.
  * @param (bool)  $is_pro True is pro logo requested.
  *
+ * @author Geoffrey Crofte
  * @return (string) The HTML tag.
  */
-function secupress_get_logo( $atts = array(), $is_pro = false ) {
-	$pro      = secupress_is_pro() || $is_pro ? '-pro' : '';
-	$base_url = SECUPRESS_ADMIN_IMAGES_URL . 'logo' . $pro;
+function secupress_get_logo( $atts = array() ) {
+	$base_url = SECUPRESS_ADMIN_IMAGES_URL . 'logo';
 
 	$atts = array_merge( array(
 		'src'    => "{$base_url}.png",

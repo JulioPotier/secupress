@@ -329,7 +329,7 @@ foreach ( $scanned_items as $class_name_part => $details ) {
 		<div class="secupress-summary-header secupress-section-dark">
 			<div class="secupress-flex">
 				<div class="secupress-col-logo">
-					<?php echo secupress_get_logo( array( 'width' => 81 ), true ); ?>
+					<?php echo secupress_get_logo( array( 'width' => 81 ) ); ?>
 				</div>
 				<div class="secupress-col-summary-text secupress-flex secupress-flex-spaced">
 					<p class="secupress-text-medium secupress-mb0">
