@@ -583,7 +583,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 			case 'textarea' :
 
-				$value       = esc_textarea( implode( "\n" , (array) $value ) );
+				$value       = esc_textarea( html_entity_decode( implode( "\n" , (array) $value ), ENT_QUOTES ) );
 				$attributes .= empty( $args['attributes']['cols'] ) ? ' cols="50"' : '';
 				$attributes .= empty( $args['attributes']['rows'] ) ? ' rows="5"'  : '';
 
