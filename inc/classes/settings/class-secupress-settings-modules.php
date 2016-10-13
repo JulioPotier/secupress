@@ -445,7 +445,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	protected function scheduled_backups() {
-		_e( 'Nothing\'s scheduled yet', 'secupress' );
+		_e( 'Nothing\'s scheduled yet.', 'secupress' );
 	}
 
 
@@ -455,7 +455,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	protected function scheduled_scan() {
-		_e( 'Nothing\'s scheduled yet', 'secupress' );
+		_e( 'Nothing\'s scheduled yet.', 'secupress' );
 	}
 
 
@@ -465,7 +465,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	protected function scheduled_monitoring() {
-		_e( 'Nothing\'s scheduled yet', 'secupress' );
+		_e( 'Nothing\'s scheduled yet.', 'secupress' );
 	}
 
 
