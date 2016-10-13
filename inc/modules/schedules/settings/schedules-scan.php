@@ -6,6 +6,13 @@ $this->set_current_section( 'scanners' );
 $this->add_section( __( 'Scanners', 'secupress' ) );
 
 
+$this->add_field( array(
+	'name'         => $this->get_field_name( 'scheduled' ),
+	'type'         => 'scheduled_scan',
+	'row_class'    => 'secupress-schedule-message-field',
+) );
+
+
 /** Translators: use %d, nothing else. */
 $label_before = __( 'Every %d days', 'secupress' );
 $label_before = explode( '%d', $label_before );
@@ -38,11 +45,4 @@ $this->add_field( array(
 	'label_for'    => $this->get_field_name( 'email' ),
 	'type'         => 'email',
 	'default'      => wp_get_current_user()->user_email,
-) );
-
-
-$this->add_field( array(
-	'title'        => __( 'Scheduled scan', 'secupress' ),
-	'name'         => $this->get_field_name( 'scheduled' ),
-	'type'         => 'scheduled_scan',
 ) );
