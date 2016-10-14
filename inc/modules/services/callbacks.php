@@ -25,23 +25,76 @@ function secupress_services_settings_callback( $settings ) {
 		return array( 'sanitized' => 1 );
 	}
 
-	$settings = array( 'sanitized' => 1 );
-
-	$summary         = ! empty( $_POST['secupress_services_settings']['support_summary'] )     ? preg_replace( "@[\r\n]+@", ' ', strip_tags( wp_unslash( trim( html_entity_decode( $_POST['secupress_services_settings']['support_summary'], ENT_QUOTES ) ) ) ) ) : ''; // WPCS: CSRF ok.
-	$description     = ! empty( $_POST['secupress_services_settings']['support_description'] ) ? str_replace( "\r\n", "\n", strip_tags( wp_unslash( trim( html_entity_decode( $_POST['secupress_services_settings']['support_description'], ENT_QUOTES ) ) ) ) )  : ''; // WPCS: CSRF ok.
+	$summary         = ! empty( $settings['support_summary'] )     ? preg_replace( "@[\r\n]+@", ' ', strip_tags( wp_unslash( trim( html_entity_decode( $settings['support_summary'], ENT_QUOTES ) ) ) ) ) : '';
+	$description     = ! empty( $settings['support_description'] ) ? str_replace( "\r\n", "\n", strip_tags( wp_unslash( trim( html_entity_decode( $settings['support_description'], ENT_QUOTES ) ) ) ) )  : '';
 
 	$esc_description = $description ? esc_html( $description ) : '';
 	$esc_def_message = __( 'Please provide the specific url(s) where we can see each issue. e.g. the request doesn\'t work on this page: example.com/this-page', 'secupress' ) . "\n\n" .
 	                   __( 'Please let us know how we will recognize the issue or can reproduce the issue. What is supposed to happen, and what is actually happening instead?', 'secupress' );
 	$esc_def_message = esc_html( str_replace( "\r\n", "\n", strip_tags( trim( html_entity_decode( $esc_def_message, ENT_QUOTES ) ) ) ) );
 
-	$data = array(
+	// Com'on, check it!
+	if ( empty( $settings['support_doc-read'] ) ) {
+		$transient = array();
+
+		if ( $summary ) {
+			$transient['summary'] = $summary;
+		}
+
+		if ( $esc_description && $esc_def_message !== $esc_description ) {
+			$transient['description'] = $description;
+		}
+
+		if ( $transient ) {
+			// Set a transient that will fill the fields back.
+			set_site_transient( 'secupress_support_form', $transient, 300 );
+		}
+
+		add_settings_error( 'general', 'doc_read', __( 'Please check the checkbox first.', 'secupress' ) );
+
+		return array( 'sanitized' => 1 );
+	}
+
+	// Other data.
+	$data    = array();
+	$scanner = ! empty( $settings['support_scanner'] ) ? sanitize_key( $settings['support_scanner'] ) : '';
+
+	if ( $scanner ) {
+		// Remove the scanner from the referer, we don't want it to be used for the redirection.
+		if ( ! empty( $_REQUEST['_wp_http_referer'] ) ) {
+			$_REQUEST['_wp_http_referer'] = str_replace( '&scanner=' . $scanner, '', $_REQUEST['_wp_http_referer'] );
+		} else if ( ! empty( $_SERVER['HTTP_REFERER'] ) ) {
+			$_REQUEST['HTTP_REFERER'] = str_replace( '&scanner=' . $scanner, '', $_REQUEST['HTTP_REFERER'] );
+		}
+	}
+
+	if ( $scanner ) {
+		$scanners = secupress_get_scanners();
+		$scanners = call_user_func_array( 'array_merge', $scanners );
+		$scanners = array_combine( array_map( 'strtolower', $scanners ), $scanners );
+
+		if ( ! empty( $scanners[ $scanner ] ) && file_exists( secupress_class_path( 'scan', $scanners[ $scanner ] ) ) ) {
+
+			secupress_require_class( 'scan' );
+			secupress_require_class( 'scan', $scanners[ $scanner ] );
+
+			$class_name = 'SecuPress_Scan_' . $scanners[ $scanner ];
+			$data       = array(
+				'scanner' => sprintf( __( 'Scanner: %s', 'secupress' ), strip_tags( $class_name::get_instance()->title ) ),
+			);
+		}
+	}
+
+	$data = array_merge( $data, array(
 		'sp_free_version'   => sprintf( __( 'Version of SecuPress Free: %s', 'secupress' ), SECUPRESS_VERSION ),
 		'website_url'       => sprintf( __( 'Site URL: %s', 'secupress' ), esc_url( user_trailingslashit( home_url(), 'home' ) ) ),
 		'is_multisite'      => sprintf( __( 'Multisite: %s', 'secupress' ), is_multisite() ? __( 'Yes', 'secupress' ) : __( 'No', 'secupress' ) ),
 		'wp_version'        => sprintf( __( 'Version of WordPress: %s', 'secupress' ), $wp_version ),
 		'wp_active_plugins' => sprintf( __( 'Active plugins: %s', 'secupress' ), "\n- " . implode( "\n- ", secupress_get_active_plugins() ) ),
-	);
+	) );
+
+	$settings = array( 'sanitized' => 1 );
+	delete_site_transient( 'secupress_support_form' );
 
 	// Free plugin.
 	if ( ! secupress_is_pro() ) {
@@ -49,7 +102,7 @@ function secupress_services_settings_callback( $settings ) {
 			/** Translators: 1 is the plugin name, 2 is a link to the "plugin directory". */
 			__( 'Oh, you use the Free version of %1$s! Support is handled on the %2$s. Thank you!', 'secupress' ),
 			SECUPRESS_PLUGIN_NAME,
-			'<a href="https://wordpress.org/support/plugin/secupress" target="_blank" aria-label="' . esc_attr__( 'Opens in a new tab or window', 'secupress' ) . '">' . __( 'plugin directory', 'secupress' ) . '</a>'
+			'<a href="https://wordpress.org/support/plugin/secupress" target="_blank" title="' . esc_attr__( 'Open in a new window.', 'secupress' ) . '">' . __( 'plugin directory', 'secupress' ) . '</a>'
 		);
 
 		if ( $esc_description && $esc_def_message !== $esc_description ) {
@@ -83,6 +136,7 @@ function secupress_services_settings_callback( $settings ) {
 		 * @param (string) $summary     A title. The value is not escaped.
 		 * @param (string) $description A message. The value is not escaped.
 		 * @param (array)  $data        An array of infos related to the site:
+		 *                              - (string) $scanner           The scanner the user asks help for.
 		 *                              - (string) $sp_free_version   Version of SecuPress Free.
 		 *                              - (string) $website_url       Site URL.
 		 *                              - (string) $is_multisite      Tell if it's a multisite: Yes or No.

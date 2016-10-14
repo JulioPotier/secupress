@@ -57,7 +57,6 @@ var secupressNotices = {
 
 (function($, d, w, undefined) {
 	/*var SecuPress = {
-			supportButtonColor:  "#F1C40F",
 			swal2Defaults:        {
 				confirmButtonText: SecuPressi18nCommon.confirmText,
 				cancelButtonText:  SecuPressi18nCommon.cancelText,
