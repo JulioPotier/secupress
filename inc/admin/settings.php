@@ -240,6 +240,9 @@ function secupress_print_version_number_in_footer( $footer ) {
 /*------------------------------------------------------------------------------------------------*/
 
 add_filter( 'plugin_action_links_' . plugin_basename( SECUPRESS_FILE ), 'secupress_settings_action_links' );
+if ( defined( 'SECUPRESS_PRO_FILE' ) ) {
+	add_filter( 'plugin_action_links_' . plugin_basename( SECUPRESS_PRO_FILE ), 'secupress_settings_action_links' );
+}
 /**
  * Add links to the plugin row.
  *
