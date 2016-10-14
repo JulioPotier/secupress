@@ -510,7 +510,6 @@ label .secupress-textarea-container + .secupress-expand-trigger-container {
 	-webkit-flex-basis: 0;
 	-ms-flex-preferred-size: 0;
 	flex-basis: 0;
-
 }
 label.secupress-textarea-label {
 	position: relative;
@@ -793,7 +792,13 @@ fieldset.secupress-boxed-group > b {
 	margin-right: 0;
 }
 [id="secupress-settings-module_services--"] .secupress-setting-content-col {
+	display: flex;
+	flex-direction: column;
 	padding-right: 0;
+}
+[id="secupress-settings-module_services--"] .secupress-setting-row .secupress-flex {
+	flex-direction: column;
+	height: 100%;
 }
 [id="secupress-settings-module_services--"] .description {
 	margin: 1.5em auto 2em;
