@@ -197,17 +197,24 @@ function secupress_global_settings_api_request_succeeded( $response, &$new_value
 
 	if ( empty( $body->success ) ) {
 		// The response is an error.
-		if ( 'invalid_api_credential' === $body->data->code ) {
+		if ( ! empty( $body->data->code ) && 'invalid_api_credential' === $body->data->code ) {
 
 			add_settings_error( 'secupress_global', 'response_error', __( 'There is a problem with your license key, please contact our support team.', 'secupress' ) );
 			unset( $new_values['consumer_key'], $new_values['site_is_pro'] );
 
-		} elseif ( 'invalid_email' === $body->data->code ) {
+		} elseif ( ! empty( $body->data->code ) && 'invalid_email' === $body->data->code ) {
 
 			add_settings_error( 'secupress_global', 'response_error', __( 'The email address is invalid.', 'secupress' ) );
 
+		} elseif ( ! empty( $body->data->code ) && 'invalid_customer' === $body->data->code ) {
+
+			add_settings_error( 'secupress_global', 'response_error', __( 'This email address is not in our database.', 'secupress' ) );
+			unset( $new_values['consumer_key'], $new_values['site_is_pro'] );
+
 		} else {
+
 			add_settings_error( 'secupress_global', 'response_error', __( 'Our server returned an error, please try again later or contact our support team.', 'secupress' ) );
+
 		}
 
 		return false;
