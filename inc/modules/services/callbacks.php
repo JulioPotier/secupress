@@ -25,23 +25,43 @@ function secupress_services_settings_callback( $settings ) {
 		return array( 'sanitized' => 1 );
 	}
 
-	$summary         = ! empty( $settings['support_summary'] )     ? preg_replace( "@[\r\n]+@", ' ', strip_tags( wp_unslash( trim( html_entity_decode( $settings['support_summary'], ENT_QUOTES ) ) ) ) ) : '';
-	$description     = ! empty( $settings['support_description'] ) ? str_replace( "\r\n", "\n", strip_tags( wp_unslash( trim( html_entity_decode( $settings['support_description'], ENT_QUOTES ) ) ) ) )  : '';
+	$allowed_tags = array(
+		'a'      => array( 'href' => array(), 'title' => array(), 'target' => array() ),
+		'abbr'   => array( 'title' => array() ),
+		'code'   => array( 'class' => array() ),
+		'em'     => array(),
+		'strong' => array(),
+		'ul'     => array(),
+		'ol'     => array(),
+		'li'     => array(),
+		'p'      => array(),
+		'pre'    => array( 'class' => array() ),
+		'br'     => array(),
+	);
 
-	$esc_description = $description ? esc_html( $description ) : '';
-	$esc_def_message = __( 'Please provide the specific url(s) where we can see each issue. e.g. the request doesn\'t work on this page: example.com/this-page', 'secupress' ) . "\n\n" .
-	                   __( 'Please let us know how we will recognize the issue or can reproduce the issue. What is supposed to happen, and what is actually happening instead?', 'secupress' );
-	$esc_def_message = esc_html( str_replace( "\r\n", "\n", strip_tags( trim( html_entity_decode( $esc_def_message, ENT_QUOTES ) ) ) ) );
+	$settings = array_merge( array(
+		'support_summary'     => '',
+		'support_description' => '',
+		'support_doc-read'    => 0,
+		'support_scanner'     => '',
+	), $settings );
+
+	$summary     = preg_replace( "@[\r\n]+@", ' ', strip_tags( wp_unslash( trim( html_entity_decode( $settings['support_summary'], ENT_QUOTES ) ) ) ) );
+	$description = str_replace( "\r\n", "\n", wp_unslash( trim( html_entity_decode( $settings['support_description'], ENT_QUOTES ) ) ) );
+
+	$def_message = __( 'Please provide the specific url(s) where we can see each issue. e.g. the request doesn\'t work on this page: example.com/this-page', 'secupress' ) . "\n\n" .
+	               __( 'Please let us know how we will recognize the issue or can reproduce the issue. What is supposed to happen, and what is actually happening instead?', 'secupress' );
+	$def_message = str_replace( "\r\n", "\n", trim( html_entity_decode( $def_message, ENT_QUOTES ) ) );
 
 	// Com'on, check it!
-	if ( empty( $settings['support_doc-read'] ) ) {
+	if ( ! $settings['support_doc-read'] ) {
 		$transient = array();
 
 		if ( $summary ) {
 			$transient['summary'] = $summary;
 		}
 
-		if ( $esc_description && $esc_def_message !== $esc_description ) {
+		if ( $description && $def_message !== $description ) {
 			$transient['description'] = $description;
 		}
 
@@ -57,18 +77,10 @@ function secupress_services_settings_callback( $settings ) {
 
 	// Other data.
 	$data    = array();
-	$scanner = ! empty( $settings['support_scanner'] ) ? sanitize_key( $settings['support_scanner'] ) : '';
+	$scanner = sanitize_key( $settings['support_scanner'] );
 
 	if ( $scanner ) {
-		// Remove the scanner from the referer, we don't want it to be used for the redirection.
-		if ( ! empty( $_REQUEST['_wp_http_referer'] ) ) {
-			$_REQUEST['_wp_http_referer'] = str_replace( '&scanner=' . $scanner, '', $_REQUEST['_wp_http_referer'] );
-		} else if ( ! empty( $_SERVER['HTTP_REFERER'] ) ) {
-			$_REQUEST['HTTP_REFERER'] = str_replace( '&scanner=' . $scanner, '', $_REQUEST['HTTP_REFERER'] );
-		}
-	}
-
-	if ( $scanner ) {
+		// Deal with the scanner.
 		$scanners = secupress_get_scanners();
 		$scanners = call_user_func_array( 'array_merge', $scanners );
 		$scanners = array_combine( array_map( 'strtolower', $scanners ), $scanners );
@@ -83,6 +95,13 @@ function secupress_services_settings_callback( $settings ) {
 				'scanner' => sprintf( __( 'Scanner: %s', 'secupress' ), strip_tags( $class_name::get_instance()->title ) ),
 			);
 		}
+
+		// Remove the scanner from the referer, we don't want it to be used for the redirection.
+		if ( ! empty( $_REQUEST['_wp_http_referer'] ) ) {
+			$_REQUEST['_wp_http_referer'] = str_replace( '&scanner=' . $scanner, '', $_REQUEST['_wp_http_referer'] );
+		} else if ( ! empty( $_SERVER['HTTP_REFERER'] ) ) {
+			$_REQUEST['HTTP_REFERER'] = str_replace( '&scanner=' . $scanner, '', $_REQUEST['HTTP_REFERER'] );
+		}
 	}
 
 	$data = array_merge( $data, array(
@@ -93,6 +112,7 @@ function secupress_services_settings_callback( $settings ) {
 		'wp_active_plugins' => sprintf( __( 'Active plugins: %s', 'secupress' ), "\n- " . implode( "\n- ", secupress_get_active_plugins() ) ),
 	) );
 
+	// Reset.
 	$settings = array( 'sanitized' => 1 );
 	delete_site_transient( 'secupress_support_form' );
 
@@ -105,19 +125,24 @@ function secupress_services_settings_callback( $settings ) {
 			'<a href="https://wordpress.org/support/plugin/secupress" target="_blank" title="' . esc_attr__( 'Open in a new window.', 'secupress' ) . '">' . __( 'plugin directory', 'secupress' ) . '</a>'
 		);
 
-		if ( $esc_description && $esc_def_message !== $esc_description ) {
+		if ( $description && $def_message !== $description ) {
 			if ( $summary ) {
 				$message .= '</strong><br/>' . __( 'By the way, here is your subject:', 'secupress' ) . '</p>';
-				$message .= '<blockquote>' . esc_html( $summary ) . '</blockquote>';
+				$message .= '<blockquote>' . esc_html( $summary ) . '</blockquote>'; // Escaped.
 				$message .= '<p>' . __( 'And your message:', 'secupress' ) . '</p>';
 			} else {
 				$message .= '</strong><br/>' . __( 'By the way, here is your message:', 'secupress' ) . '</p>';
 			}
 
-			$esc_description .= "\n\n" . str_repeat( '-', 40 );
-			$esc_description .= "\n" . esc_html( implode( "\n", $data ) );
+			// Sanitize and formate.
+			$description  = wptexturize( $description );
+			$description  = convert_chars( $description );
+			$description  = wpautop( $description );
+			$description  = wp_kses( $description, $allowed_tags );
+			$description .= '<br/><br/>' . str_repeat( '-', 40 );
+			$description .= '<br/>' . implode( '<br/>', $data );
 
-			$message .= '<blockquote>' . nl2br( $esc_description ) . '</blockquote>';
+			$message .= '<blockquote>' . esc_html( $description ) . '</blockquote>'; // Escaped.
 			$message .= '<p>' . __( '(you\'re welcome)', 'secupress' ) . '<strong>';
 		}
 
@@ -127,14 +152,20 @@ function secupress_services_settings_callback( $settings ) {
 	}
 
 	// Pro plugin.
-	if ( $summary && $description && $esc_def_message !== $esc_description ) {
+	if ( $summary && $description && $def_message !== $description ) {
+		// Sanitize and formate.
+		$description = wptexturize( $description );
+		$description = convert_chars( $description );
+		$description = wpautop( $description );
+		$description = wp_kses( $description, $allowed_tags );
+
 		/**
 		 * Triggered when the user is asking for support.
 		 *
 		 * @since 1.0.6
 		 *
 		 * @param (string) $summary     A title. The value is not escaped.
-		 * @param (string) $description A message. The value is not escaped.
+		 * @param (string) $description A message. The value has been sanitized with `wp_kses()`.
 		 * @param (array)  $data        An array of infos related to the site:
 		 *                              - (string) $scanner           The scanner the user asks help for.
 		 *                              - (string) $sp_free_version   Version of SecuPress Free.
