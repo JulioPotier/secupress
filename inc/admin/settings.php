@@ -240,7 +240,7 @@ function secupress_print_version_number_in_footer( $footer ) {
 /*------------------------------------------------------------------------------------------------*/
 
 add_filter( 'plugin_action_links_' . plugin_basename( SECUPRESS_FILE ), 'secupress_settings_action_links' );
-if ( defined( 'SECUPRESS_PRO_FILE' ) ) {
+if ( secupress_has_pro() ) {
 	add_filter( 'plugin_action_links_' . plugin_basename( SECUPRESS_PRO_FILE ), 'secupress_settings_action_links' );
 }
 /**
