@@ -109,7 +109,7 @@ function secupress_services_settings_callback( $settings ) {
 		'website_url'       => sprintf( __( 'Site URL: %s', 'secupress' ), esc_url( user_trailingslashit( home_url(), 'home' ) ) ),
 		'is_multisite'      => sprintf( __( 'Multisite: %s', 'secupress' ), is_multisite() ? __( 'Yes', 'secupress' ) : __( 'No', 'secupress' ) ),
 		'wp_version'        => sprintf( __( 'Version of WordPress: %s', 'secupress' ), $wp_version ),
-		'wp_active_plugins' => sprintf( __( 'Active plugins: %s', 'secupress' ), "\n- " . implode( "\n- ", secupress_get_active_plugins() ) ),
+		'wp_active_plugins' => sprintf( __( 'Active plugins: %s', 'secupress' ), '<br/>- ' . implode( '<br/>- ', secupress_get_active_plugins() ) ),
 	) );
 
 	// Reset.
@@ -137,12 +137,13 @@ function secupress_services_settings_callback( $settings ) {
 			// Sanitize and formate.
 			$description  = wptexturize( $description );
 			$description  = convert_chars( $description );
-			$description  = wpautop( $description );
+			$description  = wpautop( $description, false );
+			$description  = preg_replace( '@<p\s*>(.*)</p>@', '\1<br/><br/>', $description );
 			$description  = wp_kses( $description, $allowed_tags );
-			$description .= '<br/><br/>' . str_repeat( '-', 40 );
+			$description .= '<br/>' . str_repeat( '-', 40 );
 			$description .= '<br/>' . implode( '<br/>', $data );
 
-			$message .= '<blockquote>' . esc_html( $description ) . '</blockquote>'; // Escaped.
+			$message .= '<blockquote>' . $description . '</blockquote>';
 			$message .= '<p>' . __( '(you\'re welcome)', 'secupress' ) . '<strong>';
 		}
 
@@ -156,7 +157,7 @@ function secupress_services_settings_callback( $settings ) {
 		// Sanitize and formate.
 		$description = wptexturize( $description );
 		$description = convert_chars( $description );
-		$description = wpautop( $description );
+		$description = wpautop( $description, false );
 		$description = wp_kses( $description, $allowed_tags );
 
 		/**
