@@ -155,7 +155,7 @@ function secupress_activate_submodule_silently( $module, $submodule ) {
 
 
 /**
- * Deactivate a sub-module silently. This will remove all previous activation noticel and trigger no deactivation hook.
+ * Deactivate a sub-module silently. This will remove all previous activation notices and trigger no deactivation hook.
  *
  * @since 1.0
  *
