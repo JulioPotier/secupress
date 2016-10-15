@@ -56,35 +56,6 @@ var secupressNotices = {
 
 
 (function($, d, w, undefined) {
-	/*var SecuPress = {
-			supportButtonColor:  "#F1C40F",
-			swal2Defaults:        {
-				confirmButtonText: SecuPressi18nCommon.confirmText,
-				cancelButtonText:  SecuPressi18nCommon.cancelText,
-				type:              "warning",
-				allowOutsideClick: true,
-				customClass:       "wpmedia-swal2 secupress-swal2"
-			},
-			swal2ConfirmDefaults: {
-				showCancelButton:  true,
-				closeOnConfirm:    false
-			}
-		};*/
-
-	/**
-	 * Notice tests
-	 *
-
-	var message = 'Something to say',
-		good    = secupressNotices.create( { message: message } );
-		warning = secupressNotices.create( { type: 'warning', message: message } );
-		bad     = secupressNotices.create( { type: 'bad', message: message } );
-
-	$( '.secupress-row-actions' ).before( good );
-	secupressCouldSay( message );
-	*/
-
-
 	/**
 	 * Basic plugins
 	 */
@@ -225,49 +196,4 @@ var secupressNotices = {
 		} );
 
 	} );
-
-	/**
-	 * Open swal for API Key notice about it
-	 * @author: Geoffrey
-	 * @description That button could be any/everywhere!
-	 */
-////
-/*
-	$('.button-secupress-get-api-key').on( 'click.secupress', function(){
-		var $this = $(this),
-			texts = SecuPressi18nCommon.authswal,
-			customForm =  '<div class="secupress-swal-form"><form action="#" method="post">'
-							+ '<p class="secupress-block-label">'
-								+ '<label for="swal-user-email">'
-									+ '<i class="icon-mail" aria-hidden="true"></i>'
-									+ texts.email
-								+ '</label>'
-								+ '<input type="email" name="user-email" id="swal-user-email">'
-							+ '</p>'
-							+ '<p class="secupress-block-label">'
-								+ '<label for="swal-user-api">'
-									+ '<i class="icon-key" aria-hidden="true"></i>'
-									+ texts.apikey
-								+ '</label>'
-								+ '<input type="text" name="user-api" id="swal-user-api">'
-							+ '</p>'
-							+ '<p class="secupress-where-info">'
-								+ '<i class="icon-question-circle" aria-hidden="true"></i>'
-								+ '<a target="_blank" href="#">' + texts.where + '</a>'
-							+ '</p>'
-						+ '</form></div>';
-
-		swal2( jQuery.extend( {}, SecuPress.swal2Defaults, {
-			title: texts.title,
-			html:  customForm,
-			type:  'info',
-			confirmButtonText: texts.save,
-			customClass: 'wpmedia-swal2 secupress-swal2 secupress-swal-dark-header',
-			width: 400
-		} ) );
-
-		return false;
-	} );
-*/
-
 } )(jQuery, document, window);
