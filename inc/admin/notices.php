@@ -359,68 +359,37 @@ function secupress_warning_no_oneclick_scan_yet() {
 }
 
 
-/*add_action( 'all_admin_notices', 'secupress_warning_no_api_key', 50 );////.
+add_action( 'current_screen', 'secupress_warning_no_license' );
 /**
- * This warning is displayed if consumer email and key are unknown.
+ * This warning is displayed when the license is not valid.
  *
- * @since 1.0
- * @author Geoffrey
- *//*
-function secupress_warning_no_api_key() {
-	$screen_id = get_current_screen();
-	$screen_id = $screen_id && ! empty( $screen_id->id ) ? $screen_id->id : false;
+ * @since 1.0.6
+ * @author Grégory Viguier
+ */
+function secupress_warning_no_license() {
+	global $current_screen;
 
-	$allowed_screen_ids = array(
-		'toplevel_page_' . SECUPRESS_PLUGIN_SLUG . '_scanners'  => 1,
-		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules'  => 1,
-		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' => 1,
-		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_logs'     => 1,
-	); // //// Add Get Pro page later.
-
-	if ( secupress_notice_is_dismissed( 'get-api-key' ) || ! isset( $allowed_screen_ids[ $screen_id ] ) || ! current_user_can( secupress_get_capability() ) ) {
+	if ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' === $current_screen->base ) {
 		return;
 	}
 
-	$times = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
-
-	// Don't display the API key banner yet, wait the first OCS.
-	if ( secupress_get_consumer_key() || ! $times ) {
+	if ( ! secupress_has_pro() || secupress_is_pro() ) {
 		return;
 	}
 
-	$referer = urlencode( esc_url_raw( secupress_get_current_url( 'raw' ) ) );
-	?>
-	<div class="secupress-section-dark secupress-notice mini secupress-flex">
-		<div class="secupress-col-1-4 secupress-col-logo mini">
-			<div class="secupress-logo-block">
-				<div class="secupress-lb-logo">
-					<?php echo secupress_get_logo( array( 'width' => '46' ) ); ?>
-				</div>
-			</div>
-		</div>
-		<div class="secupress-col-2-4 secupress-col-text">
-			<p class="secupress-text-medium"><?php _e( 'Go further to get more security features!', 'secupress' ); ?></p>
-			<p><?php _e( 'The API Key will allow you to secure more deeply your website by activating new modules.', 'secupress' ); ?></p>
-		</div>
-		<div class="secupress-col-1-4 secupress-col-cta">
-			<a href="<?php echo esc_url( secupress_admin_url( 'settings' ) ); ?>" class="secupress-button secupress-button-primary button-secupress-get-api-key">
-				<span class="icon">
-					<i class="icon-key" aria-hidden="true"></i>
-				</span>
-				<span class="text">
-					<?php _e( 'Add API Key', 'secupress' ); ?>
-				</span>
-			</a>
-			<a class="secupress-close-notice" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_dismiss-notice&notice_id=get-api-key&_wp_http_referer=' . $referer ), 'secupress-notices' ); ?>">
-				<i class="icon-squared-cross" aria-hidden="true"></i>
-				<span class="screen-reader-text"><?php _e( 'Close' ); ?></span>
-			</a>
-		</div>
-	</div><!-- .secupress-section-medium -->
-	<?php
-	secupress_enqueue_notices_styles();
+	if ( ! current_user_can( secupress_get_capability() ) ) {
+		return;
+	}
+
+	$message  = sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
+	/** Translators: %s is a link to the "plugin settings page". */
+	$message .= sprintf(
+		__( 'Your Pro license is not valid or is not set yet. If you want to activate all the Pro features, premium support and updates, take a look at the %s.', 'secupress' ),
+		'<a href="' . esc_url( secupress_admin_url( 'settings' ) ) . '">' . __( 'plugin settings page', 'secupress' ) . '</a>'
+	);
+
+	secupress_add_notice( $message, 'updated', false );
 }
-*/
 
 
 add_action( 'admin_menu', 'secupress_display_transient_notices' );
