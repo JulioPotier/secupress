@@ -55,11 +55,11 @@
  */
 @font-face {
 	font-family: 'secupress';
-	src:url('../fonts/secupress.eot?h3d28w');
-	src:url('../fonts/secupress.eot?h3d28w#iefix') format('embedded-opentype'),
-		url('../fonts/secupress.ttf?h3d28w') format('truetype'),
-		url('../fonts/secupress.woff?h3d28w') format('woff'),
-		url('../fonts/secupress.svg?h3d28w#secupress') format('svg');
+	src:url('../fonts/secupress.eot?5cthix');
+	src:url('../fonts/secupress.eot?5cthix#iefix') format('embedded-opentype'),
+		url('../fonts/secupress.ttf?5cthix') format('truetype'),
+		url('../fonts/secupress.woff?5cthix') format('woff'),
+		url('../fonts/secupress.svg?5cthix#secupress') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -81,6 +81,15 @@
 
 .icon-squared-cross:before {
 	content: "\e914";
+}
+.icon-clock2:before {
+  content: "\e925";
+}
+.icon-data-base:before {
+  content: "\e926";
+}
+.icon-sheet:before {
+  content: "\e927";
 }
 .icon-grade-down:before {
 	content: "\e923";

@@ -572,19 +572,82 @@ fieldset.secupress-boxed-group > b {
 	margin-top: 1.5em;
 }
 
+/**
+ * Schedule specific styles
+ */
+[data-module="schedules"] .secupress-form-table {
+	clear: left;
+	overflow: hidden;
+}
+[data-module="schedules"] p.submit {
+	clear: left;
+}
+.secupress-schedule-message-field {
+	position: relative;
+	padding: 24px 24px 24px 105px;
+	margin: 1.5em 20px;
+	background: #DFF8F6;
+}
+.secupress-schedule-message-field .secupress-highlight {
+	font-weight: bold;
+	color: #26B3A9;
+}
+.secupress-schedule-message-field:after {
+	content: "\e925";
+	position: absolute;
+	top: 50%;
+	left: 28px;
+	margin-top: -10px;
+	font-family: "secupress";
+	font-size: 48px;
+	color: #2BCDC1;
+}
+
+.secupress-schedule-message-field ~ .secupress-setting-row {
+	float: left;
+	width: 50%;
+}
+.secupress-schedule-message-field ~ .secupress-setting-row .secupress-email-label br {
+	display: none;
+}
+.secupress-schedule-message-field ~ .secupress-setting-row .secupress-email-label input {
+	margin-left: 5px;
+}
+.secupress-schedule-message-field + .secupress-setting-row,
+.secupress-schedule-message-field + .secupress-setting-row + .secupress-setting-row {
+	border-top: 0;
+	margin-top: 0;
+	padding-top: 5px;
+}
+/* every 2nd and more row after message field (right side theorically) */
+.secupress-schedule-message-field ~ .secupress-setting-row + .secupress-setting-row {
+	padding: 5px 0;
+	margin-right: 20px;
+	width: calc(50% - 20px);
+}
+
 /*
-	Big Radio (Imaged radios)
-	Modules: Backup, Alerts
+	Big Radio (Imaged radios) & Checkboxes
+	Modules: Backup, Alerts, Schedule (pro)
  */
 @media (min-width: 1125px) {
 	.fieldname-backups-storage_location .secupress-radio-line,
-	.fieldname-notification-types_types .secupress-fieldset-item-checkboxes {
+	.fieldname-notification-types_types .secupress-fieldset-item-checkboxes,
+	.fieldname-schedules-backups_type .secupress-fieldset-item-checkboxes {
 		float: left;
 		width: 140px;
 		margin-bottom: 1em;
 	}
+	.fieldname-schedules-backups_type .secupress-fieldset-item-checkboxes {
+		width: 160px;
+	}
+	/* font-icon case */
+	.fieldname-schedules-backups_type .secupress-fieldset-item-checkboxes {
+		position: relative;
+	}
 	.fieldname-backups-storage_location .secupress-radio-line label:before,
-	.fieldname-notification-types_types .secupress-fieldset-item-checkboxes label:before {
+	.fieldname-notification-types_types .secupress-fieldset-item-checkboxes label:before,
+	.fieldname-schedules-backups_type .secupress-fieldset-item-checkboxes label:before {
 		content: "";
 		display: block;
 		width: 117px;
@@ -593,6 +656,16 @@ fieldset.secupress-boxed-group > b {
 		border: 1px solid #ddd;
 		background: #FFF none 50% 50% no-repeat;
 		border-radiu: 3px;
+	}
+	.fieldname-schedules-backups_type .secupress-fieldset-item-checkboxes label.is-checked:before {
+		background-color: #2BCDC1;
+		border-color: #2BCDC1;
+	}
+	.fieldname-schedules-backups_type .secupress-fieldset-item-checkboxes label:before {
+		width: 142px;
+		border-width: 2px;
+		margin-right: 5px;
+		transition: all .275s;
 	}
 	.secupress-radio-line.secupress-radio-line label .label-text {
 		display: block;
@@ -643,6 +716,29 @@ fieldset.secupress-boxed-group > b {
 	.secupress-fieldset-item-checkboxes label[for="notification-types_types_twitter"]:before {
 		background-image: url("../images/alert-twitter.png");
 	}
+
+	/* font-icon case */
+	.fieldname-schedules-backups_type label:after {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		font-family: "secupress";
+		font-size: 50px;
+		color: #CCCCCC;
+		transition: color .275s;
+	}
+	.fieldname-schedules-backups_type label.is-checked:after {
+		color: #FFF;
+	}
+	.fieldname-schedules-backups_type label[for="schedules-backups_type_db"]:after {
+		content: "\e926";
+		margin: -54px 0 0 -29px;
+	}
+	.fieldname-schedules-backups_type label[for="schedules-backups_type_files"]:after {
+		content: "\e927";
+		margin: -54px 0 0 -22px;
+	}
+
 	.fieldname-backups-storage_location .secupress-radio-line label,
 	.fieldname-backups-storage_location .secupress-get-pro-version,
 	.fieldname-notification-types_types .secupress-fieldset-item-checkboxes label,

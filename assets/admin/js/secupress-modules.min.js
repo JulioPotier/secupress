@@ -1181,3 +1181,23 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		} );
 	}
 } )(jQuery, document, window);
+
+// Checked checkbox class ========================================================================
+(function($, d, w, undefined) {
+	$( '.secupress-fieldset-item-checkboxes' ).each( function() {
+		var $checkbox = $(this).find('input'),
+			$label    = $checkbox.closest( 'label' );
+
+		if ( $checkbox.filter(':checked').length ) {
+			$label.addClass( 'is-checked' );
+		}
+
+		$checkbox.on( 'change', function() {
+			if ( $checkbox.filter(':checked').length ) {
+				$label.addClass( 'is-checked' );
+			} else {
+				$label.removeClass( 'is-checked' );
+			}
+		} );
+	} );
+} )(jQuery, document, window);
