@@ -718,6 +718,20 @@ button.secupress-virgin {
 	display: inline-block;
 }
 
+.secupress-ghost.secupress-button {
+	background: transparent;
+	color: #FFF;
+	border: 2px solid #FFF;
+}
+.secupress-ghost.secupress-ghost.secupress-ghost.secupress-button-tertiary {
+	color: #f39c12;
+	border-color: #f39c12;
+}
+.secupress-ghost.secupress-ghost.secupress-ghost.secupress-button-tertiary:hover,
+.secupress-ghost.secupress-ghost.secupress-ghost.secupress-button-tertiary:focus {
+	color: #FFF;
+}
+
 /**
  * === Bad Theme
  */

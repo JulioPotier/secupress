@@ -506,10 +506,12 @@ label .secupress-textarea-container + .secupress-expand-trigger-container {
 /*.secupress-setting-row_backups-storage_location .secupress-get-pro-col,*/
 /*.secupress-setting-row_notification-types_types .secupress-get-pro-col,*/
 .secupress-setting-row_monitoring_activated .secupress-get-pro-col,
-[id="secupress-settings-module_services--"] .secupress-get-pro-col {
+[id="secupress-settings-module_services--"] .secupress-get-pro-col,
+[data-module="schedules"] .secupress-get-pro-col {
 	-webkit-flex-basis: 0;
 	-ms-flex-preferred-size: 0;
 	flex-basis: 0;
+	display: none;
 }
 label.secupress-textarea-label {
 	position: relative;
@@ -588,6 +590,12 @@ fieldset.secupress-boxed-group > b {
 	margin: 1.5em 20px;
 	background: #DFF8F6;
 }
+.secupress-schedule-message-field.secupress-pro-row {
+	background: #FDF6DB;
+	color: #F39C12;
+	font-weight: bold;
+	padding-right: 20px;
+}
 .secupress-schedule-message-field .secupress-highlight {
 	font-weight: bold;
 	color: #26B3A9;
@@ -601,6 +609,15 @@ fieldset.secupress-boxed-group > b {
 	font-family: "secupress";
 	font-size: 48px;
 	color: #2BCDC1;
+}
+.secupress-schedule-message-field.secupress-pro-row:after {
+	content: "\e907";
+	color: #F39C12;
+	font-weight: normal;
+}
+.secupress-schedule-message-field.secupress-pro-row .secupress-button {
+	float: right;
+	margin-left: 15px;
 }
 
 .secupress-schedule-message-field ~ .secupress-setting-row {
@@ -660,6 +677,10 @@ fieldset.secupress-boxed-group > b {
 	.fieldname-schedules-backups_type .secupress-fieldset-item-checkboxes label.is-checked:before {
 		background-color: #2BCDC1;
 		border-color: #2BCDC1;
+	}
+	.secupress-pro-row .fieldname-schedules-backups_type .secupress-fieldset-item-checkboxes label.is-checked:before {
+		background: #DDD;
+		border-color: #DDD;
 	}
 	.fieldname-schedules-backups_type .secupress-fieldset-item-checkboxes label:before {
 		width: 142px;
