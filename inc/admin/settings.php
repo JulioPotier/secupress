@@ -537,9 +537,9 @@ function secupress_scanners() {
 								<p><?php _e( 'Stay updated on the security of your website. With our automatic scans, there is no need to log in to your WordPress admin to run a scan.', 'secupress' ); ?></p>
 
 								<?php if ( secupress_is_pro() ) :
-									$last_schedule = secupress_get_last_sceduled_scan();
+									$last_schedule = secupress_get_last_scheduled_scan();
 									$last_schedule = $last_schedule ? date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $last_schedule ) : '&mdash;';
-									$next_schedule = secupress_get_next_sceduled_scan();
+									$next_schedule = secupress_get_next_scheduled_scan();
 									$next_schedule = $next_schedule ? date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $next_schedule ) : '&mdash;';
 									?>
 									<div class="secupress-schedules-infos is-pro">
