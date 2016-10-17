@@ -92,12 +92,11 @@ class SecuPress_Scan_Anti_Front_Brute_Force extends SecuPress_Scan implements Se
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-		if ( ! secupress_is_submodule_active( 'firewall', 'antibruteforcemanagement' ) ) {
+		if ( ! secupress_is_submodule_active( 'firewall', 'bruteforce' ) ) {
 			// "bad"
 			$this->add_message( 200 );
 			$this->add_pre_fix_message( 201 );
 		}
-		delete_site_transient( 'secupress_dont_ban_me_on_bruteforce' );
 
 		// "good"
 		$this->maybe_set_status( 0 );

@@ -254,7 +254,7 @@ function secupress_deactivation() {
 	 *
 	 * @since 1.0
 	 *
-	 * @param (array) An empty array to mimic the `$args` parameter from `secupress_deactivate_submodule()`.
+	 * @param (array) $args An empty array to mimic the `$args` parameter from `secupress_deactivate_submodule()`.
 	 */
 	do_action( 'secupress.deactivation', array() );
 }
