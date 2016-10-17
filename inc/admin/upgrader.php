@@ -143,4 +143,11 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 			$wpdb->query( $sql );
 		}
 	}
+
+	// < 1.0.6
+	if ( version_compare( $actual_version, '1.0.6', '<' ) ) {
+		// Make sure affected roles are not empty (sanitization will do the job).
+		$users_login_settings = get_site_option( 'secupress_users-login_settings' );
+		update_site_option( 'secupress_users-login_settings', $users_login_settings );
+	}
 }
