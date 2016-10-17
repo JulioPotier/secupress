@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
 "POT-Creation-Date: 2016-10-18 00:41+0200\n"
-"PO-Revision-Date: 2016-10-18 00:42+0200\n"
+"PO-Revision-Date: 2016-10-18 00:47+0200\n"
 "Last-Translator: WP Media <contact@secupress.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -6666,7 +6666,7 @@ msgstr "Les services XML-RPC sont désactivés sur ce site."
 #: inc/modules/sensitive-data/plugins/xmlrpc.php:30
 #: inc/modules/sensitive-data/plugins/xmlrpc.php:130
 msgid "XML-RPC is disabled"
-msgstr "WML-RPC est désactivé"
+msgstr "XML-RPC est désactivé"
 
 #: inc/modules/sensitive-data/settings/content-protect.php:7
 msgid "Content Protection"
