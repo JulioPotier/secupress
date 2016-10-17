@@ -56,32 +56,6 @@ var secupressNotices = {
 
 
 (function($, d, w, undefined) {
-	/*var SecuPress = {
-			swal2Defaults:        {
-				confirmButtonText: SecuPressi18nCommon.confirmText,
-				cancelButtonText:  SecuPressi18nCommon.cancelText,
-				type:              "warning",
-				allowOutsideClick: true,
-				customClass:       "wpmedia-swal2 secupress-swal2"
-			},
-			swal2ConfirmDefaults: {
-				showCancelButton:  true,
-				closeOnConfirm:    false
-			}
-		};*/
-
-	/**
-	 * Notice tests
-	 *
-
-	var message = 'Something to say',
-		good    = secupressNotices.create( { message: message } );
-		warning = secupressNotices.create( { type: 'warning', message: message } );
-		bad     = secupressNotices.create( { type: 'bad', message: message } );
-
-	$( '.secupress-row-actions' ).before( good );
-	secupressCouldSay( message );
-	*/
 
 
 	/**
