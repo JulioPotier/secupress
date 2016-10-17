@@ -1002,7 +1002,7 @@ function secupress_sidebox( $args ) {
  * Will return the current scanner step number.
  *
  * @since 1.0
- * @author Julio Potier (Geoffrey)
+ * @author Julio Potier
  *
  * @return (int) Returns 1 if first scan never done.
  */
