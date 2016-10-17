@@ -89,7 +89,12 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 		// JS.
 		wp_enqueue_script( 'secupress-modules-js',  SECUPRESS_ADMIN_JS_URL . 'secupress-modules' . $suffix . '.js', array( 'secupress-common-js' ), $version, true );
 
-		$already_scanned = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) ) ? 1 : 0;
+		$already_scanned         = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) ) ? 1 : 0;
+		$file_monitoring_running = 'off';
+
+		if ( ! empty( $_GET['module'] ) && 'file-system' === $_GET['module'] && function_exists( 'secupress_file_monitoring_get_instance' ) ) {
+			$file_monitoring_running = secupress_file_monitoring_get_instance()->is_monitoring_running() ? 'on' : 'off';
+		}
 
 		wp_localize_script( 'secupress-modules-js', 'SecuPressi18nModules', array(
 			// Roles.
@@ -134,6 +139,9 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 			// Expand Textareas.
 			'expandTextOpen'       => __( 'Show More', 'secupress' ),
 			'expandTextClose'      => __( 'Close' ),
+			// Malware Scan
+			'malwareScanStatus'    => $file_monitoring_running,
+			'MalwareScanURI'       => secupress_admin_url( 'modules', 'file-system' ),
 		) );
 
 	}
@@ -529,18 +537,19 @@ function secupress_scanners() {
 								<p><?php _e( 'Stay updated on the security of your website. With our automatic scans, there is no need to log in to your WordPress admin to run a scan.', 'secupress' ); ?></p>
 
 								<?php if ( secupress_is_pro() ) :
-									// /////.
-									$last_schedule = '1463654935';
-									$next_schedule = '1464654935';
+									$last_schedule = secupress_get_last_sceduled_scan();
+									$last_schedule = $last_schedule ? date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $last_schedule ) : '&mdash;';
+									$next_schedule = secupress_get_next_sceduled_scan();
+									$next_schedule = $next_schedule ? date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $next_schedule ) : '&mdash;';
 									?>
 									<div class="secupress-schedules-infos is-pro">
 										<p class="secupress-schedule-last-one">
 											<i class="icon-clock-o" aria-hidden="true"></i>
-											<span><?php printf( __( 'Last automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $last_schedule ) ); ?></span>
+											<span><?php printf( __( 'Last automatic scan: %s', 'secupress' ), $last_schedule ); ?></span>
 										</p>
 										<p class="secupress-schedule-next-one">
 											<i class="icon-clock-o" aria-hidden="true"></i>
-											<span><?php printf( __( 'Next automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $next_schedule ) ); ?></span>
+											<span><?php printf( __( 'Next automatic scan: %s', 'secupress' ), $next_schedule ); ?></span>
 										</p>
 
 										<p class="secupress-cta">
@@ -986,4 +995,28 @@ function secupress_sidebox( $args ) {
 		echo '<h3 class="hndle"><span><b>' . $args['title'] . '</b></span></h3>';
 		echo'<div class="inside">' . $args['content'] . '</div>';
 	echo "</div>\n";
+}
+
+
+/**
+ * Will return the current scanner step number.
+ *
+ * @since 1.0
+ * @author Julio Potier (Geoffrey)
+ *
+ * @return (int) Returns 1 if first scan never done.
+ */
+function secupress_get_scanner_pagination() {
+	$scans = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
+
+	if ( empty( $_GET['step'] ) || ! is_numeric( $_GET['step'] ) || empty( $scans ) || 0 > $_GET['step'] ) {
+		$step = 1;
+	} else {
+		$step = (int) $_GET['step'];
+		if ( $step > 4 ) {
+			secupress_is_jarvis();
+		}
+	}
+
+	return $step;
 }

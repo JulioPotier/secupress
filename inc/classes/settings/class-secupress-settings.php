@@ -680,6 +680,10 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				foreach ( $args['options'] as $val => $title ) {
 					$args['label_for'] = $args['name'] . '_' . $val;
 					$disabled          = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' disabled="disabled"' : '';
+
+					if ( ! $disabled && strpos( $title, 'secupress-coming-soon-feature' ) !== false ) {
+						$disabled = ' disabled="disabled"';
+					}
 					?>
 					<p class="secupress-radio-line<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? ' secupress-pro-option' : ''; ?>">
 						<label<?php echo $disabled ? ' class="disabled"' : ''; ?> for="<?php echo esc_attr( $args['label_for'] ); ?>">

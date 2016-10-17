@@ -113,6 +113,7 @@ function secupress_init() {
 	require_once( SECUPRESS_INC_PATH . 'functions/formatting.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/options.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/modules.php' );
+	require_once( SECUPRESS_INC_PATH . 'functions/db.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/ip.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/files.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/htaccess.php' );
@@ -156,7 +157,6 @@ function secupress_init() {
 		require_once( SECUPRESS_ADMIN_PATH . 'functions/scan-fix.php' );
 		require_once( SECUPRESS_ADMIN_PATH . 'functions/modules.php' );
 		require_once( SECUPRESS_ADMIN_PATH . 'functions/notices.php' );
-		require_once( SECUPRESS_ADMIN_PATH . 'functions/db.php' );
 
 		// Temporary Updates when not on repo yet.
 		require_once( SECUPRESS_ADMIN_PATH . 'functions/wp-updates-plugin.php' );

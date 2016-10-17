@@ -445,7 +445,8 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	protected function scheduled_backups() {
-		_ex( 'None so far.', 'scheduled backups', 'secupress' );
+		echo '<a href="' . esc_url( secupress_admin_url( 'modules', 'get-pro' ) ) . '" class="secupress-button secupress-ghost secupress-button-tertiary">' . __( 'Learn more about SecuPress Pro', 'secupress' ) . '</a>';
+			_e( 'This feature is only available in SecuPress Pro', 'secupress' );
 	}
 
 
@@ -455,7 +456,8 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	protected function scheduled_scan() {
-		_ex( 'None so far.', 'scheduled scans', 'secupress' );
+		echo '<a href="' . esc_url( secupress_admin_url( 'modules', 'get-pro' ) ) . '" class="secupress-button secupress-ghost secupress-button-tertiary">' . __( 'Learn more about SecuPress Pro', 'secupress' ) . '</a>';
+			_e( 'This feature is only available in SecuPress Pro', 'secupress' );
 	}
 
 
@@ -465,7 +467,8 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	protected function scheduled_monitoring() {
-		_ex( 'None so far.', 'scheduled file monitoring', 'secupress' );
+		echo '<a href="' . esc_url( secupress_admin_url( 'modules', 'get-pro' ) ) . '" class="secupress-button secupress-ghost secupress-button-tertiary">' . __( 'Learn more about SecuPress Pro', 'secupress' ) . '</a>';
+			_e( 'This feature is only available in SecuPress Pro', 'secupress' );
 	}
 
 

@@ -29,7 +29,6 @@ Protect your WordPress with SecuPress, analyze and ensure the safety of your web
 (soon)
 
 == Changelog ==
-
 = 1.0.6 =
 ???
 
