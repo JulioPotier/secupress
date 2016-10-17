@@ -190,6 +190,9 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 
 		if ( secupress_is_pro() ) {
 			require_once( SECUPRESS_PRO_ADMIN_PATH . 'settings.php' );
+		} elseif ( ! empty( $modules[ $this->modulenow ]['mark_as_pro'] ) ) {
+			// Disable the section submit buttons if it's a Pro module and we're using the Free version.
+			add_filter( 'secupress.settings.section.submit_button_args', array( $this, 'disable_sumit_buttons' ) );
 		}
 	}
 
@@ -795,5 +798,32 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		$plugin_file = SECUPRESS_MODULES_PATH . $this->modulenow . '/settings/' . $plugin . '.php';
 
 		return $this->require_settings_file( $plugin_file, $plugin );
+	}
+
+
+	// Other =======================================================================================.
+
+	/**
+	 * Filter the arguments passed to the section submit button and disable it.
+	 *
+	 * @since 1.0.6
+	 * @author Grégory Viguier
+	 *
+	 * @param (array) $args An array of arguments passed to the `submit_button()` method.
+	 *
+	 * @return (array)
+	 */
+	public function disable_sumit_buttons( $args ) {
+		$wrap = isset( $args['wrap'] ) ? $args['wrap'] : true;
+		$atts = isset( $args['other_attributes'] ) && is_array( $args['other_attributes'] ) ? $args['other_attributes'] : array();
+		$atts = array_merge( $atts, array(
+			'disabled'      => 'disabled',
+			'aria-disabled' => 'true',
+		) );
+
+		return array_merge( $args, array(
+			'wrap'             => $wrap,
+			'other_attributes' => $atts,
+		) );
 	}
 }

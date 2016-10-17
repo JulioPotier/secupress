@@ -333,7 +333,20 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		echo '</div><!-- .secublock -->';
 
 		if ( $with_save_button ) {
-			static::submit_button( 'primary', $this->sectionnow . '_submit' );
+			$args = array(
+				'type' => 'primary',
+				'name' => $this->sectionnow . '_submit',
+			);
+			/**
+			 * Filter the arguments passed to the section submit button.
+			 *
+			 * @since 1.0.6
+			 *
+			 * @param (array) $args An array of arguments passed to the `submit_button()` method.
+			 */
+			$args = apply_filters( 'secupress.settings.section.submit_button_args', $args );
+
+			call_user_func_array( array( __CLASS__, 'submit_button' ), $args );
 		}
 
 		/**
