@@ -47,10 +47,10 @@ function secupress_services_settings_callback( $settings ) {
 	), $settings );
 
 	$summary     = trim( html_entity_decode( $settings['support_summary'], ENT_QUOTES ) );
-	$summary     = strip_tags( wp_unslash( $settings['support_summary'] ) );
-	$summary     = preg_replace( "@[\r\n]+@", ' ', $settings['support_summary'] );
+	$summary     = strip_tags( wp_unslash( $summary ) );
+	$summary     = preg_replace( "@[\r\n]+@", ' ', $summary );
 	$description = trim( html_entity_decode( $settings['support_description'], ENT_QUOTES ) );
-	$description = str_replace( "\r\n", "\n", wp_unslash( $settings['support_description'], ENT_QUOTES ) );
+	$description = str_replace( "\r\n", "\n", wp_unslash( $description, ENT_QUOTES ) );
 
 	$def_message = __( 'Please provide the specific url(s) where we can see each issue. e.g. the request doesn\'t work on this page: example.com/this-page', 'secupress' ) . "\n\n" .
 	               __( 'Please let us know how we will recognize the issue or can reproduce the issue. What is supposed to happen, and what is actually happening instead?', 'secupress' );
