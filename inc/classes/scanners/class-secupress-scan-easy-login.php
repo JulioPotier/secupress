@@ -69,8 +69,6 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements SecuPress_Scan
 			// "good"
 			0   => __( 'The login page seems to be protected by double authentication.', 'secupress' ),
 			1   => __( 'The <strong>PasswordLess Double Authentication</strong> module has been activated for every role. Users will receive an email to log-in now.', 'secupress' ),
-			// "warning"
-			100 => __( 'Unable to create a user to test the login authentication system.', 'secupress' ),
 			// "bad"
 			200 => __( 'Your login system is <strong>not strong enough</strong>, you need a <strong>double authentication system</strong>.', 'secupress' ),
 			201 => sprintf( __( 'Our module <a href="%s">%s</a> could fix this.', 'secupress' ), esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#row-double-auth_type', __( 'PasswordLess', 'secupress' ) ),
@@ -94,33 +92,16 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements SecuPress_Scan
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-		$temp_login = uniqid( 'secupress' );
-		$temp_pass  = wp_generate_password( 64 );
-		$temp_id    = wp_insert_user( array(
-			'user_login' => $temp_login,
-			'user_pass'  => $temp_pass,
-			'user_email' => 'secupress_no_mail_EL@fakemail.' . time(),
-			'role'       => 'secupress_no_role_' . time(),
-		) );
+		$activated = secupress_is_submodule_active( 'users-login', 'passwordless' );
 
-		if ( ! is_wp_error( $temp_id ) ) {
-
-			$check = wp_authenticate( $temp_login, $temp_pass );
-
-			wp_delete_user( $temp_id );
-
-			if ( is_a( $check, 'WP_User' ) ) {
-				// "bad"
-				$this->add_message( 200 );
-				$this->add_pre_fix_message( 201 );
-			}
+		if ( ! $activated ) {
+			// "bad"
+			$this->add_message( 200 );
+			$this->add_pre_fix_message( 201 );
 		} else {
-			// "warning"
-			$this->add_message( 100 );
+			// "good"
+			$this->add_message( 0 );
 		}
-
-		// "good"
-		$this->maybe_set_status( 0 );
 
 		return parent::scan();
 	}
