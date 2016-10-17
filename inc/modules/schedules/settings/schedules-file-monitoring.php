@@ -44,5 +44,5 @@ $this->add_field( array(
 	'label'        => __( 'Email' ),
 	'label_for'    => $this->get_field_name( 'email' ),
 	'type'         => 'email',
-	'default'      => wp_get_current_user()->user_email,
+	'default'      => secupress_get_module_option( $this->get_field_name( 'periodicity' ), '', $this->modulenow ) ? '' : wp_get_current_user()->user_email,
 ) );
