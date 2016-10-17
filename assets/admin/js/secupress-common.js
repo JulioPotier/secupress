@@ -56,8 +56,6 @@ var secupressNotices = {
 
 
 (function($, d, w, undefined) {
-
-
 	/**
 	 * Basic plugins
 	 */
