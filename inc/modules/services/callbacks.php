@@ -108,10 +108,10 @@ function secupress_services_settings_callback( $settings ) {
 	}
 
 	$data = array_merge( $data, array(
-		'sp_free_version'   => sprintf( __( 'Version of SecuPress Free: %s', 'secupress' ), SECUPRESS_VERSION ),
+		'sp_free_version'   => sprintf( __( 'SecuPress Free Version: %s', 'secupress' ), SECUPRESS_VERSION ),
 		'website_url'       => sprintf( __( 'Site URL: %s', 'secupress' ), esc_url( user_trailingslashit( home_url(), 'home' ) ) ),
 		'is_multisite'      => sprintf( __( 'Multisite: %s', 'secupress' ), is_multisite() ? __( 'Yes', 'secupress' ) : __( 'No', 'secupress' ) ),
-		'wp_version'        => sprintf( __( 'Version of WordPress: %s', 'secupress' ), $wp_version ),
+		'wp_version'        => sprintf( __( 'WordPress Version: %s', 'secupress' ), $wp_version ),
 		'wp_active_plugins' => sprintf( __( 'Active plugins: %s', 'secupress' ), '<br/>- ' . implode( '<br/>- ', secupress_get_active_plugins() ) ),
 	) );
 
@@ -122,9 +122,8 @@ function secupress_services_settings_callback( $settings ) {
 	// Free plugin.
 	if ( ! secupress_is_pro() ) {
 		$message = sprintf(
-			/** Translators: 1 is the plugin name, 2 is a link to the "plugin directory". */
-			__( 'Oh, you use the Free version of %1$s! Support is handled on the %2$s. Thank you!', 'secupress' ),
-			SECUPRESS_PLUGIN_NAME,
+			/** Translators: %s is "plugin directory". */
+			__( 'Oh, you are using SecuPress Free! The support is handled on the %s. Thank you!', 'secupress' ),
 			'<a href="https://wordpress.org/support/plugin/secupress" target="_blank" title="' . esc_attr__( 'Open in a new window.', 'secupress' ) . '">' . __( 'plugin directory', 'secupress' ) . '</a>'
 		);
 
@@ -181,10 +180,10 @@ function secupress_services_settings_callback( $settings ) {
 		do_action( 'secupress.services.ask_for_support', $summary, $description, $data );
 	} elseif ( ! $summary ) {
 		// The summary is missing.
-		add_settings_error( 'general', 'no_summary', __( 'Could you please give a short summary of your problem?', 'secupress' ) );
+		add_settings_error( 'general', 'no_summary', __( 'Could you please give a short summary of your question?', 'secupress' ) );
 	} elseif ( ! $description ) {
 		// The message is missing.
-		add_settings_error( 'general', 'no_description', __( 'Without any description, it will be difficult to solve your problem.', 'secupress' ) );
+		add_settings_error( 'general', 'no_description', __( 'Without any description, it will be difficult to bring your help.', 'secupress' ) );
 	} else {
 		// The message is the default one.
 		add_settings_error( 'general', 'default_description', __( 'I don\'t think this description can be of any help.', 'secupress' ) );
