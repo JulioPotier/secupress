@@ -29,7 +29,7 @@ if( !class_exists('WPUpdatesPluginUpdater_spfree') ) {
     	}
 
     	function check_for_update( $transient ) {
-    		if(empty($transient->checked)) return $transient;
+    		if(empty($transient->checked) || empty($transient->checked[$this->plugin_path])) return $transient;
 
     		$request_args = array(
     		    'id' => $this->plugin_id,
@@ -68,7 +68,7 @@ if( !class_exists('WPUpdatesPluginUpdater_spfree') ) {
     		$request_args = array(
     		    'id' => $this->plugin_id,
     		    'slug' => $this->plugin_slug,
-    			'version' => (isset($plugin_info->checked)) ? $plugin_info->checked[$this->plugin_path] : 0 // Current version
+    			'version' => (isset($plugin_info->checked) && isset($plugin_info->checked[$this->plugin_path])) ? $plugin_info->checked[$this->plugin_path] : 0 // Current version
     		);
 		    if ($this->license_key) $request_args['license'] = $this->license_key;
 

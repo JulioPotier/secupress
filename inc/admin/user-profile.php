@@ -62,6 +62,10 @@ add_action( 'user_profile_update_errors', 'secupress_user_profile_update_errors'
 function secupress_user_profile_update_errors( &$errors, $update, &$user ) {
 	global $wpdb;
 
+	if ( ! secupress_is_user( $user ) ) {
+		return;
+	}
+
 	secupress_reinit_notice( 'recovery_email', $user->ID );
 
 	// First, simple tests focused on the user main email.

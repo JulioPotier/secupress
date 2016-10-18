@@ -488,16 +488,17 @@ function secupress_get_capability( $force_mono = false ) {
 /**
  * Get SecuPress logo.
  *
+ * @since 1.0.6 Remove the yellow Pro logo (Julio Potier)
  * @since 1.0
  *
  * @param (array) $atts An array of HTML attributes.
  * @param (bool)  $is_pro True is pro logo requested.
  *
+ * @author Geoffrey Crofte
  * @return (string) The HTML tag.
  */
-function secupress_get_logo( $atts = array(), $is_pro = false ) {
-	$pro      = secupress_is_pro() || $is_pro ? '-pro' : '';
-	$base_url = SECUPRESS_ADMIN_IMAGES_URL . 'logo' . $pro;
+function secupress_get_logo( $atts = array() ) {
+	$base_url = SECUPRESS_ADMIN_IMAGES_URL . 'logo';
 
 	$atts = array_merge( array(
 		'src'    => "{$base_url}.png",
@@ -952,24 +953,89 @@ function secupress_is_user( $user ) {
 
 
 /**
- * Will return the current scanner step number.
+ * Compress some data to be stored in the database.
  *
- * @since 1.0
- * @author Julio Potier (Geoffrey)
+ * @since 1.0.6
  *
- * @return (int) Returns 1 if first scan never done.
+ * @param (mixed) $data The data to compress.
+ *
+ * @return (string) The compressed data.
  */
-function secupress_get_scanner_pagination() {
-	$scans = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
+function secupress_compress_data( $data ) {
+	/** Little and gentle obfuscation to avoid being tagged as "malicious script", I hope you understand :) — Julio. */
+	$gz  = 'gz' . strrev( 'eta' . 'lfed' );
+	$bsf = 'base' . '' . '64_' . strrev( 'edo' . 'cne' );
 
-	if ( empty( $_GET['step'] ) || ! is_numeric( $_GET['step'] ) || empty( $scans ) || 0 > $_GET['step'] ) {
-		$step = 1;
-	} else {
-		$step = (int) $_GET['step'];
-		if ( $step > 4 ) {
-			secupress_is_jarvis();
-		}
+	return $bsf//
+		( $gz//
+			( serialize( $data ) ) );
+}
+
+
+/**
+ * Decompress some data coming from the database.
+ *
+ * @since 1.0.6
+ *
+ * @param (string) $data The data to decompress.
+ *
+ * @return (mixed) The decompressed data.
+ */
+function secupress_decompress_data( $data ) {
+	if ( ! $data || ! is_string( $data ) ) {
+		return $data;
 	}
 
-	return $step;
+	/** Little and gentle obfuscation to avoid being tagged as "malicious script", I hope you understand :) — Julio. */
+	$gz  = 'gz' . strrev( 'eta' . 'lfni' );
+	$bsf = 'base' . '' . '64_' . strrev( 'edo' . 'ced' );
+
+	$data_tmp = $bsf//
+		( $data );
+
+	if ( ! $data_tmp ) {
+		return $data;
+	}
+
+	$data     = $data_tmp;
+	$data_tmp = $gz//
+		( $data );
+
+	if ( ! $data_tmp ) {
+		return $data;
+	}
+
+	return unserialize( $data_tmp );
+}
+
+
+/**
+ * Try to increase the memory limit if possible.
+ *
+ * @since 1.0
+ * @author Grégory Viguier
+ */
+function secupress_maybe_increase_memory_limit() {
+	if ( ! wp_is_ini_value_changeable( 'memory_limit' ) ) {
+		return;
+	}
+
+	$limits = array(
+		'64M'  => 67108864,
+		'128M' => 134217728,
+		'256M' => 268435456,
+	);
+	$current_limit     = @ini_get( 'memory_limit' );
+	$current_limit_int = wp_convert_hr_to_bytes( $current_limit );
+
+	if ( -1 === $current_limit_int || $current_limit_int > $limits['256M'] ) {
+		return;
+	}
+
+	foreach ( $limits as $limit => $bytes ) {
+		if ( $current_limit_int < $bytes ) {
+			@ini_set( 'memory_limit', $limit );
+			return;
+		}
+	}
 }

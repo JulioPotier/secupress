@@ -1,7 +1,6 @@
 /* globals jQuery: false, ajaxurl: false, wp: false, SecuPressi18nScanner: false, SecuPressi18nChart: false, secupressIsSpaceOrEnterKey: false, secupressNotices: false, Chart: false, swal2: false */
 // !Global vars ====================================================================================
 var SecuPress = {
-	supportButtonColor:   "#F1C40F",
 	swal2Defaults:        {
 		confirmButtonText: SecuPressi18nScanner.confirmText,
 		cancelButtonText:  SecuPressi18nScanner.cancelText,
@@ -487,38 +486,6 @@ jQuery( document ).ready( function( $ ) {
 			} );
 		} );
 
-	} )( window, document, $ );
-
-
-	// Ask for support button (pro).
-	( function( w, d, $, undefined ) {
-		$( '.secupress-button-support' ).on( 'click.secupress keyup', function( e ) {
-			if ( 'keyup' === e.type && ! secupressIsSpaceOrEnterKey( e ) ) {
-				return false;
-			}
-
-			e.preventDefault();
-
-			swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
-				title:              SecuPressi18nScanner.supportTitle,
-				confirmButtonText:  SecuPressi18nScanner.supportButton,
-				html:               SecuPressi18nScanner.supportContentPro,
-				confirmButtonColor: SecuPress.supportButtonColor,
-				type:               'question'
-			} ) ).then( function( isConfirm ) {
-				if ( true === isConfirm ) {
-					swal2.enableLoading();
-
-					$.post( ajaxurl, {}, null, 'json' )
-					.done( function( r ) {
-						// Display fix re
-					} )
-					.fail( function() {
-						// Error
-					} );
-				}
-			} );
-		} );
 	} )( window, document, $ );
 
 
@@ -1246,23 +1213,4 @@ jQuery( document ).ready( function( $ ) {
 			$( '.secupress-button-scan' ).last().trigger( 'bulkscan.secupress' );
 		}
 	} )( window, document, $ );
-
-
-	// Docs coming soon ============================================================================
-	(function($) {
-
-			var $links = $( 'a[href$="docs.secupress.me/"]' );
-
-			$links.on( 'click.secupress', function(e){
-
-				e.preventDefault();
-				swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
-					title:             SecuPressi18nScanner.comingSoon,
-					showConfirmButton: false,
-					html:              SecuPressi18nScanner.docNotReady,
-					type:              'info'
-				} ) );
-			} );
-
-	})(jQuery);
 } );

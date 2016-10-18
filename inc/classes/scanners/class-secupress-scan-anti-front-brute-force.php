@@ -92,12 +92,11 @@ class SecuPress_Scan_Anti_Front_Brute_Force extends SecuPress_Scan implements Se
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-		if ( ! secupress_is_submodule_active( 'firewall', 'antibruteforcemanagement' ) ) {
+		if ( ! secupress_is_submodule_active( 'firewall', 'bruteforce' ) ) {
 			// "bad"
 			$this->add_message( 200 );
 			$this->add_pre_fix_message( 201 );
 		}
-		delete_site_transient( 'secupress_dont_ban_me_on_bruteforce' );
 
 		// "good"
 		$this->maybe_set_status( 0 );
@@ -116,14 +115,10 @@ class SecuPress_Scan_Anti_Front_Brute_Force extends SecuPress_Scan implements Se
 	 * @return (array) The fix results.
 	 */
 	public function fix() {
-		if ( secupress_is_pro() && function_exists( 'secupress_pro_fix_anti_front_bruteforce' ) ) {
-			secupress_pro_fix_anti_front_bruteforce( $this );
-			// "good"
-			$this->add_fix_message( 1 );
-		} else {
-			// "bad"
-			$this->add_fix_message( 201 );
-		}
+		secupress_activate_submodule( 'firewall', 'bruteforce' );
+
+		// "good"
+		$this->add_fix_message( 1 );
 
 		return parent::fix();
 	}

@@ -22,7 +22,7 @@ if ( ! $plans ) {
 		<div class="secupress-col-1-3 secupress-col-logo secupress-text-center">
 			<div class="secupress-logo-block">
 				<div class="secupress-lb-logo">
-					<?php echo secupress_get_logo( array( 'width' => 96 ), true ); ?>
+					<?php echo secupress_get_logo( array( 'width' => 96 ) ); ?>
 				</div>
 			</div>
 		</div>
