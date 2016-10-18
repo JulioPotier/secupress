@@ -96,7 +96,7 @@ unset( $tests_1, $tests_2, $tests_3, $tests_4, $tests_5 );
 if ( ! $secupress_tests ) {
 	?>
 	<div class="secupress-step-content-header secupress-flex secupress-flex-spaced">
-		<p class="secupress-step-title"><?php _e( 'Nothing to do here' ); ?></p>
+		<p class="secupress-step-title"><?php _e( 'Nothing to do here', 'secupress' ); ?></p>
 		<p class="secupress-flex">
 			<a href="<?php echo esc_url( secupress_admin_url( 'scanners' ) ); ?>&amp;step=4" class="secupress-button shadow light">
 				<span class="icon">
