@@ -1180,7 +1180,7 @@ jQuery( document ).ready( function( $ ) {
 			$this = $( this );
 
 			if ( secupressIsButtonDisabled( $this ) ) {
-				return;
+				return false;
 			}
 
 			$parent = $( '.' + $this.attr( 'data-parent' ) );
@@ -1190,7 +1190,7 @@ jQuery( document ).ready( function( $ ) {
 			if ( ! $next.length ) {
 				// Go to step 4.
 				w.location = this.href;
-				return;
+				return false;
 			}
 
 			// Don't go on step4.
