@@ -1188,6 +1188,8 @@ jQuery( document ).ready( function( $ ) {
 
 			// If there is no next bloc.
 			if ( ! $next.length ) {
+				// Go to step 4.
+				w.location = this.href;
 				return;
 			}
 
