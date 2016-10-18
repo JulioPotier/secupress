@@ -3,7 +3,7 @@ Contributors: wp_media, secupress, juliobox, greglone
 Tags: security, spam, backup, schedule, firewall, sensitive data, antivirus, logs, alerts
 Requires at least: 3.7
 Tested up to: 4.6.1
-Stable tag: 1.0.5
+Stable tag: 1.0.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,6 +29,16 @@ Protect your WordPress with SecuPress, analyze and ensure the safety of your web
 (soon)
 
 == Changelog ==
+= 1.0.6 =
+* 18 oct 2016
+* Fix #158 & #179: Affected roles on modules were reset to empty. I prefer a filled field.
+* Fix #159: The error message from files backup talked about DB backup. Go home!
+* Fix #178: The PasswordLess scan will now check if its module is active, and in a near future will really check for any 2FA code.
+* Fix #185: A mysterious "////" title was present in the french translation, near "WML-RPC".
+* Fix #190: The module link in the non login time slot scan has now its # to get a correct anchor. Happy sailor.
+* Fix #191: A function was missing, so the PasswordLess scan couldn't activate its module, now, he can and he's happy too.
+* Fix #193: The anticrutefoce scan always said "false" because we didn't call him by its real name.
+* Fix #197: When one of our muplugin was created on plugin deactivation, it triggered a fatal error, it was so fatal that we decided to remove it.
 
 = 1.0.5 =
 * 07 oct 2016
@@ -36,7 +46,7 @@ Protect your WordPress with SecuPress, analyze and ensure the safety of your web
 * Fix #166: Various CSS improvements.
 * Fix #171: Scans related to the firewall were always returning a bad status, even if the protections were running.
 * Fix #172: The scan and the protection related to the "Bad request methods" were not accurate.
-* Fix #176: A SQL warning occured if you didn't had logs to delete from 1.0.4, a new IF condition has been added to prevent that.
+* Fix #176: A SQL warning occurred if you didn't had logs to delete from 1.0.4, a new IF condition has been added to prevent that.
 
 = 1.0.4 =
 * 26 sep 2016

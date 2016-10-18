@@ -77,6 +77,8 @@ if ( secupress_is_pro() ) {
 }
 
 $field_name = $this->get_field_name( 'location' );
+$values     = secupress_backups_storage_labels();
+$values['dropbox'] = __( 'Dropbox', 'secupress' ) . ' <span class="screen-reader-text">(</span><span class="secupress-coming-soon-feature">' . __( 'Coming soon', 'secupress' ) . '</span><span class="screen-reader-text">)</span>';
 
 $this->add_field( array(
 	'title'        => __( 'Storage Location', 'secupress' ),
@@ -85,7 +87,7 @@ $this->add_field( array(
 	'default'      => 'local',
 	'type'         => 'radios',
 	'label_screen' => __( 'Storage Location', 'secupress' ),
-	'options'      => secupress_backups_storage_labels(),
+	'options'      => $values,
 	'helpers' => array(
 		array(
 			'type'        => 'warning',

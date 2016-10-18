@@ -89,7 +89,12 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 		// JS.
 		wp_enqueue_script( 'secupress-modules-js',  SECUPRESS_ADMIN_JS_URL . 'secupress-modules' . $suffix . '.js', array( 'secupress-common-js' ), $version, true );
 
-		$already_scanned = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) ) ? 1 : 0;
+		$already_scanned         = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) ) ? 1 : 0;
+		$file_monitoring_running = 'off';
+
+		if ( ! empty( $_GET['module'] ) && 'file-system' === $_GET['module'] && function_exists( 'secupress_file_monitoring_get_instance' ) ) {
+			$file_monitoring_running = secupress_file_monitoring_get_instance()->is_monitoring_running() ? 'on' : 'off';
+		}
 
 		wp_localize_script( 'secupress-modules-js', 'SecuPressi18nModules', array(
 			// Roles.
@@ -134,6 +139,9 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 			// Expand Textareas.
 			'expandTextOpen'       => __( 'Show More', 'secupress' ),
 			'expandTextClose'      => __( 'Close' ),
+			// Malware Scan
+			'malwareScanStatus'    => $file_monitoring_running,
+			'MalwareScanURI'       => secupress_admin_url( 'modules', 'file-system' ),
 		) );
 
 	}
@@ -179,11 +187,6 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 			'scanDetails'        => __( 'Scan Details', 'secupress' ),
 			'fixDetails'         => __( 'Fix Details', 'secupress' ),
 			'firstScanURL'       => esc_url( wp_nonce_url( secupress_admin_url( 'scanners' ), 'first_oneclick-scan' ) ) . '&oneclick-scan=1',
-			'supportTitle'       => __( 'Ask for Support', 'secupress' ),
-			'supportButton'      => __( 'Open a ticket', 'secupress' ),
-			'supportContentFree' => __( '<p>During the test phase, get support by sending an email to <b>support@secupress.me</b>. Thank you!</p>', 'secupress' ), // ////.
-			// 'supportContentFree' => __( '<p>Using the free version you have to post a new thread in the free wordpress.org forums.</p><p><a href="https://wordpress.org/support/plugin/secupress-free#postform" target="_blank" class="secupress-button secupress-button-mini"><span class="icon" aria-hidden="true"><i class="icon-wordpress"></i></span><span class="text">Open the forum</span></a></p><p>When using the Pro version, you can open a ticket directly from this popin: </p><br><p style="text-align:left">Summary: <input class="large-text" type="text" name="summary"></p><p style="text-align:left">Description: <textarea name="description" disabled="disabled">Please provide the specific url(s) where we can see each issue. e.g. the request doesn\'t work on this page: example.com/this-page</textarea></p>', 'secupress' ), // ////.
-			'supportContentPro'  => '<input type="hidden" id="secupress_support_item" name="secupress_support_item" value=""><p style="text-align:left">Summary: <input class="large-text" type="text" name="summary"></p><p style="text-align:left">Description: <textarea name="description" disabled="disabled">Please provide the specific url(s) where we can see each issue. e.g. the request doesn\'t work on this page: example.com/this-page</textarea></p>', // ////.
 			'a11y' => array(
 				'scanEnded'    => __( 'Security scan just finished.', 'secupress' ),
 				'bulkFixStart' => __( 'Currently fixing…', 'secupress' ) . ' ' . __( 'Please wait until fixing is complete.', 'secupress' ),
@@ -240,6 +243,9 @@ function secupress_print_version_number_in_footer( $footer ) {
 /*------------------------------------------------------------------------------------------------*/
 
 add_filter( 'plugin_action_links_' . plugin_basename( SECUPRESS_FILE ), 'secupress_settings_action_links' );
+if ( secupress_has_pro() ) {
+	add_filter( 'plugin_action_links_' . plugin_basename( SECUPRESS_PRO_FILE ), 'secupress_settings_action_links' );
+}
 /**
  * Add links to the plugin row.
  *
@@ -252,7 +258,7 @@ add_filter( 'plugin_action_links_' . plugin_basename( SECUPRESS_FILE ), 'secupre
 function secupress_settings_action_links( $actions ) {
 	if ( ! secupress_is_white_label() ) {
 		if ( secupress_is_pro() ) {
-			array_unshift( $actions, sprintf( '<a href="%s">%s</a>', esc_url( secupress_admin_url( 'modules', 'services' ) ) . '#module-support', __( 'Support', 'secupress' ) ) );
+			array_unshift( $actions, sprintf( '<a href="%s">%s</a>', esc_url( secupress_admin_url( 'modules', 'services' ) ), __( 'Support', 'secupress' ) ) );
 		} else {
 			array_unshift( $actions, sprintf( '<a href="%s">%s</a>', 'https://wordpress.org/support/plugin/secupress', __( 'Support', 'secupress' ) ) );
 		}
@@ -531,18 +537,19 @@ function secupress_scanners() {
 								<p><?php _e( 'Stay updated on the security of your website. With our automatic scans, there is no need to log in to your WordPress admin to run a scan.', 'secupress' ); ?></p>
 
 								<?php if ( secupress_is_pro() ) :
-									// /////.
-									$last_schedule = '1463654935';
-									$next_schedule = '1464654935';
+									$last_schedule = secupress_get_last_scheduled_scan();
+									$last_schedule = $last_schedule ? date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $last_schedule ) : '&mdash;';
+									$next_schedule = secupress_get_next_scheduled_scan();
+									$next_schedule = $next_schedule ? date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $next_schedule ) : '&mdash;';
 									?>
 									<div class="secupress-schedules-infos is-pro">
 										<p class="secupress-schedule-last-one">
 											<i class="icon-clock-o" aria-hidden="true"></i>
-											<span><?php printf( __( 'Last automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $last_schedule ) ); ?></span>
+											<span><?php printf( __( 'Last automatic scan: %s', 'secupress' ), $last_schedule ); ?></span>
 										</p>
 										<p class="secupress-schedule-next-one">
 											<i class="icon-clock-o" aria-hidden="true"></i>
-											<span><?php printf( __( 'Next automatic scan: %s', 'secupress' ), date_i18n( _x( 'Y-m-d \a\t h:ia', 'Schedule date', 'secupress' ), $next_schedule ) ); ?></span>
+											<span><?php printf( __( 'Next automatic scan: %s', 'secupress' ), $next_schedule ); ?></span>
 										</p>
 
 										<p class="secupress-cta">
@@ -988,4 +995,28 @@ function secupress_sidebox( $args ) {
 		echo '<h3 class="hndle"><span><b>' . $args['title'] . '</b></span></h3>';
 		echo'<div class="inside">' . $args['content'] . '</div>';
 	echo "</div>\n";
+}
+
+
+/**
+ * Will return the current scanner step number.
+ *
+ * @since 1.0
+ * @author Julio Potier
+ *
+ * @return (int) Returns 1 if first scan never done.
+ */
+function secupress_get_scanner_pagination() {
+	$scans = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) );
+
+	if ( empty( $_GET['step'] ) || ! is_numeric( $_GET['step'] ) || empty( $scans ) || 0 > $_GET['step'] ) {
+		$step = 1;
+	} else {
+		$step = (int) $_GET['step'];
+		if ( $step > 4 ) {
+			secupress_is_jarvis();
+		}
+	}
+
+	return $step;
 }

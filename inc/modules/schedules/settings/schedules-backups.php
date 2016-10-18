@@ -7,6 +7,13 @@ $this->add_section( __( 'Backups', 'secupress' ) );
 
 
 $this->add_field( array(
+	'name'         => $this->get_field_name( 'scheduled' ),
+	'type'         => 'scheduled_backups',
+	'row_class'    => 'secupress-schedule-message-field',
+) );
+
+
+$this->add_field( array(
 	'title'        => __( 'Backup Type', 'secupress' ),
 	'name'         => $this->get_field_name( 'type' ),
 	'type'         => 'checkboxes',
@@ -26,6 +33,9 @@ $this->add_field( array(
 	'type'         => 'number',
 	'label_before' => $label_before,
 	'label_after'  => $label_after,
+	'attributes'   => array(
+		'min' => 0,
+	),
 ) );
 
 
@@ -35,12 +45,5 @@ $this->add_field( array(
 	'label'        => __( 'Email' ),
 	'label_for'    => $this->get_field_name( 'email' ),
 	'type'         => 'email',
-	'default'      => wp_get_current_user()->user_email,
-) );
-
-
-$this->add_field( array(
-	'title'        => __( 'Scheduled backups', 'secupress' ),
-	'name'         => $this->get_field_name( 'scheduled' ),
-	'type'         => 'scheduled_backups',
+	'default'      => secupress_get_module_option( $this->get_field_name( 'periodicity' ), '', $this->modulenow ) ? '' : wp_get_current_user()->user_email,
 ) );

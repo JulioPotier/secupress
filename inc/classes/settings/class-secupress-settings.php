@@ -333,7 +333,20 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		echo '</div><!-- .secublock -->';
 
 		if ( $with_save_button ) {
-			static::submit_button( 'primary', $this->sectionnow . '_submit' );
+			$args = array(
+				'type' => 'primary',
+				'name' => $this->sectionnow . '_submit',
+			);
+			/**
+			 * Filter the arguments passed to the section submit button.
+			 *
+			 * @since 1.0.6
+			 *
+			 * @param (array) $args An array of arguments passed to the `submit_button()` method.
+			 */
+			$args = apply_filters( 'secupress.settings.section.submit_button_args', $args );
+
+			call_user_func_array( array( __CLASS__, 'submit_button' ), $args );
 		}
 
 		/**
@@ -583,7 +596,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 			case 'textarea' :
 
-				$value       = esc_textarea( implode( "\n" , (array) $value ) );
+				$value       = esc_textarea( html_entity_decode( implode( "\n" , (array) $value ), ENT_QUOTES ) );
 				$attributes .= empty( $args['attributes']['cols'] ) ? ' cols="50"' : '';
 				$attributes .= empty( $args['attributes']['rows'] ) ? ' rows="5"'  : '';
 
@@ -680,6 +693,10 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				foreach ( $args['options'] as $val => $title ) {
 					$args['label_for'] = $args['name'] . '_' . $val;
 					$disabled          = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' disabled="disabled"' : '';
+
+					if ( ! $disabled && strpos( $title, 'secupress-coming-soon-feature' ) !== false ) {
+						$disabled = ' disabled="disabled"';
+					}
 					?>
 					<p class="secupress-radio-line<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? ' secupress-pro-option' : ''; ?>">
 						<label<?php echo $disabled ? ' class="disabled"' : ''; ?> for="<?php echo esc_attr( $args['label_for'] ); ?>">
@@ -709,6 +726,9 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					</p>
 					<?php
 				}
+				?>
+				<input type="hidden" name="<?php echo $name_attribute; ?>[witness]" value="1" />
+				<?php
 				break;
 
 			case 'html' :

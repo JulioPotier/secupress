@@ -361,6 +361,11 @@ button.secupress-activated .secupress-toggle-button.hidden {
 	display: block;
 }
 
+/* Labels disabled behavior */
+[class^="secupress"] label.disabled {
+	cursor: default;
+}
+
 /**
  * Checkboxes & Radioboxes
  */

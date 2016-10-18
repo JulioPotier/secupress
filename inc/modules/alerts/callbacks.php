@@ -6,12 +6,12 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /*------------------------------------------------------------------------------------------------*/
 
 /**
- * Callback to filter, sanitize.
+ * Callback to filter, sanitize, validate and de/activate submodules.
  *
  * @since 1.0
  *
  * @return (array) The sanitized and validated settings.
  */
-function secupress_backups_settings_callback() {
+function secupress_alerts_settings_callback() {
 	return array();
 }

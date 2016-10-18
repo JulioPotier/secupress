@@ -366,33 +366,6 @@ function secupress_admin_post_reset_settings_post_cb() {
 }
 
 
-add_action( 'admin_post_secupress_toggle_file_scan', 'secupress_toggle_file_scan_ajax_post_cb' );
-/**
- * Set a transient to be read later to launch an async job.
- *
- * @since 1.0
- */
-function secupress_toggle_file_scan_ajax_post_cb() {
-	if ( empty( $_GET['turn'] ) ) {
-		secupress_admin_die();
-	}
-
-	secupress_check_user_capability();
-	secupress_check_admin_referer( 'secupress_toggle_file_scan' );
-
-	if ( 'on' === $_GET['turn'] ) {
-		secupress_set_site_transient( 'secupress_toggle_file_scan', time() );
-		set_site_transient( 'secupress_toggle_queue', true, 30 );
-	} else {
-		secupress_delete_site_transient( 'secupress_toggle_file_scan' );
-		delete_site_transient( 'secupress_toggle_queue' );
-	}
-
-	wp_redirect( esc_url_raw( wp_get_referer() ) );
-	die();
-}
-
-
 add_action( 'wp_ajax_secupress_recovery_email', 'secupress_recovery_email_ajax_post_cb' );
 /**
  * Set the recovery email via notice, if possible

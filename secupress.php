@@ -5,7 +5,7 @@
  * Description: Protect your WordPress with SecuPress, analyze and ensure the safety of your website daily.
  * Author: WP Media
  * Author URI: http://wp-media.me
- * Version: 1.0.5
+ * Version: 1.0.6
  * Network: true
  * License: GPLv2
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /* DEFINES ====================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-define( 'SECUPRESS_VERSION'               , '1.0.5' );
+define( 'SECUPRESS_VERSION'               , '1.0.6' );
 define( 'SECUPRESS_PRIVATE_KEY'           , false );
 define( 'SECUPRESS_ACTIVE_SUBMODULES'     , 'secupress_active_submodules' );
 define( 'SECUPRESS_SETTINGS_SLUG'         , 'secupress_settings' );
@@ -113,6 +113,7 @@ function secupress_init() {
 	require_once( SECUPRESS_INC_PATH . 'functions/formatting.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/options.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/modules.php' );
+	require_once( SECUPRESS_INC_PATH . 'functions/db.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/ip.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/files.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/htaccess.php' );
@@ -156,7 +157,6 @@ function secupress_init() {
 		require_once( SECUPRESS_ADMIN_PATH . 'functions/scan-fix.php' );
 		require_once( SECUPRESS_ADMIN_PATH . 'functions/modules.php' );
 		require_once( SECUPRESS_ADMIN_PATH . 'functions/notices.php' );
-		require_once( SECUPRESS_ADMIN_PATH . 'functions/db.php' );
 
 		// Temporary Updates when not on repo yet.
 		require_once( SECUPRESS_ADMIN_PATH . 'functions/wp-updates-plugin.php' );
