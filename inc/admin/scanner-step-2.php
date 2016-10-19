@@ -49,7 +49,7 @@ $secupress_tests = array_filter( $secupress_tests );
 if ( ! $secupress_tests ) {
 	?>
 	<div class="secupress-step-content-header secupress-flex secupress-flex-spaced">
-		<p class="secupress-step-title"><?php _e( 'Nothing to do here' ); ?></p>
+		<p class="secupress-step-title"><?php _e( 'Nothing to do here', 'secupress' ); ?></p>
 		<p class="secupress-flex">
 			<a href="<?php echo esc_url( secupress_admin_url( 'scanners' ) ); ?>&amp;step=3" class="secupress-button shadow light">
 				<span class="icon">
