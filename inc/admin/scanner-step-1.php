@@ -99,14 +99,14 @@ foreach ( $new_scans as $key => $new_scan ) {
 <div class="secupress-step-content-footer secupress-flex secupress-flex-top secupress-flex-spaced">
 	<p>
 		<?php if ( secupress_is_pro() ) { ?>
-			<button type="button" title="<?php esc_attr_e( 'Export this report as PDF file.', 'secupress' ); ?>" class="secupress-button shadow">
+			<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_export_pdf' ), 'secupress_export_pdf' ) ); ?>" title="<?php esc_attr_e( 'Export this report as PDF file.', 'secupress' ); ?>" class="secupress-button shadow">
 				<span class="icon">
 					<i class="icon-file-pdf-o" aria-hidden="true"></i>
 				</span>
 				<span class="text">
 					<?php _e( 'Export as PDF', 'secupress' ); ?>
 				</span>
-			</button>
+			</a>
 		<?php } else { ?>
 			<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ) ?>" title="<?php esc_attr_e( 'Get the Pro Version to export this report as PDF file.', 'secupress' ); ?>" target="_blank" class="secupress-button disabled shadow">
 				<span class="icon">
