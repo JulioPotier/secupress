@@ -1180,7 +1180,7 @@ jQuery( document ).ready( function( $ ) {
 			$this = $( this );
 
 			if ( secupressIsButtonDisabled( $this ) ) {
-				return;
+				return false;
 			}
 
 			$parent = $( '.' + $this.attr( 'data-parent' ) );
@@ -1188,7 +1188,9 @@ jQuery( document ).ready( function( $ ) {
 
 			// If there is no next bloc.
 			if ( ! $next.length ) {
-				return;
+				// Go to step 4.
+				w.location = this.href;
+				return false;
 			}
 
 			// Don't go on step4.
