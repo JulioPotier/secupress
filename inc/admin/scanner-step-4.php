@@ -264,9 +264,9 @@ foreach ( $scanned_items as $class_name_part => $details ) {
 				<?php
 				if ( secupress_is_pro() ) {
 					?>
-					<button type="button" title="<?php esc_attr_e( 'Export this report as PDF file.', 'secupress' ); ?>" class="secupress-button shadow">
+					<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_export_pdf' ), 'secupress_export_pdf' ) ); ?>" title="<?php esc_attr_e( 'Export this report as PDF file.', 'secupress' ); ?>" class="secupress-button shadow">
 						<?php echo $export_pdf_btn; ?>
-					</button>
+					</a>
 					<?php
 				} else {
 					?>
