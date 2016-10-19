@@ -212,22 +212,28 @@ function secupress_get_scanner_counts( $type = '' ) {
 	}
 
 	$counts['letter'] = '<span class="letter l' . $counts['grade'] . '">' . $counts['grade'] . '</span>';
+	$counts['color']  = '195,34,34';
 
 	switch ( $counts['grade'] ) {
 		case 'A':
-			$counts['text'] = __( 'Congratulations! 🎉', 'secupress' );
+			$counts['text']  = __( 'Congratulations! 🎉', 'secupress' );
+			$counts['color'] = '43,205,193';
 			break;
 		case 'B':
-			$counts['text'] = __( 'Almost perfect!', 'secupress' );
+			$counts['text']  = __( 'Almost perfect!', 'secupress' );
+			$counts['color'] = '241,196,15';
 			break;
 		case 'C':
-			$counts['text'] = __( 'Not bad, but try to fix more items.', 'secupress' );
+			$counts['text']  = __( 'Not bad, but try to fix more items.', 'secupress' );
+			$counts['color'] = '247,171,19';
 			break;
 		case 'D':
-			$counts['text'] = __( 'Well, it\'s not good yet.', 'secupress' );
+			$counts['text']  = __( 'Well, it\'s not good yet.', 'secupress' );
+			$counts['color'] = '242,41,94';
 			break;
 		case 'E':
-			$counts['text'] = __( 'Better than nothing, but still not good.', 'secupress' );
+			$counts['text']  = __( 'Better than nothing, but still not good.', 'secupress' );
+			$counts['color'] = '203,35,79';
 			break;
 		case 'F':
 			$counts['text'] = __( 'Not good at all, fix more issues.', 'secupress' );
@@ -254,8 +260,9 @@ function secupress_get_scanner_counts( $type = '' ) {
 
 	$counts['subtext'] = sprintf( _n( 'Your grade is %s — %d scanned item is good.', 'Your grade is %s — %d scanned items are good.', $counts['good'], 'secupress' ), $counts['letter'], $counts['good'] );
 
-	if ( isset( $counts[ $type ] ) ) {
-		return $counts[ $type ];
+	if ( $type ) {
+		// Make sure to not return the whole array if a type is given, even if it isn't set.
+		return isset( $counts[ $type ] ) ? $counts[ $type ] : '';
 	}
 
 	return $counts;
