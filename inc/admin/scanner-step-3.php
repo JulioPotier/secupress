@@ -294,7 +294,7 @@ if ( ! $secupress_tests ) {
 									<span class="text"><?php _e( 'Fix it and continue', 'secupress' ); ?></span>
 								</button>
 							<?php } elseif ( $needs_pro ) { ?>
-								<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ); ?>" class="secupress-button secupress-button-tertiary secupress-button-getpro shadow">
+								<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ); ?>" class="secupress-button secupress-button-tertiary secupress-button-getpro shadow" target="_blank" title="<?php esc_attr_e( 'Open in a new window.', 'secupress' ); ?>">
 									<span class="icon">
 										<i class="icon-secupress-simple bold" aria-hidden="true"></i>
 									</span>
