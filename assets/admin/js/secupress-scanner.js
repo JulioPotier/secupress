@@ -369,7 +369,7 @@ jQuery( document ).ready( function( $ ) {
 
 		// All various texts.
 		$( ".secupress-chart-container .letter" ).replaceWith( data.letter );
-		$( ".secupress-score-text" ).text( data.text );
+		$( ".secupress-score-text" ).html( data.text );
 		$( ".secupress-scan-infos .secupress-score" ).html( data.subtext );
 		$( "#wp-admin-bar-secupress" ).find( ".letter" ).text( data.grade );
 		$( "#toplevel_page_" + SecuPressi18nScanner.pluginSlug + "_scanners" ).find( ".update-count" ).text( data.bad ).parent().attr( "class", function( i, val ) {
