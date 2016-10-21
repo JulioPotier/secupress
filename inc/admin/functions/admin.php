@@ -85,8 +85,8 @@ function secupress_enqueue_notices_styles() {
 	}
 	$done = true;
 
-	$suffix    = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-	$version   = $suffix ? SECUPRESS_VERSION : time();
+	$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+	$version = $suffix ? SECUPRESS_VERSION : time();
 
 	wp_enqueue_style( 'secupress-notices', SECUPRESS_ADMIN_CSS_URL . 'secupress-notices' . $suffix . '.css', array(), $version );
 }
@@ -227,6 +227,7 @@ function secupress_text_diff( $left_string, $right_string, $args = array() ) {
 	return $r;
 }
 
+
 /**
  * Keep the old scan report (grade + status) to be compared on step4
  *
@@ -252,6 +253,7 @@ function secupress_set_old_report() {
 function secupress_get_old_report() {
 	return get_option( 'secupress_step1_report' );
 }
+
 
 /**
  * Print Marketing block with SecuPress pro advantages.
@@ -300,4 +302,21 @@ function secupress_print_pro_advantages() {
 		</div>
 	</div>
 	<?php
+}
+
+
+/**
+ * Tell if the user can access Pro support.
+ *
+ * @since 1.1.1
+ * @author Grégory Viguier
+ *
+ * @return (bool)
+ */
+function secupress_can_access_support() {
+	if ( secupress_is_pro() ) {
+		return true;
+	}
+
+	return time() < 1478476800;
 }
