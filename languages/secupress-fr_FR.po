@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
 "POT-Creation-Date: 2016-10-18 00:41+0200\n"
-"PO-Revision-Date: 2016-10-18 00:51+0200\n"
-"Last-Translator: WP Media <contact@secupress.me>\n"
+"PO-Revision-Date: 2016-10-21 15:25+0200\n"
+"Last-Translator: WP Media <contact@wp-media.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
@@ -669,9 +669,9 @@ msgid ""
 "Your Pro license is not valid or is not set yet. If you want to activate all "
 "the Pro features, premium support and updates, take a look at the %s."
 msgstr ""
-"Votre licence Pro n'est pas valide ou pas encore. Si vous souhaitez activer "
-"toutes les fonctionnalités Pro, le support premium et les mises à jour, "
-"regarder dans %s."
+"Votre licence Pro n'est pas valide ou pas encore renseignée. Si vous "
+"souhaitez activer toutes les fonctionnalités Pro, le support premium et les "
+"mises à jour, regardez dans %s."
 
 #: inc/admin/notices.php:388
 msgid "plugin settings page"
@@ -3483,7 +3483,7 @@ msgstr ""
 
 #: inc/classes/scanners/class-secupress-scan-inactive-plugins-themes.php:43
 msgid "Delete every inactive plugin and theme you have."
-msgstr "Supprimer les plugin et thèmes inactifs que vous avez."
+msgstr "Supprimer les plugins et thèmes inactifs que vous avez."
 
 #: inc/classes/scanners/class-secupress-scan-inactive-plugins-themes.php:59
 msgid "You don't have any deactivated plugins or themes."
@@ -4832,7 +4832,7 @@ msgstr "Utilisateurs &amp; Login"
 
 #: inc/functions/modules.php:19
 msgid "Protect your users"
-msgstr "Protège vos utilisateur"
+msgstr "Protège vos utilisateurs"
 
 #: inc/functions/modules.php:20 inc/functions/modules.php:23
 msgid ""
@@ -7652,7 +7652,7 @@ msgid ""
 "Protect your WordPress with SecuPress, analyze and ensure the safety of your "
 "website daily."
 msgstr ""
-"Protègez votre WordPress avec SecuPress, analysez et assurez-vous de la "
+"Protégez votre WordPress avec SecuPress, analysez et assurez-vous de la "
 "sécurité de votre site quotidiennement."
 
 #~ msgid "This feature is only available in SecuPress Pro"
