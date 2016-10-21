@@ -384,8 +384,8 @@ function secupress_warning_no_license() {
 	$message  = sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
 	/** Translators: %s is a link to the "plugin settings page". */
 	$message .= sprintf(
-		__( 'Your Pro license is not valid or is not set yet. If you want to activate all the Pro features, premium support and updates, take a look at the %s.', 'secupress' ),
-		'<a href="' . esc_url( secupress_admin_url( 'settings' ) ) . '">' . __( 'plugin settings page', 'secupress' ) . '</a>'
+		__( 'Your Pro license is not valid or is not set yet. If you want to activate all the Pro features, premium support and updates, take a look at %s.', 'secupress' ),
+		'<a href="' . esc_url( secupress_admin_url( 'settings' ) ) . '">' . __( 'the plugin settings page', 'secupress' ) . '</a>'
 	);
 
 	secupress_add_notice( $message, 'updated', false );
