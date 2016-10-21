@@ -1,11 +1,8 @@
 <?php
 /**
- * Plugin Name: SecuPress Notice ({{PLUGIN_ID}})
- * Plugin URI: https://secupress.me
- * Description: This plugin purpose is only to display a message after SecuPress is deactivated. It will be deleted once the message is dismissed.
- * Author: WP Media
- * Author URI: http://wp-media.me
- * Version: 1.0.1
+ * Plugin Name: {{PLUGIN_NAME}} Notice ({{PLUGIN_ID}})
+ * Description: This plugin purpose is only to display a message after {{PLUGIN_NAME}} is deactivated. It will be deleted once the message is dismissed.
+ * Version: 1.0.2
  * License: GPLv2
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  *
