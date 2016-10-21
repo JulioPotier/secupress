@@ -243,6 +243,7 @@ function secupress_print_version_number_in_footer( $footer ) {
 /*------------------------------------------------------------------------------------------------*/
 
 add_filter( 'plugin_action_links_' . plugin_basename( SECUPRESS_FILE ), 'secupress_settings_action_links' );
+
 if ( secupress_has_pro() ) {
 	add_filter( 'plugin_action_links_' . plugin_basename( SECUPRESS_PRO_FILE ), 'secupress_settings_action_links' );
 }
@@ -257,7 +258,7 @@ if ( secupress_has_pro() ) {
  */
 function secupress_settings_action_links( $actions ) {
 	if ( ! secupress_is_white_label() ) {
-		if ( secupress_is_pro() ) {
+		if ( secupress_can_access_support() ) {
 			array_unshift( $actions, sprintf( '<a href="%s">%s</a>', esc_url( secupress_admin_url( 'modules', 'services' ) ), __( 'Support', 'secupress' ) ) );
 		} else {
 			array_unshift( $actions, sprintf( '<a href="%s">%s</a>', 'https://wordpress.org/support/plugin/secupress', __( 'Support', 'secupress' ) ) );
@@ -298,9 +299,10 @@ function secupress_create_menus() {
 	add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Settings' ),              __( 'Settings' ),                       $cap, SECUPRESS_PLUGIN_SLUG . '_settings', 'secupress_global_settings' );
 
 	if ( ! secupress_is_white_label() ) {
-		if ( secupress_is_pro() ) {
+		if ( secupress_can_access_support() ) {
 			add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Support', 'secupress' ), __( 'Support', 'secupress' ), $cap, SECUPRESS_PLUGIN_SLUG . '_modules&module=services', '__return_false' );
-		} else {
+		}
+		if ( ! secupress_is_pro() ) {
 			add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'PRO Version', 'secupress' ), __( 'PRO Version', 'secupress' ), $cap, SECUPRESS_PLUGIN_SLUG . '_modules&module=get-pro', '__return_false' );
 		}
 	}
