@@ -269,14 +269,12 @@ if ( ! $secupress_tests ) {
 									</span>
 									<span class="text"><?php _e( 'Read the documentation', 'secupress' ); ?></span>
 								</a>
-								<?php if ( secupress_is_pro() ) { ?>
-									<a href="<?php echo esc_url( secupress_admin_url( 'modules', 'services' ) . '&scanner=' . $class_name_part_lower ); ?>" class="secupress-button secupress-button-mini secupress-button-support light shadow" target="_blank" title="<?php esc_attr_e( 'Open in a new window.', 'secupress' ); ?>">
-										<span class="icon">
-											<i class="icon-ask" aria-hidden="true"></i>
-										</span>
-										<span class="text"><?php _e( 'Ask for support', 'secupress' ); ?></span>
-									</a>
-								<?php } ?>
+								<a href="<?php echo esc_url( secupress_admin_url( 'modules', 'services' ) . '&scanner=' . $class_name_part_lower ); ?>" class="secupress-button secupress-button-mini secupress-button-support light shadow" target="_blank" title="<?php esc_attr_e( 'Open in a new window.', 'secupress' ); ?>">
+									<span class="icon">
+										<i class="icon-ask" aria-hidden="true"></i>
+									</span>
+									<span class="text"><?php _e( 'Ask for support', 'secupress' ); ?></span>
+								</a>
 							</p>
 						<?php } ?>
 						<p class="secupress-actions">
