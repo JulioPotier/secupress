@@ -409,7 +409,7 @@ function secupress_create_deactivation_notice_muplugin( $plugin_id, $message ) {
 	}
 
 	// Plugin contents.
-	$contents = $wp_filesystem->get_contents( SECUPRESS_INC_PATH . 'data/deactivation-mu-plugin.data' );
+	$contents = $wp_filesystem->get_contents( SECUPRESS_INC_PATH . 'data/deactivation-mu-plugin.phps' );
 
 	// Add new contents.
 	$args = array(
