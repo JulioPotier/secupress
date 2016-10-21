@@ -2,7 +2,7 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /*------------------------------------------------------------------------------------------------*/
-/* ON MODULE SETTINGS SAVE ====================================================================== */
+/* HALP!!! ====================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
 /**
@@ -120,7 +120,7 @@ function secupress_services_settings_callback( $settings ) {
 	delete_site_transient( 'secupress_support_form' );
 
 	// Free plugin.
-	if ( ! secupress_is_pro() ) {
+	if ( ! secupress_can_access_support() ) {
 		$message = sprintf(
 			/** Translators: %s is "plugin directory". */
 			__( 'Oh, you are using SecuPress Free! The support is handled on the %s. Thank you!', 'secupress' ),
@@ -190,6 +190,130 @@ function secupress_services_settings_callback( $settings ) {
 	}
 
 	return $settings;
+}
+
+
+add_action( 'secupress.services.ask_for_support', 'secupress_send_support_request', 10, 3 );
+/**
+ * Send an email message to our awesome support team (yes it is).
+ *
+ * @since 1.1.1
+ * @author Grégory Viguier
+ *
+ * @param (string) $summary     A title. The value is not escaped.
+ * @param (string) $description A message. The value has been sanitized with `wp_kses()`.
+ * @param (array)  $data        An array of infos related to the site:
+ *                              - (string) $scanner           The scanner the user asks help for.
+ *                              - (string) $sp_free_version   Version of SecuPress Free.
+ *                              - (string) $website_url       Site URL.
+ *                              - (string) $is_multisite      Tell if it's a multisite: Yes or No.
+ *                              - (string) $wp_version        Version of WordPress.
+ *                              - (string) $wp_active_plugins List of active plugins.
+ */
+function secupress_send_support_request( $summary, $description, $data ) {
+	// To.
+	$to ='greg@screenfeed.fr';//// strrev( 'em' . '.' . 'sserp' . 'uces' . '@' . 'troppus' );
+
+	// From.
+	$from_email = secupress_get_consumer_email();
+	$from_user  = get_user_by( 'email', $from_email );
+
+	if ( ! secupress_is_user( $from_user ) ) {
+		$users = get_users( array(
+			'meta_key'    => 'backup_email',
+			'meta_value'  => $from_email,
+			'fields'      => 'ID',
+			'count_total' => false,
+			'number'      => 1,
+		) );
+		$userid    = is_array( $users ) && isset( $users[0] ) ? (int) $users[0] : 0;
+		$from_user = $userid ? get_user_by( 'id', $userid ) : $from_user;
+	}
+
+	if ( secupress_is_user( $from_user ) ) {
+		$from = 'from: ' . secupress_get_user_full_name( $from_user ) . ' <' . $from_email . '>';
+	} else {
+		$from = $from_email;
+	}
+
+	// Headers.
+	$headers = array(
+		$from,
+		'content-type: text/html',
+	);
+
+	// Subject.
+	$summary = esc_html( $summary );
+	if ( function_exists( 'mb_convert_encoding' ) ) {
+		$summary = preg_replace_callback( '/(&#[0-9]+;)/', function( $m ) {
+			return mb_convert_encoding( $m[1], 'UTF-8', 'HTML-ENTITIES' );
+		}, $summary );
+	}
+	$summary = wp_specialchars_decode( $summary );
+
+	// Message.
+	$data = array_merge( array(
+		'license_email'  => sprintf( __( 'License email: %s', 'secupress' ), $from_email ),
+		'license_key'    => sprintf( __( 'License key: %s', 'secupress' ), secupress_get_consumer_key() ),
+		'sp_pro_version' => secupress_has_pro() ? sprintf( __( 'Version of SecuPress Pro: %1$s (requires SecuPress Free %2$s)', 'secupress' ), SECUPRESS_PRO_VERSION, SECUPRESS_PRO_SECUPRESS_MIN ) : __( 'Version of SecuPress Pro: inactive', 'secupress' ),
+	), $data );
+
+	$data = '<br/>' . str_repeat( '-', 40 ) . '<br/>' . implode( '<br/>', $data );
+
+	// Go!
+	$success = wp_mail( $to, $summary, $description . $data, $headers );
+
+	if ( $success ) {
+		add_settings_error( 'general', 'message_sent', __( 'Your message has been sent, we will come back to you shortly. Thank you.', 'secupress' ), 'updated' );
+	} else {
+		$summary     = str_replace( '+', '%20', urlencode( $summary ) );
+		$description = str_replace( array( '+', '%3E%0A' ), array( '%20', '%3E' ), urlencode( $description . $data ) );
+		$url         = 'mailto:' . $to . '?subject=' . $summary . '&body=' . $description;
+
+		add_settings_error( 'general', 'message_failed', sprintf(
+			/** Translators: %s is an email address. */
+			__( 'Something prevented your message to be sent. Please send it manually to %s. Thank you.', 'secupress' ),
+			'<a href="' . esc_url( $url ) . '">' . $to . '</a>'
+		) );
+	}
+}
+
+
+/**
+ * Get a user name.
+ * Try first to have first name + last name, then only first name or last name, then only last name or first name, then display name.
+ *
+ * @since 1.1.1
+ * @author Grégory Viguier
+ *
+ * @param $user (object) A WP_User object.
+ *
+ * @return (string)
+ */
+function secupress_get_user_full_name( $user ) {
+	if ( ! empty( $user->first_name ) && ! empty( $user->last_name ) ) {
+		return sprintf( _x( '%1$s %2$s', 'User full name. 1: first name, 2: last name', 'secupress' ), $user->first_name, $user->last_name );
+	}
+
+	$field1 = sprintf( _x( '%1$s %2$s', 'User full name. 1: first name, 2: last name', 'secupress' ), 'first_name', 'last_name' );
+
+	if ( strpos( $field1, 'first_name' ) < strpos( $field1, 'last_name' ) ) {
+		$field1 = 'first_name';
+		$field2 = 'last_name';
+	} else {
+		$field1 = 'last_name';
+		$field2 = 'first_name';
+	}
+
+	if ( ! empty( $user->$field1 ) ) {
+		return $user->$field1;
+	}
+
+	if ( ! empty( $user->$field2 ) ) {
+		return $user->$field2;
+	}
+
+	return $user->display_name;
 }
 
 
