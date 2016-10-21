@@ -345,10 +345,11 @@ function secupress_add_cookiehash_muplugin() {
 
 	secupress_delete_site_transient( 'secupress-add-cookiehash-muplugin' );
 
-	$contents  = '<?php // Added by SecuPress' . PHP_EOL;
-	$contents .= 'define( \'COOKIEHASH\', md5( __FILE__ . \'' . wp_generate_password( 64 ) . '\' ) );';
+	// Create the MU plugin.
+	$cookiehash = file_get_contents( SECUPRESS_INC_PATH . 'data/cookiehash.phps' );
+	$cookiehash = str_replace( '{{HASH}}', wp_generate_password( 64 ), $cookiehash );
 
-	if ( ! secupress_create_mu_plugin( 'COOKIEHASH_' . uniqid(), $contents ) ) {
+	if ( ! $cookiehash || ! secupress_create_mu_plugin( 'cookiehash_' . uniqid(), $cookiehash ) ) {
 		// MU Plugin creation failed.
 		secupress_set_site_transient( 'secupress-cookiehash-muplugin-failed', 1 );
 		secupress_fixit( 'WP_Config' );
