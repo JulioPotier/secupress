@@ -1,10 +1,7 @@
 <?php
 /**
- * Plugin Name: SecuPress COOKIEHASH
- * Plugin URI: https://secupress.me
+ * Plugin Name: {{PLUGIN_NAME}} COOKIEHASH
  * Description: Change the default COOKIEHASH constant value to prevent easy guessing.
- * Author: WP Media
- * Author URI: http://wp-media.me
  * Version: 1.0
  * License: GPLv2
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html

@@ -1,11 +1,8 @@
 <?php
 /**
- * Plugin Name: SecuPress Salt Keys
- * Plugin URI: https://secupress.me
+ * Plugin Name: {{PLUGIN_NAME}} Salt Keys
  * Description: Good Security Keys for each of your blogs of your network (multisite only), auto-reseting each month.
- * Author: WP Media
- * Author URI: http://wp-media.me
- * Version: 1.0
+ * Version: 1.0.1
  * License: GPLv2
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  *
