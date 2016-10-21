@@ -212,7 +212,7 @@ add_action( 'secupress.services.ask_for_support', 'secupress_send_support_reques
  */
 function secupress_send_support_request( $summary, $description, $data ) {
 	// To.
-	$to ='greg@screenfeed.fr';//// strrev( 'em' . '.' . 'sserp' . 'uces' . '@' . 'troppus' );
+	$to = strrev( 'em' . '.' . 'sserpuces' . chr( 64 ) . 'troppus' );
 
 	// From.
 	$from_email = secupress_get_consumer_email();
