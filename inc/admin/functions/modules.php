@@ -552,7 +552,7 @@ function secupress_manage_affected_roles( &$settings, $module, $plugin ) {
 	// Useless, just to be sure.
 	unset( $settings[ $plugin . '_affected_role' ]['witness'] );
 
-	if ( $roles === $settings[ $plugin . '_affected_role' ] || empty( $settings[ $plugin . '_affected_role' ] ) ) {
+	if ( empty( $settings[ $plugin . '_affected_role' ] ) || $roles === $settings[ $plugin . '_affected_role' ] ) {
 		// We won't allow to have no roles set, so we take them all.
 		unset( $settings[ $plugin . '_affected_role' ] );
 	}
