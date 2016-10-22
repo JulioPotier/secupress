@@ -424,8 +424,6 @@ if ( defined( 'SECUPRESS_PRO_FILE' ) ) {
  * @author Julio Potier
  **/
 function secupress_updates_message( $plugin_data ) {
-	$matches = null;
-
 	// Get next version
 	if ( isset( $plugin_data['version'] ) ) { // SecuPress Free (repo)
 		$remote_version = $plugin_data['version'];
@@ -443,9 +441,9 @@ function secupress_updates_message( $plugin_data ) {
 	if ( ! isset( $body[ $slug ] ) ) {
 
 		$urls     = array( 
-						'secupress'     => SECUPRESS_WEB_MAIN . '/api/plugin/readme-free.php', 
-						// 'secupress'     => 'https://plugins.svn.wordpress.org/secupress/trunk/readme.txt', //// ok when on repo
-						'secupress-pro' => SECUPRESS_WEB_MAIN . '/api/plugin/readme-pro.php'
+					'secupress'     => SECUPRESS_WEB_MAIN . '/api/plugin/readme-free.php', 
+					// 'secupress'     => 'https://plugins.svn.wordpress.org/secupress/trunk/readme.txt', //// ok when on repo
+					'secupress-pro' => SECUPRESS_WEB_MAIN . '/api/plugin/readme-pro.php'
 					);
 		$response = wp_remote_get( $urls[ $plugin_data['slug'] ] );
 
@@ -470,7 +468,8 @@ function secupress_updates_message( $plugin_data ) {
 		$date    = str_replace( '* ', '', wp_kses_post( array_shift( $notes ) ) );
 
 		echo '<div>';
-		echo '<strong>' . sprintf( __( 'Please read these special notes for this update, version %s - %s', 'secupress' ), $remote_version, $date ) . '</strong>';
+		/** Translators: %1$s is the version number, %2$s is a date */
+		echo '<strong>' . sprintf( __( 'Please read these special notes for this update, version %1$s - %2$s', 'secupress' ), $remote_version, $date ) . '</strong>';
 			echo '<ul style="list-style:square;margin-left:20px;line-height:1em">';
 			foreach ( $notes as $note ) {
 				echo '<li>' . str_replace( '* ', '', wp_kses_post( $note ) ) . '</li>';
