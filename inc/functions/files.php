@@ -584,10 +584,10 @@ function secupress_get_rewrite_bases() {
 				'base'      => $base,
 				'wpdir'     => $wp_dir,
 				'is_sub'    => true,
-				'site_from' => '/' . $wp_dir . '([_0-9a-zA-Z-]+/)?',
+				'site_from' => $base . $wp_dir . '([_0-9a-zA-Z-]+/)?',
 				'site_to'   => $base . $wp_dir . '$1',
 				'wp_to'     => $base . $wp_dir,
-				'home_from' => '([_0-9a-zA-Z-]+/)?',
+				'home_from' => $base . '([_0-9a-zA-Z-]+/)?',
 				'home_to'   => $base . '$1',
 			) );
 		} else {
@@ -595,7 +595,7 @@ function secupress_get_rewrite_bases() {
 				'base'      => $base,
 				'wpdir'     => $wp_dir,
 				'is_sub'    => false,
-				'site_from' => '/' . $wp_dir,
+				'site_from' => $base . $wp_dir,
 				'site_to'   => $base . $wp_dir,
 				'wp_to'     => $base . $wp_dir,
 				'home_from' => '',
