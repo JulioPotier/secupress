@@ -3,7 +3,7 @@ Contributors: wp_media, secupress, juliobox, greglone
 Tags: security, spam, backup, schedule, firewall, sensitive data, antivirus, logs, alerts
 Requires at least: 3.7
 Tested up to: 4.6.1
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,7 +22,43 @@ Protect your WordPress with SecuPress, analyze and ensure the safety of your web
 
 == Frequently Asked Questions ==
 
-(soon)
+= What does SecuPress do, exactly? =
+SecuPress is a plugin for WordPress sites which enables better securisation and simplicity of use.
+
+SecuPress will initially offer to scan your site, looking for flaws and possible improvements. Then a report will detail the results of each test and automatically propose to apply solutions. The majority of these criteria can be secured with one-click, some require you to make a choice, and a very few of them will ask for your manual intervention by following our documentation.
+
+Additional security modules are then available to round off certain items according to your needs.
+
+= What makes SecuPress better than any other security plugin? =
+SecuPress incorporates many of the most awaited security features: Anti spam, Double authentication.
+
+Besides being very complete, SecuPress is also very simple to use for the beginners.
+
+You don’t need to be an experienced technician to use and configure our plugin.
+
+We have our own security alarm on our servers which supplies daily data about the most recent vulnerable plugins and themes. This allows you to always be alerted and secured.
+
+= Is SecuPress compatible with multisites installation? =
+Yes, SecuPress will be activated for all your subsite, just activate it from your main network site.
+
+= Is SecuPress compatible with all hosters like OVH, WP Engine, O2Switch or GoDaddy? =
+Yes, SecuPress is compatible with all hosters. If you encounter an issue, do not hesitate ton contact our support team.
+
+= Is SecuPress compatible with all caching plugins like WP Rocket, W3TC, WPSP? =
+Yes, SecuPress is compatible with all caching plugins. If you encounter an issue, do not hesitate ton contact our support team.
+
+= Is SecuPress compatible with all multilingual plugins like PolyLang, WPML, qTranslate? =
+Yes, SecuPress is compatible with all multilingual plugins. If you encounter an issue, do not hesitate ton contact our support team.
+
+= Is SecuPress compatible with all server engines like Apache, Ngnix, IIS7? =
+Yes, SecuPress is compatible with all server engines. If you encounter an issue, do not hesitate ton contact our support team.
+
+= Is SecuPress compatible with other security plugins like WordFence, iThemes Security, Bullet Proof Security? =
+No, SecuPress can't be compatible, like you can't install two caching plugins. The reason is that each plugin will try to block something, add security rules and at a moment they will overwrite each other. These rules can create a conflict and lead to errors on your website.
+
+It's important to delete all other security plugins before activating SecuPress. If you're not sure, do not hasitate to ask us on twitter, fabeook, support.
+
+
 
 == Screenshots ==
 
@@ -30,8 +66,21 @@ Protect your WordPress with SecuPress, analyze and ensure the safety of your web
 
 == Changelog ==
 
+= 1.1.1 =
+* 22 oct 2016
+* Improvement #216: The button "Ask for support" is now always present on scanner step 3
+* Improvement + #205: typos, and missing text domain
+* Fix #186: Add description and author to the COOKIEHASH MU plugin
+* Fix #204: When fixing the last thing in step 3, redirect to step 4
+* Fix #207: Table prefix fix won't show up on step 3
+* Fix #219: PDF Export not exporting anything, wow.
+* Fix #224: In scanner JS, HTML entities were in status text.
+* Fix #227: Notice on affected role section Undefined index: double-auth_affected_role in /inc/admin/functions/modules.php on line 555
+* Fix #232: Bad request methods scan returned false negatives status.
+
+
 = 1.1.0 =
-* 18 oct 2016
+* 19 oct 2016
 * New: Design revamp for modules homepage
 
 = 1.0.6 =
@@ -99,3 +148,17 @@ Protect your WordPress with SecuPress, analyze and ensure the safety of your web
 = 1.0 =
 * 23 aug 2016
 * Initial release \o/
+
+== Upgrade Notice ==
+
+= 1.0.5 =
+* 07 oct 2016
+* Fix #167: Possibly locked at step 1 with a fake "New scan" for readme.txt files, you're not stuck anymore.
+* Fix #166: Various CSS improvements.
+* Fix #171: Scans related to the firewall were always returning a bad status, even if the protections were running.
+* Fix #172: The scan and the protection related to the "Bad request methods" were not accurate.
+* Fix #176: A SQL warning occurred if you didn't had logs to delete from 1.0.4, a new IF condition has been added to prevent that.
+
+= 1.0 =
+* 23 aug 2016
+* Thank you!

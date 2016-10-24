@@ -409,14 +409,15 @@ function secupress_create_deactivation_notice_muplugin( $plugin_id, $message ) {
 	}
 
 	// Plugin contents.
-	$contents = $wp_filesystem->get_contents( SECUPRESS_INC_PATH . 'data/deactivation-mu-plugin.data' );
+	$contents = $wp_filesystem->get_contents( SECUPRESS_INC_PATH . 'data/deactivation-mu-plugin.phps' );
 
 	// Add new contents.
 	$args = array(
-		'##PLUGIN_ID##'   => $plugin_id,
-		'##MESSAGE##'     => $message,
-		'##USER_ID##'     => get_current_user_id(),
-		'##BUTTON_TEXT##' => __( 'OK, got it!', 'secupress' ),
+		'{{PLUGIN_NAME}}' => SECUPRESS_PLUGIN_NAME,
+		'{{PLUGIN_ID}}'   => $plugin_id,
+		'{{MESSAGE}}'     => $message,
+		'{{USER_ID}}'     => get_current_user_id(),
+		'{{BUTTON_TEXT}}' => __( 'OK, got it!', 'secupress' ),
 	);
 
 	$contents = str_replace( array_keys( $args ), $args, $contents );

@@ -1,11 +1,14 @@
 <?php
-/*
-Plugin Name: SecuPress Salt Keys
-Description: Good Security Keys for each of your blogs of your network (multisite only), auto-reseting each month.
-Author: SecuPress
-Author URI: https://secupress.me
-Version: 1.0
-*/
+/**
+ * Plugin Name: {{PLUGIN_NAME}} Salt Keys
+ * Description: Good Security Keys for each of your blogs of your network (multisite only), auto-reseting each month.
+ * Version: 1.0.1
+ * License: GPLv2
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
+ *
+ * Copyright 2012-2016 SecuPress
+ */
+
 defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
 define( 'SECUPRESS_SALT_KEYS_ACTIVE', true );

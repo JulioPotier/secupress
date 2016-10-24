@@ -107,9 +107,9 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements SecuP
 					// "bad"
 					$bads[] = '<code>' . $method . '</code>';
 				}
-			} else {
+			} elseif ( 'http_request_failed' !== $response->get_error_code() ) {
 				// "warning"
-				$bads[] = '<code>' . $method . '</code>';
+				$warnings[] = '<code>' . $method . '</code>';
 			}
 		}
 

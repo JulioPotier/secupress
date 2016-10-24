@@ -345,10 +345,15 @@ function secupress_add_cookiehash_muplugin() {
 
 	secupress_delete_site_transient( 'secupress-add-cookiehash-muplugin' );
 
-	$contents  = '<?php // Added by SecuPress' . PHP_EOL;
-	$contents .= 'define( \'COOKIEHASH\', md5( __FILE__ . \'' . wp_generate_password( 64 ) . '\' ) );';
+	// Create the MU plugin.
+	$cookiehash = file_get_contents( SECUPRESS_INC_PATH . 'data/cookiehash.phps' );
+	$args       = array(
+		'{{PLUGIN_NAME}}' => SECUPRESS_PLUGIN_NAME,
+		'{{HASH}}'        => wp_generate_password( 64 ),
+	);
+	$cookiehash = str_replace( array_keys( $args ), $args, $cookiehash );
 
-	if ( ! secupress_create_mu_plugin( 'COOKIEHASH_' . uniqid(), $contents ) ) {
+	if ( ! $cookiehash || ! secupress_create_mu_plugin( 'cookiehash_' . uniqid(), $cookiehash ) ) {
 		// MU Plugin creation failed.
 		secupress_set_site_transient( 'secupress-cookiehash-muplugin-failed', 1 );
 		secupress_fixit( 'WP_Config' );
@@ -413,7 +418,12 @@ function secupress_add_salt_muplugin() {
 
 	// Create the MU plugin.
 	$alicia_keys = file_get_contents( SECUPRESS_INC_PATH . 'data/salt-keys.phps' );
-	$alicia_keys = str_replace( array( '{{HASH1}}', '{{HASH2}}' ), array( wp_generate_password( 64, true, true ), wp_generate_password( 64, true, true ) ), $alicia_keys );
+	$args        = array(
+		'{{PLUGIN_NAME}}' => SECUPRESS_PLUGIN_NAME,
+		'{{HASH1}}'        => wp_generate_password( 64, true, true ),
+		'{{HASH2}}'        => wp_generate_password( 64, true, true ),
+	);
+	$alicia_keys = str_replace( array_keys( $args ), $args, $alicia_keys );
 
 	if ( ! $alicia_keys || ! secupress_create_mu_plugin( 'salt_keys_' . uniqid(), $alicia_keys ) ) {
 		return;

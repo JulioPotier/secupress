@@ -4,18 +4,17 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 $this->set_current_section( 'support' );
 $this->add_section( __( 'Support', 'secupress' ), array( 'with_save_button' => false ) );
 
-$main_field_name = $this->get_field_name( 'doc-read' );
+$check_field_name = $this->get_field_name( 'doc-read' );
 
 $this->add_field( array(
 	'title'             => __( 'Documentation first', 'secupress' ),
 	'type'              => 'checkbox',
-	'name'              => $main_field_name,
+	'name'              => $check_field_name,
 	'label'             => sprintf(
 		/** Translators: %s is "documentation". */
 		__( 'I\'ve read the %s, and I agree to allow SecuPress to automatically detect my WordPress version and list of enabled plugins when I submit this form.', 'secupress' ),
 		sprintf( '<a href="%s" target="_blank">%s</a>', esc_url( __( 'http://docs.secupress.me/', 'secupress' ) ), __( 'documentation', 'secupress' ) )
 	),
-	'label_for'         => $main_field_name,
 ) );
 
 $scanner = '';
@@ -48,7 +47,7 @@ $this->add_field( array(
 	'size'              => 'large',
 	'attributes'        => array( 'class' => 'large-text' ),
 	'name'              => $this->get_field_name( 'summary' ),
-	'depends'           => $main_field_name,
+	'depends'           => $check_field_name,
 	'value'             => ! empty( $support_form['summary'] ) ? $support_form['summary'] : null,
 	'helpers' => array(
 		array(
@@ -62,7 +61,7 @@ $this->add_field( array(
 	'title'             => __( 'Description', 'secupress' ),
 	'type'              => 'textarea',
 	'name'              => $this->get_field_name( 'description' ),
-	'depends'           => $main_field_name,
+	'depends'           => $check_field_name,
 	'rows'              => 10,
 	'value'             => ! empty( $support_form['description'] ) ? $support_form['description'] : null,
 	'default'           => __( 'Please provide the specific url(s) where we can see each issue. e.g. the request doesn\'t work on this page: example.com/this-page', 'secupress' ) . "\n\n" .
@@ -73,5 +72,5 @@ $this->add_field( array(
 	'type'              => 'submit',
 	'label'             => __( 'Submit the ticket', 'secupress' ),
 	'name'              => $this->get_field_name( 'submit' ),
-	'depends'           => $main_field_name,
+	'depends'           => $check_field_name,
 ) );
