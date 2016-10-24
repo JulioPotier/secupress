@@ -529,13 +529,15 @@ function secupress_get_wp_directory() {
  * @since 1.0
  *
  * @return (array) An array containing the following keys:
- *         'base'      => rewrite base,
- *         'wpdir'     => WP directory,
- *         'is_sub'    => Is it a subfolder install? (Multisite),
- *         'site_from' => regex for first part of the rewrite rule (WP files),
- *         'site_to'   => first part of the rewrited address (WP files),
- *         'home_from' => regex for first part of the rewrite rule (home),
- *         'home_to'   => first part of the rewrited address (home).
+ *         'base'      => Rewrite base.
+ *         'wpdir'     => WP directory.
+ *         'is_sub'    => Is it a subfolder install? (Multisite).
+ *         'site_from' => Regex for first part of the rewrite rule (WP files).
+ *         'site_to'   => First part of the rewrited address (WP files).
+ *                        In case of MultiSite with sub-folders, this is not really where the files are (WP rewrites the admin URL for example, which is based on the "site URL").
+ *         'wp_to'     => First part of the rewrited address (WP files), for real.
+ *         'home_from' => Regex for first part of the rewrite rule (home URL).
+ *         'home_to'   => First part of the rewrited address (home URL).
  */
 function secupress_get_rewrite_bases() {
 	global $is_apache, $is_nginx, $is_iis7;
@@ -557,17 +559,18 @@ function secupress_get_rewrite_bases() {
 				'is_sub'    => true,
 				'site_from' => $wp_dir . '([_0-9a-zA-Z-]+/)?',
 				'site_to'   => $wp_dir . '$1',
+				'wp_to'     => $wp_dir,
 				'home_from' => '([_0-9a-zA-Z-]+/)?',
 				'home_to'   => '$1',
 			) );
-		}
-		else {
+		} else {
 			return ( $bases = array(
 				'base'      => $base,
 				'wpdir'     => $wp_dir,
 				'is_sub'    => false,
 				'site_from' => $wp_dir,
 				'site_to'   => $wp_dir,
+				'wp_to'     => $wp_dir,
 				'home_from' => '',
 				'home_to'   => '',
 			) );
@@ -583,17 +586,18 @@ function secupress_get_rewrite_bases() {
 				'is_sub'    => true,
 				'site_from' => '/' . $wp_dir . '([_0-9a-zA-Z-]+/)?',
 				'site_to'   => $base . $wp_dir . '$1',
+				'wp_to'     => $base . $wp_dir,
 				'home_from' => '([_0-9a-zA-Z-]+/)?',
 				'home_to'   => $base . '$1',
 			) );
-		}
-		else {
+		} else {
 			return ( $bases = array(
 				'base'      => $base,
 				'wpdir'     => $wp_dir,
 				'is_sub'    => false,
 				'site_from' => '/' . $wp_dir,
 				'site_to'   => $base . $wp_dir,
+				'wp_to'     => $base . $wp_dir,
 				'home_from' => '',
 				'home_to'   => $base,
 			) );
@@ -611,17 +615,18 @@ function secupress_get_rewrite_bases() {
 				'is_sub'    => true,
 				'site_from' => $base . $wp_dir . '([_0-9a-zA-Z-]+/)?',
 				'site_to'   => $base . $wp_dir . '{R:1}',
+				'wp_to'     => $base . $wp_dir,
 				'home_from' => $base . '([_0-9a-zA-Z-]+/)?',
 				'home_to'   => $base . '{R:1}',
 			) );
-		}
-		else {
+		} else {
 			return ( $bases = array(
 				'base'      => $base,
 				'wpdir'     => $wp_dir,
 				'is_sub'    => false,
 				'site_from' => $base . $wp_dir,
 				'site_to'   => $base . $wp_dir,
+				'wp_to'     => $base . $wp_dir,
 				'home_from' => $base,
 				'home_to'   => $base,
 			) );

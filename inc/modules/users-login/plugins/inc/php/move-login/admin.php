@@ -369,7 +369,7 @@ function secupress_move_login_get_nginx_rules( $rules = array() ) {
 		$out    = "# BEGIN SecuPress $marker\n";
 
 		foreach ( $rules as $slug => $rule ) {
-			$out .= 'rewrite ^' . $bases['site_from'] . $slug . '/?$ ' . $bases['site_to'] . $rule . " last;\n";
+			$out .= 'rewrite ^' . $bases['site_from'] . $slug . '/?$ ' . $bases['wp_to'] . $rule . " last;\n";
 		}
 
 		$out   .= "# END SecuPress\n";
