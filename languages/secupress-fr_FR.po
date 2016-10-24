@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
 "POT-Creation-Date: 2016-10-21 16:34+0200\n"
-"PO-Revision-Date: 2016-10-21 16:34+0200\n"
+"PO-Revision-Date: 2016-10-24 17:02+0200\n"
 "Last-Translator: WP Media <contact@wp-media.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -6325,7 +6325,7 @@ msgstr "Oui, garder un journal des actions WordPress"
 msgid "High criticity <span class=\"count\">(%s)</span>"
 msgid_plural "High criticity <span class=\"count\">(%s)</span>"
 msgstr[0] "Criticité haute <span class=\"count\">(%s)</span>"
-msgstr[1] "<span class=\"count\">(%s)</span>"
+msgstr[1] "Criticité haute <span class=\"count\">(%s)</span>"
 
 #: inc/modules/logs/settings/logs.php:26
 #, php-format
