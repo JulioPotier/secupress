@@ -1055,6 +1055,9 @@ fieldset.secupress-boxed-group > b {
 .secupress-pricing ~ .secupress-catchphrase {
 	margin-bottom: 0;
 }
+.secupress-pricing .secupress-col-1-4 {
+	padding: 0 4px;
+}
 
 /* Switchers */
 .secupress-inline-options button.secupress-button {
@@ -1164,7 +1167,7 @@ fieldset.secupress-boxed-group > b {
 }
 .secupress-amounts .price,
 .secupress-amounts ins {
-	font-size: 64px;
+	font-size: 40px;
 	font-weight: 200;
 	line-height: 1;
 	text-decoration: none;
@@ -1174,14 +1177,14 @@ fieldset.secupress-boxed-group > b {
 }
 .secupress-dollars {
 	margin-right: 5px;
-	font-size: 24px;
+	font-size: 17px;
 	line-height: 1;
 	font-weight: 500;
-	vertical-align: 28px;
+	vertical-align: 16px;
 }
 .secupress-amounts del {
 	font-weight: 200;
-	font-size: 20px;
+	font-size: 16px;
 	color: #ADB1B7;
 	font-style: italic;
 }
