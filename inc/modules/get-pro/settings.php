@@ -55,7 +55,7 @@ if ( ! $plans ) {
 		<?php
 		foreach ( $plans as $plan ) {
 		?>
-			<div class="secupress-col-1-3 secupress-flex">
+			<div class="secupress-col-1-4 secupress-flex">
 				<div class="secupress-price secupress-box-shadow secupress-flex-col">
 					<div class="secupress-price-header">
 						<?php
