@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2016-10-25 13:08+0200\n"
-"PO-Revision-Date: 2016-10-25 13:10+0200\n"
+"POT-Creation-Date: 2016-10-25 01:07+0200\n"
+"PO-Revision-Date: 2016-10-25 01:07+0200\n"
 "Last-Translator: WP Media <contact@wp-media.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -179,7 +179,7 @@ msgstr "L'adresse IP %s a été bannie."
 
 #: inc/admin/ajax-post-callbacks.php:231
 #: inc/classes/settings/class-secupress-settings-modules.php:546
-#: inc/modules/get-pro/settings.php:98
+#: inc/modules/get-pro/settings.php:94
 msgid "Forever"
 msgstr "Pour toujours"
 
@@ -5750,49 +5750,44 @@ msgstr "Facturé au mois"
 msgid "Secure & Protect"
 msgstr "Sécurise et Protège"
 
-#: inc/modules/get-pro/settings.php:94
+#: inc/modules/get-pro/settings.php:93
 #, php-format
 msgid "%d Website"
 msgid_plural "%d Websites"
 msgstr[0] "%d site"
 msgstr[1] "%d sites"
 
-#: inc/modules/get-pro/settings.php:96
-msgctxt "websites"
-msgid "All your websites"
-msgstr "Tous vos sites"
-
-#: inc/modules/get-pro/settings.php:103
+#: inc/modules/get-pro/settings.php:99
 msgid "Pre-Order"
 msgstr "Précommander"
 
-#: inc/modules/get-pro/settings.php:103
+#: inc/modules/get-pro/settings.php:99
 msgid "Order"
 msgstr "Commander"
 
-#: inc/modules/get-pro/settings.php:114
+#: inc/modules/get-pro/settings.php:110
 msgid "*&nbsp;50% OFF the first year then 20% OFF the next ones."
 msgstr "*&nbsp;50% de remise la première année puis 20% pour les suivantes."
 
-#: inc/modules/get-pro/settings.php:116
+#: inc/modules/get-pro/settings.php:112
 msgid "Included With All Plans"
 msgstr "Inclus dans tous les plans"
 
-#: inc/modules/get-pro/settings.php:121
+#: inc/modules/get-pro/settings.php:117
 msgid "Unlimited Support and Updates"
 msgstr "Support et mises à jour illimités"
 
-#: inc/modules/get-pro/settings.php:125 inc/modules/get-pro/settings.php:129
+#: inc/modules/get-pro/settings.php:121 inc/modules/get-pro/settings.php:125
 #, php-format
 msgctxt "one line text please"
 msgid "Bonus %s on %s"
 msgstr "%s sur %s"
 
-#: inc/modules/get-pro/settings.php:125
+#: inc/modules/get-pro/settings.php:121
 msgid "100 MB for free"
 msgstr "100 Mo gratuits"
 
-#: inc/modules/get-pro/settings.php:129
+#: inc/modules/get-pro/settings.php:125
 msgid "20% OFF"
 msgstr "20% de remise"
 
