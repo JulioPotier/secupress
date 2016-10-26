@@ -215,30 +215,12 @@ function secupress_send_support_request( $summary, $description, $data ) {
 	$to = strrev( 'em' . '.' . 'sserpuces' . chr( 64 ) . 'troppus' );
 
 	// From.
-	$from_email = secupress_get_consumer_email();
-	$from_user  = get_user_by( 'email', $from_email );
-
-	if ( ! secupress_is_user( $from_user ) ) {
-		$users = get_users( array(
-			'meta_key'    => 'backup_email',
-			'meta_value'  => $from_email,
-			'fields'      => 'ID',
-			'count_total' => false,
-			'number'      => 1,
-		) );
-		$userid    = is_array( $users ) && isset( $users[0] ) ? (int) $users[0] : 0;
-		$from_user = $userid ? get_user_by( 'id', $userid ) : $from_user;
-	}
-
-	if ( secupress_is_user( $from_user ) ) {
-		$from = 'from: ' . secupress_get_user_full_name( $from_user ) . ' <' . $from_email . '>';
-	} else {
-		$from = $from_email;
-	}
+	$from_user = wp_get_current_user();
+	$from      = secupress_get_user_full_name( $from_user ) . ' <' . $from_user->data->user_email . '>';
 
 	// Headers.
 	$headers = array(
-		$from,
+		'from: ' . $from,
 		'content-type: text/html',
 	);
 
@@ -253,7 +235,7 @@ function secupress_send_support_request( $summary, $description, $data ) {
 
 	// Message.
 	$data = array_merge( array(
-		'license_email'  => sprintf( __( 'License email: %s', 'secupress' ), $from_email ),
+		'license_email'  => sprintf( __( 'License email: %s', 'secupress' ), secupress_get_consumer_email() ),
 		'license_key'    => sprintf( __( 'License key: %s', 'secupress' ), secupress_get_consumer_key() ),
 		'sp_pro_version' => secupress_has_pro() ? sprintf( __( 'Version of SecuPress Pro: %1$s (requires SecuPress Free %2$s)', 'secupress' ), SECUPRESS_PRO_VERSION, SECUPRESS_PRO_SECUPRESS_MIN ) : __( 'Version of SecuPress Pro: inactive', 'secupress' ),
 	), $data );
