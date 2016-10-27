@@ -1,7 +1,7 @@
 <?php
 /*
 Module Name: WooCommerce Version JS disclose
-Description: Remove the WPML version from the script tags.
+Description: Remove the WooCommerce version from the script tags.
 Main Module: discloses
 Author: SecuPress
 Version: 1.0

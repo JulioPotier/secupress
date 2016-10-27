@@ -100,7 +100,7 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 		if ( $has_response ) {
 			$body = wp_remote_retrieve_body( $response );
 
-			// WPML version in meta tag.
+			// WooCommerce version in meta tag.
 			preg_match_all( '#<meta name="generator" content="WooCommerce [^"]*' . esc_attr( WC_VERSION ) . '[^"]*"[^>]*>#s', $body, $matches );
 
 			if ( array_filter( $matches ) ) {
@@ -162,7 +162,7 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 
 			$body = wp_remote_retrieve_body( $response );
 
-			// WPML version in meta tag.
+			// WooCommerce version in meta tag.
 			preg_match_all( '#<meta name="generator" content="WooCommerce [^"]*' . esc_attr( WC_VERSION ) . '[^"]*"[^>]*>#s', $body, $matches );
 
 			if ( array_filter( $matches ) ) {

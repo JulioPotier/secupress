@@ -1,7 +1,7 @@
 <?php
 /*
 Module Name: WooCommerce Version CSS disclose
-Description: Remove the WPML version from the style tags.
+Description: Remove the WooCommerce version from the style tags.
 Main Module: discloses
 Author: SecuPress
 Version: 1.0
