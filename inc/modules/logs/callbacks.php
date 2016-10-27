@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 function secupress_logs_settings_callback( $settings ) {
 	$modulenow = 'logs';
-	$settings  = $settings ? $settings : array();
+	$settings  = $settings && is_array( $settings ) ? $settings : array();
 
 	if ( isset( $settings['sanitized'] ) ) {
 		return $settings;

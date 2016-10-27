@@ -19,7 +19,7 @@ function secupress_services_settings_callback( $settings ) {
 	global $wp_version;
 
 	$modulenow = 'services';
-	$settings  = $settings ? $settings : array();
+	$settings  = $settings && is_array( $settings ) ? $settings : array();
 
 	if ( isset( $settings['sanitized'] ) ) {
 		return array( 'sanitized' => 1 );
