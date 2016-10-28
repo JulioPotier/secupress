@@ -105,6 +105,10 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 			302 => sprintf( __( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ), '<code>.htaccess</code>', '%s' ),
 			/** Translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
 			303 => sprintf( __( 'Your %1$s file is not writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ), '<code>web.config</code>', '%1$s', '%2$s' ),
+			/** Translators: 1 is a file name, 2 is some code */
+			304 => sprintf( __( 'Your server runs <strong>Nginx</strong>, the <strong>PHP version</strong> disclosure cannot be fixed automatically but you can do it yourself by adding the following code to your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
+			/** Translators: 1 is a file name, 2 is some code */
+			305 => sprintf( __( 'Your server runs <strong>Nginx</strong>, the <strong>WordPress version</strong> disclosure cannot be fixed automatically but you can do it yourself by adding the following code to your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -431,7 +435,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 				array_pop( $wp_settings_errors );
 			}
 
-			$all_rules[] = $rules;
+			$all_rules['php_version'] = $rules;
 		}
 
 		// `readme.html` file.
@@ -447,13 +451,22 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 				array_pop( $wp_settings_errors );
 			}
 
-			$all_rules[] = $rules;
+			$all_rules['readme'] = $rules;
 		}
 
 		if ( $all_rules ) {
-			$all_rules = implode( "\n", $all_rules );
-			// "cantfix"
-			$this->add_fix_message( 300, array( $all_rules ) );
+			if ( isset( $all_rules['php_version'], $all_rules['readme'] ) ) {
+				$all_rules = implode( "\n", $all_rules );
+				// "cantfix"
+				$this->add_fix_message( 300, array( $all_rules ) );
+			} elseif ( isset( $all_rules['php_version'] ) ) {
+				// "cantfix"
+				$this->add_fix_message( 304, array( $all_rules['php_version'] ) );
+			} else {
+				$all_rules = implode( "\n", $all_rules );
+				// "cantfix"
+				$this->add_fix_message( 305, array( $all_rules['readme'] ) );
+			}
 		}
 	}
 
