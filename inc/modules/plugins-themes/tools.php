@@ -4,6 +4,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 /**
  * Get the plugins removed from repo from our local file.
  *
+ * @since 1.0.3 Use the whitelist
  * @since 1.0
  *
  * @return (array|bool) The plugins removed from the repository: dirname as array keys and plugin path as values. Return false if the file is not readable.
