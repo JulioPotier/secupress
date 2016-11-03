@@ -529,13 +529,13 @@ function secupress_get_wp_directory() {
  * @since 1.0
  *
  * @return (array) An array containing the following keys:
- *         'base'      => Rewrite base.
- *         'wpdir'     => WP directory.
+ *         'base'      => Rewrite base, or "home directory".
+ *         'wp_dir'    => WP directory.
+ *         'site_dir'  => Directory containing the WordPress files.
  *         'is_sub'    => Is it a subfolder install? (Multisite).
  *         'site_from' => Regex for first part of the rewrite rule (WP files).
  *         'site_to'   => First part of the rewrited address (WP files).
- *                        In case of MultiSite with sub-folders, this is not really where the files are (WP rewrites the admin URL for example, which is based on the "site URL").
- *         'wp_to'     => First part of the rewrited address (WP files), for real.
+ *                        In case of MultiSite with sub-folders, this is not really where the files are: WP rewrites the admin URL for example, which is based on the "site URL".
  *         'home_from' => Regex for first part of the rewrite rule (home URL).
  *         'home_to'   => First part of the rewrited address (home URL).
  */
@@ -547,89 +547,92 @@ function secupress_get_rewrite_bases() {
 		return $bases;
 	}
 
-	$base   = parse_url( trailingslashit( get_option( 'home' ) ), PHP_URL_PATH );
-	$wp_dir = secupress_get_wp_directory();
+	$base     = parse_url( trailingslashit( get_option( 'home' ) ), PHP_URL_PATH );
+	$wp_dir   = secupress_get_wp_directory();     // WP in its own directory.
+	$is_sub   = secupress_is_subfolder_install(); // MultiSite by sub-folders.
+	$site_dir = $base . ltrim( $wp_dir, '/' );
+
+	$bases = array(
+		'base'     => $base,     // '/' or '/sub-dir/'.
+		'wp_dir'   => $wp_dir,   // '' or '/wp-dir/'.
+		'site_dir' => $site_dir, // '/', '/wp-dir/', '/sub-dir/', or '/sub-dir/wp-dir/'.
+		'is_sub'   => $is_sub,   // True or false.
+	);
 
 	// Apache.
 	if ( $is_apache ) {
-		if ( secupress_is_subfolder_install() ) {
-			return ( $bases = array(
-				'base'      => $base,
-				'wpdir'     => $wp_dir,
-				'is_sub'    => true,
-				'site_from' => $wp_dir . '([_0-9a-zA-Z-]+/)?',
-				'site_to'   => $wp_dir . '$1',
-				'wp_to'     => $wp_dir,
+		/**
+		 * In the `*_from` fields, we don't add `$base` because we use `RewriteBase $base` in the rewrite rules.
+		 * In the `*_to` fields, `$base` is optional, but WP adds it so we do the same for concistancy.
+		 */
+		if ( $is_sub ) {
+			// MultiSite by sub-folders.
+			return ( $bases = array_merge( $bases, array(
+				// 'site_from' and 'site_to': no `$wp_dir` here, because it is used only for the main blog.
+				'site_from' => $wp_dir ? '([_0-9a-zA-Z-]+/)' : '(([_0-9a-zA-Z-]+/)?)',
+				'site_to'   => $base . '$1',
 				'home_from' => '([_0-9a-zA-Z-]+/)?',
-				'home_to'   => '$1',
-			) );
+				'home_to'   => $base . '$1',
+			) ) );
 		} else {
-			return ( $bases = array(
-				'base'      => $base,
-				'wpdir'     => $wp_dir,
-				'is_sub'    => false,
+			// Not MultiSite, or MultiSite by sub-domains.
+			return ( $bases = array_merge( $bases, array(
 				'site_from' => $wp_dir,
-				'site_to'   => $wp_dir,
-				'wp_to'     => $wp_dir,
+				'site_to'   => $site_dir,
 				'home_from' => '',
-				'home_to'   => '',
-			) );
+				'home_to'   => $base,
+			) ) );
 		}
 	}
 
 	// Nginx.
 	if ( $is_nginx ) {
-		if ( secupress_is_subfolder_install() ) {
-			return ( $bases = array(
-				'base'      => $base,
-				'wpdir'     => $wp_dir,
-				'is_sub'    => true,
-				'site_from' => $base . $wp_dir . '([_0-9a-zA-Z-]+/)?',
-				'site_to'   => $base . $wp_dir . '$1',
-				'wp_to'     => $base . $wp_dir,
+		if ( $is_sub ) {
+			// MultiSite by sub-folders.
+			return ( $bases = array_merge( $bases, array(
+				// 'site_from' and 'site_to': no `$wp_dir` here, because it is used only for the main blog.
+				'site_from' => $base . '(' . ( $wp_dir ? '[_0-9a-zA-Z-]+/' : '([_0-9a-zA-Z-]+/)?' ) . ')',
+				'site_to'   => $base . '$1',
 				'home_from' => $base . '([_0-9a-zA-Z-]+/)?',
 				'home_to'   => $base . '$1',
-			) );
+			) ) );
 		} else {
-			return ( $bases = array(
-				'base'      => $base,
-				'wpdir'     => $wp_dir,
-				'is_sub'    => false,
-				'site_from' => $base . $wp_dir,
-				'site_to'   => $base . $wp_dir,
-				'wp_to'     => $base . $wp_dir,
-				'home_from' => '',
+			// Not MultiSite, or MultiSite by sub-domains.
+			return ( $bases = array_merge( $bases, array(
+				'site_from' => $site_dir,
+				'site_to'   => $site_dir,
+				'home_from' => $base,
 				'home_to'   => $base,
-			) );
+			) ) );
 		}
 	}
 
 	// IIS7.
 	if ( $is_iis7 ) {
-		$base = secupress_trailingslash_only( $base );
+		$base     = ltrim( $base, '/' );     // No heading slash for IIS: '' or 'sub-dir/'.
+		$site_dir = ltrim( $site_dir, '/' ); // No heading slash for IIS: '', 'wp-dir/', 'sub-dir/', or 'sub-dir/wp-dir/'.
 
-		if ( secupress_is_subfolder_install() ) {
-			return ( $bases = array(
+		if ( $is_sub ) {
+			// MultiSite by sub-folders.
+			return ( $bases = array_merge( $bases, array(
 				'base'      => $base,
-				'wpdir'     => $wp_dir,
-				'is_sub'    => true,
-				'site_from' => $base . $wp_dir . '([_0-9a-zA-Z-]+/)?',
-				'site_to'   => $base . $wp_dir . '{R:1}',
-				'wp_to'     => $base . $wp_dir,
+				'site_dir'  => $site_dir,
+				// 'site_from' and 'site_to': no `$wp_dir` here, because it is used only for the main blog.
+				'site_from' => $base . '(' . ( $wp_dir ? '[_0-9a-zA-Z-]+/' : '([_0-9a-zA-Z-]+/)?' ) . ')',
+				'site_to'   => $base . '{R:1}',
 				'home_from' => $base . '([_0-9a-zA-Z-]+/)?',
 				'home_to'   => $base . '{R:1}',
-			) );
+			) ) );
 		} else {
-			return ( $bases = array(
+			// Not MultiSite, or MultiSite by sub-domains.
+			return ( $bases = array_merge( $bases, array(
 				'base'      => $base,
-				'wpdir'     => $wp_dir,
-				'is_sub'    => false,
-				'site_from' => $base . $wp_dir,
-				'site_to'   => $base . $wp_dir,
-				'wp_to'     => $base . $wp_dir,
+				'site_dir'  => $site_dir,
+				'site_from' => $site_dir,
+				'site_to'   => $site_dir,
 				'home_from' => $base,
 				'home_to'   => $base,
-			) );
+			) ) );
 		}
 	}
 
