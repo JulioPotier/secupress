@@ -247,7 +247,7 @@ server {
 /**
  * Get a regex pattern matching the files.
  *
- * @since 1.0
+ * @since 1.0.3
  *
  * @return (string)
  */
