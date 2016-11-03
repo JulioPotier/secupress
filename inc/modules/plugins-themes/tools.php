@@ -76,7 +76,7 @@ function secupress_get_notupdated_plugins() {
 
 
 /**
- * Get the plugins vulnerable from an option, from our option, set by `secupress_refresh_vulnerable_plugins()`.
+ * Get the plugins vulnerable from an option, from our option, set by `secupress_refresh_bad_plugins_list_ajax_post_cb()`.
  *
  * @since 1.0
  *
@@ -136,7 +136,7 @@ function secupress_get_plugins_whitelist() {
 /* THEMES */
 
 /**
- * Get the vulnerable themes from an option, from our option, set by `secupress_refresh_vulnerable_themes()`.
+ * Get the vulnerable themes from an option, from our option, set by `secupress_refresh_bad_themes_list_ajax_post_cb()`.
  *
  * @since 1.0
  *

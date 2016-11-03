@@ -380,3 +380,52 @@ function secupress_recovery_email_ajax_post_cb() {
 
 	secupress_user_profile_update_errors( $dummy, false, $user );
 }
+
+
+add_action( 'admin_post_secupress_refresh_bad_plugins', 'secupress_refresh_bad_plugins_list_ajax_post_cb' );
+/**
+ * Call the refresh of the vulnerable plugins.
+ * Moved from Pro to Free + renamed. Originally `secupress_refresh_bad_plugins_ajax_post_cb()` and `secupress_refresh_vulnerable_plugins()`.
+ *
+ * @since 1.1.3
+ */
+function secupress_refresh_bad_plugins_list_ajax_post_cb() {
+	if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'detect-bad-plugins' ) ) {
+		secupress_admin_die();
+	}
+
+	$plugins  = get_plugins(); // //// GO PRO.
+	$plugins  = wp_list_pluck( $plugins, 'Version' );
+	$args     = array( 'body' => array( 'items' => $plugins, 'type' => 'plugin' ), 'headers' => array( 'X-Secupress' => SECUPRESS_VERSION ) ); // //// Use client licence here.
+
+	$response = wp_remote_post( SECUPRESS_WEB_MAIN . '/vulns.php', $args ); // //// Url temp.
+
+	if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
+		update_site_option( 'secupress_bad_plugins', wp_remote_retrieve_body( $response ) );
+	}
+}
+
+
+add_action( 'admin_post_secupress_refresh_bad_themes', 'secupress_refresh_bad_themes_list_ajax_post_cb' );
+/**
+ * Call the refresh of the vulnerable themes.
+ * Moved from Pro to Free + renamed. Originally `secupress_refresh_bad_themes_ajax_post_cb()` and `secupress_refresh_vulnerable_themes()`.
+ *
+ * @return void
+ * @since 1.0
+ */
+function secupress_refresh_bad_themes_list_ajax_post_cb() {
+	if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'detect-bad-themes' ) ) {
+		secupress_admin_die();
+	}
+
+	$themes = wp_get_themes(); // //// GO PRO.
+	$themes = wp_list_pluck( $themes, 'Version' );
+
+	$args   = array( 'body' => array( 'items' => $themes, 'type' => 'theme' ), 'headers' => array( 'X-Secupress' => SECUPRESS_VERSION ) ); // //// Use client licence here.
+
+	$response = wp_remote_post( SECUPRESS_WEB_MAIN . '/vulns.php', $args ); // //// Url temp.
+	if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
+		update_site_option( 'secupress_bad_themes', wp_remote_retrieve_body( $response ) );
+	}
+}
