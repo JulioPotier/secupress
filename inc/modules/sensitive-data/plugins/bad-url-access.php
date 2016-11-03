@@ -199,7 +199,7 @@ function secupress_bad_url_access_apache_rules() {
 	$rules .= "    RewriteEngine On\n";
 	$rules .= "    RewriteBase $base\n";
 	$rules .= "    RewriteCond %{REQUEST_URI} !{$site_from}wp-includes/js/tinymce/wp-tinymce\.php$\n";
-	$rules .= "    RewriteRule $pattern [R=404,L]\n";
+	$rules .= "    RewriteRule $pattern [R=404,L,NC]\n";
 	$rules .= "</IfModule>\n";
 
 	return $rules;
@@ -221,7 +221,7 @@ function secupress_bad_url_access_iis7_rules() {
 	$pattern   = '^(' . $bases['home_from'] . 'php\.ini|' . $site_from . WPINC . '/.+\.php|' . $site_from . 'wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$';
 
 	$rules  = "<rule name=\"SecuPress $marker\" stopProcessing=\"true\">\n";
-	$rules .= "$spaces  <match url=\"$pattern\"/>\n";
+	$rules .= "$spaces  <match url=\"$pattern\"/ ignoreCase=\"true\">\n";
 	$rules .= "$spaces  <conditions>\n";
 	$rules .= "$spaces    <add input=\"{REQUEST_URI}\" pattern=\"{$site_from}wp-includes/js/tinymce/wp-tinymce\.php$\" negate=\"true\"/>\n";
 	$rules .= "$spaces  </conditions>\n";
