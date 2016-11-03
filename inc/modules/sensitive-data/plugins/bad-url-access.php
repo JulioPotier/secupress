@@ -171,28 +171,10 @@ function secupress_bad_url_access_upgrade( $new_version, $actual_version ) {
  * @return (string)
  */
 function secupress_bad_url_access_apache_rules() {
-	/**
-	 * ^php\.ini$
-	 *
-	 * ^wp-admin/admin-functions\.php$
-	 * ^wp-admin/install\.php$
-	 * ^wp-admin/menu-header\.php$
-	 * ^wp-admin/menu\.php$
-	 * ^wp-admin/setup-config\.php$
-	 * ^wp-admin/upgrade-functions\.php$
-	 *
-	 * ^wp-admin/includes/.+\.php$
-	 *
-	 * ^wp-admin/network/menu\.php$
-	 *
-	 * ^wp-admin/user/menu\.php$
-	 *
-	 * ^wp-includes/.+\.php$
-	 */
+	$pattern   = secupress_bad_url_access_get_regex_pattern();
 	$bases     = secupress_get_rewrite_bases();
 	$base      = $bases['base'];
 	$site_from = $bases['site_from'];
-	$pattern   = '^(' . $bases['home_from'] . 'php\.ini|' . $site_from . WPINC . '/.+\.php|' . $site_from . 'wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$';
 
 	// Trigger a 404 error, because forbidding access to a file is nice, but making it also invisible is more fun :).
 	$rules  = "<IfModule mod_rewrite.c>\n";
@@ -216,9 +198,9 @@ function secupress_bad_url_access_apache_rules() {
 function secupress_bad_url_access_iis7_rules() {
 	$marker    = 'bad_url_access';
 	$spaces    = str_repeat( ' ', 8 );
+	$pattern   = secupress_bad_url_access_get_regex_pattern();
 	$bases     = secupress_get_rewrite_bases();
 	$site_from = $bases['site_from'];
-	$pattern   = '^(' . $bases['home_from'] . 'php\.ini|' . $site_from . WPINC . '/.+\.php|' . $site_from . 'wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$';
 
 	$rules  = "<rule name=\"SecuPress $marker\" stopProcessing=\"true\">\n";
 	$rules .= "$spaces  <match url=\"$pattern\"/>\n";
@@ -240,10 +222,10 @@ function secupress_bad_url_access_iis7_rules() {
  * @return (string)
  */
 function secupress_bad_url_access_nginx_rules() {
-	$marker    = 'bad_url_access';
-	$bases     = secupress_get_rewrite_bases();
-	$site_from = ltrim( $bases['site_from'], '/' );
-	$pattern   = '^/(' . ltrim( $bases['home_from'], '/' ) . 'php\.ini|' . $site_from . WPINC . '/((?:(?!js/tinymce/wp-tinymce).)+)\.php|' . $site_from . 'wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$';
+	$marker  = 'bad_url_access';
+	$bases   = secupress_get_rewrite_bases();
+	// We add the TinyMCE file directly in the pattern.
+	$pattern = '^(' . $bases['home_from'] . 'php\.ini|' . $bases['site_from'] . WPINC . '/((?:(?!js/tinymce/wp-tinymce).)+)\.php|' . $bases['site_from'] . 'wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$';
 
 	$rules = "
 server {
@@ -255,4 +237,38 @@ server {
 }";
 
 	return trim( $rules );
+}
+
+
+/*------------------------------------------------------------------------------------------------*/
+/* TOOLS ======================================================================================== */
+/*------------------------------------------------------------------------------------------------*/
+
+/**
+ * Get a regex pattern matching the files.
+ *
+ * @since 1.0
+ *
+ * @return (string)
+ */
+function secupress_bad_url_access_get_regex_pattern() {
+	$bases = secupress_get_rewrite_bases();
+	/**
+	 * ^/php\.ini$
+	 *
+	 * ^/wp-admin/admin-functions\.php$
+	 * ^/wp-admin/install\.php$
+	 * ^/wp-admin/menu-header\.php$
+	 * ^/wp-admin/setup-config\.php$
+	 * ^/wp-admin/upgrade-functions\.php$
+	 *
+	 * ^/wp-admin/menu\.php$
+	 * ^/wp-admin/user/menu\.php$
+	 * ^/wp-admin/network/menu\.php$
+	 *
+	 * ^/wp-admin/includes/.+\.php$
+	 *
+	 * ^/wp-includes/.+\.php$
+	 */
+	return '^(' . $bases['home_from'] . 'php\.ini|' . $bases['site_from'] . WPINC . '/.+\.php|' . $bases['site_from'] . 'wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$';
 }
