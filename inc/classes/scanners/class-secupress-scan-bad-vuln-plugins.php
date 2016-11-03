@@ -189,6 +189,7 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 	/**
 	 * Get an array of installed plugins that are vulnerable.
 	 *
+	 * @since 1.0.3 Don't use the whitelist
 	 * @since 1.0
 	 *
 	 * @param (bool) $for_fix False: for scan. True: for fix.
@@ -206,33 +207,6 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 
 		if ( is_numeric( $bad_plugins ) ) {
 			return 1; // Free api call.
-		}
-
-		// Deal with the white list.
-		$whitelist = secupress_get_plugins_whitelist();
-
-		if ( false === $whitelist ) {
-			// The file is not readable.
-			$whitelist = array();
-
-			if ( ! $whitelist_error ) {
-				// No need to trigger the error more than once.
-				$whitelist_error = true;
-				$whitelist_file  = SECUPRESS_INC_PATH . 'data/whitelist-plugin-list.data';
-				$args            = array( '<code>' . str_replace( ABSPATH, '', $whitelist_file ) . '</code>' );
-				// "warning"
-				if ( $for_fix ) {
-					$this->add_fix_message( 100, $args );
-				} else {
-					$this->add_message( 100, $args );
-				}
-			}
-		}
-
-		$bad_plugins = array_diff_key( $bad_plugins, $whitelist );
-
-		if ( ! $bad_plugins ) {
-			return array();
 		}
 
 		$all_plugins = get_plugins();

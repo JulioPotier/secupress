@@ -4,6 +4,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 /**
  * Get the plugins removed from repo from our local file.
  *
+ * @since 1.0.3 Use the whitelist
  * @since 1.0
  *
  * @return (array|bool) The plugins removed from the repository: dirname as array keys and plugin path as values. Return false if the file is not readable.
@@ -26,12 +27,16 @@ function secupress_get_removed_plugins() {
 	}
 
 	$removed_plugins = array_flip( array_map( 'trim', file( $plugins_list_file ) ) );
+	$whitelist       = secupress_get_plugins_whitelist();
 
-	$all_plugins = array_keys( get_plugins() );
-	$all_plugins = array_combine( array_map( 'dirname', $all_plugins ), $all_plugins );
-	$all_plugins = array_intersect_key( $all_plugins, $removed_plugins );
+	if ( $whitelist ) {
+		$removed_plugins = array_diff_key( $removed_plugins, $whitelist );
+	}
 
-	$removed_plugins = $all_plugins;
+	$all_plugins     = array_keys( get_plugins() );
+	$all_plugins     = array_combine( array_map( 'dirname', $all_plugins ), $all_plugins );
+	$removed_plugins = array_intersect_key( $all_plugins, $removed_plugins );
+
 	set_site_transient( 'secupress_removed_plugins', $removed_plugins, 6 * HOUR_IN_SECONDS );
 
 	return $removed_plugins;
