@@ -141,8 +141,7 @@ function secupress_protect_readmes_iis7_rules() {
 function secupress_protect_readmes_nginx_rules() {
 	$marker  = 'readme_discloses';
 	$bases   = secupress_get_rewrite_bases();
-	$base    = rtrim( $bases['home_from'], '/' );
-	$pattern = "^{$base}(/|/.+/)(readme|changelog)\.(txt|md|html)$";
+	$pattern = '^' . $bases['home_from'] . '(.+/)?(readme|changelog)\.(txt|md|html)$';
 
 	// - http://nginx.org/en/docs/http/ngx_http_core_module.html#location
 	$rules  = "
