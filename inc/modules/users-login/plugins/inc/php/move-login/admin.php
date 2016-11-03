@@ -260,7 +260,7 @@ function secupress_move_login_get_apache_rules( $rules = array() ) {
 		);
 
 		foreach ( $rules as $slug => $rule ) {
-			$out[] = '    RewriteRule ^' . $bases['site_from'] . $slug . '/?$ ' . $bases['site_to'] . $rule . ' [QSA,L]';
+			$out[] = '    RewriteRule ^' . $bases['site_from'] . $slug . '/?$ ' . $bases['site_dir'] . $rule . ' [QSA,L]';
 		}
 
 		$out[] = '</IfModule>';
@@ -316,7 +316,7 @@ function secupress_move_login_get_iis7_rules( $rules = array() ) {
 		foreach ( $rules as $slug => $rule ) {
 			$out[] = $space . '<rule name="SecuPress ' . $marker . ' Rule ' . $rule_i . '" stopProcessing="true">' . "\n"
 			       . $space . '  <match url="^' . $bases['site_from'] . $slug . '/?$" ignoreCase="false" />' . "\n"
-			       . $space . '  <action type="Redirect" url="' . $bases['site_to'] . $rule . '" redirectType="Permanent" />' . "\n"
+			       . $space . '  <action type="Redirect" url="' . $bases['site_dir'] . $rule . '" redirectType="Permanent" />' . "\n"
 			       . $space . "</rule>\n";
 			$rule_i++;
 		}
@@ -369,7 +369,7 @@ function secupress_move_login_get_nginx_rules( $rules = array() ) {
 		$out    = "# BEGIN SecuPress $marker\n";
 
 		foreach ( $rules as $slug => $rule ) {
-			$out .= 'rewrite ^' . $bases['site_from'] . $slug . '/?$ ' . $bases['wp_to'] . $rule . " last;\n";
+			$out .= 'rewrite ^' . $bases['site_from'] . $slug . '/?$ ' . $bases['site_dir'] . $rule . " last;\n";
 		}
 
 		$out   .= "# END SecuPress\n";
