@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2016-11-04 18:42+0100\n"
-"PO-Revision-Date: 2016-11-04 18:42+0100\n"
+"POT-Creation-Date: 2016-11-04 19:10+0100\n"
+"PO-Revision-Date: 2016-11-04 19:10+0100\n"
 "Last-Translator: WP Media <contact@secupress.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -7631,10 +7631,12 @@ msgstr ""
 "Anti Virus, Pare-Feu, ou Anti Spam&nbsp;: Ajouter des fonctionnalités, "
 "planifiez des scans et protégez vos données."
 
-#: inc/modules/welcome/settings.php:50
+#: inc/modules/welcome/settings.php:50 inc/modules/welcome/settings.php:73
 #, php-format
-msgid "%d options available"
-msgstr "%d options available"
+msgid "%d option available"
+msgid_plural "%d options available"
+msgstr[0] "%d option disponible"
+msgstr[1] "%d options disponibles"
 
 #: inc/modules/welcome/settings.php:51
 msgid ""
@@ -7657,13 +7659,6 @@ msgid "%d pro option available"
 msgid_plural "%d pro options available"
 msgstr[0] "%d option pro disponible"
 msgstr[1] "%d options pro disponibles"
-
-#: inc/modules/welcome/settings.php:73
-#, php-format
-msgid "%d option available"
-msgid_plural "%d options available"
-msgstr[0] "%d option disponible"
-msgstr[1] "%d options disponibles"
 
 #: inc/modules/welcome/settings.php:83
 msgid "Get Pro and unlock more awesome features!"
@@ -7777,6 +7772,9 @@ msgid ""
 msgstr ""
 "Protégez votre WordPress avec SecuPress, analysez et assurez-vous de la "
 "sécurité de votre site quotidiennement."
+
+#~ msgid "%d options available"
+#~ msgstr "%d options available"
 
 #~ msgid "Deactivate the plugin %s."
 #~ msgstr "Désactivez le plugin %s."

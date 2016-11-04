@@ -47,7 +47,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 		<div class="secupress-dashboard-header secupress-flex secupress-flex-spaced">
 			<div class="secupress-dh-titles">
-				<p class="secupress-header-title"><?php printf( __( '%d options available', 'secupress' ), $total_options ); ?></p>
+				<p class="secupress-header-title"><?php printf( _n( '%d option available', '%d options available', $total_options, 'secupress' ), $total_options ); ?></p>
 				<p><?php _e( 'The scanner is able to activate some options, feel free to check the module\'s options for more.', 'secupress' ); ?></p>
 			</div>
 			<div class="secupress-dh-counts secupress-flex">
