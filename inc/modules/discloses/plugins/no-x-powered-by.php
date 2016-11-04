@@ -145,9 +145,11 @@ function secupress_no_x_powered_by_nginx_rules() {
 
 	// - http://nginx.org/en/docs/http/ngx_http_core_module.html#server_tokens
 	$rules  = "
-http {
+server {
 	# BEGIN SecuPress $marker
 	server_tokens off;
+	proxy_hide_header X-Powered-By;
+	fastcgi_hide_header X-Powered-By;
 	# END SecuPress
 }";
 
