@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2016-10-25 13:08+0200\n"
-"PO-Revision-Date: 2016-10-25 13:15+0200\n"
+"POT-Creation-Date: 2016-11-04 15:22+0100\n"
+"PO-Revision-Date: 2016-11-04 15:23+0100\n"
 "Last-Translator: WP Media <contact@wp-media.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -121,12 +121,13 @@ msgstr "%s&nbsp;: "
 #: inc/admin/activation.php:278 inc/admin/functions/modules.php:388
 #, php-format
 msgid ""
-"Your server runs <i>Nginx</i>. You have to edit the configuration file "
-"manually. Please remove all rules between %2$s and %3$s from the %1$s file."
+"Your server runs <strong>Ngnix</strong>. You have to edit the configuration "
+"file manually. Please remove all rules between %2$s and %3$s from the %1$s "
+"file."
 msgstr ""
-"Votre serveur utilise le système <i>Ngnix</i>. Vous devrez alors éditer "
-"votre fichier de configuration manuellement. Merci de supprimer les règles "
-"entre %2$s et %3$s dans le fichier %1$s."
+"Votre serveur utilise le système <strong>Ngnix</strong>. Vous devrez éditer "
+"votre fichier de configuration manuellement. Merci de supprimer toutes les "
+"règles entre %2$s et %3$s du fichier %1$s."
 
 #: inc/admin/activation.php:304
 #, php-format
@@ -302,7 +303,7 @@ msgstr ""
 #: inc/classes/scanners/class-secupress-scan-db-prefix.php:70
 #: inc/classes/scanners/class-secupress-scan-directory-listing.php:100
 #: inc/classes/scanners/class-secupress-scan-directoryindex.php:102
-#: inc/classes/scanners/class-secupress-scan-discloses.php:111
+#: inc/classes/scanners/class-secupress-scan-discloses.php:115
 #: inc/classes/scanners/class-secupress-scan-easy-login.php:78
 #: inc/classes/scanners/class-secupress-scan-inactive-plugins-themes.php:85
 #: inc/classes/scanners/class-secupress-scan-login-errors-disclose.php:66
@@ -370,25 +371,26 @@ msgstr ""
 #: inc/admin/functions/modules.php:494
 #, php-format
 msgid ""
-"Your server runs <i>Nginx</i>. You have to edit the configuration file "
-"manually. Please add the following code to your %1$s file: %2$s"
+"Your server runs <strong>Ngnix</strong>. You have to edit the configuration "
+"file manually. Please add the following code to your %1$s file: %2$s"
 msgstr ""
-"Votre serveur utilise le système <i>Ngnix</i>. Vous devrez alors éditer "
+"Votre serveur utilise le système <strong>Ngnix</strong>. Vous devrez éditer "
 "votre fichier de configuration manuellement. Merci d'ajouter le code suivant "
 "dans le fichier %1$s&nbsp;: %2$s"
 
 #: inc/admin/functions/modules.php:504
 msgid ""
-"It seems your server does not use <i>Apache</i>, <i>Nginx</i>, nor <i>IIS7</"
-"i>. This module won't work."
+"It seems your server does not use <strong>Apache</strong>, <strong>Ngnix</"
+"strong>, nor <strong>IIS7</strong>. This module won't work."
 msgstr ""
-"Il semble que votre serveur n'utilise pas <i>Apache</i>, ni <i>Ngnix</i>, ni "
-"<i>II7</i>. Ce module ne peut pas fonctionner."
+"Il semble que votre serveur n'utilise pas <strong>Apache</strong>, ni "
+"<strong>Ngnix</strong>, ni <strong>II7</strong>. Ce module ne peut pas "
+"fonctionner."
 
 #: inc/admin/functions/modules.php:579
 #, php-format
-msgid "Deactivate the plugin %s."
-msgstr "Désactiver le plugin %s."
+msgid "Will deactivate the plugin %s."
+msgstr "Cela désactivera le plugin %s."
 
 #: inc/admin/functions/wp-updates-plugin.php:79
 msgid ""
@@ -660,7 +662,7 @@ msgstr ""
 
 #: inc/admin/notices.php:388
 msgid "the plugin settings page"
-msgstr "la page des réglages du plugin."
+msgstr "la page des réglages du plugin"
 
 #: inc/admin/notices.php:472
 #, php-format
@@ -2137,8 +2139,8 @@ msgid ""
 "extensions."
 msgstr ""
 "Le fichier %s ne peut être édité automatiquement, des règles à ajouter "
-"manuellement dans le fichier vous seront fournies afin d'éviter que les "
-"attaquants ne découvrent la version de WordPress et la version de PHP."
+"manuellement dans le fichier vous seront fournies afin d'éviter l'accès "
+"direct à ces mauvaises extensions."
 
 #: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:101
 msgid "Files that use bad extensions are protected."
@@ -3370,6 +3372,30 @@ msgstr ""
 "Votre serveur tourne sous un système non reconnu. La divulgation de "
 "<strong>version de WordPress</strong> et de la <strong>version de PHP</"
 "strong> ne peut être corrigée automatiquement."
+
+#: inc/classes/scanners/class-secupress-scan-discloses.php:109
+#, php-format
+msgid ""
+"Your server runs <strong>Nginx</strong>, the <strong>PHP version</strong> "
+"disclosure cannot be fixed automatically but you can do it yourself by "
+"adding the following code to your %1$s file: %2$s"
+msgstr ""
+"Votre système utilise <strong>Ngnix</strong>, la divulgation de la "
+"<strong>version de PHP</strong> ne peut être corrigée automatiquement mais "
+"vous pouvez le faire vous même en ajoutant ce code dans votre fichier "
+"%1$s&nbsp;: %2$s."
+
+#: inc/classes/scanners/class-secupress-scan-discloses.php:111
+#, php-format
+msgid ""
+"Your server runs <strong>Nginx</strong>, the <strong>WordPress version</"
+"strong> disclosure cannot be fixed automatically but you can do it yourself "
+"by adding the following code to your %1$s file: %2$s"
+msgstr ""
+"Votre système utilise <strong>Ngnix</strong>, la divulgation de la "
+"<strong>version de WordPress</strong> ne peut être corrigé automatiquement "
+"mais vous pouvez le faire vous même en ajoutant ce code dans votre fichier "
+"%1$s&nbsp;: %2$s."
 
 #: inc/classes/scanners/class-secupress-scan-easy-login.php:48
 msgid "Check if your login page is protected by double authentication."
@@ -5771,28 +5797,24 @@ msgid "Order"
 msgstr "Commander"
 
 #: inc/modules/get-pro/settings.php:114
-msgid "*&nbsp;50% OFF the first year then 20% OFF the next ones."
-msgstr "*&nbsp;50% de remise la première année puis 20% pour les suivantes."
-
-#: inc/modules/get-pro/settings.php:116
 msgid "Included With All Plans"
 msgstr "Inclus dans tous les plans"
 
-#: inc/modules/get-pro/settings.php:121
+#: inc/modules/get-pro/settings.php:119
 msgid "Unlimited Support and Updates"
 msgstr "Support et mises à jour illimités"
 
-#: inc/modules/get-pro/settings.php:125 inc/modules/get-pro/settings.php:129
+#: inc/modules/get-pro/settings.php:123 inc/modules/get-pro/settings.php:127
 #, php-format
 msgctxt "one line text please"
 msgid "Bonus %s on %s"
 msgstr "%s sur %s"
 
-#: inc/modules/get-pro/settings.php:125
+#: inc/modules/get-pro/settings.php:123
 msgid "100 MB for free"
 msgstr "100 Mo gratuits"
 
-#: inc/modules/get-pro/settings.php:129
+#: inc/modules/get-pro/settings.php:127
 msgid "20% OFF"
 msgstr "20% de remise"
 
@@ -6836,32 +6858,32 @@ msgstr ""
 msgid "I don't think this description can be of any help."
 msgstr "Je ne pense pas que cette description apporte de l'aide."
 
-#: inc/modules/services/callbacks.php:256
+#: inc/modules/services/callbacks.php:238
 #, php-format
 msgid "License email: %s"
 msgstr "Email de la licence&nbsp;: %s"
 
-#: inc/modules/services/callbacks.php:257
+#: inc/modules/services/callbacks.php:239
 #, php-format
 msgid "License key: %s"
 msgstr "Clé de licence&nbsp;: %s"
 
-#: inc/modules/services/callbacks.php:258
+#: inc/modules/services/callbacks.php:240
 #, php-format
 msgid "Version of SecuPress Pro: %1$s (requires SecuPress Free %2$s)"
 msgstr "Version de SecuPress Pro&nbsp;: %1$s (requiert SecuPress Free %2$s)"
 
-#: inc/modules/services/callbacks.php:258
+#: inc/modules/services/callbacks.php:240
 msgid "Version of SecuPress Pro: inactive"
 msgstr "Version de SecuPress Pro&nbsp;: inactive"
 
-#: inc/modules/services/callbacks.php:267
+#: inc/modules/services/callbacks.php:249
 msgid ""
 "Your message has been sent, we will come back to you shortly. Thank you."
 msgstr ""
 "Votre message a été envoyé, nous reviendrons vers vous rapidement. Merci."
 
-#: inc/modules/services/callbacks.php:275
+#: inc/modules/services/callbacks.php:257
 #, php-format
 msgid ""
 "Something prevented your message to be sent. Please send it manually to %s. "
@@ -6870,26 +6892,26 @@ msgstr ""
 "Quelque chose a empêché votre message d'être envoyé. Merci de le faire "
 "manuellement à %s."
 
-#: inc/modules/services/callbacks.php:295
-#: inc/modules/services/callbacks.php:298
+#: inc/modules/services/callbacks.php:277
+#: inc/modules/services/callbacks.php:280
 #, php-format
 msgctxt "User full name. 1: first name, 2: last name"
 msgid "%1$s %2$s"
 msgstr "%1$s %2$s"
 
-#: inc/modules/services/callbacks.php:339
+#: inc/modules/services/callbacks.php:321
 msgid "network"
 msgstr "réseau"
 
-#: inc/modules/services/callbacks.php:364
+#: inc/modules/services/callbacks.php:346
 msgid "main site"
 msgstr "site principal"
 
-#: inc/modules/services/callbacks.php:384
+#: inc/modules/services/callbacks.php:366
 msgid "Must-Use plugin"
 msgstr "Plugin automatique (must-use)"
 
-#: inc/modules/services/callbacks.php:394
+#: inc/modules/services/callbacks.php:376
 msgid "drop-in"
 msgstr "drop-in"
 
@@ -7105,11 +7127,12 @@ msgstr ""
 
 #: inc/modules/users-login/plugins/inc/php/move-login/admin.php:27
 msgid ""
-"It seems your server does not use <i>Apache</i>, <i>Nginx</i>, or <i>IIS7</"
-"i>. The login page cannot be moved."
+"It seems your server does not use <strong>Apache</strong>, <strong>Ngnix</"
+"strong>, or <strong>IIS7</strong>. The login page cannot be moved."
 msgstr ""
-"Il semble que votre serveur n'utilise ni <i>Apache</i>, <i>Ngnix</i>, ni "
-"<i>IIS7</i>. La page de connexion ne peut pas être déplacée."
+"Il semble que votre serveur n'utilise ni <strong>Apache</strong>, "
+"<strong>Ngnix</strong>, ni <strong>IIS7</strong>. La page de connexion ne "
+"peut pas être déplacée."
 
 #: inc/modules/users-login/plugins/inc/php/move-login/admin.php:174
 #: inc/modules/users-login/plugins/inc/php/move-login/admin.php:190
@@ -7132,12 +7155,12 @@ msgstr "la section dédiée"
 #: inc/modules/users-login/plugins/inc/php/move-login/admin.php:204
 #, php-format
 msgid ""
-"Your server runs <i>Nginx</i>. You have to edit the configuration file "
-"manually. Please see the rewrite rules provided %2$s and copy/paste it into "
-"the %1$s file."
+"Your server runs <strong>Ngnix</strong>. You have to edit the configuration "
+"file manually. Please see the rewrite rules provided %2$s and copy/paste it "
+"into the %1$s file."
 msgstr ""
-"Votre serveur utilise le système <i>Ngnix</i>. Vous devrez éditer votre "
-"fichier de configuration manuellement. Merci de regarder les règles de "
+"Votre serveur utilise le système <strong>Ngnix</strong>. Vous devrez éditer "
+"votre fichier de configuration manuellement. Merci de regarder les règles de "
 "réécriture données %2$s et de les copier/coller dans le fichier %1$s."
 
 #: inc/modules/users-login/plugins/inc/php/move-login/redirections-and-dies.php:116
@@ -7249,7 +7272,7 @@ msgstr "Limiter le nombre de tentatives de connexions"
 #: inc/modules/users-login/settings/login-protection.php:12
 msgid "Ban login attempts on non-existing usernames"
 msgstr ""
-"Bannir les tentatives de connexions ou les noms d'utilisateurs inconnus"
+"Bannir les tentatives de connexions avec des noms d'utilisateurs inconnus"
 
 #: inc/modules/users-login/settings/login-protection.php:13
 msgid "Set a non-login time slot"
@@ -7501,8 +7524,8 @@ msgstr ""
 #, php-format
 msgid "%d free option available"
 msgid_plural "%d free options available"
-msgstr[0] "%d options gratuites disponibles"
-msgstr[1] "%d option gratuite disponible"
+msgstr[0] "%d option gratuite disponible"
+msgstr[1] "%d options gratuites disponibles"
 
 #: inc/modules/welcome/settings.php:57
 #, php-format
@@ -7628,6 +7651,52 @@ msgid ""
 msgstr ""
 "Protégez votre WordPress avec SecuPress, analysez et assurez-vous de la "
 "sécurité de votre site quotidiennement."
+
+#~ msgid "Deactivate the plugin %s."
+#~ msgstr "Désactivez le plugin %s."
+
+#~ msgid ""
+#~ "Your server runs <i>Nginx</i>. You have to edit the configuration file "
+#~ "manually. Please remove all rules between %2$s and %3$s from the %1$s "
+#~ "file."
+#~ msgstr ""
+#~ "Votre serveur utilise le système <i>Ngnix</i>. Vous devrez alors éditer "
+#~ "votre fichier de configuration manuellement. Merci de supprimer les "
+#~ "règles entre %2$s et %3$s dans le fichier %1$s."
+
+#~ msgid ""
+#~ "Your server runs <i>Nginx</i>. You have to edit the configuration file "
+#~ "manually. Please add the following code to your %1$s file: %2$s"
+#~ msgstr ""
+#~ "Votre serveur utilise le système <i>Ngnix</i>. Vous devrez alors éditer "
+#~ "votre fichier de configuration manuellement. Merci d'ajouter le code "
+#~ "suivant dans le fichier %1$s&nbsp;: %2$s"
+
+#~ msgid ""
+#~ "It seems your server does not use <i>Apache</i>, <i>Nginx</i>, nor "
+#~ "<i>IIS7</i>. This module won't work."
+#~ msgstr ""
+#~ "Il semble que votre serveur n'utilise pas <i>Apache</i>, ni <i>Ngnix</i>, "
+#~ "ni <i>II7</i>. Ce module ne peut pas fonctionner."
+
+#~ msgid "*&nbsp;50% OFF the first year then 20% OFF the next ones."
+#~ msgstr "*&nbsp;50% de remise la première année puis 20% pour les suivantes."
+
+#~ msgid ""
+#~ "It seems your server does not use <i>Apache</i>, <i>Nginx</i>, or "
+#~ "<i>IIS7</i>. The login page cannot be moved."
+#~ msgstr ""
+#~ "Il semble que votre serveur n'utilise ni <i>Apache</i>, <i>Ngnix</i>, ni "
+#~ "<i>IIS7</i>. La page de connexion ne peut pas être déplacée."
+
+#~ msgid ""
+#~ "Your server runs <i>Nginx</i>. You have to edit the configuration file "
+#~ "manually. Please see the rewrite rules provided %2$s and copy/paste it "
+#~ "into the %1$s file."
+#~ msgstr ""
+#~ "Votre serveur utilise le système <i>Ngnix</i>. Vous devrez éditer votre "
+#~ "fichier de configuration manuellement. Merci de regarder les règles de "
+#~ "réécriture données %2$s et de les copier/coller dans le fichier %1$s."
 
 #~ msgid ""
 #~ "Your Pro license is not valid or is not set yet. If you want to activate "

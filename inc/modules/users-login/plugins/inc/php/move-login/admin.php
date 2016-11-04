@@ -24,7 +24,7 @@ function secupress_move_login_activate() {
 	// Server not supported.
 	if ( ! $is_iis7 && ! $is_apache && ! $is_nginx ) {
 		$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
-		$message .= __( 'It seems your server does not use <i>Apache</i>, <i>Nginx</i>, or <i>IIS7</i>. The login page cannot be moved.', 'secupress' );
+		$message .= __( 'It seems your server does not use <strong>Apache</strong>, <strong>Ngnix</strong>, or <strong>IIS7</strong>. The login page cannot be moved.', 'secupress' );
 		add_settings_error( 'secupress_users-login_settings', 'unknown_os', $message, 'error' );
 	}
 
@@ -201,7 +201,7 @@ function secupress_move_login_write_rules() {
 		$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
 		$message .= sprintf(
 			/** Translators: 1 is a file name, 2 is a link "the dedicated section". */
-			__( 'Your server runs <i>Nginx</i>. You have to edit the configuration file manually. Please see the rewrite rules provided %2$s and copy/paste it into the %1$s file.', 'secupress' ),
+			__( 'Your server runs <strong>Ngnix</strong>. You have to edit the configuration file manually. Please see the rewrite rules provided %2$s and copy/paste it into the %1$s file.', 'secupress' ),
 			'<code>nginx.conf</code>',
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#move-login_rules">' . __( 'the dedicated section', 'secupress' ) . '</a>'
 		);

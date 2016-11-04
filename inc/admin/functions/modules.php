@@ -385,7 +385,7 @@ function secupress_remove_module_rules_or_notice( $marker, $module_name ) {
 		$message  = sprintf( __( '%s: ', 'secupress' ), $module_name );
 		$message .= sprintf(
 			/** Translators: 1 is a file name, 2 and 3 are small parts of code. */
-			__( 'Your server runs <i>Nginx</i>. You have to edit the configuration file manually. Please remove all rules between %2$s and %3$s from the %1$s file.', 'secupress' ),
+			__( 'Your server runs <strong>Ngnix</strong>. You have to edit the configuration file manually. Please remove all rules between %2$s and %3$s from the %1$s file.', 'secupress' ),
 			'<code>nginx.conf</code>',
 			"<code># BEGIN SecuPress $marker</code>",
 			'<code># END SecuPress</code>'
@@ -491,7 +491,7 @@ function secupress_add_module_rules_or_notice( $args ) {
 		$message  = sprintf( __( '%s: ', 'secupress' ), $title );
 		$message .= sprintf(
 			/** Translators: 1 is a file name, 2 is some code */
-			__( 'Your server runs <i>Nginx</i>. You have to edit the configuration file manually. Please add the following code to your %1$s file: %2$s', 'secupress' ),
+			__( 'Your server runs <strong>Ngnix</strong>. You have to edit the configuration file manually. Please add the following code to your %1$s file: %2$s', 'secupress' ),
 			'<code>nginx.conf</code>',
 			"<pre>$rules</pre>"
 		);
@@ -501,7 +501,7 @@ function secupress_add_module_rules_or_notice( $args ) {
 
 	// Server not supported.
 	$message  = sprintf( __( '%s: ', 'secupress' ), $title );
-	$message .= __( 'It seems your server does not use <i>Apache</i>, <i>Nginx</i>, nor <i>IIS7</i>. This module won\'t work.', 'secupress' );
+	$message .= __( 'It seems your server does not use <strong>Apache</strong>, <strong>Ngnix</strong>, nor <strong>IIS7</strong>. This module won\'t work.', 'secupress' );
 	add_settings_error( 'general', 'unknown_os', $message, 'error' );
 	return false;
 }
@@ -576,5 +576,5 @@ function secupress_get_deactivate_plugin_string( $plugin_basename ) {
 	$plugin_basename = path_join( WP_PLUGIN_DIR, $plugin_basename );
 	$plugin = get_plugin_data( $plugin_basename, false, false );
 
-	return sprintf( __( 'Deactivate the plugin %s.', 'secupress' ), '<strong>' . $plugin['Name'] . '</strong>' );
+	return sprintf( __( 'Will deactivate the plugin %s.', 'secupress' ), '<strong>' . $plugin['Name'] . '</strong>' );
 }
