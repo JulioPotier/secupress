@@ -254,9 +254,10 @@ function secupress_deactivation() {
 	 *
 	 * @since 1.0
 	 *
-	 * @param (array) $args An empty array to mimic the `$args` parameter from `secupress_deactivate_submodule()`.
+	 * @param (array) $args        An empty array to mimic the `$args` parameter from `secupress_deactivate_submodule()`.
+	 * @param (bool)  $is_inactive False to mimic the `$is_inactive` parameter from `secupress_deactivate_submodule()`.
 	 */
-	do_action( 'secupress.deactivation', array() );
+	do_action( 'secupress.deactivation', array(), false );
 }
 
 
@@ -269,26 +270,9 @@ add_action( 'secupress.deactivation', 'secupress_maybe_remove_rules_on_deactivat
 function secupress_maybe_remove_rules_on_deactivation() {
 	global $is_apache, $is_iis7, $is_nginx;
 
-	if ( ! $is_apache && ! $is_iis7 ) {
-		if ( $is_nginx ) {
-			// Since we can't edit the file, no other way but to kill the page :s.
-			$message  = sprintf( __( '%s: ', 'secupress' ), SECUPRESS_PLUGIN_NAME );
-			$message .= sprintf(
-					/** Translators: 1 is a file name, 2 and 3 are small parts of code. */
-				__( 'Your server runs <strong>Ngnix</strong>. You have to edit the configuration file manually. Please remove all rules between %2$s and %3$s from the %1$s file.', 'secupress' ),
-				'<code>nginx.conf</code>',
-				'<code># BEGIN SecuPress move_login</code>',
-				'<code># END SecuPress</code>'
-			);
-			secupress_create_deactivation_notice_muplugin( 'nginx_remove_rules', $message );
-		}
-		return;
-	}
-
-	$home_path = secupress_get_home_path();
-
 	// Apache.
 	if ( $is_apache ) {
+		$home_path = secupress_get_home_path();
 		$file_path = $home_path . '.htaccess';
 
 		if ( ! file_exists( $file_path ) ) {
@@ -297,7 +281,7 @@ function secupress_maybe_remove_rules_on_deactivation() {
 		}
 
 		if ( ! is_writable( $file_path ) ) {
-			// If the file is not writable, no other way but to kill the page :/.
+			// If the file is not writable, display a message.
 			$message  = sprintf( __( '%s: ', 'secupress' ), SECUPRESS_PLUGIN_NAME );
 			$message .= sprintf(
 				/** Translators: 1 and 2 are small parts of code, 3 is a file name. */
@@ -328,41 +312,59 @@ function secupress_maybe_remove_rules_on_deactivation() {
 	}
 
 	// IIS7.
-	$file_path = $home_path . 'web.config';
+	if ( $is_iis7 ) {
+		$home_path = secupress_get_home_path();
+		$file_path = $home_path . 'web.config';
 
-	if ( ! file_exists( $file_path ) ) {
-		// RLY?
+		if ( ! file_exists( $file_path ) ) {
+			// RLY?
+			return;
+		}
+
+		$doc = new DOMDocument();
+		$doc->preserveWhiteSpace = false;
+
+		if ( false === $doc->load( $file_path ) ) {
+			// If the file is not writable, display a message.
+			$message  = sprintf( __( '%s: ', 'secupress' ), SECUPRESS_PLUGIN_NAME );
+			$message .= sprintf(
+				/** Translators: 1 is a small part of code, 2 is a file name. */
+				__( 'It seems your %2$s file is not writable. You have to edit the file manually. Please remove all rules with %1$s from the %2$s file.', 'secupress' ),
+				'<code>SecuPress</code>',
+				'<code>web.config</code>'
+			);
+			secupress_create_deactivation_notice_muplugin( 'iis7_remove_rules', $message );
+		}
+
+		// Remove old content.
+		$xpath = new DOMXPath( $doc );
+		$nodes = $xpath->query( "/configuration/system.webServer/*[starts-with(@name,'SecuPress ') or starts-with(@id,'SecuPress ')]" );
+
+		if ( $nodes->length > 0 ) {
+			foreach ( $nodes as $node ) {
+				$node->parentNode->removeChild( $node );
+			}
+		}
+
+		// Save the file.
+		$doc->formatOutput = true;
+		saveDomDocument( $doc, $file_path );
 		return;
 	}
 
-	$doc = new DOMDocument();
-	$doc->preserveWhiteSpace = false;
-
-	if ( false === $doc->load( $file_path ) ) {
-		// If the file is not writable, no other way but to kill the page :/.
+	// Nginx.
+	if ( $is_nginx ) {
+		// Since we can't edit the file, display a message.
 		$message  = sprintf( __( '%s: ', 'secupress' ), SECUPRESS_PLUGIN_NAME );
 		$message .= sprintf(
-			/** Translators: 1 is a small part of code, 2 is a file name. */
-			__( 'It seems your %2$s file is not writable. You have to edit the file manually. Please remove all rules with %1$s from the %2$s file.', 'secupress' ),
-			'<code>SecuPress</code>',
-			'<code>web.config</code>'
+				/** Translators: 1 is a file name, 2 and 3 are small parts of code. */
+			__( 'Your server runs <strong>Ngnix</strong>. You have to edit the configuration file manually. Please remove all rules between %2$s and %3$s from the %1$s file.', 'secupress' ),
+			'<code>nginx.conf</code>',
+			'<code># BEGIN SecuPress move_login</code>',
+			'<code># END SecuPress</code>'
 		);
-		secupress_create_deactivation_notice_muplugin( 'iis7_remove_rules', $message );
+		secupress_create_deactivation_notice_muplugin( 'nginx_remove_rules', $message );
 	}
-
-	// Remove old content.
-	$xpath = new DOMXPath( $doc );
-	$nodes = $xpath->query( "/configuration/system.webServer/*[starts-with(@name,'SecuPress ') or starts-with(@id,'SecuPress ')]" );
-
-	if ( $nodes->length > 0 ) {
-		foreach ( $nodes as $node ) {
-			$node->parentNode->removeChild( $node );
-		}
-	}
-
-	// Save the file.
-	$doc->formatOutput = true;
-	saveDomDocument( $doc, $file_path );
 }
 
 
