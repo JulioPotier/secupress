@@ -89,8 +89,6 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 			// "bad"
 			/** Translators: 1 is a number, 2 is a plugin name (or a list of plugin names). */
 			200 => _n_noop( '<strong>%1$d plugin</strong> is known to be vulnerable: %2$s.', '<strong>%1$d plugins</strong> are known to be vulnerable: %2$s.', 'secupress' ),
-			/** Translators: 1 is a number, 2 is a plugin name (or a list of plugin names). */
-			// 201 => _n_noop( '<strong>%1$d plugin</strong> has not been updated for at least 2 years: %2$s.', '<strong>%1$d plugins</strong> have not been updated for at least 2 years: %2$s.', 'secupress' ),
 			/** Translators: %s is a plugin name. */
 			202 => __( 'You should delete the plugin %s.', 'secupress' ),
 			203 => _n_noop( 'Sorry, this plugin could not be deleted.', 'Sorry, those plugins could not be deleted.', 'secupress' ),
