@@ -37,15 +37,15 @@ function secupress_move_login_activate( $was_active ) {
 		return;
 	}
 
-	/**
-	 * Triggers when Move Login is activated, before writting rules.
-	 *
-	 * @since 1.1.3
-	 * @author Grégory Viguier
-	 *
-	 * @param (bool) $was_active True if Move Login was already active.
-	 */
-	do_action( 'secupress.plugin.move_login.activate', $was_active );
+	if ( ! $was_active ) {
+		/**
+		 * Triggers when Move Login is activated, before writting rules.
+		 *
+		 * @since 1.1.3
+		 * @author Grégory Viguier
+		 */
+		do_action( 'secupress.plugin.move_login.activate' );
+	}
 
 	// Rewrite rules must be added to the `.htaccess`/`web.config` file.
 	secupress_move_login_write_rules();
@@ -62,15 +62,15 @@ add_action( 'secupress.modules.deactivate_submodule_move-login', 'secupress_move
  * @param (bool)  $was_inactive True if Move Login was already inactive.
  */
 function secupress_move_login_deactivate( $args, $was_inactive ) {
-	/**
-	 * Triggers when Move Login is deactivated, before removing rules.
-	 *
-	 * @since 1.1.3
-	 * @author Grégory Viguier
-	 *
-	 * @param (bool) $was_inactive True if Move Login was already inactive.
-	 */
-	do_action( 'secupress.plugin.move_login.deactivate', $was_inactive );
+	if ( ! $was_inactive ) {
+		/**
+		 * Triggers when Move Login is deactivated, before removing rules.
+		 *
+		 * @since 1.1.3
+		 * @author Grégory Viguier
+		 */
+		do_action( 'secupress.plugin.move_login.deactivate' );
+	}
 
 	secupress_remove_module_rules_or_notice( 'move_login', __( 'Move Login', 'secupress' ) );
 }
