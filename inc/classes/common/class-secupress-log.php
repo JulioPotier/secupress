@@ -410,6 +410,8 @@ class SecuPress_Log {
 	 * @return (bool) True if ready to be displayed. False if not or empty.
 	 */
 	protected function escape_data() {
+		static $color_done = false;
+
 		if ( ! $this->data ) {
 			return false;
 		}
@@ -419,6 +421,19 @@ class SecuPress_Log {
 		}
 
 		$this->data_escaped = true;
+
+		if ( ! $color_done ) {
+			// Make sure we have the default values, or our CSS won't work.
+			if ( wp_is_ini_value_changeable( 'highlight.default' ) ) {
+				ini_set( 'highlight.default', '#0000BB' );
+			}
+			if ( wp_is_ini_value_changeable( 'highlight.keyword' ) ) {
+				ini_set( 'highlight.keyword', '#007700' );
+			}
+			if ( wp_is_ini_value_changeable( 'highlight.string' ) ) {
+				ini_set( 'highlight.string', '#DD0000' );
+			}
+		}
 
 		// Prepare and escape the data.
 		foreach ( $this->data as $key => $data ) {
