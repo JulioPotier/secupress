@@ -1170,7 +1170,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	if ( undefined !== SecuPressi18nModules && 'on' === SecuPressi18nModules.malwareScanStatus ) {
 
 		$( d ).on( 'heartbeat-send', function( e, data ) {
-			data['secupress_heartbeat_malware_scan'] = 'malwareScanStatus';
+			data.secupress_heartbeat_malware_scan = 'malwareScanStatus';
 		} )
 		// Listen for the custom event "heartbeat-tick" on $(document).
 		.on( 'heartbeat-tick', function( e, data ) {
