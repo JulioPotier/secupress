@@ -17,7 +17,7 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0';
+	const VERSION = '1.0.1';
 
 
 	/** Properties. ============================================================================= */
@@ -143,7 +143,7 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 			return parent::scan();
 		}
 
-		$response = wp_remote_get( $this->file_url, array( 'redirection' => 0, 'timeout' => static::get_timeout(), 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) );
+		$response = wp_remote_get( $this->file_url, $this->get_default_request_args() );
 
 		if ( is_wp_error( $response ) ) {
 			// "warning"

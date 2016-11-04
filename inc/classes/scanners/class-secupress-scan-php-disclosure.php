@@ -17,7 +17,7 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0';
+	const VERSION = '1.0.1';
 
 
 	/** Properties. ============================================================================= */
@@ -114,7 +114,7 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 	 */
 	public function scan() {
 		// - http://osvdb.org/12184
-		$response = wp_remote_get( user_trailingslashit( home_url() ) . '?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000', array( 'redirection' => 0, 'timeout' => static::get_timeout(), 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) );
+		$response = wp_remote_get( user_trailingslashit( home_url() ) . '?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000', $this->get_default_request_args() );
 
 		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 

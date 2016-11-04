@@ -17,7 +17,7 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Inter
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0';
+	const VERSION = '1.0.1';
 
 
 	/** Properties. ============================================================================= */
@@ -86,7 +86,7 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Inter
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-		$response = wp_remote_get( add_query_arg( secupress_generate_key( 6 ), 'UNION+SELECT+FOO', user_trailingslashit( home_url() ) ), array( 'redirection' => 0, 'timeout' => static::get_timeout(), 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) );
+		$response = wp_remote_get( add_query_arg( secupress_generate_key( 6 ), 'UNION+SELECT+FOO', user_trailingslashit( home_url() ) ), $this->get_default_request_args() );
 
 		if ( ! is_wp_error( $response ) ) {
 

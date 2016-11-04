@@ -17,7 +17,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0';
+	const VERSION = '1.0.1';
 
 
 	/** Properties. ============================================================================= */
@@ -117,7 +117,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-		$protected = static::are_files_protected();
+		$protected = $this->are_files_protected();
 
 		if ( is_null( $protected ) ) {
 			// "warning"
@@ -151,7 +151,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 	public function fix() {
 		global $is_apache, $is_nginx, $is_iis7;
 
-		$protected = static::are_files_protected();
+		$protected = $this->are_files_protected();
 
 		if ( is_null( $protected ) ) {
 			// "warning"
@@ -266,7 +266,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 	 *
 	 * @return (bool)
 	 */
-	protected static function are_files_protected() {
+	protected function are_files_protected() {
 		// Get all readme/changelog files.
 		$plugins = rtrim( secupress_get_plugins_path(), '\\/' );
 		$themes  = rtrim( secupress_get_themes_path(), '\\/' );
@@ -290,7 +290,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 		$file    = ltrim( str_replace( $abspath, '', $file ), '/' );
 
 		// Get file contents.
-		$response = wp_remote_get( site_url( $file ), array( 'redirection' => 0, 'timeout' => static::get_timeout(), 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) );
+		$response = wp_remote_get( site_url( $file ), $this->get_default_request_args() );
 
 		if ( is_wp_error( $response ) ) {
 			// "warning".

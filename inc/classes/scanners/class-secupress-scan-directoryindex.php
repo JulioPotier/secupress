@@ -17,7 +17,7 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0';
+	const VERSION = '1.0.1';
 
 
 	/** Properties. ============================================================================= */
@@ -116,7 +116,9 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-		$response = wp_remote_get( SECUPRESS_PLUGIN_URL . 'inc/DirectoryIndex', array( 'redirection' => 1, 'timeout' => static::get_timeout(), 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) ); //// create the folder at root
+		$request_args = $this->get_default_request_args();
+		$request_args['redirection'] = 1;
+		$response     = wp_remote_get( SECUPRESS_PLUGIN_URL . 'inc/DirectoryIndex', $request_args ); // Create the folder at root ////.
 
 		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 

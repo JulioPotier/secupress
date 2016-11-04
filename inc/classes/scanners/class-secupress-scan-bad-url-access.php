@@ -17,7 +17,7 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0';
+	const VERSION = '1.0.1';
 
 
 	/** Properties. ============================================================================= */
@@ -132,7 +132,7 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 		);
 
 		foreach ( $urls as $url ) {
-			$response = wp_remote_get( $url, array( 'redirection' => 0, 'timeout' => static::get_timeout(), 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) );
+			$response = wp_remote_get( $url, $this->get_default_request_args() );
 
 			if ( ! is_wp_error( $response ) ) {
 

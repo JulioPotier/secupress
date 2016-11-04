@@ -49,7 +49,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0';
+	const VERSION = '1.0.1';
 
 
 	/** Properties. ============================================================================= */
@@ -1078,6 +1078,37 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 
 
 	/**
+	 * A shorthand to get the default arguments to use in `wp_remote_get()` and friends.
+	 *
+	 * @since 1.1.3
+	 * @author Grégory Viguier
+	 *
+	 * @return (array) An array of default arguments.
+	 */
+	protected function get_default_request_args() {
+		$class_name   = get_class( $this );
+		$request_args = array(
+			'redirection' => 0,
+			'timeout'     => static::get_timeout(),
+			'sslverify'   => false,
+			'user-agent'  => SECUPRESS_PLUGIN_NAME . '/' . SECUPRESS_VERSION,
+			'headers'     => array(
+				'X-SecuPress-Origin' => $class_name,
+			),
+		);
+		/**
+		 * Filter the default arguments used in the scanners' internal requests.
+		 *
+		 * @since 1.1.3
+		 *
+		 * @param (array)  $request_args The request arguments.
+		 * @param (string) $class_name   The scan class name.
+		 */
+		return apply_filters( 'secupress.scan.default_request_args', $request_args, $class_name );
+	}
+
+
+	/**
 	 * A sandbox for doing crazy things with `.htaccess`.
 	 * Create a folder containing a `.htaccess` file with the provided content and a `secupress.html` file.
 	 * Then, make a request to the `secupress.html` file to test if a server error is triggered.
@@ -1089,7 +1120,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 * @return (object|bool) Return true if the server does not trigger an error 500, false otherwise.
 	 *                       Return a WP_Error object if the sandbox creation fails or if the HTTP request fails.
 	 */
-	final protected static function htaccess_success_in_sandbox( $content ) {
+	final protected function htaccess_success_in_sandbox( $content ) {
 		$wp_filesystem = secupress_get_filesystem();
 		$folder_name   = 'secupress-sandbox-' . uniqid();
 		$folder_path   = ABSPATH . '/' . $folder_name;
@@ -1112,7 +1143,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 		}
 
 		// Try to reach `secupress.html`.
-		$response = wp_remote_get( site_url( $folder_name . '/secupress.html' ), array( 'redirection' => 0, 'timeout' => static::get_timeout(), 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) );
+		$response = wp_remote_get( site_url( $folder_name . '/secupress.html' ), $this->get_default_request_args() );
 
 		// Now we can get rid of the files.
 		$wp_filesystem->delete( $folder_path, true );

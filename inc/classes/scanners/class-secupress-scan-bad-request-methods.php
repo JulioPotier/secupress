@@ -17,7 +17,7 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements SecuP
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0';
+	const VERSION = '1.0.1';
 
 
 	/** Properties. ============================================================================= */
@@ -94,12 +94,14 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements SecuP
 			$methods = array_merge( $methods, array( 'PUT', 'PATCH', 'DELETE' ) );
 		}
 
-		$bads     = array();
-		$warnings = array();
+		$bads         = array();
+		$warnings     = array();
+		$request_args = $this->get_default_request_args();
 
 		foreach ( $methods as $method ) {
 
-			$response = wp_remote_get( add_query_arg( secupress_generate_key( 6 ), secupress_generate_key( 8 ), user_trailingslashit( home_url() ) ), array( 'method' => $method, 'redirection' => 0, 'timeout' => static::get_timeout(), 'headers' => array( 'X-SecuPress-Origin' => __CLASS__ ) ) );
+			$request_args['method'] = $method;
+			$response = wp_remote_request( add_query_arg( secupress_generate_key( 6 ), secupress_generate_key( 8 ), user_trailingslashit( home_url() ) ), $request_args );
 
 			if ( ! is_wp_error( $response ) ) {
 
