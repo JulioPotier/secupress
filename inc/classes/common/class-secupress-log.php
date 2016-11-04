@@ -423,6 +423,8 @@ class SecuPress_Log {
 		$this->data_escaped = true;
 
 		if ( ! $color_done ) {
+			$color_done = true;
+
 			// Make sure we have the default values, or our CSS won't work.
 			if ( wp_is_ini_value_changeable( 'highlight.default' ) ) {
 				ini_set( 'highlight.default', '#0000BB' );
