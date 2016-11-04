@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2016-11-04 19:10+0100\n"
-"PO-Revision-Date: 2016-11-04 19:10+0100\n"
+"POT-Creation-Date: 2016-11-04 19:14+0100\n"
+"PO-Revision-Date: 2016-11-04 19:14+0100\n"
 "Last-Translator: WP Media <contact@secupress.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -399,8 +399,8 @@ msgstr ""
 
 #: inc/admin/functions/modules.php:579
 #, php-format
-msgid "Will deactivate the plugin %s."
-msgstr "Cela désactivera le plugin %s."
+msgid "will deactivate the plugin %s."
+msgstr "cela désactivera le plugin %s."
 
 #: inc/admin/functions/wp-updates-plugin.php:79
 msgid ""
