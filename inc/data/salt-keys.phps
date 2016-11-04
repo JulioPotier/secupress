@@ -16,7 +16,7 @@ global $blog_id;
 
 $hash_1     = '{{HASH1}}';
 $hash_2     = '{{HASH2}}';
-$file_str   = __FILE__ . date( 'Ym' ) . home_url();
+$file_str   = __FILE__ . date( 'Ym' );
 $hash_1    .= $hash_2;
 $file_str  .= $hash_2;
 $main_keys  = array( 'AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'NONCE_KEY', 'AUTH_SALT', 'SECURE_AUTH_SALT', 'LOGGED_IN_SALT', 'NONCE_SALT', );
