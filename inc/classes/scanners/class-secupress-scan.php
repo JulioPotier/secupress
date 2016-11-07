@@ -1090,7 +1090,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 		$request_args = array(
 			'redirection' => 0,
 			'timeout'     => static::get_timeout(),
-			'sslverify'   => false,
+			'sslverify'   => apply_filters( 'https_local_ssl_verify', false ),
 			'user-agent'  => SECUPRESS_PLUGIN_NAME . '/' . SECUPRESS_VERSION,
 			'headers'     => array(
 				'X-SecuPress-Origin' => $class_name,
