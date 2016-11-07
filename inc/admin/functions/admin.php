@@ -318,5 +318,5 @@ function secupress_can_access_support() {
 		return true;
 	}
 
-	return time() < 1478476800;
+	return time() < 1480550400;
 }
