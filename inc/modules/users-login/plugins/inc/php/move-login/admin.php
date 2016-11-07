@@ -11,8 +11,10 @@ add_action( 'secupress.modules.activate_submodule_move-login', 'secupress_move_l
  * If not, deactivate. If yes, write the rules.
  *
  * @since 1.0
+ *
+ * @param (bool) $was_active True if Move Login was already active.
  */
-function secupress_move_login_activate() {
+function secupress_move_login_activate( $was_active ) {
 	global $is_apache, $is_nginx, $is_iis7;
 
 	// The plugin needs the request uri.
@@ -35,18 +37,41 @@ function secupress_move_login_activate() {
 		return;
 	}
 
+	if ( ! $was_active ) {
+		/**
+		 * Triggers when Move Login is activated, before writting rules.
+		 *
+		 * @since 1.1.3
+		 * @author Grégory Viguier
+		 */
+		do_action( 'secupress.plugin.move_login.activate' );
+	}
+
 	// Rewrite rules must be added to the `.htaccess`/`web.config` file.
 	secupress_move_login_write_rules();
 }
 
 
-add_action( 'secupress.modules.deactivate_submodule_move-login', 'secupress_move_login_deactivate' );
+add_action( 'secupress.modules.deactivate_submodule_move-login', 'secupress_move_login_deactivate', 10, 2 );
 /**
  * On module deactivation, remove rewrite rules from the `.htaccess`/`web.config` file.
  *
  * @since 1.0
+ *
+ * @param (array) $args         Some arguments.
+ * @param (bool)  $was_inactive True if Move Login was already inactive.
  */
-function secupress_move_login_deactivate() {
+function secupress_move_login_deactivate( $args, $was_inactive ) {
+	if ( ! $was_inactive ) {
+		/**
+		 * Triggers when Move Login is deactivated, before removing rules.
+		 *
+		 * @since 1.1.3
+		 * @author Grégory Viguier
+		 */
+		do_action( 'secupress.plugin.move_login.deactivate' );
+	}
+
 	secupress_remove_module_rules_or_notice( 'move_login', __( 'Move Login', 'secupress' ) );
 }
 
@@ -79,13 +104,14 @@ function secupress_move_login_plugin_activate( $rules ) {
 
 	// Add the rules.
 	$marker = 'move_login';
+	$rules  = secupress_move_login_get_rules();
 
 	if ( $is_apache ) {
-		$rules[ $marker ] = secupress_move_login_get_apache_rules( secupress_move_login_get_rules() );
+		$rules[ $marker ] = secupress_move_login_get_apache_rules( $rules );
 	} elseif ( $is_iis7 ) {
-		$rules[ $marker ] = array( 'nodes_string' => secupress_move_login_get_iis7_rules( secupress_move_login_get_rules() ) );
+		$rules[ $marker ] = array( 'nodes_string' => secupress_move_login_get_iis7_rules( $rules ) );
 	} else {
-		$rules[ $marker ] = secupress_move_login_get_nginx_rules( secupress_move_login_get_rules() );
+		$rules[ $marker ] = secupress_move_login_get_nginx_rules( $rules );
 	}
 
 	return $rules;
@@ -96,7 +122,7 @@ function secupress_move_login_plugin_activate( $rules ) {
 /* UPDATE SETTINGS ============================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-add_action( 'update_option_secupress_users-login_settings', 'secupress_move_login_write_rules_on_update', 10, 2 );
+add_action( 'update_option_secupress_users-login_settings', 'secupress_move_login_write_rules_on_update', 11, 2 );
 /**
  * Add rewrite rules into the `.htaccess`/`web.config` file when settings are updated.
  *
@@ -117,14 +143,14 @@ function secupress_move_login_write_rules_on_update( $old_value, $value ) {
 		return;
 	}
 
-	// Rewrite rules have not changed? bail out.
+	// Write the rewrite rules only if they have changed.
 	$slugs   = secupress_move_login_slug_labels();
 	$changed = false;
 
 	foreach ( $slugs as $action => $label ) {
 		$option_name = 'move-login_slug-' . $action;
 
-		if ( isset( $old_value[ $option_name ], $value[ $option_name ] ) && $old_value[ $option_name ] !== $value[ $option_name ] ) {
+		if ( empty( $old_value[ $option_name ] ) || isset( $old_value[ $option_name ], $value[ $option_name ] ) && $old_value[ $option_name ] !== $value[ $option_name ] ) {
 			$changed = true;
 			break;
 		}
@@ -147,7 +173,7 @@ add_action( 'update_site_option_secupress_users-login_settings', 'secupress_move
  * @param (array)  $old_value Old value of the whole module option.
  */
 function secupress_move_login_write_rules_on_network_update( $option, $value, $old_value ) {
-	secupress_move_login_activate( $old_value, $value );
+	secupress_move_login_write_rules_on_update( $old_value, $value );
 }
 
 
@@ -163,10 +189,13 @@ function secupress_move_login_write_rules_on_network_update( $option, $value, $o
  */
 function secupress_move_login_write_rules() {
 	global $is_apache, $is_nginx, $is_iis7;
+	$success = false;
 
 	// Apache.
 	if ( $is_apache ) {
-		if ( ! secupress_move_login_write_apache_rules( secupress_move_login_get_rules() ) ) {
+		$success = secupress_move_login_write_apache_rules( secupress_move_login_get_rules() );
+
+		if ( ! $success ) {
 			// File is not writable.
 			$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
 			$message .= sprintf(
@@ -177,12 +206,13 @@ function secupress_move_login_write_rules() {
 			);
 			add_settings_error( 'general', 'apache_manual_edit', $message, 'error' );
 		}
-		return;
 	}
 
 	// IIS7.
 	if ( $is_iis7 ) {
-		if ( ! secupress_move_login_write_iis7_rules( secupress_move_login_get_rules() ) ) {
+		$success = secupress_move_login_write_iis7_rules( secupress_move_login_get_rules() );
+
+		if ( ! $success ) {
 			// File is not writable.
 			$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
 			$message .= sprintf(
@@ -193,7 +223,6 @@ function secupress_move_login_write_rules() {
 			);
 			add_settings_error( 'general', 'iis7_manual_edit', $message, 'error' );
 		}
-		return;
 	}
 
 	// Nginx: we can't edit the file.
@@ -207,6 +236,16 @@ function secupress_move_login_write_rules() {
 		);
 		add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
 	}
+
+	/**
+	 * Triggers after rules have been written (or not).
+	 *
+	 * @since 1.1.3
+	 * @author Grégory Viguier
+	 *
+	 * @param (bool) $success Tell if the rules have been successfully written into the file.
+	 */
+	do_action( 'secupress.plugin.move_login.write_rules', $success );
 }
 
 
@@ -277,7 +316,7 @@ function secupress_move_login_get_apache_rules( $rules = array() ) {
  *
  * @param (array) $rules Generic rules to write (see `secupress_move_login_get_rules()`).
  *
- * @return (bool) true on succes, false on failure.
+ * @return (bool) true on success, false on failure.
  */
 function secupress_move_login_write_apache_rules( $rules = array() ) {
 
@@ -333,7 +372,7 @@ function secupress_move_login_get_iis7_rules( $rules = array() ) {
  *
  * @param (array) $rules Generic rules to write (see `secupress_move_login_get_rules()`).
  *
- * @return (bool) true on succes, false on failure.
+ * @return (bool) true on success, false on failure.
  */
 function secupress_move_login_write_iis7_rules( $rules = array() ) {
 
