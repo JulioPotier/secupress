@@ -3,7 +3,7 @@ Contributors: wp_media, secupress, juliobox, greglone
 Tags: security, spam, backup, schedule, firewall, sensitive data, antivirus, logs, alerts
 Requires at least: 3.7
 Tested up to: 4.6.1
-Stable tag: 1.1.2
+Stable tag: 1.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -65,6 +65,15 @@ It's important to delete all other security plugins before activating SecuPress.
 (soon)
 
 == Changelog ==
+
+= 1.1.3 =
+* 07 nov 2016
+* Improvement #258: Remove the blog_id and website URL in the new salf keys to avoid aving to log in on each website on a multisite, was just annoying.
+* Improvement #259: Better hook usage to allow any cache plugin (like WP Rocket of course) to ignore login page.
+* Improvement #195: Better Move Login rules on Ngnix. And better rules in general for all modules.
+* Fix #262: Some firewall sub-modules are not working in frontend, the functions were not in the right file :|
+* Fix #252: X-Powered by header was not hidden on Ngnix. Ngnix my friend …
+* Fix #250: WPML still appeared as a "bad plugin removed from repo", well, the whitelist filter was not used.
 
 = 1.1.2 =
 * 25 oct 2016
