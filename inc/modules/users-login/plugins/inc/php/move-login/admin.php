@@ -104,14 +104,13 @@ function secupress_move_login_plugin_activate( $rules ) {
 
 	// Add the rules.
 	$marker = 'move_login';
-	$rules  = secupress_move_login_get_rules();
 
 	if ( $is_apache ) {
-		$rules[ $marker ] = secupress_move_login_get_apache_rules( $rules );
+		$rules[ $marker ] = secupress_move_login_get_apache_rules( secupress_move_login_get_rules() );
 	} elseif ( $is_iis7 ) {
-		$rules[ $marker ] = array( 'nodes_string' => secupress_move_login_get_iis7_rules( $rules ) );
+		$rules[ $marker ] = array( 'nodes_string' => secupress_move_login_get_iis7_rules( secupress_move_login_get_rules() ) );
 	} else {
-		$rules[ $marker ] = secupress_move_login_get_nginx_rules( $rules );
+		$rules[ $marker ] = secupress_move_login_get_nginx_rules( secupress_move_login_get_rules() );
 	}
 
 	return $rules;
