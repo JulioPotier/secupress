@@ -21,22 +21,6 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 		</div>
 	</div>
 
-	<?php if ( ! secupress_is_pro() ) { ?>
-		<div class="secupress-section-gray-dark secupress-section-mini secupress-flex">
-			<div class="secupress-col-1-4 secupress-col-icon">
-				<i class="icon-secupress-simple" aria-hidden="true"></i>
-			</div>
-			<div class="secupress-col-2-4 secupress-col-text">
-				<p class="secupress-text-basup"><?php _e( 'Get a better score and unlock all features', 'secupress' ); ?></p>
-			</div>
-			<div class="secupress-col-1-4 secupress-col-cta">
-				<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ); ?>" class="secupress-button secupress-button-tertiary">
-					<?php _e( 'Get Pro', 'secupress' ); ?>
-				</a>
-			</div>
-		</div><!-- .secupress-section-medium -->
-	<?php } ?>
-
 	<div class="secupress-modules-dashboard secupress-bordered secupress-section-gray">
 		<div class="secupress-modules-container secupress-box-shadow">
 
