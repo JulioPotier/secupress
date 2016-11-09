@@ -554,6 +554,91 @@ function secupress_get_logo_word( $atts = array() ) {
 	return "<img{$attributes}/>";
 }
 
+/**
+ * Print the sidebar with Ads and cross-selling
+ * 
+ * @return void
+ * 
+ * @author Geoffrey Crofte
+ * @since  1.1.4
+ */
+function secupress_get_sideads() {
+	if ( secupress_is_pro() ) {
+		return;
+	}
+?>
+				
+	<div class="secupress-sideads">
+		<div class="secupress-section-dark secupress-pro-ad">
+			
+			<i class="icon-secupress" aria-hidden="true"></i>
+
+			<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-pro.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-pro@2x.png" width="80" height="78" alt="">
+
+			<p class="secupress-text-medium"><?php _e( 'Improve your Security', 'secupress' ); ?></p>
+			<p><?php _e( 'Unlock all the features of SecuPress Pro', 'secupress' ); ?></p>
+			<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ); ?>" class="secupress-button secupress-button-tertiary secupress-button-getpro">
+				<span class="icon">
+					<i class="icon-secupress-simple" aria-hidden="true"></i>
+				</span>
+				<span class="text"><?php _ex('Get Pro', 'short', 'secupress' ); ?></span>
+			</a>
+		</div>
+
+		<div class="secupress-bordered secupress-mail-ad">
+			<div class="secupress-ad-header secupress-flex">
+				<span><i class="dashicons dashicons-email secupress-primary" aria-hidden="true"></i></span>
+				<p><?php _e( 'Join our mailing list', 'secupress' ); ?></p>
+			</div>
+			<div class="secupress-ad-content">
+				<p><?php _e( 'Get security alerts and news from SecuPress.', 'secupress' ) ?></p>
+				<form action="">
+					<p>
+						<label class="screen-reader-text" for="email-address"><?php _e( 'Your email', 'secupress' ); ?></label>
+						<input type="email" name="email-address" id="email-address" placeholder="<?php esc_attr_e( 'Email address', 'secupress' ); ?>">
+					</p>
+					<p>
+						<button type="submit" class="secupress-button secupress-button-primary"><?php _e( 'Stay tuned for more	', 'secupress' ); ?></button>
+					</p>
+				</form>
+			</div>
+		</div>
+
+		<?php if ( ! defined( 'WP_ROCKET_VERSION' ) ) { ?>
+
+		<div class="secupress-wprocket-ad secupress-product-ads">
+			<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-wprocket.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-wprocket@2x.png 2x" alt="WP Rocket" width="110" height="30">
+			
+			<p class="secupress-catch"><?php _e( 'Instantly Speed Up WordPress', 'secupress' ); ?></p>
+			<p><?php _e( 'Find out the best Caching Plugin to accelerate your website.', 'secupress' ); ?></p>
+			
+			<p class="secupress-cta">
+				<a href="https://wp-rocket.me/?utm_source=secupress&amp;utm_campaign=sidebar&amp;utm_medium=plugin" class="secupress-button"><?php _e( 'More info', 'secupress' );?></a>
+			</p>
+		</div>
+
+		<?php } ?>
+		
+		<?php if ( defined( 'IMAGIFY_VERSION' ) ) { ?>
+
+		<div class="secupress-imagify-ad secupress-product-ads">
+			<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-imagify.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-imagify@2x.png 2x" alt="Imagify" width="123" height="15">
+			
+			<p class="secupress-catch"><?php _e( 'Speed Up your website with lighter images', 'secupress' ); ?></p>
+			<p><?php _e( 'Image Optimization for Everyone.', 'secupress' ); ?></p>
+			
+			<p class="secupress-cta">
+				<a href="https://imagify.io/?utm_source=secupress&amp;utm_campaign=sidebar&amp;utm_medium=plugin" class="secupress-button"><?php _e( 'More info', 'secupress' );?></a>
+			</p>
+		</div>
+
+		<?php } ?>
+
+	</div>
+
+<?php
+}
+
 
 /**
  * Tell if users can register, whatever we're in a Multisite or not.
