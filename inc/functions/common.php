@@ -613,7 +613,7 @@ function secupress_get_sideads() {
 			<p><?php _e( 'Find out the best Caching Plugin to accelerate your website.', 'secupress' ); ?></p>
 			
 			<p class="secupress-cta">
-				<a href="https://wp-rocket.me/?utm_source=secupress&amp;utm_campaign=sidebar&amp;utm_medium=plugin" class="secupress-button"><?php _e( 'More info', 'secupress' );?></a>
+				<a href="https://wp-rocket.me/?utm_source=secupress&amp;utm_campaign=sidebar&amp;utm_medium=plugin" class="secupress-button" target="_blank"><?php _e( 'More info', 'secupress' );?></a>
 			</p>
 		</div>
 
@@ -628,7 +628,7 @@ function secupress_get_sideads() {
 			<p><?php _e( 'Image Optimization for Everyone.', 'secupress' ); ?></p>
 			
 			<p class="secupress-cta">
-				<a href="https://imagify.io/?utm_source=secupress&amp;utm_campaign=sidebar&amp;utm_medium=plugin" class="secupress-button"><?php _e( 'More info', 'secupress' );?></a>
+				<a href="https://imagify.io/?utm_source=secupress&amp;utm_campaign=sidebar&amp;utm_medium=plugin" class="secupress-button" target="_blank"><?php _e( 'More info', 'secupress' );?></a>
 			</p>
 		</div>
 
