@@ -591,14 +591,19 @@ function secupress_get_sideads() {
 				<p><?php _e( 'Join our mailing list', 'secupress' ); ?></p>
 			</div>
 			<div class="secupress-ad-content">
-				<p><?php _e( 'Get security alerts and news from SecuPress.', 'secupress' ) ?></p>
-				<form action="">
+				<p><label for="mce-EMAIL"><?php _e( 'Get security alerts and news from SecuPress.', 'secupress' ) ?></label></p>
+
+				<form action="//secupress.us13.list-manage.com/subscribe/post?u=67a6053e2542ab4330a851904&amp;id=2eecd4aed8" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+				
 					<p>
-						<label class="screen-reader-text" for="email-address"><?php _e( 'Your email', 'secupress' ); ?></label>
-						<input type="email" name="email-address" id="email-address" placeholder="<?php esc_attr_e( 'Email address', 'secupress' ); ?>">
+						<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
 					</p>
+					
+					<!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+					<div style="position:absolute;left:-9999em" aria-hidden="true"><input type="text" name="b_67a6053e2542ab4330a851904_2eecd4aed8" tabindex="-1" value=""></div>
+
 					<p>
-						<button type="submit" class="secupress-button secupress-button-primary"><?php _e( 'Stay tuned for more	', 'secupress' ); ?></button>
+						<button type="submit" name="subscribe" id="mc-embedded-subscribe" class="secupress-button secupress-button-primary"><?php _e( 'Stay tuned for more	', 'secupress' ); ?></button>
 					</p>
 				</form>
 			</div>
