@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2016-11-09 18:10+0100\n"
-"PO-Revision-Date: 2016-11-09 18:10+0100\n"
+"POT-Creation-Date: 2016-11-14 17:19+0100\n"
+"PO-Revision-Date: 2016-11-14 17:21+0100\n"
 "Last-Translator: WP Media <contact@secupress.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Generator: Poedit 1.8.6\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: _x:1,2c;__;_e;_ex:1,2c;_n:1,2;_nx:1,2;esc_html__;"
-"esc_html_e;_n_noop:1,2\n"
+"esc_html_e;_n_noop:1,2;esc_attr_e\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Textdomain-Support: yes\n"
 "X-Poedit-SearchPath-0: .\n"
@@ -179,7 +179,7 @@ msgid "The IP address %s has been banned."
 msgstr "L'adresse IP %s a été bannie."
 
 #: inc/admin/ajax-post-callbacks.php:231
-#: inc/classes/settings/class-secupress-settings-modules.php:618
+#: inc/classes/settings/class-secupress-settings-modules.php:548
 #: inc/modules/get-pro/settings.php:98
 msgid "Forever"
 msgstr "Pour toujours"
@@ -604,8 +604,8 @@ msgstr[0] "Ce module a été désactivé&nbsp;:"
 msgstr[1] "Ces modules ont été désactivés&nbsp;:"
 
 #: inc/admin/notices.php:293
-#: inc/classes/settings/class-secupress-settings-modules.php:728
-#: inc/classes/settings/class-secupress-settings-modules.php:764
+#: inc/classes/settings/class-secupress-settings-modules.php:658
+#: inc/classes/settings/class-secupress-settings-modules.php:694
 #: inc/common.php:224
 msgid "Submit"
 msgstr "Envoyer"
@@ -777,10 +777,18 @@ msgstr "Liste des éléments de sécurité analysés"
 msgid "Next step"
 msgstr "Prochaine étape"
 
+#: inc/admin/scanner-step-1.php:102 inc/admin/scanner-step-4.php:267
+msgid "Export this report as PDF file."
+msgstr ""
+
 #: inc/admin/scanner-step-1.php:107 inc/admin/scanner-step-1.php:116
 #: inc/admin/scanner-step-4.php:260
 msgid "Export as PDF"
 msgstr "Exporter en PDF"
+
+#: inc/admin/scanner-step-1.php:111 inc/admin/scanner-step-4.php:273
+msgid "Get the Pro Version to export this report as PDF file."
+msgstr ""
 
 #: inc/admin/scanner-step-1.php:121 inc/admin/scanner-step-2.php:159
 #: inc/admin/scanner-step-3.php:190 inc/admin/scanner-step-4.php:278
@@ -822,6 +830,10 @@ msgstr "Correction en cours…"
 msgid "Please wait until fixing is complete."
 msgstr "Merci de patienter pendant la correction."
 
+#: inc/admin/scanner-step-2.php:210
+msgid "Fixing…"
+msgstr ""
+
 #: inc/admin/scanner-step-2.php:212
 msgid ""
 "You’ll be automatically redirected to the next step,<br>please don’t close "
@@ -845,6 +857,11 @@ msgstr "%1$s sur %2$s"
 #: inc/admin/scanner-step-3.php:208
 msgid "How to fix this issue"
 msgstr "Comment corriger ce problème"
+
+#: inc/admin/scanner-step-3.php:266 inc/admin/scanner-step-3.php:272
+#: inc/admin/scanner-step-3.php:295
+msgid "Open in a new window."
+msgstr ""
 
 #: inc/admin/scanner-step-3.php:270
 msgid "Read the documentation"
@@ -903,6 +920,10 @@ msgstr "%d mauvais"
 #, php-format
 msgid "%d Warning"
 msgstr "%d en attente"
+
+#: inc/admin/scanner-step-4.php:102
+msgid "Show/hide the details of scanned items in your report"
+msgstr ""
 
 #: inc/admin/scanner-step-4.php:108
 msgid "See all fixed issues"
@@ -1012,7 +1033,7 @@ msgid "Unknown error."
 msgstr "Erreur inconnue."
 
 #: inc/admin/settings.php:108
-#: inc/classes/settings/class-secupress-settings-modules.php:622
+#: inc/classes/settings/class-secupress-settings-modules.php:552
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -1077,7 +1098,7 @@ msgid "No banned IPs anymore."
 msgstr "Aucune adresse IP bannie."
 
 #: inc/admin/settings.php:128
-#: inc/classes/settings/class-secupress-settings-modules.php:587
+#: inc/classes/settings/class-secupress-settings-modules.php:517
 msgid "IP not found."
 msgstr "Adresse IP no trouvée."
 
@@ -1164,7 +1185,8 @@ msgid ""
 msgstr "La documentation est en construction, merci pour votre patience."
 
 #: inc/admin/settings.php:262 inc/admin/settings.php:264
-#: inc/admin/settings.php:303 inc/modules/services/settings/support.php:5
+#: inc/admin/settings.php:303 inc/modules/get-pro/settings.php:118
+#: inc/modules/services/settings/support.php:5
 msgid "Support"
 msgstr "Support"
 
@@ -4431,57 +4453,7 @@ msgstr "Envoyer un fichier et importer les réglages"
 msgid "Download settings"
 msgstr "Télécharger les réglages"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:258
-msgid "Improve your Security"
-msgstr ""
-
-#: inc/classes/settings/class-secupress-settings-modules.php:259
-msgid "Unlock all the features of SecuPress Pro"
-msgstr ""
-
-#: inc/classes/settings/class-secupress-settings-modules.php:264
-msgctxt "short"
-msgid "Get Pro"
-msgstr "Obtenir la Pro"
-
-#: inc/classes/settings/class-secupress-settings-modules.php:271
-msgid "Join our mailing list"
-msgstr ""
-
-#: inc/classes/settings/class-secupress-settings-modules.php:274
-msgid "Get security alerts and news from SecuPress."
-msgstr ""
-
-#: inc/classes/settings/class-secupress-settings-modules.php:277
-msgid "Your email"
-msgstr ""
-
-#: inc/classes/settings/class-secupress-settings-modules.php:281
-msgid "Stay tuned for more\t"
-msgstr ""
-
-#: inc/classes/settings/class-secupress-settings-modules.php:292
-msgid "Instantly Speed Up WordPress"
-msgstr ""
-
-#: inc/classes/settings/class-secupress-settings-modules.php:293
-msgid "Find out the best Caching Plugin to accelerate your website."
-msgstr ""
-
-#: inc/classes/settings/class-secupress-settings-modules.php:296
-#: inc/classes/settings/class-secupress-settings-modules.php:311
-msgid "More info"
-msgstr ""
-
-#: inc/classes/settings/class-secupress-settings-modules.php:307
-msgid "Speed Up your website with lighter images"
-msgstr ""
-
-#: inc/classes/settings/class-secupress-settings-modules.php:308
-msgid "Image Optimization for Everyone."
-msgstr ""
-
-#: inc/classes/settings/class-secupress-settings-modules.php:430
+#: inc/classes/settings/class-secupress-settings-modules.php:360
 msgid ""
 "If you need to reset this module's settings to the default, you can do it "
 "here, the best settings for your site will be set."
@@ -4490,86 +4462,86 @@ msgstr ""
 "pouvez le faire d'ici, les meilleurs réglages pour votre site seront "
 "sélectionnés."
 
-#: inc/classes/settings/class-secupress-settings-modules.php:431
+#: inc/classes/settings/class-secupress-settings-modules.php:361
 msgid "Module settings"
 msgstr "Réglages du module"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:436
+#: inc/classes/settings/class-secupress-settings-modules.php:366
 msgid "Reset settings?"
 msgstr "Réinitialiser les réglages&nbsp;?"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:440
+#: inc/classes/settings/class-secupress-settings-modules.php:370
 #, php-format
 msgid "Reset the %s's settings."
 msgstr "Réinitialise les réglages de %s."
 
-#: inc/classes/settings/class-secupress-settings-modules.php:523
-#: inc/classes/settings/class-secupress-settings-modules.php:534
-#: inc/classes/settings/class-secupress-settings-modules.php:545
+#: inc/classes/settings/class-secupress-settings-modules.php:453
+#: inc/classes/settings/class-secupress-settings-modules.php:464
+#: inc/classes/settings/class-secupress-settings-modules.php:475
 msgid "Learn more about SecuPress Pro"
 msgstr "En savoir plus sur SecuPress Pro"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:524
-#: inc/classes/settings/class-secupress-settings-modules.php:535
-#: inc/classes/settings/class-secupress-settings-modules.php:546
+#: inc/classes/settings/class-secupress-settings-modules.php:454
+#: inc/classes/settings/class-secupress-settings-modules.php:465
+#: inc/classes/settings/class-secupress-settings-modules.php:476
 msgid "This feature is available in SecuPress Pro"
 msgstr "Cette fonctionnalité est disponible avec SecuPress Pro"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:564
+#: inc/classes/settings/class-secupress-settings-modules.php:494
 msgid "No banned IPs yet."
 msgstr "Aucune adresse IP bannie pour le moment."
 
-#: inc/classes/settings/class-secupress-settings-modules.php:568
+#: inc/classes/settings/class-secupress-settings-modules.php:498
 msgid "Specify an IP to ban."
 msgstr "Spécifier une adresse IP à bannir."
 
-#: inc/classes/settings/class-secupress-settings-modules.php:570
+#: inc/classes/settings/class-secupress-settings-modules.php:500
 msgid "Ban IP"
 msgstr "Bannir une adresse IP"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:591
+#: inc/classes/settings/class-secupress-settings-modules.php:521
 msgid "Not a valid IP."
 msgstr "Adresse IP non valide"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:597
-#: inc/classes/settings/class-secupress-settings-modules.php:599
+#: inc/classes/settings/class-secupress-settings-modules.php:527
+#: inc/classes/settings/class-secupress-settings-modules.php:529
 msgid "Search IP"
 msgstr "Chercher une adresse IP"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:601
+#: inc/classes/settings/class-secupress-settings-modules.php:531
 msgid "Reset"
 msgstr "Réinitialiser"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:609
+#: inc/classes/settings/class-secupress-settings-modules.php:539
 #, php-format
 msgid "Last %d banned IPs:"
 msgstr "Dernières %d adresses IP bannies&nbsp;"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:617
+#: inc/classes/settings/class-secupress-settings-modules.php:547
 msgid "M jS Y"
 msgstr "j M Y"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:617
+#: inc/classes/settings/class-secupress-settings-modules.php:547
 msgid "G:i"
 msgstr "G:i"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:634
+#: inc/classes/settings/class-secupress-settings-modules.php:564
 msgid "Clear all IPs"
 msgstr "Vider toutes les adresses IP"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:637
+#: inc/classes/settings/class-secupress-settings-modules.php:567
 msgid "Ban new IP"
 msgstr "Bannir une adresse IP"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:686
+#: inc/classes/settings/class-secupress-settings-modules.php:616
 msgid "One IP address per line."
 msgstr "Une adresse IP par ligne."
 
-#: inc/classes/settings/class-secupress-settings-modules.php:688
+#: inc/classes/settings/class-secupress-settings-modules.php:618
 msgid "Save whitelist"
 msgstr "Sauver la liste blanche"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:726
+#: inc/classes/settings/class-secupress-settings-modules.php:656
 msgid ""
 "Post creation or update will not be logged, but rather password and profile "
 "update, email changes, new administrator user, admin has logged in..."
@@ -4578,19 +4550,19 @@ msgstr ""
 "la mise à jour des mots de passe, modification des adresses email, un "
 "administrateur qui se connecte…"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:777
+#: inc/classes/settings/class-secupress-settings-modules.php:707
 msgid "No backups found yet, run one now?"
 msgstr "Aucune sauvegarde trouvée, en faire une&nbsp;?"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:795
+#: inc/classes/settings/class-secupress-settings-modules.php:725
 msgid "Backup my database"
 msgstr "Sauvegarder ma base de données"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:816
+#: inc/classes/settings/class-secupress-settings-modules.php:746
 msgid "Backup my files"
 msgstr "Sauvegarder mes fichiers"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:833
+#: inc/classes/settings/class-secupress-settings-modules.php:763
 msgid "Search for malicious files"
 msgstr "Chercher les fichiers malicieux"
 
@@ -4791,6 +4763,67 @@ msgstr "j F Y G:i"
 #, php-format
 msgid "Block ID: %s"
 msgstr "Block ID&nbsp;: %s"
+
+#: inc/functions/common.php:574
+msgid "100 MB"
+msgstr "100 Mo"
+
+#: inc/functions/common.php:586
+msgid "Improve your Security"
+msgstr "Améliorez votre Sécurité"
+
+#: inc/functions/common.php:587
+msgid "Unlock all the features of SecuPress Pro"
+msgstr "Débloquez toutes les fonctionnalités de SecuPress Pro"
+
+#: inc/functions/common.php:592
+msgctxt "short"
+msgid "Get Pro"
+msgstr "Obtenir la Pro"
+
+#: inc/functions/common.php:599
+msgid "Join our mailing list"
+msgstr "Restez informés"
+
+#: inc/functions/common.php:602
+msgid "Get security alerts and news from SecuPress."
+msgstr "Obtenez des alertes de sécurité et actualités de SecuPress."
+
+#: inc/functions/common.php:607
+msgid "email address"
+msgstr "Adresse e-mail"
+
+#: inc/functions/common.php:614
+msgid "Stay tuned for more"
+msgstr "Rester informés"
+
+#: inc/functions/common.php:625
+msgid "Speed up your website with WP Rocket"
+msgstr "Accélérez votre site web avec WP Rocket"
+
+#: inc/functions/common.php:626
+#, php-format
+msgid "Get <span>%s OFF</span> with this coupon code: %s"
+msgstr "Obtenez <span>%s de remise</span> avec le code promo&nbsp;: %s"
+
+#: inc/functions/common.php:629
+#, php-format
+msgid "Get %s OFF on WP Rocket"
+msgstr "%s de remise sur WP Rocket"
+
+#: inc/functions/common.php:640
+msgid "Speed Up your website with lighter images"
+msgstr "Accélérez votre site web avec des images plus légères"
+
+#: inc/functions/common.php:641
+#, php-format
+msgid "Get <span>%s Free</span> with this coupon code: %s"
+msgstr "Obtenez <span>%s de remise</span> avec le code promo&nbsp;: %s"
+
+#: inc/functions/common.php:644
+#, php-format
+msgid "Get %s Free on Imagify"
+msgstr "%s de remise sur Imagify"
 
 #: inc/functions/ip.php:163
 #, php-format
