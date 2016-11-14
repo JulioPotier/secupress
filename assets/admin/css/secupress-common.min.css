@@ -1055,7 +1055,8 @@ label.secupress-setting-row-title {
 }
 
 /* With ads */
-.secupress-wrapper.secupress-has-sideads {
+.secupress-wrapper.secupress-has-sideads,
+.secupress-setting-wrapper.secupress-has-sideads {
 	display: flex;
 	width: 1360px;
 }
@@ -1144,25 +1145,39 @@ label.secupress-setting-row-title {
 .secupress-wprocket-ad .secupress-button {
 	background: #F39C12;
 }
+.secupress-wprocket-ad span {
+	color: #F39C12;
+}
+.secupress-wprocket-ad .secupress-coupon {
+	color: #F0C30F;
+}
 .secupress-imagify-ad .secupress-button {
 	background: #15A8DC;
 }
+.secupress-imagify-ad span {
+	color: #15A8DC;
+}
+.secupress-imagify-ad .secupress-coupon {
+	color: #3FCDFF;
+}
 .secupress-product-ads .secupress-button {
-	font-size: .875em;
-	letter-spacing: 0.125em;
+	font-size: .775em;
+	letter-spacing: 0.1em;
+	text-shadow: 0 0 3px rgba(0,0,0,.15);
 }
 .secupress-product-ads {
 	padding: 25px 25px 10px;
 }
 .secupress-product-ads p {
 	color: #FFF;
+	font-weight: bold;
 }
 .secupress-product-ads .secupress-catch {
-	font-weight: bold;	
+	font-size: 11px;
 }
 .secupress-product-ads .secupress-catch + p {
-	margin-right: 20%;
-	font-size: 0.925em;
+	margin-right: 12%;
+	font-size: 1em;
 }
 
 .toplevel_page_secupress_scanners .secupress-notice,
