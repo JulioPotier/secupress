@@ -216,7 +216,7 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Int
 		);
 
 		if ( $is_apache ) {
-			$files[ $home_path . '.htaccess' ] = 644;
+			$files[ ABSPATH . '.htaccess' ] = 644;
 		}
 
 		return $files;
