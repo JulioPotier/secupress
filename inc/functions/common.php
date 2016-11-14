@@ -562,10 +562,18 @@ function secupress_get_logo_word( $atts = array() ) {
  * @author Geoffrey Crofte
  * @since  1.1.4
  */
-function secupress_get_sideads() {
+function secupress_print_sideads() {
 	if ( secupress_is_pro() ) {
 		return;
 	}
+
+	$rk_offer = '20%';
+	$rk_code  = 'SECUPRESS20';
+	$rk_url   = 'https://wp-rocket.me/?utm_source=secupress&utm_campaign=sidebar&utm_medium=plugin';
+
+	$im_offer = __( '100 MB', 'secupress' );
+	$im_code  = 'SECUPRESS100';	
+	$im_url   = 'https://imagify.io/?utm_source=secupress&utm_campaign=sidebar&utm_medium=plugin';	
 ?>
 				
 	<div class="secupress-sideads">
@@ -596,14 +604,14 @@ function secupress_get_sideads() {
 				<form action="//secupress.us13.list-manage.com/subscribe/post?u=67a6053e2542ab4330a851904&amp;id=2eecd4aed8" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
 				
 					<p>
-						<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
+						<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="<?php esc_attr_e( 'email address', 'secupress' ); ?>" required>
 					</p>
 					
 					<!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
 					<div style="position:absolute;left:-9999em" aria-hidden="true"><input type="text" name="b_67a6053e2542ab4330a851904_2eecd4aed8" tabindex="-1" value=""></div>
 
 					<p>
-						<button type="submit" name="subscribe" id="mc-embedded-subscribe" class="secupress-button secupress-button-primary"><?php _e( 'Stay tuned for more	', 'secupress' ); ?></button>
+						<button type="submit" name="subscribe" id="mc-embedded-subscribe" class="secupress-button secupress-button-primary"><?php _e( 'Stay tuned for more', 'secupress' ); ?></button>
 					</p>
 				</form>
 			</div>
@@ -614,11 +622,11 @@ function secupress_get_sideads() {
 		<div class="secupress-wprocket-ad secupress-product-ads">
 			<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-wprocket.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-wprocket@2x.png 2x" alt="WP Rocket" width="110" height="30">
 			
-			<p class="secupress-catch"><?php _e( 'Instantly Speed Up WordPress', 'secupress' ); ?></p>
-			<p><?php _e( 'Find out the best Caching Plugin to accelerate your website.', 'secupress' ); ?></p>
+			<p class="secupress-catch"><?php _e( 'Speed up your website with WP Rocket', 'secupress' ); ?></p>
+			<p><?php printf( __( 'Get <span>%s OFF</span> with this coupon code: %s', 'secupress' ), $rk_offer, '<span class="secupress-coupon">' . $rk_code . '</span>' ); ?></p>
 			
 			<p class="secupress-cta">
-				<a href="https://wp-rocket.me/?utm_source=secupress&amp;utm_campaign=sidebar&amp;utm_medium=plugin" class="secupress-button" target="_blank"><?php _e( 'More info', 'secupress' );?></a>
+				<a href="<?php echo esc_url( $rk_url ); ?>" class="secupress-button" target="_blank"><?php printf( __( 'Get %s OFF on WP Rocket', 'secupress' ), $rk_offer ); ?></a>
 			</p>
 		</div>
 
@@ -630,10 +638,10 @@ function secupress_get_sideads() {
 			<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-imagify.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-imagify@2x.png 2x" alt="Imagify" width="123" height="15">
 			
 			<p class="secupress-catch"><?php _e( 'Speed Up your website with lighter images', 'secupress' ); ?></p>
-			<p><?php _e( 'Image Optimization for Everyone.', 'secupress' ); ?></p>
+			<p><?php printf( __( 'Get <span>%s Free</span> with this coupon code: %s', 'secupress' ), $im_offer, '<span class="secupress-coupon">' . $im_code . '</span>' ); ?></p>
 			
 			<p class="secupress-cta">
-				<a href="https://imagify.io/?utm_source=secupress&amp;utm_campaign=sidebar&amp;utm_medium=plugin" class="secupress-button" target="_blank"><?php _e( 'More info', 'secupress' );?></a>
+				<a href="<?php echo esc_url( $im_url ); ?>" class="secupress-button" target="_blank"><?php printf( __( 'Get %s Free on Imagify', 'secupress' ), $im_offer ); ?></a>
 			</p>
 		</div>
 

@@ -246,7 +246,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 					<?php $this->print_current_module(); ?>
 				</div>
 				
-				<?php secupress_get_sideads(); ?>
+				<?php secupress_print_sideads(); ?>
 
 			</div>
 
