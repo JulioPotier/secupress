@@ -172,6 +172,7 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 
 		// Registrations are open: the "admin" account should exist to avoid the creation of this user.
 		if ( ! $user_id && secupress_users_can_register() ) {
+			// Make sure our "admin" creation is not blocked by our usernames blacklist.
 			secupress_cache_data( 'allowed_usernames', $username );
 			$user_id = wp_insert_user( array(
 				'user_login' => $username,
