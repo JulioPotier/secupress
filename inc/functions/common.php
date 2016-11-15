@@ -632,7 +632,7 @@ function secupress_print_sideads() {
 
 		<?php } ?>
 		
-		<?php if ( defined( 'IMAGIFY_VERSION' ) ) { ?>
+		<?php if ( ! defined( 'IMAGIFY_VERSION' ) ) { ?>
 
 		<div class="secupress-imagify-ad secupress-product-ads">
 			<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-imagify.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-imagify@2x.png 2x" alt="Imagify" width="123" height="15">
