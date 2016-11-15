@@ -93,24 +93,6 @@ function secupress_enqueue_notices_styles() {
 
 
 /**
- * Add SecuPress informations into USER_AGENT.
- *
- * @since 1.0
- *
- * @param (string) $user_agent A User Agent.
- *
- * @return (string)
- */
-function secupress_user_agent( $user_agent ) {
-	$bonus  = secupress_is_white_label()        ? '*' : '';
-	$bonus .= secupress_get_option( 'do_beta' ) ? '+' : '';
-	$new_ua = sprintf( '%s;SecuPress|%s%s|%s|;', $user_agent, SECUPRESS_VERSION, $bonus, esc_url( home_url() ) );
-
-	return $new_ua;
-}
-
-
-/**
  * Used for the "last 5 scans", formate each row.
  *
  * @since 1.0

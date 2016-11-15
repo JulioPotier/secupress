@@ -493,10 +493,54 @@ function secupress_get_capability( $force_mono = false ) {
 
 
 /**
+ * Add SecuPress informations into USER_AGENT.
+ *
+ * @since 1.0
+ * @since 1.1.4 Available in global scope.
+ *
+ * @param (string) $user_agent A User Agent.
+ *
+ * @return (string)
+ */
+function secupress_user_agent( $user_agent ) {
+	$bonus  = secupress_is_white_label()        ? '*' : '';
+	$bonus .= secupress_get_option( 'do_beta' ) ? '+' : '';
+	$new_ua = sprintf( '%s;SecuPress|%s%s|%s|;', $user_agent, SECUPRESS_VERSION, $bonus, esc_url( home_url() ) );
+
+	return $new_ua;
+}
+
+
+/**
+ * Is this version White Labeled?
+ *
+ * @since 1.0
+ * @since 1.1.4 Available in global scope.
+ *
+ * @return (bool)
+ */
+function secupress_is_white_label() {
+	if ( ! secupress_is_pro() ) {
+		return false;
+	}
+
+	$names = array( 'wl_plugin_name', 'wl_plugin_URI', 'wl_description', 'wl_author', 'wl_author_URI' );
+
+	foreach ( $names as $value ) {
+		if ( false !== secupress_get_option( $value ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+
+/**
  * Get SecuPress logo.
  *
- * @since 1.0.6 Remove the yellow Pro logo (Julio Potier)
  * @since 1.0
+ * @since 1.0.6 Remove the yellow Pro logo (Julio Potier)
  *
  * @param (array) $atts An array of HTML attributes.
  * @param (bool)  $is_pro True is pro logo requested.

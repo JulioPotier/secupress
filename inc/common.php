@@ -1,6 +1,26 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
+add_filter( 'http_request_args', 'secupress_add_own_ua', 10, 2 );
+/**
+ * Force our user agent header when we call our urls.
+ *
+ * @since 1.0
+ * @since 1.1.4 Available in global scope.
+ *
+ * @param (array)  $r   The request parameters.
+ * @param (string) $url The request URL.
+ *
+ * @return (array)
+ */
+function secupress_add_own_ua( $r, $url ) {
+	if ( false !== strpos( $url, 'secupress.me' ) ) {
+		$r['headers']['X-SECUPRESS'] = secupress_user_agent( $r['user-agent'] );
+	}
+	return $r;
+}
+
+
 add_action( 'plugins_loaded', 'secupress_check_ban_ips' );
 /**
  * Will remove expired banned IPs, then block the remaining ones. A form will be displayed to allow clumsy Administrators to unlock themselves.
