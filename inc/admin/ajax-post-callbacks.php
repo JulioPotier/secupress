@@ -398,7 +398,7 @@ function secupress_refresh_bad_plugins_list_ajax_post_cb() {
 	$plugins  = wp_list_pluck( $plugins, 'Version' );
 	$args     = array( 'body' => array( 'items' => $plugins, 'type' => 'plugin' ), 'headers' => array( 'X-Secupress' => SECUPRESS_VERSION ) ); // //// Use client licence here.
 
-	$response = wp_remote_post( SECUPRESS_WEB_MAIN . '/vulns.php', $args ); // //// Url temp.
+	$response = wp_remote_post( SECUPRESS_WEB_MAIN . 'vulns.php', $args ); // //// Url temp.
 
 	if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 		update_site_option( 'secupress_bad_plugins', wp_remote_retrieve_body( $response ) );
@@ -424,7 +424,7 @@ function secupress_refresh_bad_themes_list_ajax_post_cb() {
 
 	$args   = array( 'body' => array( 'items' => $themes, 'type' => 'theme' ), 'headers' => array( 'X-Secupress' => SECUPRESS_VERSION ) ); // //// Use client licence here.
 
-	$response = wp_remote_post( SECUPRESS_WEB_MAIN . '/vulns.php', $args ); // //// Url temp.
+	$response = wp_remote_post( SECUPRESS_WEB_MAIN . 'vulns.php', $args ); // //// Url temp.
 	if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 		update_site_option( 'secupress_bad_themes', wp_remote_retrieve_body( $response ) );
 	}
