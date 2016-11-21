@@ -28,8 +28,8 @@ if ( ! did_action( 'secupress.plugins.loaded' ) ) {
 /* ACTIVATION / DEACTIVATION ==================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-add_action( 'secupress.deactivate_plugin_404-logs', 'secupress_deactivate_plugin_404_logs' );
-add_action( 'secupress.deactivation',               'secupress_deactivate_plugin_404_logs' );
+add_action( 'secupress.modules.deactivate_submodule_' . basename( __FILE__, '.php' ), 'secupress_deactivate_plugin_404_logs' );
+add_action( 'secupress.plugins.deactivation',                                         'secupress_deactivate_plugin_404_logs' );
 /**
  * Delete logs on deactivation.
  *
