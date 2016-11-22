@@ -61,7 +61,7 @@ function secupress_insert_iis7_nodes( $marker, $args = array() ) {
 		return false;
 	}
 
-	$path_end = ! $path && strpos( ltrim( $nodes_string ), '<rule ' ) === 0 ? '/rewrite/rules/rule' : '';
+	$path_end = ! $path && strpos( ltrim( $nodes_string ), '<rule ' ) === 0 ? '/rewrite/rules' : '';
 	$path     = '/configuration/system.webServer' . ( $path ? '/' . trim( $path, '/' ) : '' ) . $path_end;
 
 	$xpath = new DOMXPath( $doc );
