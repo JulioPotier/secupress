@@ -159,10 +159,6 @@ function secupress_init() {
 		require_once( SECUPRESS_ADMIN_PATH . 'functions/modules.php' );
 		require_once( SECUPRESS_ADMIN_PATH . 'functions/notices.php' );
 
-		// Temporary Updates when not on repo yet.
-		require_once( SECUPRESS_ADMIN_PATH . 'functions/wp-updates-plugin.php' );
-		new WPUpdatesPluginUpdater_spfree( 'http://wp-updates.com/api/2/plugin', plugin_basename( __FILE__ ) );
-
 		// Hooks.
 		require_once( SECUPRESS_ADMIN_PATH . 'options.php' );
 		require_once( SECUPRESS_ADMIN_PATH . 'settings.php' );
