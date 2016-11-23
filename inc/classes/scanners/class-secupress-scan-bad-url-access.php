@@ -43,8 +43,8 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 		$this->title    = __( 'Check if any of your WordPress files disclose your site\'s internal path.', 'secupress' );
 		$this->more     = __( 'When an attacker wants to hack into a WordPress site, (s)he will search for all available informations. The goal is to find something useful that will help him penetrate your site. Don\'t let them easily find any informations.', 'secupress' );
 		$this->more_fix = sprintf(
-			__( 'Activate the <strong>%1$s</strong> protection from the module %2$s.', 'secupress' ),
-			__( 'Bad URL Access', 'secupress' ),
+			__( 'Activate the %1$s protection from the module %2$s.', 'secupress' ),
+			'<strong>' . __( 'Bad URL Access', 'secupress' ) . '</strong>',
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_bad-url-access">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
 		);
 
@@ -71,8 +71,8 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 		$config_file = $is_apache ? '.htaccess' : 'web.config';
 		$message_100 = _n_noop(
 			/** Translators: 1 is an URL or a list of URLs, 2 is the name of a protection, 3 is the name of a module. */
-			'Unable to determine if %1$s is accessible. But you can activate the <strong>%2$s</strong> protection manually from the module %3$s.',
-			'Unable to determine if %1$s are accessible. But you can activate the <strong>%2$s</strong> protection manually from the module %3$s.',
+			'Unable to determine if %1$s is accessible. But you can activate the %2$s protection manually from the module %3$s.',
+			'Unable to determine if %1$s are accessible. But you can activate the %2$s protection manually from the module %3$s.',
 			'secupress'
 		);
 
@@ -85,7 +85,7 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 			100 => static::_n_noop_sprintf(
 				$message_100,
 				'%s', // URL.
-				__( 'Bad URL Access', 'secupress' ), // Name of the protection.
+				'<strong>' . __( 'Bad URL Access', 'secupress' ) . '</strong>', // Name of the protection.
 				'<a href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_bad-url-access">' . __( 'Sensitive Data', 'secupress' ) . '</a>' // Name of the module.
 			),
 			// "bad"
