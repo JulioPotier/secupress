@@ -78,6 +78,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 			100 => sprintf(
 				/** Translators: 1 is an URL, 2 is the name of a protection, 3 is the name of a module. */
 				__( 'Unable to determine the status of %1$s to read the directory listing. But you can activate the %2$s protection manually from the module %3$s.', 'secupress' ),
+				'%s', // URL.
 				'<strong>' . __( 'Directory Listing', 'secupress' ) . '</strong>',
 				'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_directory-listing">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
 			),
