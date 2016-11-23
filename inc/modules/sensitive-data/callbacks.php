@@ -85,6 +85,7 @@ function secupress_content_protection_settings_callback( $modulenow, $activate )
 	secupress_manage_submodule( $modulenow, 'directory-listing', ! empty( $activate['content-protect_directory-listing'] ) );
 	secupress_manage_submodule( $modulenow, 'php-easter-egg', ! empty( $activate['content-protect_php-disclosure'] ) );
 	secupress_manage_submodule( $modulenow, 'bad-url-access', ! empty( $activate['content-protect_bad-url-access'] ) );
+	secupress_manage_submodule( 'discloses', 'readmes', ! empty( $activate['content-protect_readmes'] ) );
 }
 
 

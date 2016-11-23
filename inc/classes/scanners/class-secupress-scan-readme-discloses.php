@@ -17,7 +17,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0.1';
+	const VERSION = '1.0.2';
 
 
 	/** Properties. ============================================================================= */
@@ -41,24 +41,18 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 		global $is_apache, $is_nginx, $is_iis7;
 
 		/** Translators: %s is a file name */
-		$this->title = sprintf( __( 'Check if the %s files from your plugins and themes are protected.', 'secupress' ), '<code>readme.txt</code>' );
-		$this->more  = __( 'When an attacker wants to hack into a WordPress site, (s)he will search for all available informations. The goal is to find something useful that will help him penetrate your site. Don\'t let them easily find any informations.', 'secupress' );
+		$this->title    = sprintf( __( 'Check if the %s files from your plugins and themes are protected.', 'secupress' ), '<code>readme.txt</code>' );
+		$this->more     = __( 'When an attacker wants to hack into a WordPress site, (s)he will search for all available informations. The goal is to find something useful that will help him penetrate your site. Don\'t let them easily find any informations.', 'secupress' );
+		$this->more_fix = sprintf(
+			__( 'Activate the %1$s protection from the module %2$s.', 'secupress' ),
+			'<strong>' . __( 'Protect readme files', 'secupress' ) . '<strong>',
+			'<a href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_readmes">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
+		);
 
 		if ( ! $is_apache && ! $is_nginx && ! $is_iis7 ) {
 			$this->more_fix = static::get_messages( 301 );
 			$this->fixable  = false;
 			return;
-		}
-
-		if ( $is_apache ) {
-			/** Translators: 1 and 2 are file names. */
-			$this->more_fix = sprintf( __( 'Add rules in your %1$s file to prevent attackers reading sensitive information from your %2$s files.', 'secupress' ), '<code>.htaccess</code>', '<code>readme.txt</code>' );
-		} elseif ( $is_iis7 ) {
-			/** Translators: 1 and 2 are file names. */
-			$this->more_fix = sprintf( __( 'Add rules in your %1$s file to prevent attackers reading sensitive information from your %2$s files.', 'secupress' ), '<code>web.config</code>', '<code>readme.txt</code>' );
-		} else {
-			/** Translators: 1 and 2 are file names. */
-			$this->more_fix = sprintf( __( 'The %1$s file cannot be edited automatically, you will be given the rules to add into this file manually, to prevent attackers reading sensitive information from your %2$s files.', 'secupress' ), '<code>nginx.conf</code>', '<code>readme.txt</code>' );
 		}
 	}
 
@@ -83,8 +77,13 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 			/** Translators: 1 and 2 are file names */
 			1   => sprintf( __( 'The rules forbidding access to your %1$s files have been successfully added to your %2$s file.', 'secupress' ), '<code>readme.txt</code>', "<code>$config_file</code>" ),
 			// "warning"
-			/** Translators: %s is a file name */
-			100 => sprintf( __( 'Unable to determine the status of the %s files that may reveal sensitive information.', 'secupress' ), '<code>readme.txt</code>' ),
+			100 => sprintf(
+				/** Translators: 1 is a file name, 2 is the name of a protection, 3 is the name of a module. */
+				__( 'Unable to determine the status of the %1$s files that may reveal sensitive information. But you can activate the %2$s protection manually from the module %3$s.', 'secupress' ),
+				'<code>readme.txt</code>',
+				'<strong>' . __( 'Protect readme files', 'secupress' ) . '<strong>',
+				'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_readmes">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
+			),
 			// "bad"
 			/** Translators: %s is a file name */
 			200 => sprintf( __( 'The %s and/or %s files should not be accessible to anyone because they are revealing sensitive information.', 'secupress' ), '<code>readme.txt/md/html</code>', '<code>changelog.txt/md/html</code>' ),

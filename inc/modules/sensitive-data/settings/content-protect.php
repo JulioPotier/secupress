@@ -258,3 +258,60 @@ if ( $is_plugin_active && function_exists( 'secupress_bad_url_access_apache_rule
 		) );
 	}
 }
+
+
+$main_field_name  = $this->get_field_name( 'readmes' );
+$is_plugin_active = (int) secupress_is_submodule_active( 'discloses', 'readmes' );
+
+$this->add_field( array(
+	'title'             => __( 'Protect readme files', 'secupress' ),
+	/** Translators: 1 and 2 are file names. */
+	'description'       => sprintf( __( 'Files like %1$s or %2$s are a good source of information for attackers, they should not be accessible.', 'secupress' ), '<code>readme.txt</code>', '<code>changelog.md</code>' ),
+	'label_for'         => $main_field_name,
+	'plugin_activation' => true,
+	'type'              => 'checkbox',
+	'value'             => $is_plugin_active,
+	'label'             => __( 'Yes, forbid access to those files', 'secupress' ),
+) );
+
+
+// If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for the Readmes.
+
+if ( $is_plugin_active && function_exists( 'secupress_protect_readmes_apache_rules' ) ) {
+	$message = false;
+
+	// Nginx.
+	if ( $is_nginx ) {
+		/** Translators: %s is a file name. */
+		$message = sprintf( __( 'You need to add the following code to your %s file:', 'secupress' ), '<code>nginx.conf</code>' );
+		$rules   = secupress_protect_readmes_nginx_rules();
+	}
+	// Apache.
+	elseif ( $is_apache && ! secupress_root_file_is_writable( '.htaccess' ) ) {
+		/** Translators: %s is a file name. */
+		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>.htaccess</code>' );
+		$rules   = secupress_protect_readmes_apache_rules();
+		$rules   = "# BEGIN SecuPress readme_discloses\n$rules\n# END SecuPress";
+	}
+	// IIS7.
+	elseif ( $is_iis7 && ! secupress_root_file_is_writable( 'web.config' ) ) {
+		/** Translators: %s is a file name. */
+		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>web.config</code>' );
+		$rules   = secupress_protect_readmes_iis7_rules();
+	}
+
+	if ( $message ) {
+		$this->add_field( array(
+			'title'        => _x( 'Rules', 'rewrite rules', 'secupress' ),
+			'description'  => $message,
+			'depends'      => $main_field_name,
+			'label_for'    => $this->get_field_name( 'readmes_rules' ),
+			'type'         => 'textarea',
+			'value'        => $rules,
+			'attributes'   => array(
+				'readonly' => 'readonly',
+				'rows'     => substr_count( $rules, "\n" ) + 1,
+			),
+		) );
+	}
+}
