@@ -315,3 +315,40 @@ if ( $is_plugin_active && function_exists( 'secupress_protect_readmes_apache_rul
 		) );
 	}
 }
+
+
+$choices = array();
+
+if ( class_exists( 'WooCommerce' ) ) {
+	/** Translators: %s is a plugin name. */
+	$choices['woocommerce'] = sprintf( __( 'Remove %s version', 'secupress' ), '<strong>WooCommerce</strong>' );
+}
+
+if ( class_exists( 'SitePress' ) ) {
+	/** Translators: %s is a plugin name. */
+	$choices['wpml'] = sprintf( __( 'Remove %s version', 'secupress' ), '<strong>WPML</strong>' );
+}
+
+if ( $choices ) {
+	$values = array_keys( $choices );
+	$values = array_combine( $values, $values );
+
+	foreach ( $choices as $wp_plugin => $name ) {
+		foreach ( array( 'generator', 'version-css', 'version-js' ) as $sub_module ) {
+			if ( ! secupress_is_submodule_active( 'discloses', $wp_plugin . '-' . $sub_module ) ) {
+				unset( $values[ $wp_plugin ] );
+				break;
+			}
+		}
+	}
+
+	$this->add_field( array(
+		'title'             => __( 'Plugin version disclosure', 'secupress' ),
+		'description'       => __( 'Some popular big plugins print their version in your site\'s source code. This information can be useful for attackers.', 'secupress' ),
+		'name'              => $this->get_field_name( 'plugin-version-discloses' ),
+		'plugin_activation' => true,
+		'type'              => 'checkboxes',
+		'options'           => $choices,
+		'value'             => $values,
+	) );
+}

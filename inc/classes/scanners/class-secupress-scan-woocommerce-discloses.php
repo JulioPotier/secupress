@@ -17,7 +17,7 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0.1';
+	const VERSION = '1.0.2';
 
 
 	/** Properties. ============================================================================= */
@@ -41,8 +41,13 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 		/** Translators: %s is a plugin name. */
 		$this->title    = sprintf( __( 'Check if the %s plugin discloses its version.', 'secupress' ), 'WooCommerce' );
 		$this->more     = __( 'When an attacker wants to hack into a WordPress site, (s)he will search for all available informations. The goal is to find something useful that will help him penetrate your site. Don\'t let them easily find any informations.', 'secupress' );
-		/** Translators: %s is a plugin name. */
-		$this->more_fix = sprintf( __( 'Hide the %s version to avoid being read by attackers.', 'secupress' ), 'WooCommerce' );
+		$this->more_fix = sprintf(
+			/** Translators: 1 is a plugin name, 2 is the name of a protection, 3 is the name of a module. */
+			__( 'Hide the %1$s version to prevent giving too much information to attackers. The %2$s protection from the module %3$s will be activated.', 'secupress' ),
+			'WooCommerce',
+			'<strong>' . __( 'Plugin version disclosure', 'secupress' ) . '</strong>',
+			'<a href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_plugin-version-discloses">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
+		);
 	}
 
 
@@ -66,7 +71,13 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 			/** Translators: %s is a plugin name. */
 			3   => sprintf( __( 'The %s\'s version should be removed from your scripts URLs now.', 'secupress' ), 'WooCommerce' ),
 			// "warning"
-			100 => sprintf( __( 'Unable to determine if %s is disclosing its version on your homepage.', 'secupress' ), 'WooCommerce' ),
+			100 => sprintf(
+				/** Translators: 1 is a plugin name, 2 is the name of a protection, 3 is the name of a module. */
+				__( 'Unable to determine if %1$s is disclosing its version on your homepage. But you can activate the %2$s protection manually from the module %3$s.', 'secupress' ),
+				'WooCommerce',
+				'<strong>' . __( 'Plugin version disclosure', 'secupress' ) . '</strong>',
+				'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_plugin-version-discloses">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
+			),
 			// "bad"
 			/** Translators: 1 is a plugin name, 2 is some related info. */
 			200 => sprintf( __( 'The %1$s plugin displays its version in the source code of your homepage (%2$s).', 'secupress' ), 'WooCommerce', '%s' ),

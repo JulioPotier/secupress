@@ -1,11 +1,11 @@
 <?php
-/*
-Module Name: WooCommerce Version CSS disclose
-Description: Remove the WooCommerce version from the style tags.
-Main Module: discloses
-Author: SecuPress
-Version: 1.0
-*/
+/**
+ * Module Name: WooCommerce Version CSS disclosure
+ * Description: Remove the WooCommerce version from the style tags.
+ * Main Module: discloses
+ * Author: SecuPress
+ * Version: 1.0
+ */
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 if ( ! class_exists( 'WooCommerce' ) ) {

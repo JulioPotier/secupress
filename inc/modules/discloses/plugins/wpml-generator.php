@@ -1,11 +1,11 @@
 <?php
-/*
-Module Name: WPML Generator disclose
-Description: Remove the generator meta tag.
-Main Module: discloses
-Author: SecuPress
-Version: 1.0
-*/
+/**
+ * Module Name: WPML Generator disclosure
+ * Description: Remove the generator meta tag.
+ * Main Module: discloses
+ * Author: SecuPress
+ * Version: 1.0
+ */
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 global $sitepress;

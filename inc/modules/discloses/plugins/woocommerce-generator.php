@@ -1,11 +1,11 @@
 <?php
-/*
-Module Name: WooCommerce Generator disclose
-Description: Remove the generator meta tag value.
-Main Module: discloses
-Author: SecuPress
-Version: 1.0
-*/
+/**
+ * Module Name: WooCommerce Generator disclosure
+ * Description: Remove the generator meta tag value.
+ * Main Module: discloses
+ * Author: SecuPress
+ * Version: 1.0
+ */
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 if ( class_exists( 'WooCommerce' ) ) :
