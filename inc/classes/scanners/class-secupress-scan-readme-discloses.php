@@ -45,7 +45,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 		$this->more     = __( 'When an attacker wants to hack into a WordPress site, (s)he will search for all available informations. The goal is to find something useful that will help him penetrate your site. Don\'t let them easily find any informations.', 'secupress' );
 		$this->more_fix = sprintf(
 			__( 'Activate the %1$s protection from the module %2$s.', 'secupress' ),
-			'<strong>' . __( 'Protect readme files', 'secupress' ) . '<strong>',
+			'<strong>' . __( 'Protect readme files', 'secupress' ) . '</strong>',
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_readmes">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
 		);
 
@@ -81,7 +81,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 				/** Translators: 1 is a file name, 2 is the name of a protection, 3 is the name of a module. */
 				__( 'Unable to determine the status of the %1$s files that may reveal sensitive information. But you can activate the %2$s protection manually from the module %3$s.', 'secupress' ),
 				'<code>readme.txt</code>',
-				'<strong>' . __( 'Protect readme files', 'secupress' ) . '<strong>',
+				'<strong>' . __( 'Protect readme files', 'secupress' ) . '</strong>',
 				'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_readmes">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
 			),
 			// "bad"
