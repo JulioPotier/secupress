@@ -86,7 +86,7 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 				$message_100,
 				'%s', // URL.
 				'<strong>' . __( 'Bad URL Access', 'secupress' ) . '</strong>', // Name of the protection.
-				'<a href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_bad-url-access">' . __( 'Sensitive Data', 'secupress' ) . '</a>' // Name of the module.
+				'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_bad-url-access">' . __( 'Sensitive Data', 'secupress' ) . '</a>' // Name of the module.
 			),
 			// "bad"
 			/** Translators: %s is a URL, or a list of URLs. */
