@@ -80,8 +80,9 @@ function secupress_content_protection_settings_callback( $modulenow, $activate )
 	}
 
 	// (De)Activation.
-	secupress_manage_submodule( $modulenow, 'hotlink', ! empty( $activate['content-protect_hotlink'] ) && secupress_is_pro() );
 	secupress_manage_submodule( $modulenow, 'blackhole', ! empty( $activate['content-protect_blackhole'] ) && secupress_blackhole_is_robots_txt_enabled() );
+	secupress_manage_submodule( $modulenow, 'hotlink', ! empty( $activate['content-protect_hotlink'] ) && secupress_is_pro() );
+	secupress_manage_submodule( $modulenow, 'bad-url-access', ! empty( $activate['content-protect_bad-url-access'] ) );
 }
 
 

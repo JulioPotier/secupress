@@ -1,11 +1,11 @@
 <?php
-/*
-Module Name: Bad URL Access.
-Description: Deny access to some sensitive files.
-Main Module: sensitive_data
-Author: SecuPress
-Version: 1.0
-*/
+/**
+ * Module Name: Bad URL Access
+ * Description: Deny access to some sensitive files.
+ * Main Module: sensitive_data
+ * Author: SecuPress
+ * Version: 1.1
+ */
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 /*------------------------------------------------------------------------------------------------*/
@@ -225,7 +225,7 @@ function secupress_bad_url_access_nginx_rules() {
 	$marker  = 'bad_url_access';
 	$bases   = secupress_get_rewrite_bases();
 	// We add the TinyMCE file directly in the pattern.
-	$pattern = '^(' . $bases['home_from'] . 'php\.ini|' . $bases['site_from'] . WPINC . '/((?:(?!js/tinymce/wp-tinymce).)+)\.php|' . $bases['site_from'] . 'wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$';
+	$pattern = '^(' . $bases['home_from'] . 'php\.ini|' . $bases['site_from'] . 'wp-config\.php|' . $bases['site_from'] . WPINC . '/((?:(?!js/tinymce/wp-tinymce).)+)\.php|' . $bases['site_from'] . 'wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$';
 
 	$rules = "
 server {
@@ -256,6 +256,8 @@ function secupress_bad_url_access_get_regex_pattern() {
 	/**
 	 * ^/php\.ini$
 	 *
+	 * ^/wp-config\.php$
+	 *
 	 * ^/wp-admin/admin-functions\.php$
 	 * ^/wp-admin/install\.php$
 	 * ^/wp-admin/menu-header\.php$
@@ -270,5 +272,5 @@ function secupress_bad_url_access_get_regex_pattern() {
 	 *
 	 * ^/wp-includes/.+\.php$
 	 */
-	return '^(' . $bases['home_from'] . 'php\.ini|' . $bases['site_from'] . WPINC . '/.+\.php|' . $bases['site_from'] . 'wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$';
+	return '^(' . $bases['home_from'] . 'php\.ini|' . $bases['site_from'] . 'wp-config\.php|' . $bases['site_from'] . WPINC . '/.+\.php|' . $bases['site_from'] . 'wp-admin/(admin-functions|install|menu-header|setup-config|([^/]+/)?menu|upgrade-functions|includes/.+)\.php)$';
 }
