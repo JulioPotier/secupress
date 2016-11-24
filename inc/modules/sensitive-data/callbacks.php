@@ -91,17 +91,7 @@ function secupress_content_protection_settings_callback( $modulenow, $activate )
 	$wp_plugins      = array( 'woocommerce', 'wpml' );
 
 	foreach ( $wp_plugins as $wp_plugin ) {
-		if ( isset( $plugin_disclose[ $wp_plugin ] ) ) {
-			secupress_activate_submodule( 'discloses', $wp_plugin . '-generator' );
-			secupress_activate_submodule( 'discloses', $wp_plugin . '-version-css' );
-			secupress_activate_submodule( 'discloses', $wp_plugin . '-version-js' );
-		} else {
-			secupress_deactivate_submodule( 'discloses', array(
-				$wp_plugin . '-generator',
-				$wp_plugin . '-version-css',
-				$wp_plugin . '-version-js',
-			) );
-		}
+		secupress_manage_submodule( 'discloses', $wp_plugin . '-version', isset( $plugin_disclose[ $wp_plugin ] ) );
 	}
 }
 

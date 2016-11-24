@@ -1,37 +1,45 @@
 <?php
 /**
- * Module Name: WPML Version CSS disclosure
- * Description: Remove the WPML version from the style tags.
+ * Module Name: WPML Version Disclosure
+ * Description: Remove the generator meta tag, the version from the script tags, and the version from the style tags.
  * Main Module: discloses
  * Author: SecuPress
  * Version: 1.0
  */
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
-if ( ! class_exists( 'SitePress' ) ) {
+global $sitepress;
+
+if ( ! class_exists( 'SitePress' ) || ! $sitepress ) {
 	return;
 }
 
+if ( method_exists( $sitepress, 'meta_generator_tag' ) ) :
 
-/**
- * Replace the WPML version with a fake version in style src.
- */
-add_filter( 'style_loader_src', 'secupress_replace_wpml_version_in_src', PHP_INT_MAX );
-
-if ( ! function_exists( 'secupress_replace_wpml_version_in_src' ) ) :
 	/**
-	 * Replace the WPML version with a fake version.
+	 * Remove the WPML generator meta tag.
 	 *
-	 * @param (string) $src A content containing the string `ver={$wpml_version}`.
-	 *
-	 * @return (string)
+	 * @since 1.0
 	 */
-	function secupress_replace_wpml_version_in_src( $src ) {
-		$hash = secupress_generate_hash( ICL_SITEPRESS_VERSION );
+	remove_action( 'wp_head', array( $sitepress, 'meta_generator_tag' ) );
 
-		return str_replace( 'ver=' . ICL_SITEPRESS_VERSION, 'ver=' . $hash, $src );
-	}
 endif;
+
+
+add_filter( 'script_loader_src', 'secupress_replace_wpml_version_in_src', PHP_INT_MAX );
+add_filter( 'style_loader_src',  'secupress_replace_wpml_version_in_src', PHP_INT_MAX );
+/**
+ * Replace the WPML version with a fake version in script and style src.
+ *
+ * @param (string) $src A content containing the string `ver={$wpml_version}`.
+ *
+ * @return (string)
+ */
+function secupress_replace_wpml_version_in_src( $src ) {
+	$hash = secupress_generate_hash( ICL_SITEPRESS_VERSION );
+
+	return str_replace( 'ver=' . ICL_SITEPRESS_VERSION, 'ver=' . $hash, $src );
+}
 
 
 add_action( 'widgets_init', 'secupress_wpml_language_selector_widget_init', 8 );

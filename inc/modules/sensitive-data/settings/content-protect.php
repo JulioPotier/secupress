@@ -334,11 +334,8 @@ if ( $choices ) {
 	$values = array_combine( $values, $values );
 
 	foreach ( $choices as $wp_plugin => $name ) {
-		foreach ( array( 'generator', 'version-css', 'version-js' ) as $sub_module ) {
-			if ( ! secupress_is_submodule_active( 'discloses', $wp_plugin . '-' . $sub_module ) ) {
-				unset( $values[ $wp_plugin ] );
-				break;
-			}
+		if ( ! secupress_is_submodule_active( 'discloses', $wp_plugin . '-version' ) ) {
+			unset( $values[ $wp_plugin ] );
 		}
 	}
 
