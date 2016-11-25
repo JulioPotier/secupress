@@ -1092,6 +1092,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 			'timeout'     => static::get_timeout(),
 			'sslverify'   => apply_filters( 'https_local_ssl_verify', false ),
 			'user-agent'  => SECUPRESS_PLUGIN_NAME . '/' . SECUPRESS_VERSION,
+			'cookies'     => $_COOKIE,
 			'headers'     => array(
 				'X-SecuPress-Origin' => $class_name,
 			),
