@@ -1,11 +1,11 @@
 <?php
-/*
-Module Name: Block Bad User-Agents
-Description: Block requests received with bad user-agents
-Main Module: firewall
-Author: SecuPress
-Version: 1.0
-*/
+/**
+ * Module Name: Block Bad User-Agents
+ * Description: Block requests received with bad user-agents
+ * Main Module: firewall
+ * Author: SecuPress
+ * Version: 1.0
+ */
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 add_action( 'secupress.plugins.loaded', 'secupress_block_bad_user_agents', 0 );
