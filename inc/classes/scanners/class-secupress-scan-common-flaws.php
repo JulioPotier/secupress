@@ -17,7 +17,7 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements SecuPress_Sc
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0.1';
+	const VERSION = '1.1';
 
 
 	/** Properties. ============================================================================= */
@@ -28,6 +28,13 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements SecuPress_Sc
 	 * @var (object)
 	 */
 	protected static $_instance;
+
+	/**
+	 * Tells if a scanner is fixable by SecuPress.
+	 *
+	 * @var (bool|string)
+	 */
+	protected $fixable = false;
 
 
 	/** Init and messages. ====================================================================== */
@@ -61,15 +68,16 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements SecuPress_Sc
 		$messages = array(
 			// "good"
 			0   => _n_noop( '%d common flaw tested.', '%d common flaws tested.', 'secupress' ),
-			1   => __( 'Protection activated', 'secupress' ),
 			// "warning"
-			100 => __( 'Unable to determine if your homepage could be the target of common flaws.', 'secupress' ),
 			101 => sprintf( __( 'Unable to determine the status of the <strong>Shellshock</strong> flaw (%s).', 'secupress' ), '<em>CVE-2014-6271</em>' ),
 			102 => sprintf( __( 'Unable to determine the status of the <strong>Shellshock</strong> flaw (%s).', 'secupress' ), '<em>CVE-2014-7169</em>' ),
 			// "bad"
-			200 => __( 'The content of your web pages should be <strong>different</strong> for each reload (without cache).', 'secupress' ),
 			201 => sprintf( __( 'The server appears to be vulnerable to <strong>Shellshock</strong> (%s).', 'secupress' ), '<em>CVE-2014-6271</em>' ),
 			202 => sprintf( __( 'The server appears to be vulnerable to <strong>Shellshock</strong> (%s).', 'secupress' ), '<em>CVE-2014-7169</em>' ),
+			// DEPRECATED, NOT IN USE ANYMORE.
+			1   => __( 'Protection activated', 'secupress' ),
+			100 => __( 'Unable to determine if your homepage could be the target of common flaws.', 'secupress' ),
+			200 => __( 'The content of your web pages should be <strong>different</strong> for each reload (without cache).', 'secupress' ),
 			203 => __( 'Your website should block <strong>malicious requests</strong>.', 'secupress' ),
 		);
 
@@ -138,46 +146,9 @@ class SecuPress_Scan_Common_Flaws extends SecuPress_Scan implements SecuPress_Sc
 			}
 		}
 
-		/**
-		 * `wp-config.php` access.
-		 */
-		++$nbr_tests;
-		$response = wp_remote_get( add_query_arg( secupress_generate_key( 6 ), 'wp-config.php', user_trailingslashit( home_url() ) ), $this->get_default_request_args() );
-
-		if ( ! is_wp_error( $response ) ) {
-
-			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
-				// "bad"
-				$this->add_message( 203 );
-			}
-		} else {
-			// "warning"
-			$this->add_message( 100 );
-		}
-
 		// "good"
 		$this->maybe_set_status( 0, array( $nbr_tests, $nbr_tests ) );
 
 		return parent::scan();
-	}
-
-
-	/** Fix. ==================================================================================== */
-
-	/**
-	 * Try to fix the flaw(s).
-	 *
-	 * @since 1.0
-	 *
-	 * @return (array) The fix results.
-	 */
-	public function fix() {
-		// Activate.
-		secupress_activate_submodule( 'firewall', 'bad-url-contents' );
-
-		// "good"
-		$this->add_fix_message( 1 );
-
-		return parent::fix();
 	}
 }
