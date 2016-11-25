@@ -65,12 +65,6 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 			// "good"
 			/** Translators: %s is a plugin name. */
 			0   => sprintf( __( 'The %s plugin does not reveal sensitive information.', 'secupress' ), '<strong>WooCommerce</strong>' ),
-			/** Translators: %s is a plugin name. */
-			1   => sprintf( __( 'The %s plugin does not reveal sensitive information.', 'secupress' ), '<strong>WooCommerce</strong>' ), // Back compat.
-			/** Translators: %s is a plugin name. */
-			2   => sprintf( __( 'The %s plugin does not reveal sensitive information.', 'secupress' ), '<strong>WooCommerce</strong>' ), // Back compat.
-			/** Translators: %s is a plugin name. */
-			3   => sprintf( __( 'The %s plugin does not reveal sensitive information.', 'secupress' ), '<strong>WooCommerce</strong>' ), // Back compat.
 			// "warning"
 			100 => sprintf(
 				/** Translators: 1 is a plugin name, 2 is the name of a protection, 3 is the name of a module. */
@@ -82,6 +76,12 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 			// "bad"
 			/** Translators: 1 is a plugin name, 2 is some related info. */
 			200 => sprintf( __( 'The %1$s plugin displays its version in the source code of your homepage (%2$s).', 'secupress' ), '<strong>WooCommerce</strong>', '%s' ),
+			// DEPRECATED, NOT IN USE ANYMORE.
+			1   => __( 'The generator meta tag should not be displayed anymore.', 'secupress' ),
+			/** Translators: %s is a plugin name. */
+			2   => sprintf( __( 'The %s\'s version should be removed from your styles URLs now.', 'secupress' ), 'WooCommerce' ),
+			/** Translators: %s is a plugin name. */
+			3   => sprintf( __( 'The %s\'s version should be removed from your scripts URLs now.', 'secupress' ), 'WooCommerce' ),
 		);
 
 		if ( isset( $message_id ) ) {
