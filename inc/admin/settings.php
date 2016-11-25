@@ -334,7 +334,7 @@ function secupress_global_settings() {
 		secupress_require_class( 'settings', 'global' );
 	}
 
-	if ( function_exists( 'secupress_pro_class_path' ) ) {
+	if ( secupress_is_pro() ) {
 		$class_name = 'SecuPress_Pro_Settings_Global';
 
 		if ( ! class_exists( $class_name ) ) {

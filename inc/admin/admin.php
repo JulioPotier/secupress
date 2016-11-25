@@ -19,6 +19,41 @@ function secupress_is_jarvis() {
 }
 
 
+add_action( 'secupress.loaded', 'secupress_been_first' );
+/**
+ * Make SecuPress the first plugin loaded.
+ *
+ * @since 1.0
+ */
+function secupress_been_first() {
+	if ( ! is_admin() ) {
+		return;
+	}
+
+	$plugin_basename = plugin_basename( __FILE__ );
+
+	if ( is_multisite() ) {
+		$active_plugins = get_site_option( 'active_sitewide_plugins' );
+
+		if ( isset( $active_plugins[ $plugin_basename ] ) && key( $active_plugins ) !== $plugin_basename ) {
+			$this_plugin = array( $plugin_basename => $active_plugins[ $plugin_basename ] );
+			unset( $active_plugins[ $plugin_basename ] );
+			$active_plugins = array_merge( $this_plugin, $active_plugins );
+			update_site_option( 'active_sitewide_plugins', $active_plugins );
+		}
+		return;
+	}
+
+	$active_plugins = get_option( 'active_plugins' );
+
+	if ( isset( $active_plugins[ $plugin_basename ] ) && reset( $active_plugins ) !== $plugin_basename ) {
+		unset( $active_plugins[ array_search( $plugin_basename, $active_plugins ) ] );
+		array_unshift( $active_plugins, $plugin_basename );
+		update_option( 'active_plugins', $active_plugins );
+	}
+}
+
+
 /*------------------------------------------------------------------------------------------------*/
 /* DETECT BAD PLUGINS AND THEMES ================================================================ */
 /*------------------------------------------------------------------------------------------------*/

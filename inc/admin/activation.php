@@ -7,18 +7,11 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
 
 register_activation_hook( SECUPRESS_FILE, 'secupress_activation' );
 /**
- * Tell WP what to do when the plugin is activated
+ * Tell WP what to do when the plugin is activated.
  *
  * @since 1.0
  */
 function secupress_activation() {
-	// Last constants.
-	defined( 'SECUPRESS_PLUGIN_NAME' ) or define( 'SECUPRESS_PLUGIN_NAME', 'SecuPress' );
-	defined( 'SECUPRESS_PLUGIN_SLUG' ) or define( 'SECUPRESS_PLUGIN_SLUG', 'secupress' );
-
-	// Make sure our texts are translated.
-	secupress_load_plugin_textdomain_translations();
-
 	/**
 	 * Fires on SecuPress activation.
 	 *
@@ -27,20 +20,20 @@ function secupress_activation() {
 	do_action( 'secupress.activation' );
 
 	/**
-	 * As this activation hook appends before our plugins are loaded (and the page is reloaded right after that),
+	 * As this activation hook appens before our sub-modules are loaded (and the page is reloaded right after that),
 	 * this transient will trigger a custom activation hook in `secupress_load_plugins()`.
 	 */
 	set_site_transient( 'secupress_activation', 1 );
 }
 
 
-add_action( 'secupress.plugins.activation', 'secupress_maybe_write_rules_on_activation', 10000 );
+add_action( 'secupress.plugins.activation', 'secupress_maybe_set_rules_on_activation', 10000 );
 /**
- * Maybe add rules in `.htaccess` or `web.config` file on SecuPress activation.
+ * Maybe set rules to add in `.htaccess` or `web.config` file on SecuPress activation.
  *
  * @since 1.0
  */
-function secupress_maybe_write_rules_on_activation() {
+function secupress_maybe_set_rules_on_activation() {
 	global $is_apache, $is_iis7, $is_nginx;
 
 	if ( ! $is_apache && ! $is_iis7 && ! $is_nginx ) {
@@ -63,6 +56,46 @@ function secupress_maybe_write_rules_on_activation() {
 	 * @param (array) $rules An array of rules with the modules marker as key and rules (string) as value. For IIS7 it's an array of arguments (each one containing a row with the rules).
 	 */
 	$rules = apply_filters( 'secupress.plugins.activation.write_rules', $rules );
+
+	if ( $rules ) {
+		// We store the rules, they will be merged and written in `secupress_maybe_write_rules_on_activation()`.
+		secupress_cache_data( 'plugins-activation-write_rules', $rules );
+	}
+}
+
+
+add_action( 'secupress.all.plugins.activation', 'secupress_maybe_write_rules_on_activation', 10000 );
+/**
+ * Maybe add rules in `.htaccess` or `web.config` file on SecuPress or SecuPress Pro activation.
+ *
+ * @since 1.1.4
+ */
+function secupress_maybe_write_rules_on_activation() {
+	global $is_apache, $is_iis7, $is_nginx;
+
+	if ( ! $is_apache && ! $is_iis7 && ! $is_nginx ) {
+		// System not supported.
+		return;
+	}
+
+	$rules = secupress_cache_data( 'plugins-activation-write_rules' );
+	secupress_cache_data( 'plugins-activation-write_rules', null );
+
+	secupress_write_rules_on_activation( $rules );
+}
+
+
+/**
+ * Add rules in `.htaccess` or `web.config` file on plugin activation.
+ *
+ * @since 1.1.4
+ * @author Grégory Viguier
+ *
+ * @param $rules (array) An array of rules to write.
+ */
+function secupress_write_rules_on_activation( $rules ) {
+	global $is_apache, $is_iis7;
+
 	$rules = array_filter( $rules );
 
 	if ( ! $rules ) {
@@ -238,30 +271,33 @@ register_deactivation_hook( SECUPRESS_FILE, 'secupress_deactivation' );
  * @since 1.0
  */
 function secupress_deactivation() {
-
-	// While the plugin is deactivated, some sites may activate or deactivate other plugins, or change their default user role.
+	// While the plugin is deactivated, some sites may activate or deactivate other plugins and themes, or change their default user role.
 	if ( is_multisite() ) {
 		delete_site_option( 'secupress_active_plugins' );
 		delete_site_option( 'secupress_active_themes' );
 		delete_site_option( 'secupress_default_role' );
 	}
 
-	// Make sure our texts are translated.
-	secupress_load_plugin_textdomain_translations();
-
 	/**
 	 * Fires on SecuPress deactivation.
 	 *
 	 * @since 1.0
+	 */
+	do_action( 'secupress.deactivation' );
+
+	/**
+	 * Fires once SecuPress is activated, after the SecuPress's plugins are loaded.
+	 *
+	 * @since 1.1.4
 	 *
 	 * @param (array) $args        An empty array to mimic the `$args` parameter from `secupress_deactivate_submodule()`.
 	 * @param (bool)  $is_inactive False to mimic the `$is_inactive` parameter from `secupress_deactivate_submodule()`.
 	 */
-	do_action( 'secupress.deactivation', array(), false );
+	do_action( 'secupress.plugins.deactivation', array(), false );
 }
 
 
-add_action( 'secupress.deactivation', 'secupress_maybe_remove_rules_on_deactivation', 10000 );
+add_action( 'secupress.plugins.deactivation', 'secupress_maybe_remove_rules_on_deactivation', 10000 );
 /**
  * Maybe remove rules from `.htaccess` or `web.config` file on SecuPress deactivation.
  *
@@ -282,14 +318,15 @@ function secupress_maybe_remove_rules_on_deactivation() {
 
 		if ( ! is_writable( $file_path ) ) {
 			// If the file is not writable, display a message.
-			$message  = sprintf( __( '%s: ', 'secupress' ), SECUPRESS_PLUGIN_NAME );
+			$message  = sprintf( __( '%s:', 'secupress' ), SECUPRESS_PLUGIN_NAME ) . ' ';
 			$message .= sprintf(
-				/** Translators: 1 and 2 are small parts of code, 3 is a file name. */
-				__( 'It seems your %3$s file is not writable. You have to edit the file manually. Please remove all rules between %1$s and %2$s from the %3$s file.', 'secupress' ),
+				/** Translators: 1 is a file name, 2 and 3 are small parts of code. */
+				__( 'It seems your %1$s file is not writable, you have to edit it manually. Please remove all rules between %2$s and %3$s.', 'secupress' ),
+				'<code>.htaccess</code>',
 				'<code># BEGIN SecuPress</code>',
-				'<code># END SecuPress</code>',
-				'<code>.htaccess</code>'
+				'<code># END SecuPress</code>'
 			);
+
 			secupress_create_deactivation_notice_muplugin( 'apache_remove_rules', $message );
 		}
 
@@ -326,13 +363,14 @@ function secupress_maybe_remove_rules_on_deactivation() {
 
 		if ( false === $doc->load( $file_path ) ) {
 			// If the file is not writable, display a message.
-			$message  = sprintf( __( '%s: ', 'secupress' ), SECUPRESS_PLUGIN_NAME );
+			$message  = sprintf( __( '%s:', 'secupress' ), SECUPRESS_PLUGIN_NAME ) . ' ';
 			$message .= sprintf(
-				/** Translators: 1 is a small part of code, 2 is a file name. */
-				__( 'It seems your %2$s file is not writable. You have to edit the file manually. Please remove all rules with %1$s from the %2$s file.', 'secupress' ),
-				'<code>SecuPress</code>',
-				'<code>web.config</code>'
+				/** Translators: 1 is a file name, 2 is a small part of code. */
+				__( 'It seems your %1$s file is not writable, you have to edit the file manually. Please remove all nodes with %2$s.', 'secupress' ),
+				'<code>web.config</code>',
+				'<code>SecuPress</code>'
 			);
+
 			secupress_create_deactivation_notice_muplugin( 'iis7_remove_rules', $message );
 		}
 
@@ -355,14 +393,15 @@ function secupress_maybe_remove_rules_on_deactivation() {
 	// Nginx.
 	if ( $is_nginx ) {
 		// Since we can't edit the file, display a message.
-		$message  = sprintf( __( '%s: ', 'secupress' ), SECUPRESS_PLUGIN_NAME );
+		$message  = sprintf( __( '%s:', 'secupress' ), SECUPRESS_PLUGIN_NAME ) . ' ';
 		$message .= sprintf(
-				/** Translators: 1 is a file name, 2 and 3 are small parts of code. */
-			__( 'Your server runs <strong>Ngnix</strong>. You have to edit the configuration file manually. Please remove all rules between %2$s and %3$s from the %1$s file.', 'secupress' ),
-			'<code>nginx.conf</code>',
-			'<code># BEGIN SecuPress move_login</code>',
-			'<code># END SecuPress</code>'
+			/** Translators: 1 and 2 are small parts of code, 3 is a file name. */
+			__( 'Your server runs <strong>Ngnix</strong>, you have to edit the configuration file manually. Please remove all rules between %1$s and %2$s from the %3$s file.', 'secupress-pro' ),
+			'<code># BEGIN SecuPress</code>',
+			'<code># END SecuPress</code>',
+			'<code>nginx.conf</code>'
 		);
+
 		secupress_create_deactivation_notice_muplugin( 'nginx_remove_rules', $message );
 	}
 }
