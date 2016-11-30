@@ -4,7 +4,7 @@
  * Description: Deny access to some sensitive files.
  * Main Module: sensitive_data
  * Author: SecuPress
- * Version: 1.1
+ * Version: 1.1.1
  */
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
@@ -18,6 +18,7 @@ add_action( 'secupress.modules.activate_submodule_' . basename( __FILE__, '.php'
  *
  * @since 1.0
  * @since 1.0.2 Return a boolean.
+ * @author Grégory Viguier
  *
  * @return (bool) True if rules have been successfully written. False otherwise.
  */
@@ -54,6 +55,7 @@ add_action( 'secupress.modules.deactivate_submodule_' . basename( __FILE__, '.ph
  * On module deactivation, maybe remove rewrite rules from the `.htaccess`/`web.config` file.
  *
  * @since 1.0
+ * @author Grégory Viguier
  */
 function secupress_bad_url_access_deactivate() {
 	secupress_remove_module_rules_or_notice( 'bad_url_access', __( 'Bad URL Access', 'secupress' ) );
@@ -65,6 +67,7 @@ add_filter( 'secupress.plugins.activation.write_rules', 'secupress_bad_url_acces
  * On SecuPress activation, add the rules to the list of the rules to write.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (array) $rules Other rules to write.
  *
@@ -91,6 +94,7 @@ add_action( 'secupress.upgrade', 'secupress_bad_url_access_upgrade', 10, 2 );
  * Fires when SecuPress is upgraded.
  *
  * @since 1.0.2
+ * @author Grégory Viguier
  *
  * @param (string) $new_version    The version being upgraded to.
  * @param (string) $actual_version The previous version.
@@ -103,11 +107,12 @@ function secupress_bad_url_access_upgrade( $new_version, $actual_version ) {
 		return;
 	}
 
-	if ( '1.0.2' > $actual_version ) {
+	if ( '1.1.4' > $actual_version ) {
 		/**
 		 * 1.0 had a bug preventing TinyMCE to work on some Apache/IIS servers.
 		 * 1.0.1 fixed the bug but the wrong rules remained in the `.htaccess`/`web.config` file.
 		 * 1.0.2 remove the old rules and add the new ones back.
+		 * 1.1.4 added `wp-config.php` to the list of files to protect.
 		 */
 		if ( $is_nginx || secupress_bad_url_access_activation() ) {
 			return;
@@ -167,6 +172,7 @@ function secupress_bad_url_access_upgrade( $new_version, $actual_version ) {
  * Bad URL Access: get rules for apache.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @return (string)
  */
@@ -192,6 +198,7 @@ function secupress_bad_url_access_apache_rules() {
  * Bad URL Access: get rules for iis7.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @return (string)
  */
@@ -218,6 +225,7 @@ function secupress_bad_url_access_iis7_rules() {
  * Bad URL Access: get rules for nginx.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @return (string)
  */
@@ -248,6 +256,7 @@ server {
  * Get a regex pattern matching the files.
  *
  * @since 1.0.3
+ * @author Grégory Viguier
  *
  * @return (string)
  */
