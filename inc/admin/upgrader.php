@@ -190,5 +190,54 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 				secupress_activate_submodule( 'discloses', $wp_plugin . '-version' );
 			}
 		}
+
+		// `wp-config.php` constants.
+		$wpconfig_filepath = secupress_find_wpconfig_path();
+		$is_writable       = $wpconfig_filepath && wp_is_writable( $wpconfig_filepath );
+
+		if ( $is_writable ) {
+			$wp_filesystem = secupress_get_filesystem();
+			$file_content  = $wp_filesystem->get_contents( $wpconfig_filepath );
+			$pattern       = '@# BEGIN SecuPress Correct Constants Values(.*)# END SecuPress\s*?@Us';
+
+			if ( preg_match( $pattern, $file_content, $matches ) ) {
+				$new_content = $matches[1];
+				$replaced    = array();
+				$constants   = array(
+					'DISALLOW_FILE_EDIT'       => 'file-edit',
+					'DISALLOW_UNFILTERED_HTML' => 'unfiltered-html',
+					'ALLOW_UNFILTERED_UPLOADS' => 'unfiltered-uploads',
+				);
+
+				foreach ( $constants as $constant => $submodule_part ) {
+					$pattern     = "@^\s*define\s*\(\s*[\"']{$constant}[\"'].*@m";
+					$tmp_content = preg_replace( $pattern, '', $new_content );
+
+					if ( null !== $tmp_content && $tmp_content !== $new_content ) {
+						// The constant was in the block and has been removed.
+						$replaced[]  = 'wp-config-constant-' . $submodule_part;
+						$new_content = $tmp_content;
+					}
+				}
+
+				if ( $replaced ) {
+					if ( trim( $new_content ) === '' ) {
+						// No constants left, remove the marker too.
+						$new_content = '';
+					} else {
+						$new_content = str_replace( $matches[1], $new_content, $matches[0] );
+					}
+
+					// Remove the old constants.
+					$new_content = str_replace( $matches[0], $new_content, $file_content );
+					$wp_filesystem->put_contents( $wpconfig_filepath, $new_content, FS_CHMOD_FILE );
+
+					// Activate the new sub-modules.
+					foreach ( $replaced as $submodule ) {
+						secupress_activate_submodule( 'wordpress-core', $submodule );
+					}
+				}
+			}
+		}
 	}
 }
