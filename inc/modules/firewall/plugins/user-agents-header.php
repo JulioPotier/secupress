@@ -36,7 +36,7 @@ function secupress_block_bad_user_agents() {
 		}
 	}
 
-	if ( $bad_user_agents && preg_match( '/' . $bad_user_agents . '/i', $user_agent ) ) {
+	if ( $bad_user_agents && preg_match( '/' . $bad_user_agents . '/', $user_agent ) ) {
 		secupress_block( 'UAHB' );
 	}
 }
