@@ -156,6 +156,20 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 	if ( version_compare( $actual_version, '1.1.4', '<' ) ) {
 		// Lots of things have changed on the sub-modules side.
 
+		// WP disclose.
+		$deactivate = array();
+
+		foreach ( array( 'generator', 'wp-version-css', 'wp-version-js' ) as $submodule ) {
+			if ( secupress_is_submodule_active( 'discloses', $submodule ) ) {
+				$deactivate[] = $submodule;
+			}
+		}
+
+		if ( $deactivate ) {
+			secupress_deactivate_submodule( 'discloses', $deactivate );
+			secupress_activate_submodule( 'discloses', 'wp-version' );
+		}
+
 		// WooCommerce and WPML.
 		foreach ( array( 'woocommerce', 'wpml' ) as $wp_plugin ) {
 			$deactivate = array();
