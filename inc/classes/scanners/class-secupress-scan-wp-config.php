@@ -382,9 +382,10 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 
 		secupress_activate_submodule( 'wordpress-core', 'wp-config-constant-' . $has_plugin[ $constant ] );
 
-		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
+		$last_error  = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
+		$error_codes = array( 'wp_config_not_writable' => 1, 'constant_not_removed' => 1, 'constant_not_added' => 1 );
 
-		if ( $last_error && 'general' === $last_error['setting'] && ( 'constant_not_removed' === $last_error['code'] || 'constant_not_added' === $last_error['code'] ) ) {
+		if ( $last_error && 'general' === $last_error['setting'] && isset( $error_codes[ $last_error['code'] ] ) ) {
 			array_pop( $wp_settings_errors );
 			return new WP_Error( $last_error['code'], $last_error['message'] );
 		}

@@ -6,6 +6,9 @@ $this->set_current_section( 'wp_config' );
 $this->add_section( __( 'WordPress configuration file', 'secupress' ) );
 
 
+$is_writable = secupress_find_wpconfig_path();
+$is_writable = $is_writable && wp_is_writable( $is_writable );
+
 $active     = (int) secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-file-edit' );
 $can_manage = $active || ! defined( 'DISALLOW_FILE_EDIT' ) || ! DISALLOW_FILE_EDIT;
 
@@ -17,11 +20,11 @@ $this->add_field( array(
 	'type'              => 'checkbox',
 	'value'             => $active,
 	'label'             => __( 'Yes, disable the file editor', 'secupress' ),
-	'disabled'          => ! $can_manage,
+	'disabled'          => ! $can_manage || ! $is_writable,
 	'helpers'           => array(
 		array(
 			'type'        => 'help',
-			'description' => $can_manage ? null : __( 'This option is disabled because there is no need to it to be activated.', 'secupress' ),
+			'description' => ! $can_manage ? __( 'This option is disabled because there is no need to it to be activated.', 'secupress' ) : null,
 		),
 	),
 ) );
@@ -46,11 +49,11 @@ $this->add_field( array(
 	'type'              => 'checkbox',
 	'value'             => $active,
 	'label'             => __( 'Yes, filter HTML in post editor', 'secupress' ),
-	'disabled'          => ! $can_manage,
+	'disabled'          => ! $can_manage || ! $is_writable,
 	'helpers'           => array(
 		array(
 			'type'        => 'help',
-			'description' => $can_manage ? null : __( 'This option is disabled because there is no need to it to be activated.', 'secupress' ),
+			'description' => ! $can_manage ? __( 'This option is disabled because there is no need to it to be activated.', 'secupress' ) : null,
 		),
 		array(
 			'type'        => 'warning',
@@ -72,11 +75,20 @@ $this->add_field( array(
 	'type'              => 'checkbox',
 	'value'             => $active,
 	'label'             => __( 'Yes, filter uploads', 'secupress' ),
-	'disabled'          => ! $can_manage,
+	'disabled'          => ! $can_manage || ! $is_writable,
 	'helpers'           => array(
 		array(
 			'type'        => 'help',
-			'description' => $can_manage ? null : __( 'This option is disabled because there is no need to it to be activated.', 'secupress' ),
+			'description' => ! $can_manage ? __( 'This option is disabled because there is no need to it to be activated.', 'secupress' ) : null,
 		),
 	),
 ) );
+
+
+if ( ! $is_writable ) {
+	$this->add_field( array(
+		'type'  => 'html',
+		/** Translators: 1 is a file name, 2 is a code. */
+		'value' => sprintf( __( 'These options are disabled because the %1$s file is not writable. Please apply %2$s write rights to the file.', 'secupress' ), '<code>wp-config.php</code>', '<code>0644</code>' ),
+	) );
+}

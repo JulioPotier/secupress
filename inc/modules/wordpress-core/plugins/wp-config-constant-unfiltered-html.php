@@ -30,8 +30,16 @@ function secupress_unfiltered_html_activation() {
 		return;
 	}
 
-	$wpconfig_filepath = secupress_find_wpconfig_path();
 	$new_define        = "define( '$constant', true );";
+	$wpconfig_filepath = secupress_find_wpconfig_path();
+	$is_writable       = $wpconfig_filepath && wp_is_writable( $wpconfig_filepath );
+
+	if ( ! $is_writable ) {
+		/** Translators: 1 is a file name, 2 is a code. */
+		$message = sprintf( __( 'The %1$s file is not writable. Please apply %2$s write rights to the file.', 'secupress' ), '<code>wp-config.php</code>', '<code>0644</code>' );
+		add_settings_error( 'general', 'wp_config_not_writable', $message, 'error' );
+		return;
+	}
 
 	if ( defined( $constant ) ) {
 		// Remove the constant we could have previously set (and the user could have modified).
@@ -96,6 +104,14 @@ function secupress_unfiltered_html_deactivate() {
 	$constant          = 'DISALLOW_UNFILTERED_HTML';
 	$marker            = 'unfiltered_html';
 	$wpconfig_filepath = secupress_find_wpconfig_path();
+	$is_writable       = $wpconfig_filepath && wp_is_writable( $wpconfig_filepath );
+
+	if ( ! $is_writable ) {
+		/** Translators: 1 is a file name, 2 is a code. */
+		$message = sprintf( __( 'The %1$s file is not writable. Please apply %2$s write rights to the file.', 'secupress' ), '<code>wp-config.php</code>', '<code>0644</code>' );
+		add_settings_error( 'general', 'wp_config_not_writable', $message, 'error' );
+		return;
+	}
 
 	// Remove the constant we could have previously set.
 	secupress_replace_content( $wpconfig_filepath, "@# BEGIN SecuPress $marker\ndefine\( '$constant',.*# END SecuPress\s*?@sU", '' );

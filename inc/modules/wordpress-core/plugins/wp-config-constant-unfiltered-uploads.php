@@ -30,6 +30,14 @@ function secupress_unfiltered_uploads_activation() {
 	}
 
 	$wpconfig_filepath = secupress_find_wpconfig_path();
+	$is_writable       = $wpconfig_filepath && wp_is_writable( $wpconfig_filepath );
+
+	if ( ! $is_writable ) {
+		/** Translators: 1 is a file name, 2 is a code. */
+		$message = sprintf( __( 'The %1$s file is not writable. Please apply %2$s write rights to the file.', 'secupress' ), '<code>wp-config.php</code>', '<code>0644</code>' );
+		add_settings_error( 'general', 'wp_config_not_writable', $message, 'error' );
+		return;
+	}
 
 	// Comment old value.
 	$replaced = secupress_replace_content( $wpconfig_filepath, "@^define\s*\(\s*('$constant'|\"$constant\"),(.*);\s*$@mU", '/*Commented by SecuPress*/ /* $0 */' );
@@ -70,6 +78,14 @@ add_action( 'secupress.plugins.deactivation', 'secupress_unfiltered_uploads_deac
 function secupress_unfiltered_uploads_deactivate() {
 	$constant          = 'ALLOW_UNFILTERED_UPLOADS';
 	$wpconfig_filepath = secupress_find_wpconfig_path();
+	$is_writable       = $wpconfig_filepath && wp_is_writable( $wpconfig_filepath );
+
+	if ( ! $is_writable ) {
+		/** Translators: 1 is a file name, 2 is a code. */
+		$message = sprintf( __( 'The %1$s file is not writable. Please apply %2$s write rights to the file.', 'secupress' ), '<code>wp-config.php</code>', '<code>0644</code>' );
+		add_settings_error( 'general', 'wp_config_not_writable', $message, 'error' );
+		return;
+	}
 
 	// Remove the comments.
 	secupress_replace_content( $wpconfig_filepath, "@/\*Commented by SecuPress\*/ /\* *(define\s*\(\s*('$constant'|\"$constant\"),(.*);) *\*/@", '$1' );
