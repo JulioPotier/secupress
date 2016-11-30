@@ -107,14 +107,14 @@ function secupress_bad_url_access_upgrade( $new_version, $actual_version ) {
 		return;
 	}
 
-	if ( '1.1.4' > $actual_version ) {
+	if ( version_compare( $actual_version, '1.1.4', '<' ) ) {
 		/**
 		 * 1.0 had a bug preventing TinyMCE to work on some Apache/IIS servers.
 		 * 1.0.1 fixed the bug but the wrong rules remained in the `.htaccess`/`web.config` file.
 		 * 1.0.2 remove the old rules and add the new ones back.
 		 * 1.1.4 added `wp-config.php` to the list of files to protect.
 		 */
-		if ( $is_nginx || secupress_bad_url_access_activation() ) {
+		if ( secupress_bad_url_access_activation() || $is_nginx ) {
 			return;
 		}
 
