@@ -151,4 +151,25 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 		$users_login_settings = get_site_option( 'secupress_users-login_settings' );
 		update_site_option( 'secupress_users-login_settings', $users_login_settings );
 	}
+
+	// < 1.1.4
+	if ( version_compare( $actual_version, '1.1.4', '<' ) ) {
+		// Lots of things have changed on the sub-modules side.
+
+		// WooCommerce and WPML.
+		foreach ( array( 'woocommerce', 'wpml' ) as $wp_plugin ) {
+			$deactivate = array();
+
+			foreach ( array( 'generator', 'version-css', 'version-js' ) as $path_part ) {
+				if ( secupress_is_submodule_active( 'discloses', $wp_plugin . '-' . $path_part ) ) {
+					$deactivate[] = $wp_plugin . '-' . $path_part;
+				}
+			}
+
+			if ( $deactivate ) {
+				secupress_deactivate_submodule( 'discloses', $deactivate );
+				secupress_activate_submodule( 'discloses', $wp_plugin . '-version' );
+			}
+		}
+	}
 }
