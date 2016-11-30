@@ -59,6 +59,7 @@ function secupress_unfiltered_html_activation() {
 				"<pre># BEGIN SecuPress $marker\n$new_define\n# END SecuPress</pre>"
 			);
 			add_settings_error( 'general', 'constant_not_removed', $message, 'error' );
+			return;
 		}
 	}
 
