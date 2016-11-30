@@ -156,6 +156,11 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 	if ( version_compare( $actual_version, '1.1.4', '<' ) ) {
 		// Lots of things have changed on the sub-modules side.
 
+		// PHP version.
+		if ( secupress_is_submodule_active( 'discloses', 'php-version' ) && ! secupress_is_submodule_active( 'discloses', 'no-x-powered-by' ) ) {
+			secupress_activate_submodule( 'discloses', 'no-x-powered-by' );
+		}
+
 		// WP disclose.
 		$deactivate = array();
 
