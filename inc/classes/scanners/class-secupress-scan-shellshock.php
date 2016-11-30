@@ -63,24 +63,24 @@ class SecuPress_Scan_Shellshock extends SecuPress_Scan implements SecuPress_Scan
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// "good"
-			2   => __( 'The server is not vulnerable to <strong>Shellshock</strong>.', 'secupress' ),
-			3   => __( 'The protection against <strong>Shellshock</strong> has been activated. It won\'t fix the vulnerability (only your host can) but it will prevent an attacker to exploit it remotely.', 'secupress' ),
+			0   => __( 'The server is not vulnerable to <strong>Shellshock</strong>.', 'secupress' ),
+			1   => __( 'The protection against <strong>Shellshock</strong> has been activated. It won\'t fix the vulnerability (only your host can) but it will prevent an attacker to exploit it remotely.', 'secupress' ),
 			// "warning"
-			101 => sprintf(
+			100 => sprintf(
 				__( 'Unable to determine the status of the <strong>Shellshock</strong> flaw (%1$s). But you can activate the %2$s protection manually from the module %3$s.', 'secupress' ),
 				'<em>CVE-2014-6271</em>',
 				'<em>' . __( 'Block Bad User-Agents', 'secupress' ) . '</em>',
 				'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-headers_user-agents-header">' . __( 'Firewall', 'secupress' ) . '</a>'
 			),
-			102 => sprintf(
+			101 => sprintf(
 				__( 'Unable to determine the status of the <strong>Shellshock</strong> flaw (%1$s). But you can activate the %2$s protection manually from the module %3$s.', 'secupress' ),
 				'<em>CVE-2014-7169</em>',
 				'<em>' . __( 'Block Bad User-Agents', 'secupress' ) . '</em>',
 				'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-headers_user-agents-header">' . __( 'Firewall', 'secupress' ) . '</a>'
 			),
 			// "bad"
-			201 => sprintf( __( 'The server appears to be vulnerable to <strong>Shellshock</strong> (%s).', 'secupress' ), '<em>CVE-2014-6271</em>' ),
-			202 => sprintf( __( 'The server appears to be vulnerable to <strong>Shellshock</strong> (%s).', 'secupress' ), '<em>CVE-2014-7169</em>' ),
+			200 => sprintf( __( 'The server appears to be vulnerable to <strong>Shellshock</strong> (%s).', 'secupress' ), '<em>CVE-2014-6271</em>' ),
+			201 => sprintf( __( 'The server appears to be vulnerable to <strong>Shellshock</strong> (%s).', 'secupress' ), '<em>CVE-2014-7169</em>' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -103,7 +103,7 @@ class SecuPress_Scan_Shellshock extends SecuPress_Scan implements SecuPress_Scan
 	public function scan() {
 		if ( 'WIN' === strtoupper( substr( PHP_OS, 0, 3 ) ) ) {
 			// "good"
-			$this->add_message( 2 );
+			$this->add_message( 0 );
 			return parent::scan();
 		}
 
@@ -121,10 +121,10 @@ class SecuPress_Scan_Shellshock extends SecuPress_Scan implements SecuPress_Scan
 
 		if ( 'error' === $output ) {
 			// "warning"
-			$this->add_message( 101 );
+			$this->add_message( 100 );
 		} elseif ( false !== strpos( $output, 'VULNERABLE' ) ) {
 			// "bad"
-			$this->add_message( 201 );
+			$this->add_message( 200 );
 		}
 
 		// CVE-2014-7169.
@@ -135,14 +135,14 @@ class SecuPress_Scan_Shellshock extends SecuPress_Scan implements SecuPress_Scan
 
 		if ( 'error' === $output ) {
 			// "warning"
-			$this->add_message( 102 );
+			$this->add_message( 101 );
 		} elseif ( trim( $output ) === $test_date ) {
 			// "bad"
-			$this->add_message( 202 );
+			$this->add_message( 201 );
 		}
 
 		// "good"
-		$this->maybe_set_status( 2 );
+		$this->maybe_set_status( 0 );
 
 		return parent::scan();
 	}
@@ -162,7 +162,7 @@ class SecuPress_Scan_Shellshock extends SecuPress_Scan implements SecuPress_Scan
 		secupress_activate_submodule( 'firewall', 'user-agents-header' );
 
 		// "good"
-		$this->add_fix_message( 3 );
+		$this->add_fix_message( 1 );
 
 		return parent::fix();
 	}
