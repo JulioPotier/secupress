@@ -55,7 +55,7 @@ function secupress_get_modules() {
 				__( 'WordPress can be tweaked in so many ways. But are you using the right ones? Let\'s see!', 'secupress' ),
 			),
 			'counts' => array(
-				'free_options' => 2,
+				'free_options' => 5,
 				'pro_options'  => 0,
 			),
 		),
@@ -70,7 +70,7 @@ function secupress_get_modules() {
 				__( 'Preserve your data and avoid losing your content in case of attack.', 'secupress' ),
 			),
 			'counts' => array(
-				'free_options' => 4,
+				'free_options' => 10,
 				'pro_options'  => 3,
 			),
 		),
@@ -102,7 +102,7 @@ function secupress_get_modules() {
 			),
 			'mark_as_pro' => $should_be_pro,
 			'counts' => array(
-				'free_options' => 0,
+				'free_options' => 1,
 				'pro_options'  => 5,
 			),
 		),
@@ -191,8 +191,11 @@ function secupress_get_modules() {
 				'pro_options'  => 0,
 			),
 		),
-
 	);
+
+	if ( class_exists( 'WooCommerce' ) || class_exists( 'SitePress' ) ) {
+		++$modules['sensitive-data']['counts']['free_options'];
+	}
 
 	if ( function_exists( 'secupress_is_white_label' ) && ! secupress_is_white_label() ) {
 		$modules['services'] = array(
@@ -225,6 +228,7 @@ function secupress_get_modules() {
 	return $modules;
 }
 
+
 /**
  * Get the counts of Free & Pro modules, or Free or Pro individually
  *
@@ -246,8 +250,9 @@ function secupress_get_options_counts( $type = null ) {
 	return ! empty( $counts[ $type ] ) ? $counts[ $type ] : $counts;
 }
 
+
 /**
- * Get a list of all activated sub-module.
+ * Get a list of all active sub-modules.
  *
  * @since 1.0
  * @author Grégory Viguier
@@ -302,12 +307,17 @@ function secupress_get_active_submodules() {
  * @return (bool)
  */
 function secupress_is_submodule_active( $module, $submodule ) {
+	$submodule = sanitize_key( $submodule );
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		$submodule = sanitize_key( $submodule );
 		$is_active = get_site_option( 'secupress_active_submodule_' . $submodule );
+		$is_active = $is_active && $module === $is_active;
 
-		return $is_active && $module === $is_active;
+		if ( $is_active && ! secupress_is_pro() && secupress_submodule_is_pro( $module, $submodule ) ) {
+			return false;
+		}
+
+		return $is_active;
 	}
 
 	$active_submodules = secupress_get_active_submodules();
@@ -317,9 +327,81 @@ function secupress_is_submodule_active( $module, $submodule ) {
 	}
 
 	$active_submodules[ $module ] = array_flip( $active_submodules[ $module ] );
-	$submodule = sanitize_key( $submodule );
 
-	return isset( $active_submodules[ $module ][ $submodule ] );
+	$is_active = isset( $active_submodules[ $module ][ $submodule ] );
+
+	if ( $is_active && ! secupress_is_pro() && secupress_submodule_is_pro( $module, $submodule ) ) {
+		return false;
+	}
+
+	return $is_active;
+}
+
+
+/**
+ * Get a list of all active Pro sub-modules.
+ *
+ * @since 1.1.4
+ * @author Grégory Viguier
+ *
+ * @return (array) An array of arrays with the modules as keys and lists of sub-modules as values.
+ */
+function secupress_get_active_pro_submodules() {
+	static $active_submodules_cache;
+	static $active_pro_submodules;
+
+	$active_submodules_current = secupress_get_active_submodules();
+
+	if ( $active_submodules_cache !== $active_submodules_current ) {
+		$active_submodules_cache = $active_submodules_current;
+		unset( $active_pro_submodules );
+	}
+
+	if ( isset( $active_pro_submodules ) ) {
+		return $active_pro_submodules;
+	}
+
+	$active_pro_submodules = array();
+
+	if ( $active_submodules_current ) {
+		foreach ( $active_submodules_current as $module => $submodules ) {
+			foreach ( $submodules as $i => $submodule ) {
+				if ( secupress_submodule_is_pro( $module, $submodule ) ) {
+					if ( empty( $active_pro_submodules[ $module ] ) ) {
+						$active_pro_submodules[ $module ] = array();
+					}
+					$active_pro_submodules[ $module ][] = $submodule;
+				}
+			}
+		}
+	}
+
+	return $active_pro_submodules;
+}
+
+
+/**
+ * Tell if a sub-module is Pro.
+ * Here we can't use `SECUPRESS_PRO_MODULES_PATH` for our test, because it is not defined if the pro version is not activated.
+ *
+ * @since 1.1.4
+ *
+ * @param (string) $module    The module.
+ * @param (string) $submodule The sub-module.
+ *
+ * @return (bool) True if Pro. False otherwize.
+ */
+function secupress_submodule_is_pro( $module, $submodule ) {
+	static $paths = array();
+
+	$key = $module . '|' . $submodule;
+
+	if ( ! isset( $paths[ $key ] ) ) {
+		$file_path     = sanitize_key( $module ) . '/plugins/' . sanitize_key( $submodule ) . '.php';
+		$paths[ $key ] = ! file_exists( SECUPRESS_MODULES_PATH . $file_path );
+	}
+
+	return $paths[ $key ];
 }
 
 

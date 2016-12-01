@@ -80,8 +80,21 @@ function secupress_content_protection_settings_callback( $modulenow, $activate )
 	}
 
 	// (De)Activation.
-	secupress_manage_submodule( $modulenow, 'hotlink', ! empty( $activate['content-protect_hotlink'] ) && secupress_is_pro() );
-	secupress_manage_submodule( $modulenow, 'blackhole', ! empty( $activate['content-protect_blackhole'] ) && secupress_blackhole_is_robots_txt_enabled() );
+	secupress_manage_submodule( $modulenow,  'blackhole',         ! empty( $activate['content-protect_blackhole'] ) && secupress_blackhole_is_robots_txt_enabled() );
+	secupress_manage_submodule( $modulenow,  'hotlink',           ! empty( $activate['content-protect_hotlink'] ) && secupress_is_pro() );
+	secupress_manage_submodule( $modulenow,  'directory-listing', ! empty( $activate['content-protect_directory-listing'] ) );
+	secupress_manage_submodule( $modulenow,  'php-easter-egg',    ! empty( $activate['content-protect_php-disclosure'] ) );
+	secupress_manage_submodule( 'discloses', 'no-x-powered-by',   ! empty( $activate['content-protect_php-version'] ) );
+	secupress_manage_submodule( 'discloses', 'wp-version',        ! empty( $activate['content-protect_wp-version'] ) );
+	secupress_manage_submodule( $modulenow,  'bad-url-access',    ! empty( $activate['content-protect_bad-url-access'] ) );
+	secupress_manage_submodule( 'discloses', 'readmes',           ! empty( $activate['content-protect_readmes'] ) );
+
+	$plugin_disclose = ! empty( $activate['content-protect_plugin-version-discloses'] ) && is_array( $activate['content-protect_plugin-version-discloses'] ) ? array_flip( $activate['content-protect_plugin-version-discloses'] ) : array();
+	$wp_plugins      = array( 'woocommerce', 'wpml' );
+
+	foreach ( $wp_plugins as $wp_plugin ) {
+		secupress_manage_submodule( 'discloses', $wp_plugin . '-version', isset( $plugin_disclose[ $wp_plugin ] ) );
+	}
 }
 
 

@@ -41,8 +41,8 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 		<div class="secupress-modules-container secupress-box-shadow">
 
 		<?php
-			$option_counts   = secupress_get_options_counts();
-			$total_options   = array_sum( $option_counts );
+		$option_counts = secupress_get_options_counts();
+		$total_options = array_sum( $option_counts );
 		?>
 
 		<div class="secupress-dashboard-header secupress-flex secupress-flex-spaced">

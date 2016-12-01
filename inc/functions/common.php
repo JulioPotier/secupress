@@ -111,7 +111,7 @@ function secupress_get_scanners() {
 			'DirectoryIndex',
 		),
 		'firewall' => array(
-			'Common_Flaws',
+			'Shellshock',
 			'Bad_User_Agent',
 			'SQLi',
 			'Anti_Scanner',
@@ -881,7 +881,13 @@ function secupress_has_pro() {
  * @return (bool)
  */
 function secupress_is_pro() {
-	return secupress_has_pro() && secupress_get_consumer_key() && (int) secupress_get_option( 'site_is_pro' );
+	static $is_pro;
+
+	if ( ! isset( $is_pro ) ) {
+		$is_pro = secupress_has_pro() && secupress_get_consumer_key() && (int) secupress_get_option( 'site_is_pro' );
+	}
+
+	return $is_pro;
 }
 
 

@@ -17,7 +17,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0.1';
+	const VERSION = '1.0.2';
 
 
 	/** Properties. ============================================================================= */
@@ -40,24 +40,18 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 	protected function init() {
 		global $is_apache, $is_nginx, $is_iis7;
 
-		$this->title = __( 'Check if your WordPress lists the files in a directory (known as Directory Listing).', 'secupress' );
+		$this->title = __( 'Check if your server lists the files in a directory (known as Directory Listing).', 'secupress' );
 		$this->more  = __( 'Without the appropriate protection anybody could browse your site\'s files. While browsing some of your files might not be a security risk, most of them are sensitive.', 'secupress' );
+		$this->more_fix = sprintf(
+			__( 'Activate the %1$s protection from the module %2$s.', 'secupress' ),
+			'<strong>' . __( 'Directory Listing', 'secupress' ) . '</strong>',
+			'<a href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_directory-listing">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
+		);
 
 		if ( ! $is_apache && ! $is_nginx && ! $is_iis7 ) {
 			$this->more_fix = static::get_messages( 301 );
 			$this->fixable  = false;
 			return;
-		}
-
-		if ( $is_apache ) {
-			/** Translators: %s is a file name. */
-			$this->more_fix = sprintf( __( 'Add rules in your %s file to forbid browsing your site\'s files.', 'secupress' ), '<code>.htaccess</code>' );
-		} elseif ( $is_iis7 ) {
-			/** Translators: %s is a file name. */
-			$this->more_fix = sprintf( __( 'Add rules in your %s file to forbid browsing your site\'s files.', 'secupress' ), '<code>web.config</code>' );
-		} else {
-			/** Translators: %s is a file name. */
-			$this->more_fix = sprintf( __( 'The %s file cannot be edited automatically, you will be given the rules to add into this file manually, to forbid browsing your site\'s files.', 'secupress' ), '<code>nginx.conf</code>' );
 		}
 	}
 
@@ -81,8 +75,13 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 			/** Translators: %s is a file name. */
 			1   => sprintf( __( 'The rules forbidding access to directory listing have been successfully added to your %s file.', 'secupress' ), "<code>$config_file</code>" ),
 			// "warning"
-			/** Translators: %s is an URL */
-			100 => __( 'Unable to determine the status of %s to read the directory listing.', 'secupress' ),
+			100 => sprintf(
+				/** Translators: 1 is an URL, 2 is the name of a protection, 3 is the name of a module. */
+				__( 'Unable to determine the status of %1$s to read the directory listing. But you can activate the %2$s protection manually from the module %3$s.', 'secupress' ),
+				'%s', // URL.
+				'<strong>' . __( 'Directory Listing', 'secupress' ) . '</strong>',
+				'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_directory-listing">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
+			),
 			// "bad"
 			/** Translators: %s is an URL */
 			200 => __( '%s (for example) should not be accessible to anyone because of directory listing.', 'secupress' ),

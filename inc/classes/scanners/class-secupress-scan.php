@@ -49,7 +49,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0.1';
+	const VERSION = '1.0.2';
 
 
 	/** Properties. ============================================================================= */
@@ -1034,6 +1034,31 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 
 
 	/**
+	 * A `sprintf()` dedicated to `_n_noop()`.
+	 *
+	 * @since 1.1.4
+	 * @author Grégory Viguier
+	 *
+	 * @param (array) $n_noop The result of a `_n_noop()`.
+	 *
+	 * @return (array) An array like `_n_noop()` would return, where singular and plural strings have been passed through `sprintf()`.
+	 */
+	final public static function _n_noop_sprintf( $n_noop ) {
+		$args = func_get_args();
+
+		if ( isset( $n_noop[0], $n_noop[1], $n_noop['singular'], $n_noop['plural'] ) && array_key_exists( 1, $args ) ) {
+			array_shift( $args );
+			$n_noop[0] = vsprintf( $n_noop[0], $args );
+			$n_noop[1] = vsprintf( $n_noop[1], $args );
+			$n_noop['singular'] = $n_noop[0];
+			$n_noop['plural']   = $n_noop[1];
+		}
+
+		return $n_noop;
+	}
+
+
+	/**
 	 * Get the status code from a message identifier.
 	 *
 	 * @since 1.0
@@ -1092,6 +1117,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 			'timeout'     => static::get_timeout(),
 			'sslverify'   => apply_filters( 'https_local_ssl_verify', false ),
 			'user-agent'  => SECUPRESS_PLUGIN_NAME . '/' . SECUPRESS_VERSION,
+			'cookies'     => $_COOKIE,
 			'headers'     => array(
 				'X-SecuPress-Origin' => $class_name,
 			),

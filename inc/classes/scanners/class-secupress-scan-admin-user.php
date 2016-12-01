@@ -172,6 +172,7 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 
 		// Registrations are open: the "admin" account should exist to avoid the creation of this user.
 		if ( ! $user_id && secupress_users_can_register() ) {
+			// Make sure our "admin" creation is not blocked by our usernames blacklist.
 			secupress_cache_data( 'allowed_usernames', $username );
 			$user_id = wp_insert_user( array(
 				'user_login' => $username,
@@ -207,22 +208,32 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 	 * @return (array)
 	 */
 	public function need_manual_fix() {
-		$username = 'admin';
-		$user_id  = username_exists( $username );
+		$user_id   = username_exists( 'admin' );
+		$has_capas = static::user_has_capas( $user_id );
+
+		// The "admin" account exists but has no role or capabilities.
+		if ( $user_id && ! $has_capas ) {
+			// OK.
+			return array();
+		}
 
 		// The "admin" account exists and has a role or capabilities.
-		if ( static::user_has_capas( $user_id ) ) {
-			// It's you!
+		if ( $has_capas ) {
+			// It's you! Manual fix.
 			if ( get_current_user_id() === $user_id ) {
 				return array( 'rename-admin-username' => 'rename-admin-username' );
 			}
+			// It's not you: automatic fix.
+			return false;
 		}
 
 		// Registrations are open: the "admin" account should exist to avoid the creation of this user.
 		if ( ! $user_id && secupress_users_can_register() ) {
+			// Automatic fix.
 			return false;
 		}
 
+		// OK.
 		return array();
 	}
 

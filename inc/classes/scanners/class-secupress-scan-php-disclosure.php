@@ -17,7 +17,7 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0.1';
+	const VERSION = '1.0.2';
 
 
 	/** Properties. ============================================================================= */
@@ -40,24 +40,17 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 	protected function init() {
 		global $is_apache, $is_nginx, $is_iis7;
 
-		$this->title = __( 'Check if your WordPress lists the the PHP modules <em>(know as PHP Easter Egg)</em>.', 'secupress' );
-		$this->more  = __( 'PHP contains a flaw that disclosure sensitive information from installed modules, resulting in a loss of confidentiality.', 'secupress' );
+		$this->title    = __( 'Check if your server lists the PHP modules <em>(known as "PHP Easter Egg")</em>.', 'secupress' );
+		$this->more     = __( 'PHP contains a flaw that discloses sensitive information about installed modules, resulting in a loss of confidentiality.', 'secupress' );
+		$this->more_fix = sprintf(
+			__( 'Activate the %1$s protection from the module %2$s.', 'secupress' ),
+			'<strong>' . __( 'PHP Disclosure', 'secupress' ) . '</strong>',
+			'<a href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_php-disclosure">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
+		);
 
 		if ( ! $is_apache && ! $is_nginx && ! $is_iis7 ) {
 			$this->more_fix = static::get_messages( 301 );
 			$this->fixable  = false;
-			return;
-		}
-
-		if ( $is_apache ) {
-			/** Translators: %s is a file name. */
-			$this->more_fix = sprintf( __( 'Add rules in your %s file to prevent attackers reading sensitive information about PHP modules.', 'secupress' ), '<code>.htaccess</code>' );
-		} elseif ( $is_iis7 ) {
-			/** Translators: %s is a file name. */
-			$this->more_fix = sprintf( __( 'Add rules in your %s file to prevent attackers reading sensitive information about PHP modules.', 'secupress' ), '<code>web.config</code>' );
-		} else {
-			/** Translators: %s is a file name. */
-			$this->more_fix = sprintf( __( 'The %s file cannot be edited automatically, you will be given the rules to add into this file manually, to prevent attackers reading sensitive information about PHP modules.', 'secupress' ), '<code>nginx.conf</code>' );
 		}
 	}
 
@@ -81,7 +74,11 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 			/** Translators: %s is a file name. */
 			1   => sprintf( __( 'The rules forbidding access to the <strong>PHP Easter Egg</strong> have been successfully added to your %s file.', 'secupress' ), "<code>$config_file</code>" ),
 			// "warning"
-			100 => __( 'Unable to determine if your homepage is disclosing PHP Easter Egg.', 'secupress' ),
+			100 => sprintf(
+				__( 'Unable to determine if your homepage is disclosing the PHP modules. But you can activate the %1$s protection manually from the module %2$s.', 'secupress' ),
+					'<strong>' . __( 'PHP Disclosure', 'secupress' ) . '</strong>',
+					'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_php-disclosure">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
+				),
 			// "bad"
 			/** Translators: %s is an URL */
 			200 => sprintf( __( '%s should not be accessible to anyone.', 'secupress' ), '<code>' . esc_url( user_trailingslashit( home_url() ) . '?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000' ) . '</code>' ),
