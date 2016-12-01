@@ -1,12 +1,20 @@
 <?php
-/*
-Module Name: No X-Powered-By.
-Description: Unset the header <em>X-Powered-By</em> to avoid leaking sensitive information.
-Main Module: discloses
-Author: SecuPress
-Version: 1.0
-*/
+/**
+ * Module Name: PHP Version Disclosure
+ * Description: Unset the header <em>X-Powered-By</em> to avoid leaking sensitive information.
+ * Main Module: discloses
+ * Author: SecuPress
+ * Version: 1.1
+ */
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
+
+
+/*------------------------------------------------------------------------------------------------*/
+/* IN CASE THE REWRITE RULES DON'T WORK ========================================================= */
+/*------------------------------------------------------------------------------------------------*/
+
+header_remove( 'X-Powered-By' );
+
 
 /*------------------------------------------------------------------------------------------------*/
 /* ACTIVATION / DEACTIVATION ==================================================================== */
@@ -45,7 +53,7 @@ function secupress_no_x_powered_by_activation() {
 			'path'      => 'httpProtocol/customHeaders',
 			'attribute' => 'id',
 		),
-		'title'    => __( 'No X-Powered-By', 'secupress' ),
+		'title'    => __( 'PHP Version Disclosure', 'secupress' ),
 	) );
 }
 
@@ -57,7 +65,7 @@ add_action( 'secupress.modules.deactivate_submodule_' . basename( __FILE__, '.ph
  * @since 1.0
  */
 function secupress_no_x_powered_by_deactivate() {
-	secupress_remove_module_rules_or_notice( 'no_x_powered_by', __( 'No X-Powered-By', 'secupress' ) );
+	secupress_remove_module_rules_or_notice( 'no_x_powered_by', __( 'PHP Version Disclosure', 'secupress' ) );
 }
 
 

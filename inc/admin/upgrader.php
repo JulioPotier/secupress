@@ -151,4 +151,93 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 		$users_login_settings = get_site_option( 'secupress_users-login_settings' );
 		update_site_option( 'secupress_users-login_settings', $users_login_settings );
 	}
+
+	// < 1.1.4
+	if ( version_compare( $actual_version, '1.1.4', '<' ) ) {
+		// Lots of things have changed on the sub-modules side.
+
+		// PHP version.
+		if ( secupress_is_submodule_active( 'discloses', 'php-version' ) && ! secupress_is_submodule_active( 'discloses', 'no-x-powered-by' ) ) {
+			secupress_activate_submodule( 'discloses', 'no-x-powered-by' );
+		}
+
+		// WP disclose.
+		$deactivate = array();
+
+		foreach ( array( 'generator', 'wp-version-css', 'wp-version-js' ) as $submodule ) {
+			if ( secupress_is_submodule_active( 'discloses', $submodule ) ) {
+				$deactivate[] = $submodule;
+			}
+		}
+
+		if ( $deactivate ) {
+			secupress_deactivate_submodule( 'discloses', $deactivate );
+			secupress_activate_submodule( 'discloses', 'wp-version' );
+		}
+
+		// WooCommerce and WPML.
+		foreach ( array( 'woocommerce', 'wpml' ) as $wp_plugin ) {
+			$deactivate = array();
+
+			foreach ( array( 'generator', 'version-css', 'version-js' ) as $path_part ) {
+				if ( secupress_is_submodule_active( 'discloses', $wp_plugin . '-' . $path_part ) ) {
+					$deactivate[] = $wp_plugin . '-' . $path_part;
+				}
+			}
+
+			if ( $deactivate ) {
+				secupress_deactivate_submodule( 'discloses', $deactivate );
+				secupress_activate_submodule( 'discloses', $wp_plugin . '-version' );
+			}
+		}
+
+		// `wp-config.php` constants.
+		$wpconfig_filepath = secupress_find_wpconfig_path();
+		$is_writable       = $wpconfig_filepath && wp_is_writable( $wpconfig_filepath );
+
+		if ( $is_writable ) {
+			$wp_filesystem = secupress_get_filesystem();
+			$file_content  = $wp_filesystem->get_contents( $wpconfig_filepath );
+			$pattern       = '@# BEGIN SecuPress Correct Constants Values(.*)# END SecuPress\s*?@Us';
+
+			if ( preg_match( $pattern, $file_content, $matches ) ) {
+				$new_content = $matches[1];
+				$replaced    = array();
+				$constants   = array(
+					'DISALLOW_FILE_EDIT'       => 'file-edit',
+					'DISALLOW_UNFILTERED_HTML' => 'unfiltered-html',
+					'ALLOW_UNFILTERED_UPLOADS' => 'unfiltered-uploads',
+				);
+
+				foreach ( $constants as $constant => $submodule_part ) {
+					$pattern     = "@^\s*define\s*\(\s*[\"']{$constant}[\"'].*@m";
+					$tmp_content = preg_replace( $pattern, '', $new_content );
+
+					if ( null !== $tmp_content && $tmp_content !== $new_content ) {
+						// The constant was in the block and has been removed.
+						$replaced[]  = 'wp-config-constant-' . $submodule_part;
+						$new_content = $tmp_content;
+					}
+				}
+
+				if ( $replaced ) {
+					if ( trim( $new_content ) === '' ) {
+						// No constants left, remove the marker too.
+						$new_content = '';
+					} else {
+						$new_content = str_replace( $matches[1], $new_content, $matches[0] );
+					}
+
+					// Remove the old constants.
+					$new_content = str_replace( $matches[0], $new_content, $file_content );
+					$wp_filesystem->put_contents( $wpconfig_filepath, $new_content, FS_CHMOD_FILE );
+
+					// Activate the new sub-modules.
+					foreach ( $replaced as $submodule ) {
+						secupress_activate_submodule( 'wordpress-core', $submodule );
+					}
+				}
+			}
+		}
+	}
 }
