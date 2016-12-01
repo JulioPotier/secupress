@@ -1,11 +1,11 @@
 <?php
-/*
-Module Name: Block Bad Url Length
-Description: Block requests containing more than 300 (default) chars in URL
-Main Module: firewall
-Author: SecuPress
-Version: 1.0
-*/
+/**
+ * Module Name: Block Bad URL Length
+ * Description: Block requests containing more than 300 (default) chars in URL.
+ * Main Module: firewall
+ * Author: SecuPress
+ * Version: 1.0
+ */
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 $parse_url = explode( '?', $_SERVER['REQUEST_URI'] );

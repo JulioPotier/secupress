@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /* MAKE SURE OUR LISTS ARE NOT EMPTY: FILTER OUTPUT ============================================= */
 /*------------------------------------------------------------------------------------------------*/
 
-// bad User Agents.
+// Bad User Agents.
 
 add_filter( 'pre_secupress_get_module_option_bbq-headers_user-agents-list', 'secupress_firewall_pre_bbq_headers_user_agents_list_default_if_empty', PHP_INT_MAX, 3 );
 /**
@@ -110,4 +110,37 @@ function secupress_firewall_bbq_url_content_bad_contents_list_default_if_empty( 
  */
 function secupress_firewall_bbq_url_content_bad_contents_list_default() {
 	return 'AND 1=, AND+1=, AND%201=, information_schema, UNI' . 'ON SEL' . 'ECT, UNI' . 'ON+SEL' . 'ECT, UNI' . 'ON%20SEL' . 'ECT, UNI' . 'ON ALL SEL' . 'ECT, UNI' . 'ON+ALL+SEL' . 'ECT, UNI' . 'ON%20ALL%20SEL' . 'ECT, ev' . 'al(, wp-config.php, %' . '00, %%' . '30%' . '30, GLOBALS[, .ini, REQUEST[, et' . 'c/pas' . 'swd, ba' . 'se' . '64' . '_en' . 'co' . 'de, ba' . 'se' . '64' . '_de' . 'co' . 'de, javascript:, ../, 127.0.0.1, inp' . 'ut_fi' . 'le';
+}
+
+
+/*------------------------------------------------------------------------------------------------*/
+/* OTHER ======================================================================================== */
+/*------------------------------------------------------------------------------------------------*/
+
+add_filter( 'secupress_block_id', 'secupress_firewall_block_id' );
+/**
+ * Translate block IDs into understandable things.
+ *
+ * @since 1.1.4
+ * @author Grégory Viguier
+ *
+ * @param (string) $module The related module.
+ *
+ * @return (string) The block ID.
+ */
+function secupress_firewall_block_id( $module ) {
+	$block_ids = array(
+		// URL Contents.
+		'BUC'  => __( 'Bad URL Contents', 'secupress' ),
+		// URL Length.
+		'BUL'  => __( 'URL Too Long', 'secupress' ),
+		// Request Method.
+		'RMHM' => __( 'Bad Request Method', 'secupress' ),
+		// User-Agent.
+		'UAHE' => __( 'Empty User-Agent', 'secupress' ),
+		'UAHT' => __( 'User-Agent With HTML Tags', 'secupress' ),
+		'UAHB' => __( 'User-Agent Blacklisted', 'secupress' ),
+	);
+
+	return isset( $block_ids[ $module ] ) ? $block_ids[ $module ] : $module;
 }

@@ -383,28 +383,43 @@ function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 	$args = wp_parse_args( $args, array( 'code' => 403, 'content' => '' ) );
 
 	/**
+	 * Allow to give a proper name to the block ID.
+	 *
+	 * @since 1.1.4
+	 *
+	 * @param (string) $module The related module.
+	 */
+	$block_id = apply_filters( 'secupress_block_id', $module );
+
+	if ( $block_id === $module ) {
+		$block_id = ucwords( str_replace( '-', ' ', $block_id ) );
+		$block_id = preg_replace( '/[^0-9A-Z]/', '', $block_id );
+	}
+
+	/**
 	 * Fires before a user is blocked by a certain module.
 	 *
 	 * @since 1.0
+	 * @since 1.1.4 Added `$block_id` argument.
 	 *
-	 * @param (string) $ip   The IP address.
-	 * @param (array)  $args Contains the "code" (def. 403) and a "content" (def. empty), this content will replace the default message.
+	 * @param (string) $ip       The IP address.
+	 * @param (array)  $args     Contains the "code" (def. 403) and a "content" (def. empty), this content will replace the default message.
+	 * @param (string) $block_id The block ID.
 	 */
-	do_action( 'secupress.block.' . $module, $ip, $args );
+	do_action( 'secupress.block.' . $module, $ip, $args, $block_id );
 
 	/**
 	 * Fires before a user is blocked.
 	 *
 	 * @since 1.0
+	 * @since 1.1.4 Added `$block_id` argument.
 	 *
-	 * @param (string) $module The module.
-	 * @param (string) $ip     The IP address.
-	 * @param (array)  $args   Contains the "code" (def. 403) and a "content" (def. empty), this content will replace the default message.
+	 * @param (string) $module   The module.
+	 * @param (string) $ip       The IP address.
+	 * @param (array)  $args     Contains the "code" (def. 403) and a "content" (def. empty), this content will replace the default message.
+	 * @param (string) $block_id The block ID.
 	 */
-	do_action( 'secupress.block', $module, $ip, $args );
-
-	$module = ucwords( str_replace( '-', ' ', $module ) );
-	$module = preg_replace( '/[^0-9A-Z]/', '', $module );
+	do_action( 'secupress.block', $module, $ip, $args, $block_id );
 
 	$title   = $args['code'] . ' ' . get_status_header_desc( $args['code'] );
 	$content = '<h4>' . $title . '</h4>';
@@ -417,8 +432,8 @@ function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 
 	$content  = '<h4>' . __( 'Logged Details:', 'secupress' ) . '</h4><p>';
 	$content .= sprintf( __( 'Your IP: %s', 'secupress' ), $ip ) . '<br>';
-	$content .= sprintf( __( 'Time: %s', 'secupress' ), date_i18n( __( 'F j, Y g:i a' ) ) ) . '<br>';
-	$content .= sprintf( __( 'Block ID: %s', 'secupress' ), $module ) . '</p>';
+	$content .= sprintf( __( 'Time: %s', 'secupress' ), date_i18n( __( 'F j, Y g:i a', 'secupress' ) ) ) . '<br>';
+	$content .= sprintf( __( 'Block ID: %s', 'secupress' ), $block_id ) . '</p>';
 
 	secupress_die( $content, $title, array( 'response' => $args['code'] ) );
 }

@@ -1,11 +1,11 @@
 <?php
-/*
-Module Name: Block Bad URLs Contents
-Description: Block requests containing bad keywords in URL
-Main Module: firewall
-Author: SecuPress
-Version: 1.0
-*/
+/**
+ * Module Name: Block Bad URL Contents
+ * Description: Block requests containing bad keywords in URL.
+ * Main Module: firewall
+ * Author: SecuPress
+ * Version: 1.0
+ */
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 add_action( 'secupress.plugins.loaded', 'secupress_block_bad_url_contents', 0 );
