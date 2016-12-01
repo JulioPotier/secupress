@@ -111,7 +111,7 @@ function secupress_get_scanners() {
 			'DirectoryIndex',
 		),
 		'firewall' => array(
-			'Common_Flaws',
+			'Shellshock',
 			'Bad_User_Agent',
 			'SQLi',
 			'Anti_Scanner',

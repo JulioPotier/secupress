@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
  */
 abstract class SecuPress_Settings extends SecuPress_Singleton {
 
-	const VERSION = '1.0';
+	const VERSION = '1.0.1';
 
 	/**
 	 * Current module: corresponds to the page tab, like `users_login`.
@@ -317,8 +317,6 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		$html_id          = sanitize_html_class( implode( '--', $html_id ) );
 		$with_save_button = ! empty( $this->section_save_buttons[ $section_id ] );
 
-		echo '<div class="secupress-settings-section" id="secupress-settings-' . $html_id . '">';
-
 		/**
 		 * Fires before a section.
 		 *
@@ -327,6 +325,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		 * @param (bool) $with_save_button True if a "Save All Changes" button will be printed.
 		 */
 		do_action( 'secupress.settings.before_section_' . $this->sectionnow, $with_save_button );
+
+		echo '<div class="secupress-settings-section" id="secupress-settings-' . $html_id . '">';
 
 		echo '<div class="secublock">';
 			$this->do_settings_sections();
@@ -349,6 +349,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			call_user_func_array( array( __CLASS__, 'submit_button' ), $args );
 		}
 
+		echo '</div><!-- #secupress-settings-' . $html_id . ' -->';
+
 		/**
 		 * Fires after a section.
 		 *
@@ -357,8 +359,6 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		 * @param (bool) $with_save_button True if a "Save All Changes" button will be printed.
 		 */
 		do_action( 'secupress.settings.after_section_' . $this->sectionnow, $with_save_button );
-
-		echo '</div><!-- #secupress-settings-' . $html_id . ' -->';
 
 		return $this;
 	}

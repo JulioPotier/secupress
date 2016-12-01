@@ -1,11 +1,11 @@
 <?php
-/*
-Module Name: Block Bad User-Agents
-Description: Block requests received with bad user-agents
-Main Module: firewall
-Author: SecuPress
-Version: 1.0
-*/
+/**
+ * Module Name: Block Bad User-Agents
+ * Description: Block requests received with bad user-agents.
+ * Main Module: firewall
+ * Author: SecuPress
+ * Version: 1.1
+ */
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 add_action( 'secupress.plugins.loaded', 'secupress_block_bad_user_agents', 0 );
@@ -36,7 +36,10 @@ function secupress_block_bad_user_agents() {
 		}
 	}
 
-	if ( $bad_user_agents && preg_match( '/' . $bad_user_agents . '/i', $user_agent ) ) {
+	// Shellshock.
+	$bad_user_agents .= ( $bad_user_agents ? '|' : '' ) . '\(.*?\)\s*\{.*?;\s*\}\s*;';
+
+	if ( preg_match( '/' . $bad_user_agents . '/i', $user_agent ) ) {
 		secupress_block( 'UAHB' );
 	}
 }
