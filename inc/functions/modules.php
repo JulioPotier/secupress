@@ -55,7 +55,7 @@ function secupress_get_modules() {
 				__( 'WordPress can be tweaked in so many ways. But are you using the right ones? Let\'s see!', 'secupress' ),
 			),
 			'counts' => array(
-				'free_options' => 2,
+				'free_options' => 5,
 				'pro_options'  => 0,
 			),
 		),
@@ -70,7 +70,7 @@ function secupress_get_modules() {
 				__( 'Preserve your data and avoid losing your content in case of attack.', 'secupress' ),
 			),
 			'counts' => array(
-				'free_options' => 4,
+				'free_options' => 10,
 				'pro_options'  => 3,
 			),
 		),
@@ -102,7 +102,7 @@ function secupress_get_modules() {
 			),
 			'mark_as_pro' => $should_be_pro,
 			'counts' => array(
-				'free_options' => 0,
+				'free_options' => 1,
 				'pro_options'  => 5,
 			),
 		),
@@ -191,8 +191,11 @@ function secupress_get_modules() {
 				'pro_options'  => 0,
 			),
 		),
-
 	);
+
+	if ( class_exists( 'WooCommerce' ) || class_exists( 'SitePress' ) ) {
+		++$modules['sensitive-data']['counts']['free_options'];
+	}
 
 	if ( function_exists( 'secupress_is_white_label' ) && ! secupress_is_white_label() ) {
 		$modules['services'] = array(
