@@ -61,6 +61,8 @@ class SecuPress_Scan_Shellshock extends SecuPress_Scan implements SecuPress_Scan
 	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
 	 */
 	public static function get_messages( $message_id = null ) {
+		$option   = '<em>' . __( 'Block Bad User-Agents', 'secupress' ) . '</em>';
+		$link     = '<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-headers_user-agents-header">' . __( 'Firewall', 'secupress' ) . '</a>';
 		$messages = array(
 			// "good"
 			0   => __( 'The server is not vulnerable to <strong>Shellshock</strong>.', 'secupress' ),
@@ -69,18 +71,24 @@ class SecuPress_Scan_Shellshock extends SecuPress_Scan implements SecuPress_Scan
 			100 => sprintf(
 				__( 'Unable to determine the status of the <strong>Shellshock</strong> flaw (%1$s). But you can activate the %2$s protection manually from the module %3$s.', 'secupress' ),
 				'<em>CVE-2014-6271</em>',
-				'<em>' . __( 'Block Bad User-Agents', 'secupress' ) . '</em>',
-				'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-headers_user-agents-header">' . __( 'Firewall', 'secupress' ) . '</a>'
+				$option,
+				$link
 			),
 			101 => sprintf(
 				__( 'Unable to determine the status of the <strong>Shellshock</strong> flaw (%1$s). But you can activate the %2$s protection manually from the module %3$s.', 'secupress' ),
 				'<em>CVE-2014-7169</em>',
-				'<em>' . __( 'Block Bad User-Agents', 'secupress' ) . '</em>',
-				'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-headers_user-agents-header">' . __( 'Firewall', 'secupress' ) . '</a>'
+				$option,
+				$link
+			),
+			102 => sprintf(
+				__( 'Unable to determine the status of the <strong>Shellshock</strong> flaw. But you can activate the %1$s protection manually from the module %2$s.', 'secupress' ),
+				$option,
+				$link
 			),
 			// "bad"
 			200 => sprintf( __( 'The server appears to be vulnerable to <strong>Shellshock</strong> (%s).', 'secupress' ), '<em>CVE-2014-6271</em>' ),
 			201 => sprintf( __( 'The server appears to be vulnerable to <strong>Shellshock</strong> (%s).', 'secupress' ), '<em>CVE-2014-7169</em>' ),
+			202 => __( 'The server may be vulnerable to <strong>Shellshock</strong>.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -107,38 +115,60 @@ class SecuPress_Scan_Shellshock extends SecuPress_Scan implements SecuPress_Scan
 			return parent::scan();
 		}
 
-		$env  = array( 'SHELL_SHOCK_TEST' => '() { :;}; echo VULNERABLE' );
-		$desc = array(
-			0 => array( 'pipe', 'r' ),
-			1 => array( 'pipe', 'w' ),
-			2 => array( 'pipe', 'w' ),
-		);
+		if ( function_exists( 'proc_open' ) ) {
+			// Scan with `proc_open()`.
+			$env  = array( 'SHELL_SHOCK_TEST' => '() { :;}; echo VULNERABLE' );
+			$desc = array(
+				0 => array( 'pipe', 'r' ),
+				1 => array( 'pipe', 'w' ),
+				2 => array( 'pipe', 'w' ),
+			);
 
-		// CVE-2014-6271.
-		$p      = proc_open( 'bash -c "echo Test"', $desc, $pipes, null, $env );
-		$output = isset( $pipes[1] ) ? stream_get_contents( $pipes[1] ) : 'error';
-		proc_close( $p );
+			// CVE-2014-6271.
+			$p      = proc_open( 'bash -c "echo Test"', $desc, $pipes, null, $env );
+			$output = isset( $pipes[1] ) ? stream_get_contents( $pipes[1] ) : 'error';
+			proc_close( $p );
 
-		if ( 'error' === $output ) {
-			// "warning"
-			$this->add_message( 100 );
-		} elseif ( false !== strpos( $output, 'VULNERABLE' ) ) {
-			// "bad"
-			$this->add_message( 200 );
-		}
+			if ( 'error' === $output ) {
+				// "warning"
+				$this->add_message( 100 );
+			} elseif ( false !== strpos( $output, 'VULNERABLE' ) ) {
+				// "bad"
+				$this->add_message( 200 );
+			}
 
-		// CVE-2014-7169.
-		$test_date = date( 'Y' );
-		$p         = proc_open( "rm -f echo; env 'x=() { (a)=>\' bash -c \"echo date +%Y\"; cat echo", $desc, $pipes, sys_get_temp_dir() );
-		$output    = isset( $pipes[1] ) ? stream_get_contents( $pipes[1] ) : 'error';
-		proc_close( $p );
+			// CVE-2014-7169.
+			$test_date = date( 'Y' );
+			$p         = proc_open( "rm -f echo; env 'x=() { (a)=>\' bash -c \"echo date +%Y\"; cat echo", $desc, $pipes, sys_get_temp_dir() );
+			$output    = isset( $pipes[1] ) ? stream_get_contents( $pipes[1] ) : 'error';
+			proc_close( $p );
 
-		if ( 'error' === $output ) {
-			// "warning"
-			$this->add_message( 101 );
-		} elseif ( trim( $output ) === $test_date ) {
-			// "bad"
-			$this->add_message( 201 );
+			if ( 'error' === $output ) {
+				// "warning"
+				$this->add_message( 101 );
+			} elseif ( trim( $output ) === $test_date ) {
+				// "bad"
+				$this->add_message( 201 );
+			}
+		} else {
+			// Scan by altering the User-Agent.
+			$request_args = $this->get_default_request_args();
+			$request_args['user-agent'] = '() { :;}; echo VULNERABLE';
+			$response     = wp_remote_get( add_query_arg( secupress_generate_key( 6 ), secupress_generate_key( 8 ), user_trailingslashit( home_url() ) ), $request_args );
+
+			if ( ! is_wp_error( $response ) ) {
+
+				if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
+					// "bad"
+					$this->add_message( 202 );
+				} else {
+					// "good"
+					$this->add_message( 0 );
+				}
+			} else {
+				// "warning"
+				$this->add_message( 102 );
+			}
 		}
 
 		// "good"
