@@ -1413,3 +1413,21 @@ label {
 	font-style: normal;
 	color: #222831;
 }
+
+.secupress-files-list-item .secupress-button-primary.secupress-button-ghost {
+	box-shadow: none;
+	padding: 3px 15px;
+	text-transform: none;
+}
+.secupress-files-list-item .secupress-button-primary.secupress-button-ghost .icon {
+	margin-right: 0;
+	padding-right: 7px;
+}
+
+.secupress-files-list-item .secupress-button-primary .icon:after {
+	display: none;
+}
+.secupress-files-list-item .secupress-button-primary .dashicons-plus:before {
+	position: relative;
+	top: 1px;
+}
