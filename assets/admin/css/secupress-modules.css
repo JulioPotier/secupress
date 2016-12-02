@@ -245,6 +245,10 @@ p.secupress-sh-subtitle {
 	border-color: #26B3A9;
 	background: #FFF;
 }
+.secupress-boxed-group .secupress-checkbox:not(:checked) + label:before,
+.secupress-boxed-group .secupress-checkbox:checked + label:before {
+	background: #ECF0F1;
+}
 .secupress-setting-row .secupress-checkbox:not(:checked) + label:after,
 .secupress-setting-row .secupress-checkbox:checked + label:after,
 .secupress-setting-row .secupress-checkbox:not(:checked) + .label-text:after,
@@ -1374,4 +1378,38 @@ label {
 	border: none;
 	cursor: pointer;
 	background-color: transparent;
+}
+
+/* Malwares */
+.secupress-files-list {
+	margin: 0;
+}
+.secupress-boxed-group .secupress-files-list .secupress-files-list-item {
+	margin: .5em 0;
+	font-size: 13px;
+}
+.secupress-files-list-item.secupress-files-list-item label {
+	margin-right: 8px;
+	vertical-align: middle;
+}
+.secupress-inline-alert {
+	display: inline-block;
+	vertical-align: middle;
+	padding: 1px 4px 1px 10px;
+	font-weight: bold;
+	color: #F39C12;
+	background: rgba(241, 196, 15, .15);
+}
+.secupress-inline-alert:before {
+	content: "!";
+	display: inline-block;
+	margin-right: 10px;
+	font-size: 18px;
+	font-weight: bold;
+	color: #F39C12;
+}
+.secupress-inline-alert em {
+	font-weight: 500;
+	font-style: normal;
+	color: #222831;
 }
