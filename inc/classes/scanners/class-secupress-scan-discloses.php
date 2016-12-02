@@ -411,53 +411,45 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 	 */
 	protected function fix_nginx( $todo ) {
 		global $wp_settings_errors;
-		$all_rules = array();
 
 		// WP version disclosure.
 		if ( isset( $todo['wp_version'] ) ) {
 			secupress_activate_submodule( 'discloses', 'wp_version' );
 
-			// Got error?
-			$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
-			$rules      = '<code>Error</code>';
+			// Get the error.
+			$last_error         = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
+			$todo['wp_version'] = '<code>Error</code>';
 
 			if ( $last_error && 'general' === $last_error['setting'] && 'nginx_manual_edit' === $last_error['code'] ) {
-				$rules = static::get_rules_from_error( $last_error );
+				$todo['wp_version'] = static::get_rules_from_error( $last_error );
 				array_pop( $wp_settings_errors );
 			}
-
-			$all_rules['readme'] = $rules;
 		}
 
 		// PHP version disclosure.
 		if ( isset( $todo['php_version'] ) ) {
 			secupress_activate_submodule( 'discloses', 'no-x-powered-by' );
 
-			// Got error?
-			$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
-			$rules      = '<code>Error</code>';
+			// Get the error.
+			$last_error          = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
+			$todo['php_version'] = '<code>Error</code>';
 
 			if ( $last_error && 'general' === $last_error['setting'] && 'nginx_manual_edit' === $last_error['code'] ) {
-				$rules = static::get_rules_from_error( $last_error );
+				$todo['php_version'] = static::get_rules_from_error( $last_error );
 				array_pop( $wp_settings_errors );
 			}
-
-			$all_rules['php_version'] = $rules;
 		}
 
-		if ( $all_rules ) {
-			if ( isset( $all_rules['php_version'], $all_rules['wp_version'] ) ) {
-				$all_rules = implode( "\n", $all_rules );
-				// "cantfix"
-				$this->add_fix_message( 300, array( $all_rules ) );
-			} elseif ( isset( $all_rules['php_version'] ) ) {
-				// "cantfix"
-				$this->add_fix_message( 304, array( $all_rules['php_version'] ) );
-			} else {
-				$all_rules = implode( "\n", $all_rules );
-				// "cantfix"
-				$this->add_fix_message( 305, array( $all_rules['readme'] ) );
-			}
+		if ( isset( $todo['php_version'], $todo['wp_version'] ) ) {
+			$todo = implode( "\n", $todo );
+			// "cantfix"
+			$this->add_fix_message( 300, array( $todo ) );
+		} elseif ( isset( $todo['php_version'] ) ) {
+			// "cantfix"
+			$this->add_fix_message( 304, array_values( $todo ) );
+		} else {
+			// "cantfix"
+			$this->add_fix_message( 305, array_values( $todo ) );
 		}
 	}
 }
