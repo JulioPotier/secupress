@@ -123,9 +123,9 @@ if ( ! $secupress_tests ) {
 	$main_button   =
 		'<a href="' . esc_url( secupress_admin_url( 'scanners' ) ) . '&step=4" class="secupress-button shadow light">
 			<span class="icon">
-				<i class="icon-cross" aria-hidden="true"></i>
+				<i class="dashicons dashicons-controls-forward" aria-hidden="true"></i>
 			</span>
-			<span class="text">' . __( 'Ignore this step', 'secupress' ) . '</span>
+			<span class="text">' . __( 'Ignore all &amp; Go to the next step', 'secupress' ) . '</span>
 		</a>';
 	?>
 	<p class="secupress-step-title"><?php echo $page_title; ?></p>
