@@ -314,7 +314,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 
 		// WP version disclosure.
 		if ( isset( $todo['wp_version'] ) ) {
-			secupress_activate_submodule( 'discloses', 'wp_version' );
+			secupress_activate_submodule( 'discloses', 'wp-version' );
 
 			// Got error?
 			$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
@@ -364,7 +364,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 
 		// WP version disclosure.
 		if ( isset( $todo['wp_version'] ) ) {
-			secupress_activate_submodule( 'discloses', 'wp_version' );
+			secupress_activate_submodule( 'discloses', 'wp-version' );
 
 			// Got error?
 			$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
@@ -415,7 +415,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 
 		// WP version disclosure.
 		if ( isset( $todo['wp_version'] ) ) {
-			secupress_activate_submodule( 'discloses', 'wp_version' );
+			secupress_activate_submodule( 'discloses', 'wp-version' );
 
 			// Got error?
 			$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
