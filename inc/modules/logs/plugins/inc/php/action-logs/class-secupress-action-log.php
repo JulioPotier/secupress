@@ -246,6 +246,14 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *                 - (array)  $server The `$_SERVER` superglobal.
 	 */
 	protected function pre_process_action_secupress_block( $module, $ip, $args = null, $block_id = null ) {
+		$whitelisted     = secupress_ip_is_whitelisted( $ip );
+		$is_scan_request = secupress_is_scan_request(); // Used to bypass the whitelist for scans.
+
+		if ( $whitelisted && ! $is_scan_request ) {
+			// Will not be blocked.
+			return array();
+		}
+
 		$url      = wp_make_link_relative( secupress_get_current_url() );
 		$posted   = ! empty( $_POST ) ? $_POST : _x( 'None', 'data', 'secupress' ); // WPCS: CSRF ok.
 		$block_id = isset( $block_id ) ? $block_id : $module;
