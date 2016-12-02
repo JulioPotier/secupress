@@ -1253,6 +1253,7 @@ a + .secupress-row-actions {
 }
 .secupress-mf-content .secupress-action-doc {
 	margin: 0 -10px;
+	text-align: left;
 }
 .secupress-mf-content .secupress-actions .secupress-button {
 	margin: 5px 20px;
