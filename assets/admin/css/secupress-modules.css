@@ -1395,23 +1395,27 @@ label {
 .secupress-inline-alert {
 	display: inline-block;
 	vertical-align: middle;
-	padding: 1px 4px 1px 10px;
-	font-weight: bold;
+}
+p > .secupress-inline-alert {
 	color: #F39C12;
-	background: rgba(241, 196, 15, .15);
+	font-weight: bold;
 }
 .secupress-inline-alert:before {
 	content: "!";
 	display: inline-block;
-	margin-right: 10px;
+	width: 22px;
+	height: 21px;
+	padding-top: 1px;
 	font-size: 18px;
+	line-height: 18px;
 	font-weight: bold;
+	text-align: center;
 	color: #F39C12;
+	background: rgba(241, 196, 15, .15);
+	border-radius: 50%;
 }
-.secupress-inline-alert em {
-	font-weight: 500;
-	font-style: normal;
-	color: #222831;
+p > .secupress-inline-alert:before {
+	margin-right: 5px;	
 }
 
 .secupress-files-list-item .secupress-button-primary.secupress-button-ghost {
@@ -1419,8 +1423,12 @@ label {
 	padding: 3px 15px;
 	text-transform: none;
 }
+.secupress-files-list-item .secupress-button-primary.secupress-button-ghost .text {
+	vertical-align: -1px;
+}
 .secupress-files-list-item .secupress-button-primary.secupress-button-ghost .icon {
 	margin-right: 0;
+	margin-left: -8px;
 	padding-right: 7px;
 }
 
@@ -1430,4 +1438,8 @@ label {
 .secupress-files-list-item .secupress-button-primary .dashicons-plus:before {
 	position: relative;
 	top: 1px;
+}
+.secupress-files-list-item .secupress-button-primary:hover {
+	background: transparent;
+	color: #26B3A9;
 }
