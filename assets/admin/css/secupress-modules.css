@@ -245,6 +245,10 @@ p.secupress-sh-subtitle {
 	border-color: #26B3A9;
 	background: #FFF;
 }
+.secupress-boxed-group .secupress-checkbox:not(:checked) + label:before,
+.secupress-boxed-group .secupress-checkbox:checked + label:before {
+	background: #ECF0F1;
+}
 .secupress-setting-row .secupress-checkbox:not(:checked) + label:after,
 .secupress-setting-row .secupress-checkbox:checked + label:after,
 .secupress-setting-row .secupress-checkbox:not(:checked) + .label-text:after,
@@ -1374,4 +1378,68 @@ label {
 	border: none;
 	cursor: pointer;
 	background-color: transparent;
+}
+
+/* Malwares */
+.secupress-files-list {
+	margin: 0;
+}
+.secupress-boxed-group .secupress-files-list .secupress-files-list-item {
+	margin: .5em 0;
+	font-size: 13px;
+}
+.secupress-files-list-item.secupress-files-list-item label {
+	margin-right: 8px;
+	vertical-align: middle;
+}
+.secupress-inline-alert {
+	display: inline-block;
+	vertical-align: middle;
+}
+p > .secupress-inline-alert {
+	color: #F39C12;
+	font-weight: bold;
+}
+.secupress-inline-alert:before {
+	content: "!";
+	display: inline-block;
+	width: 22px;
+	height: 21px;
+	padding-top: 1px;
+	font-size: 18px;
+	line-height: 18px;
+	font-weight: bold;
+	text-align: center;
+	color: #F39C12;
+	background: rgba(241, 196, 15, .15);
+	border-radius: 50%;
+}
+p > .secupress-inline-alert:before {
+	margin-right: 5px;	
+}
+
+.secupress-files-list-item .secupress-button-primary.secupress-button-ghost {
+	box-shadow: none;
+	padding: 3px 15px;
+	text-transform: none;
+}
+.secupress-files-list-item .secupress-button-primary.secupress-button-ghost .text {
+	vertical-align: -1px;
+}
+.secupress-files-list-item .secupress-button-primary.secupress-button-ghost .icon {
+	margin-right: 0;
+	margin-left: -8px;
+	padding-right: 7px;
+}
+
+.secupress-files-list-item .secupress-button-primary .icon:after {
+	display: none;
+}
+.secupress-files-list-item .secupress-button-primary .dashicons-plus:before {
+	position: relative;
+	top: 1px;
+}
+.secupress-files-list-item .secupress-button-primary:hover {
+	background: transparent;
+	color: #26B3A9;
 }
