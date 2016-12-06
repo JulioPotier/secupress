@@ -23,7 +23,7 @@ function secupress_services_settings_callback( $settings ) {
 	}
 
 	secupress_require_class( 'Admin', 'Support' );
-	SecuPress_Admin_Support::get_instance()->ask_support( $settings );
+	new SecuPress_Admin_Support( $settings );
 
 	return array( 'sanitized' => 1 );
 }

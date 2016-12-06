@@ -9,16 +9,9 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
  * @since 1.1.4
  * @author Grégory Viguier
  */
-class SecuPress_Admin_Support extends SecuPress_Singleton {
+class SecuPress_Admin_Support {
 
-	const VERSION = '1.0';
-
-	/**
-	 * The reference to the instance of this class.
-	 *
-	 * @var (object)
-	 */
-	protected static $_instance;
+	const VERSION = '1.1';
 	/**
 	 * The data sent by the user.
 	 *
@@ -61,7 +54,7 @@ class SecuPress_Admin_Support extends SecuPress_Singleton {
 	 *
 	 * @param (array) $settings An array containing the data sent by the user.
 	 */
-	public function ask_support( $settings ) {
+	public function __construct( $settings ) {
 		// Set the data sent by the user.
 		$this->settings = array_merge( array(
 			'support_summary'     => '',
@@ -120,8 +113,9 @@ class SecuPress_Admin_Support extends SecuPress_Singleton {
 			 *                                 - (string) $is_ssl            Tell if SSL is used in back and front: Yes or No.
 			 *                                 - (string) $server_type       Apache, Nginx, or IIS.
 			 *                                 - (string) $wp_active_plugins List of active WordPress plugins.
+			 * @param (object) $this        This `SecuPress_Admin_Support` instance.
 			 */
-			do_action( 'secupress.services.ask_for_support', $summary, $description, $data );
+			do_action( 'secupress.services.ask_for_support', $summary, $description, $data, $this );
 		} elseif ( ! $this->get_summary() ) {
 			// The summary is missing.
 			add_settings_error( 'general', 'no_summary', __( 'Could you please give a short summary of your question?', 'secupress' ) );
