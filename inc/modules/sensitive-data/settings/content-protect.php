@@ -63,7 +63,7 @@ if ( $is_plugin_active && function_exists( 'secupress_hotlink_get_apache_rules' 
 	elseif ( $is_apache && ! secupress_root_file_is_writable( '.htaccess' ) ) {
 		/** Translators: %s is a file name. */
 		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>.htaccess</code>' );
-		$rules   = secupress_hotlink_get_apache_rules();
+		$rules   = trim( secupress_hotlink_get_apache_rules() );
 		$rules   = "# BEGIN SecuPress hotlink\n$rules\n# END SecuPress";
 	}
 	// IIS7.
@@ -119,7 +119,7 @@ if ( $is_plugin_active && function_exists( 'secupress_directory_listing_apache_r
 	elseif ( $is_apache && ! secupress_root_file_is_writable( '.htaccess' ) ) {
 		/** Translators: %s is a file name. */
 		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>.htaccess</code>' );
-		$rules   = secupress_directory_listing_apache_rules();
+		$rules   = trim( secupress_directory_listing_apache_rules() );
 		$rules   = "# BEGIN SecuPress directory_listing\n$rules\n# END SecuPress";
 	}
 	// IIS7.
@@ -177,7 +177,7 @@ if ( $is_plugin_active && function_exists( 'secupress_php_disclosure_apache_rule
 	elseif ( $is_apache && ! secupress_root_file_is_writable( '.htaccess' ) ) {
 		/** Translators: %s is a file name. */
 		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>.htaccess</code>' );
-		$rules   = secupress_php_disclosure_apache_rules();
+		$rules   = trim( secupress_php_disclosure_apache_rules() );
 		$rules   = "# BEGIN SecuPress php_disclosure\n$rules\n# END SecuPress";
 	}
 	// IIS7.
@@ -233,7 +233,7 @@ if ( $is_plugin_active && function_exists( 'secupress_no_x_powered_by_apache_rul
 	elseif ( $is_apache && ! secupress_root_file_is_writable( '.htaccess' ) ) {
 		/** Translators: %s is a file name. */
 		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>.htaccess</code>' );
-		$rules   = secupress_no_x_powered_by_apache_rules();
+		$rules   = trim( secupress_no_x_powered_by_apache_rules() );
 		$rules   = "# BEGIN SecuPress no_x_powered_by\n$rules\n# END SecuPress";
 	}
 	// IIS7.
@@ -289,7 +289,7 @@ if ( $is_plugin_active && function_exists( 'secupress_wp_version_apache_rules' )
 	elseif ( $is_apache && ! secupress_root_file_is_writable( '.htaccess' ) ) {
 		/** Translators: %s is a file name. */
 		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>.htaccess</code>' );
-		$rules   = secupress_wp_version_apache_rules();
+		$rules   = trim( secupress_wp_version_apache_rules() );
 		$rules   = "# BEGIN SecuPress wp_version\n$rules\n# END SecuPress";
 	}
 	// IIS7.
@@ -345,7 +345,7 @@ if ( $is_plugin_active && function_exists( 'secupress_bad_url_access_apache_rule
 	elseif ( $is_apache && ! secupress_root_file_is_writable( '.htaccess' ) ) {
 		/** Translators: %s is a file name. */
 		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>.htaccess</code>' );
-		$rules   = secupress_bad_url_access_apache_rules();
+		$rules   = trim( secupress_bad_url_access_apache_rules() );
 		$rules   = "# BEGIN SecuPress bad_url_access\n$rules\n# END SecuPress";
 	}
 	// IIS7.
@@ -402,7 +402,7 @@ if ( $is_plugin_active && function_exists( 'secupress_protect_readmes_apache_rul
 	elseif ( $is_apache && ! secupress_root_file_is_writable( '.htaccess' ) ) {
 		/** Translators: %s is a file name. */
 		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>.htaccess</code>' );
-		$rules   = secupress_protect_readmes_apache_rules();
+		$rules   = trim( secupress_protect_readmes_apache_rules() );
 		$rules   = "# BEGIN SecuPress readme_discloses\n$rules\n# END SecuPress";
 	}
 	// IIS7.
