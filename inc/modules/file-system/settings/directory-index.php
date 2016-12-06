@@ -40,7 +40,7 @@ if ( $is_plugin_active && function_exists( 'secupress_directory_index_apache_rul
 	elseif ( $is_apache && ! secupress_root_file_is_writable( '.htaccess' ) ) {
 		/** Translators: %s is a file name. */
 		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>.htaccess</code>' );
-		$rules   = secupress_directory_index_apache_rules();
+		$rules   = trim( secupress_directory_index_apache_rules() );
 		$rules   = "# BEGIN SecuPress directory_index\n$rules\n# END SecuPress";
 	}
 	// IIS7.
