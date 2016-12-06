@@ -114,8 +114,8 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 			// "warning"
 			100 => __( 'This fix is <strong>pending</strong>, please reload the page to apply it now.', 'secupress' ),
 			// "bad"
-			/** Translators: 1 is a file name, 2 is a constant name. */
-			201 => sprintf( __( 'In your %1$s file, the PHP constant %2$s should not be set with the default value.', 'secupress' ), '<code>wp-config.php</code>', '%s' ),
+			/** Translators: %s is a constant name. */
+			201 => sprintf( __( 'The PHP constant %s is defined with the default value, it should be modified.', 'secupress' ), '<code>COOKIEHASH</code>' ),
 			/** Translators: 1 is a file name, 2 is a constant name. */
 			202 => sprintf( __( 'In your %1$s file, the PHP constant %2$s should be set.', 'secupress' ), '<code>wp-config.php</code>', '%s' ),
 			207 => $message_207,
@@ -163,7 +163,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 
 		if ( $check ) {
 			// "bad"
-			$this->add_message( 201, array( '<code>COOKIEHASH</code>' ) );
+			$this->add_message( 201 );
 		}
 
 		// NOBLOGREDIRECT.
