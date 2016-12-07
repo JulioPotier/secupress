@@ -57,7 +57,7 @@
 	font-size: 35px;
 	color: #26B3A9;
 }
-.secupress-label-with-icon .icon-secupress {
+.secupress-label-with-icon .secupress-icon-secupress {
 	top: 2px;
 }
 .secupress-label-with-icon i.rounded {
@@ -209,8 +209,8 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 	position: relative;
 	padding: 16px 10px;
 }
-.secupress-introduce-first-scan .icon-secupress:before,
-.secupress-rescan-progress-infos .icon-secupress:before {
+.secupress-introduce-first-scan .secupress-icon-secupress:before,
+.secupress-rescan-progress-infos .secupress-icon-secupress:before {
 	display: inline-block;
 	margin-bottom: .25em;
 	font-size: 65px;
@@ -406,7 +406,7 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 .secupress-not-scanned-yet .secupress-close-moreinfo {
 	display: none;
 }
-.secupress-close-moreinfo .icon-cross:before {
+.secupress-close-moreinfo .secupress-icon-cross:before {
 	vertical-align: -1.5px;
 }
 .secupress-close-moreinfo {
@@ -756,7 +756,7 @@ a + .secupress-row-actions {
 .secupress-reports-list i:before {
 	font-size: 1.15em;
 }
-.secupress-reports-list .icon-minus:before {
+.secupress-reports-list .secupress-icon-minus:before {
 	font-size: 1.45em;
 }
 .secupress-reports-list .dashicons-arrow-right-alt2 {
@@ -821,13 +821,13 @@ a + .secupress-row-actions {
 .secupress-item-all .secupress-button-mini.secupress-button-mini .icon {
 	margin: 0 2px 0 -3px;
 }
-.secupress-item-all .secupress-button-mini.secupress-button-mini .icon-shield {
+.secupress-item-all .secupress-button-mini.secupress-button-mini .secupress-icon-shield {
 	vertical-align: -1.25px;
 }
 
 /* Scanning & Fixing animations */
 
-.secupress-item-all.scanning .icon-refresh {
+.secupress-item-all.scanning .secupress-icon-refresh {
 	animation: rotation 2s infinite linear;
 }
 @keyframes rotation {
@@ -836,9 +836,9 @@ a + .secupress-row-actions {
 	}
 }
 
-.secupress-item-all.fixing .icon-shield,
-.secupress-mf-content.fixing .icon-shield,
-.secupress-mf-content.scanning .icon-shield {
+.secupress-item-all.fixing .secupress-icon-shield,
+.secupress-mf-content.fixing .secupress-icon-shield,
+.secupress-mf-content.scanning .secupress-icon-shield {
 	animation: rotateshield 2s infinite linear;
 }
 @keyframes rotateshield {
@@ -1324,14 +1324,14 @@ a + .secupress-row-actions {
 .secupress-item-details.secupress-open:before {
 	top: -11px;
 }
-.secupress-details-icon .icon-i {
+.secupress-details-icon .secupress-icon-i {
 	font-size: 2.7em;
 	line-height: 1;
 }
 .secupress-details-icon {
 	text-align: center;
 }
-.secupress-details-icon .icon-i:before {
+.secupress-details-icon .secupress-icon-i:before {
 	border-width: 2px;
 	border-color: #ADB1B7;
 	color: #ADB1B7;
@@ -1406,8 +1406,8 @@ a + .secupress-row-actions {
 	padding-right: 0;
 }
 
-a:hover .icon-cog,
-a:focus .icon-cog {
+a:hover .secupress-icon-cog,
+a:focus .secupress-icon-cog {
 	display: inline-block;
 	animation: 2s linear 0s infinite rotation;
 	transform-origin: 5.6px 7.0px 0;

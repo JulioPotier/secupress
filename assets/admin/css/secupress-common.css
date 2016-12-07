@@ -315,7 +315,7 @@
 	margin-right: 4px;
 	color: #2BCDC1;
 }
-.secupress-icon-right .icon {
+.secupress-secupress-icon-right .icon {
 	float: right;
 	margin: 0 0 0 4px;
 }
@@ -346,10 +346,10 @@
 	display: none;
 	visibility: hidden;
 }
-.icon-angle-down {
+.secupress-icon-angle-down {
 	transition: transform 0.275s;
 }
-.secupress-activated .icon-angle-down {
+.secupress-activated .secupress-icon-angle-down {
 	transform: rotate(180deg);
 }
 
@@ -835,7 +835,7 @@ body[class*="secupress"] .sweet-overlay {
 .secupress-blob-icon {
 	padding: 10px 0;
 }
-.secupress-blob-icon [class^="icon-"]:before {
+.secupress-blob-icon [class^="secupress-icon-"]:before {
 	color: #2BCDC1;
 	font-size: 65px;
 }
@@ -863,7 +863,7 @@ body[class*="secupress"] .sweet-overlay {
 	font-size: 55px;
 	color: rgba(90, 98, 111, 0.5);
 }
-.secupress-landscape-blob .icon-antispam:before {
+.secupress-landscape-blob .secupress-icon-antispam:before {
 	font-size: 40px;
 }
 .secupress-pro-advantages .secupress-blob-title {

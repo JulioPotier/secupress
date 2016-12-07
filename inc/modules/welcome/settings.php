@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 	<?php if ( ! secupress_is_pro() ) { ?>
 		<div class="secupress-section-gray-dark secupress-section-mini secupress-flex">
 			<div class="secupress-col-1-4 secupress-col-icon">
-				<i class="icon-secupress-simple" aria-hidden="true"></i>
+				<i class="secupress-icon-secupress-simple" aria-hidden="true"></i>
 			</div>
 			<div class="secupress-col-2-4 secupress-col-text">
 				<p class="secupress-text-basup"><?php _e( 'Get a better score and unlock all features', 'secupress' ); ?></p>
@@ -51,7 +51,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 				<p><?php _e( 'The scanner is able to activate some options, feel free to check the module\'s options for more.', 'secupress' ); ?></p>
 			</div>
 			<div class="secupress-dh-counts secupress-flex">
-				<div class="secupress-dhc-icon"><i class="icon-info-disk" aria-hidden="true"></i></div>
+				<div class="secupress-dhc-icon"><i class="secupress-icon-info-disk" aria-hidden="true"></i></div>
 				<div class="secupress-dhc-texts">
 					<p class="secupress-primary"><?php printf( _n( '%d free option available', '%d free options available', $option_counts['free'], 'secupress' ), $option_counts['free'] ); ?></p>
 					<p class="secupress-tertiary"><?php printf( _n( '%d pro option available', '%d pro options available', $option_counts['pro'], 'secupress' ), $option_counts['pro'] ); ?></p>
@@ -71,13 +71,13 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 			$pro_info     = ! empty( $mod['mark_as_pro'] )            ? $pro_info + 1                  : $pro_info;
 			$free_options = ! empty( $mod['counts']['free_options'] ) ? $mod['counts']['free_options'] : 0;
 			$av_options   = ! empty( $mod['mark_as_pro'] )            ? _n( '%d free option available', '%d free options available', $free_options,  'secupress' ) : _n( '%d option available', '%d options available', $free_options, 'secupress' );
-			$nb_options   = ! empty( $mod['counts']['free_options'] ) ? '<span class="secupress-mb-title-datas"><i class="icon-info-disk secupress-primary" aria-hidden="true"></i>' . sprintf( $av_options, $mod['counts']['free_options'] ) . '</span>' : '';
+			$nb_options   = ! empty( $mod['counts']['free_options'] ) ? '<span class="secupress-mb-title-datas"><i class="secupress-icon-info-disk secupress-primary" aria-hidden="true"></i>' . sprintf( $av_options, $mod['counts']['free_options'] ) . '</span>' : '';
 
 			if ( 1 === $pro_info ) {
 			?>
 			<div class="secupress-module-box secupress-flex secupress-module-box-get-pro">
 				<div class="secupress-mb-icon">
-					<i class="icon-secupress-simple" aria-hidden="true"></i>
+					<i class="secupress-icon-secupress-simple" aria-hidden="true"></i>
 				</div>
 				<div class="secupress-mb-texts">
 					<p class="secupress-mb-title"><?php _e( 'Get Pro and unlock more awesome features!', 'secupress' ); ?></p>
@@ -86,7 +86,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 				<p class="secupress-mb-action">
 					<a href="<?php echo esc_url( secupress_admin_url( 'modules', $slug ) ); ?>" class="secupress-button-tertiary">
 						<span class="icon">
-							<i class="icon-secupress-simple" aria-hidden="true"></i>
+							<i class="secupress-icon-secupress-simple" aria-hidden="true"></i>
 						</span>
 						<span class="text"><?php _e( 'Get Pro', 'secupress' ); ?></span>
 					</a>
@@ -97,7 +97,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 			?>
 			<div class="secupress-module-box secupress-flex secupress-module-box-<?php echo sanitize_key( $slug ); ?>">
 				<div class="secupress-mb-icon">
-					<i class="icon-<?php echo $mod['icon']; ?>" aria-hidden="true"></i>
+					<i class="secupress-icon-<?php echo $mod['icon']; ?>" aria-hidden="true"></i>
 				</div>
 				<div class="secupress-mb-texts">
 					<p class="secupress-mb-title">

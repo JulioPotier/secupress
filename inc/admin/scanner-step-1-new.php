@@ -6,14 +6,14 @@
 		<div class="secupress-sg-header secupress-flex secupress-flex-spaced">
 
 			<div class="secupress-sgh-name">
-				<i class="icon-secupress" aria-hidden="true"></i>
+				<i class="secupress-icon-secupress" aria-hidden="true"></i>
 				<p class="secupress-sgh-title"><?php printf( esc_html__( '%sNew Items', 'secupress' ), ( SECUPRESS_PLUGIN_NAME === 'SecuPress' ? SECUPRESS_PLUGIN_NAME . ' ' . SECUPRESS_VERSION . ' ' : '' ) ); ?></p>
 				<p class="secupress-sgh-description"><?php _e( 'These new items need to be checked: You will need to rescan your website.', 'secupress' ); ?></p>
 			</div>
 
 			<div class="secupress-sgh-actions secupress-flex secupress-flex-top">
 				<button class="secupress-vnormal hide-if-no-js dont-trigger-hide trigger-hide-first" type="button" data-trigger="slidetoggle" data-target="secupress-group-content-new">
-					<i class="icon-angle-up" aria-hidden="true"></i>
+					<i class="secupress-icon-angle-up" aria-hidden="true"></i>
 					<span class="screen-reader-text"><?php _e( 'Show/Hide panel', 'secupress' ); ?></span>
 				</button>
 			</div>
@@ -63,7 +63,7 @@
 				<p class="secupress-row-actions">
 					<a class="secupress-button secupress-button-mini secupress-scanit hide-if-js" href="<?php echo esc_url( $scan_nonce_url ); ?>">
 						<span class="icon" aria-hidden="true">
-							<i class="icon-refresh"></i>
+							<i class="secupress-icon-refresh"></i>
 						</span>
 						<span class="text">
 							<?php _ex( 'Scan', 'verb', 'secupress' ); ?>
@@ -81,13 +81,13 @@
 					<button data-trigger="slidetoggle" data-target="details-<?php echo $class_name_part; ?>" class="secupress-details link-like hide-if-no-js" type="button">
 						<span class="secupress-toggle-button">
 							<span aria-hidden="true" class="icon">
-								<i class="icon-info-disk"></i>
+								<i class="secupress-icon-info-disk"></i>
 							</span>
 							<span class="text"><?php _e( 'Learn more', 'secupress' ); ?></span>
 						</span>
 						<span class="secupress-toggle-button hidden" aria-hidden="true">
 							<span aria-hidden="true" class="icon">
-								<i class="icon-cross"></i>
+								<i class="secupress-icon-cross"></i>
 							</span>
 							<span class="text"><?php _e( 'Close' ); ?></span>
 						</span>
@@ -98,7 +98,7 @@
 			<div class="secupress-item-details hide-if-js" id="details-<?php echo $class_name_part; ?>">
 				<div class="secupress-flex">
 					<span class="secupress-details-icon">
-						<i class="icon-i" aria-hidden="true"></i>
+						<i class="secupress-icon-i" aria-hidden="true"></i>
 					</span>
 					<p class="details-content"><?php echo wp_kses( $current_test->more, $allowed_tags ); ?></p>
 					<span class="secupress-placeholder"></span>

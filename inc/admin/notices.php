@@ -342,14 +342,14 @@ function secupress_warning_no_oneclick_scan_yet() {
 		<div class="secupress-col-1-4 secupress-col-cta">
 			<a class="secupress-button secupress-button-primary secupress-button-scan" href="<?php echo esc_url( wp_nonce_url( secupress_admin_url( 'scanners' ), 'first_oneclick-scan' ) ) . '&oneclick-scan=1'; ?>">
 				<span class="icon">
-					<i class="icon-radar" aria-hidden="true"></i>
+					<i class="secupress-icon-radar" aria-hidden="true"></i>
 				</span>
 				<span class="text">
 					<?php _e( 'Scan my website', 'secupress' ); ?>
 				</span>
 			</a>
 			<a class="secupress-close-notice" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_dismiss-notice&notice_id=oneclick-scan&_wp_http_referer=' . $referer ), 'secupress-notices' ); ?>">
-				<i class="icon-squared-cross" aria-hidden="true"></i>
+				<i class="secupress-icon-squared-cross" aria-hidden="true"></i>
 				<span class="screen-reader-text"><?php _e( 'Close' ); ?></span>
 			</a>
 		</div>

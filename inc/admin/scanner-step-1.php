@@ -59,7 +59,7 @@ foreach ( $new_scans as $key => $new_scan ) {
 					$main_button =
 					'<button class="secupress-button secupress-button-primary secupress-button-scan shadow" type="button" data-nonce="' . esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ) . '">
 						<span class="icon" aria-hidden="true">
-							<i class="icon-radar"></i>
+							<i class="secupress-icon-radar"></i>
 						</span>
 						<span class="text">' . __( 'Scan website', 'secupress' ) . '</span>
 					</button>';
@@ -68,7 +68,7 @@ foreach ( $new_scans as $key => $new_scan ) {
 					$main_button =
 					'<a href="' . secupress_admin_url( 'scanners' ) . '&step=2" class="secupress-button secupress-button-tertiary shadow">
 						<span class="icon">
-							<i class="icon-wrench" aria-hidden="true"></i>
+							<i class="secupress-icon-wrench" aria-hidden="true"></i>
 						</span>
 						<span class="text">' . __( 'Next step', 'secupress' ) . '</span>
 					</a>';
@@ -101,7 +101,7 @@ foreach ( $new_scans as $key => $new_scan ) {
 		<?php if ( secupress_is_pro() ) { ?>
 			<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_export_pdf' ), 'secupress_export_pdf' ) ); ?>" title="<?php esc_attr_e( 'Export this report as PDF file.', 'secupress' ); ?>" class="secupress-button shadow">
 				<span class="icon">
-					<i class="icon-file-pdf-o" aria-hidden="true"></i>
+					<i class="secupress-icon-file-pdf-o" aria-hidden="true"></i>
 				</span>
 				<span class="text">
 					<?php _e( 'Export as PDF', 'secupress' ); ?>
@@ -110,7 +110,7 @@ foreach ( $new_scans as $key => $new_scan ) {
 		<?php } else { ?>
 			<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ) ?>" title="<?php esc_attr_e( 'Get the Pro Version to export this report as PDF file.', 'secupress' ); ?>" target="_blank" class="secupress-button disabled shadow">
 				<span class="icon">
-					<i class="icon-file-pdf-o" aria-hidden="true"></i>
+					<i class="secupress-icon-file-pdf-o" aria-hidden="true"></i>
 				</span>
 				<span class="text">
 					<?php _e( 'Export as PDF', 'secupress' ); ?>
