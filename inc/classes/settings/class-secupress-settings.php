@@ -797,7 +797,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 *                      - (string) $description The text to print.
 	 *                      - (string) $type        The helper type: 'description', 'help', 'warning'.
 	 *                      - (string) $class       A html class to add to the text.
-	 *                      - (string) $depends     Like in `$this->do_settings_fields()`, used to show/hide the helper depending on a field value.
+	 *                      - (string) $depends     Like in `static::do_settings_fields()`, used to show/hide the helper depending on a field value.
 	 */
 	protected static function helpers( $args ) {
 		if ( empty( $args['helpers'] ) || ! is_array( $args['helpers'] ) ) {
