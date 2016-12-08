@@ -429,3 +429,378 @@ function secupress_refresh_bad_themes_list_ajax_post_cb() {
 		update_site_option( 'secupress_bad_themes', wp_remote_retrieve_body( $response ) );
 	}
 }
+
+
+/*------------------------------------------------------------------------------------------------*/
+/* ADMIN POST / AJAX CALLBACKS FOR THE MAIN SETTINGS ============================================ */
+/*------------------------------------------------------------------------------------------------*/
+
+add_action( 'admin_post_secupress_update_global_settings_api-key', 'secupress_global_settings_api_key_ajax_post_cb' );
+/**
+ * Deal with the license.
+ *
+ * @since 1.1.4
+ * @author Grégory Viguier
+ */
+function secupress_global_settings_api_key_ajax_post_cb() {
+	// Make all security tests.
+	secupress_check_user_capability();
+	secupress_check_admin_referer( 'secupress_update_global_settings_api-key' );
+
+	// Previous values.
+	$old_values = get_site_option( SECUPRESS_SETTINGS_SLUG );
+	$old_values = is_array( $old_values ) ? $old_values : array();
+	$old_email  = ! empty( $old_values['consumer_email'] ) ? sanitize_email( $old_values['consumer_email'] )    : '';
+	$old_key    = ! empty( $old_values['consumer_key'] )   ? sanitize_text_field( $old_values['consumer_key'] ) : '';
+	$old_is_pro = ! empty( $old_values['site_is_pro'] )    ? 1 : 0;
+	$has_old    = $old_email && $old_key;
+	$old_email  = $has_old ? $old_email  : '';
+	$old_key    = $has_old ? $old_key    : '';
+	$old_is_pro = $has_old ? $old_is_pro : 0;
+	unset( $old_values['sanitized'] ); // Back compat'.
+	// New values.
+	$values     = ! empty( $_POST['secupress_settings'] ) && is_array( $_POST['secupress_settings'] ) ? $_POST['secupress_settings'] : array();
+	$values     = secupress_array_merge_intersect( $values, array(
+		'consumer_email' => '',
+		'consumer_key'   => '',
+	) );
+	$values['install_time'] = ! empty( $old_values['install_time'] ) ? (int) $old_values['install_time'] : time();
+	$new_email  = $values['consumer_email'] ? sanitize_email( $values['consumer_email'] )    : '';
+	$new_key    = $values['consumer_key']   ? sanitize_text_field( $values['consumer_key'] ) : '';
+	$has_new    = $new_email && $new_key;
+	$new_email  = $has_new ? $new_email : '';
+	$new_key    = $has_new ? $new_key   : '';
+	// Action.
+	$action     = $has_old && $old_is_pro ? 'deactivate' : 'activate';
+
+	if ( ! secupress_has_pro() ) {
+		// The Pro version is not activated.
+		$action = false;
+
+		if ( $has_old ) {
+			// Send the previous values back.
+			$values['consumer_email'] = $old_email;
+			$values['consumer_key']   = $old_key;
+
+			if ( $old_is_pro ) {
+				$values['site_is_pro'] = 1;
+			}
+		} else {
+			// Empty the new values.
+			unset( $values['consumer_email'], $values['consumer_key'] );
+		}
+
+		add_settings_error( 'general', 'response_error', __( 'You must install and activate the Pro version first.', 'secupress' ) );
+	}
+	elseif ( 'deactivate' === $action ) {
+		// To deactivate, use old values.
+		$values['consumer_email'] = $old_email;
+		$values['consumer_key']   = $old_key;
+	}
+	elseif ( $has_new ) {
+		// To activate, use new values.
+		$values['consumer_email'] = $new_email;
+		$values['consumer_key']   = $new_key;
+	}
+	else {
+		// PEBCAK, new values are not good.
+		$action = false;
+
+		if ( ! $values['consumer_email'] && ! $values['consumer_key'] ) {
+			add_settings_error( 'general', 'response_error', __( 'Please provide a valid email address and your license key.', 'secupress' ) );
+		} elseif ( ! $values['consumer_email'] ) {
+			add_settings_error( 'general', 'response_error', __( 'Please provide a valid email address.', 'secupress' ) );
+		} else {
+			add_settings_error( 'general', 'response_error', __( 'Please provide your license key.', 'secupress' ) );
+		}
+
+		if ( $has_old ) {
+			// Send the previous values back.
+			$values['consumer_email'] = $old_email;
+			$values['consumer_key']   = $old_key;
+
+			if ( $old_is_pro ) {
+				$values['site_is_pro'] = 1;
+			}
+		} else {
+			// Empty the new values.
+			unset( $values['consumer_email'], $values['consumer_key'] );
+		}
+	}
+
+	if ( 'deactivate' === $action ) {
+		$values = secupress_global_settings_deactivate_pro_license( $values );
+	} else {
+		$values = secupress_global_settings_activate_pro_license( $values, $old_values );
+
+		if ( empty( $values['site_is_pro'] ) && ! get_settings_errors( 'general' ) ) {
+			add_settings_error( 'general', 'response_error', __( 'Your license key seems invalid.', 'secupress' ) );
+		}
+	}
+
+	// Remove previous values.
+	unset( $old_values['consumer_email'], $old_values['consumer_key'], $old_values['site_is_pro'] );
+
+	// Add other previous values.
+	$values = array_merge( $old_values, $values );
+
+	// Some cleanup.
+	if ( empty( $old_values['wl_plugin_name'] ) || 'SecuPress' === $old_values['wl_plugin_name'] ) {
+		unset( $old_values['wl_plugin_name'] );
+	}
+	if ( empty( $values['wl_plugin_name'] ) || 'SecuPress' === $values['wl_plugin_name'] ) {
+		unset( $values['wl_plugin_name'] );
+	}
+
+	// Finally, save.
+	secupress_update_options( $values );
+
+	// White Label: trick the referrer for the redirection.
+	if ( empty( $values['site_is_pro'] ) && ! empty( $values['wl_plugin_name'] ) ) {
+		$old_slug = ! empty( $old_values['wl_plugin_name'] ) ? sanitize_title( $old_values['wl_plugin_name'] ) : 'secupress';
+		$old_slug = 'page=' . $old_slug . '_settings';
+		$new_slug = 'page=secupress_settings';
+
+		if ( $old_slug !== $new_slug ) {
+			$_REQUEST['_wp_http_referer'] = str_replace( $old_slug, $new_slug, wp_get_raw_referer() );
+		}
+	}
+
+	/**
+	 * Handle settings errors and return to settings page.
+	 */
+	// If no settings errors were registered add a general 'updated' message.
+	if ( ! get_settings_errors( 'general' ) ) {
+		if ( 'deactivate' === $action ) {
+			add_settings_error( 'general', 'settings_updated', __( 'Your license has been successfully deactivated.', 'secupress' ), 'updated' );
+		} else {
+			add_settings_error( 'general', 'settings_updated', __( 'Your license has been successfully activated.', 'secupress' ), 'updated' );
+		}
+	}
+	set_transient( 'settings_errors', get_settings_errors(), 30 );
+
+	/**
+	 * Redirect back to the settings page that was submitted.
+	 */
+	$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
+	wp_redirect( esc_url_raw( $goback ) );
+	exit;
+}
+
+
+/**
+ * Call our server to activate the Pro license.
+ *
+ * @since 1.0
+ * @author Grégory Viguier
+ *
+ * @param (array) $new_values The new settings.
+ * @param (array) $old_values The old settings.
+ *
+ * @return (array) $new_values The new settings, some values may have changed.
+ */
+function secupress_global_settings_activate_pro_license( $new_values, $old_values ) {
+	$api_old_values = secupress_array_merge_intersect( $old_values, array(
+		'consumer_email' => '',
+		'consumer_key'   => '',
+		'site_is_pro'    => 0,
+		'install_time'   => 0,
+	) );
+
+	if ( $new_values['install_time'] > 1 ) {
+		$install_time = time() - $new_values['install_time'];
+	} elseif ( -1 !== $new_values['install_time'] ) {
+		$install_time = 0;
+	} else {
+		$install_time = -1;
+	}
+
+	$url = SECUPRESS_WEB_MAIN . 'key-api/1.0/?' . http_build_query( array(
+		'sp_action'    => 'activate_pro_license',
+		'user_email'   => $new_values['consumer_email'],
+		'user_key'     => $new_values['consumer_key'],
+		'install_time' => $install_time,
+	) );
+
+	$response = wp_remote_get( $url, array( 'timeout' => 10 ) );
+
+	if ( $body = secupress_global_settings_api_request_succeeded( $response, $new_values ) ) {
+		// Success!
+		$new_values['install_time'] = -1;
+		$new_values['consumer_key'] = sanitize_text_field( $body->data->user_key );
+
+		if ( ! empty( $body->data->site_is_pro ) ) {
+			$new_values['site_is_pro'] = 1;
+		} else {
+			unset( $new_values['site_is_pro'] );
+		}
+	} else {
+		// Keep old values.
+		$new_values['consumer_email'] = $api_old_values['consumer_email'];
+		$new_values['consumer_key']   = $api_old_values['consumer_key'];
+
+		if ( $api_old_values['site_is_pro'] ) {
+			// Don't invalid the license because we couldn't reach our server or things like that.
+			$new_values['site_is_pro'] = 1;
+		} else {
+			unset( $new_values['site_is_pro'] );
+		}
+	}
+
+	return $new_values;
+}
+
+
+/**
+ * Trigger a settings error if the given API request failed.
+ *
+ * @since 1.0
+ * @author Grégory Viguier
+ *
+ * @param (mixed) $response   The request response.
+ * @param (array) $new_values The new settings, passed by reference. Depending on the request result, these values may be changed.
+ *
+ * @return (object|bool) The response body on success. False otherwise.
+ */
+function secupress_global_settings_api_request_succeeded( $response, &$new_values ) {
+
+	if ( is_wp_error( $response ) ) {
+		// The request couldn't be sent.
+		add_settings_error( 'general', 'request_error', __( 'Something on your website is preventing the request to be sent.', 'secupress' ) );
+		return false;
+	}
+
+	if ( 200 !== wp_remote_retrieve_response_code( $response ) ) {
+		// The server couldn't be reached. Maybe a server error or something.
+		add_settings_error( 'general', 'server_error', __( 'Our server is not accessible at the moment, please try again later.', 'secupress' ) );
+		return false;
+	}
+
+	$body = wp_remote_retrieve_body( $response );
+	$body = @json_decode( $body );
+
+	if ( ! is_object( $body ) ) {
+		// The response is not a json.
+		add_settings_error( 'general', 'server_bad_response', __( 'Our server returned an unexpected response and might be in error, please try again later or contact our support team.', 'secupress' ) );
+		return false;
+	}
+
+	if ( empty( $body->success ) ) {
+		// The response is an error.
+		if ( ! empty( $body->data->code ) && 'invalid_api_credential' === $body->data->code ) {
+
+			add_settings_error( 'general', 'response_error', __( 'There is a problem with your license key, please contact our support team.', 'secupress' ) );
+			unset( $new_values['consumer_key'], $new_values['site_is_pro'] );
+
+		} elseif ( ! empty( $body->data->code ) && 'invalid_email' === $body->data->code ) {
+
+			add_settings_error( 'general', 'response_error', __( 'The email address is invalid.', 'secupress' ) );
+
+		} elseif ( ! empty( $body->data->code ) && 'invalid_customer' === $body->data->code ) {
+
+			add_settings_error( 'general', 'response_error', __( 'This email address is not in our database.', 'secupress' ) );
+			unset( $new_values['consumer_key'], $new_values['site_is_pro'] );
+
+		} else {
+
+			add_settings_error( 'general', 'response_error', __( 'Our server returned an error, please try again later or contact our support team.', 'secupress' ) );
+
+		}
+
+		return false;
+	}
+
+	return $body;
+}
+
+
+/**
+ * Call our server to deactivate the Pro license.
+ *
+ * @since 1.1.4
+ * @author Grégory Viguier
+ *
+ * @param (array) $new_values The new settings.
+ *
+ * @return (array) $new_values The new settings, the email and the key have been removed.
+ */
+function secupress_global_settings_deactivate_pro_license( $new_values ) {
+
+	$url = SECUPRESS_WEB_MAIN . 'key-api/1.0/?' . http_build_query( array(
+		'sp_action'    => 'deactivate_pro_license',
+		'user_email'   => $new_values['consumer_email'],
+		'user_key'     => $new_values['consumer_key'],
+	) );
+
+	unset( $new_values['consumer_email'], $new_values['consumer_key'] );
+
+	$response = wp_remote_get( $url, array( 'timeout' => 10 ) );
+
+	if ( is_wp_error( $response ) ) {
+		// The request couldn't be sent.
+		$message = __( 'Something on your website is preventing the request to be sent.', 'secupress' );
+		$message = secupress_global_settings_pro_license_deactivation_error_message( $message );
+		add_settings_error( 'general', 'request_error', $message );
+		return $new_values;
+	}
+
+	if ( 200 !== wp_remote_retrieve_response_code( $response ) ) {
+		// The server couldn't be reached. Maybe a server error or something.
+		$message = __( 'Our server is not accessible at the moment.', 'secupress' );
+		$message = secupress_global_settings_pro_license_deactivation_error_message( $message );
+		add_settings_error( 'general', 'server_error', $message );
+		return $new_values;
+	}
+
+	$body = wp_remote_retrieve_body( $response );
+	$body = @json_decode( $body );
+
+	if ( ! is_object( $body ) ) {
+		// The response is not a json.
+		$message = __( 'Our server returned an unexpected response and might be in error.', 'secupress' );
+		$message = secupress_global_settings_pro_license_deactivation_error_message( $message );
+		add_settings_error( 'general', 'server_bad_response', $message );
+		return $new_values;
+	}
+
+	if ( empty( $body->success ) ) {
+		// Didn't succeed.
+		$message = __( 'Our server returned an error.', 'secupress' );
+		$message = secupress_global_settings_pro_license_deactivation_error_message( $message );
+		add_settings_error( 'general', 'response_error', $message );
+	}
+
+	return $new_values;
+}
+
+
+/**
+ * Given a message, add a sentense to it with a link to the user account on our website.
+ *
+ * @since 1.1.4
+ * @author Grégory Viguier
+ *
+ * @param (string) The message with a link to our website appended.
+ */
+function secupress_global_settings_pro_license_deactivation_error_message( $message ) {
+	if ( secupress_is_white_label() ) {
+		// White-labelled, don't add a link to our website.
+		return $message;
+	}
+
+	/** Translators: this is the slug (part of the URL) of the account page on secupress.me, like in https://secupress.me/account/, it must not be translated if the page doesn't exist. */
+	$secupress_message = esc_url( SECUPRESS_WEB_MAIN . _x( 'account', 'URL slug', 'secupress' ) . '/' );
+	$secupress_message = sprintf(
+		/** Translators: %s is a link to the "SecuPress account". */
+		__( 'Please deactivate this site from your %s (the "Manage Sites" link in your license details).', 'secupress' ),
+		'<a target="_blank" href="' . $secupress_message . '">' . __( 'SecuPress account', 'secupress' ) . '</a>'
+	);
+
+	if ( is_rtl() ) {
+		$message = $secupress_message . ' ' . $message;
+	} else {
+		$message .= ' ' . $secupress_message;
+	}
+
+	return $message;
+}
