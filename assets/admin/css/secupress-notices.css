@@ -63,6 +63,13 @@
 	}
 }
 
+.secupress-notice li {
+	overflow: hidden;
+	clear: both;
+}
+.secupress-notice[data-id="deactivate-plugin"] li {
+	padding: 1px 0;
+}
 .wp-core-ui .notice.secupress-is-dismissible {
 	position: relative;
 	padding-right: 38px;
