@@ -78,6 +78,7 @@ function secupress_get_global_network_option_names_for_autoload() {
 		SECUPRESS_SETTINGS_SLUG,
 		SECUPRESS_ACTIVE_SUBMODULES,
 		SECUPRESS_BAN_IP,
+		SECUPRESS_SELF_WHITELIST,
 	);
 
 	// Transients.
