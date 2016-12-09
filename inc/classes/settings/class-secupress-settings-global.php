@@ -65,24 +65,17 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 			<div class="secupress-setting-wrapper<?php echo ( ! secupress_is_pro() ? ' secupress-has-sideads' : '' ) ?>">
 
 				<div class="secupress-setting-content">
-					<?php secupress_admin_heading( __( 'Settings' ) ); ?>
-					<?php settings_errors(); ?>
 					<?php
-						$titles = array(
-							'title'    => esc_html__( 'Settings', 'secupress' ),
-							'subtitle' => esc_html__( 'Overall plugin settings and fine-tuning', 'secupress' ),
-						);
-						secupress_settings_heading( $titles );
+					secupress_admin_heading( __( 'Settings' ) );
+					settings_errors();
+					secupress_settings_heading( array(
+						'title'    => esc_html__( 'Settings', 'secupress' ),
+						'subtitle' => esc_html__( 'Overall plugin settings and fine-tuning', 'secupress' ),
+					) );
 					?>
 					<div class="secupress-section-light secupress-bordered">
 
-						<form action="<?php echo $this->get_form_action(); ?>" method="post" id="secupress_settings" enctype="multipart/form-data">
-
 							<?php array_map( array( $this, 'load_module_settings' ), $setting_modules ); ?>
-
-							<?php settings_fields( 'secupress_global_settings' ); ?>
-
-						</form>
 
 					</div>
 				</div>
