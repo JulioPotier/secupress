@@ -133,25 +133,25 @@ p.secupress-sh-subtitle {
 	color: #F1C40F;
 }
 
-.secupress-modules-list-links .icon-sensitive-data,
-.secupress-modules-list-links .icon-logs,
-.secupress-modules-list-links .icon-schedule {
+.secupress-modules-list-links .secupress-icon-sensitive-data,
+.secupress-modules-list-links .secupress-icon-logs,
+.secupress-modules-list-links .secupress-icon-schedule {
 	right: 25px;
 }
-.secupress-modules-list-links .icon-information {
+.secupress-modules-list-links .secupress-icon-information {
 	right: 32px;
 }
-.secupress-modules-list-links .icon-file-system:before,
-.secupress-modules-list-links .icon-antispam:before {
+.secupress-modules-list-links .secupress-icon-file-system:before,
+.secupress-modules-list-links .secupress-icon-antispam:before {
 	font-size: 34px;
 }
-.secupress-modules-list-links .icon-services:before {
+.secupress-modules-list-links .secupress-icon-services:before {
 	font-size: 42px;
 }
-.secupress-modules-list-links .icon-secupress-simple {
+.secupress-modules-list-links .secupress-icon-secupress-simple {
 	right: 22px;
 }
-.secupress-modules-list-links .icon-secupress-simple:before {
+.secupress-modules-list-links .secupress-icon-secupress-simple:before {
 	font-size: 45px;
 }
 
@@ -460,34 +460,34 @@ p.secupress-sh-subtitle {
 .secupress-module-box-get-pro .secupress-mb-icon i {
 	color: #5A626F
 }
-.secupress-mb-icon .icon-themes-plugins {
+.secupress-mb-icon .secupress-icon-themes-plugins {
 	height: 65px;
 }
-.secupress-mb-icon .icon-core {
+.secupress-mb-icon .secupress-icon-core {
 	height: 62px;
 	font-size: 49px;
 }
-.secupress-mb-icon .icon-sensitive-data,
-.secupress-mb-icon .icon-information,
-.secupress-mb-icon .icon-schedule {
+.secupress-mb-icon .secupress-icon-sensitive-data,
+.secupress-mb-icon .secupress-icon-information,
+.secupress-mb-icon .secupress-icon-schedule {
 	height: 63px;
 }
-.secupress-mb-icon .icon-firewall,
-.secupress-mb-icon .icon-logs {
+.secupress-mb-icon .secupress-icon-firewall,
+.secupress-mb-icon .secupress-icon-logs {
 	height: 58px;
 }
-.secupress-mb-icon .icon-file-system {
+.secupress-mb-icon .secupress-icon-file-system {
 	height: 54px;
 	font-size: 40px;
 }
-.secupress-mb-icon .icon-services {
+.secupress-mb-icon .secupress-icon-services {
 	height: 60px;
 }
-.secupress-mb-icon .icon-backups {
+.secupress-mb-icon .secupress-icon-backups {
 	font-size: 46px;
 	height: 61px;
 }
-.secupress-mb-icon .icon-antispam {
+.secupress-mb-icon .secupress-icon-antispam {
 	font-size: 40px;
 }
 
@@ -924,7 +924,7 @@ fieldset.secupress-boxed-group > b {
 }
 [id="secupress-settings-module_alerts--uptime-monitoring"] .description.warning {
 	position: relative;
-	background: #ECF0F1 url('../images/icon-key-white.png') left 30px bottom -12px no-repeat;
+	background: #ECF0F1 url('../images/secupress-icon-key-white.png') left 30px bottom -12px no-repeat;
 	margin: 1em 0 0 0;
 	padding: 15px 20px;
 	font-size: 16px;
