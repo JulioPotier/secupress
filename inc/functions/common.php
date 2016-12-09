@@ -556,9 +556,9 @@ function secupress_get_logo_word( $atts = array() ) {
 
 /**
  * Print the sidebar with Ads and cross-selling
- * 
+ *
  * @return void
- * 
+ *
  * @author Geoffrey Crofte
  * @since  1.1.4
  */
@@ -572,13 +572,13 @@ function secupress_print_sideads() {
 	$rk_url   = 'https://wp-rocket.me/?utm_source=secupress&utm_campaign=sidebar&utm_medium=plugin';
 
 	$im_offer = __( '100 MB', 'secupress' );
-	$im_code  = 'SECUPRESS100';	
-	$im_url   = 'https://imagify.io/?utm_source=secupress&utm_campaign=sidebar&utm_medium=plugin';	
+	$im_code  = 'SECUPRESS100';
+	$im_url   = 'https://imagify.io/?utm_source=secupress&utm_campaign=sidebar&utm_medium=plugin';
 ?>
-				
+
 	<div class="secupress-sideads">
 		<div class="secupress-section-dark secupress-pro-ad">
-			
+
 			<i class="icon-secupress" aria-hidden="true"></i>
 
 			<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-pro.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-pro@2x.png" width="80" height="78" alt="">
@@ -602,11 +602,11 @@ function secupress_print_sideads() {
 				<p><label for="mce-EMAIL"><?php _e( 'Get security alerts and news from SecuPress.', 'secupress' ) ?></label></p>
 
 				<form action="//secupress.us13.list-manage.com/subscribe/post?u=67a6053e2542ab4330a851904&amp;id=2eecd4aed8" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-				
+
 					<p>
 						<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="<?php esc_attr_e( 'email address', 'secupress' ); ?>" required>
 					</p>
-					
+
 					<!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
 					<div style="position:absolute;left:-9999em" aria-hidden="true"><input type="text" name="b_67a6053e2542ab4330a851904_2eecd4aed8" tabindex="-1" value=""></div>
 
@@ -621,25 +621,25 @@ function secupress_print_sideads() {
 
 		<div class="secupress-wprocket-ad secupress-product-ads">
 			<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-wprocket.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-wprocket@2x.png 2x" alt="WP Rocket" width="110" height="30">
-			
+
 			<p class="secupress-catch"><?php _e( 'Speed up your website with WP Rocket', 'secupress' ); ?></p>
-			<p><?php printf( __( 'Get <span>%s OFF</span> with this coupon code: %s', 'secupress' ), $rk_offer, '<span class="secupress-coupon">' . $rk_code . '</span>' ); ?></p>
-			
+			<p><?php printf( __( 'Get <span>%1$s OFF</span> with this coupon code: %2$s', 'secupress' ), $rk_offer, '<span class="secupress-coupon">' . $rk_code . '</span>' ); ?></p>
+
 			<p class="secupress-cta">
 				<a href="<?php echo esc_url( $rk_url ); ?>" class="secupress-button" target="_blank"><?php printf( __( 'Get %s OFF on WP Rocket', 'secupress' ), $rk_offer ); ?></a>
 			</p>
 		</div>
 
 		<?php } ?>
-		
+
 		<?php if ( ! defined( 'IMAGIFY_VERSION' ) ) { ?>
 
 		<div class="secupress-imagify-ad secupress-product-ads">
 			<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-imagify.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-imagify@2x.png 2x" alt="Imagify" width="123" height="15">
-			
+
 			<p class="secupress-catch"><?php _e( 'Speed Up your website with lighter images', 'secupress' ); ?></p>
-			<p><?php printf( __( 'Get <span>%s Free</span> with this coupon code: %s', 'secupress' ), $im_offer, '<span class="secupress-coupon">' . $im_code . '</span>' ); ?></p>
-			
+			<p><?php printf( __( 'Get <span>%1$s Free</span> with this coupon code: %2$s', 'secupress' ), $im_offer, '<span class="secupress-coupon">' . $im_code . '</span>' ); ?></p>
+
 			<p class="secupress-cta">
 				<a href="<?php echo esc_url( $im_url ); ?>" class="secupress-button" target="_blank"><?php printf( __( 'Get %s Free on Imagify', 'secupress' ), $im_offer ); ?></a>
 			</p>
