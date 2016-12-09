@@ -1,4 +1,3 @@
-cvs-importer
 002-ps-custom-post-type
 011-ps-custom-taxonomy
 012-ps-multi-languages
@@ -4019,6 +4018,7 @@ cssboss-archives
 cssniffer
 cssrefresh
 csupport-live-chat
+csv-importer
 csv-importer-for-pods
 csv-me
 csv-sumotto
