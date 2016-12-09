@@ -624,7 +624,7 @@ function secupress_global_settings_activate_pro_license( $new_values, $old_value
 
 	$response = wp_remote_get( $url, array( 'timeout' => 10 ) );
 
-	if ( $body = secupress_global_settings_api_request_succeeded( $response, $new_values ) ) {
+	if ( $body = secupress_global_settings_api_request_succeeded( $response ) ) {
 		// Success!
 		$new_values['install_time'] = -1;
 		$new_values['consumer_key'] = sanitize_text_field( $body->data->user_key );
@@ -639,7 +639,9 @@ function secupress_global_settings_activate_pro_license( $new_values, $old_value
 		$new_values['consumer_email'] = $api_old_values['consumer_email'];
 		$new_values['consumer_key']   = $api_old_values['consumer_key'];
 
-		if ( $api_old_values['site_is_pro'] ) {
+		if ( ! $new_values['consumer_email'] || ! $new_values['consumer_key'] ) {
+			unset( $new_values['consumer_email'], $new_values['consumer_key'], $new_values['site_is_pro'] );
+		} elseif ( $api_old_values['site_is_pro'] ) {
 			// Don't invalid the license because we couldn't reach our server or things like that.
 			$new_values['site_is_pro'] = 1;
 		} else {
@@ -657,12 +659,11 @@ function secupress_global_settings_activate_pro_license( $new_values, $old_value
  * @since 1.0
  * @author Grégory Viguier
  *
- * @param (mixed) $response   The request response.
- * @param (array) $new_values The new settings, passed by reference. Depending on the request result, these values may be changed.
+ * @param (mixed) $response The request response.
  *
  * @return (object|bool) The response body on success. False otherwise.
  */
-function secupress_global_settings_api_request_succeeded( $response, &$new_values ) {
+function secupress_global_settings_api_request_succeeded( $response ) {
 
 	if ( is_wp_error( $response ) ) {
 		// The request couldn't be sent.
@@ -690,7 +691,6 @@ function secupress_global_settings_api_request_succeeded( $response, &$new_value
 		if ( ! empty( $body->data->code ) && 'invalid_api_credential' === $body->data->code ) {
 
 			add_settings_error( 'general', 'response_error', __( 'There is a problem with your license key, please contact our support team.', 'secupress' ) );
-			unset( $new_values['consumer_key'], $new_values['site_is_pro'] );
 
 		} elseif ( ! empty( $body->data->code ) && 'invalid_email' === $body->data->code ) {
 
@@ -699,12 +699,13 @@ function secupress_global_settings_api_request_succeeded( $response, &$new_value
 		} elseif ( ! empty( $body->data->code ) && 'invalid_customer' === $body->data->code ) {
 
 			add_settings_error( 'general', 'response_error', __( 'This email address is not in our database.', 'secupress' ) );
-			unset( $new_values['consumer_key'], $new_values['site_is_pro'] );
+
+		} elseif ( ! empty( $body->data->code ) && 'no_activations_left' === $body->data->code ) {
+
+			add_settings_error( 'general', 'response_error', __( 'You can\'t activate more sites, you have reached the maximum of your license.', 'secupress' ) );
 
 		} else {
-
-			add_settings_error( 'general', 'response_error', __( 'Our server returned an error, please try again later or contact our support team.', 'secupress' ) );
-
+			add_settings_error( 'general', 'response_error', __( 'Something may be wrong with your license, please take a look at your account or contact our support team.', 'secupress' ) );
 		}
 
 		return false;
