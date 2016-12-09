@@ -267,13 +267,13 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 					</p>
 					<p class="secupress-log-delete-actions">
 						<a class="secupress-action-links secupress-delete-log" href="<?php echo esc_url( $delete_url ); ?>">
-							<i class="icon-trash" aria-hidden="true"></i>
+							<i class="secupress-icon-trash" aria-hidden="true"></i>
 							<?php _e( 'Delete log', 'secupress' ); ?>
 						</a>
 						<span class="spinner secupress-inline-spinner"></span>
 
 						<a class="secupress-action-links secupress-delete-logs-by-user_id" href="<?php echo esc_url( $delete_by_user_id_url ); ?>">
-							<i class="icon-trash" aria-hidden="true"></i>
+							<i class="secupress-icon-trash" aria-hidden="true"></i>
 							<?php echo $user_raw->user_id ? __( 'Delete logs for this user', 'secupress' ) : __( 'Delete logs without user ID', 'secupress' ); ?>
 						</a>
 						<span class="spinner secupress-inline-spinner"></span>
@@ -294,21 +294,21 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 					<p class="secupress-ip-handler">
 						<?php if ( ! secupress_ip_is_whitelisted( $user_raw->user_ip ) && secupress_get_ip() !== $user_raw->user_ip ) { ?>
 							<a class="secupress-action-links secupress-ban-ip" href="<?php echo esc_url( $ban_ip_url ); ?>">
-								<i class="icon-times-circle" aria-hidden="true"></i>
+								<i class="secupress-icon-times-circle" aria-hidden="true"></i>
 								<?php _e( 'Ban this IP', 'secupress' ); ?>
 							</a>
 							<span class="spinner secupress-inline-spinner"></span>
 						<?php } ?>
 
 						<a class="secupress-action-links secupress-delete-logs-by-ip" href="<?php echo esc_url( $delete_by_ip_url ); ?>">
-							<i class="icon-trash" aria-hidden="true"></i>
+							<i class="secupress-icon-trash" aria-hidden="true"></i>
 							<?php _e( 'Delete logs with this IP', 'secupress' ); ?>
 						</a>
 						<span class="spinner secupress-inline-spinner"></span>
 					</p>
 				</div>
 				<a class="close" href="<?php echo esc_url( $close_href ); ?>">
-					<i class="icon-squared-cross" aria-hidden="true"></i>
+					<i class="secupress-icon-squared-cross" aria-hidden="true"></i>
 					<span class="screen-reader-text"><?php _e( 'Close' ); ?></span>
 				</a>
 			</div>
