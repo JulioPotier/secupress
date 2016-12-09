@@ -1,7 +1,6 @@
 @charset "UTF-8";
 
 html, body {
-	height: 100%;
 	margin: 0;
 	font: 1em/1.5 Arial, Helvetica, sans-serif;
 	color: #393E46;
@@ -9,6 +8,7 @@ html, body {
 }
 body {
 	display: flex;
+	min-height: 100vh;
 	flex-direction: column;
 	justify-content: center;
 }
