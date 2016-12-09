@@ -186,6 +186,10 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 				// "bad"
 				$this->add_fix_message( 207, array( '<em>' . $username . '</em>' ) );
 			} else {
+				if ( is_multisite() ) {
+					// Make sure the new user is not a network administrator.
+					revoke_super_admin( $user_id );
+				}
 				// "good"
 				$this->add_fix_message( 0, array( '<em>' . $username . '</em>' ) );
 			}
