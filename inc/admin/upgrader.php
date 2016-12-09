@@ -12,10 +12,9 @@ add_action( 'admin_init', 'secupress_upgrader' );
  * @since 1.0
  */
 function secupress_upgrader() {
-	// Grab some infos.
 	$actual_version = secupress_get_option( 'version' );
 
-	// You can hook the upgrader to trigger any action when WP SecuPress is upgraded.
+	// You can hook the upgrader to trigger any action when SecuPress is upgraded.
 	// First install.
 	if ( ! $actual_version ) {
 		/**
@@ -35,6 +34,8 @@ function secupress_upgrader() {
 			 */
 			do_action( 'secupress.first_install', 'all' );
 		}
+
+		secupress_maybe_handle_license( 'activate' );
 	}
 	// Already installed but got updated.
 	elseif ( SECUPRESS_VERSION !== $actual_version ) {
@@ -50,16 +51,62 @@ function secupress_upgrader() {
 		do_action( 'secupress.upgrade', $new_version, $actual_version );
 	}
 
+	if ( defined( 'SECUPRESS_PRO_VERSION' ) ) {
+		$actual_pro_version = secupress_get_option( 'pro_version' );
+
+		// You can hook the upgrader to trigger any action when SecuPress Pro is upgraded.
+		// First install.
+		if ( ! $actual_pro_version ) {
+			/**
+			 * Allow to prevent SecuPress Pro first install hooks to fire.
+			 *
+			 * @since 1.1.4
+			 *
+			 * @param (bool) $prevent True to prevent triggering first install hooks. False otherwise.
+			 */
+			if ( ! apply_filters( 'secupress_pro.prevent_first_install', false ) ) {
+				/**
+				 * Fires on SecuPress Pro first install.
+				 *
+				 * @since 1.1.4
+				 *
+				 * @param (string) $module The module to reset. "all" means all modules at once.
+				 */
+				do_action( 'secupress_pro.first_install', 'all' );
+			}
+
+			secupress_maybe_handle_license( 'activate', true );
+		}
+		// Already installed but got updated.
+		elseif ( SECUPRESS_PRO_VERSION !== $actual_pro_version ) {
+			$new_pro_version = SECUPRESS_PRO_VERSION;
+			/**
+			 * Fires when SecuPress Pro is upgraded.
+			 *
+			 * @since 1.0
+			 *
+			 * @param (string) $new_pro_version    The version being upgraded to.
+			 * @param (string) $actual_pro_version The previous version.
+			 */
+			do_action( 'secupress_pro.upgrade', $new_pro_version, $actual_pro_version );
+		}
+	}
+
 	// If any upgrade has been done, we flush and update version.
-	if ( did_action( 'secupress.first_install' ) || did_action( 'secupress.upgrade' ) ) {
+	if ( did_action( 'secupress.first_install' ) || did_action( 'secupress.upgrade' ) || did_action( 'secupress_pro.first_install' ) || did_action( 'secupress_pro.upgrade' ) ) {
 
 		// Do not use secupress_get_option() here.
 		$options = get_site_option( SECUPRESS_SETTINGS_SLUG );
 		$options = is_array( $options ) ? $options : array();
 		$options['version'] = SECUPRESS_VERSION;
 
+		if ( defined( 'SECUPRESS_PRO_VERSION' ) ) {
+			$options['pro_version'] = SECUPRESS_PRO_VERSION;
+		}
+
 		if ( did_action( 'secupress.first_install' ) ) {
-			$options['hash_key'] = secupress_generate_key( 64 );
+			$options['hash_key']     = secupress_generate_key( 64 );
+			$options['install_time'] = time();
 		}
 
 		secupress_update_options( $options );
@@ -155,6 +202,12 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 	// < 1.1.4
 	if ( version_compare( $actual_version, '1.1.4', '<' ) ) {
 		// Lots of things have changed on the sub-modules side.
+		secupress_maybe_handle_license( 'activate' );
+
+		$options = get_site_option( SECUPRESS_SETTINGS_SLUG );
+		$options = is_array( $options ) ? $options : array();
+		$options['install_time'] = time();
+		secupress_update_options( $options );
 
 		// PHP version.
 		if ( secupress_is_submodule_active( 'discloses', 'php-version' ) && ! secupress_is_submodule_active( 'discloses', 'no-x-powered-by' ) ) {

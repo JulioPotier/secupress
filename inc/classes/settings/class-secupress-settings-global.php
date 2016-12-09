@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 class SecuPress_Settings_Global extends SecuPress_Settings {
 
-	const VERSION = '1.0';
+	const VERSION = '1.1';
 
 	/**
 	 * The reference to *Singleton* instance of this class.
@@ -26,6 +26,7 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 	 * Set the current module.
 	 *
 	 * @since 1.0
+	 * @author Grégory Viguier
 	 *
 	 * @return (object) The class instance.
 	 */
@@ -35,12 +36,28 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 	}
 
 
+	// Init ========================================================================================.
+
+	/**
+	 * Init: this method is required by the class `SecuPress_Singleton`.
+	 *
+	 * @since 1.1.4
+	 * @author Grégory Viguier
+	 */
+	protected function _init() {
+		$this->set_current_module();
+
+		$this->form_action = esc_url( admin_url( 'admin-post.php' ) );
+	}
+
+
 	// Main template tags ==========================================================================.
 
 	/**
 	 * Print the page content.
 	 *
 	 * @since 1.0
+	 * @author Grégory Viguier
 	 */
 	public function print_page() {
 		if ( secupress_has_pro() ) {
@@ -61,29 +78,54 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 		$setting_modules = apply_filters( 'secupress.global_settings.modules', $setting_modules );
 		?>
 		<div class="wrap secupress-setting-wrapper">
-			<?php secupress_admin_heading( __( 'Settings' ) ); ?>
-			<?php settings_errors(); ?>
 			<?php
-				$titles = array(
-					'title'    => esc_html__( 'Settings', 'secupress' ),
-					'subtitle' => esc_html__( 'Overall plugin settings and fine-tuning', 'secupress' ),
-				);
-				secupress_settings_heading( $titles );
+			secupress_admin_heading( __( 'Settings' ) );
+			settings_errors();
+			secupress_settings_heading( array(
+				'title'    => esc_html__( 'Settings', 'secupress' ),
+				'subtitle' => esc_html__( 'Overall plugin settings and fine-tuning', 'secupress' ),
+			) );
 			?>
 			<div class="secupress-section-light secupress-bordered">
 
-				<form action="<?php echo $this->get_form_action(); ?>" method="post" id="secupress_settings" enctype="multipart/form-data">
-
-					<?php array_map( array( $this, 'load_module_settings' ), $setting_modules ); ?>
-
-					<?php settings_fields( 'secupress_global_settings' ); ?>
-
-				</form>
+				<?php array_map( array( $this, 'load_module_settings' ), $setting_modules ); ?>
 
 			</div>
 
 		</div>
 		<?php
+	}
+
+
+	/**
+	 * Print the opening form tag.
+	 *
+	 * @since 1.1.4
+	 * @author Grégory Viguier
+	 *
+	 * @param (string) $module A setting module name.
+	 */
+	final public function print_open_form_tag( $module ) {
+		?>
+		<form id="secupress-module-form-global-<?php echo $module; ?>" method="post" action="<?php echo $this->get_form_action(); ?>" enctype="multipart/form-data">
+		<?php
+	}
+
+
+	/**
+	 * Print the closing form tag and the hidden settings fields.
+	 *
+	 * @since 1.1.4
+	 * @author Grégory Viguier
+	 *
+	 * @param (string) $module A setting module name.
+	 */
+	final public function print_close_form_tag( $module ) {
+		$module = 'secupress_update_global_settings_' . $module;
+		echo '<input type="hidden" name="action" value="' . $module . '" />';
+		echo '<input type="hidden" id="' . $module . '-nonce" name="_wpnonce" value="' . wp_create_nonce( $module ) . '" />';
+		wp_referer_field();
+		echo '</form>';
 	}
 
 
@@ -93,6 +135,7 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 	 * Outputs the form used by the importers to accept the data to be imported.
 	 *
 	 * @since 1.0
+	 * @author Julio Potier
 	 */
 	protected function import_upload_form() {
 		/** This filter is documented in wp-admin/includes/template.php */
@@ -142,6 +185,7 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 	 * Outputs the export button.
 	 *
 	 * @since 1.0
+	 * @author Julio Potier
 	 */
 	protected function export_form() {
 		?>
@@ -177,6 +221,7 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 	 * Include a module settings file. Also, automatically set the current module and print the sections.
 	 *
 	 * @since 1.0
+	 * @author Grégory Viguier
 	 *
 	 * @param (string) $module The module.
 	 *
@@ -185,6 +230,10 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 	protected function load_module_settings( $module ) {
 		$module_file = SECUPRESS_ADMIN_SETTINGS_MODULES . $module . '.php';
 
-		return $this->require_settings_file( $module_file, $module );
+		$this->print_open_form_tag( $module );
+		$this->require_settings_file( $module_file, $module );
+		$this->print_close_form_tag( $module );
+
+		return $this;
 	}
 }

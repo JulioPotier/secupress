@@ -278,6 +278,8 @@ function secupress_deactivation() {
 		delete_site_option( 'secupress_default_role' );
 	}
 
+	secupress_maybe_handle_license( 'deactivate' );
+
 	/**
 	 * Fires on SecuPress deactivation.
 	 *
@@ -472,4 +474,36 @@ function secupress_create_deactivation_notice_muplugin( $plugin_id, $message ) {
 	}
 
 	$wp_filesystem->put_contents( $filename, $contents );
+}
+
+
+/*------------------------------------------------------------------------------------------------*/
+/* TOOLS ======================================================================================== */
+/*------------------------------------------------------------------------------------------------*/
+
+/**
+ * Make a short test for the license.
+ *
+ * @since 1.1.4
+ * @author Grégory Viguier
+ *
+ * @param (string) $type "activate" or "deactivate".
+ * @param (bool)   $pro  True to trigger a Pro test.
+ */
+function secupress_maybe_handle_license( $type, $pro = false ) {
+	if ( 'activate' === $type ) {
+		$action = 'check';
+	} elseif ( 'deactivate' === $type ) {
+		$action = 'pause';
+	} else {
+		return;
+	}
+
+	$url = SECUPRESS_WEB_MAIN . 'key-api/1.0/?sp_action=maybe_' . $action . '_license' . ( $pro ? '&pro=1' : '' );
+
+	$response = wp_remote_get( $url, array(
+		'timeout'    => 0.01,
+		'blocking'   => false,
+		'user-agent' => 'secupress',
+	) );
 }
