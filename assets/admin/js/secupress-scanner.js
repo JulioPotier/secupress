@@ -29,6 +29,39 @@ jQuery( document ).ready( function( $ ) {
 		secupressChartEls.push( document.getElementById( 'status_chart_mini' ) );
 	}
 
+	// Tweeter Grade A
+	if ( $('.secupress-score').find('.letter').hasClass('lA') ) {
+		if ( 'ok' !== secupressGetCookie('secupresstweeted') ) {
+			$( '#tweeterA' ).slideDown();
+		}
+	}
+
+	$('#tweeterA .secupress-button').on( 'click.secupress', function() {
+		var now  = new Date(),
+			time = now.getTime(),
+			expireTime = time + 1000 * 3600 * 24 * 360; // ~= 1 year
+
+		now.setTime( expireTime );
+		document.cookie = 'secupresstweeted=ok; expires=' + now.toGMTString() + '; path=/';
+		$( '#tweeterA' ).slideUp();
+	} );
+
+	// Get cookie
+	function secupressGetCookie(cname) {
+		var name = cname + "=";
+		var ca = document.cookie.split(';');
+		for ( var i = 0; i <ca.length; i++ ) {
+		    var c = ca[i];
+		    while ( c.charAt(0) == ' ' ) {
+		        c = c.substring(1);
+		    }
+		    if ( c.indexOf( name ) == 0 ) {
+		        return c.substring( name.length, c.length );
+		    }
+		}
+		return '';
+	}
+
 	// a11y function
 	function secupressCouldSay( say ) {
 		if ( wp.a11y && wp.a11y.speak && undefined !== say && say ) {
@@ -385,15 +418,7 @@ jQuery( document ).ready( function( $ ) {
 
 			secupressDrawCharts();
 		}
-
-		// Twitter.
-		if ( "A" === data.grade ) {
-			$( "#tweeterA" ).slideDown();
-		} else {
-			$( "#tweeterA" ).slideUp();
-		}
 	}
-
 
 	// Some callback that will run after all scans are done and the score has been printed.
 	function secupressAllScanDoneCallback( isOneClickScan ) {
