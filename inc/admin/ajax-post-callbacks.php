@@ -702,7 +702,7 @@ function secupress_global_settings_api_request_succeeded( $response ) {
 
 		} elseif ( ! empty( $body->data->code ) && 'no_activations_left' === $body->data->code ) {
 
-			add_settings_error( 'general', 'response_error', __( 'You can\'t activate more sites, you have reached the maximum of your license.', 'secupress' ) );
+			add_settings_error( 'general', 'response_error', __( 'You\'ve used as many as your license allows, you may want to upgrade your license to add more sites.', 'secupress' ) );
 
 		} else {
 			add_settings_error( 'general', 'response_error', __( 'Something may be wrong with your license, please take a look at your account or contact our support team.', 'secupress' ) );
