@@ -66,7 +66,7 @@ function secupress_plugins_to_deactivate() {
 		return;
 	}
 
-	$message  = '<p>' . sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
+	$message  = '<p>' . sprintf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ) . ' ';
 	$message .= __( 'The following plugins are not recommended with this plugin and may cause unexpected results:', 'secupress' );
 	$message .= '</p><ul>';
 	foreach ( $plugins_to_deactivate as $plugin ) {
@@ -189,8 +189,8 @@ function secupress_warning_wp_config_permissions() {
 		return;
 	}
 
-	$message  = sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
-	$message .= sprintf( __( 'The %1$s file is not writable, read more about <a href="%2$s" target="_blank">writing permissions</a>.', 'secupress' ), '<code>wp-config.php</code>', 'http://codex.wordpress.org/Changing_File_Permissions' );
+	$message  = sprintf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ) . ' ';
+	$message .= sprintf( __( 'The %s file is not writable, read more about <a href="http://codex.wordpress.org/Changing_File_Permissions" target="_blank">writing permissions</a>.', 'secupress' ), '<code>wp-config.php</code>' );
 
 	secupress_add_notice( $message, 'error', 'wpconfig-not-writable' );
 }
@@ -227,7 +227,7 @@ function secupress_warning_htaccess_permissions() {
 		return;
 	}
 
-	$message  = sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
+	$message  = sprintf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ) . ' ';
 	$message .= sprintf( __( 'If you had <a href="%1$s" target="_blank">writing permissions</a> on %2$s file, %3$s could do more things automatically.', 'secupress' ), 'http://codex.wordpress.org/Changing_File_Permissions', '<code>' . $file . '</code>', '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
 
 	secupress_add_notice( $message, 'error', 'htaccess-not-writable' );
@@ -251,7 +251,7 @@ function secupress_warning_module_activity() {
 	$deactivated_modules = secupress_get_site_transient( 'secupress_module_deactivation_' . $current_user_id );
 
 	if ( false !== $activated_modules ) {
-		$message  = '<p>' . sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
+		$message  = '<p>' . sprintf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ) . ' ';
 		$message .= _n( 'This module has been activated:', 'These modules have been activated:', count( $activated_modules ), 'secupress' );
 		$message .= sprintf( '</p><ul><li>%s</li></ul>', implode( '</li><li>', $activated_modules ) );
 
@@ -260,7 +260,7 @@ function secupress_warning_module_activity() {
 	}
 
 	if ( false !== $deactivated_modules ) {
-		$message  = '<p>' . sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
+		$message  = '<p>' . sprintf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ) . ' ';
 		$message .= _n( 'This module has been deactivated:', 'These modules have been deactivated:', count( $deactivated_modules ), 'secupress' );
 		$message .= sprintf( '</p><ul><li>%s</li></ul>', implode( '</li><li>', $deactivated_modules ) );
 
@@ -295,7 +295,7 @@ function secupress_warning_no_recovery_email() {
 	$form .= '<button type="button" class="button hidden" id="secupress_recovery_email_retry">' . __( 'Retry', 'secupress' ) . '</button>';
 	$form .= '</span><!-- .secupress-inline-form -->';
 
-	$message  = sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
+	$message  = sprintf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ) . ' ';
 	$message .= sprintf( __( 'A <strong>Recovery E-mail</strong> is needed in case of hack, you can set it in your <a href="%1$s">profile</a><span id="secupress_recovery_email_parent" class="hide-if-no-js"> or here: %2$s</span>', 'secupress' ), esc_url( get_edit_profile_url( get_current_user_id() ) ) . '#secupress_recovery_email', $form );
 
 	secupress_add_notice( $message, 'error', 'recovery_email' );
@@ -381,7 +381,7 @@ function secupress_warning_no_license() {
 		return;
 	}
 
-	$message  = sprintf( __( '%s: ', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
+	$message  = sprintf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ) . ' ';
 	/** Translators: %s is a link to the "plugin settings page". */
 	$message .= sprintf(
 		__( 'Your Pro license is not valid or is not set yet. If you want to activate all the Pro features, premium support and updates, take a look at %s.', 'secupress' ),
@@ -415,7 +415,7 @@ function secupress_display_transient_notices() {
 add_action( 'in_plugin_update_message-' . plugin_basename( SECUPRESS_FILE ), 'secupress_updates_message' );
 if ( defined( 'SECUPRESS_PRO_FILE' ) ) {
 	add_action( 'in_plugin_update_message-' . plugin_basename( SECUPRESS_PRO_FILE ), 'secupress_updates_message' );
-}	
+}
 /**
  * Display a message below our plugins to display the next update information if needed
  *
@@ -440,8 +440,8 @@ function secupress_updates_message( $plugin_data ) {
 
 	if ( ! isset( $body[ $slug ] ) ) {
 
-		$urls     = array( 
-					'secupress'     => SECUPRESS_WEB_MAIN . '/api/plugin/readme-free.php', 
+		$urls     = array(
+					'secupress'     => SECUPRESS_WEB_MAIN . '/api/plugin/readme-free.php',
 					// 'secupress'     => 'https://plugins.svn.wordpress.org/secupress/trunk/readme.txt', //// ok when on repo
 					'secupress-pro' => SECUPRESS_WEB_MAIN . '/api/plugin/readme-pro.php'
 					);

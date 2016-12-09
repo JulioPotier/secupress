@@ -129,7 +129,7 @@ function secupress_bad_url_access_upgrade( $new_version, $actual_version ) {
 			array_pop( $wp_settings_errors );
 
 			$rules    = esc_html( secupress_bad_url_access_apache_rules() );
-			$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Bad URL Access', 'secupress' ) );
+			$message  = sprintf( __( '%s:', 'secupress' ), __( 'Bad URL Access', 'secupress' ) ) . ' ';
 			$message .= sprintf(
 				/** Translators: 1 is a file name; 2, 3 and 4 are some code. */
 				__( 'Your %1$s file is not writable. Please replace previous lines between %2$s and %3$s by the following ones: %4$s', 'secupress' ),
@@ -149,7 +149,7 @@ function secupress_bad_url_access_upgrade( $new_version, $actual_version ) {
 			$spaces   = count( $spaces ) - 1;
 			$spaces   = str_repeat( ' ', $spaces * 2 );
 			$rules    = esc_html( secupress_bad_url_access_apache_rules() );
-			$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Bad URL Access', 'secupress' ) );
+			$message  = sprintf( __( '%s:', 'secupress' ), __( 'Bad URL Access', 'secupress' ) ) . ' ';
 			$message .= sprintf(
 				/** Translators: 1 is a file name, 2 is a tag name, 3 is a folder path (kind of), 4 is some code */
 				__( 'Your %1$s file is not writable. Please replace previous rules with %2$s from the tags hierarchy %3$s by the following ones: %4$s', 'secupress' ),
