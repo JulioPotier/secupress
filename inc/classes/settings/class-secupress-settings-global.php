@@ -77,22 +77,30 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 		 */
 		$setting_modules = apply_filters( 'secupress.global_settings.modules', $setting_modules );
 		?>
-		<div class="wrap secupress-setting-wrapper">
-			<?php
-			secupress_admin_heading( __( 'Settings' ) );
-			settings_errors();
-			secupress_settings_heading( array(
-				'title'    => esc_html__( 'Settings', 'secupress' ),
-				'subtitle' => esc_html__( 'Overall plugin settings and fine-tuning', 'secupress' ),
-			) );
-			?>
-			<div class="secupress-section-light secupress-bordered">
+		<div class="wrap">
 
-				<?php array_map( array( $this, 'load_module_settings' ), $setting_modules ); ?>
+			<div class="secupress-setting-wrapper<?php echo ( ! secupress_is_pro() ? ' secupress-has-sideads' : '' ) ?>">
 
-			</div>
+				<div class="secupress-setting-content">
+					<?php
+					secupress_admin_heading( __( 'Settings' ) );
+					settings_errors();
+					secupress_settings_heading( array(
+						'title'    => esc_html__( 'Settings', 'secupress' ),
+						'subtitle' => esc_html__( 'Overall plugin settings and fine-tuning', 'secupress' ),
+					) );
+					?>
+					<div class="secupress-section-light secupress-bordered">
 
-		</div>
+							<?php array_map( array( $this, 'load_module_settings' ), $setting_modules ); ?>
+
+					</div>
+				</div>
+
+				<?php secupress_print_sideads(); ?>
+
+			</div><!-- .secupress-setting-content -->
+		</div><!-- .wrap -->
 		<?php
 	}
 
