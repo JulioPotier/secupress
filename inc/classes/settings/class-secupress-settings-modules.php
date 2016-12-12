@@ -212,7 +212,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			<?php secupress_admin_heading( __( 'Modules', 'secupress' ) ); ?>
 			<?php settings_errors(); ?>
 
-			<div class="secupress-wrapper<?php echo ( $is_welcome ? '' : ' secupress-flex secupress-flex-top' ) ?>">
+			<div class="secupress-wrapper<?php echo ( $is_welcome ? '' : ' secupress-flex secupress-flex-top' ) ?><?php echo ( ! secupress_is_pro() ? ' secupress-has-sideads' : '' ) ?>">
 
 				<?php
 				/**
@@ -245,6 +245,8 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 				<div class="secupress-tab-content secupress-tab-content-<?php echo $this->get_current_module(); ?>" id="secupress-tab-content">
 					<?php $this->print_current_module(); ?>
 				</div>
+				
+				<?php secupress_print_sideads(); ?>
 
 			</div>
 
