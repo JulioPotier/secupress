@@ -611,7 +611,7 @@ function secupress_print_sideads() {
 					<div style="position:absolute;left:-9999em" aria-hidden="true"><input type="text" name="b_67a6053e2542ab4330a851904_2eecd4aed8" tabindex="-1" value=""></div>
 
 					<p>
-						<button type="submit" name="subscribe" id="mc-embedded-subscribe" class="secupress-button secupress-button-primary"><?php _e( 'Stay tuned for more', 'secupress' ); ?></button>
+						<button type="submit" name="subscribe" class="secupress-button secupress-button-primary"><?php _e( 'Stay tuned for more', 'secupress' ); ?></button>
 					</p>
 				</form>
 			</div>
