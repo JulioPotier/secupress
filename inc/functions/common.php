@@ -581,7 +581,7 @@ function secupress_print_sideads() {
 
 			<i class="icon-secupress" aria-hidden="true"></i>
 
-			<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-pro.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-pro@2x.png" width="80" height="78" alt="">
+			<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-pro.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-pro@2x.png" width="80" height="78" alt="SecuPress Pro">
 
 			<p class="secupress-text-medium"><?php _e( 'Improve your Security', 'secupress' ); ?></p>
 			<p><?php _e( 'Unlock all the features of SecuPress Pro', 'secupress' ); ?></p>
