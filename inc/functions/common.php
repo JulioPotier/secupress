@@ -601,7 +601,7 @@ function secupress_print_sideads() {
 			<div class="secupress-ad-content">
 				<p><label for="mce-EMAIL"><?php _e( 'Get security alerts and news from SecuPress.', 'secupress' ) ?></label></p>
 
-				<form action="//secupress.us13.list-manage.com/subscribe/post?u=67a6053e2542ab4330a851904&amp;id=2eecd4aed8" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+				<form action="//secupress.us13.list-manage.com/subscribe/post?u=67a6053e2542ab4330a851904&amp;id=2eecd4aed8" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
 
 					<p>
 						<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="<?php esc_attr_e( 'email address', 'secupress' ); ?>" required>
