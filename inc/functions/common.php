@@ -604,7 +604,7 @@ function secupress_print_sideads() {
 				<form action="//secupress.us13.list-manage.com/subscribe/post?u=67a6053e2542ab4330a851904&amp;id=2eecd4aed8" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
 
 					<p>
-						<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="<?php esc_attr_e( 'email address', 'secupress' ); ?>" required>
+						<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="<?php esc_attr_e( 'email address', 'secupress' ); ?>" required="required">
 					</p>
 
 					<!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
