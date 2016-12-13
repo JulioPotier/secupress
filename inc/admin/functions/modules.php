@@ -385,10 +385,10 @@ function secupress_remove_module_rules_or_notice( $marker, $module_name ) {
 		$message  = sprintf( __( '%s:', 'secupress' ), $module_name ) . ' ';
 		$message .= sprintf(
 			/** Translators: 1 is a file name, 2 and 3 are small parts of code. */
-			__( 'Your server runs <strong>Ngnix</strong>. You have to edit the configuration file manually. Please remove all rules between %2$s and %3$s from the %1$s file.', 'secupress' ),
-			'<code>nginx.conf</code>',
+			__( 'Your server runs <strong>Ngnix</strong>. You have to edit the configuration file manually. Please remove all rules between %1$s and %2$s from the %3$s file.', 'secupress' ),
 			"<code># BEGIN SecuPress $marker</code>",
-			'<code># END SecuPress</code>'
+			'<code># END SecuPress</code>',
+			'<code>nginx.conf</code>'
 		);
 		add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
 		return false;
