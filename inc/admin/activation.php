@@ -398,7 +398,7 @@ function secupress_maybe_remove_rules_on_deactivation() {
 		$message  = sprintf( __( '%s:', 'secupress' ), SECUPRESS_PLUGIN_NAME ) . ' ';
 		$message .= sprintf(
 			/** Translators: 1 and 2 are small parts of code, 3 is a file name. */
-			__( 'Your server runs <strong>Ngnix</strong>, you have to edit the configuration file manually. Please remove all rules between %1$s and %2$s from the %3$s file.', 'secupress-pro' ),
+			__( 'Your server runs <strong>Ngnix</strong>. You have to edit the configuration file manually. Please remove all rules between %1$s and %2$s from the %3$s file.', 'secupress' ),
 			'<code># BEGIN SecuPress</code>',
 			'<code># END SecuPress</code>',
 			'<code>nginx.conf</code>'
