@@ -2,8 +2,8 @@
 Contributors: wp_media, secupress, juliobox, greglone
 Tags: security, spam, backup, schedule, firewall, sensitive data, antivirus, logs, alerts
 Requires at least: 3.7
-Tested up to: 4.6.1
-Stable tag: 1.1.3
+Tested up to: 4.7
+Stable tag: 1.1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -39,7 +39,7 @@ You don’t need to be an experienced technician to use and configure our plugin
 We have our own security alarm on our servers which supplies daily data about the most recent vulnerable plugins and themes. This allows you to always be alerted and secured.
 
 = Is SecuPress compatible with multisites installation? =
-Yes, SecuPress will be activated for all your subsites, just activate it from your main network site.
+Yes, SecuPress will be activated for all your sub-sites, just activate it from your main network site.
 
 = Is SecuPress compatible with all web hostings like OVH, WP Engine, O2Switch or GoDaddy? =
 Yes, SecuPress is compatible with all web hostings. If you encounter an issue, do not hesitate to contact our support team.
@@ -56,7 +56,7 @@ Yes, SecuPress is compatible with all server engines. If you encounter an issue,
 = Is SecuPress compatible with other security plugins like WordFence, iThemes Security, Bullet Proof Security? =
 No, SecuPress can't be compatible, like you can't install two caching plugins. The reason is that each plugin will try to block something, add security rules and at a moment they will overwrite each other. These rules can create a conflict and lead to errors on your website.
 
-It's important to delete all other security plugins before activating SecuPress. If you're not sure, do not hesitate to ask us on twitter, facebook, support.
+It's important to delete all other security plugins before activating SecuPress. If you're not sure, do not hesitate to ask us on Twitter, Facebook, support.
 
 
 
@@ -65,6 +65,26 @@ It's important to delete all other security plugins before activating SecuPress.
 (soon)
 
 == Changelog ==
+
+= 1.1.4 =
+* 13 dec 2016
+* New: up to 12 options for you to control. Directory Index, Directory Listing, PHP modules disclosure, PHP version disclosure, WordPress version disclosure, Bad URL Access, Protect readme files, WooCommerce and WPML version disclosure, File edition constant, Unfiltered HTML constant, Unfiltered uploads constant: all these protections are now activatable and deactivatable separately when you want ( ﾟдﾟ)
+* New: some scans were slightly modified, so here is a new one that will test only the ShellShock vulnerability ヽ(´ー`)人(´∇｀)人(`Д´)ノ
+* New: if a scan displays a "Not able to access your front page" message, it brings you the possibility to activate the protection anyway.
+* Improvement #118: in the scanner's manual fixes, the "Ignore this step" button is more understandable.
+* Improvement #147: in logs and alerts, no more "UAHE", "BUC", or any other obscur codes when a request is blocked, only a human readable sentence.
+* Improvement #199: the User Agent blacklist is now case sensitive.
+* Improvement #274: if you use a "Coming Soon" or "Maintenance" page, manual scans have now a small drill and can get through it and will no longer trigger a "Not able to access your front page" message for this reason.
+* Improvement #286: updated the "no longer in directory" and "not updated over 2 years" plugins lists.
+* Improvement #289: the scan message related to the constant `COOKIEHASH` is more accurate.
+* Improvement #290: whitelisted IPs don't trigger alerts and logs when they are *not* blocked.
+* Improvement #297: the checkbox to activate the protection to deny access to malicious file extensions in the uploads folder now displays rewrite rules if the configuration file is not writable.
+* Fix #264: the scanner related to the admin user wouldn't fix anything on some circumstances. Nothing is better than a whip sometimes.
+* Fix #265: fixed a message displayed by the chmod scan. In some cases it was speaking nonsense about files `/` and `/`.
+* Fix #281: "Ask for old password" and "Strong Passwords" are now besties <3
+* Fix #285: typo in a `IfModule` (－‸ლ)
+* Fix #291: the fix related to the WordPress version disclosure ate the rewrite rules on Nginx. So we made it give them back (that was kind of scary).
+
 
 = 1.1.3 =
 * 07 nov 2016
