@@ -62,7 +62,7 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 	 */
 	public static function get_messages( $message_id = null ) {
 		/** Translators: 1 is the name of a protection, 2 is the name of a module. */
-		$activate_protection_message = sprintf( __( 'But you can activate the %1$s protection manually from the module %2$s.', 'secupress' ),
+		$activate_protection_message = sprintf( __( 'But you can activate the %1$s protection from the module %2$s.', 'secupress' ),
 			'<strong>' . __( 'Plugin version disclosure', 'secupress' ) . '</strong>',
 			'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_plugin-version-discloses">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
 		);

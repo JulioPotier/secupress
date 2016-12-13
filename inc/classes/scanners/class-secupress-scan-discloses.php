@@ -70,7 +70,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 	public static function get_messages( $message_id = null ) {
 		$module_url = esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) );
 		/** Translators: 1 and 2 are the name of protections, 3 is the name of a module. */
-		$activate_protection_message = sprintf( __( 'But you can activate the %1$s protection and the %2$s protection manually from the module %3$s.', 'secupress' ),
+		$activate_protection_message = sprintf( __( 'But you can activate the %1$s protection and the %2$s protection from the module %3$s.', 'secupress' ),
 			'<a target="_blank" href="' . $module_url . '#row-content-protect_wp-version">' . __( 'WordPress Version Disclosure', 'secupress' ) . '</a>',
 			'<a target="_blank" href="' . $module_url . '#row-content-protect_php-version">' . __( 'PHP Version Disclosure', 'secupress' ) . '</a>',
 			'<strong>' . __( 'Sensitive Data', 'secupress' ) . '</strong>'
