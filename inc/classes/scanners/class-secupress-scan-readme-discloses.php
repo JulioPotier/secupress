@@ -69,6 +69,11 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 	public static function get_messages( $message_id = null ) {
 		global $is_apache;
 		$config_file = $is_apache ? '.htaccess' : 'web.config';
+		/** Translators: 1 is the name of a protection, 2 is the name of a module. */
+		$activate_protection_message = sprintf( __( 'But you can activate the %1$s protection from the module %2$s.', 'secupress' ),
+			'<strong>' . __( 'Protect readme files', 'secupress' ) . '</strong>',
+			'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_readmes">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
+		);
 
 		$messages = array(
 			// "good"
@@ -77,13 +82,8 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 			/** Translators: 1 and 2 are file names */
 			1   => sprintf( __( 'The rules forbidding access to your %1$s files have been successfully added to your %2$s file.', 'secupress' ), '<code>readme.txt</code>', "<code>$config_file</code>" ),
 			// "warning"
-			100 => sprintf(
-				/** Translators: 1 is a file name, 2 is the name of a protection, 3 is the name of a module. */
-				__( 'Unable to determine the status of the %1$s files that may reveal sensitive information. But you can activate the %2$s protection manually from the module %3$s.', 'secupress' ),
-				'<code>readme.txt</code>',
-				'<strong>' . __( 'Protect readme files', 'secupress' ) . '</strong>',
-				'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_readmes">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
-			),
+			/** Translators: %s is a file name. */
+			100 => sprintf( __( 'Unable to determine the status of the %s files that may reveal sensitive information.', 'secupress' ), '<code>readme.txt</code>' ) . ' ' . $activate_protection_message,
 			// "bad"
 			/** Translators: %s is a file name */
 			200 => sprintf( __( 'The %s and/or %s files should not be accessible to anyone because they are revealing sensitive information.', 'secupress' ), '<code>readme.txt/md/html</code>', '<code>changelog.txt/md/html</code>' ),

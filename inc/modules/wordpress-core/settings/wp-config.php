@@ -24,7 +24,7 @@ $this->add_field( array(
 	'helpers'           => array(
 		array(
 			'type'        => 'help',
-			'description' => ! $can_manage ? __( 'This option is disabled because there is no need to it to be activated.', 'secupress' ) : null,
+			'description' => ! $can_manage ? __( 'Option unavailable, the protection is already set by another method than the plugin.', 'secupress' ) : null,
 		),
 	),
 ) );
@@ -53,7 +53,7 @@ $this->add_field( array(
 	'helpers'           => array(
 		array(
 			'type'        => 'help',
-			'description' => ! $can_manage ? __( 'This option is disabled because there is no need to it to be activated.', 'secupress' ) : null,
+			'description' => ! $can_manage ? __( 'Option unavailable, the protection is already set by another method than the plugin.', 'secupress' ) : null,
 		),
 		array(
 			'type'        => 'warning',
@@ -79,7 +79,7 @@ $this->add_field( array(
 	'helpers'           => array(
 		array(
 			'type'        => 'help',
-			'description' => ! $can_manage ? __( 'This option is disabled because there is no need to it to be activated.', 'secupress' ) : null,
+			'description' => ! $can_manage ? __( 'Option unavailable, the protection is already set by another method than the plugin.', 'secupress' ) : null,
 		),
 	),
 ) );

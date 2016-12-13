@@ -61,18 +61,19 @@ class SecuPress_Scan_Wpml_Discloses extends SecuPress_Scan implements SecuPress_
 	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
 	 */
 	public static function get_messages( $message_id = null ) {
+		/** Translators: 1 is the name of a protection, 2 is the name of a module. */
+		$activate_protection_message = sprintf( __( 'But you can activate the %1$s protection manually from the module %2$s.', 'secupress' ),
+			'<strong>' . __( 'Plugin version disclosure', 'secupress' ) . '</strong>',
+			'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_plugin-version-discloses">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
+		);
+
 		$messages = array(
 			// "good"
 			/** Translators: %s is a plugin name. */
 			0   => sprintf( __( 'The %s plugin does not reveal sensitive information.', 'secupress' ), '<strong>WPML</strong>' ),
 			// "warning"
-			100 => sprintf(
-				/** Translators: 1 is a plugin name, 2 is the name of a protection, 3 is the name of a module. */
-				__( 'Unable to determine if %1$s is disclosing its version on your homepage. But you can activate the %2$s protection manually from the module %3$s.', 'secupress' ),
-				'<strong>WPML</strong>',
-				'<strong>' . __( 'Plugin version disclosure', 'secupress' ) . '</strong>',
-				'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_plugin-version-discloses">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
-			),
+			/** Translators: %s is a plugin name. */
+			100 => sprintf( __( 'Unable to determine if %s is disclosing its version on your homepage.', 'secupress' ), '<strong>WPML</strong>' ) . ' ' . $activate_protection_message,
 			// "bad"
 			/** Translators: 1 is a plugin name, 2 is some related info. */
 			200 => sprintf( __( 'The %1$s plugin displays its version in the source code of your homepage (%2$s).', 'secupress' ), '<strong>WPML</strong>', '%s' ),

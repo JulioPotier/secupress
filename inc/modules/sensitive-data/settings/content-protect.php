@@ -452,7 +452,7 @@ if ( $choices ) {
 	}
 
 	$this->add_field( array(
-		'title'             => __( 'Plugin version disclosure', 'secupress' ),
+		'title'             => __( 'Plugin Version Disclosure', 'secupress' ),
 		'description'       => __( 'Some popular big plugins print their version in your site\'s source code. This information can be useful for attackers.', 'secupress' ),
 		'name'              => $this->get_field_name( 'plugin-version-discloses' ),
 		'plugin_activation' => true,

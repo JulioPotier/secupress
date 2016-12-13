@@ -67,6 +67,11 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 	public static function get_messages( $message_id = null ) {
 		global $is_apache;
 		$config_file = $is_apache ? '.htaccess' : 'web.config';
+		/** Translators: 1 is the name of a protection, 2 is the name of a module. */
+		$activate_protection_message = sprintf( __( 'But you can activate the %1$s protection from the module %2$s.', 'secupress' ),
+			'<strong>' . __( 'PHP Disclosure', 'secupress' ) . '</strong>',
+			'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_php-disclosure">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
+		);
 
 		$messages = array(
 			// "good"
@@ -74,11 +79,7 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 			/** Translators: %s is a file name. */
 			1   => sprintf( __( 'The rules forbidding access to the <strong>PHP Easter Egg</strong> have been successfully added to your %s file.', 'secupress' ), "<code>$config_file</code>" ),
 			// "warning"
-			100 => sprintf(
-				__( 'Unable to determine if your homepage is disclosing the PHP modules. But you can activate the %1$s protection manually from the module %2$s.', 'secupress' ),
-					'<strong>' . __( 'PHP Disclosure', 'secupress' ) . '</strong>',
-					'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_php-disclosure">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
-				),
+			100 => __( 'Unable to determine if your homepage is disclosing the PHP modules.', 'secupress' ) . ' ' . $activate_protection_message,
 			// "bad"
 			/** Translators: %s is an URL */
 			200 => sprintf( __( '%s should not be accessible to anyone.', 'secupress' ), '<code>' . esc_url( user_trailingslashit( home_url() ) . '?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000' ) . '</code>' ),

@@ -90,8 +90,11 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 		global $is_apache;
 
 		$config_file = $is_apache ? '.htaccess' : 'web.config';
-		$option      = '<strong>' . __( 'Bad File Extensions', 'secupress' ) . '</strong>';
-		$link        = '<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'file-system' ) ) . '#module-bad-file-extensions">' . __( 'Malware Scan', 'secupress' ) . '</a>';
+		/** Translators: 1 is the name of a protection, 2 is the name of a module. */
+		$activate_protection_message = sprintf( __( 'But you can activate the %1$s protection manually from the module %2$s.', 'secupress' ),
+			'<strong>' . __( 'Bad File Extensions', 'secupress' ) . '</strong>',
+			'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'file-system' ) ) . '#module-bad-file-extensions">' . __( 'Malware Scan', 'secupress' ) . '</a>'
+		);
 
 		$messages = array(
 			// "good"
@@ -99,9 +102,10 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 			/** Translators: %s is a file name */
 			1   => sprintf( __( 'The rules forbidding access to files that use bad extensions have been successfully added to your %s file.', 'secupress' ), "<code>$config_file</code>" ),
 			// "warning"
-			100 => sprintf( __( 'Unable to determine the status of the bad file extensions test file. But you can activate the %1$s protection manually from the module %2$s.', 'secupress' ), $option, $link ),
+			100 => __( 'Unable to determine the status of the bad file extensions test file.', 'secupress' ) . ' ' . $activate_protection_message,
+				/** Translators: 1 is the name of a protection, 2 is the name of a module. */
 			// "bad"
-			200 => sprintf( __( 'Could not create a bad extension test file in the uploads folder. But you can activate the %1$s protection manually from the module %2$s.', 'secupress' ), $option, $link ),
+			200 => __( 'Could not create a bad extension test file in the uploads folder.', 'secupress' ) . ' ' . $activate_protection_message,
 			201 => __( 'Whether or not you have files using bad extensions in the uploads folder, those files are accessible directly.', 'secupress' ),
 			// "cantfix"
 			/** Translators: 1 is a file name, 2 is some code */

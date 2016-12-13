@@ -70,10 +70,16 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 
 		$config_file = $is_apache ? '.htaccess' : 'web.config';
 		$message_100 = _n_noop(
-			/** Translators: 1 is an URL or a list of URLs, 2 is the name of a protection, 3 is the name of a module. */
-			'Unable to determine if %1$s is accessible. But you can activate the %2$s protection manually from the module %3$s.',
-			'Unable to determine if %1$s are accessible. But you can activate the %2$s protection manually from the module %3$s.',
+			/** Translators: %s is a URL or a list of URLs. */
+			'Unable to determine if %s is accessible.',
+			'Unable to determine if %s are accessible.',
 			'secupress'
+		);
+
+		/** Translators: 1 is the name of a protection, 2 is the name of a module. */
+		$activate_protection_message = sprintf( __( 'But you can activate the %1$s protection from the module %2$s.', 'secupress' ),
+			'<strong>' . __( 'Bad URL Access', 'secupress' ) . '</strong>', // Name of the protection.
+			'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_bad-url-access">' . __( 'Sensitive Data', 'secupress' ) . '</a>' // Name of the module.
 		);
 
 		$messages = array(
@@ -82,12 +88,7 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 			/** Translators: %s is a file name. */
 			1   => sprintf( __( 'Rules preventing disclosure of your site\'s internal path disclosure have been added to your %s file.', 'secupress' ), "<code>$config_file</code>" ),
 			// "warning"
-			100 => static::_n_noop_sprintf(
-				$message_100,
-				'%s', // URL.
-				'<strong>' . __( 'Bad URL Access', 'secupress' ) . '</strong>', // Name of the protection.
-				'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_bad-url-access">' . __( 'Sensitive Data', 'secupress' ) . '</a>' // Name of the module.
-			),
+			100 => static::_n_noop_sprintf( $message_100, '%s' ) . ' ' . $activate_protection_message,
 			// "bad"
 			/** Translators: %s is a URL, or a list of URLs. */
 			200 => _n_noop( '%s should not be accessible by anyone.', '%s should not be accessible by anyone.', 'secupress' ),

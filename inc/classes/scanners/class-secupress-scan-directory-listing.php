@@ -68,20 +68,20 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 	public static function get_messages( $message_id = null ) {
 		global $is_apache;
 		$config_file = $is_apache ? '.htaccess' : 'web.config';
+		/** Translators: 1 is the name of a protection, 2 is the name of a module. */
+		$activate_protection_message = sprintf( __( 'But you can activate the %1$s protection from the module %2$s.', 'secupress' ),
+			'<strong>' . __( 'Directory Listing', 'secupress' ) . '</strong>',
+			'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_directory-listing">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
+		);
 
 		$messages = array(
 			// "good"
 			0   => __( 'Your site does not reveal the files list.', 'secupress' ),
 			/** Translators: %s is a file name. */
-			1   => sprintf( __( 'The rules forbidding access to directory listing have been successfully added to your %s file.', 'secupress' ), "<code>$config_file</code>" ),
+			1   => sprintf( __( 'The rules forbidding access to directory listing have been successfully added to your %s file.', 'secupress' ), "<code>$config_file</code>" ) . ' ' . $activate_protection_message,
 			// "warning"
-			100 => sprintf(
-				/** Translators: 1 is an URL, 2 is the name of a protection, 3 is the name of a module. */
-				__( 'Unable to determine the status of %1$s to read the directory listing. But you can activate the %2$s protection manually from the module %3$s.', 'secupress' ),
-				'%s', // URL.
-				'<strong>' . __( 'Directory Listing', 'secupress' ) . '</strong>',
-				'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_directory-listing">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
-			),
+				/** Translators: %s is a URL. */
+			100 => sprintf( __( 'Unable to determine the status of %1$s to read the directory listing.', 'secupress' ), '%s' ),
 			// "bad"
 			/** Translators: %s is an URL */
 			200 => __( '%s (for example) should not be accessible to anyone because of directory listing.', 'secupress' ),

@@ -41,7 +41,7 @@ class SecuPress_Scan_Shellshock extends SecuPress_Scan implements SecuPress_Scan
 	 * @since 1.1.4
 	 */
 	protected function init() {
-		$this->title = __( 'Check if your website is vulnerable to "<strong>Shellshock</strong>".', 'secupress' );
+		$this->title = __( 'Check if your website is vulnerable to <strong>Shellshock</strong>.', 'secupress' );
 		$this->more  = __( '<strong>Shellshock</strong> is a critic vulnerability allowing an attacker to remotely execute malicious code on a server.', 'secupress' );
 		$this->more_fix = sprintf(
 			__( 'Activate the option %1$s in the %2$s module.', 'secupress' ),
@@ -61,30 +61,20 @@ class SecuPress_Scan_Shellshock extends SecuPress_Scan implements SecuPress_Scan
 	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
 	 */
 	public static function get_messages( $message_id = null ) {
-		$option   = '<em>' . __( 'Block Bad User-Agents', 'secupress' ) . '</em>';
-		$link     = '<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-headers_user-agents-header">' . __( 'Firewall', 'secupress' ) . '</a>';
+		/** Translators: 1 is the name of a protection, 2 is the name of a module. */
+		$activate_protection_message = sprintf( __( 'But you can activate the %1$s protection manually from the module %2$s.', 'secupress' ),
+			'<em>' . __( 'Block Bad User-Agents', 'secupress' ) . '</em>',
+			'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-headers_user-agents-header">' . __( 'Firewall', 'secupress' ) . '</a>'
+		);
+
 		$messages = array(
 			// "good"
 			0   => __( 'The server is not vulnerable to <strong>Shellshock</strong>.', 'secupress' ),
 			1   => __( 'The protection against <strong>Shellshock</strong> has been activated. It won\'t fix the vulnerability (only your host can) but it will prevent an attacker to exploit it remotely.', 'secupress' ),
 			// "warning"
-			100 => sprintf(
-				__( 'Unable to determine the status of the <strong>Shellshock</strong> flaw (%1$s). But you can activate the %2$s protection manually from the module %3$s.', 'secupress' ),
-				'<em>CVE-2014-6271</em>',
-				$option,
-				$link
-			),
-			101 => sprintf(
-				__( 'Unable to determine the status of the <strong>Shellshock</strong> flaw (%1$s). But you can activate the %2$s protection manually from the module %3$s.', 'secupress' ),
-				'<em>CVE-2014-7169</em>',
-				$option,
-				$link
-			),
-			102 => sprintf(
-				__( 'Unable to determine the status of the <strong>Shellshock</strong> flaw. But you can activate the %1$s protection manually from the module %2$s.', 'secupress' ),
-				$option,
-				$link
-			),
+			100 => sprintf( __( 'Unable to determine the status of the <strong>Shellshock</strong> flaw (%s).', 'secupress' ), '<em>CVE-2014-6271</em>' ) . ' ' . $activate_protection_message,
+			101 => sprintf( __( 'Unable to determine the status of the <strong>Shellshock</strong> flaw (%s).', 'secupress' ), '<em>CVE-2014-7169</em>' ) . ' ' . $activate_protection_message,
+			102 => __( 'Unable to determine the status of the <strong>Shellshock</strong> flaw.', 'secupress' ),
 			// "bad"
 			200 => sprintf( __( 'The server appears to be vulnerable to <strong>Shellshock</strong> (%s).', 'secupress' ), '<em>CVE-2014-6271</em>' ),
 			201 => sprintf( __( 'The server appears to be vulnerable to <strong>Shellshock</strong> (%s).', 'secupress' ), '<em>CVE-2014-7169</em>' ),

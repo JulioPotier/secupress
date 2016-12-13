@@ -70,6 +70,11 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 	public static function get_messages( $message_id = null ) {
 		global $is_apache;
 		$config_file = $is_apache ? '.htaccess' : 'web.config';
+		/** Translators: 1 is the name of a protection, 2 is the name of a module. */
+		$activate_protection_message = sprintf( __( 'But you can activate the %1$s protection from the module %2$s.', 'secupress' ),
+			'<strong>' . __( 'Directory Index', 'secupress' ) . '</strong>',
+			'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'file-system' ) ) . '#row-directory-index_activated">' . __( 'Malware Scan', 'secupress' ) . '</a>'
+		);
 
 		$messages = array(
 			// "good"
@@ -78,11 +83,7 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 			/** Translators: %s is a file name. */
 			1   => sprintf( __( 'The rules to get the correct index file order (known as Directory Index) have been successfully added to your %s file.', 'secupress' ), "<code>$config_file</code>" ),
 			// "warning"
-			100 => sprintf(
-				__( 'Unable to determine the status of the index file order. But you can activate the %1$s protection manually from the module %2$s.', 'secupress' ),
-				'<strong>' . __( 'Directory Index', 'secupress' ) . '</strong>',
-				'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'file-system' ) ) . '#row-directory-index_activated">' . __( 'Malware Scan', 'secupress' ) . '</a>'
-			),
+			100 => __( 'Unable to determine the status of the index file order.', 'secupress' ) . ' ' . $activate_protection_message,
 			// "bad"
 			/** Translators: 1 and 2 are file names. */
 			200 => sprintf( __( 'Your website should load %1$s first, but actually it loads %2$s first.', 'secupress' ), '<code>index.php</code>', '%s' ),
