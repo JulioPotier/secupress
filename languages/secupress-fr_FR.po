@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
 "POT-Creation-Date: 2016-12-13 17:39+0100\n"
-"PO-Revision-Date: 2016-12-13 17:42+0100\n"
+"PO-Revision-Date: 2016-12-13 17:48+0100\n"
 "Last-Translator: WP Media <contact@wp-media.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -130,7 +130,7 @@ msgid ""
 "Please remove all rules between %2$s and %3$s."
 msgstr ""
 "Il semble que votre fichier %1$s n'est pas en écriture, vous devrez l'éditer "
-"manuellement. Merci re supprimer toutes les règles entre %2$s et %3$s."
+"manuellement. Merci de supprimer toutes les règles entre %2$s et %3$s."
 
 #: inc/admin/activation.php:371
 #, php-format
@@ -139,7 +139,7 @@ msgid ""
 "Please remove all nodes with %2$s."
 msgstr ""
 "Il semble que votre fichier %1$s n'est pas en écriture, vous devrez l'éditer "
-"manuellement. Merci re supprimer tous les nœuds avec %2$s."
+"manuellement. Merci de supprimer tous les nœuds avec %2$s."
 
 #: inc/admin/activation.php:401 inc/admin/functions/modules.php:388
 #, php-format
