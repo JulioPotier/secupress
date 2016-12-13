@@ -124,7 +124,7 @@ It's important to delete all other security plugins before activating SecuPress.
 * Fix #185: A mysterious "////" title was present in the french translation, near "WML-RPC".
 * Fix #190: The module link in the non login time slot scan has now its # to get a correct anchor. Happy sailor.
 * Fix #191: A function was missing, so the PasswordLess scan couldn't activate its module, now, he can and he's happy too.
-* Fix #193: The antibrutefoce scan always said "false" because we didn't call him by its real name.
+* Fix #193: The anti-bruteforce scan always said "false" because we didn't call him by its real name.
 * Fix #197: When one of our MU plugin was created on plugin deactivation, it triggered a fatal error, it was so fatal that we decided to remove it.
 
 = 1.0.5 =
