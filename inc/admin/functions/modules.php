@@ -384,7 +384,7 @@ function secupress_remove_module_rules_or_notice( $marker, $module_name ) {
 	if ( $is_nginx ) {
 		$message  = sprintf( __( '%s:', 'secupress' ), $module_name ) . ' ';
 		$message .= sprintf(
-			/** Translators: 1 is a file name, 2 and 3 are small parts of code. */
+			/** Translators: 1 and 2 are small parts of code, 3 is a file name. */
 			__( 'Your server runs <strong>Ngnix</strong>. You have to edit the configuration file manually. Please remove all rules between %1$s and %2$s from the %3$s file.', 'secupress' ),
 			"<code># BEGIN SecuPress $marker</code>",
 			'<code># END SecuPress</code>',
@@ -432,7 +432,7 @@ function secupress_add_module_rules_or_notice( $args ) {
 			$rules    = esc_html( $rules );
 			$message  = sprintf( __( '%s:', 'secupress' ), $title ) . ' ';
 			$message .= sprintf(
-				/** Translators: 1 is a file name, 2 is some code */
+				/** Translators: 1 is a file name, 2 is some code. */
 				__( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ),
 				'<code>.htaccess</code>',
 				"<pre># BEGIN SecuPress $marker\n$rules# END SecuPress</pre>"
@@ -462,7 +462,7 @@ function secupress_add_module_rules_or_notice( $args ) {
 
 			if ( ! empty( $iis_args['node_types'] ) ) {
 				$message .= sprintf(
-					/** Translators: 1 is a file name, 2 is a tag name, 3 is a folder path (kind of), 4 is some code */
+					/** Translators: 1 is a file name, 2 is a tag name, 3 is a folder path (kind of), 4 is some code. */
 					__( 'Your %1$s file is not writable. Please remove any previous %2$s tag and add the following lines inside the tags hierarchy %3$s (create it if does not exist): %4$s', 'secupress' ),
 					'<code>web.config</code>',
 					'<code class="secupress-iis7-node-type">' . $iis_args['node_types'] . '</code>',
@@ -471,7 +471,7 @@ function secupress_add_module_rules_or_notice( $args ) {
 				);
 			} else {
 				$message .= sprintf(
-					/** Translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
+					/** Translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code. */
 					__( 'Your %1$s file is not writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ),
 					'<code>web.config</code>',
 					'<code class="secupress-iis7-path">' . $path . '</code>',

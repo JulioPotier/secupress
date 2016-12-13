@@ -80,18 +80,18 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 			/** Translators: %s is a file name. */
 			1   => sprintf( __( 'The rules forbidding access to directory listing have been successfully added to your %s file.', 'secupress' ), "<code>$config_file</code>" ) . ' ' . $activate_protection_message,
 			// "warning"
-				/** Translators: %s is a URL. */
+			/** Translators: %s is a URL. */
 			100 => sprintf( __( 'Unable to determine the status of %1$s to read the directory listing.', 'secupress' ), '%s' ),
 			// "bad"
-			/** Translators: %s is an URL */
+			/** Translators: %s is a URL. */
 			200 => __( '%s (for example) should not be accessible to anyone because of directory listing.', 'secupress' ),
 			// "cantfix"
-			/** Translators: 1 is a file name, 2 is some code */
+			/** Translators: 1 is a file name, 2 is some code. */
 			300 => sprintf( __( 'Your server runs <strong>Nginx</strong>, the directory listing disclosure cannot be fixed automatically but you can do it yourself by adding the following code to your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
 			301 => __( 'Your server runs an unrecognized system. The directory listing disclosure cannot be fixed automatically.', 'secupress' ),
-			/** Translators: 1 is a file name, 2 is some code */
+			/** Translators: 1 is a file name, 2 is some code. */
 			302 => sprintf( __( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ), "<code>$config_file</code>", '%s' ),
-			/** Translators: 1 is a file name, 2 is a tag name, 3 is a folder path (kind of), 4 is some code */
+			/** Translators: 1 is a file name, 2 is a tag name, 3 is a folder path (kind of), 4 is some code. */
 			303 => sprintf( __( 'Your %1$s file is not writable. Please remove any previous %2$s tag and add the following lines inside the tags hierarchy %3$s (create it if does not exist): %4$s', 'secupress' ), "<code>$config_file</code>", '%1$s', '%2$s', '%3$s' ),
 		);
 

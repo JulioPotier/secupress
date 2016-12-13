@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2016-12-13 17:39+0100\n"
-"PO-Revision-Date: 2016-12-13 17:48+0100\n"
-"Last-Translator: WP Media <contact@wp-media.me>\n"
+"POT-Creation-Date: 2016-12-13 21:25+0100\n"
+"PO-Revision-Date: 2016-12-13 21:26+0100\n"
+"Last-Translator: WP Media <contact@secupress.me>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
@@ -46,8 +46,9 @@ msgstr "Modules"
 msgid "Settings"
 msgstr "Réglages"
 
-#: inc/admin/activation.php:140 inc/admin/functions/modules.php:436
-#: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:115
+#. Translators: 1 is a file name, 2 is some code.
+#: inc/admin/activation.php:141 inc/admin/functions/modules.php:436
+#: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:114
 #: inc/classes/scanners/class-secupress-scan-bad-url-access.php:100
 #: inc/classes/scanners/class-secupress-scan-directory-listing.php:93
 #: inc/classes/scanners/class-secupress-scan-directoryindex.php:95
@@ -62,22 +63,23 @@ msgstr ""
 "Votre fichier %1$s n'est pas en écriture. Merci d'ajouter ce qui suit au "
 "début du fichier&nbsp;: %2$s"
 
-#: inc/admin/activation.php:199
+#. Translators: %s is a folder path
+#: inc/admin/activation.php:200
 #, php-format
 msgid "In %s:"
 msgstr "Dans %s&nbsp;:"
 
-#: inc/admin/activation.php:221
+#: inc/admin/activation.php:222
 #, php-format
 msgid "Remove all existing %s tags."
 msgstr "Supprimer toutes les balises %s."
 
-#: inc/admin/activation.php:239
+#: inc/admin/activation.php:240
 #, php-format
 msgid "Add the following: %s"
 msgstr "Ajouter ce qui suit&nbsp;: %s"
 
-#: inc/admin/activation.php:245
+#: inc/admin/activation.php:246
 #, php-format
 msgid ""
 "Your %1$s file is not writable. Please edit this file, following these "
@@ -86,7 +88,7 @@ msgstr ""
 "Votre fichier %1$s n'est pas en écriture. Merci d'éditer le fichier comme "
 "indiqué&nbsp;: %2$s"
 
-#: inc/admin/activation.php:258
+#: inc/admin/activation.php:259
 #, php-format
 msgid ""
 "Since your %1$s file cannot be edited directly, please add the following in "
@@ -95,8 +97,8 @@ msgstr ""
 "Puisque votre fichier %1$s ne peut pas être édité. Merci d'ajouter ceci dans "
 "votre fichier&nbsp;: %2$s"
 
-#: inc/admin/activation.php:323 inc/admin/activation.php:368
-#: inc/admin/activation.php:398 inc/admin/functions/modules.php:358
+#: inc/admin/activation.php:324 inc/admin/activation.php:369
+#: inc/admin/activation.php:399 inc/admin/functions/modules.php:358
 #: inc/admin/functions/modules.php:372 inc/admin/functions/modules.php:385
 #: inc/admin/functions/modules.php:433 inc/admin/functions/modules.php:461
 #: inc/admin/functions/modules.php:491 inc/admin/functions/modules.php:503
@@ -123,7 +125,8 @@ msgstr ""
 msgid "%s:"
 msgstr "%s&nbsp;:"
 
-#: inc/admin/activation.php:326
+#. Translators: 1 is a file name, 2 and 3 are small parts of code.
+#: inc/admin/activation.php:327
 #, php-format
 msgid ""
 "It seems your %1$s file is not writable, you have to edit it manually. "
@@ -132,7 +135,8 @@ msgstr ""
 "Il semble que votre fichier %1$s n'est pas en écriture, vous devrez l'éditer "
 "manuellement. Merci de supprimer toutes les règles entre %2$s et %3$s."
 
-#: inc/admin/activation.php:371
+#. Translators: 1 is a file name, 2 is a small part of code.
+#: inc/admin/activation.php:372
 #, php-format
 msgid ""
 "It seems your %1$s file is not writable, you have to edit the file manually. "
@@ -141,7 +145,8 @@ msgstr ""
 "Il semble que votre fichier %1$s n'est pas en écriture, vous devrez l'éditer "
 "manuellement. Merci de supprimer tous les nœuds avec %2$s."
 
-#: inc/admin/activation.php:401 inc/admin/functions/modules.php:388
+#. Translators: 1 and 2 are small parts of code, 3 is a file name.
+#: inc/admin/activation.php:402 inc/admin/functions/modules.php:388
 #, php-format
 msgid ""
 "Your server runs <strong>Ngnix</strong>. You have to edit the configuration "
@@ -152,7 +157,7 @@ msgstr ""
 "votre fichier de configuration manuellement. Merci de supprimer les règles "
 "entre %1$s et %2$s dans le fichier %3$s."
 
-#: inc/admin/activation.php:463
+#: inc/admin/activation.php:464
 msgid "OK, got it!"
 msgstr "Ok j'ai compris&nbsp;!"
 
@@ -292,11 +297,13 @@ msgstr ""
 msgid "Our server returned an error."
 msgstr "Notre serveur a retourné une erreur."
 
+#. Translators: this is the slug (part of the URL) of the account page on secupress.me, like in https://secupress.me/account/, it must not be translated if the page doesn't exist.
 #: inc/admin/ajax-post-callbacks.php:793
 msgctxt "URL slug"
 msgid "account"
 msgstr "fr/mon-compte"
 
+#. Translators: %s is a link to the "SecuPress account".
 #: inc/admin/ajax-post-callbacks.php:796
 #, php-format
 msgid ""
@@ -401,7 +408,7 @@ msgstr ""
 #: inc/classes/scanners/class-secupress-scan-anti-scanner.php:72
 #: inc/classes/scanners/class-secupress-scan-auto-update.php:76
 #: inc/classes/scanners/class-secupress-scan-bad-config-files.php:70
-#: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:121
+#: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:120
 #: inc/classes/scanners/class-secupress-scan-bad-old-files.php:68
 #: inc/classes/scanners/class-secupress-scan-bad-old-plugins.php:106
 #: inc/classes/scanners/class-secupress-scan-bad-request-methods.php:72
@@ -436,6 +443,7 @@ msgstr ""
 msgid "Unknown message"
 msgstr "Message inconnu"
 
+#. Translators: 1 is a file name, 2 and 3 are small parts of code.
 #: inc/admin/functions/modules.php:361
 #, php-format
 msgid ""
@@ -445,6 +453,7 @@ msgstr ""
 "Votre fichier %1$s n'est pas en écriture, vous devrez l'éditer manuellement. "
 "Merci de supprimer les règles entre %2$s et %3$s du fichier %1$s."
 
+#. Translators: 1 is a file name, 2 is a small part of code.
 #: inc/admin/functions/modules.php:375
 #, php-format
 msgid ""
@@ -454,6 +463,7 @@ msgstr ""
 "Votre fichier %1$s n'est pas en écriture, vous devrez l'éditer manuellement. "
 "Merci de supprimer les règles avec %2$s du fichier %1$s."
 
+#. Translators: 1 is a file name, 2 is a tag name, 3 is a folder path (kind of), 4 is some code.
 #: inc/admin/functions/modules.php:466
 #: inc/classes/scanners/class-secupress-scan-directory-listing.php:95
 #: inc/classes/scanners/class-secupress-scan-directoryindex.php:97
@@ -467,8 +477,9 @@ msgstr ""
 "%2$s précédente et d'ajouter les lignes suivantes dans la hiérarchie des "
 "balises %3$s (créez la si elle n'existe pas)&nbsp;: %4$s"
 
+#. Translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code.
 #: inc/admin/functions/modules.php:475
-#: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:117
+#: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:116
 #: inc/classes/scanners/class-secupress-scan-bad-url-access.php:102
 #: inc/classes/scanners/class-secupress-scan-discloses.php:99
 #: inc/classes/scanners/class-secupress-scan-php-disclosure.php:93
@@ -481,6 +492,7 @@ msgstr ""
 "Votre fichier %1$s n'est pas en écriture. Merci d'ajouter ce qui suit dans "
 "la hiérarchie des balises %2$s (créez la si elle n'existe pas)&nbsp;: %3$s"
 
+#. Translators: 1 is a file name, 2 is some code
 #: inc/admin/functions/modules.php:494
 #, php-format
 msgid ""
@@ -566,6 +578,7 @@ msgstr ""
 "Importer vos réglages précédemment exportés depuis un autre site ou depuis "
 "votre dernier point de sauvegarde"
 
+#. Translators: %s is a "click here" link.
 #: inc/admin/multisite/centralize-blog-options.php:143
 #, php-format
 msgid ""
@@ -580,6 +593,7 @@ msgstr ""
 msgid "click here"
 msgstr "cliquer ici"
 
+#. Translators: %s is a "click here" link.
 #: inc/admin/multisite/centralize-blog-options.php:203
 #, php-format
 msgid "If this page does not refresh automatically in 2 seconds, please %s."
@@ -598,6 +612,7 @@ msgstr "<strong>ERREUR</strong>&nbsp;: la page d'option n'a pas été trouvée"
 msgid "Settings saved."
 msgstr "Réglages sauvegardés"
 
+#. Translators: 1 is an URL, 2 is the plugin name.
 #: inc/admin/multisite/settings.php:150
 #, php-format
 msgid ""
@@ -607,6 +622,7 @@ msgstr ""
 "Des problèmes de sécurité doivent être réglés, merci de visiter <a href="
 "\"%1$s\">la page de %2$s</a>."
 
+#. Translators: %s is a link to the dashboard.
 #: inc/admin/multisite/settings.php:246
 #, php-format
 msgid ""
@@ -665,6 +681,7 @@ msgstr ""
 msgid "Deactivate"
 msgstr "Désactiver"
 
+#. Translators: 1 is the plugin name
 #: inc/admin/notices.php:115
 #, php-format
 msgid ""
@@ -769,6 +786,7 @@ msgstr ""
 msgid "the plugin settings page"
 msgstr "la page des réglages du plugin"
 
+#. Translators: %1$s is the version number, %2$s is a date
 #: inc/admin/notices.php:472
 #, php-format
 msgid "Please read these special notes for this update, version %1$s - %2$s"
@@ -889,6 +907,7 @@ msgid_plural "These %d issues require your attention"
 msgstr[0] "Ce problème requiert votre attention"
 msgstr[1] "Ces %d problèmes requièrent votre attention"
 
+#. Translators: Params are numbers like "1 of 3"
 #: inc/admin/scanner-step-3.php:121
 #, php-format
 msgid "%1$s of %2$s"
@@ -993,6 +1012,7 @@ msgstr "Aller plus loin&nbsp;?"
 msgid "Perfect the security of your website with our dedicated modules."
 msgstr "Perfectionnez la sécurité de votre site avec nos modules dédiés."
 
+#. Translators: %s is the plugin name.
 #: inc/admin/scanner-step-4.php:299
 #, php-format
 msgid "%s modules"
@@ -1266,6 +1286,7 @@ msgstr "Comment ça marche&nbsp;?"
 msgid "New Scan"
 msgstr "Nouveau scan"
 
+#. Translators: %s is the plugin name
 #: inc/admin/settings.php:497 inc/admin/settings.php:504
 #, php-format
 msgid ""
@@ -1531,6 +1552,7 @@ msgstr "Plugins WordPress actifs&nbsp;: %s"
 msgid "Please check the checkbox first."
 msgstr "Merci de cocher cette case en premier."
 
+#. Translators: %s is "plugin directory".
 #: inc/classes/admin/class-secupress-admin-support.php:407
 #, php-format
 msgid ""
@@ -1594,6 +1616,7 @@ msgstr "site principal"
 msgid "Must-Use plugin"
 msgstr "Plugin automatique (must-use)"
 
+#. Translators: a drop-in is specific kind of WordPress plugin.
 #: inc/classes/admin/class-secupress-admin-support.php:596
 #: inc/functions/deprecated.php:185
 msgid "drop-in"
@@ -1696,6 +1719,7 @@ msgstr "Tout télécharger"
 msgid "Delete All"
 msgstr "Tout supprimer"
 
+#. Translators: manage posts column name
 #: inc/classes/common/class-secupress-logs-list-table.php:555
 msgctxt "column name"
 msgid "Title"
@@ -2358,6 +2382,7 @@ msgstr "Mauvaises extensions de fichiers"
 msgid "Malware Scan"
 msgstr "Scanner de virus"
 
+#. Translators: 1 is the name of a protection, 2 is the name of a module.
 #: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:94
 #: inc/classes/scanners/class-secupress-scan-bad-url-access.php:80
 #: inc/classes/scanners/class-secupress-scan-directory-listing.php:72
@@ -2375,6 +2400,7 @@ msgstr "Mais vous pouvez activer la protection %1$s du module %2$s."
 msgid "Files that use bad extensions are protected."
 msgstr "Les fichiers avec de mauvaises extensions sont protégés."
 
+#. Translators: %s is a file name.
 #: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:103
 #, php-format
 msgid ""
@@ -2389,11 +2415,11 @@ msgid "Unable to determine the status of the bad file extensions test file."
 msgstr ""
 "Impossible de déterminer le statut des fichiers avec de mauvaises extensions."
 
-#: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:108
+#: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:107
 msgid "Could not create a bad extension test file in the uploads folder."
 msgstr "Impossible de créer un fichier de test dans le dossier des uploads."
 
-#: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:109
+#: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:108
 msgid ""
 "Whether or not you have files using bad extensions in the uploads folder, "
 "those files are accessible directly."
@@ -2401,7 +2427,8 @@ msgstr ""
 "Que vous ayez ou non des fichiers qui utilisent de mauvaises extensions, ces "
 "fichiers ne devraient pas être accessibles directement."
 
-#: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:112
+#. Translators: 1 is a file name, 2 is some code.
+#: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:111
 #, php-format
 msgid ""
 "Your server runs <strong>Nginx</strong>, the files that use bad extensions "
@@ -2413,7 +2440,7 @@ msgstr ""
 "pouvez le faire vous même en ajoutant le code suivant dans votre fichier "
 "%1$s&nbsp;: %2$s"
 
-#: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:113
+#: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:112
 msgid ""
 "Your server runs an unrecognized system. The files that use bad extensions "
 "cannot be protected automatically."
@@ -2451,6 +2478,7 @@ msgstr "Votre installation est libre d'anciens fichiers."
 msgid "All old files have been deleted."
 msgstr "Tous les anciens fichiers ont été supprimés."
 
+#. Translators: 1 is a number, 2 is a file name (or a list of file names).
 #: inc/classes/scanners/class-secupress-scan-bad-old-files.php:63
 #, php-format
 msgid "Your installation contains <strong>%1$d old file</strong>: %2$s."
@@ -2523,6 +2551,7 @@ msgstr "Tous les plugins anciens ou retirés suprimables ont été supprimés."
 msgid "All removed or old plugins have been deactivated."
 msgstr "Tous les plugins anciens ou retirés ont été désactivés."
 
+#. Translators: %s is a file name.
 #: inc/classes/scanners/class-secupress-scan-bad-old-plugins.php:75
 #: inc/classes/scanners/class-secupress-scan-bad-vuln-plugins.php:82
 #, php-format
@@ -2576,6 +2605,7 @@ msgid_plural "Sorry, the following plugins could not be deactivated: %s."
 msgstr[0] "Désolé, le plugin suivant n'a pas pu être désactivé&nbsp;: %s."
 msgstr[1] "Désolé, les plugins suivant n'ont pas pu être désactivés&nbsp;: %s."
 
+#. Translators: %s is the plugin name.
 #: inc/classes/scanners/class-secupress-scan-bad-old-plugins.php:83
 #: inc/classes/scanners/class-secupress-scan-inactive-plugins-themes.php:70
 #: inc/classes/scanners/class-secupress-scan-subscription.php:80
@@ -2587,6 +2617,7 @@ msgstr ""
 "Vous avez un grand réseau, %s doit d'abord travailler sur quelques données "
 "avant de pouvoir réaliser ce scan."
 
+#. Translators: 1 is a number, 2 is a plugin name (or a list of plugin names).
 #: inc/classes/scanners/class-secupress-scan-bad-old-plugins.php:86
 #, php-format
 msgid ""
@@ -2600,6 +2631,7 @@ msgstr[1] ""
 "<string>%1$d plugin</strong> ne sont plus dans le dépôt de WordPress&nbsp;: "
 "%2$s."
 
+#. Translators: 1 is a number, 2 is a plugin name (or a list of plugin names).
 #: inc/classes/scanners/class-secupress-scan-bad-old-plugins.php:88
 #, php-format
 msgid ""
@@ -2614,6 +2646,7 @@ msgstr[1] ""
 "<strong>%1$d plugin</strong> n'ont pas été mis à jour depuis 2 ans au "
 "moins&nbsp;: %2$s."
 
+#. Translators: %s is a plugin name.
 #: inc/classes/scanners/class-secupress-scan-bad-old-plugins.php:90
 #: inc/classes/scanners/class-secupress-scan-bad-vuln-plugins.php:93
 #, php-format
@@ -2648,6 +2681,7 @@ msgid_plural "Sorry, those plugins could not be deactivated."
 msgstr[0] "Désolé, ce plugin ne peut pas être désactivé."
 msgstr[1] "Désolé, ces plugins ne peuvent pas être désactivés."
 
+#. Translators: %d is a number.
 #: inc/classes/scanners/class-secupress-scan-bad-old-plugins.php:96
 #: inc/classes/scanners/class-secupress-scan-bad-vuln-plugins.php:100
 #, php-format
@@ -2657,6 +2691,7 @@ msgstr[0] "<strong>%d</strong> plugin peut être <strong>supprimé</strong>."
 msgstr[1] ""
 "<strong>%d</strong> plugins peuvent être <strong>supprimés</strong>."
 
+#. Translators: %d is a number.
 #: inc/classes/scanners/class-secupress-scan-bad-old-plugins.php:98
 #: inc/classes/scanners/class-secupress-scan-bad-vuln-plugins.php:102
 #, php-format
@@ -2672,6 +2707,7 @@ msgstr[1] ""
 msgid "Unable to locate WordPress Plugin directory."
 msgstr "Impossible de joindre le dépôt des plugins de WordPress."
 
+#. Translators: %s is the plugin name.
 #: inc/classes/scanners/class-secupress-scan-bad-old-plugins.php:101
 #: inc/classes/scanners/class-secupress-scan-bad-vuln-plugins.php:105
 #, php-format
@@ -2814,6 +2850,7 @@ msgstr "Accès aux mauvaises URLs"
 msgid "Sensitive Data"
 msgstr "Données sensibles"
 
+#. Translators: %s is a URL or a list of URLs.
 #: inc/classes/scanners/class-secupress-scan-bad-url-access.php:74
 #, php-format
 msgid "Unable to determine if %s is accessible."
@@ -2825,6 +2862,7 @@ msgstr[1] "Impossible de déterminer si %s sont accessibles."
 msgid "Your site does not reveal your site's internal path."
 msgstr "Votre site ne divulgue pas le chemin de votre site."
 
+#. Translators: %s is a file name.
 #: inc/classes/scanners/class-secupress-scan-bad-url-access.php:89
 #, php-format
 msgid ""
@@ -2834,6 +2872,7 @@ msgstr ""
 "Les règles pour éviter que le chemin de votre site ne soit divulgué ont été "
 "ajoutées dans votre fichier %s."
 
+#. Translators: %s is a URL, or a list of URLs.
 #: inc/classes/scanners/class-secupress-scan-bad-url-access.php:94
 #, php-format
 msgid "%s should not be accessible by anyone."
@@ -2841,6 +2880,7 @@ msgid_plural "%s should not be accessible by anyone."
 msgstr[0] "%s ne devrait pas être accessible par tout le monde."
 msgstr[1] "%s ne devraient pas être accessibles par tout le monde."
 
+#. Translators: 1 is a file name, 2 is some code.
 #: inc/classes/scanners/class-secupress-scan-bad-url-access.php:97
 #, php-format
 msgid ""
@@ -2991,6 +3031,7 @@ msgstr "Tous les plugins connus pour être vulnérables ont été supprimés."
 msgid "All plugins known to be vulnerable have been deactivated."
 msgstr "Tous les plugins connus pour être vulnérables ont été désactivés."
 
+#. Translators: 1 is a number, 2 is a plugin name (or a list of plugin names).
 #: inc/classes/scanners/class-secupress-scan-bad-vuln-plugins.php:91
 #, php-format
 msgid "<strong>%1$d plugin</strong> is known to be vulnerable: %2$s."
@@ -3245,6 +3286,7 @@ msgstr "Directory Listing"
 msgid "Your site does not reveal the files list."
 msgstr "Votre site ne révèle pas la liste des fichiers."
 
+#. Translators: %s is a file name.
 #: inc/classes/scanners/class-secupress-scan-directory-listing.php:81
 #, php-format
 msgid ""
@@ -3254,6 +3296,7 @@ msgstr ""
 "Les règles interdisant l'affichage des fichiers dans les dossiers ont été "
 "ajoutées dans votre fichier %s."
 
+#. Translators: %s is a URL.
 #: inc/classes/scanners/class-secupress-scan-directory-listing.php:84
 #, php-format
 msgid "Unable to determine the status of %1$s to read the directory listing."
@@ -3261,6 +3304,7 @@ msgstr ""
 "Impossible de déterminer le statut de %1$s pour lire l'affichage des "
 "fichiers dans les dossiers."
 
+#. Translators: %s is a URL.
 #: inc/classes/scanners/class-secupress-scan-directory-listing.php:87
 #, php-format
 msgid ""
@@ -3270,6 +3314,7 @@ msgstr ""
 "%s (par exemple) ne devrait pas être accessible de tout le monde (à cause du "
 "Directory Listing)."
 
+#. Translators: 1 is a file name, 2 is some code.
 #: inc/classes/scanners/class-secupress-scan-directory-listing.php:90
 #, php-format
 msgid ""
@@ -3290,6 +3335,7 @@ msgstr ""
 "Votre serveur tourne sur un environnement inconnu. La correction de la liste "
 "des fichiers dans les dossiers ne peut pas être faite automatiquement."
 
+#. Translators: 1, 2 and 3 are file extensions.
 #: inc/classes/scanners/class-secupress-scan-directoryindex.php:44
 #, php-format
 msgid ""
@@ -3298,6 +3344,7 @@ msgstr ""
 "Vérifie si les fichiers %1$s sont chargés en priorité au lieu de %2$s ou "
 "%3$s etc."
 
+#. Translators: 1 and 2 are file names.
 #: inc/classes/scanners/class-secupress-scan-directoryindex.php:46
 #: inc/modules/file-system/settings/directory-index.php:11
 #, php-format
@@ -3318,12 +3365,14 @@ msgstr ""
 msgid "Directory Index"
 msgstr "Index des dossiers"
 
+#. Translators: %s is a file name.
 #: inc/classes/scanners/class-secupress-scan-directoryindex.php:82
 #, php-format
 msgid "%s is the first file loaded, index file order is good."
 msgstr ""
 "%s est le premier fichier chargé, l'ordre des index de fichiers est correct."
 
+#. Translators: %s is a file name.
 #: inc/classes/scanners/class-secupress-scan-directoryindex.php:84
 #, php-format
 msgid ""
@@ -3337,6 +3386,7 @@ msgstr ""
 msgid "Unable to determine the status of the index file order."
 msgstr "Impossible de déterminer le status de l'ordre des fichiers d'index."
 
+#. Translators: 1 and 2 are file names.
 #: inc/classes/scanners/class-secupress-scan-directoryindex.php:89
 #, php-format
 msgid "Your website should load %1$s first, but actually it loads %2$s first."
@@ -3344,6 +3394,7 @@ msgstr ""
 "Votre site devrait charger %1$s en premier, mais il charge actuellement %2$s "
 "à la place."
 
+#. Translators: 1 is a file name, 2 is some code.
 #: inc/classes/scanners/class-secupress-scan-directoryindex.php:92
 #, php-format
 msgid ""
@@ -3391,6 +3442,7 @@ msgstr "Divulgation de la version de WordPress"
 msgid "PHP Version Disclosure"
 msgstr "Divulgation de la version de PHP"
 
+#. Translators: 1 and 2 are the name of protections, 3 is the name of a module.
 #: inc/classes/scanners/class-secupress-scan-discloses.php:73
 #, php-format
 msgid ""
@@ -3432,6 +3484,7 @@ msgstr ""
 "Impossible de déterminer si votre page d'accueil divulgue la <strong>version "
 "de WordPress</strong> ou la <strong>version de PHP</strong>."
 
+#. Translators: %s is a file name.
 #: inc/classes/scanners/class-secupress-scan-discloses.php:87
 #, php-format
 msgid ""
@@ -3457,6 +3510,7 @@ msgstr ""
 "Le site affiche la <strong>version de WordPress</strong> dans le code source "
 "de la page d'accueil (%s)."
 
+#. Translators: %s is a file name.
 #: inc/classes/scanners/class-secupress-scan-discloses.php:92
 #, php-format
 msgid ""
@@ -3466,6 +3520,7 @@ msgstr ""
 "Le fichier %s ne devrait pas être accessible de tout le monde afin d'éviter "
 "de révéler la <strong>version de WordPress</strong>."
 
+#. Translators: 1 is a file name, 2 is some code.
 #: inc/classes/scanners/class-secupress-scan-discloses.php:95
 #, php-format
 msgid ""
@@ -3479,6 +3534,7 @@ msgstr ""
 "strong> ne peut être corrigé automatiquement mais vous pouvez le faire vous "
 "même en ajoutant ce code dans votre fichier %1$s&nbsp;: %2$s."
 
+#. Translators: 1 is a file name, 2 is some code.
 #: inc/classes/scanners/class-secupress-scan-discloses.php:101
 #, php-format
 msgid ""
@@ -3491,6 +3547,7 @@ msgstr ""
 "vous pouvez le faire vous même en ajoutant ce code dans votre fichier "
 "%1$s&nbsp;: %2$s."
 
+#. Translators: 1 is a file name, 2 is some code.
 #: inc/classes/scanners/class-secupress-scan-discloses.php:103
 #, php-format
 msgid ""
@@ -3503,6 +3560,7 @@ msgstr ""
 "mais vous pouvez le faire vous même en ajoutant ce code dans votre fichier "
 "%1$s&nbsp;: %2$s."
 
+#. Translators: %s is a file name.
 #: inc/classes/scanners/class-secupress-scan-discloses.php:106
 #, php-format
 msgid ""
@@ -3772,6 +3830,7 @@ msgstr "Période de non connexion"
 msgid "g:i a"
 msgstr "G:i"
 
+#. Translators: 1 and 2 are hours.
 #: inc/classes/scanners/class-secupress-scan-non-login-time-slot.php:62
 #, php-format
 msgid ""
@@ -3922,6 +3981,7 @@ msgstr "Divulgation PHP"
 msgid "Your site does not reveal the PHP modules."
 msgstr "Votre site ne révèle pas les modules PHP."
 
+#. Translators: %s is a file name.
 #: inc/classes/scanners/class-secupress-scan-php-disclosure.php:80
 #, php-format
 msgid ""
@@ -3936,11 +3996,13 @@ msgid "Unable to determine if your homepage is disclosing the PHP modules."
 msgstr ""
 "Impossible de déterminer si votre page d'accueil divulgue les modules de PHP."
 
+#. Translators: %s is a URL.
 #: inc/classes/scanners/class-secupress-scan-php-disclosure.php:85
 #, php-format
 msgid "%s should not be accessible to anyone."
 msgstr "%s ne devrait pas être accessible de tout le monde."
 
+#. Translators: 1 is a file name, 2 is some code.
 #: inc/classes/scanners/class-secupress-scan-php-disclosure.php:88
 #, php-format
 msgid ""
@@ -4054,6 +4116,7 @@ msgstr[1] "<strong>%1$d plugins</strong> ne sont pas à jour&nbsp;: %2$s."
 msgid "Some plugins could not be updated correctly."
 msgstr "Quelques plugins n'ont pas pu être mis à jour correctement."
 
+#. Translators: %s is a file name
 #: inc/classes/scanners/class-secupress-scan-readme-discloses.php:44
 #, php-format
 msgid "Check if the %s files from your plugins and themes are protected."
@@ -4067,12 +4130,14 @@ msgstr "Vérifie si les fichiers %s de vos plugins et thèmes sont protégés."
 msgid "Protect readme files"
 msgstr "Protège les fichiers readme"
 
+#. Translators: %s is a file name.
 #: inc/classes/scanners/class-secupress-scan-readme-discloses.php:81
 #, php-format
 msgid "The %s files are protected from revealing sensitive information."
 msgstr ""
 "Les fichiers %s sont protégés et ne divulguent pas d'informations sensibles."
 
+#. Translators: 1 and 2 are file names.
 #: inc/classes/scanners/class-secupress-scan-readme-discloses.php:83
 #, php-format
 msgid ""
@@ -4082,6 +4147,7 @@ msgstr ""
 "Les règles interdisant l'accès à votre fichier %1$s ont été ajoutées dans "
 "votre fichier %2$s."
 
+#. Translators: %s is a file name.
 #: inc/classes/scanners/class-secupress-scan-readme-discloses.php:86
 #, php-format
 msgid ""
@@ -4091,6 +4157,7 @@ msgstr ""
 "Impossible de déterminer le status des fichiers %s qui pourraient révéler "
 "des informations sensibles."
 
+#. Translators: %s is a file name.
 #: inc/classes/scanners/class-secupress-scan-readme-discloses.php:89
 #, php-format
 msgid ""
@@ -4100,6 +4167,7 @@ msgstr ""
 "Les fichiers %s et/ou %sne devraient pas être accessibles de tout le monde "
 "car ils révèlent des informations sensibles."
 
+#. Translators: 1 and 2 are a file names, 3 is some code.
 #: inc/classes/scanners/class-secupress-scan-readme-discloses.php:92
 #, php-format
 msgid ""
@@ -4111,6 +4179,7 @@ msgstr ""
 "protégés automatiquement mais vous pouvez le faire vous même en ajoutant le "
 "code suivant dans votre fichier %2$s&nbsp;: %3$s."
 
+#. Translators: %s is a file name.
 #: inc/classes/scanners/class-secupress-scan-readme-discloses.php:94
 #, php-format
 msgid ""
@@ -4372,6 +4441,7 @@ msgid_plural "The default role is not Subscriber in %s of your sites."
 msgstr[0] "Le rôle par défaut n'est pas Abonné sur %s de vos sites."
 msgstr[1] "Le rôle par défaut n'est pas Abonné sur %s de vos sites."
 
+#. Translators: %s is the plugin name.
 #: inc/classes/scanners/class-secupress-scan-subscription.php:87
 #, php-format
 msgid ""
@@ -4435,12 +4505,14 @@ msgstr[1] "<strong>%1$d thèmes</strong> ne sont pas à jour&nbsp;: %2$s."
 msgid "Some themes could not be updated correctly."
 msgstr "Certains thèmes n'ont pu être mis à jour correctement."
 
+#. Translators: %s is a plugin name.
 #: inc/classes/scanners/class-secupress-scan-woocommerce-discloses.php:42
 #: inc/classes/scanners/class-secupress-scan-wpml-discloses.php:42
 #, php-format
 msgid "Check if the %s plugin discloses its version."
 msgstr "Vérifie si le plugin %s divulgue sa version."
 
+#. Translators: 1 is a plugin name, 2 is the name of a protection, 3 is the name of a module.
 #: inc/classes/scanners/class-secupress-scan-woocommerce-discloses.php:46
 #: inc/classes/scanners/class-secupress-scan-wpml-discloses.php:46
 #, php-format
@@ -4458,12 +4530,14 @@ msgstr ""
 msgid "Plugin version disclosure"
 msgstr "Divulgation de la version du plugin"
 
+#. Translators: %s is a plugin name.
 #: inc/classes/scanners/class-secupress-scan-woocommerce-discloses.php:73
 #: inc/classes/scanners/class-secupress-scan-wpml-discloses.php:73
 #, php-format
 msgid "The %s plugin does not reveal sensitive information."
 msgstr "Le plugin %s ne divulgue pas d'informations sensibles."
 
+#. Translators: %s is a plugin name.
 #: inc/classes/scanners/class-secupress-scan-woocommerce-discloses.php:76
 #: inc/classes/scanners/class-secupress-scan-wpml-discloses.php:76
 #, php-format
@@ -4471,6 +4545,7 @@ msgid "Unable to determine if %s is disclosing its version on your homepage."
 msgstr ""
 "Impossible de déterminer si %s divulgue sa version sur votre page d'accueil."
 
+#. Translators: 1 is a plugin name, 2 is some related info.
 #: inc/classes/scanners/class-secupress-scan-woocommerce-discloses.php:79
 #: inc/classes/scanners/class-secupress-scan-wpml-discloses.php:79
 #, php-format
@@ -4480,6 +4555,7 @@ msgid ""
 msgstr ""
 "Le plugin %1$s affiche sa version dans le code source de votre page (%2$s)."
 
+#. Translators: %s is a plugin name.
 #: inc/classes/scanners/class-secupress-scan-woocommerce-discloses.php:83
 #: inc/classes/scanners/class-secupress-scan-wpml-discloses.php:83
 #, php-format
@@ -4487,6 +4563,7 @@ msgid "The %s's version should be removed from your styles URLs now."
 msgstr ""
 "Le version de %s devrait maintenant être retirée des URLs de vos styles."
 
+#. Translators: %s is a plugin name.
 #: inc/classes/scanners/class-secupress-scan-woocommerce-discloses.php:85
 #: inc/classes/scanners/class-secupress-scan-wpml-discloses.php:85
 #, php-format
@@ -4494,17 +4571,20 @@ msgid "The %s's version should be removed from your scripts URLs now."
 msgstr ""
 "Le version de %s devrait maintenant être retirée des URLs de vos scripts."
 
+#. Translators: %s is a file name.
 #: inc/classes/scanners/class-secupress-scan-wp-config.php:62
 #, php-format
 msgid "Check your %s file, especially the PHP constants."
 msgstr "Vérifie votre fichier %s, spécialement les constantes PHP."
 
+#. Translators: %s is a file name.
 #: inc/classes/scanners/class-secupress-scan-wp-config.php:64
 #, php-format
 msgid "You can use the %s file to improve the security of your website."
 msgstr ""
 "Vous pouvez utiliser le fichier %s pour améliorer la sécurité de votre site."
 
+#. Translators: %s is a file name.
 #: inc/classes/scanners/class-secupress-scan-wp-config.php:66
 #, php-format
 msgid ""
@@ -4514,6 +4594,7 @@ msgstr ""
 "Ajoutez quelques constantes PHP dans votre fichier %s pour améliorer la "
 "sécurité de votre site."
 
+#. Translators: 1 is a file name, 2 is a constant name.
 #: inc/classes/scanners/class-secupress-scan-wp-config.php:82
 #: inc/classes/scanners/class-secupress-scan-wp-config.php:134
 #, php-format
@@ -4526,6 +4607,7 @@ msgstr[1] ""
 "Dans votre fichier %1$s, la constante PHP %2$s ne devrait pas être "
 "configurée."
 
+#. Translators: 1 is a file name, 2 is a constant name.
 #: inc/classes/scanners/class-secupress-scan-wp-config.php:89
 #: inc/classes/scanners/class-secupress-scan-wp-config.php:136
 #, php-format
@@ -4536,6 +4618,7 @@ msgstr[0] ""
 msgstr[1] ""
 "Dans votre fichier %1$s, la constante PHP %2$s ne devrait pas être vide."
 
+#. Translators: 1 is a file name, 2 is a constant name, 3 is a value.
 #: inc/classes/scanners/class-secupress-scan-wp-config.php:96
 #: inc/classes/scanners/class-secupress-scan-wp-config.php:138
 #, php-format
@@ -4548,6 +4631,7 @@ msgstr[1] ""
 "Dans votre fichier %1$s, la constante PHP %2$s devrait être configurée sur "
 "%3$s."
 
+#. Translators: 1 is a file name, 2 is a constant name, 3 is a value.
 #: inc/classes/scanners/class-secupress-scan-wp-config.php:103
 #: inc/classes/scanners/class-secupress-scan-wp-config.php:140
 #, php-format
@@ -4561,11 +4645,13 @@ msgstr[1] ""
 "Dans votre fichier %1$s, la constante PHP %2$s devrait être configurée sur "
 "%3$s ou moins."
 
+#. Translators: %s is a file name.
 #: inc/classes/scanners/class-secupress-scan-wp-config.php:111
 #, php-format
 msgid "Your %s file is correct."
 msgstr "Votre fichier %s est correct."
 
+#. Translators: %s is a constant name.
 #: inc/classes/scanners/class-secupress-scan-wp-config.php:113
 #, php-format
 msgid ""
@@ -4577,6 +4663,7 @@ msgstr ""
 "\">plugin automatique</a> a été ajouté pour modifier la valeur par défaut de "
 "%s."
 
+#. Translators: %s is a constant name.
 #: inc/classes/scanners/class-secupress-scan-wp-config.php:118
 #, php-format
 msgid ""
@@ -4585,17 +4672,20 @@ msgstr ""
 "La constante PHP %s est définie avec sa valeur par défaut, elle devrait être "
 "modifiée."
 
+#. Translators: 1 is a file name, 2 is a constant name.
 #: inc/classes/scanners/class-secupress-scan-wp-config.php:120
 #, php-format
 msgid "In your %1$s file, the PHP constant %2$s should be set."
 msgstr ""
 "Dans votre fichier %1$s, la constante PHP %2$s devrait être configurée."
 
+#. Translators: %s is a list of constant names.
 #: inc/classes/scanners/class-secupress-scan-wp-config.php:129
 #, php-format
 msgid "Some PHP constants could not be set correctly: %s."
 msgstr "Quelques constantes PHP ne sont pas correctement paramétrées&nbsp;: %s"
 
+#. Translators: %s is a constant name.
 #: inc/classes/scanners/class-secupress-scan-wp-config.php:131
 #, php-format
 msgid ""
@@ -4708,6 +4798,7 @@ msgstr "Chercher une adresse IP"
 msgid "Reset"
 msgstr "Réinitialiser"
 
+#. Translators: %d is 100
 #: inc/classes/settings/class-secupress-settings-modules.php:539
 #, php-format
 msgid "Last %d banned IPs:"
@@ -4801,6 +4892,7 @@ msgstr "Vous trichez&nbsp;?"
 msgid "<strong>Error</strong>: the email field is empty."
 msgstr "<strong>Erreur</strong>&nbsp;: Le champ email est vide."
 
+#. Translators: guess what, %s is an email address
 #: inc/common.php:154
 #, php-format
 msgid "<strong>Error</strong>: the email address %s is not valid."
@@ -4823,6 +4915,7 @@ msgstr ""
 "personne. Ou peut-être que je le ferai. Ça serait une belle histoire à "
 "raconter au cours d'une longue soirée d'hiver."
 
+#. Translators: %s is a "unlock yourself" link
 #: inc/common.php:180
 #, php-format
 msgid "Anyway, simply follow this link to %s."
@@ -5037,6 +5130,7 @@ msgid ""
 msgstr ""
 "Votre message a été envoyé, nous reviendrons vers vous rapidement. Merci."
 
+#. Translators: %s is an email address.
 #: inc/functions/deprecated.php:60
 #, php-format
 msgid ""
@@ -5298,6 +5392,7 @@ msgstr "minuit"
 msgid "noon"
 msgstr "midi"
 
+#. Translators: %s is a time (hour + minute, or "midnight", or "noon".
 #: inc/modules/alerts/settings/daily-reporting.php:35
 #, php-format
 msgid "A notification will be sent every day at %s."
@@ -5593,6 +5688,7 @@ msgstr "Historique des sauvegardes"
 msgid "Backup Storage"
 msgstr "Stockage des sauvegardes"
 
+#. Translators: %s is a path to a folder.
 #: inc/modules/backups/settings/backups-storage.php:20
 #, php-format
 msgid "backups will be stored in %s. Please, delete them as soon as possible."
@@ -5600,6 +5696,7 @@ msgstr ""
 "Les sauvegardes seront stockées dans %s. Merci de les supprimer dès que "
 "possible."
 
+#. Translators: %s is the path to a folder.
 #: inc/modules/backups/settings/backups-storage.php:30
 #, php-format
 msgid ""
@@ -5609,16 +5706,19 @@ msgstr ""
 "il semblerait que des dossiers n'aient pu être créés. Merci de créer un "
 "dossier %s contenant ce qui suit&nbsp;:"
 
+#. Translators: %s is a folder name.
 #: inc/modules/backups/settings/backups-storage.php:37
 #, php-format
 msgid "Two folders with the following names: %s and %s."
 msgstr "Deux dossiers avec les noms suivants&nbsp;: %s et %s."
 
+#. Translators: %s is a file name.
 #: inc/modules/backups/settings/backups-storage.php:44
 #, php-format
 msgid "A %s file containing the following rules:"
 msgstr "Un fichier %s contenant les règles suivantes&nbsp;:"
 
+#. Translators: 1 is a file name, 2 is the path to a folder, 3 and 4 are folder names.
 #: inc/modules/backups/settings/backups-storage.php:55
 #, php-format
 msgid ""
@@ -5631,6 +5731,7 @@ msgstr ""
 "contenant ces deux dossiers&nbsp;: %3$s et %4$s. Ensuite, ajoutez les règles "
 "suivantes dans votre fichier %1$s&nbsp;:"
 
+#. Translators: 1 is the path to a folder, 2 and 3 are folder names, 4 is a file name.
 #: inc/modules/backups/settings/backups-storage.php:67
 #, php-format
 msgid ""
@@ -5737,6 +5838,7 @@ msgstr "Dossier des uploads"
 msgid "Deny direct access to those files in the uploads folder."
 msgstr "Interdire l'accès direct aux fichiers du dossier des uploads"
 
+#. Translators: %s is a file name.
 #: inc/modules/file-system/settings/bad-file-extensions.php:34
 #: inc/modules/file-system/settings/directory-index.php:36
 #: inc/modules/sensitive-data/settings/content-protect.php:115
@@ -5750,6 +5852,7 @@ msgid "You need to add the following code to your %s file:"
 msgstr ""
 "Vous avez besoin d'ajouter le code suivant dans votre fichier %s&nbsp;:"
 
+#. Translators: %s is a file name.
 #: inc/modules/file-system/settings/bad-file-extensions.php:40
 #: inc/modules/file-system/settings/bad-file-extensions.php:47
 #: inc/modules/file-system/settings/directory-index.php:42
@@ -5793,6 +5896,7 @@ msgstr "Règles"
 msgid "Index loading order"
 msgstr "Ordre de chargement des index"
 
+#. Translators: %s is a file name.
 #: inc/modules/file-system/settings/directory-index.php:24
 #, php-format
 msgid "Make sure %s is loaded first"
@@ -6343,6 +6447,7 @@ msgstr "Option réseau %s mise à jour"
 msgid "New user added (or not)"
 msgstr "Nouvel utilisateur ajouté"
 
+#. Translators: 1 is the plugin name, 2 is an URL.
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:645
 #, php-format
 msgid "%1$s prevented a request at %2$s"
@@ -6483,6 +6588,7 @@ msgid "New user added (or not) using the following data: %s"
 msgstr ""
 "Nouvel utilisateur ajouté (ou pas) avec les données suivantes&nbsp;: %s"
 
+#. Translators: 1 is the plugin name, 2 is an URL, 3 is an IP address, 4 is an identifier, 5 and 6 are some code.
 #: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:799
 #, php-format
 msgid ""
@@ -6824,6 +6930,7 @@ msgstr ""
 msgid "Uploads Themes & Plugins"
 msgstr "Upload des thèmes & plugins"
 
+#. Translators: %s is a file extension
 #: inc/modules/plugins-themes/settings/uploads.php:14
 #, php-format
 msgid "Disallow %s uploads"
@@ -6845,6 +6952,7 @@ msgstr "Base de données"
 msgid "Files"
 msgstr "Fichiers"
 
+#. Translators: use %d, nothing else.
 #: inc/modules/schedules/settings/schedules-backups.php:25
 #: inc/modules/schedules/settings/schedules-file-monitoring.php:17
 #: inc/modules/schedules/settings/schedules-scan.php:17
@@ -6884,6 +6992,7 @@ msgstr "Surveillance des fichiers"
 msgid "Maximum %d days."
 msgstr "Maximum %d jours."
 
+#. Translators: 1 is a file name; 2, 3 and 4 are some code.
 #: inc/modules/sensitive-data/plugins/bad-url-access.php:135
 #, php-format
 msgid ""
@@ -6893,6 +7002,7 @@ msgstr ""
 "Votre fichier %1$s n'est pas en écriture. Merci de remplacer les lignes "
 "précédentes entre %2$s et %3$s par les suivantes&nbsp;: %4$s"
 
+#. Translators: 1 is a file name, 2 is a tag name, 3 is a folder path (kind of), 4 is some code
 #: inc/modules/sensitive-data/plugins/bad-url-access.php:155
 #, php-format
 msgid ""
@@ -6912,6 +7022,7 @@ msgstr "Votre adresse IP %s a été bannie."
 msgid "STOP"
 msgstr "STOP"
 
+#. Translators: 1 is a file name, 2 is a "click here" link.
 #: inc/modules/sensitive-data/plugins/inc/php/blackhole/warning-template.php:16
 #, php-format
 msgid ""
@@ -6985,6 +7096,7 @@ msgstr "Oui, protéger mes médias du Hotlinking"
 msgid "This feature is available only for sites with SSL."
 msgstr "Cette fonctionnalité n'est disponible que pour les sites avec SSL."
 
+#. Translators: 1 is a file name, 2 is a tag name.
 #: inc/modules/sensitive-data/settings/content-protect.php:59
 #: inc/modules/users-login/settings/move-login.php:79
 #, php-format
@@ -7015,6 +7127,7 @@ msgstr "Oui, désactiver l'affichage des fichiers dans les dossiers"
 msgid "PHP disclosure"
 msgstr "Divulgation PHP"
 
+#. Translators: here we speak about PHP modules, as in http://de2.php.net/manual/en/function.phpinfo.php
 #: inc/modules/sensitive-data/settings/content-protect.php:155
 msgid ""
 "PHP contains a flaw that discloses sensitive information about installed "
@@ -7027,6 +7140,7 @@ msgstr ""
 "est fortement recommandé de désactiver sa lecture, la plupart des hébergeurs "
 "le font par défaut. Si ce n'est pas le cas, vous pouvez le faire ici."
 
+#. Translators: here we speak about PHP modules, as in http://de2.php.net/manual/en/function.phpinfo.php
 #: inc/modules/sensitive-data/settings/content-protect.php:161
 msgid "Yes, forbid access to this PHP modules disclosure"
 msgstr "Oui, interdire l'accès à la divulgation des modules PHP"
@@ -7080,6 +7194,7 @@ msgstr ""
 msgid "Yes, forbid access to those files"
 msgstr "Oui, empêcher l'accès à ces fichiers"
 
+#. Translators: 1 and 2 are file names.
 #: inc/modules/sensitive-data/settings/content-protect.php:381
 #, php-format
 msgid ""
@@ -7089,6 +7204,7 @@ msgstr ""
 "Les fichiers comme %1$s or %2$s sont une bonne source d'informations pour "
 "les attaquants, ils ne devraient pas être accessibles."
 
+#. Translators: %s is a plugin name.
 #: inc/modules/sensitive-data/settings/content-protect.php:436
 #: inc/modules/sensitive-data/settings/content-protect.php:441
 #, php-format
@@ -7229,6 +7345,7 @@ msgstr ""
 msgid "Documentation first"
 msgstr "La documentation en premier"
 
+#. Translators: %s is "documentation".
 #: inc/modules/services/settings/support.php:15
 #, php-format
 msgid ""
@@ -7353,6 +7470,7 @@ msgstr "Ce nom d'utilisateur est en liste noire"
 msgid "Please change your username"
 msgstr "Merci de changer votre nom d'utilisateur"
 
+#. Translators: 1 is a user name, 2 is a link "to the site"
 #: inc/modules/users-login/plugins/blacklist-logins.php:96
 #, php-format
 msgid ""
@@ -7422,6 +7540,7 @@ msgstr ""
 "<strong>Ngnix</strong>, ni <strong>IIS7</strong>. La page de connexion ne "
 "peut pas être déplacée."
 
+#. Translators: 1 is a link "the dedicated section", 2 is a file name.
 #: inc/modules/users-login/plugins/inc/php/move-login/admin.php:205
 #: inc/modules/users-login/plugins/inc/php/move-login/admin.php:224
 #, php-format
@@ -7440,6 +7559,7 @@ msgstr ""
 msgid "the dedicated section"
 msgstr "la section dédiée"
 
+#. Translators: 1 is a file name, 2 is a link "the dedicated section".
 #: inc/modules/users-login/plugins/inc/php/move-login/admin.php:240
 #, php-format
 msgid ""
@@ -7841,6 +7961,7 @@ msgstr ""
 msgid "View options"
 msgstr "Options"
 
+#. Translators: 1 is a file name, 2 is a code.
 #: inc/modules/wordpress-core/plugins/wp-config-constant-file-edit.php:39
 #: inc/modules/wordpress-core/plugins/wp-config-constant-file-edit.php:111
 #: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-html.php:39
@@ -7854,6 +7975,7 @@ msgstr ""
 "Le fichier %1$s n'est pas en écriture. Merci d'appliquer les droits %2$s sur "
 "ce fichier."
 
+#. Translators: 1 is the plugin name, 2 is a constant name, 3 is a file name, 4 and 5 are a small parts of code.
 #: inc/modules/wordpress-core/plugins/wp-config-constant-file-edit.php:62
 #: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-html.php:62
 #, php-format
@@ -7865,6 +7987,7 @@ msgstr ""
 "%3$s. Merci d'éditer le fichier et de remplacer ceci&nbsp;: %4$s par "
 "ça&nbsp;: %5$s"
 
+#. Translators: 1 is the plugin name, 2 is a constant name, 3 is a file name, 4 is a small part of code.
 #: inc/modules/wordpress-core/plugins/wp-config-constant-file-edit.php:85
 #: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-html.php:85
 #, php-format
@@ -7875,6 +7998,7 @@ msgstr ""
 "%1$s ne peut pas ajouter la constante %2$s dans le fichier %3$s. Merci "
 "d'éditer le fichier et d'ajouter ceci au début de celui-ci&nbsp;: %4$s."
 
+#. Translators: 1 is the plugin name, 2 is a constant name, 3 is a file name, 4 is a small part of code.
 #: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-uploads.php:60
 #, php-format
 msgid ""
@@ -7987,6 +8111,7 @@ msgstr ""
 msgid "Unfiltered HTML in post editor"
 msgstr "HTML non filtré dans l'éditeur des articles"
 
+#. Translators: 1 and 2 are HTML tags, 3 is a link to "shortcodes", 4 is a link to "embeds", 5 is a PHP constant name.
 #: inc/modules/wordpress-core/settings/wp-config.php:40
 #, php-format
 msgid ""
@@ -8024,6 +8149,7 @@ msgstr "embeds"
 msgid "Yes, filter HTML in post editor"
 msgstr "Oui, filtrer le HTML de l'éditeur des articles"
 
+#. Translators: 1 and 2 are HTML tags.
 #: inc/modules/wordpress-core/settings/wp-config.php:61
 #, php-format
 msgid ""
@@ -8054,6 +8180,7 @@ msgstr ""
 msgid "Yes, filter uploads"
 msgstr "Oui, filtrer les uploads"
 
+#. Translators: 1 is a file name, 2 is a code.
 #: inc/modules/wordpress-core/settings/wp-config.php:92
 #, php-format
 msgid ""
@@ -8081,10 +8208,12 @@ msgstr ""
 "<strong>%1$s<strong> requiert WordPress v%2$s minimum, votre site utilise "
 "actuellement la version %3$s."
 
+#. Translators: Plugin Name of the plugin/theme
 #: secupress.php:323
 msgid "SecuPress — WordPress Security"
 msgstr "SecuPress — Sécurité WordPress"
 
+#. Translators: Description of the plugin/theme
 #: secupress.php:325
 msgid ""
 "Protect your WordPress with SecuPress, analyze and ensure the safety of your "

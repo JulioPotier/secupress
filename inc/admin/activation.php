@@ -137,6 +137,7 @@ function secupress_write_rules_on_activation( $rules ) {
 		}
 
 		if ( ! secupress_root_file_is_writable( '.htaccess' ) ) {
+			/** Translators: 1 is a file name, 2 is some code. */
 			$message = sprintf( __( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ), '<code>.htaccess</code>', '<pre>' . esc_html( $new_content ) . '</pre>' );
 			secupress_add_notice( $message, 'error', 'secupress-activation-file-not-writable' );
 			return;
