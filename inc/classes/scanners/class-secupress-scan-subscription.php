@@ -157,6 +157,7 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 				'secupress_token' => $token,
 			),
 		) );
+		unset( $request_args['cookies'] );
 		$response     = wp_remote_post( wp_registration_url(), $request_args );
 
 		delete_transient( 'secupress_scan_subscription_token' );

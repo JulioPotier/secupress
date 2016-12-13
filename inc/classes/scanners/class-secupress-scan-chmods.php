@@ -204,12 +204,11 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Int
 		global $is_apache;
 
 		$_wp_upload_dir = wp_upload_dir();
-		$home_path      = secupress_get_home_path();
 		$files          = array(
 			secupress_find_wpconfig_path()    => 644,
-			$home_path                        => 755,
-			$home_path . 'wp-admin/'          => 755,
-			$home_path . 'wp-includes/'       => 755,
+			ABSPATH                           => 755,
+			ABSPATH . 'wp-admin/'             => 755,
+			ABSPATH . WPINC . '/'             => 755,
 			WP_CONTENT_DIR . '/'              => 755,
 			get_theme_root() . '/'            => 755,
 			plugin_dir_path( SECUPRESS_FILE ) => 755,
@@ -217,7 +216,7 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Int
 		);
 
 		if ( $is_apache ) {
-			$files[ $home_path . '.htaccess' ] = 644;
+			$files[ ABSPATH . '.htaccess' ] = 644;
 		}
 
 		return $files;

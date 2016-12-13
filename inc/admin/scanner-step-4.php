@@ -101,7 +101,7 @@ foreach ( $scanned_items as $class_name_part => $details ) {
 						<p>
 							<button class="secupress-button secupress-button-ghost secupress-button-mini hide-is-no-js" type="button" data-target="secupress-summaries" data-trigger="slidetoggle" title="<?php esc_attr_e( 'Show/hide the details of scanned items in your report', 'secupress' ); ?>">
 								<span class="icon">
-									<i class="icon-angle-down" aria-hidden="true"></i>
+									<i class="secupress-icon-angle-down" aria-hidden="true"></i>
 								</span>
 								<span class="text" aria-hidden="true">
 									<span class="hidden-when-activated">
@@ -150,14 +150,14 @@ foreach ( $scanned_items as $class_name_part => $details ) {
 				<div class="secupress-sg-header secupress-flex secupress-flex-spaced">
 
 					<div class="secupress-sgh-name">
-						<i class="icon-user-login" aria-hidden="true"></i>
+						<i class="secupress-icon-user-login" aria-hidden="true"></i>
 						<p class="secupress-sgh-title"><?php echo $module_title; ?></p>
 						<p class="secupress-sgh-description"><?php echo $module_summary; ?></p>
 					</div>
 
 					<div class="secupress-sgh-actions secupress-flex secupress-flex-top">
 						<button class="secupress-vnormal hide-if-no-js dont-trigger-hide trigger-hide-first" type="button" data-trigger="slidetoggle" data-target="secupress-group-content-<?php echo $module_name; ?>">
-							<i class="icon-angle-up" aria-hidden="true"></i>
+							<i class="secupress-icon-angle-up" aria-hidden="true"></i>
 							<span class="screen-reader-text"><?php _e( 'Show/hide panel', 'secupress' ); ?></span>
 						</button>
 					</div>
@@ -238,7 +238,7 @@ foreach ( $scanned_items as $class_name_part => $details ) {
 
 								<p class="secupress-row-actions">
 									<span class="secupress-status secupress-status-<?php echo sanitize_html_class( $scan_status ); ?>">
-										<i class="icon-<?php echo $icon_slug; ?>" aria-hidden="true"></i>
+										<i class="secupress-icon-<?php echo $icon_slug; ?>" aria-hidden="true"></i>
 										<?php echo $scan_status_word; ?></span>
 								</p>
 							</div><!-- .secupress-flex -->
@@ -254,7 +254,7 @@ foreach ( $scanned_items as $class_name_part => $details ) {
 		<div class="secupress-step-content-footer secupress-flex secupress-flex-top secupress-flex-spaced">
 			<?php
 			$export_pdf_btn = '<span class="icon">
-					<i class="icon-file-pdf-o" aria-hidden="true"></i>
+					<i class="secupress-icon-file-pdf-o" aria-hidden="true"></i>
 				</span>
 				<span class="text">
 					' . __( 'Export as PDF', 'secupress' ) . '
@@ -293,7 +293,7 @@ foreach ( $scanned_items as $class_name_part => $details ) {
 			<div class="secupress-col secupress-col-action">
 				<a href="<?php echo esc_url( secupress_admin_url( 'modules' ) ); ?>" class="secupress-rich-link secupress-current">
 					<span class="secupress-label-with-icon">
-						<i aria-hidden="true" class="icon-cogs rounded"></i>
+						<i aria-hidden="true" class="secupress-icon-cogs rounded"></i>
 						<span class="secupress-upper"><?php printf(
 							/** Translators: %s is the plugin name. */
 							__( '%s modules', 'secupress' ),
@@ -312,7 +312,7 @@ foreach ( $scanned_items as $class_name_part => $details ) {
 			<div class="secupress-col secupress-col-action">
 				<a href="<?php echo esc_url( secupress_admin_url( 'modules' ) ); ?>&amp;module=schedules" class="secupress-rich-link secupress-current">
 					<span class="secupress-label-with-icon">
-						<i aria-hidden="true" class="icon-calendar rounded"></i>
+						<i aria-hidden="true" class="secupress-icon-calendar rounded"></i>
 						<span class="secupress-upper"><?php esc_html_e( 'Schedule Scans', 'secupress' ); ?></span>
 						<span class="secupress-description"><?php esc_html_e( 'Schedule your recurring scans', 'secupress' ); ?></span>
 					</span>
@@ -338,7 +338,7 @@ foreach ( $scanned_items as $class_name_part => $details ) {
 					<p class="secupress-p1">
 						<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ); ?>" class="secupress-button secupress-button-tertiary secupress-button-getpro">
 							<span class="icon">
-								<i class="icon-secupress-simple" aria-hidden="true"></i>
+								<i class="secupress-icon-secupress-simple" aria-hidden="true"></i>
 							</span>
 							<span class="text">
 								<?php _e( 'Get Pro', 'secupress' ); ?>

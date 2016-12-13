@@ -250,13 +250,13 @@ function secupress_move_login_settings_callback( $modulenow, &$settings, $activa
 	$errors['duplicates'] = array_unique( $errors['duplicates'] );
 
 	if ( $nbr_forbidden = count( $errors['forbidden'] ) ) {
-		$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
+		$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
 		$message .= sprintf( _n( 'The slug %s is forbidden.', 'The slugs %s are forbidden.', $nbr_forbidden, 'secupress' ), wp_sprintf( '<code>%l</code>', $errors['forbidden'] ) );
 		add_settings_error( "secupress_{$modulenow}_settings", 'forbidden-slugs', $message, 'error' );
 	}
 
 	if ( ! empty( $errors['duplicates'] ) ) {
-		$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
+		$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
 		$message .= __( 'The links can\'t have the same slugs.', 'secupress' );
 		add_settings_error( "secupress_{$modulenow}_settings", 'duplicate-slugs', $message, 'error' );
 	}

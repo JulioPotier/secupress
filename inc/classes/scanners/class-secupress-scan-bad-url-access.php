@@ -17,7 +17,7 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0.1';
+	const VERSION = '1.0.2';
 
 
 	/** Properties. ============================================================================= */
@@ -40,24 +40,18 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 	protected function init() {
 		global $is_apache, $is_nginx, $is_iis7;
 
-		$this->title = __( 'Check if any of your WordPress files disclose your site\'s internal path.', 'secupress' );
-		$this->more  = __( 'When an attacker wants to hack into a WordPress site, (s)he will search for all available informations. The goal is to find something useful that will help him penetrate your site. Don\'t let them easily find any informations.', 'secupress' );
+		$this->title    = __( 'Check if any of your WordPress files disclose your site\'s internal path.', 'secupress' );
+		$this->more     = __( 'When an attacker wants to hack into a WordPress site, (s)he will search for all available informations. The goal is to find something useful that will help him penetrate your site. Don\'t let them easily find any informations.', 'secupress' );
+		$this->more_fix = sprintf(
+			__( 'Activate the %1$s protection from the module %2$s.', 'secupress' ),
+			'<strong>' . __( 'Bad URL Access', 'secupress' ) . '</strong>',
+			'<a href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_bad-url-access">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
+		);
 
 		if ( ! $is_apache && ! $is_nginx && ! $is_iis7 ) {
 			$this->more_fix = static::get_messages( 301 );
 			$this->fixable  = false;
 			return;
-		}
-
-		if ( $is_apache ) {
-			/** Translators: %s is a file name. */
-			$this->more_fix = sprintf( __( 'Add rules in your %s file to forbid direct access to WordPress files that disclose your site\'s internal path.', 'secupress' ), '<code>.htaccess</code>' );
-		} elseif ( $is_iis7 ) {
-			/** Translators: %s is a file name. */
-			$this->more_fix = sprintf( __( 'Add rules in your %s file to forbid direct access to WordPress files that disclose your site\'s internal path.', 'secupress' ), '<code>web.config</code>' );
-		} else {
-			/** Translators: %s is a file name. */
-			$this->more_fix = sprintf( __( 'The %s file cannot be edited automatically, you will be given the rules to add into this file manually, to forbid direct access to WordPress files that disclose your site\'s internal path.', 'secupress' ), '<code>nginx.conf</code>' );
 		}
 	}
 
@@ -73,7 +67,20 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 	 */
 	public static function get_messages( $message_id = null ) {
 		global $is_apache;
+
 		$config_file = $is_apache ? '.htaccess' : 'web.config';
+		$message_100 = _n_noop(
+			/** Translators: %s is a URL or a list of URLs. */
+			'Unable to determine if %s is accessible.',
+			'Unable to determine if %s are accessible.',
+			'secupress'
+		);
+
+		/** Translators: 1 is the name of a protection, 2 is the name of a module. */
+		$activate_protection_message = sprintf( __( 'But you can activate the %1$s protection from the module %2$s.', 'secupress' ),
+			'<strong>' . __( 'Bad URL Access', 'secupress' ) . '</strong>', // Name of the protection.
+			'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_bad-url-access">' . __( 'Sensitive Data', 'secupress' ) . '</a>' // Name of the module.
+		);
 
 		$messages = array(
 			// "good"
@@ -81,18 +88,17 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 			/** Translators: %s is a file name. */
 			1   => sprintf( __( 'Rules preventing disclosure of your site\'s internal path disclosure have been added to your %s file.', 'secupress' ), "<code>$config_file</code>" ),
 			// "warning"
-			/** Translators: %s is a URL, or a list of URLs. */
-			100 => _n_noop( 'Unable to determine if %s reveals your site\'s internal path.', 'Unable to determine if %s reveal your site\'s internal path.', 'secupress' ),
+			100 => static::_n_noop_sprintf( $message_100, '%s' ) . ' ' . $activate_protection_message,
 			// "bad"
 			/** Translators: %s is a URL, or a list of URLs. */
 			200 => _n_noop( '%s should not be accessible by anyone.', '%s should not be accessible by anyone.', 'secupress' ),
 			// "cantfix"
-			/** Translators: 1 is a file name, 2 is some code */
+			/** Translators: 1 is a file name, 2 is some code. */
 			300 => sprintf( __( 'Your server runs <strong>Nginx</strong>, the files that disclose your site\'s internal path cannot be protected automatically but you can do it yourself by adding the following code to your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
 			301 => __( 'Your server runs an unrecognized system. The files that disclose your site\'s internal path cannot be protected automatically.', 'secupress' ),
-			/** Translators: 1 is a file name, 2 is some code */
+			/** Translators: 1 is a file name, 2 is some code. */
 			302 => sprintf( __( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ), "<code>$config_file</code>", '%s' ),
-			/** Translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
+			/** Translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code. */
 			303 => sprintf( __( 'Your %1$s file is not writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ), "<code>$config_file</code>", '%1$s', '%2$s' ),
 		);
 
@@ -124,6 +130,7 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 		$warnings = array();
 		$urls     = array(
 			home_url( 'php.ini' ),
+			site_url( 'wp-config.php' ),
 			admin_url( 'install.php' ),
 			admin_url( 'includes/comment.php' ),
 			admin_url( 'network/menu.php' ),
@@ -135,7 +142,6 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 			$response = wp_remote_get( $url, $this->get_default_request_args() );
 
 			if ( ! is_wp_error( $response ) ) {
-
 				if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
 					// "bad"
 					$bads[] = "<code>$url</code>";

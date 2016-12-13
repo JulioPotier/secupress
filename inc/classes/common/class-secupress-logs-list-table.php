@@ -447,7 +447,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 				?>
 				<a id="download_all" class="secupress-button secupress-button-primary secupress-button-mini apply secupress-download-logs" href="<?php echo esc_url( $href ); ?>">
 					<span class="icon">
-						<i class="icon-download" aria-hidden="true"></i>
+						<i class="secupress-icon-download" aria-hidden="true"></i>
 					</span>
 					<span class="text">
 						<?php _e( 'Download All', 'secupress' ); ?>
@@ -461,7 +461,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 				?>
 				<a id="delete_all" class="secupress-button secupress-button-secondary secupress-button-mini apply secupress-clear-logs" href="<?php echo esc_url( $href ); ?>">
 					<span class="icon">
-						<i class="icon-trash" aria-hidden="true"></i>
+						<i class="secupress-icon-trash" aria-hidden="true"></i>
 					</span>
 					<span class="text">
 						<?php _e( 'Delete All', 'secupress' ); ?>

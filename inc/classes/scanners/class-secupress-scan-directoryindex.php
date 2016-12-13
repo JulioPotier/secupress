@@ -17,7 +17,7 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0.1';
+	const VERSION = '1.0.2';
 
 
 	/** Properties. ============================================================================= */
@@ -41,25 +41,19 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 		global $is_apache, $is_nginx, $is_iis7;
 
 		/** Translators: 1, 2 and 3 are file extensions. */
-		$this->title = sprintf( __( 'Check if %1$s files are loaded with a higher priority over %2$s or %3$s etc.', 'secupress' ), '<em>.php</em>', '<em>.html</em>', '<em>.htm</em>' );
-		/** Translators: 1 and 2 are file extensions. */
-		$this->more  = sprintf( __( 'If your website is the victim of defacement using the addition of a file like %1$s, this file could be loaded first instead of the one from WordPress. This is why we have to load %2$s first.', 'secupress' ), '<code>index.htm</code>', '<code>index.php</code>' );
+		$this->title    = sprintf( __( 'Check if %1$s files are loaded with a higher priority over %2$s or %3$s etc.', 'secupress' ), '<em>.php</em>', '<em>.html</em>', '<em>.htm</em>' );
+		/** Translators: 1 and 2 are file names. */
+		$this->more     = sprintf( __( 'If your website is the victim of defacement using the addition of a file like %1$s, this file could be loaded first instead of the one from WordPress. This is why we have to load %2$s first.', 'secupress' ), '<code>index.htm</code>', '<code>index.php</code>' );
+		$this->more_fix = sprintf(
+			__( 'Activate the %1$s protection from the module %2$s.', 'secupress' ),
+			'<strong>' . __( 'Directory Index', 'secupress' ) . '</strong>',
+			'<a href="' . esc_url( secupress_admin_url( 'modules', 'file-system' ) ) . '#row-directory-index_activated">' . __( 'Malware Scan', 'secupress' ) . '</a>'
+		);
 
 		if ( ! $is_apache && ! $is_nginx && ! $is_iis7 ) {
 			$this->more_fix = static::get_messages( 301 );
 			$this->fixable  = false;
 			return;
-		}
-
-		if ( $is_apache ) {
-			/** Translators: 1 is a file name; 2, 3 and 4 are file extensions. */
-			$this->more_fix = sprintf( __( 'Add rules in your %1$s file to prevent attackers from loading %2$s or %3$s files before the %4$s one.', 'secupress' ), '<code>.htaccess</code>', '<code>.html</code>', '<code>.htm</code>', '<code>.php</code>' );
-		} elseif ( $is_iis7 ) {
-			/** Translators: 1 is a file name; 2, 3 and 4 are file extensions. */
-			$this->more_fix = sprintf( __( 'Add rules in your %1$s file to prevent attackers from loading %2$s or %3$s files before the %4$s one.', 'secupress' ), '<code>web.config</code>', '<code>.html</code>', '<code>.htm</code>', '<code>.php</code>' );
-		} else {
-			/** Translators: 1 is a file name; 2, 3 and 4 are file extensions. */
-			$this->more_fix = sprintf( __( 'The %1$s file cannot be edited automatically, you will be given the rules to add into this file manually, to prevent attackers from loading %2$s or %3$s files before the %4$s one.', 'secupress' ), '<code>nginx.conf</code>', '<code>.html</code>', '<code>.htm</code>', '<code>.php</code>' );
 		}
 	}
 
@@ -76,6 +70,11 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 	public static function get_messages( $message_id = null ) {
 		global $is_apache;
 		$config_file = $is_apache ? '.htaccess' : 'web.config';
+		/** Translators: 1 is the name of a protection, 2 is the name of a module. */
+		$activate_protection_message = sprintf( __( 'But you can activate the %1$s protection from the module %2$s.', 'secupress' ),
+			'<strong>' . __( 'Directory Index', 'secupress' ) . '</strong>',
+			'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'file-system' ) ) . '#row-directory-index_activated">' . __( 'Malware Scan', 'secupress' ) . '</a>'
+		);
 
 		$messages = array(
 			// "good"
@@ -84,17 +83,17 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 			/** Translators: %s is a file name. */
 			1   => sprintf( __( 'The rules to get the correct index file order (known as Directory Index) have been successfully added to your %s file.', 'secupress' ), "<code>$config_file</code>" ),
 			// "warning"
-			100 => __( 'Unable to determine the status of the index file order.', 'secupress' ),
+			100 => __( 'Unable to determine the status of the index file order.', 'secupress' ) . ' ' . $activate_protection_message,
 			// "bad"
 			/** Translators: 1 and 2 are file names. */
 			200 => sprintf( __( 'Your website should load %1$s first, but actually it loads %2$s first.', 'secupress' ), '<code>index.php</code>', '%s' ),
 			// "cantfix"
-			/** Translators: 1 is a file name, 2 is some code */
+			/** Translators: 1 is a file name, 2 is some code. */
 			300 => sprintf( __( 'Your server runs <strong>Nginx</strong>, the index file order cannot be fixed automatically but you can do it yourself by adding the following code to your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
 			301 => __( 'Your server runs an unrecognized system. The index file order cannot be fixed automatically.', 'secupress' ),
-			/** Translators: 1 is a file name, 2 is some code */
+			/** Translators: 1 is a file name, 2 is some code. */
 			302 => sprintf( __( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ), "<code>$config_file</code>", '%s' ),
-			/** Translators: 1 is a file name, 2 is a tag name, 3 is a folder path (kind of), 4 is some code */
+			/** Translators: 1 is a file name, 2 is a tag name, 3 is a folder path (kind of), 4 is some code. */
 			303 => sprintf( __( 'Your %1$s file is not writable. Please remove any previous %2$s tag and add the following lines inside the tags hierarchy %3$s (create it if does not exist): %4$s', 'secupress' ), "<code>$config_file</code>", '%1$s', '%2$s', '%3$s' ),
 		);
 

@@ -1,11 +1,11 @@
 <?php
-/*
-Module Name: Directory Index.
-Description: Prevent <code>.html</code>/<code>.htm</code> files to be loaded before the <code>.php</code> one.
-Main Module: file_system
-Author: SecuPress
-Version: 1.0
-*/
+/**
+ * Module Name: Directory Index
+ * Description: Prevent <code>.html</code>/<code>.htm</code> files to be loaded before the <code>.php</code> one.
+ * Main Module: file_system
+ * Author: SecuPress
+ * Version: 1.0
+ */
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 /*------------------------------------------------------------------------------------------------*/
@@ -96,7 +96,7 @@ function secupress_directory_index_plugin_activate( $rules ) {
  * @return (string)
  */
 function secupress_directory_index_apache_rules() {
-	$rules  = "<ifModule mod_dir.c>\n";
+	$rules  = "<IfModule mod_dir.c>\n";
 	$rules .= "    DirectoryIndex index.php index.html index.htm index.cgi index.pl index.xhtml\n";
 	$rules .= "</IfModule>\n";
 

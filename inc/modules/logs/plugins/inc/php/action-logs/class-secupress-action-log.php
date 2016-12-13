@@ -232,20 +232,33 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 * Fires when `secupress_block()` is called.
 	 *
 	 * @since 1.0
+	 * @since 1.1.4 Use the block ID instead of the module.
 	 *
-	 * @param (string) $module The name of the "module".
-	 * @param (string) $ip     The IP blocked.
+	 * @param (string) $module   The name of the "module".
+	 * @param (string) $ip       The IP blocked.
+	 * @param (array)  $args     Contains the "code" (def. 403) and a "content" (def. empty), this content will replace the default message.
+	 * @param (string) $block_id The block ID.
 	 *
 	 * @return (array) An array containing:
 	 *                 - (string) $url    The current URL, made relative.
 	 *                 - (string) $ip     The IP blocked.
-	 *                 - (string) $module The "module".
+	 *                 - (string) $module The block ID.
 	 *                 - (array)  $server The `$_SERVER` superglobal.
 	 */
-	protected function pre_process_action_secupress_block( $module, $ip ) {
-		$url    = wp_make_link_relative( secupress_get_current_url() );
-		$posted = ! empty( $_POST ) ? $_POST : _x( 'None', 'data', 'secupress' ); // WPCS: CSRF ok.
-		return array( 'url' => $url, 'ip' => $ip, 'module' => $module, 'server' => $_SERVER, '_post' => $posted );
+	protected function pre_process_action_secupress_block( $module, $ip, $args = null, $block_id = null ) {
+		$whitelisted     = secupress_ip_is_whitelisted( $ip );
+		$is_scan_request = secupress_is_scan_request(); // Used to bypass the whitelist for scans.
+
+		if ( $whitelisted && ! $is_scan_request ) {
+			// Will not be blocked.
+			return array();
+		}
+
+		$url      = wp_make_link_relative( secupress_get_current_url() );
+		$posted   = ! empty( $_POST ) ? $_POST : _x( 'None', 'data', 'secupress' ); // WPCS: CSRF ok.
+		$block_id = isset( $block_id ) ? $block_id : $module;
+
+		return array( 'url' => $url, 'ip' => $ip, 'module' => $block_id, 'server' => $_SERVER, '_post' => $posted );
 	}
 
 

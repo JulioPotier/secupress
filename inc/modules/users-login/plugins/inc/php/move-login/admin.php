@@ -19,13 +19,13 @@ function secupress_move_login_activate( $was_active ) {
 
 	// The plugin needs the request uri.
 	if ( empty( $GLOBALS['HTTP_SERVER_VARS']['REQUEST_URI'] ) && empty( $_SERVER['REQUEST_URI'] ) ) {
-		$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
+		$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
 		$message .= __( 'It seems your server configuration prevents the plugin from working properly. The login page cannot be moved.', 'secupress' );
 		add_settings_error( 'secupress_users-login_settings', 'no_request_uri', $message, 'error' );
 	}
 	// Server not supported.
 	if ( ! $is_iis7 && ! $is_apache && ! $is_nginx ) {
-		$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
+		$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
 		$message .= __( 'It seems your server does not use <strong>Apache</strong>, <strong>Ngnix</strong>, or <strong>IIS7</strong>. The login page cannot be moved.', 'secupress' );
 		add_settings_error( 'secupress_users-login_settings', 'unknown_os', $message, 'error' );
 	}
@@ -188,15 +188,18 @@ function secupress_move_login_write_rules_on_network_update( $option, $value, $o
  */
 function secupress_move_login_write_rules() {
 	global $is_apache, $is_nginx, $is_iis7;
+	static $error_message_done = false;
 	$success = false;
 
 	// Apache.
 	if ( $is_apache ) {
 		$success = secupress_move_login_write_apache_rules( secupress_move_login_get_rules() );
 
-		if ( ! $success ) {
+		if ( ! $success && ! $error_message_done ) {
+			$error_message_done = true;
+
 			// File is not writable.
-			$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
+			$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
 			$message .= sprintf(
 				/** Translators: 1 is a link "the dedicated section", 2 is a file name. */
 				__( 'It seems your %2$s file is not writable. You have to edit the file manually. Please see the rewrite rules provided %1$s and copy/paste it into the %2$s file.', 'secupress' ),
@@ -211,9 +214,11 @@ function secupress_move_login_write_rules() {
 	if ( $is_iis7 ) {
 		$success = secupress_move_login_write_iis7_rules( secupress_move_login_get_rules() );
 
-		if ( ! $success ) {
+		if ( ! $success && ! $error_message_done ) {
+			$error_message_done = true;
+
 			// File is not writable.
-			$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
+			$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
 			$message .= sprintf(
 				/** Translators: 1 is a link "the dedicated section", 2 is a file name. */
 				__( 'It seems your %2$s file is not writable. You have to edit the file manually. Please see the rewrite rules provided %1$s and copy/paste it into the %2$s file.', 'secupress' ),
@@ -224,9 +229,12 @@ function secupress_move_login_write_rules() {
 		}
 	}
 
-	// Nginx: we can't edit the file.
-	if ( $is_nginx ) {
-		$message  = sprintf( __( '%s: ', 'secupress' ), __( 'Move Login', 'secupress' ) );
+	// Nginx.
+	if ( $is_nginx && ! $error_message_done ) {
+		$error_message_done = true;
+
+		// We can't edit the file.
+		$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
 		$message .= sprintf(
 			/** Translators: 1 is a file name, 2 is a link "the dedicated section". */
 			__( 'Your server runs <strong>Ngnix</strong>. You have to edit the configuration file manually. Please see the rewrite rules provided %2$s and copy/paste it into the %1$s file.', 'secupress' ),

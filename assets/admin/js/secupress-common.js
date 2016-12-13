@@ -29,7 +29,7 @@ var secupressNotices = {
 			html += '</div>';
 			html += '<div class="secupress-rn-actions">';
 				html += '<button type="button" class="secupress-rn-close secupress-virgin">';
-					html += '<i class="icon-squared-cross" aria-hidden="true"></i>';
+					html += '<i class="secupress-icon-squared-cross" aria-hidden="true"></i>';
 					html += '<span class="screen-reader-text">' + SecuPressi18nCommon.closeText + '</span>';
 				html += '</button>';
 			html += '</div>';

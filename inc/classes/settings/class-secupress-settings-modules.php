@@ -212,7 +212,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			<?php secupress_admin_heading( __( 'Modules', 'secupress' ) ); ?>
 			<?php settings_errors(); ?>
 
-			<div class="secupress-wrapper<?php echo ( $is_welcome ? '' : ' secupress-flex secupress-flex-top' ) ?>">
+			<div class="secupress-wrapper<?php echo ( $is_welcome ? '' : ' secupress-flex secupress-flex-top' ) ?><?php echo ( ! secupress_is_pro() ? ' secupress-has-sideads' : '' ) ?>">
 
 				<?php
 				/**
@@ -245,6 +245,8 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 				<div class="secupress-tab-content secupress-tab-content-<?php echo $this->get_current_module(); ?>" id="secupress-tab-content">
 					<?php $this->print_current_module(); ?>
 				</div>
+				
+				<?php secupress_print_sideads(); ?>
 
 			</div>
 
@@ -268,7 +270,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 				<a href="<?php echo esc_url( secupress_admin_url( 'modules', $key ) ); ?>" class="<?php echo $class; ?> module-<?php echo sanitize_key( $key ); ?>">
 					<span class="secupress-tab-name"><?php echo $module['title']; ?></span>
 					<span class="secupress-tab-summary"><?php echo $module['summaries']['small']; ?></span>
-					<i class="icon-<?php echo $icon; ?>" aria-hidden="true"></i>
+					<i class="secupress-icon-<?php echo $icon; ?>" aria-hidden="true"></i>
 				</a>
 			</li>
 			<?php
@@ -412,7 +414,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 */
 	protected function print_module_icon() {
 		if ( $this->get_module_icon() ) {
-			echo '<i class="icon-' . $this->get_module_icon() . '" aria-hidden="true"></i>' . "\n";
+			echo '<i class="secupress-icon-' . $this->get_module_icon() . '" aria-hidden="true"></i>' . "\n";
 		}
 		return $this;
 	}
@@ -717,7 +719,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		<p class="submit">
 			<button type="button" disabled="disabled" class="secupress-button">
 				<span class="icon">
-					<i class="icon-download"></i>
+					<i class="secupress-icon-download"></i>
 				</span>
 				<span class="text">
 					<?php esc_html_e( 'Backup my database', 'secupress' ); ?>
@@ -738,7 +740,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		<p class="submit">
 			<button type="button" disabled="disabled" class="secupress-button">
 				<span class="icon">
-					<i class="icon-download"></i>
+					<i class="secupress-icon-download"></i>
 				</span>
 				<span class="text">
 					<?php esc_html_e( 'Backup my files', 'secupress' ); ?>

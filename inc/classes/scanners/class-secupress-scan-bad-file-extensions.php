@@ -17,7 +17,7 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0.1';
+	const VERSION = '1.0.2';
 
 
 	/** Properties. ============================================================================= */
@@ -61,24 +61,18 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 	protected function init() {
 		global $is_apache, $is_nginx, $is_iis7;
 
-		$this->title = __( 'Check if there are files using bad extensions are accessible in the uploads folder.', 'secupress' );
-		$this->more  = __( 'The uploads folder should only contain files like images, pdf, or zip archives. Other files should not be accessible by their URL.', 'secupress' );
+		$this->title    = __( 'Check if there are files using bad extensions are accessible in the uploads folder.', 'secupress' );
+		$this->more     = __( 'The uploads folder should only contain files like images, pdf, or zip archives. Other files should not be accessible by their URL.', 'secupress' );
+		$this->more_fix = sprintf(
+			__( 'Activate the %1$s protection from the module %2$s.', 'secupress' ),
+			'<strong>' . __( 'Bad File Extensions', 'secupress' ) . '</strong>',
+			'<a href="' . esc_url( secupress_admin_url( 'modules', 'file-system' ) ) . '#module-bad-file-extensions">' . __( 'Malware Scan', 'secupress' ) . '</a>'
+		);
 
 		if ( ! $is_apache && ! $is_nginx && ! $is_iis7 ) {
 			$this->more_fix = static::get_messages( 301 );
 			$this->fixable  = false;
 			return;
-		}
-
-		if ( $is_apache ) {
-			/** Translators: %s is a file name. */
-			$this->more_fix = sprintf( __( 'Add rules in your %s file to forbid direct access to files that have bad extensions.', 'secupress' ), '<code>.htaccess</code>' );
-		} elseif ( $is_iis7 ) {
-			/** Translators: %s is a file name. */
-			$this->more_fix = sprintf( __( 'Add rules in your %s file to forbid direct access to files that have bad extensions.', 'secupress' ), '<code>web.config</code>' );
-		} else {
-			/** Translators: %s is a file name. */
-			$this->more_fix = sprintf( __( 'The %s file cannot be edited automatically, you will be given the rules to add into this file manually, to forbid direct access to files that use bad extensions.', 'secupress' ), '<code>nginx.conf</code>' );
 		}
 	}
 
@@ -94,25 +88,31 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 	 */
 	public static function get_messages( $message_id = null ) {
 		global $is_apache;
+
 		$config_file = $is_apache ? '.htaccess' : 'web.config';
+		/** Translators: 1 is the name of a protection, 2 is the name of a module. */
+		$activate_protection_message = sprintf( __( 'But you can activate the %1$s protection from the module %2$s.', 'secupress' ),
+			'<strong>' . __( 'Bad File Extensions', 'secupress' ) . '</strong>',
+			'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'file-system' ) ) . '#module-bad-file-extensions">' . __( 'Malware Scan', 'secupress' ) . '</a>'
+		);
 
 		$messages = array(
 			// "good"
 			0   => __( 'Files that use bad extensions are protected.', 'secupress' ),
-			/** Translators: %s is a file name */
+			/** Translators: %s is a file name. */
 			1   => sprintf( __( 'The rules forbidding access to files that use bad extensions have been successfully added to your %s file.', 'secupress' ), "<code>$config_file</code>" ),
 			// "warning"
-			100 => __( 'Unable to determine the status of the bad file extensions test file.', 'secupress' ),
+			100 => __( 'Unable to determine the status of the bad file extensions test file.', 'secupress' ) . ' ' . $activate_protection_message,
 			// "bad"
-			200 => __( 'Could not create a bad extension test file in the uploads folder.', 'secupress' ),
+			200 => __( 'Could not create a bad extension test file in the uploads folder.', 'secupress' ) . ' ' . $activate_protection_message,
 			201 => __( 'Whether or not you have files using bad extensions in the uploads folder, those files are accessible directly.', 'secupress' ),
 			// "cantfix"
-			/** Translators: 1 is a file name, 2 is some code */
+			/** Translators: 1 is a file name, 2 is some code. */
 			300 => sprintf( __( 'Your server runs <strong>Nginx</strong>, the files that use bad extensions cannot be protected automatically but you can do it yourself by adding the following code to your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
 			301 => __( 'Your server runs an unrecognized system. The files that use bad extensions cannot be protected automatically.', 'secupress' ),
-			/** Translators: 1 is a file name, 2 is some code */
+			/** Translators: 1 is a file name, 2 is some code. */
 			302 => sprintf( __( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ), "<code>$config_file</code>", '%s' ),
-			/** Translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code */
+			/** Translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code. */
 			303 => sprintf( __( 'Your %1$s file is not writable. Please add the following lines inside the tags hierarchy %2$s (create it if does not exist): %3$s', 'secupress' ), "<code>$config_file</code>", '%1$s', '%2$s' ),
 		);
 

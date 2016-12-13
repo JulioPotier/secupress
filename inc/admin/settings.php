@@ -334,7 +334,7 @@ function secupress_global_settings() {
 		secupress_require_class( 'settings', 'global' );
 	}
 
-	if ( function_exists( 'secupress_pro_class_path' ) ) {
+	if ( secupress_is_pro() ) {
 		$class_name = 'SecuPress_Pro_Settings_Global';
 
 		if ( ! class_exists( $class_name ) ) {
@@ -425,14 +425,14 @@ function secupress_scanners() {
 					</div>
 					<?php } ?>
 					<p class="secupress-label-with-icon secupress-last-scan-result">
-						<i class="icon-secupress" aria-hidden="true"></i>
+						<i class="secupress-icon-secupress" aria-hidden="true"></i>
 						<span class="secupress-upper"><?php _e( 'Scan results', 'secupress' ); ?></span>
 						<span class="secupress-primary"><?php echo $last_report; ?></span>
 					</p>
 					<p class="secupress-text-end hide-if-no-js">
 						<a href="#secupress-more-info" class="secupress-link-icon secupress-open-moreinfo<?php echo $reports ? '' : ' secupress-activated dont-trigger-hide'; ?>" data-trigger="slidedown" data-target="secupress-more-info">
 							<span class="icon" aria-hidden="true">
-								<i class="icon-info"></i>
+								<i class="secupress-icon-info"></i>
 							</span>
 							<span class="text">
 								<?php _e( 'How does it work?', 'secupress' ); ?>
@@ -546,11 +546,11 @@ function secupress_scanners() {
 									?>
 									<div class="secupress-schedules-infos is-pro">
 										<p class="secupress-schedule-last-one">
-											<i class="icon-clock-o" aria-hidden="true"></i>
+											<i class="secupress-icon-clock-o" aria-hidden="true"></i>
 											<span><?php printf( __( 'Last automatic scan: %s', 'secupress' ), $last_schedule ); ?></span>
 										</p>
 										<p class="secupress-schedule-next-one">
-											<i class="icon-clock-o" aria-hidden="true"></i>
+											<i class="secupress-icon-clock-o" aria-hidden="true"></i>
 											<span><?php printf( __( 'Next automatic scan: %s', 'secupress' ), $next_schedule ); ?></span>
 										</p>
 
@@ -561,11 +561,11 @@ function secupress_scanners() {
 								<?php else : ?>
 									<div class="secupress-schedules-infos">
 										<p class="secupress-schedule-last-one">
-											<i class="icon-clock-o" aria-hidden="true"></i>
+											<i class="secupress-icon-clock-o" aria-hidden="true"></i>
 											<span><?php printf( __( 'Last automatic scan: %s', 'secupress' ), '&mdash;' ); ?></span>
 										</p>
 										<p class="secupress-schedule-next-one">
-											<i class="icon-clock-o" aria-hidden="true"></i>
+											<i class="secupress-icon-clock-o" aria-hidden="true"></i>
 											<span><?php printf( __( 'Next automatic scan: %s', 'secupress' ), '&mdash;' ); ?></span>
 										</p>
 
@@ -583,7 +583,7 @@ function secupress_scanners() {
 								<li role="presentation">
 									<a id="secupress-l-latest" href="#secupress-latest" role="tab" aria-selected="false" aria-controls="secupress-latest">
 										<span class="secupress-label-with-icon">
-											<i class="icon-back rounded" aria-hidden="true"></i>
+											<i class="secupress-icon-back rounded" aria-hidden="true"></i>
 											<span class="secupress-upper"><?php _e( 'Latest scans', 'secupress' ); ?></span>
 											<span class="secupress-description"><?php _e( 'View your previous scans', 'secupress' ); ?></span>
 										</span>
@@ -592,7 +592,7 @@ function secupress_scanners() {
 								<li role="presentation">
 									<a id="secupress-l-schedule" href="#secupress-schedule" role="tab" aria-selected="false" aria-controls="secupress-schedule">
 										<span class="secupress-label-with-icon">
-											<i class="icon-calendar rounded" aria-hidden="true"></i>
+											<i class="secupress-icon-calendar rounded" aria-hidden="true"></i>
 											<span class="secupress-upper"><?php _e( 'Schedule Scans', 'secupress' ); ?></span>
 											<span class="secupress-description"><?php _e( 'Manage your recurring scans', 'secupress' ); ?></span>
 										</span>
@@ -601,7 +601,7 @@ function secupress_scanners() {
 								<li role="presentation" class="hidden">
 									<a id="secupress-l-scan" href="#secupress-scan" role="tab" aria-selected="false" aria-controls="secupress-scan" class="secupress-current">
 										<span class="secupress-label-with-icon">
-											<i class="icon-secupress" aria-hidden="true"></i>
+											<i class="secupress-icon-secupress" aria-hidden="true"></i>
 											<span class="secupress-upper"><?php esc_html_e( 'Scan results', 'secupress' ); ?></span>
 											<span class="secupress-primary"><?php echo $last_report; ?></span>
 										</span>
@@ -610,7 +610,7 @@ function secupress_scanners() {
 							</ul>
 							<div class="secupress-rescan-progress-infos">
 								<h3>
-									<i class="icon-secupress" aria-hidden="true"></i><br>
+									<i class="secupress-icon-secupress" aria-hidden="true"></i><br>
 
 									<?php echo $currently_scanning_text; ?>
 								</h3>
@@ -619,7 +619,7 @@ function secupress_scanners() {
 								<span class="screen-reader-text"><?php _e( 'Doubts? Try a new scan.', 'secupress' ); ?></span>
 								<button class="secupress-button secupress-button-primary secupress-button-scan" type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ); ?>">
 									<span class="icon" aria-hidden="true">
-										<i class="icon-radar"></i>
+										<i class="secupress-icon-radar"></i>
 									</span>
 									<span class="text">
 										<?php _e( 'Scan website', 'secupress' ); ?>
@@ -639,7 +639,7 @@ function secupress_scanners() {
 					?>
 					<div class="secupress-introduce-first-scan secupress-text-center">
 						<h3>
-							<i class="icon-secupress" aria-hidden="true"></i><br>
+							<i class="secupress-icon-secupress" aria-hidden="true"></i><br>
 							<span class="secupress-init-title"><?php _e( 'Click to launch first scan', 'secupress' ); ?></span>
 
 							<?php echo $currently_scanning_text; ?>
@@ -648,7 +648,7 @@ function secupress_scanners() {
 						<p class="secupress-start-one-click-scan">
 							<button class="secupress-button secupress-button-primary secupress-button-scan" type="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ); ?>">
 								<span class="icon" aria-hidden="true">
-									<i class="icon-radar"></i>
+									<i class="secupress-icon-radar"></i>
 								</span>
 								<span class="text">
 									<?php _e( 'Scan my website', 'secupress' ); ?>
@@ -729,7 +729,7 @@ function secupress_scanners() {
 							<div class="secupress-col-1-4">
 								<div class="secupress-blob">
 									<div class="secupress-blob-icon" aria-hidden="true">
-										<i class="icon-radar"></i>
+										<i class="secupress-icon-radar"></i>
 									</div>
 									<p class="secupress-blob-title"><?php _e( 'Security Report', 'secupress' ); ?></p>
 									<div class="secupress-blob-content" id="sp-step-1-d">
@@ -740,7 +740,7 @@ function secupress_scanners() {
 							<div class="secupress-col-1-4">
 								<div class="secupress-blob">
 									<div class="secupress-blob-icon" aria-hidden="true">
-										<i class="icon-autofix"></i>
+										<i class="secupress-icon-autofix"></i>
 									</div>
 									<p class="secupress-blob-title"><?php _e( 'Auto-Fix', 'secupress' ) ?></p>
 									<div class="secupress-blob-content" id="sp-step-2-d">
@@ -751,7 +751,7 @@ function secupress_scanners() {
 							<div class="secupress-col-1-4">
 								<div class="secupress-blob">
 									<div class="secupress-blob-icon" aria-hidden="true">
-										<i class="icon-manuals"></i>
+										<i class="secupress-icon-manuals"></i>
 									</div>
 									<p class="secupress-blob-title"><?php _e( 'Manual Operations', 'secupress' ) ?></p>
 									<div class="secupress-blob-content" id="sp-step-3-d">
@@ -762,7 +762,7 @@ function secupress_scanners() {
 							<div class="secupress-col-1-4">
 								<div class="secupress-blob">
 									<div class="secupress-blob-icon" aria-hidden="true">
-										<i class="icon-pad-check"></i>
+										<i class="secupress-icon-pad-check"></i>
 									</div>
 									<p class="secupress-blob-title"><?php esc_html_e( 'Resolution Report', 'secupress' ); ?></p>
 									<div class="secupress-blob-content" id="sp-step-4-d">
@@ -773,9 +773,9 @@ function secupress_scanners() {
 						</div><!-- .secupress-flex -->
 
 						<p class="secupress-text-end secupress-m0">
-							<a href="#secupress-more-info" class="secupress-link-icon secupress-icon-right secupress-close-moreinfo<?php echo $reports ? '' : ' dont-trigger-hide'; ?>" data-trigger="slideup" data-target="secupress-more-info">
+							<a href="#secupress-more-info" class="secupress-link-icon secupress-secupress-icon-right secupress-close-moreinfo<?php echo $reports ? '' : ' dont-trigger-hide'; ?>" data-trigger="slideup" data-target="secupress-more-info">
 								<span class="icon" aria-hidden="true">
-									<i class="icon-cross"></i>
+									<i class="secupress-icon-cross"></i>
 								</span>
 								<span class="text">
 									<?php _e( 'I\'ve got it!', 'secupress' ); ?>
@@ -858,11 +858,11 @@ function secupress_settings_heading( $titles = array() ) {
 			</p>
 			<p class="secupress-rateus-link hidden">
 				<a href="<?php echo SECUPRESS_RATE_URL; ?>">
-					<i class="icon-star" aria-hidden="true"></i>
-					<i class="icon-star" aria-hidden="true"></i>
-					<i class="icon-star" aria-hidden="true"></i>
-					<i class="icon-star" aria-hidden="true"></i>
-					<i class="icon-star" aria-hidden="true"></i>
+					<i class="secupress-icon-star" aria-hidden="true"></i>
+					<i class="secupress-icon-star" aria-hidden="true"></i>
+					<i class="secupress-icon-star" aria-hidden="true"></i>
+					<i class="secupress-icon-star" aria-hidden="true"></i>
+					<i class="secupress-icon-star" aria-hidden="true"></i>
 					<span class="screen-reader-text"><?php echo _x( 'Give us five stars', 'hidden text', 'secupress' ); ?></span>
 				</a>
 			</p>

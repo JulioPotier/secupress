@@ -71,14 +71,17 @@ function secupress_oldpassword_add_field() {
 		<p class="description">' . __( 'Type your current password', 'secupress' ) . '</p>
 		<script type="text/javascript">
 		(function($) {
-			var pass1 = $( ".user-pass1-wrap .wp-pwd" ),
+			// Move the field.
+			var pass1 = $( ".user-pass1-wrap .wp-pwd, .secupress-user-pass1-wrap .wp-pwd" ),
 				field;
 			if ( pass1.length ) {
 				field = "<div class=\"wp-pwd hide-if-js\"><label for=\"pass-old\">' . sprintf( __( '%s:', 'secupress' ), __( 'Type your current password', 'secupress' ) ) . '</label><br/><input name=\"pass-old\" type=\"password\" id=\"pass-old\" class=\"regular-text\" value=\"\" autocomplete=\"off\" /></div>";
 				$( ".user-pass-old-wrap" ).remove();
 				pass1.last().after( field );
+			} else {
+				$( ".user-pass-old-wrap" ).removeClass( ".hide-if-js" );
 			}
-		})(jQuery);</script>
+		} )(jQuery);</script>
 	</td>
 </tr>';
 	} elseif ( secupress_wp_version_is( '4.1' ) ) {

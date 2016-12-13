@@ -1,11 +1,11 @@
 <?php
-/*
-Module Name: Block Bad Request Methods
-Description: Block requests methods spotted as potentially dangerous
-Main Module: firewall
-Author: SecuPress
-Version: 1.0
-*/
+/**
+ * Module Name: Block Bad Request Methods
+ * Description: Block requests methods spotted as potentially dangerous.
+ * Main Module: firewall
+ * Author: SecuPress
+ * Version: 1.0
+ */
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 if ( ! defined( 'DOING_CRON' ) ) {

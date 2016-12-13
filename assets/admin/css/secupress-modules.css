@@ -133,25 +133,25 @@ p.secupress-sh-subtitle {
 	color: #F1C40F;
 }
 
-.secupress-modules-list-links .icon-sensitive-data,
-.secupress-modules-list-links .icon-logs,
-.secupress-modules-list-links .icon-schedule {
+.secupress-modules-list-links .secupress-icon-sensitive-data,
+.secupress-modules-list-links .secupress-icon-logs,
+.secupress-modules-list-links .secupress-icon-schedule {
 	right: 25px;
 }
-.secupress-modules-list-links .icon-information {
+.secupress-modules-list-links .secupress-icon-information {
 	right: 32px;
 }
-.secupress-modules-list-links .icon-file-system:before,
-.secupress-modules-list-links .icon-antispam:before {
+.secupress-modules-list-links .secupress-icon-file-system:before,
+.secupress-modules-list-links .secupress-icon-antispam:before {
 	font-size: 34px;
 }
-.secupress-modules-list-links .icon-services:before {
+.secupress-modules-list-links .secupress-icon-services:before {
 	font-size: 42px;
 }
-.secupress-modules-list-links .icon-secupress-simple {
+.secupress-modules-list-links .secupress-icon-secupress-simple {
 	right: 22px;
 }
-.secupress-modules-list-links .icon-secupress-simple:before {
+.secupress-modules-list-links .secupress-icon-secupress-simple:before {
 	font-size: 45px;
 }
 
@@ -244,6 +244,10 @@ p.secupress-sh-subtitle {
 	top: -2px;
 	border-color: #26B3A9;
 	background: #FFF;
+}
+.secupress-boxed-group .secupress-checkbox:not(:checked) + label:before,
+.secupress-boxed-group .secupress-checkbox:checked + label:before {
+	background: #ECF0F1;
 }
 .secupress-setting-row .secupress-checkbox:not(:checked) + label:after,
 .secupress-setting-row .secupress-checkbox:checked + label:after,
@@ -456,34 +460,34 @@ p.secupress-sh-subtitle {
 .secupress-module-box-get-pro .secupress-mb-icon i {
 	color: #5A626F
 }
-.secupress-mb-icon .icon-themes-plugins {
+.secupress-mb-icon .secupress-icon-themes-plugins {
 	height: 65px;
 }
-.secupress-mb-icon .icon-core {
+.secupress-mb-icon .secupress-icon-core {
 	height: 62px;
 	font-size: 49px;
 }
-.secupress-mb-icon .icon-sensitive-data,
-.secupress-mb-icon .icon-information,
-.secupress-mb-icon .icon-schedule {
+.secupress-mb-icon .secupress-icon-sensitive-data,
+.secupress-mb-icon .secupress-icon-information,
+.secupress-mb-icon .secupress-icon-schedule {
 	height: 63px;
 }
-.secupress-mb-icon .icon-firewall,
-.secupress-mb-icon .icon-logs {
+.secupress-mb-icon .secupress-icon-firewall,
+.secupress-mb-icon .secupress-icon-logs {
 	height: 58px;
 }
-.secupress-mb-icon .icon-file-system {
+.secupress-mb-icon .secupress-icon-file-system {
 	height: 54px;
 	font-size: 40px;
 }
-.secupress-mb-icon .icon-services {
+.secupress-mb-icon .secupress-icon-services {
 	height: 60px;
 }
-.secupress-mb-icon .icon-backups {
+.secupress-mb-icon .secupress-icon-backups {
 	font-size: 46px;
 	height: 61px;
 }
-.secupress-mb-icon .icon-antispam {
+.secupress-mb-icon .secupress-icon-antispam {
 	font-size: 40px;
 }
 
@@ -955,25 +959,11 @@ fieldset.secupress-boxed-group > b {
 	display: flex;
 }
 [id="secupress-settings-module_services--"] .secupress-setting-row {
-	-webkit-flex-basis: 50%;
-	-ms-flex-preferred-size: 50%;
 	flex-basis: 50%;
-	-webkit-box-flex: 0;
-	-webkit-flex-grow: 0;
-	-ms-flex-positive: 0;
 	flex-grow: 0;
-	-webkit-flex-shrink: 1;
-	-ms-flex-negative: 1;
 	flex-shrink: 1;
-	display: -webkit-box;
-	display: -webkit-flex;
-	display: -ms-flexbox;
 	display: flex;
-	-webkit-box-orient: vertical;
-	-webkit-box-direction: normal;
-	-webkit-flex-direction: column;
-	-ms-flex-direction: column;
-	flex-direction: column;
+	flex-direction: row;
 	margin: 25px 15px;
 	border-top: 0;
 	background: #222831 url("../images/bg-logo-sp.png") 50% 50% no-repeat;
@@ -992,7 +982,6 @@ fieldset.secupress-boxed-group > b {
 }
 [id="secupress-settings-module_services--"] .secupress-setting-row .secupress-flex {
 	flex-direction: column;
-	height: 100%;
 }
 [id="secupress-settings-module_services--"] .description {
 	margin: 1.5em auto 2em;
@@ -1374,4 +1363,68 @@ label {
 	border: none;
 	cursor: pointer;
 	background-color: transparent;
+}
+
+/* Malwares */
+.secupress-files-list {
+	margin: 0;
+}
+.secupress-boxed-group .secupress-files-list .secupress-files-list-item {
+	margin: .5em 0;
+	font-size: 13px;
+}
+.secupress-files-list-item.secupress-files-list-item label {
+	margin-right: 8px;
+	vertical-align: middle;
+}
+.secupress-inline-alert {
+	display: inline-block;
+	vertical-align: middle;
+}
+p > .secupress-inline-alert {
+	color: #F39C12;
+	font-weight: bold;
+}
+.secupress-inline-alert:before {
+	content: "!";
+	display: inline-block;
+	width: 22px;
+	height: 21px;
+	padding-top: 1px;
+	font-size: 18px;
+	line-height: 18px;
+	font-weight: bold;
+	text-align: center;
+	color: #F39C12;
+	background: rgba(241, 196, 15, .15);
+	border-radius: 50%;
+}
+p > .secupress-inline-alert:before {
+	margin-right: 5px;	
+}
+
+.secupress-files-list-item .secupress-button-primary.secupress-button-ghost {
+	box-shadow: none;
+	padding: 3px 15px;
+	text-transform: none;
+}
+.secupress-files-list-item .secupress-button-primary.secupress-button-ghost .text {
+	vertical-align: -1px;
+}
+.secupress-files-list-item .secupress-button-primary.secupress-button-ghost .icon {
+	margin-right: 0;
+	margin-left: -8px;
+	padding-right: 7px;
+}
+
+.secupress-files-list-item .secupress-button-primary .icon:after {
+	display: none;
+}
+.secupress-files-list-item .secupress-button-primary .dashicons-plus:before {
+	position: relative;
+	top: 1px;
+}
+.secupress-files-list-item .secupress-button-primary:hover {
+	background: transparent;
+	color: #26B3A9;
 }

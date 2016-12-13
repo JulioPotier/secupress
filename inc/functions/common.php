@@ -111,7 +111,7 @@ function secupress_get_scanners() {
 			'DirectoryIndex',
 		),
 		'firewall' => array(
-			'Common_Flaws',
+			'Shellshock',
 			'Bad_User_Agent',
 			'SQLi',
 			'Anti_Scanner',
@@ -383,28 +383,43 @@ function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 	$args = wp_parse_args( $args, array( 'code' => 403, 'content' => '' ) );
 
 	/**
+	 * Allow to give a proper name to the block ID.
+	 *
+	 * @since 1.1.4
+	 *
+	 * @param (string) $module The related module.
+	 */
+	$block_id = apply_filters( 'secupress_block_id', $module );
+
+	if ( $block_id === $module ) {
+		$block_id = ucwords( str_replace( '-', ' ', $block_id ) );
+		$block_id = preg_replace( '/[^0-9A-Z]/', '', $block_id );
+	}
+
+	/**
 	 * Fires before a user is blocked by a certain module.
 	 *
 	 * @since 1.0
+	 * @since 1.1.4 Added `$block_id` argument.
 	 *
-	 * @param (string) $ip   The IP address.
-	 * @param (array)  $args Contains the "code" (def. 403) and a "content" (def. empty), this content will replace the default message.
+	 * @param (string) $ip       The IP address.
+	 * @param (array)  $args     Contains the "code" (def. 403) and a "content" (def. empty), this content will replace the default message.
+	 * @param (string) $block_id The block ID.
 	 */
-	do_action( 'secupress.block.' . $module, $ip, $args );
+	do_action( 'secupress.block.' . $module, $ip, $args, $block_id );
 
 	/**
 	 * Fires before a user is blocked.
 	 *
 	 * @since 1.0
+	 * @since 1.1.4 Added `$block_id` argument.
 	 *
-	 * @param (string) $module The module.
-	 * @param (string) $ip     The IP address.
-	 * @param (array)  $args   Contains the "code" (def. 403) and a "content" (def. empty), this content will replace the default message.
+	 * @param (string) $module   The module.
+	 * @param (string) $ip       The IP address.
+	 * @param (array)  $args     Contains the "code" (def. 403) and a "content" (def. empty), this content will replace the default message.
+	 * @param (string) $block_id The block ID.
 	 */
-	do_action( 'secupress.block', $module, $ip, $args );
-
-	$module = ucwords( str_replace( '-', ' ', $module ) );
-	$module = preg_replace( '/[^0-9A-Z]/', '', $module );
+	do_action( 'secupress.block', $module, $ip, $args, $block_id );
 
 	$title   = $args['code'] . ' ' . get_status_header_desc( $args['code'] );
 	$content = '<h4>' . $title . '</h4>';
@@ -417,8 +432,8 @@ function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 
 	$content  = '<h4>' . __( 'Logged Details:', 'secupress' ) . '</h4><p>';
 	$content .= sprintf( __( 'Your IP: %s', 'secupress' ), $ip ) . '<br>';
-	$content .= sprintf( __( 'Time: %s', 'secupress' ), date_i18n( __( 'F j, Y g:i a' ) ) ) . '<br>';
-	$content .= sprintf( __( 'Block ID: %s', 'secupress' ), $module ) . '</p>';
+	$content .= sprintf( __( 'Time: %s', 'secupress' ), date_i18n( __( 'F j, Y g:i a', 'secupress' ) ) ) . '<br>';
+	$content .= sprintf( __( 'Block ID: %s', 'secupress' ), $block_id ) . '</p>';
 
 	secupress_die( $content, $title, array( 'response' => $args['code'] ) );
 }
@@ -493,10 +508,54 @@ function secupress_get_capability( $force_mono = false ) {
 
 
 /**
+ * Add SecuPress informations into USER_AGENT.
+ *
+ * @since 1.0
+ * @since 1.1.4 Available in global scope.
+ *
+ * @param (string) $user_agent A User Agent.
+ *
+ * @return (string)
+ */
+function secupress_user_agent( $user_agent ) {
+	$bonus  = secupress_is_white_label()        ? '*' : '';
+	$bonus .= secupress_get_option( 'do_beta' ) ? '+' : '';
+	$new_ua = sprintf( '%s;SecuPress|%s%s|%s|;', $user_agent, SECUPRESS_VERSION, $bonus, esc_url( home_url() ) );
+
+	return $new_ua;
+}
+
+
+/**
+ * Is this version White Labeled?
+ *
+ * @since 1.0
+ * @since 1.1.4 Available in global scope.
+ *
+ * @return (bool)
+ */
+function secupress_is_white_label() {
+	if ( ! secupress_is_pro() ) {
+		return false;
+	}
+
+	$names = array( 'wl_plugin_name', 'wl_plugin_URI', 'wl_description', 'wl_author', 'wl_author_URI' );
+
+	foreach ( $names as $value ) {
+		if ( false !== secupress_get_option( $value ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+
+/**
  * Get SecuPress logo.
  *
- * @since 1.0.6 Remove the yellow Pro logo (Julio Potier)
  * @since 1.0
+ * @since 1.0.6 Remove the yellow Pro logo (Julio Potier)
  *
  * @param (array) $atts An array of HTML attributes.
  * @param (bool)  $is_pro True is pro logo requested.
@@ -552,6 +611,104 @@ function secupress_get_logo_word( $atts = array() ) {
 	}
 
 	return "<img{$attributes}/>";
+}
+
+/**
+ * Print the sidebar with Ads and cross-selling
+ *
+ * @return void
+ *
+ * @author Geoffrey Crofte
+ * @since  1.1.4
+ */
+function secupress_print_sideads() {
+	if ( secupress_is_pro() ) {
+		return;
+	}
+
+	$rk_offer = '20%';
+	$rk_code  = 'SECUPRESS20';
+	$rk_url   = 'https://wp-rocket.me/?utm_source=secupress&utm_campaign=sidebar&utm_medium=plugin';
+
+	$im_offer = __( '100 MB', 'secupress' );
+	$im_code  = 'SECUPRESS100';
+	$im_url   = 'https://imagify.io/?utm_source=secupress&utm_campaign=sidebar&utm_medium=plugin';
+?>
+
+	<div class="secupress-sideads">
+		<div class="secupress-section-dark secupress-pro-ad">
+
+			<i class="icon-secupress" aria-hidden="true"></i>
+
+			<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-pro.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-pro@2x.png" width="80" height="78" alt="SecuPress Pro">
+
+			<p class="secupress-text-medium"><?php _e( 'Improve your Security', 'secupress' ); ?></p>
+			<p><?php _e( 'Unlock all the features of SecuPress Pro', 'secupress' ); ?></p>
+			<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ); ?>" class="secupress-button secupress-button-tertiary secupress-button-getpro">
+				<span class="icon">
+					<i class="icon-secupress-simple" aria-hidden="true"></i>
+				</span>
+				<span class="text"><?php _ex('Get Pro', 'short', 'secupress' ); ?></span>
+			</a>
+		</div>
+
+		<div class="secupress-bordered secupress-mail-ad">
+			<div class="secupress-ad-header secupress-flex">
+				<span><i class="dashicons dashicons-email secupress-primary" aria-hidden="true"></i></span>
+				<p><?php _e( 'Join our mailing list', 'secupress' ); ?></p>
+			</div>
+			<div class="secupress-ad-content">
+				<p><label for="mce-EMAIL"><?php _e( 'Get security alerts and news from SecuPress.', 'secupress' ) ?></label></p>
+
+				<form action="//secupress.us13.list-manage.com/subscribe/post?u=67a6053e2542ab4330a851904&amp;id=2eecd4aed8" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+
+					<p>
+						<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="<?php esc_attr_e( 'email address', 'secupress' ); ?>" required="required">
+					</p>
+
+					<!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+					<div style="position:absolute;left:-9999em" aria-hidden="true"><input type="text" name="b_67a6053e2542ab4330a851904_2eecd4aed8" tabindex="-1" value=""></div>
+
+					<p>
+						<button type="submit" name="subscribe" class="secupress-button secupress-button-primary"><?php _e( 'Stay tuned for more', 'secupress' ); ?></button>
+					</p>
+				</form>
+			</div>
+		</div>
+
+		<?php if ( ! defined( 'WP_ROCKET_VERSION' ) ) { ?>
+
+		<div class="secupress-wprocket-ad secupress-product-ads">
+			<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-wprocket.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-wprocket@2x.png 2x" alt="WP Rocket" width="110" height="30">
+
+			<p class="secupress-catch"><?php _e( 'Speed up your website with WP Rocket', 'secupress' ); ?></p>
+			<p><?php printf( __( 'Get <span>%1$s OFF</span> with this coupon code: %2$s', 'secupress' ), $rk_offer, '<span class="secupress-coupon">' . $rk_code . '</span>' ); ?></p>
+
+			<p class="secupress-cta">
+				<a href="<?php echo esc_url( $rk_url ); ?>" class="secupress-button" target="_blank"><?php printf( __( 'Get %s OFF on WP Rocket', 'secupress' ), $rk_offer ); ?></a>
+			</p>
+		</div>
+
+		<?php } ?>
+
+		<?php if ( ! defined( 'IMAGIFY_VERSION' ) ) { ?>
+
+		<div class="secupress-imagify-ad secupress-product-ads">
+			<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-imagify.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-imagify@2x.png 2x" alt="Imagify" width="123" height="15">
+
+			<p class="secupress-catch"><?php _e( 'Speed Up your website with lighter images', 'secupress' ); ?></p>
+			<p><?php printf( __( 'Get <span>%1$s Free</span> with this coupon code: %2$s', 'secupress' ), $im_offer, '<span class="secupress-coupon">' . $im_code . '</span>' ); ?></p>
+
+			<p class="secupress-cta">
+				<a href="<?php echo esc_url( $im_url ); ?>" class="secupress-button" target="_blank"><?php printf( __( 'Get %s Free on Imagify', 'secupress' ), $im_offer ); ?></a>
+			</p>
+		</div>
+
+		<?php } ?>
+
+	</div>
+
+<?php
 }
 
 
@@ -837,7 +994,13 @@ function secupress_has_pro() {
  * @return (bool)
  */
 function secupress_is_pro() {
-	return secupress_has_pro() && secupress_get_consumer_key() && (int) secupress_get_option( 'site_is_pro' );
+	static $is_pro;
+
+	if ( ! isset( $is_pro ) ) {
+		$is_pro = secupress_has_pro() && secupress_get_consumer_key() && (int) secupress_get_option( 'site_is_pro' );
+	}
+
+	return $is_pro;
 }
 
 

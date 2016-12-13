@@ -29,7 +29,42 @@ jQuery( document ).ready( function( $ ) {
 		secupressChartEls.push( document.getElementById( 'status_chart_mini' ) );
 	}
 
-	// a11y function
+	// Get cookie.
+	function secupressGetCookie(cname) {
+		var name = cname + "=";
+		var ca   = document.cookie.split(';');
+
+		for ( var i = 0; i <ca.length; i++ ) {
+			var c = ca[i];
+
+			while ( c.charAt(0) === ' ' ) {
+				c = c.substring(1);
+			}
+			if ( c.indexOf( name ) === 0 ) {
+				return c.substring( name.length, c.length );
+			}
+		}
+		return '';
+	}
+
+	// Tweeter Grade A.
+	if ( $( '.secupress-score' ).find( '.letter' ).hasClass( 'lA' ) ) {
+		if ( 'ok' !== secupressGetCookie( 'secupresstweeted' ) ) {
+			$( '#tweeterA' ).slideDown();
+		}
+	}
+
+	$('#tweeterA .secupress-button').on( 'click.secupress', function() {
+		var now  = new Date(),
+			time = now.getTime(),
+			expireTime = time + 1000 * 3600 * 24 * 360; // ~= 1 year
+
+		now.setTime( expireTime );
+		document.cookie = 'secupresstweeted=ok; expires=' + now.toGMTString() + '; path=/';
+		$( '#tweeterA' ).slideUp();
+	} );
+
+	// a11y function.
 	function secupressCouldSay( say ) {
 		if ( wp.a11y && wp.a11y.speak && undefined !== say && say ) {
 			wp.a11y.speak( say );
@@ -350,7 +385,7 @@ jQuery( document ).ready( function( $ ) {
 	function secupressResetManualFix() {
 		var $buttons = $( '.secupress-button-manual-fixit' );
 		// Reset the active button icon.
-		$buttons.find( '.icon-shield' ).addClass( 'icon-check' ).removeClass( 'icon-shield' );
+		$buttons.find( '.secupress-icon-shield' ).addClass( 'secupress-icon-check' ).removeClass( 'secupress-icon-shield' );
 		// Remove the row class.
 		$( '.secupress-mf-content.fixing' ).removeClass( 'fixing' );
 		// Activate all buttons.
@@ -385,15 +420,7 @@ jQuery( document ).ready( function( $ ) {
 
 			secupressDrawCharts();
 		}
-
-		// Twitter.
-		if ( "A" === data.grade ) {
-			$( "#tweeterA" ).slideDown();
-		} else {
-			$( "#tweeterA" ).slideUp();
-		}
 	}
-
 
 	// Some callback that will run after all scans are done and the score has been printed.
 	function secupressAllScanDoneCallback( isOneClickScan ) {
@@ -415,7 +442,7 @@ jQuery( document ).ready( function( $ ) {
 		// Step 3: when a manual fix is done (and the folowing scan), or a "manual scan", go to the next manual fix (or to step 4).
 		else if ( 3 === SecuPressi18nScanner.step ) {
 			$row = $( ".secupress-manual-fix" ).not( ".hide-if-js" );
-			$row.find( ".secupress-button-manual-scanit" ).find( ".icon-shield" ).addClass( "icon-check" ).removeClass( "icon-shield" );
+			$row.find( ".secupress-button-manual-scanit" ).find( ".secupress-icon-shield" ).addClass( "secupress-icon-check" ).removeClass( "secupress-icon-shield" );
 			secupressResetManualFix();
 			$row.find( ".secupress-button-ignoreit" ).first().trigger( "next.secupress" );
 		}
@@ -885,7 +912,7 @@ jQuery( document ).ready( function( $ ) {
 				secupressNotices.remove( $notice );
 			}
 
-			$row.addClass( 'fixing' ).find( '.secupress-button-manual-fixit .icon-check' ).addClass( 'icon-shield' ).removeClass( 'icon-check' );
+			$row.addClass( 'fixing' ).find( '.secupress-button-manual-fixit .secupress-icon-check' ).addClass( 'secupress-icon-shield' ).removeClass( 'secupress-icon-check' );
 
 			$.post( ajaxurl, params, null, 'json' )
 			.done( function( r ) {
@@ -916,7 +943,7 @@ jQuery( document ).ready( function( $ ) {
 			}
 
 			// Show our scan is running.
-			$row.addClass( 'scanning' ).find( '.secupress-button-manual-scanit .icon-check' ).addClass( 'icon-shield' ).removeClass( 'icon-check' );
+			$row.addClass( 'scanning' ).find( '.secupress-button-manual-scanit .secupress-icon-check' ).addClass( 'secupress-icon-shield' ).removeClass( 'secupress-icon-check' );
 
 			// Ajax call
 			$.getJSON( href.replace( 'admin-post.php', 'admin-ajax.php' ) )

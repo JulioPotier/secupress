@@ -53,7 +53,7 @@ if ( ! $secupress_tests ) {
 		<p class="secupress-flex">
 			<a href="<?php echo esc_url( secupress_admin_url( 'scanners' ) ); ?>&amp;step=3" class="secupress-button shadow light">
 				<span class="icon">
-					<i class="icon-cross" aria-hidden="true"></i>
+					<i class="secupress-icon-cross" aria-hidden="true"></i>
 				</span>
 				<span class="text"><?php _e( 'Next step', 'secupress' ); ?></span>
 			</a>
@@ -70,13 +70,13 @@ if ( ! $secupress_tests ) {
 	$main_button =
 		'<button class="secupress-button secupress-button-tertiary secupress-button-autofix shadow' . ( $has_fixes ? '' : ' hidden' ) . '" type="button">
 			<span class="icon">
-				<i class="icon-wrench" aria-hidden="true"></i>
+				<i class="secupress-icon-wrench" aria-hidden="true"></i>
 			</span>
 			<span class="text">' . __( 'Fix it', 'secupress' ) . '</span>
 		</button>
 		<a href="' . esc_url( secupress_admin_url( 'scanners' ) ) . '&amp;step=3" class="secupress-button shadow light' . ( $has_fixes ? ' hidden' : '' ) . '">
 			<span class="icon">
-				<i class="icon-cross" aria-hidden="true"></i>
+				<i class="secupress-icon-cross" aria-hidden="true"></i>
 			</span>
 			<span class="text">' . __( 'Ignore this step', 'secupress' ) . '</span>
 		</a>';
@@ -102,7 +102,7 @@ if ( ! $secupress_tests ) {
 			<div class="secupress-sg-header secupress-flex secupress-flex-spaced">
 
 				<div class="secupress-sgh-name">
-					<i class="icon-<?php echo $module_icon; ?>" aria-hidden="true"></i>
+					<i class="secupress-icon-<?php echo $module_icon; ?>" aria-hidden="true"></i>
 					<p class="secupress-sgh-title"><?php echo $module_title; ?></p>
 					<p class="secupress-sgh-description"><?php echo $module_summary; ?></p>
 				</div>
@@ -168,7 +168,7 @@ if ( ! $secupress_tests ) {
 									</label>
 									<a class="secupress-button-primary secupress-button-mini hide-if-js secupress-fixit<?php echo $current_test->is_delayed_fix() ? ' delayed-fix' : ''; ?>" href="<?php echo esc_url( $fix_nonce_url ); ?>">
 										<span class="icon" aria-hidden="true">
-											<i class="icon-shield"></i>
+											<i class="secupress-icon-shield"></i>
 										</span>
 										<span class="text">
 											<?php _e( 'Fix it', 'secupress' ); ?>

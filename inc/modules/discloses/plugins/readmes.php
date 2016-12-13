@@ -1,11 +1,11 @@
 <?php
-/*
-Module Name: Protect readme files.
-Description: Deny access to all <code>readme</code> and <code>changelog</code> files.
-Main Module: discloses
-Author: SecuPress
-Version: 1.0
-*/
+/**
+ * Module Name: Protect readme files
+ * Description: Deny access to all <code>readme</code> and <code>changelog</code> files.
+ * Main Module: discloses
+ * Author: SecuPress
+ * Version: 1.0
+ */
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 /*------------------------------------------------------------------------------------------------*/

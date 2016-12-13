@@ -5,7 +5,7 @@
  * Description: Protect your WordPress with SecuPress, analyze and ensure the safety of your website daily.
  * Author: WP Media
  * Author URI: http://wp-media.me
- * Version: 1.1.3
+ * Version: 1.1.4
  * Network: true
  * License: GPLv2
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /* DEFINES ====================================================================================== */
 /*------------------------------------------------------------------------------------------------*/
 
-define( 'SECUPRESS_VERSION'               , '1.1.3' );
+define( 'SECUPRESS_VERSION'               , '1.1.4' );
 define( 'SECUPRESS_PRIVATE_KEY'           , false );
 define( 'SECUPRESS_ACTIVE_SUBMODULES'     , 'secupress_active_submodules' );
 define( 'SECUPRESS_SETTINGS_SLUG'         , 'secupress_settings' );
@@ -35,6 +35,7 @@ define( 'SECUPRESS_WP_CORE_FILES_HASHES'  , 'secupress_wp_core_files_hashes' );
 define( 'SECUPRESS_FULL_FILETREE'         , 'secupress_full_filetree' );
 define( 'SECUPRESS_FIX_DISTS'             , 'secupress_fix_dists' );
 define( 'SECUPRESS_BAN_IP'                , 'secupress_ban_ip' );
+define( 'SECUPRESS_SELF_WHITELIST'        , 'secupress_self_whitelist' );
 define( 'SECUPRESS_RATE_URL'              , 'https://wordpress.org/support/view/plugin-reviews/secupress?filter=5#topic' );
 define( 'SECUPRESS_REPO_URL'              , 'https://wordpress.org/plugins/secupress/' );
 define( 'SECUPRESS_WEB_MAIN'              , 'https://secupress.me/' );
@@ -109,6 +110,7 @@ function secupress_init() {
 
 	// Functions.
 	require_once( SECUPRESS_INC_PATH . 'functions/compat.php' );
+	require_once( SECUPRESS_INC_PATH . 'functions/deprecated.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/common.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/formatting.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/options.php' );
@@ -158,10 +160,6 @@ function secupress_init() {
 		require_once( SECUPRESS_ADMIN_PATH . 'functions/modules.php' );
 		require_once( SECUPRESS_ADMIN_PATH . 'functions/notices.php' );
 
-		// Temporary Updates when not on repo yet.
-		require_once( SECUPRESS_ADMIN_PATH . 'functions/wp-updates-plugin.php' );
-		new WPUpdatesPluginUpdater_spfree( 'http://wp-updates.com/api/2/plugin', plugin_basename( __FILE__ ) );
-
 		// Hooks.
 		require_once( SECUPRESS_ADMIN_PATH . 'options.php' );
 		require_once( SECUPRESS_ADMIN_PATH . 'settings.php' );
@@ -193,7 +191,7 @@ function secupress_load_plugins() {
 
 	if ( $modules ) {
 		foreach ( $modules as $key => $module ) {
-			if ( defined( 'SECUPRESS_PRO_MODULES_PATH' ) ) {
+			if ( secupress_has_pro() ) {
 				$file = SECUPRESS_PRO_MODULES_PATH . sanitize_key( $key ) . '/tools.php';
 
 				if ( file_exists( $file ) ) {
@@ -211,7 +209,7 @@ function secupress_load_plugins() {
 				continue;
 			}
 
-			if ( defined( 'SECUPRESS_PRO_MODULES_PATH' ) ) {
+			if ( secupress_has_pro() ) {
 				$file = SECUPRESS_PRO_MODULES_PATH . sanitize_key( $key ) . '/callbacks.php';
 
 				if ( file_exists( $file ) ) {
@@ -236,15 +234,21 @@ function secupress_load_plugins() {
 	if ( $modules ) {
 		foreach ( $modules as $module => $plugins ) {
 			foreach ( $plugins as $plugin ) {
-				$file_path = secupress_get_submodule_file_path( $module, $plugin );
-				if ( $file_path ) {
-					require_once( $file_path );
+				if ( secupress_is_pro() || ! secupress_submodule_is_pro( $module, $plugin ) ) {
+					$file_path = secupress_get_submodule_file_path( $module, $plugin );
+
+					if ( $file_path ) {
+						require_once( $file_path );
+					}
 				}
 			}
 		}
 	}
 
+	$has_activation = false;
+
 	if ( is_admin() && secupress_get_site_transient( 'secupress_activation' ) ) {
+		$has_activation = true;
 
 		secupress_delete_site_transient( 'secupress_activation' );
 
@@ -257,6 +261,29 @@ function secupress_load_plugins() {
 		do_action( 'secupress.plugins.activation' );
 	}
 
+	if ( secupress_is_pro() && is_admin() && secupress_get_site_transient( 'secupress_pro_activation' ) ) {
+		$has_activation = true;
+
+		secupress_delete_site_transient( 'secupress_pro_activation' );
+
+		/**
+		 * Fires once SecuPress Pro is activated, after the SecuPress's plugins are loaded.
+		 *
+		 * @since 1.1.4
+		 * @see `secupress_pro_activation()`
+		 */
+		do_action( 'secupress.pro.plugins.activation' );
+	}
+
+	if ( $has_activation ) {
+		/**
+		 * Fires once SecuPress or SecuPress Pro is activated, after the SecuPress's plugins are loaded.
+		 *
+		 * @since 1.1.4
+		 */
+		do_action( 'secupress.all.plugins.activation' );
+	}
+
 	/**
 	 * Fires once all our plugins/submodules has been loaded.
 	 *
@@ -266,40 +293,9 @@ function secupress_load_plugins() {
 }
 
 
-add_action( 'secupress.loaded', 'secupress_been_first' );
-/**
- * Make SecuPress the first plugin loaded.
- *
- * @since 1.0
- */
-function secupress_been_first() {
-	if ( ! is_admin() ) {
-		return;
-	}
-
-	$plugin_basename = plugin_basename( __FILE__ );
-
-	if ( is_multisite() ) {
-		$active_plugins = get_site_option( 'active_sitewide_plugins' );
-
-		if ( isset( $active_plugins[ $plugin_basename ] ) && key( $active_plugins ) !== $plugin_basename ) {
-			$this_plugin = array( $plugin_basename => $active_plugins[ $plugin_basename ] );
-			unset( $active_plugins[ $plugin_basename ] );
-			$active_plugins = array_merge( $this_plugin, $active_plugins );
-			update_site_option( 'active_sitewide_plugins', $active_plugins );
-		}
-		return;
-	}
-
-	$active_plugins = get_option( 'active_plugins' );
-
-	if ( isset( $active_plugins[ $plugin_basename ] ) && reset( $active_plugins ) !== $plugin_basename ) {
-		unset( $active_plugins[ array_search( $plugin_basename, $active_plugins ) ] );
-		array_unshift( $active_plugins, $plugin_basename );
-		update_option( 'active_plugins', $active_plugins );
-	}
-}
-
+/*------------------------------------------------------------------------------------------------*/
+/* I18N ========================================================================================= */
+/*------------------------------------------------------------------------------------------------*/
 
 /**
  * Translations for the plugin textdomain.

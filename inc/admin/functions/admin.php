@@ -93,24 +93,6 @@ function secupress_enqueue_notices_styles() {
 
 
 /**
- * Add SecuPress informations into USER_AGENT.
- *
- * @since 1.0
- *
- * @param (string) $user_agent A User Agent.
- *
- * @return (string)
- */
-function secupress_user_agent( $user_agent ) {
-	$bonus  = secupress_is_white_label()        ? '*' : '';
-	$bonus .= secupress_get_option( 'do_beta' ) ? '+' : '';
-	$new_ua = sprintf( '%s;SecuPress|%s%s|%s|;', $user_agent, SECUPRESS_VERSION, $bonus, esc_url( home_url() ) );
-
-	return $new_ua;
-}
-
-
-/**
  * Used for the "last 5 scans", formate each row.
  *
  * @since 1.0
@@ -137,7 +119,7 @@ function secupress_formate_latest_scans_list_item( $item, $last_percent = -1 ) {
 			<span class="secupress-latest-list-time timeago">%3$s</span>
 			<span class="secupress-latest-list-date">%4$s</span>
 			<strong class="secupress-latest-list-grade letter l%2$s">%2$s</strong>
-			<i class="mini icon-%1$s" aria-hidden="true"></i>
+			<i class="mini secupress-icon-%1$s" aria-hidden="true"></i>
 		</li>',
 		$icon,
 		$item['grade'],
@@ -266,7 +248,7 @@ function secupress_print_pro_advantages() {
 	<div class="secupress-flex secupress-wrap secupress-pt1 secupress-pb1 secupress-pro-advantages">
 		<div class="secupress-col-1-2 secupress-flex secupress-landscape-blob">
 			<div class="secupress-col">
-				<i class="icon-antispam" aria-hidden="true"></i>
+				<i class="secupress-icon-antispam" aria-hidden="true"></i>
 			</div>
 			<div class="secupress-col">
 				<p class="secupress-blob-title"><?php _e( 'Anti Spam', 'secupress' ); ?></p>
@@ -275,7 +257,7 @@ function secupress_print_pro_advantages() {
 		</div>
 		<div class="secupress-col-1-2 secupress-flex secupress-landscape-blob">
 			<div class="secupress-col">
-				<i class="icon-information" aria-hidden="true"></i>
+				<i class="secupress-icon-information" aria-hidden="true"></i>
 			</div>
 			<div class="secupress-col">
 				<p class="secupress-blob-title"><?php esc_html_e( 'Alerts', 'secupress' ); ?></p>
@@ -284,7 +266,7 @@ function secupress_print_pro_advantages() {
 		</div>
 		<div class="secupress-col-1-2 secupress-flex secupress-landscape-blob">
 			<div class="secupress-col">
-				<i class="icon-firewall" aria-hidden="true"></i>
+				<i class="secupress-icon-firewall" aria-hidden="true"></i>
 			</div>
 			<div class="secupress-col">
 				<p class="secupress-blob-title"><?php _e( 'Firewall', 'secupress' ); ?></p>
@@ -293,7 +275,7 @@ function secupress_print_pro_advantages() {
 		</div>
 		<div class="secupress-col-1-2 secupress-flex secupress-landscape-blob">
 			<div class="secupress-col">
-				<i class="icon-logs" aria-hidden="true"></i>
+				<i class="secupress-icon-logs" aria-hidden="true"></i>
 			</div>
 			<div class="secupress-col">
 				<p class="secupress-blob-title"><?php esc_html_e( 'Logs', 'secupress' ); ?></p>

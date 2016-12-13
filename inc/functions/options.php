@@ -45,6 +45,25 @@ function secupress_get_option( $option, $default = false ) {
 }
 
 
+/**
+ * A wrapper to update SecuPress options.
+ * If you want the options to be sanitized, make sure to `unset( $options['sanitized'] )` before.
+ *
+ * @since 1.1.4
+ * @author Grégory Viguier
+ *
+ * @param (array) $options The new option values.
+ */
+function secupress_update_options( $options ) {
+	// Make sure we don't mess everything.
+	if ( ! is_array( $options ) ) {
+		return;
+	}
+
+	update_site_option( SECUPRESS_SETTINGS_SLUG, $options );
+}
+
+
 /*------------------------------------------------------------------------------------------------*/
 /* MODULE OPTIONS =============================================================================== */
 /*------------------------------------------------------------------------------------------------*/

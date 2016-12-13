@@ -16,7 +16,7 @@ var SecuPress = {
 		showCancelButton:  true,
 		closeOnConfirm:    false
 	},
-	expandButton: '<p class="secupress-expand-trigger-container"><button class="secupress-expand-trigger" type="button"><span class="secupress-expand-txt">' + SecuPressi18nModules.expandTextOpen + '</span><i class="icon-angle-down" aria-hidden="true"></i></button></p>'
+	expandButton: '<p class="secupress-expand-trigger-container"><button class="secupress-expand-trigger" type="button"><span class="secupress-expand-txt">' + SecuPressi18nModules.expandTextOpen + '</span><i class="secupress-icon-angle-down" aria-hidden="true"></i></button></p>'
 };
 
 /**
@@ -35,7 +35,7 @@ if ( SecuPressi18nModules.alreadyScanned === 0 ) {
 	modal_content += '<p class="secupress-mt1 secupress-mb1">';
 		modal_content += '<a class="secupress-button secupress-button-primary secupress-button-scan shadow" href="' + SecuPressi18nModules.firstScanURL + '">';
 			modal_content += '<span class="icon">';
-				modal_content += '<i class="icon-radar" aria-hidden="true"></i>';
+				modal_content += '<i class="secupress-icon-radar" aria-hidden="true"></i>';
 			modal_content += '</span>';
 			modal_content += '<span class="text">';
 				modal_content += SecuPressi18nModules.firstScanButton;
@@ -1096,7 +1096,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 			$container.css( 'height', '200px' );
 			$_this.removeClass( 'open' );
 			$_this.find( '.secupress-expand-txt' ).text( SecuPressi18nModules.expandTextOpen );
-			$_this.find( 'i' ).removeClass( 'icon-angle-up' ).addClass( 'icon-angle-down' );
+			$_this.find( 'i' ).removeClass( 'secupress-icon-angle-up' ).addClass( 'secupress-icon-angle-down' );
 			// Scroll to the top of the box on close.
 			$( 'html, body' ).animate( {
 				scrollTop: $container.offset().top - 80 // 80 to be slightly over the box.
@@ -1106,7 +1106,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 			$textarea.focusToEnd();
 			$_this.addClass( 'open' );
 			$_this.find( '.secupress-expand-txt' ).text( SecuPressi18nModules.expandTextClose );
-			$_this.find( 'i' ).removeClass( 'icon-angle-down' ).addClass( 'icon-angle-up' );
+			$_this.find( 'i' ).removeClass( 'secupress-icon-angle-down' ).addClass( 'secupress-icon-angle-up' );
 		}
 		return false;
 	} );
@@ -1130,7 +1130,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 				$box.css( 'height', maxHeight );
 				$this.removeClass( 'open' );
 				$this.find( '.secupress-expand-txt' ).text( SecuPressi18nModules.expandTextOpen );
-				$this.find( 'i' ).removeClass( 'icon-angle-up' ).addClass( 'icon-angle-down' );
+				$this.find( 'i' ).removeClass( 'secupress-icon-angle-up' ).addClass( 'secupress-icon-angle-down' );
 				// scroll to the top of the box on close.
 				$('html, body').animate({
 					scrollTop: $box.offset().top - 80 // 80 to be slightly over the box.
@@ -1139,7 +1139,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 				$box.css( 'height', $box.data( 'height' ) );
 				$this.addClass( 'open' );
 				$this.find( '.secupress-expand-txt' ).text( SecuPressi18nModules.expandTextClose );
-				$this.find( 'i' ).removeClass( 'icon-angle-down' ).addClass( 'icon-angle-up' );
+				$this.find( 'i' ).removeClass( 'secupress-icon-angle-down' ).addClass( 'secupress-icon-angle-up' );
 			}
 			return false;
 		} );
