@@ -68,7 +68,7 @@ It's important to delete all other security plugins before activating SecuPress.
 
 = 1.1.4 =
 * 13 dec 2016
-* New: up to 12 options for you to control. Directory Index, Directory Listing, PHP modules disclosure, PHP version disclosure, WordPress version disclosure, Bad URL Access, Protect readme files, WooCommerce and WPML version disclosure, File edition constant, Unfiltered HTML constant, Unfiltered uploads constant: all these protections are now activatable and deactivatable separately when you want ( ﾟдﾟ)
+* New: up to 12 options for you to control. Directory Index, Directory Listing, PHP modules disclosure, PHP version disclosure, WordPress version disclosure, Bad URL Access, Protect readme files, WooCommerce and WPML version disclosure, File edition constant, Unfiltered HTML constant, Unfiltered uploads constant: all these protections can now be activated and deactivated separately as needed ( ﾟдﾟ)
 * New: some scans were slightly modified, so here is a new one that will test only the ShellShock vulnerability ヽ(´ー`)人(´∇｀)人(`Д´)ノ
 * New: if a scan displays a "Not able to access your front page" message, it brings you the possibility to activate the protection anyway.
 * Improvement #118: in the scanner's manual fixes, the "Ignore this step" button is more understandable.
