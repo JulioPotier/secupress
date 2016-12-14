@@ -97,7 +97,7 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 					</div>
 				</div>
 
-				<?php secupress_print_sideads(); ?>
+				<?php $this->print_sideads(); ?>
 
 			</div><!-- .secupress-setting-content -->
 		</div><!-- .wrap -->
