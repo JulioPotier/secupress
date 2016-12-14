@@ -6,10 +6,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2016-12-13 21:25+0100\n"
-"PO-Revision-Date: 2016-12-13 21:26+0100\n"
+"POT-Creation-Date: 2016-12-14 15:57+0100\n"
+"PO-Revision-Date: 2016-12-14 15:57+0100\n"
 "Last-Translator: WP Media <contact@secupress.me>\n"
-"Language-Team: French (France)\n"
+"Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Generator: Poedit 1.8.11\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: _x:1,2c;__;_e;_ex:1,2c;_n:1,2;_nx:1,2;esc_html__;"
-"esc_html_e;_n_noop:1,2\n"
+"esc_html_e;esc_attr__;esc_attr_e;_n_noop:1,2\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Textdomain-Support: yes\n"
 "X-Poedit-SearchPath-0: .\n"
@@ -725,6 +725,14 @@ msgid_plural "These modules have been deactivated:"
 msgstr[0] "Ce module a été désactivé&nbsp;:"
 msgstr[1] "Ces modules ont été désactivés&nbsp;:"
 
+#: inc/admin/notices.php:291
+msgid "Loading"
+msgstr "Chargement"
+
+#: inc/admin/notices.php:292 inc/functions/common.php:666
+msgid "Email address"
+msgstr "Adresse e-mail"
+
 #: inc/admin/notices.php:293
 #: inc/classes/settings/class-secupress-settings-modules.php:658
 #: inc/classes/settings/class-secupress-settings-modules.php:694
@@ -847,10 +855,18 @@ msgstr "Liste des éléments de sécurité analysés"
 msgid "Next step"
 msgstr "Prochaine étape"
 
+#: inc/admin/scanner-step-1.php:102 inc/admin/scanner-step-4.php:267
+msgid "Export this report as PDF file."
+msgstr "Exporter ce rapport dans un fichier PDF."
+
 #: inc/admin/scanner-step-1.php:107 inc/admin/scanner-step-1.php:116
 #: inc/admin/scanner-step-4.php:260
 msgid "Export as PDF"
 msgstr "Exporter en PDF"
+
+#: inc/admin/scanner-step-1.php:111 inc/admin/scanner-step-4.php:273
+msgid "Get the Pro Version to export this report as PDF file."
+msgstr "Obtenez la version Pro pour exporter ce rapport dans un fichier PDF."
 
 #: inc/admin/scanner-step-1.php:121 inc/admin/scanner-step-2.php:159
 #: inc/admin/scanner-step-3.php:190 inc/admin/scanner-step-4.php:278
@@ -892,6 +908,10 @@ msgstr "Correction en cours…"
 msgid "Please wait until fixing is complete."
 msgstr "Merci de patienter pendant la correction."
 
+#: inc/admin/scanner-step-2.php:210
+msgid "Fixing…"
+msgstr "Réparation en cours&hellip;"
+
 #: inc/admin/scanner-step-2.php:212
 msgid ""
 "You’ll be automatically redirected to the next step,<br>please don’t close "
@@ -920,6 +940,14 @@ msgstr "Tout ignorer &amp; Passer à l’étape suivante"
 #: inc/admin/scanner-step-3.php:208
 msgid "How to fix this issue"
 msgstr "Comment corriger ce problème"
+
+#: inc/admin/scanner-step-3.php:266 inc/admin/scanner-step-3.php:272
+#: inc/admin/scanner-step-3.php:295
+#: inc/classes/admin/class-secupress-admin-support.php:408
+#: inc/modules/wordpress-core/settings/wp-config.php:43
+#: inc/modules/wordpress-core/settings/wp-config.php:44
+msgid "Open in a new window."
+msgstr "Ouvrir dans une nouvelle fenêtre."
 
 #: inc/admin/scanner-step-3.php:270
 msgid "Read the documentation"
@@ -978,6 +1006,10 @@ msgstr "%d mauvais"
 #, php-format
 msgid "%d Warning"
 msgstr "%d en attente"
+
+#: inc/admin/scanner-step-4.php:102
+msgid "Show/hide the details of scanned items in your report"
+msgstr "Montrer/cacher les détails des éléments scannés dans votre rapport"
 
 #: inc/admin/scanner-step-4.php:108
 msgid "See all fixed issues"
@@ -1240,7 +1272,8 @@ msgid ""
 msgstr "La documentation est en construction, merci pour votre patience."
 
 #: inc/admin/settings.php:262 inc/admin/settings.php:264
-#: inc/admin/settings.php:303 inc/modules/services/settings/support.php:5
+#: inc/admin/settings.php:303 inc/modules/get-pro/settings.php:118
+#: inc/modules/services/settings/support.php:5
 msgid "Support"
 msgstr "Support"
 
@@ -1667,6 +1700,22 @@ msgstr "ID"
 msgid "Login"
 msgstr "Identifiant"
 
+#: inc/classes/common/class-secupress-log.php:318
+msgid "High priority"
+msgstr "Priorité haute"
+
+#: inc/classes/common/class-secupress-log.php:320
+msgid "Normal priority"
+msgstr "Priorité normale"
+
+#: inc/classes/common/class-secupress-log.php:322
+msgid "Low priority"
+msgstr "Priorité basse"
+
+#: inc/classes/common/class-secupress-log.php:324
+msgid "Unknown priority"
+msgstr "Priorité inconnue"
+
 #: inc/classes/common/class-secupress-log.php:329
 msgctxt "priority level"
 msgid "High"
@@ -1746,6 +1795,14 @@ msgstr "Voire &#8220;%s&#8221;"
 #: inc/classes/common/class-secupress-logs-list-table.php:716
 msgid "\\<\\b\\>Y/m/d\\<\\/\\b\\> g:i:s a"
 msgstr "\\<\\b\\>d/m/Y\\<\\/\\b\\> G:i:s"
+
+#: inc/classes/common/class-secupress-logs-list-table.php:799
+msgid "Delete this item permanently"
+msgstr "Supprimer définitivement"
+
+#: inc/classes/common/class-secupress-logs-list-table.php:800
+msgid "View this log details"
+msgstr "Voir les détails de cette entrée de journal"
 
 #: inc/classes/common/class-secupress-logs-list-table.php:800
 msgid "View"
@@ -4794,6 +4851,14 @@ msgstr "Adresse IP non valide"
 msgid "Search IP"
 msgstr "Chercher une adresse IP"
 
+#: inc/classes/settings/class-secupress-settings-modules.php:529
+msgid "Searching..."
+msgstr "Recherche&hellip;"
+
+#: inc/classes/settings/class-secupress-settings-modules.php:531
+msgid "Reseting..."
+msgstr "Réinitialisation&hellip;"
+
 #: inc/classes/settings/class-secupress-settings-modules.php:531
 msgid "Reset"
 msgstr "Réinitialiser"
@@ -4813,8 +4878,16 @@ msgid "G:i"
 msgstr "G:i"
 
 #: inc/classes/settings/class-secupress-settings-modules.php:564
+msgid "Clearing..."
+msgstr "Suppression&hellip;"
+
+#: inc/classes/settings/class-secupress-settings-modules.php:564
 msgid "Clear all IPs"
 msgstr "Vider toutes les adresses IP"
+
+#: inc/classes/settings/class-secupress-settings-modules.php:567
+msgid "Banishing..."
+msgstr "Bannissement&hellip;"
 
 #: inc/classes/settings/class-secupress-settings-modules.php:567
 msgid "Ban new IP"
@@ -8222,6 +8295,9 @@ msgstr ""
 "Protégez votre WordPress avec SecuPress, analysez et assurez-vous de la "
 "sécurité de votre site quotidiennement."
 
+#~ msgid "email address"
+#~ msgstr "Adresse e-mail"
+
 #~ msgid ""
 #~ "But you can activate the %1$s protection manually from the module %2$s."
 #~ msgstr "Mais vous pouvez activer la protection %1$s du module %2$s."
@@ -8631,9 +8707,6 @@ msgstr ""
 
 #~ msgid "This license key is not accepted."
 #~ msgstr "Cette clé de licence n'est pas acceptée."
-
-#~ msgid "Open in a new window"
-#~ msgstr "Ouvrir dans une nouvelle fenêtre"
 
 #~ msgid "Ask for Support"
 #~ msgstr "Demander au support"
