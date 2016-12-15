@@ -130,10 +130,14 @@ add_filter( 'secupress_block_id', 'secupress_firewall_block_id' );
  */
 function secupress_firewall_block_id( $module ) {
 	$block_ids = array(
+		// Antispam.
+		'AAU'  => __( 'Antispam, Anti-Usurpation', 'secupress' ),
 		// URL Contents.
 		'BUC'  => __( 'Bad URL Contents', 'secupress' ),
 		// URL Length.
 		'BUL'  => __( 'URL Too Long', 'secupress' ),
+		// GeoIP.
+		'GIP'  => __( 'GeoIP', 'secupress' ),
 		// Request Method.
 		'RMHM' => __( 'Bad Request Method', 'secupress' ),
 		// User-Agent.
