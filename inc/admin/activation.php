@@ -96,7 +96,7 @@ function secupress_maybe_write_rules_on_activation() {
 function secupress_write_rules_on_activation( $rules ) {
 	global $is_apache, $is_iis7;
 
-	$rules = array_filter( $rules );
+	$rules = $rules && is_array( $rules ) ? array_filter( $rules ) : false;
 
 	if ( ! $rules ) {
 		// Meh.
