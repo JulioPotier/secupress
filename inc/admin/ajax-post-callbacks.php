@@ -394,14 +394,19 @@ function secupress_refresh_bad_plugins_list_ajax_post_cb() {
 		secupress_admin_die();
 	}
 
-	$plugins  = get_plugins(); // //// GO PRO.
+	$plugins  = get_plugins();
 	$plugins  = wp_list_pluck( $plugins, 'Version' );
 	$args     = array( 'body' => array( 'items' => $plugins, 'type' => 'plugin' ) );
 
 	$response = wp_remote_post( SECUPRESS_WEB_MAIN . 'api/plugin/vulns.php', $args );
 
 	if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
-		update_site_option( 'secupress_bad_plugins', wp_remote_retrieve_body( $response ) );
+		$response = wp_remote_retrieve_body( $response );
+
+		// Store the result only if it's not an error (not -1, -2, -3, or -99).
+		if ( (int) $response > 0 ) {
+			update_site_option( 'secupress_bad_plugins', $response );
+		}
 	}
 }
 
@@ -419,14 +424,19 @@ function secupress_refresh_bad_themes_list_ajax_post_cb() {
 		secupress_admin_die();
 	}
 
-	$themes = wp_get_themes(); // //// GO PRO.
+	$themes = wp_get_themes();
 	$themes = wp_list_pluck( $themes, 'Version' );
-
 	$args   = array( 'body' => array( 'items' => $themes, 'type' => 'theme' ) );
 
 	$response = wp_remote_post( SECUPRESS_WEB_MAIN . 'api/plugin/vulns.php', $args );
+
 	if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
-		update_site_option( 'secupress_bad_themes', wp_remote_retrieve_body( $response ) );
+		$response = wp_remote_retrieve_body( $response );
+
+		// Store the result only if it's not an error (not -1, -2, -3, or -99).
+		if ( (int) $response > 0 ) {
+			update_site_option( 'secupress_bad_themes', $response );
+		}
 	}
 }
 
