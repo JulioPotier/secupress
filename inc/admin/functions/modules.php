@@ -283,8 +283,6 @@ function secupress_add_module_notice( $module, $submodule, $action ) {
  * @param (string) $action    "activation" or "deactivation".
  */
 function secupress_remove_module_notice( $module, $submodule, $action ) {
-	$submodule_name  = secupress_get_module_data( $module, $submodule );
-	$submodule_name  = $submodule_name['Name'];
 	$transient_name  = 'secupress_module_' . $action . '_' . get_current_user_id();
 	$transient_value = secupress_get_site_transient( $transient_name );
 
@@ -292,7 +290,14 @@ function secupress_remove_module_notice( $module, $submodule, $action ) {
 		return;
 	}
 
+	$submodule_name = secupress_get_module_data( $module, $submodule );
+
+	if ( empty( $submodule_name['Name'] ) ) {
+		return;
+	}
+
 	$transient_value = array_flip( $transient_value );
+	$submodule_name  = $submodule_name['Name'];
 
 	if ( ! isset( $transient_value[ $submodule_name ] ) ) {
 		return;
