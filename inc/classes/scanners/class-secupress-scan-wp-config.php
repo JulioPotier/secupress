@@ -77,34 +77,6 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
 	 */
 	public static function get_messages( $message_id = null ) {
-		$message_207 = static::_n_noop_sprintf( _n_noop(
-			/** Translators: 1 is a file name, 2 is a constant name. */
-			'In your %1$s file, the PHP constant %2$s should not be set.',
-			'In your %1$s file, the PHP constants %2$s should not be set.',
-			'secupress'
-		), '<code>wp-config.php</code>', '%s' );
-
-		$message_208 = static::_n_noop_sprintf( _n_noop(
-			/** Translators: 1 is a file name, 2 is a constant name. */
-			'In your %1$s file, the PHP constant %2$s should not be empty.',
-			'In your %1$s file, the PHP constants %2$s should not be empty.',
-			'secupress'
-		), '<code>wp-config.php</code>', '%s' );
-
-		$message_209 = static::_n_noop_sprintf( _n_noop(
-			/** Translators: 1 is a file name, 2 is a constant name, 3 is a value. */
-			'In your %1$s file, the PHP constant %2$s should be set to %3$s.',
-			'In your %1$s file, the PHP constants %2$s should be set to %3$s.',
-			'secupress'
-		), '<code>wp-config.php</code>', '%1$s', '%2$s' );
-
-		$message_211 = static::_n_noop_sprintf( _n_noop(
-			/** Translators: 1 is a file name, 2 is a constant name, 3 is a value. */
-			'In your %1$s file, the PHP constant %2$s should be set to %3$s or less.',
-			'In your %1$s file, the PHP constants %2$s should be set to %3$s or less.',
-			'secupress'
-		), '<code>wp-config.php</code>', '%1$s', '%2$s' );
-
 		$messages = array(
 			// "good"
 			/** Translators: %s is a file name. */
@@ -118,12 +90,42 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 			201 => sprintf( __( 'The PHP constant %s is defined with the default value, it should be modified.', 'secupress' ), '<code>COOKIEHASH</code>' ),
 			/** Translators: 1 is a file name, 2 is a constant name. */
 			202 => sprintf( __( 'In your %1$s file, the PHP constant %2$s should be set.', 'secupress' ), '<code>wp-config.php</code>', '%s' ),
-			207 => $message_207,
-			208 => $message_208,
-			209 => $message_209,
-			210 => $message_209, // 209 and 210 are identical.
-			211 => $message_211,
-			212 => $message_211, // 211 and 212 are identical.
+			207 => _n_noop(
+				/** Translators: 1 is a file name, 2 is a constant name. */
+				'In your %1$s file, the PHP constant %2$s should not be set.',
+				'In your %1$s file, the PHP constants %2$s should not be set.',
+				'secupress'
+			),
+			208 => _n_noop(
+				/** Translators: 1 is a file name, 2 is a constant name. */
+				'In your %1$s file, the PHP constant %2$s should not be empty.',
+				'In your %1$s file, the PHP constants %2$s should not be empty.',
+				'secupress'
+			),
+			209 => _n_noop(
+				/** Translators: 1 is a file name, 2 is a constant name, 3 is a value. */
+				'In your %1$s file, the PHP constant %2$s should be set to %3$s.',
+				'In your %1$s file, the PHP constants %2$s should be set to %3$s.',
+				'secupress'
+			),
+			210 => _n_noop(
+				/** Translators: 1 is a file name, 2 is a constant name, 3 is a value. */
+				'In your %1$s file, the PHP constant %2$s should be set to %3$s.',
+				'In your %1$s file, the PHP constants %2$s should be set to %3$s.',
+				'secupress'
+			), // 209 and 210 are identical.
+			211 => _n_noop(
+				/** Translators: 1 is a file name, 2 is a constant name, 3 is a value. */
+				'In your %1$s file, the PHP constant %2$s should be set to %3$s or less.',
+				'In your %1$s file, the PHP constants %2$s should be set to %3$s or less.',
+				'secupress'
+			),
+			212 => _n_noop(
+				/** Translators: 1 is a file name, 2 is a constant name, 3 is a value. */
+				'In your %1$s file, the PHP constant %2$s should be set to %3$s or less.',
+				'In your %1$s file, the PHP constants %2$s should be set to %3$s or less.',
+				'secupress'
+			), // 211 and 212 are identical.
 			// "cantfix"
 			/** Translators: %s is a list of constant names. */
 			300 => __( 'Some PHP constants could not be set correctly: %s.', 'secupress' ),
@@ -226,7 +228,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 				if ( is_array( $first ) ) {
 					foreach ( $maybe_constants as $compare => $constants ) {
 						// "bad"
-						$this->add_message( $message_id, array( count( $constants ), wp_sprintf_l( '%l', $constants ), '<code>' . $compare . '</code>' ) );
+						$this->add_message( $message_id, array( count( $constants ), '<code>wp-config.php</code>', wp_sprintf_l( '%l', $constants ), '<code>' . $compare . '</code>' ) );
 					}
 				} else {
 					// "bad"
