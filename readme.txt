@@ -11,7 +11,112 @@ Protect your WordPress with SecuPress, analyze and ensure the safety of your web
 
 == Description ==
 
-Protect your WordPress with SecuPress, analyze and ensure the safety of your website daily.
+Protect your WordPress with SecuPress, analyze and ensure the safety of yEnsuring The Safety Of Your Wordpress Website Is Now Easy
+
+Secure your WordPress Website with SecuPress to improve your Security Protection with <a href="http://secupress.me/features">our featured modules</a>:
+
+= Users & Login =
+*The best and easiest way to make sure that users' data will be protected, and their accounts not compromised.*
+
+With the login control feature, you're able to **limit the number of bad login attempts**, **ban login on non-existing usernames** and **set a non-login time slot**(1).
+Also, because your account is important, you can **avoid double logins**(1) with it and **control your sessions**(1) to kill one or all of them.
+
+A **double authentication** feature is available to add a 2FA(1) (Two Factor Auth) because today it's mandatory to have this feature everywhere.
+
+And because passwords are the most important thing on your account, you can set a **password lifetime**(1) for all your users. Also **force them to use a strong password** is possible(1).
+Then in your profile page you can now ask for the old password to set a new one, which is a basic security feature that should be used everywhere.
+
+Usernames are somehow forgotten, but you have to be sure that they are clean, not deceptive to your users, don't let usernames like www, administrator, support by using a **username blacklist**.
+
+Finally, don't let bot find your login page, just move it with the famous **Move Login** plugin, now included in SecuPress.
+
+= Plugins & Themes =
+*Vulnerable plugins and vulnerable themes should not be used, but for that, you have to know which ones are bad. Thanks to the detect bad plugins and themes features, you receive alerts by email and visually in the back-end of your site.*
+
+Also, don't let anyone upload a .zip file containing a .php in your website by **disallowing the .zip upload** of plugins and themes.
+
+Activating, deactivating, adding, removing a plugin, all **these actions should not be available all the time** on production, block these actions on prod, and let them on preprod only.
+
+= WordPress Core =
+*WordPress can be tweaked in so many ways. But are you using the right ones? Let's see!*
+
+Keeping your website up to date is mandatory, like any software you own. Use our update module to be sure to make your website ready to be updated with issue.
+
+WordPress has a veru powerful config file in which you can set more than 100 parameters, be sute to use the right one thanks to SecuPress.
+
+= Sensitive Data =
+*Preserve your data and avoid losing your content in case of attack.*
+
+WordPress Endpoints and APIs are powerful, but some people can trick to use them badly. SecuPress helps you to **block bad requests** for XML-RPC or REST API.
+
+SecuPress can secure your contents in many ways like refusing the connection for bad bots with the **Robots Blackhole** feature.
+
+Your bandwith can be stolen by hotlinking your images, activate the **anti-hotlink**(1) feature to keep your properties at home.
+
+WordPress and PHP can sometimes disclose some informations that are precious for attackers, deactivate any disclose informations with our 7 submodules **anti disclose**, same for the readme file, giving too much informations.
+
+One logged in into the back-end of your WordPress website, everybody could gain access to your profile page if you're away from the keyboard for a few minutes and then, change and read your personnal informations. SecuPress adds a **new security form to protect 2 important pages**(1) as Profile and SecuPress Settings. Don't be fooled by a colleague!
+
+= Firewall =
+*Malicious requests are common, unfortunatly. All malicious incoming requests will be checked and quietly blocked.*
+
+SecuPress can **block bad User Agents** to avoid your website being visited by bad crawler bots, and also **block the bad requests methods** in a single click.
+
+SecuPress already dislikes and block malicious URLs so it will **block bad url contents**, **block too long urls**, and help your website to **block sql injection scanners**.
+
+When a user is visiting your website, there is no reason to open 10 pages a second, so SecuPress will manage to **block brute force** tentatives(1) on your front pages.
+
+Sometimes you need to disallow the access of your website to some countries because of attacks or just by need. Thanks to **GeoIP Blocking**(1) by SecuPress, you can do that, country by country.
+
+= Malware Scan =
+*Check file permissions, run monitoring and antivirus on your installation to verify file integrity.*
+
+We developed our own **malware scan**(1), resulting on a great and simple use and results displayed in simple blocks with actions you can take. Don't spend your time in your FTP looking for bad files, SecuPress will do.
+
+This scanner also checks if your **uploads folder**(1) contains any dangerous files because there is no good reason to let these files here.
+
+Then SecuPress will warn you if the **first file to be loaded in a folder is index.php** or not which can lead on phishings or deface.
+
+= Backups =
+*Reduce the risks of losing your content in an attack by backing up your database and files.*
+
+If you don't have yet a **backup solution**(A), SecuPress brings you its own system. You can backup files and database and download them. In the future, you'll be able to upload on any cloud service.
+
+= Anti Spam =
+*Traffic done by bot represents about 60% of the internet. Spams are done by these bots. Don't let them do that!*
+
+We developed our own **anti-spam**(1) system, a light and discret one. Just activate it, you're done.
+
+= Alerts =
+*Being alerted of some important events will help you to react quickly in case of possible attacks.*
+
+When something important happens on your website, SecuPress **sends you an alert**(1) by email (and in the future by sms, notifications, slack, twitter ...).
+
+Also everyday, **receive the report of the day**(1) including all attacks and blocking done by SecuPress.
+
+= Schedules =
+*Let SecuPress scan your website when you are away by using recurent scans.*
+
+With the schedules features(1), you won't have to come back in your back-end everytime to scan, a malware file monitoring or run a backup. No, SecuPress do that for you, it prepare for you a **scheduled scanner**, then a **scheduled backup** and finally a **scheduled malware scan**.
+
+Gain time by just reading reports by SecuPress in your email box every time.
+
+= Logs =
+*Keep an eye on what happened on your website at any time. Also, control banned IPs from our modules here.*
+
+Logs(1) exists because knowing what is happening on your website is important, SecuPress will **log all important actions** only, and **logs the 404 pages** triggerd by users, bots or anyone.
+
+= Scanner =
+SecuPress it the only plugin with a full scanner able to fix the issues for you. And when a decision has to be taken, it will smartly ask you what to do. Now, you know what you're currently securing.
+
+In a 4 wizard steps, SecuPress Scanner will take 5 mn of your time to check **more than 35 security points**.
+
+Once done, you got a grade to have an idea of the security level of your website.
+
+If you're working for a client, you may need to **export a report in PDF**(1) for him, well, you can do that too.
+
+
+*(1) Available in the <a href="http://secupress.me/features/">Pro Version</a>*
 
 == Installation ==
 
@@ -59,12 +164,21 @@ No, SecuPress can't be compatible, like you can't install two caching plugins. T
 It's important to delete all other security plugins before activating SecuPress. If you're not sure, do not hesitate to ask us on Twitter, Facebook, support.
 
 
-
 == Screenshots ==
 
-(soon)
+1. All modules from SecuPress
+2. A module page (here is Users & Login)
+3. The first scan
+4. The 1st step: result of the scan
+5. The 2nd step: choose what to automatically fix
+6. SecuPress is fixing issue for you
+7. The 3rd step: manual fix, when you have to decide something
+8. The 4th step: final report, you can export it as PDF(1)
 
 == Changelog ==
+
+= 1.2 =
+
 
 = 1.1.4 =
 * 13 dec 2016
