@@ -37,7 +37,7 @@ add_action( 'login_head', 'secupress_login_captcha_scripts' );
  * @since 1.0
  */
 function secupress_login_captcha_scripts() {
-	if ( isset( $_GET['action'] ) && 'login' !== $_GET['action'] ) {
+	if ( isset( $_GET['action'] ) && 'login' !== $_GET['action'] && 'notpasswordless' !== $_GET['action'] ) {
 		return;
 	}
 
@@ -113,8 +113,10 @@ function secupress_manage_captcha( $raw_user, $username ) {
 		return $raw_user;
 	}
 
+	$fallback_wp_error = new WP_Error( 'authentication_failed', __( '<strong>ERROR</strong>: The human verification is incorrect.', 'secupress' ), __FUNCTION__ );
+
 	if ( ! isset( $_POST['sp_name'] ) || '' !== $_POST['sp_name'] ) { // WPCS: CSRF ok.
-		return new WP_Error( 'authentication_failed', __( '<strong>ERROR</strong>: The human verification is incorrect.', 'secupress' ) );
+		return $fallback_wp_error;
 	}
 
 	$captcha_key  = isset( $_POST['captcha_key'] ) ? $_POST['captcha_key'] : null; // WPCS: CSRF ok.
@@ -124,7 +126,7 @@ function secupress_manage_captcha( $raw_user, $username ) {
 		time() > $captcha_keys[ $captcha_key ] + 2 * MINUTE_IN_SECONDS ||
 		time() < $captcha_keys[ $captcha_key ] + 2
 	) {
-		return new WP_Error( 'authentication_failed', __( '<strong>ERROR</strong>: The Human verification is incorrect.', 'secupress' ) );
+		return $fallback_wp_error;
 	}
 
 	unset( $captcha_keys[ $captcha_key ] );
