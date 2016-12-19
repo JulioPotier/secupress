@@ -1123,9 +1123,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		$rk_code  = 'SECUPRESS20';
 		$rk_url   = 'https://wp-rocket.me/?utm_source=secupress&utm_campaign=sidebar&utm_medium=plugin';
 
-		$im_offer = __( '100 MB', 'secupress' );
-		$im_code  = 'SECUPRESS100';
-		$im_url   = 'https://imagify.io/?utm_source=secupress&utm_campaign=sidebar&utm_medium=plugin';
+		$im_offer = __( '100Mb', 'secupress' );
+		$im_url   = 'http://app.imagify.io/p/secupress/?utm_source=secupress&utm_campaign=sidebar&utm_medium=plugin';
 		?>
 
 		<div class="secupress-sideads">
@@ -1177,7 +1176,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				<p><?php printf( __( 'Get <span>%1$s OFF</span> with this coupon code: %2$s', 'secupress' ), $rk_offer, '<span class="secupress-coupon">' . $rk_code . '</span>' ); ?></p>
 
 				<p class="secupress-cta">
-					<a href="<?php echo esc_url( $rk_url ); ?>" class="secupress-button" target="_blank"><?php printf( __( 'Get %s OFF on WP Rocket', 'secupress' ), $rk_offer ); ?></a>
+					<a href="<?php echo esc_url( $rk_url ); ?>" class="secupress-button" target="_blank"><?php printf( __( 'Get %s OFF', 'secupress' ), $rk_offer ); ?></a>
 				</p>
 			</div>
 
@@ -1189,10 +1188,10 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-imagify.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-imagify@2x.png 2x" alt="Imagify" width="123" height="15"/>
 
 				<p class="secupress-catch"><?php _e( 'Speed Up your website with lighter images', 'secupress' ); ?></p>
-				<p><?php printf( __( 'Get <span>%1$s Free</span> with this coupon code: %2$s', 'secupress' ), $im_offer, '<span class="secupress-coupon">' . $im_code . '</span>' ); ?></p>
+				<p><?php printf( __( 'For each new account, get <span>%1$s Free</span>.', 'secupress' ), $im_offer ); ?></p>
 
 				<p class="secupress-cta">
-					<a href="<?php echo esc_url( $im_url ); ?>" class="secupress-button" target="_blank"><?php printf( __( 'Get %s Free on Imagify', 'secupress' ), $im_offer ); ?></a>
+					<a href="<?php echo esc_url( $im_url ); ?>" class="secupress-button" target="_blank"><?php printf( __( 'Get %s Free', 'secupress' ), $im_offer ); ?></a>
 				</p>
 			</div>
 
