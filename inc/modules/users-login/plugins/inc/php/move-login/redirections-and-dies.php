@@ -50,9 +50,10 @@ function secupress_move_login_maybe_deny_login_page() {
 		return;
 	}
 
-	$uri       = secupress_get_current_url( 'uri' );
-	$subdir    = secupress_get_wp_directory();
-	$slugs     = secupress_move_login_get_slugs();
+	$uri    = secupress_get_current_url( 'uri' );
+	$subdir = secupress_get_wp_directory();
+	$slugs  = secupress_move_login_get_slugs();
+
 	if ( $subdir ) {
 		foreach ( $slugs as $action => $slug ) {
 			$slugs[ $action ] = $subdir . $slug;
@@ -73,6 +74,11 @@ function secupress_move_login_maybe_deny_login_page() {
 	$slugs     = array_flip( $slugs );
 
 	if ( isset( $slugs[ $uri ] ) ) {
+		// Display the login page.
+		if ( ! defined( 'DONOTCACHEPAGE' ) ) {
+			// Tell cache plugins not to cache the login page.
+			define( 'DONOTCACHEPAGE', true );
+		}
 		return;
 	}
 

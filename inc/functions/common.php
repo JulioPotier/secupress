@@ -357,6 +357,11 @@ function secupress_die( $message = '', $title = '', $args = array() ) {
 	do_action( 'secupress.before.die', $message, $url, $args, $whitelisted, $is_scan_request );
 
 	if ( ! $whitelisted || $is_scan_request ) {
+		// Die.
+		if ( ! defined( 'DONOTCACHEPAGE' ) ) {
+			// Tell cache plugins not to cache our error message.
+			define( 'DONOTCACHEPAGE', true );
+		}
 		wp_die( $message, $title, $args );
 	}
 }
