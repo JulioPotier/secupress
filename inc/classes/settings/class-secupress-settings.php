@@ -1123,7 +1123,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		$rk_code  = 'SECUPRESS20';
 		$rk_url   = 'https://wp-rocket.me/?utm_source=secupress&utm_campaign=sidebar&utm_medium=plugin';
 
-		$im_offer = __( '100Mb', 'secupress' );
+		$im_offer = __( '100MB', 'secupress' );
 		$im_url   = 'http://app.imagify.io/p/secupress/?utm_source=secupress&utm_campaign=sidebar&utm_medium=plugin';
 		?>
 
