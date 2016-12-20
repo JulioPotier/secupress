@@ -1188,7 +1188,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-imagify.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-imagify@2x.png 2x" alt="Imagify" width="123" height="15"/>
 
 				<p class="secupress-catch"><?php _e( 'Speed Up your website with lighter images', 'secupress' ); ?></p>
-				<p><?php printf( __( 'For each new account, get <span>%1$s Free</span>.', 'secupress' ), $im_offer ); ?></p>
+				<p><?php printf( __( 'For each new account, get <span>%s Free</span>.', 'secupress' ), $im_offer ); ?></p>
 
 				<p class="secupress-cta">
 					<a href="<?php echo esc_url( $im_url ); ?>" class="secupress-button" target="_blank"><?php printf( __( 'Get %s Free', 'secupress' ), $im_offer ); ?></a>
