@@ -245,8 +245,8 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 				<div class="secupress-tab-content secupress-tab-content-<?php echo $this->get_current_module(); ?>" id="secupress-tab-content">
 					<?php $this->print_current_module(); ?>
 				</div>
-				
-				<?php secupress_print_sideads(); ?>
+
+				<?php $this->print_sideads(); ?>
 
 			</div>
 

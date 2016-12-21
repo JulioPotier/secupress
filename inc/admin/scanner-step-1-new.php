@@ -8,7 +8,7 @@
 			<div class="secupress-sgh-name">
 				<i class="secupress-icon-secupress" aria-hidden="true"></i>
 				<p class="secupress-sgh-title"><?php printf( esc_html__( '%sNew Items', 'secupress' ), ( SECUPRESS_PLUGIN_NAME === 'SecuPress' ? SECUPRESS_PLUGIN_NAME . ' ' . SECUPRESS_VERSION . ' ' : '' ) ); ?></p>
-				<p class="secupress-sgh-description"><?php _e( 'These new items need to be checked: You will need to rescan your website.', 'secupress' ); ?></p>
+				<p class="secupress-sgh-description"><?php _e( 'These new items need to be checked: you will need to rescan your website.', 'secupress' ); ?></p>
 			</div>
 
 			<div class="secupress-sgh-actions secupress-flex secupress-flex-top">

@@ -1107,6 +1107,101 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	}
 
 
+	/**
+	 * Print the sidebar with Ads and cross-selling.
+	 *
+	 * @author Geoffrey Crofte
+	 * @since 1.1.4
+	 * @since 1.2 A method of this class. Was previously `secupress_print_sideads()`.
+	 */
+	protected function print_sideads() {
+		if ( secupress_is_pro() ) {
+			return;
+		}
+
+		$rk_offer = '20%';
+		$rk_code  = 'SECUPRESS20';
+		$rk_url   = 'https://wp-rocket.me/?utm_source=secupress&utm_campaign=sidebar&utm_medium=plugin';
+
+		$im_offer = __( '100MB', 'secupress' );
+		$im_url   = 'http://app.imagify.io/p/secupress/?utm_source=secupress&utm_campaign=sidebar&utm_medium=plugin';
+		?>
+
+		<div class="secupress-sideads">
+			<div class="secupress-section-dark secupress-pro-ad">
+
+				<i class="icon-secupress" aria-hidden="true"></i>
+
+				<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-pro.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-pro@2x.png" width="80" height="78" alt="SecuPress Pro"/>
+
+				<p class="secupress-text-medium"><?php _e( 'Improve your Security', 'secupress' ); ?></p>
+				<p><?php _e( 'Unlock all the features of SecuPress Pro', 'secupress' ); ?></p>
+				<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ); ?>" class="secupress-button secupress-button-tertiary secupress-button-getpro">
+					<span class="icon">
+						<i class="icon-secupress-simple" aria-hidden="true"></i>
+					</span>
+					<span class="text"><?php _ex( 'Get Pro', 'short', 'secupress' ); ?></span>
+				</a>
+			</div>
+
+			<div class="secupress-bordered secupress-mail-ad">
+				<div class="secupress-ad-header secupress-flex">
+					<span><i class="dashicons dashicons-email secupress-primary" aria-hidden="true"></i></span>
+					<p><?php _e( 'Join our mailing list', 'secupress' ); ?></p>
+				</div>
+				<div class="secupress-ad-content">
+					<p><label for="mce-EMAIL"><?php _e( 'Get security alerts and news from SecuPress.', 'secupress' ) ?></label></p>
+
+					<form action="https://secupress.us13.list-manage.com/subscribe/post?u=67a6053e2542ab4330a851904&amp;id=2eecd4aed8" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+						<p>
+							<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="<?php esc_attr_e( 'Email address', 'secupress' ); ?>" required="required"/>
+						</p>
+
+						<!-- Real people should not fill this in and expect good things - do not remove this or risk form bot signups. -->
+						<div style="position:absolute;left:-9999em" aria-hidden="true"><input type="text" name="b_67a6053e2542ab4330a851904_2eecd4aed8" tabindex="-1" value=""/></div>
+
+						<p>
+							<button type="submit" name="subscribe" class="secupress-button secupress-button-primary"><?php _e( 'Stay tuned for more', 'secupress' ); ?></button>
+						</p>
+					</form>
+				</div>
+			</div>
+
+			<?php if ( ! defined( 'WP_ROCKET_VERSION' ) ) { ?>
+
+			<div class="secupress-wprocket-ad secupress-product-ads">
+				<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-wprocket.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-wprocket@2x.png 2x" alt="WP Rocket" width="110" height="30"/>
+
+				<p class="secupress-catch"><?php _e( 'Speed up your website with WP Rocket', 'secupress' ); ?></p>
+				<p><?php printf( __( 'Get <span>%1$s OFF</span> with this coupon code: %2$s', 'secupress' ), $rk_offer, '<span class="secupress-coupon">' . $rk_code . '</span>' ); ?></p>
+
+				<p class="secupress-cta">
+					<a href="<?php echo esc_url( $rk_url ); ?>" class="secupress-button" target="_blank"><?php printf( __( 'Get %s OFF', 'secupress' ), $rk_offer ); ?></a>
+				</p>
+			</div>
+
+			<?php } ?>
+
+			<?php if ( ! defined( 'IMAGIFY_VERSION' ) ) { ?>
+
+			<div class="secupress-imagify-ad secupress-product-ads">
+				<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-imagify.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-imagify@2x.png 2x" alt="Imagify" width="123" height="15"/>
+
+				<p class="secupress-catch"><?php _e( 'Speed Up your website with lighter images', 'secupress' ); ?></p>
+				<p><?php printf( __( 'For each new account, get <span>%s Free</span>.', 'secupress' ), $im_offer ); ?></p>
+
+				<p class="secupress-cta">
+					<a href="<?php echo esc_url( $im_url ); ?>" class="secupress-button" target="_blank"><?php printf( __( 'Get %s Free', 'secupress' ), $im_offer ); ?></a>
+				</p>
+			</div>
+
+			<?php } ?>
+
+		</div>
+		<?php
+	}
+
+
 	// Utilities ===================================================================================.
 
 	/**
