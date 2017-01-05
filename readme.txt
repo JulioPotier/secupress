@@ -3,7 +3,7 @@ Contributors: wp_media, secupress, juliobox, greglone
 Tags: security, spam, backup, schedule, firewall, sensitive data, antivirus, logs, alerts
 Requires at least: 3.7
 Tested up to: 4.7
-Stable tag: 1.2
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
