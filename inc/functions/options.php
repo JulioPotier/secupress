@@ -131,12 +131,8 @@ function secupress_get_scan_results() {
 	static $tests;
 
 	if ( ! isset( $tests ) ) {
-		$tests = array();
-		$tmps  = secupress_get_scanners();
-
-		foreach ( $tmps as $tmp ) {
-			$tests = array_merge( $tests, array_map( 'strtolower', $tmp ) );
-		}
+		$tests = secupress_get_scanners();
+		$tests = array_map( 'strtolower', call_user_func_array( 'array_merge', $tests ) );
 
 		// Cache transients.
 		if ( ! wp_using_ext_object_cache() ) {
@@ -162,8 +158,54 @@ function secupress_get_scan_results() {
 			$update_scans = true;
 		}
 
+		if ( empty( $options[ $test_name ] ) ) {
+			continue;
+		}
+
+		// Make sure we have messages.
+		if ( empty( $options[ $test_name ]['msgs'] ) || ! is_array( $options[ $test_name ]['msgs'] ) ) {
+			unset( $options[ $test_name ] );
+			$update_scans = true;
+			continue;
+		}
+
+		// Make sure the status is OK.
+		if ( empty( $options[ $test_name ]['status'] ) || ! is_string( $options[ $test_name ]['status'] ) ) {
+			$previous_id = -1;
+
+			// Loop through all messages to get the right status.
+			foreach ( $options[ $test_name ]['msgs'] as $message_id => $message_data ) {
+				if ( $message_id < $previous_id ) {
+					// If we have more than 1 message, we keep the worst status (biggest message ID).
+					continue;
+				}
+				if ( $message_id < 0 || $message_id >= 400 || ! is_array( $message_data ) ) {
+					// The message ID or the message data is invalid.
+					unset( $options[ $test_name ]['msgs'][ $message_id ] );
+					continue;
+				}
+				if ( $message_id < 100 ) {
+					$options[ $test_name ]['status'] = 'good';
+				} elseif ( $message_id < 200 ) {
+					$options[ $test_name ]['status'] = 'warning';
+				} elseif ( $message_id < 300 ) {
+					$options[ $test_name ]['status'] = 'bad';
+				} else {
+					$options[ $test_name ]['status'] = 'cantfix';
+				}
+				$previous_id = $message_id;
+			}
+
+			if ( empty( $options[ $test_name ]['msgs'] ) ) {
+				// There was only 1 message and its ID was invalid (or its data).
+				unset( $options[ $test_name ] );
+			}
+
+			$update_scans = true;
+		}
+
 		// In the same time, when a scan is good, remove the related fix.
-		if ( ! empty( $options[ $test_name ] ) && 'good' === $options[ $test_name ]['status'] ) {
+		if ( 'good' === $options[ $test_name ]['status'] ) {
 			$to_remove[ $test_name ] = 1;
 		}
 	}
