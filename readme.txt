@@ -1,5 +1,5 @@
 === SecuPress — WordPress Security ===
-Contributors: wp_media, secupress, juliobox, greglone
+Contributors: wp_media, SecuPress, juliobox, GregLone
 Tags: security, spam, backup, schedule, firewall, sensitive data, antivirus, logs, alerts
 Requires at least: 3.7
 Tested up to: 4.7
@@ -11,7 +11,11 @@ Protect your WordPress with SecuPress, analyze and ensure the safety of your web
 
 == Description ==
 
-Protect your WordPress with SecuPress, analyze and ensure the safety of your Wordpress website is now easy
+Protect your WordPress with SecuPress, analyze and ensure the safety of your Wordpress website is now easy.
+
+Check out the 1 minute demo:
+
+https://www.youtube.com/watch?v=mhgYpxIrF5g
 
 Secure your WordPress website with SecuPress to improve your security protection with <a href="http://secupress.me/features">our featured modules</a>:
 
