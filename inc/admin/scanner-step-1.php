@@ -6,12 +6,14 @@ $scanned_items          = is_array( $scanned_items ) ? array_flip( array_keys( $
 $secupress_tests_keys   = array_flip( array_map( 'strtolower', call_user_func_array( 'array_merge', $secupress_tests ) ) );
 $new_scans              = array_diff_key( $secupress_tests_keys, $scanned_items );
 $modules                = secupress_get_modules();
-$is_there_something_new = reset( $new_scans ) !== false;
+$is_there_something_new = $new_scans ? reset( $new_scans ) !== false : false;
 $flag_first_iteration   = true;
 
 // Build the "new scans" array.
-foreach ( $new_scans as $key => $new_scan ) {
-	$new_scans[ $key ] = str_replace( ' ', '_', ucwords( str_replace( '_', ' ', $key ) ) );
+if ( $new_scans ) {
+	foreach ( $new_scans as $key => $new_scan ) {
+		$new_scans[ $key ] = str_replace( ' ', '_', ucwords( str_replace( '_', ' ', $key ) ) );
+	}
 }
 ?>
 
