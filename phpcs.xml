@@ -8,10 +8,10 @@
 	<file>.</file>
 
 	<exclude-pattern>*.js</exclude-pattern>
-	<exclude-pattern>*/secupress-free/inc/modules/users-login/plugins/inc/php/base32.php</exclude-pattern>
-	<exclude-pattern>*/secupress-free/inc/admin/functions/wp-updates-plugin.php</exclude-pattern>
+	<exclude-pattern>*/secupress/inc/modules/users-login/plugins/inc/php/base32.php</exclude-pattern>
 
 	<rule ref="WordPress">
+		<!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/ -->
 		<exclude name="Generic.PHP.NoSilencedErrors.Discouraged"/>
 		<exclude name="PEAR.Functions.FunctionCallSignature.Indent"/>
 		<exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterCloseBrace"/>
@@ -22,21 +22,23 @@
 		<exclude name="Squiz.Commenting.FileComment.WrongStyle"/>
 		<exclude name="Squiz.Commenting.InlineComment.SpacingAfter"/>
 		<exclude name="Squiz.PHP.CommentedOutCode.Found"/>
+		<exclude name="WordPress.NamingConventions.ValidHookName.UseUnderscores"/>
 		<exclude name="WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar"/>
 		<exclude name="WordPress.Variables.GlobalVariables.OverrideProhibited"/>
 		<exclude name="WordPress.VIP"/>
 		<exclude name="WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet"/>
+		<exclude name="WordPress.WP.I18n.MissingSingularPlaceholder"/>
 		<exclude name="WordPress.XSS.EscapeOutput"/>
 	</rule>
 
 	<rule ref="Generic.Strings.UnnecessaryStringConcat.Found">
-		<exclude-pattern>*/secupress-free/inc/modules/firewall/callbacks.php</exclude-pattern>
-		<exclude-pattern>*/secupress-free/inc/modules/users-login/tools.php</exclude-pattern>
+		<exclude-pattern>*/secupress/inc/modules/firewall/callbacks.php</exclude-pattern>
+		<exclude-pattern>*/secupress/inc/modules/users-login/tools.php</exclude-pattern>
 	</rule>
 
 	<rule ref="WordPress.Arrays.ArrayDeclaration.ValueNoNewline">
-		<exclude-pattern>*/secupress-free/inc/modules/users-login/tools.php</exclude-pattern>
-		<exclude-pattern>*/secupress-free/inc/modules/file-system/tools.php</exclude-pattern>
+		<exclude-pattern>*/secupress/inc/modules/users-login/tools.php</exclude-pattern>
+		<exclude-pattern>*/secupress/inc/modules/file-system/tools.php</exclude-pattern>
 	</rule>
 
 	<rule ref="WordPress.CSRF.NonceVerification">
