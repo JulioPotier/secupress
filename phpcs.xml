@@ -8,7 +8,7 @@
 	<file>.</file>
 
 	<exclude-pattern>*.js</exclude-pattern>
-	<exclude-pattern>*/secupress/inc/modules/users-login/plugins/inc/php/base32.php</exclude-pattern>
+	<exclude-pattern>inc/modules/users-login/plugins/inc/php/base32.php</exclude-pattern>
 
 	<rule ref="WordPress">
 		<!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/ -->
@@ -32,13 +32,13 @@
 	</rule>
 
 	<rule ref="Generic.Strings.UnnecessaryStringConcat.Found">
-		<exclude-pattern>*/secupress/inc/modules/firewall/callbacks.php</exclude-pattern>
-		<exclude-pattern>*/secupress/inc/modules/users-login/tools.php</exclude-pattern>
+		<exclude-pattern>inc/modules/firewall/callbacks.php</exclude-pattern>
+		<exclude-pattern>inc/modules/users-login/tools.php</exclude-pattern>
 	</rule>
 
 	<rule ref="WordPress.Arrays.ArrayDeclaration.ValueNoNewline">
-		<exclude-pattern>*/secupress/inc/modules/users-login/tools.php</exclude-pattern>
-		<exclude-pattern>*/secupress/inc/modules/file-system/tools.php</exclude-pattern>
+		<exclude-pattern>inc/modules/users-login/tools.php</exclude-pattern>
+		<exclude-pattern>inc/modules/file-system/tools.php</exclude-pattern>
 	</rule>
 
 	<rule ref="WordPress.CSRF.NonceVerification">
