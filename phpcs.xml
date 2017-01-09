@@ -32,7 +32,6 @@
 	</rule>
 
 	<rule ref="Generic.Strings.UnnecessaryStringConcat.Found">
-		<exclude-pattern>inc/modules/firewall/callbacks.php</exclude-pattern>
 		<exclude-pattern>inc/modules/users-login/tools.php</exclude-pattern>
 	</rule>
 
