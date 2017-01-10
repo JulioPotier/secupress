@@ -41,6 +41,13 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	protected $section_descriptions = array();
 
 	/**
+	 * Tell if a section is disabled.
+	 *
+	 * @var (bool|null)
+	 */
+	protected $section_is_disabled = null;
+
+	/**
 	 * Section Save buttons.
 	 *
 	 * @var (array)
@@ -311,7 +318,6 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * @return (object) The class instance.
 	 */
 	protected function do_sections() {
-
 		$section_id       = $this->get_section_id();
 		$html_id          = explode( '|', $section_id );
 		$html_id          = sanitize_html_class( implode( '--', $html_id ) );
@@ -326,6 +332,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		 */
 		do_action( 'secupress.settings.before_section_' . $this->sectionnow, $with_save_button );
 
+		$this->section_is_disabled = true;
+
 		echo '<div class="secupress-settings-section" id="secupress-settings-' . $html_id . '">';
 
 		echo '<div class="secublock">';
@@ -337,6 +345,14 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				'type' => 'primary',
 				'name' => $this->sectionnow . '_submit',
 			);
+
+			if ( $this->section_is_disabled ) {
+				$args['wrap']             = true;
+				$args['other_attributes'] = array(
+					'disabled'      => 'disabled',
+					'aria-disabled' => 'true',
+				);
+			}
 			/**
 			 * Filter the arguments passed to the section submit button.
 			 *
@@ -359,6 +375,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		 * @param (bool) $with_save_button True if a "Save All Changes" button will be printed.
 		 */
 		do_action( 'secupress.settings.after_section_' . $this->sectionnow, $with_save_button );
+
+		$this->section_is_disabled = null;
 
 		return $this;
 	}
@@ -403,7 +421,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			}
 
 			echo '<div class="secupress-form-table">';
-				static::do_settings_fields( $section_id, $section['id'] );
+				$this->do_settings_fields( $section_id, $section['id'] );
 			echo '</div>';
 		}
 	}
@@ -458,7 +476,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$option_name = 'secupress' . ( 'global' !== $this->modulenow ? '_' . $this->modulenow : '' ) . '_settings';
 		}
 		$name_attribute = $option_name . '[' . $args['name'] . ']';
-		$disabled       = ! empty( $args['disabled'] ) || static::is_pro_feature( $args['name'] );
+		$disabled       = (bool) $args['disabled'];
 
 		// Type.
 		$args['type'] = 'radio' === $args['type'] ? 'radios' : $args['type'];
@@ -797,7 +815,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 *                      - (string) $description The text to print.
 	 *                      - (string) $type        The helper type: 'description', 'help', 'warning'.
 	 *                      - (string) $class       A html class to add to the text.
-	 *                      - (string) $depends     Like in `static::do_settings_fields()`, used to show/hide the helper depending on a field value.
+	 *                      - (string) $depends     Like in `$this->do_settings_fields()`, used to show/hide the helper depending on a field value.
 	 */
 	protected static function helpers( $args ) {
 		if ( empty( $args['helpers'] ) || ! is_array( $args['helpers'] ) ) {
@@ -935,7 +953,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * @param (string) $page    Slug title of the admin page who's settings fields you want to show.
 	 * @param (string) $section Slug title of the settings section who's fields you want to show.
 	 */
-	final protected static function do_settings_fields( $page, $section ) {
+	final protected function do_settings_fields( $page, $section ) {
 		global $wp_settings_fields;
 
 		if ( ! isset( $wp_settings_fields[ $page ][ $section ] ) ) {
@@ -968,7 +986,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				$class = ' class="' . esc_attr( trim( $class ) ) . '"';
 			}
 
-			unset( $field['args']['row_id'], $field['args']['row_class'], $field['args']['depends'] );
+			unset( $field['args']['row_id'], $field['args']['row_class'] );
 			?>
 			<div<?php echo $id . $class; ?>>
 				<div class="secupress-flex">
@@ -990,6 +1008,16 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					}
 					unset( $field['args']['description'] );
 
+					$field_is_disabled = $this->field_is_disabled( $field['args'] );
+
+					if ( empty( $field['args']['disabled'] ) && $field_is_disabled ) {
+						$field['args']['disabled'] = true;
+					}
+
+					if ( $this->section_is_disabled && ! $field_is_disabled ) {
+						$this->section_is_disabled = false;
+					}
+
 					call_user_func( $field['callback'], $field['args'] );
 					?>
 					</div>
@@ -1004,6 +1032,82 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			</div>
 			<?php
 		}
+	}
+
+
+	/**
+	 * Tell if a field is disabled.
+	 *
+	 * @since 1.2.1
+	 * @author Grégory Viguier
+	 *
+	 * @param (array) $field_args Field arguments.
+	 *
+	 * @return (bool)
+	 */
+	protected function field_is_disabled( $field_args ) {
+		static $fields = array();
+
+		if ( isset( $fields[ $field_args['name'] ] ) ) {
+			return $fields[ $field_args['name'] ];
+		}
+
+		$disabled = false;
+
+		if ( ! empty( $field_args['disabled'] ) ) {
+			// The field is disabled.
+			$disabled = true;
+		} elseif ( static::is_pro_feature( $field_args['name'] ) ) {
+			// The field is Pro.
+			$disabled = true;
+		} elseif ( ! empty( $field_args['options'] ) && ! secupress_is_pro() ) {
+			// All the options are Pro.
+			$has_enabled = false;
+
+			foreach ( (array) $field_args['options'] as $val => $title ) {
+				$name = $field_args['name'] . '_' . $val;
+
+				if ( ! static::is_pro_feature( $field_args['name'] . '|' . $val ) ) {
+					$has_enabled = true;
+					$fields[ $name ] = false;
+				} else {
+					$fields[ $name ] = true;
+				}
+			}
+
+			$disabled = ! $has_enabled;
+		}
+
+		if ( ! $disabled && ! empty( $field_args['depends'] ) ) {
+			// All dependencies are disabled.
+			$has_enabled = false;
+
+			foreach ( (array) $field_args['depends'] as $depend ) {
+				if ( empty( $fields[ $depend ] ) ) {
+					$has_enabled = true;
+					break;
+				}
+			}
+
+			$disabled = ! $has_enabled;
+		}
+
+		if ( $disabled && ! empty( $field_args['options'] ) ) {
+			/*
+			 * When a field is disabled and has options (checklist or select), mark all the options as disabled.
+			 * It will be usefull for the previous dependencies test.
+			 */
+			foreach ( (array) $field_args['options'] as $val => $title ) {
+				$name = $field_args['name'] . '_' . $val;
+
+				if ( ! isset( $fields[ $name ] ) ) {
+					$fields[ $name ] = true;
+				}
+			}
+		}
+
+		$fields[ $field_args['name'] ] = $disabled;
+		return $disabled;
 	}
 
 
