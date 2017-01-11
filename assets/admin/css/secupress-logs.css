@@ -255,14 +255,10 @@
 	background: #222831;
 	color: #FFF;
 }
-.secupress-logs-list .row-actions {
-	max-height: 0;
-	overflow: hidden;
-	transition: max-height .275s ease .25s;
-}
-.secupress-logs-list .row-actions.visible,
-.secupress-logs-list tr:hover .row-actions {
-	max-height: 2em;
+.secupress-logs-list .check-column .label-text {
+	display: block;
+	margin-top: 0;
+	margin-left: .05em;
 }
 
 /* Date col */
