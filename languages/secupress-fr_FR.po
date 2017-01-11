@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2016-12-20 13:25+0100\n"
-"PO-Revision-Date: 2016-12-20 13:45+0100\n"
+"POT-Creation-Date: 2017-01-11 15:53+0100\n"
+"PO-Revision-Date: 2017-01-11 15:56+0100\n"
 "Last-Translator: WP Media <contact@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -36,7 +36,7 @@ msgid "Scanners"
 msgstr "Scanners"
 
 #: inc/admin-bar.php:44 inc/admin/settings.php:298
-#: inc/classes/settings/class-secupress-settings-modules.php:212
+#: inc/classes/settings/class-secupress-settings-modules.php:209
 msgid "Modules"
 msgstr "Modules"
 
@@ -188,7 +188,7 @@ msgid "The IP address %s has been banned."
 msgstr "L'adresse IP %s a été bannie."
 
 #: inc/admin/ajax-post-callbacks.php:231
-#: inc/classes/settings/class-secupress-settings-modules.php:548
+#: inc/classes/settings/class-secupress-settings-modules.php:545
 #: inc/modules/get-pro/settings.php:98
 msgid "Forever"
 msgstr "Pour toujours"
@@ -730,13 +730,13 @@ msgid "Loading"
 msgstr "Chargement"
 
 #: inc/admin/notices.php:292
-#: inc/classes/settings/class-secupress-settings.php:1157
+#: inc/classes/settings/class-secupress-settings.php:1261
 msgid "Email address"
 msgstr "Adresse e-mail"
 
 #: inc/admin/notices.php:293
-#: inc/classes/settings/class-secupress-settings-modules.php:658
-#: inc/classes/settings/class-secupress-settings-modules.php:694
+#: inc/classes/settings/class-secupress-settings-modules.php:655
+#: inc/classes/settings/class-secupress-settings-modules.php:691
 #: inc/common.php:244
 msgid "Submit"
 msgstr "Envoyer"
@@ -837,41 +837,41 @@ msgstr ""
 msgid "Show/Hide panel"
 msgstr "Montrer/cacher"
 
-#: inc/admin/scanner-step-1.php:58
+#: inc/admin/scanner-step-1.php:60
 #, php-format
 msgid "Update %s: Discover the new security items to check"
 msgstr ""
 "Mise à jour %s&nbsp;: Découvrez les nouveaux points de sécurité à vérifier"
 
-#: inc/admin/scanner-step-1.php:64 inc/admin/settings.php:625
+#: inc/admin/scanner-step-1.php:66 inc/admin/settings.php:625
 msgid "Scan website"
 msgstr "Scanner le site"
 
-#: inc/admin/scanner-step-1.php:67
+#: inc/admin/scanner-step-1.php:69
 msgid "List of the security items already analyzed"
 msgstr "Liste des éléments de sécurité analysés"
 
-#: inc/admin/scanner-step-1.php:73 inc/admin/scanner-step-2.php:58
+#: inc/admin/scanner-step-1.php:75 inc/admin/scanner-step-2.php:58
 #: inc/admin/scanner-step-3.php:105
 msgid "Next step"
 msgstr "Prochaine étape"
 
-#: inc/admin/scanner-step-1.php:102 inc/admin/scanner-step-4.php:267
+#: inc/admin/scanner-step-1.php:104 inc/admin/scanner-step-4.php:267
 msgid "Export this report as PDF file."
 msgstr "Exporter ce rapport dans un fichier PDF."
 
-#: inc/admin/scanner-step-1.php:107 inc/admin/scanner-step-1.php:116
+#: inc/admin/scanner-step-1.php:109 inc/admin/scanner-step-1.php:118
 #: inc/admin/scanner-step-4.php:260
 msgid "Export as PDF"
 msgstr "Exporter en PDF"
 
-#: inc/admin/scanner-step-1.php:111 inc/admin/scanner-step-4.php:273
+#: inc/admin/scanner-step-1.php:113 inc/admin/scanner-step-4.php:273
 msgid "Get the Pro Version to export this report as PDF file."
 msgstr "Obtenez la version Pro pour exporter ce rapport dans un fichier PDF."
 
-#: inc/admin/scanner-step-1.php:121 inc/admin/scanner-step-2.php:159
+#: inc/admin/scanner-step-1.php:123 inc/admin/scanner-step-2.php:159
 #: inc/admin/scanner-step-3.php:190 inc/admin/scanner-step-4.php:278
-#: inc/classes/settings/class-secupress-settings.php:1231
+#: inc/classes/settings/class-secupress-settings.php:1335
 #, php-format
 msgid "Available in <a href=\"%s\" target=\"_blank\">Pro Version</a>"
 msgstr "Disponible dans la <a href=\"%s\" target=\"_blank\">version Pro</a>"
@@ -1108,7 +1108,7 @@ msgstr ""
 "secours. <a href=\"%2$s\">Faites-le maintenant&nbsp;!</a>"
 
 #: inc/admin/settings.php:101
-#: inc/classes/settings/class-secupress-settings.php:295
+#: inc/classes/settings/class-secupress-settings.php:302
 msgid "Select 1 role minimum"
 msgstr "Sélectionnez 1 rôle au minimum"
 
@@ -1121,7 +1121,7 @@ msgid "Unknown error."
 msgstr "Erreur inconnue."
 
 #: inc/admin/settings.php:108
-#: inc/classes/settings/class-secupress-settings-modules.php:552
+#: inc/classes/settings/class-secupress-settings-modules.php:549
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -1186,7 +1186,7 @@ msgid "No banned IPs anymore."
 msgstr "Aucune adresse IP bannie."
 
 #: inc/admin/settings.php:128
-#: inc/classes/settings/class-secupress-settings-modules.php:517
+#: inc/classes/settings/class-secupress-settings-modules.php:514
 msgid "IP not found."
 msgstr "Adresse IP no trouvée."
 
@@ -3409,11 +3409,11 @@ msgstr ""
 msgid ""
 "If your website is the victim of defacement using the addition of a file "
 "like %1$s, this file could be loaded first instead of the one from "
-"WordPress. This is why we have to load %2$s first."
+"WordPress. This is why your website has to load %2$s first."
 msgstr ""
 "Si votre site est victime d'un défacement utilisant un fichier additionnel "
 "comme %1$s, ce fichier pourrait être chargé à la place de celui de "
-"WordPress. Voilà pourquoi vous devez charger %2$s en premier."
+"WordPress. Voilà pourquoi votre site doit charger %2$s en premier."
 
 #: inc/classes/scanners/class-secupress-scan-directoryindex.php:49
 #: inc/classes/scanners/class-secupress-scan-directoryindex.php:75
@@ -4799,7 +4799,7 @@ msgstr "Envoyer un fichier et importer les réglages"
 msgid "Download settings"
 msgstr "Télécharger les réglages"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:360
+#: inc/classes/settings/class-secupress-settings-modules.php:357
 msgid ""
 "If you need to reset this module's settings to the default, you can do it "
 "here, the best settings for your site will be set."
@@ -4808,103 +4808,103 @@ msgstr ""
 "pouvez le faire d'ici, les meilleurs réglages pour votre site seront "
 "sélectionnés."
 
-#: inc/classes/settings/class-secupress-settings-modules.php:361
+#: inc/classes/settings/class-secupress-settings-modules.php:358
 msgid "Module settings"
 msgstr "Réglages du module"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:366
+#: inc/classes/settings/class-secupress-settings-modules.php:363
 msgid "Reset settings?"
 msgstr "Réinitialiser les réglages&nbsp;?"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:370
+#: inc/classes/settings/class-secupress-settings-modules.php:367
 #, php-format
 msgid "Reset the %s's settings."
 msgstr "Réinitialise les réglages de %s."
 
-#: inc/classes/settings/class-secupress-settings-modules.php:453
-#: inc/classes/settings/class-secupress-settings-modules.php:464
-#: inc/classes/settings/class-secupress-settings-modules.php:475
+#: inc/classes/settings/class-secupress-settings-modules.php:450
+#: inc/classes/settings/class-secupress-settings-modules.php:461
+#: inc/classes/settings/class-secupress-settings-modules.php:472
 msgid "Learn more about SecuPress Pro"
 msgstr "En savoir plus sur SecuPress Pro"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:454
-#: inc/classes/settings/class-secupress-settings-modules.php:465
-#: inc/classes/settings/class-secupress-settings-modules.php:476
+#: inc/classes/settings/class-secupress-settings-modules.php:451
+#: inc/classes/settings/class-secupress-settings-modules.php:462
+#: inc/classes/settings/class-secupress-settings-modules.php:473
 msgid "This feature is available in SecuPress Pro"
 msgstr "Cette fonctionnalité est disponible avec SecuPress Pro"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:494
+#: inc/classes/settings/class-secupress-settings-modules.php:491
 msgid "No banned IPs yet."
 msgstr "Aucune adresse IP bannie pour le moment."
 
-#: inc/classes/settings/class-secupress-settings-modules.php:498
+#: inc/classes/settings/class-secupress-settings-modules.php:495
 msgid "Specify an IP to ban."
 msgstr "Spécifier une adresse IP à bannir."
 
-#: inc/classes/settings/class-secupress-settings-modules.php:500
+#: inc/classes/settings/class-secupress-settings-modules.php:497
 msgid "Ban IP"
 msgstr "Bannir une adresse IP"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:521
+#: inc/classes/settings/class-secupress-settings-modules.php:518
 msgid "Not a valid IP."
 msgstr "Adresse IP non valide"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:527
-#: inc/classes/settings/class-secupress-settings-modules.php:529
+#: inc/classes/settings/class-secupress-settings-modules.php:524
+#: inc/classes/settings/class-secupress-settings-modules.php:526
 msgid "Search IP"
 msgstr "Chercher une adresse IP"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:529
+#: inc/classes/settings/class-secupress-settings-modules.php:526
 msgid "Searching..."
 msgstr "Recherche&hellip;"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:531
+#: inc/classes/settings/class-secupress-settings-modules.php:528
 msgid "Reseting..."
 msgstr "Réinitialisation&hellip;"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:531
+#: inc/classes/settings/class-secupress-settings-modules.php:528
 msgid "Reset"
 msgstr "Réinitialiser"
 
 #. Translators: %d is 100
-#: inc/classes/settings/class-secupress-settings-modules.php:539
+#: inc/classes/settings/class-secupress-settings-modules.php:536
 #, php-format
 msgid "Last %d banned IPs:"
 msgstr "Dernières %d adresses IP bannies&nbsp;"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:547
+#: inc/classes/settings/class-secupress-settings-modules.php:544
 msgid "M jS Y"
 msgstr "j M Y"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:547
+#: inc/classes/settings/class-secupress-settings-modules.php:544
 msgid "G:i"
 msgstr "G:i"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:564
+#: inc/classes/settings/class-secupress-settings-modules.php:561
 msgid "Clearing..."
 msgstr "Suppression&hellip;"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:564
+#: inc/classes/settings/class-secupress-settings-modules.php:561
 msgid "Clear all IPs"
 msgstr "Vider toutes les adresses IP"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:567
+#: inc/classes/settings/class-secupress-settings-modules.php:564
 msgid "Banishing..."
 msgstr "Bannissement&hellip;"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:567
+#: inc/classes/settings/class-secupress-settings-modules.php:564
 msgid "Ban new IP"
 msgstr "Bannir une adresse IP"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:616
+#: inc/classes/settings/class-secupress-settings-modules.php:613
 msgid "One IP address per line."
 msgstr "Une adresse IP par ligne."
 
-#: inc/classes/settings/class-secupress-settings-modules.php:618
+#: inc/classes/settings/class-secupress-settings-modules.php:615
 msgid "Save whitelist"
 msgstr "Sauver la liste blanche"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:656
+#: inc/classes/settings/class-secupress-settings-modules.php:653
 msgid ""
 "Post creation or update will not be logged, but rather password and profile "
 "update, email changes, new administrator user, admin has logged in..."
@@ -4913,100 +4913,100 @@ msgstr ""
 "la mise à jour des mots de passe, modification des adresses email, un "
 "administrateur qui se connecte…"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:707
+#: inc/classes/settings/class-secupress-settings-modules.php:704
 msgid "No backups found yet, run one now?"
 msgstr "Aucune sauvegarde trouvée, en faire une&nbsp;?"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:725
+#: inc/classes/settings/class-secupress-settings-modules.php:722
 msgid "Backup my database"
 msgstr "Sauvegarder ma base de données"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:746
+#: inc/classes/settings/class-secupress-settings-modules.php:743
 msgid "Backup my files"
 msgstr "Sauvegarder mes fichiers"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:763
+#: inc/classes/settings/class-secupress-settings-modules.php:760
 msgid "Search for malicious files"
 msgstr "Chercher les fichiers malicieux"
 
-#: inc/classes/settings/class-secupress-settings.php:261
+#: inc/classes/settings/class-secupress-settings.php:268
 msgid "Roles"
 msgstr "Rôles"
 
-#: inc/classes/settings/class-secupress-settings.php:280
-#: inc/classes/settings/class-secupress-settings.php:286
+#: inc/classes/settings/class-secupress-settings.php:287
+#: inc/classes/settings/class-secupress-settings.php:293
 msgid "Affected Roles"
 msgstr "Rôles affectés"
 
-#: inc/classes/settings/class-secupress-settings.php:281
+#: inc/classes/settings/class-secupress-settings.php:288
 msgid "Which roles will be affected by this module?"
 msgstr "Quels rôles doivent être affectés pour ce module&nbsp;?"
 
-#: inc/classes/settings/class-secupress-settings.php:290
+#: inc/classes/settings/class-secupress-settings.php:297
 msgid "Future roles will be automatically checked."
 msgstr "Les prochains rôles seront automatiquement cochés."
 
-#: inc/classes/settings/class-secupress-settings.php:832
+#: inc/classes/settings/class-secupress-settings.php:850
 msgid "Warning: "
 msgstr "Attention&nbsp;:"
 
-#: inc/classes/settings/class-secupress-settings.php:1096
+#: inc/classes/settings/class-secupress-settings.php:1200
 msgid "Save All Changes"
 msgstr "Tout sauver"
 
-#: inc/classes/settings/class-secupress-settings.php:1126
+#: inc/classes/settings/class-secupress-settings.php:1230
 msgid "100MB"
 msgstr "100Mb"
 
-#: inc/classes/settings/class-secupress-settings.php:1137
+#: inc/classes/settings/class-secupress-settings.php:1241
 msgid "Improve your Security"
 msgstr "Améliorez votre sécurité"
 
-#: inc/classes/settings/class-secupress-settings.php:1138
+#: inc/classes/settings/class-secupress-settings.php:1242
 msgid "Unlock all the features of SecuPress Pro"
 msgstr "Débloquez toutes les fonctionnalités de SecuPress Pro"
 
-#: inc/classes/settings/class-secupress-settings.php:1143
+#: inc/classes/settings/class-secupress-settings.php:1247
 msgctxt "short"
 msgid "Get Pro"
 msgstr "Obtenir la version Pro"
 
-#: inc/classes/settings/class-secupress-settings.php:1150
+#: inc/classes/settings/class-secupress-settings.php:1254
 msgid "Join our mailing list"
 msgstr "Rejoignez notre liste"
 
-#: inc/classes/settings/class-secupress-settings.php:1153
+#: inc/classes/settings/class-secupress-settings.php:1257
 msgid "Get security alerts and news from SecuPress."
 msgstr "Obtenez des alertes de sécurité et des nouveautés de SecuPress."
 
-#: inc/classes/settings/class-secupress-settings.php:1164
+#: inc/classes/settings/class-secupress-settings.php:1268
 msgid "Stay tuned for more"
 msgstr "Restez à l'écoute"
 
-#: inc/classes/settings/class-secupress-settings.php:1175
+#: inc/classes/settings/class-secupress-settings.php:1279
 msgid "Speed up your website with WP Rocket"
 msgstr "Accélérez votre site WordPress avec WP Rocket."
 
-#: inc/classes/settings/class-secupress-settings.php:1176
+#: inc/classes/settings/class-secupress-settings.php:1280
 #, php-format
 msgid "Get <span>%1$s OFF</span> with this coupon code: %2$s"
 msgstr "Obtenez <span>-%1$s</span> avec le coupon&nbsp;: %2$s"
 
-#: inc/classes/settings/class-secupress-settings.php:1179
+#: inc/classes/settings/class-secupress-settings.php:1283
 #, php-format
 msgid "Get %s OFF"
 msgstr "Obtenez -%s"
 
-#: inc/classes/settings/class-secupress-settings.php:1190
+#: inc/classes/settings/class-secupress-settings.php:1294
 msgid "Speed Up your website with lighter images"
 msgstr "Accélérez votre site avec des images plus légères."
 
-#: inc/classes/settings/class-secupress-settings.php:1191
+#: inc/classes/settings/class-secupress-settings.php:1295
 #, php-format
 msgid "For each new account, get <span>%s Free</span>."
 msgstr "Pour chaque nouveau compte, obtenez <span>%s gratuits</span>."
 
-#: inc/classes/settings/class-secupress-settings.php:1194
+#: inc/classes/settings/class-secupress-settings.php:1298
 #, php-format
 msgid "Get %s Free"
 msgstr "Obtenez %s gratuits"
@@ -5910,8 +5910,8 @@ msgid "Uploads folder"
 msgstr "Dossier des uploads"
 
 #: inc/modules/file-system/settings/bad-file-extensions.php:22
-msgid "Deny direct access to those files in the uploads folder."
-msgstr "Interdire l'accès direct aux fichiers du dossier des uploads"
+msgid "Yes, deny direct access to those files in the uploads folder."
+msgstr "Oui, interdire l'accès direct aux fichiers du dossier des uploads."
 
 #. Translators: %s is a file name.
 #: inc/modules/file-system/settings/bad-file-extensions.php:34
@@ -5974,8 +5974,8 @@ msgstr "Ordre de chargement des index"
 #. Translators: %s is a file name.
 #: inc/modules/file-system/settings/directory-index.php:24
 #, php-format
-msgid "Make sure %s is loaded first"
-msgstr "Assurez vous que %s soit chargé en premier"
+msgid "Yes, make sure %s is loaded first"
+msgstr "Oui, assurez vous que %s soit chargé en premier"
 
 #: inc/modules/file-system/settings/file-scanner.php:5
 msgid ""
@@ -7974,9 +7974,9 @@ msgid "Password changement"
 msgstr "Changement de mot de passe"
 
 #: inc/modules/users-login/settings/password-policy.php:41
-msgid "Ask for old password when a user changes it"
+msgid "Yes, ask for old password when a user changes it"
 msgstr ""
-"Demander l'ancien mot de passe quand un utilisateur veut changer le sien"
+"Oui, demander l'ancien mot de passe quand un utilisateur veut changer le sien"
 
 #: inc/modules/users-login/settings/password-policy.php:45
 msgid "For all users."
@@ -8108,10 +8108,10 @@ msgstr ""
 
 #: inc/modules/wordpress-core/settings/auto-update.php:18
 msgid ""
-"Try to force WordPress to allow auto updates for <strong>minor</strong> "
+"Yes, try to force WordPress to allow auto updates for <strong>minor</strong> "
 "versions."
 msgstr ""
-"Essaie de forcer WordPress à autoriser les mises à jour de versions "
+"Oui, essayer de forcer WordPress à autoriser les mises à jour de versions "
 "<strong>mineures</strong>."
 
 #: inc/modules/wordpress-core/settings/auto-update.php:22
@@ -8137,10 +8137,10 @@ msgstr ""
 
 #: inc/modules/wordpress-core/settings/auto-update.php:35
 msgid ""
-"Try to force WordPress to allow auto updates for <strong>major</strong> "
+"Yes, try to force WordPress to allow auto updates for <strong>major</strong> "
 "versions."
 msgstr ""
-"Essaie de forcer WordPress à autoriser les mises à jour de versions "
+"Oui, essayer de forcer WordPress à autoriser les mises à jour de versions "
 "<strong>majeures</strong>."
 
 #: inc/modules/wordpress-core/settings/auto-update.php:39
@@ -8269,7 +8269,7 @@ msgstr ""
 "Ces options sont désactivées car le fichier %1$s n'est pas en écriture. "
 "Merci d'appliquer les droits %2$s sur ce fichier."
 
-#: secupress.php:101
+#: secupress.php:102
 #, php-format
 msgid ""
 "<strong>%1$s</strong> requires PHP %2$s minimum, your website is actually "
@@ -8278,7 +8278,7 @@ msgstr ""
 "<strong>%1$s<strong> requiert PHP v%2$s minimum, votre site utilise "
 "actuellement la version %3$s."
 
-#: secupress.php:108
+#: secupress.php:109
 #, php-format
 msgid ""
 "<strong>%1$s</strong> requires WordPress %2$s minimum, your website is "
@@ -8288,12 +8288,12 @@ msgstr ""
 "actuellement la version %3$s."
 
 #. Translators: Plugin Name of the plugin/theme
-#: secupress.php:323
+#: secupress.php:324
 msgid "SecuPress — WordPress Security"
 msgstr "SecuPress — Sécurité WordPress"
 
 #. Translators: Description of the plugin/theme
-#: secupress.php:325
+#: secupress.php:326
 msgid ""
 "Protect your WordPress with SecuPress, analyze and ensure the safety of your "
 "website daily."
