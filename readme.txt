@@ -205,9 +205,9 @@ It's important to delete all other security plugins before activating SecuPress.
 
 * 11 jan 2017
 * Happy new year! 🎉
-* Bugfix #342: in the Malware Scan module, the "Save All Changes" button under the Directory Index option was disabled.
 * Improvement #336: prevent a rare *PHP warning: `array_count_values()` can only count string and integer values!* that could mess with the scan results.
 * Improvement #322: CSS animations are no more on Logs page, interacting with them is now easier.
+* Fix #342: in the Malware Scan module, the "Save All Changes" button under the Directory Index option was disabled.
 
 = 1.2 =
 
