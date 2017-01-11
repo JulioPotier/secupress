@@ -43,7 +43,7 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 		/** Translators: 1, 2 and 3 are file extensions. */
 		$this->title    = sprintf( __( 'Check if %1$s files are loaded with a higher priority over %2$s or %3$s etc.', 'secupress' ), '<em>.php</em>', '<em>.html</em>', '<em>.htm</em>' );
 		/** Translators: 1 and 2 are file names. */
-		$this->more     = sprintf( __( 'If your website is the victim of defacement using the addition of a file like %1$s, this file could be loaded first instead of the one from WordPress. This is why we have to load %2$s first.', 'secupress' ), '<code>index.htm</code>', '<code>index.php</code>' );
+		$this->more     = sprintf( __( 'If your website is the victim of defacement using the addition of a file like %1$s, this file could be loaded first instead of the one from WordPress. This is why your website has to load %2$s first.', 'secupress' ), '<code>index.htm</code>', '<code>index.php</code>' );
 		$this->more_fix = sprintf(
 			__( 'Activate the %1$s protection from the module %2$s.', 'secupress' ),
 			'<strong>' . __( 'Directory Index', 'secupress' ) . '</strong>',

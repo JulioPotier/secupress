@@ -15,7 +15,7 @@ $this->add_field( array(
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
 	'value'             => (int) secupress_is_submodule_active( 'wordpress-core', 'minor-updates' ),
-	'label'             => __( 'Try to force WordPress to allow auto updates for <strong>minor</strong> versions.', 'secupress' ),
+	'label'             => __( 'Yes, try to force WordPress to allow auto updates for <strong>minor</strong> versions.', 'secupress' ),
 	'helpers'           => array(
 		array(
 			'type'        => 'warning',
@@ -32,7 +32,7 @@ $this->add_field( array(
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
 	'value'             => (int) secupress_is_submodule_active( 'wordpress-core', 'major-updates' ),
-	'label'             => __( 'Try to force WordPress to allow auto updates for <strong>major</strong> versions.', 'secupress' ),
+	'label'             => __( 'Yes, try to force WordPress to allow auto updates for <strong>major</strong> versions.', 'secupress' ),
 	'helpers'           => array(
 		array(
 			'type'        => 'help',

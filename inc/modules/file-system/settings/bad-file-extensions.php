@@ -19,7 +19,7 @@ $this->add_field( array(
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
 	'value'             => $is_plugin_active,
-	'label'             => __( 'Deny direct access to those files in the uploads folder.', 'secupress' ),
+	'label'             => __( 'Yes, deny direct access to those files in the uploads folder.', 'secupress' ),
 ) );
 
 

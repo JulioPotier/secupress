@@ -38,7 +38,7 @@ $this->add_field( array(
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
 	'value'             => (int) secupress_is_submodule_active( 'users-login', 'ask-old-password' ),
-	'label'             => __( 'Ask for old password when a user changes it', 'secupress' ),
+	'label'             => __( 'Yes, ask for old password when a user changes it', 'secupress' ),
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
