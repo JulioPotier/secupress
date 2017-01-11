@@ -190,9 +190,6 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 
 		if ( secupress_is_pro() ) {
 			require_once( SECUPRESS_PRO_ADMIN_PATH . 'settings.php' );
-		} elseif ( ! empty( $modules[ $this->modulenow ]['mark_as_pro'] ) ) {
-			// Disable the section submit buttons if it's a Pro module and we're using the Free version.
-			add_filter( 'secupress.settings.section.submit_button_args', array( $this, 'disable_sumit_buttons' ) );
 		}
 	}
 
@@ -817,6 +814,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 */
 	public function disable_sumit_buttons( $args ) {
 		$wrap = isset( $args['wrap'] ) ? $args['wrap'] : true;
+		$atts = array();
 		$atts = isset( $args['other_attributes'] ) && is_array( $args['other_attributes'] ) ? $args['other_attributes'] : array();
 		$atts = array_merge( $atts, array(
 			'disabled'      => 'disabled',
