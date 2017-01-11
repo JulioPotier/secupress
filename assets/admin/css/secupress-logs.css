@@ -255,6 +255,10 @@
 	background: #222831;
 	color: #FFF;
 }
+.secupress-logs-list .check-column .label-text {
+	display: block;
+	margin-top: 0;
+	margin-left: .05em;
 }
 
 /* Date col */
