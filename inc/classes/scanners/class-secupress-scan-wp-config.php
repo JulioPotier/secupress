@@ -232,7 +232,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 					}
 				} else {
 					// "bad"
-					$this->add_message( $message_id, array( count( $maybe_constants ), wp_sprintf_l( '%l', $maybe_constants ) ) );
+					$this->add_message( $message_id, array( count( $maybe_constants ), '<code>wp-config.php</code>', wp_sprintf_l( '%l', $maybe_constants ) ) );
 				}
 			}
 		}
