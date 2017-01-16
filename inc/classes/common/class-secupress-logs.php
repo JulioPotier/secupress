@@ -933,19 +933,21 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			ini_set( 'zlib.output_compression', 'Off' );
 		}
 
-		$filename = 'secupress-' . $this->log_type . '-logs.txt';
-		$logs     = $this->get_logs();
-
 		set_time_limit( 0 );
 
-		ob_start();
-		nocache_headers();
-		header( 'Content-Type: text/plain; charset=' . get_option( 'blog_charset' ) );
-		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
-		header( 'Content-Transfer-Encoding: binary' );
-		header( 'Connection: close' );
-		ob_end_clean();
-		flush();
+		if ( ! headers_sent() ) {
+			ob_start();
+			nocache_headers();
+			header( 'Content-Type: text/plain; charset=' . get_option( 'blog_charset' ) );
+			header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
+			header( 'Content-Transfer-Encoding: binary' );
+			header( 'Connection: close' );
+			ob_end_clean();
+			flush();
+		}
+
+		$filename = 'secupress-' . $this->log_type . '-logs.txt';
+		$logs     = $this->get_logs();
 
 		if ( $logs && is_array( $logs ) ) {
 			$classname  = static::maybe_include_log_class();
