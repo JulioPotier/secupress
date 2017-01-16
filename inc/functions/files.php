@@ -191,6 +191,20 @@ function secupress_find_wpconfig_path() {
 
 
 /**
+ * Tell if the `wp-config.php` file is writtable.
+ *
+ * @since 1.2.2
+ * @author Grégory Viguier
+ *
+ * @return (string|bool) The path of `wp-config.php` file or false.
+ */
+function secupress_is_wpconfig_writtable() {
+	$wpconfig_filepath = secupress_find_wpconfig_path();
+	return $wpconfig_filepath && wp_is_writable( $wpconfig_filepath ) ? $wpconfig_filepath : false;
+}
+
+
+/**
  * Get plugins dir path.
  *
  * @since 1.0

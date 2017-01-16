@@ -118,16 +118,17 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 	 * Tell if the `wp-config.php` file can be fixed.
 	 *
 	 * @since 1.1.1
+	 * @since 1.2.2 Returns the file path instead of true.
 	 * @author Grégory Viguier
 	 *
-	 * @return (bool)
+	 * @return (string|bool) The path of `wp-config.php` file or false.
 	 */
 	protected function is_wp_config_fixable() {
 		global $wpdb;
 
-		$wpconfig_filename = secupress_find_wpconfig_path();
+		$wpconfig_filepath = secupress_is_wpconfig_writtable();
 
-		return is_writable( $wpconfig_filename ) && preg_match( '/\$table_prefix\s*=\s*(\'' . $wpdb->prefix . '\'|"' . $wpdb->prefix . '");.*/', file_get_contents( $wpconfig_filename ) );
+		return $wpconfig_filepath && preg_match( '/\$table_prefix\s*=\s*(\'' . $wpdb->prefix . '\'|"' . $wpdb->prefix . '");.*/', file_get_contents( $wpconfig_filepath ) ) ? $wpconfig_filepath : false;
 	}
 
 
@@ -229,7 +230,9 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 			$can_fix = false;
 		}
 
-		if ( ! $this->is_wp_config_fixable() ) {
+		$wpconfig_filepath = $this->is_wp_config_fixable();
+
+		if ( ! $wpconfig_filepath ) {
 			// "cantfix"
 			$this->add_fix_message( 302 );
 			$can_fix = false;
@@ -308,7 +311,7 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 
 		// `wp-config.php` file.
 		secupress_replace_content(
-			secupress_find_wpconfig_path(),
+			$wpconfig_filepath,
 			'#\$table_prefix\s*=\s*(\'' . $old_prefix . '\'|"' . $old_prefix . '");.*#',
 			'$table_prefix = \'' . $new_prefix . '\'; // Modified by SecuPress' . "\n" . '/*Commented by SecuPress*/ // $0'
 		);

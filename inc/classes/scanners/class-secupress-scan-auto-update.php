@@ -144,13 +144,15 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements SecuPress_Sca
 	public function fix() {
 		secupress_activate_submodule( 'wordpress-core', 'minor-updates' );
 
-		$wpconfig_filename = secupress_find_wpconfig_path();
+		$wpconfig_filepath = secupress_is_wpconfig_writtable();
 		$constants         = array( 'AUTOMATIC_UPDATER_DISABLED' => true, 'WP_AUTO_UPDATE_CORE' => false );
 
-		foreach ( $constants as $constant => $val ) {
-			if ( defined( $constant ) && (bool) constant( $constant ) === $val ) {
-				$str_val = false === $val ? 'true' : 'false';
-				secupress_replace_content( $wpconfig_filename, "#define\(.*('$constant'|\"$constant\"),(.*)#", "define('$constant', $str_val ); // Modified by SecuPress\n/*Commented by SecuPress*/ /* $0 */" );
+		if ( $wpconfig_filepath ) {
+			foreach ( $constants as $constant => $val ) {
+				if ( defined( $constant ) && (bool) constant( $constant ) === $val ) {
+					$str_val = false === $val ? 'true' : 'false';
+					secupress_replace_content( $wpconfig_filepath, "#define\(.*('$constant'|\"$constant\"),(.*)#", "define('$constant', $str_val ); // Modified by SecuPress\n/*Commented by SecuPress*/ /* $0 */" );
+				}
 			}
 		}
 

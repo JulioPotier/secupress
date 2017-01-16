@@ -59,6 +59,7 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 			0   => __( 'All security keys are properly set.', 'secupress' ),
 			// "warning"
 			100 => __( 'This fix is <strong>pending</strong>, please reload the page to apply it now.', 'secupress' ),
+			101 => __( 'The <code>wp-config.php</code> file could not be located.', 'secupress' ),
 			// "bad"
 			200 => __( 'The following security keys are not set correctly:', 'secupress' ),
 			201 => _n_noop( '<strong>&middot; Not Set:</strong> %s.',       '<strong>&middot; Not Set:</strong> %s.',       'secupress' ),
@@ -89,17 +90,24 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-		$keys     = $this->get_keys();
-		$bad_keys = array(
+		$wpconfig_filepath = secupress_find_wpconfig_path();
+
+		if ( ! $wpconfig_filepath ) {
+			// "warning"
+			$this->add_message( 100 );
+			return parent::scan();
+		}
+
+		// Get code only from `wp-config.php`.
+		$wp_config_content = php_strip_whitespace( $wpconfig_filepath );
+		$keys              = $this->get_keys();
+		$bad_keys          = array(
 			201 => array(),
 			202 => array(),
 			203 => array(),
 			204 => array(),
 			205 => array(),
 		);
-
-		// Get code only from wp-config.php.
-		$wp_config_content = php_strip_whitespace( secupress_find_wpconfig_path() );
 
 		preg_match_all( '/' . implode( '|', $keys ) . '/', $wp_config_content, $matches );
 
@@ -169,19 +177,14 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 
 		if ( defined( 'SECUPRESS_SALT_KEYS_ACTIVE' ) ) {
 			$this->add_fix_message( 301 );
+		} elseif ( ! secupress_is_wpconfig_writtable() ) {
+			$this->add_fix_message( 300 );
 		} else {
-
-			$wpconfig_filename = secupress_find_wpconfig_path();
-
-			if ( ! is_writable( $wpconfig_filename ) ) {
-				$this->add_fix_message( 300 );
-			} else {
-				if ( isset( $current_user->ID ) ) {
-					secupress_set_site_transient( 'secupress-add-salt-muplugin', array( 'ID' => $current_user->ID, 'username' => $current_user->user_login ) );
-				}
-
-				$this->add_fix_message( 100 );
+			if ( isset( $current_user->ID ) ) {
+				secupress_set_site_transient( 'secupress-add-salt-muplugin', array( 'ID' => $current_user->ID, 'username' => $current_user->user_login ) );
 			}
+
+			$this->add_fix_message( 100 );
 		}
 
 		return parent::fix();
