@@ -66,7 +66,9 @@ add_action( 'wp_ajax_nopriv_captcha_check', 'secupress_captcha_check' );
  */
 function secupress_captcha_check() {
 	if ( ! empty( $_POST['captcha_key'] ) || ! isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) || 'XMLHttpRequest' !== $_SERVER['HTTP_X_REQUESTED_WITH'] ) { // WPCS: CSRF ok. A "real" ajax request.
-		status_header( 400 );
+		if ( ! headers_sent() ) {
+			status_header( 400 );
+		}
 		wp_send_json_error();
 	}
 
