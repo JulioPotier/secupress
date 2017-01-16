@@ -4,8 +4,9 @@
  * Description: Unset the header <em>X-Powered-By</em> to avoid leaking sensitive information.
  * Main Module: discloses
  * Author: SecuPress
- * Version: 1.1
+ * Version: 1.1.1
  */
+
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 

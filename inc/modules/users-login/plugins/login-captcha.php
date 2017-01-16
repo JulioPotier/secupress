@@ -1,11 +1,12 @@
 <?php
-/*
-Module Name: Captcha for Login
-Description: Add a gentle captcha on the login form
-Main Module: users_login
-Author: SecuPress
-Version: 1.0
-*/
+/**
+ * Module Name: Captcha for Login
+ * Description: Add a gentle captcha on the login form
+ * Main Module: users_login
+ * Author: SecuPress
+ * Version: 1.0.1
+ */
+
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 add_action( 'login_form', 'secupress_add_captcha_on_login_form' );
