@@ -1,11 +1,12 @@
 <?php
-/*
-Module Name: Captcha for Login
-Description: Add a gentle captcha on the login form
-Main Module: users_login
-Author: SecuPress
-Version: 1.0
-*/
+/**
+ * Module Name: Captcha for Login
+ * Description: Add a gentle captcha on the login form
+ * Main Module: users_login
+ * Author: SecuPress
+ * Version: 1.0.1
+ */
+
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 add_action( 'login_form', 'secupress_add_captcha_on_login_form' );
@@ -66,7 +67,9 @@ add_action( 'wp_ajax_nopriv_captcha_check', 'secupress_captcha_check' );
  */
 function secupress_captcha_check() {
 	if ( ! empty( $_POST['captcha_key'] ) || ! isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) || 'XMLHttpRequest' !== $_SERVER['HTTP_X_REQUESTED_WITH'] ) { // WPCS: CSRF ok. A "real" ajax request.
-		status_header( 400 );
+		if ( ! headers_sent() ) {
+			status_header( 400 );
+		}
 		wp_send_json_error();
 	}
 
