@@ -430,9 +430,9 @@ function secupress_add_salt_muplugin() {
 	secupress_delete_site_transient( 'secupress-add-salt-muplugin' );
 
 	// Make sure we find the `wp-config.php` file.
-	$wpconfig_path = secupress_find_wpconfig_path();
+	$wpconfig_filepath = secupress_is_wpconfig_writtable();
 
-	if ( ! is_writable( $wpconfig_path ) ) {
+	if ( ! $wpconfig_filepath ) {
 		return;
 	}
 
@@ -454,7 +454,7 @@ function secupress_add_salt_muplugin() {
 	 * We have to make sure the comment is added, only once, only if one or more keys are found, even if some secret keys are missing, and do not create useless empty lines.
 	 */
 	$wp_filesystem    = secupress_get_filesystem();
-	$wpconfig_content = $wp_filesystem->get_contents( $wpconfig_path );
+	$wpconfig_content = $wp_filesystem->get_contents( $wpconfig_filepath );
 	$keys             = array( 'AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'NONCE_KEY', 'AUTH_SALT', 'SECURE_AUTH_SALT', 'LOGGED_IN_SALT', 'NONCE_SALT' );
 	$comment_added    = false;
 	$comment          = '/** SecuPress: if you ever want to add secret keys back here, get new ones at https://api.wordpress.org/secret-key/1.1/salt. */';
@@ -473,7 +473,7 @@ function secupress_add_salt_muplugin() {
 	if ( $comment_added ) {
 		$wpconfig_content = str_replace( $placeholder . "\n", '', $wpconfig_content );
 
-		$wp_filesystem->put_contents( $wpconfig_path, $wpconfig_content, FS_CHMOD_FILE );
+		$wp_filesystem->put_contents( $wpconfig_filepath, $wpconfig_content, FS_CHMOD_FILE );
 	}
 
 	// Remove old secret keys from the database.

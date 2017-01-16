@@ -203,9 +203,9 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Int
 	protected static function get_file_perms() {
 		global $is_apache;
 
-		$_wp_upload_dir = wp_upload_dir();
-		$files          = array(
-			secupress_find_wpconfig_path()    => 644,
+		$_wp_upload_dir    = wp_upload_dir();
+		$wpconfig_filepath = secupress_find_wpconfig_path();
+		$files             = array(
 			ABSPATH                           => 755,
 			ABSPATH . 'wp-admin/'             => 755,
 			ABSPATH . WPINC . '/'             => 755,
@@ -214,6 +214,10 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Int
 			plugin_dir_path( SECUPRESS_FILE ) => 755,
 			$_wp_upload_dir['basedir'] . '/'  => 755,
 		);
+
+		if ( $wpconfig_filepath ) {
+			$files[ $wpconfig_filepath ] = 644;
+		}
 
 		if ( $is_apache ) {
 			$files[ ABSPATH . '.htaccess' ] = 644;

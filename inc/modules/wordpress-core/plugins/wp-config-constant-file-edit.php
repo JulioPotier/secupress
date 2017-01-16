@@ -31,10 +31,9 @@ function secupress_disallow_file_edit_activation() {
 	}
 
 	$new_define        = "define( '$constant', true );";
-	$wpconfig_filepath = secupress_find_wpconfig_path();
-	$is_writable       = $wpconfig_filepath && wp_is_writable( $wpconfig_filepath );
+	$wpconfig_filepath = secupress_is_wpconfig_writtable();
 
-	if ( ! $is_writable ) {
+	if ( ! $wpconfig_filepath ) {
 		/** Translators: 1 is a file name, 2 is a code. */
 		$message = sprintf( __( 'The %1$s file is not writable. Please apply %2$s write rights to the file.', 'secupress' ), '<code>wp-config.php</code>', '<code>0644</code>' );
 		add_settings_error( 'general', 'wp_config_not_writable', $message, 'error' );
@@ -103,10 +102,9 @@ add_action( 'secupress.plugins.deactivation', 'secupress_disallow_file_edit_deac
 function secupress_disallow_file_edit_deactivate() {
 	$constant          = 'DISALLOW_FILE_EDIT';
 	$marker            = 'file_edit';
-	$wpconfig_filepath = secupress_find_wpconfig_path();
-	$is_writable       = $wpconfig_filepath && wp_is_writable( $wpconfig_filepath );
+	$wpconfig_filepath = secupress_is_wpconfig_writtable();
 
-	if ( ! $is_writable ) {
+	if ( ! $wpconfig_filepath ) {
 		/** Translators: 1 is a file name, 2 is a code. */
 		$message = sprintf( __( 'The %1$s file is not writable. Please apply %2$s write rights to the file.', 'secupress' ), '<code>wp-config.php</code>', '<code>0644</code>' );
 		add_settings_error( 'general', 'wp_config_not_writable', $message, 'error' );

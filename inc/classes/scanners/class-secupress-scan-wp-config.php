@@ -131,6 +131,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 			300 => __( 'Some PHP constants could not be set correctly: %s.', 'secupress' ),
 			/** Translators: %s is a constant name. */
 			301 => sprintf( __( 'Impossible to create a <a href="https://codex.wordpress.org/Must_Use_Plugins">must-use plugin</a> but the default value for %s needs to be changed.', 'secupress' ), '<code>COOKIEHASH</code>' ),
+			302 => __( 'The <code>wp-config.php</code> file is not writable, the constants could not be changed.', 'secupress' ),
 			// DEPRECATED, NOT IN USE ANYMORE.
 			/** Translators: 1 is a file name, 2 is a constant name. */
 			203 => sprintf( __( 'In your %1$s file, the PHP constant %2$s should not be set.', 'secupress' ), '<code>wp-config.php</code>', '%s' ),
@@ -277,7 +278,14 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 		}
 
 		// Other constants.
-		$wpconfig_filepath = secupress_find_wpconfig_path();
+		$wpconfig_filepath = secupress_is_wpconfig_writtable();
+
+		if ( ! $wpconfig_filepath ) {
+			// "bad"
+			$this->add_fix_message( 302 );
+			return parent::fix();
+		}
+
 		$new_content = '';
 		$results     = array();
 		$not_fixed   = array();

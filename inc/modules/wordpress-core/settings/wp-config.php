@@ -6,8 +6,7 @@ $this->set_current_section( 'wp_config' );
 $this->add_section( __( 'WordPress configuration file', 'secupress' ) );
 
 
-$is_writable = secupress_find_wpconfig_path();
-$is_writable = $is_writable && wp_is_writable( $is_writable );
+$is_writable = secupress_is_wpconfig_writtable();
 
 $active     = (int) secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-file-edit' );
 $can_manage = $active || ! defined( 'DISALLOW_FILE_EDIT' ) || ! DISALLOW_FILE_EDIT;
