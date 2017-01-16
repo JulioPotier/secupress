@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
  */
 class SecuPress_Logs extends SecuPress_Singleton {
 
-	const VERSION = '1.0';
+	const VERSION = '1.0.1';
 
 	/**
 	 * The reference to the *Singleton* instance of this class: must be extended.
