@@ -245,7 +245,7 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 		}
 
 		// `wp-config.php` constants.
-		$wpconfig_filepath = secupress_is_wpconfig_writtable();
+		$wpconfig_filepath = secupress_is_wpconfig_writable();
 
 		if ( $wpconfig_filepath ) {
 			$wp_filesystem = secupress_get_filesystem();

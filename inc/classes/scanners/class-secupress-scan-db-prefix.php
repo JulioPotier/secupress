@@ -126,7 +126,7 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 	protected function is_wp_config_fixable() {
 		global $wpdb;
 
-		$wpconfig_filepath = secupress_is_wpconfig_writtable();
+		$wpconfig_filepath = secupress_is_wpconfig_writable();
 
 		return $wpconfig_filepath && preg_match( '/\$table_prefix\s*=\s*(\'' . $wpdb->prefix . '\'|"' . $wpdb->prefix . '");.*/', file_get_contents( $wpconfig_filepath ) ) ? $wpconfig_filepath : false;
 	}

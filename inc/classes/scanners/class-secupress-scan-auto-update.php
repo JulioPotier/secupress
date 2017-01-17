@@ -144,7 +144,7 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements SecuPress_Sca
 	public function fix() {
 		secupress_activate_submodule( 'wordpress-core', 'minor-updates' );
 
-		$wpconfig_filepath = secupress_is_wpconfig_writtable();
+		$wpconfig_filepath = secupress_is_wpconfig_writable();
 		$constants         = array( 'AUTOMATIC_UPDATER_DISABLED' => true, 'WP_AUTO_UPDATE_CORE' => false );
 
 		if ( $wpconfig_filepath ) {

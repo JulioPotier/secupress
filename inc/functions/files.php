@@ -198,7 +198,7 @@ function secupress_find_wpconfig_path() {
  *
  * @return (string|bool) The path of `wp-config.php` file or false.
  */
-function secupress_is_wpconfig_writtable() {
+function secupress_is_wpconfig_writable() {
 	$wpconfig_filepath = secupress_find_wpconfig_path();
 	return $wpconfig_filepath && wp_is_writable( $wpconfig_filepath ) ? $wpconfig_filepath : false;
 }
