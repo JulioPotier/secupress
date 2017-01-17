@@ -150,8 +150,8 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements SecuPress_Sca
 		if ( $wpconfig_filepath ) {
 			foreach ( $constants as $constant => $val ) {
 				if ( defined( $constant ) && (bool) constant( $constant ) === $val ) {
-					$str_val = false === $val ? 'true' : 'false';
-					secupress_replace_content( $wpconfig_filepath, "#define\(.*('$constant'|\"$constant\"),(.*)#", "define('$constant', $str_val ); // Modified by SecuPress\n/*Commented by SecuPress*/ /* $0 */" );
+					$val = $val ? 'true' : 'false';
+					secupress_comment_constant( $constant, $wpconfig_filepath, false, $val );
 				}
 			}
 		}

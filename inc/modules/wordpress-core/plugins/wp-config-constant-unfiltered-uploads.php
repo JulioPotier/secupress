@@ -39,7 +39,7 @@ function secupress_unfiltered_uploads_activation() {
 	}
 
 	// Comment old value.
-	$replaced = secupress_replace_content( $wpconfig_filepath, "@^define\s*\(\s*('$constant'|\"$constant\"),(.*);\s*$@mU", '/*Commented by SecuPress*/ /* $0 */' );
+	$replaced = secupress_comment_constant( $constant, $wpconfig_filepath );
 
 	if ( $replaced ) {
 		// OK, we succeeded to comment the constant.
@@ -85,6 +85,6 @@ function secupress_unfiltered_uploads_deactivate() {
 		return;
 	}
 
-	// Remove the comments.
-	secupress_replace_content( $wpconfig_filepath, "@/\*Commented by SecuPress\*/ /\* *(define\s*\(\s*('$constant'|\"$constant\"),(.*);) *\*/@", '$1' );
+	// Uncomment the original constant definition.
+	secupress_uncomment_constant( $constant, $wpconfig_filepath );
 }
