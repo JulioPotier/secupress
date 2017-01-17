@@ -29,7 +29,7 @@ function secupress_unfiltered_uploads_activation() {
 		return;
 	}
 
-	$wpconfig_filepath = secupress_is_wpconfig_writtable();
+	$wpconfig_filepath = secupress_is_wpconfig_writable();
 
 	if ( ! $wpconfig_filepath ) {
 		/** Translators: 1 is a file name, 2 is a code. */
@@ -76,7 +76,7 @@ add_action( 'secupress.plugins.deactivation', 'secupress_unfiltered_uploads_deac
  */
 function secupress_unfiltered_uploads_deactivate() {
 	$constant          = 'ALLOW_UNFILTERED_UPLOADS';
-	$wpconfig_filepath = secupress_is_wpconfig_writtable();
+	$wpconfig_filepath = secupress_is_wpconfig_writable();
 
 	if ( ! $wpconfig_filepath ) {
 		/** Translators: 1 is a file name, 2 is a code. */

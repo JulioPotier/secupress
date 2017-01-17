@@ -278,7 +278,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 		}
 
 		// Other constants.
-		$wpconfig_filepath = secupress_is_wpconfig_writtable();
+		$wpconfig_filepath = secupress_is_wpconfig_writable();
 
 		if ( ! $wpconfig_filepath ) {
 			// "bad"

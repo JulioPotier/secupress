@@ -31,7 +31,7 @@ function secupress_disallow_file_edit_activation() {
 	}
 
 	$new_define        = "define( '$constant', true );";
-	$wpconfig_filepath = secupress_is_wpconfig_writtable();
+	$wpconfig_filepath = secupress_is_wpconfig_writable();
 
 	if ( ! $wpconfig_filepath ) {
 		/** Translators: 1 is a file name, 2 is a code. */
@@ -102,7 +102,7 @@ add_action( 'secupress.plugins.deactivation', 'secupress_disallow_file_edit_deac
 function secupress_disallow_file_edit_deactivate() {
 	$constant          = 'DISALLOW_FILE_EDIT';
 	$marker            = 'file_edit';
-	$wpconfig_filepath = secupress_is_wpconfig_writtable();
+	$wpconfig_filepath = secupress_is_wpconfig_writable();
 
 	if ( ! $wpconfig_filepath ) {
 		/** Translators: 1 is a file name, 2 is a code. */

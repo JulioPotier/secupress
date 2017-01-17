@@ -430,7 +430,7 @@ function secupress_add_salt_muplugin() {
 	secupress_delete_site_transient( 'secupress-add-salt-muplugin' );
 
 	// Make sure we find the `wp-config.php` file.
-	$wpconfig_filepath = secupress_is_wpconfig_writtable();
+	$wpconfig_filepath = secupress_is_wpconfig_writable();
 
 	if ( ! $wpconfig_filepath ) {
 		return;

@@ -31,7 +31,7 @@ function secupress_unfiltered_html_activation() {
 	}
 
 	$new_define        = "define( '$constant', true );";
-	$wpconfig_filepath = secupress_is_wpconfig_writtable();
+	$wpconfig_filepath = secupress_is_wpconfig_writable();
 
 	if ( ! $wpconfig_filepath ) {
 		/** Translators: 1 is a file name, 2 is a code. */
@@ -102,7 +102,7 @@ add_action( 'secupress.plugins.deactivation', 'secupress_unfiltered_html_deactiv
 function secupress_unfiltered_html_deactivate() {
 	$constant          = 'DISALLOW_UNFILTERED_HTML';
 	$marker            = 'unfiltered_html';
-	$wpconfig_filepath = secupress_is_wpconfig_writtable();
+	$wpconfig_filepath = secupress_is_wpconfig_writable();
 
 	if ( ! $wpconfig_filepath ) {
 		/** Translators: 1 is a file name, 2 is a code. */

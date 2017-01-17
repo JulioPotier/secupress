@@ -185,7 +185,7 @@ function secupress_warning_wp_config_permissions() {
 		return;
 	}
 
-	if ( ! current_user_can( secupress_get_capability() ) || secupress_is_wpconfig_writtable() ) {
+	if ( ! current_user_can( secupress_get_capability() ) || secupress_is_wpconfig_writable() ) {
 		return;
 	}
 
