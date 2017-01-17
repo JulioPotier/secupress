@@ -241,7 +241,7 @@ function secupress_comment_constant( $constant, $wpconfig_filepath = false, $mar
 		$prefix = "define( '$constant', $new_value ); // Modified by SecuPress.\n";
 	}
 
-	$replaced2 = secupress_replace_content( $wpconfig_filepath, "@^\s*define\s*\(\s*(?:'{$constant}'|\"{$constant}\")\s*,(?:.*);\s*$@mU", $prefix . '/** Commented by SecuPress. */ /** $0 */' );
+	$replaced2 = secupress_replace_content( $wpconfig_filepath, "@^[\t ]*define\s*\(\s*(?:'{$constant}'|\"{$constant}\")\s*,(?:.*);\s*$@mU", $prefix . '/** Commented by SecuPress. */ /** $0 */' );
 
 	return $replaced1 || $replaced2;
 }
