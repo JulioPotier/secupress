@@ -303,7 +303,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 				case '!empty':
 					if ( is_null( $check ) ) {
 						$errorlogfile = dirname( ini_get( 'error_log' ) ) . '/wp_errorlogfile.log';
-						$new_content .= "define( '{$constant}', '{$errorlogfile}' ); // Added by SecuPress\n";
+						$new_content .= "define( '{$constant}', '{$errorlogfile}' ); // Added by SecuPress.\n";
 					}
 					break;
 				case 1:
@@ -316,11 +316,11 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 						}
 
 						if ( defined( $constant ) ) {
-							$replaced = secupress_replace_content( $wpconfig_filepath, "@^define\s*\(\s*('$constant'|\"$constant\"),(.*);\s*$@mU", '/*Commented by SecuPress*/ /* $0 */' );
+							$replaced = secupress_comment_constant( $constant, $wpconfig_filepath );
 						}
 
 						if ( ! defined( $constant ) || $replaced ) {
-							$new_content .= "define( '{$constant}', TRUE ); // Added by SecuPress\n";
+							$new_content .= "define( '{$constant}', true ); // Added by SecuPress.\n";
 						} else {
 							$not_fixed[] = sprintf( '<code>%s</code>', $constant );
 						}
@@ -336,11 +336,11 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 						}
 
 						if ( defined( $constant ) ) {
-							$replaced = secupress_replace_content( $wpconfig_filepath, "@^define\s*\(\s*('$constant'|\"$constant\"),(.*);\s*$@mU", '/*Commented by SecuPress*/ /* $0 */' );
+							$replaced = secupress_comment_constant( $constant, $wpconfig_filepath );
 						}
 
 						if ( ! defined( $constant ) || $replaced || 'WP_DEBUG_DISPLAY' === $constant ) {
-							$new_content .= "define( '{$constant}', FALSE ); // Added by SecuPress\n";
+							$new_content .= "define( '{$constant}', false ); // Added by SecuPress.\n";
 						} else {
 							$not_fixed[] = sprintf( '<code>%s</code>', $constant );
 						}
