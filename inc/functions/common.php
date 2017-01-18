@@ -205,7 +205,7 @@ function secupress_get_scanner_counts( $type = '' ) {
 		$counts['grade'] = 'I';
 	} elseif ( $counts['percent'] >= 10 ) { // 6 less
 		$counts['grade'] = 'J';
-	} elseif ( 0 === $counts['percent'] ) { // (ᕗ‶⇀︹↼)ᕗノ彡┻━┻
+	} elseif ( 0 === $counts['percent'] ) { // (ᕗ‶⇀︹↼)ᕗ彡┻━┻
 		$counts['grade'] = '∅';
 	} else {
 		$counts['grade'] = 'K'; // < 10 %
@@ -254,7 +254,7 @@ function secupress_get_scanner_counts( $type = '' ) {
 			$counts['text'] = __( 'Very very, really very bad.', 'secupress' );
 			break;
 		case '∅':
-			$counts['text'] = '(ᕗ‶⇀︹↼)ᕗノ彡┻━┻'; // Easter egg if you got 0% (how is this possible oO).
+			$counts['text'] = '(ᕗ‶⇀︹↼)ᕗ彡┻━┻'; // Easter egg if you got 0% (how is this possible oO).
 			break;
 	}
 
