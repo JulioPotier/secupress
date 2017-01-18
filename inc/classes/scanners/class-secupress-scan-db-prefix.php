@@ -312,8 +312,8 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 		// `wp-config.php` file.
 		secupress_replace_content(
 			$wpconfig_filepath,
-			'#\$table_prefix\s*=\s*(\'' . $old_prefix . '\'|"' . $old_prefix . '");.*#',
-			'$table_prefix = \'' . $new_prefix . '\'; // Modified by SecuPress' . "\n" . '/*Commented by SecuPress*/ // $0'
+			'@^[\t ]*?\$table_prefix\s*=\s*(?:\'' . $old_prefix . '\'|"' . $old_prefix . '")\s*;.*?$@mU',
+			'$table_prefix = \'' . $new_prefix . "'; // Modified by SecuPress.\n/** Commented by SecuPress. */ // $0"
 		);
 
 		$this->add_fix_message( 0 );
