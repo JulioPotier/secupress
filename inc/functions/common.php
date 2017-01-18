@@ -525,9 +525,41 @@ function secupress_get_capability( $force_mono = false ) {
 function secupress_user_agent( $user_agent ) {
 	$bonus  = secupress_is_white_label()        ? '*' : '';
 	$bonus .= secupress_get_option( 'do_beta' ) ? '+' : '';
-	$new_ua = sprintf( '%s;SecuPress|%s%s|%s|;', $user_agent, SECUPRESS_VERSION, $bonus, esc_url( home_url() ) );
+	$new_ua = sprintf( '%s;SecuPress|%s%s|%s|;', $user_agent, SECUPRESS_VERSION, $bonus, esc_url( secupress_get_main_url() ) );
 
 	return $new_ua;
+}
+
+
+/**
+ * Get the site main URL. Will be the same for any site of a network, and for any lang of a multilang site.
+ *
+ * @since 1.2.2
+ * @author Grégory Viguier
+ *
+ * @return (string) The URL.
+ */
+function secupress_get_main_url() {
+	if ( ! is_multisite() ) {
+		return get_option( 'siteurl' );
+	}
+
+	if ( function_exists( 'get_network' ) ) {
+		$current_network = get_network();
+	} elseif ( function_exists( 'get_current_site' ) ) {
+		$current_network = get_current_site();
+	} else {
+		return get_option( 'siteurl' );
+	}
+
+	if ( ! $current_network ) {
+		return get_option( 'siteurl' );
+	}
+
+	$scheme   = is_ssl() ? 'https' : 'http';
+	$main_url = set_url_scheme( 'http://' . $current_network->domain . $current_network->path, $scheme );
+
+	return untrailingslashit( $main_url );
 }
 
 
