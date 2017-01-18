@@ -540,16 +540,12 @@ function secupress_user_agent( $user_agent ) {
  * @return (string) The URL.
  */
 function secupress_get_main_url() {
-	if ( ! is_multisite() ) {
-		return get_option( 'siteurl' );
-	}
+	$current_network = false;
 
 	if ( function_exists( 'get_network' ) ) {
 		$current_network = get_network();
 	} elseif ( function_exists( 'get_current_site' ) ) {
 		$current_network = get_current_site();
-	} else {
-		return get_option( 'siteurl' );
 	}
 
 	if ( ! $current_network ) {
