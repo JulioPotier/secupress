@@ -205,6 +205,80 @@ function secupress_is_wpconfig_writable() {
 
 
 /**
+ * Comment a constant definition in the `wp-config.php` file (or any other file).
+ * If `$marker` is provided, our definition will be also removed.
+ *
+ * @since 1.2.2
+ * @author Grégory Viguier
+ *
+ * @param (string) $constant          Name of the constant.
+ * @param (string) $wpconfig_filepath Path to the `wp-config.php` file.
+ * @param (string) $marker            Name of the marker used to define the constant ourself.
+ * @param (string) $new_value         We can define a new value for the constant: a new difinition will be prepended to the commented line.
+ *                                    Warning: if the new value of this constant is a string, wrap it with `'` characters: '\'my_value\''.
+ *
+ * @return (bool) True if at least one of the two actions succeeds. False otherwise.
+ */
+function secupress_comment_constant( $constant, $wpconfig_filepath = false, $marker = false, $new_value = false ) {
+	$replaced1 = false;
+	$prefix    = '';
+
+	if ( ! $wpconfig_filepath ) {
+		$wpconfig_filepath = secupress_is_wpconfig_writtable();
+
+		if ( ! $wpconfig_filepath ) {
+			return  false;
+		}
+	}
+
+	if ( $marker ) {
+		// Remove the constant we could have previously set.
+		$replaced1 = secupress_replace_content( $wpconfig_filepath, "@[\t ]*?# BEGIN SecuPress {$marker}\s.*# END SecuPress\s*?@sU", '' );
+	}
+
+	// Comment old value.
+	if ( is_string( $new_value ) ) {
+		$prefix = "define( '$constant', $new_value ); // Modified by SecuPress.\n";
+	}
+
+	$replaced2 = secupress_replace_content( $wpconfig_filepath, "@^[\t ]*define\s*\(\s*(?:'{$constant}'|\"{$constant}\")\s*,(?:.*);\s*$@mU", $prefix . '/** Commented by SecuPress. */ /** $0 */' );
+
+	return $replaced1 || $replaced2;
+}
+
+
+/**
+ * Uncomment a constant definition in the `wp-config.php` file (or any other file).
+ * If `$marker` is provided, our definition will be also removed.
+ *
+ * @since 1.2.2
+ * @author Grégory Viguier
+ *
+ * @param (string) $constant          Name of the constant.
+ * @param (string) $wpconfig_filepath Path to the `wp-config.php` file.
+ * @param (string) $marker            Name of the marker used to define the constant ourself.
+ */
+function secupress_uncomment_constant( $constant, $wpconfig_filepath = false, $marker = false ) {
+	if ( ! $wpconfig_filepath ) {
+		$wpconfig_filepath = secupress_is_wpconfig_writtable();
+
+		if ( ! $wpconfig_filepath ) {
+			return  false;
+		}
+	}
+
+	if ( $marker ) {
+		// Remove the constant we could have previously set.
+		secupress_replace_content( $wpconfig_filepath, "@[\t ]*?# BEGIN SecuPress {$marker}\s.*# END SecuPress\s*?@sU", '' );
+	}
+
+	// Uncomment old value.
+	$constant = "(define\s*\(\s*(?:'$constant'|\"$constant\")\s*,(?:.*);)";
+	secupress_replace_content( $wpconfig_filepath, "@^[\t ]*/\*+\s*Commented by SecuPress\.*\s*\*/\s*?(?:/\*+\s*{$constant}\s*\*/|/+\s*{$constant})\s*$@mU", '$1' );
+}
+
+
+/**
  * Get plugins dir path.
  *
  * @since 1.0

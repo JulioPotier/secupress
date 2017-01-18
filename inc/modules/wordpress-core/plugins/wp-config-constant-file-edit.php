@@ -41,13 +41,10 @@ function secupress_disallow_file_edit_activation() {
 	}
 
 	if ( defined( $constant ) ) {
-		// Remove the constant we could have previously set (and the user could have modified).
-		$replaced1 = secupress_replace_content( $wpconfig_filepath, "@# BEGIN SecuPress $marker\ndefine\( '$constant',.*# END SecuPress\s*?@sU", '' );
+		// Remove the constant we could have previously set, and comment old value.
+		$replaced = secupress_comment_constant( $constant, $wpconfig_filepath, $marker );
 
-		// Comment old value.
-		$replaced2 = secupress_replace_content( $wpconfig_filepath, "@^define\s*\(\s*('$constant'|\"$constant\"),(.*);\s*$@mU", '/*Commented by SecuPress*/ /* $0 */' );
-
-		if ( ! $replaced1 && ! $replaced2 ) {
+		if ( ! $replaced ) {
 			// The constant couldn't be removed or commented: display an error message.
 			if ( true === $check ) {
 				$value = 'true';
@@ -111,9 +108,6 @@ function secupress_disallow_file_edit_deactivate() {
 		return;
 	}
 
-	// Remove the constant we could have previously set.
-	secupress_replace_content( $wpconfig_filepath, "@# BEGIN SecuPress $marker\ndefine\( '$constant',.*# END SecuPress\s*?@sU", '' );
-
-	// Remove the comments.
-	secupress_replace_content( $wpconfig_filepath, "@/\*Commented by SecuPress\*/ /\* *(define\s*\(\s*('$constant'|\"$constant\"),(.*);) *\*/@", '$1' );
+	// Remove the constant we could have previously set, and uncomment the original constant definition.
+	secupress_uncomment_constant( $constant, $wpconfig_filepath, $marker );
 }
