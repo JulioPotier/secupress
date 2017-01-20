@@ -379,9 +379,9 @@ function secupress_die( $message = '', $title = '', $args = array() ) {
 function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 
 	if ( is_int( $args ) ) {
-		$args = array( 'code' => $args );
+		$args = array( 'code' => (int) $args ); // Cast to prevent recursion.
 	} elseif ( is_string( $args ) ) {
-		$args = array( 'content' => $args );
+		$args = array( 'content' => (string) $args ); // Cast to prevent recursion.
 	}
 
 	$ip   = secupress_get_ip();
