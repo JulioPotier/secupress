@@ -51,7 +51,7 @@ function secupress_upgrader() {
 		do_action( 'secupress.upgrade', $new_version, $actual_version );
 	}
 
-	if ( defined( 'SECUPRESS_PRO_VERSION' ) ) {
+	if ( defined( 'SECUPRESS_PRO_VERSION' ) && version_compare( SECUPRESS_VERSION, SECUPRESS_PRO_SECUPRESS_MIN ) >= 0 ) {
 		$actual_pro_version = secupress_get_option( 'pro_version' );
 
 		// You can hook the upgrader to trigger any action when SecuPress Pro is upgraded.
@@ -98,12 +98,16 @@ function secupress_upgrader() {
 		// Do not use secupress_get_option() here.
 		$options = get_site_option( SECUPRESS_SETTINGS_SLUG );
 		$options = is_array( $options ) ? $options : array();
+
+		// Free version.
 		$options['version'] = SECUPRESS_VERSION;
 
-		if ( defined( 'SECUPRESS_PRO_VERSION' ) ) {
+		// Pro version.
+		if ( did_action( 'secupress_pro.first_install' ) || did_action( 'secupress_pro.upgrade' ) ) {
 			$options['pro_version'] = SECUPRESS_PRO_VERSION;
 		}
 
+		// First install.
 		if ( did_action( 'secupress.first_install' ) ) {
 			$options['hash_key']     = secupress_generate_key( 64 );
 			$options['install_time'] = time();
