@@ -3,7 +3,7 @@ Contributors: wp_media, SecuPress, juliobox, GregLone
 Tags: security, spam, backup, schedule, firewall, sensitive data, antivirus, logs, alerts
 Requires at least: 3.7
 Tested up to: 4.7.1
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -201,9 +201,20 @@ It's important to delete all other security plugins before activating SecuPress.
 
 == Changelog ==
 
+= 1.2.2 =
+
+* 23 jan 2017
+* Fix #355: fixed a "recursion" that caused some scans to return a "bad" status while the corresponding protections were working ¯\(°_o)/¯
+* Fix #351: fixed license invalidation on multisite or multilingual sites.
+* Fix #346: fixed a PHP warning about `vsprintf()` in the scanner page.
+* Fix #345: don't manipulate headers if they have been already sent.
+* Fix #313: fixed one of our easter eggs. 😬
+* Fix #256: in the `wp-config.php` file, don't comment a constant that is already commented or the sky will fall.
+* Fix #46, #154, #328, #348: fixed the whole chmod scan. Some fixes made in version 1.0.3 dramagically disappeared at some point, we bring them back: chmod values are correct again, test for the `web.config` file is back (if applicable). In the scan result, the list of files/folders were incomplete. In the scan result, folders are not called files anymore. Test for `.htaccess` and `web.config` existence instead of testing for Apache / IIS7.
+
 = 1.2.1 =
 
-* 11 jan 2017
+* 18 jan 2017
 * Happy new year! 🎉
 * Bugfix #342: in the Malware Scan module, the "Save All Changes" button under the Directory Index option was disabled.
 * Improvement #336: prevent a rare *PHP warning: `array_count_values()` can only count string and integer values!* that could mess with the scan results.
