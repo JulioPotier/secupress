@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2017-01-11 15:53+0100\n"
-"PO-Revision-Date: 2017-01-11 15:56+0100\n"
+"POT-Creation-Date: 2017-01-23 15:25+0100\n"
+"PO-Revision-Date: 2017-01-23 15:33+0100\n"
 "Last-Translator: WP Media <contact@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -107,8 +107,8 @@ msgstr ""
 #: inc/admin/notices.php:298 inc/admin/notices.php:384
 #: inc/classes/common/class-secupress-log.php:289
 #: inc/classes/common/class-secupress-log.php:294
-#: inc/classes/common/class-secupress-logs.php:1386
-#: inc/classes/common/class-secupress-logs.php:1390
+#: inc/classes/common/class-secupress-logs.php:1388
+#: inc/classes/common/class-secupress-logs.php:1392
 #: inc/modules/logs/plugins/inc/php/404-logs/class-secupress-404-log.php:65
 #: inc/modules/logs/plugins/inc/php/404-logs/class-secupress-404-log.php:66
 #: inc/modules/sensitive-data/plugins/bad-url-access.php:132
@@ -417,7 +417,7 @@ msgstr ""
 #: inc/classes/scanners/class-secupress-scan-bad-usernames.php:72
 #: inc/classes/scanners/class-secupress-scan-bad-vuln-plugins.php:110
 #: inc/classes/scanners/class-secupress-scan-block-long-url.php:81
-#: inc/classes/scanners/class-secupress-scan-chmods.php:69
+#: inc/classes/scanners/class-secupress-scan-chmods.php:116
 #: inc/classes/scanners/class-secupress-scan-core-update.php:77
 #: inc/classes/scanners/class-secupress-scan-db-prefix.php:70
 #: inc/classes/scanners/class-secupress-scan-directory-listing.php:99
@@ -432,13 +432,13 @@ msgstr ""
 #: inc/classes/scanners/class-secupress-scan-phpversion.php:78
 #: inc/classes/scanners/class-secupress-scan-plugins-update.php:77
 #: inc/classes/scanners/class-secupress-scan-readme-discloses.php:102
-#: inc/classes/scanners/class-secupress-scan-salt-keys.php:75
+#: inc/classes/scanners/class-secupress-scan-salt-keys.php:76
 #: inc/classes/scanners/class-secupress-scan-shellshock.php:85
 #: inc/classes/scanners/class-secupress-scan-sqli.php:72
 #: inc/classes/scanners/class-secupress-scan-subscription.php:91
 #: inc/classes/scanners/class-secupress-scan-themes-update.php:77
 #: inc/classes/scanners/class-secupress-scan-woocommerce-discloses.php:89
-#: inc/classes/scanners/class-secupress-scan-wp-config.php:146
+#: inc/classes/scanners/class-secupress-scan-wp-config.php:147
 #: inc/classes/scanners/class-secupress-scan-wpml-discloses.php:89
 msgid "Unknown message"
 msgstr "Message inconnu"
@@ -945,8 +945,8 @@ msgstr "Comment corriger ce problème"
 #: inc/admin/scanner-step-3.php:266 inc/admin/scanner-step-3.php:272
 #: inc/admin/scanner-step-3.php:295
 #: inc/classes/admin/class-secupress-admin-support.php:408
+#: inc/modules/wordpress-core/settings/wp-config.php:42
 #: inc/modules/wordpress-core/settings/wp-config.php:43
-#: inc/modules/wordpress-core/settings/wp-config.php:44
 msgid "Open in a new window."
 msgstr "Ouvrir dans une nouvelle fenêtre."
 
@@ -1686,18 +1686,18 @@ msgstr "Profil"
 
 #: inc/classes/common/class-secupress-log.php:283
 #: inc/classes/common/class-secupress-log.php:294
-#: inc/classes/common/class-secupress-logs.php:1381
-#: inc/classes/common/class-secupress-logs.php:1390
+#: inc/classes/common/class-secupress-logs.php:1383
+#: inc/classes/common/class-secupress-logs.php:1392
 msgid "IP"
 msgstr "IP"
 
 #: inc/classes/common/class-secupress-log.php:284
-#: inc/classes/common/class-secupress-logs.php:1382
+#: inc/classes/common/class-secupress-logs.php:1384
 msgid "ID"
 msgstr "ID"
 
 #: inc/classes/common/class-secupress-log.php:285
-#: inc/classes/common/class-secupress-logs.php:1383
+#: inc/classes/common/class-secupress-logs.php:1385
 msgid "Login"
 msgstr "Identifiant"
 
@@ -1957,35 +1957,35 @@ msgid_plural "Low <span class=\"count\">(%s)</span>"
 msgstr[0] "Basse <span class=\"count\">(%s)</span>"
 msgstr[1] "Basses <span class=\"count\">(%s)</span>"
 
-#: inc/classes/common/class-secupress-logs.php:978
-#: inc/classes/common/class-secupress-logs.php:993
+#: inc/classes/common/class-secupress-logs.php:980
+#: inc/classes/common/class-secupress-logs.php:995
 msgid "Logs deleted."
 msgstr "Journaux supprimés."
 
-#: inc/classes/common/class-secupress-logs.php:1012
-#: inc/classes/common/class-secupress-logs.php:1055
-#: inc/classes/common/class-secupress-logs.php:1100
-#: inc/classes/common/class-secupress-logs.php:1106
+#: inc/classes/common/class-secupress-logs.php:1014
+#: inc/classes/common/class-secupress-logs.php:1057
+#: inc/classes/common/class-secupress-logs.php:1102
+#: inc/classes/common/class-secupress-logs.php:1108
 #, php-format
 msgid "%s Log deleted."
 msgid_plural "%s Logs deleted."
 msgstr[0] "%s journal supprimé."
 msgstr[1] "%s journaux supprimés."
 
-#: inc/classes/common/class-secupress-logs.php:1017
-#: inc/classes/common/class-secupress-logs.php:1036
-#: inc/classes/common/class-secupress-logs.php:1061
-#: inc/classes/common/class-secupress-logs.php:1081
-#: inc/classes/common/class-secupress-logs.php:1112
-#: inc/classes/common/class-secupress-logs.php:1138
+#: inc/classes/common/class-secupress-logs.php:1019
+#: inc/classes/common/class-secupress-logs.php:1038
+#: inc/classes/common/class-secupress-logs.php:1063
+#: inc/classes/common/class-secupress-logs.php:1083
+#: inc/classes/common/class-secupress-logs.php:1114
+#: inc/classes/common/class-secupress-logs.php:1140
 #, php-format
 msgid "%s log permanently deleted."
 msgid_plural "%s logs permanently deleted."
 msgstr[0] "%s journal définitivement supprimé."
 msgstr[1] "%s journaux définitivement supprimés."
 
-#: inc/classes/common/class-secupress-logs.php:1164
-#: inc/classes/common/class-secupress-logs.php:1185
+#: inc/classes/common/class-secupress-logs.php:1166
+#: inc/classes/common/class-secupress-logs.php:1187
 msgid "Log permanently deleted."
 msgstr "Journal définitivement supprimé."
 
@@ -3147,12 +3147,12 @@ msgid ""
 "Your website should block <strong>excessively long string requests</strong>."
 msgstr "Votre site devrait bloquer les <strong>trop longues URLs</strong>."
 
-#: inc/classes/scanners/class-secupress-scan-chmods.php:41
+#: inc/classes/scanners/class-secupress-scan-chmods.php:70
 msgid ""
 "Check if your files and folders have the correct write permissions (chmod)."
 msgstr "Vérifie si vos fichiers et dossiers on les droits adéquat (chmod)."
 
-#: inc/classes/scanners/class-secupress-scan-chmods.php:42
+#: inc/classes/scanners/class-secupress-scan-chmods.php:71
 msgid ""
 "CHMOD is the way to give read/write/execute rights to a file or a folder. "
 "The <code>0777</code> value is bad and should be avoided. This test will "
@@ -3163,34 +3163,75 @@ msgstr ""
 "<code>0777</code> devrait être évité. Vérifions cela sur quelques fichiers "
 "et dossiers stratégiques."
 
-#: inc/classes/scanners/class-secupress-scan-chmods.php:43
+#: inc/classes/scanners/class-secupress-scan-chmods.php:72
 msgid "Change the files permissions to the recommended one for each."
 msgstr ""
 "Change les permissions sur les fichiers avec ce qui est recommandé pour "
 "chacun."
 
-#: inc/classes/scanners/class-secupress-scan-chmods.php:59
+#: inc/classes/scanners/class-secupress-scan-chmods.php:88
 msgid "All file permissions are good."
 msgstr "Tous les fichiers ont les droits corrects."
 
-#: inc/classes/scanners/class-secupress-scan-chmods.php:60
+#: inc/classes/scanners/class-secupress-scan-chmods.php:89
 msgid "All file permissions are fixed."
 msgstr "Tous les fichiers on vus leurs droits corrigés."
 
-#: inc/classes/scanners/class-secupress-scan-chmods.php:62
+#: inc/classes/scanners/class-secupress-scan-chmods.php:91
 #, php-format
 msgid "Unable to determine the file permissions of %s."
 msgstr "Impossible de déterminer les droits sur le fichier %s."
 
-#: inc/classes/scanners/class-secupress-scan-chmods.php:64
+#: inc/classes/scanners/class-secupress-scan-chmods.php:94
+#, php-format
+msgctxt "secupress"
+msgid ""
+"File permissions for the following folder <strong>should be %1$s</strong>: "
+"%2$s."
+msgid_plural ""
+"File permissions for the following folders <strong>should be %1$s</strong>: "
+"%2$s."
+msgstr[0] ""
+"Les droits sur le dossier suivant <strong>devraient être %1$s</"
+"strong>&nbsp;: %2$s."
+msgstr[1] ""
+"Les droits sur les dossiers suivants <strong>devraient être %1$s</"
+"strong>&nbsp;: %2$s."
+
+#: inc/classes/scanners/class-secupress-scan-chmods.php:100
+#, php-format
+msgctxt "secupress"
+msgid ""
+"File permissions for the following file <strong>should be %1$s</strong>: "
+"%2$s."
+msgid_plural ""
+"File permissions for the following files <strong>should be %1$s</strong>: "
+"%2$s."
+msgstr[0] ""
+"Les droits sur le fichier suivant <strong>devraient être %1$s</"
+"strong>&nbsp;: %2$s."
+msgstr[1] ""
+"Les droits sur les fichiers suivants <strong>devraient être %1$s</"
+"strong>&nbsp;: %2$s."
+
+#: inc/classes/scanners/class-secupress-scan-chmods.php:106
+#, php-format
+msgid "Unable to apply new permissions to the file or folder %s."
+msgid_plural "Unable to apply new permissions to the files or folders %s."
+msgstr[0] ""
+"Impossible d'appliquer les nouveaux droits sur le fichier ou dossier %s."
+msgstr[1] ""
+"Impossible d'appliquer les nouveaux droits sur les fichiers ou dossiers %s."
+
+#: inc/classes/scanners/class-secupress-scan-chmods.php:111
 #, php-format
 msgctxt "1: file path, 2: chmod required, 3: current chmod"
 msgid "File permissions for %1$s <strong>should be %2$s</strong>, NOT %3$s!"
 msgstr ""
-"Les droits sur le fichier %1$s <strong>devrait être %2$s</strong> et non pas "
-"%3$s&nbsp;!"
+"Les droits sur le fichier %1$s <strong>devraient être %2$s</strong> et non "
+"pas %3$s&nbsp;!"
 
-#: inc/classes/scanners/class-secupress-scan-chmods.php:65
+#: inc/classes/scanners/class-secupress-scan-chmods.php:112
 #, php-format
 msgid "Unable to apply new file permissions to %s."
 msgstr "Impossible d'appliquer les nouveaux droits sur le fichier %s."
@@ -3293,24 +3334,24 @@ msgid "Too many database tables found, so which ones to rename?!"
 msgstr ""
 "Trop de tables trouvées dans la base de données, lesquelles renommer&nbsp;?"
 
-#: inc/classes/scanners/class-secupress-scan-db-prefix.php:338
+#: inc/classes/scanners/class-secupress-scan-db-prefix.php:341
 msgid "Checked tables will be renamed:"
 msgstr "Les tables cochées seront renommées&nbsp;:"
 
-#: inc/classes/scanners/class-secupress-scan-db-prefix.php:339
+#: inc/classes/scanners/class-secupress-scan-db-prefix.php:342
 msgid "Renaming a table is irreversible."
 msgstr "Le renommage d'une table n'a pas de retour arrière possible."
 
-#: inc/classes/scanners/class-secupress-scan-db-prefix.php:344
+#: inc/classes/scanners/class-secupress-scan-db-prefix.php:347
 msgid "Unknown tables"
 msgstr "Tables inconnues"
 
-#: inc/classes/scanners/class-secupress-scan-db-prefix.php:352
+#: inc/classes/scanners/class-secupress-scan-db-prefix.php:355
 msgctxt "database table"
 msgid "None"
 msgstr "Aucune"
 
-#: inc/classes/scanners/class-secupress-scan-db-prefix.php:355
+#: inc/classes/scanners/class-secupress-scan-db-prefix.php:358
 msgid "WordPress tables (mandatory)"
 msgstr "Tables de WordPress (obligatoires)"
 
@@ -3495,8 +3536,8 @@ msgstr "Divulgation de la version de WordPress"
 
 #: inc/classes/scanners/class-secupress-scan-discloses.php:49
 #: inc/classes/scanners/class-secupress-scan-discloses.php:75
-#: inc/modules/discloses/plugins/no-x-powered-by.php:56
-#: inc/modules/discloses/plugins/no-x-powered-by.php:68
+#: inc/modules/discloses/plugins/no-x-powered-by.php:59
+#: inc/modules/discloses/plugins/no-x-powered-by.php:71
 msgid "PHP Version Disclosure"
 msgstr "Divulgation de la version de PHP"
 
@@ -4277,46 +4318,50 @@ msgstr ""
 msgid "All security keys are properly set."
 msgstr "Toutes les clés sont paramétrées correctement."
 
-#: inc/classes/scanners/class-secupress-scan-salt-keys.php:63
+#: inc/classes/scanners/class-secupress-scan-salt-keys.php:62
+msgid "The <code>wp-config.php</code> file could not be located."
+msgstr "Le fichier <code>wp-config.php</code> n'a pas pu être localisé."
+
+#: inc/classes/scanners/class-secupress-scan-salt-keys.php:64
 msgid "The following security keys are not set correctly:"
 msgstr "Les clés suivantes ne sont pas paramétrées correctement&nbsp;:"
 
-#: inc/classes/scanners/class-secupress-scan-salt-keys.php:64
+#: inc/classes/scanners/class-secupress-scan-salt-keys.php:65
 #, php-format
 msgid "<strong>&middot; Not Set:</strong> %s."
 msgid_plural "<strong>&middot; Not Set:</strong> %s."
 msgstr[0] "<strong>&middot; Non paramétrée&nbsp;:</strong> %s."
 msgstr[1] "<strong>&middot; Non paramétrées&nbsp;:</strong> %s."
 
-#: inc/classes/scanners/class-secupress-scan-salt-keys.php:65
+#: inc/classes/scanners/class-secupress-scan-salt-keys.php:66
 #, php-format
 msgid "<strong>&middot; Default Value:</strong> %s."
 msgid_plural "<strong>&middot; Default Value:</strong> %s."
 msgstr[0] "<strong>&middot; Valeur par défaut&nbsp;:</strong> %s."
 msgstr[1] "<strong>&middot; Valeur par défaut&nbsp;:</strong> %s."
 
-#: inc/classes/scanners/class-secupress-scan-salt-keys.php:66
+#: inc/classes/scanners/class-secupress-scan-salt-keys.php:67
 #, php-format
 msgid "<strong>&middot; Too Short:</strong> %s."
 msgid_plural "<strong>&middot; Too Short:</strong> %s."
 msgstr[0] "<strong>&middot; Trop courte&nbsp;:</strong> %s."
 msgstr[1] "<strong>&middot; Trop courtes&nbsp;:</strong> %s."
 
-#: inc/classes/scanners/class-secupress-scan-salt-keys.php:67
+#: inc/classes/scanners/class-secupress-scan-salt-keys.php:68
 #, php-format
 msgid "<strong>&middot; Hardcoded:</strong> %s."
 msgid_plural "<strong>&middot; Hardcoded:</strong> %s."
 msgstr[0] "<strong>&middot; Dans le fichier&nbsp;:</strong> %s."
 msgstr[1] "<strong>&middot; Dans le fichier&nbsp;:</strong> %s."
 
-#: inc/classes/scanners/class-secupress-scan-salt-keys.php:68
+#: inc/classes/scanners/class-secupress-scan-salt-keys.php:69
 #, php-format
 msgid "<strong>&middot; From DB:</strong> %s."
 msgid_plural "<strong>&middot; From DB:</strong> %s."
 msgstr[0] "<strong>&middot; En base de données&nbsp;:</strong> %s."
 msgstr[1] "<strong>&middot; En base de données&nbsp;:</strong> %s."
 
-#: inc/classes/scanners/class-secupress-scan-salt-keys.php:70
+#: inc/classes/scanners/class-secupress-scan-salt-keys.php:71
 msgid ""
 "The <code>wp-config.php</code> file is not writable, security keys could not "
 "be changed."
@@ -4324,7 +4369,7 @@ msgstr ""
 "Le fichier <code>wp-config.php</code> ne semble pas être en écriture, les "
 "clés de sécurité ne peuvent être changées."
 
-#: inc/classes/scanners/class-secupress-scan-salt-keys.php:71
+#: inc/classes/scanners/class-secupress-scan-salt-keys.php:72
 msgid ""
 "The security keys fix has been applied but there is still keys that can't be "
 "modified."
@@ -4688,7 +4733,7 @@ msgstr ""
 
 #. Translators: 1 is a file name, 2 is a constant name.
 #: inc/classes/scanners/class-secupress-scan-wp-config.php:95
-#: inc/classes/scanners/class-secupress-scan-wp-config.php:136
+#: inc/classes/scanners/class-secupress-scan-wp-config.php:137
 #, php-format
 msgid "In your %1$s file, the PHP constant %2$s should not be set."
 msgid_plural "In your %1$s file, the PHP constants %2$s should not be set."
@@ -4701,7 +4746,7 @@ msgstr[1] ""
 
 #. Translators: 1 is a file name, 2 is a constant name.
 #: inc/classes/scanners/class-secupress-scan-wp-config.php:101
-#: inc/classes/scanners/class-secupress-scan-wp-config.php:138
+#: inc/classes/scanners/class-secupress-scan-wp-config.php:139
 #, php-format
 msgid "In your %1$s file, the PHP constant %2$s should not be empty."
 msgid_plural "In your %1$s file, the PHP constants %2$s should not be empty."
@@ -4713,7 +4758,7 @@ msgstr[1] ""
 #. Translators: 1 is a file name, 2 is a constant name, 3 is a value.
 #: inc/classes/scanners/class-secupress-scan-wp-config.php:107
 #: inc/classes/scanners/class-secupress-scan-wp-config.php:113
-#: inc/classes/scanners/class-secupress-scan-wp-config.php:140
+#: inc/classes/scanners/class-secupress-scan-wp-config.php:141
 #, php-format
 msgid "In your %1$s file, the PHP constant %2$s should be set to %3$s."
 msgid_plural "In your %1$s file, the PHP constants %2$s should be set to %3$s."
@@ -4727,7 +4772,7 @@ msgstr[1] ""
 #. Translators: 1 is a file name, 2 is a constant name, 3 is a value.
 #: inc/classes/scanners/class-secupress-scan-wp-config.php:119
 #: inc/classes/scanners/class-secupress-scan-wp-config.php:125
-#: inc/classes/scanners/class-secupress-scan-wp-config.php:142
+#: inc/classes/scanners/class-secupress-scan-wp-config.php:143
 #, php-format
 msgid "In your %1$s file, the PHP constant %2$s should be set to %3$s or less."
 msgid_plural ""
@@ -4755,6 +4800,14 @@ msgstr ""
 "Impossible de créer un <a href=\"https://codex.wordpress.org/Must_Use_Plugins"
 "\" hreflang=\"en\">plugin automatique</a> pourtant la valeur par défaut de "
 "%s a besoin d'être modifiée."
+
+#: inc/classes/scanners/class-secupress-scan-wp-config.php:134
+msgid ""
+"The <code>wp-config.php</code> file is not writable, the constants could not "
+"be changed."
+msgstr ""
+"Le fichier <code>wp-config.php</code> ne semble pas être en écriture, les "
+"constantes ne peuvent être changées."
 
 #: inc/classes/scanners/class-secupress-scan.php:1031
 #, php-format
@@ -7670,23 +7723,23 @@ msgid_plural "Login failed, <strong>%d</strong> attempts left."
 msgstr[0] "Connexion impossible, <strong>%d</strong> tentative restante."
 msgstr[1] "Connexion impossible, <strong>%d</strong> tentatives restantes."
 
-#: inc/modules/users-login/plugins/login-captcha.php:23
+#: inc/modules/users-login/plugins/login-captcha.php:24
 msgid "Yes, I'm a human."
 msgstr "Oui, je suis un humain."
 
-#: inc/modules/users-login/plugins/login-captcha.php:26
+#: inc/modules/users-login/plugins/login-captcha.php:27
 msgid "Session expired, please try again."
 msgstr "Session expirée, merci de réessayer."
 
-#: inc/modules/users-login/plugins/login-captcha.php:55
+#: inc/modules/users-login/plugins/login-captcha.php:56
 msgid "Do not fill in this field."
 msgstr "Ne remplissez pas ce champ."
 
-#: inc/modules/users-login/plugins/login-captcha.php:116
+#: inc/modules/users-login/plugins/login-captcha.php:119
 msgid "<strong>ERROR</strong>: The human verification is incorrect."
 msgstr "<strong>ERREUR</strong>&nbsp;: La vérification Humaine est incorrecte."
 
-#: inc/modules/users-login/plugins/login-captcha.php:157
+#: inc/modules/users-login/plugins/login-captcha.php:160
 msgid "You need to enable JavaScript to send this form correctly."
 msgstr ""
 "Vous avez besoin d'activer le JavaScript pour que ce formulaire soit envoyé "
@@ -8041,12 +8094,12 @@ msgid "View options"
 msgstr "Options"
 
 #. Translators: 1 is a file name, 2 is a code.
-#: inc/modules/wordpress-core/plugins/wp-config-constant-file-edit.php:39
-#: inc/modules/wordpress-core/plugins/wp-config-constant-file-edit.php:111
-#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-html.php:39
-#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-html.php:111
-#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-uploads.php:37
-#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-uploads.php:85
+#: inc/modules/wordpress-core/plugins/wp-config-constant-file-edit.php:38
+#: inc/modules/wordpress-core/plugins/wp-config-constant-file-edit.php:106
+#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-html.php:38
+#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-html.php:106
+#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-uploads.php:36
+#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-uploads.php:83
 #, php-format
 msgid ""
 "The %1$s file is not writable. Please apply %2$s write rights to the file."
@@ -8055,8 +8108,8 @@ msgstr ""
 "ce fichier."
 
 #. Translators: 1 is the plugin name, 2 is a constant name, 3 is a file name, 4 and 5 are a small parts of code.
-#: inc/modules/wordpress-core/plugins/wp-config-constant-file-edit.php:62
-#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-html.php:62
+#: inc/modules/wordpress-core/plugins/wp-config-constant-file-edit.php:58
+#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-html.php:58
 #, php-format
 msgid ""
 "%1$s couldn't change the value of the constant %2$s in the %3$s file. Please "
@@ -8067,8 +8120,8 @@ msgstr ""
 "ça&nbsp;: %5$s"
 
 #. Translators: 1 is the plugin name, 2 is a constant name, 3 is a file name, 4 is a small part of code.
-#: inc/modules/wordpress-core/plugins/wp-config-constant-file-edit.php:85
-#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-html.php:85
+#: inc/modules/wordpress-core/plugins/wp-config-constant-file-edit.php:81
+#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-html.php:81
 #, php-format
 msgid ""
 "%1$s couldn't add the constant %2$s to the %3$s file. Please edit the file "
@@ -8078,7 +8131,7 @@ msgstr ""
 "d'éditer le fichier et d'ajouter ceci au début de celui-ci&nbsp;: %4$s."
 
 #. Translators: 1 is the plugin name, 2 is a constant name, 3 is a file name, 4 is a small part of code.
-#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-uploads.php:60
+#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-uploads.php:59
 #, php-format
 msgid ""
 "%1$s couldn't remove the constant %2$s from the %3$s file. Please edit the "
@@ -8155,11 +8208,11 @@ msgstr ""
 msgid "WordPress configuration file"
 msgstr "Fichier de configuration de WordPress"
 
-#: inc/modules/wordpress-core/settings/wp-config.php:16
+#: inc/modules/wordpress-core/settings/wp-config.php:15
 msgid "File edition"
 msgstr "Édition des fichiers"
 
-#: inc/modules/wordpress-core/settings/wp-config.php:17
+#: inc/modules/wordpress-core/settings/wp-config.php:16
 #, php-format
 msgid ""
 "By default Administrators are able to edit the plugins and themes' files "
@@ -8172,13 +8225,13 @@ msgstr ""
 "sécurisé et devrait être désactivé. En activant cette option, la constante "
 "%s sera ajoutée et l'éditeur des plugins et thèmes désactivé."
 
-#: inc/modules/wordpress-core/settings/wp-config.php:22
+#: inc/modules/wordpress-core/settings/wp-config.php:21
 msgid "Yes, disable the file editor"
 msgstr "Oui, désactiver l'éditeur de fichiers"
 
-#: inc/modules/wordpress-core/settings/wp-config.php:27
-#: inc/modules/wordpress-core/settings/wp-config.php:56
-#: inc/modules/wordpress-core/settings/wp-config.php:82
+#: inc/modules/wordpress-core/settings/wp-config.php:26
+#: inc/modules/wordpress-core/settings/wp-config.php:55
+#: inc/modules/wordpress-core/settings/wp-config.php:81
 msgid ""
 "Option unavailable, the protection is already set by another method than the "
 "plugin."
@@ -8186,12 +8239,12 @@ msgstr ""
 "Option non disponible, la protection est déjà activée par une autre méthode "
 "que le plugin."
 
-#: inc/modules/wordpress-core/settings/wp-config.php:37
+#: inc/modules/wordpress-core/settings/wp-config.php:36
 msgid "Unfiltered HTML in post editor"
 msgstr "HTML non filtré dans l'éditeur des articles"
 
 #. Translators: 1 and 2 are HTML tags, 3 is a link to "shortcodes", 4 is a link to "embeds", 5 is a PHP constant name.
-#: inc/modules/wordpress-core/settings/wp-config.php:40
+#: inc/modules/wordpress-core/settings/wp-config.php:39
 #, php-format
 msgid ""
 "By default Administrators are allowed to write any type of <abbr title="
@@ -8208,28 +8261,28 @@ msgstr ""
 "à la place. En activant cette option, la constante %5$s sera ajoutée et "
 "n'autorisera que les balises HTML correctes dans l'éditeur."
 
-#: inc/modules/wordpress-core/settings/wp-config.php:43
+#: inc/modules/wordpress-core/settings/wp-config.php:42
 msgid "https://codex.wordpress.org/Shortcode"
 msgstr "https://codex.wordpress.org/Shortcode"
 
-#: inc/modules/wordpress-core/settings/wp-config.php:43
+#: inc/modules/wordpress-core/settings/wp-config.php:42
 msgid "shortcodes"
 msgstr "shortcodes"
 
-#: inc/modules/wordpress-core/settings/wp-config.php:44
+#: inc/modules/wordpress-core/settings/wp-config.php:43
 msgid "https://codex.wordpress.org/Embeds"
 msgstr "https://codex.wordpress.org/Embeds"
 
-#: inc/modules/wordpress-core/settings/wp-config.php:44
+#: inc/modules/wordpress-core/settings/wp-config.php:43
 msgid "embeds"
 msgstr "embeds"
 
-#: inc/modules/wordpress-core/settings/wp-config.php:51
+#: inc/modules/wordpress-core/settings/wp-config.php:50
 msgid "Yes, filter HTML in post editor"
 msgstr "Oui, filtrer le HTML de l'éditeur des articles"
 
 #. Translators: 1 and 2 are HTML tags.
-#: inc/modules/wordpress-core/settings/wp-config.php:61
+#: inc/modules/wordpress-core/settings/wp-config.php:60
 #, php-format
 msgid ""
 "by activating this option, %1$s and %2$s tags won't be allowed int the post "
@@ -8238,11 +8291,11 @@ msgstr ""
 "en activant cette option, les balises %1$s et %2$s ne seront plus autorisées "
 "dans l'éditeur&nbsp;!"
 
-#: inc/modules/wordpress-core/settings/wp-config.php:71
+#: inc/modules/wordpress-core/settings/wp-config.php:70
 msgid "Unfiltered uploads"
 msgstr "Uploads non filtrés"
 
-#: inc/modules/wordpress-core/settings/wp-config.php:72
+#: inc/modules/wordpress-core/settings/wp-config.php:71
 #, php-format
 msgid ""
 "A constant (%s) may be defined to allow Administrators to upload any type of "
@@ -8255,12 +8308,12 @@ msgstr ""
 "et ne devrait pas être réalisé. En activant cette option, vous supprimez "
 "cette constante et n'autorisez que les types communs d'être uploadés."
 
-#: inc/modules/wordpress-core/settings/wp-config.php:77
+#: inc/modules/wordpress-core/settings/wp-config.php:76
 msgid "Yes, filter uploads"
 msgstr "Oui, filtrer les uploads"
 
 #. Translators: 1 is a file name, 2 is a code.
-#: inc/modules/wordpress-core/settings/wp-config.php:92
+#: inc/modules/wordpress-core/settings/wp-config.php:91
 #, php-format
 msgid ""
 "These options are disabled because the %1$s file is not writable. Please "
