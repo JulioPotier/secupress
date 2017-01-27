@@ -203,7 +203,7 @@ It's important to delete all other security plugins before activating SecuPress.
 
 = 1.2.2 =
 
-* 23 jan 2017
+* 27 jan 2017
 * Fix #355: fixed a "recursion" that caused some scans to return a "bad" status while the corresponding protections were working ¯\(°_o)/¯
 * Fix #351: fixed license invalidation on multisite or multilingual sites.
 * Fix #346: fixed a PHP warning about `vsprintf()` in the scanner page.
