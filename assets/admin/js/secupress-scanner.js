@@ -133,8 +133,7 @@ jQuery( document ).ready( function( $ ) {
 	// !"Select all" -------------------------------------------------------------------------------
 	(function( w, d, $, undefined ) {
 
-		var lastClicked = {},
-			jqPropHookChecked = $.propHooks.checked;
+		var jqPropHookChecked = $.propHooks.checked;
 
 		// Force `.prop()` to trigger a `change` event.
 		$.propHooks.checked = {
@@ -155,13 +154,11 @@ jQuery( document ).ready( function( $ ) {
 
 		// Check all checkboxes.
 		$( '.secupress-sg-content .secupress-row-check' ).on( 'click', function( e ) {
-			var $this     = $( this ),
-				unchecked = $this.closest( '.secupress-scans-group' ).find( '.secupress-row-check' ).filter( ':visible:enabled' ).not( ':checked' );
+			var $group     = $( this ).closest( '.secupress-scans-group' ),
+				allChecked = 0 === $group.find( '.secupress-row-check' ).filter( ':visible:enabled' ).not( ':checked' ).length;
 
 			// Toggle "check all" checkboxes.
-			$this.closest( '.secupress-scans-group' ).find( '.secupress-toggle-check' ).prop( 'checked', function() {
-				return ( 0 === unchecked.length );
-			} );
+			$group.find( '.secupress-toggle-check' ).prop( 'checked', allChecked );
 		} )
 		// If nothing is checked, change the "Fix all checked issues" button into "Ignore this step".
 		.on( 'change.secupress', function( e ) {
