@@ -9,6 +9,8 @@
 
 	<exclude-pattern>*.js</exclude-pattern>
 	<exclude-pattern>inc/modules/users-login/plugins/inc/php/base32.php</exclude-pattern>
+	<exclude-pattern>inc/classes/admin/class-secupress-admin-wp-async-request.php</exclude-pattern>
+	<exclude-pattern>inc/classes/admin/class-secupress-admin-wp-background-process.php</exclude-pattern>
 
 	<rule ref="WordPress">
 		<!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/ -->
