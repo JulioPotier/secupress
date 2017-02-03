@@ -972,7 +972,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 
 	// Function to resize textarea.
 	SPautoSized.resize = function( e, init ) {
-		var vlen, ewidth;
+		var vlen, ewidth, h, $textarea, $container;
 
 		// e = event or element?
 		e = e.target || e;
@@ -984,9 +984,10 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 			if ( hCheck && ( vlen < e.valLength || ewidth !== e.boxWidth ) ) {
 				e.style.height = '0px';
 			}
-			var h          = Math.max( e.expandMin, Math.min( e.scrollHeight, e.expandMax ) ),
-				$textarea  = $( e ),
-				$container = $textarea.closest('.secupress-textarea-container');
+
+			h          = Math.max( e.expandMin, Math.min( e.scrollHeight, e.expandMax ) );
+			$textarea  = $( e );
+			$container = $textarea.closest( '.secupress-textarea-container' );
 
 			e.style.overflow = 'hidden';
 			e.style.height = h + 'px';
@@ -1113,7 +1114,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 
 } )(jQuery);
 
-// Auto Expand Boxed Groups ======================================================================
+// Auto Expand Boxed Groups ========================================================================
 (function($) {
 	$( 'fieldset.secupress-boxed-group' ).each( function() {
 		var $box      = $( this ),
@@ -1146,7 +1147,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	} );
 } )(jQuery);
 
-// Pricing switching ============================================================================
+// Pricing switching ===============================================================================
 (function($) {
 	var $buttons = $( '.secupress-tab-content-get-pro .secupress-inline-options button' );
 
@@ -1165,7 +1166,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	} );
 } )(jQuery);
 
-// Malware Scan Status ============================================================================
+// Malware Scan Status =============================================================================
 (function($, d, w, undefined) {
 	if ( undefined !== SecuPressi18nModules && 'on' === SecuPressi18nModules.malwareScanStatus ) {
 
@@ -1182,7 +1183,74 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 	}
 } )(jQuery, document, window);
 
-// Checked checkbox class ========================================================================
+
+// Malware Scan "Select all" =======================================================================
+(function( w, d, $, undefined ) {
+
+	var lastClicked = {},
+		jqPropHookChecked = $.propHooks.checked;
+
+	// Force `.prop()` to trigger a `change` event.
+	$.propHooks.checked = {
+		set: function( elem, value, name ) {
+			var ret;
+
+			if ( undefined === jqPropHookChecked ) {
+				ret = ( elem[ name ] = value );
+			} else {
+				ret = jqPropHookChecked( elem, value, name );
+			}
+
+			$( elem ).trigger( 'change.secupress' );
+
+			return ret;
+		}
+	};
+
+	// Check all checkboxes.
+	$( '.secupress-check-group .secupress-row-check' ).on( 'click', function( e ) {
+		var $group     = $( this ).closest( '.secupress-check-group' ),
+			allChecked = 0 === $group.find( '.secupress-row-check' ).filter( ':visible:enabled' ).not( ':checked' ).length;
+
+		// Toggle "check all" checkboxes.
+		$group.find( '.secupress-toggle-check' ).prop( 'checked', allChecked );
+	} )
+	.first().trigger( 'change.secupress' );
+
+	$( '.secupress-check-group .secupress-toggle-check' ).on( 'click.wp-toggle-checkboxes', function( e ) {
+		var $this          = $( this ),
+			$wrap          = $this.closest( '.secupress-check-group' ),
+			controlChecked = $this.prop( 'checked' ),
+			toggle         = e.shiftKey || $this.data( 'wp-toggle' );
+
+		$wrap.find( '.secupress-toggle-check' )
+			.prop( 'checked', function() {
+				var $this = $( this );
+
+				if ( $this.is( ':hidden,:disabled' ) ) {
+					return false;
+				}
+
+				if ( toggle ) {
+					return ! $this.prop( 'checked' );
+				}
+
+				return controlChecked ? true : false;
+			} );
+
+		$wrap.find( '.secupress-row-check' )
+			.prop( 'checked', function() {
+				if ( toggle ) {
+					return false;
+				}
+
+				return controlChecked ? true : false;
+			} );
+	} );
+
+} )(window, document, jQuery);
+
+// Checked checkbox class ==========================================================================
 (function($, d, w, undefined) {
 	$( '.secupress-fieldset-item-checkboxes' ).each( function() {
 		var $checkbox = $(this).find('input'),
