@@ -12,6 +12,9 @@ register_activation_hook( SECUPRESS_FILE, 'secupress_activation' );
  * @since 1.0
  */
 function secupress_activation() {
+	// Make sure we have our toys.
+	secupress_load_functions();
+
 	/**
 	 * Fires on SecuPress activation.
 	 *
@@ -91,7 +94,7 @@ function secupress_maybe_write_rules_on_activation() {
  * @since 1.1.4
  * @author Grégory Viguier
  *
- * @param $rules (array) An array of rules to write.
+ * @param (array) $rules An array of rules to write.
  */
 function secupress_write_rules_on_activation( $rules ) {
 	global $is_apache, $is_iis7;
@@ -105,15 +108,15 @@ function secupress_write_rules_on_activation( $rules ) {
 
 	// Apache.
 	if ( $is_apache ) {
-		$wp_filesystem = secupress_get_filesystem();
-		$home_path     = secupress_get_home_path();
-		$file_path     = $home_path . '.htaccess';
-		$file_content  = '';
-		$new_content   = '';
+		$filesystem   = secupress_get_filesystem();
+		$home_path    = secupress_get_home_path();
+		$file_path    = $home_path . '.htaccess';
+		$file_content = '';
+		$new_content  = '';
 
 		// Get the whole content of the file.
-		if ( file_exists( $file_path ) && is_writable( $file_path ) ) {
-			$file_content = (string) $wp_filesystem->get_contents( $file_path );
+		if ( $filesystem->exists( $file_path ) && $filesystem->is_writable( $file_path ) ) {
+			$file_content = (string) $filesystem->get_contents( $file_path );
 			/**
 			 * Filter the `.htaccess` file content before add new rules.
 			 *
@@ -146,19 +149,19 @@ function secupress_write_rules_on_activation( $rules ) {
 		$file_content = $new_content . $file_content;
 
 		// Save the file.
-		$wp_filesystem->put_contents( $file_path, $file_content, FS_CHMOD_FILE );
+		$filesystem->put_contents( $file_path, $file_content, FS_CHMOD_FILE );
 		return;
 	}
 
 	// IIS7.
 	if ( $is_iis7 ) {
-		$file_path = $home_path . 'web.config';
+		$filesystem = secupress_get_filesystem();
+		$home_path  = secupress_get_home_path();
+		$file_path  = $home_path . 'web.config';
 
 		// If configuration file does not exist then we create one.
-		if ( ! file_exists( $file_path ) ) {
-			$fp = fopen( $file_path, 'w' );
-			fwrite( $fp, '<configuration/>' );
-			fclose( $fp );
+		if ( ! $filesystem->exists( $file_path ) ) {
+			$filesystem->put_contents( $file_path, '<configuration/>' );
 		}
 
 		$doc = new DOMDocument();
@@ -249,6 +252,8 @@ function secupress_write_rules_on_activation( $rules ) {
 		}
 
 		// Save the file.
+		require_once( ABSPATH . 'wp-admin/includes/misc.php' );
+
 		$doc->encoding     = 'UTF-8';
 		$doc->formatOutput = true;
 		saveDomDocument( $doc, $file_path );
@@ -272,6 +277,9 @@ register_deactivation_hook( SECUPRESS_FILE, 'secupress_deactivation' );
  * @since 1.0
  */
 function secupress_deactivation() {
+	// Make sure we have our toys.
+	secupress_load_functions();
+
 	// While the plugin is deactivated, some sites may activate or deactivate other plugins and themes, or change their default user role.
 	if ( is_multisite() ) {
 		delete_site_option( 'secupress_active_plugins' );
@@ -311,15 +319,16 @@ function secupress_maybe_remove_rules_on_deactivation() {
 
 	// Apache.
 	if ( $is_apache ) {
-		$home_path = secupress_get_home_path();
-		$file_path = $home_path . '.htaccess';
+		$home_path  = secupress_get_home_path();
+		$file_path  = $home_path . '.htaccess';
+		$filesystem = secupress_get_filesystem();
 
-		if ( ! file_exists( $file_path ) ) {
+		if ( ! $filesystem->exists( $file_path ) ) {
 			// RLY?
 			return;
 		}
 
-		if ( ! is_writable( $file_path ) ) {
+		if ( ! $filesystem->is_writable( $file_path ) ) {
 			// If the file is not writable, display a message.
 			$message  = sprintf( __( '%s:', 'secupress' ), SECUPRESS_PLUGIN_NAME ) . ' ';
 			$message .= sprintf(
@@ -334,7 +343,7 @@ function secupress_maybe_remove_rules_on_deactivation() {
 		}
 
 		// Get the whole content of the file.
-		$file_content = file_get_contents( $file_path );
+		$file_content = $filesystem->get_contents( $file_path );
 
 		if ( ! $file_content ) {
 			// Nothing? OK.
@@ -346,17 +355,17 @@ function secupress_maybe_remove_rules_on_deactivation() {
 		$file_content = preg_replace( $pattern, '', $file_content );
 
 		// Save the file.
-		$wp_filesystem = secupress_get_filesystem();
-		$wp_filesystem->put_contents( $file_path, $file_content, FS_CHMOD_FILE );
+		$filesystem->put_contents( $file_path, $file_content, FS_CHMOD_FILE );
 		return;
 	}
 
 	// IIS7.
 	if ( $is_iis7 ) {
-		$home_path = secupress_get_home_path();
-		$file_path = $home_path . 'web.config';
+		$home_path  = secupress_get_home_path();
+		$file_path  = $home_path . 'web.config';
+		$filesystem = secupress_get_filesystem();
 
-		if ( ! file_exists( $file_path ) ) {
+		if ( ! $filesystem->exists( $file_path ) ) {
 			// RLY?
 			return;
 		}
@@ -420,7 +429,6 @@ function secupress_maybe_remove_rules_on_deactivation() {
  * @param (string) $message   The message to display.
  */
 function secupress_create_deactivation_notice_muplugin( $plugin_id, $message ) {
-	global $wp_filesystem;
 	static $authenticated;
 
 	if ( ! function_exists( 'wp_validate_auth_cookie' ) ) {
@@ -431,29 +439,15 @@ function secupress_create_deactivation_notice_muplugin( $plugin_id, $message ) {
 		$authenticated = wp_validate_auth_cookie();
 	}
 
-	$filename = WPMU_PLUGIN_DIR . "/_secupress_deactivation-notice-{$plugin_id}.php";
+	$filesystem = secupress_get_filesystem();
+	$filename   = WPMU_PLUGIN_DIR . "/_secupress_deactivation-notice-{$plugin_id}.php";
 
-	if ( ! $authenticated || file_exists( $filename ) ) {
+	if ( ! $authenticated || $filesystem->exists( $filename ) ) {
 		return;
 	}
 
-	// Filesystem.
-	if ( ! $wp_filesystem ) {
-		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php' );
-		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php' );
-
-		$wp_filesystem = new WP_Filesystem_Direct( new StdClass() );
-	}
-
-	if ( ! defined( 'FS_CHMOD_DIR' ) ) {
-		define( 'FS_CHMOD_DIR', ( fileperms( ABSPATH ) & 0777 | 0755 ) );
-	}
-	if ( ! defined( 'FS_CHMOD_FILE' ) ) {
-		define( 'FS_CHMOD_FILE', ( fileperms( ABSPATH . 'index.php' ) & 0777 | 0644 ) );
-	}
-
 	// Plugin contents.
-	$contents = $wp_filesystem->get_contents( SECUPRESS_INC_PATH . 'data/deactivation-mu-plugin.phps' );
+	$contents = $filesystem->get_contents( SECUPRESS_INC_PATH . 'data/deactivation-mu-plugin.phps' );
 
 	// Add new contents.
 	$args = array(
@@ -466,15 +460,15 @@ function secupress_create_deactivation_notice_muplugin( $plugin_id, $message ) {
 
 	$contents = str_replace( array_keys( $args ), $args, $contents );
 
-	if ( ! file_exists( WPMU_PLUGIN_DIR ) ) {
-		$wp_filesystem->mkdir( WPMU_PLUGIN_DIR );
+	if ( ! $filesystem->exists( WPMU_PLUGIN_DIR ) ) {
+		$filesystem->mkdir( WPMU_PLUGIN_DIR );
 	}
 
-	if ( ! file_exists( WPMU_PLUGIN_DIR ) ) {
+	if ( ! $filesystem->exists( WPMU_PLUGIN_DIR ) ) {
 		return;
 	}
 
-	$wp_filesystem->put_contents( $filename, $contents );
+	$filesystem->put_contents( $filename, $contents );
 }
 
 

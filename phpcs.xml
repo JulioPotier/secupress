@@ -53,4 +53,11 @@
 			<property name="customNonceVerificationFunctions" value="secupress_check_admin_referer" type="array"/>
 		</properties>
 	</rule>
+
+	<rule ref="WordPress.NamingConventions.ValidVariableName">
+		<properties>
+			<!-- You're drunk WPCS, I wanted to white-list properties. -->
+			<property name="customVariablesWhitelist" value="preserveWhiteSpace,parentNode,formatOutput" type="array"/>
+		</properties>
+	</rule>
 </ruleset>
