@@ -135,7 +135,9 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 
 		secupress_deactivation();
 
-		// From uninstall.php.
+		/**
+		 * From uninstall.php.
+		 */
 
 		// Transients.
 		$transients = $wpdb->get_col( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE '_transient_secupress_%' OR option_name LIKE '_transient_secupress-%'" );
@@ -187,12 +189,10 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 
 		if ( $post_ids ) {
 			// Delete Postmeta.
-			$sql = sprintf( "DELETE FROM $wpdb->postmeta WHERE post_id IN (%s)", implode( ",", $post_ids ) );
-			$wpdb->query( $sql );
+			$wpdb->query( sprintf( "DELETE FROM $wpdb->postmeta WHERE post_id IN (%s)", implode( ',', $post_ids ) ) ); // WPCS: unprepared SQL ok.
 
 			// Delete Posts.
-			$sql = sprintf( "DELETE FROM $wpdb->posts WHERE ID IN (%s)", implode( ",", $post_ids ) );
-			$wpdb->query( $sql );
+			$wpdb->query( sprintf( "DELETE FROM $wpdb->posts WHERE ID IN (%s)", implode( ',', $post_ids ) ) ); // WPCS: unprepared SQL ok.
 		}
 	}
 

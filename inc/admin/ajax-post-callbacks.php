@@ -5,8 +5,9 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /** ADMIN POST / AJAX CALLBACKS ================================================================= */
 /** --------------------------------------------------------------------------------------------- */
 
-// Scan callback.
-
+/**
+ * Scan callback.
+ */
 add_action( 'admin_post_secupress_scanner', 'secupress_scanit_ajax_post_cb' );
 add_action( 'wp_ajax_secupress_scanner',    'secupress_scanit_ajax_post_cb' );
 /**
@@ -34,8 +35,9 @@ function secupress_scanit_ajax_post_cb() {
 }
 
 
-// Fix callback.
-
+/**
+ * Fix callback.
+ */
 add_action( 'admin_post_secupress_fixit', 'secupress_fixit_ajax_post_cb' );
 add_action( 'wp_ajax_secupress_fixit',    'secupress_fixit_ajax_post_cb' );
 /**
@@ -68,8 +70,9 @@ function secupress_fixit_ajax_post_cb() {
 }
 
 
-// Manual fix callback.
-
+/**
+ * Manual fix callback.
+ */
 add_action( 'admin_post_secupress_manual_fixit', 'secupress_manual_fixit_ajax_post_cb' );
 add_action( 'wp_ajax_secupress_manual_fixit',    'secupress_manual_fixit_ajax_post_cb' );
 /**
@@ -102,8 +105,9 @@ function secupress_manual_fixit_ajax_post_cb() {
 }
 
 
-// Get all translated strings for the scans UI.
-
+/**
+ * Get all translated strings for the scans UI.
+ */
 add_action( 'wp_ajax_secupress-get-scan-counters', 'secupress_get_scan_counters_ajax_cb' );
 /**
  * Used to get all the needed translated strings and counters needed after each single scan/one-click scan.
@@ -124,8 +128,9 @@ function secupress_get_scan_counters_ajax_cb() {
 }
 
 
-// Date of the last One-click scan.
-
+/**
+ * Date of the last One-click scan.
+ */
 add_action( 'wp_ajax_secupress-update-oneclick-scan-date', 'secupress_update_oneclick_scan_date_ajax_cb' );
 /**
  * Used to update the date of the last One-click scan.
@@ -791,7 +796,7 @@ function secupress_global_settings_deactivate_pro_license( $new_values ) {
  * @since 1.1.4
  * @author Grégory Viguier
  *
- * @param (string) The message with a link to our website appended.
+ * @param (string) $message The message with a link to our website appended.
  */
 function secupress_global_settings_pro_license_deactivation_error_message( $message ) {
 	if ( secupress_is_white_label() ) {

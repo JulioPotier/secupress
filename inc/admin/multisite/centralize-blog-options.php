@@ -197,14 +197,16 @@ function secupress_add_centralized_blog_options_admin_post_callback() {
 	ob_start();
 	?>
 	<div class="wrap">
-		<p><?php
-		printf(
-			/** Translators: %s is a "click here" link. */
-			__( 'If this page does not refresh automatically in 2 seconds, please %s.', 'secupress' ),
-			/* For `wp_get_referer()` see the param `_wp_http_referer` in `secupress_add_centralized_blog_options()`. */
-			'<a href="' . esc_url( $href ) . '" class="secupress-centralize-blog-options">' . __( 'click here', 'secupress' ) . '</a>'
-		);
-		?></p>
+		<p>
+			<?php
+			printf(
+				/** Translators: %s is a "click here" link. */
+				__( 'If this page does not refresh automatically in 2 seconds, please %s.', 'secupress' ),
+				/** For `wp_get_referer()` see the param `_wp_http_referer` in `secupress_add_centralized_blog_options()`. */
+				'<a href="' . esc_url( $href ) . '" class="secupress-centralize-blog-options">' . __( 'click here', 'secupress' ) . '</a>'
+			);
+			?>
+		</p>
 		<div class="progress-wrap"><div style="width:<?php echo $percent; ?>%" class="progress"><?php echo $percent; ?>%</div></div>
 	</div>
 	<?php

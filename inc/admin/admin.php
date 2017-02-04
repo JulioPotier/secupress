@@ -47,7 +47,7 @@ function secupress_been_first() {
 	$active_plugins = get_option( 'active_plugins' );
 
 	if ( isset( $active_plugins[ $plugin_basename ] ) && reset( $active_plugins ) !== $plugin_basename ) {
-		unset( $active_plugins[ array_search( $plugin_basename, $active_plugins ) ] );
+		unset( $active_plugins[ array_search( $plugin_basename, $active_plugins, true ) ] );
 		array_unshift( $active_plugins, $plugin_basename );
 		update_option( 'active_plugins', $active_plugins );
 	}
