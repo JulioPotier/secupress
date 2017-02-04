@@ -13,7 +13,7 @@ add_filter( 'user_contactmethods', 'secupress_add_user_contactmethods', 0, 2 );
  * @return (array)
  */
 function secupress_add_user_contactmethods( $methods, $user ) {
-	if ( ! empty( $user->ID ) && $user->ID === get_current_user_id() ) {
+	if ( ! empty( $user->ID ) && get_current_user_id() === $user->ID ) {
 		$methods['secupress_recovery_email'] = __( '<span id="secupress_recovery_email">Recovery E-mail</span><p class="description">For security reasons, you may need to retrieve some private informations at an alternate email address.</p>', 'secupress' );
 	}
 	return $methods;

@@ -60,4 +60,8 @@
 			<property name="customVariablesWhitelist" value="preserveWhiteSpace,parentNode,formatOutput" type="array"/>
 		</properties>
 	</rule>
+
+	<rule ref="WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet">
+		<exclude-pattern>inc/admin/functions/admin.php</exclude-pattern>
+	</rule>
 </ruleset>

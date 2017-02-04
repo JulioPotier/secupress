@@ -67,7 +67,8 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 		'confirmText'         => __( 'OK', 'secupress' ),
 		'cancelText'          => __( 'Cancel' ),
 		'closeText'           => __( 'Close' ),
-		/*'authswal'     => array(
+		/**
+		'authswal'     => array(
 			'title'  => __( 'Authentication', 'secupress' ),
 			'email'  => __( 'Enter your email', 'secupress' ),
 			'apikey' => __( 'Enter your API Key', 'secupress' ),
@@ -139,7 +140,7 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 			// Expand Textareas.
 			'expandTextOpen'       => __( 'Show More', 'secupress' ),
 			'expandTextClose'      => __( 'Close' ),
-			// Malware Scan
+			// Malware Scan.
 			'malwareScanStatus'    => $file_monitoring_running,
 			'MalwareScanURI'       => secupress_admin_url( 'modules', 'file-system' ),
 		) );
@@ -829,7 +830,8 @@ function secupress_admin_heading( $title = '' ) {
  * @param (array) $titles The title and subtitle.
  */
 function secupress_settings_heading( $titles = array() ) {
-	extract( $titles );
+	$title    = ! empty( $titles['title'] )    ? $titles['title']    : '';
+	$subtitle = ! empty( $titles['subtitle'] ) ? $titles['subtitle'] : '';
 	?>
 	<div class="secupress-section-dark secupress-settings-header secupress-header-mini secupress-flex">
 		<div class="secupress-col-1-3 secupress-col-logo secupress-text-center">
@@ -846,7 +848,7 @@ function secupress_settings_heading( $titles = array() ) {
 		</div>
 		<div class="secupress-col-1-3 secupress-col-text">
 			<p class="secupress-text-medium"><?php echo $title; ?></p>
-			<?php if ( isset( $subtitle ) ) { ?>
+			<?php if ( $subtitle ) { ?>
 			<p><?php echo $subtitle; ?></p>
 			<?php } ?>
 		</div>
@@ -854,7 +856,7 @@ function secupress_settings_heading( $titles = array() ) {
 			<p class="secupress-rateus hidden">
 				<strong><?php _e( 'Do you like this plugin?' ) ?></strong>
 				<br>
-				<?php printf( __( 'Please take a few seconds to rate us on %sWordPress.org%s', 'secupress' ), '<a href="' . SECUPRESS_RATE_URL . '">', '</a>' ); ?>
+				<?php printf( __( 'Please take a few seconds to rate us on %1$sWordPress.org%2$s', 'secupress' ), '<a href="' . SECUPRESS_RATE_URL . '">', '</a>' ); ?>
 			</p>
 			<p class="secupress-rateus-link hidden">
 				<a href="<?php echo SECUPRESS_RATE_URL; ?>">
