@@ -269,6 +269,19 @@ function secupress_get_scanner_counts( $type = '' ) {
 }
 
 
+/**
+ * Tell if we can perform "extra fix actions" (something we do on page reload after a fix is done).
+ *
+ * @since 1.2.3
+ *
+ * @return (bool)
+ */
+function secupress_can_perform_extra_fix_action() {
+	global $pagenow;
+	return empty( $_POST ) && ! defined( 'DOING_AJAX' ) && ! defined( 'DOING_AUTOSAVE' ) && is_admin() && 'admin-post.php' !== $pagenow && is_user_logged_in(); // WPCS: CSRF ok.
+}
+
+
 /** --------------------------------------------------------------------------------------------- */
 /** PLUGINS ===================================================================================== */
 /** --------------------------------------------------------------------------------------------- */
