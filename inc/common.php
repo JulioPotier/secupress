@@ -1,25 +1,9 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
-add_filter( 'http_request_args', 'secupress_add_own_ua', 10, 2 );
-/**
- * Force our user agent header when we call our urls.
- *
- * @since 1.0
- * @since 1.1.4 Available in global scope.
- *
- * @param (array)  $r   The request parameters.
- * @param (string) $url The request URL.
- *
- * @return (array)
- */
-function secupress_add_own_ua( $r, $url ) {
-	if ( false !== strpos( $url, 'secupress.me' ) ) {
-		$r['headers']['X-SECUPRESS'] = secupress_user_agent( $r['user-agent'] );
-	}
-	return $r;
-}
-
+/** --------------------------------------------------------------------------------------------- */
+/** BANNED IPS ================================================================================== */
+/** --------------------------------------------------------------------------------------------- */
 
 add_action( 'plugins_loaded', 'secupress_check_ban_ips' );
 /**
@@ -249,6 +233,30 @@ function secupress_check_ban_ips_form( $args ) {
 }
 
 
+/** --------------------------------------------------------------------------------------------- */
+/** VARIOUS STUFF =============================================================================== */
+/** --------------------------------------------------------------------------------------------- */
+
+add_filter( 'http_request_args', 'secupress_add_own_ua', 10, 2 );
+/**
+ * Force our user agent header when we call our urls.
+ *
+ * @since 1.0
+ * @since 1.1.4 Available in global scope.
+ *
+ * @param (array)  $r   The request parameters.
+ * @param (string) $url The request URL.
+ *
+ * @return (array)
+ */
+function secupress_add_own_ua( $r, $url ) {
+	if ( false !== strpos( $url, 'secupress.me' ) ) {
+		$r['headers']['X-SECUPRESS'] = secupress_user_agent( $r['user-agent'] );
+	}
+	return $r;
+}
+
+
 add_filter( 'secupress.plugin.blacklist_logins_list', 'secupress_maybe_remove_admin_from_blacklist' );
 /**
  * If user registrations are open, the "admin" user should not be blacklisted.
@@ -269,9 +277,48 @@ function secupress_maybe_remove_admin_from_blacklist( $list ) {
 }
 
 
+add_action( 'secupress.loaded', 'secupress_check_token_wp_registration_url' );
+/**
+ * Avoid sending emails when we do a "subscription test scan"
+ *
+ * @since 1.0
+ */
+function secupress_check_token_wp_registration_url() {
+	if ( ! empty( $_POST['secupress_token'] ) && false !== ( $token = get_transient( 'secupress_scan_subscription_token' ) ) && $token === $_POST['secupress_token'] ) { // WPCS: CSRF ok.
+		add_action( 'wp_mail', '__return_false' );
+	}
+}
+
+
+add_filter( 'registration_errors', 'secupress_registration_test_errors', PHP_INT_MAX, 2 );
+/**
+ * This is used in the Subscription scan to test user registrations from the login page.
+ *
+ * @since 1.0
+ * @see `register_new_user()`
+ *
+ * @param (object) $errors               A WP_Error object containing any errors encountered during registration.
+ * @param (string) $sanitized_user_login User's username after it has been sanitized.
+ *
+ * @return (object) The WP_Error object with a new error if the user name is blacklisted.
+ */
+function secupress_registration_test_errors( $errors, $sanitized_user_login ) {
+	if ( ! $errors->get_error_code() && false !== strpos( $sanitized_user_login, 'secupress' ) ) {
+		set_transient( 'secupress_registration_test', 'failed', HOUR_IN_SECONDS );
+		$errors->add( 'secupress_registration_test', 'secupress_registration_test_failed' );
+	}
+
+	return $errors;
+}
+
+
+/** --------------------------------------------------------------------------------------------- */
+/** AFTER AUTOMATIC FIX / MANUAL FIX ============================================================ */
+/** --------------------------------------------------------------------------------------------- */
+
 add_action( 'plugins_loaded', 'secupress_rename_admin_username_logout', 50 );
 /**
- * Will rename the "admin" account after the rename-admin-username manual fix
+ * Will rename the "admin" account after the rename-admin-username manual fix.
  *
  * @since 1.0
  */
@@ -337,7 +384,7 @@ function secupress_rename_admin_username_logout() {
 
 add_action( 'plugins_loaded', 'secupress_add_cookiehash_muplugin', 50 );
 /**
- * Will create a mu plugin to modify the COOKIEHASH constant
+ * Will create a mu plugin to modify the COOKIEHASH constant.
  *
  * @since 1.0
  */
@@ -401,7 +448,7 @@ function secupress_add_cookiehash_muplugin() {
 
 add_action( 'plugins_loaded', 'secupress_add_salt_muplugin', 50 );
 /**
- * Will create a mu plugin to early set the salt keys
+ * Will create a mu plugin to early set the salt keys.
  *
  * @since 1.0
  */
@@ -638,39 +685,4 @@ function secupress_downgrade_author_administrator() {
 
 	// Bye bye!
 	secupress_delete_site_transient( 'secupress-admin-as-author-administrator' );
-}
-
-
-add_action( 'secupress.loaded', 'secupress_check_token_wp_registration_url' );
-/**
- * Avoid sending emails when we do a "subscription test scan"
- *
- * @since 1.0
- */
-function secupress_check_token_wp_registration_url() {
-	if ( ! empty( $_POST['secupress_token'] ) && false !== ( $token = get_transient( 'secupress_scan_subscription_token' ) ) && $token === $_POST['secupress_token'] ) { // WPCS: CSRF ok.
-		add_action( 'wp_mail', '__return_false' );
-	}
-}
-
-
-add_filter( 'registration_errors', 'secupress_registration_test_errors', PHP_INT_MAX, 2 );
-/**
- * This is used in the Subscription scan to test user registrations from the login page.
- *
- * @since 1.0
- * @see `register_new_user()`
- *
- * @param (object) $errors               A WP_Error object containing any errors encountered during registration.
- * @param (string) $sanitized_user_login User's username after it has been sanitized.
- *
- * @return (object) The WP_Error object with a new error if the user name is blacklisted.
- */
-function secupress_registration_test_errors( $errors, $sanitized_user_login ) {
-	if ( ! $errors->get_error_code() && false !== strpos( $sanitized_user_login, 'secupress' ) ) {
-		set_transient( 'secupress_registration_test', 'failed', HOUR_IN_SECONDS );
-		$errors->add( 'secupress_registration_test', 'secupress_registration_test_failed' );
-	}
-
-	return $errors;
 }
