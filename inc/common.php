@@ -323,9 +323,9 @@ add_action( 'plugins_loaded', 'secupress_rename_admin_username_logout', 50 );
  * @since 1.0
  */
 function secupress_rename_admin_username_logout() {
-	global $current_user, $pagenow, $wpdb;
+	global $current_user, $wpdb;
 
-	if ( ! empty( $_POST ) || defined( 'DOING_AJAX' ) || defined( 'DOING_AUTOSAVE' ) || defined( 'DOING_CRON' ) || 'admin-post.php' === $pagenow || ! is_user_logged_in() ) { // WPCS: CSRF ok.
+	if ( ! secupress_can_perform_extra_fix_action() ) {
 		return;
 	}
 
@@ -389,9 +389,9 @@ add_action( 'plugins_loaded', 'secupress_add_cookiehash_muplugin', 50 );
  * @since 1.0
  */
 function secupress_add_cookiehash_muplugin() {
-	global $current_user, $pagenow, $wpdb;
+	global $current_user, $wpdb;
 
-	if ( ! empty( $_POST ) || defined( 'DOING_AJAX' ) || defined( 'DOING_AUTOSAVE' ) || defined( 'DOING_CRON' ) || 'admin-post.php' === $pagenow || ! is_user_logged_in() ) { // WPCS: CSRF ok.
+	if ( ! secupress_can_perform_extra_fix_action() ) {
 		return;
 	}
 
@@ -453,9 +453,9 @@ add_action( 'plugins_loaded', 'secupress_add_salt_muplugin', 50 );
  * @since 1.0
  */
 function secupress_add_salt_muplugin() {
-	global $current_user, $pagenow, $wpdb;
+	global $current_user, $wpdb;
 
-	if ( ! empty( $_POST ) || defined( 'SECUPRESS_SALT_KEYS_ACTIVE' ) || defined( 'DOING_AJAX' ) || defined( 'DOING_AUTOSAVE' ) || defined( 'DOING_CRON' ) || 'admin-post.php' === $pagenow || ! is_user_logged_in() ) { // WPCS: CSRF ok.
+	if ( defined( 'SECUPRESS_SALT_KEYS_ACTIVE' ) || ! secupress_can_perform_extra_fix_action() ) {
 		return;
 	}
 
@@ -580,7 +580,7 @@ function secupress_auto_username_login() {
 
 
 /**
- * Used in secupress_rename_admin_username_login() to force a user when auto authenticating
+ * Used in secupress_rename_admin_username_login() to force a user when auto authenticating.
  *
  * @since 1.0
  *
@@ -602,7 +602,7 @@ add_action( 'plugins_loaded', 'secupress_downgrade_author_administrator', 70 );
  * @since 1.0
  */
 function secupress_downgrade_author_administrator() {
-	if ( ! is_admin() ) {
+	if ( ! is_admin() || ! is_user_logged_in() ) {
 		return;
 	}
 
