@@ -444,7 +444,8 @@ function secupress_updates_message( $plugin_data ) {
 	if ( ! isset( $body[ $slug ] ) ) {
 
 		$urls = array(
-			'secupress'     => 'https://plugins.svn.wordpress.org/secupress/trunk/readme.txt',
+			'secupress'     => SECUPRESS_WEB_MAIN . '/api/plugin/readme-free.php',
+			// 'secupress'     => 'https://plugins.svn.wordpress.org/secupress/trunk/readme.txt', // Ok when on repo ////.
 			'secupress-pro' => SECUPRESS_WEB_MAIN . '/api/plugin/readme-pro.php',
 		);
 		$response = wp_remote_get( $urls[ $plugin_data['slug'] ] );
