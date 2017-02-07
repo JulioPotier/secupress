@@ -340,6 +340,7 @@ function secupress_die( $message = '', $title = '', $args = array() ) {
 	$message         = ( $has_p ? '' : '<p>' ) . $message . ( $has_p ? '' : '</p>' );
 	$message         = '<h1>' . SECUPRESS_PLUGIN_NAME . '</h1>' . $message;
 	$url             = secupress_get_current_url( 'raw' );
+	$force_die       = ! empty( $args['force_die'] );
 	$whitelisted     = secupress_ip_is_whitelisted();
 	$is_scan_request = secupress_is_scan_request(); // Used to bypass the whitelist for scans.
 
@@ -369,7 +370,7 @@ function secupress_die( $message = '', $title = '', $args = array() ) {
 	 */
 	do_action( 'secupress.before.die', $message, $url, $args, $whitelisted, $is_scan_request );
 
-	if ( ! $whitelisted || $is_scan_request ) {
+	if ( $force_die || ! $whitelisted || $is_scan_request ) {
 		// Die.
 		if ( ! defined( 'DONOTCACHEPAGE' ) ) {
 			// Tell cache plugins not to cache our error message.

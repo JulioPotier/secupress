@@ -12,7 +12,26 @@ add_action( 'plugins_loaded', 'secupress_check_ban_ips' );
  * @since 1.0
  */
 function secupress_check_ban_ips() {
-	$ban_ips  = get_site_option( SECUPRESS_BAN_IP );
+	$ban_ips = get_site_option( SECUPRESS_BAN_IP );
+	$ip      = secupress_get_ip();
+
+	if ( secupress_ip_is_whitelisted( $ip ) ) {
+		/**
+		 * The user is white-listed. Make sure to remove the IP from the list.
+		 * It will also prevent problems with `secupress_die()` not dying.
+		 */
+		if ( isset( $ban_ips[ $ip ] ) ) {
+			unset( $ban_ips[ $ip ] );
+			if ( $ban_ips ) {
+				update_site_option( SECUPRESS_BAN_IP, $ban_ips );
+			} else {
+				delete_site_option( SECUPRESS_BAN_IP );
+			}
+		}
+
+		return;
+	}
+
 	$time_ban = (int) secupress_get_module_option( 'login-protection_time_ban', 5, 'users-login' );
 	$update   = false;
 	$redirect = false;
@@ -21,7 +40,6 @@ function secupress_check_ban_ips() {
 	if ( $ban_ips && is_array( $ban_ips ) ) {
 		// The link to be unlocked?
 		if ( ! empty( $_GET['action'] ) && 'secupress_self-unban-ip' === $_GET['action'] ) {
-			$ip     = secupress_get_ip();
 			$result = ! empty( $_GET['_wpnonce'] ) ? wp_verify_nonce( $_GET['_wpnonce'], 'secupress_self-unban-ip-' . $ip ) : false;
 
 			if ( $result ) {
@@ -48,7 +66,11 @@ function secupress_check_ban_ips() {
 
 		// Save the changes.
 		if ( $update ) {
-			update_site_option( SECUPRESS_BAN_IP, $ban_ips );
+			if ( $ban_ips ) {
+				update_site_option( SECUPRESS_BAN_IP, $ban_ips );
+			} else {
+				delete_site_option( SECUPRESS_BAN_IP );
+			}
 		}
 
 		// The user just got unlocked. Redirect to homepage.
@@ -58,8 +80,6 @@ function secupress_check_ban_ips() {
 		}
 
 		// Block the user if the IP is still in the array.
-		$ip = secupress_get_ip();
-
 		if ( array_key_exists( $ip, $ban_ips ) ) {
 			// Display a form in case of accidental ban.
 			$unban_atts = secupress_check_ban_ips_maybe_send_unban_email( $ip );
