@@ -4,7 +4,7 @@
  * Description: Add a gentle captcha on the login form
  * Main Module: users_login
  * Author: SecuPress
- * Version: 1.0.1
+ * Version: 1.0.2
  */
 
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
@@ -95,9 +95,9 @@ function secupress_captcha_check() {
 }
 
 
-add_action( 'authenticate', 'secupress_manage_captcha', 20, 2 );
+add_action( 'authenticate', 'secupress_manage_captcha', PHP_INT_MAX - 20, 2 );
 /**
- * Display a message when the user disabled JavaScript on his/her browser.
+ * Process the captcha test.
  *
  * @since 1.0
  *
@@ -112,7 +112,8 @@ function secupress_manage_captcha( $raw_user, $username ) {
 		return $raw_user;
 	}
 
-	if ( is_wp_error( $raw_user ) || ! isset( $_POST['log'], $_POST['pwd'] ) ) { // WPCS: CSRF ok.
+	// Make sure to process only credentials provided by the login form.
+	if ( ! isset( $_POST['log'] ) && ! isset( $_POST['pwd'] ) ) { // WPCS: CSRF ok.
 		return $raw_user;
 	}
 
