@@ -60,6 +60,7 @@ define( 'SECUPRESS_ADMIN_JS_URL'          , SECUPRESS_ASSETS_URL . 'admin/js/' )
 define( 'SECUPRESS_ADMIN_IMAGES_URL'      , SECUPRESS_ASSETS_URL . 'admin/images/' );
 define( 'SECUPRESS_PHP_MIN'               , '5.3' );
 define( 'SECUPRESS_WP_MIN'                , '3.7' );
+define( 'SECUPRESS_INT_MAX'               , PHP_INT_MAX - 20 );
 
 if ( ! defined( 'SECUPRESS_LASTVERSION' ) ) {
 	define( 'SECUPRESS_LASTVERSION', '0' );

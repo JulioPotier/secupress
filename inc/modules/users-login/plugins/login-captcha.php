@@ -95,7 +95,7 @@ function secupress_captcha_check() {
 }
 
 
-add_action( 'authenticate', 'secupress_manage_captcha', PHP_INT_MAX - 20, 2 );
+add_action( 'authenticate', 'secupress_manage_captcha', SECUPRESS_INT_MAX - 20, 2 );
 /**
  * Process the captcha test.
  *
