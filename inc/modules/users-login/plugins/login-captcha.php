@@ -16,6 +16,10 @@ add_action( 'login_form', 'secupress_add_captcha_on_login_form' );
  * @since 1.0
  */
 function secupress_add_captcha_on_login_form() {
+	if ( isset( $_GET['action'] ) && 'login' !== $_GET['action'] ) {
+		return;
+	}
+
 	?>
 	<div>
 		<div id="areyouhuman">
@@ -38,7 +42,7 @@ add_action( 'login_head', 'secupress_login_captcha_scripts' );
  * @since 1.0
  */
 function secupress_login_captcha_scripts() {
-	if ( isset( $_GET['action'] ) && 'login' !== $_GET['action'] && 'notpasswordless' !== $_GET['action'] ) {
+	if ( isset( $_GET['action'] ) && 'login' !== $_GET['action'] ) {
 		return;
 	}
 
@@ -113,7 +117,7 @@ function secupress_manage_captcha( $raw_user, $username ) {
 	}
 
 	// Make sure to process only credentials provided by the login form.
-	if ( ! isset( $_POST['log'] ) && ! isset( $_POST['pwd'] ) ) { // WPCS: CSRF ok.
+	if ( empty( $_POST['log'] ) ) { // WPCS: CSRF ok.
 		return $raw_user;
 	}
 
