@@ -273,10 +273,16 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 * @return (array) An array containing:
 	 *                 - (string) $user The user name followed by the user ID.
 	 */
-	protected function pre_process_action_wp_login( $user_login, $user ) {
+	protected function pre_process_action_wp_login( $user_login, $user = null ) {
+		if ( ! $user ) {
+			// Somebody used `do_action( 'wp_login', $user_login )` without providing the 2nd argument ಠ_ಠ.
+			$user = get_user_by( 'login', $user_login );
+		}
+
 		if ( ! user_can( $user, 'administrator' ) ) {
 			return array();
 		}
+
 		$user = static::format_user_login( $user );
 		return compact( 'user' );
 	}
