@@ -17,7 +17,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.1';
+	const VERSION = '1.1.1';
 
 
 	/** Properties. ============================================================================= */
@@ -70,11 +70,17 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 	public static function get_messages( $message_id = null ) {
 		$module_url = esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) );
 		/** Translators: 1 and 2 are the name of protections, 3 is the name of a module. */
-		$activate_protection_message = sprintf( __( 'But you can activate the %1$s protection and the %2$s protection from the module %3$s.', 'secupress' ),
+		$activate_protections_message = sprintf( __( 'But you can activate the %1$s protection and the %2$s protection from the module %3$s.', 'secupress' ),
 			'<a target="_blank" href="' . $module_url . '#row-content-protect_wp-version">' . __( 'WordPress Version Disclosure', 'secupress' ) . '</a>',
 			'<a target="_blank" href="' . $module_url . '#row-content-protect_php-version">' . __( 'PHP Version Disclosure', 'secupress' ) . '</a>',
 			'<strong>' . __( 'Sensitive Data', 'secupress' ) . '</strong>'
 		);
+		/** Translators: 1 is the name of a protection, 2 is the name of a module. */
+		$activate_protection_message = sprintf( __( 'But you can activate the %1$s protection from the module %2$s.', 'secupress' ),
+			'<strong>' . __( 'WordPress Version Disclosure', 'secupress' ) . '</strong>',
+			'<a target="_blank" href="' . $module_url . '#row-content-protect_wp-version">' . __( 'WordPress Version Disclosure', 'secupress' ) . '</a>'
+		);
+
 
 		$messages   = array(
 			// "good"
@@ -82,9 +88,9 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 			1   => __( 'The protection preventing your site to disclose your <strong>PHP version</strong> has been activated.', 'secupress' ),
 			7   => __( 'The protection preventing your site to disclose your <strong>WordPress version</strong> has been activated.', 'secupress' ),
 			// "warning"
-			100 => __( 'Unable to determine if your homepage is disclosing your <strong>WordPress version</strong> or <strong>PHP version</strong>.', 'secupress' ) . ' ' . $activate_protection_message,
+			100 => __( 'Unable to determine if your homepage is disclosing your <strong>WordPress version</strong> or <strong>PHP version</strong>.', 'secupress' ) . ' ' . $activate_protections_message,
 			/** Translators: %s is a file name. */
-			101 => sprintf( __( 'Unable to determine if the %s file is disclosing your <strong>WordPress version</strong>.', 'secupress' ), '<code>readme.html</code>' ),
+			101 => sprintf( __( 'Unable to determine if the %s file is disclosing your <strong>WordPress version</strong>.', 'secupress' ), '<code>readme.html</code>' ) . ' ' . $activate_protection_message,
 			// "bad"
 			200 => __( 'The website displays the <strong>PHP version</strong> in the request headers.', 'secupress' ),
 			201 => __( 'The website displays the <strong>WordPress version</strong> in the homepage source code (%s).', 'secupress' ),

@@ -20,7 +20,7 @@ class SecuPress_Scan_Shellshock extends SecuPress_Scan implements SecuPress_Scan
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.1';
+	const VERSION = '1.1.1';
 
 
 	/** Properties. ============================================================================= */
@@ -74,7 +74,7 @@ class SecuPress_Scan_Shellshock extends SecuPress_Scan implements SecuPress_Scan
 			// "warning"
 			100 => sprintf( __( 'Unable to determine the status of the <strong>Shellshock</strong> flaw (%s).', 'secupress' ), '<em>CVE-2014-6271</em>' ) . ' ' . $activate_protection_message,
 			101 => sprintf( __( 'Unable to determine the status of the <strong>Shellshock</strong> flaw (%s).', 'secupress' ), '<em>CVE-2014-7169</em>' ) . ' ' . $activate_protection_message,
-			102 => __( 'Unable to determine the status of the <strong>Shellshock</strong> flaw.', 'secupress' ),
+			102 => __( 'Unable to determine the status of the <strong>Shellshock</strong> flaw.', 'secupress' ) . ' ' . $activate_protection_message,
 			// "bad"
 			200 => sprintf( __( 'The server appears to be vulnerable to <strong>Shellshock</strong> (%s).', 'secupress' ), '<em>CVE-2014-6271</em>' ),
 			201 => sprintf( __( 'The server appears to be vulnerable to <strong>Shellshock</strong> (%s).', 'secupress' ), '<em>CVE-2014-7169</em>' ),
