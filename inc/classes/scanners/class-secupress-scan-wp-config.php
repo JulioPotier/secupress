@@ -17,7 +17,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0';
+	const VERSION = '1.0.1';
 
 
 	/** Properties. ============================================================================= */
@@ -148,6 +148,20 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 		}
 
 		return $messages;
+	}
+
+
+	/** Getters. ================================================================================ */
+
+	/**
+	 * Get the documentation URL.
+	 *
+	 * @since 1.2.3
+	 *
+	 * @return (string)
+	 */
+	public static function get_docs_url() {
+		return __( 'http://docs.secupress.me/article/93-wp-config-php-file-constants-scan', 'secupress' );
 	}
 
 

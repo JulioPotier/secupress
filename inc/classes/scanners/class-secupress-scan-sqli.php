@@ -17,7 +17,7 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Inter
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0.1';
+	const VERSION = '1.0.2';
 
 
 	/** Properties. ============================================================================= */
@@ -73,6 +73,20 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Inter
 		}
 
 		return $messages;
+	}
+
+
+	/** Getters. ================================================================================ */
+
+	/**
+	 * Get the documentation URL.
+	 *
+	 * @since 1.2.3
+	 *
+	 * @return (string)
+	 */
+	public static function get_docs_url() {
+		return __( 'http://docs.secupress.me/article/109-basic-sql-injection-scan', 'secupress' );
 	}
 
 

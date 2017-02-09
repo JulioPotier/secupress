@@ -17,7 +17,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0.2';
+	const VERSION = '1.0.3';
 
 
 	/** Properties. ============================================================================= */
@@ -100,6 +100,20 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 		}
 
 		return $messages;
+	}
+
+
+	/** Getters. ================================================================================ */
+
+	/**
+	 * Get the documentation URL.
+	 *
+	 * @since 1.2.3
+	 *
+	 * @return (string)
+	 */
+	public static function get_docs_url() {
+		return __( 'http://docs.secupress.me/article/126-index-listing-scan', 'secupress' );
 	}
 
 

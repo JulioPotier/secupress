@@ -17,7 +17,7 @@ class SecuPress_Scan_Non_Login_Time_Slot extends SecuPress_Scan implements SecuP
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0';
+	const VERSION = '1.0.1';
 
 
 	/** Properties. ============================================================================= */
@@ -92,6 +92,20 @@ class SecuPress_Scan_Non_Login_Time_Slot extends SecuPress_Scan implements SecuP
 		}
 
 		return $messages;
+	}
+
+
+	/** Getters. ================================================================================ */
+
+	/**
+	 * Get the documentation URL.
+	 *
+	 * @since 1.2.3
+	 *
+	 * @return (string)
+	 */
+	public static function get_docs_url() {
+		return __( 'http://docs.secupress.me/article/130-restricted-admin-access-scan', 'secupress' );
 	}
 
 

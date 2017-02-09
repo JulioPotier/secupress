@@ -17,7 +17,7 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0.1';
+	const VERSION = '1.0.2';
 
 
 	/** Properties. ============================================================================= */
@@ -75,7 +75,7 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 			1   => __( 'A captcha module has been activated to block bot registration.', 'secupress' ),
 			2   => __( 'The user role for new registrations has been set to <strong>Subscriber</strong>.', 'secupress' ),
 			// "warning"
-			100 => __( 'Unable to determine the status of your subscribtion settings.', 'secupress' ),
+			100 => __( 'Unable to determine the status of your subscription settings.', 'secupress' ),
 			/** Translators: %s is the plugin name. */
 			101 => sprintf( __( 'You have a big network, %s must work on some data before being able to perform this scan.', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ),
 			// "bad"
@@ -92,6 +92,20 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 		}
 
 		return $messages;
+	}
+
+
+	/** Getters. ================================================================================ */
+
+	/**
+	 * Get the documentation URL.
+	 *
+	 * @since 1.2.3
+	 *
+	 * @return (string)
+	 */
+	public static function get_docs_url() {
+		return __( 'http://docs.secupress.me/article/134-membership-settings-scan', 'secupress' );
 	}
 
 

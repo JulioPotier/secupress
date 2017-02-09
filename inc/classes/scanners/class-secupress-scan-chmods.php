@@ -32,7 +32,7 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Int
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0';
+	const VERSION = '1.0.2';
 
 
 	/** Properties. ============================================================================= */
@@ -117,6 +117,20 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Int
 		}
 
 		return $messages;
+	}
+
+
+	/** Getters. ================================================================================ */
+
+	/**
+	 * Get the documentation URL.
+	 *
+	 * @since 1.2.3
+	 *
+	 * @return (string)
+	 */
+	public static function get_docs_url() {
+		return __( 'http://docs.secupress.me/article/125-file-permission-scan', 'secupress' );
 	}
 
 

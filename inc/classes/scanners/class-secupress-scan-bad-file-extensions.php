@@ -124,6 +124,20 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 	}
 
 
+	/** Getters. ================================================================================ */
+
+	/**
+	 * Get the documentation URL.
+	 *
+	 * @since 1.2.3
+	 *
+	 * @return (string)
+	 */
+	public static function get_docs_url() {
+		return __( 'http://docs.secupress.me/article/124-bad-file-extension-scan', 'secupress' );
+	}
+
+
 	/** Scan. =================================================================================== */
 
 	/**
