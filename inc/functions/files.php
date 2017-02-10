@@ -257,8 +257,20 @@ function secupress_comment_constant( $constant, $wpconfig_filepath = false, $mar
  * @param (string) $constant          Name of the constant.
  * @param (string) $wpconfig_filepath Path to the `wp-config.php` file.
  * @param (string) $marker            Name of the marker used to define the constant ourself.
+ *
+ * @return (bool) True if the constant definition has been successfully uncommented. False if:
+ *                - the constant is already defined somewhere,
+ *                - or the file is not writable,
+ *                - or the comment was not found in the file,
+ *                - or it couldn't be uncommented.
+ *                So basically, this information is totally useless, deal with it.
  */
 function secupress_uncomment_constant( $constant, $wpconfig_filepath = false, $marker = false ) {
+	if ( defined( $constant ) ) {
+		// We must not uncomment a constant if it's already defined somewhere.
+		return false;
+	}
+
 	if ( ! $wpconfig_filepath ) {
 		$wpconfig_filepath = secupress_is_wpconfig_writtable();
 
@@ -274,7 +286,7 @@ function secupress_uncomment_constant( $constant, $wpconfig_filepath = false, $m
 
 	// Uncomment old value.
 	$constant = "(define\s*\(\s*(?:'$constant'|\"$constant\")\s*,(?:.*);)";
-	secupress_replace_content( $wpconfig_filepath, "@^[\t ]*/\*+\s*Commented by SecuPress\.*\s*\*/\s*?(?:/\*+\s*{$constant}\s*\*/|/+\s*{$constant})\s*$@mU", '$1' );
+	return secupress_replace_content( $wpconfig_filepath, "@^[\t ]*/\*+\s*Commented by SecuPress\.*\s*\*/\s*?(?:/\*+\s*{$constant}\s*\*/|/+\s*{$constant})\s*$@mU", '$1' );
 }
 
 
