@@ -17,7 +17,7 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0.2';
+	const VERSION = '1.0.3';
 
 
 	/** Properties. ============================================================================= */
@@ -102,6 +102,20 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 		}
 
 		return $messages;
+	}
+
+
+	/** Getters. ================================================================================ */
+
+	/**
+	 * Get the documentation URL.
+	 *
+	 * @since 1.2.3
+	 *
+	 * @return (string)
+	 */
+	public static function get_docs_url() {
+		return __( 'http://docs.secupress.me/article/123-index-file-priority-scan', 'secupress' );
 	}
 
 

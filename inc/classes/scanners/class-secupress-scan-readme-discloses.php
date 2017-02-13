@@ -17,7 +17,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0.2';
+	const VERSION = '1.0.3';
 
 
 	/** Properties. ============================================================================= */
@@ -103,6 +103,20 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 		}
 
 		return $messages;
+	}
+
+
+	/** Getters. ================================================================================ */
+
+	/**
+	 * Get the documentation URL.
+	 *
+	 * @since 1.2.3
+	 *
+	 * @return (string)
+	 */
+	public static function get_docs_url() {
+		return __( 'http://docs.secupress.me/article/102-readme-txt-access-scan', 'secupress' );
 	}
 
 

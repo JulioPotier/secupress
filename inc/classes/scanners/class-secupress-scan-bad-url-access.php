@@ -17,7 +17,7 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0.2';
+	const VERSION = '1.0.3';
 
 
 	/** Properties. ============================================================================= */
@@ -106,6 +106,20 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 		}
 
 		return $messages;
+	}
+
+
+	/** Getters. ================================================================================ */
+
+	/**
+	 * Get the documentation URL.
+	 *
+	 * @since 1.2.3
+	 *
+	 * @return (string)
+	 */
+	public static function get_docs_url() {
+		return __( 'http://docs.secupress.me/article/107-sensitive-files-access-scan', 'secupress' );
 	}
 
 
