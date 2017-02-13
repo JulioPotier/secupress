@@ -58,12 +58,18 @@ class SecuPress_Scan_Anti_Scanner extends SecuPress_Scan implements SecuPress_Sc
 	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
 	 */
 	public static function get_messages( $message_id = null ) {
+		/** Translators: 1 is the name of a protection, 2 is the name of a module. */
+		$activate_protection_message = sprintf( __( 'But you can activate the %1$s protection from the module %2$s.', 'secupress' ),
+			'<strong>' . __( 'Block SQLi Scan Attempts', 'secupress' ) . '</strong>',
+			'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-url-content_bad-sqli-scan">' . __( 'Firewall', 'secupress' ) . '</a>'
+		);
+
 		$messages = array(
 			// "good"
 			0   => __( 'You are currently blocking <strong>automated scanning</strong>.', 'secupress' ),
 			1   => __( 'Protection activated against <strong>automated scanning</strong>', 'secupress' ),
 			// "warning"
-			100 => __( 'Unable to determine if you are blocking <strong>automated scanning</strong>.', 'secupress' ),
+			100 => __( 'Unable to determine if you are blocking <strong>automated scanning</strong>.', 'secupress' ) . ' ' . $activate_protection_message,
 			// "bad"
 			200 => __( 'Your website should block <strong>automated scanning</strong>.', 'secupress' ),
 		);

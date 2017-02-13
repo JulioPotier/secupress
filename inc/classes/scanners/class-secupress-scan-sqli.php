@@ -58,12 +58,18 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Inter
 	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
 	 */
 	public static function get_messages( $message_id = null ) {
+		/** Translators: 1 is the name of a protection, 2 is the name of a module. */
+		$activate_protection_message = sprintf( __( 'But you can activate the %1$s protection from the module %2$s.', 'secupress' ),
+			'<strong>' . __( 'block bad content', 'secupress' ) . '</strong>',
+			'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-url-content_bad-contents">' . __( 'Firewall', 'secupress' ) . '</a>'
+		);
+
 		$messages = array(
 			// "good"
 			0   => __( 'You are currently blocking simple SQL Injection.', 'secupress' ),
 			1   => __( 'Protection activated', 'secupress' ),
 			// "warning"
-			100 => __( 'Unable to determine if your homepage is blocking SQL Injection.', 'secupress' ),
+			100 => __( 'Unable to determine if your homepage is blocking SQL Injection.', 'secupress' ) . ' ' . $activate_protection_message,
 			// "bad"
 			200 => __( 'Your website should block <strong>SQL Injection</strong>.', 'secupress' ),
 		);
