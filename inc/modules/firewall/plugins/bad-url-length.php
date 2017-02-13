@@ -44,7 +44,7 @@ function secupress_block_too_long_url() {
 
 	$url_test = http_build_query( $args );
 
-	if ( strlen( $url_test ) <= $length ) {
+	if ( mb_strlen( $url_test ) <= $length ) {
 		// The URL is not too long.
 		return;
 	}
@@ -54,15 +54,17 @@ function secupress_block_too_long_url() {
 		$header_name = 'HTTP_' . str_replace( '-', '_', SECUPRESS_BBUL_HEADER_NAME );
 
 		foreach ( $_SERVER as $key => $val ) {
-			if ( strtoupper( $key ) === $header_name ) {
-				// We found our header.
-				if ( wp_verify_nonce( $val, 'secupress_block_too_long_url' ) ) {
-					// The nonce is fine, bail out.
-					return;
-				}
-				// The nonce is not OK. No need to continue our loop.
-				break;
+			if ( strtoupper( $key ) !== $header_name ) {
+				// Not the header we want.
+				continue;
 			}
+			// We found our header.
+			if ( wp_verify_nonce( $val, 'secupress_block_too_long_url' ) ) {
+				// The nonce is fine, bail out.
+				return;
+			}
+			// The nonce is not OK (and no need to continue our loop).
+			break;
 		}
 	}
 
