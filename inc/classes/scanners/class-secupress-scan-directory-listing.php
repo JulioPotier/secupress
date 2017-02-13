@@ -17,7 +17,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0.2';
+	const VERSION = '1.0.3';
 
 
 	/** Properties. ============================================================================= */
@@ -78,10 +78,10 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 			// "good"
 			0   => __( 'Your site does not reveal the files list.', 'secupress' ),
 			/** Translators: %s is a file name. */
-			1   => sprintf( __( 'The rules forbidding access to directory listing have been successfully added to your %s file.', 'secupress' ), "<code>$config_file</code>" ) . ' ' . $activate_protection_message,
+			1   => sprintf( __( 'The rules forbidding access to directory listing have been successfully added to your %s file.', 'secupress' ), "<code>$config_file</code>" ),
 			// "warning"
 			/** Translators: %s is a URL. */
-			100 => sprintf( __( 'Unable to determine the status of %1$s to read the directory listing.', 'secupress' ), '%s' ),
+			100 => sprintf( __( 'Unable to determine the status of %1$s to read the directory listing.', 'secupress' ), '%s' ) . ' ' . $activate_protection_message,
 			// "bad"
 			/** Translators: %s is a URL. */
 			200 => __( '%s (for example) should not be accessible to anyone because of directory listing.', 'secupress' ),
@@ -100,6 +100,20 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 		}
 
 		return $messages;
+	}
+
+
+	/** Getters. ================================================================================ */
+
+	/**
+	 * Get the documentation URL.
+	 *
+	 * @since 1.2.3
+	 *
+	 * @return (string)
+	 */
+	public static function get_docs_url() {
+		return __( 'http://docs.secupress.me/article/126-index-listing-scan', 'secupress' );
 	}
 
 

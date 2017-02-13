@@ -17,7 +17,7 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.1';
+	const VERSION = '1.1.1';
 
 
 	/** Properties. ============================================================================= */
@@ -79,6 +79,20 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 		}
 
 		return $messages;
+	}
+
+
+	/** Getters. ================================================================================ */
+
+	/**
+	 * Get the documentation URL.
+	 *
+	 * @since 1.2.3
+	 *
+	 * @return (string)
+	 */
+	public static function get_docs_url() {
+		return __( 'http://docs.secupress.me/article/114-php-version-scan', 'secupress' );
 	}
 
 

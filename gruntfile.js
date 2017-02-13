@@ -13,7 +13,8 @@ module.exports = function( grunt ) {
 						"assets/admin/js/secupress-modules.js",
 						"assets/admin/js/secupress-notices.js",
 						"assets/admin/js/secupress-scanner.js",
-						"assets/admin/js/secupress-wordpress.js"
+						"assets/admin/js/secupress-wordpress.js",
+						"inc/modules/users-login/plugins/inc/js/captcha.js"
 					]
 				}
 			}
@@ -40,6 +41,10 @@ module.exports = function( grunt ) {
 					{
 						"src":  "assets/admin/js/secupress-wordpress.js",
 						"dest": "assets/admin/js/secupress-wordpress.min.js"
+					},
+					{
+						"src":  "inc/modules/users-login/plugins/inc/js/captcha.js",
+						"dest": "inc/modules/users-login/plugins/inc/js/captcha.min.js"
 					}
 				]
 			}

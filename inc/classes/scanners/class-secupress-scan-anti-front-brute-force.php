@@ -17,7 +17,7 @@ class SecuPress_Scan_Anti_Front_Brute_Force extends SecuPress_Scan implements Se
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0';
+	const VERSION = '1.0.1';
 
 
 	/** Properties. ============================================================================= */
@@ -79,6 +79,20 @@ class SecuPress_Scan_Anti_Front_Brute_Force extends SecuPress_Scan implements Se
 		}
 
 		return $messages;
+	}
+
+
+	/** Getters. ================================================================================ */
+
+	/**
+	 * Get the documentation URL.
+	 *
+	 * @since 1.2.3
+	 *
+	 * @return (string)
+	 */
+	public static function get_docs_url() {
+		return __( 'http://docs.secupress.me/article/110-brute-force-attack-vulnerability-scan', 'secupress' );
 	}
 
 

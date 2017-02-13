@@ -114,6 +114,20 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements SecuPress_Sca
 	}
 
 
+	/** Getters. ================================================================================ */
+
+	/**
+	 * Get the documentation URL.
+	 *
+	 * @since 1.2.3
+	 *
+	 * @return (string)
+	 */
+	public static function get_docs_url() {
+		return __( 'http://docs.secupress.me/article/98-automatic-updates-scan', 'secupress' );
+	}
+
+
 	/** Scan. =================================================================================== */
 
 	/**

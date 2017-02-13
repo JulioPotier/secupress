@@ -17,7 +17,7 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements SecuPress_Sca
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0';
+	const VERSION = '1.0.1';
 
 
 	/** Properties. ============================================================================= */
@@ -78,6 +78,20 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements SecuPress_Sca
 		}
 
 		return $messages;
+	}
+
+
+	/** Getters. ================================================================================ */
+
+	/**
+	 * Get the documentation URL.
+	 *
+	 * @since 1.2.3
+	 *
+	 * @return (string)
+	 */
+	public static function get_docs_url() {
+		return __( 'http://docs.secupress.me/article/95-wordpress-core-update-scan', 'secupress' );
 	}
 
 

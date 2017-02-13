@@ -17,7 +17,7 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0.1';
+	const VERSION = '1.0.2';
 
 
 	/** Properties. ============================================================================= */
@@ -69,13 +69,19 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
 	 */
 	public static function get_messages( $message_id = null ) {
+		/** Translators: 1 is the name of a protection, 2 is the name of a module. */
+		$activate_protection_message = sprintf( __( 'But you can activate the %1$s protection from the module %2$s.', 'secupress' ),
+			'<strong>' . __( 'Use a Captcha for everyone', 'secupress' ) . '</strong>',
+			'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#row-captcha_activate">' . __( 'Users & Login', 'secupress' ) . '</a>'
+		);
+
 		$messages = array(
 			// "good"
 			0   => __( 'Your subscription settings are set correctly.', 'secupress' ),
 			1   => __( 'A captcha module has been activated to block bot registration.', 'secupress' ),
 			2   => __( 'The user role for new registrations has been set to <strong>Subscriber</strong>.', 'secupress' ),
 			// "warning"
-			100 => __( 'Unable to determine the status of your subscribtion settings.', 'secupress' ),
+			100 => __( 'Unable to determine the status of your subscription settings.', 'secupress' ) . ' ' . $activate_protection_message,
 			/** Translators: %s is the plugin name. */
 			101 => sprintf( __( 'You have a big network, %s must work on some data before being able to perform this scan.', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ),
 			// "bad"
@@ -92,6 +98,20 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 		}
 
 		return $messages;
+	}
+
+
+	/** Getters. ================================================================================ */
+
+	/**
+	 * Get the documentation URL.
+	 *
+	 * @since 1.2.3
+	 *
+	 * @return (string)
+	 */
+	public static function get_docs_url() {
+		return __( 'http://docs.secupress.me/article/134-membership-settings-scan', 'secupress' );
 	}
 
 
