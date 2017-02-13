@@ -134,11 +134,15 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 		if ( ! is_wp_error( $response ) ) {
 
 			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
-				// "bad"
-				$this->add_message( 200, array( '<code>' . $base_url . '</code>' ) );
+				$body = trim( wp_remote_retrieve_body( $response ) );
 
-				if ( ! $this->fixable ) {
-					$this->add_pre_fix_message( 301 );
+				if ( strlen( $body ) > 25 ) {
+					// "bad"
+					$this->add_message( 200, array( '<code>' . $base_url . '</code>' ) );
+
+					if ( ! $this->fixable ) {
+						$this->add_pre_fix_message( 301 );
+					}
 				}
 			}
 		} else {
