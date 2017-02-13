@@ -125,6 +125,20 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 	}
 
 
+	/** Getters. ================================================================================ */
+
+	/**
+	 * Get the documentation URL.
+	 *
+	 * @since 1.2.3
+	 *
+	 * @return (string)
+	 */
+	public static function get_docs_url() {
+		return __( 'http://docs.secupress.me/article/101-php-and-wordpress-version-disclosure-scan', 'secupress' );
+	}
+
+
 	/** Scan. =================================================================================== */
 
 	/**

@@ -82,6 +82,20 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan implements SecuPress_
 	}
 
 
+	/** Getters. ================================================================================ */
+
+	/**
+	 * Get the documentation URL.
+	 *
+	 * @since 1.2.3
+	 *
+	 * @return (string)
+	 */
+	public static function get_docs_url() {
+		return __( 'http://docs.secupress.me/article/108-bad-user-agent-scan', 'secupress' );
+	}
+
+
 	/** Scan. =================================================================================== */
 
 	/**

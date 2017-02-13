@@ -82,6 +82,20 @@ class SecuPress_Scan_Anti_Scanner extends SecuPress_Scan implements SecuPress_Sc
 	}
 
 
+	/** Getters. ================================================================================ */
+
+	/**
+	 * Get the documentation URL.
+	 *
+	 * @since 1.2.3
+	 *
+	 * @return (string)
+	 */
+	public static function get_docs_url() {
+		return __( 'http://docs.secupress.me/article/111-anti-sqli-scanner-scan', 'secupress' );
+	}
+
+
 	/** Scan. =================================================================================== */
 
 	/**

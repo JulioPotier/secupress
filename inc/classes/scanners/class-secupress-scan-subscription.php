@@ -101,6 +101,20 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 	}
 
 
+	/** Getters. ================================================================================ */
+
+	/**
+	 * Get the documentation URL.
+	 *
+	 * @since 1.2.3
+	 *
+	 * @return (string)
+	 */
+	public static function get_docs_url() {
+		return __( 'http://docs.secupress.me/article/134-membership-settings-scan', 'secupress' );
+	}
+
+
 	/** Scan. =================================================================================== */
 
 	/**

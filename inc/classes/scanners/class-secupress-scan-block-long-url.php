@@ -91,6 +91,20 @@ class SecuPress_Scan_Block_Long_URL extends SecuPress_Scan implements SecuPress_
 	}
 
 
+	/** Getters. ================================================================================ */
+
+	/**
+	 * Get the documentation URL.
+	 *
+	 * @since 1.2.3
+	 *
+	 * @return (string)
+	 */
+	public static function get_docs_url() {
+		return __( 'http://docs.secupress.me/article/113-maximum-url-length-scans', 'secupress' );
+	}
+
+
 	/** Scan. =================================================================================== */
 
 	/**

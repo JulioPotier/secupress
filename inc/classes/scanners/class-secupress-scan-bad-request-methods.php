@@ -82,6 +82,20 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements SecuP
 	}
 
 
+	/** Getters. ================================================================================ */
+
+	/**
+	 * Get the documentation URL.
+	 *
+	 * @since 1.2.3
+	 *
+	 * @return (string)
+	 */
+	public static function get_docs_url() {
+		return __( 'http://docs.secupress.me/article/112-bad-request-method-scan', 'secupress' );
+	}
+
+
 	/** Scan. =================================================================================== */
 
 	/**
