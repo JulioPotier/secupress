@@ -19,7 +19,7 @@ define( 'SECUPRESS_BBUL_HEADER_NAME', 'X-SECUPRESS-BBUL-NONCE' );
  * @author Julio Potier
  */
 function secupress_block_too_long_url() {
-	$parse_url = explode( '?', $_SERVER['REQUEST_URI'] );
+	$parse_url = explode( '?', $_SERVER['REQUEST_URI'], 2 );
 	parse_str( end( $parse_url ), $args );
 
 	unset( $args['_wp_http_referer'] );
