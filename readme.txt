@@ -2,7 +2,7 @@
 Contributors: wp_media, SecuPress, juliobox, GregLone
 Tags: security, spam, backup, schedule, firewall, sensitive data, antivirus, logs, alerts
 Requires at least: 3.7
-Tested up to: 4.7.1
+Tested up to: 4.7.2
 Stable tag: 1.2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -200,6 +200,19 @@ It's important to delete all other security plugins before activating SecuPress.
 8. The 4th step: final report, you can export it as PDF (1)
 
 == Changelog ==
+
+= 1.2.3 =
+
+* 14 feb 2017
+* Improvement #370: in the scanner, each scan has now its own documentation 📖. The "Read the documentation" links can be found at step 3, the Manual Operations.
+* Improvement #357: for the "Too Long URL" protection, requests made with `wp_request_***()` to self are not blocked anymore.
+* Fix #373: fixed a bug that allowed a specifically forged URL to cheat the "Too Long URL" protection.
+* Fix #367: fixed a PHP notice `Missing argument 2 for SecuPress_Action_Log::pre_process_action_wp_login()`.
+* Fix #363: fixed a possible failure on step 2 of the scanner (Auto-Fix).
+* Fix #352: revamp the whole "Auto Update" scan and protection, mainly focusing on the constant definitions.
+* Fix #347: the Twitter bird now can sing correctly.
+* Fix #343: when some scans display a message "Unable to determine...", a link to activate manually the protection should be displaying. Some were missing.
+* Fix #329: the directory listing scan now reports a "Good" status if folders display an empty page with HTTP code 200.
 
 = 1.2.2 =
 
