@@ -85,8 +85,8 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 			/** Translators: %s is a file name. */
 			100 => sprintf( __( 'Unable to determine the status of the %s files that may reveal sensitive information.', 'secupress' ), '<code>readme.txt</code>' ) . ' ' . $activate_protection_message,
 			// "bad"
-			/** Translators: %s is a file name. */
-			200 => sprintf( __( 'The %s and/or %s files should not be accessible to anyone because they are revealing sensitive information.', 'secupress' ), '<code>readme.txt/md/html</code>', '<code>changelog.txt/md/html</code>' ),
+			/** Translators: 1 and 2 are file names. */
+			200 => sprintf( __( 'The %1$s and/or %2$s files should not be accessible to anyone because they are revealing sensitive information.', 'secupress' ), '<code>readme.txt/md/html</code>', '<code>changelog.txt/md/html</code>' ),
 			// "cantfix"
 			/** Translators: 1 and 2 are a file names, 3 is some code. */
 			300 => sprintf( __( 'Your server runs <strong>Nginx</strong>, the %1$s files cannot be protected automatically but you can do it yourself by adding the following code to your %2$s file: %3$s', 'secupress' ), '<code>readme.txt</code>', '<code>nginx.conf</code>', '%s' ),

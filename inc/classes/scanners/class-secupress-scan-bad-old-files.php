@@ -150,8 +150,10 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements SecuPress_S
 			return parent::fix();
 		}
 
+		$filesystem = secupress_get_filesystem();
+
 		foreach ( $_old_files as $file ) {
-			if ( @file_exists( ABSPATH . $file ) && ( ! is_writable( ABSPATH . $file ) || ! @unlink( ABSPATH . $file ) ) ) {
+			if ( $filesystem->exists( ABSPATH . $file ) && ( ! wp_is_writable( ABSPATH . $file ) || ! $filesystem->delete( ABSPATH . $file ) ) ) {
 				$not_deleted[] = sprintf( '<code>%s</code>', $file );
 			}
 		}
