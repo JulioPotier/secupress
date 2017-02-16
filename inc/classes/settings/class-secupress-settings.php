@@ -69,7 +69,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	protected $with_form = true;
 
 
-	// Setters =====================================================================================.
+	/** Setters ================================================================================= */
 
 	/**
 	 * Set the current module.
@@ -154,7 +154,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	}
 
 
-	// Getters =====================================================================================.
+	/** Getters ================================================================================= */
 
 	/**
 	 * Get the current module.
@@ -228,7 +228,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	}
 
 
-	// Init ========================================================================================.
+	/** Init ==================================================================================== */
 
 	/**
 	 * Init: this method is required by the class `SecuPress_Singleton`.
@@ -243,7 +243,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	}
 
 
-	// Sections ====================================================================================.
+	/** Sections ================================================================================ */
 
 	/**
 	 * Add a section in the page (a block).
@@ -427,7 +427,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	}
 
 
-	// Generic fields ==============================================================================.
+	/** Generic fields ========================================================================== */
 
 	/**
 	 * The main callback that prints basic fields.
@@ -589,7 +589,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		$label_open  = '';
 		$label_close = '';
 		if ( '' !== $args['label_before'] || '' !== $args['label'] || '' !== $args['label_after'] ) {
-			$label_open  = '<label class="secupress-' . esc_attr( $args['type'] )  . '-label' . ( $disabled ? ' disabled' : '' ) . '">';
+			$label_open  = '<label class="secupress-' . esc_attr( $args['type'] ) . '-label' . ( $disabled ? ' disabled' : '' ) . '">';
 			$label_close = '</label>';
 		}
 
@@ -793,7 +793,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$id     = ! empty( $args['id'] )    ? ' id="' . $args['id'] . '"' : '';
 
 			if ( ! empty( $args['url'] ) ) {
-				echo '<a' . $id . ' class="secupress-button secupress-button-primary secupressicon-'. $class . ( ! empty( $args['disabled'] ) ? ' disabled' : '' ) . '" href="' . esc_url( $args['url'] ) . '">' . $args['label'] . '</a>';
+				echo '<a' . $id . ' class="secupress-button secupress-button-primary secupressicon-' . $class . ( ! empty( $args['disabled'] ) ? ' disabled' : '' ) . '" href="' . esc_url( $args['url'] ) . '">' . $args['label'] . '</a>';
 			}
 			else {
 				echo '<button' . $id . ' class="secupress-button secupress-button-primary secupressicon-' . $class . '"' . ( ! empty( $args['disabled'] ) ? ' disabled="disabled"' : '' ) . ' type="button">' . $args['label'] . '</button>';
@@ -867,7 +867,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	}
 
 
-	// Fields related ==============================================================================.
+	/** Fields related ========================================================================== */
 
 	/**
 	 * Get a correct name for setting fields based on the current module.
@@ -1111,7 +1111,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	}
 
 
-	// Main template tags ==========================================================================.
+	/** Main template tags ====================================================================== */
 
 	/**
 	 * Print the page content. Must be extended.
@@ -1123,7 +1123,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	}
 
 
-	// Other template tags =========================================================================.
+	/** Other template tags ===================================================================== */
 
 	/**
 	 * Print the current section description (because you wouldn't guess by the method's name, be thankful).
@@ -1306,7 +1306,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	}
 
 
-	// Utilities ===================================================================================.
+	/** Utilities =============================================================================== */
 
 	/**
 	 * Tell if the option value is for the pro version and we're not using the pro version.
@@ -1340,7 +1340,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	}
 
 
-	// Includes ====================================================================================.
+	/** Includes ================================================================================ */
 
 	/**
 	 * Include a module settings file. Also, automatically set the current module and print the sections.

@@ -20,7 +20,7 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 	protected static $_instance;
 
 
-	// Setters =====================================================================================.
+	/** Setters ================================================================================= */
 
 	/**
 	 * Set the current module.
@@ -36,7 +36,7 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 	}
 
 
-	// Init ========================================================================================.
+	/** Init ==================================================================================== */
 
 	/**
 	 * Init: this method is required by the class `SecuPress_Singleton`.
@@ -51,7 +51,7 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 	}
 
 
-	// Main template tags ==========================================================================.
+	/** Main template tags ====================================================================== */
 
 	/**
 	 * Print the page content.
@@ -137,7 +137,7 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 	}
 
 
-	// Specific fields =============================================================================.
+	/** Specific fields ========================================================================= */
 
 	/**
 	 * Outputs the form used by the importers to accept the data to be imported.
@@ -223,7 +223,7 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 	}
 
 
-	// Includes ====================================================================================.
+	/** Includes ================================================================================ */
 
 	/**
 	 * Include a module settings file. Also, automatically set the current module and print the sections.
