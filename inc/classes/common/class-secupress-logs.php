@@ -68,7 +68,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	private static $all_criticities = array();
 
 
-	// Public methods ==============================================================================.
+	/** Public methods ========================================================================== */
 
 	/**
 	 * Get the Log type.
@@ -231,13 +231,13 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			return 0;
 		}
 
-		// Delete Postmeta
-		$sql = sprintf( "DELETE FROM $wpdb->postmeta WHERE post_id IN (%s)", implode( ",", $post_ids ) );
-		$wpdb->query( $sql );
+		// Delete Postmeta.
+		$sql = sprintf( "DELETE FROM $wpdb->postmeta WHERE post_id IN (%s)", implode( ',', $post_ids ) );
+		$wpdb->query( $sql ); // WPCS: unprepared SQL ok.
 
-		// Delete Posts
-		$sql = sprintf( "DELETE FROM $wpdb->posts WHERE ID IN (%s)", implode( ",", $post_ids ) );
-		$wpdb->query( $sql );
+		// Delete Posts.
+		$sql = sprintf( "DELETE FROM $wpdb->posts WHERE ID IN (%s)", implode( ',', $post_ids ) );
+		$wpdb->query( $sql ); // WPCS: unprepared SQL ok.
 
 		return count( $post_ids );
 	}
@@ -390,7 +390,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	}
 
 
-	// Private methods =============================================================================.
+	/** Private methods ========================================================================= */
 
 	/**
 	 * Launch main hooks.
@@ -918,7 +918,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	}
 
 
-	// Admin post / Admin ajax =====================================================================.
+	/** Admin post / Admin ajax ================================================================= */
 
 	/**
 	 * Admin post callback that allows to download the Logs of a certain type as a .txt file.
@@ -1193,7 +1193,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	}
 
 
-	// Various =====================================================================================.
+	/** Various ================================================================================= */
 
 	/**
 	 * Add the transient we use to store the delayed logs to be autoloaded on multisite.
@@ -1210,7 +1210,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	}
 
 
-	// Tools =======================================================================================.
+	/** Tools =================================================================================== */
 
 	/**
 	 * Create a Post Type name based on a Log type.
