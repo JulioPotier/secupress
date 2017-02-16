@@ -26,7 +26,7 @@ class SecuPress_404_Logs extends SecuPress_Logs {
 	protected $log_type = 'err404';
 
 
-	// Private methods =============================================================================.
+	/** Private methods ========================================================================= */
 
 	/**
 	 * Launch main hooks.
@@ -101,7 +101,7 @@ class SecuPress_404_Logs extends SecuPress_Logs {
 	}
 
 
-	// Tools =======================================================================================.
+	/** Tools =================================================================================== */
 
 	/**
 	 * Include the files containing the classes `Secupress_Log` and `SecuPress_404_Log` if not already done.

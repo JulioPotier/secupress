@@ -23,8 +23,9 @@ $this->add_field( array(
 ) );
 
 
-// If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for the Bad File Extensions.
-
+/**
+ * If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for the Bad File Extensions.
+ */
 if ( $is_plugin_active && function_exists( 'secupress_bad_file_extensions_apache_rules' ) ) {
 	$message = false;
 

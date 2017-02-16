@@ -48,8 +48,9 @@ $this->add_field( array(
 ) );
 
 
-// If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for the Anti Hotlink.
-
+/**
+ * If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for the Anti Hotlink.
+ */
 if ( $is_plugin_active && function_exists( 'secupress_hotlink_get_apache_rules' ) ) {
 	$message = false;
 
@@ -104,8 +105,9 @@ $this->add_field( array(
 ) );
 
 
-// If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for the Directory Listing.
-
+/**
+ * If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for the Directory Listing.
+ */
 if ( $is_plugin_active && function_exists( 'secupress_directory_listing_apache_rules' ) ) {
 	$message = false;
 
@@ -162,8 +164,9 @@ $this->add_field( array(
 ) );
 
 
-// If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for the PHP Disclosure.
-
+/**
+ * If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for the PHP Disclosure.
+*/
 if ( $is_plugin_active && function_exists( 'secupress_php_disclosure_apache_rules' ) ) {
 	$message = false;
 
@@ -218,8 +221,9 @@ $this->add_field( array(
 ) );
 
 
-// If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for the PHP Version Disclosure.
-
+/**
+ * If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for the PHP Version Disclosure.
+ */
 if ( $is_plugin_active && function_exists( 'secupress_no_x_powered_by_apache_rules' ) ) {
 	$message = false;
 
@@ -274,8 +278,9 @@ $this->add_field( array(
 ) );
 
 
-// If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for the WP Version Disclosure.
-
+/**
+ * If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for the WP Version Disclosure.
+ */
 if ( $is_plugin_active && function_exists( 'secupress_wp_version_apache_rules' ) ) {
 	$message = false;
 
@@ -330,8 +335,9 @@ $this->add_field( array(
 ) );
 
 
-// If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for the Bad URL Access.
-
+/**
+ * If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for the Bad URL Access.
+ */
 if ( $is_plugin_active && function_exists( 'secupress_bad_url_access_apache_rules' ) ) {
 	$message = false;
 
@@ -387,8 +393,9 @@ $this->add_field( array(
 ) );
 
 
-// If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for the Readmes.
-
+/**
+ * If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for the Readmes.
+ */
 if ( $is_plugin_active && function_exists( 'secupress_protect_readmes_apache_rules' ) ) {
 	$message = false;
 

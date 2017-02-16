@@ -6,6 +6,7 @@
  * Author: SecuPress
  * Version: 1.0
  */
+
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 if ( ! class_exists( 'WooCommerce' ) ) {

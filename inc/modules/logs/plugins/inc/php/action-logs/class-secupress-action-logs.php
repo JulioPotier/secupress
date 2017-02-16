@@ -140,7 +140,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	protected $logs_queue = array();
 
 
-	// Private methods =============================================================================.
+	/** Private methods ========================================================================= */
 
 	/**
 	 * Launch main hooks.
@@ -225,7 +225,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	}
 
 
-	// Log a hook ==================================================================================.
+	/** Log a hook ============================================================================== */
 
 	/**
 	 * Temporary store a Log in queue.
@@ -418,7 +418,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	}
 
 
-	// Save Logs ===================================================================================.
+	/** Save Logs =============================================================================== */
 
 	/**
 	 * Save all new Logs.
@@ -431,7 +431,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	}
 
 
-	// Tools =======================================================================================.
+	/** Tools =================================================================================== */
 
 	/**
 	 * Include the files containing the classes `Secupress_Log` and `SecuPress_Action_Log` if not already done.

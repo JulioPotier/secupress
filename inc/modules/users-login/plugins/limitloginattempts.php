@@ -1,11 +1,12 @@
 <?php
-/*
-Module Name: Limit Login Attempts
-Description: Limit login attempts and ban if too many tries have been done.
-Main Module: users_login
-Author: SecuPress
-Version: 1.0
-*/
+/**
+ * Module Name: Limit Login Attempts
+ * Description: Limit login attempts and ban if too many tries have been done.
+ * Main Module: users_login
+ * Author: SecuPress
+ * Version: 1.0
+ */
+
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 add_action( 'authenticate', 'secupress_limitloginattempts', PHP_INT_MAX - 20, 2 );

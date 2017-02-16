@@ -1,11 +1,12 @@
 <?php
-/*
-Module Name: 404 Logs
-Description: Logs "404 Page Not Found" errors on the site.
-Main Module: logs
-Author: SecuPress
-Version: 1.0
-*/
+/**
+ * Module Name: 404 Logs
+ * Description: Logs "404 Page Not Found" errors on the site.
+ * Main Module: logs
+ * Author: SecuPress
+ * Version: 1.0
+ */
+
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 /** --------------------------------------------------------------------------------------------- */
