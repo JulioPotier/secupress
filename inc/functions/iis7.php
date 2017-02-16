@@ -47,11 +47,11 @@ function secupress_insert_iis7_nodes( $marker, $args = array() ) {
 		return false;
 	}
 
+	$filesystem = secupress_get_filesystem();
+
 	// If configuration file does not exist then we create one.
-	if ( ! file_exists( $web_config_file ) ) {
-		$fp = fopen( $web_config_file, 'w' );
-		fwrite( $fp, '<configuration/>' );
-		fclose( $fp );
+	if ( ! $filesystem->exists( $web_config_file ) ) {
+		$filesystem->put_contents( $web_config_file, '<configuration/>' );
 	}
 
 	$doc = new DOMDocument();

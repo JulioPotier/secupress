@@ -18,10 +18,11 @@ function secupress_write_htaccess( $marker, $rules = false, $relative_path = '' 
 		return false;
 	}
 
+	$filesystem    = secupress_get_filesystem();
 	$htaccess_path = trailingslashit( secupress_get_home_path() . trim( $relative_path, '/' ) );
 	$htaccess_file = $htaccess_path . '.htaccess';
 
-	if ( is_writable( $htaccess_file ) || ! file_exists( $htaccess_file ) && is_writable( $htaccess_path ) ) {
+	if ( wp_is_writable( $htaccess_file ) || ! $filesystem->exists( $htaccess_file ) && wp_is_writable( $htaccess_path ) ) {
 		// Update the .htaccess file.
 		return secupress_put_contents( $htaccess_file, $rules, array( 'marker' => $marker ) );
 	}
