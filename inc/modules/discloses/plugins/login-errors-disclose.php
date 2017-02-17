@@ -1,11 +1,12 @@
 <?php
-/*
-Module Name: Login Errors Disclose
-Description: Replace some login error messages.
-Main Module: discloses
-Author: SecuPress
-Version: 1.0
-*/
+/**
+ * Module Name: Login Errors Disclose
+ * Description: Replace some login error messages.
+ * Main Module: discloses
+ * Author: SecuPress
+ * Version: 1.0
+ */
+
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 

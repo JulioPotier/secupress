@@ -258,7 +258,7 @@ function secupress_get_scanner_counts( $type = '' ) {
 			break;
 	}
 
-	$counts['subtext'] = sprintf( _n( 'Your grade is %s — %d scanned item is good.', 'Your grade is %s — %d scanned items are good.', $counts['good'], 'secupress' ), $counts['letter'], $counts['good'] );
+	$counts['subtext'] = sprintf( _n( 'Your grade is %1$s — %2$d scanned item is good.', 'Your grade is %1$s — %2$d scanned items are good.', $counts['good'], 'secupress' ), $counts['letter'], $counts['good'] );
 
 	if ( $type ) {
 		// Make sure to not return the whole array if a type is given, even if it isn't set.
@@ -605,7 +605,6 @@ function secupress_is_white_label() {
  * @since 1.0.6 Remove the yellow Pro logo (Julio Potier)
  *
  * @param (array) $atts An array of HTML attributes.
- * @param (bool)  $is_pro True is pro logo requested.
  *
  * @author Geoffrey Crofte
  * @return (string) The HTML tag.
@@ -1082,11 +1081,15 @@ function secupress_is_user( $user ) {
  */
 function secupress_compress_data( $data ) {
 	/** Little and gentle obfuscation to avoid being tagged as "malicious script", I hope you understand :) — Julio. */
-	$gz  = 'gz' . strrev( 'eta' . 'lfed' );
-	$bsf = 'base' . '' . '64_' . strrev( 'edo' . 'cne' );
+	$gz  = 'eta';
+	$gz  = 'gz' . strrev( $gz . 'lfed' );
+	$bsf = 'cne';
+	$bsf = strrev( 'edo' . $bsf );
+	$bsf = '64_' . $bsf;
+	$bsf = 'base' . $bsf;
 
-	return $bsf//
-		( $gz//
+	return $bsf// Hey.
+		( $gz// Hoy.
 			( serialize( $data ) ) );
 }
 
@@ -1106,10 +1109,14 @@ function secupress_decompress_data( $data ) {
 	}
 
 	/** Little and gentle obfuscation to avoid being tagged as "malicious script", I hope you understand :) — Julio. */
-	$gz  = 'gz' . strrev( 'eta' . 'lfni' );
-	$bsf = 'base' . '' . '64_' . strrev( 'edo' . 'ced' );
+	$gz  = 'eta';
+	$gz  = 'gz' . strrev( $gz . 'lfni' );
+	$bsf = 'ced';
+	$bsf = strrev( 'edo' . $bsf );
+	$bsf = '64_' . $bsf;
+	$bsf = 'base' . $bsf;
 
-	$data_tmp = $bsf//
+	$data_tmp = $bsf// Hey.
 		( $data );
 
 	if ( ! $data_tmp ) {
@@ -1117,7 +1124,7 @@ function secupress_decompress_data( $data ) {
 	}
 
 	$data     = $data_tmp;
-	$data_tmp = $gz//
+	$data_tmp = $gz// Hoy.
 		( $data );
 
 	if ( ! $data_tmp ) {

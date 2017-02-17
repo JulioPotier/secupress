@@ -865,7 +865,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 		$output .= '<input type="hidden" name="test" value="' . $this->class_name_part . '" />' . "\n";
 		$output .= '<input type="hidden" name="test-parts" value="' . implode( ',', $fix_actions ) . '" />' . "\n";
 		$output .= '<input type="hidden" name="_wpnonce" value="' . wp_create_nonce( $nonce ) . '" />' . "\n";
-		$output .= '<input type="hidden" name="_wp_http_referer" value="'. esc_attr( wp_unslash( $_SERVER['REQUEST_URI'] ) ) . '" />' . "\n";
+		$output .= '<input type="hidden" name="_wp_http_referer" value="' . esc_attr( wp_unslash( $_SERVER['REQUEST_URI'] ) ) . '" />' . "\n";
 
 		return $output;
 	}

@@ -53,7 +53,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 	private $current_log_id = 0;
 
 
-	// Init ========================================================================================.
+	/** Init ==================================================================================== */
 
 	/**
 	 * Set the values.
@@ -79,7 +79,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 	}
 
 
-	// Private methods =============================================================================.
+	/** Private methods ========================================================================= */
 
 	/**
 	 * Prepare the list.
@@ -92,7 +92,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 		secupress_require_class( 'Logs', 'List_Table' );
 
 		// Instantiate the list.
-		$wp_list_table = new SecuPress_Logs_List_Table( array( 'screen' => convert_to_screen( $this->post_type ) ) );
+		$wp_list_table = new SecuPress_Logs_List_Table( array( 'screen' => convert_to_screen( $this->post_type ) ) ); // WPCS: override ok.
 
 		// Query the Logs.
 		$wp_list_table->prepare_items();
@@ -141,12 +141,12 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 		<div class="wrap">
 			<?php
 			// The page title.
-			$log_types = SecuPress_Logs::get_log_types();
-			$title     = get_post_type_object( $log_types[ $this->log_type ]['post_type'] )->label;
+			$log_types  = SecuPress_Logs::get_log_types();
+			$head_title = get_post_type_object( $log_types[ $this->log_type ]['post_type'] )->label;
 
-			secupress_admin_heading( $title );
+			secupress_admin_heading( $head_title );
 			secupress_settings_heading( array(
-				'title'    => $title,
+				'title'    => $head_title,
 				'subtitle' => __( 'Monitor everything', 'secupress' ),
 			) );
 			?>
@@ -340,7 +340,7 @@ class SecuPress_Logs_List extends SecuPress_Singleton {
 	}
 
 
-	// Tools =======================================================================================.
+	/** Tools =================================================================================== */
 
 	/**
 	 * The page URL.

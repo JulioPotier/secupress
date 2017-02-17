@@ -34,7 +34,7 @@ if ( secupress_is_pro() ) {
 				$warning_cant_write .= '<li>';
 					$warning_cant_write .= sprintf(
 						/** Translators: %s is a folder name. */
-						__( 'Two folders with the following names: %s and %s.', 'secupress' ),
+						__( 'Two folders with the following names: %1$s and %2$s.', 'secupress' ),
 						'<code>' . basename( secupress_get_local_backups_path() ) . '</code>',
 						'<code>' . basename( secupress_get_temporary_backups_path() ) . '</code>'
 					);

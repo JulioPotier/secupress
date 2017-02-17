@@ -63,7 +63,7 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements SecuPress_S
 			0   => __( 'All the usernames are correct.', 'secupress' ),
 			1   => __( 'Module activated: the users with a blacklisted username will be asked to change it.', 'secupress' ),
 			// "bad"
-			200 => _n_noop( '<strong>%s user</strong> has a forbidden username: %s', '<strong>%s users</strong> have a forbidden username: %s', 'secupress' ),
+			200 => _n_noop( '<strong>%1$s user</strong> has a forbidden username: %2$s', '<strong>%1$s users</strong> have a forbidden username: %2$s', 'secupress' ),
 			// "cantfix"
 			300 => __( 'The module is already activated. Let\'s give your users some time to change their username.', 'secupress' ),
 		);

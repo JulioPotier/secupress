@@ -119,14 +119,14 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 		$this->log_classname = $logs_classname::maybe_include_log_class();
 
 		// Set some globals.
-		$mode = 'list';
+		$mode = 'list'; // WPCS: override ok.
 
-		$per_page = $this->get_items_per_page( 'edit_' . $post_type . '_per_page' );
+		$per_page = $this->get_items_per_page( 'edit_' . $post_type . '_per_page' ); // WPCS: override ok.
 
 		/** This filter is documented in wp-admin/includes/post.php */
-		$per_page = apply_filters( 'edit_posts_per_page', $per_page, $post_type );
+		$per_page = apply_filters( 'edit_posts_per_page', $per_page, $post_type ); // WPCS: override ok.
 
-		$avail_post_stati = get_available_post_statuses( $post_type );
+		$avail_post_stati = get_available_post_statuses( $post_type ); // WPCS: override ok.
 
 		// Get posts.
 		$this->query();
@@ -490,7 +490,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 			wp_nonce_field( 'secupress-bulk-' . $this->log_type . '-logs', '_wpnonce', false );
 
 			// Use a custom referer input, we don't want superfuous paramaters in the URL.
-			echo '<input type="hidden" name="_wp_http_referer" value="'. esc_attr( $this->paged_page_url() ) . '" />';
+			echo '<input type="hidden" name="_wp_http_referer" value="' . esc_attr( $this->paged_page_url() ) . '" />';
 
 			$args = parse_url( $this->paged_page_url(), PHP_URL_QUERY );
 
@@ -746,14 +746,14 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 		$global_post = get_post();
 		$post        = get_post( $post );
 
-		$GLOBALS['post'] = $post;
+		$GLOBALS['post'] = $post; // WPCS: override ok.
 		setup_postdata( $post );
 		?>
 		<tr id="post-<?php echo $post->ID; ?>" class="<?php echo implode( ' ', get_post_class( 'level-0', $post->ID ) ); ?>">
 			<?php $this->single_row_columns( $post ); ?>
 		</tr>
 		<?php
-		$GLOBALS['post'] = $global_post;
+		$GLOBALS['post'] = $global_post; // WPCS: override ok.
 	}
 
 

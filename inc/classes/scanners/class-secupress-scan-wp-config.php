@@ -387,7 +387,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 	 *
 	 * @since 1.1.4
 	 *
-	 * @param (string) A constant name.
+	 * @param (string) $constant A constant name.
 	 *
 	 * @return (bool|object) False if no plugin, true if the plugin was successfully activated, a `WP_Error` object if the plugin returned an error.
 	 */

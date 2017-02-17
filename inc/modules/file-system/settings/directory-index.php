@@ -25,8 +25,9 @@ $this->add_field( array(
 ) );
 
 
-// If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for the Directory Index.
-
+/**
+ * If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for the Directory Index.
+ */
 if ( $is_plugin_active && function_exists( 'secupress_directory_index_apache_rules' ) ) {
 	$message = false;
 

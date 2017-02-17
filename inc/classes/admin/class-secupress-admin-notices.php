@@ -51,7 +51,7 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 	protected static $version;
 
 
-	// Public methods ==============================================================================.
+	/** Public methods ========================================================================== */
 
 	/**
 	 * Add an admin notice.
@@ -205,7 +205,7 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 	}
 
 
-	// Private methods =============================================================================.
+	/** Private methods ========================================================================= */
 
 	/**
 	 * Init: this method is required by the class `SecuPress_Singleton`.

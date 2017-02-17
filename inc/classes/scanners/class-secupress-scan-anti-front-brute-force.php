@@ -71,7 +71,7 @@ class SecuPress_Scan_Anti_Front_Brute_Force extends SecuPress_Scan implements Se
 			1   => __( 'The <strong>Anti Front-End Brute-Force</strong> module has been activated.', 'secupress' ),
 			// "bad"
 			200 => __( 'Your website is not protected from multiple and quick requests.', 'secupress' ),
-			201 => sprintf( __( 'Our module <a href="%s">%s</a> could fix this.', 'secupress' ), esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bruteforce_activated', __( 'Anti Front-End Brute-Force', 'secupress' ) ),
+			201 => sprintf( __( 'Our module %s could fix this.', 'secupress' ), '<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bruteforce_activated">' . __( 'Anti Front-End Brute-Force', 'secupress' ) . '</a>' ),
 		);
 
 		if ( isset( $message_id ) ) {

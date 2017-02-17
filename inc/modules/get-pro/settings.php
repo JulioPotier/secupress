@@ -14,7 +14,7 @@ if ( false === $plans ) {
 
 if ( ! $plans ) {
 	$plans      = json_decode( '[{"names":{"en_US":"Lite","fr_FR":"Simple"},"button":"preorder","price":"5.99","price_new":"36","price_old":"72","free":50,"websites":1,"url":"https:\/\/secupress.me\/checkout\/?edd_action=add_to_cart&download_id=14&edd_options[price_id]=4&discount=LANDING50"},{"names":{"en_US":"Standard","fr_FR":"Standard"},"button":"preorder","price":"14.99","price_new":"90","price_old":"180","free":50,"websites":3,"url":"https:\/\/secupress.me\/checkout\/?edd_action=add_to_cart&download_id=14&edd_options[price_id]=5&discount=LANDING50"},{"names":{"en_US":"Plus","fr_FR":"Plus"},"button":"preorder","price":"29.99","price_new":"180","price_old":"360","free":50,"websites":10,"url":"https:\/\/secupress.me\/checkout\/?edd_action=add_to_cart&download_id=14&edd_options[price_id]=6&discount=LANDING50"}]', true );
-	$impossible = sprintf( '<p class="secupress-response-notice secupress-rn-warning secupress-text-center">' . __( 'Impossible to get online prices, please check %sonline prices%s to get the last ones.', 'secupress' ), '<a href="https://secupress.me/downloads/secupress/" target="_blank">', '</a>' ) . '</p>';
+	$impossible = sprintf( '<p class="secupress-response-notice secupress-rn-warning secupress-text-center">' . __( 'Impossible to get online prices, please check %1$sonline prices%2$s to get the last ones.', 'secupress' ), '<a href="https://secupress.me/downloads/secupress/" target="_blank">', '</a>' ) . '</p>';
 }
 ?>
 
@@ -83,7 +83,7 @@ if ( ! $plans ) {
 							?>
 							<span class="price"><?php echo $price; ?></span>
 						</p>
-						<p class="secupress-price-desc secupress-hide-monthly"><?php echo esc_html( sprintf( __( '%d%% OFF', 'secupress' ), (int) $plan['free'] ) ); ?></p>
+						<p class="secupress-price-desc secupress-hide-monthly"><?php echo esc_html( sprintf( __( '%1$d%% OFF', 'secupress' ), (int) $plan['free'] ) ); ?></p>
 					</div>
 					<div class="secupress-price-details">
 						<p class="secupress-pd-info secupress-hide-monthly"><?php _e( 'Billed per year', 'secupress' ); ?></p>
@@ -120,11 +120,11 @@ if ( ! $plans ) {
 			</div>
 			<div class="secupress-col-1-3">
 				<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>icon-imagify.png" width="66" height="66" alt="Imagify">
-				<p><?php printf( _x( 'Bonus %s on %s', 'one line text please', 'secupress' ), '<strong class="secupress-tertiary">' . __( '100 MB for free', 'secupress' ) . '</strong>', '<strong>Imagify</strong>' ); ?></p>
+				<p><?php printf( _x( 'Bonus %1$s on %2$s', 'one line text please', 'secupress' ), '<strong class="secupress-tertiary">' . __( '100 MB for free', 'secupress' ) . '</strong>', '<strong>Imagify</strong>' ); ?></p>
 			</div>
 			<div class="secupress-col-1-3">
 				<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>icon-wp-rocket.png" width="66" height="66" alt="WP Rocket">
-				<p><?php printf( _x( 'Bonus %s on %s', 'one line text please', 'secupress' ), '<strong class="secupress-tertiary">' . __( '20% OFF', 'secupress' ) . '</strong>', '<strong>WP&nbsp;Rocket</strong>' ); ?></p>
+				<p><?php printf( _x( 'Bonus %1$s on %2$s', 'one line text please', 'secupress' ), '<strong class="secupress-tertiary">' . __( '20% OFF', 'secupress' ) . '</strong>', '<strong>WP&nbsp;Rocket</strong>' ); ?></p>
 			</div>
 		</div>
 

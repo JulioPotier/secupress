@@ -1,11 +1,12 @@
 <?php
-/*
-Module Name: Actions Logs
-Description: Logs important events on the site, like some critical option changes and some hooks.
-Main Module: logs
-Author: SecuPress
-Version: 1.0
-*/
+/**
+ * Module Name: Actions Logs
+ * Description: Logs important events on the site, like some critical option changes and some hooks.
+ * Main Module: logs
+ * Author: SecuPress
+ * Version: 1.0
+ */
+
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 /** --------------------------------------------------------------------------------------------- */

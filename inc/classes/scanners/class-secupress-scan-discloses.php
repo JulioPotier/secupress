@@ -81,7 +81,6 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 			'<a target="_blank" href="' . $module_url . '#row-content-protect_wp-version">' . __( 'WordPress Version Disclosure', 'secupress' ) . '</a>'
 		);
 
-
 		$messages   = array(
 			// "good"
 			0   => __( 'Your site does not reveal either your <strong>WordPress version</strong> or <strong>PHP version</strong>.', 'secupress' ),

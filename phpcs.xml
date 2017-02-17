@@ -40,12 +40,13 @@
 	</rule>
 
 	<rule ref="Generic.Strings.UnnecessaryStringConcat.Found">
+		<exclude-pattern>inc/modules/firewall/tools.php</exclude-pattern>
 		<exclude-pattern>inc/modules/users-login/tools.php</exclude-pattern>
 	</rule>
 
 	<rule ref="WordPress.Arrays.ArrayDeclaration.ValueNoNewline">
-		<exclude-pattern>inc/modules/users-login/tools.php</exclude-pattern>
 		<exclude-pattern>inc/modules/file-system/tools.php</exclude-pattern>
+		<exclude-pattern>inc/modules/users-login/tools.php</exclude-pattern>
 	</rule>
 
 	<rule ref="WordPress.CSRF.NonceVerification">
@@ -57,7 +58,7 @@
 	<rule ref="WordPress.NamingConventions.ValidVariableName">
 		<properties>
 			<!-- You're drunk WPCS, I wanted to white-list properties. -->
-			<property name="customVariablesWhitelist" value="preserveWhiteSpace,parentNode,formatOutput" type="array"/>
+			<property name="customVariablesWhitelist" value="preserveWhiteSpace,parentNode,formatOutput,firstChild,FromName,From,Subject" type="array"/>
 		</properties>
 	</rule>
 

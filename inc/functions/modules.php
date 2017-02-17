@@ -230,13 +230,14 @@ function secupress_get_modules() {
 
 
 /**
- * Get the counts of Free & Pro modules, or Free or Pro individually
- *
- * @param  (string) $type Null by default, "free" or "pro" string expected
- * @return (array|int)    Array of both types of module count, or an individual count
+ * Get the counts of Free & Pro modules, or Free or Pro individually.
  *
  * @since  1.0.5
  * @author Geoffrey Crofte
+ *
+ * @param  (string) $type Null by default, "free" or "pro" string expected.
+ *
+ * @return (array|int)    Array of both types of module count, or an individual count
  */
 function secupress_get_options_counts( $type = null ) {
 	$modules = secupress_get_modules();

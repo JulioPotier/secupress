@@ -5,8 +5,9 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /** MAKE SURE OUR LISTS ARE NOT EMPTY: FILTER OUTPUT ============================================ */
 /** --------------------------------------------------------------------------------------------- */
 
-// Bad User Agents.
-
+/**
+ * Bad User Agents.
+ */
 add_filter( 'pre_secupress_get_module_option_bbq-headers_user-agents-list', 'secupress_firewall_pre_bbq_headers_user_agents_list_default_if_empty', PHP_INT_MAX, 3 );
 /**
  * Filter the option to not return an empty list of forbidden user-agents.
@@ -59,8 +60,9 @@ function secupress_firewall_bbq_headers_user_agents_list_default() {
 }
 
 
-// Bad URL contents.
-
+/**
+ * Bad URL contents.
+ */
 add_filter( 'pre_secupress_get_module_option_bbq-url-content_bad-contents-list', 'secupress_firewall_pre_bbq_url_content_bad_contents_list_default_if_empty', PHP_INT_MAX, 3 );
 /**
  * Filter the option to not return an empty list of forbidden contents.

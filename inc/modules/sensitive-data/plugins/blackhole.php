@@ -1,11 +1,12 @@
 <?php
-/*
-Module Name: Blackhole
-Description: Catch bots that don't respect your <code>robots.txt</code> rules.
-Main Module: sensitive_data
-Author: SecuPress
-Version: 1.0
-*/
+/**
+ * Module Name: Blackhole
+ * Description: Catch bots that don't respect your <code>robots.txt</code> rules.
+ * Main Module: sensitive_data
+ * Author: SecuPress
+ * Version: 1.0
+ */
+
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 

@@ -44,7 +44,7 @@ class SecuPress_Admin_Support {
 	protected $data;
 
 
-	// Public methods ==============================================================================.
+	/** Public methods ========================================================================== */
 
 	/**
 	 * Init.
@@ -198,7 +198,7 @@ class SecuPress_Admin_Support {
 	}
 
 
-	// Private methods =============================================================================.
+	/** Private methods ========================================================================= */
 
 	/**
 	 * Sanitize and get the summary.
@@ -370,7 +370,7 @@ class SecuPress_Admin_Support {
 			// Remove the scanner from the referer, we don't want it to be used for the redirection.
 			if ( ! empty( $_REQUEST['_wp_http_referer'] ) ) {
 				$_REQUEST['_wp_http_referer'] = preg_replace( '@&scanner=' . $this->settings['support_scanner'] . '@i', '', $_REQUEST['_wp_http_referer'] );
-			} else if ( ! empty( $_SERVER['HTTP_REFERER'] ) ) {
+			} elseif ( ! empty( $_SERVER['HTTP_REFERER'] ) ) {
 				$_REQUEST['HTTP_REFERER'] = preg_replace( '@&scanner=' . $this->settings['support_scanner'] . '@i', '', $_REQUEST['HTTP_REFERER'] );
 			}
 		}
@@ -413,7 +413,7 @@ class SecuPress_Admin_Support {
 			return;
 		}
 
-		// Maybe add the summary
+		// Maybe add the summary.
 		if ( $this->get_summary() ) {
 			$message .= '</strong><br/>' . __( 'By the way, here is your subject:', 'secupress' ) . '</p>';
 			$message .= '<blockquote>' . esc_html( $this->get_summary() ) . '</blockquote>'; // Escaped.
@@ -438,7 +438,7 @@ class SecuPress_Admin_Support {
 	}
 
 
-	// Static methods ==============================================================================.
+	/** Static methods ========================================================================== */
 
 	/**
 	 * Get the default description.

@@ -360,7 +360,7 @@ function secupress_rename_admin_username_logout() {
 		return;
 	}
 
-	$current_user = wp_get_current_user();
+	$current_user = wp_get_current_user(); // WPCS: override ok.
 
 	if ( (int) $current_user->ID !== (int) $data['ID'] || 'admin' !== $current_user->user_login ) {
 		return;

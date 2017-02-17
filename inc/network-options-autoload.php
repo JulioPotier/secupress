@@ -93,8 +93,8 @@ function secupress_get_global_network_option_names_for_autoload() {
 		if ( is_admin() ) {
 			$option_names = array_merge( $option_names, array(
 				'_site_transient_secupress-admin-as-author-administrator', // Pro.
-				'_site_transient_secupress_toggle_file_scan', // Pro
-				'_site_transient_secupress_pro_activation', // Pro
+				'_site_transient_secupress_toggle_file_scan', // Pro.
+				'_site_transient_secupress_pro_activation', // Pro.
 				'_site_transient_secupress_activation',
 			) );
 		}

@@ -1,11 +1,12 @@
 <?php
-/*
-Module Name: No Theme Installation
-Description: Disabled the theme installation from repository
-Main Module: plugins_themes
-Author: SecuPress
-Version: 1.0
-*/
+/**
+ * Module Name: No Theme Installation
+ * Description: Disabled the theme installation from repository
+ * Main Module: plugins_themes
+ * Author: SecuPress
+ * Version: 1.0
+ */
+
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 if ( is_admin() ) {

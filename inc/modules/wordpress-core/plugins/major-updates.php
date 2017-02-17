@@ -1,11 +1,12 @@
 <?php
-/*
-Module Name: Major Updates
-Description: Allow Auto Updates for Major Versions
-Main Module: wordpress_core
-Author: SecuPress
-Version: 1.0
-*/
+/**
+ * Module Name: Major Updates
+ * Description: Allow Auto Updates for Major Versions
+ * Main Module: wordpress_core
+ * Author: SecuPress
+ * Version: 1.0
+ */
+
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 // Fix using filters auto_update_core, allow_major_auto_core_updates.
