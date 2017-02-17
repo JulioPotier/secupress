@@ -1110,7 +1110,7 @@ function secupress_decompress_data( $data ) {
 
 	/** Little and gentle obfuscation to avoid being tagged as "malicious script", I hope you understand :) — Julio. */
 	$gz  = 'eta';
-	$gz  = 'gz' . strrev( $gz . 'lfin' );
+	$gz  = 'gz' . strrev( $gz . 'lfni' );
 	$bsf = 'ced';
 	$bsf = strrev( 'edo' . $bsf );
 	$bsf = '64_' . $bsf;
