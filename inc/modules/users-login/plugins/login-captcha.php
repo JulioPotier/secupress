@@ -4,7 +4,7 @@
  * Description: Add a gentle captcha on the login form
  * Main Module: users_login
  * Author: SecuPress
- * Version: 1.0.1
+ * Version: 1.1
  */
 
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
@@ -16,6 +16,10 @@ add_action( 'login_form', 'secupress_add_captcha_on_login_form' );
  * @since 1.0
  */
 function secupress_add_captcha_on_login_form() {
+	if ( isset( $_GET['action'] ) && 'login' !== $_GET['action'] ) {
+		return;
+	}
+
 	?>
 	<div>
 		<div id="areyouhuman">
@@ -38,7 +42,7 @@ add_action( 'login_head', 'secupress_login_captcha_scripts' );
  * @since 1.0
  */
 function secupress_login_captcha_scripts() {
-	if ( isset( $_GET['action'] ) && 'login' !== $_GET['action'] && 'notpasswordless' !== $_GET['action'] ) {
+	if ( isset( $_GET['action'] ) && 'login' !== $_GET['action'] ) {
 		return;
 	}
 
@@ -95,9 +99,9 @@ function secupress_captcha_check() {
 }
 
 
-add_action( 'authenticate', 'secupress_manage_captcha', 20, 2 );
+add_action( 'authenticate', 'secupress_manage_captcha', SECUPRESS_INT_MAX - 20, 2 );
 /**
- * Display a message when the user disabled JavaScript on his/her browser.
+ * Process the captcha test.
  *
  * @since 1.0
  *
@@ -108,17 +112,28 @@ add_action( 'authenticate', 'secupress_manage_captcha', 20, 2 );
  * @return (null|object)
  */
 function secupress_manage_captcha( $raw_user, $username ) {
+	static $running = false;
+
+	if ( $running ) {
+		return $raw_user;
+	}
+	$running = true;
+
 	if ( defined( 'XMLRPC_REQUEST' ) || defined( 'APP_REQUEST' ) ) {
+		$running = false;
 		return $raw_user;
 	}
 
-	if ( is_wp_error( $raw_user ) || ! isset( $_POST['log'], $_POST['pwd'] ) ) { // WPCS: CSRF ok.
+	// Make sure to process only credentials provided by the login form.
+	if ( empty( $_POST['log'] ) ) { // WPCS: CSRF ok.
+		$running = false;
 		return $raw_user;
 	}
 
 	$fallback_wp_error = new WP_Error( 'authentication_failed', __( '<strong>ERROR</strong>: The human verification is incorrect.', 'secupress' ), __FUNCTION__ );
 
 	if ( ! isset( $_POST['sp_name'] ) || '' !== $_POST['sp_name'] ) { // WPCS: CSRF ok.
+		$running = false;
 		return $fallback_wp_error;
 	}
 
@@ -129,6 +144,7 @@ function secupress_manage_captcha( $raw_user, $username ) {
 		time() > $captcha_keys[ $captcha_key ] + 2 * MINUTE_IN_SECONDS ||
 		time() < $captcha_keys[ $captcha_key ] + 2
 	) {
+		$running = false;
 		return $fallback_wp_error;
 	}
 
@@ -141,6 +157,7 @@ function secupress_manage_captcha( $raw_user, $username ) {
 		update_site_option( 'secupress_captcha_keys', $captcha_keys, false );
 	}
 
+	$running = false;
 	return $raw_user;
 }
 

@@ -5,7 +5,8 @@
  * Description: Protect your WordPress with SecuPress, analyze and ensure the safety of your website daily.
  * Author: WP Media
  * Author URI: http://wp-media.me
- * Version: 1.2.2
+ * Version: 1.2.3
+ * Sub-code Name: Nous irons au bois
  * Code Name: Heavy Duty
  * Network: true
  * License: GPLv2
@@ -20,11 +21,11 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 
-/*------------------------------------------------------------------------------------------------*/
-/* DEFINES ====================================================================================== */
-/*------------------------------------------------------------------------------------------------*/
+/** --------------------------------------------------------------------------------------------- */
+/** DEFINES ===================================================================================== */
+/** --------------------------------------------------------------------------------------------- */
 
-define( 'SECUPRESS_VERSION'               , '1.2.2' );
+define( 'SECUPRESS_VERSION'               , '1.2.3' );
 define( 'SECUPRESS_PRIVATE_KEY'           , false );
 define( 'SECUPRESS_ACTIVE_SUBMODULES'     , 'secupress_active_submodules' );
 define( 'SECUPRESS_SETTINGS_SLUG'         , 'secupress_settings' );
@@ -60,15 +61,16 @@ define( 'SECUPRESS_ADMIN_JS_URL'          , SECUPRESS_ASSETS_URL . 'admin/js/' )
 define( 'SECUPRESS_ADMIN_IMAGES_URL'      , SECUPRESS_ASSETS_URL . 'admin/images/' );
 define( 'SECUPRESS_PHP_MIN'               , '5.3' );
 define( 'SECUPRESS_WP_MIN'                , '3.7' );
+define( 'SECUPRESS_INT_MAX'               , PHP_INT_MAX - 20 );
 
 if ( ! defined( 'SECUPRESS_LASTVERSION' ) ) {
 	define( 'SECUPRESS_LASTVERSION', '0' );
 }
 
 
-/*------------------------------------------------------------------------------------------------*/
-/* INIT ========================================================================================= */
-/*------------------------------------------------------------------------------------------------*/
+/** --------------------------------------------------------------------------------------------- */
+/** INIT ======================================================================================== */
+/** --------------------------------------------------------------------------------------------- */
 
 /**
  * All the stuff for the plugin activation and deactivation.
@@ -85,7 +87,7 @@ add_action( 'plugins_loaded', 'secupress_init', 0 );
  * @since 1.0
  */
 function secupress_init() {
-	global $wp_version, $is_iis7;
+	global $wp_version;
 
 	// Nothing to do if autosave.
 	if ( defined( 'DOING_AUTOSAVE' ) ) {
@@ -110,19 +112,7 @@ function secupress_init() {
 	}
 
 	// Functions.
-	require_once( SECUPRESS_INC_PATH . 'functions/compat.php' );
-	require_once( SECUPRESS_INC_PATH . 'functions/deprecated.php' );
-	require_once( SECUPRESS_INC_PATH . 'functions/common.php' );
-	require_once( SECUPRESS_INC_PATH . 'functions/formatting.php' );
-	require_once( SECUPRESS_INC_PATH . 'functions/options.php' );
-	require_once( SECUPRESS_INC_PATH . 'functions/modules.php' );
-	require_once( SECUPRESS_INC_PATH . 'functions/db.php' );
-	require_once( SECUPRESS_INC_PATH . 'functions/ip.php' );
-	require_once( SECUPRESS_INC_PATH . 'functions/files.php' );
-	require_once( SECUPRESS_INC_PATH . 'functions/htaccess.php' );
-	if ( $is_iis7 ) {
-		require_once( SECUPRESS_INC_PATH . 'functions/iis7.php' );
-	}
+	secupress_load_functions();
 
 	// Hooks.
 	require_once( SECUPRESS_INC_PATH . 'network-options-autoload.php' );
@@ -137,29 +127,15 @@ function secupress_init() {
 	}
 	define( 'SECUPRESS_PLUGIN_SLUG', sanitize_title( SECUPRESS_PLUGIN_NAME ) );
 
-	// The Singleton class.
-	secupress_require_class( 'Singleton' );
-
 	if ( is_admin() ) {
 		if ( is_multisite() ) {
-			// Hooks and functions for multisite.
+			// Hooks for multisite.
 			require_once( SECUPRESS_ADMIN_PATH . 'multisite/centralize-blog-options.php' );
-			require_once( SECUPRESS_ADMIN_PATH . 'multisite/options.php' );
 			require_once( SECUPRESS_ADMIN_PATH . 'multisite/settings.php' );
 		}
 
-		// The notices class.
-		secupress_require_class( 'Admin', 'Notices' );
+		// Notices.
 		SecuPress_Admin_Notices::get_instance();
-
-		// Functions.
-		require_once( SECUPRESS_ADMIN_PATH . 'functions/admin.php' );
-		require_once( SECUPRESS_ADMIN_PATH . 'functions/options.php' );
-		require_once( SECUPRESS_ADMIN_PATH . 'functions/settings.php' );
-		require_once( SECUPRESS_ADMIN_PATH . 'functions/ajax-post.php' );
-		require_once( SECUPRESS_ADMIN_PATH . 'functions/scan-fix.php' );
-		require_once( SECUPRESS_ADMIN_PATH . 'functions/modules.php' );
-		require_once( SECUPRESS_ADMIN_PATH . 'functions/notices.php' );
 
 		// Hooks.
 		require_once( SECUPRESS_ADMIN_PATH . 'options.php' );
@@ -294,9 +270,65 @@ function secupress_load_plugins() {
 }
 
 
-/*------------------------------------------------------------------------------------------------*/
-/* I18N ========================================================================================= */
-/*------------------------------------------------------------------------------------------------*/
+/**
+ * Include files that contain our functions.
+ *
+ * @since 1.2.3
+ * @author Grégory Viguier
+ */
+function secupress_load_functions() {
+	global $is_iis7;
+	static $done = false;
+
+	if ( $done ) {
+		return;
+	}
+	$done = true;
+
+	require_once( SECUPRESS_INC_PATH . 'functions/compat.php' );
+	require_once( SECUPRESS_INC_PATH . 'functions/deprecated.php' );
+	require_once( SECUPRESS_INC_PATH . 'functions/common.php' );
+	require_once( SECUPRESS_INC_PATH . 'functions/formatting.php' );
+	require_once( SECUPRESS_INC_PATH . 'functions/options.php' );
+	require_once( SECUPRESS_INC_PATH . 'functions/modules.php' );
+	require_once( SECUPRESS_INC_PATH . 'functions/db.php' );
+	require_once( SECUPRESS_INC_PATH . 'functions/ip.php' );
+	require_once( SECUPRESS_INC_PATH . 'functions/files.php' );
+	require_once( SECUPRESS_INC_PATH . 'functions/htaccess.php' );
+
+	if ( $is_iis7 ) {
+		require_once( SECUPRESS_INC_PATH . 'functions/iis7.php' );
+	}
+
+	// The Singleton class.
+	secupress_require_class( 'Singleton' );
+
+	if ( ! is_admin() ) {
+		return;
+	}
+
+	if ( is_multisite() ) {
+		// Functions for multisite.
+		require_once( SECUPRESS_ADMIN_PATH . 'multisite/options.php' );
+	}
+
+	// The notices class.
+	secupress_require_class( 'Admin', 'Notices' );
+
+	// Functions for the admin side.
+	require_once( SECUPRESS_ADMIN_PATH . 'functions/admin.php' );
+	require_once( SECUPRESS_ADMIN_PATH . 'functions/options.php' );
+	require_once( SECUPRESS_ADMIN_PATH . 'functions/settings.php' );
+	require_once( SECUPRESS_ADMIN_PATH . 'functions/ajax-post.php' );
+	require_once( SECUPRESS_ADMIN_PATH . 'functions/scan-fix.php' );
+	require_once( SECUPRESS_ADMIN_PATH . 'functions/modules.php' );
+	require_once( SECUPRESS_ADMIN_PATH . 'functions/notices.php' );
+}
+
+
+/** --------------------------------------------------------------------------------------------- */
+/** I18N ======================================================================================== */
+/** --------------------------------------------------------------------------------------------- */
 
 /**
  * Translations for the plugin textdomain.

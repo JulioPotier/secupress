@@ -3,7 +3,7 @@ Contributors: wp_media, SecuPress, juliobox, GregLone
 Tags: security, spam, backup, schedule, firewall, sensitive data, antivirus, logs, alerts
 Requires at least: 3.7
 Tested up to: 4.7.2
-Stable tag: 1.2.2
+Stable tag: 1.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -201,6 +201,19 @@ It's important to delete all other security plugins before activating SecuPress.
 
 == Changelog ==
 
+= 1.2.3 =
+
+* 20 feb 2017
+* Improvement #370: in the scanner, each scan has now its own documentation 📖. The "Read the documentation" links can be found at step 3, the Manual Operations.
+* Improvement #357: for the "Too Long URL" protection, requests made with `wp_request_***()` to self are not blocked anymore.
+* Fix #373: fixed a bug that allowed a specifically forged URL to cheat the "Too Long URL" protection.
+* Fix #367: fixed a PHP notice `Missing argument 2 for SecuPress_Action_Log::pre_process_action_wp_login()`.
+* Fix #363: fixed a possible failure on step 2 of the scanner (Auto-Fix).
+* Fix #352: revamp the whole "Auto Update" scan and protection, mainly focusing on the constant definitions.
+* Fix #347: the Twitter bird now can sing correctly.
+* Fix #343: when some scans display a message "Unable to determine...", a link to activate manually the protection should be displaying. Some were missing.
+* Fix #329: the directory listing scan now reports a "Good" status if folders display an empty page with HTTP code 200.
+
 = 1.2.2 =
 
 * 27 jan 2017
@@ -216,9 +229,9 @@ It's important to delete all other security plugins before activating SecuPress.
 
 * 18 jan 2017
 * Happy new year! 🎉
-* Bugfix #342: in the Malware Scan module, the "Save All Changes" button under the Directory Index option was disabled.
 * Improvement #336: prevent a rare *PHP warning: `array_count_values()` can only count string and integer values!* that could mess with the scan results.
 * Improvement #322: CSS animations are no more on Logs page, interacting with them is now easier.
+* Fix #342: in the Malware Scan module, the "Save All Changes" button under the Directory Index option was disabled.
 
 = 1.2 =
 

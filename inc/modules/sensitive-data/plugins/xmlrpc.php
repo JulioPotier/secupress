@@ -1,11 +1,12 @@
 <?php
-/*
-Module Name: Disable XML-RPC
-Description: Disable totally or partially XML-RPC.
-Main Module: sensitive_data
-Author: SecuPress
-Version: 1.0
-*/
+/**
+ * Module Name: Disable XML-RPC
+ * Description: Disable totally or partially XML-RPC.
+ * Main Module: sensitive_data
+ * Author: SecuPress
+ * Version: 1.0
+ */
+
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 

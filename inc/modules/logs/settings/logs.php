@@ -7,8 +7,9 @@ $this->set_current_section( 'logs' );
 $this->add_section( _x( 'Logs', 'post type general name', 'secupress' ), array( 'with_save_button' => false ) );
 
 
-// WP actions.
-
+/**
+ * WP actions.
+ */
 $main_field_name = $this->get_field_name( 'action-logs-activated' );
 
 $this->add_field( array(
@@ -65,8 +66,9 @@ if ( class_exists( 'SecuPress_Action_Logs' ) ) :
 endif;
 
 
-// WP 404s.
-
+/**
+ * WP 404s.
+ */
 $main_field_name = $this->get_field_name( '404-logs-activated' );
 
 $this->add_field( array(

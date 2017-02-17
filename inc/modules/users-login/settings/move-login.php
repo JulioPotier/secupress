@@ -68,8 +68,9 @@ $this->add_field( array(
 ) );
 
 
-// If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for Move Login.
-
+/**
+ * If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for Move Login.
+ */
 if ( $is_plugin_active && function_exists( 'secupress_move_login_get_rules' ) ) {
 	$message = false;
 

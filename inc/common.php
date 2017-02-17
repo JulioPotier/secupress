@@ -1,25 +1,9 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
-add_filter( 'http_request_args', 'secupress_add_own_ua', 10, 2 );
-/**
- * Force our user agent header when we call our urls.
- *
- * @since 1.0
- * @since 1.1.4 Available in global scope.
- *
- * @param (array)  $r   The request parameters.
- * @param (string) $url The request URL.
- *
- * @return (array)
- */
-function secupress_add_own_ua( $r, $url ) {
-	if ( false !== strpos( $url, 'secupress.me' ) ) {
-		$r['headers']['X-SECUPRESS'] = secupress_user_agent( $r['user-agent'] );
-	}
-	return $r;
-}
-
+/** --------------------------------------------------------------------------------------------- */
+/** BANNED IPS ================================================================================== */
+/** --------------------------------------------------------------------------------------------- */
 
 add_action( 'plugins_loaded', 'secupress_check_ban_ips' );
 /**
@@ -28,7 +12,26 @@ add_action( 'plugins_loaded', 'secupress_check_ban_ips' );
  * @since 1.0
  */
 function secupress_check_ban_ips() {
-	$ban_ips  = get_site_option( SECUPRESS_BAN_IP );
+	$ban_ips = get_site_option( SECUPRESS_BAN_IP );
+	$ip      = secupress_get_ip();
+
+	if ( secupress_ip_is_whitelisted( $ip ) ) {
+		/**
+		 * The user is white-listed. Make sure to remove the IP from the list.
+		 * It will also prevent problems with `secupress_die()` not dying.
+		 */
+		if ( isset( $ban_ips[ $ip ] ) ) {
+			unset( $ban_ips[ $ip ] );
+			if ( $ban_ips ) {
+				update_site_option( SECUPRESS_BAN_IP, $ban_ips );
+			} else {
+				delete_site_option( SECUPRESS_BAN_IP );
+			}
+		}
+
+		return;
+	}
+
 	$time_ban = (int) secupress_get_module_option( 'login-protection_time_ban', 5, 'users-login' );
 	$update   = false;
 	$redirect = false;
@@ -37,7 +40,6 @@ function secupress_check_ban_ips() {
 	if ( $ban_ips && is_array( $ban_ips ) ) {
 		// The link to be unlocked?
 		if ( ! empty( $_GET['action'] ) && 'secupress_self-unban-ip' === $_GET['action'] ) {
-			$ip     = secupress_get_ip();
 			$result = ! empty( $_GET['_wpnonce'] ) ? wp_verify_nonce( $_GET['_wpnonce'], 'secupress_self-unban-ip-' . $ip ) : false;
 
 			if ( $result ) {
@@ -64,7 +66,11 @@ function secupress_check_ban_ips() {
 
 		// Save the changes.
 		if ( $update ) {
-			update_site_option( SECUPRESS_BAN_IP, $ban_ips );
+			if ( $ban_ips ) {
+				update_site_option( SECUPRESS_BAN_IP, $ban_ips );
+			} else {
+				delete_site_option( SECUPRESS_BAN_IP );
+			}
 		}
 
 		// The user just got unlocked. Redirect to homepage.
@@ -74,8 +80,6 @@ function secupress_check_ban_ips() {
 		}
 
 		// Block the user if the IP is still in the array.
-		$ip = secupress_get_ip();
-
 		if ( array_key_exists( $ip, $ban_ips ) ) {
 			// Display a form in case of accidental ban.
 			$unban_atts = secupress_check_ban_ips_maybe_send_unban_email( $ip );
@@ -249,6 +253,30 @@ function secupress_check_ban_ips_form( $args ) {
 }
 
 
+/** --------------------------------------------------------------------------------------------- */
+/** VARIOUS STUFF =============================================================================== */
+/** --------------------------------------------------------------------------------------------- */
+
+add_filter( 'http_request_args', 'secupress_add_own_ua', 10, 2 );
+/**
+ * Force our user agent header when we call our urls.
+ *
+ * @since 1.0
+ * @since 1.1.4 Available in global scope.
+ *
+ * @param (array)  $r   The request parameters.
+ * @param (string) $url The request URL.
+ *
+ * @return (array)
+ */
+function secupress_add_own_ua( $r, $url ) {
+	if ( false !== strpos( $url, 'secupress.me' ) ) {
+		$r['headers']['X-SECUPRESS'] = secupress_user_agent( $r['user-agent'] );
+	}
+	return $r;
+}
+
+
 add_filter( 'secupress.plugin.blacklist_logins_list', 'secupress_maybe_remove_admin_from_blacklist' );
 /**
  * If user registrations are open, the "admin" user should not be blacklisted.
@@ -269,16 +297,55 @@ function secupress_maybe_remove_admin_from_blacklist( $list ) {
 }
 
 
+add_action( 'secupress.loaded', 'secupress_check_token_wp_registration_url' );
+/**
+ * Avoid sending emails when we do a "subscription test scan"
+ *
+ * @since 1.0
+ */
+function secupress_check_token_wp_registration_url() {
+	if ( ! empty( $_POST['secupress_token'] ) && false !== ( $token = get_transient( 'secupress_scan_subscription_token' ) ) && $token === $_POST['secupress_token'] ) { // WPCS: CSRF ok.
+		add_action( 'wp_mail', '__return_false' );
+	}
+}
+
+
+add_filter( 'registration_errors', 'secupress_registration_test_errors', PHP_INT_MAX, 2 );
+/**
+ * This is used in the Subscription scan to test user registrations from the login page.
+ *
+ * @since 1.0
+ * @see `register_new_user()`
+ *
+ * @param (object) $errors               A WP_Error object containing any errors encountered during registration.
+ * @param (string) $sanitized_user_login User's username after it has been sanitized.
+ *
+ * @return (object) The WP_Error object with a new error if the user name is blacklisted.
+ */
+function secupress_registration_test_errors( $errors, $sanitized_user_login ) {
+	if ( ! $errors->get_error_code() && false !== strpos( $sanitized_user_login, 'secupress' ) ) {
+		set_transient( 'secupress_registration_test', 'failed', HOUR_IN_SECONDS );
+		$errors->add( 'secupress_registration_test', 'secupress_registration_test_failed' );
+	}
+
+	return $errors;
+}
+
+
+/** --------------------------------------------------------------------------------------------- */
+/** AFTER AUTOMATIC FIX / MANUAL FIX ============================================================ */
+/** --------------------------------------------------------------------------------------------- */
+
 add_action( 'plugins_loaded', 'secupress_rename_admin_username_logout', 50 );
 /**
- * Will rename the "admin" account after the rename-admin-username manual fix
+ * Will rename the "admin" account after the rename-admin-username manual fix.
  *
  * @since 1.0
  */
 function secupress_rename_admin_username_logout() {
-	global $current_user, $pagenow, $wpdb;
+	global $current_user, $wpdb;
 
-	if ( ! empty( $_POST ) || defined( 'DOING_AJAX' ) || defined( 'DOING_AUTOSAVE' ) || defined( 'DOING_CRON' ) || 'admin-post.php' === $pagenow || ! is_user_logged_in() ) { // WPCS: CSRF ok.
+	if ( ! secupress_can_perform_extra_fix_action() ) {
 		return;
 	}
 
@@ -293,7 +360,7 @@ function secupress_rename_admin_username_logout() {
 		return;
 	}
 
-	$current_user = wp_get_current_user();
+	$current_user = wp_get_current_user(); // WPCS: override ok.
 
 	if ( (int) $current_user->ID !== (int) $data['ID'] || 'admin' !== $current_user->user_login ) {
 		return;
@@ -337,14 +404,14 @@ function secupress_rename_admin_username_logout() {
 
 add_action( 'plugins_loaded', 'secupress_add_cookiehash_muplugin', 50 );
 /**
- * Will create a mu plugin to modify the COOKIEHASH constant
+ * Will create a mu plugin to modify the COOKIEHASH constant.
  *
  * @since 1.0
  */
 function secupress_add_cookiehash_muplugin() {
-	global $current_user, $pagenow, $wpdb;
+	global $current_user, $wpdb;
 
-	if ( ! empty( $_POST ) || defined( 'DOING_AJAX' ) || defined( 'DOING_AUTOSAVE' ) || defined( 'DOING_CRON' ) || 'admin-post.php' === $pagenow || ! is_user_logged_in() ) { // WPCS: CSRF ok.
+	if ( ! secupress_can_perform_extra_fix_action() ) {
 		return;
 	}
 
@@ -401,14 +468,14 @@ function secupress_add_cookiehash_muplugin() {
 
 add_action( 'plugins_loaded', 'secupress_add_salt_muplugin', 50 );
 /**
- * Will create a mu plugin to early set the salt keys
+ * Will create a mu plugin to early set the salt keys.
  *
  * @since 1.0
  */
 function secupress_add_salt_muplugin() {
-	global $current_user, $pagenow, $wpdb;
+	global $current_user, $wpdb;
 
-	if ( ! empty( $_POST ) || defined( 'SECUPRESS_SALT_KEYS_ACTIVE' ) || defined( 'DOING_AJAX' ) || defined( 'DOING_AUTOSAVE' ) || defined( 'DOING_CRON' ) || 'admin-post.php' === $pagenow || ! is_user_logged_in() ) { // WPCS: CSRF ok.
+	if ( defined( 'SECUPRESS_SALT_KEYS_ACTIVE' ) || ! secupress_can_perform_extra_fix_action() ) {
 		return;
 	}
 
@@ -533,7 +600,7 @@ function secupress_auto_username_login() {
 
 
 /**
- * Used in secupress_rename_admin_username_login() to force a user when auto authenticating
+ * Used in secupress_rename_admin_username_login() to force a user when auto authenticating.
  *
  * @since 1.0
  *
@@ -555,7 +622,7 @@ add_action( 'plugins_loaded', 'secupress_downgrade_author_administrator', 70 );
  * @since 1.0
  */
 function secupress_downgrade_author_administrator() {
-	if ( ! is_admin() ) {
+	if ( ! is_admin() || ! is_user_logged_in() ) {
 		return;
 	}
 
@@ -638,39 +705,4 @@ function secupress_downgrade_author_administrator() {
 
 	// Bye bye!
 	secupress_delete_site_transient( 'secupress-admin-as-author-administrator' );
-}
-
-
-add_action( 'secupress.loaded', 'secupress_check_token_wp_registration_url' );
-/**
- * Avoid sending emails when we do a "subscription test scan"
- *
- * @since 1.0
- */
-function secupress_check_token_wp_registration_url() {
-	if ( ! empty( $_POST['secupress_token'] ) && false !== ( $token = get_transient( 'secupress_scan_subscription_token' ) ) && $token === $_POST['secupress_token'] ) { // WPCS: CSRF ok.
-		add_action( 'wp_mail', '__return_false' );
-	}
-}
-
-
-add_filter( 'registration_errors', 'secupress_registration_test_errors', PHP_INT_MAX, 2 );
-/**
- * This is used in the Subscription scan to test user registrations from the login page.
- *
- * @since 1.0
- * @see `register_new_user()`
- *
- * @param (object) $errors               A WP_Error object containing any errors encountered during registration.
- * @param (string) $sanitized_user_login User's username after it has been sanitized.
- *
- * @return (object) The WP_Error object with a new error if the user name is blacklisted.
- */
-function secupress_registration_test_errors( $errors, $sanitized_user_login ) {
-	if ( ! $errors->get_error_code() && false !== strpos( $sanitized_user_login, 'secupress' ) ) {
-		set_transient( 'secupress_registration_test', 'failed', HOUR_IN_SECONDS );
-		$errors->add( 'secupress_registration_test', 'secupress_registration_test_failed' );
-	}
-
-	return $errors;
 }

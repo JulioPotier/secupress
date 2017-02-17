@@ -17,7 +17,7 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements SecuPress_Sca
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0';
+	const VERSION = '1.1';
 
 
 	/** Properties. ============================================================================= */
@@ -64,6 +64,40 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements SecuPress_Sca
 			1   => __( 'Protection activated', 'secupress' ),
 			// "bad"
 			200 => __( 'Your installation <strong>cannot auto-update</strong> itself.', 'secupress' ),
+			207 => _n_noop(
+				/** Translators: 1 is a value, 2 is a PHP constant name (or a list of names). */
+				'The following constant should not be set to %1$s: %2$s.',
+				'The following constants should not be set to %1$s: %2$s.',
+				'secupress'
+			),
+			208 => _n_noop(
+				/** Translators: 1 is a value, 2 is a PHP constant name (or a list of names). */
+				'The following constant should not be set to %1$s: %2$s.',
+				'The following constants should not be set to %1$s: %2$s.',
+				'secupress'
+			),
+			209 => _n_noop(
+				/** Translators: 1 is a value, 2 is a filter name (or a list of names). */
+				'The following filter should not be used or set to return %1$s: %2$s.',
+				'The following filters should not be used or set to return %1$s: %2$s.',
+				'secupress'
+			),
+			210 => _n_noop(
+				/** Translators: 1 is a value, 2 is a filter name (or a list of names). */
+				'The following filter should not be used or set to return %1$s: %2$s.',
+				'The following filters should not be used or set to return %1$s: %2$s.',
+				'secupress'
+			),
+			// "cantfix"
+			/** Translators: 1 is a file name, 2 is some code. */
+			300 => sprintf( __( 'The %1$s file is not writable. Please remove the following code from the file: %2$s', 'secupress' ), '<code>wp-config.php</code>', '%s' ),
+			301 => _n_noop(
+				/** Translators: 1 is the plugin name, 2 is a file name, 3 is some code. */
+				'%1$s could not remove a constant definition from the %2$s file. Please remove the following line from the file: %3$s',
+				'%1$s could not remove some constant definitions from the %2$s file. Please remove the following lines from the file: %3$s',
+				'secupress'
+			),
+			// DEPRECATED, NOT IN USE ANYMORE.
 			201 => __( '<code>DISALLOW_FILE_MODS</code> should be set to <code>FALSE</code>.', 'secupress' ),
 			202 => __( '<code>AUTOMATIC_UPDATER_DISABLED</code> should be set to <code>FALSE</code>.', 'secupress' ),
 			203 => __( '<code>DISALLOW_FILE_MODS</code> and <code>AUTOMATIC_UPDATER_DISABLED</code> should be set to <code>FALSE</code>.', 'secupress' ),
@@ -80,6 +114,20 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements SecuPress_Sca
 	}
 
 
+	/** Getters. ================================================================================ */
+
+	/**
+	 * Get the documentation URL.
+	 *
+	 * @since 1.2.3
+	 *
+	 * @return (string)
+	 */
+	public static function get_docs_url() {
+		return __( 'http://docs.secupress.me/article/98-automatic-updates-scan', 'secupress' );
+	}
+
+
 	/** Scan. =================================================================================== */
 
 	/**
@@ -90,36 +138,56 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements SecuPress_Sca
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-		// "bad"
-		$constants = 0;
-		$filters   = 0;
+		$constants_false = array();
+		$constants_true  = array();
+		$constants       = array(
+			'DISALLOW_FILE_MODS'         => true,
+			'AUTOMATIC_UPDATER_DISABLED' => true,
+			'WP_AUTO_UPDATE_CORE'        => false,
+		);
 
-		if ( defined( 'DISALLOW_FILE_MODS' ) && DISALLOW_FILE_MODS ) {
-			$constants += 1;
+		foreach ( $constants as $constant => $val ) {
+			if ( defined( $constant ) && (bool) constant( $constant ) === $val ) {
+				if ( $val ) {
+					$constants_true[] = "<code>$constant</code>";
+				} else {
+					$constants_false[] = "<code>$constant</code>";
+				}
+			}
 		}
 
-		if ( defined( 'AUTOMATIC_UPDATER_DISABLED' ) && AUTOMATIC_UPDATER_DISABLED ) {
-			$constants += 2;
+		$filters_false = array();
+		$filters_true  = array();
+		$filters       = array(
+			'automatic_updater_disabled'    => true,
+			'allow_minor_auto_core_updates' => false,
+		);
+
+		foreach ( $filters as $filter => $val ) {
+			/** This filter is documented wp-admin/includes/class-wp-upgrader.php */
+			if ( apply_filters( $filter, ! $val ) === $val ) {
+				if ( $val ) {
+					$filters_true[] = "<code>$filter</code>";
+				} else {
+					$filters_false[] = "<code>$filter</code>";
+				}
+			}
 		}
 
-		/** This filter is documented wp-admin/includes/class-wp-upgrader.php */
-		if ( true === apply_filters( 'automatic_updater_disabled', false ) ) {
-			$filters += 1;
-		}
-
-		/** This filter is documented wp-admin/includes/class-wp-upgrader.php */
-		if ( false === apply_filters( 'allow_minor_auto_core_updates', true ) ) {
-			$filters += 2;
-		}
-
-		if ( $constants || $filters ) {
+		if ( $constants_false || $constants_true || $filters_false || $filters_true ) {
 			$this->add_message( 200 );
 
-			if ( $constants ) {
-				$this->add_message( 200 + $constants );
+			if ( $constants_false ) {
+				$this->add_message( 207, array( count( $constants_false ), '<code>false</code>', $constants_false ) );
 			}
-			if ( $filters ) {
-				$this->add_message( 203 + $filters );
+			if ( $constants_true ) {
+				$this->add_message( 208, array( count( $constants_true ), '<code>true</code>', $constants_true ) );
+			}
+			if ( $filters_false ) {
+				$this->add_message( 209, array( count( $filters_false ), '<code>false</code>', $filters_false ) );
+			}
+			if ( $filters_true ) {
+				$this->add_message( 210, array( count( $filters_true ), '<code>true</code>', $filters_true ) );
 			}
 		} else {
 			$this->add_message( 0 );
@@ -142,21 +210,32 @@ class SecuPress_Scan_Auto_Update extends SecuPress_Scan implements SecuPress_Sca
 	 * @return (array) The fix results.
 	 */
 	public function fix() {
+		global $wp_settings_errors;
+
 		secupress_activate_submodule( 'wordpress-core', 'minor-updates' );
 
-		$wpconfig_filepath = secupress_is_wpconfig_writable();
-		$constants         = array( 'AUTOMATIC_UPDATER_DISABLED' => true, 'WP_AUTO_UPDATE_CORE' => false );
+		// Get the error.
+		$last_error = is_array( $wp_settings_errors ) && $wp_settings_errors ? end( $wp_settings_errors ) : false;
 
-		if ( $wpconfig_filepath ) {
-			foreach ( $constants as $constant => $val ) {
-				if ( defined( $constant ) && (bool) constant( $constant ) === $val ) {
-					$val = $val ? 'false' : 'true';
-					secupress_comment_constant( $constant, $wpconfig_filepath, false, $val );
-				}
+		if ( $last_error && 'general' === $last_error['setting'] ) {
+			if ( 'wp_config_not_writable' === $last_error['code'] ) {
+
+				$rules = static::get_rules_from_error( $last_error );
+				// "cantfix"
+				$this->add_fix_message( 300, array( $rules ) );
+				array_pop( $wp_settings_errors );
+
+			} elseif ( 'constant_not_commented' === $last_error['code'] ) {
+
+				$rules = static::get_rules_from_error( $last_error );
+				$count = substr_count( $rules, "\n" ) + 1;
+				// "cantfix"
+				$this->add_fix_message( 301, array( $count, SECUPRESS_PLUGIN_NAME, '<code>wp-config.php</code>', $rules ) );
+				array_pop( $wp_settings_errors );
 			}
 		}
 
-		$this->add_fix_message( 1 );
+		$this->maybe_set_fix_status( 1 );
 
 		return parent::fix();
 	}

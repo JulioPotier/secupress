@@ -1,11 +1,12 @@
 <?php
-/*
-Module Name: Ask for old password
-Description: Users must provide their old password when they want to change it in their profile page.
-Main Module: users_login
-Author: SecuPress
-Version: 1.0
-*/
+/**
+ * Module Name: Ask for old password
+ * Description: Users must provide their old password when they want to change it in their profile page.
+ * Main Module: users_login
+ * Author: SecuPress
+ * Version: 1.0
+ */
+
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 

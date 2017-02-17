@@ -1,16 +1,17 @@
 <?php
-/*
-Module Name: Logins Blacklist
-Description: Forbid some usernames to be used.
-Main Module: users_login
-Author: SecuPress
-Version: 1.0
-*/
+/**
+ * Module Name: Logins Blacklist
+ * Description: Forbid some usernames to be used.
+ * Main Module: users_login
+ * Author: SecuPress
+ * Version: 1.0
+ */
+
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
-/*------------------------------------------------------------------------------------------------*/
-/* EXISTING USERS WITH A BLACKLISTED USERNAME MUST CHANGE IT. =================================== */
-/*------------------------------------------------------------------------------------------------*/
+/** --------------------------------------------------------------------------------------------- */
+/** EXISTING USERS WITH A BLACKLISTED USERNAME MUST CHANGE IT. ================================== */
+/** --------------------------------------------------------------------------------------------- */
 
 add_action( 'auth_redirect', 'secupress_auth_redirect_blacklist_logins' );
 /**
@@ -90,14 +91,16 @@ function secupress_auth_redirect_blacklist_logins( $user_id ) {
 	?>
 	<form class="wrap" method="post">
 		<h1><?php _e( 'Please change your username', 'secupress' ); ?></h1>
-		<p><?php
-		printf(
-			/** Translators: 1 is a user name, 2 is a link "to the site" */
-			__( 'Your current username %1$s is blacklisted. You will not be able to reach the administration area until you change your username. Meanwhile, you still have access %2$s.', 'secupress' ),
-			'<strong>' . esc_html( $user->user_login ) . '</strong>',
-			'<a href="' . esc_url( user_trailingslashit( home_url() ) ) . '">' . __( 'to the site', 'secupress' ) . '</a>'
-		);
-		?></p>
+		<p>
+			<?php
+			printf(
+				/** Translators: 1 is a user name, 2 is a link "to the site" */
+				__( 'Your current username %1$s is blacklisted. You will not be able to reach the administration area until you change your username. Meanwhile, you still have access %2$s.', 'secupress' ),
+				'<strong>' . esc_html( $user->user_login ) . '</strong>',
+				'<a href="' . esc_url( user_trailingslashit( home_url() ) ) . '">' . __( 'to the site', 'secupress' ) . '</a>'
+			);
+			?>
+		</p>
 		<?php echo $error ? '<p class="error">' . $error . '</p>' : ''; ?>
 		<label for="new-login"><?php _e( 'New username:', 'secupress' ); ?></label><br/>
 		<input type="text" id="new-login" name="secupress-backlist-logins-new-login" value="" maxlength="60" required="required" aria-required="true" pattern="[A-Za-z0-9 _.\-@]{2,60}" autocorrect="off" autocapitalize="off" title="<?php echo $allowed; ?>"/><br/>
@@ -139,9 +142,9 @@ function secupress_blacklist_logins_display_login_message( $errors, $redirect_to
 }
 
 
-/*------------------------------------------------------------------------------------------------*/
-/* UTILITIES ==================================================================================== */
-/*------------------------------------------------------------------------------------------------*/
+/** --------------------------------------------------------------------------------------------- */
+/** UTILITIES =================================================================================== */
+/** --------------------------------------------------------------------------------------------- */
 
 /**
  * Change a user login.
@@ -237,12 +240,13 @@ function secupress_blacklist_logins_allowed_characters( $wrap = false ) {
 }
 
 
-/*------------------------------------------------------------------------------------------------*/
-/* FORBID USER CREATION AND EDITION IF THE USERNAME IS BLACKLISTED. ============================= */
-/*------------------------------------------------------------------------------------------------*/
+/** --------------------------------------------------------------------------------------------- */
+/** FORBID USER CREATION AND EDITION IF THE USERNAME IS BLACKLISTED. ============================ */
+/** --------------------------------------------------------------------------------------------- */
 
-// Launch the filters.
-
+/**
+ * Launch the filters.
+ */
 if ( secupress_wp_version_is( '4.4-RC1-35773' ) ) :
 
 	// `edit_user()`, `wpmu_validate_user_signup()`, `wp_insert_user()` and `register_new_user()`.

@@ -1,9 +1,9 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
-/*------------------------------------------------------------------------------------------------*/
-/* ACTIVE PLUGINS AND THEMES ==================================================================== */
-/*------------------------------------------------------------------------------------------------*/
+/** --------------------------------------------------------------------------------------------- */
+/** ACTIVE PLUGINS AND THEMES =================================================================== */
+/** --------------------------------------------------------------------------------------------- */
 
 add_action( 'add_option_active_plugins',    'secupress_update_active_plugins_centralized_blog_option', 20, 2 );
 add_action( 'update_option_active_plugins', 'secupress_update_active_plugins_centralized_blog_option', 20, 2 );
@@ -119,9 +119,9 @@ function secupress_delete_blog_from_centralized_blog_options( $blog_id ) {
 }
 
 
-/*------------------------------------------------------------------------------------------------*/
-/* FILL IN THE FIRST VALUES ===================================================================== */
-/*------------------------------------------------------------------------------------------------*/
+/** --------------------------------------------------------------------------------------------- */
+/** FILL IN THE FIRST VALUES ==================================================================== */
+/** --------------------------------------------------------------------------------------------- */
 
 add_action( 'load-toplevel_page_' . SECUPRESS_PLUGIN_SLUG . '_scanners', 'secupress_add_centralized_blog_options' );
 /**
@@ -197,14 +197,16 @@ function secupress_add_centralized_blog_options_admin_post_callback() {
 	ob_start();
 	?>
 	<div class="wrap">
-		<p><?php
-		printf(
-			/** Translators: %s is a "click here" link. */
-			__( 'If this page does not refresh automatically in 2 seconds, please %s.', 'secupress' ),
-			/* For `wp_get_referer()` see the param `_wp_http_referer` in `secupress_add_centralized_blog_options()`. */
-			'<a href="' . esc_url( $href ) . '" class="secupress-centralize-blog-options">' . __( 'click here', 'secupress' ) . '</a>'
-		);
-		?></p>
+		<p>
+			<?php
+			printf(
+				/** Translators: %s is a "click here" link. */
+				__( 'If this page does not refresh automatically in 2 seconds, please %s.', 'secupress' ),
+				/** For `wp_get_referer()` see the param `_wp_http_referer` in `secupress_add_centralized_blog_options()`. */
+				'<a href="' . esc_url( $href ) . '" class="secupress-centralize-blog-options">' . __( 'click here', 'secupress' ) . '</a>'
+			);
+			?>
+		</p>
 		<div class="progress-wrap"><div style="width:<?php echo $percent; ?>%" class="progress"><?php echo $percent; ?>%</div></div>
 	</div>
 	<?php
@@ -217,9 +219,9 @@ function secupress_add_centralized_blog_options_admin_post_callback() {
 }
 
 
-/*------------------------------------------------------------------------------------------------*/
-/* TOOLS ======================================================================================== */
-/*------------------------------------------------------------------------------------------------*/
+/** --------------------------------------------------------------------------------------------- */
+/** TOOLS ======================================================================================= */
+/** --------------------------------------------------------------------------------------------- */
 
 /**
  * First complete filling.

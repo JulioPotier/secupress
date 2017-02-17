@@ -17,7 +17,7 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements SecuP
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0.1';
+	const VERSION = '1.0.2';
 
 
 	/** Properties. ============================================================================= */
@@ -64,6 +64,12 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements SecuP
 			1   => __( 'Protection activated', 'secupress' ),
 			// "warning"
 			100 => _n_noop( 'Unable to determine the status of your homepage for %s request method.', 'Unable to determine the status of your homepage for %s request methods.', 'secupress' ),
+			101 => sprintf(
+				/** Translators: 1 is the name of a protection, 2 is the name of a module. */
+				__( 'But you can activate the %1$s protection from the module %2$s.', 'secupress' ),
+				'<strong>' . __( 'Block Bad Request Methods', 'secupress' ) . '</strong>',
+				'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-headers_request-methods-header">' . __( 'Firewall', 'secupress' ) . '</a>'
+			),
 			// "bad"
 			200 => _n_noop( 'Your website should block %s request method.', 'Your website should block %s request methods.', 'secupress' ),
 		);
@@ -73,6 +79,20 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements SecuP
 		}
 
 		return $messages;
+	}
+
+
+	/** Getters. ================================================================================ */
+
+	/**
+	 * Get the documentation URL.
+	 *
+	 * @since 1.2.3
+	 *
+	 * @return (string)
+	 */
+	public static function get_docs_url() {
+		return __( 'http://docs.secupress.me/article/112-bad-request-method-scan', 'secupress' );
 	}
 
 
@@ -123,6 +143,7 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements SecuP
 		if ( $warnings ) {
 			// "warning"
 			$this->add_message( 100, array( count( $warnings ), $warnings ) );
+			$this->add_message( 101 );
 		}
 
 		// "good"

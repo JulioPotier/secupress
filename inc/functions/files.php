@@ -15,7 +15,7 @@ function secupress_get_filesystem() {
 		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php' );
 		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php' );
 
-		$wp_filesystem = new WP_Filesystem_Direct( new StdClass() );
+		$wp_filesystem = new WP_Filesystem_Direct( new StdClass() ); // WPCS: override ok.
 	}
 
 	// Set the permission constants if not already set.
@@ -51,8 +51,10 @@ function secupress_rrmdir( $dir, $dirs_to_preserve = array() ) {
 	 */
 	do_action( 'secupress.before_rrmdir', $dir, $dirs_to_preserve );
 
-	if ( ! is_dir( $dir ) ) {
-		@unlink( $dir );
+	$filesystem = secupress_get_filesystem();
+
+	if ( ! $filesystem->is_dir( $dir ) ) {
+		$filesystem->delete( $dir );
 		return;
 	};
 
@@ -67,15 +69,15 @@ function secupress_rrmdir( $dir, $dirs_to_preserve = array() ) {
 		$dirs = array_diff( $dirs, array_filter( $keys ) );
 
 		foreach ( $dirs as $dir ) {
-			if ( is_dir( $dir ) ) {
+			if ( $filesystem->is_dir( $dir ) ) {
 				secupress_rrmdir( $dir, $dirs_to_preserve );
 			} else {
-				@unlink( $dir );
+				$filesystem->delete( $dir );
 			}
 		}
 	}
 
-	@rmdir( $dir );
+	$filesystem->delete( $dir );
 
 	/**
 	 * Fires before a file/directory cache was deleted.
@@ -99,9 +101,8 @@ function secupress_rrmdir( $dir, $dirs_to_preserve = array() ) {
  * @return (bool)
  */
 function secupress_mkdir( $dir ) {
-	$wp_filesystem = secupress_get_filesystem();
-
-	return $wp_filesystem->mkdir( $dir, FS_CHMOD_DIR );
+	$filesystem = secupress_get_filesystem();
+	return $filesystem->mkdir( $dir );
 }
 
 
@@ -257,8 +258,20 @@ function secupress_comment_constant( $constant, $wpconfig_filepath = false, $mar
  * @param (string) $constant          Name of the constant.
  * @param (string) $wpconfig_filepath Path to the `wp-config.php` file.
  * @param (string) $marker            Name of the marker used to define the constant ourself.
+ *
+ * @return (bool) True if the constant definition has been successfully uncommented. False if:
+ *                - the constant is already defined somewhere,
+ *                - or the file is not writable,
+ *                - or the comment was not found in the file,
+ *                - or it couldn't be uncommented.
+ *                So basically, this information is totally useless, deal with it.
  */
 function secupress_uncomment_constant( $constant, $wpconfig_filepath = false, $marker = false ) {
+	if ( defined( $constant ) ) {
+		// We must not uncomment a constant if it's already defined somewhere.
+		return false;
+	}
+
 	if ( ! $wpconfig_filepath ) {
 		$wpconfig_filepath = secupress_is_wpconfig_writtable();
 
@@ -274,7 +287,7 @@ function secupress_uncomment_constant( $constant, $wpconfig_filepath = false, $m
 
 	// Uncomment old value.
 	$constant = "(define\s*\(\s*(?:'$constant'|\"$constant\")\s*,(?:.*);)";
-	secupress_replace_content( $wpconfig_filepath, "@^[\t ]*/\*+\s*Commented by SecuPress\.*\s*\*/\s*?(?:/\*+\s*{$constant}\s*\*/|/+\s*{$constant})\s*$@mU", '$1' );
+	return secupress_replace_content( $wpconfig_filepath, "@^[\t ]*/\*+\s*Commented by SecuPress\.*\s*\*/\s*?(?:/\*+\s*{$constant}\s*\*/|/+\s*{$constant})\s*$@mU", '$1' );
 }
 
 
@@ -307,7 +320,7 @@ function secupress_get_themes_path() {
 	static $themes_dir;
 
 	if ( ! isset( $themes_dir ) ) {
-		$wp_filesystem = secupress_get_filesystem();
+		$wp_filesystem = secupress_get_filesystem(); // WPCS: override ok.
 		$themes_dir    = realpath( $wp_filesystem->wp_themes_dir() ) . DIRECTORY_SEPARATOR;
 	}
 
@@ -370,9 +383,9 @@ function secupress_put_contents( $file, $new_content = '', $args = array() ) {
 		'keep_old' => false,
 	) );
 
-	$wp_filesystem = secupress_get_filesystem();
-	$file_content  = '';
-	$comment_char  = basename( $file ) !== 'php.ini' ? '#' : ';';
+	$filesystem   = secupress_get_filesystem();
+	$file_content = '';
+	$comment_char = basename( $file ) !== 'php.ini' ? '#' : ';';
 
 	// Get the whole content of file and remove old marker content.
 	if ( file_exists( $file ) ) {
@@ -410,7 +423,7 @@ function secupress_put_contents( $file, $new_content = '', $args = array() ) {
 		$file_content = $content;
 	}
 
-	return $wp_filesystem->put_contents( $file, $file_content, FS_CHMOD_FILE );
+	return $filesystem->put_contents( $file, $file_content, FS_CHMOD_FILE );
 }
 
 
@@ -430,12 +443,12 @@ function secupress_replace_content( $file, $old_content, $new_content ) {
 		return false;
 	}
 
-	$wp_filesystem = secupress_get_filesystem();
-	$file_content  = $wp_filesystem->get_contents( $file );
+	$filesystem   = secupress_get_filesystem();
+	$file_content = $filesystem->get_contents( $file );
 
 	$new_content  = preg_replace( $old_content, $new_content, $file_content );
 	$replaced     = null !== $new_content && $new_content !== $file_content;
-	$put_contents = $wp_filesystem->put_contents( $file, $new_content, FS_CHMOD_FILE );
+	$put_contents = $filesystem->put_contents( $file, $new_content, FS_CHMOD_FILE );
 
 	return $put_contents && $replaced;
 }
@@ -495,20 +508,20 @@ function secupress_async_upgrades() {
  */
 function secupress_create_mu_plugin( $filename_part, $contents ) {
 
-	$wp_filesystem = secupress_get_filesystem();
-	$filename      = WPMU_PLUGIN_DIR . "/_secupress_{$filename_part}.php";
+	$filesystem = secupress_get_filesystem();
+	$filename   = WPMU_PLUGIN_DIR . "/_secupress_{$filename_part}.php";
 
 	if ( file_exists( $filename ) ) {
-		$wp_filesystem->delete( $filename );
+		$filesystem->delete( $filename );
 	}
 	if ( ! file_exists( WPMU_PLUGIN_DIR ) ) {
-		$wp_filesystem->mkdir( WPMU_PLUGIN_DIR );
+		$filesystem->mkdir( WPMU_PLUGIN_DIR );
 	}
 	if ( file_exists( $filename ) || ! file_exists( WPMU_PLUGIN_DIR ) ) {
 		return false;
 	}
 
-	return $wp_filesystem->put_contents( $filename, $contents );
+	return $filesystem->put_contents( $filename, $contents );
 }
 
 

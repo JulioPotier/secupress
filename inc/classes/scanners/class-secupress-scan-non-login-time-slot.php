@@ -17,7 +17,7 @@ class SecuPress_Scan_Non_Login_Time_Slot extends SecuPress_Scan implements SecuP
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0';
+	const VERSION = '1.0.1';
 
 
 	/** Properties. ============================================================================= */
@@ -84,7 +84,7 @@ class SecuPress_Scan_Non_Login_Time_Slot extends SecuPress_Scan implements SecuP
 			1   => __( 'Protection activated', 'secupress' ),
 			// "bad"
 			200 => __( 'Your website should be <strong>locked out sometimes</strong>.', 'secupress' ),
-			201 => sprintf( __( 'Our module <a href="%s">%s</a> could fix this.', 'secupress' ), esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#row-login-protection_type', __( 'Non Login Time Slot', 'secupress' ) ),
+			201 => sprintf( __( 'Our module %s could fix this.', 'secupress' ), '<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#row-login-protection_type">' . __( 'Non Login Time Slot', 'secupress' ) ) . '</a>',
 		);
 
 		if ( isset( $message_id ) ) {
@@ -92,6 +92,20 @@ class SecuPress_Scan_Non_Login_Time_Slot extends SecuPress_Scan implements SecuP
 		}
 
 		return $messages;
+	}
+
+
+	/** Getters. ================================================================================ */
+
+	/**
+	 * Get the documentation URL.
+	 *
+	 * @since 1.2.3
+	 *
+	 * @return (string)
+	 */
+	public static function get_docs_url() {
+		return __( 'http://docs.secupress.me/article/130-restricted-admin-access-scan', 'secupress' );
 	}
 
 

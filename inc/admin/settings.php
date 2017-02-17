@@ -1,9 +1,9 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
-/*------------------------------------------------------------------------------------------------*/
-/* CSS, JS, FOOTER ============================================================================== */
-/*------------------------------------------------------------------------------------------------*/
+/** --------------------------------------------------------------------------------------------- */
+/** CSS, JS, FOOTER ============================================================================= */
+/** --------------------------------------------------------------------------------------------- */
 
 add_action( 'admin_enqueue_scripts', 'secupress_add_settings_scripts' );
 /**
@@ -67,7 +67,8 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 		'confirmText'         => __( 'OK', 'secupress' ),
 		'cancelText'          => __( 'Cancel' ),
 		'closeText'           => __( 'Close' ),
-		/*'authswal'     => array(
+		/**
+		'authswal'     => array(
 			'title'  => __( 'Authentication', 'secupress' ),
 			'email'  => __( 'Enter your email', 'secupress' ),
 			'apikey' => __( 'Enter your API Key', 'secupress' ),
@@ -139,7 +140,7 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 			// Expand Textareas.
 			'expandTextOpen'       => __( 'Show More', 'secupress' ),
 			'expandTextClose'      => __( 'Close' ),
-			// Malware Scan
+			// Malware Scan.
 			'malwareScanStatus'    => $file_monitoring_running,
 			'MalwareScanURI'       => secupress_admin_url( 'modules', 'file-system' ),
 		) );
@@ -238,9 +239,9 @@ function secupress_print_version_number_in_footer( $footer ) {
 }
 
 
-/*------------------------------------------------------------------------------------------------*/
-/* PLUGINS LIST ================================================================================= */
-/*------------------------------------------------------------------------------------------------*/
+/** --------------------------------------------------------------------------------------------- */
+/** PLUGINS LIST ================================================================================ */
+/** --------------------------------------------------------------------------------------------- */
 
 add_filter( 'plugin_action_links_' . plugin_basename( SECUPRESS_FILE ), 'secupress_settings_action_links' );
 
@@ -273,9 +274,9 @@ function secupress_settings_action_links( $actions ) {
 }
 
 
-/*------------------------------------------------------------------------------------------------*/
-/* ADMIN MENU =================================================================================== */
-/*------------------------------------------------------------------------------------------------*/
+/** --------------------------------------------------------------------------------------------- */
+/** ADMIN MENU ================================================================================== */
+/** --------------------------------------------------------------------------------------------- */
 
 add_action( ( is_multisite() ? 'network_' : '' ) . 'admin_menu', 'secupress_create_menus' );
 /**
@@ -314,9 +315,9 @@ function secupress_create_menus() {
 }
 
 
-/*------------------------------------------------------------------------------------------------*/
-/* SETTINGS PAGES =============================================================================== */
-/*------------------------------------------------------------------------------------------------*/
+/** --------------------------------------------------------------------------------------------- */
+/** SETTINGS PAGES ============================================================================== */
+/** --------------------------------------------------------------------------------------------- */
 
 /**
  * Settings page.
@@ -499,10 +500,10 @@ function secupress_scanners() {
 													</q>
 												</p>
 
-												<a class="secupress-button secupress-button-mini" href="https://twitter.com/intent/tweet?via=secupress&amp;url=<?php
+												<a class="secupress-button secupress-button-mini" target="_blank" title="<?php esc_attr_e( 'Open in a new window.', 'secupress' ); ?>" href="https://twitter.com/intent/tweet?via=secupress&amp;url=<?php
 													/** Translators: %s is the plugin name */
-													echo urlencode( esc_url_raw( 'http://secupress.me&text=' . sprintf( __( 'Wow! My website just got an A grade for security using %s, what about yours?', 'secupress' ), SECUPRESS_PLUGIN_NAME ) ) );
-												?>">
+													echo rawurlencode( 'https://secupress.me' ); ?>&amp;text=<?php echo rawurlencode( html_entity_decode( sprintf( __( 'Wow! My website just got an A grade for security using %s, what about yours?', 'secupress' ), SECUPRESS_PLUGIN_NAME ) ) );
+													?>">
 													<span class="icon" aria-hidden="true"><span class="dashicons dashicons-twitter"></span></span>
 													<span class="text"><?php esc_html_e( 'Tweet this', 'secupress' ); ?></span>
 												</a>
@@ -804,9 +805,9 @@ function secupress_scanners() {
 }
 
 
-/*------------------------------------------------------------------------------------------------*/
-/* TEMPLATE TAGS ================================================================================ */
-/*------------------------------------------------------------------------------------------------*/
+/** --------------------------------------------------------------------------------------------- */
+/** TEMPLATE TAGS =============================================================================== */
+/** --------------------------------------------------------------------------------------------- */
 
 /**
  * Print the settings page title.
@@ -829,7 +830,8 @@ function secupress_admin_heading( $title = '' ) {
  * @param (array) $titles The title and subtitle.
  */
 function secupress_settings_heading( $titles = array() ) {
-	extract( $titles );
+	$title    = ! empty( $titles['title'] )    ? $titles['title']    : '';
+	$subtitle = ! empty( $titles['subtitle'] ) ? $titles['subtitle'] : '';
 	?>
 	<div class="secupress-section-dark secupress-settings-header secupress-header-mini secupress-flex">
 		<div class="secupress-col-1-3 secupress-col-logo secupress-text-center">
@@ -846,7 +848,7 @@ function secupress_settings_heading( $titles = array() ) {
 		</div>
 		<div class="secupress-col-1-3 secupress-col-text">
 			<p class="secupress-text-medium"><?php echo $title; ?></p>
-			<?php if ( isset( $subtitle ) ) { ?>
+			<?php if ( $subtitle ) { ?>
 			<p><?php echo $subtitle; ?></p>
 			<?php } ?>
 		</div>
@@ -854,7 +856,7 @@ function secupress_settings_heading( $titles = array() ) {
 			<p class="secupress-rateus hidden">
 				<strong><?php _e( 'Do you like this plugin?' ) ?></strong>
 				<br>
-				<?php printf( __( 'Please take a few seconds to rate us on %sWordPress.org%s', 'secupress' ), '<a href="' . SECUPRESS_RATE_URL . '">', '</a>' ); ?>
+				<?php printf( __( 'Please take a few seconds to rate us on %1$sWordPress.org%2$s', 'secupress' ), '<a href="' . SECUPRESS_RATE_URL . '">', '</a>' ); ?>
 			</p>
 			<p class="secupress-rateus-link hidden">
 				<a href="<?php echo SECUPRESS_RATE_URL; ?>">

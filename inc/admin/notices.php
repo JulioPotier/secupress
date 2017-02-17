@@ -210,14 +210,14 @@ function secupress_warning_htaccess_permissions() {
 	}
 
 	if ( $is_apache ) {
-		$file = '.htaccess';
+		$file          = '.htaccess';
 		$htaccess_file = secupress_get_home_path() . $file;
 
-		if ( is_writable( $htaccess_file ) ) {
+		if ( wp_is_writable( $htaccess_file ) ) {
 			return;
 		}
 	} elseif ( $is_iis7 ) {
-		$file = 'web.config';
+		$file            = 'web.config';
 		$web_config_file = secupress_get_home_path() . $file;
 
 		if ( wp_is_writable( $web_config_file ) ) {
@@ -420,14 +420,17 @@ if ( defined( 'SECUPRESS_PRO_FILE' ) ) {
  * Display a message below our plugins to display the next update information if needed
  *
  * @since 1.1.1
- * @param (array) $plugin_data Contains the plugin data from EDD or repository
  * @author Julio Potier
- **/
+ *
+ * @param (array) $plugin_data Contains the plugin data from EDD or repository.
+ */
 function secupress_updates_message( $plugin_data ) {
-	// Get next version
-	if ( isset( $plugin_data['version'] ) ) { // SecuPress Free (repo)
+	// Get next version.
+	if ( isset( $plugin_data['version'] ) ) {
+		// SecuPress Free (repo).
 		$remote_version = $plugin_data['version'];
-	} elseif ( isset( $plugin_data['new_version'] ) ) { // SecuPress Pro (EDD)
+	} elseif ( isset( $plugin_data['new_version'] ) ) {
+		// SecuPress Pro (EDD).
 		$remote_version = $plugin_data['new_version'];
 	}
 
@@ -440,11 +443,10 @@ function secupress_updates_message( $plugin_data ) {
 
 	if ( ! isset( $body[ $slug ] ) ) {
 
-		$urls     = array(
-					'secupress'     => SECUPRESS_WEB_MAIN . '/api/plugin/readme-free.php',
-					// 'secupress'     => 'https://plugins.svn.wordpress.org/secupress/trunk/readme.txt', //// ok when on repo
-					'secupress-pro' => SECUPRESS_WEB_MAIN . '/api/plugin/readme-pro.php'
-					);
+		$urls = array(
+			'secupress'     => 'https://plugins.svn.wordpress.org/secupress/trunk/readme.txt',
+			'secupress-pro' => SECUPRESS_WEB_MAIN . '/api/plugin/readme-pro.php',
+		);
 		$response = wp_remote_get( $urls[ $plugin_data['slug'] ] );
 
 		if ( 200 !== wp_remote_retrieve_response_code( $response ) ) {
@@ -459,22 +461,22 @@ function secupress_updates_message( $plugin_data ) {
 		$body = $body[ $slug ];
 	}
 
-	// Find the Notes for this version
-	$regexp  = '#== Upgrade Notice ==.*= ' . preg_quote( $remote_version ) . ' =(.*)=#Us';
+	// Find the Notes for this version.
+	$regexp = '#== Upgrade Notice ==.*= ' . preg_quote( $remote_version ) . ' =(.*)=#Us';
 
 	if ( preg_match( $regexp, $body, $matches ) ) {
 
-		$notes   = (array) preg_split( '#[\r\n]+#', trim( $matches[1] ) );
-		$date    = str_replace( '* ', '', wp_kses_post( array_shift( $notes ) ) );
+		$notes = (array) preg_split( '#[\r\n]+#', trim( $matches[1] ) );
+		$date  = str_replace( '* ', '', wp_kses_post( array_shift( $notes ) ) );
 
 		echo '<div>';
-		/** Translators: %1$s is the version number, %2$s is a date */
+		/** Translators: %1$s is the version number, %2$s is a date. */
 		echo '<strong>' . sprintf( __( 'Please read these special notes for this update, version %1$s - %2$s', 'secupress' ), $remote_version, $date ) . '</strong>';
-			echo '<ul style="list-style:square;margin-left:20px;line-height:1em">';
-			foreach ( $notes as $note ) {
-				echo '<li>' . str_replace( '* ', '', wp_kses_post( $note ) ) . '</li>';
-			}
-			echo '</ul>';
+		echo '<ul style="list-style:square;margin-left:20px;line-height:1em">';
+		foreach ( $notes as $note ) {
+			echo '<li>' . str_replace( '* ', '', wp_kses_post( $note ) ) . '</li>';
+		}
+		echo '</ul>';
 		echo '</div>';
 	}
 }

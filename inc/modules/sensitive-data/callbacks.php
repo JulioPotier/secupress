@@ -1,9 +1,9 @@
 <?php
 defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
 
-/*------------------------------------------------------------------------------------------------*/
-/* ON MODULE SETTINGS SAVE ====================================================================== */
-/*------------------------------------------------------------------------------------------------*/
+/** --------------------------------------------------------------------------------------------- */
+/** ON MODULE SETTINGS SAVE ===================================================================== */
+/** --------------------------------------------------------------------------------------------- */
 
 /**
  * Callback to filter, sanitize, validate and de/activate submodules.
@@ -80,14 +80,14 @@ function secupress_content_protection_settings_callback( $modulenow, $activate )
 	}
 
 	// (De)Activation.
-	secupress_manage_submodule( $modulenow,  'blackhole',         ! empty( $activate['content-protect_blackhole'] ) && secupress_blackhole_is_robots_txt_enabled() );
-	secupress_manage_submodule( $modulenow,  'hotlink',           ! empty( $activate['content-protect_hotlink'] ) && secupress_is_pro() );
+	secupress_manage_submodule( $modulenow,  'blackhole', ! empty( $activate['content-protect_blackhole'] ) && secupress_blackhole_is_robots_txt_enabled() );
+	secupress_manage_submodule( $modulenow,  'hotlink', ! empty( $activate['content-protect_hotlink'] ) && secupress_is_pro() );
 	secupress_manage_submodule( $modulenow,  'directory-listing', ! empty( $activate['content-protect_directory-listing'] ) );
-	secupress_manage_submodule( $modulenow,  'php-easter-egg',    ! empty( $activate['content-protect_php-disclosure'] ) );
-	secupress_manage_submodule( 'discloses', 'no-x-powered-by',   ! empty( $activate['content-protect_php-version'] ) );
-	secupress_manage_submodule( 'discloses', 'wp-version',        ! empty( $activate['content-protect_wp-version'] ) );
-	secupress_manage_submodule( $modulenow,  'bad-url-access',    ! empty( $activate['content-protect_bad-url-access'] ) );
-	secupress_manage_submodule( 'discloses', 'readmes',           ! empty( $activate['content-protect_readmes'] ) );
+	secupress_manage_submodule( $modulenow,  'php-easter-egg', ! empty( $activate['content-protect_php-disclosure'] ) );
+	secupress_manage_submodule( 'discloses', 'no-x-powered-by', ! empty( $activate['content-protect_php-version'] ) );
+	secupress_manage_submodule( 'discloses', 'wp-version', ! empty( $activate['content-protect_wp-version'] ) );
+	secupress_manage_submodule( $modulenow,  'bad-url-access', ! empty( $activate['content-protect_bad-url-access'] ) );
+	secupress_manage_submodule( 'discloses', 'readmes', ! empty( $activate['content-protect_readmes'] ) );
 
 	$plugin_disclose = ! empty( $activate['content-protect_plugin-version-discloses'] ) && is_array( $activate['content-protect_plugin-version-discloses'] ) ? array_flip( $activate['content-protect_plugin-version-discloses'] ) : array();
 	$wp_plugins      = array( 'woocommerce', 'wpml' );
@@ -126,9 +126,9 @@ function secupress_wp_endpoints_settings_callback( $modulenow, &$settings, $acti
 }
 
 
-/*------------------------------------------------------------------------------------------------*/
-/* TOOLS ======================================================================================== */
-/*------------------------------------------------------------------------------------------------*/
+/** --------------------------------------------------------------------------------------------- */
+/** TOOLS ======================================================================================= */
+/** --------------------------------------------------------------------------------------------- */
 
 /**
  * Tell if a `robots.txt` file is in use.

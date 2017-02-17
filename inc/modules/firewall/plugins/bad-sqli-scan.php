@@ -1,11 +1,12 @@
 <?php
-/*
-Module Name: Block SQLi Scan Attempts
-Description: Fool SQLi scanner/scripts to always give them different content on each reload of the same page.
-Main Module: firewall
-Author: SecuPress
-Version: 1.0
-*/
+/**
+ * Module Name: Block SQLi Scan Attempts
+ * Description: Fool SQLi scanner/scripts to always give them different content on each reload of the same page.
+ * Main Module: firewall
+ * Author: SecuPress
+ * Version: 1.0
+ */
+
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
 add_action( 'admin_footer', 'secupress_block_sqli_scanners' );

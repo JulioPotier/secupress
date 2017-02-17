@@ -27,7 +27,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	protected static $_instance;
 
 
-	// Setters =====================================================================================.
+	/** Setters ================================================================================= */
 
 	/**
 	 * Set the modules infos.
@@ -53,7 +53,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	}
 
 
-	// Getters =====================================================================================.
+	/** Getters ================================================================================= */
 
 	/**
 	 * Set the modules infos.
@@ -174,7 +174,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	}
 
 
-	// Init ========================================================================================.
+	/** Init ==================================================================================== */
 
 	/**
 	 * Init: this method is required by the class `SecuPress_Singleton`.
@@ -194,7 +194,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	}
 
 
-	// Main template tags ==========================================================================.
+	/** Main template tags ====================================================================== */
 
 	/**
 	 * Print the page content.
@@ -417,7 +417,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	}
 
 
-	// Specific fields =============================================================================.
+	/** Specific fields ========================================================================= */
 
 	/**
 	 * Non login time slot field.
@@ -644,7 +644,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 				<?php
 				echo $label_open;
 				echo $args['label_before'];
-				echo ' <input type="checkbox" id="' . $args['label_for'] . '" name="' . $name_attribute . '" value="1"' . checked( $value, 1, false ) .  $disabled . ' class="secupress-checkbox" /> ';
+				echo ' <input type="checkbox" id="' . $args['label_for'] . '" name="' . $name_attribute . '" value="1"' . checked( $value, 1, false ) . $disabled . ' class="secupress-checkbox" /> ';
 				echo '<span class="label-text">' . $args['label'] . '</span>';
 				echo $label_close;
 				?>
@@ -683,7 +683,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			<p><?php echo $label_open; ?>
 				<?php
 				echo $args['label_before'];
-				echo ' <input type="checkbox" id="' . $args['label_for'] . '" name="' . $name_attribute . '" value="1"' . checked( $value, 1, false ) .  $disabled . 'class="secupress-checkbox" /> ';
+				echo ' <input type="checkbox" id="' . $args['label_for'] . '" name="' . $name_attribute . '" value="1"' . checked( $value, 1, false ) . $disabled . 'class="secupress-checkbox" /> ';
 				echo '<span class="label-text">' . $args['label'] . '</span>';
 				?>
 			<?php echo $label_close; ?>
@@ -764,7 +764,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	}
 
 
-	// Includes ====================================================================================.
+	/** Includes ================================================================================ */
 
 	/**
 	 * Include the current module settings file.
@@ -800,7 +800,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	}
 
 
-	// Other =======================================================================================.
+	/** Other =================================================================================== */
 
 	/**
 	 * Filter the arguments passed to the section submit button and disable it.

@@ -28,7 +28,7 @@ function secupress_db_access_granted() {
 		}
 
 		$quoted_db_name = preg_quote( DB_NAME );
-		$access_granted = preg_match( '/ALL PRIVILEGES ON `?' . $quoted_db_name . '`?|ALL PRIVILEGES ON \*\.\*|GRANT .*, ALTER,.* ON `?' . $quoted_db_name .'`?|GRANT .*, ALTER,.* ON \*\.\*/', $result );
+		$access_granted = preg_match( '/ALL PRIVILEGES ON `?' . $quoted_db_name . '`?|ALL PRIVILEGES ON \*\.\*|GRANT .*, ALTER,.* ON `?' . $quoted_db_name . '`?|GRANT .*, ALTER,.* ON \*\.\*/', $result );
 
 		if ( $access_granted ) {
 			break;

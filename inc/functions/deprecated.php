@@ -15,7 +15,8 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 function secupress_send_support_request( $summary, $description, $data ) {
 	_deprecated_function( __FUNCTION__, '1.1.4', 'secupress_pro_send_support_request()' );
 	// To.
-	$to = strrev( 'em' . '.' . 'sserpuces' . chr( 64 ) . 'troppus' );
+	$to = 'sserpuces' . chr( 64 );
+	$to = strrev( 'em.' . $to . 'troppus' );
 
 	// From.
 	$from_user = wp_get_current_user();
@@ -72,7 +73,7 @@ function secupress_send_support_request( $summary, $description, $data ) {
  * @since 1.1.4 Deprecated.
  * @author Grégory Viguier
  *
- * @param $user (object) A WP_User object.
+ * @param (object) $user A WP_User object.
  *
  * @return (string)
  */

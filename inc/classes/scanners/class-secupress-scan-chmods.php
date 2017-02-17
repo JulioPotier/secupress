@@ -32,7 +32,7 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Int
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0';
+	const VERSION = '1.0.2';
 
 
 	/** Properties. ============================================================================= */
@@ -117,6 +117,20 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Int
 		}
 
 		return $messages;
+	}
+
+
+	/** Getters. ================================================================================ */
+
+	/**
+	 * Get the documentation URL.
+	 *
+	 * @since 1.2.3
+	 *
+	 * @return (string)
+	 */
+	public static function get_docs_url() {
+		return __( 'http://docs.secupress.me/article/125-file-permission-scan', 'secupress' );
 	}
 
 
@@ -208,11 +222,12 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Int
 	 * @return (array) The fix results.
 	 */
 	public function fix() {
-		$warnings = array();
-		$files    = array();
-		$failed   = array();
-		$to_test  = $this->get_files();
-		$abspath  = realpath( ABSPATH );
+		$warnings   = array();
+		$files      = array();
+		$failed     = array();
+		$to_test    = $this->get_files();
+		$abspath    = realpath( ABSPATH );
+		$filesystem = secupress_get_filesystem();
 
 		clearstatcache();
 
@@ -223,7 +238,7 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Int
 
 			if ( ! $current_chmod || $current_chmod > $this->folder_chmod ) {
 				// Apply new folder perm.
-				@chmod( $file_path, $this->folder_chmod );
+				$filesystem->chmod( $file_path, $this->folder_chmod );
 				$files[ $file_path ] = $this->folder_chmod;
 			}
 		}
@@ -236,7 +251,7 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Int
 
 				if ( ! $current_chmod || $current_chmod > $this->file_chmod ) {
 					// Apply new file perm.
-					@chmod( $file_path, $this->file_chmod );
+					$filesystem->chmod( $file_path, $this->file_chmod );
 					$files[ $file_path ] = $this->file_chmod;
 				}
 			}
@@ -338,7 +353,7 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Int
 	 *
 	 * @since 1.2.2
 	 *
-	 * @param (int) An "octal" integer.
+	 * @param (int) $int An "octal" integer.
 	 *
 	 * @return (string).
 	 */
