@@ -4,12 +4,12 @@
  * Description: If someone tries to log in using a username that doesn'y exists on your website, he will be banned for x minutes.
  * Main Module: users_login
  * Author: SecuPress
- * Version: 1.0
+ * Version: 1.1
  */
 
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
-add_action( 'authenticate', 'secupress_bannonexistsuser_auth', PHP_INT_MAX - 10, 2 );
+add_action( 'authenticate', 'secupress_bannonexistsuser_auth', 100, 2 );
 /**
  * Ban users who try to log in with a non existing username.
  *
@@ -22,6 +22,13 @@ add_action( 'authenticate', 'secupress_bannonexistsuser_auth', PHP_INT_MAX - 10,
  * @return (null|object)
  */
 function secupress_bannonexistsuser_auth( $raw_user, $username ) {
+	static $running = false;
+
+	if ( $running ) {
+		return $raw_user;
+	}
+	$running = true;
+
 	if ( ! empty( $_POST ) && is_wp_error( $raw_user ) && ! secupress_ip_is_whitelisted() ) { // WPCS: CSRF ok.
 		$errors = $raw_user->get_error_codes();
 		$errors = array_flip( $errors );
@@ -31,5 +38,6 @@ function secupress_bannonexistsuser_auth( $raw_user, $username ) {
 		}
 	}
 
+	$running = false;
 	return $raw_user;
 }

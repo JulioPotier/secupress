@@ -4,7 +4,7 @@
  * Description: Add a gentle captcha on the login form
  * Main Module: users_login
  * Author: SecuPress
- * Version: 1.0.2
+ * Version: 1.1
  */
 
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
@@ -112,18 +112,28 @@ add_action( 'authenticate', 'secupress_manage_captcha', SECUPRESS_INT_MAX - 20, 
  * @return (null|object)
  */
 function secupress_manage_captcha( $raw_user, $username ) {
+	static $running = false;
+
+	if ( $running ) {
+		return $raw_user;
+	}
+	$running = true;
+
 	if ( defined( 'XMLRPC_REQUEST' ) || defined( 'APP_REQUEST' ) ) {
+		$running = false;
 		return $raw_user;
 	}
 
 	// Make sure to process only credentials provided by the login form.
 	if ( empty( $_POST['log'] ) ) { // WPCS: CSRF ok.
+		$running = false;
 		return $raw_user;
 	}
 
 	$fallback_wp_error = new WP_Error( 'authentication_failed', __( '<strong>ERROR</strong>: The human verification is incorrect.', 'secupress' ), __FUNCTION__ );
 
 	if ( ! isset( $_POST['sp_name'] ) || '' !== $_POST['sp_name'] ) { // WPCS: CSRF ok.
+		$running = false;
 		return $fallback_wp_error;
 	}
 
@@ -134,6 +144,7 @@ function secupress_manage_captcha( $raw_user, $username ) {
 		time() > $captcha_keys[ $captcha_key ] + 2 * MINUTE_IN_SECONDS ||
 		time() < $captcha_keys[ $captcha_key ] + 2
 	) {
+		$running = false;
 		return $fallback_wp_error;
 	}
 
@@ -146,6 +157,7 @@ function secupress_manage_captcha( $raw_user, $username ) {
 		update_site_option( 'secupress_captcha_keys', $captcha_keys, false );
 	}
 
+	$running = false;
 	return $raw_user;
 }
 

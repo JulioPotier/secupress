@@ -4,12 +4,12 @@
  * Description: Limit login attempts and ban if too many tries have been done.
  * Main Module: users_login
  * Author: SecuPress
- * Version: 1.0
+ * Version: 1.1
  */
 
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
-add_action( 'authenticate', 'secupress_limitloginattempts', PHP_INT_MAX - 20, 2 );
+add_action( 'authenticate', 'secupress_limitloginattempts', SECUPRESS_INT_MAX, 2 );
 /**
  * Check the number of attemps.
  *
@@ -22,6 +22,13 @@ add_action( 'authenticate', 'secupress_limitloginattempts', PHP_INT_MAX - 20, 2 
  * @return (null|object)
  */
 function secupress_limitloginattempts( $raw_user, $username ) {
+	static $done = false;
+
+	if ( $done ) {
+		return $raw_user;
+	}
+	$done = true;
+
 	if ( empty( $_POST ) || ! is_wp_error( $raw_user ) || false === ( $uid = username_exists( $username ) ) || secupress_ip_is_whitelisted() ) { // WPCS: CSRF ok.
 		if ( ! empty( $raw_user->ID ) ) {
 			delete_user_meta( $raw_user->ID, '_secupress_limitloginattempts' );
@@ -43,9 +50,8 @@ function secupress_limitloginattempts( $raw_user, $username ) {
 	$user_attempts_left = $max_attempts - $user_attempts;
 
 	if ( $user_attempts_left <= 3 ) {
-		add_filter( 'login_message', function( $message ) use ( $user_attempts_left ) {
-			return secupress_limitloginattempts_error_message( $message, $user_attempts_left );
-		} );
+		secupress_cache_data( 'limitloginattempts_user_attempts_left', $user_attempts_left );
+		add_filter( 'login_message', 'secupress_limitloginattempts_error_message' );
 	}
 
 	return $raw_user;
@@ -56,12 +62,18 @@ function secupress_limitloginattempts( $raw_user, $username ) {
  * Append our error message.
  *
  * @since 1.0
+ * @since 1.1 The 2nd argument, `$user_attempts_left`, has been removed. Its value is retrieved with `secupress_cache_data()` instead.
  *
- * @param (string) $message            Previous messages.
- * @param (int)    $user_attempts_left Number of attemps left for this user.
+ * @param (string) $message Previous messages.
  *
  * @return (string)
  */
-function secupress_limitloginattempts_error_message( $message, $user_attempts_left ) {
+function secupress_limitloginattempts_error_message( $message ) {
+	$user_attempts_left = secupress_cache_data( 'limitloginattempts_user_attempts_left' );
+
+	if ( ! isset( $user_attempts_left ) ) {
+		return $message;
+	}
+
 	return $message . '<p class="message">' . sprintf( _n( 'Login failed, <strong>%d</strong> attempt left.', 'Login failed, <strong>%d</strong> attempts left.', $user_attempts_left, 'secupress' ), $user_attempts_left ) . '</p><br>';
 }
