@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2017-02-14 00:08+0100\n"
-"PO-Revision-Date: 2017-02-14 01:08+0100\n"
+"POT-Creation-Date: 2017-02-17 15:19+0100\n"
+"PO-Revision-Date: 2017-02-17 15:39+0100\n"
 "Last-Translator: WP Media <contact@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -52,7 +52,7 @@ msgstr "Réglages"
 #: inc/classes/scanners/class-secupress-scan-bad-url-access.php:99
 #: inc/classes/scanners/class-secupress-scan-directory-listing.php:93
 #: inc/classes/scanners/class-secupress-scan-directoryindex.php:95
-#: inc/classes/scanners/class-secupress-scan-discloses.php:103
+#: inc/classes/scanners/class-secupress-scan-discloses.php:102
 #: inc/classes/scanners/class-secupress-scan-php-disclosure.php:91
 #: inc/classes/scanners/class-secupress-scan-readme-discloses.php:96
 #, php-format
@@ -111,11 +111,11 @@ msgstr ""
 #: inc/classes/common/class-secupress-logs.php:1392
 #: inc/modules/logs/plugins/inc/php/404-logs/class-secupress-404-log.php:65
 #: inc/modules/logs/plugins/inc/php/404-logs/class-secupress-404-log.php:66
-#: inc/modules/sensitive-data/plugins/bad-url-access.php:132
-#: inc/modules/sensitive-data/plugins/bad-url-access.php:152
+#: inc/modules/sensitive-data/plugins/bad-url-access.php:133
+#: inc/modules/sensitive-data/plugins/bad-url-access.php:153
 #: inc/modules/users-login/callbacks.php:253
 #: inc/modules/users-login/callbacks.php:259
-#: inc/modules/users-login/plugins/ask-old-password.php:78
+#: inc/modules/users-login/plugins/ask-old-password.php:79
 #: inc/modules/users-login/plugins/inc/php/move-login/admin.php:22
 #: inc/modules/users-login/plugins/inc/php/move-login/admin.php:28
 #: inc/modules/users-login/plugins/inc/php/move-login/admin.php:202
@@ -427,7 +427,7 @@ msgstr ""
 #: inc/classes/scanners/class-secupress-scan-db-prefix.php:70
 #: inc/classes/scanners/class-secupress-scan-directory-listing.php:99
 #: inc/classes/scanners/class-secupress-scan-directoryindex.php:101
-#: inc/classes/scanners/class-secupress-scan-discloses.php:121
+#: inc/classes/scanners/class-secupress-scan-discloses.php:120
 #: inc/classes/scanners/class-secupress-scan-easy-login.php:78
 #: inc/classes/scanners/class-secupress-scan-inactive-plugins-themes.php:85
 #: inc/classes/scanners/class-secupress-scan-login-errors-disclose.php:66
@@ -486,7 +486,7 @@ msgstr ""
 #: inc/admin/functions/modules.php:480
 #: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:116
 #: inc/classes/scanners/class-secupress-scan-bad-url-access.php:101
-#: inc/classes/scanners/class-secupress-scan-discloses.php:105
+#: inc/classes/scanners/class-secupress-scan-discloses.php:104
 #: inc/classes/scanners/class-secupress-scan-php-disclosure.php:93
 #: inc/classes/scanners/class-secupress-scan-readme-discloses.php:98
 #, php-format
@@ -1555,13 +1555,13 @@ msgid "None"
 msgstr "Aucun"
 
 #: inc/classes/admin/class-secupress-admin-support.php:174
-#: inc/functions/deprecated.php:41
+#: inc/functions/deprecated.php:42
 #, php-format
 msgid "License email: %s"
 msgstr "Email de la licence&nbsp;: %s"
 
 #: inc/classes/admin/class-secupress-admin-support.php:175
-#: inc/functions/deprecated.php:42
+#: inc/functions/deprecated.php:43
 #, php-format
 msgid "License key: %s"
 msgstr "Clé de licence&nbsp;: %s"
@@ -1640,23 +1640,23 @@ msgstr ""
 "supposé arriver, et qu'est-ce qui arrive à la place&nbsp;?"
 
 #: inc/classes/admin/class-secupress-admin-support.php:541
-#: inc/functions/deprecated.php:130
+#: inc/functions/deprecated.php:131
 msgid "network"
 msgstr "réseau"
 
 #: inc/classes/admin/class-secupress-admin-support.php:566
-#: inc/functions/deprecated.php:155
+#: inc/functions/deprecated.php:156
 msgid "main site"
 msgstr "site principal"
 
 #: inc/classes/admin/class-secupress-admin-support.php:586
-#: inc/functions/deprecated.php:175
+#: inc/functions/deprecated.php:176
 msgid "Must-Use plugin"
 msgstr "Plugin automatique (must-use)"
 
 #. Translators: a drop-in is specific kind of WordPress plugin.
 #: inc/classes/admin/class-secupress-admin-support.php:596
-#: inc/functions/deprecated.php:185
+#: inc/functions/deprecated.php:186
 msgid "drop-in"
 msgstr "drop-in"
 
@@ -2119,7 +2119,7 @@ msgid "Your username will be renamed on the next page load."
 msgstr "Votre nom d'utilisateur sera renommé au prochaine chargement de page."
 
 #: inc/classes/scanners/class-secupress-scan-admin-user.php:308
-#: inc/modules/users-login/plugins/blacklist-logins.php:236
+#: inc/modules/users-login/plugins/blacklist-logins.php:239
 #, php-format
 msgid "Allowed characters: %s."
 msgstr "Caractères autorisés&nbsp;: %s."
@@ -2169,8 +2169,8 @@ msgstr "Votre site n'est pas protégé contre les multiples attaques rapides."
 #: inc/classes/scanners/class-secupress-scan-easy-login.php:74
 #: inc/classes/scanners/class-secupress-scan-non-login-time-slot.php:87
 #, php-format
-msgid "Our module <a href=\"%s\">%s</a> could fix this."
-msgstr "Notre module <a href=\"%s\">%s</a> pourrait corriger ça."
+msgid "Our module %s could fix this."
+msgstr "Notre module %s pourrait corriger cela."
 
 #: inc/classes/scanners/class-secupress-scan-anti-front-brute-force.php:95
 msgid ""
@@ -2995,11 +2995,11 @@ msgstr ""
 
 #: inc/classes/scanners/class-secupress-scan-bad-url-access.php:47
 #: inc/classes/scanners/class-secupress-scan-bad-url-access.php:88
-#: inc/modules/sensitive-data/plugins/bad-url-access.php:48
-#: inc/modules/sensitive-data/plugins/bad-url-access.php:61
-#: inc/modules/sensitive-data/plugins/bad-url-access.php:132
-#: inc/modules/sensitive-data/plugins/bad-url-access.php:152
-#: inc/modules/sensitive-data/settings/content-protect.php:323
+#: inc/modules/sensitive-data/plugins/bad-url-access.php:49
+#: inc/modules/sensitive-data/plugins/bad-url-access.php:62
+#: inc/modules/sensitive-data/plugins/bad-url-access.php:133
+#: inc/modules/sensitive-data/plugins/bad-url-access.php:153
+#: inc/modules/sensitive-data/settings/content-protect.php:328
 msgid "Bad URL Access"
 msgstr "Accès aux mauvaises URLs"
 
@@ -3161,10 +3161,11 @@ msgstr ""
 
 #: inc/classes/scanners/class-secupress-scan-bad-usernames.php:66
 #, php-format
-msgid "<strong>%s user</strong> has a forbidden username: %s"
-msgid_plural "<strong>%s users</strong> have a forbidden username: %s"
-msgstr[0] "L'utilisateur <strong>%s</strong> a un nom interdit&nbsp;: %s"
-msgstr[1] "Les utilisateurs <strong>%s</strong> ont un nom interdit&nbsp;: %s"
+msgid "<strong>%1$s user</strong> has a forbidden username: %2$s"
+msgid_plural "<strong>%1$s users</strong> have a forbidden username: %2$s"
+msgstr[0] "L'utilisateur <strong>%1$s</strong> a un nom interdit&nbsp;: %2$s"
+msgstr[1] ""
+"Les utilisateurs <strong>%1$s</strong> ont un nom interdit&nbsp;: %2$s"
 
 #: inc/classes/scanners/class-secupress-scan-bad-usernames.php:68
 msgid ""
@@ -3423,16 +3424,16 @@ msgstr ""
 "wordpress"
 
 #: inc/classes/scanners/class-secupress-scan-db-prefix.php:41
-msgid "Check if your database prefix is correct."
-msgstr "Vérifie si le préfixe de la base de donnée est correct."
+msgid "Check if your database tables prefix is correct."
+msgstr "Vérifie si le préfixe des tables de votre base de données est correct."
 
 #: inc/classes/scanners/class-secupress-scan-db-prefix.php:42
 msgid ""
 "Avoid the use of <code>wp_</code> or <code>wordpress_</code> as database "
-"prefix to improve your security."
+"tables prefix to improve your security."
 msgstr ""
-"Évitez l'utilisation des préfixes de base de données comme <code>wp_</code> "
-"ou <code>wordpress_</code> pour améliorer votre sécurité."
+"Évitez l'utilisation des préfixes de tables de base de données comme "
+"<code>wp_</code> ou <code>wordpress_</code> pour améliorer votre sécurité."
 
 #: inc/classes/scanners/class-secupress-scan-db-prefix.php:43
 msgid ""
@@ -3443,42 +3444,42 @@ msgstr ""
 "configuration avec le nouveau et plus sécurisé préfixe."
 
 #: inc/classes/scanners/class-secupress-scan-db-prefix.php:59
-msgid "Your database prefix is correct."
-msgstr "Votre préfixe de base de données est correct."
+msgid "Your database tables prefix is correct."
+msgstr "Le préfixe des tables de votre base de données est correct."
 
 #: inc/classes/scanners/class-secupress-scan-db-prefix.php:61
 #, php-format
 msgid ""
-"The database prefix should not be %s. Choose something else besides "
+"The database tables prefix should not be %s. Choose something else besides "
 "<code>wp_</code> or <code>wordpress_</code>, they are too easy to guess."
 msgstr ""
-"Le préfixe de la base de données ne devait pas être %s. Choisissez quelque "
-"chose d'autre que <code>wp_</code> ou <code>wordpress_</code>, ils sont trop "
-"simples à deviner."
+"Le préfixe des tables de la base de données ne devrait pas être %s. "
+"Choisissez quelque chose d'autre que <code>wp_</code> ou <code>wordpress_</"
+"code>, ils sont trop simples à deviner."
 
 #: inc/classes/scanners/class-secupress-scan-db-prefix.php:63
 msgid ""
-"The database user cannot alter tables and so the database prefix could not "
-"be changed."
+"The database user cannot alter tables and so the database tables prefix "
+"could not be changed."
 msgstr ""
 "L'utilisateur de la base de données ne peut pas altérer les tables donc le "
-"préfixe de pourra pas être modifié."
+"préfixe n'a pas pu être modifié."
 
 #: inc/classes/scanners/class-secupress-scan-db-prefix.php:64
 msgid ""
-"The <code>wp-config.php</code> file is not writable, so the database prefix "
-"cannot be changed."
+"The <code>wp-config.php</code> file is not writable, so the database tables "
+"prefix cannot be changed."
 msgstr ""
-"Le fichier <code>wp-config.php</code> semble ne pas être en écriture, le "
-"préfixe de la base de données ne pourra pas être modifié."
+"Le fichier <code>wp-config.php</code> ne semble pas être inscriptible, le "
+"préfixe des tables de la base de données ne pourra pas être modifié."
 
 #: inc/classes/scanners/class-secupress-scan-db-prefix.php:65
 msgid ""
-"The database user seems to have to correct rights, but the database prefix "
-"could still not be changed."
+"The database user seems to have to correct rights, but the database tables "
+"prefix could still not be changed."
 msgstr ""
 "L'utilisateur de la base de données semble avoir les droits, mais le préfixe "
-"de base ne peut tout de même pas être modifié."
+"des tables de la base de données ne peut tout de même pas être modifié."
 
 #: inc/classes/scanners/class-secupress-scan-db-prefix.php:66
 msgid "Too many database tables found, so which ones to rename?!"
@@ -3532,9 +3533,9 @@ msgstr ""
 
 #: inc/classes/scanners/class-secupress-scan-directory-listing.php:47
 #: inc/classes/scanners/class-secupress-scan-directory-listing.php:73
-#: inc/modules/sensitive-data/plugins/directory-listing.php:45
-#: inc/modules/sensitive-data/plugins/directory-listing.php:80
-#: inc/modules/sensitive-data/settings/content-protect.php:97
+#: inc/modules/sensitive-data/plugins/directory-listing.php:46
+#: inc/modules/sensitive-data/plugins/directory-listing.php:81
+#: inc/modules/sensitive-data/settings/content-protect.php:98
 msgid "Directory Listing"
 msgstr "Directory Listing"
 
@@ -3619,8 +3620,8 @@ msgstr ""
 
 #: inc/classes/scanners/class-secupress-scan-directoryindex.php:49
 #: inc/classes/scanners/class-secupress-scan-directoryindex.php:75
-#: inc/modules/file-system/plugins/directory-index.php:45
-#: inc/modules/file-system/plugins/directory-index.php:57
+#: inc/modules/file-system/plugins/directory-index.php:46
+#: inc/modules/file-system/plugins/directory-index.php:58
 #: inc/modules/file-system/settings/directory-index.php:12
 msgid "Directory Index"
 msgstr "Index des dossiers"
@@ -3698,8 +3699,8 @@ msgstr "Active la protection %1$s et/ou la protection %2$s du module %3$s."
 #: inc/classes/scanners/class-secupress-scan-discloses.php:74
 #: inc/classes/scanners/class-secupress-scan-discloses.php:80
 #: inc/classes/scanners/class-secupress-scan-discloses.php:81
-#: inc/modules/discloses/plugins/wp-version.php:45
-#: inc/modules/discloses/plugins/wp-version.php:57
+#: inc/modules/discloses/plugins/wp-version.php:46
+#: inc/modules/discloses/plugins/wp-version.php:58
 msgid "WordPress Version Disclosure"
 msgstr "Divulgation de la version de WordPress"
 
@@ -3720,7 +3721,7 @@ msgstr ""
 "Mais vous pouvez activer la protection %1$s et la protection %2$s du module "
 "%3$s."
 
-#: inc/classes/scanners/class-secupress-scan-discloses.php:87
+#: inc/classes/scanners/class-secupress-scan-discloses.php:86
 msgid ""
 "Your site does not reveal either your <strong>WordPress version</strong> or "
 "<strong>PHP version</strong>."
@@ -3728,7 +3729,7 @@ msgstr ""
 "Votre site ne révèle pas la <strong>version de WordPress</strong> ni "
 "<strong>la version de PHP</strong>."
 
-#: inc/classes/scanners/class-secupress-scan-discloses.php:88
+#: inc/classes/scanners/class-secupress-scan-discloses.php:87
 msgid ""
 "The protection preventing your site to disclose your <strong>PHP version</"
 "strong> has been activated."
@@ -3736,7 +3737,7 @@ msgstr ""
 "La protection empêchant votre site de divulguer la <strong>version de PHP</"
 "strong> a été activée."
 
-#: inc/classes/scanners/class-secupress-scan-discloses.php:89
+#: inc/classes/scanners/class-secupress-scan-discloses.php:88
 msgid ""
 "The protection preventing your site to disclose your <strong>WordPress "
 "version</strong> has been activated."
@@ -3744,7 +3745,7 @@ msgstr ""
 "La protection empêchant votre site de divulguer la <strong>version de "
 "WordPress</strong> a été activée."
 
-#: inc/classes/scanners/class-secupress-scan-discloses.php:91
+#: inc/classes/scanners/class-secupress-scan-discloses.php:90
 msgid ""
 "Unable to determine if your homepage is disclosing your <strong>WordPress "
 "version</strong> or <strong>PHP version</strong>."
@@ -3753,7 +3754,7 @@ msgstr ""
 "de WordPress</strong> ou la <strong>version de PHP</strong>."
 
 #. Translators: %s is a file name.
-#: inc/classes/scanners/class-secupress-scan-discloses.php:93
+#: inc/classes/scanners/class-secupress-scan-discloses.php:92
 #, php-format
 msgid ""
 "Unable to determine if the %s file is disclosing your <strong>WordPress "
@@ -3762,14 +3763,14 @@ msgstr ""
 "Impossible de déterminer si le fichier %s divulgue la <strong>version de "
 "WordPress</strong>."
 
-#: inc/classes/scanners/class-secupress-scan-discloses.php:95
+#: inc/classes/scanners/class-secupress-scan-discloses.php:94
 msgid ""
 "The website displays the <strong>PHP version</strong> in the request headers."
 msgstr ""
 "Le site affiche la <strong>version de PHP</strong> dans les entêtes de la "
 "requête."
 
-#: inc/classes/scanners/class-secupress-scan-discloses.php:96
+#: inc/classes/scanners/class-secupress-scan-discloses.php:95
 #, php-format
 msgid ""
 "The website displays the <strong>WordPress version</strong> in the homepage "
@@ -3779,7 +3780,7 @@ msgstr ""
 "de la page d'accueil (%s)."
 
 #. Translators: %s is a file name.
-#: inc/classes/scanners/class-secupress-scan-discloses.php:98
+#: inc/classes/scanners/class-secupress-scan-discloses.php:97
 #, php-format
 msgid ""
 "The %s file should not be accessible by anyone to avoid to reveal your "
@@ -3789,7 +3790,7 @@ msgstr ""
 "de révéler la <strong>version de WordPress</strong>."
 
 #. Translators: 1 is a file name, 2 is some code.
-#: inc/classes/scanners/class-secupress-scan-discloses.php:101
+#: inc/classes/scanners/class-secupress-scan-discloses.php:100
 #, php-format
 msgid ""
 "Your server runs <strong>Nginx</strong>, the <strong>WordPress version</"
@@ -3803,7 +3804,7 @@ msgstr ""
 "même en ajoutant ce code dans votre fichier %1$s&nbsp;: %2$s."
 
 #. Translators: 1 is a file name, 2 is some code.
-#: inc/classes/scanners/class-secupress-scan-discloses.php:107
+#: inc/classes/scanners/class-secupress-scan-discloses.php:106
 #, php-format
 msgid ""
 "Your server runs <strong>Nginx</strong>, the <strong>PHP version</strong> "
@@ -3816,7 +3817,7 @@ msgstr ""
 "%1$s&nbsp;: %2$s."
 
 #. Translators: 1 is a file name, 2 is some code.
-#: inc/classes/scanners/class-secupress-scan-discloses.php:109
+#: inc/classes/scanners/class-secupress-scan-discloses.php:108
 #, php-format
 msgid ""
 "Your server runs <strong>Nginx</strong>, the <strong>WordPress version</"
@@ -3829,7 +3830,7 @@ msgstr ""
 "%1$s&nbsp;: %2$s."
 
 #. Translators: %s is a file name.
-#: inc/classes/scanners/class-secupress-scan-discloses.php:112
+#: inc/classes/scanners/class-secupress-scan-discloses.php:111
 #, php-format
 msgid ""
 "The %s file is now protected from revealing your <strong>WordPress version</"
@@ -3838,20 +3839,20 @@ msgstr ""
 "Le fichier %s est maintenant protégé de la divulgation de la <strong>version "
 "de WordPress</strong>."
 
-#: inc/classes/scanners/class-secupress-scan-discloses.php:113
+#: inc/classes/scanners/class-secupress-scan-discloses.php:112
 msgid ""
 "The website does not display the <strong>PHP version</strong> in the request "
 "headers anymore."
 msgstr ""
 "Le site n'affiche plus la <strong>version de PHP</strong> dans les entêtes."
 
-#: inc/classes/scanners/class-secupress-scan-discloses.php:114
+#: inc/classes/scanners/class-secupress-scan-discloses.php:113
 #: inc/classes/scanners/class-secupress-scan-woocommerce-discloses.php:81
 #: inc/classes/scanners/class-secupress-scan-wpml-discloses.php:81
 msgid "The generator meta tag should not be displayed anymore."
 msgstr "La balise meta \"generator\" ne devrait plus s'afficher désormais."
 
-#: inc/classes/scanners/class-secupress-scan-discloses.php:115
+#: inc/classes/scanners/class-secupress-scan-discloses.php:114
 msgid ""
 "The <strong>WordPress version</strong> should now be removed from your "
 "styles URLs."
@@ -3859,7 +3860,7 @@ msgstr ""
 "La <strong>version de WordPress</strong> devrait maintenant être supprimée "
 "des URLs de vos styles."
 
-#: inc/classes/scanners/class-secupress-scan-discloses.php:116
+#: inc/classes/scanners/class-secupress-scan-discloses.php:115
 msgid ""
 "The <strong>WordPress version</strong> should now be removed from your "
 "scripts URLs."
@@ -3867,7 +3868,7 @@ msgstr ""
 "La <strong>version de WordPress</strong> devrait maintenant être supprimée "
 "des URLs de vos scripts."
 
-#: inc/classes/scanners/class-secupress-scan-discloses.php:117
+#: inc/classes/scanners/class-secupress-scan-discloses.php:116
 msgid ""
 "Your server runs an unrecognized system. The <strong>WordPress version</"
 "strong> and <strong>PHP version</strong> disclosure cannot be fixed "
@@ -3877,7 +3878,7 @@ msgstr ""
 "<strong>version de WordPress</strong> et de la <strong>version de PHP</"
 "strong> ne peut être corrigée automatiquement."
 
-#: inc/classes/scanners/class-secupress-scan-discloses.php:138
+#: inc/classes/scanners/class-secupress-scan-discloses.php:137
 msgid ""
 "http://docs.secupress.me/article/101-php-and-wordpress-version-disclosure-"
 "scan"
@@ -4277,8 +4278,8 @@ msgstr ""
 
 #: inc/classes/scanners/class-secupress-scan-php-disclosure.php:47
 #: inc/classes/scanners/class-secupress-scan-php-disclosure.php:72
-#: inc/modules/sensitive-data/plugins/php-easter-egg.php:44
-#: inc/modules/sensitive-data/plugins/php-easter-egg.php:56
+#: inc/modules/sensitive-data/plugins/php-easter-egg.php:45
+#: inc/modules/sensitive-data/plugins/php-easter-egg.php:57
 msgid "PHP Disclosure"
 msgstr "Divulgation PHP"
 
@@ -4443,9 +4444,9 @@ msgstr "Vérifie si les fichiers %s de vos plugins et thèmes sont protégés."
 
 #: inc/classes/scanners/class-secupress-scan-readme-discloses.php:48
 #: inc/classes/scanners/class-secupress-scan-readme-discloses.php:74
-#: inc/modules/discloses/plugins/readmes.php:44
-#: inc/modules/discloses/plugins/readmes.php:56
-#: inc/modules/sensitive-data/settings/content-protect.php:379
+#: inc/modules/discloses/plugins/readmes.php:45
+#: inc/modules/discloses/plugins/readmes.php:57
+#: inc/modules/sensitive-data/settings/content-protect.php:385
 msgid "Protect readme files"
 msgstr "Protège les fichiers readme"
 
@@ -4476,15 +4477,15 @@ msgstr ""
 "Impossible de déterminer le status des fichiers %s qui pourraient révéler "
 "des informations sensibles."
 
-#. Translators: %s is a file name.
+#. Translators: 1 and 2 are file names.
 #: inc/classes/scanners/class-secupress-scan-readme-discloses.php:89
 #, php-format
 msgid ""
-"The %s and/or %s files should not be accessible to anyone because they are "
-"revealing sensitive information."
+"The %1$s and/or %2$s files should not be accessible to anyone because they "
+"are revealing sensitive information."
 msgstr ""
-"Les fichiers %s et/ou %sne devraient pas être accessibles de tout le monde "
-"car ils révèlent des informations sensibles."
+"Les fichiers %1$s et/ou %2$s ne devraient pas être accessibles à tout le "
+"monde car ils révèlent des informations sensibles."
 
 #. Translators: 1 and 2 are a file names, 3 is some code.
 #: inc/classes/scanners/class-secupress-scan-readme-discloses.php:92
@@ -4685,7 +4686,7 @@ msgstr ""
 #: inc/classes/scanners/class-secupress-scan-sqli.php:45
 #: inc/classes/scanners/class-secupress-scan-sqli.php:63
 #: inc/modules/firewall/settings/bbq-url-content.php:12
-msgid "block bad content"
+msgid "Block bad content"
 msgstr "Bloque les mauvais contenus"
 
 #: inc/classes/scanners/class-secupress-scan-sqli.php:69
@@ -5339,7 +5340,7 @@ msgid "Your unlock link has expired (or you're cheating)."
 msgstr "Votre lien de déverrouillage a expiré (ou vous trichez)."
 
 #: inc/common.php:138 inc/common.php:139
-#: inc/modules/users-login/plugins/blacklist-logins.php:45
+#: inc/modules/users-login/plugins/blacklist-logins.php:46
 #: inc/modules/users-login/plugins/inc/php/move-login/redirections-and-dies.php:209
 msgid "Cheatin&#8217; uh?"
 msgstr "Vous trichez&nbsp;?"
@@ -5481,10 +5482,10 @@ msgstr "Très très, vraiment très mauvais."
 
 #: inc/functions/common.php:261
 #, php-format
-msgid "Your grade is %s — %d scanned item is good."
-msgid_plural "Your grade is %s — %d scanned items are good."
-msgstr[0] "Votre note est %s — %d élément scanné est bon."
-msgstr[1] "Votre note est %s — %d éléments scannés sont bons."
+msgid "Your grade is %1$s — %2$d scanned item is good."
+msgid_plural "Your grade is %1$s — %2$d scanned items are good."
+msgstr[0] "Votre note est %1$s — %2$d élément scanné est bon."
+msgstr[1] "Votre note est %1$s — %2$d éléments scannés sont bons."
 
 #: inc/functions/common.php:447
 msgid "You are not allowed to access the requested page."
@@ -5513,23 +5514,23 @@ msgstr "j F Y G:i"
 msgid "Block ID: %s"
 msgstr "Block ID&nbsp;: %s"
 
-#: inc/functions/deprecated.php:43
+#: inc/functions/deprecated.php:44
 #, php-format
 msgid "Version of SecuPress Pro: %1$s (requires SecuPress Free %2$s)"
 msgstr "Version de SecuPress Pro&nbsp;: %1$s (requiert SecuPress Free %2$s)"
 
-#: inc/functions/deprecated.php:43
+#: inc/functions/deprecated.php:44
 msgid "Version of SecuPress Pro: inactive"
 msgstr "Version de SecuPress Pro&nbsp;: inactive"
 
-#: inc/functions/deprecated.php:52
+#: inc/functions/deprecated.php:53
 msgid ""
 "Your message has been sent, we will come back to you shortly. Thank you."
 msgstr ""
 "Votre message a été envoyé, nous reviendrons vers vous rapidement. Merci."
 
 #. Translators: %s is an email address.
-#: inc/functions/deprecated.php:60
+#: inc/functions/deprecated.php:61
 #, php-format
 msgid ""
 "Something prevented your message to be sent. Please send it manually to %s. "
@@ -5538,7 +5539,7 @@ msgstr ""
 "Quelque chose a empêché votre message d'être envoyé. Merci de le faire "
 "manuellement à %s."
 
-#: inc/functions/deprecated.php:83 inc/functions/deprecated.php:86
+#: inc/functions/deprecated.php:84 inc/functions/deprecated.php:87
 #, php-format
 msgctxt "User full name. 1: first name, 2: last name"
 msgid "%1$s %2$s"
@@ -6107,8 +6108,8 @@ msgstr ""
 #. Translators: %s is a folder name.
 #: inc/modules/backups/settings/backups-storage.php:37
 #, php-format
-msgid "Two folders with the following names: %s and %s."
-msgstr "Deux dossiers avec les noms suivants&nbsp;: %s et %s."
+msgid "Two folders with the following names: %1$s and %2$s."
+msgstr "Deux dossiers avec les noms suivants&nbsp;: %1$s et %2$s."
 
 #. Translators: %s is a file name.
 #: inc/modules/backups/settings/backups-storage.php:44
@@ -6162,7 +6163,7 @@ msgstr "Où souhaitez-vous stocker vos sauvegardes&nbsp;?"
 msgid "Local"
 msgstr "Local"
 
-#: inc/modules/discloses/plugins/login-errors-disclose.php:26
+#: inc/modules/discloses/plugins/login-errors-disclose.php:27
 msgid "<strong>ERROR</strong>: Invalid username or incorrect password."
 msgstr ""
 "<strong>ERREUR</strong>&nbsp;: Nom d'utilisateur ou mot de passe incorrect."
@@ -6237,55 +6238,55 @@ msgid "Yes, deny direct access to those files in the uploads folder."
 msgstr "Oui, interdire l'accès direct aux fichiers du dossier des uploads."
 
 #. Translators: %s is a file name.
-#: inc/modules/file-system/settings/bad-file-extensions.php:34
-#: inc/modules/file-system/settings/directory-index.php:36
-#: inc/modules/sensitive-data/settings/content-protect.php:115
-#: inc/modules/sensitive-data/settings/content-protect.php:173
-#: inc/modules/sensitive-data/settings/content-protect.php:229
-#: inc/modules/sensitive-data/settings/content-protect.php:285
-#: inc/modules/sensitive-data/settings/content-protect.php:341
-#: inc/modules/sensitive-data/settings/content-protect.php:398
+#: inc/modules/file-system/settings/bad-file-extensions.php:35
+#: inc/modules/file-system/settings/directory-index.php:37
+#: inc/modules/sensitive-data/settings/content-protect.php:117
+#: inc/modules/sensitive-data/settings/content-protect.php:176
+#: inc/modules/sensitive-data/settings/content-protect.php:233
+#: inc/modules/sensitive-data/settings/content-protect.php:290
+#: inc/modules/sensitive-data/settings/content-protect.php:347
+#: inc/modules/sensitive-data/settings/content-protect.php:405
 #, php-format
 msgid "You need to add the following code to your %s file:"
 msgstr ""
 "Vous avez besoin d'ajouter le code suivant dans votre fichier %s&nbsp;:"
 
 #. Translators: %s is a file name.
-#: inc/modules/file-system/settings/bad-file-extensions.php:40
-#: inc/modules/file-system/settings/bad-file-extensions.php:47
-#: inc/modules/file-system/settings/directory-index.php:42
-#: inc/modules/file-system/settings/directory-index.php:49
-#: inc/modules/sensitive-data/settings/content-protect.php:65
-#: inc/modules/sensitive-data/settings/content-protect.php:72
-#: inc/modules/sensitive-data/settings/content-protect.php:121
-#: inc/modules/sensitive-data/settings/content-protect.php:128
-#: inc/modules/sensitive-data/settings/content-protect.php:179
-#: inc/modules/sensitive-data/settings/content-protect.php:186
-#: inc/modules/sensitive-data/settings/content-protect.php:235
-#: inc/modules/sensitive-data/settings/content-protect.php:242
-#: inc/modules/sensitive-data/settings/content-protect.php:291
-#: inc/modules/sensitive-data/settings/content-protect.php:298
-#: inc/modules/sensitive-data/settings/content-protect.php:347
-#: inc/modules/sensitive-data/settings/content-protect.php:354
-#: inc/modules/sensitive-data/settings/content-protect.php:404
+#: inc/modules/file-system/settings/bad-file-extensions.php:41
+#: inc/modules/file-system/settings/bad-file-extensions.php:48
+#: inc/modules/file-system/settings/directory-index.php:43
+#: inc/modules/file-system/settings/directory-index.php:50
+#: inc/modules/sensitive-data/settings/content-protect.php:66
+#: inc/modules/sensitive-data/settings/content-protect.php:73
+#: inc/modules/sensitive-data/settings/content-protect.php:123
+#: inc/modules/sensitive-data/settings/content-protect.php:130
+#: inc/modules/sensitive-data/settings/content-protect.php:182
+#: inc/modules/sensitive-data/settings/content-protect.php:189
+#: inc/modules/sensitive-data/settings/content-protect.php:239
+#: inc/modules/sensitive-data/settings/content-protect.php:246
+#: inc/modules/sensitive-data/settings/content-protect.php:296
+#: inc/modules/sensitive-data/settings/content-protect.php:303
+#: inc/modules/sensitive-data/settings/content-protect.php:353
+#: inc/modules/sensitive-data/settings/content-protect.php:360
 #: inc/modules/sensitive-data/settings/content-protect.php:411
-#: inc/modules/users-login/settings/move-login.php:85
-#: inc/modules/users-login/settings/move-login.php:92
+#: inc/modules/sensitive-data/settings/content-protect.php:418
+#: inc/modules/users-login/settings/move-login.php:86
+#: inc/modules/users-login/settings/move-login.php:93
 #, php-format
 msgid "Your %s file is not writable, you need to add the following code to it:"
 msgstr ""
 "Votre fichier %1$s n'est pas en écriture, vous devez ajouter le code suivant "
 "dedans&nbsp;:"
 
-#: inc/modules/file-system/settings/bad-file-extensions.php:53
-#: inc/modules/file-system/settings/directory-index.php:55
-#: inc/modules/sensitive-data/settings/content-protect.php:78
-#: inc/modules/sensitive-data/settings/content-protect.php:134
-#: inc/modules/sensitive-data/settings/content-protect.php:192
-#: inc/modules/sensitive-data/settings/content-protect.php:248
-#: inc/modules/sensitive-data/settings/content-protect.php:304
-#: inc/modules/sensitive-data/settings/content-protect.php:360
-#: inc/modules/sensitive-data/settings/content-protect.php:417
+#: inc/modules/file-system/settings/bad-file-extensions.php:54
+#: inc/modules/file-system/settings/directory-index.php:56
+#: inc/modules/sensitive-data/settings/content-protect.php:79
+#: inc/modules/sensitive-data/settings/content-protect.php:136
+#: inc/modules/sensitive-data/settings/content-protect.php:195
+#: inc/modules/sensitive-data/settings/content-protect.php:252
+#: inc/modules/sensitive-data/settings/content-protect.php:309
+#: inc/modules/sensitive-data/settings/content-protect.php:366
+#: inc/modules/sensitive-data/settings/content-protect.php:424
 msgctxt "rewrite rules"
 msgid "Rules"
 msgstr "Règles"
@@ -6567,46 +6568,46 @@ msgid "Add or remove countries you want to manage for your website."
 msgstr ""
 "Ajouter ou supprimer les pays que vous souhaitez gérer pour votre site."
 
-#: inc/modules/firewall/tools.php:134
+#: inc/modules/firewall/tools.php:136
 msgid "Antispam, Anti-Usurpation"
 msgstr "Anti-spam, anti-usurpation"
 
-#: inc/modules/firewall/tools.php:136
+#: inc/modules/firewall/tools.php:138
 msgid "Bad URL Contents"
 msgstr "Mauvais contenu dans l'URL"
 
-#: inc/modules/firewall/tools.php:138
+#: inc/modules/firewall/tools.php:140
 msgid "URL Too Long"
 msgstr "URL trop longue"
 
-#: inc/modules/firewall/tools.php:140
+#: inc/modules/firewall/tools.php:142
 msgid "GeoIP"
 msgstr "Géolocalisation"
 
-#: inc/modules/firewall/tools.php:142
+#: inc/modules/firewall/tools.php:144
 msgid "Bad Request Method"
 msgstr "Mauvaise méthode de requête"
 
-#: inc/modules/firewall/tools.php:144
+#: inc/modules/firewall/tools.php:146
 msgid "Empty User-Agent"
 msgstr "User-Agent vide"
 
-#: inc/modules/firewall/tools.php:145
+#: inc/modules/firewall/tools.php:147
 msgid "User-Agent With HTML Tags"
 msgstr "User-Agent contenant des balises HTML"
 
-#: inc/modules/firewall/tools.php:146
+#: inc/modules/firewall/tools.php:148
 msgid "User-Agent Blacklisted"
 msgstr "User-Agent en liste noire"
 
 #: inc/modules/get-pro/settings.php:17
 #, php-format
 msgid ""
-"Impossible to get online prices, please check %sonline prices%s to get the "
-"last ones."
+"Impossible to get online prices, please check %1$sonline prices%2$s to get "
+"the last ones."
 msgstr ""
-"Impossible de récupérer les tarifs à distance, merci de vérifier %sen ligne"
-"%s pour obtenir les derniers."
+"Impossible de récupérer les tarifs à distance, merci de vérifier %1$sen ligne"
+"%2$s pour obtenir les derniers."
 
 #: inc/modules/get-pro/settings.php:30
 msgid "Pre-order SecuPress Pro Now and Get an Exclusive Discount"
@@ -6639,8 +6640,8 @@ msgstr "Mensuellement"
 
 #: inc/modules/get-pro/settings.php:86
 #, php-format
-msgid "%d%% OFF"
-msgstr "%d%% de remise"
+msgid "%1$d%% OFF"
+msgstr "%1$d%% de remise"
 
 #: inc/modules/get-pro/settings.php:89
 msgid "Billed per year"
@@ -6685,8 +6686,8 @@ msgstr "Support et mises à jour illimités"
 #: inc/modules/get-pro/settings.php:123 inc/modules/get-pro/settings.php:127
 #, php-format
 msgctxt "one line text please"
-msgid "Bonus %s on %s"
-msgstr "%s sur %s"
+msgid "Bonus %1$s on %2$s"
+msgstr "%1$s sur %2$s"
 
 #: inc/modules/get-pro/settings.php:123
 msgid "100 MB for free"
@@ -7102,11 +7103,11 @@ msgstr "Adresses IP en liste blanche"
 msgid "List IPs that must not be banned:"
 msgstr "Liste des adresses IP qui ne doivent pas être bannies&nbsp;:"
 
-#: inc/modules/logs/settings/logs.php:15
+#: inc/modules/logs/settings/logs.php:16
 msgid "WordPress action logs"
 msgstr "Journaux des actions de WordPress"
 
-#: inc/modules/logs/settings/logs.php:16
+#: inc/modules/logs/settings/logs.php:17
 msgid ""
 "What happened on your WordPress website? By activating this module, most "
 "sensitive actions will be logged."
@@ -7114,49 +7115,49 @@ msgstr ""
 "Qu'est-il arrivé sur votre site WordPress&nbsp;? En activant ce module, les "
 "actions les plus sensibles seront enregistrées."
 
-#: inc/modules/logs/settings/logs.php:19
+#: inc/modules/logs/settings/logs.php:20
 msgid "Yes, log WordPress actions"
 msgstr "Oui, garder un journal des actions WordPress"
 
-#: inc/modules/logs/settings/logs.php:25
+#: inc/modules/logs/settings/logs.php:26
 #, php-format
 msgid "High criticity <span class=\"count\">(%s)</span>"
 msgid_plural "High criticity <span class=\"count\">(%s)</span>"
 msgstr[0] "Criticité haute <span class=\"count\">(%s)</span>"
 msgstr[1] "Criticité haute <span class=\"count\">(%s)</span>"
 
-#: inc/modules/logs/settings/logs.php:26
+#: inc/modules/logs/settings/logs.php:27
 #, php-format
 msgid "Normal criticity <span class=\"count\">(%s)</span>"
 msgid_plural "Normal criticity <span class=\"count\">(%s)</span>"
 msgstr[0] "Criticité normale <span class=\"count\">(%s)</span>"
 msgstr[1] "Criticité normale <span class=\"count\">(%s)</span>"
 
-#: inc/modules/logs/settings/logs.php:27
+#: inc/modules/logs/settings/logs.php:28
 #, php-format
 msgid "Low criticity <span class=\"count\">(%s)</span>"
 msgid_plural "Low criticity <span class=\"count\">(%s)</span>"
 msgstr[0] "Criticité basse <span class=\"count\">(%s)</span>"
 msgstr[1] "Criticité basse <span class=\"count\">(%s)</span>"
 
-#: inc/modules/logs/settings/logs.php:48
+#: inc/modules/logs/settings/logs.php:49
 #, php-format
 msgid "Total: %s"
 msgstr "Total&nbsp;: %s"
 
-#: inc/modules/logs/settings/logs.php:53 inc/modules/logs/settings/logs.php:91
+#: inc/modules/logs/settings/logs.php:54 inc/modules/logs/settings/logs.php:93
 msgid "Nothing happened yet."
 msgstr "Rien n'est encore arrivé."
 
-#: inc/modules/logs/settings/logs.php:58 inc/modules/logs/settings/logs.php:96
+#: inc/modules/logs/settings/logs.php:59 inc/modules/logs/settings/logs.php:98
 msgid "What happened on your WordPress website?"
 msgstr "Qu'est-il arrivé sur votre site WordPress&nbsp;?"
 
-#: inc/modules/logs/settings/logs.php:73
+#: inc/modules/logs/settings/logs.php:75
 msgid "404 Error Pages Log"
 msgstr "Journaux des erreurs 404"
 
-#: inc/modules/logs/settings/logs.php:74
+#: inc/modules/logs/settings/logs.php:76
 msgid ""
 "404 Error pages are common, but it can also be some bots trying to find "
 "insecure content on your website. You may want to know that."
@@ -7165,28 +7166,28 @@ msgstr ""
 "qui tentent de trouver du contenu sensible sur votre site. Vous souhaiteriez "
 "aussi connaitre ça."
 
-#: inc/modules/logs/settings/logs.php:77
+#: inc/modules/logs/settings/logs.php:79
 msgid "Yes, log WordPress 404s"
 msgstr "Oui, garder un journal des erreurs 404 de WordPress"
 
-#: inc/modules/logs/settings/logs.php:88
+#: inc/modules/logs/settings/logs.php:90
 #, php-format
 msgid "%s error 404."
 msgid_plural "%s errors 404."
 msgstr[0] "%s erreur 404."
 msgstr[1] "%s erreurs 404."
 
-#: inc/modules/plugins-themes/plugins/plugin-installation.php:32
-#: inc/modules/plugins-themes/plugins/plugin-installation.php:47
-#: inc/modules/plugins-themes/plugins/plugin-installation.php:65
-#: inc/modules/plugins-themes/plugins/uploads.php:12
+#: inc/modules/plugins-themes/plugins/plugin-installation.php:33
+#: inc/modules/plugins-themes/plugins/plugin-installation.php:48
+#: inc/modules/plugins-themes/plugins/plugin-installation.php:66
+#: inc/modules/plugins-themes/plugins/uploads.php:13
 msgid "You do not have sufficient permissions to install plugins on this site."
 msgstr "Vous n'avez pas la permission d'installer des plugins sur ce site."
 
-#: inc/modules/plugins-themes/plugins/theme-installation.php:31
-#: inc/modules/plugins-themes/plugins/theme-installation.php:45
-#: inc/modules/plugins-themes/plugins/theme-installation.php:51
-#: inc/modules/plugins-themes/plugins/uploads.php:16
+#: inc/modules/plugins-themes/plugins/theme-installation.php:32
+#: inc/modules/plugins-themes/plugins/theme-installation.php:46
+#: inc/modules/plugins-themes/plugins/theme-installation.php:52
+#: inc/modules/plugins-themes/plugins/uploads.php:17
 msgid "You do not have sufficient permissions to install themes on this site."
 msgstr "Vous n'avez pas la permission d'installer des thèmes sur ce site."
 
@@ -7399,7 +7400,7 @@ msgid "Maximum %d days."
 msgstr "Maximum %d jours."
 
 #. Translators: 1 is a file name; 2, 3 and 4 are some code.
-#: inc/modules/sensitive-data/plugins/bad-url-access.php:135
+#: inc/modules/sensitive-data/plugins/bad-url-access.php:136
 #, php-format
 msgid ""
 "Your %1$s file is not writable. Please replace previous lines between %2$s "
@@ -7409,7 +7410,7 @@ msgstr ""
 "précédentes entre %2$s et %3$s par les suivantes&nbsp;: %4$s"
 
 #. Translators: 1 is a file name, 2 is a tag name, 3 is a folder path (kind of), 4 is some code
-#: inc/modules/sensitive-data/plugins/bad-url-access.php:155
+#: inc/modules/sensitive-data/plugins/bad-url-access.php:156
 #, php-format
 msgid ""
 "Your %1$s file is not writable. Please replace previous rules with %2$s from "
@@ -7419,7 +7420,7 @@ msgstr ""
 "précédentes par %2$s depuis la hiérarchie des balises %3$s par les "
 "suivantes&nbsp;: %4$s"
 
-#: inc/modules/sensitive-data/plugins/blackhole.php:94
+#: inc/modules/sensitive-data/plugins/blackhole.php:95
 #, php-format
 msgid "Your IP address %s has been banned."
 msgstr "Votre adresse IP %s a été bannie."
@@ -7444,13 +7445,13 @@ msgstr ""
 msgid "click this link"
 msgstr "cliquez pas sur ce lien"
 
-#: inc/modules/sensitive-data/plugins/xmlrpc.php:29
-#: inc/modules/sensitive-data/plugins/xmlrpc.php:129
+#: inc/modules/sensitive-data/plugins/xmlrpc.php:30
+#: inc/modules/sensitive-data/plugins/xmlrpc.php:130
 msgid "XML-RPC services are disabled on this site."
 msgstr "Les services XML-RPC sont désactivés sur ce site."
 
-#: inc/modules/sensitive-data/plugins/xmlrpc.php:30
-#: inc/modules/sensitive-data/plugins/xmlrpc.php:130
+#: inc/modules/sensitive-data/plugins/xmlrpc.php:31
+#: inc/modules/sensitive-data/plugins/xmlrpc.php:131
 msgid "XML-RPC is disabled"
 msgstr "XML-RPC est désactivé"
 
@@ -7503,8 +7504,8 @@ msgid "This feature is available only for sites with SSL."
 msgstr "Cette fonctionnalité n'est disponible que pour les sites avec SSL."
 
 #. Translators: 1 is a file name, 2 is a tag name.
-#: inc/modules/sensitive-data/settings/content-protect.php:59
-#: inc/modules/users-login/settings/move-login.php:79
+#: inc/modules/sensitive-data/settings/content-protect.php:60
+#: inc/modules/users-login/settings/move-login.php:80
 #, php-format
 msgid ""
 "You need to add the following code to your %1$s file, inside the %2$s block:"
@@ -7512,7 +7513,7 @@ msgstr ""
 "You devez ajouter le code suivant dans votre fichier %1$s, dans le bloc "
 "%2$s&nbsp;:"
 
-#: inc/modules/sensitive-data/settings/content-protect.php:98
+#: inc/modules/sensitive-data/settings/content-protect.php:99
 msgid ""
 "Directory Listing is a functionality that allows anyone to list a directory "
 "content (its files and sub-folders) simply by entering its URL in a web "
@@ -7525,16 +7526,16 @@ msgstr ""
 "la plupart des hébergeurs le font par défaut. Si ce n'est pas le cas, vous "
 "pouvez la désactiver ici."
 
-#: inc/modules/sensitive-data/settings/content-protect.php:103
+#: inc/modules/sensitive-data/settings/content-protect.php:104
 msgid "Yes, disable Directory Listing"
 msgstr "Oui, désactiver l'affichage des fichiers dans les dossiers"
 
-#: inc/modules/sensitive-data/settings/content-protect.php:153
+#: inc/modules/sensitive-data/settings/content-protect.php:155
 msgid "PHP disclosure"
 msgstr "Divulgation PHP"
 
 #. Translators: here we speak about PHP modules, as in http://de2.php.net/manual/en/function.phpinfo.php
-#: inc/modules/sensitive-data/settings/content-protect.php:155
+#: inc/modules/sensitive-data/settings/content-protect.php:157
 msgid ""
 "PHP contains a flaw that discloses sensitive information about installed "
 "modules, this is also known as \"PHP Easter Egg\". This is highly insecure "
@@ -7547,15 +7548,15 @@ msgstr ""
 "le font par défaut. Si ce n'est pas le cas, vous pouvez le faire ici."
 
 #. Translators: here we speak about PHP modules, as in http://de2.php.net/manual/en/function.phpinfo.php
-#: inc/modules/sensitive-data/settings/content-protect.php:161
+#: inc/modules/sensitive-data/settings/content-protect.php:163
 msgid "Yes, forbid access to this PHP modules disclosure"
 msgstr "Oui, interdire l'accès à la divulgation des modules PHP"
 
-#: inc/modules/sensitive-data/settings/content-protect.php:211
+#: inc/modules/sensitive-data/settings/content-protect.php:214
 msgid "PHP version disclosure"
 msgstr "Divulgation de la version PHP"
 
-#: inc/modules/sensitive-data/settings/content-protect.php:212
+#: inc/modules/sensitive-data/settings/content-protect.php:215
 #, php-format
 msgid ""
 "Some servers send a header called %s that contains the PHP version used on "
@@ -7566,15 +7567,15 @@ msgstr ""
 "utilisée sur votre site. Cela peut être une information utile pour un "
 "attaquant et devrait être supprimée."
 
-#: inc/modules/sensitive-data/settings/content-protect.php:217
+#: inc/modules/sensitive-data/settings/content-protect.php:220
 msgid "Yes, remove the PHP version"
 msgstr "Oui, supprimer l'affichage de la version de PHP"
 
-#: inc/modules/sensitive-data/settings/content-protect.php:267
+#: inc/modules/sensitive-data/settings/content-protect.php:271
 msgid "WordPress version disclosure"
 msgstr "Divulgation de la version de WordPress"
 
-#: inc/modules/sensitive-data/settings/content-protect.php:268
+#: inc/modules/sensitive-data/settings/content-protect.php:272
 msgid ""
 "Disclosing your WordPress version may be a useful information for attackers, "
 "it should be removed."
@@ -7582,11 +7583,11 @@ msgstr ""
 "Divulguer la version de WordPress peut être une information utile pour un "
 "attaquant et devrait être supprimée."
 
-#: inc/modules/sensitive-data/settings/content-protect.php:273
+#: inc/modules/sensitive-data/settings/content-protect.php:277
 msgid "Yes, remove the WordPress version"
 msgstr "Oui, supprimer l'affichage de la version de WordPress"
 
-#: inc/modules/sensitive-data/settings/content-protect.php:324
+#: inc/modules/sensitive-data/settings/content-protect.php:329
 msgid ""
 "Directly accessing some WordPress files would disclose sensitive information "
 "that will help an attacker, like your site's internal path."
@@ -7595,13 +7596,13 @@ msgstr ""
 "informations sensibles et aider un attaquant, comme le chemin interne de "
 "votre site."
 
-#: inc/modules/sensitive-data/settings/content-protect.php:329
-#: inc/modules/sensitive-data/settings/content-protect.php:386
+#: inc/modules/sensitive-data/settings/content-protect.php:334
+#: inc/modules/sensitive-data/settings/content-protect.php:392
 msgid "Yes, forbid access to those files"
 msgstr "Oui, empêcher l'accès à ces fichiers"
 
 #. Translators: 1 and 2 are file names.
-#: inc/modules/sensitive-data/settings/content-protect.php:381
+#: inc/modules/sensitive-data/settings/content-protect.php:387
 #, php-format
 msgid ""
 "Files like %1$s or %2$s are a good source of information for attackers, they "
@@ -7611,17 +7612,17 @@ msgstr ""
 "les attaquants, ils ne devraient pas être accessibles."
 
 #. Translators: %s is a plugin name.
-#: inc/modules/sensitive-data/settings/content-protect.php:436
-#: inc/modules/sensitive-data/settings/content-protect.php:441
+#: inc/modules/sensitive-data/settings/content-protect.php:443
+#: inc/modules/sensitive-data/settings/content-protect.php:448
 #, php-format
 msgid "Remove %s version"
 msgstr "Supprimer la version de %s"
 
-#: inc/modules/sensitive-data/settings/content-protect.php:455
+#: inc/modules/sensitive-data/settings/content-protect.php:462
 msgid "Plugin Version Disclosure"
 msgstr "Divulgation de la version de plugins"
 
-#: inc/modules/sensitive-data/settings/content-protect.php:456
+#: inc/modules/sensitive-data/settings/content-protect.php:463
 msgid ""
 "Some popular big plugins print their version in your site's source code. "
 "This information can be useful for attackers."
@@ -7843,41 +7844,41 @@ msgstr "Ne rien faire, rediriger sur la nouvelle page de connexion"
 msgid "not recommended"
 msgstr "non recommandé"
 
-#: inc/modules/users-login/plugins/ask-old-password.php:68
-#: inc/modules/users-login/plugins/ask-old-password.php:90
-#: inc/modules/users-login/plugins/ask-old-password.php:99
-#: inc/modules/users-login/plugins/ask-old-password.php:108
+#: inc/modules/users-login/plugins/ask-old-password.php:69
+#: inc/modules/users-login/plugins/ask-old-password.php:91
+#: inc/modules/users-login/plugins/ask-old-password.php:100
+#: inc/modules/users-login/plugins/ask-old-password.php:109
 msgid "Current Password"
 msgstr "Mot de passe actuel"
 
-#: inc/modules/users-login/plugins/ask-old-password.php:71
-#: inc/modules/users-login/plugins/ask-old-password.php:78
-#: inc/modules/users-login/plugins/ask-old-password.php:93
-#: inc/modules/users-login/plugins/ask-old-password.php:102
-#: inc/modules/users-login/plugins/ask-old-password.php:111
+#: inc/modules/users-login/plugins/ask-old-password.php:72
+#: inc/modules/users-login/plugins/ask-old-password.php:79
+#: inc/modules/users-login/plugins/ask-old-password.php:94
+#: inc/modules/users-login/plugins/ask-old-password.php:103
+#: inc/modules/users-login/plugins/ask-old-password.php:112
 msgid "Type your current password"
 msgstr "Tapez votre mot de passe actuel"
 
-#: inc/modules/users-login/plugins/ask-old-password.php:152
+#: inc/modules/users-login/plugins/ask-old-password.php:153
 msgid "<strong>ERROR</strong>: Please enter your current password."
 msgstr ""
 "<strong>ERREUR</strong>&nbsp;: Merci d'entrer votre mot de passe actuel."
 
-#: inc/modules/users-login/plugins/blacklist-logins.php:50
+#: inc/modules/users-login/plugins/blacklist-logins.php:51
 msgid "Username required"
 msgstr "Nom d'utilisateur requis"
 
-#: inc/modules/users-login/plugins/blacklist-logins.php:57
+#: inc/modules/users-login/plugins/blacklist-logins.php:58
 msgid "This username is also blacklisted"
 msgstr "Ce nom d'utilisateur est en liste noire"
 
-#: inc/modules/users-login/plugins/blacklist-logins.php:92
-#: inc/modules/users-login/plugins/blacklist-logins.php:108
+#: inc/modules/users-login/plugins/blacklist-logins.php:93
+#: inc/modules/users-login/plugins/blacklist-logins.php:111
 msgid "Please change your username"
 msgstr "Merci de changer votre nom d'utilisateur"
 
 #. Translators: 1 is a user name, 2 is a link "to the site"
-#: inc/modules/users-login/plugins/blacklist-logins.php:96
+#: inc/modules/users-login/plugins/blacklist-logins.php:98
 #, php-format
 msgid ""
 "Your current username %1$s is blacklisted. You will not be able to reach the "
@@ -7888,44 +7889,44 @@ msgstr ""
 "visiter l'administration tant que vous ne l'aurez pas changé. Mais vous avez "
 "toujours accès %2$s."
 
-#: inc/modules/users-login/plugins/blacklist-logins.php:98
+#: inc/modules/users-login/plugins/blacklist-logins.php:100
 msgid "to the site"
 msgstr "au site"
 
-#: inc/modules/users-login/plugins/blacklist-logins.php:102
+#: inc/modules/users-login/plugins/blacklist-logins.php:105
 msgid "New username:"
 msgstr "Nouveau nom d'utilisateur&nbsp;:"
 
-#: inc/modules/users-login/plugins/blacklist-logins.php:136
+#: inc/modules/users-login/plugins/blacklist-logins.php:139
 msgid "You will receive your new login in your mailbox."
 msgstr "Vous recevrez votre nouveau nom dans votre boite mail."
 
-#: inc/modules/users-login/plugins/blacklist-logins.php:161
+#: inc/modules/users-login/plugins/blacklist-logins.php:164
 msgid "Cannot create a user with an empty login name."
 msgstr "Impossible de créer un utilisateur avec un nom vide."
 
-#: inc/modules/users-login/plugins/blacklist-logins.php:163
+#: inc/modules/users-login/plugins/blacklist-logins.php:166
 msgid "Username may not be longer than 60 characters."
 msgstr "Le nom d'utilisateur ne doit pas dépasser 60 caractères."
 
-#: inc/modules/users-login/plugins/blacklist-logins.php:167
+#: inc/modules/users-login/plugins/blacklist-logins.php:170
 msgid "Sorry, that username already exists!"
 msgstr "Désolé, ce nom d'utilisateur existe déjà&nbsp;!"
 
-#: inc/modules/users-login/plugins/blacklist-logins.php:195
+#: inc/modules/users-login/plugins/blacklist-logins.php:198
 #, php-format
 msgid "Username: %s"
 msgstr "Nom d'utilisateur&nbsp;: %s"
 
-#: inc/modules/users-login/plugins/blacklist-logins.php:198
+#: inc/modules/users-login/plugins/blacklist-logins.php:201
 #, php-format
 msgid "[%s] Your username info"
 msgstr "[%s] Votre nom d'utilisateur"
 
-#: inc/modules/users-login/plugins/blacklist-logins.php:293
-#: inc/modules/users-login/plugins/blacklist-logins.php:310
-#: inc/modules/users-login/plugins/blacklist-logins.php:351
-#: inc/modules/users-login/plugins/blacklist-logins.php:369
+#: inc/modules/users-login/plugins/blacklist-logins.php:297
+#: inc/modules/users-login/plugins/blacklist-logins.php:314
+#: inc/modules/users-login/plugins/blacklist-logins.php:355
+#: inc/modules/users-login/plugins/blacklist-logins.php:373
 msgid "Sorry, that username is not allowed."
 msgstr "Désolé, ce nom d'utilisateur n'est pas autorisé."
 
@@ -7986,7 +7987,7 @@ msgstr "Le formulaire de connexion n'est pas là."
 msgid "Lost?"
 msgstr "Perdu&nbsp;?"
 
-#: inc/modules/users-login/plugins/limitloginattempts.php:65
+#: inc/modules/users-login/plugins/limitloginattempts.php:78
 #, php-format
 msgid "Login failed, <strong>%d</strong> attempt left."
 msgid_plural "Login failed, <strong>%d</strong> attempts left."
@@ -8005,11 +8006,11 @@ msgstr "Session expirée, merci de réessayer."
 msgid "Do not fill in this field."
 msgstr "Ne remplissez pas ce champ."
 
-#: inc/modules/users-login/plugins/login-captcha.php:124
+#: inc/modules/users-login/plugins/login-captcha.php:133
 msgid "<strong>ERROR</strong>: The human verification is incorrect."
-msgstr "<strong>ERREUR</strong>&nbsp;: La vérification Humaine est incorrecte."
+msgstr "<strong>ERREUR</strong>&nbsp;: La vérification humaine est incorrecte."
 
-#: inc/modules/users-login/plugins/login-captcha.php:165
+#: inc/modules/users-login/plugins/login-captcha.php:177
 msgid "You need to enable JavaScript to send this form correctly."
 msgstr ""
 "Vous avez besoin d'activer le JavaScript pour que ce formulaire soit envoyé "
@@ -8255,7 +8256,7 @@ msgstr ""
 msgid "Choose how to deny access to the administration area"
 msgstr "Choisissez comment interdire l'accès à l'administration"
 
-#: inc/modules/users-login/settings/move-login.php:98
+#: inc/modules/users-login/settings/move-login.php:99
 msgid "Rules"
 msgstr "Règles"
 
@@ -8380,12 +8381,12 @@ msgstr[1] ""
 "%2$s. Merci de supprimer les lignes suivantes du fichier&nbsp;: %3$s"
 
 #. Translators: 1 is a file name, 2 is a code.
-#: inc/modules/wordpress-core/plugins/wp-config-constant-file-edit.php:38
-#: inc/modules/wordpress-core/plugins/wp-config-constant-file-edit.php:106
-#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-html.php:38
-#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-html.php:106
-#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-uploads.php:36
-#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-uploads.php:83
+#: inc/modules/wordpress-core/plugins/wp-config-constant-file-edit.php:39
+#: inc/modules/wordpress-core/plugins/wp-config-constant-file-edit.php:107
+#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-html.php:39
+#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-html.php:107
+#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-uploads.php:37
+#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-uploads.php:84
 #, php-format
 msgid ""
 "The %1$s file is not writable. Please apply %2$s write rights to the file."
@@ -8394,8 +8395,8 @@ msgstr ""
 "ce fichier."
 
 #. Translators: 1 is the plugin name, 2 is a constant name, 3 is a file name, 4 and 5 are a small parts of code.
-#: inc/modules/wordpress-core/plugins/wp-config-constant-file-edit.php:58
-#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-html.php:58
+#: inc/modules/wordpress-core/plugins/wp-config-constant-file-edit.php:59
+#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-html.php:59
 #, php-format
 msgid ""
 "%1$s couldn't change the value of the constant %2$s in the %3$s file. Please "
@@ -8406,8 +8407,8 @@ msgstr ""
 "ça&nbsp;: %5$s"
 
 #. Translators: 1 is the plugin name, 2 is a constant name, 3 is a file name, 4 is a small part of code.
-#: inc/modules/wordpress-core/plugins/wp-config-constant-file-edit.php:81
-#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-html.php:81
+#: inc/modules/wordpress-core/plugins/wp-config-constant-file-edit.php:82
+#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-html.php:82
 #, php-format
 msgid ""
 "%1$s couldn't add the constant %2$s to the %3$s file. Please edit the file "
@@ -8417,7 +8418,7 @@ msgstr ""
 "d'éditer le fichier et d'ajouter ceci au début de celui-ci&nbsp;: %4$s."
 
 #. Translators: 1 is the plugin name, 2 is a constant name, 3 is a file name, 4 is a small part of code.
-#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-uploads.php:59
+#: inc/modules/wordpress-core/plugins/wp-config-constant-unfiltered-uploads.php:60
 #, php-format
 msgid ""
 "%1$s couldn't remove the constant %2$s from the %3$s file. Please edit the "
