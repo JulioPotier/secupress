@@ -3,7 +3,7 @@ Contributors: wp_media, SecuPress, juliobox, GregLone
 Tags: security, spam, backup, schedule, firewall, sensitive data, antivirus, logs, alerts
 Requires at least: 3.7
 Tested up to: 4.7.2
-Stable tag: 1.2.2
+Stable tag: 1.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -203,7 +203,7 @@ It's important to delete all other security plugins before activating SecuPress.
 
 = 1.2.3 =
 
-* 14 feb 2017
+* 20 feb 2017
 * Improvement #370: in the scanner, each scan has now its own documentation 📖. The "Read the documentation" links can be found at step 3, the Manual Operations.
 * Improvement #357: for the "Too Long URL" protection, requests made with `wp_request_***()` to self are not blocked anymore.
 * Fix #373: fixed a bug that allowed a specifically forged URL to cheat the "Too Long URL" protection.
