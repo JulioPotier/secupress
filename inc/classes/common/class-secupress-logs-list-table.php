@@ -492,7 +492,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 			// Use a custom referer input, we don't want superfuous paramaters in the URL.
 			echo '<input type="hidden" name="_wp_http_referer" value="' . esc_attr( $this->paged_page_url() ) . '" />';
 
-			$args = parse_url( $this->paged_page_url(), PHP_URL_QUERY );
+			$args = wp_parse_url( $this->paged_page_url(), PHP_URL_QUERY );
 
 			if ( $args ) {
 				// Display all other parameters ("page" is the most important).

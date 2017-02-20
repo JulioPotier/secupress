@@ -159,7 +159,7 @@ function secupress_move_login_set_path( $path ) {
 	$other = array_diff_key( $other, $slugs );
 
 	// Get the action.
-	$parsed_path = parse_url( $path );
+	$parsed_path = wp_parse_url( $path );
 
 	if ( ! empty( $parsed_path['query'] ) ) {
 		wp_parse_str( $parsed_path['query'], $params );
@@ -181,8 +181,7 @@ function secupress_move_login_set_path( $path ) {
 	if ( isset( $slugs[ $action ] ) ) {
 		$path = str_replace( 'wp-login.php', $slugs[ $action ], $path );
 		$path = remove_query_arg( 'action', $path );
-	}
-	else {
+	} else {
 		// In case of a custom action.
 		$path = str_replace( 'wp-login.php', $slugs['login'], $path );
 		$path = add_query_arg( 'action', $action, $path );
@@ -209,22 +208,19 @@ function secupress_move_login_login_to_action( $link, $action ) {
 
 	if ( isset( $slugs[ $action ] ) ) {
 		$slug = $slugs[ $action ];
-	}
-	else {
+	} else {
 		// Shouldn't happen, because this function is not used in this case.
 		$slug = $slugs['login'];
 
 		if ( false === has_filter( 'login_form_' . $action ) ) {
 			$action = 'login';
-		}
-		else {
+		} else {
 			// In case of a custom action.
 			$need_action_param = true;
 		}
 	}
 
 	if ( $link && false === strpos( $link, '/' . $slug ) ) {
-
 		$link = str_replace( array( '/' . $slugs['login'], '&amp;', '?amp;', '&' ), array( '/' . $slug, '&', '?', '&amp;' ), remove_query_arg( 'action', $link ) );
 
 		if ( $need_action_param ) {
