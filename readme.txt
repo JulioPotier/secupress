@@ -3,7 +3,7 @@ Contributors: wp_media, SecuPress, juliobox, GregLone
 Tags: security, spam, backup, schedule, firewall, sensitive data, antivirus, logs, alerts
 Requires at least: 3.7
 Tested up to: 4.7.2
-Stable tag: 1.2.3
+Stable tag: 1.2.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -200,6 +200,11 @@ It's important to delete all other security plugins before activating SecuPress.
 8. The 4th step: final report, you can export it as PDF (1)
 
 == Changelog ==
+
+= 1.2.3.1 =
+
+* 21 feb 2017
+* Fix #391: whenever an IP address is banned, the message was displayed to everybody.
 
 = 1.2.3 =
 
