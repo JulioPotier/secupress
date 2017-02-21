@@ -103,27 +103,11 @@ add_filter( 'wp_redirect', 'secupress_move_login_redirect', 10 );
  * @return (string) The path to redirect to.
  */
 function secupress_move_login_redirect( $location ) {
-	$location_base = explode( '?', $location, 2 );
+	$location_base = explode( '?', $location );
 	$location_base = reset( $location_base );
 
 	if ( site_url( $location_base ) === site_url( 'wp-login.php' ) ) {
 		return secupress_move_login_site_url( $location, $location, 'login', get_current_blog_id() );
-	}
-
-	if ( trailingslashit( $location_base ) === trailingslashit( wp_login_url() ) ) {
-		$location_query = wp_parse_url( $location );
-
-		if ( empty( $location_query['query'] ) ) {
-			return $location;
-		}
-
-		wp_parse_str( $location_query['query'], $location_query );
-
-		if ( empty( $location_query['action'] ) ) {
-			return $location;
-		}
-
-		return secupress_move_login_login_to_action( $location, $location_query['action'] );
 	}
 
 	return $location;
@@ -175,7 +159,7 @@ function secupress_move_login_set_path( $path ) {
 	$other = array_diff_key( $other, $slugs );
 
 	// Get the action.
-	$parsed_path = wp_parse_url( $path );
+	$parsed_path = parse_url( $path );
 
 	if ( ! empty( $parsed_path['query'] ) ) {
 		wp_parse_str( $parsed_path['query'], $params );
@@ -197,7 +181,8 @@ function secupress_move_login_set_path( $path ) {
 	if ( isset( $slugs[ $action ] ) ) {
 		$path = str_replace( 'wp-login.php', $slugs[ $action ], $path );
 		$path = remove_query_arg( 'action', $path );
-	} else {
+	}
+	else {
 		// In case of a custom action.
 		$path = str_replace( 'wp-login.php', $slugs['login'], $path );
 		$path = add_query_arg( 'action', $action, $path );
@@ -224,18 +209,22 @@ function secupress_move_login_login_to_action( $link, $action ) {
 
 	if ( isset( $slugs[ $action ] ) ) {
 		$slug = $slugs[ $action ];
-	} else {
+	}
+	else {
+		// Shouldn't happen, because this function is not used in this case.
 		$slug = $slugs['login'];
 
 		if ( false === has_filter( 'login_form_' . $action ) ) {
 			$action = 'login';
-		} else {
+		}
+		else {
 			// In case of a custom action.
 			$need_action_param = true;
 		}
 	}
 
 	if ( $link && false === strpos( $link, '/' . $slug ) ) {
+
 		$link = str_replace( array( '/' . $slugs['login'], '&amp;', '?amp;', '&' ), array( '/' . $slug, '&', '?', '&amp;' ), remove_query_arg( 'action', $link ) );
 
 		if ( $need_action_param ) {

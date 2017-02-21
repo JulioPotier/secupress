@@ -123,6 +123,7 @@ function secupress_create_subsite_menu() {
 
 	$site_id = get_current_blog_id();
 	$sites   = secupress_get_results_for_ms_scanner_fixes();
+	$cap     = secupress_get_capability( true );
 	$menu    = false;
 
 	if ( ! $sites ) {
@@ -140,11 +141,8 @@ function secupress_create_subsite_menu() {
 		return;
 	}
 
-	$cap  = secupress_get_capability( true );
-	$icon = secupress_wp_version_is( '3.8' ) ? 'dashicons-shield-alt' : '';
-
 	// Menu item.
-	add_menu_page( SECUPRESS_PLUGIN_NAME, 'secupress', $cap, SECUPRESS_PLUGIN_SLUG . '_scanners', 'secupress_subsite_scanners', $icon );
+	add_menu_page( SECUPRESS_PLUGIN_NAME, 'secupress', $cap, SECUPRESS_PLUGIN_SLUG . '_scanners', 'secupress_subsite_scanners', 'dashicons-shield-alt' );
 
 	// Display a notice for Administrators.
 	if ( 'admin.php' !== $pagenow || empty( $_GET['page'] ) || SECUPRESS_PLUGIN_SLUG . '_scanners' !== $_GET['page'] ) {

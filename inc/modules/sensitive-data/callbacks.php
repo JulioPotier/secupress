@@ -142,6 +142,6 @@ function secupress_wp_endpoints_settings_callback( $modulenow, &$settings, $acti
  * @return (bool)
  */
 function secupress_blackhole_is_robots_txt_enabled() {
-	$home_path = wp_parse_url( home_url() );
+	$home_path = parse_url( home_url() );
 	return empty( $home_path['path'] ) || '/' === $home_path['path'] || defined( 'SECUPRESS_FORCE_ROBOTS_TXT' ) && SECUPRESS_FORCE_ROBOTS_TXT;
 }
