@@ -57,9 +57,9 @@ function secupress_check_ban_ips() {
 		}
 
 		// Purge the expired banned IPs.
-		foreach ( $ban_ips as $ip => $time ) {
+		foreach ( $ban_ips as $timed_ip => $time ) {
 			if ( ( $time + ( $time_ban * 60 ) ) < time() ) {
-				unset( $ban_ips[ $ip ] );
+				unset( $ban_ips[ $timed_ip ] );
 				$update = true;
 			}
 		}
