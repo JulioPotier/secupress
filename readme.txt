@@ -201,6 +201,11 @@ It's important to delete all other security plugins before activating SecuPress.
 
 == Changelog ==
 
+= 1.2.3.1 =
+
+* 21 feb 2017
+* Fix #391: whenever an IP address is banned, the message was displayed to everybody.
+
 = 1.2.3 =
 
 * 20 feb 2017
