@@ -254,6 +254,64 @@ function secupress_check_ban_ips_form( $args ) {
 
 
 /** --------------------------------------------------------------------------------------------- */
+/** FIX WP_DIE() HTML =========================================================================== */
+/** --------------------------------------------------------------------------------------------- */
+
+add_filter( 'wp_die_handler', 'secupress_get_wp_die_handler', SECUPRESS_INT_MAX );
+/**
+ * Filter the callback for killing WordPress execution for all non-Ajax, non-XML-RPC requests.
+ * The aim is to fix the printed markup.
+ *
+ * @since 1.2.4
+ * @author Grégory Viguier
+ *
+ * @param (string) $callback Callback function name.
+ *
+ * @return (string)
+ */
+function secupress_get_wp_die_handler( $callback ) {
+	secupress_cache_data( 'wp_die_handler', $callback );
+	return 'secupress_wp_die_handler';
+}
+
+
+/**
+ * Kills WordPress execution and display HTML message with error message.
+ * We first trigger the previous handler and then fix the markup.
+ *
+ * @since 1.2.4
+ * @author Grégory Viguier
+ *
+ * @param (string|object) $message Error message or WP_Error object.
+ * @param (string)        $title   Optional. Error title. Default empty.
+ * @param (string|array)  $args    Optional. Arguments to control behavior. Default empty array.
+ */
+function secupress_wp_die_handler( $message, $title = '', $args = array() ) {
+	ob_start( 'secupress_fix_wp_die_html' );
+
+	$callback = secupress_cache_data( 'wp_die_handler' );
+	$callback = $callback && is_callable( $callback ) ? $callback : '_default_wp_die_handler';
+
+	call_user_func( $callback, $message, $title, $args );
+}
+
+
+/**
+ * `ob_start()` callback to fix HTML markup.
+ *
+ * @since 1.2.4
+ * @author Grégory Viguier
+ *
+ * @param (string) $buffer The error page HTML.
+ *
+ * @return (string)
+ */
+function secupress_fix_wp_die_html( $buffer ) {
+	return str_replace( array( '<p><p>', '</p></p>', '<p><h1>', '</h1></p>' ), array( '<p>', '</p>', '<h1>', '</h1>' ), $buffer );
+}
+
+
+/** --------------------------------------------------------------------------------------------- */
 /** VARIOUS STUFF =============================================================================== */
 /** --------------------------------------------------------------------------------------------- */
 
