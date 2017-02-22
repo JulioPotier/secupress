@@ -191,15 +191,17 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 
 		if ( defined( 'SECUPRESS_SALT_KEYS_ACTIVE' ) ) {
 			$this->add_fix_message( 301 );
-		} elseif ( ! secupress_is_wpconfig_writable() ) {
-			$this->add_fix_message( 300 );
-		} else {
-			if ( isset( $current_user->ID ) ) {
-				secupress_set_site_transient( 'secupress-add-salt-muplugin', array( 'ID' => $current_user->ID, 'username' => $current_user->user_login ) );
-			}
+		}
 
+		if ( ! secupress_is_wpconfig_writable() ) {
+			$this->add_fix_message( 300 );
+		}
+	
+		if ( isset( $current_user->ID ) ) {
+			secupress_set_site_transient( 'secupress-add-salt-muplugin', array( 'ID' => $current_user->ID, 'username' => $current_user->user_login ) );
 			$this->add_fix_message( 100 );
 		}
+
 
 		return parent::fix();
 	}
