@@ -475,7 +475,7 @@ add_action( 'plugins_loaded', 'secupress_add_salt_muplugin', 50 );
 function secupress_add_salt_muplugin() {
 	global $current_user, $wpdb;
 
-	if ( defined( 'SECUPRESS_SALT_KEYS_ACTIVE' ) || ! secupress_can_perform_extra_fix_action() ) {
+	if ( ! secupress_can_perform_extra_fix_action() ) {
 		return;
 	}
 
@@ -504,16 +504,18 @@ function secupress_add_salt_muplugin() {
 	}
 
 	// Create the MU plugin.
-	$alicia_keys = file_get_contents( SECUPRESS_INC_PATH . 'data/salt-keys.phps' );
-	$args        = array(
-		'{{PLUGIN_NAME}}' => SECUPRESS_PLUGIN_NAME,
-		'{{HASH1}}'        => wp_generate_password( 64, true, true ),
-		'{{HASH2}}'        => wp_generate_password( 64, true, true ),
-	);
-	$alicia_keys = str_replace( array_keys( $args ), $args, $alicia_keys );
+	if ( ! defined( 'SECUPRESS_SALT_KEYS_ACTIVE' ) ) {
+		$alicia_keys = file_get_contents( SECUPRESS_INC_PATH . 'data/salt-keys.phps' );
+		$args        = array(
+			'{{PLUGIN_NAME}}' => SECUPRESS_PLUGIN_NAME,
+			'{{HASH1}}'        => wp_generate_password( 64, true, true ),
+			'{{HASH2}}'        => wp_generate_password( 64, true, true ),
+		);
+		$alicia_keys = str_replace( array_keys( $args ), $args, $alicia_keys );
 
-	if ( ! $alicia_keys || ! secupress_create_mu_plugin( 'salt_keys_' . uniqid(), $alicia_keys ) ) {
-		return;
+		if ( ! $alicia_keys || ! secupress_create_mu_plugin( 'salt_keys_' . uniqid(), $alicia_keys ) ) {
+			return;
+		}
 	}
 
 	/**
