@@ -210,20 +210,14 @@ function secupress_warning_htaccess_permissions() {
 	}
 
 	if ( $is_apache ) {
-		$file          = '.htaccess';
-		$htaccess_file = secupress_get_home_path() . $file;
-
-		if ( wp_is_writable( $htaccess_file ) ) {
-			return;
-		}
+		$file = '.htaccess';
 	} elseif ( $is_iis7 ) {
-		$file            = 'web.config';
-		$web_config_file = secupress_get_home_path() . $file;
-
-		if ( wp_is_writable( $web_config_file ) ) {
-			return;
-		}
+		$file = 'web.config';
 	} else {
+		return;
+	}
+
+	if ( secupress_root_file_is_writable( $file ) ) {
 		return;
 	}
 
