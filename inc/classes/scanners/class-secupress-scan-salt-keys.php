@@ -196,7 +196,7 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 			$this->add_fix_message( 301 );
 		}
 
-		if ( ! isset( $is_wpconfig_writable ) ) {
+		if ( is_null( $is_wpconfig_writable ) ) {
 			// "warning"
 			$this->add_fix_message( 101 );
 		} elseif ( ! $is_wpconfig_writable ) {
