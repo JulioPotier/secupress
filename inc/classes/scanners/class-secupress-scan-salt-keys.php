@@ -213,7 +213,6 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 		// "good"
 		$this->maybe_set_fix_status( 0 );
 
-
 		return parent::fix();
 	}
 
