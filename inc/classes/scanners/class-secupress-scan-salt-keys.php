@@ -69,7 +69,7 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 			205 => _n_noop( '<strong>&middot; From DB:</strong> %s.',       '<strong>&middot; From DB:</strong> %s.',       'secupress' ),
 			// "cantfix"
 			300 => __( 'The <code>wp-config.php</code> file is not writable, security keys could not be changed.', 'secupress' ),
-			301 => __( 'The security keys fix has been applied but there is still keys that can\'t be modified.', 'secupress' ),
+			301 => __( 'The security keys fix has been applied but there is still keys that could not be modified so far.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -189,18 +189,29 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 	public function fix() {
 		global $current_user;
 
+		$is_wpconfig_writable = secupress_is_wpconfig_writable();
+
 		if ( defined( 'SECUPRESS_SALT_KEYS_ACTIVE' ) ) {
+			// "cantfix"
 			$this->add_fix_message( 301 );
 		}
 
-		if ( ! secupress_is_wpconfig_writable() ) {
+		if ( ! isset( $is_wpconfig_writable ) ) {
+			// "warning"
+			$this->add_fix_message( 101 );
+		} elseif ( ! $is_wpconfig_writable ) {
+			// "cantfix"
 			$this->add_fix_message( 300 );
 		}
-	
+
 		if ( isset( $current_user->ID ) ) {
 			secupress_set_site_transient( 'secupress-add-salt-muplugin', array( 'ID' => $current_user->ID, 'username' => $current_user->user_login ) );
+			// "warning"
 			$this->add_fix_message( 100 );
 		}
+
+		// "good"
+		$this->maybe_set_fix_status( 0 );
 
 
 		return parent::fix();
