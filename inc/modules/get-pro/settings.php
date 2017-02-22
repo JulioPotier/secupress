@@ -95,7 +95,6 @@ if ( ! $plans ) {
 							<?php } else { ?>
 							<strong><?php _ex( 'All your websites', 'websites', 'secupress' ); ?></strong>
 							<?php } ?>
-							<?php _e( 'Forever', 'secupress' ); ?>
 						</p>
 					</div>
 					<div class="secupress-price-cta">
