@@ -701,6 +701,39 @@ function secupress_get_email( $from_header = false ) {
 
 
 /**
+ * Send mail.
+ *
+ * @since 1.2.4
+ * @author Grégory Viguier
+ *
+ * @param (string|array) $to          Array or comma-separated list of email addresses to send message.
+ * @param (string)       $subject     Email subject.
+ * @param (string)       $message     Message contents.
+ * @param (array)        $headers     Optional. Additional headers.
+ * @param (string|array) $attachments Optional. Files to attach.
+ *
+ * @return (bool) Whether the email contents were sent successfully.
+ */
+function secupress_send_mail( $to, $subject, $message, $headers = array(), $attachments = array() ) {
+	$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
+
+	// Subject.
+	$subject = wp_specialchars_decode( sprintf( $subject, $blogname ) );
+
+	// Message.
+	$message = sprintf( $message, $blogname );
+
+	// Headers.
+	$headers = array_merge( array(
+		'from'         => secupress_get_email( true ),
+		'content-type' => 'content-type: text/html',
+	), $headers );
+
+	return wp_mail( $to, $subject, $message, $headers, $attachments );
+}
+
+
+/**
  * Return the current URL.
  *
  * @since 1.0

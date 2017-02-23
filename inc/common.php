@@ -180,23 +180,20 @@ function secupress_check_ban_ips_maybe_send_unban_email( $ip ) {
 	// Send message.
 	$message  = '<p>' . __( 'Well, this is awkward, you got yourself locked out? No problem, it happens sometimes. I\'ve got your back! I won\'t tell anybody. Or maybe I will. It could be a great story to tell during a long winter evening.', 'secupress' ) . '</p>';
 	$message .= '<p>' . sprintf(
-		/** Translators: %s is a "unlock yourself" link */
+		/** Translators: %s is a "unlock yourself" link. */
 		__( 'Anyway, simply follow this link to %s.', 'secupress' ),
-		'<a href="' . esc_url( wp_nonce_url( home_url() . '?action=secupress_self-unban-ip', 'secupress_self-unban-ip-' . $ip ) ) . '">' . __( 'unlock yourself', 'secupress' ) . '</a>'
+		'<a href="' . esc_url_raw( wp_nonce_url( home_url() . '?action=secupress_self-unban-ip', 'secupress_self-unban-ip-' . $ip ) ) . '">' . __( 'unlock yourself', 'secupress' ) . '</a>'
 	) . '</p>';
-
-	$headers = array(
-		secupress_get_email( true ),
-		'content-type: text/html',
-	);
 
 	$bcc = get_user_meta( $user->ID, 'secupress_recovery_email', true );
 
 	if ( $bcc && $bcc = is_email( $bcc ) ) {
-		$headers[] = 'bcc: ' . $bcc;
+		$headers = array( 'bcc: ' . $bcc );
+	} else {
+		$headers = array();
 	}
 
-	$sent = wp_mail( $user->user_email, SECUPRESS_PLUGIN_NAME, $message, $headers );
+	$sent = secupress_send_mail( $user->user_email, SECUPRESS_PLUGIN_NAME, $message, $headers );
 
 	if ( ! $sent ) {
 		return array(
