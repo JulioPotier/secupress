@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @since 1.0
  * @since 1.2.4 Added `$data` parameter.
  *
- * @param $data (string|object) A message to display or a WP_Error object.
+ * @param (string|object) $data A message to display or a WP_Error object.
  */
 function secupress_admin_die( $data = null ) {
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
