@@ -3,7 +3,7 @@ Contributors: wp_media, SecuPress, juliobox, GregLone
 Tags: security, spam, backup, schedule, firewall, sensitive data, antivirus, logs, alerts
 Requires at least: 3.7
 Tested up to: 4.7.2
-Stable tag: 1.2.3.1
+Stable tag: 1.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -200,6 +200,14 @@ It's important to delete all other security plugins before activating SecuPress.
 8. The 4th step: final report, you can export it as PDF (1)
 
 == Changelog ==
+
+= 1.2.4 =
+
+* 27 feb 2017
+* Improvement #382: if the salt keys scan still reports problems after the MU plugin is created, it will still try to fix it.
+* Fix #170: the notice saying the `.htaccess` file is not writable now is displayed only if the file exists.
+* Tested with php 7.1.
+* Various small fixes and improvements.
 
 = 1.2.3.1 =
 
