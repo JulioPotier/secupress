@@ -205,6 +205,7 @@ It's important to delete all other security plugins before activating SecuPress.
 
 * 27 feb 2017
 * Improvement #382: if the salt keys scan still reports problems after the MU plugin is created, it will still try to fix it.
+* Fix #282: links in email messages should now be fine.
 * Fix #170: the notice saying the `.htaccess` file is not writable now is displayed only if the file exists.
 * Tested with php 7.1.
 * Various small fixes and improvements.
