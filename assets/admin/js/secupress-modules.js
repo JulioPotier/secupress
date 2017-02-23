@@ -522,14 +522,19 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 
 		$.post( href, $button.closest( "form" ).serializeArray() )
 		.done( function( r ) {
-			if ( $.isPlainObject( r ) && r.success ) {
-				$( r.data.elemRow ).addClass( "hidden" ).css( "backgroundColor", SecuPress.addedRowColor ).insertAfter( "#form-delete-backups legend" ).show( "normal", function() {
-					$( this ).css( "backgroundColor", "" );
-				} );
+			if ( $.isPlainObject( r ) ) {
+				if ( r.success ) {
+					$( r.data.elemRow ).addClass( "hidden" ).css( "backgroundColor", SecuPress.addedRowColor ).insertAfter( "#form-delete-backups legend" ).show( "normal", function() {
+						$( this ).css( "backgroundColor", "" );
+					} );
 
-				secupressUpdateAvailableBackupCounter( r );
-				secupressUpdateBackupVisibility();
-				secupressEnableAjaxButton( $button, SecuPressi18nModules.backupedText, "backup" );
+					secupressUpdateAvailableBackupCounter( r );
+					secupressUpdateBackupVisibility();
+					secupressEnableAjaxButton( $button, SecuPressi18nModules.backupedText, "backup" );
+				} else {
+					r.data = r.data ? r.data : SecuPressi18nModules.backupImpossible;
+					secupressDisplayAjaxError( $button, r.data, "backup" );
+				}
 			} else {
 				secupressDisplayAjaxError( $button, SecuPressi18nModules.backupImpossible, "backup" );
 			}
@@ -545,15 +550,20 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 
 		$.post( href, $button.closest( "form" ).serializeArray() )
 		.done( function( r ) {
-			if ( $.isPlainObject( r ) && r.success ) {
-				$( r.data.elemRow ).addClass( "hidden" ).css( "backgroundColor", SecuPress.addedRowColor ).insertAfter( "#form-delete-backups legend" ).show( "normal", function() {
-					$( this ).css( "backgroundColor", "" );
-				} );
+			if ( $.isPlainObject( r ) ) {
+				if ( r.success ) {
+					$( r.data.elemRow ).addClass( "hidden" ).css( "backgroundColor", SecuPress.addedRowColor ).insertAfter( "#form-delete-backups legend" ).show( "normal", function() {
+						$( this ).css( "backgroundColor", "" );
+					} );
 
-				secupressUpdateAvailableBackupCounter( r );
-				secupressUpdateBackupVisibility();
-				$( "#ignored_directories" ).val( r.data.ignoredFiles );
-				secupressEnableAjaxButton( $button, SecuPressi18nModules.backupedText, "backup" );
+					secupressUpdateAvailableBackupCounter( r );
+					secupressUpdateBackupVisibility();
+					$( "#ignored_directories" ).val( r.data.ignoredFiles );
+					secupressEnableAjaxButton( $button, SecuPressi18nModules.backupedText, "backup" );
+				} else {
+					r.data = r.data ? r.data : SecuPressi18nModules.backupImpossible;
+					secupressDisplayAjaxError( $button, r.data, "backup" );
+				}
 			} else {
 				secupressDisplayAjaxError( $button, SecuPressi18nModules.backupImpossible, "backup" );
 			}
