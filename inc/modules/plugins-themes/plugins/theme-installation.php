@@ -4,7 +4,7 @@
  * Description: Disabled the theme installation from repository
  * Main Module: plugins_themes
  * Author: SecuPress
- * Version: 1.0
+ * Version: 1.1
  */
 
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
@@ -29,7 +29,7 @@ if ( is_admin() ) {
 	 * @since 1.0
 	 */
 	function secupress_no_theme_install_page() {
-		secupress_die( __( 'You do not have sufficient permissions to install themes on this site.' ) );
+		secupress_die( __( 'You do not have sufficient permissions to install themes on this site.', 'secupress' ), '', array( 'force_die' => true ) );
 	}
 
 
@@ -43,11 +43,11 @@ if ( is_admin() ) {
 	 */
 	function secupress_avoid_switch_theme( $action ) {
 		if ( 'theme-upload' === $action || strpos( $action, 'install-theme_' ) === 0 ) {
-			secupress_die( __( 'You do not have sufficient permissions to install themes on this site.' ) );
+			secupress_die( __( 'You do not have sufficient permissions to install themes on this site.', 'secupress' ), '', array( 'force_die' => true ) );
 		}
 	}
 }
 
 if ( isset( $_FILES['themezip'] ) ) {
-	secupress_die( __( 'You do not have sufficient permissions to install themes on this site.' ) );
+	secupress_die( __( 'You do not have sufficient permissions to install themes on this site.', 'secupress' ), '', array( 'force_die' => true ) );
 }
