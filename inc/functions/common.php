@@ -718,10 +718,11 @@ function secupress_send_mail( $to, $subject, $message, $headers = array(), $atta
 	$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
 
 	// Subject.
-	$subject = wp_specialchars_decode( sprintf( $subject, $blogname ) );
+	$subject = str_replace( '###SITENAME###', $blogname, $subject );
+	$subject = wp_specialchars_decode( $subject );
 
 	// Message.
-	$message = sprintf( $message, $blogname );
+	$message = str_replace( '###SITENAME###', $blogname, $message );
 
 	// Headers.
 	$headers = array_merge( array(

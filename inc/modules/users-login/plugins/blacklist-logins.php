@@ -191,7 +191,7 @@ function secupress_blacklist_logins_change_user_login( $user_id, $user_login ) {
 function secupress_blacklist_logins_new_user_notification( $user ) {
 	$user     = secupress_is_user( $user ) ? $user : get_userdata( $user );
 	/* Translators: 1 is a blog name. */
-	$subject  = __( '[%s] Your username info', 'secupress' );
+	$subject  = sprintf( __( '[%s] Your username info', 'secupress' ), '###SITENAME###' );
 	$message  = sprintf( __( 'Username: %s' ), $user->user_login ) . "\r\n\r\n"; // WP i18n.
 	$message .= esc_url_raw( wp_login_url() ) . "\r\n";
 
