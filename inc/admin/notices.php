@@ -474,3 +474,22 @@ function secupress_updates_message( $plugin_data ) {
 		echo '</div>';
 	}
 }
+
+
+add_action( 'admin_bar_menu', 'secupress_remove_all_notices_on_get_pro_page', SECUPRESS_INT_MAX );
+/**
+ * Remove all admin notices from the "Get Pro" screen.
+ *
+ * @since 1.2.5
+ */
+function secupress_remove_all_notices_on_get_pro_page() {
+	global $current_screen;
+
+	if ( empty( $current_screen->id ) || 'secupress_page_secupress_modules' !== $current_screen->id || empty( $_GET['module'] ) || 'get-pro' !== $_GET['module'] ) {
+		return;
+	}
+
+	$action = is_network_admin() ? 'network_admin_notices' : 'admin_notices';
+	remove_all_actions( $action );
+	remove_all_actions( 'all_admin_notices' );
+}
