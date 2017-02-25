@@ -570,8 +570,6 @@ function secupress_global_settings_api_key_ajax_post_cb() {
 	// Finally, save.
 	secupress_update_options( $values );
 
-	$new_is_pro = ! empty( $values['site_is_pro'] ) ? 1 : 0;
-
 	// White Label: trick the referrer for the redirection.
 	if ( ! empty( $values['wl_plugin_name'] ) ) {
 		if ( empty( $values['site_is_pro'] ) ) {
