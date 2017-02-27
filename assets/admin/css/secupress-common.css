@@ -659,6 +659,42 @@ button.secupress-activated .secupress-toggle-button.hidden {
 	font-style: italic;
 }
 
+/* Small (centered) boxes */
+.secupress-small-box {
+	width: 360px;
+	max-width: 100%;
+	margin: 2em auto;
+	background: #FFF;
+	box-shadow: 0 15px 10px rgba(0,0,0,.15);
+}
+.secupress-small-box label {
+	display: block;
+	font-weight: bold;
+}
+.secupress-small-box input:not([type="submit"]) {
+	width: 100%;
+}
+.secupress-sb-header {
+	padding: 25px;
+	background: #222831;
+	color: #FFF;
+}
+.secupress-sb-header .secupress-icon-secupress {
+	font-size: 4em;
+}
+.secupress-sb-description.description {
+	margin: 1em auto;
+}
+.secupress-sb-content {
+	padding: 15px 25px;
+}
+.secupress-sb-title {
+	margin: 0;
+}
+.secupress-sb-submit {
+	margin: 2em auto;
+}
+
 /* Big spinner */
 .hidden .secupress-big-spinner {
 	animation-play-state: paused;
