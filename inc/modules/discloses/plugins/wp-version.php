@@ -99,7 +99,7 @@ function secupress_wp_version_plugin_activate( $rules ) {
 function secupress_wp_version_apache_rules() {
 	$bases   = secupress_get_rewrite_bases();
 	$base    = $bases['base'];
-	$pattern = '^' . $bases['site_dir'] . 'readme\.html$';
+	$pattern = '^' . $bases['site_from'] . 'readme\.html$';
 
 	$rules  = "<IfModule mod_rewrite.c>\n";
 	$rules .= "    RewriteEngine On\n";
@@ -122,7 +122,7 @@ function secupress_wp_version_iis7_rules() {
 	$marker  = 'wp_version';
 	$spaces  = str_repeat( ' ', 8 );
 	$bases   = secupress_get_rewrite_bases();
-	$pattern = '^' . $bases['site_dir'] . 'readme\.html$';
+	$pattern = '^' . $bases['site_from'] . 'readme\.html$';
 
 	$rules  = "<rule name=\"SecuPress $marker\" stopProcessing=\"true\">\n";
 	$rules .= "$spaces  <match url=\"$pattern\"/ ignoreCase=\"true\">\n";
@@ -143,7 +143,7 @@ function secupress_wp_version_iis7_rules() {
 function secupress_wp_version_nginx_rules() {
 	$marker  = 'wp_version';
 	$bases   = secupress_get_rewrite_bases();
-	$pattern = $bases['site_dir'] . 'readme.html';
+	$pattern = $bases['site_from'] . 'readme.html';
 
 	// - http://nginx.org/en/docs/http/ngx_http_core_module.html#location
 	$rules  = "
