@@ -9,12 +9,40 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * A simple shorthand to `die()`, depending on the admin context.
  *
  * @since 1.0
+ * @since 1.2.4 Added `$data` parameter.
+ *
+ * @param (string|object) $data A message to display or a WP_Error object.
  */
-function secupress_admin_die() {
+function secupress_admin_die( $data = null ) {
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-		wp_send_json_error();
+		wp_send_json_error( $data );
 	}
-	wp_nonce_ays( '' );
+
+	if ( ! $data ) {
+		wp_nonce_ays( '' );
+	}
+
+	if ( is_wp_error( $data ) ) {
+		$result = array();
+
+		foreach ( $data->errors as $messages ) {
+			foreach ( $messages as $message ) {
+				$result[] = $message;
+			}
+		}
+
+		$data = implode( '</p><p>', $result );
+
+		if ( wp_get_referer() ) {
+			$data .= '</p><p>';
+			$data .= sprintf( '<a href="%s">%s</a>',
+				esc_url( wp_get_referer() ),
+				__( 'Please try again.' ) // WP i18n.
+			);
+		}
+	}
+
+	wp_die( $data, __( 'WordPress Failure Notice' ), 403 ); // WP i18n.
 }
 
 

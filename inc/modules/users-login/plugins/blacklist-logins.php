@@ -189,16 +189,13 @@ function secupress_blacklist_logins_change_user_login( $user_id, $user_login ) {
  * @param (int|object) $user A user ID or a user object.
  */
 function secupress_blacklist_logins_new_user_notification( $user ) {
-	$user = is_object( $user ) ? $user : get_userdata( $user );
-
-	// The blogname option is escaped with esc_html on the way into the database in sanitize_option
-	// we want to reverse this for the plain text arena of emails.
-	$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
-
+	$user     = secupress_is_user( $user ) ? $user : get_userdata( $user );
+	/* Translators: 1 is a blog name. */
+	$subject  = sprintf( __( '[%s] Your username info', 'secupress' ), '###SITENAME###' );
 	$message  = sprintf( __( 'Username: %s' ), $user->user_login ) . "\r\n\r\n"; // WP i18n.
-	$message .= wp_login_url() . "\r\n";
+	$message .= esc_url_raw( wp_login_url() ) . "\r\n";
 
-	wp_mail( $user->user_email, sprintf( __( '[%s] Your username info', 'secupress' ), $blogname ), $message );
+	secupress_send_mail( $user->user_email, $subject, $message );
 }
 
 

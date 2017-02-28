@@ -180,23 +180,20 @@ function secupress_check_ban_ips_maybe_send_unban_email( $ip ) {
 	// Send message.
 	$message  = '<p>' . __( 'Well, this is awkward, you got yourself locked out? No problem, it happens sometimes. I\'ve got your back! I won\'t tell anybody. Or maybe I will. It could be a great story to tell during a long winter evening.', 'secupress' ) . '</p>';
 	$message .= '<p>' . sprintf(
-		/** Translators: %s is a "unlock yourself" link */
+		/** Translators: %s is a "unlock yourself" link. */
 		__( 'Anyway, simply follow this link to %s.', 'secupress' ),
-		'<a href="' . esc_url( wp_nonce_url( home_url() . '?action=secupress_self-unban-ip', 'secupress_self-unban-ip-' . $ip ) ) . '">' . __( 'unlock yourself', 'secupress' ) . '</a>'
+		'<a href="' . esc_url_raw( wp_nonce_url( home_url() . '?action=secupress_self-unban-ip', 'secupress_self-unban-ip-' . $ip ) ) . '">' . __( 'unlock yourself', 'secupress' ) . '</a>'
 	) . '</p>';
-
-	$headers = array(
-		secupress_get_email( true ),
-		'content-type: text/html',
-	);
 
 	$bcc = get_user_meta( $user->ID, 'secupress_recovery_email', true );
 
 	if ( $bcc && $bcc = is_email( $bcc ) ) {
-		$headers[] = 'bcc: ' . $bcc;
+		$headers = array( 'bcc: ' . $bcc );
+	} else {
+		$headers = array();
 	}
 
-	$sent = wp_mail( $user->user_email, SECUPRESS_PLUGIN_NAME, $message, $headers );
+	$sent = secupress_send_mail( $user->user_email, SECUPRESS_PLUGIN_NAME, $message, $headers );
 
 	if ( ! $sent ) {
 		return array(
@@ -250,6 +247,64 @@ function secupress_check_ban_ips_form( $args ) {
 	$content .= '</form>';
 
 	return $content;
+}
+
+
+/** --------------------------------------------------------------------------------------------- */
+/** FIX WP_DIE() HTML =========================================================================== */
+/** --------------------------------------------------------------------------------------------- */
+
+add_filter( 'wp_die_handler', 'secupress_get_wp_die_handler', SECUPRESS_INT_MAX );
+/**
+ * Filter the callback for killing WordPress execution for all non-Ajax, non-XML-RPC requests.
+ * The aim is to fix the printed markup.
+ *
+ * @since 1.2.4
+ * @author Grégory Viguier
+ *
+ * @param (string) $callback Callback function name.
+ *
+ * @return (string)
+ */
+function secupress_get_wp_die_handler( $callback ) {
+	secupress_cache_data( 'wp_die_handler', $callback );
+	return 'secupress_wp_die_handler';
+}
+
+
+/**
+ * Kills WordPress execution and display HTML message with error message.
+ * We first trigger the previous handler and then fix the markup.
+ *
+ * @since 1.2.4
+ * @author Grégory Viguier
+ *
+ * @param (string|object) $message Error message or WP_Error object.
+ * @param (string)        $title   Optional. Error title. Default empty.
+ * @param (string|array)  $args    Optional. Arguments to control behavior. Default empty array.
+ */
+function secupress_wp_die_handler( $message, $title = '', $args = array() ) {
+	ob_start( 'secupress_fix_wp_die_html' );
+
+	$callback = secupress_cache_data( 'wp_die_handler' );
+	$callback = $callback && is_callable( $callback ) ? $callback : '_default_wp_die_handler';
+
+	call_user_func( $callback, $message, $title, $args );
+}
+
+
+/**
+ * `ob_start()` callback to fix HTML markup.
+ *
+ * @since 1.2.4
+ * @author Grégory Viguier
+ *
+ * @param (string) $buffer The error page HTML.
+ *
+ * @return (string)
+ */
+function secupress_fix_wp_die_html( $buffer ) {
+	return str_replace( array( '<p><p>', '</p></p>', '<p><h1>', '</h1></p>' ), array( '<p>', '</p>', '<h1>', '</h1>' ), $buffer );
 }
 
 
@@ -475,7 +530,7 @@ add_action( 'plugins_loaded', 'secupress_add_salt_muplugin', 50 );
 function secupress_add_salt_muplugin() {
 	global $current_user, $wpdb;
 
-	if ( defined( 'SECUPRESS_SALT_KEYS_ACTIVE' ) || ! secupress_can_perform_extra_fix_action() ) {
+	if ( ! secupress_can_perform_extra_fix_action() ) {
 		return;
 	}
 
@@ -504,16 +559,18 @@ function secupress_add_salt_muplugin() {
 	}
 
 	// Create the MU plugin.
-	$alicia_keys = file_get_contents( SECUPRESS_INC_PATH . 'data/salt-keys.phps' );
-	$args        = array(
-		'{{PLUGIN_NAME}}' => SECUPRESS_PLUGIN_NAME,
-		'{{HASH1}}'        => wp_generate_password( 64, true, true ),
-		'{{HASH2}}'        => wp_generate_password( 64, true, true ),
-	);
-	$alicia_keys = str_replace( array_keys( $args ), $args, $alicia_keys );
+	if ( ! defined( 'SECUPRESS_SALT_KEYS_ACTIVE' ) ) {
+		$alicia_keys = file_get_contents( SECUPRESS_INC_PATH . 'data/salt-keys.phps' );
+		$args        = array(
+			'{{PLUGIN_NAME}}' => SECUPRESS_PLUGIN_NAME,
+			'{{HASH1}}'        => wp_generate_password( 64, true, true ),
+			'{{HASH2}}'        => wp_generate_password( 64, true, true ),
+		);
+		$alicia_keys = str_replace( array_keys( $args ), $args, $alicia_keys );
 
-	if ( ! $alicia_keys || ! secupress_create_mu_plugin( 'salt_keys_' . uniqid(), $alicia_keys ) ) {
-		return;
+		if ( ! $alicia_keys || ! secupress_create_mu_plugin( 'salt_keys_' . uniqid(), $alicia_keys ) ) {
+			return;
+		}
 	}
 
 	/**
