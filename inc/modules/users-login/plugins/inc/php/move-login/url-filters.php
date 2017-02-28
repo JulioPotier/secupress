@@ -102,11 +102,27 @@ add_filter( 'wp_redirect', 'secupress_move_login_redirect', 10 );
  * @return (string) The path to redirect to.
  */
 function secupress_move_login_redirect( $location ) {
-	$location_base = explode( '?', $location );
+	$location_base = explode( '?', $location, 2 );
 	$location_base = reset( $location_base );
 
 	if ( site_url( $location_base ) === site_url( 'wp-login.php' ) ) {
 		return secupress_move_login_site_url( $location, $location, 'login', get_current_blog_id() );
+	}
+
+	if ( trailingslashit( $location_base ) === trailingslashit( wp_login_url() ) ) {
+		$location_query = wp_parse_url( $location );
+
+		if ( empty( $location_query['query'] ) ) {
+			return $location;
+		}
+
+		wp_parse_str( $location_query['query'], $location_query );
+
+		if ( empty( $location_query['action'] ) ) {
+			return $location;
+		}
+
+		return secupress_move_login_login_to_action( $location, $location_query['action'] );
 	}
 
 	return $location;
@@ -207,7 +223,6 @@ function secupress_move_login_login_to_action( $link, $action ) {
 	if ( isset( $slugs[ $action ] ) ) {
 		$slug = $slugs[ $action ];
 	} else {
-		// Shouldn't happen, because this function is not used in this case.
 		$slug = $slugs['login'];
 
 		if ( false === has_filter( 'login_form_' . $action ) ) {

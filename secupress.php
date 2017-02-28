@@ -5,7 +5,7 @@
  * Description: Protect your WordPress with SecuPress, analyze and ensure the safety of your website daily.
  * Author: WP Media
  * Author URI: http://wp-media.me
- * Version: 1.2.3.1
+ * Version: 1.2.4
  * Code Name: Heavy Duty
  * Network: true
  * License: GPLv2
