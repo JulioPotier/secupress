@@ -26,8 +26,7 @@ function secupress_move_login_site_url( $url, $path, $scheme, $blog_id = null ) 
 		// Base url.
 		if ( empty( $blog_id ) || get_current_blog_id() === $blog_id || ! is_multisite() ) {
 			$url = get_option( 'siteurl' );
-		}
-		else {
+		} else {
 			$url = get_blog_option( $blog_id, 'siteurl' );
 		}
 
@@ -188,8 +187,7 @@ function secupress_move_login_set_path( $path ) {
 		if ( ! isset( $slugs[ $action ] ) && ! isset( $other[ $action ] ) && false === has_filter( 'login_form_' . $action ) ) {
 			$action = 'login';
 		}
-	}
-	else {
+	} else {
 		$action = 'login';
 	}
 
