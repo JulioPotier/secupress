@@ -571,10 +571,17 @@ function secupress_global_settings_api_key_ajax_post_cb() {
 	secupress_update_options( $values );
 
 	// White Label: trick the referrer for the redirection.
-	if ( empty( $values['site_is_pro'] ) && ! empty( $values['wl_plugin_name'] ) ) {
-		$old_slug = ! empty( $old_values['wl_plugin_name'] ) ? sanitize_title( $old_values['wl_plugin_name'] ) : 'secupress';
-		$old_slug = 'page=' . $old_slug . '_settings';
-		$new_slug = 'page=secupress_settings';
+	if ( ! empty( $values['wl_plugin_name'] ) ) {
+		if ( empty( $values['site_is_pro'] ) ) {
+			// Pro deactivation.
+			$old_slug = ! empty( $old_values['wl_plugin_name'] ) ? sanitize_title( $old_values['wl_plugin_name'] ) : 'secupress';
+			$old_slug = 'page=' . $old_slug . '_settings';
+			$new_slug = 'page=secupress_settings';
+		} else {
+			// Pro activation.
+			$old_slug = 'page=secupress_settings';
+			$new_slug = 'page=' . sanitize_title( $values['wl_plugin_name'] ) . '_settings';
+		}
 
 		if ( $old_slug !== $new_slug ) {
 			$_REQUEST['_wp_http_referer'] = str_replace( $old_slug, $new_slug, wp_get_raw_referer() );
