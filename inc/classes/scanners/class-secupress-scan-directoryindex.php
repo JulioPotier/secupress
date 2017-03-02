@@ -131,7 +131,7 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 	public function scan() {
 		$request_args = $this->get_default_request_args();
 		$request_args['redirection'] = 1;
-		$response     = wp_remote_get( SECUPRESS_PLUGIN_URL . 'inc/DirectoryIndex', $request_args ); // Create the folder at root ////.
+		$response     = wp_remote_get( SECUPRESS_INC_URL . 'DirectoryIndex', $request_args ); // Create the folder at root ////.
 
 		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 
