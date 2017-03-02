@@ -342,7 +342,7 @@ function secupress_load_plugin_textdomain_translations() {
 	}
 	$done = true;
 
-	load_plugin_textdomain( 'secupress', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+	load_plugin_textdomain( 'secupress', false, dirname( plugin_basename( SECUPRESS_FILE ) ) . '/languages' );
 	/**
 	 * Fires right after the plugin text domain is loaded.
 	 *
@@ -366,6 +366,6 @@ add_action( 'init', 'secupress_load_default_textdomain_translations' );
  */
 function secupress_load_default_textdomain_translations() {
 	if ( ! defined( 'DOING_AUTOSAVE' ) ) {
-		load_plugin_textdomain( 'default', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+		load_plugin_textdomain( 'default', false, dirname( plugin_basename( SECUPRESS_FILE ) ) . '/languages' );
 	}
 }
