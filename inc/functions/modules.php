@@ -383,7 +383,6 @@ function secupress_get_active_pro_submodules() {
 
 /**
  * Tell if a sub-module is Pro.
- * Here we can't use `SECUPRESS_PRO_MODULES_PATH` for our test, because it is not defined if the pro version is not activated.
  *
  * @since 1.1.4
  *
@@ -398,8 +397,13 @@ function secupress_submodule_is_pro( $module, $submodule ) {
 	$key = $module . '|' . $submodule;
 
 	if ( ! isset( $paths[ $key ] ) ) {
-		$file_path     = sanitize_key( $module ) . '/plugins/' . sanitize_key( $submodule ) . '.php';
-		$paths[ $key ] = ! file_exists( SECUPRESS_MODULES_PATH . $file_path );
+		$file_path = sanitize_key( $module ) . '/plugins/' . sanitize_key( $submodule ) . '.php';
+
+		if ( defined( 'SECUPRESS_PRO_MODULES_PATH' ) ) {
+			$paths[ $key ] = file_exists( SECUPRESS_PRO_MODULES_PATH . $file_path );
+		} else {
+			$paths[ $key ] = ! file_exists( SECUPRESS_MODULES_PATH . $file_path );
+		}
 	}
 
 	return $paths[ $key ];
