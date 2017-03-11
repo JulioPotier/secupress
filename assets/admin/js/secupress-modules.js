@@ -301,6 +301,14 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		dependsIds = {}, // IDs of the checkboxes, radios, etc that will trigger a panel open/close.
 		dependsRadioNames = {}; // names of the radios.
 
+	$( '.secupress-setting-row_move-login_slug-login' )
+		.on( 'secupressbeforeshow secupressinitshow', function() {
+			$( '#move-login_slug-login' ).attr( { 'required': 'required', 'aria-required': 'true' } );
+		} )
+		.on( 'secupressafterhide secupressinithide', function() {
+			$( '#move-login_slug-login' ).removeAttr( 'required aria-required' );
+		} );
+
 	$depends.each( function() {
 		var classes = $( this ).attr( "class" ).replace( /^\s+|\s+$/g, "" ).replace( /\s+/, " " ).split( " " );
 
@@ -340,7 +348,6 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 				if ( "checkbox" === inputTypeAttr || "radio" === inputTypeAttr ) {
 					inputIsValid = true;
 				}
-
 			} else if ( "button" === inputTagName ) {
 				inputIsValid = true;
 			}
@@ -359,7 +366,6 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 					$( this ).toggleClass( 'open' );
 					$( ".depends-" + id ).toggle( 250 );
 				} );
-
 			}
 			// Radios
 			else if ( "radio" === inputTypeAttr ) {
@@ -392,7 +398,6 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 						$( this ).trigger( "secupressafterhide" );
 					} );
 				} ).filter( ":checked" ).trigger( "init.secupress" );
-
 			}
 			// Checkboxes
 			else if ( "checkbox" === inputTypeAttr ) {
@@ -438,9 +443,82 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 					}
 				} ).filter( ":checked" ).trigger( "init.secupress" );
 
+				if ( $input.is( ':checked' ) ) {
+					$( '.depends-' + id ).filter( ':visible' ).trigger( 'secupressinitshow' );
+				} else {
+					$( '.depends-' + id ).not( ':visible' ).trigger( 'secupressinithide' );
+				}
 			}
 		} );
 	} );
+
+} )(jQuery, document, window);
+
+
+// Move Login ======================================================================================
+(function($, d, w, undefined) {
+
+	var cache   = {},
+		timeout = {};
+
+	function secupressUpdateMoveLoginSlug( value, $input ) {
+		$( $input ).closest( '.secupress-text-label' ).find( '.dynamic-login-url-slug' ).text( value );
+	}
+
+	if ( SecuPressi18nModules.moveLoginNonce ) {
+		$( '.dynamic-login-url-slug' ).closest( '.secupress-text-label' ).find( '[type="text"]' ).on( 'keyup', function( e ) {
+			var elem, value, action,
+				// Shift, Control, Alt, Meta, Escape.
+				keys = [ 16, 17, 18, 224, 27 ];
+
+			if ( $.inArray( e.which, keys ) !== -1 ) {
+				return false;
+			}
+
+			elem   = this;
+			value  = elem.value.replace( /^\s+|\s+$/g, '' );
+			action = elem.id.replace( 'move-login_slug-', '' );
+
+			if ( typeof timeout[ elem.id ] !== undefined ) {
+				w.clearTimeout( timeout[ elem.id ] );
+			}
+
+			if ( 'login' !== action ) {
+				value = '' === value ? action : value;
+			}
+
+			if ( typeof cache[ value ] === 'string' ) {
+				secupressUpdateMoveLoginSlug( cache[ value ], elem );
+				return true;
+			}
+
+			timeout[ elem.id ] = w.setTimeout( function() {
+				var $elem  = $( elem ).addClass( 'ui-autocomplete-loading' ),
+					params = {
+						'action':   'sanitize_move_login_slug',
+						'slug':     value,
+						'default':  action,
+						'_wpnonce': SecuPressi18nModules.moveLoginNonce
+					};
+
+				$.getJSON( ajaxurl, params )
+				.done( function( r ) {
+					if ( $.isPlainObject( r ) && r.success ) {
+						cache[ value ] = r.data;
+						secupressUpdateMoveLoginSlug( r.data, $elem );
+					} else {
+						secupressUpdateMoveLoginSlug( '--' + SecuPressi18nModules.error + '--', $elem );
+					}
+				} )
+				.fail( function() {
+					secupressUpdateMoveLoginSlug( '--' + SecuPressi18nModules.error + '--', $elem );
+				} )
+				.always( function() {
+					$elem.removeClass( 'ui-autocomplete-loading' );
+				} );
+			}, 300 );
+		} );
+	}
 
 } )(jQuery, document, window);
 

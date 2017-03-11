@@ -267,6 +267,14 @@ p.secupress-sh-subtitle {
 	border-color: #bbb;
 }
 
+/* Text fields that display a spinner as background image (like autocomplete) */
+.depends-move-login_activated [type="text"]{
+	transition: none;
+}
+input[type="text"]:required:invalid {
+	box-shadow: 0 0 2px rgba(255, 0, 0, .8 );
+}
+
 /* An item inside a fieldset (type: checkboxes or radioboxes) */
 .secupress-fieldset-item {
 	margin: 0.5em 0;
@@ -1400,7 +1408,7 @@ p > .secupress-inline-alert {
 	border-radius: 50%;
 }
 p > .secupress-inline-alert:before {
-	margin-right: 5px;	
+	margin-right: 5px;
 }
 
 .secupress-files-list-item .secupress-button-primary.secupress-button-ghost {

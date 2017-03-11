@@ -92,9 +92,15 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 
 		$already_scanned         = array_filter( (array) get_site_option( SECUPRESS_SCAN_TIMES ) ) ? 1 : 0;
 		$file_monitoring_running = 'off';
+		$move_login_nonce        = null;
 
-		if ( ! empty( $_GET['module'] ) && 'file-system' === $_GET['module'] && function_exists( 'secupress_file_monitoring_get_instance' ) ) {
-			$file_monitoring_running = secupress_file_monitoring_get_instance()->is_monitoring_running() ? 'on' : 'off';
+		if ( ! empty( $_GET['module'] ) ) {
+			if ( 'file-system' === $_GET['module'] && function_exists( 'secupress_file_monitoring_get_instance' ) ) {
+				$file_monitoring_running = secupress_file_monitoring_get_instance()->is_monitoring_running() ? 'on' : 'off';
+			}
+			elseif ( 'users-login' === $_GET['module'] ) {
+				$move_login_nonce = wp_create_nonce( 'sanitize_move_login_slug' );
+			}
 		}
 
 		wp_localize_script( 'secupress-modules-js', 'SecuPressi18nModules', array(
@@ -143,6 +149,8 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 			// Malware Scan.
 			'malwareScanStatus'    => $file_monitoring_running,
 			'MalwareScanURI'       => secupress_admin_url( 'modules', 'file-system' ),
+			// Various.
+			'moveLoginNonce'       => $move_login_nonce,
 		) );
 
 	}

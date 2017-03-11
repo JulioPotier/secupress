@@ -217,8 +217,13 @@ function secupress_move_login_settings_callback( $modulenow, &$settings, $activa
 		$new_slug = ! empty( $settings[ $option_name ] ) ? sanitize_title( $settings[ $option_name ] ) : '';
 
 		if ( ! $new_slug ) {
-			// Sanitization did its job til the end, or the field was empty.
-			$new_slug = $fallback_slug;
+			/**
+			 * Sanitization did its job til the end, or the field was empty.
+			 * For the "login" slug don't fallback to the default slug: we'll keep it empty and trigger an error.
+			 */
+			if ( 'login' !== $default_slug ) {
+				$new_slug = $fallback_slug;
+			}
 		} else {
 			// Validation.
 			// Test for forbidden slugs.
@@ -249,6 +254,12 @@ function secupress_move_login_settings_callback( $modulenow, &$settings, $activa
 	$errors['forbidden']  = array_unique( $errors['forbidden'] );
 	$errors['duplicates'] = array_unique( $errors['duplicates'] );
 
+	if ( empty( $settings['move-login_slug-login'] ) ) {
+		$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
+		$message .= __( 'Please choose your login URL.', 'secupress' );
+		add_settings_error( "secupress_{$modulenow}_settings", 'forbidden-slugs', $message, 'error' );
+	}
+
 	if ( $nbr_forbidden = count( $errors['forbidden'] ) ) {
 		$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
 		$message .= sprintf( _n( 'The slug %s is forbidden.', 'The slugs %s are forbidden.', $nbr_forbidden, 'secupress' ), wp_sprintf( '<code>%l</code>', $errors['forbidden'] ) );
@@ -263,7 +274,11 @@ function secupress_move_login_settings_callback( $modulenow, &$settings, $activa
 
 	// (De)Activation.
 	if ( false !== $activate ) {
-		secupress_manage_submodule( $modulenow, 'move-login', ! empty( $activate['move-login_activated'] ) );
+		if ( empty( $settings['move-login_slug-login'] ) ) {
+			secupress_deactivate_submodule( $modulenow, array( 'move-login' ) );
+		} else {
+			secupress_manage_submodule( $modulenow, 'move-login', ! empty( $activate['move-login_activated'] ) );
+		}
 	}
 }
 
