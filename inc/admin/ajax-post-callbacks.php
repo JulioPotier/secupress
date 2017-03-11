@@ -446,6 +446,40 @@ function secupress_refresh_bad_themes_list_ajax_post_cb() {
 }
 
 
+add_action( 'wp_ajax_sanitize_move_login_slug', 'secupress_sanitize_move_login_slug_ajax_post_cb' );
+/**
+ * Sanitize a value for a Move Login slug.
+ *
+ * @since 1.2.5
+ * @author Grégory Viguier
+ */
+function secupress_sanitize_move_login_slug_ajax_post_cb() {
+	// Make all security tests.
+	secupress_check_admin_referer( 'sanitize_move_login_slug' );
+	secupress_check_user_capability();
+
+	if ( empty( $_GET['default'] ) || ! isset( $_GET['slug'] ) ) {
+		wp_send_json_error();
+	}
+
+	$default = sanitize_title( $_GET['default'] );
+
+	if ( ! $default ) {
+		wp_send_json_error();
+	}
+
+	if ( 'login' === $default ) {
+		$slug = sanitize_title( $_GET['slug'], '', 'display' );
+		// See secupress/inc/modules/users-login/settings/move-login.php.
+		$slug = $slug ? $slug : '##-' . strtoupper( sanitize_title( __( 'Choose your login URL', 'secupress' ), '', 'display' ) ) . '-##';
+	} else {
+		$slug = sanitize_title( $_GET['slug'], $default, 'display' );
+	}
+
+	wp_send_json_success( $slug );
+}
+
+
 /** --------------------------------------------------------------------------------------------- */
 /** ADMIN POST / AJAX CALLBACKS FOR THE MAIN SETTINGS =========================================== */
 /** --------------------------------------------------------------------------------------------- */
