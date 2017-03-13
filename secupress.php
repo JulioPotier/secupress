@@ -276,7 +276,7 @@ function secupress_load_functions() {
 	if ( version_compare( phpversion(), SECUPRESS_PHP_MIN ) < 0 ) {
 		$plugin = plugin_basename( SECUPRESS_FILE );
 
-		if ( 'activate_' . $plugin !== current_filter() ) {
+		if ( current_filter() !== 'activate_' . $plugin ) {
 			require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 			deactivate_plugins( SECUPRESS_FILE, true );
 		}
@@ -290,7 +290,7 @@ function secupress_load_functions() {
 	if ( version_compare( $wp_version, SECUPRESS_WP_MIN ) < 0 ) {
 		$plugin = plugin_basename( SECUPRESS_FILE );
 
-		if ( 'activate_' . $plugin !== current_filter() ) {
+		if ( current_filter() !== 'activate_' . $plugin ) {
 			require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 			deactivate_plugins( SECUPRESS_FILE, true );
 		}
