@@ -1165,7 +1165,7 @@ function secupress_decompress_data( $data ) {
 		return $data;
 	}
 
-	return unserialize( $data_tmp );
+	return maybe_unserialize( $data_tmp );
 }
 
 
