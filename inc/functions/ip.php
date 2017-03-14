@@ -24,8 +24,8 @@ function secupress_get_ip() {
 
 	foreach ( $keys as $key ) {
 		if ( array_key_exists( $key, $_SERVER ) ) {
-			$ip = explode( ',', $_SERVER[ $key ] );
-			$ip = end( $ip );
+			$ip = explode( ',', $_SERVER[ $key ], 2 );
+			$ip = reset( $ip );
 
 			if ( false !== secupress_ip_is_valid( $ip ) ) {
 				/**
