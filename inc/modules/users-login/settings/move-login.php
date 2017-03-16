@@ -27,19 +27,32 @@ $this->add_field( array(
 ) );
 
 
-$labels = secupress_move_login_slug_labels();
+$labels    = secupress_move_login_slug_labels();
+$login_url = site_url( '%%slug%%', 'login' );
 
 foreach ( $labels as $slug => $label ) {
-	$slug = esc_attr( $slug );
+	$name    = $this->get_field_name( 'slug-' . $slug );
+	$default = 'login' === $slug ? '' : $slug;
+	$value   = secupress_get_module_option( $name, $slug, 'users-login' );
+	$value   = sanitize_title( $value, $default, 'display' );
+
+	if ( ! $value ) {
+		if ( 'login' === $slug ) {
+			// See `secupress_sanitize_move_login_slug_ajax_post_cb()`.
+			$value = '##-' . strtoupper( sanitize_title( __( 'Choose your login URL', 'secupress' ), '', 'display' ) ) . '-##';
+		} else {
+			$value = $default;
+		}
+	}
 
 	$this->add_field( array(
 		'title'        => esc_html( $label ),
 		'depends'      => $main_field_name,
 		'label_for'    => $this->get_field_name( 'slug-' . $slug ),
 		'type'         => 'text',
-		'default'      => $slug,
+		'default'      => $default,
 		'label_before' => '<span class="screen-reader-text">' . __( 'URL' ) . '</span>',
-		'label_after'  => '<em>(' . sprintf( __( 'Default: %s', 'secupress' ), $slug ) . ')</em>',
+		'label_after'  => '<em class="hide-if-no-js">' . str_replace( '%%slug%%', '<strong class="dynamic-login-url-slug">' . $value . '</strong>', $login_url ) . '</em>',
 	) );
 }
 

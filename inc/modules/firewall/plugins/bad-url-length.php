@@ -4,7 +4,7 @@
  * Description: Block requests containing more than 300 (default) chars in URL.
  * Main Module: firewall
  * Author: SecuPress
- * Version: 1.1
+ * Version: 1.1.1
  */
 
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
@@ -20,7 +20,8 @@ define( 'SECUPRESS_BBUL_HEADER_NAME', 'X-SECUPRESS-BBUL-NONCE' );
  */
 function secupress_block_too_long_url() {
 	$parse_url = explode( '?', $_SERVER['REQUEST_URI'], 2 );
-	parse_str( end( $parse_url ), $args );
+	$parse_url = end( $parse_url );
+	wp_parse_str( $parse_url, $args );
 
 	unset( $args['_wp_http_referer'] );
 

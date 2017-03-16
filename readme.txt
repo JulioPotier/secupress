@@ -2,8 +2,8 @@
 Contributors: wp_media, SecuPress, juliobox, GregLone
 Tags: alerts, antivirus, backup, firewall, Logs, schedule, security, sensitive data, spam, block hackers, country blocking, login security, malware, secure, security plugin, Web application firewall, wordpress security
 Requires at least: 3.7
-Tested up to: 4.7.2
-Stable tag: 1.2.4
+Tested up to: 4.7.3
+Stable tag: 1.2.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -103,6 +103,15 @@ It's important to delete all other security plugins before activating SecuPress.
 8. The 4th step: final report, you can export it as PDF (1)
 
 == Changelog ==
+
+= 1.2.5 =
+
+* 16 mar 2017
+* Improvement #413: improved PHP and WP version check on activation.
+* Improvement #408: improved Move Login settings. Now you HAVE to specify a new login URL: no default value anymore, no forgotten URL anymore. Also, your new URLs can be seen while you type in :)
+* Improvement #397: improved the theme/plugin installation/upload sub-modules: even white-listed IPs are blocked now.
+* Fix #402: in some cases, the scan testing the `readme.html` direct access was testing a wrong URL.
+* Fix #111: added the IP address `0.0.0.0` to the hardcoded white-list. It should prevent some cron processes to be blocked (because of an empty User Agent for example).
 
 = 1.2.4 =
 

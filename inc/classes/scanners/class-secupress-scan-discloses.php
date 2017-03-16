@@ -203,7 +203,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 		}
 
 		// Readme file. =====================================.
-		$response = wp_remote_get( home_url( 'readme.html' ), $this->get_default_request_args() );
+		$response = wp_remote_get( site_url( 'readme.html' ), $this->get_default_request_args() );
 
 		if ( ! is_wp_error( $response ) ) {
 			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
@@ -288,7 +288,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 
 		// Readme file. =====================================.
 		if ( empty( $todo['wp_version'] ) ) {
-			$response = wp_remote_get( home_url( 'readme.html' ), $this->get_default_request_args() );
+			$response = wp_remote_get( site_url( 'readme.html' ), $this->get_default_request_args() );
 
 			if ( ! is_wp_error( $response ) ) {
 				if ( 200 === wp_remote_retrieve_response_code( $response ) ) {

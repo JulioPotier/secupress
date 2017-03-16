@@ -5,7 +5,7 @@
  * Description: Protect your WordPress with SecuPress, analyze and ensure the safety of your website daily.
  * Author: WP Media
  * Author URI: http://wp-media.me
- * Version: 1.2.4
+ * Version: 1.2.5
  * Code Name: Heavy Duty
  * Network: true
  * License: GPLv2
@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /** DEFINES ===================================================================================== */
 /** --------------------------------------------------------------------------------------------- */
 
-define( 'SECUPRESS_VERSION'               , '1.2.4' );
+define( 'SECUPRESS_VERSION'               , '1.2.5' );
 define( 'SECUPRESS_PRIVATE_KEY'           , false );
 define( 'SECUPRESS_ACTIVE_SUBMODULES'     , 'secupress_active_submodules' );
 define( 'SECUPRESS_SETTINGS_SLUG'         , 'secupress_settings' );
@@ -86,8 +86,6 @@ add_action( 'plugins_loaded', 'secupress_init', 0 );
  * @since 1.0
  */
 function secupress_init() {
-	global $wp_version;
-
 	// Nothing to do if autosave.
 	if ( defined( 'DOING_AUTOSAVE' ) ) {
 		return;
@@ -95,20 +93,6 @@ function secupress_init() {
 
 	// Load translations.
 	secupress_load_plugin_textdomain_translations();
-
-	// Check php version.
-	if ( version_compare( phpversion(), SECUPRESS_PHP_MIN ) < 0 ) {
-		require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-		deactivate_plugins( plugin_basename( SECUPRESS_FILE ) );
-		wp_die( sprintf( __( '<strong>%1$s</strong> requires PHP %2$s minimum, your website is actually running version %3$s.', 'secupress' ), 'SecuPress', '<code>' . SECUPRESS_PHP_MIN . '</code>', '<code>' . phpversion() . '</code>' ) );
-	}
-
-	// Check WordPress version.
-	if ( version_compare( $wp_version, SECUPRESS_WP_MIN ) < 0 ) {
-		require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-		deactivate_plugins( plugin_basename( SECUPRESS_FILE ) );
-		wp_die( sprintf( __( '<strong>%1$s</strong> requires WordPress %2$s minimum, your website is actually running version %3$s.', 'secupress' ), 'SecuPress', '<code>' . SECUPRESS_WP_MIN . '</code>', '<code>' . $wp_version . '</code>' ) );
-	}
 
 	// Functions.
 	secupress_load_functions();
@@ -273,10 +257,11 @@ function secupress_load_plugins() {
  * Include files that contain our functions.
  *
  * @since 1.2.3
+ * @since 1.2.5 Includes requirement checks.
  * @author Grégory Viguier
  */
 function secupress_load_functions() {
-	global $is_iis7;
+	global $is_iis7, $wp_version;
 	static $done = false;
 
 	if ( $done ) {
@@ -284,6 +269,40 @@ function secupress_load_functions() {
 	}
 	$done = true;
 
+	/**
+	 * Check requirements.
+	 */
+	// Check php version.
+	if ( version_compare( phpversion(), SECUPRESS_PHP_MIN ) < 0 ) {
+		$plugin = plugin_basename( SECUPRESS_FILE );
+
+		if ( current_filter() !== 'activate_' . $plugin ) {
+			require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+			deactivate_plugins( SECUPRESS_FILE, true );
+		}
+
+		secupress_load_plugin_textdomain_translations();
+
+		wp_die( sprintf( __( '<strong>%1$s</strong> requires PHP %2$s minimum, your website is actually running version %3$s.', 'secupress' ), 'SecuPress', '<code>' . SECUPRESS_PHP_MIN . '</code>', '<code>' . phpversion() . '</code>' ) );
+	}
+
+	// Check WordPress version.
+	if ( version_compare( $wp_version, SECUPRESS_WP_MIN ) < 0 ) {
+		$plugin = plugin_basename( SECUPRESS_FILE );
+
+		if ( current_filter() !== 'activate_' . $plugin ) {
+			require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+			deactivate_plugins( SECUPRESS_FILE, true );
+		}
+
+		secupress_load_plugin_textdomain_translations();
+
+		wp_die( sprintf( __( '<strong>%1$s</strong> requires WordPress %2$s minimum, your website is actually running version %3$s.', 'secupress' ), 'SecuPress', '<code>' . SECUPRESS_WP_MIN . '</code>', '<code>' . $wp_version . '</code>' ) );
+	}
+
+	/**
+	 * Require our functions.
+	 */
 	require_once( SECUPRESS_INC_PATH . 'functions/compat.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/deprecated.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/common.php' );
@@ -342,7 +361,7 @@ function secupress_load_plugin_textdomain_translations() {
 	}
 	$done = true;
 
-	load_plugin_textdomain( 'secupress', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+	load_plugin_textdomain( 'secupress', false, dirname( plugin_basename( SECUPRESS_FILE ) ) . '/languages' );
 	/**
 	 * Fires right after the plugin text domain is loaded.
 	 *
@@ -366,6 +385,6 @@ add_action( 'init', 'secupress_load_default_textdomain_translations' );
  */
 function secupress_load_default_textdomain_translations() {
 	if ( ! defined( 'DOING_AUTOSAVE' ) ) {
-		load_plugin_textdomain( 'default', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+		load_plugin_textdomain( 'default', false, dirname( plugin_basename( SECUPRESS_FILE ) ) . '/languages' );
 	}
 }

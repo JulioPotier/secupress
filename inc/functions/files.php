@@ -117,8 +117,8 @@ function secupress_mkdir( $dir ) {
  * @return True on success.
  */
 function secupress_mkdir_p( $target ) {
-	// From php.net/mkdir user contributed notes.
-	$target = str_replace( '//', '/', $target );
+	$target     = wp_normalize_path( $target );
+	$filesystem = secupress_get_filesystem();
 
 	// Safe mode fails with a trailing slash under certain PHP versions.
 	$target = rtrim( $target, '/' );
@@ -127,14 +127,14 @@ function secupress_mkdir_p( $target ) {
 		$target = '/';
 	}
 
-	if ( file_exists( $target ) ) {
-		return @is_dir( $target );
+	if ( $filesystem->exists( $target ) ) {
+		return $filesystem->is_dir( $target );
 	}
 
 	// Attempting to create the directory may clutter up our display.
-	if ( secupress_mkdir( $target ) ) {
+	if ( $filesystem->mkdir( $target ) ) {
 		return true;
-	} elseif ( is_dir( dirname( $target ) ) ) {
+	} elseif ( $filesystem->is_dir( dirname( $target ) ) ) {
 		return false;
 	}
 

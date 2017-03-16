@@ -24,8 +24,8 @@ function secupress_get_ip() {
 
 	foreach ( $keys as $key ) {
 		if ( array_key_exists( $key, $_SERVER ) ) {
-			$ip = explode( ',', $_SERVER[ $key ] );
-			$ip = end( $ip );
+			$ip = explode( ',', $_SERVER[ $key ], 2 );
+			$ip = reset( $ip );
 
 			if ( false !== secupress_ip_is_valid( $ip ) ) {
 				/**
@@ -90,6 +90,7 @@ function secupress_ip_is_whitelisted( $ip = null ) {
 	$whitelist = array(
 		$_SERVER['SERVER_ADDR'] => 1,
 		'::1'                   => 1,
+		'0.0.0.0'               => 1,
 		'127.0.0.1'             => 1,
 		'37.187.85.82'          => 1, // WPRocketbot.
 		'37.187.58.236'         => 1, // WPRocketbot.

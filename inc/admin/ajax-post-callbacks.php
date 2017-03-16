@@ -446,6 +446,40 @@ function secupress_refresh_bad_themes_list_ajax_post_cb() {
 }
 
 
+add_action( 'wp_ajax_sanitize_move_login_slug', 'secupress_sanitize_move_login_slug_ajax_post_cb' );
+/**
+ * Sanitize a value for a Move Login slug.
+ *
+ * @since 1.2.5
+ * @author Grégory Viguier
+ */
+function secupress_sanitize_move_login_slug_ajax_post_cb() {
+	// Make all security tests.
+	secupress_check_admin_referer( 'sanitize_move_login_slug' );
+	secupress_check_user_capability();
+
+	if ( empty( $_GET['default'] ) || ! isset( $_GET['slug'] ) ) {
+		wp_send_json_error();
+	}
+
+	$default = sanitize_title( $_GET['default'] );
+
+	if ( ! $default ) {
+		wp_send_json_error();
+	}
+
+	if ( 'login' === $default ) {
+		$slug = sanitize_title( $_GET['slug'], '', 'display' );
+		// See secupress/inc/modules/users-login/settings/move-login.php.
+		$slug = $slug ? $slug : '##-' . strtoupper( sanitize_title( __( 'Choose your login URL', 'secupress' ), '', 'display' ) ) . '-##';
+	} else {
+		$slug = sanitize_title( $_GET['slug'], $default, 'display' );
+	}
+
+	wp_send_json_success( $slug );
+}
+
+
 /** --------------------------------------------------------------------------------------------- */
 /** ADMIN POST / AJAX CALLBACKS FOR THE MAIN SETTINGS =========================================== */
 /** --------------------------------------------------------------------------------------------- */
@@ -571,10 +605,17 @@ function secupress_global_settings_api_key_ajax_post_cb() {
 	secupress_update_options( $values );
 
 	// White Label: trick the referrer for the redirection.
-	if ( empty( $values['site_is_pro'] ) && ! empty( $values['wl_plugin_name'] ) ) {
-		$old_slug = ! empty( $old_values['wl_plugin_name'] ) ? sanitize_title( $old_values['wl_plugin_name'] ) : 'secupress';
-		$old_slug = 'page=' . $old_slug . '_settings';
-		$new_slug = 'page=secupress_settings';
+	if ( ! empty( $values['wl_plugin_name'] ) ) {
+		if ( empty( $values['site_is_pro'] ) ) {
+			// Pro deactivation.
+			$old_slug = ! empty( $old_values['wl_plugin_name'] ) ? sanitize_title( $old_values['wl_plugin_name'] ) : 'secupress';
+			$old_slug = 'page=' . $old_slug . '_settings';
+			$new_slug = 'page=secupress_settings';
+		} else {
+			// Pro activation.
+			$old_slug = 'page=secupress_settings';
+			$new_slug = 'page=' . sanitize_title( $values['wl_plugin_name'] ) . '_settings';
+		}
 
 		if ( $old_slug !== $new_slug ) {
 			$_REQUEST['_wp_http_referer'] = str_replace( $old_slug, $new_slug, wp_get_raw_referer() );
