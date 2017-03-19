@@ -654,7 +654,8 @@ function secupress_get_rewrite_bases() {
 		return $bases;
 	}
 
-	$base     = wp_parse_url( trailingslashit( get_option( 'home' ) ), PHP_URL_PATH );
+	$base     = wp_parse_url( trailingslashit( get_option( 'home' ) ) );
+	$base     = $base['path'];
 	$wp_dir   = secupress_get_wp_directory();     // WP in its own directory.
 	$is_sub   = secupress_is_subfolder_install(); // MultiSite by sub-folders.
 	$site_dir = $base . ltrim( $wp_dir, '/' );
