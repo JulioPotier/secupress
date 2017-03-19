@@ -3,7 +3,7 @@ Contributors: wp_media, SecuPress, juliobox, GregLone
 Tags: alerts, antivirus, backup, firewall, Logs, schedule, security, sensitive data, spam, block hackers, country blocking, login security, malware, secure, security plugin, Web application firewall, wordpress security
 Requires at least: 3.7
 Tested up to: 4.7.3
-Stable tag: 1.2.5
+Stable tag: 1.2.5.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -103,6 +103,11 @@ It's important to delete all other security plugins before activating SecuPress.
 8. The 4th step: final report, you can export it as PDF (1)
 
 == Changelog ==
+
+= 1.2.5.1 =
+
+* 19 mar 2017
+* Fix #424: A htaccess server error appeared if you were using WP <4.7 with "readme file protection module"
 
 = 1.2.5 =
 
