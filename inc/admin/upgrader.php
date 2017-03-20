@@ -51,7 +51,7 @@ function secupress_upgrader() {
 		do_action( 'secupress.upgrade', $new_version, $actual_version );
 	}
 
-	if ( defined( 'SECUPRESS_PRO_VERSION' ) && version_compare( SECUPRESS_VERSION, SECUPRESS_PRO_SECUPRESS_MIN ) >= 0 ) {
+	if ( defined( 'SECUPRESS_PRO_VERSION' ) && ( ! defined( 'SECUPRESS_PRO_SECUPRESS_MIN' ) || version_compare( SECUPRESS_VERSION, SECUPRESS_PRO_SECUPRESS_MIN ) >= 0 ) ) {
 		$actual_pro_version = secupress_get_option( 'pro_version' );
 
 		// You can hook the upgrader to trigger any action when SecuPress Pro is upgraded.

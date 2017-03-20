@@ -324,7 +324,7 @@ class SecuPress_Admin_Support {
 			'license_key'       => secupress_get_consumer_key(),
 			'site_url'          => esc_url( user_trailingslashit( home_url(), 'home' ) ),
 			// SecuPress.
-			'sp_pro_version'    => SECUPRESS_PRO_VERSION . ' | ' . SECUPRESS_PRO_SECUPRESS_MIN,
+			'sp_pro_version'    => SECUPRESS_PRO_VERSION,
 			'sp_active_plugins' => secupress_get_active_submodules(),
 			// WordPress.
 			'wp_active_plugins' => static::get_active_plugins(),

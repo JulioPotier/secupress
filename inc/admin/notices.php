@@ -407,9 +407,6 @@ function secupress_display_transient_notices() {
 }
 
 add_action( 'in_plugin_update_message-' . plugin_basename( SECUPRESS_FILE ), 'secupress_updates_message' );
-if ( defined( 'SECUPRESS_PRO_FILE' ) ) {
-	add_action( 'in_plugin_update_message-' . plugin_basename( SECUPRESS_PRO_FILE ), 'secupress_updates_message' );
-}
 /**
  * Display a message below our plugins to display the next update information if needed
  *

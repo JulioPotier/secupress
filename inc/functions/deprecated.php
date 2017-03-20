@@ -41,7 +41,7 @@ function secupress_send_support_request( $summary, $description, $data ) {
 	$data = array_merge( array(
 		'license_email'  => sprintf( __( 'License email: %s', 'secupress' ), secupress_get_consumer_email() ),
 		'license_key'    => sprintf( __( 'License key: %s', 'secupress' ), secupress_get_consumer_key() ),
-		'sp_pro_version' => secupress_has_pro() ? sprintf( __( 'Version of SecuPress Pro: %1$s (requires SecuPress Free %2$s)', 'secupress' ), SECUPRESS_PRO_VERSION, SECUPRESS_PRO_SECUPRESS_MIN ) : __( 'Version of SecuPress Pro: inactive', 'secupress' ),
+		'sp_pro_version' => secupress_has_pro() ? sprintf( __( 'Version of SecuPress Pro: %s', 'secupress' ), SECUPRESS_PRO_VERSION ) : __( 'Version of SecuPress Pro: inactive', 'secupress' ),
 	), $data );
 
 	$data = '<br/>' . str_repeat( '-', 40 ) . '<br/>' . implode( '<br/>', $data );

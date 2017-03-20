@@ -30,6 +30,14 @@
 		"secupressIsEscapeKey":       false,
 		"secupressNotices":           false,
 		"Chart":                      false,
-		"swal":                       false
+		"swal":                       false,
+		"_":                          false,
+		"commonL10n":                 false,
+		"pwsL10n":                    false,
+		"userProfileL10n":            false,
+		"spSessionsControlL10n":      true,
+		"secupressIsSpaceOrEnterKey": false,
+		"zxcvbn":                     false,
+		"_zxcvbnSettings":            false
 	}
 }
