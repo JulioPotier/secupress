@@ -273,11 +273,6 @@ function secupress_comment_constant( $constant, $wpconfig_filepath = false, $mar
  *                So basically, this information is totally useless, deal with it.
  */
 function secupress_uncomment_constant( $constant, $wpconfig_filepath = false, $marker = false ) {
-	if ( defined( $constant ) ) {
-		// We must not uncomment a constant if it's already defined somewhere.
-		return false;
-	}
-
 	if ( ! $wpconfig_filepath ) {
 		$wpconfig_filepath = secupress_is_wpconfig_writtable();
 
@@ -288,7 +283,15 @@ function secupress_uncomment_constant( $constant, $wpconfig_filepath = false, $m
 
 	if ( $marker ) {
 		// Remove the constant we could have previously set.
-		secupress_replace_content( $wpconfig_filepath, "@[\t ]*?# BEGIN SecuPress {$marker}\s.*# END SecuPress\s*?@sU", '' );
+		$replaced = secupress_replace_content( $wpconfig_filepath, "@[\t ]*?# BEGIN SecuPress {$marker}\s.*# END SecuPress\s*?@sU", '' );
+
+		if ( defined( $constant ) && ! $replaced ) {
+			/**
+			 * If the constant is defined and "our" has not been removed (because it didn't exist), that means it's defined somewhere else.
+			 * In that case, we must not uncomment the previous value or it will be defined twice.
+			 */
+			return false;
+		}
 	}
 
 	// Uncomment old value.
