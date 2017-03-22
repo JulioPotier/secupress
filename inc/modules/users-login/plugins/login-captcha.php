@@ -4,22 +4,22 @@
  * Description: Add a gentle captcha on the login form
  * Main Module: users_login
  * Author: SecuPress
- * Version: 1.1
+ * Version: 1.2
  */
 
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
-add_action( 'login_form', 'secupress_add_captcha_on_login_form' );
+add_action( 'login_form',    'secupress_add_captcha_on_login_form' );
+add_action( 'register_form', 'secupress_add_captcha_on_login_form' );
 /**
  * Print the captcha in the login form.
  *
  * @since 1.0
  */
 function secupress_add_captcha_on_login_form() {
-	if ( isset( $_GET['action'] ) && 'login' !== $_GET['action'] ) {
+	if ( ! secupress_can_display_captcha() ) {
 		return;
 	}
-
 	?>
 	<div>
 		<div id="areyouhuman">
@@ -42,7 +42,7 @@ add_action( 'login_head', 'secupress_login_captcha_scripts' );
  * @since 1.0
  */
 function secupress_login_captcha_scripts() {
-	if ( isset( $_GET['action'] ) && 'login' !== $_GET['action'] ) {
+	if ( ! secupress_can_display_captcha() ) {
 		return;
 	}
 
@@ -65,7 +65,7 @@ function secupress_login_captcha_scripts() {
 add_action( 'wp_ajax_captcha_check',        'secupress_captcha_check' );
 add_action( 'wp_ajax_nopriv_captcha_check', 'secupress_captcha_check' );
 /**
- * Check the captcha.
+ * Check the captcha via ajax.
  *
  * @since 1.0
  */
@@ -101,7 +101,7 @@ function secupress_captcha_check() {
 
 add_action( 'authenticate', 'secupress_manage_captcha', SECUPRESS_INT_MAX - 20, 2 );
 /**
- * Process the captcha test.
+ * Process the captcha test on user log-in.
  *
  * @since 1.0
  *
@@ -162,6 +162,68 @@ function secupress_manage_captcha( $raw_user, $username ) {
 }
 
 
+add_filter( 'registration_errors', 'secupress_manage_registration_captcha', SECUPRESS_INT_MAX - 20, 3 );
+/**
+ * Process the captcha test on user registration.
+ *
+ * @since 1.3
+ * @author Grégory Viguier
+ *
+ * @param (object) $errors               A WP_Error object containing any errors encountered during registration.
+ * @param (string) $sanitized_user_login User's username after it has been sanitized.
+ * @param (string) $user_email           User's email.
+ */
+function secupress_manage_registration_captcha( $errors, $sanitized_user_login, $user_email ) {
+	static $running = false;
+
+	if ( $running ) {
+		return $errors;
+	}
+	$running = true;
+
+	if ( defined( 'XMLRPC_REQUEST' ) || defined( 'APP_REQUEST' ) ) {
+		$running = false;
+		return $errors;
+	}
+
+	// Make sure to process only credentials provided by the registration form.
+	if ( ! isset( $_POST['user_login'], $_POST['user_email'] ) ) { // WPCS: CSRF ok.
+		$running = false;
+		return $errors;
+	}
+
+	if ( ! isset( $_POST['sp_name'] ) || '' !== $_POST['sp_name'] ) { // WPCS: CSRF ok.
+		$running = false;
+		$errors->add( 'authentication_failed', __( '<strong>ERROR</strong>: The human verification is incorrect.', 'secupress' ), __FUNCTION__ );
+		return $errors;
+	}
+
+	$captcha_key  = isset( $_POST['captcha_key'] ) ? $_POST['captcha_key'] : null; // WPCS: CSRF ok.
+	$captcha_keys = get_site_option( 'secupress_captcha_keys', array() );
+
+	if ( ! isset( $captcha_keys[ $captcha_key ] ) ||
+		time() > $captcha_keys[ $captcha_key ] + 2 * MINUTE_IN_SECONDS ||
+		time() < $captcha_keys[ $captcha_key ] + 2
+	) {
+		$running = false;
+		$errors->add( 'authentication_failed', __( '<strong>ERROR</strong>: The human verification is incorrect.', 'secupress' ), __FUNCTION__ );
+		return $errors;
+	}
+
+	unset( $captcha_keys[ $captcha_key ] );
+
+	if ( ! secupress_wp_version_is( '4.2.0-alpha' ) ) {
+		delete_site_option( 'secupress_captcha_keys' );
+		add_site_option( 'secupress_captcha_keys', $captcha_keys, false );
+	} else {
+		update_site_option( 'secupress_captcha_keys', $captcha_keys, false );
+	}
+
+	$running = false;
+	return $errors;
+}
+
+
 add_filter( 'login_message', 'secupress_login_form_nojs_error' );
 /**
  * Display a message when the user disabled JavaScript on his/her browser.
@@ -173,10 +235,22 @@ add_filter( 'login_message', 'secupress_login_form_nojs_error' );
  * @return (string)
  */
 function secupress_login_form_nojs_error( $message ) {
-	if ( ! isset( $_GET['action'] ) || 'login' === $_GET['action'] ) {
+	if ( secupress_can_display_captcha() ) {
 		$message .= '<noscript><p class="message">' . __( 'You need to enable JavaScript to send this form correctly.', 'secupress' ) . '</p></noscript>';
 	}
 	return $message;
+}
+
+
+/**
+ * Tell if the captcha UI should be displayed in the page.
+ *
+ * @since 1.3
+ *
+ * @return (bool)
+ */
+function secupress_can_display_captcha() {
+	return ! isset( $_GET['action'] ) || 'login' === $_GET['action'] || 'register' === $_GET['action'];
 }
 
 
