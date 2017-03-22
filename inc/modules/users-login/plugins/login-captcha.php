@@ -162,18 +162,18 @@ function secupress_manage_captcha( $raw_user, $username ) {
 }
 
 
-add_filter( 'registration_errors', 'secupress_manage_registration_captcha', SECUPRESS_INT_MAX - 20, 3 );
+add_filter( 'registration_errors', 'secupress_manage_registration_captcha', SECUPRESS_INT_MAX - 20 );
 /**
  * Process the captcha test on user registration.
  *
  * @since 1.3
  * @author Grégory Viguier
  *
- * @param (object) $errors               A WP_Error object containing any errors encountered during registration.
- * @param (string) $sanitized_user_login User's username after it has been sanitized.
- * @param (string) $user_email           User's email.
+ * @param (object) $errors A WP_Error object containing any errors encountered during registration.
+ *
+ * @return (object) The WP_Error object.
  */
-function secupress_manage_registration_captcha( $errors, $sanitized_user_login, $user_email ) {
+function secupress_manage_registration_captcha( $errors ) {
 	static $running = false;
 
 	if ( $running ) {
@@ -193,8 +193,8 @@ function secupress_manage_registration_captcha( $errors, $sanitized_user_login, 
 	}
 
 	if ( ! isset( $_POST['sp_name'] ) || '' !== $_POST['sp_name'] ) { // WPCS: CSRF ok.
-		$running = false;
 		$errors->add( 'authentication_failed', __( '<strong>ERROR</strong>: The human verification is incorrect.', 'secupress' ), __FUNCTION__ );
+		$running = false;
 		return $errors;
 	}
 
@@ -205,8 +205,8 @@ function secupress_manage_registration_captcha( $errors, $sanitized_user_login, 
 		time() > $captcha_keys[ $captcha_key ] + 2 * MINUTE_IN_SECONDS ||
 		time() < $captcha_keys[ $captcha_key ] + 2
 	) {
-		$running = false;
 		$errors->add( 'authentication_failed', __( '<strong>ERROR</strong>: The human verification is incorrect.', 'secupress' ), __FUNCTION__ );
+		$running = false;
 		return $errors;
 	}
 
