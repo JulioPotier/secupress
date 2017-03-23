@@ -124,6 +124,6 @@
 	} );
 
 	// Honeypot.
-	$( "#loginform, #registerform" ).prepend( '<p class="screen-reader-text"><label for="user_name">' + w.spCaptchaL10n.hPotText + '<br /><input name="sp_name" id="user_name" class="input" value="" autocomplete="off" size="20" type="text" /></label>' );
+	$( "#loginform, #registerform, #setupform" ).prepend( '<p class="screen-reader-text"><label for="user_name">' + w.spCaptchaL10n.hPotText + '<br /><input name="sp_name" id="user_name" class="input" value="" autocomplete="off" size="20" type="text" /></label>' );
 
 } )(jQuery, document, window);

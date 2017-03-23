@@ -9,8 +9,9 @@
 
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
-add_action( 'login_form',    'secupress_add_captcha_on_login_form' );
-add_action( 'register_form', 'secupress_add_captcha_on_login_form' );
+add_action( 'login_form',          'secupress_add_captcha_on_login_form' );
+add_action( 'register_form',       'secupress_add_captcha_on_login_form' );
+add_action( 'signup_extra_fields', 'secupress_add_captcha_on_login_form', 100 );
 /**
  * Print the captcha in the login form.
  *
@@ -35,7 +36,8 @@ function secupress_add_captcha_on_login_form() {
 }
 
 
-add_action( 'login_head', 'secupress_login_captcha_scripts' );
+add_action( 'login_head',    'secupress_login_captcha_scripts' );
+add_action( 'signup_header', 'secupress_login_captcha_scripts' );
 /**
  * Enqueue captcha styles and scripts.
  *
@@ -224,6 +226,70 @@ function secupress_manage_registration_captcha( $errors ) {
 }
 
 
+add_filter( 'wpmu_validate_user_signup', 'secupress_manage_ms_registration_captcha', SECUPRESS_INT_MAX - 20 );
+/**
+ * Process the captcha test on user registration on multisite.
+ *
+ * @since 1.3
+ * @author Grégory Viguier
+ *
+ * @param (array) $result The array of user name, email and the error messages:
+ *                        (string) $user_name     Sanitized and unique username.
+ *                        (string) $orig_username Original username.
+ *                        (string) $user_email    User email address.
+ *                        (object) $errors        WP_Error object containing any errors found.
+ */
+function secupress_manage_ms_registration_captcha( $result ) {
+	static $running = false;
+
+	if ( $running ) {
+		return $result;
+	}
+	$running = true;
+
+	if ( defined( 'XMLRPC_REQUEST' ) || defined( 'APP_REQUEST' ) ) {
+		$running = false;
+		return $result;
+	}
+
+	// Make sure to process only credentials provided by the registration form.
+	if ( ! isset( $_POST['user_name'], $_POST['user_email'], $_POST['stage'] ) || 'validate-user-signup' !== $_POST['stage'] ) { // WPCS: CSRF ok.
+		$running = false;
+		return $result;
+	}
+
+	if ( ! isset( $_POST['sp_name'] ) || '' !== $_POST['sp_name'] ) { // WPCS: CSRF ok.
+		$result['errors']->add( 'authentication_failed', __( '<strong>ERROR</strong>: The human verification is incorrect.', 'secupress' ), __FUNCTION__ );
+		$running = false;
+		return $result;
+	}
+
+	$captcha_key  = isset( $_POST['captcha_key'] ) ? $_POST['captcha_key'] : null; // WPCS: CSRF ok.
+	$captcha_keys = get_site_option( 'secupress_captcha_keys', array() );
+
+	if ( ! isset( $captcha_keys[ $captcha_key ] ) ||
+		time() > $captcha_keys[ $captcha_key ] + 2 * MINUTE_IN_SECONDS ||
+		time() < $captcha_keys[ $captcha_key ] + 2
+	) {
+		$result['errors']->add( 'authentication_failed', __( '<strong>ERROR</strong>: The human verification is incorrect.', 'secupress' ), __FUNCTION__ );
+		$running = false;
+		return $result;
+	}
+
+	unset( $captcha_keys[ $captcha_key ] );
+
+	if ( ! secupress_wp_version_is( '4.2.0-alpha' ) ) {
+		delete_site_option( 'secupress_captcha_keys' );
+		add_site_option( 'secupress_captcha_keys', $captcha_keys, false );
+	} else {
+		update_site_option( 'secupress_captcha_keys', $captcha_keys, false );
+	}
+
+	$running = false;
+	return $result;
+}
+
+
 add_filter( 'login_message', 'secupress_login_form_nojs_error' );
 /**
  * Display a message when the user disabled JavaScript on his/her browser.
@@ -242,6 +308,26 @@ function secupress_login_form_nojs_error( $message ) {
 }
 
 
+add_action( 'signup_extra_fields', 'secupress_print_login_form_nojs_error', 1 );
+/**
+ * On multisite, print the "The human verification is incorrect" message and a message when the user disabled JavaScript on his/her browser.
+ *
+ * @since 1.3
+ * @author Grégory Viguier
+ *
+ * @param (array) $errors An array possibly containing 'user_name' or 'user_email' errors.
+ */
+function secupress_print_login_form_nojs_error( $errors ) {
+	if ( $errmsg = $errors->get_error_message( 'authentication_failed' ) ) {
+		echo '<p class="error">' . $errmsg . '</p>';
+	}
+
+	if ( secupress_can_display_captcha() ) {
+		echo '<noscript><p class="error">' . __( 'You need to enable JavaScript to send this form correctly.', 'secupress' ) . '</p></noscript>';
+	}
+}
+
+
 /**
  * Tell if the captcha UI should be displayed in the page.
  *
@@ -250,7 +336,44 @@ function secupress_login_form_nojs_error( $message ) {
  * @return (bool)
  */
 function secupress_can_display_captcha() {
-	return ! isset( $_GET['action'] ) || 'login' === $_GET['action'] || 'register' === $_GET['action'];
+	global $pagenow;
+
+	if ( ! is_multisite() ) {
+		// Only on the login form and the registration form.
+		return ! isset( $_GET['action'] ) || 'login' === $_GET['action'] || 'register' === $_GET['action'];
+	}
+
+	if ( is_super_admin() ) {
+		// Network admins have a free pass.
+		return false;
+	}
+
+	if ( is_user_logged_in() ) {
+		// Logged in users don't see the form.
+		return false;
+	}
+
+	if ( 'wp-signup.php' !== $pagenow ) {
+		// Login page, only on the login form.
+		return ! isset( $_GET['action'] ) || 'login' === $_GET['action'];
+	}
+
+	// Registrations page.
+	$active_signup = get_site_option( 'registration', 'none' );
+	/**
+	 * This filter is documented in wp-signup.php.
+	 * Possible values are 'none', 'user', 'blog' and 'all'.
+	 */
+	$active_signup = apply_filters( 'wpmu_active_signup', $active_signup );
+
+	switch ( $active_signup ) {
+		case 'user':
+		case 'all':
+			// Deal only with the "user" form.
+			return true;
+		default:
+			return false;
+	}
 }
 
 
