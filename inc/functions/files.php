@@ -5,18 +5,21 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * Get WP Direct filesystem object. Also define chmod constants if not done yet.
  *
  * @since 1.0
+ * @since 1.3 Don't use the global Filesystem anymore, to make sure to use "direct" (some things don't work over "ftp").
  *
  * @return `$wp_filesystem` object.
  */
 function secupress_get_filesystem() {
-	global $wp_filesystem;
+	static $filesystem;
 
-	if ( ! $wp_filesystem ) {
-		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php' );
-		require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php' );
-
-		$wp_filesystem = new WP_Filesystem_Direct( new StdClass() ); // WPCS: override ok.
+	if ( $filesystem ) {
+		return $filesystem;
 	}
+
+	require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php' );
+	require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php' );
+
+	$filesystem = new WP_Filesystem_Direct( new StdClass() ); // WPCS: override ok.
 
 	// Set the permission constants if not already set.
 	if ( ! defined( 'FS_CHMOD_DIR' ) ) {
@@ -26,7 +29,7 @@ function secupress_get_filesystem() {
 		define( 'FS_CHMOD_FILE', ( fileperms( ABSPATH . 'index.php' ) & 0777 | 0644 ) );
 	}
 
-	return $wp_filesystem;
+	return $filesystem;
 }
 
 
