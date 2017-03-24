@@ -296,4 +296,18 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 			}
 		}
 	}
+
+	// < 1.3
+	if ( version_compare( $actual_version, '1.3', '<' ) ) {
+		// Remove 'OrangeBot' from the Bad User Agents list.
+		$user_agents_options = get_option( 'secupress_firewall_settings' );
+
+		if ( is_array( $user_agents_options ) && ! empty( $user_agents_options['bbq-headers_user-agents-list'] ) ) {
+			$user_agents_options['bbq-headers_user-agents-list'] = secupress_sanitize_list( $user_agents_options['bbq-headers_user-agents-list'] );
+			$user_agents_options['bbq-headers_user-agents-list'] = explode( ', ', $user_agents_options['bbq-headers_user-agents-list'] );
+			$user_agents_options['bbq-headers_user-agents-list'] = array_diff( $user_agents_options['bbq-headers_user-agents-list'], array( 'OrangeBot' ) );
+			$user_agents_options['bbq-headers_user-agents-list'] = implode( ', ', $user_agents_options['bbq-headers_user-agents-list'] );
+			update_option( 'secupress_firewall_settings', $user_agents_options );
+		}
+	}
 }
