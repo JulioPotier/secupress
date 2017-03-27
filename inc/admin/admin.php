@@ -90,14 +90,17 @@ add_action( 'admin_footer', 'secupress_detect_bad_themes_async_get_and_store_inf
  * @since 1.1.3
  */
 function secupress_detect_bad_themes_async_get_and_store_infos() {
-	if ( false === get_site_transient( 'secupress-detect-bad-themes' ) ) {
-		$args = array(
-			'timeout'   => 0.01,
-			'blocking'  => false,
-			'cookies'   => $_COOKIE,
-			'sslverify' => apply_filters( 'https_local_ssl_verify', false ),
-		);
-		wp_remote_get( admin_url( 'admin-post.php' ) . '?action=secupress_refresh_bad_themes&_wpnonce=' . wp_create_nonce( 'detect-bad-themes' ), $args );
-		set_site_transient( 'secupress-detect-bad-themes', 1, 6 * HOUR_IN_SECONDS );
+	if ( false !== get_site_transient( 'secupress-detect-bad-themes' ) ) {
+		return;
 	}
+
+	$args = array(
+		'timeout'   => 0.01,
+		'blocking'  => false,
+		'cookies'   => $_COOKIE,
+		'sslverify' => apply_filters( 'https_local_ssl_verify', false ),
+	);
+	wp_remote_get( admin_url( 'admin-post.php' ) . '?action=secupress_refresh_bad_themes&_wpnonce=' . wp_create_nonce( 'detect-bad-themes' ), $args );
+
+	set_site_transient( 'secupress-detect-bad-themes', 1, 6 * HOUR_IN_SECONDS );
 }
