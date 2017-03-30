@@ -969,6 +969,24 @@ function secupress_has_pro() {
 
 
 /**
+ * Return true if the license is ok.
+ *
+ * @since 1.3
+ *
+ * @return (bool)
+ */
+function secupress_has_pro_license() {
+	static $has_pro;
+
+	if ( ! isset( $has_pro ) ) {
+		$has_pro = secupress_get_consumer_key() && secupress_get_option( 'site_is_pro' );
+	}
+
+	return $has_pro;
+}
+
+
+/**
  * Return true if secupress pro is installed and the license is ok.
  *
  * @since 1.0
@@ -976,13 +994,7 @@ function secupress_has_pro() {
  * @return (bool)
  */
 function secupress_is_pro() {
-	static $is_pro;
-
-	if ( ! isset( $is_pro ) ) {
-		$is_pro = secupress_has_pro() && secupress_get_consumer_key() && (int) secupress_get_option( 'site_is_pro' );
-	}
-
-	return $is_pro;
+	return secupress_has_pro() && secupress_has_pro_license();
 }
 
 
