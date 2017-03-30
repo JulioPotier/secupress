@@ -66,6 +66,30 @@ function secupress_send_support_request( $summary, $description, $data ) {
 
 
 /**
+ * Will lately add admin notices added by `secupress_add_transient_notice()`.
+ *
+ * @since 1.0
+ * @since 1.3 Deprecated.
+ * @author Julio Potier
+ */
+function secupress_display_transient_notices() {
+	_deprecated_function( __FUNCTION__, '1.3', 'SecuPress_Admin_Notices::get_instance()->add_transient_notices()' );
+
+	$notices = secupress_get_transient( 'secupress-notices-' . get_current_user_id() );
+
+	if ( ! $notices ) {
+		return;
+	}
+
+	foreach ( $notices as $notice ) {
+		secupress_add_notice( $notice['message'], $notice['error_code'], false );
+	}
+
+	delete_transient( 'secupress-notices-' . get_current_user_id() );
+}
+
+
+/**
  * Get a user name.
  * Try first to have first name + last name, then only first name or last name, then only last name or first name, then display name.
  *

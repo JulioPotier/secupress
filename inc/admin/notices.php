@@ -386,26 +386,6 @@ function secupress_warning_no_license() {
 }
 
 
-add_action( 'admin_menu', 'secupress_display_transient_notices' );
-/**
- * Will lately add admin notices added by `secupress_add_transient_notice()`.
- *
- * @since 1.0
- */
-function secupress_display_transient_notices() {
-	$notices = secupress_get_transient( 'secupress-notices-' . get_current_user_id() );
-
-	if ( ! $notices ) {
-		return;
-	}
-
-	foreach ( $notices as $notice ) {
-		secupress_add_notice( $notice['message'], $notice['error_code'], false );
-	}
-
-	delete_transient( 'secupress-notices-' . get_current_user_id() );
-}
-
 add_action( 'in_plugin_update_message-' . plugin_basename( SECUPRESS_FILE ), 'secupress_updates_message' );
 /**
  * Display a message below our plugins to display the next update information if needed
