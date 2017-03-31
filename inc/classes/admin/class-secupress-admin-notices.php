@@ -286,7 +286,7 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 
 		if ( is_array( $notices ) ) {
 			foreach ( $notices as $notice ) {
-				$notice_id = ! empty( $notice['notice_id'] ) ? $notice['notice_id'] : false;
+				$notice_id = isset( $notice['notice_id'] ) ? $notice['notice_id'] : false;
 				$this->add( $notice['message'], $notice['error_code'], $notice_id );
 			}
 		}
