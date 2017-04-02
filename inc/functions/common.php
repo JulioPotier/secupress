@@ -972,6 +972,7 @@ function secupress_has_pro() {
  * Return true if the license is ok.
  *
  * @since 1.3
+ * @author Grégory Viguier
  *
  * @return (bool)
  */
