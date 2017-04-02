@@ -353,39 +353,6 @@ function secupress_warning_no_oneclick_scan_yet() {
 }
 
 
-add_action( 'current_screen', 'secupress_warning_no_license' );
-/**
- * This warning is displayed when the license is not valid.
- *
- * @since 1.0.6
- * @author Grégory Viguier
- */
-function secupress_warning_no_license() {
-	global $current_screen;
-
-	if ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' === $current_screen->base ) {
-		return;
-	}
-
-	if ( ! secupress_has_pro() || secupress_is_pro() ) {
-		return;
-	}
-
-	if ( ! current_user_can( secupress_get_capability() ) ) {
-		return;
-	}
-
-	$message  = sprintf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ) . ' ';
-	/** Translators: %s is a link to the "plugin settings page". */
-	$message .= sprintf(
-		__( 'Your Pro license is not valid or is not set yet. If you want to activate all the Pro features, premium support and updates, take a look at %s.', 'secupress' ),
-		'<a href="' . esc_url( secupress_admin_url( 'settings' ) ) . '">' . __( 'the plugin settings page', 'secupress' ) . '</a>'
-	);
-
-	secupress_add_notice( $message, 'updated', false );
-}
-
-
 add_action( 'in_plugin_update_message-' . plugin_basename( SECUPRESS_FILE ), 'secupress_updates_message' );
 /**
  * Display a message below our plugins to display the next update information if needed

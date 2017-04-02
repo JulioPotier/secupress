@@ -90,6 +90,41 @@ function secupress_display_transient_notices() {
 
 
 /**
+ * This warning is displayed when the license is not valid.
+ *
+ * @since 1.0.6
+ * @since 1.3 Deprecated.
+ * @author Grégory Viguier
+ */
+function secupress_warning_no_license() {
+	global $current_screen;
+
+	_deprecated_function( __FUNCTION__, '1.3', 'SecuPress_Admin_Pro_Upgrade::get_instance()->maybe_warn_no_license()' );
+
+	if ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' === $current_screen->base ) {
+		return;
+	}
+
+	if ( ! secupress_has_pro() || secupress_is_pro() ) {
+		return;
+	}
+
+	if ( ! current_user_can( secupress_get_capability() ) ) {
+		return;
+	}
+
+	$message  = sprintf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ) . ' ';
+	/** Translators: %s is a link to the "plugin settings page". */
+	$message .= sprintf(
+		__( 'Your Pro license is not valid or is not set yet. If you want to activate all the Pro features, premium support and updates, take a look at %s.', 'secupress' ),
+		'<a href="' . esc_url( secupress_admin_url( 'settings' ) ) . '">' . __( 'the plugin settings page', 'secupress' ) . '</a>'
+	);
+
+	secupress_add_notice( $message, 'updated', false );
+}
+
+
+/**
  * Get a user name.
  * Try first to have first name + last name, then only first name or last name, then only last name or first name, then display name.
  *
