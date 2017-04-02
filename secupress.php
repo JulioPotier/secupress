@@ -113,6 +113,9 @@ function secupress_init() {
 		// Notices.
 		SecuPress_Admin_Notices::get_instance();
 
+		// Pro upgrade.
+		SecuPress_Admin_Pro_Upgrade::get_instance();
+
 		// Hooks.
 		require_once( SECUPRESS_ADMIN_PATH . 'options.php' );
 		require_once( SECUPRESS_ADMIN_PATH . 'settings.php' );
@@ -325,6 +328,9 @@ function secupress_load_functions() {
 
 	// The notices class.
 	secupress_require_class( 'Admin', 'Notices' );
+
+	// The Pro upgrade class.
+	secupress_require_class( 'Admin', 'Pro_Upgrade' );
 
 	// Functions for the admin side.
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/admin.php' );
