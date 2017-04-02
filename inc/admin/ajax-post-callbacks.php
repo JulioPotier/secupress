@@ -522,26 +522,7 @@ function secupress_global_settings_api_key_ajax_post_cb() {
 	// Action.
 	$action     = $has_old && $old_is_pro ? 'deactivate' : 'activate';
 
-	if ( ! secupress_has_pro() ) {
-		// The Pro version is not activated.
-		$action = false;
-
-		if ( $has_old ) {
-			// Send the previous values back.
-			$values['consumer_email'] = $old_email;
-			$values['consumer_key']   = $old_key;
-
-			if ( $old_is_pro ) {
-				$values['site_is_pro'] = 1;
-			}
-		} else {
-			// Empty the new values.
-			unset( $values['consumer_email'], $values['consumer_key'] );
-		}
-
-		add_settings_error( 'general', 'response_error', __( 'You must install and activate the Pro version first.', 'secupress' ) );
-	}
-	elseif ( 'deactivate' === $action ) {
+	if ( 'deactivate' === $action ) {
 		// To deactivate, use old values.
 		$values['consumer_email'] = $old_email;
 		$values['consumer_key']   = $old_key;
@@ -578,11 +559,14 @@ function secupress_global_settings_api_key_ajax_post_cb() {
 	}
 
 	if ( 'deactivate' === $action ) {
+		// Deactivate the license.
 		$values = secupress_global_settings_deactivate_pro_license( $values );
-	} else {
+	} elseif ( 'activate' === $action ) {
+		// Activate the license.
 		$values = secupress_global_settings_activate_pro_license( $values, $old_values );
 
 		if ( empty( $values['site_is_pro'] ) && ! get_settings_errors( 'general' ) ) {
+			// Invalid key.
 			add_settings_error( 'general', 'response_error', __( 'Your license key seems invalid.', 'secupress' ) );
 		}
 	}
@@ -629,7 +613,7 @@ function secupress_global_settings_api_key_ajax_post_cb() {
 	if ( ! get_settings_errors( 'general' ) ) {
 		if ( 'deactivate' === $action ) {
 			add_settings_error( 'general', 'settings_updated', __( 'Your license has been successfully deactivated.', 'secupress' ), 'updated' );
-		} else {
+		} elseif ( 'activate' === $action ) {
 			add_settings_error( 'general', 'settings_updated', __( 'Your license has been successfully activated.', 'secupress' ), 'updated' );
 		}
 	}
@@ -656,7 +640,9 @@ function secupress_global_settings_api_key_ajax_post_cb() {
  * @return (array) $new_values The new settings, some values may have changed.
  */
 function secupress_global_settings_activate_pro_license( $new_values, $old_values ) {
-	$api_old_values = secupress_array_merge_intersect( $old_values, array(
+	// If the Pro is not installed, get the plugin information.
+	$need_plugin_data = (int) ! secupress_has_pro();
+	$api_old_values   = secupress_array_merge_intersect( $old_values, array(
 		'consumer_email' => '',
 		'consumer_key'   => '',
 		'site_is_pro'    => 0,
@@ -676,6 +662,7 @@ function secupress_global_settings_activate_pro_license( $new_values, $old_value
 		'user_email'   => $new_values['consumer_email'],
 		'user_key'     => $new_values['consumer_key'],
 		'install_time' => $install_time,
+		'plugin_data'  => $need_plugin_data,
 	) );
 
 	$response = wp_remote_get( $url, array( 'timeout' => 10 ) );
@@ -687,8 +674,20 @@ function secupress_global_settings_activate_pro_license( $new_values, $old_value
 
 		if ( ! empty( $body->data->site_is_pro ) ) {
 			$new_values['site_is_pro'] = 1;
+
+			if ( ! empty( $body->data->plugin_information ) ) {
+				// Store the plugin information.
+				SecuPress_Admin_Pro_Upgrade::get_instance()->maybe_set_transient_from_remote( $body->data->plugin_information );
+			} elseif ( $need_plugin_data ) {
+				// Should not happen.
+				SecuPress_Admin_Pro_Upgrade::get_instance()->delete_transient();
+			}
 		} else {
 			unset( $new_values['site_is_pro'] );
+
+			if ( $need_plugin_data ) {
+				SecuPress_Admin_Pro_Upgrade::get_instance()->delete_transient();
+			}
 		}
 	} else {
 		// Keep old values.
@@ -698,10 +697,14 @@ function secupress_global_settings_activate_pro_license( $new_values, $old_value
 		if ( ! $new_values['consumer_email'] || ! $new_values['consumer_key'] ) {
 			unset( $new_values['consumer_email'], $new_values['consumer_key'], $new_values['site_is_pro'] );
 		} elseif ( $api_old_values['site_is_pro'] ) {
-			// Don't invalid the license because we couldn't reach our server or things like that.
+			// Don't invalidate the license because we couldn't reach our server or things like that.
 			$new_values['site_is_pro'] = 1;
 		} else {
 			unset( $new_values['site_is_pro'] );
+		}
+
+		if ( $need_plugin_data ) {
+			SecuPress_Admin_Pro_Upgrade::get_instance()->delete_transient();
 		}
 	}
 
