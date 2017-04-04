@@ -234,7 +234,7 @@ function secupress_move_login_login_to_action( $link, $action ) {
 	}
 
 	if ( $link && false === strpos( $link, '/' . $slug ) ) {
-		$link = str_replace( array( '/' . $slugs['login'], '&amp;', '?amp;', '&' ), array( '/' . $slug, '&', '?', '&amp;' ), remove_query_arg( 'action', $link ) );
+		$link = str_replace( array( '/' . $slugs['login'], '?amp;' ), array( '/' . $slug, '?' ), remove_query_arg( 'action', $link ) );
 
 		if ( $need_action_param ) {
 			// In case of a custom action, shouldn't happen.
