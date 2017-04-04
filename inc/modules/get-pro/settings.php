@@ -42,19 +42,18 @@ if ( ! $plans ) {
 		}
 		?>
 
-		<p class="secupress-inline-options secupress-text-center hide-if-no-js secupress-type-yearly">
-			<button type="button" class="secupress-button secupress-inline-option secupress-current" data-type="yearly">
-				<?php _e( 'Yearly', 'secupress' ); ?>
-			</button>
-			<button type="button" class="secupress-button secupress-inline-option" data-type="monthly">
+		<p class="secupress-inline-options secupress-text-center hide-if-no-js secupress-type-monthly">
+			<button type="button" class="secupress-button secupress-inline-option secupress-current" data-type="monthly">
 				<?php _e( 'Monthly', 'secupress' ); ?>
-				<span class="secupress-tip"><?php _e( 'Coming soon', 'secupress' ) ?></span>
+			</button>
+			<button type="button" class="secupress-button secupress-inline-option" data-type="yearly">
+				<?php _e( 'Yearly', 'secupress' ); ?>
 			</button>
 		</p>
 		<div id="secupress-pricing" class="secupress-pricing secupress-flex secupress-text-center">
 		<?php
 		foreach ( $plans as $plan ) {
-		?>
+			?>
 			<div class="secupress-col-1-4 secupress-flex">
 				<div class="secupress-price secupress-box-shadow secupress-flex-col">
 					<div class="secupress-price-header">
@@ -105,7 +104,7 @@ if ( ! $plans ) {
 					</div>
 				</div>
 			</div>
-		<?php
+			<?php
 		}
 		?>
 		</div><!-- #secupress-pricing -->
