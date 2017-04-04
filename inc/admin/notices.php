@@ -363,7 +363,7 @@ add_action( 'current_screen', 'secupress_warning_no_license' );
 function secupress_warning_no_license() {
 	global $current_screen;
 
-	if ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' === $current_screen->base ) {
+	if ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' === $current_screen->base || 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings-network' === $current_screen->base ) {
 		return;
 	}
 
