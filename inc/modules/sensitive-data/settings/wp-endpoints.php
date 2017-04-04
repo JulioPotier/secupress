@@ -15,6 +15,12 @@ $this->add_field( array(
 		'block-all'   => __( '<strong>Disable all</strong> the features of XML-RPC', 'secupress' ),
 		'block-multi' => __( '<strong>Only disable</strong> the multiple authentication attempts', 'secupress' ),
 	),
+	'helpers'      => array(
+		array(
+			'type'        => 'warning',
+			'description' => __( 'If you have a mobile application, or any service linked to your website, you should not disable entirely the XML-RPC API.', 'secupress' ),
+		),
+	),
 ) );
 
 
