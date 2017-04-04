@@ -1104,9 +1104,6 @@ fieldset.secupress-boxed-group > b {
 .secupress-type-monthly + .secupress-pricing .secupress-hide-monthly {
 	display: none;
 }
-.secupress-type-monthly + .secupress-pricing .secupress-price-cta .secupress-button {
-	background: #CCCCCC;
-}
 
 /* Pricing blocks */
 .secupress-pricing {

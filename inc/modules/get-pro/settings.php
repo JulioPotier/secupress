@@ -13,8 +13,20 @@ if ( false === $plans ) {
 }
 
 if ( ! $plans ) {
-	$plans      = json_decode( '[{"names":{"en_US":"Lite","fr_FR":"Simple"},"button":"preorder","price":"5.99","price_new":"36","price_old":"72","free":50,"websites":1,"url":"https:\/\/secupress.me\/checkout\/?edd_action=add_to_cart&download_id=14&edd_options[price_id]=4&discount=LANDING50"},{"names":{"en_US":"Standard","fr_FR":"Standard"},"button":"preorder","price":"14.99","price_new":"90","price_old":"180","free":50,"websites":3,"url":"https:\/\/secupress.me\/checkout\/?edd_action=add_to_cart&download_id=14&edd_options[price_id]=5&discount=LANDING50"},{"names":{"en_US":"Plus","fr_FR":"Plus"},"button":"preorder","price":"29.99","price_new":"180","price_old":"360","free":50,"websites":10,"url":"https:\/\/secupress.me\/checkout\/?edd_action=add_to_cart&download_id=14&edd_options[price_id]=6&discount=LANDING50"}]', true );
+	$plans      = json_decode( '[{"names":{"en_US":"Lite","fr_FR":"Lite"},"button":"order","price":"5.99","price_new":"57.60","price_old":"72","free":20,"websites":1,"url":"https:\\/\\/secupress.me\\/checkout\\/?edd_action=add_to_cart&download_id=14&edd_options[price_id]=4"},{"names":{"en_US":"Standard","fr_FR":"Standard"},"button":"order","price":"14.99","price_new":"144","price_old":"180","free":20,"websites":3,"url":"https:\\/\\/secupress.me\\/checkout\\/?edd_action=add_to_cart&download_id=14&edd_options[price_id]=5"},{"names":{"en_US":"Plus","fr_FR":"Plus"},"button":"order","price":"29.99","price_new":"288","price_old":"360","free":20,"websites":10,"url":"https:\\/\\/secupress.me\\/checkout\\/?edd_action=add_to_cart&download_id=14&edd_options[price_id]=6"},{"names":{"en_US":"Unlimited","fr_FR":"Unlimited"},"button":"order","price":"49.99","price_new":"479","price_old":"600","free":20,"websites":-1,"url":"https:\\/\\/secupress.me\\/checkout\\/?edd_action=add_to_cart&download_id=14&edd_options[price_id]=8"}]', true );
 	$impossible = sprintf( '<p class="secupress-response-notice secupress-rn-warning secupress-text-center">' . __( 'Impossible to get online prices, please check %1$sonline prices%2$s to get the last ones.', 'secupress' ), '<a href="https://secupress.me/downloads/secupress/" target="_blank">', '</a>' ) . '</p>';
+}
+
+// Check if the Pro discount is the same for every plan.
+$pro_off = false;
+
+foreach ( $plans as $plan ) {
+	if ( false === $pro_off ) {
+		$pro_off = $plan['free'];
+	} elseif ( $pro_off !== $plan['free'] ) {
+		$pro_off = 0;
+		break;
+	}
 }
 ?>
 
@@ -42,19 +54,21 @@ if ( ! $plans ) {
 		}
 		?>
 
-		<p class="secupress-inline-options secupress-text-center hide-if-no-js secupress-type-yearly">
-			<button type="button" class="secupress-button secupress-inline-option secupress-current" data-type="yearly">
-				<?php _e( 'Yearly', 'secupress' ); ?>
-			</button>
-			<button type="button" class="secupress-button secupress-inline-option" data-type="monthly">
+		<p class="secupress-inline-options secupress-text-center hide-if-no-js secupress-type-monthly">
+			<button type="button" class="secupress-button secupress-inline-option secupress-current" data-type="monthly">
 				<?php _e( 'Monthly', 'secupress' ); ?>
-				<span class="secupress-tip"><?php _e( 'Coming soon', 'secupress' ) ?></span>
+			</button>
+			<button type="button" class="secupress-button secupress-inline-option" data-type="yearly">
+				<?php _e( 'Yearly', 'secupress' ); ?>
+				<?php if ( $pro_off ) { ?>
+					<span class="secupress-tip"><?php echo esc_html( sprintf( __( '%1$d%% OFF', 'secupress' ), (int) $pro_off ) ); ?></span>
+				<?php } ?>
 			</button>
 		</p>
 		<div id="secupress-pricing" class="secupress-pricing secupress-flex secupress-text-center">
 		<?php
 		foreach ( $plans as $plan ) {
-		?>
+			?>
 			<div class="secupress-col-1-4 secupress-flex">
 				<div class="secupress-price secupress-box-shadow secupress-flex-col">
 					<div class="secupress-price-header">
@@ -98,14 +112,11 @@ if ( ! $plans ) {
 						</p>
 					</div>
 					<div class="secupress-price-cta">
-						<?php
-						$order_button = 'preorder' === $plan['button'] ? __( 'Pre-Order', 'secupress' ) : __( 'Order', 'secupress' );
-						?>
-						<a href="<?php echo esc_url( $plan['url'] ); ?>" class="secupress-button secupress-button-primary shadow" target="_blank"><?php echo $order_button; ?></a>
+						<a href="<?php echo esc_url( $plan['url'] ); ?>" class="secupress-button secupress-button-primary shadow" target="_blank"><?php _e( 'Order', 'secupress' ); ?></a>
 					</div>
 				</div>
 			</div>
-		<?php
+			<?php
 		}
 		?>
 		</div><!-- #secupress-pricing -->
