@@ -862,12 +862,12 @@ function secupress_settings_heading( $titles = array() ) {
 			<?php } ?>
 		</div>
 		<div class="secupress-col-1-3 secupress-col-rateus secupress-text-end">
-			<p class="secupress-rateus hidden">
-				<strong><?php _e( 'Do you like this plugin?' ) ?></strong>
+			<p class="secupress-rateus">
+				<strong><?php _e( 'Do you like this plugin?', 'secupress' ) ?></strong>
 				<br>
 				<?php printf( __( 'Please take a few seconds to rate us on %1$sWordPress.org%2$s', 'secupress' ), '<a href="' . SECUPRESS_RATE_URL . '">', '</a>' ); ?>
 			</p>
-			<p class="secupress-rateus-link hidden">
+			<p class="secupress-rateus-link">
 				<a href="<?php echo SECUPRESS_RATE_URL; ?>">
 					<i class="secupress-icon-star" aria-hidden="true"></i>
 					<i class="secupress-icon-star" aria-hidden="true"></i>
