@@ -3,7 +3,7 @@ Contributors: wp_media, SecuPress, juliobox, GregLone
 Tags: secure, security plugin, wordpress security, hack, malware
 Requires at least: 3.7
 Tested up to: 4.7.3
-Stable tag: 1.2.5.1
+Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -175,6 +175,13 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 8. The 4th step: final report, you can export it as PDF (1)
 
 == Changelog ==
+
+= 1.2.6 =
+
+* 05 apr 2017
+* Improvement #445: display the missing "Rate us" box in the settings page.
+* Improvements #387 and #449: changed a few things in the "Get Pro" page, mainly focused on the monthly plans.
+* Fix #447: prevented Move Login to change `&` characters into `&amp;` in filtered URLs, it may cause problems when used as a redirection target.
 
 = 1.2.5.1 =
 
