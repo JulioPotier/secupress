@@ -861,6 +861,7 @@ function secupress_settings_heading( $titles = array() ) {
 			<p><?php echo $subtitle; ?></p>
 			<?php } ?>
 		</div>
+		<?php if ( ! secupress_is_white_label() ) { ?>
 		<div class="secupress-col-1-3 secupress-col-rateus secupress-text-end">
 			<p class="secupress-rateus">
 				<strong><?php _e( 'Do you like this plugin?', 'secupress' ) ?></strong>
@@ -878,6 +879,7 @@ function secupress_settings_heading( $titles = array() ) {
 				</a>
 			</p>
 		</div>
+		<?php } ?>
 	</div>
 	<?php
 }
