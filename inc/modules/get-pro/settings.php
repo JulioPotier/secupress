@@ -118,13 +118,13 @@ foreach ( $plans as $i => $plan ) {
 				$price_month = $price_month[0];
 			}
 
-			if ( empty( $plan['price']['drop_month'] ) ) {
-				// We use a discount based on a percentage.
-				$off_amount = sprintf( __( '%1$d%% OFF', 'secupress' ), (int) $plan['price']['drop_percent'] );
-			} else {
+			if ( ! empty( $plan['price']['drop_month'] ) ) {
 				// We use a discount based on a number of months.
 				$off_amount = (int) $plan['price']['drop_month'];
 				$off_amount = sprintf( _n( '%1$d month free', '%1$d months free', $off_amount, 'secupress' ), $off_amount );
+			} else {
+				// We use a discount based on a percentage.
+				$off_amount = sprintf( __( '%1$d%% OFF', 'secupress' ), (int) $plan['price']['drop_percent'] );
 			}
 			?>
 			<div class="secupress-col-1-4 secupress-flex">
