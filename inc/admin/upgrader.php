@@ -296,4 +296,10 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 			}
 		}
 	}
+
+	// < 1.2.6.1
+	if ( version_compare( $actual_version, '1.2.6.1', '<' ) ) {
+		// New API route and response format.
+		delete_transient( 'secupress_pro_plans' );
+	}
 }

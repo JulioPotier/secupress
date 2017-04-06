@@ -1079,7 +1079,7 @@ fieldset.secupress-boxed-group > b {
 	position: absolute;
 	left: 100%;
 	top: 50%;
-	width: 110px;
+	width: 10em;
 	padding: 3px 4px;
 	margin: -1em 0 0 10px;
 	font-size: 11px;
@@ -1175,6 +1175,11 @@ fieldset.secupress-boxed-group > b {
 	line-height: 1;
 	font-weight: 500;
 	vertical-align: 16px;
+}
+.price + .secupress-dollars,
+ins + .secupress-dollars {
+	margin-left: 5px;
+	margin-right: 0;
 }
 .secupress-amounts del {
 	font-weight: 200;
