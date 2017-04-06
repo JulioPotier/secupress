@@ -107,7 +107,7 @@ foreach ( $plans as $i => $plan ) {
 		foreach ( $plans as $plan ) {
 			$plan           = isset( $plan[ $locale ] ) ? $plan[ $locale ] : $plan['en_US'];
 			$currency       = esc_html( $plan['price']['currency'] );
-			$currency_after = $plan['price']['currency_pos'] !== 'before';
+			$currency_after = 'before' !== $plan['price']['currency_pos'];
 			// 1 is the currency symbol, 2 is the price.
 			$price_template = $currency_after ? '%2$s%1$s' : '%1$s%2$s';
 			$price_month    = explode( '.', esc_html( $plan['price']['month'] ) );
