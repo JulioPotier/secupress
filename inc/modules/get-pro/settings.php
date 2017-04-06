@@ -3,6 +3,15 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 $plans = get_transient( 'secupress_pro_plans' );
 
+/**
+ * Make sure the transient doesn't contain data from the previous API.
+ * It shouldn't, since the upgrader should have run, but we already had a haunted site where logic is not the rule and the mind is lost into unknown dimensions.
+ * Specialists call it the Emilie effect. If it can go wrong, it will go wrong. Even if it can't.
+ */
+if ( ! is_array( $plans ) || empty( $plans[0]['en_US']['name'] ) ) {
+	$plans = false;
+}
+
 if ( false === $plans ) {
 	$response = wp_remote_get( SECUPRESS_WEB_MAIN . 'api/plugin/plans/1.0/' );
 
