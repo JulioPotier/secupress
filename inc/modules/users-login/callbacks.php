@@ -254,22 +254,24 @@ function secupress_move_login_settings_callback( $modulenow, &$settings, $activa
 	$errors['forbidden']  = array_unique( $errors['forbidden'] );
 	$errors['duplicates'] = array_unique( $errors['duplicates'] );
 
-	if ( empty( $settings['move-login_slug-login'] ) ) {
-		$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
-		$message .= __( 'Please choose your login URL.', 'secupress' );
-		add_settings_error( "secupress_{$modulenow}_settings", 'forbidden-slugs', $message, 'error' );
-	}
+	if ( false !== $activate && ! empty( $activate['move-login_activated'] ) ) {
+		if ( empty( $settings['move-login_slug-login'] ) ) {
+			$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
+			$message .= __( 'Please choose your login URL.', 'secupress' );
+			add_settings_error( "secupress_{$modulenow}_settings", 'forbidden-slugs', $message, 'error' );
+		}
 
-	if ( $nbr_forbidden = count( $errors['forbidden'] ) ) {
-		$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
-		$message .= sprintf( _n( 'The slug %s is forbidden.', 'The slugs %s are forbidden.', $nbr_forbidden, 'secupress' ), wp_sprintf( '<code>%l</code>', $errors['forbidden'] ) );
-		add_settings_error( "secupress_{$modulenow}_settings", 'forbidden-slugs', $message, 'error' );
-	}
+		if ( $nbr_forbidden = count( $errors['forbidden'] ) ) {
+			$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
+			$message .= sprintf( _n( 'The slug %s is forbidden.', 'The slugs %s are forbidden.', $nbr_forbidden, 'secupress' ), wp_sprintf( '<code>%l</code>', $errors['forbidden'] ) );
+			add_settings_error( "secupress_{$modulenow}_settings", 'forbidden-slugs', $message, 'error' );
+		}
 
-	if ( ! empty( $errors['duplicates'] ) ) {
-		$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
-		$message .= __( 'The links can\'t have the same slugs.', 'secupress' );
-		add_settings_error( "secupress_{$modulenow}_settings", 'duplicate-slugs', $message, 'error' );
+		if ( ! empty( $errors['duplicates'] ) ) {
+			$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
+			$message .= __( 'The links can\'t have the same slugs.', 'secupress' );
+			add_settings_error( "secupress_{$modulenow}_settings", 'duplicate-slugs', $message, 'error' );
+		}
 	}
 
 	// (De)Activation.

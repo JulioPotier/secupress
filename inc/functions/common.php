@@ -957,7 +957,7 @@ function secupress_get_consumer_key() {
 
 
 /**
- * Return true if secupress pro is installed.
+ * Return true if secupress pro is activated.
  *
  * @since 1.0
  *

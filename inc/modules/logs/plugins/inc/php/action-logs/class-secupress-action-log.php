@@ -107,8 +107,8 @@ class SecuPress_Action_Log extends SecuPress_Log {
 		}
 
 		foreach ( $value as $i => $plugin_path ) {
-			$plugin      = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin_path, false, false );
-			$value[ $i ] = $plugin['Name'];
+			$plugin  = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin_path, false, false );
+			$value[] = $plugin['Name'];
 		}
 
 		$sep   = sprintf( __( '%s, %s' ), '', '' );
@@ -139,15 +139,15 @@ class SecuPress_Action_Log extends SecuPress_Log {
 
 		if ( $activated ) {
 			foreach ( $activated as $i => $plugin_path ) {
-				$plugin          = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin_path, false, false );
-				$activated[ $i ] = $plugin['Name'];
+				$plugin      = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin_path, false, false );
+				$activated[] = $plugin['Name'];
 			}
 		}
 
 		if ( $deactivated ) {
 			foreach ( $deactivated as $i => $plugin_path ) {
-				$plugin            = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin_path, false, false );
-				$deactivated[ $i ] = $plugin['Name'];
+				$plugin        = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin_path, false, false );
+				$deactivated[] = $plugin['Name'];
 			}
 		}
 
@@ -175,9 +175,9 @@ class SecuPress_Action_Log extends SecuPress_Log {
 			return array();
 		}
 
-		foreach ( $value as $i => $plugin_path ) {
-			$plugin      = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin_path, false, false );
-			$value[ $i ] = $plugin['Name'];
+		foreach ( $value as $plugin_path => $i ) {
+			$plugin  = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin_path, false, false );
+			$value[] = $plugin['Name'];
 		}
 
 		$sep   = sprintf( __( '%s, %s' ), '', '' );
@@ -207,16 +207,16 @@ class SecuPress_Action_Log extends SecuPress_Log {
 		$deactivated = array_diff( $old_value, $value );
 
 		if ( $activated ) {
-			foreach ( $activated as $i => $plugin_path ) {
-				$plugin          = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin_path, false, false );
-				$activated[ $i ] = $plugin['Name'];
+			foreach ( $activated as $plugin_path => $i ) {
+				$plugin      = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin_path, false, false );
+				$activated[] = $plugin['Name'];
 			}
 		}
 
 		if ( $deactivated ) {
-			foreach ( $deactivated as $i => $plugin_path ) {
-				$plugin            = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin_path, false, false );
-				$deactivated[ $i ] = $plugin['Name'];
+			foreach ( $deactivated as $plugin_path => $i ) {
+				$plugin        = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin_path, false, false );
+				$deactivated[] = $plugin['Name'];
 			}
 		}
 
