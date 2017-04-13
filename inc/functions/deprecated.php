@@ -99,7 +99,7 @@ function secupress_display_transient_notices() {
 function secupress_warning_no_license() {
 	global $current_screen;
 
-	_deprecated_function( __FUNCTION__, '1.3', 'SecuPress_Admin_Pro_Upgrade::get_instance()->maybe_warn_no_license()' );
+	_deprecated_function( __FUNCTION__, '1.3', 'SecuPress_Pro_Admin_Free_Downgrade::get_instance()->maybe_warn_no_license()' );
 
 	if ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' === $current_screen->base ) {
 		return;

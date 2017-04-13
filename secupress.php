@@ -37,7 +37,6 @@ define( 'SECUPRESS_FIX_DISTS'             , 'secupress_fix_dists' );
 define( 'SECUPRESS_BAN_IP'                , 'secupress_ban_ip' );
 define( 'SECUPRESS_SELF_WHITELIST'        , 'secupress_self_whitelist' );
 define( 'SECUPRESS_RATE_URL'              , 'https://wordpress.org/support/view/plugin-reviews/secupress?filter=5#topic' );
-define( 'SECUPRESS_REPO_URL'              , 'https://wordpress.org/plugins/secupress/' );
 define( 'SECUPRESS_WEB_MAIN'              , 'https://secupress.me/' );
 define( 'SECUPRESS_BOT_URL'               , 'http://bot.secupress.me' );
 define( 'SECUPRESS_WEB_VALID'             , 'http://support.secupress.me/' );
@@ -330,6 +329,7 @@ function secupress_load_functions() {
 	secupress_require_class( 'Admin', 'Notices' );
 
 	// The Pro upgrade class.
+	secupress_require_class( 'Admin', 'Offer_Migration' );
 	secupress_require_class( 'Admin', 'Pro_Upgrade' );
 
 	// Functions for the admin side.

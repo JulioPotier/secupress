@@ -537,11 +537,11 @@ function secupress_global_settings_api_key_ajax_post_cb() {
 		$action = false;
 
 		if ( ! $values['consumer_email'] && ! $values['consumer_key'] ) {
-			add_settings_error( 'general', 'response_error', __( 'Please provide a valid email address and your license key.', 'secupress' ) );
+			add_settings_error( 'general', 'no_email_license', secupress_global_settings_pro_license_activation_error_message( 'no_email_license' ) );
 		} elseif ( ! $values['consumer_email'] ) {
-			add_settings_error( 'general', 'response_error', __( 'Please provide a valid email address.', 'secupress' ) );
+			add_settings_error( 'general', 'no_email', secupress_global_settings_pro_license_activation_error_message( 'no_email' ) );
 		} else {
-			add_settings_error( 'general', 'response_error', __( 'Please provide your license key.', 'secupress' ) );
+			add_settings_error( 'general', 'no_license', secupress_global_settings_pro_license_activation_error_message( 'no_license' ) );
 		}
 
 		if ( $has_old ) {
@@ -567,7 +567,7 @@ function secupress_global_settings_api_key_ajax_post_cb() {
 
 		if ( empty( $values['site_is_pro'] ) && ! get_settings_errors( 'general' ) ) {
 			// Invalid key.
-			add_settings_error( 'general', 'response_error', __( 'Your license key seems invalid.', 'secupress' ) );
+			add_settings_error( 'general', 'invalid_license', secupress_global_settings_pro_license_activation_error_message( 'invalid_license' ) );
 		}
 	}
 
@@ -648,6 +648,7 @@ function secupress_global_settings_activate_pro_license( $new_values, $old_value
 		'site_is_pro'    => 0,
 		'install_time'   => 0,
 	) );
+	unset( $new_values['license_error'] );
 
 	if ( $new_values['install_time'] > 1 ) {
 		$install_time = time() - $new_values['install_time'];
@@ -691,8 +692,10 @@ function secupress_global_settings_activate_pro_license( $new_values, $old_value
 		}
 	} else {
 		// Keep old values.
-		$new_values['consumer_email'] = $api_old_values['consumer_email'];
-		$new_values['consumer_key']   = $api_old_values['consumer_key'];
+		if ( $api_old_values['consumer_email'] && $api_old_values['consumer_key'] ) {
+			$new_values['consumer_email'] = $api_old_values['consumer_email'];
+			$new_values['consumer_key']   = $api_old_values['consumer_key'];
+		}
 
 		if ( ! $new_values['consumer_email'] || ! $new_values['consumer_key'] ) {
 			unset( $new_values['consumer_email'], $new_values['consumer_key'], $new_values['site_is_pro'] );
@@ -701,6 +704,23 @@ function secupress_global_settings_activate_pro_license( $new_values, $old_value
 			$new_values['site_is_pro'] = 1;
 		} else {
 			unset( $new_values['site_is_pro'] );
+		}
+
+		if ( secupress_has_pro() ) {
+			// Invalidate the license only for some reasons.
+			$errors = get_settings_errors( 'general' );
+
+			if ( $errors ) {
+				$codes = secupress_global_settings_pro_license_activation_error_message( 'edd' );
+
+				foreach ( $errors as $error ) {
+					if ( isset( $codes[ $error['code'] ] ) ) {
+						unset( $new_values['site_is_pro'] );
+						$new_values['license_error'] = $error['code'];
+						break;
+					}
+				}
+			}
 		}
 
 		if ( $need_plugin_data ) {
@@ -726,13 +746,13 @@ function secupress_global_settings_api_request_succeeded( $response ) {
 
 	if ( is_wp_error( $response ) ) {
 		// The request couldn't be sent.
-		add_settings_error( 'general', 'request_error', __( 'Something on your website is preventing the request to be sent.', 'secupress' ) );
+		add_settings_error( 'general', 'request_error', secupress_global_settings_pro_license_activation_error_message( 'request_error' ) );
 		return false;
 	}
 
 	if ( 200 !== wp_remote_retrieve_response_code( $response ) ) {
 		// The server couldn't be reached. Maybe a server error or something.
-		add_settings_error( 'general', 'server_error', __( 'Our server is not accessible at the moment, please try again later.', 'secupress' ) );
+		add_settings_error( 'general', 'server_error', secupress_global_settings_pro_license_activation_error_message( 'server_error' ) );
 		return false;
 	}
 
@@ -741,36 +761,109 @@ function secupress_global_settings_api_request_succeeded( $response ) {
 
 	if ( ! is_object( $body ) ) {
 		// The response is not a json.
-		add_settings_error( 'general', 'server_bad_response', __( 'Our server returned an unexpected response and might be in error, please try again later or contact our support team.', 'secupress' ) );
+		add_settings_error( 'general', 'server_bad_response', secupress_global_settings_pro_license_activation_error_message( 'server_bad_response' ) );
 		return false;
 	}
 
 	if ( empty( $body->success ) ) {
 		// The response is an error.
-		if ( ! empty( $body->data->code ) && 'invalid_api_credential' === $body->data->code ) {
-
-			add_settings_error( 'general', 'response_error', __( 'There is a problem with your license key, please contact our support team.', 'secupress' ) );
-
-		} elseif ( ! empty( $body->data->code ) && 'invalid_email' === $body->data->code ) {
-
-			add_settings_error( 'general', 'response_error', __( 'The email address is invalid.', 'secupress' ) );
-
-		} elseif ( ! empty( $body->data->code ) && 'invalid_customer' === $body->data->code ) {
-
-			add_settings_error( 'general', 'response_error', __( 'This email address is not in our database.', 'secupress' ) );
-
-		} elseif ( ! empty( $body->data->code ) && 'no_activations_left' === $body->data->code ) {
-
-			add_settings_error( 'general', 'response_error', __( 'You\'ve used as many as your license allows, you may want to upgrade your license to add more sites.', 'secupress' ) );
-
+		if ( ! empty( $body->data->error ) ) {
+			add_settings_error( 'general', $body->data->error, secupress_global_settings_pro_license_activation_error_message( $body->data->error ) );
+		} elseif ( ! empty( $body->data->code ) ) {
+			add_settings_error( 'general', $body->data->code, secupress_global_settings_pro_license_activation_error_message( $body->data->code ) );
 		} else {
-			add_settings_error( 'general', 'response_error', __( 'Something may be wrong with your license, please take a look at your account or contact our support team.', 'secupress' ) );
+			add_settings_error( 'general', 'license_error', secupress_global_settings_pro_license_activation_error_message( 'license_error' ) );
 		}
 
 		return false;
 	}
 
 	return $body;
+}
+
+
+/**
+ * Get an error message or an array of error messages.
+ *
+ * @since 1.3
+ * @author Grégory Viguier
+ *
+ * @param (string) $code     An error code. Return an array of messages if 'all', 'api', or 'edd'. The 'edd' value returns the messages that should trigger a license invalidation.
+ * @param (string) $fallback The error code corresponding to the default message to return if the given $code doesn't match any of the error codes.
+ *
+ * @return (array|string) An error message or an array of error messages.
+ */
+function secupress_global_settings_pro_license_activation_error_message( $code = false, $fallback = 'license_error' ) {
+	$support_link = '<a href="' . esc_url( SecuPress_Admin_Offer_Migration::get_support_url() ) . '" target="_blank" title="' . esc_attr__( 'Open in a new window.', 'secupress-pro' ) . '">' . __( 'our support team', 'secupress-pro' ) . '</a>';
+	$account_link = '<a href="' . esc_url( SecuPress_Admin_Offer_Migration::get_account_url() ) . '" target="_blank" title="' . esc_attr__( 'Open in a new window.', 'secupress-pro' ) . '">%s</a>';
+
+	$api_errors = array(
+		'no_email_license'    => __( 'Please provide a valid email address and your license key.', 'secupress' ),
+		'no_email'            => __( 'Please provide a valid email address.', 'secupress' ),
+		'no_license'          => __( 'Please provide your license key.', 'secupress' ),
+		'invalid_license'     => sprintf(
+			/** Translators: %s is a "to verify these infos" link. */
+			__( 'Your license key seems invalid. You may want %s.', 'secupress' ),
+			sprintf( $account_link, __( 'to verify these infos', 'secupress-pro' ) )
+		),
+		'request_error'       => __( 'Something on your website is preventing the request to be sent.', 'secupress' ),
+		/** Translators: %s is a "our support team" link. */
+		'server_error'        => sprintf( __( 'Our server is not accessible at the moment, please try again later or contact %s.', 'secupress' ), $support_link ),
+		/** Translators: %s is a "our support team" link. */
+		'server_bad_response' => sprintf( __( 'Our server returned an unexpected response and might be in error, please try again later or contact %s.', 'secupress' ), $support_link ),
+		/** Translators: %s is a "our support team" link. */
+		'invalid_api_request' => sprintf( __( 'There is a problem with your license key, please contact our support team.', 'secupress' ), $support_link ),
+		'invalid_email'       => __( 'The email address is invalid.', 'secupress' ),
+		'invalid_license_key' => __( 'The license key is invalid.', 'secupress' ),
+		'invalid_customer'    => sprintf(
+			/** Translators: %s is a "to verify these infos" link. */
+			__( 'This email address is not in our database. You may want %s.', 'secupress' ),
+			sprintf( $account_link, __( 'to verify these infos', 'secupress-pro' ) )
+		),
+	);
+
+	if ( 'api' === $code ) {
+		return $api_errors;
+	}
+
+	// These are errors returned by EDD and that may (or not) require SecuPress Pro uninstall.
+	$edd_errors = array(
+		/** Translators: %s is a "our support team" link. */
+		'missing'             => sprintf( __( 'There is a problem with your license key, please verify it. If you think there is a mistake, you should contact %s.', 'secupress' ), $support_link ),
+		/** Translators: %s is a "our support team" link. */
+		'key_mismatch'        => sprintf( __( 'There is a problem with your license key, please verify it. If you think there is a mistake, you should contact %s.', 'secupress' ), $support_link ),
+		/** Translators: %s is a "our support team" link. */
+		'revoked'             => sprintf( __( 'This license key has been revoked. If you think there is a mistake, you should contact %s.', 'secupress' ), $support_link ),
+		'expired'             => sprintf(
+			/** Translators: %s is a "to renew your subscription" link. */
+			__( 'This license key expired. You may want %s.', 'secupress' ),
+			sprintf( $account_link, __( 'to renew your subscription', 'secupress-pro' ) )
+		),
+		'no_activations_left' => sprintf(
+			/** Translators: %s is a "to upgrade your license" link. */
+			__( 'You\'ve used as many sites as your license allows. You may want %s to add more sites.', 'secupress' ),
+			sprintf( $account_link, __( 'to upgrade your license', 'secupress-pro' ) )
+		),
+	);
+
+	if ( 'edd' === $code ) {
+		return $edd_errors;
+	}
+
+	$all_errors = array_merge( $api_errors, $edd_errors );
+
+	// Generic message.
+	$all_errors['license_error'] = __( 'Something may be wrong with your license, please take a look at your account or contact our support team.', 'secupress' );
+
+	if ( 'all' === $code ) {
+		return $all_errors;
+	}
+
+	if ( ! empty( $all_errors[ $code ] ) ) {
+		return $all_errors[ $code ];
+	}
+
+	return ! empty( $all_errors[ $fallback ] ) ? $all_errors[ $fallback ] : $all_errors['license_error'];
 }
 
 
@@ -848,12 +941,10 @@ function secupress_global_settings_pro_license_deactivation_error_message( $mess
 		return $message;
 	}
 
-	/** Translators: this is the slug (part of the URL) of the account page on secupress.me, like in https://secupress.me/account/, it must not be translated if the page doesn't exist. */
-	$secupress_message = esc_url( SECUPRESS_WEB_MAIN . _x( 'account', 'URL slug', 'secupress' ) . '/' );
 	$secupress_message = sprintf(
 		/** Translators: %s is a link to the "SecuPress account". */
 		__( 'Please deactivate this site from your %s (the "Manage Sites" link in your license details).', 'secupress' ),
-		'<a target="_blank" href="' . $secupress_message . '">' . __( 'SecuPress account', 'secupress' ) . '</a>'
+		'<a target="_blank" title="' . esc_attr__( 'Open in a new window.', 'secupress' ) . '" href="' . esc_url( SecuPress_Admin_Offer_Migration::get_account_url() ) . '">' . __( 'SecuPress account', 'secupress' ) . '</a>'
 	);
 
 	if ( is_rtl() ) {
