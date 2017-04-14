@@ -5,7 +5,7 @@
  * Description: Protect your WordPress with SecuPress, analyze and ensure the safety of your website daily.
  * Author: WP Media
  * Author URI: http://wp-media.me
- * Version: 1.3
+ * Version: 1.3-beta1
  * Code Name: Bleeding Edge
  * Network: true
  * License: GPLv2
@@ -58,6 +58,10 @@ define( 'SECUPRESS_ADMIN_IMAGES_URL'      , SECUPRESS_ASSETS_URL . 'admin/images
 define( 'SECUPRESS_PHP_MIN'               , '5.3' );
 define( 'SECUPRESS_WP_MIN'                , '3.7' );
 define( 'SECUPRESS_INT_MAX'               , PHP_INT_MAX - 20 );
+
+if ( ! defined( 'SECUPRESS_USE_BETA' ) ) {
+	define( 'SECUPRESS_USE_BETA', 0 );
+}
 
 
 /** --------------------------------------------------------------------------------------------- */

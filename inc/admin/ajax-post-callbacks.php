@@ -664,6 +664,7 @@ function secupress_global_settings_activate_pro_license( $new_values, $old_value
 		'user_key'     => $new_values['consumer_key'],
 		'install_time' => $install_time,
 		'plugin_data'  => $need_plugin_data,
+		'beta'         => (int) SECUPRESS_USE_BETA,
 	) );
 
 	$response = wp_remote_get( $url, array( 'timeout' => 10 ) );
