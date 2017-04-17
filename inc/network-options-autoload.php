@@ -81,6 +81,13 @@ function secupress_get_global_network_option_names_for_autoload() {
 		SECUPRESS_SELF_WHITELIST,
 	);
 
+	if ( is_admin() ) {
+		$option_names = array_merge( $option_names, array(
+			SECUPRESS_SCAN_TIMES,
+			SECUPRESS_FIX_SLUG,
+		) );
+	}
+
 	// Transients.
 	if ( ! wp_using_ext_object_cache() ) {
 		$option_names = array_merge( $option_names, array(
@@ -96,6 +103,10 @@ function secupress_get_global_network_option_names_for_autoload() {
 				'_site_transient_secupress_toggle_file_scan', // Pro.
 				'_site_transient_secupress_pro_activation', // Pro.
 				'_site_transient_secupress_activation',
+				'_site_transient_timeout_secupress-detect-bad-plugins',
+				'_site_transient_secupress-detect-bad-plugins',
+				'_site_transient_timeout_secupress-detect-bad-themes',
+				'_site_transient_secupress-detect-bad-themes',
 			) );
 		}
 	}
