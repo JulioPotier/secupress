@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2017-04-18 14:00+0200\n"
-"PO-Revision-Date: 2017-04-18 14:01+0200\n"
+"POT-Creation-Date: 2017-04-18 14:24+0200\n"
+"PO-Revision-Date: 2017-04-18 14:24+0200\n"
 "Last-Translator: WP Media <contact@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -1292,7 +1292,7 @@ msgid ""
 msgstr "La documentation est en construction, merci pour votre patience."
 
 #: inc/admin/settings.php:271 inc/admin/settings.php:273
-#: inc/admin/settings.php:313 inc/modules/get-pro/settings.php:95
+#: inc/admin/settings.php:313 inc/modules/get-pro/settings.php:94
 #: inc/modules/services/settings/support.php:5
 msgid "Support"
 msgstr "Support"
@@ -6632,45 +6632,41 @@ msgstr ""
 msgid "Billed per year"
 msgstr "Facturé à l'année"
 
-#: inc/modules/get-pro/settings.php:73
-msgid "Secure & Protect"
-msgstr "Sécurise et Protège"
-
-#: inc/modules/get-pro/settings.php:75
+#: inc/modules/get-pro/settings.php:74
 #, php-format
 msgid "%d Site"
 msgid_plural "%d Sites"
 msgstr[0] "%d Site"
 msgstr[1] "%d Sites"
 
-#: inc/modules/get-pro/settings.php:77
+#: inc/modules/get-pro/settings.php:76
 msgctxt "websites"
 msgid "Unlimited Sites"
 msgstr "Sites Illimités"
 
-#: inc/modules/get-pro/settings.php:82
+#: inc/modules/get-pro/settings.php:81
 msgid "Order"
 msgstr "Commander"
 
-#: inc/modules/get-pro/settings.php:91
+#: inc/modules/get-pro/settings.php:90
 msgid "Included With All Plans"
 msgstr "Inclus dans tous les plans"
 
-#: inc/modules/get-pro/settings.php:96
+#: inc/modules/get-pro/settings.php:95
 msgid "Unlimited Support and Updates"
 msgstr "Support et mises à jour illimités"
 
-#: inc/modules/get-pro/settings.php:100 inc/modules/get-pro/settings.php:104
+#: inc/modules/get-pro/settings.php:99 inc/modules/get-pro/settings.php:103
 #, php-format
 msgctxt "one line text please"
 msgid "Bonus %1$s on %2$s"
 msgstr "%1$s sur %2$s"
 
-#: inc/modules/get-pro/settings.php:100
+#: inc/modules/get-pro/settings.php:99
 msgid "100 MB for free"
 msgstr "100 Mo gratuits"
 
-#: inc/modules/get-pro/settings.php:104
+#: inc/modules/get-pro/settings.php:103
 msgid "20% OFF"
 msgstr "20% de remise"
 
@@ -8618,6 +8614,9 @@ msgid ""
 msgstr ""
 "Protégez votre WordPress avec SecuPress, analysez et assurez-vous de la "
 "sécurité de votre site quotidiennement."
+
+#~ msgid "Secure & Protect"
+#~ msgstr "Sécurise et Protège"
 
 #~ msgid "Pre-order SecuPress Pro Now and Get an Exclusive Discount"
 #~ msgstr ""

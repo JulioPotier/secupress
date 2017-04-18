@@ -70,7 +70,6 @@ if ( ! $plans ) {
 						<div class="secupress-price-details">
 							<p class="secupress-pd-info"><?php _e( 'Billed per year', 'secupress' ); ?></p>
 							<p class="secupress-pd-benefits">
-								<?php _e( 'Secure & Protect', 'secupress' ); ?>
 								<?php if ( -1 < (int) $plan['websites'] ) { ?>
 									<strong><?php echo esc_html( sprintf( _n( '%d Site', '%d Sites', (int) $plan['websites'], 'secupress' ), (int) $plan['websites'] ) ); ?></strong>
 								<?php } else { ?>
