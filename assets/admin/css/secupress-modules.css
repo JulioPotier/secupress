@@ -1159,8 +1159,7 @@ fieldset.secupress-boxed-group > b {
 .secupress-amounts {
 	color: #F39C12;
 }
-.secupress-amounts .price,
-.secupress-amounts ins {
+.secupress-amounts .price {
 	font-size: 40px;
 	font-weight: 200;
 	line-height: 1;
