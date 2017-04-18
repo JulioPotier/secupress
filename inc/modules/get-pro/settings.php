@@ -74,7 +74,7 @@ if ( ! $plans ) {
 								<?php if ( -1 < (int) $plan['websites'] ) { ?>
 									<strong><?php echo esc_html( sprintf( _n( '%d Site', '%d Sites', (int) $plan['websites'], 'secupress' ), (int) $plan['websites'] ) ); ?></strong>
 								<?php } else { ?>
-									<strong><?php _ex( 'Unlimited', 'websites', 'secupress' ); ?></strong>
+									<strong><?php _ex( 'Unlimited Sites', 'websites', 'secupress' ); ?></strong>
 								<?php } ?>
 							</p>
 						</div>
