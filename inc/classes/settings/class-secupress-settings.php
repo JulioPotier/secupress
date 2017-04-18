@@ -1219,6 +1219,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * @since 1.2 A method of this class. Was previously `secupress_print_sideads()`.
 	 */
 	protected function print_sideads() {
+		global $current_screen;
+
 		if ( secupress_is_pro() ) {
 			return;
 		}
@@ -1232,21 +1234,23 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		?>
 
 		<div class="secupress-sideads">
-			<div class="secupress-section-dark secupress-pro-ad">
+			<?php if ( empty( $current_screen ) || 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' !== $current_screen->base || empty( $_GET['module'] ) || 'get-pro' !== $_GET['module'] ) { ?>
+				<div class="secupress-section-dark secupress-pro-ad">
 
-				<i class="icon-secupress" aria-hidden="true"></i>
+					<i class="icon-secupress" aria-hidden="true"></i>
 
-				<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-pro.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-pro@2x.png" width="80" height="78" alt="SecuPress Pro"/>
+					<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-pro.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-pro@2x.png" width="80" height="78" alt="SecuPress Pro"/>
 
-				<p class="secupress-text-medium"><?php _e( 'Improve your Security', 'secupress' ); ?></p>
-				<p><?php _e( 'Unlock all the features of SecuPress Pro', 'secupress' ); ?></p>
-				<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ); ?>" class="secupress-button secupress-button-tertiary secupress-button-getpro">
-					<span class="icon">
-						<i class="icon-secupress-simple" aria-hidden="true"></i>
-					</span>
-					<span class="text"><?php _ex( 'Get Pro', 'short', 'secupress' ); ?></span>
-				</a>
-			</div>
+					<p class="secupress-text-medium"><?php _e( 'Improve your Security', 'secupress' ); ?></p>
+					<p><?php _e( 'Unlock all the features of SecuPress Pro', 'secupress' ); ?></p>
+					<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ); ?>" class="secupress-button secupress-button-tertiary secupress-button-getpro">
+						<span class="icon">
+							<i class="icon-secupress-simple" aria-hidden="true"></i>
+						</span>
+						<span class="text"><?php _ex( 'Get Pro', 'short', 'secupress' ); ?></span>
+					</a>
+				</div>
+			<?php } ?>
 
 			<div class="secupress-bordered secupress-mail-ad">
 				<div class="secupress-ad-header secupress-flex">
