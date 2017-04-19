@@ -44,8 +44,8 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 		</div>
 
 		<?php
-		$modules   = $this->get_modules();
-		$pro_msg   = '<span class="secupress-cta-pro">' . static::get_pro_version_string() . '</span>';
+		$modules   = SecuPress_Settings_Modules::get_modules();
+		$pro_msg   = '<span class="secupress-cta-pro">' . SecuPress_Settings_Modules::get_pro_version_string() . '</span>';
 		$pro_info = 0;
 
 		// Do not display the get pro block, but we still need it for the content.
