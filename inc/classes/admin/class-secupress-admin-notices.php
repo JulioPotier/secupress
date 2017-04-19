@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
  */
 class SecuPress_Admin_Notices extends SecuPress_Singleton {
 
-	const VERSION   = '1.0';
+	const VERSION   = '1.1';
 	const META_NAME = 'dismissed_secupress_notices';
 
 	/**
@@ -105,15 +105,20 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 	 * Add a temporary admin notice.
 	 *
 	 * @since 1.0
+	 * @since 1.3 Added $notice_id parameter.
 	 *
-	 * @param (string) $message    The message to display in the notice.
-	 * @param (string) $error_code Like WordPress notices: "error" or "updated". Default is "updated".
+	 * @param (string)      $message    The message to display in the notice.
+	 * @param (string)      $error_code Like WordPress notices: "error" or "updated". Default is "updated".
+	 * @param (string|bool) $notice_id  A unique identifier to tell id the notice is dismissible.
+	 *                                  false: the notice is not dismissible.
+	 *                                  string: the notice is dismissible and send an ajax call to store the "dismissed" state into a user meta to prevent it to popup again.
+	 *                                  enpty string: meant for a one-shot use. The notice is dismissible but the "dismissed" state is not stored, it will popup again. This is the exact same behavior than the WordPress dismissible notices.
 	 */
-	public function add_temporary( $message, $error_code = 'updated' ) {
+	public function add_temporary( $message, $error_code = 'updated', $notice_id = false ) {
 		$error_code = 'error' === $error_code ? 'error' : 'updated';
 		$notices    = secupress_get_transient( 'secupress-notices-' . get_current_user_id() );
 		$notices    = is_array( $notices ) ? $notices : array();
-		$notices[]  = compact( 'message', 'error_code' );
+		$notices[]  = compact( 'message', 'error_code', 'notice_id' );
 
 		secupress_set_transient( 'secupress-notices-' . get_current_user_id(), $notices );
 	}
@@ -265,6 +270,30 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 
 
 	/**
+	 * Add notices added by `$this->add_temporary()`.
+	 *
+	 * @since 1.3
+	 * @see Was previously called `secupress_display_transient_notices()`.
+	 */
+	public function add_transient_notices() {
+		$notices = secupress_get_transient( 'secupress-notices-' . get_current_user_id() );
+
+		if ( ! $notices ) {
+			return;
+		}
+
+		delete_transient( 'secupress-notices-' . get_current_user_id() );
+
+		if ( is_array( $notices ) ) {
+			foreach ( $notices as $notice ) {
+				$notice_id = isset( $notice['notice_id'] ) ? $notice['notice_id'] : false;
+				$this->add( $notice['message'], $notice['error_code'], $notice_id );
+			}
+		}
+	}
+
+
+	/**
 	 * Display the notices.
 	 *
 	 * The notices are displayed by error code ("error" or "updated"), then by type (dismissible with state stored, dismissible like WP, not dismissible).
@@ -274,6 +303,8 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	public function print_notices() {
+		$this->add_transient_notices();
+
 		if ( ! $this->notices ) {
 			return;
 		}

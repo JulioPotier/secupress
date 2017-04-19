@@ -41,7 +41,7 @@ function secupress_send_support_request( $summary, $description, $data ) {
 	$data = array_merge( array(
 		'license_email'  => sprintf( __( 'License email: %s', 'secupress' ), secupress_get_consumer_email() ),
 		'license_key'    => sprintf( __( 'License key: %s', 'secupress' ), secupress_get_consumer_key() ),
-		'sp_pro_version' => secupress_has_pro() ? sprintf( __( 'Version of SecuPress Pro: %1$s (requires SecuPress Free %2$s)', 'secupress' ), SECUPRESS_PRO_VERSION, SECUPRESS_PRO_SECUPRESS_MIN ) : __( 'Version of SecuPress Pro: inactive', 'secupress' ),
+		'sp_pro_version' => secupress_has_pro() ? sprintf( __( 'Version of SecuPress Pro: %s', 'secupress' ), SECUPRESS_PRO_VERSION ) : __( 'Version of SecuPress Pro: inactive', 'secupress' ),
 	), $data );
 
 	$data = '<br/>' . str_repeat( '-', 40 ) . '<br/>' . implode( '<br/>', $data );
@@ -62,6 +62,65 @@ function secupress_send_support_request( $summary, $description, $data ) {
 			'<a href="' . esc_url( $url ) . '">' . $to . '</a>'
 		) );
 	}
+}
+
+
+/**
+ * Will lately add admin notices added by `secupress_add_transient_notice()`.
+ *
+ * @since 1.0
+ * @since 1.3 Deprecated.
+ * @author Julio Potier
+ */
+function secupress_display_transient_notices() {
+	_deprecated_function( __FUNCTION__, '1.3', 'SecuPress_Admin_Notices::get_instance()->add_transient_notices()' );
+
+	$notices = secupress_get_transient( 'secupress-notices-' . get_current_user_id() );
+
+	if ( ! $notices ) {
+		return;
+	}
+
+	foreach ( $notices as $notice ) {
+		secupress_add_notice( $notice['message'], $notice['error_code'], false );
+	}
+
+	delete_transient( 'secupress-notices-' . get_current_user_id() );
+}
+
+
+/**
+ * This warning is displayed when the license is not valid.
+ *
+ * @since 1.0.6
+ * @since 1.3 Deprecated.
+ * @author Grégory Viguier
+ */
+function secupress_warning_no_license() {
+	global $current_screen;
+
+	_deprecated_function( __FUNCTION__, '1.3', 'SecuPress_Pro_Admin_Free_Downgrade::get_instance()->maybe_warn_no_license()' );
+
+	if ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' === $current_screen->base ) {
+		return;
+	}
+
+	if ( ! secupress_has_pro() || secupress_is_pro() ) {
+		return;
+	}
+
+	if ( ! current_user_can( secupress_get_capability() ) ) {
+		return;
+	}
+
+	$message  = sprintf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ) . ' ';
+	/** Translators: %s is a link to the "plugin settings page". */
+	$message .= sprintf(
+		__( 'Your Pro license is not valid or is not set yet. If you want to activate all the Pro features, premium support and updates, take a look at %s.', 'secupress' ),
+		'<a href="' . esc_url( secupress_admin_url( 'settings' ) ) . '">' . __( 'the plugin settings page', 'secupress' ) . '</a>'
+	);
+
+	secupress_add_notice( $message, 'updated', false );
 }
 
 

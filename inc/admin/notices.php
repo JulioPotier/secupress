@@ -353,63 +353,7 @@ function secupress_warning_no_oneclick_scan_yet() {
 }
 
 
-add_action( 'current_screen', 'secupress_warning_no_license' );
-/**
- * This warning is displayed when the license is not valid.
- *
- * @since 1.0.6
- * @author Grégory Viguier
- */
-function secupress_warning_no_license() {
-	global $current_screen;
-
-	if ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' === $current_screen->base || 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings-network' === $current_screen->base ) {
-		return;
-	}
-
-	if ( ! secupress_has_pro() || secupress_is_pro() ) {
-		return;
-	}
-
-	if ( ! current_user_can( secupress_get_capability() ) ) {
-		return;
-	}
-
-	$message  = sprintf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ) . ' ';
-	/** Translators: %s is a link to the "plugin settings page". */
-	$message .= sprintf(
-		__( 'Your Pro license is not valid or is not set yet. If you want to activate all the Pro features, premium support and updates, take a look at %s.', 'secupress' ),
-		'<a href="' . esc_url( secupress_admin_url( 'settings' ) ) . '">' . __( 'the plugin settings page', 'secupress' ) . '</a>'
-	);
-
-	secupress_add_notice( $message, 'updated', false );
-}
-
-
-add_action( 'admin_menu', 'secupress_display_transient_notices' );
-/**
- * Will lately add admin notices added by `secupress_add_transient_notice()`.
- *
- * @since 1.0
- */
-function secupress_display_transient_notices() {
-	$notices = secupress_get_transient( 'secupress-notices-' . get_current_user_id() );
-
-	if ( ! $notices ) {
-		return;
-	}
-
-	foreach ( $notices as $notice ) {
-		secupress_add_notice( $notice['message'], $notice['error_code'], false );
-	}
-
-	delete_transient( 'secupress-notices-' . get_current_user_id() );
-}
-
 add_action( 'in_plugin_update_message-' . plugin_basename( SECUPRESS_FILE ), 'secupress_updates_message' );
-if ( defined( 'SECUPRESS_PRO_FILE' ) ) {
-	add_action( 'in_plugin_update_message-' . plugin_basename( SECUPRESS_PRO_FILE ), 'secupress_updates_message' );
-}
 /**
  * Display a message below our plugins to display the next update information if needed
  *
@@ -439,7 +383,7 @@ function secupress_updates_message( $plugin_data ) {
 
 		$urls = array(
 			'secupress'     => 'https://plugins.svn.wordpress.org/secupress/trunk/readme.txt',
-			'secupress-pro' => SECUPRESS_WEB_MAIN . '/api/plugin/readme-pro.php',
+			'secupress-pro' => SECUPRESS_WEB_MAIN . 'api/plugin/readme-pro.php',
 		);
 		$response = wp_remote_get( $urls[ $plugin_data['slug'] ] );
 

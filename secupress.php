@@ -25,7 +25,6 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /** --------------------------------------------------------------------------------------------- */
 
 define( 'SECUPRESS_VERSION'               , '1.3-beta1' );
-define( 'SECUPRESS_PRIVATE_KEY'           , false );
 define( 'SECUPRESS_ACTIVE_SUBMODULES'     , 'secupress_active_submodules' );
 define( 'SECUPRESS_SETTINGS_SLUG'         , 'secupress_settings' );
 define( 'SECUPRESS_SCAN_SLUG'             , 'secupress_scanners' );
@@ -38,18 +37,16 @@ define( 'SECUPRESS_FIX_DISTS'             , 'secupress_fix_dists' );
 define( 'SECUPRESS_BAN_IP'                , 'secupress_ban_ip' );
 define( 'SECUPRESS_SELF_WHITELIST'        , 'secupress_self_whitelist' );
 define( 'SECUPRESS_RATE_URL'              , 'https://wordpress.org/support/view/plugin-reviews/secupress?filter=5#topic' );
-define( 'SECUPRESS_REPO_URL'              , 'https://wordpress.org/plugins/secupress/' );
 define( 'SECUPRESS_WEB_MAIN'              , 'https://secupress.me/' );
 define( 'SECUPRESS_BOT_URL'               , 'http://bot.secupress.me' );
 define( 'SECUPRESS_WEB_VALID'             , 'http://support.secupress.me/' );
 define( 'SECUPRESS_FILE'                  , __FILE__ );
-define( 'SECUPRESS_PLUGIN_FILE'           , 'secupress/secupress.php' );
-define( 'SECUPRESS_PATH'                  , realpath( plugin_dir_path( SECUPRESS_FILE ) ) . '/' );
-define( 'SECUPRESS_INC_PATH'              , realpath( SECUPRESS_PATH . 'inc/' ) . '/' );
-define( 'SECUPRESS_MODULES_PATH'          , realpath( SECUPRESS_INC_PATH . 'modules/' ) . '/' );
-define( 'SECUPRESS_ADMIN_PATH'            , realpath( SECUPRESS_INC_PATH . 'admin/' ) . '/' );
-define( 'SECUPRESS_CLASSES_PATH'          , realpath( SECUPRESS_INC_PATH . 'classes/' ) . '/' );
-define( 'SECUPRESS_ADMIN_SETTINGS_MODULES', SECUPRESS_ADMIN_PATH . 'modules/' );
+define( 'SECUPRESS_PATH'                  , realpath( plugin_dir_path( SECUPRESS_FILE ) ) . DIRECTORY_SEPARATOR );
+define( 'SECUPRESS_INC_PATH'              , SECUPRESS_PATH . 'inc' . DIRECTORY_SEPARATOR );
+define( 'SECUPRESS_MODULES_PATH'          , SECUPRESS_INC_PATH . 'modules' . DIRECTORY_SEPARATOR );
+define( 'SECUPRESS_ADMIN_PATH'            , SECUPRESS_INC_PATH . 'admin' . DIRECTORY_SEPARATOR );
+define( 'SECUPRESS_CLASSES_PATH'          , SECUPRESS_INC_PATH . 'classes' . DIRECTORY_SEPARATOR );
+define( 'SECUPRESS_ADMIN_SETTINGS_MODULES', SECUPRESS_ADMIN_PATH . 'modules' . DIRECTORY_SEPARATOR );
 define( 'SECUPRESS_PLUGIN_URL'            , plugin_dir_url( SECUPRESS_FILE ) );
 define( 'SECUPRESS_INC_URL'               , SECUPRESS_PLUGIN_URL . 'inc/' );
 define( 'SECUPRESS_FRONT_URL'             , SECUPRESS_INC_URL . 'front/' );
@@ -62,10 +59,6 @@ define( 'SECUPRESS_PHP_MIN'               , '5.3' );
 define( 'SECUPRESS_WP_MIN'                , '3.7' );
 define( 'SECUPRESS_INT_MAX'               , PHP_INT_MAX - 20 );
 
-if ( ! defined( 'SECUPRESS_LASTVERSION' ) ) {
-	define( 'SECUPRESS_LASTVERSION', '0' );
-}
-
 
 /** --------------------------------------------------------------------------------------------- */
 /** INIT ======================================================================================== */
@@ -74,9 +67,7 @@ if ( ! defined( 'SECUPRESS_LASTVERSION' ) ) {
 /**
  * All the stuff for the plugin activation and deactivation.
  */
-if ( is_admin() ) {
-	require_once( SECUPRESS_ADMIN_PATH . 'activation.php' );
-}
+require_once( SECUPRESS_INC_PATH . 'activation.php' );
 
 
 add_action( 'plugins_loaded', 'secupress_init', 0 );
@@ -108,6 +99,7 @@ function secupress_init() {
 	} else {
 		define( 'SECUPRESS_PLUGIN_NAME', 'SecuPress' );
 	}
+
 	define( 'SECUPRESS_PLUGIN_SLUG', sanitize_title( SECUPRESS_PLUGIN_NAME ) );
 
 	if ( is_admin() ) {
@@ -119,6 +111,9 @@ function secupress_init() {
 
 		// Notices.
 		SecuPress_Admin_Notices::get_instance();
+
+		// Pro upgrade.
+		SecuPress_Admin_Pro_Upgrade::get_instance();
 
 		// Hooks.
 		require_once( SECUPRESS_ADMIN_PATH . 'options.php' );
@@ -332,6 +327,10 @@ function secupress_load_functions() {
 
 	// The notices class.
 	secupress_require_class( 'Admin', 'Notices' );
+
+	// The Pro upgrade class.
+	secupress_require_class( 'Admin', 'Offer_Migration' );
+	secupress_require_class( 'Admin', 'Pro_Upgrade' );
 
 	// Functions for the admin side.
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/admin.php' );

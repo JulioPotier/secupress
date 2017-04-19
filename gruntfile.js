@@ -81,20 +81,6 @@ module.exports = function( grunt ) {
 					"ext":    ".min.css"
 				} ]
 			}
-		},
-		"devUpdate": {
-			"check": {
-				"options": {
-					"reportUpdated": true
-				}
-			},
-			"update": {
-				"options": {
-					"updateType": "force",
-					"reportUpdated": true,
-					"semver": false
-				}
-			}
 		}
 	} );
 
