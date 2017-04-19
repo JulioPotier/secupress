@@ -168,7 +168,7 @@ class SecuPress_Admin_Pro_Upgrade extends SecuPress_Admin_Offer_Migration {
 		$message = sprintf(
 			/** Translators: 1 is a "upgrade" link. */
 			__( 'You can now %s to the Pro version.', 'secupress' ),
-			'<a href="' . esc_url( static::get_install_url() ) . '">' . __( 'upgrade', 'secupress' ) . '</a>'
+			'<a href="' . esc_url( static::get_install_url() ) . '">' . _x( 'upgrade', 'verb', 'secupress' ) . '</a>'
 		);
 
 		static::add_notice( $message, 'updated', false );
