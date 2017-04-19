@@ -237,7 +237,7 @@ function secupress_comment_constant( $constant, $wpconfig_filepath = false, $mar
 		$wpconfig_filepath = secupress_is_wpconfig_writtable();
 
 		if ( ! $wpconfig_filepath ) {
-			return  false;
+			return false;
 		}
 	}
 
@@ -285,7 +285,7 @@ function secupress_uncomment_constant( $constant, $wpconfig_filepath = false, $m
 		$wpconfig_filepath = secupress_is_wpconfig_writtable();
 
 		if ( ! $wpconfig_filepath ) {
-			return  false;
+			return false;
 		}
 	}
 
@@ -440,6 +440,7 @@ function secupress_put_contents( $file, $new_content = '', $args = array() ) {
  * File creation based on WordPress Filesystem.
  *
  * @since 1.0
+ * @since 1.3 Use a sandbox for the `wp-config.php` file.
  *
  * @param (string) $file        The path of file will be created.
  * @param (string) $old_content The content to be replaced from the file (preg_replace).
@@ -454,12 +455,88 @@ function secupress_replace_content( $file, $old_content, $new_content ) {
 
 	$filesystem   = secupress_get_filesystem();
 	$file_content = $filesystem->get_contents( $file );
-
 	$new_content  = preg_replace( $old_content, $new_content, $file_content );
-	$replaced     = null !== $new_content && $new_content !== $file_content;
-	$put_contents = $filesystem->put_contents( $file, $new_content, FS_CHMOD_FILE );
 
-	return $put_contents && $replaced;
+	if ( null === $new_content || $new_content === $file_content ) {
+		return false;
+	}
+
+	if ( preg_match( '@/wp-config\.php$@', $file ) !== false && secupress_wpconfig_success_in_sandbox( $new_content ) !== true ) {
+		return false;
+	}
+
+	return $filesystem->put_contents( $file, $new_content, FS_CHMOD_FILE );
+}
+
+
+/**
+ * A sandbox for doing crazy things with `wp-config.php`.
+ * Create a folder containing a `index.php` file with the provided content.
+ * Then, make a request to the `index.php` file to test if a server error is triggered.
+ *
+ * @since 1.3
+ * @author Grégory Viguier
+ *
+ * @param (string) $content The content to put in the `wp-config.php` file.
+ *
+ * @return (object|bool) Return true if the server does not trigger an error 500, false otherwise.
+ *                       Return a WP_Error object if the sandbox creation fails or if the HTTP request fails.
+ */
+function secupress_wpconfig_success_in_sandbox( $content ) {
+	$wp_filesystem = secupress_get_filesystem();
+	$file_name     = 'index.php';
+	$folder_name   = 'secupress-sandbox-' . uniqid();
+	$folder_path   = ABSPATH . $folder_name;
+	// Remove any `require_once()` and friends.
+	$content       = preg_replace( '@(require|include)(_once)?[\s(][^;]+;@', '$foo = "foo";', $content );
+	// Define `ABSPATH` and add `error_reporting()`.
+	$content       = preg_replace( '@^<\?php@', '<?php define( \'ABSPATH\', dirname( dirname( __FILE__ ) ) . '/' ); error_reporting( -1 );', trim( $content ) );
+	// Print a placeholder when the file is requested.
+	$content      .= "\necho 'SANDBOX OK';";
+
+	// Create folder.
+	if ( ! $wp_filesystem->mkdir( $folder_path ) ) {
+		return new WP_Error( 'dir_creation_failed', __( 'The temporary directory could not be created.', 'secupress' ) );
+	}
+
+	// Create `index.php` file with our content.
+	if ( ! $wp_filesystem->put_contents( $folder_path . '/' . $file_name, $content, FS_CHMOD_FILE ) ) {
+		$wp_filesystem->delete( $folder_path, true );
+		return new WP_Error( 'file_creation_failed', __( 'The temporary file could not be created.', 'secupress' ) );
+	}
+
+	/** This filter is documented in inc/classes/scanners/class-secupress-scan.php. */
+	$timeout      = apply_filters( 'secupress.remote_timeout', 30 );
+	$origin       = 'wp-config-sandbox';
+	$request_args = array(
+		'redirection' => 0,
+		'timeout'     => $timeout,
+		'local'       => true,
+		'sslverify'   => false,
+		'user-agent'  => SECUPRESS_PLUGIN_NAME . '/' . SECUPRESS_VERSION,
+		'cookies'     => $_COOKIE,
+		'headers'     => array(
+			'X-SecuPress-Origin' => $origin,
+		),
+	);
+
+	/** This filter is documented in inc/classes/scanners/class-secupress-scan.php. */
+	$request_args = apply_filters( 'secupress.scan.default_request_args', $request_args, $origin );
+
+	// Try to reach `index.php`.
+	$request_url = $folder_name . '/' . $file_name . '?' . md5( $folder_name . 's' ) . '=' . md5( $folder_name . 'p' );
+	$response    = wp_remote_get( site_url( $request_url ), $request_args );
+
+	// Now we can get rid of the files.
+	$wp_filesystem->delete( $folder_path, true );
+
+	// HTTP requests are probably blocked.
+	if ( is_wp_error( $response ) ) {
+		return $response;
+	}
+
+	// Finally, the answer we were looking for.
+	return 500 !== wp_remote_retrieve_response_code( $response ) && 'SANDBOX OK' === trim( wp_remote_retrieve_body( $response ) );
 }
 
 
