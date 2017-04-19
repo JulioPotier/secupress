@@ -484,6 +484,14 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *                 - (string) $subject The Subject (no kidding).
 	 */
 	protected function pre_process_action_phpmailer_init( $phpmailer ) {
+		if ( ! method_exists( $phpmailer, 'getAllRecipientAddresses' ) ) {
+			/**
+			 * This method was introduced in WP 4.2.11. Moreover, `$this->all_recipients` is protected.
+			 * So, there is no way to get recipients prior WP 4.2.11.
+			 */
+			return array();
+		}
+
 		$from    = $phpmailer->FromName . '[' . $phpmailer->From . ']';
 		$to      = implode( ', ', array_keys( $phpmailer->getAllRecipientAddresses() ) );
 		$subject = $phpmailer->Subject;
