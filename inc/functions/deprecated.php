@@ -50,13 +50,13 @@ function secupress_send_support_request( $summary, $description, $data ) {
 	$success = wp_mail( $to, $summary, $description . $data, $headers );
 
 	if ( $success ) {
-		add_settings_error( 'general', 'message_sent', __( 'Your message has been sent, we will come back to you shortly. Thank you.', 'secupress' ), 'updated' );
+		secupress_add_settings_error( 'general', 'message_sent', __( 'Your message has been sent, we will come back to you shortly. Thank you.', 'secupress' ), 'updated' );
 	} else {
 		$summary     = str_replace( '+', '%20', urlencode( $summary ) );
 		$description = str_replace( array( '+', '%3E%0A' ), array( '%20', '%3E' ), urlencode( $description . $data ) );
 		$url         = 'mailto:' . $to . '?subject=' . $summary . '&body=' . $description;
 
-		add_settings_error( 'general', 'message_failed', sprintf(
+		secupress_add_settings_error( 'general', 'message_failed', sprintf(
 			/** Translators: %s is an email address. */
 			__( 'Something prevented your message to be sent. Please send it manually to %s. Thank you.', 'secupress' ),
 			'<a href="' . esc_url( $url ) . '">' . $to . '</a>'

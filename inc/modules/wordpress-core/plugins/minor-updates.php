@@ -63,7 +63,7 @@ function secupress_minor_updates_activation() {
 			'<code>wp-config.php</code>',
 			"<pre>$failed</pre>"
 		);
-		add_settings_error( 'general', 'wp_config_not_writable', $message, 'error' );
+		secupress_add_settings_error( 'general', 'wp_config_not_writable', $message, 'error' );
 	} else {
 		$message = sprintf(
 			/** Translators: 1 is the plugin name, 2 is a file name, 3 is some code. */
@@ -72,7 +72,7 @@ function secupress_minor_updates_activation() {
 			'<code>wp-config.php</code>',
 			"<pre>$failed</pre>"
 		);
-		add_settings_error( 'general', 'constant_not_commented', $message, 'error' );
+		secupress_add_settings_error( 'general', 'constant_not_commented', $message, 'error' );
 	}
 }
 

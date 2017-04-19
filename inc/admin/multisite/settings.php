@@ -89,10 +89,10 @@ function secupress_update_network_option_on_submit() {
 	 * Handle settings errors and return to options page.
 	 */
 	// If no settings errors were registered add a general 'updated' message.
-	if ( ! count( get_settings_errors() ) ) {
-		add_settings_error( 'general', 'settings_updated', __( 'Settings saved.' ), 'updated' );
+	if ( ! count( secupress_get_settings_errors() ) ) {
+		secupress_add_settings_error( 'general', 'settings_updated', __( 'Settings saved.' ), 'updated' );
 	}
-	set_transient( 'settings_errors', get_settings_errors(), 30 );
+	set_transient( 'settings_errors', secupress_get_settings_errors(), 30 );
 
 	/**
 	 * Redirect back to the settings page that was submitted.

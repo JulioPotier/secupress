@@ -139,7 +139,7 @@ function secupress_bad_url_access_upgrade( $new_version, $actual_version ) {
 				'<code># END SecuPress</code>',
 				"<pre># BEGIN SecuPress $marker\n$rules# END SecuPress</pre>"
 			);
-			add_settings_error( 'general', 'apache_manual_edit', $message, 'error' );
+			secupress_add_settings_error( 'general', 'apache_manual_edit', $message, 'error' );
 		}
 
 		if ( $is_iis7 && 'iis7_manual_edit' === $last_error['code'] ) {
@@ -159,7 +159,7 @@ function secupress_bad_url_access_upgrade( $new_version, $actual_version ) {
 				'<code class="secupress-iis7-path">' . $path . '</code>',
 				"<pre>{$spaces}{$rules}</pre>"
 			);
-			add_settings_error( 'general', 'iis7_manual_edit', $message, 'error' );
+			secupress_add_settings_error( 'general', 'iis7_manual_edit', $message, 'error' );
 		}
 	}
 }

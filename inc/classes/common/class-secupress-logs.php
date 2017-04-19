@@ -995,8 +995,8 @@ class SecuPress_Logs extends SecuPress_Singleton {
 
 		$this->delete_logs();
 
-		add_settings_error( 'general', 'logs_cleared', __( 'Logs deleted.', 'secupress' ), 'updated' );
-		set_transient( 'settings_errors', get_settings_errors(), 30 );
+		secupress_add_settings_error( 'general', 'logs_cleared', __( 'Logs deleted.', 'secupress' ), 'updated' );
+		set_transient( 'settings_errors', secupress_get_settings_errors(), 30 );
 
 		$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
 		wp_redirect( esc_url_raw( $goback ) );
@@ -1038,8 +1038,8 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			$deleted = $this->delete_logs( $_GET['post'] );
 		}
 
-		add_settings_error( 'general', 'logs_bulk_deleted', sprintf( _n( '%s log permanently deleted.', '%s logs permanently deleted.', $deleted, 'secupress' ), number_format_i18n( $deleted ) ), 'updated' );
-		set_transient( 'settings_errors', get_settings_errors(), 30 );
+		secupress_add_settings_error( 'general', 'logs_bulk_deleted', sprintf( _n( '%s log permanently deleted.', '%s logs permanently deleted.', $deleted, 'secupress' ), number_format_i18n( $deleted ) ), 'updated' );
+		set_transient( 'settings_errors', secupress_get_settings_errors(), 30 );
 
 		$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
 		wp_redirect( esc_url_raw( $goback ) );
@@ -1083,8 +1083,8 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			$deleted = $this->delete_logs( $posts );
 		}
 
-		add_settings_error( 'general', 'logs_bulk_deleted', sprintf( _n( '%s log permanently deleted.', '%s logs permanently deleted.', $deleted, 'secupress' ), number_format_i18n( $deleted ) ), 'updated' );
-		set_transient( 'settings_errors', get_settings_errors(), 30 );
+		secupress_add_settings_error( 'general', 'logs_bulk_deleted', sprintf( _n( '%s log permanently deleted.', '%s logs permanently deleted.', $deleted, 'secupress' ), number_format_i18n( $deleted ) ), 'updated' );
+		set_transient( 'settings_errors', secupress_get_settings_errors(), 30 );
 
 		$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
 		wp_redirect( esc_url_raw( $goback ) );
@@ -1140,8 +1140,8 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			}
 		}
 
-		add_settings_error( 'general', 'logs_bulk_deleted', sprintf( _n( '%s log permanently deleted.', '%s logs permanently deleted.', $deleted, 'secupress' ), number_format_i18n( $deleted ) ), 'updated' );
-		set_transient( 'settings_errors', get_settings_errors(), 30 );
+		secupress_add_settings_error( 'general', 'logs_bulk_deleted', sprintf( _n( '%s log permanently deleted.', '%s logs permanently deleted.', $deleted, 'secupress' ), number_format_i18n( $deleted ) ), 'updated' );
+		set_transient( 'settings_errors', secupress_get_settings_errors(), 30 );
 
 		$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
 		wp_redirect( esc_url_raw( $goback ) );
@@ -1187,8 +1187,8 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			secupress_admin_die();
 		}
 
-		add_settings_error( 'general', 'log_deleted', __( 'Log permanently deleted.', 'secupress' ), 'updated' );
-		set_transient( 'settings_errors', get_settings_errors(), 30 );
+		secupress_add_settings_error( 'general', 'log_deleted', __( 'Log permanently deleted.', 'secupress' ), 'updated' );
+		set_transient( 'settings_errors', secupress_get_settings_errors(), 30 );
 
 		$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
 		wp_redirect( esc_url_raw( $goback ) );

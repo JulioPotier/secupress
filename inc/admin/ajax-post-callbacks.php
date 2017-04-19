@@ -537,11 +537,11 @@ function secupress_global_settings_api_key_ajax_post_cb() {
 		$action = false;
 
 		if ( ! $values['consumer_email'] && ! $values['consumer_key'] ) {
-			add_settings_error( 'general', 'no_email_license', secupress_global_settings_pro_license_activation_error_message( 'no_email_license' ) );
+			secupress_add_settings_error( 'general', 'no_email_license', secupress_global_settings_pro_license_activation_error_message( 'no_email_license' ) );
 		} elseif ( ! $values['consumer_email'] ) {
-			add_settings_error( 'general', 'no_email', secupress_global_settings_pro_license_activation_error_message( 'no_email' ) );
+			secupress_add_settings_error( 'general', 'no_email', secupress_global_settings_pro_license_activation_error_message( 'no_email' ) );
 		} else {
-			add_settings_error( 'general', 'no_license', secupress_global_settings_pro_license_activation_error_message( 'no_license' ) );
+			secupress_add_settings_error( 'general', 'no_license', secupress_global_settings_pro_license_activation_error_message( 'no_license' ) );
 		}
 
 		if ( $has_old ) {
@@ -565,9 +565,9 @@ function secupress_global_settings_api_key_ajax_post_cb() {
 		// Activate the license.
 		$values = secupress_global_settings_activate_pro_license( $values, $old_values );
 
-		if ( empty( $values['site_is_pro'] ) && ! get_settings_errors( 'general' ) ) {
+		if ( empty( $values['site_is_pro'] ) && ! secupress_get_settings_errors( 'general' ) ) {
 			// Invalid key.
-			add_settings_error( 'general', 'invalid_license', secupress_global_settings_pro_license_activation_error_message( 'invalid_license' ) );
+			secupress_add_settings_error( 'general', 'invalid_license', secupress_global_settings_pro_license_activation_error_message( 'invalid_license' ) );
 		}
 	}
 
@@ -610,14 +610,14 @@ function secupress_global_settings_api_key_ajax_post_cb() {
 	 * Handle settings errors and return to settings page.
 	 */
 	// If no settings errors were registered add a general 'updated' message.
-	if ( ! get_settings_errors( 'general' ) ) {
+	if ( ! secupress_get_settings_errors( 'general' ) ) {
 		if ( 'deactivate' === $action ) {
-			add_settings_error( 'general', 'settings_updated', __( 'Your license has been successfully deactivated.', 'secupress' ), 'updated' );
+			secupress_add_settings_error( 'general', 'settings_updated', __( 'Your license has been successfully deactivated.', 'secupress' ), 'updated' );
 		} elseif ( 'activate' === $action ) {
-			add_settings_error( 'general', 'settings_updated', __( 'Your license has been successfully activated.', 'secupress' ), 'updated' );
+			secupress_add_settings_error( 'general', 'settings_updated', __( 'Your license has been successfully activated.', 'secupress' ), 'updated' );
 		}
 	}
-	set_transient( 'settings_errors', get_settings_errors(), 30 );
+	set_transient( 'settings_errors', secupress_get_settings_errors(), 30 );
 
 	/**
 	 * Redirect back to the settings page that was submitted.
@@ -709,7 +709,7 @@ function secupress_global_settings_activate_pro_license( $new_values, $old_value
 
 		if ( secupress_has_pro() ) {
 			// Invalidate the license only for some reasons.
-			$errors = get_settings_errors( 'general' );
+			$errors = secupress_get_settings_errors( 'general' );
 
 			if ( $errors ) {
 				$codes = secupress_global_settings_pro_license_activation_error_message( 'edd' );
@@ -747,13 +747,13 @@ function secupress_global_settings_api_request_succeeded( $response ) {
 
 	if ( is_wp_error( $response ) ) {
 		// The request couldn't be sent.
-		add_settings_error( 'general', 'request_error', secupress_global_settings_pro_license_activation_error_message( 'request_error' ) );
+		secupress_add_settings_error( 'general', 'request_error', secupress_global_settings_pro_license_activation_error_message( 'request_error' ) );
 		return false;
 	}
 
 	if ( 200 !== wp_remote_retrieve_response_code( $response ) ) {
 		// The server couldn't be reached. Maybe a server error or something.
-		add_settings_error( 'general', 'server_error', secupress_global_settings_pro_license_activation_error_message( 'server_error' ) );
+		secupress_add_settings_error( 'general', 'server_error', secupress_global_settings_pro_license_activation_error_message( 'server_error' ) );
 		return false;
 	}
 
@@ -762,18 +762,18 @@ function secupress_global_settings_api_request_succeeded( $response ) {
 
 	if ( ! is_object( $body ) ) {
 		// The response is not a json.
-		add_settings_error( 'general', 'server_bad_response', secupress_global_settings_pro_license_activation_error_message( 'server_bad_response' ) );
+		secupress_add_settings_error( 'general', 'server_bad_response', secupress_global_settings_pro_license_activation_error_message( 'server_bad_response' ) );
 		return false;
 	}
 
 	if ( empty( $body->success ) ) {
 		// The response is an error.
 		if ( ! empty( $body->data->error ) ) {
-			add_settings_error( 'general', $body->data->error, secupress_global_settings_pro_license_activation_error_message( $body->data->error ) );
+			secupress_add_settings_error( 'general', $body->data->error, secupress_global_settings_pro_license_activation_error_message( $body->data->error ) );
 		} elseif ( ! empty( $body->data->code ) ) {
-			add_settings_error( 'general', $body->data->code, secupress_global_settings_pro_license_activation_error_message( $body->data->code ) );
+			secupress_add_settings_error( 'general', $body->data->code, secupress_global_settings_pro_license_activation_error_message( $body->data->code ) );
 		} else {
-			add_settings_error( 'general', 'license_error', secupress_global_settings_pro_license_activation_error_message( 'license_error' ) );
+			secupress_add_settings_error( 'general', 'license_error', secupress_global_settings_pro_license_activation_error_message( 'license_error' ) );
 		}
 
 		return false;
@@ -899,7 +899,7 @@ function secupress_global_settings_deactivate_pro_license( $new_values ) {
 		// The request couldn't be sent.
 		$message = __( 'Something on your website is preventing the request to be sent.', 'secupress' );
 		$message = secupress_global_settings_pro_license_deactivation_error_message( $message );
-		add_settings_error( 'general', 'request_error', $message );
+		secupress_add_settings_error( 'general', 'request_error', $message );
 		return $new_values;
 	}
 
@@ -907,7 +907,7 @@ function secupress_global_settings_deactivate_pro_license( $new_values ) {
 		// The server couldn't be reached. Maybe a server error or something.
 		$message = __( 'Our server is not accessible at the moment.', 'secupress' );
 		$message = secupress_global_settings_pro_license_deactivation_error_message( $message );
-		add_settings_error( 'general', 'server_error', $message );
+		secupress_add_settings_error( 'general', 'server_error', $message );
 		return $new_values;
 	}
 
@@ -918,7 +918,7 @@ function secupress_global_settings_deactivate_pro_license( $new_values ) {
 		// The response is not a json.
 		$message = __( 'Our server returned an unexpected response and might be in error.', 'secupress' );
 		$message = secupress_global_settings_pro_license_deactivation_error_message( $message );
-		add_settings_error( 'general', 'server_bad_response', $message );
+		secupress_add_settings_error( 'general', 'server_bad_response', $message );
 		return $new_values;
 	}
 
@@ -926,7 +926,7 @@ function secupress_global_settings_deactivate_pro_license( $new_values ) {
 		// Didn't succeed.
 		$message = __( 'Our server returned an error.', 'secupress' );
 		$message = secupress_global_settings_pro_license_deactivation_error_message( $message );
-		add_settings_error( 'general', 'response_error', $message );
+		secupress_add_settings_error( 'general', 'response_error', $message );
 	}
 
 	return $new_values;

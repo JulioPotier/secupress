@@ -21,13 +21,13 @@ function secupress_move_login_activate( $was_active ) {
 	if ( empty( $GLOBALS['HTTP_SERVER_VARS']['REQUEST_URI'] ) && empty( $_SERVER['REQUEST_URI'] ) ) {
 		$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
 		$message .= __( 'It seems your server configuration prevents the plugin from working properly. The login page cannot be moved.', 'secupress' );
-		add_settings_error( 'secupress_users-login_settings', 'no_request_uri', $message, 'error' );
+		secupress_add_settings_error( 'secupress_users-login_settings', 'no_request_uri', $message, 'error' );
 	}
 	// Server not supported.
 	if ( ! $is_iis7 && ! $is_apache && ! $is_nginx ) {
 		$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
 		$message .= __( 'It seems your server does not use <strong>Apache</strong>, <strong>Ngnix</strong>, or <strong>IIS7</strong>. The login page cannot be moved.', 'secupress' );
-		add_settings_error( 'secupress_users-login_settings', 'unknown_os', $message, 'error' );
+		secupress_add_settings_error( 'secupress_users-login_settings', 'unknown_os', $message, 'error' );
 	}
 
 	// If a message is set, the plugin can't work.
@@ -206,7 +206,7 @@ function secupress_move_login_write_rules() {
 				'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#move-login_rules">' . __( 'the dedicated section', 'secupress' ) . '</a>',
 				'<code>.htaccess</code>'
 			);
-			add_settings_error( 'general', 'apache_manual_edit', $message, 'error' );
+			secupress_add_settings_error( 'general', 'apache_manual_edit', $message, 'error' );
 		}
 	}
 
@@ -225,7 +225,7 @@ function secupress_move_login_write_rules() {
 				'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#move-login_rules">' . __( 'the dedicated section', 'secupress' ) . '</a>',
 				'<code>web.config</code>'
 			);
-			add_settings_error( 'general', 'iis7_manual_edit', $message, 'error' );
+			secupress_add_settings_error( 'general', 'iis7_manual_edit', $message, 'error' );
 		}
 	}
 
@@ -241,7 +241,7 @@ function secupress_move_login_write_rules() {
 			'<code>nginx.conf</code>',
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#move-login_rules">' . __( 'the dedicated section', 'secupress' ) . '</a>'
 		);
-		add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
+		secupress_add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
 	}
 
 	/**

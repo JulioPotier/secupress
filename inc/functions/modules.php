@@ -567,7 +567,7 @@ function secupress_remove_module_rules_or_notice( $marker, $module_name ) {
 			"<code># BEGIN SecuPress $marker</code>",
 			'<code># END SecuPress</code>'
 		);
-		add_settings_error( 'general', 'apache_manual_edit', $message, 'error' );
+		secupress_add_settings_error( 'general', 'apache_manual_edit', $message, 'error' );
 		return false;
 	}
 
@@ -580,7 +580,7 @@ function secupress_remove_module_rules_or_notice( $marker, $module_name ) {
 			'<code>web.config</code>',
 			"<code>SecuPress $marker</code>"
 		);
-		add_settings_error( 'general', 'iis7_manual_edit', $message, 'error' );
+		secupress_add_settings_error( 'general', 'iis7_manual_edit', $message, 'error' );
 		return false;
 	}
 
@@ -594,7 +594,7 @@ function secupress_remove_module_rules_or_notice( $marker, $module_name ) {
 			'<code># END SecuPress</code>',
 			'<code>nginx.conf</code>'
 		);
-		add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
+		secupress_add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
 		return false;
 	}
 
@@ -643,7 +643,7 @@ function secupress_add_module_rules_or_notice( $args ) {
 				'<code>.htaccess</code>',
 				"<pre># BEGIN SecuPress $marker\n$rules# END SecuPress</pre>"
 			);
-			add_settings_error( 'general', 'apache_manual_edit', $message, 'error' );
+			secupress_add_settings_error( 'general', 'apache_manual_edit', $message, 'error' );
 			return false;
 		}
 
@@ -684,7 +684,7 @@ function secupress_add_module_rules_or_notice( $args ) {
 					"<pre>{$spaces}{$rules}</pre>"
 				);
 			}
-			add_settings_error( 'general', 'iis7_manual_edit', $message, 'error' );
+			secupress_add_settings_error( 'general', 'iis7_manual_edit', $message, 'error' );
 			return false;
 		}
 
@@ -701,14 +701,14 @@ function secupress_add_module_rules_or_notice( $args ) {
 			'<code>nginx.conf</code>',
 			"<pre>$rules</pre>"
 		);
-		add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
+		secupress_add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
 		return false;
 	}
 
 	// Server not supported.
 	$message  = sprintf( __( '%s:', 'secupress' ), $title ) . ' ';
 	$message .= __( 'It seems your server does not use <strong>Apache</strong>, <strong>Ngnix</strong>, nor <strong>IIS7</strong>. This module won\'t work.', 'secupress' );
-	add_settings_error( 'general', 'unknown_os', $message, 'error' );
+	secupress_add_settings_error( 'general', 'unknown_os', $message, 'error' );
 	return false;
 }
 
