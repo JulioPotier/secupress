@@ -1,9 +1,9 @@
 === SecuPress — WordPress Security ===
 Contributors: wp_media, SecuPress, juliobox, GregLone
-Tags: alerts, antivirus, backup, firewall, Logs, schedule, security, sensitive data, spam, block hackers, country blocking, login security, malware, secure, security plugin, Web application firewall, wordpress security
+Tags: secure, security plugin, wordpress security, hack, malware
 Requires at least: 3.7
 Tested up to: 4.7.3
-Stable tag: 1.2.5.1
+Stable tag: 1.2.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,11 +13,10 @@ Protect your WordPress with SecuPress, analyze and ensure the safety of your web
 
 = YOU MADE IT, WE KEEP IT SAFE! =
 
-Protect your WordPress website with SecuPress. Who says good UX and solid security can’t work hand in hand? WordPress security is our specialty. Our job is to monitor your website, prevent attacks and to protect it. Yours is to own and maintain an awesome website.
+Protect your WordPress with malware scans; block bots & suspicious IPs. Get a complete [WordPress security toolkit](https://secupress.me/home/) for free or as a pro plugin.
 
-SecuPress is a complete suite of WordPress security tools in one single plugin: it contains more than a dozen modules (specialized security features) to ensure the security of your website on multiple fronts.
-
-How will you know it works? Well, we have a dedicated security scanner that will give you a clear security grade and report for your website. This way, you’ll know exactly what to fix.
+**What’s the difference between free and pro version?**  
+If you are proactive, our free WordPress security plugin is a great choice! No time to activate weekly scans? Then [SecuPress pro](https://secupress.me/details/) is the way to go. Our plugin takes care of everything with automated tasks.
 
 = Here are some of our most popular features: =
 
@@ -35,9 +34,92 @@ How will you know it works? Well, we have a dedicated security scanner that will
 * Vulnerable Plugins & Themes detection (1)
 * Security Reports in PDF format (1)
 
-*(1) <a href="https://secupress.me/features/">Pro Version</a> Only.*
+You can check out [Frequently Asked Questions](https://secupress.me/faq/) or get in touch with our [support](https://secupress.me/support/). Want to know all about SecuPress? You can read our documentation here: [docs.secupress.me](https://docs.secupress.me).
+
+**How will you know it works?**  
+Well, we have a dedicated security scanner that will give you a clear security grade and report for your website. This way, you’ll know exactly what to fix.
+
+= WordPress Features =
+
+**Security Audit**  
+SecuPress is the only plugin with a full scanner able to fix the issues for you. And when it requires a decision from you, it will ask you before proceeding. With this feature, you can check 35 security points in 5 minutes and let us take care of the rest.
+
+Once done, you get a security grade that gives you a clear idea of what your security level is. You can export this analysis in PDF format to share with others (clients or colleagues) (1).
+
+**Users & Login**  
+This feature is the easiest way to make sure your users’ data is protected and to keep their accounts from being compromised. With this feature you can limit the number of bad login attempts, ban non-existing usernames login attempts and set a non-login time slot. SecuPress also makes sure you can avoid double logins and control your sessions.
+
+SecuPress also adds a [2FA](https://secupress.me/blog/two-factor-authentication/) (Two Factor Authentication) because it’s almost a mandatory feature when it comes to WordPress security!
+
+The plugin also gives you greater user and password control as you can set:
+
+* Password lifetimes for your users.
+* Enforce strong password use.
+* Forbid the use of vague usernames like www or admin.
+
+Tired of bots finding your WordPress login page? Finally, don't let bots find your login page, just move it with the famous Move Login plugin, now included in SecuPress.
+
+**Plugins and Themes**  
+SecuPress helps you detect themes and plugins that are vulnerable or that have been tampered with to include malicious code. If you install one of these, your security module will send out an email alert and give you a warning in WordPress.
+
+SecuPress takes security further by limiting plugin activation, deactivation, installation and removal in your production (live) website. Plugin and theme uploads via .zip files will be on lockdown as well to block off this easy hacking route.
+
+**WordPress Core**  
+SecuPress reinforces the WordPress Core to keep it safe. The security plugin optimizes what’s under the hood to secure the config file by setting the proper parameters.
+
+**Sensitive Data**  
+SecuPress secures content in many ways:
+
+* The plugin secures WordPress Endpoints and APIs by blocking bad requests for XML-RPC or REST API.
+* It blocks bad bots with its Robots Blackhole feature.
+* It provides an anti-hotlink feature to preserve your bandwidth.
+* The plugin packs 7 anti-disclose security modules to make sure no precious information is available to hackers in your PHP or WordPress itself.
+* Profile and SecuPress settings pages are password protected to keep sensitive information away from prying eyes.
+
+**Firewall**  
+
+* SecuPress is the most efficient WordPress bouncer you’ll ever see!
+* The plugin blocks malicious incoming requests.
+* It blocks bad User Agents (no bad crawlers allowed).
+* Bad requests methods also get the boot in a single click.
+* URLs are kept in check: no bad URL contents or URLs that are too long allowed.
+* SQL injection scanners are kept out as well.
+* Brute force attempts are stopped in their tracks.
+* GeoIP Blocking by country gives you more control over your traffic.
+
+**Malware Scan**  
+SecuPress has a unique malware scan developed by our security experts. It hunts down bad files and provides you with an easy step-by-step report that lets you take action. It looks into:
+
+* Bad files in your FTP.
+* Your uploads folder for dangerous files.
+* Potential phishing attempts via `index.php` loads.
+
+**Backups**  
+We know firsthand how painful it is to pick up the pieces after an attack damages your WordPress. SecuPress preserves your data to help you avoid lost content or settings if your website comes under attack. The plugin backs up your database and files and lets you download them to guarantee you peace of mind.
+
+**Anti Spam**  
+Did you know that 60% of the traffic on the Internet is generated by bots? Most of them happen to be spam bots. We developed our own anti-spam system that works quietly in the background. Just activate it and enjoy a spam free experience.
+
+**Alerts**  
+Alerts are an essential tool when your website is under attack. When something important happens on your website, SecuPress will send you an alert via email. We’re working on alerts via SMS, Slack & Twitter as well.
+
+You also receive a daily report that provides a debrief of the attempted attack and all the activities blocked by SecuPress.
+
+**Scheduled Security Tasks**  
+SecuPress can run 3 separate scheduled tasks for you. It’s like having a security patrol on your WordPress.
+
+**Scheduled Scanner:** SecuPress scans your website to detect any issues. After the scan is complete, you get a report in your inbox outlining any actions you have to take to protect your website.  
+**Scheduled Backup:** our team knows that everyone at one time or another forgets to back things up. We made it an automatic task to help ensure you always can recover from an attack with your content safe.  
+**Scheduled Malware Scan:** this security feature scans your website at regular intervals to hunt down any malware that may have gotten into your WordPress.
+
+**Logs**  
+SecuPress will keep a log of important security activities and 404 pages triggered by users, bots or even Chuck Norris. This lets you keep an eye on what’s going on in your WordPress at any time. You can also control banned IPs from this option.
+
+*(1) Available in the [Pro Version](http://secupress.me/features/).*
 
 == Installation ==
+
+*It's important to delete all other security plugins before activating SecuPress.*
 
 1. Upload the plugin files to the `/wp-content/plugins/secupress` directory, or install the plugin through the WordPress plugins screen directly.
 1. Activate the plugin through the 'Plugins' screen in WordPress.
@@ -48,47 +130,37 @@ How will you know it works? Well, we have a dedicated security scanner that will
 
 = What does SecuPress do, exactly? =
 
-SecuPress is a plugin for WordPress sites which enables better security and simplicity of use.
-
-SecuPress will initially offer to scan your site, looking for flaws and possible improvements. Then a report will detail the results of each test and automatically propose to apply solutions. The majority of these criteria can be secured with one-click, some require you to make a choice, and a very few of them will ask for your manual intervention by following our documentation.
-
-Additional security modules are then available to round off certain items according to your needs.
+SecuPress is a plugin for WordPress sites which enables better security without sacrificing usability. It’s easy to use for you and hard to hack for pirates. First, SecuPress will scan your site, looking for vulnerabilities and provide a report detailing how to harden your WordPress. possible security improvements. The majority of recommendations are easy to implement by checking a box; very few will require a manual setup.
 
 = What makes SecuPress better than any other security plugin? =
 
-SecuPress incorporates many of the most awaited security features: Anti spam, Double authentication.
+SecuPress protects your website on multiple fronts: anti spam, double authentication. The best feature for users remains how easy to use this plugin is. You don’t need to be an experienced technician to use and secure your WordPress like an expert!
 
-Besides being very complete, SecuPress is also very simple to use for the beginners.
-
-You don’t need to be an experienced technician to use and configure our plugin.
-
-We have our own security alarm on our servers which supplies daily data about the most recent vulnerable plugins and themes. This allows you to always be alerted and secured.
+Our security alarms hosted on our servers supply daily data about the most recent vulnerable plugins and themes. This allows you to always be aware and safe.
 
 = Is SecuPress compatible with multisites installation? =
 
-Yes, SecuPress will be activated for all your sub-sites, just activate it from your main network site.
+Yes, SecuPress can be activated for all your sub-sites, just activate it from your main network site.
 
-= Is SecuPress compatible with all web hosters like OVH, WP Engine, O2Switch or GoDaddy? =
+= Is SecuPress compatible with all web hosters? =
 
-Yes, SecuPress is compatible with all web hosters. If you encounter an issue, do not hesitate to contact our support team.
+Yes, SecuPress is compatible with all web hosters like OVH, WP Engine, O2Switch or GoDaddy? If you encounter an issue, do not hesitate to contact our support team.
 
-= Is SecuPress compatible with all caching plugins like WP Rocket, W3TC, WPSP? =
+= Is SecuPress compatible with all caching plugins like WP Rocket, W3 Total Cache, WP Super Cache? =
 
-Yes, SecuPress is compatible with all caching plugins. If you encounter an issue, do not hesitate ton contact our support team.
+Yes, SecuPress is compatible with all WordPress caching plugins. If you encounter an issue, do not hesitate to contact our support team.
 
 = Is SecuPress compatible with all multilingual plugins like PolyLang, WPML, qTranslate? =
 
-Yes, SecuPress is compatible with all multilingual plugins. If you encounter an issue, do not hesitate ton contact our support team.
+Yes, SecuPress is compatible with all multilingual WordPress plugins. If you have an issue, please get in touch with us and let us know!
 
 = Is SecuPress compatible with all server engines like Apache, Ngnix, IIS7? =
 
-Yes, SecuPress is compatible with all server engines. If you encounter an issue, do not hesitate ton contact our support team.
+Yes, SecuPress is compatible with all server engines. If you encounter an issue, do not hesitate to contact our support team.
 
 = Is SecuPress compatible with other security plugins like WordFence, iThemes Security, Bullet Proof Security? =
 
-No, SecuPress can't be compatible, like you can't install two caching plugins. The reason is that each plugin will try to block something, add security rules and at a moment they will overwrite each other. These rules can create a conflict and lead to errors on your website.
-
-It's important to delete all other security plugins before activating SecuPress. If you're not sure, do not hesitate to ask us on Twitter, Facebook, support.
+The answer is no. SecuPress is not compatible with another security plugin. Just like two caching plugins do not make your website faster, two security plugins do not make your WordPress more secure. Security rules tend to be overwritten or conflict with other rules if two security plugins are installed. This can cause errors on your website and is not recommended.
 
 
 == Screenshots ==
@@ -103,6 +175,23 @@ It's important to delete all other security plugins before activating SecuPress.
 8. The 4th step: final report, you can export it as PDF (1)
 
 == Changelog ==
+
+= 1.2.7 =
+
+* 18 apr 2017
+* Improvement: removed the monthly plans from the "Get Pro" page and improved a few things.
+
+= 1.2.6.1 =
+
+* 06 apr 2017
+* Improvement #450: use a new API for the "Get Pro" page, to fetch prices.
+
+= 1.2.6 =
+
+* 05 apr 2017
+* Improvement #445: display the missing "Rate us" box in the settings page.
+* Improvements #387 and #449: changed a few things in the "Get Pro" page, mainly focused on the monthly plans.
+* Fix #447: prevented Move Login to change `&` characters into `&amp;` in filtered URLs, it may cause problems when used as a redirection target.
 
 = 1.2.5.1 =
 

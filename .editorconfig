@@ -11,9 +11,9 @@ trim_trailing_whitespace = true
 indent_style = tab
 indent_size = 4
 
-[{*.yml,*.yaml}]
-indent_style = space
-indent_size = 4
-
 [{*.txt}]
 end_of_line = crlf
+trim_trailing_whitespace = false
+
+[{*.md}]
+trim_trailing_whitespace = false

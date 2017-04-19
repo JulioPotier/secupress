@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2017-03-13 22:07+0100\n"
-"PO-Revision-Date: 2017-03-13 22:08+0100\n"
+"POT-Creation-Date: 2017-04-18 14:24+0200\n"
+"PO-Revision-Date: 2017-04-18 14:24+0200\n"
 "Last-Translator: WP Media <contact@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -748,7 +748,7 @@ msgid "Loading"
 msgstr "Chargement"
 
 #: inc/admin/notices.php:286
-#: inc/classes/settings/class-secupress-settings.php:1261
+#: inc/classes/settings/class-secupress-settings.php:1265
 msgid "Email address"
 msgstr "Adresse e-mail"
 
@@ -889,7 +889,7 @@ msgstr "Obtenez la version Pro pour exporter ce rapport dans un fichier PDF."
 
 #: inc/admin/scanner-step-1.php:123 inc/admin/scanner-step-2.php:159
 #: inc/admin/scanner-step-3.php:190 inc/admin/scanner-step-4.php:278
-#: inc/classes/settings/class-secupress-settings.php:1335
+#: inc/classes/settings/class-secupress-settings.php:1339
 #, php-format
 msgid "Available in <a href=\"%s\" target=\"_blank\">Pro Version</a>"
 msgstr "Disponible dans la <a href=\"%s\" target=\"_blank\">version Pro</a>"
@@ -962,6 +962,7 @@ msgstr "Comment corriger ce problème"
 
 #: inc/admin/scanner-step-3.php:266 inc/admin/scanner-step-3.php:272
 #: inc/admin/scanner-step-3.php:295 inc/admin/settings.php:512
+#: inc/admin/settings.php:869 inc/admin/settings.php:872
 #: inc/classes/admin/class-secupress-admin-support.php:408
 #: inc/modules/wordpress-core/settings/wp-config.php:42
 #: inc/modules/wordpress-core/settings/wp-config.php:43
@@ -1043,7 +1044,7 @@ msgid "Not fixed"
 msgstr "Non corrigé"
 
 #: inc/admin/scanner-step-4.php:215 inc/admin/settings.php:113
-#: inc/admin/settings.php:187 inc/admin/settings.php:986
+#: inc/admin/settings.php:187 inc/admin/settings.php:988
 msgid "Error"
 msgstr "Erreur"
 
@@ -1237,17 +1238,17 @@ msgid "Show More"
 msgstr "Voir plus"
 
 #: inc/admin/settings.php:173 inc/admin/settings.php:479
-#: inc/admin/settings.php:982
+#: inc/admin/settings.php:984
 msgid "Good"
 msgstr "Bon"
 
 #: inc/admin/settings.php:174 inc/admin/settings.php:489
-#: inc/admin/settings.php:984
+#: inc/admin/settings.php:986
 msgid "Warning"
 msgstr "En attente"
 
 #: inc/admin/settings.php:175 inc/admin/settings.php:484
-#: inc/admin/settings.php:980
+#: inc/admin/settings.php:982
 msgid "Bad"
 msgstr "Mauvais"
 
@@ -1291,7 +1292,7 @@ msgid ""
 msgstr "La documentation est en construction, merci pour votre patience."
 
 #: inc/admin/settings.php:271 inc/admin/settings.php:273
-#: inc/admin/settings.php:313 inc/modules/get-pro/settings.php:117
+#: inc/admin/settings.php:313 inc/modules/get-pro/settings.php:94
 #: inc/modules/services/settings/support.php:5
 msgid "Support"
 msgstr "Support"
@@ -1453,22 +1454,22 @@ msgstr "Obtenez le nouveau rapport de sécurité de votre site."
 msgid "I've got it!"
 msgstr "J'ai compris&nbsp;!"
 
-#: inc/admin/settings.php:866
+#: inc/admin/settings.php:867
 msgid "Do you like this plugin?"
 msgstr "Vous aimez ce plugin&nbsp;?"
 
-#: inc/admin/settings.php:868
+#: inc/admin/settings.php:869
 #, php-format
 msgid "Please take a few seconds to rate us on %1$sWordPress.org%2$s"
 msgstr ""
 "Merci de prendre quelques secondes pour nous noter sur %1$sWordPress.org%2$s"
 
-#: inc/admin/settings.php:877
+#: inc/admin/settings.php:878
 msgctxt "hidden text"
 msgid "Give us five stars"
 msgstr "Donnez nous les 5 étoiles"
 
-#: inc/admin/settings.php:988
+#: inc/admin/settings.php:990
 msgid "New"
 msgstr "Nouveau"
 
@@ -1774,7 +1775,7 @@ msgstr[0] "Tout <span class=\"count\">(%s)</span>"
 msgstr[1] "Tout <span class=\"count\">(%s)</span>"
 
 #: inc/classes/common/class-secupress-logs-list-table.php:420
-#: inc/classes/common/class-secupress-logs-list-table.php:799
+#: inc/classes/common/class-secupress-logs-list-table.php:800
 msgid "Delete Permanently"
 msgstr "Supprimer définitivement"
 
@@ -1787,42 +1788,42 @@ msgid "Delete All"
 msgstr "Tout supprimer"
 
 #. Translators: manage posts column name
-#: inc/classes/common/class-secupress-logs-list-table.php:555
+#: inc/classes/common/class-secupress-logs-list-table.php:556
 msgctxt "column name"
 msgid "Title"
 msgstr "Titre"
 
-#: inc/classes/common/class-secupress-logs-list-table.php:558
+#: inc/classes/common/class-secupress-logs-list-table.php:559
 msgid "priority"
 msgstr "priorité"
 
-#: inc/classes/common/class-secupress-logs-list-table.php:561
+#: inc/classes/common/class-secupress-logs-list-table.php:562
 msgid "Date"
 msgstr "Date"
 
-#: inc/classes/common/class-secupress-logs-list-table.php:638
+#: inc/classes/common/class-secupress-logs-list-table.php:639
 #, php-format
 msgid "Select &#8220;%s&#8221;"
 msgstr "Select &#8220;%s&#8221;"
 
-#: inc/classes/common/class-secupress-logs-list-table.php:685
+#: inc/classes/common/class-secupress-logs-list-table.php:686
 #, php-format
 msgid "View &#8220;%s&#8221;"
 msgstr "Voire &#8220;%s&#8221;"
 
-#: inc/classes/common/class-secupress-logs-list-table.php:716
+#: inc/classes/common/class-secupress-logs-list-table.php:717
 msgid "\\<\\b\\>Y/m/d\\<\\/\\b\\> g:i:s a"
 msgstr "\\<\\b\\>d/m/Y\\<\\/\\b\\> G:i:s"
 
-#: inc/classes/common/class-secupress-logs-list-table.php:799
+#: inc/classes/common/class-secupress-logs-list-table.php:800
 msgid "Delete this item permanently"
 msgstr "Supprimer définitivement"
 
-#: inc/classes/common/class-secupress-logs-list-table.php:800
+#: inc/classes/common/class-secupress-logs-list-table.php:801
 msgid "View this log details"
 msgstr "Voir les détails de cette entrée de journal"
 
-#: inc/classes/common/class-secupress-logs-list-table.php:800
+#: inc/classes/common/class-secupress-logs-list-table.php:801
 msgid "View"
 msgstr "Voir"
 
@@ -2799,7 +2800,7 @@ msgstr[0] ""
 "<string>%1$d plugin</strong> n'est plus dans le dépôt de WordPress&nbsp;: "
 "%2$s."
 msgstr[1] ""
-"<string>%1$d plugin</strong> ne sont plus dans le dépôt de WordPress&nbsp;: "
+"<string>%1$d plugins</strong> ne sont plus dans le dépôt de WordPress&nbsp;: "
 "%2$s."
 
 #. Translators: 1 is a number, 2 is a plugin name (or a list of plugin names).
@@ -2814,7 +2815,7 @@ msgstr[0] ""
 "<strong>%1$d plugin</strong> n'a pas été mis à jour depuis 2 ans au "
 "moins&nbsp;: %2$s."
 msgstr[1] ""
-"<strong>%1$d plugin</strong> n'ont pas été mis à jour depuis 2 ans au "
+"<strong>%1$d plugins</strong> n'ont pas été mis à jour depuis 2 ans au "
 "moins&nbsp;: %2$s."
 
 #. Translators: %s is a plugin name.
@@ -5291,59 +5292,59 @@ msgstr "Attention&nbsp;:"
 msgid "Save All Changes"
 msgstr "Tout sauver"
 
-#: inc/classes/settings/class-secupress-settings.php:1230
+#: inc/classes/settings/class-secupress-settings.php:1232
 msgid "100MB"
 msgstr "100Mb"
 
-#: inc/classes/settings/class-secupress-settings.php:1241
+#: inc/classes/settings/class-secupress-settings.php:1244
 msgid "Improve your Security"
 msgstr "Améliorez votre sécurité"
 
-#: inc/classes/settings/class-secupress-settings.php:1242
+#: inc/classes/settings/class-secupress-settings.php:1245
 msgid "Unlock all the features of SecuPress Pro"
 msgstr "Débloquez toutes les fonctionnalités de SecuPress Pro"
 
-#: inc/classes/settings/class-secupress-settings.php:1247
+#: inc/classes/settings/class-secupress-settings.php:1250
 msgctxt "short"
 msgid "Get Pro"
 msgstr "Obtenir la version Pro"
 
-#: inc/classes/settings/class-secupress-settings.php:1254
+#: inc/classes/settings/class-secupress-settings.php:1258
 msgid "Join our mailing list"
 msgstr "Rejoignez notre liste"
 
-#: inc/classes/settings/class-secupress-settings.php:1257
+#: inc/classes/settings/class-secupress-settings.php:1261
 msgid "Get security alerts and news from SecuPress."
 msgstr "Obtenez des alertes de sécurité et des nouveautés de SecuPress."
 
-#: inc/classes/settings/class-secupress-settings.php:1268
+#: inc/classes/settings/class-secupress-settings.php:1272
 msgid "Stay tuned for more"
 msgstr "Restez à l'écoute"
 
-#: inc/classes/settings/class-secupress-settings.php:1279
+#: inc/classes/settings/class-secupress-settings.php:1283
 msgid "Speed up your website with WP Rocket"
 msgstr "Accélérez votre site WordPress avec WP Rocket."
 
-#: inc/classes/settings/class-secupress-settings.php:1280
+#: inc/classes/settings/class-secupress-settings.php:1284
 #, php-format
 msgid "Get <span>%1$s OFF</span> with this coupon code: %2$s"
 msgstr "Obtenez <span>-%1$s</span> avec le coupon&nbsp;: %2$s"
 
-#: inc/classes/settings/class-secupress-settings.php:1283
+#: inc/classes/settings/class-secupress-settings.php:1287
 #, php-format
 msgid "Get %s OFF"
 msgstr "Obtenez -%s"
 
-#: inc/classes/settings/class-secupress-settings.php:1294
+#: inc/classes/settings/class-secupress-settings.php:1298
 msgid "Speed Up your website with lighter images"
 msgstr "Accélérez votre site avec des images plus légères."
 
-#: inc/classes/settings/class-secupress-settings.php:1295
+#: inc/classes/settings/class-secupress-settings.php:1299
 #, php-format
 msgid "For each new account, get <span>%s Free</span>."
 msgstr "Pour chaque nouveau compte, obtenez <span>%s gratuits</span>."
 
-#: inc/classes/settings/class-secupress-settings.php:1298
+#: inc/classes/settings/class-secupress-settings.php:1302
 #, php-format
 msgid "Get %s Free"
 msgstr "Obtenez %s gratuits"
@@ -6159,7 +6160,6 @@ msgid "Dropbox"
 msgstr "Dropbox"
 
 #: inc/modules/backups/settings/backups-storage.php:81
-#: inc/modules/get-pro/settings.php:51
 msgid "Coming soon"
 msgstr "Bientôt"
 
@@ -6613,7 +6613,7 @@ msgstr "User-Agent contenant des balises HTML"
 msgid "User-Agent Blacklisted"
 msgstr "User-Agent en liste noire"
 
-#: inc/modules/get-pro/settings.php:17
+#: inc/modules/get-pro/settings.php:27
 #, php-format
 msgid ""
 "Impossible to get online prices, please check %1$sonline prices%2$s to get "
@@ -6622,91 +6622,51 @@ msgstr ""
 "Impossible de récupérer les tarifs à distance, merci de vérifier %1$sen ligne"
 "%2$s pour obtenir les derniers."
 
-#: inc/modules/get-pro/settings.php:30
-msgid "Pre-order SecuPress Pro Now and Get an Exclusive Discount"
+#: inc/modules/get-pro/settings.php:40
+msgid "Get exclusive features to protect your website with SecuPress&#160;Pro"
 msgstr ""
-"Précommandez dès aujourd'hui votre SecuPress Pro et bénéficiez d'une remise "
-"exclusive"
+"Avec SecuPress&#160;Pro, bénéficiez de fonctionnalités exclusives pour "
+"protéger votre site"
 
-#: inc/modules/get-pro/settings.php:31
-msgid ""
-"Choose the licence that suits you the best and be one of the first users to "
-"get SecuPress Pro upon its release"
-msgstr ""
-"Choisissez la formule qui vous convient et faites partie des premiers "
-"utilisateurs de SecuPress Pro dès sa sortie"
-
-#: inc/modules/get-pro/settings.php:37
-#, php-format
-msgid "Improve Your Security by Unlocking%sAll the Features of SecuPress Pro"
-msgstr ""
-"Améliorez votre sécurité en débloquant%stoutes les fonctionnalités de "
-"SecuPress Pro"
-
-#: inc/modules/get-pro/settings.php:47
-msgid "Yearly"
-msgstr "Annuellement"
-
-#: inc/modules/get-pro/settings.php:50
-msgid "Monthly"
-msgstr "Mensuellement"
-
-#: inc/modules/get-pro/settings.php:86
-#, php-format
-msgid "%1$d%% OFF"
-msgstr "%1$d%% de remise"
-
-#: inc/modules/get-pro/settings.php:89
+#: inc/modules/get-pro/settings.php:71
 msgid "Billed per year"
 msgstr "Facturé à l'année"
 
-#: inc/modules/get-pro/settings.php:90
-msgid "Billed per month"
-msgstr "Facturé au mois"
-
-#: inc/modules/get-pro/settings.php:92
-msgid "Secure & Protect"
-msgstr "Sécurise et Protège"
-
-#: inc/modules/get-pro/settings.php:94
+#: inc/modules/get-pro/settings.php:74
 #, php-format
-msgid "%d Website"
-msgid_plural "%d Websites"
-msgstr[0] "%d site"
-msgstr[1] "%d sites"
+msgid "%d Site"
+msgid_plural "%d Sites"
+msgstr[0] "%d Site"
+msgstr[1] "%d Sites"
 
-#: inc/modules/get-pro/settings.php:96
+#: inc/modules/get-pro/settings.php:76
 msgctxt "websites"
-msgid "All your websites"
-msgstr "Tous vos sites"
+msgid "Unlimited Sites"
+msgstr "Sites Illimités"
 
-#: inc/modules/get-pro/settings.php:102
-msgid "Pre-Order"
-msgstr "Précommander"
-
-#: inc/modules/get-pro/settings.php:102
+#: inc/modules/get-pro/settings.php:81
 msgid "Order"
 msgstr "Commander"
 
-#: inc/modules/get-pro/settings.php:113
+#: inc/modules/get-pro/settings.php:90
 msgid "Included With All Plans"
 msgstr "Inclus dans tous les plans"
 
-#: inc/modules/get-pro/settings.php:118
+#: inc/modules/get-pro/settings.php:95
 msgid "Unlimited Support and Updates"
 msgstr "Support et mises à jour illimités"
 
-#: inc/modules/get-pro/settings.php:122 inc/modules/get-pro/settings.php:126
+#: inc/modules/get-pro/settings.php:99 inc/modules/get-pro/settings.php:103
 #, php-format
 msgctxt "one line text please"
 msgid "Bonus %1$s on %2$s"
 msgstr "%1$s sur %2$s"
 
-#: inc/modules/get-pro/settings.php:122
+#: inc/modules/get-pro/settings.php:99
 msgid "100 MB for free"
 msgstr "100 Mo gratuits"
 
-#: inc/modules/get-pro/settings.php:126
+#: inc/modules/get-pro/settings.php:103
 msgid "20% OFF"
 msgstr "20% de remise"
 
@@ -8654,6 +8614,56 @@ msgid ""
 msgstr ""
 "Protégez votre WordPress avec SecuPress, analysez et assurez-vous de la "
 "sécurité de votre site quotidiennement."
+
+#~ msgid "Secure & Protect"
+#~ msgstr "Sécurise et Protège"
+
+#~ msgid "Pre-order SecuPress Pro Now and Get an Exclusive Discount"
+#~ msgstr ""
+#~ "Précommandez dès aujourd'hui votre SecuPress Pro et bénéficiez d'une "
+#~ "remise exclusive"
+
+#~ msgid ""
+#~ "Choose the licence that suits you the best and be one of the first users "
+#~ "to get SecuPress Pro upon its release"
+#~ msgstr ""
+#~ "Choisissez la formule qui vous convient et faites partie des premiers "
+#~ "utilisateurs de SecuPress Pro dès sa sortie"
+
+#~ msgid ""
+#~ "Improve Your Security by Unlocking%sAll the Features of SecuPress Pro"
+#~ msgstr ""
+#~ "Améliorez votre sécurité en débloquant%stoutes les fonctionnalités de "
+#~ "SecuPress Pro"
+
+#~ msgid "Monthly"
+#~ msgstr "Mensuellement"
+
+#~ msgid "Yearly"
+#~ msgstr "Annuellement"
+
+#~ msgid "%1$d month free"
+#~ msgid_plural "%1$d months free"
+#~ msgstr[0] "%1$d mois gratuit"
+#~ msgstr[1] "%1$d mois gratuits"
+
+#~ msgid "%1$d%% OFF"
+#~ msgstr "%1$d%% de remise"
+
+#~ msgid "Billed per month"
+#~ msgstr "Facturé au mois"
+
+#~ msgid "%d Website"
+#~ msgid_plural "%d Websites"
+#~ msgstr[0] "%d site"
+#~ msgstr[1] "%d sites"
+
+#~ msgctxt "websites"
+#~ msgid "All your websites"
+#~ msgstr "Tous vos sites"
+
+#~ msgid "Pre-Order"
+#~ msgstr "Précommander"
 
 #~ msgid "Default: %s"
 #~ msgstr "Défaut&nbsp;: %s"
