@@ -936,18 +936,21 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		set_time_limit( 0 );
 
 		if ( ! headers_sent() ) {
+			$filename = 'secupress-' . $this->log_type . '-logs-' . current_time( 'Y-m-d@H-i-s' ) . '.txt';
+
 			ob_start();
 			nocache_headers();
 			header( 'Content-Type: text/plain; charset=' . get_option( 'blog_charset' ) );
-			header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
+			header( 'Content-Disposition: attachment; filename="' . utf8_encode( $filename ) . '"' );
 			header( 'Content-Transfer-Encoding: binary' );
+			header( 'Cache-Control: private, max-age=0, must-revalidate' );
+			header( 'Pragma: public' );
 			header( 'Connection: close' );
 			ob_end_clean();
 			flush();
 		}
 
-		$filename = 'secupress-' . $this->log_type . '-logs.txt';
-		$logs     = $this->get_logs();
+		$logs = $this->get_logs();
 
 		if ( $logs && is_array( $logs ) ) {
 			$classname  = static::maybe_include_log_class();
