@@ -795,8 +795,8 @@ function secupress_global_settings_api_request_succeeded( $response ) {
  * @return (array|string) An error message or an array of error messages.
  */
 function secupress_global_settings_pro_license_activation_error_message( $code = false, $fallback = 'license_error' ) {
-	$support_link = '<a href="' . esc_url( SecuPress_Admin_Offer_Migration::get_support_url() ) . '" target="_blank" title="' . esc_attr__( 'Open in a new window.', 'secupress-pro' ) . '">' . __( 'our support team', 'secupress-pro' ) . '</a>';
-	$account_link = '<a href="' . esc_url( SecuPress_Admin_Offer_Migration::get_account_url() ) . '" target="_blank" title="' . esc_attr__( 'Open in a new window.', 'secupress-pro' ) . '">%s</a>';
+	$support_link = '<a href="' . esc_url( SecuPress_Admin_Offer_Migration::get_support_url() ) . '" target="_blank" title="' . esc_attr__( 'Open in a new window.', 'secupress' ) . '">' . __( 'our support team', 'secupress' ) . '</a>';
+	$account_link = '<a href="' . esc_url( SecuPress_Admin_Offer_Migration::get_account_url() ) . '" target="_blank" title="' . esc_attr__( 'Open in a new window.', 'secupress' ) . '">%s</a>';
 
 	$api_errors = array(
 		'no_email_license'    => __( 'Please provide a valid email address and your license key.', 'secupress' ),
@@ -805,7 +805,7 @@ function secupress_global_settings_pro_license_activation_error_message( $code =
 		'invalid_license'     => sprintf(
 			/** Translators: %s is a "to verify these infos" link. */
 			__( 'Your license key seems invalid. You may want %s.', 'secupress' ),
-			sprintf( $account_link, __( 'to verify these infos', 'secupress-pro' ) )
+			sprintf( $account_link, __( 'to verify these infos', 'secupress' ) )
 		),
 		'request_error'       => __( 'Something on your website is preventing the request to be sent.', 'secupress' ),
 		/** Translators: %s is a "our support team" link. */
@@ -813,13 +813,13 @@ function secupress_global_settings_pro_license_activation_error_message( $code =
 		/** Translators: %s is a "our support team" link. */
 		'server_bad_response' => sprintf( __( 'Our server returned an unexpected response and might be in error, please try again later or contact %s.', 'secupress' ), $support_link ),
 		/** Translators: %s is a "our support team" link. */
-		'invalid_api_request' => sprintf( __( 'There is a problem with your license key, please contact our support team.', 'secupress' ), $support_link ),
+		'invalid_api_request' => sprintf( __( 'There is a problem with your license key, please contact %s.', 'secupress' ), $support_link ),
 		'invalid_email'       => __( 'The email address is invalid.', 'secupress' ),
 		'invalid_license_key' => __( 'The license key is invalid.', 'secupress' ),
 		'invalid_customer'    => sprintf(
 			/** Translators: %s is a "to verify these infos" link. */
 			__( 'This email address is not in our database. You may want %s.', 'secupress' ),
-			sprintf( $account_link, __( 'to verify these infos', 'secupress-pro' ) )
+			sprintf( $account_link, __( 'to verify these infos', 'secupress' ) )
 		),
 	);
 
@@ -838,12 +838,12 @@ function secupress_global_settings_pro_license_activation_error_message( $code =
 		'expired'             => sprintf(
 			/** Translators: %s is a "to renew your subscription" link. */
 			__( 'This license key expired. You may want %s.', 'secupress' ),
-			sprintf( $account_link, __( 'to renew your subscription', 'secupress-pro' ) )
+			sprintf( $account_link, __( 'to renew your subscription', 'secupress' ) )
 		),
 		'no_activations_left' => sprintf(
 			/** Translators: %s is a "to upgrade your license" link. */
 			__( 'You\'ve used as many sites as your license allows. You may want %s to add more sites.', 'secupress' ),
-			sprintf( $account_link, __( 'to upgrade your license', 'secupress-pro' ) )
+			sprintf( $account_link, __( 'to upgrade your license', 'secupress' ) )
 		),
 	);
 
@@ -854,7 +854,12 @@ function secupress_global_settings_pro_license_activation_error_message( $code =
 	$all_errors = array_merge( $api_errors, $edd_errors );
 
 	// Generic message.
-	$all_errors['license_error'] = __( 'Something may be wrong with your license, please take a look at your account or contact our support team.', 'secupress' );
+	$all_errors['license_error'] = sprintf(
+		/** Translators: 1 is a "your account" link, 2 is a "our support team" link. */
+		__( 'Something may be wrong with your license, please take a look at %1$s or contact %2$s.', 'secupress' ),
+		sprintf( $account_link, __( 'your account', 'secupress' ) ),
+		$support_link
+	);
 
 	if ( 'all' === $code ) {
 		return $all_errors;
