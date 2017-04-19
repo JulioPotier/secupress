@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
 "POT-Creation-Date: 2017-04-19 14:26+0200\n"
-"PO-Revision-Date: 2017-04-19 14:26+0200\n"
+"PO-Revision-Date: 2017-04-19 23:41+0200\n"
 "Last-Translator: WP Media <contact@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -1551,8 +1551,6 @@ msgid "You can now %s to the Pro version."
 msgstr "Vous pouvez maintenant %s vers la version Pro."
 
 #: inc/classes/admin/class-secupress-admin-pro-upgrade.php:171
-#, fuzzy
-#| msgid "upgrade"
 msgctxt "verb"
 msgid "upgrade"
 msgstr "mettre à jour"
