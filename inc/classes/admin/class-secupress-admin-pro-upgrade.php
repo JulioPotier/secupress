@@ -268,7 +268,11 @@ class SecuPress_Admin_Pro_Upgrade extends SecuPress_Admin_Offer_Migration {
 			return null;
 		}
 
-		if ( empty( $information->data ) || ! is_array( $information->data ) ) {
+		if ( empty( $information->data ) ) {
+			return null;
+		}
+
+		if ( ! is_array( $information->data ) && ! is_object( $information->data ) ) {
 			return null;
 		}
 
