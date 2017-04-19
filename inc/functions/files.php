@@ -493,7 +493,7 @@ function secupress_wpconfig_success_in_sandbox( $content ) {
 	// Remove any `require_once()` and friends.
 	$content       = preg_replace( '@(require|include)(_once)?[\s(][^;]+;@', '$foo = "foo";', $content );
 	// Define `ABSPATH` and add `error_reporting()`.
-	$content       = preg_replace( '@^<\?php@', '<?php define( \'ABSPATH\', dirname( dirname( __FILE__ ) ) . '/' ); error_reporting( -1 );', trim( $content ) );
+	$content       = preg_replace( '@^<\?php@', '<?php define( \'ABSPATH\', dirname( dirname( __FILE__ ) ) . \'/\' ); error_reporting( -1 );', trim( $content ) );
 	// Print a placeholder when the file is requested.
 	$content      .= "\necho 'SANDBOX OK';";
 
