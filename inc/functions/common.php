@@ -1221,7 +1221,7 @@ function secupress_maybe_increase_memory_limit() {
  * @since 1.3
  * @author Grégory Viguier
  *
- * @param (string) $setting Slug title of the setting to which this error applies
+ * @param (string) $setting Slug title of the setting to which this error applies.
  * @param (string) $code    Slug-name to identify the error. Used as part of 'id' attribute in HTML output.
  * @param (string) $message The formatted message text to display to the user (will be shown inside styled
  *                          `<div>` and `<p>` tags).
@@ -1265,7 +1265,7 @@ function secupress_get_settings_errors( $setting = '', $sanitize = false ) {
 
 	// If settings were passed back from options.php then use them.
 	if ( isset( $_GET['settings-updated'] ) && $_GET['settings-updated'] && get_transient( 'settings_errors' ) ) {
-		$wp_settings_errors = array_merge( (array) $wp_settings_errors, get_transient( 'settings_errors' ) );
+		$wp_settings_errors = array_merge( (array) $wp_settings_errors, get_transient( 'settings_errors' ) ); // WPCS: override ok.
 		delete_transient( 'settings_errors' );
 	}
 
