@@ -18,6 +18,13 @@ class SecuPress_Admin_Pro_Upgrade extends SecuPress_Admin_Offer_Migration {
 	const VERSION = '1.0';
 
 	/**
+	 * Name of the post action used to install the Pro plugin.
+	 *
+	 * @var (string)
+	 */
+	const POST_ACTION = 'secupress_maybe_install_pro_version';
+
+	/**
 	 * The reference to the "Singleton" instance of this class.
 	 *
 	 * @var (object)
@@ -33,69 +40,30 @@ class SecuPress_Admin_Pro_Upgrade extends SecuPress_Admin_Offer_Migration {
 	 * @since 1.3
 	 * @author Grégory Viguier
 	 */
-	protected function init() {
+	protected function _init() {
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			parent::_init();
 			return;
 		}
 
-		if ( ! secupress_has_pro() ) {
-			// Only for the Free version.
-			add_action( 'current_screen',  array( $this, 'maybe_warn_license_is_deactivated' ) );
-			add_action( 'current_screen',  array( $this, 'maybe_install_pro_version' ) );
-		}
+		add_action( 'current_screen',                  array( $this, 'maybe_warn_to_install_pro_version' ) );
+		add_action( 'admin_post_' . self::POST_ACTION, array( $this, 'maybe_install_pro_version' ) );
 
-		add_action( 'in_admin_header', array( $this, 'maybe_congratulate' ) );
+		parent::_init();
 	}
 
 
 	/** Public methods ========================================================================== */
 
 	/**
-	 * If the license is filled but not activated, tell the user.
+	 * If the `$automatic_install` property is set in the plugin information, redirect and install the Pro version.
+	 * Otherwise, display a notice to install the Pro version.
 	 *
 	 * @since 1.3
 	 * @author Grégory Viguier
 	 */
-	public function maybe_warn_license_is_deactivated() {
-		global $current_screen, $pagenow;
-
-		if ( 'update.php' === $pagenow || 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' === $current_screen->base ) {
-			return;
-		}
-
-		if ( ! static::current_user_can() ) {
-			return;
-		}
-
-		if ( secupress_has_pro_license() || ! secupress_get_consumer_key() ) {
-			// If the license is valid, or the license is empty.
-			return;
-		}
-
-		// Display a notice telling the user (his|her) license is deactivated.
-		$message = sprintf(
-			/** Translators: %s is a "the plugin settings page" link. */
-			__( 'Your license is inactive, you should take a look at %s.', 'secupress' ),
-			'<a href="' . esc_url( static::get_settings_url() ) . '">' . __( 'the plugin settings page', 'secupress' ) . '</a>'
-		);
-
-		static::add_notice( $message, 'error', false );
-	}
-
-
-	/**
-	 * Maybe install the Pro plugin.
-	 * If the Pro plugin information is missing, we get fresh data from our server first.
-	 * Once the information is stored, display a notice to install the Pro version.
-	 *
-	 * @since 1.3
-	 * @author Grégory Viguier
-	 */
-	public function maybe_install_pro_version() {
-		global $pagenow;
-
-		if ( 'update.php' === $pagenow ) {
-			// This is the page where WP displays when installing a plugin.
+	public function maybe_warn_to_install_pro_version() {
+		if ( static::is_update_page() ) {
 			return;
 		}
 
@@ -108,6 +76,57 @@ class SecuPress_Admin_Pro_Upgrade extends SecuPress_Admin_Offer_Migration {
 			return;
 		}
 
+		$information = static::get_transient();
+
+		if ( $information && ! empty( $information->automatic_install ) ) {
+			// Install the Pro version by redirecting the user to the install URL.
+			unset( $information->automatic_install );
+			static::set_transient( $information );
+
+			wp_safe_redirect( esc_url_raw( static::get_post_install_url() ) );
+			die();
+		}
+
+		if ( null === $information ) {
+			// The information is not valid, cleanup the transient.
+			static::delete_transient();
+		}
+
+		// Display a notice asking the user to install the Pro version.
+		$message = sprintf(
+			/** Translators: 1 is a "upgrade" link. */
+			__( 'You can now %s to the Pro version.', 'secupress' ),
+			'<a href="' . esc_url( static::get_post_install_url() ) . '">' . _x( 'upgrade', 'verb', 'secupress' ) . '</a>'
+		);
+
+		static::add_notice( $message, 'updated', false );
+	}
+
+
+	/**
+	 * Maybe install the Pro plugin.
+	 * If the Pro plugin information is missing, we get fresh data from our server first.
+	 * If the Pro plugin is already installed, we delete it.
+	 * Once the information is stored, install the Pro version.
+	 *
+	 * @since 1.3
+	 * @author Grégory Viguier
+	 */
+	public function maybe_install_pro_version() {
+		if ( ! static::current_user_can() ) {
+			return;
+		}
+
+		if ( empty( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], self::POST_ACTION ) ) {
+			secupress_admin_die();
+		}
+
+		if ( ! secupress_has_pro_license() ) {
+			// If the license is not valid.
+			return;
+		}
+
+		// Make sure we have the plugin information.
 		$information = static::get_transient();
 
 		if ( null === $information ) {
@@ -129,8 +148,10 @@ class SecuPress_Admin_Pro_Upgrade extends SecuPress_Admin_Offer_Migration {
 					'<a target="_blank" title="' . esc_attr__( 'Open in a new window.', 'secupress' ) . '" href="' . esc_url( static::get_account_url() ) . '">' . __( 'SecuPress account', 'secupress' ) . '</a>'
 				);
 
-				static::add_notice( $message, 'error' );
-				return;
+				static::add_transient_notice( $message, 'error' );
+
+				wp_safe_redirect( esc_url_raw( wp_get_referer() ) );
+				die();
 			}
 
 			static::set_transient( $information );
@@ -148,72 +169,17 @@ class SecuPress_Admin_Pro_Upgrade extends SecuPress_Admin_Offer_Migration {
 				'<a target="_blank" title="' . esc_attr__( 'Open in a new window.', 'secupress' ) . '" href="' . esc_url( static::get_account_url() ) . '">' . __( 'SecuPress account', 'secupress' ) . '</a>'
 			);
 
-			static::add_notice( $message, 'error' );
-			return;
+			static::add_transient_notice( $message, 'error' );
+
+			wp_safe_redirect( esc_url_raw( wp_get_referer() ) );
+			die();
 		}
 
 		/**
 		 * OK, we have all we need, `static::add_migration_data()` will do the rest.
 		 */
-		if ( ! empty( $information->automatic_install ) ) {
-			// Install the Pro version by redirecting the user to the install URL.
-			unset( $information->automatic_install );
-			static::set_transient( $information );
-
-			wp_safe_redirect( esc_url_raw( static::get_install_url() ) );
-			die();
-		}
-
-		// Display a notice asking the user to install the Pro version.
-		$message = sprintf(
-			/** Translators: 1 is a "upgrade" link. */
-			__( 'You can now %s to the Pro version.', 'secupress' ),
-			'<a href="' . esc_url( static::get_install_url() ) . '">' . _x( 'upgrade', 'verb', 'secupress' ) . '</a>'
-		);
-
-		static::add_notice( $message, 'updated', false );
-	}
-
-
-	/**
-	 * Display a warning when the Pro plugin has been installed (once).
-	 *
-	 * @since 1.3
-	 * @author Grégory Viguier
-	 */
-	public function maybe_congratulate() {
-		global $pagenow;
-
-		if ( 'update.php' === $pagenow ) {
-			return;
-		}
-
-		if ( ! static::current_user_can() ) {
-			return;
-		}
-
-		$transient = static::get_transient();
-
-		/**
-		 * If the transient value is null, that means it contains an invalid value, like a value from the Pro plugin, that is now considered invalid by the Free plugin.
-		 * In that case we need to delete it before bailing out.
-		 */
-		if ( false === $transient ) {
-			return;
-		}
-
-		// The same transient is used for both migrations, so we delete it in both cases.
-		static::delete_transient();
-
-		if ( ! $transient || ! secupress_is_pro() ) {
-			// Pro is not activated or the license is not valid.
-			return;
-		}
-
-		// Add a congratulations notice.
-		$message = __( 'Congratulations, your Pro version has been installed 🎉.', 'secupress' );
-
-		static::add_transient_notice( $message );
+		wp_safe_redirect( esc_url_raw( static::get_install_url() ) );
+		die();
 	}
 
 
@@ -227,6 +193,10 @@ class SecuPress_Admin_Pro_Upgrade extends SecuPress_Admin_Offer_Migration {
 	 * @param (object|bool) $information The Pro plugin information. False otherwise.
 	 */
 	public function maybe_set_transient_from_remote( $information ) {
+		if ( $information && is_object( $information ) ) {
+			$information->secupress_data_type = 'pro';
+		}
+
 		$information = static::validate_plugin_information( $information, true );
 
 		if ( $information ) {
@@ -277,8 +247,10 @@ class SecuPress_Admin_Pro_Upgrade extends SecuPress_Admin_Offer_Migration {
 		}
 
 		$information = (object) $information->data;
+		$information->secupress_data_type = 'pro';
 
-		return static::validate_plugin_information( $information, true );
+		$information = static::validate_plugin_information( $information, true );
+		return $information;
 	}
 
 
