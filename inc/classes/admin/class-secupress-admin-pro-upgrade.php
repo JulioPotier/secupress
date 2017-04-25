@@ -46,8 +46,13 @@ class SecuPress_Admin_Pro_Upgrade extends SecuPress_Admin_Offer_Migration {
 			return;
 		}
 
-		add_action( 'current_screen',                  array( $this, 'maybe_warn_to_install_pro_version' ) );
-		add_action( 'admin_post_' . self::POST_ACTION, array( $this, 'maybe_install_pro_version' ) );
+		if ( ! secupress_has_pro() ) {
+			add_action( 'current_screen',                  array( $this, 'maybe_warn_to_install_pro_version' ) );
+			add_action( 'admin_post_' . self::POST_ACTION, array( $this, 'maybe_install_pro_version' ) );
+		} else {
+			add_action( 'secupress.offer_migration.migration_done', array( $this, 'maybe_trigger_activation_hooks' ) );
+			add_action( 'admin_head',                               array( $this, 'maybe_congratulate' ) );
+		}
 
 		parent::_init();
 	}
@@ -180,6 +185,49 @@ class SecuPress_Admin_Pro_Upgrade extends SecuPress_Admin_Offer_Migration {
 		 */
 		wp_safe_redirect( esc_url_raw( static::get_install_url() ) );
 		die();
+	}
+
+
+	/**
+	 * After Free -> Pro migration, trigger activation hooks.
+	 *
+	 * @since 1.3
+	 * @author Grégory Viguier
+	 */
+	public function maybe_trigger_activation_hooks() {
+		// Store the user ID, it will be used to display the congratulations notice.
+		add_user_meta( get_current_user_id(), 'secupress_migration_congrats', 1, true );
+
+		// Trigger activation hooks.
+		$plugin       = static::$plugin_basename;
+		$network_wide = is_multisite();
+		/** This hook is documented in wp-admin/includes/plugin.php. */
+		do_action( "activate_{$plugin}", $network_wide );
+	}
+
+
+	/**
+	 * Display a warning when the Pro plugin has been installed.
+	 *
+	 * @since 1.3
+	 * @author Grégory Viguier
+	 */
+	public function maybe_congratulate() {
+		if ( ! static::current_user_can() ) {
+			return;
+		}
+
+		$user_id  = get_current_user_id();
+		$congrats = get_user_meta( $user_id, 'secupress_migration_congrats', true );
+
+		if ( ! $congrats ) {
+			return;
+		}
+
+		delete_user_meta( $user_id, 'secupress_migration_congrats' );
+
+		$message = __( 'Congratulations, your Pro version has been installed 🎉.', 'secupress' );
+		static::add_notice( $message );
 	}
 
 
