@@ -52,6 +52,7 @@ class SecuPress_Admin_Pro_Upgrade extends SecuPress_Admin_Offer_Migration {
 		} else {
 			add_action( 'secupress.offer_migration.migration_done', array( $this, 'maybe_trigger_activation_hooks' ) );
 			add_action( 'admin_head',                               array( $this, 'maybe_congratulate' ) );
+			add_action( 'admin_footer',                             array( $this, 'maybe_redirect_to_settings' ), SECUPRESS_INT_MAX );
 		}
 
 		parent::_init();
@@ -87,6 +88,9 @@ class SecuPress_Admin_Pro_Upgrade extends SecuPress_Admin_Offer_Migration {
 			// Install the Pro version by redirecting the user to the install URL.
 			unset( $information->automatic_install );
 			static::set_transient( $information );
+
+			// This one will be used to do a redirection once the Pro plugin is installed.
+			secupress_set_site_transient( 'secupress_offer_migration_redirect', 1 );
 
 			wp_safe_redirect( esc_url_raw( static::get_post_install_url() ) );
 			die();
@@ -228,6 +232,32 @@ class SecuPress_Admin_Pro_Upgrade extends SecuPress_Admin_Offer_Migration {
 
 		$message = __( 'Congratulations, your Pro version has been installed 🎉.', 'secupress' );
 		static::add_notice( $message );
+	}
+
+
+	/**
+	 * Once the Pro version is installed and activated, redirect to the settings page, but only if the user just submitted the license key.
+	 *
+	 * @since 1.3
+	 * @author Grégory Viguier
+	 */
+	public function maybe_redirect_to_settings( $hook_suffix ) {
+		if ( 'update.php' !== $hook_suffix || ! defined( 'IFRAME_REQUEST' ) || ! IFRAME_REQUEST ) {
+			return;
+		}
+
+		if ( ! isset( $_GET['action'], $_GET['success'], $_GET['plugin'], $_GET['_wpnonce'] ) || isset( $_GET['failure'] ) ) {
+			return;
+		}
+
+		if ( 'activate-plugin' !== $_GET['action'] || static::$plugin_basename !== $_GET['plugin'] || ! wp_verify_nonce( $_GET['_wpnonce'], 'activate-plugin_' . $_GET['plugin'] ) ) {
+			return;
+		}
+
+		if ( secupress_get_site_transient( 'secupress_offer_migration_redirect' ) ) {
+			secupress_delete_site_transient( 'secupress_offer_migration_redirect' );
+			echo '<script type="text/javascript">window.top.location.href = "' . esc_url_raw( secupress_admin_url( 'settings' ) ) . '";</script>';
+		}
 	}
 
 
