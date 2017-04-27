@@ -2,7 +2,7 @@
 Contributors: wp_media, SecuPress, juliobox, GregLone
 Tags: secure, security plugin, wordpress security, hack, malware
 Requires at least: 3.7
-Tested up to: 4.7.3
+Tested up to: 4.7.4
 Stable tag: 1.2.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -116,6 +116,8 @@ SecuPress can run 3 separate scheduled tasks for you. It’s like having a secur
 SecuPress will keep a log of important security activities and 404 pages triggered by users, bots or even Chuck Norris. This lets you keep an eye on what’s going on in your WordPress at any time. You can also control banned IPs from this option.
 
 *(1) Available in the [Pro Version](http://secupress.me/features/).*
+
+*(SecuPress est une extension de sécurité WordPress réalisée par WP Media, startup française auteure de WP Rocket et Imagify)*
 
 == Installation ==
 
