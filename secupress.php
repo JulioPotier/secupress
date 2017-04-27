@@ -106,6 +106,9 @@ function secupress_init() {
 
 	define( 'SECUPRESS_PLUGIN_SLUG', sanitize_title( SECUPRESS_PLUGIN_NAME ) );
 
+	// Cleanup leftovers periodically.
+	SecuPress_Cleanup_Leftovers::get_instance();
+
 	if ( is_admin() ) {
 		if ( is_multisite() ) {
 			// Hooks for multisite.
@@ -319,6 +322,9 @@ function secupress_load_functions() {
 
 	// The Singleton class.
 	secupress_require_class( 'Singleton' );
+
+	// Cleanup leftovers periodically.
+	secupress_require_class( 'Cleanup_Leftovers' );
 
 	if ( ! is_admin() ) {
 		return;
