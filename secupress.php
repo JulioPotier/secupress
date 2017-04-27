@@ -60,7 +60,7 @@ define( 'SECUPRESS_WP_MIN'                , '3.7' );
 define( 'SECUPRESS_INT_MAX'               , PHP_INT_MAX - 20 );
 
 if ( ! defined( 'SECUPRESS_USE_BETA' ) ) {
-	define( 'SECUPRESS_USE_BETA', 0 );
+	define( 'SECUPRESS_USE_BETA', 1 );////Back to 0 when the beta tests are finished.
 }
 
 
