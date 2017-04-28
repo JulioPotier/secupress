@@ -301,13 +301,14 @@ abstract class SecuPress_Admin_Offer_Migration extends SecuPress_Singleton {
 	 * @return (string) A URL.
 	 */
 	public static function get_install_url() {
-		$install_url = array(
+		$install_url = is_multisite() ? network_admin_url( 'update.php' ) : admin_url( 'update.php' );
+		$args        = array(
 			'action'   => 'upgrade-plugin',
 			'plugin'   => static::$plugin_basename,
 			'_wpnonce' => wp_create_nonce( 'upgrade-plugin_' . static::$plugin_basename ),
 		);
 
-		return add_query_arg( $install_url, self_admin_url( 'update.php' ) );
+		return add_query_arg( $args, $install_url );
 	}
 
 
@@ -320,12 +321,13 @@ abstract class SecuPress_Admin_Offer_Migration extends SecuPress_Singleton {
 	 * @return (string) A URL.
 	 */
 	protected static function get_post_install_url() {
-		$install_url = array(
+		$install_url = admin_url( 'admin-post.php' );
+		$args        = array(
 			'action'   => static::POST_ACTION,
 			'_wpnonce' => wp_create_nonce( static::POST_ACTION ),
 		);
 
-		return add_query_arg( $install_url, admin_url( 'admin-post.php' ) );
+		return add_query_arg( $args, $install_url );
 	}
 
 
@@ -414,9 +416,15 @@ abstract class SecuPress_Admin_Offer_Migration extends SecuPress_Singleton {
 	 *
 	 * @since 1.3
 	 * @author Grégory Viguier
+	 *
+	 * @param $current_page (string) The current screen name.
 	 */
-	protected static function is_update_page() {
+	protected static function is_update_page( $current_page = null ) {
 		global $pagenow;
+
+		if ( $current_page ) {
+			return 'update.php' === $current_page;
+		}
 
 		return 'update.php' === $pagenow;
 	}
@@ -431,7 +439,9 @@ abstract class SecuPress_Admin_Offer_Migration extends SecuPress_Singleton {
 	protected static function is_settings_page() {
 		global $current_screen;
 
-		return 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' === $current_screen->base;
+		$base = 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' . ( is_multisite() ? '-network' : '' );
+
+		return $base === $current_screen->base;
 	}
 
 
