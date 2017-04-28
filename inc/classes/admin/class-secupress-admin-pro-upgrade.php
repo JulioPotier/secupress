@@ -236,13 +236,16 @@ class SecuPress_Admin_Pro_Upgrade extends SecuPress_Admin_Offer_Migration {
 
 
 	/**
-	 * Once the Pro version is installed and activated, redirect to the settings page, but only if the user just submitted the license key.
+	 * Once the Pro version is installed and activated, redirect to the settings page, but only if the user just submitted the license key. This is printed right after the "Plugin reactivated successfully.".
 	 *
 	 * @since 1.3
+	 * @see iframe_footer()
 	 * @author Grégory Viguier
+	 *
+	 * @param $hook_suffix (string) The hook name (also known as the hook suffix) used to determine the current screen.
 	 */
 	public function maybe_redirect_to_settings( $hook_suffix ) {
-		if ( 'update.php' !== $hook_suffix || ! defined( 'IFRAME_REQUEST' ) || ! IFRAME_REQUEST ) {
+		if ( ! static::is_update_page( $hook_suffix ) || ! defined( 'IFRAME_REQUEST' ) || ! IFRAME_REQUEST ) {
 			return;
 		}
 
