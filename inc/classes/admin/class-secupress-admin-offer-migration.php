@@ -417,7 +417,7 @@ abstract class SecuPress_Admin_Offer_Migration extends SecuPress_Singleton {
 	 * @since 1.3
 	 * @author Grégory Viguier
 	 *
-	 * @param $current_page (string) The current screen name.
+	 * @param (string) $current_page The current screen name.
 	 */
 	protected static function is_update_page( $current_page = null ) {
 		global $pagenow;

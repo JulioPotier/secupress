@@ -242,7 +242,7 @@ class SecuPress_Admin_Pro_Upgrade extends SecuPress_Admin_Offer_Migration {
 	 * @see iframe_footer()
 	 * @author Grégory Viguier
 	 *
-	 * @param $hook_suffix (string) The hook name (also known as the hook suffix) used to determine the current screen.
+	 * @param (string) $hook_suffix The hook name (also known as the hook suffix) used to determine the current screen.
 	 */
 	public function maybe_redirect_to_settings( $hook_suffix ) {
 		if ( ! static::is_update_page( $hook_suffix ) || ! defined( 'IFRAME_REQUEST' ) || ! IFRAME_REQUEST ) {
