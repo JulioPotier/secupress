@@ -81,8 +81,27 @@ module.exports = function( grunt ) {
 					"ext":    ".min.css"
 				} ]
 			}
+		},
+		'copy': {
+			'no-longer-in-directory': {
+				'files': [
+					{
+						'expand': true,
+						'nonull': true,
+						'cwd': '../no-longer-in-directory',
+						'src':  '*-plugin-list.txt',
+						'dest': 'inc/data/',
+						'ext': '.data'
+					}
+				]
+			}
 		}
 	} );
+
+	// Allow local configuration, for file paths for example.
+	if ( grunt.file.exists( 'gruntlocalconf.json' ) ) {
+		grunt.config.merge( grunt.file.readJSON( 'gruntlocalconf.json' ) );
+	}
 
 	grunt.loadNpmTasks( "grunt-contrib-jshint" );
 	grunt.loadNpmTasks( "grunt-contrib-uglify" );
@@ -90,6 +109,7 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( "grunt-postcss" );
 	grunt.loadNpmTasks( "grunt-newer" );
 	grunt.loadNpmTasks( "grunt-dev-update" );
+	grunt.loadNpmTasks( "grunt-contrib-copy" );
 
 	grunt.registerTask( "css", [ "postcss", "cssmin" ] );
 	grunt.registerTask( "js", [ "newer:jshint", "newer:uglify" ] );
