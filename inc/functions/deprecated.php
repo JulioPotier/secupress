@@ -2,6 +2,15 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 /**
+ * Deprecated constants.
+ * Be aware that they are not defined as soon as the plugin loads anymore.
+ */
+define( 'SECUPRESS_SCAN_SLUG',           'secupress_scanners' );  // Since 1.3.1.
+define( 'SECUPRESS_FIX_SLUG',            'secupress_fixes' );     // Since 1.3.1.
+define( 'SECUPRESS_SCAN_FIX_SITES_SLUG', 'secupress_fix_sites' ); // Since 1.3.1.
+
+
+/**
  * Send an email message to our awesome support team (yes it is).
  *
  * @since 1.1.1

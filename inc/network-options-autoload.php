@@ -84,7 +84,6 @@ function secupress_get_global_network_option_names_for_autoload() {
 	if ( is_admin() ) {
 		$option_names = array_merge( $option_names, array(
 			SECUPRESS_SCAN_TIMES,
-			SECUPRESS_FIX_SLUG,
 		) );
 	}
 
@@ -95,6 +94,7 @@ function secupress_get_global_network_option_names_for_autoload() {
 			'_site_transient_secupress-add-cookiehash-muplugin',
 			'_site_transient_secupress-add-salt-muplugin',
 			'_site_transient_' . SECUPRESS_ACTIVE_SUBMODULES,
+			'_site_transient_secupress_autoscans',
 		) );
 
 		if ( is_admin() ) {
@@ -193,15 +193,6 @@ function secupress_load_user_network_options( $cookie_elements, $user ) {
 			'_site_transient_secupress_module_deactivation_' . $current_user_id,
 			'_transient_secupress-notices-' . $current_user_id,
 		);
-	}
-
-	// Scans, fixes.
-	if ( $user_can ) {
-		$option_names[] = SECUPRESS_SCAN_SLUG;
-
-		if ( is_admin() ) {
-			$option_names[] = SECUPRESS_SCAN_FIX_SITES_SLUG;
-		}
 	}
 
 	/**

@@ -887,19 +887,19 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 				return array();
 			}
 
-			$site_id       = get_current_blog_id();
-			$sub_transient = secupress_get_site_transient( SECUPRESS_SCAN_FIX_SITES_SLUG . '_' . $name );
-			$sub_transient = is_array( $sub_transient ) ? $sub_transient : array();
+			$site_id     = get_current_blog_id();
+			$sub_results = SecuPress_Scanner_Results::get_sub_sites_results( $name );
+			$sub_results = is_array( $sub_results ) ? $sub_results : array();
 
-			$sub_transient[ $site_id ] = ! empty( $sub_transient[ $site_id ] ) ? $sub_transient[ $site_id ] : array();
-			$sub_transient[ $site_id ]['scan'] = ! empty( $this->fix_sites[ $site_id ]['scan'] ) ? $this->fix_sites[ $site_id ]['scan'] : array();
+			$sub_results[ $site_id ]         = ! empty( $sub_results[ $site_id ] )             ? $sub_results[ $site_id ]             : array();
+			$sub_results[ $site_id ]['scan'] = ! empty( $this->fix_sites[ $site_id ]['scan'] ) ? $this->fix_sites[ $site_id ]['scan'] : array();
 
-			secupress_set_site_transient( SECUPRESS_SCAN_FIX_SITES_SLUG . '_' . $name, $sub_transient );
+			SecuPress_Scanner_Results::update_sub_sites_result( $name, $sub_results );
 
 			return isset( $this->fix_sites[ $site_id ]['scan'] ) && is_array( $this->fix_sites[ $site_id ]['scan'] ) ? $this->fix_sites[ $site_id ]['scan'] : array();
 		}
 
-		secupress_set_site_transient( 'secupress_scan_' . $name, $this->result );
+		SecuPress_Scanner_Results::update_scan_result( $name, $this->result );
 
 		return $this->result;
 	}
@@ -920,23 +920,23 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 				return array();
 			}
 
-			$site_id       = get_current_blog_id();
-			$sub_transient = secupress_get_site_transient( SECUPRESS_SCAN_FIX_SITES_SLUG . '_' . $name );
-			$sub_transient = is_array( $sub_transient ) ? $sub_transient : array();
+			$site_id     = get_current_blog_id();
+			$sub_results = SecuPress_Scanner_Results::get_sub_sites_results( $name );
+			$sub_results = is_array( $sub_results ) ? $sub_results : array();
 
-			$sub_transient[ $site_id ] = ! empty( $sub_transient[ $site_id ] ) ? $sub_transient[ $site_id ] : array();
-			$sub_transient[ $site_id ]['fix'] = ! empty( $this->fix_sites[ $site_id ]['fix'] ) ? $this->fix_sites[ $site_id ]['fix'] : array();
+			$sub_results[ $site_id ]        = ! empty( $sub_results[ $site_id ] )            ? $sub_results[ $site_id ]            : array();
+			$sub_results[ $site_id ]['fix'] = ! empty( $this->fix_sites[ $site_id ]['fix'] ) ? $this->fix_sites[ $site_id ]['fix'] : array();
 
-			secupress_set_site_transient( SECUPRESS_SCAN_FIX_SITES_SLUG . '_' . $name, $sub_transient );
+			SecuPress_Scanner_Results::update_sub_sites_result( $name, $sub_results );
 
 			return isset( $this->fix_sites[ $site_id ]['fix'] ) && is_array( $this->fix_sites[ $site_id ]['fix'] ) ? $this->fix_sites[ $site_id ]['fix'] : array();
 		}
 
 		if ( isset( $this->fix_sites ) ) {
-			secupress_set_site_transient( SECUPRESS_SCAN_FIX_SITES_SLUG . '_' . $name, $this->fix_sites );
+			SecuPress_Scanner_Results::update_sub_sites_result( $name, $this->fix_sites );
 		}
 
-		secupress_set_site_transient( 'secupress_fix_' . $name, $this->result_fix );
+		SecuPress_Scanner_Results::update_fix_result( $name, $this->result_fix );
 
 		return $this->result_fix;
 	}

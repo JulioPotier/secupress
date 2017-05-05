@@ -27,10 +27,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 define( 'SECUPRESS_VERSION'               , '1.3-beta3' );
 define( 'SECUPRESS_ACTIVE_SUBMODULES'     , 'secupress_active_submodules' );
 define( 'SECUPRESS_SETTINGS_SLUG'         , 'secupress_settings' );
-define( 'SECUPRESS_SCAN_SLUG'             , 'secupress_scanners' );
 define( 'SECUPRESS_SCAN_TIMES'            , 'secupress_scanners_times' );
-define( 'SECUPRESS_FIX_SLUG'              , 'secupress_fixes' );
-define( 'SECUPRESS_SCAN_FIX_SITES_SLUG'   , 'secupress_fix_sites' );
 define( 'SECUPRESS_WP_CORE_FILES_HASHES'  , 'secupress_wp_core_files_hashes' );
 define( 'SECUPRESS_FULL_FILETREE'         , 'secupress_full_filetree' );
 define( 'SECUPRESS_FIX_DISTS'             , 'secupress_fix_dists' );
@@ -320,6 +317,9 @@ function secupress_load_functions() {
 
 	// The Singleton class.
 	secupress_require_class( 'Singleton' );
+
+	// The Scanner results class.
+	secupress_require_class( 'Scanner_Results' );
 
 	if ( ! is_admin() ) {
 		return;
