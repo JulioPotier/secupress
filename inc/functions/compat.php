@@ -297,7 +297,7 @@ if ( ! function_exists( 'wp_get_raw_referer' ) ) :
 	function wp_get_raw_referer() {
 		if ( ! empty( $_REQUEST['_wp_http_referer'] ) ) {
 			return wp_unslash( $_REQUEST['_wp_http_referer'] );
-		} else if ( ! empty( $_SERVER['HTTP_REFERER'] ) ) {
+		} elseif ( ! empty( $_SERVER['HTTP_REFERER'] ) ) {
 			return wp_unslash( $_SERVER['HTTP_REFERER'] );
 		}
 
