@@ -304,7 +304,7 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 	}
 
 	// < 1.3
-	if ( version_compare( $actual_version, '1.3', '<' ) ) {
+	if ( version_compare( $actual_version, '1.3' ) < 0 ) {
 		// Remove 'OrangeBot' from the Bad User Agents list.
 		$user_agents_options = get_option( 'secupress_firewall_settings' );
 
@@ -315,10 +315,7 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 			$user_agents_options['bbq-headers_user-agents-list'] = implode( ', ', $user_agents_options['bbq-headers_user-agents-list'] );
 			update_option( 'secupress_firewall_settings', $user_agents_options );
 		}
-	}
 
-	// < 1.3.1
-	if ( version_compare( $actual_version, '1.3.1' ) < 0 ) {
 		// New way to store scans and fixes.
 		$scanners     = secupress_get_scanners();
 		$scanners     = call_user_func_array( 'array_merge', $scanners );

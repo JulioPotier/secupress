@@ -123,7 +123,7 @@ function secupress_get_module_option( $option, $default = null, $module = false 
  * Get all scan results.
  *
  * @since 1.0
- * @since 1.3.1 Use multiple options instead of 1 option and multiple transients.
+ * @since 1.3 Use multiple options instead of 1 option and multiple transients.
  * @author Grégory Viguier
  *
  * @return (array)
@@ -137,7 +137,7 @@ function secupress_get_scan_results() {
  * Get all fix results.
  *
  * @since 1.0
- * @since 1.3.1 Use multiple options instead of 1 option and multiple transients.
+ * @since 1.3 Use multiple options instead of 1 option and multiple transients.
  * @author Grégory Viguier
  *
  * @return (array)

@@ -6,7 +6,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
  * Scan and Fix results class.
  *
  * @package SecuPress
- * @since 1.3.1
+ * @since 1.3
  * @author Grégory Viguier
  */
 class SecuPress_Scanner_Results {
@@ -57,7 +57,7 @@ class SecuPress_Scanner_Results {
 	/**
 	 * Get all scan results.
 	 *
-	 * @since 1.3.1
+	 * @since 1.3
 	 * @author Grégory Viguier
 	 *
 	 * @return (array)
@@ -80,7 +80,7 @@ class SecuPress_Scanner_Results {
 	/**
 	 * Get a scan result.
 	 *
-	 * @since 1.3.1
+	 * @since 1.3
 	 * @author Grégory Viguier
 	 *
 	 * @param (string) $scan_name Name of the scanner.
@@ -149,7 +149,7 @@ class SecuPress_Scanner_Results {
 	/**
 	 * Get a scan raw result.
 	 *
-	 * @since 1.3.1
+	 * @since 1.3
 	 * @author Grégory Viguier
 	 *
 	 * @param (string) $scan_name Name of the scanner.
@@ -173,7 +173,7 @@ class SecuPress_Scanner_Results {
 	/**
 	 * Delete a scan result.
 	 *
-	 * @since 1.3.1
+	 * @since 1.3
 	 * @author Grégory Viguier
 	 *
 	 * @param (string) $scan_name Name of the scanner.
@@ -195,7 +195,7 @@ class SecuPress_Scanner_Results {
 	/**
 	 * Update a scan result.
 	 *
-	 * @since 1.3.1
+	 * @since 1.3
 	 * @author Grégory Viguier
 	 *
 	 * @param (string) $scan_name Name of the scanner.
@@ -218,7 +218,7 @@ class SecuPress_Scanner_Results {
 	/**
 	 * Retrieve (and cache) from the DB all scan results at once.
 	 *
-	 * @since 1.3.1
+	 * @since 1.3
 	 * @author Grégory Viguier
 	 */
 	protected static function cache_scan_results() {
@@ -241,7 +241,7 @@ class SecuPress_Scanner_Results {
 	/**
 	 * Get all fix results.
 	 *
-	 * @since 1.3.1
+	 * @since 1.3
 	 *
 	 * @return (array)
 	 */
@@ -263,7 +263,7 @@ class SecuPress_Scanner_Results {
 	/**
 	 * Get a fix result.
 	 *
-	 * @since 1.3.1
+	 * @since 1.3
 	 * @author Grégory Viguier
 	 *
 	 * @param (string) $scan_name Name of the scanner.
@@ -289,7 +289,7 @@ class SecuPress_Scanner_Results {
 	/**
 	 * Get a fix raw result.
 	 *
-	 * @since 1.3.1
+	 * @since 1.3
 	 * @author Grégory Viguier
 	 *
 	 * @param (string) $scan_name Name of the scanner.
@@ -313,7 +313,7 @@ class SecuPress_Scanner_Results {
 	/**
 	 * Delete a fix result.
 	 *
-	 * @since 1.3.1
+	 * @since 1.3
 	 * @author Grégory Viguier
 	 *
 	 * @param (string) $scan_name Name of the scanner.
@@ -335,7 +335,7 @@ class SecuPress_Scanner_Results {
 	/**
 	 * Update a fix result.
 	 *
-	 * @since 1.3.1
+	 * @since 1.3
 	 * @author Grégory Viguier
 	 *
 	 * @param (string) $scan_name Name of the scanner.
@@ -358,7 +358,7 @@ class SecuPress_Scanner_Results {
 	/**
 	 * Retrieve (and cache) from the DB all fix results at once.
 	 *
-	 * @since 1.3.1
+	 * @since 1.3
 	 * @author Grégory Viguier
 	 */
 	protected static function cache_fix_results() {
@@ -381,7 +381,7 @@ class SecuPress_Scanner_Results {
 	/**
 	 * Get all sub-sites results.
 	 *
-	 * @since 1.3.1
+	 * @since 1.3
 	 *
 	 * @return (array) The results, like:
 	 *  array(
@@ -447,7 +447,7 @@ class SecuPress_Scanner_Results {
 	/**
 	 * Get a sub-sites result.
 	 *
-	 * @since 1.3.1
+	 * @since 1.3
 	 * @author Grégory Viguier
 	 *
 	 * @param (string) $scan_name Name of the scanner.
@@ -515,7 +515,7 @@ class SecuPress_Scanner_Results {
 	/**
 	 * Get a fix raw result.
 	 *
-	 * @since 1.3.1
+	 * @since 1.3
 	 * @author Grégory Viguier
 	 *
 	 * @param (string) $scan_name Name of the scanner.
@@ -539,7 +539,7 @@ class SecuPress_Scanner_Results {
 	/**
 	 * Delete a sub-sites result.
 	 *
-	 * @since 1.3.1
+	 * @since 1.3
 	 * @author Grégory Viguier
 	 *
 	 * @param (string) $scan_name Name of the scanner.
@@ -561,7 +561,7 @@ class SecuPress_Scanner_Results {
 	/**
 	 * Update a sub-sites result.
 	 *
-	 * @since 1.3.1
+	 * @since 1.3
 	 * @author Grégory Viguier
 	 *
 	 * @param (string) $scan_name Name of the scanner.
@@ -584,7 +584,7 @@ class SecuPress_Scanner_Results {
 	/**
 	 * Retrieve (and cache) from the DB all sub-sites results at once.
 	 *
-	 * @since 1.3.1
+	 * @since 1.3
 	 * @author Grégory Viguier
 	 */
 	protected static function cache_sub_sites_results() {
@@ -607,7 +607,7 @@ class SecuPress_Scanner_Results {
 	/**
 	 * Get all scanner names.
 	 *
-	 * @since 1.3.1
+	 * @since 1.3
 	 * @author Grégory Viguier
 	 *
 	 * @return (array) An array like `array( 'easy_login' => 'Easy_Login',... )`.
@@ -632,7 +632,7 @@ class SecuPress_Scanner_Results {
 	/**
 	 * Get scanner names that can't be fixes from the network admin.
 	 *
-	 * @since 1.3.1
+	 * @since 1.3
 	 * @author Grégory Viguier
 	 *
 	 * @return (array) An array like `array( 'bad_old_plugins' => 'Bad_Old_Plugins',... )`.
@@ -656,7 +656,7 @@ class SecuPress_Scanner_Results {
 	/**
 	 * Schedule an auto-scan.
 	 *
-	 * @since 1.3.1
+	 * @since 1.3
 	 * @author Grégory Viguier
 	 *
 	 * @param (string) $scan_name Name of the scanner.

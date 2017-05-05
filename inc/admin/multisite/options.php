@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * The "scans et fixes of subsites" are related to the fixes that can't be done from the network admin if we are in a multisite installation.
  *
  * @since 1.0
- * @since 1.3.1 Use multiple options instead of 1 option and multiple transients.
+ * @since 1.3 Use multiple options instead of 1 option and multiple transients.
  * @author Grégory Viguier
  *
  * @return (array) The results, like:
