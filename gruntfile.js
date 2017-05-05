@@ -95,6 +95,36 @@ module.exports = function( grunt ) {
 					}
 				]
 			}
+		},
+		'http': {
+			'10k-most-common': {
+				'options': {
+					'url':     'https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/10k_most_common.txt',
+					'timeout': 10000
+				},
+				'dest': 'inc/data/10kmostcommon.data'
+			},
+			'no-longer-in-directory': {
+				'options': {
+					'url':     'https://plugins.svn.wordpress.org/no-longer-in-directory/trunk/no-longer-in-directory-plugin-list.txt',
+					'timeout': 10000
+				},
+				'dest': 'inc/data/no-longer-in-directory-plugin-list.data'
+			},
+			'not-updated-in-over-two-years': {
+				'options': {
+					'url':     'https://plugins.svn.wordpress.org/no-longer-in-directory/trunk/not-updated-in-over-two-years-plugin-list.txt',
+					'timeout': 10000
+				},
+				'dest': 'inc/data/not-updated-in-over-two-years-plugin-list.data'
+			},
+			'spam-blacklist': {
+				'options': {
+					'url':     'https://raw.githubusercontent.com/splorp/wordpress-comment-blacklist/master/blacklist.txt',
+					'timeout': 10000
+				},
+				'dest': 'inc/data/spam-blacklist.data'
+			}
 		}
 	} );
 
@@ -110,10 +140,12 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( "grunt-newer" );
 	grunt.loadNpmTasks( "grunt-dev-update" );
 	grunt.loadNpmTasks( "grunt-contrib-copy" );
+	grunt.loadNpmTasks( "grunt-http" );
 
 	grunt.registerTask( "css", [ "postcss", "cssmin" ] );
 	grunt.registerTask( "js", [ "newer:jshint", "newer:uglify" ] );
 	grunt.registerTask( "jsh", [ "jshint" ] );
 	grunt.registerTask( "minify", [ "jshint", "uglify", "postcss", "cssmin" ] );
 	grunt.registerTask( "minify-force", [ "minify" ] );
+	grunt.registerTask( "data", [ "http:10k-most-common", "http:no-longer-in-directory", "http:not-updated-in-over-two-years", "http:spam-blacklist" ] );
 };
