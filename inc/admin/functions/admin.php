@@ -218,7 +218,7 @@ function secupress_text_diff( $left_string, $right_string, $args = array() ) {
  */
 function secupress_set_old_report() {
 	$grade  = secupress_get_scanner_counts( 'grade' );
-	$report = get_option( SECUPRESS_SCAN_SLUG );
+	$report = secupress_get_scan_results();
 	update_option( 'secupress_step1_report', array( 'grade' => $grade, 'report' => $report ) );
 }
 
