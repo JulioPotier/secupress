@@ -281,3 +281,26 @@ if ( ! function_exists( 'hash_equals' ) ) :
 		return 0 === $result;
 	}
 endif;
+
+
+if ( ! function_exists( 'wp_get_raw_referer' ) ) :
+	/**
+	 * Retrieves unvalidated referer from '_wp_http_referer' or HTTP referer.
+	 *
+	 * Do not use for redirects, use wp_get_referer() instead.
+	 *
+	 * @since 1.3
+	 * @since WP 4.5.0
+	 *
+	 * @return string|false Referer URL on success, false on failure.
+	 */
+	function wp_get_raw_referer() {
+		if ( ! empty( $_REQUEST['_wp_http_referer'] ) ) {
+			return wp_unslash( $_REQUEST['_wp_http_referer'] );
+		} else if ( ! empty( $_SERVER['HTTP_REFERER'] ) ) {
+			return wp_unslash( $_SERVER['HTTP_REFERER'] );
+		}
+
+		return false;
+	}
+endif;
