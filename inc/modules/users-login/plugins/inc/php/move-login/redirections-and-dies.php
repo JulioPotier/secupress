@@ -11,6 +11,7 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
  * We don't want that, so we remove the hook.
  *
  * @since 1.0
+ * @author Grégory Viguier
  */
 remove_action( 'template_redirect', 'wp_redirect_admin_locations', 1000 );
 
@@ -20,6 +21,7 @@ add_filter( 'rewrite_rules_array', 'secupress_move_login_remove_rewrite_rules' )
  * Filter the full set of generated rewrite rules.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (array) $rules The compiled array of rewrite rules.
  *
@@ -43,6 +45,7 @@ add_action( 'login_init', 'secupress_move_login_maybe_deny_login_page', 0 );
  * Does nothing if the user is logged in.
  *
  * @since 1.0
+ * @author Grégory Viguier
  */
 function secupress_move_login_maybe_deny_login_page() {
 	// If the user is logged in, do nothing, let WP redirect this user to the administration area.
@@ -63,6 +66,7 @@ function secupress_move_login_maybe_deny_login_page() {
 	 * If you want to display the login form somewhere outside wp-login.php, add your URIs here.
 	 *
 	 * @since 1.0
+	 * @author Grégory Viguier
 	 *
 	 * @param (array)  $new_slugs An array of action => URIs (WP directory + slugs).
 	 * @param (string) $uri       The current URI.
@@ -91,6 +95,7 @@ function secupress_move_login_maybe_deny_login_page() {
  * Perform the action set for the login page: die or redirect.
  *
  * @since 1.0
+ * @author Grégory Viguier
  */
 function secupress_move_login_deny_login_access() {
 	/**
@@ -98,6 +103,7 @@ function secupress_move_login_deny_login_access() {
 	 * Don't forget to exit/die.
 	 *
 	 * @since 1.0
+	 * @author Grégory Viguier
 	 */
 	do_action( 'secupress.plugin.move-login.deny_login_access' );
 
@@ -109,6 +115,7 @@ function secupress_move_login_deny_login_access() {
 			 * Filter the 404 page URL.
 			 *
 			 * @since 1.0
+			 * @author Grégory Viguier
 			 *
 			 * @param (string) $redirect An URL that leads to a 404 response.
 			 */
@@ -135,6 +142,7 @@ add_action( 'after_setup_theme', 'secupress_move_login_maybe_deny_admin_redirect
  * `admin-post.php` and `admin-ajax.php` are white listed.
  *
  * @since 1.0
+ * @author Grégory Viguier
  */
 function secupress_move_login_maybe_deny_admin_redirect() {
 	global $pagenow;
@@ -166,6 +174,7 @@ add_filter( 'register_url', 'secupress_move_login_maybe_deny_signup_redirect' );
  * Does nothing in multi-site.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (string) $url The URL.
  */
@@ -189,6 +198,7 @@ function secupress_move_login_maybe_deny_signup_redirect( $url ) {
  * Perform the action set for redirections to login page: die or redirect.
  *
  * @since 1.0
+ * @author Grégory Viguier
  */
 function secupress_move_login_deny_login_redirect() {
 	/**
@@ -196,6 +206,7 @@ function secupress_move_login_deny_login_redirect() {
 	 * Don't forget to exit/die.
 	 *
 	 * @since 1.0
+	 * @author Grégory Viguier
 	 */
 	do_action( 'secupress.plugin.move-login.deny_login_redirect' );
 

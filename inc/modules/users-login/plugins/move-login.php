@@ -4,7 +4,7 @@
  * Description: Change your login URL.
  * Main Module: users_login
  * Author: SecuPress
- * Version: 1.0
+ * Version: 1.1
  */
 
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
@@ -32,6 +32,7 @@ if ( ! defined( 'SFML_ALLOW_LOGIN_ACCESS' ) || ! SFML_ALLOW_LOGIN_ACCESS ) {
  * Get default slugs.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @return (array)
  */
@@ -50,6 +51,7 @@ function secupress_move_login_get_default_slugs() {
 	 * Add additional slugs.
 	 *
 	 * @since 1.0
+	 * @author Grégory Viguier
 	 *
 	 * @param (array) $new_slugs An array with slugs as keys.
 	 */
@@ -69,6 +71,7 @@ function secupress_move_login_get_default_slugs() {
  * Get the slugs the user has set.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @return (array)
  */
