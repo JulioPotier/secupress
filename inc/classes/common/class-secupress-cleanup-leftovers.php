@@ -41,8 +41,10 @@ class SecuPress_Cleanup_Leftovers extends SecuPress_Singleton {
 	 * @since 1.0
 	 */
 	protected function _init() {
-		add_action( 'init',            array( $this, 'init_cron' ) );
-		add_action( static::CRON_NAME, array( $this, 'do_cron' ) );
+		add_action( 'init',                       array( $this, 'init_cron' ) );
+		add_action( static::CRON_NAME,            array( $this, 'do_cron' ) );
+		add_action( 'secupress.deactivation',     array( $this, 'do_cron' ) );
+		add_action( 'secupress.pro.deactivation', array( $this, 'do_cron' ) );
 	}
 
 
@@ -99,7 +101,7 @@ class SecuPress_Cleanup_Leftovers extends SecuPress_Singleton {
 			}
 		}
 
-		// Files created by the "Bad file extensions" scanner.
+		// Files created by the "Bad file extensions" scan.
 		$folder = wp_upload_dir( null, false );
 		$folder = trailingslashit( wp_normalize_path( $folder['basedir'] ) );
 		$files  = static::scandir( $folder );
@@ -118,6 +120,8 @@ class SecuPress_Cleanup_Leftovers extends SecuPress_Singleton {
 		$users = $wpdb->get_col( "SELECT ID FROM {$wpdb->users} WHERE user_email LIKE 'secupress_no_mail_SS@fakemail.%'" );
 
 		if ( $users ) {
+			require_once(ABSPATH . 'wp-admin/includes/user.php');
+
 			foreach ( $users as $user_id ) {
 				wp_delete_user( (int) $user_id );
 			}
