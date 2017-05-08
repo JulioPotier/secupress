@@ -19,6 +19,7 @@ if ( is_admin() ) {
 
 // EMERGENCY BYPASS!
 if ( ! defined( 'SFML_ALLOW_LOGIN_ACCESS' ) || ! SFML_ALLOW_LOGIN_ACCESS ) {
+	include( SECUPRESS_MODULES_PATH . 'users-login/plugins/inc/php/move-login/deprecated.php' );
 	include( SECUPRESS_MODULES_PATH . 'users-login/plugins/inc/php/move-login/url-filters.php' );
 	include( SECUPRESS_MODULES_PATH . 'users-login/plugins/inc/php/move-login/redirections-and-dies.php' );
 }
