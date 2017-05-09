@@ -199,7 +199,7 @@ function secupress_move_login_maybe_deny_login_redirect( $location ) {
 			// Ok, let WordPress redirect the user to the login page.
 			return $location;
 		case 'error':
-			wp_die( __( 'Cheatin&#8217; uh?' ), __( 'Lost?', 'secupress' ), array( 'response' => 403 ) );
+			wp_die( __( 'Cheatin&#8217; uh?', 'secupress' ), __( 'Lost?', 'secupress' ), array( 'response' => 403 ) );
 		case 'redir_404':
 			/** This filter is documented in inc/modules/users-login/plugins/inc/php/move-login/redirections-and-dies.php */
 			$redirect = apply_filters( 'sfml_404_error_page', home_url( '404' ) );
