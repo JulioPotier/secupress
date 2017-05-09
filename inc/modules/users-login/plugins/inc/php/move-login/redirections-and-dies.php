@@ -149,8 +149,6 @@ add_filter( 'wp_redirect', 'secupress_move_login_maybe_deny_login_redirect', 1 )
  * @return (string)
  */
 function secupress_move_login_maybe_deny_login_redirect( $location ) {
-	global $is_apache;
-
 	if ( is_user_logged_in() ) {
 		return $location;
 	}
