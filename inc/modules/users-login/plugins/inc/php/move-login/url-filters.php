@@ -10,6 +10,7 @@ add_filter( 'site_url', 'secupress_move_login_site_url', 10, 4 );
  * Filter the site URL.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (string)      $url     The complete site URL including scheme and path.
  * @param (string)      $path    Path relative to the site URL. Blank string if no path is specified.
@@ -43,6 +44,7 @@ add_filter( 'network_site_url', 'secupress_move_login_network_site_url', 10, 3 )
  * Filter the network site URL: don't use `network_site_url()` for the login URL ffs!
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (string)      $url    The complete network site URL including scheme and path.
  * @param (string)      $path   Path relative to the network site URL. Blank string if
@@ -66,6 +68,7 @@ add_filter( 'logout_url', 'secupress_move_login_logout_url', 1 );
  * Filter the logout URL: `wp_logout_url()` add the action param after using `site_url()`.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (string) $logout_url The Log Out URL.
  *
@@ -81,6 +84,7 @@ add_filter( 'lostpassword_url', 'secupress_move_login_lostpassword_url', 1 );
  * Filter the Lost Password URL: `wp_lostpassword_url()` add the action param after using `network_site_url()`.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (string) $lostpassword_url The lost password page URL.
  *
@@ -96,6 +100,7 @@ add_filter( 'wp_redirect', 'secupress_move_login_redirect', 10 );
  * Filter the redirect location: some redirections are hard-coded.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (string) $location The path to redirect to.
  *
@@ -134,6 +139,7 @@ add_filter( 'update_welcome_email', 'secupress_move_login_update_welcome_email',
  * Multisite: filter the content of the welcome email after site activation.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (string) $welcome_email Message body of the email.
  * @param (int)    $blog_id       Blog ID.
@@ -163,6 +169,7 @@ function secupress_move_login_update_welcome_email( $welcome_email, $blog_id ) {
  * Set the relative path: `wp-login.php?action=register -> /register`.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (string) $path Path relative to the site URL.
  *
@@ -210,6 +217,7 @@ function secupress_move_login_set_path( $path ) {
  * If the action is not present when we try to build the new URL, we fallback to `/login`. Then we can use this function after the action is added.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (string) $link The URL.
  * @param (string) $action The action.

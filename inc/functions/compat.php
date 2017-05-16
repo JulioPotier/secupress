@@ -281,3 +281,109 @@ if ( ! function_exists( 'hash_equals' ) ) :
 		return 0 === $result;
 	}
 endif;
+
+
+if ( ! function_exists( 'wp_get_raw_referer' ) ) :
+	/**
+	 * Retrieves unvalidated referer from '_wp_http_referer' or HTTP referer.
+	 *
+	 * Do not use for redirects, use wp_get_referer() instead.
+	 *
+	 * @since 1.3
+	 * @since WP 4.5.0
+	 *
+	 * @return (string|false) Referer URL on success, false on failure.
+	 */
+	function wp_get_raw_referer() {
+		if ( ! empty( $_REQUEST['_wp_http_referer'] ) ) {
+			return wp_unslash( $_REQUEST['_wp_http_referer'] );
+		} elseif ( ! empty( $_SERVER['HTTP_REFERER'] ) ) {
+			return wp_unslash( $_SERVER['HTTP_REFERER'] );
+		}
+
+		return false;
+	}
+endif;
+
+
+if ( ! function_exists( 'do_action_deprecated' ) ) :
+	/**
+	 * Fires functions attached to a deprecated action hook.
+	 *
+	 * When an action hook is deprecated, the do_action() call is replaced with do_action_deprecated(), which triggers a deprecation notice and then fires the original hook.
+	 *
+	 * @since 1.3
+	 * @since WP 4.6.0
+	 *
+	 * @see _deprecated_hook()
+	 *
+	 * @param (string) $tag         The name of the action hook.
+	 * @param (array)  $args        Array of additional function arguments to be passed to do_action().
+	 * @param (string) $version     The version of WordPress that deprecated the hook.
+	 * @param (string) $replacement Optional. The hook that should have been used.
+	 * @param (string) $message     Optional. A message regarding the change.
+	 */
+	function do_action_deprecated( $tag, $args, $version, $replacement = false, $message = null ) {
+		if ( ! has_action( $tag ) ) {
+			return;
+		}
+
+		_deprecated_hook( $tag, $version, $replacement, $message );
+
+		do_action_ref_array( $tag, $args );
+	}
+endif;
+
+
+if ( ! function_exists( '_deprecated_hook' ) ) :
+	/**
+	 * Marks a deprecated action or filter hook as deprecated and throws a notice.
+	 *
+	 * Use the {@see 'deprecated_hook_run'} action to get the backtrace describing where the deprecated hook was called.
+	 *
+	 * Default behavior is to trigger a user error if `WP_DEBUG` is true.
+	 *
+	 * This function is called by the do_action_deprecated() and apply_filters_deprecated() functions, and so generally does not need to be called directly.
+	 *
+	 * @since 1.3
+	 * @since WP 4.6.0
+	 *
+	 * @param (string) $hook        The hook that was used.
+	 * @param (string) $version     The version of WordPress that deprecated the hook.
+	 * @param (string) $replacement Optional. The hook that should have been used.
+	 * @param (string) $message     Optional. A message regarding the change.
+	 */
+	function _deprecated_hook( $hook, $version, $replacement = null, $message = null ) {
+		/**
+		 * Fires when a deprecated hook is called.
+		 *
+		 * @since 1.3
+		 * @since WP 4.6.0
+		 *
+		 * @param (string) $hook        The hook that was called.
+		 * @param (string) $replacement The hook that should be used as a replacement.
+		 * @param (string) $version     The version of WordPress that deprecated the argument used.
+		 * @param (string) $message     A message regarding the change.
+		 */
+		do_action( 'deprecated_hook_run', $hook, $replacement, $version, $message );
+
+		/**
+		 * Filters whether to trigger deprecated hook errors.
+		 *
+		 * @since 1.3
+		 * @since WP 4.6.0
+		 *
+		 * @param (bool) $trigger Whether to trigger deprecated hook errors. Requires `WP_DEBUG` to be defined true.
+		 */
+		if ( WP_DEBUG && apply_filters( 'deprecated_hook_trigger_error', true ) ) {
+			$message = empty( $message ) ? '' : ' ' . $message;
+			if ( ! is_null( $replacement ) ) {
+				/* Translators: 1: WordPress hook name, 2: version number, 3: alternative hook name. */
+				trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since version %2$s! Use %3$s instead.', 'secupress' ), $hook, $version, $replacement ) . $message );
+			} else {
+				/* Translators: 1: WordPress hook name, 2: version number. */
+				trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since version %2$s with no alternative available.', 'secupress' ), $hook, $version ) . $message );
+			}
+		}
+	}
+endif;

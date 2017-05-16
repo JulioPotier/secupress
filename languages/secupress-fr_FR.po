@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2017-04-19 14:26+0200\n"
-"PO-Revision-Date: 2017-04-19 23:41+0200\n"
+"POT-Creation-Date: 2017-05-03 15:32+0200\n"
+"PO-Revision-Date: 2017-05-03 15:33+0200\n"
 "Last-Translator: WP Media <contact@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -80,8 +80,8 @@ msgstr ""
 #: inc/admin/notices.php:69 inc/admin/notices.php:192 inc/admin/notices.php:224
 #: inc/admin/notices.php:248 inc/admin/notices.php:257
 #: inc/admin/notices.php:292
-#: inc/classes/admin/class-secupress-admin-offer-migration.php:465
-#: inc/classes/admin/class-secupress-admin-offer-migration.php:485
+#: inc/classes/admin/class-secupress-admin-offer-migration.php:548
+#: inc/classes/admin/class-secupress-admin-offer-migration.php:568
 #: inc/classes/common/class-secupress-log.php:289
 #: inc/classes/common/class-secupress-log.php:294
 #: inc/classes/common/class-secupress-logs.php:1391
@@ -228,8 +228,8 @@ msgstr "Votre licence a été activée avec succès."
 #: inc/admin/scanner-step-3.php:272 inc/admin/scanner-step-3.php:295
 #: inc/admin/settings.php:508 inc/admin/settings.php:865
 #: inc/admin/settings.php:868
-#: inc/classes/admin/class-secupress-admin-pro-upgrade.php:129
-#: inc/classes/admin/class-secupress-admin-pro-upgrade.php:148
+#: inc/classes/admin/class-secupress-admin-pro-upgrade.php:157
+#: inc/classes/admin/class-secupress-admin-pro-upgrade.php:178
 #: inc/classes/admin/class-secupress-admin-support.php:408
 #: inc/modules/wordpress-core/settings/wp-config.php:42
 #: inc/modules/wordpress-core/settings/wp-config.php:43
@@ -390,8 +390,8 @@ msgstr ""
 "détail de vos licences)."
 
 #: inc/admin/ajax-post-callbacks.php:953
-#: inc/classes/admin/class-secupress-admin-pro-upgrade.php:129
-#: inc/classes/admin/class-secupress-admin-pro-upgrade.php:148
+#: inc/classes/admin/class-secupress-admin-pro-upgrade.php:157
+#: inc/classes/admin/class-secupress-admin-pro-upgrade.php:178
 msgid "SecuPress account"
 msgstr "compte SecuPress"
 
@@ -1487,28 +1487,28 @@ msgid "Dismiss"
 msgstr "Fermer"
 
 #. Translators: this is the slug (part of the URL) of the account page on secupress.me, like in https://secupress.me/account/, it must not be translated if the page doesn't exist.
-#: inc/classes/admin/class-secupress-admin-offer-migration.php:252
+#: inc/classes/admin/class-secupress-admin-offer-migration.php:270
 msgctxt "URL slug"
 msgid "account"
 msgstr "fr/mon-compte"
 
-#: inc/classes/admin/class-secupress-admin-offer-migration.php:268
+#: inc/classes/admin/class-secupress-admin-offer-migration.php:286
 msgid "HALP!"
 msgstr "AU S'COURS !"
 
-#. Translators: %s is a "the plugin settings page" link.
-#: inc/classes/admin/class-secupress-admin-pro-upgrade.php:78
+#. Translators: 1 is a "upgrade" link.
+#: inc/classes/admin/class-secupress-admin-pro-upgrade.php:107
 #, php-format
-msgid "Your license is inactive, you should take a look at %s."
-msgstr "Votre licence est inactive, vous devriez jeter un œil à %s."
+msgid "You can now %s to the Pro version."
+msgstr "Vous pouvez maintenant %s vers la version Pro."
 
-#: inc/classes/admin/class-secupress-admin-pro-upgrade.php:79
-#: inc/functions/deprecated.php:120
-msgid "the plugin settings page"
-msgstr "la page des réglages du plugin"
+#: inc/classes/admin/class-secupress-admin-pro-upgrade.php:108
+msgctxt "verb"
+msgid "upgrade"
+msgstr "mettre à jour"
 
 #. Translators: %s is a link to the "SecuPress account".
-#: inc/classes/admin/class-secupress-admin-pro-upgrade.php:128
+#: inc/classes/admin/class-secupress-admin-pro-upgrade.php:156
 #, php-format
 msgid ""
 "A problem occurred while retrieving the Pro version information. Please "
@@ -1525,7 +1525,7 @@ msgstr ""
 "Pro, l&rsquo;extension gratuite a disparue comme par magie."
 
 #. Translators: %s is a link to the "SecuPress account".
-#: inc/classes/admin/class-secupress-admin-pro-upgrade.php:147
+#: inc/classes/admin/class-secupress-admin-pro-upgrade.php:177
 #, php-format
 msgid ""
 "It seems you already installed the Pro version. An attempt has been made to "
@@ -1544,18 +1544,7 @@ msgstr ""
 "et activer l&rsquo;extension Pro, l&rsquo;extension gratuite a disparu comme "
 "par magie."
 
-#. Translators: 1 is a "upgrade" link.
-#: inc/classes/admin/class-secupress-admin-pro-upgrade.php:170
-#, php-format
-msgid "You can now %s to the Pro version."
-msgstr "Vous pouvez maintenant %s vers la version Pro."
-
-#: inc/classes/admin/class-secupress-admin-pro-upgrade.php:171
-msgctxt "verb"
-msgid "upgrade"
-msgstr "mettre à jour"
-
-#: inc/classes/admin/class-secupress-admin-pro-upgrade.php:214
+#: inc/classes/admin/class-secupress-admin-pro-upgrade.php:233
 msgid "Congratulations, your Pro version has been installed 🎉."
 msgstr "Félicitations, votre version Pro a été installée 🎉."
 
@@ -5647,6 +5636,10 @@ msgstr ""
 "souhaitez activer toutes les fonctionnalités Pro, le support premium et les "
 "mises à jour, regardez dans %s."
 
+#: inc/functions/deprecated.php:120
+msgid "the plugin settings page"
+msgstr "la page des réglages du plugin"
+
 #: inc/functions/deprecated.php:143 inc/functions/deprecated.php:146
 #, php-format
 msgctxt "User full name. 1: first name, 2: last name"
@@ -8643,7 +8636,6 @@ msgstr "Oui, désactiver l'éditeur de fichiers"
 
 #: inc/modules/wordpress-core/settings/wp-config.php:26
 #: inc/modules/wordpress-core/settings/wp-config.php:55
-#: inc/modules/wordpress-core/settings/wp-config.php:81
 msgid ""
 "Option unavailable, the protection is already set by another method than the "
 "plugin."
@@ -8703,11 +8695,21 @@ msgstr ""
 "en activant cette option, les balises %1$s et %2$s ne seront plus autorisées "
 "dans l'éditeur&nbsp;!"
 
-#: inc/modules/wordpress-core/settings/wp-config.php:70
+#: inc/modules/wordpress-core/settings/wp-config.php:71
+msgid ""
+"Option unavailable, the constant is already defined with the good value."
+msgstr ""
+"Option non disponible, la constante est déjà définie avec la bonne valeur."
+
+#: inc/modules/wordpress-core/settings/wp-config.php:71
+msgid "Option unavailable, the constant is not defined."
+msgstr "Option non disponible, la constante n&rsquo;est pas définie."
+
+#: inc/modules/wordpress-core/settings/wp-config.php:75
 msgid "Unfiltered uploads"
 msgstr "Uploads non filtrés"
 
-#: inc/modules/wordpress-core/settings/wp-config.php:71
+#: inc/modules/wordpress-core/settings/wp-config.php:76
 #, php-format
 msgid ""
 "A constant (%s) may be defined to allow Administrators to upload any type of "
@@ -8720,12 +8722,12 @@ msgstr ""
 "et ne devrait pas être réalisé. En activant cette option, vous supprimez "
 "cette constante et n'autorisez que les types communs d'être uploadés."
 
-#: inc/modules/wordpress-core/settings/wp-config.php:76
+#: inc/modules/wordpress-core/settings/wp-config.php:81
 msgid "Yes, filter uploads"
 msgstr "Oui, filtrer les uploads"
 
 #. Translators: 1 is a file name, 2 is a code.
-#: inc/modules/wordpress-core/settings/wp-config.php:91
+#: inc/modules/wordpress-core/settings/wp-config.php:96
 #, php-format
 msgid ""
 "These options are disabled because the %1$s file is not writable. Please "
@@ -8734,7 +8736,7 @@ msgstr ""
 "Ces options sont désactivées car le fichier %1$s n'est pas en écriture. "
 "Merci d'appliquer les droits %2$s sur ce fichier."
 
-#: secupress.php:285
+#: secupress.php:286
 #, php-format
 msgid ""
 "<strong>%1$s</strong> requires PHP %2$s minimum, your website is actually "
@@ -8743,7 +8745,7 @@ msgstr ""
 "<strong>%1$s<strong> requiert PHP v%2$s minimum, votre site utilise "
 "actuellement la version %3$s."
 
-#: secupress.php:299
+#: secupress.php:300
 #, php-format
 msgid ""
 "<strong>%1$s</strong> requires WordPress %2$s minimum, your website is "
@@ -8753,18 +8755,21 @@ msgstr ""
 "actuellement la version %3$s."
 
 #. Translators: Plugin Name of the plugin/theme
-#: secupress.php:377
+#: secupress.php:378
 msgid "SecuPress — WordPress Security"
 msgstr "SecuPress — Sécurité WordPress"
 
 #. Translators: Description of the plugin/theme
-#: secupress.php:379
+#: secupress.php:380
 msgid ""
 "Protect your WordPress with SecuPress, analyze and ensure the safety of your "
 "website daily."
 msgstr ""
 "Protégez votre WordPress avec SecuPress, analysez et assurez-vous de la "
 "sécurité de votre site quotidiennement."
+
+#~ msgid "Your license is inactive, you should take a look at %s."
+#~ msgstr "Votre licence est inactive, vous devriez jeter un œil à %s."
 
 #~ msgid "You must install and activate the Pro version first."
 #~ msgstr "Vous devez d'abord installer et activer la version Pro en premier."

@@ -22,7 +22,7 @@ function secupress_load_network_options( $option_names, $prefix = '' ) {
 	$options      = "'$prefix" . implode( "', '$prefix", esc_sql( $option_names ) ) . "'";
 
 	if ( is_multisite() ) {
-		$network_id     = (int) $wpdb->siteid;
+		$network_id     = function_exists( 'get_current_network_id' ) ? get_current_network_id() : (int) $wpdb->siteid;
 		$cache_prefix   = "$network_id:";
 		$notoptions_key = "$network_id:notoptions";
 		$cache_group    = 'site-options';
@@ -36,14 +36,14 @@ function secupress_load_network_options( $option_names, $prefix = '' ) {
 
 	foreach ( $option_names as $option_name ) {
 		$option_name = $prefix . $option_name;
-		// Cache the value.
+
 		if ( isset( $results[ $option_name ] ) ) {
+			// Cache the value.
 			$value = $results[ $option_name ]->value;
 			$value = maybe_unserialize( $value );
 			wp_cache_set( "$cache_prefix$option_name", $value, $cache_group );
-		}
-		// No value.
-		else {
+		} else {
+			// No value.
 			$not_exist[ $option_name ] = true;
 		}
 	}
@@ -56,6 +56,7 @@ function secupress_load_network_options( $option_names, $prefix = '' ) {
 	$notoptions = wp_cache_get( $notoptions_key, $cache_group );
 	$notoptions = is_array( $notoptions ) ? $notoptions : array();
 	$notoptions = array_merge( $notoptions, $not_exist );
+
 	wp_cache_set( $notoptions_key, $notoptions, $cache_group );
 }
 
@@ -84,7 +85,6 @@ function secupress_get_global_network_option_names_for_autoload() {
 	if ( is_admin() ) {
 		$option_names = array_merge( $option_names, array(
 			SECUPRESS_SCAN_TIMES,
-			SECUPRESS_FIX_SLUG,
 		) );
 	}
 
@@ -95,6 +95,7 @@ function secupress_get_global_network_option_names_for_autoload() {
 			'_site_transient_secupress-add-cookiehash-muplugin',
 			'_site_transient_secupress-add-salt-muplugin',
 			'_site_transient_' . SECUPRESS_ACTIVE_SUBMODULES,
+			'_site_transient_secupress_autoscans',
 		) );
 
 		if ( is_admin() ) {
@@ -193,15 +194,6 @@ function secupress_load_user_network_options( $cookie_elements, $user ) {
 			'_site_transient_secupress_module_deactivation_' . $current_user_id,
 			'_transient_secupress-notices-' . $current_user_id,
 		);
-	}
-
-	// Scans, fixes.
-	if ( $user_can ) {
-		$option_names[] = SECUPRESS_SCAN_SLUG;
-
-		if ( is_admin() ) {
-			$option_names[] = SECUPRESS_SCAN_FIX_SITES_SLUG;
-		}
 	}
 
 	/**

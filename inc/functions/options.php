@@ -120,161 +120,30 @@ function secupress_get_module_option( $option, $default = null, $module = false 
 /** --------------------------------------------------------------------------------------------- */
 
 /**
- * Get scanners scan results.
- * Those results are stored in transients first. Then those transient values are merged in a global option.
+ * Get all scan results.
  *
  * @since 1.0
+ * @since 1.3 Use multiple options instead of 1 option and multiple transients.
+ * @author Grégory Viguier
  *
  * @return (array)
  */
 function secupress_get_scan_results() {
-	static $tests;
-
-	if ( ! isset( $tests ) ) {
-		$tests = secupress_get_scanners();
-		$tests = array_map( 'strtolower', call_user_func_array( 'array_merge', $tests ) );
-
-		// Cache transients.
-		if ( ! wp_using_ext_object_cache() ) {
-			secupress_load_network_options( $tests, '_site_transient_secupress_scan_' );
-		}
-
-		$tests = array_flip( $tests );
-	}
-
-	$options      = get_site_option( SECUPRESS_SCAN_SLUG, array() );
-	$options      = is_array( $options ) ? $options : array();
-	$options      = array_intersect_key( $options, $tests );
-	$update_scans = false;
-	$to_remove    = array();
-
-	foreach ( $tests as $test_name => $i ) {
-		$transient = secupress_get_site_transient( 'secupress_scan_' . $test_name );
-
-		// Update scans.
-		if ( $transient && is_array( $transient ) ) {
-			secupress_delete_site_transient( 'secupress_scan_' . $test_name );
-			$options[ $test_name ] = $transient;
-			$update_scans = true;
-		}
-
-		if ( empty( $options[ $test_name ] ) ) {
-			continue;
-		}
-
-		// Make sure we have messages.
-		if ( empty( $options[ $test_name ]['msgs'] ) || ! is_array( $options[ $test_name ]['msgs'] ) ) {
-			unset( $options[ $test_name ] );
-			$update_scans = true;
-			continue;
-		}
-
-		// Make sure the status is OK.
-		if ( empty( $options[ $test_name ]['status'] ) || ! is_string( $options[ $test_name ]['status'] ) ) {
-			$previous_id = -1;
-
-			// Loop through all messages to get the right status.
-			foreach ( $options[ $test_name ]['msgs'] as $message_id => $message_data ) {
-				if ( $message_id < $previous_id ) {
-					// If we have more than 1 message, we keep the worst status (biggest message ID).
-					continue;
-				}
-				if ( $message_id < 0 || $message_id >= 400 || ! is_array( $message_data ) ) {
-					// The message ID or the message data is invalid.
-					unset( $options[ $test_name ]['msgs'][ $message_id ] );
-					continue;
-				}
-				if ( $message_id < 100 ) {
-					$options[ $test_name ]['status'] = 'good';
-				} elseif ( $message_id < 200 ) {
-					$options[ $test_name ]['status'] = 'warning';
-				} elseif ( $message_id < 300 ) {
-					$options[ $test_name ]['status'] = 'bad';
-				} else {
-					$options[ $test_name ]['status'] = 'cantfix';
-				}
-				$previous_id = $message_id;
-			}
-
-			if ( empty( $options[ $test_name ]['msgs'] ) ) {
-				// There was only 1 message and its ID was invalid (or its data).
-				unset( $options[ $test_name ] );
-			}
-
-			$update_scans = true;
-		}
-
-		// In the same time, when a scan is good, remove the related fix.
-		if ( 'good' === $options[ $test_name ]['status'] ) {
-			$to_remove[ $test_name ] = 1;
-		}
-	}
-
-	// Update scans.
-	if ( $update_scans ) {
-		update_site_option( SECUPRESS_SCAN_SLUG, $options );
-	}
-
-	// Update the fixes.
-	if ( $to_remove ) {
-		$fixes = secupress_get_fix_results();
-		$fixes = array_diff_key( $fixes, $to_remove );
-
-		update_site_option( SECUPRESS_FIX_SLUG, $fixes );
-	}
-
-	return $options;
+	return SecuPress_Scanner_Results::get_scan_results();
 }
 
 
 /**
- * Get scanners fix results.
- * Those results are stored in transients first. Then those transient values are merged in a global option.
+ * Get all fix results.
  *
  * @since 1.0
+ * @since 1.3 Use multiple options instead of 1 option and multiple transients.
+ * @author Grégory Viguier
  *
  * @return (array)
  */
 function secupress_get_fix_results() {
-	static $tests;
-
-	if ( ! isset( $tests ) ) {
-		$tests = array();
-		$tmps  = secupress_get_scanners();
-
-		foreach ( $tmps as $tmp ) {
-			$tests = array_merge( $tests, array_map( 'strtolower', $tmp ) );
-		}
-
-		// Cache transients.
-		if ( ! wp_using_ext_object_cache() ) {
-			secupress_load_network_options( $tests, '_site_transient_secupress_fix_' );
-		}
-
-		$tests = array_flip( $tests );
-	}
-
-	$transients = array();
-
-	foreach ( $tests as $test_name => $i ) {
-		$transient = secupress_get_site_transient( 'secupress_fix_' . $test_name );
-
-		if ( $transient && is_array( $transient ) ) {
-			secupress_delete_site_transient( 'secupress_fix_' . $test_name );
-			$transients[ $test_name ] = $transient;
-		}
-	}
-
-	$options = get_site_option( SECUPRESS_FIX_SLUG, array() );
-	$options = is_array( $options ) ? $options : array();
-	$options = array_intersect_key( $options, $tests );
-
-	if ( $transients ) {
-		$options = array_merge( $options, $transients );
-		update_site_option( SECUPRESS_FIX_SLUG, $options );
-	}
-
-	return $options;
+	return SecuPress_Scanner_Results::get_fix_results();
 }
 
 

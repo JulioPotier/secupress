@@ -5,7 +5,7 @@
  * Description: Protect your WordPress with SecuPress, analyze and ensure the safety of your website daily.
  * Author: WP Media
  * Author URI: http://wp-media.me
- * Version: 1.3-beta2
+ * Version: 1.3-beta3
  * Code Name: Bleeding Edge
  * Network: true
  * License: GPLv2
@@ -24,13 +24,10 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /** DEFINES ===================================================================================== */
 /** --------------------------------------------------------------------------------------------- */
 
-define( 'SECUPRESS_VERSION'               , '1.3-beta2' );
+define( 'SECUPRESS_VERSION'               , '1.3-beta3' );
 define( 'SECUPRESS_ACTIVE_SUBMODULES'     , 'secupress_active_submodules' );
 define( 'SECUPRESS_SETTINGS_SLUG'         , 'secupress_settings' );
-define( 'SECUPRESS_SCAN_SLUG'             , 'secupress_scanners' );
 define( 'SECUPRESS_SCAN_TIMES'            , 'secupress_scanners_times' );
-define( 'SECUPRESS_FIX_SLUG'              , 'secupress_fixes' );
-define( 'SECUPRESS_SCAN_FIX_SITES_SLUG'   , 'secupress_fix_sites' );
 define( 'SECUPRESS_WP_CORE_FILES_HASHES'  , 'secupress_wp_core_files_hashes' );
 define( 'SECUPRESS_FULL_FILETREE'         , 'secupress_full_filetree' );
 define( 'SECUPRESS_FIX_DISTS'             , 'secupress_fix_dists' );
@@ -60,7 +57,7 @@ define( 'SECUPRESS_WP_MIN'                , '3.7' );
 define( 'SECUPRESS_INT_MAX'               , PHP_INT_MAX - 20 );
 
 if ( ! defined( 'SECUPRESS_USE_BETA' ) ) {
-	define( 'SECUPRESS_USE_BETA', 0 );
+	define( 'SECUPRESS_USE_BETA', 1 );////Back to 0 when the beta tests are finished.
 }
 
 
@@ -88,6 +85,7 @@ function secupress_init() {
 
 	// Load translations.
 	secupress_load_plugin_textdomain_translations();
+	add_action( 'init', 'secupress_load_default_textdomain_translations' );
 
 	// Functions.
 	secupress_load_functions();
@@ -325,6 +323,8 @@ function secupress_load_functions() {
 
 	// Cleanup leftovers periodically.
 	secupress_require_class( 'Cleanup_Leftovers' );
+	// The Scanner results class.
+	secupress_require_class( 'Scanner_Results' );
 
 	if ( ! is_admin() ) {
 		return;
@@ -386,14 +386,18 @@ function secupress_load_plugin_textdomain_translations() {
 }
 
 
-add_action( 'init', 'secupress_load_default_textdomain_translations' );
 /**
  * Translations for the default textdomain must be loaded on init, not before.
  *
  * @since 1.0
  */
 function secupress_load_default_textdomain_translations() {
-	if ( ! defined( 'DOING_AUTOSAVE' ) ) {
-		load_plugin_textdomain( 'default', false, dirname( plugin_basename( SECUPRESS_FILE ) ) . '/languages' );
+	static $done = false;
+
+	if ( $done ) {
+		return;
 	}
+	$done = true;
+
+	load_plugin_textdomain( 'default', false, dirname( plugin_basename( SECUPRESS_FILE ) ) . '/languages' );
 }

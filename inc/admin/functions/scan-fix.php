@@ -38,7 +38,7 @@ function secupress_scanit( $test_name, $format_response = false, $for_current_si
 		 */
 		// If the scan is good, remove fix result.
 		if ( 'good' === $response['status'] ) {
-			secupress_delete_site_transient( 'secupress_fix_' . $test_name );
+			SecuPress_Scanner_Results::delete_fix_result( $test_name );
 		}
 		ob_end_clean();
 	}
