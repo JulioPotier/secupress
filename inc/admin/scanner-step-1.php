@@ -1,8 +1,8 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
-$scanned_items          = get_option( SECUPRESS_SCAN_SLUG );
-$scanned_items          = is_array( $scanned_items ) ? array_flip( array_keys( $scanned_items ) ) : array();
+$scanned_items          = secupress_get_scan_results();
+$scanned_items          = $scanned_items ? array_flip( array_keys( $scanned_items ) ) : array();
 $secupress_tests_keys   = array_flip( array_map( 'strtolower', call_user_func_array( 'array_merge', $secupress_tests ) ) );
 $new_scans              = array_diff_key( $secupress_tests_keys, $scanned_items );
 $modules                = secupress_get_modules();
