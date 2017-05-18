@@ -22,6 +22,7 @@ function secupress_class_path( $prefix, $class_name_part = '' ) {
 		'logs'              => 'common',
 		'log'               => 'common',
 		'cleanup-leftovers' => 'common',
+		'scanner-results'   => 'common',
 	);
 
 	$prefix = strtolower( str_replace( '_', '-', $prefix ) );
