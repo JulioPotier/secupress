@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 function secupress_backups_storage_labels() {
 	return array(
 		'local'     => __( 'Local', 'secupress' ),
-		// 'dropbox'   => __( 'Dropbox', 'secupress' ),
+		// 'dropbox'   => __( 'Dropbox', 'secupress' ), ////
 		// 'amazons3'  => __( 'Amazon S3', 'secupress' ), ////
 		// 'rackspace' => __( 'Rackspace Cloud', 'secupress' ), ////
 	);

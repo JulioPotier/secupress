@@ -50,7 +50,7 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 
 		if ( is_network_admin() ) {
 			$this->more_fix  = __( 'Select and delete vulnerable plugins.', 'secupress' );
-			$this->more_fix .= '<br/>' . __( 'Will be fixable soon.', 'secupress' ); // RC2 ////.
+			$this->more_fix .= '<br/>' . __( 'Not fixable on Multisite.', 'secupress' );
 			$this->fixable   = false;
 		} elseif ( ! is_multisite() ) {
 			$this->more_fix = __( 'Delete vulnerable plugins.', 'secupress' );

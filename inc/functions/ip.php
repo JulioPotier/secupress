@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @return (string)
  */
 function secupress_get_ip() {
-	// Find the best order ////.
+	// Find the best order
 	$keys = array(
 		'HTTP_CF_CONNECTING_IP', // CF = CloudFlare.
 		'HTTP_CLIENT_IP',

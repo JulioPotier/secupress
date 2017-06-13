@@ -43,7 +43,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 
 		if ( is_network_admin() ) {
 			$this->more_fix  = __( 'Select removed and old plugins to be deleted.', 'secupress' );
-			$this->more_fix .= '<br/>' . __( 'Will be fixable soon.', 'secupress' ); // RC2 ////.
+			$this->more_fix .= '<br/>' . __( 'Not fixable on Multisite.', 'secupress' );
 			$this->fixable   = false;
 		} elseif ( ! is_multisite() ) {
 			$this->more_fix = __( 'Select and delete removed and old plugins.', 'secupress' );
