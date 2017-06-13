@@ -120,7 +120,7 @@ class SecuPress_Cleanup_Leftovers extends SecuPress_Singleton {
 		$users = $wpdb->get_col( "SELECT ID FROM {$wpdb->users} WHERE user_email LIKE 'secupress_no_mail_SS@fakemail.%'" );
 
 		if ( $users ) {
-			require_once(ABSPATH . 'wp-admin/includes/user.php');
+			require_once( ABSPATH . 'wp-admin/includes/user.php' );
 
 			foreach ( $users as $user_id ) {
 				wp_delete_user( (int) $user_id );

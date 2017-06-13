@@ -138,26 +138,7 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-		// Multisite, for the current site.
-		if ( $this->is_for_current_site() ) {
-			// Plugins vulnerables.
-			/*
-			$bad_plugins = $this->get_installed_plugins_to_remove(); ////
-
-			if ( is_numeric( $bad_plugins ) ) {
-				$this->add_message( 206 );
-			} else {
-				$bad_plugins = $bad_plugins['to_deactivate'];
-
-				if ( $count = count( $bad_plugins ) ) {
-					// "bad"
-					$this->add_message( 204, array( $count, $bad_plugins ) );
-				}
-			}
-			*/
-		}
-		// Network admin or not Multisite.
-		else {
+		if ( ! $this->is_for_current_site() ) {
 			// If we're in a sub-site, don't list the plugins enabled in the network.
 			$to_keep = array();
 			// Plugins vulnerables.

@@ -111,7 +111,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 			$value[] = $plugin['Name'];
 		}
 
-		$sep   = sprintf( __( '%s, %s' ), '', '' );
+		$sep   = sprintf( __( '%1$s, %2$s' ), '', '' );
 		$value = implode( $sep, $value );
 
 		return array( 'activated' => $value );
@@ -151,7 +151,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 			}
 		}
 
-		$sep = sprintf( __( '%s, %s' ), '', '' );
+		$sep = sprintf( __( '%1$s, %2$s' ), '', '' );
 		$activated   = implode( $sep, $activated );
 		$deactivated = implode( $sep, $deactivated );
 
@@ -180,7 +180,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 			$value[] = $plugin['Name'];
 		}
 
-		$sep   = sprintf( __( '%s, %s' ), '', '' );
+		$sep   = sprintf( __( '%1$s, %2$s' ), '', '' );
 		$value = implode( $sep, $value );
 
 		return array( 'activated' => $value );
@@ -220,7 +220,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 			}
 		}
 
-		$sep = sprintf( __( '%s, %s' ), '', '' );
+		$sep = sprintf( __( '%1$s, %2$s' ), '', '' );
 		$activated   = implode( $sep, $activated );
 		$deactivated = implode( $sep, $deactivated );
 
