@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: SecuPress — WordPress Security
+ * Plugin Name: SecuPress Free — WordPress Security
  * Plugin URI: https://secupress.me
  * Description: Protect your WordPress with SecuPress, analyze and ensure the safety of your website daily.
  * Author: SecuPress
