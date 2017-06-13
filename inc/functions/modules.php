@@ -25,8 +25,8 @@ function secupress_get_modules() {
 				__( 'The best and easiest way to make sure that users\' data will be protected, and their accounts not compromised.', 'secupress' ),
 			),
 			'counts' => array(
-				'free_options' => 18,
-				'pro_options'  => 7,
+				'free_options' => 6,
+				'pro_options'  => 6,
 			),
 		),
 		'plugins-themes'  => array(
@@ -86,7 +86,7 @@ function secupress_get_modules() {
 			),
 			'counts' => array(
 				'free_options' => 5,
-				'pro_options'  => 4,
+				'pro_options'  => 3,
 			),
 		),
 		'file-system'     => array(
@@ -103,7 +103,7 @@ function secupress_get_modules() {
 			'mark_as_pro' => $should_be_pro,
 			'counts' => array(
 				'free_options' => 1,
-				'pro_options'  => 5,
+				'pro_options'  => 3,
 			),
 		),
 		'backups'         => array(
@@ -156,7 +156,7 @@ function secupress_get_modules() {
 			'mark_as_pro' => $should_be_pro,
 			'counts' => array(
 				'free_options' => 0,
-				'pro_options'  => 4,
+				'pro_options'  => 3,
 			),
 		),
 		'schedules'       => array(
@@ -172,7 +172,7 @@ function secupress_get_modules() {
 			'mark_as_pro' => $should_be_pro,
 			'counts' => array(
 				'free_options' => 0,
-				'pro_options'  => 8,
+				'pro_options'  => 4,
 			),
 		),
 		'logs'            => array(
@@ -187,7 +187,7 @@ function secupress_get_modules() {
 				__( 'Keep an eye on what happened on your website at any time. Also, control banned IPs from our modules here.', 'secupress' ),
 			),
 			'counts' => array(
-				'free_options' => 2,
+				'free_options' => 4,
 				'pro_options'  => 0,
 			),
 		),
