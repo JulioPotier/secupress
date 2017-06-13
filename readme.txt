@@ -1,6 +1,6 @@
 === SecuPress Free — WordPress Security ===
-Contributors: wp_media, SecuPress, juliobox, GregLone
-Tags: secure, security plugin, wordpress security, hack, malware
+Contributors: SecuPress, juliobox, GregLone
+Tags: wordpress security, secure, security plugin, hack, malware, 
 Requires at least: 3.7
 Tested up to: 4.8
 Stable tag: 1.3
@@ -115,9 +115,9 @@ SecuPress can run 3 separate scheduled tasks for you. It’s like having a secur
 **Logs**  
 SecuPress will keep a log of important security activities and 404 pages triggered by users, bots or even Chuck Norris. This lets you keep an eye on what’s going on in your WordPress at any time. You can also control banned IPs from this option.
 
-*(1) Available in the [Pro Version](http://secupress.me/features/).*
+*(1) Available in the [Pro Version](https://secupress.me/features/).*
 
-*(SecuPress est une extension de sécurité WordPress réalisée par WP Media, startup française auteure de WP Rocket et Imagify)*
+*(SecuPress est une extension de sécurité WordPress)*
 
 == Installation ==
 
@@ -146,7 +146,7 @@ Yes, SecuPress can be activated for all your sub-sites, just activate it from yo
 
 = Is SecuPress compatible with all web hosters? =
 
-Yes, SecuPress is compatible with all web hosters like OVH, WP Engine, O2Switch or GoDaddy? If you encounter an issue, do not hesitate to contact our support team.
+Yes, SecuPress is compatible with all web hosters like WP Serveur, OVH, Siteground, BlueHost, PlanetHoster, WP Engine, O2Switch or GoDaddy? If you encounter an issue, do not hesitate to contact our support team.
 
 = Is SecuPress compatible with all caching plugins like WP Rocket, W3 Total Cache, WP Super Cache? =
 
