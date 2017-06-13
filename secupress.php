@@ -3,9 +3,9 @@
  * Plugin Name: SecuPress — WordPress Security
  * Plugin URI: https://secupress.me
  * Description: Protect your WordPress with SecuPress, analyze and ensure the safety of your website daily.
- * Author: WP Media
- * Author URI: http://wp-media.me
- * Version: 1.3-beta3
+ * Author: SecuPress
+ * Author URI: https://secupress.me
+ * Version: 1.3
  * Code Name: Bleeding Edge
  * Network: true
  * License: GPLv2
@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /** DEFINES ===================================================================================== */
 /** --------------------------------------------------------------------------------------------- */
 
-define( 'SECUPRESS_VERSION'               , '1.3-beta3' );
+define( 'SECUPRESS_VERSION'               , '1.3' );
 define( 'SECUPRESS_ACTIVE_SUBMODULES'     , 'secupress_active_submodules' );
 define( 'SECUPRESS_SETTINGS_SLUG'         , 'secupress_settings' );
 define( 'SECUPRESS_SCAN_TIMES'            , 'secupress_scanners_times' );
@@ -35,8 +35,6 @@ define( 'SECUPRESS_BAN_IP'                , 'secupress_ban_ip' );
 define( 'SECUPRESS_SELF_WHITELIST'        , 'secupress_self_whitelist' );
 define( 'SECUPRESS_RATE_URL'              , 'https://wordpress.org/support/view/plugin-reviews/secupress?filter=5#topic' );
 define( 'SECUPRESS_WEB_MAIN'              , 'https://secupress.me/' );
-define( 'SECUPRESS_BOT_URL'               , 'http://bot.secupress.me' );
-define( 'SECUPRESS_WEB_VALID'             , 'http://support.secupress.me/' );
 define( 'SECUPRESS_FILE'                  , __FILE__ );
 define( 'SECUPRESS_PATH'                  , realpath( plugin_dir_path( SECUPRESS_FILE ) ) . DIRECTORY_SEPARATOR );
 define( 'SECUPRESS_INC_PATH'              , SECUPRESS_PATH . 'inc' . DIRECTORY_SEPARATOR );
@@ -57,7 +55,7 @@ define( 'SECUPRESS_WP_MIN'                , '3.7' );
 define( 'SECUPRESS_INT_MAX'               , PHP_INT_MAX - 20 );
 
 if ( ! defined( 'SECUPRESS_USE_BETA' ) ) {
-	define( 'SECUPRESS_USE_BETA', 1 );////Back to 0 when the beta tests are finished.
+	define( 'SECUPRESS_USE_BETA', 0 );
 }
 
 
