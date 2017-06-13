@@ -4,7 +4,7 @@
  * Description: Block requests containing bad keywords in URL.
  * Main Module: firewall
  * Author: SecuPress
- * Version: 1.0
+ * Version: 1.0.1
  */
 
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
@@ -35,4 +35,21 @@ function secupress_block_bad_url_contents() {
 	if ( $bad_url_contents && preg_match( '/' . $bad_url_contents . '/i', $_SERVER['QUERY_STRING'] ) ) {
 		secupress_block( 'BUC', 503 );
 	}
+}
+
+
+add_filter( 'secupress.options.load_plugins_network_options', 'secupress_block_bad_url_contents_autoload_options' );
+/**
+ * Add the option(s) we use in this plugin to be autoloaded.
+ *
+ * @since 1.3
+ * @author Grégory Viguier
+ *
+ * @param (array) $option_names An array of network option names.
+ *
+ * @return (array)
+ */
+function secupress_block_bad_url_contents_autoload_options( $option_names ) {
+	$option_names[] = 'secupress_firewall_settings';
+	return $option_names;
 }

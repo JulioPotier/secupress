@@ -35,7 +35,7 @@ function secupress_unfiltered_uploads_activation() {
 	if ( ! $wpconfig_filepath ) {
 		/** Translators: 1 is a file name, 2 is a code. */
 		$message = sprintf( __( 'The %1$s file is not writable. Please apply %2$s write rights to the file.', 'secupress' ), '<code>wp-config.php</code>', '<code>0644</code>' );
-		add_settings_error( 'general', 'wp_config_not_writable', $message, 'error' );
+		secupress_add_settings_error( 'general', 'wp_config_not_writable', $message, 'error' );
 		return;
 	}
 
@@ -63,7 +63,7 @@ function secupress_unfiltered_uploads_activation() {
 		'<code>wp-config.php</code>',
 		"<code>define( '$constant', $value );</code>"
 	);
-	add_settings_error( 'general', 'constant_not_removed', $message, 'error' );
+	secupress_add_settings_error( 'general', 'constant_not_removed', $message, 'error' );
 }
 
 
@@ -82,7 +82,7 @@ function secupress_unfiltered_uploads_deactivate() {
 	if ( ! $wpconfig_filepath ) {
 		/** Translators: 1 is a file name, 2 is a code. */
 		$message = sprintf( __( 'The %1$s file is not writable. Please apply %2$s write rights to the file.', 'secupress' ), '<code>wp-config.php</code>', '<code>0644</code>' );
-		add_settings_error( 'general', 'wp_config_not_writable', $message, 'error' );
+		secupress_add_settings_error( 'general', 'wp_config_not_writable', $message, 'error' );
 		return;
 	}
 

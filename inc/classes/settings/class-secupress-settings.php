@@ -1316,12 +1316,13 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * Tell if the option value is for the pro version and we're not using the pro version.
 	 *
 	 * @since 1.0
+	 * @since 1.3 The method is public.
 	 *
 	 * @param (string) $value The option value.
 	 *
 	 * @return (bool) True if the option value is for pro version but w're not using the pro version.
 	 */
-	protected static function is_pro_feature( $value ) {
+	public static function is_pro_feature( $value ) {
 		return secupress_feature_is_pro( $value ) && ! secupress_is_pro();
 	}
 
@@ -1330,12 +1331,13 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * Returns a i18n message to act like a CTA on pro version.
 	 *
 	 * @since 1.0
+	 * @since 1.3 The method is public.
 	 *
 	 * @param (string) $format You can use it to embed the message in a HTML tag, usage of "%s" is mandatory.
 	 *
 	 * @return (string)
 	 */
-	protected static function get_pro_version_string( $format = '' ) {
+	public static function get_pro_version_string( $format = '' ) {
 		$message = sprintf( __( 'Available in <a href="%s" target="_blank">Pro Version</a>', 'secupress' ), esc_url( secupress_admin_url( 'get_pro' ) ) );
 		if ( $format ) {
 			$message = sprintf( $format, $message );

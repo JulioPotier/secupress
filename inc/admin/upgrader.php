@@ -51,7 +51,7 @@ function secupress_upgrader() {
 		do_action( 'secupress.upgrade', $new_version, $actual_version );
 	}
 
-	if ( defined( 'SECUPRESS_PRO_VERSION' ) && version_compare( SECUPRESS_VERSION, SECUPRESS_PRO_SECUPRESS_MIN ) >= 0 ) {
+	if ( defined( 'SECUPRESS_PRO_VERSION' ) && ( ! defined( 'SECUPRESS_PRO_SECUPRESS_MIN' ) || version_compare( SECUPRESS_VERSION, SECUPRESS_PRO_SECUPRESS_MIN ) >= 0 ) ) {
 		$actual_pro_version = secupress_get_option( 'pro_version' );
 
 		// You can hook the upgrader to trigger any action when SecuPress Pro is upgraded.
@@ -301,5 +301,125 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 	if ( version_compare( $actual_version, '1.2.6.1', '<' ) ) {
 		// New API route and response format.
 		delete_transient( 'secupress_pro_plans' );
+	}
+
+	// < 1.3
+	if ( version_compare( $actual_version, '1.3' ) < 0 ) {
+		// Remove 'OrangeBot' from the Bad User Agents list.
+		$user_agents_options = get_option( 'secupress_firewall_settings' );
+
+		if ( is_array( $user_agents_options ) && ! empty( $user_agents_options['bbq-headers_user-agents-list'] ) ) {
+			$user_agents_options['bbq-headers_user-agents-list'] = secupress_sanitize_list( $user_agents_options['bbq-headers_user-agents-list'] );
+			$user_agents_options['bbq-headers_user-agents-list'] = explode( ', ', $user_agents_options['bbq-headers_user-agents-list'] );
+			$user_agents_options['bbq-headers_user-agents-list'] = array_diff( $user_agents_options['bbq-headers_user-agents-list'], array( 'OrangeBot' ) );
+			$user_agents_options['bbq-headers_user-agents-list'] = implode( ', ', $user_agents_options['bbq-headers_user-agents-list'] );
+			update_option( 'secupress_firewall_settings', $user_agents_options );
+		}
+
+		// New way to store scans and fixes.
+		$scanners     = secupress_get_scanners();
+		$scanners     = call_user_func_array( 'array_merge', $scanners );
+		$scanners     = array_map( 'strtolower', $scanners );
+		$sub_scanners = secupress_get_tests_for_ms_scanner_fixes();
+		$sub_scanners = array_map( 'strtolower', $sub_scanners );
+		$sub_scanners = array_flip( $sub_scanners );
+		$is_multisite = is_multisite();
+
+		$scan_results = get_site_option( 'secupress_scanners' );
+		$fix_results  = get_site_option( 'secupress_fixes' );
+		$sub_results  = get_site_option( 'secupress_fix_sites' );
+
+		if ( ! wp_using_ext_object_cache() ) {
+			secupress_load_network_options( $scanners, '_site_transient_secupress_scan_' );
+			secupress_load_network_options( $scanners, '_site_transient_secupress_fix_' );
+			secupress_load_network_options( $sub_scanners, '_site_transient_secupress_fix_sites_' );
+		}
+
+		foreach ( $scanners as $scan_name ) {
+			/**
+			 * Scan.
+			 */
+			// Try the transient first (probability we got one is near 0).
+			$result = secupress_get_site_transient( 'secupress_scan_' . $scan_name );
+
+			if ( false !== $result ) {
+				secupress_delete_site_transient( 'secupress_scan_' . $scan_name );
+			}
+
+			$result = $result && is_array( $result ) ? $result : false;
+
+			if ( ! $result && ! empty( $scan_results[ $scan_name ] ) && is_array( $scan_results[ $scan_name ] ) ) {
+				$result = $scan_results[ $scan_name ];
+			}
+
+			$get_fix = true;
+
+			if ( $result ) {
+				SecuPress_Scanner_Results::update_scan_result( $scan_name, $result );
+
+				if ( 'good' === $result['status'] ) {
+					// No need for a fix in that case.
+					$get_fix = false;
+				}
+			}
+
+			/**
+			 * Fix.
+			 */
+			// Try the transient first (probability we got one is near 0).
+			$result = secupress_get_site_transient( 'secupress_fix_' . $scan_name );
+
+			if ( false !== $result ) {
+				secupress_delete_site_transient( 'secupress_fix_' . $scan_name );
+			}
+
+			if ( $get_fix ) {
+				$result = $result && is_array( $result ) ? $result : false;
+
+				if ( ! $result && ! empty( $fix_results[ $scan_name ] ) && is_array( $fix_results[ $scan_name ] ) ) {
+					$result = $fix_results[ $scan_name ];
+				}
+
+				if ( $result ) {
+					SecuPress_Scanner_Results::update_fix_result( $scan_name, $result );
+				}
+			}
+
+			/**
+			 * Scan and Fix of subsites..
+			 */
+			// Try the transient first (probability we got one is near 0).
+			$result = secupress_get_site_transient( 'secupress_fix_sites_' . $scan_name );
+
+			if ( false !== $result ) {
+				secupress_delete_site_transient( 'secupress_fix_sites_' . $scan_name );
+			}
+
+			if ( ! $is_multisite || ! isset( $sub_scanners[ $scan_name ] ) ) {
+				continue;
+			}
+
+			$result = $result && is_array( $result ) ? $result : false;
+
+			if ( ! $result && ! empty( $sub_results[ $scan_name ] ) && is_array( $sub_results[ $scan_name ] ) ) {
+				$result = $sub_results[ $scan_name ];
+			}
+
+			if ( $result ) {
+				SecuPress_Scanner_Results::update_sub_sites_result( $scan_name, $result );
+			}
+		}
+
+		if ( false !== $scan_results ) {
+			delete_site_option( 'secupress_scanners' );
+		}
+
+		if ( false !== $fix_results ) {
+			delete_site_option( 'secupress_fixes' );
+		}
+
+		if ( false !== $sub_results ) {
+			delete_site_option( 'secupress_fix_sites' );
+		}
 	}
 }

@@ -107,11 +107,11 @@ class SecuPress_Action_Log extends SecuPress_Log {
 		}
 
 		foreach ( $value as $i => $plugin_path ) {
-			$plugin      = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin_path, false, false );
-			$value[ $i ] = $plugin['Name'];
+			$plugin  = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin_path, false, false );
+			$value[] = $plugin['Name'];
 		}
 
-		$sep   = sprintf( __( '%s, %s' ), '', '' );
+		$sep   = sprintf( __( '%1$s, %2$s' ), '', '' );
 		$value = implode( $sep, $value );
 
 		return array( 'activated' => $value );
@@ -139,19 +139,19 @@ class SecuPress_Action_Log extends SecuPress_Log {
 
 		if ( $activated ) {
 			foreach ( $activated as $i => $plugin_path ) {
-				$plugin          = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin_path, false, false );
-				$activated[ $i ] = $plugin['Name'];
+				$plugin      = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin_path, false, false );
+				$activated[] = $plugin['Name'];
 			}
 		}
 
 		if ( $deactivated ) {
 			foreach ( $deactivated as $i => $plugin_path ) {
-				$plugin            = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin_path, false, false );
-				$deactivated[ $i ] = $plugin['Name'];
+				$plugin        = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin_path, false, false );
+				$deactivated[] = $plugin['Name'];
 			}
 		}
 
-		$sep = sprintf( __( '%s, %s' ), '', '' );
+		$sep = sprintf( __( '%1$s, %2$s' ), '', '' );
 		$activated   = implode( $sep, $activated );
 		$deactivated = implode( $sep, $deactivated );
 
@@ -175,12 +175,12 @@ class SecuPress_Action_Log extends SecuPress_Log {
 			return array();
 		}
 
-		foreach ( $value as $i => $plugin_path ) {
-			$plugin      = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin_path, false, false );
-			$value[ $i ] = $plugin['Name'];
+		foreach ( $value as $plugin_path => $i ) {
+			$plugin  = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin_path, false, false );
+			$value[] = $plugin['Name'];
 		}
 
-		$sep   = sprintf( __( '%s, %s' ), '', '' );
+		$sep   = sprintf( __( '%1$s, %2$s' ), '', '' );
 		$value = implode( $sep, $value );
 
 		return array( 'activated' => $value );
@@ -207,20 +207,20 @@ class SecuPress_Action_Log extends SecuPress_Log {
 		$deactivated = array_diff( $old_value, $value );
 
 		if ( $activated ) {
-			foreach ( $activated as $i => $plugin_path ) {
-				$plugin          = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin_path, false, false );
-				$activated[ $i ] = $plugin['Name'];
+			foreach ( $activated as $plugin_path => $i ) {
+				$plugin      = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin_path, false, false );
+				$activated[] = $plugin['Name'];
 			}
 		}
 
 		if ( $deactivated ) {
-			foreach ( $deactivated as $i => $plugin_path ) {
-				$plugin            = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin_path, false, false );
-				$deactivated[ $i ] = $plugin['Name'];
+			foreach ( $deactivated as $plugin_path => $i ) {
+				$plugin        = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin_path, false, false );
+				$deactivated[] = $plugin['Name'];
 			}
 		}
 
-		$sep = sprintf( __( '%s, %s' ), '', '' );
+		$sep = sprintf( __( '%1$s, %2$s' ), '', '' );
 		$activated   = implode( $sep, $activated );
 		$deactivated = implode( $sep, $deactivated );
 
@@ -484,6 +484,14 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *                 - (string) $subject The Subject (no kidding).
 	 */
 	protected function pre_process_action_phpmailer_init( $phpmailer ) {
+		if ( ! method_exists( $phpmailer, 'getAllRecipientAddresses' ) ) {
+			/**
+			 * This method was introduced in WP 4.2.11. Moreover, `$this->all_recipients` is protected.
+			 * So, there is no way to get recipients prior WP 4.2.11.
+			 */
+			return array();
+		}
+
 		$from    = $phpmailer->FromName . '[' . $phpmailer->From . ']';
 		$to      = implode( ', ', array_keys( $phpmailer->getAllRecipientAddresses() ) );
 		$subject = $phpmailer->Subject;

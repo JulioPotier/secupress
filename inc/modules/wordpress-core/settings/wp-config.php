@@ -63,8 +63,13 @@ $this->add_field( array(
 ) );
 
 
-$active     = (int) secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-unfiltered-uploads' );
-$can_manage = $active || defined( 'ALLOW_UNFILTERED_UPLOADS' ) && ALLOW_UNFILTERED_UPLOADS;
+$active      = (int) secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-unfiltered-uploads' );
+$can_manage  = $active || defined( 'ALLOW_UNFILTERED_UPLOADS' ) && ALLOW_UNFILTERED_UPLOADS;
+$description = null;
+
+if ( ! $can_manage ) {
+	$description = defined( 'ALLOW_UNFILTERED_UPLOADS' ) ? __( 'Option unavailable, the constant is already defined with the good value.', 'secupress' ) : __( 'Option unavailable, the constant is not defined.', 'secupress' );
+}
 
 $this->add_field( array(
 	'title'             => __( 'Unfiltered uploads', 'secupress' ),
@@ -78,7 +83,7 @@ $this->add_field( array(
 	'helpers'           => array(
 		array(
 			'type'        => 'help',
-			'description' => ! $can_manage ? __( 'Option unavailable, the protection is already set by another method than the plugin.', 'secupress' ) : null,
+			'description' => $description,
 		),
 	),
 ) );

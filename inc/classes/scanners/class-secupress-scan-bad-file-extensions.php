@@ -297,7 +297,7 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 		// Get the file name.
 		$file_ext  = mt_rand( 0, count( $extensions ) - 1 );
 		$file_ext  = $extensions[ $file_ext ];
-		$file_name = 'secupress-' . secupress_generate_hash( 'file_name', 2, 6 ) . '.' . $file_ext;
+		$file_name = 'secupress-temporary-file-' . secupress_generate_hash( 'file_name', 2, 6 ) . '.' . $file_ext;
 		$file_path = $basedir . '/' . $file_name;
 
 		// Create the file.

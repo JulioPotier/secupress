@@ -1,9 +1,9 @@
-=== SecuPress — WordPress Security ===
-Contributors: wp_media, SecuPress, juliobox, GregLone
-Tags: secure, security plugin, wordpress security, hack, malware
+=== SecuPress Free — WordPress Security ===
+Contributors: SecuPress, juliobox, GregLone
+Tags: wordpress security, secure, security plugin, hack, malware, 
 Requires at least: 3.7
-Tested up to: 4.7.3
-Stable tag: 1.2.7
+Tested up to: 4.8
+Stable tag: 1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -115,7 +115,9 @@ SecuPress can run 3 separate scheduled tasks for you. It’s like having a secur
 **Logs**  
 SecuPress will keep a log of important security activities and 404 pages triggered by users, bots or even Chuck Norris. This lets you keep an eye on what’s going on in your WordPress at any time. You can also control banned IPs from this option.
 
-*(1) Available in the [Pro Version](http://secupress.me/features/).*
+*(1) Available in the [Pro Version](https://secupress.me/features/).*
+
+*(SecuPress est une extension de sécurité WordPress)*
 
 == Installation ==
 
@@ -144,7 +146,7 @@ Yes, SecuPress can be activated for all your sub-sites, just activate it from yo
 
 = Is SecuPress compatible with all web hosters? =
 
-Yes, SecuPress is compatible with all web hosters like OVH, WP Engine, O2Switch or GoDaddy? If you encounter an issue, do not hesitate to contact our support team.
+Yes, SecuPress is compatible with all web hosters like WP Serveur, OVH, Siteground, BlueHost, PlanetHoster, WP Engine, O2Switch or GoDaddy? If you encounter an issue, do not hesitate to contact our support team.
 
 = Is SecuPress compatible with all caching plugins like WP Rocket, W3 Total Cache, WP Super Cache? =
 
@@ -176,31 +178,41 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 == Changelog ==
 
+= 1.3 =
+
+* 13 june 2017
+* New: You can now set your PRO licence key in the settings page without installing the PRO version. This will replace your free version by the PRO one, quietly.
+* Improvement #448: Better detection of user's right for DB scan
+* Improvement #308: Sometimes after a scan (step 1), some results are still tagged as "new", you should encounter less cases.
+* Fix #469: customize.php redirects to the login page (thanks to @wpmarmite)
+* Fix #451: Fatal error on WP <4.2.11 when sending emails
+* Fix #414: PHP7 errors
+
 = 1.2.7 =
 
-* 18 apr 2017
+* 18 april 2017
 * Improvement: removed the monthly plans from the "Get Pro" page and improved a few things.
 
 = 1.2.6.1 =
 
-* 06 apr 2017
+* 06 april 2017
 * Improvement #450: use a new API for the "Get Pro" page, to fetch prices.
 
 = 1.2.6 =
 
-* 05 apr 2017
+* 05 april 2017
 * Improvement #445: display the missing "Rate us" box in the settings page.
 * Improvements #387 and #449: changed a few things in the "Get Pro" page, mainly focused on the monthly plans.
 * Fix #447: prevented Move Login to change `&` characters into `&amp;` in filtered URLs, it may cause problems when used as a redirection target.
 
 = 1.2.5.1 =
 
-* 19 mar 2017
-* Fix #424: A htaccess server error appeared if you were using WP <4.7 with "readme file protection module"
+* 19 march 2017
+* Fix #424: a htaccess server error appeared if you were using WP <4.7 with "readme file protection module".
 
 = 1.2.5 =
 
-* 16 mar 2017
+* 16 march 2017
 * Improvement #413: improved PHP and WP version check on activation.
 * Improvement #408: improved Move Login settings. Now you HAVE to specify a new login URL: no default value anymore, no forgotten URL anymore. Also, your new URLs can be seen while you type in :)
 * Improvement #397: improved the theme/plugin installation/upload sub-modules: even white-listed IPs are blocked now.
@@ -209,7 +221,7 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 = 1.2.4 =
 
-* 28 feb 2017
+* 28 february 2017
 * Improvement #382: if the salt keys scan still reports problems after the MU plugin is created, it will still try to fix it.
 * Fix #282: links in email messages should now be fine.
 * Fix #170: the notice saying the `.htaccess` file is not writable now is displayed only if the file exists.
@@ -218,12 +230,12 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 = 1.2.3.1 =
 
-* 21 feb 2017
+* 21 february 2017
 * Fix #391: whenever an IP address is banned, the message was displayed to everybody.
 
 = 1.2.3 =
 
-* 20 feb 2017
+* 20 february 2017
 * Improvement #370: in the scanner, each scan has now its own documentation 📖. The "Read the documentation" links can be found at step 3, the Manual Operations.
 * Improvement #357: for the "Too Long URL" protection, requests made with `wp_request_***()` to self are not blocked anymore.
 * Fix #373: fixed a bug that allowed a specifically forged URL to cheat the "Too Long URL" protection.
@@ -236,7 +248,7 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 = 1.2.2 =
 
-* 27 jan 2017
+* 27 january 2017
 * Fix #355: fixed a "recursion" that caused some scans to return a "bad" status while the corresponding protections were working ¯\(°_o)/¯
 * Fix #351: fixed license invalidation on multisite or multilingual sites.
 * Fix #346: fixed a PHP warning about `vsprintf()` in the scanner page.
@@ -247,7 +259,7 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 = 1.2.1 =
 
-* 18 jan 2017
+* 18 january 2017
 * Happy new year! 🎉
 * Improvement #336: prevent a rare *PHP warning: `array_count_values()` can only count string and integer values!* that could mess with the scan results.
 * Improvement #322: CSS animations are no more on Logs page, interacting with them is now easier.
@@ -255,7 +267,7 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 = 1.2 =
 
-* 20 dec 2016
+* 20 december 2016
 * New: up to 12 options for you to control. Directory Index, Directory Listing, PHP modules disclosure, PHP version disclosure, WordPress version disclosure, Bad URL Access, Protect readme files, WooCommerce and WPML version disclosure, File edition constant, Unfiltered HTML constant, Unfiltered uploads constant: all these protections can now be activated and deactivated separately as needed ( ﾟдﾟ)
 * New: some scans were slightly modified, so here is a new one that will test only the ShellShock vulnerability ヽ(´ー\`)人(´∇｀)人(\`Д´)ノ
 * New: if a scan displays a "Not able to access your front page" message, it brings you the possibility to activate the protection anyway.
@@ -278,7 +290,7 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 = 1.1.3 =
 
-* 07 nov 2016
+* 07 november 2016
 * Improvement #258: Remove the blog_id and website URL in the new salt keys to avoid having to log in on each website on a multisite, was just annoying.
 * Improvement #259: Better hook usage to allow any cache plugin (like WP Rocket of course) to ignore login page.
 * Improvement #195: Better Move Login rules on Ngnix. And better rules in general for all modules.
@@ -288,12 +300,12 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 = 1.1.2 =
 
-* 25 oct 2016
+* 25 october 2016
 * Just prices update.
 
 = 1.1.1 =
 
-* 22 oct 2016
+* 22 october 2016
 * Improvement #216: The button "Ask for support" is now always present on scanner step 3.
 * Improvement + #205: typos, and missing text domain.
 * Fix #186: Add description and author to the `COOKIEHASH` MU plugin.
@@ -307,12 +319,12 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 = 1.1.0 =
 
-* 19 oct 2016
+* 19 october 2016
 * New: Design revamp for modules homepage.
 
 = 1.0.6 =
 
-* 18 oct 2016
+* 18 october 2016
 * Fix #158 & #179: Affected roles on modules were reset to empty. I prefer a filled field.
 * Fix #159: The error message from files backup talked about DB backup. Go home!
 * Fix #178: The PasswordLess scan will now check if its module is active, and in a near future will really check for any 2FA code.
@@ -324,7 +336,7 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 = 1.0.5 =
 
-* 07 oct 2016
+* 07 october 2016
 * Fix #167: Possibly locked at step 1 with a fake "New scan" for readme.txt files, you're not stuck anymore.
 * Fix #166: Various CSS improvements.
 * Fix #171: Scans related to the firewall were always returning a bad status, even if the protections were running.
@@ -333,14 +345,14 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 = 1.0.4 =
 
-* 26 sep 2016
+* 26 september 2016
 * TAKE CARE, ALL YOUR LOGS WILL BE DELETED! THANK YOU.
 * Improvement #164: Logs are now lighter (without a flame) and can be deleted much faster (still not as fast as WP Rocket, but who can).
 * New #160: Add a filter named `secupress.remote_timeout` if you got too many "Pending" status in scanner, add more timeout since cUrl is not always gentle with us ><
 
 = 1.0.3 =
 
-* 14 sep 2016
+* 14 september 2016
 * Improvement: Commented salt keys (previously fixed) will now be deleted to avoid another error 500 case (in case of, you know).
 * Improvement: The banner button has now a better display on tiny screen.
 * Improvement: Since SecuPress is compatible with WP 3.7 and 3.8, the icons are now compatible too.
@@ -352,7 +364,7 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 = 1.0.2 =
 
-* 02 sep 2016
+* 02 september 2016
 * Fix: The PHP Notice: wp_enqueue_script/wp_enqueue_style called incorrectly is now called correctly and won't disturb you anymore everywhere in your admin area.
 * Fix: The Error 500 caused by commented salt keys will not happen again.
 * Fix: We removed the "ping" keyword from the bad user-agents since "pingdom" is not so malicious, isn't it?
@@ -362,7 +374,7 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 = 1.0.1 =
 
-* 31 aug 2016
+* 31 august 2016
 * Improvement: Better sorting for Step 3 items.
 * Improvement: Better global wording.
 * Improvement: The fix which delete the deactivated theme will now keep the default theme (using the PHP constant `WP_DEFAULT_THEME`).
@@ -380,14 +392,14 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 = 1.0 =
 
-* 23 aug 2016
+* 23 august 2016
 * Initial release \o/
 
 == Upgrade Notice ==
 
 = 1.0.5 =
 
-* 07 oct 2016
+* 07 october 2016
 * Fix #167: Possibly locked at step 1 with a fake "New scan" for readme.txt files, you're not stuck anymore.
 * Fix #166: Various CSS improvements.
 * Fix #171: Scans related to the firewall were always returning a bad status, even if the protections were running.
@@ -396,5 +408,5 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 = 1.0 =
 
-* 23 aug 2016
+* 23 august 2016
 * Thank you!

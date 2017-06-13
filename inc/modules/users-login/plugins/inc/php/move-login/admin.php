@@ -11,6 +11,7 @@ add_action( 'secupress.modules.activate_submodule_move-login', 'secupress_move_l
  * If not, deactivate. If yes, write the rules.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (bool) $was_active True if Move Login was already active.
  */
@@ -21,13 +22,13 @@ function secupress_move_login_activate( $was_active ) {
 	if ( empty( $GLOBALS['HTTP_SERVER_VARS']['REQUEST_URI'] ) && empty( $_SERVER['REQUEST_URI'] ) ) {
 		$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
 		$message .= __( 'It seems your server configuration prevents the plugin from working properly. The login page cannot be moved.', 'secupress' );
-		add_settings_error( 'secupress_users-login_settings', 'no_request_uri', $message, 'error' );
+		secupress_add_settings_error( 'secupress_users-login_settings', 'no_request_uri', $message, 'error' );
 	}
 	// Server not supported.
 	if ( ! $is_iis7 && ! $is_apache && ! $is_nginx ) {
 		$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
 		$message .= __( 'It seems your server does not use <strong>Apache</strong>, <strong>Ngnix</strong>, or <strong>IIS7</strong>. The login page cannot be moved.', 'secupress' );
-		add_settings_error( 'secupress_users-login_settings', 'unknown_os', $message, 'error' );
+		secupress_add_settings_error( 'secupress_users-login_settings', 'unknown_os', $message, 'error' );
 	}
 
 	// If a message is set, the plugin can't work.
@@ -57,6 +58,7 @@ add_action( 'secupress.modules.deactivate_submodule_move-login', 'secupress_move
  * On module deactivation, remove rewrite rules from the `.htaccess`/`web.config` file.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (array) $args         Some arguments.
  * @param (bool)  $was_inactive True if Move Login was already inactive.
@@ -81,6 +83,7 @@ add_filter( 'secupress.plugins.activation.write_rules', 'secupress_move_login_pl
  * On SecuPress activation, add the rules to the list of the rules to write.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (array) $rules Other rules to write.
  *
@@ -126,6 +129,7 @@ add_action( 'update_option_secupress_users-login_settings', 'secupress_move_logi
  * Add rewrite rules into the `.htaccess`/`web.config` file when settings are updated.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (array) $old_value Old value of the whole module option.
  * @param (array) $value     New value of the whole module option.
@@ -166,6 +170,7 @@ add_action( 'update_site_option_secupress_users-login_settings', 'secupress_move
  * Add rewrite rules into the `.htaccess`/`web.config` file when settings are (network) updated.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (string) $option    Name of the network option.
  * @param (array)  $value     New value of the whole module option.
@@ -185,6 +190,7 @@ function secupress_move_login_write_rules_on_network_update( $option, $value, $o
  * An error notice is displayed on nginx servers or if the file is not writable.
  *
  * @since 1.0
+ * @author Grégory Viguier
  */
 function secupress_move_login_write_rules() {
 	global $is_apache, $is_nginx, $is_iis7;
@@ -206,7 +212,7 @@ function secupress_move_login_write_rules() {
 				'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#move-login_rules">' . __( 'the dedicated section', 'secupress' ) . '</a>',
 				'<code>.htaccess</code>'
 			);
-			add_settings_error( 'general', 'apache_manual_edit', $message, 'error' );
+			secupress_add_settings_error( 'general', 'apache_manual_edit', $message, 'error' );
 		}
 	}
 
@@ -225,7 +231,7 @@ function secupress_move_login_write_rules() {
 				'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#move-login_rules">' . __( 'the dedicated section', 'secupress' ) . '</a>',
 				'<code>web.config</code>'
 			);
-			add_settings_error( 'general', 'iis7_manual_edit', $message, 'error' );
+			secupress_add_settings_error( 'general', 'iis7_manual_edit', $message, 'error' );
 		}
 	}
 
@@ -241,7 +247,7 @@ function secupress_move_login_write_rules() {
 			'<code>nginx.conf</code>',
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#move-login_rules">' . __( 'the dedicated section', 'secupress' ) . '</a>'
 		);
-		add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
+		secupress_add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
 	}
 
 	/**
@@ -264,6 +270,7 @@ function secupress_move_login_write_rules() {
  * Get generic rules for the rewrite rules, based on the settings.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @return (array) An array with the rewritted URIs as keys and the real URIs as values.
  */
@@ -289,6 +296,7 @@ function secupress_move_login_get_rules() {
  * Get the rewrite rules that should be added into the `.htaccess` file (without the SecuPress marker).
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (array) $rules Generic rules to write (see `secupress_move_login_get_rules()`).
  *
@@ -320,6 +328,7 @@ function secupress_move_login_get_apache_rules( $rules = array() ) {
  * Add or remove rules into the `.htaccess` file.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (array) $rules Generic rules to write (see `secupress_move_login_get_rules()`).
  *
@@ -345,6 +354,7 @@ function secupress_move_login_write_apache_rules( $rules = array() ) {
  * Get the rewrite rules that should be added into the `web.config` file.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (array) $rules Generic rules to write (see `secupress_move_login_get_rules()`).
  *
@@ -376,6 +386,7 @@ function secupress_move_login_get_iis7_rules( $rules = array() ) {
  * Add or remove rules into the `web.config` file.
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (array) $rules Generic rules to write (see `secupress_move_login_get_rules()`).
  *
@@ -401,6 +412,7 @@ function secupress_move_login_write_iis7_rules( $rules = array() ) {
  * Get the rewrite rules that should be added into the `nginx.conf` file (without the SecuPress marker).
  *
  * @since 1.0
+ * @author Grégory Viguier
  *
  * @param (array) $rules Generic rules to write (see `secupress_move_login_get_rules()`).
  *

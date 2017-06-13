@@ -2,8 +2,7 @@
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 $modules          = secupress_get_modules();
-$scanned_items    = get_option( SECUPRESS_SCAN_SLUG );
-$scanned_items    = is_array( $scanned_items ) ? $scanned_items : array();
+$scanned_items    = secupress_get_scan_results();
 $nb_good_scans    = 0;
 $nb_bad_scans     = 0;
 $nb_warning_scans = 0;

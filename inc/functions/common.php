@@ -17,10 +17,12 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 function secupress_class_path( $prefix, $class_name_part = '' ) {
 	$folders = array(
-		'scan'      => 'scanners',
-		'singleton' => 'common',
-		'logs'      => 'common',
-		'log'       => 'common',
+		'scan'              => 'scanners',
+		'singleton'         => 'common',
+		'logs'              => 'common',
+		'log'               => 'common',
+		'cleanup-leftovers' => 'common',
+		'scanner-results'   => 'common',
 	);
 
 	$prefix = strtolower( str_replace( '_', '-', $prefix ) );
@@ -957,7 +959,7 @@ function secupress_get_consumer_key() {
 
 
 /**
- * Return true if secupress pro is installed.
+ * Return true if secupress pro is activated.
  *
  * @since 1.0
  *
@@ -969,6 +971,25 @@ function secupress_has_pro() {
 
 
 /**
+ * Return true if the license is ok.
+ *
+ * @since 1.3
+ * @author Grégory Viguier
+ *
+ * @return (bool)
+ */
+function secupress_has_pro_license() {
+	static $has_pro;
+
+	if ( ! isset( $has_pro ) ) {
+		$has_pro = secupress_get_consumer_key() && secupress_get_option( 'site_is_pro' );
+	}
+
+	return $has_pro;
+}
+
+
+/**
  * Return true if secupress pro is installed and the license is ok.
  *
  * @since 1.0
@@ -976,13 +997,7 @@ function secupress_has_pro() {
  * @return (bool)
  */
 function secupress_is_pro() {
-	static $is_pro;
-
-	if ( ! isset( $is_pro ) ) {
-		$is_pro = secupress_has_pro() && secupress_get_consumer_key() && (int) secupress_get_option( 'site_is_pro' );
-	}
-
-	return $is_pro;
+	return secupress_has_pro() && secupress_has_pro_license();
 }
 
 
@@ -1198,4 +1213,81 @@ function secupress_maybe_increase_memory_limit() {
 			return;
 		}
 	}
+}
+
+
+/**
+ * Register a settings error to be displayed to the user.
+ * This a clone of `add_settings_error()`, but available in the global scope.
+ *
+ * @since 1.3
+ * @author Grégory Viguier
+ *
+ * @param (string) $setting Slug title of the setting to which this error applies.
+ * @param (string) $code    Slug-name to identify the error. Used as part of 'id' attribute in HTML output.
+ * @param (string) $message The formatted message text to display to the user (will be shown inside styled
+ *                          `<div>` and `<p>` tags).
+ * @param (string) $type    Optional. Message type, controls HTML class. Accepts 'error' or 'updated'.
+ *                          Default 'error'.
+ */
+function secupress_add_settings_error( $setting, $code, $message, $type = 'error' ) {
+	global $wp_settings_errors;
+
+	$wp_settings_errors[] = array(
+		'setting' => $setting,
+		'code'    => $code,
+		'message' => $message,
+		'type'    => $type,
+	);
+}
+
+
+/**
+ * Fetch settings errors registered by `add_settings_error()` and `secupress_add_settings_error()`.
+ * This a clone of `get_settings_errors()`, but available in the global scope.
+ *
+ * @since 1.3
+ * @author Grégory Viguier
+ *
+ * @param (string)  $setting  Optional slug title of a specific setting who's errors you want.
+ * @param (boolean) $sanitize Whether to re-sanitize the setting value before returning errors.
+ *
+ * @return (array) Array of settings errors
+ */
+function secupress_get_settings_errors( $setting = '', $sanitize = false ) {
+	global $wp_settings_errors;
+
+	/**
+	 * If `$sanitize` is true, manually re-run the sanitization for this option.
+	 * This allows the $sanitize_callback from register_setting() to run, adding any settings errors you want to show by default.
+	 */
+	if ( $sanitize ) {
+		sanitize_option( $setting, get_option( $setting ) );
+	}
+
+	// If settings were passed back from options.php then use them.
+	if ( isset( $_GET['settings-updated'] ) && $_GET['settings-updated'] && get_transient( 'settings_errors' ) ) {
+		$wp_settings_errors = array_merge( (array) $wp_settings_errors, get_transient( 'settings_errors' ) ); // WPCS: override ok.
+		delete_transient( 'settings_errors' );
+	}
+
+	// Check global in case errors have been added on this pageload.
+	if ( ! count( $wp_settings_errors ) ) {
+		return array();
+	}
+
+	// Filter the results to those of a specific setting if one was set.
+	if ( $setting ) {
+		$setting_errors = array();
+
+		foreach ( (array) $wp_settings_errors as $key => $details ) {
+			if ( $setting === $details['setting'] ) {
+				$setting_errors[] = $wp_settings_errors[ $key ];
+			}
+		}
+
+		return $setting_errors;
+	}
+
+	return $wp_settings_errors;
 }

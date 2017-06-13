@@ -83,7 +83,7 @@ function secupress_admin_send_response_or_redirect( $response = false, $redirect
  * @param (array) $args An array of arguments like:
  *                      (string)      $message     The message to return.
  *                      (string|bool) $redirect_to The URL to redirect to: false for the referer, or a complete URL, or the slug of one of our settings pages.
- *                      (string)      $code        An error code used by `add_settings_error()`.
+ *                      (string)      $code        An error code used by `secupress_add_settings_error()`.
  *                      (string)      $type        `success` (default) or `error`. Will decide to send a success or an error message.
  **/
 function secupress_admin_send_message_die( $args ) {
@@ -118,8 +118,8 @@ function secupress_admin_send_message_die( $args ) {
 
 	$args['type'] = 'success' === $args['type'] ? 'updated' : 'error';
 
-	add_settings_error( 'general', $args['code'], $args['message'], $args['type'] );
-	set_transient( 'settings_errors', get_settings_errors(), 30 );
+	secupress_add_settings_error( 'general', $args['code'], $args['message'], $args['type'] );
+	set_transient( 'settings_errors', secupress_get_settings_errors(), 30 );
 
 	$goback = add_query_arg( 'settings-updated', 'true', $args['redirect_to'] );
 	wp_redirect( esc_url_raw( $goback ) );

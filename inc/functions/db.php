@@ -10,15 +10,18 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  */
 function secupress_db_access_granted() {
 	global $wpdb;
+
 	// Get privilege for the WP user.
-	$results = $wpdb->get_results( 'SHOW GRANTS FOR ' . DB_USER . '@' . DB_HOST ); // WPCS: unprepared SQL ok.
+	$host    = preg_replace( '/:\d+$/', '', DB_HOST );
+	$results = $wpdb->get_results( 'SHOW GRANTS FOR ' . DB_USER . '@' . $host ); // WPCS: unprepared SQL ok.
 
 	// We got something.
-	if ( ! isset( $results[0]->{'Grants for ' . DB_USER . '@' . DB_HOST} ) ) {
+	if ( ! isset( $results[0]->{'Grants for ' . DB_USER . '@' . $host} ) ) {
 		return false;
 	}
 
 	$access_granted = false;
+	$quoted_db_name = str_replace( '_', '\\\*_', preg_quote( DB_NAME, '/' ) );
 
 	foreach ( $results as $result ) {
 		$result = reset( $result );
@@ -27,7 +30,6 @@ function secupress_db_access_granted() {
 			continue;
 		}
 
-		$quoted_db_name = preg_quote( DB_NAME );
 		$access_granted = preg_match( '/ALL PRIVILEGES ON `?' . $quoted_db_name . '`?|ALL PRIVILEGES ON \*\.\*|GRANT .*, ALTER,.* ON `?' . $quoted_db_name . '`?|GRANT .*, ALTER,.* ON \*\.\*/', $result );
 
 		if ( $access_granted ) {

@@ -118,13 +118,13 @@ class SecuPress_Admin_Support {
 			do_action( 'secupress.services.ask_for_support', $summary, $description, $data, $this );
 		} elseif ( ! $this->get_summary() ) {
 			// The summary is missing.
-			add_settings_error( 'general', 'no_summary', __( 'Could you please give a short summary of your question?', 'secupress' ) );
+			secupress_add_settings_error( 'general', 'no_summary', __( 'Could you please give a short summary of your question?', 'secupress' ) );
 		} elseif ( ! $this->get_description() ) {
 			// The message is missing.
-			add_settings_error( 'general', 'no_description', __( 'Without any description, it will be difficult to bring you help.', 'secupress' ) );
+			secupress_add_settings_error( 'general', 'no_description', __( 'Without any description, it will be difficult to bring you help.', 'secupress' ) );
 		} else {
 			// The message is the default one.
-			add_settings_error( 'general', 'default_description', __( 'I don\'t think this description can be of any help.', 'secupress' ) );
+			secupress_add_settings_error( 'general', 'default_description', __( 'I don\'t think this description can be of any help.', 'secupress' ) );
 		}
 	}
 
@@ -276,7 +276,7 @@ class SecuPress_Admin_Support {
 			set_site_transient( 'secupress_support_form', $transient, 300 );
 		}
 
-		add_settings_error( 'general', 'doc_read', __( 'Please check the checkbox first.', 'secupress' ) );
+		secupress_add_settings_error( 'general', 'doc_read', __( 'Please check the checkbox first.', 'secupress' ) );
 	}
 
 
@@ -324,7 +324,7 @@ class SecuPress_Admin_Support {
 			'license_key'       => secupress_get_consumer_key(),
 			'site_url'          => esc_url( user_trailingslashit( home_url(), 'home' ) ),
 			// SecuPress.
-			'sp_pro_version'    => SECUPRESS_PRO_VERSION . ' | ' . SECUPRESS_PRO_SECUPRESS_MIN,
+			'sp_pro_version'    => SECUPRESS_PRO_VERSION,
 			'sp_active_plugins' => secupress_get_active_submodules(),
 			// WordPress.
 			'wp_active_plugins' => static::get_active_plugins(),
@@ -409,7 +409,7 @@ class SecuPress_Admin_Support {
 		);
 
 		if ( ! $this->has_description() ) {
-			add_settings_error( 'general', 'free_support', $message );
+			secupress_add_settings_error( 'general', 'free_support', $message );
 			return;
 		}
 
@@ -434,7 +434,7 @@ class SecuPress_Admin_Support {
 		$message .= '<blockquote>' . $description . '</blockquote>';
 		$message .= '<p>' . __( '(you\'re welcome)', 'secupress' ) . '<strong>';
 
-		add_settings_error( 'general', 'free_support', $message );
+		secupress_add_settings_error( 'general', 'free_support', $message );
 	}
 
 

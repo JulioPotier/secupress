@@ -37,7 +37,7 @@ function secupress_disallow_file_edit_activation() {
 	if ( ! $wpconfig_filepath ) {
 		/** Translators: 1 is a file name, 2 is a code. */
 		$message = sprintf( __( 'The %1$s file is not writable. Please apply %2$s write rights to the file.', 'secupress' ), '<code>wp-config.php</code>', '<code>0644</code>' );
-		add_settings_error( 'general', 'wp_config_not_writable', $message, 'error' );
+		secupress_add_settings_error( 'general', 'wp_config_not_writable', $message, 'error' );
 		return;
 	}
 
@@ -63,7 +63,7 @@ function secupress_disallow_file_edit_activation() {
 				"<code>define( '$constant', $value );</code>",
 				"<pre># BEGIN SecuPress $marker\n$new_define\n# END SecuPress</pre>"
 			);
-			add_settings_error( 'general', 'constant_not_removed', $message, 'error' );
+			secupress_add_settings_error( 'general', 'constant_not_removed', $message, 'error' );
 			return;
 		}
 	}
@@ -85,7 +85,7 @@ function secupress_disallow_file_edit_activation() {
 		'<code>wp-config.php</code>',
 		"<pre># BEGIN SecuPress $marker\n$new_define\n# END SecuPress</pre>"
 	);
-	add_settings_error( 'general', 'constant_not_added', $message, 'error' );
+	secupress_add_settings_error( 'general', 'constant_not_added', $message, 'error' );
 }
 
 
@@ -105,7 +105,7 @@ function secupress_disallow_file_edit_deactivate() {
 	if ( ! $wpconfig_filepath ) {
 		/** Translators: 1 is a file name, 2 is a code. */
 		$message = sprintf( __( 'The %1$s file is not writable. Please apply %2$s write rights to the file.', 'secupress' ), '<code>wp-config.php</code>', '<code>0644</code>' );
-		add_settings_error( 'general', 'wp_config_not_writable', $message, 'error' );
+		secupress_add_settings_error( 'general', 'wp_config_not_writable', $message, 'error' );
 		return;
 	}
 
