@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2017-05-03 15:32+0200\n"
-"PO-Revision-Date: 2017-05-03 15:33+0200\n"
+"POT-Creation-Date: 2017-05-19 15:59+0200\n"
+"PO-Revision-Date: 2017-05-19 16:01+0200\n"
 "Last-Translator: WP Media <contact@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.12\n"
+"X-Generator: Poedit 1.8.9\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: _x:1,2c;__;_e;_ex:1,2c;_n:1,2;_nx:1,2;esc_html__;"
 "esc_html_e;esc_attr__;esc_attr_e;_n_noop:1,2;_nx_noop:4c,1,2\n"
@@ -86,7 +86,7 @@ msgstr ""
 #: inc/classes/common/class-secupress-log.php:294
 #: inc/classes/common/class-secupress-logs.php:1391
 #: inc/classes/common/class-secupress-logs.php:1395
-#: inc/functions/deprecated.php:116 inc/functions/modules.php:562
+#: inc/functions/deprecated.php:125 inc/functions/modules.php:562
 #: inc/functions/modules.php:576 inc/functions/modules.php:589
 #: inc/functions/modules.php:639 inc/functions/modules.php:667
 #: inc/functions/modules.php:697 inc/functions/modules.php:709
@@ -98,11 +98,11 @@ msgstr ""
 #: inc/modules/users-login/callbacks.php:265
 #: inc/modules/users-login/callbacks.php:271
 #: inc/modules/users-login/plugins/ask-old-password.php:79
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:22
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:28
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:202
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:221
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:237
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:23
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:29
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:208
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:227
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:243
 #, php-format
 msgid "%s:"
 msgstr "%s&nbsp;:"
@@ -815,7 +815,7 @@ msgstr ""
 msgid "Go to module settings"
 msgstr "Réglages du module"
 
-#: inc/admin/scanner-step-1-all.php:23 inc/admin/scanner-step-4.php:161
+#: inc/admin/scanner-step-1-all.php:23 inc/admin/scanner-step-4.php:160
 msgid "Show/hide panel"
 msgstr "Montrer/cacher"
 
@@ -864,21 +864,21 @@ msgstr "Liste des éléments de sécurité analysés"
 msgid "Next step"
 msgstr "Prochaine étape"
 
-#: inc/admin/scanner-step-1.php:104 inc/admin/scanner-step-4.php:267
+#: inc/admin/scanner-step-1.php:104 inc/admin/scanner-step-4.php:266
 msgid "Export this report as PDF file."
 msgstr "Exporter ce rapport dans un fichier PDF."
 
 #: inc/admin/scanner-step-1.php:109 inc/admin/scanner-step-1.php:118
-#: inc/admin/scanner-step-4.php:260
+#: inc/admin/scanner-step-4.php:259
 msgid "Export as PDF"
 msgstr "Exporter en PDF"
 
-#: inc/admin/scanner-step-1.php:113 inc/admin/scanner-step-4.php:273
+#: inc/admin/scanner-step-1.php:113 inc/admin/scanner-step-4.php:272
 msgid "Get the Pro Version to export this report as PDF file."
 msgstr "Obtenez la version Pro pour exporter ce rapport dans un fichier PDF."
 
 #: inc/admin/scanner-step-1.php:123 inc/admin/scanner-step-2.php:159
-#: inc/admin/scanner-step-3.php:190 inc/admin/scanner-step-4.php:278
+#: inc/admin/scanner-step-3.php:190 inc/admin/scanner-step-4.php:277
 #: inc/classes/settings/class-secupress-settings.php:1341
 #, php-format
 msgid "Available in <a href=\"%s\" target=\"_blank\">Pro Version</a>"
@@ -974,111 +974,111 @@ msgstr "Obtenir la version PRO"
 msgid "I did the requested work, continue"
 msgstr "J'ai fait le travail demandé, continuer"
 
-#: inc/admin/scanner-step-4.php:43
+#: inc/admin/scanner-step-4.php:42
 #, php-format
 msgid "Bravo! You fixed %1$d of %2$d."
 msgstr "Bravo&nbsp; Vous avez corrigé %1$d éléments sur %2$d"
 
-#: inc/admin/scanner-step-4.php:47
+#: inc/admin/scanner-step-4.php:46
 #, php-format
 msgid "Nothing fixed yet, %d left."
 msgstr "Aucune correction actuellement, %d restantes."
 
-#: inc/admin/scanner-step-4.php:56
+#: inc/admin/scanner-step-4.php:55
 #, php-format
 msgid "Your grade is still %s. "
 msgstr "Votre grade est encore %s. "
 
-#: inc/admin/scanner-step-4.php:58
+#: inc/admin/scanner-step-4.php:57
 #, php-format
 msgid "Your grade went from %1$s to %2$s. "
 msgstr "Votre grade est passé de %1$s à %2$s."
 
-#: inc/admin/scanner-step-4.php:63
+#: inc/admin/scanner-step-4.php:62
 msgid "You fixed: "
 msgstr "Vous avez corrigé&nbsp;:"
 
-#: inc/admin/scanner-step-4.php:79
+#: inc/admin/scanner-step-4.php:78
 #, php-format
 msgid "%d Bad"
 msgstr "%d mauvais"
 
-#: inc/admin/scanner-step-4.php:89
+#: inc/admin/scanner-step-4.php:88
 #, php-format
 msgid "%d Warning"
 msgstr "%d en attente"
 
-#: inc/admin/scanner-step-4.php:102
+#: inc/admin/scanner-step-4.php:101
 msgid "Show/hide the details of scanned items in your report"
 msgstr "Montrer/cacher les détails des éléments scannés dans votre rapport"
 
-#: inc/admin/scanner-step-4.php:108
+#: inc/admin/scanner-step-4.php:107
 msgid "See all fixed issues"
 msgstr "Voir tous les problèmes corrigés"
 
-#: inc/admin/scanner-step-4.php:111
+#: inc/admin/scanner-step-4.php:110
 msgid "Hide all fixed issues"
 msgstr "Cacher tous les problèmes corrigés"
 
-#: inc/admin/scanner-step-4.php:210 inc/admin/settings.php:190
+#: inc/admin/scanner-step-4.php:209 inc/admin/settings.php:190
 msgid "Not fixed"
 msgstr "Non corrigé"
 
-#: inc/admin/scanner-step-4.php:215 inc/admin/settings.php:113
+#: inc/admin/scanner-step-4.php:214 inc/admin/settings.php:113
 #: inc/admin/settings.php:187 inc/admin/settings.php:984
 msgid "Error"
 msgstr "Erreur"
 
-#: inc/admin/scanner-step-4.php:220
+#: inc/admin/scanner-step-4.php:219
 msgid "Pending"
 msgstr "En attente"
 
-#: inc/admin/scanner-step-4.php:225 inc/admin/settings.php:188
+#: inc/admin/scanner-step-4.php:224 inc/admin/settings.php:188
 msgid "Fixed"
 msgstr "Corrigé"
 
-#: inc/admin/scanner-step-4.php:290
+#: inc/admin/scanner-step-4.php:289
 msgid "Want to go farther?"
 msgstr "Aller plus loin&nbsp;?"
 
-#: inc/admin/scanner-step-4.php:291
+#: inc/admin/scanner-step-4.php:290
 msgid "Perfect the security of your website with our dedicated modules."
 msgstr "Perfectionnez la sécurité de votre site avec nos modules dédiés."
 
 #. Translators: %s is the plugin name.
-#: inc/admin/scanner-step-4.php:299
+#: inc/admin/scanner-step-4.php:298
 #, php-format
 msgid "%s modules"
 msgstr "%s modules"
 
-#: inc/admin/scanner-step-4.php:302
+#: inc/admin/scanner-step-4.php:301
 msgid "Fine-tune your security"
 msgstr "Découvrez toutes les fonctionnalités"
 
-#: inc/admin/scanner-step-4.php:309 inc/admin/settings.php:603
+#: inc/admin/scanner-step-4.php:308 inc/admin/settings.php:603
 msgid "Manage your recurring scans"
 msgstr "Planifiez vos scans automatiques"
 
-#: inc/admin/scanner-step-4.php:310
+#: inc/admin/scanner-step-4.php:309
 #, php-format
 msgid "Let %s scan your website when you are away by using scheduled scans."
 msgstr ""
 "Laissez %s scanner votre site quand vous n'êtes pas là avec des scanners "
 "récurrents."
 
-#: inc/admin/scanner-step-4.php:316 inc/admin/settings.php:602
+#: inc/admin/scanner-step-4.php:315 inc/admin/settings.php:602
 msgid "Schedule Scans"
 msgstr "Planification de scans"
 
-#: inc/admin/scanner-step-4.php:317
+#: inc/admin/scanner-step-4.php:316
 msgid "Schedule your recurring scans"
 msgstr "Planifiez vos analyses récurrentes"
 
-#: inc/admin/scanner-step-4.php:336
+#: inc/admin/scanner-step-4.php:335
 msgid "Get a better score and unlock all features"
 msgstr "Obtenez une meilleure note et débloquez toutes les fonctionnalités"
 
-#: inc/admin/scanner-step-4.php:344 inc/functions/modules.php:215
+#: inc/admin/scanner-step-4.php:343 inc/functions/modules.php:215
 #: inc/modules/welcome/settings.php:75
 msgid "Get Pro"
 msgstr "Passer à la version PRO"
@@ -1612,13 +1612,13 @@ msgid "None"
 msgstr "Aucun"
 
 #: inc/classes/admin/class-secupress-admin-support.php:174
-#: inc/functions/deprecated.php:42
+#: inc/functions/deprecated.php:51
 #, php-format
 msgid "License email: %s"
 msgstr "Email de la licence&nbsp;: %s"
 
 #: inc/classes/admin/class-secupress-admin-support.php:175
-#: inc/functions/deprecated.php:43
+#: inc/functions/deprecated.php:52
 #, php-format
 msgid "License key: %s"
 msgstr "Clé de licence&nbsp;: %s"
@@ -1697,23 +1697,23 @@ msgstr ""
 "supposé arriver, et qu'est-ce qui arrive à la place&nbsp;?"
 
 #: inc/classes/admin/class-secupress-admin-support.php:541
-#: inc/functions/deprecated.php:190
+#: inc/functions/deprecated.php:199
 msgid "network"
 msgstr "réseau"
 
 #: inc/classes/admin/class-secupress-admin-support.php:566
-#: inc/functions/deprecated.php:215
+#: inc/functions/deprecated.php:224
 msgid "main site"
 msgstr "site principal"
 
 #: inc/classes/admin/class-secupress-admin-support.php:586
-#: inc/functions/deprecated.php:235
+#: inc/functions/deprecated.php:244
 msgid "Must-Use plugin"
 msgstr "Plugin automatique (must-use)"
 
 #. Translators: a drop-in is specific kind of WordPress plugin.
 #: inc/classes/admin/class-secupress-admin-support.php:596
-#: inc/functions/deprecated.php:245
+#: inc/functions/deprecated.php:254
 msgid "drop-in"
 msgstr "drop-in"
 
@@ -5428,7 +5428,8 @@ msgstr "Votre lien de déverrouillage a expiré (ou vous trichez)."
 
 #: inc/common.php:138 inc/common.php:139
 #: inc/modules/users-login/plugins/blacklist-logins.php:46
-#: inc/modules/users-login/plugins/inc/php/move-login/redirections-and-dies.php:209
+#: inc/modules/users-login/plugins/inc/php/move-login/deprecated.php:94
+#: inc/modules/users-login/plugins/inc/php/move-login/redirections-and-dies.php:202
 msgid "Cheatin&#8217; uh?"
 msgstr "Vous trichez&nbsp;?"
 
@@ -5523,101 +5524,120 @@ msgstr ""
 msgid "Your email address:"
 msgstr "Votre adresse email&nbsp;"
 
-#: inc/functions/common.php:219
+#: inc/functions/common.php:221
 msgid "Congratulations! 🎉"
 msgstr "Félicitations&nbsp;🎉"
 
-#: inc/functions/common.php:223
+#: inc/functions/common.php:225
 msgid "Almost perfect!"
 msgstr "Presque parfait&nbsp;!"
 
-#: inc/functions/common.php:227
+#: inc/functions/common.php:229
 msgid "Not bad, but try to fix more items."
 msgstr "Pas mauvais, mais corrigez plus de choses."
 
-#: inc/functions/common.php:231
+#: inc/functions/common.php:233
 msgid "Well, it's not good yet."
 msgstr "Bien, mais pas encore assez bon."
 
-#: inc/functions/common.php:235
+#: inc/functions/common.php:237
 msgid "Better than nothing, but still not good."
 msgstr "Mieux que rien, mais pas encore bon."
 
-#: inc/functions/common.php:239
+#: inc/functions/common.php:241
 msgid "Not good at all, fix more issues."
 msgstr "Pas bon du tout, corrigez plus de choses."
 
-#: inc/functions/common.php:242
+#: inc/functions/common.php:244
 msgid "Bad, fix issues right away!"
 msgstr "Pas bien, n'hésitez pas à corriger&nbsp;!"
 
-#: inc/functions/common.php:245
+#: inc/functions/common.php:247
 msgid "Still very bad, start fixing things!"
 msgstr "Toujours mauvais, commencez à corriger&nbsp;!"
 
-#: inc/functions/common.php:248
+#: inc/functions/common.php:250
 msgid "Very bad. You should take some actions."
 msgstr "Très mauvais. Vous devriez vous y mettre."
 
-#: inc/functions/common.php:251
+#: inc/functions/common.php:253
 msgid "Very very bad, please fix something!"
 msgstr "Très très mauvais, s'il vous plait, corriger quelque chose&nbsp;!"
 
-#: inc/functions/common.php:254
+#: inc/functions/common.php:256
 msgid "Very very, really very bad."
 msgstr "Très très, vraiment très mauvais."
 
-#: inc/functions/common.php:261
+#: inc/functions/common.php:263
 #, php-format
 msgid "Your grade is %1$s — %2$d scanned item is good."
 msgid_plural "Your grade is %1$s — %2$d scanned items are good."
 msgstr[0] "Votre note est %1$s — %2$d élément scanné est bon."
 msgstr[1] "Votre note est %1$s — %2$d éléments scannés sont bons."
 
-#: inc/functions/common.php:447
+#: inc/functions/common.php:449
 msgid "You are not allowed to access the requested page."
 msgstr "Vous n'êtes pas autorisé à accéder à là page demandée."
 
-#: inc/functions/common.php:452
+#: inc/functions/common.php:454
 msgid "Logged Details:"
 msgstr "Détails enregistrés&nbsp;:"
 
-#: inc/functions/common.php:453
+#: inc/functions/common.php:455
 #, php-format
 msgid "Your IP: %s"
 msgstr "Votre IP&nbsp;: %s"
 
-#: inc/functions/common.php:454
+#: inc/functions/common.php:456
 #, php-format
 msgid "Time: %s"
 msgstr "Heure&nbsp;: %s"
 
-#: inc/functions/common.php:454
+#: inc/functions/common.php:456
 msgid "F j, Y g:i a"
 msgstr "j F Y G:i"
 
-#: inc/functions/common.php:455
+#: inc/functions/common.php:457
 #, php-format
 msgid "Block ID: %s"
 msgstr "Block ID&nbsp;: %s"
 
-#: inc/functions/deprecated.php:44
+#. Translators: 1: WordPress hook name, 2: version number, 3: alternative hook name.
+#: inc/functions/compat.php:382
+#, php-format
+msgid ""
+"%1$s is <strong>deprecated</strong> since version %2$s! Use %3$s instead."
+msgstr ""
+"%1$s est <strong>déprécié</strong> depuis la version %2$s. Utilisez %3$s à "
+"la place."
+
+#. Translators: 1: WordPress hook name, 2: version number.
+#: inc/functions/compat.php:385
+#, php-format
+msgid ""
+"%1$s is <strong>deprecated</strong> since version %2$s with no alternative "
+"available."
+msgstr ""
+"%1$s est <strong>déprécié</strong> depuis la version %2$s sans autre "
+"alternative."
+
+#: inc/functions/deprecated.php:53
 #, php-format
 msgid "Version of SecuPress Pro: %s"
 msgstr "Version de SecuPress Pro&nbsp;: %s"
 
-#: inc/functions/deprecated.php:44
+#: inc/functions/deprecated.php:53
 msgid "Version of SecuPress Pro: inactive"
 msgstr "Version de SecuPress Pro&nbsp;: inactive"
 
-#: inc/functions/deprecated.php:53
+#: inc/functions/deprecated.php:62
 msgid ""
 "Your message has been sent, we will come back to you shortly. Thank you."
 msgstr ""
 "Votre message a été envoyé, nous reviendrons vers vous rapidement. Merci."
 
 #. Translators: %s is an email address.
-#: inc/functions/deprecated.php:61
+#: inc/functions/deprecated.php:70
 #, php-format
 msgid ""
 "Something prevented your message to be sent. Please send it manually to %s. "
@@ -5626,7 +5646,7 @@ msgstr ""
 "Quelque chose a empêché votre message d'être envoyé. Merci de le faire "
 "manuellement à %s."
 
-#: inc/functions/deprecated.php:119
+#: inc/functions/deprecated.php:128
 #, php-format
 msgid ""
 "Your Pro license is not valid or is not set yet. If you want to activate all "
@@ -5636,11 +5656,11 @@ msgstr ""
 "souhaitez activer toutes les fonctionnalités Pro, le support premium et les "
 "mises à jour, regardez dans %s."
 
-#: inc/functions/deprecated.php:120
+#: inc/functions/deprecated.php:129
 msgid "the plugin settings page"
 msgstr "la page des réglages du plugin"
 
-#: inc/functions/deprecated.php:143 inc/functions/deprecated.php:146
+#: inc/functions/deprecated.php:152 inc/functions/deprecated.php:155
 #, php-format
 msgctxt "User full name. 1: first name, 2: last name"
 msgid "%1$s %2$s"
@@ -7893,12 +7913,12 @@ msgstr "Envoyer le ticket"
 #: inc/modules/users-login/callbacks.php:259
 #: inc/modules/users-login/callbacks.php:265
 #: inc/modules/users-login/callbacks.php:271
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:22
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:28
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:75
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:202
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:221
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:237
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:23
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:29
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:77
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:208
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:227
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:243
 #: inc/modules/users-login/settings/move-login.php:7
 msgid "Move Login"
 msgstr "Déplacer la page de connexion"
@@ -8048,7 +8068,7 @@ msgstr "Nom d'utilisateur&nbsp;: %s"
 msgid "Sorry, that username is not allowed."
 msgstr "Désolé, ce nom d'utilisateur n'est pas autorisé."
 
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:23
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:24
 msgid ""
 "It seems your server configuration prevents the plugin from working "
 "properly. The login page cannot be moved."
@@ -8056,7 +8076,7 @@ msgstr ""
 "Il semble que la configuration de votre serveur empêche le plugin de "
 "fonctionner correctement. La page de connexion ne peut pas être déplacée."
 
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:29
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:30
 msgid ""
 "It seems your server does not use <strong>Apache</strong>, <strong>Ngnix</"
 "strong>, or <strong>IIS7</strong>. The login page cannot be moved."
@@ -8066,8 +8086,8 @@ msgstr ""
 "peut pas être déplacée."
 
 #. Translators: 1 is a link "the dedicated section", 2 is a file name.
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:205
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:224
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:211
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:230
 #, php-format
 msgid ""
 "It seems your %2$s file is not writable. You have to edit the file manually. "
@@ -8078,14 +8098,14 @@ msgstr ""
 "manuellement. Merci de copier/coller les règles de réécriture %1$s dans "
 "votre fichier %2$s."
 
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:206
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:225
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:242
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:212
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:231
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:248
 msgid "the dedicated section"
 msgstr "la section dédiée"
 
 #. Translators: 1 is a file name, 2 is a link "the dedicated section".
-#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:240
+#: inc/modules/users-login/plugins/inc/php/move-login/admin.php:246
 #, php-format
 msgid ""
 "Your server runs <strong>Ngnix</strong>. You have to edit the configuration "
@@ -8096,14 +8116,15 @@ msgstr ""
 "votre fichier de configuration manuellement. Merci de regarder les règles de "
 "réécriture données %2$s et de les copier/coller dans le fichier %1$s."
 
-#: inc/modules/users-login/plugins/inc/php/move-login/redirections-and-dies.php:122
-msgid "The login form is not here."
-msgstr "Le formulaire de connexion n'est pas là."
-
-#: inc/modules/users-login/plugins/inc/php/move-login/redirections-and-dies.php:122
-#: inc/modules/users-login/plugins/inc/php/move-login/redirections-and-dies.php:209
+#: inc/modules/users-login/plugins/inc/php/move-login/deprecated.php:94
+#: inc/modules/users-login/plugins/inc/php/move-login/redirections-and-dies.php:129
+#: inc/modules/users-login/plugins/inc/php/move-login/redirections-and-dies.php:202
 msgid "Lost?"
 msgstr "Perdu&nbsp;?"
+
+#: inc/modules/users-login/plugins/inc/php/move-login/redirections-and-dies.php:129
+msgid "The login form is not here."
+msgstr "Le formulaire de connexion n'est pas là."
 
 #: inc/modules/users-login/plugins/limitloginattempts.php:78
 #, php-format
@@ -8755,12 +8776,12 @@ msgstr ""
 "actuellement la version %3$s."
 
 #. Translators: Plugin Name of the plugin/theme
-#: secupress.php:378
+#: secupress.php:383
 msgid "SecuPress — WordPress Security"
 msgstr "SecuPress — Sécurité WordPress"
 
 #. Translators: Description of the plugin/theme
-#: secupress.php:380
+#: secupress.php:385
 msgid ""
 "Protect your WordPress with SecuPress, analyze and ensure the safety of your "
 "website daily."
