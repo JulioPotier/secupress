@@ -1,4 +1,4 @@
-=== SecuPress — WordPress Security ===
+=== SecuPress Free — WordPress Security ===
 Contributors: wp_media, SecuPress, juliobox, GregLone
 Tags: secure, security plugin, wordpress security, hack, malware
 Requires at least: 3.7
