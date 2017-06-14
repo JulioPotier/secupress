@@ -5,8 +5,8 @@
  * Description: Protect your WordPress with SecuPress, analyze and ensure the safety of your website daily.
  * Author: SecuPress
  * Author URI: https://secupress.me
- * Version: 1.3
- * Code Name: Bleeding Edge
+ * Version: 1.4
+ * Code Name: Renaissance
  * Network: true
  * License: GPLv2
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /** DEFINES ===================================================================================== */
 /** --------------------------------------------------------------------------------------------- */
 
-define( 'SECUPRESS_VERSION'               , '1.3' );
+define( 'SECUPRESS_VERSION'               , '1.4' );
 define( 'SECUPRESS_ACTIVE_SUBMODULES'     , 'secupress_active_submodules' );
 define( 'SECUPRESS_SETTINGS_SLUG'         , 'secupress_settings' );
 define( 'SECUPRESS_SCAN_TIMES'            , 'secupress_scanners_times' );
