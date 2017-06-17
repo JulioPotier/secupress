@@ -44,6 +44,9 @@ function secupress_users_login_settings_callback( $settings ) {
 	// Logins blacklist.
 	secupress_logins_blacklist_settings_callback( $modulenow, $activate );
 
+	// Stop User Enumeration.
+	secupress_stopuserenumeration_settings_callback( $modulenow, $activate );
+
 	// Move Login.
 	secupress_move_login_settings_callback( $modulenow, $settings, $activate );
 
@@ -171,6 +174,23 @@ function secupress_logins_blacklist_settings_callback( $modulenow, $activate ) {
 	// (De)Activation.
 	if ( false !== $activate ) {
 		secupress_manage_submodule( $modulenow, 'blacklist-logins', ! empty( $activate['blacklist-logins_activated'] ) );
+	}
+}
+
+
+
+/**
+ * (De)Activate stop user enumeration plugin.
+ *
+ * @since 1.3
+ *
+ * @param (string)     $modulenow Current module.
+ * @param (array|bool) $activate  An array containing the fields related to the sub-module being activated. False if not on this module page.
+ */
+function secupress_stopuserenumeration_settings_callback( $modulenow, $activate ) {
+	// (De)Activation.
+	if ( false !== $activate ) {
+		secupress_manage_submodule( $modulenow, 'stop-user-enumeration', ! empty( $activate['blacklist-logins_stop-user-enumeration'] ) );
 	}
 }
 
