@@ -143,7 +143,6 @@ function secupress_firewall_block_id( $module ) {
 		// Request Method.
 		'RMHM' => __( 'Bad Request Method', 'secupress' ),
 		// User-Agent.
-		'UAHE' => __( 'Empty User-Agent', 'secupress' ),
 		'UAHT' => __( 'User-Agent With HTML Tags', 'secupress' ),
 		'UAHB' => __( 'User-Agent Blacklisted', 'secupress' ),
 	);
