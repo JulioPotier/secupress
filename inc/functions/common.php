@@ -119,7 +119,6 @@ function secupress_get_scanners() {
 			'Anti_Scanner',
 			'Anti_Front_Brute_Force',
 			'Bad_Request_Methods',
-			'Block_Long_URL',
 			'Bad_Url_Access',
 			'PhpVersion',
 		),
