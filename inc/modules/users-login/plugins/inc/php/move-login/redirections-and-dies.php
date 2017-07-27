@@ -96,6 +96,9 @@ function secupress_move_login_maybe_deny_login_page() {
  *
  * @since 1.0
  * @author Grégory Viguier
+ *
+ * @since 1.3.1 Only redirect choice left
+ * @author Julio Potier
  */
 function secupress_move_login_deny_login_access() {
 	/**
@@ -103,9 +106,7 @@ function secupress_move_login_deny_login_access() {
 	 * Don't forget to exit/die.
 	 *
 	 * @since 1.0
-	 * @since 1.3.1 Only redirect choice left
 	 * @author Grégory Viguier
-	 * @author Julio Potier
 	 */
 	do_action( 'secupress.plugin.move-login.deny_login_access' );
 
@@ -192,7 +193,7 @@ function secupress_move_login_maybe_deny_login_redirect( $location ) {
 
 	do_action_deprecated( 'secupress.plugin.move-login.deny_login_redirect', array(), '1.3', 'secupress.plugin.move-login.login_redirect_location' );
 
-	$do = secupress_get_module_option( 'move-login_login-redirect', '404', 'users-login' );
+	$do = secupress_get_module_option( 'move-login_login-access', '404', 'users-login' );
 
 	if ( 'redir_404' == $do || 'redir_home' == $do ) {
 		$do = '404';

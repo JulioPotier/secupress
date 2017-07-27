@@ -55,7 +55,8 @@ foreach ( $labels as $slug => $label ) {
 	) );
 }
 
-
+$value = secupress_get_module_option( $this->get_field_name( 'login-access' ) );
+$value = str_replace( 'redir_', '', $value );
 $this->add_field( array(
 	'title'        => sprintf( __( 'Redirection when access to %s or %s', 'secupress' ), '<code>wp-login.php</code>', '<code>/wp-admin/</code>' ),
 	'description'  => __( 'When a logged out user attempts to access the old login page or admin area.', 'secupress' ),
@@ -64,6 +65,7 @@ $this->add_field( array(
 	'label_before' => home_url() . '/',
 	'type'         => 'text',
 	'default'      => '404',
+	'value'        => $value,
 	'label_screen' => __( 'Choose how to deny access to login and admin pages', 'secupress' ),
 ) );
 
@@ -77,21 +79,8 @@ if ( $is_plugin_active && function_exists( 'secupress_move_login_get_rules' ) ) 
 	// Nginx.
 	if ( $is_nginx ) {
 		/** Translators: 1 is a file name, 2 is a tag name. */
-		$message = sprintf( __( 'You need to add the following code to your %1$s file, inside the %2$s block:', 'secupress' ), '<code>nginx.conf</code>', '<code>server</code>' );
+		$message = sprintf( __( 'You need to remove the following code from your %1$s file, inside the %2$s block:', 'secupress' ), '<code>nginx.conf</code>', '<code>server</code>' );
 		$rules   = secupress_move_login_get_nginx_rules( secupress_move_login_get_rules() );
-	}
-	// Apache.
-	elseif ( $is_apache && ! secupress_root_file_is_writable( '.htaccess' ) ) {
-		/** Translators: %s is a file name. */
-		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>.htaccess</code>' );
-		$rules   = secupress_move_login_get_apache_rules( secupress_move_login_get_rules() );
-		$rules   = "# BEGIN SecuPress move_login\n$rules\n# END SecuPress";
-	}
-	// IIS7.
-	elseif ( $is_iis7 && ! secupress_root_file_is_writable( 'web.config' ) ) {
-		/** Translators: %s is a file name. */
-		$message = sprintf( __( 'Your %s file is not writable, you need to add the following code to it:', 'secupress' ), '<code>web.config</code>' );
-		$rules   = secupress_move_login_get_iis7_rules( secupress_move_login_get_rules() );
 	}
 
 	if ( $message ) {

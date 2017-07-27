@@ -128,52 +128,12 @@ function secupress_move_login_write_rules() {
 
 	// Apache.
 	if ( $is_apache ) {
-		$success = secupress_move_login_write_apache_rules();
-
-		if ( ! $success && ! $error_message_done ) {
-			$error_message_done = true;
-
-			// File is not writable.
-			$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
-			$message .= sprintf(
-				/** Translators: 1 is a file name. */
-				__( 'It seems your %1$s file is not writable. You have to edit the file manually. Remove the rules from the %1$s file.', 'secupress' ),
-				'<code>.htaccess</code>'
-			);
-			secupress_add_settings_error( 'general', 'apache_manual_edit', $message, 'error' );
-		}
+		secupress_move_login_write_apache_rules();
 	}
 
 	// IIS7.
 	if ( $is_iis7 ) {
-		$success = secupress_move_login_write_iis7_rules();
-
-		if ( ! $success && ! $error_message_done ) {
-			$error_message_done = true;
-
-			// File is not writable.
-			$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
-			$message .= sprintf(
-				/** Translators: 1 is a file name. */
-				__( 'It seems your %1$s file is not writable. You have to edit the file manually. Remove the rules the %1$s file.', 'secupress' ),
-				'<code>web.config</code>'
-			);
-			secupress_add_settings_error( 'general', 'iis7_manual_edit', $message, 'error' );
-		}
-	}
-
-	// Nginx.
-	if ( $is_nginx && ! $error_message_done ) {
-		$error_message_done = true;
-
-		// We can't edit the file.
-		$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
-		$message .= sprintf(
-			/** Translators: 1 is a file name". */
-			__( 'Your server runs <strong>Ngnix</strong>. You have to edit the configuration file manually. Remove the rules the %1$s file.', 'secupress' ),
-			'<code>nginx.conf</code>'
-		);
-		secupress_add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
+		secupress_move_login_write_iis7_rules();
 	}
 
 	/**
