@@ -156,7 +156,6 @@ function secupress_move_login_maybe_deny_login_redirect( $location ) {
 
 	$slugs  = secupress_move_login_get_slugs();
 	$wp_dir = secupress_get_wp_directory();
-
 	if ( secupress_is_subfolder_install() ) {
 		$base  = wp_parse_url( trailingslashit( secupress_get_main_url() ) );
 		$base  = ltrim( $base['path'], '/' );
@@ -241,7 +240,9 @@ function secupress_fallback_slug_redirect() {
 	$parsed = trim( $parsed, '/' );
 
 	if ( preg_match( "@{$regex}@", $parsed ) ) {
-		$slugs = array_flip( secupress_move_login_get_slugs() );
+		$slugs  = array_flip( secupress_move_login_get_slugs() );
+		$parsed = explode( '/', $parsed );
+		$parsed = end( $parsed );
 		if ( ! isset( $_REQUEST['action'] ) && isset( $slugs[ $parsed ] ) ) {
 			$_REQUEST['action'] = $slugs[ $parsed ];
 		}
