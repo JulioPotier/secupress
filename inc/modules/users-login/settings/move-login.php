@@ -11,13 +11,12 @@ $main_field_name  = $this->get_field_name( 'activated' );
 $is_plugin_active = secupress_is_submodule_active( 'users-login', 'move-login' );
 
 $this->add_field( array(
-	'title'             => __( 'Move the login page', 'secupress' ),
-	'description'       => __( 'Hide the login form, not totally from humans, the main goal is to prevent bots hitting this URL.', 'secupress' ),
+	'title'             => __( 'Move the login and admin pages', 'secupress' ),
 	'label_for'         => $main_field_name,
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
 	'value'             => (int) $is_plugin_active,
-	'label'             => __( 'Yes, move the login page to avoid bad login attempts', 'secupress' ),
+	'label'             => __( 'Yes, move the login and admin pages', 'secupress' ),
 	'helpers'           => array(
 		array(
 			'type'        => 'warning',
@@ -58,26 +57,14 @@ foreach ( $labels as $slug => $label ) {
 
 
 $this->add_field( array(
-	'title'        => sprintf( __( 'Access to %s', 'secupress' ), '<code>wp-login.php</code>' ),
-	'description'  => __( 'When a logged out user attempts to access the old login page.', 'secupress' ),
+	'title'        => sprintf( __( 'Redirection when access to %s or %s', 'secupress' ), '<code>wp-login.php</code>', '<code>/wp-admin/</code>' ),
+	'description'  => __( 'When a logged out user attempts to access the old login page or admin area.', 'secupress' ),
 	'depends'      => $main_field_name,
 	'name'         => $this->get_field_name( 'login-access' ),
-	'type'         => 'radios',
-	'options'      => secupress_move_login_login_access_labels(),
-	'default'      => 'error',
-	'label_screen' => sprintf( __( 'Choose how to deny access to %s', 'secupress' ), '<code>wp-login.php</code>' ),
-) );
-
-
-$this->add_field( array(
-	'title'        => __( 'Redirection to the login page', 'secupress' ),
-	'description'  => __( 'When a logged out user attempts to access the administration area or an URL that redirects to the login page.', 'secupress' ),
-	'depends'      => $main_field_name,
-	'name'         => $this->get_field_name( 'login-redirect' ),
-	'type'         => 'radios',
-	'options'      => secupress_move_login_login_redirect_labels(),
-	'default'      => 'redir-login',
-	'label_screen' => __( 'Choose how to deny access to the administration area', 'secupress' ),
+	'label_before' => home_url() . '/',
+	'type'         => 'text',
+	'default'      => '404',
+	'label_screen' => __( 'Choose how to deny access to login and admin pages', 'secupress' ),
 ) );
 
 

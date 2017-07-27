@@ -103,31 +103,31 @@ function secupress_move_login_deny_login_access() {
 	 * Don't forget to exit/die.
 	 *
 	 * @since 1.0
+	 * @since 1.3.1 Only redirect choice left
 	 * @author Grégory Viguier
+	 * @author Julio Potier
 	 */
 	do_action( 'secupress.plugin.move-login.deny_login_access' );
 
-	$do = secupress_get_module_option( 'move-login_login-access', 'error', 'users-login' );
+	$do = secupress_get_module_option( 'move-login_login-access', '404', 'users-login' );
 
-	switch ( $do ) {
-		case 'redir_404':
-			/**
-			 * Filter the 404 page URL.
-			 *
-			 * @since 1.0
-			 * @author Grégory Viguier
-			 *
-			 * @param (string) $redirect An URL that leads to a 404 response.
-			 */
-			$redirect = apply_filters( 'sfml_404_error_page', home_url( '404' ) );
-			wp_redirect( esc_url_raw( user_trailingslashit( $redirect ) ) );
-			exit;
-		case 'redir_home':
-			wp_redirect( esc_url_raw( user_trailingslashit( home_url() ) ) );
-			exit;
-		default:
-			wp_die( __( 'The login form is not here.', 'secupress' ), __( 'Lost?', 'secupress' ), array( 'response' => 403 ) );
+	if ( 'redir_404' == $do || 'redir_home' == $do ) {
+		$do = '404';
 	}
+
+	$redirect_url = home_url( $do );
+	/**
+	 * Filter the 404 page URL.
+	 *
+	 * @since 1.0
+	 * @author Grégory Viguier
+	 *
+	 * @param (string) $redirect An URL that leads to a 404 response.
+	 */
+	$redirect     = apply_filters( 'sfml_404_error_page', $redirect_url );
+	$redirect     = apply_filters( 'secupress.plugin.move-login.login_redirect_location', $redirect_url );
+	wp_redirect( esc_url_raw( user_trailingslashit( $redirect ) ) );
+	die();
 }
 
 
@@ -192,21 +192,59 @@ function secupress_move_login_maybe_deny_login_redirect( $location ) {
 
 	do_action_deprecated( 'secupress.plugin.move-login.deny_login_redirect', array(), '1.3', 'secupress.plugin.move-login.login_redirect_location' );
 
-	$do = secupress_get_module_option( 'move-login_login-redirect', 'redir-login', 'users-login' );
+	$do = secupress_get_module_option( 'move-login_login-redirect', '404', 'users-login' );
 
-	switch ( $do ) {
-		case 'redir-login':
-			// Ok, let WordPress redirect the user to the login page.
-			return $location;
-		case 'error':
-			wp_die( __( 'Cheatin&#8217; uh?', 'secupress' ), __( 'Lost?', 'secupress' ), array( 'response' => 403 ) );
-		case 'redir_404':
-			/** This filter is documented in inc/modules/users-login/plugins/inc/php/move-login/redirections-and-dies.php */
-			$redirect = apply_filters( 'sfml_404_error_page', home_url( '404' ) );
-			return esc_url_raw( user_trailingslashit( $redirect ) );
-		case 'redir_home':
-			return esc_url_raw( user_trailingslashit( home_url() ) );
+	if ( 'redir_404' == $do || 'redir_home' == $do ) {
+		$do = '404';
 	}
 
+	$redirect_url = home_url( $do );
+	/**
+	 * Filter the 404 page URL.
+	 *
+	 * @since 1.0
+	 * @since 1.3.1 Only redirect choice left
+	 * @author Grégory Viguier
+	 * @author Julio Potier
+	 *
+	 * @param (string) $redirect An URL that leads to a 404 response.
+	 */
+	$redirect = apply_filters( 'sfml_404_error_page', $redirect_url );
+	$redirect = apply_filters( 'secupress.plugin.move-login.login_redirect_location', $redirect_url );
+
+	wp_redirect( esc_url_raw( user_trailingslashit( $redirect ) ) );
 	die();
+}
+
+add_action( 'template_redirect', 'secupress_fallback_slug_redirect' );
+function secupress_fallback_slug_redirect() {
+	if ( ! is_404() || ! isset( $_SERVER['REQUEST_URI'] ) ) {
+		return;
+	}
+	$slugs  = secupress_move_login_get_slugs();
+	$wp_dir = secupress_get_wp_directory();
+
+	if ( secupress_is_subfolder_install() ) {
+		$base  = wp_parse_url( trailingslashit( secupress_get_main_url() ) );
+		$base  = ltrim( $base['path'], '/' );
+		$base .= $wp_dir ? '[_0-9a-zA-Z-]+/' : '([_0-9a-zA-Z-]+/)?';
+	} else {
+		$base  = wp_parse_url( trailingslashit( get_option( 'home' ) ) );
+		$base  = ltrim( $base['path'], '/' );
+		$base .= $wp_dir ? ltrim( $wp_dir, '/' ) : '';
+	}
+
+	$regex  = '^' . $base . '(' . implode( '|', $slugs ) . ')$';
+	$parsed = wp_parse_url( $_SERVER['REQUEST_URI'] );
+	$parsed = ! empty( $parsed['path'] ) ? $parsed['path'] : '';
+	$parsed = trim( $parsed, '/' );
+
+	if ( preg_match( "@{$regex}@", $parsed ) ) {
+		$slugs = array_flip( secupress_move_login_get_slugs() );
+		if ( ! isset( $_REQUEST['action'] ) && isset( $slugs[ $parsed ] ) ) {
+			$_REQUEST['action'] = $slugs[ $parsed ];
+		}
+		require( ABSPATH . 'wp-login.php' );
+		die();
+	}
 }

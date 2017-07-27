@@ -243,12 +243,7 @@ function secupress_move_login_settings_callback( $modulenow, &$settings, $activa
 	}
 
 	// Access to `wp-login.php`.
-	$wp_login_actions = secupress_move_login_login_access_labels();
-	$settings['move-login_login-access'] = isset( $settings['move-login_login-access'], $wp_login_actions[ $settings['move-login_login-access'] ] ) ? $settings['move-login_login-access'] : 'error';
-
-	// Access to `wp-admin`.
-	$admin_actions = secupress_move_login_login_redirect_labels();
-	$settings['move-login_login-redirect'] = isset( $settings['move-login_login-redirect'], $wp_login_actions[ $settings['move-login_login-redirect'] ] ) ? $settings['move-login_login-redirect'] : 'redir-login';
+	$settings['move-login_login-access'] = sanitize_text_field( $settings['move-login_login-access'] );
 
 	// Handle validation errors.
 	$errors['forbidden']  = array_unique( $errors['forbidden'] );
@@ -345,16 +340,13 @@ function secupress_install_users_login_module( $module ) {
  * Move Login: return the list of customizable login actions.
  *
  * @since 1.0
+ * @since 1.3.1 Remove all other slugs than "login"
  *
  * @return (array) Return an array with the action names as keys and field labels as values.
  */
 function secupress_move_login_slug_labels() {
 	$labels = array(
-		'login'        => __( 'Log in' ),
-		'logout'       => __( 'Log out' ),
-		'register'     => __( 'Register' ),
-		'lostpassword' => __( 'Lost Password' ),
-		'resetpass'    => __( 'Password Reset' ),
+		'login'        => __( 'New login page slug', 'secupress' ),
 	);
 
 	/**
@@ -372,41 +364,4 @@ function secupress_move_login_slug_labels() {
 	}
 
 	return $labels;
-}
-
-
-/** --------------------------------------------------------------------------------------------- */
-/** TOOLS ======================================================================================= */
-/** --------------------------------------------------------------------------------------------- */
-
-/**
- * Move Login: return the list of available actions to perform when someone reaches the old login page.
- *
- * @since 1.0
- *
- * @return (array) Return an array with identifiers as keys and field labels as values.
- */
-function secupress_move_login_login_access_labels() {
-	return array(
-		'error'      => __( 'Display an error message', 'secupress' ),
-		'redir_404'  => __( 'Redirect to a "Page Not Found" error page', 'secupress' ),
-		'redir_home' => __( 'Redirect to the home page', 'secupress' ),
-	);
-}
-
-
-/**
- * Move Login: return the list of available actions to perform when a logged out user reaches the administration area.
- *
- * @since 1.0
- *
- * @return (array) Return an array with identifiers as keys and field labels as values.
- */
-function secupress_move_login_login_redirect_labels() {
-	return array(
-		'redir-login' => __( 'Do nothing, redirect to the new login page', 'secupress' ) . ' <span class="description">(' . __( 'not recommended', 'secupress' ) . ')</span>',
-		'error'       => __( 'Display an error message', 'secupress' ),
-		'redir_404'   => __( 'Redirect to a "Page Not Found" error page', 'secupress' ),
-		'redir_home'  => __( 'Redirect to the home page', 'secupress' ),
-	);
 }
