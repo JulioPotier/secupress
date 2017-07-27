@@ -40,6 +40,7 @@ function secupress_move_login_remove_rewrite_rules( $rules ) {
 /** --------------------------------------------------------------------------------------------- */
 
 add_action( 'login_init', 'secupress_move_login_maybe_deny_login_page', 0 );
+add_action( 'secure_auth_redirect', 'secupress_move_login_maybe_deny_login_page', 0 );
 /**
  * When displaying the login page, if the URL does not matches those in our settings, deny access.
  * Does nothing if the user is logged in.
@@ -127,6 +128,7 @@ function secupress_move_login_deny_login_access() {
 	 */
 	$redirect     = apply_filters( 'sfml_404_error_page', $redirect_url );
 	$redirect     = apply_filters( 'secupress.plugin.move-login.login_redirect_location', $redirect_url );
+	remove_filter( 'wp_redirect', 'secupress_move_login_maybe_deny_login_redirect', 1 );
 	wp_redirect( esc_url_raw( user_trailingslashit( $redirect ) ) );
 	die();
 }
@@ -172,11 +174,11 @@ function secupress_move_login_maybe_deny_login_redirect( $location ) {
 	$parsed = trim( $parsed, '/' );
 	$parsed = explode( '/', $parsed );
 	$parsed = end( $parsed );
-
+// var_dump($regex);
+// wp_die(var_dump(preg_match( "@{$regex}@", $parsed )));
 	if ( ! preg_match( "@{$regex}@", $parsed ) ) {
 		return $location;
 	}
-
 	$redirect = false;
 	/**
 	 * If you want to trigger a custom action (redirect, message, die...), add it here.
