@@ -94,28 +94,6 @@ $this->add_field( array(
 
 
 $this->add_field( array(
-	'title'             => __( 'Avoid Double Logins', 'secupress' ),
-	'description'       => __( 'Once logged in, nobody can log in using your account at the same time as you. You have to logout first to allow another login.', 'secupress' ),
-	'label_for'         => $this->get_field_name( 'only-one-connection' ),
-	'plugin_activation' => true,
-	'type'              => 'checkbox',
-	'disabled'          => ! secupress_wp_version_is( '4.0' ),
-	'value'             => (int) secupress_is_submodule_active( 'users-login', 'only-one-connection' ),
-	'label'             => __( 'Yes, disallow double logins', 'secupress' ),
-	'helpers'           => array(
-		array(
-			'type'        => 'description',
-			'description' => __( 'You will be able to force the disconnection of anyone or everyone when using the <b>Session Control</b> module below.', 'secupress' ),
-		),
-		array(
-			'type'        => 'warning',
-			'description' => secupress_wp_version_is( '4.0' ) ? '' : __( 'This module requires WordPress 4.0 minimum, please update now!', 'secupress' ),
-		),
-	),
-) );
-
-
-$this->add_field( array(
 	'title'             => __( 'Session Control', 'secupress' ),
 	'description'       => __( 'Disconnect any user in one click, or even every logged in user (except you) at the same time in one click.', 'secupress' ),
 	'label_for'         => $this->get_field_name( 'sessions_control' ),
