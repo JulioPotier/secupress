@@ -124,7 +124,6 @@ function secupress_init() {
 		require_once( SECUPRESS_ADMIN_PATH . 'admin.php' );
 		require_once( SECUPRESS_ADMIN_PATH . 'ajax-post-callbacks.php' );
 		require_once( SECUPRESS_ADMIN_PATH . 'notices.php' );
-		require_once( SECUPRESS_ADMIN_PATH . 'user-profile.php' );
 		require_once( SECUPRESS_ADMIN_PATH . 'upgrader.php' );
 	}
 
