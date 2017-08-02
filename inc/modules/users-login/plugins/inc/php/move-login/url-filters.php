@@ -252,3 +252,17 @@ function secupress_move_login_login_to_action( $link, $action ) {
 
 	return $link;
 }
+
+add_action( 'login_head', 'secupress_hack_global_error' );
+/**
+ * Prevent to display a '404' login error message from WP
+ *
+ * @since 1.3.1
+ * @author Julio Potier
+ **/
+function secupress_hack_global_error() {
+	global $error;
+	if ( '404' === $error ) {
+		$error = ''; // Triggers a PHPCS "Overriding WordPress globals is prohibited" message, sorry mate, can't help. ////
+	}
+}

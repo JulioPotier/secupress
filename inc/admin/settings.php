@@ -38,10 +38,8 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 
 	$localize_wp = array(
 		'isPro'               => (int) secupress_is_pro(),
-		'recoveryEmailNeeded' => __( 'Recovery Email Needed', 'secupress' ),
 		'confirmText'         => __( 'OK', 'secupress' ),
 		'cancelText'          => __( 'Cancel' ),
-		'forYourSecurity'     => sprintf( __( 'For your security you should set a recovery email, %1$s will use it in case of hack as a rescue email address. <a href="%2$s">Do it now!</a>', 'secupress' ), SECUPRESS_PLUGIN_NAME, get_edit_profile_url( get_current_user_id() ) . '#secupress_recovery_email' ),
 	);
 
 	wp_localize_script( 'secupress-wordpress-js', 'SecuPressi18n', $localize_wp );

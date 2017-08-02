@@ -164,12 +164,6 @@ function secupress_check_ban_ips_maybe_send_unban_email( $ip ) {
 	// Check user.
 	$user = get_user_by( 'email', $email );
 
-	if ( ! $user ) {
-		// Try with the recovery email.
-		$user = (int) $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'secupress_recovery_email' AND meta_value = %s LIMIT 1", $email ) );
-		$user = $user ? get_userdata( $user ) : 0;
-	}
-
 	if ( ! $user || ! user_can( $user, secupress_get_capability() ) ) {
 		return array(
 			'message'      => __( '<strong>Error</strong>: this email address does not belong to an Administrator.', 'secupress' ),
@@ -178,11 +172,11 @@ function secupress_check_ban_ips_maybe_send_unban_email( $ip ) {
 	}
 
 	// Send message.
-	$message  = '<p>' . __( 'Well, this is awkward, you got yourself locked out? No problem, it happens sometimes. I\'ve got your back! I won\'t tell anybody. Or maybe I will. It could be a great story to tell during a long winter evening.', 'secupress' ) . '</p>';
-	$message .= '<p>' . sprintf(
+	$url     = esc_url_raw( wp_nonce_url( home_url( '?action=secupress_self-unban-ip' ), 'secupress_self-unban-ip-' . $ip ) );
+	$message = '<p>' . sprintf(
 		/** Translators: %s is a "unlock yourself" link. */
-		__( 'Anyway, simply follow this link to %s.', 'secupress' ),
-		'<a href="' . esc_url_raw( wp_nonce_url( home_url() . '?action=secupress_self-unban-ip', 'secupress_self-unban-ip-' . $ip ) ) . '">' . __( 'unlock yourself', 'secupress' ) . '</a>'
+		__( 'You got yourself locked out? No problem, simply follow this link to %s.', 'secupress' ),
+		'<a href="' . $url . '">' . __( 'unlock yourself', 'secupress' ) . '</a> (' . $url . ')'
 	) . '</p>';
 
 	$bcc = get_user_meta( $user->ID, 'secupress_recovery_email', true );
@@ -197,8 +191,8 @@ function secupress_check_ban_ips_maybe_send_unban_email( $ip ) {
 
 	if ( ! $sent ) {
 		return array(
-			'title'        => __( 'Oh ooooooh...', 'secupress' ),
-			'message'      => __( 'The message could not be sent. I guess you have to wait now :(', 'secupress' ),
+			'title'        => __( 'Too bad', 'secupress' ),
+			'message'      => __( 'The message could not be sent. Sorry', 'secupress' ),
 			'display_form' => false,
 		);
 	}

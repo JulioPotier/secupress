@@ -24,12 +24,6 @@ function secupress_move_login_activate( $was_active ) {
 		$message .= __( 'It seems your server configuration prevents the plugin from working properly. The login page cannot be moved.', 'secupress' );
 		secupress_add_settings_error( 'secupress_users-login_settings', 'no_request_uri', $message, 'error' );
 	}
-	// Server not supported.
-	if ( ! $is_iis7 && ! $is_apache && ! $is_nginx ) {
-		$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
-		$message .= __( 'It seems your server does not use <strong>Apache</strong>, <strong>Ngnix</strong>, or <strong>IIS7</strong>. The login page cannot be moved.', 'secupress' );
-		secupress_add_settings_error( 'secupress_users-login_settings', 'unknown_os', $message, 'error' );
-	}
 
 	// If a message is set, the plugin can't work.
 	if ( ! empty( $message ) ) {
@@ -83,7 +77,9 @@ add_filter( 'secupress.plugins.activation.write_rules', 'secupress_move_login_pl
  * On SecuPress activation, add the rules to the list of the rules to write.
  *
  * @since 1.0
+ * @since 1.3.1 Do not need rules, all done in php
  * @author Grégory Viguier
+ * @author Julio Potier
  *
  * @param (array) $rules Other rules to write.
  *
@@ -98,86 +94,19 @@ function secupress_move_login_plugin_activate( $rules ) {
 		secupress_deactivate_submodule_silently( 'users-login', 'move-login' );
 		return $rules;
 	}
-	// Server not supported.
-	if ( ! $is_iis7 && ! $is_apache && ! $is_nginx ) {
-		// Deactivate the plugin.
-		secupress_deactivate_submodule_silently( 'users-login', 'move-login' );
-		return $rules;
-	}
 
-	// Add the rules.
+	// Add empty rules.
 	$marker = 'move_login';
 
 	if ( $is_apache ) {
-		$rules[ $marker ] = secupress_move_login_get_apache_rules( secupress_move_login_get_rules() );
+		$rules[ $marker ] = secupress_move_login_get_apache_rules();
 	} elseif ( $is_iis7 ) {
-		$rules[ $marker ] = array( 'nodes_string' => secupress_move_login_get_iis7_rules( secupress_move_login_get_rules() ) );
+		$rules[ $marker ] = array( 'nodes_string' => secupress_move_login_get_iis7_rules() );
 	} else {
-		$rules[ $marker ] = secupress_move_login_get_nginx_rules( secupress_move_login_get_rules() );
+		$rules[ $marker ] = secupress_move_login_get_nginx_rules();
 	}
 
 	return $rules;
-}
-
-
-/** --------------------------------------------------------------------------------------------- */
-/** UPDATE SETTINGS ============================================================================= */
-/** --------------------------------------------------------------------------------------------- */
-
-add_action( 'update_option_secupress_users-login_settings', 'secupress_move_login_write_rules_on_update', 11, 2 );
-/**
- * Add rewrite rules into the `.htaccess`/`web.config` file when settings are updated.
- *
- * @since 1.0
- * @author Grégory Viguier
- *
- * @param (array) $old_value Old value of the whole module option.
- * @param (array) $value     New value of the whole module option.
- */
-function secupress_move_login_write_rules_on_update( $old_value, $value ) {
-	global $is_apache, $is_nginx, $is_iis7;
-
-	if ( ! $is_iis7 && ! $is_apache && ! $is_nginx ) {
-		return;
-	}
-
-	// Not active? Bail out.
-	if ( ! secupress_is_submodule_active( 'users-login', 'move-login' ) ) {
-		return;
-	}
-
-	// Write the rewrite rules only if they have changed.
-	$slugs   = secupress_move_login_slug_labels();
-	$changed = false;
-
-	foreach ( $slugs as $action => $label ) {
-		$option_name = 'move-login_slug-' . $action;
-
-		if ( empty( $old_value[ $option_name ] ) || isset( $old_value[ $option_name ], $value[ $option_name ] ) && $old_value[ $option_name ] !== $value[ $option_name ] ) {
-			$changed = true;
-			break;
-		}
-	}
-
-	if ( $changed ) {
-		secupress_move_login_write_rules();
-	}
-}
-
-
-add_action( 'update_site_option_secupress_users-login_settings', 'secupress_move_login_write_rules_on_network_update', 10, 3 );
-/**
- * Add rewrite rules into the `.htaccess`/`web.config` file when settings are (network) updated.
- *
- * @since 1.0
- * @author Grégory Viguier
- *
- * @param (string) $option    Name of the network option.
- * @param (array)  $value     New value of the whole module option.
- * @param (array)  $old_value Old value of the whole module option.
- */
-function secupress_move_login_write_rules_on_network_update( $option, $value, $old_value ) {
-	secupress_move_login_write_rules_on_update( $old_value, $value );
 }
 
 
@@ -199,55 +128,12 @@ function secupress_move_login_write_rules() {
 
 	// Apache.
 	if ( $is_apache ) {
-		$success = secupress_move_login_write_apache_rules( secupress_move_login_get_rules() );
-
-		if ( ! $success && ! $error_message_done ) {
-			$error_message_done = true;
-
-			// File is not writable.
-			$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
-			$message .= sprintf(
-				/** Translators: 1 is a link "the dedicated section", 2 is a file name. */
-				__( 'It seems your %2$s file is not writable. You have to edit the file manually. Please see the rewrite rules provided %1$s and copy/paste it into the %2$s file.', 'secupress' ),
-				'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#move-login_rules">' . __( 'the dedicated section', 'secupress' ) . '</a>',
-				'<code>.htaccess</code>'
-			);
-			secupress_add_settings_error( 'general', 'apache_manual_edit', $message, 'error' );
-		}
+		secupress_move_login_write_apache_rules();
 	}
 
 	// IIS7.
 	if ( $is_iis7 ) {
-		$success = secupress_move_login_write_iis7_rules( secupress_move_login_get_rules() );
-
-		if ( ! $success && ! $error_message_done ) {
-			$error_message_done = true;
-
-			// File is not writable.
-			$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
-			$message .= sprintf(
-				/** Translators: 1 is a link "the dedicated section", 2 is a file name. */
-				__( 'It seems your %2$s file is not writable. You have to edit the file manually. Please see the rewrite rules provided %1$s and copy/paste it into the %2$s file.', 'secupress' ),
-				'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#move-login_rules">' . __( 'the dedicated section', 'secupress' ) . '</a>',
-				'<code>web.config</code>'
-			);
-			secupress_add_settings_error( 'general', 'iis7_manual_edit', $message, 'error' );
-		}
-	}
-
-	// Nginx.
-	if ( $is_nginx && ! $error_message_done ) {
-		$error_message_done = true;
-
-		// We can't edit the file.
-		$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
-		$message .= sprintf(
-			/** Translators: 1 is a file name, 2 is a link "the dedicated section". */
-			__( 'Your server runs <strong>Ngnix</strong>. You have to edit the configuration file manually. Please see the rewrite rules provided %2$s and copy/paste it into the %1$s file.', 'secupress' ),
-			'<code>nginx.conf</code>',
-			'<a href="' . esc_url( secupress_admin_url( 'modules', 'users-login' ) ) . '#move-login_rules">' . __( 'the dedicated section', 'secupress' ) . '</a>'
-		);
-		secupress_add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
+		secupress_move_login_write_iis7_rules();
 	}
 
 	/**

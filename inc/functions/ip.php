@@ -88,7 +88,6 @@ function secupress_ip_is_whitelisted( $ip = null ) {
 
 	// Some hardcoded IPs that are always whitelisted.
 	$whitelist = array(
-		$_SERVER['SERVER_ADDR'] => 1,
 		'::1'                   => 1,
 		'0.0.0.0'               => 1,
 		'127.0.0.1'             => 1,
@@ -96,6 +95,10 @@ function secupress_ip_is_whitelisted( $ip = null ) {
 		'37.187.58.236'         => 1, // WPRocketbot.
 		'167.114.234.234'       => 1, // WPRocketbot.
 	);
+
+	if ( isset( $_SERVER['SERVER_ADDR'] ) ) {
+		$whitelist[ $_SERVER['SERVER_ADDR'] ] = 1;
+	}
 
 	if ( isset( $whitelist[ $ip ] ) ) {
 		return true;
