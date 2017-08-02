@@ -564,7 +564,14 @@ function secupress_get_main_url() {
 	}
 
 	if ( ! $current_network ) {
-		return get_option( 'siteurl' );
+		if ( ! function_exists( '__get_option' ) ) {
+			include( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		}
+		if ( function_exists( '__get_option' ) ) {
+			return __get_option( 'siteurl' );
+		} else {
+			return get_option( 'siteurl' );
+		}
 	}
 
 	$scheme   = is_ssl() ? 'https' : 'http';
@@ -572,7 +579,6 @@ function secupress_get_main_url() {
 
 	return untrailingslashit( $main_url );
 }
-
 
 /**
  * Is this version White Labeled?
