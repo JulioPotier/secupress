@@ -75,32 +75,5 @@ function secupress_move_login_maybe_deny_signup_redirect( $url ) {
 function secupress_move_login_deny_login_redirect() {
 	_deprecated_function( __FUNCTION__, '1.3', 'secupress_move_login_maybe_deny_login_redirect' );
 
-	/**
-	 * If you want to trigger a custom action (redirect, message, die...), add it here.
-	 * Don't forget to exit/die.
-	 *
-	 * @since 1.0
-	 * @author Grégory Viguier
-	 */
-	do_action( 'secupress.plugin.move-login.deny_login_redirect' );
-
-	$do = secupress_get_module_option( 'move-login_login-redirect', 'redir-login', 'users-login' );
-
-	switch ( $do ) {
-		case 'redir-login':
-			// Ok, let WordPress redirect the user to the login page.
-			return;
-		case 'error':
-			wp_die( __( 'Cheatin&#8217; uh?' ), __( 'Lost?', 'secupress' ), array( 'response' => 403 ) );
-		case 'redir_404':
-			/** This filter is documented in inc/modules/users-login/plugins/inc/php/move-login/redirections-and-dies.php */
-			$redirect = apply_filters( 'sfml_404_error_page', home_url( '404' ) );
-			wp_redirect( esc_url_raw( user_trailingslashit( $redirect ) ) );
-			exit;
-		case 'redir_home':
-			wp_redirect( esc_url_raw( user_trailingslashit( home_url() ) ) );
-			exit;
-	}
-
-	die();
+	secupress_move_login_maybe_deny_login_redirect();
 }

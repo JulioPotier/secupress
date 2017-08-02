@@ -4,7 +4,7 @@
  * Description: Change your login URL.
  * Main Module: users_login
  * Author: SecuPress
- * Version: 1.1
+ * Version: 1.3.1
  */
 
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
@@ -13,12 +13,14 @@ defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 /** INCLUDES ==================================================================================== */
 /** --------------------------------------------------------------------------------------------- */
 
-if ( is_admin() ) {
+if ( is_admin() && ! function_exists( 'secupress_move_login_write_rules' ) ) {
 	include( SECUPRESS_MODULES_PATH . 'users-login/plugins/inc/php/move-login/admin.php' );
 }
 
 // EMERGENCY BYPASS!
-if ( ! defined( 'SFML_ALLOW_LOGIN_ACCESS' ) || ! SFML_ALLOW_LOGIN_ACCESS ) {
+if ( ( ! defined( 'SFML_ALLOW_LOGIN_ACCESS' ) || ! SFML_ALLOW_LOGIN_ACCESS ) &&
+	( ! defined( 'SECUPRESS_ALLOW_LOGIN_ACCESS' ) || ! SECUPRESS_ALLOW_LOGIN_ACCESS )
+ ) {
 	include( SECUPRESS_MODULES_PATH . 'users-login/plugins/inc/php/move-login/deprecated.php' );
 	include( SECUPRESS_MODULES_PATH . 'users-login/plugins/inc/php/move-login/url-filters.php' );
 	include( SECUPRESS_MODULES_PATH . 'users-login/plugins/inc/php/move-login/redirections-and-dies.php' );
@@ -40,12 +42,6 @@ if ( ! defined( 'SFML_ALLOW_LOGIN_ACCESS' ) || ! SFML_ALLOW_LOGIN_ACCESS ) {
 function secupress_move_login_get_default_slugs() {
 	$slugs = array(
 		'login'        => 1,
-		'logout'       => 1,
-		'register'     => 1,
-		'lostpassword' => 1,
-		'resetpass'    => 1,
-		// 'postpass' is not customizable by default (not listed in `secupress_move_login_slug_labels()`).
-		'postpass'     => 1,
 	);
 
 	/**
@@ -83,6 +79,5 @@ function secupress_move_login_get_slugs() {
 		$slugs[ $action ] = secupress_get_module_option( 'move-login_slug-' . $action, $action, 'users-login' );
 		$slugs[ $action ] = sanitize_title( $slugs[ $action ], $action, 'display' );
 	}
-
 	return $slugs;
 }

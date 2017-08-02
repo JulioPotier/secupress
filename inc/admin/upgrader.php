@@ -422,4 +422,15 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 			delete_site_option( 'secupress_fix_sites' );
 		}
 	}
+
+	// < 1.3.1
+	if ( secupress_is_submodule_active( 'users-login', 'move-login' ) && version_compare( $actual_version, '1.3.1', '<' ) ) {
+		// Remove move login rules
+		if ( ! function_exists( 'secupress_move_login_write_rules' ) ) {
+			include( SECUPRESS_MODULES_PATH . 'users-login/plugins/inc/php/move-login/admin.php' );
+		}
+		secupress_move_login_write_rules();
+	}
+
+
 }
