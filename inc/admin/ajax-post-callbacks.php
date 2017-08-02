@@ -371,22 +371,6 @@ function secupress_admin_post_reset_settings_post_cb() {
 }
 
 
-add_action( 'wp_ajax_secupress_recovery_email', 'secupress_recovery_email_ajax_post_cb' );
-/**
- * Set the recovery email via notice, if possible
- *
- * @author Julio Potier
- * @since 1.0
- */
-function secupress_recovery_email_ajax_post_cb() {
-	secupress_callback_update_user_contactmethods( get_current_user_id() );
-	$user  = wp_get_current_user();
-	$dummy = new stdClass();
-
-	secupress_user_profile_update_errors( $dummy, false, $user );
-}
-
-
 add_action( 'admin_post_secupress_refresh_bad_plugins', 'secupress_refresh_bad_plugins_list_ajax_post_cb' );
 /**
  * Call the refresh of the vulnerable plugins.

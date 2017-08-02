@@ -164,12 +164,6 @@ function secupress_check_ban_ips_maybe_send_unban_email( $ip ) {
 	// Check user.
 	$user = get_user_by( 'email', $email );
 
-	if ( ! $user ) {
-		// Try with the recovery email.
-		$user = (int) $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM $wpdb->usermeta WHERE meta_key = 'secupress_recovery_email' AND meta_value = %s LIMIT 1", $email ) );
-		$user = $user ? get_userdata( $user ) : 0;
-	}
-
 	if ( ! $user || ! user_can( $user, secupress_get_capability() ) ) {
 		return array(
 			'message'      => __( '<strong>Error</strong>: this email address does not belong to an Administrator.', 'secupress' ),
