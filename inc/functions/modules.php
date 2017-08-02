@@ -26,7 +26,7 @@ function secupress_get_modules() {
 			),
 			'counts' => array(
 				'free_options' => 6,
-				'pro_options'  => 6,
+				'pro_options'  => 5,
 			),
 		),
 		'plugins-themes'  => array(
@@ -85,8 +85,8 @@ function secupress_get_modules() {
 				__( 'Malicious requests are common, unfortunatly. All malicious incoming requests will be checked and quietly blocked.', 'secupress' ),
 			),
 			'counts' => array(
-				'free_options' => 5,
-				'pro_options'  => 3,
+				'free_options' => 4,
+				'pro_options'  => 2,
 			),
 		),
 		'file-system'     => array(
@@ -103,7 +103,7 @@ function secupress_get_modules() {
 			'mark_as_pro' => $should_be_pro,
 			'counts' => array(
 				'free_options' => 1,
-				'pro_options'  => 3,
+				'pro_options'  => 2,
 			),
 		),
 		'backups'         => array(
