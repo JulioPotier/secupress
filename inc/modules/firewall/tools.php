@@ -136,8 +136,6 @@ function secupress_firewall_block_id( $module ) {
 		'AAU'  => __( 'Antispam, Anti-Usurpation', 'secupress' ),
 		// URL Contents.
 		'BUC'  => __( 'Bad URL Contents', 'secupress' ),
-		// URL Length.
-		'BUL'  => __( 'URL Too Long', 'secupress' ),
 		// GeoIP.
 		'GIP'  => __( 'GeoIP', 'secupress' ),
 		// Request Method.
