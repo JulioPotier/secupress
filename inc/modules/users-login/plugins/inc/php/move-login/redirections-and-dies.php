@@ -149,7 +149,17 @@ add_filter( 'wp_redirect', 'secupress_move_login_maybe_deny_login_redirect', 1 )
  * @return (string)
  */
 function secupress_move_login_maybe_deny_login_redirect( $location ) {
+	global $pagenow;
+
+	if ( 'wp-login.php' === $pagenow ) {
+		return $location;
+	}	
+
 	if ( is_user_logged_in() ) {
+		return $location;
+	}
+
+	if ( wp_get_referer() === $location ) {
 		return $location;
 	}
 
@@ -193,6 +203,10 @@ function secupress_move_login_maybe_deny_login_redirect( $location ) {
 	do_action_deprecated( 'secupress.plugin.move-login.deny_login_redirect', array(), '1.3', 'secupress.plugin.move-login.login_redirect_location' );
 
 	$do = secupress_get_module_option( 'move-login_login-redirect', 'redir-login', 'users-login' );
+
+	$_location = explode( '?', $location, 2);
+	parse_str( $_location[1], $new );
+	$do = 'passwordless_autologin' === $new['action'] ? 'redir-login' : $do;
 
 	switch ( $do ) {
 		case 'redir-login':
