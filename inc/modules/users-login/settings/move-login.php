@@ -58,7 +58,7 @@ foreach ( $labels as $slug => $label ) {
 $value = secupress_get_module_option( $this->get_field_name( 'login-access' ) );
 $value = str_replace( 'redir_', '', $value );
 $this->add_field( array(
-	'title'        => sprintf( __( 'Redirection when access to %s or %s', 'secupress' ), '<code>wp-login.php</code>', '<code>/wp-admin/</code>' ),
+	'title'        => sprintf( __( 'Redirection when access to %1$s or %2$s', 'secupress' ), '<code>wp-login.php</code>', '<code>/wp-admin/</code>' ),
 	'description'  => __( 'When a logged out user attempts to access the old login page or admin area.', 'secupress' ),
 	'depends'      => $main_field_name,
 	'name'         => $this->get_field_name( 'login-access' ),

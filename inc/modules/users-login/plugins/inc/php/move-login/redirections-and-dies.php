@@ -113,7 +113,7 @@ function secupress_move_login_deny_login_access() {
 
 	$do = secupress_get_module_option( 'move-login_login-access', '404', 'users-login' );
 
-	if ( 'redir_404' == $do || 'redir_home' == $do ) {
+	if ( 'redir_404' === $do || 'redir_home' === $do ) {
 		$do = '404';
 	}
 
@@ -156,7 +156,7 @@ function secupress_move_login_maybe_deny_login_redirect( $location ) {
 
 	if ( 'wp-login.php' === $pagenow ) {
 		return $location;
-	}	
+	}
 
 	if ( is_user_logged_in() ) {
 		return $location;
@@ -206,7 +206,7 @@ function secupress_move_login_maybe_deny_login_redirect( $location ) {
 
 	$do = secupress_get_module_option( 'move-login_login-access', '404', 'users-login' );
 
-	if ( 'redir_404' == $do || 'redir_home' == $do ) {
+	if ( 'redir_404' === $do || 'redir_home' === $do ) {
 		$do = '404';
 	}
 
@@ -229,6 +229,12 @@ function secupress_move_login_maybe_deny_login_redirect( $location ) {
 }
 
 add_action( 'template_redirect', 'secupress_fallback_slug_redirect' );
+/**
+ * Will include the wp-loing.php file/template if the URL triggers the new slug
+ *
+ * @since 1.3.1
+ * @author Julio Potier
+ **/
 function secupress_fallback_slug_redirect() {
 	if ( ! is_404() || ! isset( $_SERVER['REQUEST_URI'] ) ) {
 		return;

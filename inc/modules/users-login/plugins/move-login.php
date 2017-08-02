@@ -20,7 +20,7 @@ if ( is_admin() && ! function_exists( 'secupress_move_login_write_rules' ) ) {
 // EMERGENCY BYPASS!
 if ( ( ! defined( 'SFML_ALLOW_LOGIN_ACCESS' ) || ! SFML_ALLOW_LOGIN_ACCESS ) &&
 	( ! defined( 'SECUPRESS_ALLOW_LOGIN_ACCESS' ) || ! SECUPRESS_ALLOW_LOGIN_ACCESS )
- ) {
+	) {
 	include( SECUPRESS_MODULES_PATH . 'users-login/plugins/inc/php/move-login/deprecated.php' );
 	include( SECUPRESS_MODULES_PATH . 'users-login/plugins/inc/php/move-login/url-filters.php' );
 	include( SECUPRESS_MODULES_PATH . 'users-login/plugins/inc/php/move-login/redirections-and-dies.php' );
