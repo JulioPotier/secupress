@@ -281,24 +281,6 @@ function secupress_move_login_settings_callback( $modulenow, &$settings, $activa
 
 
 /** --------------------------------------------------------------------------------------------- */
-/** NOTICES ===================================================================================== */
-/** --------------------------------------------------------------------------------------------- */
-
-add_filter( 'secupress.plugins.packed-plugins', 'secupress_move_login_add_packed_plugin' );
-/**
- * Display a notice if the standalone version of Move Login is used.
- *
- * @since 1.0
- *
- * @param (array) $plugins A list of plugin paths, relative to the plugins folder.
- */
-function secupress_move_login_add_packed_plugin( $plugins ) {
-	$plugins['move-login'] = 'sf-move-login/sf-move-login.php';
-	return $plugins;
-}
-
-
-/** --------------------------------------------------------------------------------------------- */
 /** INSTALL/RESET =============================================================================== */
 /** --------------------------------------------------------------------------------------------- */
 
@@ -341,27 +323,15 @@ function secupress_install_users_login_module( $module ) {
  *
  * @since 1.0
  * @since 1.3.1 Remove all other slugs than "login"
+ * @since 1.3.2 Remove SFML hook, not compatible anymore
  *
  * @return (array) Return an array with the action names as keys and field labels as values.
  */
 function secupress_move_login_slug_labels() {
 	$labels = array(
-		'login'        => __( 'New login page slug', 'secupress' ),
+		'login'    => __( 'New login page', 'secupress' ),
+		'register' => __( 'New register page', 'secupress' ),
 	);
-
-	/**
-	 * Add custom actions to the list of customizable actions.
-	 *
-	 * @since 1.0
-	 *
-	 * @param (array) $new_slugs An array with the action names as keys and field labels as values. An empty array by default.
-	*/
-	$new_slugs = apply_filters( 'sfml_additional_slugs', array() );
-
-	if ( $new_slugs && is_array( $new_slugs ) ) {
-		$new_slugs = array_diff_key( $new_slugs, $labels );
-		$labels    = array_merge( $labels, $new_slugs );
-	}
 
 	return $labels;
 }

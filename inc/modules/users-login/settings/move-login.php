@@ -4,11 +4,50 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 global $is_apache, $is_nginx, $is_iis7;
 
 $this->set_current_section( 'move-login' );
-$this->add_section( __( 'Move Login', 'secupress' ) );
+$this->add_section( __( 'Login Pages', 'secupress' ) );
 
 
 $main_field_name  = $this->get_field_name( 'activated' );
 $is_plugin_active = secupress_is_submodule_active( 'users-login', 'move-login' );
+
+if ( is_plugin_active( 'sf-move-login/sf-move-login.php' ) ) {
+	$this->add_field( array(
+		'title'             => __( 'Move the login and admin pages', 'secupress' ),
+		'label_for'         => $main_field_name,
+		'plugin_activation' => true,
+		'type'              => 'checkbox',
+		'value'             => false,
+		'disabled'          => true,
+		'label'             => __( 'Yes, move the login and admin pages', 'secupress' ),
+		'helpers'           => array(
+			array(
+				'type'        => 'warning',
+				'description' => secupress_plugin_in_usage_string( 'sf-move-login/sf-move-login.php', 'options-general.php?page=move-login' ),
+			),
+		),
+	) );
+
+	return;
+}
+if ( is_plugin_active( 'wps-hide-login/wps-hide-login.php' ) ) {
+	$this->add_field( array(
+		'title'             => __( 'Move the login and admin pages', 'secupress' ),
+		'label_for'         => $main_field_name,
+		'plugin_activation' => true,
+		'type'              => 'checkbox',
+		'value'             => false,
+		'disabled'          => true,
+		'label'             => __( 'Yes, move the login and admin pages', 'secupress' ),
+		'helpers'           => array(
+			array(
+				'type'        => 'warning',
+				'description' => secupress_plugin_in_usage_string( 'wps-hide-login/wps-hide-login.php', 'options-general.php#whl_page' ),
+			),
+		),
+	) );
+
+	return;
+}
 
 $this->add_field( array(
 	'title'             => __( 'Move the login and admin pages', 'secupress' ),
@@ -17,12 +56,6 @@ $this->add_field( array(
 	'type'              => 'checkbox',
 	'value'             => (int) $is_plugin_active,
 	'label'             => __( 'Yes, move the login and admin pages', 'secupress' ),
-	'helpers'           => array(
-		array(
-			'type'        => 'warning',
-			'description' => secupress_get_deactivate_plugin_string( 'sf-move-login/sf-move-login.php' ),
-		),
-	),
 ) );
 
 
