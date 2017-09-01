@@ -61,8 +61,19 @@ function secupress_users_login_settings_callback( $settings ) {
  * @param (array|bool) $activate  An array containing the fields related to the sub-module being activated. False if not on this module page.
  */
 function secupress_double_auth_settings_callback( $modulenow, &$settings, $activate ) {
+	global $current_user;
 	// (De)Activation.
+	$options = get_site_option( SECUPRESS_SETTINGS_SLUG );
+	unset( $options['secupress_passwordless_activation_validation'] );
+	secupress_update_options( $options );
+
 	if ( ! empty( $activate['double-auth_type'] ) ) {
+		$url     = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_passwordless_confirmation' ), 'secupress_passwordless_confirmation' );
+		$message = sprintf( __( 'Hello %1$s, you just activated the double authentication module "PasswordLess".<br><br>To be sure this module can be activated, confirm your action by clicking the link below:<br><br><a href="%2$s">%2$s</a><br><br>Thank you, have a nice day!', 'secupress' ),
+							$current_user->nicename,
+							$url
+		);
+		secupress_send_mail( $current_user->user_email, __( '[###SITENAME###] PasswordLess 2FA: Validation required', 'secupress' ), $message );
 		secupress_manage_submodule( $modulenow, 'passwordless', '1' === $activate['double-auth_type'] && secupress_is_pro() );
 	} elseif ( false !== $activate ) {
 		secupress_deactivate_submodule( $modulenow, array( 'passwordless' ) );
