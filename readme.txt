@@ -182,6 +182,8 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 * 01 september 2017
 * Improvement #516, #518, #519: Move login hides now the postpass url, the register url is now different and has its own setting, /!\ now our Move Login is not compatible anymore with "SF Move Login" from GregLone, thank you buddy!
+* Improvement: You can now unlock yourself from the move login page by filling a field with your email. You'll find the (forgotten) new login page url, and a second link to deactivate the module.
+* Improvement: The Move login will not redirect on a /404 page, but will fail with a message.
 * Fix: Remove the module file from "bad url length", should be deleted in 1.3.1
 
 = 1.3.1 =
