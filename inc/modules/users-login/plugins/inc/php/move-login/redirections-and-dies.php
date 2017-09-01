@@ -46,6 +46,7 @@ add_action( 'secure_auth_redirect', 'secupress_move_login_maybe_deny_login_page'
  * Does nothing if the user is logged in.
  *
  * @since 1.0
+ * @param (boolean) $secure The var to be filtered, but we won't.
  * @author Grégory Viguier
  */
 function secupress_move_login_maybe_deny_login_page( $secure = true ) {
@@ -99,12 +100,13 @@ function secupress_move_login_deny_login_access() {
 	 */
 	do_action( 'secupress.plugin.move-login.deny_login_access' );
 
-	secupress_die( secupress_check_ban_ips_form( [	'content' => '<p>⚠️ ' . __( 'This page does not exists, has moved or you are not allowed to access it.', 'secupress' ) . '</p>', 
-													'time_ban' => -1, 
-													'ip' => __FUNCTION__,
-													'ip' => 'admin', // use for nonce check, see action below v
-													'action' => 'action="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_unlock_admin' ), 'secupress-unban-ip-admin' ) . '"', 
-													] ) 
+	secupress_die( secupress_check_ban_ips_form( [
+													'content'  => '<p>⚠️ ' . __( 'This page does not exists, has moved or you are not allowed to access it.', 'secupress' ) . '</p>',
+													'time_ban' => -1,
+													'id'       => __FUNCTION__,
+													'ip'       => 'admin', // use for nonce check, see action below v.
+													'action'   => 'action="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_unlock_admin' ), 'secupress-unban-ip-admin' ) . '"',
+													] )
 	);
 }
 
@@ -167,8 +169,15 @@ function secupress_move_login_maybe_deny_login_redirect( $location ) {
 	if ( preg_match( "@{$regex}@", $parsed ) ) {
 		return $location;
 	}
-	
-	secupress_die( secupress_check_ban_ips_form( [ 'content' => '<p>⚠️ ' . __( 'This page does not exists, has moved or you are not allowed to access it.', 'secupress' ) . '</p>', 'time_ban' => -1, 'nonce' => false, 'action' => admin_url( 'admin-post.php?action=????' ), ] ) );
+
+	secupress_die( secupress_check_ban_ips_form( [
+													'content'  => '<p>⚠️ ' . __( 'This page does not exists, has moved or you are not allowed to access it.', 'secupress' ) . '</p>',
+													'time_ban' => -1,
+													'id'       => __FUNCTION__,
+													'ip'       => 'admin', // use for nonce check, see action below v.
+													'action'   => 'action="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_unlock_admin' ), 'secupress-unban-ip-admin' ) . '"',
+													] )
+	);
 }
 
 add_action( 'template_redirect', 'secupress_fallback_slug_redirect' );
