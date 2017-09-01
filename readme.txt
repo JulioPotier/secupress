@@ -1,6 +1,6 @@
 === SecuPress Free — WordPress Security ===
 Contributors: SecuPress, juliobox, GregLone
-Tags: wordpress security, secure, security plugin, hack, malware, 
+Tags: wordpress security, secure, security plugin, security, malware
 Requires at least: 3.7
 Tested up to: 4.8.2
 Stable tag: 1.3.2
