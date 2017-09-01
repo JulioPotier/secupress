@@ -117,3 +117,28 @@ function secupress_get_deactivate_plugin_string( $plugin_basename ) {
 
 	return sprintf( __( 'will deactivate the plugin %s.', 'secupress' ), '<strong>' . $plugin['Name'] . '</strong>' );
 }
+
+/**
+ * Returns a i18n message used with a packed plugin activation checkbox to tell the user that a plugin doing the same thing is already active
+ *
+ * @since 1.3.2
+ *
+ * @param (string) $plugin_basename The standalone plugin basename.
+ *
+ * @return (string|null) Return null if the plugin is not activated.
+ */
+function secupress_plugin_in_usage_string( $plugin_basename, $settings_page = '' ) {
+	if ( ! is_plugin_active( $plugin_basename ) ) {
+		return null;
+	}
+
+	$plugin_basename = path_join( WP_PLUGIN_DIR, $plugin_basename );
+	$plugin = get_plugin_data( $plugin_basename, false, false );
+
+	$content = sprintf( __( 'You can not use this feature now because you are using the plugin %s which is already doing this job well.', 'secupress' ), '<strong>' . $plugin['Name'] . '</strong>' );
+	if ( $settings_page ) {
+		$content .= sprintf( '<br><a href="%s">' . __( 'Open the %s settings page', 'secupress' ) . '.</a>', admin_url( $settings_page ), '<strong>' . $plugin['Name'] . '</strong>' );
+	}
+
+	return $content;
+}
