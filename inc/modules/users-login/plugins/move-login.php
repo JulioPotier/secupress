@@ -39,10 +39,10 @@ if ( ! defined( 'SECUPRESS_ALLOW_LOGIN_ACCESS' ) || ! SECUPRESS_ALLOW_LOGIN_ACCE
  */
 function secupress_move_login_get_default_slugs() {
 	$slugs = array(
-		// custom
+		// custom.
 		'login'     => 1,
 		'register'  => 1,
-		// hardcoded
+		// hardcoded.
 		'postpass'  => 1,
 	);
 

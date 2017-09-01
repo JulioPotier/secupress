@@ -231,13 +231,13 @@ function secupress_check_ban_ips_form( $args ) {
 		case $args['time_ban'] > 0:
 			$content = '<p>' . sprintf( _n( 'Your IP address <code>%1$s</code> has been banned for <strong>%2$d</strong> minute.', 'Your IP address <code>%1$s</code> has been banned for <strong>%2$d</strong> minutes.', $args['time_ban'], 'secupress' ), esc_html( $args['ip'] ), $args['time_ban'] ) . '</p>';
 		break;
-		case 0 == $args['time_ban']:
+		case 0 === $args['time_ban']:
 			$content = '<p>' . sprintf( __( 'Your IP address <code>%s</code> has been banned.', 'secupress' ), esc_html( $args['ip'] ) ) . '</p>';
 		break;
 		default:
 			$content = $args['content'];
 	}
-	$content .= '<form method="post" autocomplete="on" ' . $args['action'] .'>';
+	$content .= '<form method="post" autocomplete="on" ' . $args['action'] . '>';
 		$content .= '<p>' . __( 'If you are Administrator and have been accidentally locked out, enter your email address here to unlock yourself.', 'secupress' ) . '</p>';
 		$content .= '<label for="email">';
 			$content .= __( 'Your email address:', 'secupress' );

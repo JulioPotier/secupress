@@ -265,6 +265,6 @@ add_action( 'login_head', 'secupress_hack_global_error' );
 function secupress_hack_global_error() {
 	global $error;
 	if ( '404' === $error ) {
-		$error = ''; // Triggers a PHPCS "Overriding WordPress globals is prohibited" message, sorry mate, can't help. ////
+		$error = ''; // Triggers a PHPCS "Overriding WordPress globals is prohibited" message, sorry mate, can't help.
 	}
 }
