@@ -1,6 +1,9 @@
-This file contains a list of people who have made large contributions
-to the public version of SecuPress.
+This file contains a list of people who have made large contributions to the public version of SecuPress.
 
-Developers:
-	Julio Potier    <julio@secupress.me>
-	Gregory Viguier <gregory@secupress.me>
+Back dev
+	Julio Potier          <julio@secupress.me>
+	Gregory Viguier       <gregory@secupress.me>
+Design
+	Matthieu Bousendorfer <edenpulse@gmail.com>
+Front dev
+	Geoffrey Crofte       <g.crofte@creativejuiz.fr>

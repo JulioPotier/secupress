@@ -22,6 +22,10 @@ $this->add_field( array(
 			'type'        => 'description',
 			'description' => __( 'Users will just have to enter their email address when log in, then click on a link in the email they receive.', 'secupress' ),
 		),
+		array(
+			'type'        => 'warning',
+			'description' => ! secupress_is_submodule_active( 'users-login', 'passwordless' ) || secupress_get_option( 'secupress_passwordless_activation_validation' ) ? '' : __( 'This module will not work until validated by a link sent to your email address when you activated it.', 'secupress' ),
+		),
 	),
 ) );
 

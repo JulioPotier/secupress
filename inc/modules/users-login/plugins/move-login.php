@@ -18,9 +18,7 @@ if ( is_admin() && ! function_exists( 'secupress_move_login_write_rules' ) ) {
 }
 
 // EMERGENCY BYPASS!
-if ( ( ! defined( 'SFML_ALLOW_LOGIN_ACCESS' ) || ! SFML_ALLOW_LOGIN_ACCESS ) &&
-	( ! defined( 'SECUPRESS_ALLOW_LOGIN_ACCESS' ) || ! SECUPRESS_ALLOW_LOGIN_ACCESS )
-	) {
+if ( ! defined( 'SECUPRESS_ALLOW_LOGIN_ACCESS' ) || ! SECUPRESS_ALLOW_LOGIN_ACCESS ) {
 	include( SECUPRESS_MODULES_PATH . 'users-login/plugins/inc/php/move-login/deprecated.php' );
 	include( SECUPRESS_MODULES_PATH . 'users-login/plugins/inc/php/move-login/url-filters.php' );
 	include( SECUPRESS_MODULES_PATH . 'users-login/plugins/inc/php/move-login/redirections-and-dies.php' );
@@ -41,25 +39,13 @@ if ( ( ! defined( 'SFML_ALLOW_LOGIN_ACCESS' ) || ! SFML_ALLOW_LOGIN_ACCESS ) &&
  */
 function secupress_move_login_get_default_slugs() {
 	$slugs = array(
-		'login'        => 1,
+		// custom.
+		'login'     => 1,
+		'register'  => 1,
+		// hardcoded.
+		'postpass'  => 1,
+		'passwordless_autologin'  => 1,
 	);
-
-	/**
-	 * Add additional slugs.
-	 *
-	 * @since 1.0
-	 * @author Grégory Viguier
-	 *
-	 * @param (array) $new_slugs An array with slugs as keys.
-	 */
-	$new_slugs = apply_filters( 'sfml_additional_slugs', array() );
-
-	if ( $new_slugs && is_array( $new_slugs ) ) {
-		$slugs = array_merge( $slugs, $new_slugs );
-	}
-
-	$slugs = array_keys( $slugs );
-	$slugs = array_combine( $slugs, $slugs );
 
 	return $slugs;
 }
@@ -75,9 +61,12 @@ function secupress_move_login_get_default_slugs() {
 function secupress_move_login_get_slugs() {
 	$slugs = secupress_move_login_get_default_slugs();
 
-	foreach ( $slugs as $action ) {
+	foreach ( $slugs as $action => $dummy ) {
 		$slugs[ $action ] = secupress_get_module_option( 'move-login_slug-' . $action, $action, 'users-login' );
 		$slugs[ $action ] = sanitize_title( $slugs[ $action ], $action, 'display' );
 	}
+	$slugs['postpass']  = 'postpass';
+	$slugs['passwordless_autologin']  = 'passwordless_autologin';
+
 	return $slugs;
 }

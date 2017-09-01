@@ -46,14 +46,14 @@ add_action( 'secure_auth_redirect', 'secupress_move_login_maybe_deny_login_page'
  * Does nothing if the user is logged in.
  *
  * @since 1.0
+ * @param (boolean) $secure The var to be filtered, but we won't.
  * @author Grégory Viguier
  */
-function secupress_move_login_maybe_deny_login_page() {
+function secupress_move_login_maybe_deny_login_page( $secure = true ) {
 	// If the user is logged in, do nothing, let WP redirect this user to the administration area.
 	if ( is_user_logged_in() ) {
-		return;
+		return $secure;
 	}
-
 	$uri    = secupress_get_current_url( 'uri' );
 	$subdir = secupress_get_wp_directory();
 	$slugs  = secupress_move_login_get_slugs();
@@ -63,20 +63,8 @@ function secupress_move_login_maybe_deny_login_page() {
 			$slugs[ $action ] = $subdir . $slug;
 		}
 	}
-	/**
-	 * If you want to display the login form somewhere outside wp-login.php, add your URIs here.
-	 *
-	 * @since 1.0
-	 * @author Grégory Viguier
-	 *
-	 * @param (array)  $new_slugs An array of action => URIs (WP directory + slugs).
-	 * @param (string) $uri       The current URI.
-	 * @param (string) $subdir    WP directory.
-	 * @param (array)  $slugs     URIs already in use.
-	 */
-	$new_slugs = apply_filters( 'sfml_slugs_not_to_kill', array(), $uri, $subdir, $slugs );
-	$slugs     = is_array( $new_slugs ) && ! empty( $new_slugs ) ? array_merge( $new_slugs, $slugs ) : $slugs;
-	$slugs     = array_flip( $slugs );
+
+	$slugs = array_flip( $slugs );
 
 	if ( isset( $slugs[ $uri ] ) ) {
 		// Display the login page.
@@ -84,7 +72,8 @@ function secupress_move_login_maybe_deny_login_page() {
 			// Tell cache plugins not to cache the login page.
 			define( 'DONOTCACHEPAGE', true );
 		}
-		return;
+
+		return $secure;
 	}
 
 	// You shall not pass!
@@ -111,26 +100,14 @@ function secupress_move_login_deny_login_access() {
 	 */
 	do_action( 'secupress.plugin.move-login.deny_login_access' );
 
-	$do = secupress_get_module_option( 'move-login_login-access', '404', 'users-login' );
-
-	if ( 'redir_404' === $do || 'redir_home' === $do ) {
-		$do = '404';
-	}
-
-	$redirect_url = home_url( $do );
-	/**
-	 * Filter the 404 page URL.
-	 *
-	 * @since 1.0
-	 * @author Grégory Viguier
-	 *
-	 * @param (string) $redirect An URL that leads to a 404 response.
-	 */
-	$redirect     = apply_filters( 'sfml_404_error_page', $redirect_url );
-	$redirect     = apply_filters( 'secupress.plugin.move-login.login_redirect_location', $redirect_url );
-	remove_filter( 'wp_redirect', 'secupress_move_login_maybe_deny_login_redirect', 1 );
-	wp_redirect( esc_url_raw( user_trailingslashit( $redirect ) ) );
-	die();
+	secupress_die( secupress_check_ban_ips_form( [
+													'content'  => '<p>⚠️ ' . __( 'This page does not exists, has moved or you are not allowed to access it.', 'secupress' ) . '</p>',
+													'time_ban' => -1,
+													'id'       => __FUNCTION__,
+													'ip'       => 'admin', // use for nonce check, see action below v.
+													'action'   => 'action="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_unlock_admin' ), 'secupress-unban-ip-admin' ) . '"',
+													] )
+	);
 }
 
 
@@ -168,6 +145,7 @@ function secupress_move_login_maybe_deny_login_redirect( $location ) {
 
 	$slugs  = secupress_move_login_get_slugs();
 	$wp_dir = secupress_get_wp_directory();
+
 	if ( secupress_is_subfolder_install() ) {
 		$base  = wp_parse_url( trailingslashit( secupress_get_main_url() ) );
 		$base  = ltrim( $base['path'], '/' );
@@ -177,55 +155,33 @@ function secupress_move_login_maybe_deny_login_redirect( $location ) {
 		$base  = ltrim( $base['path'], '/' );
 		$base .= $wp_dir ? ltrim( $wp_dir, '/' ) : '';
 	}
-
 	$regex  = '^' . $base . '(' . implode( '|', $slugs ) . ')$';
 	$parsed = wp_parse_url( $location );
 	$parsed = ! empty( $parsed['path'] ) ? $parsed['path'] : '';
 	$parsed = trim( $parsed, '/' );
 	$parsed = explode( '/', $parsed );
 	$parsed = end( $parsed );
-	if ( ! preg_match( "@{$regex}@", $parsed ) ) {
+
+	if ( 'wp-login.php' === $parsed ) {
 		return $location;
 	}
-	$redirect = false;
-	/**
-	 * If you want to trigger a custom action (redirect, message, die...), add it here.
-	 *
-	 * @since 1.3
-	 * @author Grégory Viguier
-	 *
-	 * @param (string|bool) $redirect A custom URL to redirect to. Default is false.
-	 */
-	$redirect = apply_filters( 'secupress.plugin.move-login.login_redirect_location', $redirect );
 
-	if ( $redirect ) {
-		return esc_url_raw( $redirect );
+	if ( preg_match( "@{$regex}@", $parsed ) ) {
+		return $location;
 	}
 
-	do_action_deprecated( 'secupress.plugin.move-login.deny_login_redirect', array(), '1.3', 'secupress.plugin.move-login.login_redirect_location' );
-
-	$do = secupress_get_module_option( 'move-login_login-access', '404', 'users-login' );
-
-	if ( 'redir_404' === $do || 'redir_home' === $do ) {
-		$do = '404';
+	if ( isset( $_REQUEST['action'] ) && isset( $slugs[ $_REQUEST['action'] ] ) ) {
+		return $location;
 	}
 
-	$redirect_url = home_url( $do );
-	/**
-	 * Filter the 404 page URL.
-	 *
-	 * @since 1.0
-	 * @since 1.3.1 Only redirect choice left
-	 * @author Grégory Viguier
-	 * @author Julio Potier
-	 *
-	 * @param (string) $redirect An URL that leads to a 404 response.
-	 */
-	$redirect = apply_filters( 'sfml_404_error_page', $redirect_url );
-	$redirect = apply_filters( 'secupress.plugin.move-login.login_redirect_location', $redirect_url );
-
-	wp_redirect( esc_url_raw( user_trailingslashit( $redirect ) ) );
-	die();
+	secupress_die( secupress_check_ban_ips_form( [
+													'content'  => '<p>⚠️ ' . __( 'This page does not exists, has moved or you are not allowed to access it.', 'secupress' ) . '</p>',
+													'time_ban' => -1,
+													'id'       => __FUNCTION__,
+													'ip'       => 'admin', // use for nonce check, see action below v.
+													'action'   => 'action="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_unlock_admin' ), 'secupress-unban-ip-admin' ) . '"',
+													] )
+	);
 }
 
 add_action( 'template_redirect', 'secupress_fallback_slug_redirect' );
@@ -251,11 +207,12 @@ function secupress_fallback_slug_redirect() {
 		$base  = ltrim( $base['path'], '/' );
 		$base .= $wp_dir ? ltrim( $wp_dir, '/' ) : '';
 	}
-
 	$regex  = '^' . $base . '(' . implode( '|', $slugs ) . ')$';
 	$parsed = wp_parse_url( $_SERVER['REQUEST_URI'] );
 	$parsed = ! empty( $parsed['path'] ) ? $parsed['path'] : '';
 	$parsed = trim( $parsed, '/' );
+	$parsed = explode( '/', $parsed );
+	$parsed = end( $parsed );
 	if ( preg_match( "@{$regex}@", $parsed ) ) {
 		$slugs  = array_flip( secupress_move_login_get_slugs() );
 		$parsed = explode( '/', $parsed );
@@ -263,6 +220,7 @@ function secupress_fallback_slug_redirect() {
 		if ( ! isset( $_REQUEST['action'] ) && isset( $slugs[ $parsed ] ) ) {
 			$_REQUEST['action'] = $slugs[ $parsed ];
 		}
+
 		require( ABSPATH . 'wp-login.php' );
 		die();
 	}

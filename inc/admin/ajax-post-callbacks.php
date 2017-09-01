@@ -464,6 +464,53 @@ function secupress_sanitize_move_login_slug_ajax_post_cb() {
 }
 
 
+add_action( 'admin_post_nopriv_secupress_unlock_admin', 'secupress_unlock_admin_ajax_post_cb' );
+/**
+ * Send an unlonk email if the provided address is from an admin
+ *
+ * @author Julio Potier
+ * @since 1.3.2
+ **/
+function secupress_unlock_admin_ajax_post_cb() {
+	if ( ! isset( $_POST['_wpnonce'], $_POST['email'] ) || ! is_email( $_POST['email'] ) || ! check_ajax_referer( 'secupress-unban-ip-admin', '_wpnonce' ) ) {
+		wp_die( 'Cheatin\' uh?' );
+	}
+	$user = get_user_by( 'email', $_POST['email'] );
+	if ( ! $user || ! user_can( $user, 'manage_options' ) ) {
+		wp_die( 'Cheatin\' uh?' );
+	}
+	$url_remember = wp_login_url();
+	$token        = strtolower( wp_generate_password( 10, false ) );
+	set_transient( 'secupress_unlock_admin_key', $token, DAY_IN_SECONDS );
+	$url_remove   = add_query_arg( '_wpnonce', $token, admin_url( 'admin-post.php?action=secupress_deactivate_module&module=move-login' ) );
+
+	$subject      = __( '###SITENAME### – Unlock an administrator', 'secupress' );
+	$message      = sprintf( __( 'Hello %1$s, it seems you are locked out from your website ###SITENAME###.<br><br>You can now click to go to the login page or deactivate the Move Login module.<br><br>%2$s<br>%3$s<br><br>Have a nice day!', 'secupress' ),
+							$user->nicename,
+							'<a href="' . $url_remember . '">' . $url_remember . '</a>',
+							'<a href="' . $url_remove . '">' . $url_remove . '</a> ' . __( '(Valid 1 day)', 'secupress' )
+					);
+	$sent = secupress_send_mail( $_POST['email'], $subject, $message );
+	secupress_die( $sent ? __( 'Email sent, check your mailbox.', 'secupress' ) : __( 'Email not sent, please contact the support.', 'secupress' ), __( 'Email', 'secupress' ) );
+}
+
+add_action( 'admin_post_nopriv_secupress_deactivate_module', 'secupress_deactivate_module_admin_post_cb' );
+/**
+ * Can deactivate a module from a link sent by secupress_unlock_admin_ajax_post_cb()
+ *
+ * @author Julio Potier
+ * @since 1.3.2
+ **/
+function secupress_deactivate_module_admin_post_cb() {
+	if ( ! isset( $_GET['_wpnonce'], $_GET['module'] ) || empty( $_GET['_wpnonce'] ) || ! get_transient( 'secupress_unlock_admin_key' ) || ! hash_equals( get_transient( 'secupress_unlock_admin_key' ), $_GET['_wpnonce'] ) ) {
+		wp_die( 'Cheatin\' uh?' );
+	}
+	delete_transient( 'secupress_unlock_admin_key' );
+	secupress_deactivate_submodule( 'users-login', array( 'move-login' ) );
+	wp_redirect( wp_login_url( secupress_admin_url( 'modules', 'users-login' ) ) );
+	die();
+}
+
 /** --------------------------------------------------------------------------------------------- */
 /** ADMIN POST / AJAX CALLBACKS FOR THE MAIN SETTINGS =========================================== */
 /** --------------------------------------------------------------------------------------------- */

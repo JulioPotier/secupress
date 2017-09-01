@@ -61,8 +61,19 @@ function secupress_users_login_settings_callback( $settings ) {
  * @param (array|bool) $activate  An array containing the fields related to the sub-module being activated. False if not on this module page.
  */
 function secupress_double_auth_settings_callback( $modulenow, &$settings, $activate ) {
+	global $current_user;
 	// (De)Activation.
+	$options = get_site_option( SECUPRESS_SETTINGS_SLUG );
+	unset( $options['secupress_passwordless_activation_validation'] );
+	secupress_update_options( $options );
+
 	if ( ! empty( $activate['double-auth_type'] ) ) {
+		$url     = wp_nonce_url( admin_url( 'admin-post.php?action=secupress_passwordless_confirmation' ), 'secupress_passwordless_confirmation' );
+		$message = sprintf( __( 'Hello %1$s, you just activated the double authentication module "PasswordLess".<br><br>To be sure this module can be activated, confirm your action by clicking the link below:<br><br><a href="%2$s">%2$s</a><br><br>Thank you, have a nice day!', 'secupress' ),
+							$current_user->nicename,
+							$url
+		);
+		secupress_send_mail( $current_user->user_email, __( '[###SITENAME###] PasswordLess 2FA: Validation required', 'secupress' ), $message );
 		secupress_manage_submodule( $modulenow, 'passwordless', '1' === $activate['double-auth_type'] && secupress_is_pro() );
 	} elseif ( false !== $activate ) {
 		secupress_deactivate_submodule( $modulenow, array( 'passwordless' ) );
@@ -281,24 +292,6 @@ function secupress_move_login_settings_callback( $modulenow, &$settings, $activa
 
 
 /** --------------------------------------------------------------------------------------------- */
-/** NOTICES ===================================================================================== */
-/** --------------------------------------------------------------------------------------------- */
-
-add_filter( 'secupress.plugins.packed-plugins', 'secupress_move_login_add_packed_plugin' );
-/**
- * Display a notice if the standalone version of Move Login is used.
- *
- * @since 1.0
- *
- * @param (array) $plugins A list of plugin paths, relative to the plugins folder.
- */
-function secupress_move_login_add_packed_plugin( $plugins ) {
-	$plugins['move-login'] = 'sf-move-login/sf-move-login.php';
-	return $plugins;
-}
-
-
-/** --------------------------------------------------------------------------------------------- */
 /** INSTALL/RESET =============================================================================== */
 /** --------------------------------------------------------------------------------------------- */
 
@@ -341,27 +334,15 @@ function secupress_install_users_login_module( $module ) {
  *
  * @since 1.0
  * @since 1.3.1 Remove all other slugs than "login"
+ * @since 1.3.2 Remove SFML hook, not compatible anymore
  *
  * @return (array) Return an array with the action names as keys and field labels as values.
  */
 function secupress_move_login_slug_labels() {
 	$labels = array(
-		'login'        => __( 'New login page slug', 'secupress' ),
+		'login'    => __( 'New login page', 'secupress' ),
+		'register' => __( 'New registration page', 'secupress' ),
 	);
-
-	/**
-	 * Add custom actions to the list of customizable actions.
-	 *
-	 * @since 1.0
-	 *
-	 * @param (array) $new_slugs An array with the action names as keys and field labels as values. An empty array by default.
-	*/
-	$new_slugs = apply_filters( 'sfml_additional_slugs', array() );
-
-	if ( $new_slugs && is_array( $new_slugs ) ) {
-		$new_slugs = array_diff_key( $new_slugs, $labels );
-		$labels    = array_merge( $labels, $new_slugs );
-	}
 
 	return $labels;
 }

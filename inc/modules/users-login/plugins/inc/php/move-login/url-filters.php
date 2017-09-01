@@ -21,7 +21,7 @@ add_filter( 'site_url', 'secupress_move_login_site_url', 10, 4 );
  * @return (string) The site URL.
  */
 function secupress_move_login_site_url( $url, $path, $scheme, $blog_id = null ) {
-	if ( ! empty( $path ) && is_string( $path ) && false === strpos( $path, '..' ) && 0 === strpos( ltrim( $path, '/' ), 'wp-login.php' ) ) {
+	if ( secupress_is_submodule_active( 'users-login', 'move-login' ) && ! empty( $path ) && is_string( $path ) && false === strpos( $path, '..' ) && 0 === strpos( ltrim( $path, '/' ), 'wp-login.php' ) ) {
 		$blog_id = (int) $blog_id;
 
 		// Base url.
@@ -55,7 +55,7 @@ add_filter( 'network_site_url', 'secupress_move_login_network_site_url', 10, 3 )
  * @return (string) The network site URL.
  */
 function secupress_move_login_network_site_url( $url, $path, $scheme ) {
-	if ( ! empty( $path ) && is_string( $path ) && false === strpos( $path, '..' ) && 0 === strpos( ltrim( $path, '/' ), 'wp-login.php' ) ) {
+	if ( secupress_is_submodule_active( 'users-login', 'move-login' ) && ! empty( $path ) && is_string( $path ) && false === strpos( $path, '..' ) && 0 === strpos( ltrim( $path, '/' ), 'wp-login.php' ) ) {
 		return site_url( $path, $scheme );
 	}
 
@@ -107,6 +107,9 @@ add_filter( 'wp_redirect', 'secupress_move_login_redirect', 10 );
  * @return (string) The path to redirect to.
  */
 function secupress_move_login_redirect( $location ) {
+	if ( ! secupress_is_submodule_active( 'users-login', 'move-login' ) ) {
+		return $location;
+	}
 	$location_base = explode( '?', $location, 2 );
 	$location_base = reset( $location_base );
 
@@ -177,7 +180,7 @@ function secupress_move_login_update_welcome_email( $welcome_email, $blog_id ) {
  */
 function secupress_move_login_set_path( $path ) {
 	$slugs = secupress_move_login_get_slugs();
-	$other = array( 'retrievepassword' => 1, 'rp' => 1 );
+	$other = array( 'retrievepassword' => 1, 'rp' => 1, 'lostpassword' => 1, 'resetpass' => 1 );
 	$other = array_diff_key( $other, $slugs );
 
 	// Get the action.
@@ -197,7 +200,6 @@ function secupress_move_login_set_path( $path ) {
 	} else {
 		$action = 'login';
 	}
-
 	// Set the path.
 	if ( isset( $slugs[ $action ] ) ) {
 		$path = str_replace( 'wp-login.php', $slugs[ $action ], $path );
@@ -263,6 +265,6 @@ add_action( 'login_head', 'secupress_hack_global_error' );
 function secupress_hack_global_error() {
 	global $error;
 	if ( '404' === $error ) {
-		$error = ''; // Triggers a PHPCS "Overriding WordPress globals is prohibited" message, sorry mate, can't help. ////
+		$error = ''; // Triggers a PHPCS "Overriding WordPress globals is prohibited" message, sorry mate, can't help.
 	}
 }
