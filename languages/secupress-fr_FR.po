@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2017-09-01 10:51+0200\n"
-"PO-Revision-Date: 2017-09-01 11:02+0200\n"
+"POT-Creation-Date: 2017-09-01 14:43+0200\n"
+"PO-Revision-Date: 2017-09-01 14:44+0200\n"
 "Last-Translator: WP Media <contact@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -93,9 +93,9 @@ msgstr ""
 #: inc/modules/logs/plugins/inc/php/404-logs/class-secupress-404-log.php:66
 #: inc/modules/sensitive-data/plugins/bad-url-access.php:133
 #: inc/modules/sensitive-data/plugins/bad-url-access.php:153
-#: inc/modules/users-login/callbacks.php:254
-#: inc/modules/users-login/callbacks.php:260
-#: inc/modules/users-login/callbacks.php:266
+#: inc/modules/users-login/callbacks.php:265
+#: inc/modules/users-login/callbacks.php:271
+#: inc/modules/users-login/callbacks.php:277
 #: inc/modules/users-login/plugins/ask-old-password.php:79
 #: inc/modules/users-login/plugins/inc/php/move-login/admin.php:23
 #, php-format
@@ -566,7 +566,7 @@ msgstr "Message inconnu"
 msgid "will deactivate the plugin %s."
 msgstr "cela désactivera le plugin %s."
 
-#: inc/admin/functions/modules.php:138
+#: inc/admin/functions/modules.php:139
 #, php-format
 msgid ""
 "You can not use this feature now because you are using the plugin %s which "
@@ -575,7 +575,7 @@ msgstr ""
 "Vous ne pouvez pas utiliser cette fonctionnalité maintenant car vous avez le "
 "plugin %s qui fait déjà très bien le travail."
 
-#: inc/admin/functions/modules.php:140
+#: inc/admin/functions/modules.php:141
 #, php-format
 msgid "Open the %s settings page"
 msgstr "Ouvrir les réglages du plugin %s"
@@ -4723,7 +4723,7 @@ msgstr ""
 
 #: inc/classes/scanners/class-secupress-scan-subscription.php:47
 #: inc/classes/scanners/class-secupress-scan-subscription.php:74
-#: inc/modules/users-login/settings/double-auth.php:32
+#: inc/modules/users-login/settings/double-auth.php:36
 msgid "Use a Captcha for everyone"
 msgstr "Utiliser un captcha pour tout le monde"
 
@@ -7785,34 +7785,51 @@ msgstr "Description"
 msgid "Submit the ticket"
 msgstr "Envoyer le ticket"
 
-#: inc/modules/users-login/callbacks.php:254
-#: inc/modules/users-login/callbacks.php:260
-#: inc/modules/users-login/callbacks.php:266
+#: inc/modules/users-login/callbacks.php:72
+#, php-format
+msgid ""
+"Hello %1$s, you just activated the double authentication module "
+"\"PasswordLess\".<br><br>To be sure this module can be activated, confirm "
+"your action by clicking the link below:<br><br><a href=\"%2$s\">%2$s</"
+"a><br><br>Thank you, have a nice day!"
+msgstr ""
+"Bonjour %1$s, vous venez d'activer le module de double authentification "
+"\"PasswordLess\".<br><br>Pour confirmer l'activation de ce module, validez "
+"votre actionen cliquant sur le lien suivant&nbsp;:<br><br><a href=\"%2$s\">"
+"%2$s</a><br><br>Merci et bonne journée&nbsp;!"
+
+#: inc/modules/users-login/callbacks.php:76
+msgid "[###SITENAME###] PasswordLess 2FA: Validation required"
+msgstr "[###SITENAME###] PasswordLess 2FA: Validation requise"
+
+#: inc/modules/users-login/callbacks.php:265
+#: inc/modules/users-login/callbacks.php:271
+#: inc/modules/users-login/callbacks.php:277
 #: inc/modules/users-login/plugins/inc/php/move-login/admin.php:23
 #: inc/modules/users-login/plugins/inc/php/move-login/admin.php:71
 msgid "Move Login"
 msgstr "Déplacer la page de connexion"
 
-#: inc/modules/users-login/callbacks.php:255
+#: inc/modules/users-login/callbacks.php:266
 msgid "Please choose your login URL."
 msgstr "Veuillez choisir votre URL de connexion."
 
-#: inc/modules/users-login/callbacks.php:261
+#: inc/modules/users-login/callbacks.php:272
 #, php-format
 msgid "The slug %s is forbidden."
 msgid_plural "The slugs %s are forbidden."
 msgstr[0] "L'identifiant %s est interdit."
 msgstr[1] "Les identifiants %s sont interdits."
 
-#: inc/modules/users-login/callbacks.php:267
+#: inc/modules/users-login/callbacks.php:278
 msgid "The links can't have the same slugs."
 msgstr "Les liens ne peuvent pas avoir le même identifiants."
 
-#: inc/modules/users-login/callbacks.php:332
+#: inc/modules/users-login/callbacks.php:343
 msgid "New login page"
 msgstr "Nouvelle page d'inscription"
 
-#: inc/modules/users-login/callbacks.php:333
+#: inc/modules/users-login/callbacks.php:344
 msgid "New register page"
 msgstr "Nouvelle page de connexion"
 
@@ -7911,8 +7928,8 @@ msgstr ""
 "Il semble que la configuration de votre serveur empêche le plugin de "
 "fonctionner correctement. La page de connexion ne peut pas être déplacée."
 
-#: inc/modules/users-login/plugins/inc/php/move-login/redirections-and-dies.php:102
-#: inc/modules/users-login/plugins/inc/php/move-login/redirections-and-dies.php:171
+#: inc/modules/users-login/plugins/inc/php/move-login/redirections-and-dies.php:104
+#: inc/modules/users-login/plugins/inc/php/move-login/redirections-and-dies.php:178
 msgid ""
 "This page does not exists, has moved or you are not allowed to access it."
 msgstr "Cette page n'existe pas, a été déplacée ou vous n'y avez pas accès."
@@ -7989,17 +8006,25 @@ msgstr ""
 "Les utilisateurs devront juste entrer leur adresse email pour se connecter, "
 "puis cliquer sur un lien dans le mail reçu."
 
-#: inc/modules/users-login/settings/double-auth.php:33
+#: inc/modules/users-login/settings/double-auth.php:27
+msgid ""
+"This module will not work until validated by a link sent to your email "
+"address when you activated it."
+msgstr ""
+"Ce module ne fonctionnera que quand il aura été validé par le lien qui vous "
+"a été envoyé par email."
+
+#: inc/modules/users-login/settings/double-auth.php:37
 msgid "A Captcha can prevent a form being sent if its rule isn't respected."
 msgstr ""
 "Un Captcha peut éviter que le formulaire ne soit envoyé si sa règle n'est "
 "pas respectée."
 
-#: inc/modules/users-login/settings/double-auth.php:38
+#: inc/modules/users-login/settings/double-auth.php:42
 msgid "Yes, use a Captcha"
 msgstr "Oui, utiliser un Captcha"
 
-#: inc/modules/users-login/settings/double-auth.php:42
+#: inc/modules/users-login/settings/double-auth.php:46
 msgid ""
 "This module requires JavaScript to be enabled, without it the form will "
 "never be sent."
