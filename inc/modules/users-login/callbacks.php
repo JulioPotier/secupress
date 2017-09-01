@@ -341,7 +341,7 @@ function secupress_install_users_login_module( $module ) {
 function secupress_move_login_slug_labels() {
 	$labels = array(
 		'login'    => __( 'New login page', 'secupress' ),
-		'register' => __( 'New register page', 'secupress' ),
+		'register' => __( 'New registration page', 'secupress' ),
 	);
 
 	return $labels;

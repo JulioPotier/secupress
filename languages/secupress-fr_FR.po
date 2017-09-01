@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2017-09-01 14:43+0200\n"
-"PO-Revision-Date: 2017-09-01 14:44+0200\n"
+"POT-Creation-Date: 2017-09-01 15:02+0200\n"
+"PO-Revision-Date: 2017-09-01 15:02+0200\n"
 "Last-Translator: WP Media <contact@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -7830,8 +7830,8 @@ msgid "New login page"
 msgstr "Nouvelle page d'inscription"
 
 #: inc/modules/users-login/callbacks.php:344
-msgid "New register page"
-msgstr "Nouvelle page de connexion"
+msgid "New registration page"
+msgstr "Nouvelle page d'inscription"
 
 #: inc/modules/users-login/plugins/ask-old-password.php:69
 #: inc/modules/users-login/plugins/ask-old-password.php:91
@@ -8152,25 +8152,8 @@ msgstr "Oui, déplacer la page de connexion et d'administrations"
 msgid "URL"
 msgstr "URL"
 
-#: inc/modules/users-login/settings/move-login.php:94
-#, php-format
-msgid "Redirection when access to %1$s or %2$s"
-msgstr "Page de redirection quand on accède à %1$s ou %2$s"
-
-#: inc/modules/users-login/settings/move-login.php:95
-msgid ""
-"When a logged out user attempts to access the old login page or admin area."
-msgstr ""
-"Quand un utilisateur non connecté tente d'accéder à l'ancienne page de "
-"connexion ou d'administration."
-
-#: inc/modules/users-login/settings/move-login.php:102
-msgid "Choose how to deny access to login and admin pages"
-msgstr ""
-"Choisissez comment interdire l'accès aux pages d'administration et connexion"
-
 #. Translators: 1 is a file name, 2 is a tag name.
-#: inc/modules/users-login/settings/move-login.php:115
+#: inc/modules/users-login/settings/move-login.php:100
 #, php-format
 msgid ""
 "You need to remove the following code from your %1$s file, inside the %2$s "
@@ -8179,7 +8162,7 @@ msgstr ""
 "You devez retirer le code suivant dans votre fichier %1$s, dans le bloc "
 "%2$s&nbsp;:"
 
-#: inc/modules/users-login/settings/move-login.php:121
+#: inc/modules/users-login/settings/move-login.php:106
 msgid "Rules"
 msgstr "Règles"
 
@@ -8572,6 +8555,21 @@ msgid ""
 msgstr ""
 "Protégez votre WordPress avec SecuPress, analysez et assurez-vous de la "
 "sécurité de votre site quotidiennement."
+
+#~ msgid "Redirection when access to %1$s or %2$s"
+#~ msgstr "Page de redirection quand on accède à %1$s ou %2$s"
+
+#~ msgid ""
+#~ "When a logged out user attempts to access the old login page or admin "
+#~ "area."
+#~ msgstr ""
+#~ "Quand un utilisateur non connecté tente d'accéder à l'ancienne page de "
+#~ "connexion ou d'administration."
+
+#~ msgid "Choose how to deny access to login and admin pages"
+#~ msgstr ""
+#~ "Choisissez comment interdire l'accès aux pages d'administration et "
+#~ "connexion"
 
 #~ msgid "Loading"
 #~ msgstr "Chargement"
