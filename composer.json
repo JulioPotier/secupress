@@ -1,5 +1,5 @@
 {
-    "name": "wpmedia/secupress",
+    "name": "BoiteAWeb/secupress",
     "require-dev": {
         "squizlabs/php_codesniffer": "*",
         "wimg/php-compatibility": "dev-master",
