@@ -170,6 +170,10 @@ function secupress_move_login_maybe_deny_login_redirect( $location ) {
 		return $location;
 	}
 
+	if ( isset( $_REQUEST['action'] ) && isset( $slugs[ $_REQUEST['action'] ] ) ) {
+		return $location;
+	}
+
 	secupress_die( secupress_check_ban_ips_form( [
 													'content'  => '<p>⚠️ ' . __( 'This page does not exists, has moved or you are not allowed to access it.', 'secupress' ) . '</p>',
 													'time_ban' => -1,
