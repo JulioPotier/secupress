@@ -3,7 +3,7 @@ Contributors: SecuPress, juliobox, GregLone
 Tags: wordpress security, secure, security plugin, hack, malware, 
 Requires at least: 3.7
 Tested up to: 4.8.2
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -178,6 +178,12 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 == Changelog ==
 
+= 1.3.2 =
+
+* 01 september 2017
+* Improvement #516, #518, #519: Move login hides now the postpass url, the register url is now different and has its own setting, /!\ now our Move Login is not compatible anymore with "SF Move Login" from GregLone, thank you buddy!
+* Fix: Remove the module file from "bad url length", should be deleted in 1.3.1
+
 = 1.3.1 =
 
 * 02 august 2017
@@ -191,7 +197,6 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 * Fix #502: Move login was not cool with PasswordLess
 * Fix #501: Some multisites websites could not validate their licence.
 * Fix #473: Captcha always returned "human verification fail" when autofill from browser is enabled.
-
 
 = 1.3 =
 

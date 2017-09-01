@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <ruleset name="SecuPress">
-	<description>Security plugin for WordPress by WP Media.</description>
+	<description>Security plugin for WordPress</description>
 
 	<arg name="extensions" value="php"/>
 	<!--<arg value="s"/>-->
