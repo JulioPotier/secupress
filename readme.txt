@@ -178,6 +178,11 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 == Changelog ==
 
+= 1.3.3 =
+* 04 september 2017
+* Fix#522: zxcvbn lib contained a not fixed bug, I did.
+* Fix#524: Move login was blocking the home page
+
 = 1.3.2 =
 
 * 01 september 2017
