@@ -57,6 +57,8 @@ function secupress_move_login_maybe_deny_login_page( $secure = true ) {
 	$uri    = secupress_get_current_url( 'uri' );
 	$subdir = secupress_get_wp_directory();
 	$slugs  = secupress_move_login_get_slugs();
+	$uri    = explode( '/', $uri );
+	$uri    = end( $uri );
 
 	if ( $subdir ) {
 		foreach ( $slugs as $action => $slug ) {
@@ -114,8 +116,8 @@ function secupress_move_login_deny_login_access() {
 /** --------------------------------------------------------------------------------------------- */
 /** DO NOT REDIRECT TO THE NEW LOGIN PAGE ======================================================= */
 /** --------------------------------------------------------------------------------------------- */
-
-add_filter( 'wp_redirect', 'secupress_move_login_maybe_deny_login_redirect', 1 );
+// Commented for 1.3.3 .
+// add_filter( 'wp_redirect', 'secupress_move_login_maybe_deny_login_redirect', 1 );
 /**
  * Filters the redirect location.
  * When a logged out user is being redirected to the new login page, deny access.
@@ -184,7 +186,7 @@ function secupress_move_login_maybe_deny_login_redirect( $location ) {
 	);
 }
 
-add_action( 'template_redirect', 'secupress_fallback_slug_redirect' );
+add_action( 'template_redirect', 'secupress_fallback_slug_redirect', 0 );
 /**
  * Will include the wp-loing.php file/template if the URL triggers the new slug
  *
