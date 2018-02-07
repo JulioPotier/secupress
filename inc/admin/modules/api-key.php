@@ -25,6 +25,7 @@ $this->add_field( array(
 	'label_for'    => 'consumer_email',
 	'type'         => 'email',
 	'attributes'   => $attributes,
+	'value'        => defined( 'SECUPRESS_API_EMAIL' ) ? esc_attr( SECUPRESS_API_EMAIL ) : null,
 	'helpers'      => array(
 		array(
 			'type'        => 'help',
@@ -40,6 +41,7 @@ $this->add_field( array(
 	'type'         => 'text',
 	'attributes'   => $attributes,
 	'value'        => $value,
+	'value'        => is_null( $value ) && defined( 'SECUPRESS_API_KEY' ) ? esc_attr( SECUPRESS_API_KEY ) : null,
 	'helpers'      => array(
 		array(
 			'type'        => 'help',
