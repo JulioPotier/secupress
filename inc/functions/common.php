@@ -124,10 +124,6 @@ function secupress_get_scanners() {
 		),
 	);
 
-	if ( ! secupress_users_can_register() ) {
-		$tests['users-login'][] = 'Non_Login_Time_Slot';
-	}
-
 	if ( class_exists( 'SitePress' ) ) {
 		$tests['sensitive-data'][] = 'Wpml_Discloses';
 	}
