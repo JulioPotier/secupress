@@ -244,6 +244,17 @@ function secupress_load_plugins() {
 		do_action( 'secupress.all.plugins.activation' );
 	}
 
+	// Autovalidate license if constants are set
+	if ( secupress_has_pro() && ! secupress_has_pro_license() 
+		&& defined( 'SECUPRESS_API_EMAIL' ) && defined( 'SECUPRESS_API_KEY' ) 
+	) {
+		$args                   = array();
+		$options                = get_site_option( SECUPRESS_SETTINGS_SLUG );
+ 		$args['install_time']   = isset( $options['install_time'] ) && -1 != $options['install_time'] ? $options['install_time'] : time();
+ 		$args['consumer_email'] = SECUPRESS_API_EMAIL;
+ 		$args['consumer_key']   = SECUPRESS_API_KEY;
+		secupress_global_settings_activate_pro_license( $args );
+	}
 	/**
 	 * Fires once all our plugins/submodules has been loaded.
 	 *

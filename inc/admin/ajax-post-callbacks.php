@@ -670,7 +670,7 @@ function secupress_global_settings_api_key_ajax_post_cb() {
  *
  * @return (array) $new_values The new settings, some values may have changed.
  */
-function secupress_global_settings_activate_pro_license( $new_values, $old_values ) {
+function secupress_global_settings_activate_pro_license( $new_values, $old_values = array() ) {
 	// If the Pro is not installed, get the plugin information.
 	$need_plugin_data = (int) ! secupress_has_pro();
 	$api_old_values   = secupress_array_merge_intersect( $old_values, array(
@@ -760,7 +760,12 @@ function secupress_global_settings_activate_pro_license( $new_values, $old_value
 		}
 	}
 
-	return $new_values;
+	// Triggered by auto license validation
+	if ( empty( $old_values ) ) {
+		update_site_option( SECUPRESS_SETTINGS_SLUG, array_merge( $new_values, get_site_option( SECUPRESS_SETTINGS_SLUG ) ) );
+	} else {
+		return $new_values;
+	}
 }
 
 
