@@ -110,7 +110,6 @@ function secupress_get_scanners() {
 			'Chmods',
 			'Directory_Listing',
 			'Bad_File_Extensions',
-			'DirectoryIndex',
 		),
 		'firewall' => array(
 			'Shellshock',
@@ -123,10 +122,6 @@ function secupress_get_scanners() {
 			'PhpVersion',
 		),
 	);
-
-	if ( ! secupress_users_can_register() ) {
-		$tests['users-login'][] = 'Non_Login_Time_Slot';
-	}
 
 	if ( class_exists( 'SitePress' ) ) {
 		$tests['sensitive-data'][] = 'Wpml_Discloses';

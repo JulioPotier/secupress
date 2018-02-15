@@ -38,8 +38,6 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 		'ALLOW_UNFILTERED_UPLOADS' => false,
 		'DIEONDBERROR'             => false,
 		'DISALLOW_FILE_EDIT'       => 1,
-		'DISALLOW_UNFILTERED_HTML' => 1,
-		'ERRORLOGFILE'             => '!empty',
 		'FS_CHMOD_DIR'             => 755,
 		'FS_CHMOD_FILE'            => 644,
 		'RELOCATE'                 => false,
@@ -397,7 +395,6 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 		$has_plugin = array(
 			'ALLOW_UNFILTERED_UPLOADS' => 'unfiltered-uploads',
 			'DISALLOW_FILE_EDIT'       => 'file-edit',
-			'DISALLOW_UNFILTERED_HTML' => 'unfiltered-html',
 		);
 
 		if ( empty( $has_plugin[ $constant ] ) ) {
