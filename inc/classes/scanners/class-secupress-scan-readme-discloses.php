@@ -130,13 +130,16 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
+
+		$activated = secupress_filter_scanner( __CLASS__ );
+		if ( true === $activated ) {
+			$this->add_message( 0 );
+			return parent::scan();
+		}
+
 		$protected = $this->are_files_protected();
 
-		if ( is_null( $protected ) ) {
-			// "warning"
-			$this->add_message( 100 );
-
-		} elseif ( ! $protected ) {
+		if ( ! $protected ) {
 			// "bad"
 			$this->add_message( 200 );
 
@@ -305,10 +308,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 		// Get file contents.
 		$response = wp_remote_get( site_url( $file ), $this->get_default_request_args() );
 
-		if ( is_wp_error( $response ) ) {
-			// "warning".
-			return null;
-		} elseif ( 200 === wp_remote_retrieve_response_code( $response ) ) {
+		if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 			// "bad".
 			return false;
 		}

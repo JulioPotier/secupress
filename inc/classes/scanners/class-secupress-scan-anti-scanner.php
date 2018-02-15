@@ -106,6 +106,13 @@ class SecuPress_Scan_Anti_Scanner extends SecuPress_Scan implements SecuPress_Sc
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
+
+		$activated = secupress_filter_scanner( __CLASS__ );
+		if ( true === $activated ) {
+			$this->add_message( 0 );
+			return parent::scan();
+		}
+
 		// Scanners and Breach.
 		$hashes = array();
 
@@ -124,8 +131,8 @@ class SecuPress_Scan_Anti_Scanner extends SecuPress_Scan implements SecuPress_Sc
 			$this->add_message( 0 );
 
 		} elseif ( ! isset( $hashes[0] ) ) { // = error during page request
-			// "warning"
-			$this->add_message( 100 );
+			// "good"
+			$this->add_message( 0 );
 
 		} else { // = we got 1 or 2 different hashes only.
 			// "bad"

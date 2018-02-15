@@ -148,6 +148,13 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
+
+		$activated = secupress_filter_scanner( __CLASS__ );
+		if ( true === $activated ) {
+			$this->add_message( 0 );
+			return parent::scan();
+		}
+
 		global $is_nginx;
 
 		$wp_version   = get_bloginfo( 'version' );
@@ -210,9 +217,6 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 				// "bad"
 				$this->add_message( 202 );
 			}
-		} else {
-			// "warning"
-			$this->add_message( 101 );
 		}
 
 		// PHP version in headers. ==========================.

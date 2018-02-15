@@ -133,6 +133,13 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
+
+		$activated = secupress_filter_scanner( __CLASS__ );
+		if ( true === $activated ) {
+			$this->add_message( 0 );
+			return parent::scan();
+		}
+
 		// Avoid plugin's hooks.
 		remove_all_filters( 'site_url' );
 		remove_all_filters( 'includes_url' );
@@ -154,14 +161,9 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 		foreach ( $urls as $url ) {
 			$response = wp_remote_get( $url, $this->get_default_request_args() );
 
-			if ( ! is_wp_error( $response ) ) {
-				if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
-					// "bad"
-					$bads[] = "<code>$url</code>";
-				}
-			} else {
-				// "warning"
-				$warnings[] = "<code>$url</code>";
+			if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
+				// "bad"
+				$bads[] = "<code>$url</code>";
 			}
 		}
 
@@ -172,12 +174,6 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 			if ( ! $this->fixable ) {
 				$this->add_pre_fix_message( 301 );
 			}
-		}
-
-		if ( $warnings ) {
-			// "warning"
-			$this->add_message( 100, array( count( $warnings ), $warnings ) );
-			$this->add_message( 101 );
 		}
 
 		// "good"

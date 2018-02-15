@@ -129,6 +129,13 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
+
+		$activated = secupress_filter_scanner( __CLASS__ );
+		if ( true === $activated ) {
+			$this->add_message( 0 );
+			return parent::scan();
+		}
+
 		$request_args = $this->get_default_request_args();
 		$request_args['redirection'] = 1;
 		$response     = wp_remote_get( SECUPRESS_INC_URL . 'DirectoryIndex', $request_args ); // Create the folder at root ////.
@@ -145,9 +152,6 @@ class SecuPress_Scan_DirectoryIndex extends SecuPress_Scan implements SecuPress_
 					$this->add_pre_fix_message( 301 );
 				}
 			}
-		} else {
-			// "warning"
-			$this->add_message( 100 );
 		}
 
 		// "good"

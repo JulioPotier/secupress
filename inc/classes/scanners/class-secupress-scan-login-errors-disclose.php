@@ -94,6 +94,13 @@ class SecuPress_Scan_Login_Errors_Disclose extends SecuPress_Scan implements Sec
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
+
+		$activated = secupress_filter_scanner( __CLASS__ );
+		if ( true === $activated ) {
+			$this->add_message( 0 );
+			return parent::scan();
+		}
+
 		$messages = secupress_login_errors_disclose_get_messages( false );
 		$messages = '	' . implode( "<br />\n	", $messages ) . "<br />\n";
 		/** This filter is documented in wp-login.php */

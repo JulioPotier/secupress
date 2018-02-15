@@ -148,6 +148,13 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
+
+		$activated = secupress_filter_scanner( __CLASS__ );
+		if ( true === $activated ) {
+			$this->add_message( 0 );
+			return parent::scan();
+		}
+
 		// Create the temporary file.
 		$this->create_file();
 
@@ -160,8 +167,8 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 		$response = wp_remote_get( $this->file_url, $this->get_default_request_args() );
 
 		if ( is_wp_error( $response ) ) {
-			// "warning"
-			$this->add_message( 100 );
+			// "good"
+			$this->add_message( 0 );
 
 		} elseif ( 200 === wp_remote_retrieve_response_code( $response ) ) {
 			// "bad"

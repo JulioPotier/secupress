@@ -119,6 +119,13 @@ class SecuPress_Scan_Non_Login_Time_Slot extends SecuPress_Scan implements SecuP
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
+
+		$activated = secupress_filter_scanner( __CLASS__ );
+		if ( true === $activated ) {
+			$this->add_message( 0 );
+			return parent::scan();
+		}
+
 		if ( ! secupress_is_submodule_active( 'users-login', 'nonlogintimeslot' ) ) {
 			// "bad"
 			$this->add_message( 200 );
