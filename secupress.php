@@ -303,6 +303,7 @@ function secupress_load_functions() {
 	require_once( SECUPRESS_INC_PATH . 'functions/compat.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/deprecated.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/common.php' );
+	require_once( SECUPRESS_INC_PATH . 'functions/3rdparty.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/formatting.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/options.php' );
 	require_once( SECUPRESS_INC_PATH . 'functions/modules.php' );
