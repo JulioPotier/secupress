@@ -58,6 +58,9 @@ if ( ! defined( 'SECUPRESS_USE_BETA' ) ) {
 	define( 'SECUPRESS_USE_BETA', 0 );
 }
 
+if ( defined( 'SECUPRESS_API_EMAIL' ) && defined( 'SECUPRESS_API_KEY' ) && ! defined( 'SECUPRESS_HIDE_API_KEY' ) ) {
+	define( 'SECUPRESS_HIDE_API_KEY', true );
+}
 
 /** --------------------------------------------------------------------------------------------- */
 /** INIT ======================================================================================== */
