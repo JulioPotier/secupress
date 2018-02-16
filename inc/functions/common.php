@@ -1059,8 +1059,6 @@ function secupress_feature_is_pro( $feature ) {
 		'backups-storage_location'               => 1,
 		'event-alerts_activated'                 => 1,
 		'daily-reporting_activated'              => 1,
-		// Field values.
-		'login-protection_type|nonlogintimeslot' => 1,
 	);
 
 	return isset( $features[ $feature ] );

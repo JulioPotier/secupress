@@ -26,7 +26,6 @@ function secupress_file_system_settings_callback( $settings ) {
 
 	// Activate/deactivate.
 	secupress_manage_submodule( $modulenow, 'bad-file-extensions', ! empty( $activate['bad-file-extensions_activated'] ) && secupress_is_pro() );
-	secupress_manage_submodule( $modulenow, 'directory-index', ! empty( $activate['directory-index_activated'] ) );
 
 	return $settings;
 }

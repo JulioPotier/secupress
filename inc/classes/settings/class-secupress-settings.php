@@ -435,7 +435,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * @since 1.0
 	 *
 	 * @param (array) $args An array with the following parameters:
-	 *                - (string) $type              The field type: 'number', 'email', 'tel', 'text', 'textarea', 'select', 'checkbox', 'checkboxes', 'radioboxes', 'radios', 'roles', 'countries', 'nonlogintimeslot'.
+	 *                - (string) $type              The field type: 'number', 'email', 'tel', 'text', 'textarea', 'select', 'checkbox', 'checkboxes', 'radioboxes', 'radios', 'roles', 'countries'.
 	 *                - (string) $name              The name attribute. Also used as id attribute if `$label_for` is not provided.
 	 *                - (string) $label_for         The id attribute. Also used as name attribute if `$name` is not provided.
 	 *                - (bool)   $plugin_activation Set to true if the field is not used for a setting but to (de)activate a plugin.
