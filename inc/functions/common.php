@@ -124,6 +124,7 @@ function secupress_get_scanners() {
 		),
 	);
 
+	// 3rd party.
 	if ( class_exists( 'SitePress' ) ) {
 		$tests['sensitive-data'][3] = 'Wpml_Discloses';
 	}
