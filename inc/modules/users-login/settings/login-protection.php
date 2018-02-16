@@ -10,7 +10,6 @@ $is_plugin_active = array();
 $values           = array(
 	'limitloginattempts' => __( 'Limit the number of bad login attempts', 'secupress' ),
 	'bannonexistsuser'   => __( 'Ban login attempts on non-existing usernames', 'secupress' ),
-	'nonlogintimeslot'   => __( 'Set a non-login time slot', 'secupress' ),
 );
 
 foreach ( $values as $_plugin => $label ) {
@@ -60,38 +59,6 @@ $this->add_field( array(
 		'max' => 60,
 	),
 ) );
-
-
-$field_name = $this->get_field_name( 'nonlogintimeslot' );
-// Server hour.
-$utc          = new DateTimeZone( 'UTC' );
-$new_tz       = ini_get( 'date.timezone' );
-$new_tz       = $new_tz ? new DateTimeZone( $new_tz ) : $utc;
-$date         = new DateTime( '', $utc );
-$date->setTimezone( $new_tz );
-$server_hour  = $date->format( 'H \h i \m\i\n' );
-
-$this->add_field( array(
-	'title'        => __( 'Non-Login time slot settings', 'secupress' ),
-	'depends'      => $main_field_name . '_nonlogintimeslot',
-	'label_for'    => $field_name . '_from_hour',
-	'name'         => $field_name,
-	'type'         => 'non_login_time_slot',
-	'label'        => __( 'Everyday:', 'secupress' ),
-	'fieldset'     => 'yes',
-	'label_screen' => __( 'Choose your time slot', 'secupress' ),
-	'helpers'      => array(
-		array(
-			'type'        => 'help',
-			'description' => sprintf( __( 'Current server time: %s.', 'secupress' ), '<strong>' . $server_hour . '</strong>' ),
-		),
-		array(
-			'type'        => 'description',
-			'description' => __( 'Select the range of time you need to disallow logins.', 'secupress' ),
-		),
-	),
-) );
-
 
 $this->add_field( array(
 	'title'             => __( 'Session Control', 'secupress' ),
