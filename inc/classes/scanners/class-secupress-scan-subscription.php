@@ -125,6 +125,13 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
+
+		$activated = secupress_filter_scanner( __CLASS__ );
+		if ( true === $activated ) {
+			$this->add_message( 0 );
+			return parent::scan();
+		}
+
 		global $wp_roles;
 
 		// Subscriptions are closed.
@@ -193,9 +200,6 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 					$this->add_message( 201 );
 				}
 			}
-		} else {
-			// "warning"
-			$this->add_message( 100 );
 		}
 
 		delete_transient( 'secupress_registration_test' );

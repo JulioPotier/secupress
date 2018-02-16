@@ -113,6 +113,13 @@ class SecuPress_Scan_Shellshock extends SecuPress_Scan implements SecuPress_Scan
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
+
+		$activated = secupress_filter_scanner( __CLASS__ );
+		if ( true === $activated ) {
+			$this->add_message( 0 );
+			return parent::scan();
+		}
+
 		if ( 'WIN' === strtoupper( substr( PHP_OS, 0, 3 ) ) ) {
 			// "good"
 			$this->add_message( 0 );
@@ -133,10 +140,7 @@ class SecuPress_Scan_Shellshock extends SecuPress_Scan implements SecuPress_Scan
 			$output = isset( $pipes[1] ) ? stream_get_contents( $pipes[1] ) : 'error';
 			proc_close( $p );
 
-			if ( 'error' === $output ) {
-				// "warning"
-				$this->add_message( 100 );
-			} elseif ( false !== strpos( $output, 'VULNERABLE' ) ) {
+			if ( false !== strpos( $output, 'VULNERABLE' ) ) {
 				// "bad"
 				$this->add_message( 200 );
 			}
@@ -147,10 +151,7 @@ class SecuPress_Scan_Shellshock extends SecuPress_Scan implements SecuPress_Scan
 			$output    = isset( $pipes[1] ) ? stream_get_contents( $pipes[1] ) : 'error';
 			proc_close( $p );
 
-			if ( 'error' === $output ) {
-				// "warning"
-				$this->add_message( 101 );
-			} elseif ( trim( $output ) === $test_date ) {
+			if ( trim( $output ) === $test_date ) {
 				// "bad"
 				$this->add_message( 201 );
 			}
@@ -169,9 +170,6 @@ class SecuPress_Scan_Shellshock extends SecuPress_Scan implements SecuPress_Scan
 					// "good"
 					$this->add_message( 0 );
 				}
-			} else {
-				// "warning"
-				$this->add_message( 102 );
 			}
 		}
 

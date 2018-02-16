@@ -96,6 +96,13 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements SecuPress_S
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
+
+		$activated = secupress_filter_scanner( __CLASS__ );
+		if ( true === $activated ) {
+			$this->add_message( 0 );
+			return parent::scan();
+		}
+
 		global $_old_files;
 
 		require_once( ABSPATH . 'wp-admin/includes/update-core.php' );

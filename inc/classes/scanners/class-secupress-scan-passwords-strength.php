@@ -113,6 +113,13 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan implements SecuPr
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
+
+		$activated = secupress_filter_scanner( __CLASS__ );
+		if ( true === $activated ) {
+			$this->add_message( 0 );
+			return parent::scan();
+		}
+
 		$has_ftp = defined( 'FTP_PASS' );
 
 		// DB_PASSWORD.

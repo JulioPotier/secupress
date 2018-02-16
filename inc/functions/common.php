@@ -78,60 +78,61 @@ function secupress_require_class_async() {
 function secupress_get_scanners() {
 	$tests = array(
 		'users-login' => array(
-			'Admin_User',
-			'Easy_Login',
-			'Subscription',
-			'Passwords_Strength',
-			'Bad_Usernames',
-			'Login_Errors_Disclose',
+			0 => 'Admin_User',
+			1 => 'Easy_Login',
+			2 => 'Subscription',
+			3 => 'Passwords_Strength',
+			4 => 'Bad_Usernames',
+			5 => 'Login_Errors_Disclose',
 		),
 		'plugins-themes' => array(
-			'Plugins_Update',
-			'Themes_Update',
-			'Bad_Old_Plugins',
-			'Bad_Vuln_Plugins',
-			'Inactive_Plugins_Themes',
+			0 => 'Plugins_Update',
+			1 => 'Themes_Update',
+			2 => 'Bad_Old_Plugins',
+			3 => 'Bad_Vuln_Plugins',
+			4 => 'Inactive_Plugins_Themes',
 		),
 		'wordpress-core' => array(
-			'Core_Update',
-			'Auto_Update',
-			'Bad_Old_Files',
-			'Bad_Config_Files',
-			'WP_Config',
-			'DB_Prefix',
-			'Salt_Keys',
+			0 => 'Core_Update',
+			1 => 'Auto_Update',
+			2 => 'Bad_Old_Files',
+			3 => 'Bad_Config_Files',
+			4 => 'WP_Config',
+			5 => 'DB_Prefix',
+			6 => 'Salt_Keys',
 		),
 		'sensitive-data' => array(
-			'Discloses',
-			'Readme_Discloses',
-			'PHP_Disclosure',
+			0 => 'Discloses',
+			1 => 'Readme_Discloses',
+			2 => 'PHP_Disclosure',
 		),
 		'file-system' => array(
-			'Chmods',
-			'Directory_Listing',
-			'Bad_File_Extensions',
+			0 => 'Chmods',
+			1 => 'Directory_Listing',
+			2 => 'Bad_File_Extensions',
+			3 => 'DirectoryIndex',
 		),
 		'firewall' => array(
-			'Shellshock',
-			'Bad_User_Agent',
-			'SQLi',
-			'Anti_Scanner',
-			'Anti_Front_Brute_Force',
-			'Bad_Request_Methods',
-			'Bad_Url_Access',
-			'PhpVersion',
+			0 => 'Shellshock',
+			1 => 'Bad_User_Agent',
+			2 => 'SQLi',
+			3 => 'Anti_Scanner',
+			4 => 'Anti_Front_Brute_Force',
+			5 => 'Bad_Request_Methods',
+			6 => 'Bad_Url_Access',
+			7 => 'PhpVersion',
 		),
 	);
 
 	if ( class_exists( 'SitePress' ) ) {
-		$tests['sensitive-data'][] = 'Wpml_Discloses';
+		$tests['sensitive-data'][3] = 'Wpml_Discloses';
 	}
 
 	if ( class_exists( 'WooCommerce' ) ) {
-		$tests['sensitive-data'][] = 'Woocommerce_Discloses';
+		$tests['sensitive-data'][4] = 'Woocommerce_Discloses';
 	}
 
-	return $tests;
+	return apply_filters( 'secupress.scanner.tests', $tests );
 }
 
 

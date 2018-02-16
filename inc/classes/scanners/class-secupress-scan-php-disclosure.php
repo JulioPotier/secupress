@@ -125,6 +125,13 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
+
+		$activated = secupress_filter_scanner( __CLASS__ );
+		if ( true === $activated ) {
+			$this->add_message( 0 );
+			return parent::scan();
+		}
+
 		// - http://osvdb.org/12184
 		$response = wp_remote_get( user_trailingslashit( home_url() ) . '?=PHPB8B5F2A0-3C92-11d3-A3A9-4C7B08C10000', $this->get_default_request_args() );
 
@@ -140,10 +147,6 @@ class SecuPress_Scan_PHP_Disclosure extends SecuPress_Scan implements SecuPress_
 					$this->add_pre_fix_message( 301 );
 				}
 			}
-		} elseif ( is_wp_error( $response ) ) {
-			// If it's not an error, then no disclosure.
-			// "warning".
-			$this->add_message( 100 );
 		}
 
 		// "good"
