@@ -168,9 +168,6 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 		if ( $has_response ) {
 			$powered_by = wp_remote_retrieve_header( $response, 'x-powered-by' );
 			$body       = wp_remote_retrieve_body( $response );
-		} else {
-			// "warning"
-			$this->add_message( 100 );
 		}
 
 		// WordPress version in generator meta tag. =========.
@@ -255,9 +252,6 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 		if ( $has_response ) {
 			$powered_by = wp_remote_retrieve_header( $response, 'x-powered-by' );
 			$body       = wp_remote_retrieve_body( $response );
-		} else {
-			// "warning"
-			$this->add_fix_message( 100 );
 		}
 
 		// WordPress version in generator meta tag. =========.

@@ -110,6 +110,7 @@ function secupress_get_scanners() {
 			0 => 'Chmods',
 			1 => 'Directory_Listing',
 			2 => 'Bad_File_Extensions',
+			3 => 'DirectoryIndex',
 		),
 		'firewall' => array(
 			0 => 'Shellshock',
