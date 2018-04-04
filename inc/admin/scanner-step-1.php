@@ -58,29 +58,20 @@ if ( $new_scans ) {
 				<?php
 				if ( $is_there_something_new && $scanned_items ) {
 					$page_title  = sprintf( __( 'Update %s: Discover the new security items to check', 'secupress' ), SECUPRESS_VERSION );
-					$main_button =
-					'<button class="secupress-button secupress-button-primary secupress-button-scan shadow" type="button" data-nonce="' . esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ) . '">
-						<span class="icon" aria-hidden="true">
-							<i class="secupress-icon-radar"></i>
-						</span>
-						<span class="text">' . __( 'Scan website', 'secupress' ) . '</span>
-					</button>';
 				} else {
 					$page_title  = __( 'List of the security items already analyzed', 'secupress' );
-					$main_button =
-					'<a href="' . secupress_admin_url( 'scanners' ) . '&step=2" class="secupress-button secupress-button-tertiary shadow">
-						<span class="icon">
-							<i class="secupress-icon-wrench" aria-hidden="true"></i>
-						</span>
-						<span class="text">' . __( 'Next step', 'secupress' ) . '</span>
-					</a>';
 				}
 				?>
 				<p class="secupress-step-title">
 					<?php echo $page_title; ?>
 				</p>
 				<p>
-					<?php echo $main_button; ?>
+					<a href="<?php echo secupress_admin_url( 'scanners' ); ?>&step=2" class="secupress-button secupress-button-tertiary shadow">
+						<span class="icon">
+							<i class="secupress-icon-wrench" aria-hidden="true"></i>
+						</span>
+						<span class="text"><?php _e( 'Next step', 'secupress' ); ?></span>
+					</a>
 				</p>
 			</div><!-- .secupress-step-content-header -->
 			<?php
