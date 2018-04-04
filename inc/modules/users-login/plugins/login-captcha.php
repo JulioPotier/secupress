@@ -134,11 +134,6 @@ function secupress_manage_captcha( $raw_user, $username ) {
 
 	$fallback_wp_error = new WP_Error( 'authentication_failed', __( '<strong>ERROR</strong>: The human verification is incorrect.', 'secupress' ), __FUNCTION__ );
 
-	if ( ! isset( $_POST['sp_name'] ) || '' !== $_POST['sp_name'] ) { // WPCS: CSRF ok.
-		$running = false;
-		return $fallback_wp_error;
-	}
-
 	$captcha_key  = isset( $_POST['captcha_key'] ) ? $_POST['captcha_key'] : null; // WPCS: CSRF ok.
 	$captcha_keys = get_site_option( 'secupress_captcha_keys', array() );
 
@@ -190,12 +185,6 @@ function secupress_manage_registration_captcha( $errors ) {
 
 	// Make sure to process only credentials provided by the registration form.
 	if ( ! isset( $_POST['user_login'], $_POST['user_email'] ) ) { // WPCS: CSRF ok.
-		$running = false;
-		return $errors;
-	}
-
-	if ( ! isset( $_POST['sp_name'] ) || '' !== $_POST['sp_name'] ) { // WPCS: CSRF ok.
-		$errors->add( 'authentication_failed', __( '<strong>ERROR</strong>: The human verification is incorrect.', 'secupress' ), __FUNCTION__ );
 		$running = false;
 		return $errors;
 	}
@@ -254,12 +243,6 @@ function secupress_manage_ms_registration_captcha( $result ) {
 
 	// Make sure to process only credentials provided by the registration form.
 	if ( ! isset( $_POST['user_name'], $_POST['user_email'], $_POST['stage'] ) || 'validate-user-signup' !== $_POST['stage'] ) { // WPCS: CSRF ok.
-		$running = false;
-		return $result;
-	}
-
-	if ( ! isset( $_POST['sp_name'] ) || '' !== $_POST['sp_name'] ) { // WPCS: CSRF ok.
-		$result['errors']->add( 'authentication_failed', __( '<strong>ERROR</strong>: The human verification is incorrect.', 'secupress' ), __FUNCTION__ );
 		$running = false;
 		return $result;
 	}
