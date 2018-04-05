@@ -65,7 +65,7 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 		'confirmText'         => __( 'OK', 'secupress' ),
 		'cancelText'          => __( 'Cancel' ),
 		'closeText'           => __( 'Close' ),
-		/**
+		/*
 		'authswal'     => array(
 			'title'  => __( 'Authentication', 'secupress' ),
 			'email'  => __( 'Enter your email', 'secupress' ),
@@ -287,7 +287,7 @@ add_action( ( is_multisite() ? 'network_' : '' ) . 'admin_menu', 'secupress_crea
  * @since 1.0
  */
 function secupress_create_menus() {
-	global $menu;
+	global $menu, $submenu;
 
 	// Add a counter of scans with bad result.
 	$count = sprintf( ' <span class="update-plugins count-%1$d"><span class="update-count">%1$d</span></span>', secupress_get_scanner_counts( 'bad' ) );
@@ -295,7 +295,7 @@ function secupress_create_menus() {
 	$icon  = secupress_wp_version_is( '3.8' ) ? 'dashicons-shield-alt' : '';
 
 	// Main menu item.
-	add_menu_page( SECUPRESS_PLUGIN_NAME, 'secupress', $cap, SECUPRESS_PLUGIN_SLUG . '_scanners', 'secupress_scanners', $icon );
+	add_menu_page( SECUPRESS_PLUGIN_NAME, SECUPRESS_PLUGIN_NAME, $cap, SECUPRESS_PLUGIN_SLUG . '_scanners', 'secupress_scanners', $icon );
 
 	// Sub-menus.
 	add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ) . $count, $cap, SECUPRESS_PLUGIN_SLUG . '_scanners', 'secupress_scanners' );
@@ -307,7 +307,7 @@ function secupress_create_menus() {
 			add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Support', 'secupress' ), __( 'Support', 'secupress' ), $cap, SECUPRESS_PLUGIN_SLUG . '_modules&module=services', '__return_false' );
 		}
 		if ( ! secupress_is_pro() ) {
-			add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'PRO Version', 'secupress' ), __( 'PRO Version', 'secupress' ), $cap, SECUPRESS_PLUGIN_SLUG . '_modules&module=get-pro', '__return_false' );
+			add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'More Security', 'secupress' ), __( 'More Security', 'secupress' ), $cap, '__return_false', '__return_false' );
 		}
 	}
 
@@ -315,6 +315,13 @@ function secupress_create_menus() {
 	end( $menu );
 	$key = key( $menu );
 	$menu[ $key ][0] = SECUPRESS_PLUGIN_NAME . $count;
+	
+	// Fix `add_submenu_page()` URL.
+	if ( ! secupress_is_white_label() && ! secupress_is_pro() ) {
+		end( $submenu );
+		$key = key( $submenu );
+		$submenu[ $key ][ count( $submenu[ $key ] )-1 ] = array( __( 'More Security', 'secupress' ), $cap, __( 'https://secupress.me/pricing/?from=secupress-plugin', 'secupress' ), __( 'More Security', 'secupress' ) );
+	}
 }
 
 
