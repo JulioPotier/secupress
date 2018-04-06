@@ -1220,93 +1220,149 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 */
 	protected function print_sideads() {
 		global $current_screen;
-
-		if ( secupress_is_pro() ) {
+		
+		if ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' !== $current_screen->base ) {
+			return;
+		}
+		if ( false !== apply_filters( 'secupress_no_sidebar_at_all', false ) ) {
 			return;
 		}
 
-		$rk_offer = '20%';
-		$rk_code  = 'SECUPRESS20';
-		$rk_url   = 'https://wp-rocket.me/?utm_source=secupress&utm_campaign=sidebar&utm_medium=plugin';
+		?>
+		<div class="secupress-sideads">
+		<?php 
+		if ( false === apply_filters( 'secupress_no_sideads', false ) ) { // Filter secupress_no_sideads.
 
-		$im_offer = __( '100MB', 'secupress' );
-		$im_url   = 'http://app.imagify.io/p/secupress/?utm_source=secupress&utm_campaign=sidebar&utm_medium=plugin';
+			$sideads = get_transient( 'secupress_sideads' );
+
+			if ( false === $sideads ) {
+				$response = wp_remote_get( SECUPRESS_WEB_MAIN . 'api/plugin/sideads/1.0/?lang=' . get_locale() );
+
+				if ( ! is_wp_error( $response ) && wp_remote_retrieve_response_code( $response ) === 200 ) {
+					$sideads = wp_remote_retrieve_body( $response );
+					$sideads = json_decode( $sideads, true );
+					set_transient( 'secupress_sideads', $sideads, DAY_IN_SECONDS );
+				}
+			}
+
+			if ( ! $sideads ) {
+				$sideads = array( 0 => array( 
+											'hook'    => 'secupress_ad_before',
+											'when'    => 'free', // For free || pro || both .
+											'content' => '<div class="secupress-section-dark secupress-pro-ad"> <i class="icon-secupress" aria-hidden="true"></i> <img src="##SECUPRESS_ADMIN_IMAGES_URL##logo-pro.png" class="secupress-pro-icon" srcset="##SECUPRESS_ADMIN_IMAGES_URL##logo-pro@2x.png" width="80" height="78" alt="SecuPress Pro"/> <p class="secupress-text-medium">Improve your Security</p> <p>Unlock all the features of SecuPress Pro</p> <a href="https://secupress.me/pricing/" class="secupress-button secupress-button-tertiary"> <span class="text">Get Pro Version</span> </a> <p><a href="https://secupress.me/features">Learn More About Pro Features</a></p> </div>',
+											),
+									//<div class="secupress-product-ads"> <a href="http://www.o2switch.fr/" target="_blank"> <img src="https://boiteaweb.fr/wp-content/uploads/plugins/ad-o2switch.jpg" width="280"/> </a> </div>
+				);
+			}
+
+			
+			foreach ( $sideads as $sidead ) {
+				if ( 'secupress_ad_before' != $sidead['hook'] ) {
+					continue;
+				}
+				if ( ( 'free' == $sidead['when'] && ! secupress_is_pro() )
+					|| ( 'pro' == $sidead['when'] && secupress_is_pro() )
+					|| 'both' == $sidead['when']
+				 ) {
+					echo wp_kses_post( str_replace( '##SECUPRESS_ADMIN_IMAGES_URL##', SECUPRESS_ADMIN_IMAGES_URL, $sidead['content'] ) );
+				}
+			}
+			do_action( 'secupress_ad_before' ); 
+
+		}
 		?>
 
-		<div class="secupress-sideads">
-			<?php if ( empty( $current_screen ) || 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' !== $current_screen->base || empty( $_GET['module'] ) || 'get-pro' !== $_GET['module'] ) { ?>
-				<div class="secupress-section-dark secupress-pro-ad">
-
-					<i class="icon-secupress" aria-hidden="true"></i>
-
-					<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-pro.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-pro@2x.png" width="80" height="78" alt="SecuPress Pro"/>
-
-					<p class="secupress-text-medium"><?php _e( 'Improve your Security', 'secupress' ); ?></p>
-					<p><?php _e( 'Unlock all the features of SecuPress Pro', 'secupress' ); ?></p>
-					<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ); ?>" class="secupress-button secupress-button-tertiary secupress-button-getpro">
-						<span class="icon">
-							<i class="icon-secupress-simple" aria-hidden="true"></i>
-						</span>
-						<span class="text"><?php _ex( 'Get Pro', 'short', 'secupress' ); ?></span>
-					</a>
-				</div>
-			<?php } ?>
-
-			<div class="secupress-bordered secupress-mail-ad">
-				<div class="secupress-ad-header secupress-flex">
-					<span><i class="dashicons dashicons-email secupress-primary" aria-hidden="true"></i></span>
-					<p><?php _e( 'Join our mailing list', 'secupress' ); ?></p>
-				</div>
-				<div class="secupress-ad-content">
-					<p><label for="mce-EMAIL"><?php _e( 'Get security alerts and news from SecuPress.', 'secupress' ) ?></label></p>
-
-					<form action="https://secupress.us13.list-manage.com/subscribe/post?u=67a6053e2542ab4330a851904&amp;id=2eecd4aed8" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
-						<p>
-							<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="<?php esc_attr_e( 'Email address', 'secupress' ); ?>" required="required"/>
-						</p>
-
-						<!-- Real people should not fill this in and expect good things - do not remove this or risk form bot signups. -->
-						<div style="position:absolute;left:-9999em" aria-hidden="true"><input type="text" name="b_67a6053e2542ab4330a851904_2eecd4aed8" tabindex="-1" value=""/></div>
-
-						<p>
-							<button type="submit" name="subscribe" class="secupress-button secupress-button-primary"><?php _e( 'Stay tuned for more', 'secupress' ); ?></button>
-						</p>
-					</form>
-				</div>
+		<div class="secupress-bordered secupress-mail-ad">
+			<div class="secupress-ad-header secupress-flex">
+				<span><i class="dashicons dashicons-plus-alt secupress-primary" aria-hidden="true"></i></span>
+				<p><?php _e( 'Hacked Website?', 'secupress' ); ?></p>
 			</div>
+			<div class="secupress-ad-content-padded secupress-ad-content">
+				<p><?php _e( 'Well, this is not a good day for you, we will try to make you smile while we’re working on it!.', 'secupress' ) ?></p>
 
-			<?php if ( ! defined( 'WP_ROCKET_VERSION' ) ) { ?>
-
-			<div class="secupress-wprocket-ad secupress-product-ads">
-				<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-wprocket.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-wprocket@2x.png 2x" alt="WP Rocket" width="110" height="30"/>
-
-				<p class="secupress-catch"><?php _e( 'Speed up your website with WP Rocket', 'secupress' ); ?></p>
-				<p><?php printf( __( 'Get <span>%1$s OFF</span> with this coupon code: %2$s', 'secupress' ), $rk_offer, '<span class="secupress-coupon">' . $rk_code . '</span>' ); ?></p>
-
-				<p class="secupress-cta">
-					<a href="<?php echo esc_url( $rk_url ); ?>" class="secupress-button" target="_blank"><?php printf( __( 'Get %s OFF', 'secupress' ), $rk_offer ); ?></a>
-				</p>
+			<p class="secupress-cta">
+				<a href="https://secupress.me/<?php _e( 'pricing', 'secupress' ); ?>#services" class="secupress-button" target="_blank"><?php _e( 'Ask an Expert', 'secupress' ); ?></a>
+			</p>
 			</div>
-
-			<?php } ?>
-
-			<?php if ( ! defined( 'IMAGIFY_VERSION' ) ) { ?>
-
-			<div class="secupress-imagify-ad secupress-product-ads">
-				<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-imagify.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-imagify@2x.png 2x" alt="Imagify" width="123" height="15"/>
-
-				<p class="secupress-catch"><?php _e( 'Speed Up your website with lighter images', 'secupress' ); ?></p>
-				<p><?php printf( __( 'For each new account, get <span>%s Free</span>.', 'secupress' ), $im_offer ); ?></p>
-
-				<p class="secupress-cta">
-					<a href="<?php echo esc_url( $im_url ); ?>" class="secupress-button" target="_blank"><?php printf( __( 'Get %s Free', 'secupress' ), $im_offer ); ?></a>
-				</p>
-			</div>
-
-			<?php } ?>
-
 		</div>
-		<?php
+
+		<div class="secupress-bordered secupress-mail-ad">
+			<div class="secupress-ad-header secupress-flex">
+				<span><i class="dashicons dashicons-businessman secupress-primary" aria-hidden="true"></i></span>
+				<p><?php _e( 'Pro Config', 'secupress' ); ?></p>
+			</div>
+			<div class="secupress-ad-content-padded secupress-ad-content">
+				<p><?php _e( 'Need an Expert to Set-Up SecuPress for You?.', 'secupress' ) ?></p>
+
+			<p class="secupress-cta">
+				<a href="https://secupress.me/<?php _e( 'pricing', 'secupress' ); ?>#services" class="secupress-button" target="_blank"><?php _e( 'Ask an Expert', 'secupress' ); ?></a>
+			</p>
+			</div>
+		</div>
+
+		<p><hr></p>
+
+		<div class="secupress-bordered secupress-mail-ad">
+			<div class="secupress-ad-header secupress-flex">
+				<span><i class="dashicons dashicons-editor-help secupress-primary" aria-hidden="true"></i></span>
+				<p><?php _e( 'FAQ', 'secupress' ); ?></p>
+			</div>
+			<div class="secupress-ad-content-padded secupress-ad-content">
+				<p><?php _e( 'All the answers to your questions.', 'secupress' ) ?></p>
+
+			<p class="secupress-cta">
+				<a href="https://secupress.me/<?php _e( 'faq', 'secupress' ); ?>" class="secupress-button" target="_blank"><?php _e( 'Read the FAQ', 'secupress' ); ?></a>
+			</p>
+			</div>
+		</div>
+
+		<div class="secupress-bordered secupress-mail-ad">
+			<div class="secupress-ad-header secupress-flex">
+				<span><i class="dashicons dashicons-book secupress-primary" aria-hidden="true"></i></span>
+				<p><?php _e( 'Documentation', 'secupress' ); ?></p>
+			</div>
+			<div class="secupress-ad-content-padded secupress-ad-content">
+				<p><?php _e( 'We already have some solutions for you.', 'secupress' ) ?></p>
+
+			<p class="secupress-cta">
+				<a href="<?php _e( 'http://docs.secupress.me/', 'secupress' ); ?>" class="secupress-button" target="_blank"><?php _e( 'Read the docs', 'secupress' ); ?></a>
+			</p>
+			</div>
+		</div>
+
+		<div class="secupress-bordered secupress-mail-ad">
+			<div class="secupress-ad-header secupress-flex">
+				<span><i class="dashicons dashicons-sos secupress-primary" aria-hidden="true"></i></span>
+				<p><?php _e( 'Support', 'secupress' ); ?></p>
+			</div>
+			<div class="secupress-ad-content-padded secupress-ad-content">
+				<p><?php _e( 'Got an issue? Ask for support.', 'secupress' ) ?></p>
+
+			<p class="secupress-cta">
+				<a href="https://secupress.me/<?php _e( 'support', 'secupress' ); ?>" class="secupress-button" target="_blank"><?php _e( 'Read the FAQ', 'secupress' ); ?></a>
+			</p>
+			</div>
+		</div>
+
+		<?php 
+		if ( false === apply_filters( 'secupress_no_sideads', false ) ) { // Filter secupress_no_sideads.
+			foreach ( $sideads as $sidead ) {
+				if ( 'secupress_ad_after' != $sidead['hook'] ) {
+					continue;
+				}
+				if ( ( 'free' == $sidead['when'] && ! secupress_is_pro() )
+					|| ( 'pro' == $sidead['when'] && secupress_is_pro() )
+					|| 'both' == $sidead['when']
+				 ) {
+					echo wp_kses_post( str_replace( '##SECUPRESS_ADMIN_IMAGES_URL##', SECUPRESS_ADMIN_IMAGES_URL, $sidead['content'] ) );
+				}
+			}
+			do_action( 'secupress_ad_after' ); 
+		}
+		?>
+
+	</div>
+	<?php
 	}
 
 
