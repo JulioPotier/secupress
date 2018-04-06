@@ -1224,6 +1224,13 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		if ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' !== $current_screen->base ) {
 			return;
 		}
+		/**
+		 * Give the possibility to hide the whole sidebar, don't do that!! ><
+		 *
+		 * @since 1.4
+		 *
+		 * @param (bool) false by default
+		 */
 		if ( false !== apply_filters( 'secupress.no_sidebar', false ) ) {
 			return;
 		}
@@ -1231,6 +1238,13 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		?>
 		<div class="secupress-sideads">
 		<?php 
+		/**
+		 * Give the possibility to hide the ads sidebar, ok you can do that.
+		 *
+		 * @since 1.4
+		 *
+		 * @param (bool) false by default
+		 */
 		if ( false === apply_filters( 'secupress.no_sideads', false ) ) { // Filter secupress_no_sideads.
 
 			$sideads = get_transient( 'secupress_sideads' );
@@ -1267,6 +1281,13 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					echo wp_kses_post( str_replace( '##SECUPRESS_ADMIN_IMAGES_URL##', SECUPRESS_ADMIN_IMAGES_URL, $sidead['content'] ) );
 				}
 			}
+
+			/**
+			 * Triggered before the tool boxes
+			 *
+			 * @since 1.4
+			 *
+			 */
 			do_action( 'secupress.ad_before' ); 
 
 		}
@@ -1345,6 +1366,9 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		</div>
 
 		<?php 
+		/**
+		 * This hook is defined in class-secupress-settings.php
+		 */
 		if ( false === apply_filters( 'secupress.no_sideads', false ) ) { // Filter secupress_no_sideads.
 			foreach ( $sideads as $sidead ) {
 				if ( 'secupress_ad_after' != $sidead['hook'] ) {
@@ -1357,6 +1381,12 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					echo wp_kses_post( str_replace( '##SECUPRESS_ADMIN_IMAGES_URL##', SECUPRESS_ADMIN_IMAGES_URL, $sidead['content'] ) );
 				}
 			}
+			/**
+			 * Triggered after the tool boxes
+			 *
+			 * @since 1.4
+			 *
+			 */
 			do_action( 'secupress.ad_after' ); 
 		}
 		?>
