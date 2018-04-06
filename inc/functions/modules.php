@@ -589,12 +589,14 @@ function secupress_remove_module_rules_or_notice( $marker, $module_name ) {
 		$message  = sprintf( __( '%s:', 'secupress' ), $module_name ) . ' ';
 		$message .= sprintf(
 			/** Translators: 1 and 2 are small parts of code, 3 is a file name. */
-			__( 'Your server runs <strong>Ngnix</strong>. You have to edit the configuration file manually. Please remove all rules between %1$s and %2$s from the %3$s file.', 'secupress' ),
+			__( 'Your server runs <strong>Nginx</strong>. You have to edit the configuration file manually. Please remove all rules between %1$s and %2$s from the %3$s file.', 'secupress' ),
 			"<code># BEGIN SecuPress $marker</code>",
 			'<code># END SecuPress</code>',
 			'<code>nginx.conf</code>'
 		);
-		secupress_add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
+		if ( apply_filters( 'secupress.nginx.notice', true ) ) {
+			secupress_add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
+		}
 		return false;
 	}
 
@@ -697,17 +699,19 @@ function secupress_add_module_rules_or_notice( $args ) {
 		$message  = sprintf( __( '%s:', 'secupress' ), $title ) . ' ';
 		$message .= sprintf(
 			/** Translators: 1 is a file name, 2 is some code */
-			__( 'Your server runs <strong>Ngnix</strong>. You have to edit the configuration file manually. Please add the following code to your %1$s file: %2$s', 'secupress' ),
+			__( 'Your server runs <strong>Nginx</strong>. You have to edit the configuration file manually. Please add the following code to your %1$s file: %2$s', 'secupress' ),
 			'<code>nginx.conf</code>',
 			"<pre>$rules</pre>"
 		);
-		secupress_add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
+		if ( apply_filters( 'secupress.nginx.notice', true ) ) {
+			secupress_add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
+		}
 		return false;
 	}
 
 	// Server not supported.
 	$message  = sprintf( __( '%s:', 'secupress' ), $title ) . ' ';
-	$message .= __( 'It seems your server does not use <strong>Apache</strong>, <strong>Ngnix</strong>, nor <strong>IIS7</strong>. This module won\'t work.', 'secupress' );
+	$message .= __( 'It seems your server does not use <strong>Apache</strong>, <strong>Nginx</strong>, nor <strong>IIS7</strong>. This module won\'t work.', 'secupress' );
 	secupress_add_settings_error( 'general', 'unknown_os', $message, 'error' );
 	return false;
 }
