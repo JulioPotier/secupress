@@ -1224,14 +1224,14 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		if ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' !== $current_screen->base ) {
 			return;
 		}
-		if ( false !== apply_filters( 'secupress_no_sidebar_at_all', false ) ) {
+		if ( false !== apply_filters( 'secupress.no_sidebar', false ) ) {
 			return;
 		}
 
 		?>
 		<div class="secupress-sideads">
 		<?php 
-		if ( false === apply_filters( 'secupress_no_sideads', false ) ) { // Filter secupress_no_sideads.
+		if ( false === apply_filters( 'secupress.no_sideads', false ) ) { // Filter secupress_no_sideads.
 
 			$sideads = get_transient( 'secupress_sideads' );
 
@@ -1267,7 +1267,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					echo wp_kses_post( str_replace( '##SECUPRESS_ADMIN_IMAGES_URL##', SECUPRESS_ADMIN_IMAGES_URL, $sidead['content'] ) );
 				}
 			}
-			do_action( 'secupress_ad_before' ); 
+			do_action( 'secupress.ad_before' ); 
 
 		}
 		?>
@@ -1345,7 +1345,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		</div>
 
 		<?php 
-		if ( false === apply_filters( 'secupress_no_sideads', false ) ) { // Filter secupress_no_sideads.
+		if ( false === apply_filters( 'secupress.no_sideads', false ) ) { // Filter secupress_no_sideads.
 			foreach ( $sideads as $sidead ) {
 				if ( 'secupress_ad_after' != $sidead['hook'] ) {
 					continue;
@@ -1357,7 +1357,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					echo wp_kses_post( str_replace( '##SECUPRESS_ADMIN_IMAGES_URL##', SECUPRESS_ADMIN_IMAGES_URL, $sidead['content'] ) );
 				}
 			}
-			do_action( 'secupress_ad_after' ); 
+			do_action( 'secupress.ad_after' ); 
 		}
 		?>
 
