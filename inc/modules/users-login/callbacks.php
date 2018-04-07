@@ -243,7 +243,7 @@ function secupress_move_login_settings_callback( $modulenow, &$settings, $activa
 	}
 
 	// Access to `wp-login.php`.
-	$settings['move-login_login-access'] = sanitize_text_field( $settings['move-login_login-access'] );
+	$settings['move-login_login-access'] = isset( $settings['move-login_login-access'] ) ? sanitize_text_field( $settings['move-login_login-access'] ) : '';
 
 	// Handle validation errors.
 	$errors['forbidden']  = array_unique( $errors['forbidden'] );
