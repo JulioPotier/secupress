@@ -909,6 +909,10 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$args['name'] = $args['label_for'];
 		}
 
+		if ( false !== apply_filters( 'secupress.settings.field.' . $args['name'], false ) ) {
+			return;
+		}
+
 		// Get the title.
 		$title = $args['title'];
 		unset( $args['title'] );
