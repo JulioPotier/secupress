@@ -263,6 +263,10 @@
 	text-align: center;
 	color: rgba(255, 255, 255, 0.25);
 }
+.secupress-pro-icon {
+	-webkit-filter: drop-shadow( 0px 0px 10px #F19B12);
+	filter: drop-shadow( 0px 0px 10px #F19B12);
+}
 
 /* Buttons container */
 .secupress-actions-line {
@@ -1119,9 +1123,12 @@ label.secupress-setting-row-title {
 	font-size: 2em;
 	vertical-align: -5px;
 }
-.secupress-ad-content {
+.secupress-ad-content-padded {
 	padding: 20px 25px 18px;
+}
+.secupress-ad-content {
 	background: #FFF;
+	line-height: 0;
 }
 .secupress-ad-content > :first-child {
 	margin-top: 0;
@@ -1165,7 +1172,7 @@ label.secupress-setting-row-title {
 	letter-spacing: 0.1em;
 	text-shadow: 0 0 3px rgba(0,0,0,.15);
 }
-.secupress-product-ads {
+.secupress-product-ads-padded {
 	padding: 25px 25px 10px;
 }
 .secupress-product-ads p {
