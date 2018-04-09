@@ -90,6 +90,7 @@ function secupress_bad_contents_settings_callback( $modulenow, &$settings, $acti
 		secupress_manage_submodule( $modulenow, 'bad-url-contents', ! empty( $activate['bbq-url-content_bad-contents'] ) );
 		secupress_manage_submodule( $modulenow, 'bad-url-length', ! empty( $activate['bbq-url-content_bad-url-length'] ) );
 		secupress_manage_submodule( $modulenow, 'bad-sqli-scan', ! empty( $activate['bbq-url-content_bad-sqli-scan'] ) );
+		secupress_manage_submodule( $modulenow, 'ban-404-php', ! empty( $activate['bbq-url-content_ban-404-php'] ) );
 	}
 
 	// Settings.
