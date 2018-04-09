@@ -794,6 +794,17 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @return (object) The class instance.
 	 */
 	final protected function load_plugin_settings( $plugin ) {
+		/**
+		 * Give the possibility to hide a full block of options
+		 *
+		 * @since 1.4
+		 *
+		 * @param (bool) false by default
+		 */
+
+		if ( false !== apply_filters( 'secupress.settings.load_plugin.' . $plugin, false ) ) {
+			return;
+		}
 		$plugin_file = SECUPRESS_MODULES_PATH . $this->modulenow . '/settings/' . $plugin . '.php';
 
 		return $this->require_settings_file( $plugin_file, $plugin );
