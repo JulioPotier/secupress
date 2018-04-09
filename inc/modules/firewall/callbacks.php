@@ -59,6 +59,7 @@ function secupress_bad_headers_settings_callback( $modulenow, &$settings, $activ
 	if ( false !== $activate ) {
 		secupress_manage_submodule( $modulenow, 'user-agents-header', ! empty( $activate['bbq-headers_user-agents-header'] ) );
 		secupress_manage_submodule( $modulenow, 'request-methods-header', ! empty( $activate['bbq-headers_request-methods-header'] ) );
+		secupress_manage_submodule( $modulenow, 'fake-google-bots', ! empty( $activate['bbq-headers_fake-google-bots'] ) );
 	}
 
 	// Settings.
