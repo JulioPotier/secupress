@@ -156,7 +156,7 @@ Yes, SecuPress is compatible with all WordPress caching plugins. If you encounte
 
 Yes, SecuPress is compatible with all multilingual WordPress plugins. If you have an issue, please get in touch with us and let us know!
 
-= Is SecuPress compatible with all server engines like Apache, Ngnix, IIS7? =
+= Is SecuPress compatible with all server engines like Apache, Nginx, IIS7? =
 
 Yes, SecuPress is compatible with all server engines. If you encounter an issue, do not hesitate to contact our support team.
 
@@ -195,7 +195,7 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 * 02 august 2017
 * Improvement #512: Remove the recovery email notice, you won't need to fill this anymore
-* Improvement #507: Lighter Move Login module with less options, no .htaccess/web.config/ngnix.conf modifications but more decisions and less bugs instead of endless bugs.
+* Improvement #507: Lighter Move Login module with less options, no .htaccess/web.config/nginx.conf modifications but more decisions and less bugs instead of endless bugs.
 * Improvement #506: Remove the scan and fix for empty user agent (not efficient enough in 2017, too much false positive)
 * Improvement #505: Remove the scan and fix for too long URLs (not efficient enough in 2017, too much false positive)
 * Improvement #488: New bad user agent (Gecko/2009032609 Firefox), thanks to Fabrice from wpformation.com
@@ -320,9 +320,9 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 * 07 november 2016
 * Improvement #258: Remove the blog_id and website URL in the new salt keys to avoid having to log in on each website on a multisite, was just annoying.
 * Improvement #259: Better hook usage to allow any cache plugin (like WP Rocket of course) to ignore login page.
-* Improvement #195: Better Move Login rules on Ngnix. And better rules in general for all modules.
+* Improvement #195: Better Move Login rules on Nginx. And better rules in general for all modules.
 * Fix #262: Some firewall sub-modules are not working in front-end, the functions were not in the right file :|
-* Fix #252: X-Powered by header was not hidden on Ngnix. Ngnix my friend…
+* Fix #252: X-Powered by header was not hidden on Nginx.
 * Fix #250: WPML still appeared as a "bad plugin removed from repo", well, the whitelist filter was not used.
 
 = 1.1.2 =
