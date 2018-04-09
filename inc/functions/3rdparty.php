@@ -143,3 +143,17 @@ function secupress_3rd_compat__wordpress_2_step_verification( $activated ) {
 	}
 	return $activated;
 }
+
+/* wpserveur.net */
+// Auto approve those rules (already done by their own nginx rules provided from us)
+add_filter( 'secupress.pre_scan.SecuPress_Scan_Bad_File_Extensions', '__return_true' );
+add_filter( 'secupress.pre_scan.SecuPress_Scan_Bad_Url_Access', '__return_true' );
+add_filter( 'secupress.pre_scan.SecuPress_Scan_Directory_Listing', '__return_true' );
+add_filter( 'secupress.pre_scan.SecuPress_Scan_Discloses', '__return_true' );
+add_filter( 'secupress.pre_scan.SecuPress_Scan_PHP_Disclosure', '__return_true' );
+add_filter( 'secupress.pre_scan.SecuPress_Scan_Readme_Discloses', '__return_true' );
+
+/* o2switch.net */
+// Remove the textarea fields since they are already protecting it, leading our page to be caught
+add_filter( 'secupress.settings.field.bbq-headers_user-agents-list', '__return_null' );
+add_filter( 'secupress.settings.field.bbq-url-content_bad-contents-list', '__return_null' );
