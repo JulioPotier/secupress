@@ -121,6 +121,7 @@ function secupress_get_scanners() {
 			'Bad_Request_Methods',
 			'Bad_Url_Access',
 			'PhpVersion',
+			'Php_404',
 		),
 	);
 
