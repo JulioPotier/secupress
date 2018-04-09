@@ -227,3 +227,21 @@ function secupress_fallback_slug_redirect() {
 		die();
 	}
 }
+
+add_filter( 'register_url', 'secupress_register_url_redirect' );
+/**
+ * Fordib the redirection on the registration URL if not logged-in, you have to know the correct new page
+ *
+ * @since 1.4
+ * @return (string) $url
+ * @author Julio Potier
+ **/
+function secupress_register_url_redirect( $url ) {
+	if ( ! is_user_logged_in() ) {
+		remove_filter( 'register_url', 'secupress_register_url' );
+		if ( wp_registration_url() == $url ) {
+			secupress_move_login_deny_login_access();
+		}
+	}
+	return $url;
+}
