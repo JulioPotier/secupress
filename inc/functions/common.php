@@ -697,7 +697,14 @@ function secupress_get_email( $from_header = false ) {
 		$sitename = substr( $sitename, 4 );
 	}
 
-	$email = 'noreply@' . $sitename;
+	/**
+	 * Give the possibility to replace the "from" email address
+	 *
+	 * @since 1.4
+	 *
+	 * @param (string) noreply@sitename by default@
+	 */
+	$email = apply_filters( 'secupress.get_email', 'noreply@' . $sitename );
 
 	return $from_header ? 'from: ' . SECUPRESS_PLUGIN_NAME . ' <' . $email . '>' : $email;
 }
