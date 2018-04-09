@@ -186,10 +186,11 @@ function secupress_move_login_maybe_deny_login_redirect( $location ) {
 	);
 }
 
-add_action( 'template_redirect', 'secupress_fallback_slug_redirect', 0 );
+add_action( 'wp', 'secupress_fallback_slug_redirect', 0 );
 /**
  * Will include the wp-loing.php file/template if the URL triggers the new slug
  *
+ * @since 1.4 on "wp" hook instead of "template_redirect" because of many "404 management" plugins.
  * @since 1.3.1
  * @author Julio Potier
  **/
