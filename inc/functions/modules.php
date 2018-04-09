@@ -210,19 +210,6 @@ function secupress_get_modules() {
 			),
 		);
 
-		if ( $should_be_pro ) {
-			$modules['get-pro'] = array(
-				'title'       => __( 'Get Pro', 'secupress' ),
-				'icon'        => 'secupress',
-				'summaries'   => array(
-					'small'  => __( 'Do more with the Pro version', 'secupress' ),
-					'normal' => __( 'Access more modules and options to automate the security of your website.', 'secupress' ),
-				),
-				'description' => array(
-					__( 'Access more modules and options to automate the security of your website.', 'secupress' ),
-				),
-			);
-		}
 	}
 
 	return $modules;

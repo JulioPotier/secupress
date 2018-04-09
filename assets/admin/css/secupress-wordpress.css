@@ -407,8 +407,10 @@ i.bold {
 	font-family: 'secupress';
 	content: "\e907";
 }
-#adminmenu .wp-submenu a[href$="secupress_modules&module=get-pro"] {
+#adminmenu .wp-submenu a[href*="secupress.me"] {
 	color: #F7AB13;
+	target-name:new;
+	target-new:tab;
 }
 
 /* Font sizes */
