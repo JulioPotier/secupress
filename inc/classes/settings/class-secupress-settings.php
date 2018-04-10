@@ -1314,7 +1314,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				<p><?php _e( 'Hacked Website?', 'secupress' ); ?></p>
 			</div>
 			<div class="secupress-ad-content-padded secupress-ad-content">
-				<p><?php _e( 'Well, this is not a good day for you, we will try to make you smile while we’re working on it!.', 'secupress' ) ?></p>
+				<p><?php _e( 'Well, this is not a good day for you, we will try to make you smile while we’re working on it!', 'secupress' ) ?></p>
 
 			<p class="secupress-cta">
 				<a href="https://secupress.me/<?php _e( 'pricing', 'secupress' ); ?>#services" class="secupress-button" target="_blank"><?php _e( 'Ask an Expert', 'secupress' ); ?></a>
