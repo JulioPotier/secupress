@@ -145,7 +145,7 @@ function secupress_get_modules() {
 		),
 		'alerts'          => array(
 			'title'       => __( 'Alerts', 'secupress' ),
-			'icon'        => 'information',
+			'icon'        => 'services',
 			'summaries'   => array(
 				'small'  => __( 'React quickly in case of attack', 'secupress' ),
 				'normal' => __( 'Being alerted of some important events will help you to react quickly in case of possible attacks.', 'secupress' ),
@@ -199,14 +199,14 @@ function secupress_get_modules() {
 
 	if ( function_exists( 'secupress_is_white_label' ) && ! secupress_is_white_label() ) {
 		$modules['services'] = array(
-			'title'       => __( 'Services', 'secupress' ),
-			'icon'        => 'services',
+			'title'       => __( 'Support', 'secupress' ),
+			'icon'        => 'information',
 			'summaries'   => array(
-				'small'  => __( 'Post Hack & Pro Configuration', 'secupress' ),
-				'normal' => sprintf( __( 'Let us configure %s on your site and benefit from our expertise. Get help from our experts. This page contains our services designed to help you with the plugin.', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
+				'small'  => __( 'Get support from our team', 'secupress' ),
+				'normal' => __( 'Need help? Don’t hesitate to ask for support here.', 'secupress' ),
 			),
 			'description' => array(
-				sprintf( __( 'Let us configure %s on your site and benefit from our expertise. Get help from our experts. This page contains our services designed to help you with the plugin.', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
+				__( 'Need help? Don’t hesitate to ask for support here.', 'secupress' ),
 			),
 		);
 
