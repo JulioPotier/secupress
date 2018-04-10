@@ -39,7 +39,7 @@ class SecuPress_Scan_Php_404 extends SecuPress_Scan implements SecuPress_Scan_In
 	 */
 	protected function init() {
 		$this->title = __( 'Check if your site is allowing 404 on PHP files.', 'secupress' );
-		$this->more  = __( 'Do not let attackers to find hidden PHP files by guessing them, ban the attackers!.', 'secupress' );
+		$this->more  = __( 'Do not let attackers find hidden PHP files by guessing it, ban them!', 'secupress' );
 		$this->more_fix = sprintf(
 			__( 'Activate the option %1$s in the %2$s module.', 'secupress' ),
 			'<em>' . __( 'Ban 404 on .php', 'secupress' ) . '</em>',
