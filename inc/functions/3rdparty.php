@@ -157,7 +157,7 @@ if ( defined( 'IS_WPSERVEUR' ) && IS_WPSERVEUR ) {
 
 /* o2switch.net */
 // Remove the textarea fields since they are already protecting it, leading our page to be caught
-if ( defined( 'IS_O2SWITCH' ) && IS_O2SWITCH ) {
+if ( isset( $_SERVER['SERVER_ADDR'] ) && 0 === strpos( $_SERVER['SERVER_ADDR'], '109.234.' ) ) {
 	add_filter( 'secupress.settings.field.bbq-headers_user-agents-list',      '__return_null' );
 	add_filter( 'secupress.settings.field.bbq-url-content_bad-contents-list', '__return_null' );
 }
