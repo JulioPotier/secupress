@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2018-04-10 23:40+0200\n"
-"PO-Revision-Date: 2018-04-10 23:43+0200\n"
+"POT-Creation-Date: 2018-04-10 23:55+0200\n"
+"PO-Revision-Date: 2018-04-10 23:55+0200\n"
 "Last-Translator: WP Media <contact@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -1090,7 +1090,7 @@ msgstr "Planifiez vos analyses récurrentes"
 msgid "Get a better score and unlock all features"
 msgstr "Obtenez une meilleure note et débloquez toutes les fonctionnalités"
 
-#: inc/admin/scanner-step-4.php:343 inc/modules/welcome/settings.php:75
+#: inc/admin/scanner-step-4.php:343 inc/modules/welcome/settings.php:56
 msgid "Get Pro"
 msgstr "Passer à la version PRO"
 
@@ -8059,8 +8059,8 @@ msgid "For all users."
 msgstr "Pour tous les utilisateurs."
 
 #: inc/modules/welcome/settings.php:19
-msgid "Secure your website more thoroughly thanks to our dedicated modules"
-msgstr "Sécuriser votre site plus profondément grâce à nos modules dédiés"
+msgid "Secure your website with to our dedicated modules"
+msgstr "Sécuriser votre site grâce à nos modules dédiés"
 
 #: inc/modules/welcome/settings.php:20
 msgid ""
@@ -8070,40 +8070,25 @@ msgstr ""
 "Anti Virus, Pare-Feu, ou Anti Spam : Ajouter des fonctionnalités, planifiez "
 "des scans et protégez vos données."
 
-#: inc/modules/welcome/settings.php:34 inc/modules/welcome/settings.php:57
-#, php-format
-msgid "%d option available"
-msgid_plural "%d options available"
-msgstr[0] "%d option disponible"
-msgstr[1] "%d options disponibles"
-
-#: inc/modules/welcome/settings.php:35
-msgid ""
-"The scanner is able to activate some options, feel free to check the "
-"module's options for more."
-msgstr ""
-"Le scanner peut activer des options, sentez vous libre de vérifier dans les "
-"options du module pour en savoir plus."
-
-#: inc/modules/welcome/settings.php:40 inc/modules/welcome/settings.php:57
+#: inc/modules/welcome/settings.php:38
 #, php-format
 msgid "%d free option available"
 msgid_plural "%d free options available"
 msgstr[0] "%d option gratuite disponible"
 msgstr[1] "%d options gratuites disponibles"
 
-#: inc/modules/welcome/settings.php:41
+#: inc/modules/welcome/settings.php:38
 #, php-format
-msgid "%d pro option available"
-msgid_plural "%d pro options available"
-msgstr[0] "%d option pro disponible"
-msgstr[1] "%d options pro disponibles"
+msgid "%d option available"
+msgid_plural "%d options available"
+msgstr[0] "%d option disponible"
+msgstr[1] "%d options disponibles"
 
-#: inc/modules/welcome/settings.php:67
+#: inc/modules/welcome/settings.php:48
 msgid "Get Pro and unlock more awesome features!"
 msgstr "Obtenez la version Pro et débloquez d’excellentes fonctionnalités !"
 
-#: inc/modules/welcome/settings.php:68
+#: inc/modules/welcome/settings.php:49
 msgid ""
 "Explore the modules and unlock the Pro options, and because we’re nice, you "
 "have plenty of free options too!"
@@ -8111,7 +8096,7 @@ msgstr ""
 "Explorez les modules et débloquez les options Pro, et parce que nous sommes "
 "gentils, vous aurez plein d’options gratuites aussi !"
 
-#: inc/modules/welcome/settings.php:98
+#: inc/modules/welcome/settings.php:78
 msgid "View options"
 msgstr "Options"
 
@@ -8342,6 +8327,18 @@ msgid ""
 msgstr ""
 "Protégez votre WordPress avec SecuPress, analysez et assurez-vous de la "
 "sécurité de votre site quotidiennement."
+
+#~ msgid ""
+#~ "The scanner is able to activate some options, feel free to check the "
+#~ "module's options for more."
+#~ msgstr ""
+#~ "Le scanner peut activer des options, sentez vous libre de vérifier dans "
+#~ "les options du module pour en savoir plus."
+
+#~ msgid "%d pro option available"
+#~ msgid_plural "%d pro options available"
+#~ msgstr[0] "%d option pro disponible"
+#~ msgstr[1] "%d options pro disponibles"
 
 #~ msgid ""
 #~ "%1$s couldn’t remove a constant definition from the %2$s file. Please "
