@@ -379,7 +379,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @return (object) The class instance.
 	 */
 	protected function print_module_title( $tag = 'h2' ) {
-		echo "<$tag class=\"secupress-tc-title\">"; 
+		echo "<$tag class=\"secupress-tc-title\">";
 			$this->print_module_icon();
 			echo $this->get_module_title();
 		echo "</$tag>\n";

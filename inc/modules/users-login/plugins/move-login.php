@@ -22,7 +22,7 @@ if ( function_exists( 'is_plugin_active' ) && (
 	is_plugin_active( 'wps-hide-login/wps-hide-login.php' )
 	) ) {
 	return;
-}	
+}
 
 if ( is_admin() && ! function_exists( 'secupress_move_login_write_rules' ) ) {
 	include( SECUPRESS_MODULES_PATH . 'users-login/plugins/inc/php/move-login/admin.php' );

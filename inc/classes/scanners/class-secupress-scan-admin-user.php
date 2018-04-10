@@ -114,7 +114,7 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 	public function scan() {
 
 		$username = 'admin';
-		
+
 		$activated = secupress_filter_scanner( __CLASS__ );
 		if ( true === $activated ) {
 			$this->add_message( 0, array( '<em>' . $username . '</em>' ) );

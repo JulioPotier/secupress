@@ -306,6 +306,8 @@ function secupress_can_access_support() {
 /**
  * Filter every scan to bypass the scan and return "true"
  *
+ * @param (string) $class The SecuPress class to be filtered.
+ *
  * @return (bool) "false" by default (not modified), should be "true" to be used
  * @author Julio Potier
  **/

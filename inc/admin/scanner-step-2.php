@@ -68,7 +68,7 @@ if ( ! $secupress_tests ) {
 	<?php
 	$has_fixes   = (bool) array_filter( $fixable_modules );
 	if ( $secupress_is_pro ) {
-	$main_button =
+		$main_button =
 		'<button class="secupress-button secupress-button-tertiary secupress-button-autofix shadow' . ( $has_fixes ? '' : ' hidden' ) . '" type="button">
 			<span class="icon">
 				<i class="secupress-icon-wrench" aria-hidden="true"></i>
@@ -76,7 +76,7 @@ if ( ! $secupress_tests ) {
 			<span class="text">' . __( 'Fix it', 'secupress' ) . '</span>
 		</button>';
 	} else {
-	$main_button =
+		$main_button =
 		'
 	<span class="secupress-get-pro-version">
 		' . sprintf( __( 'The <a href="%s" target="_blank">Pro Version</a> is required to <strong>autofix</strong> issues.', 'secupress' ), esc_url( secupress_admin_url( 'get_pro' ) ) ) . '
@@ -97,7 +97,7 @@ if ( ! $secupress_tests ) {
 			</span>
 			<span class="text">' . __( 'Ignore this step', 'secupress' ) . '</span>
 		</a>';
-if ( ! $secupress_is_pro ) {
+	if ( ! $secupress_is_pro ) {
 	?>
 	<span class="secupress-get-pro-version">
 		<?php printf( __( 'The <a href="%s" target="_blank">Pro Version</a> is required to <strong>autofix</strong> issues.', 'secupress' ), esc_url( secupress_admin_url( 'get_pro' ) ) ); ?>
@@ -114,8 +114,8 @@ if ( ! $secupress_is_pro ) {
 		</p>
 	</div>
 	<?php
-} else {
-?>
+	} else {
+	?>
 	<p class="secupress-step-title"><?php _e( 'Only checked items will be automatically fixed', 'secupress' ); ?></p>
 	<p>
 		<?php echo $main_button; ?>

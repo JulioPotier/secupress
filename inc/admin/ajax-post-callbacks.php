@@ -466,13 +466,13 @@ function secupress_sanitize_move_login_slug_ajax_post_cb() {
 
 add_action( 'admin_post_nopriv_secupress_unlock_admin', 'secupress_unlock_admin_ajax_post_cb' );
 /**
- * Send an unlonk email if the provided address is from an admin
+ * Send an unlock email if the provided address is from an admin
  *
  * @author Julio Potier
  * @since 1.3.2
  **/
 function secupress_unlock_admin_ajax_post_cb() {
-	if ( ! isset( $_POST['_wpnonce'], $_POST['email'] ) || ! is_email( $_POST['email'] ) || ! check_ajax_referer( 'secupress-unban-ip-admin', '_wpnonce' ) ) {
+	if ( ! isset( $_POST['_wpnonce'], $_POST['email'] ) || ! is_email( $_POST['email'] ) || ! check_ajax_referer( 'secupress-unban-ip-admin', '_wpnonce' ) ) { // WPCS: CSRF ok.
 		wp_die( 'Cheatin\' uh?' );
 	}
 	$user = get_user_by( 'email', $_POST['email'] );
@@ -760,7 +760,7 @@ function secupress_global_settings_activate_pro_license( $new_values, $old_value
 		}
 	}
 
-	// Triggered by auto license validation
+	// Triggered by auto license validation.
 	if ( empty( $old_values ) ) {
 		update_site_option( SECUPRESS_SETTINGS_SLUG, array_merge( $new_values, get_site_option( SECUPRESS_SETTINGS_SLUG ) ) );
 	} else {

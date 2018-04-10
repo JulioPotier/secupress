@@ -23,11 +23,11 @@ function secupress_check_bot_ip() {
 	$real_ip    = gethostbyname( $hostname );
 	$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? trim( $_SERVER['HTTP_USER_AGENT'] ) : '';
 
-	if ( $hostname == $ip ) {
+	if ( $hostname === $ip ) {
 		return false;
 	}
-	
-	if ( $ip == $real_ip ) {
+
+	if ( $ip === $real_ip ) {
 
 		if ( preg_match( '/bingbot|msnbot/i', $user_agent ) && ( preg_match( '/msn\.com/i', $hostname ) ) ) {
 			return true;
@@ -55,9 +55,9 @@ function secupress_check_bot_ip() {
 		}
 
 		preg_match( '/([\w]+\.[\w]+)($|\.uk$)/', strtolower( $hostname ), $matches );
-		
+
 		$domain = $matches[0];
-		
+
 		if ( ! ( strpos( $user_agent, $domain ) !== false ) ) {
 			return false;
 		}

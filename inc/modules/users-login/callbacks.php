@@ -108,8 +108,6 @@ function secupress_login_protection_settings_callback( $modulenow, &$settings, $
 
 		secupress_manage_submodule( $modulenow, 'limitloginattempts', isset( $activate['login-protection_type']['limitloginattempts'] ) );
 		secupress_manage_submodule( $modulenow, 'bannonexistsuser',   isset( $activate['login-protection_type']['bannonexistsuser'] ) );
-	} elseif ( false !== $activate ) {
-		// No need yet.
 	}
 
 	// Settings.
@@ -314,10 +312,6 @@ function secupress_install_users_login_module( $module ) {
 		secupress_activate_submodule_silently( 'users-login', 'ask-old-password' );
 	}
 
-	// First install or reset.
-	if ( 'all' === $module || 'users-login' === $module ) {
-		// No need yet.
-	}
 }
 
 

@@ -241,6 +241,7 @@ add_filter( 'register_url', 'secupress_register_url_redirect' );
 /**
  * Fordib the redirection on the registration URL if not logged-in, you have to know the correct new page
  *
+ * @param (string) $url The register_url from WP
  * @since 1.4
  * @return (string) $url
  * @author Julio Potier

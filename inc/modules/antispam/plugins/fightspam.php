@@ -718,10 +718,10 @@ function secupress_fightspam_get_spam_status( $value ) {
 		$is_what = 'username';
 		if ( filter_var( $value, FILTER_VALIDATE_IP ) ) {
 			$is_what = 'ip';
-		} elseif( is_email( $value ) ) {
+		} elseif ( is_email( $value ) ) {
 			$is_what = 'email';
 		}
-		if ( 'username' != $is_what ) {
+		if ( 'username' !== $is_what ) {
 			$service_base_url = 'https://api.stopforumspam.org/api?f=serial&' . $is_what . '=' . $value;
 			$response         = wp_remote_get( $service_base_url, array( 'timeout' => 5 ) );
 
@@ -729,11 +729,11 @@ function secupress_fightspam_get_spam_status( $value ) {
 				$results = maybe_unserialize( $response['body'] );
 
 				if ( isset( $results['success'], $results[ $is_what ] ) && $results['success'] ) {
-					$status = 0 == $results[ $is_what ]['frequency'] && 1 < $results[ $is_what ]['confidence'] ? 'safe' : 'blacklisted';
+					$status = 0 === (int) $results[ $is_what ]['frequency'] && 1 < $results[ $is_what ]['confidence'] ? 'safe' : 'blacklisted';
 				}
 			}
 		} else {
-			// We can't say "John" is a spammer just by it's name. SO, all username are "good" since they can't be a URL, already done earlier
+			// We can't say "John" is a spammer just by it's name. SO, all username are "good" since they can't be a URL, already done earlier.
 			$status = 'safe';
 		}
 	}

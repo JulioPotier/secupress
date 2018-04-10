@@ -60,11 +60,9 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 	 * @author Grégory Viguier
 	 */
 	public function print_page() {
-		
+
 		$setting_modules = array( 'settings-manager' );
-		if ( ! secupress_is_white_label() && 
-			( ! defined( 'SECUPRESS_HIDE_API_KEY' ) || ! SECUPRESS_HIDE_API_KEY ) )
-		{
+		if ( ! secupress_is_white_label() && ( ! defined( 'SECUPRESS_HIDE_API_KEY' ) || ! SECUPRESS_HIDE_API_KEY ) ) {
 			$setting_modules = array( 'api-key', 'settings-manager' );
 		}
 

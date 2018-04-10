@@ -64,6 +64,6 @@ $this->add_field( array(
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
 	'value'             => (int) secupress_is_submodule_active( 'firewall', 'fake-google-bots' ),
-	'label'             => __( 'Yes, protect my site from fake SEO Bots', 'secupress' )
+	'label'             => __( 'Yes, protect my site from fake SEO Bots', 'secupress' ),
 	)
- );
+);

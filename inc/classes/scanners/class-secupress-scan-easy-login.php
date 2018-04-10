@@ -112,7 +112,7 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements SecuPress_Scan
 			$this->add_message( 0 );
 			return parent::scan();
 		}
-		
+
 		$activated = secupress_is_submodule_active( 'users-login', 'passwordless' ) ? 'PasswordLess' : false;
 
 		/**

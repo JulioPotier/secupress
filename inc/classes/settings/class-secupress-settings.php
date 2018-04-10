@@ -1236,7 +1236,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 */
 	protected function print_sideads() {
 		global $current_screen;
-		
+
 		if ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' !== $current_screen->base ) {
 			return;
 		}
@@ -1253,7 +1253,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 		?>
 		<div class="secupress-sideads">
-		<?php 
+		<?php
 		/**
 		 * Give the possibility to hide the ads sidebar, ok you can do that.
 		 *
@@ -1276,35 +1276,34 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			}
 
 			if ( ! $sideads ) {
-				$sideads = array( 0 => array( 
-											'hook'    => 'secupress_ad_before',
-											'when'    => 'free', // For free || pro || both .
-											'content' => '<div class="secupress-section-dark secupress-pro-ad"> <i class="icon-secupress" aria-hidden="true"></i> <img src="##SECUPRESS_ADMIN_IMAGES_URL##logo-pro.png" class="secupress-pro-icon" srcset="##SECUPRESS_ADMIN_IMAGES_URL##logo-pro@2x.png" width="80" height="78" alt="SecuPress Pro"/> <p class="secupress-text-medium">Improve your Security</p> <p>Unlock all the features of SecuPress Pro</p> <a href="https://secupress.me/pricing/" class="secupress-button secupress-button-tertiary"> <span class="text">Get Pro Version</span> </a> <p><a href="https://secupress.me/features">Learn More About Pro Features</a></p> </div>',
-											),
-									//<div class="secupress-product-ads"> <a href="http://www.o2switch.fr/" target="_blank"> <img src="https://boiteaweb.fr/wp-content/uploads/plugins/ad-o2switch.jpg" width="280"/> </a> </div>
+				$sideads = array(
+									0 => array(
+										'hook'    => 'secupress_ad_before',
+										'when'    => 'free', // For free || pro || both .
+										'content' => '<div class="secupress-section-dark secupress-pro-ad"> <i class="icon-secupress" aria-hidden="true"></i> <img src="##SECUPRESS_ADMIN_IMAGES_URL##logo-pro.png" class="secupress-pro-icon" srcset="##SECUPRESS_ADMIN_IMAGES_URL##logo-pro@2x.png" width="80" height="78" alt="SecuPress Pro"/> <p class="secupress-text-medium">Improve your Security</p> <p>Unlock all the features of SecuPress Pro</p> <a href="https://secupress.me/pricing/" class="secupress-button secupress-button-tertiary"> <span class="text">Get Pro Version</span> </a> <p><a href="https://secupress.me/features">Learn More About Pro Features</a></p> </div>',
+										),
+									// 1 => <div class="secupress-product-ads"> <a href="http://www.o2switch.fr/" target="_blank"> <img src="https://boiteaweb.fr/wp-content/uploads/plugins/ad-o2switch.jpg" width="280"/> </a> </div>
 				);
 			}
 
-			
 			foreach ( $sideads as $sidead ) {
-				if ( 'secupress_ad_before' != $sidead['hook'] ) {
+				if ( 'secupress_ad_before' !== $sidead['hook'] ) {
 					continue;
 				}
-				if ( ( 'free' == $sidead['when'] && ! secupress_is_pro() )
-					|| ( 'pro' == $sidead['when'] && secupress_is_pro() )
-					|| 'both' == $sidead['when']
+				if ( ( 'free' === $sidead['when'] && ! secupress_is_pro() )
+					|| ( 'pro' === $sidead['when'] && secupress_is_pro() )
+					|| 'both' === $sidead['when']
 				 ) {
 					echo wp_kses_post( str_replace( '##SECUPRESS_ADMIN_IMAGES_URL##', SECUPRESS_ADMIN_IMAGES_URL, $sidead['content'] ) );
 				}
 			}
 
 			/**
-			 * Triggered before the tool boxes
+			 * Triggered before the tool boxes.
 			 *
 			 * @since 1.4
-			 *
 			 */
-			do_action( 'secupress.ad_before' ); 
+			do_action( 'secupress.ad_before' );
 
 		}
 		?>
@@ -1381,29 +1380,28 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			</div>
 		</div>
 
-		<?php 
+		<?php
 		/**
 		 * This hook is defined in class-secupress-settings.php
 		 */
 		if ( false === apply_filters( 'secupress.no_sideads', false ) ) { // Filter secupress_no_sideads.
 			foreach ( $sideads as $sidead ) {
-				if ( 'secupress_ad_after' != $sidead['hook'] ) {
+				if ( 'secupress_ad_after' !== $sidead['hook'] ) {
 					continue;
 				}
-				if ( ( 'free' == $sidead['when'] && ! secupress_is_pro() )
-					|| ( 'pro' == $sidead['when'] && secupress_is_pro() )
-					|| 'both' == $sidead['when']
+				if ( ( 'free' === $sidead['when'] && ! secupress_is_pro() )
+					|| ( 'pro' === $sidead['when'] && secupress_is_pro() )
+					|| 'both' === $sidead['when']
 				 ) {
 					echo wp_kses_post( str_replace( '##SECUPRESS_ADMIN_IMAGES_URL##', SECUPRESS_ADMIN_IMAGES_URL, $sidead['content'] ) );
 				}
 			}
 			/**
-			 * Triggered after the tool boxes
+			 * Triggered after the tool boxes.
 			 *
 			 * @since 1.4
-			 *
 			 */
-			do_action( 'secupress.ad_after' ); 
+			do_action( 'secupress.ad_after' );
 		}
 		?>
 

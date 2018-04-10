@@ -65,6 +65,7 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 		'confirmText'         => __( 'OK', 'secupress' ),
 		'cancelText'          => __( 'Cancel' ),
 		'closeText'           => __( 'Close' ),
+
 		/*
 		'authswal'     => array(
 			'title'  => __( 'Authentication', 'secupress' ),
@@ -72,7 +73,8 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 			'apikey' => __( 'Enter your API Key', 'secupress' ),
 			'where'  => __( 'Where can I find my API Key?', 'secupress' ),
 			'save'   => __( 'Save and continue to first scan', 'secupress' ),
-		),*/
+		),
+		*/
 	) );
 
 	// Settings page.
@@ -315,12 +317,12 @@ function secupress_create_menus() {
 	end( $menu );
 	$key = key( $menu );
 	$menu[ $key ][0] = SECUPRESS_PLUGIN_NAME . $count;
-	
+
 	// Fix `add_submenu_page()` URL.
 	if ( ! secupress_is_white_label() && ! secupress_is_pro() ) {
 		end( $submenu );
 		$key = key( $submenu );
-		$submenu[ $key ][ count( $submenu[ $key ] )-1 ] = array( __( 'More Security', 'secupress' ), $cap, __( 'https://secupress.me/pricing/?from=secupress-plugin', 'secupress' ), __( 'More Security', 'secupress' ) );
+		$submenu[ $key ][ count( $submenu[ $key ] ) -1 ] = array( __( 'More Security', 'secupress' ), $cap, __( 'https://secupress.me/pricing/?from=secupress-plugin', 'secupress' ), __( 'More Security', 'secupress' ) );
 	}
 }
 

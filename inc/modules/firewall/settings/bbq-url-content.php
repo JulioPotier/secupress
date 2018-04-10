@@ -64,5 +64,5 @@ $this->add_field( array(
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
 	'value'             => (int) secupress_is_submodule_active( 'firewall', 'ban-404-php' ),
-	'label'             => __( 'Yes, protect my site from 404 on .php files', 'secupress' )
+	'label'             => __( 'Yes, protect my site from 404 on .php files', 'secupress' ),
 ) );
