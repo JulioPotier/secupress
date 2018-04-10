@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 			</div>
 		</div>
 		<div class="secupress-col-2-3 secupress-col-text">
-			<p class="secupress-text-medium"><?php esc_html_e( 'Secure your website more thoroughly thanks to our dedicated modules', 'secupress' ); ?></p>
+			<p class="secupress-text-medium"><?php esc_html_e( 'Secure your website with to our dedicated modules', 'secupress' ); ?></p>
 			<p><?php esc_html_e( 'Anti-Malware, Firewall, or Anti-Spam: add features, schedule scans and protect your data.', 'secupress' ); ?></p>
 		</div>
 	</div>
@@ -25,27 +25,8 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 		<div class="secupress-modules-container secupress-box-shadow">
 
 		<?php
-		$option_counts = secupress_get_options_counts();
-		$total_options = array_sum( $option_counts );
-		?>
-
-		<div class="secupress-dashboard-header secupress-flex secupress-flex-spaced">
-			<div class="secupress-dh-titles">
-				<p class="secupress-header-title"><?php printf( _n( '%d option available', '%d options available', $total_options, 'secupress' ), $total_options ); ?></p>
-				<p><?php _e( 'The scanner is able to activate some options, feel free to check the module\'s options for more.', 'secupress' ); ?></p>
-			</div>
-			<div class="secupress-dh-counts secupress-flex">
-				<div class="secupress-dhc-icon"><i class="secupress-icon-info-disk" aria-hidden="true"></i></div>
-				<div class="secupress-dhc-texts">
-					<p class="secupress-primary"><?php printf( _n( '%d free option available', '%d free options available', $option_counts['free'], 'secupress' ), $option_counts['free'] ); ?></p>
-					<p class="secupress-tertiary"><?php printf( _n( '%d pro option available', '%d pro options available', $option_counts['pro'], 'secupress' ), $option_counts['pro'] ); ?></p>
-				</div>
-			</div>
-		</div>
-
-		<?php
-		$modules   = SecuPress_Settings_Modules::get_modules();
-		$pro_msg   = '<span class="secupress-cta-pro">' . SecuPress_Settings_Modules::get_pro_version_string() . '</span>';
+		$modules  = SecuPress_Settings_Modules::get_modules();
+		$pro_msg  = '<span class="secupress-cta-pro">' . SecuPress_Settings_Modules::get_pro_version_string() . '</span>';
 		$pro_info = 0;
 
 		// Do not display the get pro block, but we still need it for the content.
@@ -86,7 +67,6 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 				<div class="secupress-mb-texts">
 					<p class="secupress-mb-title">
 						<span class="secupress-mb-title-text"><?php echo $mod['title'] ?></span>
-						<?php echo $nb_options; ?>
 					</p>
 					<p class="secupress-mb-description"><?php echo $mod['summaries']['normal']; ?></p>
 				</div>

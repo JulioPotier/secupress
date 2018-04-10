@@ -327,11 +327,6 @@ input[type="text"]:required:invalid {
 .secupress-modules-dashboard {
 	border-radius: 0 0 3px 3px;
 }
-.secupress-modules-container {
-	width: 880px;
-	max-width: 100%;
-	margin: 4em auto;
-}
 .secupress-dashboard-header {
 	padding: 0 20px;
 	background: #222831;
