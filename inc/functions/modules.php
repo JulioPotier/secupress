@@ -197,21 +197,6 @@ function secupress_get_modules() {
 		++$modules['sensitive-data']['counts']['free_options'];
 	}
 
-	if ( function_exists( 'secupress_is_white_label' ) && ! secupress_is_white_label() ) {
-		$modules['services'] = array(
-			'title'       => __( 'Support', 'secupress' ),
-			'icon'        => 'information',
-			'summaries'   => array(
-				'small'  => __( 'Get support from our team', 'secupress' ),
-				'normal' => __( 'Need help? Don’t hesitate to ask for support here.', 'secupress' ),
-			),
-			'description' => array(
-				__( 'Need help? Don’t hesitate to ask for support here.', 'secupress' ),
-			),
-		);
-
-	}
-
 	return $modules;
 }
 
