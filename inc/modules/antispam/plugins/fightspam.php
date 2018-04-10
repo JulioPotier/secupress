@@ -54,7 +54,7 @@ function secupress_fightspam_dont_use_my_identity_to_comment( $commentdata ) {
 
 		$content = sprintf(
 			/* translators: %s is a "please log in" link */
-			__( 'Can\'t process because this username or email belongs to a registered user. If it\'s you, %s.', 'secupress-pro' ),
+			__( 'Can’t process because this username or email belongs to a registered user. If it’s you, %s.', 'secupress-pro' ),
 			'<a href="' . esc_url( wp_login_url( wp_get_referer() ) ) . '">' . __( 'please log in', 'secupress-pro' ) . '</a>'
 		);
 		if ( ! empty( $commentdata['comment_content'] ) ) {
