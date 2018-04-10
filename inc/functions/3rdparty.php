@@ -153,6 +153,7 @@ if ( defined( 'IS_WPSERVEUR' ) && IS_WPSERVEUR ) {
 	add_filter( 'secupress.pre_scan.SecuPress_Scan_Discloses',           '__return_true' );
 	add_filter( 'secupress.pre_scan.SecuPress_Scan_PHP_Disclosure',      '__return_true' );
 	add_filter( 'secupress.pre_scan.SecuPress_Scan_Readme_Discloses',    '__return_true' );
+	add_filter( 'secupress.nginx.notice',                                '__return_false' );
 }
 
 /* o2switch.net */
