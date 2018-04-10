@@ -130,6 +130,7 @@ function secupress_move_login_deny_login_access() {
  *
  * @return (string)
  */
+/*
 function secupress_move_login_maybe_deny_login_redirect( $location ) {
 	global $pagenow;
 
@@ -185,6 +186,7 @@ function secupress_move_login_maybe_deny_login_redirect( $location ) {
 													] )
 	);
 }
+*/
 
 add_action( 'template_redirect', 'secupress_fallback_slug_redirect', 0 );
 /**
@@ -213,12 +215,13 @@ function secupress_fallback_slug_redirect() {
 	$parsed = wp_parse_url( $_SERVER['REQUEST_URI'] );
 	$parsed = ! empty( $parsed['path'] ) ? $parsed['path'] : '';
 	$parsed = trim( $parsed, '/' );
-	$parsed = explode( '/', $parsed );
-	$parsed = end( $parsed );
+
 	if ( preg_match( "@{$regex}@", $parsed ) ) {
+
 		$slugs  = array_flip( secupress_move_login_get_slugs() );
 		$parsed = explode( '/', $parsed );
 		$parsed = end( $parsed );
+
 		if ( ! isset( $_REQUEST['action'] ) && isset( $slugs[ $parsed ] ) ) {
 			$_REQUEST['action'] = $slugs[ $parsed ];
 		}
