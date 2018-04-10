@@ -653,7 +653,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 						<?php
 						foreach ( $args['options'] as $val => $title ) {
 							$disabled = '';
-							if ( static::is_pro_feature( $args['name'] . '|' . $val ) ) {
+							if ( static::is_pro_feature( $args['name'] . '|' . $val ) && ! secupress_is_pro() ) {
 								$disabled     = ' disabled="disabled"';
 								$has_disabled = true;
 							}
@@ -693,35 +693,47 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 				foreach ( $args['options'] as $val => $title ) {
 					$args['label_for'] = $args['name'] . '_' . $val;
-					$disabled          = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' disabled="disabled"' : '';
+					$disabled          = static::is_pro_feature( $args['name'] . '|' . $val ) && ! secupress_is_pro() ? ' disabled="disabled"' : '';
+					$pro_class         = '';
+					if ( static::is_pro_feature( $args['name'] . '|' . $val ) && ! secupress_is_pro() ) {
+						$pro_class = ' secupress-pro-option';
+					} elseif ( static::is_pro_feature( $args['name'] . '|' . $val ) ) {
+						$pro_class = ' secupress-show-pro';
+					}
 					?>
-					<p class="secupress-fieldset-item secupress-fieldset-item-<?php echo $args['type']; ?><?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? ' secupress-pro-option' : ''; ?>">
+					<p class="secupress-fieldset-item secupress-fieldset-item-<?php echo $args['type']; ?><?php echo $pro_class; ?>">
 						<label<?php echo $disabled ? ' class="disabled"' : ''; ?> for="<?php echo esc_attr( $args['label_for'] ); ?>">
 							<input type="checkbox" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>[]" value="<?php echo $val; ?>"<?php checked( isset( $value[ $val ] ) ); ?><?php echo $disabled; ?><?php echo $attributes; ?>>
 							<?php echo '<span class="label-text">' . $title . '</span>'; ?>
 						</label>
-					<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? static::get_pro_version_string( '<span class="description secupress-get-pro-version">%s</span>' ) : ''; ?>
+					<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) && ! secupress_is_pro() ? static::get_pro_version_string( '<span class="description secupress-get-pro-version">%s</span>' ) : ''; ?>
 					</p>
 					<?php
 				}
 				break;
 
-			case 'radios' : // Video killed the radio star.
+			case 'radios' :
 
 				foreach ( $args['options'] as $val => $title ) {
 					$args['label_for'] = $args['name'] . '_' . $val;
-					$disabled          = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' disabled="disabled"' : '';
+					$disabled          = static::is_pro_feature( $args['name'] . '|' . $val ) && ! secupress_is_pro() ? ' disabled="disabled"' : '';
+					$pro_class         = '';
+					if ( static::is_pro_feature( $args['name'] . '|' . $val ) && ! secupress_is_pro() ) {
+						$pro_class = ' secupress-pro-option';
+					} elseif ( static::is_pro_feature( $args['name'] . '|' . $val ) ) {
+						$pro_class = ' secupress-show-pro';
+					}
 
 					if ( ! $disabled && strpos( $title, 'secupress-coming-soon-feature' ) !== false ) {
 						$disabled = ' disabled="disabled"';
 					}
 					?>
-					<p class="secupress-radio-line<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? ' secupress-pro-option' : ''; ?>">
+					<p class="secupress-radio-line<?php echo $pro_class; ?>">
 						<label<?php echo $disabled ? ' class="disabled"' : ''; ?> for="<?php echo esc_attr( $args['label_for'] ); ?>">
 							<input type="radio" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>" value="<?php echo $val; ?>"<?php checked( $value, $val ); ?><?php echo $disabled; ?><?php echo $attributes; ?>>
 							<?php echo '<span class="label-text">' . $title . '</span>'; ?>
 						</label>
-						<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? static::get_pro_version_string( '<span class="description secupress-get-pro-version">%s</span>' ) : ''; ?>
+						<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) && ! secupress_is_pro() ? static::get_pro_version_string( '<span class="description secupress-get-pro-version">%s</span>' ) : ''; ?>
 					</p>
 					<?php
 				}
@@ -968,8 +980,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$id       = '';
 			$field_id = isset( $field['id'] ) ? explode( '|', $field['id'] ) : array( '' );
 			$field_id = end( $field_id );
-			$is_pro   = static::is_pro_feature( $field['args']['name'] );
-			$class    = 'secupress-setting-row ' . ( $is_pro ? 'secupress-pro-row ' : '' ) . 'secupress-setting-row_' . sanitize_html_class( $field_id ) . ' ';
+			$is_pro   = static::is_pro_feature( $field['args']['name'] ) && ! secupress_is_pro();
+			$class    = 'secupress-setting-row ' . ( $is_pro ? 'secupress-pro-row ' : static::is_pro_feature( $field['args']['name'] ) ? 'secupress-show-pro ' : '' ) . 'secupress-setting-row_' . sanitize_html_class( $field_id ) . ' ';
 
 			// Row ID.
 			if ( ! empty( $field['args']['row_id'] ) ) {
@@ -1061,7 +1073,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		if ( ! empty( $field_args['disabled'] ) ) {
 			// The field is disabled.
 			$disabled = true;
-		} elseif ( static::is_pro_feature( $field_args['name'] ) ) {
+		} elseif ( static::is_pro_feature( $field_args['name'] ) && ! secupress_is_pro() ) {
 			// The field is Pro.
 			$disabled = true;
 		} elseif ( ! empty( $field_args['options'] ) && ! secupress_is_pro() ) {
@@ -1071,7 +1083,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			foreach ( (array) $field_args['options'] as $val => $title ) {
 				$name = $field_args['name'] . '_' . $val;
 
-				if ( ! static::is_pro_feature( $field_args['name'] . '|' . $val ) ) {
+				if ( ! static::is_pro_feature( $field_args['name'] . '|' . $val ) && ! secupress_is_pro() ) {
 					$has_enabled = true;
 					$fields[ $name ] = false;
 				} else {
@@ -1405,15 +1417,16 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	/**
 	 * Tell if the option value is for the pro version and we're not using the pro version.
 	 *
-	 * @since 1.0
+	 * @since 1.4 Do not check anymore if secupress_is_pro()
 	 * @since 1.3 The method is public.
+	 * @since 1.0
 	 *
 	 * @param (string) $value The option value.
 	 *
 	 * @return (bool) True if the option value is for pro version but w're not using the pro version.
 	 */
 	public static function is_pro_feature( $value ) {
-		return secupress_feature_is_pro( $value ) && ! secupress_is_pro();
+		return secupress_feature_is_pro( $value );
 	}
 
 

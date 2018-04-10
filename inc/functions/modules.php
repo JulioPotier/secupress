@@ -89,6 +89,25 @@ function secupress_get_modules() {
 				'pro_options'  => 2,
 			),
 		),
+		'antispam'        => array(
+			'title'       => __( 'Anti Spam', 'secupress' ),
+			'icon'        => 'antispam',
+			'summaries'   => array(
+				'small'  => __( 'Get rid of bad bots', 'secupress' ),
+				'normal' => __( 'Traffic done by bot represents about 60% of the internet. Spams are done by these bots. Don\'t let them do that!', 'secupress' ),
+			),
+			'description' => array(
+				__( 'Comments are great for your website, but bot traffic represents about 60 % of the internet. Spams are done by these bots, and they just want to add their content into your website. Don\'t let them do that!', 'secupress' ),
+				sprintf( __( 'Do not forget to visit the <a href="%s">Settings &rsaquo; Discussion</a> area to add words to the blacklist and other usual settings regarding comments.', 'secupress' ), esc_url( admin_url( 'options-discussion.php' ) ) ),
+				__( 'By default, identity theft is blocked, so if someone tries to comment using your email/name, the comment will be blocked.', 'secupress' ),
+				__( 'Also by default, bad IPs are blocked, as are the author name, email and website url of known as spammer.', 'secupress' ),
+			),
+			'mark_as_pro' => false,
+			'counts' => array(
+				'free_options' => 7,
+				'pro_options'  => 0,
+			),
+		),
 		'file-system'     => array(
 			'title'       => __( 'Malware Scan', 'secupress' ),
 			'icon'        => 'file-system',
@@ -122,25 +141,6 @@ function secupress_get_modules() {
 			'counts' => array(
 				'free_options' => 0,
 				'pro_options'  => 4,
-			),
-		),
-		'antispam'        => array(
-			'title'       => __( 'Anti Spam', 'secupress' ),
-			'icon'        => 'antispam',
-			'summaries'   => array(
-				'small'  => __( 'Get rid of bad bots', 'secupress' ),
-				'normal' => __( 'Traffic done by bot represents about 60% of the internet. Spams are done by these bots. Don\'t let them do that!', 'secupress' ),
-			),
-			'description' => array(
-				__( 'Comments are great for your website, but bot traffic represents about 60 % of the internet. Spams are done by these bots, and they just want to add their content into your website. Don\'t let them do that!', 'secupress' ),
-				sprintf( __( 'Do not forget to visit the <a href="%s">Settings &rsaquo; Discussion</a> area to add words to the blacklist and other usual settings regarding comments.', 'secupress' ), esc_url( admin_url( 'options-discussion.php' ) ) ),
-				__( 'By default, identity theft is blocked, so if someone tries to comment using your email/name, the comment will be blocked.', 'secupress' ),
-				__( 'Also by default, bad IPs are blocked, as are the author name, email and website url of known as spammer.', 'secupress' ),
-			),
-			'mark_as_pro' => $should_be_pro,
-			'counts' => array(
-				'free_options' => 0,
-				'pro_options'  => 7,
 			),
 		),
 		'alerts'          => array(

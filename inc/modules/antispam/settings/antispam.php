@@ -10,13 +10,11 @@ $field_name       = $this->get_field_name( 'antispam' );
 $main_field_name  = $field_name . '_fightspam';
 $is_plugin_active = array();
 
-if ( secupress_is_pro() ) {
-	if ( secupress_is_submodule_active( 'antispam', 'fightspam' ) ) {
-		$is_plugin_active[] = 'fightspam';
-	}
-	if ( secupress_is_submodule_active( 'antispam', 'remove-comment-feature' ) ) {
-		$is_plugin_active[] = 'remove-comment-feature';
-	}
+if ( secupress_is_submodule_active( 'antispam', 'fightspam' ) ) {
+	$is_plugin_active[] = 'fightspam';
+}
+if ( secupress_is_submodule_active( 'antispam', 'remove-comment-feature' ) ) {
+	$is_plugin_active[] = 'remove-comment-feature';
 }
 
 $this->add_field( array(

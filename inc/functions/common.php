@@ -1063,7 +1063,6 @@ function secupress_feature_is_pro( $feature ) {
 		'schedules-file-monitoring_scheduled'    => 1,
 		'notification-types_types'               => 1,
 		'alerts_activated'                       => 1,
-		'antispam_antispam'                      => 1,
 		'backups-storage_location'               => 1,
 		'event-alerts_activated'                 => 1,
 		'daily-reporting_activated'              => 1,

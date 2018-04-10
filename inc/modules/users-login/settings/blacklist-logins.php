@@ -14,3 +14,12 @@ $this->add_field( array(
 	'value'             => (int) secupress_is_submodule_active( 'users-login', 'blacklist-logins' ),
 	'label'             => __( 'Yes, forbid users to use blacklisted usernames', 'secupress' ),
 ) );
+
+$this->add_field( array(
+	'title'             => __( 'Stop User Enumeration', 'secupress' ),
+	'label_for'         => $this->get_field_name( 'stop-user-enumeration' ),
+	'plugin_activation' => true,
+	'type'              => 'checkbox',
+	'value'             => (int) secupress_is_submodule_active( 'users-login', 'stop-user-enumeration' ),
+	'label'             => __( 'Yes, stop user and author enumeration', 'secupress' ),
+) );
