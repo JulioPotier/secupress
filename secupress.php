@@ -5,8 +5,8 @@
  * Description: Protect your WordPress with SecuPress, analyze and ensure the safety of your website daily.
  * Author: SecuPress
  * Author URI: https://secupress.me
- * Version: 1.3.3
- * Code Name: Bleeding Edge
+ * Version: 1.4
+ * Code Name: Hotrod
  * Network: true
  * License: GPLv2
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -14,7 +14,7 @@
  * Text Domain: secupress
  * Domain Path: /languages/
  *
- * Copyright 2012-2017 SecuPress
+ * Copyright 2012-2018 SecuPress
  */
 
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /** DEFINES ===================================================================================== */
 /** --------------------------------------------------------------------------------------------- */
 
-define( 'SECUPRESS_VERSION'               , '1.3.3' );
+define( 'SECUPRESS_VERSION'               , '1.4' );
 define( 'SECUPRESS_ACTIVE_SUBMODULES'     , 'secupress_active_submodules' );
 define( 'SECUPRESS_SETTINGS_SLUG'         , 'secupress_settings' );
 define( 'SECUPRESS_SCAN_TIMES'            , 'secupress_scanners_times' );
@@ -50,13 +50,9 @@ define( 'SECUPRESS_ASSETS_URL'            , SECUPRESS_PLUGIN_URL . 'assets/' );
 define( 'SECUPRESS_ADMIN_CSS_URL'         , SECUPRESS_ASSETS_URL . 'admin/css/' );
 define( 'SECUPRESS_ADMIN_JS_URL'          , SECUPRESS_ASSETS_URL . 'admin/js/' );
 define( 'SECUPRESS_ADMIN_IMAGES_URL'      , SECUPRESS_ASSETS_URL . 'admin/images/' );
-define( 'SECUPRESS_PHP_MIN'               , '5.3' );
-define( 'SECUPRESS_WP_MIN'                , '3.7' );
+define( 'SECUPRESS_PHP_MIN'               , '5.4' );
+define( 'SECUPRESS_WP_MIN'                , '4.0' );
 define( 'SECUPRESS_INT_MAX'               , PHP_INT_MAX - 20 );
-
-if ( ! defined( 'SECUPRESS_USE_BETA' ) ) {
-	define( 'SECUPRESS_USE_BETA', 0 );
-}
 
 if ( defined( 'SECUPRESS_API_EMAIL' ) && defined( 'SECUPRESS_API_KEY' ) && ! defined( 'SECUPRESS_HIDE_API_KEY' ) ) {
 	define( 'SECUPRESS_HIDE_API_KEY', true );
