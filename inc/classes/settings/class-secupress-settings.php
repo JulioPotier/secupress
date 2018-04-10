@@ -1328,7 +1328,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				<p><?php _e( 'Pro Config', 'secupress' ); ?></p>
 			</div>
 			<div class="secupress-ad-content-padded secupress-ad-content">
-				<p><?php _e( 'Need an Expert to Set-Up SecuPress for You?.', 'secupress' ) ?></p>
+				<p><?php _e( 'Need an Expert to Set-Up SecuPress for You?', 'secupress' ) ?></p>
 
 			<p class="secupress-cta">
 				<a href="https://secupress.me/<?php _e( 'pricing', 'secupress' ); ?>#services" class="secupress-button" target="_blank"><?php _e( 'Ask an Expert', 'secupress' ); ?></a>
