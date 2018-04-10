@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2018-04-10 23:55+0200\n"
-"PO-Revision-Date: 2018-04-10 23:55+0200\n"
+"POT-Creation-Date: 2018-04-11 00:05+0200\n"
+"PO-Revision-Date: 2018-04-11 00:05+0200\n"
 "Last-Translator: WP Media <contact@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -1258,8 +1258,7 @@ msgstr "Détail du correctif"
 msgid "Security scan just finished."
 msgstr "Le scanner de sécurité est terminé."
 
-#: inc/admin/settings.php:203 inc/modules/services/settings/services.php:14
-#: inc/modules/services/settings/services.php:25
+#: inc/admin/settings.php:203
 msgid "Coming Soon"
 msgstr "Bientôt"
 
@@ -1272,7 +1271,7 @@ msgstr "La documentation est en construction, merci pour votre patience."
 #: inc/admin/settings.php:267 inc/admin/settings.php:269
 #: inc/admin/settings.php:309
 #: inc/classes/settings/class-secupress-settings.php:1372
-#: inc/modules/services/settings/support.php:5
+#: inc/functions/modules.php:202 inc/modules/services/settings/support.php:5
 msgid "Support"
 msgstr "Support"
 
@@ -5710,24 +5709,13 @@ msgstr ""
 "Gardez un oeil sur ce qui arrive sur votre site tout le temps. Aussi, "
 "contrôlez les adresses IP bannie depuis ce module."
 
-#: inc/functions/modules.php:202 inc/modules/services/settings/services.php:4
-msgid "Services"
-msgstr "Services"
-
 #: inc/functions/modules.php:205
-msgid "Post Hack & Pro Configuration"
-msgstr "Après piratage & Configuration Pro"
+msgid "Get support from our team"
+msgstr "Obtenez de l’aide par notre équipe support"
 
 #: inc/functions/modules.php:206 inc/functions/modules.php:209
-#, php-format
-msgid ""
-"Let us configure %s on your site and benefit from our expertise. Get help "
-"from our experts. This page contains our services designed to help you with "
-"the plugin."
-msgstr ""
-"Laissez nous configurer %s pour vous et bénéficiez de notre expertise. "
-"Obtenez de l’aide de la part de nos experts. Cette page contient nos "
-"services fait pour vous aider avec le plugin."
+msgid "Need help? Don’t hesitate to ask for support here."
+msgstr "Besoin d’aide ? N’hésitez pas à demander du support ici."
 
 #. Translators: 1 is a file name, 2 and 3 are small parts of code.
 #: inc/functions/modules.php:552
@@ -7613,28 +7601,6 @@ msgstr ""
 "Si vous avez une application mobile, ou tout service lié à votre site web, "
 "vous ne devriez pas désactiver entièrement l’API XML-RPC."
 
-#: inc/modules/services/settings/services.php:7
-msgid "Professional Configuration"
-msgstr "Configuration professionnelle"
-
-#: inc/modules/services/settings/services.php:8
-msgid ""
-"You may need help to configuring the plugin perfectly, we can do this for "
-"you for $200."
-msgstr ""
-"Vous pourriez avoir besoin d’aide pour configurer le plugin avec perfection, "
-"nous pouvons le faire pour vous pour 200$."
-
-#: inc/modules/services/settings/services.php:18
-msgid "Has your website been hacked?"
-msgstr "Votre site a été piraté ?"
-
-#: inc/modules/services/settings/services.php:19
-msgid "We can help you to clean up your website after a hack, we charge $500."
-msgstr ""
-"Vous pourriez avoir besoin de nettoyer votre site après un piratage, nous "
-"facturons 500$."
-
 #: inc/modules/services/settings/support.php:10
 msgid "Documentation first"
 msgstr "La documentation en premier"
@@ -8327,6 +8293,40 @@ msgid ""
 msgstr ""
 "Protégez votre WordPress avec SecuPress, analysez et assurez-vous de la "
 "sécurité de votre site quotidiennement."
+
+#~ msgid "Services"
+#~ msgstr "Services"
+
+#~ msgid "Post Hack & Pro Configuration"
+#~ msgstr "Après piratage & Configuration Pro"
+
+#~ msgid ""
+#~ "Let us configure %s on your site and benefit from our expertise. Get help "
+#~ "from our experts. This page contains our services designed to help you "
+#~ "with the plugin."
+#~ msgstr ""
+#~ "Laissez nous configurer %s pour vous et bénéficiez de notre expertise. "
+#~ "Obtenez de l’aide de la part de nos experts. Cette page contient nos "
+#~ "services fait pour vous aider avec le plugin."
+
+#~ msgid "Professional Configuration"
+#~ msgstr "Configuration professionnelle"
+
+#~ msgid ""
+#~ "You may need help to configuring the plugin perfectly, we can do this for "
+#~ "you for $200."
+#~ msgstr ""
+#~ "Vous pourriez avoir besoin d’aide pour configurer le plugin avec "
+#~ "perfection, nous pouvons le faire pour vous pour 200$."
+
+#~ msgid "Has your website been hacked?"
+#~ msgstr "Votre site a été piraté ?"
+
+#~ msgid ""
+#~ "We can help you to clean up your website after a hack, we charge $500."
+#~ msgstr ""
+#~ "Vous pourriez avoir besoin de nettoyer votre site après un piratage, nous "
+#~ "facturons 500$."
 
 #~ msgid ""
 #~ "The scanner is able to activate some options, feel free to check the "
