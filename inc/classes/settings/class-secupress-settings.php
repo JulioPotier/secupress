@@ -1283,6 +1283,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 										'hook'    => 'secupress_ad_before',
 										'when'    => 'free', // For free || pro || both .
 										'content' => '<div class="secupress-section-dark secupress-pro-ad"> <i class="icon-secupress" aria-hidden="true"></i> <img src="##SECUPRESS_ADMIN_IMAGES_URL##logo-pro.png" class="secupress-pro-icon" srcset="##SECUPRESS_ADMIN_IMAGES_URL##logo-pro@2x.png" width="80" height="78" alt="SecuPress Pro"/> <p class="secupress-text-medium">Improve your Security</p> <p>Unlock all the features of SecuPress Pro</p> <a href="https://secupress.me/pricing/" class="secupress-button secupress-button-tertiary"> <span class="text">Get Pro Version</span> </a> <p><a href="https://secupress.me/features">Learn More About Pro Features</a></p> </div>',
+										'content-fr_FR' => '<div class="secupress-section-dark secupress-pro-ad"> <i class="icon-secupress" aria-hidden="true"></i> <img src="##SECUPRESS_ADMIN_IMAGES_URL##logo-pro.png" class="secupress-pro-icon" srcset="##SECUPRESS_ADMIN_IMAGES_URL##logo-pro@2x.png" width="80" height="78" alt="SecuPress Pro"/> <p class="secupress-text-medium">Améliorez votre sécurité</p> <p>Débloquez toutes les fonctionnalités<br>de SecuPress Pro</p> <a href="https://secupress.me/fr/tarifs/" class="secupress-button secupress-button-tertiary"> <span class="text">Acheter la version Pro</span> </a> <p><a href="https://secupress.me/fr/fonctionnalites/">Découvrez les fonctionalités pro</a></p> </div>',
 										),
 									// 1 => <div class="secupress-product-ads"> <a href="http://www.o2switch.fr/" target="_blank"> <img src="https://boiteaweb.fr/wp-content/uploads/plugins/ad-o2switch.jpg" width="280"/> </a> </div>
 				);
@@ -1296,7 +1297,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					|| ( 'pro' === $sidead['when'] && secupress_is_pro() )
 					|| 'both' === $sidead['when']
 				 ) {
-					echo wp_kses_post( str_replace( '##SECUPRESS_ADMIN_IMAGES_URL##', SECUPRESS_ADMIN_IMAGES_URL, $sidead['content'] ) );
+				 	$content = isset( $sidead['content-' . get_locale()] ) ? $sidead['content-' . get_locale()] : $sidead['content'];
+					echo wp_kses_post( str_replace( '##SECUPRESS_ADMIN_IMAGES_URL##', SECUPRESS_ADMIN_IMAGES_URL, $content ) );
 				}
 			}
 
