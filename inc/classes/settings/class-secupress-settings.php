@@ -977,7 +977,6 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$field_id = isset( $field['id'] ) ? explode( '|', $field['id'] ) : array( '' );
 			$field_id = end( $field_id );
 			$is_free  = ! secupress_is_pro();
-			$is_free  = false;
 			$class    = 'secupress-setting-row_' . sanitize_html_class( $field_id ) . ' secupress-setting-row ';
 			$class   .= static::is_pro_feature( $field['args']['name'] ) && $is_free ? 'secupress-pro-row ' : '';
 			$class   .= static::is_pro_feature( $field['args']['name'] ) && ! $is_free ? 'secupress-show-pro ' : '';
