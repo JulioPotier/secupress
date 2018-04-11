@@ -193,6 +193,7 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 * New#572: New filter `secupress.settings.load_plugin.$plugin` to prevent a full block of settings to be displayed
 * New#572: New filter `secupress.settings.field.$args['name']` to hide an option from a setting block
 * New#576: New scan 404 on .php files
+* Improvement#242: When Pro is active, you'll see a small yellow Ezio (the eagle) logo on each pro feature, so you know what is a pro feature.
 * Improvement#401: Remove outdated scanners and features : REST API Blocking, Non Login Time Slot, DirectoryIndex, no need that now.
 * Improvement#480: Change the way we display the anti sqli scanner code, more lorem, more ipsum, less random
 * Improvement#541: Change the way we load Move Login to prevent any "404 management" plugin to generate conflict
