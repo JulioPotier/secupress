@@ -108,6 +108,22 @@ function secupress_get_modules() {
 				'pro_options'  => 0,
 			),
 		),
+		'logs'            => array(
+			'title'       => _x( 'Logs', 'post type general name', 'secupress' ),
+			'icon'        => 'logs',
+			'summaries'   => array(
+				'small'  => __( 'Monitor everything', 'secupress' ),
+				'normal' => __( 'Keep an eye on what happened on your website at any time. Also, control banned IPs from our modules here.', 'secupress' ),
+			),
+			'with_form'   => false,
+			'description' => array(
+				__( 'Keep an eye on what happened on your website at any time. Also, control banned IPs from our modules here.', 'secupress' ),
+			),
+			'counts' => array(
+				'free_options' => 4,
+				'pro_options'  => 0,
+			),
+		),
 		'file-system'     => array(
 			'title'       => __( 'Malware Scan', 'secupress' ),
 			'icon'        => 'file-system',
@@ -173,22 +189,6 @@ function secupress_get_modules() {
 			'counts' => array(
 				'free_options' => 0,
 				'pro_options'  => 4,
-			),
-		),
-		'logs'            => array(
-			'title'       => _x( 'Logs', 'post type general name', 'secupress' ),
-			'icon'        => 'logs',
-			'summaries'   => array(
-				'small'  => __( 'Monitor everything', 'secupress' ),
-				'normal' => __( 'Keep an eye on what happened on your website at any time. Also, control banned IPs from our modules here.', 'secupress' ),
-			),
-			'with_form'   => false,
-			'description' => array(
-				__( 'Keep an eye on what happened on your website at any time. Also, control banned IPs from our modules here.', 'secupress' ),
-			),
-			'counts' => array(
-				'free_options' => 4,
-				'pro_options'  => 0,
 			),
 		),
 	);
