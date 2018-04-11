@@ -203,13 +203,14 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 */
 	public function print_page() {
 		$is_welcome = 'welcome' !== $this->get_current_module() ? false : true;
+		$secupress_has_sideads = apply_filters( 'secupress.no_sidebar', true ) && apply_filters( 'secupress.no_sideads', true );
 		?>
 		<div class="wrap">
 
 			<?php secupress_admin_heading( __( 'Modules', 'secupress' ) ); ?>
 			<?php settings_errors(); ?>
 
-			<div class="secupress-wrapper<?php echo ( $is_welcome ? '' : ' secupress-flex secupress-flex-top' ) ?><?php echo ( ! secupress_is_pro() ? ' secupress-has-sideads' : '' ) ?>">
+			<div class="secupress-wrapper<?php echo ( $is_welcome ? '' : ' secupress-flex secupress-flex-top' ) ?><?php echo ( $secupress_has_sideads ? ' secupress-has-sideads' : '' ) ?>">
 
 				<?php
 				/**

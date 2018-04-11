@@ -74,10 +74,11 @@ class SecuPress_Settings_Global extends SecuPress_Settings {
 		 * @param (array) $setting_modules The modules.
 		 */
 		$setting_modules = apply_filters( 'secupress.global_settings.modules', $setting_modules );
+		$secupress_has_sideads = apply_filters( 'secupress.no_sidebar', true ) && apply_filters( 'secupress.no_sideads', true );
 		?>
 		<div class="wrap">
 
-			<div class="secupress-setting-wrapper<?php echo ( ! secupress_is_pro() ? ' secupress-has-sideads' : '' ) ?>">
+			<div class="secupress-setting-wrapper<?php echo ( $secupress_has_sideads ? ' secupress-has-sideads' : '' ) ?>">
 
 				<div class="secupress-setting-content">
 					<?php
