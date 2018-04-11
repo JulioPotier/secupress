@@ -128,6 +128,9 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan implements SecuPress_
 			}
 		}
 
+		// Good.
+		$this->maybe_set_status( 0 );
+
 		return parent::scan();
 	}
 

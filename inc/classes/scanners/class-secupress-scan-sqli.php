@@ -126,6 +126,9 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Inter
 			}
 		}
 
+		// Good.
+		$this->maybe_set_status( 0 );
+
 		return parent::scan();
 	}
 
