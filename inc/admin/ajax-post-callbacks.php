@@ -762,7 +762,8 @@ function secupress_global_settings_activate_pro_license( $new_values, $old_value
 
 	// Triggered by auto license validation.
 	if ( empty( $old_values ) ) {
-		update_site_option( SECUPRESS_SETTINGS_SLUG, array_merge( $new_values, get_site_option( SECUPRESS_SETTINGS_SLUG ) ) );
+		$options = get_site_option( SECUPRESS_SETTINGS_SLUG ) ? get_site_option( SECUPRESS_SETTINGS_SLUG ) : array();
+		update_site_option( SECUPRESS_SETTINGS_SLUG, array_merge( $new_values, $options ) );
 	} else {
 		return $new_values;
 	}
