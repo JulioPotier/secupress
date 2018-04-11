@@ -739,7 +739,7 @@ function secupress_scanners() {
 
 					<div id="secupress-more-info" class="<?php echo $reports ? ' hide-if-js' : ' secupress-open'; ?>">
 						<div class="secupress-flex secupress-flex-top">
-							<div class="secupress-col-1-4">
+							<div class="secupress-col-1-4 step1">
 								<div class="secupress-blob">
 									<div class="secupress-blob-icon" aria-hidden="true">
 										<i class="secupress-icon-radar"></i>
@@ -750,7 +750,7 @@ function secupress_scanners() {
 									</div>
 								</div>
 							</div><!-- .secupress-col-1-4 -->
-							<div class="secupress-col-1-4">
+							<div class="secupress-col-1-4 step2">
 								<div class="secupress-blob">
 									<div class="secupress-blob-icon" aria-hidden="true">
 										<i class="secupress-icon-autofix"></i>
@@ -761,7 +761,7 @@ function secupress_scanners() {
 									</div>
 								</div>
 							</div><!-- .secupress-col-1-4 -->
-							<div class="secupress-col-1-4">
+							<div class="secupress-col-1-4 step3">
 								<div class="secupress-blob">
 									<div class="secupress-blob-icon" aria-hidden="true">
 										<i class="secupress-icon-manuals"></i>
@@ -772,7 +772,7 @@ function secupress_scanners() {
 									</div>
 								</div>
 							</div><!-- .secupress-col-1-4 -->
-							<div class="secupress-col-1-4">
+							<div class="secupress-col-1-4 step4">
 								<div class="secupress-blob">
 									<div class="secupress-blob-icon" aria-hidden="true">
 										<i class="secupress-icon-pad-check"></i>

@@ -116,6 +116,11 @@ if ( $new_scans ) {
 		<?php } ?>
 	</p>
 	<p>
-		<?php echo $main_button; ?>
+		<a href="<?php echo secupress_admin_url( 'scanners' ); ?>&step=2" class="secupress-button secupress-button-tertiary shadow">
+			<span class="icon">
+				<i class="secupress-icon-wrench" aria-hidden="true"></i>
+			</span>
+			<span class="text"><?php _e( 'Next step', 'secupress' ); ?></span>
+		</a>
 	</p>
 </div>
