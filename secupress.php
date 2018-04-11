@@ -82,7 +82,6 @@ function secupress_init() {
 
 	// Load translations.
 	secupress_load_plugin_textdomain_translations();
-	add_action( 'init', 'secupress_load_default_textdomain_translations' );
 
 	// Functions.
 	secupress_load_functions();
@@ -388,24 +387,7 @@ function secupress_load_plugin_textdomain_translations() {
 
 	// Make sure Poedit keeps our plugin headers.
 	/** Translators: Plugin Name of the plugin/theme */
-	__( 'SecuPress — WordPress Security', 'secupress' );
+	__( 'SecuPress Free — WordPress Security', 'secupress' );
 	/** Translators: Description of the plugin/theme */
 	__( 'Protect your WordPress with SecuPress, analyze and ensure the safety of your website daily.', 'secupress' );
-}
-
-
-/**
- * Translations for the default textdomain must be loaded on init, not before.
- *
- * @since 1.0
- */
-function secupress_load_default_textdomain_translations() {
-	static $done = false;
-
-	if ( $done ) {
-		return;
-	}
-	$done = true;
-
-	load_plugin_textdomain( 'default', false, dirname( plugin_basename( SECUPRESS_FILE ) ) . '/languages' );
 }

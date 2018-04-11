@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2018-04-11 00:10+0200\n"
-"PO-Revision-Date: 2018-04-11 00:10+0200\n"
+"POT-Creation-Date: 2018-04-11 16:07+0200\n"
+"PO-Revision-Date: 2018-04-11 16:07+0200\n"
 "Last-Translator: WP Media <contact@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -462,7 +462,7 @@ msgstr ""
 "Le trafic réalisé par les bots représente environ 60% d’Internet. Les spams "
 "sont fait par ces bots. Ne les laissez pas faire ça !"
 
-#: inc/admin/functions/admin.php:263 inc/functions/modules.php:147
+#: inc/admin/functions/admin.php:263 inc/functions/modules.php:163
 msgid "Alerts"
 msgstr "Alertes"
 
@@ -861,9 +861,9 @@ msgstr "Mise à jour %s : Découvrez les nouveaux points de sécurité à véri
 msgid "List of the security items already analyzed"
 msgstr "Liste des éléments de sécurité analysés"
 
-#: inc/admin/scanner-step-1.php:73 inc/admin/scanner-step-2.php:58
-#: inc/admin/scanner-step-2.php:89 inc/admin/scanner-step-2.php:112
-#: inc/admin/scanner-step-3.php:105
+#: inc/admin/scanner-step-1.php:73 inc/admin/scanner-step-1.php:123
+#: inc/admin/scanner-step-2.php:58 inc/admin/scanner-step-2.php:89
+#: inc/admin/scanner-step-2.php:112 inc/admin/scanner-step-3.php:105
 msgid "Next step"
 msgstr "Prochaine étape"
 
@@ -882,7 +882,7 @@ msgstr "Obtenez la version Pro pour exporter ce rapport dans un fichier PDF."
 
 #: inc/admin/scanner-step-1.php:114 inc/admin/scanner-step-2.php:194
 #: inc/admin/scanner-step-3.php:190 inc/admin/scanner-step-4.php:277
-#: inc/classes/settings/class-secupress-settings.php:1442
+#: inc/classes/settings/class-secupress-settings.php:1446
 #, php-format
 msgid "Available in <a href=\"%s\" target=\"_blank\">Pro Version</a>"
 msgstr "Disponible dans la <a href=\"%s\" target=\"_blank\">version Pro</a>"
@@ -967,6 +967,7 @@ msgid "Read the documentation"
 msgstr "Lire la documentation"
 
 #: inc/admin/scanner-step-3.php:276
+#: inc/classes/settings/class-secupress-settings.php:1382
 msgid "Ask for support"
 msgstr "Demander au support"
 
@@ -1270,12 +1271,12 @@ msgstr "La documentation est en construction, merci pour votre patience."
 
 #: inc/admin/settings.php:267 inc/admin/settings.php:269
 #: inc/admin/settings.php:309
-#: inc/classes/settings/class-secupress-settings.php:1372
+#: inc/classes/settings/class-secupress-settings.php:1376
 msgid "Support"
 msgstr "Support"
 
 #: inc/admin/settings.php:272 inc/classes/scanners/class-secupress-scan.php:229
-#: inc/classes/settings/class-secupress-settings.php:1364
+#: inc/classes/settings/class-secupress-settings.php:1368
 msgid "http://docs.secupress.me/"
 msgstr "http://fr.docs.secupress.me/"
 
@@ -1844,7 +1845,7 @@ msgid "View"
 msgstr "Voir"
 
 #: inc/classes/common/class-secupress-logs-list.php:150
-#: inc/functions/modules.php:182
+#: inc/functions/modules.php:115
 msgid "Monitor everything"
 msgstr "Surveillez tout"
 
@@ -1882,7 +1883,7 @@ msgstr "Supprimer les journaux avec cette IP"
 #: inc/classes/common/class-secupress-logs.php:493
 #: inc/classes/common/class-secupress-logs.php:667
 #: inc/classes/common/class-secupress-logs.php:668
-#: inc/functions/modules.php:179 inc/modules/logs/settings/logs.php:7
+#: inc/functions/modules.php:112 inc/modules/logs/settings/logs.php:7
 msgctxt "post type general name"
 msgid "Logs"
 msgstr "Journaux"
@@ -2562,7 +2563,7 @@ msgstr "Mauvaises extensions de fichiers"
 
 #: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:69
 #: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:96
-#: inc/functions/modules.php:112
+#: inc/functions/modules.php:128
 msgid "Malware Scan"
 msgstr "Scanner de virus"
 
@@ -5206,15 +5207,15 @@ msgstr "Les prochains rôles seront automatiquement cochés."
 msgid "Warning: "
 msgstr "Attention : "
 
-#: inc/classes/settings/class-secupress-settings.php:1216
+#: inc/classes/settings/class-secupress-settings.php:1218
 msgid "Save All Changes"
 msgstr "Tout sauver"
 
-#: inc/classes/settings/class-secupress-settings.php:1314
+#: inc/classes/settings/class-secupress-settings.php:1318
 msgid "Hacked Website?"
 msgstr "Site piraté ?"
 
-#: inc/classes/settings/class-secupress-settings.php:1317
+#: inc/classes/settings/class-secupress-settings.php:1321
 msgid ""
 "Well, this is not a good day for you, we will try to make you smile while "
 "we’re working on it!"
@@ -5222,58 +5223,57 @@ msgstr ""
 "Mince, ce n‘est pas un bon jour pour vous, nous essaierons de vous faire "
 "sourire pendant que nous travaillons dessus !"
 
-#: inc/classes/settings/class-secupress-settings.php:1320
-#: inc/classes/settings/class-secupress-settings.php:1334
+#: inc/classes/settings/class-secupress-settings.php:1324
+#: inc/classes/settings/class-secupress-settings.php:1338
 msgid "pricing"
 msgstr "fr/tarifs"
 
-#: inc/classes/settings/class-secupress-settings.php:1320
-#: inc/classes/settings/class-secupress-settings.php:1334
+#: inc/classes/settings/class-secupress-settings.php:1324
+#: inc/classes/settings/class-secupress-settings.php:1338
 msgid "Ask an Expert"
 msgstr "Demandez un expert"
 
-#: inc/classes/settings/class-secupress-settings.php:1328
+#: inc/classes/settings/class-secupress-settings.php:1332
 msgid "Pro Config"
 msgstr "Configuration Pro"
 
-#: inc/classes/settings/class-secupress-settings.php:1331
+#: inc/classes/settings/class-secupress-settings.php:1335
 msgid "Need an Expert to Set-Up SecuPress for You?"
 msgstr "Besoin qu’un expert configure SecuPress pour vous ?"
 
-#: inc/classes/settings/class-secupress-settings.php:1344
+#: inc/classes/settings/class-secupress-settings.php:1348
 msgid "FAQ"
 msgstr "FAQ"
 
-#: inc/classes/settings/class-secupress-settings.php:1347
+#: inc/classes/settings/class-secupress-settings.php:1351
 msgid "All the answers to your questions."
 msgstr "Toutes les réponses à vos questions."
 
-#: inc/classes/settings/class-secupress-settings.php:1350
+#: inc/classes/settings/class-secupress-settings.php:1354
 msgid "faq"
 msgstr "fr/faq"
 
-#: inc/classes/settings/class-secupress-settings.php:1350
-#: inc/classes/settings/class-secupress-settings.php:1378
+#: inc/classes/settings/class-secupress-settings.php:1354
 msgid "Read the FAQ"
 msgstr "Lire la FAQ"
 
-#: inc/classes/settings/class-secupress-settings.php:1358
+#: inc/classes/settings/class-secupress-settings.php:1362
 msgid "Documentation"
 msgstr "Documentation"
 
-#: inc/classes/settings/class-secupress-settings.php:1361
+#: inc/classes/settings/class-secupress-settings.php:1365
 msgid "We already have some solutions for you."
 msgstr "Nous avons déjà des solutions pour vous."
 
-#: inc/classes/settings/class-secupress-settings.php:1364
+#: inc/classes/settings/class-secupress-settings.php:1368
 msgid "Read the docs"
 msgstr "Lire la documentation"
 
-#: inc/classes/settings/class-secupress-settings.php:1375
+#: inc/classes/settings/class-secupress-settings.php:1379
 msgid "Got an issue? Ask for support."
 msgstr "Un problème ? Demandez du support."
 
-#: inc/classes/settings/class-secupress-settings.php:1378
+#: inc/classes/settings/class-secupress-settings.php:1382
 msgid "support"
 msgstr "fr/support"
 
@@ -5632,11 +5632,19 @@ msgstr ""
 "Aussi par défaut, les mauvaises adresses IP sont bloquées, les noms "
 "d’auteur, email et sites web connus en tant que spammers."
 
-#: inc/functions/modules.php:115
+#: inc/functions/modules.php:116 inc/functions/modules.php:120
+msgid ""
+"Keep an eye on what happened on your website at any time. Also, control "
+"banned IPs from our modules here."
+msgstr ""
+"Gardez un oeil sur ce qui arrive sur votre site tout le temps. Aussi, "
+"contrôlez les adresses IP bannie depuis ce module."
+
+#: inc/functions/modules.php:131
 msgid "Permissions &amp; Antivirus"
 msgstr "Droits &amp; Antivirus"
 
-#: inc/functions/modules.php:116 inc/functions/modules.php:120
+#: inc/functions/modules.php:132 inc/functions/modules.php:136
 msgid ""
 "Check file permissions, run monitoring and antivirus on your installation to "
 "verify file integrity."
@@ -5644,16 +5652,16 @@ msgstr ""
 "Vérifie les droits sur les fichiers, lance des surveillance et un antivirus "
 "sur votre installation pour vérifier l’intégrité de vos fichiers."
 
-#: inc/functions/modules.php:129
+#: inc/functions/modules.php:145
 #: inc/modules/schedules/settings/schedules-backups.php:6
 msgid "Backups"
 msgstr "Sauvegardes"
 
-#: inc/functions/modules.php:132
+#: inc/functions/modules.php:148
 msgid "Never lose anything"
 msgstr "Ne perdez plus jamais rien"
 
-#: inc/functions/modules.php:133 inc/functions/modules.php:137
+#: inc/functions/modules.php:149 inc/functions/modules.php:153
 msgid ""
 "Reduce the risks of losing your content in an attack by backing up your "
 "database and files."
@@ -5661,7 +5669,7 @@ msgstr ""
 "Réduisez le risque de perdre votre contenu à cause d’une attaque en "
 "sauvegardant votre base de données et vos fichiers."
 
-#: inc/functions/modules.php:138
+#: inc/functions/modules.php:154
 #, php-format
 msgid ""
 "Don't forget to <a href=\"%s\">schedule backups</a> as soon as possible."
@@ -5669,11 +5677,11 @@ msgstr ""
 "N’oubliez pas de <a href=\"%s\">planifier des sauvegardes</a> dès que "
 "possible."
 
-#: inc/functions/modules.php:150
+#: inc/functions/modules.php:166
 msgid "React quickly in case of attack"
 msgstr "Réagissez vite en cas d’attaque"
 
-#: inc/functions/modules.php:151 inc/functions/modules.php:154
+#: inc/functions/modules.php:167 inc/functions/modules.php:170
 msgid ""
 "Being alerted of some important events will help you to react quickly in "
 "case of possible attacks."
@@ -5681,28 +5689,20 @@ msgstr ""
 "Être alerté(e) des évènements importants peut aider à réagir rapidement en "
 "cas de possibles attaques."
 
-#: inc/functions/modules.php:163
+#: inc/functions/modules.php:179
 msgid "Schedules"
 msgstr "Planifications"
 
-#: inc/functions/modules.php:166
+#: inc/functions/modules.php:182
 msgid "Automate all your tasks"
 msgstr "Automatisez toutes vos tâches"
 
-#: inc/functions/modules.php:167 inc/functions/modules.php:170
+#: inc/functions/modules.php:183 inc/functions/modules.php:186
 #, php-format
 msgid "Let %s scan your website when you are away by using recurent scans."
 msgstr ""
 "Laissez %s scanner votre site quand vous n’êtes pas là avec des scanners "
 "récurrents."
-
-#: inc/functions/modules.php:183 inc/functions/modules.php:187
-msgid ""
-"Keep an eye on what happened on your website at any time. Also, control "
-"banned IPs from our modules here."
-msgstr ""
-"Gardez un oeil sur ce qui arrive sur votre site tout le temps. Aussi, "
-"contrôlez les adresses IP bannie depuis ce module."
 
 #. Translators: 1 is a file name, 2 and 3 are small parts of code.
 #: inc/functions/modules.php:537
@@ -8219,7 +8219,7 @@ msgstr ""
 "Ces options sont désactivées car le fichier %1$s n’est pas en écriture. "
 "Merci d’appliquer les droits %2$s sur ce fichier."
 
-#: secupress.php:293
+#: secupress.php:292
 #, php-format
 msgid ""
 "<strong>%1$s</strong> requires PHP %2$s minimum, your website is actually "
@@ -8228,7 +8228,7 @@ msgstr ""
 "<strong>%1$s<strong> requiert PHP v%2$s minimum, votre site utilise "
 "actuellement la version %3$s."
 
-#: secupress.php:307
+#: secupress.php:306
 #, php-format
 msgid ""
 "<strong>%1$s</strong> requires WordPress %2$s minimum, your website is "
@@ -8238,18 +8238,27 @@ msgstr ""
 "actuellement la version %3$s."
 
 #. Translators: Plugin Name of the plugin/theme
-#: secupress.php:391
-msgid "SecuPress — WordPress Security"
-msgstr "SecuPress — Sécurité WordPress"
+#: secupress.php:390
+msgid "SecuPress Free — WordPress Security"
+msgstr "SecuPress Free — Sécurité WordPress"
 
 #. Translators: Description of the plugin/theme
-#: secupress.php:393
+#: secupress.php:392
 msgid ""
 "Protect your WordPress with SecuPress, analyze and ensure the safety of your "
 "website daily."
 msgstr ""
 "Protégez votre WordPress avec SecuPress, analysez et assurez-vous de la "
 "sécurité de votre site quotidiennement."
+
+#~ msgid "More Security2"
+#~ msgstr "Plus de sécurité2"
+
+#~ msgid "More Security3"
+#~ msgstr "Plus de sécurité3"
+
+#~ msgid "More Security4"
+#~ msgstr "Plus de sécurité4"
 
 #~ msgid "Get support from our team"
 #~ msgstr "Obtenez de l’aide par notre équipe support"
