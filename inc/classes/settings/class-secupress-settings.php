@@ -980,8 +980,11 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$id       = '';
 			$field_id = isset( $field['id'] ) ? explode( '|', $field['id'] ) : array( '' );
 			$field_id = end( $field_id );
-			$is_pro   = static::is_pro_feature( $field['args']['name'] ) && ! secupress_is_pro();
-			$class    = 'secupress-setting-row ' . ( $is_pro ? 'secupress-pro-row ' : static::is_pro_feature( $field['args']['name'] ) ? 'secupress-show-pro ' : '' ) . 'secupress-setting-row_' . sanitize_html_class( $field_id ) . ' ';
+			$is_free  = ! secupress_is_pro();
+			$is_free  = false;
+			$class    = 'secupress-setting-row_' . sanitize_html_class( $field_id ) . ' secupress-setting-row ';
+			$class   .= static::is_pro_feature( $field['args']['name'] ) && $is_free ? 'secupress-pro-row ' : '';
+			$class   .= static::is_pro_feature( $field['args']['name'] ) && ! $is_free ? 'secupress-show-pro ' : '';
 
 			// Row ID.
 			if ( ! empty( $field['args']['row_id'] ) ) {
@@ -990,7 +993,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 			// Row class.
 			if ( ! empty( $field['args']['row_class'] ) ) {
-				$class .= $field['args']['row_class'];
+				$class .= ' ' . $field['args']['row_class'];
 			}
 
 			if ( ! empty( $field['args']['depends'] ) ) {
@@ -1039,7 +1042,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					</div>
 					<div class="secupress-get-pro-col">
 					<?php
-					if ( $is_pro ) {
+					if ( ! $is_free ) {
 						echo '<p class="secupress-get-pro">' . static::get_pro_version_string() . '</p>';
 					}
 					?>
