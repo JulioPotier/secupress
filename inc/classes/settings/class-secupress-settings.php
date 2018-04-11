@@ -1037,7 +1037,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					</div>
 					<div class="secupress-get-pro-col">
 					<?php
-					if ( ! $is_free ) {
+					if ( static::is_pro_feature( $field['args']['name'] ) && $is_free ) {
 						echo '<p class="secupress-get-pro">' . static::get_pro_version_string() . '</p>';
 					}
 					?>
