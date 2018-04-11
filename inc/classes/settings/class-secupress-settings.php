@@ -1378,7 +1378,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				<p><?php _e( 'Got an issue? Ask for support.', 'secupress' ) ?></p>
 
 			<p class="secupress-cta">
-				<a href="https://secupress.me/<?php _e( 'support', 'secupress' ); ?>" class="secupress-button" target="_blank"><?php _e( 'Read the FAQ', 'secupress' ); ?></a>
+				<a href="https://secupress.me/<?php _e( 'support', 'secupress' ); ?>" class="secupress-button" target="_blank"><?php _e( 'Ask for support', 'secupress' ); ?></a>
 			</p>
 			</div>
 		</div>
