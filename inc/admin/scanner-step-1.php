@@ -101,7 +101,7 @@ if ( $new_scans ) {
 				</span>
 			</a>
 		<?php } else { ?>
-			<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ) ?>" title="<?php esc_attr_e( 'Get the Pro Version to export this report as PDF file.', 'secupress' ); ?>" target="_blank" class="secupress-button disabled shadow">
+			<a href="<?php echo esc_url( 'https://secupress.me/' . __( 'pricing', 'secupress' ) ) ?>" title="<?php esc_attr_e( 'Get the Pro Version to export this report as PDF file.', 'secupress' ); ?>" target="_blank" class="secupress-button disabled shadow">
 				<span class="icon">
 					<i class="secupress-icon-file-pdf-o" aria-hidden="true"></i>
 				</span>
@@ -111,7 +111,7 @@ if ( $new_scans ) {
 			</a>
 			<br>
 			<span class="secupress-get-pro-version">
-				<?php printf( __( 'Available in <a href="%s" target="_blank">Pro Version</a>', 'secupress' ), esc_url( secupress_admin_url( 'get_pro' ) ) ); ?>
+				<?php printf( __( 'Available in <a href="%s" target="_blank">Pro Version</a>', 'secupress' ), esc_url( 'https://secupress.me/' . __( 'pricing', 'secupress' ) ) ); ?>
 			</span>
 		<?php } ?>
 	</p>

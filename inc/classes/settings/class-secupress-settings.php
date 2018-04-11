@@ -1443,7 +1443,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * @return (string)
 	 */
 	public static function get_pro_version_string( $format = '' ) {
-		$message = sprintf( __( 'Available in <a href="%s" target="_blank">Pro Version</a>', 'secupress' ), esc_url( secupress_admin_url( 'get_pro' ) ) );
+		$message = sprintf( __( 'Available in <a href="%s" target="_blank">Pro Version</a>', 'secupress' ), esc_url( 'https://secupress.me/' . __( 'pricing', 'secupress' ) ) );
 		if ( $format ) {
 			$message = sprintf( $format, $message );
 		}
