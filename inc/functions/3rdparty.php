@@ -150,7 +150,7 @@ function secupress_3rd_compat__wordpress_2_step_verification( $activated ) {
 For wpserveur.net
 */
 // Auto approve those rules (already done by their own nginx rules provided from us).
-if ( defined( 'IS_WPSERVEUR' ) && IS_WPSERVEUR ) {
+if ( strpos( gethostname(), 'wps' ) === 0 ) {
 	add_filter( 'secupress.pre_scan.SecuPress_Scan_Bad_File_Extensions', '__return_true' );
 	add_filter( 'secupress.pre_scan.SecuPress_Scan_Bad_Url_Access',      '__return_true' );
 	add_filter( 'secupress.pre_scan.SecuPress_Scan_Directory_Listing',   '__return_true' );
