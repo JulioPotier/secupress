@@ -65,14 +65,16 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 		'confirmText'         => __( 'OK', 'secupress' ),
 		'cancelText'          => __( 'Cancel' ),
 		'closeText'           => __( 'Close' ),
-		/**
+
+		/*
 		'authswal'     => array(
 			'title'  => __( 'Authentication', 'secupress' ),
 			'email'  => __( 'Enter your email', 'secupress' ),
 			'apikey' => __( 'Enter your API Key', 'secupress' ),
 			'where'  => __( 'Where can I find my API Key?', 'secupress' ),
 			'save'   => __( 'Save and continue to first scan', 'secupress' ),
-		),*/
+		),
+		*/
 	) );
 
 	// Settings page.
@@ -262,7 +264,7 @@ add_filter( 'plugin_action_links_' . plugin_basename( SECUPRESS_FILE ), 'secupre
 function secupress_settings_action_links( $actions ) {
 	if ( ! secupress_is_white_label() ) {
 		if ( secupress_can_access_support() ) {
-			array_unshift( $actions, sprintf( '<a href="%s">%s</a>', esc_url( secupress_admin_url( 'modules', 'services' ) ), __( 'Support', 'secupress' ) ) );
+			array_unshift( $actions, sprintf( '<a href="%s">%s</a>', esc_url( 'https://secupress.me/' . __( 'support', 'secupress' ) ), __( 'Support', 'secupress' ) ) );
 		} else {
 			array_unshift( $actions, sprintf( '<a href="%s">%s</a>', 'https://wordpress.org/support/plugin/secupress', __( 'Support', 'secupress' ) ) );
 		}
@@ -287,7 +289,7 @@ add_action( ( is_multisite() ? 'network_' : '' ) . 'admin_menu', 'secupress_crea
  * @since 1.0
  */
 function secupress_create_menus() {
-	global $menu;
+	global $menu, $submenu;
 
 	// Add a counter of scans with bad result.
 	$count = sprintf( ' <span class="update-plugins count-%1$d"><span class="update-count">%1$d</span></span>', secupress_get_scanner_counts( 'bad' ) );
@@ -295,7 +297,7 @@ function secupress_create_menus() {
 	$icon  = secupress_wp_version_is( '3.8' ) ? 'dashicons-shield-alt' : '';
 
 	// Main menu item.
-	add_menu_page( SECUPRESS_PLUGIN_NAME, 'secupress', $cap, SECUPRESS_PLUGIN_SLUG . '_scanners', 'secupress_scanners', $icon );
+	add_menu_page( SECUPRESS_PLUGIN_NAME, SECUPRESS_PLUGIN_NAME, $cap, SECUPRESS_PLUGIN_SLUG . '_scanners', 'secupress_scanners', $icon );
 
 	// Sub-menus.
 	add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ) . $count, $cap, SECUPRESS_PLUGIN_SLUG . '_scanners', 'secupress_scanners' );
@@ -303,11 +305,8 @@ function secupress_create_menus() {
 	add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Settings' ),              __( 'Settings' ),                       $cap, SECUPRESS_PLUGIN_SLUG . '_settings', 'secupress_global_settings' );
 
 	if ( ! secupress_is_white_label() ) {
-		if ( secupress_can_access_support() ) {
-			add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Support', 'secupress' ), __( 'Support', 'secupress' ), $cap, SECUPRESS_PLUGIN_SLUG . '_modules&module=services', '__return_false' );
-		}
 		if ( ! secupress_is_pro() ) {
-			add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'PRO Version', 'secupress' ), __( 'PRO Version', 'secupress' ), $cap, SECUPRESS_PLUGIN_SLUG . '_modules&module=get-pro', '__return_false' );
+			add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'More Security', 'secupress' ), __( 'More Security', 'secupress' ), $cap, '__return_false', '__return_false' );
 		}
 	}
 
@@ -315,6 +314,13 @@ function secupress_create_menus() {
 	end( $menu );
 	$key = key( $menu );
 	$menu[ $key ][0] = SECUPRESS_PLUGIN_NAME . $count;
+
+	// Fix `add_submenu_page()` URL.
+	if ( ! secupress_is_white_label() && ! secupress_is_pro() ) {
+		end( $submenu );
+		$key = key( $submenu );
+		$submenu[ $key ][ count( $submenu[ $key ] ) -1 ] = array( __( 'More Security', 'secupress' ), $cap, __( 'https://secupress.me/pricing/?from=secupress-plugin', 'secupress' ), __( 'More Security', 'secupress' ) );
+	}
 }
 
 
@@ -730,7 +736,7 @@ function secupress_scanners() {
 
 					<div id="secupress-more-info" class="<?php echo $reports ? ' hide-if-js' : ' secupress-open'; ?>">
 						<div class="secupress-flex secupress-flex-top">
-							<div class="secupress-col-1-4">
+							<div class="secupress-col-1-4 step1">
 								<div class="secupress-blob">
 									<div class="secupress-blob-icon" aria-hidden="true">
 										<i class="secupress-icon-radar"></i>
@@ -741,7 +747,7 @@ function secupress_scanners() {
 									</div>
 								</div>
 							</div><!-- .secupress-col-1-4 -->
-							<div class="secupress-col-1-4">
+							<div class="secupress-col-1-4 step2">
 								<div class="secupress-blob">
 									<div class="secupress-blob-icon" aria-hidden="true">
 										<i class="secupress-icon-autofix"></i>
@@ -752,7 +758,7 @@ function secupress_scanners() {
 									</div>
 								</div>
 							</div><!-- .secupress-col-1-4 -->
-							<div class="secupress-col-1-4">
+							<div class="secupress-col-1-4 step3">
 								<div class="secupress-blob">
 									<div class="secupress-blob-icon" aria-hidden="true">
 										<i class="secupress-icon-manuals"></i>
@@ -763,7 +769,7 @@ function secupress_scanners() {
 									</div>
 								</div>
 							</div><!-- .secupress-col-1-4 -->
-							<div class="secupress-col-1-4">
+							<div class="secupress-col-1-4 step4">
 								<div class="secupress-blob">
 									<div class="secupress-blob-icon" aria-hidden="true">
 										<i class="secupress-icon-pad-check"></i>

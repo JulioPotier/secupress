@@ -138,6 +138,13 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
+
+		$activated = secupress_filter_scanner( __CLASS__ );
+		if ( true === $activated ) {
+			$this->add_message( 0 );
+			return parent::scan();
+		}
+
 		if ( ! $this->is_for_current_site() ) {
 			// If we're in a sub-site, don't list the plugins enabled in the network.
 			$to_keep = array();

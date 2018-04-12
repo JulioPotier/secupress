@@ -1,9 +1,9 @@
 === SecuPress Free — WordPress Security ===
 Contributors: SecuPress, juliobox, GregLone
 Tags: wordpress security, secure, security plugin, security, malware
-Requires at least: 3.7
-Tested up to: 4.8.2
-Stable tag: 1.3.3
+Requires at least: 4.0
+Tested up to: 4.9.5
+Stable tag: 1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -156,7 +156,7 @@ Yes, SecuPress is compatible with all WordPress caching plugins. If you encounte
 
 Yes, SecuPress is compatible with all multilingual WordPress plugins. If you have an issue, please get in touch with us and let us know!
 
-= Is SecuPress compatible with all server engines like Apache, Ngnix, IIS7? =
+= Is SecuPress compatible with all server engines like Apache, Nginx, IIS7? =
 
 Yes, SecuPress is compatible with all server engines. If you encounter an issue, do not hesitate to contact our support team.
 
@@ -178,6 +178,42 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 == Changelog ==
 
+= 1.4 =
+* 11 april 2018
+* New: PHP required version is now 5.4 (and will grow at each major version)
+* New: WordPress required version is now 4.0 (and will grow at each major version)
+* New#490: Block User Enumeration Feature
+* New#551: Ban 404 on .php Files Feature
+* New#544: API Key is hidden by default, you can also hide the full block using the new constant `SECUPRESS_HIDE_API_KEY` (will be set to true if `SECUPRESS_API_EMAIL` and `SECUPRESS_API_KEY` are set)
+* New#557: New constants `SECUPRESS_API_EMAIL` and `SECUPRESS_API_KEY` to overridde data from settings
+* New#558: New filter `secupress.pre_scan.$class` to shortcut any scanner
+* New#564: Block Fake SEO Bots Feature
+* New#562: New filter `secupress.get_email` to change the email when sending
+* New#567: New filter `secupress.nginx.notice` to prevent Nginx notices to pop
+* New#572: New filter `secupress.settings.load_plugin.$plugin` to prevent a full block of settings to be displayed
+* New#572: New filter `secupress.settings.field.$args['name']` to hide an option from a setting block
+* New#576: New scan 404 on .php files
+* New: Pro version is now required to auto-fix issues on step 2 in the scanner
+* Improvement#242: When Pro is active, you'll see a small yellow Ezio (the eagle) logo on each pro feature, so you know what is a pro feature.
+* Improvement#401: Remove outdated scanners and features : REST API Blocking, Non Login Time Slot, DirectoryIndex, no need that now.
+* Improvement#480: Change the way we display the anti sqli scanner code, more lorem, more ipsum, less random
+* Improvement#541: Change the way we load Move Login to prevent any "404 management" plugin to generate conflict
+* Improvement#550: Move Login will now let the priority to "WPS Hide Login" and "SF Move Login"
+* Improvement#553: Move Login will now redirect into the dashboard if the user is logged in
+* Improvement#563: Do not log banned IPs
+* Improvement#569: Let the possibility to go to step2 without launching a new scan
+* Improvement#570: Revamp of the "Get Pro" page (use an external link instead haha)
+* Improvement#571: Remove the hardcoded ads, add more help instead + you can still disable the full bar using the filter `secupress.no_sidebar` or just future ads with `secupress.no_sideads`
+* Improvement#573: Add a 3rdparty.php file to have a better detection of 2FA plugins installed, and better compat with hosts like WPServeur and O2Switch
+* Fix#470: Some messages could be in 2 different languages in the scan results
+* Fix#533: Move Login was not acting correctly when subfoldered
+* Fix#543: ManageWP couldn't always correctly access the plugins list, now it's ok
+* Fix#545: Move Login new page was disclosed by wp-signup.php page
+* Fix#559: Notice: Undefined index: move-login_login-access in /secupress/modules/users-login/callbacks.php on line 246
+* Fix#565: GEOIp was not blocking all countries correctly
+* Fix#566: Anti Bruteforce Front was not blocking all requests correctly
+* Fix#568: Remove the Captcha hidden field, too much false negatives
+
 = 1.3.3 =
 * 04 september 2017
 * Fix#522: zxcvbn lib contained a not fixed bug, I did.
@@ -195,7 +231,7 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 * 02 august 2017
 * Improvement #512: Remove the recovery email notice, you won't need to fill this anymore
-* Improvement #507: Lighter Move Login module with less options, no .htaccess/web.config/ngnix.conf modifications but more decisions and less bugs instead of endless bugs.
+* Improvement #507: Lighter Move Login module with less options, no .htaccess/web.config/nginx.conf modifications but more decisions and less bugs instead of endless bugs.
 * Improvement #506: Remove the scan and fix for empty user agent (not efficient enough in 2017, too much false positive)
 * Improvement #505: Remove the scan and fix for too long URLs (not efficient enough in 2017, too much false positive)
 * Improvement #488: New bad user agent (Gecko/2009032609 Firefox), thanks to Fabrice from wpformation.com
@@ -320,9 +356,9 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 * 07 november 2016
 * Improvement #258: Remove the blog_id and website URL in the new salt keys to avoid having to log in on each website on a multisite, was just annoying.
 * Improvement #259: Better hook usage to allow any cache plugin (like WP Rocket of course) to ignore login page.
-* Improvement #195: Better Move Login rules on Ngnix. And better rules in general for all modules.
+* Improvement #195: Better Move Login rules on Nginx. And better rules in general for all modules.
 * Fix #262: Some firewall sub-modules are not working in front-end, the functions were not in the right file :|
-* Fix #252: X-Powered by header was not hidden on Ngnix. Ngnix my friend…
+* Fix #252: X-Powered by header was not hidden on Nginx.
 * Fix #250: WPML still appeared as a "bad plugin removed from repo", well, the whitelist filter was not used.
 
 = 1.1.2 =
@@ -423,6 +459,11 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 * Initial release \o/
 
 == Upgrade Notice ==
+
+= 1.4 =
+* 11 april 2018
+* PHP required version is now 5.4
+* WordPress required version is now 4.0
 
 = 1.3.1 =
 

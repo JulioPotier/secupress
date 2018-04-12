@@ -193,26 +193,28 @@ p.secupress-sh-subtitle {
 
 .secupress-tab-content-header {
 	position: relative;
-	padding: 15px 175px 25px 20px;
+	padding: 15px 175px 18px 20px;
 	background: #F2F2F6;
 	color: #5A626F; /*#393E46*/
+	border-bottom: 2px solid #393E46;
 }
 .secupress-tab-content-header p {
 	position: relative;
 	z-index: 2;
 }
 .secupress-tab-content-header i {
-	position: absolute;
-	z-index: 1;
-	right: 45px;
-	top: 50%;
-	margin-top: -40px;
-	font-size: 80px;
+	margin-right: 10px;
+	font-size: 30px;
+	background-color: #393E46;
 	color: #DFE3E8;
+	padding: 8px 8px 14px 10px;
+	border-radius: 5px;
+	display: inline;
 }
 .secupress-tc-title {
 	margin-top: .5em;
-	font-size: 23px;
+	font-size: 25px;
+	margin-left: 0;
 	font-weight: 600;
 	color: #393E46;
 }
@@ -326,11 +328,6 @@ input[type="text"]:required:invalid {
 /* Dashboard (Welcome Page) */
 .secupress-modules-dashboard {
 	border-radius: 0 0 3px 3px;
-}
-.secupress-modules-container {
-	width: 880px;
-	max-width: 100%;
-	margin: 4em auto;
 }
 .secupress-dashboard-header {
 	padding: 0 20px;
@@ -536,6 +533,10 @@ input[type="text"]:required:invalid {
 .fieldname-login-protection_type .secupress-pro-option .secupress-get-pro-version:before {
 	top: 12px;
 	left: 16px;
+}
+
+.secupress-show-pro {
+	background: url("../images/logo-pro-mini.png") top right no-repeat transparent;
 }
 
 /**

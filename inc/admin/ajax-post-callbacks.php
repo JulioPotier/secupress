@@ -466,13 +466,13 @@ function secupress_sanitize_move_login_slug_ajax_post_cb() {
 
 add_action( 'admin_post_nopriv_secupress_unlock_admin', 'secupress_unlock_admin_ajax_post_cb' );
 /**
- * Send an unlonk email if the provided address is from an admin
+ * Send an unlock email if the provided address is from an admin
  *
  * @author Julio Potier
  * @since 1.3.2
  **/
 function secupress_unlock_admin_ajax_post_cb() {
-	if ( ! isset( $_POST['_wpnonce'], $_POST['email'] ) || ! is_email( $_POST['email'] ) || ! check_ajax_referer( 'secupress-unban-ip-admin', '_wpnonce' ) ) {
+	if ( ! isset( $_POST['_wpnonce'], $_POST['email'] ) || ! is_email( $_POST['email'] ) || ! check_ajax_referer( 'secupress-unban-ip-admin', '_wpnonce' ) ) { // WPCS: CSRF ok.
 		wp_die( 'Cheatin\' uh?' );
 	}
 	$user = get_user_by( 'email', $_POST['email'] );
@@ -670,7 +670,7 @@ function secupress_global_settings_api_key_ajax_post_cb() {
  *
  * @return (array) $new_values The new settings, some values may have changed.
  */
-function secupress_global_settings_activate_pro_license( $new_values, $old_values ) {
+function secupress_global_settings_activate_pro_license( $new_values, $old_values = array() ) {
 	// If the Pro is not installed, get the plugin information.
 	$need_plugin_data = (int) ! secupress_has_pro();
 	$api_old_values   = secupress_array_merge_intersect( $old_values, array(
@@ -695,7 +695,6 @@ function secupress_global_settings_activate_pro_license( $new_values, $old_value
 		'user_key'     => $new_values['consumer_key'],
 		'install_time' => $install_time,
 		'plugin_data'  => $need_plugin_data,
-		'beta'         => (int) SECUPRESS_USE_BETA,
 	) );
 
 	$response = wp_remote_get( $url, array( 'timeout' => 10 ) );
@@ -760,7 +759,13 @@ function secupress_global_settings_activate_pro_license( $new_values, $old_value
 		}
 	}
 
-	return $new_values;
+	// Triggered by auto license validation.
+	if ( empty( $old_values ) ) {
+		$options = get_site_option( SECUPRESS_SETTINGS_SLUG ) ? get_site_option( SECUPRESS_SETTINGS_SLUG ) : array();
+		update_site_option( SECUPRESS_SETTINGS_SLUG, array_merge( $new_values, $options ) );
+	} else {
+		return $new_values;
+	}
 }
 
 

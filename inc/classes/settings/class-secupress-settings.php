@@ -435,7 +435,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * @since 1.0
 	 *
 	 * @param (array) $args An array with the following parameters:
-	 *                - (string) $type              The field type: 'number', 'email', 'tel', 'text', 'textarea', 'select', 'checkbox', 'checkboxes', 'radioboxes', 'radios', 'roles', 'countries', 'nonlogintimeslot'.
+	 *                - (string) $type              The field type: 'number', 'email', 'tel', 'text', 'textarea', 'select', 'checkbox', 'checkboxes', 'radioboxes', 'radios', 'roles', 'countries'.
 	 *                - (string) $name              The name attribute. Also used as id attribute if `$label_for` is not provided.
 	 *                - (string) $label_for         The id attribute. Also used as name attribute if `$name` is not provided.
 	 *                - (bool)   $plugin_activation Set to true if the field is not used for a setting but to (de)activate a plugin.
@@ -653,7 +653,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 						<?php
 						foreach ( $args['options'] as $val => $title ) {
 							$disabled = '';
-							if ( static::is_pro_feature( $args['name'] . '|' . $val ) ) {
+							if ( static::is_pro_feature( $args['name'] . '|' . $val ) && ! secupress_is_pro() ) {
 								$disabled     = ' disabled="disabled"';
 								$has_disabled = true;
 							}
@@ -693,35 +693,47 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 				foreach ( $args['options'] as $val => $title ) {
 					$args['label_for'] = $args['name'] . '_' . $val;
-					$disabled          = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' disabled="disabled"' : '';
+					$disabled          = static::is_pro_feature( $args['name'] . '|' . $val ) && ! secupress_is_pro() ? ' disabled="disabled"' : '';
+					$pro_class         = '';
+					if ( static::is_pro_feature( $args['name'] . '|' . $val ) && ! secupress_is_pro() ) {
+						$pro_class = ' secupress-pro-option';
+					} elseif ( static::is_pro_feature( $args['name'] . '|' . $val ) ) {
+						$pro_class = ' secupress-show-pro';
+					}
 					?>
-					<p class="secupress-fieldset-item secupress-fieldset-item-<?php echo $args['type']; ?><?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? ' secupress-pro-option' : ''; ?>">
+					<p class="secupress-fieldset-item secupress-fieldset-item-<?php echo $args['type']; ?><?php echo $pro_class; ?>">
 						<label<?php echo $disabled ? ' class="disabled"' : ''; ?> for="<?php echo esc_attr( $args['label_for'] ); ?>">
 							<input type="checkbox" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>[]" value="<?php echo $val; ?>"<?php checked( isset( $value[ $val ] ) ); ?><?php echo $disabled; ?><?php echo $attributes; ?>>
 							<?php echo '<span class="label-text">' . $title . '</span>'; ?>
 						</label>
-					<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? static::get_pro_version_string( '<span class="description secupress-get-pro-version">%s</span>' ) : ''; ?>
+					<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) && ! secupress_is_pro() ? static::get_pro_version_string( '<span class="description secupress-get-pro-version">%s</span>' ) : ''; ?>
 					</p>
 					<?php
 				}
 				break;
 
-			case 'radios' : // Video killed the radio star.
+			case 'radios' :
 
 				foreach ( $args['options'] as $val => $title ) {
 					$args['label_for'] = $args['name'] . '_' . $val;
-					$disabled          = static::is_pro_feature( $args['name'] . '|' . $val ) ? ' disabled="disabled"' : '';
+					$disabled          = static::is_pro_feature( $args['name'] . '|' . $val ) && ! secupress_is_pro() ? ' disabled="disabled"' : '';
+					$pro_class         = '';
+					if ( static::is_pro_feature( $args['name'] . '|' . $val ) && ! secupress_is_pro() ) {
+						$pro_class = ' secupress-pro-option';
+					} elseif ( static::is_pro_feature( $args['name'] . '|' . $val ) ) {
+						$pro_class = ' secupress-show-pro';
+					}
 
 					if ( ! $disabled && strpos( $title, 'secupress-coming-soon-feature' ) !== false ) {
 						$disabled = ' disabled="disabled"';
 					}
 					?>
-					<p class="secupress-radio-line<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? ' secupress-pro-option' : ''; ?>">
+					<p class="secupress-radio-line<?php echo $pro_class; ?>">
 						<label<?php echo $disabled ? ' class="disabled"' : ''; ?> for="<?php echo esc_attr( $args['label_for'] ); ?>">
 							<input type="radio" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>" value="<?php echo $val; ?>"<?php checked( $value, $val ); ?><?php echo $disabled; ?><?php echo $attributes; ?>>
 							<?php echo '<span class="label-text">' . $title . '</span>'; ?>
 						</label>
-						<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) ? static::get_pro_version_string( '<span class="description secupress-get-pro-version">%s</span>' ) : ''; ?>
+						<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) && ! secupress_is_pro() ? static::get_pro_version_string( '<span class="description secupress-get-pro-version">%s</span>' ) : ''; ?>
 					</p>
 					<?php
 				}
@@ -909,6 +921,10 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$args['name'] = $args['label_for'];
 		}
 
+		if ( false !== apply_filters( 'secupress.settings.field.' . $args['name'], false ) ) {
+			return;
+		}
+
 		// Get the title.
 		$title = $args['title'];
 		unset( $args['title'] );
@@ -964,8 +980,10 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$id       = '';
 			$field_id = isset( $field['id'] ) ? explode( '|', $field['id'] ) : array( '' );
 			$field_id = end( $field_id );
-			$is_pro   = static::is_pro_feature( $field['args']['name'] );
-			$class    = 'secupress-setting-row ' . ( $is_pro ? 'secupress-pro-row ' : '' ) . 'secupress-setting-row_' . sanitize_html_class( $field_id ) . ' ';
+			$is_free  = ! secupress_is_pro();
+			$class    = 'secupress-setting-row_' . sanitize_html_class( $field_id ) . ' secupress-setting-row ';
+			$class   .= static::is_pro_feature( $field['args']['name'] ) && $is_free ? 'secupress-pro-row ' : '';
+			$class   .= static::is_pro_feature( $field['args']['name'] ) && ! $is_free ? 'secupress-show-pro ' : '';
 
 			// Row ID.
 			if ( ! empty( $field['args']['row_id'] ) ) {
@@ -974,7 +992,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 			// Row class.
 			if ( ! empty( $field['args']['row_class'] ) ) {
-				$class .= $field['args']['row_class'];
+				$class .= ' ' . $field['args']['row_class'];
 			}
 
 			if ( ! empty( $field['args']['depends'] ) ) {
@@ -1023,7 +1041,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					</div>
 					<div class="secupress-get-pro-col">
 					<?php
-					if ( $is_pro ) {
+					if ( static::is_pro_feature( $field['args']['name'] ) && $is_free ) {
 						echo '<p class="secupress-get-pro">' . static::get_pro_version_string() . '</p>';
 					}
 					?>
@@ -1057,7 +1075,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		if ( ! empty( $field_args['disabled'] ) ) {
 			// The field is disabled.
 			$disabled = true;
-		} elseif ( static::is_pro_feature( $field_args['name'] ) ) {
+		} elseif ( static::is_pro_feature( $field_args['name'] ) && ! secupress_is_pro() ) {
 			// The field is Pro.
 			$disabled = true;
 		} elseif ( ! empty( $field_args['options'] ) && ! secupress_is_pro() ) {
@@ -1067,7 +1085,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			foreach ( (array) $field_args['options'] as $val => $title ) {
 				$name = $field_args['name'] . '_' . $val;
 
-				if ( ! static::is_pro_feature( $field_args['name'] . '|' . $val ) ) {
+				if ( ! static::is_pro_feature( $field_args['name'] . '|' . $val ) && ! secupress_is_pro() ) {
 					$has_enabled = true;
 					$fields[ $name ] = false;
 				} else {
@@ -1221,92 +1239,178 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	protected function print_sideads() {
 		global $current_screen;
 
-		if ( secupress_is_pro() ) {
+		if ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' !== $current_screen->base ) {
+			return;
+		}
+		/**
+		 * Give the possibility to hide the whole sidebar, don't do that!! ><
+		 *
+		 * @since 1.4
+		 *
+		 * @param (bool) false by default
+		 */
+		if ( false !== apply_filters( 'secupress.no_sidebar', false ) ) {
 			return;
 		}
 
-		$rk_offer = '20%';
-		$rk_code  = 'SECUPRESS20';
-		$rk_url   = 'https://wp-rocket.me/?utm_source=secupress&utm_campaign=sidebar&utm_medium=plugin';
+		?>
+		<div class="secupress-sideads">
+		<?php
+		/**
+		 * Give the possibility to hide the ads sidebar, ok you can do that.
+		 *
+		 * @since 1.4
+		 *
+		 * @param (bool) false by default
+		 */
+		if ( false === apply_filters( 'secupress.no_sideads', false ) ) { // Filter secupress_no_sideads.
 
-		$im_offer = __( '100MB', 'secupress' );
-		$im_url   = 'http://app.imagify.io/p/secupress/?utm_source=secupress&utm_campaign=sidebar&utm_medium=plugin';
+			$sideads = get_transient( 'secupress_sideads' );
+
+			if ( false === $sideads ) {
+				$response = wp_remote_get( SECUPRESS_WEB_MAIN . 'api/plugin/sideads/1.0/?lang=' . get_locale() );
+
+				if ( ! is_wp_error( $response ) && wp_remote_retrieve_response_code( $response ) === 200 ) {
+					$sideads = wp_remote_retrieve_body( $response );
+					$sideads = json_decode( $sideads, true );
+					set_transient( 'secupress_sideads', $sideads, DAY_IN_SECONDS );
+				}
+			}
+
+			if ( ! $sideads ) {
+				$sideads = array(
+									0 => array(
+										'hook'    => 'secupress_ad_before',
+										'when'    => 'free', // For free || pro || both .
+										'content' => '<div class="secupress-section-dark secupress-pro-ad"> <i class="icon-secupress" aria-hidden="true"></i> <img src="##SECUPRESS_ADMIN_IMAGES_URL##logo-pro.png" class="secupress-pro-icon" srcset="##SECUPRESS_ADMIN_IMAGES_URL##logo-pro@2x.png" width="80" height="78" alt="SecuPress Pro"/> <p class="secupress-text-medium">Improve your Security</p> <p>Unlock all the features of SecuPress Pro</p> <a href="https://secupress.me/pricing/" class="secupress-button secupress-button-tertiary"> <span class="text">Get Pro Version</span> </a> <p><a href="https://secupress.me/features">Learn More About Pro Features</a></p> </div>',
+										'content-fr_FR' => '<div class="secupress-section-dark secupress-pro-ad"> <i class="icon-secupress" aria-hidden="true"></i> <img src="##SECUPRESS_ADMIN_IMAGES_URL##logo-pro.png" class="secupress-pro-icon" srcset="##SECUPRESS_ADMIN_IMAGES_URL##logo-pro@2x.png" width="80" height="78" alt="SecuPress Pro"/> <p class="secupress-text-medium">Améliorez votre sécurité</p> <p>Débloquez toutes les fonctionnalités<br>de SecuPress Pro</p> <a href="https://secupress.me/fr/tarifs/" class="secupress-button secupress-button-tertiary"> <span class="text">Acheter la version Pro</span> </a> <p><a href="https://secupress.me/fr/fonctionnalites/">Découvrez les fonctionalités pro</a></p> </div>',
+										),
+									// 1 => <div class="secupress-product-ads"> <a href="http://www.o2switch.fr/" target="_blank"> <img src="https://boiteaweb.fr/wp-content/uploads/plugins/ad-o2switch.jpg" width="280"/> </a> </div>
+				);
+			}
+
+			foreach ( $sideads as $sidead ) {
+				if ( 'secupress_ad_before' !== $sidead['hook'] ) {
+					continue;
+				}
+				if ( ( 'free' === $sidead['when'] && ! secupress_is_pro() )
+					|| ( 'pro' === $sidead['when'] && secupress_is_pro() )
+					|| 'both' === $sidead['when']
+				 ) {
+				 	$content = isset( $sidead['content-' . get_locale()] ) ? $sidead['content-' . get_locale()] : $sidead['content'];
+					echo wp_kses_post( str_replace( '##SECUPRESS_ADMIN_IMAGES_URL##', SECUPRESS_ADMIN_IMAGES_URL, $content ) );
+				}
+			}
+
+			/**
+			 * Triggered before the tool boxes.
+			 *
+			 * @since 1.4
+			 */
+			do_action( 'secupress.ad_before' );
+
+		}
 		?>
 
-		<div class="secupress-sideads">
-			<?php if ( empty( $current_screen ) || 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' !== $current_screen->base || empty( $_GET['module'] ) || 'get-pro' !== $_GET['module'] ) { ?>
-				<div class="secupress-section-dark secupress-pro-ad">
-
-					<i class="icon-secupress" aria-hidden="true"></i>
-
-					<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-pro.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-pro@2x.png" width="80" height="78" alt="SecuPress Pro"/>
-
-					<p class="secupress-text-medium"><?php _e( 'Improve your Security', 'secupress' ); ?></p>
-					<p><?php _e( 'Unlock all the features of SecuPress Pro', 'secupress' ); ?></p>
-					<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ); ?>" class="secupress-button secupress-button-tertiary secupress-button-getpro">
-						<span class="icon">
-							<i class="icon-secupress-simple" aria-hidden="true"></i>
-						</span>
-						<span class="text"><?php _ex( 'Get Pro', 'short', 'secupress' ); ?></span>
-					</a>
-				</div>
-			<?php } ?>
-
-			<div class="secupress-bordered secupress-mail-ad">
-				<div class="secupress-ad-header secupress-flex">
-					<span><i class="dashicons dashicons-email secupress-primary" aria-hidden="true"></i></span>
-					<p><?php _e( 'Join our mailing list', 'secupress' ); ?></p>
-				</div>
-				<div class="secupress-ad-content">
-					<p><label for="mce-EMAIL"><?php _e( 'Get security alerts and news from SecuPress.', 'secupress' ) ?></label></p>
-
-					<form action="https://secupress.us13.list-manage.com/subscribe/post?u=67a6053e2542ab4330a851904&amp;id=2eecd4aed8" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
-						<p>
-							<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="<?php esc_attr_e( 'Email address', 'secupress' ); ?>" required="required"/>
-						</p>
-
-						<!-- Real people should not fill this in and expect good things - do not remove this or risk form bot signups. -->
-						<div style="position:absolute;left:-9999em" aria-hidden="true"><input type="text" name="b_67a6053e2542ab4330a851904_2eecd4aed8" tabindex="-1" value=""/></div>
-
-						<p>
-							<button type="submit" name="subscribe" class="secupress-button secupress-button-primary"><?php _e( 'Stay tuned for more', 'secupress' ); ?></button>
-						</p>
-					</form>
-				</div>
+		<div class="secupress-bordered secupress-mail-ad">
+			<div class="secupress-ad-header secupress-flex">
+				<span><i class="dashicons dashicons-plus-alt secupress-primary" aria-hidden="true"></i></span>
+				<p><?php _e( 'Hacked Website?', 'secupress' ); ?></p>
 			</div>
+			<div class="secupress-ad-content-padded secupress-ad-content">
+				<p><?php _e( 'Well, this is not a good day for you, we will try to make you smile while we’re working on it!', 'secupress' ) ?></p>
 
-			<?php if ( ! defined( 'WP_ROCKET_VERSION' ) ) { ?>
-
-			<div class="secupress-wprocket-ad secupress-product-ads">
-				<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-wprocket.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-wprocket@2x.png 2x" alt="WP Rocket" width="110" height="30"/>
-
-				<p class="secupress-catch"><?php _e( 'Speed up your website with WP Rocket', 'secupress' ); ?></p>
-				<p><?php printf( __( 'Get <span>%1$s OFF</span> with this coupon code: %2$s', 'secupress' ), $rk_offer, '<span class="secupress-coupon">' . $rk_code . '</span>' ); ?></p>
-
-				<p class="secupress-cta">
-					<a href="<?php echo esc_url( $rk_url ); ?>" class="secupress-button" target="_blank"><?php printf( __( 'Get %s OFF', 'secupress' ), $rk_offer ); ?></a>
-				</p>
+			<p class="secupress-cta">
+				<a href="https://secupress.me/<?php _e( 'pricing', 'secupress' ); ?>#services" class="secupress-button" target="_blank"><?php _e( 'Ask an Expert', 'secupress' ); ?></a>
+			</p>
 			</div>
-
-			<?php } ?>
-
-			<?php if ( ! defined( 'IMAGIFY_VERSION' ) ) { ?>
-
-			<div class="secupress-imagify-ad secupress-product-ads">
-				<img src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-imagify.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>logo-imagify@2x.png 2x" alt="Imagify" width="123" height="15"/>
-
-				<p class="secupress-catch"><?php _e( 'Speed Up your website with lighter images', 'secupress' ); ?></p>
-				<p><?php printf( __( 'For each new account, get <span>%s Free</span>.', 'secupress' ), $im_offer ); ?></p>
-
-				<p class="secupress-cta">
-					<a href="<?php echo esc_url( $im_url ); ?>" class="secupress-button" target="_blank"><?php printf( __( 'Get %s Free', 'secupress' ), $im_offer ); ?></a>
-				</p>
-			</div>
-
-			<?php } ?>
-
 		</div>
+
+		<div class="secupress-bordered secupress-mail-ad">
+			<div class="secupress-ad-header secupress-flex">
+				<span><i class="dashicons dashicons-businessman secupress-primary" aria-hidden="true"></i></span>
+				<p><?php _e( 'Pro Config', 'secupress' ); ?></p>
+			</div>
+			<div class="secupress-ad-content-padded secupress-ad-content">
+				<p><?php _e( 'Need an Expert to Set-Up SecuPress for You?', 'secupress' ) ?></p>
+
+			<p class="secupress-cta">
+				<a href="https://secupress.me/<?php _e( 'pricing', 'secupress' ); ?>#services" class="secupress-button" target="_blank"><?php _e( 'Ask an Expert', 'secupress' ); ?></a>
+			</p>
+			</div>
+		</div>
+
+		<p><hr></p>
+
+		<div class="secupress-bordered secupress-mail-ad">
+			<div class="secupress-ad-header secupress-flex">
+				<span><i class="dashicons dashicons-editor-help secupress-primary" aria-hidden="true"></i></span>
+				<p><?php _e( 'FAQ', 'secupress' ); ?></p>
+			</div>
+			<div class="secupress-ad-content-padded secupress-ad-content">
+				<p><?php _e( 'All the answers to your questions.', 'secupress' ) ?></p>
+
+			<p class="secupress-cta">
+				<a href="https://secupress.me/<?php _e( 'faq', 'secupress' ); ?>" class="secupress-button" target="_blank"><?php _e( 'Read the FAQ', 'secupress' ); ?></a>
+			</p>
+			</div>
+		</div>
+
+		<div class="secupress-bordered secupress-mail-ad">
+			<div class="secupress-ad-header secupress-flex">
+				<span><i class="dashicons dashicons-book secupress-primary" aria-hidden="true"></i></span>
+				<p><?php _e( 'Documentation', 'secupress' ); ?></p>
+			</div>
+			<div class="secupress-ad-content-padded secupress-ad-content">
+				<p><?php _e( 'We already have some solutions for you.', 'secupress' ) ?></p>
+
+			<p class="secupress-cta">
+				<a href="<?php _e( 'http://docs.secupress.me/', 'secupress' ); ?>" class="secupress-button" target="_blank"><?php _e( 'Read the docs', 'secupress' ); ?></a>
+			</p>
+			</div>
+		</div>
+
+		<div class="secupress-bordered secupress-mail-ad">
+			<div class="secupress-ad-header secupress-flex">
+				<span><i class="dashicons dashicons-sos secupress-primary" aria-hidden="true"></i></span>
+				<p><?php _e( 'Support', 'secupress' ); ?></p>
+			</div>
+			<div class="secupress-ad-content-padded secupress-ad-content">
+				<p><?php _e( 'Got an issue? Ask for support.', 'secupress' ) ?></p>
+
+			<p class="secupress-cta">
+				<a href="https://secupress.me/<?php _e( 'support', 'secupress' ); ?>" class="secupress-button" target="_blank"><?php _e( 'Ask for support', 'secupress' ); ?></a>
+			</p>
+			</div>
+		</div>
+
 		<?php
+		/**
+		 * This hook is defined in class-secupress-settings.php
+		 */
+		if ( false === apply_filters( 'secupress.no_sideads', false ) ) { // Filter secupress_no_sideads.
+			foreach ( $sideads as $sidead ) {
+				if ( 'secupress_ad_after' !== $sidead['hook'] ) {
+					continue;
+				}
+				if ( ( 'free' === $sidead['when'] && ! secupress_is_pro() )
+					|| ( 'pro' === $sidead['when'] && secupress_is_pro() )
+					|| 'both' === $sidead['when']
+				 ) {
+					echo wp_kses_post( str_replace( '##SECUPRESS_ADMIN_IMAGES_URL##', SECUPRESS_ADMIN_IMAGES_URL, $sidead['content'] ) );
+				}
+			}
+			/**
+			 * Triggered after the tool boxes.
+			 *
+			 * @since 1.4
+			 */
+			do_action( 'secupress.ad_after' );
+		}
+		?>
+
+	</div>
+	<?php
 	}
 
 
@@ -1315,15 +1419,16 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	/**
 	 * Tell if the option value is for the pro version and we're not using the pro version.
 	 *
-	 * @since 1.0
+	 * @since 1.4 Do not check anymore if secupress_is_pro()
 	 * @since 1.3 The method is public.
+	 * @since 1.0
 	 *
 	 * @param (string) $value The option value.
 	 *
 	 * @return (bool) True if the option value is for pro version but w're not using the pro version.
 	 */
 	public static function is_pro_feature( $value ) {
-		return secupress_feature_is_pro( $value ) && ! secupress_is_pro();
+		return secupress_feature_is_pro( $value );
 	}
 
 
@@ -1338,7 +1443,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * @return (string)
 	 */
 	public static function get_pro_version_string( $format = '' ) {
-		$message = sprintf( __( 'Available in <a href="%s" target="_blank">Pro Version</a>', 'secupress' ), esc_url( secupress_admin_url( 'get_pro' ) ) );
+		$message = sprintf( __( 'Available in <a href="%s" target="_blank">Pro Version</a>', 'secupress' ), esc_url( 'https://secupress.me/' . __( 'pricing', 'secupress' ) ) );
 		if ( $format ) {
 			$message = sprintf( $format, $message );
 		}

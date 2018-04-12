@@ -89,6 +89,41 @@ function secupress_get_modules() {
 				'pro_options'  => 2,
 			),
 		),
+		'antispam'        => array(
+			'title'       => __( 'Anti Spam', 'secupress' ),
+			'icon'        => 'antispam',
+			'summaries'   => array(
+				'small'  => __( 'Get rid of bad bots', 'secupress' ),
+				'normal' => __( 'Traffic done by bot represents about 60% of the internet. Spams are done by these bots. Don\'t let them do that!', 'secupress' ),
+			),
+			'description' => array(
+				__( 'Comments are great for your website, but bot traffic represents about 60 % of the internet. Spams are done by these bots, and they just want to add their content into your website. Don\'t let them do that!', 'secupress' ),
+				sprintf( __( 'Do not forget to visit the <a href="%s">Settings &rsaquo; Discussion</a> area to add words to the blacklist and other usual settings regarding comments.', 'secupress' ), esc_url( admin_url( 'options-discussion.php' ) ) ),
+				__( 'By default, identity theft is blocked, so if someone tries to comment using your email/name, the comment will be blocked.', 'secupress' ),
+				__( 'Also by default, bad IPs are blocked, as are the author name, email and website url of known as spammer.', 'secupress' ),
+			),
+			'mark_as_pro' => false,
+			'counts' => array(
+				'free_options' => 7,
+				'pro_options'  => 0,
+			),
+		),
+		'logs'            => array(
+			'title'       => _x( 'Logs', 'post type general name', 'secupress' ),
+			'icon'        => 'logs',
+			'summaries'   => array(
+				'small'  => __( 'Monitor everything', 'secupress' ),
+				'normal' => __( 'Keep an eye on what happened on your website at any time. Also, control banned IPs from our modules here.', 'secupress' ),
+			),
+			'with_form'   => false,
+			'description' => array(
+				__( 'Keep an eye on what happened on your website at any time. Also, control banned IPs from our modules here.', 'secupress' ),
+			),
+			'counts' => array(
+				'free_options' => 4,
+				'pro_options'  => 0,
+			),
+		),
 		'file-system'     => array(
 			'title'       => __( 'Malware Scan', 'secupress' ),
 			'icon'        => 'file-system',
@@ -124,28 +159,9 @@ function secupress_get_modules() {
 				'pro_options'  => 4,
 			),
 		),
-		'antispam'        => array(
-			'title'       => __( 'Anti Spam', 'secupress' ),
-			'icon'        => 'antispam',
-			'summaries'   => array(
-				'small'  => __( 'Get rid of bad bots', 'secupress' ),
-				'normal' => __( 'Traffic done by bot represents about 60% of the internet. Spams are done by these bots. Don\'t let them do that!', 'secupress' ),
-			),
-			'description' => array(
-				__( 'Comments are great for your website, but bot traffic represents about 60 % of the internet. Spams are done by these bots, and they just want to add their content into your website. Don\'t let them do that!', 'secupress' ),
-				sprintf( __( 'Do not forget to visit the <a href="%s">Settings &rsaquo; Discussion</a> area to add words to the blacklist and other usual settings regarding comments.', 'secupress' ), esc_url( admin_url( 'options-discussion.php' ) ) ),
-				__( 'By default, identity theft is blocked, so if someone tries to comment using your email/name, the comment will be blocked.', 'secupress' ),
-				__( 'Also by default, bad IPs are blocked, as are the author name, email and website url of known as spammer.', 'secupress' ),
-			),
-			'mark_as_pro' => $should_be_pro,
-			'counts' => array(
-				'free_options' => 0,
-				'pro_options'  => 7,
-			),
-		),
 		'alerts'          => array(
 			'title'       => __( 'Alerts', 'secupress' ),
-			'icon'        => 'information',
+			'icon'        => 'services',
 			'summaries'   => array(
 				'small'  => __( 'React quickly in case of attack', 'secupress' ),
 				'normal' => __( 'Being alerted of some important events will help you to react quickly in case of possible attacks.', 'secupress' ),
@@ -175,54 +191,10 @@ function secupress_get_modules() {
 				'pro_options'  => 4,
 			),
 		),
-		'logs'            => array(
-			'title'       => _x( 'Logs', 'post type general name', 'secupress' ),
-			'icon'        => 'logs',
-			'summaries'   => array(
-				'small'  => __( 'Monitor everything', 'secupress' ),
-				'normal' => __( 'Keep an eye on what happened on your website at any time. Also, control banned IPs from our modules here.', 'secupress' ),
-			),
-			'with_form'   => false,
-			'description' => array(
-				__( 'Keep an eye on what happened on your website at any time. Also, control banned IPs from our modules here.', 'secupress' ),
-			),
-			'counts' => array(
-				'free_options' => 4,
-				'pro_options'  => 0,
-			),
-		),
 	);
 
 	if ( class_exists( 'WooCommerce' ) || class_exists( 'SitePress' ) ) {
 		++$modules['sensitive-data']['counts']['free_options'];
-	}
-
-	if ( function_exists( 'secupress_is_white_label' ) && ! secupress_is_white_label() ) {
-		$modules['services'] = array(
-			'title'       => __( 'Services', 'secupress' ),
-			'icon'        => 'services',
-			'summaries'   => array(
-				'small'  => __( 'Post Hack & Pro Configuration', 'secupress' ),
-				'normal' => sprintf( __( 'Let us configure %s on your site and benefit from our expertise. Get help from our experts. This page contains our services designed to help you with the plugin.', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
-			),
-			'description' => array(
-				sprintf( __( 'Let us configure %s on your site and benefit from our expertise. Get help from our experts. This page contains our services designed to help you with the plugin.', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
-			),
-		);
-
-		if ( $should_be_pro ) {
-			$modules['get-pro'] = array(
-				'title'       => __( 'Get Pro', 'secupress' ),
-				'icon'        => 'secupress',
-				'summaries'   => array(
-					'small'  => __( 'Do more with the Pro version', 'secupress' ),
-					'normal' => __( 'Access more modules and options to automate the security of your website.', 'secupress' ),
-				),
-				'description' => array(
-					__( 'Access more modules and options to automate the security of your website.', 'secupress' ),
-				),
-			);
-		}
 	}
 
 	return $modules;
@@ -589,12 +561,14 @@ function secupress_remove_module_rules_or_notice( $marker, $module_name ) {
 		$message  = sprintf( __( '%s:', 'secupress' ), $module_name ) . ' ';
 		$message .= sprintf(
 			/** Translators: 1 and 2 are small parts of code, 3 is a file name. */
-			__( 'Your server runs <strong>Ngnix</strong>. You have to edit the configuration file manually. Please remove all rules between %1$s and %2$s from the %3$s file.', 'secupress' ),
+			__( 'Your server runs <strong>Nginx</strong>. You have to edit the configuration file manually. Please remove all rules between %1$s and %2$s from the %3$s file.', 'secupress' ),
 			"<code># BEGIN SecuPress $marker</code>",
 			'<code># END SecuPress</code>',
 			'<code>nginx.conf</code>'
 		);
-		secupress_add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
+		if ( apply_filters( 'secupress.nginx.notice', true ) ) {
+			secupress_add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
+		}
 		return false;
 	}
 
@@ -697,17 +671,19 @@ function secupress_add_module_rules_or_notice( $args ) {
 		$message  = sprintf( __( '%s:', 'secupress' ), $title ) . ' ';
 		$message .= sprintf(
 			/** Translators: 1 is a file name, 2 is some code */
-			__( 'Your server runs <strong>Ngnix</strong>. You have to edit the configuration file manually. Please add the following code to your %1$s file: %2$s', 'secupress' ),
+			__( 'Your server runs <strong>Nginx</strong>. You have to edit the configuration file manually. Please add the following code to your %1$s file: %2$s', 'secupress' ),
 			'<code>nginx.conf</code>',
 			"<pre>$rules</pre>"
 		);
-		secupress_add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
+		if ( apply_filters( 'secupress.nginx.notice', true ) ) {
+			secupress_add_settings_error( 'general', 'nginx_manual_edit', $message, 'error' );
+		}
 		return false;
 	}
 
 	// Server not supported.
 	$message  = sprintf( __( '%s:', 'secupress' ), $title ) . ' ';
-	$message .= __( 'It seems your server does not use <strong>Apache</strong>, <strong>Ngnix</strong>, nor <strong>IIS7</strong>. This module won\'t work.', 'secupress' );
+	$message .= __( 'It seems your server does not use <strong>Apache</strong>, <strong>Nginx</strong>, nor <strong>IIS7</strong>. This module won\'t work.', 'secupress' );
 	secupress_add_settings_error( 'general', 'unknown_os', $message, 'error' );
 	return false;
 }

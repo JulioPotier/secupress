@@ -117,6 +117,13 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
+
+		$activated = secupress_filter_scanner( __CLASS__ );
+		if ( true === $activated ) {
+			$this->add_message( 0 );
+			return parent::scan();
+		}
+
 		$discloses = array();
 
 		// Get home page contents.
@@ -134,9 +141,6 @@ class SecuPress_Scan_Woocommerce_Discloses extends SecuPress_Scan implements Sec
 				// "bad"
 				$discloses[] = 'META';
 			}
-		} else {
-			// "warning"
-			$this->add_message( 100 );
 		}
 
 		// What about style tag src?

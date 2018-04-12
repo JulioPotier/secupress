@@ -58,29 +58,20 @@ if ( $new_scans ) {
 				<?php
 				if ( $is_there_something_new && $scanned_items ) {
 					$page_title  = sprintf( __( 'Update %s: Discover the new security items to check', 'secupress' ), SECUPRESS_VERSION );
-					$main_button =
-					'<button class="secupress-button secupress-button-primary secupress-button-scan shadow" type="button" data-nonce="' . esc_attr( wp_create_nonce( 'secupress-update-oneclick-scan-date' ) ) . '">
-						<span class="icon" aria-hidden="true">
-							<i class="secupress-icon-radar"></i>
-						</span>
-						<span class="text">' . __( 'Scan website', 'secupress' ) . '</span>
-					</button>';
 				} else {
 					$page_title  = __( 'List of the security items already analyzed', 'secupress' );
-					$main_button =
-					'<a href="' . secupress_admin_url( 'scanners' ) . '&step=2" class="secupress-button secupress-button-tertiary shadow">
-						<span class="icon">
-							<i class="secupress-icon-wrench" aria-hidden="true"></i>
-						</span>
-						<span class="text">' . __( 'Next step', 'secupress' ) . '</span>
-					</a>';
 				}
 				?>
 				<p class="secupress-step-title">
 					<?php echo $page_title; ?>
 				</p>
 				<p>
-					<?php echo $main_button; ?>
+					<a href="<?php echo secupress_admin_url( 'scanners' ); ?>&step=2" class="secupress-button secupress-button-tertiary shadow">
+						<span class="icon">
+							<i class="secupress-icon-wrench" aria-hidden="true"></i>
+						</span>
+						<span class="text"><?php _e( 'Next step', 'secupress' ); ?></span>
+					</a>
 				</p>
 			</div><!-- .secupress-step-content-header -->
 			<?php
@@ -110,7 +101,7 @@ if ( $new_scans ) {
 				</span>
 			</a>
 		<?php } else { ?>
-			<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ) ?>" title="<?php esc_attr_e( 'Get the Pro Version to export this report as PDF file.', 'secupress' ); ?>" target="_blank" class="secupress-button disabled shadow">
+			<a href="<?php echo esc_url( 'https://secupress.me/' . __( 'pricing', 'secupress' ) ) ?>" title="<?php esc_attr_e( 'Get the Pro Version to export this report as PDF file.', 'secupress' ); ?>" target="_blank" class="secupress-button disabled shadow">
 				<span class="icon">
 					<i class="secupress-icon-file-pdf-o" aria-hidden="true"></i>
 				</span>
@@ -120,11 +111,16 @@ if ( $new_scans ) {
 			</a>
 			<br>
 			<span class="secupress-get-pro-version">
-				<?php printf( __( 'Available in <a href="%s" target="_blank">Pro Version</a>', 'secupress' ), esc_url( secupress_admin_url( 'get_pro' ) ) ); ?>
+				<?php printf( __( 'Available in <a href="%s" target="_blank">Pro Version</a>', 'secupress' ), esc_url( 'https://secupress.me/' . __( 'pricing', 'secupress' ) ) ); ?>
 			</span>
 		<?php } ?>
 	</p>
 	<p>
-		<?php echo $main_button; ?>
+		<a href="<?php echo secupress_admin_url( 'scanners' ); ?>&step=2" class="secupress-button secupress-button-tertiary shadow">
+			<span class="icon">
+				<i class="secupress-icon-wrench" aria-hidden="true"></i>
+			</span>
+			<span class="text"><?php _e( 'Next step', 'secupress' ); ?></span>
+		</a>
 	</p>
 </div>

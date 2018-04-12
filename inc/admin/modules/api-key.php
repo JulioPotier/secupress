@@ -8,6 +8,7 @@ $this->add_section( __( 'License Validation', 'secupress' ), array( 'with_save_b
 
 $settings   = get_site_option( SECUPRESS_SETTINGS_SLUG );
 $disabled   = is_array( $settings ) && ! empty( $settings['consumer_email'] ) && ! empty( $settings['consumer_key'] ) && ! empty( $settings['site_is_pro'] );
+$value      = null;
 $attributes = array(
 	'required'      => 'required',
 	'aria-required' => 'true',
@@ -16,6 +17,7 @@ $attributes = array(
 
 if ( $disabled ) {
 	$attributes['readonly'] = true;
+	$value = str_repeat( '&bull;', 22 );
 }
 
 $this->add_field( array(
@@ -23,6 +25,7 @@ $this->add_field( array(
 	'label_for'    => 'consumer_email',
 	'type'         => 'email',
 	'attributes'   => $attributes,
+	'value'        => defined( 'SECUPRESS_API_EMAIL' ) ? esc_attr( SECUPRESS_API_EMAIL ) : null,
 	'helpers'      => array(
 		array(
 			'type'        => 'help',
@@ -37,6 +40,8 @@ $this->add_field( array(
 	'label_for'    => 'consumer_key',
 	'type'         => 'text',
 	'attributes'   => $attributes,
+	'value'        => $value,
+	'value'        => is_null( $value ) && defined( 'SECUPRESS_API_KEY' ) ? esc_attr( SECUPRESS_API_KEY ) : null,
 	'helpers'      => array(
 		array(
 			'type'        => 'help',

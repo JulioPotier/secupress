@@ -106,6 +106,13 @@ class SecuPress_Scan_Anti_Front_Brute_Force extends SecuPress_Scan implements Se
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
+
+		$activated = secupress_filter_scanner( __CLASS__ );
+		if ( true === $activated ) {
+			$this->add_message( 0 );
+			return parent::scan();
+		}
+
 		if ( ! secupress_is_submodule_active( 'firewall', 'bruteforce' ) ) {
 			// "bad"
 			$this->add_message( 200 );

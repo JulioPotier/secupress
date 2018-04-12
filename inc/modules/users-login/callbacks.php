@@ -44,6 +44,9 @@ function secupress_users_login_settings_callback( $settings ) {
 	// Logins blacklist.
 	secupress_logins_blacklist_settings_callback( $modulenow, $activate );
 
+	// Stop User Enumeration.
+	secupress_stopuserenumeration_settings_callback( $modulenow, $activate );
+
 	// Move Login.
 	secupress_move_login_settings_callback( $modulenow, $settings, $activate );
 
@@ -105,20 +108,11 @@ function secupress_login_protection_settings_callback( $modulenow, &$settings, $
 
 		secupress_manage_submodule( $modulenow, 'limitloginattempts', isset( $activate['login-protection_type']['limitloginattempts'] ) );
 		secupress_manage_submodule( $modulenow, 'bannonexistsuser',   isset( $activate['login-protection_type']['bannonexistsuser'] ) );
-		secupress_manage_submodule( $modulenow, 'nonlogintimeslot',   isset( $activate['login-protection_type']['nonlogintimeslot'] ) );
-	} elseif ( false !== $activate ) {
-		secupress_deactivate_submodule( $modulenow, array( 'bannonexistsuser', 'limitloginattempts', 'nonlogintimeslot' ) );
 	}
 
 	// Settings.
 	$settings['login-protection_number_attempts']  = ! empty( $settings['login-protection_number_attempts'] ) ? secupress_validate_range( $settings['login-protection_number_attempts'], 3, 99, 10 ) : 10;
 	$settings['login-protection_time_ban']         = ! empty( $settings['login-protection_time_ban'] )        ? secupress_validate_range( $settings['login-protection_time_ban'],        1, 60, 5 )  : 5;
-	$settings['login-protection_nonlogintimeslot'] = ! empty( $settings['login-protection_nonlogintimeslot'] ) && is_array( $settings['login-protection_nonlogintimeslot'] ) ? $settings['login-protection_nonlogintimeslot'] : array();
-
-	$settings['login-protection_nonlogintimeslot']['from_hour']   = ! empty( $settings['login-protection_nonlogintimeslot']['from_hour'] )   ? secupress_validate_range( (int) $settings['login-protection_nonlogintimeslot']['from_hour'],   0, 23, 0 ) : 0;
-	$settings['login-protection_nonlogintimeslot']['from_minute'] = ! empty( $settings['login-protection_nonlogintimeslot']['from_minute'] ) ? secupress_validate_range( (int) $settings['login-protection_nonlogintimeslot']['from_minute'], 0, 59, 0 ) : 0;
-	$settings['login-protection_nonlogintimeslot']['to_hour']     = ! empty( $settings['login-protection_nonlogintimeslot']['to_hour'] )     ? secupress_validate_range( (int) $settings['login-protection_nonlogintimeslot']['to_hour'],     0, 23, 0 ) : 0;
-	$settings['login-protection_nonlogintimeslot']['to_minute']   = ! empty( $settings['login-protection_nonlogintimeslot']['to_minute'] )   ? secupress_validate_range( (int) $settings['login-protection_nonlogintimeslot']['to_minute'],   0, 59, 0 ) : 0;
 
 	// (De)Activation.
 	if ( false !== $activate ) {
@@ -171,6 +165,23 @@ function secupress_logins_blacklist_settings_callback( $modulenow, $activate ) {
 	// (De)Activation.
 	if ( false !== $activate ) {
 		secupress_manage_submodule( $modulenow, 'blacklist-logins', ! empty( $activate['blacklist-logins_activated'] ) );
+	}
+}
+
+
+
+/**
+ * (De)Activate stop user enumeration plugin.
+ *
+ * @since 1.3
+ *
+ * @param (string)     $modulenow Current module.
+ * @param (array|bool) $activate  An array containing the fields related to the sub-module being activated. False if not on this module page.
+ */
+function secupress_stopuserenumeration_settings_callback( $modulenow, $activate ) {
+	// (De)Activation.
+	if ( false !== $activate ) {
+		secupress_manage_submodule( $modulenow, 'stop-user-enumeration', ! empty( $activate['blacklist-logins_stop-user-enumeration'] ) );
 	}
 }
 
@@ -243,7 +254,9 @@ function secupress_move_login_settings_callback( $modulenow, &$settings, $activa
 	}
 
 	// Access to `wp-login.php`.
-	$settings['move-login_login-access'] = sanitize_text_field( $settings['move-login_login-access'] );
+	if ( isset( $settings['move-login_login-access'] ) ) {
+		$settings['move-login_login-access'] = sanitize_text_field( $settings['move-login_login-access'] );
+	}
 
 	// Handle validation errors.
 	$errors['forbidden']  = array_unique( $errors['forbidden'] );
@@ -299,18 +312,6 @@ function secupress_install_users_login_module( $module ) {
 		secupress_activate_submodule_silently( 'users-login', 'ask-old-password' );
 	}
 
-	// First install or reset.
-	if ( 'all' === $module || 'users-login' === $module ) {
-		// Set default non-login time slot.
-		update_site_option( 'secupress_users-login_settings', array(
-			'login-protection_nonlogintimeslot' => array(
-				'from_hour'   => 19,
-				'from_minute' => 0,
-				'to_hour'     => 8,
-				'to_minute'   => 0,
-			),
-		) );
-	}
 }
 
 

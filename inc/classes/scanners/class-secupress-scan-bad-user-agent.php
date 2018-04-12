@@ -106,6 +106,13 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan implements SecuPress_
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
+
+		$activated = secupress_filter_scanner( __CLASS__ );
+		if ( true === $activated ) {
+			$this->add_message( 0 );
+			return parent::scan();
+		}
+
 		$request_args = $this->get_default_request_args();
 		$request_args['user-agent'] = '<script>';
 		$response     = wp_remote_get( add_query_arg( secupress_generate_key( 6 ), secupress_generate_key( 8 ), user_trailingslashit( home_url() ) ), $request_args );
@@ -119,10 +126,10 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan implements SecuPress_
 				// "good"
 				$this->add_message( 0 );
 			}
-		} else {
-			// "warning"
-			$this->add_message( 100 );
 		}
+
+		// Good.
+		$this->maybe_set_status( 0 );
 
 		return parent::scan();
 	}

@@ -39,6 +39,7 @@ $this->add_field( array(
 	),
 ) );
 
+
 $this->add_field( array(
 	'title'             => __( 'Block SQLi Scan Attempts', 'secupress' ),
 	'description'       => __( 'Fool SQLi scanner/scripts to always give them different content on each reload of the same page.', 'secupress' ),
@@ -53,4 +54,15 @@ $this->add_field( array(
 			'description' => __( 'To determine if a URL is vulnerable to an SQL Injection flaw, automated scanner requires a triple page reload to be identical. By giving them a different content for each request, it will not be possible for it to work properly.', 'secupress' ),
 		),
 	),
+) );
+
+
+$this->add_field( array(
+	'title'             => __( 'Ban 404 requests on PHP files', 'secupress' ),
+	'description'       => __( 'When someone is tring to find a hidden or malicious PHP file, they could just get a 404 error, page not found. Ban them.', 'secupress' ),
+	'label_for'         => $this->get_field_name( 'ban-404-php' ),
+	'plugin_activation' => true,
+	'type'              => 'checkbox',
+	'value'             => (int) secupress_is_submodule_active( 'firewall', 'ban-404-php' ),
+	'label'             => __( 'Yes, protect my site from 404 on .php files', 'secupress' ),
 ) );

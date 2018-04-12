@@ -105,6 +105,13 @@ class SecuPress_Scan_Plugins_Update extends SecuPress_Scan implements SecuPress_
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
+
+		$activated = secupress_filter_scanner( __CLASS__ );
+		if ( true === $activated ) {
+			$this->add_message( 0 );
+			return parent::scan();
+		}
+
 		ob_start();
 
 		wp_update_plugins();

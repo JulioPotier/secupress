@@ -187,7 +187,7 @@ if ( ! $secupress_tests ) {
 
 						<div class="secupress-mfh-pro">
 							<p class="secupress-get-pro-version">
-								<?php printf( __( 'Available in <a href="%s" target="_blank">Pro Version</a>', 'secupress' ), esc_url( secupress_admin_url( 'get_pro' ) ) ); ?>
+								<?php printf( __( 'Available in <a href="%s" target="_blank">Pro Version</a>', 'secupress' ), esc_url( 'https://secupress.me/' . __( 'pricing', 'secupress' ) ) ); ?>
 							</p>
 						</div>
 
@@ -292,7 +292,7 @@ if ( ! $secupress_tests ) {
 									<span class="text"><?php _e( 'Fix it and continue', 'secupress' ); ?></span>
 								</button>
 							<?php } elseif ( $needs_pro ) { ?>
-								<a href="<?php echo esc_url( secupress_admin_url( 'get_pro' ) ); ?>" class="secupress-button secupress-button-tertiary secupress-button-getpro shadow" target="_blank" title="<?php esc_attr_e( 'Open in a new window.', 'secupress' ); ?>">
+								<a href="<?php echo esc_url( 'https://secupress.me/' . __( 'pricing', 'secupress' ) ); ?>" class="secupress-button secupress-button-tertiary secupress-button-getpro shadow" target="_blank" title="<?php esc_attr_e( 'Open in a new window.', 'secupress' ); ?>">
 									<span class="icon">
 										<i class="secupress-icon-secupress-simple bold" aria-hidden="true"></i>
 									</span>

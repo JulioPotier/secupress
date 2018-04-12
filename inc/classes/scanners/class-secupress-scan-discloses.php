@@ -148,6 +148,13 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
+
+		$activated = secupress_filter_scanner( __CLASS__ );
+		if ( true === $activated ) {
+			$this->add_message( 0 );
+			return parent::scan();
+		}
+
 		global $is_nginx;
 
 		$wp_version   = get_bloginfo( 'version' );
@@ -161,9 +168,6 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 		if ( $has_response ) {
 			$powered_by = wp_remote_retrieve_header( $response, 'x-powered-by' );
 			$body       = wp_remote_retrieve_body( $response );
-		} else {
-			// "warning"
-			$this->add_message( 100 );
 		}
 
 		// WordPress version in generator meta tag. =========.
@@ -210,9 +214,6 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 				// "bad"
 				$this->add_message( 202 );
 			}
-		} else {
-			// "warning"
-			$this->add_message( 101 );
 		}
 
 		// PHP version in headers. ==========================.
@@ -251,9 +252,6 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 		if ( $has_response ) {
 			$powered_by = wp_remote_retrieve_header( $response, 'x-powered-by' );
 			$body       = wp_remote_retrieve_body( $response );
-		} else {
-			// "warning"
-			$this->add_fix_message( 100 );
 		}
 
 		// WordPress version in generator meta tag. =========.

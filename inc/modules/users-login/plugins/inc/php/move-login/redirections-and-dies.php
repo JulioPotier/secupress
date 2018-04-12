@@ -130,6 +130,7 @@ function secupress_move_login_deny_login_access() {
  *
  * @return (string)
  */
+/*
 function secupress_move_login_maybe_deny_login_redirect( $location ) {
 	global $pagenow;
 
@@ -185,11 +186,13 @@ function secupress_move_login_maybe_deny_login_redirect( $location ) {
 													] )
 	);
 }
+*/
 
-add_action( 'template_redirect', 'secupress_fallback_slug_redirect', 0 );
+add_action( 'wp', 'secupress_fallback_slug_redirect', 0 );
 /**
  * Will include the wp-loing.php file/template if the URL triggers the new slug
  *
+ * @since 1.4 on "wp" hook instead of "template_redirect" because of many "404 management" plugins.
  * @since 1.3.1
  * @author Julio Potier
  **/
@@ -213,12 +216,18 @@ function secupress_fallback_slug_redirect() {
 	$parsed = wp_parse_url( $_SERVER['REQUEST_URI'] );
 	$parsed = ! empty( $parsed['path'] ) ? $parsed['path'] : '';
 	$parsed = trim( $parsed, '/' );
-	$parsed = explode( '/', $parsed );
-	$parsed = end( $parsed );
+
 	if ( preg_match( "@{$regex}@", $parsed ) ) {
+
 		$slugs  = array_flip( secupress_move_login_get_slugs() );
 		$parsed = explode( '/', $parsed );
 		$parsed = end( $parsed );
+
+		if ( is_user_logged_in() ) {
+			wp_safe_redirect( admin_url(), 302 );
+			die();
+		}
+
 		if ( ! isset( $_REQUEST['action'] ) && isset( $slugs[ $parsed ] ) ) {
 			$_REQUEST['action'] = $slugs[ $parsed ];
 		}
@@ -226,4 +235,23 @@ function secupress_fallback_slug_redirect() {
 		require( ABSPATH . 'wp-login.php' );
 		die();
 	}
+}
+
+add_filter( 'register_url', 'secupress_register_url_redirect' );
+/**
+ * Fordib the redirection on the registration URL if not logged-in, you have to know the correct new page
+ *
+ * @param (string) $url The register_url from WP
+ * @since 1.4
+ * @return (string) $url
+ * @author Julio Potier
+ **/
+function secupress_register_url_redirect( $url ) {
+	if ( ! is_user_logged_in() ) {
+		remove_filter( 'register_url', 'secupress_register_url' );
+		if ( wp_registration_url() == $url ) {
+			secupress_move_login_deny_login_access();
+		}
+	}
+	return $url;
 }

@@ -90,12 +90,14 @@ class SecuPress_Cleanup_Leftovers extends SecuPress_Singleton {
 		// Backup files in the temporary folder.
 		if ( function_exists( 'secupress_get_temporary_backups_path' ) ) {
 			$folder = secupress_get_temporary_backups_path();
-			$files  = static::scandir( $folder );
+			if ( file_exists( $folder ) ) {
+				$files  = static::scandir( $folder );
 
-			if ( $files ) {
-				foreach ( $files as $file ) {
-					if ( '.htaccess' !== $file ) {
-						$filesystem->delete( $folder . $file, true );
+				if ( $files ) {
+					foreach ( $files as $file ) {
+						if ( '.htaccess' !== $file ) {
+							$filesystem->delete( $folder . $file, true );
+						}
 					}
 				}
 			}
@@ -104,14 +106,16 @@ class SecuPress_Cleanup_Leftovers extends SecuPress_Singleton {
 		// Files created by the "Bad file extensions" scan.
 		$folder = wp_upload_dir( null, false );
 		$folder = trailingslashit( wp_normalize_path( $folder['basedir'] ) );
-		$files  = static::scandir( $folder );
+		if ( file_exists( $folder ) ) {
+			$files  = static::scandir( $folder );
 
-		if ( $files ) {
-			foreach ( $files as $file ) {
-				$path = $folder . $file;
+			if ( $files ) {
+				foreach ( $files as $file ) {
+					$path = $folder . $file;
 
-				if ( $filesystem->is_file( $path ) && preg_match( '@^secupress-temporary-file-@', $file ) ) {
-					$filesystem->delete( $path );
+					if ( $filesystem->is_file( $path ) && preg_match( '@^secupress-temporary-file-@', $file ) ) {
+						$filesystem->delete( $path );
+					}
 				}
 			}
 		}
@@ -142,6 +146,9 @@ class SecuPress_Cleanup_Leftovers extends SecuPress_Singleton {
 	 * @return (array) An array of files.
 	 */
 	protected static function scandir( $path ) {
+		if ( ! file_exists( $path ) ) {
+			return array();
+		}
 		$files = scandir( $path );
 
 		if ( $files ) {

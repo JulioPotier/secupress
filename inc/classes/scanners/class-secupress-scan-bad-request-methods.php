@@ -106,6 +106,13 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements SecuP
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
+
+		$activated = secupress_filter_scanner( __CLASS__ );
+		if ( true === $activated ) {
+			$this->add_message( 0 );
+			return parent::scan();
+		}
+
 		// These methods should be blocked.
 		$methods = array( 'TRACK', 'OPTIONS', 'CONNECT', 'SECUPRESS_TEST_' . time() );
 
@@ -123,27 +130,15 @@ class SecuPress_Scan_Bad_Request_Methods extends SecuPress_Scan implements SecuP
 			$request_args['method'] = $method;
 			$response = wp_remote_request( add_query_arg( secupress_generate_key( 6 ), secupress_generate_key( 8 ), user_trailingslashit( home_url() ) ), $request_args );
 
-			if ( ! is_wp_error( $response ) ) {
-
-				if ( 200 === wp_remote_retrieve_response_code( $response ) && '' !== wp_remote_retrieve_body( $response ) ) {
-					// "bad"
-					$bads[] = '<code>' . $method . '</code>';
-				}
-			} elseif ( 'http_request_failed' !== $response->get_error_code() ) {
-				// "warning"
-				$warnings[] = '<code>' . $method . '</code>';
+			if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) && '' !== wp_remote_retrieve_body( $response ) ) {
+				// "bad"
+				$bads[] = '<code>' . $method . '</code>';
 			}
 		}
 
 		if ( $bads ) {
 			// "bad"
 			$this->add_message( 200, array( count( $bads ), $bads ) );
-		}
-
-		if ( $warnings ) {
-			// "warning"
-			$this->add_message( 100, array( count( $warnings ), $warnings ) );
-			$this->add_message( 101 );
 		}
 
 		// "good"

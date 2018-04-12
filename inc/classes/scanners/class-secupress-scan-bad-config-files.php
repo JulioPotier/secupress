@@ -98,6 +98,13 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements SecuPres
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
+
+		$activated = secupress_filter_scanner( __CLASS__ );
+		if ( true === $activated ) {
+			$this->add_message( 0 );
+			return parent::scan();
+		}
+
 		$files = static::get_files();
 
 		if ( $files ) {

@@ -124,7 +124,7 @@ function secupress_get_deactivate_plugin_string( $plugin_basename ) {
  * @since 1.3.2
  *
  * @param (string) $plugin_basename The standalone plugin basename.
- * @param (string) $settings_page The possible setting page
+ * @param (string) $settings_page The possible setting page.
  *
  * @return (string|null) Return null if the plugin is not activated.
  */

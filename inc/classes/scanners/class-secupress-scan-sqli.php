@@ -106,6 +106,13 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Inter
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
+
+		$activated = secupress_filter_scanner( __CLASS__ );
+		if ( true === $activated ) {
+			$this->add_message( 0 );
+			return parent::scan();
+		}
+
 		$response = wp_remote_get( add_query_arg( secupress_generate_key( 6 ), 'UNION+SELECT+FOO', user_trailingslashit( home_url() ) ), $this->get_default_request_args() );
 
 		if ( ! is_wp_error( $response ) ) {
@@ -117,10 +124,10 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Inter
 				// "good"
 				$this->add_message( 0 );
 			}
-		} else {
-			// "warning"
-			$this->add_message( 100 );
 		}
+
+		// Good.
+		$this->maybe_set_status( 0 );
 
 		return parent::scan();
 	}

@@ -29,40 +29,6 @@ $this->add_field( array(
 ) );
 
 
-$active     = (int) secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-unfiltered-html' );
-$can_manage = $active || ! defined( 'DISALLOW_UNFILTERED_HTML' ) || ! DISALLOW_UNFILTERED_HTML;
-
-$this->add_field( array(
-	'title'             => __( 'Unfiltered HTML in post editor', 'secupress' ),
-	'description'       => sprintf(
-		/** Translators: 1 and 2 are HTML tags, 3 is a link to "shortcodes", 4 is a link to "embeds", 5 is a PHP constant name. */
-		__( 'By default Administrators are allowed to write any type of <abbr title="Hypertext Markup Language">HTML</abbr> in the post editor, including unsafe HTML tags like %1$s and %2$s. This kind of tag is highly insecure and %3$s or %4$s must be used instead. By activating this option, you will set the constant %5$s and allow only common HTML tags to be used in the post editor.', 'secupress' ),
-		'<code>&lt;script&gt;</code>',
-		'<code>&lt;iframe&gt;</code>',
-		'<a href="' . __( 'https://codex.wordpress.org/Shortcode', 'secupress' ) . '" target="_blank" title="' . esc_attr__( 'Open in a new window.', 'secupress' ) . '">' . __( 'shortcodes', 'secupress' ) . '</a>',
-		'<a href="' . __( 'https://codex.wordpress.org/Embeds', 'secupress' ) . '" target="_blank" title="' . esc_attr__( 'Open in a new window.', 'secupress' ) . '">' . __( 'embeds', 'secupress' ) . '</a>',
-		'<code>DISALLOW_UNFILTERED_HTML</code>'
-	),
-	'label_for'         => $this->get_field_name( 'disallow_unfiltered_html' ),
-	'plugin_activation' => true,
-	'type'              => 'checkbox',
-	'value'             => $active,
-	'label'             => __( 'Yes, filter HTML in post editor', 'secupress' ),
-	'disabled'          => ! $can_manage || ! $is_writable,
-	'helpers'           => array(
-		array(
-			'type'        => 'help',
-			'description' => ! $can_manage ? __( 'Option unavailable, the protection is already set by another method than the plugin.', 'secupress' ) : null,
-		),
-		array(
-			'type'        => 'warning',
-			/** Translators: 1 and 2 are HTML tags. */
-			'description' => $can_manage ? sprintf( __( 'by activating this option, %1$s and %2$s tags won\'t be allowed int the post editor anymore!', 'secupress' ), '<code>&lt;script&gt;</code>', '<code>&lt;iframe&gt;</code>' ) : null,
-		),
-	),
-) );
-
-
 $active      = (int) secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-unfiltered-uploads' );
 $can_manage  = $active || defined( 'ALLOW_UNFILTERED_UPLOADS' ) && ALLOW_UNFILTERED_UPLOADS;
 $description = null;

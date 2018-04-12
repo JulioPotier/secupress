@@ -67,7 +67,7 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements SecuPress_Scan
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// "good"
-			0   => __( 'The login page seems to be protected by double authentication.', 'secupress' ),
+			0   => __( 'The login page is protected by double authentication with %s.', 'secupress' ),
 			1   => __( 'The <strong>PasswordLess Double Authentication</strong> module has been activated for every role. Users will receive an email to log-in now.', 'secupress' ),
 			// "bad"
 			200 => __( 'Your login system is <strong>not strong enough</strong>, you need a <strong>double authentication system</strong>.', 'secupress' ),
@@ -106,7 +106,24 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements SecuPress_Scan
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
-		$activated = secupress_is_submodule_active( 'users-login', 'passwordless' );
+
+		$activated = secupress_filter_scanner( __CLASS__ );
+		if ( true === $activated ) {
+			$this->add_message( 0 );
+			return parent::scan();
+		}
+
+		$activated = secupress_is_submodule_active( 'users-login', 'passwordless' ) ? 'PasswordLess' : false;
+
+		/**
+		 * Overwrite the activated bool to force a good information
+		 *
+		 * @since 1.4
+		 *
+		 * @param (bool|string) False if not activated, string containing the plugin/system name than activate the feature
+		 */
+
+		$activated = apply_filters( 'secupress.scan.' . __CLASS__ . '.activated', $activated );
 
 		if ( ! $activated ) {
 			// "bad"
@@ -114,7 +131,7 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements SecuPress_Scan
 			$this->add_pre_fix_message( 201 );
 		} else {
 			// "good"
-			$this->add_message( 0 );
+			$this->add_message( 0, array( '<strong>' . $activated . '</strong>' ) );
 		}
 
 		return parent::scan();

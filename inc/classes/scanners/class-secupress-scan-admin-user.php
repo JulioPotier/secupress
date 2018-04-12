@@ -112,12 +112,20 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
+
+		$username = 'admin';
+
+		$activated = secupress_filter_scanner( __CLASS__ );
+		if ( true === $activated ) {
+			$this->add_message( 0, array( '<em>' . $username . '</em>' ) );
+			return parent::scan();
+		}
+
 		if ( secupress_get_site_transient( 'secupress-rename-admin-username' ) ) {
 			$this->add_message( 100 );
 			return parent::scan();
 		}
 
-		$username = 'admin';
 		$user_id  = username_exists( $username );
 
 		// The "admin" account exists and has a role or capabilities: it should have no role.

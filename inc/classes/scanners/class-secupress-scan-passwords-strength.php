@@ -71,10 +71,14 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan implements SecuPr
 			0   => __( 'Database password seems strong enough.', 'secupress' ),
 			1   => __( 'Database and FTP passwords seems strong enough.', 'secupress' ),
 			// "bad"
-			200 => __( '%s is <strong>empty</strong>, this is not secure!', 'secupress' ),
-			201 => __( '%s is known to be <strong>too common</strong>, this is not secure', 'secupress' ),
-			202 => _n_noop( '%1$s is only <strong>%2$d character length</strong>, this is not secure', '%1$s is only <strong>%2$d characters length</strong>, this is not secure', 'secupress' ),
-			203 => __( '%s is not <strong>complex</strong> enough, this is not secure', 'secupress' ),
+			200 => __( 'Your Database password is <strong>empty</strong>, this is not secure!', 'secupress' ),
+			201 => __( 'Your Database password is known to be <strong>too common</strong>, this is not secure', 'secupress' ),
+			202 => _n_noop( 'Your Database password is only <strong>%d character length</strong>, this is not secure', 'Your Database password is only <strong>%d characters length</strong>, this is not secure', 'secupress' ),
+			203 => __( 'Your Database password is not <strong>complex</strong> enough, this is not secure', 'secupress' ),
+			210 => __( 'Your FTP password is <strong>empty</strong>, this is not secure!', 'secupress' ),
+			211 => __( 'Your FTP password is known to be <strong>too common</strong>, this is not secure', 'secupress' ),
+			212 => _n_noop( 'Your FTP password is only <strong>%d character length</strong>, this is not secure', 'Your FTP password is only <strong>%d characters length</strong>, this is not secure', 'secupress' ),
+			213 => __( 'Your FTP password is not <strong>complex</strong> enough, this is not secure', 'secupress' ),
 			// "cantfix"
 			300 => __( 'This cannot be fixed automatically, you have to manually change your database and FTP password in your server administration.', 'secupress' ),
 			301 => __( 'This cannot be fixed automatically, you have to manually change your database password in your server administration.', 'secupress' ),
@@ -113,27 +117,34 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan implements SecuPr
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
+
+		$activated = secupress_filter_scanner( __CLASS__ );
+		if ( true === $activated ) {
+			$this->add_message( 0 );
+			return parent::scan();
+		}
+
 		$has_ftp = defined( 'FTP_PASS' );
 
 		// DB_PASSWORD.
 		if ( '' === DB_PASSWORD ) {
 			// "bad"
-			$this->add_message( 200, array( __( 'Your Database password', 'secupress' ) ) );
+			$this->add_message( 200 );
 			$this->add_pre_fix_message( 301 );
 
 		} elseif ( self::dictionary_attack( DB_PASSWORD ) ) {
 			// "bad"
-			$this->add_message( 201, array( __( 'Your Database password', 'secupress' ) ) );
+			$this->add_message( 201 );
 			$this->add_pre_fix_message( 301 );
 
 		} elseif ( ( $len = strlen( DB_PASSWORD ) ) <= 6 ) {
 			// "bad"
-			$this->add_message( 202, array( $len, __( 'Your Database password', 'secupress' ), $len ) );
+			$this->add_message( 202 );
 			$this->add_pre_fix_message( 301 );
 
 		} elseif ( count( count_chars( DB_PASSWORD, 1 ) ) < 5 ) {
 			// "bad"
-			$this->add_message( 203, array( __( 'Your Database password', 'secupress' ) ) );
+			$this->add_message( 203 );
 			$this->add_pre_fix_message( 301 );
 
 		}
@@ -142,22 +153,22 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan implements SecuPr
 		if ( $has_ftp ) {
 			if ( '' === FTP_PASS ) {
 					// "bad"
-				$this->add_message( 200, array( __( 'Your FTP password', 'secupress' ) ) );
+				$this->add_message( 210 );
 				$this->add_pre_fix_message( 302 );
 
 			} elseif ( self::dictionary_attack( FTP_PASS ) ) {
 					// "bad"
-				$this->add_message( 201, array( __( 'Your FTP password', 'secupress' ) ) );
+				$this->add_message( 211 );
 				$this->add_pre_fix_message( 302 );
 
 			} elseif ( ( $len = strlen( FTP_PASS ) ) <= 6 ) {
 					// "bad"
-				$this->add_message( 202, array( $len, __( 'Your FTP password', 'secupress' ), $len ) );
+				$this->add_message( 212 );
 				$this->add_pre_fix_message( 302 );
 
 			} elseif ( count( count_chars( FTP_PASS, 1 ) ) < 5 ) {
 					// "bad"
-				$this->add_message( 203, array( __( 'Your FTP password', 'secupress' ) ) );
+				$this->add_message( 213 );
 				$this->add_pre_fix_message( 302 );
 
 			}

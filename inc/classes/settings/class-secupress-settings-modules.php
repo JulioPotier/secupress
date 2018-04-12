@@ -203,13 +203,14 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 */
 	public function print_page() {
 		$is_welcome = 'welcome' !== $this->get_current_module() ? false : true;
+		$secupress_has_sideads = apply_filters( 'secupress.no_sidebar', true ) && apply_filters( 'secupress.no_sideads', true );
 		?>
 		<div class="wrap">
 
 			<?php secupress_admin_heading( __( 'Modules', 'secupress' ) ); ?>
 			<?php settings_errors(); ?>
 
-			<div class="secupress-wrapper<?php echo ( $is_welcome ? '' : ' secupress-flex secupress-flex-top' ) ?><?php echo ( ! secupress_is_pro() ? ' secupress-has-sideads' : '' ) ?>">
+			<div class="secupress-wrapper<?php echo ( $is_welcome ? '' : ' secupress-flex secupress-flex-top' ) ?><?php echo ( $secupress_has_sideads ? ' secupress-has-sideads' : '' ) ?>">
 
 				<?php
 				/**
@@ -318,8 +319,6 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		<div class="secupress-tab-content-header">
 			<?php
 			$this->print_module_title();
-			$this->print_module_description();
-			$this->print_module_icon();
 			?>
 		</div>
 
@@ -381,7 +380,10 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @return (object) The class instance.
 	 */
 	protected function print_module_title( $tag = 'h2' ) {
-		echo '<' . $tag . ' class="secupress-tc-title">' . $this->get_module_title() . "</$tag>\n";
+		echo "<$tag class=\"secupress-tc-title\">";
+			$this->print_module_icon();
+			echo $this->get_module_title();
+		echo "</$tag>\n";
 		return $this;
 	}
 
@@ -794,6 +796,17 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @return (object) The class instance.
 	 */
 	final protected function load_plugin_settings( $plugin ) {
+		/**
+		 * Give the possibility to hide a full block of options
+		 *
+		 * @since 1.4
+		 *
+		 * @param (bool) false by default
+		 */
+
+		if ( false !== apply_filters( 'secupress.settings.load_plugin.' . $plugin, false ) ) {
+			return;
+		}
 		$plugin_file = SECUPRESS_MODULES_PATH . $this->modulenow . '/settings/' . $plugin . '.php';
 
 		return $this->require_settings_file( $plugin_file, $plugin );

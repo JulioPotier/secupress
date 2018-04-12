@@ -127,6 +127,13 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 	 * @return (array) The scan results.
 	 */
 	public function scan() {
+
+		$activated = secupress_filter_scanner( __CLASS__ );
+		if ( true === $activated ) {
+			$this->add_message( 0 );
+			return parent::scan();
+		}
+
 		$upload_dir = wp_upload_dir();
 		$base_url   = user_trailingslashit( $upload_dir['baseurl'] );
 		$response   = wp_remote_get( $base_url, $this->get_default_request_args() );
@@ -145,9 +152,6 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 					}
 				}
 			}
-		} else {
-			// "warning"
-			$this->add_message( 100, array( '<code>' . $base_url . '</code>' ) );
 		}
 
 		// "good"

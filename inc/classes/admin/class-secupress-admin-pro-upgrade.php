@@ -303,7 +303,6 @@ class SecuPress_Admin_Pro_Upgrade extends SecuPress_Admin_Offer_Migration {
 			'sp_action'  => 'get_upgrade_data',
 			'user_email' => secupress_get_consumer_email(),
 			'user_key'   => secupress_get_consumer_key(),
-			'beta'       => (int) SECUPRESS_USE_BETA,
 		) );
 
 		$information = wp_remote_get( $url, array( 'timeout' => 15 ) );
