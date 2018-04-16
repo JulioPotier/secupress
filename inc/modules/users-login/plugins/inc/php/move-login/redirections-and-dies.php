@@ -223,7 +223,7 @@ function secupress_fallback_slug_redirect() {
 		$parsed = explode( '/', $parsed );
 		$parsed = end( $parsed );
 
-		if ( is_user_logged_in() ) {
+		if ( is_user_logged_in() && ! isset( $_REQUEST['action'] ) ) {
 			wp_safe_redirect( admin_url(), 302 );
 			die();
 		}
