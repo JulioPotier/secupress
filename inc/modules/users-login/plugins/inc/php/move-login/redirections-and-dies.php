@@ -223,7 +223,7 @@ function secupress_fallback_slug_redirect() {
 		$parsed = explode( '/', $parsed );
 		$parsed = end( $parsed );
 
-		if ( is_user_logged_in() ) {
+		if ( is_user_logged_in() && ! isset( $_REQUEST['action'] ) ) {
 			wp_safe_redirect( admin_url(), 302 );
 			die();
 		}
@@ -248,7 +248,7 @@ add_filter( 'register_url', 'secupress_register_url_redirect' );
  **/
 function secupress_register_url_redirect( $url ) {
 	if ( ! is_user_logged_in() ) {
-		remove_filter( 'register_url', 'secupress_register_url' );
+		remove_filter( 'register_url', 'secupress_register_url_redirect' );
 		if ( wp_registration_url() == $url ) {
 			secupress_move_login_deny_login_access();
 		}

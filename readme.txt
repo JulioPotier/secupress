@@ -3,7 +3,7 @@ Contributors: SecuPress, juliobox, GregLone
 Tags: wordpress security, secure, security plugin, security, malware
 Requires at least: 4.0
 Tested up to: 4.9.5
-Stable tag: 1.4
+Stable tag: 1.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -178,7 +178,17 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 == Changelog ==
 
+= 1.4.1 =
+
+* 18 april 2018
+* Improvement#583: Better PHP Version detection and warning (php 7 is now the best recommanded one)
+* Improvement: Easy Login scan will now detect correctly 15 2FA plugins, not only our PasswordLess module.
+* Fix#581: You can now correctly disconnect if you're using Move Login Page.
+* Fix#582: You can now correctly save the malware scan option page.
+* Fix#586: Possible 503 error : "The server is temporarily unable to service your request due to maintenance downtime or capacity problems. Please try again later."
+
 = 1.4 =
+
 * 11 april 2018
 * New: PHP required version is now 5.4 (and will grow at each major version)
 * New: WordPress required version is now 4.0 (and will grow at each major version)
@@ -460,7 +470,14 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 == Upgrade Notice ==
 
+= 1.4.1 =
+
+* 18 april 2018
+* PHP required version is now 5.4
+* WordPress required version is now 4.0
+
 = 1.4 =
+
 * 11 april 2018
 * PHP required version is now 5.4
 * WordPress required version is now 4.0

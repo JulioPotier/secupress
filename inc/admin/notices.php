@@ -322,7 +322,7 @@ function secupress_warning_no_oneclick_scan_yet() {
 }
 
 
-add_action( 'in_plugin_update_message-' . plugin_basename( SECUPRESS_FILE ), 'secupress_updates_message' );
+add_action( 'in_plugin_update_message-' . plugin_basename( SECUPRESS_FILE ), 'secupress_updates_message', 10, 2 );
 /**
  * Display a message below our plugins to display the next update information if needed
  *
@@ -331,14 +331,11 @@ add_action( 'in_plugin_update_message-' . plugin_basename( SECUPRESS_FILE ), 'se
  *
  * @param (array) $plugin_data Contains the plugin data from EDD or repository.
  */
-function secupress_updates_message( $plugin_data ) {
+function secupress_updates_message( $plugin_data, $new_plugin_data ) {
 	// Get next version.
-	if ( isset( $plugin_data['version'] ) ) {
-		// SecuPress Free (repo).
-		$remote_version = $plugin_data['version'];
-	} elseif ( isset( $plugin_data['new_version'] ) ) {
-		// SecuPress Pro (EDD).
-		$remote_version = $plugin_data['new_version'];
+	$new_plugin_data = (array) $new_plugin_data;
+	if ( isset( $new_plugin_data['new_version'] ) ) {
+		$remote_version = $new_plugin_data['new_version'];
 	}
 
 	if ( ! isset( $remote_version ) ) {
@@ -346,15 +343,15 @@ function secupress_updates_message( $plugin_data ) {
 	}
 
 	$body = get_option( 'secupress_updates_message' );
-	$slug = $plugin_data['slug'] . '-' . $remote_version;
+	$slug = $new_plugin_data['slug'] . '-' . $remote_version;
 
 	if ( ! isset( $body[ $slug ] ) ) {
 
 		$urls = array(
 			'secupress'     => 'https://plugins.svn.wordpress.org/secupress/trunk/readme.txt',
-			'secupress-pro' => SECUPRESS_WEB_MAIN . 'api/plugin/readme-pro.php',
+			'secupress-pro' => 'https://secupress.me/wp-content/uploads/secupress-pro-readme.txt',
 		);
-		$response = wp_remote_get( $urls[ $plugin_data['slug'] ] );
+		$response = wp_remote_get( $urls[ $new_plugin_data['slug'] ] );
 
 		if ( 200 !== wp_remote_retrieve_response_code( $response ) ) {
 			return;
