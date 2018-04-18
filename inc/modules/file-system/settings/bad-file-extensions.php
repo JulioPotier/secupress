@@ -5,6 +5,8 @@ global $is_apache, $is_nginx, $is_iis7;
 
 // Open a form tag wrapping the following modules.
 add_action( 'secupress.settings.before_section_bad-file-extensions', array( $this, 'print_open_form_tag' ) );
+// Close the form tag wrapping these module.
+add_action( 'secupress.settings.after_section_bad-file-extensions', array( $this, 'print_close_form_tag' ) );
 
 $this->set_current_section( 'bad-file-extensions' );
 $this->set_section_description( __( 'Many file extensions are known to be used by malware, or can pose a threat if they are vulnerable. Denying direct access to those files will prevent their use.', 'secupress' ) );
