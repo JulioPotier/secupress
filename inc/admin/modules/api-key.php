@@ -41,7 +41,7 @@ $this->add_field( array(
 	'type'         => 'text',
 	'attributes'   => $attributes,
 	'value'        => $value,
-	'value'        => is_null( $value ) && defined( 'SECUPRESS_API_KEY' ) ? esc_attr( SECUPRESS_API_KEY ) : null,
+	'value'        => defined( 'SECUPRESS_API_KEY' ) ? esc_attr( SECUPRESS_API_KEY ) : $value,
 	'helpers'      => array(
 		array(
 			'type'        => 'help',
