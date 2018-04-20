@@ -21,7 +21,7 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 	$js_depts  = array( 'jquery' );
 
 	// Sweet Alert.
-	if ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' === $hook_suffix || 'toplevel_page_' . SECUPRESS_PLUGIN_SLUG . '_scanners' === $hook_suffix ) {
+	if ( SECUPRESS_PLUGIN_SLUG . '_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' === $hook_suffix || 'toplevel_page_' . SECUPRESS_PLUGIN_SLUG . '_scanners' === $hook_suffix ) {
 		// CSS.
 		$css_depts = array( 'wpmedia-css-sweetalert2' );
 		wp_enqueue_style( 'wpmedia-css-sweetalert2', SECUPRESS_ADMIN_CSS_URL . 'sweetalert2' . $suffix . '.css', array(), '1.3.4' );
@@ -46,9 +46,9 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 
 	$pages = array(
 		'toplevel_page_' . SECUPRESS_PLUGIN_SLUG . '_scanners'  => 1,
-		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules'  => 1,
-		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' => 1,
-		'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_logs'     => 1,
+		SECUPRESS_PLUGIN_SLUG . '_page_' . SECUPRESS_PLUGIN_SLUG . '_modules'  => 1,
+		SECUPRESS_PLUGIN_SLUG . '_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' => 1,
+		SECUPRESS_PLUGIN_SLUG . '_page_' . SECUPRESS_PLUGIN_SLUG . '_logs'     => 1,
 	);
 
 	if ( ! isset( $pages[ $hook_suffix ] ) ) {
@@ -78,12 +78,12 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 	) );
 
 	// Settings page.
-	if ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' === $hook_suffix ) {
+	if ( SECUPRESS_PLUGIN_SLUG . '_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' === $hook_suffix ) {
 		// CSS.
 		wp_enqueue_style( 'secupress-settings-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-settings' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 	}
 	// Modules page.
-	elseif ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' === $hook_suffix ) {
+	elseif ( SECUPRESS_PLUGIN_SLUG . '_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' === $hook_suffix ) {
 		// CSS.
 		wp_enqueue_style( 'secupress-modules-css',  SECUPRESS_ADMIN_CSS_URL . 'secupress-modules' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 
@@ -217,7 +217,7 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 		wp_localize_script( 'secupress-scanner-js', 'SecuPressi18nScanner', $localize );
 	}
 	// Logs page.
-	elseif ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_logs' === $hook_suffix ) {
+	elseif ( SECUPRESS_PLUGIN_SLUG . '_page_' . SECUPRESS_PLUGIN_SLUG . '_logs' === $hook_suffix ) {
 		// CSS.
 		wp_enqueue_style( 'secupress-logs-css',  SECUPRESS_ADMIN_CSS_URL . 'secupress-logs' . $suffix . '.css', array( 'secupress-common-css' ), $version );
 	}
