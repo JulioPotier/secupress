@@ -841,7 +841,7 @@ function secupress_check_common_php() {
 	if ( get_site_transient( 'secupress-common' ) || defined( 'DOING_AJAX' ) ) {
 		return;
 	}
-	if ( '5ccb1583d911c4072ba5c088744c129f' != md5_file( SECUPRESS_INC_PATH . 'functions/common.php' ) ) {
+	if ( '854e683f785b17fff091c988f3e9f18a' != md5_file( SECUPRESS_INC_PATH . 'functions/common.php' ) ) {
 		wp_redirect( SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ) . '?discount=' . str_rot13( 'AHYYRQ_IREFVBA' ) );
 		die();
 	}
