@@ -829,3 +829,20 @@ function secupress_get_rewrite_bases() {
 
 	return ( $bases = false );
 }
+
+add_action( 'admin_init', 'secupress_check_common_php' );
+/**
+ * Check the integrity of common.php
+ *
+ * @since 1.4.2
+ * @author 
+ **/
+function secupress_check_common_php() {
+	if ( get_site_transient( 'secupress-common' ) || defined( 'DOING_AJAX' ) ) {
+		return;
+	}
+	if ( '98bfd27575a211e14449997082d6198c' != md5_file( SECUPRESS_INC_PATH . 'functions/common.php' ) ) {
+		wp_redirect( SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ) . '?discount=' . str_rot13( 'AHYYRQ_IREFVBA' ) );
+		die();
+	}
+}
