@@ -29,7 +29,7 @@ function secupress_xmlrpc_disable_rpc() {
 			secupress_die(
 				__( 'XML-RPC services are disabled on this site.' ), // WP i18n.
 				__( 'XML-RPC is disabled', 'secupress' ),
-				array( 'response' => 403 )
+				array( 'response' => 403, 'force_die' => true )
 			);
 		}
 

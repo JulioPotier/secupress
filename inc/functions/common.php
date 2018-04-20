@@ -339,7 +339,6 @@ function secupress_die( $message = '', $title = '', $args = array() ) {
 	$message         = '<h1>' . SECUPRESS_PLUGIN_NAME . '</h1>' . $message;
 	$url             = secupress_get_current_url( 'raw' );
 	$force_die       = ! empty( $args['force_die'] );
-	$whitelisted     = secupress_ip_is_whitelisted();
 	$is_scan_request = secupress_is_scan_request(); // Used to bypass the whitelist for scans.
 
 	/**
@@ -350,10 +349,9 @@ function secupress_die( $message = '', $title = '', $args = array() ) {
 	 * @param (string) $message         The message displayed.
 	 * @param (string) $url             The current URL.
 	 * @param (array)  $args            Facultative arguments.
-	 * @param (bool)   $whitelisted     Is the current user IP whitelisted or not.
 	 * @param (bool)   $is_scan_request Tell if the request comes from one of our scans.
 	 */
-	$message = apply_filters( 'secupress.die.message', $message, $url, $args, $whitelisted, $is_scan_request );
+	$message = apply_filters( 'secupress.die.message', $message, $url, $args, $is_scan_request );
 
 	/**
 	 * Fires right before `wp_die()`.
@@ -363,12 +361,11 @@ function secupress_die( $message = '', $title = '', $args = array() ) {
 	 * @param (string) $message         The message displayed.
 	 * @param (string) $url             The current URL.
 	 * @param (array)  $args            Facultative arguments.
-	 * @param (bool)   $whitelisted Is the current user IP whitelisted or not.
 	 * @param (bool)   $is_scan_request Tell if the request comes from one of our scans.
 	 */
-	do_action( 'secupress.before.die', $message, $url, $args, $whitelisted, $is_scan_request );
+	do_action( 'secupress.before.die', $message, $url, $args, $is_scan_request );
 
-	if ( $force_die || ! $whitelisted || $is_scan_request ) {
+	if ( $force_die || $is_scan_request ) {
 		// Die.
 		if ( ! defined( 'DONOTCACHEPAGE' ) ) {
 			// Tell cache plugins not to cache our error message.
