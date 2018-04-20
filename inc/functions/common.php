@@ -610,6 +610,17 @@ function secupress_is_white_label() {
  * @return (string) The HTML tag.
  */
 function secupress_get_logo( $atts = array() ) {
+	if ( secupress_is_white_label() ) {
+		/**
+		 * If white label is activated, no SecuPress logo is retrieve, let the filter do the job.
+		 *
+		 * @since 1.4.2
+		 *
+		 * @param (string) Should return a <img> or dashicon span tag.
+		 * @param (array) $atts Attributes, contains logo size.
+		 */
+		return apply_filters( 'secupress.white_label.logo', '<span class="dashicons dashicons-shield-alt"></span>', $atts );
+	}
 	$base_url = SECUPRESS_ADMIN_IMAGES_URL . 'logo';
 
 	$atts = array_merge( array(

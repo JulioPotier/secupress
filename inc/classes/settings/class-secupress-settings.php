@@ -1239,7 +1239,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	protected function print_sideads() {
 		global $current_screen;
 
-		if ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' !== $current_screen->base ) {
+		if ( SECUPRESS_PLUGIN_SLUG . '_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' !== $current_screen->base ) {
 			return;
 		}
 		/**
