@@ -436,20 +436,19 @@ function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 	do_action( 'secupress.block', $module, $ip, $args, $block_id );
 
 	$title   = $args['code'] . ' ' . get_status_header_desc( $args['code'] );
-	$content = '<h4>' . $title . '</h4>';
-
+	$content = '<h2>' . $title . '</h2>';
 	if ( ! $args['content'] ) {
 		$content .= '<p>' . __( 'You are not allowed to access the requested page.', 'secupress' ) . '</p>';
 	} else {
 		$content .= '<p>' . $args['content'] . '</p>';
 	}
 
-	$content  = '<h4>' . __( 'Logged Details:', 'secupress' ) . '</h4><p>';
+	$content .= '<h3>' . __( 'Logged Details:', 'secupress' ) . '</h3><p>';
 	$content .= sprintf( __( 'Your IP: %s', 'secupress' ), $ip ) . '<br>';
 	$content .= sprintf( __( 'Time: %s', 'secupress' ), date_i18n( __( 'F j, Y g:i a', 'secupress' ) ) ) . '<br>';
 	$content .= sprintf( __( 'Block ID: %s', 'secupress' ), $block_id ) . '</p>';
 
-	secupress_die( $content, $title, array( 'response' => $args['code'] ) );
+	secupress_die( $content, $title, array( 'response' => $args['code'], 'force_die' => true ) );
 }
 
 
