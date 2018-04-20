@@ -491,7 +491,7 @@ function secupress_unlock_admin_ajax_post_cb() {
 							'<a href="' . $url_remove . '">' . $url_remove . '</a> ' . __( '(Valid 1 day)', 'secupress' )
 					);
 	$sent = secupress_send_mail( $_POST['email'], $subject, $message );
-	secupress_die( $sent ? __( 'Email sent, check your mailbox.', 'secupress' ) : __( 'Email not sent, please contact the support.', 'secupress' ), __( 'Email', 'secupress' ) );
+	secupress_die( $sent ? __( 'Email sent, check your mailbox.', 'secupress' ) : __( 'Email not sent, please contact the support.', 'secupress' ), __( 'Email', 'secupress' ), array( 'force_die' => true ) );
 }
 
 add_action( 'admin_post_nopriv_secupress_deactivate_module', 'secupress_deactivate_module_admin_post_cb' );
