@@ -432,12 +432,14 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 		secupress_move_login_write_rules();
 	}
 
-	// < 1.4.1
-	if ( version_compare( $actual_version, '1.4.1', '<' ) && secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-unfiltered-html' ) ) {
+	// < 1.4.2
+	if ( version_compare( $actual_version, '1.4.2', '<' ) ) {
 		secupress_deactivate_submodule( 'wordpress-core', 'wp-config-constant-unfiltered-html' );
 		secupress_deactivate_submodule( 'sensitive-data', 'restapi' );
 		secupress_deactivate_submodule( 'users-login', 'nonlogintimeslot' );
 		secupress_deactivate_submodule( 'file-system', 'directory-index' );
+
+		set_site_transient( 'secupress-common', time(), 2 * DAY_IN_SECONDS );
 	}
 
 }
