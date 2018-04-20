@@ -173,8 +173,8 @@ add_filter( 'register_url', 'secupress_register_url_redirect' );
  **/
 function secupress_register_url_redirect( $url ) {
 	if ( ! is_user_logged_in() ) {
-		remove_filter( 'register_url', 'secupress_register_url_redirect' );
-		if ( wp_registration_url() == $url ) {
+		$current_url = secupress_get_current_url( 'raw' );
+		if ( $url == $current_url ) {
 			secupress_move_login_deny_login_access();
 		}
 	}
