@@ -504,17 +504,22 @@ function secupress_scanners() {
 													<q>
 													<?php
 													/** Translators: %s is the plugin name */
-													printf( esc_html__( 'Wow! My website just got an A grade for security using %s, what about yours?', 'secupress' ), SECUPRESS_PLUGIN_NAME );
+													$quote = __( 'Wow! My website just got an A grade for security using @SecuPress, what about yours?', 'secupress' );
+													echo $quote;
 													?>
 													</q>
 												</p>
 
-												<a class="secupress-button secupress-button-mini" target="_blank" title="<?php esc_attr_e( 'Open in a new window.', 'secupress' ); ?>" href="https://twitter.com/intent/tweet?via=secupress&amp;url=<?php
-													/** Translators: %s is the plugin name */
-													echo rawurlencode( 'https://secupress.me' ); ?>&amp;text=<?php echo rawurlencode( html_entity_decode( sprintf( __( 'Wow! My website just got an A grade for security using %s, what about yours?', 'secupress' ), SECUPRESS_PLUGIN_NAME ) ) );
-													?>">
+												<a class="secupress-button secupress-button-mini" target="_blank" title="<?php esc_attr_e( 'Open in a new window.', 'secupress' ); ?>" href="https://twitter.com/intent/tweet?url=<?php
+													echo rawurlencode( 'https://secupress.me' ); ?>&amp;text=<?php echo rawurlencode( html_entity_decode( $quote ) ); ?>">
 													<span class="icon" aria-hidden="true"><span class="dashicons dashicons-twitter"></span></span>
 													<span class="text"><?php esc_html_e( 'Tweet this', 'secupress' ); ?></span>
+												</a>
+
+												<a class="secupress-button secupress-button-mini" target="_blank" title="<?php esc_attr_e( 'Open in a new window.', 'secupress' ); ?>" href="https://www.facebook.com/sharer/sharer.php?u=<?php
+													echo rawurlencode( 'https://secupress.me' ); ?>&amp;quote=<?php echo rawurlencode( html_entity_decode( $quote ) ); ?>">
+													<span class="icon" aria-hidden="true"><span class="dashicons dashicons-facebook"></span></span>
+													<span class="text"><?php esc_html_e( 'Share this', 'secupress' ); ?></span>
 												</a>
 											</div><!-- #tweeterA -->
 										<?php } ?>
