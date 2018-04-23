@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2018-04-11 16:07+0200\n"
-"PO-Revision-Date: 2018-04-18 09:21+0200\n"
+"POT-Creation-Date: 2018-04-22 23:57+0200\n"
+"PO-Revision-Date: 2018-04-22 23:59+0200\n"
 "Last-Translator: WP Media <contact@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -143,19 +143,19 @@ msgid "Grade %s"
 msgstr "Grade %s"
 
 #: inc/admin-bar.php:36 inc/admin/multisite/settings.php:217
-#: inc/admin/settings.php:303 inc/admin/settings.php:418
+#: inc/admin/settings.php:303 inc/admin/settings.php:415
 #: inc/modules/schedules/settings/schedules-scan.php:6
 msgid "Scanners"
 msgstr "Scanners"
 
 #: inc/admin-bar.php:44 inc/admin/settings.php:304
-#: inc/classes/settings/class-secupress-settings-modules.php:209
+#: inc/classes/settings/class-secupress-settings-modules.php:210
 msgid "Modules"
 msgstr "Modules"
 
 #: inc/admin-bar.php:52 inc/admin/settings.php:275 inc/admin/settings.php:305
-#: inc/classes/settings/class-secupress-settings-global.php:84
-#: inc/classes/settings/class-secupress-settings-global.php:87
+#: inc/classes/settings/class-secupress-settings-global.php:85
+#: inc/classes/settings/class-secupress-settings-global.php:88
 msgid "Settings"
 msgstr "Réglages"
 
@@ -186,7 +186,7 @@ msgid "The IP address %s has been banned."
 msgstr "L’adresse IP %s a été bannie."
 
 #: inc/admin/ajax-post-callbacks.php:236
-#: inc/classes/settings/class-secupress-settings-modules.php:546
+#: inc/classes/settings/class-secupress-settings-modules.php:547
 msgid "Forever"
 msgstr "Pour toujours"
 
@@ -255,8 +255,8 @@ msgstr "Votre licence a été activée avec succès."
 #: inc/admin/ajax-post-callbacks.php:834 inc/admin/ajax-post-callbacks.php:835
 #: inc/admin/ajax-post-callbacks.php:989 inc/admin/scanner-step-3.php:266
 #: inc/admin/scanner-step-3.php:272 inc/admin/scanner-step-3.php:295
-#: inc/admin/settings.php:515 inc/admin/settings.php:872
-#: inc/admin/settings.php:875
+#: inc/admin/settings.php:513 inc/admin/settings.php:519
+#: inc/admin/settings.php:874 inc/admin/settings.php:877
 #: inc/classes/admin/class-secupress-admin-pro-upgrade.php:157
 #: inc/classes/admin/class-secupress-admin-pro-upgrade.php:178
 #: inc/classes/admin/class-secupress-admin-support.php:408
@@ -427,7 +427,7 @@ msgstr "Compte SecuPress"
 msgid "%s ago"
 msgstr "Il y a %s"
 
-#: inc/admin/functions/admin.php:127 inc/admin/settings.php:399
+#: inc/admin/functions/admin.php:127 inc/admin/settings.php:396
 msgctxt "Latest scans"
 msgid "M dS, Y \\a\\t h:ia"
 msgstr "l j F Y \\à G:i:s"
@@ -799,7 +799,7 @@ msgstr ""
 "dès maintenant."
 
 #: inc/admin/notices.php:311 inc/admin/settings.php:143
-#: inc/admin/settings.php:667
+#: inc/admin/settings.php:669
 msgid "Scan my website"
 msgstr "Scanner mon site"
 
@@ -811,7 +811,7 @@ msgid "Close"
 msgstr "Fermer"
 
 #. Translators: %1$s is the version number, %2$s is a date.
-#: inc/admin/notices.php:381
+#: inc/admin/notices.php:378
 #, php-format
 msgid "Please read these special notes for this update, version %1$s - %2$s"
 msgstr ""
@@ -875,6 +875,18 @@ msgstr "Exporter ce rapport dans un fichier PDF."
 #: inc/admin/scanner-step-4.php:259
 msgid "Export as PDF"
 msgstr "Exporter en PDF"
+
+#: inc/admin/scanner-step-1.php:104 inc/admin/scanner-step-1.php:114
+#: inc/admin/scanner-step-2.php:82 inc/admin/scanner-step-2.php:103
+#: inc/admin/scanner-step-2.php:194 inc/admin/scanner-step-3.php:190
+#: inc/admin/scanner-step-3.php:295 inc/admin/scanner-step-4.php:272
+#: inc/admin/scanner-step-4.php:277 inc/admin/scanner-step-4.php:338
+#: inc/classes/settings/class-secupress-settings.php:1324
+#: inc/classes/settings/class-secupress-settings.php:1338
+#: inc/classes/settings/class-secupress-settings.php:1446
+#: inc/functions/files.php:845
+msgid "pricing"
+msgstr "fr/tarifs"
 
 #: inc/admin/scanner-step-1.php:104 inc/admin/scanner-step-4.php:272
 msgid "Get the Pro Version to export this report as PDF file."
@@ -1038,7 +1050,7 @@ msgid "Not fixed"
 msgstr "Non corrigé"
 
 #: inc/admin/scanner-step-4.php:214 inc/admin/settings.php:113
-#: inc/admin/settings.php:187 inc/admin/settings.php:991
+#: inc/admin/settings.php:187 inc/admin/settings.php:993
 msgid "Error"
 msgstr "Erreur"
 
@@ -1068,7 +1080,7 @@ msgstr "%s modules"
 msgid "Fine-tune your security"
 msgstr "Découvrez toutes les fonctionnalités"
 
-#: inc/admin/scanner-step-4.php:308 inc/admin/settings.php:610
+#: inc/admin/scanner-step-4.php:308 inc/admin/settings.php:612
 msgid "Manage your recurring scans"
 msgstr "Planifiez vos scans automatiques"
 
@@ -1079,7 +1091,7 @@ msgstr ""
 "Laissez %s scanner votre site quand vous n’êtes pas là avec des scanners "
 "récurrents."
 
-#: inc/admin/scanner-step-4.php:315 inc/admin/settings.php:609
+#: inc/admin/scanner-step-4.php:315 inc/admin/settings.php:611
 msgid "Schedule Scans"
 msgstr "Planification de scans"
 
@@ -1119,7 +1131,7 @@ msgid "Unknown error."
 msgstr "Erreur inconnue."
 
 #: inc/admin/settings.php:115
-#: inc/classes/settings/class-secupress-settings-modules.php:550
+#: inc/classes/settings/class-secupress-settings-modules.php:551
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -1184,7 +1196,7 @@ msgid "No banned IPs anymore."
 msgstr "Aucune adresse IP bannie."
 
 #: inc/admin/settings.php:135
-#: inc/classes/settings/class-secupress-settings-modules.php:515
+#: inc/classes/settings/class-secupress-settings-modules.php:516
 msgid "IP not found."
 msgstr "Adresse IP no trouvée."
 
@@ -1216,18 +1228,18 @@ msgstr "C’est une procédure automatisée qui vous aide à sécuriser votre si
 msgid "Show More"
 msgstr "Voir plus"
 
-#: inc/admin/settings.php:173 inc/admin/settings.php:482
-#: inc/admin/settings.php:987
+#: inc/admin/settings.php:173 inc/admin/settings.php:479
+#: inc/admin/settings.php:989
 msgid "Good"
 msgstr "Bon"
 
-#: inc/admin/settings.php:174 inc/admin/settings.php:492
-#: inc/admin/settings.php:989
+#: inc/admin/settings.php:174 inc/admin/settings.php:489
+#: inc/admin/settings.php:991
 msgid "Warning"
 msgstr "En attente"
 
-#: inc/admin/settings.php:175 inc/admin/settings.php:487
-#: inc/admin/settings.php:985
+#: inc/admin/settings.php:175 inc/admin/settings.php:484
+#: inc/admin/settings.php:987
 msgid "Bad"
 msgstr "Mauvais"
 
@@ -1269,8 +1281,12 @@ msgid ""
 "patience."
 msgstr "La documentation est en construction, merci pour votre patience."
 
+#: inc/admin/settings.php:267
+#: inc/classes/settings/class-secupress-settings.php:1382
+msgid "support"
+msgstr "fr/support"
+
 #: inc/admin/settings.php:267 inc/admin/settings.php:269
-#: inc/admin/settings.php:309
 #: inc/classes/settings/class-secupress-settings.php:1376
 msgid "Support"
 msgstr "Support"
@@ -1284,69 +1300,73 @@ msgstr "http://fr.docs.secupress.me/"
 msgid "Docs"
 msgstr "Docs"
 
-#: inc/admin/settings.php:312 inc/admin/settings.php:325
+#: inc/admin/settings.php:309 inc/admin/settings.php:322
 msgid "More Security"
 msgstr "Plus de sécurité"
 
-#: inc/admin/settings.php:325
+#: inc/admin/settings.php:322
 msgid "https://secupress.me/pricing/?from=secupress-plugin"
 msgstr "https://secupress.me/fr/tarifs/?from=secupress-plugin"
 
-#: inc/admin/settings.php:407
+#: inc/admin/settings.php:404
 msgid "Currently scanning"
 msgstr "Scanner en cours"
 
-#: inc/admin/settings.php:410
+#: inc/admin/settings.php:407
 #, php-format
 msgid "%1$s&nbsp;/&nbsp;%2$s points"
 msgstr "%1$s / %2$s points"
 
-#: inc/admin/settings.php:436
+#: inc/admin/settings.php:433
 msgid "First scan"
 msgstr "Premier scanner"
 
-#: inc/admin/settings.php:437
+#: inc/admin/settings.php:434
 msgid "Here’s how it’s going to work"
 msgstr "Voici comment cela fonctionne"
 
-#: inc/admin/settings.php:442 inc/admin/settings.php:618
+#: inc/admin/settings.php:439 inc/admin/settings.php:620
 msgid "Scan results"
 msgstr "Résultat du scanner"
 
-#: inc/admin/settings.php:451
+#: inc/admin/settings.php:448
 msgid "How does it work?"
 msgstr "Comment ça marche ?"
 
-#: inc/admin/settings.php:498
+#: inc/admin/settings.php:495
 msgid "New Scan"
 msgstr "Nouveau scan"
 
 #. Translators: %s is the plugin name
-#: inc/admin/settings.php:510 inc/admin/settings.php:517
-#, php-format
+#: inc/admin/settings.php:507
 msgid ""
-"Wow! My website just got an A grade for security using %s, what about yours?"
+"Wow! My website just got an A grade for security using @SecuPress, what "
+"about yours?"
 msgstr ""
-"Wow ! Mon site a reçu le grade de sécurité A en utilisant %s, quel est le "
-"vôtre ?"
+"Wow ! Mon site a reçu le grade de sécurité A en utilisant @SecuPress, quel "
+"est le vôtre ?"
 
-#: inc/admin/settings.php:520
+#: inc/admin/settings.php:516
 msgid "Tweet this"
 msgstr "Twitter ça"
 
-#: inc/admin/settings.php:531
+#: inc/admin/settings.php:522
+msgid "Share this"
+msgstr "Partager ça"
+
+#: inc/admin/settings.php:533
 msgid "Your last scans"
 msgstr "Vos derniers scans"
 
-#: inc/admin/settings.php:539
+#: inc/admin/settings.php:541
 msgid "You have no other reports for now."
 msgstr "Vous n’avez pas d’autres rapports pour le moment."
 
-#: inc/admin/settings.php:550
+#: inc/admin/settings.php:552
 msgid "Schedule your security analysis"
 msgstr "Planifiez votre analyse de sécurité"
 
-#: inc/admin/settings.php:552
+#: inc/admin/settings.php:554
 msgid ""
 "Stay updated on the security of your website. With our automatic scans, "
 "there is no need to log in to your WordPress admin to run a scan."
@@ -1355,76 +1375,76 @@ msgstr ""
 "automatiques, plus besoin de se connecter dans l’administration de WordPress "
 "pour lancer un scan."
 
-#: inc/admin/settings.php:556 inc/admin/settings.php:558
+#: inc/admin/settings.php:558 inc/admin/settings.php:560
 msgctxt "Schedule date"
 msgid "Y-m-d \\a\\t h:ia"
 msgstr "d/m/Y \\à G:i"
 
-#: inc/admin/settings.php:563 inc/admin/settings.php:578
+#: inc/admin/settings.php:565 inc/admin/settings.php:580
 #, php-format
 msgid "Last automatic scan: %s"
 msgstr "Dernier scan automatique : %s"
 
-#: inc/admin/settings.php:567 inc/admin/settings.php:582
+#: inc/admin/settings.php:569 inc/admin/settings.php:584
 #, php-format
 msgid "Next automatic scan: %s"
 msgstr "Prochain scan automatique : %s"
 
-#: inc/admin/settings.php:571 inc/admin/settings.php:586
+#: inc/admin/settings.php:573 inc/admin/settings.php:588
 msgid "Schedule your next analysis"
 msgstr "Planifier votre prochaine analyse"
 
-#: inc/admin/settings.php:588
+#: inc/admin/settings.php:590
 msgid "Available in the PRO version"
 msgstr "Disponible dans la version PRO"
 
-#: inc/admin/settings.php:600
+#: inc/admin/settings.php:602
 msgid "Latest scans"
 msgstr "Derniers scans"
 
-#: inc/admin/settings.php:601
+#: inc/admin/settings.php:603
 msgid "View your previous scans"
 msgstr "Voir vos scans précédents"
 
-#: inc/admin/settings.php:632
+#: inc/admin/settings.php:634
 msgid "Doubts? Try a new scan."
 msgstr "Un doute ? Lancez un nouveau scan."
 
-#: inc/admin/settings.php:638
+#: inc/admin/settings.php:640
 msgid "Scan website"
 msgstr "Scanner le site"
 
-#: inc/admin/settings.php:656
+#: inc/admin/settings.php:658
 msgid "Click to launch first scan"
 msgstr "Cliquez pour lancer le premier scan"
 
-#: inc/admin/settings.php:690 inc/admin/settings.php:747
+#: inc/admin/settings.php:692 inc/admin/settings.php:749
 msgid "Security Report"
 msgstr "Rapport de sécurité"
 
-#: inc/admin/settings.php:691 inc/admin/settings.php:758
+#: inc/admin/settings.php:693 inc/admin/settings.php:760
 msgid "Auto-Fix"
 msgstr "Correction automatique"
 
-#: inc/admin/settings.php:692 inc/admin/settings.php:769
+#: inc/admin/settings.php:694 inc/admin/settings.php:771
 msgid "Manual Operations"
 msgstr "Opérations manuelles"
 
-#: inc/admin/settings.php:693 inc/admin/settings.php:780
+#: inc/admin/settings.php:695 inc/admin/settings.php:782
 msgid "Resolution Report"
 msgstr "Rapport de résolutions"
 
-#: inc/admin/settings.php:749
+#: inc/admin/settings.php:751
 msgid "Start to check all security items with the Scan your website button."
 msgstr ""
 "Commencez à vérifier tous les éléments de sécurité avec le bouton Scanner le "
 "site."
 
-#: inc/admin/settings.php:760
+#: inc/admin/settings.php:762
 msgid "Launch the auto-fix on selected issues."
 msgstr "Lancer la correction automatique sur les problèmes sélectionnés."
 
-#: inc/admin/settings.php:771
+#: inc/admin/settings.php:773
 msgid ""
 "Go further and take a look at the items you have to fix with specific "
 "operations."
@@ -1432,30 +1452,30 @@ msgstr ""
 "Aller plus loin et jeter un oeil aux points que vous pouvez résoudre grâce à "
 "une opération spécifique."
 
-#: inc/admin/settings.php:782
+#: inc/admin/settings.php:784
 msgid "Get the new security report for your website."
 msgstr "Obtenez le nouveau rapport de sécurité de votre site."
 
-#: inc/admin/settings.php:794
+#: inc/admin/settings.php:796
 msgid "I've got it!"
 msgstr "J’ai compris !"
 
-#: inc/admin/settings.php:870
+#: inc/admin/settings.php:872
 msgid "Do you like this plugin?"
 msgstr "Vous aimez ce plugin ?"
 
-#: inc/admin/settings.php:872
+#: inc/admin/settings.php:874
 #, php-format
 msgid "Please take a few seconds to rate us on %1$sWordPress.org%2$s"
 msgstr ""
 "Merci de prendre quelques secondes pour nous noter sur %1$sWordPress.org%2$s"
 
-#: inc/admin/settings.php:881
+#: inc/admin/settings.php:883
 msgctxt "hidden text"
 msgid "Give us five stars"
 msgstr "Donnez nous les 5 étoiles"
 
-#: inc/admin/settings.php:993
+#: inc/admin/settings.php:995
 msgid "New"
 msgstr "Nouveau"
 
@@ -2557,7 +2577,7 @@ msgstr "Active la protection %1$s du module %2$s."
 
 #: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:68
 #: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:95
-#: inc/modules/file-system/settings/bad-file-extensions.php:11
+#: inc/modules/file-system/settings/bad-file-extensions.php:13
 msgid "Bad File Extensions"
 msgstr "Mauvaises extensions de fichiers"
 
@@ -3196,8 +3216,8 @@ msgstr ""
 #, php-format
 msgid "<strong>%1$s user</strong> has a forbidden username: %2$s"
 msgid_plural "<strong>%1$s users</strong> have a forbidden username: %2$s"
-msgstr[0] "L’utilisateur <strong>%1$s</strong> a un nom interdit : %2$s"
-msgstr[1] "Les utilisateurs <strong>%1$s</strong> ont un nom interdit : %2$s"
+msgstr[0] "<strong>%1$s</strong> utilisateur a un nom interdit : %2$s"
+msgstr[1] "<strong>%1$s</strong> utilisateurs ont un nom interdit : %2$s"
 
 #: inc/classes/scanners/class-secupress-scan-bad-usernames.php:68
 msgid ""
@@ -5021,36 +5041,36 @@ msgstr[1] "%s autres"
 msgid "The temporary directory could not be created."
 msgstr "Le dossier temporaire n&rsquo;a pu être créé."
 
-#: inc/classes/settings/class-secupress-settings-global.php:88
+#: inc/classes/settings/class-secupress-settings-global.php:89
 msgid "Overall plugin settings and fine-tuning"
 msgstr "Réglages généraux et personnalisation"
 
-#: inc/classes/settings/class-secupress-settings-global.php:156
+#: inc/classes/settings/class-secupress-settings-global.php:157
 msgid ""
 "Before you can upload your import file, you will need to fix the following "
 "error:"
 msgstr ""
 "Avant d’envoyer votre fichier d’import, vous devez régler l’erreur suivante :"
 
-#: inc/classes/settings/class-secupress-settings-global.php:165
+#: inc/classes/settings/class-secupress-settings-global.php:166
 msgid "Choose a file from your computer:"
 msgstr "Choisissez un fichier depuis votre ordinateur :"
 
-#: inc/classes/settings/class-secupress-settings-global.php:165
+#: inc/classes/settings/class-secupress-settings-global.php:166
 #, php-format
 msgid "Maximum size: %s"
 msgstr "Taille maximum : %s"
 
-#: inc/classes/settings/class-secupress-settings-global.php:181
+#: inc/classes/settings/class-secupress-settings-global.php:182
 msgid "Upload file and import settings"
 msgstr "Envoyer un fichier et importer les réglages"
 
-#: inc/classes/settings/class-secupress-settings-global.php:205
-#: inc/classes/settings/class-secupress-settings-global.php:214
+#: inc/classes/settings/class-secupress-settings-global.php:206
+#: inc/classes/settings/class-secupress-settings-global.php:215
 msgid "Download settings"
 msgstr "Télécharger les réglages"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:355
+#: inc/classes/settings/class-secupress-settings-modules.php:356
 msgid ""
 "If you need to reset this module's settings to the default, you can do it "
 "here, the best settings for your site will be set."
@@ -5059,103 +5079,103 @@ msgstr ""
 "pouvez le faire d’ici, les meilleurs réglages pour votre site seront "
 "sélectionnés."
 
-#: inc/classes/settings/class-secupress-settings-modules.php:356
+#: inc/classes/settings/class-secupress-settings-modules.php:357
 msgid "Module settings"
 msgstr "Réglages du module"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:361
+#: inc/classes/settings/class-secupress-settings-modules.php:362
 msgid "Reset settings?"
 msgstr "Réinitialiser les réglages ?"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:365
+#: inc/classes/settings/class-secupress-settings-modules.php:366
 #, php-format
 msgid "Reset the %s's settings."
 msgstr "Réinitialise les réglages de %s."
 
-#: inc/classes/settings/class-secupress-settings-modules.php:451
-#: inc/classes/settings/class-secupress-settings-modules.php:462
-#: inc/classes/settings/class-secupress-settings-modules.php:473
-msgid "Learn more about SecuPress Pro"
-msgstr "En savoir plus sur SecuPress Pro"
-
 #: inc/classes/settings/class-secupress-settings-modules.php:452
 #: inc/classes/settings/class-secupress-settings-modules.php:463
 #: inc/classes/settings/class-secupress-settings-modules.php:474
+msgid "Learn more about SecuPress Pro"
+msgstr "En savoir plus sur SecuPress Pro"
+
+#: inc/classes/settings/class-secupress-settings-modules.php:453
+#: inc/classes/settings/class-secupress-settings-modules.php:464
+#: inc/classes/settings/class-secupress-settings-modules.php:475
 msgid "This feature is available in SecuPress Pro"
 msgstr "Cette fonctionnalité est disponible avec SecuPress Pro"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:492
+#: inc/classes/settings/class-secupress-settings-modules.php:493
 msgid "No banned IPs yet."
 msgstr "Aucune adresse IP bannie pour le moment."
 
-#: inc/classes/settings/class-secupress-settings-modules.php:496
+#: inc/classes/settings/class-secupress-settings-modules.php:497
 msgid "Specify an IP to ban."
 msgstr "Spécifier une adresse IP à bannir."
 
-#: inc/classes/settings/class-secupress-settings-modules.php:498
+#: inc/classes/settings/class-secupress-settings-modules.php:499
 msgid "Ban IP"
 msgstr "Bannir une adresse IP"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:519
+#: inc/classes/settings/class-secupress-settings-modules.php:520
 msgid "Not a valid IP."
 msgstr "Adresse IP non valide."
 
-#: inc/classes/settings/class-secupress-settings-modules.php:525
-#: inc/classes/settings/class-secupress-settings-modules.php:527
+#: inc/classes/settings/class-secupress-settings-modules.php:526
+#: inc/classes/settings/class-secupress-settings-modules.php:528
 msgid "Search IP"
 msgstr "Chercher une adresse IP"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:527
+#: inc/classes/settings/class-secupress-settings-modules.php:528
 msgid "Searching..."
 msgstr "Recherche&hellip;"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:529
+#: inc/classes/settings/class-secupress-settings-modules.php:530
 msgid "Reseting..."
 msgstr "Réinitialisation&hellip;"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:529
+#: inc/classes/settings/class-secupress-settings-modules.php:530
 msgid "Reset"
 msgstr "Réinitialiser"
 
 #. Translators: %d is 100
-#: inc/classes/settings/class-secupress-settings-modules.php:537
+#: inc/classes/settings/class-secupress-settings-modules.php:538
 #, php-format
 msgid "Last %d banned IPs:"
 msgstr "Dernières %d adresses IP bannies :"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:545
+#: inc/classes/settings/class-secupress-settings-modules.php:546
 msgid "M jS Y"
 msgstr "j M Y"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:545
+#: inc/classes/settings/class-secupress-settings-modules.php:546
 msgid "G:i"
 msgstr "G:i"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:562
+#: inc/classes/settings/class-secupress-settings-modules.php:563
 msgid "Clearing..."
 msgstr "Suppression&hellip;"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:562
+#: inc/classes/settings/class-secupress-settings-modules.php:563
 msgid "Clear all IPs"
 msgstr "Vider toutes les adresses IP"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:565
+#: inc/classes/settings/class-secupress-settings-modules.php:566
 msgid "Banishing..."
 msgstr "Bannissement&hellip;"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:565
+#: inc/classes/settings/class-secupress-settings-modules.php:566
 msgid "Ban new IP"
 msgstr "Bannir une adresse IP"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:614
+#: inc/classes/settings/class-secupress-settings-modules.php:615
 msgid "One IP address per line."
 msgstr "Une adresse IP par ligne."
 
-#: inc/classes/settings/class-secupress-settings-modules.php:616
+#: inc/classes/settings/class-secupress-settings-modules.php:617
 msgid "Save whitelist"
 msgstr "Sauver la liste blanche"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:654
+#: inc/classes/settings/class-secupress-settings-modules.php:655
 msgid ""
 "Post creation or update will not be logged, but rather password and profile "
 "update, email changes, new administrator user, admin has logged in..."
@@ -5164,25 +5184,25 @@ msgstr ""
 "la mise à jour des mots de passe, modification des adresses email, un "
 "administrateur qui se connecte…"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:656
-#: inc/classes/settings/class-secupress-settings-modules.php:692
+#: inc/classes/settings/class-secupress-settings-modules.php:657
+#: inc/classes/settings/class-secupress-settings-modules.php:693
 #: inc/common.php:247
 msgid "Submit"
 msgstr "Envoyer"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:705
+#: inc/classes/settings/class-secupress-settings-modules.php:706
 msgid "No backups found yet, run one now?"
 msgstr "Aucune sauvegarde trouvée, en faire une ?"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:723
+#: inc/classes/settings/class-secupress-settings-modules.php:724
 msgid "Backup my database"
 msgstr "Sauvegarder ma base de données"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:744
+#: inc/classes/settings/class-secupress-settings-modules.php:745
 msgid "Backup my files"
 msgstr "Sauvegarder mes fichiers"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:761
+#: inc/classes/settings/class-secupress-settings-modules.php:762
 msgid "Search for malicious files"
 msgstr "Chercher les fichiers malicieux"
 
@@ -5222,11 +5242,6 @@ msgid ""
 msgstr ""
 "Mince, ce n‘est pas un bon jour pour vous, nous essaierons de vous faire "
 "sourire pendant que nous travaillons dessus !"
-
-#: inc/classes/settings/class-secupress-settings.php:1324
-#: inc/classes/settings/class-secupress-settings.php:1338
-msgid "pricing"
-msgstr "fr/tarifs"
 
 #: inc/classes/settings/class-secupress-settings.php:1324
 #: inc/classes/settings/class-secupress-settings.php:1338
@@ -5272,10 +5287,6 @@ msgstr "Lire la documentation"
 #: inc/classes/settings/class-secupress-settings.php:1379
 msgid "Got an issue? Ask for support."
 msgstr "Un problème ? Demandez du support."
-
-#: inc/classes/settings/class-secupress-settings.php:1382
-msgid "support"
-msgstr "fr/support"
 
 #: inc/common.php:53
 msgid "Your unlock link has expired (or you're cheating)."
@@ -5414,29 +5425,29 @@ msgid_plural "Your grade is %1$s — %2$d scanned items are good."
 msgstr[0] "Votre note est %1$s — %2$d élément scanné est bon."
 msgstr[1] "Votre note est %1$s — %2$d éléments scannés sont bons."
 
-#: inc/functions/common.php:445
+#: inc/functions/common.php:441
 msgid "You are not allowed to access the requested page."
 msgstr "Vous n’êtes pas autorisé à accéder à là page demandée."
 
-#: inc/functions/common.php:450
+#: inc/functions/common.php:446
 msgid "Logged Details:"
 msgstr "Détails enregistrés :"
 
-#: inc/functions/common.php:451
+#: inc/functions/common.php:447
 #, php-format
 msgid "Your IP: %s"
 msgstr "Votre IP : %s"
 
-#: inc/functions/common.php:452
+#: inc/functions/common.php:448
 #, php-format
 msgid "Time: %s"
 msgstr "Heure : %s"
 
-#: inc/functions/common.php:452
+#: inc/functions/common.php:448
 msgid "F j, Y g:i a"
 msgstr "j F Y G:i"
 
-#: inc/functions/common.php:453
+#: inc/functions/common.php:449
 #, php-format
 msgid "Block ID: %s"
 msgstr "Block ID : %s"
@@ -6205,7 +6216,7 @@ msgstr ""
 "<strong>ERREUR</strong> : Le mot de passe entré pour l’utilisateur %s est "
 "incorrect."
 
-#: inc/modules/file-system/settings/bad-file-extensions.php:10
+#: inc/modules/file-system/settings/bad-file-extensions.php:12
 msgid ""
 "Many file extensions are known to be used by malware, or can pose a threat "
 "if they are vulnerable. Denying direct access to those files will prevent "
@@ -6215,16 +6226,16 @@ msgstr ""
 "peuvent poser des menaces s’ils sont vulnérables. Interdisez l’accès direct "
 "à ces fichiers pour éviter leur utilisation."
 
-#: inc/modules/file-system/settings/bad-file-extensions.php:17
+#: inc/modules/file-system/settings/bad-file-extensions.php:19
 msgid "Uploads folder"
 msgstr "Dossier des uploads"
 
-#: inc/modules/file-system/settings/bad-file-extensions.php:22
+#: inc/modules/file-system/settings/bad-file-extensions.php:24
 msgid "Yes, deny direct access to those files in the uploads folder."
 msgstr "Oui, interdire l’accès direct aux fichiers du dossier des uploads."
 
 #. Translators: %s is a file name.
-#: inc/modules/file-system/settings/bad-file-extensions.php:35
+#: inc/modules/file-system/settings/bad-file-extensions.php:37
 #: inc/modules/sensitive-data/settings/content-protect.php:117
 #: inc/modules/sensitive-data/settings/content-protect.php:176
 #: inc/modules/sensitive-data/settings/content-protect.php:233
@@ -6236,8 +6247,8 @@ msgid "You need to add the following code to your %s file:"
 msgstr "Vous avez besoin d’ajouter le code suivant dans votre fichier %s :"
 
 #. Translators: %s is a file name.
-#: inc/modules/file-system/settings/bad-file-extensions.php:41
-#: inc/modules/file-system/settings/bad-file-extensions.php:48
+#: inc/modules/file-system/settings/bad-file-extensions.php:43
+#: inc/modules/file-system/settings/bad-file-extensions.php:50
 #: inc/modules/sensitive-data/settings/content-protect.php:66
 #: inc/modules/sensitive-data/settings/content-protect.php:73
 #: inc/modules/sensitive-data/settings/content-protect.php:123
@@ -6258,7 +6269,7 @@ msgstr ""
 "Votre fichier %1$s n’est pas en écriture, vous devez ajouter le code suivant "
 "dedans :"
 
-#: inc/modules/file-system/settings/bad-file-extensions.php:54
+#: inc/modules/file-system/settings/bad-file-extensions.php:56
 #: inc/modules/sensitive-data/settings/content-protect.php:79
 #: inc/modules/sensitive-data/settings/content-protect.php:136
 #: inc/modules/sensitive-data/settings/content-protect.php:195
@@ -6364,9 +6375,17 @@ msgstr ""
 "Certains serveurs se font passer pour GoogleBots (ou d’autres), détectez et "
 "bloquez les."
 
-#: inc/modules/firewall/settings/bbq-headers.php:67
+#: inc/modules/firewall/settings/bbq-headers.php:68
 msgid "Yes, protect my site from fake SEO Bots"
 msgstr "Oui, protéger mon site des faux bots SEO"
+
+#: inc/modules/firewall/settings/bbq-headers.php:72
+msgid ""
+"Impossible to use this feature, your server can not check a hostname "
+"correctly! Sorry."
+msgstr ""
+"Impossible d’utiliser cette fonctionnalité, votre serveur ne peut pas "
+"correctement vérifier un nom d'hôte ! désolé."
 
 #: inc/modules/firewall/settings/bbq-url-content.php:6
 msgid "Malicious URLs"
@@ -7750,8 +7769,8 @@ msgstr ""
 "Vous avez besoin d’activer le JavaScript pour que ce formulaire soit envoyé "
 "correctement."
 
-#: inc/modules/users-login/plugins/stop-user-enumeration.php:40
-#: inc/modules/users-login/plugins/stop-user-enumeration.php:55
+#: inc/modules/users-login/plugins/stop-user-enumeration.php:68
+#: inc/modules/users-login/plugins/stop-user-enumeration.php:83
 msgid "Sorry, you are not allowed to do that."
 msgstr "Désolé, vous ne pouvez pas faire cela."
 
@@ -8219,7 +8238,7 @@ msgstr ""
 "Ces options sont désactivées car le fichier %1$s n’est pas en écriture. "
 "Merci d’appliquer les droits %2$s sur ce fichier."
 
-#: secupress.php:292
+#: secupress.php:291
 #, php-format
 msgid ""
 "<strong>%1$s</strong> requires PHP %2$s minimum, your website is actually "
@@ -8228,7 +8247,7 @@ msgstr ""
 "<strong>%1$s<strong> requiert PHP v%2$s minimum, votre site utilise "
 "actuellement la version %3$s."
 
-#: secupress.php:306
+#: secupress.php:305
 #, php-format
 msgid ""
 "<strong>%1$s</strong> requires WordPress %2$s minimum, your website is "
@@ -8238,12 +8257,12 @@ msgstr ""
 "actuellement la version %3$s."
 
 #. Translators: Plugin Name of the plugin/theme
-#: secupress.php:390
+#: secupress.php:389
 msgid "SecuPress Free — WordPress Security"
 msgstr "SecuPress Free — Sécurité WordPress"
 
 #. Translators: Description of the plugin/theme
-#: secupress.php:392
+#: secupress.php:391
 msgid ""
 "Protect your WordPress with SecuPress, analyze and ensure the safety of your "
 "website daily."
