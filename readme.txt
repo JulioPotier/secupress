@@ -3,7 +3,7 @@ Contributors: SecuPress, juliobox, GregLone
 Tags: wordpress security, secure, security plugin, security, malware
 Requires at least: 4.0
 Tested up to: 4.9.5
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,10 +13,10 @@ Protect your WordPress with SecuPress, analyze and ensure the safety of your web
 
 = YOU MADE IT, WE KEEP IT SAFE! =
 
-Protect your WordPress with malware scans; block bots & suspicious IPs. Get a complete [WordPress security toolkit](https://secupress.me/home/) for free or as a pro plugin.
+Protect your WordPress with malware scans; block bots & suspicious IPs. Get a complete [WordPress security toolkit](https://secupress.me/) for free or as a pro plugin.
 
 **What’s the difference between free and pro version?**  
-If you are proactive, our free WordPress security plugin is a great choice! No time to activate weekly scans? Then [SecuPress pro](https://secupress.me/details/) is the way to go. Our plugin takes care of everything with automated tasks.
+If you are proactive, our free WordPress security plugin is a great choice! No time to activate weekly scans? Then [SecuPress pro](https://secupress.me/) is the way to go. Our plugin takes care of everything with automated tasks.
 
 = Here are some of our most popular features: =
 
@@ -78,11 +78,11 @@ SecuPress secures content in many ways:
 
 **Firewall**  
 
-* SecuPress is the most efficient WordPress bouncer you’ll ever see!
+* SecuPress is one of the most efficient WordPress bouncer you’ll ever see!
 * The plugin blocks malicious incoming requests.
 * It blocks bad User Agents (no bad crawlers allowed).
 * Bad requests methods also get the boot in a single click.
-* URLs are kept in check: no bad URL contents or URLs that are too long allowed.
+* URLs are kept in check: no bad URL contents.
 * SQL injection scanners are kept out as well.
 * Brute force attempts are stopped in their tracks.
 * GeoIP Blocking by country gives you more control over your traffic.
@@ -117,7 +117,7 @@ SecuPress will keep a log of important security activities and 404 pages trigger
 
 *(1) Available in the [Pro Version](https://secupress.me/features/).*
 
-*(SecuPress est une extension de sécurité WordPress)*
+*(SecuPress est une extension de sécurité WordPress française)*
 
 == Installation ==
 
@@ -177,6 +177,19 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 8. The 4th step: final report, you can export it as PDF (1)
 
 == Changelog ==
+
+= 1.4.2 =
+
+* 23 april 2018
+
+* Improvement#587: Remove SecuPress main logo on whitelabel (there is still some, wait!)
+* Improvement#589: API Key is hidden behind ••••• chars.
+* Improvement#592: Add a Facebook link when grade is A to share the result.
+* Fix#587: CSS missing when whitelabel is on.
+* Fix#588: Move Login died when it should not.
+* Fix#591: Block Fake Bots should not block real bots, right?
+* Fix#595: Fatal error when blocking User Enumeration on REST API
+* Fix#596: Security Fix: The new moved login page could be guessed because of a redirect due to a lack of "die()", there is no more whitelist condition now. Thanks to Aymen Borgi.
 
 = 1.4.1 =
 
