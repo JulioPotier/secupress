@@ -329,7 +329,8 @@ add_action( 'in_plugin_update_message-' . plugin_basename( SECUPRESS_FILE ), 'se
  * @since 1.1.1
  * @author Julio Potier
  *
- * @param (array) $plugin_data Contains the plugin data from EDD or repository.
+ * @param (array) $plugin_data Contains the old plugin data from EDD or repository.
+ * @param (array) $new_plugin_data Contains the new plugin data from EDD or repository.
  */
 function secupress_updates_message( $plugin_data, $new_plugin_data ) {
 	// Get next version.

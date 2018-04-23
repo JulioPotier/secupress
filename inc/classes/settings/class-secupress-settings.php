@@ -1297,7 +1297,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					|| ( 'pro' === $sidead['when'] && secupress_is_pro() )
 					|| 'both' === $sidead['when']
 				 ) {
-				 	$content = isset( $sidead['content-' . get_locale()] ) ? $sidead['content-' . get_locale()] : $sidead['content'];
+				 	$content_locale = 'content-' . get_locale();
+				 	$content        = isset( $sidead[ $content_locale ] ) ? $sidead[ $content_locale ] : $sidead['content'];
 					echo wp_kses_post( str_replace( '##SECUPRESS_ADMIN_IMAGES_URL##', SECUPRESS_ADMIN_IMAGES_URL, $content ) );
 				}
 			}

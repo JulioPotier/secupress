@@ -51,7 +51,6 @@ function secupress_get_option( $option, $default = false ) {
  *
  * @param (string) $option  The option name.
  * @param (string) $value  The value.
- *
  */
 function secupress_set_option( $option, $value ) {
 	/**

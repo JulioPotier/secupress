@@ -195,7 +195,10 @@ function secupress_write_in_htaccess_on_ban() {
  * Returns if the user-agent is a fake bot or not.
  *
  * @return (bool) true mean the IP is a good bot, false is a fake bot.
+ * @since 1.4.2 Add $test param + revamp
  * @since 1.4
+ *
+ * @param (bool) $test Set to TRUE to just get the googlebot hostname test result (transient enabled)
  *
  * @author Julio Potier
  **/

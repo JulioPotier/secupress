@@ -248,7 +248,7 @@ function secupress_load_plugins() {
 		$args['consumer_key']   = SECUPRESS_API_KEY;
 		secupress_global_settings_activate_pro_license( $args );
 	}
-	
+
 	/**
 	 * Fires once all our plugins/submodules has been loaded.
 	 *

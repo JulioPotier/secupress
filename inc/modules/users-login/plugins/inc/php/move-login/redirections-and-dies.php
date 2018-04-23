@@ -166,7 +166,7 @@ add_filter( 'register_url', 'secupress_register_url_redirect' );
 /**
  * Fordib the redirection on the registration URL if not logged-in, you have to know the correct new page
  *
- * @param (string) $url The register_url from WP
+ * @param (string) $url The register_url from WP.
  * @since 1.4
  * @return (string) $url
  * @author Julio Potier
@@ -174,7 +174,7 @@ add_filter( 'register_url', 'secupress_register_url_redirect' );
 function secupress_register_url_redirect( $url ) {
 	if ( ! is_user_logged_in() ) {
 		$current_url = secupress_get_current_url( 'raw' );
-		if ( $url == $current_url ) {
+		if ( $url === $current_url ) {
 			secupress_move_login_deny_login_access();
 		}
 	}
