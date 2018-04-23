@@ -93,7 +93,7 @@ function secupress_blackhole_ban_ip() {
 	}
 
 	$msg = sprintf( __( 'Your IP address %s has been banned.', 'secupress' ), '<code>' . esc_html( $ip ) . '</code>' );
-	secupress_die( $msg );
+	secupress_die( $msg, '', array( 'force_die' => true ) );
 }
 
 

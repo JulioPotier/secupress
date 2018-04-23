@@ -19,9 +19,9 @@ function secupress_http_block_external_notice() {
 
 	if ( $is_accessible || ! defined( 'WP_HTTP_BLOCK_EXTERNAL' ) || ( isset( $current_screen )
 		&& 'toplevel_page_' . SECUPRESS_PLUGIN_SLUG . '_scanners' !== $current_screen->base
-		&& 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' !== $current_screen->base
-		&& 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' !== $current_screen->base
-		&& 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_logs' !== $current_screen->base )
+		&& SECUPRESS_PLUGIN_SLUG . '_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' !== $current_screen->base
+		&& SECUPRESS_PLUGIN_SLUG . '_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' !== $current_screen->base
+		&& SECUPRESS_PLUGIN_SLUG . '_page_' . SECUPRESS_PLUGIN_SLUG . '_logs' !== $current_screen->base )
 		|| SecuPress_Admin_Notices::is_dismissed( 'http-block-external' )
 		) {
 		return;
@@ -275,7 +275,7 @@ function secupress_warning_no_oneclick_scan_yet() {
 	$screen_id = get_current_screen();
 	$screen_id = $screen_id && ! empty( $screen_id->id ) ? $screen_id->id : false;
 
-	if ( ! ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' === $screen_id || ( 'plugins' === $screen_id && ! is_multisite() ) || 'plugins-network' === $screen_id ) ) {
+	if ( ! ( SECUPRESS_PLUGIN_SLUG . '_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' === $screen_id || ( 'plugins' === $screen_id && ! is_multisite() ) || 'plugins-network' === $screen_id ) ) {
 		return;
 	}
 
@@ -329,7 +329,8 @@ add_action( 'in_plugin_update_message-' . plugin_basename( SECUPRESS_FILE ), 'se
  * @since 1.1.1
  * @author Julio Potier
  *
- * @param (array) $plugin_data Contains the plugin data from EDD or repository.
+ * @param (array) $plugin_data Contains the old plugin data from EDD or repository.
+ * @param (array) $new_plugin_data Contains the new plugin data from EDD or repository.
  */
 function secupress_updates_message( $plugin_data, $new_plugin_data ) {
 	// Get next version.

@@ -439,7 +439,7 @@ abstract class SecuPress_Admin_Offer_Migration extends SecuPress_Singleton {
 	protected static function is_settings_page() {
 		global $current_screen;
 
-		$base = 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' . ( is_multisite() ? '-network' : '' );
+		$base = SECUPRESS_PLUGIN_SLUG . '_page_' . SECUPRESS_PLUGIN_SLUG . '_settings' . ( is_multisite() ? '-network' : '' );
 
 		return $base === $current_screen->base;
 	}

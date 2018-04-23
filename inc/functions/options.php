@@ -44,6 +44,32 @@ function secupress_get_option( $option, $default = false ) {
 	return apply_filters( 'secupress_get_option_' . $option, $value, $default );
 }
 
+/**
+ * A wrapper to easily set a SecuPress option.
+ *
+ * @since 1.4.2
+ *
+ * @param (string) $option  The option name.
+ * @param (string) $value  The value.
+ */
+function secupress_set_option( $option, $value ) {
+	/**
+	 * Pre-filter any SecuPress option before set.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (mixed) $value     Null.
+	 */
+	$value = apply_filters( 'pre_secupress_set_option_' . $option, $value );
+
+	$options = get_site_option( SECUPRESS_SETTINGS_SLUG );
+	$options = is_array( $options ) ?: array();
+
+	$options[ $option ] = $value;
+
+	secupress_update_options( $options );
+}
+
 
 /**
  * A wrapper to update SecuPress options.

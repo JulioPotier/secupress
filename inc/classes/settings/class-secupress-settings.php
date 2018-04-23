@@ -1239,7 +1239,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	protected function print_sideads() {
 		global $current_screen;
 
-		if ( 'secupress_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' !== $current_screen->base ) {
+		if ( SECUPRESS_PLUGIN_SLUG . '_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' !== $current_screen->base ) {
 			return;
 		}
 		/**
@@ -1297,7 +1297,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					|| ( 'pro' === $sidead['when'] && secupress_is_pro() )
 					|| 'both' === $sidead['when']
 				 ) {
-				 	$content = isset( $sidead['content-' . get_locale()] ) ? $sidead['content-' . get_locale()] : $sidead['content'];
+				 	$content_locale = 'content-' . get_locale();
+				 	$content        = isset( $sidead[ $content_locale ] ) ? $sidead[ $content_locale ] : $sidead['content'];
 					echo wp_kses_post( str_replace( '##SECUPRESS_ADMIN_IMAGES_URL##', SECUPRESS_ADMIN_IMAGES_URL, $content ) );
 				}
 			}
@@ -1321,7 +1322,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				<p><?php _e( 'Well, this is not a good day for you, we will try to make you smile while we’re working on it!', 'secupress' ) ?></p>
 
 			<p class="secupress-cta">
-				<a href="https://secupress.me/<?php _e( 'pricing', 'secupress' ); ?>#services" class="secupress-button" target="_blank"><?php _e( 'Ask an Expert', 'secupress' ); ?></a>
+				<a href="<?php echo esc_url( SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ) ); ?>#services" class="secupress-button" target="_blank"><?php _e( 'Ask an Expert', 'secupress' ); ?></a>
 			</p>
 			</div>
 		</div>
@@ -1335,7 +1336,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				<p><?php _e( 'Need an Expert to Set-Up SecuPress for You?', 'secupress' ) ?></p>
 
 			<p class="secupress-cta">
-				<a href="https://secupress.me/<?php _e( 'pricing', 'secupress' ); ?>#services" class="secupress-button" target="_blank"><?php _e( 'Ask an Expert', 'secupress' ); ?></a>
+				<a href="<?php echo esc_url( SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ) ); ?>#services" class="secupress-button" target="_blank"><?php _e( 'Ask an Expert', 'secupress' ); ?></a>
 			</p>
 			</div>
 		</div>
@@ -1351,7 +1352,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				<p><?php _e( 'All the answers to your questions.', 'secupress' ) ?></p>
 
 			<p class="secupress-cta">
-				<a href="https://secupress.me/<?php _e( 'faq', 'secupress' ); ?>" class="secupress-button" target="_blank"><?php _e( 'Read the FAQ', 'secupress' ); ?></a>
+				<a href="<?php echo esc_url( SECUPRESS_WEB_MAIN . __( 'faq', 'secupress' ) ); ?>" class="secupress-button" target="_blank"><?php _e( 'Read the FAQ', 'secupress' ); ?></a>
 			</p>
 			</div>
 		</div>
@@ -1379,7 +1380,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				<p><?php _e( 'Got an issue? Ask for support.', 'secupress' ) ?></p>
 
 			<p class="secupress-cta">
-				<a href="https://secupress.me/<?php _e( 'support', 'secupress' ); ?>" class="secupress-button" target="_blank"><?php _e( 'Ask for support', 'secupress' ); ?></a>
+				<a href="<?php echo esc_url( SECUPRESS_WEB_MAIN . __( 'support', 'secupress' ) ); ?>" class="secupress-button" target="_blank"><?php _e( 'Ask for support', 'secupress' ); ?></a>
 			</p>
 			</div>
 		</div>

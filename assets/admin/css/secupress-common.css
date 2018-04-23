@@ -903,6 +903,7 @@ body[class*="secupress"] .sweet-overlay {
 .secupress-lb-name {
 	padding: 0 20px;
 	text-align: left;
+	font-family: 'Oswald';
 }
 .secupress-header-mini .secupress-lb-name {
 	padding: 0 30px 0 5px;
@@ -930,6 +931,10 @@ body[class*="secupress"] .sweet-overlay {
 }
 .secupress-header-mini .secupress-lb-logo img {
 	width: 78px;
+}
+.secupress-lb-logo span.dashicons.dashicons-shield-alt {
+    font-size: 40px;
+    line-height: 0.5em;
 }
 .secupress-header-mini .secupress-col-logo {
 	-webkit-flex-basis: 190px;

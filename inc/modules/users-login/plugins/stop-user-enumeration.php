@@ -65,7 +65,7 @@ add_action( 'init', 'secupress_stop_user_enumeration_front', SECUPRESS_INT_MAX )
  **/
 function secupress_stop_user_enumeration_front() {
 	if ( ! current_user_can( 'list_users' ) && is_author() ) {
-		secupress_die( __( 'Sorry, you are not allowed to do that.', 'secupress' ), '', array( 'response' => 403 ) );
+		secupress_die( __( 'Sorry, you are not allowed to do that.', 'secupress' ), '', array( 'response' => 403, 'force_die' => true ) );
 	}
 }
 
@@ -79,7 +79,7 @@ add_filter( 'rest_request_before_callbacks', 'secupress_stop_user_enumeration_re
  **/
 function secupress_stop_user_enumeration_rest() {
 	$rest_base_url = home_url( Secupress_WP_REST_Users_Controller::get_rest_base() );
-	if ( ! current_user_can( 'list_users' ) && strpos( secupress_get_base_url(), $rest_base_url ) === 0 ) {
-		secupress_die( __( 'Sorry, you are not allowed to do that.', 'secupress' ), '', array( 'response' => 403 ) );
+	if ( ! current_user_can( 'list_users' ) && strpos( secupress_get_current_url( 'base' ), $rest_base_url ) === 0 ) {
+		secupress_die( __( 'Sorry, you are not allowed to do that.', 'secupress' ), '', array( 'response' => 403, 'force_die' => true ) );
 	}
 }

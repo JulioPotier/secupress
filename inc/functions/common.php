@@ -339,7 +339,6 @@ function secupress_die( $message = '', $title = '', $args = array() ) {
 	$message         = '<h1>' . SECUPRESS_PLUGIN_NAME . '</h1>' . $message;
 	$url             = secupress_get_current_url( 'raw' );
 	$force_die       = ! empty( $args['force_die'] );
-	$whitelisted     = secupress_ip_is_whitelisted();
 	$is_scan_request = secupress_is_scan_request(); // Used to bypass the whitelist for scans.
 
 	/**
@@ -350,10 +349,9 @@ function secupress_die( $message = '', $title = '', $args = array() ) {
 	 * @param (string) $message         The message displayed.
 	 * @param (string) $url             The current URL.
 	 * @param (array)  $args            Facultative arguments.
-	 * @param (bool)   $whitelisted     Is the current user IP whitelisted or not.
 	 * @param (bool)   $is_scan_request Tell if the request comes from one of our scans.
 	 */
-	$message = apply_filters( 'secupress.die.message', $message, $url, $args, $whitelisted, $is_scan_request );
+	$message = apply_filters( 'secupress.die.message', $message, $url, $args, $is_scan_request );
 
 	/**
 	 * Fires right before `wp_die()`.
@@ -363,12 +361,11 @@ function secupress_die( $message = '', $title = '', $args = array() ) {
 	 * @param (string) $message         The message displayed.
 	 * @param (string) $url             The current URL.
 	 * @param (array)  $args            Facultative arguments.
-	 * @param (bool)   $whitelisted Is the current user IP whitelisted or not.
 	 * @param (bool)   $is_scan_request Tell if the request comes from one of our scans.
 	 */
-	do_action( 'secupress.before.die', $message, $url, $args, $whitelisted, $is_scan_request );
+	do_action( 'secupress.before.die', $message, $url, $args, $is_scan_request );
 
-	if ( $force_die || ! $whitelisted || $is_scan_request ) {
+	if ( $force_die || $is_scan_request ) {
 		// Die.
 		if ( ! defined( 'DONOTCACHEPAGE' ) ) {
 			// Tell cache plugins not to cache our error message.
@@ -439,20 +436,19 @@ function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 	do_action( 'secupress.block', $module, $ip, $args, $block_id );
 
 	$title   = $args['code'] . ' ' . get_status_header_desc( $args['code'] );
-	$content = '<h4>' . $title . '</h4>';
-
+	$content = '<h2>' . $title . '</h2>';
 	if ( ! $args['content'] ) {
 		$content .= '<p>' . __( 'You are not allowed to access the requested page.', 'secupress' ) . '</p>';
 	} else {
 		$content .= '<p>' . $args['content'] . '</p>';
 	}
 
-	$content  = '<h4>' . __( 'Logged Details:', 'secupress' ) . '</h4><p>';
+	$content .= '<h3>' . __( 'Logged Details:', 'secupress' ) . '</h3><p>';
 	$content .= sprintf( __( 'Your IP: %s', 'secupress' ), $ip ) . '<br>';
 	$content .= sprintf( __( 'Time: %s', 'secupress' ), date_i18n( __( 'F j, Y g:i a', 'secupress' ) ) ) . '<br>';
 	$content .= sprintf( __( 'Block ID: %s', 'secupress' ), $block_id ) . '</p>';
 
-	secupress_die( $content, $title, array( 'response' => $args['code'] ) );
+	secupress_die( $content, $title, array( 'response' => $args['code'], 'force_die' => true ) );
 }
 
 
@@ -614,6 +610,17 @@ function secupress_is_white_label() {
  * @return (string) The HTML tag.
  */
 function secupress_get_logo( $atts = array() ) {
+	if ( secupress_is_white_label() ) {
+		/**
+		 * If white label is activated, no SecuPress logo is retrieve, let the filter do the job.
+		 *
+		 * @since 1.4.2
+		 *
+		 * @param (string) Should return a <img> or dashicon span tag.
+		 * @param (array) $atts Attributes, contains logo size.
+		 */
+		return apply_filters( 'secupress.white_label.logo', '<span class="dashicons dashicons-shield-alt"></span>', $atts );
+	}
 	$base_url = SECUPRESS_ADMIN_IMAGES_URL . 'logo';
 
 	$atts = array_merge( array(
