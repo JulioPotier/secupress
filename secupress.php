@@ -5,7 +5,7 @@
  * Description: Protect your WordPress with SecuPress, analyze and ensure the safety of your website daily.
  * Author: SecuPress
  * Author URI: https://secupress.me
- * Version: 1.4.1
+ * Version: 1.4.2
  * Code Name: Hotrod
  * Network: true
  * License: GPLv2
