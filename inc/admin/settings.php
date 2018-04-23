@@ -263,11 +263,7 @@ add_filter( 'plugin_action_links_' . plugin_basename( SECUPRESS_FILE ), 'secupre
  */
 function secupress_settings_action_links( $actions ) {
 	if ( ! secupress_is_white_label() ) {
-		if ( secupress_can_access_support() ) {
-			array_unshift( $actions, sprintf( '<a href="%s">%s</a>', esc_url( 'https://secupress.me/' . __( 'support', 'secupress' ) ), __( 'Support', 'secupress' ) ) );
-		} else {
-			array_unshift( $actions, sprintf( '<a href="%s">%s</a>', 'https://wordpress.org/support/plugin/secupress', __( 'Support', 'secupress' ) ) );
-		}
+		array_unshift( $actions, sprintf( '<a href="%s">%s</a>', esc_url( SECUPRESS_WEB_MAIN . __( 'support', 'secupress' ) ), __( 'Support', 'secupress' ) ) );
 
 		array_unshift( $actions, sprintf( '<a href="%s">%s</a>', esc_url( __( 'http://docs.secupress.me/', 'secupress' ) ), __( 'Docs', 'secupress' ) ) );
 	}
@@ -319,7 +315,7 @@ function secupress_create_menus() {
 	if ( ! secupress_is_white_label() && ! secupress_is_pro() ) {
 		end( $submenu );
 		$key = key( $submenu );
-		$submenu[ $key ][ count( $submenu[ $key ] ) -1 ] = array( __( 'More Security', 'secupress' ), $cap, __( 'https://secupress.me/pricing/?from=secupress-plugin', 'secupress' ), __( 'More Security', 'secupress' ) );
+		$submenu[ $key ][ count( $submenu[ $key ] ) -1 ] = array( __( 'More Security', 'secupress' ), $cap, esc_url( SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ) . '/?from=secupress-plugin' ), __( 'More Security', 'secupress' ) );
 	}
 }
 

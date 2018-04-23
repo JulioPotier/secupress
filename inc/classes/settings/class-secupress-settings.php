@@ -1322,7 +1322,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				<p><?php _e( 'Well, this is not a good day for you, we will try to make you smile while we’re working on it!', 'secupress' ) ?></p>
 
 			<p class="secupress-cta">
-				<a href="https://secupress.me/<?php _e( 'pricing', 'secupress' ); ?>#services" class="secupress-button" target="_blank"><?php _e( 'Ask an Expert', 'secupress' ); ?></a>
+				<a href="<?php echo esc_url( SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ) ); ?>#services" class="secupress-button" target="_blank"><?php _e( 'Ask an Expert', 'secupress' ); ?></a>
 			</p>
 			</div>
 		</div>
@@ -1336,7 +1336,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				<p><?php _e( 'Need an Expert to Set-Up SecuPress for You?', 'secupress' ) ?></p>
 
 			<p class="secupress-cta">
-				<a href="https://secupress.me/<?php _e( 'pricing', 'secupress' ); ?>#services" class="secupress-button" target="_blank"><?php _e( 'Ask an Expert', 'secupress' ); ?></a>
+				<a href="<?php echo esc_url( SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ) ); ?>#services" class="secupress-button" target="_blank"><?php _e( 'Ask an Expert', 'secupress' ); ?></a>
 			</p>
 			</div>
 		</div>
@@ -1352,7 +1352,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				<p><?php _e( 'All the answers to your questions.', 'secupress' ) ?></p>
 
 			<p class="secupress-cta">
-				<a href="https://secupress.me/<?php _e( 'faq', 'secupress' ); ?>" class="secupress-button" target="_blank"><?php _e( 'Read the FAQ', 'secupress' ); ?></a>
+				<a href="<?php echo esc_url( SECUPRESS_WEB_MAIN . __( 'faq', 'secupress' ) ); ?>" class="secupress-button" target="_blank"><?php _e( 'Read the FAQ', 'secupress' ); ?></a>
 			</p>
 			</div>
 		</div>
@@ -1380,7 +1380,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				<p><?php _e( 'Got an issue? Ask for support.', 'secupress' ) ?></p>
 
 			<p class="secupress-cta">
-				<a href="https://secupress.me/<?php _e( 'support', 'secupress' ); ?>" class="secupress-button" target="_blank"><?php _e( 'Ask for support', 'secupress' ); ?></a>
+				<a href="<?php echo esc_url( SECUPRESS_WEB_MAIN . __( 'support', 'secupress' ) ); ?>" class="secupress-button" target="_blank"><?php _e( 'Ask for support', 'secupress' ); ?></a>
 			</p>
 			</div>
 		</div>
