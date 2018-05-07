@@ -25,7 +25,7 @@ function secupress_check_fake_bot() {
 	// Is a bot if true.
 	$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? trim( $_SERVER['HTTP_USER_AGENT'] ) : '';
 
-	if ( ! preg_match( '/curl|fetch|crawler|bot|spider|slurp|archiver|google|bing|yahoo/i', $user_agent ) ) {
+	if ( ! preg_match( '/yandexbot|duckduckbot|slurp|baiduspider|facebot|facebook|ia_archiver|google|bingbot|msnbot/i', $user_agent ) ) {
 		return;
 	}
 
