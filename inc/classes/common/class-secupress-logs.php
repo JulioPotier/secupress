@@ -933,7 +933,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			ini_set( 'zlib.output_compression', 'Off' );
 		}
 
-		set_time_limit( 0 );
+		@set_time_limit( 0 );
 
 		if ( ! headers_sent() ) {
 			$filename = 'secupress-' . $this->log_type . '-logs-' . current_time( 'Y-m-d@H-i-s' ) . '.txt';
