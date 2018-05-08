@@ -1,7 +1,3 @@
 .DS_Store
 gruntlocalconf.json
 node_modules
-
-inc/classes/scanners/class-secupress-scan-non-login-time-slot.php
-
-inc/classes/scanners/class-secupress-scan-directoryindex.php
