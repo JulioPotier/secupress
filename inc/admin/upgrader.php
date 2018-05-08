@@ -435,8 +435,10 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 	// < 1.4.3
 	if ( version_compare( $actual_version, '1.4.3', '<' ) ) {
 
-		secupress_deactivate_submodule( 'users-login', 'nonlogintimeslot' );
-		secupress_remove_old_plugin_file( SECUPRESS_PRO_MODULES_PATH . 'users-login/plugins/nonlogintimeslot.php' );
+		if ( secupress_has_pro() ) {
+			secupress_deactivate_submodule( 'users-login', 'nonlogintimeslot' );
+			secupress_remove_old_plugin_file( SECUPRESS_PRO_MODULES_PATH . 'users-login/plugins/nonlogintimeslot.php' );
+		}
 
 		secupress_deactivate_submodule( 'file-system', 'directory-index' );
 		secupress_remove_old_plugin_file( SECUPRESS_MODULES_PATH . 'file-system/plugins/directory-index.php' );
@@ -465,14 +467,14 @@ function secupress_remove_old_plugin_file( $file ) {
 		$file = @readlink( $file );
 	}
 	// Try to delete.
-	if ( ! @unlink( $file ) ) {
+	if ( file_exists( $file ) && ! @unlink( $file ) ) {
 		// Or try to empty it.
-		$fh = fopen( $file, 'w' );
-		$fw = fwrite( $fh, '<?php // File removed by SecuPress' );
-		fclose( $fh );
+		$fh = @fopen( $file, 'w' );
+		$fw = @fwrite( $fh, '<?php // File removed by SecuPress' );
+		@fclose( $fh );
 		if ( ! $fw ) {
 			// Or try to rename it.
-			return rename( $file, $file . '.old' );
+			return @rename( $file, $file . '.old' );
 		}
 	}
 	return true;
