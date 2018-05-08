@@ -79,7 +79,7 @@ if ( ! $secupress_tests ) {
 		$main_button =
 		'
 	<span class="secupress-get-pro-version">
-		' . sprintf( __( 'The <a href="%s" target="_blank">Pro Version</a> is required to <strong>autofix</strong> issues.', 'secupress' ), esc_url( SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ) ) ) . '
+		' . sprintf( __( 'The <a href="%s" target="_blank">Pro Version</a> is required to autofix issues.', 'secupress' ), esc_url( SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ) ) ) . '
 	</span>
 		 <p class="secupress-flex">
 			<a href="' . esc_url( secupress_admin_url( 'scanners' ) ) . '&amp;step=3" class="secupress-button secupress-button-tertiary shadow">
@@ -100,7 +100,7 @@ if ( ! $secupress_tests ) {
 	if ( ! $secupress_is_pro ) {
 	?>
 	<span class="secupress-get-pro-version">
-		<?php printf( __( 'The <a href="%s" target="_blank">Pro Version</a> is required to <strong>autofix</strong> issues.', 'secupress' ), esc_url( SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ) ) ); ?>
+		<?php printf( __( 'The <a href="%s" target="_blank">Pro Version</a> is required to autofix issues.', 'secupress' ), esc_url( SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ) ) ); ?>
 	</span>
 	<div class="secupress-step-content-header secupress-flex secupress-flex-spaced">
 		<p class="secupress-step-title"> </p>
@@ -175,6 +175,7 @@ if ( ! $secupress_tests ) {
 					$row_css_class  = 'secupress-item-' . $class_name_part;
 					$row_css_class .= ' status-' . sanitize_html_class( $scan_status );
 					$row_css_class .= $needs_pro ? ' secupress-only-pro not-fixable' : '';
+					$row_css_class .= ! secupress_is_pro() ? ' disabled' : '';
 					?>
 					<div class="secupress-item-all <?php echo $row_css_class; ?>" id="<?php echo $class_name_part; ?>" data-scan-url="<?php echo esc_url( $scan_nonce_url ); ?>">
 						<div class="secupress-flex">
