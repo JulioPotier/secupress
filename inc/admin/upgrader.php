@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /** MIGRATE / UPGRADE =========================================================================== */
 /** --------------------------------------------------------------------------------------------- */
 
-add_action( 'admin_init', 'secupress_upgrader' );
+add_action( 'secupress.loaded', 'secupress_upgrader', 9 );
 /**
  * Tell WP what to do when admin is loaded aka upgrader
  *
@@ -432,14 +432,48 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 		secupress_move_login_write_rules();
 	}
 
-	// < 1.4.2
-	if ( version_compare( $actual_version, '1.4.2', '<' ) ) {
-		secupress_deactivate_submodule( 'wordpress-core', 'wp-config-constant-unfiltered-html' );
-		secupress_deactivate_submodule( 'sensitive-data', 'restapi' );
+	// < 1.4.3
+	if ( version_compare( $actual_version, '1.4.3', '<' ) ) {
+
 		secupress_deactivate_submodule( 'users-login', 'nonlogintimeslot' );
+		secupress_remove_old_plugin_file( SECUPRESS_PRO_MODULES_PATH . 'users-login/plugins/nonlogintimeslot.php' );
+
 		secupress_deactivate_submodule( 'file-system', 'directory-index' );
+		secupress_remove_old_plugin_file( SECUPRESS_MODULES_PATH . 'file-system/plugins/directory-index.php' );
+
+		secupress_deactivate_submodule( 'wordpress-core', 'wp-config-constant-unfiltered-html' );
+		secupress_remove_old_plugin_file( SECUPRESS_MODULES_PATH . 'wordpress-core/plugins/wp-config-constant-unfiltered-html.php' );
+
+		secupress_deactivate_submodule( 'sensitive-data', 'restapi' );
+		secupress_remove_old_plugin_file( SECUPRESS_MODULES_PATH . 'sensitive-data/plugins/restapi.php' );
 
 		set_site_transient( 'secupress-common', time(), 2 * DAY_IN_SECONDS );
 	}
 
+}
+
+/**
+ * Try to delete an old plugin file removed in a particular version, if not, will empty the file, if not, will rename it, if still not well… ¯\_(ツ)_/¯.
+ *
+ * @since 1.4.3
+ * @param (string) $file The file to be deleted.
+ * @author Julio Potier
+ **/
+function secupress_remove_old_plugin_file( $file ) {
+	// Is it a sym link ?
+	if ( is_link ( $file ) ) {
+		$file = @readlink( $file );
+	}
+	// Try to delete.
+	if ( ! @unlink( $file ) ) {
+		// Or try to empty it.
+		$fh = fopen( $file, 'w' );
+		$fw = fwrite( $fh, '<?php // File removed by SecuPress' );
+		fclose( $fh );
+		if ( ! $fw ) {
+			// Or try to rename it.
+			return rename( $file, $file . '.old' );
+		}
+	}
+	return true;
 }
