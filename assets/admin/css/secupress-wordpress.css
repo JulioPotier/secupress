@@ -35,7 +35,7 @@
 }
 [class^="secupress-"] ::-moz-selection {
 	background: #26B3A9;
-	color: #FFF;	
+	color: #FFF;
 }
 
 /* Animations */
@@ -403,12 +403,14 @@ i.bold {
 }
 
 /* SecuPress menu icon */
+#wp-admin-bar-secupress .dashicons-shield-alt:before,
 #toplevel_page_secupress_scanners .wp-menu-image.dashicons-shield-alt:before {
 	font-family: 'secupress';
 	content: "\e907";
 }
+.secupress-pro-notice a,
 #adminmenu .wp-submenu a[href*="secupress.me"] {
-	color: #F7AB13;
+	color: #F7AB13 !important;
 	target-name:new;
 	target-new:tab;
 }
