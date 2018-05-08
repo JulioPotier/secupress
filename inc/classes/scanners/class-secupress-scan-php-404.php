@@ -42,7 +42,7 @@ class SecuPress_Scan_Php_404 extends SecuPress_Scan implements SecuPress_Scan_In
 		$this->more  = __( 'Do not let attackers find hidden PHP files by guessing it, ban them!', 'secupress' );
 		$this->more_fix = sprintf(
 			__( 'Activate the option %1$s in the %2$s module.', 'secupress' ),
-			'<em>' . __( 'Ban 404 on .php', 'secupress' ) . '</em>',
+			'<em>' . __( 'Block 404 on .php', 'secupress' ) . '</em>',
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-url-content_ban-404-php">' . __( 'Firewall', 'secupress' ) . '</a>'
 		);
 	}
@@ -60,13 +60,13 @@ class SecuPress_Scan_Php_404 extends SecuPress_Scan implements SecuPress_Scan_In
 	public static function get_messages( $message_id = null ) {
 		/** Translators: 1 is the name of a protection, 2 is the name of a module. */
 		$activate_protection_message = sprintf( __( 'But you can activate the %1$s protection from the module %2$s.', 'secupress' ),
-			'<strong>' . __( 'Ban 404 on .php', 'secupress' ) . '</strong>',
+			'<strong>' . __( 'Block 404 on .php', 'secupress' ) . '</strong>',
 			'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'firewall' ) ) . '#row-bbq-url-content_ban-404-php">' . __( 'Firewall', 'secupress' ) . '</a>'
 		);
 
 		$messages = array(
 			// "good"
-			0   => __( 'You are currently banning 404 requests on .php files.', 'secupress' ),
+			0   => __( 'You are currently blocking 404 requests on .php files.', 'secupress' ),
 			1   => __( 'Protection activated', 'secupress' ),
 			// "warning"
 			100 => __( 'Unable to determine if your homepage is blocking 404 on .php files.', 'secupress' ) . ' ' . $activate_protection_message,
