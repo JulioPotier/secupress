@@ -507,7 +507,7 @@ function secupress_hack_changelog() {
 	global $admin_body_class;
 
 	$api = plugins_api( 'plugin_information', array(
-		'slug' => $_GET['plugin'],
+		'slug' => 'secupress',
 		'is_ssl' => is_ssl(),
 		'fields' => [
 			'short_description' => false,
@@ -533,20 +533,99 @@ function secupress_hack_changelog() {
 	$changelog_content = $api->sections['changelog'];
 	$changelog_content = explode( "\n", $changelog_content );
 	$changelog_content = array_slice( $changelog_content, 0, array_search( '</ul>', $changelog_content ) );
-	$changelog_version = strip_tags( array_shift( $changelog_content ) );
-	$changelog_content = implode( "\n", $changelog_content );
+	$changelog_content = array_map( 'strip_tags', $changelog_content );
+	$changelog_version = array_shift( $changelog_content );
+	$changelog_content = array_filter( $changelog_content );
+	$changelog_date    = array_shift( $changelog_content );
+	$pro_suffix        = secupress_has_pro() ? 'Pro ' : 'Free ';
+	$banner            = secupress_has_pro() ? 'banner-secupress-pro.jpg' : 'banner-1544x500.png';
 
 	iframe_header( __( 'Plugin Installation' ) );
 	?>
-	<style>
+	<style type="text/css">
+		body {
+			color: #333;
+			font-family: Helvetica, Arial, sans-serif;
+			margin: 0;
+			padding: 0;
+			background-color: #fff
+		}
+
+		section {
+			margin: 20px 25px;
+			max-width: 830px
+		}
+
+		header {
+			position: relative;
+			margin-bottom: 20px;
+			width: 100%;
+			max-width: 830px;
+			height: 276px;
+			color: #fff;
+		}
+
 		#plugin-information-title.with-banner div.vignette {
-			background-image: url( '<?php echo esc_url( $api->banners['high'] ); ?>' );
+			background-image: url( 'https://plugins.svn.wordpress.org/secupress/assets/<?php echo $banner; ?>' );
 			background-size: contain;
 		}
 
+		header h1,
+		header h2 {
+			font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", sans-serif;
+			font-size: 2em;
+			font-weight: normal;
+			margin: 0;
+			color: #fff;
+			line-height: 1em
+		}
+
+		header h2 {
+			font-size: 1.4em;
+			margin-bottom: 3px
+		}
+
+		hgroup {
+			float: right;
+			padding-right: 50px
+		}
+
+		h2 {
+			font-size: 1.2em
+		}
+
 		ul {
-			list-style: inside;
-			padding-left: 15px;
+			margin-bottom: 30px
+		}
+
+		li {
+			margin-bottom: 0.5em
+		}
+
+		.changelog tr {
+			line-height: 1.5em;
+		}
+
+		.changelog td {
+			padding: 3px;
+			font-size: 15px;
+			vertical-align: middle;
+		}
+
+		.changelog .type {
+			font-size: 12px;
+			text-transform: uppercase;
+			padding-right: 15px;
+			padding-top: 5px;
+			padding-left: 0;
+			text-align: left;
+			color: #999;
+			min-width: 100px;
+			border-right: 2px solid #eee;
+		}
+
+		.changelog .type, .changelog .description {
+			vertical-align: top;
 		}
 
 		code {
@@ -563,9 +642,6 @@ function secupress_hack_changelog() {
 			line-height: 1.7em;
 		}
 
-		.fyi-description {
-			display: none;
-		}
 	</style>
 </head>
 
@@ -573,21 +649,42 @@ function secupress_hack_changelog() {
 
 <header id="plugin-information-title" class="with-banner">
 	<div class="vignette"></div>
-	<h2>SecuPress <?php echo secupress_has_pro() ? 'Pro' : 'Free'; ?> <?php echo esc_html( $changelog_version ); ?></h2>
+	<h2>SecuPress <?php echo $pro_suffix; ?> <?php echo esc_html( $changelog_version ); ?> – <?php echo esc_html( $changelog_date ); ?></h2>
 </header>
 
 <section id="plugin-information-scrollable">
+	<table class="changelog">
 	<?php
-	$changelog_content = wp_kses( $changelog_content, ['code' => ['id' => 1, 'class' => 1], 'ul' => ['id' => 1, 'class' => 1], 'li' => ['id' => 1, 'class' => 1] ] );
-	echo $changelog_content;
-
+	foreach ( $changelog_content as $content ) {
+		if ( ! $content ) {
+			continue;
+		}
+		$content = explode( ' ', $content, 2 );
+		?>
+		<tr>
+			<td class="type"><?php echo wp_kses_post( '<strong>' . str_replace( '#', '</strong>&nbsp;#', reset( $content ) ) ); ?></td>
+			<td class="description"><?php echo wp_kses_post( end( $content ) ); ?></td>
+		</tr>
+		<?php
+	}
+	?>
+		<tr>
+			<td class="type"><strong><?php _e( 'Full Changelog', 'secupress' ); ?></strong></td>
+			<td class="description"><a href="<?php echo SECUPRESS_WEB_MAIN; ?>changelog/" target="_blank"><?php echo SECUPRESS_WEB_MAIN; ?>changelog/</a></td>
+		</tr>
+	</table>
+	<hr>
+	<?php
+	$status = install_plugin_install_status( $api );
+	if ( $status['url'] ) {
+		echo '<p><a data-slug="' . esc_attr( $api->slug ) . '" data-plugin="' . esc_attr( $status['file'] ) . '" id="plugin_update_from_iframe" class="button button-primary right" href="' . $status['url'] . '" target="_parent">' . __( 'Install Update Now' ) .'</a></p>';
+	}
 	if ( ! secupress_has_pro() ) {
 	?>
-	<p><a href="https://secupress.me/pricing/" class="button">SecuPress Pro</a></p>
+	<p><a href="<?php echo SECUPRESS_WEB_MAIN; ?>pricing/" class="button button-secondary"><?php _e( 'Get SecuPress Pro Now!', 'secupress' ); ?></a></p>
 	<?php
 	}
 	?>
-	<p><em><?php _e( 'Read <a target="_blank" href="https://secupress.me/changelog">full changelog</a> on SecuPress.me', 'secupress' ); ?></em></p>
 </section>
 
 <div id="plugin-information-footer">
