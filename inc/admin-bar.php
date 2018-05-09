@@ -109,7 +109,7 @@ function secupress_admin_bar( $wp_admin_bar ) {
 				'title'  => str_replace( '*', '', '&rsaquo; ' . $submodule ),
 				'href'   => esc_url( secupress_admin_url( 'modules', $module_slug . '#' . $submodule_slug ) ),
 				'meta'   => [
-								'class'  => false === strpos( $submodule, '*' ) ? '' : 'secupress-pro-notice',
+								'class'  => false === strpos( $submodule, '*' ) || secupress_is_pro() ? '' : 'secupress-pro-notice',
 							]
 			) );
 		}
