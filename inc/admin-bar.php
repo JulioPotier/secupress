@@ -93,7 +93,7 @@ function secupress_admin_bar( $wp_admin_bar ) {
 						esc_url( secupress_admin_url( 'modules', $module_slug ) ) :
 						esc_url( $module['href'] ),
 			'meta'   => [
-							'class'  => ! isset( $module['mark_as_pro'] ) || ! $module['mark_as_pro'] ? '' : 'secupress-pro-notice',
+							'class'  => ! isset( $module['mark_as_pro'] ) || ! $module['mark_as_pro'] || secupress_is_pro() ? '' : 'secupress-pro-notice',
 							'target' => ! isset( $module['href'] ) ? '' : '_blank',
 						]
 		) );
