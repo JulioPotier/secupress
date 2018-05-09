@@ -36,6 +36,43 @@ function secupress_admin_bar( $wp_admin_bar ) {
 		'title'  => __( 'Scanners', 'secupress' ),
 		'href'   => esc_url( secupress_admin_url( 'scanners' ) ),
 	) );
+	// Sub-Scanners.
+	$wp_admin_bar->add_menu( array(
+		'parent' => 'secupress-scanners',
+		'id' 	 => 'secupress-scanners-step1',
+		'title'  => __( 'Step 1 – Security Report', 'secupress' ),
+		'href'   => esc_url( secupress_admin_url( 'scanners', '&step=1' ) ),
+	) );
+	$wp_admin_bar->add_menu( array(
+		'parent' => 'secupress-scanners',
+		'id' 	 => 'secupress-scanners-step2',
+		'title'  => __( 'Step 2 – Auto-Fix', 'secupress' ),
+		'href'   => esc_url( secupress_admin_url( 'scanners', '&step=2' ) ),
+		'meta'   => [
+						'class'  => secupress_is_pro() ? '' : 'secupress-pro-notice',
+					]
+	) );
+	$wp_admin_bar->add_menu( array(
+		'parent' => 'secupress-scanners',
+		'id' 	 => 'secupress-scanners-step3',
+		'title'  => __( 'Step 3 – Manual Operations', 'secupress' ),
+		'href'   => esc_url( secupress_admin_url( 'scanners', '&step=3' ) ),
+	) );
+	$wp_admin_bar->add_menu( array(
+		'parent' => 'secupress-scanners',
+		'id' 	 => 'secupress-scanners-step4',
+		'title'  => __( 'Step 4 – Resolution Report', 'secupress' ),
+		'href'   => esc_url( secupress_admin_url( 'scanners', '&step=4' ) ),
+	) );
+	$wp_admin_bar->add_menu( array(
+		'parent' => 'secupress-scanners',
+		'id' 	 => 'secupress-scanners-pdf',
+		'title'  => __( 'Export Security Report as PDF', 'secupress' ),
+		'href'   => esc_url( secupress_admin_url( 'scanners', '#secupress-step-content-footer' ) ),
+		'meta'   => [
+						'class'  => secupress_is_pro() ? '' : 'secupress-pro-notice',
+					]
+	) );
 
 	// Modules.
 	$wp_admin_bar->add_menu( array(
@@ -45,6 +82,51 @@ function secupress_admin_bar( $wp_admin_bar ) {
 		'href'   => esc_url( secupress_admin_url( 'modules' ) ),
 	) );
 
+	// Sub-Modules.
+	$modules = secupress_get_modules();
+	foreach ( $modules as $module_slug => $module ) {
+		$wp_admin_bar->add_menu( array(
+			'parent' => 'secupress-modules',
+			'id' 	 => 'secupress-modules-' . $module_slug,
+			'title'  => '<span class="ab-icon dashicons dashicons-' . $module['dashicon'] . '" style="font-size: 17px"></span>' . $module['title'],
+			'href'   => ! isset( $module['href'] ) ?
+						esc_url( secupress_admin_url( 'modules', $module_slug ) ) :
+						esc_url( $module['href'] ),
+			'meta'   => [
+							'class'  => ! isset( $module['mark_as_pro'] ) || ! $module['mark_as_pro'] || secupress_is_pro() ? '' : 'secupress-pro-notice',
+							'target' => ! isset( $module['href'] ) ? '' : '_blank',
+						]
+		) );
+
+		if ( empty( $module['submodules'] ) ) {
+			continue;
+		}
+
+		foreach ( $module['submodules'] as $submodule_slug => $submodule ) {
+			$wp_admin_bar->add_menu( array(
+				'parent' => 'secupress-modules-' . $module_slug,
+				'id'     => 'secupress-submodules-' . $submodule_slug,
+				'title'  => str_replace( '*', '', '&rsaquo; ' . $submodule ),
+				'href'   => esc_url( secupress_admin_url( 'modules', $module_slug . '#' . $submodule_slug ) ),
+				'meta'   => [
+								'class'  => false === strpos( $submodule, '*' ) || secupress_is_pro() ? '' : 'secupress-pro-notice',
+							]
+			) );
+		}
+	}
+	if ( ! secupress_is_pro() ) {
+		$wp_admin_bar->add_menu( array(
+			'parent' => 'secupress-modules',
+			'id' 	 => 'secupress-modules-get-pro',
+			'title'  => '<span class="ab-icon dashicons dashicons-star-filled" style="font-size: 17px"></span>' . __( 'More Security', 'secupress' ),
+			'href'   => SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ),
+			'meta'   => [
+							'class'  => 'secupress-pro-notice',
+							'target' => '_blank',
+						]
+		) );
+	}
+
 	// Settings.
 	$wp_admin_bar->add_menu( array(
 		'parent' => 'secupress',
@@ -52,4 +134,58 @@ function secupress_admin_bar( $wp_admin_bar ) {
 		'title'  => __( 'Settings', 'secupress' ),
 		'href'   => esc_url( secupress_admin_url( 'settings' ) ),
 	) );
+	// Sub-Settings.
+	if ( ! defined( 'SECUPRESS_HIDE_API_KEY' ) || ! SECUPRESS_HIDE_API_KEY ) {
+		$wp_admin_bar->add_menu( array(
+			'parent' => 'secupress-settings',
+			'id' 	 => 'secupress-settings-apikey',
+			'title'  => __( 'Licence Validation', 'secupress' ),
+			'href'   => esc_url( secupress_admin_url( 'settings#module-secupress_display_apikey_options' ) ),
+		) );
+	}
+	if ( secupress_is_pro() && defined( 'WP_SWL' ) && WP_SWL ) {
+		$wp_admin_bar->add_menu( array(
+			'parent' => 'secupress-settings',
+			'id' 	 => 'secupress-settings-whitelabel',
+			'title'  => __( 'White Label', 'secupress' ),
+			'href'   => esc_url( secupress_admin_url( 'settings#module-secupress_display_whitelabel_options' ) ),
+		) );
+	}
+	$wp_admin_bar->add_menu( array(
+		'parent' => 'secupress-settings',
+		'id' 	 => 'secupress-settings-exporter',
+		'title'  => __( 'Settings Manager', 'secupress' ),
+		'href'   => esc_url( secupress_admin_url( 'settings#module-import_export' ) ),
+		'meta'   => [
+						'class'  => secupress_is_pro() ? '' : 'secupress-pro-notice',
+					]
+	) );
+
+	if ( class_exists( 'SecuPress_Logs' ) ) {
+		// Logs.
+		$wp_admin_bar->add_menu( array(
+			'parent' => 'secupress',
+			'id' 	 => 'secupress-logs',
+			'title'  => _x( 'Logs', 'post type general name', 'secupress' ),
+			'href'   => esc_url( secupress_admin_url( 'logs' ) ),
+		) );
+		// Only add sub level menus if the 2 logs types are displayed.
+		if ( 2 === count( SecuPress_Logs::get_log_types() ) ) {
+			// Sub-Logs.
+			$wp_admin_bar->add_menu( array(
+				'parent' => 'secupress-logs',
+				'id' 	 => 'secupress-logs-action',
+				'title'  => __( 'Actions Logs', 'secupress' ),
+				'href'   => esc_url( secupress_admin_url( 'logs' ) ),
+			) );
+			$wp_admin_bar->add_menu( array(
+				'parent' => 'secupress-logs',
+				'id' 	 => 'secupress-logs-404',
+				'title'  => __( '404 Logs', 'secupress' ),
+				'href'   => esc_url( secupress_admin_url( 'logs', '&tab=err404' ) ),
+			) );
+		}
+	}
+
+
 }

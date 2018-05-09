@@ -4,13 +4,15 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /**
  * Get the IP address of the current user.
  *
+ * @since 1.4.3 Add $priority param
  * @since 1.0
  *
+ * @param (string) $priority Contains a key from $keys to be read first.
  * @return (string)
  */
-function secupress_get_ip() {
+function secupress_get_ip( $priority = null ) {
 	// Find the best order.
-	$keys = array(
+	$keys = [
 		'HTTP_CF_CONNECTING_IP', // CF = CloudFlare.
 		'HTTP_CLIENT_IP',
 		'HTTP_X_FORWARDED_FOR',
@@ -20,7 +22,11 @@ function secupress_get_ip() {
 		'HTTP_FORWARDED_FOR',
 		'HTTP_FORWARDED',
 		'REMOTE_ADDR',
-	);
+	];
+
+	if ( ! is_null( $priority ) ) {
+		array_unshift( $keys, $priority );
+	}
 
 	foreach ( $keys as $key ) {
 		if ( array_key_exists( $key, $_SERVER ) ) {
@@ -194,11 +200,11 @@ function secupress_write_in_htaccess_on_ban() {
 /**
  * Returns if the user-agent is a fake bot or not.
  *
- * @return (bool) true mean the IP is a good bot, false is a fake bot.
  * @since 1.4.2 Add $test param + revamp
  * @since 1.4
  *
  * @param (bool) $test Set to TRUE to just get the googlebot hostname test result (transient enabled)
+ * @return (bool) true mean the IP is a good bot, false is a fake bot.
  *
  * @author Julio Potier
  **/
@@ -214,7 +220,7 @@ function secupress_check_bot_ip( $test = false ) {
 	}
 
 	if ( ! $test ) {
-		$ip         = secupress_get_ip();
+		$ip         = secupress_get_ip( 'REMOTE_ADDR' );
 	} else {
 		$ip         = '66.249.66.83'; // Googlebot.
 	}

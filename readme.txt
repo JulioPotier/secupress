@@ -2,8 +2,8 @@
 Contributors: SecuPress, juliobox, GregLone
 Tags: wordpress security, secure, security plugin, security, malware
 Requires at least: 4.0
-Tested up to: 4.9.5
-Stable tag: 1.4.2
+Tested up to: 4.9.6
+Stable tag: 1.4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -177,6 +177,23 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 8. The 4th step: final report, you can export it as PDF (1)
 
 == Changelog ==
+
+= 1.4.3 =
+
+* 9 may 2018
+
+* New#605: New feature added in Sessions Control module: Send a reset link to users
+* Improvement#599: UI was not full width
+* Improvement#600: Checkboxes in step 2 seems enabled
+* Improvement#602: Compat with HostPAPA.ca
+* Improvement#609: Remove the notices "These options are disabled…"
+* Improvement: Remove every check about WP being under 4.0
+* Fix#597: Fatal error when updating using folder overwrite (FTP for example)
+* Fix#598: GooglePageSpeed is blocked by Fake SEO Bots module
+* Fix#601: 404 on PHP should block but not ban
+* Fix#606: regex of fake bots' user agents was too large
+* Fix#607: Alerts were always sent every 15mn, even with a higher number
+* Fix#608: Fix "Warning: set_time_limit() has been disabled for security reasons"
 
 = 1.4.2 =
 
@@ -482,6 +499,18 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 * Initial release \o/
 
 == Upgrade Notice ==
+
+= 1.4.3 =
+
+* 9 may 2018
+* PHP required version is now 5.4
+* WordPress required version is now 4.0
+
+= 1.4.2 =
+
+* 23 april 2018
+* PHP required version is now 5.4
+* WordPress required version is now 4.0
 
 = 1.4.1 =
 

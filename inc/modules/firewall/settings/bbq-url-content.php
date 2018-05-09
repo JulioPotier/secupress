@@ -58,8 +58,8 @@ $this->add_field( array(
 
 
 $this->add_field( array(
-	'title'             => __( 'Ban 404 requests on PHP files', 'secupress' ),
-	'description'       => __( 'When someone is tring to find a hidden or malicious PHP file, they could just get a 404 error, page not found. Ban them.', 'secupress' ),
+	'title'             => __( 'Block 404 requests on PHP files', 'secupress' ),
+	'description'       => __( 'When someone is tring to find a hidden or malicious PHP file, they could just get a 404 error, page not found. Block them.', 'secupress' ),
 	'label_for'         => $this->get_field_name( 'ban-404-php' ),
 	'plugin_activation' => true,
 	'type'              => 'checkbox',

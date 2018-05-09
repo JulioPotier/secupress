@@ -62,21 +62,16 @@ $this->add_field( array(
 
 $this->add_field( array(
 	'title'             => __( 'Session Control', 'secupress' ),
-	'description'       => __( 'Disconnect any user in one click, or even every logged in user (except you) at the same time in one click.', 'secupress' ),
+	'description'       => __( 'Disconnect or Reset Password of any user in one click.', 'secupress' ),
 	'label_for'         => $this->get_field_name( 'sessions_control' ),
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
-	'disabled'          => ! secupress_wp_version_is( '4.0' ) ? true : null,
 	'value'             => (int) secupress_is_submodule_active( 'users-login', 'sessions-control' ),
 	'label'             => __( 'Yes, control user sessions', 'secupress' ),
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
 			'description' => sprintf( __( 'You will find action links on every user\'s row in the <a href="%s">user listing administration page</a>.', 'secupress' ), esc_url( admin_url( 'users.php' ) ) ),
-		),
-		array(
-			'type'        => 'warning',
-			'description' => secupress_wp_version_is( '4.0' ) ? '' : __( 'This module requires WordPress 4.0 minimum, please update now!', 'secupress' ),
 		),
 	),
 ) );

@@ -542,6 +542,20 @@ button.secupress-activated .secupress-toggle-button.hidden {
 	transform: scale(1);
 }
 
+.secupress-item-all.disabled {
+	background: rgba(0,0,0,0.02);
+}
+
+.secupress-item-all.disabled * {
+    opacity: 0.75;
+}
+
+.secupress-item-all.disabled .secupress-checkbox:not(:checked) + .label-text:before {
+    border-color: #999 !important;
+    background: rgba( 0, 0, 0, 0.2 );
+    cursor: not-allowed;
+}
+
 /* Specific for radios */
 .secupress-radio:not(:checked) + label:before,
 .secupress-radio:checked + label:before,
@@ -1058,8 +1072,7 @@ label.secupress-setting-row-title {
 
 .secupress-wrapper {
 	max-width: 100%;
-	width: 1078px; /* 1240 */
-	padding-top: 20px;
+	padding-top: 10px;
 	overflow: hidden;
 }
 
@@ -1067,7 +1080,6 @@ label.secupress-setting-row-title {
 .secupress-wrapper.secupress-has-sideads,
 .secupress-setting-wrapper.secupress-has-sideads {
 	display: flex;
-	width: 1360px;
 }
 
 /* Ads sidebar */
@@ -1088,7 +1100,7 @@ label.secupress-setting-row-title {
 	position: relative;
 	text-align: center;
 	overflow: hidden;
-	padding: 22px 15px; 
+	padding: 22px 15px;
 }
 .secupress-pro-ad > * {
 	position: relative;

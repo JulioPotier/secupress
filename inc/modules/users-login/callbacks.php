@@ -116,9 +116,8 @@ function secupress_login_protection_settings_callback( $modulenow, &$settings, $
 
 	// (De)Activation.
 	if ( false !== $activate ) {
-		$available = secupress_wp_version_is( '4.0' ) && secupress_is_pro();
-		secupress_manage_submodule( $modulenow, 'only-one-connection', ! empty( $activate['login-protection_only-one-connection'] ) && $available );
-		secupress_manage_submodule( $modulenow, 'sessions-control', ! empty( $activate['login-protection_sessions_control'] ) && $available );
+		secupress_manage_submodule( $modulenow, 'only-one-connection', ! empty( $activate['login-protection_only-one-connection'] ) );
+		secupress_manage_submodule( $modulenow, 'sessions-control', ! empty( $activate['login-protection_sessions_control'] ) );
 	}
 }
 

@@ -89,7 +89,7 @@ if ( $new_scans ) {
 	?>
 </div><!-- .secupress-tests -->
 
-<div class="secupress-step-content-footer secupress-flex secupress-flex-top secupress-flex-spaced">
+<div class="secupress-step-content-footer secupress-flex secupress-flex-top secupress-flex-spaced" id="secupress-step-content-footer">
 	<p>
 		<?php if ( secupress_is_pro() ) { ?>
 			<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_export_pdf' ), 'secupress_export_pdf' ) ); ?>" title="<?php esc_attr_e( 'Export this report as PDF file.', 'secupress' ); ?>" class="secupress-button shadow">

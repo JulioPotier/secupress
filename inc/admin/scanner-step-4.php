@@ -250,7 +250,7 @@ foreach ( $scanned_items as $class_name_part => $details ) {
 			<?php
 		}
 		?>
-		<div class="secupress-step-content-footer secupress-flex secupress-flex-top secupress-flex-spaced">
+		<div class="secupress-step-content-footer secupress-flex secupress-flex-top secupress-flex-spaced" id="secupress-step-content-footer">
 			<?php
 			$export_pdf_btn = '<span class="icon">
 					<i class="secupress-icon-file-pdf-o" aria-hidden="true"></i>

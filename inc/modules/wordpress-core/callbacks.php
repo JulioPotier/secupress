@@ -31,7 +31,7 @@ function secupress_wordpress_core_settings_callback( $settings ) {
 	secupress_manage_submodule( $modulenow, 'major-updates', ! empty( $activate['auto-update_major'] ) );
 
 	// File editor.
-	$can_manage = ! defined( 'DISALLOW_FILE_EDIT' ) || ! DISALLOW_FILE_EDIT || secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-file-edit' );
+	$can_manage = secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-file-edit' );
 
 	if ( $can_manage ) {
 		secupress_manage_submodule( $modulenow, 'wp-config-constant-file-edit', ! empty( $activate['wp-config_disallow_file_edit'] ) );
@@ -40,7 +40,7 @@ function secupress_wordpress_core_settings_callback( $settings ) {
 	}
 
 	// Unfiltered HTML.
-	$can_manage = ! defined( 'DISALLOW_UNFILTERED_HTML' ) || ! DISALLOW_UNFILTERED_HTML || secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-unfiltered-html' );
+	$can_manage = secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-unfiltered-html' );
 
 	if ( $can_manage ) {
 		secupress_manage_submodule( $modulenow, 'wp-config-constant-unfiltered-html', ! empty( $activate['wp-config_disallow_unfiltered_html'] ) );
@@ -49,7 +49,7 @@ function secupress_wordpress_core_settings_callback( $settings ) {
 	}
 
 	// Unfiltered uploads.
-	$can_manage = defined( 'ALLOW_UNFILTERED_UPLOADS' ) && ALLOW_UNFILTERED_UPLOADS || secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-unfiltered-uploads' );
+	$can_manage = secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-unfiltered-uploads' );
 
 	if ( $can_manage ) {
 		secupress_manage_submodule( $modulenow, 'wp-config-constant-unfiltered-uploads', ! empty( $activate['wp-config_disallow_unfiltered_uploads'] ) );

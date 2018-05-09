@@ -161,10 +161,10 @@ if ( strpos( gethostname(), 'wps' ) === 0 ) {
 }
 
 /*
-For o2switch.net
+For o2switch.net + HostPapa
 */
 // Remove the textarea fields since they are already protecting it, leading our page to be caught.
-if ( isset( $_SERVER['SERVER_ADDR'] ) && 0 === strpos( $_SERVER['SERVER_ADDR'], '109.234.' ) ) {
+if ( isset( $_SERVER['SERVER_ADDR'] ) && ( 0 === strpos( $_SERVER['SERVER_ADDR'], '109.234.' ) || 0 === strpos( $_SERVER['SERVER_ADDR'], '64.34.157.' ) ) ) {
 	add_filter( 'secupress.settings.field.bbq-headers_user-agents-list',      '__return_null' );
 	add_filter( 'secupress.settings.field.bbq-url-content_bad-contents-list', '__return_null' );
 }
