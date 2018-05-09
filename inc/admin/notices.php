@@ -334,36 +334,29 @@ add_action( 'in_plugin_update_message-' . plugin_basename( SECUPRESS_FILE ), 'se
  */
 function secupress_updates_message( $plugin_data, $new_plugin_data ) {
 	// Get next version.
-	$new_plugin_data = (array) $new_plugin_data;
-	if ( isset( $new_plugin_data['new_version'] ) ) {
-		$remote_version = $new_plugin_data['new_version'];
+	if ( isset( $new_plugin_data->new_version ) ) {
+		$remote_version = $new_plugin_data->new_version;
 	}
 
 	if ( ! isset( $remote_version ) ) {
 		return;
 	}
 
-	$body = get_option( 'secupress_updates_message' );
-	$slug = $new_plugin_data['slug'] . '-' . $remote_version;
+	$body = get_transient( 'secupress_updates_message' );
 
-	if ( ! isset( $body[ $slug ] ) ) {
+	if ( ! isset( $body[ $remote_version ] ) ) {
+		$url = 'https://plugins.svn.wordpress.org/secupress/trunk/readme.txt';
+		$response = wp_remote_get( $url );
 
-		$urls = array(
-			'secupress'     => 'https://plugins.svn.wordpress.org/secupress/trunk/readme.txt',
-			'secupress-pro' => 'https://secupress.me/wp-content/uploads/secupress-pro-readme.txt',
-		);
-		$response = wp_remote_get( $urls[ $new_plugin_data['slug'] ] );
-
-		if ( 200 !== wp_remote_retrieve_response_code( $response ) ) {
+		if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
 			return;
 		}
 
 		$body = wp_remote_retrieve_body( $response );
 
-		update_option( 'secupress_updates_message' , array( $slug => $body ) );
-
+		set_transient( 'secupress_updates_message' , array( $remote_version => $body ) );
 	} else {
-		$body = $body[ $slug ];
+		$body = $body[ $remote_version ];
 	}
 
 	// Find the Notes for this version.

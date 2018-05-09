@@ -479,3 +479,145 @@ function secupress_remove_old_plugin_file( $file ) {
 	}
 	return true;
 }
+
+
+add_action( 'admin_init', 'secupress_better_changelog' );
+/**
+ * If the plugin is secupress free or pro, let's add our changlog content
+ *
+ * @since 1.4.3
+ * @author Julio Potier
+ **/
+function secupress_better_changelog() {
+	if ( isset( $_GET['tab'], $_GET['plugin'], $_GET['section'] )
+	&& ( 'secupress' === $_GET['plugin'] || 'secupress-pro' === $_GET['plugin'] )
+	&& 'changelog' === $_GET['section'] && 'plugin-information' === $_GET['tab'] ) {
+		remove_action( 'install_plugins_pre_plugin-information', 'install_plugin_information' );
+		add_action( 'install_plugins_pre_plugin-information', 'secupress_hack_changelog' );
+	}
+}
+
+/**
+ * Will display our changelog content wiht our CSS
+ *
+ * @since 1.4.3
+ * @author Julio Potier
+ **/
+function secupress_hack_changelog() {
+	global $admin_body_class;
+
+	$api = plugins_api( 'plugin_information', array(
+		'slug' => $_GET['plugin'],
+		'is_ssl' => is_ssl(),
+		'fields' => [
+			'short_description' => false,
+			'reviews' => false,
+			'downloaded' => false,
+			'downloadlink' => false,
+			'last_updated' => false,
+			'added' => false,
+			'tags' => false,
+			'homepage' => false,
+			'donate_link' => false,
+			'ratings' => false,
+			'active_installs' => true,
+			'banners' => true,
+			'sections' => true,
+		]
+	) );
+
+	if ( is_wp_error( $api ) ) {
+		wp_die( $api );
+	}
+
+	$changelog_content = $api->sections['changelog'];
+	$changelog_content = explode( "\n", $changelog_content );
+	$changelog_content = array_slice( $changelog_content, 0, array_search( '</ul>', $changelog_content ) );
+	$changelog_version = strip_tags( array_shift( $changelog_content ) );
+	$changelog_content = implode( "\n", $changelog_content );
+
+	iframe_header( __( 'Plugin Installation' ) );
+	?>
+	<style>
+		#plugin-information-title.with-banner div.vignette {
+			background-image: url( '<?php echo esc_url( $api->banners['high'] ); ?>' );
+			background-size: contain;
+		}
+
+		ul {
+			list-style: inside;
+			padding-left: 15px;
+		}
+
+		code {
+			background-color: #EEE;
+			padding: 2px
+		}
+
+		.star-rating {
+			display: inline;
+		}
+
+		#plugin-information-footer {
+			text-align: center;
+			line-height: 1.7em;
+		}
+
+		.fyi-description {
+			display: none;
+		}
+	</style>
+</head>
+
+<body class="$admin_body_class">
+
+<header id="plugin-information-title" class="with-banner">
+	<div class="vignette"></div>
+	<h2>SecuPress <?php echo secupress_has_pro() ? 'Pro' : 'Free'; ?> <?php echo esc_html( $changelog_version ); ?></h2>
+</header>
+
+<section id="plugin-information-scrollable">
+	<?php
+	$changelog_content = wp_kses( $changelog_content, ['code' => ['id' => 1, 'class' => 1], 'ul' => ['id' => 1, 'class' => 1], 'li' => ['id' => 1, 'class' => 1] ] );
+	echo $changelog_content;
+
+	if ( ! secupress_has_pro() ) {
+	?>
+	<p><a href="https://secupress.me/pricing/" class="button">SecuPress Pro</a></p>
+	<?php
+	}
+	?>
+	<p><em><?php _e( 'Read <a target="_blank" href="https://secupress.me/changelog">full changelog</a> on SecuPress.me', 'secupress' ); ?></em></p>
+</section>
+
+<div id="plugin-information-footer">
+	<strong><?php _e( 'Requires WordPress Version:' ); ?></strong>
+	<?php
+	printf( __( '%s or higher' ), $api->requires );
+
+	if ( ! empty( $api->requires_php ) ) {
+		echo '& PHP ' . printf( __( '%s or higher' ), $api->requires );
+	}
+	?> |
+	<strong><?php _e( 'Compatible up to:' ); ?></strong>
+	<?php echo $api->tested; ?>
+	<br>
+	<strong><?php _e( 'Active Installations:' ); ?></strong>
+	<?php
+	if ( $api->active_installs >= 1000000 ) {
+		_ex( '1+ Million', 'Active plugin installations' );
+	} elseif ( 0 == $api->active_installs ) {
+		_ex( 'Less Than 10', 'Active plugin installations' );
+	} else {
+		echo number_format_i18n( $api->active_installs ) . '+';
+	}
+	?> |
+	<strong><?php _e( 'Average Rating' ); ?>:</strong>
+	<?php wp_star_rating( [ 'type' => 'percent', 'rating' => $api->rating, 'number' => $api->num_ratings ] ); ?>
+	<p aria-hidden="true" class="fyi-description"><?php printf( _n( '(based on %s rating)', '(based on %s ratings)', $api->num_ratings ), number_format_i18n( $api->num_ratings ) ); ?></p>
+	<br>
+</div>
+<?php
+iframe_footer();
+exit;
+}
