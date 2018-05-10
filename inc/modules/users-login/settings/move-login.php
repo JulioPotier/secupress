@@ -91,30 +91,21 @@ foreach ( $labels as $slug => $label ) {
 /**
  * If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for Move Login.
  */
-if ( $is_plugin_active && function_exists( 'secupress_move_login_get_rules' ) ) {
-	$message = false;
+if ( $is_nginx && apply_filters( 'secupress.nginx.notice', true ) && $is_plugin_active && function_exists( 'secupress_move_login_get_rules' ) ) {
 
-	// Nginx.
-	if ( $is_nginx ) {
+	$this->add_field( array(
+		'title'        => __( 'Rules', 'secupress' ),
 		/** Translators: 1 is a file name, 2 is a tag name. */
-		$message = sprintf( __( 'You need to remove the following code from your %1$s file, inside the %2$s block:', 'secupress' ), '<code>nginx.conf</code>', '<code>server</code>' );
-		$rules   = secupress_move_login_get_nginx_rules( secupress_move_login_get_rules() );
-	}
-
-	if ( $message ) {
-		$this->add_field( array(
-			'title'        => __( 'Rules', 'secupress' ),
-			'description'  => $message,
-			'depends'      => $main_field_name,
-			'label_for'    => $this->get_field_name( 'rules' ),
-			'type'         => 'textarea',
-			'value'        => $rules,
-			'attributes'   => array(
-				'readonly' => 'readonly',
-				'rows'     => substr_count( $rules, "\n" ) + 1,
-			),
-		) );
-	}
+		'description'  => sprintf( __( 'You need to remove the following code from your %1$s file, inside the %2$s block:', 'secupress' ), '<code>nginx.conf</code>', '<code>server</code>' )
+		'depends'      => $main_field_name,
+		'label_for'    => $this->get_field_name( 'rules' ),
+		'type'         => 'textarea',
+		'value'        => secupress_move_login_get_nginx_rules( secupress_move_login_get_rules() ),
+		'attributes'   => array(
+			'readonly' => 'readonly',
+			'rows'     => substr_count( $rules, "\n" ) + 1,
+		),
+	) );
 }
 
 unset( $main_field_name, $is_plugin_active, $labels, $message, $rules );
