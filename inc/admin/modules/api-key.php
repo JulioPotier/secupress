@@ -3,7 +3,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 
 $this->set_current_section( 'secupress_display_apikey_options' );
-$this->add_section( __( 'License Validation', 'secupress' ), array( 'with_save_button' => false ) );
+$this->add_section( __( 'License Information', 'secupress' ), array( 'with_save_button' => false ) );
 
 
 $settings   = get_site_option( SECUPRESS_SETTINGS_SLUG );
@@ -29,7 +29,7 @@ $this->add_field( array(
 	'helpers'      => array(
 		array(
 			'type'        => 'help',
-			'description' => _x( 'The one you used for your Pro account.', 'e-mail address', 'secupress' ),
+			'description' => _x( 'The one you used<br>for your Pro account.', 'e-mail address', 'secupress' ),
 		),
 	),
 ) );
@@ -45,7 +45,105 @@ $this->add_field( array(
 	'helpers'      => array(
 		array(
 			'type'        => 'help',
-			'description' => __( 'The license key obtained with your Pro account.', 'secupress' ),
+			'description' => __( 'The license key obtained<br>with your Pro account.', 'secupress' ),
+		),
+	),
+) );
+
+$license   = secupress_get_option( 'license' );
+$helper    = 'help';
+$need_more = '';
+if ( secupress_is_pro() && $license ) {
+
+	if ( $license['limit'] === 0 ) { // Unlimited.
+		$sites_number = sprintf( __( '%d / unlimited', 'secupress' ), (int) $license['count'] );
+	} else {
+		$need_more    = sprintf( __( 'Need more than %1$d sites?<br><a href="%2$s">Just ask for more!</a>', 'secupress' ), $license['limit'], SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ) );
+		$sites_number = sprintf( _n( '%1$d / %2$d site', '%1$d / %2$d sites', $license['count'], 'secupress' ), (int) $license['count'], (int) $license['limit'] );
+	}
+
+} else {
+	$sites_number = _x( 'Free', 'feminine', 'secupress' );
+	$license      = ['status' => false];
+}
+
+ob_start();
+?>
+<p>
+	<strong><?php _e( 'License:', 'secupress' ); ?></strong>
+	<code><strong><?php echo $sites_number; ?></strong></code>
+	<br>
+	<strong><?php _e( 'Status:', 'secupress' ); ?></strong>
+	<?php
+	switch ( $license['status'] ) {
+		case 'active':
+		case 'inactive':
+			echo '<span class="dashicons dashicons-yes"></span>&nbsp;' . __( 'Active', 'secupress' );
+		break;
+		case 'expired':
+			$need_more = __( 'Expired Licenses<br>don’t use the pro features!', 'secupress' );
+			$helper    = 'warning';
+			echo '<span class="dashicons dashicons-clock"></span>&nbsp;' . __( 'Expired', 'secupress' );
+		break;
+		case 'disabled':
+			echo '<span class="dashicons dashicons-dismiss"></span>&nbsp;' . __( 'Disabled', 'secupress' );
+		break;
+		default: echo '–';
+	}
+	?>
+</p>
+<p>
+	<?php
+	switch ( $license['status'] ) {
+		case 'active':
+		case 'inactive':
+		?>
+			<a class="button button-small button-primary"
+			href="<?php echo SECUPRESS_WEB_MAIN . __( 'account', 'secupress' ); ?>"
+			target="_blank"
+			title="<?php _e( 'on secupress.me', 'secupress' ); ?>">
+				<?php _e( 'Open My Account', 'secupress' ); ?>
+				<span class="dashicons dashicons-admin-users"></span>
+			</a>
+		<?php
+		break;
+		case 'expired':
+		?>
+			<a class="button button-small button-primary"
+			href="<?php echo SECUPRESS_WEB_MAIN . __( 'checkout', 'secupress' ) . '/?edd_license_key=' . secupress_get_option( 'consumer_key' ) . '&download_id=14'; ?>"
+			target="_blank"
+			title="<?php _e( 'on secupress.me', 'secupress' ); ?>">
+				<?php _e( 'Renew My License', 'secupress' ); ?>
+				<span class="dashicons dashicons-star-filled"></span>
+			</a>
+		<?php
+		break;
+		default:
+		?>
+			<a class="button button-small button-primary"
+			href="<?php echo SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ); ?>"
+			target="_blank"
+			title="<?php _e( 'on secupress.me', 'secupress' ); ?>">
+				<?php _e( 'Get Pro Version', 'secupress' ); ?>
+				<span class="dashicons dashicons-star-filled"></span>
+			</a>
+		<?php
+	}
+	?>
+</p>
+<?php
+$value = ob_get_contents();
+ob_end_clean();
+// $helper = 'help';
+$this->add_field( array(
+	'title'        => __( 'My Account', 'secupress' ),
+	'label_for'    => 'license_information',
+	'type'         => 'html',
+	'value'        => $value,
+	'helpers'      => array(
+		array(
+			'type'        => $helper,
+			'description' => $need_more,
 		),
 	),
 ) );
