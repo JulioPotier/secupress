@@ -706,6 +706,7 @@ function secupress_global_settings_activate_pro_license( $new_values, $old_value
 
 		if ( ! empty( $body->data->site_is_pro ) ) {
 			$new_values['site_is_pro'] = 1;
+			$new_values['license'] = (array) $body->data->license;
 
 			if ( ! empty( $body->data->plugin_information ) ) {
 				// Store the plugin information. See `SecuPress_Admin_Pro_Upgrade::maybe_warn_to_install_pro_version()`.
