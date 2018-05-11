@@ -177,7 +177,16 @@ p.secupress-sh-subtitle {
 /**
  * === Main content of a module
  */
-
+.secupress-tab-content-welcome .secupress-setting-row + .secupress-setting-row {
+    margin-top: 0px;
+    border-top: 0px;
+}
+.secupress-tab-content-welcome .secupress-setting-row {
+	max-width: 400px;
+}
+.secupress-setting-row_wl_description {
+	flex-basis: calc(100% - 282px);
+}
 .secupress-tab-content {
 	width: 800px;
 	position: relative;
@@ -185,12 +194,6 @@ p.secupress-sh-subtitle {
 	border-radius: 0 3px 3px 0;
 	border: 1px solid #CCC;
 }
-.secupress-tab-content-welcome {
-	width: 100%;
-	border-radius: 0;
-	border: 0 none;
-}
-
 .secupress-tab-content-header {
 	position: relative;
 	padding: 15px 175px 18px 20px;
@@ -326,6 +329,11 @@ input[type="text"]:required:invalid {
 }
 
 /* Dashboard (Welcome Page) */
+.secupress-tab-content-welcome .secupress-form-table {
+	display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
 .secupress-modules-dashboard {
 	border-radius: 0 0 3px 3px;
 }
@@ -613,8 +621,7 @@ label.secupress-textarea-label {
 	height: 200px;
 	margin: .75em auto 1.5em;
 	padding: 10px;
-	background: #ECF0F1;
-	border: 1px solid #ECF0F1;
+	border: 2px solid #ECF0F1;
 	overflow: hidden;
 	transition: all .275s;
 }
@@ -648,15 +655,11 @@ fieldset.secupress-boxed-group > b {
 	border: 0;
 	font-size: 1em;
 	line-height: 1.7;
-	background: #ECF0F1;
 	color: #5A626F;
 	font-family: Consolas, Monaco, "Andale Mono", monospace;
 	box-shadow: none;
 	transition: all .275s;
 	resize: none;
-}
-.secupress-textarea-container textarea:focus {
-	background: #FFF;
 }
 
 .secupress-textarea-container + .description.desc {
