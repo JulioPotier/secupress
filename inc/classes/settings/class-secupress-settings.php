@@ -356,13 +356,22 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			/**
 			 * Filter the arguments passed to the section submit button.
 			 *
+			 * @since 1.4.3 Add $this->sectionnow.
 			 * @since 1.0.6
 			 *
 			 * @param (array) $args An array of arguments passed to the `submit_button()` method.
 			 */
-			$args = apply_filters( 'secupress.settings.section.submit_button_args', $args );
+			$args = apply_filters( 'secupress.settings.section.submit_button_args', $args, $this->sectionnow );
+			/**
+			 * Filter the arguments passed to the section submit button.
+			 *
+			 * @since 1.4.3
+			 *
+			 * @param (array) $args An array of arguments passed to the `submit_button()` method.
+			 */
+			$args = apply_filters( 'secupress.settings.section-' . $this->sectionnow . '.submit_button_args', $args );
 
-			call_user_func_array( array( __CLASS__, 'submit_button' ), $args );
+			call_user_func( array( __CLASS__, 'submit_button' ), $args );
 		}
 
 		echo '</div><!-- #secupress-settings-' . $html_id . ' -->';
@@ -789,6 +798,90 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		}
 	}
 
+	/** Specific fields ========================================================================= */
+
+	/**
+	 * Outputs the form used by the importers to accept the data to be imported.
+	 *
+	 * @since 1.0
+	 * @author Julio Potier
+	 */
+	protected function import_upload_form() {
+		/** This filter is documented in wp-admin/includes/template.php */
+		$bytes      = apply_filters( 'import_upload_size_limit', wp_max_upload_size() );
+		$size       = size_format( $bytes );
+		$upload_dir = wp_upload_dir();
+		$disabled   = secupress_is_pro() ? '' : ' disabled="disabled"';
+
+		if ( ! empty( $upload_dir['error'] ) ) {
+			?>
+			<div class="error">
+				<p><?php _e( 'Before you can upload your import file, you will need to fix the following error:', 'secupress' ); ?></p>
+				<p><strong><?php echo $upload_dir['error']; ?></strong></p>
+			</div><?php
+			echo secupress_is_pro() ? '' : static::get_pro_version_string( '<p class="description secupress-get-pro-version">%s</p>' );
+			return;
+		}
+
+		$name        = 'upload';
+		$type        = 'help';
+		$description = __( 'Choose a file from your computer:', 'secupress' ) . ' (' . sprintf( __( 'Maximum size: %s', 'secupress' ), $size ) . ')';
+		/** This filter is documented in inc/classes/settings/class-secupress-settings.php */
+		$description = apply_filters( 'secupress.settings.help', $description, $name, $type );
+		?>
+		<p>
+			<input type="file" id="upload" name="import" size="25"<?php echo $disabled; ?>/><br/>
+			<label for="upload"><?php echo $description; ?></label>
+			<input type="hidden" name="max_file_size" value="<?php echo $bytes; ?>" />
+		</p>
+
+		<p class="submit">
+			<button type="submit"<?php echo $disabled; ?> class="secupress-button" id="import">
+				<span class="icon">
+					<i class="secupress-icon-upload" aria-hidden="true"></i>
+				</span>
+				<span class="text">
+					<?php _e( 'Upload settings', 'secupress' ); ?>
+				</span>
+			</button>
+		</p>
+		<?php
+		echo secupress_is_pro() ? '' : static::get_pro_version_string( '<p class="description secupress-get-pro-version">%s</p>' );
+	}
+
+
+	/**
+	 * Outputs the export button.
+	 *
+	 * @since 1.0
+	 * @author Julio Potier
+	 */
+	protected function export_form() {
+		?>
+		<p class="submit">
+			<?php if ( secupress_is_pro() ) : ?>
+				<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress_export' ), 'secupress_export' ) ); ?>" id="export" class="secupress-button">
+					<span class="icon" aria-hidden="true">
+						<i class="secupress-icon-download"></i>
+					</span>
+					<span class="text">
+						<?php _e( 'Download settings', 'secupress' ); ?>
+					</span>
+				</a>
+			<?php else : ?>
+				<button type="button" class="secupress-button" disabled="disabled">
+					<span class="icon" aria-hidden="true">
+						<i class="secupress-icon-download"></i>
+					</span>
+					<span class="text">
+						<?php _e( 'Download settings', 'secupress' ); ?>
+					</span>
+				</button>
+			<?php endif; ?>
+		</p>
+		<?php
+		echo secupress_is_pro() ? '' : static::get_pro_version_string( '<p class="description secupress-get-pro-version">%s</p>' );
+	}
 
 	/**
 	 * Used to display buttons.
@@ -1176,15 +1269,20 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 *
 	 * @return (string) Submit button HTML.
 	 */
-	protected static function submit_button( $type = 'primary large', $name = 'main_submit', $wrap = true, $other_attributes = null, $echo = true ) {
-		if ( true === $wrap ) {
+	protected static function submit_button( $args ) {
+		$defaults = ['label' => __( 'Save All Changes', 'secupress' ), 'before' => '', 'type' => 'primary large', 'name' => 'main_submit', 'wrap' => true, 'other_attributes' => null, 'echo' => true];
+		$args     = wp_parse_args( $args, $defaults );
+
+		if ( true === $args['wrap'] ) {
 			$wrap = '<p class="submit">';
-		} elseif ( $wrap ) {
-			$wrap = '<p class="submit ' . sanitize_html_class( $wrap ) . '">';
+		} elseif ( $args['wrap'] ) {
+			$wrap = '<p class="submit ' . sanitize_html_class( $args['wrap'] ) . '">';
 		}
 
-		if ( ! is_array( $type ) ) {
-			$type = explode( ' ', $type );
+		if ( ! is_array( $args['type'] ) ) {
+			$type = explode( ' ', $args['type'] );
+		} else {
+			$type = $args['type'];
 		}
 
 		$button_shorthand = array( 'primary' => 1, 'secondary' => 1, 'tertiary' => 1, 'small' => 1, 'large' => 1, 'delete' => 1 );
@@ -1196,32 +1294,33 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		$class = implode( ' ', array_unique( $classes ) );
 
 		// Default the id attribute to $name unless an id was specifically provided in $other_attributes.
-		$id = $name;
-		if ( is_array( $other_attributes ) && isset( $other_attributes['id'] ) ) {
-			$id = $other_attributes['id'];
-			unset( $other_attributes['id'] );
+		$name = $args['name'];
+		$id   = $args['name'];
+		if ( is_array( $args['other_attributes'] ) && isset( $args['other_attributes']['id'] ) ) {
+			$id = $args['other_attributes']['id'];
 		}
 
 		$attributes = '';
-		if ( is_array( $other_attributes ) ) {
-			foreach ( $other_attributes as $attribute => $value ) {
+		if ( is_array( $args['other_attributes'] ) ) {
+			foreach ( $args['other_attributes'] as $attribute => $value ) {
 				$attributes .= ' ' . $attribute . '="' . esc_attr( $value ) . '"';
 			}
-		} elseif ( ! empty( $other_attributes ) ) { // Attributes provided as a string.
-			$attributes = $other_attributes;
+		} elseif ( ! empty( $args['other_attributes'] ) ) { // Attributes provided as a string.
+			$attributes = $args['other_attributes'];
 		}
 
 		// Don't output empty name and id attributes.
 		$name_attr = $name ? ' name="' . esc_attr( $name ) . '"' : '';
 		$id_attr   = $id   ? ' id="' . esc_attr( $id ) . '"'     : '';
+		$label     = esc_html( $args['label'] );
 
-		$button = '<button type="submit"' . $name_attr . $id_attr . ' class="' . esc_attr( $class ) . '"' . $attributes . '>' . __( 'Save All Changes', 'secupress' ) . '</button>';
+		$button = '<button type="submit"' . $name_attr . $id_attr . ' class="' . esc_attr( $class ) . '"' . $attributes . '>' . $label . '</button>';
 
 		if ( $wrap ) {
 			$button = $wrap . $button . '</p>';
 		}
 
-		if ( $echo ) {
+		if ( $args['echo'] ) {
 			echo $button;
 		}
 
