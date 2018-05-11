@@ -14,6 +14,17 @@ function secupress_get_modules() {
 	$should_be_pro = ! secupress_is_pro();
 
 	$modules = [
+		'welcome'         => [
+			'title'       => __( 'Dashboard', 'secupress' ),
+			'icon'        => 'cogs',
+			'dashicon'    => 'admin-home',
+			'summaries'   => [
+				'small'   => __( 'License, Import & Export', 'secupress' ),
+				'normal'  => __( 'nothing', 'secupress' ),
+			],
+			'with_form'   => false,
+			'submodules'  => []
+		],
 		'users-login'     => [
 			'title'       => __( 'Users &amp; Login', 'secupress' ),
 			'icon'        => 'user-login',
