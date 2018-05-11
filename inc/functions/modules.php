@@ -23,7 +23,11 @@ function secupress_get_modules() {
 				'normal'  => __( 'nothing', 'secupress' ),
 			],
 			'with_form'   => false,
-			'submodules'  => []
+			'submodules'  => [
+							'module-secupress_display_apikey_options'     => ! defined( 'SECUPRESS_HIDE_API_KEY' ) || SECUPRESS_HIDE_API_KEY ? __( 'Licence Information', 'secupress' ) : '',
+							'module-secupress_display_whitelabel_options' => ! secupress_is_pro() || ( secupress_is_pro() && defined( 'WP_SWL' ) && WP_SWL ) ? ( ! secupress_is_pro() ? '*' : '' ) . __( 'White Label', 'secupress' ) : '',
+							'module-import_export'                        => '*' . __( 'Settings Import & Export', 'secupress' ),
+						]
 		],
 		'users-login'     => [
 			'title'       => __( 'Users &amp; Login', 'secupress' ),

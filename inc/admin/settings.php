@@ -290,15 +290,13 @@ function secupress_create_menus() {
 	// Add a counter of scans with bad result.
 	$count = sprintf( ' <span class="update-plugins count-%1$d"><span class="update-count">%1$d</span></span>', secupress_get_scanner_counts( 'bad' ) );
 	$cap   = secupress_get_capability();
-	$icon  = secupress_wp_version_is( '3.8' ) ? 'dashicons-shield-alt' : '';
 
 	// Main menu item.
-	add_menu_page( SECUPRESS_PLUGIN_NAME, SECUPRESS_PLUGIN_NAME, $cap, SECUPRESS_PLUGIN_SLUG . '_scanners', 'secupress_scanners', $icon );
+	add_menu_page( SECUPRESS_PLUGIN_NAME, SECUPRESS_PLUGIN_NAME, $cap, SECUPRESS_PLUGIN_SLUG . '_scanners', 'secupress_scanners', 'dashicons-shield-alt' );
 
 	// Sub-menus.
 	add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Scanners', 'secupress' ), __( 'Scanners', 'secupress' ) . $count, $cap, SECUPRESS_PLUGIN_SLUG . '_scanners', 'secupress_scanners' );
 	add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Modules', 'secupress' ),  __( 'Modules', 'secupress' ),           $cap, SECUPRESS_PLUGIN_SLUG . '_modules',  'secupress_modules' );
-	add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Settings' ),              __( 'Settings' ),                       $cap, SECUPRESS_PLUGIN_SLUG . '_settings', 'secupress_global_settings' );
 
 	if ( ! secupress_is_white_label() ) {
 		if ( ! secupress_is_pro() ) {

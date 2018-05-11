@@ -209,7 +209,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			<?php secupress_admin_heading( __( 'Modules', 'secupress' ) ); ?>
 			<?php settings_errors(); ?>
 
-			<div class="secupress-wrapper<?php echo ( $is_welcome ? '' : ' secupress-flex secupress-flex-top' ) ?><?php echo ( $secupress_has_sideads ? ' secupress-has-sideads' : '' ) ?>">
+			<div class="secupress-wrapper secupress-flex secupress-flex-top<?php echo ( $secupress_has_sideads ? ' secupress-has-sideads' : '' ) ?>">
 				<div class="secupress-modules-sidebar">
 					<div class="secupress-sidebar-header">
 						<div class="secupress-flex">
