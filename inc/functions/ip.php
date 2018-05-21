@@ -222,23 +222,27 @@ function secupress_check_bot_ip( $test = false ) {
 	if ( ! $test ) {
 		$ip         = secupress_get_ip( 'REMOTE_ADDR' );
 	} else {
-		$ip         = '66.249.66.83'; // Googlebot.
+		$ip         = '66.249.66.83'; // GoogleBot.
 	}
 	$hostname_addr  = gethostbyaddr( $ip );
 	$real_ip        = gethostbyname( $hostname_addr );
-	$hostname_fork  = `host $ip`;
+	try {
+		$hostname_fork  = `host $ip`;
+	} catch (Exception $e) {
+		$hostname_fork = false;
+	}
 	$hostname       = is_string( $hostname_addr ) && ! secupress_ip_is_valid( $hostname_addr ) ? $hostname_addr : $hostname_fork;
 	$hostname       = is_string( $hostname ) ? explode( ' ', $hostname ) : [];
 	$hostname       = end( $hostname );
 	$user_agent     = isset( $_SERVER['HTTP_USER_AGENT'] ) ? trim( $_SERVER['HTTP_USER_AGENT'] ) : '';
 
 	if ( true === $test ) {
-		$test_result = (int) preg_match( '/googlebot/i', $hostname );
+		$test_result = (int) preg_match( '/google/i', $hostname );
 		set_site_transient( 'secupress-test-hostname', $test_result, WEEK_IN_SECONDS );
 		return ! (bool) $test_result;
 	}
 
-	if ( preg_match( '/Google/i', $user_agent ) && ( preg_match( '/googlebot/i', $hostname ) ) ) {
+	if ( preg_match( '/google/i', $user_agent ) && ( preg_match( '/google/i', $hostname ) ) ) {
 		return true;
 	}
 	if ( preg_match( '/bingbot|msnbot/i', $user_agent ) && ( preg_match( '/msn/i', $hostname ) ) ) {
@@ -250,13 +254,13 @@ function secupress_check_bot_ip( $test = false ) {
 	if ( preg_match( '/slurp/i', $user_agent ) && ( preg_match( '/yahoo/i', $hostname ) ) ) {
 		return true;
 	}
-	if ( preg_match( '/Baiduspider/i', $user_agent ) && ( preg_match( '/baidu/i', $hostname ) ) ) {
+	if ( preg_match( '/baiduspider/i', $user_agent ) && ( preg_match( '/baidu/i', $hostname ) ) ) {
 		return true;
 	}
-	if ( preg_match( '/YandexBot/i', $user_agent ) && ( preg_match( '/yandex/i', $hostname ) ) ) {
+	if ( preg_match( '/yandexbot/i', $user_agent ) && ( preg_match( '/yandex/i', $hostname ) ) ) {
 		return true;
 	}
-	if ( preg_match( '/DuckDuckBot/i', $user_agent ) && ( preg_match( '/DuckDuckGo/i', $hostname ) ) ) {
+	if ( preg_match( '/duckduckbot/i', $user_agent ) && ( preg_match( '/duckduck/i', $hostname ) ) ) {
 		return true;
 	}
 	if ( preg_match( '/ia_archiver/i', $user_agent ) && ( preg_match( '/alexa/i', $hostname ) ) ) {
