@@ -452,6 +452,13 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 		set_site_transient( 'secupress-common', time(), 2 * DAY_IN_SECONDS );
 	}
 
+	// < 1.4.4
+	if ( version_compare( $actual_version, '1.4.4', '<' ) ) {
+		$value = secupress_get_module_option( 'bbq-headers_user-agents-list', secupress_firewall_bbq_headers_user_agents_list_default(), 'firewall' );
+		$value = str_replace( 'Wget, ', '', $value );
+		secupress_update_module_option( 'bbq-headers_user-agents-list', $value, 'firewall' );
+	}
+
 }
 
 /**
