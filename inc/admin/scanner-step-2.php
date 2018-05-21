@@ -79,7 +79,7 @@ if ( ! $secupress_tests ) {
 		$main_button =
 		'
 	<span class="secupress-get-pro-version">
-		' . sprintf( __( 'The <a href="%s" target="_blank">Pro Version</a> is required to autofix issues.', 'secupress' ), esc_url( SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ) ) ) . '
+		' . sprintf( __( 'The <a href="%s" target="_blank">Pro Version</a> is required to autofix issues.', 'secupress' ), esc_url( secupress_admin_url( 'get-pro' ) ) ) . '
 	</span>
 		 <p class="secupress-flex">
 			<a href="' . esc_url( secupress_admin_url( 'scanners' ) ) . '&amp;step=3" class="secupress-button secupress-button-tertiary shadow">
@@ -100,7 +100,7 @@ if ( ! $secupress_tests ) {
 	if ( ! $secupress_is_pro ) {
 	?>
 	<span class="secupress-get-pro-version">
-		<?php printf( __( 'The <a href="%s" target="_blank">Pro Version</a> is required to autofix issues.', 'secupress' ), esc_url( SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ) ) ); ?>
+		<?php printf( __( 'The <a href="%s" target="_blank">Pro Version</a> is required to autofix issues.', 'secupress' ), esc_url( secupress_admin_url( 'get-pro' ) ) ); ?>
 	</span>
 	<div class="secupress-step-content-header secupress-flex secupress-flex-spaced">
 		<p class="secupress-step-title"> </p>
@@ -192,7 +192,7 @@ if ( ! $secupress_tests ) {
 									// It is fixable with the pro version but the free version is used.
 									?>
 									<span class="secupress-get-pro-version">
-										<?php printf( __( 'Available in <a href="%s" target="_blank">Pro Version</a>', 'secupress' ), esc_url( SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ) ) ); ?>
+										<?php printf( __( 'Available in <a href="%s" target="_blank">Pro Version</a>', 'secupress' ), esc_url( secupress_admin_url( 'get-pro' ) ) ); ?>
 									</span>
 									<?php
 								} else {

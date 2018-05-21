@@ -315,7 +315,7 @@ function secupress_create_menus() {
 	if ( ! secupress_is_white_label() && ! secupress_is_pro() ) {
 		end( $submenu );
 		$key = key( $submenu );
-		$submenu[ $key ][ count( $submenu[ $key ] ) -1 ] = array( __( 'More Security', 'secupress' ), $cap, esc_url( SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ) . '/?from=secupress-plugin' ), __( 'More Security', 'secupress' ) );
+		$submenu[ $key ][ count( $submenu[ $key ] ) -1 ] = array( __( 'More Security', 'secupress' ), $cap, esc_url( secupress_admin_url( 'get-pro' ) ), __( 'More Security', 'secupress' ) );
 	}
 }
 

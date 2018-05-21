@@ -29,9 +29,6 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 		$pro_msg  = '<span class="secupress-cta-pro">' . SecuPress_Settings_Modules::get_pro_version_string() . '</span>';
 		$pro_info = 0;
 
-		// Do not display the get pro block, but we still need it for the content.
-		unset( $modules['get-pro'] );
-
 		foreach ( $modules as $slug => $mod ) {
 			$pro_info     = ! empty( $mod['mark_as_pro'] )            ? $pro_info + 1                  : $pro_info;
 			$free_options = ! empty( $mod['counts']['free_options'] ) ? $mod['counts']['free_options'] : 0;

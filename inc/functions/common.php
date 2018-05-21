@@ -473,6 +473,7 @@ function secupress_is_scan_request() {
 /**
  * Create a URL to easily access to our pages.
  *
+ * @since 1.4.4 'get-pro' $page is now returning the external URL
  * @since 1.0
  *
  * @param (string) $page   The last word of the secupress page slug.
@@ -481,9 +482,8 @@ function secupress_is_scan_request() {
  * @return (string) The URL.
  */
 function secupress_admin_url( $page, $module = '' ) {
-	if ( 'get_pro' === $page ) {
-		$page   = 'modules';
-		$module = 'get-pro';
+	if ( 'get-pro' === $page ) {
+		return SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' );
 	}
 
 	$module = $module ? '&module=' . $module : '';

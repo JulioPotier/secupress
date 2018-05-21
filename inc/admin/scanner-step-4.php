@@ -269,12 +269,12 @@ foreach ( $scanned_items as $class_name_part => $details ) {
 					<?php
 				} else {
 					?>
-					<a href="<?php echo esc_url( SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ) ) ?>" type="button" title="<?php esc_attr_e( 'Get the Pro Version to export this report as PDF file.', 'secupress' ); ?>" target="_blank" class="secupress-button disabled shadow">
+					<a href="<?php echo esc_url( secupress_admin_url( 'get-pro' ) ) ?>" type="button" title="<?php esc_attr_e( 'Get the Pro Version to export this report as PDF file.', 'secupress' ); ?>" target="_blank" class="secupress-button disabled shadow">
 						<?php echo $export_pdf_btn; ?>
 					</a>
 					<br>
 					<span class="secupress-get-pro-version">
-						<?php printf( __( 'Available in <a href="%s" target="_blank">Pro Version</a>', 'secupress' ), esc_url( SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ) ) ); ?>
+						<?php printf( __( 'Available in <a href="%s" target="_blank">Pro Version</a>', 'secupress' ), esc_url( secupress_admin_url( 'get-pro' ) ) ); ?>
 					</span>
 					<?php
 				}
@@ -335,7 +335,7 @@ foreach ( $scanned_items as $class_name_part => $details ) {
 						<?php _e( 'Get a better score and unlock all features', 'secupress' ); ?>
 					</p>
 					<p class="secupress-p1">
-						<a href="<?php echo esc_url( SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ) ); ?>" class="secupress-button secupress-button-tertiary secupress-button-getpro">
+						<a href="<?php echo esc_url( secupress_admin_url( 'get-pro' ) ); ?>" class="secupress-button secupress-button-tertiary secupress-button-getpro">
 							<span class="icon">
 								<i class="secupress-icon-secupress-simple" aria-hidden="true"></i>
 							</span>

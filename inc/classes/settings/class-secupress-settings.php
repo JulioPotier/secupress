@@ -1322,7 +1322,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				<p><?php _e( 'Well, this is not a good day for you, we will try to make you smile while we’re working on it!', 'secupress' ) ?></p>
 
 			<p class="secupress-cta">
-				<a href="<?php echo esc_url( SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ) ); ?>#services" class="secupress-button" target="_blank"><?php _e( 'Ask an Expert', 'secupress' ); ?></a>
+				<a href="<?php echo esc_url( secupress_admin_url( 'get-pro' ) ); ?>#services" class="secupress-button" target="_blank"><?php _e( 'Ask an Expert', 'secupress' ); ?></a>
 			</p>
 			</div>
 		</div>
@@ -1336,7 +1336,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				<p><?php _e( 'Need an Expert to Set-Up SecuPress for You?', 'secupress' ) ?></p>
 
 			<p class="secupress-cta">
-				<a href="<?php echo esc_url( SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ) ); ?>#services" class="secupress-button" target="_blank"><?php _e( 'Ask an Expert', 'secupress' ); ?></a>
+				<a href="<?php echo esc_url( secupress_admin_url( 'get-pro' ) ); ?>#services" class="secupress-button" target="_blank"><?php _e( 'Ask an Expert', 'secupress' ); ?></a>
 			</p>
 			</div>
 		</div>

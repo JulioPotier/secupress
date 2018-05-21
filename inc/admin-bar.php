@@ -119,7 +119,7 @@ function secupress_admin_bar( $wp_admin_bar ) {
 			'parent' => 'secupress-modules',
 			'id' 	 => 'secupress-modules-get-pro',
 			'title'  => '<span class="ab-icon dashicons dashicons-star-filled" style="font-size: 17px"></span>' . __( 'More Security', 'secupress' ),
-			'href'   => SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ),
+			'href'   => esc_url( secupress_admin_url( 'get-pro' ) ),
 			'meta'   => [
 							'class'  => 'secupress-pro-notice',
 							'target' => '_blank',
