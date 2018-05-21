@@ -170,7 +170,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		$modules = static::get_modules();
 		$module  = $module ? $module : $this->modulenow;
 
-		return isset( $modules[ $module ]['with_reset_box'] ) ? (bool) $modules[ $module ]['with_reset_box'] : false;
+		return isset( $modules[ $module ]['with_reset_box'] ) ? (bool) $modules[ $module ]['with_reset_box'] : true;
 	}
 
 
@@ -331,7 +331,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		}
 		// //// Todo save settings with history.
 		$this->set_current_section( 'reset' );
-		$this->set_section_description( __( 'If you need to reset this module\'s settings to the default, you can do it here, the best settings for your site will be set.', 'secupress' ) );
+		$this->set_section_description( __( 'When you need to reset this module\'s settings to the default.', 'secupress' ) );
 		$this->add_section( __( 'Module settings', 'secupress' ), array( 'with_save_button' => false ) );
 
 		$this->set_current_plugin( 'reset' );

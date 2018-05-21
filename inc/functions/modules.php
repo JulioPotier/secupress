@@ -22,8 +22,9 @@ function secupress_get_modules() {
 				'small'   => __( 'License, Import & Export', 'secupress' ),
 				'normal'  => __( 'nothing', 'secupress' ),
 			],
-			'with_form'   => false,
-			'submodules'  => [
+			'with_form'      => false,
+			'with_reset_box' => false,
+			'submodules'     => [
 							'module-secupress_display_apikey_options'     => ! defined( 'SECUPRESS_HIDE_API_KEY' ) || SECUPRESS_HIDE_API_KEY ? __( 'Licence Information', 'secupress' ) : '',
 							'module-secupress_display_whitelabel_options' => ! secupress_is_pro() || ( secupress_is_pro() && defined( 'WP_SWL' ) && WP_SWL ) ? ( ! secupress_is_pro() ? '*' : '' ) . __( 'White Label', 'secupress' ) : '',
 							'module-import_export'                        => '*' . __( 'Settings Import & Export', 'secupress' ),
@@ -151,8 +152,9 @@ function secupress_get_modules() {
 				'small'   => __( 'Monitor everything', 'secupress' ),
 				'normal'  => __( 'Keep an eye on what happened on your website at any time. Also, control banned IPs from our modules here.', 'secupress' ),
 			],
-			'with_form'   => false,
-			'submodules'  => [
+			'with_form'      => false,
+			'with_reset_box' => false,
+			'submodules'     => [
 							'secupress-banned-ips-list'  => __( 'Banned IPs', 'secupress' ),
 							'banned-ips_whitelist'       => __( 'IP Whitelist', 'secupress' ),
 							'logs_action-logs-activated' => __( 'Action Logs Activation', 'secupress' ),
@@ -167,9 +169,10 @@ function secupress_get_modules() {
 				'small'   => __( 'Permissions &amp; Antivirus', 'secupress' ),
 				'normal'  => __( 'Check file permissions, run monitoring and antivirus on your installation to verify file integrity.', 'secupress' ),
 			],
-			'with_form'   => false,
-			'mark_as_pro' => $should_be_pro,
-			'submodules'  => [
+			'with_form'      => false,
+			'with_reset_box' => false,
+			'mark_as_pro'    => $should_be_pro,
+			'submodules'     => [
 							'secupress-settings-module_file-system--file-scanner' => __( 'File Scanner', 'secupress' ),
 							'bad-file-extensions_activated'                       => __( 'Bad File Extensions', 'secupress' ),
 						]
@@ -182,9 +185,10 @@ function secupress_get_modules() {
 				'small'   => __( 'Never lose anything', 'secupress' ),
 				'normal'  => __( 'Reduce the risks of losing your content in an attack by backing up your database and files.', 'secupress' ),
 			],
-			'with_form'   => false,
-			'mark_as_pro' => $should_be_pro,
-			'submodules'  => [
+			'with_form'      => false,
+			'with_reset_box' => false,
+			'mark_as_pro'    => $should_be_pro,
+			'submodules'     => [
 							'backups-storage_location_local'                    => __( 'Backup Storage', 'secupress' ),
 							'secupress-settings-module_backups--backup-history' => __( 'Backup History', 'secupress' ),
 							'secupress-settings-module_backups--backup-db'      => __( 'Database Backup', 'secupress' ),
@@ -214,8 +218,9 @@ function secupress_get_modules() {
 				'small'   => __( 'Automate all your tasks', 'secupress' ),
 				'normal'  => sprintf( __( 'Let %s scan your website when you are away by using recurent scans.', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
 			],
-			'mark_as_pro' => $should_be_pro,
-			'submodules'  => [
+			'mark_as_pro'    => $should_be_pro,
+			'with_reset_box' => false,
+			'submodules'     => [
 							'module-backups'          => __( 'Backups', 'secupress' ),
 							'module-scanners'         => __( 'Scanners', 'secupress' ),
 							'module-files-monitoring' => __( 'File Monitoring', 'secupress' ),

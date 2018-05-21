@@ -353,21 +353,35 @@ add_action( 'admin_post_secupress_reset_settings', 'secupress_admin_post_reset_s
 /**
  * Reset SecuPress settings or module settings.
  *
+ * @since 1.4.4 Params $module & $bypass.
  * @since 1.0
+ *
+ * @author Julio Potier
+ * @param (string) $module Empty by default, the module to be reset if $_GET is not defined.
+ * @param (bool) $bypass False by default, if true, the security will not be checked, already done by the caller.
  */
-function secupress_admin_post_reset_settings_post_cb() {
-	if ( empty( $_GET['module'] ) ) {
+function secupress_admin_post_reset_settings_post_cb( $module = '', $bypass = false ) {
+	if ( empty( $_GET['module'] ) && ! $module ) {
 		secupress_admin_die();
 	}
-	// Make all security tests.
-	secupress_check_admin_referer( 'secupress_reset_' . $_GET['module'] );
-	secupress_check_user_capability();
 
+	$module = isset( $_GET['module'] ) ? $_GET['module'] : $module;
+	if ( ! $bypass ) {
+		// Make all security tests.
+		secupress_check_admin_referer( 'secupress_reset_' . $module );
+		secupress_check_user_capability();
+	}
+
+	secupress_delete_module_option( $module );
 	/** This action is documented in inc/admin/upgrader.php */
-	do_action( 'secupress.first_install', $_GET['module'] );
+	do_action( 'secupress.first_install', $module );
 
-	wp_safe_redirect( esc_url_raw( secupress_admin_url( 'modules', $_GET['module'] ) ) );
-	die();
+	if ( ! $bypass ) {
+		secupress_add_transient_notice( __( 'Module settings reset.', 'secupress' ), 'updated', 'module-reset' );
+
+		wp_safe_redirect( esc_url_raw( secupress_admin_url( 'modules', $module ) ) );
+		die();
+	}
 }
 
 
@@ -508,5 +522,35 @@ function secupress_deactivate_module_admin_post_cb() {
 	delete_transient( 'secupress_unlock_admin_key' );
 	secupress_deactivate_submodule( 'users-login', array( 'move-login' ) );
 	wp_redirect( wp_login_url( secupress_admin_url( 'modules', 'users-login' ) ) );
+	die();
+}
+
+add_action( 'admin_post_secupress_reset_all_settings', 'secupress_reset_all_settings_admin_post_cb' );
+/**
+ * Will reset the settings like a fresh install
+ *
+ * @since 1.4.4
+ * @author Julio Potier
+ **/
+function secupress_reset_all_settings_admin_post_cb() {
+	if ( ! isset( $_GET['_wpnonce'] ) ) {
+		wp_die( 'Cheatin\' uh?' );
+	}
+
+	secupress_check_admin_referer( 'secupress_reset_all_settings' );
+	secupress_check_user_capability();
+
+	$modules = secupress_get_modules();
+	foreach ( $modules as $key => $module ) {
+
+		if ( isset( $module['with_reset_box'] ) && false === $module['with_reset_box'] ) {
+			continue;
+		}
+		secupress_admin_post_reset_settings_post_cb( $key, true );
+	}
+
+	secupress_add_transient_notice( __( 'All modules settings reset', 'secupress' ), 'updated', 'module-reset' );
+
+	wp_safe_redirect( wp_get_referer() );
 	die();
 }

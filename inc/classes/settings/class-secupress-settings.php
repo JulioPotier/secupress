@@ -801,6 +801,20 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	/** Specific fields ========================================================================= */
 
 	/**
+	 * Outputs the form used by the reset settings form
+	 *
+	 * @since 1.4.4
+	 * @author Julio Potier
+	 */
+	protected function reset_settings_button() {
+		?>
+		<a class="secupress-button button button-secondary" href="<?php echo wp_nonce_url( admin_url( 'admin-post.php?action=secupress_reset_all_settings' ), 'secupress_reset_all_settings' ); ?>">
+			<?php _e( 'Reset Settings', 'secupress' ); ?>
+		</a>
+		<?php
+	}
+
+	/**
 	 * Outputs the form used by the importers to accept the data to be imported.
 	 *
 	 * @since 1.0
