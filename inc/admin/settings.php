@@ -312,10 +312,10 @@ function secupress_create_menus() {
 	$menu[ $key ][0] = SECUPRESS_PLUGIN_NAME . $count;
 
 	// Fix `add_submenu_page()` URL.
-	if ( ! secupress_is_white_label() ) {
+	if ( ! secupress_is_pro() ) {
 		end( $submenu );
 		$key = key( $submenu );
-		$url = secupress_has_pro() ? esc_url( secupress_admin_url( 'welcome' ) ) : esc_url( secupress_admin_url( 'get-pro' ) );
+		$url = secupress_has_pro() ? esc_url( secupress_admin_url( 'modules' ) ) : esc_url( secupress_admin_url( 'get-pro' ) );
 		$submenu[ $key ][ count( $submenu[ $key ] ) -1 ] = array( $title, $cap, $url, $title );
 	}
 }
