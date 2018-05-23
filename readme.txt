@@ -12,6 +12,8 @@ Protect your WordPress with SecuPress, analyze and ensure the safety of your web
 
 == Description ==
 
+= Edit May, 23rd: SecuPress is GDPR compliant ! =
+
 = YOU MADE IT, WE KEEP IT SAFE! =
 
 Protect your WordPress with malware scans; block bots & suspicious IPs. Get a complete [WordPress security toolkit](https://secupress.me/) for free or as a pro plugin.
@@ -183,6 +185,7 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 * 23 may 2018
 
+* GDPR Compliance!
 * New Dashboard: The first module page is now a dashboard, you can see your licence info here now.
 * New: You can now reset the SecuPress settings or just module per module.
 * Improvement#628: GeoIP Database has been updated with new IPs
