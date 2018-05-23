@@ -1275,11 +1275,14 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 *
 	 * @since 1.0
 	 *
-	 * @param (string)       $type             Optional. The type of button. Accepts 'primary', 'secondary', or 'delete'. Default 'primary large'.
-	 * @param (string)       $name             Optional. The HTML name of the submit button. If no id attribute is given in $other_attributes below, `$name` will be used as the button's id. Default 'main_submit'.
-	 * @param (bool|string)  $wrap             Optional. True if the output button should be wrapped in a paragraph tag, false otherwise. Can be used as a string to add a class to the wrapper. Default true.
-	 * @param (array|string) $other_attributes Optional. Other attributes that should be output with the button, mapping attributes to their values, such as `array( 'tabindex' => '1' )`. These attributes will be output as `attribute="value"`, such as `tabindex="1"`. Other attributes can also be provided as a string such as `tabindex="1"`, though the array format is typically cleaner. Default empty.
-	 * @param (bool)         $echo             Optional. True if the button should be "echo"ed, false otherwise.
+	 * $type             The type of button. Accepts 'primary', 'secondary', or 'delete'. Default 'primary large'.
+	 * $name             The HTML name of the submit button. If no id attribute is given in $other_attributes below, `$name` will be used as the button's id. Default 'main_submit'.
+	 * $wrap             True if the output button should be wrapped in a paragraph tag, false otherwise. Can be used as a string to add a class to the wrapper. Default true.
+	 * $other_attributes Other attributes that should be output with the button, mapping attributes to their values, such as `array( 'tabindex' => '1' )`. These attributes will be output as `attribute="value"`, such as `tabindex="1"`. Other attributes can also be provided as a string such as `tabindex="1"`, though the array format is typically cleaner. Default empty.
+	 * $echo             True if the button should be "echo"ed, false otherwise.
+	 * $label            The button label.
+	 * $before           What to print before the button
+	 * @param (array)    $args Optional.
 	 *
 	 * @return (string) Submit button HTML.
 	 */

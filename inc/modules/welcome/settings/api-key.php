@@ -8,7 +8,7 @@ add_action( 'secupress.settings.after_section_secupress_display_apikey_options',
 $this->set_current_section( 'secupress_display_apikey_options' );
 $this->add_section( __( 'License Validation', 'secupress' ) );
 
-add_filter( 'secupress.settings.section-secupress_display_apikey_options.submit_button_args', 'secupress_submit_button_title_for_secupress_display_apikey_options' );;
+add_filter( 'secupress.settings.section-secupress_display_apikey_options.submit_button_args', 'secupress_submit_button_title_for_secupress_display_apikey_options' );
 /**
  * Filter the submit button for the licence.
  *
@@ -100,17 +100,15 @@ $license   = secupress_get_option( 'license' );
 $helper    = 'help';
 $need_more = '';
 if ( secupress_is_pro() && $license ) {
-
-	if ( $license['limit'] === 0 ) { // Unlimited.
+	if ( 0 === $license['limit'] ) { // Unlimited.
 		$sites_number = sprintf( __( '%d / unlimited', 'secupress' ), (int) $license['count'] );
 	} else {
 		$need_more    = sprintf( __( 'Need more than %1$d sites?<br><a href="%2$s">Just ask for more!</a>', 'secupress' ), $license['limit'], SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ) );
 		$sites_number = sprintf( _n( '%1$d / %2$d site', '%1$d / %2$d sites', $license['count'], 'secupress' ), (int) $license['count'], (int) $license['limit'] );
 	}
-
 } else {
 	$sites_number = _x( 'Free', 'feminine', 'secupress' );
-	$license      = ['status' => false];
+	$license      = [ 'status' => false ];
 }
 
 ob_start();
@@ -211,31 +209,4 @@ if ( false && ! secupress_is_white_label() ) {
 			),
 		),
 	) );
-}
-// add_action( 'secupress.settings.after_section_secupress_display_apikey_options', 'secupress_apikey_fields_submit_button', 9 );
-/**
- * Print a warning message and a submit button to activate the license key.
- *
- * @since 1.0.5
- * @author Grégory Viguier
- *
- * @param (bool) $with_save_button True if a "Save All Changes" button will be printed.
- */
-function secupress_apikey_fields_submit_button( $with_save_button ) {
-	if ( $with_save_button ) {
-		return;
-	}
-
-	$values = get_site_option( SECUPRESS_SETTINGS_SLUG );
-	$label  = __( 'Activate the license', 'secupress' );
-
-	if ( is_array( $values ) && ! empty( $values['consumer_email'] ) && ! empty( $values['consumer_key'] ) ) {
-		if ( empty( $values['site_is_pro'] ) ) {
-			echo '<p style="color:#CB234F">' . __( 'Your License Key is inactive or invalid.', 'secupress' ) . '</p>';
-		} else {
-			$label = __( 'Deactivate the license', 'secupress' );
-		}
-	}
-
-	echo '<p class="submit"><button type="submit" class="secupress-button-primary" name="secupress_display_apikey_options_submit">' . $label . '</button></p>';
 }

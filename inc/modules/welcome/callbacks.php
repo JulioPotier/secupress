@@ -28,7 +28,7 @@ function secupress_welcome_settings_callback() {
 		return;
 	}
 
-	// Handle License
+	// Handle License.
 	if ( isset( $_POST['secupress_display_apikey_options_submit'] ) ) {
 		secupress_settings_licence_callback();
 		return;
@@ -54,7 +54,7 @@ function secupress_settings_licence_callback() {
 	$old_is_pro = $has_old ? $old_is_pro : 0;
 	unset( $old_values['sanitized'] ); // Back compat'.
 	// New values.
-	$values     = ! empty( $_POST['secupress_welcome_settings'] ) && is_array( $_POST['secupress_welcome_settings'] ) ? $_POST['secupress_welcome_settings'] : array();
+	$values     = ! empty( $_POST['secupress_welcome_settings'] ) && is_array( $_POST['secupress_welcome_settings'] ) ? $_POST['secupress_welcome_settings'] : array(); // WPCS: CSR ok.
 	$values     = secupress_array_merge_intersect( $values, array(
 		'consumer_email' => '',
 		'consumer_key'   => '',

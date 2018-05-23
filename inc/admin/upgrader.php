@@ -470,7 +470,7 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
  **/
 function secupress_remove_old_plugin_file( $file ) {
 	// Is it a sym link ?
-	if ( is_link ( $file ) ) {
+	if ( is_link( $file ) ) {
 		$file = @readlink( $file );
 	}
 	// Try to delete.
@@ -684,7 +684,7 @@ function secupress_hack_changelog() {
 	<?php
 	$status = install_plugin_install_status( $api );
 	if ( $status['url'] ) {
-		echo '<p><a data-slug="' . esc_attr( $api->slug ) . '" data-plugin="' . esc_attr( $status['file'] ) . '" id="plugin_update_from_iframe" class="button button-primary right" href="' . $status['url'] . '" target="_parent">' . __( 'Install Update Now' ) .'</a></p>';
+		echo '<p><a data-slug="' . esc_attr( $api->slug ) . '" data-plugin="' . esc_attr( $status['file'] ) . '" id="plugin_update_from_iframe" class="button button-primary right" href="' . esc_url( $status['url'] ) . '" target="_parent">' . __( 'Install Update Now' ) . '</a></p>';
 	}
 	if ( ! secupress_has_pro() ) {
 	?>
@@ -710,7 +710,7 @@ function secupress_hack_changelog() {
 	<?php
 	if ( $api->active_installs >= 1000000 ) {
 		_ex( '1+ Million', 'Active plugin installations' );
-	} elseif ( 0 == $api->active_installs ) {
+	} elseif ( 0 === $api->active_installs ) {
 		_ex( 'Less Than 10', 'Active plugin installations' );
 	} else {
 		echo number_format_i18n( $api->active_installs ) . '+';

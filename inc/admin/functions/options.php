@@ -16,9 +16,7 @@ function secupress_delete_module_option( $module ) {
 	global $wpdb;
 	delete_site_option( "secupress_{$module}_settings" );
 	delete_site_transient( 'secupress_active_submodules' );
-	$sql = 'DELETE FROM ' . $wpdb->options . ' WHERE option_name LIKE "secupress_active_submodule_%" AND option_value = %s';
-	$pre = $wpdb->prepare( $sql, $module );
-	$req = $wpdb->query( $pre );
+	$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . $wpdb->options . ' WHERE option_name LIKE "secupress_active_submodule_%" AND option_value = %s', $module ) );
 }
 
 /**

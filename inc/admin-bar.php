@@ -162,7 +162,4 @@ function secupress_admin_bar( $wp_admin_bar ) {
 						'target' => '_blank',
 					]
 	) );
-
-
-
 }

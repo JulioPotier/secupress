@@ -358,7 +358,7 @@ add_action( 'admin_post_secupress_reset_settings', 'secupress_admin_post_reset_s
  *
  * @author Julio Potier
  * @param (string) $module Empty by default, the module to be reset if $_GET is not defined.
- * @param (bool) $bypass False by default, if true, the security will not be checked, already done by the caller.
+ * @param (bool)   $bypass False by default, if true, the security will not be checked, already done by the caller.
  */
 function secupress_admin_post_reset_settings_post_cb( $module = '', $bypass = false ) {
 	if ( empty( $_GET['module'] ) && ! $module ) {
