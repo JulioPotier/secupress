@@ -194,7 +194,7 @@ $this->add_field( array(
 	),
 ) );
 
-if ( ! secupress_is_white_label() ) {
+if ( false && ! secupress_is_white_label() ) {
 	$free_message  = __( '<strong>Free Support</strong>: <a href="https://wordpress.org/support/plugin/secupress" lang="en">Community Forum</a>', 'secupress' );
 	$free_message .= '<br>' . sprintf( __( '<strong>Priority Support</strong>: <a href="%ssupport#free">From 12$</a>', 'secupress' ), SECUPRESS_WEB_MAIN );
 	$pro_message   = '<br>' . sprintf( __( '<strong>Priority Support</strong>: <a href="%ssupport">Available</a>', 'secupress' ), SECUPRESS_WEB_MAIN );
