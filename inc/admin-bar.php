@@ -154,14 +154,16 @@ function secupress_admin_bar( $wp_admin_bar ) {
 		$target = '_self';
 	}
 
-	$wp_admin_bar->add_menu( array(
-		'parent' => 'secupress',
-		'id'     => 'secupress-modules-get-pro',
-		'title'  => '<span class="ab-icon dashicons dashicons-star-filled" style="font-size: 17px"></span>' . $title,
-		'href'   => $href,
-		'meta'   => [
-						'class'  => 'secupress-pro-notice',
-						'target' => $target,
-					]
-	) );
+	if ( ! secupress_is_pro() ) {
+		$wp_admin_bar->add_menu( array(
+			'parent' => 'secupress',
+			'id'     => 'secupress-modules-get-pro',
+			'title'  => '<span class="ab-icon dashicons dashicons-star-filled" style="font-size: 17px"></span>' . $title,
+			'href'   => $href,
+			'meta'   => [
+							'class'  => 'secupress-pro-notice',
+							'target' => $target,
+						]
+		) );
+	}
 }
