@@ -261,8 +261,10 @@ function secupress_write_rules_on_activation( $rules ) {
 	}
 
 	// Nginx.
-	$message = sprintf( __( 'Since your %1$s file cannot be edited directly, please add the following in your file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '<pre>' . implode( "\n", $rules ) . '</pre>' );
-	secupress_add_notice( $message, 'error', 'secupress-activation-file-not-writable' );
+	if ( apply_filters( 'secupress.nginx.notice', true ) ) {
+		$message = sprintf( __( 'Since your %1$s file cannot be edited directly, please add the following in your file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '<pre>' . implode( "\n", $rules ) . '</pre>' );
+		secupress_add_notice( $message, 'error', 'secupress-activation-file-not-writable' );
+	}
 }
 
 
