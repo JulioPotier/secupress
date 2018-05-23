@@ -117,18 +117,6 @@ function secupress_admin_bar( $wp_admin_bar ) {
 			) );
 		}
 	}
-	if ( ! secupress_is_pro() ) {
-		$wp_admin_bar->add_menu( array(
-			'parent' => 'secupress',
-			'id' 	 => 'secupress-modules-get-pro',
-			'title'  => '<span class="ab-icon dashicons dashicons-star-filled" style="font-size: 17px"></span>' . __( 'More Security', 'secupress' ),
-			'href'   => SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ),
-			'meta'   => [
-							'class'  => 'secupress-pro-notice',
-							'target' => '_blank',
-						]
-		) );
-	}
 
 	if ( class_exists( 'SecuPress_Logs' ) ) {
 		// Logs.
@@ -155,6 +143,26 @@ function secupress_admin_bar( $wp_admin_bar ) {
 			) );
 		}
 	}
+
+	if ( ! secupress_has_pro() ) {
+		$title = __( 'More Security', 'secupress' );
+		$href  = secupress_admin_url( 'get-pro' );
+	} else {
+		$title = __( 'Add my license', 'secupress' );
+		$href  = secupress_admin_url( 'welcome' );
+	}
+
+	$wp_admin_bar->add_menu( array(
+		'parent' => 'secupress',
+		'id'     => 'secupress-modules-get-pro',
+		'title'  => '<span class="ab-icon dashicons dashicons-star-filled" style="font-size: 17px"></span>' . $title,
+		'href'   => $href,
+		'meta'   => [
+						'class'  => 'secupress-pro-notice',
+						'target' => '_blank',
+					]
+	) );
+
 
 
 }

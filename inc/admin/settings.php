@@ -299,9 +299,11 @@ function secupress_create_menus() {
 	add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'Modules', 'secupress' ),  __( 'Modules', 'secupress' ),           $cap, SECUPRESS_PLUGIN_SLUG . '_modules',  'secupress_modules' );
 
 	if ( ! secupress_is_white_label() ) {
-		if ( ! secupress_is_pro() ) {
-			add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', __( 'More Security', 'secupress' ), __( 'More Security', 'secupress' ), $cap, '__return_false', '__return_false' );
+		$title = __( 'More Security', 'secupress' );
+		if ( secupress_has_pro() ) {
+			$title = __( 'Add my license', 'secupress' );
 		}
+			add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', $title, $title, $cap, '__return_false', '__return_false' );
 	}
 
 	// Fix `add_menu_page()` nonsense.
@@ -310,10 +312,11 @@ function secupress_create_menus() {
 	$menu[ $key ][0] = SECUPRESS_PLUGIN_NAME . $count;
 
 	// Fix `add_submenu_page()` URL.
-	if ( ! secupress_is_white_label() && ! secupress_is_pro() ) {
+	if ( ! secupress_is_white_label() ) {
 		end( $submenu );
 		$key = key( $submenu );
-		$submenu[ $key ][ count( $submenu[ $key ] ) -1 ] = array( __( 'More Security', 'secupress' ), $cap, esc_url( secupress_admin_url( 'get-pro' ) ), __( 'More Security', 'secupress' ) );
+		$url = secupress_has_pro() ? esc_url( secupress_admin_url( 'welcome' ) ) : esc_url( secupress_admin_url( 'get-pro' ) );
+		$submenu[ $key ][ count( $submenu[ $key ] ) -1 ] = array( $title, $cap, $url, $title );
 	}
 }
 
