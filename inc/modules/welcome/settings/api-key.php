@@ -1,20 +1,50 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
+// Add the form manually.
+add_action( 'secupress.settings.before_section_secupress_display_apikey_options', array( $this, 'print_open_form_tag' ) );
+add_action( 'secupress.settings.after_section_secupress_display_apikey_options', array( $this, 'print_close_form_tag' ) );
 
 $this->set_current_section( 'secupress_display_apikey_options' );
-$this->add_section( __( 'License Information', 'secupress' ), array( 'with_save_button' => false ) );
+$this->add_section( __( 'License Validation', 'secupress' ) );
 
+add_filter( 'secupress.settings.section-secupress_display_apikey_options.submit_button_args', 'secupress_submit_button_title_for_secupress_display_apikey_options' );;
+/**
+ * Filter the submit button for the licence.
+ *
+ * @since 1.4.3
+ *
+ * @return (array) $args
+ * @author Julio Potier
+ * @param (array) $args Contains the attributes and stuff to create a submit button.
+ **/
+function secupress_submit_button_title_for_secupress_display_apikey_options( $args ) {
+	$values = get_site_option( SECUPRESS_SETTINGS_SLUG );
+	$label  = __( 'Activate the license', 'secupress' );
+	$before = '';
+
+	if ( is_array( $values ) && ! empty( $values['consumer_email'] ) && ! empty( $values['consumer_key'] ) ) {
+		if ( empty( $values['site_is_pro'] ) ) {
+			$before = '<p style="color:#CB234F">' . __( 'Your License Key is inactive or invalid.', 'secupress' ) . '</p>';
+		} else {
+			$label  = __( 'Deactivate the license', 'secupress' );
+		}
+	}
+
+	$args['before'] = $before;
+	$args['label']  = $label;
+
+	return $args;
+}
 
 $settings   = get_site_option( SECUPRESS_SETTINGS_SLUG );
 $disabled   = is_array( $settings ) && ! empty( $settings['consumer_email'] ) && ! empty( $settings['consumer_key'] ) && ! empty( $settings['site_is_pro'] );
-$value      = null;
+$value      = false;
 $attributes = array(
 	'required'      => 'required',
 	'aria-required' => 'true',
 	'autocomplete'  => 'off',
 );
-
 if ( $disabled ) {
 	$attributes['readonly'] = true;
 	$value = str_repeat( '&bull;', 22 );
@@ -25,11 +55,11 @@ $this->add_field( array(
 	'label_for'    => 'consumer_email',
 	'type'         => 'email',
 	'attributes'   => $attributes,
-	'value'        => defined( 'SECUPRESS_API_EMAIL' ) ? esc_attr( SECUPRESS_API_EMAIL ) : null,
+	'value'        => defined( 'SECUPRESS_API_EMAIL' ) ? esc_attr( SECUPRESS_API_EMAIL ) : secupress_get_consumer_email(),
 	'helpers'      => array(
 		array(
 			'type'        => 'help',
-			'description' => _x( 'The one you used<br>for your Pro account.', 'e-mail address', 'secupress' ),
+			'description' => _x( 'The one you used for your Pro account.', 'e-mail address', 'secupress' ),
 		),
 	),
 ) );
@@ -45,7 +75,23 @@ $this->add_field( array(
 	'helpers'      => array(
 		array(
 			'type'        => 'help',
-			'description' => __( 'The license key obtained<br>with your Pro account.', 'secupress' ),
+			'description' => __( 'The license key obtained with your Pro account.', 'secupress' ),
+		),
+	),
+) );
+
+
+$this->add_field( array(
+	'title'        => __( 'License Key', 'secupress' ),
+	'label_for'    => 'consumer_key',
+	'type'         => 'text',
+	'attributes'   => $attributes,
+	'value'        => $value,
+	'value'        => defined( 'SECUPRESS_API_KEY' ) ? esc_attr( SECUPRESS_API_KEY ) : $value,
+	'helpers'      => array(
+		array(
+			'type'        => 'help',
+			'description' => __( 'The license key obtained with your Pro account.', 'secupress' ),
 		),
 	),
 ) );
@@ -148,8 +194,25 @@ $this->add_field( array(
 	),
 ) );
 
+if ( ! secupress_is_white_label() ) {
+	$free_message  = __( '<strong>Free Support</strong>: <a href="https://wordpress.org/support/plugin/secupress" lang="en">Community Forum</a>', 'secupress' );
+	$free_message .= '<br>' . sprintf( __( '<strong>Priority Support</strong>: <a href="%ssupport#free">From 12$</a>', 'secupress' ), SECUPRESS_WEB_MAIN );
+	$pro_message   = '<br>' . sprintf( __( '<strong>Priority Support</strong>: <a href="%ssupport">Available</a>', 'secupress' ), SECUPRESS_WEB_MAIN );
 
-add_action( 'secupress.settings.after_section_secupress_display_apikey_options', 'secupress_apikey_fields_submit_button' );
+	$this->add_field( array(
+		'title'        => __( 'Support', 'secupress' ),
+		'label_for'    => 'support_info',
+		'type'         => 'html',
+		'value'        => secupress_is_pro() ? $pro_message : $free_message,
+		'helpers'      => array(
+			array(
+				'type'        => 'help',
+				'description' => ! secupress_is_pro() ? __( 'Priority and free support is not included in the free version since june 2018. You can still freely post a topic on the wp.org forums, or purchase a ticket on secupress.me.', 'secupress' ) : '',
+			),
+		),
+	) );
+}
+// add_action( 'secupress.settings.after_section_secupress_display_apikey_options', 'secupress_apikey_fields_submit_button', 9 );
 /**
  * Print a warning message and a submit button to activate the license key.
  *

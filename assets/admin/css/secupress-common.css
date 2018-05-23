@@ -584,6 +584,8 @@ button.secupress-activated .secupress-toggle-button.hidden {
  * === Other Form items
  */
 [class^="secupress-"] input[type="text"],
+[class^="secupress-"] input[type="url"],
+[class^="secupress-"] input[type="number"],
 [class^="secupress-"] input[type="email"],
 [class^="secupress-"] input[type="password"],
 [class^="secupress-"] input[type="number"],
@@ -997,7 +999,7 @@ body[class*="secupress"] .sweet-overlay {
 	font-size: 11px;
 }
 .secupress-setting-row {
-	padding: 20px;
+	padding: 10px;
 }
 .secupress-setting-row + .secupress-setting-row {
 	margin-top: 20px;

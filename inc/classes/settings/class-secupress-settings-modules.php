@@ -170,7 +170,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		$modules = static::get_modules();
 		$module  = $module ? $module : $this->modulenow;
 
-		return isset( $modules[ $module ]['with_reset_box'] ) ? (bool) $modules[ $module ]['with_reset_box'] : false;
+		return isset( $modules[ $module ]['with_reset_box'] ) ? (bool) $modules[ $module ]['with_reset_box'] : true;
 	}
 
 
@@ -202,7 +202,6 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	public function print_page() {
-		$is_welcome = 'welcome' !== $this->get_current_module() ? false : true;
 		$secupress_has_sideads = apply_filters( 'secupress.no_sidebar', true ) && apply_filters( 'secupress.no_sideads', true );
 		?>
 		<div class="wrap">
@@ -210,36 +209,25 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			<?php secupress_admin_heading( __( 'Modules', 'secupress' ) ); ?>
 			<?php settings_errors(); ?>
 
-			<div class="secupress-wrapper<?php echo ( $is_welcome ? '' : ' secupress-flex secupress-flex-top' ) ?><?php echo ( $secupress_has_sideads ? ' secupress-has-sideads' : '' ) ?>">
-
-				<?php
-				/**
-				 * Don't print sidebar if we are in Welcome page.
-				 * Modules are included in the content of the page.
-				 */
-				if ( ! $is_welcome ) {
-					?>
-					<div class="secupress-modules-sidebar">
-						<div class="secupress-sidebar-header">
-							<div class="secupress-flex">
-								<div class="secupress-sh-logo">
-									<?php echo secupress_get_logo(); ?>
-								</div>
-								<div class="secupress-sh-name">
-									<p class="secupress-sh-title">
-										<?php echo secupress_get_logo_word( array( 'width' => 81, 'height' => 19 ) ); ?>
-									</p>
-								</div>
+			<div class="secupress-wrapper secupress-flex secupress-flex-top<?php echo ( $secupress_has_sideads ? ' secupress-has-sideads' : '' ) ?>">
+				<div class="secupress-modules-sidebar">
+					<div class="secupress-sidebar-header">
+						<div class="secupress-flex">
+							<div class="secupress-sh-logo">
+								<?php echo secupress_get_logo(); ?>
+							</div>
+							<div class="secupress-sh-name">
+								<p class="secupress-sh-title">
+									<?php echo secupress_get_logo_word( array( 'width' => 81, 'height' => 19 ) ); ?>
+								</p>
 							</div>
 						</div>
-
-						<ul id="secupress-modules-navigation" class="secupress-modules-list-links">
-							<?php $this->print_tabs(); ?>
-						</ul>
 					</div>
-					<?php
-				} ?>
 
+					<ul id="secupress-modules-navigation" class="secupress-modules-list-links">
+						<?php $this->print_tabs(); ?>
+					</ul>
+				</div>
 				<div class="secupress-tab-content secupress-tab-content-<?php echo $this->get_current_module(); ?>" id="secupress-tab-content">
 					<?php $this->print_current_module(); ?>
 				</div>
@@ -283,7 +271,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 */
 	final public function print_open_form_tag() {
 		?>
-		<form id="secupress-module-form-settings" method="post" action="<?php echo $this->get_form_action(); ?>">
+		<form id="secupress-module-form-settings" method="post" action="<?php echo $this->get_form_action(); ?>" enctype="multipart/form-data">
 		<?php
 	}
 
@@ -305,16 +293,6 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 	 * @since 1.0
 	 */
 	protected function print_current_module() {
-		// No module.
-		if ( 'welcome' === $this->get_current_module() ) {
-			$this->load_module_settings();
-			return;
-		}
-		// Get Pro Page.
-		if ( 'get-pro' === $this->get_current_module() ) {
-			$this->load_module_settings();
-			return;
-		}
 		?>
 		<div class="secupress-tab-content-header">
 			<?php
@@ -353,7 +331,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		}
 		// //// Todo save settings with history.
 		$this->set_current_section( 'reset' );
-		$this->set_section_description( __( 'If you need to reset this module\'s settings to the default, you can do it here, the best settings for your site will be set.', 'secupress' ) );
+		$this->set_section_description( __( 'When you need to reset this module\'s settings to the default.', 'secupress' ) );
 		$this->add_section( __( 'Module settings', 'secupress' ), array( 'with_save_button' => false ) );
 
 		$this->set_current_plugin( 'reset' );

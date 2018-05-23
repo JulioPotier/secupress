@@ -103,6 +103,9 @@ function secupress_admin_bar( $wp_admin_bar ) {
 		}
 
 		foreach ( $module['submodules'] as $submodule_slug => $submodule ) {
+			if ( ! $submodule ) {
+				continue;
+			}
 			$wp_admin_bar->add_menu( array(
 				'parent' => 'secupress-modules-' . $module_slug,
 				'id'     => 'secupress-submodules-' . $submodule_slug,
@@ -116,50 +119,16 @@ function secupress_admin_bar( $wp_admin_bar ) {
 	}
 	if ( ! secupress_is_pro() ) {
 		$wp_admin_bar->add_menu( array(
-			'parent' => 'secupress-modules',
+			'parent' => 'secupress',
 			'id' 	 => 'secupress-modules-get-pro',
 			'title'  => '<span class="ab-icon dashicons dashicons-star-filled" style="font-size: 17px"></span>' . __( 'More Security', 'secupress' ),
-			'href'   => esc_url( secupress_admin_url( 'get-pro' ) ),
+			'href'   => SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ),
 			'meta'   => [
 							'class'  => 'secupress-pro-notice',
 							'target' => '_blank',
 						]
 		) );
 	}
-
-	// Settings.
-	$wp_admin_bar->add_menu( array(
-		'parent' => 'secupress',
-		'id' 	 => 'secupress-settings',
-		'title'  => __( 'Settings', 'secupress' ),
-		'href'   => esc_url( secupress_admin_url( 'settings' ) ),
-	) );
-	// Sub-Settings.
-	if ( ! defined( 'SECUPRESS_HIDE_API_KEY' ) || ! SECUPRESS_HIDE_API_KEY ) {
-		$wp_admin_bar->add_menu( array(
-			'parent' => 'secupress-settings',
-			'id' 	 => 'secupress-settings-apikey',
-			'title'  => __( 'Licence Validation', 'secupress' ),
-			'href'   => esc_url( secupress_admin_url( 'settings#module-secupress_display_apikey_options' ) ),
-		) );
-	}
-	if ( secupress_is_pro() && defined( 'WP_SWL' ) && WP_SWL ) {
-		$wp_admin_bar->add_menu( array(
-			'parent' => 'secupress-settings',
-			'id' 	 => 'secupress-settings-whitelabel',
-			'title'  => __( 'White Label', 'secupress' ),
-			'href'   => esc_url( secupress_admin_url( 'settings#module-secupress_display_whitelabel_options' ) ),
-		) );
-	}
-	$wp_admin_bar->add_menu( array(
-		'parent' => 'secupress-settings',
-		'id' 	 => 'secupress-settings-exporter',
-		'title'  => __( 'Settings Manager', 'secupress' ),
-		'href'   => esc_url( secupress_admin_url( 'settings#module-import_export' ) ),
-		'meta'   => [
-						'class'  => secupress_is_pro() ? '' : 'secupress-pro-notice',
-					]
-	) );
 
 	if ( class_exists( 'SecuPress_Logs' ) ) {
 		// Logs.
