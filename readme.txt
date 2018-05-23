@@ -2,8 +2,9 @@
 Contributors: SecuPress, juliobox, GregLone
 Tags: wordpress security, secure, security plugin, security, malware
 Requires at least: 4.0
-Tested up to: 4.9.6
-Stable tag: 1.4.3
+Tested up to: 5.0-alpha
+Requires PHP: 5.4
+Stable tag: 1.4.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -177,6 +178,23 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 8. The 4th step: final report, you can export it as PDF (1)
 
 == Changelog ==
+
+= 1.4.4 =
+
+* 23 may 2018
+
+* New Dashboard: The first module page is now a dashboard, you can see your licence info here now.
+* New: You can now reset the SecuPress settings or just module per module.
+* Improvement#628: GeoIP Database has been updated with new IPs
+* Improvement#630: Force strong password is now available on reset form too.
+* Fix#614: Exported settings file doesn't contains the whitelabeled name, this will prevent the impossibility to import this file on another website whitout the same whitelabel name.
+* Fix#617: Warning:  shell_exec() has been disabled for security reasons in /secupress-pro/core/functions/ip.php on line 229
+* Fix#620: PHP Fatal error:  Uncaught Error: Call to undefined function secupress_global_settings_activate_pro_license() in /secupress-pro/core/core.php:227
+* Fix#622: Warning: count(): Parameter must be an array or an object that implements Countable in /secupress/functions/common.php on line 1288
+* Fix#625: Remove "Wget" from bad User Agents
+* Fix#626: Facebook share post parser was blocked by block fake bot module
+* Fix#627: GooglePageSpeed too
+* Fix#628: GeoIP will not block anymore an unknow IP address (country not found)
 
 = 1.4.3 =
 
