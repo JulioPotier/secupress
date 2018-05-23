@@ -145,11 +145,13 @@ function secupress_admin_bar( $wp_admin_bar ) {
 	}
 
 	if ( ! secupress_has_pro() ) {
-		$title = __( 'More Security', 'secupress' );
-		$href  = secupress_admin_url( 'get-pro' );
+		$title  = __( 'More Security', 'secupress' );
+		$href   = secupress_admin_url( 'get-pro' );
+		$target = '_blank';
 	} else {
 		$title = __( 'Add my license', 'secupress' );
-		$href  = secupress_admin_url( 'welcome' );
+		$href  = secupress_admin_url( 'modules' );
+		$target = '_self';
 	}
 
 	$wp_admin_bar->add_menu( array(
@@ -159,7 +161,7 @@ function secupress_admin_bar( $wp_admin_bar ) {
 		'href'   => $href,
 		'meta'   => [
 						'class'  => 'secupress-pro-notice',
-						'target' => '_blank',
+						'target' => $target,
 					]
 	) );
 }
