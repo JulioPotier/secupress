@@ -31,31 +31,13 @@ function secupress_wordpress_core_settings_callback( $settings ) {
 	secupress_manage_submodule( $modulenow, 'major-updates', ! empty( $activate['auto-update_major'] ) );
 
 	// File editor.
-	$can_manage = secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-file-edit' );
-
-	if ( $can_manage ) {
-		secupress_manage_submodule( $modulenow, 'wp-config-constant-file-edit', ! empty( $activate['wp-config_disallow_file_edit'] ) );
-	} else {
-		secupress_deactivate_submodule( $modulenow, 'wp-config-constant-file-edit' );
-	}
+	secupress_manage_submodule( $modulenow, 'wp-config-constant-file-edit', ! empty( $activate['wp-config_disallow_file_edit'] ) );
 
 	// Unfiltered HTML.
-	$can_manage = secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-unfiltered-html' );
-
-	if ( $can_manage ) {
-		secupress_manage_submodule( $modulenow, 'wp-config-constant-unfiltered-html', ! empty( $activate['wp-config_disallow_unfiltered_html'] ) );
-	} else {
-		secupress_deactivate_submodule( $modulenow, 'wp-config-constant-unfiltered-html' );
-	}
+	secupress_manage_submodule( $modulenow, 'wp-config-constant-unfiltered-html', ! empty( $activate['wp-config_disallow_unfiltered_html'] ) );
 
 	// Unfiltered uploads.
-	$can_manage = secupress_is_submodule_active( 'wordpress-core', 'wp-config-constant-unfiltered-uploads' );
-
-	if ( $can_manage ) {
-		secupress_manage_submodule( $modulenow, 'wp-config-constant-unfiltered-uploads', ! empty( $activate['wp-config_disallow_unfiltered_uploads'] ) );
-	} else {
-		secupress_deactivate_submodule( $modulenow, 'wp-config-constant-unfiltered-uploads' );
-	}
+	secupress_manage_submodule( $modulenow, 'wp-config-constant-unfiltered-uploads', ! empty( $activate['wp-config_disallow_unfiltered_uploads'] ) );
 
 	// There are no settings to save.
 	return array( 'sanitized' => 1 );
