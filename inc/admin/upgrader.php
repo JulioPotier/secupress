@@ -459,6 +459,11 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 		secupress_update_module_option( 'bbq-headers_user-agents-list', $value, 'firewall' );
 	}
 
+	// < 1.4.5
+	if ( secupress_has_pro() && version_compare( $actual_version, '1.4.5', '<' ) ) {
+		secupress_remove_old_plugin_file( SECUPRESS_PRO_MODULES_PATH . 'antispam/callbacks.php' );
+	}
+
 }
 
 /**
