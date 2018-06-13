@@ -268,3 +268,23 @@ function secupress_hack_global_error() {
 		$error = ''; // Triggers a PHPCS "Overriding WordPress globals is prohibited" message, sorry mate, can't help.
 	}
 }
+
+
+add_filter( 'user_request_action_email_content', 'secupress_user_request_action_email_content_move_login_url', 1, 2 );
+/**
+ * Filter the content to replace first the confirl URL in order to hide the moved login url with a hardcoded one "conformaction".
+ *
+ * @return (string) $email_text
+ * @param (string) $email_text
+ * @param (array) $email_data
+ *
+ * @since 1.4.5
+ * @author Julio Potier
+ **/
+function secupress_user_request_action_email_content_move_login_url( $email_text, $email_data ) {
+	$confirmaction_query = explode( '?', $email_data['confirm_url'] );
+	$confirmaction_query = end( $confirmaction_query );
+	$confirmaction_url   = site_url( 'wp-login.php?' . $confirmaction_query );
+	$email_text          = str_replace( '###CONFIRM_URL###', $confirmaction_url, $email_text );
+	return $email_text;
+}

@@ -54,8 +54,9 @@ function secupress_move_login_get_default_slugs() {
 		'login'     => 1,
 		'register'  => 1,
 		// hardcoded.
-		'postpass'  => 1,
-		'passwordless_autologin'  => 1,
+		'postpass'               => 1,
+		'passwordless_autologin' => 1,
+		'confirmaction'          => 1,
 	);
 
 	return $slugs;
@@ -76,8 +77,9 @@ function secupress_move_login_get_slugs() {
 		$slugs[ $action ] = secupress_get_module_option( 'move-login_slug-' . $action, $action, 'users-login' );
 		$slugs[ $action ] = sanitize_title( $slugs[ $action ], $action, 'display' );
 	}
-	$slugs['postpass']  = 'postpass';
+	$slugs['postpass']                = 'postpass';
 	$slugs['passwordless_autologin']  = 'passwordless_autologin';
+	$slugs['confirmaction']           = 'confirmaction';
 
 	return $slugs;
 }
