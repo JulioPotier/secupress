@@ -6,7 +6,7 @@ add_action( 'secupress.settings.before_section_secupress_display_white_label', a
 add_action( 'secupress.settings.after_section_secupress_display_white_label', array( $this, 'print_close_form_tag' ) );
 
 $this->set_current_section( 'secupress_display_white_label' );
-$this->set_section_description( __( 'You can change the name of the plugin, this will be shown on the plugins page, only when activated.', 'secupress-pro' ) );
+$this->set_section_description( __( 'You can change the name of the plugin, this will be shown on the plugins page, only when activated. Leave the plugin name empty to remove the White Label.', 'secupress-pro' ) );
 $this->add_section( __( 'White Label', 'secupress-pro' ) );
 
 $this->add_field( array(
