@@ -150,7 +150,7 @@ function secupress_admin_bar( $wp_admin_bar ) {
 		$target = '_blank';
 	} else {
 		$title = __( 'Add my license', 'secupress' );
-		$href  = secupress_admin_url( 'modules' );
+		$href  = secupress_admin_url( 'modules' ) . '#module-secupress_display_apikey_options';
 		$target = '_self';
 	}
 
