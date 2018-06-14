@@ -126,7 +126,7 @@ class SecuPress_Scan_Shellshock extends SecuPress_Scan implements SecuPress_Scan
 			return parent::scan();
 		}
 
-		if ( function_exists( 'proc_open' ) ) {
+		if ( ! secupress_is_function_disabled( 'proc_open' ) ) {
 			// Scan with `proc_open()`.
 			$env  = array( 'SHELL_SHOCK_TEST' => '() { :;}; echo VULNERABLE' );
 			$desc = array(

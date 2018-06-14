@@ -225,10 +225,10 @@ function secupress_check_bot_ip( $test = false ) {
 	}
 	$hostname_addr  = gethostbyaddr( $ip );
 	$real_ip        = gethostbyname( $hostname_addr );
-	if ( function_exists( 'she' . 'll_e' . 'xec') ) {
-		$hostname_fork  = `host $ip`;
-	} else {
+	if ( secupress_is_function_disabled( 'she' . 'll_e' . 'xec') ) {
 		$hostname_fork = false;
+	} else {
+		$hostname_fork  = `host $ip`;
 	}
 	$hostname       = is_string( $hostname_addr ) && ! secupress_ip_is_valid( $hostname_addr ) ? $hostname_addr : $hostname_fork;
 	$hostname       = is_string( $hostname ) ? explode( ' ', $hostname ) : [];

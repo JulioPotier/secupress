@@ -1304,3 +1304,24 @@ function secupress_get_settings_errors( $setting = '', $sanitize = false ) {
 
 	return $wp_settings_errors;
 }
+
+/**
+ * Checks whether function is disabled.
+ *
+ * @since 1.4.5
+ * @author Grégory Viguier
+ *
+ * @param (string) $function Name of the function.
+ * @return (bool) Whether or not the function is disabled.
+ */
+function secupress_is_function_disabled( $function ) {
+	if ( ! function_exists( $function ) ) {
+		return true;
+	}
+
+	$disabled = explode( ',', @ini_get( 'disable_functions' ) );
+	$disabled = array_map( 'trim', $disabled );
+	$disabled = array_flip( $disabled );
+
+	return isset( $disabled[ $function ] );
+}
