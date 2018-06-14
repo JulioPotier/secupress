@@ -1285,7 +1285,7 @@ function secupress_get_settings_errors( $setting = '', $sanitize = false ) {
 	}
 
 	// Check global in case errors have been added on this pageload.
-	if ( ! count( $wp_settings_errors ) ) {
+	if ( is_array( $wp_settings_errors ) && ! count( $wp_settings_errors ) ) {
 		return array();
 	}
 
