@@ -33,7 +33,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		$is_fixable       = $current_test->is_fixable();
 
 		// Remove those that are not fixable automatically.
-		if ( false === $is_fixable || is_array( $current_test->need_manual_fix() ) ) {
+		if ( false === $is_fixable ) {
 			unset( $secupress_tests[ $module_name ][ $class_name_part_lower ] );
 		}
 		// Tell if the module has fixable items.
@@ -78,17 +78,12 @@ if ( ! $secupress_tests ) {
 	} else {
 		$main_button =
 		'
-	<span class="secupress-get-pro-version">
-		' . sprintf( __( 'The <a href="%s" target="_blank">Pro Version</a> is required to autofix issues.', 'secupress' ), esc_url( secupress_admin_url( 'get-pro' ) ) ) . '
-	</span>
-		 <p class="secupress-flex">
-			<a href="' . esc_url( secupress_admin_url( 'scanners' ) ) . '&amp;step=3" class="secupress-button secupress-button-tertiary shadow">
-				<span class="icon">
-					<i class="secupress-icon-wrench" aria-hidden="true"></i>
-				</span>
-				<span class="text">' . __( 'Next step', 'secupress' ) . '</span>
-			</a>
-		</p>';
+		<a href="' . esc_url( secupress_admin_url( 'scanners' ) ) . '&amp;step=3" class="secupress-button secupress-button-tertiary shadow">
+			<span class="icon">
+				<i class="secupress-icon-wrench" aria-hidden="true"></i>
+			</span>
+			<span class="text">' . __( 'Next step', 'secupress' ) . '</span>
+		</a>';
 	}
 	$main_button .=
 		'<a href="' . esc_url( secupress_admin_url( 'scanners' ) ) . '&amp;step=3" class="secupress-button shadow light' . ( $has_fixes ? ' hidden' : '' ) . '">
@@ -99,9 +94,7 @@ if ( ! $secupress_tests ) {
 		</a>';
 	if ( ! $secupress_is_pro ) {
 	?>
-	<span class="secupress-get-pro-version">
-		<?php printf( __( 'The <a href="%s" target="_blank">Pro Version</a> is required to autofix issues.', 'secupress' ), esc_url( secupress_admin_url( 'get-pro' ) ) ); ?>
-	</span>
+	<span><?php // Flex col placeholder. ?></span>
 	<div class="secupress-step-content-header secupress-flex secupress-flex-spaced">
 		<p class="secupress-step-title"> </p>
 		<p class="secupress-flex">
@@ -154,6 +147,14 @@ if ( ! $secupress_tests ) {
 
 			</div><!-- .secupress-sg-header -->
 
+			<?php if ( ! secupress_is_pro() ) { ?>
+			<div class="secupress-get-pro-version-div">
+				<span class="secupress-get-pro-version">
+					<?php printf( __( 'The <a href="%s" target="_blank">Pro Version</a> is required to autofix issues, fix it manually on next step.', 'secupress' ), esc_url( secupress_admin_url( 'get-pro' ) ) ); ?>
+				</span>
+			</div>
+			<?php } ?>
+
 			<div id="secupress-group-content-<?php echo $module_name; ?>" class="secupress-sg-content">
 				<?php
 				foreach ( $class_name_parts as $class_name_part_lower => $class_name_part ) {
@@ -192,7 +193,7 @@ if ( ! $secupress_tests ) {
 									// It is fixable with the pro version but the free version is used.
 									?>
 									<span class="secupress-get-pro-version">
-										<?php printf( __( 'Available in <a href="%s" target="_blank">Pro Version</a>', 'secupress' ), esc_url( secupress_admin_url( 'get-pro' ) ) ); ?>
+										<?php printf( __( 'This feature and its fix are available in <a href="%s" target="_blank">Pro Version</a>', 'secupress' ), esc_url( secupress_admin_url( 'get-pro' ) ) ); ?>
 									</span>
 									<?php
 								} else {
@@ -200,8 +201,6 @@ if ( ! $secupress_tests ) {
 									if ( $secupress_is_pro ) {
 									?>
 									<input type="checkbox" id="secupress-item-<?php echo $class_name_part; ?>" class="secupress-checkbox secupress-row-check hide-if-no-js" checked="checked"/>
-									<?php } else { ?>
-									<input type="checkbox" class="secupress-checkbox secupress-row-check hide-if-no-js" disabled/>
 									<?php } ?>
 									<label for="secupress-item-<?php echo $class_name_part; ?>" class="label-text hide-if-no-js">
 										<span class="screen-reader-text"><?php _e( 'Auto-fix this item', 'secupress' ); ?></span>

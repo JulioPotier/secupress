@@ -79,7 +79,7 @@ foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 			continue;
 		}
 		// A "bad" scan status means the user didn't try to fix it.
-		if ( 'warning' !== $bad_scan_results[ $class_name_part_lower ] ) {
+		if ( secupress_is_pro() && 'warning' !== $bad_scan_results[ $class_name_part_lower ] ) {
 			// Excluded.
 			unset( $bad_scan_results[ $class_name_part_lower ] );
 			continue;
@@ -163,7 +163,6 @@ if ( ! $secupress_tests ) {
 		$is_fixable             = true === $current_test->is_fixable() || 'pro' === $current_test->is_fixable() && secupress_is_pro();
 		$not_fixable_by_sp      = false === $current_test->is_fixable();
 		$is_fixable_with_action = $is_fixable && $has_actions;
-
 		// Row css class.
 		$row_css_class  = 'secupress-item-' . $class_name_part;
 		$row_css_class .= ' status-' . sanitize_html_class( $scan_status );
