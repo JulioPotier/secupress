@@ -554,3 +554,34 @@ function secupress_reset_all_settings_admin_post_cb() {
 	wp_safe_redirect( wp_get_referer() );
 	die();
 }
+
+add_action( 'wp_ajax_secupress_set_scan_speed', 'secupress_set_scan_speed_admin_post_cb' );
+/**
+ * Will reset the settings like a fresh install
+ *
+ * @since 1.4.4
+ * @author Julio Potier
+ **/
+function secupress_set_scan_speed_admin_post_cb() {
+	$old_value       = secupress_get_option( 'scan-speed', 0 );
+	$allowed_values  = [ 'max' => 0, 'normal' => 250, 'low' => 1000 ];
+	$_CLEAN          = [];
+	$_CLEAN['text']  = isset( $allowed_values[ $_GET['value'] ] ) ? $_GET['value'] : 'max';
+	$_CLEAN['value'] = isset( $allowed_values[ $_GET['value'] ] ) ? $allowed_values[ $_GET['value'] ] : 0;
+
+	if ( ! isset( $_GET['_wpnonce'], $_GET['value'] ) || ! check_ajax_referer( 'secupress-set-scan-speed', '_wpnonce', false ) ) {
+		$allowed_values = array_flip( $allowed_values );
+		wp_send_json_error( [ 'val' => $old_value, 'text' => $allowed_values[ $old_value ] ] );
+	}
+
+	/**
+	* Filter the milliseconds between scans.
+	*
+	* @param (int) $value Defaults values are 0, 250 (1/4 sec), 1000 (1 sec)
+	* @since 1.4.5
+	* @author Julio Potier
+	*/
+	$value = apply_filters( 'secupress.scanner.scan-speed', $_CLEAN['value'] );
+	secupress_set_option( 'scan-speed', $value );
+	wp_send_json_success( [ 'debug'=>(int) $value, 'val' => $_CLEAN['value'], 'text' => $_CLEAN['text'] ] );
+}

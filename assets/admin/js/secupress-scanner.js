@@ -72,6 +72,29 @@ jQuery( document ).ready( function( $ ) {
 	}
 
 
+	// !Scan Speed. ================================================================
+	( function( w, d, $, undefined ) {
+		$( '#secupress-button-scan-speed' ).on( 'click', function( e ) {
+			$(this).find('span').toggleClass( 'dashicons-arrow-down dashicons-arrow-up' );
+			$( '#secupress-scan-speed' ).slideToggle(100);
+		} );
+		$( 'input[name=secupress-scan-speed]' ).on( 'click', function( e ) {
+			var params = {
+				"action":   "secupress_set_scan_speed",
+				"_wpnonce": $( '#secupress-button-scan-speed' ).data('nonce'),
+				"value": $( 'input[name=secupress-scan-speed]:checked' ).val()
+			};
+
+			$.getJSON( ajaxurl, params ).done( function(r) {;
+				SecuPressi18nScanner.offset = r.data.val;
+				$( 'input[name=secupress-scan-speed][value='+r.data.text+']' ).prop( 'checked', 'checked' );
+				$( '#secupress-button-scan-speed' ).find('span').toggleClass( 'dashicons-arrow-down dashicons-arrow-up' );
+				$( '#secupress-scan-speed' ).slideToggle(500);
+			} );
+
+		} );
+	} )( window, document, $ );
+
 	// !Big network: set some data. ================================================================
 	( function( w, d, $, undefined ) {
 		function secupressSetBigData( href, $button, $spinner, $percent ) {
@@ -557,15 +580,12 @@ jQuery( document ).ready( function( $ ) {
 				var n_doing = Object.keys( secupressScans.doingScan ).length,
 					n_done  = secupressScans.total - n_doing,
 					percent = Math.max( n_done / secupressScans.total * 100, init_percent );
-
 				percent = Math.round( Math.min( percent, 100 ) );
 
 				// Progress bar update
 				$bar_val.css( 'width', percent + '%' );
 				$text_val.text( percent + '\u00A0%' );
 
-				// Number N / T points update
-				$( '.secupress-scanned-current' ).text( n_done );
 
 				if ( percent >= 100 ) {
 					secupressCouldSay( SecuPressi18nScanner.a11y.scanEnded );
@@ -579,7 +599,6 @@ jQuery( document ).ready( function( $ ) {
 							$( '.secupress-open-moreinfo' ).removeClass( 'secupress-activated' );
 							$( '#secupress-more-info' ).removeClass( 'secupress-open' ).hide();
 
-							//// TODO : check if note is attributed before showing this content
 							// Show other element (list of scans, tabs, tabs contents).
 							$( '.secupress-scan-header-main' ).css('display', 'flex').hide().slideDown( 200, function() {
 								$( '.secupress-scanners-header.secupress-not-scanned-yet' ).removeClass( 'secupress-not-scanned-yet' );
@@ -593,7 +612,7 @@ jQuery( document ).ready( function( $ ) {
 						$main_header.removeClass( 'secupress-scanning' );
 					}
 				}
-			}, 500 );
+			}, 100 );
 		}
 
 
@@ -707,8 +726,14 @@ jQuery( document ).ready( function( $ ) {
 		}
 
 
+		var offset = -1;
 		// Perform a scan: spinner + row class + ajax call + display result.
 		function secupressScanit( test, $row, href, isBulk ) {
+			var offsetinit = parseInt( SecuPressi18nScanner.offset );
+			if ( -1 == offset ) {
+				offset = parseInt( -offsetinit );
+			}
+			offset = offset + offsetinit;
 			if ( ! test ) {
 				// Something's wrong here.
 				return secupressDisplayScanError( $row );
@@ -722,36 +747,24 @@ jQuery( document ).ready( function( $ ) {
 			// Show our scan is running.
 			secupressScans.doingScan[ test ] = 1;
 			$row.addClass( 'scanning' ).removeClass( 'status-error' );
-
 			// Ajax call
-			$.getJSON( href.replace( 'admin-post.php', 'admin-ajax.php' ) )
-			.done( function( r ) {
-				delete secupressScans.doingScan[ test ];
+			setTimeout( function() {
+				$.getJSON( href.replace( 'admin-post.php', 'admin-ajax.php' ) )
+				.done( function( r ) {
+					$( '.secupress-scanned-current' ).html( test.replace(/_/g, ' ') + '<br>' + $('.secupress-item-all').index($row) );
+				} )
+				.fail( function() {
+					// Error
+					secupressDisplayScanError( $row );
+				} )
+				.always( function() {
+					delete secupressScans.doingScan[ test ];
 
-				// Display scan result.
-				if ( secupressDisplayScanResult( r, $row ) ) {
-					// Trigger an event on success.
-					$( 'body' ).trigger( 'scanDone.secupress', [ {
-						test:   test,
-						href:   href,
-						isBulk: isBulk,
-						data:   r.data
-					} ] );
-				}
-			} )
-			.fail( function() {
-				delete secupressScans.doingScan[ test ];
-				// Error
-				secupressDisplayScanError( $row );
-			} )
-			.always( function() {
-				// Show our scan is completed.
-				$row.removeClass( 'scanning' );
-
-				if ( secupressScansGlandouillent() ) {
-					$( 'body' ).trigger( 'allScanDone.secupress', [ { isBulk: isBulk } ] );
-				}
-			} );
+					if ( secupressScansGlandouillent() ) {
+						$( 'body' ).trigger( 'allScanDone.secupress', [ { isBulk: isBulk } ] );
+					}
+				} );
+			}, offset );
 		}
 
 
@@ -1074,7 +1087,6 @@ jQuery( document ).ready( function( $ ) {
 			href  = $this.attr( 'href' );
 			test  = secupressGetTestFromUrl( href );
 			$row  = $this.closest( '.secupress-item-' + test );
-
 			secupressScanit( test, $row, href, true );
 		} );
 
@@ -1127,6 +1139,7 @@ jQuery( document ).ready( function( $ ) {
 			e.preventDefault();
 
 			secupressDisableButtons( $( '.secupress-button-scan' ) );
+			$( '#secupress-button-scan-speed' ).hide();
 			$( '.secupress-scanit' ).trigger( 'bulkscan.secupress' );
 			secupressRunProgressBar( $this );
 		} );
