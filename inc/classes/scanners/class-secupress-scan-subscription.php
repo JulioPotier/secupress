@@ -17,7 +17,7 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.0.2';
+	const VERSION = '1.0.3';
 
 
 	/** Properties. ============================================================================= */
@@ -28,6 +28,8 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 	 * @var (object)
 	 */
 	protected static $_instance;
+	protected $role_minimum;
+	protected $role_minimum_i18n;
 
 
 	/** Init and messages. ====================================================================== */
@@ -38,10 +40,13 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 	 * @since 1.0
 	 */
 	protected function init() {
-		$this->title = __( 'Check if the subscription settings are set correctly.', 'secupress' );
+		global $wp_roles;
+		$this->role_minimum      = apply_filters( 'secupress.scan.' . __CLASS__ . '.role_minimum', 'subscriber' );
+		$this->role_minimum_i18n = isset( $wp_roles->role_names[ $this->role_minimum ] ) ? translate_user_role( $wp_roles->role_names[ $this->role_minimum ] ) : _x( 'None', 'a WP role', 'secupress' );
+		$this->title             = __( 'Check if the subscription settings are set correctly.', 'secupress' );
 
 		if ( ! is_multisite() || is_network_admin() ) {
-			$this->more     = __( 'If user registrations are open, the default user role should be Subscriber. Moreover, your registration page should be protected from bots.', 'secupress' );
+			$this->more     = sprintf( __( 'If user registrations are open, the default user role should be %s. Moreover, your registration page should be protected from bots.', 'secupress' ), $this->role_minimum_i18n );
 			$this->more_fix = sprintf(
 				__( 'Activate the option %1$s in the %2$s module.', 'secupress' ),
 				'<em>' . __( 'Use a Captcha for everyone', 'secupress' ) . '</em>',
@@ -49,13 +54,13 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 			);
 
 			if ( is_network_admin() ) {
-				$this->more_fix .= '<br/>' . __( 'If the default user role is not Subscriber in some of your websites, administrators will be asked to set the default user role to Subscriber.', 'secupress' );
+				$this->more_fix .= '<br/>' . sprintf( __( 'If the default user role is not %1$s in some of your websites, administrators will be asked to set the default user role to %1$s.', 'secupress' ), $this->role_minimum_i18n );
 			} else {
-				$this->more_fix .= '<br/>' . __( 'Set the default user\'s role to Subscriber.', 'secupress' );
+				$this->more_fix .= '<br/>' . sprintf( __( 'Set the default user\'s role to %s.', 'secupress' ), $this->role_minimum_i18n );
 			}
 		} else {
-			$this->more     = __( 'If user registrations are open, the default user role should be Subscriber.', 'secupress' );
-			$this->more_fix = __( 'Set the default user\'s role to Subscriber.', 'secupress' );
+			$this->more     = sprintf( __( 'If user registrations are open, the default user role should be %s.', 'secupress' ), $this->role_minimum_i18n );
+			$this->more_fix = sprintf( __( 'Set the default user\'s role to %s.', 'secupress' ), $this->role_minimum_i18n );
 		}
 	}
 
@@ -79,15 +84,15 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 			// "good"
 			0   => __( 'Your subscription settings are set correctly.', 'secupress' ),
 			1   => __( 'A captcha module has been activated to block bot registration.', 'secupress' ),
-			2   => __( 'The user role for new registrations has been set to <strong>Subscriber</strong>.', 'secupress' ),
+			2   => __( 'The user role for new registrations has been set to <strong>%s</strong>.', 'secupress' ),
 			// "warning"
 			100 => __( 'Unable to determine the status of your subscription settings.', 'secupress' ) . ' ' . $activate_protection_message,
 			/** Translators: %s is the plugin name. */
 			101 => sprintf( __( 'You have a big network, %s must work on some data before being able to perform this scan.', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ),
 			// "bad"
-			200 => __( 'The default role in your installation is <strong>%s</strong> and it should be <strong>Subscriber</strong>, or registrations should be <strong>closed</strong>.', 'secupress' ),
+			200 => __( 'The default role in your installation is <strong>%1$s</strong> and it should be <strong>%2$s</strong>, or registrations should be <strong>closed</strong>.', 'secupress' ),
 			201 => __( 'The registration page is <strong>not protected</strong> from bots.', 'secupress' ),
-			202 => _n_noop( 'The default role is not Subscriber in %s of your sites.', 'The default role is not Subscriber in %s of your sites.', 'secupress' ),
+			202 => _n_noop( 'The default role is not %2$s in %1$s of your sites.', 'The default role is not %2$s in %1$s of your sites.', 'secupress' ),
 			// "cantfix"
 			/** Translators: %s is the plugin name. */
 			300 => sprintf( __( 'The default role cannot be fixed from here. A new %s menu item has been activated in the relevant site\'s administration area.', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ),
@@ -153,22 +158,22 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 			$blogs = array();
 
 			foreach ( $roles as $blog_id => $role ) {
-				if ( 'subscriber' !== $role ) {
+				if ( 'administrator' === $role ) {
 					$blogs[] = $blog_id;
 				}
 			}
 
 			if ( $count = count( $blogs ) ) {
 				// "bad"
-				$this->add_message( 202, array( $count, $count ) );
+				$this->add_message( 202, array( $count, $count, $this->role_minimum_i18n ) );
 			}
 		} else {
 			$role = get_option( 'default_role' );
 
-			if ( 'subscriber' !== $role ) {
+			if ( 'administrator' === $role ) {
 				// "bad"
 				$role = isset( $wp_roles->role_names[ $role ] ) ? translate_user_role( $wp_roles->role_names[ $role ] ) : _x( 'None', 'a WP role', 'secupress' );
-				$this->add_message( 200, array( $role ) );
+				$this->add_message( 200, array( $role, $this->role_minimum_i18n ) );
 			}
 		}
 
@@ -216,6 +221,49 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 	/**
 	 * Try to fix the flaw(s).
 	 *
+	 * @since 1.4.5
+	 *
+	 * @return (array) The fix results.
+	 */
+	public function need_manual_fix() {
+		return [ 'fix' => 'fix' ];
+	}
+
+	/**
+	 * Get an array containing ALL the forms that would fix the scan if it requires user action.
+	 *
+	 * @since 1.4.5
+	 *
+	 * @return (array) An array of HTML templates (form contents most of the time).
+	 */
+	protected function get_fix_action_template_parts() {
+		return [ 'fix' => '&nbsp;' ];
+	}
+
+	/**
+	 * Try to fix the flaw(s) after requiring user action.
+	 *
+	 * @since 1.4.5
+	 *
+	 * @return (array) The fix results.
+	 */
+	public function manual_fix() {
+		if ( $this->has_fix_action_part( 'fix' ) ) {
+			$this->fix();
+		}
+		if ( is_multisite() ) {
+			$this->add_fix_message( 300 );
+		} else {
+			$this->add_fix_message( 2, array( $this->role_minimum_i18n ) );
+		}
+		// "good"
+		$this->add_fix_message( 1 );
+		return parent::manual_fix();
+	}
+
+	/**
+	 * Try to fix the flaw(s).
+	 *
 	 * @since 1.0
 	 *
 	 * @return (array) The fix results.
@@ -234,10 +282,10 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 			$is_bad = false;
 
 			foreach ( $roles as $blog_id => $role ) {
-				if ( 'subscriber' !== $role ) {
+				if ( 'administrator' === $role ) {
 					$is_bad = true;
 					$role   = isset( $wp_roles->role_names[ $role ] ) ? translate_user_role( $wp_roles->role_names[ $role ] ) : _x( 'None', 'a WP role', 'secupress' );
-					$data   = array( $role );
+					$data   = array( $role, $this->role_minimum_i18n );
 					// Add a scan message for each sub-site with wrong role.
 					$this->add_subsite_message( 200, $data, 'scan', $blog_id );
 				} else {
@@ -249,8 +297,8 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 				// "cantfix"
 				$this->add_fix_message( 300 );
 			}
-		} elseif ( 'subscriber' !== get_option( 'default_role' ) ) {
-			update_option( 'default_role', 'subscriber' );
+		} elseif ( 'administrator' === get_option( 'default_role' ) ) {
+			update_option( 'default_role', $this->role_minimum );
 			// "good"
 			$this->add_fix_message( 2 );
 		}
