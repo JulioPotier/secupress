@@ -754,6 +754,9 @@ button.secupress-virgin {
 /**
  * === Get Pro marks
  */
+.secupress-get-pro-version-div {
+	text-align: center;
+}
 span.secupress-get-pro-version {
 	display: inline-block;
 	vertical-align: middle;
