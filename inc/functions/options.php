@@ -63,7 +63,7 @@ function secupress_set_option( $option, $value ) {
 	$value = apply_filters( 'pre_secupress_set_option_' . $option, $value );
 
 	$options = get_site_option( SECUPRESS_SETTINGS_SLUG );
-	$options = is_array( $options ) ?: array();
+	$options = is_array( $options ) ? $options : array();
 
 	$options[ $option ] = $value;
 
