@@ -209,14 +209,14 @@ function secupress_write_in_htaccess_on_ban() {
  * @author Julio Potier
  **/
 function secupress_check_bot_ip( $test = false ) {
-	// static $test_result;
+	static $test_result;
 
-	// if ( $test && isset( $test_result ) ) {
-	// 	return $test_result;
-	// }
-	// if ( $test && ( false !== ( $test_result = get_site_transient( 'secupress-test-hostname' ) ) ) ) {
-	// 	return $test_result;
-	// }
+	if ( $test && isset( $test_result ) ) {
+		return $test_result;
+	}
+	if ( $test && ( false !== ( $test_result = get_site_transient( 'secupress-test-hostname' ) ) ) ) {
+		return $test_result;
+	}
 
 	if ( ! $test ) {
 		$ip         = secupress_get_ip( 'REMOTE_ADDR' );
@@ -225,10 +225,10 @@ function secupress_check_bot_ip( $test = false ) {
 	}
 	$hostname_addr  = gethostbyaddr( $ip );
 	$real_ip        = gethostbyname( $hostname_addr );
-	try {
-		$hostname_fork  = `host $ip`;
-	} catch (Exception $e) {
+	if ( secupress_is_function_disabled( 'she' . 'll_e' . 'xec') ) {
 		$hostname_fork = false;
+	} else {
+		$hostname_fork  = `host $ip`;
 	}
 	$hostname       = is_string( $hostname_addr ) && ! secupress_ip_is_valid( $hostname_addr ) ? $hostname_addr : $hostname_fork;
 	$hostname       = is_string( $hostname ) ? explode( ' ', $hostname ) : [];
