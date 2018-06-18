@@ -186,7 +186,7 @@ function secupress_format_message( $msgs, $test_name ) {
 
 		if ( ! isset( $messages[ $id ] ) ) {
 
-			$string = __( 'Unknown message', 'secupress' );
+			$string = __( 'Fix done.', 'secupress' );
 
 		} elseif ( is_array( $messages[ $id ] ) ) {
 

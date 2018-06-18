@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2018-06-18 11:11+0200\n"
-"PO-Revision-Date: 2018-06-18 11:11+0200\n"
+"POT-Creation-Date: 2018-06-18 14:17+0200\n"
+"PO-Revision-Date: 2018-06-18 14:21+0200\n"
 "Last-Translator: Julio Potier <julio@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.7\n"
+"X-Generator: Poedit 2.0.8\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: _x:1,2c;__;_e;_ex:1,2c;_n:1,2;_nx:1,2;esc_html__;"
 "esc_html_e;esc_attr__;esc_attr_e;_n_noop:1,2;_nx_noop:4c,1,2\n"
@@ -143,7 +143,7 @@ msgid "Grade %s"
 msgstr "Grade %s"
 
 #: inc/admin-bar.php:36 inc/admin/multisite/settings.php:217
-#: inc/admin/settings.php:298 inc/admin/settings.php:414
+#: inc/admin/settings.php:299 inc/admin/settings.php:415
 #: inc/functions/modules.php:225
 #: inc/modules/schedules/settings/schedules-scan.php:6
 msgid "Scanners"
@@ -169,7 +169,7 @@ msgstr "Étape 4 – Rapport de résolutions"
 msgid "Export Security Report as PDF"
 msgstr "Exporter ce rapport dans un fichier PDF"
 
-#: inc/admin-bar.php:81 inc/admin/settings.php:299
+#: inc/admin-bar.php:81 inc/admin/settings.php:300
 #: inc/classes/settings/class-secupress-settings-modules.php:209
 msgid "Modules"
 msgstr "Modules"
@@ -192,11 +192,11 @@ msgstr "Journaux des actions"
 msgid "404 Logs"
 msgstr "Journaux des erreurs 404"
 
-#: inc/admin-bar.php:148 inc/admin/settings.php:302
+#: inc/admin-bar.php:148 inc/admin/settings.php:303
 msgid "More Security"
 msgstr "Plus de sécurité"
 
-#: inc/admin-bar.php:152 inc/admin/settings.php:304
+#: inc/admin-bar.php:152 inc/admin/settings.php:305
 msgid "Add my license"
 msgstr "Ajouter ma licence"
 
@@ -291,14 +291,14 @@ msgstr "Email"
 
 #: inc/admin/ajax-post-callbacks.php:552
 msgid "All modules settings reset"
-msgstr "Tous les réglages ont été réinitialisés."
+msgstr "Tous les réglages ont été réinitialisés"
 
 #: inc/admin/functions/admin.php:126
 #, php-format
 msgid "%s ago"
 msgstr "Il y a %s"
 
-#: inc/admin/functions/admin.php:127 inc/admin/settings.php:395
+#: inc/admin/functions/admin.php:127 inc/admin/settings.php:396
 msgctxt "Latest scans"
 msgid "M dS, Y \\a\\t h:ia"
 msgstr "l j F Y \\à G:i:s"
@@ -392,43 +392,8 @@ msgid "WordPress Failure Notice"
 msgstr "Avertissement d&rsquo;échec de WordPress"
 
 #: inc/admin/functions/ajax-post.php:189
-#: inc/classes/scanners/class-secupress-scan-admin-user.php:84
-#: inc/classes/scanners/class-secupress-scan-anti-front-brute-force.php:78
-#: inc/classes/scanners/class-secupress-scan-anti-scanner.php:78
-#: inc/classes/scanners/class-secupress-scan-auto-update.php:110
-#: inc/classes/scanners/class-secupress-scan-bad-config-files.php:70
-#: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:120
-#: inc/classes/scanners/class-secupress-scan-bad-old-files.php:68
-#: inc/classes/scanners/class-secupress-scan-bad-old-plugins.php:106
-#: inc/classes/scanners/class-secupress-scan-bad-request-methods.php:78
-#: inc/classes/scanners/class-secupress-scan-bad-url-access.php:105
-#: inc/classes/scanners/class-secupress-scan-bad-user-agent.php:78
-#: inc/classes/scanners/class-secupress-scan-bad-usernames.php:72
-#: inc/classes/scanners/class-secupress-scan-bad-vuln-plugins.php:110
-#: inc/classes/scanners/class-secupress-scan-chmods.php:116
-#: inc/classes/scanners/class-secupress-scan-core-update.php:77
-#: inc/classes/scanners/class-secupress-scan-db-prefix.php:70
-#: inc/classes/scanners/class-secupress-scan-directory-listing.php:99
-#: inc/classes/scanners/class-secupress-scan-discloses.php:120
-#: inc/classes/scanners/class-secupress-scan-easy-login.php:78
-#: inc/classes/scanners/class-secupress-scan-inactive-plugins-themes.php:85
-#: inc/classes/scanners/class-secupress-scan-login-errors-disclose.php:66
-#: inc/classes/scanners/class-secupress-scan-passwords-strength.php:89
-#: inc/classes/scanners/class-secupress-scan-php-404.php:78
-#: inc/classes/scanners/class-secupress-scan-php-disclosure.php:97
-#: inc/classes/scanners/class-secupress-scan-phpversion.php:78
-#: inc/classes/scanners/class-secupress-scan-plugins-update.php:77
-#: inc/classes/scanners/class-secupress-scan-readme-discloses.php:102
-#: inc/classes/scanners/class-secupress-scan-salt-keys.php:76
-#: inc/classes/scanners/class-secupress-scan-shellshock.php:85
-#: inc/classes/scanners/class-secupress-scan-sqli.php:78
-#: inc/classes/scanners/class-secupress-scan-subscription.php:97
-#: inc/classes/scanners/class-secupress-scan-themes-update.php:77
-#: inc/classes/scanners/class-secupress-scan-woocommerce-discloses.php:89
-#: inc/classes/scanners/class-secupress-scan-wp-config.php:145
-#: inc/classes/scanners/class-secupress-scan-wpml-discloses.php:89
-msgid "Unknown message"
-msgstr "Message inconnu"
+msgid "Fix done."
+msgstr "Correction effectuée."
 
 #: inc/admin/functions/modules.php:118
 #, php-format
@@ -609,7 +574,7 @@ msgstr ""
 "dès maintenant."
 
 #: inc/admin/notices.php:311 inc/admin/settings.php:143
-#: inc/admin/settings.php:668
+#: inc/admin/settings.php:690
 msgid "Scan my website"
 msgstr "Scanner mon site"
 
@@ -672,8 +637,8 @@ msgid "List of the security items already analyzed"
 msgstr "Liste des éléments de sécurité analysés"
 
 #: inc/admin/scanner-step-1.php:73 inc/admin/scanner-step-1.php:123
-#: inc/admin/scanner-step-2.php:58 inc/admin/scanner-step-2.php:89
-#: inc/admin/scanner-step-2.php:112 inc/admin/scanner-step-3.php:105
+#: inc/admin/scanner-step-2.php:58 inc/admin/scanner-step-2.php:85
+#: inc/admin/scanner-step-2.php:105 inc/admin/scanner-step-3.php:105
 msgid "Next step"
 msgstr "Prochaine étape"
 
@@ -690,8 +655,8 @@ msgstr "Exporter en PDF"
 msgid "Get the Pro Version to export this report as PDF file."
 msgstr "Obtenez la version Pro pour exporter ce rapport dans un fichier PDF."
 
-#: inc/admin/scanner-step-1.php:114 inc/admin/scanner-step-2.php:195
-#: inc/admin/scanner-step-3.php:190 inc/admin/scanner-step-4.php:277
+#: inc/admin/scanner-step-1.php:114 inc/admin/scanner-step-3.php:189
+#: inc/admin/scanner-step-4.php:277
 #: inc/classes/settings/class-secupress-settings.php:1563
 #, php-format
 msgid "Available in <a href=\"%s\" target=\"_blank\">Pro Version</a>"
@@ -701,49 +666,58 @@ msgstr "Disponible dans la <a href=\"%s\" target=\"_blank\">version Pro</a>"
 msgid "Nothing to do here"
 msgstr "Rien à faire ici"
 
-#: inc/admin/scanner-step-2.php:76 inc/admin/scanner-step-2.php:214
+#: inc/admin/scanner-step-2.php:76 inc/admin/scanner-step-2.php:213
 #: inc/admin/settings.php:191
 msgid "Fix it"
 msgstr "Corriger"
 
-#: inc/admin/scanner-step-2.php:82 inc/admin/scanner-step-2.php:103
-#, php-format
-msgid ""
-"The <a href=\"%s\" target=\"_blank\">Pro Version</a> is required to autofix "
-"issues."
-msgstr ""
-"La <a href=\"%s\" target=\"_blank\">version Pro</a> est requise pour auto "
-"corriger les problèmes."
-
-#: inc/admin/scanner-step-2.php:98
+#: inc/admin/scanner-step-2.php:93
 msgid "Ignore this step"
 msgstr "Ignorer cette étape"
 
-#: inc/admin/scanner-step-2.php:119
+#: inc/admin/scanner-step-2.php:112
 msgid "Only checked items will be automatically fixed"
 msgstr "Seuls les éléments cochés seront corrigés automatiquement"
 
-#: inc/admin/scanner-step-2.php:148
+#: inc/admin/scanner-step-2.php:141
 msgid "Toggle group check"
 msgstr "Inverser les coches"
 
-#: inc/admin/scanner-step-2.php:207
+#: inc/admin/scanner-step-2.php:153
+#, php-format
+msgid ""
+"The <a href=\"%s\" target=\"_blank\">Pro Version</a> is required to autofix "
+"issues, fix it manually on next step."
+msgstr ""
+"La <a href=\"%s\" target=\"_blank\">version Pro</a> est requise pour auto "
+"corriger les problèmes, corrigez les manuellement à la prochaine étape."
+
+#: inc/admin/scanner-step-2.php:196
+#, php-format
+msgid ""
+"This feature and its fix are available in <a href=\"%s\" target=\"_blank"
+"\">Pro Version</a>"
+msgstr ""
+"Fonctionnalité et correctif disponibles dans la <a href=\"%s\" target="
+"\"_blank\">version Pro</a>"
+
+#: inc/admin/scanner-step-2.php:206
 msgid "Auto-fix this item"
 msgstr "Corriger automatiquement cet élément"
 
-#: inc/admin/scanner-step-2.php:244 inc/admin/settings.php:201
+#: inc/admin/scanner-step-2.php:243 inc/admin/settings.php:201
 msgid "Currently fixing…"
 msgstr "Correction en cours…"
 
-#: inc/admin/scanner-step-2.php:245 inc/admin/settings.php:201
+#: inc/admin/scanner-step-2.php:244 inc/admin/settings.php:201
 msgid "Please wait until fixing is complete."
 msgstr "Merci de patienter pendant la correction."
 
-#: inc/admin/scanner-step-2.php:250
+#: inc/admin/scanner-step-2.php:249
 msgid "Fixing…"
 msgstr "Réparation en cours&hellip;"
 
-#: inc/admin/scanner-step-2.php:252
+#: inc/admin/scanner-step-2.php:251
 msgid ""
 "You’ll be automatically redirected to the next step,<br>please don’t close "
 "this window."
@@ -768,52 +742,46 @@ msgstr "%1$s sur %2$s"
 msgid "Ignore all &amp; Go to the next step"
 msgstr "Tout ignorer &amp; Passer à l’étape suivante"
 
-#: inc/admin/scanner-step-3.php:208
+#: inc/admin/scanner-step-3.php:207
 msgid "How to fix this issue"
 msgstr "Comment corriger ce problème"
 
-#: inc/admin/scanner-step-3.php:266 inc/admin/scanner-step-3.php:272
-#: inc/admin/scanner-step-3.php:295 inc/admin/settings.php:512
-#: inc/admin/settings.php:518 inc/admin/settings.php:873
-#: inc/admin/settings.php:876
+#: inc/admin/scanner-step-3.php:265 inc/admin/scanner-step-3.php:288
+#: inc/admin/settings.php:513 inc/admin/settings.php:519
+#: inc/admin/settings.php:895 inc/admin/settings.php:898
 #: inc/classes/admin/class-secupress-admin-pro-upgrade.php:157
 #: inc/classes/admin/class-secupress-admin-pro-upgrade.php:178
 #: inc/classes/admin/class-secupress-admin-support.php:408
-#: inc/modules/welcome/callbacks.php:349 inc/modules/welcome/callbacks.php:350
-#: inc/modules/welcome/callbacks.php:504
+#: inc/modules/welcome/callbacks.php:370 inc/modules/welcome/callbacks.php:371
+#: inc/modules/welcome/callbacks.php:525
 msgid "Open in a new window."
 msgstr "Ouvrir dans une nouvelle fenêtre."
 
-#: inc/admin/scanner-step-3.php:270
+#: inc/admin/scanner-step-3.php:269
 msgid "Read the documentation"
 msgstr "Lire la documentation"
 
-#: inc/admin/scanner-step-3.php:276
-#: inc/classes/settings/class-secupress-settings.php:1499
-msgid "Ask for support"
-msgstr "Demander au support"
-
-#: inc/admin/scanner-step-3.php:285
+#: inc/admin/scanner-step-3.php:278
 msgid "Ignore it"
 msgstr "Ignorer"
 
-#: inc/admin/scanner-step-3.php:292
+#: inc/admin/scanner-step-3.php:285
 msgid "Fix it and continue"
 msgstr "Corriger et continuer"
 
-#: inc/admin/scanner-step-3.php:295
+#: inc/admin/scanner-step-3.php:288
 #: inc/classes/settings/class-secupress-settings.php:1563
 #: inc/functions/common.php:486
 msgid "pricing"
 msgstr "fr/tarifs"
 
-#: inc/admin/scanner-step-3.php:299
+#: inc/admin/scanner-step-3.php:292
 msgid "Get PRO"
 msgstr "Obtenir la version PRO"
 
-#: inc/admin/scanner-step-3.php:306
-msgid "I did the requested work, continue"
-msgstr "J’ai fait le travail demandé, continuer"
+#: inc/admin/scanner-step-3.php:299
+msgid "I did the job, continue"
+msgstr "J’ai fait le travail, continuer"
 
 #: inc/admin/scanner-step-4.php:42
 #, php-format
@@ -866,7 +834,7 @@ msgid "Not fixed"
 msgstr "Non corrigé"
 
 #: inc/admin/scanner-step-4.php:214 inc/admin/settings.php:113
-#: inc/admin/settings.php:187 inc/admin/settings.php:992
+#: inc/admin/settings.php:187 inc/admin/settings.php:1014
 msgid "Error"
 msgstr "Erreur"
 
@@ -896,7 +864,7 @@ msgstr "%s modules"
 msgid "Fine-tune your security"
 msgstr "Découvrez toutes les fonctionnalités"
 
-#: inc/admin/scanner-step-4.php:308 inc/admin/settings.php:611
+#: inc/admin/scanner-step-4.php:308 inc/admin/settings.php:612
 msgid "Manage your recurring scans"
 msgstr "Planifiez vos scans automatiques"
 
@@ -907,7 +875,7 @@ msgstr ""
 "Laissez %s scanner votre site quand vous n’êtes pas là avec des scanners "
 "récurrents."
 
-#: inc/admin/scanner-step-4.php:315 inc/admin/settings.php:610
+#: inc/admin/scanner-step-4.php:315 inc/admin/settings.php:611
 msgid "Schedule Scans"
 msgstr "Planification de scans"
 
@@ -1044,18 +1012,18 @@ msgstr "C’est une procédure automatisée qui vous aide à sécuriser votre si
 msgid "Show More"
 msgstr "Voir plus"
 
-#: inc/admin/settings.php:173 inc/admin/settings.php:478
-#: inc/admin/settings.php:988
+#: inc/admin/settings.php:173 inc/admin/settings.php:479
+#: inc/admin/settings.php:1010
 msgid "Good"
 msgstr "Bon"
 
-#: inc/admin/settings.php:174 inc/admin/settings.php:488
-#: inc/admin/settings.php:990
+#: inc/admin/settings.php:174 inc/admin/settings.php:489
+#: inc/admin/settings.php:1012
 msgid "Warning"
 msgstr "En attente"
 
-#: inc/admin/settings.php:175 inc/admin/settings.php:483
-#: inc/admin/settings.php:986
+#: inc/admin/settings.php:175 inc/admin/settings.php:484
+#: inc/admin/settings.php:1008
 msgid "Bad"
 msgstr "Mauvais"
 
@@ -1097,62 +1065,62 @@ msgid ""
 "patience."
 msgstr "La documentation est en construction, merci pour votre patience."
 
-#: inc/admin/settings.php:266
+#: inc/admin/settings.php:267
 #: inc/classes/settings/class-secupress-settings.php:1499
 msgid "support"
 msgstr "fr/support"
 
-#: inc/admin/settings.php:266
+#: inc/admin/settings.php:267
 #: inc/classes/settings/class-secupress-settings.php:1493
 msgid "Support"
 msgstr "Support"
 
-#: inc/admin/settings.php:268 inc/classes/scanners/class-secupress-scan.php:229
+#: inc/admin/settings.php:269 inc/classes/scanners/class-secupress-scan.php:229
 #: inc/classes/settings/class-secupress-settings.php:1485
 msgid "http://docs.secupress.me/"
 msgstr "http://fr.docs.secupress.me/"
 
-#: inc/admin/settings.php:268
+#: inc/admin/settings.php:269
 msgid "Docs"
 msgstr "Docs"
 
-#: inc/admin/settings.php:271
+#: inc/admin/settings.php:272
 #: inc/classes/settings/class-secupress-settings-global.php:85
 #: inc/classes/settings/class-secupress-settings-global.php:88
 msgid "Settings"
 msgstr "Réglages"
 
-#: inc/admin/settings.php:403
+#: inc/admin/settings.php:404
 msgid "Currently scanning"
 msgstr "Scanner en cours"
 
-#: inc/admin/settings.php:406
+#: inc/admin/settings.php:407
 #, php-format
 msgid "%1$s&nbsp;/&nbsp;%2$s points"
 msgstr "%1$s / %2$s points"
 
-#: inc/admin/settings.php:432
+#: inc/admin/settings.php:433
 msgid "First scan"
 msgstr "Premier scanner"
 
-#: inc/admin/settings.php:433
+#: inc/admin/settings.php:434
 msgid "Here’s how it’s going to work"
 msgstr "Voici comment cela fonctionne"
 
-#: inc/admin/settings.php:438 inc/admin/settings.php:619
+#: inc/admin/settings.php:439 inc/admin/settings.php:620
 msgid "Scan results"
 msgstr "Résultat du scanner"
 
-#: inc/admin/settings.php:447
+#: inc/admin/settings.php:448
 msgid "How does it work?"
 msgstr "Comment ça marche ?"
 
-#: inc/admin/settings.php:494
+#: inc/admin/settings.php:495
 msgid "New Scan"
 msgstr "Nouveau scan"
 
 #. Translators: %s is the plugin name
-#: inc/admin/settings.php:506
+#: inc/admin/settings.php:507
 msgid ""
 "Wow! My website just got an A grade for security using @SecuPress, what "
 "about yours?"
@@ -1160,27 +1128,27 @@ msgstr ""
 "Wow ! Mon site a reçu le grade de sécurité A en utilisant @SecuPress, quel "
 "est le vôtre ?"
 
-#: inc/admin/settings.php:515
+#: inc/admin/settings.php:516
 msgid "Tweet this"
 msgstr "Twitter ça"
 
-#: inc/admin/settings.php:521
+#: inc/admin/settings.php:522
 msgid "Share this"
 msgstr "Partager ça"
 
-#: inc/admin/settings.php:532
+#: inc/admin/settings.php:533
 msgid "Your last scans"
 msgstr "Vos derniers scans"
 
-#: inc/admin/settings.php:540
+#: inc/admin/settings.php:541
 msgid "You have no other reports for now."
 msgstr "Vous n’avez pas d’autres rapports pour le moment."
 
-#: inc/admin/settings.php:551
+#: inc/admin/settings.php:552
 msgid "Schedule your security analysis"
 msgstr "Planifiez votre analyse de sécurité"
 
-#: inc/admin/settings.php:553
+#: inc/admin/settings.php:554
 msgid ""
 "Stay updated on the security of your website. With our automatic scans, "
 "there is no need to log in to your WordPress admin to run a scan."
@@ -1189,76 +1157,96 @@ msgstr ""
 "automatiques, plus besoin de se connecter dans l’administration de WordPress "
 "pour lancer un scan."
 
-#: inc/admin/settings.php:557 inc/admin/settings.php:559
+#: inc/admin/settings.php:558 inc/admin/settings.php:560
 msgctxt "Schedule date"
 msgid "Y-m-d \\a\\t h:ia"
 msgstr "d/m/Y \\à G:i"
 
-#: inc/admin/settings.php:564 inc/admin/settings.php:579
+#: inc/admin/settings.php:565 inc/admin/settings.php:580
 #, php-format
 msgid "Last automatic scan: %s"
 msgstr "Dernier scan automatique : %s"
 
-#: inc/admin/settings.php:568 inc/admin/settings.php:583
+#: inc/admin/settings.php:569 inc/admin/settings.php:584
 #, php-format
 msgid "Next automatic scan: %s"
 msgstr "Prochain scan automatique : %s"
 
-#: inc/admin/settings.php:572 inc/admin/settings.php:587
+#: inc/admin/settings.php:573 inc/admin/settings.php:588
 msgid "Schedule your next analysis"
 msgstr "Planifier votre prochaine analyse"
 
-#: inc/admin/settings.php:589
+#: inc/admin/settings.php:590
 msgid "Available in the PRO version"
 msgstr "Disponible dans la version PRO"
 
-#: inc/admin/settings.php:601
+#: inc/admin/settings.php:602
 msgid "Latest scans"
 msgstr "Derniers scans"
 
-#: inc/admin/settings.php:602
+#: inc/admin/settings.php:603
 msgid "View your previous scans"
 msgstr "Voir vos scans précédents"
 
-#: inc/admin/settings.php:633
+#: inc/admin/settings.php:634
 msgid "Doubts? Try a new scan."
 msgstr "Un doute ? Lancez un nouveau scan."
 
-#: inc/admin/settings.php:639
+#: inc/admin/settings.php:640
 msgid "Scan website"
 msgstr "Scanner le site"
 
-#: inc/admin/settings.php:657
+#: inc/admin/settings.php:660
+msgid "Max Speed (def.)"
+msgstr "Vitesse maximale (def.)"
+
+#: inc/admin/settings.php:661
+msgid "Normal Speed"
+msgstr "Vitesse normale"
+
+#: inc/admin/settings.php:662
+msgid "Low Speed"
+msgstr "Vitesse basse"
+
+#: inc/admin/settings.php:664
+msgid "https://docs.secupress.me/article/156-whats-this-speed-thing"
+msgstr "https://fr.docs.secupress.me/article/157-cest-quoi-cette-vitesse"
+
+#: inc/admin/settings.php:664
+msgid "What’s this speed thing?"
+msgstr "C’est quoi cette vitesse ?"
+
+#: inc/admin/settings.php:679
 msgid "Click to launch first scan"
 msgstr "Cliquez pour lancer le premier scan"
 
-#: inc/admin/settings.php:691 inc/admin/settings.php:748
+#: inc/admin/settings.php:713 inc/admin/settings.php:770
 msgid "Security Report"
 msgstr "Rapport de sécurité"
 
-#: inc/admin/settings.php:692 inc/admin/settings.php:759
+#: inc/admin/settings.php:714 inc/admin/settings.php:781
 msgid "Auto-Fix"
 msgstr "Correction automatique"
 
-#: inc/admin/settings.php:693 inc/admin/settings.php:770
+#: inc/admin/settings.php:715 inc/admin/settings.php:792
 msgid "Manual Operations"
 msgstr "Opérations manuelles"
 
-#: inc/admin/settings.php:694 inc/admin/settings.php:781
+#: inc/admin/settings.php:716 inc/admin/settings.php:803
 msgid "Resolution Report"
 msgstr "Rapport de résolutions"
 
-#: inc/admin/settings.php:750
+#: inc/admin/settings.php:772
 msgid "Start to check all security items with the Scan your website button."
 msgstr ""
 "Commencez à vérifier tous les éléments de sécurité avec le bouton Scanner le "
 "site."
 
-#: inc/admin/settings.php:761
+#: inc/admin/settings.php:783
 msgid "Launch the auto-fix on selected issues."
 msgstr "Lancer la correction automatique sur les problèmes sélectionnés."
 
-#: inc/admin/settings.php:772
+#: inc/admin/settings.php:794
 msgid ""
 "Go further and take a look at the items you have to fix with specific "
 "operations."
@@ -1266,30 +1254,30 @@ msgstr ""
 "Aller plus loin et jeter un oeil aux points que vous pouvez résoudre grâce à "
 "une opération spécifique."
 
-#: inc/admin/settings.php:783
+#: inc/admin/settings.php:805
 msgid "Get the new security report for your website."
 msgstr "Obtenez le nouveau rapport de sécurité de votre site."
 
-#: inc/admin/settings.php:795
+#: inc/admin/settings.php:817
 msgid "I've got it!"
 msgstr "J’ai compris !"
 
-#: inc/admin/settings.php:871
+#: inc/admin/settings.php:893
 msgid "Do you like this plugin?"
 msgstr "Vous aimez ce plugin ?"
 
-#: inc/admin/settings.php:873
+#: inc/admin/settings.php:895
 #, php-format
 msgid "Please take a few seconds to rate us on %1$sWordPress.org%2$s"
 msgstr ""
 "Merci de prendre quelques secondes pour nous noter sur %1$sWordPress.org%2$s"
 
-#: inc/admin/settings.php:882
+#: inc/admin/settings.php:904
 msgctxt "hidden text"
 msgid "Give us five stars"
 msgstr "Donnez nous les 5 étoiles"
 
-#: inc/admin/settings.php:994
+#: inc/admin/settings.php:1016
 msgid "New"
 msgstr "Nouveau"
 
@@ -1392,7 +1380,7 @@ msgstr ""
 
 #: inc/classes/admin/class-secupress-admin-pro-upgrade.php:157
 #: inc/classes/admin/class-secupress-admin-pro-upgrade.php:178
-#: inc/modules/welcome/callbacks.php:504
+#: inc/modules/welcome/callbacks.php:525
 msgid "SecuPress account"
 msgstr "Compte SecuPress"
 
@@ -2021,6 +2009,44 @@ msgstr ""
 "Oh ! Le compte %s est le votre ! Merci de choisir un nouveau login pour "
 "votre compte à la prochaine étape."
 
+#: inc/classes/scanners/class-secupress-scan-admin-user.php:84
+#: inc/classes/scanners/class-secupress-scan-anti-front-brute-force.php:78
+#: inc/classes/scanners/class-secupress-scan-anti-scanner.php:78
+#: inc/classes/scanners/class-secupress-scan-auto-update.php:110
+#: inc/classes/scanners/class-secupress-scan-bad-config-files.php:70
+#: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:120
+#: inc/classes/scanners/class-secupress-scan-bad-old-files.php:68
+#: inc/classes/scanners/class-secupress-scan-bad-old-plugins.php:106
+#: inc/classes/scanners/class-secupress-scan-bad-request-methods.php:78
+#: inc/classes/scanners/class-secupress-scan-bad-url-access.php:105
+#: inc/classes/scanners/class-secupress-scan-bad-user-agent.php:78
+#: inc/classes/scanners/class-secupress-scan-bad-usernames.php:72
+#: inc/classes/scanners/class-secupress-scan-bad-vuln-plugins.php:110
+#: inc/classes/scanners/class-secupress-scan-chmods.php:116
+#: inc/classes/scanners/class-secupress-scan-core-update.php:77
+#: inc/classes/scanners/class-secupress-scan-db-prefix.php:70
+#: inc/classes/scanners/class-secupress-scan-directory-listing.php:99
+#: inc/classes/scanners/class-secupress-scan-discloses.php:120
+#: inc/classes/scanners/class-secupress-scan-easy-login.php:78
+#: inc/classes/scanners/class-secupress-scan-inactive-plugins-themes.php:85
+#: inc/classes/scanners/class-secupress-scan-login-errors-disclose.php:66
+#: inc/classes/scanners/class-secupress-scan-passwords-strength.php:89
+#: inc/classes/scanners/class-secupress-scan-php-404.php:78
+#: inc/classes/scanners/class-secupress-scan-php-disclosure.php:97
+#: inc/classes/scanners/class-secupress-scan-phpversion.php:78
+#: inc/classes/scanners/class-secupress-scan-plugins-update.php:77
+#: inc/classes/scanners/class-secupress-scan-readme-discloses.php:102
+#: inc/classes/scanners/class-secupress-scan-salt-keys.php:76
+#: inc/classes/scanners/class-secupress-scan-shellshock.php:85
+#: inc/classes/scanners/class-secupress-scan-sqli.php:78
+#: inc/classes/scanners/class-secupress-scan-subscription.php:102
+#: inc/classes/scanners/class-secupress-scan-themes-update.php:77
+#: inc/classes/scanners/class-secupress-scan-woocommerce-discloses.php:89
+#: inc/classes/scanners/class-secupress-scan-wp-config.php:145
+#: inc/classes/scanners/class-secupress-scan-wpml-discloses.php:89
+msgid "Unknown message"
+msgstr "Message inconnu"
+
 #: inc/classes/scanners/class-secupress-scan-admin-user.php:101
 msgid "http://docs.secupress.me/article/132-admin-user-account-scan"
 msgstr "http://fr.docs.secupress.me/article/33-scan-du-compte-admin"
@@ -2116,7 +2142,7 @@ msgstr ""
 #: inc/classes/scanners/class-secupress-scan-php-404.php:44
 #: inc/classes/scanners/class-secupress-scan-shellshock.php:47
 #: inc/classes/scanners/class-secupress-scan-sqli.php:44
-#: inc/classes/scanners/class-secupress-scan-subscription.php:46
+#: inc/classes/scanners/class-secupress-scan-subscription.php:51
 #, php-format
 msgid "Activate the option %1$s in the %2$s module."
 msgstr "Active l’option %1$s du module %2$s."
@@ -2141,7 +2167,7 @@ msgstr "Bloque les tentatives de SQLi"
 #: inc/classes/scanners/class-secupress-scan-readme-discloses.php:73
 #: inc/classes/scanners/class-secupress-scan-shellshock.php:65
 #: inc/classes/scanners/class-secupress-scan-sqli.php:62
-#: inc/classes/scanners/class-secupress-scan-subscription.php:73
+#: inc/classes/scanners/class-secupress-scan-subscription.php:78
 #: inc/classes/scanners/class-secupress-scan-woocommerce-discloses.php:65
 #: inc/classes/scanners/class-secupress-scan-wpml-discloses.php:65
 #, php-format
@@ -2413,6 +2439,10 @@ msgstr[1] ""
 msgid "http://docs.secupress.me/article/96-wp-config-php-file-backups-scan"
 msgstr ""
 "http://fr.docs.secupress.me/article/47-scan-des-sauvegardes-de-wp-config-php"
+
+#: inc/classes/scanners/class-secupress-scan-bad-config-files.php:159
+msgid "a safe file extension"
+msgstr "une extension de fichier correcte"
 
 #: inc/classes/scanners/class-secupress-scan-bad-file-extensions.php:64
 msgid ""
@@ -2689,7 +2719,7 @@ msgstr[1] "Désolé, les plugins suivant n’ont pas pu être désactivés : %s
 #. Translators: %s is the plugin name.
 #: inc/classes/scanners/class-secupress-scan-bad-old-plugins.php:83
 #: inc/classes/scanners/class-secupress-scan-inactive-plugins-themes.php:70
-#: inc/classes/scanners/class-secupress-scan-subscription.php:86
+#: inc/classes/scanners/class-secupress-scan-subscription.php:91
 #, php-format
 msgid ""
 "You have a big network, %s must work on some data before being able to "
@@ -3063,8 +3093,8 @@ msgstr "Noms d’utilisateur interdits"
 
 #: inc/classes/scanners/class-secupress-scan-bad-usernames.php:46
 #: inc/classes/scanners/class-secupress-scan-easy-login.php:53
-#: inc/classes/scanners/class-secupress-scan-subscription.php:48
-#: inc/classes/scanners/class-secupress-scan-subscription.php:75
+#: inc/classes/scanners/class-secupress-scan-subscription.php:53
+#: inc/classes/scanners/class-secupress-scan-subscription.php:80
 msgid "Users & Login"
 msgstr "Utilisateurs & Login"
 
@@ -4525,87 +4555,95 @@ msgid "http://docs.secupress.me/article/109-basic-sql-injection-scan"
 msgstr ""
 "http://fr.docs.secupress.me/article/71-scan-des-injections-sql-basiques"
 
-#: inc/classes/scanners/class-secupress-scan-subscription.php:41
+#: inc/classes/scanners/class-secupress-scan-subscription.php:45
+#: inc/classes/scanners/class-secupress-scan-subscription.php:175
+#: inc/classes/scanners/class-secupress-scan-subscription.php:287
+msgctxt "a WP role"
+msgid "None"
+msgstr "Aucun"
+
+#: inc/classes/scanners/class-secupress-scan-subscription.php:46
 msgid "Check if the subscription settings are set correctly."
 msgstr "Vérifie si le réglage de l’inscription est correct."
 
-#: inc/classes/scanners/class-secupress-scan-subscription.php:44
+#: inc/classes/scanners/class-secupress-scan-subscription.php:49
+#, php-format
 msgid ""
-"If user registrations are open, the default user role should be Subscriber. "
+"If user registrations are open, the default user role should be %s. "
 "Moreover, your registration page should be protected from bots."
 msgstr ""
-"Si les inscriptions sont ouvertes, le rôle par défaut devrait être Abonné. "
-"De plus, votre page d’inscription devrait être protégée des robots."
+"Si les inscriptions sont ouvertes, le rôle par défaut devrait être %s. De "
+"plus, votre page d’inscription devrait être protégée des robots."
 
-#: inc/classes/scanners/class-secupress-scan-subscription.php:47
-#: inc/classes/scanners/class-secupress-scan-subscription.php:74
+#: inc/classes/scanners/class-secupress-scan-subscription.php:52
+#: inc/classes/scanners/class-secupress-scan-subscription.php:79
 #: inc/modules/users-login/settings/double-auth.php:36
 msgid "Use a Captcha for everyone"
 msgstr "Utiliser un captcha pour tout le monde"
 
-#: inc/classes/scanners/class-secupress-scan-subscription.php:52
-msgid ""
-"If the default user role is not Subscriber in some of your websites, "
-"administrators will be asked to set the default user role to Subscriber."
-msgstr ""
-"Si le rôle par défaut n’est pas Abonné sur certains de vos sites, il sera "
-"demandé demandé aux administrateurs de mettre le rôle Abonné par défaut."
-
-#: inc/classes/scanners/class-secupress-scan-subscription.php:54
-#: inc/classes/scanners/class-secupress-scan-subscription.php:58
-msgid "Set the default user's role to Subscriber."
-msgstr "Configure le rôle par défaut sur Abonné."
-
 #: inc/classes/scanners/class-secupress-scan-subscription.php:57
+#, php-format
 msgid ""
-"If user registrations are open, the default user role should be Subscriber."
+"If the default user role is not %1$s in some of your websites, "
+"administrators will be asked to set the default user role to %1$s."
 msgstr ""
-"Si les inscriptions sont ouvertes, le rôle par défaut devrait être Abonné."
+"Si le rôle par défaut n’est pas %1$s sur certains de vos sites, il sera "
+"demandé demandé aux administrateurs de mettre le rôle %1$s par défaut."
 
-#: inc/classes/scanners/class-secupress-scan-subscription.php:80
+#: inc/classes/scanners/class-secupress-scan-subscription.php:59
+#: inc/classes/scanners/class-secupress-scan-subscription.php:63
+#, php-format
+msgid "Set the default user's role to %s."
+msgstr "Configure le rôle par défaut sur %s."
+
+#: inc/classes/scanners/class-secupress-scan-subscription.php:62
+#, php-format
+msgid "If user registrations are open, the default user role should be %s."
+msgstr "Si les inscriptions sont ouvertes, le rôle par défaut devrait être %s."
+
+#: inc/classes/scanners/class-secupress-scan-subscription.php:85
 msgid "Your subscription settings are set correctly."
 msgstr "Vos réglages d’inscription sont corrects."
 
-#: inc/classes/scanners/class-secupress-scan-subscription.php:81
+#: inc/classes/scanners/class-secupress-scan-subscription.php:86
 msgid "A captcha module has been activated to block bot registration."
 msgstr ""
 "Le module de captcha a été activé pour bloquer les inscriptions de robots."
 
-#: inc/classes/scanners/class-secupress-scan-subscription.php:82
+#: inc/classes/scanners/class-secupress-scan-subscription.php:87
+#, php-format
 msgid ""
-"The user role for new registrations has been set to <strong>Subscriber</"
-"strong>."
-msgstr "Le rôle des nouveaux inscrits a été réglé sur <strong>Abonné</strong>."
+"The user role for new registrations has been set to <strong>%s</strong>."
+msgstr "Le rôle des nouveaux inscrits a été réglé sur <strong>%s</strong>."
 
-#: inc/classes/scanners/class-secupress-scan-subscription.php:84
+#: inc/classes/scanners/class-secupress-scan-subscription.php:89
 msgid "Unable to determine the status of your subscription settings."
 msgstr "Impossible de déterminer le statut du réglage des inscriptions."
 
-#: inc/classes/scanners/class-secupress-scan-subscription.php:88
+#: inc/classes/scanners/class-secupress-scan-subscription.php:93
 #, php-format
 msgid ""
-"The default role in your installation is <strong>%s</strong> and it should "
-"be <strong>Subscriber</strong>, or registrations should be <strong>closed</"
-"strong>."
+"The default role in your installation is <strong>%1$s</strong> and it should "
+"be <strong>%2$s</strong>, or registrations should be <strong>closed</strong>."
 msgstr ""
-"Le rôle par défaut de votre installation est <strong>%s</strong> et devrait "
-"être <strong>Abonné</strong>, ou les inscriptions devraient être "
+"Le rôle par défaut de votre installation est <strong>%1$s</strong> et "
+"devrait être <strong>%2$s</strong>, ou les inscriptions devraient être "
 "<strong>fermées</strong>."
 
-#: inc/classes/scanners/class-secupress-scan-subscription.php:89
+#: inc/classes/scanners/class-secupress-scan-subscription.php:94
 msgid "The registration page is <strong>not protected</strong> from bots."
 msgstr ""
 "La page d’inscription <strong>n’est pas protégée</strong> contre les robots."
 
-#: inc/classes/scanners/class-secupress-scan-subscription.php:90
+#: inc/classes/scanners/class-secupress-scan-subscription.php:95
 #, php-format
-msgid "The default role is not Subscriber in %s of your sites."
-msgid_plural "The default role is not Subscriber in %s of your sites."
-msgstr[0] "Le rôle par défaut n’est pas Abonné sur %s de vos sites."
-msgstr[1] "Le rôle par défaut n’est pas Abonné sur %s de vos sites."
+msgid "The default role is not %2$s in %1$s of your sites."
+msgid_plural "The default role is not %2$s in %1$s of your sites."
+msgstr[0] "Le rôle par défaut n’est pas %2$s sur %1$s de vos sites."
+msgstr[1] "Le rôle par défaut n’est pas %2$s sur %1$s de vos sites."
 
 #. Translators: %s is the plugin name.
-#: inc/classes/scanners/class-secupress-scan-subscription.php:93
+#: inc/classes/scanners/class-secupress-scan-subscription.php:98
 #, php-format
 msgid ""
 "The default role cannot be fixed from here. A new %s menu item has been "
@@ -4614,16 +4652,10 @@ msgstr ""
 "Le rôle par défaut ne peut pas être corrigé d’ici. Un nouveau %s menu a été "
 "activé dans les sites du réseau."
 
-#: inc/classes/scanners/class-secupress-scan-subscription.php:114
+#: inc/classes/scanners/class-secupress-scan-subscription.php:119
 msgid "http://docs.secupress.me/article/134-membership-settings-scan"
 msgstr ""
 "http://fr.docs.secupress.me/article/32-scan-des-parametres-d-inscription"
-
-#: inc/classes/scanners/class-secupress-scan-subscription.php:170
-#: inc/classes/scanners/class-secupress-scan-subscription.php:239
-msgctxt "a WP role"
-msgid "None"
-msgstr "Aucun"
 
 #: inc/classes/scanners/class-secupress-scan-themes-update.php:48
 msgid "Check if your themes are up to date."
@@ -5158,6 +5190,10 @@ msgstr "Lire la documentation"
 #: inc/classes/settings/class-secupress-settings.php:1496
 msgid "Got an issue? Ask for support."
 msgstr "Un problème ? Demandez du support."
+
+#: inc/classes/settings/class-secupress-settings.php:1499
+msgid "Ask for support"
+msgstr "Demander au support"
 
 #: inc/common.php:53
 msgid "Your unlock link has expired (or you're cheating)."
@@ -7758,7 +7794,7 @@ msgstr ""
 "Il semble que la configuration de votre serveur empêche le plugin de "
 "fonctionner correctement. La page de connexion ne peut pas être déplacée."
 
-#: inc/modules/users-login/plugins/inc/php/move-login/redirections-and-dies.php:106
+#: inc/modules/users-login/plugins/inc/php/move-login/redirections-and-dies.php:104
 msgid ""
 "This page does not exists, has moved or you are not allowed to access it."
 msgstr "Cette page n’existe pas, a été déplacée ou vous n’y avez pas accès."
@@ -8005,46 +8041,50 @@ msgstr ""
 msgid "For all users."
 msgstr "Pour tous les utilisateurs."
 
-#: inc/modules/welcome/callbacks.php:161
+#: inc/modules/welcome/callbacks.php:134
 msgid "Your license has been successfully deactivated."
 msgstr "Votre licence a été correctement désactivée."
 
-#: inc/modules/welcome/callbacks.php:163
+#: inc/modules/welcome/callbacks.php:136
 msgid "Your license has been successfully activated."
 msgstr "Votre licence a été activée avec succès."
 
-#: inc/modules/welcome/callbacks.php:349
+#: inc/modules/welcome/callbacks.php:184
+msgid "Plugin has been renamed correctly."
+msgstr "Extension renommée correctement."
+
+#: inc/modules/welcome/callbacks.php:370
 msgid "our support team"
 msgstr "notre équipe support"
 
-#: inc/modules/welcome/callbacks.php:353
+#: inc/modules/welcome/callbacks.php:374
 msgid "Please provide a valid email address and your license key."
 msgstr "Merci de fournir une adresse email valide ainsi qu’une clé de licence."
 
-#: inc/modules/welcome/callbacks.php:354
+#: inc/modules/welcome/callbacks.php:375
 msgid "Please provide a valid email address."
 msgstr "Veuillez entrer une adresse e-mail valide."
 
-#: inc/modules/welcome/callbacks.php:355
+#: inc/modules/welcome/callbacks.php:376
 msgid "Please provide your license key."
 msgstr "Veuillez entrer votre clé de licence."
 
 #. Translators: %s is a "to verify these infos" link.
-#: inc/modules/welcome/callbacks.php:358
+#: inc/modules/welcome/callbacks.php:379
 #, php-format
 msgid "Your license key seems invalid. You may want %s."
 msgstr "Votre clé de licence semble non valide. Peut-être voudrez-vous %s."
 
-#: inc/modules/welcome/callbacks.php:359 inc/modules/welcome/callbacks.php:373
+#: inc/modules/welcome/callbacks.php:380 inc/modules/welcome/callbacks.php:394
 msgid "to verify these infos"
 msgstr "pour vérifier ces infos"
 
-#: inc/modules/welcome/callbacks.php:361 inc/modules/welcome/callbacks.php:451
+#: inc/modules/welcome/callbacks.php:382 inc/modules/welcome/callbacks.php:472
 msgid "Something on your website is preventing the request to be sent."
 msgstr "Quelque chose sur votre site empêche la requête d’être envoyée."
 
 #. Translators: %s is a "our support team" link.
-#: inc/modules/welcome/callbacks.php:363
+#: inc/modules/welcome/callbacks.php:384
 #, php-format
 msgid ""
 "Our server is not accessible at the moment, please try again later or "
@@ -8054,7 +8094,7 @@ msgstr ""
 "ultérieurement ou contacter %s."
 
 #. Translators: %s is a "our support team" link.
-#: inc/modules/welcome/callbacks.php:365
+#: inc/modules/welcome/callbacks.php:386
 #, php-format
 msgid ""
 "Our server returned an unexpected response and might be in error, please try "
@@ -8064,21 +8104,21 @@ msgstr ""
 "veuillez réessayer ultérieurement ou contacter %s."
 
 #. Translators: %s is a "our support team" link.
-#: inc/modules/welcome/callbacks.php:367
+#: inc/modules/welcome/callbacks.php:388
 #, php-format
 msgid "There is a problem with your license key, please contact %s."
 msgstr "Il y a un problème avec votre clé de licence, merci de contacter %s."
 
-#: inc/modules/welcome/callbacks.php:368
+#: inc/modules/welcome/callbacks.php:389
 msgid "The email address is invalid."
 msgstr "L’adresse e-mail est invalide."
 
-#: inc/modules/welcome/callbacks.php:369
+#: inc/modules/welcome/callbacks.php:390
 msgid "The license key is invalid."
 msgstr "Votre clé de licence semble non valide."
 
 #. Translators: %s is a "to verify these infos" link.
-#: inc/modules/welcome/callbacks.php:372
+#: inc/modules/welcome/callbacks.php:393
 #, php-format
 msgid "This email address is not in our database. You may want %s."
 msgstr ""
@@ -8086,7 +8126,7 @@ msgstr ""
 "vous %s."
 
 #. Translators: %s is a "our support team" link.
-#: inc/modules/welcome/callbacks.php:384 inc/modules/welcome/callbacks.php:386
+#: inc/modules/welcome/callbacks.php:405 inc/modules/welcome/callbacks.php:407
 #, php-format
 msgid ""
 "There is a problem with your license key, please verify it. If you think "
@@ -8096,7 +8136,7 @@ msgstr ""
 "pensez qu&rsquo;il s&rsquo;agit d&rsquo;une erreur, veuillez contacter %s."
 
 #. Translators: %s is a "our support team" link.
-#: inc/modules/welcome/callbacks.php:388
+#: inc/modules/welcome/callbacks.php:409
 #, php-format
 msgid ""
 "This license key has been revoked. If you think there is a mistake, you "
@@ -8106,17 +8146,17 @@ msgstr ""
 "d&rsquo;une erreur, veuillez contacter %s."
 
 #. Translators: %s is a "to renew your subscription" link.
-#: inc/modules/welcome/callbacks.php:391
+#: inc/modules/welcome/callbacks.php:412
 #, php-format
 msgid "This license key expired. You may want %s."
 msgstr "Cette clé de licence a expirée. Peut-être voudrez-vous %s."
 
-#: inc/modules/welcome/callbacks.php:392
+#: inc/modules/welcome/callbacks.php:413
 msgid "to renew your subscription"
 msgstr "renouveler votre abonnement"
 
 #. Translators: %s is a "to upgrade your license" link.
-#: inc/modules/welcome/callbacks.php:396
+#: inc/modules/welcome/callbacks.php:417
 #, php-format
 msgid ""
 "You've used as many sites as your license allows. You may want %s to add "
@@ -8125,12 +8165,12 @@ msgstr ""
 "Vous avez utilisé autant de sites que votre licence le permet. Peut-être "
 "voudrez-vous %s pour ajouter plus de sites."
 
-#: inc/modules/welcome/callbacks.php:397
+#: inc/modules/welcome/callbacks.php:418
 msgid "to upgrade your license"
 msgstr "mettre à niveau votre licence"
 
 #. Translators: 1 is a "your account" link, 2 is a "our support team" link.
-#: inc/modules/welcome/callbacks.php:410
+#: inc/modules/welcome/callbacks.php:431
 #, php-format
 msgid ""
 "Something may be wrong with your license, please take a look at %1$s or "
@@ -8139,25 +8179,25 @@ msgstr ""
 "Quelque chose semble incorrect avec votre licence, merci de jeter un œil à "
 "%1$s ou de contacter %2$s."
 
-#: inc/modules/welcome/callbacks.php:411
+#: inc/modules/welcome/callbacks.php:432
 msgid "your account"
 msgstr "votre compte"
 
-#: inc/modules/welcome/callbacks.php:459
+#: inc/modules/welcome/callbacks.php:480
 msgid "Our server is not accessible at the moment."
 msgstr "Notre serveur n’est pas accessible pour le moment."
 
-#: inc/modules/welcome/callbacks.php:470
+#: inc/modules/welcome/callbacks.php:491
 msgid "Our server returned an unexpected response and might be in error."
 msgstr ""
 "Notre serveur a retourné une réponse inatendue, cela est surement une erreur."
 
-#: inc/modules/welcome/callbacks.php:478
+#: inc/modules/welcome/callbacks.php:499
 msgid "Our server returned an error."
 msgstr "Notre serveur a retourné une erreur."
 
 #. Translators: %s is a link to the "SecuPress account".
-#: inc/modules/welcome/callbacks.php:503
+#: inc/modules/welcome/callbacks.php:524
 #, php-format
 msgid ""
 "Please deactivate this site from your %s (the \"Manage Sites\" link in your "
@@ -8227,7 +8267,7 @@ msgid ""
 "save."
 msgstr ""
 "Importer vos réglages précédemment exportés depuis un autre site ou depuis "
-"une dernière sauvegarde"
+"une dernière sauvegarde."
 
 #: inc/modules/welcome/settings/settings-manager.php:29
 msgid "Reset All Settings"
@@ -8240,10 +8280,12 @@ msgstr "Réinitialise les réglages comme une nouvelle installation."
 #: inc/modules/welcome/settings/wl.php:9
 msgid ""
 "You can change the name of the plugin, this will be shown on the plugins "
-"page, only when activated."
+"page, only when activated. Leave the plugin name empty to remove the White "
+"Label."
 msgstr ""
 "Vous pouvez changer le nom de l’extension, ce nom sera affiché sur la page "
-"des extensions, si elle est activée."
+"des extensions, si elle est activée. Laissez le nom vide pour supprimer la "
+"marque blanche."
 
 #: inc/modules/welcome/settings/wl.php:13
 msgid "Plugin name"

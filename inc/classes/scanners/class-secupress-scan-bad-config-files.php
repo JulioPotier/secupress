@@ -156,7 +156,7 @@ class SecuPress_Scan_Bad_Config_Files extends SecuPress_Scan implements SecuPres
 			$this->fix();
 		}
 		// "good"
-		$this->add_fix_message( 1 );
+		$this->add_fix_message( 1, __( 'a safe file extension', 'secupress' ) );
 		return parent::manual_fix();
 	}
 
