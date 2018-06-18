@@ -57,8 +57,6 @@ function secupress_move_login_maybe_deny_login_page( $secure = true ) {
 	$uri    = secupress_get_current_url( 'uri' );
 	$subdir = secupress_get_wp_directory();
 	$slugs  = secupress_move_login_get_slugs();
-	$uri    = explode( '/', $uri );
-	$uri    = end( $uri );
 
 	if ( $subdir ) {
 		foreach ( $slugs as $action => $slug ) {
