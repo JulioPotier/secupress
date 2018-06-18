@@ -4,7 +4,7 @@ Tags: wordpress security, secure, security plugin, security, malware
 Requires at least: 4.0
 Tested up to: 5.0-alpha
 Requires PHP: 5.4
-Stable tag: 1.4.4
+Stable tag: 1.4.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -180,6 +180,28 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 8. The 4th step: final report, you can export it as PDF (1)
 
 == Changelog ==
+
+= 1.4.5 =
+
+* 18 june 2018
+
+* New#659: You can now set a scanner speed on scanner page, just below the scanner button. This is designed to resolve some server issue that does not love/allow too much (ajax) requests at the same time (30+ in 1 sec by default to 0,25sec or 1 per sec now).
+* Improvement#649: Change the behavior of the scanner for minimum role. It's not 'Subscriber' anymore but 'Not Administrator', so you can now set your default role on "Customer" or whatever without being tagged as "bad".
+* Improvement#655: The new "confirmaction" links on WP 4.9.6 were showing the new moved login page. It will now show a "confirmaction" shortcut when move login is active.
+* Improvement#657: Remove the "Ask for support" on each scan result in step 3, nobody was using them.
+* Fix#626: Block Fake SEO Bots won't block Facebook share anymore.
+* Fix#640: Import file was tagged as "empty", not anymore.
+* Fix#641,#647: Some module were impossible to activate/check, it's now ok.
+* Fix#642: Warning: count(): Parameter must be an array or an object that implements Countable in /secupress/inc/functions/common.php on line 1288
+* Fix#643: The "Add my license" link is now correct.
+* Fix#644: GeoIPs database will now work on 32 bits servers (INT MAX issue).
+* Fix#645: GeoIPs database has been updated to perfectly match countries, and won't block an unknown country now.
+* Fix#646: Warning: shell_exec() has been disabled for security reasons in /secupress/inc/functions/ip.php on line 229
+* Fix#648: Fatal error: Cannot redeclare secupress_remove_comment_feature_add_packed_plugin() (previously declared in secupress-pro/core/modules/antispam/callbacks.php on line 64
+* Fix#650: Fatal error: Uncaught Error: Call to undefined function secupress_pro_settings_white_label_callback() in /secupress/inc/modules/welcome/callbacks.php on line 27
+* Fix #651: Move login and subfolder love/hate again.
+* Fix #654: Warning: fileperms(): stat failed for /index.php in /secupress/inc/functions/files.php on line 29
+* Fix #656: The scanner step 3 was not showing all the possible fixes.
 
 = 1.4.4 =
 
