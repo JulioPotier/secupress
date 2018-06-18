@@ -829,20 +829,3 @@ function secupress_get_rewrite_bases() {
 
 	return ( $bases = false );
 }
-
-add_action( 'admin_init', 'secupress_check_common_php' );
-/**
- * Check the integrity of common.php
- *
- * @since 1.4.2
- * @author Julio Potier
- **/
-function secupress_check_common_php() {
-	if ( get_site_transient( 'secupress-common' ) || defined( 'DOING_AJAX' ) ) {
-		return;
-	}
-	if ( ! hash_equals( 'c65171d2c699aafab9ca98fae4533cab', md5_file( SECUPRESS_INC_PATH . 'functions/common.php' ) ) ) {
-		wp_redirect( esc_url( secupress_admin_url( 'get-pro' ) . str_rot13( '?qvfpbhag=AHYYRQ_IREFVBA' ) ) );
-		die();
-	}
-}
