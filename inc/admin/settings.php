@@ -303,7 +303,9 @@ function secupress_create_menus() {
 		if ( secupress_has_pro() ) {
 			$title = __( 'Add my license', 'secupress' );
 		}
+		if ( ! secupress_is_pro() ) {
 			add_submenu_page( SECUPRESS_PLUGIN_SLUG . '_scanners', $title, $title, $cap, '__return_false', '__return_false' );
+		}
 	}
 
 	// Fix `add_menu_page()` nonsense.
@@ -315,7 +317,7 @@ function secupress_create_menus() {
 	if ( ! secupress_is_pro() ) {
 		end( $submenu );
 		$key = key( $submenu );
-		$url = secupress_has_pro() ? esc_url( secupress_admin_url( 'modules' ) ) : esc_url( secupress_admin_url( 'get-pro' ) );
+		$url = secupress_has_pro() ? esc_url( secupress_admin_url( 'modules' ) . '#module-secupress_display_apikey_options' ) : esc_url( secupress_admin_url( 'get-pro' ) );
 		$submenu[ $key ][ count( $submenu[ $key ] ) -1 ] = array( $title, $cap, $url, $title );
 	}
 }
