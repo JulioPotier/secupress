@@ -269,7 +269,7 @@ function secupress_settings_action_links( $actions ) {
 		array_unshift( $actions, sprintf( '<a href="%s">%s</a>', esc_url( __( 'http://docs.secupress.me/', 'secupress' ) ), __( 'Docs', 'secupress' ) ) );
 	}
 
-	array_unshift( $actions, sprintf( '<a href="%s">%s</a>', esc_url( secupress_admin_url( 'settings' ) ), __( 'Settings' ) ) );
+	array_unshift( $actions, sprintf( '<a href="%s">%s</a>', esc_url( secupress_admin_url( 'modules', 'welcome' ) ), __( 'Settings' ) ) );
 
 	return $actions;
 }
