@@ -48,9 +48,7 @@ function secupress_admin_bar( $wp_admin_bar ) {
 		'id' 	 => 'secupress-scanners-step2',
 		'title'  => __( 'Step 2 – Auto-Fix', 'secupress' ),
 		'href'   => esc_url( secupress_admin_url( 'scanners', '&step=2' ) ),
-		'meta'   => [
-						'class'  => secupress_is_pro() ? '' : 'secupress-pro-notice',
-					]
+		'meta'   => [ 'class'  => secupress_is_pro() ? '' : 'secupress-pro-notice' ],
 	) );
 	$wp_admin_bar->add_menu( array(
 		'parent' => 'secupress-scanners',
@@ -69,9 +67,7 @@ function secupress_admin_bar( $wp_admin_bar ) {
 		'id' 	 => 'secupress-scanners-pdf',
 		'title'  => __( 'Export Security Report as PDF', 'secupress' ),
 		'href'   => esc_url( secupress_admin_url( 'scanners', '#secupress-step-content-footer' ) ),
-		'meta'   => [
-						'class'  => secupress_is_pro() ? '' : 'secupress-pro-notice',
-					]
+		'meta'   => [ 'class'  => secupress_is_pro() ? '' : 'secupress-pro-notice' ],
 	) );
 
 	// Modules.
@@ -111,9 +107,7 @@ function secupress_admin_bar( $wp_admin_bar ) {
 				'id'     => 'secupress-submodules-' . $submodule_slug,
 				'title'  => str_replace( '*', '', '&rsaquo; ' . $submodule ),
 				'href'   => esc_url( secupress_admin_url( 'modules', $module_slug . '#' . $submodule_slug ) ),
-				'meta'   => [
-								'class'  => false === strpos( $submodule, '*' ) || secupress_is_pro() ? '' : 'secupress-pro-notice',
-							]
+				'meta'   => [ 'class'  => false === strpos( $submodule, '*' ) || secupress_is_pro() ? '' : 'secupress-pro-notice' ],
 			) );
 		}
 	}
@@ -160,10 +154,9 @@ function secupress_admin_bar( $wp_admin_bar ) {
 			'id'     => 'secupress-modules-get-pro',
 			'title'  => '<span class="ab-icon dashicons dashicons-star-filled" style="font-size: 17px"></span>' . $title,
 			'href'   => $href,
-			'meta'   => [
-							'class'  => 'secupress-pro-notice',
-							'target' => $target,
-						]
+			'meta'   => [ 'class'  => 'secupress-pro-notice',
+						'target' => $target,
+						],
 		) );
 	}
 }

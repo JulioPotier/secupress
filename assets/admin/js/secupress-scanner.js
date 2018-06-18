@@ -85,7 +85,7 @@ jQuery( document ).ready( function( $ ) {
 				"value": $( 'input[name=secupress-scan-speed]:checked' ).val()
 			};
 
-			$.getJSON( ajaxurl, params ).done( function(r) {;
+			$.getJSON( ajaxurl, params ).done( function(r) {
 				SecuPressi18nScanner.offset = r.data.val;
 				$( 'input[name=secupress-scan-speed][value='+r.data.text+']' ).prop( 'checked', 'checked' );
 				$( '#secupress-button-scan-speed' ).find('span').toggleClass( 'dashicons-arrow-down dashicons-arrow-up' );
@@ -730,7 +730,7 @@ jQuery( document ).ready( function( $ ) {
 		// Perform a scan: spinner + row class + ajax call + display result.
 		function secupressScanit( test, $row, href, isBulk ) {
 			var offsetinit = parseInt( SecuPressi18nScanner.offset );
-			if ( -1 == offset ) {
+			if ( -1 === offset ) {
 				offset = parseInt( -offsetinit );
 			}
 			offset = offset + offsetinit;

@@ -521,21 +521,20 @@ function secupress_hack_changelog() {
 	$api = plugins_api( 'plugin_information', array(
 		'slug' => 'secupress',
 		'is_ssl' => is_ssl(),
-		'fields' => [
-			'short_description' => false,
-			'reviews' => false,
-			'downloaded' => false,
-			'downloadlink' => false,
-			'last_updated' => false,
-			'added' => false,
-			'tags' => false,
-			'homepage' => false,
-			'donate_link' => false,
-			'ratings' => false,
-			'active_installs' => true,
-			'banners' => true,
-			'sections' => true,
-		]
+		'fields' => [ 'short_description' => false,
+					'reviews' => false,
+					'downloaded' => false,
+					'downloadlink' => false,
+					'last_updated' => false,
+					'added' => false,
+					'tags' => false,
+					'homepage' => false,
+					'donate_link' => false,
+					'ratings' => false,
+					'active_installs' => true,
+					'banners' => true,
+					'sections' => true,
+				]
 	) );
 
 	if ( is_wp_error( $api ) ) {
@@ -544,7 +543,7 @@ function secupress_hack_changelog() {
 
 	$changelog_content = $api->sections['changelog'];
 	$changelog_content = explode( "\n", $changelog_content );
-	$changelog_content = array_slice( $changelog_content, 0, array_search( '</ul>', $changelog_content ) );
+	$changelog_content = array_slice( $changelog_content, 0, array_search( '</ul>', $changelog_content, true ) );
 	$changelog_content = array_map( 'strip_tags', $changelog_content );
 	$changelog_version = array_shift( $changelog_content );
 	$changelog_content = array_filter( $changelog_content );

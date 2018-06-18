@@ -53,7 +53,7 @@ function secupress_settings_licence_callback() {
 	$old_is_pro = $has_old ? $old_is_pro : 0;
 	unset( $old_values['sanitized'] ); // Back compat'.
 	// New values.
-	$values     = ! empty( $_POST['secupress_welcome_settings'] ) && is_array( $_POST['secupress_welcome_settings'] ) ? $_POST['secupress_welcome_settings'] : array(); // WPCS: CSR ok.
+	$values     = ! empty( $_POST['secupress_welcome_settings'] ) && is_array( $_POST['secupress_welcome_settings'] ) ? $_POST['secupress_welcome_settings'] : array(); // WPCS: CSRF ok.
 	$values     = secupress_array_merge_intersect( $values, array(
 		'consumer_email' => '',
 		'consumer_key'   => '',
@@ -146,6 +146,12 @@ function secupress_settings_licence_callback() {
 	exit;
 }
 
+/**
+ * Handle the white label validation
+ *
+ * @since 1.4.5
+ * @author Julio Potier
+ **/
 function secupress_pro_settings_white_label_callback() {
 	$old_values = get_site_option( SECUPRESS_SETTINGS_SLUG );
 	$old_values = is_array( $old_values ) ? $old_values : [];

@@ -1282,12 +1282,12 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * $echo             True if the button should be "echo"ed, false otherwise.
 	 * $label            The button label.
 	 * $before           What to print before the button
-	 * @param (array)    $args Optional.
+	 * @param (array) $args Optional.
 	 *
 	 * @return (string) Submit button HTML.
 	 */
 	protected static function submit_button( $args ) {
-		$defaults = ['label' => __( 'Save All Changes', 'secupress' ), 'before' => '', 'type' => 'primary large', 'name' => 'main_submit', 'wrap' => true, 'other_attributes' => null, 'echo' => true];
+		$defaults = [ 'label' => __( 'Save All Changes', 'secupress' ), 'before' => '', 'type' => 'primary large', 'name' => 'main_submit', 'wrap' => true, 'other_attributes' => null, 'echo' => true ];
 		$args     = wp_parse_args( $args, $defaults );
 
 		if ( true === $args['wrap'] ) {

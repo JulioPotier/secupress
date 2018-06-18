@@ -275,8 +275,9 @@ add_filter( 'user_request_action_email_content', 'secupress_user_request_action_
  * Filter the content to replace first the confirl URL in order to hide the moved login url with a hardcoded one "conformaction".
  *
  * @return (string) $email_text
- * @param (string) $email_text
- * @param (array) $email_data
+ *
+ * @param (string) $email_text The email
+ * @param (array)  $email_data The data
  *
  * @since 1.4.5
  * @author Julio Potier

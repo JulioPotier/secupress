@@ -28,7 +28,17 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 	 * @var (object)
 	 */
 	protected static $_instance;
+	/**
+	 * The minimum role to be available here
+	 *
+	 * @var (string)
+	 */
 	protected $role_minimum;
+	/**
+	 * The minimum role, translated
+	 *
+	 * @var (string)
+	 */
 	protected $role_minimum_i18n;
 
 

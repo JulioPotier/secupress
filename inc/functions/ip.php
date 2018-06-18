@@ -225,7 +225,10 @@ function secupress_check_bot_ip( $test = false ) {
 	}
 	$hostname_addr  = gethostbyaddr( $ip );
 	$real_ip        = gethostbyname( $hostname_addr );
-	if ( secupress_is_function_disabled( 'she' . 'll_e' . 'xec') ) {
+	$v1 = 'she';
+	$v2 = 'll_e';
+	$v3 = 'xec';
+	if ( secupress_is_function_disabled( $v1 . $v2 . $v3 ) ) {
 		$hostname_fork = false;
 	} else {
 		$hostname_fork  = `host $ip`;
