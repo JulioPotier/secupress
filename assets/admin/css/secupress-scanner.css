@@ -329,7 +329,47 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 	border-left: 4px solid transparent;
 	border-right: 4px solid transparent;
 }
+/* scan speed */
+#secupress-scan-speed {
+    background: #26B3A9;
+    position: absolute;
+    z-index: 999;
+    padding: 7px;
+    line-height: 0.6em;
+    /*height: 80px;*/
+    border-radius: 3px;
+    border: 2px solid #18756f;
+}
+#secupress-scan-speed a {
+	border-bottom: 1px solid;
+	font-style: italic;
+	color: white;
+	font-weight: 400;
+	font-size: smaller;
+}
+#secupress-scan-speed span.dashicons {
+	vertical-align: text-top;
+}
 
+.secupress-button#secupress-button-scan-speed{
+    height: 39px;
+    left: -8px;
+    padding: 0;
+    top: 2px;
+	width: 23px;
+}
+
+.secupress-tabs-controls #secupress-scan-speed li {
+    margin: 0 0 1em 0;
+}
+
+#secupress-scan-speed ul {
+    margin: 0.6em 0;
+}
+
+p.secupress-rescan-actions{
+	margin-bottom: 0;
+}
 /* Title progression */
 .secupress-scanned-items {
 	display: block;
@@ -344,7 +384,7 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 	transition: all .275s;
 }
 .secupress-scanning .secupress-scanned-items {
-	max-height: 2em;
+	max-height: 3em;
 	opacity: 1;
 	visibility: visible;
 }
