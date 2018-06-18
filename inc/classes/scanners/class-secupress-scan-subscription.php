@@ -85,7 +85,7 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 			/** Translators: %s is the plugin name. */
 			101 => sprintf( __( 'You have a big network, %s must work on some data before being able to perform this scan.', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ),
 			// "bad"
-			200 => __( 'The default role in your installation is <strong>%s</strong> and it should be <strong>Subscriber</strong>, or registrations should be <strong>closed</strong>.', 'secupress' ),
+			200 => __( 'The default role in your installation is <strong>%1$s</strong> and it should be <strong>%2$s</strong>, or registrations should be <strong>closed</strong>.', 'secupress' ),
 			201 => __( 'The registration page is <strong>not protected</strong> from bots.', 'secupress' ),
 			202 => _n_noop( 'The default role is not Subscriber in %s of your sites.', 'The default role is not Subscriber in %s of your sites.', 'secupress' ),
 			// "cantfix"
@@ -153,7 +153,7 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 			$blogs = array();
 
 			foreach ( $roles as $blog_id => $role ) {
-				if ( 'subscriber' !== $role ) {
+				if ( 'administrator' === $role ) {
 					$blogs[] = $blog_id;
 				}
 			}
@@ -165,10 +165,16 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 		} else {
 			$role = get_option( 'default_role' );
 
-			if ( 'subscriber' !== $role ) {
+			if ( 'administrator' === $role ) {
 				// "bad"
-				$role = isset( $wp_roles->role_names[ $role ] ) ? translate_user_role( $wp_roles->role_names[ $role ] ) : _x( 'None', 'a WP role', 'secupress' );
-				$this->add_message( 200, array( $role ) );
+				$role_administrator = isset( $wp_roles->role_names[ $role ] ) ? translate_user_role( $wp_roles->role_names[ $role ] ) : _x( 'None', 'a WP role', 'secupress' );
+				/**
+				* Filter the minimum role to inform which one should be used to fix.
+				* @param (string) $role_minimum The minimum role to be filtered, 'subscriber' by default.
+				*/
+				$role_minimum       = apply_filters( 'secupress.scan.' . __CLASS__ . '.minimum_role', 'subscriber' );
+				$role_minimum       = isset( $wp_roles->role_names[ $role_minimum ] ) ? translate_user_role( $wp_roles->role_names[ $role_minimum ] ) : _x( 'None', 'a WP role', 'secupress' );
+				$this->add_message( 200, array( $role_administrator, $role_minimum ) );
 			}
 		}
 
@@ -234,10 +240,12 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 			$is_bad = false;
 
 			foreach ( $roles as $blog_id => $role ) {
-				if ( 'subscriber' !== $role ) {
+				if ( 'administrator' === $role ) {
 					$is_bad = true;
-					$role   = isset( $wp_roles->role_names[ $role ] ) ? translate_user_role( $wp_roles->role_names[ $role ] ) : _x( 'None', 'a WP role', 'secupress' );
-					$data   = array( $role );
+					$role_administrator = isset( $wp_roles->role_names[ $role ] ) ? translate_user_role( $wp_roles->role_names[ $role ] ) : _x( 'None', 'a WP role', 'secupress' );
+					$role_minimum       = apply_filters( 'secupress.scan.' . __CLASS__ . '.minimum_role', 'subscriber' );
+					$role_minimum       = isset( $wp_roles->role_names[ $role_minimum ] ) ? translate_user_role( $wp_roles->role_names[ $role_minimum ] ) : _x( 'None', 'a WP role', 'secupress' );
+					$data   = array( $role_administrator, $role_minimum );
 					// Add a scan message for each sub-site with wrong role.
 					$this->add_subsite_message( 200, $data, 'scan', $blog_id );
 				} else {
@@ -249,8 +257,9 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 				// "cantfix"
 				$this->add_fix_message( 300 );
 			}
-		} elseif ( 'subscriber' !== get_option( 'default_role' ) ) {
-			update_option( 'default_role', 'subscriber' );
+		} elseif ( 'administrator' === get_option( 'default_role' ) ) {
+			$role_minimum = apply_filters( 'secupress.scan.' . __CLASS__ . '.minimum_role', 'subscriber' );
+			update_option( 'default_role', $role_minimum );
 			// "good"
 			$this->add_fix_message( 2 );
 		}
