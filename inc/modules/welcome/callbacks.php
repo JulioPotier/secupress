@@ -15,7 +15,6 @@ function secupress_welcome_settings_callback() {
 	secupress_check_user_capability();
 	secupress_check_admin_referer( 'secupress_welcome_settings-options' );
 
-	// die(var_dump($_POST));
 	// Handle Import.
 	if ( ! empty( $_FILES['import'] ) ) {
 		secupress_settings_import_callback();
@@ -23,7 +22,7 @@ function secupress_welcome_settings_callback() {
 	}
 
 	// Handle White Label.
-	if ( secupress_is_pro() && isset( $_POST['secupress_display_white_label_submit'] ) ) {
+	if ( secupress_is_pro() && isset( $_POST['secupress_display_white_label_submit'], $_POST['secupress_welcome_settings'] ) ) {
 		secupress_pro_settings_white_label_callback();
 		return;
 	}
@@ -123,34 +122,8 @@ function secupress_settings_licence_callback() {
 	// Add other previous values.
 	$values = array_merge( $old_values, $values );
 
-	// Some cleanup.
-	if ( empty( $old_values['wl_plugin_name'] ) || 'SecuPress' === $old_values['wl_plugin_name'] ) {
-		unset( $old_values['wl_plugin_name'] );
-	}
-	if ( empty( $values['wl_plugin_name'] ) || 'SecuPress' === $values['wl_plugin_name'] ) {
-		unset( $values['wl_plugin_name'] );
-	}
-
 	// Finally, save.
 	secupress_update_options( $values );
-
-	// White Label: trick the referrer for the redirection.
-	if ( ! empty( $values['wl_plugin_name'] ) ) {
-		if ( empty( $values['site_is_pro'] ) ) {
-			// Pro deactivation.
-			$old_slug = ! empty( $old_values['wl_plugin_name'] ) ? sanitize_title( $old_values['wl_plugin_name'] ) : 'secupress';
-			$old_slug = 'page=' . $old_slug . '_settings';
-			$new_slug = 'page=secupress_settings';
-		} else {
-			// Pro activation.
-			$old_slug = 'page=secupress_settings';
-			$new_slug = 'page=' . sanitize_title( $values['wl_plugin_name'] ) . '_settings';
-		}
-
-		if ( $old_slug !== $new_slug ) {
-			$_REQUEST['_wp_http_referer'] = str_replace( $old_slug, $new_slug, wp_get_raw_referer() );
-		}
-	}
 
 	/**
 	 * Handle settings errors and return to settings page.
@@ -173,7 +146,55 @@ function secupress_settings_licence_callback() {
 	exit;
 }
 
+function secupress_pro_settings_white_label_callback() {
+	$old_values = get_site_option( SECUPRESS_SETTINGS_SLUG );
+	$old_values = is_array( $old_values ) ? $old_values : [];
+	$names      = [
+			'wl_plugin_name' => '',
+			'wl_plugin_URI'  => '',
+			'wl_description' => '',
+			'wl_author'      => '',
+			'wl_author_URI'  => '',
+		];
+	// New values.
+	$values     = $_POST['secupress_welcome_settings']; // WPCS: CSRF ok.
+	// Some cleanup.
+	if ( empty( $values['wl_plugin_name'] ) || '' === trim( $values['wl_plugin_name'] ) ) {
+		$values = $names;
+	} else {
+		$values = wp_parse_args( $values, $names );
+	}
 
+	// White Label: trick the referer for the redirection.
+	$old_slug = 'page=' . SECUPRESS_PLUGIN_SLUG . '_modules';
+	$new_slug = 'page=' . sanitize_title( $values['wl_plugin_name'] ) . '_modules';
+
+	if ( '' !== $values['wl_plugin_name'] ) {
+		$values = wp_parse_args( $values, $old_values );
+	} else {
+		$new_slug = 'page=secupress_modules';
+		$values = wp_parse_args( $values, $old_values );
+		foreach ( $names as $name => $dummy ) {
+			unset( $values[ $name ] );
+		}
+	}
+
+	if ( $old_slug !== $new_slug ) {
+		$_REQUEST['_wp_http_referer'] = str_replace( $old_slug, $new_slug, wp_get_raw_referer() );
+		secupress_add_settings_error( 'general', 'settings_updated', __( 'Plugin has been renamed correctly.', 'secupress' ), 'updated' );
+		set_transient( 'settings_errors', secupress_get_settings_errors(), 30 );
+	}
+
+	// Finally, save.
+	secupress_update_options( $values );
+
+	/**
+	 * Redirect back to the settings page that was submitted.
+	 */
+	$goback = add_query_arg( 'settings-updated', 'true',  wp_get_referer() );
+	wp_redirect( esc_url_raw( $goback ) );
+	exit;
+}
 /**
  * Call our server to activate the Pro license.
  *
