@@ -449,6 +449,15 @@ i.bold {
 /**
  * === Flexbox
  */
+.secupress-flex .plugin-card {
+    width: 100%;
+}
+.secupress-flex .plugin-card a:not(.button) {
+	color: #0073aa;
+}
+.secupress-flex .plugin-card .button {
+	font-weight: 400;
+}
 .secupress-flex,
 .secupress-flex-spaced {
 	position: relative;

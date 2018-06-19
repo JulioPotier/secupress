@@ -770,6 +770,64 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				<?php
 				break;
 
+			case 'plugin' :
+				$helpers_args_for_plugins = $args;
+				unset( $helpers_args_for_plugins['helpers']['help'] );
+				static::helpers( $helpers_args_for_plugins );
+
+				if ( ! function_exists( 'plugins_api' ) ) {
+					require( ABSPATH . '/wp-admin/includes/plugin-install.php' );
+				}
+				// Set up our query fields.
+				$fields = array(
+					'banners' => false,
+					'icons' => true,
+					'reviews' => false,
+					'rating' => true,
+					'num_ratings' => true,
+					'downloaded' => true,
+					'active_installs' => true,
+					'short_description' => true,
+					'sections' => false,
+					'downloadlink' => true,
+					'last_updated' => true,
+					'homepage' => true,
+				);
+				// Set how long to cache results.
+				$expiration = 120 * MINUTE_IN_SECONDS;
+				$plugin_info = false;
+				/**
+				 * Do query using passed in params.
+				 */
+				// Look in the cache.
+				$plugin_info = get_transient( "secupress_plugin_cards_{$args['name']}" );
+				// If it's not in the cache or it's expired, do it live
+				// and store it in the cache for next time.
+				if ( ! $plugin_info ) {
+					$plugin_info = plugins_api(
+						'plugin_information',
+						array(
+							'slug'   => $args['name'],
+							'fields' => $fields,
+						)
+					);
+					if ( is_object( $plugin_info ) && ! is_wp_error( $plugin_info ) ) {
+						set_transient( "secupress_plugin_cards_{$slug}", $plugin_info, $expiration );
+					}
+				}
+				// Default $output.
+				$output = '';
+				// Confirm the call to plugins_api worked.
+				if ( is_object( $plugin_info ) && ! is_wp_error( $plugin_info ) ) {
+					// var_dump($plugin_info);
+					$output .= '<div class="plugin-cards single-plugin">';
+					$output .= secupress_render_plugin_card( $plugin_info );
+					$output .= '</div>';
+				}
+				echo $output;
+
+				break;
+
 			case 'html' :
 
 				echo $value;
@@ -791,7 +849,13 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		}
 
 		// Helpers.
-		static::helpers( $args );
+		if ( 'plugin' !== $args['type'] ) {
+			static::helpers( $args );
+		} else {
+			$helpers_args_for_plugins = $args;
+			unset( $helpers_args_for_plugins['helpers']['description'] );
+			static::helpers( $helpers_args_for_plugins );
+		}
 
 		if ( $has_fieldset_end ) {
 			echo '</fieldset>';
@@ -963,7 +1027,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					$description = '<' . $tag . ' class="description desc' . $depends . $class . '">' . $helper['description'] . '</' . $tag . '>';
 					break;
 				case 'help' :
-					$description = '<' . $tag . ' class="description help' . $depends . $class . '">' . $helper['description'] . '</' . $tag . '>';
+					$description = '<' . $tag . ' class="description help' . $depends . $class . '"><span class="dashicons dashicons-editor-help"></span> ' . $helper['description'] . '</' . $tag . '>';
 					break;
 				case 'warning' :
 					$description = '<' . $tag . ' class="description warning' . $depends . $class . '">' . ( 'p' === $tag ? '' : '<p>' ) . '<strong>' . __( 'Warning: ', 'secupress' ) . '</strong> ' . $helper['description'] . '</' . $tag . '>'; // Don't forget to close the <p> tag.

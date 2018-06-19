@@ -161,6 +161,21 @@ function secupress_get_modules() {
 							'logs_404-logs-activated'    => __( '404 Logs Activation', 'secupress' ),
 						]
 		],
+		'addons'          => [
+			'title'       => __( 'Add-ons', 'secupress' ),
+			'icon'        => 'cogs',
+			'dashicon'    => 'admin-tools',
+			'summaries'   => [
+				'small'   => __( 'More security', 'secupress' ),
+				'normal'  => __( 'More security from our plugin’s partners.', 'secupress' ),
+			],
+			'with_form'      => false,
+			'with_reset_box' => false,
+			'submodules'     => [
+							'logs'    => __( 'Logs', 'secupress' ),
+							'backups' => __( 'Backups', 'secupress' ),
+						]
+		],
 		'file-system'     => [
 			'title'       => __( 'Malware Scan', 'secupress' ),
 			'icon'        => 'file-system',
