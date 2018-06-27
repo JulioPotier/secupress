@@ -77,7 +77,6 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 		// Add notices style.
 		self::enqueue_style();
 
-		// $error_code = 'error' === $error_code ? 'error' : 'updated';
 		$notice_id  = $notice_id ? sanitize_title( $notice_id ) : $notice_id;
 
 		if ( ! isset( $this->notices[ $error_code ] ) ) {
@@ -115,7 +114,6 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 	 *                                  enpty string: meant for a one-shot use. The notice is dismissible but the "dismissed" state is not stored, it will popup again. This is the exact same behavior than the WordPress dismissible notices.
 	 */
 	public function add_temporary( $message, $error_code = 'updated', $notice_id = false ) {
-		// $error_code = 'error' === $error_code ? 'error' : 'updated';
 		$notices    = secupress_get_transient( 'secupress-notices-' . get_current_user_id() );
 		$notices    = is_array( $notices ) ? $notices : array();
 		$notices[]  = compact( 'message', 'error_code', 'notice_id' );

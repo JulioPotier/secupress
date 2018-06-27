@@ -157,8 +157,6 @@ function secupress_get_modules() {
 			'submodules'     => [
 							'secupress-banned-ips-list'  => __( 'Banned IPs', 'secupress' ),
 							'banned-ips_whitelist'       => __( 'IP Whitelist', 'secupress' ),
-							// 'logs_action-logs-activated' => __( 'Action Logs Activation', 'secupress' ),
-							// 'logs_404-logs-activated'    => __( '404 Logs Activation', 'secupress' ),
 						]
 		],
 		'addons'          => [
