@@ -181,6 +181,12 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 == Changelog ==
 
+= 1.4.5.1 =
+
+* 27 june 2018
+
+* New: Hotfix a non patched vulnerability in WordPress Core, read more at https://blog.ripstech.com/2018/wordpress-file-delete-to-code-execution/
+
 = 1.4.5 =
 
 * 18 june 2018
