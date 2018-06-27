@@ -451,6 +451,7 @@ i.bold {
  */
 .secupress-flex .plugin-card {
     width: 100%;
+    box-shadow: 7px 7px 0px rgba( 0, 0, 0, 0.4 );
 }
 .secupress-flex .plugin-card a:not(.button) {
 	color: #0073aa;

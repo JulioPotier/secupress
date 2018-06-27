@@ -13,6 +13,12 @@ add_action( 'secupress.loaded', 'secupress_upgrader', 9 );
  */
 function secupress_upgrader() {
 	$actual_version = secupress_get_option( 'version' );
+		if ( secupress_is_submodule_active( 'logs', '404-logs' ) || secupress_is_submodule_active( 'logs', 'action-logs' ) ) {
+			secupress_add_transient_notice( [ 'title' => sprintf( __( 'New Logs in %s', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
+											'message' => '<span class="dashicons dashicons-media-spreadsheet"></span> ' . sprintf( __( 'Our <strong>Logs Module</strong> has changed, you were using it, thank you.<br>You can know activate the new one by yourself by visiting the <a href="%s#module-logs">Add-ons & Plugins</a> page.', 'secupress' ), secupress_admin_url( 'modules', 'addons' ) ),
+											],
+											'updated secupress-big', 'secupress-new-logs' );
+		}
 
 	// You can hook the upgrader to trigger any action when SecuPress is upgraded.
 	// First install.
@@ -40,6 +46,7 @@ function secupress_upgrader() {
 	// Already installed but got updated.
 	elseif ( SECUPRESS_VERSION !== $actual_version ) {
 		$new_version = SECUPRESS_VERSION;
+
 		/**
 		 * Fires when SecuPress is upgraded.
 		 *
@@ -464,6 +471,25 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 		secupress_remove_old_plugin_file( SECUPRESS_PRO_MODULES_PATH . 'antispam/callbacks.php' );
 	}
 
+	// < 1.4.6
+	if ( version_compare( $actual_version, '1.4.6', '<' ) ) {
+		if ( secupress_is_submodule_active( 'logs', '404-logs' ) || secupress_is_submodule_active( 'logs', 'action-logs' ) ) {
+			secupress_add_transient_notice( sprintf( __( '<strong>New!</strong>: Logs module has changed, you were using it, thank you. You can know activate the new one by yourself by visiting the <a href="%s#module-logs">Add-ons & Plugins</a> page.', 'secupress' ), secupress_admin_url( 'modules', 'addons' ) ) );
+		}
+		secupress_deactivate_submodule( 'logs', '404-logs' );
+		secupress_remove_old_plugin_file( SECUPRESS_MODULES_PATH . 'logs/plugins/404-logs.php' );
+		secupress_remove_old_plugin_file( SECUPRESS_MODULES_PATH . 'logs/plugins/inc/php/404-logs/class-secupress-404-log.php' );
+		secupress_remove_old_plugin_file( SECUPRESS_MODULES_PATH . 'logs/plugins/inc/php/404-logs/class-secupress-404-logs.php' );
+
+		secupress_deactivate_submodule( 'logs', 'action-logs' );
+		secupress_remove_old_plugin_file( SECUPRESS_MODULES_PATH . 'logs/plugins/action-logs.php' );
+		secupress_remove_old_plugin_file( SECUPRESS_MODULES_PATH . 'logs/plugins/inc/php/action-logs/class-secupress-action-log.php' );
+		secupress_remove_old_plugin_file( SECUPRESS_MODULES_PATH . 'logs/plugins/inc/php/action-logs/class-secupress-action-logs.php' );
+
+		secupress_remove_old_plugin_file( SECUPRESS_MODULES_PATH . 'logs/settings/logs.php' );
+
+		delete_site_transient( 'secupress-common' );
+	}
 }
 
 /**

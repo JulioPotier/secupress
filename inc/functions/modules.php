@@ -145,20 +145,20 @@ function secupress_get_modules() {
 						]
 		],
 		'logs'            => [
-			'title'       => _x( 'Logs', 'post type general name', 'secupress' ),
+			'title'       => __( 'IPs', 'secupress' ),
 			'icon'        => 'logs',
 			'dashicon'    => 'welcome-write-blog',
 			'summaries'   => [
-				'small'   => __( 'Monitor everything', 'secupress' ),
-				'normal'  => __( 'Keep an eye on what happened on your website at any time. Also, control banned IPs from our modules here.', 'secupress' ),
+				'small'   => __( 'Whitelist & Blacklist', 'secupress' ),
+				'normal'  => __( 'Set allowed IP to perform actions and permanently ban bad IPs.', 'secupress' ),
 			],
 			'with_form'      => false,
 			'with_reset_box' => false,
 			'submodules'     => [
 							'secupress-banned-ips-list'  => __( 'Banned IPs', 'secupress' ),
 							'banned-ips_whitelist'       => __( 'IP Whitelist', 'secupress' ),
-							'logs_action-logs-activated' => __( 'Action Logs Activation', 'secupress' ),
-							'logs_404-logs-activated'    => __( '404 Logs Activation', 'secupress' ),
+							// 'logs_action-logs-activated' => __( 'Action Logs Activation', 'secupress' ),
+							// 'logs_404-logs-activated'    => __( '404 Logs Activation', 'secupress' ),
 						]
 		],
 		'addons'          => [

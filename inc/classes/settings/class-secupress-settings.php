@@ -772,7 +772,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 			case 'plugin' :
 				$helpers_args_for_plugins = $args;
-				unset( $helpers_args_for_plugins['helpers']['help'] );
+				unset( $helpers_args_for_plugins['helpers']['description'] );
 				static::helpers( $helpers_args_for_plugins );
 
 				if ( ! function_exists( 'plugins_api' ) ) {
@@ -853,7 +853,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			static::helpers( $args );
 		} else {
 			$helpers_args_for_plugins = $args;
-			unset( $helpers_args_for_plugins['helpers']['description'] );
+			unset( $helpers_args_for_plugins['helpers']['help'] );
 			static::helpers( $helpers_args_for_plugins );
 		}
 

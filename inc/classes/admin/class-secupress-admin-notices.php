@@ -77,7 +77,7 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 		// Add notices style.
 		self::enqueue_style();
 
-		$error_code = 'error' === $error_code ? 'error' : 'updated';
+		// $error_code = 'error' === $error_code ? 'error' : 'updated';
 		$notice_id  = $notice_id ? sanitize_title( $notice_id ) : $notice_id;
 
 		if ( ! isset( $this->notices[ $error_code ] ) ) {
@@ -115,7 +115,7 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 	 *                                  enpty string: meant for a one-shot use. The notice is dismissible but the "dismissed" state is not stored, it will popup again. This is the exact same behavior than the WordPress dismissible notices.
 	 */
 	public function add_temporary( $message, $error_code = 'updated', $notice_id = false ) {
-		$error_code = 'error' === $error_code ? 'error' : 'updated';
+		// $error_code = 'error' === $error_code ? 'error' : 'updated';
 		$notices    = secupress_get_transient( 'secupress-notices-' . get_current_user_id() );
 		$notices    = is_array( $notices ) ? $notices : array();
 		$notices[]  = compact( 'message', 'error_code', 'notice_id' );
@@ -322,16 +322,38 @@ class SecuPress_Admin_Notices extends SecuPress_Singleton {
 			foreach ( $types as $type => $messages ) {
 				if ( 'sp-dismissible' === $type ) {
 					foreach ( $messages as $notice_id => $message ) {
+
 						$button = admin_url( 'admin-post.php?action=secupress_dismiss-notice&notice_id=' . $notice_id . '&_wp_http_referer=' . $referer );
 						$button = wp_nonce_url( $button, 'secupress-notices' );
 						$button = '<a href="' . esc_url( $button ) . '" class="notice-dismiss"><span class="screen-reader-text">' . __( 'Dismiss', 'secupress' ) . '</span></a>';
-						$message = strpos( $message, '<p>' ) === false ? '<p>' . $message . '</p>' : $message;
-						?>
-						<div class="<?php echo $error_code . $compat; ?> notice secupress-notice secupress-is-dismissible" data-id="<?php echo $notice_id; ?>">
-							<?php echo $message; ?>
-							<?php echo $button; ?>
-						</div>
-						<?php
+						if ( strpos( $error_code, 'secupress-big' ) !== false ) {
+							$title = $message['title'];
+							$msg   = strpos( $message['message'], '<p>' ) === false ? '<p>' . $message['message'] . '</p>' : ['message'];
+							?>
+							<div class="secupress-section-dark secupress-notice secupress-flex secupress-is-dismissible" data-id="<?php echo $notice_id; ?>">
+								<div class="secupress-col-1-4 secupress-col-logo secupress-text-center">
+									<div class="secupress-logo-block">
+										<div class="secupress-lb-logo">
+											<?php echo secupress_get_logo( array( 'width' => '84' ) ); ?>
+										</div>
+									</div>
+								</div>
+								<div class="secupress-col-3-4 secupress-col-text">
+									<p class="secupress-text-medium"><?php echo $title; ?></p>
+									<?php echo $msg; ?>
+								</div>
+								<?php echo $button; ?>
+							</div>
+							<?php
+						} else {
+							$message = strpos( $message, '<p>' ) === false ? '<p>' . $message . '</p>' : $message;
+							?>
+							<div class="<?php echo $error_code . $compat; ?> notice secupress-notice secupress-is-dismissible" data-id="<?php echo $notice_id; ?>">
+								<?php echo $message; ?>
+								<?php echo $button; ?>
+							</div>
+							<?php
+						}
 					}
 				} elseif ( 'wp-dismissible' === $type ) {
 					?>
