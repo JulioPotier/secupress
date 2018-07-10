@@ -138,8 +138,8 @@ function secupress_3rd_compat__keyy( $activated ) {
 }
 
 // https://plugins.svn.wordpress.org/2fas-light/trunk/twofas_light.php .
-add_filter( 'secupress.scan.SecuPress_Scan_Easy_Login.activated', 'secupress_3rd_compat__2fas-light' );
-function secupress_3rd_compat__2fas-light( $activated ) {
+add_filter( 'secupress.scan.SecuPress_Scan_Easy_Login.activated', 'secupress_3rd_compat__2fas_light' );
+function secupress_3rd_compat__2fas_light( $activated ) {
 	if ( ! $activated && defined( 'TWOFAS_LIGHT_FULL_TWOFAS_PLUGIN_ACTIVE_FLAG' ) && TWOFAS_LIGHT_FULL_TWOFAS_PLUGIN_ACTIVE_FLAG ) {
 		return '2FAS Light';
 	}
