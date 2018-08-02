@@ -91,13 +91,13 @@ foreach ( $labels as $slug => $label ) {
 /**
  * If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for Move Login.
  */
-if ( $is_plugin_active && function_exists( 'secupress_move_login_get_rules' ) ) {
+if ( $is_plugin_active && function_exists( 'secupress_move_login_get_rules' ) && apply_filters( 'secupress.nginx.notice', true ) ) {
 	$message = false;
 
 	// Nginx.
 	if ( $is_nginx ) {
 		/** Translators: 1 is a file name, 2 is a tag name. */
-		$message = sprintf( __( 'You need to remove the following code from your %1$s file, inside the %2$s block:', 'secupress' ), '<code>nginx.conf</code>', '<code>server</code>' );
+		$message = sprintf( __( 'You need to add the following code from your %1$s file, inside the %2$s block:', 'secupress' ), '<code>nginx.conf</code>', '<code>server</code>' );
 		$rules   = secupress_move_login_get_nginx_rules( secupress_move_login_get_rules() );
 	}
 
