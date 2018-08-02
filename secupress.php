@@ -332,6 +332,9 @@ function secupress_load_functions() {
 	// The Scanner results class.
 	secupress_require_class( 'Scanner_Results' );
 
+	// Admin side but need when running cron.
+	require_once( SECUPRESS_ADMIN_PATH . 'functions/scan-fix.php' );
+
 	if ( ! is_admin() ) {
 		return;
 	}
@@ -353,7 +356,6 @@ function secupress_load_functions() {
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/options.php' );
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/settings.php' );
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/ajax-post.php' );
-	require_once( SECUPRESS_ADMIN_PATH . 'functions/scan-fix.php' );
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/modules.php' );
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/notices.php' );
 }
