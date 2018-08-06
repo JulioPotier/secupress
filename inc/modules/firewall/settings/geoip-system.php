@@ -46,3 +46,17 @@ $this->add_field( array(
 	'type'         => 'countries',
 	'name'         => $this->get_field_name( 'countries' ),
 ) );
+
+$this->add_field( array(
+	'title'        => __( 'Manual Update', 'secupress' ),
+	'label_for'    => 'manual_update',
+	'depends'      => $main_field_name . '_blacklist ' . $main_field_name . '_whitelist',
+	'type'         => 'html',
+	'value'        => '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_geoips_update_data' ), 'secupress_geoips_update_data' ) . '" class="button button-secondary">Update the GeoIP database now</a>',
+	'helpers'      => array(
+		array(
+			'type'        => 'help',
+			'description' => __( 'The GeoIP database will update everyday automatically using a cron.<br />If you encounter strange behaviour like too much blocking or not enough, try to update manually.', 'secupress' ),
+		),
+	),
+) );
