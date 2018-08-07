@@ -6,3 +6,4 @@ if ( secupress_is_pro() && defined( 'WP_SWL' ) && WP_SWL ) {
 }
 $this->load_plugin_settings( 'api-key' );
 $this->load_plugin_settings( 'settings-manager' );
+$this->load_plugin_settings( 'general' );

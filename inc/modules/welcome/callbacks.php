@@ -32,6 +32,10 @@ function secupress_welcome_settings_callback() {
 		secupress_settings_licence_callback();
 		return;
 	}
+
+	$modulenow = 'welcome';
+	$activate  = secupress_get_submodule_activations( $modulenow );
+	secupress_manage_submodule( 'users-login', 'expert-mode', ! empty( $activate['general_expert-mode'] ) );
 }
 
 
