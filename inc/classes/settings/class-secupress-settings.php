@@ -1127,8 +1127,11 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 							echo '<h4 id="row-' . sanitize_html_class( $field_id ) . '" class="secupress-setting-row-title">' . $field['title'] . '</h4>';
 						}
 					}
-
-					if ( $field['args']['description'] ) {
+					/**
+					* Filter used to print or not the descriptions during the "expert" mode
+					* @param (bool) true to display, false to hide
+					*/
+					if ( $field['args']['description'] && apply_filters( 'secupress.settings.description', true ) ) {
 						echo '<p class="description">' . $field['args']['description'] . '</p>';
 					}
 					unset( $field['args']['description'] );
@@ -1260,7 +1263,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	protected function print_section_description() {
 		$key = $this->modulenow . '|' . $this->sectionnow;
 
-		if ( ! empty( $this->section_descriptions[ $key ] ) ) {
+		if ( ! empty( $this->section_descriptions[ $key ] ) && apply_filters( 'secupress.settings.description', true ) ) {
 			echo '<div class="secupress-settings-section-description">';
 				echo $this->section_descriptions[ $key ];
 			echo '</div>';
