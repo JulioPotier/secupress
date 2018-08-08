@@ -1325,3 +1325,25 @@ function secupress_is_function_disabled( $function ) {
 
 	return isset( $disabled[ $function ] );
 }
+
+/**
+ * Returns true if SECUPRESS_MODE is defined on "expert" or "dev" (if you are a dev, you're an expert, right?)
+ *
+ * @since 1.4.6
+ * @return (bool)
+ * @author Julio Potier
+ **/
+function secupress_is_expert_mode() {
+	return defined( 'SECUPRESS_MODE' ) && ( 'expert' === strtolower( SECUPRESS_MODE )|| 'dev' === strtolower( SECUPRESS_MODE ) );
+}
+
+/**
+ * Returns true if SECUPRESS_MODE is defined on "dev"
+ *
+ * @since 1.4.6
+ * @return (bool)
+ * @author Julio Potier
+ **/
+function secupress_is_dev_mode() {
+	return defined( 'SECUPRESS_MODE' ) && 'dev' === strtolower( SECUPRESS_MODE );
+}

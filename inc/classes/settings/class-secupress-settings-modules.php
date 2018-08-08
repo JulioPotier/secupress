@@ -255,7 +255,13 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 			<li>
 				<a href="<?php echo esc_url( secupress_admin_url( 'modules', $key ) ); ?>" class="<?php echo $class; ?> module-<?php echo sanitize_key( $key ); ?>">
 					<span class="secupress-tab-name"><?php echo $module['title']; ?></span>
-					<span class="secupress-tab-summary"><?php echo $module['summaries']['small']; ?></span>
+					<span class="secupress-tab-summary">
+					<?php
+					if ( apply_filters( 'secupress.settings.description', true ) ) {
+						echo $module['summaries']['small'];
+					}
+					?>
+					</span>
 					<i class="secupress-icon-<?php echo $icon; ?>" aria-hidden="true"></i>
 				</a>
 			</li>

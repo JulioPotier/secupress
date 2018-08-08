@@ -104,3 +104,8 @@ function secupress_detect_bad_themes_async_get_and_store_infos() {
 
 	set_site_transient( 'secupress-detect-bad-themes', 1, 6 * HOUR_IN_SECONDS );
 }
+
+if ( secupress_is_expert_mode() ) {
+	add_filter( 'secupress.settings.help', '__return_empty_string' );
+	add_filter( 'secupress.settings.description', '__return_empty_string' );
+}
