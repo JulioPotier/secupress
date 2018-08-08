@@ -9,11 +9,11 @@
 
 defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
 
-
-add_filter( 'login_errors', 'secupress_replace_login_errors_disclose', PHP_INT_MAX );
+add_filter( 'login_errors', 'secupress_replace_login_errors_disclose', SECUPRESS_INT_MAX );
 /**
  * Replace some login error messages with a more generic message.
  *
+ * @since 1.4.6 Remove "\n" from pattern + new $default value
  * @since 1.0
  *
  * @param (string) $errors Login error message.
@@ -23,8 +23,8 @@ add_filter( 'login_errors', 'secupress_replace_login_errors_disclose', PHP_INT_M
 function secupress_replace_login_errors_disclose( $errors ) {
 	$pattern = secupress_login_errors_disclose_get_messages();
 
-	$pattern = '@\s(' . implode( '|', $pattern ) . ')<br />\n@';
-	$default = __( '<strong>ERROR</strong>: Invalid username or incorrect password.' );
+	$pattern = '@\s(' . implode( '|', $pattern ) . ')<br />@';
+	$default = __( '<strong>Authentication failed</strong>.', 'secupress' );
 
 	return preg_replace( $pattern, $default, $errors );
 }

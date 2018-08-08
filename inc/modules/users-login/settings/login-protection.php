@@ -75,3 +75,13 @@ $this->add_field( array(
 		),
 	),
 ) );
+
+$this->add_field( array(
+	'title'             => __( 'Login Errors', 'secupress' ),
+	'description'       => __( 'Hiding login errors will prevent to leak login informations.', 'secupress' ),
+	'label_for'         => $this->get_field_name( 'login_errors' ),
+	'plugin_activation' => true,
+	'type'              => 'checkbox',
+	'value'             => (int) secupress_is_submodule_active( 'discloses', 'login-errors-disclose' ),
+	'label'             => __( 'Yes, hide the usual login errors', 'secupress' ),
+) );
