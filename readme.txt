@@ -4,7 +4,7 @@ Tags: wordpress security, secure, security plugin, security, malware
 Requires at least: 4.0
 Tested up to: 5.0-alpha
 Requires PHP: 5.4
-Stable tag: 1.4.5
+Stable tag: 1.4.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -180,6 +180,24 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 8. The 4th step: final report, you can export it as PDF (1)
 
 == Changelog ==
+
+= 1.4.6 =
+
+* 9 august 2018
+
+* New#668: Add support for https://fr.wordpress.org/plugins/2fas-light/ as a 2FA plugin
+* New#676: SecuPress Expert Mode. You can set a SECUPRESS_MODE constant on "expert" to hide descriptions and help all over the plugin to have a clear interface.
+* Improvement#663: GeoIP module can now bypass real seo bots! So you can block USA but still got Google on your website for example.
+* Improvement#665: Backups are now done using offset, this means that there is more chance to finish instead of dying.
+* Improvement#670: GeoIP database will update everyday automatically using a cron. You and your visitors won't fell the update. Why everyday? Because everyday IPs are changing (in fact, every second… but I didn't want to be so mean). This will prevent false positives and false negatives from your visitors, bots, crons.
+* Improvement#671: Strip URLs from UA before check bad UA to prevent false positives.
+* Improvement#672: Better compatibility for secupress_get_main_url compat()`.
+* Improvement#675: Add a checkbox for login errors module to allow its deactivation.
+* Fix#660: Fix the JARVIS encounter in a bad SecuPress settings link.
+* Fix#661: SECUPRESS_HIDE_API_KEY was not hiding the key anymore, ironic.
+* Fix#664: Fatal error: Uncaught Error: Call to undefined function secupress_global_settings_activate_pro_license() in /secupress-pro/core/core.php:227
+* Fix#667: WP Cron Fatal error: Uncaught Error: Call to undefined function secupress_scanit() in /secupress-pro/inc/modules/schedules/plugins/inc/php/class-secupress-background-process-schedules-scan.php:47
+* Fix#673: MoveLogin with nginx sais you have to "remove" rules instead of adding them. Funny or not.
 
 = 1.4.5 =
 
