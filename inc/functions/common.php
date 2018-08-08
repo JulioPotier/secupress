@@ -557,11 +557,10 @@ function secupress_get_main_url() {
 	}
 
 	if ( ! $current_network ) {
-		if ( ! function_exists( '__get_option' ) ) {
-			include( ABSPATH . 'wp-admin/includes/upgrade.php' );
-		}
 		if ( function_exists( '__get_option' ) ) {
-			return __get_option( 'siteurl' );
+			if ( __get_option( 'siteurl' ) ) {
+				return __get_option( 'siteurl' );
+			}
 		} else {
 			return get_option( 'siteurl' );
 		}
