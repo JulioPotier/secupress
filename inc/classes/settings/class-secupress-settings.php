@@ -1127,6 +1127,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 							echo '<h4 id="row-' . sanitize_html_class( $field_id ) . '" class="secupress-setting-row-title">' . $field['title'] . '</h4>';
 						}
 					}
+
 					/**
 					* Filter used to print or not the descriptions during the "expert" mode
 					* @param (bool) true to display, false to hide
