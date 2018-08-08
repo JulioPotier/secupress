@@ -306,8 +306,10 @@ if ( ! $secupress_tests ) {
 				</form><!-- .secupress-item-content -->
 				<?php } else { ?>
 				</div><!-- .secupress-item-content -->
-				<?php } ?>
+				<?php }
 
+				if ( apply_filters( 'secupress.settings.help', true ) ) {
+				?>
 				<div class="secupress-item-details" id="details-<?php echo $class_name_part; ?>">
 					<div class="secupress-flex">
 						<span class="secupress-details-icon">
@@ -317,7 +319,7 @@ if ( ! $secupress_tests ) {
 						<span class="secupress-placeholder"></span>
 					</div>
 				</div>
-
+				<?php } ?>
 			</div><!-- .secupress-mf-content -->
 		</div><!-- .secupress-manual-fix -->
 		<?php
