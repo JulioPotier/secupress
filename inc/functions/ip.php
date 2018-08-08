@@ -198,7 +198,7 @@ function secupress_write_in_htaccess_on_ban() {
 
 
 /**
- * Returns if the user-agent is a fake bot or not.
+ * Returns if the user-agent is a real bot (true) or not, a fake one (false).
  *
  * @since 1.4.2 Add $test param + revamp
  * @since 1.4
