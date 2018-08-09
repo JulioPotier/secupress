@@ -137,6 +137,15 @@ function secupress_3rd_compat__keyy( $activated ) {
 	return $activated;
 }
 
+// https://plugins.svn.wordpress.org/2fas-light/trunk/twofas_light.php .
+add_filter( 'secupress.scan.SecuPress_Scan_Easy_Login.activated', 'secupress_3rd_compat__2fas_light' );
+function secupress_3rd_compat__2fas_light( $activated ) {
+	if ( ! $activated && defined( 'TWOFAS_LIGHT_FULL_TWOFAS_PLUGIN_ACTIVE_FLAG' ) && TWOFAS_LIGHT_FULL_TWOFAS_PLUGIN_ACTIVE_FLAG ) {
+		return '2FAS Light';
+	}
+	return $activated;
+}
+
 // https://plugins.svn.wordpress.org/wordpress-2-step-verification/trunk/wordpress-2-step-verification.php .
 add_filter( 'secupress.scan.SecuPress_Scan_Easy_Login.activated', 'secupress_3rd_compat__wordpress_2_step_verification' );
 function secupress_3rd_compat__wordpress_2_step_verification( $activated ) {

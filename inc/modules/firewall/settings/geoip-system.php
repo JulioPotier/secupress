@@ -40,9 +40,44 @@ $this->add_field( array(
 ) );
 
 $this->add_field( array(
+	'title'             => __( 'SEO bots GeoIP bypass', 'secupress' ),
+	'description'       => __( 'SEO bots are allowed to visit your website even if they are coming from a blocked country.', 'secupress' ),
+	'label_for'         => $main_field_name,
+	'name'              => $this->get_field_name( 'seo-bypass' ),
+	'type'              => 'checkbox',
+	'depends'           => $main_field_name . '_blacklist ' . $main_field_name . '_whitelist',
+	// 'value'             => secupress_get_module_option( 'geoip-system_seo-bypass' ) === 1,
+	'label'             => __( 'Yes, still block SEO bots with GeoIP blocking', 'secupress' ),
+	'helpers'           => array(
+		array(
+			'type'        => 'description',
+			'description' => __( 'If you block like the USA, any SEO bots will be blocked (Google?), keep this in mind.', 'secupress' ),
+		),
+		array(
+			'type'        => 'warning',
+			'description' => __( 'We recommand to let this setting OFF.', 'secupress' ),
+		),
+	),
+) );
+
+$this->add_field( array(
 	'title'        => __( 'Which countries?', 'secupress' ),
 	'description'  => __( 'Add or remove countries you want to manage for your website.', 'secupress' ),
 	'depends'      => $main_field_name . '_blacklist ' . $main_field_name . '_whitelist',
 	'type'         => 'countries',
 	'name'         => $this->get_field_name( 'countries' ),
+) );
+
+$this->add_field( array(
+	'title'        => __( 'Manual Update', 'secupress' ),
+	'label_for'    => 'manual_update',
+	'depends'      => $main_field_name . '_blacklist ' . $main_field_name . '_whitelist',
+	'type'         => 'html',
+	'value'        => '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_geoips_update_data' ), 'secupress_geoips_update_data' ) . '" class="button button-secondary">Update the GeoIP database now</a>',
+	'helpers'      => array(
+		array(
+			'type'        => 'help',
+			'description' => __( 'The GeoIP database will update everyday automatically using a cron.<br />If you encounter strange behaviour like too much blocking or not enough, try to update manually.', 'secupress' ),
+		),
+	),
 ) );

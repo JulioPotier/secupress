@@ -77,6 +77,7 @@
 					 * data-target instead of data-test
 					 * data-target === .secupress-item-details' ID
 					 */
+					if ( apply_filters( 'secupress.settings.help', true ) ) {
 					?>
 					<button data-trigger="slidetoggle" data-target="details-<?php echo $class_name_part; ?>" class="secupress-details link-like hide-if-no-js" type="button">
 						<span class="secupress-toggle-button">
@@ -92,6 +93,7 @@
 							<span class="text"><?php _e( 'Close' ); ?></span>
 						</span>
 					</button>
+					<?php } ?>
 				</p>
 			</div><!-- .secupress-flex -->
 

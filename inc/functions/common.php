@@ -557,11 +557,10 @@ function secupress_get_main_url() {
 	}
 
 	if ( ! $current_network ) {
-		if ( ! function_exists( '__get_option' ) ) {
-			include( ABSPATH . 'wp-admin/includes/upgrade.php' );
-		}
 		if ( function_exists( '__get_option' ) ) {
-			return __get_option( 'siteurl' );
+			if ( __get_option( 'siteurl' ) ) {
+				return __get_option( 'siteurl' );
+			}
 		} else {
 			return get_option( 'siteurl' );
 		}
@@ -1324,4 +1323,26 @@ function secupress_is_function_disabled( $function ) {
 	$disabled = array_flip( $disabled );
 
 	return isset( $disabled[ $function ] );
+}
+
+/**
+ * Returns true if SECUPRESS_MODE is defined on "expert" or "dev" (if you are a dev, you're an expert, right?)
+ *
+ * @since 1.4.6
+ * @return (bool)
+ * @author Julio Potier
+ **/
+function secupress_is_expert_mode() {
+	return defined( 'SECUPRESS_MODE' ) && ( 'expert' === strtolower( SECUPRESS_MODE )|| 'dev' === strtolower( SECUPRESS_MODE ) );
+}
+
+/**
+ * Returns true if SECUPRESS_MODE is defined on "dev"
+ *
+ * @since 1.4.6
+ * @return (bool)
+ * @author Julio Potier
+ **/
+function secupress_is_dev_mode() {
+	return defined( 'SECUPRESS_MODE' ) && 'dev' === strtolower( SECUPRESS_MODE );
 }
