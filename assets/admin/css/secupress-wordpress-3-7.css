@@ -9,7 +9,7 @@
  * RedDark		: #CB234F;
  * Green		: #2BCDC1;
  * GreenDark	: #26B3A9;
- * Dark			: #222831;
+ * Dark			: #23282d;
  * GrayLight	: #F2F2F6;
  * GrayMedium	: #5A626F;
  * GrayDark		: #393E46;
@@ -31,7 +31,7 @@
 	background: #F2F2F6;
 }
 .secupress-log-content code {
-	background: #222831;
+	background: #23282d;
 }
 
 /* Buttons */

@@ -9,7 +9,7 @@
  * RedDark		: #CB234F;
  * Green		: #2BCDC1;
  * GreenDark	: #26B3A9;
- * Dark			: #222831;
+ * Dark			: #23282d;
  * GrayLight	: #F2F2F6;
  * GrayMidLight	: #ECF0F1;
  * GrayMidLight2: #B6B7BB;
@@ -35,7 +35,7 @@
 	padding: 0;
 	border: none;
 	border-radius: 3px;
-	background: #222831;
+	background: #23282d;
 	color: #F2F2F6;
 	margin-right: -2px;
 }
@@ -339,7 +339,7 @@ input[type="text"]:required:invalid {
 }
 .secupress-dashboard-header {
 	padding: 0 20px;
-	background: #222831;
+	background: #23282d;
 	color: #FFF;
 }
 .secupress-dh-titles p:first-child {
@@ -765,7 +765,7 @@ fieldset.secupress-boxed-group > b {
 		margin: 0 15px 10px 0;
 		border: 1px solid #ddd;
 		background: #FFF none 50% 50% no-repeat;
-		border-radiu: 3px;
+		border-radius: 3px;
 	}
 	.fieldname-schedules-backups_type .secupress-fieldset-item-checkboxes label.is-checked:before {
 		background-color: #2BCDC1;
@@ -940,7 +940,7 @@ fieldset.secupress-boxed-group > b {
 	margin: 1em 0 0 0;
 	padding: 15px 20px;
 	font-size: 16px;
-	color: #222831;
+	color: #23282d;
 	font-style: normal;
 	font-weight: 600;
 	overflow: hidden;
@@ -978,7 +978,7 @@ fieldset.secupress-boxed-group > b {
 	flex-direction: row;
 	margin: 25px 15px;
 	border-top: 0;
-	background: #222831 url("../images/bg-logo-sp.png") 50% 50% no-repeat;
+	background: #23282d url("../images/bg-logo-sp.png") 50% 50% no-repeat;
 	text-align: center;
 }
 [id="secupress-settings-module_services--"] .secupress-setting-row:first-child {
@@ -1066,7 +1066,7 @@ fieldset.secupress-boxed-group > b {
 	min-width: 115px;
 	letter-spacing: 0.05em;
 	padding: 6px 20px;
-	background: #222831;
+	background: #23282d;
 	color: #5A626F;
 }
 .secupress-inline-options button.secupress-button + button {
@@ -1089,7 +1089,7 @@ fieldset.secupress-boxed-group > b {
 	font-size: 11px;
 	letter-spacing: 0;
 	color: #FFF;
-	background: #222831;
+	background: #23282d;
 	border-radius: 2px;
 }
 .secupress-inline-options .secupress-tip:after {
@@ -1098,7 +1098,7 @@ fieldset.secupress-boxed-group > b {
 	left: -5px;
 	top: 50%;
 	margin-top: -6px;
-	border-right: 6px solid #222831;
+	border-right: 6px solid #23282d;
 	border-top: 6px solid transparent;
 	border-bottom: 6px solid transparent;
 }
@@ -1124,7 +1124,7 @@ fieldset.secupress-boxed-group > b {
 	position: relative;
 	padding-bottom: 2em;
 	color: #FFF;
-	background: #222831;
+	background: #23282d;
 	overflow: hidden;
 }
 .secupress-price-header > * {
