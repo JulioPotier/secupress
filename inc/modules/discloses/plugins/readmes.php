@@ -98,7 +98,7 @@ function secupress_protect_readmes_plugin_activate( $rules ) {
 function secupress_protect_readmes_apache_rules() {
 	$bases   = secupress_get_rewrite_bases();
 	$base    = $bases['base'];
-	$pattern = '^' . $bases['site_from'] . '(.*/)?(readme|changelog)\.(txt|md|html)$';
+	$pattern = '^' . $bases['site_from'] . '(.*/)?(readme|changelog|debug)\.(txt|md|html|log)$';
 
 	$rules  = "<IfModule mod_rewrite.c>\n";
 	$rules .= "    RewriteEngine On\n";
@@ -121,7 +121,7 @@ function secupress_protect_readmes_iis7_rules() {
 	$marker  = 'readme_discloses';
 	$spaces  = str_repeat( ' ', 8 );
 	$bases   = secupress_get_rewrite_bases();
-	$pattern = '^' . $bases['site_from'] . '(.*/)?(readme|changelog)\.(txt|md|html)$';
+	$pattern = '^' . $bases['site_from'] . '(.*/)?(readme|changelog|debug)\.(txt|md|html|log)$';
 
 	$rules  = "<rule name=\"SecuPress $marker\" stopProcessing=\"true\">\n";
 	$rules .= "$spaces  <match url=\"$pattern\"/ ignoreCase=\"true\">\n";
@@ -142,7 +142,7 @@ function secupress_protect_readmes_iis7_rules() {
 function secupress_protect_readmes_nginx_rules() {
 	$marker  = 'readme_discloses';
 	$bases   = secupress_get_rewrite_bases();
-	$pattern = '^' . $bases['site_from'] . '(.+/)?(readme|changelog)\.(txt|md|html)$';
+	$pattern = '^' . $bases['site_from'] . '(.+/)?(readme|changelog|debug)\.(txt|md|html|log)$';
 
 	// - http://nginx.org/en/docs/http/ngx_http_core_module.html#location
 	$rules  = "
