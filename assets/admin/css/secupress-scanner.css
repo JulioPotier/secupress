@@ -9,7 +9,7 @@
  * RedDark		: #CB234F;
  * Green		: #2BCDC1;
  * GreenDark	: #26B3A9;
- * Dark			: #222831;
+ * Dark			: #23282d;
  * GrayLight	: #F2F2F6;
  * GrayMedium	: #5A626F;
  * GrayDark		: #393E46;
@@ -489,7 +489,7 @@ p.secupress-rescan-actions{
 	margin-top: 1px; /* lets the top border appears */
 }
 .secupress-section-dark [id="secupress-more-info"] {
-	background: #222831;
+	background: #23282d;
 }
 [id="secupress-more-info"] .secupress-blob {
 	transform: scale(1.1);
@@ -559,7 +559,7 @@ p.secupress-rescan-actions{
 .secupress-section-dark .secupress-tabs-controls-list a:focus i.rounded,
 .secupress-section-dark .secupress-rich-link:hover i.rounded,
 .secupress-section-dark .secupress-rich-link:focus i.rounded {
-	color: #222831;
+	color: #23282d;
 }
 .secupress-tabs-controls .secupress-button-primary {
 	letter-spacing: 0.1em;
@@ -608,7 +608,7 @@ p.secupress-rescan-actions{
 }
 .secupress-tab-selected .secupress-tabs-controls-list .secupress-current:after {
 	left: -37.5px;
-	border-left-color: #222831;
+	border-left-color: #23282d;
 }
 .secupress-tab-selected .secupress-tabs-controls-list li.hidden {
 	display: block;
@@ -1026,7 +1026,7 @@ a + .secupress-row-actions {
 }
 .secupress-sg-header {
 	padding: 0 0 0 25px;
-	background: #222831;
+	background: #23282d;
 	color: #FFF;
 }
 .secupress-manual-fix {
@@ -1037,7 +1037,7 @@ a + .secupress-row-actions {
 .secupress-sg-header,
 .secupress-mf-header {
 	padding: 0 0 0 20px;
-	background: #222831;
+	background: #23282d;
 	color: #FFF;
 }
 .secupress-mf-header {
@@ -1168,7 +1168,7 @@ a + .secupress-row-actions {
 }
 .secupress-sgh-actions .secupress-checkbox:not(:checked) + .label-text:before,
 .secupress-sgh-actions .secupress-checkbox:checked + .label-text:before {
-	background: #222831;
+	background: #23282d;
 }
 .secupress-sgh-actions .secupress-checkbox:not(:checked) + .label-text:after,
 .secupress-sgh-actions .secupress-checkbox:checked + .label-text:after {
@@ -1225,7 +1225,6 @@ a + .secupress-row-actions {
 	left: 0;
 	background: #FFF repeating-linear-gradient(-45deg, #fff, #fff 10px, #EEE 10px, #EEE 11px) repeat scroll 0 0;
 	opacity: 0.6;
-	z-index: 2;
 }
 .secupress-item-all .secupress-get-pro-version a:before {
 	content: "";

@@ -5,7 +5,21 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /** CSS, JS, FOOTER ============================================================================= */
 /** --------------------------------------------------------------------------------------------- */
 
-add_action( 'admin_enqueue_scripts', 'secupress_add_settings_scripts' );
+add_action( 'admin_enqueue_scripts', 'secupress_add_settings_scripts_for_dark_mode', 11 );
+/**
+ * Add some CSS for Dark Mode
+ *
+ * @since 1.4.7
+ *
+ */
+function secupress_add_settings_scripts_for_dark_mode() {
+	$suffix    = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+	$version   = $suffix ? SECUPRESS_VERSION : time();
+	// SecuPress Dark Mode
+	wp_enqueue_style( 'secupress-dark-mode', SECUPRESS_ADMIN_CSS_URL . 'secupress-dark-mode' . $suffix . '.css', array( 'secupress-wordpress-css' ), $version );
+}
+
+add_action( 'admin_enqueue_scripts', 'secupress_add_settings_scripts', 10 );
 /**
  * Add some CSS and JS to our settings pages.
  *
@@ -65,16 +79,6 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 		'confirmText'         => __( 'OK', 'secupress' ),
 		'cancelText'          => __( 'Cancel' ),
 		'closeText'           => __( 'Close' ),
-
-		/*
-		'authswal'     => array(
-			'title'  => __( 'Authentication', 'secupress' ),
-			'email'  => __( 'Enter your email', 'secupress' ),
-			'apikey' => __( 'Enter your API Key', 'secupress' ),
-			'where'  => __( 'Where can I find my API Key?', 'secupress' ),
-			'save'   => __( 'Save and continue to first scan', 'secupress' ),
-		),
-		*/
 	) );
 
 	// Settings page.

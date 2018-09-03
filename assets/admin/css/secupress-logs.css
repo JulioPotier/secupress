@@ -9,7 +9,7 @@
  * RedDark		: #CB234F;
  * Green		: #2BCDC1;
  * GreenDark	: #26B3A9;
- * Dark			: #222831;
+ * Dark			: #23282d;
  * GrayLight	: #F2F2F6;
  * GrayMedium	: #5A626F;
  * GrayDark		: #393E46;
@@ -96,7 +96,7 @@
 }
 .secupress-logs-list .nav-tab:hover,
 .secupress-logs-list .nav-tab:focus {
-	background: #222831;
+	background: #23282d;
 }
 .secupress-logs-list .nav-tab + .screen-reader-text + .nav-tab {
 	margin-left: 1px;
@@ -238,7 +238,7 @@
 /* Title col */
 .secupress-logs-list .page-title a {
 	font-weight: 600;
-	color: #222831;
+	color: #23282d;
 }
 .secupress-logs-list .page-title code {
 	display: block;
@@ -252,7 +252,7 @@
 	color: #5A626F;
 }
 .current-log .page-title code {
-	background: #222831;
+	background: #23282d;
 	color: #FFF;
 }
 .secupress-logs-list .check-column .label-text {
@@ -312,7 +312,7 @@
 }
 .secupress-log-content-header code,
 .secupress-log-content-message pre {
-	background: #222831;
+	background: #23282d;
 	color: #FFF;
 }
 .secupress-log-user .login {

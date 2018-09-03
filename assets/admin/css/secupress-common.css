@@ -9,7 +9,7 @@
  * RedDark		: #CB234F;
  * Green		: #2BCDC1;
  * GreenDark	: #26B3A9;
- * Dark			: #222831;
+ * Dark			: #23282d;
  * GrayLight	: #F2F2F6;
  * GrayMedium	: #5A626F;
  * GrayDark		: #393E46;
@@ -276,17 +276,6 @@
 	margin: 0 10px;
 }
 
-/* Ghost button */
-.secupress-button-ghost.secupress-button-ghost {
-	background: transparent;
-	border: 2px solid #ADB1B7;
-	color: #ADB1B7;
-}
-.secupress-button-ghost.secupress-button-primary {
-	border: 2px solid #26B3A9;
-	color: #26B3A9;
-}
-
 /* Pro button with right icon */
 .secupress-go-pro.secupress-go-pro {
 	overflow: hidden;
@@ -458,7 +447,7 @@ button.secupress-activated .secupress-toggle-button.hidden {
 .secupress-section-dark .secupress-radio:checked + label:before,
 .secupress-section-dark .secupress-radio:not(:checked) + .label-text:before,
 .secupress-section-dark .secupress-radio:checked + .label-text:before {
-	background: #222831;
+	background: #23282d;
 }
 
 /* Disabled */
@@ -706,7 +695,7 @@ body[class*="secupress"] .sweet-overlay {
 	padding: 5px 55px 5px 20px;
 	text-align: left;
 	color: #FFF;
-	background: #222831;
+	background: #23282d;
 }
 .secupress-swal-dark-header.secupress-text-center.secupress-swal2 h2 {
 	text-align: center;
@@ -1396,6 +1385,6 @@ table.fixed .column-date {
 	height: 16px;
 	border-radius: 3px;
 	background: #CFCFCF;
-	color: #222831;
+	color: #23282d;
 	font-weight: bold;
 }
