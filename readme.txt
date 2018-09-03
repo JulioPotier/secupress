@@ -4,7 +4,7 @@ Tags: wordpress security, secure, security plugin, security, malware
 Requires at least: 4.0
 Tested up to: 5.0-alpha
 Requires PHP: 5.4
-Stable tag: 1.4.6
+Stable tag: 1.4.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -174,12 +174,24 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 2. A module page (here is Users & Login)
 3. The first scan
 4. The 1st step: result of the scan
-5. The 2nd step: choose what to automatically fix
+5. The 2nd step: choose what to automatically fix (1)
 6. SecuPress is fixing issue for you
 7. The 3rd step: manual fix, when you have to decide something
 8. The 4th step: final report, you can export it as PDF (1)
 
 == Changelog ==
+
+= 1.4.7 =
+
+* 4 september 2018
+
+* New#689: Dark Mode compatibility! Check https://wordpress.org/plugins/dark-mode/ (merge in core proposed)
+* Improvement#680: Add all "debug" and ".log" files to the "anti disclose readme/changelog" feature
+* Improvement#683: Add 2 filters on captcha messages to replace the default "Yes i‘m a human" and "Session expired". See `secupress.plugins.login-captcha.checkbox.text` and `secupress.plugins.login-captcha.error.text`
+* Improvement#684: Better 64 bits check.
+* Improvement#685: Better "stop user enumeration" on Rest API, (JSON return instead of diying)
+* Fix#679: Compatibility with PHP7 for a vendor package (PDF)
+* Fix#686: Remove the HTML tags check from "bad user-agents" feature. Too many false positive since WP 4.9.8 :|
 
 = 1.4.6 =
 
