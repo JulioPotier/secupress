@@ -15,21 +15,29 @@ add_action( 'signup_extra_fields', 'secupress_add_captcha_on_login_form', 100 );
 /**
  * Print the captcha in the login form.
  *
+ * @author Grégory Viguier
+ * @since 1.4.7 Add filters
  * @since 1.0
  */
 function secupress_add_captcha_on_login_form() {
 	if ( ! secupress_can_display_captcha() ) {
 		return;
 	}
+	/**
+	 * This filter is documented in wp-signup.php.
+	 * @param (string) The text to be clicked next to the checkbox
+	 */
+	$yes_im_a_human  = apply_filters( 'secupress.plugins.login-captcha.checkbox.text', __( 'Yes, I’m a human.', 'secupress' ) );
+	$session_expired = apply_filters( 'secupress.plugins.login-captcha.error.text', __( 'Session expired, please try again.', 'secupress' ) );
 	?>
 	<div>
 		<div id="areyouhuman">
 			<label>
 				<span class="checkme" role="checkbox" tabindex="0" aria-checked="false"></span>
-				<i class="checkme"><?php _e( 'Yes, I\'m a human.', 'secupress' ); ?></i>
+				<i class="checkme"><?php echo $yes_im_a_human; ?></i>
 			</label>
 		</div>
-		<div id="msg" class="hidden"><?php _e( 'Session expired, please try again.', 'secupress' ); ?></div>
+		<div id="msg" class="hidden"><?php echo $session_expired; ?></div>
 		<input type="hidden" name="captcha_key" id="captcha_key" value="" />
 	</div>
 	<?php
