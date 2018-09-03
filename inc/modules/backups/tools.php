@@ -20,3 +20,25 @@ function secupress_backups_storage_labels() {
 		// 'rackspace' => __( 'Rackspace Cloud', 'secupress' ), ////
 	);
 }
+
+/**
+ * Get backups parent folder path.
+ *
+ * @since 1.0
+ * @author Grégory Viguier
+ *
+ * @param (bool) $relative Set to true to get the path relative to the site's root.
+ *
+ * @return (string) The absolute (or relative) path to the backups parent folder. The path has a trailing slash.
+ */
+function secupress_get_parent_backups_path( $relative = false ) {
+	static $abs_path;
+	static $rel_path;
+
+	if ( ! isset( $abs_path ) ) {
+		$abs_path = untrailingslashit( wp_normalize_path( WP_CONTENT_DIR ) ) . '/backups/';
+		$rel_path = str_replace( rtrim( wp_normalize_path( ABSPATH ), '/' ), '', $abs_path );
+	}
+
+	return $relative ? $rel_path : $abs_path;
+}

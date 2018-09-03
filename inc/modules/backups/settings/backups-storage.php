@@ -76,7 +76,8 @@ $warnings = '<div class="description warning">' . '<strong>' . __( 'Warning: ', 
 if ( $warning_cant_write ) {
 	$warnings .= '<div class="description warning">' . '<strong>' . __( 'Warning: ', 'secupress' ) . '</strong> ' . $warning_cant_write . '</div>';
 }
+
 $this->add_field( array(
-	'type'         => 'html',
-	'value'         => $warnings,
+	'type'  => 'html',
+	'value' => $warnings,
 ) );
