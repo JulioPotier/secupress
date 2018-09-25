@@ -98,6 +98,7 @@ function secupress_get_modules() {
 			],
 			'submodules'  => [
 							'wp-endpoints_xmlrpc_block-all'     => __( 'XML-RPC Management', 'secupress' ),
+							'content-protect_blackhole'         => __( 'Blackhole', 'secupress' ),
 							'content-protect_hotlink'           => '*' . __( 'Anti Hotlink', 'secupress' ),
 							'content-protect_directory-listing' => __( 'Directory Listing', 'secupress' ),
 							'content-protect_php-disclosure'    => __( 'PHP Disclosure', 'secupress' ),
@@ -205,7 +206,7 @@ function secupress_get_modules() {
 			],
 			'mark_as_pro' => $should_be_pro,
 			'submodules'  => [
-							'module-notifications'          => __( 'Types of Notification', 'secupress' ),
+							'module-notifications'          => __( 'Email Notifications', 'secupress' ),
 							'event-alerts_activated'    => __( 'Events Alerts', 'secupress' ),
 							'daily-reporting_activated' => __( 'Daily Reports', 'secupress' ),
 						]
