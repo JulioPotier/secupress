@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /** CSS, JS, FOOTER ============================================================================= */
 /** --------------------------------------------------------------------------------------------- */
 
-add_action( 'admin_enqueue_scripts', 'secupress_add_settings_scripts_for_dark_mode', 11 );
+add_action( 'doing_dark_mode', 'secupress_add_settings_scripts_for_dark_mode', 11 );
 /**
  * Add some CSS for Dark Mode
  *
@@ -18,6 +18,7 @@ function secupress_add_settings_scripts_for_dark_mode() {
 	// SecuPress Dark Mode
 	wp_enqueue_style( 'secupress-dark-mode', SECUPRESS_ADMIN_CSS_URL . 'secupress-dark-mode' . $suffix . '.css', array( 'secupress-wordpress-css' ), $version );
 }
+
 
 add_action( 'admin_enqueue_scripts', 'secupress_add_settings_scripts', 10 );
 /**
