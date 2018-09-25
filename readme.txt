@@ -183,15 +183,16 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 = 1.4.7 =
 
-* 4 september 2018
+* 26 september 2018
 
 * New#689: Dark Mode compatibility! Check https://wordpress.org/plugins/dark-mode/ (merge in core proposed)
 * Improvement#680: Add all "debug" and ".log" files to the "anti disclose readme/changelog" feature
 * Improvement#683: Add 2 filters on captcha messages to replace the default "Yes i‘m a human" and "Session expired". See `secupress.plugins.login-captcha.checkbox.text` and `secupress.plugins.login-captcha.error.text`
 * Improvement#684: Better 64 bits check.
 * Improvement#685: Better "stop user enumeration" on Rest API, (JSON return instead of diying)
-* Fix#679: Compatibility with PHP7 for a vendor package (PDF)
-* Fix#686: Remove the HTML tags check from "bad user-agents" feature. Too many false positive since WP 4.9.8 :|
+* Improvement#679: Compatibility with PHP7 for a vendor package (PDF)
+* Improvement#686: Remove the HTML tags check from "bad user-agents" feature. Too many false positive since WP 4.9.8 :|
+* Fix#691: GeoIP was returning false since 1.4.5 because of the bad prepare format.
 
 = 1.4.6 =
 
