@@ -185,6 +185,21 @@ body #wpbody .secupress-setting-row.secupress-pro-row p {
     border-bottom: 22px solid #bbc8d4;
 }
 
+.secupress-item-details {
+    background: #32373c;
+}
+
+.secupress-item-details:before {
+    display: none;
+}
+
+.secupress-details-icon .secupress-icon-i:before {
+    border-width: 2px;
+    border-color: #00a0d2;
+    color: #00a0d2;
+    font-weight: 500;
+}
+
 .secupress-link-icon .icon {
     color: #00a0d2;
     overflow: hidden;
