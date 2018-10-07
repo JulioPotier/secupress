@@ -22,6 +22,10 @@ function secupress_block_bad_user_agents() {
 	$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? trim( $_SERVER['HTTP_USER_AGENT'] ) : '';
 	$user_agent = preg_replace( '/\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|$!:,.;]*[A-Z0-9+&@#\/%=~_|$]/i', '', $user_agent );
 
+	if ( trim( wp_strip_all_tags( $user_agent ) ) !== trim( $user_agent ) ) {
+		secupress_block( 'UAHT' );
+	}
+
 	$bad_user_agents = secupress_get_module_option( 'bbq-headers_user-agents-list', '', 'firewall' );
 
 	if ( ! empty( $bad_user_agents ) ) {
