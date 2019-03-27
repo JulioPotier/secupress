@@ -1,6 +1,6 @@
 <?php
 defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
-
+return;
 
 $this->set_current_section( 'page_protect' );
 $this->add_section( __( 'Page Protection', 'secupress' ) );

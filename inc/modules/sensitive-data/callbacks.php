@@ -29,9 +29,6 @@ function secupress_sensitive_data_settings_callback( $settings ) {
 	 * The `$settings` parameter is passed by reference.
 	 */
 
-	// Pages Protection.
-	secupress_pages_protection_settings_callback( $modulenow, $activate );
-
 	// Content Protection.
 	secupress_content_protection_settings_callback( $modulenow, $activate );
 
@@ -39,30 +36,6 @@ function secupress_sensitive_data_settings_callback( $settings ) {
 	secupress_wp_endpoints_settings_callback( $modulenow, $settings, $activate );
 
 	return $settings;
-}
-
-
-/**
- * Pages Protection plugins.
- *
- * @since 1.0
- *
- * @param (string)     $modulenow Current module.
- * @param (bool|array) $activate  Used to (de)activate plugins.
- */
-function secupress_pages_protection_settings_callback( $modulenow, $activate ) {
-	if ( false === $activate ) {
-		return;
-	}
-
-	// (De)Activation.
-	if ( secupress_is_pro() ) {
-		secupress_manage_submodule( $modulenow, 'page-protect', ! empty( $activate['page-protect_profile'] ) || ! empty( $activate['page-protect_settings'] ) );
-		secupress_manage_submodule( $modulenow, 'profile-protect', ! empty( $activate['page-protect_profile'] ) );
-		secupress_manage_submodule( $modulenow, 'options-protect', ! empty( $activate['page-protect_settings'] ) );
-	} else {
-		secupress_deactivate_submodule( $modulenow, array( 'page-protect', 'profile-protect', 'options-protect' ) );
-	}
 }
 
 
