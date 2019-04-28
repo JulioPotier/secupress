@@ -164,12 +164,12 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 
 		$versions = array(
 			'current' => phpversion(),
-			'mini'    => '5.5.38',
-			'best'    => '5.6.24',
+			'mini'    => '7.1.28',
+			'best'    => '7.3.4',
 		);
 
 		if ( false === ( $php_vers = get_site_transient( 'secupress_php_versions' ) ) ) {
-			$response = wp_remote_get( 'http://php.net/releases/index.php?json&version=5&max=2' );
+			$response = wp_remote_get( 'http://php.net/releases/index.php?json&version=7&max=2' );
 
 			if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
 				$php_vers = json_decode( wp_remote_retrieve_body( $response ) );
