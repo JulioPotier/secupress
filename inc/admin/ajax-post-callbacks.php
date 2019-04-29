@@ -489,7 +489,9 @@ function secupress_unlock_admin_ajax_post_cb() {
 	if ( ! isset( $_POST['_wpnonce'], $_POST['email'] ) || ! is_email( $_POST['email'] ) || ! check_ajax_referer( 'secupress-unban-ip-admin', '_wpnonce' ) ) { // WPCS: CSRF ok.
 		wp_die( 'Cheatin\' uh?' );
 	}
-	$user = get_user_by( 'email', $_POST['email'] );
+	$_CLEAN          = [];
+	$_CLEAN['email'] = $_POST['email'];
+	$user            = get_user_by( 'email', $_CLEAN['email'] );
 	if ( ! $user || ! user_can( $user, 'manage_options' ) ) {
 		wp_die( 'Cheatin\' uh?' );
 	}
@@ -504,7 +506,7 @@ function secupress_unlock_admin_ajax_post_cb() {
 							'<a href="' . $url_remember . '">' . $url_remember . '</a>',
 							'<a href="' . $url_remove . '">' . $url_remove . '</a> ' . __( '(Valid 1 day)', 'secupress' )
 					);
-	$sent = secupress_send_mail( $_POST['email'], $subject, $message );
+	$sent = secupress_send_mail( $_CLEAN['email'], $subject, $message );
 	secupress_die( $sent ? __( 'Email sent, check your mailbox.', 'secupress' ) : __( 'Email not sent, please contact the support.', 'secupress' ), __( 'Email', 'secupress' ), array( 'force_die' => true ) );
 }
 
