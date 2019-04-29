@@ -2,9 +2,9 @@
 Contributors: SecuPress, juliobox, GregLone
 Tags: wordpress security, secure, security plugin, security, malware
 Requires at least: 4.0
-Tested up to: 5.0-alpha
+Tested up to: 5.2
 Requires PHP: 5.4
-Stable tag: 1.4.7
+Stable tag: 1.4.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -180,6 +180,15 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 8. The 4th step: final report, you can export it as PDF (1)
 
 == Changelog ==
+
+= 1.4.8 =
+
+* 30 april 2019
+
+* Fix#686: (again) The scanner for "bad user agent header" could not read the correct value, Grade A was not possible, it's back in the game!
+* Improvement#697: Update the PHP minimum values. Bye 5.x, welcome 7.x
+* Improvement: Remove the "page protect" module, we don't need this protection finally.
+* Improvement: Various CSS and PHP improvements.
 
 = 1.4.7 =
 
