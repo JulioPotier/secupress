@@ -466,7 +466,7 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 
 	// < 1.4.9
 	if ( secupress_has_pro() && version_compare( $actual_version, '1.4.9', '<' ) ) {
-		secupress_deactivate_submodule( $modulenow, array( 'page-protect', 'profile-protect', 'options-protect' ) );
+		secupress_deactivate_submodule( 'sensitive-data', array( 'page-protect', 'profile-protect', 'options-protect' ) );
 		secupress_remove_old_plugin_file( SECUPRESS_PRO_MODULES_PATH . 'sensitive-data/plugins/options-protect.php' );
 		secupress_remove_old_plugin_file( SECUPRESS_PRO_MODULES_PATH . 'sensitive-data/plugins/profile-protect.php' );
 		secupress_remove_old_plugin_file( SECUPRESS_PRO_MODULES_PATH . 'sensitive-data/plugins/page-protect.php' );
