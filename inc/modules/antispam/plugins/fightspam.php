@@ -729,7 +729,7 @@ function secupress_fightspam_get_spam_status( $value ) {
 				$results = maybe_unserialize( $response['body'] );
 
 				if ( isset( $results['success'], $results[ $is_what ] ) && $results['success'] ) {
-					$status = 0 === (int) $results[ $is_what ]['frequency'] && 1 < $results[ $is_what ]['confidence'] ? 'safe' : 'blacklisted';
+					$status = 0 === (int) $results[ $is_what ]['frequency'] && ( ! isset( $results[ $is_what ]['confidence'] ) || 1 < $results[ $is_what ]['confidence'] ) ? 'safe' : 'blacklisted';
 				}
 			}
 		} else {
