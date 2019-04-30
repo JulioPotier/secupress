@@ -969,7 +969,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					$description = '<' . $tag . ' class="description warning' . $depends . $class . '">' . ( 'p' === $tag ? '' : '<p>' ) . '<strong>' . __( 'Warning: ', 'secupress' ) . '</strong> ' . $helper['description'] . '</' . $tag . '>'; // Don't forget to close the <p> tag.
 					break;
 				default :
-					continue;
+					break;
 			}
 
 			/**
