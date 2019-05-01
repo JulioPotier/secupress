@@ -68,16 +68,18 @@ $this->add_field( array(
 	'name'         => $this->get_field_name( 'countries' ),
 ) );
 
+$lastupdate = secupress_get_option( 'geoips_last_update' );
+$lastupdate = '1' === get_option( 'secupress_geoip_installed', 0 ) && $lastupdate ? $lastupdate : __( 'Not installed yet', 'secupress' );
 $this->add_field( array(
 	'title'        => __( 'Manual Update', 'secupress' ),
 	'label_for'    => 'manual_update',
-	'depends'      => $main_field_name . '_blacklist ' . $main_field_name . '_whitelist',
+	'depends'      => '1' === get_option( 'secupress_geoip_installed', 0 ) ? $main_field_name . '_blacklist ' . $main_field_name . '_whitelist' : 'not_installed_yet',
 	'type'         => 'html',
-	'value'        => '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_geoips_update_data' ), 'secupress_geoips_update_data' ) . '" class="button button-secondary">Update the GeoIP database now</a>',
+	'value'        => '1' === get_option( 'secupress_geoip_installed', 0 ) ? '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_geoips_update_data' ), 'secupress_geoips_update_data' ) . '" class="button button-secondary">Update the GeoIP database now</a>' : '<a disabled class="button button-secondary">Save the changes first</a>',
 	'helpers'      => array(
 		array(
 			'type'        => 'help',
-			'description' => __( 'The GeoIP database will update everyday automatically using a cron.<br />If you encounter strange behaviour like too much blocking or not enough, try to update manually.', 'secupress' ),
+			'description' => sprintf( __( 'The GeoIP database will update everyday automatically using a cron.<br />If you encounter strange behaviour like too much blocking or not enough, try to update manually.<br>Last update: %s', 'secupress' ), $lastupdate ),
 		),
 	),
 ) );
