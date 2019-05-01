@@ -286,6 +286,9 @@ function secupress_check_bot_ip( $test = false ) {
  **/
 function secupress_ipv6_numeric( $ip, $length = 19 ) {
     $bin = '';
+	if ( ! filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 ) ) {
+		return 0;
+	}
     foreach ( unpack( 'C*', inet_pton( $ip ) ) as $byte ) {
         $bin .= str_pad( decbin( $byte ), 8, '0', STR_PAD_LEFT );
     }
