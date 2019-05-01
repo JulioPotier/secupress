@@ -271,3 +271,23 @@ function secupress_check_bot_ip( $test = false ) {
 
 	return false;
 }
+
+/**
+ * Convert a IPv6 into decimal value, stripping it to $length (19 to match a bigint)
+ *
+ * @since 1.4.9
+ * @author Julio Potier
+ *
+ * @see https://stackoverflow.com/questions/18276757/php-convert-ipv6-to-number
+ *
+ * @param (string) $ip The IPv4 to be converted
+ * @param (integer) $length The max length of the decimal representation
+ * @return (string) Decimal representation, stripped
+ **/
+function secupress_ipv6_numeric( $ip, $length = 19 ) {
+    $bin = '';
+    foreach ( unpack( 'C*', inet_pton( $ip ) ) as $byte ) {
+        $bin .= str_pad( decbin( $byte ), 8, '0', STR_PAD_LEFT );
+    }
+    return substr( base_convert( ltrim( $bin, '0'), 2, 10 ), 0, $length );
+}
