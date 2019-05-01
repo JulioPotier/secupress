@@ -435,11 +435,6 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 	// < 1.4.3
 	if ( version_compare( $actual_version, '1.4.3', '<' ) ) {
 
-		if ( secupress_has_pro() ) {
-			secupress_deactivate_submodule( 'users-login', 'nonlogintimeslot' );
-			secupress_remove_old_plugin_file( SECUPRESS_PRO_MODULES_PATH . 'users-login/plugins/nonlogintimeslot.php' );
-		}
-
 		secupress_deactivate_submodule( 'file-system', 'directory-index' );
 		secupress_remove_old_plugin_file( SECUPRESS_MODULES_PATH . 'file-system/plugins/directory-index.php' );
 
@@ -450,39 +445,6 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 		secupress_remove_old_plugin_file( SECUPRESS_MODULES_PATH . 'sensitive-data/plugins/restapi.php' );
 
 		set_site_transient( 'secupress-common', time(), 2 * DAY_IN_SECONDS );
-	}
-
-	// < 1.4.4
-	if ( version_compare( $actual_version, '1.4.4', '<' ) ) {
-		$value = secupress_get_module_option( 'bbq-headers_user-agents-list', secupress_firewall_bbq_headers_user_agents_list_default(), 'firewall' );
-		$value = str_replace( 'Wget, ', '', $value );
-		secupress_update_module_option( 'bbq-headers_user-agents-list', $value, 'firewall' );
-	}
-
-	// < 1.4.5
-	if ( secupress_has_pro() && version_compare( $actual_version, '1.4.5', '<' ) ) {
-		secupress_remove_old_plugin_file( SECUPRESS_PRO_MODULES_PATH . 'antispam/callbacks.php' );
-	}
-
-	// < 1.4.9
-	if ( secupress_has_pro() && version_compare( $actual_version, '1.4.9', '<' ) ) {
-		secupress_deactivate_submodule( 'sensitive-data', array( 'page-protect', 'profile-protect', 'options-protect' ) );
-		secupress_remove_old_plugin_file( SECUPRESS_PRO_MODULES_PATH . 'sensitive-data/plugins/options-protect.php' );
-		secupress_remove_old_plugin_file( SECUPRESS_PRO_MODULES_PATH . 'sensitive-data/plugins/profile-protect.php' );
-		secupress_remove_old_plugin_file( SECUPRESS_PRO_MODULES_PATH . 'sensitive-data/plugins/page-protect.php' );
-	}
-
-	// < 1.4.10
-	if ( secupress_has_pro() && version_compare( $actual_version, '1.4.10', '<' ) ) {
-		wp_clear_scheduled_hook( 'secupress_geoips_update_data' );
-
-		// Alter the table and drop the end_ip column
-		$charset_collate = $wpdb->get_charset_collate();
-		$sql = "ALTER TABLE {$wpdb->prefix}secupress_geoips DROP end_ip";
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-		dbDelta( $sql );
-
-		secupress_geoips_update_datas();
 	}
 
 }
