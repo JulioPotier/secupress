@@ -472,6 +472,11 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 		secupress_remove_old_plugin_file( SECUPRESS_PRO_MODULES_PATH . 'sensitive-data/plugins/page-protect.php' );
 	}
 
+	// < 1.4.10
+	if ( secupress_has_pro() && version_compare( $actual_version, '1.4.10', '<' ) ) {
+		wp_clear_scheduled_hook( 'secupress_geoips_update_data' );
+	}
+
 }
 
 /**
