@@ -122,7 +122,6 @@ function secupress_init() {
 		require_once( SECUPRESS_ADMIN_PATH . 'admin.php' );
 		require_once( SECUPRESS_ADMIN_PATH . 'ajax-post-callbacks.php' );
 		require_once( SECUPRESS_ADMIN_PATH . 'notices.php' );
-		require_once( SECUPRESS_ADMIN_PATH . 'upgrader.php' );
 	}
 
 	/**
@@ -131,6 +130,11 @@ function secupress_init() {
 	 * @since 1.0
 	 */
 	do_action( 'secupress.loaded' );
+	// Load the upgrader after the load of our plugins, SecuPress is still considered "loaded" even without this file since it's not usefull for security
+	if ( is_admin() ) {
+		require_once( SECUPRESS_ADMIN_PATH . 'upgrader.php' );
+		secupress_upgrader();
+	}
 }
 
 

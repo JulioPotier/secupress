@@ -5,7 +5,6 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /** MIGRATE / UPGRADE =========================================================================== */
 /** --------------------------------------------------------------------------------------------- */
 
-add_action( 'secupress.loaded', 'secupress_upgrader', 9 );
 /**
  * Tell WP what to do when admin is loaded aka upgrader
  *
