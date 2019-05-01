@@ -475,6 +475,14 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 	// < 1.4.10
 	if ( secupress_has_pro() && version_compare( $actual_version, '1.4.10', '<' ) ) {
 		wp_clear_scheduled_hook( 'secupress_geoips_update_data' );
+
+		// Alter the table and drop the end_ip column
+		$charset_collate = $wpdb->get_charset_collate();
+		$sql = "ALTER TABLE {$wpdb->prefix}secupress_geoips DROP end_ip";
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $sql );
+
+		secupress_geoips_update_datas();
 	}
 
 }
