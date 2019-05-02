@@ -88,6 +88,30 @@ foreach ( $labels as $slug => $label ) {
 	) );
 }
 
+$this->add_field( [
+	'title'        => __( 'What to do when the old page is triggered?', 'secupress' ),
+	'depends'      => $main_field_name,
+	'label_for'    => $this->get_field_name( 'whattodo' ),
+	'type'         => 'radio',
+	'default'      => 'sperror',
+	'options'      => [
+		'sperror' => __( 'Standard Error Message', 'secupress' ),
+		'custom_error' => __( 'Custom Error Message', 'secupress' ),
+		'404' => __( '404 Page', 'secupress' ),
+		'custom_url' => __( 'Custom URL', 'secupress' )
+	],
+	// 'label_before' => '<span class="screen-reader-text">' . __( 'URL' ) . '</span>',
+	// 'label_after'  => '<em class="hide-if-no-js">' . str_replace( '%%slug%%', '<strong class="dynamic-login-url-slug">' . $value . '</strong>', $login_url ) . '</em>',
+] );
+
+$this->add_field( [
+	'title'        => __( 'Preview', 'secupress' ),
+	'type'         => 'html',
+	'value'        => sprintf( '<a href="%2$s%1$s" target="_blank"><img src="%2$s%1$s" height="150"></a>', __( 'secupress-movelogin-error-preview-en_US.png', 'secupress' ), SECUPRESS_ADMIN_IMAGES_URL ),
+	'depends'      => $this->get_field_name( 'whattodo' ) . '_sperror',
+] );
+
+
 /**
  * If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for Move Login.
  */
