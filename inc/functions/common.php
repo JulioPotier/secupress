@@ -1073,8 +1073,7 @@ function secupress_feature_is_pro( $feature ) {
 		'event-alerts_activated'                 => 1,
 		'daily-reporting_activated'              => 1,
 		'move-login_whattodo|custom_error'       => 1,
-		'move-login_whattodo|custom_url'         => 1,
-		'move-login_whattodo|404'                => 1,
+		'move-login_whattodo|custom_page'        => 1,
 	);
 
 	return isset( $features[ $feature ] );
