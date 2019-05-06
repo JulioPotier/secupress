@@ -475,6 +475,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			'label_before'      => '',
 			'label_after'       => '',
 			'disabled'          => false,
+			'readonly'          => false,
 			'attributes'        => array(),
 			'helpers'           => array(),
 		), $args );
@@ -486,6 +487,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		}
 		$name_attribute = $option_name . '[' . $args['name'] . ']';
 		$disabled       = (bool) $args['disabled'];
+		$readonly       = (bool) $args['readonly'];
 
 		// Type.
 		$args['type'] = 'radio' === $args['type'] ? 'radios' : $args['type'];
@@ -556,6 +558,10 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$args['attributes']['disabled'] = 'disabled';
 		}
 
+		if ( $readonly ) {
+			$args['attributes']['readonly'] = 'readonly';
+		}
+
 		unset( $args['attributes']['pattern'], $args['attributes']['required'] );
 
 		if ( ! empty( $args['attributes'] ) ) {
@@ -604,10 +610,11 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 		// Types.
 		switch ( $args['type'] ) {
+			case 'url' :
+				add_action( 'admin_footer', 'secupress_enqueue_wplink_dialog' );
 			case 'number' :
 			case 'email' :
 			case 'tel' :
-			case 'url' :
 			case 'text' :
 
 				echo $label_open; ?>
@@ -621,6 +628,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				echo $label_close;
 				break;
 
+			case 'wpeditor' :
 			case 'textarea' :
 
 				$value       = esc_textarea( html_entity_decode( implode( "\n" , (array) $value ), ENT_QUOTES ) );
@@ -629,8 +637,8 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 				// Don't add expandable feature for these exceptions.
 				$exceptions   = array(
-					'support_description',
 					'notification-types_emails',
+					'move-login_custom_error_content',
 				);
 				$is_exception = in_array( $args['name'], $exceptions, true );
 
@@ -641,7 +649,11 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					<?php
 					echo $args['label'] ? '<span class="secupress-bold">' . $args['label'] . '</span><br/>' : '';
 					echo $args['label_before'];
-					echo '<textarea id="' . $args['label_for'] . '" name="' . $name_attribute . '"' . $attributes . ' spellcheck="false">' . $value . '</textarea>';
+					if ( 'textarea' === $args['type'] ) {
+						echo '<textarea id="' . $args['label_for'] . '" name="' . $name_attribute . '"' . $attributes . ' spellcheck="false">' . $value . '</textarea>';
+					} else {
+						wp_editor( html_entity_decode( $value ), sanitize_key( $name_attribute ), [ 'textarea_name' => $name_attribute ] );
+					}
 					echo $args['label_after'];
 					?>
 				<?php
