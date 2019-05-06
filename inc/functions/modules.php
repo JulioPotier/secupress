@@ -39,6 +39,7 @@ function secupress_get_modules() {
 				'normal'  => __( 'The best and easiest way to make sure that users\' data will be protected, and their accounts not compromised.', 'secupress' ),
 			],
 			'submodules'  => [
+							'move-login_activated'                     => __( 'Move Login Page', 'secupress' ),
 							'login-protection_type_limitloginattempts' => __( 'Limit Login Attempts', 'secupress' ),
 							'login-protection_type_bannonexistsuser'   => __( 'Ban Non Existing Users', 'secupress' ),
 							'login-protection_sessions_control'        => '*' . __( 'Session Control', 'secupress' ),
@@ -49,7 +50,6 @@ function secupress_get_modules() {
 							'password-policy_ask-old-password'         => __( 'Ask Old Password', 'secupress' ),
 							'blacklist-logins_activated'               => __( 'Forbidden Usernames', 'secupress' ),
 							'blacklist-logins_stop-user-enumeration'   => __( 'Stop User Enumeration', 'secupress' ),
-							'move-login_activated'                     => __( 'Move Login Page', 'secupress' ),
 						]
 		],
 		'plugins-themes'  => [
@@ -106,8 +106,6 @@ function secupress_get_modules() {
 							'content-protect_wp-version'        => __( 'PHP WP Disclosure', 'secupress' ),
 							'content-protect_bad-url-access'    => __( 'Bad URL Access', 'secupress' ),
 							'content-protect_readmes'           => __( 'Protect Readme Files', 'secupress' ),
-							'page-protect_profile'              => '*' . __( 'Protect Profile Page', 'secupress' ),
-							'page-protect_settings'             => '*' . sprintf( __( 'Protect %s Pages', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
 						]
 		],
 		'firewall'        => [
@@ -268,28 +266,26 @@ function secupress_activate_submodule( $module, $submodule, $incompatible_submod
 		require_once( $file_path );
 
 		secupress_add_module_notice( $module, $submodule, 'activation' );
-	}
 
-	/**
-	 * Fires once a sub-module is activated, even if it was already active.
-	 *
-	 * @since 1.0
-	 *
-	 * @param (bool) $is_active True if the sub-module was already active.
-	 */
-	do_action( 'secupress.modules.activate_submodule_' . $submodule, $is_active );
+		/**
+		 * Fires once a sub-module is activated, even if it was already active.
+		 *
+		 * @since 1.0
+		 *
+		 * @param (bool) $is_active True if the sub-module was already active.
+		 */
+		do_action( 'secupress.modules.activate_submodule_' . $submodule, $is_active );
 
-	/**
-	 * Fires once any sub-module is activated, even if it was already active.
-	 *
-	 * @since 1.0
-	 *
-	 * @param (string) $submodule The sub-module slug.
-	 * @param (bool)   $is_active True if the sub-module was already active.
-	 */
-	do_action( 'secupress.modules.activate_submodule', $submodule, $is_active );
+		/**
+		 * Fires once any sub-module is activated, even if it was already active.
+		 *
+		 * @since 1.0
+		 *
+		 * @param (string) $submodule The sub-module slug.
+		 * @param (bool)   $is_active True if the sub-module was already active.
+		 */
+		do_action( 'secupress.modules.activate_submodule', $submodule, $is_active );
 
-	if ( ! $is_active ) {
 		secupress_delete_site_transient( SECUPRESS_ACTIVE_SUBMODULES );
 	}
 
@@ -905,28 +901,39 @@ function secupress_submodule_is_pro( $module, $submodule ) {
 
 
 /**
- * Get a sub-module file path.
+ * Get a sub-module file path. Pro, free, both.
  *
+ * @since 1.4.9 $both Param
  * @since 1.0
  * @author Grégory Viguier
  *
  * @param (string) $module    The module.
  * @param (string) $submodule The sub-module.
+ * @param (bool)   $both      True will return all the found files path
  *
  * @return (string|bool) The file path on success. False on failure.
  */
 function secupress_get_submodule_file_path( $module, $submodule ) {
 	$file_path = sanitize_key( $module ) . '/plugins/' . sanitize_key( $submodule ) . '.php';
-
-	if ( defined( 'SECUPRESS_PRO_MODULES_PATH' ) && file_exists( SECUPRESS_PRO_MODULES_PATH . $file_path ) ) {
-		return SECUPRESS_PRO_MODULES_PATH . $file_path;
-	}
+	$paths     = [];
 
 	if ( file_exists( SECUPRESS_MODULES_PATH . $file_path ) ) {
-		return SECUPRESS_MODULES_PATH . $file_path;
+		$paths['free'] = SECUPRESS_MODULES_PATH . $file_path;
 	}
 
-	return false;
+	if ( defined( 'SECUPRESS_PRO_MODULES_PATH' ) && file_exists( SECUPRESS_PRO_MODULES_PATH . $file_path ) ) {
+		$paths['pro'] = SECUPRESS_PRO_MODULES_PATH . $file_path;
+	}
+
+	if ( empty( $paths ) ) {
+		return false;
+	} elseif ( isset( $paths['pro'], $paths['free'] ) ) {
+		return $paths;
+	} elseif( isset( $paths['pro'] ) ) {
+		return $paths['pro'];
+	} else {
+		return $paths['free'];
+	}
 }
 
 
