@@ -204,7 +204,7 @@ function secupress_check_ban_ips_maybe_send_unban_email( $ip ) {
 	);
 }
 
-
+add_shortcode( 'secupress_check_ban_ips_form', 'secupress_check_ban_ips_form' );
 /**
  * Return the form where the user can enter his email address.
  *
@@ -217,15 +217,14 @@ function secupress_check_ban_ips_maybe_send_unban_email( $ip ) {
  *
  * @return (string) The form.
  */
-function secupress_check_ban_ips_form( $args ) {
-	$args = array_merge( array(
-		'ip'       => '',
-		'time_ban' => 0,
+function secupress_check_ban_ips_form( $args, $contents = '' ) {
+	$args = wp_parse_args( $args, [
+		'time_ban' => -1,
+		'ip'       => 'admin', // use for nonce check, see action below v.
+		'action'   => 'action="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_unlock_admin' ), 'secupress-unban-ip-admin' ) . '"',
 		'error'    => '',
-		'action'   => '',
 		'content'  => '',
-		'id'       => '',
-	), $args );
+	] );
 
 	switch ( true ) {
 		case $args['time_ban'] > 0:
@@ -237,7 +236,7 @@ function secupress_check_ban_ips_form( $args ) {
 		default:
 			$content = $args['content'];
 	}
-	$content .= '<form method="post" autocomplete="on" ' . $args['action'] . '>';
+	$content .= '<p><form method="post" autocomplete="on" ' . $args['action'] . '>';
 		$content .= '<p>' . __( 'If you are Administrator and have been accidentally locked out, enter your email address here to unlock yourself.', 'secupress' ) . '</p>';
 		$content .= '<label for="email">';
 			$content .= __( 'Your email address:', 'secupress' );
@@ -246,11 +245,10 @@ function secupress_check_ban_ips_form( $args ) {
 		$content .= '</label>';
 		$content .= '<p class="submit"><button type="submit" name="submit" class="button button-primary button-large">' . __( 'Submit', 'secupress' ) . '</button></p>';
 		$content .= wp_nonce_field( 'secupress-unban-ip-' . $args['ip'], '_wpnonce', true , false );
-	$content .= '</form>';
+	$content .= '</form></p>';
 
 	return $content;
 }
-
 
 /** --------------------------------------------------------------------------------------------- */
 /** FIX WP_DIE() HTML =========================================================================== */

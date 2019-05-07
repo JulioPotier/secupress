@@ -50,6 +50,16 @@ function secupress_users_login_settings_callback( $settings ) {
 	// Move Login.
 	secupress_move_login_settings_callback( $modulenow, $settings, $activate );
 
+	/**
+	 * Filter the settings before saving.
+	 *
+	 * @since 1.4.9
+	 *
+	 * @param (array)      $settings The module settings.
+	 * @param (array\bool) $activate Contains the activation rules for the different modules
+	 */
+	$settings = apply_filters( "secupress_{$modulenow}_settings_callback", $settings, $activate );
+
 	return $settings;
 }
 

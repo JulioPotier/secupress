@@ -88,6 +88,57 @@ foreach ( $labels as $slug => $label ) {
 	) );
 }
 
+$this->add_field( [
+	'title'        => __( 'What to do when the old page is triggered?', 'secupress' ),
+	'depends'      => $main_field_name,
+	'label_for'    => $this->get_field_name( 'whattodo' ),
+	'type'         => 'radio',
+	'options'      => [
+		'sperror'      => __( 'Standard Error Message', 'secupress' ),
+		'custom_error' => __( 'Custom Error Message', 'secupress' ),
+		'custom_page'  => __( 'Custom Page', 'secupress' )
+	],
+] );
+
+add_action( 'admin_footer', 'add_thickbox' );
+$this->add_field( [
+	'title'        => __( 'Preview', 'secupress' ),
+	'type'         => 'html',
+	'value'        => sprintf( '<a href="%2$s%1$s" target="_blank" class="thickbox"><img src="%2$s%1$s" height="150"></a>', __( 'secupress-movelogin-error-preview-en_US.png', 'secupress' ), SECUPRESS_ADMIN_IMAGES_URL ),
+	'depends'      => $this->get_field_name( 'whattodo' ) . '_sperror',
+] );
+
+$this->add_field( [
+	'title'        => __( 'Custom Message', 'secupress' ),
+	'type'         => 'wpeditor',
+	'label_for'    => $this->get_field_name( 'custom_error_content' ),
+	'depends'      => $this->get_field_name( 'whattodo' ) . '_custom_error',
+	'default'      => '⚠️ ' . __( 'This page does not exists, has moved or you are not allowed to access it.', 'secupress' ) . "\n" .
+					__( 'If you are Administrator and have been accidentally locked out, enter your email address here to unlock yourself.', 'secupress' ),
+	'helpers'           => array(
+		array(
+			'type'        => 'description',
+			'description' => __( 'Clean HTML allowed. The recovery form will be automatically aadded t the end of your content.', 'secupress' ),
+		),
+	),
+] );
+
+$this->add_field( [
+	'title'        => __( 'Custom Page', 'secupress' ),
+	'type'         => 'url',
+	'attributes'   => [ 'class' => [ 'regular-text', 'wp_link_dialog' ] ],
+	'label_for'    => $this->get_field_name( 'custom_page_url' ),
+	'depends'      => $this->get_field_name( 'whattodo' ) . '_custom_page',
+	'default'      => home_url(),
+	'value'        => '' !== secupress_get_module_option( 'move-login_custom_page_url', '', 'users-login' ) ? secupress_get_module_option( 'move-login_custom_page_url', '', 'users-login' ) : home_url(),
+	'helpers'      => array(
+		array(
+			'type'        => 'description',
+			'description' => __( 'A custom page from your site, only.', 'secupress' ),
+		),
+	),
+] );
+
 /**
  * If nginx or if `.htaccess`/`web.config` is not writable, display a textarea containing the rewrite rules for Move Login.
  */
