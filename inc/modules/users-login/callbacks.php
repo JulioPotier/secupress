@@ -299,6 +299,11 @@ function secupress_move_login_settings_callback( $modulenow, &$settings, $activa
 			secupress_manage_submodule( $modulenow, 'move-login', ! empty( $activate['move-login_activated'] ) );
 		}
 	}
+	if ( isset( $activate['move-login_activated'] ) ) {
+		$settings['move-login_whattodo'] = isset( $settings['move-login_whattodo'] ) ? $settings['move-login_whattodo'] : 'sperror';
+	} else {
+		unset( $settings['move-login_whattodo'] );
+	}
 }
 
 
@@ -338,10 +343,10 @@ function secupress_install_users_login_module( $module ) {
  * @return (array) Return an array with the action names as keys and field labels as values.
  */
 function secupress_move_login_slug_labels() {
-	$labels = array(
-		'login'    => __( 'New login page', 'secupress' ),
-		'register' => __( 'New registration page', 'secupress' ),
-	);
+	$labels = [ 'login' => __( 'New login page', 'secupress' ) ];
+	if ( '1' === get_option( 'users_can_register' ) ) {
+		$labels['register'] = __( 'New registration page', 'secupress' );
+	}
 
 	return $labels;
 }
