@@ -365,6 +365,7 @@ function secupress_load_functions() {
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/ajax-post.php' );
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/modules.php' );
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/notices.php' );
+	require_once( SECUPRESS_ADMIN_PATH . 'functions/site-health.php' );
 }
 
 
