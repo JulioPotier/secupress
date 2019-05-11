@@ -105,6 +105,7 @@ function secupress_get_scanners() {
 			0 => 'Discloses',
 			1 => 'Readme_Discloses',
 			2 => 'PHP_Disclosure',
+			3 => 'HTTPS',
 		),
 		'file-system' => array(
 			0 => 'Chmods',
