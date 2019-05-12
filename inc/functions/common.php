@@ -100,6 +100,7 @@ function secupress_get_scanners() {
 			4 => 'WP_Config',
 			5 => 'DB_Prefix',
 			6 => 'Salt_Keys',
+			7 => 'WPOrg',
 		),
 		'sensitive-data' => array(
 			0 => 'Discloses',
