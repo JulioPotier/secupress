@@ -1228,7 +1228,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 * @return (bool) "false" by default (not modified), should be "true" to be used
 	 * @author Julio Potier
 	 **/
-	final protected function secupress_filter_scanner( $class ) {
+	final protected function filter_scanner( $class ) {
 		return ! is_null( apply_filters( 'secupress.pre_scan.' . $class, null ) );
 	}
 

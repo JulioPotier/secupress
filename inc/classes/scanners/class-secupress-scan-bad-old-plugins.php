@@ -135,7 +135,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 	 */
 	public function scan() {
 
-		$activated = secupress_filter_scanner( __CLASS__ );
+		$activated = $this->filter_scanner( __CLASS__ );
 		if ( true === $activated ) {
 			$this->add_message( 0 );
 			return parent::scan();
