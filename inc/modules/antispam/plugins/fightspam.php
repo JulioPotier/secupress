@@ -441,7 +441,7 @@ function secupress_fightspam_comment_count_without_pingbacks( $count, $post_id )
  * @return (array)
  */
 function secupress_fightspam_filter_real_comments( $comment ) {
-	return ! $comment->comment_type;
+	return ! ( 'Pingback' === $comment->comment_type || 'Trackback' === $comment->comment_type );
 }
 
 
