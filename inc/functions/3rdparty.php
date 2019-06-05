@@ -177,6 +177,7 @@ if ( isset( $_SERVER['SERVER_ADDR'] ) &&
 	(
 	0 === strpos( $_SERVER['SERVER_ADDR'], '109.234.' ) || 0 === strpos( $_SERVER['SERVER_ADDR'], '64.34.157.' ) ||
 	strpos( gethostname(), '.secure-node.at' ) > 0 ||
+	strpos( gethostname(), '.hostgator.com' ) > 0 ||
 	) ) {
 	add_filter( 'secupress.settings.field.bbq-headers_user-agents-list',      '__return_null' );
 	add_filter( 'secupress.settings.field.bbq-url-content_bad-contents-list', '__return_null' );
