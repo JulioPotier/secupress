@@ -656,6 +656,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	protected function set_action_title() {
 		$titles = array(
 			/** Translators: 1 is the plugin name, 2 is an URL. */
+			'secupress.block.whitelisted'        => sprintf( __( '%1$s should have prevent a request at %2$sn', 'secupress' ), '<b>' . SECUPRESS_PLUGIN_NAME . '</b>', '%1$s' ),
 			'secupress.block'         => sprintf( __( '%1$s prevented a request at %2$s', 'secupress' ), '<b>' . SECUPRESS_PLUGIN_NAME . '</b>', '%1$s' ),
 			'secupress.ban.ip_banned' => __( 'IP banned: %s', 'secupress' ),
 			'switch_theme'            => __( 'Theme activated: %s', 'secupress' ),
@@ -810,6 +811,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	protected function set_action_message() {
 		$messages = array(
 			/** Translators: 1 is the plugin name, 2 is an URL, 3 is an IP address, 4 is an identifier, 5 and 6 are some code. */
+			'secupress.block.whitelisted'        => sprintf( __( '%1$s should have prevent a request at %2$s. Block ID: %4$s. But the IP %3$s is whitelisted. The server configuration at the moment: %5$s Data posted: %6$s', 'secupress' ), '<b>' . SECUPRESS_PLUGIN_NAME . '</b>', '%1$s', '%2$s', '%4$s', '%3$s', '%5$s' ),
 			'secupress.block'         => sprintf( __( '%1$s prevented a request at %2$s from the IP %3$s. Block ID: %4$s. The server configuration at the moment: %5$s Data posted: %6$s', 'secupress' ), '<b>' . SECUPRESS_PLUGIN_NAME . '</b>', '%1$s', '%2$s', '%3$s', '%4$s', '%5$s' ),
 			'secupress.ban.ip_banned' => __( 'IP banned: %s.', 'secupress' ),
 			'switch_theme'            => __( 'Theme activated: %s.', 'secupress' ),
@@ -898,6 +900,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 */
 	protected function set_action_criticity() {
 		switch ( $this->target ) {
+			case 'secupress.block.whitelisted':
 			case 'secupress.block':
 				$this->critic = 'high';
 				break;
