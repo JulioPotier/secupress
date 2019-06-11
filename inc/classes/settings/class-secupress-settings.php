@@ -611,7 +611,9 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		// Types.
 		switch ( $args['type'] ) {
 			case 'url' :
-				add_action( 'admin_footer', 'secupress_enqueue_wplink_dialog' );
+				if ( secupress_is_pro() ) {
+						add_action( 'admin_footer', 'secupress_enqueue_wplink_dialog' );
+				}
 			case 'number' :
 			case 'email' :
 			case 'tel' :
