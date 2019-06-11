@@ -46,11 +46,6 @@ function secupress_maybe_set_rules_on_activation() {
 
 	$rules = array();
 
-	// Banned IPs.
-	if ( secupress_write_in_htaccess_on_ban() ) {
-		$rules['ban_ip'] = secupress_get_htaccess_ban_ip();
-	}
-
 	/**
 	 * Rules that must be added to the `.htaccess`, `web.config`, or `nginx.conf` file on SecuPress activation.
 	 *
