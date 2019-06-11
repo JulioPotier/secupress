@@ -654,26 +654,3 @@ function secupress_auto_username_login() {
 function secupress_give_him_a_user( $user, $username ) {
 	return get_user_by( 'login', $username );
 }
-
-/**
- * Enqueue and Print CSS, JS, PHP, HTML to get the wpLink dialog in our sertings for url field type
- *
- * @see /wp-includes/js/wplink.js
- * @since 1.4.9
- * @author Julio Potier
- *
- * @hook admin_footer
- **/
-function secupress_enqueue_wplink_dialog() {
-	// We need the editor buttons styles
-	wp_enqueue_style( 'editor-buttons' );
-	// and native wplink script here
-	wp_enqueue_script( 'wplink' );
-	// and native wplink script here
-	$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-	$version = $suffix ? '1.0' : time();
-	// Our wplink JS code
-	wp_enqueue_script( 'secupress-wplink', SECUPRESS_ADMIN_JS_URL . 'secupress-wplink' . $suffix . '.js', 'jQuery', $version, true );
-	// some i18n
-	wp_localize_script( 'secupress-wplink', 'secupresswplink', [ 'insert' => __( 'Insert/edit link' ), 'home_url' => esc_url( home_url() ) ] );
-}
