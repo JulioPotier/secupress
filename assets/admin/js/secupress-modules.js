@@ -397,7 +397,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 					$( toHide.join( "," ) ).not( $toShow ).filter( ":visible" ).trigger( "secupressbeforehide" ).hide( tempo, function() {
 						$( this ).trigger( "secupressafterhide" );
 					} );
-				} );
+				} ).filter( ":checked" ).trigger( "init.secupress" );
 			}
 			// Checkboxes
 			else if ( "checkbox" === inputTypeAttr ) {
@@ -441,7 +441,7 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 							}
 						} );
 					}
-				} );
+				} ).filter( ":checked" ).trigger( "init.secupress" );
 
 				if ( $input.is( ':checked' ) ) {
 					$( '.depends-' + id ).filter( ':visible' ).trigger( 'secupressinitshow' );
