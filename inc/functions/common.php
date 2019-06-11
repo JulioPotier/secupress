@@ -100,11 +100,13 @@ function secupress_get_scanners() {
 			4 => 'WP_Config',
 			5 => 'DB_Prefix',
 			6 => 'Salt_Keys',
+			7 => 'WPOrg',
 		),
 		'sensitive-data' => array(
 			0 => 'Discloses',
 			1 => 'Readme_Discloses',
 			2 => 'PHP_Disclosure',
+			3 => 'HTTPS',
 		),
 		'file-system' => array(
 			0 => 'Chmods',
