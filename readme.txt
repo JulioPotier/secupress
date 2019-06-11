@@ -184,6 +184,7 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 * 12 June 2019
 * New: New scanners to match Site Health: HTTPS, Communication with WP.org.
 * New#707: New Site Health page from WP 5.2 is now managed by SecuPress for all "security" points.
+* Improvement: Remove 2 textarea fields from firewall, too many times blocked by hosts, use a hook if you really want to customize the rules.
 * Improvement#717: Update firewall rules with custom 7G rules.
 * Improvement#701: GeoIP Module is now compatible with IPv6.
 * Improvement#705: Move Login can now be configured to display a custom message or redirect on a custom page.
