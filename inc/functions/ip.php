@@ -63,32 +63,88 @@ function secupress_get_ip( $priority = null ) {
  * @since 1.0
  *
  * @param (string) $ip An IP address.
+ * @param (bool) $range_format If we have to check in ranges format.
+ * @param (null|int) $flag Flags from filter_var()
  *
- * @return (string|bool) The IP address if valid. False otherwise.
+ * @return (bool) True is valid IP
  */
-function secupress_ip_is_valid( $ip ) {
+function secupress_ip_is_valid( $ip, $range_format = false , $flag = null ) {
 	if ( ! $ip || ! is_string( $ip ) ) {
 		return false;
 	}
 
 	$ip = trim( $ip );
-	return filter_var( $ip, FILTER_VALIDATE_IP );
+	if ( filter_var( $ip, FILTER_VALIDATE_IP, $flag ) ) {
+		return true;
+	}
+
+	if ( ! $range_format ) {
+		return false;
+	}
+
+	if ( strpos( $ip, '*' ) > 0 ) {
+		$ipv4 = str_replace( '*', '0', $ip );
+		$ipv6 = str_replace( '*', '', $ip );
+		$ipv6 = secupress_get_full_ipv6( $ipv6, '0' );
+
+		if ( FILTER_FLAG_IPV6 === $flag ) {
+			return (bool) filter_var( $ipv6, FILTER_VALIDATE_IP, $flag );
+		} elseif ( FILTER_FLAG_IPV4 === $flag ) {
+			return (bool) filter_var( $ipv4, FILTER_VALIDATE_IP, $flag );
+		} elseif ( is_null( $flag ) ) {
+			return (bool) ( filter_var( $ipv4, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 ) || filter_var( $ipv6, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 ) );
+		}
+	}
+
+	if ( strpos( $ip, '/' ) > 0 ) {
+		$ip = explode( '/', $ip, 2 );
+		return (bool) filter_var( $ip[0], FILTER_VALIDATE_IP, $flag ) && is_numeric( $ip[1] ) && $ip[1] <= 128 && $ip[1] > 0;
+	}
+
+	if ( strpos( $ip, '-' ) > 0 ) {
+		$ip = explode( '-', $ip, 2 );
+		return (bool) filter_var( $ip[0], FILTER_VALIDATE_IP, $flag ) && is_numeric( $ip[1] )  && $ip[1] <= 255 && $ip[1] > 0;
+	}
+
+	return false;
 }
 
+/**
+ * Transform a non complete IPv6 form to its complete form (from '-' range)
+ *
+ * @since 1.4.9
+ * @author Julio Potier
+ *
+ * @param (string) $ipv6 Non complete IPv6 form like fedc:6482:cafe::-fedc:6482:cafe:ffff:ffff:ffff:ffff:ffff
+ * @param (string) $mask Either '0' of 'f' to complete the ipv6@
+ * @return (string) The final ipv6 form
+ **/
+function secupress_get_full_ipv6( $ipv6, $mask ) {
+	$ipv6 = explode( ':', $ipv6 );
+	$ipv6 = array_filter( $ipv6 );
+	$ipv6 = $ipv6 + array_fill( count( $ipv6 ), 4 - count( $ipv6 ), '0/ffff' );
+	$ipv6 = implode( ':', $ipv6 );
+	$temp = explode( '::-', $ipv6 );
+	$ipv6 = $temp[0] . str_repeat( ':0/ffff', 7 - substr_count( $temp[0], ':' ) );
+	$ipv6 = str_replace( '0/ffff', $mask, $ipv6 );
+	return $ipv6;
+}
 
 /**
  * Tell if an IP address is whitelisted.
  *
  * @since 1.0
+ * @since 1.4.9 $in_range param
  *
  * @param (string) $ip An IP address. If not provided, the current IP by default.
+ * @param (bool) $in_range Specify if the whitelist should aso be tested including ranged ips
  *
  * @return (bool).
  */
-function secupress_ip_is_whitelisted( $ip = null ) {
+function secupress_ip_is_whitelisted( $ip = null, $in_range = true ) {
 	$ip = $ip ? $ip : secupress_get_ip();
 
-	if ( ! $ip = secupress_ip_is_valid( $ip ) ) {
+	if ( ! secupress_ip_is_valid( $ip ) ) {
 		return false;
 	}
 
@@ -641,16 +697,12 @@ function secupress_ip_is_whitelisted( $ip = null ) {
 	if ( isset( $_SERVER['SERVER_ADDR'] ) ) {
 		$whitelist[ $_SERVER['SERVER_ADDR'] ] = 1;
 	}
-
-	if ( isset( $whitelist[ $ip ] ) ) {
-		return true;
-	}
-
 	// The IPs from the settings page.
-	$whitelist = secupress_get_module_option( 'banned-ips_whitelist', '', 'logs' );
-	$whitelist = explode( "\n", $whitelist );
-	$whitelist = array_flip( $whitelist );
-
+	$_whitelist = get_site_option( SECUPRESS_WHITE_IP );
+	if ( $_whitelist ) {
+		$_whitelist = array_flip( array_keys( $_whitelist ) );
+		$whitelist  = array_merge( $whitelist, $_whitelist );
+	}
 	/**
 	 * Filter the IPs whitelist.
 	 *
@@ -660,10 +712,156 @@ function secupress_ip_is_whitelisted( $ip = null ) {
 	 * @param (string) $ip        The IP address.
 	 */
 	$whitelist = apply_filters( 'secupress.ip.ips_whitelist', $whitelist, $ip );
+	if ( isset( $whitelist[ $ip ] ) ) {
+		return true;
+	}
 
-	return isset( $whitelist[ $ip ] );
+	if ( $in_range ) {
+		// Handle IP ranges lately
+		$whitelist = array_keys( $whitelist );
+		$whitelist = array_filter( $whitelist, function( $item ) {
+			return strpos( $item, '*' ) > 0 || strpos( $item, '/' ) > 0 || strpos( $item, '-' ) > 0;
+		} );
+
+		return secupress_is_ip_in_range( $ip, $whitelist );
+	}
+
+	return false;
 }
 
+/**
+ * Tell if an IP address is blacklisted.
+ *
+ * @since 1.4.9
+ *
+ * @param (string) $ip An IP address. If not provided, the current IP by default.
+ *
+ * @return (bool).
+ */
+function secupress_ip_is_blacklisted( $ip = null ) {
+	$ip = $ip ? $ip : secupress_get_ip();
+
+	if ( ! secupress_ip_is_valid( $ip ) ) {
+		return false;
+	}
+
+	// The IPs from the settings page.
+	$blacklist = get_site_option( SECUPRESS_BAN_IP );
+	$blacklist = array_flip( array_keys( $blacklist ) );
+	/**
+	 * Filter the IPs blacklist.
+	 *
+	 * @since 1.4.9
+	 *
+	 * @param (array)  $blacklist The blacklist. IPs are the array keys.
+	 * @param (string) $ip        The IP address.
+	 */
+	$blacklist = apply_filters( 'secupress.ip.ips_blacklist', $blacklist, $ip );
+	if ( isset( $blacklist[ $ip ] ) ) {
+		return true;
+	}
+	// Handle IP ranges lately
+	$blacklist = array_keys( $blacklist );
+	$blacklist = array_filter( $blacklist, function( $item ) {
+		return strpos( $item, '*' ) > 0 || strpos( $item, '/' ) > 0 || strpos( $item, '-' ) > 0;
+	} );
+	return secupress_is_ip_in_range( $ip, $blacklist );
+}
+
+/**
+ * Check if the asked IP is in the asked range :
+ * • 123.123.123.0-24 = from 123.123.123.0 to 123.123.123.24
+ * • 123.123.123.0/24 = from 123.123.123.0 to 123.123.123.255
+ * • 123.123.*.*      = from 123.123.0.0   to 123.123.255.255
+ *
+ * • fedc:6482:cafe::-fedc:6482:cafe:ffff:ffff:ffff:ffff:ffff = from fedc:6482:cafe:0:0:0:0:0 to fedc:6482:cafe:ffff:ffff:ffff:ffff:ffff
+ * • fedc:6482:cafe::/32 = from fedc:6482:cafe:0:0:0:0:0 to fedc:cafe:FFFF:ffff:ffff:ffff:ffff:ffff
+ * • fedc:6482:cafe:* = from fedc:6482:cafe:0:0:0:0:0    to fedc:6482:FFFF:ffff:ffff:ffff:ffff:ffff
+ *
+ * @since 1.4.9
+ * @author Julio Potier
+ *
+ * @param (string) $ip The $ip to be checked
+ * @param (array) $ips The IPS whitelist
+ * @return (bool) True if in range
+ **/
+function secupress_is_ip_in_range( $ip, $ips ) {
+	if ( empty( $ips ) || ! is_array( $ips ) ) {
+		return false;
+	}
+	foreach ( $ips as $_ips ) {
+		if ( secupress_ip_is_valid( $ip, true, FILTER_FLAG_IPV4 ) && secupress_ip_is_valid( $_ips, true, FILTER_FLAG_IPV4 ) ) {
+			if ( 0 === strcmp( $ip, $_ips ) ) {
+				return true;
+			}
+			if ( strpos( $_ips, '-' ) ) {
+				list( $first_ip, $mask ) = explode( '-', $_ips );
+				$_ip      = explode('.', $first_ip);
+				$_ip[3]   = $mask;
+				$last_ip  = implode('.', $_ip);
+
+				return ip2long( $ip ) >= ip2long( $first_ip ) && ip2long( $ip ) <= ip2long( $last_ip );
+			}
+			if ( strpos( $_ips, '/' ) ) {
+				list( $first_ip, $mask ) = explode( '/', $_ips );
+				if ( $mask === '0' ) {
+					return true;
+				}
+				if ( $mask < 0 || $mask > 32 ) {
+					return false;
+				}
+				return 0 === substr_compare( sprintf( '%032b', ip2long( $ip ) ), sprintf( '%032b', ip2long( $first_ip ) ), 0, $mask );
+			}
+			if ( strpos( $_ips, '*' ) ) {
+				$mask     = str_replace( '*', '', $_ips );
+				$mask     = explode( '.', $mask );
+				$mask     = array_filter( $mask );
+				$mask     = $mask + array_fill( count( $mask ), 4 - count( $mask ), '0/255' );
+				$mask     = implode( '.', $mask );
+				$first_ip = str_replace( '0/255', '0', $mask );
+				$last_ip  = str_replace( '0/255', '255', $mask );
+
+				return secupress_ipv6_numeric( $ip ) >= secupress_ipv6_numeric( $first_ip ) && secupress_ipv6_numeric( $ip ) <= secupress_ipv6_numeric( $last_ip );
+			}
+			return false;
+		} elseif ( secupress_ip_is_valid( $ip, true , FILTER_FLAG_IPV6 ) && secupress_ip_is_valid( $_ips, true , FILTER_FLAG_IPV6 ) ) {
+			if ( strpos( $_ips, '::-' ) ) {
+				$temp     = explode( '::-', $_ips );
+				$first_ip = $temp[0] . str_repeat( ':0', 7 - substr_count( $temp[0], ':' ) );
+				$last_ip  = $temp[1];
+
+				return secupress_ipv6_numeric( $ip ) >= secupress_ipv6_numeric( $first_ip ) && secupress_ipv6_numeric( $ip ) <= secupress_ipv6_numeric( $last_ip );
+			}
+			if ( strpos( $_ips, '/' ) ) {
+				list( $first_ip, $mask ) = explode( '/', $_ips, 2 );
+				if ($mask < 1 || $mask > 128) {
+					return false;
+				}
+				$bytesAddr = unpack( 'n*', @inet_pton( $first_ip ) );
+				$bytesTest = unpack( 'n*', @inet_pton( $ip ) );
+				if ( ! $bytesAddr || ! $bytesTest ) {
+					return false;
+				}
+				for ( $i = 1, $ceil = ceil( $mask / 16 ); $i <= $ceil; ++$i ) {
+					$left = $mask - 16 * ( $i - 1 );
+					$left = ( $left <= 16 ) ? $left : 16;
+					$mask = ~ ( 0xffff >> $left ) & 0xffff;
+					if ( ( $bytesAddr[$i] & $mask ) != ( $bytesTest[$i] & $mask ) ) {
+						return false;
+					}
+				}
+				return true;
+			}
+			if ( strpos( $_ips, '*' ) ) {
+				$_ips     = str_replace( '*', '', $_ips );
+				$first_ip = secupress_get_full_ipv6( $_ips, '0' );
+				$last_ip  = secupress_get_full_ipv6( $_ips, 'ffff' );;
+				return secupress_ipv6_numeric( $ip ) >= secupress_ipv6_numeric( $first_ip ) && secupress_ipv6_numeric( $ip ) <= secupress_ipv6_numeric( $last_ip );
+			}
+			return false;
+		}
+	}
+}
 
 /**
  * Ban an IP address if not whitelisted.
@@ -700,10 +898,6 @@ function secupress_ban_ip( $time_ban = 5, $ip = null, $die = true ) {
 	 */
 	do_action( 'secupress.ban.ip_banned', $ip, $ban_ips );
 
-	if ( secupress_write_in_htaccess_on_ban() ) {
-		secupress_write_htaccess( 'ban_ip', secupress_get_htaccess_ban_ip() );
-	}
-
 	if ( $die ) {
 		secupress_die( sprintf(
 			_n( 'Your IP address %1$s has been banned for %2$s minute, please do not retry until then.', 'Your IP address %1$s has been banned for %2$s minutes, please do not retry until then.', $time_ban, 'secupress' ),
@@ -721,7 +915,7 @@ function secupress_ban_ip( $time_ban = 5, $ip = null, $die = true ) {
  *
  * @return (bool)
  */
-function secupress_write_in_htaccess_on_ban() {
+function secupress_write_in_htaccess() {
 	/**
 	 * Filter to write in the file.
 	 *
@@ -729,7 +923,7 @@ function secupress_write_in_htaccess_on_ban() {
 	 *
 	 * @param (bool) $write False by default.
 	 */
-	return apply_filters( 'secupress.ban.write_in_htaccess', false );
+	return apply_filters( 'secupress.write_in_htaccess', false );
 }
 
 
@@ -821,12 +1015,12 @@ function secupress_check_bot_ip( $test = false ) {
  * @return (string) Decimal representation, stripped
  **/
 function secupress_ipv6_numeric( $ip, $length = 19 ) {
-    $bin = '';
+	$bin = '';
 	if ( ! filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6 ) ) {
 		return 0;
 	}
-    foreach ( unpack( 'C*', inet_pton( $ip ) ) as $byte ) {
-        $bin .= str_pad( decbin( $byte ), 8, '0', STR_PAD_LEFT );
-    }
-    return substr( base_convert( ltrim( $bin, '0'), 2, 10 ), 0, $length );
+	foreach ( unpack( 'C*', inet_pton( $ip ) ) as $byte ) {
+		$bin .= str_pad( decbin( $byte ), 8, '0', STR_PAD_LEFT );
+	}
+	return substr( base_convert( ltrim( $bin, '0'), 2, 10 ), 0, $length );
 }

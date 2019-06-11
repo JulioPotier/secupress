@@ -168,7 +168,214 @@ function secupress_update_oneclick_scan_date_ajax_cb() {
 	wp_send_json_success( secupress_formate_latest_scans_list_item( $item, $last_percent ) );
 }
 
+// WHITELIST IPs
+add_action( 'admin_post_secupress-whitelist-ip', 'secupress_whitelist_ip_ajax_post_cb' );
+add_action( 'wp_ajax_secupress-whitelist-ip',    'secupress_whitelist_ip_ajax_post_cb' );
+/**
+ * Whitelist an IP address.
+ *
+ * @since 1.4.9
+ */
+function secupress_whitelist_ip_ajax_post_cb() {
+	// Make all security tests.
+	secupress_check_admin_referer( 'secupress-whitelist-ip' );
+	secupress_check_user_capability();
 
+	if ( empty( $_REQUEST['ip'] ) ) {
+		secupress_admin_send_message_die( array(
+			'message' => __( 'IP address not provided.', 'secupress' ),
+			'code'    => 'no_ip',
+			'type'    => 'error',
+		) );
+	}
+
+	// Test the IP.
+	$ip          = trim( urldecode( $_REQUEST['ip'] ) );
+	$original_ip = $ip;
+	$is_list     = false;
+	$sep         = "\n";
+	if ( strpos( $ip, ', ' ) > 0 ) {
+		$sep = ', ';
+	} elseif ( strpos( $ip, ',' ) > 0 ) {
+		$sep = ',';
+	} elseif ( strpos( $ip, ';' ) > 0 ) {
+		$sep = ';';
+	} elseif ( strpos( $ip, ' ' ) > 0 ) {
+		$sep = ' ';
+	}
+	if ( strpos( $ip, $sep ) > 0 ) {
+		$is_list = true;
+		$ip      = explode( $sep, $ip );
+		$count_1 = count( $ip );
+		$ip      = array_filter( $ip , function( $_ip ) {
+			return secupress_ip_is_valid( $_ip, true );
+		} );
+		$count_2 = count( $ip );
+	}
+
+	if ( ! $is_list && ! secupress_ip_is_valid( $ip, true ) ) {
+		secupress_admin_send_message_die( array(
+			'message' => __( 'This is not a valid IP address.', 'secupress' ),
+			'code'    => 'invalid_ip',
+			'type'    => 'error',
+		) );
+	}
+
+	if ( ! $is_list && ( secupress_ip_is_whitelisted( $ip ) ) ) {
+		secupress_admin_send_message_die( [
+			'message' => __( 'This IP address is already whitelisted.', 'secupress' ),
+			'code'    => 'already_whitelisted',
+			'type'    => 'error',
+		] );
+	}
+
+	if ( $is_list && 0 === $count_2 ) {
+		secupress_admin_send_message_die( [
+			'message' => __( 'The list does not contains any valid IP address.', 'secupress' ),
+			'code'    => 'invalid_ip',
+			'type'    => 'error',
+		] );
+	}
+
+	// Add the IP to the option.
+	$white_ips = get_site_option( SECUPRESS_WHITE_IP );
+	$white_ips = is_array( $white_ips ) ? $white_ips : [];
+	if ( ! is_array( $ip ) ) {
+		$ip    = [ $ip ];
+	}
+	$ip        = array_flip( $ip );
+	$white_ips = array_merge( $white_ips, $ip );
+
+	update_site_option( SECUPRESS_WHITE_IP, $white_ips );
+
+	/* This hook is documented in /inc/functions/admin.php */
+	do_action( 'secupress.whitelist.ip_whitelisted', $ip, $white_ips );
+
+	$referer_arg  = '&_wp_http_referer=' . urlencode( esc_url_raw( secupress_admin_url( 'modules', 'logs' ) ) );
+	// Send a response.
+	if ( ! $is_list ) {
+		secupress_admin_send_message_die( [
+			'message'    => sprintf( __( 'The IP address %s has been whitelisted.', 'secupress' ), '<code>' . esc_html( $original_ip ) . '</code>' ),
+			'code'       => 'ip_whitelist',
+			'tmplValues' => [
+				[
+					'ip'              => $original_ip,
+					'unwhitelist_url' => esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress-unwhitelist-ip&ip=' . esc_attr( $original_ip ) . $referer_arg ), 'secupress-unwhitelist-ip_' . $original_ip ) ),
+				],
+			] ]
+		);
+	} else {
+		$tmplValues = [];
+		foreach ( $white_ips as $_ip => $time ) {
+			$tmplValues[] = [   'ip'              => $_ip,
+								'unwhitelist_url' => esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress-unwhitelist-ip&ip=' . esc_attr( $_ip ) . $referer_arg ), 'secupress-unwhitelist-ip_' . $_ip ) ),
+							];
+		}
+		if ( $count_1 === $count_2 ) {
+			secupress_admin_send_message_die( [
+				'message'    => __( 'The IP address list has been whitelisted.', 'secupress' ),
+				'code'       => 'ip_whitelist',
+				'tmplValues' => $tmplValues,
+			] );
+		} else {
+			secupress_admin_send_message_die( [
+				'message'    => __( 'Some of the IP address list has been whitelisted.', 'secupress' ),
+				'code'       => 'ip_whitelist',
+				'tmplValues' => $tmplValues,
+			] );
+		}
+	}
+}
+
+
+add_action( 'admin_post_secupress-unwhitelist-ip', 'secupress_unwhitelist_ip_ajax_post_cb' );
+add_action( 'wp_ajax_secupress-unwhitelist-ip',    'secupress_unwhitelist_ip_ajax_post_cb' );
+/**
+ * Unwhitelist an IP address.
+ *
+ * @since 1.4.9
+ */
+function secupress_unwhitelist_ip_ajax_post_cb() {
+	// Make all security tests.
+	if ( empty( $_REQUEST['ip'] ) ) {
+		secupress_admin_send_message_die( array(
+			'message' => __( 'IP address not provided.', 'secupress' ),
+			'code'    => 'no_ip',
+			'type'    => 'error',
+		) );
+	}
+
+	secupress_check_admin_referer( 'secupress-unwhitelist-ip_' . $_REQUEST['ip'] );
+	secupress_check_user_capability();
+
+	$ip = trim( urldecode( $_REQUEST['ip'] ) );
+
+	// Remove the IP from the option.
+	$white_ips = get_site_option( SECUPRESS_WHITE_IP );
+	$white_ips = is_array( $white_ips ) ? $white_ips : [];
+	if ( ! isset( $white_ips[ $ip ] ) ) {
+		secupress_admin_send_message_die( [
+			'message' => sprintf( __( 'The IP address %s is not whitelisted.', 'secupress' ), '<code>' . esc_html( $ip ) . '</code>' ),
+			'code'    => 'ip_not_whitelisted',
+		] );
+	}
+
+	unset( $white_ips[ $ip ] );
+
+	if ( $white_ips ) {
+		update_site_option( SECUPRESS_WHITE_IP, $white_ips );
+	} else {
+		delete_site_option( SECUPRESS_WHITE_IP );
+	}
+
+	/**
+	 * Fires once a IP is unbanned.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $ip      The IP unbanned.
+	 * @param (array)  $white_ips The list of IPs banned (keys) and the time they were banned (values).
+	 */
+	do_action( 'secupress.whitelist.ip_unwhitelisted', $ip, $white_ips );
+
+	// Send a response.
+	secupress_admin_send_message_die( array(
+		'message' => sprintf( __( 'The IP address %s has been remove from the whitelist.', 'secupress' ), '<code>' . esc_html( $ip ) . '</code>' ),
+		'code'    => 'ip_unwhitelisted',
+	) );
+}
+
+
+add_action( 'admin_post_secupress-clear-whitelist-ips', 'secupress_clear_whitelist_ips_ajax_post_cb' );
+add_action( 'wp_ajax_secupress-clear-whitelist-ips',    'secupress_clear_whitelist_ips_ajax_post_cb' );
+/**
+ * Unwhitelist all IP addresses.
+ *
+ * @since 1.4.9
+ */
+function secupress_clear_whitelist_ips_ajax_post_cb() {
+	// Make all security tests.
+	secupress_check_admin_referer( 'secupress-clear-whitelist-ips' );
+	secupress_check_user_capability();
+
+	// Remove all IPs from the option.
+	delete_site_option( SECUPRESS_WHITE_IP );
+
+	/**
+	 * Fires once all IPs are unbanned.
+	 *
+	 * @since 1.0
+	 */
+	do_action( 'secupress.whitelist.ips_cleared' );
+
+	// Send a response.
+	secupress_admin_send_message_die( [
+		'message' => __( 'All IP addresses have been removed from whitelist.', 'secupress' ),
+		'code'    => 'whitelisted_ips_cleared',
+	] );
+}
+
+// BANNED IPs
 add_action( 'admin_post_secupress-ban-ip', 'secupress_ban_ip_ajax_post_cb' );
 add_action( 'wp_ajax_secupress-ban-ip',    'secupress_ban_ip_ajax_post_cb' );
 /**
@@ -182,62 +389,130 @@ function secupress_ban_ip_ajax_post_cb() {
 	secupress_check_user_capability();
 
 	if ( empty( $_REQUEST['ip'] ) ) {
-		secupress_admin_send_message_die( array(
+		secupress_admin_send_message_die( [
 			'message' => __( 'IP address not provided.', 'secupress' ),
 			'code'    => 'no_ip',
 			'type'    => 'error',
-		) );
+		] );
 	}
 
 	// Test the IP.
-	$ip = urldecode( $_REQUEST['ip'] );
+	$ip          = trim( urldecode( $_REQUEST['ip'] ) );
+	$original_ip = $ip;
+	$is_list     = false;
+	$sep         = "\n";
+	$unbanned    = '';
+	if ( strpos( $ip, ', ' ) > 0 ) {
+		$sep = ', ';
+	} elseif ( strpos( $ip, ',' ) > 0 ) {
+		$sep = ',';
+	} elseif ( strpos( $ip, ';' ) > 0 ) {
+		$sep = ';';
+	} elseif ( strpos( $ip, ' ' ) > 0 ) {
+		$sep = ' ';
+	}
+	if ( strpos( $ip, $sep ) > 0 ) {
+		$is_list = true;
+		$ip      = explode( $sep, $ip );
+		$count_1 = count( $ip );
+		$ip      = array_filter( $ip , function( $_ip ) {
+			return secupress_ip_is_valid( $_ip, true );
+		} );
+		$count_2 = count( $ip );
+	}
 
-	if ( ! secupress_ip_is_valid( $ip ) ) {
+	if ( ! $is_list && ! secupress_ip_is_valid( $ip, true ) ) {
 		secupress_admin_send_message_die( array(
-			'message' => sprintf( __( '%s is not a valid IP address.', 'secupress' ), '<code>' . esc_html( $ip ) . '</code>' ),
+			'message' => __( 'This is not a valid IP address.', 'secupress' ),
 			'code'    => 'invalid_ip',
 			'type'    => 'error',
 		) );
 	}
 
-	if ( secupress_ip_is_whitelisted( $ip ) || secupress_get_ip() === $ip ) {
+	// Don't ban your IP
+	if ( secupress_get_ip() === $ip ) {
 		secupress_admin_send_message_die( array(
-			'message' => sprintf( __( 'The IP address %s is whitelisted.', 'secupress' ), '<code>' . esc_html( $ip ) . '</code>' ),
+			'message' => __( 'You cannot ban your own IP address.', 'secupress' ),
 			'code'    => 'own_ip',
 			'type'    => 'error',
 		) );
 	}
 
-	// Add the IP to the option.
-	$ban_ips = get_site_option( SECUPRESS_BAN_IP );
-	$ban_ips = is_array( $ban_ips ) ? $ban_ips : array();
-
-	$ban_ips[ $ip ] = time() + YEAR_IN_SECONDS * 100; // Now you got 100 years to think about your future, kiddo. In the meantime, go clean your room.
-
-	update_site_option( SECUPRESS_BAN_IP, $ban_ips );
-
-	// Add the IP to the `.htaccess` file.
-	if ( secupress_write_in_htaccess_on_ban() ) {
-		secupress_write_htaccess( 'ban_ip', secupress_get_htaccess_ban_ip() );
+	// No valid IP in a list
+	if ( $is_list && 0 === $count_2 ) {
+		secupress_admin_send_message_die( array(
+			'message' => __( 'The list does not contains any valid IP address.', 'secupress' ),
+			'code'    => 'invalid_ip',
+			'type'    => 'error',
+		) );
 	}
+
+	// Already banned
+	$ban_ips = get_site_option( SECUPRESS_BAN_IP );
+	$ban_ips = is_array( $ban_ips ) ? $ban_ips : [];
+	if ( ! $is_list && isset( $ban_ips[ $ip ] ) ) {
+		secupress_admin_send_message_die( array(
+			'message' => __( 'This IP is already banned.', 'secupress' ),
+			'code'    => 'already_banned',
+			'type'    => 'error',
+		) );
+	}
+	// Transform the non list as a list now
+	if ( ! is_array( $ip ) ) {
+		$ip  = [ $ip ];
+	}
+	$ip      = array_flip( $ip );
+	array_walk( $ip, function( &$_ip, $time ) {
+		$_ip = time() + YEAR_IN_SECONDS * 10;
+	});
+	$ban_ips = array_merge( $ban_ips, $ip );
+
+	// Update the ips now
+	update_site_option( SECUPRESS_BAN_IP, $ban_ips );
 
 	/* This hook is documented in /inc/functions/admin.php */
 	do_action( 'secupress.ban.ip_banned', $ip, $ban_ips );
 
-	$referer_arg = '&_wp_http_referer=' . urlencode( esc_url_raw( secupress_admin_url( 'modules', 'logs' ) ) );
-
+	$referer_arg  = '&_wp_http_referer=' . urlencode( esc_url_raw( secupress_admin_url( 'modules', 'logs' ) ) );
+	$offset       = get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;
+	$in_ten_years = time() + YEAR_IN_SECONDS * 10;
+	$format       = __( 'M jS Y', 'secupress' ) . ' ' . __( 'G:i', 'secupress' );
+	$_time        = date_i18n( $format, $in_ten_years + $offset );
 	// Send a response.
-	secupress_admin_send_message_die( array(
-		'message'    => sprintf( __( 'The IP address %s has been banned.', 'secupress' ), '<code>' . esc_html( $ip ) . '</code>' ),
-		'code'       => 'ip_banned',
-		'tmplValues' => array(
-			array(
-				'ip'        => $ip,
-				'time'      => __( 'Forever', 'secupress' ),
-				'unban_url' => esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress-unban-ip&ip=' . esc_attr( $ip ) . $referer_arg ), 'secupress-unban-ip_' . $ip ) ),
-			),
-		),
-	) );
+	if ( ! $is_list ) {
+		secupress_admin_send_message_die( [
+			'message'    => sprintf( __( 'The IP address %s has been banned.', 'secupress' ) . $unbanned, '<code>' . esc_html( $original_ip ) . '</code>' ),
+			'code'       => 'ip_banned',
+			'tmplValues' => [
+				[
+					'ip'        => $original_ip,
+					'time'      => $_time,
+					'unban_url' => esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress-unban-ip&ip=' . esc_attr( $original_ip ) . $referer_arg ), 'secupress-unban-ip_' . $original_ip ) ),
+				],
+			] ]
+		);
+	} else {
+		$tmplValues = [];
+		foreach ( $ban_ips as $_ip => $time ) {
+			$tmplValues[] = [   'ip'        => $_ip,
+								'time'      => $_time,
+								'unban_url' => esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress-unban-ip&ip=' . esc_attr( $_ip ) . $referer_arg ), 'secupress-unban-ip_' . $_ip ) ),
+							];
+		}
+		if ( $count_1 === $count_2 ) {
+			secupress_admin_send_message_die( [
+				'message'    => __( 'The IP address list has been banned.' . $unbanned, 'secupress' ),
+				'code'       => 'ip_banned',
+				'tmplValues' => $tmplValues,
+			] );
+		} else {
+			secupress_admin_send_message_die( [
+				'message'    => __( 'Some of the IP address list has been banned.' . $unbanned, 'secupress' ),
+				'code'       => 'ip_banned',
+				'tmplValues' => $tmplValues,
+			] );
+		}
+	}
 }
 
 
@@ -261,16 +536,7 @@ function secupress_unban_ip_ajax_post_cb() {
 	secupress_check_admin_referer( 'secupress-unban-ip_' . $_REQUEST['ip'] );
 	secupress_check_user_capability();
 
-	// Test the IP.
 	$ip = urldecode( $_REQUEST['ip'] );
-
-	if ( ! secupress_ip_is_valid( $ip ) ) {
-		secupress_admin_send_message_die( array(
-			'message' => sprintf( __( '%s is not a valid IP address.', 'secupress' ), '<code>' . esc_html( $ip ) . '</code>' ),
-			'code'    => 'invalid_ip',
-			'type'    => 'error',
-		) );
-	}
 
 	// Remove the IP from the option.
 	$ban_ips = get_site_option( SECUPRESS_BAN_IP );
@@ -289,11 +555,6 @@ function secupress_unban_ip_ajax_post_cb() {
 		update_site_option( SECUPRESS_BAN_IP, $ban_ips );
 	} else {
 		delete_site_option( SECUPRESS_BAN_IP );
-	}
-
-	// Remove the IP from the `.htaccess` file.
-	if ( secupress_write_in_htaccess_on_ban() ) {
-		secupress_write_htaccess( 'ban_ip', secupress_get_htaccess_ban_ip() );
 	}
 
 	/**
@@ -328,11 +589,6 @@ function secupress_clear_ips_ajax_post_cb() {
 
 	// Remove all IPs from the option.
 	delete_site_option( SECUPRESS_BAN_IP );
-
-	// Remove all IPs from the `.htaccess` file.
-	if ( secupress_write_in_htaccess_on_ban() ) {
-		secupress_write_htaccess( 'ban_ip' );
-	}
 
 	/**
 	 * Fires once all IPs are unbanned.

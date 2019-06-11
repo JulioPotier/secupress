@@ -169,9 +169,9 @@ if ( strpos( gethostname(), 'wps' ) === 0 ) {
 	add_filter( 'secupress.nginx.notice',                                '__return_false' );
 }
 
-/*
-For everyone now.
+/**
+* For eveyone now
+* @since 1.4.9
 */
-// Remove the textarea fields since they are already protecting it, leading our page to be caught.
 add_filter( 'secupress.settings.field.bbq-headers_user-agents-list',      '__return_null' );
 add_filter( 'secupress.settings.field.bbq-url-content_bad-contents-list', '__return_null' );
