@@ -2,7 +2,7 @@
 Contributors: SecuPress, juliobox, GregLone
 Tags: wordpress security, secure, security plugin, security, malware
 Requires at least: 4.0
-Tested up to: 5.2
+Tested up to: 5.3
 Requires PHP: 5.4
 Stable tag: 1.4.9
 License: GPLv2 or later
@@ -12,11 +12,9 @@ Protect your WordPress with SecuPress, analyze and ensure the safety of your web
 
 == Description ==
 
-= Edit May, 23rd: SecuPress is GDPR compliant ! =
-
 = YOU MADE IT, WE KEEP IT SAFE! =
 
-Protect your WordPress with malware scans; block bots & suspicious IPs. Get a complete [WordPress security toolkit](https://secupress.me/) for free or as a pro plugin.
+Protect your WordPress with malware scans; block bots & suspicious IPs. Get a complete [WordPress security toolkit](https://secupress.me/) for free or as a pro plugin. SecuPress is GDPR compliant.
 
 **What’s the difference between free and pro version?**
 If you are proactive, our free WordPress security plugin is a great choice! No time to activate weekly scans? Then [SecuPress pro](https://secupress.me/) is the way to go. Our plugin takes care of everything with automated tasks.
@@ -183,8 +181,23 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 = 1.4.9 =
 
-* XX may 2019
+* 12 June 2019
+* New#707: New Site Health page from WP 5.2 is now managed by SecuPress for all "security" points.
+* Improvement#717: Update firewall rules with custom 7G rules.
+* Improvement#701: GeoIP Module is now compatible with IPv6.
+* Improvement#705: Move Login can now be configured to display a custom message or redirect on a custom page.
+* Improvement#721: Whitelist and Blacklist in "log" module are now compatibles with IPv6, IP ranges and IP lists than can be copy/pasted.
+* Improvement#724: Remove all actions before get_users() for passwordless to prevent someone/a plugin to hack the list, resulting on not being possible to log-in.
+* Improvement#725: Function secupress_send_mail() replace blogname with url if empty, yes it exists.
+* Fix#705: Updates (for SecuPress of other plugin, sometimes) were not always visible.
+* Fix#709: "Alerts" settings were not saved correctly.
+* Fix#720: Uncaught Error: Call to undefined function secupress_filter_scanner()
+* Fix#723: Antispam forbid usage of pb and tb is removing too much.
 
-* New#000:
-* Improvement#000:
-* Fix#000:
+== Upgrade Notice ==
+
+= 1.4.9 =
+
+* 12 June 2019
+* Nothing special for the 1.4.9 BUT the 1.5.0 will require PHP 5.6 and WordPress 4.9 (actually PHP 5.4 and WordPress 4.0)
+* v1.5 ETA October 2019
