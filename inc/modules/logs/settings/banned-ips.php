@@ -3,7 +3,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 
 $this->set_current_section( 'banned-ips' );
-$this->set_section_description( sprintf( __( 'When you need to (dis)allow access to your website to some servers by their IP.<br>Your IP is: %s', 'secupress' ), esc_html( secupress_get_ip() ) ) );
+$this->set_section_description( __( 'When you need to (dis)allow access to your website to some servers by their IP.', 'secupress' ) );
 $this->add_section( __( 'IP Adresses', 'secupress' ), array( 'with_save_button' => false ) );
 
 
