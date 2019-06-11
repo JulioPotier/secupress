@@ -553,7 +553,18 @@ input[type="text"]:required:invalid {
  * &
  * Expandable textareas
  */
+#secupress-ban-ip, #secupress-whitelist-ip {
+	height: 150px;
+	margin-top: 5px;
+}
 
+#secupress-banned-ips-list a, #secupress-whitelist-ips-list a{
+	display:none;
+}
+
+#secupress-banned-ips-list li:hover a, #secupress-whitelist-ips-list li:hover a{
+	display: inline;
+}
 .secupress-expand-trigger-container {
 	text-align: center;
 }
