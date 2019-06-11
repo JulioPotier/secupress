@@ -749,7 +749,7 @@ function secupress_get_email( $from_header = false ) {
  * @return (bool) Whether the email contents were sent successfully.
  */
 function secupress_send_mail( $to, $subject, $message, $headers = array(), $attachments = array() ) {
-	$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
+	$blogname = secupress_get_blogname();
 
 	// Subject.
 	$subject = str_replace( '###SITENAME###', $blogname, $subject );
@@ -767,6 +767,28 @@ function secupress_send_mail( $to, $subject, $message, $headers = array(), $atta
 	return wp_mail( $to, $subject, $message, $headers, $attachments );
 }
 
+
+/**
+ * Get the blog name or host if empty.
+ *
+ * @since 1.4.9
+ *
+ * @return (string)
+ */
+function secupress_get_blogname() {
+	static $blogname;
+
+	if ( ! isset( $blogname ) ) {
+		/**
+		 * The blogname option is escaped with esc_html on the way into the database in sanitize_option
+		 * we want to reverse this for the plain text arena of emails.
+		 */
+		$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
+		$blogname = $blogname ?: parse_url( home_url(), PHP_URL_HOST );
+	}
+
+	return $blogname;
+}
 
 /**
  * Return the current URL.
