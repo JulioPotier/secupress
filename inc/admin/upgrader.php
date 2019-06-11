@@ -5,7 +5,6 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /** MIGRATE / UPGRADE =========================================================================== */
 /** --------------------------------------------------------------------------------------------- */
 
-add_action( 'secupress.loaded', 'secupress_upgrader', 9 );
 /**
  * Tell WP what to do when admin is loaded aka upgrader
  *
@@ -435,11 +434,6 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 	// < 1.4.3
 	if ( version_compare( $actual_version, '1.4.3', '<' ) ) {
 
-		if ( secupress_has_pro() ) {
-			secupress_deactivate_submodule( 'users-login', 'nonlogintimeslot' );
-			secupress_remove_old_plugin_file( SECUPRESS_PRO_MODULES_PATH . 'users-login/plugins/nonlogintimeslot.php' );
-		}
-
 		secupress_deactivate_submodule( 'file-system', 'directory-index' );
 		secupress_remove_old_plugin_file( SECUPRESS_MODULES_PATH . 'file-system/plugins/directory-index.php' );
 
@@ -459,8 +453,8 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 		secupress_update_module_option( 'bbq-headers_user-agents-list', $value, 'firewall' );
 	}
 
-	// < 1.5.0
-	if ( version_compare( $actual_version, '1.5.0', '<' ) ) {
+	// < 1.4.9
+	if ( version_compare( $actual_version, '1.4.9', '<' ) ) {
 		secupress_remove_old_plugin_file( SECUPRESS_MODULES_PATH . 'users-login/plugins/inc/php/move-login/deprecated.php' );
 		secupress_remove_old_plugin_file( SECUPRESS_MODULES_PATH . 'users-login/plugins/inc/php/move-login/redirections-and-dies.php' );
 		secupress_remove_old_plugin_file( SECUPRESS_MODULES_PATH . 'users-login/plugins/inc/php/move-login/admin.php' );

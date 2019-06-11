@@ -816,7 +816,7 @@ function secupress_check_bot_ip( $test = false ) {
  *
  * @see https://stackoverflow.com/questions/18276757/php-convert-ipv6-to-number
  *
- * @param (string)  $ip     The IPv4 to be converted
+ * @param (string)  $ip     The IPv6 to be converted
  * @param (integer) $length The max length of the decimal representation
  * @return (string) Decimal representation, stripped
  **/
