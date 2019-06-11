@@ -144,7 +144,7 @@ function secupress_get_modules() {
 						]
 		],
 		'logs'            => [
-			'title'       => _x( 'Logs', 'post type general name', 'secupress' ),
+			'title'       => _x( 'Logs and IPs', 'post type general name', 'secupress' ),
 			'icon'        => 'logs',
 			'dashicon'    => 'welcome-write-blog',
 			'summaries'   => [

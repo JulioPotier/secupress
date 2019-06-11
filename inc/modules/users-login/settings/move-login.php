@@ -118,7 +118,7 @@ $this->add_field( [
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'Clean HTML allowed. The recovery form will be automatically aadded t the end of your content.', 'secupress' ),
+			'description' => __( 'Clean HTML allowed. The recovery form will be automatically added at the end of your content.', 'secupress' ),
 		),
 	),
 ] );

@@ -46,7 +46,7 @@ class SecuPress_Scan_WPOrg extends SecuPress_Scan implements SecuPress_Scan_Inte
 	 */
 	protected function init() {
 		$this->title    = __( 'Check if your installation can communicate with WordPress.org.', 'secupress' );
-		$this->more     = __( 'Communicating with the WordPress servers is used to check for new versions, and to both install and update WordPress core, themes or plugins.', 'secupress' );
+		$this->more     = __( 'Communicating with the WordPress servers is used to check for new versions, and to both install and update WordPress core, themes or plugins.' );
 		$this->more_fix = static::get_messages( 300 );
 	}
 

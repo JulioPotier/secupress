@@ -474,7 +474,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		$referer_arg        = '&_wp_http_referer=' . urlencode( esc_url_raw( $page_url ) );
 		$is_search          = false;
 		$search_val         = '';
-		$empty_list_message = __( 'No banned IPs', 'secupress' );
+		$empty_list_message = __( 'Empty blacklist', 'secupress' );
 
 		// Ban form.
 		echo '<form id="form-ban-ip" class="hide-if-js" action="' . esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress-ban-ip' . $referer_arg ), 'secupress-ban-ip' ) ) . '" method="post">';
@@ -517,7 +517,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		$count_ips = count( $ban_ips );
 		if ( $count_ips > $limit ) {
 			$ban_ips = array_slice( $ban_ips, - $limit );
-			echo '<p>' . sprintf( __( 'Last %1$s/%2$s whitelisted IPs (do a search to find more):', 'secupress' ), number_format_i18n( $limit ), $count_ips ) . '</p>' . "\n";
+			echo '<p>' . sprintf( __( 'Last %1$s/%2$s whitelisted IPs:', 'secupress' ), number_format_i18n( $limit ), $count_ips ) . '</p>' . "\n";
 		}
 
 		// Display the list.
@@ -614,7 +614,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		$count_ips = count( $ban_ips );
 		if ( $count_ips > $limit ) {
 			$ban_ips = array_slice( $ban_ips, - $limit );
-			echo '<p>' . sprintf( __( 'Last %1$s/%2$s whitelisted IPs (do a search to find more):', 'secupress' ), number_format_i18n( $limit ), $count_ips ) . '</p>' . "\n";
+			echo '<p>' . sprintf( __( 'Last %1$s/%2$s whitelisted IPs:', 'secupress' ), number_format_i18n( $limit ), $count_ips ) . '</p>' . "\n";
 		}
 
 		// Display the list.

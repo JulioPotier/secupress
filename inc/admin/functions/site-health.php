@@ -221,7 +221,7 @@ function get_test_secupress__global( $option_name ) {
 		'actions'     => sprintf(
 				'<p><a href="%s">%s</a> or <a href="%s" target="_blank" rel="noopener noreferrer">%s<span class="screen-reader-text">%s</span><span aria-hidden="true" class="dashicons dashicons-external"></span></a></p>',
 				esc_url( secupress_admin_url( 'scanners', '#' . $class_name_part ) ),
-				__( 'Open the SecuPress scanners' ),
+				__( 'Open the scanners' ),
 				esc_url( $current_test::get_docs_url() ),
 				__( 'Read the documentation' ),
 				__( '(opens in a new tab)' )
