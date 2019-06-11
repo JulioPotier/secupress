@@ -154,8 +154,8 @@ function secupress_get_modules() {
 			'with_form'      => false,
 			'with_reset_box' => false,
 			'submodules'     => [
-							'secupress-banned-ips-list'  => __( 'Banned IPs', 'secupress' ),
-							'banned-ips_whitelist'       => __( 'IP Whitelist', 'secupress' ),
+							'secupress-banned-ips-list'  => __( 'Blacklist IPs', 'secupress' ),
+							'banned-ips_whitelist'       => __( 'Whitelist IPs', 'secupress' ),
 							'logs_action-logs-activated' => __( 'Action Logs Activation', 'secupress' ),
 							'logs_404-logs-activated'    => __( '404 Logs Activation', 'secupress' ),
 						]
@@ -266,26 +266,28 @@ function secupress_activate_submodule( $module, $submodule, $incompatible_submod
 		require_once( $file_path );
 
 		secupress_add_module_notice( $module, $submodule, 'activation' );
+	}
 
-		/**
-		 * Fires once a sub-module is activated, even if it was already active.
-		 *
-		 * @since 1.0
-		 *
-		 * @param (bool) $is_active True if the sub-module was already active.
-		 */
-		do_action( 'secupress.modules.activate_submodule_' . $submodule, $is_active );
+	/**
+	 * Fires once a sub-module is activated, even if it was already active.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (bool) $is_active True if the sub-module was already active.
+	 */
+	do_action( 'secupress.modules.activate_submodule_' . $submodule, $is_active );
 
-		/**
-		 * Fires once any sub-module is activated, even if it was already active.
-		 *
-		 * @since 1.0
-		 *
-		 * @param (string) $submodule The sub-module slug.
-		 * @param (bool)   $is_active True if the sub-module was already active.
-		 */
-		do_action( 'secupress.modules.activate_submodule', $submodule, $is_active );
+	/**
+	 * Fires once any sub-module is activated, even if it was already active.
+	 *
+	 * @since 1.0
+	 *
+	 * @param (string) $submodule The sub-module slug.
+	 * @param (bool)   $is_active True if the sub-module was already active.
+	 */
+	do_action( 'secupress.modules.activate_submodule', $submodule, $is_active );
 
+	if ( ! $is_active ) {
 		secupress_delete_site_transient( SECUPRESS_ACTIVE_SUBMODULES );
 	}
 
