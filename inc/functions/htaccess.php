@@ -61,16 +61,3 @@ function secupress_get_htaccess_marker( $function ) {
 
 	return $marker;
 }
-
-
-/**
- * Get contents to put in the `.htaccess` file to ban IPs.
- *
- * @since 1.0
- * @since 1.4.9 Deprecated
- *
- * @return (string)
- */
-function secupress_get_htaccess_ban_ip() {
-	_deprecated_function( __FUNCTION__, '1.4.9' );
-}
