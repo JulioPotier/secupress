@@ -12,193 +12,213 @@ function secupress_site_status_tests( $tests ) {
 				continue;
 			}
 			$tests['direct'][ $option_name ] = [
-				'test'  => 'get_test_secupress__' . $option_name,
+				'test'  => 'secupress_get_test__' . $option_name,
 			];
 		}
 	}
 
-	//// refaire les scanners que WP fait
 	unset( $tests['direct']['debug_enabled'], $tests['direct']['plugin_version'], $tests['direct']['theme_version'], $tests['direct']['https_status'], $tests['direct']['php_version'], $tests['direct']['ssl_support'] );
 	unset( $tests['async']['background_updates'], $tests['async']['dotorg_communication'] );
 	return $tests;
 }
 
-function get_test_secupress__admin_user() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+// Do you like duplicate code? Because I don't… but I had too, thanks WP.
+
+function secupress_get_test__admin_user() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__easy_login() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__easy_login() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__subscription() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__subscription() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__passwords_strength() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__passwords_strength() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__bad_usernames() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__bad_usernames() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__login_errors_disclose() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__login_errors_disclose() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__plugins_update() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__plugins_update() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__themes_update() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__themes_update() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__bad_old_plugins() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__bad_old_plugins() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__bad_vuln_plugins() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__bad_vuln_plugins() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__inactive_plugins_themes() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__inactive_plugins_themes() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__core_update() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__core_update() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__auto_update() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__auto_update() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__bad_old_files() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__bad_old_files() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__bad_config_files() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__bad_config_files() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__wp_config() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__wp_config() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__db_prefix() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__db_prefix() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__salt_keys() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__salt_keys() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__discloses() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__discloses() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__readme_discloses() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__readme_discloses() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__php_disclosure() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__php_disclosure() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__chmods() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__chmods() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__directory_listing() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__directory_listing() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__bad_file_extensions() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__bad_file_extensions() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__shellshock() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__shellshock() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__bad_user_agent() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__bad_user_agent() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__sqli() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__sqli() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__anti_scanner() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__anti_scanner() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__anti_front_brute_force() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__anti_front_brute_force() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__bad_request_methods() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__bad_request_methods() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__bad_url_access() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__bad_url_access() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__phpversion() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__phpversion() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__php_404() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__php_404() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__wpml_discloses() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__wpml_discloses() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__woocommerce_discloses() {
-	$option_name = str_replace( 'get_test_secupress__', '', __FUNCTION__ );
-	return get_test_secupress__global( $option_name );
+function secupress_get_test__woocommerce_discloses() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
 }
 
-function get_test_secupress__global( $option_name ) {
+function secupress_get_test__wporg() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
+}
+
+function secupress_get_test__https() {
+	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
+	return secupress_get_test__global( $option_name );
+}
+
+/**
+ * Add a test to the site health check page from wp 5.2
+ *
+ * @since 1.4.9
+ * @author Julio Potier
+ *
+ * @param (string) $option_name
+ * @return
+ **/
+function secupress_get_test__global( $option_name ) {
 	secupress_require_class( 'scan' );
 	$class_name_part = str_replace( ' ', '_', ucwords( str_replace( '_', ' ', $option_name ) ) );
 	$class_name      = 'SecuPress_Scan_' . $class_name_part;
@@ -210,13 +230,13 @@ function get_test_secupress__global( $option_name ) {
 	$messages        = $current_test::get_messages();
 	$message         = secupress_format_message( $scanners[ $option_name ]['msgs'], $class_name_part );
 	$message_id      = key( $scanners[ $option_name ]['msgs'] );
-	$result = array(
+	$result = [
 		'label'       => strip_tags( $current_test->title ),
 		'status'      => 'bad' === $scanners[ $option_name ]['status'] ? 'critical' : 'good',
-		'badge'       => array(
+		'badge'       => [
 			'label'   => __( 'Security' ),
 			'color'   => 'bad' === $scanners[ $option_name ]['status'] ? 'red' : 'blue',
-		),
+		],
 		'description' => $message . '<br><br><em>' . $current_test->more . '</em>',
 		'actions'     => sprintf(
 				'<p><a href="%s">%s</a> or <a href="%s" target="_blank" rel="noopener noreferrer">%s<span class="screen-reader-text">%s</span><span aria-hidden="true" class="dashicons dashicons-external"></span></a></p>',
@@ -226,8 +246,8 @@ function get_test_secupress__global( $option_name ) {
 				__( 'Read the documentation' ),
 				__( '(opens in a new tab)' )
 			),
-		'test'        => 'get_test_secupress__' . $option_name,
-	);
+		'test'        => 'secupress_get_test__' . $option_name,
+	];
 
 	return $result;
 }
