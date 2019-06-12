@@ -545,6 +545,8 @@ input[type="text"]:required:invalid {
 
 .secupress-show-pro {
 	background: url("../images/logo-pro-mini.png") top right no-repeat transparent;
+}
+.secupress-setting-row_login-protection_sessions_control.secupress-show-pro {
 	background-size: contain;
 }
 
