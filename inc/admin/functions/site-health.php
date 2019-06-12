@@ -251,3 +251,10 @@ function secupress_get_test__global( $option_name ) {
 
 	return $result;
 }
+
+
+add_action( 'load-site-health.php', 'secupress_replace_progress_count' );
+function secupress_replace_progress_count() {
+	$counts = secupress_get_scanner_counts();
+	wp_localize_script( 'jquery', 'SecuPressi18nSHC', [ 'grade' => $counts['grade'] ] );
+}

@@ -51,4 +51,7 @@ jQuery( document ).ready( function( $ ) {
 
 	} )(jQuery, document, window);
 
+	$(".site-health-progress-count").toggleClass("site-health-progress-count secupress-site-health-progress-count").text( SecuPressi18nSHC.grade);
+
+
 } );

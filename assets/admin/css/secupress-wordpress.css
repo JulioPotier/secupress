@@ -807,3 +807,16 @@ span.secupress-get-pro-version {
 	content: "";
 	display: block;
 }
+.secupress-site-health-progress-count {
+	position: absolute;
+	display: block;
+	height: 80px;
+	width: 80px;
+	left: 50%;
+	top: 50%;
+	margin-top: -40px;
+	margin-left: -40px;
+	border-radius: 100%;
+	line-height: 6.3;
+	font-size: 2em;
+}
