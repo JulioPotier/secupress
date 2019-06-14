@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @return (array) The sanitized and validated settings.
  */
 function secupress_firewall_settings_callback( $settings ) {
+
 	$modulenow = 'firewall';
 	$activate  = secupress_get_submodule_activations( $modulenow );
 	$settings  = $settings && is_array( $settings ) ? $settings : array();
@@ -28,15 +29,14 @@ function secupress_firewall_settings_callback( $settings ) {
 	 * Each submodule has its own sanitization function.
 	 * The `$settings` parameter is passed by reference.
 	 */
-
 	// Bad headers.
-	secupress_bad_headers_settings_callback( $modulenow, $settings, (bool) $activate['bbq-headers_request-methods-header'] );
+	secupress_bad_headers_settings_callback( $modulenow, $settings, $activate );
 
 	// Bad contents.
-	secupress_bad_contents_settings_callback( $modulenow, $settings, (bool) $activate['bbq-url-content_bad-sqli-scan'] );
+	secupress_bad_contents_settings_callback( $modulenow, $settings, $activate );
 
 	// Anti Bruteforce Management.
-	secupress_bruteforce_settings_callback( $modulenow, $settings, (bool) $activate['bruteforce_activated'] );
+	secupress_bruteforce_settings_callback( $modulenow, $settings, $activate );
 
 	// Country Management.
 	secupress_geoip_settings_callback( $modulenow, $settings, $activate );
