@@ -202,8 +202,9 @@ function secupress_get_modules() {
 				'small'   => __( 'React quickly in case of attack', 'secupress' ),
 				'normal'  => __( 'Being alerted of some important events will help you to react quickly in case of possible attacks.', 'secupress' ),
 			],
-			'mark_as_pro' => $should_be_pro,
-			'submodules'  => [
+			'with_reset_box' => false,
+			'mark_as_pro'    => $should_be_pro,
+			'submodules'     => [
 							'module-notifications'          => __( 'Email Notifications', 'secupress' ),
 							'event-alerts_activated'    => __( 'Events Alerts', 'secupress' ),
 							'daily-reporting_activated' => __( 'Daily Reports', 'secupress' ),

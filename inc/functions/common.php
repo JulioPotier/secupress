@@ -1110,6 +1110,7 @@ function secupress_feature_is_pro( $feature ) {
 		'alerts_activated'                       => 1,
 		'backups-storage_location'               => 1,
 		'event-alerts_activated'                 => 1,
+		'notification-types_emails'              => 1,
 		'daily-reporting_activated'              => 1,
 		'move-login_whattodo|custom_error'       => 1,
 		'move-login_whattodo|custom_page'        => 1,
