@@ -480,7 +480,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		echo '<form id="form-ban-ip" class="hide-if-js" action="' . esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress-ban-ip' . $referer_arg ), 'secupress-ban-ip' ) ) . '" method="post">';
 			echo '<label for="secupress-ban-ip" class="screen-reader-text">' . __( 'Specify an IP to ban.', 'secupress' ) . '</label><br/>';
 			echo '<p class="description">' . __( 'You can use <a href="https://docs.secupress.me/article/161-ip-range">IP ranges</a>.', 'secupress' ) . '</p>';
-			echo '<textarea id="secupress-ban-ip" name="ip"></textarea> ';
+			echo '<textarea cols="50" id="secupress-ban-ip" name="ip"></textarea> ';
 			echo '<button type="submit" class="secupress-button secupress-button-mini">' . __( 'Ban IP', 'secupress' ) . '</button>';
 		echo "</form>\n";
 
@@ -577,7 +577,7 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		echo '<form id="form-whitelist-ip" class="hide-if-js" action="' . esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=secupress-whitelist-ip' . $referer_arg ), 'secupress-whitelist-ip' ) ) . '" method="post">';
 			echo '<label for="secupress-whitelist-ip" class="screen-reader-text">' . __( 'Specify an IP to whitelist.', 'secupress' ) . '</label><br/>';
 			echo '<p class="description">' . __( 'You can use <a href="https://docs.secupress.me/article/161-ip-range">IP ranges</a>.', 'secupress' ) . '</p>';
-			echo '<textarea id="secupress-whitelist-ip" name="ip"></textarea> ';
+			echo '<textarea cols="50" id="secupress-whitelist-ip" name="ip"></textarea> ';
 			echo '<button type="submit" class="secupress-button secupress-button-mini">' . __( 'Whitelist IP', 'secupress' ) . '</button>';
 		echo "</form>\n";
 
