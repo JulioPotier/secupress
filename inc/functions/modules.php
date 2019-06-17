@@ -264,7 +264,11 @@ function secupress_activate_submodule( $module, $submodule, $incompatible_submod
 
 		update_site_option( 'secupress_active_submodule_' . $submodule, $module );
 
-		require_once( $file_path );
+		if ( is_array( $file_path ) ) {
+			foreach ( $file_path as $path ) {
+				require_once( $path );
+			}
+		}
 
 		secupress_add_module_notice( $module, $submodule, 'activation' );
 	}
