@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @return (array) The sanitized and validated settings.
  */
 function secupress_firewall_settings_callback( $settings ) {
+
 	$modulenow = 'firewall';
 	$activate  = secupress_get_submodule_activations( $modulenow );
 	$settings  = $settings && is_array( $settings ) ? $settings : array();
@@ -28,7 +29,6 @@ function secupress_firewall_settings_callback( $settings ) {
 	 * Each submodule has its own sanitization function.
 	 * The `$settings` parameter is passed by reference.
 	 */
-
 	// Bad headers.
 	secupress_bad_headers_settings_callback( $modulenow, $settings, $activate );
 
@@ -147,9 +147,7 @@ function secupress_geoip_settings_callback( $modulenow, &$settings, $activate ) 
 	}
 
 	// (De)Activation.
-	if ( false !== $activate ) {
-		secupress_manage_submodule( $modulenow, 'geoip-system', ( '-1' !== $settings['geoip-system_type'] ) );
-	}
+	secupress_manage_submodule( $modulenow, 'geoip-system', ( '-1' !== $settings['geoip-system_type'] ) );
 
 	// Make sure to not block the user.
 	if ( '-1' !== $settings['geoip-system_type'] && function_exists( 'secupress_geoip2country' ) ) {
@@ -161,12 +159,14 @@ function secupress_geoip_settings_callback( $modulenow, &$settings, $activate ) 
 			$countries    = array_flip( $settings['geoip-system_countries'] );
 
 			if ( isset( $countries[ $country_code ] ) && ! $is_whitelist ) {
+				secupress_add_transient_notice( __( 'You cannot block your own country, it has been removed from the blacklist.', 'secupress' ) );
 				// Unblacklist the user country.
 				unset( $countries[ $country_code ] );
 				$settings['geoip-system_countries'] = array_flip( $countries );
 
 			} elseif ( ! isset( $countries[ $country_code ] ) && $is_whitelist ) {
 				// Whitelist the user country.
+				secupress_add_transient_notice( __( 'You cannot block your own country, it has been added to the whitelist.', 'secupress' ) );
 				$countries   = array_flip( $countries );
 				$countries[] = $country_code;
 				$settings['geoip-system_countries'] = $countries;

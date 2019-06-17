@@ -1219,4 +1219,6 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 
 		return is_array( $plugins ) && empty( $plugins['offset'] );
 	}
+
+	//// placer ici
 }

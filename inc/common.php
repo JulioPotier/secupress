@@ -16,19 +16,6 @@ function secupress_check_ban_ips() {
 	$ip      = secupress_get_ip();
 
 	if ( secupress_ip_is_whitelisted( $ip ) ) {
-		/**
-		 * The user is white-listed. Make sure to remove the IP from the list.
-		 * It will also prevent problems with `secupress_die()` not dying.
-		 */
-		if ( isset( $ban_ips[ $ip ] ) ) {
-			unset( $ban_ips[ $ip ] );
-			if ( $ban_ips ) {
-				update_site_option( SECUPRESS_BAN_IP, $ban_ips );
-			} else {
-				delete_site_option( SECUPRESS_BAN_IP );
-			}
-		}
-
 		return;
 	}
 
@@ -47,10 +34,10 @@ function secupress_check_ban_ips() {
 				unset( $ban_ips[ $ip ] );
 				$update   = true;
 				$redirect = true;
-			} elseif ( isset( $ban_ips[ $ip ] ) ) {
+			} else {
 				// Cheating?
 				$title   = '403 ' . get_status_header_desc( 403 );
-				$content = __( 'Your unlock link has expired (or you\'re cheating).', 'secupress' );
+				$content = __( 'Unlock link expired.', 'secupress' );
 
 				secupress_die( $content, $title, array( 'response' => 403, 'force_die' => true ) );
 			}
@@ -80,7 +67,7 @@ function secupress_check_ban_ips() {
 		}
 
 		// Block the user if the IP is still in the array.
-		if ( array_key_exists( $ip, $ban_ips ) ) {
+		if ( secupress_is_ip_in_range( $ip, array_keys( $ban_ips ) ) ) {
 			// Display a form in case of accidental ban.
 			$unban_atts = secupress_check_ban_ips_maybe_send_unban_email( $ip );
 
@@ -88,7 +75,7 @@ function secupress_check_ban_ips() {
 
 			if ( $unban_atts['display_form'] ) {
 				$in_ten_years = time() + YEAR_IN_SECONDS * 10;
-				$time_ban     = $ban_ips[ $ip ] > $in_ten_years ? 0 : $time_ban;
+				$time_ban     = 0;
 				$error        = $unban_atts['message'];
 				$content      = secupress_check_ban_ips_form( compact( 'ip', 'time_ban', 'error' ) );
 			} else {
@@ -204,7 +191,7 @@ function secupress_check_ban_ips_maybe_send_unban_email( $ip ) {
 	);
 }
 
-
+add_shortcode( 'secupress_check_ban_ips_form', 'secupress_check_ban_ips_form' );
 /**
  * Return the form where the user can enter his email address.
  *
@@ -217,27 +204,23 @@ function secupress_check_ban_ips_maybe_send_unban_email( $ip ) {
  *
  * @return (string) The form.
  */
-function secupress_check_ban_ips_form( $args ) {
-	$args = array_merge( array(
-		'ip'       => '',
-		'time_ban' => 0,
+function secupress_check_ban_ips_form( $args, $contents = '' ) {
+	$args = wp_parse_args( $args, [
+		'time_ban' => -1,
+		'ip'       => 'admin', // use for nonce check, see action below v.
+		'action'   => 'action="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_unlock_admin' ), 'secupress-unban-ip-admin' ) . '"',
 		'error'    => '',
-		'action'   => '',
 		'content'  => '',
-		'id'       => '',
-	), $args );
+	] );
 
 	switch ( true ) {
-		case $args['time_ban'] > 0:
-			$content = '<p>' . sprintf( _n( 'Your IP address <code>%1$s</code> has been banned for <strong>%2$d</strong> minute.', 'Your IP address <code>%1$s</code> has been banned for <strong>%2$d</strong> minutes.', $args['time_ban'], 'secupress' ), esc_html( $args['ip'] ), $args['time_ban'] ) . '</p>';
-		break;
-		case 0 === $args['time_ban']:
+		case $args['time_ban'] >= 0:
 			$content = '<p>' . sprintf( __( 'Your IP address <code>%s</code> has been banned.', 'secupress' ), esc_html( $args['ip'] ) ) . '</p>';
 		break;
 		default:
 			$content = $args['content'];
 	}
-	$content .= '<form method="post" autocomplete="on" ' . $args['action'] . '>';
+	$content .= '<p><form method="post" autocomplete="on" ' . $args['action'] . '>';
 		$content .= '<p>' . __( 'If you are Administrator and have been accidentally locked out, enter your email address here to unlock yourself.', 'secupress' ) . '</p>';
 		$content .= '<label for="email">';
 			$content .= __( 'Your email address:', 'secupress' );
@@ -246,11 +229,10 @@ function secupress_check_ban_ips_form( $args ) {
 		$content .= '</label>';
 		$content .= '<p class="submit"><button type="submit" name="submit" class="button button-primary button-large">' . __( 'Submit', 'secupress' ) . '</button></p>';
 		$content .= wp_nonce_field( 'secupress-unban-ip-' . $args['ip'], '_wpnonce', true , false );
-	$content .= '</form>';
+	$content .= '</form></p>';
 
 	return $content;
 }
-
 
 /** --------------------------------------------------------------------------------------------- */
 /** FIX WP_DIE() HTML =========================================================================== */

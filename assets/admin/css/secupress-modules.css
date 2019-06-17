@@ -546,13 +546,27 @@ input[type="text"]:required:invalid {
 .secupress-show-pro {
 	background: url("../images/logo-pro-mini.png") top right no-repeat transparent;
 }
+.secupress-setting-row_login-protection_sessions_control.secupress-show-pro {
+	background-size: contain;
+}
 
 /**
  * Module User Agent List
  * &
  * Expandable textareas
  */
+#secupress-ban-ip, #secupress-whitelist-ip {
+	height: 150px;
+	margin-top: 5px;
+}
 
+#secupress-banned-ips-list a, #secupress-whitelist-ips-list a{
+	display:none;
+}
+
+#secupress-banned-ips-list li:hover a, #secupress-whitelist-ips-list li:hover a{
+	display: inline;
+}
 .secupress-expand-trigger-container {
 	text-align: center;
 }

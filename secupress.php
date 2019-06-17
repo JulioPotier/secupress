@@ -5,7 +5,7 @@
  * Description: Protect your WordPress with SecuPress, analyze and ensure the safety of your website daily.
  * Author: SecuPress
  * Author URI: https://secupress.me
- * Version: 1.4.8.1
+ * Version: 1.4.9
  * Code Name: Hotrod
  * Network: true
  * License: GPLv2
@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /** DEFINES ===================================================================================== */
 /** --------------------------------------------------------------------------------------------- */
 
-define( 'SECUPRESS_VERSION'               , '1.4.8.1' );
+define( 'SECUPRESS_VERSION'               , '1.4.9' );
 define( 'SECUPRESS_ACTIVE_SUBMODULES'     , 'secupress_active_submodules' );
 define( 'SECUPRESS_SETTINGS_SLUG'         , 'secupress_settings' );
 define( 'SECUPRESS_SCAN_TIMES'            , 'secupress_scanners_times' );
@@ -32,6 +32,7 @@ define( 'SECUPRESS_WP_CORE_FILES_HASHES'  , 'secupress_wp_core_files_hashes' );
 define( 'SECUPRESS_FULL_FILETREE'         , 'secupress_full_filetree' );
 define( 'SECUPRESS_FIX_DISTS'             , 'secupress_fix_dists' );
 define( 'SECUPRESS_BAN_IP'                , 'secupress_ban_ip' );
+define( 'SECUPRESS_WHITE_IP'              , 'secupress_whitelist_ip' );
 define( 'SECUPRESS_SELF_WHITELIST'        , 'secupress_self_whitelist' );
 define( 'SECUPRESS_RATE_URL'              , 'https://wordpress.org/support/view/plugin-reviews/secupress?filter=5#topic' );
 define( 'SECUPRESS_WEB_MAIN'              , 'https://secupress.me/' );
@@ -122,7 +123,6 @@ function secupress_init() {
 		require_once( SECUPRESS_ADMIN_PATH . 'admin.php' );
 		require_once( SECUPRESS_ADMIN_PATH . 'ajax-post-callbacks.php' );
 		require_once( SECUPRESS_ADMIN_PATH . 'notices.php' );
-		require_once( SECUPRESS_ADMIN_PATH . 'upgrader.php' );
 	}
 
 	/**
@@ -131,6 +131,11 @@ function secupress_init() {
 	 * @since 1.0
 	 */
 	do_action( 'secupress.loaded' );
+	// Load the upgrader after the load of our plugins, SecuPress is still considered "loaded" even without this file since it's not usefull for security
+	if ( is_admin() ) {
+		require_once( SECUPRESS_ADMIN_PATH . 'upgrader.php' );
+		secupress_upgrader();
+	}
 }
 
 
@@ -192,7 +197,11 @@ function secupress_load_plugins() {
 				if ( secupress_is_pro() || ! secupress_submodule_is_pro( $module, $plugin ) ) {
 					$file_path = secupress_get_submodule_file_path( $module, $plugin );
 
-					if ( $file_path ) {
+					if ( is_array( $file_path ) ) {
+						foreach ( $file_path as $path ) {
+							require_once( $path );
+						}
+					} else {
 						require_once( $file_path );
 					}
 				}
@@ -361,6 +370,7 @@ function secupress_load_functions() {
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/ajax-post.php' );
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/modules.php' );
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/notices.php' );
+	require_once( SECUPRESS_ADMIN_PATH . 'functions/site-health.php' );
 }
 
 

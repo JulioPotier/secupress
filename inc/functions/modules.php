@@ -39,6 +39,7 @@ function secupress_get_modules() {
 				'normal'  => __( 'The best and easiest way to make sure that users\' data will be protected, and their accounts not compromised.', 'secupress' ),
 			],
 			'submodules'  => [
+							'move-login_activated'                     => __( 'Move Login Page', 'secupress' ),
 							'login-protection_type_limitloginattempts' => __( 'Limit Login Attempts', 'secupress' ),
 							'login-protection_type_bannonexistsuser'   => __( 'Ban Non Existing Users', 'secupress' ),
 							'login-protection_sessions_control'        => '*' . __( 'Session Control', 'secupress' ),
@@ -49,7 +50,6 @@ function secupress_get_modules() {
 							'password-policy_ask-old-password'         => __( 'Ask Old Password', 'secupress' ),
 							'blacklist-logins_activated'               => __( 'Forbidden Usernames', 'secupress' ),
 							'blacklist-logins_stop-user-enumeration'   => __( 'Stop User Enumeration', 'secupress' ),
-							'move-login_activated'                     => __( 'Move Login Page', 'secupress' ),
 						]
 		],
 		'plugins-themes'  => [
@@ -106,8 +106,6 @@ function secupress_get_modules() {
 							'content-protect_wp-version'        => __( 'PHP WP Disclosure', 'secupress' ),
 							'content-protect_bad-url-access'    => __( 'Bad URL Access', 'secupress' ),
 							'content-protect_readmes'           => __( 'Protect Readme Files', 'secupress' ),
-							'page-protect_profile'              => '*' . __( 'Protect Profile Page', 'secupress' ),
-							'page-protect_settings'             => '*' . sprintf( __( 'Protect %s Pages', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
 						]
 		],
 		'firewall'        => [
@@ -146,7 +144,7 @@ function secupress_get_modules() {
 						]
 		],
 		'logs'            => [
-			'title'       => _x( 'Logs', 'post type general name', 'secupress' ),
+			'title'       => _x( 'Logs and IPs', 'post type general name', 'secupress' ),
 			'icon'        => 'logs',
 			'dashicon'    => 'welcome-write-blog',
 			'summaries'   => [
@@ -156,8 +154,8 @@ function secupress_get_modules() {
 			'with_form'      => false,
 			'with_reset_box' => false,
 			'submodules'     => [
-							'secupress-banned-ips-list'  => __( 'Banned IPs', 'secupress' ),
-							'banned-ips_whitelist'       => __( 'IP Whitelist', 'secupress' ),
+							'secupress-banned-ips-list'  => __( 'Blacklist IPs', 'secupress' ),
+							'banned-ips_whitelist'       => __( 'Whitelist IPs', 'secupress' ),
 							'logs_action-logs-activated' => __( 'Action Logs Activation', 'secupress' ),
 							'logs_404-logs-activated'    => __( '404 Logs Activation', 'secupress' ),
 						]
@@ -204,8 +202,9 @@ function secupress_get_modules() {
 				'small'   => __( 'React quickly in case of attack', 'secupress' ),
 				'normal'  => __( 'Being alerted of some important events will help you to react quickly in case of possible attacks.', 'secupress' ),
 			],
-			'mark_as_pro' => $should_be_pro,
-			'submodules'  => [
+			'with_reset_box' => false,
+			'mark_as_pro'    => $should_be_pro,
+			'submodules'     => [
 							'module-notifications'          => __( 'Email Notifications', 'secupress' ),
 							'event-alerts_activated'    => __( 'Events Alerts', 'secupress' ),
 							'daily-reporting_activated' => __( 'Daily Reports', 'secupress' ),
@@ -265,7 +264,11 @@ function secupress_activate_submodule( $module, $submodule, $incompatible_submod
 
 		update_site_option( 'secupress_active_submodule_' . $submodule, $module );
 
-		require_once( $file_path );
+		if ( is_array( $file_path ) ) {
+			foreach ( $file_path as $path ) {
+				require_once( $path );
+			}
+		}
 
 		secupress_add_module_notice( $module, $submodule, 'activation' );
 	}
@@ -905,38 +908,37 @@ function secupress_submodule_is_pro( $module, $submodule ) {
 
 
 /**
- * Get a sub-module file path.
+ * Get a sub-module file path. Pro, free, both.
  *
+ * @since 1.4.9 $both Param
  * @since 1.0
  * @author Grégory Viguier
  *
  * @param (string) $module    The module.
  * @param (string) $submodule The sub-module.
+ * @param (bool)   $both      True will return all the found files path
  *
  * @return (string|bool) The file path on success. False on failure.
  */
 function secupress_get_submodule_file_path( $module, $submodule ) {
 	$file_path = sanitize_key( $module ) . '/plugins/' . sanitize_key( $submodule ) . '.php';
-
-	if ( defined( 'SECUPRESS_PRO_MODULES_PATH' ) && file_exists( SECUPRESS_PRO_MODULES_PATH . $file_path ) ) {
-		return SECUPRESS_PRO_MODULES_PATH . $file_path;
-	}
+	$paths     = [];
 
 	if ( file_exists( SECUPRESS_MODULES_PATH . $file_path ) ) {
-		return SECUPRESS_MODULES_PATH . $file_path;
+		$paths['free'] = SECUPRESS_MODULES_PATH . $file_path;
 	}
 
-	return false;
-}
+	if ( defined( 'SECUPRESS_PRO_MODULES_PATH' ) && file_exists( SECUPRESS_PRO_MODULES_PATH . $file_path ) ) {
+		$paths['pro'] = SECUPRESS_PRO_MODULES_PATH . $file_path;
+	}
 
-
-/**
- * Get user-agents forbidden by default.
- *
- * @since 1.0
- *
- * @return (string) A comma-separated list.
- */
-function secupress_firewall_bbq_headers_user_agents_list_default() {
-	return 'Gecko/2009032609 Firefox, ADSARobot, ah-ha, almaden, aktuelles, Anarchie, amzn_assoc, ASPSeek, ASSORT, ATHENS, Atomz, attach, autoemailspider, BackWeb, Bandit, BatchFTP, bdfetch, big.brother, BlackWidow, bmclient, Boston Project, BravoBrian SpiderEngine MarcoPolo, Bot mailto:craftbot@yahoo.com, Buddy, Bullseye, bumblebee, capture, CherryPicker, ChinaClaw, CICC, clipping, Collector, Copier, Crescent, Crescent Internet ToolPak, Custo, cyberalert, DA$, Deweb, diagem, Digger, Digimarc, DIIbot, DISCo, DISCo Pump, DISCoFinder, Download Demon, Download Wonder, Downloader, Drip, DSurf15a, DTS.Agent, EasyDL, eCatch, ecollector, efp@gmx.net, Email Extractor, EirGrabber, EmailCollector, EmailSiphon, EmailWolf, Express WebPictures, ExtractorPro, EyeNetIE, FavOrg, fastlwspider, Favorites Sweeper, FEZhead, FileHound, FlashGet WebWasher, FlickBot, fluffy, FrontPage, GalaxyBot, Generic, Getleft, GetRight, GetSmart, GetWeb!, GetWebPage, gigabaz, Girafabot, Go!Zilla, Go!Zilla, Go-Ahead-Got-It, GornKer, gotit, Grabber, GrabNet, Grafula, Green Research, grub-client, Harvest, hhjhj@yahoo, hloader, HMView, HomePageSearch, http generic, HTTrack, httpdown, httrack, ia_archiver, IBM_Planetwide, Image Stripper, Image Sucker, imagefetch, IncyWincy, Indy*Library, Indy Library, informant, Ingelin, InterGET, Internet Ninja, InternetLinkagent, Internet Ninja, InternetSeer.com, Iria, Irvine, JBH*agent, JetCar, JOC, JOC Web Spider, JustView, KWebGet, Lachesis, larbin, LeechFTP, LexiBot, lftp, libwww, likse, Link*Sleuth, LINKS ARoMATIZED, LinkWalker, LWP, lwp-trivial, Mag-Net, Magnet, Mac Finder, Mag-Net, Mass Downloader, MCspider, Memo, Microsoft.URL, MIDown tool, Mirror, Missigua Locator, Mister PiX, MMMtoCrawl/UrlDispatcherLLL, ^Mozilla$, Mozilla.*Indy, Mozilla.*NEWT, Mozilla*MSIECrawler, MS FrontPage*, MSFrontPage, MSIECrawler, MSProxy, multithreaddb, nationaldirectory, Navroad, NearSite, NetAnts, NetCarta, NetMechanic, netprospector, NetResearchServer, NetSpider, Net Vampire, NetZIP, NetZip Downloader, NetZippy, NEWT, NICErsPRO, Ninja, NPBot, Octopus, Offline Explorer, Offline Navigator, OpaL, Openfind, OpenTextSiteCrawler, PageGrabber, Papa Foto, PackRat, pavuk, pcBrowser, PersonaPilot, PingALink, Pockey, psbot, PSurf, puf, Pump, PushSite, QRVA, RealDownload, Reaper, Recorder, ReGet, replacer, RepoMonkey, Robozilla, Rover, RPT-HTTPClient, Rsync, Scooter, SearchExpress, searchhippo, searchterms.it, Second Street Research, Seeker, Shai, Siphon, sitecheck, sitecheck.internetseer.com, SiteSnagger, SlySearch, SmartDownload, snagger, Snake, SpaceBison, Spegla, SpiderBot, sproose, SqWorm, Stripper, Sucker, SuperBot, SuperHTTP, Surfbot, SurfWalker, Szukacz, tAkeOut, tarspider, Teleport Pro, Templeton, TrueRobot, TV33_Mercator, UIowaCrawler, UtilMind, URLSpiderPro, URL_Spider_Pro, Vacuum, vagabondo, vayala, visibilitygap, VoidEYE, vspider, Web Downloader, w3mir, Web Data Extractor, Web Image Collector, Web Sucker, Wweb, WebAuto, WebBandit, web.by.mail, Webclipping, webcollage, webcollector, WebCopier, webcraft@bea, webdevil, webdownloader, Webdup, WebEMailExtrac, WebFetch, WebGo IS, WebHook, Webinator, WebLeacher, WEBMASTERS, WebMiner, WebMirror, webmole, WebReaper, WebSauger, Website, Website eXtractor, Website Quester, WebSnake, Webster, WebStripper, websucker, webvac, webwalk, webweasel, WebWhacker, WebZIP, Whacker, whizbang, WhosTalking, Widow, WISEbot, WWWOFFLE, x-Tractor, ^Xaldon WebSpider, WUMPUS, Xenu, XGET, Zeus.*Webster, Zeus';
+	if ( empty( $paths ) ) {
+		return false;
+	} elseif ( isset( $paths['pro'], $paths['free'] ) ) {
+		return $paths;
+	} elseif( isset( $paths['pro'] ) ) {
+		return $paths['pro'];
+	} else {
+		return $paths['free'];
+	}
 }

@@ -100,11 +100,13 @@ function secupress_get_scanners() {
 			4 => 'WP_Config',
 			5 => 'DB_Prefix',
 			6 => 'Salt_Keys',
+			7 => 'WPOrg',
 		),
 		'sensitive-data' => array(
 			0 => 'Discloses',
 			1 => 'Readme_Discloses',
 			2 => 'PHP_Disclosure',
+			3 => 'HTTPS',
 		),
 		'file-system' => array(
 			0 => 'Chmods',
@@ -386,15 +388,7 @@ function secupress_die( $message = '', $title = '', $args = array() ) {
  *                                   $args can be used only for the "code" or "content" or both using an array.
  */
 function secupress_block( $module, $args = array( 'code' => 403 ) ) {
-
-	if ( is_int( $args ) ) {
-		$args = array( 'code' => (int) $args ); // Cast to prevent recursion.
-	} elseif ( is_string( $args ) ) {
-		$args = array( 'content' => (string) $args ); // Cast to prevent recursion.
-	}
-
-	$ip   = secupress_get_ip();
-	$args = wp_parse_args( $args, array( 'code' => 403, 'content' => '' ) );
+	$ip = secupress_get_ip();
 
 	/**
 	 * Allow to give a proper name to the block ID.
@@ -409,6 +403,29 @@ function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 		$block_id = ucwords( str_replace( '-', ' ', $block_id ) );
 		$block_id = preg_replace( '/[^0-9A-Z]/', '', $block_id );
 	}
+
+	if ( secupress_ip_is_whitelisted( $ip ) ) {
+		/**
+		* Run an action when the blockage from security purposes is triggered but IP is in whitelist
+		*
+		* @since 1.4.9
+		*
+		* @param (string) $module
+		* @param (string) $ip
+		* @param (array) $args
+		* @param (string) $block_id
+		*/
+		do_action( 'secupress.block.whitelisted', $module, $ip, $args, $block_id );
+		return;
+	}
+
+	if ( is_int( $args ) ) {
+		$args = array( 'code' => (int) $args ); // Cast to prevent recursion.
+	} elseif ( is_string( $args ) ) {
+		$args = array( 'content' => (string) $args ); // Cast to prevent recursion.
+	}
+
+	$args = wp_parse_args( $args, array( 'code' => 403, 'content' => '' ) );
 
 	/**
 	 * Fires before a user is blocked by a certain module.
@@ -732,7 +749,7 @@ function secupress_get_email( $from_header = false ) {
  * @return (bool) Whether the email contents were sent successfully.
  */
 function secupress_send_mail( $to, $subject, $message, $headers = array(), $attachments = array() ) {
-	$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
+	$blogname = secupress_get_blogname();
 
 	// Subject.
 	$subject = str_replace( '###SITENAME###', $blogname, $subject );
@@ -750,6 +767,28 @@ function secupress_send_mail( $to, $subject, $message, $headers = array(), $atta
 	return wp_mail( $to, $subject, $message, $headers, $attachments );
 }
 
+
+/**
+ * Get the blog name or host if empty.
+ *
+ * @since 1.4.9
+ *
+ * @return (string)
+ */
+function secupress_get_blogname() {
+	static $blogname;
+
+	if ( ! isset( $blogname ) ) {
+		/**
+		 * The blogname option is escaped with esc_html on the way into the database in sanitize_option
+		 * we want to reverse this for the plain text arena of emails.
+		 */
+		$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
+		$blogname = $blogname ?: parse_url( home_url(), PHP_URL_HOST );
+	}
+
+	return $blogname;
+}
 
 /**
  * Return the current URL.
@@ -1071,7 +1110,10 @@ function secupress_feature_is_pro( $feature ) {
 		'alerts_activated'                       => 1,
 		'backups-storage_location'               => 1,
 		'event-alerts_activated'                 => 1,
+		'notification-types_emails'              => 1,
 		'daily-reporting_activated'              => 1,
+		'move-login_whattodo|custom_error'       => 1,
+		'move-login_whattodo|custom_page'        => 1,
 	);
 
 	return isset( $features[ $feature ] );

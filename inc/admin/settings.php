@@ -135,8 +135,9 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 			'backupImpossible'     => __( 'Impossible to backup.', 'secupress' ),
 			'backupingText'        => __( 'Backuping&hellip;', 'secupress' ),
 			'backupedText'         => __( 'Backup done', 'secupress' ),
-			// Ban IPs.
-			'noBannedIPs'          => __( 'No banned IPs anymore.', 'secupress' ),
+			// Ban/Whitelist IPs.
+			'noBannedIPs'          => __( 'Empty blacklist.', 'secupress' ),
+			'noWhitelistIPs'       => __( 'Empty whitelist.', 'secupress' ),
 			'IPnotFound'           => __( 'IP not found.', 'secupress' ),
 			'IPremoved'            => __( 'IP removed.', 'secupress' ),
 			'searchResults'        => _x( 'See search result below.', 'adjective', 'secupress' ),

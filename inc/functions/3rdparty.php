@@ -161,7 +161,7 @@ For wpserveur.net
 // Auto approve those rules (already done by their own nginx rules provided from us).
 if ( strpos( gethostname(), 'wps' ) === 0 ) {
 	add_filter( 'secupress.pre_scan.SecuPress_Scan_Bad_File_Extensions', '__return_true' );
-	add_filter( 'secupress.pre_scan.SecuPress_Scan_Bad_Url_Access',      '__return_true' );
+	add_filter( 'secupress.pre_scan.SecuPress_Scan_Bad_URL_Access',      '__return_true' );
 	add_filter( 'secupress.pre_scan.SecuPress_Scan_Directory_Listing',   '__return_true' );
 	add_filter( 'secupress.pre_scan.SecuPress_Scan_Discloses',           '__return_true' );
 	add_filter( 'secupress.pre_scan.SecuPress_Scan_PHP_Disclosure',      '__return_true' );
@@ -169,11 +169,9 @@ if ( strpos( gethostname(), 'wps' ) === 0 ) {
 	add_filter( 'secupress.nginx.notice',                                '__return_false' );
 }
 
-/*
-For o2switch.net + HostPapa
+/**
+* For eveyone now
+* @since 1.4.9
 */
-// Remove the textarea fields since they are already protecting it, leading our page to be caught.
-if ( isset( $_SERVER['SERVER_ADDR'] ) && ( 0 === strpos( $_SERVER['SERVER_ADDR'], '109.234.' ) || 0 === strpos( $_SERVER['SERVER_ADDR'], '64.34.157.' ) ) ) {
-	add_filter( 'secupress.settings.field.bbq-headers_user-agents-list',      '__return_null' );
-	add_filter( 'secupress.settings.field.bbq-url-content_bad-contents-list', '__return_null' );
-}
+add_filter( 'secupress.settings.field.bbq-headers_user-agents-list',      '__return_null' );
+add_filter( 'secupress.settings.field.bbq-url-content_bad-contents-list', '__return_null' );

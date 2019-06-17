@@ -44,8 +44,8 @@ function secupress_add_captcha_on_login_form() {
 }
 
 
-add_action( 'login_head',    'secupress_login_captcha_scripts' );
-add_action( 'signup_header', 'secupress_login_captcha_scripts' );
+add_action( 'login_footer',    'secupress_login_captcha_scripts' );
+add_action( 'after_signup_form', 'secupress_login_captcha_scripts' );
 /**
  * Enqueue captcha styles and scripts.
  *
@@ -69,6 +69,7 @@ function secupress_login_captcha_scripts() {
 		'ajaxurl'  => esc_url( admin_url( 'admin-ajax.php' ) ),
 		'hPotText' => __( 'Do not fill in this field.', 'secupress' ),
 	) );
+	wp_print_scripts( 'secupress-captcha' );
 }
 
 
