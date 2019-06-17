@@ -122,7 +122,7 @@ function secupress_ip_is_valid( $ip, $range_format = false , $flag = null ) {
 function secupress_get_full_ipv6( $ipv6, $mask ) {
 	$ipv6 = explode( ':', $ipv6 );
 	$ipv6 = array_filter( $ipv6 );
-	$ipv6 = $ipv6 + array_fill( count( $ipv6 ), 4 - count( $ipv6 ), '0/ffff' );
+	$ipv6 = array_merge( $ipv6, array_fill( count( $ipv6 ), 8 - count( $ipv6 ), '0/ffff' ) );
 	$ipv6 = implode( ':', $ipv6 );
 	$temp = explode( '::-', $ipv6 );
 	$ipv6 = $temp[0] . str_repeat( ':0/ffff', 7 - substr_count( $temp[0], ':' ) );
