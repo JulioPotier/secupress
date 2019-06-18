@@ -196,13 +196,16 @@ function secupress_load_plugins() {
 			foreach ( $plugins as $plugin ) {
 				if ( secupress_is_pro() || ! secupress_submodule_is_pro( $module, $plugin ) ) {
 					$file_path = secupress_get_submodule_file_path( $module, $plugin );
-
 					if ( is_array( $file_path ) ) {
 						foreach ( $file_path as $path ) {
-							require_once( $path );
+							if ( file_exists( $path ) ) {
+								require_once( $path );
+							}
 						}
 					} else {
-						require_once( $file_path );
+						if ( file_exists( $file_path ) ) {
+							require_once( $file_path );
+						}
 					}
 				}
 			}
