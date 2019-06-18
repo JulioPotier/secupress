@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2019-06-11 17:10+0200\n"
-"PO-Revision-Date: 2019-06-13 17:07+0200\n"
+"POT-Creation-Date: 2019-06-18 08:43+0200\n"
+"PO-Revision-Date: 2019-06-18 08:43+0200\n"
 "Last-Translator: Julio Potier <julio@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -32,7 +32,7 @@ msgstr ""
 #: inc/classes/scanners/class-secupress-scan-discloses.php:102
 #: inc/classes/scanners/class-secupress-scan-php-disclosure.php:91
 #: inc/classes/scanners/class-secupress-scan-readme-discloses.php:96
-#: inc/functions/modules.php:646
+#: inc/functions/modules.php:651
 #, php-format
 msgid ""
 "Your %1$s file is not writable. Please add the following lines at the "
@@ -84,10 +84,10 @@ msgstr ""
 #: inc/classes/common/class-secupress-log.php:294
 #: inc/classes/common/class-secupress-logs.php:1391
 #: inc/classes/common/class-secupress-logs.php:1395
-#: inc/functions/deprecated.php:125 inc/functions/modules.php:564
-#: inc/functions/modules.php:578 inc/functions/modules.php:591
-#: inc/functions/modules.php:643 inc/functions/modules.php:671
-#: inc/functions/modules.php:701 inc/functions/modules.php:715
+#: inc/functions/deprecated.php:125 inc/functions/modules.php:569
+#: inc/functions/modules.php:583 inc/functions/modules.php:596
+#: inc/functions/modules.php:648 inc/functions/modules.php:676
+#: inc/functions/modules.php:706 inc/functions/modules.php:720
 #: inc/modules/logs/plugins/inc/php/404-logs/class-secupress-404-log.php:65
 #: inc/modules/logs/plugins/inc/php/404-logs/class-secupress-404-log.php:66
 #: inc/modules/sensitive-data/plugins/bad-url-access.php:133
@@ -121,7 +121,7 @@ msgstr ""
 "manuellement. Merci de supprimer tous les nœuds avec %2$s."
 
 #. Translators: 1 and 2 are small parts of code, 3 is a file name.
-#: inc/activation.php:408 inc/functions/modules.php:594
+#: inc/activation.php:408 inc/functions/modules.php:599
 #, php-format
 msgid ""
 "Your server runs <strong>Nginx</strong>. You have to edit the configuration "
@@ -143,7 +143,7 @@ msgstr "Grade %s"
 
 #: inc/admin-bar.php:36 inc/admin/multisite/settings.php:217
 #: inc/admin/settings.php:305 inc/admin/settings.php:421
-#: inc/functions/modules.php:224
+#: inc/functions/modules.php:225
 #: inc/modules/schedules/settings/schedules-scan.php:6
 msgid "Scanners"
 msgstr "Scanners"
@@ -464,19 +464,19 @@ msgstr ""
 msgid "Open the %s settings page"
 msgstr "Ouvrir les réglages du plugin %s"
 
-#: inc/admin/functions/site-health.php:217
+#: inc/admin/functions/site-health.php:237
 msgid "Security"
 msgstr "Sécurité"
 
-#: inc/admin/functions/site-health.php:224
-msgid "Open the SecuPress scanners"
+#: inc/admin/functions/site-health.php:244
+msgid "Open the scanners"
 msgstr "Ouvrir les scanners"
 
-#: inc/admin/functions/site-health.php:226 inc/admin/scanner-step-3.php:269
+#: inc/admin/functions/site-health.php:246 inc/admin/scanner-step-3.php:269
 msgid "Read the documentation"
 msgstr "Lire la documentation"
 
-#: inc/admin/functions/site-health.php:227
+#: inc/admin/functions/site-health.php:247
 #: inc/classes/scanners/class-secupress-scan-wporg.php:77
 msgid "(opens in a new tab)"
 msgstr "(dans un nouvel onglet)"
@@ -2610,7 +2610,7 @@ msgstr ""
 #: inc/classes/scanners/class-secupress-scan-discloses.php:104
 #: inc/classes/scanners/class-secupress-scan-php-disclosure.php:93
 #: inc/classes/scanners/class-secupress-scan-readme-discloses.php:98
-#: inc/functions/modules.php:685
+#: inc/functions/modules.php:690
 #, php-format
 msgid ""
 "Your %1$s file is not writable. Please add the following lines inside the "
@@ -3568,7 +3568,7 @@ msgstr ""
 
 #. Translators: 1 is a file name, 2 is a tag name, 3 is a folder path (kind of), 4 is some code.
 #: inc/classes/scanners/class-secupress-scan-directory-listing.php:95
-#: inc/functions/modules.php:676
+#: inc/functions/modules.php:681
 #, php-format
 msgid ""
 "Your %1$s file is not writable. Please remove any previous %2$s tag and add "
@@ -5925,7 +5925,7 @@ msgstr ""
 msgid "File Scanner"
 msgstr "Scanner de fichiers"
 
-#: inc/functions/modules.php:180 inc/functions/modules.php:223
+#: inc/functions/modules.php:180 inc/functions/modules.php:224
 #: inc/modules/schedules/settings/schedules-backups.php:6
 msgid "Backups"
 msgstr "Sauvegardes"
@@ -5974,42 +5974,42 @@ msgstr ""
 "Être alerté(e) des évènements importants peut aider à réagir rapidement en "
 "cas de possibles attaques."
 
-#: inc/functions/modules.php:207
+#: inc/functions/modules.php:208
 #: inc/modules/alerts/settings/notification-types.php:6
 msgid "Email Notifications"
 msgstr "Notifications par e-mail"
 
-#: inc/functions/modules.php:208
+#: inc/functions/modules.php:209
 msgid "Events Alerts"
 msgstr "Alertes des évènements"
 
-#: inc/functions/modules.php:209
+#: inc/functions/modules.php:210
 #: inc/modules/alerts/settings/daily-reporting.php:6
 msgid "Daily Reports"
 msgstr "Rapports journaliers"
 
-#: inc/functions/modules.php:213
+#: inc/functions/modules.php:214
 msgid "Schedules"
 msgstr "Planifications"
 
-#: inc/functions/modules.php:217
+#: inc/functions/modules.php:218
 msgid "Automate all your tasks"
 msgstr "Automatisez toutes vos tâches"
 
-#: inc/functions/modules.php:218
+#: inc/functions/modules.php:219
 #, php-format
 msgid "Let %s scan your website when you are away by using recurent scans."
 msgstr ""
 "Laissez %s scanner votre site quand vous n’êtes pas là avec des scanners "
 "récurrents."
 
-#: inc/functions/modules.php:225
+#: inc/functions/modules.php:226
 #: inc/modules/schedules/settings/schedules-file-monitoring.php:6
 msgid "File Monitoring"
 msgstr "Surveillance des fichiers"
 
 #. Translators: 1 is a file name, 2 and 3 are small parts of code.
-#: inc/functions/modules.php:567
+#: inc/functions/modules.php:572
 #, php-format
 msgid ""
 "Your %1$s file is not writable, you have to edit it manually. Please remove "
@@ -6019,7 +6019,7 @@ msgstr ""
 "Merci de supprimer les règles entre %2$s et %3$s du fichier %1$s."
 
 #. Translators: 1 is a file name, 2 is a small part of code.
-#: inc/functions/modules.php:581
+#: inc/functions/modules.php:586
 #, php-format
 msgid ""
 "Your %1$s file is not writable, you have to edit it manually. Please remove "
@@ -6029,7 +6029,7 @@ msgstr ""
 "Merci de supprimer les règles avec %2$s du fichier %1$s."
 
 #. Translators: 1 is a file name, 2 is some code
-#: inc/functions/modules.php:704
+#: inc/functions/modules.php:709
 #, php-format
 msgid ""
 "Your server runs <strong>Nginx</strong>. You have to edit the configuration "
@@ -6039,7 +6039,7 @@ msgstr ""
 "votre fichier de configuration manuellement. Merci d’ajouter le code suivant "
 "dans le fichier %1$s : %2$s"
 
-#: inc/functions/modules.php:716
+#: inc/functions/modules.php:721
 msgid ""
 "It seems your server does not use <strong>Apache</strong>, <strong>Nginx</"
 "strong>, nor <strong>IIS7</strong>. This module won't work."
@@ -7365,14 +7365,14 @@ msgstr[1] "%s erreurs 404."
 #: inc/modules/plugins-themes/plugins/plugin-installation.php:33
 #: inc/modules/plugins-themes/plugins/plugin-installation.php:48
 #: inc/modules/plugins-themes/plugins/plugin-installation.php:66
-#: inc/modules/plugins-themes/plugins/uploads.php:13
+#: inc/modules/plugins-themes/plugins/uploads.php:17
 msgid "You do not have sufficient permissions to install plugins on this site."
 msgstr "Vous n’avez pas la permission d’installer des plugins sur ce site."
 
 #: inc/modules/plugins-themes/plugins/theme-installation.php:32
 #: inc/modules/plugins-themes/plugins/theme-installation.php:46
 #: inc/modules/plugins-themes/plugins/theme-installation.php:52
-#: inc/modules/plugins-themes/plugins/uploads.php:17
+#: inc/modules/plugins-themes/plugins/uploads.php:21
 msgid "You do not have sufficient permissions to install themes on this site."
 msgstr "Vous n’avez pas la permission d’installer des thèmes sur ce site."
 
@@ -8011,14 +8011,14 @@ msgstr "Session expirée, merci de réessayer."
 msgid "Do not fill in this field."
 msgstr "Ne remplissez pas ce champ."
 
-#: inc/modules/users-login/plugins/login-captcha.php:143
-#: inc/modules/users-login/plugins/login-captcha.php:207
-#: inc/modules/users-login/plugins/login-captcha.php:265
+#: inc/modules/users-login/plugins/login-captcha.php:144
+#: inc/modules/users-login/plugins/login-captcha.php:208
+#: inc/modules/users-login/plugins/login-captcha.php:266
 msgid "<strong>ERROR</strong>: The human verification is incorrect."
 msgstr "<strong>ERREUR</strong> : La vérification humaine est incorrecte."
 
-#: inc/modules/users-login/plugins/login-captcha.php:296
-#: inc/modules/users-login/plugins/login-captcha.php:317
+#: inc/modules/users-login/plugins/login-captcha.php:297
+#: inc/modules/users-login/plugins/login-captcha.php:318
 msgid "You need to enable JavaScript to send this form correctly."
 msgstr ""
 "Vous avez besoin d’activer le JavaScript pour que ce formulaire soit envoyé "
