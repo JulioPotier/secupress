@@ -4,7 +4,7 @@ Tags: wordpress security, secure, security plugin, security, malware
 Requires at least: 4.0
 Tested up to: 5.3
 Requires PHP: 5.4
-Stable tag: 1.4.9
+Stable tag: 1.4.9.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,9 +179,9 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 == Changelog ==
 
-= 1.4.9 =
+= 1.4.9.1 =
 
-* 12 June 2019
+* 18 June 2019
 * New: New scanners to match Site Health: HTTPS, Communication with WP.org.
 * New#707: New Site Health page from WP 5.2 is now managed by SecuPress for all "security" points.
 * Improvement: Remove 2 textarea fields from firewall, too many times blocked by hosts, use a hook if you really want to customize the rules.
@@ -195,11 +195,18 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 * Fix#709: "Alerts" settings were not saved correctly.
 * Fix#720: Uncaught Error: Call to undefined function secupress_filter_scanner()
 * Fix#723: Antispam forbid usage of pb and tb is removing too much.
+* Fix: Fatal error on update 1.4.9 for ols pro users
 
 == Upgrade Notice ==
 
+= 1.4.9.1 =
+
+* 18 June 2019
+* Nothing special for the 1.4.9.1 BUT the 1.5.0 will require PHP 5.6 and WordPress 4.9 (actually PHP 5.4 and WordPress 4.0)
+* v1.5 ETA October 2019
+
 = 1.4.9 =
 
-* 12 June 2019
+* 17 June 2019
 * Nothing special for the 1.4.9 BUT the 1.5.0 will require PHP 5.6 and WordPress 4.9 (actually PHP 5.4 and WordPress 4.0)
 * v1.5 ETA October 2019
