@@ -52,6 +52,6 @@ function secupress_check_fake_bot() {
 	}
 
 	if ( ! secupress_check_bot_ip() ) {
-		secupress_block( 'FAKEBOT', 403 );
+		secupress_block( 'FAKEBOT', [ 'code' => 403, 'b64' => [ 'data' => $user_agent ] ] );
 	}
 }

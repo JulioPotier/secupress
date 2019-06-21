@@ -23,7 +23,7 @@ function secupress_block_bad_user_agents() {
 	$user_agent = preg_replace( '/\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|$!:,.;]*[A-Z0-9+&@#\/%=~_|$]/i', '', $user_agent );
 
 	if ( trim( wp_strip_all_tags( $user_agent ) ) !== trim( $user_agent ) ) {
-		secupress_block( 'UAHT' );
+		secupress_block( 'UAHT', [ 'code' => 403, 'b64' => [ 'data' => $user_agent ] ] );
 	}
 
 	$bad_user_agents = secupress_get_module_option( 'bbq-headers_user-agents-list', '', 'firewall' );
@@ -40,7 +40,8 @@ function secupress_block_bad_user_agents() {
 	// Shellshock.
 	$bad_user_agents .= ( $bad_user_agents ? '|' : '' ) . '\(.*?\)\s*\{.*?;\s*\}\s*;';
 
-	if ( preg_match( '/' . $bad_user_agents . '/', $user_agent ) ) {
-		secupress_block( 'UAHB' );
+	preg_match( '/' . $bad_user_agents . '/', $user_agent, $matches );
+	if ( ! empty( $matches ) ) {
+		secupress_block( 'UAHB', [ 'code' => 403, 'b64' => [ 'data' => $matches ] ] );
 	}
 }

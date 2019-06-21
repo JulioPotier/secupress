@@ -19,6 +19,6 @@ if ( ! defined( 'DOING_CRON' ) ) {
 	}
 
 	if ( ! isset( $methods[ $_SERVER['REQUEST_METHOD'] ] ) ) {
-		secupress_block( 'RMHM', 405 );
+		secupress_block( 'RMHM', [ 'code' => 405, 'b64' => [ 'data' => $_SERVER['REQUEST_METHOD'] ] ] );
 	}
 }
