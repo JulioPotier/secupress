@@ -4,7 +4,7 @@ Tags: wordpress security, secure, security plugin, security, malware
 Requires at least: 4.0
 Tested up to: 5.3
 Requires PHP: 5.4
-Stable tag: 1.4.9.1
+Stable tag: 1.4.9.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,34 +179,27 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 == Changelog ==
 
-= 1.4.9.1 =
+= 1.4.9.2 =
 
-* 18 June 2019
-* New: New scanners to match Site Health: HTTPS, Communication with WP.org.
-* New#707: New Site Health page from WP 5.2 is now managed by SecuPress for all "security" points.
-* Improvement: Remove 2 textarea fields from firewall, too many times blocked by hosts, use a hook if you really want to customize the rules.
-* Improvement#717: Update firewall rules with custom 7G rules.
-* Improvement#701: GeoIP Module is now compatible with IPv6.
-* Improvement#705: Move Login can now be configured to display a custom message or redirect on a custom page.
-* Improvement#721: Whitelist and Blacklist in "log" module are now compatibles with IPv6, IP ranges and IP lists than can be copy/pasted.
-* Improvement#724: Remove all actions before get_users() for passwordless to prevent someone/a plugin to hack the list, resulting on not being possible to log-in.
-* Improvement#725: Function secupress_send_mail() replace blogname with url if empty, yes it exists.
-* Fix#705: Updates (for SecuPress of other plugin, sometimes) were not always visible.
-* Fix#709: "Alerts" settings were not saved correctly.
-* Fix#720: Uncaught Error: Call to undefined function secupress_filter_scanner()
-* Fix#723: Antispam forbid usage of pb and tb is removing too much.
-* Fix: Fatal error on update 1.4.9 for ols pro users
+* 21 June 2019
+* Improvement: Add more details on block page for better support
+* Fix: Remove some agressive bad content rules that triggered the block page too often
+* Fix: Fatal error on plugin activation if a module has to be silently activated (not so oftenà
+* Fix: Better result for some scanners that were not valid (but the protection was there!)
 
 == Upgrade Notice ==
+
+= 1.4.9.2 =
+
+* 21 June 2019
+* Nothing special for the 1.4.9.2 BUT the 1.5.0 will require PHP 5.6 and WordPress 4.9 (actually PHP 5.4 and WordPress 4.0)
 
 = 1.4.9.1 =
 
 * 18 June 2019
 * Nothing special for the 1.4.9.1 BUT the 1.5.0 will require PHP 5.6 and WordPress 4.9 (actually PHP 5.4 and WordPress 4.0)
-* v1.5 ETA October 2019
 
 = 1.4.9 =
 
 * 17 June 2019
 * Nothing special for the 1.4.9 BUT the 1.5.0 will require PHP 5.6 and WordPress 4.9 (actually PHP 5.4 and WordPress 4.0)
-* v1.5 ETA October 2019
