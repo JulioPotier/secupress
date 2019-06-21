@@ -389,7 +389,11 @@ function secupress_activate_submodule_silently( $module, $submodule ) {
 	// Activate the submodule.
 	update_site_option( 'secupress_active_submodule_' . $submodule, $module );
 
-	require_once( $file_path );
+	if ( is_array( $file_path ) ) {
+		foreach ( $file_path as $path ) {
+			require_once( $path );
+		}
+	}
 
 	secupress_delete_site_transient( SECUPRESS_ACTIVE_SUBMODULES );
 }
