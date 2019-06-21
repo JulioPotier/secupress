@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2019-06-21 09:33+0200\n"
-"PO-Revision-Date: 2019-06-21 09:33+0200\n"
+"POT-Creation-Date: 2019-06-21 11:05+0200\n"
+"PO-Revision-Date: 2019-06-21 11:05+0200\n"
 "Last-Translator: Julio Potier <julio@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -772,13 +772,13 @@ msgstr ""
 msgid "Auto-fix this item"
 msgstr "Corriger automatiquement cet élément"
 
-#: inc/admin/scanner-step-2.php:243 inc/admin/settings.php:207
-msgid "Currently fixing…"
-msgstr "Correction en cours…"
+#: inc/admin/scanner-step-2.php:243
+msgid "Currently fixing&hellip;"
+msgstr "Correction en cours&hellip;"
 
-#: inc/admin/scanner-step-2.php:244 inc/admin/settings.php:207
-msgid "Please wait until fixing is complete."
-msgstr "Merci de patienter pendant la correction."
+#: inc/admin/scanner-step-2.php:244
+msgid "Please grab a cup of water, open a book and just wait a few minutes."
+msgstr "Prenez un verre d’eau, ouvrez un livre et patientez quelques minutes."
 
 #: inc/admin/scanner-step-2.php:249
 msgid "Fixing…"
@@ -786,11 +786,11 @@ msgstr "Réparation en cours&hellip;"
 
 #: inc/admin/scanner-step-2.php:251
 msgid ""
-"You’ll be automatically redirected to the next step,<br>please don’t close "
-"this window."
+"You’ll be automatically redirected to the next step,<br>if you are not "
+"within 5 minutes, please reload the page or ignore this step."
 msgstr ""
-"Vous serez redirigé automatiquement vers la prochaine étape,<br/>merci de ne "
-"pas fermer cette fenêtre."
+"Vous serez redirigé automatiquement vers la prochaine étape,<br/>si vous ne "
+"l’êtes pas d’ici 5 minutes, rechargez la page ou ignorez cette étape."
 
 #: inc/admin/scanner-step-3.php:117
 #, php-format
@@ -1121,6 +1121,14 @@ msgstr "Détail du correctif"
 #: inc/admin/settings.php:206
 msgid "Security scan just finished."
 msgstr "Le scanner de sécurité est terminé."
+
+#: inc/admin/settings.php:207
+msgid "Currently fixing…"
+msgstr "Correction en cours…"
+
+#: inc/admin/settings.php:207
+msgid "Please wait until fixing is complete."
+msgstr "Merci de patienter pendant la correction."
 
 #: inc/admin/settings.php:209
 msgid "Coming Soon"

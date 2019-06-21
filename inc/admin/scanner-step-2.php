@@ -240,15 +240,15 @@ if ( ! $secupress_tests ) {
 <div id="secupress-spinner" class="secupress-scans-group secupress-group-spinner hidden" aria-hidden="true">
 	<div class="secupress-sg-header">
 		<div class="secupress-sgh-name">
-			<p class="secupress-sgh-title"><?php esc_html_e( 'Currently fixing…', 'secupress' ); ?></p>
-			<p class="secupress-sgh-description"><?php esc_html_e( 'Please wait until fixing is complete.', 'secupress' ); ?></p>
+			<p class="secupress-sgh-title"><?php esc_html_e( 'Currently fixing&hellip;', 'secupress' ); ?></p>
+			<p class="secupress-sgh-description"><?php esc_html_e( 'Please grab a cup of water, open a book and just wait a few minutes.', 'secupress' ); ?></p>
 		</div>
 	</div>
 	<div class="secupress-spinner-content secupress-text-center secupress-p3">
 
 		<img class="secupress-big-spinner secupress-mb1" src="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>spinner-big.png" srcset="<?php echo SECUPRESS_ADMIN_IMAGES_URL; ?>spinner-big2x.png 2x" alt="<?php esc_attr_e( 'Fixing…', 'secupress' ); ?>" width="128" height="128">
 
-		<p class="secupress-text-basup"><?php _e( 'You’ll be automatically redirected to the next step,<br>please don’t close this window.', 'secupress' ); ?></p>
+		<p class="secupress-text-basup"><?php _e( 'You’ll be automatically redirected to the next step,<br>if you are not within 5 minutes, please reload the page or ignore this step.', 'secupress' ); ?></p>
 
 	</div>
 </div>
