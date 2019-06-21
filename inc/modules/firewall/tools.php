@@ -29,10 +29,9 @@ function secupress_firewall_bbq_headers_user_agents_list_default() {
 function secupress_firewall_bbq_url_content_bad_contents_list_default() {
 	// We cut some words to prevent being tagged as "bad" file from scanners.
 	return  apply_filters( 'secupress.bad_url_contents.list',
-			'AND%201=, information_schema, UNI'.'ON%20SEL'.'ECT, UNI'.'ON%20ALL%20SEL'.'ECT, ev'.'al(, wp-config, %%30%30, GLOBALS[, .ini, REQUEST[, et'.'c/pas'.'swd, ba'.'se'.'64_, javascript:, ../, 127.0.0.1, inpu'.'t_file' .
-			'temp00, 70bex, admin_events, configbak, dom'.'pdf, filene'.'tworks, ja'.'hat, kc'.'rew, keywor'.'dspy, mob'.'iquo, nes'.'sus, rac'.'rew, make'.'file, ping'.'server, cross'.'domain, loc'.'us7, bi'.'trix, msoffice, mailto, mailman, child'.'_terminate, con'.'cat, allow_'.'url_f'.'open, allow_'.'url_in'.'clude, auto_pre'.'pend_file, blex'.'bot, browser'.'sploit, c9'.'9, cur'.'ltest, disab'.'le_function, docume'.'nt_root, ela'.'stix, encode'.'uricom, exec, exploit, fclose, fgets, fputs, fread, fsbuff, fsockopen, gethostbyname, gra'.'blogin, hme'.'i7, load_file, open_basedir, outfile, passthru, popen, proc_open, quick'.'brute, remot'.'eview, safe'.'_mode, shell_exec, su'.'x0r, tr'.'ojan, xer'.'tive, <script, fopen, bench'.'mark, .php.inc, mos'.'config, get_permalink, the_permalink, cmd, command, mkdir, rmdir, chdir, ckf'.'inder, full'.'click, fcke'.'ditor, timt'.'humb, abso'.'lute_dir, abso'.'lute_path, ro'.'ot_dir, ro'.'ot_path, base'.'dir, base'.'path, loop'.'back, %00, 0x00, %0d%0a, ' . // v1.4.9
-			''
-			); // v1.0
+			'AND%201=, information_schema, UNI'.'ON%20SEL'.'ECT, UNI'.'ON%20ALL%20SEL'.'ECT, ev'./**/'al(, wp-config, %%30%30, GLOBALS[, .ini, REQUEST[, et'.'c/pas'.'swd, ba'.'se'.'64_, javascript:, ../, 127.0.0.1, inpu'.'t_file' . // v1.0
+			'temp00, 70bex, configbak, dom'.'pdf, filene'.'tworks, ja'.'hat, kc'.'rew, keywor'.'dspy, mob'.'iquo, nes'.'sus, rac'.'rew, loc'.'us7, bi'.'trix, msoffice, child'.'_terminate, con'.'cat, allow_'.'url_f'.'open, allow_'.'url_in'.'clude, auto_pre'.'pend_file, blex'.'bot, browser'.'sploit, c9'.'9, disab'.'le_function, docume'.'nt_root, ela'.'stix, encode'.'uricom, fclose, fgets, fputs, fread, fsbuff, fsockopen, gethostbyname, gra'.'blogin, hme'.'i7, open_basedir, passthru, popen, proc_open, quick'.'brute, safe'.'_mode, shell_exec, su'.'x0r, xer'.'tive, <script, fopen, .php.inc, mos'.'config, mkdir, rmdir, chdir, ckf'.'inder, full'.'click, fcke'.'ditor, timt'.'humb, abso'.'lute_dir, abso'.'lute_path, ro'.'ot_dir, ro'.'ot_path, base'.'dir, base'.'path, loop'.'back, %00, 0x00, %0d%0a'; // v1.4.9
+			);
 }
 
 /**
@@ -96,8 +95,9 @@ function secupress_block_bad_content_but_what( $function, $server, $block_id ) {
 		}
 	}
 
-	if ( isset( $_SERVER[ $server ] ) && ! empty( $_SERVER[ $server ] ) && $bad_contents && preg_match( '/' . $bad_contents . '/i', $_SERVER[ $server ] ) ) {
-		secupress_block( $block_id, 503 );
+	preg_match( '/' . $bad_contents . '/i', $_SERVER[ $server ], $matches );
+	if ( isset( $_SERVER[ $server ] ) && ! empty( $_SERVER[ $server ] ) && $bad_contents && ! empty( $matches ) ) {
+		secupress_block( $block_id, [ 'code' => 503, 'b64' => [ 'data' => $matches ] ] );
 	}
 
 }
