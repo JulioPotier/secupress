@@ -404,28 +404,18 @@ function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 		$block_id = preg_replace( '/[^0-9A-Z]/', '', $block_id );
 	}
 
-	if ( secupress_ip_is_whitelisted( $ip ) ) {
-		/**
-		* Run an action when the blockage from security purposes is triggered but IP is in whitelist
-		*
-		* @since 1.4.9
-		*
-		* @param (string) $module
-		* @param (string) $ip
-		* @param (array) $args
-		* @param (string) $block_id
-		*/
-		do_action( 'secupress.block.whitelisted', $module, $ip, $args, $block_id );
-		return;
-	}
-
 	if ( is_int( $args ) ) {
 		$args = array( 'code' => (int) $args ); // Cast to prevent recursion.
 	} elseif ( is_string( $args ) ) {
 		$args = array( 'content' => (string) $args ); // Cast to prevent recursion.
 	}
 
-	$args = wp_parse_args( $args, array( 'code' => 403, 'content' => '' ) );
+	$args = wp_parse_args( $args, array( 'code' => 403, 'content' => '', 'b64' => [] ) );
+
+	// Add some hardcoded b64 args to be printed for support help.
+	$args['b64']['URL'] = secupress_get_current_url( 'raw' );
+	$args['b64']['SP']  = secupress_has_pro() ? 'Pro v' . SECUPRESS_PRO_VERSION : 'Free v' . SECUPRESS_VERSION;
+	$args['b64']['ID']  = $module;
 
 	/**
 	 * Fires before a user is blocked by a certain module.
@@ -460,10 +450,13 @@ function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 		$content .= '<p>' . $args['content'] . '</p>';
 	}
 
-	$content .= '<h3>' . __( 'Logged Details:', 'secupress' ) . '</h3><p>';
+	$content .= '<h3>' . __( 'Logged Details:', 'secupress' ) . '</h3>';
+	$content .= '<p>';
 	$content .= sprintf( __( 'Your IP: %s', 'secupress' ), $ip ) . '<br>';
 	$content .= sprintf( __( 'Time: %s', 'secupress' ), date_i18n( __( 'F j, Y g:i a', 'secupress' ) ) ) . '<br>';
-	$content .= sprintf( __( 'Block ID: %s', 'secupress' ), $block_id ) . '</p>';
+	$content .= sprintf( __( 'Reason: %s', 'secupress' ), $block_id ) . '<br>';
+	$content .= sprintf( __( 'Support ID: %s', 'secupress' ), '<textarea style="width:100%;height:27px;vertical-align:text-top">' . base64_encode( json_encode( $args['b64'] ) ) . '</textarea>' ) . '<br>';
+	$content .= '</p>';
 
 	secupress_die( $content, $title, array( 'response' => $args['code'], 'force_die' => true ) );
 }
