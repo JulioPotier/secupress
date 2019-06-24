@@ -107,7 +107,7 @@ class SecuPress_Scan_Anti_Front_Brute_Force extends SecuPress_Scan implements Se
 	 */
 	public function scan() {
 
-		$activated = secupress_filter_scanner( __CLASS__ );
+		$activated = $this->filter_scanner( __CLASS__ );
 		if ( true === $activated ) {
 			$this->add_message( 0 );
 			return parent::scan();

@@ -106,7 +106,7 @@ class SecuPress_Scan_Themes_Update extends SecuPress_Scan implements SecuPress_S
 	 */
 	public function scan() {
 
-		$activated = secupress_filter_scanner( __CLASS__ );
+		$activated = $this->filter_scanner( __CLASS__ );
 		if ( true === $activated ) {
 			$this->add_message( 0 );
 			return parent::scan();

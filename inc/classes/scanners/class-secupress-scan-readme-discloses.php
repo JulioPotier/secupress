@@ -131,7 +131,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 	 */
 	public function scan() {
 
-		$activated = secupress_filter_scanner( __CLASS__ );
+		$activated = $this->filter_scanner( __CLASS__ );
 		if ( true === $activated ) {
 			$this->add_message( 0 );
 			return parent::scan();

@@ -99,7 +99,7 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 	 */
 	public function scan() {
 
-		$activated = secupress_filter_scanner( __CLASS__ );
+		$activated = $this->filter_scanner( __CLASS__ );
 		if ( true === $activated ) {
 			$this->add_message( 0 );
 			return parent::scan();
