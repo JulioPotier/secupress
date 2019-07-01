@@ -190,7 +190,7 @@ function secupress_move_login_redirect( $location ) {
 	$location_base = explode( '?', $location, 2 );
 	$location_base = reset( $location_base );
 
-	if ( site_url( $location_base ) === site_url( 'wp-login.php' ) ) {
+	if ( site_url( $location_base ) === site_url( 'wp-login.php' ) && strpos( wp_get_referer(), 'wp-login.php' ) === false ) {
 		return secupress_move_login_site_url( $location, $location, 'login', get_current_blog_id() );
 	}
 

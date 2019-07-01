@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
 "POT-Creation-Date: 2019-06-21 11:05+0200\n"
-"PO-Revision-Date: 2019-06-21 15:16+0200\n"
+"PO-Revision-Date: 2019-06-26 00:39+0200\n"
 "Last-Translator: Julio Potier <julio@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -5064,7 +5064,7 @@ msgstr ""
 
 #: inc/classes/scanners/class-secupress-scan-wporg.php:48
 msgid "Check if your installation can communicate with WordPress.org."
-msgstr "Vérifie sur votre installation peut communiquer avec WordPress.org."
+msgstr "Vérifie que votre installation peut communiquer avec WordPress.org."
 
 #: inc/classes/scanners/class-secupress-scan-wporg.php:49
 msgid ""
