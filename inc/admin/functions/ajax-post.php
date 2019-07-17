@@ -182,6 +182,10 @@ function secupress_format_message( $msgs, $test_name ) {
 
 	$output = array();
 
+	if ( empty( $msgs ) ) {
+		return implode( '<br/>', $output );
+	}
+
 	foreach ( $msgs as $id => $atts ) {
 
 		if ( ! isset( $messages[ $id ] ) ) {
