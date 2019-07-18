@@ -149,7 +149,7 @@ class SecuPress_Cleanup_Leftovers extends SecuPress_Singleton {
 		if ( ! file_exists( $path ) ) {
 			return array();
 		}
-		$files = scandir( $path );
+		$files = @scandir( $path );
 
 		if ( $files ) {
 			$files = array_diff( $files, array( '.', '..' ) );
