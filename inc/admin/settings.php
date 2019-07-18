@@ -295,8 +295,11 @@ function secupress_create_menus() {
 	global $menu, $submenu;
 
 	// Add a counter of scans with bad result.
-	$count = sprintf( ' <span class="update-plugins count-%1$d"><span class="update-count">%1$d</span></span>', secupress_get_scanner_counts( 'bad' ) );
 	$cap   = secupress_get_capability();
+	if ( ! current_user_can( $cap ) ) {
+		return;
+	}
+	$count = sprintf( ' <span class="update-plugins count-%1$d"><span class="update-count">%1$d</span></span>', secupress_get_scanner_counts( 'bad' ) );
 
 	// Main menu item.
 	add_menu_page( SECUPRESS_PLUGIN_NAME, SECUPRESS_PLUGIN_NAME, $cap, SECUPRESS_PLUGIN_SLUG . '_scanners', 'secupress_scanners', 'dashicons-shield-alt' );
