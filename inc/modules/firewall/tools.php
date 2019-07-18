@@ -56,7 +56,7 @@ function secupress_firewall_bbq_host_content_bad_contents_list_default() {
  */
 function secupress_firewall_bbq_referer_content_bad_contents_list_default() {
 	return  apply_filters( 'secupress.bad_referer_contents.list',
-			'semalt.com, todaperfeita, ambien, blue spill, cialis, cocaine, ejaculat, erectile, erections, hoodia, huronriveracres, impotence, levitra, libido, lipitor, phentermin, pro[sz]ac, sandyauer, tramadol, troyhamby, ultram, unicauca, valium, viagra, vicodin, xanax, ypxaieo'
+			'semalt.com, todaperfeita, ambien, blue spill, cialis, cocaine, ejaculat, erectile, erections, hoodia, huronriveracres, impotence, levitra, libido, lipitor, phentermin, sandyauer, tramadol, troyhamby, ultram, unicauca, valium, viagra, vicodin, xanax, ypxaieo'
 			);
 }
 
