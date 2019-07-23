@@ -10,43 +10,31 @@ $this->add_section( __( 'Login Pages', 'secupress' ) );
 $main_field_name  = $this->get_field_name( 'activated' );
 $is_plugin_active = secupress_is_submodule_active( 'users-login', 'move-login' );
 
-if ( is_plugin_active( 'sf-move-login/sf-move-login.php' ) ) {
-	$this->add_field( array(
-		'title'             => __( 'Move the login and admin pages', 'secupress' ),
-		'label_for'         => $main_field_name,
-		'plugin_activation' => true,
-		'type'              => 'checkbox',
-		'value'             => false,
-		'disabled'          => true,
-		'label'             => __( 'Yes, move the login and admin pages', 'secupress' ),
-		'helpers'           => array(
-			array(
-				'type'        => 'warning',
-				'description' => secupress_plugin_in_usage_string( 'sf-move-login/sf-move-login.php', 'options-general.php?page=move-login' ),
+/**
+* Allow some plugins to take over SecuPress settings if they are actually activated.
+* @param (array) The plugins list ; format 'plugins-path/plugin-file.php' => 'admin-page.php#for-settings'
+*/
+$override_plugins = apply_filters( 'secupress.move-login.override-plugins', [ 'wps-hide-login/wps-hide-login.php' => 'options-general.php#whl_page' ] );
+foreach ( $override_plugins as $plugin_path => $plugin_page) {
+	if ( is_plugin_active( $plugin_path ) ) {
+		$this->add_field( array(
+			'title'             => __( 'Move the login and admin pages', 'secupress' ),
+			'label_for'         => $main_field_name,
+			'plugin_activation' => true,
+			'type'              => 'checkbox',
+			'value'             => false,
+			'disabled'          => true,
+			'label'             => __( 'Yes, move the login and admin pages', 'secupress' ),
+			'helpers'           => array(
+				array(
+					'type'        => 'warning',
+					'description' => secupress_plugin_in_usage_string( $plugin_path, $plugin_page ),
+				),
 			),
-		),
-	) );
+		) );
 
-	return;
-}
-if ( is_plugin_active( 'wps-hide-login/wps-hide-login.php' ) ) {
-	$this->add_field( array(
-		'title'             => __( 'Move the login and admin pages', 'secupress' ),
-		'label_for'         => $main_field_name,
-		'plugin_activation' => true,
-		'type'              => 'checkbox',
-		'value'             => false,
-		'disabled'          => true,
-		'label'             => __( 'Yes, move the login and admin pages', 'secupress' ),
-		'helpers'           => array(
-			array(
-				'type'        => 'warning',
-				'description' => secupress_plugin_in_usage_string( 'wps-hide-login/wps-hide-login.php', 'options-general.php#whl_page' ),
-			),
-		),
-	) );
-
-	return;
+		return;
+	}
 }
 
 $this->add_field( array(
