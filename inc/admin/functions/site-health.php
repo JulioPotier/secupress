@@ -3,6 +3,10 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 
 add_filter( 'site_status_tests', 'secupress_site_status_tests' );
 function secupress_site_status_tests( $tests ) {
+	$scanners        = secupress_get_scan_results();
+	if ( empty( $scanners ) ) {
+		return [ 'direct' => [], 'async' => [] ];
+	}
 	$secupress_tests = secupress_get_scanners();
 	foreach ( $secupress_tests as $module_name => $class_name_parts ) {
 		$class_name_parts = array_combine( array_map( 'strtolower', $class_name_parts ), $class_name_parts );
@@ -228,6 +232,9 @@ function secupress_get_test__global( $option_name ) {
 	$fixes           = secupress_get_fix_results();
 	$current_test    = $class_name::get_instance();
 	$messages        = $current_test::get_messages();
+	if ( ! isset( $scanners[ $option_name ] ) ) {
+		return;
+	}
 	$message         = secupress_format_message( $scanners[ $option_name ]['msgs'], $class_name_part );
 	$message_id      = key( $scanners[ $option_name ]['msgs'] );
 	$result = [
@@ -255,6 +262,12 @@ function secupress_get_test__global( $option_name ) {
 
 add_action( 'load-site-health.php', 'secupress_replace_progress_count' );
 function secupress_replace_progress_count() {
-	$counts = secupress_get_scanner_counts();
-	wp_localize_script( 'jquery', 'SecuPressi18nSHC', [ 'grade' => $counts['grade'] ] );
+	$i18n          = [];
+	$counts        = secupress_get_scanner_counts();
+	$i18n['grade'] = $counts['grade'];
+	$scanners = secupress_get_scan_results();
+	if ( empty( $scanners ) ) {
+		$i18n['caution'] = sprintf( esc_html__( '<hr><strong>No status yet, please run the <a href="%s">%s scanners</a> first.</strong><hr>', 'secupress' ), secupress_admin_url( 'scanners' ), SECUPRESS_PLUGIN_NAME );
+	}
+	wp_localize_script( 'jquery', 'SecuPressi18nSHC', $i18n );
 }

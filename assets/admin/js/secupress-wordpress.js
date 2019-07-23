@@ -52,7 +52,11 @@ jQuery( document ).ready( function( $ ) {
 	} )(jQuery, document, window);
 
 	if ( "undefined" !== typeof( SecuPressi18nSHC ) ) {
-		$(".site-health-progress-count").toggleClass("site-health-progress-count secupress-site-health-progress-count").text( SecuPressi18nSHC.grade);
+		$(".site-health-progress-count").toggleClass("site-health-progress-count secupress-site-health-progress-count").text( SecuPressi18nSHC.grade );
+		if ( "undefined" !== typeof( SecuPressi18nSHC.caution ) ) {
+			$(".site-health-view-more, .site-health-issues-wrapper").remove();
+			$(".site-status-has-issues").append( SecuPressi18nSHC.caution );
+		}
 	}
 
 
