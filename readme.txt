@@ -188,6 +188,7 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 * Fix#731: Site Health page is on error is no scanner has been done yet (of course !)
 * Fix#732: Some menus links could be modified by SecuPress
 * Fix#536: Translations in pro were having "secupress" domain instead of "secupress-pro"…
+* Security Fix: Move Login will not display the new login page in an certain exploit (see secupress.me blog, related to "wps hide login" flaws)
 
 == Upgrade Notice ==
 
