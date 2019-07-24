@@ -80,6 +80,14 @@ function secupress_block_bad_content_but_what( $function, $server, $block_id ) {
 		return;
 	}
 
+	// don't block if our own domain name contains a bad word and is present in the URL (with redirect for example).
+	$check_value  = str_replace( $_SERVER['HTTP_HOST'], '', $_SERVER[ $server ] );
+	$check_value  = explode( '?', $check_value, 2 );
+	// Nothing like a request uri? It's ok, don't look into the URLs paths
+	if ( 'QUERY_STRING' !== $server && ! isset( $check_value[1] ) ) {
+		return;
+	}
+	$check_value  = end( $check_value );
 	$bad_contents = "secupress_firewall_bbq_{$function}_content_bad_contents_list_default";
 	if ( ! function_exists( $bad_contents ) ) {
 		wp_die( __FUNCTION__ ); // Should not happen in live.
@@ -95,8 +103,8 @@ function secupress_block_bad_content_but_what( $function, $server, $block_id ) {
 		}
 	}
 
-	preg_match( '/' . $bad_contents . '/i', $_SERVER[ $server ], $matches );
-	if ( isset( $_SERVER[ $server ] ) && ! empty( $_SERVER[ $server ] ) && $bad_contents && ! empty( $matches ) ) {
+	preg_match( '/' . $bad_contents . '/i', $check_value, $matches );
+	if ( ! empty( $check_value ) && $bad_contents && ! empty( $matches ) ) {
 		secupress_block( $block_id, [ 'code' => 503, 'b64' => [ 'data' => $matches ] ] );
 	}
 

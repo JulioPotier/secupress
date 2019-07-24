@@ -14,10 +14,9 @@ add_action( 'secupress.plugins.loaded', 'secupress_block_bad_url_contents', 0 );
  * Filter the query string to block the request or not
  *
  * @since 1.0
- * @since 1.4.9 REQUEST_URI instead of QUERY_STRING + REMOTE_HOST test
  */
 function secupress_block_bad_url_contents() {
-	secupress_block_bad_content_but_what( 'url',     'REQUEST_URI',  'BUC' );
+	secupress_block_bad_content_but_what( 'url',     'QUERY_STRING', 'BUC' );
 	secupress_block_bad_content_but_what( 'host',    'REMOTE_HOST',  'BHC' );
 	secupress_block_bad_content_but_what( 'referer', 'HTTP_REFERER', 'BRC' );
 }
