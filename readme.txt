@@ -4,7 +4,7 @@ Tags: wordpress security, secure, security plugin, security, malware
 Requires at least: 4.0
 Tested up to: 5.3
 Requires PHP: 5.4
-Stable tag: 1.4.9.2
+Stable tag: 1.4.9.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,15 +179,22 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 == Changelog ==
 
-= 1.4.9.2 =
+= 1.4.9.3 =
 
-* 21 June 2019
-* Improvement: Add more details on block page for better support
-* Fix: Remove some agressive bad content rules that triggered the block page too often
-* Fix: Fatal error on plugin activation if a module has to be silently activated (not so oftenà
-* Fix: Better result for some scanners that were not valid (but the protection was there!)
+* 24 July 2019
+* SF Move Login is not allowed anymore as a replacement plugin for our Move Login module
+* A new filter `secupress.move-login.override-plugins` is not there to add your plugin if needed.
+* Fix#729: Improve the detection of bad contents
+* Fix#731: Site Health page is on error is no scanner has been done yet (of course !)
+* Fix#732: Some menus links could be modified by SecuPress
+* Fix#536: Translations in pro were having "secupress" domain instead of "secupress-pro"…
 
 == Upgrade Notice ==
+
+= 1.4.9.3 =
+
+* 24 July 2019
+* Nothing special for the 1.4.9.3 BUT the 1.5.0 will require PHP 5.6 and WordPress 4.9 (actually PHP 5.4 and WordPress 4.0)
 
 = 1.4.9.2 =
 

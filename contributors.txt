@@ -4,6 +4,5 @@ Devs
 	Julio Potier          <@juliopotier>
 	Gregory Viguier       <@screenfeedfr>
 	Geoffrey Crofte       <@geoffreycrofte>
-	Clément Hermant       <@superment15>
 Design
 	Matthieu Bousendorfer <@edenpulse>
