@@ -1029,7 +1029,7 @@ function secupress_has_pro_license() {
 	static $has_pro;
 
 	if ( ! isset( $has_pro ) ) {
-		$has_pro = secupress_get_consumer_key() && secupress_get_option( 'site_is_pro' );
+		$has_pro = ( 32 === strlen( secupress_get_consumer_key() ) ) && secupress_get_option( 'site_is_pro' );
 	}
 
 	return $has_pro;
