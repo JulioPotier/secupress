@@ -29,6 +29,9 @@ function secupress_users_login_settings_callback( $settings ) {
 	 * The `$settings` parameter is passed by reference.
 	 */
 
+	// Move Login.
+	secupress_move_login_settings_callback( $modulenow, $settings, $activate );
+
 	// Double authentication.
 	secupress_double_auth_settings_callback( $modulenow, $settings, $activate );
 
@@ -47,8 +50,9 @@ function secupress_users_login_settings_callback( $settings ) {
 	// Stop User Enumeration.
 	secupress_stopuserenumeration_settings_callback( $modulenow, $activate );
 
-	// Move Login.
-	secupress_move_login_settings_callback( $modulenow, $settings, $activate );
+	// Prevent User Creation
+	secupress_preventusercreation_settings_callback( $modulenow, $activate );
+
 
 	/**
 	 * Filter the settings before saving.
@@ -191,6 +195,21 @@ function secupress_stopuserenumeration_settings_callback( $modulenow, $activate 
 	// (De)Activation.
 	if ( false !== $activate ) {
 		secupress_manage_submodule( $modulenow, 'stop-user-enumeration', ! empty( $activate['blacklist-logins_stop-user-enumeration'] ) );
+	}
+}
+
+/**
+ * (De)Activate prevent user creation plugin.
+ *
+ * @since 1.4.5.9
+ *
+ * @param (string)     $modulenow Current module.
+ * @param (array|bool) $activate  An array containing the fields related to the sub-module being activated. False if not on this module page.
+ */
+function secupress_preventusercreation_settings_callback( $modulenow, $activate ) {
+	// (De)Activation.
+	if ( false !== $activate && secupress_is_pro() ) {
+		secupress_manage_submodule( $modulenow, 'prevent-user-creation', ! empty( $activate['blacklist-logins_prevent-user-creation'] ) );
 	}
 }
 
