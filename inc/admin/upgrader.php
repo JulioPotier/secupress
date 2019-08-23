@@ -726,3 +726,20 @@ function secupress_hack_changelog() {
 iframe_footer();
 exit;
 }
+if ( ! secupress_is_white_label() ) {
+	add_action( 'admin_notices', 'secupress_display_whats_new' );
+	function secupress_display_whats_new() {
+		if ( ! current_user_can( secupress_get_capability() ) ) {
+			return;
+		}
+		$title    = sprintf( '<strong>' . __( 'What’s new in SecuPress %s', 'secupress' ) . '</strong>', SECUPRESS_VERSION );
+		$readmore = '<a href="https://secupress.me/changelog">' . __( 'Read full changelog on secupress.me', 'secupress' ) . '</a>';
+		$newitems = [
+						__( 'Fix bug firewall machin chose', 'secupress' ),
+						__( 'Better ceci cela machin truc', 'secupress' ),
+						__( 'New feature prevent <a>user creation</a>', 'secupress' ),
+					];
+		$newitems = '<ul><li>• ' . implode( '</li><li>• ', $newitems ) . '</li></ul>';
+		secupress_add_notice( $title . $newitems . $message . $readmore, 'updated', 'new-1410' );
+	}
+}
