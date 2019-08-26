@@ -191,5 +191,5 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 = 1.4.10 =
 
-* 24 July 2019
+* 26 August 2019
 * Nothing special for the 1.4.10 BUT the 1.5.0 will require PHP 5.6 and WordPress 4.9 (actually PHP 5.4 and WordPress 4.0)
