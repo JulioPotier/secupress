@@ -747,7 +747,7 @@ if ( ! secupress_is_white_label() ) {
 		$newitems = [
 						// Change this and only
 						__( 'New Feature: Do not allow User Creation', 'secupress' ),
-						__( 'Fix: Backlist IP didn’t worked as expected.', 'secupress' ),
+						__( 'Fix: Blacklist IP didn’t worked as expected.', 'secupress' ),
 						__( 'Fix: Add a try/catch on shell_exec test to prevent fatal errors.', 'secupress' ),
 						__( 'Improvement: Prevent the plugin to be tagged as malicious.', 'secupress' ),
 					];

@@ -183,7 +183,7 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 * 26 August 2019
 * New Feature#736: Do not allow User Creation
-* Fix#737: Backlist IP didn't worked as expected, fixed now.
+* Fix#737: Blacklist IP didn't worked as expected, fixed now.
 * Fix#733: Add a try/catch on shell_exec test to prevent fatal errors (seems that functions_exists is not enough oO)
 * Improvement#734: Prevent the plugin to be tagged as malicious because of all the "bad words" contained in the code
 

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2019-07-24 10:18+0200\n"
-"PO-Revision-Date: 2019-07-24 10:19+0200\n"
+"POT-Creation-Date: 2019-08-26 11:49+0200\n"
+"PO-Revision-Date: 2019-08-26 11:52+0200\n"
 "Last-Translator: Julio Potier <julio@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -92,9 +92,9 @@ msgstr ""
 #: inc/modules/logs/plugins/inc/php/404-logs/class-secupress-404-log.php:66
 #: inc/modules/sensitive-data/plugins/bad-url-access.php:133
 #: inc/modules/sensitive-data/plugins/bad-url-access.php:153
-#: inc/modules/users-login/callbacks.php:276
-#: inc/modules/users-login/callbacks.php:282
-#: inc/modules/users-login/callbacks.php:288
+#: inc/modules/users-login/callbacks.php:295
+#: inc/modules/users-login/callbacks.php:301
+#: inc/modules/users-login/callbacks.php:307
 #: inc/modules/users-login/plugins/ask-old-password.php:79
 #, php-format
 msgid "%s:"
@@ -1418,6 +1418,33 @@ msgid "(based on %s rating)"
 msgid_plural "(based on %s ratings)"
 msgstr[0] "(basée sur %s vote)"
 msgstr[1] "(basée sur %s votes)"
+
+#: inc/admin/upgrader.php:745
+#, php-format
+msgid "What’s new in SecuPress %s"
+msgstr "Quoi de neuf dans SecuPress %s"
+
+#: inc/admin/upgrader.php:746
+msgid "Read full changelog on secupress.me"
+msgstr "Lire le journal des modification complet sur secupress.me"
+
+#: inc/admin/upgrader.php:749
+msgid "New Feature: Do not allow User Creation"
+msgstr "Nouveauté : Interdire la création d’utilisateurs"
+
+#: inc/admin/upgrader.php:750
+msgid "Fix: Backlist IP didn’t worked as expected."
+msgstr "Fix : La liste des IP bannies ne fonctionnait pas comme attendu."
+
+#: inc/admin/upgrader.php:751
+msgid "Fix: Add a try/catch on shell_exec test to prevent fatal errors."
+msgstr ""
+"Fix : Ajout d’un `try/catch` sur `shell_exec` pour empêcher des erreurs "
+"fatales."
+
+#: inc/admin/upgrader.php:752
+msgid "Improvement: Prevent the plugin to be tagged as malicious."
+msgstr "Amélioration : Empêcher l’extension d’être marquée comme malicieuse."
 
 #: inc/classes/admin/class-secupress-admin-notices.php:247
 #: inc/classes/admin/class-secupress-admin-notices.php:327
@@ -5622,7 +5649,7 @@ msgstr "%1$s %2$s"
 msgid "The temporary file could not be created."
 msgstr "Le fichier temporaire n&rsquo;a pu être créé."
 
-#: inc/functions/ip.php:903
+#: inc/functions/ip.php:902
 #, php-format
 msgid ""
 "Your IP address %1$s has been banned for %2$s minute, please do not retry "
@@ -7883,32 +7910,32 @@ msgstr ""
 "Si vous avez une application mobile, ou tout service lié à votre site web, "
 "vous ne devriez pas désactiver entièrement l’API XML-RPC."
 
-#: inc/modules/users-login/callbacks.php:276
-#: inc/modules/users-login/callbacks.php:282
-#: inc/modules/users-login/callbacks.php:288
+#: inc/modules/users-login/callbacks.php:295
+#: inc/modules/users-login/callbacks.php:301
+#: inc/modules/users-login/callbacks.php:307
 msgid "Move Login"
 msgstr "Déplacer la page de connexion"
 
-#: inc/modules/users-login/callbacks.php:277
+#: inc/modules/users-login/callbacks.php:296
 msgid "Please choose your login URL."
 msgstr "Veuillez choisir votre URL de connexion."
 
-#: inc/modules/users-login/callbacks.php:283
+#: inc/modules/users-login/callbacks.php:302
 #, php-format
 msgid "The slug %s is forbidden."
 msgid_plural "The slugs %s are forbidden."
 msgstr[0] "L’identifiant %s est interdit."
 msgstr[1] "Les identifiants %s sont interdits."
 
-#: inc/modules/users-login/callbacks.php:289
+#: inc/modules/users-login/callbacks.php:308
 msgid "The links can't have the same slugs."
 msgstr "Les liens ne peuvent pas avoir le même identifiants."
 
-#: inc/modules/users-login/callbacks.php:346
+#: inc/modules/users-login/callbacks.php:365
 msgid "New login page"
 msgstr "Nouvelle page de connexion"
 
-#: inc/modules/users-login/callbacks.php:348
+#: inc/modules/users-login/callbacks.php:367
 msgid "New registration page"
 msgstr "Nouvelle page d’inscription"
 
@@ -8051,6 +8078,20 @@ msgstr "Oui, utiliser une liste noire de noms d’utilisateurs"
 #: inc/modules/users-login/settings/blacklist-logins.php:24
 msgid "Yes, stop user and author enumeration"
 msgstr "Oui, stopper l’énumération des utilisateurs et auteurs"
+
+#: inc/modules/users-login/settings/blacklist-logins.php:32
+msgid "You cannot prevent user creation since your subscriptions are open."
+msgstr ""
+"Vous ne pouvez pas empêcher la création d’utilisateurs si les inscriptions "
+"sont ouvertes."
+
+#: inc/modules/users-login/settings/blacklist-logins.php:37
+msgid "Prevent User Creation"
+msgstr "Empêcher la création d’utilisateurs"
+
+#: inc/modules/users-login/settings/blacklist-logins.php:43
+msgid "Yes, prevent attacks to exploit user creation"
+msgstr "Oui, empêcher les attaques qui créent des utilisateurs"
 
 #: inc/modules/users-login/settings/double-auth.php:8
 msgid ""
@@ -8951,9 +8992,6 @@ msgstr ""
 
 #~ msgid "account"
 #~ msgstr "fr/mon-compte"
-
-#~ msgid "on secupress.me"
-#~ msgstr "sur secupress.me"
 
 #~ msgid "Open My Account"
 #~ msgstr "Mon compte"
