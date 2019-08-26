@@ -726,3 +726,22 @@ function secupress_hack_changelog() {
 iframe_footer();
 exit;
 }
+if ( ! secupress_is_white_label() ) {
+	add_action( 'admin_notices', 'secupress_display_whats_new' );
+	function secupress_display_whats_new() {
+		if ( ! current_user_can( secupress_get_capability() ) ) {
+			return;
+		}
+		$title    = sprintf( '<strong>' . __( 'What’s new in SecuPress %s', 'secupress' ) . '</strong>', SECUPRESS_VERSION );
+		$readmore = '<a href="https://secupress.me/changelog">' . __( 'Read full changelog on secupress.me', 'secupress' ) . '</a>';
+		$newitems = [
+						// Change this and only
+						__( 'New Feature: Do not allow User Creation', 'secupress' ),
+						__( 'Fix: Backlist IP didn’t worked as expected.', 'secupress' ),
+						__( 'Fix: Add a try/catch on shell_exec test to prevent fatal errors.', 'secupress' ),
+						__( 'Improvement: Prevent the plugin to be tagged as malicious.', 'secupress' ),
+					];
+		$newitems = '<ul><li>• ' . implode( '</li><li>• ', $newitems ) . '</li></ul>';
+		secupress_add_notice( $title . $newitems . $message . $readmore, 'updated', 'new-1410' );
+	}
+}
