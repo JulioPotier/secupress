@@ -726,8 +726,18 @@ function secupress_hack_changelog() {
 iframe_footer();
 exit;
 }
+
 if ( ! secupress_is_white_label() ) {
 	add_action( 'admin_notices', 'secupress_display_whats_new' );
+	/**
+	 * Display a "what's new" notice when not in WhiteLabel and user has the correct capa
+	 *
+	 * @since 1.4.10
+	 * @author Julio Potier
+	 *
+	 * @hook admin_notices
+	 * @return (void)
+	 **/
 	function secupress_display_whats_new() {
 		if ( ! current_user_can( secupress_get_capability() ) ) {
 			return;
