@@ -823,8 +823,7 @@ function secupress_is_ip_in_range( $ip, $ips ) {
 
 				return secupress_ipv6_numeric( $ip ) >= secupress_ipv6_numeric( $first_ip ) && secupress_ipv6_numeric( $ip ) <= secupress_ipv6_numeric( $last_ip );
 			}
-			return false;
-		} elseif ( secupress_ip_is_valid( $ip, true , FILTER_FLAG_IPV6 ) && secupress_ip_is_valid( $_ips, true , FILTER_FLAG_IPV6 ) ) {
+		} elseif ( secupress_ip_is_valid( $ip, true, FILTER_FLAG_IPV6 ) && secupress_ip_is_valid( $_ips, true, FILTER_FLAG_IPV6 ) ) {
 			if ( strpos( $_ips, '::-' ) ) {
 				$temp     = explode( '::-', $_ips );
 				$first_ip = $temp[0] . str_repeat( ':0', 7 - substr_count( $temp[0], ':' ) );
@@ -855,12 +854,12 @@ function secupress_is_ip_in_range( $ip, $ips ) {
 			if ( strpos( $_ips, '*' ) ) {
 				$_ips     = str_replace( '*', '', $_ips );
 				$first_ip = secupress_get_full_ipv6( $_ips, '0' );
-				$last_ip  = secupress_get_full_ipv6( $_ips, 'ffff' );;
+				$last_ip  = secupress_get_full_ipv6( $_ips, 'ffff' );
 				return secupress_ipv6_numeric( $ip ) >= secupress_ipv6_numeric( $first_ip ) && secupress_ipv6_numeric( $ip ) <= secupress_ipv6_numeric( $last_ip );
 			}
-			return false;
 		}
 	}
+	return false;
 }
 
 /**
