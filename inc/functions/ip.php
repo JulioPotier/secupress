@@ -961,7 +961,11 @@ function secupress_check_bot_ip( $test = false ) {
 	if ( secupress_is_function_disabled( $v1 . $v2 . $v3 ) ) {
 		$hostname_fork = false;
 	} else {
-		$hostname_fork  = `host $ip`;
+		try {
+			$hostname_fork  = `host $ip`;
+		} catch (Exception $e) {
+			$hostname_fork = false;
+		}
 	}
 	$hostname       = is_string( $hostname_addr ) && ! secupress_ip_is_valid( $hostname_addr ) ? $hostname_addr : $hostname_fork;
 	$hostname       = is_string( $hostname ) ? explode( ' ', $hostname ) : [];
