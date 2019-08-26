@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2019-08-26 11:49+0200\n"
-"PO-Revision-Date: 2019-08-26 11:52+0200\n"
+"POT-Creation-Date: 2019-08-26 11:53+0200\n"
+"PO-Revision-Date: 2019-08-26 11:53+0200\n"
 "Last-Translator: Julio Potier <julio@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -1433,7 +1433,7 @@ msgid "New Feature: Do not allow User Creation"
 msgstr "Nouveauté : Interdire la création d’utilisateurs"
 
 #: inc/admin/upgrader.php:750
-msgid "Fix: Backlist IP didn’t worked as expected."
+msgid "Fix: Blacklist IP didn’t worked as expected."
 msgstr "Fix : La liste des IP bannies ne fonctionnait pas comme attendu."
 
 #: inc/admin/upgrader.php:751
