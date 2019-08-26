@@ -735,9 +735,11 @@ if ( ! secupress_is_white_label() ) {
 		$title    = sprintf( '<strong>' . __( 'What’s new in SecuPress %s', 'secupress' ) . '</strong>', SECUPRESS_VERSION );
 		$readmore = '<a href="https://secupress.me/changelog">' . __( 'Read full changelog on secupress.me', 'secupress' ) . '</a>';
 		$newitems = [
-						__( 'Fix bug firewall machin chose', 'secupress' ),
-						__( 'Better ceci cela machin truc', 'secupress' ),
-						__( 'New feature prevent <a>user creation</a>', 'secupress' ),
+						// Change this and only
+						__( 'New Feature: Do not allow User Creation', 'secupress' ),
+						__( 'Fix: Backlist IP didn’t worked as expected.', 'secupress' ),
+						__( 'Fix: Add a try/catch on shell_exec test to prevent fatal errors.', 'secupress' ),
+						__( 'Improvement: Prevent the plugin to be tagged as malicious.', 'secupress' ),
 					];
 		$newitems = '<ul><li>• ' . implode( '</li><li>• ', $newitems ) . '</li></ul>';
 		secupress_add_notice( $title . $newitems . $message . $readmore, 'updated', 'new-1410' );
