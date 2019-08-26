@@ -4,7 +4,7 @@ Tags: wordpress security, secure, security plugin, security, malware
 Requires at least: 4.0
 Tested up to: 5.3
 Requires PHP: 5.4
-Stable tag: 1.4.9.3
+Stable tag: 1.4.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,35 +179,17 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 == Changelog ==
 
-= 1.4.9.3 =
+= 1.4.10 =
 
-* 24 July 2019
-* SF Move Login is not allowed anymore as a replacement plugin for our Move Login module
-* A new filter `secupress.move-login.override-plugins` is not there to add your plugin if needed.
-* Fix#729: Improve the detection of bad contents
-* Fix#731: Site Health page is on error is no scanner has been done yet (of course !)
-* Fix#732: Some menus links could be modified by SecuPress
-* Fix#536: Translations in pro were having "secupress" domain instead of "secupress-pro"…
-* Security Fix: Move Login will not display the new login page in an certain exploit (see secupress.me blog, related to "wps hide login" flaws)
+* 26 August 2019
+* New Feature#736: Do not allow User Creation
+* Fix#737: Backlist IP didn't worked as expected, fixed now.
+* Fix#733: Add a try/catch on shell_exec test to prevent fatal errors (seems that functions_exists is not enough oO)
+* Improvement#734: Prevent the plugin to be tagged as malicious because of all the "bad words" contained in the code
 
 == Upgrade Notice ==
 
-= 1.4.9.3 =
+= 1.4.10 =
 
 * 24 July 2019
-* Nothing special for the 1.4.9.3 BUT the 1.5.0 will require PHP 5.6 and WordPress 4.9 (actually PHP 5.4 and WordPress 4.0)
-
-= 1.4.9.2 =
-
-* 21 June 2019
-* Nothing special for the 1.4.9.2 BUT the 1.5.0 will require PHP 5.6 and WordPress 4.9 (actually PHP 5.4 and WordPress 4.0)
-
-= 1.4.9.1 =
-
-* 18 June 2019
-* Nothing special for the 1.4.9.1 BUT the 1.5.0 will require PHP 5.6 and WordPress 4.9 (actually PHP 5.4 and WordPress 4.0)
-
-= 1.4.9 =
-
-* 17 June 2019
-* Nothing special for the 1.4.9 BUT the 1.5.0 will require PHP 5.6 and WordPress 4.9 (actually PHP 5.4 and WordPress 4.0)
+* Nothing special for the 1.4.10 BUT the 1.5.0 will require PHP 5.6 and WordPress 4.9 (actually PHP 5.4 and WordPress 4.0)
