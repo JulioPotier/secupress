@@ -752,6 +752,6 @@ if ( ! secupress_is_white_label() ) {
 						__( 'Improvement: Prevent the plugin to be tagged as malicious.', 'secupress' ),
 					];
 		$newitems = '<ul><li>• ' . implode( '</li><li>• ', $newitems ) . '</li></ul>';
-		secupress_add_notice( $title . $newitems . $message . $readmore, 'updated', 'new-1410' );
+		secupress_add_notice( $title . $newitems . $readmore, 'updated', 'new-1410' );
 	}
 }
