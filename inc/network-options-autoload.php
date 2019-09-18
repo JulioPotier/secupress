@@ -122,7 +122,7 @@ function secupress_get_global_network_option_names_for_autoload() {
 secupress_load_network_options( secupress_get_global_network_option_names_for_autoload() );
 
 
-add_action( 'secupress.plugins.loaded', 'secupress_load_plugins_network_options', 0 );
+add_action( 'secupress.plugins.loaded', 'secupress_load_plugins_network_options', 5 );
 /**
  * Autoload some options/transients after submodules are included.
  *
