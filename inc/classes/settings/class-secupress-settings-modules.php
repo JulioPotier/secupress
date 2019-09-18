@@ -469,7 +469,6 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		$ban_ips            = get_site_option( SECUPRESS_BAN_IP );
 		$ban_ips            = is_array( $ban_ips ) ? $ban_ips : [];
 		$offset             = get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;
-		$in_ten_years       = time() + YEAR_IN_SECONDS * 10;
 		$page_url           = secupress_admin_url( 'modules', 'logs' );
 		$referer_arg        = '&_wp_http_referer=' . urlencode( esc_url_raw( $page_url ) );
 		$is_search          = false;
@@ -566,7 +565,6 @@ class SecuPress_Settings_Modules extends SecuPress_Settings {
 		$ban_ips            = get_site_option( SECUPRESS_WHITE_IP );
 		$ban_ips            = is_array( $ban_ips ) ? $ban_ips : [];
 		$offset             = get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;
-		$in_ten_years       = time() + YEAR_IN_SECONDS * 10;
 		$page_url           = secupress_admin_url( 'modules', 'logs' );
 		$referer_arg        = '&_wp_http_referer=' . urlencode( esc_url_raw( $page_url ) );
 		$is_search          = false;

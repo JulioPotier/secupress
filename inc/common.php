@@ -74,7 +74,6 @@ function secupress_check_ban_ips() {
 			$title = ! empty( $unban_atts['title'] ) ? $unban_atts['title'] : ( '403 ' . get_status_header_desc( 403 ) );
 
 			if ( $unban_atts['display_form'] ) {
-				$in_ten_years = time() + YEAR_IN_SECONDS * 10;
 				$time_ban     = 0;
 				$error        = $unban_atts['message'];
 				$content      = secupress_check_ban_ips_form( compact( 'ip', 'time_ban', 'error' ) );
