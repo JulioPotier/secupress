@@ -324,8 +324,13 @@ function secupress_global_settings_activate_pro_license( $new_values, $old_value
 function secupress_global_settings_api_request_succeeded( $response ) {
 
 	if ( is_wp_error( $response ) ) {
+		$listMessages = '';
+		foreach($response->get_error_messages() as $message) {
+			$listMessages = $listMessages . ' - ' . $message;
+		}
+
 		// The request couldn't be sent.
-		secupress_add_settings_error( 'general', 'request_error', secupress_global_settings_pro_license_activation_error_message( 'request_error' ) );
+		secupress_add_settings_error( 'general', 'request_error', secupress_global_settings_pro_license_activation_error_message( 'request_error' ) . listMessages);
 		return false;
 	}
 
