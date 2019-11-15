@@ -899,6 +899,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	protected function set_action_criticity() {
 		switch ( $this->target ) {
 			case 'secupress.block':
+			case 'secupress.ban.ip_banned':
 				$this->critic = 'high';
 				break;
 			default:
