@@ -18,6 +18,7 @@ Protect your WordPress with malware scans; block bots & suspicious IPs. Get a co
 
 **What’s the difference between free and pro version?**
 If you are proactive, our free WordPress security plugin is a great choice! No time to activate weekly scans? Then [SecuPress pro](https://secupress.me/) is the way to go. Our plugin takes care of everything with automated tasks.
+[](http://coderisk.com/wp/plugin/secupress/RIPS-VuMwMBsSXj)
 
 = Here are some of our most popular features: =
 
