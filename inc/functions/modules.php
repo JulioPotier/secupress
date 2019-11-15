@@ -268,8 +268,11 @@ function secupress_activate_submodule( $module, $submodule, $incompatible_submod
 			foreach ( $file_path as $path ) {
 				require_once( $path );
 			}
+		} else {
+			if ( file_exists( $file_path ) ) {
+				require_once( $file_path );
+			}
 		}
-
 		secupress_add_module_notice( $module, $submodule, 'activation' );
 	}
 
