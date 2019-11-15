@@ -317,32 +317,6 @@ function secupress_move_login_login_to_action( $link, $action ) {
 	return $link;
 }
 
-/*
-524
-/app/public/wp-content/plugins/secupress/inc/modules/users-login/plugins/move-login.php:307:string 'https://wpsolo.fr/lolog?action=logout&amp;_wpnonce=7eede95f7b' (length=61)
-/app/public/wp-content/plugins/secupress/inc/modules/users-login/plugins/move-login.php:308:string 'logout' (length=6)
-/app/public/wp-content/plugins/secupress/inc/modules/users-login/plugins/move-login.php:310:
-array (size=5)
-  'login' => string 'lolog' (length=5)
-  'register' => string 'register' (length=8)
-  'postpass' => string 'postpass' (length=8)
-  'passwordless_autologin' => string 'passwordless_autologin' (length=22)
-  'confirmaction' => string 'confirmaction' (length=13)
-/app/public/wp-content/plugins/secupress/inc/modules/users-login/plugins/move-login.php:334:string 'https://wpsolo.fr/lolog?action=logout&amp;_wpnonce=7eede95f7b' (length=61)
-
-53
-/app/public/wp-content/plugins/secupress/inc/modules/users-login/plugins/move-login.php:307:string 'https://wpsolo.fr/lolog?_wpnonce=7eede95f7b' (length=43)
-/app/public/wp-content/plugins/secupress/inc/modules/users-login/plugins/move-login.php:308:string 'logout' (length=6)
-/app/public/wp-content/plugins/secupress/inc/modules/users-login/plugins/move-login.php:310:
-array (size=5)
-  'login' => string 'lolog' (length=5)
-  'register' => string 'register' (length=8)
-  'postpass' => string 'postpass' (length=8)
-  'passwordless_autologin' => string 'passwordless_autologin' (length=22)
-  'confirmaction' => string 'confirmaction' (length=13)
-/app/public/wp-content/plugins/secupress/inc/modules/users-login/plugins/move-login.php:334:string 'https://wpsolo.fr/lolog?_wpnonce=7eede95f7b' (length=43)
-*/
-
 add_action( 'login_head', 'secupress_hack_global_error' );
 /**
  * Prevent to display a '404' login error message from WP
