@@ -396,6 +396,10 @@ function secupress_activate_submodule_silently( $module, $submodule ) {
 		foreach ( $file_path as $path ) {
 			require_once( $path );
 		}
+	} else {
+		if ( file_exists( $file_path ) ) {
+			require_once( $file_path );
+		}
 	}
 
 	secupress_delete_site_transient( SECUPRESS_ACTIVE_SUBMODULES );
@@ -546,7 +550,7 @@ function secupress_get_module_data( $module, $submodule ) {
 
 	$file_path = secupress_get_submodule_file_path( $module, $submodule );
 
-	if ( $file_path ) {
+	if ( ! is_array( $file_path ) ) {
 		return get_file_data( $file_path, $default_headers, 'module' );
 	}
 
