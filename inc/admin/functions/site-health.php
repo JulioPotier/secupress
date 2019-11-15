@@ -233,7 +233,18 @@ function secupress_get_test__global( $option_name ) {
 	$current_test    = $class_name::get_instance();
 	$messages        = $current_test::get_messages();
 	if ( ! isset( $scanners[ $option_name ] ) ) {
-		return;
+		$result = [
+			'label'       => strip_tags( $current_test->title ),
+			'status'      => 'good',
+			'badge'       => [
+				'label'   => __( 'Security' ),
+				'color'   => 'blue',
+				],
+			'description' => '',
+			'actions'     => '',
+			'test'        => 'secupress_get_test__' . $option_name,
+		];
+		return $result;
 	}
 	$message         = secupress_format_message( $scanners[ $option_name ]['msgs'], $class_name_part );
 	$message_id      = key( $scanners[ $option_name ]['msgs'] );
