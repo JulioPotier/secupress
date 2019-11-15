@@ -305,32 +305,43 @@ function secupress_move_login_set_path( $path ) {
  */
 function secupress_move_login_login_to_action( $link, $action ) {
 	$slugs = secupress_move_login_get_slugs();
-	$need_action_param = false;
-
 	if ( isset( $slugs[ $action ] ) ) {
 		$slug = $slugs[ $action ];
+		$link = str_replace( array( '/' . $slugs['login'], '?amp;' ), array( '/' . $slug, '?' ), remove_query_arg( 'action', $link ) );
 	} else {
 		$slug = $slugs['login'];
-
-		if ( false === has_filter( 'login_form_' . $action ) ) {
-			$action = 'login';
-		} else {
-			// In case of a custom action.
-			$need_action_param = true;
-		}
 	}
 
-	if ( $link && false === strpos( $link, '/' . $slug ) ) {
-		$link = str_replace( array( '/' . $slugs['login'], '?amp;' ), array( '/' . $slug, '?' ), remove_query_arg( 'action', $link ) );
-
-		if ( $need_action_param ) {
-			// In case of a custom action, shouldn't happen.
-			$link = add_query_arg( 'action', $action, $link );
-		}
-	}
+	$link = add_query_arg( 'action', $action, $link );
 
 	return $link;
 }
+
+/*
+524
+/app/public/wp-content/plugins/secupress/inc/modules/users-login/plugins/move-login.php:307:string 'https://wpsolo.fr/lolog?action=logout&amp;_wpnonce=7eede95f7b' (length=61)
+/app/public/wp-content/plugins/secupress/inc/modules/users-login/plugins/move-login.php:308:string 'logout' (length=6)
+/app/public/wp-content/plugins/secupress/inc/modules/users-login/plugins/move-login.php:310:
+array (size=5)
+  'login' => string 'lolog' (length=5)
+  'register' => string 'register' (length=8)
+  'postpass' => string 'postpass' (length=8)
+  'passwordless_autologin' => string 'passwordless_autologin' (length=22)
+  'confirmaction' => string 'confirmaction' (length=13)
+/app/public/wp-content/plugins/secupress/inc/modules/users-login/plugins/move-login.php:334:string 'https://wpsolo.fr/lolog?action=logout&amp;_wpnonce=7eede95f7b' (length=61)
+
+53
+/app/public/wp-content/plugins/secupress/inc/modules/users-login/plugins/move-login.php:307:string 'https://wpsolo.fr/lolog?_wpnonce=7eede95f7b' (length=43)
+/app/public/wp-content/plugins/secupress/inc/modules/users-login/plugins/move-login.php:308:string 'logout' (length=6)
+/app/public/wp-content/plugins/secupress/inc/modules/users-login/plugins/move-login.php:310:
+array (size=5)
+  'login' => string 'lolog' (length=5)
+  'register' => string 'register' (length=8)
+  'postpass' => string 'postpass' (length=8)
+  'passwordless_autologin' => string 'passwordless_autologin' (length=22)
+  'confirmaction' => string 'confirmaction' (length=13)
+/app/public/wp-content/plugins/secupress/inc/modules/users-login/plugins/move-login.php:334:string 'https://wpsolo.fr/lolog?_wpnonce=7eede95f7b' (length=43)
+*/
 
 add_action( 'login_head', 'secupress_hack_global_error' );
 /**
