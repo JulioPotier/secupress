@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2019-08-26 11:53+0200\n"
-"PO-Revision-Date: 2019-08-26 11:53+0200\n"
+"POT-Creation-Date: 2019-11-18 11:36+0100\n"
+"PO-Revision-Date: 2019-11-18 11:36+0100\n"
 "Last-Translator: Julio Potier <julio@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -32,7 +32,7 @@ msgstr ""
 #: inc/classes/scanners/class-secupress-scan-discloses.php:102
 #: inc/classes/scanners/class-secupress-scan-php-disclosure.php:91
 #: inc/classes/scanners/class-secupress-scan-readme-discloses.php:96
-#: inc/functions/modules.php:655
+#: inc/functions/modules.php:662
 #, php-format
 msgid ""
 "Your %1$s file is not writable. Please add the following lines at the "
@@ -84,10 +84,10 @@ msgstr ""
 #: inc/classes/common/class-secupress-log.php:294
 #: inc/classes/common/class-secupress-logs.php:1391
 #: inc/classes/common/class-secupress-logs.php:1395
-#: inc/functions/deprecated.php:125 inc/functions/modules.php:573
-#: inc/functions/modules.php:587 inc/functions/modules.php:600
-#: inc/functions/modules.php:652 inc/functions/modules.php:680
-#: inc/functions/modules.php:710 inc/functions/modules.php:724
+#: inc/functions/deprecated.php:125 inc/functions/modules.php:580
+#: inc/functions/modules.php:594 inc/functions/modules.php:607
+#: inc/functions/modules.php:659 inc/functions/modules.php:687
+#: inc/functions/modules.php:717 inc/functions/modules.php:731
 #: inc/modules/logs/plugins/inc/php/404-logs/class-secupress-404-log.php:65
 #: inc/modules/logs/plugins/inc/php/404-logs/class-secupress-404-log.php:66
 #: inc/modules/sensitive-data/plugins/bad-url-access.php:133
@@ -121,7 +121,7 @@ msgstr ""
 "manuellement. Merci de supprimer tous les nœuds avec %2$s."
 
 #. Translators: 1 and 2 are small parts of code, 3 is a file name.
-#: inc/activation.php:408 inc/functions/modules.php:603
+#: inc/activation.php:408 inc/functions/modules.php:610
 #, php-format
 msgid ""
 "Your server runs <strong>Nginx</strong>. You have to edit the configuration "
@@ -207,7 +207,7 @@ msgstr[0] "%d problème"
 msgstr[1] "%d problèmes"
 
 #: inc/admin/ajax-post-callbacks.php:186 inc/admin/ajax-post-callbacks.php:302
-#: inc/admin/ajax-post-callbacks.php:393 inc/admin/ajax-post-callbacks.php:530
+#: inc/admin/ajax-post-callbacks.php:393 inc/admin/ajax-post-callbacks.php:528
 msgid "IP address not provided."
 msgstr "Adresse IP non fournie."
 
@@ -258,57 +258,57 @@ msgstr "Vous ne pouvez pas bannir votre propre adresse IP."
 msgid "This IP is already banned."
 msgstr "Cette adresse IP est déjà en liste noire."
 
-#: inc/admin/ajax-post-callbacks.php:479
-#: inc/classes/settings/class-secupress-settings-modules.php:528
+#: inc/admin/ajax-post-callbacks.php:477
+#: inc/classes/settings/class-secupress-settings-modules.php:527
 msgid "M jS Y"
 msgstr "j M Y"
 
-#: inc/admin/ajax-post-callbacks.php:479
-#: inc/classes/settings/class-secupress-settings-modules.php:528
+#: inc/admin/ajax-post-callbacks.php:477
+#: inc/classes/settings/class-secupress-settings-modules.php:527
 msgid "G:i"
 msgstr "G:i"
 
-#: inc/admin/ajax-post-callbacks.php:484
+#: inc/admin/ajax-post-callbacks.php:482
 #, php-format
 msgid "The IP address %s has been banned."
 msgstr "L’adresse IP %s a été bannie."
 
-#: inc/admin/ajax-post-callbacks.php:504
+#: inc/admin/ajax-post-callbacks.php:502
 msgid "The IP address list has been banned."
 msgstr "La liste d’adresses IP est maintenant en liste noire."
 
-#: inc/admin/ajax-post-callbacks.php:510
+#: inc/admin/ajax-post-callbacks.php:508
 msgid "Some of the IP address list has been banned."
 msgstr "Certaines des adresses IP sont maintenant en liste noire."
 
-#: inc/admin/ajax-post-callbacks.php:547
+#: inc/admin/ajax-post-callbacks.php:545
 #, php-format
 msgid "The IP address %s is not banned."
 msgstr "L’adresse IP %s n’est pas bannie."
 
-#: inc/admin/ajax-post-callbacks.php:572
+#: inc/admin/ajax-post-callbacks.php:570
 #, php-format
 msgid "The IP address %s has been unbanned."
 msgstr "L’adresse IP %s a été débannie."
 
-#: inc/admin/ajax-post-callbacks.php:602
+#: inc/admin/ajax-post-callbacks.php:600
 msgid "All IP addresses have been unbanned."
 msgstr "Toutes les adresses IP ont été débannies."
 
-#: inc/admin/ajax-post-callbacks.php:636
+#: inc/admin/ajax-post-callbacks.php:634
 msgid "Module settings reset."
 msgstr "Réglages du module réinitialisés."
 
-#: inc/admin/ajax-post-callbacks.php:728
+#: inc/admin/ajax-post-callbacks.php:726
 #: inc/modules/users-login/settings/move-login.php:62
 msgid "Choose your login URL"
 msgstr "Choisissez votre URL de connexion"
 
-#: inc/admin/ajax-post-callbacks.php:759
+#: inc/admin/ajax-post-callbacks.php:757
 msgid "###SITENAME### – Unlock an administrator"
 msgstr "###SITENAME### – Débloquer un administrateur"
 
-#: inc/admin/ajax-post-callbacks.php:760
+#: inc/admin/ajax-post-callbacks.php:758
 #, php-format
 msgid ""
 "Hello %1$s, it seems you are locked out from your website ###SITENAME###."
@@ -320,26 +320,26 @@ msgstr ""
 "connexion ou désactiver le module de déplacement de page.<br><br>%2$s<br>"
 "%3$s<br><br>Bonne journée !"
 
-#: inc/admin/ajax-post-callbacks.php:763
+#: inc/admin/ajax-post-callbacks.php:761
 msgid "(Valid 1 day)"
 msgstr "(Valide 1 jour)"
 
-#: inc/admin/ajax-post-callbacks.php:766
+#: inc/admin/ajax-post-callbacks.php:764
 msgid "Email sent, check your mailbox."
 msgstr "Email envoyé, vérifiez votre boite mail."
 
-#: inc/admin/ajax-post-callbacks.php:766
+#: inc/admin/ajax-post-callbacks.php:764
 msgid "Email not sent, please contact the support."
 msgstr "Email non envoyé, merci de contacter le support."
 
-#: inc/admin/ajax-post-callbacks.php:766 inc/modules/alerts/tools.php:14
+#: inc/admin/ajax-post-callbacks.php:764 inc/modules/alerts/tools.php:14
 #: inc/modules/schedules/settings/schedules-backups.php:45
 #: inc/modules/schedules/settings/schedules-file-monitoring.php:44
 #: inc/modules/schedules/settings/schedules-scan.php:44
 msgid "Email"
 msgstr "Email"
 
-#: inc/admin/ajax-post-callbacks.php:810
+#: inc/admin/ajax-post-callbacks.php:808
 msgid "All modules settings reset"
 msgstr "Tous les réglages ont été réinitialisés"
 
@@ -464,24 +464,25 @@ msgstr ""
 msgid "Open the %s settings page"
 msgstr "Ouvrir les réglages du plugin %s"
 
-#: inc/admin/functions/site-health.php:244
+#: inc/admin/functions/site-health.php:240
+#: inc/admin/functions/site-health.php:255
 msgid "Security"
 msgstr "Sécurité"
 
-#: inc/admin/functions/site-health.php:251
+#: inc/admin/functions/site-health.php:262
 msgid "Open the scanners"
 msgstr "Ouvrir les scanners"
 
-#: inc/admin/functions/site-health.php:253 inc/admin/scanner-step-3.php:269
+#: inc/admin/functions/site-health.php:264 inc/admin/scanner-step-3.php:269
 msgid "Read the documentation"
 msgstr "Lire la documentation"
 
-#: inc/admin/functions/site-health.php:254
+#: inc/admin/functions/site-health.php:265
 #: inc/classes/scanners/class-secupress-scan-wporg.php:77
 msgid "(opens in a new tab)"
 msgstr "(dans un nouvel onglet)"
 
-#: inc/admin/functions/site-health.php:270
+#: inc/admin/functions/site-health.php:281
 #, php-format
 msgid ""
 "<hr><strong>No status yet, please run the <a href=\"%s\">%s scanners</a> "
@@ -828,8 +829,8 @@ msgstr "Comment corriger ce problème"
 #: inc/classes/admin/class-secupress-admin-pro-upgrade.php:157
 #: inc/classes/admin/class-secupress-admin-pro-upgrade.php:178
 #: inc/classes/admin/class-secupress-admin-support.php:408
-#: inc/modules/welcome/callbacks.php:376 inc/modules/welcome/callbacks.php:377
-#: inc/modules/welcome/callbacks.php:531
+#: inc/modules/welcome/callbacks.php:381 inc/modules/welcome/callbacks.php:382
+#: inc/modules/welcome/callbacks.php:536
 msgid "Open in a new window."
 msgstr "Ouvrir dans une nouvelle fenêtre."
 
@@ -1055,8 +1056,8 @@ msgid "Empty whitelist."
 msgstr "Liste blanche vide"
 
 #: inc/admin/settings.php:141
-#: inc/classes/settings/class-secupress-settings-modules.php:497
-#: inc/classes/settings/class-secupress-settings-modules.php:594
+#: inc/classes/settings/class-secupress-settings-modules.php:496
+#: inc/classes/settings/class-secupress-settings-modules.php:592
 msgid "IP not found."
 msgstr "Adresse IP no trouvée."
 
@@ -1491,7 +1492,7 @@ msgstr ""
 
 #: inc/classes/admin/class-secupress-admin-pro-upgrade.php:157
 #: inc/classes/admin/class-secupress-admin-pro-upgrade.php:178
-#: inc/modules/welcome/callbacks.php:531
+#: inc/modules/welcome/callbacks.php:536
 msgid "SecuPress account"
 msgstr "Compte SecuPress"
 
@@ -2654,7 +2655,7 @@ msgstr ""
 #: inc/classes/scanners/class-secupress-scan-discloses.php:104
 #: inc/classes/scanners/class-secupress-scan-php-disclosure.php:93
 #: inc/classes/scanners/class-secupress-scan-readme-discloses.php:98
-#: inc/functions/modules.php:694
+#: inc/functions/modules.php:701
 #, php-format
 msgid ""
 "Your %1$s file is not writable. Please add the following lines inside the "
@@ -3612,7 +3613,7 @@ msgstr ""
 
 #. Translators: 1 is a file name, 2 is a tag name, 3 is a folder path (kind of), 4 is some code.
 #: inc/classes/scanners/class-secupress-scan-directory-listing.php:95
-#: inc/functions/modules.php:685
+#: inc/functions/modules.php:692
 #, php-format
 msgid ""
 "Your %1$s file is not writable. Please remove any previous %2$s tag and add "
@@ -5174,16 +5175,16 @@ msgstr "En savoir plus sur SecuPress Pro"
 msgid "This feature is available in SecuPress Pro"
 msgstr "Cette fonctionnalité est disponible avec SecuPress Pro"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:477
+#: inc/classes/settings/class-secupress-settings-modules.php:476
 msgid "Empty blacklist"
 msgstr "Liste noire vide"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:481
+#: inc/classes/settings/class-secupress-settings-modules.php:480
 msgid "Specify an IP to ban."
 msgstr "Spécifier une adresse IP à bannir."
 
-#: inc/classes/settings/class-secupress-settings-modules.php:482
-#: inc/classes/settings/class-secupress-settings-modules.php:579
+#: inc/classes/settings/class-secupress-settings-modules.php:481
+#: inc/classes/settings/class-secupress-settings-modules.php:577
 msgid ""
 "You can use <a href=\"https://docs.secupress.me/article/161-ip-range\">IP "
 "ranges</a>."
@@ -5191,95 +5192,95 @@ msgstr ""
 "Vous pouvez utiliser des <a href=\"https://fr.docs.secupress.me/article/160-"
 "ip-range\">ranges d’IP</a>."
 
-#: inc/classes/settings/class-secupress-settings-modules.php:484
+#: inc/classes/settings/class-secupress-settings-modules.php:483
 msgid "Ban IP"
 msgstr "Bannir une adresse IP"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:503
-#: inc/classes/settings/class-secupress-settings-modules.php:505
+#: inc/classes/settings/class-secupress-settings-modules.php:502
+#: inc/classes/settings/class-secupress-settings-modules.php:504
+#: inc/classes/settings/class-secupress-settings-modules.php:598
 #: inc/classes/settings/class-secupress-settings-modules.php:600
-#: inc/classes/settings/class-secupress-settings-modules.php:602
 msgid "Search IP"
 msgstr "Chercher une adresse IP"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:505
-#: inc/classes/settings/class-secupress-settings-modules.php:602
+#: inc/classes/settings/class-secupress-settings-modules.php:504
+#: inc/classes/settings/class-secupress-settings-modules.php:600
 msgid "Searching..."
 msgstr "Recherche&hellip;"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:507
-#: inc/classes/settings/class-secupress-settings-modules.php:604
+#: inc/classes/settings/class-secupress-settings-modules.php:506
+#: inc/classes/settings/class-secupress-settings-modules.php:602
 msgid "Cancel search"
 msgstr "Annuler"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:520
-#: inc/classes/settings/class-secupress-settings-modules.php:617
+#: inc/classes/settings/class-secupress-settings-modules.php:519
+#: inc/classes/settings/class-secupress-settings-modules.php:615
 #, php-format
 msgid "Last %1$s/%2$s whitelisted IPs:"
 msgstr "Dernières %1$s/%2$s IP en liste blanche :"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:532
+#: inc/classes/settings/class-secupress-settings-modules.php:531
 #, php-format
 msgid "<strong>%s</strong> <em>(Banned until %s)</em>"
 msgstr "<strong>%s</strong> <em>(Bannie jusqu’au %s)</em>"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:533
-#: inc/classes/settings/class-secupress-settings-modules.php:628
+#: inc/classes/settings/class-secupress-settings-modules.php:532
+#: inc/classes/settings/class-secupress-settings-modules.php:626
 msgid "Remove"
 msgstr "Supprimer"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:537
-#: inc/classes/settings/class-secupress-settings-modules.php:632
+#: inc/classes/settings/class-secupress-settings-modules.php:536
+#: inc/classes/settings/class-secupress-settings-modules.php:630
 msgid "Do a search to find more."
 msgstr "Faites une recherche pour en trouver plus."
 
-#: inc/classes/settings/class-secupress-settings-modules.php:549
-#: inc/classes/settings/class-secupress-settings-modules.php:644
+#: inc/classes/settings/class-secupress-settings-modules.php:548
+#: inc/classes/settings/class-secupress-settings-modules.php:642
 msgid "Clearing..."
 msgstr "Suppression&hellip;"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:549
-#: inc/classes/settings/class-secupress-settings-modules.php:644
+#: inc/classes/settings/class-secupress-settings-modules.php:548
+#: inc/classes/settings/class-secupress-settings-modules.php:642
 msgid "Clear all IPs"
 msgstr "Vider toutes les adresses IP"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:552
+#: inc/classes/settings/class-secupress-settings-modules.php:551
 msgid "Banishing..."
 msgstr "Bannissement&hellip;"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:552
+#: inc/classes/settings/class-secupress-settings-modules.php:551
 msgid "Blacklist"
 msgstr "Liste noire"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:574
+#: inc/classes/settings/class-secupress-settings-modules.php:572
 msgid "Empty whitelist"
 msgstr "Liste blanche vide"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:578
+#: inc/classes/settings/class-secupress-settings-modules.php:576
 msgid "Specify an IP to whitelist."
 msgstr "Spécifier une adresse IP à autoriser."
 
-#: inc/classes/settings/class-secupress-settings-modules.php:581
+#: inc/classes/settings/class-secupress-settings-modules.php:579
 msgid "Whitelist IP"
 msgstr "Adresse IP en liste blanche"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:604
+#: inc/classes/settings/class-secupress-settings-modules.php:602
 msgid "Reseting..."
 msgstr "Réinitialisation&hellip;"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:604
+#: inc/classes/settings/class-secupress-settings-modules.php:602
 msgid "Reset"
 msgstr "Réinitialiser"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:647
+#: inc/classes/settings/class-secupress-settings-modules.php:645
 msgid "Whitelisting..."
 msgstr "Mise en liste blanche&hellip;"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:647
+#: inc/classes/settings/class-secupress-settings-modules.php:645
 msgid "Whitelist"
 msgstr "Liste blanche"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:685
+#: inc/classes/settings/class-secupress-settings-modules.php:683
 msgid ""
 "Post creation or update will not be logged, but rather password and profile "
 "update, email changes, new administrator user, admin has logged in..."
@@ -5288,25 +5289,25 @@ msgstr ""
 "la mise à jour des mots de passe, modification des adresses email, un "
 "administrateur qui se connecte…"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:687
-#: inc/classes/settings/class-secupress-settings-modules.php:723
-#: inc/common.php:230
+#: inc/classes/settings/class-secupress-settings-modules.php:685
+#: inc/classes/settings/class-secupress-settings-modules.php:721
+#: inc/common.php:229
 msgid "Submit"
 msgstr "Envoyer"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:736
+#: inc/classes/settings/class-secupress-settings-modules.php:734
 msgid "No backups found yet, run one now?"
 msgstr "Aucune sauvegarde trouvée, en faire une ?"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:754
+#: inc/classes/settings/class-secupress-settings-modules.php:752
 msgid "Backup my database"
 msgstr "Sauvegarder ma base de données"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:775
+#: inc/classes/settings/class-secupress-settings-modules.php:773
 msgid "Backup my files"
 msgstr "Sauvegarder mes fichiers"
 
-#: inc/classes/settings/class-secupress-settings-modules.php:792
+#: inc/classes/settings/class-secupress-settings-modules.php:790
 msgid "Search for malicious files"
 msgstr "Chercher les fichiers malicieux"
 
@@ -5431,62 +5432,62 @@ msgstr "Demander au support"
 msgid "Unlock link expired."
 msgstr "Lien de déverrouillage expiré."
 
-#: inc/common.php:125 inc/common.php:126
+#: inc/common.php:124 inc/common.php:125
 #: inc/modules/users-login/plugins/blacklist-logins.php:46
 msgid "Cheatin&#8217; uh?"
 msgstr "Vous trichez ?"
 
-#: inc/common.php:134
+#: inc/common.php:133
 msgid "<strong>Error</strong>: the email field is empty."
 msgstr "<strong>Erreur</strong> : Le champ email est vide."
 
 #. Translators: guess what, %s is an email address
-#: inc/common.php:145
+#: inc/common.php:144
 #, php-format
 msgid "<strong>Error</strong>: the email address %s is not valid."
 msgstr "<strong>Erreur</strong> : L’adresse email %s n’est pas valide."
 
-#: inc/common.php:156
+#: inc/common.php:155
 msgid ""
 "<strong>Error</strong>: this email address does not belong to an "
 "Administrator."
 msgstr "<strong>Erreur</strong> : L’adresse email n’est pas valide."
 
 #. Translators: %s is a "unlock yourself" link.
-#: inc/common.php:165
+#: inc/common.php:164
 #, php-format
 msgid "You got yourself locked out? No problem, simply follow this link to %s."
 msgstr ""
 "Vous vous êtes coincé(e) ? Pas de problème, suivez simplement ce lien pour "
 "vous %s."
 
-#: inc/common.php:166
+#: inc/common.php:165
 msgid "unlock yourself"
 msgstr "dévérouiller"
 
-#: inc/common.php:181
+#: inc/common.php:180
 msgid "Too bad"
 msgstr "Mince"
 
-#: inc/common.php:182
+#: inc/common.php:181
 msgid "The message could not be sent. Sorry"
 msgstr "Le message n’a pas pu être envoyé. Désolés"
 
-#: inc/common.php:188
+#: inc/common.php:187
 msgid "Message sent"
 msgstr "Message envoyé"
 
-#: inc/common.php:189
+#: inc/common.php:188
 msgid "Everything went fine, your message is on its way to your mailbox."
 msgstr ""
 "Tout s’est bien passé, votre message est en route vers votre boite mail."
 
-#: inc/common.php:218
+#: inc/common.php:217
 #, php-format
 msgid "Your IP address <code>%s</code> has been banned."
 msgstr "Votre adresse IP <code>%1$s</code> a été bannie."
 
-#: inc/common.php:224 inc/modules/users-login/settings/move-login.php:105
+#: inc/common.php:223 inc/modules/users-login/settings/move-login.php:105
 msgid ""
 "If you are Administrator and have been accidentally locked out, enter your "
 "email address here to unlock yourself."
@@ -5494,7 +5495,7 @@ msgstr ""
 "Si vous êtes administrateur et que vous êtes coincé, entrez votre adresse "
 "email pour vous déverrouiller."
 
-#: inc/common.php:226
+#: inc/common.php:225
 msgid "Your email address:"
 msgstr "Votre adresse email :"
 
@@ -6058,7 +6059,7 @@ msgid "File Monitoring"
 msgstr "Surveillance des fichiers"
 
 #. Translators: 1 is a file name, 2 and 3 are small parts of code.
-#: inc/functions/modules.php:576
+#: inc/functions/modules.php:583
 #, php-format
 msgid ""
 "Your %1$s file is not writable, you have to edit it manually. Please remove "
@@ -6068,7 +6069,7 @@ msgstr ""
 "Merci de supprimer les règles entre %2$s et %3$s du fichier %1$s."
 
 #. Translators: 1 is a file name, 2 is a small part of code.
-#: inc/functions/modules.php:590
+#: inc/functions/modules.php:597
 #, php-format
 msgid ""
 "Your %1$s file is not writable, you have to edit it manually. Please remove "
@@ -6078,7 +6079,7 @@ msgstr ""
 "Merci de supprimer les règles avec %2$s du fichier %1$s."
 
 #. Translators: 1 is a file name, 2 is some code
-#: inc/functions/modules.php:713
+#: inc/functions/modules.php:720
 #, php-format
 msgid ""
 "Your server runs <strong>Nginx</strong>. You have to edit the configuration "
@@ -6088,7 +6089,7 @@ msgstr ""
 "votre fichier de configuration manuellement. Merci d’ajouter le code suivant "
 "dans le fichier %1$s : %2$s"
 
-#: inc/functions/modules.php:725
+#: inc/functions/modules.php:732
 msgid ""
 "It seems your server does not use <strong>Apache</strong>, <strong>Nginx</"
 "strong>, nor <strong>IIS7</strong>. This module won't work."
@@ -6871,35 +6872,35 @@ msgstr ""
 "trop ou pas assez de blocages, essayez de mettre à jour manuellement."
 "<br>Dernière mise à jour : %s"
 
-#: inc/modules/firewall/tools.php:128
+#: inc/modules/firewall/tools.php:131
 msgid "Antispam, Anti-Usurpation"
 msgstr "Anti-spam, anti-usurpation"
 
-#: inc/modules/firewall/tools.php:130
+#: inc/modules/firewall/tools.php:133
 msgid "Bad URL Contents"
 msgstr "Mauvais contenu dans l’URL"
 
-#: inc/modules/firewall/tools.php:131
+#: inc/modules/firewall/tools.php:134
 msgid "Bad Host Contents"
 msgstr "Mauvais contenu dans l’hôte"
 
-#: inc/modules/firewall/tools.php:132
+#: inc/modules/firewall/tools.php:135
 msgid "Bad Referer Contents"
 msgstr "Mauvais contenu dans l’URL"
 
-#: inc/modules/firewall/tools.php:134
+#: inc/modules/firewall/tools.php:137
 msgid "Bad GeoIP"
 msgstr "Mauvaise Géolocalisation"
 
-#: inc/modules/firewall/tools.php:136
+#: inc/modules/firewall/tools.php:139
 msgid "Bad Request Method"
 msgstr "Mauvaise méthode de requête"
 
-#: inc/modules/firewall/tools.php:138
+#: inc/modules/firewall/tools.php:141
 msgid "User-Agent With HTML Tags"
 msgstr "User-Agent contenant des balises HTML"
 
-#: inc/modules/firewall/tools.php:139
+#: inc/modules/firewall/tools.php:142
 msgid "User-Agent Blacklisted"
 msgstr "User-Agent en liste noire"
 
@@ -7280,7 +7281,7 @@ msgstr ""
 "Requête externe sur %1$s avec les arguments suivants %2$s La réponse était "
 "%3$s"
 
-#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:934
+#: inc/modules/logs/plugins/inc/php/action-logs/class-secupress-action-log.php:936
 msgid "Unknown user"
 msgstr "Utilisateur inconnu"
 
@@ -7289,7 +7290,7 @@ msgid ""
 "When you need to (dis)allow access to your website to some servers by their "
 "IP."
 msgstr ""
-"Quand vous avez besoin d’interdire ou d’autoriser l’accès à vitre site pour "
+"Quand vous avez besoin d’interdire ou d’autoriser l’accès à votre site pour "
 "certains serveurs par leur IP."
 
 #: inc/modules/logs/settings/banned-ips.php:7
@@ -8057,7 +8058,7 @@ msgstr ""
 "Vous avez besoin d’activer le JavaScript pour que ce formulaire soit envoyé "
 "correctement."
 
-#: inc/modules/users-login/plugins/move-login.php:470
+#: inc/modules/users-login/plugins/move-login.php:455
 #: inc/modules/users-login/settings/move-login.php:104
 msgid ""
 "This page does not exists, has moved or you are not allowed to access it."
@@ -8350,38 +8351,38 @@ msgstr "Votre licence a été activée avec succès."
 msgid "Plugin has been renamed correctly."
 msgstr "Extension renommée correctement."
 
-#: inc/modules/welcome/callbacks.php:376
+#: inc/modules/welcome/callbacks.php:381
 msgid "our support team"
 msgstr "notre équipe support"
 
-#: inc/modules/welcome/callbacks.php:380
+#: inc/modules/welcome/callbacks.php:385
 msgid "Please provide a valid email address and your license key."
 msgstr "Merci de fournir une adresse email valide ainsi qu’une clé de licence."
 
-#: inc/modules/welcome/callbacks.php:381
+#: inc/modules/welcome/callbacks.php:386
 msgid "Please provide a valid email address."
 msgstr "Veuillez entrer une adresse e-mail valide."
 
-#: inc/modules/welcome/callbacks.php:382
+#: inc/modules/welcome/callbacks.php:387
 msgid "Please provide your license key."
 msgstr "Veuillez entrer votre clé de licence."
 
 #. Translators: %s is a "to verify these infos" link.
-#: inc/modules/welcome/callbacks.php:385
+#: inc/modules/welcome/callbacks.php:390
 #, php-format
 msgid "Your license key seems invalid. You may want %s."
 msgstr "Votre clé de licence semble non valide. Peut-être voudrez-vous %s."
 
-#: inc/modules/welcome/callbacks.php:386 inc/modules/welcome/callbacks.php:400
+#: inc/modules/welcome/callbacks.php:391 inc/modules/welcome/callbacks.php:405
 msgid "to verify these infos"
 msgstr "pour vérifier ces infos"
 
-#: inc/modules/welcome/callbacks.php:388 inc/modules/welcome/callbacks.php:478
+#: inc/modules/welcome/callbacks.php:393 inc/modules/welcome/callbacks.php:483
 msgid "Something on your website is preventing the request to be sent."
 msgstr "Quelque chose sur votre site empêche la requête d’être envoyée."
 
 #. Translators: %s is a "our support team" link.
-#: inc/modules/welcome/callbacks.php:390
+#: inc/modules/welcome/callbacks.php:395
 #, php-format
 msgid ""
 "Our server is not accessible at the moment, please try again later or "
@@ -8391,7 +8392,7 @@ msgstr ""
 "ultérieurement ou contacter %s."
 
 #. Translators: %s is a "our support team" link.
-#: inc/modules/welcome/callbacks.php:392
+#: inc/modules/welcome/callbacks.php:397
 #, php-format
 msgid ""
 "Our server returned an unexpected response and might be in error, please try "
@@ -8401,21 +8402,21 @@ msgstr ""
 "veuillez réessayer ultérieurement ou contacter %s."
 
 #. Translators: %s is a "our support team" link.
-#: inc/modules/welcome/callbacks.php:394
+#: inc/modules/welcome/callbacks.php:399
 #, php-format
 msgid "There is a problem with your license key, please contact %s."
 msgstr "Il y a un problème avec votre clé de licence, merci de contacter %s."
 
-#: inc/modules/welcome/callbacks.php:395
+#: inc/modules/welcome/callbacks.php:400
 msgid "The email address is invalid."
 msgstr "L’adresse e-mail est invalide."
 
-#: inc/modules/welcome/callbacks.php:396
+#: inc/modules/welcome/callbacks.php:401
 msgid "The license key is invalid."
 msgstr "Votre clé de licence semble non valide."
 
 #. Translators: %s is a "to verify these infos" link.
-#: inc/modules/welcome/callbacks.php:399
+#: inc/modules/welcome/callbacks.php:404
 #, php-format
 msgid "This email address is not in our database. You may want %s."
 msgstr ""
@@ -8423,7 +8424,7 @@ msgstr ""
 "vous %s."
 
 #. Translators: %s is a "our support team" link.
-#: inc/modules/welcome/callbacks.php:411 inc/modules/welcome/callbacks.php:413
+#: inc/modules/welcome/callbacks.php:416 inc/modules/welcome/callbacks.php:418
 #, php-format
 msgid ""
 "There is a problem with your license key, please verify it. If you think "
@@ -8433,7 +8434,7 @@ msgstr ""
 "pensez qu&rsquo;il s&rsquo;agit d&rsquo;une erreur, veuillez contacter %s."
 
 #. Translators: %s is a "our support team" link.
-#: inc/modules/welcome/callbacks.php:415
+#: inc/modules/welcome/callbacks.php:420
 #, php-format
 msgid ""
 "This license key has been revoked. If you think there is a mistake, you "
@@ -8443,17 +8444,17 @@ msgstr ""
 "d&rsquo;une erreur, veuillez contacter %s."
 
 #. Translators: %s is a "to renew your subscription" link.
-#: inc/modules/welcome/callbacks.php:418
+#: inc/modules/welcome/callbacks.php:423
 #, php-format
 msgid "This license key expired. You may want %s."
 msgstr "Cette clé de licence a expirée. Peut-être voudrez-vous %s."
 
-#: inc/modules/welcome/callbacks.php:419
+#: inc/modules/welcome/callbacks.php:424
 msgid "to renew your subscription"
 msgstr "renouveler votre abonnement"
 
 #. Translators: %s is a "to upgrade your license" link.
-#: inc/modules/welcome/callbacks.php:423
+#: inc/modules/welcome/callbacks.php:428
 #, php-format
 msgid ""
 "You've used as many sites as your license allows. You may want %s to add "
@@ -8462,12 +8463,12 @@ msgstr ""
 "Vous avez utilisé autant de sites que votre licence le permet. Peut-être "
 "voudrez-vous %s pour ajouter plus de sites."
 
-#: inc/modules/welcome/callbacks.php:424
+#: inc/modules/welcome/callbacks.php:429
 msgid "to upgrade your license"
 msgstr "mettre à niveau votre licence"
 
 #. Translators: 1 is a "your account" link, 2 is a "our support team" link.
-#: inc/modules/welcome/callbacks.php:437
+#: inc/modules/welcome/callbacks.php:442
 #, php-format
 msgid ""
 "Something may be wrong with your license, please take a look at %1$s or "
@@ -8476,25 +8477,25 @@ msgstr ""
 "Quelque chose semble incorrect avec votre licence, merci de jeter un œil à "
 "%1$s ou de contacter %2$s."
 
-#: inc/modules/welcome/callbacks.php:438
+#: inc/modules/welcome/callbacks.php:443
 msgid "your account"
 msgstr "votre compte"
 
-#: inc/modules/welcome/callbacks.php:486
+#: inc/modules/welcome/callbacks.php:491
 msgid "Our server is not accessible at the moment."
 msgstr "Notre serveur n’est pas accessible pour le moment."
 
-#: inc/modules/welcome/callbacks.php:497
+#: inc/modules/welcome/callbacks.php:502
 msgid "Our server returned an unexpected response and might be in error."
 msgstr ""
 "Notre serveur a retourné une réponse inatendue, cela est surement une erreur."
 
-#: inc/modules/welcome/callbacks.php:505
+#: inc/modules/welcome/callbacks.php:510
 msgid "Our server returned an error."
 msgstr "Notre serveur a retourné une erreur."
 
 #. Translators: %s is a link to the "SecuPress account".
-#: inc/modules/welcome/callbacks.php:530
+#: inc/modules/welcome/callbacks.php:535
 #, php-format
 msgid ""
 "Please deactivate this site from your %s (the \"Manage Sites\" link in your "
