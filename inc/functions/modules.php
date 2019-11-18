@@ -50,6 +50,7 @@ function secupress_get_modules() {
 							'password-policy_ask-old-password'         => __( 'Ask Old Password', 'secupress' ),
 							'blacklist-logins_activated'               => __( 'Forbidden Usernames', 'secupress' ),
 							'blacklist-logins_stop-user-enumeration'   => __( 'Stop User Enumeration', 'secupress' ),
+							'blacklist-logins_prevent-user-creation'   => '*' . __( 'Prevent User Creation', 'secupress' ),
 						]
 		],
 		'plugins-themes'  => [
