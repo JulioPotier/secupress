@@ -900,6 +900,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 		switch ( $this->target ) {
 			case 'secupress.block':
 			case 'secupress.ban.ip_banned':
+			case 'secupress.geoip.blocked':
 				$this->critic = 'high';
 				break;
 			default:
