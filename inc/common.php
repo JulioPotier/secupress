@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
 /** BANNED IPS ================================================================================== */
 /** --------------------------------------------------------------------------------------------- */
 
-add_action( 'plugins_loaded', 'secupress_check_ban_ips' );
+add_action('secupress.plugins.loaded','secupress_check_ban_ips', 0);
 /**
  * Will remove expired banned IPs, then block the remaining ones. A form will be displayed to allow clumsy Administrators to unlock themselves.
  *
