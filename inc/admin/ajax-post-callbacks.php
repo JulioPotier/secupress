@@ -463,7 +463,7 @@ function secupress_ban_ip_ajax_post_cb() {
 	}
 	$ip      = array_flip( $ip );
 	array_walk( $ip, function( &$_ip, $time ) {
-		$_ip = time() + YEAR_IN_SECONDS * 10;
+		$_ip = strtotime('+10 years');
 	});
 	$ban_ips = array_merge( $ban_ips, $ip );
 
@@ -474,10 +474,8 @@ function secupress_ban_ip_ajax_post_cb() {
 	do_action( 'secupress.ban.ip_banned', $ip, $ban_ips );
 
 	$referer_arg  = '&_wp_http_referer=' . urlencode( esc_url_raw( secupress_admin_url( 'modules', 'logs' ) ) );
-	$offset       = get_option( 'gmt_offset' ) * HOUR_IN_SECONDS;
-	$in_ten_years = time() + YEAR_IN_SECONDS * 10;
 	$format       = __( 'M jS Y', 'secupress' ) . ' ' . __( 'G:i', 'secupress' );
-	$_time        = date_i18n( $format, $in_ten_years + $offset );
+	$_time        = date_i18n( $format, strtotime('+10 years'));
 	// Send a response.
 	if ( ! $is_list ) {
 		secupress_admin_send_message_die( [
