@@ -1,8 +1,9 @@
 This file contains a list of people who have made significant contributions to the SecuPress Project.
 
-Devs
+Devs Back
 	Julio Potier          <@juliopotier>
 	Gregory Viguier       <@screenfeedfr>
+Dev Front
 	Geoffrey Crofte       <@geoffreycrofte>
 Design
 	Matthieu Bousendorfer <@edenpulse>
