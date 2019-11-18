@@ -37,6 +37,8 @@ foreach ( $override_plugins as $plugin_path => $plugin_page) {
 	}
 }
 
+
+
 $this->add_field( array(
 	'title'             => __( 'Move the login and admin pages', 'secupress' ),
 	'label_for'         => $main_field_name,
@@ -46,6 +48,21 @@ $this->add_field( array(
 	'label'             => __( 'Yes, move the login and admin pages', 'secupress' ),
 ) );
 
+if ( defined( 'SECUPRESS_ALLOW_LOGIN_ACCESS' ) && SECUPRESS_ALLOW_LOGIN_ACCESS ) {
+	$this->add_field( array(
+		'title'             => __( 'Move the login and admin pages', 'secupress' ),
+		'label_for'         => $main_field_name,
+		'type'              => 'html',
+		'value'             => '',
+		'helpers'           => array(
+			array(
+				'type'        => 'warning',
+				'description' => sprintf( __( 'The %1$s constant is set, you cannot use the %2$s module.', 'secupress' ), '<code>SECUPRESS_ALLOW_LOGIN_ACCESS</code>', '<em>Move Login</em>' ),
+			),
+		),
+	) );
+	return;
+}
 
 $labels    = secupress_move_login_slug_labels();
 $login_url = site_url( '%%slug%%', 'login' );

@@ -10,25 +10,40 @@ $this->add_section( __( 'Authentication', 'secupress' ), array( 'with_roles' => 
 
 $field_name = $this->get_field_name( 'type' );
 
-$this->add_field( array(
-	'title'             => __( 'Use a Two-Factor Authentication', 'secupress' ),
-	'name'              => $field_name,
-	'plugin_activation' => true,
-	'type'              => 'checkbox',
-	'label'             => __( 'Yes, use the <strong>PasswordLess</strong> method', 'secupress' ),
-	'value'             => (int) secupress_is_submodule_active( 'users-login', 'passwordless' ),
-	'helpers'           => array(
-		array(
-			'type'        => 'description',
-			'description' => __( 'Users will just have to enter their email address when log in, then click on a link in the email they receive.', 'secupress' ),
+if ( secupress_is_pro() && defined( 'SECUPRESS_ALLOW_LOGIN_ACCESS' ) && SECUPRESS_ALLOW_LOGIN_ACCESS ) {
+	$this->add_field( array(
+		'title'             => __( 'Use a Two-Factor Authentication', 'secupress' ),
+		'label_for'         => $field_name,
+		'type'              => 'html',
+		'value'             => '',
+		'helpers'           => array(
+			array(
+				'type'        => 'warning',
+				'description' => sprintf( __( 'The %1$s constant is set, you cannot use the %2$s module.', 'secupress' ), '<code>SECUPRESS_ALLOW_LOGIN_ACCESS</code>', '<em>PasswordLess</em>' ),
+			),
 		),
-		array(
-			'type'        => 'warning',
-			'description' => ! secupress_is_submodule_active( 'users-login', 'passwordless' ) || secupress_get_option( 'secupress_passwordless_activation_validation' ) ? '' : __( 'This module will not work until validated by a link sent to your email address when you activated it.', 'secupress' ),
+	) );
+	return;
+} else {
+	$this->add_field( array(
+		'title'             => __( 'Use a Two-Factor Authentication', 'secupress' ),
+		'name'              => $field_name,
+		'plugin_activation' => true,
+		'type'              => 'checkbox',
+		'label'             => __( 'Yes, use the <strong>PasswordLess</strong> method', 'secupress' ),
+		'value'             => (int) secupress_is_submodule_active( 'users-login', 'passwordless' ),
+		'helpers'           => array(
+			array(
+				'type'        => 'description',
+				'description' => __( 'Users will just have to enter their email address when log in, then click on a link in the email they receive.', 'secupress' ),
+			),
+			array(
+				'type'        => 'warning',
+				'description' => ! secupress_is_submodule_active( 'users-login', 'passwordless' ) || secupress_get_option( 'secupress_passwordless_activation_validation' ) ? '' : __( 'This module will not work until validated by a link sent to your email address when you activated it.', 'secupress' ),
+			),
 		),
-	),
-) );
-
+	) );
+}
 
 $this->set_current_plugin( 'captcha' );
 
