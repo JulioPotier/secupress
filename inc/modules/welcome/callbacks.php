@@ -330,7 +330,7 @@ function secupress_global_settings_api_request_succeeded( $response ) {
 		}
 
 		// The request couldn't be sent.
-		secupress_add_settings_error( 'general', 'request_error', secupress_global_settings_pro_license_activation_error_message( 'request_error' ) . listMessages);
+		secupress_add_settings_error( 'general', 'request_error', secupress_global_settings_pro_license_activation_error_message( 'request_error' ) . $listMessages);
 		return false;
 	}
 
