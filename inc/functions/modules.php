@@ -124,7 +124,6 @@ function secupress_get_modules() {
 							'bbq-url-content_bad-contents'       => __( 'Block Bad Content', 'secupress' ),
 							'bbq-url-content_bad-sqli-scan'      => __( 'Block SQLi Scan Attempts', 'secupress' ),
 							'bbq-url-content_ban-404-php'        => __( 'Block 404 requests on PHP files', 'secupress' ),
-							'bruteforce_activated'               => '*' . __( 'Front Anti Brute-Force', 'secupress' ),
 							'geoip-system_type_-1'               => '*' . __( 'GeoIP Management', 'secupress' ),
 						]
 		],

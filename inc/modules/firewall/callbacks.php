@@ -35,9 +35,6 @@ function secupress_firewall_settings_callback( $settings ) {
 	// Bad contents.
 	secupress_bad_contents_settings_callback( $modulenow, $settings, $activate );
 
-	// Anti Bruteforce Management.
-	secupress_bruteforce_settings_callback( $modulenow, $settings, $activate );
-
 	// Country Management.
 	secupress_geoip_settings_callback( $modulenow, $settings, $activate );
 
@@ -103,27 +100,6 @@ function secupress_bad_contents_settings_callback( $modulenow, &$settings, $acti
 	if ( empty( $settings['bbq-url-content_bad-contents-list'] ) ) {
 		$settings['bbq-url-content_bad-contents-list'] = secupress_firewall_bbq_url_content_bad_contents_list_default();
 	}
-}
-
-
-/**
- * Anti Bruteforce Management plugin.
- *
- * @since 1.0
- *
- * @param (string)     $modulenow Current module.
- * @param (array)      $settings  The module settings, passed by reference.
- * @param (bool|array) $activate  Used to (de)activate plugins.
- */
-function secupress_bruteforce_settings_callback( $modulenow, &$settings, $activate ) {
-	// (De)Activation.
-	if ( false !== $activate ) {
-		secupress_manage_submodule( $modulenow, 'bruteforce', ! empty( $activate['bruteforce_activated'] ) );
-	}
-
-	// Settings.
-	$settings['bruteforce_request_number'] = ! empty( $settings['bruteforce_request_number'] ) ? (int) secupress_validate_range( $settings['bruteforce_request_number'], 3, 1000, 9 ) : 9;
-	$settings['bruteforce_time_ban']       = ! empty( $settings['bruteforce_time_ban'] )       ? (int) secupress_validate_range( $settings['bruteforce_time_ban'], 1, 60, 5 )         : 5;
 }
 
 

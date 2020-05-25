@@ -118,7 +118,7 @@ function secupress_get_scanners() {
 			1 => 'Bad_User_Agent',
 			2 => 'SQLi',
 			3 => 'Anti_Scanner',
-			4 => 'Anti_Front_Brute_Force',
+			// 4 => '', // ex-Anti_Front_Brute_Force, do not reuse "4"!
 			5 => 'Bad_Request_Methods',
 			6 => 'Bad_Url_Access',
 			7 => 'PhpVersion',
@@ -1086,7 +1086,6 @@ function secupress_feature_is_pro( $feature ) {
 		'import-export_export_settings'          => 1,
 		'import-export_import_settings'          => 1,
 		'geoip-system_type'                      => 1,
-		'bruteforce_activated'                   => 1,
 		'schedules-backups_type'                 => 1,
 		'schedules-backups_periodicity'          => 1,
 		'schedules-backups_email'                => 1,

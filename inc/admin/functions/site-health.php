@@ -168,11 +168,6 @@ function secupress_get_test__anti_scanner() {
 	return secupress_get_test__global( $option_name );
 }
 
-function secupress_get_test__anti_front_brute_force() {
-	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
-	return secupress_get_test__global( $option_name );
-}
-
 function secupress_get_test__bad_request_methods() {
 	$option_name = str_replace( 'secupress_get_test__', '', __FUNCTION__ );
 	return secupress_get_test__global( $option_name );
