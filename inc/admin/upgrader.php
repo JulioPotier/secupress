@@ -728,7 +728,7 @@ exit;
 }
 
 if ( ! secupress_is_white_label() ) {
-	add_action( 'admin_notices', 'secupress_display_whats_new' );
+	// add_action( 'admin_notices', 'secupress_display_whats_new' );
 	/**
 	 * Display a "what's new" notice when not in WhiteLabel and user has the correct capa
 	 *
