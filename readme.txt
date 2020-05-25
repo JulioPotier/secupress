@@ -4,7 +4,7 @@ Tags: wordpress security, secure, security plugin, security, malware
 Requires at least: 4.0
 Tested up to: 5.3
 Requires PHP: 5.4
-Stable tag: 1.4.11
+Stable tag: 1.4.12
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -180,29 +180,14 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 == Changelog ==
 
-= 1.4.11 =
+= 1.4.12 =
 
-* 18 November 2019
-* Improvement#759: GeoIP blocked IP will be logged as "critical" now.
-* Improvement#748: Antibrute Force on Front will be logged as "critical" now.
-* Improvement#749: You can now use the PHP bypass constant `SECUPRESS_ALLOW_LOGIN_ACCESS` for both Move Login and PasswordLess.
-* Fix#772: PasswordLess fields were not correct since WP 5.3
-* Fix#771: Move Login "logout" link was not correct since WP 5.3
-* Fix#768: "Prevent User Creation" was preventing users to change their passwords
-* Fix#763: Alerts modules was not activated on demand
-* Fix#757: "Site Health" will not be an empty page anymore when you didn't scanned yet your site with SP.
-* Fix#755: PHP Error message with `secupress_get_submodule_file_path()`
-* Fix#747: Brute Force module activation does not requires 2 clicks on save button.
-* Fix#746: Message more specific when switching to pro version.
-* Fix#745: Purge the bruteforce table more efficiently
-* Fix#744: Banned IPs are now the top prio over "bad url content" module
-* Fix#743: Better datation for banned IPs
-* Fix#742: Better hooks content for `secupress.plugin.passwordless_email_activation_subject` and `secupress.plugin.passwordless_email_activation_message`
-* Fix#726: Uncaught Error: Call to a member function views() on null in /inc/classes/common/class-secupress-logs-list.php:165
+* 26 May 2020
+* Fix: Don't ban IP, just block. This will prevent false positives on Banned IPs but still can block bad stuff.
 
 == Upgrade Notice ==
 
 = 1.4.11 =
 
-* 18 November 2019
-* Nothing special for the 1.4.11 BUT the 1.5.0 will require PHP 5.6 and WordPress 4.9 (actually PHP 5.4 and WordPress 4.0)
+* 26 May 2020
+* Nothing special for the 1.4.12 BUT the 1.5.0 will require PHP 5.6 and WordPress 4.9 (actually PHP 5.4 and WordPress 4.0)
