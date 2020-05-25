@@ -184,6 +184,7 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 * 26 May 2020
 * Fix: Don't ban IP, just block. This will prevent false positives on Banned IPs but still can block bad stuff.
+* Removed: The AntiFront BruteForce feature doesn't exist anymore, too much false positive since now, websites can need may requests.
 
 == Upgrade Notice ==
 
