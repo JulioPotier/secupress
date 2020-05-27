@@ -69,7 +69,7 @@ class SecuPress_Scan_PhpVersion extends SecuPress_Scan implements SecuPress_Scan
 			// "warning"
 			100 => __( 'Unable to determine version of PHP.', 'secupress' ),
 			// "bad"
-			200   => sprintf( __( 'You are using <strong>PHP v%1$s</strong>, but the latest supported version is <strong>PHP v%2$s</strong>, and the best is <strong>PHP v%3$s</strong>.', 'secupress' ), $versions['current'], $versions['mini'], $versions['best'] ),
+			200   => sprintf( __( 'You are using <strong>PHP v%1$s</strong>, but the latest supported version is <strong>PHP v%2$s</strong>.', 'secupress' ), $versions['current'], $versions['mini'] ),
 			// "cantfix"
 			300 => __( 'Cannot be fixed automatically. You have to contact you host provider to ask him to <strong>upgrade you version of PHP</strong>.', 'secupress' ),
 		);
