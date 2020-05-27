@@ -41,48 +41,6 @@ function secupress_http_block_external_notice() {
 }
 
 
-add_action( 'admin_init', 'secupress_plugins_to_deactivate' );
-/**
- * This warning is displayed when some plugins may conflict with SecuPress.
- *
- * @since 1.0
- */
-function secupress_plugins_to_deactivate() {
-	if ( ! current_user_can( secupress_get_capability() ) ) {
-		return;
-	}
-
-	$plugins = array(
-		'wordfence/wordfence.php',
-		'better-wp-security/better-wp-security.php',
-		'all-in-one-wp-security-and-firewall/wp-security.php',
-		'bulletproof-security/bulletproof-security.php',
-		'sucuri-scanner/sucuri.php',
-	);
-
-	$plugins_to_deactivate = array_filter( $plugins, 'is_plugin_active' );
-
-	if ( ! $plugins_to_deactivate ) {
-		return;
-	}
-
-	$message  = '<p>' . sprintf( __( '%s:', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ) . ' ';
-	$message .= __( 'The following plugins are not recommended with this plugin and may cause unexpected results:', 'secupress' );
-	$message .= '</p><ul>';
-	foreach ( $plugins_to_deactivate as $plugin ) {
-		$plugin_data = get_plugin_data( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $plugin );
-		$context     = isset( $_GET['plugin_status'] ) ? '&amp;plugin_status=' . $_GET['plugin_status'] : '';
-		$page        = isset( $_GET['pages'] ) ? '&amp;paged=' . $_GET['paged'] : '';
-		$search      = isset( $_GET['s'] ) ? '&amp;s=' . $_GET['s'] : '';
-		$url         = wp_nonce_url( 'plugins.php?action=deactivate&amp;plugin=' . $plugin . $context . $page . $search, 'deactivate-plugin_' . $plugin );
-		$message    .= '<li>' . $plugin_data['Name'] . '</span> <a href="' . esc_url( $url ) . '" class="button-secondary alignright">' . __( 'Deactivate' ) . '</a></li>';
-	}
-	$message .= '</ul>';
-
-	secupress_add_notice( $message, 'error', 'deactivate-plugin' );
-}
-
-
 add_action( 'admin_init', 'secupress_add_packed_plugins_notice' );
 /**
  * Display a notice if the standalone version of a plugin packed in SecuPress is used.
