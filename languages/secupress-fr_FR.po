@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2019-11-18 11:36+0100\n"
-"PO-Revision-Date: 2019-11-18 11:36+0100\n"
+"POT-Creation-Date: 2020-05-27 09:41+0200\n"
+"PO-Revision-Date: 2020-05-27 09:42+0200\n"
 "Last-Translator: Julio Potier <julio@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2.3\n"
+"X-Generator: Poedit 2.3.1\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: _x:1,2c;__;_e;_ex:1,2c;_n:1,2;_nx:1,2;esc_html__;"
 "esc_html_e;esc_attr__;esc_attr_e;_n_noop:1,2;_nx_noop:4c,1,2\n"
@@ -76,8 +76,8 @@ msgstr ""
 "votre fichier : %2$s"
 
 #: inc/activation.php:330 inc/activation.php:375 inc/activation.php:405
-#: inc/admin/notices.php:69 inc/admin/notices.php:192 inc/admin/notices.php:224
-#: inc/admin/notices.php:248 inc/admin/notices.php:257
+#: inc/admin/notices.php:150 inc/admin/notices.php:182
+#: inc/admin/notices.php:206 inc/admin/notices.php:215
 #: inc/classes/admin/class-secupress-admin-offer-migration.php:548
 #: inc/classes/admin/class-secupress-admin-offer-migration.php:568
 #: inc/classes/common/class-secupress-log.php:289
@@ -300,7 +300,7 @@ msgid "Module settings reset."
 msgstr "Réglages du module réinitialisés."
 
 #: inc/admin/ajax-post-callbacks.php:726
-#: inc/modules/users-login/settings/move-login.php:62
+#: inc/modules/users-login/settings/move-login.php:79
 msgid "Choose your login URL"
 msgstr "Choisissez votre URL de connexion"
 
@@ -396,7 +396,6 @@ msgstr ""
 "réseau social en plus des alertes par emails."
 
 #: inc/admin/functions/admin.php:272
-#: inc/classes/scanners/class-secupress-scan-anti-front-brute-force.php:53
 #: inc/classes/scanners/class-secupress-scan-anti-scanner.php:46
 #: inc/classes/scanners/class-secupress-scan-anti-scanner.php:64
 #: inc/classes/scanners/class-secupress-scan-bad-request-methods.php:46
@@ -409,7 +408,7 @@ msgstr ""
 #: inc/classes/scanners/class-secupress-scan-shellshock.php:67
 #: inc/classes/scanners/class-secupress-scan-sqli.php:46
 #: inc/classes/scanners/class-secupress-scan-sqli.php:64
-#: inc/functions/modules.php:112
+#: inc/functions/modules.php:113
 msgid "Firewall"
 msgstr "Pare-feu"
 
@@ -464,25 +463,25 @@ msgstr ""
 msgid "Open the %s settings page"
 msgstr "Ouvrir les réglages du plugin %s"
 
-#: inc/admin/functions/site-health.php:240
-#: inc/admin/functions/site-health.php:255
+#: inc/admin/functions/site-health.php:235
+#: inc/admin/functions/site-health.php:250
 msgid "Security"
 msgstr "Sécurité"
 
-#: inc/admin/functions/site-health.php:262
+#: inc/admin/functions/site-health.php:257
 msgid "Open the scanners"
 msgstr "Ouvrir les scanners"
 
-#: inc/admin/functions/site-health.php:264 inc/admin/scanner-step-3.php:269
+#: inc/admin/functions/site-health.php:259 inc/admin/scanner-step-3.php:269
 msgid "Read the documentation"
 msgstr "Lire la documentation"
 
-#: inc/admin/functions/site-health.php:265
+#: inc/admin/functions/site-health.php:260
 #: inc/classes/scanners/class-secupress-scan-wporg.php:77
 msgid "(opens in a new tab)"
 msgstr "(dans un nouvel onglet)"
 
-#: inc/admin/functions/site-health.php:281
+#: inc/admin/functions/site-health.php:276
 #, php-format
 msgid ""
 "<hr><strong>No status yet, please run the <a href=\"%s\">%s scanners</a> "
@@ -583,20 +582,8 @@ msgid "Click on the field and press Ctrl+A or Cmd+A to select all."
 msgstr ""
 "Cliquez dans le champ et faites Ctrl+A ou Commande+A pour tout sélectionner."
 
-#: inc/admin/notices.php:70
-msgid ""
-"The following plugins are not recommended with this plugin and may cause "
-"unexpected results:"
-msgstr ""
-"Les plugins suivants ne sont pas recommandés avec ce plugin et pourraient "
-"causer des résultats inattendus :"
-
-#: inc/admin/notices.php:78 inc/admin/notices.php:121
-msgid "Deactivate"
-msgstr "Désactiver"
-
 #. Translators: 1 is the plugin name
-#: inc/admin/notices.php:115
+#: inc/admin/notices.php:73
 #, php-format
 msgid ""
 "The features of the following plugins are included in %1$s. You can "
@@ -606,7 +593,11 @@ msgstr ""
 "désactiver ces plugins maintenant et activer ces fonctions plus tard dans "
 "%1$s :"
 
-#: inc/admin/notices.php:193
+#: inc/admin/notices.php:79
+msgid "Deactivate"
+msgstr "Désactiver"
+
+#: inc/admin/notices.php:151
 #, php-format
 msgid ""
 "The %s file is not writable, read more about <a href=\"http://codex."
@@ -617,7 +608,7 @@ msgstr ""
 "href=\"http://codex.wordpress.org/Changing_File_Permissions\" target=\"_blank"
 "\" rel=\"noopener noreferrer\" lang=\"en\">droits d’écriture (en)</a>."
 
-#: inc/admin/notices.php:225
+#: inc/admin/notices.php:183
 #, php-format
 msgid ""
 "If you had <a href=\"%1$s\" target=\"_blank\">writing permissions</a> on "
@@ -627,35 +618,35 @@ msgstr ""
 "d’écriture</a> sur le fichier %2$s, %3$s pourrait faire plus de choses "
 "automatiquement."
 
-#: inc/admin/notices.php:249
+#: inc/admin/notices.php:207
 msgid "This module has been activated:"
 msgid_plural "These modules have been activated:"
 msgstr[0] "Ce module a été activé :"
 msgstr[1] "Ces modules ont été activés :"
 
-#: inc/admin/notices.php:258
+#: inc/admin/notices.php:216
 msgid "This module has been deactivated:"
 msgid_plural "These modules have been deactivated:"
 msgstr[0] "Ce module a été désactivé :"
 msgstr[1] "Ces modules ont été désactivés :"
 
-#: inc/admin/notices.php:302
+#: inc/admin/notices.php:260
 #, php-format
 msgid "%s is activated, let's improve the security of your website!"
 msgstr "%s est activé, améliorons la sécurité de votre site !"
 
-#: inc/admin/notices.php:303
+#: inc/admin/notices.php:261
 msgid "Scan your website for security issues, right now."
 msgstr ""
 "Scanner tous les points de sécurité pour la première fois dans votre site, "
 "dès maintenant."
 
-#: inc/admin/notices.php:311 inc/admin/settings.php:149
+#: inc/admin/notices.php:269 inc/admin/settings.php:149
 #: inc/admin/settings.php:699
 msgid "Scan my website"
 msgstr "Scanner mon site"
 
-#: inc/admin/notices.php:316 inc/admin/scanner-step-1-all.php:95
+#: inc/admin/notices.php:274 inc/admin/scanner-step-1-all.php:95
 #: inc/admin/scanner-step-1-new.php:93 inc/admin/settings.php:82
 #: inc/admin/settings.php:154
 #: inc/classes/common/class-secupress-logs-list.php:312
@@ -663,7 +654,7 @@ msgid "Close"
 msgstr "Fermer"
 
 #. Translators: %1$s is the version number, %2$s is a date.
-#: inc/admin/notices.php:372
+#: inc/admin/notices.php:330
 #, php-format
 msgid "Please read these special notes for this update, version %1$s - %2$s"
 msgstr ""
@@ -2122,7 +2113,6 @@ msgstr ""
 "votre compte à la prochaine étape."
 
 #: inc/classes/scanners/class-secupress-scan-admin-user.php:84
-#: inc/classes/scanners/class-secupress-scan-anti-front-brute-force.php:78
 #: inc/classes/scanners/class-secupress-scan-anti-scanner.php:78
 #: inc/classes/scanners/class-secupress-scan-auto-update.php:110
 #: inc/classes/scanners/class-secupress-scan-bad-config-files.php:70
@@ -2179,60 +2169,6 @@ msgstr "Votre nom d’utilisateur sera renommé au prochaine chargement de page.
 msgid "Allowed characters: %s."
 msgstr "Caractères autorisés : %s."
 
-#: inc/classes/scanners/class-secupress-scan-anti-front-brute-force.php:48
-msgid ""
-"Check if your website is vulnerable to attacks by multiple and quick "
-"requests (DDoS like)."
-msgstr ""
-"Vérifie si votre site peut être attaqué par de multiples requêtes rapides "
-"(comme DDoS)."
-
-#: inc/classes/scanners/class-secupress-scan-anti-front-brute-force.php:49
-msgid ""
-"Nobody needs to load more than 10 pages per second on your front-end, back-"
-"end or login page. You should block the requests' owner."
-msgstr ""
-"Personne n’a besoin de charger plus de 10 pages par secondes sur votre front-"
-"office, back-office ou page de connexion."
-
-#: inc/classes/scanners/class-secupress-scan-anti-front-brute-force.php:51
-#: inc/classes/scanners/class-secupress-scan-easy-login.php:51
-#, php-format
-msgid "Activate the <strong>%1$s</strong> from the module %2$s."
-msgstr "Active <strong>%1$s</strong> du module %2$s."
-
-#: inc/classes/scanners/class-secupress-scan-anti-front-brute-force.php:52
-#: inc/classes/scanners/class-secupress-scan-anti-front-brute-force.php:74
-msgid "Anti Front-End Brute-Force"
-msgstr "Anti Brute-Force en front-office"
-
-#: inc/classes/scanners/class-secupress-scan-anti-front-brute-force.php:70
-msgid "Your website seems to be protected against multiple and quick requests."
-msgstr "Votre site semble être protégé contre les multiples attaques rapides."
-
-#: inc/classes/scanners/class-secupress-scan-anti-front-brute-force.php:71
-msgid ""
-"The <strong>Anti Front-End Brute-Force</strong> module has been activated."
-msgstr ""
-"Le module <strong>anti Brute-Force en front-office</strong> a été activé."
-
-#: inc/classes/scanners/class-secupress-scan-anti-front-brute-force.php:73
-msgid "Your website is not protected from multiple and quick requests."
-msgstr "Votre site n’est pas protégé contre les multiples attaques rapides."
-
-#: inc/classes/scanners/class-secupress-scan-anti-front-brute-force.php:74
-#: inc/classes/scanners/class-secupress-scan-easy-login.php:74
-#, php-format
-msgid "Our module %s could fix this."
-msgstr "Notre module %s pourrait corriger cela."
-
-#: inc/classes/scanners/class-secupress-scan-anti-front-brute-force.php:95
-msgid ""
-"http://docs.secupress.me/article/110-brute-force-attack-vulnerability-scan"
-msgstr ""
-"http://fr.docs.secupress.me/article/70-scan-de-possibilite-de-brute-force-"
-"sur-le-site"
-
 #: inc/classes/scanners/class-secupress-scan-anti-scanner.php:41
 msgid "Check if automated bot scanners can target your website."
 msgstr ""
@@ -2263,7 +2199,7 @@ msgstr "Active l’option %1$s du module %2$s."
 
 #: inc/classes/scanners/class-secupress-scan-anti-scanner.php:45
 #: inc/classes/scanners/class-secupress-scan-anti-scanner.php:63
-#: inc/functions/modules.php:124
+#: inc/functions/modules.php:125
 #: inc/modules/firewall/settings/bbq-url-content.php:44
 msgid "Block SQLi Scan Attempts"
 msgstr "Bloque les tentatives de SQLi"
@@ -2334,7 +2270,7 @@ msgid "Minor updates"
 msgstr "Mises à jour mineures"
 
 #: inc/classes/scanners/class-secupress-scan-auto-update.php:46
-#: inc/functions/modules.php:77
+#: inc/functions/modules.php:78
 msgid "WordPress Core"
 msgstr "Cœur de WordPress"
 
@@ -3002,7 +2938,7 @@ msgstr ""
 
 #: inc/classes/scanners/class-secupress-scan-bad-request-methods.php:45
 #: inc/classes/scanners/class-secupress-scan-bad-request-methods.php:70
-#: inc/functions/modules.php:121
+#: inc/functions/modules.php:122
 #: inc/modules/firewall/settings/bbq-headers.php:44
 msgid "Block Bad Request Methods"
 msgstr "Bloque les mauvaises méthodes de requête"
@@ -3060,7 +2996,7 @@ msgstr ""
 
 #: inc/classes/scanners/class-secupress-scan-bad-url-access.php:47
 #: inc/classes/scanners/class-secupress-scan-bad-url-access.php:88
-#: inc/functions/modules.php:107
+#: inc/functions/modules.php:108
 #: inc/modules/sensitive-data/plugins/bad-url-access.php:49
 #: inc/modules/sensitive-data/plugins/bad-url-access.php:62
 #: inc/modules/sensitive-data/plugins/bad-url-access.php:133
@@ -3083,7 +3019,7 @@ msgstr "Accès aux mauvaises URLs"
 #: inc/classes/scanners/class-secupress-scan-woocommerce-discloses.php:67
 #: inc/classes/scanners/class-secupress-scan-wpml-discloses.php:49
 #: inc/classes/scanners/class-secupress-scan-wpml-discloses.php:67
-#: inc/functions/modules.php:92
+#: inc/functions/modules.php:93
 msgid "Sensitive Data"
 msgstr "Données sensibles"
 
@@ -3551,7 +3487,7 @@ msgstr ""
 
 #: inc/classes/scanners/class-secupress-scan-directory-listing.php:47
 #: inc/classes/scanners/class-secupress-scan-directory-listing.php:73
-#: inc/functions/modules.php:103
+#: inc/functions/modules.php:104
 #: inc/modules/sensitive-data/plugins/directory-listing.php:46
 #: inc/modules/sensitive-data/plugins/directory-listing.php:81
 #: inc/modules/sensitive-data/settings/content-protect.php:98
@@ -3653,7 +3589,7 @@ msgstr "Divulgation de la version de WordPress"
 
 #: inc/classes/scanners/class-secupress-scan-discloses.php:49
 #: inc/classes/scanners/class-secupress-scan-discloses.php:75
-#: inc/functions/modules.php:105
+#: inc/functions/modules.php:106
 #: inc/modules/discloses/plugins/no-x-powered-by.php:59
 #: inc/modules/discloses/plugins/no-x-powered-by.php:71
 msgid "PHP Version Disclosure"
@@ -3850,6 +3786,11 @@ msgstr ""
 "site est la cible de robots qui tentent de se connecter. En ajoutant une "
 "couche supplémentaire de protection sur le login, vous améliorez la sécurité."
 
+#: inc/classes/scanners/class-secupress-scan-easy-login.php:51
+#, php-format
+msgid "Activate the <strong>%1$s</strong> from the module %2$s."
+msgstr "Active <strong>%1$s</strong> du module %2$s."
+
 #: inc/classes/scanners/class-secupress-scan-easy-login.php:52
 msgid "PasswordLess Double Authentication"
 msgstr "Double authentification PasswordLess"
@@ -3876,6 +3817,11 @@ msgid ""
 msgstr ""
 "Votre système de connexion <strong>n’est pas assez fort</strong>, vous avez "
 "besoin d’un <strong>système de double authentification</strong>."
+
+#: inc/classes/scanners/class-secupress-scan-easy-login.php:74
+#, php-format
+msgid "Our module %s could fix this."
+msgstr "Notre module %s pourrait corriger cela."
 
 #: inc/classes/scanners/class-secupress-scan-easy-login.php:74
 msgid "PasswordLess"
@@ -4293,7 +4239,7 @@ msgstr ""
 
 #: inc/classes/scanners/class-secupress-scan-php-disclosure.php:47
 #: inc/classes/scanners/class-secupress-scan-php-disclosure.php:72
-#: inc/functions/modules.php:104
+#: inc/functions/modules.php:105
 #: inc/modules/sensitive-data/plugins/php-easter-egg.php:45
 #: inc/modules/sensitive-data/plugins/php-easter-egg.php:57
 msgid "PHP Disclosure"
@@ -4379,11 +4325,10 @@ msgstr "Impossible de déterminer la version de PHP."
 #, php-format
 msgid ""
 "You are using <strong>PHP v%1$s</strong>, but the latest supported version "
-"is <strong>PHP v%2$s</strong>, and the best is <strong>PHP v%3$s</strong>."
+"is <strong>PHP v%2$s</strong>."
 msgstr ""
 "Vous utilisez <strong>PHP v%1$s</strong>, mais la dernière version supportée "
-"est <strong>PHP v%2$s</strong>, et le mieux serait <strong>PHP v%3$s</"
-"strong>."
+"est <strong>PHP v%2$s</strong>."
 
 #: inc/classes/scanners/class-secupress-scan-phpversion.php:74
 msgid ""
@@ -4745,7 +4690,7 @@ msgstr ""
 
 #: inc/classes/scanners/class-secupress-scan-subscription.php:62
 #: inc/classes/scanners/class-secupress-scan-subscription.php:89
-#: inc/modules/users-login/settings/double-auth.php:36
+#: inc/modules/users-login/settings/double-auth.php:51
 msgid "Use a Captcha for everyone"
 msgstr "Utiliser un captcha pour tout le monde"
 
@@ -5487,7 +5432,7 @@ msgstr ""
 msgid "Your IP address <code>%s</code> has been banned."
 msgstr "Votre adresse IP <code>%1$s</code> a été bannie."
 
-#: inc/common.php:223 inc/modules/users-login/settings/move-login.php:105
+#: inc/common.php:223 inc/modules/users-login/settings/move-login.php:122
 msgid ""
 "If you are Administrator and have been accidentally locked out, enter your "
 "email address here to unlock yourself."
@@ -5748,15 +5693,20 @@ msgstr "Noms d’utilisateur interdits"
 msgid "Stop User Enumeration"
 msgstr "Stopper l’énumération des utilisateurs"
 
-#: inc/functions/modules.php:56
+#: inc/functions/modules.php:53
+#: inc/modules/users-login/settings/blacklist-logins.php:37
+msgid "Prevent User Creation"
+msgstr "Empêcher la création d’utilisateurs"
+
+#: inc/functions/modules.php:57
 msgid "Plugins &amp; Themes"
 msgstr "Plugins &amp; Thèmes"
 
-#: inc/functions/modules.php:60
+#: inc/functions/modules.php:61
 msgid "Check your plugins &amp; themes"
 msgstr "Vérifie vos plugins &amp; thèmes"
 
-#: inc/functions/modules.php:61
+#: inc/functions/modules.php:62
 msgid ""
 "Detect themes and plugins known as vulnerable to avoid hackings. Also, "
 "manage installation and activation rights on them."
@@ -5764,53 +5714,53 @@ msgstr ""
 "Détecte les thèmes et plugins connus pour être vulnérables pour éviter un "
 "piratage. Gère aussi les droits d’installation et d’activation dessus."
 
-#: inc/functions/modules.php:64
+#: inc/functions/modules.php:65
 msgid "Disallow .zip uploads"
 msgstr "Interdire l’envoi des fichiers .zip"
 
-#: inc/functions/modules.php:65
+#: inc/functions/modules.php:66
 msgid "Plugins Installation"
 msgstr "Installation des extensions"
 
-#: inc/functions/modules.php:66
+#: inc/functions/modules.php:67
 msgid "Plugins Activation"
 msgstr "Activation des extensions"
 
-#: inc/functions/modules.php:67
+#: inc/functions/modules.php:68
 msgid "Plugins Deactivation"
 msgstr "Désactivation des extensions"
 
-#: inc/functions/modules.php:68
+#: inc/functions/modules.php:69
 msgid "Plugins Deletion"
 msgstr "Suppression des extensions"
 
-#: inc/functions/modules.php:69
+#: inc/functions/modules.php:70
 #: inc/modules/plugins-themes/settings/plugins.php:61
 msgid "Detect Bad Plugins"
 msgstr "Détection des mauvais plugins"
 
-#: inc/functions/modules.php:70
+#: inc/functions/modules.php:71
 msgid "Themes Installation"
 msgstr "Installation de thèmes"
 
-#: inc/functions/modules.php:71
+#: inc/functions/modules.php:72
 msgid "Themes Switch"
 msgstr "Activation des thèmes"
 
-#: inc/functions/modules.php:72
+#: inc/functions/modules.php:73
 msgid "Themes Deletion"
 msgstr "Suppression des thèmes"
 
-#: inc/functions/modules.php:73
+#: inc/functions/modules.php:74
 #: inc/modules/plugins-themes/settings/themes.php:51
 msgid "Detect Bad Themes"
 msgstr "Détection des mauvais thèmes"
 
-#: inc/functions/modules.php:81
+#: inc/functions/modules.php:82
 msgid "Core Tweaking"
 msgstr "Optimisation du cœur"
 
-#: inc/functions/modules.php:82
+#: inc/functions/modules.php:83
 msgid ""
 "WordPress can be tweaked in so many ways. But are you using the right ones? "
 "Let's see!"
@@ -5818,59 +5768,59 @@ msgstr ""
 "WordPress peut être personnalisé par divers moyens. mais utilisez vous les "
 "bons ? Voyons ça !"
 
-#: inc/functions/modules.php:85
+#: inc/functions/modules.php:86
 #: inc/modules/wordpress-core/settings/auto-update.php:12
 msgid "Minor Updates"
 msgstr "Mises à jour mineures"
 
-#: inc/functions/modules.php:86
+#: inc/functions/modules.php:87
 #: inc/modules/wordpress-core/settings/auto-update.php:29
 msgid "Major Updates"
 msgstr "Mises à jour majeures"
 
-#: inc/functions/modules.php:87
+#: inc/functions/modules.php:88
 msgid "Disallow File Edit"
 msgstr "Interdire l’édition des fichiers"
 
-#: inc/functions/modules.php:88
+#: inc/functions/modules.php:89
 msgid "Disallow Unfiltered Uploads"
 msgstr "Interdire les téléversements non filtrés"
 
-#: inc/functions/modules.php:96
+#: inc/functions/modules.php:97
 msgid "Keep your data safe"
 msgstr "Gardez vos données en sécurité"
 
-#: inc/functions/modules.php:97
+#: inc/functions/modules.php:98
 msgid "Preserve your data and avoid losing your content in case of attack."
 msgstr "Préserve vos données et évite la perte de contenu en cas d’attaque."
 
-#: inc/functions/modules.php:100
+#: inc/functions/modules.php:101
 msgid "XML-RPC Management"
 msgstr "Gestion XML-RPC"
 
-#: inc/functions/modules.php:101
+#: inc/functions/modules.php:102
 #: inc/modules/sensitive-data/settings/content-protect.php:12
 msgid "Blackhole"
 msgstr "Trou noir"
 
-#: inc/functions/modules.php:102
+#: inc/functions/modules.php:103
 #: inc/modules/sensitive-data/settings/content-protect.php:34
 msgid "Anti Hotlink"
 msgstr "Anti Hotlink"
 
-#: inc/functions/modules.php:106
+#: inc/functions/modules.php:107
 msgid "PHP WP Disclosure"
 msgstr "Divulgation PHP"
 
-#: inc/functions/modules.php:108
+#: inc/functions/modules.php:109
 msgid "Protect Readme Files"
 msgstr "Protège les fichiers readme"
 
-#: inc/functions/modules.php:116
+#: inc/functions/modules.php:117
 msgid "Block bad requests"
 msgstr "Bloque les mauvaises requêtes"
 
-#: inc/functions/modules.php:117
+#: inc/functions/modules.php:118
 msgid ""
 "Malicious requests are common, unfortunatly. All malicious incoming requests "
 "will be checked and quietly blocked."
@@ -5879,28 +5829,24 @@ msgstr ""
 "entrantes contenant des mauvais choses seront vérifiées et bloquées "
 "silencieusement."
 
-#: inc/functions/modules.php:120
+#: inc/functions/modules.php:121
 #: inc/modules/firewall/settings/bbq-headers.php:12
 msgid "Block Bad User Agents"
 msgstr "Bloquer les mauvais User-Agents"
 
-#: inc/functions/modules.php:122
+#: inc/functions/modules.php:123
 #: inc/modules/firewall/settings/bbq-headers.php:61
 msgid "Block Fake SEO Bots"
 msgstr "Bloquer les faux bots SEO"
 
-#: inc/functions/modules.php:123
+#: inc/functions/modules.php:124
 msgid "Block Bad Content"
 msgstr "Bloque les mauvais contenus"
 
-#: inc/functions/modules.php:125
+#: inc/functions/modules.php:126
 #: inc/modules/firewall/settings/bbq-url-content.php:61
 msgid "Block 404 requests on PHP files"
 msgstr "Bloquer les pages 404 sur les fichiers PHP"
-
-#: inc/functions/modules.php:126
-msgid "Front Anti Brute-Force"
-msgstr "Anti Brute-Force en front-office"
 
 #: inc/functions/modules.php:127
 msgid "GeoIP Management"
@@ -6555,14 +6501,14 @@ msgstr "Scanner de virus"
 msgid "Files Scanner"
 msgstr "Scanner de fichiers"
 
-#: inc/modules/firewall/callbacks.php:162
+#: inc/modules/firewall/callbacks.php:138
 msgid ""
 "You cannot block your own country, it has been removed from the blacklist."
 msgstr ""
 "Vous ne pouvez pas bloquer votre propre pays, il a été retiré de la liste "
 "des pays indésirables."
 
-#: inc/modules/firewall/callbacks.php:169
+#: inc/modules/firewall/callbacks.php:145
 msgid "You cannot block your own country, it has been added to the whitelist."
 msgstr ""
 "Vous ne pouvez pas bloquer votre propre pays, il a été ajouté à la liste des "
@@ -6721,50 +6667,6 @@ msgstr ""
 #: inc/modules/firewall/settings/bbq-url-content.php:67
 msgid "Yes, protect my site from 404 on .php files"
 msgstr "Oui, protéger mon site des 404 sur les fichiers .php"
-
-#: inc/modules/firewall/settings/bruteforce.php:6
-msgid "Anti Brute-Force Management"
-msgstr "Gestion de l’Anti Brute Force"
-
-#: inc/modules/firewall/settings/bruteforce.php:12
-msgid "Use Anti Brute-Force"
-msgstr "Utiliser un Anti Brute-Force"
-
-#: inc/modules/firewall/settings/bruteforce.php:13
-msgid ""
-"When a single visitor (IP Address) is hitting your website hard (10 times "
-"per second), (s)he should go slowly, and if (s)he continues, lock their IP "
-"Address."
-msgstr ""
-"Quand un visiteur unique (par adresse IP) attaque votre site (10 fois par "
-"seconde), il devrait aller plus lentement, et s’il continue, bloquer son "
-"adresse IP."
-
-#: inc/modules/firewall/settings/bruteforce.php:18
-msgid "Yes, use Anti Brute-Force on my website"
-msgstr "Oui, utiliser un Anti Brute-Force sur mon site"
-
-#: inc/modules/firewall/settings/bruteforce.php:22
-msgid "Used on your all WordPress pages."
-msgstr "Utilisé sur toutes les pages WordPress."
-
-#: inc/modules/firewall/settings/bruteforce.php:26
-msgid ""
-"Requests done by logged-in administrators and AJAX requests are not blocked."
-msgstr ""
-"Les requêtes faites par des administrateurs connectés, et les requêtes AJAX "
-"ne sont pas bloquées."
-
-#: inc/modules/firewall/settings/bruteforce.php:30
-#, php-format
-msgid ""
-"This is NOT an anti login brute-force, if you want this kind of module, just "
-"activate the <a href=\"%s#row-login-protection_type\">Login Attempts "
-"Blocker</a>."
-msgstr ""
-"Ce n’est PAS un anti brute-force contre la page de connexion, si vous "
-"souhaitez ce module, activez simplement le <a href=\"%s#row-login-"
-"protection_type\">Blocage des tentatives des connexions</a>."
 
 #: inc/modules/firewall/settings/geoip-system.php:6
 msgid "Country Management"
@@ -8026,7 +7928,7 @@ msgstr "Nom d’utilisateur : %s"
 msgid "Sorry, that username is not allowed."
 msgstr "Désolé, ce nom d’utilisateur n’est pas autorisé."
 
-#: inc/modules/users-login/plugins/limitloginattempts.php:78
+#: inc/modules/users-login/plugins/limitloginattempts.php:79
 #, php-format
 msgid "Login failed, <strong>%d</strong> attempt left."
 msgid_plural "Login failed, <strong>%d</strong> attempts left."
@@ -8059,7 +7961,7 @@ msgstr ""
 "correctement."
 
 #: inc/modules/users-login/plugins/move-login.php:455
-#: inc/modules/users-login/settings/move-login.php:104
+#: inc/modules/users-login/settings/move-login.php:121
 msgid ""
 "This page does not exists, has moved or you are not allowed to access it."
 msgstr "Cette page n’existe pas, a été déplacée ou vous n’y avez pas accès."
@@ -8086,10 +7988,6 @@ msgstr ""
 "Vous ne pouvez pas empêcher la création d’utilisateurs si les inscriptions "
 "sont ouvertes."
 
-#: inc/modules/users-login/settings/blacklist-logins.php:37
-msgid "Prevent User Creation"
-msgstr "Empêcher la création d’utilisateurs"
-
 #: inc/modules/users-login/settings/blacklist-logins.php:43
 msgid "Yes, prevent attacks to exploit user creation"
 msgstr "Oui, empêcher les attaques qui créent des utilisateurs"
@@ -8108,15 +8006,23 @@ msgstr ""
 msgid "Authentication"
 msgstr "Authentification"
 
-#: inc/modules/users-login/settings/double-auth.php:14
+#: inc/modules/users-login/settings/double-auth.php:15
+#: inc/modules/users-login/settings/double-auth.php:29
 msgid "Use a Two-Factor Authentication"
 msgstr "Utiliser une Double Authentification"
 
-#: inc/modules/users-login/settings/double-auth.php:18
+#: inc/modules/users-login/settings/double-auth.php:22
+#: inc/modules/users-login/settings/move-login.php:60
+#, php-format
+msgid "The %1$s constant is set, you cannot use the %2$s module."
+msgstr ""
+"La constante %1$s est configurée, vous ne pouvez pas utiliser le module %2$s."
+
+#: inc/modules/users-login/settings/double-auth.php:33
 msgid "Yes, use the <strong>PasswordLess</strong> method"
 msgstr "Oui, utiliser la méthode <strong>PasswordLess</strong>"
 
-#: inc/modules/users-login/settings/double-auth.php:23
+#: inc/modules/users-login/settings/double-auth.php:38
 msgid ""
 "Users will just have to enter their email address when log in, then click on "
 "a link in the email they receive."
@@ -8124,7 +8030,7 @@ msgstr ""
 "Les utilisateurs devront juste entrer leur adresse email pour se connecter, "
 "puis cliquer sur un lien dans le mail reçu."
 
-#: inc/modules/users-login/settings/double-auth.php:27
+#: inc/modules/users-login/settings/double-auth.php:42
 msgid ""
 "This module will not work until validated by a link sent to your email "
 "address when you activated it."
@@ -8132,17 +8038,17 @@ msgstr ""
 "Ce module ne fonctionnera que quand il aura été validé par le lien qui vous "
 "a été envoyé par email."
 
-#: inc/modules/users-login/settings/double-auth.php:37
+#: inc/modules/users-login/settings/double-auth.php:52
 msgid "A Captcha can prevent a form being sent if its rule isn't respected."
 msgstr ""
 "Un Captcha peut éviter que le formulaire ne soit envoyé si sa règle n’est "
 "pas respectée."
 
-#: inc/modules/users-login/settings/double-auth.php:42
+#: inc/modules/users-login/settings/double-auth.php:57
 msgid "Yes, use a Captcha"
 msgstr "Oui, utiliser un Captcha"
 
-#: inc/modules/users-login/settings/double-auth.php:46
+#: inc/modules/users-login/settings/double-auth.php:61
 msgid ""
 "This module requires JavaScript to be enabled, without it the form will "
 "never be sent."
@@ -8229,49 +8135,50 @@ msgid "Login Pages"
 msgstr "Pages de connexion"
 
 #: inc/modules/users-login/settings/move-login.php:21
-#: inc/modules/users-login/settings/move-login.php:41
+#: inc/modules/users-login/settings/move-login.php:43
+#: inc/modules/users-login/settings/move-login.php:53
 msgid "Move the login and admin pages"
 msgstr "Déplacer les pages d’administration et de connexion"
 
 #: inc/modules/users-login/settings/move-login.php:27
-#: inc/modules/users-login/settings/move-login.php:46
+#: inc/modules/users-login/settings/move-login.php:48
 msgid "Yes, move the login and admin pages"
 msgstr "Oui, déplacer la page de connexion et d’administrations"
 
-#: inc/modules/users-login/settings/move-login.php:74
+#: inc/modules/users-login/settings/move-login.php:91
 msgid "URL"
 msgstr "URL"
 
-#: inc/modules/users-login/settings/move-login.php:80
+#: inc/modules/users-login/settings/move-login.php:97
 msgid "What to do when the old page is triggered?"
 msgstr "Que faire quand l’ancienne page est chargée ?"
 
-#: inc/modules/users-login/settings/move-login.php:85
+#: inc/modules/users-login/settings/move-login.php:102
 msgid "Standard Error Message"
 msgstr "Message d'erreur standard"
 
-#: inc/modules/users-login/settings/move-login.php:86
+#: inc/modules/users-login/settings/move-login.php:103
 msgid "Custom Error Message"
 msgstr "Message d’erreur personnalisé"
 
-#: inc/modules/users-login/settings/move-login.php:87
-#: inc/modules/users-login/settings/move-login.php:115
+#: inc/modules/users-login/settings/move-login.php:104
+#: inc/modules/users-login/settings/move-login.php:132
 msgid "Custom Page"
 msgstr "Page personnalisée"
 
-#: inc/modules/users-login/settings/move-login.php:93
+#: inc/modules/users-login/settings/move-login.php:110
 msgid "Preview"
 msgstr "Prévisualisation"
 
-#: inc/modules/users-login/settings/move-login.php:95
+#: inc/modules/users-login/settings/move-login.php:112
 msgid "secupress-movelogin-error-preview-en_US.png"
 msgstr "secupress-movelogin-error-preview-fr_FR.png"
 
-#: inc/modules/users-login/settings/move-login.php:100
+#: inc/modules/users-login/settings/move-login.php:117
 msgid "Custom Message"
 msgstr "Message personnalisé"
 
-#: inc/modules/users-login/settings/move-login.php:109
+#: inc/modules/users-login/settings/move-login.php:126
 msgid ""
 "Clean HTML allowed. The recovery form will be automatically added at the end "
 "of your content."
@@ -8279,12 +8186,12 @@ msgstr ""
 "Code HTML propre autorisé. Le formulaire de récupération sera "
 "automatiquement ajouté à la fin de votre contenu."
 
-#: inc/modules/users-login/settings/move-login.php:125
+#: inc/modules/users-login/settings/move-login.php:142
 msgid "A custom page from your site, only."
 msgstr "Une page personnalisée de votre site seulement."
 
 #. Translators: 1 is a file name, 2 is a tag name.
-#: inc/modules/users-login/settings/move-login.php:139
+#: inc/modules/users-login/settings/move-login.php:156
 #, php-format
 msgid ""
 "You need to add the following code from your %1$s file, inside the %2$s "
@@ -8293,7 +8200,7 @@ msgstr ""
 "Vous devez ajouter le code suivant dans votre fichier %1$s, dans le bloc "
 "%2$s :"
 
-#: inc/modules/users-login/settings/move-login.php:145
+#: inc/modules/users-login/settings/move-login.php:162
 msgid "Rules"
 msgstr "Règles"
 
@@ -8809,6 +8716,90 @@ msgid ""
 msgstr ""
 "Protégez votre WordPress avec SecuPress, analysez et assurez-vous de la "
 "sécurité de votre site quotidiennement."
+
+#~ msgid ""
+#~ "The following plugins are not recommended with this plugin and may cause "
+#~ "unexpected results:"
+#~ msgstr ""
+#~ "Les plugins suivants ne sont pas recommandés avec ce plugin et pourraient "
+#~ "causer des résultats inattendus :"
+
+#~ msgid ""
+#~ "Check if your website is vulnerable to attacks by multiple and quick "
+#~ "requests (DDoS like)."
+#~ msgstr ""
+#~ "Vérifie si votre site peut être attaqué par de multiples requêtes rapides "
+#~ "(comme DDoS)."
+
+#~ msgid ""
+#~ "Nobody needs to load more than 10 pages per second on your front-end, "
+#~ "back-end or login page. You should block the requests' owner."
+#~ msgstr ""
+#~ "Personne n’a besoin de charger plus de 10 pages par secondes sur votre "
+#~ "front-office, back-office ou page de connexion."
+
+#~ msgid "Anti Front-End Brute-Force"
+#~ msgstr "Anti Brute-Force en front-office"
+
+#~ msgid ""
+#~ "Your website seems to be protected against multiple and quick requests."
+#~ msgstr ""
+#~ "Votre site semble être protégé contre les multiples attaques rapides."
+
+#~ msgid ""
+#~ "The <strong>Anti Front-End Brute-Force</strong> module has been activated."
+#~ msgstr ""
+#~ "Le module <strong>anti Brute-Force en front-office</strong> a été activé."
+
+#~ msgid "Your website is not protected from multiple and quick requests."
+#~ msgstr "Votre site n’est pas protégé contre les multiples attaques rapides."
+
+#~ msgid ""
+#~ "http://docs.secupress.me/article/110-brute-force-attack-vulnerability-scan"
+#~ msgstr ""
+#~ "http://fr.docs.secupress.me/article/70-scan-de-possibilite-de-brute-force-"
+#~ "sur-le-site"
+
+#~ msgid "Front Anti Brute-Force"
+#~ msgstr "Anti Brute-Force en front-office"
+
+#~ msgid "Anti Brute-Force Management"
+#~ msgstr "Gestion de l’Anti Brute Force"
+
+#~ msgid "Use Anti Brute-Force"
+#~ msgstr "Utiliser un Anti Brute-Force"
+
+#~ msgid ""
+#~ "When a single visitor (IP Address) is hitting your website hard (10 times "
+#~ "per second), (s)he should go slowly, and if (s)he continues, lock their "
+#~ "IP Address."
+#~ msgstr ""
+#~ "Quand un visiteur unique (par adresse IP) attaque votre site (10 fois par "
+#~ "seconde), il devrait aller plus lentement, et s’il continue, bloquer son "
+#~ "adresse IP."
+
+#~ msgid "Yes, use Anti Brute-Force on my website"
+#~ msgstr "Oui, utiliser un Anti Brute-Force sur mon site"
+
+#~ msgid "Used on your all WordPress pages."
+#~ msgstr "Utilisé sur toutes les pages WordPress."
+
+#~ msgid ""
+#~ "Requests done by logged-in administrators and AJAX requests are not "
+#~ "blocked."
+#~ msgstr ""
+#~ "Les requêtes faites par des administrateurs connectés, et les requêtes "
+#~ "AJAX ne sont pas bloquées."
+
+#, php-format
+#~ msgid ""
+#~ "This is NOT an anti login brute-force, if you want this kind of module, "
+#~ "just activate the <a href=\"%s#row-login-protection_type\">Login Attempts "
+#~ "Blocker</a>."
+#~ msgstr ""
+#~ "Ce n’est PAS un anti brute-force contre la page de connexion, si vous "
+#~ "souhaitez ce module, activez simplement le <a href=\"%s#row-login-"
+#~ "protection_type\">Blocage des tentatives des connexions</a>."
 
 #~ msgid "Block ID: %s"
 #~ msgstr "Block ID : %s"
