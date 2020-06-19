@@ -373,6 +373,9 @@ function secupress_die( $message = '', $title = '', $args = array() ) {
 			// Tell cache plugins not to cache our error message.
 			define( 'DONOTCACHEPAGE', true );
 		}
+		if ( ! empty( $args['response'] ) ) {
+			http_response_code( absint( $args['response'] ) );
+		}
 		wp_die( $message, $title, $args );
 	}
 }
