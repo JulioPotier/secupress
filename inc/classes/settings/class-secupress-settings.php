@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 
 /**
@@ -494,12 +494,12 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 
 		// Value.
 		if ( isset( $args['value'] ) ) {
-			if ( $args['plugin_activation'] ) {
-				// For the checkboxes that activate un sub-module, make sure they are not checked if they are disabled.
-				$value = $disabled ? null : $args['value'];
-			} else {
+			// if ( $args['plugin_activation'] ) {
+				// // For the checkboxes that activate un sub-module, make sure they are not checked if they are disabled.
+				// $value = $disabled ? null : $args['value'];
+			// } else {
 				$value = $args['value'];
-			}
+			// }
 		} elseif ( 'global' === $this->modulenow ) {
 			$value = secupress_get_option( $args['name'] );
 		} else {
@@ -529,7 +529,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$args['attributes']['class'][] = 'secupress-checkbox-mini';
 		}
 
-		if ( 'radios' === $args['type'] ) {
+		if ( 'radios' === $args['type'] || 'roles_radio' === $args['type'] ) {
 			$args['attributes']['class'][] = 'secupress-radio';
 		}
 
@@ -562,7 +562,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$args['attributes']['readonly'] = 'readonly';
 		}
 
-		unset( $args['attributes']['pattern'], $args['attributes']['required'] );
+		unset( $args['attributes']['required'] );
 
 		if ( ! empty( $args['attributes'] ) ) {
 			foreach ( $args['attributes'] as $attribute => $attribute_value ) {
@@ -584,7 +584,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			case 'no' :
 				break;
 			default :
-				$fieldset_auto = array( 'checkboxes' => 1, 'radioboxes' => 1, 'radios' => 1, 'roles' => 1 );
+				$fieldset_auto = array( 'checkboxes' => 1, 'radioboxes' => 1, 'radios' => 1, 'roles' => 1, 'roles_radio' => 1 );
 
 				if ( 'yes' === $args['fieldset'] || isset( $fieldset_auto[ $args['type'] ] ) ) {
 					$has_fieldset_begin = true;
@@ -762,13 +762,42 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				}
 				break;
 
-			case 'roles' :
-
-				$value = array_flip( (array) $value );
+			case 'roles_radio' :
 				$roles = new WP_Roles();
 				$roles = $roles->get_names();
 				$roles = array_map( 'translate_user_role', $roles );
-
+				if ( isset( $args['options'] ) ) {
+					$roles = array_merge( $args['options'], $roles );
+				}
+				foreach ( $roles as $val => $title ) {
+					$args['label_for'] = $args['name'] . '_' . $val;
+					$pro_class         = '';
+					if ( static::is_pro_feature( $args['name'] . '|' . $val ) && ! secupress_is_pro() ) {
+						$pro_class = ' secupress-pro-option';
+					} elseif ( static::is_pro_feature( $args['name'] . '|' . $val ) ) {
+						$pro_class = ' secupress-show-pro';
+					}
+					?>
+					<p class="secupress-radio-line<?php echo $pro_class; ?>">
+							<?php if ( isset( $args['not'] ) && is_array( $args['not'] ) && isset( $args['not'][ $val ] ) ) { ?>
+								<label class="disabled" for="<?php echo esc_attr( $args['label_for'] ); ?>">
+								<input type="radio" id="<?php echo $args['label_for']; ?>" value="" disabled="disabled"<?php echo $attributes; ?>>
+							<?php } else { ?>
+								<label<?php echo $disabled ? ' class="disabled"' : ''; ?> for="<?php echo esc_attr( $args['label_for'] ); ?>">
+								<input type="radio" id="<?php echo $args['label_for']; ?>" name="<?php echo $name_attribute; ?>" value="<?php echo $val; ?>"<?php checked( $value, $val ); ?><?php echo $disabled; ?><?php echo $attributes; ?>>
+							<?php } ?>
+							<?php echo '<span class="label-text">' . $title . '</span>'; ?>
+						</label>
+						<?php echo static::is_pro_feature( $args['name'] . '|' . $val ) && ! secupress_is_pro() ? static::get_pro_version_string( '<span class="description secupress-get-pro-version">%s</span>' ) : ''; ?>
+					</p>
+					<?php
+				}
+				break;
+			case 'roles' :
+				$value = array_flip( (array) $value );
+				$roles = new WP_Roles();
+				$roles = $roles->get_names();
+				$roles = array_map( 'secupress_translate_user_role', $roles );
 				foreach ( $roles as $val => $title ) {
 					?>
 					<p class="secupress-checkbox-roles-line">
@@ -794,6 +823,63 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				echo '<button type="submit" class="secupress-button" id="' . esc_attr( $args['name'] ) . '">' . $args['label'] . '</button>';
 				break;
 
+			case 'plugin' :
+				$helpers_args_for_plugins = $args;
+				unset( $helpers_args_for_plugins['helpers']['help'] );
+				static::helpers( $helpers_args_for_plugins );
+
+				if ( ! function_exists( 'plugins_api' ) ) {
+					require( ABSPATH . '/wp-admin/includes/plugin-install.php' );
+				}
+				// Set up our query fields.
+				$fields = array(
+					'banners'           => false,
+					'icons'             => true,
+					'reviews'           => false,
+					'rating'            => true,
+					'num_ratings'       => true,
+					'downloaded'        => true,
+					'active_installs'   => true,
+					'short_description' => true,
+					'sections'          => false,
+					'downloadlink'      => true,
+					'last_updated'      => true,
+					'homepage'          => true,
+				);
+				// Set how long to cache results.
+				$expiration = 120 * MINUTE_IN_SECONDS;
+				$plugin_info = false;
+				/**
+				 * Do query using passed in params.
+				 */
+				// Look in the cache.
+				$plugin_info = get_transient( "secupress_plugin_cards_{$args['name']}" );
+				// If it's not in the cache or it's expired, do it live
+				// and store it in the cache for next time.
+				if ( ! $plugin_info ) {
+					$plugin_info = plugins_api(
+						'plugin_information',
+						array(
+							'slug'   => $args['name'],
+							'fields' => $fields,
+						)
+					);
+					if ( is_object( $plugin_info ) && ! is_wp_error( $plugin_info ) ) {
+						set_transient( "secupress_plugin_cards_{$args['name']}", $plugin_info, $expiration );
+					}
+				}
+				// Default $output.
+				$output = '';
+				// Confirm the call to plugins_api worked.
+				if ( is_object( $plugin_info ) && ! is_wp_error( $plugin_info ) ) {
+					$output .= '<div class="plugin-cards single-plugin">';
+					$output .= secupress_render_plugin_card( $plugin_info );
+					$output .= '</div>';
+				}
+				echo $output;
+
+				break;
+
 			default :
 				if ( secupress_is_pro() && function_exists( 'secupress_pro_' . $args['type'] . '_field' ) ) {
 					call_user_func( 'secupress_pro_' . $args['type'] . '_field', $args, $this );
@@ -805,8 +891,13 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 		}
 
 		// Helpers.
-		static::helpers( $args );
-
+		if ( 'plugin' !== $args['type'] ) {
+			static::helpers( $args );
+		} else {
+			$helpers_args_for_plugins = $args;
+			unset( $helpers_args_for_plugins['helpers']['description'] );
+			static::helpers( $helpers_args_for_plugins );
+		}
 		if ( $has_fieldset_end ) {
 			echo '</fieldset>';
 		}
@@ -826,6 +917,42 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			<?php _e( 'Reset Settings', 'secupress' ); ?>
 		</a>
 		<?php
+	}
+
+	protected function tables_selection() {
+		global $wpdb;
+
+		$non_wp_tables = secupress_get_non_wp_tables();
+		$wp_tables     = secupress_get_wp_tables();
+		$blog_ids      = ! is_multisite() ? [ '1' ] : $wpdb->get_col( "SELECT blog_id FROM {$wpdb->blogs}" );
+
+		$form  = '<div class="show-input">';
+		$form .= '<fieldset aria-labelledby="select-db-tables-to-rename" class="secupress-boxed-group">';
+
+		if ( $non_wp_tables ) {
+			$form .= '<b>' . __( 'Other tables', 'secupress' ) . '</b><br/>';
+			foreach ( $non_wp_tables as $table ) {
+				$table_attr = esc_attr( $table );
+				$form      .= '<input type="checkbox" name="secupress_wordpress-core_settings[database_tables_selection][]" value="' . $table_attr . '" id="select-db-tables-to-rename-' . $table_attr . '" checked="checked"><label for="select-db-tables-to-rename-' . $table_attr . '">' . esc_html( $table ) . '</label><br/>';
+			}
+		}
+
+		$form .= '<b>' . __( 'WordPress tables (mandatory)', 'secupress' ) . '</b><br/>';
+
+		foreach ( $blog_ids as $blog_id ) {
+			$blog_id = '1' === $blog_id ? '' : $blog_id . '_';
+
+			foreach ( $wp_tables as $table ) {
+				$table = substr_replace( $table, $wpdb->prefix . $blog_id, 0, strlen( $wpdb->prefix ) );
+				$form .= '<input type="checkbox" checked="checked" disabled="disabled"><label>' . esc_html( $table ) . '</label><br/>';
+			}
+		}
+
+		$form .= '</fieldset>';
+
+		$form .= '</div>';
+
+		echo $form;
 	}
 
 	/**
@@ -921,15 +1048,17 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	protected function field_button( $args ) {
 
 		if ( ! empty( $args['label'] ) ) {
-			$class  = sanitize_html_class( $args['name'] );
-			$class .= ! empty( $args['style'] ) ? ' button-' . sanitize_html_class( $args['style'] ) : ' button-secondary';
-			$id     = ! empty( $args['id'] )    ? ' id="' . $args['id'] . '"' : '';
+			$class    = 'secupress-button button secupressicon-' . sanitize_html_class( $args['name'] );
+			$class   .= ! empty( $args['style'] )    ? ' button-' . $args['style'] : '';
+			$class   .= ! empty( $args['class'] )    ? ' ' . $args['class'] : '';
+			$id       = ! empty( $args['id'] )       ? ' id="' . $args['id'] . '"' : '';
+			$disabled = ! empty( $args['disabled'] ) ? ' disabled="disabled"' : '';
 
 			if ( ! empty( $args['url'] ) ) {
-				echo '<a' . $id . ' class="secupress-button secupress-button-primary secupressicon-' . $class . ( ! empty( $args['disabled'] ) ? ' disabled' : '' ) . '" href="' . esc_url( $args['url'] ) . '">' . $args['label'] . '</a>';
+				echo '<a' . $id . ' class="' . $class . $disabled . '" href="' . esc_url( $args['url'] ) . '">' . $args['label'] . '</a>';
 			}
 			else {
-				echo '<button' . $id . ' class="secupress-button secupress-button-primary secupressicon-' . $class . '"' . ( ! empty( $args['disabled'] ) ? ' disabled="disabled"' : '' ) . ' type="button">' . $args['label'] . '</button>';
+				echo '<button' . $id . ' class="' . $class . '"' . $disabled . ' type="button">' . $args['label'] . '</button>';
 			}
 		}
 
@@ -977,7 +1106,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					$description = '<' . $tag . ' class="description desc' . $depends . $class . '">' . $helper['description'] . '</' . $tag . '>';
 					break;
 				case 'help' :
-					$description = '<' . $tag . ' class="description help' . $depends . $class . '">' . $helper['description'] . '</' . $tag . '>';
+					$description = '<' . $tag . ' class="description help' . $depends . $class . '"><span class="dashicons dashicons-editor-help"></span> ' . $helper['description'] . '</' . $tag . '>';
 					break;
 				case 'warning' :
 					$description = '<' . $tag . ' class="description warning' . $depends . $class . '">' . ( 'p' === $tag ? '' : '<p>' ) . '<strong>' . __( 'Warning: ', 'secupress' ) . '</strong> ' . $helper['description'] . '</' . $tag . '>'; // Don't forget to close the <p> tag.
@@ -1402,8 +1531,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 			$sideads = get_transient( 'secupress_sideads' );
 
 			if ( false === $sideads ) {
-				$response = wp_remote_get( SECUPRESS_WEB_MAIN . 'api/plugin/sideads/1.0/?lang=' . get_locale() );
-
+				$response = wp_remote_get( SECUPRESS_WEB_MAIN . 'api/plugin/sideads/1.0/' );
 				if ( ! is_wp_error( $response ) && wp_remote_retrieve_response_code( $response ) === 200 ) {
 					$sideads = wp_remote_retrieve_body( $response );
 					$sideads = json_decode( $sideads, true );
@@ -1419,7 +1547,6 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 										'content' => '<div class="secupress-section-dark secupress-pro-ad"> <i class="icon-secupress" aria-hidden="true"></i> <img src="##SECUPRESS_ADMIN_IMAGES_URL##logo-pro.png" class="secupress-pro-icon" srcset="##SECUPRESS_ADMIN_IMAGES_URL##logo-pro@2x.png" width="80" height="78" alt="SecuPress Pro"/> <p class="secupress-text-medium">Improve your Security</p> <p>Unlock all the features of SecuPress Pro</p> <a href="https://secupress.me/pricing/" class="secupress-button secupress-button-tertiary secupress-button-getpro"> <span class="text">Get Pro Version</span> </a> <p><a href="https://secupress.me/features">Learn More About Pro Features</a></p> </div>',
 										'content-fr_FR' => '<div class="secupress-section-dark secupress-pro-ad"> <i class="icon-secupress" aria-hidden="true"></i> <img src="##SECUPRESS_ADMIN_IMAGES_URL##logo-pro.png" class="secupress-pro-icon" srcset="##SECUPRESS_ADMIN_IMAGES_URL##logo-pro@2x.png" width="80" height="78" alt="SecuPress Pro"/> <p class="secupress-text-medium">Améliorez votre sécurité</p> <p>Débloquez toutes les fonctionnalités<br>de SecuPress Pro</p> <a href="https://secupress.me/fr/tarifs/" class="secupress-button secupress-button-tertiary secupress-button-getpro"> <span class="text">Acheter la version Pro</span> </a> <p><a href="https://secupress.me/fr/fonctionnalites/">Découvrez les fonctionalités pro</a></p> </div>',
 										),
-									// 1 => <div class="secupress-product-ads"> <a href="http://www.o2switch.fr/" target="_blank"> <img src="https://boiteaweb.fr/wp-content/uploads/plugins/ad-o2switch.jpg" width="280"/> </a> </div>
 				);
 			}
 
@@ -1431,7 +1558,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 					|| ( 'pro' === $sidead['when'] && secupress_is_pro() )
 					|| 'both' === $sidead['when']
 				 ) {
-				 	$content_locale = 'content-' . get_locale();
+				 	$content_locale = 'content-' . get_user_locale();
 				 	$content        = isset( $sidead[ $content_locale ] ) ? $sidead[ $content_locale ] : $sidead['content'];
 					echo wp_kses_post( str_replace( '##SECUPRESS_ADMIN_IMAGES_URL##', SECUPRESS_ADMIN_IMAGES_URL, $content ) );
 				}
@@ -1500,7 +1627,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 				<p><?php _e( 'We already have some solutions for you.', 'secupress' ) ?></p>
 
 			<p class="secupress-cta">
-				<a href="<?php _e( 'http://docs.secupress.me/', 'secupress' ); ?>" class="secupress-button" target="_blank"><?php _e( 'Read the docs', 'secupress' ); ?></a>
+				<a href="<?php _e( 'https://docs.secupress.me/', 'secupress' ); ?>" class="secupress-button" target="_blank"><?php _e( 'Read the docs', 'secupress' ); ?></a>
 			</p>
 			</div>
 		</div>
@@ -1578,7 +1705,7 @@ abstract class SecuPress_Settings extends SecuPress_Singleton {
 	 * @return (string)
 	 */
 	public static function get_pro_version_string( $format = '' ) {
-		$message = sprintf( __( 'Available in <a href="%s" target="_blank">Pro Version</a>', 'secupress' ), esc_url( 'https://secupress.me/' . __( 'pricing', 'secupress' ) ) );
+		$message = sprintf( __( 'Available in <a href="%s" target="_blank">Pro Version</a>', 'secupress' ), esc_url( SECUPRESS_WEB_MAIN . __( 'pricing', 'secupress' ) ) );
 		if ( $format ) {
 			$message = sprintf( $format, $message );
 		}

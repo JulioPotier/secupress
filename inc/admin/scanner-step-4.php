@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 $modules          = secupress_get_modules();
 $scanned_items    = secupress_get_scan_results();
@@ -12,7 +12,7 @@ $old_grade        = $old_report['grade'];
 $this_good_scans  = array();
 
 foreach ( $scanned_items as $class_name_part => $details ) {
-	if ( 'good' === $details['status'] && 'good' !== $old_report['report'][ $class_name_part ]['status'] ) {
+	if ( isset( $old_report['report'][ $class_name_part ] ) && 'good' === $details['status'] && 'good' !== $old_report['report'][ $class_name_part ]['status'] ) {
 		$this_good_scans[ $class_name_part ] = $details;
 		if ( 'bad' === $old_report['report'][ $class_name_part ]['status'] ) {
 			++$nb_bad_scans;
@@ -46,8 +46,8 @@ foreach ( $scanned_items as $class_name_part => $details ) {
 					<p class="secupress-text-medium secupress-mb0"><?php printf( __( 'Nothing fixed yet, %d left.', 'secupress' ), count( $scanned_items ) ); ?></p>
 					<?php
 				}
+				if ( secupress_get_module_option( 'advanced-settings_grade-system', true, 'welcome' ) ) {
 				?>
-
 				<p>
 					<?php
 					// Display a "grade ent from to" message only if it's better.
@@ -63,7 +63,7 @@ foreach ( $scanned_items as $class_name_part => $details ) {
 					}
 					?>
 				</p>
-
+				<?php } ?>
 				<div class="secupress-flex secupress-flex-spaced">
 					<div>
 						<?php

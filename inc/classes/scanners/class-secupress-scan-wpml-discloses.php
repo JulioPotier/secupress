@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * WPML version disclose scan class.
@@ -40,7 +40,7 @@ class SecuPress_Scan_Wpml_Discloses extends SecuPress_Scan implements SecuPress_
 	protected function init() {
 		/** Translators: %s is a plugin name. */
 		$this->title    = sprintf( __( 'Check if the %s plugin discloses its version.', 'secupress' ), 'WPML' );
-		$this->more     = __( 'When an attacker wants to hack into a WordPress site, (s)he will search for all available informations. The goal is to find something useful that will help him penetrate your site. Don\'t let them easily find any informations.', 'secupress' );
+		$this->more     = __( 'When an attacker wants to hack into a WordPress site, they will search for all available informations. The goal is to find something useful that will help him penetrate your site. Don’t let them easily find any informations.', 'secupress' );
 		$this->more_fix = sprintf(
 			/** Translators: 1 is a plugin name, 2 is the name of a protection, 3 is the name of a module. */
 			__( 'Hide the %1$s version to prevent giving too much information to attackers. The %2$s protection from the module %3$s will be activated.', 'secupress' ),
@@ -80,9 +80,9 @@ class SecuPress_Scan_Wpml_Discloses extends SecuPress_Scan implements SecuPress_
 			// DEPRECATED, NOT IN USE ANYMORE.
 			1   => __( 'The generator meta tag should not be displayed anymore.', 'secupress' ),
 			/** Translators: %s is a plugin name. */
-			2   => sprintf( __( 'The %s\'s version should be removed from your styles URLs now.', 'secupress' ), 'WPML' ),
+			2   => sprintf( __( 'The %s’s version should be removed from your styles URLs now.', 'secupress' ), 'WPML' ),
 			/** Translators: %s is a plugin name. */
-			3   => sprintf( __( 'The %s\'s version should be removed from your scripts URLs now.', 'secupress' ), 'WPML' ),
+			3   => sprintf( __( 'The %s’s version should be removed from your scripts URLs now.', 'secupress' ), 'WPML' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -103,7 +103,7 @@ class SecuPress_Scan_Wpml_Discloses extends SecuPress_Scan implements SecuPress_
 	 * @return (string)
 	 */
 	public static function get_docs_url() {
-		return __( 'http://docs.secupress.me/article/104-wpml-version-number-disclosure-scan', 'secupress' );
+		return __( 'https://docs.secupress.me/article/104-wpml-version-number-disclosure-scan', 'secupress' );
 	}
 
 

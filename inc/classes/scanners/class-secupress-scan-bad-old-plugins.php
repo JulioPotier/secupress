@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Bad Old Plugins scan class.
@@ -65,8 +65,8 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// "good"
-			0   => __( 'You don\'t use removed or old plugins.', 'secupress' ),
-			1   => __( 'You don\'t use removed or old plugins anymore.', 'secupress' ),
+			0   => __( 'You don’t use removed or old plugins.', 'secupress' ),
+			1   => __( 'You don’t use removed or old plugins anymore.', 'secupress' ),
 			2   => __( 'All removed or old plugins have been deleted.', 'secupress' ),
 			3   => __( 'All deletable removed or old plugins have been deleted.', 'secupress' ),
 			4   => __( 'All removed or old plugins have been deactivated.', 'secupress' ),
@@ -89,16 +89,16 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 			/** Translators: %s is a plugin name. */
 			202 => __( 'You should delete the plugin %s.', 'secupress' ),
 			203 => _n_noop( 'Sorry, this plugin could not be deleted.', 'Sorry, those plugins could not be deleted.', 'secupress' ),
-			204 => _n_noop( 'The following plugin should be deactivated if you don\'t need it: %s.', 'The following plugins should be deactivated if you don\'t need them: %s.', 'secupress' ),
+			204 => _n_noop( 'The following plugin should be deactivated if you don’t need it: %s.', 'The following plugins should be deactivated if you don’t need them: %s.', 'secupress' ),
 			205 => _n_noop( 'Sorry, this plugin could not be deactivated.', 'Sorry, those plugins could not be deactivated.', 'secupress' ),
 			// "cantfix"
 			/** Translators: %d is a number. */
 			300 => _n_noop( '<strong>%d</strong> plugin can be <strong>deleted</strong>.', '<strong>%d</strong> plugins can be <strong>deleted</strong>.', 'secupress' ),
 			/** Translators: %d is a number. */
 			301 => _n_noop( '<strong>%d</strong> plugin can be <strong>deactivated</strong>.', '<strong>%d</strong> plugins can be <strong>deactivated</strong>.', 'secupress' ),
-			302 => __( 'Unable to locate WordPress Plugin directory.' ), // WP i18n.
+			302 => __( 'Unable to locate WordPress Plugin directory.', 'secupress' ),
 			/** Translators: %s is the plugin name. */
-			303 => sprintf( __( 'A new %s menu item has been activated in the relevant site\'s administration area to let Administrators know which plugins to deactivate.', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ),
+			303 => sprintf( __( 'A new %s menu item has been activated in the relevant site’s administration area to let Administrators know which plugins to deactivate.', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ),
 			304 => __( 'No plugins selected.', 'secupress' ),
 		);
 
@@ -120,7 +120,7 @@ class SecuPress_Scan_Bad_Old_Plugins extends SecuPress_Scan implements SecuPress
 	 * @return (string)
 	 */
 	public static function get_docs_url() {
-		return __( 'http://docs.secupress.me/article/117-outdated-and-bad-plugin-check', 'secupress' );
+		return __( 'https://docs.secupress.me/article/117-outdated-and-bad-plugin-check', 'secupress' );
 	}
 
 

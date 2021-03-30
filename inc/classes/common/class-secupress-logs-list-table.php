@@ -6,7 +6,7 @@
  * @since 1.0
  */
 
-defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Core class used to implement displaying Logs in a list table.
@@ -683,7 +683,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 		}
 		$view_href      = add_query_arg( $view_href, $this->paged_page_url() );
 
-		echo '<a class="secupress-view-log" href="' . esc_url( $view_href ) . '" title="' . esc_attr( sprintf( __( 'View &#8220;%s&#8221;' ), strip_tags( $title ) ) ) . '">'; // WP i18n.
+		echo '<a class="secupress-view-log" href="' . esc_url( $view_href ) . '" title="' . esc_attr( sprintf( __( 'View &#8220;%s&#8221;', 'secupress' ), strip_tags( $title ) ) ) . '">';
 			echo $title;
 		echo "</a>\n";
 
@@ -801,8 +801,14 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 			'view'   => '<a class="secupress-view-log" href="' . esc_url( $view_href ) . '" title="' . esc_attr__( 'View this log details', 'secupress' ) . '" tabindex="-1">' . __( 'View' ) . '</a>',
 		);
 
-		/** This filter is documented in wp-admin/includes/class-wp-posts-list-table.php */
-		$actions = apply_filters( 'post_row_actions', $actions, $post );
+		/**
+		* Filter the actions, only for secupress
+		* @since 2.0 Do not use the WP hook name or we have too many useless actions
+		* @param (array) $actions
+		* @param (WP_Post) $post
+		* @param (string) $criticity
+		*/
+		$actions = apply_filters( 'secupress.post_row_actions', $actions, $post, $_GET['critic'] );
 
 		return $this->row_actions( $actions );
 	}

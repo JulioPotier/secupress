@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 // Keep only scans with "bad" status.
 $this_step_scans  = $bad_scans;	// `array( $class_name_part_lower => $status )`

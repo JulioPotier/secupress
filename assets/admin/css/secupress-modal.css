@@ -1,0 +1,271 @@
+.secupress-Modal {
+	display: none;
+	position: fixed;
+	width: 550px;
+	height: auto;
+	top: 50%;
+	left: 50%;
+	background: #fff;
+	color: #444;
+	transform: translateX(-50%) translateY(-50%);
+	z-index: 100000;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	-ms-interpolation-mode: nearest-neighbor;
+	image-rendering: optimizeQuality;
+	text-rendering: optimizeLegibility
+}
+
+.secupress-Modal-overlay {
+	display: none;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	background: rgba(0, 0, 0, 0.7);
+	z-index: 99999
+}
+
+.secupress-Modal-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 16px 0 32px;
+	border-bottom: 1px solid #EEE
+}
+
+.secupress-Modal-header>div {
+	display: flex
+}
+
+.secupress-Modal-footer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	height: 64px;
+	padding: 0 32px;
+	background: #F5F5F5
+}
+
+.secupress-Modal-close {
+	font-size: 0;
+	color: #AAA;
+	border: none;
+	background: none;
+	cursor: pointer
+}
+
+.secupress-Modal-close:hover {
+	color: #008ec2
+}
+
+.secupress-Modal-close:before {
+	font-size: 1.25rem;
+	line-height: 1
+}
+
+.secupress-Modal-return {
+	display: none;
+	border: none;
+	background: none;
+	cursor: pointer;
+	font-size: 0;
+	color: #777;
+	position: relative;
+	width: 28px;
+	left: -12px
+}
+
+.secupress-Modal-return.secupress-isOpen {
+	display: inline-block
+}
+
+.secupress-Modal-return:before {
+	font-size: 14px;
+	display: inline-block
+}
+
+.secupress-Modal-return:hover,
+.secupress-Modal-return:focus {
+	outline: none;
+	color: #008ec2
+}
+
+.secupress-Modal-cancel {
+	color: #0073aa;
+	text-decoration: underline;
+	margin-left: 8px;
+	line-height: 28px;
+	border: none;
+	background: none;
+	cursor: pointer;
+	font-weight: 500
+}
+
+.secupress-Modal-cancel:hover {
+	color: #008ec2
+}
+
+.secupress-Modal-question {
+	display: none
+}
+
+.secupress-Modal-question {
+	display: block
+}
+
+.secupress-Modal-content {
+	padding: 8px 32px
+}
+
+.secupress-Modal-fieldHidden {
+	display: none;
+	padding-left: 26px;
+	margin-top: 8px
+}
+
+.secupress-Modal-fieldHidden.secupress-isOpen {
+	display: block
+}
+
+.secupress-Modal-fieldHidden input[type=text],
+.secupress-Modal-fieldHidden textarea {
+	border: 2px solid #A9ADB0;
+	font-size: 12px;
+	border-radius: 3px;
+	transition: border 150ms ease-out;
+	-webkit-transition: border 150ms ease-out
+}
+
+.secupress-Modal-fieldHidden input[type=text]:focus,
+.secupress-Modal-fieldHidden textarea:focus {
+	outline: none;
+	box-shadow: none;
+	border-color: #777
+}
+
+.secupress-Modal-fieldHidden input[type=text]::-webkit-input-placeholder,
+.secupress-Modal-fieldHidden textarea::-webkit-input-placeholder {
+	color: #ccc
+}
+
+.secupress-Modal-fieldHidden input[type=text] :-moz-placeholder,
+.secupress-Modal-fieldHidden textarea :-moz-placeholder {
+	color: #ccc;
+	opacity: 1
+}
+
+.secupress-Modal-fieldHidden input[type=text]::-moz-placeholder,
+.secupress-Modal-fieldHidden textarea::-moz-placeholder {
+	color: #ccc;
+	opacity: 1
+}
+
+.secupress-Modal-fieldHidden input[type=text] :-ms-input-placeholder,
+.secupress-Modal-fieldHidden textarea :-ms-input-placeholder {
+	color: #ccc
+}
+
+.secupress-Modal-fieldHidden input[type=text]::-ms-input-placeholder,
+.secupress-Modal-fieldHidden textarea::-ms-input-placeholder {
+	color: #ccc
+}
+
+.secupress-Modal-fieldHidden input[type=text]::placeholder,
+.secupress-Modal-fieldHidden textarea::placeholder {
+	color: #ccc
+}
+
+.secupress-Modal-fieldHidden input[type=text] {
+	width: 300px;
+	height: 30px
+}
+
+.secupress-Modal-fieldHidden textarea {
+	width: 100%;
+	height: 60px;
+	padding: 5px
+}
+
+.secupress-Modal-hidden {
+	display: none;
+	padding: 0 15px;
+}
+
+.secupress-Modal-hidden button {
+	cursor: pointer;
+	border: none;
+	margin-bottom: 24px
+}
+
+.secupress-Modal-hidden .text-center {
+	text-align: center
+}
+
+.secupress-Modal-hidden h3 {
+	display: none
+}
+
+.secupress-Modal-hidden a {
+	color: #1B9AAA
+}
+
+.secupress-Modal-hidden a:hover {
+	color: #0073aa
+}
+
+.secupress-Modal ul li {
+	padding: 4px 0
+}
+
+.secupress-Modal h2,
+.secupress-Modal h3 {
+	display: inline-block;
+	font-size: 1rem;
+	line-height: 1.1875
+}
+
+.secupress-Modal h2 {
+	max-width: 430px;
+	font-weight: 600;
+	color: #23282D;
+	margin: 12px 0
+}
+
+.secupress-Modal h3 {
+	font-weight: bold;
+	color: #3D474E;
+	margin: 8px 0
+}
+
+.secupress-Modal input[type=radio] {
+	margin-top: 1px;
+	margin-right: 8px
+}
+
+.secupress-Modal-header{
+	background-color: #23282d;
+}
+
+.secupress-Modal-header h2{
+	color: #fff;
+	font-family: "Arial Narrow";
+}
+
+.secupress-Modal .secupress-check-help {
+	text-align: right;
+}
+
+.secupress-Modal .secupress-check-help span {
+	font-size: 1.3em;
+}
+
+html[dir=rtl] .secupress-Modal-header {
+	padding: 0 32px 0 16px
+}
+
+html[dir=rtl] .secupress-Modal-return {
+	left: 12px;
+	transform: rotate(180deg)
+}

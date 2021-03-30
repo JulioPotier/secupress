@@ -7,7 +7,7 @@
  * Version: 1.0.3
  */
 
-defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
 
 
 /** --------------------------------------------------------------------------------------------- */
@@ -54,12 +54,12 @@ function secupress_fightspam_dont_use_my_identity_to_comment( $commentdata ) {
 
 		$content = sprintf(
 			/* translators: %s is a "please log in" link */
-			__( 'Can’t process because this username or email belongs to a registered user. If it’s you, %s.', 'secupress-pro' ),
-			'<a href="' . esc_url( wp_login_url( wp_get_referer() ) ) . '">' . __( 'please log in', 'secupress-pro' ) . '</a>'
+			__( 'Can’t process because this username or email belongs to a registered user. If it’s you, %s.', 'secupress' ),
+			'<a href="' . esc_url( wp_login_url( wp_get_referer() ) ) . '">' . __( 'please log in', 'secupress' ) . '</a>'
 		);
 		if ( ! empty( $commentdata['comment_content'] ) ) {
 			$content .= "<br/>\n";
-			$content .= __( 'You may want to copy your message before logging in:', 'secupress-pro' );
+			$content .= __( 'You may want to copy your message before logging in:', 'secupress' );
 			$content .= '<br/><textarea readonly="readonly" rows="8" cols="45">' . esc_html( wp_unslash( $commentdata['comment_content'] ) ) . '</textarea>';
 		}
 
@@ -112,12 +112,13 @@ add_action( 'check_comment_flood', 'secupress_fightspam_force_check_comment' );
  * This will allow `check_comment()` to run its tests properly in `wp_allow_comment()`, and let us do our job.
  * Force deactivation of the blacklist from WordPress, because it does not return the right spam status. We will use it later in `secupress_fightspam_blacklist_as_spam_check()`.
  *
+ * @since 2.0 Remove pre_option_comment_moderation
  * @since 1.0
  */
 function secupress_fightspam_force_check_comment() {
 	if ( get_option( 'comment_moderation' ) ) {
 		// Do not use `__return_false`, it won't work.
-		add_filter( 'pre_option_comment_moderation', '__return_zero', 1 );
+		// add_filter( 'pre_option_comment_moderation', '__return_zero', 1 );
 		add_filter( 'pre_option_comment_whitelist',  '__return_empty_string', 1 );
 		add_filter( 'pre_option_blacklist_keys',     '__return_empty_string', 1 );
 	}

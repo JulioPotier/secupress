@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Discloses scan class.
@@ -41,8 +41,8 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 		global $is_apache, $is_nginx, $is_iis7;
 
 		$module_url     = esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) );
-		$this->title    = __( 'Check if your site discloses your WordPress version and your server\'s PHP version.', 'secupress' );
-		$this->more     = __( 'When an attacker wants to hack into a WordPress site, (s)he will search for all available informations. The goal is to find something useful that will help him penetrate your site. Don\'t let them easily find any informations.', 'secupress' );
+		$this->title    = __( 'Check if your site discloses your WordPress version and your server’s PHP version.', 'secupress' );
+		$this->more     = __( 'When an attacker wants to hack into a WordPress site, they will search for all available informations. The goal is to find something useful that will help him penetrate your site. Don’t let them easily find any informations.', 'secupress' );
 		$this->more_fix = sprintf(
 			__( 'Activate the %1$s protection and/or the %2$s protection from the module %3$s.', 'secupress' ),
 			'<a href="' . $module_url . '#row-content-protect_wp-version">' . __( 'WordPress Version Disclosure', 'secupress' ) . '</a>',
@@ -134,7 +134,7 @@ class SecuPress_Scan_Discloses extends SecuPress_Scan implements SecuPress_Scan_
 	 * @return (string)
 	 */
 	public static function get_docs_url() {
-		return __( 'http://docs.secupress.me/article/101-php-and-wordpress-version-disclosure-scan', 'secupress' );
+		return __( 'https://docs.secupress.me/article/101-php-and-wordpress-version-disclosure-scan', 'secupress' );
 	}
 
 

@@ -1,19 +1,27 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /*
 3rd party plugins compat/help
 */
 
 /**
-SecuPress_Scan_Easy_Login
+* SecuPress_Scan_Easy_Login
 */
-
 // https://plugins.svn.wordpress.org/miniorange-2-factor-authentication/trunk/miniorange_2_factor_settings.php .
 add_filter( 'secupress.scan.SecuPress_Scan_Easy_Login.activated', 'secupress_3rd_compat__miniorange_2_factor_authentication' );
 function secupress_3rd_compat__miniorange_2_factor_authentication( $activated ) {
-	if ( ! $activated && defined( 'MOAUTH_PATH' ) ) {
+	if ( ! $activated && defined( 'MO2F_VERSION' ) ) {
 		return 'Miniorange 2 Factor Authentication';
+	}
+	return $activated;
+}
+
+// https://plugins.svn.wordpress.org/unikname-connect/trunk/unikname_connect.php
+add_filter( 'secupress.scan.SecuPress_Scan_Easy_Login.activated', 'secupress_3rd_compat__unikname_connect' );
+function secupress_3rd_compat__unikname_connect( $activated ) {
+	if ( ! $activated && defined( 'UNIKNAME_VERSION' ) ) {
+		return 'Unikname – Authentication (2FA) Passwordless Login';
 	}
 	return $activated;
 }
@@ -30,14 +38,13 @@ function secupress_3rd_compat__two_factor_authentication( $activated ) {
 // https://plugins.svn.wordpress.org/two-factor/trunk/two-factor.php .
 add_filter( 'secupress.scan.SecuPress_Scan_Easy_Login.activated', 'secupress_3rd_compat__two_factor' );
 function secupress_3rd_compat__two_factor( $activated ) {
-	if ( ! $activated && defined( 'TWO_FACTOR_DIR' ) ) {
+	if ( ! $activated && defined( 'TWO_FACTOR_VERSION' ) ) {
 		return 'Two Factor';
 	}
 	return $activated;
 }
 
-
-// https://plugins.svn.wordpress.org/2fas/trunk/two-factor.php .
+// https://plugins.svn.wordpress.org/2fas/trunk/constants.php .
 add_filter( 'secupress.scan.SecuPress_Scan_Easy_Login.activated', 'secupress_3rd_compat__2fas' );
 function secupress_3rd_compat__2fas( $activated ) {
 	if ( ! $activated && defined( 'TWOFAS_PLUGIN_VERSION' ) ) {
@@ -51,15 +58,6 @@ add_filter( 'secupress.scan.SecuPress_Scan_Easy_Login.activated', 'secupress_3rd
 function secupress_3rd_compat__rublon( $activated ) {
 	if ( ! $activated && defined( 'RUBLON2FACTOR_PLUGIN_PATH' ) ) {
 		return 'Rublon';
-	}
-	return $activated;
-}
-
-// https://plugins.svn.wordpress.org/wp-cerber/trunk/wp-cerber.php .
-add_filter( 'secupress.scan.SecuPress_Scan_Easy_Login.activated', 'secupress_3rd_compat__cerber' );
-function secupress_3rd_compat__cerber( $activated ) {
-	if ( ! $activated && defined( 'CERBER_VER' ) ) {
-		return 'Cerber';
 	}
 	return $activated;
 }
@@ -81,7 +79,6 @@ function secupress_3rd_compat__unloq( $activated ) {
 	}
 	return $activated;
 }
-
 
 // https://plugins.svn.wordpress.org/duo-wordpress/trunk/duo_web/duo_web.php .
 add_filter( 'secupress.scan.SecuPress_Scan_Easy_Login.activated', 'secupress_3rd_compat__duo_wordpress' );
@@ -149,7 +146,7 @@ function secupress_3rd_compat__2fas_light( $activated ) {
 // https://plugins.svn.wordpress.org/wordpress-2-step-verification/trunk/wordpress-2-step-verification.php .
 add_filter( 'secupress.scan.SecuPress_Scan_Easy_Login.activated', 'secupress_3rd_compat__wordpress_2_step_verification' );
 function secupress_3rd_compat__wordpress_2_step_verification( $activated ) {
-	if ( ! $activated && class_exists( 'Wordpress2StepVerification' ) ) {
+	if ( ! $activated && defined( 'WP2SV_ASSETS_VERSION' ) ) {
 		return 'WordPress 2 Step Verification';
 	}
 	return $activated;
@@ -170,7 +167,7 @@ if ( strpos( gethostname(), 'wps' ) === 0 ) {
 }
 
 /**
-* For eveyone now
+* For everyone now
 * @since 1.4.9
 */
 add_filter( 'secupress.settings.field.bbq-headers_user-agents-list',      '__return_null' );

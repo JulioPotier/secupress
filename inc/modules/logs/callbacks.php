@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Callback to filter, sanitize and de/activate submodules
@@ -11,6 +11,17 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @return (array) The sanitized and validated settings.
  */
 function secupress_logs_settings_callback( $settings ) {
+	$modulenow = 'logs';
+	/**
+	 * Filter the settings before saving.
+	 *
+	 * @since 1.4.9
+	 *
+	 * @param (array)      $settings The module settings.
+	 * @param (array\bool) $activate Contains the activation rules for the different modules
+	 */
+	$settings = apply_filters( "secupress_{$modulenow}_settings_callback", $settings, $activate );
+
 	return $settings;
 }
 

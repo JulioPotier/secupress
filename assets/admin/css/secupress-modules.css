@@ -17,6 +17,10 @@
  * GrayDark		: #393E46;
  *
  */
+ ::placeholder {
+	font-style: italic;
+	color: #ccc;
+}
 /**
  * === Main navigation between modules
  */
@@ -65,7 +69,11 @@
 	color: #ECF0F1;
 }
 .secupress-sh-title {
-	font-size: 18px;
+	font-size: 24px;
+	font-family: "Arial Narrow";
+	font-weight: 800;
+	letter-spacing: 0.5px;
+	text-align: right;
 }
 p.secupress-sh-subtitle {
 	margin-bottom: 5px;
@@ -91,6 +99,7 @@ p.secupress-sh-subtitle {
 	font-weight: 500;
 	text-decoration: none;
 	transition: all .275s;
+	border-left: 5px solid transparent;
 }
 .secupress-modules-list-links li:last-child a {
 	border-bottom: 1px solid rgba(255, 255, 255, 0.15);
@@ -161,6 +170,7 @@ p.secupress-sh-subtitle {
 .secupress-modules-sidebar a:hover,
 .secupress-modules-sidebar a:focus {
 	background: rgba(255, 255, 255, 0.075);
+	border-left: 5px solid;
 }
 
 /* Get pro link */
@@ -240,10 +250,13 @@ p.secupress-sh-subtitle {
 
 .secupress-setting-row .secupress-checkbox:not(:checked) + label:before,
 .secupress-setting-row .secupress-checkbox:checked + label:before,
+
 .secupress-setting-row .secupress-checkbox:not(:checked) + .label-text:before,
 .secupress-setting-row .secupress-checkbox:checked + .label-text:before,
+
 .secupress-setting-row .secupress-radio:not(:checked) + label:before,
 .secupress-setting-row .secupress-radio:checked + label:before,
+
 .secupress-setting-row .secupress-radio:not(:checked) + .label-text:before,
 .secupress-setting-row .secupress-radio:checked + .label-text:before {
 	top: -2px;
@@ -270,6 +283,12 @@ p.secupress-sh-subtitle {
 .secupress-setting-row .secupress-radio:not(:checked):disabled + .label-text:before,
 .secupress-setting-row .secupress-radio:checked:disabled + .label-text:before {
 	border-color: #bbb;
+}
+.secupress-checkbox:focus + label:before,
+.secupress-checkbox:focus + .label-text:before,
+.secupress-radio:focus + label:before,
+.secupress-radio:focus + .label-text:before {
+	border-color: #555 !important;
 }
 
 /* Text fields that display a spinner as background image (like autocomplete) */
@@ -546,9 +565,6 @@ input[type="text"]:required:invalid {
 .secupress-show-pro {
 	background: url("../images/logo-pro-mini.png") top right no-repeat transparent;
 }
-.secupress-setting-row_login-protection_sessions_control.secupress-show-pro {
-	background-size: contain;
-}
 
 /**
  * Module User Agent List
@@ -632,11 +648,11 @@ label.secupress-textarea-label {
 .secupress-textarea-container,
 .secupress-boxed-group {
 	width: 100%;
-	height: 200px;
+	min-height: 20px;
 	margin: .75em auto 1.5em;
 	padding: 10px;
 	border: 2px solid #ECF0F1;
-	overflow: hidden;
+	overflow: scroll;
 	transition: all .275s;
 }
 .secupress-setting-row .secupress-boxed-group {
@@ -663,7 +679,7 @@ fieldset.secupress-boxed-group > b {
 }
 .secupress-textarea-container textarea {
 	width: 100%;
-	height: 100%;
+	min-height: 20px;
 	padding: 0;
 	margin: 0;
 	border: 0;
@@ -680,7 +696,9 @@ fieldset.secupress-boxed-group > b {
 	padding-left: 0;
 	margin-top: 1.5em;
 }
-
+.wp-core-ui label.secupress-text-label button.button {
+	vertical-align: inherit;
+}
 /**
  * Schedule specific styles
  */
@@ -1041,7 +1059,29 @@ fieldset.secupress-boxed-group > b {
 [id="secupress-settings-module_services--support"] .secupress-setting-row.secupress-setting-row_support_submit {
 	padding-bottom: 20px;
 }
-
+/*database prefix */
+.secupress-setting-row.secupress-setting-row_database_db_prefix {
+	float: left;
+	width: 50%;
+}
+.secupress-setting-row.secupress-setting-row_database_db_prefix.secupress-pro-row {
+	float: none;
+	width: 100%;
+}
+.secupress-setting-row.secupress-setting-row_database_tables_selection {
+	float: right;
+	display: contents;
+}
+.secupress-setting-row + .secupress-setting-row.secupress-setting-row_database_tables_selection {
+	margin: 0;
+	border: none;
+}
+.secupress-setting-row.secupress-setting-row_database_tables_selection fieldset {
+	background: #FFF;
+}
+[name='secupress_wordpress-core_settings[database_db_prefix]'] {
+	text-transform: lowercase;
+}
 /**
  * Get Pro "module"
  */
@@ -1454,4 +1494,15 @@ p > .secupress-inline-alert:before {
 .secupress-files-list-item .secupress-button-primary:hover {
 	background: transparent;
 	color: #26B3A9;
+}
+/** addons */
+.secupress-flex .plugin-card {
+    width: 100%;
+    box-shadow: 7px 7px 0px rgba( 0, 0, 0, 0.4 );
+}
+.secupress-flex .plugin-card a:not(.button) {
+	color: #0073aa;
+}
+.secupress-flex .plugin-card .button {
+	font-weight: 400;
 }

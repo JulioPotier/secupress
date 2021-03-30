@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Depending on the value of `$activate`, will activate or deactivate a sub-module.
@@ -136,7 +136,7 @@ function secupress_plugin_in_usage_string( $plugin_basename, $settings_page = ''
 	$plugin_basename = path_join( WP_PLUGIN_DIR, $plugin_basename );
 	$plugin = get_plugin_data( $plugin_basename, false, false );
 
-	$content = sprintf( __( 'You can not use this feature now because you are using the plugin %s which is already doing this job well.', 'secupress' ), '<strong>' . esc_html( $plugin['Name'] ) . '</strong>' );
+	$content = sprintf( __( 'You can not use this feature now because you are using the plugin %s. Please deactivate it.', 'secupress' ), '<strong>' . esc_html( $plugin['Name'] ) . '</strong>' );
 	if ( $settings_page ) {
 		$content .= sprintf( '<br><a href="%s">' . __( 'Open the %s settings page', 'secupress' ) . '.</a>', esc_url( admin_url( $settings_page ) ), '<strong>' . esc_html( $plugin['Name'] ) . '</strong>' );
 	}

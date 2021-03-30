@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * WPOrg scan class.
@@ -61,7 +61,7 @@ class SecuPress_Scan_WPOrg extends SecuPress_Scan implements SecuPress_Scan_Inte
 	 * @return (string|array) A message if a message ID is provided. An array containing all messages otherwise.
 	 */
 	public static function get_messages( $message_id = null ) {
-		$versions = static::get_php_versions();
+		$versions = secupress_get_php_versions();
 		$messages = array(
 			// "good"
 			0   => __( 'Your site can communicate with WordPress.org.', 'secupress' ),
@@ -96,7 +96,7 @@ class SecuPress_Scan_WPOrg extends SecuPress_Scan implements SecuPress_Scan_Inte
 	 * @return (string)
 	 */
 	public static function get_docs_url() {
-		return __( 'http://docs.secupress.me/article/114-php-version-scan', 'secupress' ); ////
+		return __( 'https://docs.secupress.me/article/177-communicate-with-wordpress-org-or-secupress-me', 'secupress' );
 	}
 
 
@@ -143,44 +143,4 @@ class SecuPress_Scan_WPOrg extends SecuPress_Scan implements SecuPress_Scan_Inte
 		return parent::fix();
 	}
 
-
-	/** Tools. ================================================================================== */
-
-	/**
-	 * Get the 3 php versions we need: current, mini, and best.
-	 *
-	 * @since 1.0
-	 *
-	 * @return (array) The 3 php versions with the following keys: "current", "mini", "best".
-	 */
-	public static function get_php_versions() {
-		static $versions;
-
-		if ( isset( $versions ) ) {
-			return $versions;
-		}
-
-		$versions = array(
-			'current' => phpversion(),
-			'mini'    => '7.1.28',
-			'best'    => '7.3.4',
-		);
-
-		if ( false === ( $php_vers = get_site_transient( 'secupress_php_versions' ) ) ) {
-			$response = wp_remote_get( 'http://php.net/releases/index.php?json&version=7&max=2' );
-
-			if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) ) {
-				$php_vers = json_decode( wp_remote_retrieve_body( $response ) );
-				$php_vers = array_keys( (array) $php_vers );
-				set_site_transient( 'secupress_php_versions', $php_vers, 7 * DAY_IN_SECONDS );
-			}
-		}
-
-		if ( $php_vers ) {
-			$versions['mini'] = end( $php_vers );
-			$versions['best'] = reset( $php_vers );
-		}
-
-		return $versions;
-	}
 }

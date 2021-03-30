@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 global $is_apache, $is_nginx, $is_iis7;
 
@@ -57,7 +57,7 @@ if ( defined( 'SECUPRESS_ALLOW_LOGIN_ACCESS' ) && SECUPRESS_ALLOW_LOGIN_ACCESS )
 		'helpers'           => array(
 			array(
 				'type'        => 'warning',
-				'description' => sprintf( __( 'The %1$s constant is set, you cannot use the %2$s module.', 'secupress' ), '<code>SECUPRESS_ALLOW_LOGIN_ACCESS</code>', '<em>Move Login</em>' ),
+				'description' => sprintf( __( 'The %1$s constant is set, you cannot use the %2$s module.', 'secupress' ), '<code>SECUPRESS_ALLOW_LOGIN_ACCESS</code>', '<em>' . __( 'Move Login', 'secupress' ) . '</em>' ),
 			),
 		),
 	) );
@@ -118,7 +118,7 @@ $this->add_field( [
 	'type'         => 'wpeditor',
 	'label_for'    => $this->get_field_name( 'custom_error_content' ),
 	'depends'      => $this->get_field_name( 'whattodo' ) . '_custom_error',
-	'default'      => '⚠️ ' . __( 'This page does not exists, has moved or you are not allowed to access it.', 'secupress' ) . "\n" .
+	'default'      => __( 'This page does not exist, has moved or you are not allowed to access it.', 'secupress' ) . "\n" .
 					__( 'If you are Administrator and have been accidentally locked out, enter your email address here to unlock yourself.', 'secupress' ),
 	'helpers'           => array(
 		array(

@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Singleton class.
@@ -61,7 +61,7 @@ class SecuPress_Singleton {
 	 *
 	 * @since 1.0
 	 */
-	final private function __clone() {}
+	private function __clone() {}
 
 
 	/**
@@ -69,5 +69,5 @@ class SecuPress_Singleton {
 	 *
 	 * @since 1.0
 	 */
-	final private function __wakeup() {}
+	public function __wakeup() {}
 }

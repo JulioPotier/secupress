@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * `readme.txt` disclose scan class.
@@ -42,10 +42,10 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 
 		/** Translators: %s is a file name */
 		$this->title    = sprintf( __( 'Check if the %s files from your plugins and themes are protected.', 'secupress' ), '<code>readme.txt</code>' );
-		$this->more     = __( 'When an attacker wants to hack into a WordPress site, (s)he will search for all available informations. The goal is to find something useful that will help him penetrate your site. Don\'t let them easily find any informations.', 'secupress' );
+		$this->more     = __( 'When an attacker wants to hack into a WordPress site, they will search for all available informations. The goal is to find something useful that will help him penetrate your site. Don’t let them easily find any informations.', 'secupress' );
 		$this->more_fix = sprintf(
 			__( 'Activate the %1$s protection from the module %2$s.', 'secupress' ),
-			'<strong>' . __( 'Protect readme files', 'secupress' ) . '</strong>',
+			'<strong>' . __( 'Protect Readme Files', 'secupress' ) . '</strong>',
 			'<a href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_readmes">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
 		);
 
@@ -71,7 +71,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 		$config_file = $is_apache ? '.htaccess' : 'web.config';
 		/** Translators: 1 is the name of a protection, 2 is the name of a module. */
 		$activate_protection_message = sprintf( __( 'But you can activate the %1$s protection from the module %2$s.', 'secupress' ),
-			'<strong>' . __( 'Protect readme files', 'secupress' ) . '</strong>',
+			'<strong>' . __( 'Protect Readme Files', 'secupress' ) . '</strong>',
 			'<a target="_blank" href="' . esc_url( secupress_admin_url( 'modules', 'sensitive-data' ) ) . '#row-content-protect_readmes">' . __( 'Sensitive Data', 'secupress' ) . '</a>'
 		);
 
@@ -116,7 +116,7 @@ class SecuPress_Scan_Readme_Discloses extends SecuPress_Scan implements SecuPres
 	 * @return (string)
 	 */
 	public static function get_docs_url() {
-		return __( 'http://docs.secupress.me/article/102-readme-txt-access-scan', 'secupress' );
+		return __( 'https://docs.secupress.me/article/102-readme-txt-access-scan', 'secupress' );
 	}
 
 

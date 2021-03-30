@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 
 $this->set_current_section( 'antispam' );
@@ -69,7 +69,7 @@ unset( $options );
 
 $this->add_field( array(
 	'title'        => __( 'Shortcode usage', 'secupress' ),
-	'description'  => __( 'A <a href="https://codex.wordpress.org/Shortcode" target="_blank">shortcode</a> can create macros to be used in a post\'s content.', 'secupress' ),
+	'description'  => __( 'A <a href="https://codex.wordpress.org/Shortcode" target="_blank">shortcode</a> can create macros to be used in a post’s content.', 'secupress' ),
 	'depends'      => $main_field_name,
 	'label_for'    => $this->get_field_name( 'block-shortcodes' ),
 	'type'         => 'checkbox',
@@ -84,13 +84,13 @@ $this->add_field( array(
 
 
 $this->add_field( array(
-	'title'        => __( 'Improve the WordPress comments blacklist', 'secupress' ),
+	'title'        => __( 'Improve the WordPress comments disallowed terms', 'secupress' ),
 	'description'  => __( 'You can improve the list of bad words that will flag comments as spam.', 'secupress' ),
 	'depends'      => $main_field_name,
 	'label_for'    => $this->get_field_name( 'better-blacklist-comment' ),
 	'type'         => 'checkbox',
-	'label'        => __( 'Yes, use a better comments blacklist to detect spams', 'secupress' ),
-	'disabled'     => ! is_readable( SECUPRESS_INC_PATH . 'data/spam-blacklist.data' ),
+	'label'        => __( 'Yes, use a better comments disallowed terms to detect spams', 'secupress' ),
+	'disabled'     => ! is_readable( SECUPRESS_INC_PATH . 'data/spam-disallowed-terms.data' ),
 	'helpers' => array(
 		array(
 			'type'        => 'description',
@@ -98,7 +98,7 @@ $this->add_field( array(
 		),
 		array(
 			'type'        => 'warning',
-			'description' => ! is_readable( SECUPRESS_INC_PATH . 'data/spam-blacklist.data' ) ? sprintf( __( 'As long as the %s file is not readable, this feature can\'t be used.', 'secupress' ), '<code>' . SECUPRESS_INC_PATH . 'data/spam-blacklist.data</code>' ) : null,
+			'description' => ! is_readable( SECUPRESS_INC_PATH . 'data/spam-disallowed-terms.data' ) ? sprintf( __( 'As long as the %s file is not readable, this feature can’t be used.', 'secupress' ), '<code>' . SECUPRESS_INC_PATH . 'data/spam-disallowed-terms.data</code>' ) : null,
 		),
 	),
 ) );

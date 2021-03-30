@@ -7,13 +7,11 @@
  * Version: 1.4.12
  */
 
-defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
-
+defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
 add_action( 'authenticate', 'secupress_limitloginattempts', SECUPRESS_INT_MAX, 2 );
 /**
  * Check the number of attemps.
  *
- * @since 1.4.12 Don't ban, just block.
  * @since 1.0
  *
  * @param (null|object) $raw_user WP_User if the user is authenticated.
@@ -44,7 +42,7 @@ function secupress_limitloginattempts( $raw_user, $username ) {
 
 	if ( $user_attempts >= $max_attempts ) {
 		delete_user_meta( $uid, '_secupress_limitloginattempts' );
-		secupress_block( 'LIMITATTEMPTS', [ 'code' => 403, 'b64' => [ 'data' => [ $username, $user_attempts ] ] ] );
+		secupress_ban_ip( (int) secupress_get_module_option( 'login-protection_time_ban', 5, 'users-login' ) );
 	}
 
 	update_user_meta( $uid, '_secupress_limitloginattempts', $user_attempts );

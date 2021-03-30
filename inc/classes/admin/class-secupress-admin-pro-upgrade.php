@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 
 /**
@@ -153,7 +153,7 @@ class SecuPress_Admin_Pro_Upgrade extends SecuPress_Admin_Offer_Migration {
 			if ( ! $information ) {
 				$message = sprintf(
 					/** Translators: %s is a link to the "SecuPress account". */
-					__( 'A problem occurred while retrieving the Pro version information. Please download the plugin from your %s and proceed as follow in that order: do NOT uninstall the Free plugin or you\'ll lose all your settings (but you can deactivate it if you want), install and activate the Pro plugin, the Free plugin magically disappeared.', 'secupress' ),
+					__( 'A problem occurred while retrieving the Pro version information. Please download the plugin from your %s and proceed as follow in that order: do NOT uninstall the Free plugin or you’ll lose all your settings (but you can deactivate it if you want), install and activate the Pro plugin, the Free plugin magically disappeared.', 'secupress' ),
 					'<a target="_blank" title="' . esc_attr__( 'Open in a new window.', 'secupress' ) . '" href="' . esc_url( static::get_account_url() ) . '">' . __( 'SecuPress account', 'secupress' ) . '</a>'
 				);
 
@@ -174,7 +174,7 @@ class SecuPress_Admin_Pro_Upgrade extends SecuPress_Admin_Offer_Migration {
 
 			$message = sprintf(
 				/** Translators: %s is a link to the "SecuPress account". */
-				__( 'It seems you already installed the Pro version. An attempt has been made to replace it with a fresh copy but it couldn\'t be deleted (which is not normal). Please download the plugin from your %s and proceed as follow in that order: do NOT uninstall the Free plugin or you\'ll lose all your settings (but you can deactivate it if you want), install and activate the Pro plugin, the Free plugin magically disappeared.', 'secupress' ),
+				__( 'It seems you already installed the Pro version. An attempt has been made to replace it with a fresh copy but it couldn’t be deleted (which is not normal). Please download the plugin from your %s and proceed as follow in that order: do NOT uninstall the Free plugin or you’ll lose all your settings (but you can deactivate it if you want), install and activate the Pro plugin, the Free plugin magically disappeared.', 'secupress' ),
 				'<a target="_blank" title="' . esc_attr__( 'Open in a new window.', 'secupress' ) . '" href="' . esc_url( static::get_account_url() ) . '">' . __( 'SecuPress account', 'secupress' ) . '</a>'
 			);
 

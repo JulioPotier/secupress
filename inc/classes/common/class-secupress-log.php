@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 
 /**
@@ -262,7 +262,7 @@ class SecuPress_Log {
 			}
 			// Add a link to the user's profile page.
 			elseif ( $referer ) {
-				$suffix = __( 'Profile' ); // WP i18n.
+				$suffix = __( 'Profile', 'secupress' );
 			}
 			else {
 				$suffix = '';

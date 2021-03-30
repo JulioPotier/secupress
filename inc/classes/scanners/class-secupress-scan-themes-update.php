@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Themes Update scan class.
@@ -91,7 +91,7 @@ class SecuPress_Scan_Themes_Update extends SecuPress_Scan implements SecuPress_S
 	 * @return (string)
 	 */
 	public static function get_docs_url() {
-		return __( 'http://docs.secupress.me/article/119-theme-update-scan', 'secupress' );
+		return __( 'https://docs.secupress.me/article/119-theme-update-scan', 'secupress' );
 	}
 
 

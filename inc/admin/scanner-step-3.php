@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 // Keep only scans with "bad" and "warning" status.
 $bad_scan_results = array_merge( $bad_scans, $warning_scans );	// `array( $class_name_part_lower => $status )`.

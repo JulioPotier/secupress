@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Bad File Extensions scan class.
@@ -134,7 +134,7 @@ class SecuPress_Scan_Bad_File_Extensions extends SecuPress_Scan implements SecuP
 	 * @return (string)
 	 */
 	public static function get_docs_url() {
-		return __( 'http://docs.secupress.me/article/124-bad-file-extension-scan', 'secupress' );
+		return __( 'https://docs.secupress.me/article/124-bad-file-extension-scan', 'secupress' );
 	}
 
 

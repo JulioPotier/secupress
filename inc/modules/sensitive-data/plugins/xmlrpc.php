@@ -7,7 +7,7 @@
  * Version: 1.0
  */
 
-defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
 
 
 add_action( 'secupress.plugins.loaded', 'secupress_xmlrpc_disable_rpc' );
@@ -27,7 +27,7 @@ function secupress_xmlrpc_disable_rpc() {
 		// Well, why not killing everything here?
 		if ( $is_xmlrpc ) {
 			secupress_die(
-				__( 'XML-RPC services are disabled on this site.' ), // WP i18n.
+				__( 'XML-RPC services are disabled on this site.', 'secupress' ),
 				__( 'XML-RPC is disabled', 'secupress' ),
 				array( 'response' => 403, 'force_die' => true )
 			);
@@ -127,7 +127,7 @@ function secupress_xmlrpc_block_multiauth_attempts( $user, $username, $password 
 	}
 
 	secupress_die(
-		__( 'XML-RPC services are disabled on this site.' ), // WP i18n.
+		__( 'XML-RPC services are disabled on this site.', 'secupress' ),
 		__( 'XML-RPC is disabled', 'secupress' ),
 		array( 'response' => 403 )
 	);

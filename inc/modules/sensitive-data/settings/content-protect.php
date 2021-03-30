@@ -1,31 +1,10 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 global $is_apache, $is_nginx, $is_iis7;
 
 $this->set_current_section( 'content_protect' );
 $this->add_section( __( 'Content Protection', 'secupress' ) );
-
-$robots_enabled = secupress_blackhole_is_robots_txt_enabled();
-
-$this->add_field( array(
-	'title'             => __( 'Blackhole', 'secupress' ),
-	'description'       => sprintf( __( 'A blackhole is a forbidden folder, mentioned in the %1$s file as %2$s. If a bot does not respect this rule, its IP address will be banned.', 'secupress' ), '<code>robots.txt</code>', '<em>Disallowed</em>' ),
-	'label_for'         => $this->get_field_name( 'blackhole' ),
-	'plugin_activation' => true,
-	'type'              => 'checkbox',
-	'value'             => (int) secupress_is_submodule_active( 'sensitive-data', 'blackhole' ),
-	'label'             => sprintf( __( 'Yes, add a blackhole in my %s file.', 'secupress' ), '<code>robots.txt</code>' ),
-	'disabled'          => ! $robots_enabled,
-	'helpers'           => array(
-		array(
-			'type'        => 'description',
-			'description' => $robots_enabled ? false : __( 'This feature is available only for sites installed at the domain root.', 'secupress' ),
-		),
-	),
-) );
-
-unset( $main_field_name, $is_plugin_active, $message, $rules, $robots_enabled );
 
 $main_field_name  = $this->get_field_name( 'hotlink' );
 $is_plugin_active = (int) secupress_is_submodule_active( 'sensitive-data', 'hotlink' );
@@ -42,7 +21,51 @@ $this->add_field( array(
 	'helpers' => array(
 		array(
 			'type'        => 'warning',
-			'description' => ! secupress_is_site_ssl() ? __( 'This feature is available only for sites with SSL.', 'secupress' ) : null,
+			'description' => ! secupress_is_site_ssl() ? __( 'This feature is available only for sites with HTTPS.', 'secupress' ) : null,
+		),
+	),
+) );
+
+global $wp_version;
+$main_field_name  = $this->get_field_name( '404guess' );
+$disabled         = version_compare( $wp_version, '5.5' ) < 0;
+$is_plugin_active = (int) secupress_is_submodule_active( 'sensitive-data', '404guess' );
+$helpers          = ! $disabled ? [] :
+	array(
+		array(
+			'type'        => 'warning',
+			'description' => sprintf( __( '<strong>%1$s</strong> requires WordPress %2$s minimum, your website is actually running version %3$s.', 'secupress' ), __( 'Anti 404 Guessing', 'secupress' ), '<code>5.5</code>', '<code>' . $wp_version . '</code>' ),
+		),
+	);
+
+$this->add_field( array(
+	'title'             => __( 'Anti 404 Guessing', 'secupress' ),
+	'description'       => __( 'WordPress can redirect people on your public posts and pages even if they don’t know the URL just by guessing.', 'secupress' ),
+	'label_for'         => $main_field_name,
+	'disabled'          => $disabled,
+	'plugin_activation' => true,
+	'type'              => 'checkbox',
+	'value'             => $is_plugin_active,
+	'label'             => __( 'Yes, do not allow to guess the URL of my posts and pages.', 'secupress' ),
+	'helpers'           => $helpers,
+) );
+
+
+$robots_enabled = secupress_blackhole_is_robots_txt_enabled();
+
+$this->add_field( array(
+	'title'             => __( 'Blackhole', 'secupress' ),
+	'description'       => sprintf( __( 'A blackhole is a forbidden folder, mentioned in the %1$s file as %2$s. If a bot does not respect this rule, its IP address will be banned.', 'secupress' ), '<code>robots.txt</code>', '<em>Disallowed</em>' ),
+	'label_for'         => $this->get_field_name( 'blackhole' ),
+	'plugin_activation' => true,
+	'type'              => 'checkbox',
+	'value'             => (int) secupress_is_submodule_active( 'sensitive-data', 'blackhole' ),
+	'label'             => sprintf( __( 'Yes, add a blackhole in my %s file.', 'secupress' ), '<code>robots.txt</code>' ),
+	'disabled'          => ! $robots_enabled,
+	'helpers'           => array(
+		array(
+			'type'        => 'description',
+			'description' => $robots_enabled ? false : __( 'This feature is available only for sites installed at the domain root.', 'secupress' ),
 		),
 	),
 ) );
@@ -326,7 +349,7 @@ $is_plugin_active = (int) secupress_is_submodule_active( 'sensitive-data', 'bad-
 
 $this->add_field( array(
 	'title'             => __( 'Bad URL Access', 'secupress' ),
-	'description'       => __( 'Directly accessing some WordPress files would disclose sensitive information that will help an attacker, like your site\'s internal path.', 'secupress' ),
+	'description'       => __( 'Directly accessing some WordPress files would disclose sensitive information that will help an attacker, like your site’s internal path.', 'secupress' ),
 	'label_for'         => $main_field_name,
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
@@ -382,7 +405,7 @@ $main_field_name  = $this->get_field_name( 'readmes' );
 $is_plugin_active = (int) secupress_is_submodule_active( 'discloses', 'readmes' );
 
 $this->add_field( array(
-	'title'             => __( 'Protect readme files', 'secupress' ),
+	'title'             => __( 'Protect Readme Files', 'secupress' ),
 	/** Translators: 1 and 2 are file names. */
 	'description'       => sprintf( __( 'Files like %1$s or %2$s are a good source of information for attackers, they should not be accessible.', 'secupress' ), '<code>readme.txt</code>', '<code>changelog.md</code>' ),
 	'label_for'         => $main_field_name,
@@ -440,12 +463,12 @@ $choices = array();
 
 if ( class_exists( 'WooCommerce' ) ) {
 	/** Translators: %s is a plugin name. */
-	$choices['woocommerce'] = sprintf( __( 'Remove %s version', 'secupress' ), '<strong>WooCommerce</strong>' );
+	$choices['woocommerce'] = sprintf( __( 'Do not display the %s version', 'secupress' ), '<strong>WooCommerce</strong>' );
 }
 
 if ( class_exists( 'SitePress' ) ) {
 	/** Translators: %s is a plugin name. */
-	$choices['wpml'] = sprintf( __( 'Remove %s version', 'secupress' ), '<strong>WPML</strong>' );
+	$choices['wpml'] = sprintf( __( 'Do not display the %s version', 'secupress' ), '<strong>WPML</strong>' );
 }
 
 if ( $choices ) {
@@ -460,7 +483,7 @@ if ( $choices ) {
 
 	$this->add_field( array(
 		'title'             => __( 'Plugin Version Disclosure', 'secupress' ),
-		'description'       => __( 'Some popular big plugins print their version in your site\'s source code. This information can be useful for attackers.', 'secupress' ),
+		'description'       => __( 'Some popular big plugins print their version in your site’s source code. This information can be useful for attackers.', 'secupress' ),
 		'name'              => $this->get_field_name( 'plugin-version-discloses' ),
 		'plugin_activation' => true,
 		'type'              => 'checkboxes',
@@ -468,3 +491,18 @@ if ( $choices ) {
 		'value'             => $values,
 	) );
 }
+
+
+$main_field_name  = $this->get_field_name( 'bad-url-access' );
+$is_plugin_active = (int) secupress_is_submodule_active( 'sensitive-data', 'bad-url-access' );
+
+$this->add_field( array(
+	'title'             => __( 'Bad URL Access', 'secupress' ),
+	'description'       => __( 'Directly accessing some WordPress files would disclose sensitive information that will help an attacker, like your site’s internal path.', 'secupress' ),
+	'label_for'         => $main_field_name,
+	'plugin_activation' => true,
+	'type'              => 'checkbox',
+	'value'             => $is_plugin_active,
+	'label'             => __( 'Yes, forbid access to those files', 'secupress' ),
+) );
+

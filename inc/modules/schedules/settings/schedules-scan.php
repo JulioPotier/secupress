@@ -1,9 +1,9 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 
 $this->set_current_section( 'scanners' );
-$this->add_section( __( 'Scanners', 'secupress' ) );
+$this->add_section( __( 'Scanners', 'secupress' ) . ' ' . sprintf( '<span class="button button-small alignright secupress-button-small"><a href="%s">%s</a></span>', secupress_admin_url( 'scanners' ), __( 'Scanner Module', 'secupress' ) ) );
 
 
 $this->add_field( array(

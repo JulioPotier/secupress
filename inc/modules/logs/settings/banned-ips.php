@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 
 $this->set_current_section( 'banned-ips' );
@@ -8,7 +8,7 @@ $this->add_section( __( 'IP Adresses', 'secupress' ), array( 'with_save_button' 
 
 
 $this->add_field( array(
-	'title'        => __( 'Blacklisted IPs', 'secupress' ),
+	'title'        => __( 'Disallowed IPs', 'secupress' ),
 	'description'  => __( 'Bots, servers, visitors with those IP addresses will <strong>never</strong> have the right to visit your website.', 'secupress' ),
 	'name'         => $this->get_field_name( 'banned-ips' ),
 	'type'         => 'blacklist_ips',
@@ -17,8 +17,8 @@ $this->add_field( array(
 
 
 $this->add_field( array(
-	'title'        => __( 'Whitelisted IPs', 'secupress' ),
-	'description'  => __( 'Bots, servers, visitors with those IP addresses will <strong>always</strong> have the right to visit your website. Whitelist has priority over Blacklist.', 'secupress' ),
+	'title'        => __( 'Allowed IPs', 'secupress' ),
+	'description'  => __( 'Bots, servers, visitors with those IP addresses will <strong>always</strong> have the right to visit your website. This list has priority over all.', 'secupress' ),
 	'label_for'    => $this->get_field_name( 'whitelist' ),
 	'type'         => 'whitelist_ips',
 	'row_id'       => 'whitelist-ips-row',

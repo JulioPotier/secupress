@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Get the blacklisted usernames.
@@ -44,11 +44,12 @@ function secupress_get_blacklisted_usernames() {
 	/**
 	 * Filter the list of blacklisted usernames.
 	 *
+	 * @since 2.0 renamed hook
 	 * @since 1.0
 	 *
 	 * @param (array) $list List of usernames.
 	 */
-	$list = apply_filters( 'secupress.plugin.blacklist_logins_list', $list );
+	$list = apply_filters( 'secupress.plugin.disallowed_logins_list', $list );
 
 	// Temporarily allow some blacklisted usernames.
 	$allowed = (array) secupress_cache_data( 'allowed_usernames' );
@@ -58,4 +59,22 @@ function secupress_get_blacklisted_usernames() {
 	}
 
 	return $list;
+}
+
+/**
+ * Return an array of forbidden roles
+ *
+ * @since 2.0
+ * @author Julio Potier
+ *
+ * @see roles_radios
+ *
+ * @return (array) $roles
+ **/
+function secupress_get_forbidden_default_roles() {
+	/**
+	* Filter the forbidden roles
+	* @param (array) $roles, format 'role' => true
+	*/
+	return apply_filters( 'secupress.plugin.default_role.forbidden', [ 'administrator' => true ] );
 }

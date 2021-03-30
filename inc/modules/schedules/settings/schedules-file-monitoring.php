@@ -1,9 +1,9 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 
 $this->set_current_section( 'files-monitoring' );
-$this->add_section( __( 'File Monitoring', 'secupress' ) );
+$this->add_section( __( 'File Monitoring', 'secupress' ) . ' ' . sprintf( '<span class="button button-small alignright secupress-button-small"><a href="%s">%s</a></span>', secupress_admin_url( 'modules', 'file-system' ), __( 'Malware Scan Module', 'secupress' ) ) );
 
 
 $this->add_field( array(

@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 $this->set_current_section( 'backup-history' );
 $this->add_section( __( 'Backup History', 'secupress' ), array( 'with_save_button' => false ) );

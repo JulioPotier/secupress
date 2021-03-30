@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Directory Listing scan class.
@@ -41,7 +41,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 		global $is_apache, $is_nginx, $is_iis7;
 
 		$this->title = __( 'Check if your server lists the files in a directory (known as Directory Listing).', 'secupress' );
-		$this->more  = __( 'Without the appropriate protection anybody could browse your site\'s files. While browsing some of your files might not be a security risk, most of them are sensitive.', 'secupress' );
+		$this->more  = __( 'Without the appropriate protection anybody could browse your site’s files. While browsing some of your files might not be a security risk, most of them are sensitive.', 'secupress' );
 		$this->more_fix = sprintf(
 			__( 'Activate the %1$s protection from the module %2$s.', 'secupress' ),
 			'<strong>' . __( 'Directory Listing', 'secupress' ) . '</strong>',
@@ -113,7 +113,7 @@ class SecuPress_Scan_Directory_Listing extends SecuPress_Scan implements SecuPre
 	 * @return (string)
 	 */
 	public static function get_docs_url() {
-		return __( 'http://docs.secupress.me/article/126-index-listing-scan', 'secupress' );
+		return __( 'https://docs.secupress.me/article/126-index-listing-scan', 'secupress' );
 	}
 
 

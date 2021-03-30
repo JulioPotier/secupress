@@ -1,9 +1,9 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 
 $this->set_current_section( 'backups' );
-$this->add_section( __( 'Backups', 'secupress' ) );
+$this->add_section( __( 'Backups', 'secupress' ) . ' ' . sprintf( '<span class="button button-small alignright secupress-button-small"><a href="%s">%s</a></span>', secupress_admin_url( 'modules', 'backups' ), __( 'Backup Module', 'secupress' ) ) );
 
 
 $this->add_field( array(
@@ -47,3 +47,4 @@ $this->add_field( array(
 	'type'         => 'email',
 	'default'      => secupress_get_module_option( $this->get_field_name( 'periodicity' ), '', $this->modulenow ) ? '' : wp_get_current_user()->user_email,
 ) );
+

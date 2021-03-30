@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Bad Old Files scan class.
@@ -38,9 +38,13 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements SecuPress_S
 	 * @since 1.0
 	 */
 	protected function init() {
-		$this->title    = __( 'Check if your installation still contains old files from WordPress 2.0 to your current version.', 'secupress' );
-		$this->more     = sprintf( __( 'Since WordPress 2.0, about %s files were deleted, let\'s check if your website needs a clean up.', 'secupress' ), number_format_i18n( 650 ) );
+		global $_old_files;
+		require_once( ABSPATH . 'wp-admin/includes/update-core.php' );
+		$this->title    = __( 'Check if your installation still contains old WordPress files.', 'secupress' );
+		$this->more     = sprintf( __( 'Since WordPress 2.0, about %s files were deleted, let’s check if your website needs a clean up.', 'secupress' ), number_format_i18n( count( $_old_files ) ) );
 		$this->more_fix = __( 'Delete all old files because your actual installation does not need it.', 'secupress' );
+		// Add wp-config-sample.php into $_old_files.
+		add_filter( 'secupress._old_files', function( $files ) { $files[] = 'wp-config-sample.php'; return $files; } );
 	}
 
 
@@ -82,7 +86,7 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements SecuPress_S
 	 * @return (string)
 	 */
 	public static function get_docs_url() {
-		return __( 'http://docs.secupress.me/article/97-legacy-files-scan', 'secupress' );
+		return __( 'https://docs.secupress.me/article/97-legacy-files-scan', 'secupress' );
 	}
 
 
@@ -115,10 +119,17 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements SecuPress_S
 			return parent::fix();
 		}
 
-		foreach ( $_old_files as $file ) {
-			if ( @file_exists( ABSPATH . $file ) ) {
-				// "bad"
-				$bads[] = sprintf( '<code>%s</code>', $file );
+		/**
+		* Filter the old WP files to add more file (don’t remove!)
+		*/
+		$_old_files = apply_filters( 'secupress._old_files', $_old_files );
+
+		if ( ! empty( $_old_files ) ) {
+			foreach ( $_old_files as $file ) {
+				if ( @file_exists( ABSPATH . $file ) ) {
+					// "bad"
+					$bads[] = sprintf( '<code>%s</code>', $file );
+				}
 			}
 		}
 
@@ -187,16 +198,12 @@ class SecuPress_Scan_Bad_Old_Files extends SecuPress_Scan implements SecuPress_S
 
 		require_once( ABSPATH . 'wp-admin/includes/update-core.php' );
 
-		$not_deleted = array();
-
-		if ( empty( $_old_files ) || ! is_array( $_old_files ) ) {
-			// Should not happen.
-			$this->add_fix_message( 0 );
-			return parent::fix();
-		}
-
-		$filesystem = secupress_get_filesystem();
-
+		$not_deleted = [];
+		/**
+		* Filter the old WP files to add more file (don’t remove!)
+		*/
+		$_old_files  = apply_filters( 'secupress._old_files', $_old_files );
+		$filesystem  = secupress_get_filesystem();
 		foreach ( $_old_files as $file ) {
 			if ( $filesystem->exists( ABSPATH . $file ) && ( ! wp_is_writable( ABSPATH . $file ) || ! $filesystem->delete( ABSPATH . $file ) ) ) {
 				$not_deleted[] = sprintf( '<code>%s</code>', $file );

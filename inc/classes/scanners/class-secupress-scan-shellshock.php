@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Shellshock scan class.
@@ -41,7 +41,7 @@ class SecuPress_Scan_Shellshock extends SecuPress_Scan implements SecuPress_Scan
 	 * @since 1.1.4
 	 */
 	protected function init() {
-		$this->title = __( 'Check if your website is vulnerable to <strong>Shellshock</strong>.', 'secupress' );
+		$this->title = __( 'Check if your server is vulnerable to <strong>Shellshock</strong>.', 'secupress' );
 		$this->more  = __( '<strong>Shellshock</strong> is a critic vulnerability allowing an attacker to remotely execute malicious code on a server.', 'secupress' );
 		$this->more_fix = sprintf(
 			__( 'Activate the option %1$s in the %2$s module.', 'secupress' ),
@@ -70,7 +70,7 @@ class SecuPress_Scan_Shellshock extends SecuPress_Scan implements SecuPress_Scan
 		$messages = array(
 			// "good"
 			0   => __( 'The server is not vulnerable to <strong>Shellshock</strong>.', 'secupress' ),
-			1   => __( 'The protection against <strong>Shellshock</strong> has been activated. It won\'t fix the vulnerability (only your host can) but it will prevent an attacker to exploit it remotely.', 'secupress' ),
+			1   => __( 'The protection against <strong>Shellshock</strong> has been activated. It won’t fix the vulnerability (only your host can) but it will prevent an attacker to exploit it remotely.', 'secupress' ),
 			// "warning"
 			100 => sprintf( __( 'Unable to determine the status of the <strong>Shellshock</strong> flaw (%s).', 'secupress' ), '<em>CVE-2014-6271</em>' ) . ' ' . $activate_protection_message,
 			101 => sprintf( __( 'Unable to determine the status of the <strong>Shellshock</strong> flaw (%s).', 'secupress' ), '<em>CVE-2014-7169</em>' ) . ' ' . $activate_protection_message,
@@ -99,7 +99,7 @@ class SecuPress_Scan_Shellshock extends SecuPress_Scan implements SecuPress_Scan
 	 * @return (string)
 	 */
 	public static function get_docs_url() {
-		return __( 'http://docs.secupress.me/article/115-shellshock-scan', 'secupress' );
+		return __( 'https://docs.secupress.me/article/115-shellshock-scan', 'secupress' );
 	}
 
 

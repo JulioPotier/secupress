@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Get the plugins removed from repo from our local file.
@@ -117,7 +117,7 @@ function secupress_get_vulnerable_plugins() {
  *
  * @since 1.0
  *
- * @return (array|bool) The plugins whitelist, with dirname as keys. Return false if the file is not readable.
+ * @return (array) The plugins whitelist, with dirname as keys.
  */
 function secupress_get_plugins_whitelist() {
 	static $whitelist;
@@ -127,14 +127,29 @@ function secupress_get_plugins_whitelist() {
 	}
 
 	$whitelist_file = SECUPRESS_INC_PATH . 'data/whitelist-plugin-list.data';
-
-	if ( ! is_readable( $whitelist_file ) ) {
-		return false;
+	/**
+	* Shortcut the list with this filter
+	*/
+	$whitelist      = apply_filters( 'secupress.allowed.plugins.pre', [] ) ;
+	if ( ! empty( $whitelist) ) {
+		return $whitelist;
 	}
 
 	$whitelist = file( $whitelist_file );
 	$whitelist = array_map( 'trim', $whitelist );
 	$whitelist = array_flip( $whitelist );
+
+	if ( ! is_readable( $whitelist_file ) ) {
+		/**
+		* If file is not readable, you can fill it manually
+		*/
+		return apply_filters( 'secupress.allowed.plugins.file_not_readable', [] ) ;
+	}
+
+	/**
+	* The list from file, you can filter it
+	*/
+	$whitelist = apply_filters( 'secupress.allowed.plugins.list', $whitelist ) ;
 
 	return $whitelist;
 }

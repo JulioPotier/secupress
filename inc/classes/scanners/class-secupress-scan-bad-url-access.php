@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Bad URL Access scan class.
@@ -40,8 +40,8 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 	protected function init() {
 		global $is_apache, $is_nginx, $is_iis7;
 
-		$this->title    = __( 'Check if any of your WordPress files disclose your site\'s internal path.', 'secupress' );
-		$this->more     = __( 'When an attacker wants to hack into a WordPress site, (s)he will search for all available informations. The goal is to find something useful that will help him penetrate your site. Don\'t let them easily find any informations.', 'secupress' );
+		$this->title    = __( 'Check if any of your WordPress files disclose your site’s internal path.', 'secupress' );
+		$this->more     = __( 'When an attacker wants to hack into a WordPress site, they will search for all available informations. The goal is to find something useful that will help him penetrate your site. Don’t let them easily find any informations.', 'secupress' );
 		$this->more_fix = sprintf(
 			__( 'Activate the %1$s protection from the module %2$s.', 'secupress' ),
 			'<strong>' . __( 'Bad URL Access', 'secupress' ) . '</strong>',
@@ -72,9 +72,9 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 
 		$messages = array(
 			// "good"
-			0   => __( 'Your site does not reveal your site\'s internal path.', 'secupress' ),
+			0   => __( 'Your site does not reveal your site’s internal path.', 'secupress' ),
 			/** Translators: %s is a file name. */
-			1   => sprintf( __( 'Rules preventing disclosure of your site\'s internal path disclosure have been added to your %s file.', 'secupress' ), "<code>$config_file</code>" ),
+			1   => sprintf( __( 'Rules preventing disclosure of your site’s internal path disclosure have been added to your %s file.', 'secupress' ), "<code>$config_file</code>" ),
 			// "warning"
 			100 => _n_noop(
 				/** Translators: %s is a URL or a list of URLs. */
@@ -93,8 +93,8 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 			200 => _n_noop( '%s should not be accessible by anyone.', '%s should not be accessible by anyone.', 'secupress' ),
 			// "cantfix"
 			/** Translators: 1 is a file name, 2 is some code. */
-			300 => sprintf( __( 'Your server runs <strong>Nginx</strong>, the files that disclose your site\'s internal path cannot be protected automatically but you can do it yourself by adding the following code to your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
-			301 => __( 'Your server runs an unrecognized system. The files that disclose your site\'s internal path cannot be protected automatically.', 'secupress' ),
+			300 => sprintf( __( 'Your server runs <strong>Nginx</strong>, the files that disclose your site’s internal path cannot be protected automatically but you can do it yourself by adding the following code to your %1$s file: %2$s', 'secupress' ), '<code>nginx.conf</code>', '%s' ),
+			301 => __( 'Your server runs an unrecognized system. The files that disclose your site’s internal path cannot be protected automatically.', 'secupress' ),
 			/** Translators: 1 is a file name, 2 is some code. */
 			302 => sprintf( __( 'Your %1$s file is not writable. Please add the following lines at the beginning of the file: %2$s', 'secupress' ), "<code>$config_file</code>", '%s' ),
 			/** Translators: 1 is a file name, 2 is a folder path (kind of), 3 is some code. */
@@ -119,7 +119,7 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 	 * @return (string)
 	 */
 	public static function get_docs_url() {
-		return __( 'http://docs.secupress.me/article/107-sensitive-files-access-scan', 'secupress' );
+		return __( 'https://docs.secupress.me/article/107-sensitive-files-access-scan', 'secupress' );
 	}
 
 

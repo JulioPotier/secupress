@@ -1,5 +1,9 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
+
+if ( ! secupress_get_module_option( 'advanced-settings_admin-bar', true , 'welcome' ) ) {
+	return;
+}
 
 add_action( 'admin_bar_menu', 'secupress_admin_bar', 100 );
 /**
@@ -17,7 +21,7 @@ function secupress_admin_bar( $wp_admin_bar ) {
 	// Add a counter of scans with good result.
 	$counts = secupress_get_scanner_counts();
 
-	if ( $counts['good'] || $counts['bad'] ) {
+	if ( secupress_get_module_option( 'advanced-settings_grade-system', true, 'welcome' ) && ( $counts['good'] || $counts['bad'] ) ) {
 		$grade = sprintf( __( 'Grade %s', 'secupress' ), '<span class="letter">' . $counts['grade'] . '</span>' );
 	} else {
 		$grade = '';
@@ -40,7 +44,7 @@ function secupress_admin_bar( $wp_admin_bar ) {
 	$wp_admin_bar->add_menu( array(
 		'parent' => 'secupress-scanners',
 		'id' 	 => 'secupress-scanners-step1',
-		'title'  => __( 'Step 1 – Security Report', 'secupress' ),
+		'title'  => __( 'Step 1 – Site Health', 'secupress' ),
 		'href'   => esc_url( secupress_admin_url( 'scanners', '&step=1' ) ),
 	) );
 	$wp_admin_bar->add_menu( array(
@@ -65,7 +69,7 @@ function secupress_admin_bar( $wp_admin_bar ) {
 	$wp_admin_bar->add_menu( array(
 		'parent' => 'secupress-scanners',
 		'id' 	 => 'secupress-scanners-pdf',
-		'title'  => __( 'Export Security Report as PDF', 'secupress' ),
+		'title'  => __( 'Export Site Health report as PDF', 'secupress' ),
 		'href'   => esc_url( secupress_admin_url( 'scanners', '#secupress-step-content-footer' ) ),
 		'meta'   => [ 'class' => secupress_is_pro() ? '' : 'secupress-pro-notice' ],
 	) );

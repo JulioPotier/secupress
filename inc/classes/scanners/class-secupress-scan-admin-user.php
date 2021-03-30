@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Admin User scan class.
@@ -98,7 +98,7 @@ class SecuPress_Scan_Admin_User extends SecuPress_Scan implements SecuPress_Scan
 	 * @return (string)
 	 */
 	public static function get_docs_url() {
-		return __( 'http://docs.secupress.me/article/132-admin-user-account-scan', 'secupress' );
+		return __( 'https://docs.secupress.me/article/132-admin-user-account-scan', 'secupress' );
 	}
 
 

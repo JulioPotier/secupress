@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /** --------------------------------------------------------------------------------------------- */
 /** ON MODULE SETTINGS SAVE ===================================================================== */
@@ -38,6 +38,37 @@ function secupress_wordpress_core_settings_callback( $settings ) {
 
 	// Unfiltered uploads.
 	secupress_manage_submodule( $modulenow, 'wp-config-constant-unfiltered-uploads', ! empty( $activate['wp-config_disallow_unfiltered_uploads'] ) );
+
+	// Database
+	secupress_manage_submodule( $modulenow, 'wp-config-constant-dieondberror', ! empty( $activate['wp-config_dieondberror'] ) );
+
+	// Repair page
+	secupress_manage_submodule( $modulenow, 'wp-config-constant-repair', ! empty( $activate['wp-config_repair'] ) );
+
+	// fs chmod
+	secupress_manage_submodule( $modulenow, 'wp-config-constant-fs-chmod', ! empty( $activate['wp-config_fs_chmod'] ) );
+
+	// Locations
+	secupress_manage_submodule( $modulenow, 'wp-config-constant-locations', ! empty( $activate['wp-config_locations'] ) );
+
+	// Debugging
+	secupress_manage_submodule( $modulenow, 'wp-config-constant-debugging', ! empty( $activate['wp-config_debugging'] ) );
+
+	// cookiehash
+	secupress_manage_submodule( $modulenow, 'wp-config-constant-cookiehash', ! empty( $activate['wp-config_cookiehash'] ) );
+
+	// saltkeys
+	secupress_manage_submodule( $modulenow, 'wp-config-constant-saltkeys', ! empty( $activate['wp-config_saltkeys'] ) );
+
+	/**
+	 * Filter the settings before saving.
+	 *
+	 * @since 1.4.9
+	 *
+	 * @param (array)      $settings The module settings.
+	 * @param (array\bool) $activate Contains the activation rules for the different modules
+	 */
+	$settings = apply_filters( "secupress_{$modulenow}_settings_callback", $settings, $activate );
 
 	// There are no settings to save.
 	return array( 'sanitized' => 1 );

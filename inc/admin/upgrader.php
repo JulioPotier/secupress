@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /** --------------------------------------------------------------------------------------------- */
 /** MIGRATE / UPGRADE =========================================================================== */
@@ -34,7 +34,6 @@ function secupress_upgrader() {
 			do_action( 'secupress.first_install', 'all' );
 		}
 
-		secupress_maybe_handle_license( 'activate' );
 	}
 	// Already installed but got updated.
 	elseif ( SECUPRESS_VERSION !== $actual_version ) {
@@ -74,7 +73,6 @@ function secupress_upgrader() {
 				do_action( 'secupress_pro.first_install', 'all' );
 			}
 
-			secupress_maybe_handle_license( 'activate', true );
 		}
 		// Already installed but got updated.
 		elseif ( SECUPRESS_PRO_VERSION !== $actual_pro_version ) {
@@ -111,11 +109,57 @@ function secupress_upgrader() {
 			$options['hash_key']     = secupress_generate_key( 64 );
 			$options['install_time'] = time();
 		}
-
 		secupress_update_options( $options );
+
+		/**
+		* Fires when an updated has been done.
+		*
+		* @since 2.0
+		* @author Julio Potier
+		*
+		* @param (string) $actual_version
+		* @param (string) $new_version
+		* @param (array)  $options
+		*/
+		do_action( 'secupress.did_upgrade', $actual_version, SECUPRESS_VERSION, $options );
 	}
 }
 
+add_action( 'secupress.first_install', 'secupress_install_users_login_module' );
+/**
+ * Create default option on install and reset.
+ *
+ * @since 1.0
+ *
+ * @param (string) $module The module(s) that will be reset to default. `all` means "all modules".
+ */
+function secupress_install_users_login_module( $module ) {
+	// First install.
+	if ( 'all' === $module ) {
+		// Activate "Ask for old password" submodule.
+		// secupress_activate_submodule_silently( 'users-login', 'ask-old-password' );
+	}
+
+}
+
+add_action( 'secupress_pro.upgrade', 'secupress_new_pro_upgrade', 10, 2 );
+/**
+ * What to do when SecuPress Pro is updated, depending on versions.
+ *
+ * @since 2.0
+ *
+ * @param (string) $secupress_version The version being upgraded to.
+ * @param (string) $actual_version    The previous version.
+ */
+function secupress_new_pro_upgrade( $secupress_version, $actual_pro_version ) {
+	global $wpdb;
+
+	// < 2.0
+	if ( version_compare( $actual_pro_version, '2.0', '<' ) ) {
+		secupress_remove_old_plugin_file( SECUPRESS_PRO_MODULES_PATH . 'services/callbacks.php' );
+		delete_site_option( SECUPRESS_FULL_FILETREE );
+	}
+}
 
 add_action( 'secupress.upgrade', 'secupress_new_upgrade', 10, 2 );
 /**
@@ -127,309 +171,7 @@ add_action( 'secupress.upgrade', 'secupress_new_upgrade', 10, 2 );
  * @param (string) $actual_version    The previous version.
  */
 function secupress_new_upgrade( $secupress_version, $actual_version ) {
-	global $wpdb;
-
-	// < 1.0
-	if ( version_compare( $actual_version, '1.0', '<' ) ) {
-
-		secupress_deactivation();
-
-		/**
-		 * From uninstall.php.
-		 */
-
-		// Transients.
-		$transients = $wpdb->get_col( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE '_transient_secupress_%' OR option_name LIKE '_transient_secupress-%'" );
-		array_map( 'delete_transient', $transients );
-
-		// Site transients.
-		$transients = $wpdb->get_col( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE '_site_transient_secupress_%' OR option_name LIKE '_site_transient_secupress-%'" );
-		array_map( 'delete_site_transient', $transients );
-
-		if ( is_multisite() ) {
-			$transients = $wpdb->get_col( "SELECT meta_key FROM $wpdb->sitemeta WHERE meta_key LIKE '_site_transient_secupress_%' OR meta_key LIKE '_site_transient_secupress-%'" );
-			array_map( 'delete_site_transient', $transients );
-		}
-
-		// Options.
-		$options = $wpdb->get_col( "SELECT option_name FROM $wpdb->options WHERE option_name LIKE 'secupress_%'" );
-		array_map( 'delete_option', $options );
-
-		if ( is_multisite() ) {
-			// Site options.
-			$options = $wpdb->get_col( "SELECT meta_key FROM $wpdb->sitemeta WHERE meta_key LIKE 'secupress_%'" );
-			array_map( 'delete_site_option', $options );
-		}
-
-		// User metas.
-		$wpdb->query( "DELETE FROM $wpdb->usermeta WHERE meta_key LIKE 'secupress_%' OR meta_key LIKE '%_secupress_%'" );
-
-		secupress_activation();
-	}
-
-	// < 1.0.3
-	if ( version_compare( $actual_version, '1.0.3', '<' ) ) {
-		// Remove some User Agents that are too generic from the settings.
-		$user_agents_options = get_option( 'secupress_firewall_settings' );
-
-		if ( is_array( $user_agents_options ) && ! empty( $user_agents_options['bbq-headers_user-agents-list'] ) ) {
-			$user_agents_options['bbq-headers_user-agents-list'] = secupress_sanitize_list( $user_agents_options['bbq-headers_user-agents-list'] );
-			$user_agents_options['bbq-headers_user-agents-list'] = explode( ', ', $user_agents_options['bbq-headers_user-agents-list'] );
-			$user_agents_options['bbq-headers_user-agents-list'] = array_diff( $user_agents_options['bbq-headers_user-agents-list'], array( 'attache', 'email', 'Fetch', 'Link', 'Ping', 'Proxy' ) );
-			$user_agents_options['bbq-headers_user-agents-list'] = implode( ', ', $user_agents_options['bbq-headers_user-agents-list'] );
-			update_option( 'secupress_firewall_settings', $user_agents_options );
-		}
-	}
-
-	// < 1.0.4
-	if ( version_compare( $actual_version, '1.0.4', '<' ) ) {
-		// Get post ids from logs.
-		$post_ids = $wpdb->get_col( "SELECT ID FROM $wpdb->posts WHERE post_type LIKE 'secupress_log_%'" );
-
-		if ( $post_ids ) {
-			// Delete Postmeta.
-			$wpdb->query( sprintf( "DELETE FROM $wpdb->postmeta WHERE post_id IN (%s)", implode( ',', $post_ids ) ) ); // WPCS: unprepared SQL ok.
-
-			// Delete Posts.
-			$wpdb->query( sprintf( "DELETE FROM $wpdb->posts WHERE ID IN (%s)", implode( ',', $post_ids ) ) ); // WPCS: unprepared SQL ok.
-		}
-	}
-
-	// < 1.0.6
-	if ( version_compare( $actual_version, '1.0.6', '<' ) ) {
-		// Make sure affected roles are not empty (sanitization will do the job).
-		$users_login_settings = get_site_option( 'secupress_users-login_settings' );
-		update_site_option( 'secupress_users-login_settings', $users_login_settings );
-	}
-
-	// < 1.1.4
-	if ( version_compare( $actual_version, '1.1.4', '<' ) ) {
-		// Lots of things have changed on the sub-modules side.
-		secupress_maybe_handle_license( 'activate' );
-
-		$options = get_site_option( SECUPRESS_SETTINGS_SLUG );
-		$options = is_array( $options ) ? $options : array();
-		$options['install_time'] = time();
-		secupress_update_options( $options );
-
-		// PHP version.
-		if ( secupress_is_submodule_active( 'discloses', 'php-version' ) && ! secupress_is_submodule_active( 'discloses', 'no-x-powered-by' ) ) {
-			secupress_activate_submodule( 'discloses', 'no-x-powered-by' );
-		}
-
-		// WP disclose.
-		$deactivate = array();
-
-		foreach ( array( 'generator', 'wp-version-css', 'wp-version-js' ) as $submodule ) {
-			if ( secupress_is_submodule_active( 'discloses', $submodule ) ) {
-				$deactivate[] = $submodule;
-			}
-		}
-
-		if ( $deactivate ) {
-			secupress_deactivate_submodule( 'discloses', $deactivate );
-			secupress_activate_submodule( 'discloses', 'wp-version' );
-		}
-
-		// WooCommerce and WPML.
-		foreach ( array( 'woocommerce', 'wpml' ) as $wp_plugin ) {
-			$deactivate = array();
-
-			foreach ( array( 'generator', 'version-css', 'version-js' ) as $path_part ) {
-				if ( secupress_is_submodule_active( 'discloses', $wp_plugin . '-' . $path_part ) ) {
-					$deactivate[] = $wp_plugin . '-' . $path_part;
-				}
-			}
-
-			if ( $deactivate ) {
-				secupress_deactivate_submodule( 'discloses', $deactivate );
-				secupress_activate_submodule( 'discloses', $wp_plugin . '-version' );
-			}
-		}
-
-		// `wp-config.php` constants.
-		$wpconfig_filepath = secupress_is_wpconfig_writable();
-
-		if ( $wpconfig_filepath ) {
-			$wp_filesystem = secupress_get_filesystem();
-			$file_content  = $wp_filesystem->get_contents( $wpconfig_filepath );
-			$pattern       = '@# BEGIN SecuPress Correct Constants Values(.*)# END SecuPress\s*?@Us';
-
-			if ( preg_match( $pattern, $file_content, $matches ) ) {
-				$new_content = $matches[1];
-				$replaced    = array();
-				$constants   = array(
-					'DISALLOW_FILE_EDIT'       => 'file-edit',
-					'DISALLOW_UNFILTERED_HTML' => 'unfiltered-html',
-					'ALLOW_UNFILTERED_UPLOADS' => 'unfiltered-uploads',
-				);
-
-				foreach ( $constants as $constant => $submodule_part ) {
-					$pattern     = "@^\s*define\s*\(\s*[\"']{$constant}[\"'].*@m";
-					$tmp_content = preg_replace( $pattern, '', $new_content );
-
-					if ( null !== $tmp_content && $tmp_content !== $new_content ) {
-						// The constant was in the block and has been removed.
-						$replaced[]  = 'wp-config-constant-' . $submodule_part;
-						$new_content = $tmp_content;
-					}
-				}
-
-				if ( $replaced ) {
-					if ( trim( $new_content ) === '' ) {
-						// No constants left, remove the marker too.
-						$new_content = '';
-					} else {
-						$new_content = str_replace( $matches[1], $new_content, $matches[0] );
-					}
-
-					// Remove the old constants.
-					$new_content = str_replace( $matches[0], $new_content, $file_content );
-					$wp_filesystem->put_contents( $wpconfig_filepath, $new_content, FS_CHMOD_FILE );
-
-					// Activate the new sub-modules.
-					foreach ( $replaced as $submodule ) {
-						secupress_activate_submodule( 'wordpress-core', $submodule );
-					}
-				}
-			}
-		}
-	}
-
-	// < 1.2.6.1
-	if ( version_compare( $actual_version, '1.2.6.1', '<' ) ) {
-		// New API route and response format.
-		delete_transient( 'secupress_pro_plans' );
-	}
-
-	// < 1.3
-	if ( version_compare( $actual_version, '1.3' ) < 0 ) {
-		// Remove 'OrangeBot' from the Bad User Agents list.
-		$user_agents_options = get_option( 'secupress_firewall_settings' );
-
-		if ( is_array( $user_agents_options ) && ! empty( $user_agents_options['bbq-headers_user-agents-list'] ) ) {
-			$user_agents_options['bbq-headers_user-agents-list'] = secupress_sanitize_list( $user_agents_options['bbq-headers_user-agents-list'] );
-			$user_agents_options['bbq-headers_user-agents-list'] = explode( ', ', $user_agents_options['bbq-headers_user-agents-list'] );
-			$user_agents_options['bbq-headers_user-agents-list'] = array_diff( $user_agents_options['bbq-headers_user-agents-list'], array( 'OrangeBot' ) );
-			$user_agents_options['bbq-headers_user-agents-list'] = implode( ', ', $user_agents_options['bbq-headers_user-agents-list'] );
-			update_option( 'secupress_firewall_settings', $user_agents_options );
-		}
-
-		// New way to store scans and fixes.
-		$scanners     = secupress_get_scanners();
-		$scanners     = call_user_func_array( 'array_merge', $scanners );
-		$scanners     = array_map( 'strtolower', $scanners );
-		$sub_scanners = secupress_get_tests_for_ms_scanner_fixes();
-		$sub_scanners = array_map( 'strtolower', $sub_scanners );
-		$sub_scanners = array_flip( $sub_scanners );
-		$is_multisite = is_multisite();
-
-		$scan_results = get_site_option( 'secupress_scanners' );
-		$fix_results  = get_site_option( 'secupress_fixes' );
-		$sub_results  = get_site_option( 'secupress_fix_sites' );
-
-		if ( ! wp_using_ext_object_cache() ) {
-			secupress_load_network_options( $scanners, '_site_transient_secupress_scan_' );
-			secupress_load_network_options( $scanners, '_site_transient_secupress_fix_' );
-			secupress_load_network_options( $sub_scanners, '_site_transient_secupress_fix_sites_' );
-		}
-
-		foreach ( $scanners as $scan_name ) {
-			/**
-			 * Scan.
-			 */
-			// Try the transient first (probability we got one is near 0).
-			$result = secupress_get_site_transient( 'secupress_scan_' . $scan_name );
-
-			if ( false !== $result ) {
-				secupress_delete_site_transient( 'secupress_scan_' . $scan_name );
-			}
-
-			$result = $result && is_array( $result ) ? $result : false;
-
-			if ( ! $result && ! empty( $scan_results[ $scan_name ] ) && is_array( $scan_results[ $scan_name ] ) ) {
-				$result = $scan_results[ $scan_name ];
-			}
-
-			$get_fix = true;
-
-			if ( $result ) {
-				SecuPress_Scanner_Results::update_scan_result( $scan_name, $result );
-
-				if ( 'good' === $result['status'] ) {
-					// No need for a fix in that case.
-					$get_fix = false;
-				}
-			}
-
-			/**
-			 * Fix.
-			 */
-			// Try the transient first (probability we got one is near 0).
-			$result = secupress_get_site_transient( 'secupress_fix_' . $scan_name );
-
-			if ( false !== $result ) {
-				secupress_delete_site_transient( 'secupress_fix_' . $scan_name );
-			}
-
-			if ( $get_fix ) {
-				$result = $result && is_array( $result ) ? $result : false;
-
-				if ( ! $result && ! empty( $fix_results[ $scan_name ] ) && is_array( $fix_results[ $scan_name ] ) ) {
-					$result = $fix_results[ $scan_name ];
-				}
-
-				if ( $result ) {
-					SecuPress_Scanner_Results::update_fix_result( $scan_name, $result );
-				}
-			}
-
-			/**
-			 * Scan and Fix of subsites..
-			 */
-			// Try the transient first (probability we got one is near 0).
-			$result = secupress_get_site_transient( 'secupress_fix_sites_' . $scan_name );
-
-			if ( false !== $result ) {
-				secupress_delete_site_transient( 'secupress_fix_sites_' . $scan_name );
-			}
-
-			if ( ! $is_multisite || ! isset( $sub_scanners[ $scan_name ] ) ) {
-				continue;
-			}
-
-			$result = $result && is_array( $result ) ? $result : false;
-
-			if ( ! $result && ! empty( $sub_results[ $scan_name ] ) && is_array( $sub_results[ $scan_name ] ) ) {
-				$result = $sub_results[ $scan_name ];
-			}
-
-			if ( $result ) {
-				SecuPress_Scanner_Results::update_sub_sites_result( $scan_name, $result );
-			}
-		}
-
-		if ( false !== $scan_results ) {
-			delete_site_option( 'secupress_scanners' );
-		}
-
-		if ( false !== $fix_results ) {
-			delete_site_option( 'secupress_fixes' );
-		}
-
-		if ( false !== $sub_results ) {
-			delete_site_option( 'secupress_fix_sites' );
-		}
-	}
-
-	// < 1.3.1
-	if ( secupress_is_submodule_active( 'users-login', 'move-login' ) && version_compare( $actual_version, '1.3.1', '<' ) ) {
-		// Remove move login rules.
-		if ( ! function_exists( 'secupress_move_login_write_rules' ) ) {
-			include( SECUPRESS_MODULES_PATH . 'users-login/plugins/inc/php/move-login/admin.php' );
-		}
-		secupress_move_login_write_rules();
-	}
+	global $wpdb, $current_user;
 
 	// < 1.4.3
 	if ( version_compare( $actual_version, '1.4.3', '<' ) ) {
@@ -461,32 +203,21 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 		secupress_remove_old_plugin_file( SECUPRESS_MODULES_PATH . 'users-login/plugins/inc/php/move-login/url-filters.php' );
 	}
 
-}
-
-/**
- * Try to delete an old plugin file removed in a particular version, if not, will empty the file, if not, will rename it, if still not well… ¯\_(ツ)_/¯.
- *
- * @since 1.4.3
- * @param (string) $file The file to be deleted.
- * @author Julio Potier
- **/
-function secupress_remove_old_plugin_file( $file ) {
-	// Is it a sym link ?
-	if ( is_link( $file ) ) {
-		$file = @readlink( $file );
-	}
-	// Try to delete.
-	if ( file_exists( $file ) && ! @unlink( $file ) ) {
-		// Or try to empty it.
-		$fh = @fopen( $file, 'w' );
-		$fw = @fwrite( $fh, '<?php // File removed by SecuPress' );
-		@fclose( $fh );
-		if ( ! $fw ) {
-			// Or try to rename it.
-			return @rename( $file, $file . '.old' );
+	// < 2.0
+	if ( version_compare( $actual_version, '2.0', '<' ) ) {
+		// Cannot use secupress_is_submodule_active() here because these are not modules yet (< 2.0...)
+		if ( defined( 'SECUPRESS_SALT_KEYS_ACTIVE' ) ) {
+			secupress_set_site_transient( 'secupress-add-salt-muplugin', array( 'ID' => $current_user->ID, 'username' => $current_user->user_login ) );
 		}
+		if ( defined( 'COOKIEHASH' ) && COOKIEHASH !== md5( get_site_option( 'siteurl' ) ) ) {
+			secupress_set_site_transient( 'secupress-add-cookiehash-muplugin', array( 'ID' => $current_user->ID, 'username' => $current_user->user_login ) );
+		}
+
+		secupress_remove_old_plugin_file( SECUPRESS_MODULES_PATH . 'firewall/plugins/bad-sqli-scan.php' );
+		secupress_remove_old_plugin_file( SECUPRESS_MODULES_PATH . 'users-login/plugins/ask-old-password.php' );
+		secupress_remove_old_plugin_file( SECUPRESS_CLASSES_PATH . 'class-secupress-admin-support.php.php' );
+		delete_site_option( 'secupress_scan_wp_config' );
 	}
-	return true;
 }
 
 
@@ -728,10 +459,11 @@ exit;
 }
 
 if ( ! secupress_is_white_label() ) {
-	// add_action( 'admin_notices', 'secupress_display_whats_new' );
+	add_action( 'admin_notices', 'secupress_display_whats_new' );
 	/**
 	 * Display a "what's new" notice when not in WhiteLabel and user has the correct capa
 	 *
+	 * @since 2.0 secupress_add_transient_notice + SECUPRESS_MAJOR_VERSION
 	 * @since 1.4.10
 	 * @author Julio Potier
 	 *
@@ -739,19 +471,17 @@ if ( ! secupress_is_white_label() ) {
 	 * @return (void)
 	 **/
 	function secupress_display_whats_new() {
-		if ( ! current_user_can( secupress_get_capability() ) ) {
+		$notice_id = 'new-' . sanitize_key( SECUPRESS_MAJOR_VERSION );
+		if ( ! current_user_can( secupress_get_capability() ) || secupress_notice_is_dismissed( $notice_id ) ) {
 			return;
 		}
-		$title    = sprintf( '<strong>' . __( 'What’s new in SecuPress %s', 'secupress' ) . '</strong>', SECUPRESS_VERSION );
-		$readmore = '<a href="https://secupress.me/changelog">' . __( 'Read full changelog on secupress.me', 'secupress' ) . '</a>';
+
+		$title    = sprintf( '<strong>' . __( 'What’s new in SecuPress %s', 'secupress' ) . '</strong>', SECUPRESS_MAJOR_VERSION );
+		$readmore = '';//'<a href="https://secupress.me/changelog"><em>' . __( 'Or read full changelog on secupress.me', 'secupress' ) . '</em></a>';
 		$newitems = [
-						// Change this and only
-						__( 'New Feature: Do not allow User Creation', 'secupress' ),
-						__( 'Fix: Blacklist IP didn’t worked as expected.', 'secupress' ),
-						__( 'Fix: Add a try/catch on shell_exec test to prevent fatal errors.', 'secupress' ),
-						__( 'Improvement: Prevent the plugin to be tagged as malicious.', 'secupress' ),
+						__( 'So many things have changed, read our blog post: <a href="https://secupress.me/blog/secupress-v2-0">SecuPress v2.0 aka Python</a>.', 'secupress' ),
 					];
 		$newitems = '<ul><li>• ' . implode( '</li><li>• ', $newitems ) . '</li></ul>';
-		secupress_add_notice( $title . $newitems . $readmore, 'updated', 'new-1410' );
+		secupress_add_transient_notice( $title . $newitems . $readmore, 'updated', $notice_id );
 	}
 }

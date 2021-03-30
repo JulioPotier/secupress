@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Easy Login scan class.
@@ -92,7 +92,7 @@ class SecuPress_Scan_Easy_Login extends SecuPress_Scan implements SecuPress_Scan
 	 * @return (string)
 	 */
 	public static function get_docs_url() {
-		return __( 'http://docs.secupress.me/article/128-two-factor-authentication-scan', 'secupress' );
+		return __( 'https://docs.secupress.me/article/128-two-factor-authentication-scan', 'secupress' );
 	}
 
 

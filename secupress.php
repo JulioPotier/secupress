@@ -2,43 +2,49 @@
 /**
  * Plugin Name: SecuPress Free — WordPress Security
  * Plugin URI: https://secupress.me
- * Description: Protect your WordPress with SecuPress, analyze and ensure the safety of your website daily.
+ * Description: More than a plugin, the guarantee of a protected website by experts.
  * Author: SecuPress
  * Author URI: https://secupress.me
- * Version: 1.4.12
- * Code Name: Hotrod
+ * Version: 2.0.1.1
+ * Code Name: Python (Mark XX)
  * Network: true
+ * Contributors: SecuPress, juliobox, GregLone
  * License: GPLv2
- * License URI: http://www.gnu.org/licenses/gpl-2.0.html
- *
- * Text Domain: secupress
  * Domain Path: /languages/
- *
- * Copyright 2012-2018 SecuPress
+ * Requires at least: 4.9
+ * Requires PHP: 5.6
+ * Copyright 2012-2021 SecuPress
  */
 
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
+
+
+/** --------------------------------------------------------------------------------------------- */
+/** DEFINES ===================================================================================== */
+/** ----------------------------------------------------------------------------------------------*/
+
+define( 'SECUPRESS_VERSION',                    '2.0.1.1' );
+define( 'SECUPRESS_MAJOR_VERSION',              '2.0' );
+define( 'SECUPRESS_FILE',                       __FILE__ );
+define( 'SECUPRESS_PATH',                       realpath( dirname( SECUPRESS_FILE ) ) . DIRECTORY_SEPARATOR );
+define( 'SECUPRESS_INC_PATH',                   SECUPRESS_PATH . 'inc' . DIRECTORY_SEPARATOR );
 
 
 /** --------------------------------------------------------------------------------------------- */
 /** DEFINES ===================================================================================== */
 /** --------------------------------------------------------------------------------------------- */
 
-define( 'SECUPRESS_VERSION'               , '1.4.12' );
 define( 'SECUPRESS_ACTIVE_SUBMODULES'     , 'secupress_active_submodules' );
 define( 'SECUPRESS_SETTINGS_SLUG'         , 'secupress_settings' );
 define( 'SECUPRESS_SCAN_TIMES'            , 'secupress_scanners_times' );
 define( 'SECUPRESS_WP_CORE_FILES_HASHES'  , 'secupress_wp_core_files_hashes' );
 define( 'SECUPRESS_FULL_FILETREE'         , 'secupress_full_filetree' );
+define( 'SECUPRESS_DATABASE_MALWARES'     , 'secupress_database_malwares' );
 define( 'SECUPRESS_FIX_DISTS'             , 'secupress_fix_dists' );
 define( 'SECUPRESS_BAN_IP'                , 'secupress_ban_ip' );
 define( 'SECUPRESS_WHITE_IP'              , 'secupress_whitelist_ip' );
-define( 'SECUPRESS_SELF_WHITELIST'        , 'secupress_self_whitelist' );
 define( 'SECUPRESS_RATE_URL'              , 'https://wordpress.org/support/view/plugin-reviews/secupress?filter=5#topic' );
 define( 'SECUPRESS_WEB_MAIN'              , 'https://secupress.me/' );
-define( 'SECUPRESS_FILE'                  , __FILE__ );
-define( 'SECUPRESS_PATH'                  , realpath( plugin_dir_path( SECUPRESS_FILE ) ) . DIRECTORY_SEPARATOR );
-define( 'SECUPRESS_INC_PATH'              , SECUPRESS_PATH . 'inc' . DIRECTORY_SEPARATOR );
 define( 'SECUPRESS_MODULES_PATH'          , SECUPRESS_INC_PATH . 'modules' . DIRECTORY_SEPARATOR );
 define( 'SECUPRESS_ADMIN_PATH'            , SECUPRESS_INC_PATH . 'admin' . DIRECTORY_SEPARATOR );
 define( 'SECUPRESS_CLASSES_PATH'          , SECUPRESS_INC_PATH . 'classes' . DIRECTORY_SEPARATOR );
@@ -51,8 +57,8 @@ define( 'SECUPRESS_ASSETS_URL'            , SECUPRESS_PLUGIN_URL . 'assets/' );
 define( 'SECUPRESS_ADMIN_CSS_URL'         , SECUPRESS_ASSETS_URL . 'admin/css/' );
 define( 'SECUPRESS_ADMIN_JS_URL'          , SECUPRESS_ASSETS_URL . 'admin/js/' );
 define( 'SECUPRESS_ADMIN_IMAGES_URL'      , SECUPRESS_ASSETS_URL . 'admin/images/' );
-define( 'SECUPRESS_PHP_MIN'               , '5.4' );
-define( 'SECUPRESS_WP_MIN'                , '4.0' );
+define( 'SECUPRESS_PHP_MIN'               , '5.6' );
+define( 'SECUPRESS_WP_MIN'                , '4.9' );
 define( 'SECUPRESS_INT_MAX'               , PHP_INT_MAX - 20 );
 
 if ( defined( 'SECUPRESS_API_EMAIL' ) && defined( 'SECUPRESS_API_KEY' ) && ! defined( 'SECUPRESS_HIDE_API_KEY' ) ) {
@@ -365,6 +371,7 @@ function secupress_load_functions() {
 	// The Pro upgrade class.
 	secupress_require_class( 'Admin', 'Offer_Migration' );
 	secupress_require_class( 'Admin', 'Pro_Upgrade' );
+	secupress_require_class( 'Admin', 'Pointers' );
 
 	// Functions for the admin side.
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/admin.php' );
@@ -373,13 +380,40 @@ function secupress_load_functions() {
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/ajax-post.php' );
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/modules.php' );
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/notices.php' );
-	require_once( SECUPRESS_ADMIN_PATH . 'functions/site-health.php' );
 }
 
 
 /** --------------------------------------------------------------------------------------------- */
 /** I18N ======================================================================================== */
 /** --------------------------------------------------------------------------------------------- */
+
+add_filter( 'load_textdomain_mofile', 'secupress_load_own_i18n', 10, 2 );
+/**
+ * Load our own i18n to prevent too long strings or spelling errors from voluteers at translate.wp.org, sorry guys.
+ *
+ * @since 2.0
+ * @author Julio Potier
+ *
+ * @hook load_textdomain_mofile
+ * @param (string)  $mofile The file to be loaded
+ * @param (string)  $domain The desired textdomain
+ * @return (string) $mofile
+ **/
+function secupress_load_own_i18n( $mofile, $domain ) {
+	if ( 'secupress' === $domain && false !== strpos( $mofile, WP_LANG_DIR . '/plugins/' ) ) {
+		if ( ! function_exists( 'determine_locale' ) ) { // WP 5.0.
+			$determined_locale     = get_locale();
+			if ( is_admin() ) {
+				$determined_locale = get_user_locale();
+			}
+		} else {
+			$determined_locale = determine_locale();
+		}
+		$locale = apply_filters( 'plugin_locale', $determined_locale, $domain );
+		$mofile = WP_PLUGIN_DIR . '/' . dirname( plugin_basename( SECUPRESS_FILE ) ) . '/languages/' . $domain . '-' . $locale . '.mo';
+	}
+	return $mofile;
+}
 
 /**
  * Translations for the plugin textdomain.

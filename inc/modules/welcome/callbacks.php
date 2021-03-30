@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /** --------------------------------------------------------------------------------------------- */
 /** CALLBACKS FOR THE MAIN SETTINGS =========================================== */
@@ -11,27 +11,50 @@ defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
  * @since 1.4.3
  * @author Julio Potier
  */
-function secupress_welcome_settings_callback() {
+function secupress_welcome_settings_callback( $settings ) {
+	$modulenow = 'welcome';
 	secupress_check_user_capability();
 	secupress_check_admin_referer( 'secupress_welcome_settings-options' );
+
+	$_FILES = apply_filters( 'wp_handle_upload_prefilter', $_FILES );
 
 	// Handle Import.
 	if ( ! empty( $_FILES['import'] ) ) {
 		secupress_settings_import_callback();
-		return;
+		return $settings;
 	}
 
 	// Handle White Label.
 	if ( secupress_is_pro() && isset( $_POST['secupress_display_white_label_submit'], $_POST['secupress_welcome_settings'] ) ) {
 		secupress_pro_settings_white_label_callback();
-		return;
+		return $settings;
 	}
 
 	// Handle License.
 	if ( isset( $_POST['secupress_display_apikey_options_submit'] ) ) {
 		secupress_settings_licence_callback();
-		return;
+		return $settings;
 	}
+
+	if ( ! isset( $settings['advanced-settings_admin-bar'] ) ) {
+		$settings['advanced-settings_admin-bar'] = '0';
+	}
+	if ( ! isset( $settings['advanced-settings_grade-system'] ) ) {
+		$settings['advanced-settings_grade-system'] = '0';
+	}
+	if ( ! isset( $settings['advanced-settings_expert-mode'] ) ) {
+		$settings['advanced-settings_expert-mode'] = '0';
+	}
+	/**
+	 * Filter the settings before saving.
+	 *
+	 * @since 1.4.9
+	 *
+	 * @param (array)      $settings The module settings.
+	 */
+	$settings = apply_filters( "secupress_{$modulenow}_settings_callback", $settings, null );
+
+	return $settings;
 }
 
 
@@ -330,7 +353,7 @@ function secupress_global_settings_api_request_succeeded( $response ) {
 		}
 
 		// The request couldn't be sent.
-		secupress_add_settings_error( 'general', 'request_error', secupress_global_settings_pro_license_activation_error_message( 'request_error' ) . listMessages);
+		secupress_add_settings_error( 'general', 'request_error', secupress_global_settings_pro_license_activation_error_message( 'request_error' ) . $listMessages );
 		return false;
 	}
 
@@ -425,7 +448,7 @@ function secupress_global_settings_pro_license_activation_error_message( $code =
 		),
 		'no_activations_left' => sprintf(
 			/** Translators: %s is a "to upgrade your license" link. */
-			__( 'You\'ve used as many sites as your license allows. You may want %s to add more sites.', 'secupress' ),
+			__( 'You used as many sites as your license allows. You may want %s to add more sites.', 'secupress' ),
 			sprintf( $account_link, __( 'to upgrade your license', 'secupress' ) )
 		),
 	);

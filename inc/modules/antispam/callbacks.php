@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /** --------------------------------------------------------------------------------------------- */
 /** ON MODULE SETTINGS SAVE ===================================================================== */
@@ -39,6 +39,16 @@ function secupress_antispam_settings_callback( $settings ) {
 	$settings['antispam_block-shortcodes']         = (int) ! empty( $settings['antispam_block-shortcodes'] );
 	$settings['antispam_better-blacklist-comment'] = (int) ! empty( $settings['antispam_better-blacklist-comment'] );
 	$settings['antispam_forbid-pings-trackbacks']  = (int) ! empty( $settings['antispam_forbid-pings-trackbacks'] );
+
+	/**
+	 * Filter the settings before saving.
+	 *
+	 * @since 1.4.9
+	 *
+	 * @param (array)      $settings The module settings.
+	 * @param (array\bool) $activate Contains the activation rules for the different modules
+	 */
+	$settings = apply_filters( "secupress_{$modulenow}_settings_callback", $settings, $activate );
 
 	return $settings;
 }

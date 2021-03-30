@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 
 $this->set_current_section( 'wordpress_updates' );
@@ -7,10 +7,10 @@ $this->add_section( __( 'WordPress Updates', 'secupress' ) );
 
 
 $plugin = $this->get_current_plugin();
-
+$ver    = strlen( $GLOBALS['wp_version'] ) >= 5 ? $GLOBALS['wp_version'] : $GLOBALS['wp_version'] . '.1';
 $this->add_field( array(
 	'title'             => __( 'Minor Updates', 'secupress' ),
-	'description'       => __( 'By default, WordPress updates itself when a minor version is available. But a plugin could disable this feature: this setting will force automatic background updates regardless.<br/>4.3.<strong>1</strong> is a minor version.', 'secupress' ),
+	'description'       => sprintf( __( 'By default, WordPress updates itself when a minor version is available. But a plugin could disable this feature: this setting will force automatic background updates regardless. <em>Example: <strong>%s</strong> is a minor version</em>.', 'secupress' ), $ver ),
 	'label_for'         => $this->get_field_name( 'minor' ),
 	'plugin_activation' => true,
 	'type'              => 'checkbox',
@@ -25,9 +25,10 @@ $this->add_field( array(
 ) );
 
 
+$ver    = substr( $GLOBALS['wp_version'], 0, 3 );
 $this->add_field( array(
 	'title'             => __( 'Major Updates', 'secupress' ),
-	'description'       => __( 'Let WordPress update itself when a major version is available.<br/>4.<strong>4</strong> is a major version.', 'secupress' ),
+	'description'       => sprintf( __( 'Let WordPress update itself when a major version is available. <em>Example: <strong>%s</strong> is a major version</em>.', 'secupress' ), $ver ),
 	'label_for'         => $this->get_field_name( 'major' ),
 	'plugin_activation' => true,
 	'type'              => 'checkbox',

@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 
 $this->set_current_section( 'geoip-system' );
@@ -25,16 +25,16 @@ $this->add_field( array(
 	'type'         => 'radios',
 	'value'        => $geoip_value,
 	'default'      => '-1',
-	'label_screen' => __( 'Whitelist or blacklist the countries', 'secupress' ),
+	'label_screen' => __( 'Allow or disallow countries', 'secupress' ),
 	'options'      => array(
 		'-1'        => __( '<strong>Do not block</strong> countries from visiting my website', 'secupress' ),
-		'blacklist' => __( '<strong>Block</strong> the selected countries from visiting my website (blacklist)', 'secupress' ),
-		'whitelist' => __( '<strong>Only allow</strong> the selected countries to visit my website (whitelist)', 'secupress' ),
+		'blacklist' => __( '<strong>Block</strong> the selected countries from visiting my website (disallowed list)', 'secupress' ),
+		'whitelist' => __( '<strong>Only allow</strong> the selected countries to visit my website (allowed list)', 'secupress' ),
 	),
 	'helpers'      => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'Remember that the detection of a visit is based on the IP address, so it\'s effective for almost all automated attacks.', 'secupress' ),
+			'description' => __( 'Remember that the detection of a visit is based on the IP address, so it’s effective for almost all automated attacks.', 'secupress' ),
 		),
 	),
 ) );
@@ -55,7 +55,7 @@ $this->add_field( array(
 		),
 		array(
 			'type'        => 'warning',
-			'description' => __( 'We recommand to let this setting OFF.', 'secupress' ),
+			'description' => __( 'We recommand to let this setting deactivated.', 'secupress' ),
 		),
 	),
 ) );
@@ -79,7 +79,7 @@ $this->add_field( array(
 	'helpers'      => array(
 		array(
 			'type'        => 'help',
-			'description' => sprintf( __( 'The GeoIP database will update everyday automatically using a cron.<br />If you encounter strange behaviour like too much blocking or not enough, try to update manually.<br>Last update: %s', 'secupress' ), $lastupdate ),
+			'description' => sprintf( __( 'The GeoIP database will update everyday automatically.<br />If you encounter strange behaviour like too much blocking or not enough, try to update manually.<br>Last update: %s', 'secupress' ), $lastupdate ),
 		),
 	),
 ) );

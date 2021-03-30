@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 
 $this->set_current_section( 'bbq_headers' );
@@ -70,6 +70,32 @@ $this->add_field( array(
 		array(
 			'type'        => 'warning',
 			'description' => ! secupress_check_bot_ip( true ) ? __( 'Impossible to use this feature, your server can not check a hostname correctly! Sorry.', 'secupress' ) : '',
+		),
+	),
+) );
+
+$main_field_name = $this->get_field_name( 'bad-referer' );
+$this->add_field( array(
+	'title'             => __( 'Block Bad Referers', 'secupress' ),
+	'description'  => __( 'You may want to forbid access to your site depending on from where requests are.', 'secupress' ),
+	'label_for'         => $main_field_name,
+	'plugin_activation' => true,
+	'type'              => 'checkbox',
+	'value'             => (int) secupress_is_submodule_active( 'firewall', 'bad-referer' ),
+	'label'             => __( 'Yes, protect my site from bad referers. <em>Check to see list below</em>.', 'secupress' ),
+) );
+
+
+$this->add_field( array(
+	'title'        => __( 'Referers List', 'secupress' ),
+	'name'         => $this->get_field_name( 'bad-referer-list' ),
+	'type'         => 'textarea',
+	'depends'      => $main_field_name,
+	'attributes'   => array( 'rows' => 2 ),
+	'helpers'      => array(
+		array(
+			'type'        => 'description',
+			'description' => __( 'One URL per line.', 'secupress' ),
 		),
 	),
 ) );

@@ -1,6 +1,130 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
+
+/**
+ * Return the filepath where the $table_prefix global is set.
+ * Don’t get me wrong, you have to give him the correct file, it won't search for you.
+ *
+ * @since 2.0
+ * @author Julio Potier
+ *
+ * @global $wpdb
+ * @return (string|bool) Filepath or false
+ **/
+function secupress_where_is_table_prefix() {
+	global $wpdb;
+
+	$config_filepath = secupress_is_wpconfig_writable( 'db' );
+	if ( $config_filepath ) {
+		$regex_pattern = '/(\$table_prefix\s*=\s*(\'' . $wpdb->prefix . '\'|"' . $wpdb->prefix . '");).*|(\$GLOBALS\[\'table_prefix\'\]\s*=\s*(\'' . $wpdb->prefix . '\'|"' . $wpdb->prefix . '");).*/';
+		$file_content  = file_get_contents( $config_filepath );
+
+		return preg_match( $regex_pattern, $file_content ) ? $config_filepath : false;
+	}
+	return false;
+}
+
+function secupress_change_db_prefix( $new_prefix, $tables ) {
+	global $wpdb, $table_prefix;
+
+	$old_prefix = $wpdb->prefix;
+	if ( $new_prefix === $old_prefix ) {
+		return -1;
+	}
+	$new_prefix = preg_replace( '/[^A-Za-z0-9\_]/', '', $new_prefix );
+	$new_prefix = rtrim( $new_prefix, '_' ) . '_';
+	if ( strlen( $new_prefix ) === 1 ) {
+		return -2;
+	}
+	if ( ! secupress_db_access_granted() ) {
+		return -3;
+	}
+	$non_wp_tables    = secupress_get_non_wp_tables();
+	$wp_tables        = secupress_get_wp_tables();
+	$tables           = is_array( $tables ) ? $tables : [];
+	$tables_to_rename = array_merge( array_intersect( $non_wp_tables, $tables ), array_values( $wp_tables ) );
+
+	$wpconfig_filepath = secupress_where_is_table_prefix();
+	if ( ! $wpconfig_filepath ) {
+		return -4;
+	}
+
+	// Let's start.
+	$query_tables = [];
+
+	// Tables for multisite.
+	if ( is_multisite() ) {
+		$blog_ids = $wpdb->get_col( "SELECT blog_id FROM {$wpdb->blogs} WHERE blog_id > 1" );
+
+		if ( $blog_ids ) {
+			foreach ( $blog_ids as $blog_id ) {
+				$tables = $wpdb->tables( 'blog' );
+
+				foreach ( $tables as $table ) {
+					$tables_to_rename[] = substr_replace( $table, $old_prefix . $blog_id . '_', 0, strlen( $old_prefix ) );
+				}
+			}
+		}
+	}
+
+	// Build the query to rename the tables.
+	foreach ( $tables_to_rename as $table ) {
+		$new_table      = substr_replace( $table, $new_prefix, 0, strlen( $wpdb->prefix ) );
+		$query_tables[] = "`{$table}` TO `{$new_table}`";
+	}
+
+	$wpdb->query( 'RENAME TABLE ' . implode( ', ', $query_tables ) ); // WPCS: unprepared SQL ok.
+
+	// Test if we succeeded.
+	$options_tables = $wpdb->get_col( "SHOW TABLES LIKE '{$new_prefix}options'" ); // WPCS: unprepared SQL ok.
+
+	if ( reset( $options_tables ) !== $new_prefix . 'options' ) { // WPCS: unprepared SQL ok.
+		return -5;
+	}
+
+	// We must not forget to change the prefix attribute for future queries.
+	$table_prefix = $new_prefix; // WPCS: override ok.
+	$wpdb->set_prefix( $table_prefix );
+	$wpdb->prefix = $table_prefix; // WPCS: override ok.
+
+	// Some values must be updated.
+	$old_prefix_len  = strlen( $old_prefix );
+	$old_prefix_len1 = $old_prefix_len + 1;
+	$wpdb->update( $new_prefix . 'options', array( 'option_name' => $new_prefix . 'user_roles' ), array( 'option_name' => $old_prefix . 'user_roles' ) );
+	$wpdb->query( "UPDATE {$new_prefix}usermeta SET meta_key = CONCAT( REPLACE( LEFT( meta_key, {$old_prefix_len}), '$old_prefix', '$new_prefix' ), SUBSTR( meta_key, {$old_prefix_len1} ) )" ); // WPCS: unprepared SQL ok.
+
+	if ( ! empty( $blog_ids ) ) {
+		foreach ( $blog_ids as $blog_id ) {
+			$old_prefix_len  = strlen( $old_prefix ) + strlen( $blog_id ) + 1; // + 1 = "_"
+			$old_prefix_len1 = $old_prefix_len + 1;
+			$ms_prefix       = $new_prefix . $blog_id . '_';
+
+			$wpdb->update( $ms_prefix . 'options', array( 'option_name' => $ms_prefix . 'user_roles' ), array( 'option_name' => $old_prefix . 'user_roles' ) );
+			$wpdb->query( "UPDATE {$ms_prefix}usermeta SET meta_key = CONCAT( REPLACE( LEFT( meta_key, {$old_prefix_len}), '$old_prefix', '$ms_prefix' ), SUBSTR( meta_key, {$old_prefix_len1} ) )" ); // WPCS: unprepared SQL ok.
+		}
+	}
+
+	// $table_prefix = 'foobar';
+	secupress_replace_content(
+		$wpconfig_filepath,
+		'@^[\t ]*?\$table_prefix\s*=\s*(?:\'' . $old_prefix . '\'|"' . $old_prefix . '")\s*;.*?$@mU',
+		'$table_prefix = \'' . $new_prefix . "'; // Modified by SecuPress.\n/** Commented by SecuPress. */ // $0"
+	);
+	// $GLOBALS['table_prefix'] = 'foobar';
+	secupress_replace_content(
+		$wpconfig_filepath,
+		'@^[\t ]*?\$GLOBALS\[\'table_prefix\']\s*=\s*(?:\'' . $old_prefix . '\'|"' . $old_prefix . '")\s*;.*?$@mU',
+		'$GLOBALS[\'table_prefix\'] = \'' . $new_prefix . "'; // Modified by SecuPress.\n/** Commented by SecuPress. */ // $0"
+	);
+
+	// Wait 3 seconds to prevent redirection on install.php
+	sleep( 3 );
+
+	secupress_scanit( 'DB_Prefix' );
+
+	return $new_prefix;
+}
 /**
  * Check a privilege for the DB_USER@DB_NAME on DB_HOST.
  *
@@ -104,7 +228,11 @@ function secupress_get_non_wp_tables() {
 	$good_tables = array_diff( $all_tables, $dup_tables );
 	$good_tables = array_diff( $good_tables, $wp_tables );
 
-	return $good_tables;
+	/**
+	* Filter the Non WordPress Tables
+	* @param (array) $good_tables
+	*/
+	return apply_filters( 'secupress.get_non_wp_tables', $good_tables );
 }
 
 
@@ -133,6 +261,9 @@ function secupress_get_wp_tables() {
 	global $wpdb;
 
 	$wp_tables = $wpdb->tables();
+	if ( secupress_is_submodule_active( 'firewall', 'geoip-system' ) ) {
+		$wp_tables['secupress_geoips'] = $wpdb->prefix . 'secupress_geoips';
+	}
 
 	if ( is_multisite() ) {
 		$query = $wpdb->prepare( 'SHOW TABLES LIKE %s', secupress_esc_like( $wpdb->sitecategories ) );
@@ -141,5 +272,49 @@ function secupress_get_wp_tables() {
 		}
 	}
 
-	return $wp_tables;
+	/**
+	* Filter the WordPress Tables
+	* @param (array) $wp_tables
+	*/
+	return apply_filters( 'secupress.get_wp_tables', $wp_tables );
+}
+
+
+/**
+ * Get salt keys.
+ *
+ * @since 2.0
+ * @author Julio Potier
+ *
+ * @return (array)
+ */
+function secupress_get_db_salt_keys() {
+	return [ 'AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'NONCE_KEY', 'AUTH_SALT', 'SECURE_AUTH_SALT', 'LOGGED_IN_SALT', 'NONCE_SALT' ];
+}
+
+
+/**
+ * Delete DB salt keys.
+ *
+ * @since 2.0
+ * @author Julio Potier
+ *
+ * @return (bool) true: nothing delete or everything deleted, false: missing deletion, keys still in DB
+ */
+function secupress_delete_db_salt_keys() {
+	$keys    = secupress_get_db_salt_keys();
+	$present = 0;
+	$deleted = 0;
+	foreach ( $keys as $key ) {
+		$key = strtolower( $key );
+		$db  = get_site_option( $key, null );
+		if ( ! is_null( $db ) ) {
+			$present++;
+			if ( delete_site_option( $key ) ) {
+				$deleted++;
+			}
+		}
+	}
+
+	return 0 === ( $present - $deleted );
 }

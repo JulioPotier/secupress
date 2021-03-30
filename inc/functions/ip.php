@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Get the IP address of the current user.
@@ -49,11 +49,14 @@ function secupress_get_ip( $priority = null ) {
 	/**
 	 * Filter the default IP address.
 	 *
+	 * @since 2.0 $ip + $priority params
 	 * @since 1.0
 	 *
-	 * @param (string) $ip The IP address.
+	 * @param (string) The fake IP address.
+	 * @param (string) $ip The original IP address.
+	 * @param (string) $priority
 	 */
-	return apply_filters( 'secupress.ip.default_ip', '0.0.0.0' );
+	return apply_filters( 'secupress.ip.default_ip', '0.0.0.0', $ip, $priority );
 }
 
 

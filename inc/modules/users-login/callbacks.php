@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /** --------------------------------------------------------------------------------------------- */
 /** ON MODULE SETTINGS SAVE ===================================================================== */
@@ -52,6 +52,15 @@ function secupress_users_login_settings_callback( $settings ) {
 
 	// Prevent User Creation
 	secupress_preventusercreation_settings_callback( $modulenow, $activate );
+
+	// Lock Default Role
+	secupress_lock_default_role_settings_callback( $modulenow, $settings, $activate );
+
+	// Lock Membership
+	secupress_lock_membership_settings_callback( $modulenow, $activate );
+
+	// Lock Admin Email
+	secupress_lock_admin_email_settings_callback( $modulenow, $activate );
 
 
 	/**
@@ -160,7 +169,6 @@ function secupress_password_policy_settings_callback( $modulenow, &$settings, $a
 
 	// (De)Activation.
 	if ( false !== $activate ) {
-		secupress_manage_submodule( $modulenow, 'ask-old-password', ! empty( $activate['password-policy_ask-old-password'] ) );
 		secupress_manage_submodule( $modulenow, 'strong-passwords', ! empty( $activate['password-policy_strong_passwords'] ) && secupress_is_pro() );
 	}
 }
@@ -211,6 +219,64 @@ function secupress_preventusercreation_settings_callback( $modulenow, $activate 
 	if ( false !== $activate && secupress_is_pro() ) {
 		secupress_manage_submodule( $modulenow, 'prevent-user-creation', ! empty( $activate['blacklist-logins_prevent-user-creation'] ) );
 	}
+}
+
+
+/**
+ * (De)Activate lock default role plugin.
+ *
+ * @since 2.0
+ *
+ * @param (string)     $modulenow Current module.
+ * @param (array|bool) $activate  An array containing the fields related to the sub-module being activated. False if not on this module page.
+ */
+function secupress_lock_default_role_settings_callback( $modulenow, $settings, $activate ) {
+	// (De)Activation.
+	if ( false !== $activate ) {
+		if ( isset( $settings['blacklist-logins_default-role'] ) ) {
+			$roles = new WP_Roles();
+			$roles = $roles->get_names();
+			$valid_role = ! empty( $activate['blacklist-logins_default-role-activated'] ) && in_array( $settings['blacklist-logins_default-role'], array_keys( $roles ) ) && ! isset( secupress_get_forbidden_default_roles()[ $settings['blacklist-logins_default-role'] ] );
+			secupress_manage_submodule( $modulenow, 'default-role', $valid_role );
+		} else {
+			secupress_manage_submodule( $modulenow, 'default-role', false );
+		}
+	}
+
+}
+
+
+/**
+ * (De)Activate lock membership plugin.
+ *
+ * @since 2.0
+ *
+ * @param (string)     $modulenow Current module.
+ * @param (array|bool) $activate  An array containing the fields related to the sub-module being activated. False if not on this module page.
+ */
+function secupress_lock_membership_settings_callback( $modulenow, $activate ) {
+	// (De)Activation.
+	if ( false !== $activate ) {
+		secupress_manage_submodule( $modulenow, 'membership', ! empty( $activate['blacklist-logins_membership-activated'] ) );
+	}
+
+}
+
+
+/**
+ * (De)Activate lock admin email plugin.
+ *
+ * @since 2.0
+ *
+ * @param (string)     $modulenow Current module.
+ * @param (array|bool) $activate  An array containing the fields related to the sub-module being activated. False if not on this module page.
+ */
+function secupress_lock_admin_email_settings_callback( $modulenow, $activate ) {
+	// (De)Activation.
+	if ( false !== $activate ) {
+		secupress_manage_submodule( $modulenow, 'admin-email', ! empty( $activate['blacklist-logins_admin-email-activated'] ) );
+	}
+
 }
 
 
@@ -305,7 +371,7 @@ function secupress_move_login_settings_callback( $modulenow, &$settings, $activa
 
 		if ( ! empty( $errors['duplicates'] ) ) {
 			$message  = sprintf( __( '%s:', 'secupress' ), __( 'Move Login', 'secupress' ) ) . ' ';
-			$message .= __( 'The links can\'t have the same slugs.', 'secupress' );
+			$message .= __( 'The links can’t have the same slugs.', 'secupress' );
 			secupress_add_settings_error( "secupress_{$modulenow}_settings", 'duplicate-slugs', $message, 'error' );
 		}
 	}
@@ -329,24 +395,24 @@ function secupress_move_login_settings_callback( $modulenow, &$settings, $activa
 /** --------------------------------------------------------------------------------------------- */
 /** INSTALL/RESET =============================================================================== */
 /** --------------------------------------------------------------------------------------------- */
-
-add_action( 'secupress.first_install', 'secupress_install_users_login_module' );
+/*
+add_action( 'secupress.first_install', 'secupress_install_****_module' );
 /**
  * Create default option on install and reset.
  *
  * @since 1.0
  *
  * @param (string) $module The module(s) that will be reset to default. `all` means "all modules".
- */
+
 function secupress_install_users_login_module( $module ) {
 	// First install.
 	if ( 'all' === $module ) {
 		// Activate "Ask for old password" submodule.
-		secupress_activate_submodule_silently( 'users-login', 'ask-old-password' );
+		secupress_activate_submodule_silently( '****', '****' );
 	}
 
 }
-
+*/
 
 /** --------------------------------------------------------------------------------------------- */
 /** DEFAULT VALUES ============================================================================== */

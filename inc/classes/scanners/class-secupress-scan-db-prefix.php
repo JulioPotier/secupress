@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * DB Prefix scan class.
@@ -61,7 +61,7 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 			200 => __( 'The database tables prefix should not be %s. Choose something else besides <code>wp_</code> or <code>wordpress_</code>, they are too easy to guess.', 'secupress' ),
 			// "cantfix"
 			301 => __( 'The database user cannot alter tables and so the database tables prefix could not be changed.', 'secupress' ),
-			302 => __( 'The <code>wp-config.php</code> file is not writable, so the database tables prefix cannot be changed.', 'secupress' ),
+			302 => sprintf( __( 'The <code>%s</code> file is not writable, so the database tables prefix cannot be changed.', 'secupress' ), secupress_get_wpconfig_filename( 'db' ) ),
 			303 => __( 'The database user seems to have to correct rights, but the database tables prefix could still not be changed.', 'secupress' ),
 			304 => __( 'Too many database tables found, so which ones to rename?!', 'secupress' ), // Trinity! Help me!
 		);
@@ -84,7 +84,7 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 	 * @return (string)
 	 */
 	public static function get_docs_url() {
-		return __( 'http://docs.secupress.me/article/99-database-table-prefix-scan', 'secupress' );
+		return __( 'https://docs.secupress.me/article/99-database-table-prefix-scan', 'secupress' );
 	}
 
 
@@ -138,8 +138,8 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 	/**
 	 * Tell if the `wp-config.php` file can be fixed.
 	 *
-	 * @since 1.1.1
 	 * @since 1.2.2 Returns the file path instead of true.
+	 * @since 1.1.1
 	 * @author Grégory Viguier
 	 *
 	 * @return (string|bool) The path of `wp-config.php` file or false.
@@ -147,9 +147,28 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 	protected function is_wp_config_fixable() {
 		global $wpdb;
 
-		$wpconfig_filepath = secupress_is_wpconfig_writable();
+		$wpconfig_filepath = secupress_is_wpconfig_writable( 'db' );
 
-		return $wpconfig_filepath && preg_match( '/\$table_prefix\s*=\s*(\'' . $wpdb->prefix . '\'|"' . $wpdb->prefix . '");.*/', file_get_contents( $wpconfig_filepath ) ) ? $wpconfig_filepath : false;
+		if ( ! $wpconfig_filepath ) {
+			return false;
+		}
+
+		// Get the file content
+		$file_content = file_get_contents( $wpconfig_filepath );
+		// Find the string we need with WP default syntax
+		$match_default = preg_match( '/\$table_prefix\s*=\s*(\'' . $wpdb->prefix . '\'|"' . $wpdb->prefix . '");.*/', $file_content );
+		if ( $match_default ) {
+			return $wpconfig_filepath;
+		}
+
+		// Find the string we need with GLOBALS syntax
+		$match_globals = preg_match( '/\$GLOBALS[\'table_prefix\']\s*=\s*(\'' . $wpdb->prefix . '\'|"' . $wpdb->prefix . '");.*/', $file_content );
+		if ( $match_globals ) {
+			return $wpconfig_filepath;
+		}
+
+		// Nothing found
+		return false;
 	}
 
 
@@ -176,7 +195,7 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 			$can_fix = false;
 		}
 
-		if ( ! $this->is_wp_config_fixable() ) {
+		if ( ! secupress_where_is_table_prefix() ) {
 			// "cantfix"
 			$this->add_fix_message( 302 );
 			$can_fix = false;
@@ -209,12 +228,12 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 			return false;
 		}
 
-		if ( ! $this->is_wp_config_fixable() ) {
+		if ( ! secupress_where_is_table_prefix() ) {
 			return false;
 		}
 
 		if ( ! secupress_db_access_granted() ) {
-			return false;
+			return array( 'db_access' => 'db_access' );
 		}
 
 		// We have non WP table(s) to (maybe) rename, the user must choose.
@@ -251,7 +270,7 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 			$can_fix = false;
 		}
 
-		$wpconfig_filepath = $this->is_wp_config_fixable();
+		$wpconfig_filepath = secupress_where_is_table_prefix();
 
 		if ( ! $wpconfig_filepath ) {
 			// "cantfix"
@@ -263,79 +282,14 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 			return parent::manual_fix();
 		}
 
-		// Let's start.
-		$old_prefix       = $wpdb->prefix;
-		$new_prefix       = secupress_create_unique_db_prefix();
-		$query_tables     = array();
-		$tables_to_rename = secupress_get_wp_tables();
-
 		// Chosen non WP tables.
+		$tables_to_rename = secupress_get_wp_tables();
 		if ( isset( $_POST['secupress-select-db-tables-to-rename-flag'] ) && ! empty( $_POST['secupress-select-db-tables-to-rename'] ) ) { // WPCS: CSRF ok.
 			$non_wp_tables    = (array) $_POST['secupress-select-db-tables-to-rename']; // WPCS: CSRF ok.
 			$non_wp_tables    = array_intersect( $non_wp_tables, secupress_get_non_wp_tables() );
 			$tables_to_rename = array_merge( $non_wp_tables, $tables_to_rename );
 		}
-
-		// Tables for multisite.
-		if ( is_multisite() ) {
-			$blog_ids = $wpdb->get_col( "SELECT blog_id FROM {$wpdb->blogs} WHERE blog_id > 1" );
-
-			if ( $blog_ids ) {
-				foreach ( $blog_ids as $blog_id ) {
-					$tables = $wpdb->tables( 'blog' );
-
-					foreach ( $tables as $table ) {
-						$tables_to_rename[] = substr_replace( $table, $old_prefix . $blog_id . '_', 0, strlen( $old_prefix ) );
-					}
-				}
-			}
-		}
-
-		// Build the query to rename the tables.
-		foreach ( $tables_to_rename as $table ) {
-			$new_table      = substr_replace( $table, $new_prefix, 0, strlen( $wpdb->prefix ) );
-			$query_tables[] = "`{$table}` TO `{$new_table}`";
-		}
-
-		$wpdb->query( 'RENAME TABLE ' . implode( ', ', $query_tables ) ); // WPCS: unprepared SQL ok.
-
-		// Test if we succeeded.
-		$options_tables = $wpdb->get_col( "SHOW TABLES LIKE '{$new_prefix}options'" ); // WPCS: unprepared SQL ok.
-
-		if ( reset( $options_tables ) !== $new_prefix . 'options' ) { // WPCS: unprepared SQL ok.
-			// Failed to rename the tables.
-			$this->add_fix_message( 303 );
-			return parent::manual_fix();
-		}
-
-		// We must not forget to change the prefix attribute for future queries.
-		$table_prefix = $new_prefix; // WPCS: override ok.
-		$wpdb->set_prefix( $table_prefix );
-
-		// Some values must be updated.
-		$old_prefix_len  = strlen( $old_prefix );
-		$old_prefix_len1 = $old_prefix_len + 1;
-
-		$wpdb->update( $new_prefix . 'options', array( 'option_name' => $new_prefix . 'user_roles' ), array( 'option_name' => $old_prefix . 'user_roles' ) );
-		$wpdb->query( "UPDATE {$new_prefix}usermeta SET meta_key = CONCAT( REPLACE( LEFT( meta_key, {$old_prefix_len}), '$old_prefix', '$new_prefix' ), SUBSTR( meta_key, {$old_prefix_len1} ) )" ); // WPCS: unprepared SQL ok.
-
-		if ( ! empty( $blog_ids ) ) {
-			foreach ( $blog_ids as $blog_id ) {
-				$old_prefix_len  = strlen( $old_prefix ) + strlen( $blog_id ) + 1; // + 1 = "_"
-				$old_prefix_len1 = $old_prefix_len + 1;
-				$ms_prefix       = $new_prefix . $blog_id . '_';
-
-				$wpdb->update( $ms_prefix . 'options', array( 'option_name' => $ms_prefix . 'user_roles' ), array( 'option_name' => $old_prefix . 'user_roles' ) );
-				$wpdb->query( "UPDATE {$ms_prefix}usermeta SET meta_key = CONCAT( REPLACE( LEFT( meta_key, {$old_prefix_len}), '$old_prefix', '$ms_prefix' ), SUBSTR( meta_key, {$old_prefix_len1} ) )" ); // WPCS: unprepared SQL ok.
-			}
-		}
-
-		// `wp-config.php` file.
-		secupress_replace_content(
-			$wpconfig_filepath,
-			'@^[\t ]*?\$table_prefix\s*=\s*(?:\'' . $old_prefix . '\'|"' . $old_prefix . '")\s*;.*?$@mU',
-			'$table_prefix = \'' . $new_prefix . "'; // Modified by SecuPress.\n/** Commented by SecuPress. */ // $0"
-		);
+		secupress_change_db_prefix( secupress_create_unique_db_prefix(), $tables_to_rename );
 
 		$this->add_fix_message( 0 );
 
@@ -360,20 +314,17 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 		$form  = '<div class="show-input">';
 
 		$form .= '<h4>' . __( 'Checked tables will be renamed:', 'secupress' ) . '</h4>';
-		$form .= '<p><span style="color:red">' . __( 'Renaming a table is irreversible.', 'secupress' ) . '</span></p>';
 		$form .= '<input type="hidden" name="secupress-select-db-tables-to-rename-flag">';
 
 		$form .= '<fieldset aria-labelledby="select-db-tables-to-rename" class="secupress-boxed-group">';
 
-		$form .= '<b>' . __( 'Unknown tables', 'secupress' ) . '</b><br/>';
 
 		if ( $non_wp_tables ) {
+			$form .= '<b>' . __( 'Unknown tables', 'secupress' ) . '</b><br/>';
 			foreach ( $non_wp_tables as $table ) {
 				$table_attr = esc_attr( $table );
 				$form      .= '<input type="checkbox" name="secupress-select-db-tables-to-rename[]" value="' . $table_attr . '" id="select-db-tables-to-rename-' . $table_attr . '" checked="checked"><label for="select-db-tables-to-rename-' . $table_attr . '">' . esc_html( $table ) . '</label><br/>';
 			}
-		} else {
-			$form .= '<em>' . _x( 'None', 'database table', 'secupress' ) . '</em><br/>';
 		}
 
 		$form .= '<b>' . __( 'WordPress tables (mandatory)', 'secupress' ) . '</b><br/>';
@@ -391,6 +342,9 @@ class SecuPress_Scan_DB_Prefix extends SecuPress_Scan implements SecuPress_Scan_
 
 		$form .= '</div>';
 
-		return array( 'select-db-tables-to-rename' => $form );
+		return [ 'select-db-tables-to-rename' => $form,
+				 'db_access' => $this->get_messages( 301 ) . '<br>' . sprintf( __( 'Please <a href="%s">read the documentation</a>.', 'secupress' ), $this->get_docs_url() ),
+				 'wpconfig_fixable' => $this->get_messages( 302 ) . '<br>' . sprintf( __( 'Please <a href="%s">read the documentation</a>.', 'secupress' ), $this->get_docs_url() ),
+			 	];
 	}
 }

@@ -7,14 +7,14 @@
  * Version: 1.0
  */
 
-defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
 
 
 /** --------------------------------------------------------------------------------------------- */
 /** ACTIVATION / DEACTIVATION =================================================================== */
 /** --------------------------------------------------------------------------------------------- */
 
-add_action( 'secupress.modules.activate_submodule_' . basename( __FILE__, '.php' ), 'secupress_wp_version_activation' );
+add_action( 'secupress.modules.activation', 'secupress_wp_version_activation' );
 /**
  * On module activation, maybe write the rules.
  *
@@ -48,6 +48,12 @@ function secupress_wp_version_activation() {
 }
 
 
+add_action( 'secupress.modules.activate_submodule_' . basename( __FILE__, '.php' ), 'secupress_wp_version_activation' );
+function secupress_wp_version_activation_file() {
+	secupress_wp_version_activation();
+	secupress_scanit_async( 'Discloses', 3 );
+}
+
 add_action( 'secupress.modules.deactivate_submodule_' . basename( __FILE__, '.php' ), 'secupress_wp_version_deactivate' );
 /**
  * On module deactivation, maybe remove rewrite rules from the `.htaccess`/`web.config` file.
@@ -56,6 +62,7 @@ add_action( 'secupress.modules.deactivate_submodule_' . basename( __FILE__, '.ph
  */
 function secupress_wp_version_deactivate() {
 	secupress_remove_module_rules_or_notice( 'wp_version', __( 'WordPress Version Disclosure', 'secupress' ) );
+	secupress_scanit_async( 'Discloses', 3 );
 }
 
 
@@ -201,3 +208,19 @@ function secupress_replace_wp_version_in_src( $src ) {
 	return str_replace( 'ver=' . $ver, 'ver=' . $hash, $src );
 }
 
+add_filter( 'update_footer', 'secupress_replace_wp_version_in_footer', 11 );
+/**
+ * Remove the WP version number in footer
+ *
+ * @since 2.0
+ * @author Julio Potier
+ *
+ * @param (string) $footer
+ * @return (string) $footer
+ **/
+function secupress_replace_wp_version_in_footer( $footer ) {
+	if ( ! current_user_can( 'update_core' ) ) {
+		$footer = str_replace( sprintf( __( 'Version %s' ), get_bloginfo( 'version', 'display' ) ), __( 'Powered by WordPress', 'secupress' ), $footer );
+	}
+	return $footer;
+}

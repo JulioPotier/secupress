@@ -7,7 +7,7 @@
  * Version: 1.4.12
  */
 
-defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
 
 add_action( 'authenticate', 'secupress_bannonexistsuser_auth', 100, 2 );
 /**

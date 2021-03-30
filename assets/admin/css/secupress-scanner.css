@@ -104,7 +104,7 @@
 	position: relative;
 }
 .secupress-scanner-steps ol {
-	margin: 1.7em 85px 1em;
+	margin: 4em 85px 1em;
 }
 .secupress-scanner-steps li {
 	padding: 0;
@@ -234,6 +234,10 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 /**
  * Button to progressbar
  */
+.secupress-rescan-actions {
+    align-items: center;
+    display: inline-flex;
+}
 .secupress-start-one-click-scan .secupress-button,
 .secupress-rescan-actions .secupress-button {
 	position: relative;
@@ -336,9 +340,11 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
     z-index: 999;
     padding: 7px;
     line-height: 0.6em;
-    /*height: 80px;*/
-    border-radius: 3px;
-    border: 2px solid #18756f;
+    height: 80px;
+    border: 1px solid #18756f;
+    top: 41px;
+    left: 403px;
+    color: #FFF;
 }
 #secupress-scan-speed a {
 	border-bottom: 1px solid;
@@ -352,10 +358,10 @@ li.secupress-current:nth-last-child(1) .secupress-step-name {
 }
 
 .secupress-button#secupress-button-scan-speed{
-    height: 39px;
-    left: -8px;
+    height: 38px;
+    left: -3px;
     padding: 0;
-    top: 2px;
+    top: 0px;
 	width: 23px;
 }
 
@@ -485,7 +491,6 @@ p.secupress-rescan-actions{
 	bottom: 100%;
 	left: -25px; right: -25px;
 	z-index: 2;
-	padding-bottom: 18px;
 	margin-top: 1px; /* lets the top border appears */
 }
 .secupress-section-dark [id="secupress-more-info"] {
@@ -530,6 +535,13 @@ p.secupress-rescan-actions{
 }
 .secupress-tabs-controls li {
 	margin: 0 0 2.5em 0;
+}
+.secupress-tabs-controls.secupress-inline-block li {
+	margin: 0 5em 2.5em 0;
+	display: inline-block;
+}
+.secupress-tabs-controls.secupress-inline-block li.hidden {
+	display: none;
 }
 .secupress-tabs-controls-list {
 	margin: 0;
@@ -609,9 +621,6 @@ p.secupress-rescan-actions{
 .secupress-tab-selected .secupress-tabs-controls-list .secupress-current:after {
 	left: -37.5px;
 	border-left-color: #23282d;
-}
-.secupress-tab-selected .secupress-tabs-controls-list li.hidden {
-	display: block;
 }
 .secupress-tab-selected .secupress-rescan-actions {
 	display: none;
@@ -916,9 +925,16 @@ a + .secupress-row-actions {
 .secupress-chart-container .secupress-score .letter {
 	position: absolute;
 	font-size: 82px;
-	top: 50%; left: 50%;
+	top: 50%;
+	left: 50%;
 	margin: -.5em 0 0 -.33em;;
 	font-family: Arial, Helvetica, sans-serif;
+}
+.secupress-chart-container .secupress-score .letter.secupress-grade-plus {
+	left: 40%;
+}
+.secupress-chart-container .secupress-score .letter.secupress-grade-plus-plus {
+	left: 24%;
 }
 .secupress-scan-infos .secupress-score-text {
 	margin-bottom: 0.1em;
@@ -1209,6 +1225,12 @@ a + .secupress-row-actions {
  */
 .secupress-tests .secupress-item-all {
 	position: relative;
+}
+.secupress-item-all:hover .secupress-scanit{
+	display: inline-block;
+}
+a.secupress-button.secupress-button-mini.secupress-scanit.light.hide-if-js{
+	line-height: 1em;
 }
 .secupress-item-all .secupress-flex {
 	padding: 20px 25px;

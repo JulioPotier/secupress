@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /** --------------------------------------------------------------------------------------------- */
 /** ON MODULE SETTINGS SAVE ===================================================================== */
@@ -31,8 +31,17 @@ function secupress_plugins_themes_settings_callback( $settings ) {
 	// Uploads.
 	secupress_uploads_settings_callback( $modulenow, $activate );
 
-	// There are no settings to save.
-	return array();
+	/**
+	 * Filter the settings before saving.
+	 *
+	 * @since 1.4.9
+	 *
+	 * @param (array)      $settings The module settings.
+	 * @param (array\bool) $activate Contains the activation rules for the different modules
+	 */
+	$settings = apply_filters( "secupress_{$modulenow}_settings_callback", $settings, $activate );
+
+	return $settings;
 }
 
 

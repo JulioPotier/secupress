@@ -63,7 +63,7 @@
 					<p class="secupress-item-title"><?php echo $scan_message; ?></p>
 
 					<p class="secupress-row-actions">
-						<a class="secupress-button secupress-button-mini secupress-scanit hide-if-js" href="<?php echo esc_url( $scan_nonce_url ); ?>">
+						<a class="secupress-button secupress-button-mini secupress-scanit light hide-if-js" href="<?php echo esc_url( $scan_nonce_url ); ?>">
 							<span class="icon" aria-hidden="true">
 								<i class="secupress-icon-refresh"></i>
 							</span>

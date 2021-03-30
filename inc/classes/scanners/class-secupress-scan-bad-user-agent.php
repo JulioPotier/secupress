@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Bad User Agent scan class.
@@ -39,7 +39,7 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan implements SecuPress_
 	 */
 	protected function init() {
 		$this->title    = __( 'Check if bad User Agents can visit your website.', 'secupress' );
-		$this->more     = __( 'Bad User Agents are bots that provide no value to the website. They include scrapers, spambots, email harvesters and more bots that you don\'t want on your site. Those bots that are crawling with a malicious purpose, have no desire to follow any <code>robots.txt</code> or meta tag.', 'secupress' );
+		$this->more     = __( 'Bad User Agents are bots that provide no value to the website. They include scrapers, spambots, email harvesters and more bots that you don’t want on your site. Those bots that are crawling with a malicious purpose, have no desire to follow any <code>robots.txt</code> or meta tag.', 'secupress' );
 		$this->more_fix = sprintf(
 			__( 'Activate the option %1$s in the %2$s module.', 'secupress' ),
 			'<em>' . __( 'Block bad User Agents', 'secupress' ) . '</em>',
@@ -92,7 +92,7 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan implements SecuPress_
 	 * @return (string)
 	 */
 	public static function get_docs_url() {
-		return __( 'http://docs.secupress.me/article/108-bad-user-agent-scan', 'secupress' );
+		return __( 'https://docs.secupress.me/article/108-bad-user-agent-scan', 'secupress' );
 	}
 
 
@@ -120,8 +120,10 @@ class SecuPress_Scan_Bad_User_Agent extends SecuPress_Scan implements SecuPress_
 		if ( ! is_wp_error( $response ) ) {
 
 			if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
-				// "bad"
-				$this->add_message( 200 );
+				if ( 'SecuPress_Scan_Bad_User_Agent OK' !== wp_remote_retrieve_body( $response ) ) {
+					// "bad"
+					$this->add_message( 200 );
+				}
 			} else {
 				// "good"
 				$this->add_message( 0 );

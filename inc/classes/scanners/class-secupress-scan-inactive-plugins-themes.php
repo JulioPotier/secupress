@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Inactive Plugins Themes scan class.
@@ -39,7 +39,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 	 */
 	protected function init() {
 		$this->title    = __( 'Check if you have some deactivated plugins or themes.', 'secupress' );
-		$this->more     = __( 'Even deactivated plugins or themes can potentially be exploited to some vulnerabilities. Don\'t take the risk to keep them on your website.', 'secupress' );
+		$this->more     = __( 'Even deactivated plugins or themes can potentially be exploited to some vulnerabilities. Don’t take the risk to keep them on your website.', 'secupress' );
 		$this->more_fix = __( 'Delete every inactive plugin and theme you have.', 'secupress' );
 	}
 
@@ -56,7 +56,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 	public static function get_messages( $message_id = null ) {
 		$messages = array(
 			// "good"
-			0   => __( 'You don\'t have any deactivated plugins or themes.', 'secupress' ),
+			0   => __( 'You don’t have any deactivated plugins or themes.', 'secupress' ),
 			1   => __( 'All inactive plugins have been deleted.', 'secupress' ),
 			2   => __( 'All inactive themes have been deleted.', 'secupress' ),
 			// "warning"
@@ -69,15 +69,15 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 			/** Translators: %s is the plugin name. */
 			106 => sprintf( __( 'You have a big network, %s must work on some data before being able to perform this scan.', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ),
 			// "bad"
-			200 => _n_noop( '<strong>%1$d deactivated plugin</strong>, if you don\'t need it, delete it: %2$s.', '<strong>%1$d deactivated plugins</strong>, if you don\'t need them, delete them: %2$s.', 'secupress' ),
-			201 => _n_noop( '<strong>%1$d deactivated theme</strong>, if you don\'t need it, delete it: %2$s.', '<strong>%1$d deactivated themes</strong>, if you don\'t need them, delete them: %2$s.', 'secupress' ),
+			200 => _n_noop( '<strong>%1$d deactivated plugin</strong>, if you don’t need it, delete it: %2$s.', '<strong>%1$d deactivated plugins</strong>, if you don’t need them, delete them: %2$s.', 'secupress' ),
+			201 => _n_noop( '<strong>%1$d deactivated theme</strong>, if you don’t need it, delete it: %2$s.', '<strong>%1$d deactivated themes</strong>, if you don’t need them, delete them: %2$s.', 'secupress' ),
 			202 => _n_noop( 'Sorry, this plugin could not be deleted.', 'Sorry, those plugins could not be deleted.', 'secupress' ),
 			203 => _n_noop( 'Sorry, this theme could not be deleted.', 'Sorry, those themes could not be deleted.', 'secupress' ),
 			// "cantfix"
 			300 => _n_noop( '%d plugin is deactivated.', '%d plugins are deactivated.', 'secupress' ),
 			301 => _n_noop( '%d theme is deactivated.', '%d themes are deactivated.', 'secupress' ),
-			302 => __( 'Unable to locate WordPress Plugin directory.' ), // WP i18n.
-			303 => __( 'Unable to locate WordPress theme directory.' ), // WP i18n.
+			302 => __( 'Unable to locate WordPress Plugin directory.', 'secupress' ),
+			303 => __( 'Unable to locate WordPress theme directory.', 'secupress' ),
 			304 => __( 'No plugins nor themes selected.', 'secupress' ),
 		);
 
@@ -99,7 +99,7 @@ class SecuPress_Scan_Inactive_Plugins_Themes extends SecuPress_Scan implements S
 	 * @return (string)
 	 */
 	public static function get_docs_url() {
-		return __( 'http://docs.secupress.me/article/118-deactivated-plugins-and-themes-scan', 'secupress' );
+		return __( 'https://docs.secupress.me/article/118-deactivated-plugins-and-themes-scan', 'secupress' );
 	}
 
 

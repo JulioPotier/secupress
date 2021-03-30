@@ -141,7 +141,6 @@ var secupressNotices = {
 		$tabs.find('a').on( 'click.secupress', function() {
 			set_current( $(this) );
 			change_tab( $(this) );
-			return false;
 		} );
 
 		$current.trigger('click.secupress');

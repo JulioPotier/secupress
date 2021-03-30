@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Core Update scan class.
@@ -46,7 +46,7 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements SecuPress_Sca
 	 */
 	protected function init() {
 		$this->title    = __( 'Check if your WordPress core is up to date.', 'secupress' );
-		$this->more     = __( 'It\'s very important to keep your WordPress installation up to date. If you cannot update for any reason, contact your hosting provider as soon as possible.', 'secupress' );
+		$this->more     = __( 'It’s very important to keep your WordPress installation up to date. If you cannot update for any reason, contact your hosting provider as soon as possible.', 'secupress' );
 		$this->more_fix = __( 'Update your WordPress installation right away.', 'secupress' );
 	}
 
@@ -70,7 +70,7 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements SecuPress_Sca
 			200 => __( 'WordPress core is <strong>not up to date</strong>.', 'secupress' ),
 			// "cantfix"
 			300 => '%s', // Already translated.
-			301 => __( 'You have the latest version of WordPress.' ), // WP i18n.
+			301 => __( 'You have the latest version of WordPress.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -91,7 +91,7 @@ class SecuPress_Scan_Core_Update extends SecuPress_Scan implements SecuPress_Sca
 	 * @return (string)
 	 */
 	public static function get_docs_url() {
-		return __( 'http://docs.secupress.me/article/95-wordpress-core-update-scan', 'secupress' );
+		return __( 'https://docs.secupress.me/article/95-wordpress-core-update-scan', 'secupress' );
 	}
 
 

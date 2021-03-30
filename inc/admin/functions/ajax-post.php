@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /** --------------------------------------------------------------------------------------------- */
 /** AJAX AND POST HELPERS ======================================================================= */
@@ -37,12 +37,12 @@ function secupress_admin_die( $data = null ) {
 			$data .= '</p><p>';
 			$data .= sprintf( '<a href="%s">%s</a>',
 				esc_url( wp_get_referer() ),
-				__( 'Please try again.' ) // WP i18n.
+				__( 'Please try again.', 'secupress' )
 			);
 		}
 	}
 
-	wp_die( $data, __( 'WordPress Failure Notice' ), 403 ); // WP i18n.
+	wp_die( $data, __( 'WordPress Failure Notice', 'secupress' ), 403 );
 }
 
 
@@ -56,7 +56,7 @@ function secupress_admin_die( $data = null ) {
  */
 function secupress_admin_send_response_or_redirect( $response = false, $redirect = false ) {
 	if ( ! $response ) {
-		secupress_admin_die();
+		secupress_admin_die( 'Missing $response in ' . __FUNCTION__ ); // Do not translate.
 	}
 
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {

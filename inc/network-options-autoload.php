@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Autoload network options and put them in cache.
@@ -79,7 +79,6 @@ function secupress_get_global_network_option_names_for_autoload() {
 		SECUPRESS_SETTINGS_SLUG,
 		SECUPRESS_ACTIVE_SUBMODULES,
 		SECUPRESS_BAN_IP,
-		SECUPRESS_SELF_WHITELIST,
 	);
 
 	if ( is_admin() ) {

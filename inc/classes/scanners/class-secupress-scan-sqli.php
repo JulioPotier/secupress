@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * SQLi scan class.
@@ -39,7 +39,7 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Inter
 	 */
 	protected function init() {
 		$this->title = __( 'Check if basic SQL Injections are blocked or not.', 'secupress' );
-		$this->more  = __( 'SQL injection is a way to read, modify, delete any content of your database, this is a powerful vulnerability, don\'t let anyone play with that.', 'secupress' );
+		$this->more  = __( 'SQL injection is a way to read, modify, delete any content of your database, this is a powerful vulnerability, don’t let anyone play with that.', 'secupress' );
 		$this->more_fix = sprintf(
 			__( 'Activate the option %1$s in the %2$s module.', 'secupress' ),
 			'<em>' . __( 'Block bad content', 'secupress' ) . '</em>',
@@ -92,7 +92,7 @@ class SecuPress_Scan_SQLi extends SecuPress_Scan implements SecuPress_Scan_Inter
 	 * @return (string)
 	 */
 	public static function get_docs_url() {
-		return __( 'http://docs.secupress.me/article/109-basic-sql-injection-scan', 'secupress' );
+		return __( 'https://docs.secupress.me/article/109-basic-sql-injection-scan', 'secupress' );
 	}
 
 

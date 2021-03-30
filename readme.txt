@@ -1,10 +1,10 @@
 === SecuPress Free — WordPress Security ===
 Contributors: SecuPress, juliobox, GregLone, Superment
 Tags: wordpress security, secure, security plugin, security, malware
-Requires at least: 4.0
-Tested up to: 5.3
-Requires PHP: 5.4
-Stable tag: 1.4.12
+Requires at least: 4.9
+Tested up to: 5.7
+Requires PHP: 5.6
+Stable tag: 2.0.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,7 +18,6 @@ Protect your WordPress with malware scans; block bots & suspicious IPs. Get a co
 
 **What’s the difference between free and pro version?**
 If you are proactive, our free WordPress security plugin is a great choice! No time to activate weekly scans? Then [SecuPress pro](https://secupress.me/) is the way to go. Our plugin takes care of everything with automated tasks.
-[](http://coderisk.com/wp/plugin/secupress/RIPS-VuMwMBsSXj)
 
 = Here are some of our most popular features: =
 
@@ -180,15 +179,107 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 == Changelog ==
 
-= 1.4.12 =
+= 2.0.1.1 =
 
-* 26 May 2020
-* Fix: Don't ban IP, just block. This will prevent false positives on Banned IPs but still can block bad stuff.
-* Removed: The AntiFront BruteForce feature doesn't exist anymore, too much false positive since now, websites can need may requests.
+* 29 March 2021
+* Fix: Missing files from /core/ (was /inc/… my bad)
+
+= 2.0.1 =
+
+* 29 March 2021
+* New#905: Expert Mode has been added as a simple checkbox (but already available since 1.4.6 – 9 august 2018 ;p so, "new" feature)
+* Improvement#885: Extend allowed request methods
+* Improvement#893: Test if file exists be fore being tagged as PHP404 to prevent false positives
+* Improvement#894: Better HTTPS tests
+* Improvement#896: Emails from SecuPress will now come from the admin email address instead of noreply@ (the WP filter hook wp_mail_from is still usable)
+* Improvement#901: New way to propose deactivation on incompatible plugins + force deactivation on plugins that directly enters in conflict
+* Improvement#906: ?wp_lang param was not usable on moved login pages
+* Fix#897: A Grade was not accessible even with all the tests OK
+* Fix#898: WordPress Site Health page is back!
+* Fix#900: Undefined Index on step4
+* Fix#902: Update WP_Background_Process Lib
+* Fix#904: Locked Default Role was not deactivable
+* Fix#903: Database Prefix Rename feature didn't renamed the checked tables
+* Fix#907: Alerts Emails contains HTML tags
+
+
+= 2.0 =
+
+* 05 March 2021
+* New#318: Malware Scan on DataBase
+* New#332: WordPress Core > Change DB Prefix Manually
+* New#399: WordPress Core > Renew you security keys in one click
+* New#531,769: Revamp the Malware Scan Module: better detection, more detection (and remove the delete file button, sorry)
+* New#575: Addon Module Page
+* New#791: WordPress Wore > Lock admin_email, default_role, membership settings from WP
+* New#821: Your Grade can not get a "+", and the A Grade is more accessible
+* New#823: Sensitive Data > Prevent 404 guessing
+* New#825: PHP8 Compatibility
+* New#828: WordPress Core > Lock home_url and site_url
+* New#863: Main Scanner > You can now scan a specific item
+* New#866: fr_BE and fr_CA will get the fr_FR translations (until a real one exists)
+* New#870: New php constant SECUPRESS_ALLOW_GEOIP_ACCESS to bypass geoip auto blocking
+* New#872: FireWall > Block Bad referers
+
+* Improvement#184: Add the total of scanners when displayed (like 22/35)
+* Improvement#187,292,783: Better uninstallation of the whole plugin (wp-config & htaccess content, mu-plugins)
+* Improvement#194,220,395,482,579,775,789,809,812,840,842,871: Better wording, i18n, explanations, remove "Cheatin'uh?", remove whitelist/blacklist, remove masculinity terms in french because snowflakes + do not ever use WP text domain and keep our trad at home
+* Improvement#229: Add links to related modules in schedules page
+* Improvement#740: Reset button with JS confirmation (but at the same time, remove the button for now, see blog post)
+* Improvement#752: Better report email subject
+* Improvement#753: Remove the obsolete Block SQLi option
+* Improvement#754: Stop main scanner after 3 minutes
+* Improvement#778: Remove the date by month in security keys to prevent too many disconnection and prevent some bad dev based on thoses keys to mess up (plese do not relay on these keys, use wp_salt()…)
+* Improvement#781: Better anti hotlink to prevent possible 404 urls on our fake image + allow google image
+* Improvement#782: Change recommandations for PHP Version to be more flexible
+* Improvement#786: Add "wp-config-sample.php" to old WordPress files
+* Improvement#796: Add the found IP in filter secupress.ip.default_ip
+* Improvement#800: Import settings will now import htaccess modifications (based on activated modules, not in the exported file)
+* Improvement#808: return HTTP response code matching the data passed to secupress_die (props @jeherve)
+* Improvement#815: Hide all login errors instead of a list
+* Improvement#822: Grade is included in the email subject
+* Improvement#827: Email only if grade has changed and is worst
+* Improvement#831: Remove license.txt, wp-config-sample.php, readme.html from being missing files in malware scanner
+* Improvement#834: Remove notices about wp-config.php and .htaccess not writable
+* Improvement#835: Remove SCRIPT_DEBUG from wp-config scanner
+* Improvement#837: Better secupress.plugin.passwordless_email_message replacements
+* Improvement#855: Empty User-Agent is not a bad one anymore
+* Improvement#860: On module (de)activation, rescan the test if present
+* Improvement#861: Do a JS check on captcha module to be sure it can be activated
+* Improvement#862: If a scanner gone bad, send it to alerts
+* Improvement#865: Remove the "ask old password" option
+
+* Fix#362: SecuPress tables tagged as unknown when autofix the DB prefix switch
+* Fix#471: Remove unwanted columns in Logs pages
+* Fix#499: .htaccess path was not correct with ABSPATH
+* Fix#547: Remove "www." in domain for antihotlink (for multisite subdomains)
+* Fix#746: Notice: "listMessage is not a constant"
+* Fix#762: Fix displaying wrong confirmation message when addind multiple IP to (dis)allow
+* Fix#767: Notice: "Undefined index: SERVER_PORT/HTTP_HOST in core/functions/common.php on line 797/800"
+* Fix#774: Remove the warning emoji in move login message
+* Fix#779: Email confirmation is present at each connection when move login is activated
+* Fix#784: Cannot use move login when pro is installed but not activated with the license
+* Fix#788: Settings link in plugins page is not correct with white label
+* Fix#792: Update doc links with https
+* Fix#793: Update Support for 2FA 3rd party
+* Fix#798: Google Bot was blocked due to a bad method query
+* Fix#801: Block double slashed users route from REST API
+* Fix#802: Remove old obsolete devs from <2.0 (recovery_email, support)
+* Fix#804: Double auth still displays 2 fields
+* Fix#814: API Keys can't be hidden anymore
+* Fix#817: AntiSpam let any comment pass, sometimes…
+* Fix#818: If WooCommerce, do not scan login errors
+* Fix#819: Fatal error on GeoIP update (in background, your site was not harmed)
+* Fix#824: Display strange chars in Grade
+* Fix#830: Notice: "Undefined index: move-login_custom_page_url"
+* Fix#838: Move Login password page won't work
+* Fix#855: Do not display SecuPress in admin footer and if hide WordPress version active, hide it in admin footer too
+
+* Security Fix#844: A visitor can ban any IP
 
 == Upgrade Notice ==
 
-= 1.4.11 =
+= 2.0 =
 
-* 26 May 2020
-* Nothing special for the 1.4.12 BUT the 1.5.0 will require PHP 7.0 and WordPress 4.9 (actually PHP 5.4 and WordPress 4.0)
+* 05 March 2021
+* The v2.0 will require PHP 5.6 and WordPress 4.9 (actually PHP 5.4 and WordPress 4.0)

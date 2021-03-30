@@ -7,7 +7,7 @@
  * Version: 1.2
  */
 
-defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
 
 if ( ! is_admin() ) {
 	return;

@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Bad Usernames scan class.
@@ -38,7 +38,7 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements SecuPress_S
 	 * @since 1.0
 	 */
 	protected function init() {
-		$this->title    = __( 'Check if your usernames are blacklisted.', 'secupress' );
+		$this->title    = __( 'Check if your usernames are disallowed.', 'secupress' );
 		$this->more     = __( 'Some usernames are known to be used for malicious usage, or created by bots.', 'secupress' );
 		$this->more_fix = sprintf(
 			__( 'Activate the option %1$s in the %2$s module.', 'secupress' ),
@@ -61,11 +61,11 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements SecuPress_S
 		$messages = array(
 			// "good"
 			0   => __( 'All the usernames are correct.', 'secupress' ),
-			1   => __( 'Module activated: the users with a blacklisted username will be asked to change it.', 'secupress' ),
+			1   => __( 'Module activated: the users with a disallowed username will be asked to change it.', 'secupress' ),
 			// "bad"
-			200 => _n_noop( '<strong>%1$s user</strong> has a forbidden username: %2$s', '<strong>%1$s users</strong> have a forbidden username: %2$s', 'secupress' ),
+			200 => _n_noop( '<strong>%1$s user</strong> has a disallowed username: %2$s', '<strong>%1$s users</strong> have a disallowed username: %2$s', 'secupress' ),
 			// "cantfix"
-			300 => __( 'The module is already activated. Let\'s give your users some time to change their username.', 'secupress' ),
+			300 => __( 'The module is already activated. Let’s give your users some time to change their username.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -86,7 +86,7 @@ class SecuPress_Scan_Bad_Usernames extends SecuPress_Scan implements SecuPress_S
 	 * @return (string)
 	 */
 	public static function get_docs_url() {
-		return __( 'http://docs.secupress.me/article/133-bad-username-scan', 'secupress' );
+		return __( 'https://docs.secupress.me/article/133-bad-username-scan', 'secupress' );
 	}
 
 

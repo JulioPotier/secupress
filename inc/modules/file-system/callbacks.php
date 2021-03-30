@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /** --------------------------------------------------------------------------------------------- */
 /** ON MODULE SETTINGS SAVE ===================================================================== */
@@ -26,6 +26,15 @@ function secupress_file_system_settings_callback( $settings ) {
 
 	// Activate/deactivate.
 	secupress_manage_submodule( $modulenow, 'bad-file-extensions', ! empty( $activate['bad-file-extensions_activated'] ) && secupress_is_pro() );
+	/**
+	 * Filter the settings before saving.
+	 *
+	 * @since 1.4.9
+	 *
+	 * @param (array)      $settings The module settings.
+	 * @param (array\bool) $activate Contains the activation rules for the different modules
+	 */
+	$settings = apply_filters( "secupress_{$modulenow}_settings_callback", $settings, $activate );
 
 	return $settings;
 }

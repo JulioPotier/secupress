@@ -7,7 +7,7 @@
  * Version: 1.0
  */
 
-defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
 
 add_action( 'plugins_loaded', 'secupress_check_fake_bot' );
 /**

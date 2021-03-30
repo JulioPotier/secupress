@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Passwords Strength scan class.
@@ -103,7 +103,7 @@ class SecuPress_Scan_Passwords_Strength extends SecuPress_Scan implements SecuPr
 	 * @return (string)
 	 */
 	public static function get_docs_url() {
-		return __( 'http://docs.secupress.me/article/131-ftp-and-database-passwords-scan', 'secupress' );
+		return __( 'https://docs.secupress.me/article/131-ftp-and-database-passwords-scan', 'secupress' );
 	}
 
 

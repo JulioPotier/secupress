@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * WP Background Process
@@ -374,7 +374,7 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 				$memory_limit = '32000M';
 			}
 
-			return intval( $memory_limit ) * 1024 * 1024;
+			return wp_convert_hr_to_bytes( $memory_limit );
 		}
 
 		/**

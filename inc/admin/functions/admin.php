@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Display a small page, usually used to block a user until this user provides some info.
@@ -252,7 +252,7 @@ function secupress_print_pro_advantages() {
 			</div>
 			<div class="secupress-col">
 				<p class="secupress-blob-title"><?php _e( 'Anti Spam', 'secupress' ); ?></p>
-				<p class="secupress-blob-desc"><?php _e( 'Traffic done by bot represents about 60% of the internet. Spams are done by these bots. Don\'t let them do that!', 'secupress' ); ?></p>
+				<p class="secupress-blob-desc"><?php _e( 'Bots represent about 60% of internet traffic. Don’t let them add their spam to your site!', 'secupress' ); ?></p>
 			</div>
 		</div>
 		<div class="secupress-col-1-2 secupress-flex secupress-landscape-blob">
@@ -286,19 +286,22 @@ function secupress_print_pro_advantages() {
 	<?php
 }
 
-
 /**
- * Tell if the user can access Pro support.
+ * Redirect the user on a specific URL to be autologged-in
  *
- * @since 1.1.1
- * @author Grégory Viguier
+ * @since 2.0
+ * @author Julio Potier
  *
- * @return (bool)
- */
-function secupress_can_access_support() {
-	if ( secupress_is_pro() ) {
-		return true;
+ * @param (string) $module The SecuPress module to be redirected
+ **/
+function secupress_auto_login( $module ) {
+	$current_user = wp_get_current_user();
+	if ( ! $current_user ) {
+		return;
 	}
+	$token = md5( time() . $module );
+	secupress_set_site_transient( 'secupress_auto_login_' . $token, array( $current_user->user_login, $module ), MINUTE_IN_SECONDS );
 
-	return time() < 1480550400;
+	wp_safe_redirect( esc_url_raw( add_query_arg( 'secupress_auto_login_token', $token ) ) );
+	die();
 }

@@ -61,7 +61,6 @@ jQuery( document ).ready( function( $ ) {
 
 		now.setTime( expireTime );
 		document.cookie = 'secupresstweeted=ok; expires=' + now.toGMTString() + '; path=/';
-		$( '#tweeterA' ).slideUp();
 	} );
 
 	// a11y function.
@@ -282,7 +281,7 @@ jQuery( document ).ready( function( $ ) {
 				}
 			];
 
-			if ( SecuPressi18nChart.notscannedyet.value ) {
+			if ( SecuPressi18nChart.notscannedyet.value > 0 ) {
 				chartData.push( {
 					value:     SecuPressi18nChart.notscannedyet.value,
 					color:     "#5A626F",
@@ -627,6 +626,7 @@ jQuery( document ).ready( function( $ ) {
 
 			// a11y
 			secupressCouldSay( SecuPressi18nScanner.a11y.bulkFixStart );
+			setTimeout(secupressAllScanDoneCallback, 1000*60*3); // 3 min max
 		}
 
 
@@ -923,6 +923,7 @@ jQuery( document ).ready( function( $ ) {
 			}
 
 			$row.addClass( 'fixing' ).find( '.secupress-button-manual-fixit .secupress-icon-check' ).addClass( 'secupress-icon-shield' ).removeClass( 'secupress-icon-check' );
+			$row.find('button .text').text( SecuPressi18nScanner.fixInProgress );
 
 			$.post( ajaxurl, params, null, 'json' )
 			.done( function( r ) {

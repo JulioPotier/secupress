@@ -9,7 +9,7 @@
  * Copyright 2012-2016 SecuPress
  */
 
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Print the notice.

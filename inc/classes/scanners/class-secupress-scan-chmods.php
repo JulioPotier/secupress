@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Chmods scan class.
@@ -32,7 +32,7 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Int
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.2';
+	const VERSION = '2.0';
 
 
 	/** Properties. ============================================================================= */
@@ -68,7 +68,7 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Int
 	 */
 	protected function init() {
 		$this->title    = __( 'Check if your files and folders have the correct write permissions (chmod).', 'secupress' );
-		$this->more     = __( 'CHMOD is the way to give read/write/execute rights to a file or a folder. The <code>0777</code> value is bad and should be avoided. This test will check some strategic files and folders.', 'secupress' );
+		$this->more     = __( 'CHMOD is the way to give read/write/execute rights to a file or a folder. This test will check some strategic files and folders.', 'secupress' );
 		$this->more_fix = __( 'Change the files permissions to the recommended one for each.', 'secupress' );
 	}
 
@@ -107,9 +107,6 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Int
 				'Unable to apply new permissions to the files or folders %s.',
 				'secupress'
 			),
-			// DEPRECATED, NOT IN USE ANYMORE.
-			200 => _x( 'File permissions for %1$s <strong>should be %2$s</strong>, NOT %3$s!', '1: file path, 2: chmod required, 3: current chmod', 'secupress' ),
-			201 => __( 'Unable to apply new file permissions to %s.', 'secupress' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -130,7 +127,7 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Int
 	 * @return (string)
 	 */
 	public static function get_docs_url() {
-		return __( 'http://docs.secupress.me/article/125-file-permission-scan', 'secupress' );
+		return __( 'https://docs.secupress.me/article/125-file-permission-scan', 'secupress' );
 	}
 
 
@@ -197,17 +194,17 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Int
 			}
 		}
 
-		if ( $folders ) {
+		if ( ! empty( $folders ) ) {
 			// "bad"
 			$this->add_message( 202, array( count( $folders ), sprintf( '<code>%s</code>', static::to_octal( $this->folder_chmod ) ), $folders ) );
 		}
 
-		if ( $files ) {
+		if ( ! empty( $files ) ) {
 			// "bad"
 			$this->add_message( 203, array( count( $files ), sprintf( '<code>%s</code>', static::to_octal( $this->file_chmod ) ), $files ) );
 		}
 
-		if ( $warnings ) {
+		if ( ! empty( $warnings ) ) {
 			// "warning"
 			$this->add_message( 100, array( $warnings ) );
 		}
@@ -292,11 +289,11 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Int
 		if ( $to_test['files'] ) {
 			foreach ( $to_test['files'] as $file_path ) {
 				// Current file perm.
-				$current_chmod = fileperms( $file_path ) & 0777;
+				$current_chmod = @fileperms( $file_path ) & 0777;
 
 				if ( ! $current_chmod || $current_chmod > $this->file_chmod ) {
 					// Apply new file perm.
-					$filesystem->chmod( $file_path, $this->file_chmod );
+					@$filesystem->chmod( $file_path, $this->file_chmod );
 					$files[ $file_path ] = $this->file_chmod;
 				}
 			}
@@ -304,6 +301,9 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Int
 
 		// Check if it worked.
 		clearstatcache();
+
+		// Activate.
+		secupress_activate_submodule( 'wordpress-core', 'wp-config-constant-fs-chmod' );
 
 		if ( ! $files ) {
 			// "good" (there was nothing to fix).
@@ -352,13 +352,13 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Int
 	/**
 	 * Get files and folders to test, categorized by type.
 	 *
+	 * @since 2.0 remove web.config+ better .htaccess path
 	 * @since 1.2.2
 	 *
 	 * @return (array) An array of arrays of paths.
 	 */
 	protected function get_files() {
 		$upload_dir        = wp_upload_dir();
-		$wpconfig_filepath = secupress_find_wpconfig_path();
 
 		$files = array(
 			'folders' => array(
@@ -379,14 +379,15 @@ class SecuPress_Scan_Chmods extends SecuPress_Scan implements SecuPress_Scan_Int
 
 		$files['folders'] = array_map( 'trailingslashit', $files['folders'] );
 
-		if ( $wpconfig_filepath ) {
+		$wpconfig_filepath = secupress_find_wpconfig_path();
+		if ( file_exists( $wpconfig_filepath ) ) {
 			$files['files'][] = $wpconfig_filepath;
 		}
-		if ( file_exists( ABSPATH . '.htaccess' ) ) {
-			$files['files'][] = ABSPATH . '.htaccess';
-		}
-		if ( file_exists( ABSPATH . 'web.config' ) ) {
-			$files['files'][] = ABSPATH . 'web.config';
+
+		$htaccess_path = trailingslashit( secupress_get_home_path() );
+		$htaccess_file = $htaccess_path . '.htaccess';
+		if ( file_exists( $htaccess_file ) ) {
+			$files['files'][] = $htaccess_file;
 		}
 
 		return $files;

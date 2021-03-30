@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 
 /**
@@ -620,14 +620,19 @@ class SecuPress_Scanner_Results {
 		}
 
 		$scanners = secupress_get_scanners();
-		$scanners = call_user_func_array( 'array_merge', $scanners );
+		$temp     = [];
+		foreach ( $scanners as $keys ) {
+			foreach( $keys as $index => $values ) {
+				$temp[] = $values;
+			}
+		}
+		$scanners = $temp;
 		$scanners = array_combine( $scanners, $scanners );
 		$scanners = array_map( 'strtolower', $scanners );
 		$scanners = array_flip( $scanners );
 
 		return $scanners;
 	}
-
 
 	/**
 	 * Get scanner names that can't be fixes from the network admin.

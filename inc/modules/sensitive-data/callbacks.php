@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or	die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or	die( 'Something went wrong.' );
 
 /** --------------------------------------------------------------------------------------------- */
 /** ON MODULE SETTINGS SAVE ===================================================================== */
@@ -35,6 +35,16 @@ function secupress_sensitive_data_settings_callback( $settings ) {
 	// WordPress Endpoints.
 	secupress_wp_endpoints_settings_callback( $modulenow, $settings, $activate );
 
+	/**
+	 * Filter the settings before saving.
+	 *
+	 * @since 1.4.9
+	 *
+	 * @param (array)      $settings The module settings.
+	 * @param (array\bool) $activate Contains the activation rules for the different modules
+	 */
+	$settings = apply_filters( "secupress_{$modulenow}_settings_callback", $settings, $activate );
+
 	return $settings;
 }
 
@@ -53,8 +63,9 @@ function secupress_content_protection_settings_callback( $modulenow, $activate )
 	}
 
 	// (De)Activation.
-	secupress_manage_submodule( $modulenow,  'blackhole', ! empty( $activate['content-protect_blackhole'] ) && secupress_blackhole_is_robots_txt_enabled() );
+	secupress_manage_submodule( $modulenow,  '404guess', ! empty( $activate['content-protect_404guess'] ) && secupress_is_pro() );
 	secupress_manage_submodule( $modulenow,  'hotlink', ! empty( $activate['content-protect_hotlink'] ) && secupress_is_pro() );
+	secupress_manage_submodule( $modulenow,  'blackhole', ! empty( $activate['content-protect_blackhole'] ) && secupress_blackhole_is_robots_txt_enabled() );
 	secupress_manage_submodule( $modulenow,  'directory-listing', ! empty( $activate['content-protect_directory-listing'] ) );
 	secupress_manage_submodule( $modulenow,  'php-easter-egg', ! empty( $activate['content-protect_php-disclosure'] ) );
 	secupress_manage_submodule( 'discloses', 'no-x-powered-by', ! empty( $activate['content-protect_php-version'] ) );

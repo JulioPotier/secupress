@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /** --------------------------------------------------------------------------------------------- */
 /** VARIOUS ===================================================================================== */
@@ -18,7 +18,7 @@ function secupress_is_jarvis() {
 		die();
 	}
 	if ( ! secupress_is_white_label() && isset( $_GET['page'] ) && strpos( $_GET['page'], 'secupress' ) !== false ) { // Do not use SECUPRESS_PLUGIN_SLUG, we don't want that in white label.
-		wp_die( '[J.A.R.V.I.S.] You are not authorized to access this area.<br/>[Christine Everhart] Jesus ...<br/>[Pepper Potts] That\'s Jarvis, he runs the house.', 403 );
+		wp_die( '[J.A.R.V.I.S.] You are not authorized to access this area.<br/>[Christine Everhart] Jesus ...<br/>[Pepper Potts] That’s Jarvis, he runs the house.', 403 );
 	}
 }
 
@@ -112,4 +112,53 @@ function secupress_detect_bad_themes_async_get_and_store_infos() {
 if ( secupress_is_expert_mode() ) {
 	add_filter( 'secupress.settings.help', '__return_empty_string' );
 	add_filter( 'secupress.settings.description', '__return_empty_string' );
+}
+
+
+add_filter( 'pre_http_request', 'secupress_filter_remote_url', 1, 3 );
+/**
+ * Filter the URL to prevent access to secupress.me if the version is nulled
+ *
+ * @since 2.0
+ * @author Julio Potier
+ **/
+function secupress_filter_remote_url( $val, $parsed_args, $url ) {
+	if (
+		strpos( secupress_get_consumer_email(), 'nulled' ) !== false ||
+		strpos( secupress_get_consumer_email(), 'babiato' ) !== false ||
+		( secupress_get_consumer_email() === 'abc@abc.com' ) ||
+		( secupress_is_pro() && 32 !== strlen( secupress_get_consumer_key() ) && 0 === strpos( $url, untrailingslashit( SECUPRESS_WEB_MAIN ) ) )
+	) {
+		return new WP_Error();
+	}
+	return $val;
+}
+
+
+add_action( 'wp_head', 'secupress_check_licence_info', 1000 );
+/**
+ * (admin side only) Redirect to the pricing page if the email is a nulled one
+ *
+ * @since 2.0.1 abs@abc.com
+ * @since 2.0 "babiato" + "!== 32" > you don't pay = no seo
+ * @since 1.4.9.5
+ * @author Julio Potier
+ **/
+function secupress_check_licence_info() {
+	if ( strpos( secupress_get_consumer_email(), 'nulled' ) !== false ||
+		 strpos( secupress_get_consumer_email(), 'babiato' ) !== false ||
+		 ( secupress_get_consumer_email() === 'abc@abc.com' ) ||
+		 ( secupress_is_pro() && 32 !== strlen( secupress_get_consumer_key() ) )
+	) {
+		// Use NULLEDVERSION to get 10% off to buy a real licence of SecuPress, you'll get full support and updates in real time.
+		// Need more than 10%? Ask Julio on contact@secupress.me ;)
+		// wp_redirect( SECUPRESS_WEB_MAIN . __( '/pricing/', 'secupress' ) . '?discount=nulledversion' );
+		// die();
+		if ( function_exists( 'wp_robots_no_robots' ) ) {
+			add_filter( 'wp_robots', 'wp_robots_no_index' );
+			wp_robots();
+		} else {
+			wp_no_robots();
+		}
+	}
 }

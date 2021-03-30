@@ -7,7 +7,7 @@
  * Version: 1.0
  */
 
-defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
 
 
 add_filter( 'robots_txt', 'secupress_blackhole_robots_txt' );
@@ -67,6 +67,8 @@ add_action( 'admin_post_nopriv_secupress-ban-me-please', 'secupress_blackhole_ba
 /**
  * Ban an IP address and die.
  *
+ * @since 2.0 use REMOTE_ADDR + do not print anything
+ * @author Julio Potier
  * @since 1.0
  */
 function secupress_blackhole_ban_ip() {
@@ -74,22 +76,21 @@ function secupress_blackhole_ban_ip() {
 		return;
 	}
 
-	$ip      = secupress_get_ip();
+	$ip      = secupress_get_ip( 'REMOTE_ADDR' );
 	$ban_ips = get_site_option( SECUPRESS_BAN_IP );
 
 	if ( ! is_array( $ban_ips ) ) {
 		$ban_ips = array();
 	}
 
-	$ban_ips[ $ip ] = time() + MONTH_IN_SECONDS; // Now you got 1 month to think about your future, kiddo. In the meantime, go clean your room.
+	$ban_ips[ $ip ] = time() + MONTH_IN_SECONDS;
 
 	update_site_option( SECUPRESS_BAN_IP, $ban_ips );
 
 	/* This hook is documented in /inc/functions/admin.php */
 	do_action( 'secupress.ban.ip_banned', $ip, $ban_ips );
 
-	$msg = sprintf( __( 'Your IP address %s has been banned.', 'secupress' ), '<code>' . esc_html( $ip ) . '</code>' );
-	secupress_die( $msg, '', array( 'force_die' => true ) );
+	die();
 }
 
 
@@ -118,5 +119,5 @@ function secupress_blackhole_is_whitelisted() {
 	 * @param (string) $ip The user's IP.
 	 * @param (string) $ua The user's User-Agent.
 	 */
-	return apply_filters( 'secupress.plugin.blackhole.is_whitelisted', false, $ip, $ua );
+	return apply_filters( 'secupress.plugin.blackhole.is_allowed', false, $ip, $ua );
 }

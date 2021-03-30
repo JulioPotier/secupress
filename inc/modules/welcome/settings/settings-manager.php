@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 // Add the form manually.
 add_action( 'secupress.settings.before_section_import_export', array( $this, 'print_open_form_tag' ) );

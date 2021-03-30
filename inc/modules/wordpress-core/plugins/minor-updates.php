@@ -7,13 +7,12 @@
  * Version: 1.1
  */
 
-defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
 
 /** --------------------------------------------------------------------------------------------- */
 /** ACTIVATION / DEACTIVATION =================================================================== */
 /** --------------------------------------------------------------------------------------------- */
 
-add_action( 'secupress.modules.activate_submodule_' . basename( __FILE__, '.php' ), 'secupress_minor_updates_activation' );
 add_action( 'secupress.plugins.activation', 'secupress_minor_updates_activation' );
 /**
  * On module activation, comment the defines.
@@ -43,7 +42,7 @@ function secupress_minor_updates_activation() {
 		}
 
 		if ( ! $success ) {
-			$val      = $val ? 'true' : 'false';
+			$val      = var_export( $val, true );
 			$failed[] = "define( '$constant', $val );";
 		}
 	}
@@ -60,16 +59,16 @@ function secupress_minor_updates_activation() {
 		$message = sprintf(
 			/** Translators: 1 is a file name, 2 is some code. */
 			__( 'The %1$s file is not writable. Please remove the following code from the file: %2$s', 'secupress' ),
-			'<code>wp-config.php</code>',
+			'<code>' . secupress_get_wpconfig_filename() . '</code>',
 			"<pre>$failed</pre>"
 		);
 		secupress_add_settings_error( 'general', 'wp_config_not_writable', $message, 'error' );
 	} else {
 		$message = sprintf(
 			/** Translators: 1 is the plugin name, 2 is a file name, 3 is some code. */
-			_n( '%1$s couldn\'t remove a constant definition from the %2$s file. Please remove the following line from the file: %3$s', '%1$s couldn\'t remove some constant definitions from the %2$s file. Please remove the following lines from the file: %3$s', $count, 'secupress' ),
+			_n( '%1$s couldn’t remove a constant definition from the %2$s file. Please remove the following line from the file: %3$s', '%1$s couldn’t remove some constant definitions from the %2$s file. Please remove the following lines from the file: %3$s', $count, 'secupress' ),
 			SECUPRESS_PLUGIN_NAME,
-			'<code>wp-config.php</code>',
+			'<code>' . secupress_get_wpconfig_filename() . '</code>',
 			"<pre>$failed</pre>"
 		);
 		secupress_add_settings_error( 'general', 'constant_not_commented', $message, 'error' );
@@ -77,16 +76,28 @@ function secupress_minor_updates_activation() {
 }
 
 
-add_action( 'secupress.modules.deactivate_submodule_' . basename( __FILE__, '.php' ), 'secupress_minor_updates_deactivate' );
-add_action( 'secupress.plugins.deactivation', 'secupress_minor_updates_deactivate' );
+add_action( 'secupress.modules.activate_submodule_' . basename( __FILE__, '.php' ), 'secupress_minor_updates_activate_file' );
+/**
+ * On module deactivation, maybe put the constants back.
+ *
+ * @since 2.0
+ * @author Julio Potier
+ */
+function secupress_minor_updates_activate_file() {
+	secupress_minor_updates_activation();
+	secupress_scanit_async( 'Auto_Update', 3 );
+}
+
+
+add_action( 'secupress.plugins.deactivation', 'secupress_minor_updates_deactivation' );
 /**
  * On module deactivation, maybe put the constants back.
  *
  * @since 1.2.3
  * @author Grégory Viguier
  */
-function secupress_minor_updates_deactivate() {
-	// Unomment the 2 constants.
+function secupress_minor_updates_deactivation() {
+	// Uncomment the 2 constants.
 	$filepath  = secupress_is_wpconfig_writable();
 	$constants = array(
 		'DISALLOW_FILE_MODS',
@@ -99,6 +110,19 @@ function secupress_minor_updates_deactivate() {
 			secupress_uncomment_constant( $constant, $filepath );
 		}
 	}
+}
+
+
+add_action( 'secupress.modules.deactivate_submodule_' . basename( __FILE__, '.php' ), 'secupress_minor_updates_deactivate_file' );
+/**
+ * On module deactivation, maybe put the constants back.
+ *
+ * @since 2.0
+ * @author Julio Potier
+ */
+function secupress_minor_updates_deactivate_file() {
+	secupress_minor_updates_deactivation();
+	secupress_scanit_async( 'Auto_Update', 3 );
 }
 
 

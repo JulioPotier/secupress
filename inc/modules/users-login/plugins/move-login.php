@@ -7,7 +7,7 @@
  * Version: 1.3.1
  */
 
-defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
 
 /** --------------------------------------------------------------------------------------------- */
 /** INCLUDES ==================================================================================== */
@@ -18,7 +18,6 @@ if ( ! function_exists( 'is_plugin_active' ) ) {
 	require( ABSPATH . 'wp-admin/includes/plugin.php' );
 }
 if ( function_exists( 'is_plugin_active' ) && (
-	is_plugin_active( 'sf-move-login/sf-move-login.php' ) ||
 	is_plugin_active( 'wps-hide-login/wps-hide-login.php' )
 	) ) {
 	return;
@@ -51,6 +50,7 @@ function secupress_move_login_get_default_slugs() {
 		'postpass'               => 1,
 		'passwordless_autologin' => 1,
 		'confirmaction'          => 1,
+		'confirm_admin_email'    => 1,
 	);
 
 	return $slugs;
@@ -74,6 +74,7 @@ function secupress_move_login_get_slugs() {
 	$slugs['postpass']                = 'postpass';
 	$slugs['passwordless_autologin']  = 'passwordless_autologin';
 	$slugs['confirmaction']           = 'confirmaction';
+	$slugs['confirm_admin_email']     = 'confirm_admin_email';
 
 	return $slugs;
 }
@@ -405,7 +406,11 @@ function secupress_move_login_maybe_deny_login_page( $secure = true ) {
 	if ( is_user_logged_in() ) {
 		return $secure;
 	}
-	$uri    = secupress_get_current_url( 'uri' );
+	$parsed = wp_parse_url( $_SERVER['REQUEST_URI'] );
+	$parsed = ! empty( $parsed['path'] ) ? $parsed['path'] : '';
+	$parsed = trim( $parsed, '/' );
+	$parsed = explode( '/', $parsed );
+	$parsed = end( $parsed );
 	$subdir = secupress_get_wp_directory();
 	$slugs  = secupress_move_login_get_slugs();
 
@@ -417,7 +422,7 @@ function secupress_move_login_maybe_deny_login_page( $secure = true ) {
 
 	$slugs = array_flip( $slugs );
 
-	if ( isset( $slugs[ $uri ] ) ) {
+	if ( isset( $slugs[ $parsed ] ) ) {
 		// Display the login page.
 		if ( ! defined( 'DONOTCACHEPAGE' ) ) {
 			// Tell cache plugins not to cache the login page.
@@ -452,7 +457,7 @@ function secupress_move_login_deny_login_access() {
 	do_action( 'secupress.plugin.move-login.deny_login_access' );
 
 	secupress_die( secupress_check_ban_ips_form( [
-													'content'  => '<p>⚠️ ' . __( 'This page does not exists, has moved or you are not allowed to access it.', 'secupress' ) . '</p>',
+													'content'  => '<p>' . __( 'This page does not exist, has moved or you are not allowed to access it.', 'secupress' ) . '</p>',
 													'time_ban' => -1,
 													'id'       => __FUNCTION__,
 													'ip'       => 'admin', // use for nonce check, see action below v.
@@ -466,12 +471,13 @@ add_action( 'wp', 'secupress_fallback_slug_redirect', 0 );
 /**
  * Will include the wp-loing.php file/template if the URL triggers the new slug
  *
+ * @since 2.0.1 Use determine_locale()
  * @since 1.4 on "wp" hook instead of "template_redirect" because of many "404 management" plugins.
  * @since 1.3.1
  * @author Julio Potier
  **/
-function secupress_fallback_slug_redirect() {
-	if ( ! is_404() || ! isset( $_SERVER['REQUEST_URI'] ) ) {
+function secupress_fallback_slug_redirect( $wp, $test = false ) {
+	if ( ! $test && ( ! is_404() || ! isset( $_SERVER['REQUEST_URI'] ) ) ) {
 		return;
 	}
 	$slugs  = secupress_move_login_get_slugs();
@@ -497,19 +503,51 @@ function secupress_fallback_slug_redirect() {
 		$parsed = explode( '/', $parsed );
 		$parsed = end( $parsed );
 
-		if ( is_user_logged_in() && ! isset( $_REQUEST['action'] ) ) {
-			wp_safe_redirect( admin_url(), 302 );
-			die();
-		}
-
 		if ( ! isset( $_REQUEST['action'] ) && isset( $slugs[ $parsed ] ) ) {
 			$_REQUEST['action'] = $slugs[ $parsed ];
 		}
-
+		if ( ! $test && is_user_logged_in() && ! isset( $_REQUEST['action'] ) ) {
+			wp_safe_redirect( admin_url(), 302 );
+			die();
+		}
+		if ( $test ) {
+			return true;
+		}
 		require( ABSPATH . 'wp-login.php' );
 		die();
 	}
 }
+
+add_action( 'setup_theme', 'secupress_set_wp_lang_early', 1 );
+/**
+ * Add this filter early for ligne 516 above
+ *
+ * @since 2.0.1
+ * @author Julio Potier
+ *
+ * @see secupress_set_wp_lang()
+ *
+ **/
+function secupress_set_wp_lang_early( $locale ) {
+	if ( secupress_fallback_slug_redirect( null, true ) ) {
+		add_filter( 'determine_locale', 'secupress_set_wp_lang' );
+	}
+}
+
+/**
+ * Change the locale if ?wp_lang param is set
+ *
+ * @since 2.0.1
+ * @author Julio Potier
+ *
+ * @return (string) $locale
+ **/
+function secupress_set_wp_lang( $locale ) {
+	if ( ! empty( $_GET['wp_lang'] ) ) {
+		$locale = sanitize_text_field( $_GET['wp_lang'] );
+	}
+	return $locale;
+};
 
 add_filter( 'register_url', 'secupress_register_url_redirect' );
 /**

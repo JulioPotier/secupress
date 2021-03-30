@@ -7,13 +7,13 @@
  * Version: 1.0
  */
 
-defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
 
 /** --------------------------------------------------------------------------------------------- */
 /** ACTIVATION / DEACTIVATION =================================================================== */
 /** --------------------------------------------------------------------------------------------- */
 
-add_action( 'secupress.modules.activate_submodule_' . basename( __FILE__, '.php' ), 'secupress_directory_listing_activation' );
+add_action( 'secupress.modules.activation', 'secupress_directory_listing_activation' );
 /**
  * On module activation, maybe write the rules.
  *
@@ -70,6 +70,11 @@ function secupress_directory_listing_activation_remove_rule( $file_content ) {
 	return preg_replace( "/Options\s+\+Indexes\s*(?:\n|$)/", '', $file_content );
 }
 
+add_action( 'secupress.modules.activate_submodule_' . basename( __FILE__, '.php' ), 'secupress_directory_listing_activation_file' );
+function secupress_directory_listing_activation_file() {
+	secupress_directory_listing_activation();
+	secupress_scanit( 'Directory_Listing', 3 );
+}
 
 add_action( 'secupress.modules.deactivate_submodule_' . basename( __FILE__, '.php' ), 'secupress_directory_listing_deactivate' );
 /**
@@ -79,6 +84,7 @@ add_action( 'secupress.modules.deactivate_submodule_' . basename( __FILE__, '.ph
  */
 function secupress_directory_listing_deactivate() {
 	secupress_remove_module_rules_or_notice( 'directory_listing', __( 'Directory Listing', 'secupress' ) );
+	secupress_scanit( 'Directory_Listing', 3 );
 }
 
 

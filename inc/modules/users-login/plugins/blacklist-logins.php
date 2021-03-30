@@ -1,13 +1,13 @@
 <?php
 /**
- * Module Name: Logins Blacklist
+ * Module Name: Disallowed Logins
  * Description: Forbid some usernames to be used.
  * Main Module: users_login
  * Author: SecuPress
  * Version: 1.0
  */
 
-defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
 
 /** --------------------------------------------------------------------------------------------- */
 /** EXISTING USERS WITH A BLACKLISTED USERNAME MUST CHANGE IT. ================================== */
@@ -43,7 +43,7 @@ function secupress_auth_redirect_blacklist_logins( $user_id ) {
 	if ( isset( $_POST['secupress-backlist-logins-new-login'] ) ) {
 
 		if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], $nonce_action ) ) {
-			wp_die( __( 'Cheatin&#8217; uh?' ) );
+			wp_die( __( 'Something went wrong.', 'secupress' ) );
 		}
 
 		if ( empty( $_POST['secupress-backlist-logins-new-login'] ) ) {
@@ -55,7 +55,7 @@ function secupress_auth_redirect_blacklist_logins( $user_id ) {
 
 			if ( isset( $list[ $user_login ] ) ) {
 				// The new login is blacklisted.
-				$error = __( 'This username is also blacklisted', 'secupress' );
+				$error = __( 'This username is also disallowed', 'secupress' );
 			} else {
 				// Good, change the user login.
 				$inserted = secupress_blacklist_logins_change_user_login( $user_id, $user_login );
@@ -95,7 +95,7 @@ function secupress_auth_redirect_blacklist_logins( $user_id ) {
 			<?php
 			printf(
 				/** Translators: 1 is a user name, 2 is a link "to the site" */
-				__( 'Your current username %1$s is blacklisted. You will not be able to reach the administration area until you change your username. Meanwhile, you still have access %2$s.', 'secupress' ),
+				__( 'Your current username %1$s is disallowed. You will not be able to reach the administration area until you change your username. Meanwhile, you still have access %2$s.', 'secupress' ),
 				'<strong>' . esc_html( $user->user_login ) . '</strong>',
 				'<a href="' . esc_url( user_trailingslashit( home_url() ) ) . '">' . __( 'to the site', 'secupress' ) . '</a>'
 			);
@@ -192,7 +192,7 @@ function secupress_blacklist_logins_new_user_notification( $user ) {
 	$user     = secupress_is_user( $user ) ? $user : get_userdata( $user );
 	/* Translators: 1 is a blog name. */
 	$subject  = sprintf( __( '[%s] Your username info', 'secupress' ), '###SITENAME###' );
-	$message  = sprintf( __( 'Username: %s' ), $user->user_login ) . "\r\n\r\n"; // WP i18n.
+	$message  = sprintf( __( 'Username: %s', 'secupress' ), $user->user_login ) . "\r\n\r\n";
 	$message .= esc_url_raw( wp_login_url() ) . "\r\n";
 
 	secupress_send_mail( $user->user_email, $subject, $message );
@@ -370,4 +370,15 @@ function secupress_blacklist_logins_registration_errors( $errors, $sanitized_use
 		$errors->add( 'user_name',  __( 'Sorry, that username is not allowed.', 'secupress' ) );
 	}
 	return $errors;
+}
+
+add_action( 'secupress.modules.activate_submodule_' . basename( __FILE__, '.php' ), 'secupress_bad_logins_de_activate_file' );
+add_action( 'secupress.modules.deactivate_submodule_' . basename( __FILE__, '.php' ), 'secupress_bad_logins_de_activate_file' );
+/**
+ * On module de/activation, rescan.
+ *
+ * @since 2.0
+ */
+function secupress_bad_logins_de_activate_file() {
+	secupress_scanit( 'Bad_Usernames' );
 }

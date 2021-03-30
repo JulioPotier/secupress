@@ -1469,17 +1469,30 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 // Malware Scan Status =============================================================================
 (function($, d, w, undefined) {
 	if ( undefined !== SecuPressi18nModules && 'on' === SecuPressi18nModules.malwareScanStatus ) {
+		window.stop();
+		function secupress_get_malwarescanstatus() {
+			var params = {
+				"action":   "secupress_malwareScanStatus",
+				"_wpnonce": $("#secupress-scanner-info").data('nonce'),
+			};
 
-		$( d ).on( 'heartbeat-send', function( e, data ) {
-			data.secupress_heartbeat_malware_scan = 'malwareScanStatus';
-		} )
-		// Listen for the custom event "heartbeat-tick" on $(document).
-		.on( 'heartbeat-tick', function( e, data ) {
-			// Only proceed if our data is present.
-			if ( data.malwareScanStatus ) {
-				w.location.href = SecuPressi18nModules.MalwareScanURI;
-			}
-		} );
+			$.getJSON( ajaxurl, params ).done( function( r ) {
+				if ( ! r.success ) {
+					$("#secupress-scanner-info code").parent().parent().text( SecuPressi18nModules.malwareScanError );
+				} else if( r.data.malwareScanStatus ) {
+					w.location.href = SecuPressi18nModules.MalwareScanURI;
+				} else {
+		 			setTimeout( secupress_get_malwarescanstatus, 15 * 1000 );
+					timer = 16 / r.data.currentItems.length * 1000;
+					r.data.currentItems.forEach( ( elem, index ) => {
+							setTimeout( function() { $("#secupress-scanner-info code").text( elem ); }, timer  * ( index + 1 ) );
+						}
+					);
+				}
+
+			} );
+		 }
+		 secupress_get_malwarescanstatus();
 	}
 } )(jQuery, document, window);
 
@@ -1507,45 +1520,23 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 		}
 	};
 
-	// Check all checkboxes.
-	$( '.secupress-check-group .secupress-row-check' ).on( 'click', function( e ) {
-		var $group     = $( this ).closest( '.secupress-check-group' ),
-			allChecked = 0 === $group.find( '.secupress-row-check' ).filter( ':visible:enabled' ).not( ':checked' ).length;
-
-		// Toggle "check all" checkboxes.
-		$group.find( '.secupress-toggle-check' ).prop( 'checked', allChecked );
-	} )
-	.first().trigger( 'change.secupress' );
-
-	$( '.secupress-check-group .secupress-toggle-check' ).on( 'click.wp-toggle-checkboxes', function( e ) {
-		var $this          = $( this ),
-			$wrap          = $this.closest( '.secupress-check-group' ),
-			controlChecked = $this.prop( 'checked' ),
-			toggle         = e.shiftKey || $this.data( 'wp-toggle' );
-
-		$wrap.find( '.secupress-toggle-check' )
-			.prop( 'checked', function() {
-				var $this = $( this );
-
-				if ( $this.is( ':hidden,:disabled' ) ) {
-					return false;
-				}
-
-				if ( toggle ) {
-					return ! $this.prop( 'checked' );
-				}
-
-				return controlChecked ? true : false;
-			} );
-
-		$wrap.find( '.secupress-row-check' )
-			.prop( 'checked', function() {
-				if ( toggle ) {
-					return false;
-				}
-
-				return controlChecked ? true : false;
-			} );
+	// Open all signatures info
+	$( '.secupress-toggle-sort' ).css('cursor', 'pointer').on( 'click', function( e ) {
+		var data = $( this ).data( 'file' );
+		$( this ).toggleClass( 'dashicons-arrow-right dashicons-arrow-down' );
+		$( '.secupress-toggle-me.' + data ).toggle('fast');
+	} );
+	var flag = 0;
+	$( '.secupress-toggle-sort-all' ).css('cursor', 'pointer').on( 'click', function( e ) {
+		if ( 0 === flag ) {
+			$( this ) . next( 'ul' ). find( '.secupress-toggle-me' ).show('fast');
+			$( this ) . next( 'ul' ). find( 'li span.dashicons-arrow-right' ).toggleClass( 'dashicons-arrow-right dashicons-arrow-down' );
+			flag = 1;
+		} else {
+			$( this ) . next( 'ul' ). find( '.secupress-toggle-me' ).hide('fast');
+			$( this ) . next( 'ul' ). find( 'li span.dashicons-arrow-down' ).toggleClass( 'dashicons-arrow-right dashicons-arrow-down' );
+			flag = 0;
+		}
 	} );
 
 } )(window, document, jQuery);
@@ -1567,5 +1558,91 @@ function secupressDisplayAjaxSuccess( $button, text, ajaxID ) {
 				$label.removeClass( 'is-checked' );
 			}
 		} );
+	} );
+} )(jQuery, document, window);
+
+// Reset button ====================
+(function($, d, w, undefined) {
+	$( '.secupressicon-reset' ).on( 'click', function(e) {
+		var _this = this;
+		e.preventDefault();
+		swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
+			text:              SecuPressi18nModules.resetDefault,
+			type:              "question",
+			reverseButtons:    true
+		} ) ).then( function ( isConfirm ) {
+			if ( isConfirm ) {
+				window.location = $(_this).attr('href');
+			} else {
+				return false;
+			}
+		} );
+	} );
+} )(jQuery, document, window);
+
+// Regenerate keys button ====================
+(function($, d, w, undefined) {
+	$( '#secupress-regen-keys' ).on( 'click', function(e) {
+		var _this = this;
+		e.preventDefault();
+		swal2( $.extend( {}, SecuPress.swal2Defaults, SecuPress.swal2ConfirmDefaults, {
+			text:              SecuPressi18nModules.regenKeys,
+			type:              "question",
+			reverseButtons:    true
+		} ) ).then( function ( isConfirm ) {
+			if ( isConfirm ) {
+				window.location = $(_this).attr('href');
+			} else {
+				return false;
+			}
+		} );
+	} );
+} )(jQuery, document, window);
+
+// Captcha module test ====================
+(function($, d, w, undefined) {
+	if ( ! $( '#captcha_activate' ).length ) {
+		return;
+	}
+	params = {
+		'action': 'secupress_test_captcha_random_string_action--' + Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5)
+	};
+	$.getJSON( ajaxurl, params ).always( function( r ) {
+		if ( '0' === r.responseText && 400 === r.status ) {
+			$( '#captcha_activate' ).prop( 'disabled', false ).parent().removeClass( 'disabled' ).parent().next().hide();
+			$( '#captcha_activate' ).prop( 'checked', 1 == $('#captcha_activate').data( 'value' ) );
+		}
+	});
+} )(jQuery, document, window);
+
+// Database prefix ==========================================================================
+(function($, d, w, undefined) {
+	$( '[name="secupress_wordpress-core_settings[database_db_prefix]"]' ).on( 'keypress', function(e) {
+		const regex = /[a-z0-9_]|i/;
+		if ( ! regex.test(e.key)) {
+			e.preventDefault();
+		}
+	} );
+	$( '[name="secupress_wordpress-core_settings[database_db_prefix]"]' ).on( 'blur', function(elem) {
+		if ( 'wp_' === $(this).val() || 'wordpress_' === $(this).val() ) {
+			$(this).val('');
+		}
+	} );
+	$( '[name="secupress_wordpress-core_settings[database_db_prefix]"]' ).on( 'paste', function(elem) {
+		const regex = /^([a-z0-9_]{1,})$/;
+		var pasted  = elem.originalEvent.clipboardData.getData('Text');
+		if ( ! regex.test(pasted)) {
+			setTimeout(
+				function() {
+					$( "[type='submit']:first" ).trigger( "click" );
+					$('[name="secupress_wordpress-core_settings[database_db_prefix]"]').focus().select();
+				}
+			, 10 );
+		}
+	} );
+	$( '#secupress-database-prefix-generate' ).on( 'click', function(e) {
+		var r = Math.random().toString(36) + Math.random().toString(36);
+		r = r.replace(/[^a-zA-Z]+/g, '').substr(0,5);
+		$( '[name="secupress_wordpress-core_settings[database_db_prefix]"]' ).val( 'wp_' + r + '_' ).focus();
 	} );
 } )(jQuery, document, window);

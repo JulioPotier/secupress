@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Subscription scan class.
@@ -66,11 +66,11 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 			if ( is_network_admin() ) {
 				$this->more_fix .= '<br/>' . sprintf( __( 'If the default user role is not %1$s in some of your websites, administrators will be asked to set the default user role to %1$s.', 'secupress' ), $this->role_minimum_i18n );
 			} else {
-				$this->more_fix .= '<br/>' . sprintf( __( 'Set the default user\'s role to %s.', 'secupress' ), $this->role_minimum_i18n );
+				$this->more_fix .= '<br/>' . sprintf( __( 'Set the default user’s role to %s.', 'secupress' ), $this->role_minimum_i18n );
 			}
 		} else {
 			$this->more     = sprintf( __( 'If user registrations are open, the default user role should be %s.', 'secupress' ), $this->role_minimum_i18n );
-			$this->more_fix = sprintf( __( 'Set the default user\'s role to %s.', 'secupress' ), $this->role_minimum_i18n );
+			$this->more_fix = sprintf( __( 'Set the default user’s role to %s.', 'secupress' ), $this->role_minimum_i18n );
 		}
 	}
 
@@ -105,7 +105,7 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 			202 => _n_noop( 'The default role is not %2$s in %1$s of your sites.', 'The default role is not %2$s in %1$s of your sites.', 'secupress' ),
 			// "cantfix"
 			/** Translators: %s is the plugin name. */
-			300 => sprintf( __( 'The default role cannot be fixed from here. A new %s menu item has been activated in the relevant site\'s administration area.', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ),
+			300 => sprintf( __( 'The default role cannot be fixed from here. A new %s menu item has been activated in the relevant site’s administration area.', 'secupress' ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -126,7 +126,7 @@ class SecuPress_Scan_Subscription extends SecuPress_Scan implements SecuPress_Sc
 	 * @return (string)
 	 */
 	public static function get_docs_url() {
-		return __( 'http://docs.secupress.me/article/134-membership-settings-scan', 'secupress' );
+		return __( 'https://docs.secupress.me/article/134-membership-settings-scan', 'secupress' );
 	}
 
 

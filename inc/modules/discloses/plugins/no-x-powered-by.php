@@ -7,7 +7,7 @@
  * Version: 1.1.1
  */
 
-defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
 
 
 /** --------------------------------------------------------------------------------------------- */

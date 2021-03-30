@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Actions Log class.
@@ -73,7 +73,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 		$method_name = str_replace( array( '.', '-', '|' ), '_', $this->target );
 		$method_name = 'pre_process_' . $this->type . ( $this->subtype ? '_' . $this->subtype : '' ) . '_' . $method_name;
 
-		if ( method_exists( $this, $method_name ) ) {
+		if ( method_exists( $this, $method_name ) && $this->data ) {
 			$this->data = (array) call_user_func_array( array( $this, $method_name ), $this->data );
 		}
 
@@ -428,7 +428,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 		if ( 'session_tokens' === $meta_key ) {
 			return array();
 		}
-		$user = $object_id ? static::format_user_login( $object_id ) : __( 'All Users' ); // WP i18n.
+		$user = $object_id ? static::format_user_login( $object_id ) : __( 'All Users', 'secupress' );
 		return compact( 'user', 'meta_key', 'meta_value' );
 	}
 
@@ -661,7 +661,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 			'switch_theme'            => __( 'Theme activated: %s', 'secupress' ),
 			'wp_login'                => __( 'Administrator %s logged in', 'secupress' ),
 			'delete_user'             => __( 'User deleted: %s', 'secupress' ),
-			'profile_update'          => __( '%s\'s user data changed', 'secupress' ),
+			'profile_update'          => __( '%s’s user data changed', 'secupress' ),
 			'user_register'           => __( 'New user %s created', 'secupress' ),
 			'added_user_meta'         => __( 'User meta %2$s added to %1$s', 'secupress' ),
 			'updated_user_meta'       => __( 'User meta %2$s updated for %1$s', 'secupress' ),
@@ -815,7 +815,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 			'switch_theme'            => __( 'Theme activated: %s.', 'secupress' ),
 			'wp_login'                => __( 'Administrator %s logged in.', 'secupress' ),
 			'delete_user'             => __( 'User deleted: %1$s. Posts assigned to: %2$s.', 'secupress' ),
-			'profile_update'          => __( '%1$s\'s user data changed from: %2$s To: %3$s', 'secupress' ),
+			'profile_update'          => __( '%1$s’s user data changed from: %2$s To: %3$s', 'secupress' ),
 			'user_register'           => __( 'New user %s created.', 'secupress' ),
 			'added_user_meta'         => __( 'User meta %2$s added to %1$s with the value %3$s', 'secupress' ),
 			'updated_user_meta'       => __( 'User meta %2$s updated for %1$s with the value %3$s Previous value was: %3$s', 'secupress' ),

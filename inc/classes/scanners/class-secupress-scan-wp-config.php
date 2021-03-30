@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * `wp-config.php` scan class.
@@ -41,8 +41,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 		'FS_CHMOD_DIR'             => 755,
 		'FS_CHMOD_FILE'            => 644,
 		'RELOCATE'                 => false,
-		'SCRIPT_DEBUG'             => false,
-		'WP_ALLOW_REPAIR'          => '!isset',
+		'WP_ALLOW_REPAIR'          => false,
 		'WP_DEBUG'                 => false,
 		'WP_DEBUG_DISPLAY'         => false,
 	);
@@ -57,11 +56,11 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 	 */
 	protected function init() {
 		/** Translators: %s is a file name. */
-		$this->title    = sprintf( __( 'Check your %s file, especially the PHP constants.', 'secupress' ), '<code>wp-config.php</code>' );
+		$this->title    = sprintf( __( 'Check your %s file, especially the PHP constants.', 'secupress' ), '<code>' . secupress_get_wpconfig_filename() . '</code>' );
 		/** Translators: %s is a file name. */
-		$this->more     = sprintf( __( 'You can use the %s file to improve the security of your website.', 'secupress' ), '<code>wp-config.php</code>' );
+		$this->more     = sprintf( __( 'You can use the %s file to improve the security of your website.', 'secupress' ), '<code>' . secupress_get_wpconfig_filename() . '</code>' );
 		/** Translators: %s is a file name. */
-		$this->more_fix = sprintf( __( 'Set some PHP constants in your %s file to improve the security of your website.', 'secupress' ), '<code>wp-config.php</code>' );
+		$this->more_fix = sprintf( __( 'Set some PHP constants in your %s file to improve the security of your website.', 'secupress' ), '<code>' . secupress_get_wpconfig_filename() . '</code>' );
 	}
 
 
@@ -78,7 +77,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 		$messages = array(
 			// "good"
 			/** Translators: %s is a file name. */
-			0   => sprintf( __( 'Your %s file is correct.', 'secupress' ), '<code>wp-config.php</code>' ),
+			0   => sprintf( __( 'Your %s file is correct.', 'secupress' ), '<code>' . secupress_get_wpconfig_filename() . '</code>' ),
 			/** Translators: %s is a constant name. */
 			1   => sprintf( __( 'A <a href="https://codex.wordpress.org/Must_Use_Plugins" hreflang="en">must-use plugin</a> has been added in order to change the default value for %s.', 'secupress' ), '<code>COOKIEHASH</code>' ),
 			// "warning"
@@ -87,7 +86,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 			/** Translators: %s is a constant name. */
 			201 => sprintf( __( 'The PHP constant %s is defined with the default value, it should be modified.', 'secupress' ), '<code>COOKIEHASH</code>' ),
 			/** Translators: 1 is a file name, 2 is a constant name. */
-			202 => sprintf( __( 'In your %1$s file, the PHP constant %2$s should be set.', 'secupress' ), '<code>wp-config.php</code>', '%s' ),
+			202 => sprintf( __( 'In your %1$s file, the PHP constant %2$s should be set.', 'secupress' ), '<code>' . secupress_get_wpconfig_filename() . '</code>', '%s' ),
 			207 => _n_noop(
 				/** Translators: 1 is a file name, 2 is a constant name. */
 				'In your %1$s file, the PHP constant %2$s should not be set.',
@@ -129,16 +128,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 			300 => __( 'Some PHP constants could not be set correctly: %s.', 'secupress' ),
 			/** Translators: %s is a constant name. */
 			301 => sprintf( __( 'Impossible to create a <a href="https://codex.wordpress.org/Must_Use_Plugins">must-use plugin</a> but the default value for %s needs to be changed.', 'secupress' ), '<code>COOKIEHASH</code>' ),
-			302 => __( 'The <code>wp-config.php</code> file is not writable, the constants could not be changed.', 'secupress' ),
-			// DEPRECATED, NOT IN USE ANYMORE.
-			/** Translators: 1 is a file name, 2 is a constant name. */
-			203 => sprintf( __( 'In your %1$s file, the PHP constant %2$s should not be set.', 'secupress' ), '<code>wp-config.php</code>', '%s' ),
-			/** Translators: 1 is a file name, 2 is a constant name. */
-			204 => sprintf( __( 'In your %1$s file, the PHP constant %2$s should not be empty.', 'secupress' ), '<code>wp-config.php</code>', '%s' ),
-			/** Translators: 1 is a file name, 2 is a constant name, 3 is a value. */
-			205 => sprintf( __( 'In your %1$s file, the PHP constant %2$s should be set to %3$s.', 'secupress' ), '<code>wp-config.php</code>', '%1$s', '%2$s' ),
-			/** Translators: 1 is a file name, 2 is a constant name, 3 is a value. */
-			206 => sprintf( __( 'In your %1$s file, the PHP constant %2$s should be set to %3$s or less.', 'secupress' ), '<code>wp-config.php</code>', '%1$s', '%2$s' ),
+			302 => sprintf( __( 'The <code>%s</code> file is not writable, the constants could not be changed.', 'secupress' ), secupress_get_wpconfig_filename() ),
 		);
 
 		if ( isset( $message_id ) ) {
@@ -159,7 +149,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 	 * @return (string)
 	 */
 	public static function get_docs_url() {
-		return __( 'http://docs.secupress.me/article/93-wp-config-php-file-constants-scan', 'secupress' );
+		return __( 'https://docs.secupress.me/article/93-wp-config-php-file-constants-scan', 'secupress' );
 	}
 
 
@@ -188,13 +178,6 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 			$this->add_message( 201 );
 		}
 
-		// NOBLOGREDIRECT.
-		/** This filter is documented in wp-includes/ms-functions.php */
-		if ( is_multisite() && is_subdomain_install() && ! has_action( 'ms_site_not_found' ) && ( ! defined( 'NOBLOGREDIRECT' ) || ! NOBLOGREDIRECT || ! apply_filters( 'blog_redirect_404', NOBLOGREDIRECT ) ) ) {
-			// "bad"
-			$this->add_message( 202, array( '<code>NOBLOGREDIRECT</code>' ) );
-		}
-
 		// Other constants.
 		$results = array();
 
@@ -202,18 +185,6 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 			$check = defined( $constant ) ? constant( $constant ) : null;
 
 			switch ( $compare ) {
-				case '!isset':
-					if ( isset( $check ) ) {
-						$results[207]   = isset( $results[207] ) ? $results[207] : array();
-						$results[207][] = '<code>' . $constant . '</code>';
-					}
-					break;
-				case '!empty':
-					if ( empty( $check ) ) {
-						$results[208]   = isset( $results[208] ) ? $results[208] : array();
-						$results[208][] = '<code>' . $constant . '</code>';
-					}
-					break;
 				case 1:
 					if ( ! $check ) {
 						$results[209]           = isset( $results[209] )         ? $results[209]         : array();
@@ -248,11 +219,11 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 				if ( is_array( $first ) ) {
 					foreach ( $maybe_constants as $compare => $constants ) {
 						// "bad"
-						$this->add_message( $message_id, array( count( $constants ), '<code>wp-config.php</code>', $constants, '<code>' . $compare . '</code>' ) );
+						$this->add_message( $message_id, array( count( $constants ), '<code>' . secupress_get_wpconfig_filename() . '</code>', $constants, '<code>' . $compare . '</code>' ) );
 					}
 				} else {
 					// "bad"
-					$this->add_message( $message_id, array( count( $maybe_constants ), '<code>wp-config.php</code>', $maybe_constants ) );
+					$this->add_message( $message_id, array( count( $maybe_constants ), '<code>' . secupress_get_wpconfig_filename() . '</code>', $maybe_constants ) );
 				}
 			}
 		}
@@ -330,8 +301,7 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 
 		if ( $check ) {
 			// "bad"
-			secupress_set_site_transient( 'secupress-add-cookiehash-muplugin', array( 'ID' => $current_user->ID, 'username' => $current_user->user_login ) );
-			$this->add_fix_message( 100 );
+			$this->maybe_fix_by_plugin( 'COOKIEHASH' );
 		}
 
 		// Other constants.
@@ -352,65 +322,20 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 			$replaced  = false;
 
 			switch ( $compare ) {
-				case '!isset':
-					if ( isset( $check ) ) {
+				case 1:
+					if ( true !== $check && is_wp_error( $this->maybe_fix_by_plugin( $constant ) ) ) {
 						$not_fixed[] = sprintf( '<code>%s</code>', $constant );
 					}
-					break;
-				case '!empty':
-					if ( is_null( $check ) ) {
-						$errorlogfile = dirname( ini_get( 'error_log' ) ) . '/wp_errorlogfile.log';
-						$new_content .= "define( '{$constant}', '{$errorlogfile}' ); // Added by SecuPress.\n";
-					}
-					break;
-				case 1:
-					if ( ! $check ) {
-						if ( $activated = $this->maybe_fix_by_plugin( $constant ) ) {
-							if ( is_wp_error( $activated ) ) {
-								$not_fixed[] = sprintf( '<code>%s</code>', $constant );
-							}
-							break;
-						}
-
-						if ( defined( $constant ) ) {
-							$replaced = secupress_comment_constant( $constant, $wpconfig_filepath );
-						}
-
-						if ( ! defined( $constant ) || $replaced ) {
-							$new_content .= "define( '{$constant}', true ); // Added by SecuPress.\n";
-						} else {
-							$not_fixed[] = sprintf( '<code>%s</code>', $constant );
-						}
-					}
-					break;
+				break;
 				case false:
-					if ( $check ) {
-						if ( $activated = $this->maybe_fix_by_plugin( $constant ) ) {
-							if ( is_wp_error( $activated ) ) {
-								$not_fixed[] = sprintf( '<code>%s</code>', $constant );
-							}
-							break;
-						}
-
-						if ( defined( $constant ) ) {
-							$replaced = secupress_comment_constant( $constant, $wpconfig_filepath );
-						}
-
-						if ( ! defined( $constant ) || $replaced || 'WP_DEBUG_DISPLAY' === $constant ) {
-							$new_content .= "define( '{$constant}', false ); // Added by SecuPress.\n";
-						} else {
-							$not_fixed[] = sprintf( '<code>%s</code>', $constant );
-						}
+					if ( false !== $check && is_wp_error( $this->maybe_fix_by_plugin( $constant ) ) ) {
+						$not_fixed[] = sprintf( '<code>%s</code>', $constant );
 					}
-					break;
+				break;
 				default:
 					$check = decoct( $check ) <= $compare;
-					break;
+				break;
 			}
-		}
-
-		if ( $new_content ) {
-			secupress_put_contents( $wpconfig_filepath, $new_content, array( 'marker' => 'Correct Constants Values', 'put' => 'append', 'text' => '<?php', 'keep_old' => true ) );
 		}
 
 		if ( $not_fixed ) {
@@ -439,7 +364,17 @@ class SecuPress_Scan_WP_Config extends SecuPress_Scan implements SecuPress_Scan_
 
 		$has_plugin = array(
 			'ALLOW_UNFILTERED_UPLOADS' => 'unfiltered-uploads',
+			'COOKIEHASH'               => 'cookiehash',
+			'DIEONDBERROR'             => 'dieondberror',
 			'DISALLOW_FILE_EDIT'       => 'file-edit',
+			'FS_CHMOD_DIR'             => 'fs-chmod',
+			'FS_CHMOD_FILE'            => 'fs-chmod',
+			'RELOCATE'                 => 'locations',
+			'WP_ALLOW_REPAIR'          => 'repair',
+			'WP_DEBUG'                 => 'debugging',
+			'WP_DEBUG_DISPLAY'         => 'debugging',
+			'WP_HOME'                  => 'locations',
+			'WP_SITEURL'               => 'locations',
 		);
 
 		if ( empty( $has_plugin[ $constant ] ) ) {

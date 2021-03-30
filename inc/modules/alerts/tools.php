@@ -1,24 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
-
-/**
- * Get available alert types.
- *
- * @since 1.0
- *
- * @return (array) Return an array with identifiers as keys and field labels as values.
- */
-function secupress_alert_types_labels() {
-
-	return array(
-		'email'   => __( 'Email', 'secupress' ),
-		// 'twitter' => __( 'Twitter', 'secupress' ), ////
-		// 'slack'   => __( 'Slack', 'secupress' ), ////
-		// 'sms'     => __( 'SMS', 'secupress' ), ////
-		// 'push'    => __( 'Push notification', 'secupress' ), ////
-	);
-}
-
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Get email addresses set by the user in the settings.

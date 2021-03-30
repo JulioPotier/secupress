@@ -7,13 +7,13 @@
  * Version: 1.0
  */
 
-defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
 
 /** --------------------------------------------------------------------------------------------- */
 /** ACTIVATION / DEACTIVATION =================================================================== */
 /** --------------------------------------------------------------------------------------------- */
 
-add_action( 'secupress.modules.activate_submodule_' . basename( __FILE__, '.php' ), 'secupress_php_disclosure_activation' );
+add_action( 'secupress.modules.activation', 'secupress_php_disclosure_activation' );
 /**
  * On module activation, maybe write the rules.
  *
@@ -47,6 +47,18 @@ function secupress_php_disclosure_activation() {
 }
 
 
+add_action( 'secupress.modules.activate_submodule_' . basename( __FILE__, '.php' ), 'secupress_php_disclosure_activation_file' );
+/**
+ * On module de/activation, rescan.
+ *
+ * @since 2.0
+ */
+function secupress_php_disclosure_activation_file() {
+	secupress_php_disclosure_activation();
+	secupress_scanit( 'PHP_Disclosure', 3 );
+}
+
+
 add_action( 'secupress.modules.deactivate_submodule_' . basename( __FILE__, '.php' ), 'secupress_php_disclosure_deactivate' );
 /**
  * On module deactivation, maybe remove rewrite rules from the `.htaccess`/`web.config` file.
@@ -55,6 +67,7 @@ add_action( 'secupress.modules.deactivate_submodule_' . basename( __FILE__, '.ph
  */
 function secupress_php_disclosure_deactivate() {
 	secupress_remove_module_rules_or_notice( 'php_disclosure', __( 'PHP Disclosure', 'secupress' ) );
+	secupress_scanit( 'PHP_Disclosure', 3 );
 }
 
 

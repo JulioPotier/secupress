@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 
 $this->set_current_section( 'login_auth2' );
@@ -71,7 +71,7 @@ $this->add_field( array(
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
-			'description' => sprintf( __( 'You will find action links on every user\'s row in the <a href="%s">user listing administration page</a>.', 'secupress' ), esc_url( admin_url( 'users.php' ) ) ),
+			'description' => sprintf( __( 'You will find action links on every user’s row in the <a href="%s">user listing administration page</a>.', 'secupress' ), esc_url( admin_url( 'users.php' ) ) ),
 		),
 	),
 ) );

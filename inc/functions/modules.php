@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Get modules title, icon, description and other informations.
@@ -16,18 +16,18 @@ function secupress_get_modules() {
 	$modules = [
 		'welcome'         => [
 			'title'       => __( 'Dashboard', 'secupress' ),
-			'icon'        => 'cogs',
+			'icon'        => null, // null = SecuPress logo
 			'dashicon'    => 'admin-home',
 			'summaries'   => [
-				'small'   => __( 'License, Import & Export', 'secupress' ),
-				'normal'  => __( 'nothing', 'secupress' ),
+				'small'   => __( 'Settings, Import & Export', 'secupress' ),
 			],
 			'with_form'      => false,
 			'with_reset_box' => false,
 			'submodules'     => [
-							'module-secupress_display_apikey_options'     => ! defined( 'SECUPRESS_HIDE_API_KEY' ) || SECUPRESS_HIDE_API_KEY ? __( 'Licence Information', 'secupress' ) : '',
+							'module-secupress_display_apikey_options'     => ! defined( 'SECUPRESS_HIDE_API_KEY' ) || SECUPRESS_HIDE_API_KEY ? __( 'License Information', 'secupress' ) : '',
 							'module-secupress_display_whitelabel_options' => ! secupress_is_pro() || ( secupress_is_pro() && defined( 'WP_SWL' ) && WP_SWL ) ? ( ! secupress_is_pro() ? '*' : '' ) . __( 'White Label', 'secupress' ) : '',
-							'module-import_export'                        => '*' . __( 'Settings Import & Export', 'secupress' ),
+							'module-secupress_advanced_settings'          => __( 'Advanced Settings', 'secupress' ),
+							'module-import_export'                        => '*' . __( 'Settings, Import & Export', 'secupress' ),
 						]
 		],
 		'users-login'     => [
@@ -36,21 +36,23 @@ function secupress_get_modules() {
 			'dashicon'    => 'groups',
 			'summaries'   => [
 				'small'   => __( 'Protect your users', 'secupress' ),
-				'normal'  => __( 'The best and easiest way to make sure that users\' data will be protected, and their accounts not compromised.', 'secupress' ),
 			],
 			'submodules'  => [
-							'move-login_activated'                     => __( 'Move Login Page', 'secupress' ),
-							'login-protection_type_limitloginattempts' => __( 'Limit Login Attempts', 'secupress' ),
-							'login-protection_type_bannonexistsuser'   => __( 'Ban Non Existing Users', 'secupress' ),
-							'login-protection_sessions_control'        => '*' . __( 'Session Control', 'secupress' ),
-							'double-auth_type'                         => '*' . __( '2FA PasswordLess', 'secupress' ),
-							'captcha_activate'                         => __( 'Captcha', 'secupress' ),
-							'password-policy_password_expiration'      => '*' . __( 'Password Lifespan', 'secupress' ),
-							'password-policy_strong_passwords'         => '*' . __( 'Strong Password', 'secupress' ),
-							'password-policy_ask-old-password'         => __( 'Ask Old Password', 'secupress' ),
-							'blacklist-logins_activated'               => __( 'Forbidden Usernames', 'secupress' ),
-							'blacklist-logins_stop-user-enumeration'   => __( 'Stop User Enumeration', 'secupress' ),
-							'blacklist-logins_prevent-user-creation'   => '*' . __( 'Prevent User Creation', 'secupress' ),
+							'row-move-login_activated'                        => __( 'Move Login Page', 'secupress' ),
+							'row-login-protection_type_limitloginattempts'    => __( 'Limit Login Attempts', 'secupress' ),
+							'row-login-protection_type_bannonexistsuser'      => __( 'Ban Non Existing Users', 'secupress' ),
+							'row-login-protection_sessions_control'           => '*' . __( 'Session Control', 'secupress' ),
+							'row-login-protection_login_errors'               => __( 'Login Errors', 'secupress' ),
+							'row-double-auth_type'                            => '*' . __( '2 Factors Authentication', 'secupress' ),
+							'row-captcha_activate'                            => __( 'Captcha', 'secupress' ),
+							'row-password-policy_password_expiration'         => '*' . __( 'Password Lifespan', 'secupress' ),
+							'row-password-policy_strong_passwords'            => '*' . __( 'Strong Password', 'secupress' ),
+							'row-blacklist-logins_activated'                  => __( 'Disallowed Usernames', 'secupress' ),
+							'row-blacklist-logins_stop-user-enumeration'      => __( 'Forbid User Enumeration', 'secupress' ),
+							'row-blacklist-logins_prevent-user-creation'      => '*' . __( 'Forbid User Creation', 'secupress' ),
+							'row-blacklist-logins_default-role-activated' => __( 'Lock Default Role', 'secupress' ),
+							'row-blacklist-logins_membership-activated'   => __( 'Lock Membership', 'secupress' ),
+							'row-blacklist-logins_admin-email-activated'      => __( 'Lock Admin Email', 'secupress' ),
 						]
 		],
 		'plugins-themes'  => [
@@ -59,19 +61,18 @@ function secupress_get_modules() {
 			'dashicon'    => 'admin-plugins',
 			'summaries'   => [
 				'small'   => __( 'Check your plugins &amp; themes', 'secupress' ),
-				'normal'  => __( 'Detect themes and plugins known as vulnerable to avoid hackings. Also, manage installation and activation rights on them.', 'secupress' ),
 			],
 			'submodules'  => [
-							'uploads_activate'           => __( 'Disallow .zip uploads', 'secupress' ),
-							'plugins_installation'       => __( 'Plugins Installation', 'secupress' ),
-							'plugins_activation'         => '*' . __( 'Plugins Activation', 'secupress' ),
-							'plugins_deactivation'       => '*' . __( 'Plugins Deactivation', 'secupress' ),
-							'plugins_deletion'           => '*' . __( 'Plugins Deletion', 'secupress' ),
-							'plugins_detect_bad_plugins' => '*' . __( 'Detect Bad Plugins', 'secupress' ),
-							'themes_installation'        => __( 'Themes Installation', 'secupress' ),
-							'themes_activation'          => '*' . __( 'Themes Switch', 'secupress' ),
-							'themes_deletion'            => '*' . __( 'Themes Deletion', 'secupress' ),
-							'themes_detect_bad_themes'   => '*' . __( 'Detect Bad Themes', 'secupress' ),
+							'row-uploads_activate'           => __( 'Disallow .zip uploads', 'secupress' ),
+							'row-plugins_installation'       => __( 'Plugins Installation', 'secupress' ),
+							'row-plugins_activation'         => '*' . __( 'Plugins Activation', 'secupress' ),
+							'row-plugins_deactivation'       => '*' . __( 'Plugins Deactivation', 'secupress' ),
+							'row-plugins_deletion'           => '*' . __( 'Plugins Deletion', 'secupress' ),
+							'row-plugins_detect_bad_plugins' => '*' . __( 'Detect Bad Plugins', 'secupress' ),
+							'row-themes_installation'        => __( 'Themes Installation', 'secupress' ),
+							'row-themes_activation'          => '*' . __( 'Themes Switch', 'secupress' ),
+							'row-themes_deletion'            => '*' . __( 'Themes Deletion', 'secupress' ),
+							'row-themes_detect_bad_themes'   => '*' . __( 'Detect Bad Themes', 'secupress' ),
 						]
 		],
 		'wordpress-core'  => [
@@ -80,13 +81,20 @@ function secupress_get_modules() {
 			'dashicon'    => 'wordpress',
 			'summaries'   => [
 				'small'   => __( 'Core Tweaking', 'secupress' ),
-				'normal'  => __( 'WordPress can be tweaked in so many ways. But are you using the right ones? Let\'s see!', 'secupress' ),
 			],
 			'submodules'  => [
-							'auto-update_minor'                     => __( 'Minor Updates', 'secupress' ),
-							'auto-update_major'                     => __( 'Major Updates', 'secupress' ),
-							'wp-config_disallow_file_edit'          => __( 'Disallow File Edit', 'secupress' ),
-							'wp-config_disallow_unfiltered_uploads' => __( 'Disallow Unfiltered Uploads', 'secupress' ),
+							'row-auto-update_minor'                     => __( 'Minor Updates', 'secupress' ),
+							'row-auto-update_major'                     => __( 'Major Updates', 'secupress' ),
+							'module-database'                           => '*' . __( 'Database Prefix', 'secupress' ),
+							'row-wp-config_debugging'                   => __( 'Correct DEBUG Settings', 'secupress' ),
+							'row-wp-config_locations'                   => __( 'Disallow URL Relocation', 'secupress' ),
+							'row-wp-config_fs_chmod'                    => __( 'Correct Files Rights', 'secupress' ),
+							'row-wp-config_disallow_file_edit'          => __( 'Disallow File Edit', 'secupress' ),
+							'row-wp-config_disallow_unfiltered_uploads' => __( 'Disallow Unfiltered Uploads', 'secupress' ),
+							'row-wp-config_dieondberror'                => __( 'Disallow DB Error Display', 'secupress' ),
+							'row-wp-config_repair'                      => __( 'Disallow DB Repair Page', 'secupress' ),
+							'row-wp-config_cookiehash'                  => __( 'Correct WP Cookie Name', 'secupress' ),
+							'row-wp-config_saltkeys'                    => __( 'Correct WP Security Keys', 'secupress' ),
 						]
 		],
 		'sensitive-data'  => [
@@ -95,18 +103,17 @@ function secupress_get_modules() {
 			'dashicon'    => 'lock',
 			'summaries'   => [
 				'small'   => __( 'Keep your data safe', 'secupress' ),
-				'normal'  => __( 'Preserve your data and avoid losing your content in case of attack.', 'secupress' ),
 			],
 			'submodules'  => [
-							'wp-endpoints_xmlrpc_block-all'     => __( 'XML-RPC Management', 'secupress' ),
-							'content-protect_blackhole'         => __( 'Blackhole', 'secupress' ),
-							'content-protect_hotlink'           => '*' . __( 'Anti Hotlink', 'secupress' ),
-							'content-protect_directory-listing' => __( 'Directory Listing', 'secupress' ),
-							'content-protect_php-disclosure'    => __( 'PHP Disclosure', 'secupress' ),
-							'content-protect_php-version'       => __( 'PHP Version Disclosure', 'secupress' ),
-							'content-protect_wp-version'        => __( 'PHP WP Disclosure', 'secupress' ),
-							'content-protect_bad-url-access'    => __( 'Bad URL Access', 'secupress' ),
-							'content-protect_readmes'           => __( 'Protect Readme Files', 'secupress' ),
+							'row-wp-endpoints_xmlrpc_block-all'     => __( 'XML-RPC Management', 'secupress' ),
+							'row-content-protect_blackhole'         => __( 'Blackhole', 'secupress' ),
+							'row-content-protect_hotlink'           => '*' . __( 'Anti Hotlink', 'secupress' ),
+							'row-content-protect_directory-listing' => __( 'Directory Listing', 'secupress' ),
+							'row-content-protect_php-disclosure'    => __( 'PHP Disclosure', 'secupress' ),
+							'row-content-protect_php-version'       => __( 'PHP Version Disclosure', 'secupress' ),
+							'row-content-protect_wp-version'        => __( 'PHP WP Disclosure', 'secupress' ),
+							'row-content-protect_bad-url-access'    => __( 'Bad URL Access', 'secupress' ),
+							'row-content-protect_readmes'           => __( 'Protect Readme Files', 'secupress' ),
 						]
 		],
 		'firewall'        => [
@@ -115,16 +122,15 @@ function secupress_get_modules() {
 			'dashicon'    => 'shield',
 			'summaries'   => [
 				'small'   => __( 'Block bad requests', 'secupress' ),
-				'normal'  => __( 'Malicious requests are common, unfortunatly. All malicious incoming requests will be checked and quietly blocked.', 'secupress' ),
 			],
 			'submodules'  => [
-							'bbq-headers_user-agents-header'     => __( 'Block Bad User Agents', 'secupress' ),
-							'bbq-headers_request-methods-header' => __( 'Block Bad Request Methods', 'secupress' ),
-							'bbq-headers_fake-google-bots'       => __( 'Block Fake SEO Bots', 'secupress' ),
-							'bbq-url-content_bad-contents'       => __( 'Block Bad Content', 'secupress' ),
-							'bbq-url-content_bad-sqli-scan'      => __( 'Block SQLi Scan Attempts', 'secupress' ),
-							'bbq-url-content_ban-404-php'        => __( 'Block 404 requests on PHP files', 'secupress' ),
-							'geoip-system_type_-1'               => '*' . __( 'GeoIP Management', 'secupress' ),
+							'row-bbq-headers_user-agents-header'     => __( 'Block Bad User Agents', 'secupress' ),
+							'row-bbq-headers_request-methods-header' => __( 'Block Bad Request Methods', 'secupress' ),
+							'row-bbq-headers_fake-google-bots'       => __( 'Block Fake SEO Bots', 'secupress' ),
+							'row-bbq-headers_bad-referer-urls'       => __( 'Block Bad Referers', 'secupress' ),
+							'row-bbq-url-content_bad-contents'       => __( 'Block Bad Content', 'secupress' ),
+							'row-bbq-url-content_ban-404-php'        => __( 'Block 404 requests on PHP files', 'secupress' ),
+							'module-geoip-system'                    => '*' . __( 'GeoIP Management', 'secupress' ),
 						]
 		],
 		'antispam'        => [
@@ -133,14 +139,22 @@ function secupress_get_modules() {
 			'dashicon'    => 'email-alt',
 			'summaries'   => [
 				'small'   => __( 'Get rid of bad bots', 'secupress' ),
-				'normal'  => __( 'Traffic done by bot represents about 60% of the internet. Spams are done by these bots. Don\'t let them do that!', 'secupress' ),
 			],
-			'submodules'  => [
-							'antispam_antispam_fightspam'       => __( 'Anti Spam Rules', 'secupress' ),
-							'antispam_mark-as_spam'             => __( 'Mark Spam As', 'secupress' ),
-							'antispam_block-shortcodes'         => __( 'Block Shortcodes', 'secupress' ),
-							'antispam_better-blacklist-comment' => __( 'Better Comments Blacklist', 'secupress' ),
-							'antispam_forbid-pings-trackbacks'  => __( 'Forbid Pingbacks & Trackbacks', 'secupress' ),
+		],
+		'file-system'     => [
+			'title'       => __( 'Malware Scan', 'secupress' ),
+			'icon'        => 'file-system',
+			'dashicon'    => 'portfolio',
+			'summaries'   => [
+				'small'   => __( 'Clean your files &amp; DB', 'secupress' ),
+				'normal'  => __( 'Check file permissions, run monitoring and antivirus on your installation to verify file integrity.', 'secupress' ),
+			],
+			'with_form'      => false,
+			'with_reset_box' => false,
+			'mark_as_pro'    => $should_be_pro,
+			'submodules'     => [
+							''                           => __( 'File & DB Scanner', 'secupress' ),
+							'module-bad-file-extensions' => __( 'Bad File Extensions', 'secupress' ),
 						]
 		],
 		'logs'            => [
@@ -149,31 +163,30 @@ function secupress_get_modules() {
 			'dashicon'    => 'welcome-write-blog',
 			'summaries'   => [
 				'small'   => __( 'Monitor everything', 'secupress' ),
-				'normal'  => __( 'Keep an eye on what happened on your website at any time. Also, control banned IPs from our modules here.', 'secupress' ),
 			],
 			'with_form'      => false,
 			'with_reset_box' => false,
 			'submodules'     => [
-							'secupress-banned-ips-list'  => __( 'Blacklist IPs', 'secupress' ),
-							'banned-ips_whitelist'       => __( 'Whitelist IPs', 'secupress' ),
-							'logs_action-logs-activated' => __( 'Action Logs Activation', 'secupress' ),
-							'logs_404-logs-activated'    => __( '404 Logs Activation', 'secupress' ),
+							'row-secupress-banned-ips-list'  => __( 'Disallow IPs', 'secupress' ),
+							'row-banned-ips_whitelist'       => __( 'Allow IPs', 'secupress' ),
+							'row-logs_action-logs-activated' => __( 'Action Logs Activation', 'secupress' ),
+							'row-logs_404-logs-activated'    => __( '404 Logs Activation', 'secupress' ),
 						]
 		],
-		'file-system'     => [
-			'title'       => __( 'Malware Scan', 'secupress' ),
-			'icon'        => 'file-system',
-			'dashicon'    => 'portfolio',
+		'addons'          => [
+			'title'       => __( 'Add-ons', 'secupress' ),
+			'icon'        => 'cogs',
+			'dashicon'    => 'admin-tools',
 			'summaries'   => [
-				'small'   => __( 'Permissions &amp; Antivirus', 'secupress' ),
-				'normal'  => __( 'Check file permissions, run monitoring and antivirus on your installation to verify file integrity.', 'secupress' ),
+				'small'   => __( 'Improve more', 'secupress' ),
+				'normal'  => __( 'More security with our partners.', 'secupress' ),
 			],
 			'with_form'      => false,
 			'with_reset_box' => false,
-			'mark_as_pro'    => $should_be_pro,
 			'submodules'     => [
-							'secupress-settings-module_file-system--file-scanner' => __( 'File Scanner', 'secupress' ),
-							'bad-file-extensions_activated'                       => __( 'Bad File Extensions', 'secupress' ),
+							'row-module-monitoring' => __( 'Monitoring', 'secupress' ),
+							'row-module-logs'       => __( 'Logs', 'secupress' ),
+							'row-module-backup'     => __( 'Backups', 'secupress' ),
 						]
 		],
 		'backups'         => [
@@ -182,13 +195,12 @@ function secupress_get_modules() {
 			'dashicon'    => 'media-archive',
 			'summaries'   => [
 				'small'   => __( 'Never lose anything', 'secupress' ),
-				'normal'  => __( 'Reduce the risks of losing your content in an attack by backing up your database and files.', 'secupress' ),
 			],
 			'with_form'      => false,
 			'with_reset_box' => false,
 			'mark_as_pro'    => $should_be_pro,
 			'submodules'     => [
-							'backups-storage_location_local'                    => __( 'Backup Storage', 'secupress' ),
+							'row-backups-storage_location_local'                => __( 'Backup Storage', 'secupress' ),
 							'secupress-settings-module_backups--backup-history' => __( 'Backup History', 'secupress' ),
 							'secupress-settings-module_backups--backup-db'      => __( 'Database Backup', 'secupress' ),
 							'secupress-settings-module_backups--backup-file'    => __( 'Files Backup', 'secupress' ),
@@ -200,14 +212,13 @@ function secupress_get_modules() {
 			'dashicon'    => 'megaphone',
 			'summaries'   => [
 				'small'   => __( 'React quickly in case of attack', 'secupress' ),
-				'normal'  => __( 'Being alerted of some important events will help you to react quickly in case of possible attacks.', 'secupress' ),
 			],
 			'with_reset_box' => false,
 			'mark_as_pro'    => $should_be_pro,
 			'submodules'     => [
-							'module-notifications'          => __( 'Email Notifications', 'secupress' ),
-							'event-alerts_activated'    => __( 'Events Alerts', 'secupress' ),
-							'daily-reporting_activated' => __( 'Daily Reports', 'secupress' ),
+							'row-module-notifications'      => __( 'Notifications', 'secupress' ),
+							'row-event-alerts_activated'    => __( 'Events Alerts', 'secupress' ),
+							'row-daily-reporting_activated' => __( 'Daily Reports', 'secupress' ),
 						]
 		],
 		'schedules'       => [
@@ -216,7 +227,6 @@ function secupress_get_modules() {
 			'dashicon'    => 'calendar-alt',
 			'summaries'   => [
 				'small'   => __( 'Automate all your tasks', 'secupress' ),
-				'normal'  => sprintf( __( 'Let %s scan your website when you are away by using recurent scans.', 'secupress' ), SECUPRESS_PLUGIN_NAME ),
 			],
 			'mark_as_pro'    => $should_be_pro,
 			'with_reset_box' => false,
@@ -729,7 +739,7 @@ function secupress_add_module_rules_or_notice( $args ) {
 
 	// Server not supported.
 	$message  = sprintf( __( '%s:', 'secupress' ), $title ) . ' ';
-	$message .= __( 'It seems your server does not use <strong>Apache</strong>, <strong>Nginx</strong>, nor <strong>IIS7</strong>. This module won\'t work.', 'secupress' );
+	$message .= __( 'It seems your server does not use <strong>Apache</strong>, <strong>Nginx</strong>, nor <strong>IIS7</strong>. This module won’t work.', 'secupress' );
 	secupress_add_settings_error( 'general', 'unknown_os', $message, 'error' );
 	return false;
 }

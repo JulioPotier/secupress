@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Login Errors Disclose scan class.
@@ -80,7 +80,7 @@ class SecuPress_Scan_Login_Errors_Disclose extends SecuPress_Scan implements Sec
 	 * @return (string)
 	 */
 	public static function get_docs_url() {
-		return __( 'http://docs.secupress.me/article/129-login-error-message-scan', 'secupress' );
+		return __( 'https://docs.secupress.me/article/129-login-error-message-scan', 'secupress' );
 	}
 
 

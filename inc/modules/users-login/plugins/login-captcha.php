@@ -7,7 +7,7 @@
  * Version: 1.2
  */
 
-defined( 'SECUPRESS_VERSION' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
 
 add_action( 'login_form',          'secupress_add_captcha_on_login_form' );
 add_action( 'register_form',       'secupress_add_captcha_on_login_form' );
@@ -141,7 +141,7 @@ function secupress_manage_captcha( $raw_user, $username ) {
 		return $raw_user;
 	}
 
-	$fallback_wp_error = new WP_Error( 'authentication_failed', __( '<strong>ERROR</strong>: The human verification is incorrect.', 'secupress' ), __FUNCTION__ );
+	$fallback_wp_error = new WP_Error( 'authentication_failed', __( '<strong>Error</strong>: The human verification is incorrect.', 'secupress' ), __FUNCTION__ );
 
 	$captcha_key  = isset( $_POST['captcha_key'] ) ? $_POST['captcha_key'] : null; // WPCS: CSRF ok.
 	$captcha_keys = get_site_option( 'secupress_captcha_keys', array() );
@@ -205,7 +205,7 @@ function secupress_manage_registration_captcha( $errors ) {
 		time() > $captcha_keys[ $captcha_key ] + 2 * MINUTE_IN_SECONDS ||
 		time() < $captcha_keys[ $captcha_key ] + 2
 	) {
-		$errors->add( 'authentication_failed', __( '<strong>ERROR</strong>: The human verification is incorrect.', 'secupress' ), __FUNCTION__ );
+		$errors->add( 'authentication_failed', __( '<strong>Error</strong>: The human verification is incorrect.', 'secupress' ), __FUNCTION__ );
 		$running = false;
 		return $errors;
 	}
@@ -263,7 +263,7 @@ function secupress_manage_ms_registration_captcha( $result ) {
 		time() > $captcha_keys[ $captcha_key ] + 2 * MINUTE_IN_SECONDS ||
 		time() < $captcha_keys[ $captcha_key ] + 2
 	) {
-		$result['errors']->add( 'authentication_failed', __( '<strong>ERROR</strong>: The human verification is incorrect.', 'secupress' ), __FUNCTION__ );
+		$result['errors']->add( 'authentication_failed', __( '<strong>Error</strong>: The human verification is incorrect.', 'secupress' ), __FUNCTION__ );
 		$running = false;
 		return $result;
 	}

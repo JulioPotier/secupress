@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /** --------------------------------------------------------------------------------------------- */
 /** MAKE SURE OUR LISTS ARE NOT EMPTY: FILTER OUTPUT ============================================ */
@@ -32,7 +32,7 @@ function secupress_firewall_bbq_headers_user_agents_list_default() {
 function secupress_firewall_bbq_url_content_bad_contents_list_default() {
 	// We cut some words to prevent being tagged as "bad" file from scanners.
 	return  apply_filters( 'secupress.bad_url_contents.list',
-			'AND%201=, information_schema, UNI'.'ON%20SEL'.'ECT, UNI'.'ON%20ALL%20SEL'.'ECT, ev'./**/'al(, wp-config, %%30%30, GLOBALS[, .ini, REQUEST[, et'.'c/pas'.'swd, ba'.'se'.'64_, javascript:, ../, 127.0.0.1, inpu'.'t_file' // v1.0
+			'AND%201=, information_schema, UNI'.'ON%20SEL'.'ECT, UNI'.'ON%20ALL%20SEL'.'ECT, ev'./**/'al(, wp-config.php, %%30%30, GLOBALS[, .ini, REQUEST[, et'.'c/pas'.'swd, ba'.'se'.'64_, javascript:, ../, 127.0.0.1, inpu'.'t_file' // v1.0
 			// . 'temp00, 70bex, configbak, dom'.'pdf, filene'.'tworks, ja'.'hat, kc'.'rew, keywor'.'dspy, mob'.'iquo, nes'.'sus, rac'.'rew, loc'.'us7, bi'.'trix, msoffice, child'.'_terminate, con'.'cat, allow_'.'url_f'.'open, allow_'.'url_in'.'clude, auto_pre'.'pend_file, blex'.'bot, browser'.'sploit, c9'.'9, disab'.'le_function, docume'.'nt_root, ela'.'stix, encode'.'uricom, fclose, fgets, fputs, fread, fsbuff, fsockopen, gethostbyname, gra'.'blogin, hme'.'i7, open_basedir, passthru, popen, proc_open, quick'.'brute, safe'.'_mode, shell_exec, su'.'x0r, xer'.'tive, <script, fopen, .php.inc, mos'.'config, mkdir, rmdir, chdir, ckf'.'inder, full'.'click, fcke'.'ditor, timt'.'humb, abso'.'lute_dir, abso'.'lute_path, ro'.'ot_dir, ro'.'ot_path, base'.'dir, base'.'path, loop'.'back, %00, 0x00, %0d%0a' // v1.4.9
 			);
 }
@@ -72,7 +72,7 @@ function secupress_firewall_bbq_referer_content_bad_contents_list_default() {
  * See secupress_block_bad_url_contents
  *
  * @since 1.4.9
- * @author Juio Potier
+ * @author Julio Potier
  * @param (string) $function Short string to be concat to form the callback
  * @param (string) $server The index in $_SERVER to be checked
  * @param (string) $block_id Which code use if we block
@@ -117,8 +117,10 @@ add_filter( 'secupress_block_id', 'secupress_firewall_block_id' );
 /**
  * Translate block IDs into understandable things.
  *
- * @since 1.1.4
+ * @since 2.0   BRU
  * @since 1.4.9 BHC, BRC
+ * @author Julio Potier
+ * @since 1.1.4
  * @author Grégory Viguier
  *
  * @param (string) $module The related module.
@@ -129,8 +131,9 @@ function secupress_firewall_block_id( $module ) {
 	$block_ids = array(
 		// Antispam.
 		'AAU'  => __( 'Antispam, Anti-Usurpation', 'secupress' ),
+		// Firewall.
+		'BRU'  => __( 'Bad Referer URL', 'secupress' ),
 		// URL Contents.
-		'BUC'  => __( 'Bad URL Contents', 'secupress' ),
 		'BHC'  => __( 'Bad Host Contents', 'secupress' ),
 		'BRC'  => __( 'Bad Referer Contents', 'secupress' ),
 		// GeoIP.
@@ -139,7 +142,7 @@ function secupress_firewall_block_id( $module ) {
 		'RMHM' => __( 'Bad Request Method', 'secupress' ),
 		// User-Agent.
 		'UAHT' => __( 'User-Agent With HTML Tags', 'secupress' ),
-		'UAHB' => __( 'User-Agent Blacklisted', 'secupress' ),
+		'UAHB' => __( 'User-Agent Disallowed', 'secupress' ),
 	);
 
 	return isset( $block_ids[ $module ] ) ? $block_ids[ $module ] : $module;

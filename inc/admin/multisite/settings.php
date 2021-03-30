@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /** --------------------------------------------------------------------------------------------- */
 /** MULTISITE SETTINGS API ====================================================================== */
@@ -19,7 +19,11 @@ function secupress_network_option_update_filter( $options ) {
 	$whitelist = secupress_cache_data( 'new_whitelist_network_options' );
 
 	if ( is_array( $whitelist ) ) {
-		$options = add_option_whitelist( $whitelist, $options );
+		if ( function_exists( 'add_allowed_options' ) ) { // WP 5.5
+			$options = add_allowed_options( $whitelist, $options );
+		} else {
+			$options = add_option_whitelist( $whitelist, $options );
+		}
 	}
 
 	return $options;
@@ -63,7 +67,7 @@ function secupress_update_network_option_on_submit() {
 	$whitelist_options = apply_filters( 'secupress_whitelist_network_options', array() );
 
 	if ( ! isset( $whitelist_options[ $option_group ] ) ) {
-		wp_die( __( '<strong>ERROR</strong>: options page not found.' ) );
+		wp_die( __( '<strong>Error</strong>: options page not found.', 'secupress' ) );
 	}
 
 	$options = $whitelist_options[ $option_group ];
@@ -149,7 +153,7 @@ function secupress_create_subsite_menu() {
 	// Display a notice for Administrators.
 	if ( 'admin.php' !== $pagenow || empty( $_GET['page'] ) || SECUPRESS_PLUGIN_SLUG . '_scanners' !== $_GET['page'] ) {
 		/** Translators: 1 is an URL, 2 is the plugin name. */
-		$message = sprintf( __( 'Some security issues must be fixed, please visit <a href="%1$s">%2$s\'s page</a>.', 'secupress' ), esc_url( admin_url( 'admin.php?page=' . SECUPRESS_PLUGIN_SLUG . '_scanners' ) ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
+		$message = sprintf( __( 'Some security issues must be fixed, please visit <a href="%1$s">%2$s’s page</a>.', 'secupress' ), esc_url( admin_url( 'admin.php?page=' . SECUPRESS_PLUGIN_SLUG . '_scanners' ) ), '<strong>' . SECUPRESS_PLUGIN_NAME . '</strong>' );
 		secupress_add_notice( $message, null, 'subsite-security-issues' );
 	} else {
 		// The user is on the plugin page: make sure to not display the notice.

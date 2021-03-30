@@ -451,6 +451,18 @@ button.secupress-activated .secupress-toggle-button.hidden {
 }
 
 /* Disabled */
+select + .secupress_disabled,
+input + .secupress_disabled{
+	color:#aaa;
+	display:none;
+	font-style:italic;
+	left:-145px;
+	position:relative;
+}
+select:hover + .secupress_disabled,
+input:hover + .secupress_disabled{
+	display:inline;
+}
 .secupress-checkbox:disabled:not(:checked) + label:after,
 .secupress-checkbox:disabled:checked + label:after,
 .secupress-checkbox:disabled:not(:checked) + .label-text:after,
@@ -902,13 +914,14 @@ body[class*="secupress"] .sweet-overlay {
 	margin-top: .5em;
 	font-size: 1.2em;
 }
+.secupress-button-small a,
 .secupress-rateus-link a {
 	text-decoration: none;
 }
 .secupress-lb-name {
 	padding: 0 20px;
 	text-align: left;
-	font-family: 'Oswald';
+	font-family: 'Arial Narrow';
 }
 .secupress-header-mini .secupress-lb-name {
 	padding: 0 30px 0 5px;
@@ -953,6 +966,12 @@ body[class*="secupress"] .sweet-overlay {
 }
 .secupress-settings-section-header {
 	padding-bottom: 15px;
+	border-bottom: 2px solid #2BCDC1;
+}
+.secupress-tab-content.secupress-tab-content-addons .secupress-settings-section-header{
+	border-bottom: none;
+}
+.secupress-tab-content.secupress-tab-content-addons .secupress-settings-section{
 	border-bottom: 2px solid #2BCDC1;
 }
 .secupress-settings-section-title {
@@ -1036,13 +1055,37 @@ label.secupress-setting-row-title {
 	margin-bottom: 1em;
 }
 
+.secupress-setting-content-col .description.help {
+	padding-left: 5px;
+	border-left: 3px solid #26B3A9;
+}
+.secupress-setting-content-col .description.help + ul {
+	padding: 5px 0 0 3px;
+	border-left: 3px solid #26B3A9;
+	margin: -5px 0 5px;
+	color: #646970;
+	font-size: 13px;
+	font-weight: 400;
+}
+.secupress-setting-content-col .description.help + ul li {
+	list-style: circle;
+	list-style-position: inside;
+}
+.secupress-setting-content-col .description.warning {
+	padding-left: 5px;
+	border-left: 3px solid #CB234F;
+}
+.secupress-setting-content-col .description.desc {
+	padding-left: 5px;
+	border-left: 3px solid #F2F2F6;
+}
 .description.desc {
 	padding-left: 32px;
 	color: #5A626F;
+	font-style: italic;
 }
-.fieldtype-roles .description.desc {
-	padding-left: 0;
-	margin-top: 1.5em;
+.fieldtype-radios p {
+	line-height: 2.3em;
 }
 .secupress-setting-row em {
 	padding-left: 5px;

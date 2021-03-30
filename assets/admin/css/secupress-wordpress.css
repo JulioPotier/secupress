@@ -715,7 +715,7 @@ button.secupress-virgin {
 
 .secupress-logo-block p {
 	margin: 0;
-	font-weight: bold;
+	font-weight: 400;
 }
 
 .secupress-inline-form {
@@ -807,16 +807,16 @@ span.secupress-get-pro-version {
 	content: "";
 	display: block;
 }
-.secupress-site-health-progress-count {
-	position: absolute;
-	display: block;
-	height: 80px;
-	width: 80px;
-	left: 50%;
-	top: 50%;
-	margin-top: -40px;
-	margin-left: -40px;
-	border-radius: 100%;
-	line-height: 6.3;
-	font-size: 2em;
+
+.secupress_disable_select{
+	color:#aaa;
+	display:none;
+	font-style:italic;
+}
+*:hover + .secupress_disable_select{
+	display:inline;
+}
+
+.secupress_disable_select + p.description {
+	display:none;
 }

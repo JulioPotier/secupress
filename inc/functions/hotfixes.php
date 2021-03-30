@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 add_filter( 'wp_update_attachment_metadata', 'secupress_fix_wp_496_1' );
 /**

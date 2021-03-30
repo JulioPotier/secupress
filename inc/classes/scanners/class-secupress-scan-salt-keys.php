@@ -1,12 +1,12 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin&#8217; uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Salt Keys scan class.
  *
  * @package SecuPress
  * @subpackage SecuPress_Scan
- * @since 1.0
+ * @since 2.0
  */
 class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_Interface {
 
@@ -17,7 +17,7 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 	 *
 	 * @var (string)
 	 */
-	const VERSION = '1.2';
+	const VERSION = '2.0';
 
 
 	/** Properties. ============================================================================= */
@@ -39,8 +39,8 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 	 */
 	protected function init() {
 		$this->title    = __( 'Check if the security keys are correctly set.', 'secupress' );
-		$this->more     = __( 'WordPress provides 8 security keys, each key has its own purpose. These keys must be set with long random strings: don\'t keep the default value, don\'t store them in the database, don\'t hardcode them.', 'secupress' );
-		$this->more_fix = __( 'Create a <a href="https://codex.wordpress.org/Must_Use_Plugins">must-use plugin</a> to replace your actual keys stored in <code>wp-config.php</code> or in your database to keep them safer.', 'secupress' );
+		$this->more     = __( 'WordPress provides 8 security keys, each key has its own purpose. These keys must be set with long random strings: don’t keep the default value, don’t store them in the database, don’t hardcode them.', 'secupress' );
+		$this->more_fix = sprintf( __( 'Create a <a href="https://codex.wordpress.org/Must_Use_Plugins">must-use plugin</a> to replace your actual keys stored in <code>%s</code> or in your database to keep them safer.', 'secupress' ), secupress_get_wpconfig_filename() );
 	}
 
 
@@ -59,7 +59,7 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 			0   => __( 'All security keys are properly set.', 'secupress' ),
 			// "warning"
 			100 => __( 'This fix is <strong>pending</strong>, please reload the page to apply it now.', 'secupress' ),
-			101 => __( 'The <code>wp-config.php</code> file could not be located.', 'secupress' ),
+			101 => sprintf( __( 'The <code>%s</code> file could not be located.', 'secupress' ), secupress_get_wpconfig_filename() ),
 			// "bad"
 			200 => __( 'The following security keys are not set correctly:', 'secupress' ),
 			201 => _n_noop( '<strong>&middot; Not Set:</strong> %s.',       '<strong>&middot; Not Set:</strong> %s.',       'secupress' ),
@@ -68,7 +68,7 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 			204 => _n_noop( '<strong>&middot; Hardcoded:</strong> %s.',     '<strong>&middot; Hardcoded:</strong> %s.',     'secupress' ),
 			205 => _n_noop( '<strong>&middot; From DB:</strong> %s.',       '<strong>&middot; From DB:</strong> %s.',       'secupress' ),
 			// "cantfix"
-			300 => __( 'The <code>wp-config.php</code> file is not writable, security keys could not be changed.', 'secupress' ),
+			300 => sprintf( __( 'The <code>%s</code> file is not writable, security keys could not be changed.', 'secupress' ), secupress_get_wpconfig_filename() ),
 			301 => __( 'The security keys fix has been applied but there is still keys that could not be modified so far.', 'secupress' ),
 		);
 
@@ -90,7 +90,7 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 	 * @return (string)
 	 */
 	public static function get_docs_url() {
-		return __( 'http://docs.secupress.me/article/92-security-keys-scan', 'secupress' );
+		return __( 'https://docs.secupress.me/article/92-security-keys-scan', 'secupress' );
 	}
 
 
@@ -121,14 +121,14 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 
 		// Get code only from `wp-config.php`.
 		$wp_config_content = php_strip_whitespace( $wpconfig_filepath );
-		$keys              = $this->get_keys();
-		$bad_keys          = array(
-			201 => array(),
-			202 => array(),
-			203 => array(),
-			204 => array(),
-			205 => array(),
-		);
+		$keys              = secupress_get_db_salt_keys();
+		$bad_keys          = [
+			201 => [],
+			202 => [],
+			203 => [],
+			204 => [],
+			205 => [],
+		];
 
 		preg_match_all( '/' . implode( '|', $keys ) . '/', $wp_config_content, $matches );
 
@@ -234,23 +234,30 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 	public function fix() {
 		global $current_user;
 
-		$is_wpconfig_writable = secupress_is_wpconfig_writable();
+		secupress_delete_db_salt_keys();
 
-		if ( defined( 'SECUPRESS_SALT_KEYS_ACTIVE' ) ) {
+		if ( $present > 0 ) {
+			// good
+			if ( $deleted === $present ) {
+				$this->add_fix_message( 1 );
+			} else {
+			// cantfix
+				$this->add_fix_message( 302 );
+			}
+		}
+
+		if ( defined( 'SECUPRESS_SALT_KEYS_MODULE_ACTIVE' ) ) {
 			// "cantfix"
 			$this->add_fix_message( 301 );
 		}
 
-		if ( is_null( $is_wpconfig_writable ) ) {
-			// "warning"
-			$this->add_fix_message( 101 );
-		} elseif ( ! $is_wpconfig_writable ) {
+		if ( ! secupress_is_wpconfig_writable() ) {
 			// "cantfix"
 			$this->add_fix_message( 300 );
 		}
 
 		if ( isset( $current_user->ID ) ) {
-			secupress_set_site_transient( 'secupress-add-salt-muplugin', array( 'ID' => $current_user->ID, 'username' => $current_user->user_login ) );
+			secupress_activate_submodule( 'wordpress-core', 'wp-config-constant-saltkeys' );
 			// "warning"
 			$this->add_fix_message( 100 );
 		}
@@ -261,17 +268,4 @@ class SecuPress_Scan_Salt_Keys extends SecuPress_Scan implements SecuPress_Scan_
 		return parent::fix();
 	}
 
-
-	/** Tools. ================================================================================== */
-
-	/**
-	 * Get salt keys.
-	 *
-	 * @since 1.0
-	 *
-	 * @return (array)
-	 */
-	protected static function get_keys() {
-		return array( 'AUTH_KEY', 'SECURE_AUTH_KEY', 'LOGGED_IN_KEY', 'NONCE_KEY', 'AUTH_SALT', 'SECURE_AUTH_SALT', 'LOGGED_IN_SALT', 'NONCE_SALT' );
-	}
 }

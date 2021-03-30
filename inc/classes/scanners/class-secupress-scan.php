@@ -1,5 +1,5 @@
 <?php
-defined( 'ABSPATH' ) or die( 'Cheatin\' uh?' );
+defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 
 /**
  * Base scan interface.
@@ -226,7 +226,7 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 * @return (string)
 	 */
 	public static function get_docs_url() {
-		return __( 'http://docs.secupress.me/', 'secupress' );
+		return __( 'https://docs.secupress.me/', 'secupress' );
 	}
 
 	/**
@@ -1122,6 +1122,14 @@ abstract class SecuPress_Scan extends SecuPress_Singleton implements SecuPress_S
 	 *                       Return a WP_Error object if the sandbox creation fails or if the HTTP request fails.
 	 */
 	final protected function htaccess_success_in_sandbox( $content ) {
+		/**
+		* Allows to bypass the sandbox
+		* @param (bool) true by default, false to use it.
+		* @param (string) A context.
+		*/
+		if ( false === apply_filters( 'secupress.use_sandbox', true, 'htaccess' ) ) {
+			return true;
+		}
 		$wp_filesystem = secupress_get_filesystem();
 		$folder_name   = 'secupress-sandbox-' . uniqid();
 		$folder_path   = ABSPATH . '/' . $folder_name;
