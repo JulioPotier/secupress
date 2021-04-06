@@ -8,11 +8,21 @@ defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 /**
 * SecuPress_Scan_Easy_Login
 */
+
 // https://plugins.svn.wordpress.org/miniorange-2-factor-authentication/trunk/miniorange_2_factor_settings.php .
 add_filter( 'secupress.scan.SecuPress_Scan_Easy_Login.activated', 'secupress_3rd_compat__miniorange_2_factor_authentication' );
 function secupress_3rd_compat__miniorange_2_factor_authentication( $activated ) {
 	if ( ! $activated && defined( 'MO2F_VERSION' ) ) {
 		return 'Miniorange 2 Factor Authentication';
+	}
+	return $activated;
+}
+
+// https://plugins.svn.wordpress.org/jetpack/trunk/modules/sso.php .
+add_filter( 'secupress.scan.SecuPress_Scan_Easy_Login.activated', 'secupress_3rd_compat__jetpack_sso' );
+function secupress_3rd_compat__jetpack_sso( $activated ) {
+	if ( class_exists( 'Jetpack' ) && Jetpack::is_active() && Jetpack::is_module_active( 'sso' ) ) {
+		return 'Jetpack Secure Sign On';
 	}
 	return $activated;
 }

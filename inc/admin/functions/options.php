@@ -64,22 +64,3 @@ function secupress_update_module_options( $values, $module = false ) {
 
 	update_site_option( "secupress_{$module}_settings", $options );
 }
-
-
-/**
- * Get the current module.
- *
- * @since 1.0
- *
- * @return (string).
- */
-function secupress_get_current_module() {
-	if ( ! class_exists( 'SecuPress_Settings' ) ) {
-		secupress_require_class( 'settings' );
-	}
-	if ( ! class_exists( 'SecuPress_Settings_Modules' ) ) {
-		secupress_require_class( 'settings', 'modules' );
-	}
-
-	return SecuPress_Settings_Modules::get_instance()->get_current_module();
-}

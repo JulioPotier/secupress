@@ -1,10 +1,10 @@
-=== SecuPress Free — WordPress Security ===
+=== SecuPress Pro — WordPress Security ===
 Contributors: SecuPress, juliobox, GregLone, Superment
 Tags: wordpress security, secure, security plugin, security, malware
 Requires at least: 4.9
 Tested up to: 5.7
 Requires PHP: 5.6
-Stable tag: 2.0.1.1
+Stable tag: 2.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -179,10 +179,16 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 
 == Changelog ==
 
-= 2.0.1.1 =
+= 2.0.2 =
 
-* 29 March 2021
-* Fix: Missing files from /core/ (was /inc/… my bad)
+* 06 April 2021
+* Improvement: Add Jetpack SSO as supported 2FA
+* Improvement: Add a few forbidden names in "bad login IDs" module
+* Fix: Emails for PasswordLess were not sent or sent in spam. (WP 5.7.1 will also fix this)
+* Fix: Export Mode not read correctly
+* Fix: 3 undefined index PHP warning
+* Fix: 2 possible PHP fatal error (but won't break the front site)
+* Fix: Move Login with WP running in a subdir was broken since 2.0
 
 = 2.0.1 =
 

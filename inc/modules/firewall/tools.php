@@ -84,8 +84,8 @@ function secupress_block_bad_content_but_what( $function, $server, $block_id ) {
 	}
 
 	// don't block if our own domain name contains a bad word and is present in the URL (with redirect for example).
-	$check_value  = str_replace( $_SERVER['HTTP_HOST'], '', $_SERVER[ $server ] );
-	$check_value  = explode( '?', $check_value, 2 );
+	$check_value = isset( $_SERVER['HTTP_HOST'] ) ? str_replace( $_SERVER['HTTP_HOST'], '', $_SERVER[ $server ] ) : $_SERVER[ $server ];
+	$check_value = explode( '?', $check_value, 2 );
 	// Nothing like a request uri? It's ok, don't look into the URLs paths
 	if ( 'QUERY_STRING' !== $server && ! isset( $check_value[1] ) ) {
 		return;

@@ -5,14 +5,6 @@ defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 /** REQUIRE FILES =============================================================================== */
 /** --------------------------------------------------------------------------------------------- */
 
-function secupress_tag_me( $str, $tag ) {
-	return sprintf( '<%1$s>%$2s</%1$s>', $tag, $str );
-}
-
-function secupress_code_me( $str ) {
-	return secupress_tag_me( $str, 'code' );
-}
-
 /**
  * Return the path to a class.
  *
@@ -766,23 +758,15 @@ function secupress_get_email( $from_header = false ) {
 	}
 
 	/**
-	 * Filters the email address to send from.
-	 *
-	 * @since WP 2.2.0
-	 *
-	 * @param (string) $from_email Email address to send from.
-	 * @param (string) $context
-	 */
-	$email = apply_filters( 'wp_mail_from', get_option( 'admin_email' ), 'secupress' );
-	/**
 	 * Give the possibility to replace the "from" email address
 	 *
-	 * @since 2.0.1 Change the order to let SP have priority, butcan also use the default WP one with new context param
+	 * @since 2.0.1 Change the order to let SP have priority, but can also use the default WP one with new context param
 	 * @since 1.0
 	 *
 	 * @param (string)
 	 */
-	$email = apply_filters( 'secupress.get_email', $email );
+	$email = apply_filters( 'secupress.get_email', 'noreply@' . $sitename );
+	$email = apply_filters( 'wp_mail_from', $email );
 
 
 	return $from_header ? 'from: ' . SECUPRESS_PLUGIN_NAME . ' <' . $email . '>' : $email;
@@ -1436,7 +1420,7 @@ function secupress_is_function_disabled( $function ) {
  * @author Julio Potier
  **/
 function secupress_is_expert_mode() {
-	return secupress_get_module_option( 'advanced-settings_expert-mode', false ) || defined( 'SECUPRESS_MODE' ) && ( 'expert' === strtolower( SECUPRESS_MODE ) );
+	return secupress_get_module_option( 'advanced-settings_expert-mode', false , 'welcome') || defined( 'SECUPRESS_MODE' ) && ( 'expert' === strtolower( SECUPRESS_MODE ) );
 }
 
 

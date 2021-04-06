@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SecuPress\n"
 "Report-Msgid-Bugs-To: https://secupress.me/\n"
-"POT-Creation-Date: 2021-03-29 14:37+0200\n"
-"PO-Revision-Date: 2021-03-29 14:37+0200\n"
+"POT-Creation-Date: 2021-04-06 10:28+0200\n"
+"PO-Revision-Date: 2021-04-06 10:28+0200\n"
 "Last-Translator: Julio Potier <julio@secupress.me>\n"
 "Language-Team: French (France) <contact@secupress.me>\n"
 "Language: fr_FR\n"
@@ -593,7 +593,7 @@ msgstr "Savez-vous que nous proposons un service de Configuration Pro ?"
 #: core/admin/modal.php:80 core/admin/modal.php:89 core/admin/modal.php:99
 #: core/admin/scanner-step-3.php:288
 #: core/classes/settings/class-secupress-settings.php:1708
-#: core/functions/common.php:544
+#: core/functions/common.php:536
 msgid "pricing"
 msgstr "fr/tarifs"
 
@@ -1020,9 +1020,9 @@ msgstr "Comment corriger ce problème"
 #: core/admin/settings.php:877 core/admin/settings.php:880
 #: core/classes/admin/class-secupress-admin-pro-upgrade.php:157
 #: core/classes/admin/class-secupress-admin-pro-upgrade.php:178
+#: core/modules/welcome/callbacks.php:404
 #: core/modules/welcome/callbacks.php:405
-#: core/modules/welcome/callbacks.php:406
-#: core/modules/welcome/callbacks.php:560
+#: core/modules/welcome/callbacks.php:559
 #: inc/classes/admin/class-secupress-pro-admin-free-downgrade.php:163
 #: inc/classes/admin/class-secupress-pro-admin-free-downgrade.php:164
 msgid "Open in a new window."
@@ -1812,7 +1812,7 @@ msgstr ""
 
 #: core/classes/admin/class-secupress-admin-pro-upgrade.php:157
 #: core/classes/admin/class-secupress-admin-pro-upgrade.php:178
-#: core/modules/welcome/callbacks.php:560
+#: core/modules/welcome/callbacks.php:559
 msgid "SecuPress account"
 msgstr "Compte SecuPress"
 
@@ -5640,132 +5640,113 @@ msgstr ""
 "Protégez votre WordPress avec SecuPress, analysez et assurez-vous de la "
 "sécurité de votre site quotidiennement."
 
-#: core/functions/common.php:254
+#: core/functions/common.php:246
 msgid "Congratulations! 🎉"
 msgstr "Félicitations 🎉"
 
-#: core/functions/common.php:258
+#: core/functions/common.php:250
 msgid "Almost perfect!"
 msgstr "Presque parfait !"
 
-#: core/functions/common.php:262
+#: core/functions/common.php:254
 msgid "Not bad, but try to fix more items."
 msgstr "Pas mauvais, mais corrigez plus de choses."
 
-#: core/functions/common.php:266
+#: core/functions/common.php:258
 msgid "Well, it’s not good yet."
 msgstr "Bien, mais pas encore assez bon."
 
-#: core/functions/common.php:270
+#: core/functions/common.php:262
 msgid "Better than nothing, but still not good."
 msgstr "Mieux que rien, mais pas encore bon."
 
-#: core/functions/common.php:274
+#: core/functions/common.php:266
 msgid "Not good at all, fix more issues."
 msgstr "Pas bon du tout, corrigez plus de choses."
 
-#: core/functions/common.php:277
+#: core/functions/common.php:269
 msgid "Bad, fix issues right away!"
 msgstr "Pas bien, n’hésitez pas à corriger !"
 
-#: core/functions/common.php:280
+#: core/functions/common.php:272
 msgid "Still very bad, start fixing things!"
 msgstr "Toujours mauvais, commencez à corriger !"
 
-#: core/functions/common.php:283
+#: core/functions/common.php:275
 msgid "Very bad. You should take some actions."
 msgstr "Très mauvais. Vous devriez vous y mettre."
 
-#: core/functions/common.php:286
+#: core/functions/common.php:278
 msgid "Very very bad, please fix something!"
 msgstr "Très très mauvais, s’il vous plait, corriger quelque chose !"
 
-#: core/functions/common.php:289
+#: core/functions/common.php:281
 msgid "Very very, really very bad."
 msgstr "Très très, vraiment très mauvais."
 
-#: core/functions/common.php:295
+#: core/functions/common.php:287
 #, php-format
 msgid "Your grade is %1$s with %2$d good scanned item."
 msgid_plural "Your grade is %1$s with %2$d good scanned items."
 msgstr[0] "Votre grade est %1$s avec %2$d élément scanné correct."
 msgstr[1] "Votre grade est %1$s avec %2$d éléments scannés corrects."
 
-#: core/functions/common.php:496
+#: core/functions/common.php:488
 msgid "You are not allowed to access the requested page."
 msgstr "Vous n’êtes pas autorisé à accéder à là page demandée."
 
-#: core/functions/common.php:501
+#: core/functions/common.php:493
 msgid "Logged Details:"
 msgstr "Détails enregistrés :"
 
-#: core/functions/common.php:503
+#: core/functions/common.php:495
 #, php-format
 msgid "Your IP: %s"
 msgstr "Votre IP : %s"
 
-#: core/functions/common.php:504
+#: core/functions/common.php:496
 #, php-format
 msgid "Time: %s"
 msgstr "Heure : %s"
 
-#: core/functions/common.php:504
+#: core/functions/common.php:496
 msgid "F j, Y g:i a"
 msgstr "j F Y G:i"
 
-#: core/functions/common.php:505
+#: core/functions/common.php:497
 #, php-format
 msgid "Reason: %s"
 msgstr "Raison : %s"
 
-#: core/functions/common.php:506
+#: core/functions/common.php:498
 #, php-format
 msgid "Support ID: %s"
 msgstr "Support ID : %s"
 
-#: core/functions/common.php:1620
+#: core/functions/common.php:1594
 msgctxt "User role"
 msgid "Administrator"
 msgstr "Administrateur"
 
-#: core/functions/common.php:1621
+#: core/functions/common.php:1595
 msgctxt "User role"
 msgid "Editor"
 msgstr "Éditeur"
 
-#: core/functions/common.php:1622
+#: core/functions/common.php:1596
 msgctxt "User role"
 msgid "Author"
 msgstr "Auteur"
 
-#: core/functions/common.php:1623
+#: core/functions/common.php:1597
 msgctxt "User role"
 msgid "Contributor"
 msgstr "Contributeur"
 
-#: core/functions/common.php:1624
+#: core/functions/common.php:1598
 msgctxt "User role"
 msgid "Subscriber"
 msgstr "Abonné"
-
-#. Translators: 1: WordPress hook name, 2: version number, 3: alternative hook name.
-#: core/functions/compat.php:382
-#, php-format
-msgid ""
-"%1$s is <strong>deprecated</strong> since version %2$s! Use %3$s instead."
-msgstr ""
-"%1$s est <strong>déprécié</strong> depuis la version %2$s. Utilisez %3$s à "
-"la place."
-
-#. Translators: 1: WordPress hook name, 2: version number.
-#: core/functions/compat.php:385
-#, php-format
-msgid ""
-"%1$s is <strong>deprecated</strong> since version %2$s with no alternative "
-"available."
-msgstr ""
-"%1$s est <strong>déprécié</strong> depuis la version %2$s sans autre "
-"alternative."
 
 #: core/functions/deprecated.php:51
 #, php-format
@@ -8324,7 +8305,7 @@ msgstr ""
 "Vous avez besoin d’activer le JavaScript pour que ce formulaire soit envoyé "
 "correctement."
 
-#: core/modules/users-login/plugins/move-login.php:460
+#: core/modules/users-login/plugins/move-login.php:457
 #: core/modules/users-login/settings/move-login.php:121
 #: inc/modules/users-login/tools.php:15
 msgid ""
@@ -8685,54 +8666,54 @@ msgstr ""
 msgid "Yes, force the use of strong passwords usage"
 msgstr "Oui, forcer l’utilisation des mots de passe forts"
 
-#: core/modules/welcome/callbacks.php:158
+#: core/modules/welcome/callbacks.php:157
 msgid "Your license has been successfully deactivated."
 msgstr "Votre licence a été correctement désactivée."
 
-#: core/modules/welcome/callbacks.php:160
+#: core/modules/welcome/callbacks.php:159
 msgid "Your license has been successfully activated."
 msgstr "Votre licence a été activée avec succès."
 
-#: core/modules/welcome/callbacks.php:214
+#: core/modules/welcome/callbacks.php:213
 msgid "Plugin has been renamed correctly."
 msgstr "Extension renommée correctement."
 
-#: core/modules/welcome/callbacks.php:405
+#: core/modules/welcome/callbacks.php:404
 #: inc/classes/admin/class-secupress-pro-admin-free-downgrade.php:163
 msgid "our support team"
 msgstr "notre équipe support"
 
-#: core/modules/welcome/callbacks.php:409
+#: core/modules/welcome/callbacks.php:408
 msgid "Please provide a valid email address and your license key."
 msgstr ""
 "Merci de fournir une adresse de courriel valide ainsi qu’une clé de licence."
 
-#: core/modules/welcome/callbacks.php:410
+#: core/modules/welcome/callbacks.php:409
 msgid "Please provide a valid email address."
 msgstr "Veuillez entrer une adresse de courriel valide."
 
-#: core/modules/welcome/callbacks.php:411
+#: core/modules/welcome/callbacks.php:410
 msgid "Please provide your license key."
 msgstr "Veuillez entrer votre clé de licence."
 
 #. Translators: %s is a "to verify these infos" link.
-#: core/modules/welcome/callbacks.php:414
+#: core/modules/welcome/callbacks.php:413
 #, php-format
 msgid "Your license key seems invalid. You may want %s."
 msgstr "Votre clé de licence semble non valide. Peut-être voudrez-vous %s."
 
-#: core/modules/welcome/callbacks.php:415
-#: core/modules/welcome/callbacks.php:429
+#: core/modules/welcome/callbacks.php:414
+#: core/modules/welcome/callbacks.php:428
 msgid "to verify these infos"
 msgstr "pour vérifier ces infos"
 
-#: core/modules/welcome/callbacks.php:417
-#: core/modules/welcome/callbacks.php:507
+#: core/modules/welcome/callbacks.php:416
+#: core/modules/welcome/callbacks.php:506
 msgid "Something on your website is preventing the request to be sent."
 msgstr "Quelque chose sur votre site empêche la requête d’être envoyée."
 
 #. Translators: %s is a "our support team" link.
-#: core/modules/welcome/callbacks.php:419
+#: core/modules/welcome/callbacks.php:418
 #, php-format
 msgid ""
 "Our server is not accessible at the moment, please try again later or "
@@ -8742,7 +8723,7 @@ msgstr ""
 "ultérieurement ou contacter %s."
 
 #. Translators: %s is a "our support team" link.
-#: core/modules/welcome/callbacks.php:421
+#: core/modules/welcome/callbacks.php:420
 #, php-format
 msgid ""
 "Our server returned an unexpected response and might be in error, please try "
@@ -8752,21 +8733,21 @@ msgstr ""
 "veuillez réessayer ultérieurement ou contacter %s."
 
 #. Translators: %s is a "our support team" link.
-#: core/modules/welcome/callbacks.php:423
+#: core/modules/welcome/callbacks.php:422
 #, php-format
 msgid "There is a problem with your license key, please contact %s."
 msgstr "Il y a un problème avec votre clé de licence, merci de contacter %s."
 
-#: core/modules/welcome/callbacks.php:424
+#: core/modules/welcome/callbacks.php:423
 msgid "The email address is invalid."
 msgstr "L’adresse e-mail est invalide."
 
-#: core/modules/welcome/callbacks.php:425
+#: core/modules/welcome/callbacks.php:424
 msgid "The license key is invalid."
 msgstr "Votre clé de licence semble invalide."
 
 #. Translators: %s is a "to verify these infos" link.
-#: core/modules/welcome/callbacks.php:428
+#: core/modules/welcome/callbacks.php:427
 #, php-format
 msgid "This email address is not in our database. You may want %s."
 msgstr ""
@@ -8774,8 +8755,8 @@ msgstr ""
 "vous %s."
 
 #. Translators: %s is a "our support team" link.
-#: core/modules/welcome/callbacks.php:440
-#: core/modules/welcome/callbacks.php:442
+#: core/modules/welcome/callbacks.php:439
+#: core/modules/welcome/callbacks.php:441
 #, php-format
 msgid ""
 "There is a problem with your license key, please verify it. If you think "
@@ -8785,7 +8766,7 @@ msgstr ""
 "pensez qu’il s’agit d’une erreur, veuillez contacter %s."
 
 #. Translators: %s is a "our support team" link.
-#: core/modules/welcome/callbacks.php:444
+#: core/modules/welcome/callbacks.php:443
 #, php-format
 msgid ""
 "This license key has been revoked. If you think there is a mistake, you "
@@ -8795,18 +8776,18 @@ msgstr ""
 "erreur, veuillez contacter %s."
 
 #. Translators: %s is a "to renew your subscription" link.
-#: core/modules/welcome/callbacks.php:447
+#: core/modules/welcome/callbacks.php:446
 #, php-format
 msgid "This license key expired. You may want %s."
 msgstr "Cette clé de licence a expirée. Peut-être voudrez-vous %s."
 
-#: core/modules/welcome/callbacks.php:448
+#: core/modules/welcome/callbacks.php:447
 #: inc/classes/admin/class-secupress-pro-admin-free-downgrade.php:186
 msgid "to renew your subscription"
 msgstr "renouveler votre abonnement"
 
 #. Translators: %s is a "to upgrade your license" link.
-#: core/modules/welcome/callbacks.php:452
+#: core/modules/welcome/callbacks.php:451
 #, php-format
 msgid ""
 "You used as many sites as your license allows. You may want %s to add more "
@@ -8815,13 +8796,13 @@ msgstr ""
 "Vous avez utilisé autant de sites que votre licence le permet. Peut-être "
 "voudrez-vous %s pour ajouter plus de sites."
 
-#: core/modules/welcome/callbacks.php:453
+#: core/modules/welcome/callbacks.php:452
 #: inc/classes/admin/class-secupress-pro-admin-free-downgrade.php:192
 msgid "to upgrade your license"
 msgstr "mettre à niveau votre licence"
 
 #. Translators: 1 is a "your account" link, 2 is a "our support team" link.
-#: core/modules/welcome/callbacks.php:466
+#: core/modules/welcome/callbacks.php:465
 #, php-format
 msgid ""
 "Something may be wrong with your license, please take a look at %1$s or "
@@ -8830,26 +8811,26 @@ msgstr ""
 "Quelque chose semble incorrect avec votre licence, merci de jeter un œil à "
 "%1$s ou de contacter %2$s."
 
-#: core/modules/welcome/callbacks.php:467
+#: core/modules/welcome/callbacks.php:466
 msgid "your account"
 msgstr "votre compte"
 
-#: core/modules/welcome/callbacks.php:515
+#: core/modules/welcome/callbacks.php:514
 msgid "Our server is not accessible at the moment."
 msgstr "Notre serveur n’est pas accessible pour le moment."
 
-#: core/modules/welcome/callbacks.php:526
+#: core/modules/welcome/callbacks.php:525
 msgid "Our server returned an unexpected response and might be in error."
 msgstr ""
 "Notre serveur a retourné une réponse inattendue, cela est surement une "
 "erreur."
 
-#: core/modules/welcome/callbacks.php:534
+#: core/modules/welcome/callbacks.php:533
 msgid "Our server returned an error."
 msgstr "Notre serveur a retourné une erreur."
 
 #. Translators: %s is a link to the "SecuPress account".
-#: core/modules/welcome/callbacks.php:559
+#: core/modules/welcome/callbacks.php:558
 #, php-format
 msgid ""
 "Please deactivate this site from your %s (the \"Manage Sites\" link in your "
@@ -10767,6 +10748,21 @@ msgstr "SecuPress Pro — Sécurité WordPress"
 msgid "More than a plugin, the guarantee of a protected website by experts."
 msgstr ""
 "Plus qu’une extension, la garantie d’un site Web protégé par des experts."
+
+#, php-format
+#~ msgid ""
+#~ "%1$s is <strong>deprecated</strong> since version %2$s! Use %3$s instead."
+#~ msgstr ""
+#~ "%1$s est <strong>déprécié</strong> depuis la version %2$s. Utilisez %3$s "
+#~ "à la place."
+
+#, php-format
+#~ msgid ""
+#~ "%1$s is <strong>deprecated</strong> since version %2$s with no "
+#~ "alternative available."
+#~ msgstr ""
+#~ "%1$s est <strong>déprécié</strong> depuis la version %2$s sans autre "
+#~ "alternative."
 
 #~ msgid "License, Import & Export"
 #~ msgstr "Réglez, importez & exportez"
