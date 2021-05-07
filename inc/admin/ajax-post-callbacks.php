@@ -749,7 +749,7 @@ function secupress_unlock_admin_ajax_post_cb() {
 	$_CLEAN          = [];
 	$_CLEAN['email'] = $_POST['email'];
 	$user            = get_user_by( 'email', $_CLEAN['email'] );
-	if ( ! $user || ! user_can( $user, 'manage_options' ) ) {
+	if ( ! secupress_is_user( $user ) || ! user_can( $user, 'manage_options' ) ) {
 		wp_die( 'Something went wrong.' );
 	}
 	$url_remember = wp_login_url();

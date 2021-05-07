@@ -4,10 +4,16 @@
  * Description: Add a gentle captcha on the login form
  * Main Module: users_login
  * Author: SecuPress
- * Version: 1.2
+ * Version: 2.0.3
  */
 
 defined( 'SECUPRESS_VERSION' ) or die( 'Something went wrong.' );
+
+
+// EMERGENCY BYPASS!
+if ( defined( 'SECUPRESS_ALLOW_LOGIN_ACCESS' ) && SECUPRESS_ALLOW_LOGIN_ACCESS ) {
+	return;
+}
 
 add_action( 'login_form',          'secupress_add_captcha_on_login_form' );
 add_action( 'register_form',       'secupress_add_captcha_on_login_form' );

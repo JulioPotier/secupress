@@ -56,6 +56,16 @@ function secupress_update_https_detection_errors() {
 		}
 	}
 
+	/**
+	* Filter the returned errors
+	*
+	* @since 2.0.3
+	* @author Julio Potier
+	* @param (WP_Error) $support_errors
+	* @param (WP_HTTP) $response
+	* @return (WP_Error) $support_errors
+	*/
+	$support_errors = apply_filters( 'secupress.https_detection_errors', $support_errors, $response );
 	return $support_errors;
 }
 

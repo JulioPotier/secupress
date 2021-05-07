@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) or die( 'Something went wrong.' );
  * @since WP 4.0.0
  *
  * @param (string) $text The raw text to be escaped. The input typed by the user should have no extra or deleted slashes.
-
+ *
  * @return (string) Text in the form of a LIKE phrase. The output is not SQL safe. Call $wpdb::prepare() or real_escape next.
  */
 function secupress_esc_like( $text ) {
@@ -229,4 +229,81 @@ function secupress_unique_sorted_list( $list, $separator = false ) {
 	}
 
 	return $list;
+}
+
+
+/**
+ * Format a timestamp into something really human.
+ *
+ * @since 2.1
+ * @author Julio Potier
+ *
+ * @see https://21douze.fr/human_readable_duration-ou-pas-147097.html
+ *
+ * @param (string|int) $entry Can be a timestamp or a string like 24:12:33
+ * @return
+ **/
+function secupress_readable_duration( $entry ) {
+	if ( ! is_numeric( $entry ) ) {
+		$coeff    = [ 1, MINUTE_IN_SECONDS, HOUR_IN_SECONDS, DAY_IN_SECONDS, MONTH_IN_SECONDS, YEAR_IN_SECONDS ];
+		$data     = array_reverse( array_map( 'intval', explode( ':', $entry ) ) );
+		$entry    = 0;
+		foreach ( $data as $index => $time ) {
+			$entry += $time * $coeff[ $index ];
+		}
+		if ( ! $entry ) {
+			trigger_error( 'Entry data must be numeric or respect format dd:hh:mm:ss' );
+			return;
+		}
+	}
+	$from   = new \DateTime( '@0' );
+	$to     = new \DateTime( "@$entry" );
+	$data   = explode( ':', $from->diff( $to )->format('%s:%i:%h:%d:%m:%y') );
+	$return = [];
+	$labels = [ _n_noop( '%s second', '%s seconds' ),
+				_n_noop( '%s minute', '%s minutes' ),
+				_n_noop( '%s hour', '%s hours' ),
+				_n_noop( '%s day', '%s days' ),
+				_n_noop( '%s month', '%s months' ),
+				_n_noop( '%s year', '%s years' ),
+	];
+
+	foreach( $data as $i => $time ) {
+		if ( '0' === $time && ! empty( array_filter( $return, 'intval' ) ) ) {
+			continue;
+		}
+		$return[] = sprintf( translate_nooped_plural( $labels[ $i ], $time ), $time );
+	}
+
+	$return = array_reverse( $return );
+	$text   = wp_sprintf( '%l', $return );
+
+	return $text;
+}
+
+/**
+ * Tag a string
+ *
+ * @since 2.0.3
+ * @author Julio Potier
+ *
+ * @param (string) $str The text
+ * @param (string) $tag The HTML tag
+ * @return (string)
+ **/
+function secupress_tag_me( $str, $tag ) {
+	return sprintf( '<%1$s>%2$s</%1$s>', $tag, $str );
+}
+
+/**
+ * Tag a string with <code>
+ *
+ * @since 2.0.3
+ * @author Julio Potier
+ *
+ * @param (string) $str The text
+ * @return (string)
+ **/
+function secupress_code_me( $str ) {
+	return secupress_tag_me( $str, 'code' );
 }

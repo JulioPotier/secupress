@@ -279,8 +279,9 @@ class SecuPress_Action_Log extends SecuPress_Log {
 			$user = get_user_by( 'login', $user_login );
 		}
 
-		if ( ! user_can( $user, 'administrator' ) ) {
-			return array();
+
+		if ( ! secupress_is_user( $user ) || ! user_can( $user, 'administrator' ) ) {
+			return [];
 		}
 
 		$user = static::format_user_login( $user );
@@ -530,7 +531,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *
 	 * @since 1.0
 	 */
-	protected function set_title() {
+	protected function set_title( $post = null ) {
 		switch ( $this->type ) {
 			case 'option':
 				$this->set_option_title();
@@ -548,7 +549,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 				return;
 		}
 
-		parent::set_title();
+		parent::set_title( $post );
 	}
 
 

@@ -152,7 +152,6 @@ class SecuPress_Scan_Bad_URL_Access extends SecuPress_Scan implements SecuPress_
 			home_url( 'php.ini' ),
 			site_url( 'wp-config.php' ),
 			admin_url( 'install.php' ),
-			admin_url( 'includes/comment.php' ),
 			admin_url( 'network/menu.php' ),
 			admin_url( 'user/menu.php' ),
 			includes_url( 'admin-bar.php' ),

@@ -150,7 +150,7 @@ function secupress_check_ban_ips_maybe_send_unban_email( $ip ) {
 	// Check user.
 	$user = get_user_by( 'email', $email );
 
-	if ( ! $user || ! user_can( $user, secupress_get_capability() ) ) {
+	if ( ! secupress_is_user( $user ) || ! user_can( $user, secupress_get_capability() ) ) {
 		return array(
 			'message'      => __( '<strong>Error</strong>: this email address does not belong to an Administrator.', 'secupress' ),
 			'display_form' => true,

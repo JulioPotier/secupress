@@ -4,7 +4,7 @@ Tags: wordpress security, secure, security plugin, security, malware
 Requires at least: 4.9
 Tested up to: 5.7
 Requires PHP: 5.6
-Stable tag: 2.0.2
+Stable tag: 2.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -178,6 +178,13 @@ The answer is no. SecuPress is not compatible with another security plugin. Just
 8. The 4th step: final report, you can export it as PDF (1)
 
 == Changelog ==
+
+= 2.0.3 =
+
+* 12 April 2021
+* Fix#913: user_can can lead to fatal error (see https://core.trac.wordpress.org/ticket/52076)
+* Fix: undefined functions (free version only)
+* Fix: role was not translated in the alerts
 
 = 2.0.2 =
 

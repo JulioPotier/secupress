@@ -5,7 +5,7 @@
  * Description: More than a plugin, the guarantee of a protected website by experts.
  * Author: SecuPress
  * Author URI: https://secupress.me
- * Version: 2.0.2
+ * Version: 2.0.3
  * Code Name: Python (Mark XX)
  * Network: true
  * Contributors: SecuPress, juliobox, GregLone
@@ -23,21 +23,18 @@ defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 /** DEFINES ===================================================================================== */
 /** ----------------------------------------------------------------------------------------------*/
 
-define( 'SECUPRESS_VERSION',                        '2.0.2' );
-// define( 'SECUPRESS_PRO_VERSION',                    SECUPRESS_VERSION );
-define( 'SECUPRESS_MAJOR_VERSION',                  '2.0' );
-define( 'SECUPRESS_FILE',                           __FILE__ );
-define( 'SECUPRESS_PATH',                           realpath( dirname( SECUPRESS_FILE ) ) . DIRECTORY_SEPARATOR );
-if ( defined( 'SECUPRESS_PRO_VERSION' ) ) {
-	define( 'SECUPRESS_INC_PATH',                   SECUPRESS_PATH . 'core' . DIRECTORY_SEPARATOR );
-	define( 'SECUPRESS_PRO_INC_PATH',               SECUPRESS_PATH . 'inc' . DIRECTORY_SEPARATOR );
-	define( 'SECUPRESS_PRO_ADMIN_PATH',             SECUPRESS_PRO_INC_PATH . 'admin' . DIRECTORY_SEPARATOR );
-	define( 'SECUPRESS_PRO_CLASSES_PATH',           SECUPRESS_PRO_INC_PATH . 'classes' . DIRECTORY_SEPARATOR );
-	define( 'SECUPRESS_PRO_MODULES_PATH',           SECUPRESS_PRO_INC_PATH . 'modules' . DIRECTORY_SEPARATOR );
-	define( 'SECUPRESS_PRO_ADMIN_SETTINGS_MODULES', SECUPRESS_PRO_ADMIN_PATH . 'modules' . DIRECTORY_SEPARATOR );
-} else {
-	define( 'SECUPRESS_INC_PATH',                   SECUPRESS_PATH . 'inc' . DIRECTORY_SEPARATOR );
-}
+define( 'SECUPRESS_VERSION',                    '2.0.3' );
+// define( 'SECUPRESS_PRO_VERSION',                SECUPRESS_VERSION );
+define( 'SECUPRESS_MAJOR_VERSION',              '2.0' );
+define( 'SECUPRESS_FILE',                       __FILE__ );
+define( 'SECUPRESS_PATH',                       realpath( dirname( SECUPRESS_FILE ) ) . DIRECTORY_SEPARATOR );
+define( 'SECUPRESS_INC_PATH',                   SECUPRESS_PATH . 'inc' . DIRECTORY_SEPARATOR );
+define( 'SECUPRESS_PRO_INC_PATH',               SECUPRESS_PATH . 'pro' . DIRECTORY_SEPARATOR );
+define( 'SECUPRESS_PRO_ADMIN_PATH',             SECUPRESS_PRO_INC_PATH . 'admin' . DIRECTORY_SEPARATOR );
+define( 'SECUPRESS_PRO_CLASSES_PATH',           SECUPRESS_PRO_INC_PATH . 'classes' . DIRECTORY_SEPARATOR );
+define( 'SECUPRESS_PRO_MODULES_PATH',           SECUPRESS_PRO_INC_PATH . 'modules' . DIRECTORY_SEPARATOR );
+define( 'SECUPRESS_PRO_ADMIN_SETTINGS_MODULES', SECUPRESS_PRO_ADMIN_PATH . 'modules' . DIRECTORY_SEPARATOR );
+
 
 
 /** --------------------------------------------------------------------------------------------- */
@@ -60,11 +57,7 @@ define( 'SECUPRESS_ADMIN_PATH'            , SECUPRESS_INC_PATH . 'admin' . DIREC
 define( 'SECUPRESS_CLASSES_PATH'          , SECUPRESS_INC_PATH . 'classes' . DIRECTORY_SEPARATOR );
 define( 'SECUPRESS_ADMIN_SETTINGS_MODULES', SECUPRESS_ADMIN_PATH . 'modules' . DIRECTORY_SEPARATOR );
 define( 'SECUPRESS_PLUGIN_URL'            , plugin_dir_url( SECUPRESS_FILE ) );
-if ( defined( 'SECUPRESS_PRO_VERSION' ) ) {
-	define( 'SECUPRESS_INC_URL'           , SECUPRESS_PLUGIN_URL . 'core/' );
-} else {
-	define( 'SECUPRESS_INC_URL'           , SECUPRESS_PLUGIN_URL . 'inc/' );
-}
+define( 'SECUPRESS_INC_URL'               , SECUPRESS_PLUGIN_URL . 'inc/' );
 define( 'SECUPRESS_FRONT_URL'             , SECUPRESS_INC_URL . 'front/' );
 define( 'SECUPRESS_ADMIN_URL'             , SECUPRESS_INC_URL . 'admin/' );
 define( 'SECUPRESS_ASSETS_URL'            , SECUPRESS_PLUGIN_URL . 'assets/' );
@@ -405,6 +398,7 @@ add_filter( 'load_textdomain_mofile', 'secupress_load_own_i18n', 10, 2 );
 /**
  * Load our own i18n to prevent too long strings or spelling errors from voluteers at translate.wp.org, sorry guys.
  *
+ * @since 2.0.3 fr_BE & fr_CA = fr_FR
  * @since 2.0
  * @author Julio Potier
  *
@@ -415,6 +409,7 @@ add_filter( 'load_textdomain_mofile', 'secupress_load_own_i18n', 10, 2 );
  **/
 function secupress_load_own_i18n( $mofile, $domain ) {
 	if ( 'secupress' === $domain && false !== strpos( $mofile, WP_LANG_DIR . '/plugins/' ) ) {
+		$locale = apply_filters( 'plugin_locale', determine_locale(), $domain );
 		if ( ! function_exists( 'determine_locale' ) ) { // WP 5.0.
 			$determined_locale     = get_locale();
 			if ( is_admin() ) {
@@ -424,11 +419,13 @@ function secupress_load_own_i18n( $mofile, $domain ) {
 			$determined_locale = determine_locale();
 		}
 		$locale = apply_filters( 'plugin_locale', $determined_locale, $domain );
+		if ( 'fr_CA' === $locale || 'fr_BE' === $locale ) {
+			$locale = 'fr_FR';
+		}
 		$mofile = WP_PLUGIN_DIR . '/' . dirname( plugin_basename( SECUPRESS_FILE ) ) . '/languages/' . $domain . '-' . $locale . '.mo';
 	}
 	return $mofile;
 }
-
 /**
  * Translations for the plugin textdomain.
  *
