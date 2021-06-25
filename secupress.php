@@ -55,6 +55,7 @@ define( 'SECUPRESS_WEB_MAIN'              , 'https://secupress.me/' );
 define( 'SECUPRESS_MODULES_PATH'          , SECUPRESS_INC_PATH . 'modules' . DIRECTORY_SEPARATOR );
 define( 'SECUPRESS_ADMIN_PATH'            , SECUPRESS_INC_PATH . 'admin' . DIRECTORY_SEPARATOR );
 define( 'SECUPRESS_CLASSES_PATH'          , SECUPRESS_INC_PATH . 'classes' . DIRECTORY_SEPARATOR );
+define( 'SECUPRESS_ADMIN_IMAGES_PATH'     , SECUPRESS_PATH . 'assets' . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR );
 define( 'SECUPRESS_ADMIN_SETTINGS_MODULES', SECUPRESS_ADMIN_PATH . 'modules' . DIRECTORY_SEPARATOR );
 define( 'SECUPRESS_PLUGIN_URL'            , plugin_dir_url( SECUPRESS_FILE ) );
 define( 'SECUPRESS_INC_URL'               , SECUPRESS_PLUGIN_URL . 'inc/' );
@@ -75,6 +76,11 @@ if ( defined( 'SECUPRESS_API_EMAIL' ) && defined( 'SECUPRESS_API_KEY' ) && ! def
 /** --------------------------------------------------------------------------------------------- */
 /** INIT ======================================================================================== */
 /** --------------------------------------------------------------------------------------------- */
+
+/**
+ * Loads Composer's packages.
+ */
+require_once __DIR__ . '/vendor/autoload.php';
 
 /**
  * All the stuff for the plugin activation and deactivation.
@@ -114,6 +120,19 @@ function secupress_init() {
 
 	define( 'SECUPRESS_PLUGIN_SLUG', sanitize_title( SECUPRESS_PLUGIN_NAME ) );
 
+	// Generate a base64 encoded logo for SecuPress.
+	// There are better ways to do this, but that's a POC.
+	$sp_logo = '';
+	if ( file_exists( SECUPRESS_ADMIN_IMAGES_PATH . 'logo2x.svg' ) ) {
+		// phpcs:ignore
+		$sp_logo = 'data:image/svg+xml;base64,' . base64_encode( file_get_contents( SECUPRESS_ADMIN_IMAGES_PATH . 'logo2x.svg' ) );
+	}
+
+	// Initializes DecaLog SDK.
+	// Note: it would have been better to do this before the call to secupress_load_functions() but this
+	//       would require a major refactoring of the plugin bootstrap sequence.
+	\DecaLog\Engine::initPlugin( SECUPRESS_PLUGIN_SLUG, SECUPRESS_PLUGIN_NAME, SECUPRESS_VERSION, $sp_logo );
+
 	// Cleanup leftovers periodically.
 	SecuPress_Cleanup_Leftovers::get_instance();
 
@@ -144,6 +163,7 @@ function secupress_init() {
 	 * @since 1.0
 	 */
 	do_action( 'secupress.loaded' );
+	\DecaLog\Engine::eventsLogger( SECUPRESS_PLUGIN_SLUG )->debug( 'SecuPress is loaded.' );
 	// Load the upgrader after the load of our plugins, SecuPress is still considered "loaded" even without this file since it's not usefull for security
 	if ( is_admin() ) {
 		require_once( SECUPRESS_ADMIN_PATH . 'upgrader.php' );
