@@ -97,6 +97,9 @@ class SecuPress_404_Logs extends SecuPress_Logs {
 			),
 		) );
 
+		// Add this event to DecaLog.
+		\DecaLog\Engine::eventsLogger( SECUPRESS_PLUGIN_SLUG )->warning( 'Page not found: ' . esc_html( secupress_get_current_url( 'uri' ) ), [ 'code' => 404 ] );
+
 		parent::save_logs( array( $log ) );
 	}
 
