@@ -153,12 +153,14 @@ add_action( 'secupress_pro.upgrade', 'secupress_new_pro_upgrade', 10, 2 );
  */
 function secupress_new_pro_upgrade( $secupress_version, $actual_pro_version ) {
 	global $wpdb;
+	$span = \DecaLog\Engine::tracesLogger( SECUPRESS_PLUGIN_SLUG )->startSpan( 'Upgrade' );
 
 	// < 2.0
 	if ( version_compare( $actual_pro_version, '2.0', '<' ) ) {
 		secupress_remove_old_plugin_file( SECUPRESS_PRO_MODULES_PATH . 'services/callbacks.php' );
 		delete_site_option( SECUPRESS_FULL_FILETREE );
 	}
+	\DecaLog\Engine::tracesLogger( SECUPRESS_PLUGIN_SLUG )->endSpan( $span );
 }
 
 add_action( 'secupress.upgrade', 'secupress_new_upgrade', 10, 2 );
@@ -172,6 +174,7 @@ add_action( 'secupress.upgrade', 'secupress_new_upgrade', 10, 2 );
  */
 function secupress_new_upgrade( $secupress_version, $actual_version ) {
 	global $wpdb, $current_user;
+	$span = \DecaLog\Engine::tracesLogger( SECUPRESS_PLUGIN_SLUG )->startSpan( 'Upgrade' );
 
 	// < 1.4.3
 	if ( version_compare( $actual_version, '1.4.3', '<' ) ) {
@@ -218,6 +221,7 @@ function secupress_new_upgrade( $secupress_version, $actual_version ) {
 		secupress_remove_old_plugin_file( SECUPRESS_CLASSES_PATH . 'class-secupress-admin-support.php.php' );
 		delete_site_option( 'secupress_scan_wp_config' );
 	}
+	\DecaLog\Engine::tracesLogger( SECUPRESS_PLUGIN_SLUG )->endSpan( $span );
 }
 
 
