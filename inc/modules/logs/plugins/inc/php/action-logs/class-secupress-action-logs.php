@@ -132,6 +132,13 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 		'http_api_debug'           => 5, // `WP_Http`
 	);
 
+	protected $psr_levels = array(
+		'high'    => \Psr\Log\LogLevel::WARNING,
+		'normal'  => \Psr\Log\LogLevel::NOTICE,
+		'low'     => \Psr\Log\LogLevel::INFO,
+		'unknown' => \Psr\Log\LogLevel::ERROR,
+	);
+
 	/**
 	 * An array of Log arrays: all things in this page that should be logged will end here, before being saved at the end of the page.
 	 *
@@ -220,6 +227,19 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 			add_action( $tag, array( $this, 'log_action' ), 1000, $accepted_args );
 		}
 
+		// As SecuPress have post-based logging system, it can generate some noise in PSR-3 logging.
+		// So, we tell here (to DecaLog) to not log post activity for these posts.
+		// Note: DecaLog feature starting from version 3.1.0.
+		$actions = array_keys( $this->actions );
+		add_filter(
+			'decalog_no_log_post_activity',
+			function( $posts ) use ( $actions ) {
+				return array_merge( $posts, $actions );
+			},
+			10,
+			1
+		);
+
 		// Parent hooks.
 		parent::_init();
 	}
@@ -262,6 +282,13 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 
 		// Add this Log to the queue.
 		$this->logs_queue[] = $log;
+
+		// Add this event to DecaLog.
+		// Note: as SecuPress can log http outbounds and DecaLog may propagate events via http, it is required to verify outbound
+		//       headers before allowing to log an event (to avoid infinite loop).
+		if ( false === strpos( wp_json_encode( $log['data'] && $log['data']['args'] && $log['data']['args']['headers'] ? $log['data']['args']['headers'] : '' ), 'Decalog-No-Log' ) ) {
+			\DecaLog\Engine::eventsLogger( SECUPRESS_PLUGIN_SLUG )->log( $this->psr_levels[ $log['critic'] ] ? $this->psr_levels[ $log['critic'] ] : $this->psr_levels['unknown'], $log_inst->get_message() );
+		}
 
 		if ( $done ) {
 			return;
