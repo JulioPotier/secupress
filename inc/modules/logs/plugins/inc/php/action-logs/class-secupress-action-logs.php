@@ -286,8 +286,8 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 		// Add this event to DecaLog.
 		// Note: as SecuPress can log http outbounds and DecaLog may propagate events via http, it is required to verify outbound
 		//       headers before allowing to log an event (to avoid infinite loop).
-		if ( false === strpos( wp_json_encode( $log['data'] && $log['data']['args'] && $log['data']['args']['headers'] ? $log['data']['args']['headers'] : '' ), 'Decalog-No-Log' ) ) {
-			\DecaLog\Engine::eventsLogger( SECUPRESS_PLUGIN_SLUG )->log( $this->psr_levels[ $log['critic'] ] ? $this->psr_levels[ $log['critic'] ] : $this->psr_levels['unknown'], $log_inst->get_message() );
+		if ( false === strpos( wp_json_encode( array_key_exists( 'data', $log ) && array_key_exists( 'args', $log['data'] ) && $log['data']['args']['headers'] ? $log['data']['args']['headers'] : '' ), 'Decalog-No-Log' ) ) {
+			\DecaLog\Engine::eventsLogger( SECUPRESS_PLUGIN_SLUG )->log( $this->psr_levels[ $log['critic'] ? $log['critic'] : 'unknown' ] ? $this->psr_levels[ $log['critic'] ? $log['critic'] : 'unknown' ] : $this->psr_levels['unknown'], $log_inst->get_message() );
 		}
 
 		if ( $done ) {
