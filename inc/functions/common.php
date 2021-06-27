@@ -1340,6 +1340,9 @@ function secupress_add_settings_error( $setting, $code, $message, $type = 'error
 		'message' => $message,
 		'type'    => $type,
 	);
+
+	// Add this event to DecaLog.
+	\DecaLog\Engine::eventsLogger( SECUPRESS_PLUGIN_SLUG )->log( ( 'error' === $type ? \Psr\Log\LogLevel::ERROR : \Psr\Log\LogLevel::INFO ), sprintf( '%s [%s/%s].', $message, $code, $type ) );
 }
 
 
