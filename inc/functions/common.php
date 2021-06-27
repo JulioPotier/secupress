@@ -498,6 +498,9 @@ function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 	$content .= sprintf( __( 'Support ID: %s', 'secupress' ), '<textarea style="width:100%;height:27px;vertical-align:text-top">' . base64_encode( json_encode( $args['b64'] ) ) . '</textarea>' ) . '<br>';
 	$content .= '</p>';
 
+	// phpcs:ignore
+	\DecaLog\Engine::eventsLogger( SECUPRESS_PLUGIN_SLUG )->warning( sprintf( '%s blocked. Reason: %s. Support ID: %s.', $ip, $block_id, base64_encode( json_encode( $args['b64'] ) ) ) );
+
 	secupress_die( $content, $title, array( 'response' => $args['code'], 'force_die' => true ) );
 }
 
