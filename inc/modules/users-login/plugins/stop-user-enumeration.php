@@ -65,7 +65,7 @@ add_action( 'init', 'secupress_stop_user_enumeration_front', SECUPRESS_INT_MAX )
  **/
 function secupress_stop_user_enumeration_front() {
 	if ( ! current_user_can( 'list_users' ) && is_author() ) {
-		secupress_die( __( 'Sorry, you are not allowed to do that.', 'secupress' ), '', array( 'response' => 403, 'force_die' => true ) );
+		secupress_die( __( 'Sorry, you are not allowed to do that.', 'secupress' ), '', array( 'response' => 403, 'force_die' => true, 'log_level' => \Psr\Log\LogLevel::WARNING ) );
 	}
 }
 

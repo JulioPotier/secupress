@@ -30,7 +30,7 @@ if ( is_admin() ) {
 	 */
 	function secupress_no_plugin_install_page_redirect() {
 		if ( ! isset( $_GET['tab'] ) || 'plugin-information' !== $_GET['tab'] ) {
-			secupress_die( __( 'You do not have sufficient permissions to install plugins on this site.', 'secupress' ), '', array( 'force_die' => true ) );
+			secupress_die( __( 'You do not have sufficient permissions to install plugins on this site.', 'secupress' ), '', array( 'force_die' => true, 'log_level' => \Psr\Log\LogLevel::WARNING ) );
 		}
 	}
 
@@ -45,7 +45,7 @@ if ( is_admin() ) {
 	 */
 	function secupress_avoid_install_plugin( $action ) {
 		if ( 'plugin-upload' === $action || strpos( $action, 'install-plugin_' ) === 0 ) {
-			secupress_die( __( 'You do not have sufficient permissions to install plugins on this site.', 'secupress' ), '', array( 'force_die' => true ) );
+			secupress_die( __( 'You do not have sufficient permissions to install plugins on this site.', 'secupress' ), '', array( 'force_die' => true, 'log_level' => \Psr\Log\LogLevel::WARNING ) );
 		}
 	}
 
@@ -63,5 +63,5 @@ if ( is_admin() ) {
 }
 
 if ( isset( $_FILES['pluginzip'] ) ) {
-	secupress_die( __( 'You do not have sufficient permissions to install plugins on this site.', 'secupress' ), '', array( 'force_die' => true ) );
+	secupress_die( __( 'You do not have sufficient permissions to install plugins on this site.', 'secupress' ), '', array( 'force_die' => true, 'log_level' => \Psr\Log\LogLevel::WARNING ) );
 }

@@ -459,7 +459,7 @@ function secupress_move_login_deny_login_access() {
 													'id'       => __FUNCTION__,
 													'ip'       => 'admin', // use for nonce check, see action below v.
 													'action'   => 'action="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_unlock_admin' ), 'secupress-unban-ip-admin' ) . '"',
-													] ), '', array( 'force_die' => true )
+													] ), '', array( 'force_die' => true, 'log_level' => \Psr\Log\LogLevel::WARNING )
 	);
 }
 

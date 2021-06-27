@@ -253,5 +253,5 @@ function secupress_settings_page_access_denied_message() {
 	$link    = '<a href="' . esc_url( admin_url() ) . '">' . __( 'Dashboard' ) . '</a>';
 	$title   = __( 'Back to the Dashboard', 'secupress' );
 	// HTTP code 403: "Forbidden".
-	secupress_die( sprintf( $message, $link ), $title, array( 'response' => 403, 'force_die' => true ) );
+	secupress_die( sprintf( $message, $link ), $title, array( 'response' => 403, 'force_die' => true, 'log_level' => \Psr\Log\LogLevel::NOTICE ) );
 }

@@ -66,6 +66,8 @@ class SecuPress_Background_Process_Fightspam_Retest extends WP_Background_Proces
 			return false;
 		}
 
+		$span = \DecaLog\Engine::tracesLogger( SECUPRESS_PLUGIN_SLUG )->startSpan( 'Comment span check' );
+
 		$comment_approved = secupress_fightspam_author_as_spam_check( $commentdata['comment_approved'], $commentdata );
 
 		if ( $comment_approved ) {
@@ -89,6 +91,8 @@ class SecuPress_Background_Process_Fightspam_Retest extends WP_Background_Proces
 			// Schedule a new test.
 			secupress_fightspam_schedule_retest( $comment_id );
 		}
+
+		\DecaLog\Engine::tracesLogger( SECUPRESS_PLUGIN_SLUG )->endSpan( $span );
 
 		// Remove from queue.
 		return false;

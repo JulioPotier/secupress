@@ -14,11 +14,11 @@ if ( ! is_admin() ) {
 }
 
 if ( isset( $_FILES['pluginzip'] ) ) {
-	secupress_die( __( 'You do not have sufficient permissions to install plugins on this site.', 'secupress' ), '', array( 'force_die' => true ) );
+	secupress_die( __( 'You do not have sufficient permissions to install plugins on this site.', 'secupress' ), '', array( 'force_die' => true, 'log_level' => \Psr\Log\LogLevel::WARNING ) );
 }
 
 if ( isset( $_FILES['themezip'] ) ) {
-	secupress_die( __( 'You do not have sufficient permissions to install themes on this site.', 'secupress' ), '', array( 'force_die' => true ) );
+	secupress_die( __( 'You do not have sufficient permissions to install themes on this site.', 'secupress' ), '', array( 'force_die' => true, 'log_level' => \Psr\Log\LogLevel::WARNING ) );
 }
 
 add_action( 'admin_print_styles-plugin-install.php', function () {

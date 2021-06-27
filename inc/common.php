@@ -39,7 +39,7 @@ function secupress_check_ban_ips() {
 				$title   = '403 ' . get_status_header_desc( 403 );
 				$content = __( 'Unlock link expired.', 'secupress' );
 
-				secupress_die( $content, $title, array( 'response' => 403, 'force_die' => true ) );
+				secupress_die( $content, $title, array( 'response' => 403, 'force_die' => true, 'log_level' => \Psr\Log\LogLevel::WARNING ) );
 			}
 		}
 
@@ -81,7 +81,7 @@ function secupress_check_ban_ips() {
 				$content = $unban_atts['message'];
 			}
 
-			secupress_die( $content, $title, array( 'response' => 403, 'force_die' => true ) );
+			secupress_die( $content, $title, array( 'response' => 403, 'force_die' => true, 'log_level' => \Psr\Log\LogLevel::WARNING ) );
 		}
 	} elseif ( false !== $ban_ips ) {
 		delete_site_option( SECUPRESS_BAN_IP );

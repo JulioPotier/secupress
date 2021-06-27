@@ -29,7 +29,7 @@ if ( is_admin() ) {
 	 * @since 1.0
 	 */
 	function secupress_no_theme_install_page() {
-		secupress_die( __( 'You do not have sufficient permissions to install themes on this site.', 'secupress' ), '', array( 'force_die' => true ) );
+		secupress_die( __( 'You do not have sufficient permissions to install themes on this site.', 'secupress' ), '', array( 'force_die' => true, 'log_level' => \Psr\Log\LogLevel::WARNING ) );
 	}
 
 
@@ -43,11 +43,11 @@ if ( is_admin() ) {
 	 */
 	function secupress_avoid_switch_theme( $action ) {
 		if ( 'theme-upload' === $action || strpos( $action, 'install-theme_' ) === 0 ) {
-			secupress_die( __( 'You do not have sufficient permissions to install themes on this site.', 'secupress' ), '', array( 'force_die' => true ) );
+			secupress_die( __( 'You do not have sufficient permissions to install themes on this site.', 'secupress' ), '', array( 'force_die' => true, 'log_level' => \Psr\Log\LogLevel::WARNING ) );
 		}
 	}
 }
 
 if ( isset( $_FILES['themezip'] ) ) {
-	secupress_die( __( 'You do not have sufficient permissions to install themes on this site.', 'secupress' ), '', array( 'force_die' => true ) );
+	secupress_die( __( 'You do not have sufficient permissions to install themes on this site.', 'secupress' ), '', array( 'force_die' => true, 'log_level' => \Psr\Log\LogLevel::WARNING ) );
 }
