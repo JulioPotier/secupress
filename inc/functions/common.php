@@ -499,7 +499,7 @@ function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 	$content .= '</p>';
 
 	// phpcs:ignore
-	\DecaLog\Engine::eventsLogger( SECUPRESS_PLUGIN_SLUG )->warning( sprintf( '%s blocked. Reason: %s. Support ID: %s.', $ip, $block_id, base64_encode( json_encode( $args['b64'] ) ) ) );
+	\DecaLog\Engine::eventsLogger( SECUPRESS_PLUGIN_SLUG )->warning( sprintf( '%s blocked. Reason: %s. Support ID: %s.', $ip, $block_id, base64_encode( json_encode( $args['b64'] ) ) ), $args );
 
 	secupress_die( $content, $title, array( 'response' => $args['code'], 'force_die' => true ) );
 }
