@@ -169,7 +169,7 @@ function secupress_register_and_set_metrics() {
 		$total += isset( $metrics[ $key ] ) && 0 < (int) $metrics[ $key ] ? (int) $metrics[ $key ] : 0;
 	}
 	foreach ( [ 'good', 'bad', 'warning' ] as $key ) {
-		\DecaLog\Engine::metricsLogger( SECUPRESS_PLUGIN_SLUG )->createProdGauge( sprintf( 'scan_%s', $key ), 0 < $total ? $metrics[ $key ] / $total : 0, sprintf( 'Ratio of scan items with status "%s" - [percent]', $key ) );
+		\DecaLog\Engine::metricsLogger( SECUPRESS_PLUGIN_SLUG )->createProdGauge( sprintf( 'scan_%s', $key ), 0 < $total ? ( isset( $metrics[ $key ] ) ? $metrics[ $key ] : 0 ) / $total : 0, sprintf( 'Ratio of scan items with status "%s" - [percent]', $key ) );
 	}
 	\DecaLog\Engine::metricsLogger( SECUPRESS_PLUGIN_SLUG )->createProdGauge( 'fix_onhold', isset( $metrics['hasaction'] ) && 0 < (int) $metrics['hasaction'] ? (int) $metrics['hasaction'] : 0, 'Number of available fixes - [count]' );
 }
