@@ -808,7 +808,7 @@ class SecuPress_Logs_List_Table extends WP_List_Table {
 		* @param (WP_Post) $post
 		* @param (string) $criticity
 		*/
-		$actions = apply_filters( 'secupress.post_row_actions', $actions, $post, $_GET['critic'] );
+		$actions = apply_filters( 'secupress.post_row_actions', $actions, $post, $_GET['critic'] ? $_GET['critic'] : '' );
 
 		return $this->row_actions( $actions );
 	}
