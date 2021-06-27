@@ -404,6 +404,10 @@ function secupress_die( $message = '', $title = '', $args = array() ) {
 		if ( ! empty( $args['response'] ) ) {
 			http_response_code( absint( $args['response'] ) );
 		}
+
+		// Log death with DecaLog.
+		\DecaLog\Engine::eventsLogger( SECUPRESS_PLUGIN_SLUG )->log( isset( $args['log_level'] ) ? $args['log_level'] : \Psr\Log\LogLevel::ERROR, wp_kses( str_replace( [ '<br>', '<br/>', '<br />' ], ' ', $message ), [] ), [ 'code' => ( isset( $args['response'] ) ? absint( $args['response'] ) : 0 ) ] );
+
 		wp_die( $message, $title, $args );
 	}
 }
@@ -498,10 +502,7 @@ function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 	$content .= sprintf( __( 'Support ID: %s', 'secupress' ), '<textarea style="width:100%;height:27px;vertical-align:text-top">' . base64_encode( json_encode( $args['b64'] ) ) . '</textarea>' ) . '<br>';
 	$content .= '</p>';
 
-	// phpcs:ignore
-	\DecaLog\Engine::eventsLogger( SECUPRESS_PLUGIN_SLUG )->warning( sprintf( '%s blocked. Reason: %s. Support ID: %s.', $ip, $block_id, base64_encode( json_encode( $args['b64'] ) ) ), $args );
-
-	secupress_die( $content, $title, array( 'response' => $args['code'], 'force_die' => true ) );
+	secupress_die( $content, $title, array( 'response' => $args['code'], 'force_die' => true, 'log_level' => \Psr\Log\LogLevel::WARNING ) );
 }
 
 
