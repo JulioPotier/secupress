@@ -133,6 +133,9 @@ function secupress_init() {
 	//       would require a major refactoring of the plugin bootstrap sequence.
 	\DecaLog\Engine::initPlugin( SECUPRESS_PLUGIN_SLUG, SECUPRESS_PLUGIN_NAME, SECUPRESS_VERSION, $sp_logo );
 
+	// Registers and set metrics in one shot with DecaLog
+	secupress_register_and_set_metrics();
+
 	// Cleanup leftovers periodically.
 	SecuPress_Cleanup_Leftovers::get_instance();
 

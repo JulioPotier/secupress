@@ -157,6 +157,23 @@ function secupress_get_tests_for_ms_scanner_fixes() {
 	);
 }
 
+/**
+ * Registers and set metrics in one shot with DecaLog.
+ *
+ * @since 2.0
+ */
+function secupress_register_and_set_metrics() {
+	$total   = 0;
+	$metrics = secupress_get_scanner_counts();
+	foreach ( [ 'good', 'bad', 'warning' ] as $key ) {
+		$total += isset( $metrics[ $key ] ) && 0 < (int) $metrics[ $key ] ? (int) $metrics[ $key ] : 0;
+	}
+	foreach ( [ 'good', 'bad', 'warning' ] as $key ) {
+		\DecaLog\Engine::metricsLogger( SECUPRESS_PLUGIN_SLUG )->createProdGauge( sprintf( 'scan_%s', $key ), 0 < $total ? $metrics[ $key ] / $total : 0, sprintf( 'Ratio of scan items with status "%s" - [percent]', $key ) );
+	}
+	\DecaLog\Engine::metricsLogger( SECUPRESS_PLUGIN_SLUG )->createProdGauge( 'fix_onhold', isset( $metrics['hasaction'] ) && 0 < (int) $metrics['hasaction'] ? (int) $metrics['hasaction'] : 0, 'Number of available fixes - [count]' );
+}
+
 
 /**
  * Get SecuPress scanner counter(s).
