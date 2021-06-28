@@ -182,6 +182,8 @@ add_action( 'secupress.loaded', 'secupress_load_plugins' );
  * @since 1.0
  */
 function secupress_load_plugins() {
+	$span = \DecaLog\Engine::tracesLogger( SECUPRESS_PLUGIN_SLUG )->startSpan( 'Modules load', DECALOG_SPAN_PLUGINS_LOAD );
+
 	// All modules.
 	$modules = secupress_get_modules();
 
@@ -247,6 +249,8 @@ function secupress_load_plugins() {
 			}
 		}
 	}
+
+	\DecaLog\Engine::tracesLogger( SECUPRESS_PLUGIN_SLUG )->endSpan( $span );
 
 	$has_activation = false;
 

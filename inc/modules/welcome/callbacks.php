@@ -236,6 +236,8 @@ function secupress_pro_settings_white_label_callback() {
  * @return (array) $new_values The new settings, some values may have changed.
  */
 function secupress_global_settings_activate_pro_license( $new_values, $old_values = array() ) {
+	$span = \DecaLog\Engine::tracesLogger( SECUPRESS_PLUGIN_SLUG )->startSpan( 'License activation', DECALOG_SPAN_PLUGINS_LOAD );
+
 	// If the Pro is not installed, get the plugin information.
 	$need_plugin_data = (int) ! secupress_has_pro();
 	$api_old_values   = secupress_array_merge_intersect( $old_values, array(
@@ -328,7 +330,9 @@ function secupress_global_settings_activate_pro_license( $new_values, $old_value
 	if ( empty( $old_values ) ) {
 		$options = get_site_option( SECUPRESS_SETTINGS_SLUG ) ? get_site_option( SECUPRESS_SETTINGS_SLUG ) : array();
 		update_site_option( SECUPRESS_SETTINGS_SLUG, array_merge( $new_values, $options ) );
+		\DecaLog\Engine::tracesLogger( SECUPRESS_PLUGIN_SLUG )->endSpan( $span );
 	} else {
+		\DecaLog\Engine::tracesLogger( SECUPRESS_PLUGIN_SLUG )->endSpan( $span );
 		return $new_values;
 	}
 }
