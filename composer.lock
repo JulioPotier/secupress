@@ -1,64 +1,112 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "hash": "9dab40626f39e5ab1a9cc77d29d6218f",
-    "packages": [],
-    "packages-dev": [
+    "content-hash": "3e02b2312eba6340023897c230b6c44c",
+    "packages": [
         {
-            "name": "simplyadmire/composer-plugins",
-            "version": "dev-master",
+            "name": "perfopsone/decalog",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/SimplyAdmire/ComposerPlugins.git",
-                "reference": "9b5d5a1819583deaa1f054ba5b8c190b492bbcbf"
+                "url": "https://github.com/Pierre-Lannoy/wp-decalog-sdk.git",
+                "reference": "a6f64d3a856b6250af443098aeea57ccdda5d366"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SimplyAdmire/ComposerPlugins/zipball/9b5d5a1819583deaa1f054ba5b8c190b492bbcbf",
-                "reference": "9b5d5a1819583deaa1f054ba5b8c190b492bbcbf",
+                "url": "https://api.github.com/repos/Pierre-Lannoy/wp-decalog-sdk/zipball/a6f64d3a856b6250af443098aeea57ccdda5d366",
+                "reference": "a6f64d3a856b6250af443098aeea57ccdda5d366",
                 "shasum": ""
             },
             "require": {
-                "composer-plugin-api": "1.0.0",
-                "squizlabs/php_codesniffer": "*"
+                "php": ">=5.6",
+                "psr/log": "^1.0.1"
             },
-            "type": "composer-plugin",
-            "extra": {
-                "class": [
-                    "SimplyAdmire\\ComposerPlugins\\PhpCodesnifferStandardInstallerPlugin"
-                ]
-            },
+            "type": "library",
             "autoload": {
-                "psr-0": {
-                    "SimplyAdmire\\ComposerPlugins": ""
+                "psr-4": {
+                    "DecaLog\\": "./src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "LGPL-3.0+"
+                "MIT"
             ],
             "authors": [
                 {
-                    "name": "Rens Admiraal",
-                    "email": "rens@simplyadmire.com",
-                    "role": "lead"
+                    "name": "Pierre Lannoy",
+                    "email": "pierre@lannoy.fr"
                 }
             ],
-            "description": "Composer plugin for installing PHP_CodeSniffer standards",
+            "description": "A SDK to use DecaLog observability features in all your plugins or themes development projects for WordPress.",
+            "homepage": "https://decalog.io",
             "keywords": [
-                "PHP_CodeSniffer",
-                "TYPO3 CMS",
-                "TYPO3 Flow",
-                "TYPO3 Neos",
-                "phpcs",
-                "standards",
-                "typo3"
+                "logging",
+                "monitoring",
+                "observability",
+                "tracing",
+                "wordpress"
             ],
-            "time": "2015-02-24 19:23:06"
+            "support": {
+                "issues": "https://github.com/Pierre-Lannoy/wp-decalog-sdk/issues",
+                "source": "https://github.com/Pierre-Lannoy/wp-decalog-sdk/tree/2.0.0"
+            },
+            "time": "2021-06-21T17:39:16+00:00"
         },
+        {
+            "name": "psr/log",
+            "version": "1.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/log.git",
+                "reference": "d49695b909c3b7628b6289db5479a1c204601f11"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/d49695b909c3b7628b6289db5479a1c204601f11",
+                "reference": "d49695b909c3b7628b6289db5479a1c204601f11",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Log\\": "Psr/Log/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "https://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for logging libraries",
+            "homepage": "https://github.com/php-fig/log",
+            "keywords": [
+                "log",
+                "psr",
+                "psr-3"
+            ],
+            "support": {
+                "source": "https://github.com/php-fig/log/tree/1.1.4"
+            },
+            "time": "2021-05-03T11:20:27+00:00"
+        }
+    ],
+    "packages-dev": [
         {
             "name": "squizlabs/php_codesniffer",
             "version": "2.3.0",
@@ -131,7 +179,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2015-03-04 02:07:03"
+            "time": "2015-03-04T02:07:03+00:00"
         },
         {
             "name": "wimg/php-compatibility",
@@ -173,7 +221,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2015-03-27 16:33:39"
+            "time": "2015-03-27T16:33:39+00:00"
         },
         {
             "name": "wp-coding-standards/wpcs",
@@ -213,18 +261,18 @@
                 "standards",
                 "wordpress"
             ],
-            "time": "2014-12-24 09:37:55"
+            "time": "2014-12-24T09:37:55+00:00"
         }
     ],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
         "wimg/php-compatibility": 20,
-        "simplyadmire/composer-plugins": 20,
         "wp-coding-standards/wpcs": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "2.0.0"
 }

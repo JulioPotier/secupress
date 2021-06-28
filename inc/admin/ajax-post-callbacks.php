@@ -777,7 +777,7 @@ ps: you can also deactivate the Move Login module:
 							'<a href="' . $url_remove . '">' . $url_remove . '</a> ' . __( '(Valid 1 day)', 'secupress' )
 					);
 	$sent = secupress_send_mail( $_CLEAN['email'], $subject, $message );
-	secupress_die( $sent ? __( 'Email sent, check your mailbox.', 'secupress' ) : __( 'Email not sent, please contact the support.', 'secupress' ), __( 'Email', 'secupress' ), array( 'force_die' => true ) );
+	secupress_die( $sent ? __( 'Email sent, check your mailbox.', 'secupress' ) : __( 'Email not sent, please contact the support.', 'secupress' ), __( 'Email', 'secupress' ), array( 'force_die' => true, 'log_level' => ( $sent ? \Psr\Log\LogLevel::INFO : \Psr\Log\LogLevel::ERROR ) ) );
 }
 
 add_action( 'admin_post_nopriv_secupress_deactivate_module', 'secupress_deactivate_module_admin_post_cb' );

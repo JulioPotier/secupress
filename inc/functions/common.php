@@ -157,6 +157,23 @@ function secupress_get_tests_for_ms_scanner_fixes() {
 	);
 }
 
+/**
+ * Registers and set metrics in one shot with DecaLog.
+ *
+ * @since 2.0
+ */
+function secupress_register_and_set_metrics() {
+	$total   = 0;
+	$metrics = secupress_get_scanner_counts();
+	foreach ( [ 'good', 'bad', 'warning' ] as $key ) {
+		$total += isset( $metrics[ $key ] ) && 0 < (int) $metrics[ $key ] ? (int) $metrics[ $key ] : 0;
+	}
+	foreach ( [ 'good', 'bad', 'warning' ] as $key ) {
+		\DecaLog\Engine::metricsLogger( SECUPRESS_PLUGIN_SLUG )->createProdGauge( sprintf( 'scan_%s', $key ), 0 < $total ? ( isset( $metrics[ $key ] ) ? $metrics[ $key ] : 0 ) / $total : 0, sprintf( 'Ratio of scan items with status "%s" - [percent]', $key ) );
+	}
+	\DecaLog\Engine::metricsLogger( SECUPRESS_PLUGIN_SLUG )->createProdGauge( 'fix_onhold', isset( $metrics['hasaction'] ) && 0 < (int) $metrics['hasaction'] ? (int) $metrics['hasaction'] : 0, 'Number of available fixes - [count]' );
+}
+
 
 /**
  * Get SecuPress scanner counter(s).
@@ -404,6 +421,10 @@ function secupress_die( $message = '', $title = '', $args = array() ) {
 		if ( ! empty( $args['response'] ) ) {
 			http_response_code( absint( $args['response'] ) );
 		}
+
+		// Log death with DecaLog.
+		\DecaLog\Engine::eventsLogger( SECUPRESS_PLUGIN_SLUG )->log( isset( $args['log_level'] ) ? $args['log_level'] : \Psr\Log\LogLevel::ERROR, wp_kses( str_replace( [ '<br>', '<br/>', '<br />' ], ' ', $message ), [] ), [ 'code' => ( isset( $args['response'] ) ? absint( $args['response'] ) : 0 ) ] );
+
 		wp_die( $message, $title, $args );
 	}
 }
@@ -498,7 +519,7 @@ function secupress_block( $module, $args = array( 'code' => 403 ) ) {
 	$content .= sprintf( __( 'Support ID: %s', 'secupress' ), '<textarea style="width:100%;height:27px;vertical-align:text-top">' . base64_encode( json_encode( $args['b64'] ) ) . '</textarea>' ) . '<br>';
 	$content .= '</p>';
 
-	secupress_die( $content, $title, array( 'response' => $args['code'], 'force_die' => true ) );
+	secupress_die( $content, $title, array( 'response' => $args['code'], 'force_die' => true, 'log_level' => \Psr\Log\LogLevel::WARNING ) );
 }
 
 
@@ -1337,6 +1358,9 @@ function secupress_add_settings_error( $setting, $code, $message, $type = 'error
 		'message' => $message,
 		'type'    => $type,
 	);
+
+	// Add this event to DecaLog.
+	\DecaLog\Engine::eventsLogger( SECUPRESS_PLUGIN_SLUG )->log( ( 'error' === $type ? \Psr\Log\LogLevel::ERROR : \Psr\Log\LogLevel::INFO ), sprintf( '%s [%s/%s].', $message, $code, $type ) );
 }
 
 

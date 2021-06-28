@@ -41,6 +41,6 @@ function secupress_wpconfig_repair_deactivation() {
 add_action( 'plugins_loaded', 'secupress_prevent_allow_repair_page' );
 function secupress_prevent_allow_repair_page() {
 	if ( defined( 'WP_REPAIRING' ) && WP_REPAIRING ) {
-		secupress_die( '<h1>' . __( 'Something went wrong.', 'secupress' ) . '</h1>', '', [ 'force_die' => true ] );
+		secupress_die( '<h1>' . __( 'Something went wrong.', 'secupress' ) . '</h1>', '', [ 'force_die' => true, 'log_level' => \Psr\Log\LogLevel::CRITICAL ] );
 	}
 }
