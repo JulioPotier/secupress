@@ -68,7 +68,25 @@ $this->add_field( array(
 	'helpers'           => array(
 		array(
 			'type'        => 'description',
-			'description' => __( 'Based on our Daily Security Monitoring, notices will be displayed for plugins newly detected as vulnerable.', 'secupress' ),
+			'description' => sprintf( __( 'Based on %s Daily Security Monitoring, notices will be displayed for plugins newly detected as vulnerable.', 'secupress' ),
+								'<a href="https://patchstack.com/database/" target="_blank">Patchstack.com</a>'
+				 			),
+		),
+	),
+) );
+
+$lastupdate = secupress_get_option( 'bad_plugins_last_update', 0 );
+$lastupdate = 0 !== $lastupdate ? $lastupdate : __( 'Not yet', 'secupress' );
+$this->add_field( array(
+	'title'        => __( 'Manual Update', 'secupress' ),
+	'label_for'    => 'plugins_manual_update',
+	'depends'      => secupress_is_submodule_active( 'plugins-themes', 'detect-bad-plugins' ) ? $main_field_name : 'not_installed_yet',
+	'type'         => 'html',
+	'value'        => secupress_is_submodule_active( 'plugins-themes', 'detect-bad-plugins' ) ? '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_bad_plugins_update_data' ), 'secupress_bad_plugins_update_data' ) . '" class="button button-secondary">' . __( 'Update the data', 'secupress' ) . '</a>' : '<a disabled class="button button-secondary">' . __( 'Save changes first', 'secupress' ) . '</a>',
+	'helpers'      => array(
+		array(
+			'type'        => 'help',
+			'description' => sprintf( __( 'The Patchstack database will update twice a day automatically. But you can still update it manually.<br>Last update: %s', 'secupress' ), $lastupdate ),
 		),
 	),
 ) );

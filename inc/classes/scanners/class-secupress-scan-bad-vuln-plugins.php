@@ -94,7 +94,7 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 			203 => _n_noop( 'Sorry, this plugin could not be deleted.', 'Sorry, those plugins could not be deleted.', 'secupress' ),
 			204 => _n_noop( 'The following plugin should be deactivated if you don’t need it: %s.', 'The following plugins should be deactivated if you don’t need them: %s.', 'secupress' ),
 			205 => _n_noop( 'Sorry, this plugin could not be deactivated.', 'Sorry, those plugins could not be deactivated.', 'secupress' ),
-			206 => __( 'Your installation contains some plugins known to be vulnerable. The PRO version will be more accurate.', 'secupress' ),
+			206 => __( 'Your installation may contain vulnerable plugins. The PRO version will be more accurate.', 'secupress' ),
 			// "cantfix"
 			/** Translators: %d is a number. */
 			300 => _n_noop( '<strong>%d</strong> plugin can be <strong>deleted</strong>.', '<strong>%d</strong> plugins can be <strong>deleted</strong>.', 'secupress' ),
@@ -227,6 +227,7 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 	/**
 	 * Get an array of installed plugins that are vulnerable.
 	 *
+	 * @since 2.1 Returns 1 if not pro
 	 * @since 1.0.3 Don't use the whitelist
 	 * @since 1.0
 	 *
@@ -237,14 +238,14 @@ class SecuPress_Scan_Bad_Vuln_Plugins extends SecuPress_Scan implements SecuPres
 	final protected function get_installed_plugins_vulnerables( $for_fix = false ) {
 		static $whitelist_error = false;
 
+		if ( ! secupress_is_pro() ) {
+			return 1;
+		}
+
 		$bad_plugins = secupress_get_vulnerable_plugins();
 
 		if ( ! $bad_plugins ) {
 			return array();
-		}
-
-		if ( is_numeric( $bad_plugins ) ) {
-			return 1; // Free api call.
 		}
 
 		$all_plugins = get_plugins();

@@ -190,8 +190,8 @@ class SecuPress_Log {
 	 *
 	 * @return (string) A title containing some related data.
 	 */
-	public function get_title() {
-		$this->set_title();
+	public function get_title( $post ) {
+		$this->set_title( $post );
 		return $this->title;
 	}
 
@@ -486,7 +486,7 @@ class SecuPress_Log {
 	 *
 	 * @since 1.0
 	 */
-	protected function set_title() {
+	protected function set_title( $post = null ) {
 		/**
 		 * First, `$this->title` must be set by the method extending this one.
 		 */
@@ -506,7 +506,7 @@ class SecuPress_Log {
 		}
 
 		// Add the data to the title.
-		$this->title = vsprintf( $this->title, $data );
+		$this->title = apply_filters( 'secupress.logs.set_title', vsprintf( $this->title, $data ), $this->title, $data, $post );
 	}
 
 

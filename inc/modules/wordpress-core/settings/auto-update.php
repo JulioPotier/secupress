@@ -19,7 +19,7 @@ $this->add_field( array(
 	'helpers'           => array(
 		array(
 			'type'        => 'warning',
-			'description' => __( 'Not allowing this may result in using a vulnerable version of WordPress. Usually, minor versions are safe to update and contains security fixes.', 'secupress' ),
+			'description' => __( 'Not allowing this may result in using a vulnerable version of WordPress. Usually, minor versions are safe to update and contain security fixes.', 'secupress' ),
 		),
 	),
 ) );

@@ -556,6 +556,16 @@ button.secupress-virgin {
 	box-shadow: none;
 	text-shadow: none;
 }
+.secupress-thickbox-fixed {
+	position: fixed;
+	background: #fff;
+	width: 372px;
+	padding: 14px;
+	text-align: right;
+}
+.secupress-thickbox-fixed + hr {
+	margin-top: 60px;
+}
 .secupress-button.secupress-button,
 .secupress-button-primary.secupress-button-primary,
 .secupress-button-secondary.secupress-button-secondary,

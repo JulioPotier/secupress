@@ -44,7 +44,17 @@
 	clear: both;
 	margin: 35px 0;
 }
-
+div.secupress-notif {
+	background: #fff;
+    border: 1px solid #c3c4c7;
+    border-left-width: 4px;
+    box-shadow: 0 1px 1px rgb(0 0 0 / 4%);
+    margin: 5px 0 15px;
+    padding: 1px 12px;
+}
+div.secupress-error {
+    border-left-color: #d63638;
+}
 /* Inline-block */
 .secupress-ib {
 	display: inline-block;
@@ -1359,6 +1369,9 @@ table.fixed .column-critic {
 }
 table.fixed .column-date {
 	width: 11em;
+}
+table.fixed .column-counter {
+	width: 7em;
 }
 .column-title .secupress-inline-spinner {
 	float: right;

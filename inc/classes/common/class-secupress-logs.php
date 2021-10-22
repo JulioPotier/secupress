@@ -93,7 +93,6 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		if ( ! $this->post_type ) {
 			$this->post_type = static::build_post_type_name( $this->log_type );
 		}
-
 		return $this->post_type;
 	}
 
@@ -161,16 +160,6 @@ class SecuPress_Logs extends SecuPress_Singleton {
 				'key'     => 'user_id',
 				'compare' => 'NOT EXISTS',
 			);
-
-			if ( ! secupress_wp_version_is( '3.9' ) ) {
-				/**
-				 * Bugfix for meta queries with `NOT EXISTS`.
-				 *
-				 * @see http://codex.wordpress.org/Class_Reference/WP_Query#Custom_Field_Parameters.
-				 * @see https://core.trac.wordpress.org/ticket/23268.
-				 */
-				$meta['value'] = 'foo';
-			}
 
 			$args['meta_query'][] = $meta;
 		}
@@ -267,7 +256,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 	public function get_logs_limit() {
 		/**
 		 * Limit the number of Logs stored in the database.
-		 * By default 1000, is restricted between 50 and 2000.
+		 * By default 1000, is restricted between 10 and 10000.
 		 *
 		 * @since 1.0
 		 *
@@ -276,7 +265,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		 */
 		$limit = apply_filters( 'secupress.logs.logs_limit', 1000, $this->log_type );
 
-		return secupress_minmax_range( $limit, 50, 2000 );
+		return secupress_minmax_range( $limit, 10, 10000 );
 	}
 
 
@@ -579,7 +568,6 @@ class SecuPress_Logs extends SecuPress_Singleton {
 		if ( ! empty( $args['post_type'] ) && $this->get_post_type() === $args['post_type'] ) {
 			return $this->logs_query_args( $args );
 		}
-
 		return $args;
 	}
 
@@ -712,7 +700,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			return 0;
 		}
 
-		$added   = 0;
+		$added   = [];
 		$user_id = 0;
 
 		if ( is_multisite() ) {
@@ -749,6 +737,7 @@ class SecuPress_Logs extends SecuPress_Singleton {
 				'post_type'   => $this->get_post_type(), // Post type / Action, 404.
 				'post_date'   => $new_log['time'],       // Post date / Time.
 				'menu_order'  => 0,                      // Menu order / Microtime.
+				'post_parent' => isset( $new_log['parent'] ) ? (int) $new_log['parent'] : 0, // For HTTP logs or 0.
 				'post_status' => 'normal',               // Post status / Criticity.
 				'post_author' => $user_id,               // Post author: needed to create the post, we don't want the current user to create it.
 			);
@@ -789,11 +778,11 @@ class SecuPress_Logs extends SecuPress_Singleton {
 			// It's too soon, we need to delay the log creation.
 			if ( ! $log_now ) {
 				$delayed_logs[] = array( 'args' => $args, 'meta' => $new_log );
-				++$added;
+				$added[] = true;
 			}
 			// Create the Log.
 			elseif ( $post_id = static::insert_log( $args, $new_log ) ) {
-				++$added;
+				$added[] = $post_id;
 			}
 		}
 

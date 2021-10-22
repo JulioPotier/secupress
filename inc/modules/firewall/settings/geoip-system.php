@@ -36,6 +36,10 @@ $this->add_field( array(
 			'type'        => 'description',
 			'description' => __( 'Remember that the detection of a visit is based on the IP address, so it’s effective for almost all automated attacks.', 'secupress' ),
 		),
+		array(
+			'type'        => 'warning',
+			'description' => __( 'This module will store GeoIP data in the database, raising it for about 25MB.', 'secupress' ),
+		),
 	),
 ) );
 
@@ -75,7 +79,7 @@ $this->add_field( array(
 	'label_for'    => 'manual_update',
 	'depends'      => '1' === get_option( 'secupress_geoip_installed', 0 ) ? $main_field_name . '_blacklist ' . $main_field_name . '_whitelist' : 'not_installed_yet',
 	'type'         => 'html',
-	'value'        => '1' === get_option( 'secupress_geoip_installed', 0 ) ? '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_geoips_update_data' ), 'secupress_geoips_update_data' ) . '" class="button button-secondary">Update the GeoIP database now</a>' : '<a disabled class="button button-secondary">Save the changes first</a>',
+	'value'        => '1' === get_option( 'secupress_geoip_installed', 0 ) ? '<a href="' . wp_nonce_url( admin_url( 'admin-post.php?action=secupress_geoips_update_data' ), 'secupress_geoips_update_data' ) . '" class="button button-secondary">' . __( 'Update the GeoIP database now', 'secupress' ) . '</a>' : '<a disabled class="button button-secondary">' . __( 'Save changes first', 'secupress' ) . '</a>',
 	'helpers'      => array(
 		array(
 			'type'        => 'help',

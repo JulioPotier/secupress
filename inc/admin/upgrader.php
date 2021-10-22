@@ -477,11 +477,15 @@ if ( ! secupress_is_white_label() ) {
 		}
 
 		$title    = sprintf( '<strong>' . __( 'What’s new in SecuPress %s', 'secupress' ) . '</strong>', SECUPRESS_MAJOR_VERSION );
-		$readmore = '';//'<a href="https://secupress.me/changelog"><em>' . __( 'Or read full changelog on secupress.me', 'secupress' ) . '</em></a>';
-		$newitems = [
-						__( 'So many things have changed, read our blog post: <a href="https://secupress.me/blog/secupress-v2-0">SecuPress v2.0 aka Python</a>.', 'secupress' ),
+		$readmore = '<a href="https://secupress.me/changelog" target="_blank"><em>' . __( 'Or read full changelog on secupress.me', 'secupress' ) . '</em></a>';
+		$newitems = [ 	//__( 'New HTTP Logs Module', 'secupress' ),
+						__( 'New Vulnerable Themes and Plugins API', 'secupress' ),
+						__( 'New GeoIP API', 'secupress' ),
+						__( 'New Sessions Details', 'secupress' ),
 					];
-		$newitems = '<ul><li>• ' . implode( '</li><li>• ', $newitems ) . '</li></ul>';
-		secupress_add_transient_notice( $title . $newitems . $readmore, 'updated', $notice_id );
+		if ( ! empty( $newitems ) ) {
+			$newitems = '<ul><li>• ' . implode( '</li><li>• ', $newitems ) . '</li></ul>';
+			secupress_add_transient_notice( $title . $newitems . $readmore, 'updated', $notice_id );
+		}
 	}
 }

@@ -19,7 +19,7 @@ $this->add_field( array(
 	'type'              => 'checkbox',
 	'disabled'          => get_option( 'users_can_register' ),
 	'value'             => get_option( 'users_can_register' ) ? false : (int) secupress_is_submodule_active( 'users-login', 'prevent-user-creation' ),
-	'label'             => __( 'Yes, forbid attacks to exploit user creation', 'secupress' ),
+	'label'             => __( 'Yes, always forbid new user creation', 'secupress' ),
 	'helpers'           => $helpers,
 ) );
 

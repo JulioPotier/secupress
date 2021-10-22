@@ -103,3 +103,47 @@ if ( class_exists( 'SecuPress_404_Logs' ) ) :
 	) );
 
 endif;
+
+
+/**
+ * WP HTTP Requests.
+$main_field_name = $this->get_field_name( 'http-logs-activated' );
+
+$this->add_field( array(
+	'title'             => __( 'HTTP Requests Log', 'secupress' ),
+	'description'       => __( 'Every HTTP request triggered from WordPress can be tracked here.', 'secupress' ),
+	'label_for'         => $main_field_name,
+	'type'              => 'activate_http_logs',
+	'label'             => __( 'Yes, log WordPress HTTP requests', 'secupress' ),
+) );
+
+
+if ( class_exists( 'SecuPress_HTTP_Logs' ) ) :
+
+	$post_type = SecuPress_HTTP_Logs::get_instance()->get_post_type();
+	$logs      = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ID) FROM $wpdb->posts WHERE post_type = %s", $post_type ) );
+
+	if ( $logs ) {
+		$log_type = SecuPress_HTTP_Logs::get_instance()->get_log_type();
+		$text     = sprintf( _n( '%s HTTP Request.', '%s HTTP Requests.', $logs, 'secupress' ), number_format_i18n( $logs ) );
+		$text     = '<a href="' . esc_url( SecuPress_HTTP_Logs::get_log_type_url( $log_type ) ) . '">' . $text . '</a>';
+	} else {
+		$text     = __( 'Nothing happened yet.', 'secupress' );
+	}
+
+	$this->add_field( array(
+		'title'        => '',
+		'description'  => __( 'What happened on your WordPress website?', 'secupress' ),
+		'depends'      => $main_field_name,
+		'name'         => $this->get_field_name( 'logs-http' ),
+		'type'         => 'html',
+		'value'        => "<p>$text</p>\n",
+	) );
+
+endif;
+
+$this->add_field( array(
+	'title'        => '',
+	'type'         => 'http_logs_restrictions',
+) );
+ */

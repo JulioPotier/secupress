@@ -5,7 +5,7 @@
  * Description: More than a plugin, the guarantee of a protected website by experts.
  * Author: SecuPress
  * Author URI: https://secupress.me
- * Version: 2.0.3
+ * Version: 2.1
  * Code Name: Python (Mark XX)
  * Network: true
  * Contributors: SecuPress, juliobox, GregLone
@@ -23,18 +23,11 @@ defined( 'ABSPATH' ) or die( 'Something went wrong.' );
 /** DEFINES ===================================================================================== */
 /** ----------------------------------------------------------------------------------------------*/
 
-define( 'SECUPRESS_VERSION',                    '2.0.3' );
-// define( 'SECUPRESS_PRO_VERSION',                SECUPRESS_VERSION );
-define( 'SECUPRESS_MAJOR_VERSION',              '2.0' );
+define( 'SECUPRESS_VERSION',                    '2.1' );
+define( 'SECUPRESS_MAJOR_VERSION',              '2.1' );
 define( 'SECUPRESS_FILE',                       __FILE__ );
 define( 'SECUPRESS_PATH',                       realpath( dirname( SECUPRESS_FILE ) ) . DIRECTORY_SEPARATOR );
 define( 'SECUPRESS_INC_PATH',                   SECUPRESS_PATH . 'inc' . DIRECTORY_SEPARATOR );
-define( 'SECUPRESS_PRO_INC_PATH',               SECUPRESS_PATH . 'pro' . DIRECTORY_SEPARATOR );
-define( 'SECUPRESS_PRO_ADMIN_PATH',             SECUPRESS_PRO_INC_PATH . 'admin' . DIRECTORY_SEPARATOR );
-define( 'SECUPRESS_PRO_CLASSES_PATH',           SECUPRESS_PRO_INC_PATH . 'classes' . DIRECTORY_SEPARATOR );
-define( 'SECUPRESS_PRO_MODULES_PATH',           SECUPRESS_PRO_INC_PATH . 'modules' . DIRECTORY_SEPARATOR );
-define( 'SECUPRESS_PRO_ADMIN_SETTINGS_MODULES', SECUPRESS_PRO_ADMIN_PATH . 'modules' . DIRECTORY_SEPARATOR );
-
 
 
 /** --------------------------------------------------------------------------------------------- */
@@ -361,6 +354,7 @@ function secupress_load_functions() {
 	secupress_require_class( 'Scanner_Results' );
 
 	// Admin side but need when running cron.
+	require_once( SECUPRESS_ADMIN_PATH . 'functions/settings.php' );
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/scan-fix.php' );
 
 	if ( ! is_admin() ) {
@@ -383,7 +377,6 @@ function secupress_load_functions() {
 	// Functions for the admin side.
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/admin.php' );
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/options.php' );
-	require_once( SECUPRESS_ADMIN_PATH . 'functions/settings.php' );
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/ajax-post.php' );
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/modules.php' );
 	require_once( SECUPRESS_ADMIN_PATH . 'functions/notices.php' );

@@ -171,6 +171,7 @@ function secupress_get_modules() {
 							'row-banned-ips_whitelist'       => __( 'Allow IPs', 'secupress' ),
 							'row-logs_action-logs-activated' => __( 'Action Logs Activation', 'secupress' ),
 							'row-logs_404-logs-activated'    => __( '404 Logs Activation', 'secupress' ),
+							// 'row-logs_http-logs-activated'   => __( 'HTTP Logs Activation', 'secupress' ),
 						]
 		],
 		'addons'          => [

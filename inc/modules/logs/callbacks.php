@@ -66,3 +66,24 @@ function secupress_activate_404_logs() {
 	wp_redirect( esc_url_raw( wp_get_referer() ) );
 	die();
 }
+
+
+add_action( 'admin_post_secupress_activate_http_logs', 'secupress_activate_http_logs' );
+/**
+ * Activate or deactivate "HTTP" Logs.
+ *
+ * @since 2.1
+ */
+function secupress_activate_http_logs() {
+	// Make all security tests.
+	secupress_check_admin_referer( 'secupress_activate_http_logs' );
+	secupress_check_user_capability();
+
+	// (De)Activate.
+	$activate = ! empty( $_POST['secupress-plugin-activation']['logs_http-logs-activated'] );
+	secupress_manage_submodule( 'logs', 'http-logs', $activate );
+
+	// Redirect.
+	wp_redirect( esc_url_raw( wp_get_referer() ) );
+	die();
+}

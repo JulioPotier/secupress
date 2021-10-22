@@ -19,8 +19,11 @@ function secupress_add_settings_scripts_for_dark_mode() {
 	wp_enqueue_style( 'secupress-dark-mode', SECUPRESS_ADMIN_CSS_URL . 'secupress-dark-mode' . $suffix . '.css', array( 'secupress-wordpress-css' ), $version );
 }
 
+/*
 add_action( 'admin_footer-plugins.php', 'secupress_add_deactivation_form' );
 add_action( 'admin_footer-plugins-network.php', 'secupress_add_deactivation_form' );
+// Removed in 2.1, for now.
+*/
 /**
  * Onclude the modal form for deactivation feedback, only if transient is not set
  *
@@ -49,12 +52,13 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 	$css_depts = array();
 	$js_depts  = array( 'jquery' );
 
-	if ( ! function_exists( 'wp_get_environment_type' ) || 'production' === wp_get_environment_type() ) {
-		if ( 'plugins.php' === $hook_suffix || 'plugins-network.php' === $hook_suffix ) {
-			wp_enqueue_style( 'secupress-modal', SECUPRESS_ADMIN_CSS_URL . 'secupress-modal' . $suffix . '.css', null, SECUPRESS_VERSION );
-			wp_enqueue_script( 'secupress-modal', SECUPRESS_ADMIN_JS_URL . 'secupress-modal' . $suffix . '.js', null, SECUPRESS_VERSION, true );
-		}
-	}
+	// Deactivation Modal removed in 2.1 for now
+	// if ( ! function_exists( 'wp_get_environment_type' ) || 'production' === wp_get_environment_type() ) {
+	// 	if ( 'plugins.php' === $hook_suffix || 'plugins-network.php' === $hook_suffix ) {
+	// 		wp_enqueue_style( 'secupress-modal', SECUPRESS_ADMIN_CSS_URL . 'secupress-modal' . $suffix . '.css', null, SECUPRESS_VERSION );
+	// 		wp_enqueue_script( 'secupress-modal', SECUPRESS_ADMIN_JS_URL . 'secupress-modal' . $suffix . '.js', null, SECUPRESS_VERSION, true );
+	// 	}
+	// }
 
 	// Sweet Alert.
 	if ( SECUPRESS_PLUGIN_SLUG . '_page_' . SECUPRESS_PLUGIN_SLUG . '_modules' === $hook_suffix || 'toplevel_page_' . SECUPRESS_PLUGIN_SLUG . '_scanners' === $hook_suffix ) {
@@ -86,11 +90,11 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 		SECUPRESS_PLUGIN_SLUG . '_page_' . SECUPRESS_PLUGIN_SLUG . '_logs'     => 1,
 	);
 
+	SecuPress_Admin_Pointers::enqueue_scripts( $hook_suffix );
+
 	if ( ! isset( $pages[ $hook_suffix ] ) ) {
 		return;
 	}
-
-	SecuPress_Admin_Pointers::enqueue_scripts( $hook_suffix );
 
    	// SecuPress Common CSS.
 	wp_enqueue_style( 'secupress-common-css', SECUPRESS_ADMIN_CSS_URL . 'secupress-common' . $suffix . '.css', array( 'secupress-wordpress-css' ), $version );
@@ -225,7 +229,7 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 			'notFixed'           => __( 'Not fixed', 'secupress' ),
 			'fixit'              => __( 'Fix it', 'secupress' ),
 			'oneManualFix'       => __( 'One fix requires your intervention.', 'secupress' ),
-			'fixInProgress'      => __( 'Fix in progress...', 'secupress' ),
+			'fixInProgress'      => __( 'Fix in progress&hellip;', 'secupress' ),
 			'someManualFixes'    => __( 'Some fixes require your intervention.', 'secupress' ),
 			'spinnerUrl'         => admin_url( 'images/wpspin_light-2x.gif' ),
 			'reScan'             => _x( 'Scan', 'verb', 'secupress' ),
@@ -256,7 +260,13 @@ function secupress_add_settings_scripts( $hook_suffix ) {
 	// Logs page.
 	elseif ( SECUPRESS_PLUGIN_SLUG . '_page_' . SECUPRESS_PLUGIN_SLUG . '_logs' === $hook_suffix ) {
 		// CSS.
+		////// CSS.
 		wp_enqueue_style( 'secupress-logs-css',  SECUPRESS_ADMIN_CSS_URL . 'secupress-logs' . $suffix . '.css', array( 'secupress-common-css' ), $version );
+		wp_enqueue_style( 'secupress-modules-css',  SECUPRESS_ADMIN_CSS_URL . 'secupress-modules' . $suffix . '.css', array( 'secupress-common-css' ), $version );
+		wp_enqueue_script( 'secupress-logs-js',  SECUPRESS_ADMIN_JS_URL . 'secupress-logs' . $suffix . '.js', array( 'jquery-ui-slider' ), $version );
+		$localize = [ 'steps' => secupress_get_http_logs_limits() ];
+		wp_localize_script( 'secupress-logs-js', 'SecuPressi18nLogs', $localize );
+		add_thickbox();
 	}
 
 }

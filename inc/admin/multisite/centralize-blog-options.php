@@ -210,7 +210,7 @@ function secupress_add_centralized_blog_options_admin_post_callback() {
 		<div class="progress-wrap"><div style="width:<?php echo $percent; ?>%" class="progress"><?php echo $percent; ?>%</div></div>
 	</div>
 	<?php
-	$title   = __( 'Setting new data...', 'secupress' );
+	$title   = __( 'Setting new data&hellip;', 'secupress' );
 	$content = ob_get_contents();
 	$args    = array( 'head' => '<meta http-equiv="refresh" content="1" />' );
 	ob_clean();

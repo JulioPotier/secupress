@@ -531,7 +531,7 @@ class SecuPress_Action_Log extends SecuPress_Log {
 	 *
 	 * @since 1.0
 	 */
-	protected function set_title( $post = null ) {
+	protected function set_title( $post = NULL ) {
 		switch ( $this->type ) {
 			case 'option':
 				$this->set_option_title();

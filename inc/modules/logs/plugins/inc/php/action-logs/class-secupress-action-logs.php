@@ -282,7 +282,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	 * @param (mixed)  $value  The option new value.
 	 */
 	public function maybe_log_added_option( $option, $value ) {
-		$this->maybe_log_option( $option, array( 'new' => $value ) );
+		$this->maybe_log_option( $option, array( 'value' => $value ) );
 	}
 
 
@@ -296,7 +296,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	 * @param (mixed)  $value     The option new value.
 	 */
 	public function maybe_log_updated_option( $option, $old_value, $value ) {
-		$this->maybe_log_option( $option, array( 'new' => $value, 'old' => $old_value ) );
+		$this->maybe_log_option( $option, array( 'value' => $value, 'old_value' => $old_value ) );
 	}
 
 
@@ -309,7 +309,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	 * @param (mixed)  $value  The option new value.
 	 */
 	public function maybe_log_added_network_option( $option, $value ) {
-		$this->maybe_log_option( $option, array( 'new' => $value ), true );
+		$this->maybe_log_option( $option, array( 'value' => $value ), true );
 	}
 
 
@@ -323,7 +323,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 	 * @param (mixed)  $old_value The option old value.
 	 */
 	public function maybe_log_updated_network_option( $option, $value, $old_value ) {
-		$this->maybe_log_option( $option, array( 'new' => $value, 'old' => $old_value ), true );
+		$this->maybe_log_option( $option, array( 'value' => $value, 'old_value' => $old_value ), true );
 	}
 
 
@@ -361,7 +361,7 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 		}
 		// '1' => only this numeric value will be logged.
 		elseif ( is_int( $compare ) || is_numeric( $compare ) ) {
-			if ( (int) $compare === (int) $values['new'] ) {
+			if ( (int) $compare === (int) $values['value'] ) {
 				$this->log( $type, $option, $values );
 			}
 		}
@@ -371,12 +371,12 @@ class SecuPress_Action_Logs extends SecuPress_Logs {
 
 			// '!1'
 			if ( is_numeric( $compare ) ) {
-				if ( (int) $compare !== (int) $values['new'] ) {
+				if ( (int) $compare !== (int) $values['value'] ) {
 					$this->log( $type, $option, $values );
 				}
 			}
 			// '!subscriber'
-			elseif ( $compare !== $values['new'] ) {
+			elseif ( $compare !== $values['value'] ) {
 				$this->log( $type, $option, $values );
 			}
 		}
